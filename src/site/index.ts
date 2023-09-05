@@ -13,8 +13,8 @@ export const IMAGE_OG_WIDTH = 1200;
 export const IMAGE_OG_HEIGHT = IMAGE_OG_WIDTH * (1 / IMAGE_OG_RATIO);
 
 // 3:2 og grid ratio
-export const GRID_OG_RATIO = 1.35;
-export const GRID_OG_WIDTH = 1200;
+export const GRID_OG_RATIO = 1.33;
+export const GRID_OG_WIDTH = 2000;
 export const GRID_OG_HEIGHT = GRID_OG_WIDTH * (1 / GRID_OG_RATIO);
 
 const STORE_ID = process.env.BLOB_READ_WRITE_TOKEN?.match(

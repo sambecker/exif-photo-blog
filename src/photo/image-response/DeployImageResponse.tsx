@@ -9,7 +9,7 @@ export default function DeployImageResponse({
   width,
   height,
   fontFamily,
-  outerMargin = 30,
+  outerMargin = 50,
   darkMode = true,
 }: {
   photos: Photo[]
@@ -39,8 +39,8 @@ export default function DeployImageResponse({
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        fontSize: 26,
-        height: 40,
+        fontSize: 40,
+        height: 80,
         lineHeight: 1,
         marginBottom: outerMargin,
         width: '100%',
@@ -62,13 +62,13 @@ export default function DeployImageResponse({
               color: '#333',
               borderRight: '2px solid #333',
             }}>
-              <IconFullFrame includeTitle={false} width={48} />
+              <IconFullFrame includeTitle={false} width={80} />
             </div>
             <div style={{
               display: 'flex',
               padding: '3px 10px',
             }}>
-              <IconGrid includeTitle={false} width={48} />
+              <IconGrid includeTitle={false} width={80} />
             </div>
           </div>
         </div>
@@ -77,7 +77,7 @@ export default function DeployImageResponse({
           justifyContent: 'flex-end',
           flexGrow: 1,
         }}>
-          thephotoblog.vercel.app
+          photos.sambecker.com
         </div>
       </div>
       <PhotoGridImageResponse {...{
