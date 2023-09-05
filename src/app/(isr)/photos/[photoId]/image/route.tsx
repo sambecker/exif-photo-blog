@@ -10,7 +10,11 @@ export const runtime = 'edge';
 
 export async function GET(request: Request, context: any) {
   const photo = await getPhoto(context.params.photoId);
+  
+  if (!photo) { return null; }
+  
   const fontData = await getIBMPlexMonoMedium();
+
   return new ImageResponse(
     (
       <PhotoOGImageResponse
