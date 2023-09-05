@@ -4,7 +4,9 @@ import {
   PhotoDbInsert,
   translatePhotoId,
   parsePhotoFromDb,
+  Photo,
 } from '@/photo';
+import { isValidUUID } from '@/utility/string';
 
 const PHOTO_DEFAULT_LIMIT = 100;
 
@@ -184,10 +186,12 @@ export const getPhotos = async (
   return photos;
 };
 
-export const getPhoto = (id: string) =>
-  sqlGetPhotoFromDb(
-    // Check for photo id forwarding
-    // and convert short ids to uuids
-    translatePhotoId(id)
-  )
-    .then(photos => photos[0]);
+export const getPhoto = async (id: string): Promise<Photo | undefined> => {
+  // Check for photo id forwarding
+  // and convert short ids to uuids
+  const photoId = translatePhotoId(id);
+  return isValidUUID(photoId)
+    ? sqlGetPhotoFromDb(photoId)
+      .then(photos => photos.length > 0 ? photos[0] : undefined)
+    : Promise.resolve(undefined);
+};

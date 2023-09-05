@@ -9,6 +9,7 @@ import { cc } from '@/utility/css';
 import { Metadata } from 'next';
 import { BASE_URL } from '@/site/config';
 import { getPhoto, getPhotos } from '@/services/postgres';
+import { redirect } from 'next/navigation';
 
 export const runtime = 'edge';
 
@@ -20,9 +21,13 @@ export async function generateMetadata(
   { params: { photoId } }: Props
 ): Promise<Metadata> {
   const photo = await getPhoto(photoId);
+
+  if (!photo) { return {}; }
+
   const title = photo.title;
   const description = ogImageDescriptionForPhoto(photo);
   const images = ogImageUrlForPhoto(photo);
+
   return {
     title,
     description,
@@ -46,6 +51,9 @@ export default async function PhotoPage({
   children,
 }: Props) {
   const photo = await getPhoto(photoId);
+
+  if (!photo) { redirect('/'); }
+
   const photos = await getPhotos();
 
   return <>
