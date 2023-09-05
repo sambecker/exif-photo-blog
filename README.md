@@ -1,4 +1,4 @@
-# 📸 Photo Blog `(BETA)`
+# 📷 Photo Blog `(BETA)`
 
 _This template is in `BETA`. Optimizations are still being made around auth and cache behavior. Database schema changes are expected._
 
