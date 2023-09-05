@@ -1,6 +1,6 @@
 # 📸 Photo Blog `(BETA)`
 
-_This template is in `BETA`. Optimizations still being made around auth and cache behavior. Database schema changes to be expected._
+_This template is in `BETA`. Optimizations are still being made around auth and cache behavior. Database schema changes are expected._
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?demo-title=Photo+Blog&demo-description=Store+photos+with+original+camera+data&demo-url=https%3A%2F%2Fphotos.sambecker.com&demo-image=https%3A%2F%2Fphotos.sambecker.com%2Fdeploy-image&project-name=Photo+Blog&repository-name=photo-blog&repository-url=https%3A%2F%2Fgithub.com%2Fsambecker%2Fphoto-blog&from=templates&skippable-integrations=1&env-description=Configure+your+photo+blog+meta&env-link=BLANK&env=NEXT_PUBLIC_SITE_TITLE%2CNEXT_PUBLIC_SITE_DOMAIN&teamCreateStatus=hidden&stores=%5B%7B%22type%22%3A%22postgres%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D)
 
