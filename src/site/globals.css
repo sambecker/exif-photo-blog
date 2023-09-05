@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply
+      font-mono text-sm md:text-base
+      bg-white dark:bg-black
+     text-gray-900 dark:text-gray-100
+  }
+  label {
+    @apply
+      font-sans font-medium block uppercase text-xs
+      text-gray-500 dark:text-gray-400
+      tracking-wider
+  }
+  button, .button,
+  input[type=text] {
+    @apply
+      px-2 py-1.5
+      border rounded-md
+      dark:bg-black
+      border-gray-200 dark:border-gray-700
+      font-mono text-base leading-none
+      min-h-[2.25rem]
+  }
+  input[type=text] {
+    @apply
+      min-w-[20rem] read-only:cursor-default
+      read-only:bg-gray-100
+      dark:read-only:bg-gray-900 dark:read-only:text-gray-400
+  }
+  input[type=file] {
+    @apply
+      block font-mono w-full text-gray-500 dark:text-gray-400
+      file:bg-white dark:file:bg-gray-950
+      file:mr-2 file:my-2 file:px-4 file:py-1.5 file:rounded-md
+      file:border-solid file:border
+      file:border-gray-200 dark:file:border-gray-700
+      file:cursor-pointer
+      file:shadow-sm
+      file:active:bg-gray-100
+      file:disabled:bg-gray-100
+      file:hover:border-gray-300
+      file:hover:disabled:border-gray-200
+      file:active:disabled:bg-white
+      file:hover:disabled:cursor-not-allowed
+  }
+  button, .button {
+    @apply
+      inline-flex gap-2 items-center
+      px-4
+      text-base
+      shadow-sm
+      disabled:bg-gray-100 dark:disabled:bg-gray-900 disabled:cursor-not-allowed
+      active:bg-gray-100 dark:active:bg-gray-900
+      hover:border-gray-300 dark:hover:border-gray-600
+      hover:disabled:border-gray-200
+  }
+}
