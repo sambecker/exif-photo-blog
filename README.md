@@ -21,18 +21,29 @@ _Database schema changes are expected._
 
 ### 2. Setup Auth
 
-1. Create a Clerk account
-2. Add Clerk environment variables to your project
-3. Create an admin user
-4. Add standard environment variables:
+1. Create [Clerk account](https://dashboard.clerk.com/sign-up)
+2. Add Clerk environment variables:
 - `NEXT_PUBLIC_CLERK_SIGN_IN_URL`
 - `CLERK_SECRET_KEY`
 - `CLERK_ADMIN_USER_ID`
-4. Add your admin user id to environment variables:
-- `CLERK_ADMIN_USER_ID` 
+3. Create admin user (you'll use this to access `/admin` on your blog)
+4. Add admin user id to environment variables:
+- `CLERK_ADMIN_USER_ID`
 
-### 3. Develop locally
+### 3. Upload your first photo
+1. Visit `/admin`
+2. Click "Choose File"
+3. Title your photo
+4. Click "Create"
+
+### 4. Develop locally
 
 1. Clone code
 2. Install dependencies `pnpm i`
 3. Run `vc dev` to utilize Vercel-stored environment variables
+
+### 5. Add Analytics (optional)
+
+1. Open project on Vercel
+2. Click "Analytics" tab
+3. Follow "Enable Web Analytics" instructions (`@vercel/analytics` is already part of your project)
