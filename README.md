@@ -11,33 +11,25 @@ _Database schema changes are expected._
 ### 1. Deploy to Vercel
 
 1. Click Deploy
-2. Add required storage
+2. Add required storage ([Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres) + [Vercel Blob](https://vercel.com/docs/storage/vercel-blob))
 3. Add environment variables
 - `NEXT_PUBLIC_SITE_TITLE` (e.g., My Photos)
 - `NEXT_PUBLIC_SITE_DOMAIN` (e.g., photos.domain.com)
-- `NEXT_PUBLIC_SITE_DESCRIPTION` (optional—mainly used for og meta)
+- `NEXT_PUBLIC_SITE_DESCRIPTION` (optional—mainly used for OG meta)
 
-### 2. Setup Vercel Postgres
-
-1. Visit the `Storage` tab on your project
-2. Click "Create Database"
-3. Select Postgres
-
-### 3. Setup Vercel Blob
-
-1. Visit the `Storage` tab on your project
-2. Click "Create Database"
-3. Select Blob
-
-### 4. Setup Auth
+### 2. Setup Auth
 
 1. Create a Clerk account
 2. Add Clerk environment variables to your project
 3. Create an admin user
-4. Add your admin user id to your environment variables as
+4. Add standard environment variables:
+- `NEXT_PUBLIC_CLERK_SIGN_IN_URL`
+- `CLERK_SECRET_KEY`
+- `CLERK_ADMIN_USER_ID`
+4. Add your admin user id to environment variables:
 - `CLERK_ADMIN_USER_ID` 
 
-### 5. Develop locally
+### 3. Develop locally
 
 1. Clone code
 2. Install dependencies `pnpm i`
