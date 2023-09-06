@@ -21,3 +21,7 @@ export const isRoutePhotoShare = (pathname = '') =>
 
 export const isRouteSignIn = (pathname = '') =>
   pathname.startsWith('/sign-in');
+
+export const isRouteProtected = (pathname = '') =>
+  pathname.startsWith('/admin') ||
+  pathname === '/checklist';

@@ -1,3 +1,4 @@
+import { isRouteProtected } from '@/site/routes';
 import NextAuth, { User, type DefaultSession } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { NextResponse } from 'next/server';
@@ -39,16 +40,16 @@ export const {
       const url = new URL(request.url);
       const { pathname } = url;
 
-      const isUrlProtected = pathname.startsWith('/admin');
-      const isLoggedIn = !!auth?.user;
-      const isAuthorized = !isUrlProtected || isLoggedIn;
+      const isUrlProtected = isRouteProtected(pathname);
+      const isUserLoggedIn = !!auth?.user;
+      const isRequestAuthorized = !isUrlProtected || isUserLoggedIn;
 
       if (pathname === '/admin') {
         url.pathname = '/admin/photos';
         return NextResponse.redirect(url);
       }
 
-      return isAuthorized;
+      return isRequestAuthorized;
     },
   },
   pages: {
