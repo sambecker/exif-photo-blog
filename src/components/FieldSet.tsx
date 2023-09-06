@@ -5,6 +5,7 @@ export default function FieldSet({
   onChange,
   required,
   readOnly,
+  type = 'text',
 }: {
   id: string
   label: string
@@ -12,6 +13,7 @@ export default function FieldSet({
   onChange?: (value: string) => void
   required?: boolean
   readOnly?: boolean
+  type?: 'text' | 'password'
 }) {
   return (
     <div className="space-y-1">
@@ -30,7 +32,7 @@ export default function FieldSet({
         name={id}
         value={value}
         onChange={e => onChange?.(e.target.value)}
-        type="text"
+        type={type}
         autoComplete="off"
         readOnly={readOnly}
         className="w-full"
