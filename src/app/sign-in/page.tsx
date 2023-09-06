@@ -3,6 +3,8 @@ import SignInForm from '@/auth/SignInForm';
 import { cc } from '@/utility/css';
 import { redirect } from 'next/navigation';
 
+export const runtime = 'edge';
+
 export default async function SignInPage() {
   const session = await auth();
 
