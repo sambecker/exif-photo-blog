@@ -2,7 +2,7 @@
 
 import { cc } from '@/utility/css';
 import Link from 'next/link';
-import { useClerk } from '@clerk/nextjs';
+import { useSession, signOut } from 'next-auth/react';
 import ThemeSwitcher from '@/site/ThemeSwitcher';
 import SiteGrid from './SiteGrid';
 import { usePathname } from 'next/navigation';
@@ -14,9 +14,9 @@ const LINK_STYLE = cc(
 );
 
 export default function AuthNav() {
-  const { user, signOut } = useClerk();
+  const { data: session, status  } = useSession();
 
-  const hasState = signOut !== undefined;
+  const hasState = status !== 'loading';
 
   const path = usePathname();
 
@@ -29,10 +29,10 @@ export default function AuthNav() {
         <div className="flex gap-4 flex-grow">
           {hasState
             ? <>
-              {user === undefined &&
+              {session?.user === undefined &&
                 <>Loading ...</>}
-              {user !== undefined && user !== null && <>
-                <div>{user?.emailAddresses[0].emailAddress}</div>
+              {session?.user.email && <>
+                <div>{session.user.email}</div>
                 <div
                   onClick={() => signOut()}
                   className={LINK_STYLE}

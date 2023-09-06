@@ -1,5 +1,5 @@
 import AuthNav from '@/components/AuthNav';
-import { ClerkProvider } from '@clerk/nextjs';
+import { SessionProvider } from 'next-auth/react';
 
 export default function RootLayout({
   children,
@@ -7,11 +7,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
+    <SessionProvider>
       {children}
       <div className="my-8">
         <AuthNav />
       </div>
-    </ClerkProvider>
+    </SessionProvider>
   );
 }

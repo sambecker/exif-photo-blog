@@ -49,6 +49,7 @@
   }
   button, .button {
     @apply
+      cursor-pointer
       inline-flex gap-2 items-center
       px-4
       text-base
