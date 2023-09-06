@@ -23,16 +23,3 @@ const STORE_ID = process.env.BLOB_READ_WRITE_TOKEN?.match(
 
 export const BLOB_BASE_URL =
   `https://${STORE_ID}.public.blob.vercel-storage.com`;
-
-export const SITE_CHECKLIST_STATUS = {
-  hasTitle: (process.env.NEXT_PUBLIC_SITE_TITLE ?? '').length > 0,
-  hasDomain: (process.env.NEXT_PUBLIC_SITE_DOMAIN ?? '').length > 0,
-  hasPostgres: (process.env.POSTGRES_HOST ?? '').length > 0,
-  hasBlob: (process.env.BLOB_READ_WRITE_TOKEN ?? '').length > 0,
-  hasAuth: (
-    (process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ?? '').length > 0 &&
-    (process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL ?? '').length > 0 &&
-    (process.env.CLERK_SECRET_KEY ?? '').length > 0 &&
-    (process.env.CLERK_ADMIN_USER_ID ?? '').length > 0
-  ),
-};

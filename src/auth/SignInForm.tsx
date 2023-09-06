@@ -10,37 +10,36 @@ export default function SignInForm() {
   const [password, setPassword] = useState('');
 
   return (
-    <InfoBlock
-      className="space-y-8"
-      padding="normal"
-    >
-      <div className="space-y-4">
-        <FieldSet
-          id="email"
-          label="Admin Email"
-          value={email}
-          onChange={setEmail}
-        />
-        <FieldSet
-          id="password"
-          label="Admin Password"
-          value={password}
-          onChange={setPassword}
-          type="password"
-        />
+    <InfoBlock>
+      <div className="space-y-8">
+        <div className="space-y-4">
+          <FieldSet
+            id="email"
+            label="Admin Email"
+            value={email}
+            onChange={setEmail}
+          />
+          <FieldSet
+            id="password"
+            label="Admin Password"
+            value={password}
+            onChange={setPassword}
+            type="password"
+          />
+        </div>
+        <button
+          onClick={() => signIn(
+            'credentials',
+            {
+              email,
+              password,
+              callbackUrl: '/admin/photos',
+            },
+          )}
+        >
+          Sign in
+        </button>
       </div>
-      <button
-        onClick={() => signIn(
-          'credentials',
-          {
-            email,
-            password,
-            callbackUrl: '/admin/photos',
-          },
-        )}
-      >
-        Sign in
-      </button>
     </InfoBlock>
   );
 }

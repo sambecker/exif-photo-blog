@@ -11,3 +11,15 @@ export const SITE_DESCRIPTION = process.env.NEXT_PUBLIC_SITE_DESCRIPTION
 export const BASE_URL = process.env.NODE_ENV === 'production'
   ? `https://${SITE_DOMAIN}`
   : 'http://localhost:3000';
+
+export const CONFIG_CHECKLIST_STATUS = {
+  hasTitle: (process.env.NEXT_PUBLIC_SITE_TITLE ?? '').length > 0,
+  hasDomain: (process.env.NEXT_PUBLIC_SITE_DOMAIN ?? '').length > 0,
+  hasPostgres: (process.env.POSTGRES_HOST ?? '').length > 0,
+  hasBlob: (process.env.BLOB_READ_WRITE_TOKEN ?? '').length > 0,
+  hasAuth: (process.env.AUTH_SECRET ?? '').length > 0,
+  hasAdminUser: (
+    (process.env.ADMIN_EMAIL ?? '').length > 0 &&
+    (process.env.ADMIN_PASSWORD ?? '').length > 0
+  ),
+};

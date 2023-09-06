@@ -29,6 +29,7 @@ specifiers:
   react-icons: ^4.10.1
   react-spinners: ^0.13.8
   short-uuid: ^4.2.2
+  sonner: ^0.7.0
   tailwindcss: 3.3.3
   ts-exif-parser: ^0.2.2
   typescript: 5.2.2
@@ -59,6 +60,7 @@ dependencies:
   react-icons: 4.10.1_react@18.2.0
   react-spinners: 0.13.8_biqbaboplfbrettd7655fr4n2y
   short-uuid: 4.2.2
+  sonner: 0.7.0_biqbaboplfbrettd7655fr4n2y
   tailwindcss: 3.3.3
   ts-exif-parser: 0.2.2
   typescript: 5.2.2
@@ -3187,6 +3189,16 @@ packages:
   /slash/3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
+    dev: false
+
+  /sonner/0.7.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-vAlXCrE6/183yt64ktIUnPv85RmAPYiicl5z35fDDFhWRIUpg7N62TsiIbHjwGuxbVJu/5hYlh92HHImsS27dA==}
+    peerDependencies:
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /source-map-js/1.0.2:

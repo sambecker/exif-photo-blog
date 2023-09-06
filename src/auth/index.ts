@@ -55,3 +55,8 @@ export const {
     signIn: '/sign-in',
   },
 });
+
+export const generateAuthSecret = () => fetch(
+  'https://generate-secret.vercel.app/32',
+  { cache: 'no-cache' },
+).then(res => res.text());

@@ -1,13 +1,13 @@
 import InfoBlock from '@/components/InfoBlock';
 import SiteGrid from '@/components/SiteGrid';
-import { SITE_CHECKLIST_STATUS } from '@/site';
+import { CONFIG_CHECKLIST_STATUS } from '@/site/config';
 import SiteChecklist from '@/site/SiteChecklist';
 import { cc } from '@/utility/css';
 import Link from 'next/link';
 import { HiOutlinePhotograph } from 'react-icons/hi';
 
 export default function PhotosEmptyState() {
-  const showChecklist = Object.values(SITE_CHECKLIST_STATUS).some(v => !v);
+  const showChecklist = Object.values(CONFIG_CHECKLIST_STATUS).some(v => !v);
 
   return (
     <SiteGrid
@@ -21,13 +21,11 @@ export default function PhotosEmptyState() {
             'font-bold text-2xl',
             'text-gray-700 dark:text-gray-200',
           )}>
-            {showChecklist
-              ? 'Finish Setup'
-              : 'Welcome!'}
+            {showChecklist ? 'Finish Setup' : 'Welcome!'}
           </div>
           {showChecklist
-            ? <SiteChecklist {...SITE_CHECKLIST_STATUS} />
-            : <div className="max-w-md leading-[1.7]">
+            ? <SiteChecklist />
+            : <div className="max-w-md leading-[1.7] text-center">
               <div className="mb-2">
                 1. Visit
                 {' '}

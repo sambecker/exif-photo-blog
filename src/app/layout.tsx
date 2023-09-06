@@ -6,6 +6,7 @@ import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from '@/site/config';
 import StateProvider from '@/state/AppStateProvider';
 import ThemeProviderClient from '@/site/ThemeProviderClient';
 import Nav from '@/components/Nav';
+import ToasterClient from '@/components/ToasterClient';
 
 import '../site/globals.css';
 
@@ -76,6 +77,7 @@ export default function RootLayout({
             </StateProvider>
             <Analytics />
           </main>
+          <ToasterClient />
         </ThemeProviderClient>
       </body>
     </html>
