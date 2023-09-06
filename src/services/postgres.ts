@@ -171,7 +171,7 @@ export const getPhotos = async (
   try {
     photos = await getPhotosRequest(limit, offset);
   } catch (e: any) {
-    if (e.message === 'relation "photos" does not exist') {
+    if (/relation "photos" does not exist/i.test(e.message)) {
       console.log(
         'Creating table "photos" because it did not exist',
       );
