@@ -12,7 +12,7 @@ export default function SignInForm() {
   return (
     <InfoBlock
       className="space-y-8"
-      padding="loose"
+      padding="normal"
     >
       <div className="space-y-4">
         <FieldSet
