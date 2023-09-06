@@ -32,10 +32,10 @@ export async function GET(request: Request) {
           style: 'normal',
         },
       ],
-      ...!DEBUG_CACHING && {
-        headers: {
-          'Cache-Control': 's-maxage=3600, stale-while-revalidate',
-        },
+      headers: {
+        'Cache-Control': DEBUG_CACHING
+          ? 's-maxage=1'
+          : 's-maxage=3600, stale-while-revalidate',
       },
     },
   );
