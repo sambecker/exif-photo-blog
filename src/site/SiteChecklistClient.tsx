@@ -139,7 +139,7 @@ export default function SiteChecklistClient({
                 <IconButton
                   onClick={() => {
                     navigator.clipboard.writeText(secret);
-                    toast('Secret copied to clipboard', {
+                    toast.success('Secret copied to clipboard', {
                       duration: 4000,
                     });
                   }}

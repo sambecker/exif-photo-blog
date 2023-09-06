@@ -6,11 +6,10 @@ import { absoluteRouteForPhoto, routeForPhoto } from '@/site/routes';
 import { TbPhotoShare } from 'react-icons/tb';
 import { cc } from '@/utility/css';
 import { BiCopy } from 'react-icons/bi';
-import { useState } from 'react';
 import { Photo } from '.';
+import { toast } from 'sonner';
 
 export default function PhotoModal({ photo }: { photo: Photo }) {
-  const [copied, setIsCopied] = useState(false);
   const shareUrl = absoluteRouteForPhoto(photo);
   
   return (
@@ -24,13 +23,6 @@ export default function PhotoModal({ photo }: { photo: Photo }) {
           <div className="flex-grow">
             Share Photo
           </div>
-          {copied && <div className={cc(
-            'text-sm leading-none py-1.5 px-2',
-            'bg-blue-600 text-white',
-            'rounded-full',
-          )}>
-            Copied!
-          </div>}
         </div>
         <PhotoOGTile photo={photo} />
         <div className={cc(
@@ -52,7 +44,7 @@ export default function PhotoModal({ photo }: { photo: Photo }) {
             )}
             onClick={() => {
               navigator.clipboard.writeText(shareUrl);
-              setIsCopied(true);
+              toast.success('Link to photo copied');
             }}
           >
             <BiCopy size={18} />
