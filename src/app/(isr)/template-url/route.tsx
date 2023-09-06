@@ -12,7 +12,7 @@ export function GET() {
   url.searchParams.set('demo-description', DESCRIPTION);
   url.searchParams.set('demo-url', 'https://photos.sambecker.com');
   url.searchParams.set('demo-description', DESCRIPTION);
-  url.searchParams.set('demo-image', 'https://photos.sambecker.com/deploy-image');
+  url.searchParams.set('demo-image', 'https://photos.sambecker.com/template-image');
   url.searchParams.set('project-name', TITLE);
   url.searchParams.set('repository-name', REPO_NAME);
   url.searchParams.set('repository-url', `https://github.com/sambecker/${REPO_NAME}`);

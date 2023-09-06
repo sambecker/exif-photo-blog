@@ -4,7 +4,7 @@ import { GRID_OG_WIDTH, GRID_OG_HEIGHT } from '@/site';
 import { FONT_FAMILY_IBM_PLEX_MONO, getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from '@vercel/og';
 
-const DEBUG_CACHING: boolean = false;
+const DEBUG_CACHING: boolean = true;
 
 export const runtime = 'edge';
 
