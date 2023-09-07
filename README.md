@@ -8,7 +8,7 @@ _Database schema changes are expected._
 
 ![App Preview](app-preview.png)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?demo-title=Photo+Blog&demo-description=Store+photos+with+original+camera+data&demo-url=https%3A%2F%2Fphotos.sambecker.com&demo-image=https%3A%2F%2Fphotos.sambecker.com%2Fdeploy-image&project-name=Photo+Blog&repository-name=photo-blog&repository-url=https%3A%2F%2Fgithub.com%2Fsambecker%2Fphoto-blog&from=templates&skippable-integrations=1&env-description=Configure+your+photo+blog+meta&env-link=BLANK&env=NEXT_PUBLIC_SITE_TITLE%2CNEXT_PUBLIC_SITE_DOMAIN&teamCreateStatus=hidden&stores=%5B%7B%22type%22%3A%22postgres%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?demo-title=Photo+Blog&demo-description=Store+photos+with+original+camera+data&demo-url=https%3A%2F%2Fphotos.sambecker.com&demo-image=https%3A%2F%2Fphotos.sambecker.com%2Ftemplate-image&project-name=Photo+Blog&repository-name=photo-blog&repository-url=https%3A%2F%2Fgithub.com%2Fsambecker%2Fphoto-blog&from=templates&skippable-integrations=1&env-description=Configure+your+photo+blog+meta&env-link=BLANK&env=NEXT_PUBLIC_SITE_TITLE%2CNEXT_PUBLIC_SITE_DOMAIN&teamCreateStatus=hidden&stores=%5B%7B%22type%22%3A%22postgres%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D)
 
 ### 1. Deploy to Vercel
 
@@ -21,14 +21,13 @@ _Database schema changes are expected._
 
 ### 2. Setup Auth
 
-1. Create [Clerk account](https://dashboard.clerk.com/sign-up)
-2. Add Clerk environment variables:
-- `NEXT_PUBLIC_CLERK_SIGN_IN_URL`
-- `CLERK_SECRET_KEY`
-- `CLERK_ADMIN_USER_ID`
-3. Create admin user (you'll use this to access `/admin` on your blog)
-4. Add admin user id to environment variables:
-- `CLERK_ADMIN_USER_ID`
+1. [Generate auth secret](https://generate-secret.vercel.app/32)
+2. Add to environment variables:
+- `AUTH_SECRET`
+3. Add admin user to environment variables:
+- `ADMIN_EMAIL`
+- `ADMIN_PASSWORD`
+
 
 ### 3. Upload your first photo
 1. Visit `/admin`
