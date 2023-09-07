@@ -10,7 +10,9 @@ export default function DeployImageResponse({
   height,
   fontFamily,
   outerMargin = 50,
+  includeHeader = true,
   darkMode = true,
+  verticalOffset,
 }: {
   photos: Photo[]
   request: Request
@@ -18,7 +20,9 @@ export default function DeployImageResponse({
   height: number
   fontFamily: string
   outerMargin?: number
+  includeHeader?: boolean
   darkMode?: boolean
+  verticalOffset?: number
 }) {
   const innerWidth = width - (outerMargin * 2);
 
@@ -45,33 +49,34 @@ export default function DeployImageResponse({
         marginBottom: outerMargin,
         width: '100%',
       }}>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          flexGrow: 1,
-        }}>
+        {includeHeader &&
           <div style={{
             display: 'flex',
-            border: '2px solid #333',
-            alignItems: 'center',
-            borderRadius: 8,
+            justifyContent: 'flex-start',
+            flexGrow: 1,
           }}>
             <div style={{
               display: 'flex',
-              padding: '3px 10px',
-              color: '#333',
-              borderRight: '2px solid #333',
+              border: '2px solid #333',
+              alignItems: 'center',
+              borderRadius: 8,
             }}>
-              <IconFullFrame includeTitle={false} width={80} />
+              <div style={{
+                display: 'flex',
+                padding: '3px 10px',
+                color: '#333',
+                borderRight: '2px solid #333',
+              }}>
+                <IconFullFrame includeTitle={false} width={80} />
+              </div>
+              <div style={{
+                display: 'flex',
+                padding: '3px 10px',
+              }}>
+                <IconGrid includeTitle={false} width={80} />
+              </div>
             </div>
-            <div style={{
-              display: 'flex',
-              padding: '3px 10px',
-            }}>
-              <IconGrid includeTitle={false} width={80} />
-            </div>
-          </div>
-        </div>
+          </div>}
         <div style={{
           display: 'flex',
           justifyContent: 'flex-end',
@@ -86,6 +91,7 @@ export default function DeployImageResponse({
         colCount: 4,
         rowCount: 4,
         width: innerWidth,
+        verticalOffset,
       }} />
     </div>
   );

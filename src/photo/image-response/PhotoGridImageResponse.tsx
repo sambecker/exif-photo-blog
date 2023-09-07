@@ -10,6 +10,7 @@ export default function PhotoGridImageResponse({
   colCount,
   rowCount,
   gap = 12,
+  verticalOffset,
 }: {
   photos: Photo[]
   request: Request
@@ -17,6 +18,7 @@ export default function PhotoGridImageResponse({
   colCount: number
   rowCount: number
   gap?: number
+  verticalOffset?: number
 }) {
   const imageWidth = (width - ((colCount - 1) * gap)) / colCount ;
 
@@ -24,6 +26,7 @@ export default function PhotoGridImageResponse({
     <div style={{
       display: 'flex',
       flexWrap: 'wrap',
+      ...verticalOffset && { transform: `translateY(${verticalOffset}px)` },
     }}>
       {photos
         .slice(0, colCount * rowCount)
