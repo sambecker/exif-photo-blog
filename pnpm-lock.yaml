@@ -29,7 +29,7 @@ specifiers:
   react-icons: ^4.10.1
   react-spinners: ^0.13.8
   short-uuid: ^4.2.2
-  sonner: ^0.7.0
+  sonner: ^0.7.1
   tailwindcss: 3.3.3
   ts-exif-parser: ^0.2.2
   typescript: 5.2.2
@@ -60,7 +60,7 @@ dependencies:
   react-icons: 4.10.1_react@18.2.0
   react-spinners: 0.13.8_biqbaboplfbrettd7655fr4n2y
   short-uuid: 4.2.2
-  sonner: 0.7.0_biqbaboplfbrettd7655fr4n2y
+  sonner: 0.7.1_biqbaboplfbrettd7655fr4n2y
   tailwindcss: 3.3.3
   ts-exif-parser: 0.2.2
   typescript: 5.2.2
@@ -3191,8 +3191,8 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
-  /sonner/0.7.0_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-vAlXCrE6/183yt64ktIUnPv85RmAPYiicl5z35fDDFhWRIUpg7N62TsiIbHjwGuxbVJu/5hYlh92HHImsS27dA==}
+  /sonner/0.7.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-awbVcBwV0xV5TN7kJEZv6Sx7Fi9JBL26vTn0FnBcf6YsyWKnyvz16I/jE6omCtBjd0/YXsPHJ//VuA5fvD2vEg==}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
