@@ -1,20 +1,19 @@
+import { getImageCacheHeadersForAuth } from '@/cache';
 import PhotoOGImageResponse from '@/photo/image-response/PhotoOGImageResponse';
 import { getPhoto } from '@/services/postgres';
 import { IMAGE_OG_WIDTH, IMAGE_OG_HEIGHT } from '@/site';
 import { FONT_FAMILY_IBM_PLEX_MONO, getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from '@vercel/og';
 
-const DEBUG_CACHING: boolean = false;
-
 export const runtime = 'edge';
 
 export async function GET(request: Request, context: any) {
   const photo = await getPhoto(context.params.photoId);
+  const fontData = await getIBMPlexMonoMedium();
+  const headers = await getImageCacheHeadersForAuth();
   
   if (!photo) { return null; }
   
-  const fontData = await getIBMPlexMonoMedium();
-
   return new ImageResponse(
     (
       <PhotoOGImageResponse
@@ -36,11 +35,7 @@ export async function GET(request: Request, context: any) {
           style: 'normal',
         },
       ],
-      ...!DEBUG_CACHING && {
-        headers: {
-          'Cache-Control': 's-maxage=3600, stale-while-revalidate',
-        },
-      },
+      headers,
     },
   );
 }
