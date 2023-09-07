@@ -6,6 +6,9 @@ import { Toaster } from 'sonner';
 export default function ToasterClient() {
   const { theme } = useTheme();
   return (
-    <Toaster theme={theme as 'system' | 'light' | 'dark'} />
+    <Toaster
+      theme={theme as 'system' | 'light' | 'dark'}
+      className="!font-mono"
+    />
   );
 }

@@ -4,7 +4,7 @@ import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { cc } from '@/utility/css';
 import SiteChecklistRow from './SiteChecklistRow';
-import { FiExternalLink } from 'react-icons/fi';
+import { FiCheckSquare, FiExternalLink } from 'react-icons/fi';
 import { BiCopy, BiRefresh } from 'react-icons/bi';
 import IconButton from '@/components/LoaderIcon';
 import { toast } from 'sonner';
@@ -139,9 +139,12 @@ export default function SiteChecklistClient({
                 <IconButton
                   onClick={() => {
                     navigator.clipboard.writeText(secret);
-                    toast.success('Secret copied to clipboard', {
-                      duration: 4000,
-                    });
+                    toast(
+                      'Secret copied to clipboard', {
+                        icon: <FiCheckSquare size={16} />,
+                        duration: 4000,
+                      },
+                    );
                   }}
                 >
                   <BiCopy size={16} />

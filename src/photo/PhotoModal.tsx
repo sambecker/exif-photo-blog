@@ -8,6 +8,7 @@ import { cc } from '@/utility/css';
 import { BiCopy } from 'react-icons/bi';
 import { Photo } from '.';
 import { toast } from 'sonner';
+import { FiCheckSquare } from 'react-icons/fi';
 
 export default function PhotoModal({ photo }: { photo: Photo }) {
   const shareUrl = absoluteRouteForPhoto(photo);
@@ -44,7 +45,10 @@ export default function PhotoModal({ photo }: { photo: Photo }) {
             )}
             onClick={() => {
               navigator.clipboard.writeText(shareUrl);
-              toast.success('Link to photo copied');
+              toast(
+                'Link to photo copied',
+                { icon: <FiCheckSquare size={16} /> },
+              );
             }}
           >
             <BiCopy size={18} />
