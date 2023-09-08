@@ -1,7 +1,6 @@
 import { isRouteProtected } from '@/site/routes';
 import NextAuth, { User, type DefaultSession } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-import { NextResponse } from 'next/server';
 
 declare module 'next-auth' {
   interface Session {
@@ -37,17 +36,11 @@ export const {
   ],
   callbacks: {
     authorized({ auth, request }) {
-      const url = new URL(request.url);
-      const { pathname } = url;
+      const { pathname } = request.nextUrl;
 
       const isUrlProtected = isRouteProtected(pathname);
       const isUserLoggedIn = !!auth?.user;
       const isRequestAuthorized = !isUrlProtected || isUserLoggedIn;
-
-      if (pathname === '/admin') {
-        url.pathname = '/admin/photos';
-        return NextResponse.redirect(url);
-      }
 
       return isRequestAuthorized;
     },
