@@ -26,10 +26,10 @@ export default function SiteChecklistRow({
           ? <div className="translate-y-0.5">
             <Spinner size={14} />
           </div>
-          : <div className="text-[0.8rem]">
+          : <div className="text-[0.8rem]" style={{ fontFamily: 'emoji' }}>
             {status
               ? '✅'
-              : optional ? '—' : '❌'}
+              : optional ? '⚠️' : '❌'}
           </div>}
       </div>
       <div className="flex flex-col items-start">
