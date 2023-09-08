@@ -1,8 +1,13 @@
 export const SITE_TITLE = process.env.NEXT_PUBLIC_SITE_TITLE
   || 'Photo Blog';
 
-const SITE_DOMAIN = process.env.NEXT_PUBLIC_SITE_DOMAIN
-  || process.env.NEXT_PUBLIC_VERCEL_URL;
+const VERCEL_BRANCH_URL = process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL;
+const VERCEL_BRANCH = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF;
+const VERCEL_URL = VERCEL_BRANCH_URL && VERCEL_BRANCH
+  ? `${VERCEL_BRANCH_URL.split(`-git-${VERCEL_BRANCH}-`)[0]}.vercel.app`
+  : undefined;
+
+const SITE_DOMAIN = process.env.NEXT_PUBLIC_SITE_DOMAIN || VERCEL_URL;
 
 export const SITE_DOMAIN_OR_TITLE = SITE_DOMAIN || SITE_TITLE;
 
