@@ -1,3 +1,4 @@
+import { auth } from '@/auth';
 import { getImageCacheHeadersForAuth } from '@/cache';
 import DeployImageResponse from '@/photo/image-response/DeployImageResponse';
 import { getPhotos } from '@/services/postgres';
@@ -9,7 +10,7 @@ export const runtime = 'edge';
 export async function GET(request: Request) {
   const photos = await getPhotos('priority');
   const fontData = await getIBMPlexMonoMedium();
-  const headers = await getImageCacheHeadersForAuth();
+  const headers = await getImageCacheHeadersForAuth(await auth());
 
   return new ImageResponse(
     (

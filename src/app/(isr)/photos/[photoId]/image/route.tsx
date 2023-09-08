@@ -1,3 +1,4 @@
+import { auth } from '@/auth';
 import { getImageCacheHeadersForAuth } from '@/cache';
 import PhotoOGImageResponse from '@/photo/image-response/PhotoOGImageResponse';
 import { getPhoto } from '@/services/postgres';
@@ -10,7 +11,7 @@ export const runtime = 'edge';
 export async function GET(request: Request, context: any) {
   const photo = await getPhoto(context.params.photoId);
   const fontData = await getIBMPlexMonoMedium();
-  const headers = await getImageCacheHeadersForAuth();
+  const headers = await getImageCacheHeadersForAuth(await auth());
   
   if (!photo) { return null; }
   

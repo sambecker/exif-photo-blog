@@ -1,4 +1,5 @@
 import { getPhoto, getPhotos } from '@/services/postgres';
+import type { Session } from 'next-auth/types';
 import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
 
 const TAG_PHOTOS = 'photos';
@@ -41,9 +42,9 @@ export const getPhotoCached: typeof getPhoto = (...args) =>
     }
   )();
 
-export const getImageCacheHeadersForAuth = async (shouldCache = true) => {
+export const getImageCacheHeadersForAuth = async (session?: Session) => {
   return {
-    'Cache-Control': shouldCache
+    'Cache-Control': !session?.user
       ? 's-maxage=3600, stale-while-revalidate'
       : 's-maxage=1, stale-while-revalidate',
   };
