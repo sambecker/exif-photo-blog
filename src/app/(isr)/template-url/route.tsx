@@ -22,7 +22,6 @@ export function GET() {
   url.searchParams.set('env-link', 'BLANK');
   url.searchParams.set('env', [
     'NEXT_PUBLIC_SITE_TITLE',
-    'NEXT_PUBLIC_SITE_DOMAIN',
   ].join(','));
   url.searchParams.set('teamCreateStatus', 'hidden');
   url.searchParams.set('stores', JSON.stringify([

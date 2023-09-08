@@ -6,11 +6,13 @@ export default function SiteChecklistRow({
   title,
   status,
   isPending,
+  optional,
   children,
 }: {
   title: string
   status: boolean
   isPending: boolean
+  optional?: boolean
   children: ReactNode
 }) {
   return (
@@ -25,12 +27,18 @@ export default function SiteChecklistRow({
             <Spinner size={14} />
           </div>
           : <div className="text-[0.8rem]">
-            {status ? '✅' : '❌'}
+            {status
+              ? '✅'
+              : optional ? '—' : '❌'}
           </div>}
       </div>
       <div className="flex flex-col items-start">
-        <div className="font-bold dark:text-gray-300">{title}</div>
-        <div>{children}</div>
+        <div className="font-bold dark:text-gray-300">
+          {title}{optional && ' (optional)'}
+        </div>
+        <div>
+          {children}
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { Photo } from '@/photo';
-import { SITE_DOMAIN } from './config';
+import { BASE_URL } from './config';
 
 export const ROUTE_ADMIN_UPLOAD = '/admin/uploads';
 
@@ -11,7 +11,7 @@ export const routeForPhoto = (photo: Photo, share?: boolean) =>
     : `/photos/${photo.idShort}`;
 
 export const absoluteRouteForPhoto = (photo: Photo) =>
-  `https://${SITE_DOMAIN}${routeForPhoto(photo)}`;
+  `${BASE_URL}${routeForPhoto(photo)}`;
 
 export const isRoutePhoto = (pathname = '') =>
   /^\/photos\/[^/]+\/?$/.test(pathname);

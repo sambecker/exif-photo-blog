@@ -4,7 +4,7 @@ import { cc } from '@/utility/css';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import SiteGrid from './SiteGrid';
-import { SITE_DOMAIN } from '@/site/config';
+import { SITE_DOMAIN_OR_TITLE } from '@/site/config';
 import ViewSwitcher, { SwitcherSelection } from '@/photo/ViewSwitcher';
 
 export default function Nav({ showTextLinks }: { showTextLinks?: boolean }) {
@@ -52,7 +52,7 @@ export default function Nav({ showTextLinks }: { showTextLinks?: boolean }) {
               </>}
             </div>
             <div className="hidden xs:block">
-              {renderLink(SITE_DOMAIN, '/')}
+              {renderLink(SITE_DOMAIN_OR_TITLE, '/')}
             </div>
           </>}
         </div>

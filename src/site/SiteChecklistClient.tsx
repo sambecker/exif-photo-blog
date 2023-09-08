@@ -95,9 +95,10 @@ export default function SiteChecklistClient({
           {renderEnvVars(['NEXT_PUBLIC_SITE_TITLE'])}
         </SiteChecklistRow>
         <SiteChecklistRow
-          title="Add domain"
+          title="Add custom domain"
           status={hasDomain}
           isPending={isPendingPage}
+          optional
         >
           Store in environment variable:
           {renderEnvVars(['NEXT_PUBLIC_SITE_DOMAIN'])}

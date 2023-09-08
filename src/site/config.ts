@@ -1,9 +1,10 @@
 export const SITE_TITLE = process.env.NEXT_PUBLIC_SITE_TITLE
   || 'Photo Blog';
 
-export const SITE_DOMAIN = process.env.NEXT_PUBLIC_SITE_DOMAIN
-  || process.env.NEXT_PUBLIC_VERCEL_URL
-  || SITE_TITLE;
+const SITE_DOMAIN = process.env.NEXT_PUBLIC_SITE_DOMAIN
+  || process.env.NEXT_PUBLIC_VERCEL_URL;
+
+export const SITE_DOMAIN_OR_TITLE = SITE_DOMAIN || SITE_TITLE;
 
 export const SITE_DESCRIPTION = process.env.NEXT_PUBLIC_SITE_DESCRIPTION
   || SITE_DOMAIN;
