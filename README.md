@@ -4,6 +4,8 @@ _This template is in `BETA`._
 
 _Optimizations are still being made around auth and cache behavior._
 
+_Access to Vercel Blob—currently in private beta—must be requested._
+
 _Database schema changes are expected._
 
 ![App Preview](app-preview.png)
