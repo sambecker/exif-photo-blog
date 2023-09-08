@@ -5,7 +5,7 @@ import {
   FORM_METADATA_ENTRIES,
   PhotoFormData,
 } from './form';
-import FieldSet from '@/components/FieldSet';
+import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import NextImage from 'next/image';
 import { createPhotoAction, updatePhotoAction } from './actions';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
@@ -108,7 +108,7 @@ export default function PhotoForm({
           { label, required, readOnly, hideIfEmpty },
         ]) =>
           (!hideIfEmpty || formData[key]) &&
-            <FieldSet
+            <FieldSetWithStatus
               key={key}
               id={key}
               label={label}
