@@ -1,8 +1,5 @@
 lockfileVersion: 5.4
 
-overrides:
-  '@auth/core': 0.13.0
-
 specifiers:
   '@tailwindcss/forms': ^0.5.6
   '@types/node': ^20.5.9
@@ -77,8 +74,8 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /@auth/core/0.13.0:
-    resolution: {integrity: sha512-StjrzUenaKfMr68kmvhiqfY0xvxRvg8wllmem9JAULpPAAAt3uwRUDXICWOP/PfWB4OZ2wQT7rgfm0n42b+Mjg==}
+  /@auth/core/0.0.0-manual.e9863699:
+    resolution: {integrity: sha512-/hVzGuFw7nAZimliD8kpuKnNjvkRu+jpaVhYB/FaIXLNJFNwhbO2MgXBnr5tvLIHgRJnR5C9UN5RNpQXiFHuSA==}
     peerDependencies:
       nodemailer: ^6.8.0
     peerDependenciesMeta:
@@ -2523,7 +2520,7 @@ packages:
       nodemailer:
         optional: true
     dependencies:
-      '@auth/core': 0.13.0
+      '@auth/core': 0.0.0-manual.e9863699
       next: 13.4.19_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
     dev: false
