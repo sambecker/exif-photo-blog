@@ -140,3 +140,6 @@ export const translatePhotoId = (shortId: string) => {
   const id = PHOTO_ID_FORWARDING_TABLE[shortId] || shortId;
   return id.length === 22 ? translator.toUUID(id) : id;
 };
+
+export const titleForPhoto = (photo: Photo) =>
+  photo.title || 'Untitled';

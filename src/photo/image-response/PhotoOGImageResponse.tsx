@@ -1,4 +1,4 @@
-import { Photo } from '..';
+import { Photo, titleForPhoto } from '..';
 import { getNextImageUrlForRequest } from '@/utility/image';
 import { formatModelShort } from '@/utility/exif';
 import { AiFillApple } from 'react-icons/ai';
@@ -34,7 +34,7 @@ export default function PhotoOGImageResponse({
           )}
         width={width}
         height={width / photo.aspectRatio}
-        alt={photo.title}
+        alt={titleForPhoto(photo)}
       />
       <div style={{
         display: 'flex',

@@ -1,5 +1,5 @@
 import { getNextImageUrlForRequest } from '@/utility/image';
-import { Photo } from '..';
+import { Photo, titleForPhoto } from '..';
 
 const IMAGE_WIDTH = 400;
 
@@ -38,7 +38,7 @@ export default function PhotoGridImageResponse({
               request,
               IMAGE_WIDTH,
             )}
-            alt={photo.title}
+            alt={titleForPhoto(photo)}
             width={IMAGE_WIDTH}
             height={IMAGE_WIDTH / photo.aspectRatio}
             style={{

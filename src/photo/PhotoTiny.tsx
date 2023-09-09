@@ -1,4 +1,4 @@
-import { Photo } from '.';
+import { Photo, titleForPhoto } from '.';
 import ImageTiny from '@/components/ImageTiny';
 import Link from 'next/link';
 import { cc } from '@/utility/css';
@@ -27,7 +27,7 @@ export default function PhotoTiny({
         src={photo.url}
         aspectRatio={photo.aspectRatio}
         blurData={photo.blurData}
-        alt={photo.title ?? 'Photo'}
+        alt={titleForPhoto(photo)}
       />
     </Link>
   );

@@ -1,4 +1,4 @@
-import { Photo } from '.';
+import { Photo, titleForPhoto } from '.';
 import SiteGrid from '@/components/SiteGrid';
 import ImageLarge from '@/components/ImageLarge';
 import { cc } from '@/utility/css';
@@ -30,7 +30,7 @@ export default function PhotoLarge({
       contentMain={
         <ImageLarge
           className="w-full"
-          alt={photo.title ?? 'Photo'}
+          alt={titleForPhoto(photo)}
           href={routeForPhoto(photo)}
           src={photo.url}
           aspectRatio={photo.aspectRatio}
@@ -50,7 +50,7 @@ export default function PhotoLarge({
               href={routeForPhoto(photo)}
               className="font-bold uppercase"
             >
-              {photo.title}
+              {titleForPhoto(photo)}
             </Link>
             <div className="uppercase">
               {photo.make} {photo.model}

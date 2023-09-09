@@ -63,7 +63,10 @@ export default async function AdminPage() {
                     href={routeForPhoto(photo)}
                     className="grow flex items-center gap-2"
                   >
-                    {photo.title}
+                    {photo.title ||
+                      <span className="text-gray-400 dark:text-gray-500">
+                        Untitled
+                      </span>}
                     {photo.priorityOrder !== null &&
                       <span className={cc(
                         'text-xs leading-none px-1.5 py-1 rounded-sm',
@@ -101,7 +104,7 @@ function AdminGrid ({
   title: string,
   children: ReactNode,
 }) {
-  return <div className="space-y-2">
+  return <div className="space-y-4">
     <div className="font-bold">
       {title}
     </div>

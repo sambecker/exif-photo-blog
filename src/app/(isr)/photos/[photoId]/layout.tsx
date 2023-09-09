@@ -2,7 +2,11 @@ import { PropsWithChildren } from 'react';
 import AnimateItems from '@/components/AnimateItems';
 import PhotoLinks from '@/photo/PhotoLinks';
 import SiteGrid from '@/components/SiteGrid';
-import { ogImageDescriptionForPhoto, ogImageUrlForPhoto } from '@/photo';
+import {
+  ogImageDescriptionForPhoto,
+  ogImageUrlForPhoto,
+  titleForPhoto,
+} from '@/photo';
 import PhotoGrid from '@/photo/PhotoGrid';
 import PhotoLarge from '@/photo/PhotoLarge';
 import { cc } from '@/utility/css';
@@ -24,7 +28,7 @@ export async function generateMetadata(
 
   if (!photo) { return {}; }
 
-  const title = photo.title;
+  const title = titleForPhoto(photo);
   const description = ogImageDescriptionForPhoto(photo);
   const images = ogImageUrlForPhoto(photo);
 

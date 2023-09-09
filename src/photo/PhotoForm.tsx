@@ -72,9 +72,8 @@ export default function PhotoForm({
     };
   }, [url, type]);
 
-  const isFormValid =
-    Boolean(formData.blurData) &&
-    Boolean(formData.title);
+  const isFormValid = FORM_METADATA_ENTRIES.every(([key, { required }]) =>
+    !required || Boolean(formData[key]));
 
   return (
     <div className="space-y-8 max-w-[38rem]">

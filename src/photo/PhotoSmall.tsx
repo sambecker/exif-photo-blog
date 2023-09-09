@@ -1,4 +1,4 @@
-import { Photo } from '.';
+import { Photo, titleForPhoto } from '.';
 import ImageSmall from '@/components/ImageSmall';
 import Link from 'next/link';
 import { cc } from '@/utility/css';
@@ -24,7 +24,7 @@ export default function PhotoSmall({
         aspectRatio={photo.aspectRatio}
         blurData={photo.blurData}
         className="w-full"
-        alt={photo.title ?? 'Photo'}
+        alt={titleForPhoto(photo)}
       />
     </Link>
   );

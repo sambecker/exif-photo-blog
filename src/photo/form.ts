@@ -18,13 +18,13 @@ type FormMeta = {
 };
 
 const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
-  title: { label: 'title', required: true },
+  title: { label: 'title' },
   id: { label: 'id', readOnly: true, hideIfEmpty: true },
   idShort: { label: 'short id', readOnly: true, hideIfEmpty: true },
   url: { label: 'url', readOnly: true },
   extension: { label: 'extension', readOnly: true },
   aspectRatio: { label: 'aspect ratio', readOnly: true },
-  blurData: { label: 'blur data', readOnly: true },
+  blurData: { label: 'blur data', readOnly: true, required: true },
   make: { label: 'camera make' },
   model: { label: 'camera model' },
   focalLength: { label: 'focal length' },

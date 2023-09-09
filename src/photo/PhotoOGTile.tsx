@@ -1,7 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Photo, ogImageDescriptionForPhoto, ogImageUrlForPhoto } from '@/photo';
+import {
+  Photo,
+  ogImageDescriptionForPhoto,
+  ogImageUrlForPhoto,
+  titleForPhoto,
+} from '@/photo';
 import { cc } from '@/utility/css';
 import Link from 'next/link';
 import { BiError } from 'react-icons/bi';
@@ -111,7 +116,7 @@ export default function PhotoOGTile({
         'border-t border-gray-200 dark:border-gray-800',
       )}>
         <div className="text-gray-800 dark:text-white font-medium">
-          {photo.title}
+          {titleForPhoto(photo)}
         </div>
         <div className="text-gray-500">
           {ogImageDescriptionForPhoto(photo)}
