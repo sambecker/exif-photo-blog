@@ -117,7 +117,7 @@ function AdminGrid ({
       <div className={cc(
         'w-full',
         'grid grid-cols-[auto_1fr_auto_auto] ',
-        'gap-3 items-center',
+        'gap-1.5 sm:gap-3 items-center',
       )}>
         {children}
       </div>
