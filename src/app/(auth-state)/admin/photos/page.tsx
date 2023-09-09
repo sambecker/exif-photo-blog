@@ -58,26 +58,31 @@ export default async function AdminPage() {
                     )}
                     photo={photo}
                   />
-                  <Link
-                    key={photo.id}
-                    href={routeForPhoto(photo)}
-                    className="grow flex items-center gap-2"
-                  >
-                    {photo.title ||
-                      <span className="text-gray-400 dark:text-gray-500">
-                        Untitled
-                      </span>}
-                    {photo.priorityOrder !== null &&
-                      <span className={cc(
-                        'text-xs leading-none px-1.5 py-1 rounded-sm',
-                        'dark:text-gray-300',
-                        'bg-gray-100 dark:bg-gray-800',
-                      )}>
-                        {photo.priorityOrder}
-                      </span>}
-                  </Link>
-                  <div className="text-gray-400 uppercase">
-                    {photo.takenAtNaive}
+                  <div className="flex flex-col md:flex-row">
+                    <Link
+                      key={photo.id}
+                      href={routeForPhoto(photo)}
+                      className="w-[50%] flex items-center gap-2"
+                    >
+                      {photo.title ||
+                        <span className="text-gray-400 dark:text-gray-500">
+                          Untitled
+                        </span>}
+                      {photo.priorityOrder !== null &&
+                        <span className={cc(
+                          'text-xs leading-none px-1.5 py-1 rounded-sm',
+                          'dark:text-gray-300',
+                          'bg-gray-100 dark:bg-gray-800',
+                        )}>
+                          {photo.priorityOrder}
+                        </span>}
+                    </Link>
+                    <div className={cc(
+                      'w-[50%] uppercase',
+                      'text-gray-400 dark:text-gray-500',
+                    )}>
+                      {photo.takenAtNaive}
+                    </div>
                   </div>
                   <EditButton href={`/admin/photos/${photo.idShort}/edit`} />
                   <FormWithConfirm
@@ -111,7 +116,7 @@ function AdminGrid ({
     <div className="min-w-[14rem] overflow-x-scroll">
       <div className={cc(
         'w-full',
-        'grid grid-cols-[auto_auto_1fr_auto_auto] ',
+        'grid grid-cols-[auto_1fr_auto_auto] ',
         'gap-3 items-center',
       )}>
         {children}
@@ -127,17 +132,23 @@ function EditButton ({
   href: string,
   label?: string,
 }) {
-  return <Link
-    href={href}
-    className="button"
-  >
-    <FaRegEdit className="translate-y-[-0.5px]" />
-    {label}
-  </Link>;
+  return (
+    <Link
+      title="Edit"
+      href={href}
+      className="button"
+    >
+      <FaRegEdit className="translate-y-[-0.5px]" />
+      <span className="hidden sm:inline-block">
+        {label}
+      </span>
+    </Link>
+  );
 }
 
 function DeleteButton () {
   return <SubmitButtonWithStatus
+    title="Delete"
     icon={<span className="inline-flex text-[18px]">×</span>}
   >
     Delete
@@ -174,7 +185,6 @@ function BlobUrls ({
         >
           {pathForBlobUrl(url)}
         </Link>
-        <div />
         <EditButton href={href} label="Setup" />
         <FormWithConfirm
           action={deleteBlobPhotoAction}

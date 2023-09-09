@@ -34,14 +34,16 @@ export default function SubmitButtonWithStatus(props: Props) {
       {(icon || pending) &&
         <span className={cc(
           'min-w-[1rem]',
-          'inline-flex',
+          'inline-flex justify-center sm:justify-normal',
           '-mx-0.5',
         )}>
           {pending
             ? <Spinner size={14} />
             : icon}
         </span>}
-      {children}
+      <span className="hidden sm:inline-block">
+        {children}
+      </span>
     </button>
   );
 };
