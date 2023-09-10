@@ -8,9 +8,9 @@ export default function middleware(req: NextRequest, res:NextResponse) {
   if (pathname === '/admin') {
     return NextResponse.redirect(new URL('/admin/photos', req.url));
   } else if (/^\/photos\/(.)+$/.test(pathname)) {
-    // Accept full /photos/* paths, but redirect to /p/*
+    // Accept /photos/* paths, but serve /p/*
     const matches = pathname.match(/^\/photos\/(.+)$/);
-    return NextResponse.redirect(new URL(
+    return NextResponse.rewrite(new URL(
       `/p/${matches?.[1]}`,
       req.url,
     ));
