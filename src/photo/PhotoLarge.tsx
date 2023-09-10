@@ -3,17 +3,17 @@ import SiteGrid from '@/components/SiteGrid';
 import ImageLarge from '@/components/ImageLarge';
 import { cc } from '@/utility/css';
 import Link from 'next/link';
-import { TbPhotoShare } from 'react-icons/tb';
 import { routeForPhoto } from '@/site/routes';
+import SharePhotoButton from './SharePhotoButton';
 
 export default function PhotoLarge({
   photo,
   priority,
-  showShare,
+  prefetchShare,
 }: {
   photo: Photo
   priority?: boolean
-  showShare?: boolean
+  prefetchShare?: boolean
 }) {
   const renderMiniGrid = (children: JSX.Element) =>
     <div className={cc(
@@ -83,21 +83,12 @@ export default function PhotoLarge({
             )}>
               {photo.takenAtNaiveFormatted}
             </div>
-            {showShare &&
-              <Link
-                href={routeForPhoto(photo, true)}
-                className={cc(
-                  'active:translate-y-[1px]',
-                  'text-gray-500 active:text-gray-600',
-                  'dark:text-gray-400 dark:active:text-gray-300',
-                )}
-                prefetch
-              >
-                <TbPhotoShare
-                  className="translate-x-[-1.5px]"
-                  size={17}
-                />
-              </Link>}
+            <div className="-translate-x-1">
+              <SharePhotoButton
+                photo={photo}
+                prefetch={prefetchShare}
+              />
+            </div>
           </>)}
         </div>}
     />

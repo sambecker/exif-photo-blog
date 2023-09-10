@@ -79,7 +79,7 @@ export default async function PhotoPage({
           key={photo.id}
           photo={photo}
           priority
-          showShare
+          prefetchShare
         />]}
       />
       <SiteGrid

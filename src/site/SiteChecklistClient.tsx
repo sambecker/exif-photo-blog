@@ -136,7 +136,7 @@ export default function SiteChecklistClient({
           <InfoBlock className="my-1.5" padding="tight">
             <div className="flex items-center gap-4">
               <span>{secret}</span>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-0.5">
                 <IconButton
                   onClick={() => {
                     navigator.clipboard.writeText(secret);

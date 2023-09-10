@@ -7,13 +7,19 @@ export default function IconButton({
   children,
   onClick,
   isLoading,
+  className,
 }: {
   children: React.ReactNode
   onClick?: () => void
   isLoading?: boolean
+  className?: string
 }) {
   return (
-    <span className="min-w-[1.1rem]">
+    <span className={cc(
+      className,
+      'relative inline-flex items-center justify-center',
+      'min-w-[1.2rem] min-h-[1.3rem]',
+    )}>
       {!isLoading
         ? <span
           onClick={onClick}
@@ -25,7 +31,7 @@ export default function IconButton({
           {children}
         </span>
         : <span className={cc(
-          'inline-block translate-x-[2px] translate-y-[1px]',
+          'inline-block translate-y-[1.5px]',
         )}>
           <Spinner size={12} />
         </span>}
