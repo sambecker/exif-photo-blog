@@ -186,6 +186,30 @@ export const getPhotos = async (
   return photos;
 };
 
+export const getPhotosTakenAfterPhotoInclusive = (
+  photo: Photo,
+  limit?: number,
+) =>
+  sql<PhotoDb>`
+    SELECT * FROM photos
+    WHERE taken_at <= ${photo.takenAt.toISOString()}
+    ORDER BY taken_at DESC
+    LIMIT ${limit}
+  `
+    .then(({ rows }) => rows.map(parsePhotoFromDb));
+    
+export const getPhotosTakenBeforePhoto = (
+  photo: Photo,
+  limit?: number,
+) =>
+  sql<PhotoDb>`
+    SELECT * FROM photos
+    WHERE taken_at > ${photo.takenAt.toISOString()}
+    ORDER BY taken_at ASC
+    LIMIT ${limit}
+  `
+    .then(({ rows }) => rows.map(parsePhotoFromDb));
+
 export const getPhotosCount = async () => sql`
   SELECT COUNT(*) FROM photos
 `.then(({ rows }) => parseInt(rows[0].count, 10));

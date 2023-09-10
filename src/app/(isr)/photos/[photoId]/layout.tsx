@@ -3,6 +3,7 @@ import AnimateItems from '@/components/AnimateItems';
 import PhotoLinks from '@/photo/PhotoLinks';
 import SiteGrid from '@/components/SiteGrid';
 import {
+  PHOTOS_PER_REQUEST,
   ogImageDescriptionForPhoto,
   ogImageUrlForPhoto,
   titleForPhoto,
@@ -12,7 +13,11 @@ import PhotoLarge from '@/photo/PhotoLarge';
 import { cc } from '@/utility/css';
 import { Metadata } from 'next';
 import { BASE_URL } from '@/site/config';
-import { getPhoto, getPhotos } from '@/services/postgres';
+import {
+  getPhoto,
+  getPhotosTakenAfterPhotoInclusive,
+  getPhotosTakenBeforePhoto,
+} from '@/services/postgres';
 import { redirect } from 'next/navigation';
 
 export const runtime = 'edge';
@@ -58,7 +63,12 @@ export default async function PhotoPage({
 
   if (!photo) { redirect('/'); }
 
-  const photos = await getPhotos();
+  const photosBefore = await getPhotosTakenBeforePhoto(photo, 1);
+  const photosAfter = await getPhotosTakenAfterPhotoInclusive(
+    photo,
+    PHOTOS_PER_REQUEST + 1,
+  );
+  const photos = photosBefore.concat(photosAfter);
 
   return <>
     {children}
@@ -75,8 +85,7 @@ export default async function PhotoPage({
       <SiteGrid
         sideFirstOnMobile
         contentMain={<PhotoGrid
-          photos={photos}
-          selectedPhoto={photo}
+          photos={photosAfter.slice(1)}
           animateOnFirstLoadOnly
           staggerOnFirstLoadOnly
         />}
