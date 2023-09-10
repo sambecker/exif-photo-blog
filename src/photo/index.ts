@@ -1,4 +1,4 @@
-import { BASE_URL } from '@/site/config';
+import { absoluteRouteForPhotoImage } from '@/site/routes';
 import { formatDateFromPostgresString } from '@/utility/date';
 import {
   formatAperture,
@@ -102,9 +102,6 @@ export const photoStatsAsString = (photo: Photo) => [
   photo.isoFormatted,
 ].join(' ');
 
-export const ogImageUrlForPhoto = (photo: Photo) =>
-  `${BASE_URL}/photos/${photo.idShort}/image`;
-
 export const ogImageDescriptionForPhoto = (photo: Photo) =>
   photo.takenAtNaiveFormatted?.toUpperCase();
 
@@ -137,11 +134,11 @@ export const getPhotosLimitForQuery = (
 export const generateImageMetaForPhoto = (photo?: Photo): Metadata => photo
   ? {
     openGraph: {
-      images: ogImageUrlForPhoto(photo),
+      images: absoluteRouteForPhotoImage(photo),
     },
     twitter: {
       card: 'summary_large_image',
-      images: ogImageUrlForPhoto(photo),
+      images: absoluteRouteForPhotoImage(photo),
     },
   }
   : {};

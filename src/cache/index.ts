@@ -7,8 +7,8 @@ const TAG_PHOTOS = 'photos';
 const PHOTO_PATHS = [
   '/',
   '/grid',
-  '/photos/[photoId]',
-  '/photos/[photoId]/image',
+  '/p/[photoId]',
+  '/p/[photoId]/image',
   '/admin/photos',
   '/admin/photos/[photoId]',
   '/admin/photos/[photoId]/edit',

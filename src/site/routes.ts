@@ -7,17 +7,20 @@ export const ROUTE_ADMIN_UPLOAD_BLOB_HANDLER = '/admin/uploads/blob';
 
 export const routeForPhoto = (photo: Photo, share?: boolean) =>
   share
-    ? `/photos/${photo.idShort}/share`
-    : `/photos/${photo.idShort}`;
+    ? `/p/${photo.idShort}/share`
+    : `/p/${photo.idShort}`;
 
 export const absoluteRouteForPhoto = (photo: Photo) =>
   `${BASE_URL}${routeForPhoto(photo)}`;
 
+export const absoluteRouteForPhotoImage = (photo: Photo) =>
+  `${absoluteRouteForPhoto(photo)}/image`;
+
 export const isRoutePhoto = (pathname = '') =>
-  /^\/photos\/[^/]+\/?$/.test(pathname);
+  /^\/p\/[^/]+\/?$/.test(pathname);
 
 export const isRoutePhotoShare = (pathname = '') =>
-  /^\/photos\/[^/]+\/share\/?$/.test(pathname);
+  /^\/p\/[^/]+\/share\/?$/.test(pathname);
 
 export const isRouteSignIn = (pathname = '') =>
   pathname.startsWith('/sign-in');

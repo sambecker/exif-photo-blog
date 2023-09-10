@@ -5,7 +5,6 @@ import SiteGrid from '@/components/SiteGrid';
 import {
   PHOTOS_PER_REQUEST,
   ogImageDescriptionForPhoto,
-  ogImageUrlForPhoto,
   titleForPhoto,
 } from '@/photo';
 import PhotoGrid from '@/photo/PhotoGrid';
@@ -19,6 +18,7 @@ import {
   getPhotosTakenBeforePhoto,
 } from '@/services/postgres';
 import { redirect } from 'next/navigation';
+import { absoluteRouteForPhotoImage } from '@/site/routes';
 
 export const runtime = 'edge';
 
@@ -35,7 +35,7 @@ export async function generateMetadata(
 
   const title = titleForPhoto(photo);
   const description = ogImageDescriptionForPhoto(photo);
-  const images = ogImageUrlForPhoto(photo);
+  const images = absoluteRouteForPhotoImage(photo);
 
   return {
     title,
@@ -44,7 +44,7 @@ export async function generateMetadata(
       title,
       images,
       description,
-      url: `${BASE_URL}/photos/${photo.idShort}`,
+      url: `${BASE_URL}/p/${photo.idShort}`,
     },
     twitter: {
       title,

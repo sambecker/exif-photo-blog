@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import {
   Photo,
   ogImageDescriptionForPhoto,
-  ogImageUrlForPhoto,
   titleForPhoto,
 } from '@/photo';
 import { cc } from '@/utility/css';
@@ -12,7 +11,7 @@ import Link from 'next/link';
 import { BiError } from 'react-icons/bi';
 import Spinner from '@/components/Spinner';
 import { IMAGE_OG_HEIGHT, IMAGE_OG_RATIO, IMAGE_OG_WIDTH } from '@/site';
-import { routeForPhoto } from '@/site/routes';
+import { absoluteRouteForPhotoImage, routeForPhoto } from '@/site/routes';
 
 export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 
@@ -84,7 +83,7 @@ export default function PhotoOGTile({
               loadingState === 'loading' && 'opacity-0',
               'transition-opacity',
             )}
-            src={ogImageUrlForPhoto(photo)}
+            src={absoluteRouteForPhotoImage(photo)}
             width={IMAGE_OG_WIDTH}
             height={IMAGE_OG_HEIGHT}
             onLoad={() => {
