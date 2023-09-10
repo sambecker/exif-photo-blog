@@ -1,4 +1,4 @@
-# 📷 Photo Blog
+# 📷 `EXIF` Photo Blog
 
 _This template is in `BETA`._
 

@@ -1,6 +1,5 @@
 {
-  "name": "photo-blog",
-  "private": true,
+  "name": "exif-photo-blog",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
