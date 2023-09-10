@@ -15,10 +15,6 @@ export default function MorePhotos({
 }) {
   const router = useRouter();
 
-  if (prefetch) {
-    router.prefetch(path);
-  }
-
   const [isPending, startTransition] = useTransition();
 
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -26,6 +22,12 @@ export default function MorePhotos({
   const advance = useCallback(() => startTransition(() => {
     router.push(path, { scroll: false });
   }), [router, path]);
+
+  useEffect(() => {
+    if (prefetch) {
+      router.prefetch(path);
+    }
+  }, [router, path, prefetch]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(e => {
