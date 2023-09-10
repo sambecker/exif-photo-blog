@@ -6,7 +6,7 @@ import { cc } from '@/utility/css';
 import SiteChecklistRow from './SiteChecklistRow';
 import { FiCheckSquare, FiExternalLink } from 'react-icons/fi';
 import { BiCopy, BiRefresh } from 'react-icons/bi';
-import IconButton from '@/components/LoaderIcon';
+import IconButton from '@/components/IconButton';
 import { toast } from 'sonner';
 import InfoBlock from '@/components/InfoBlock';
 

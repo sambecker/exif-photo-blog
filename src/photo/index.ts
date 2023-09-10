@@ -120,6 +120,18 @@ export const getNextPhoto = (photo: Photo, photos: Photo[]) => {
     : undefined;
 };
 
+export const getPhotosLimitForQuery = (
+  query?: string,
+  photosPerRequest = 12,
+) => {
+  const offsetInt = parseInt(query ?? '0');
+  const offset = (Number.isNaN(offsetInt) ? 0 : offsetInt);
+  return {
+    offset,
+    limit: photosPerRequest + offset * photosPerRequest,
+  };
+};
+
 export const generateImageMetaForPhoto = (photo?: Photo): Metadata => photo
   ? {
     openGraph: {

@@ -186,6 +186,10 @@ export const getPhotos = async (
   return photos;
 };
 
+export const getPhotosCount = async () => sql`
+  SELECT COUNT(*) FROM photos
+`.then(({ rows }) => parseInt(rows[0].count, 10));
+
 export const getPhoto = async (id: string): Promise<Photo | undefined> => {
   // Check for photo id forwarding
   // and convert short ids to uuids

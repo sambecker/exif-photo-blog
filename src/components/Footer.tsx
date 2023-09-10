@@ -6,7 +6,11 @@ import ThemeSwitcher from '@/site/ThemeSwitcher';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 
-export default function Footer() {
+export default function Footer({
+  showSignOut,
+}: {
+  showSignOut?: boolean
+}) {
   return (
     <SiteGrid
       contentMain={<div className={cc(
@@ -21,15 +25,16 @@ export default function Footer() {
           >
             Admin
           </Link>
-          <div
-            className={cc(
-              'cursor-pointer',
-              'hover:text-gray-600 dark:hover:text-gray-400',
-            )}
-            onClick={() => signOut()}
-          >
-            Sign out
-          </div>
+          {showSignOut &&
+            <div
+              className={cc(
+                'cursor-pointer',
+                'hover:text-gray-600 dark:hover:text-gray-400',
+              )}
+              onClick={() => signOut()}
+            >
+              Sign out
+            </div>}
         </div>
         <ThemeSwitcher />
       </div>}

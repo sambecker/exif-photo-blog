@@ -59,4 +59,10 @@
       hover:border-gray-300 dark:hover:border-gray-600
       hover:disabled:border-gray-200
   }
+  button.subtle, .button.subtle {
+    @apply
+      disabled:shadow-none
+      disabled:bg-transparent dark:disabled:bg-transparent
+      disabled:border-gray-100 dark:disabled:border-gray-900
+  }
 }
