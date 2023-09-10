@@ -62,7 +62,7 @@ export default async function AdminPage() {
                     <Link
                       key={photo.id}
                       href={routeForPhoto(photo)}
-                      className="w-[50%] flex items-center gap-2"
+                      className="sm:w-[50%] flex items-center gap-2"
                     >
                       {photo.title ||
                         <span className="text-gray-400 dark:text-gray-500">
@@ -78,7 +78,7 @@ export default async function AdminPage() {
                         </span>}
                     </Link>
                     <div className={cc(
-                      'w-[50%] uppercase',
+                      'sm:w-[50%] uppercase',
                       'text-gray-400 dark:text-gray-500',
                     )}>
                       {photo.takenAtNaive}
@@ -117,7 +117,7 @@ function AdminGrid ({
       <div className={cc(
         'w-full',
         'grid grid-cols-[auto_1fr_auto_auto] ',
-        'gap-1.5 sm:gap-3 items-center',
+        'gap-2 sm:gap-3 items-center',
       )}>
         {children}
       </div>
