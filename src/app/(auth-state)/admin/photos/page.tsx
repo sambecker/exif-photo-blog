@@ -17,16 +17,27 @@ import {
   getBlobPhotoUrls,
   getBlobUploadUrls,
 } from '@/services/blob';
-import { getPhotos } from '@/services/postgres';
+import { getPhotos, getPhotosCount } from '@/services/postgres';
 import { routeForPhoto } from '@/site/routes';
-import { titleForPhoto } from '@/photo';
+import { getPhotosLimitForQuery, titleForPhoto } from '@/photo';
+import MorePhotos from '@/components/MorePhotos';
 
 export const runtime = 'edge';
 
 const DEBUG_PHOTO_BLOBS = false;
 
-export default async function AdminPage() {
-  const photos = await getPhotos('createdAt');
+export default async function AdminPage({
+  searchParams,
+}: {
+  searchParams: { next: string };
+}) {
+  const { offset, limit } = getPhotosLimitForQuery(searchParams.next);
+
+  const photos = await getPhotos('createdAt', limit);
+
+  const count = await getPhotosCount();
+
+  const showMorePhotos = count > photos.length;
 
   const blobUploadUrls = await getBlobUploadUrls(); 
   const blobPhotoUrls = DEBUG_PHOTO_BLOBS
@@ -49,55 +60,59 @@ export default async function AdminPage() {
                 blobUrls={blobPhotoUrls}
                 label={`Photos Files (${blobPhotoUrls.length})`}
               />}
-            <AdminGrid title={`Photos (${photos.length})`}>
-              {photos.map(photo =>
-                <Fragment key={photo.id}>
-                  <PhotoTiny
-                    className={cc(
-                      'rounded-sm overflow-hidden',
-                      'border border-gray-200 dark:border-gray-800',
-                    )}
-                    photo={photo}
-                  />
-                  <div className="flex flex-col md:flex-row">
-                    <Link
-                      key={photo.id}
-                      href={routeForPhoto(photo)}
-                      className="sm:w-[50%] flex items-center gap-2"
-                    >
-                      {photo.title ||
-                        <span className="text-gray-400 dark:text-gray-500">
-                          Untitled
-                        </span>}
-                      {photo.priorityOrder !== null &&
-                        <span className={cc(
-                          'text-xs leading-none px-1.5 py-1 rounded-sm',
-                          'dark:text-gray-300',
-                          'bg-gray-100 dark:bg-gray-800',
-                        )}>
-                          {photo.priorityOrder}
-                        </span>}
-                    </Link>
-                    <div className={cc(
-                      'sm:w-[50%] uppercase',
-                      'text-gray-400 dark:text-gray-500',
-                    )}>
-                      {photo.takenAtNaive}
+            <div className="space-y-4">
+              <AdminGrid title={`Photos (${photos.length})`}>
+                {photos.map(photo =>
+                  <Fragment key={photo.id}>
+                    <PhotoTiny
+                      className={cc(
+                        'rounded-sm overflow-hidden',
+                        'border border-gray-200 dark:border-gray-800',
+                      )}
+                      photo={photo}
+                    />
+                    <div className="flex flex-col md:flex-row">
+                      <Link
+                        key={photo.id}
+                        href={routeForPhoto(photo)}
+                        className="sm:w-[50%] flex items-center gap-2"
+                      >
+                        {photo.title ||
+                          <span className="text-gray-400 dark:text-gray-500">
+                            Untitled
+                          </span>}
+                        {photo.priorityOrder !== null &&
+                          <span className={cc(
+                            'text-xs leading-none px-1.5 py-1 rounded-sm',
+                            'dark:text-gray-300',
+                            'bg-gray-100 dark:bg-gray-800',
+                          )}>
+                            {photo.priorityOrder}
+                          </span>}
+                      </Link>
+                      <div className={cc(
+                        'sm:w-[50%] uppercase',
+                        'text-gray-400 dark:text-gray-500',
+                      )}>
+                        {photo.takenAtNaive}
+                      </div>
                     </div>
-                  </div>
-                  <EditButton href={`/admin/photos/${photo.idShort}/edit`} />
-                  <FormWithConfirm
-                    action={deletePhotoAction}
-                    confirmText={
-                      // eslint-disable-next-line max-len
-                      `Are you sure you want to delete "${titleForPhoto(photo)}?"`}
-                  >
-                    <input type="hidden" name="id" value={photo.id} />
-                    <input type="hidden" name="url" value={photo.url} />
-                    <DeleteButton />
-                  </FormWithConfirm>
-                </Fragment>)}
-            </AdminGrid>
+                    <EditButton href={`/admin/photos/${photo.idShort}/edit`} />
+                    <FormWithConfirm
+                      action={deletePhotoAction}
+                      confirmText={
+                        // eslint-disable-next-line max-len
+                        `Are you sure you want to delete "${titleForPhoto(photo)}?"`}
+                    >
+                      <input type="hidden" name="id" value={photo.id} />
+                      <input type="hidden" name="url" value={photo.url} />
+                      <DeleteButton />
+                    </FormWithConfirm>
+                  </Fragment>)}
+              </AdminGrid>
+              {showMorePhotos &&
+                <MorePhotos path={`/admin/photos?next=${offset + 1}`} />}
+            </div>
           </div>
         </div>}
     />
