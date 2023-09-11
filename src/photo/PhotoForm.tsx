@@ -86,6 +86,7 @@ export default function PhotoForm({
         )}
         width={THUMBNAIL_WIDTH}
         height={THUMBNAIL_HEIGHT}
+        priority
       />
       <canvas
         ref={canvasRef}

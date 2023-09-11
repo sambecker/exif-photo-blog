@@ -48,3 +48,7 @@ _Database schema changes are expected._
 1. Open project on Vercel
 2. Click "Analytics" tab
 3. Follow "Enable Web Analytics" instructions (`@vercel/analytics` is already part of your project)
+
+### 6. Remove repo link (optional)
+
+1. Set `NEXT_PUBLIC_HIDE_REPO_LINK = 1`

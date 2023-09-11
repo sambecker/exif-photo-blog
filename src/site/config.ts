@@ -18,6 +18,8 @@ export const BASE_URL = process.env.NODE_ENV === 'production'
   ? `https://${SITE_DOMAIN}`
   : 'http://localhost:3000';
 
+export const SHOW_REPO_LINK = process.env.NEXT_PUBLIC_HIDE_REPO_LINK !== '1';
+
 export const CONFIG_CHECKLIST_STATUS = {
   hasTitle: (process.env.NEXT_PUBLIC_SITE_TITLE ?? '').length > 0,
   hasDomain: (process.env.NEXT_PUBLIC_SITE_DOMAIN ?? '').length > 0,

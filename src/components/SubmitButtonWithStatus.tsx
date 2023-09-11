@@ -41,7 +41,9 @@ export default function SubmitButtonWithStatus(props: Props) {
             ? <Spinner size={14} />
             : icon}
         </span>}
-      <span className="hidden sm:inline-block">
+      <span className={cc(
+        icon !== undefined && 'hidden sm:inline-block',
+      )}>
         {children}
       </span>
     </button>

@@ -13,7 +13,7 @@ const LINK_STYLE = cc(
   'hover:text-gray-600',
 );
 
-export default function AuthNav() {
+export default function FooterAuth() {
   const { data: session, status  } = useSession();
 
   const hasState = status !== 'loading';
@@ -26,7 +26,7 @@ export default function AuthNav() {
         'flex items-center',
         'text-gray-400 dark:text-gray-500',
       )}>
-        <div className="flex gap-4 flex-grow">
+        <div className="flex gap-x-4 gap-y-1 flex-wrap flex-grow">
           {hasState
             ? <>
               {session?.user === undefined &&

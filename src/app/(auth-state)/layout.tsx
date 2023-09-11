@@ -1,4 +1,4 @@
-import AuthNav from '@/components/AuthNav';
+import FooterAuth from '@/components/FooterAuth';
 import { SessionProvider } from 'next-auth/react';
 
 export default function RootLayout({
@@ -10,7 +10,7 @@ export default function RootLayout({
     <SessionProvider>
       {children}
       <div className="my-8">
-        <AuthNav />
+        <FooterAuth />
       </div>
     </SessionProvider>
   );

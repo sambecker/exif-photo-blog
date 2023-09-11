@@ -19,6 +19,7 @@ import {
 } from '@/services/blob';
 import { getPhotos } from '@/services/postgres';
 import { routeForPhoto } from '@/site/routes';
+import { titleForPhoto } from '@/photo';
 
 export const runtime = 'edge';
 
@@ -88,7 +89,8 @@ export default async function AdminPage() {
                   <FormWithConfirm
                     action={deletePhotoAction}
                     confirmText={
-                      `Are you sure you want to delete "${photo.title}?"`}
+                      // eslint-disable-next-line max-len
+                      `Are you sure you want to delete "${titleForPhoto(photo)}?"`}
                   >
                     <input type="hidden" name="id" value={photo.id} />
                     <input type="hidden" name="url" value={photo.url} />

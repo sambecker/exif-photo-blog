@@ -5,8 +5,10 @@ import SiteGrid from './SiteGrid';
 import ThemeSwitcher from '@/site/ThemeSwitcher';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
+import { SHOW_REPO_LINK } from '@/site/config';
+import RepoLink from './RepoLink';
 
-export default function Footer({
+export default function FooterStatic({
   showSignOut,
 }: {
   showSignOut?: boolean
@@ -18,13 +20,15 @@ export default function Footer({
         'flex items-center',
         'text-gray-400 dark:text-gray-500',
       )}>
-        <div className="flex gap-4 flex-grow">
+        <div className="flex gap-x-4 gap-y-1 flex-grow flex-wrap">
           <Link
             href="/admin/photos"
             className="hover:text-gray-600 dark:hover:text-gray-400"
           >
             Admin
           </Link>
+          {SHOW_REPO_LINK &&
+            <RepoLink />}
           {showSignOut &&
             <div
               className={cc(

@@ -1,4 +1,4 @@
-import Footer from '@/components/Footer';
+import FooterStatic from '@/components/FooterStatic';
 
 export default function RootLayout({
   children,
@@ -8,7 +8,7 @@ export default function RootLayout({
   return (
     <>
       {children}
-      <Footer />
+      <FooterStatic />
     </>
   );
 }
