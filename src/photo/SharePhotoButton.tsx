@@ -33,6 +33,7 @@ export default function SharePhotoButton({
         router.push(shareRoute))}
       isLoading={isPending}
       className={cc(
+        'min-h-[1.75rem]',
         'active:translate-y-[1px]',
         'text-gray-500 active:text-gray-600',
         'dark:text-gray-400 dark:active:text-gray-300',
