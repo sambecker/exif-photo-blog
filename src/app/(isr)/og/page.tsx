@@ -1,14 +1,30 @@
-import StaggeredPhotos from '@/photo/StaggeredPhotos';
-import { getPhotos } from '@/services/postgres';
+import MorePhotos from '@/components/MorePhotos';
+import { getPhotosLimitForQuery } from '@/photo';
+import StaggeredOgPhotos from '@/photo/StaggeredOgPhotos';
+import { getPhotos, getPhotosCount } from '@/services/postgres';
 
 export const runtime = 'edge';
 
-export default async function GridPage() {
-  const photos = await getPhotos();
+export default async function GridPage({
+  searchParams,
+}: {
+  searchParams: { next: string };
+}) {
+  const { offset, limit } = getPhotosLimitForQuery(searchParams.next);
+
+  const photos = await getPhotos(undefined, limit);
+
+  const count = await getPhotosCount();
+
+  const showMorePhotos = count > photos.length;
   
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-      <StaggeredPhotos photos={photos} />
+    <div className="space-y-3">
+      <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <StaggeredOgPhotos photos={photos} />
+      </div>
+      {showMorePhotos &&
+        <MorePhotos path={`/og?next=${offset + 1}`} />}
     </div>
   );
 }
