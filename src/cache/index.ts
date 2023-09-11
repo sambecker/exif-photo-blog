@@ -45,7 +45,7 @@ export const getPhotoCached: typeof getPhoto = (...args) =>
 export const getImageCacheHeadersForAuth = async (session?: Session) => {
   return {
     'Cache-Control': !session?.user
-      ? 's-maxage=3600, stale-while-revalidate'
-      : 's-maxage=1, stale-while-revalidate',
+      ? 's-maxage=3600, stale-while-revalidate=59'
+      : 's-maxage=1, stale-while-revalidate=59',
   };
 };
