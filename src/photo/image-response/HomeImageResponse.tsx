@@ -28,8 +28,10 @@ export default function HomeImageResponse({
       <PhotoGridImageResponse {...{
         photos,
         request,
+        nextImageWidth: 200,
         colCount: 4,
         rowCount: 3,
+        gap: 6,
         width,
         height,
       }} />

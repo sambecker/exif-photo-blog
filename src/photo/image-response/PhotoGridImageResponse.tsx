@@ -1,11 +1,10 @@
 import { getNextImageUrlForRequest } from '@/utility/image';
 import { Photo, titleForPhoto } from '..';
 
-const IMAGE_WIDTH = 400;
-
 export default function PhotoGridImageResponse({
   photos,
   request,
+  nextImageWidth = 400,
   height,
   width,
   colCount,
@@ -15,6 +14,7 @@ export default function PhotoGridImageResponse({
 }: {
   photos: Photo[]
   request: Request
+  nextImageWidth?: 200 | 400,
   height?: number
   width: number
   colCount: number
@@ -65,11 +65,11 @@ export default function PhotoGridImageResponse({
                 src={getNextImageUrlForRequest(
                   photo.url,
                   request,
-                  IMAGE_WIDTH,
+                  nextImageWidth,
                 )}
                 alt={titleForPhoto(photo)}
-                width={IMAGE_WIDTH}
-                height={IMAGE_WIDTH / photo.aspectRatio}
+                width={nextImageWidth}
+                height={nextImageWidth / photo.aspectRatio}
                 style={{
                   display: 'flex',
                   width: photoWidth,

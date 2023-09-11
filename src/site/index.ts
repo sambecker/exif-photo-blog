@@ -10,7 +10,13 @@ export const IMAGE_LARGE_WIDTH = 900;
 // 16:9 og image ratio
 export const IMAGE_OG_RATIO = 16 / 9;
 export const IMAGE_OG_WIDTH = 1200;
-export const IMAGE_OG_HEIGHT = IMAGE_OG_WIDTH * (1 / IMAGE_OG_RATIO);
+export const IMAGE_OG_HEIGHT =
+  IMAGE_OG_WIDTH * (1 / IMAGE_OG_RATIO);
+
+// 16:9 og image ratio, small
+export const IMAGE_OG_SMALL_WIDTH = 800;
+export const IMAGE_OG_SMALL_HEIGHT =
+  IMAGE_OG_SMALL_WIDTH * (1 / IMAGE_OG_RATIO);
 
 // 3:2 og grid ratio
 export const GRID_OG_RATIO = 1.33;

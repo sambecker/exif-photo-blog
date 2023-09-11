@@ -6,7 +6,7 @@ const STORE_ID = process.env.BLOB_READ_WRITE_TOKEN?.match(
 
 const nextConfig = {
   images: {
-    imageSizes: [400, 1050, 1200],
+    imageSizes: [200, 400, 1050, 1200],
     remotePatterns: [{
       protocol: 'https',
       hostname: `${STORE_ID}.public.blob.vercel-storage.com`,
