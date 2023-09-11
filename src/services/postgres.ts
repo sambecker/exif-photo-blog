@@ -108,7 +108,7 @@ export const sqlUpdatePhotoInDb = (photo: PhotoDbInsert) =>
     latitude=${photo.latitude},
     longitude=${photo.longitude},
     film_simulation=${photo.filmSimulation},
-    priority_order=${photo.priorityOrder},
+    priority_order=${photo.priorityOrder || null},
     taken_at=${photo.takenAt},
     taken_at_naive=${photo.takenAtNaive},
     updated_at=${(new Date()).toISOString()}
@@ -146,7 +146,7 @@ const sqlGetPhotosFromDbSortedByPriority = (
 ) =>
   sql<PhotoDb>`
     SELECT * FROM photos
-    ORDER BY priority_order ASC
+    ORDER BY priority_order ASC, taken_at DESC
     LIMIT ${limit} OFFSET ${offset}
   `
     .then(({ rows }) => rows.map(parsePhotoFromDb));
