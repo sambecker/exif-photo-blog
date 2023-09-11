@@ -61,7 +61,7 @@ export default async function AdminPage({
                 label={`Photos Files (${blobPhotoUrls.length})`}
               />}
             <div className="space-y-4">
-              <AdminGrid title={`Photos (${photos.length})`}>
+              <AdminGrid title={`Photos (${count})`}>
                 {photos.map(photo =>
                   <Fragment key={photo.id}>
                     <PhotoTiny
