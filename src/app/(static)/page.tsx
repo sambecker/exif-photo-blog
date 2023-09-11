@@ -7,7 +7,7 @@ import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { getPhotos, getPhotosCount } from '@/services/postgres';
 import { Metadata } from 'next';
 
-export const dynamic = 'force-static';
+export const runtime = 'edge';
 
 export async function generateMetadata(): Promise<Metadata> {
   const photos = await getPhotos();
