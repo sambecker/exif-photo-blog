@@ -5,6 +5,8 @@ export const ROUTE_ADMIN_UPLOAD = '/admin/uploads';
 
 export const ROUTE_ADMIN_UPLOAD_BLOB_HANDLER = '/admin/uploads/blob';
 
+export const ABSOLUTE_ROUTE_FOR_HOME_IMAGE = `${BASE_URL}/home-image`;
+
 export const routeForPhoto = (photo: Photo, share?: boolean) =>
   share
     ? `/p/${photo.idShort}/share`

@@ -1,6 +1,6 @@
 import MorePhotos from '@/components/MorePhotos';
 import SiteGrid from '@/components/SiteGrid';
-import { generateImageMetaForPhoto, getPhotosLimitForQuery } from '@/photo';
+import { generateOgImageMetaForPhotos, getPhotosLimitForQuery } from '@/photo';
 import PhotoGrid from '@/photo/PhotoGrid';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { getPhotos, getPhotosCount } from '@/services/postgres';
@@ -10,7 +10,7 @@ export const runtime = 'edge';
 
 export async function generateMetadata(): Promise<Metadata> {
   const photos = await getPhotos();
-  return generateImageMetaForPhoto(photos[0]);
+  return generateOgImageMetaForPhotos(photos);
 }
 
 export default async function GridPage({

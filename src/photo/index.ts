@@ -1,4 +1,7 @@
-import { absoluteRouteForPhotoImage } from '@/site/routes';
+import {
+  ABSOLUTE_ROUTE_FOR_HOME_IMAGE,
+  absoluteRouteForPhotoImage,
+} from '@/site/routes';
 import { formatDateFromPostgresString } from '@/utility/date';
 import {
   formatAperture,
@@ -131,17 +134,34 @@ export const getPhotosLimitForQuery = (
   };
 };
 
-export const generateImageMetaForPhoto = (photo?: Photo): Metadata => photo
-  ? {
-    openGraph: {
-      images: absoluteRouteForPhotoImage(photo),
-    },
-    twitter: {
-      card: 'summary_large_image',
-      images: absoluteRouteForPhotoImage(photo),
-    },
+export const generateOgImageMetaForPhotos = (photos: Photo[]): Metadata => {
+  if (photos.length >= 6) {
+    // Show multiple photos once a 3x2 grid is available
+    return {
+      openGraph: {
+        images: ABSOLUTE_ROUTE_FOR_HOME_IMAGE,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        images: ABSOLUTE_ROUTE_FOR_HOME_IMAGE,
+      },
+    };
+  } else if (photos.length > 0) {
+    // Otherwise show the first photo
+    const photo = photos[0];
+    return {
+      openGraph: {
+        images: absoluteRouteForPhotoImage(photo),
+      },
+      twitter: {
+        card: 'summary_large_image',
+        images: absoluteRouteForPhotoImage(photo),
+      },
+    };
   }
-  : {};
+  // If there are no photos, refrain from showing an OG image
+  return {};
+};
 
 const PHOTO_ID_FORWARDING_TABLE: Record<string, string> = JSON.parse(
   process.env.PHOTO_ID_FORWARDING_TABLE || '{}'

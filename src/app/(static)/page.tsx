@@ -1,12 +1,18 @@
 import AnimateItems from '@/components/AnimateItems';
 import MorePhotos from '@/components/MorePhotos';
 import SiteGrid from '@/components/SiteGrid';
-import { getPhotosLimitForQuery } from '@/photo';
+import { generateOgImageMetaForPhotos, getPhotosLimitForQuery } from '@/photo';
 import PhotoLarge from '@/photo/PhotoLarge';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { getPhotos, getPhotosCount } from '@/services/postgres';
+import { Metadata } from 'next';
 
 export const runtime = 'edge';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const photos = await getPhotos();
+  return generateOgImageMetaForPhotos(photos);
+}
 
 export default async function HomePage({
   searchParams,

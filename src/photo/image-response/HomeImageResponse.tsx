@@ -14,6 +14,10 @@ export default function HomeImageResponse({
   height: number
   fontFamily: string
 }) {
+  const grid = photos.length >= 12
+    ? { colCount: 4, rowCount: 3 }
+    : { colCount: 3, rowCount: 2 };
+
   return (
     <div style={{
       display: 'flex',
@@ -29,8 +33,7 @@ export default function HomeImageResponse({
         photos,
         request,
         nextImageWidth: 200,
-        colCount: 4,
-        rowCount: 3,
+        ...grid,
         gap: 6,
         width,
         height,

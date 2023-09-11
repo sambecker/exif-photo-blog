@@ -23,13 +23,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
-    images: '/home-image',
   },
   twitter: {
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
-    images: '/home-image',
-    card: 'summary_large_image',
   },
   icons: [{
     url: '/favicon.ico',
