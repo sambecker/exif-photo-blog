@@ -177,6 +177,15 @@ export const getPhotos = async (
       );
       await sqlCreatePhotosTable();
       photos = await getPhotosRequest(limit, offset);
+    } else if (/endpoint is in transition/i.test(e.message)) {
+      // Wait 5 seconds and try again
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      try {
+        photos = await getPhotosRequest(limit, offset);
+      } catch (e: any) {
+        console.log(`sql get error on retry (after 5000ms): ${e.message} `);
+        throw e;
+      }
     } else {
       console.log(`sql get error: ${e.message} `);
       throw e;
