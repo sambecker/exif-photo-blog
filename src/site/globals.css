@@ -70,4 +70,9 @@
       disabled:bg-transparent dark:disabled:bg-transparent
       disabled:border-gray-100 dark:disabled:border-gray-900
   }
+  .toaster [data-sonner-toast] {
+    @apply
+      font-mono
+      !border-gray-200 dark:!border-gray-800
+  }
 }

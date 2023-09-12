@@ -8,7 +8,7 @@ export default function ToasterClient() {
   return (
     <Toaster
       theme={theme as 'system' | 'light' | 'dark'}
-      className="!font-mono"
+      className="toaster"
     />
   );
 }
