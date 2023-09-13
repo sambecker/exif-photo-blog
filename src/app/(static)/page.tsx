@@ -19,7 +19,7 @@ export default async function HomePage({
 }: {
   searchParams: { next: string };
 }) {
-  const { offset, limit } = getPhotosLimitForQuery(searchParams.next);
+  const { offset, limit } = getPhotosLimitForQuery(searchParams.next, 12);
 
   const photos = await getPhotos(undefined, limit);
 
@@ -31,7 +31,7 @@ export default async function HomePage({
     photos.length > 0
       ? <div className="space-y-4">
         <AnimateItems
-          className="space-y-2"
+          className="space-y-1"
           duration={0.7}
           staggerDelay={0.15}
           distanceOffset={0}

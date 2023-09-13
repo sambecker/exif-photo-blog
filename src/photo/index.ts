@@ -14,8 +14,6 @@ import camelcaseKeys from 'camelcase-keys';
 import { Metadata } from 'next';
 import short from 'short-uuid';
 
-export const PHOTOS_PER_REQUEST = 12;
-
 const translator = short();
 
 // Core EXIF data
@@ -124,7 +122,7 @@ export const getNextPhoto = (photo: Photo, photos: Photo[]) => {
 
 export const getPhotosLimitForQuery = (
   query?: string,
-  photosPerRequest = PHOTOS_PER_REQUEST,
+  photosPerRequest = 24,
 ) => {
   const offsetInt = parseInt(query ?? '0');
   const offset = (Number.isNaN(offsetInt) ? 0 : offsetInt);

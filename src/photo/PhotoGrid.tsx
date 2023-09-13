@@ -29,8 +29,8 @@ export default function PhotoGrid({
     <>
       <AnimateItems
         className={cc(
-          'grid gap-1 sm:gap-2',
-          'grid-cols-2 sm:grid-cols-4 md:grid-cols-3',
+          'grid gap-1',
+          'grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
           'items-center',
         )}
         duration={fast ? 0.3 : undefined}
