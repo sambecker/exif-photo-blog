@@ -3,7 +3,6 @@ import AnimateItems from '@/components/AnimateItems';
 import PhotoLinks from '@/photo/PhotoLinks';
 import SiteGrid from '@/components/SiteGrid';
 import {
-  PHOTOS_PER_REQUEST,
   ogImageDescriptionForPhoto,
   titleForPhoto,
 } from '@/photo';
@@ -19,6 +18,8 @@ import {
 } from '@/services/postgres';
 import { redirect } from 'next/navigation';
 import { absoluteRouteForPhotoImage } from '@/site/routes';
+
+const THUMBNAILS_TO_SHOW_MAX = 12;
 
 export const runtime = 'edge';
 
@@ -66,7 +67,7 @@ export default async function PhotoPage({
   const photosBefore = await getPhotosTakenBeforePhoto(photo, 1);
   const photosAfter = await getPhotosTakenAfterPhotoInclusive(
     photo,
-    PHOTOS_PER_REQUEST + 1,
+    THUMBNAILS_TO_SHOW_MAX + 1,
   );
   const photos = photosBefore.concat(photosAfter);
 
