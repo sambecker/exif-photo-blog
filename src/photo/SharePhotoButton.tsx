@@ -38,6 +38,7 @@ export default function SharePhotoButton({
         'text-gray-500 active:text-gray-600',
         'dark:text-gray-400 dark:active:text-gray-300',
       )}
+      spinnerColor="text"
     >
       <TbPhotoShare size={17} />
     </IconButton>

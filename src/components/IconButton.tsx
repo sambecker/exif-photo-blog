@@ -1,18 +1,22 @@
 'use client';
 
 import { cc } from '@/utility/css';
-import Spinner from './Spinner';
+import Spinner, { SpinnerColor } from './Spinner';
 
 export default function IconButton({
   children,
   onClick,
   isLoading,
   className,
+  spinnerColor,
+  spinnerSize,
 }: {
   children: React.ReactNode
   onClick?: () => void
   isLoading?: boolean
   className?: string
+  spinnerColor?: SpinnerColor
+  spinnerSize?: number
 }) {
   return (
     <span className={cc(
@@ -33,7 +37,10 @@ export default function IconButton({
         : <span className={cc(
           'inline-block translate-y-[1.5px]',
         )}>
-          <Spinner size={12} />
+          <Spinner
+            color={spinnerColor}
+            size={spinnerSize}
+          />
         </span>}
     </span>
   );

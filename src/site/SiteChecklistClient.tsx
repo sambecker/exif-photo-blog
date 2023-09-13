@@ -153,6 +153,7 @@ export default function SiteChecklistClient({
                 <IconButton
                   onClick={refreshSecret}
                   isLoading={isPendingSecret}
+                  spinnerColor="text"
                 >
                   <BiRefresh size={18} />
                 </IconButton>

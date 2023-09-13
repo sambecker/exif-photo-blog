@@ -24,6 +24,17 @@ module.exports = {
       fontFamily: {
         'mono': ['var(--font-ibm-plex-mono)', ...defaultTheme.fontFamily.mono],
       },
+      animation: {
+        'rotate-pulse':
+          'rotate-pulse 0.75s linear infinite normal both running',
+      },
+      keyframes: {
+        'rotate-pulse': {
+          '0%': { rotate: '0deg', scale: '1' },
+          '50%': { rotate: '180deg', scale: '0.8' },
+          '100%': { rotate: '360deg', scale: '1' },
+        },
+      },
     },
   },
   plugins: [

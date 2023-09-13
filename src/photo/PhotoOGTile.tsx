@@ -9,9 +9,9 @@ import {
 import { cc } from '@/utility/css';
 import Link from 'next/link';
 import { BiError } from 'react-icons/bi';
-import Spinner from '@/components/Spinner';
 import { IMAGE_OG_HEIGHT, IMAGE_OG_RATIO, IMAGE_OG_WIDTH } from '@/site';
 import { absoluteRouteForPhotoImage, routeForPhoto } from '@/site/routes';
+import Spinner from '@/components/Spinner';
 
 export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 
@@ -64,7 +64,7 @@ export default function PhotoOGTile({
             'absolute top-0 left-0 right-0 bottom-0 z-10',
             'flex items-center justify-center',
           )}>
-            <Spinner />
+            <Spinner size={40} />
           </div>}
         {loadingState === 'failed' &&
           <div className={cc(

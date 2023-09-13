@@ -24,7 +24,7 @@ export default function SubmitButtonWithStatus(props: Props) {
   return (
     <button
       type="submit"
-      disabled={disabled || pending}
+      disabled={disabled}
       className={cc(
         className,
         'inline-flex items-center gap-2',
