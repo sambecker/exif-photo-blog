@@ -14,6 +14,7 @@ export default function RepoLink() {
         className={cc(
           'flex items-center gap-1',
           'text-black dark:text-white',
+          'hover:underline',
         )}
       >
         <BiLogoGithub className="translate-y-[1px]" />

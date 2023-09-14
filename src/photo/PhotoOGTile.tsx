@@ -49,6 +49,7 @@ export default function PhotoOGTile({
       key={photo.id}
       href={routeForPhoto(photo)}
       className={cc(
+        'group',
         'block w-full rounded-md overflow-hidden',
         'border shadow-sm',
         'border-gray-200 dark:border-gray-800',
@@ -112,6 +113,7 @@ export default function PhotoOGTile({
         'flex flex-col gap-1 p-3',
         'font-sans leading-none',
         'bg-gray-50 dark:bg-gray-900/50',
+        'group-active:bg-gray-100 group-active:dark:bg-black',
         'border-t border-gray-200 dark:border-gray-800',
       )}>
         <div className="text-gray-800 dark:text-white font-medium">
