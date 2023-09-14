@@ -88,7 +88,6 @@ export default async function PhotoPage({
         contentMain={<PhotoGrid
           photos={photosAfter.slice(1)}
           animateOnFirstLoadOnly
-          staggerOnFirstLoadOnly
         />}
         contentSide={<div className={cc(
           'grid grid-cols-2',

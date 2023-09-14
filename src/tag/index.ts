@@ -5,7 +5,7 @@ export const pageTitleForTag = (tag: string) =>
   `${capitalizeWords(tag.replaceAll('-', ' '))} Photos`;
 
 export const ogTitleForTag = (tag: string) =>
-  `🏷️ ${tag.replaceAll('-', ' ').toUpperCase()}`;
+  `🏷️ ${capitalizeWords(tag.replaceAll('-', ' '))}`;
 
 export const descriptionForTaggedPhotos = (photos:Photo[]) =>
-  `${photos.length} ${photos.length === 1 ? 'photo' : 'photos'}`;
+  `${photos.length} tagged ${photos.length === 1 ? 'photo' : 'photos'}`;

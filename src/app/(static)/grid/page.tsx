@@ -30,10 +30,7 @@ export default async function GridPage({
     photos.length > 0
       ? <SiteGrid
         contentMain={<div className="space-y-4">
-          <PhotoGrid
-            photos={photos}
-            staggerOnFirstLoadOnly
-          />
+          <PhotoGrid photos={photos} />
           {showMorePhotos &&
             <MorePhotos path={`/grid?next=${offset + 1}`} />}
         </div>}

@@ -13,7 +13,7 @@ export default function PhotoGrid({
   offset = 0,
   fast,
   animateOnFirstLoadOnly,
-  staggerOnFirstLoadOnly,
+  staggerOnFirstLoadOnly = true,
   showMore,
 }: {
   photos: Photo[]
