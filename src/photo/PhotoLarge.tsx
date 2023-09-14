@@ -3,7 +3,7 @@ import SiteGrid from '@/components/SiteGrid';
 import ImageLarge from '@/components/ImageLarge';
 import { cc } from '@/utility/css';
 import Link from 'next/link';
-import { routeForPhoto } from '@/site/routes';
+import { pathForPhoto } from '@/site/paths';
 import SharePhotoButton from './SharePhotoButton';
 import PhotoTags from '@/tag/PhotoTags';
 
@@ -32,7 +32,7 @@ export default function PhotoLarge({
         <ImageLarge
           className="w-full"
           alt={titleForPhoto(photo)}
-          href={routeForPhoto(photo)}
+          href={pathForPhoto(photo)}
           src={photo.url}
           aspectRatio={photo.aspectRatio}
           blurData={photo.blurData}
@@ -48,7 +48,7 @@ export default function PhotoLarge({
         )}>
           {renderMiniGrid(<>
             <Link
-              href={routeForPhoto(photo)}
+              href={pathForPhoto(photo)}
               className="font-bold uppercase"
             >
               {titleForPhoto(photo)}

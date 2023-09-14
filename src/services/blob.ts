@@ -1,5 +1,5 @@
 import { BLOB_BASE_URL } from '@/site';
-import { ROUTE_ADMIN_UPLOAD_BLOB_HANDLER } from '@/site/routes';
+import { PATH_ADMIN_UPLOAD_BLOB_HANDLER } from '@/site/paths';
 import { del, list, put } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
 
@@ -43,7 +43,7 @@ export const uploadPhotoFromClient = async (
     file,
     {
       access: 'public',
-      handleUploadUrl: ROUTE_ADMIN_UPLOAD_BLOB_HANDLER,
+      handleUploadUrl: PATH_ADMIN_UPLOAD_BLOB_HANDLER,
     },
   );
 

@@ -10,7 +10,7 @@ import { cc } from '@/utility/css';
 import Link from 'next/link';
 import { BiError } from 'react-icons/bi';
 import { IMAGE_OG_HEIGHT, IMAGE_OG_RATIO, IMAGE_OG_WIDTH } from '@/site';
-import { absoluteRouteForPhotoImage, routeForPhoto } from '@/site/routes';
+import { absolutePathForPhotoImage, pathForPhoto } from '@/site/paths';
 import Spinner from '@/components/Spinner';
 
 export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
@@ -47,7 +47,7 @@ export default function PhotoOGTile({
   return (
     <Link
       key={photo.id}
-      href={routeForPhoto(photo)}
+      href={pathForPhoto(photo)}
       className={cc(
         'group',
         'block w-full rounded-md overflow-hidden',
@@ -84,7 +84,7 @@ export default function PhotoOGTile({
               loadingState === 'loading' && 'opacity-0',
               'transition-opacity',
             )}
-            src={absoluteRouteForPhotoImage(photo)}
+            src={absolutePathForPhotoImage(photo)}
             width={IMAGE_OG_WIDTH}
             height={IMAGE_OG_HEIGHT}
             onLoad={() => {

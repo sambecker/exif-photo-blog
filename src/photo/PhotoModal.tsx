@@ -2,7 +2,7 @@
 
 import Modal from '@/components/Modal';
 import PhotoOGTile from '@/photo/PhotoOGTile';
-import { absoluteRouteForPhoto, routeForPhoto } from '@/site/routes';
+import { absolutePathForPhoto, pathForPhoto } from '@/site/paths';
 import { TbPhotoShare } from 'react-icons/tb';
 import { cc } from '@/utility/css';
 import { BiCopy } from 'react-icons/bi';
@@ -11,10 +11,10 @@ import { toast } from 'sonner';
 import { FiCheckSquare } from 'react-icons/fi';
 
 export default function PhotoModal({ photo }: { photo: Photo }) {
-  const shareUrl = absoluteRouteForPhoto(photo);
+  const shareUrl = absolutePathForPhoto(photo);
   
   return (
-    <Modal onClosePath={routeForPhoto(photo)}>
+    <Modal onClosePath={pathForPhoto(photo)}>
       <div className="space-y-3 md:space-y-4 w-full">
         <div className={cc(
           'flex items-center gap-x-3',

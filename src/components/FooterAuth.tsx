@@ -6,7 +6,7 @@ import { useSession, signOut } from 'next-auth/react';
 import ThemeSwitcher from '@/site/ThemeSwitcher';
 import SiteGrid from './SiteGrid';
 import { usePathname } from 'next/navigation';
-import { isRouteSignIn } from '@/site/routes';
+import { isPathSignIn } from '@/site/paths';
 
 const LINK_STYLE = cc(
   'cursor-pointer',
@@ -48,7 +48,7 @@ export default function FooterAuth() {
               Sign In
             </Link>}
         </div>
-        {!isRouteSignIn(path) && <ThemeSwitcher />}
+        {!isPathSignIn(path) && <ThemeSwitcher />}
       </div>}
     />
   );

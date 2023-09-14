@@ -18,7 +18,7 @@ import {
   getBlobUploadUrls,
 } from '@/services/blob';
 import { getPhotos, getPhotosCount } from '@/services/postgres';
-import { routeForPhoto } from '@/site/routes';
+import { pathForPhoto, pathForPhotoEdit } from '@/site/paths';
 import { getPhotosLimitForQuery, titleForPhoto } from '@/photo';
 import MorePhotos from '@/components/MorePhotos';
 
@@ -74,7 +74,7 @@ export default async function AdminPage({
                     <div className="flex flex-col md:flex-row">
                       <Link
                         key={photo.id}
-                        href={routeForPhoto(photo)}
+                        href={pathForPhoto(photo)}
                         className="sm:w-[50%] flex items-center gap-2"
                       >
                         {photo.title ||
@@ -97,7 +97,7 @@ export default async function AdminPage({
                         {photo.takenAtNaive}
                       </div>
                     </div>
-                    <EditButton href={`/admin/photos/${photo.idShort}/edit`} />
+                    <EditButton href={pathForPhotoEdit(photo)} />
                     <FormWithConfirm
                       action={deletePhotoAction}
                       confirmText={

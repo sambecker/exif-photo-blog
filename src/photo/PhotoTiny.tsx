@@ -2,7 +2,7 @@ import { Photo, titleForPhoto } from '.';
 import ImageTiny from '@/components/ImageTiny';
 import Link from 'next/link';
 import { cc } from '@/utility/css';
-import { routeForPhoto } from '@/site/routes';
+import { pathForPhoto } from '@/site/paths';
 
 export default function PhotoTiny({
   className,
@@ -15,7 +15,7 @@ export default function PhotoTiny({
 }) {
   return (
     <Link
-      href={routeForPhoto(photo)}
+      href={pathForPhoto(photo)}
       className={cc(
         className,
         'active:brightness-75',

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { routeForTag } from '@/site/routes';
+import { pathForTag } from '@/site/paths';
 import { FaTag } from 'react-icons/fa';
 
 export default function PhotoTag({
@@ -10,7 +10,7 @@ export default function PhotoTag({
   return (
     <Link
       key={tag}
-      href={routeForTag(tag)}
+      href={pathForTag(tag)}
       className="flex items-center gap-x-1.5"
     >
       <FaTag size={11} />

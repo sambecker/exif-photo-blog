@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { Photo, getNextPhoto, getPreviousPhoto } from '@/photo';
 import PhotoLink from './PhotoLink';
 import { usePathname, useRouter } from 'next/navigation';
-import { isRoutePhotoShare, routeForPhoto } from '@/site/routes';
+import { isPathPhotoShare, pathForPhoto } from '@/site/paths';
 import { useAppState } from '@/state';
 import { AnimationConfig } from '@/components/AnimateItems';
 
@@ -23,7 +23,7 @@ export default function PhotoLinks({
 
   const { setNextPhotoAnimation } = useAppState();
 
-  const isRouteShare = isRoutePhotoShare(pathname);
+  const isRouteShare = isPathPhotoShare(pathname);
   const previousPhoto = getPreviousPhoto(photo, photos);
   const nextPhoto = getNextPhoto(photo, photos);
 
@@ -34,14 +34,14 @@ export default function PhotoLinks({
       case 'J':
         if (previousPhoto) {
           setNextPhotoAnimation?.(ANIMATION_RIGHT);
-          router.push(routeForPhoto(previousPhoto, isRouteShare));
+          router.push(pathForPhoto(previousPhoto, isRouteShare));
         }
         break;
       case 'ARROWRIGHT':
       case 'L':
         if (nextPhoto) {
           setNextPhotoAnimation?.(ANIMATION_LEFT);
-          router.push(routeForPhoto(nextPhoto, isRouteShare));
+          router.push(pathForPhoto(nextPhoto, isRouteShare));
         }
         break;
       case 'ESCAPE':

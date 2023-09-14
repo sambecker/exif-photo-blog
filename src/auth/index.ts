@@ -1,4 +1,4 @@
-import { isRouteProtected } from '@/site/routes';
+import { isPathProtected } from '@/site/paths';
 import NextAuth, { User, type DefaultSession } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
@@ -38,7 +38,7 @@ export const {
     authorized({ auth, request }) {
       const { pathname } = request.nextUrl;
 
-      const isUrlProtected = isRouteProtected(pathname);
+      const isUrlProtected = isPathProtected(pathname);
       const isUserLoggedIn = !!auth?.user;
       const isRequestAuthorized = !isUrlProtected || isUserLoggedIn;
 

@@ -2,7 +2,7 @@ import { Photo, titleForPhoto } from '.';
 import ImageSmall from '@/components/ImageSmall';
 import Link from 'next/link';
 import { cc } from '@/utility/css';
-import { routeForPhoto } from '@/site/routes';
+import { pathForPhoto } from '@/site/paths';
 
 export default function PhotoSmall({
   photo,
@@ -13,7 +13,7 @@ export default function PhotoSmall({
 }) {
   return (
     <Link
-      href={routeForPhoto(photo)}
+      href={pathForPhoto(photo)}
       className={cc(
         'active:brightness-75',
         selected && 'brightness-50',

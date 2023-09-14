@@ -5,7 +5,7 @@ import { Photo } from '@/photo';
 import Link from 'next/link';
 import { AnimationConfig } from '../components/AnimateItems';
 import { useAppState } from '@/state';
-import { routeForPhoto } from '@/site/routes';
+import { pathForPhoto } from '@/site/paths';
 
 export default function PhotoLink({
   photo,
@@ -23,7 +23,7 @@ export default function PhotoLink({
   return (
     photo
       ? <Link
-        href={routeForPhoto(photo)}
+        href={pathForPhoto(photo)}
         prefetch={prefetch}
         onClick={() => {
           if (nextPhotoAnimation) {

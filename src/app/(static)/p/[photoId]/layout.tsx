@@ -16,7 +16,7 @@ import {
   getPhotosTakenBeforePhoto,
 } from '@/services/postgres';
 import { redirect } from 'next/navigation';
-import { absoluteRouteForPhotoImage } from '@/site/routes';
+import { absolutePathForPhotoImage } from '@/site/paths';
 
 const THUMBNAILS_TO_SHOW_MAX = 12;
 
@@ -33,7 +33,7 @@ export async function generateMetadata({
 
   const title = titleForPhoto(photo);
   const description = ogImageDescriptionForPhoto(photo);
-  const images = absoluteRouteForPhotoImage(photo);
+  const images = absolutePathForPhotoImage(photo);
 
   return {
     title,

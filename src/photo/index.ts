@@ -1,7 +1,7 @@
 import {
-  ABSOLUTE_ROUTE_FOR_HOME_IMAGE,
-  absoluteRouteForPhotoImage,
-} from '@/site/routes';
+  ABSOLUTE_PATH_FOR_HOME_IMAGE,
+  absolutePathForPhotoImage,
+} from '@/site/paths';
 import { formatDateFromPostgresString } from '@/utility/date';
 import {
   formatAperture,
@@ -140,11 +140,11 @@ export const generateOgImageMetaForPhotos = (photos: Photo[]): Metadata => {
     // Show multiple photos once a 3x2 grid is available
     return {
       openGraph: {
-        images: ABSOLUTE_ROUTE_FOR_HOME_IMAGE,
+        images: ABSOLUTE_PATH_FOR_HOME_IMAGE,
       },
       twitter: {
         card: 'summary_large_image',
-        images: ABSOLUTE_ROUTE_FOR_HOME_IMAGE,
+        images: ABSOLUTE_PATH_FOR_HOME_IMAGE,
       },
     };
   } else if (photos.length > 0) {
@@ -152,11 +152,11 @@ export const generateOgImageMetaForPhotos = (photos: Photo[]): Metadata => {
     const photo = photos[0];
     return {
       openGraph: {
-        images: absoluteRouteForPhotoImage(photo),
+        images: absolutePathForPhotoImage(photo),
       },
       twitter: {
         card: 'summary_large_image',
-        images: absoluteRouteForPhotoImage(photo),
+        images: absolutePathForPhotoImage(photo),
       },
     };
   }
