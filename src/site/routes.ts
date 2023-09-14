@@ -1,16 +1,20 @@
 import { Photo } from '@/photo';
 import { BASE_URL } from './config';
 
-export const ROUTE_ADMIN_UPLOAD = '/admin/uploads';
+const PHOTO_PREFIX = '/p';
+const TAG_PREFIX = '/t';
 
+export const ROUTE_ADMIN_UPLOAD = '/admin/uploads';
 export const ROUTE_ADMIN_UPLOAD_BLOB_HANDLER = '/admin/uploads/blob';
 
 export const ABSOLUTE_ROUTE_FOR_HOME_IMAGE = `${BASE_URL}/home-image`;
 
 export const routeForPhoto = (photo: Photo, share?: boolean) =>
   share
-    ? `/p/${photo.idShort}/share`
-    : `/p/${photo.idShort}`;
+    ? `${PHOTO_PREFIX}/${photo.idShort}/share`
+    : `${PHOTO_PREFIX}/${photo.idShort}`;
+
+export const routeForTag = (tag: string) => `${TAG_PREFIX}/${tag}`;
 
 export const absoluteRouteForPhoto = (photo: Photo) =>
   `${BASE_URL}${routeForPhoto(photo)}`;

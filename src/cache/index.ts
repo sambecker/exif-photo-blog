@@ -9,6 +9,7 @@ const PHOTO_PATHS = [
   '/grid',
   '/p/[photoId]',
   '/p/[photoId]/image',
+  '/t/[tag]',
   '/admin/photos',
   '/admin/photos/[photoId]',
   '/admin/photos/[photoId]/edit',

@@ -1,4 +1,3 @@
-import { PropsWithChildren } from 'react';
 import AnimateItems from '@/components/AnimateItems';
 import PhotoLinks from '@/photo/PhotoLinks';
 import SiteGrid from '@/components/SiteGrid';
@@ -23,13 +22,11 @@ const THUMBNAILS_TO_SHOW_MAX = 12;
 
 export const runtime = 'edge';
 
-interface Props extends PropsWithChildren {
+export async function generateMetadata({
+  params: { photoId },
+}: {
   params: { photoId: string }
-}
-
-export async function generateMetadata(
-  { params: { photoId } }: Props
-): Promise<Metadata> {
+}): Promise<Metadata> {
   const photo = await getPhoto(photoId);
 
   if (!photo) { return {}; }
@@ -59,7 +56,10 @@ export async function generateMetadata(
 export default async function PhotoPage({
   params: { photoId },
   children,
-}: Props) {
+}: {
+  params: { photoId: string }
+  children: React.ReactNode
+}) {
   const photo = await getPhoto(photoId);
 
   if (!photo) { redirect('/'); }

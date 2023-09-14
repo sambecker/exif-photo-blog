@@ -159,6 +159,18 @@ const sqlGetPhotosFromDbSortedByPriority = (
   `
     .then(({ rows }) => rows.map(parsePhotoFromDb));
 
+const sqlGetPhotosFromDbByTag = (
+  limit = PHOTO_DEFAULT_LIMIT,
+  offset = 0,
+  tag: string,
+) =>
+  sql<PhotoDb>`
+    SELECT * FROM photos WHERE ${tag}=ANY(tags)
+    ORDER BY taken_at DESC
+    LIMIT ${limit} OFFSET ${offset}
+  `
+    .then(({ rows }) => rows.map(parsePhotoFromDb));
+
 const sqlGetPhotoFromDb = (id: string) =>
   sql<PhotoDb>`SELECT * FROM photos WHERE id=${id} LIMIT 1`
     .then(({ rows }) => rows.map(parsePhotoFromDb));
@@ -167,29 +179,32 @@ export const getPhotos = async (
   sortBy: 'createdAt' | 'takenAt' | 'priority' = 'takenAt',
   limit?: number,
   offset?: number,
+  tag?: string,
 ) => {
   let photos;
 
-  const getPhotosRequest = sortBy === 'createdAt'
-    ? sqlGetPhotosFromDbSortedByCreatedAt
-    : sortBy === 'priority' 
-      ? sqlGetPhotosFromDbSortedByPriority
-      : sqlGetPhotosFromDb;
+  const getPhotosRequest = tag
+    ? () => sqlGetPhotosFromDbByTag(limit, offset, tag)
+    : sortBy === 'createdAt'
+      ? () => sqlGetPhotosFromDbSortedByCreatedAt(limit, offset)
+      : sortBy === 'priority' 
+        ? () => sqlGetPhotosFromDbSortedByPriority(limit, offset)
+        : () => sqlGetPhotosFromDb(limit, offset);
 
   try {
-    photos = await getPhotosRequest(limit, offset);
+    photos = await getPhotosRequest();
   } catch (e: any) {
     if (/relation "photos" does not exist/i.test(e.message)) {
       console.log(
         'Creating table "photos" because it did not exist',
       );
       await sqlCreatePhotosTable();
-      photos = await getPhotosRequest(limit, offset);
+      photos = await getPhotosRequest();
     } else if (/endpoint is in transition/i.test(e.message)) {
       // Wait 5 seconds and try again
       await new Promise(resolve => setTimeout(resolve, 5000));
       try {
-        photos = await getPhotosRequest(limit, offset);
+        photos = await getPhotosRequest();
       } catch (e: any) {
         console.log(`sql get error on retry (after 5000ms): ${e.message} `);
         throw e;
