@@ -24,8 +24,14 @@ export const pathForTag = (tag: string) => `${PREFIX_TAG}/${tag}`;
 export const absolutePathForPhoto = (photo: Photo) =>
   `${BASE_URL}${pathForPhoto(photo)}`;
 
+export const absolutePathForTag = (tag: string) =>
+  `${BASE_URL}${pathForTag(tag)}`;
+
 export const absolutePathForPhotoImage = (photo: Photo) =>
   `${absolutePathForPhoto(photo)}/image`;
+
+export const absolutePathForTagImage = (tag: string) =>
+  `${absolutePathForTag(tag)}/image`;
 
 export const isPathPhoto = (pathname = '') =>
   /^\/p\/[^/]+\/?$/.test(pathname);

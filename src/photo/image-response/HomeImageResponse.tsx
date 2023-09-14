@@ -6,17 +6,17 @@ export default function HomeImageResponse({
   request,
   width,
   height,
-  fontFamily,
 }: {
   photos: Photo[]
   request: Request
   width: number
   height: number
-  fontFamily: string
 }) {
   const grid = photos.length >= 12
     ? { colCount: 4, rowCount: 3 }
     : { colCount: 3, rowCount: 2 };
+
+  const photosPerGrid = grid.colCount * grid.rowCount;
 
   return (
     <div style={{
@@ -27,10 +27,9 @@ export default function HomeImageResponse({
       background: 'transparent',
       width,
       height,
-      fontFamily,
     }}>
       <PhotoGridImageResponse {...{
-        photos,
+        photos: photos.slice(0, photosPerGrid),
         request,
         nextImageWidth: 200,
         ...grid,
