@@ -12,10 +12,9 @@ export default function SharePhotoButton({
 }) {
   return (
     <IconPathButton
+      icon={<TbPhotoShare size={17} />}
       path={pathForPhoto(photo, true)}
       prefetch={prefetch}
-    >
-      <TbPhotoShare size={17} />
-    </IconPathButton>
+    />
   );
 }

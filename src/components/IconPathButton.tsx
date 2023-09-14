@@ -6,15 +6,15 @@ import { useEffect, useState, useTransition } from 'react';
 import { cc } from '@/utility/css';
 
 export default function IconPathButton({
+  icon,
   path,
   prefetch,
   loaderDelay = 250,
-  children,
 }: {
+  icon: JSX.Element
   path: string
   prefetch?: boolean
   loaderDelay?: number
-  children: React.ReactNode
 }) {
   const router = useRouter();
 
@@ -41,6 +41,7 @@ export default function IconPathButton({
 
   return (
     <IconButton
+      icon={icon}
       onClick={() => startTransition(() =>
         router.push(path))}
       isLoading={shouldShowLoader}
@@ -51,8 +52,6 @@ export default function IconPathButton({
         'dark:text-gray-400 dark:active:text-gray-300',
       )}
       spinnerColor="text"
-    >
-      {children}
-    </IconButton>
+    />
   );
 }

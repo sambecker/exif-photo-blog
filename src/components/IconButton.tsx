@@ -4,14 +4,14 @@ import { cc } from '@/utility/css';
 import Spinner, { SpinnerColor } from './Spinner';
 
 export default function IconButton({
-  children,
+  icon,
   onClick,
   isLoading,
   className,
   spinnerColor,
   spinnerSize,
 }: {
-  children: React.ReactNode
+  icon: JSX.Element
   onClick?: () => void
   isLoading?: boolean
   className?: string
@@ -32,7 +32,7 @@ export default function IconButton({
             'active:opacity-50',
           )}
         >
-          {children}
+          {icon}
         </span>
         : <span className={cc(
           'inline-block translate-y-[1.5px]',

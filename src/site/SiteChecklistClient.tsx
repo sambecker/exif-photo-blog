@@ -138,6 +138,7 @@ export default function SiteChecklistClient({
               <span>{secret}</span>
               <div className="flex items-center gap-0.5">
                 <IconButton
+                  icon={<BiCopy size={16} />}
                   onClick={() => {
                     navigator.clipboard.writeText(secret);
                     toast(
@@ -147,16 +148,13 @@ export default function SiteChecklistClient({
                       },
                     );
                   }}
-                >
-                  <BiCopy size={16} />
-                </IconButton>
+                />
                 <IconButton
+                  icon={<BiRefresh size={18} />}
                   onClick={refreshSecret}
                   isLoading={isPendingSecret}
                   spinnerColor="text"
-                >
-                  <BiRefresh size={18} />
-                </IconButton>
+                />
               </div>
             </div>
           </InfoBlock>
