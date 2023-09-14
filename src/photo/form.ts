@@ -6,19 +6,22 @@ import {
 } from '@/utility/date';
 import { getOffsetFromExif } from '@/utility/exif';
 import { toFixedNumber } from '@/utility/number';
+import { convertStringToArray } from '@/utility/string';
 
 export type PhotoFormData = Record<keyof PhotoDbInsert, string>;
 
 type FormMeta = {
-  label: string,
-  required?: boolean,
-  readOnly?: boolean,
-  hideIfEmpty?: boolean,
-  hideTemporarily?: boolean,
+  label: string
+  note?: string
+  required?: boolean
+  readOnly?: boolean
+  hideIfEmpty?: boolean
+  hideTemporarily?: boolean
 };
 
 const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
   title: { label: 'title' },
+  tags: { label: 'tags', note: 'comma-separated values' },
   id: { label: 'id', readOnly: true, hideIfEmpty: true },
   idShort: { label: 'short id', readOnly: true, hideIfEmpty: true },
   url: { label: 'url', readOnly: true },
@@ -51,6 +54,8 @@ export const convertPhotoToFormData = (
 ): PhotoFormData => {
   const valueForKey = (key: keyof Photo, value: any) => {
     switch (key) {
+    case 'tags':
+      return value?.join ? value.join(', ') : value;
     case 'takenAt':
       return value?.toISOString ? value.toISOString() : value;
     default:
@@ -106,6 +111,8 @@ export const convertFormDataToPhoto = (
 
   return {
     ...photoForm,
+    // convert form strings to arrays
+    tags: convertStringToArray(photoForm.tags),
     // Convert form strings to numbers
     aspectRatio: toFixedNumber(parseFloat(photoForm.aspectRatio), 6),
     focalLength: photoForm.focalLength

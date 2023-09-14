@@ -42,15 +42,17 @@ export interface PhotoDbInsert extends PhotoExif {
   extension: string
   blurData: string
   title?: string
+  tags?: string[]
   locationName?: string
   priorityOrder?: number
 }
 
 // Raw db response
-export interface PhotoDb extends Omit<PhotoDbInsert, 'takenAt'> {
+export interface PhotoDb extends Omit<PhotoDbInsert, 'takenAt' | 'tags'> {
   updatedAt: Date
   createdAt: Date
   takenAt: Date
+  tags: string[]
 }
 
 // Parsed db response
@@ -72,6 +74,7 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
     ...photoDb,
     idShort:
       translator.fromUUID(photoDb.id),
+    tags: photoDb.tags ?? [],
     focalLengthFormatted:
       formatFocalLength(photoDb.focalLength),
     focalLengthIn35MmFormatFormatted:

@@ -5,6 +5,7 @@ import { cc } from '@/utility/css';
 import Link from 'next/link';
 import { routeForPhoto } from '@/site/routes';
 import SharePhotoButton from './SharePhotoButton';
+import { FaTag } from 'react-icons/fa';
 
 export default function PhotoLarge({
   photo,
@@ -52,6 +53,17 @@ export default function PhotoLarge({
             >
               {titleForPhoto(photo)}
             </Link>
+            {photo.tags.length > 0 &&
+              <div className="uppercase">
+                {photo.tags.map(tag =>
+                  <div
+                    className="flex items-center gap-x-1.5"
+                    key={tag}
+                  >
+                    <FaTag size={11} />
+                    <span>{tag}</span>
+                  </div>)}
+              </div>}
             <div className="uppercase">
               {photo.make} {photo.model}
             </div>

@@ -6,6 +6,7 @@ import { experimental_useFormStatus as useFormStatus } from 'react-dom';
 export default function FieldSetWithStatus({
   id,
   label,
+  note,
   value,
   onChange,
   required,
@@ -15,6 +16,7 @@ export default function FieldSetWithStatus({
 }: {
   id: string
   label: string
+  note?: string
   value: string
   onChange?: (value: string) => void
   required?: boolean
@@ -31,9 +33,13 @@ export default function FieldSetWithStatus({
         htmlFor={id}
       >
         {label}
+        {note &&
+          <span className="text-gray-400 dark:text-gray-600">
+            ({note})
+          </span>}
         {required &&
           <span className="text-gray-400 dark:text-gray-600">
-            (Required)
+            Required
           </span>}
       </label>
       <input

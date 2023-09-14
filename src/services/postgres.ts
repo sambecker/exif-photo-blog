@@ -10,6 +10,10 @@ import { isValidUUID } from '@/utility/string';
 
 const PHOTO_DEFAULT_LIMIT = 100;
 
+export const convertArrayToPostgresString = (array?: string[]) => array
+  ? `{${array.join(',')}}`
+  : null;
+
 const sqlCreatePhotosTable = () =>
   sql`
     CREATE TABLE IF NOT EXISTS photos (
@@ -19,6 +23,7 @@ const sqlCreatePhotosTable = () =>
       aspect_ratio REAL DEFAULT 1.5,
       blur_data TEXT,
       title VARCHAR(255),
+      tags VARCHAR(255)[],
       make VARCHAR(255),
       model VARCHAR(255),
       focal_length SMALLINT,
@@ -47,6 +52,7 @@ export const sqlInsertPhotoIntoDb = (photo: PhotoDbInsert) => {
       aspect_ratio,
       blur_data,
       title,
+      tags,
       make,
       model,
       focal_length,
@@ -69,6 +75,7 @@ export const sqlInsertPhotoIntoDb = (photo: PhotoDbInsert) => {
       ${photo.aspectRatio},
       ${photo.blurData},
       ${photo.title},
+      ${convertArrayToPostgresString(photo.tags)},
       ${photo.make},
       ${photo.model},
       ${photo.focalLength},
@@ -96,6 +103,7 @@ export const sqlUpdatePhotoInDb = (photo: PhotoDbInsert) =>
     aspect_ratio=${photo.aspectRatio},
     blur_data=${photo.blurData},
     title=${photo.title},
+    tags=${convertArrayToPostgresString(photo.tags)},
     make=${photo.make},
     model=${photo.model},
     focal_length=${photo.focalLength},

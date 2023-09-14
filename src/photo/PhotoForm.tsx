@@ -105,13 +105,14 @@ export default function PhotoForm({
       >
         {FORM_METADATA_ENTRIES.map(([
           key,
-          { label, required, readOnly, hideIfEmpty },
+          { label, note, required, readOnly, hideIfEmpty },
         ]) =>
           (!hideIfEmpty || formData[key]) &&
             <FieldSetWithStatus
               key={key}
               id={key}
               label={label}
+              note={note}
               value={formData[key] ?? ''}
               onChange={value => setFormData({ ...formData, [key]: value })}
               required={required}
