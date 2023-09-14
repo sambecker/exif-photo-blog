@@ -113,7 +113,8 @@ export default function PhotoOGTile({
         'flex flex-col gap-1 p-3',
         'font-sans leading-none',
         'bg-gray-50 dark:bg-gray-900/50',
-        'group-active:bg-gray-100 group-active:dark:bg-black',
+        'group-active:bg-gray-50 group-active:dark:bg-gray-900/50',
+        'group-hover:bg-gray-100 group-hover:dark:bg-gray-900/70',
         'border-t border-gray-200 dark:border-gray-800',
       )}>
         <div className="text-gray-800 dark:text-white font-medium">
