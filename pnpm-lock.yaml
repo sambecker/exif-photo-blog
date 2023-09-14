@@ -8,7 +8,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^6.7.0
   '@typescript-eslint/parser': ^6.7.0
   '@vercel/analytics': ^1.0.2
-  '@vercel/blob': ^0.12.0
+  '@vercel/blob': ^0.12.1
   '@vercel/og': ^0.5.13
   '@vercel/postgres': ^0.4.1
   autoprefixer: 10.4.15
@@ -38,7 +38,7 @@ dependencies:
   '@typescript-eslint/eslint-plugin': 6.7.0_upusunw4marwma72j5kmgdi4ee
   '@typescript-eslint/parser': 6.7.0_rngtr6f3b25lvetpihwplgecf4
   '@vercel/analytics': 1.0.2
-  '@vercel/blob': 0.12.0
+  '@vercel/blob': 0.12.1
   '@vercel/og': 0.5.13
   '@vercel/postgres': 0.4.1
   autoprefixer: 10.4.15_postcss@8.4.29
@@ -657,8 +657,8 @@ packages:
     resolution: {integrity: sha512-BZFxVrv24VbNNl5xMxqUojQIegEeXMI6rX3rg1uVLYUEXsuKNBSAEQf4BWEcjQDp/8aYJOj6m8V4PUA3x/cxgg==}
     dev: false
 
-  /@vercel/blob/0.12.0:
-    resolution: {integrity: sha512-Rn11pRGiHtxd4fyy73BD6PtPRkjo63TdMRFMVYmvoSytu0AL8w0Rrg1QFOHtlocXXgL3BIvWwuwQFw305ZDkow==}
+  /@vercel/blob/0.12.1:
+    resolution: {integrity: sha512-pnjkXjDRYjTsYU8fBgsBWlpxDRUG8x4oCG6KCJjaBJ2JPYf0bPT4rSHxnfH14QPab1VozJgB2SVBkcFcx8Y5OQ==}
     engines: {node: '>=16.14'}
     dependencies:
       jest-environment-jsdom: 29.6.4
