@@ -14,7 +14,7 @@ export default function PhotoTag({
       className="flex items-center gap-x-1.5"
     >
       <FaTag size={11} />
-      <span className="uppercase">{tag}</span>
+      <span className="uppercase">{tag.replaceAll('-', ' ')}</span>
     </Link>
   );
 }
