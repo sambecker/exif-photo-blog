@@ -2,17 +2,17 @@ import {
   ACCEPTED_PHOTO_FILE_TYPES,
   isUploadPathnameValid,
 } from '@/services/blob';
-import { handleBlobUpload, type HandleBlobUploadBody } from '@vercel/blob';
+import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
 
 export const runtime = 'edge';
 
 export async function POST(request: Request): Promise<NextResponse> {
-  const body = (await request.json()) as HandleBlobUploadBody;
+  const body = (await request.json()) as HandleUploadBody;
 
   try {
-    const jsonResponse = await handleBlobUpload({
+    const jsonResponse = await handleUpload({
       body,
       request,
       onBeforeGenerateToken: async (pathname) => {

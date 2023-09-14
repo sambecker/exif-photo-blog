@@ -1,5 +1,7 @@
 import { BLOB_BASE_URL } from '@/site';
+import { ROUTE_ADMIN_UPLOAD_BLOB_HANDLER } from '@/site/routes';
 import { del, list, put } from '@vercel/blob';
+import { upload } from '@vercel/blob/client';
 
 export const ACCEPTED_PHOTO_FILE_TYPES = [
   'image/jpg',
@@ -32,30 +34,34 @@ export const getExtensionFromBlobUrl = (url: string) =>
 export const isUploadPathnameValid = (pathname?: string) =>
   pathname?.match(REGEX_UPLOAD_PATH);
 
-export const putPhoto = async (
+export const uploadPhotoFromClient = async (
   file: File | Blob,
   extension = 'jpg',
-  type: 'upload' | 'photo' = 'upload',
-  handleBlobUploadUrl?: string,
 ) =>
-  put(
-    `${type === 'upload' ? PREFIX_UPLOAD : PREFIX_PHOTO}.${extension}`,
+  upload(
+    `${PREFIX_UPLOAD}.${extension}`,
     file,
     {
       access: 'public',
-      handleBlobUploadUrl,
+      handleUploadUrl: ROUTE_ADMIN_UPLOAD_BLOB_HANDLER,
     },
   );
 
-export const convertUploadToPhoto = async (uploadUrl: string) => {
+export const convertUploadToPhoto = async (
+  uploadUrl: string,
+  photoId: string,
+) => {
   const file = await fetch(uploadUrl)
     .then((response) => response.blob());
 
   if (file) {
-    const { url } = await putPhoto(
+    const { url } = await put(
+      `${PREFIX_PHOTO}-${photoId}.${uploadUrl.split('.').pop()}`,
       file,
-      uploadUrl.split('.').pop(),
-      'photo',
+      {
+        access: 'public',
+        addRandomSuffix: false,
+      }
     );
 
     if (url) {

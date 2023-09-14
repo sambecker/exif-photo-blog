@@ -17,7 +17,10 @@ import { revalidatePhotosTag } from '@/cache';
 export async function createPhotoAction(formData: FormData) {
   const photo = convertFormDataToPhoto(formData);
 
-  const updatedUrl = await convertUploadToPhoto(photo.url);
+  const updatedUrl = await convertUploadToPhoto(
+    photo.url,
+    photo.id,
+  );
 
   if (updatedUrl) { photo.url = updatedUrl; }
   await sqlInsertPhotoIntoDb(photo);

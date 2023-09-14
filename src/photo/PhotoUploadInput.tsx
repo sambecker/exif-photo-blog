@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import Spinner from '@/components/Spinner';
-import { ACCEPTED_PHOTO_FILE_TYPES, putPhoto } from '@/services/blob';
-import { ROUTE_ADMIN_UPLOAD_BLOB_HANDLER } from '@/site/routes';
+import {
+  ACCEPTED_PHOTO_FILE_TYPES,
+  uploadPhotoFromClient,
+} from '@/services/blob';
 import { cc } from '@/utility/css';
 import { useRouter } from 'next/navigation';
 
@@ -27,11 +29,9 @@ export default function PhotoUploadInput() {
                 setIsUploading(true);
                 setUploadError('');
                 const extension = file.name.split('.').pop();
-                putPhoto(
+                uploadPhotoFromClient(
                   file,
                   extension,
-                  'upload',
-                  ROUTE_ADMIN_UPLOAD_BLOB_HANDLER,
                 )
                   .then(({ url }) => {
                     // Refresh page to update upload list,
