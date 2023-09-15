@@ -31,3 +31,10 @@ export const CONFIG_CHECKLIST_STATUS = {
     (process.env.ADMIN_PASSWORD ?? '').length > 0
   ),
 };
+
+export const IS_CHECKLIST_COMPLETE =
+  CONFIG_CHECKLIST_STATUS.hasTitle &&
+  CONFIG_CHECKLIST_STATUS.hasPostgres &&
+  CONFIG_CHECKLIST_STATUS.hasBlob &&
+  CONFIG_CHECKLIST_STATUS.hasAuth &&
+  CONFIG_CHECKLIST_STATUS.hasAdminUser;
