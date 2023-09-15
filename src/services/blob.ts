@@ -49,18 +49,21 @@ export const uploadPhotoFromClient = async (
 
 export const convertUploadToPhoto = async (
   uploadUrl: string,
-  photoId: string,
+  photoId?: string,
 ) => {
   const file = await fetch(uploadUrl)
     .then((response) => response.blob());
 
+  const fileName = photoId ? `${PREFIX_PHOTO}-${photoId}` : `${PREFIX_PHOTO}`;
+  const fileExtension = getExtensionFromBlobUrl(uploadUrl);
+
   if (file) {
     const { url } = await put(
-      `${PREFIX_PHOTO}-${photoId}.${uploadUrl.split('.').pop()}`,
+      `${fileName}.${fileExtension ?? 'jpg'}`,
       file,
       {
         access: 'public',
-        addRandomSuffix: false,
+        ...photoId && { addRandomSuffix: false },
       }
     );
 
