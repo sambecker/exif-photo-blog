@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { cc } from '@/utility/css';
 import Spinner from '@/components/Spinner';
 
-export default function SiteChecklistRow({
+export default function ChecklistRow({
   title,
   status,
   isPending,

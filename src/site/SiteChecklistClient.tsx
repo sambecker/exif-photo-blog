@@ -3,12 +3,13 @@
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { cc } from '@/utility/css';
-import SiteChecklistRow from './SiteChecklistRow';
+import ChecklistRow from '../components/ChecklistRow';
 import { FiCheckSquare, FiExternalLink } from 'react-icons/fi';
 import { BiCopy, BiRefresh } from 'react-icons/bi';
 import IconButton from '@/components/IconButton';
 import { toast } from 'sonner';
 import InfoBlock from '@/components/InfoBlock';
+import Checklist from '@/components/Checklist';
 
 export default function SiteChecklistClient({
   hasTitle,
@@ -100,21 +101,16 @@ export default function SiteChecklistClient({
 
   return (
     <div className="text-sm max-w-xl space-y-4">
-      <div className={cc(
-        'bg-white dark:bg-black',
-        'dark:text-gray-400',
-        'border border-gray-200 dark:border-gray-800 rounded-md',
-        'divide-y divide-gray-200 dark:divide-gray-800',
-      )}>
-        <SiteChecklistRow
+      <Checklist>
+        <ChecklistRow
           title="Add title"
           status={hasTitle}
           isPending={isPendingPage}
         >
           Store in environment variable:
           {renderEnvVars(['NEXT_PUBLIC_SITE_TITLE'])}
-        </SiteChecklistRow>
-        <SiteChecklistRow
+        </ChecklistRow>
+        <ChecklistRow
           title="Add custom domain"
           status={hasDomain}
           isPending={isPendingPage}
@@ -122,8 +118,8 @@ export default function SiteChecklistClient({
         >
           Store in environment variable:
           {renderEnvVars(['NEXT_PUBLIC_SITE_DOMAIN'])}
-        </SiteChecklistRow>
-        <SiteChecklistRow
+        </ChecklistRow>
+        <ChecklistRow
           title="Setup database"
           status={hasPostgres}
           isPending={isPendingPage}
@@ -134,8 +130,8 @@ export default function SiteChecklistClient({
           )}
           {' '}
           and connect to project
-        </SiteChecklistRow>
-        <SiteChecklistRow
+        </ChecklistRow>
+        <ChecklistRow
           title="Setup blob store"
           status={hasBlob}
           isPending={isPendingPage}
@@ -146,8 +142,8 @@ export default function SiteChecklistClient({
           )}
           {' '}
           and connect to project
-        </SiteChecklistRow>
-        <SiteChecklistRow
+        </ChecklistRow>
+        <ChecklistRow
           title="Setup auth"
           status={hasAuth}
           isPending={isPendingPage}
@@ -168,8 +164,8 @@ export default function SiteChecklistClient({
             </div>
           </InfoBlock>
           {renderEnvVars(['AUTH_SECRET'])}
-        </SiteChecklistRow>
-        <SiteChecklistRow
+        </ChecklistRow>
+        <ChecklistRow
           title="Setup admin user"
           status={hasAdminUser}
           isPending={isPendingPage}
@@ -181,14 +177,14 @@ export default function SiteChecklistClient({
             'ADMIN_EMAIL',
             'ADMIN_PASSWORD',
           ])}
-        </SiteChecklistRow>
+        </ChecklistRow>
         {showRefreshButton &&
           <div className="py-4 space-y-4">
             <button onClick={refreshPage}>
               Check
             </button>
           </div>}
-      </div>
+      </Checklist>
       <div className="px-10 text-gray-500">
         Changes to environment variables require a redeploy
         or reboot of local dev server
