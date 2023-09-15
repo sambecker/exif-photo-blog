@@ -80,17 +80,22 @@ export default function PhotoLarge({
               <li>{photo.exposureCompensationFormatted ?? '—'}</li>
             </ul>
             <div className={cc(
-              'uppercase',
-              'text-gray-500',
-              'dark:text-gray-400',
+              'flex gap-y-4',
+              'flex-col sm:flex-row md:flex-col',
             )}>
-              {photo.takenAtNaiveFormatted}
-            </div>
-            <div className="-translate-x-1">
-              <SharePhotoButton
-                photo={photo}
-                prefetch={prefetchShare}
-              />
+              <div className={cc(
+                'grow uppercase',
+                'text-gray-500',
+                'dark:text-gray-400',
+              )}>
+                {photo.takenAtNaiveFormatted}
+              </div>
+              <div className="-translate-x-0.5">
+                <SharePhotoButton
+                  photo={photo}
+                  prefetch={prefetchShare}
+                />
+              </div>
             </div>
           </>)}
         </div>}
