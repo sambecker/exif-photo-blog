@@ -62,14 +62,34 @@ export default function SiteChecklistClient({
         </>}
     </>;
 
+  const renderCopyButton = (label: string, text: string, subtle?: boolean) =>
+    <IconButton
+      icon={<BiCopy size={15} />}
+      className={cc(subtle && 'text-gray-300 dark:text-gray-700')}
+      onClick={() => {
+        navigator.clipboard.writeText(text);
+        toast(
+          `${label} copied to clipboard`, {
+            icon: <FiCheckSquare size={16} />,
+            duration: 4000,
+          },
+        );
+      }}
+    />;
+
   const renderEnvVar = (variable: string) =>
-    <div key={variable}>
-      <span className={cc(
-        'rounded-sm',
-        'bg-gray-100 text-gray-500',
-        'dark:bg-gray-800 dark:text-gray-400',
-      )}>
-        `{variable}`
+    <div
+      key={variable}
+    >
+      <span className="inline-flex items-center gap-1">
+        <span className={cc(
+          'rounded-sm',
+          'bg-gray-100 text-gray-500',
+          'dark:bg-gray-800 dark:text-gray-400',
+        )}>
+          `{variable}`
+        </span>
+        {renderCopyButton(variable, variable, true)}
       </span>
     </div>;
 
@@ -137,18 +157,7 @@ export default function SiteChecklistClient({
             <div className="flex items-center gap-4">
               <span>{secret}</span>
               <div className="flex items-center gap-0.5">
-                <IconButton
-                  icon={<BiCopy size={16} />}
-                  onClick={() => {
-                    navigator.clipboard.writeText(secret);
-                    toast(
-                      'Secret copied to clipboard', {
-                        icon: <FiCheckSquare size={16} />,
-                        duration: 4000,
-                      },
-                    );
-                  }}
-                />
+                {renderCopyButton('Secret', secret)}
                 <IconButton
                   icon={<BiRefresh size={18} />}
                   onClick={refreshSecret}
