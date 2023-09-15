@@ -1,7 +1,7 @@
 import SiteGrid from '@/components/SiteGrid';
 import PhotoGrid from '@/photo/PhotoGrid';
 import { getPhotos } from '@/services/postgres';
-import { absolutePathForTagImage } from '@/site/paths';
+import { absolutePathForTag, absolutePathForTagImage } from '@/site/paths';
 import {
   descriptionForTaggedPhotos,
   ogTitleForTag,
@@ -19,17 +19,27 @@ export async function generateMetadata({
   params: { tag },
 }: TagProps): Promise<Metadata> {
   const photos = await getPhotos(undefined, undefined, undefined, tag);
+
+  const url = absolutePathForTag(tag);
+  const titlePage = pageTitleForTag(tag);
+  const titleOg = ogTitleForTag(tag);
+  const description = descriptionForTaggedPhotos(photos);
+  const images = absolutePathForTagImage(tag);
+
   return {
-    title: pageTitleForTag(tag),
+    title: titlePage,
     openGraph: {
-      title: ogTitleForTag(tag),
-      images: absolutePathForTagImage(tag),
+      title: titleOg,
+      description,
+      images,
+      url,
     },
     twitter: {
+      images,
+      description,
       card: 'summary_large_image',
-      images: absolutePathForTagImage(tag),
     },
-    description: descriptionForTaggedPhotos(photos),
+    description,
   };
 }
 
