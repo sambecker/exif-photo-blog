@@ -64,6 +64,7 @@ export interface Photo extends PhotoDb {
   exposureTimeFormatted?: string
   exposureCompensationFormatted?: string
   takenAtNaiveFormatted?: string
+  takenAtNaiveFormattedShort?: string
 }
 
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
@@ -89,6 +90,8 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
       formatExposureCompensation(photoDb.exposureCompensation),
     takenAtNaiveFormatted:
       formatDateFromPostgresString(photoDb.takenAtNaive),
+    takenAtNaiveFormattedShort:
+      formatDateFromPostgresString(photoDb.takenAtNaive, true),
   };
 };
 

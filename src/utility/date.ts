@@ -1,13 +1,14 @@
 import { format, parseISO, parse } from 'date-fns';
 
+const DATE_STRING_FORMAT_SHORT    = 'dd MMM yyyy';
 const DATE_STRING_FORMAT          = 'd MMM yyyy h:mma';
 const DATE_STRING_FORMAT_POSTGRES = 'yyyy-MM-dd HH:mm:ss';
 
-export const formatDate = (date: Date) =>
-  format(date, DATE_STRING_FORMAT);
+export const formatDate = (date: Date, short?: boolean) =>
+  format(date, short? DATE_STRING_FORMAT_SHORT : DATE_STRING_FORMAT);
 
-export const formatDateFromPostgresString = (date: string) =>
-  formatDate(parse(date, DATE_STRING_FORMAT_POSTGRES, new Date()));
+export const formatDateFromPostgresString = (date: string, short?: boolean) =>
+  formatDate(parse(date, DATE_STRING_FORMAT_POSTGRES, new Date()), short);
 
 export const formatDateForPostgres = (date: Date) =>
   date.toISOString().replace(

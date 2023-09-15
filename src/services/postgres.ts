@@ -166,7 +166,7 @@ const sqlGetPhotosFromDbByTag = (
 ) =>
   sql<PhotoDb>`
     SELECT * FROM photos WHERE ${tag}=ANY(tags)
-    ORDER BY taken_at DESC
+    ORDER BY taken_at ASC
     LIMIT ${limit} OFFSET ${offset}
   `
     .then(({ rows }) => rows.map(parsePhotoFromDb));

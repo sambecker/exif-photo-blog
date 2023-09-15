@@ -11,12 +11,15 @@ export default function PhotoTag({
     <Link
       key={tag}
       href={pathForTag(tag)}
-      className="flex items-center gap-x-2"
+      className="flex items-center gap-x-1.5 self-start"
     >
+      <FaTag
+        size={11}
+        className="text-gray-700 dark:text-gray-300 translate-y-[0.5px]"
+      />
       <span className="uppercase">
         {tag.replaceAll('-', ' ')}
       </span>
-      <FaTag size={11} />
     </Link>
   );
 }
