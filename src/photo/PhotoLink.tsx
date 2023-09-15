@@ -30,6 +30,7 @@ export default function PhotoLink({
             setNextPhotoAnimation?.(nextPhotoAnimation);
           }
         }}
+        scroll={false}
       >
         {children}
       </Link>
