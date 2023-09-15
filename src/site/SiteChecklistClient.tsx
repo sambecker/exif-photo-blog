@@ -101,7 +101,7 @@ export default function SiteChecklistClient({
 
   return (
     <div className="text-sm max-w-xl space-y-4">
-      <Checklist>
+      <Checklist title="Site content">
         <ChecklistRow
           title="Add title"
           status={hasTitle}
@@ -119,6 +119,8 @@ export default function SiteChecklistClient({
           Store in environment variable:
           {renderEnvVars(['NEXT_PUBLIC_SITE_DOMAIN'])}
         </ChecklistRow>
+      </Checklist>
+      <Checklist title="Storage">
         <ChecklistRow
           title="Setup database"
           status={hasPostgres}
@@ -143,6 +145,8 @@ export default function SiteChecklistClient({
           {' '}
           and connect to project
         </ChecklistRow>
+      </Checklist>
+      <Checklist title="Authentication">
         <ChecklistRow
           title="Setup auth"
           status={hasAuth}

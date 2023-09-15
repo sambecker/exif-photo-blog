@@ -18,7 +18,7 @@ export default function ChecklistRow({
   return (
     <div className={cc(
       'flex gap-2.5',
-      'px-4 py-3',
+      'px-4 pt-2 pb-2.5',
       'text-left',
     )}>
       <div className="min-w-[1rem] pt-[1px]">
