@@ -2,13 +2,13 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tailwindcss/forms': ^0.5.6
-  '@types/node': ^20.6.0
+  '@types/node': ^20.6.1
   '@types/react': 18.2.21
   '@types/react-dom': 18.2.7
   '@typescript-eslint/eslint-plugin': ^6.7.0
   '@typescript-eslint/parser': ^6.7.0
   '@vercel/analytics': ^1.0.2
-  '@vercel/blob': ^0.12.1
+  '@vercel/blob': ^0.12.2
   '@vercel/og': ^0.5.13
   '@vercel/postgres': ^0.4.1
   autoprefixer: 10.4.15
@@ -32,13 +32,13 @@ specifiers:
 
 dependencies:
   '@tailwindcss/forms': 0.5.6_tailwindcss@3.3.3
-  '@types/node': 20.6.0
+  '@types/node': 20.6.1
   '@types/react': 18.2.21
   '@types/react-dom': 18.2.7
   '@typescript-eslint/eslint-plugin': 6.7.0_upusunw4marwma72j5kmgdi4ee
   '@typescript-eslint/parser': 6.7.0_rngtr6f3b25lvetpihwplgecf4
   '@vercel/analytics': 1.0.2
-  '@vercel/blob': 0.12.1
+  '@vercel/blob': 0.12.2
   '@vercel/og': 0.5.13
   '@vercel/postgres': 0.4.1
   autoprefixer: 10.4.15_postcss@8.4.29
@@ -193,7 +193,7 @@ packages:
     dependencies:
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 20.6.0
+      '@types/node': 20.6.1
       jest-mock: 29.7.0
     dev: false
 
@@ -203,7 +203,7 @@ packages:
     dependencies:
       '@jest/types': 29.6.3
       '@sinonjs/fake-timers': 10.3.0
-      '@types/node': 20.6.0
+      '@types/node': 20.6.1
       jest-message-util: 29.7.0
       jest-mock: 29.7.0
       jest-util: 29.7.0
@@ -223,7 +223,7 @@ packages:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.4
       '@types/istanbul-reports': 3.0.1
-      '@types/node': 20.6.0
+      '@types/node': 20.6.1
       '@types/yargs': 17.0.24
       chalk: 4.1.2
     dev: false
@@ -453,7 +453,7 @@ packages:
   /@types/jsdom/20.0.1:
     resolution: {integrity: sha512-d0r18sZPmMQr1eG35u12FZfhIXNrnsPU/g5wvRKCUf/tOGilKKwYMYGqh33BNR6ba+2gkHw1EUiHoN3mn7E5IQ==}
     dependencies:
-      '@types/node': 20.6.0
+      '@types/node': 20.6.1
       '@types/tough-cookie': 4.0.3
       parse5: 7.1.2
     dev: false
@@ -466,14 +466,14 @@ packages:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: false
 
-  /@types/node/20.6.0:
-    resolution: {integrity: sha512-najjVq5KN2vsH2U/xyh2opaSEz6cZMR2SetLIlxlj08nOcmPOemJmUK2o4kUzfLqfrWE0PIrNeE16XhYDd3nqg==}
+  /@types/node/20.6.1:
+    resolution: {integrity: sha512-4LcJvuXQlv4lTHnxwyHQZ3uR9Zw2j7m1C9DfuwoTFQQP4Pmu04O6IfLYgMmHoOCt0nosItLLZAH+sOrRE0Bo8g==}
     dev: false
 
   /@types/pg/8.6.6:
     resolution: {integrity: sha512-O2xNmXebtwVekJDD+02udOncjVcMZQuTEQEMpKJ0ZRf5E7/9JJX3izhKUcUifBkyKpljyUM6BTgy2trmviKlpw==}
     dependencies:
-      '@types/node': 20.6.0
+      '@types/node': 20.6.1
       pg-protocol: 1.6.0
       pg-types: 2.2.0
     dev: false
@@ -657,12 +657,12 @@ packages:
     resolution: {integrity: sha512-BZFxVrv24VbNNl5xMxqUojQIegEeXMI6rX3rg1uVLYUEXsuKNBSAEQf4BWEcjQDp/8aYJOj6m8V4PUA3x/cxgg==}
     dev: false
 
-  /@vercel/blob/0.12.1:
-    resolution: {integrity: sha512-pnjkXjDRYjTsYU8fBgsBWlpxDRUG8x4oCG6KCJjaBJ2JPYf0bPT4rSHxnfH14QPab1VozJgB2SVBkcFcx8Y5OQ==}
+  /@vercel/blob/0.12.2:
+    resolution: {integrity: sha512-TlHgiTVlRu3NyLHc5KYqSJ57LTeKZL9uoKV0Tp3mBDRglPYx63XIEyD98TvvKjefT/TcUbODhIaorvTym6xX0Q==}
     engines: {node: '>=16.14'}
     dependencies:
-      jest-environment-jsdom: 29.6.4
-      undici: 5.23.0
+      jest-environment-jsdom: 29.7.0
+      undici: 5.24.0
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -2243,8 +2243,8 @@ packages:
       reflect.getprototypeof: 1.0.4
     dev: false
 
-  /jest-environment-jsdom/29.6.4:
-    resolution: {integrity: sha512-K6wfgUJ16DoMs02JYFid9lOsqfpoVtyJxpRlnTxUHzvZWBnnh2VNGRB9EC1Cro96TQdq5TtSjb3qUjNaJP9IyA==}
+  /jest-environment-jsdom/29.7.0:
+    resolution: {integrity: sha512-k9iQbsf9OyOfdzWH8HDmrRT0gSIcX+FLNW7IQq94tFX0gynPwqDTW0Ho6iMVNjGz/nb+l/vW3dWM2bbLLpkbXA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     peerDependencies:
       canvas: ^2.5.0
@@ -2256,7 +2256,7 @@ packages:
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
       '@types/jsdom': 20.0.1
-      '@types/node': 20.6.0
+      '@types/node': 20.6.1
       jest-mock: 29.7.0
       jest-util: 29.7.0
       jsdom: 20.0.3
@@ -2286,7 +2286,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 20.6.0
+      '@types/node': 20.6.1
       jest-util: 29.7.0
     dev: false
 
@@ -2295,7 +2295,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 20.6.0
+      '@types/node': 20.6.1
       chalk: 4.1.2
       ci-info: 3.8.0
       graceful-fs: 4.2.11
@@ -3541,8 +3541,8 @@ packages:
       which-boxed-primitive: 1.0.2
     dev: false
 
-  /undici/5.23.0:
-    resolution: {integrity: sha512-1D7w+fvRsqlQ9GscLBwcAJinqcZGHUKjbOmXdlE/v8BvEGXjeWAax+341q44EuTcHXXnfyKNbKRq4Lg7OzhMmg==}
+  /undici/5.24.0:
+    resolution: {integrity: sha512-OKlckxBjFl0oXxcj9FU6oB8fDAaiRUq+D8jrFWGmOfI/gIyjk/IeS75LMzgYKUaeHzLUcYvf9bbJGSrUwTfwwQ==}
     engines: {node: '>=14.0'}
     dependencies:
       busboy: 1.6.0
