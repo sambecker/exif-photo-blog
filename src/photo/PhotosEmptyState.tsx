@@ -29,7 +29,7 @@ export default function PhotosEmptyState() {
                 {' '}
                 <Link
                   href="/admin"
-                  className="underline hover:no-underline"
+                  className="hover:text-gray-800 hover:dark:text-gray-100"
                 >
                   /admin
                 </Link>

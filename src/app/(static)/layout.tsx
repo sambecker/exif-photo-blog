@@ -1,4 +1,5 @@
 import FooterStatic from '@/components/FooterStatic';
+import PageContentContainer from '@/components/PageContentContainer';
 
 export default function RootLayout({
   children,
@@ -7,7 +8,9 @@ export default function RootLayout({
 }) {
   return (
     <>
-      {children}
+      <PageContentContainer>
+        {children}
+      </PageContentContainer>
       <FooterStatic />
     </>
   );

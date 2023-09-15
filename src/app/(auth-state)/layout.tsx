@@ -1,4 +1,5 @@
 import FooterAuth from '@/components/FooterAuth';
+import PageContentContainer from '@/components/PageContentContainer';
 import { SessionProvider } from 'next-auth/react';
 
 export default function RootLayout({
@@ -8,10 +9,10 @@ export default function RootLayout({
 }) {
   return (
     <SessionProvider>
-      {children}
-      <div className="my-8">
-        <FooterAuth />
-      </div>
+      <PageContentContainer>
+        {children}
+      </PageContentContainer>
+      <FooterAuth />
     </SessionProvider>
   );
 }

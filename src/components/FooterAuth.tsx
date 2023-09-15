@@ -24,6 +24,7 @@ export default function FooterAuth() {
     <SiteGrid
       contentMain={<div className={cc(
         'flex items-center',
+        'my-8',
         'text-gray-400 dark:text-gray-500',
       )}>
         <div className="flex gap-x-4 gap-y-1 flex-wrap flex-grow">
