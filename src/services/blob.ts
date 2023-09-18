@@ -1,7 +1,13 @@
-import { BLOB_BASE_URL } from '@/site';
 import { PATH_ADMIN_UPLOAD_BLOB_HANDLER } from '@/site/paths';
 import { del, list, put } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
+
+const STORE_ID = process.env.BLOB_READ_WRITE_TOKEN?.match(
+  /^vercel_blob_rw_([a-z0-9]+)_[a-z0-9]+$/i,
+)?.[1].toLowerCase();
+
+export const BLOB_BASE_URL =
+  `https://${STORE_ID}.public.blob.vercel-storage.com`;
 
 export const ACCEPTED_PHOTO_FILE_TYPES = [
   'image/jpg',

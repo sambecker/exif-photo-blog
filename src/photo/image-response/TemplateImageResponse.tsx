@@ -1,9 +1,9 @@
 import { Photo } from '..';
-import PhotoGridImageResponse from './PhotoGridImageResponse';
 import IconFullFrame from '@/icons/IconFullFrame';
 import IconGrid from '@/icons/IconGrid';
+import ImagePhotoGrid from './components/ImagePhotoGrid';
 
-export default function DeployImageResponse({
+export default function TemplateImageResponse({
   photos,
   request,
   width,
@@ -40,16 +40,16 @@ export default function DeployImageResponse({
       height,
       fontFamily,
     }}>
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        fontSize: 40,
-        height: 80,
-        lineHeight: 1,
-        marginBottom: outerMargin,
-        width: '100%',
-      }}>
-        {includeHeader &&
+      {includeHeader &&
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          fontSize: 40,
+          height: 80,
+          lineHeight: 1,
+          marginBottom: outerMargin,
+          width: '100%',
+        }}>
           <div style={{
             display: 'flex',
             justifyContent: 'flex-start',
@@ -76,23 +76,29 @@ export default function DeployImageResponse({
                 <IconGrid includeTitle={false} width={80} />
               </div>
             </div>
-          </div>}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          flexGrow: 1,
-        }}>
-          photos.sambecker.com
-        </div>
+          </div>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            flexGrow: 1,
+          }}>
+            photos.sambecker.com
+          </div>
+        </div>}
+      <div style={{
+        display: 'flex',
+        ...verticalOffset && { transform: `translateY(${verticalOffset}px)` },
+      }}>
+        <ImagePhotoGrid {...{
+          photos,
+          request,
+          width: innerWidth,
+          height: includeHeader
+            ? height - 130 - outerMargin * 2
+            : height,
+          gap: 10,
+        }} />
       </div>
-      <PhotoGridImageResponse {...{
-        photos,
-        request,
-        colCount: 4,
-        rowCount: 4,
-        width: innerWidth,
-        verticalOffset,
-      }} />
     </div>
   );
 }

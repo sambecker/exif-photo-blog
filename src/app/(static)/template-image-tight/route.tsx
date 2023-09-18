@@ -1,41 +1,45 @@
 import { auth } from '@/auth';
 import { getImageCacheHeadersForAuth } from '@/cache';
-import DeployImageResponse from '@/photo/image-response/DeployImageResponse';
+import {
+  IMAGE_OG_SIZE,
+  MAX_PHOTOS_TO_SHOW_TEMPLATE_TIGHT,
+} from '@/photo/image-response';
+import TemplateImageResponse from
+  '@/photo/image-response/TemplateImageResponse';
 import { getPhotos } from '@/services/postgres';
-import { IMAGE_OG_HEIGHT, IMAGE_OG_WIDTH } from '@/site';
-import { FONT_FAMILY_IBM_PLEX_MONO, getIBMPlexMonoMedium } from '@/site/font';
+import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from '@vercel/og';
 
 export const runtime = 'edge';
 
 export async function GET(request: Request) {
-  const photos = await getPhotos('priority');
-  const fontData = await getIBMPlexMonoMedium();
+  const photos = await getPhotos('priority', MAX_PHOTOS_TO_SHOW_TEMPLATE_TIGHT);
+
+  const {
+    fontFamily,
+    fonts,
+  } = await getIBMPlexMonoMedium();
+
   const headers = await getImageCacheHeadersForAuth(await auth());
+
+  const { width, height } = IMAGE_OG_SIZE;
 
   return new ImageResponse(
     (
-      <DeployImageResponse {...{
+      <TemplateImageResponse {...{
         photos,
         request,
         includeHeader: false,
         outerMargin: 0,
-        width: IMAGE_OG_WIDTH,
-        height: IMAGE_OG_HEIGHT,
-        verticalOffset: -30,
-        fontFamily: FONT_FAMILY_IBM_PLEX_MONO,
+        width,
+        height,
+        fontFamily,
       }}/>
     ),
     {
-      width: IMAGE_OG_WIDTH,
-      height: IMAGE_OG_HEIGHT,
-      fonts: [
-        {
-          name: FONT_FAMILY_IBM_PLEX_MONO,
-          data: fontData,
-          style: 'normal',
-        },
-      ],
+      width,
+      height,
+      fonts,
       headers,
     },
   );

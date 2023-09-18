@@ -9,9 +9,9 @@ import {
 import { cc } from '@/utility/css';
 import Link from 'next/link';
 import { BiError } from 'react-icons/bi';
-import { IMAGE_OG_HEIGHT, IMAGE_OG_RATIO, IMAGE_OG_WIDTH } from '@/site';
 import { absolutePathForPhotoImage, pathForPhoto } from '@/site/paths';
 import Spinner from '@/components/Spinner';
+import { IMAGE_OG_SIZE } from './image-response';
 
 export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 
@@ -44,6 +44,8 @@ export default function PhotoOGTile({
     }
   }, [loadingStateExternal, loadingStateInternal]);
 
+  const { width, height, ratio } = IMAGE_OG_SIZE;
+
   return (
     <Link
       key={photo.id}
@@ -58,7 +60,7 @@ export default function PhotoOGTile({
     >
       <div
         className="relative"
-        style={{ aspectRatio: IMAGE_OG_RATIO }}
+        style={{ aspectRatio: ratio }}
       >
         {loadingState === 'loading' &&
           <div className={cc(
@@ -85,8 +87,8 @@ export default function PhotoOGTile({
               'transition-opacity',
             )}
             src={absolutePathForPhotoImage(photo)}
-            width={IMAGE_OG_WIDTH}
-            height={IMAGE_OG_HEIGHT}
+            width={width}
+            height={height}
             onLoad={() => {
               if (onLoad) {
                 onLoad();

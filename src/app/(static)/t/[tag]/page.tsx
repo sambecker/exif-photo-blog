@@ -53,13 +53,13 @@ export default async function TagPage({ params: { tag } }: TagProps) {
     <SiteGrid
       contentMain={<div className="space-y-8 mt-4">
         <div className={cc(
-          'flex gap-2 sm:gap-0',
-          'sm:grid sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
+          'flex flex-col gap-y-0.5',
+          'xs:grid grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
         )}>
           <PhotoTag tag={tag} />
           <span className={cc(
             'uppercase text-gray-300 dark:text-gray-500',
-            'col-span-2 md:col-span-1 lg:col-span-2',
+            'sm:col-span-2 md:col-span-1 lg:col-span-2',
           )}>
             {descriptionForTaggedPhotos(photos)}
           </span>

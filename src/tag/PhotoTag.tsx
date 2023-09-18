@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { pathForTag } from '@/site/paths';
 import { FaTag } from 'react-icons/fa';
+import { cc } from '@/utility/css';
 
 export default function PhotoTag({
   tag,
@@ -15,7 +16,10 @@ export default function PhotoTag({
     >
       <FaTag
         size={11}
-        className="text-gray-700 dark:text-gray-300 translate-y-[0.5px]"
+        className={cc(
+          'flex-shrink-0',
+          'text-gray-700 dark:text-gray-300 translate-y-[0.5px]',
+        )}
       />
       <span className="uppercase">
         {tag.replaceAll('-', ' ')}

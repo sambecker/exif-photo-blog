@@ -1,7 +1,10 @@
+// Must be explicity defined next.config.js `imageSizes`
+export type NextImageWidth = 200 | 400 | 1050 | 1200;
+
 export const getNextImageUrlForRequest = (
   imageUrl: string,
   request: Request,
-  width: number,
+  width: NextImageWidth,
   quality = 75,
 ) => {
   const protocol = (request.headers.get('x-forwarded-proto') || 'https')
