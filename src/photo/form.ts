@@ -98,7 +98,8 @@ export const convertExifToFormData = (
 });
 
 export const convertFormDataToPhoto = (
-  formData: FormData
+  formData: FormData,
+  generateId?: boolean,
 ): PhotoDbInsert => {
   const photoForm = Object.fromEntries(formData) as PhotoFormData;
   
@@ -111,6 +112,7 @@ export const convertFormDataToPhoto = (
 
   return {
     ...photoForm,
+    ...(generateId && !photoForm.id) && { id: crypto.randomUUID() },
     // convert form strings to arrays
     tags: convertStringToArray(photoForm.tags),
     // Convert form strings to numbers

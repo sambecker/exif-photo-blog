@@ -47,6 +47,7 @@ const sqlCreatePhotosTable = () =>
 export const sqlInsertPhotoIntoDb = (photo: PhotoDbInsert) => {
   return sql`
     INSERT INTO photos (
+      id,
       url,
       extension,
       aspect_ratio,
@@ -70,6 +71,7 @@ export const sqlInsertPhotoIntoDb = (photo: PhotoDbInsert) => {
       taken_at_naive
     )
     VALUES (
+      ${photo.id},
       ${photo.url},
       ${photo.extension},
       ${photo.aspectRatio},

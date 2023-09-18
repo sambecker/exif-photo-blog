@@ -37,7 +37,6 @@ export interface PhotoExif {
 // Raw db insert
 export interface PhotoDbInsert extends PhotoExif {
   id: string
-  idShort: string
   url: string
   extension: string
   blurData: string
@@ -57,6 +56,7 @@ export interface PhotoDb extends Omit<PhotoDbInsert, 'takenAt' | 'tags'> {
 
 // Parsed db response
 export interface Photo extends PhotoDb {
+  idShort?: string
   focalLengthFormatted?: string
   focalLengthIn35MmFormatFormatted?: string
   fNumberFormatted?: string

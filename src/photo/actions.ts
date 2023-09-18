@@ -15,7 +15,7 @@ import {
 import { revalidatePhotosTag } from '@/cache';
 
 export async function createPhotoAction(formData: FormData) {
-  const photo = convertFormDataToPhoto(formData);
+  const photo = convertFormDataToPhoto(formData, true);
 
   const updatedUrl = await convertUploadToPhoto(
     photo.url,
