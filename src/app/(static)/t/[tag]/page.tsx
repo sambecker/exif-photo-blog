@@ -58,7 +58,7 @@ export default async function TagPage({ params: { tag } }: TagProps) {
         )}>
           <PhotoTag tag={tag} />
           <span className={cc(
-            'uppercase text-gray-300 dark:text-gray-500',
+            'uppercase text-gray-400 dark:text-gray-500',
             'sm:col-span-2 md:col-span-1 lg:col-span-2',
           )}>
             {descriptionForTaggedPhotos(photos)}
