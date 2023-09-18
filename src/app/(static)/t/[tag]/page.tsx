@@ -1,12 +1,9 @@
 import SiteGrid from '@/components/SiteGrid';
+import { dateRangeForPhotos } from '@/photo';
 import PhotoGrid from '@/photo/PhotoGrid';
 import { getPhotos } from '@/services/postgres';
 import { absolutePathForTag, absolutePathForTagImage } from '@/site/paths';
-import {
-  descriptionForTaggedPhotos,
-  ogTitleForTag,
-  pageTitleForTag,
-} from '@/tag';
+import { descriptionForTaggedPhotos, titleForTag } from '@/tag';
 import PhotoTag from '@/tag/PhotoTag';
 import { cc } from '@/utility/css';
 import { Metadata } from 'next';
@@ -21,15 +18,14 @@ export async function generateMetadata({
   const photos = await getPhotos(undefined, undefined, undefined, tag);
 
   const url = absolutePathForTag(tag);
-  const titlePage = pageTitleForTag(tag);
-  const titleOg = ogTitleForTag(tag);
-  const description = descriptionForTaggedPhotos(photos);
+  const title = titleForTag(tag, photos);
+  const description = descriptionForTaggedPhotos(photos, true);
   const images = absolutePathForTagImage(tag);
 
   return {
-    title: titlePage,
+    title,
     openGraph: {
-      title: titleOg,
+      title,
       description,
       images,
       url,
@@ -46,8 +42,7 @@ export async function generateMetadata({
 export default async function TagPage({ params: { tag } }: TagProps) {
   const photos = await getPhotos(undefined, undefined, undefined, tag);
 
-  const dateStart = photos[0].takenAtNaiveFormattedShort;
-  const dateEnd = photos[photos.length - 1].takenAtNaiveFormattedShort;
+  const { start, end } = dateRangeForPhotos(photos);
 
   return (
     <SiteGrid
@@ -68,9 +63,9 @@ export default async function TagPage({ params: { tag } }: TagProps) {
             'text-right uppercase',
             'text-gray-400 dark:text-gray-500',
           )}>
-            {dateStart === dateEnd
-              ? dateStart
-              : <>{dateStart}<br />– {dateEnd}</>}
+            {start === end
+              ? start
+              : <>{start}<br />– {end}</>}
           </span>
         </div>
         <PhotoGrid photos={photos} />

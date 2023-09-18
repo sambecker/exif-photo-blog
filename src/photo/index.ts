@@ -63,8 +63,8 @@ export interface Photo extends PhotoDb {
   isoFormatted?: string
   exposureTimeFormatted?: string
   exposureCompensationFormatted?: string
-  takenAtNaiveFormatted?: string
-  takenAtNaiveFormattedShort?: string
+  takenAtNaiveFormatted: string
+  takenAtNaiveFormattedShort: string
 }
 
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
@@ -178,3 +178,12 @@ export const translatePhotoId = (shortId: string) => {
 
 export const titleForPhoto = (photo: Photo) =>
   photo.title || 'Untitled';
+
+export const dateRangeForPhotos = (photos: Photo[]) => {
+  const start = photos[0].takenAtNaiveFormattedShort;
+  const end = photos[photos.length - 1].takenAtNaiveFormattedShort;
+  const description = start === end
+    ? start
+    : `${start}–${end}`;
+  return { start, end, description };
+};
