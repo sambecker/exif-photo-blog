@@ -246,6 +246,10 @@ export const getPhotosCount = async () => sql`
   SELECT COUNT(*) FROM photos
 `.then(({ rows }) => parseInt(rows[0].count, 10));
 
+export const getUniqueTags = async () => sql`
+  SELECT DISTINCT unnest(tags) FROM photos
+`.then(({ rows }) => rows.map(row => row.unnest as string));
+
 export const getPhoto = async (id: string): Promise<Photo | undefined> => {
   // Check for photo id forwarding
   // and convert short ids to uuids
