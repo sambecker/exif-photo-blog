@@ -9,19 +9,14 @@ const STORE_ID = process.env.BLOB_READ_WRITE_TOKEN?.match(
 export const BLOB_BASE_URL =
   `https://${STORE_ID}.public.blob.vercel-storage.com`;
 
+const PREFIX_UPLOAD = 'upload';
+const PREFIX_PHOTO = 'photo';
+
 export const ACCEPTED_PHOTO_FILE_TYPES = [
   'image/jpg',
   'image/jpeg',
   'image/png',
 ];
-
-const PREFIX_UPLOAD = 'upload';
-const PREFIX_PHOTO = 'photo';
-
-const REGEX_ID = new RegExp(
-  `\/(?:${PREFIX_UPLOAD}|${PREFIX_PHOTO})-([a-z0-9]+)\.[a-z]{1,4}`,
-  'i',
-);
 
 const REGEX_UPLOAD_PATH = new RegExp(
   `(?:${PREFIX_UPLOAD})\.[a-z]{1,4}`,
@@ -30,9 +25,6 @@ const REGEX_UPLOAD_PATH = new RegExp(
 
 export const pathForBlobUrl = (url: string) =>
   url.replace(`${BLOB_BASE_URL}/`, '');
-
-export const getIdFromBlobUrl = (url: string) =>
-  url.match(REGEX_ID)?.[1];
 
 export const getExtensionFromBlobUrl = (url: string) =>
   url.match(/.([a-z]{1,4})$/i)?.[1];
