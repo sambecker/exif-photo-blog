@@ -8,12 +8,14 @@ export default function ImagePhotoGrid({
   request,
   width,
   height,
+  imagePosition = 'center',
   gap = 3,
 }: {
   photos: Photo[]
   request: Request
   width: number
   height: number
+  imagePosition?: 'center' | 'top'
   gap?: number
 }) {
   let count = 1;
@@ -31,6 +33,11 @@ export default function ImagePhotoGrid({
 
   const imagesPerRow = count / rows;
 
+  const cellWidth = width / imagesPerRow -
+    (imagesPerRow - 1) * gap / (imagesPerRow);
+  const cellHeight= height / rows -
+    (rows - 1) * gap / rows;
+
   return (
     <div style={{
       display: 'flex',
@@ -39,26 +46,28 @@ export default function ImagePhotoGrid({
       justifyContent: 'center',
       gap,
     }}>
-      {photos.slice(0, count).map(photo =>
+      {photos.slice(0, count).map(({ id, url }) =>
         <div
-          key={photo.id}
+          key={id}
           style={{
             display: 'flex',
-            width:
-              width / imagesPerRow -
-              (imagesPerRow - 1) * gap / (imagesPerRow),
-            height: height / rows - (rows - 1) * gap / rows,
+            width: cellWidth,
+            height: cellHeight,
+            overflow: 'hidden',
           }}
         >
           <img {...{
-            src: getNextImageUrlForRequest(photo.url, request, imageQuality),
+            src: getNextImageUrlForRequest(url, request, imageQuality),
             style: {
               width: '100%',
-              height: '100%',
+              ...imagePosition === 'center' && {
+                height: '100%',
+              },
               objectFit: 'cover',
             },
           }} />
-        </div>)}
+        </div>
+      )}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { formatModelShort } from '@/utility/exif';
 import { AiFillApple } from 'react-icons/ai';
 import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
+import ImageContainer from './components/ImageContainer';
 
 export default function PhotoImageResponse({
   photo,
@@ -19,18 +20,13 @@ export default function PhotoImageResponse({
   fontFamily: string
 }) {
   return (
-    <div style={{
-      display: 'flex',
-      position: 'relative',
-      background: 'red',
-      width,
-      height,
-    }}>
+    <ImageContainer {...{ width, height }}>
       <ImagePhotoGrid {...{
         photos: [photo],
         request,
         width,
         height,
+        imagePosition: 'top',
       }} />
       <ImageCaption {...{ width, height, fontFamily }}>
         {photo.make === 'Apple' &&
@@ -50,6 +46,6 @@ export default function PhotoImageResponse({
           {photo.isoFormatted}
         </div>
       </ImageCaption>
-    </div>
+    </ImageContainer>
   );
 };
