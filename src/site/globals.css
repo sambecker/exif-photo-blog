@@ -42,8 +42,8 @@
       file:shadow-sm
       file:active:bg-gray-100
       file:disabled:bg-gray-100
-      file:hover:border-gray-300
-      file:hover:disabled:border-gray-200
+      file:hover:border-gray-300 file:dark:hover:border-gray-600
+      file:hover:disabled:border-gray-200 file:dark:hover:disabled:border-gray-700
       file:active:disabled:bg-white
       file:hover:disabled:cursor-not-allowed
   }
