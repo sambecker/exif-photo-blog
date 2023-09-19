@@ -12,9 +12,6 @@ import {
 } from '@/utility/exif';
 import camelcaseKeys from 'camelcase-keys';
 import { Metadata } from 'next';
-import short from 'short-uuid';
-
-const translator = short();
 
 export const GRID_THUMBNAILS_TO_SHOW_MAX = 12;
 
@@ -58,7 +55,6 @@ export interface PhotoDb extends Omit<PhotoDbInsert, 'takenAt' | 'tags'> {
 
 // Parsed db response
 export interface Photo extends PhotoDb {
-  idShort?: string
   focalLengthFormatted?: string
   focalLengthIn35MmFormatFormatted?: string
   fNumberFormatted?: string
@@ -75,8 +71,6 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
   ) as unknown as PhotoDb;
   return {
     ...photoDb,
-    idShort:
-      translator.fromUUID(photoDb.id),
     tags: photoDb.tags ?? [],
     focalLengthFormatted:
       formatFocalLength(photoDb.focalLength),
@@ -173,10 +167,8 @@ const PHOTO_ID_FORWARDING_TABLE: Record<string, string> = JSON.parse(
   process.env.PHOTO_ID_FORWARDING_TABLE || '{}'
 );
 
-export const translatePhotoId = (shortId: string) => {
-  const id = PHOTO_ID_FORWARDING_TABLE[shortId] || shortId;
-  return id.length === 22 ? translator.toUUID(id) : id;
-};
+export const translatePhotoId = (id: string) =>
+  PHOTO_ID_FORWARDING_TABLE[id] || id;
 
 export const titleForPhoto = (photo: Photo) =>
   photo.title || 'Untitled';

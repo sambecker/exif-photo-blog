@@ -79,7 +79,7 @@ export default function PhotoOGTile({
           </div>}
         {(loadingState === 'loading' || loadingState === 'loaded') &&
           <img
-            alt={`OG Image: ${photo.idShort}`}
+            alt={titleForPhoto(photo)}
             className={cc(
               'absolute top-0 left-0 right-0 bottom-0 z-0',
               'w-full',

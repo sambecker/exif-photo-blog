@@ -6,7 +6,6 @@ import {
   parsePhotoFromDb,
   Photo,
 } from '@/photo';
-import { isValidUUID } from '@/utility/string';
 
 const PHOTO_DEFAULT_LIMIT = 100;
 
@@ -17,7 +16,7 @@ export const convertArrayToPostgresString = (array?: string[]) => array
 const sqlCreatePhotosTable = () =>
   sql`
     CREATE TABLE IF NOT EXISTS photos (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      id VARCHAR(8) PRIMARY KEY,
       url VARCHAR(255) NOT NULL,
       extension VARCHAR(255) NOT NULL,
       aspect_ratio REAL DEFAULT 1.5,
@@ -44,6 +43,7 @@ const sqlCreatePhotosTable = () =>
     )
   `;
 
+// Must provide id as 8-character nanoid
 export const sqlInsertPhotoIntoDb = (photo: PhotoDbInsert) => {
   return sql`
     INSERT INTO photos (
@@ -256,8 +256,6 @@ export const getPhoto = async (id: string): Promise<Photo | undefined> => {
   // Check for photo id forwarding
   // and convert short ids to uuids
   const photoId = translatePhotoId(id);
-  return isValidUUID(photoId)
-    ? sqlGetPhotoFromDb(photoId)
-      .then(photos => photos.length > 0 ? photos[0] : undefined)
-    : Promise.resolve(undefined);
+  return sqlGetPhotoFromDb(photoId)
+    .then(photos => photos.length > 0 ? photos[0] : undefined);
 };

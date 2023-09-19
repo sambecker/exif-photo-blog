@@ -13,14 +13,14 @@ export const ABSOLUTE_PATH_FOR_HOME_IMAGE = `${BASE_URL}/home-image`;
 
 export const pathForPhoto = (photo: Photo, tag?: string) =>
   tag
-    ? `${pathForTag(tag)}/${photo.idShort}`
-    : `${PREFIX_PHOTO}/${photo.idShort}`;
+    ? `${pathForTag(tag)}/${photo.id}`
+    : `${PREFIX_PHOTO}/${photo.id}`;
 
 export const pathForPhotoShare = (photo: Photo, tag?: string) =>
   `${pathForPhoto(photo, tag)}/share`;
 
 export const pathForPhotoEdit = (photo: Photo) =>
-  `${PATH_ADMIN_PHOTOS}/${photo.idShort}/edit`;
+  `${PATH_ADMIN_PHOTOS}/${photo.id}/edit`;
 
 export const pathForTag = (tag: string) => `${PREFIX_TAG}/${tag}`;
 
