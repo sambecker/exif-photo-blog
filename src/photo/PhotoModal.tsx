@@ -38,7 +38,7 @@ export default function PhotoModal({
           'flex items-center justify-stretch',
           'border border-gray-200 dark:border-gray-800',
         )}>
-          <div className="truncate p-2">
+          <div className="truncate p-2 w-full">
             {shareUrl}
           </div>
           <div
