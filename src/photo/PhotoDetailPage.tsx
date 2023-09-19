@@ -49,6 +49,7 @@ export default function PhotoDetailPage({
         contentMain={<PhotoGrid
           photos={photosGrid ?? photos}
           selectedPhoto={photo}
+          tag={tag}
           animateOnFirstLoadOnly
         />}
         contentSide={<div className={cc(
