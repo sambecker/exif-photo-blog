@@ -9,7 +9,7 @@ export default function ImagePhotoGrid({
   width,
   height,
   imagePosition = 'center',
-  gap = 3,
+  gap = 4,
 }: {
   photos: Photo[]
   request: Request
