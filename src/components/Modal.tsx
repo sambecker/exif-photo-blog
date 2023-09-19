@@ -51,7 +51,7 @@ export default function Modal({
             'dark:border dark:border-gray-800',
             'md:p-4 md:rounded-xl',
           )}
-          style={{ maxWidth: 'min(500px, 90vw)' }}
+          style={{ width: 'min(500px, 90vw)' }}
           ref={contentRef}
         >
           {children}
