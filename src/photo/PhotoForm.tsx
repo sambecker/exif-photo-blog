@@ -41,34 +41,39 @@ export default function PhotoForm({
     image.crossOrigin = 'anonymous';
     image.src = url;
     image.onload = () => {
-      const canvas = canvasRef.current;
-      if (canvas) {
-        canvas.width = THUMBNAIL_WIDTH * BLUR_SCALE;
-        canvas.height = THUMBNAIL_HEIGHT * BLUR_SCALE;
-        canvas.style.width = `${THUMBNAIL_WIDTH}px`;
-        canvas.style.height = `${THUMBNAIL_HEIGHT}px`;
-        const context = canvasRef.current?.getContext('2d');
-        if (context) {
-          context.scale(BLUR_SCALE, BLUR_SCALE);
-          context.filter =
-            'contrast(1.2) saturate(1.2)' +
-            `blur(${BLUR_SCALE * 10}px)`;
-          context.drawImage(
-            image,
-            -EDGE_BLUR_COMPENSATION,
-            -EDGE_BLUR_COMPENSATION,
-            THUMBNAIL_WIDTH + EDGE_BLUR_COMPENSATION * 2,
-            THUMBNAIL_WIDTH * image.height / image.width
-              + EDGE_BLUR_COMPENSATION * 2,
-          );
-          if (type === 'create') {
-            setFormData(data => ({
-              ...data,
-              blurData: canvas.toDataURL('image/jpeg', BLUE_JPEG_QUALITY),
-            }));
+      const timeout = setTimeout(() => {
+        const canvas = canvasRef.current;
+        if (canvas) {
+          canvas.width = THUMBNAIL_WIDTH * BLUR_SCALE;
+          canvas.height = THUMBNAIL_HEIGHT * BLUR_SCALE;
+          canvas.style.width = `${THUMBNAIL_WIDTH}px`;
+          canvas.style.height = `${THUMBNAIL_HEIGHT}px`;
+          const context = canvasRef.current?.getContext('2d');
+          if (context) {
+            context.scale(BLUR_SCALE, BLUR_SCALE);
+            context.filter =
+              'contrast(1.2) saturate(1.2)' +
+              `blur(${BLUR_SCALE * 10}px)`;
+            context.drawImage(
+              image,
+              -EDGE_BLUR_COMPENSATION,
+              -EDGE_BLUR_COMPENSATION,
+              THUMBNAIL_WIDTH + EDGE_BLUR_COMPENSATION * 2,
+              THUMBNAIL_WIDTH * image.height / image.width
+                + EDGE_BLUR_COMPENSATION * 2,
+            );
+            if (type === 'create') {
+              setFormData(data => ({
+                ...data,
+                blurData: canvas.toDataURL('image/jpeg', BLUE_JPEG_QUALITY),
+              }));
+            }
           }
+        } else {
+          console.error('Cannot generate blur data: canvas not found');
         }
-      }
+      }, 1000);
+      return () => clearTimeout(timeout);
     };
   }, [url, type]);
 
