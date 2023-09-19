@@ -18,6 +18,8 @@ export default function PhotoLarge({
   priority?: boolean
   prefetchShare?: boolean
 }) {
+  const tagsToShow = photo.tags.filter(t => t !== tag);
+  
   const renderMiniGrid = (children: JSX.Element) =>
     <div className={cc(
       'flex gap-y-4',
@@ -49,14 +51,16 @@ export default function PhotoLarge({
           'mb-4',
         )}>
           {renderMiniGrid(<>
-            <Link
-              href={pathForPhoto(photo, tag)}
-              className="font-bold uppercase"
-            >
-              {titleForPhoto(photo)}
-            </Link>
-            {photo.tags.length > 0 &&
-              <PhotoTags tags={photo.tags} />}
+            <div>
+              <Link
+                href={pathForPhoto(photo, tag)}
+                className="font-bold uppercase"
+              >
+                {titleForPhoto(photo)}
+              </Link>
+              {tagsToShow.length > 0 &&
+                <PhotoTags tags={tagsToShow} />}
+            </div>
             <div className="uppercase">
               {photo.make} {photo.model}
             </div>
