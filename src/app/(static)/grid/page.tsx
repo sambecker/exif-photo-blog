@@ -41,6 +41,7 @@ export default async function GridPage({
         contentSide={tags &&
           <AnimateItems
             items={tags.map(tag => <PhotoTag key={tag} tag={tag} />)}
+            staggerOnFirstLoadOnly
           />}
         sideHiddenOnMobile
       />
