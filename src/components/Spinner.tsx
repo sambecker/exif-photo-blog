@@ -26,7 +26,7 @@ export default function Spinner({
         viewBox="0 0 12 12"
         fill="none"
         stroke="currentColor"
-        stroke-width={SIZE_DEFAULT / size * 2}
+        strokeWidth={SIZE_DEFAULT / size * 2}
         xmlns="http://www.w3.org/2000/svg"
         className="animate-rotate-pulse"
       >
