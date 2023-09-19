@@ -1,9 +1,11 @@
+import AnimateItems from '@/components/AnimateItems';
 import MorePhotos from '@/components/MorePhotos';
 import SiteGrid from '@/components/SiteGrid';
 import { generateOgImageMetaForPhotos, getPhotosLimitForQuery } from '@/photo';
 import PhotoGrid from '@/photo/PhotoGrid';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
-import { getPhotos, getPhotosCount } from '@/services/postgres';
+import { getPhotos, getPhotosCount, getUniqueTags } from '@/services/postgres';
+import PhotoTag from '@/tag/PhotoTag';
 import { Metadata } from 'next';
 
 export const runtime = 'edge';
@@ -24,6 +26,8 @@ export default async function GridPage({
 
   const count = await getPhotosCount();
 
+  const tags = await getUniqueTags();
+
   const showMorePhotos = count > photos.length;
   
   return (
@@ -34,6 +38,11 @@ export default async function GridPage({
           {showMorePhotos &&
             <MorePhotos path={`/grid?next=${offset + 1}`} />}
         </div>}
+        contentSide={tags &&
+          <AnimateItems
+            items={tags.map(tag => <PhotoTag key={tag} tag={tag} />)}
+          />}
+        sideHiddenOnMobile
       />
       : <PhotosEmptyState />
   );

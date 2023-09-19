@@ -29,7 +29,7 @@ export default function TagHeader({
         'sm:col-span-2 md:col-span-1 lg:col-span-2',
       )}>
         {selectedPhotoIndex !== undefined
-          ? `Tagged photo ${selectedPhotoIndex + 1} of ${photos.length}`
+          ? `Tagged ${selectedPhotoIndex + 1} of ${photos.length}`
           : descriptionForTaggedPhotos(photos)}
       </span>
       <span className={cc(

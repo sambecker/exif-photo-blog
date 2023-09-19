@@ -5,11 +5,13 @@ export default function SiteGrid({
   contentMain,
   contentSide,
   sideFirstOnMobile,
+  sideHiddenOnMobile,
 }: {
   className?: string
   contentMain: JSX.Element
   contentSide?: JSX.Element
   sideFirstOnMobile?: boolean
+  sideHiddenOnMobile?: boolean
 }) {
   return (
     <div className={cc(
@@ -27,7 +29,8 @@ export default function SiteGrid({
       {contentSide &&
         <div className={cc(
           'col-span-1 md:col-span-3',
-          sideFirstOnMobile && 'order-1 md:order-none'
+          sideFirstOnMobile && 'order-1 md:order-none',
+          sideHiddenOnMobile && 'hidden md:block',
         )}>
           {contentSide}
         </div>}
