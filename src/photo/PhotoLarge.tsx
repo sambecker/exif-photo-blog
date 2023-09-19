@@ -9,10 +9,12 @@ import PhotoTags from '@/tag/PhotoTags';
 
 export default function PhotoLarge({
   photo,
+  tag,
   priority,
   prefetchShare,
 }: {
   photo: Photo
+  tag?: string
   priority?: boolean
   prefetchShare?: boolean
 }) {
@@ -32,7 +34,7 @@ export default function PhotoLarge({
         <ImageLarge
           className="w-full"
           alt={titleForPhoto(photo)}
-          href={pathForPhoto(photo)}
+          href={pathForPhoto(photo, tag)}
           src={photo.url}
           aspectRatio={photo.aspectRatio}
           blurData={photo.blurData}
@@ -48,7 +50,7 @@ export default function PhotoLarge({
         )}>
           {renderMiniGrid(<>
             <Link
-              href={pathForPhoto(photo)}
+              href={pathForPhoto(photo, tag)}
               className="font-bold uppercase"
             >
               {titleForPhoto(photo)}
@@ -93,6 +95,7 @@ export default function PhotoLarge({
               <div className="-translate-x-0.5">
                 <SharePhotoButton
                   photo={photo}
+                  tag={tag}
                   prefetch={prefetchShare}
                 />
               </div>

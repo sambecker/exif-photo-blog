@@ -6,14 +6,16 @@ import { pathForPhoto } from '@/site/paths';
 
 export default function PhotoSmall({
   photo,
+  tag,
   selected,
 }: {
   photo: Photo
+  tag?: string
   selected?: boolean
 }) {
   return (
     <Link
-      href={pathForPhoto(photo)}
+      href={pathForPhoto(photo, tag)}
       className={cc(
         'active:brightness-75',
         selected && 'brightness-50',

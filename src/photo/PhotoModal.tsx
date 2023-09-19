@@ -10,11 +10,17 @@ import { Photo } from '.';
 import { toast } from 'sonner';
 import { FiCheckSquare } from 'react-icons/fi';
 
-export default function PhotoModal({ photo }: { photo: Photo }) {
-  const shareUrl = absolutePathForPhoto(photo);
+export default function PhotoModal({
+  photo,
+  tag,
+}: {
+  photo: Photo
+  tag?: string
+}) {
+  const shareUrl = absolutePathForPhoto(photo, tag);
   
   return (
-    <Modal onClosePath={pathForPhoto(photo)}>
+    <Modal onClosePath={pathForPhoto(photo, tag)}>
       <div className="space-y-3 md:space-y-4 w-full">
         <div className={cc(
           'flex items-center gap-x-3',

@@ -5,13 +5,13 @@ import { redirect } from 'next/navigation';
 export const runtime = 'edge';
 
 export default async function Share({
-  params: { photoId },
+  params: { photoId, tag },
 }: {
-  params: { photoId: string }
+  params: { photoId: string, tag: string }
 }) {
   const photo = await getPhoto(photoId);
 
   if (!photo) { return redirect('/'); }
 
-  return <PhotoModal photo={photo} />;
+  return <PhotoModal photo={photo} tag={tag} />;
 }

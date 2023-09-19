@@ -9,11 +9,13 @@ import { pathForPhoto } from '@/site/paths';
 
 export default function PhotoLink({
   photo,
+  tag,
   prefetch,
   nextPhotoAnimation,
   children,
 }: {
   photo?: Photo
+  tag?: string
   prefetch?: boolean
   nextPhotoAnimation?: AnimationConfig
   children: ReactNode
@@ -23,7 +25,7 @@ export default function PhotoLink({
   return (
     photo
       ? <Link
-        href={pathForPhoto(photo)}
+        href={pathForPhoto(photo, tag)}
         prefetch={prefetch}
         onClick={() => {
           if (nextPhotoAnimation) {

@@ -16,6 +16,8 @@ import short from 'short-uuid';
 
 const translator = short();
 
+export const GRID_THUMBNAILS_TO_SHOW_MAX = 12;
+
 // Core EXIF data
 export interface PhotoExif {
   aspectRatio: number

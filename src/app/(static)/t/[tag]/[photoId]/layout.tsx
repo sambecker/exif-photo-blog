@@ -1,13 +1,11 @@
 import {
-  GRID_THUMBNAILS_TO_SHOW_MAX,
   ogImageDescriptionForPhoto,
   titleForPhoto,
 } from '@/photo';
 import { Metadata } from 'next';
 import {
   getPhoto,
-  getPhotosTakenAfterPhotoInclusive,
-  getPhotosTakenBeforePhoto,
+  getPhotos,
 } from '@/services/postgres';
 import { redirect } from 'next/navigation';
 import { absolutePathForPhoto, absolutePathForPhotoImage } from '@/site/paths';
@@ -16,9 +14,9 @@ import PhotoDetailPage from '@/photo/PhotoDetailPage';
 export const runtime = 'edge';
 
 export async function generateMetadata({
-  params: { photoId },
+  params: { photoId, tag },
 }: {
-  params: { photoId: string }
+  params: { photoId: string, tag: string }
 }): Promise<Metadata> {
   const photo = await getPhoto(photoId);
 
@@ -27,7 +25,7 @@ export async function generateMetadata({
   const title = titleForPhoto(photo);
   const description = ogImageDescriptionForPhoto(photo);
   const images = absolutePathForPhotoImage(photo);
-  const url = absolutePathForPhoto(photo);
+  const url = absolutePathForPhoto(photo, tag);
 
   return {
     title,
@@ -47,30 +45,25 @@ export async function generateMetadata({
   };
 }
 
-export default async function PhotoPage({
-  params: { photoId },
+export default async function PhotoTagPage({
+  params: { photoId, tag },
   children,
 }: {
-  params: { photoId: string }
+  params: { photoId: string, tag: string }
   children: React.ReactNode
 }) {
   const photo = await getPhoto(photoId);
 
   if (!photo) { redirect('/'); }
 
-  const photosBefore = await getPhotosTakenBeforePhoto(photo, 1);
-  const photosAfter = await getPhotosTakenAfterPhotoInclusive(
-    photo,
-    GRID_THUMBNAILS_TO_SHOW_MAX + 1,
-  );
-  const photos = photosBefore.concat(photosAfter);
+  const photos = await getPhotos(undefined, undefined, undefined, tag);
 
   return <>
     {children}
     <PhotoDetailPage
       photo={photo}
       photos={photos}
-      photosGrid={photosAfter.slice(1)}
+      tag={tag}
     />
   </>;
 }

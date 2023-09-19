@@ -10,6 +10,7 @@ const PHOTOS_MAX = 35;
 export default function PhotoGrid({
   photos,
   selectedPhoto,
+  tag,
   offset = 0,
   fast,
   animateOnFirstLoadOnly,
@@ -18,6 +19,7 @@ export default function PhotoGrid({
 }: {
   photos: Photo[]
   selectedPhoto?: Photo
+  tag?: string
   offset?: number
   fast?: boolean
   animate?: boolean
@@ -42,6 +44,7 @@ export default function PhotoGrid({
           <PhotoSmall
             key={photo.id}
             photo={photo}
+            tag={tag}
             selected={photo.id === selectedPhoto?.id}
           />)}
       />

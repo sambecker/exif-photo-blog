@@ -3,8 +3,8 @@
 import { useEffect } from 'react';
 import { Photo, getNextPhoto, getPreviousPhoto } from '@/photo';
 import PhotoLink from './PhotoLink';
-import { usePathname, useRouter } from 'next/navigation';
-import { isPathPhotoShare, pathForPhoto } from '@/site/paths';
+import { useRouter } from 'next/navigation';
+import { pathForPhoto } from '@/site/paths';
 import { useAppState } from '@/state';
 import { AnimationConfig } from '@/components/AnimateItems';
 
@@ -14,16 +14,16 @@ const ANIMATION_RIGHT: AnimationConfig = { type: 'right', duration: 0.3 };
 export default function PhotoLinks({
   photo,
   photos,
+  tag,
 }: {
   photo: Photo
   photos: Photo[]
+  tag?: string
 }) {
   const router = useRouter();
-  const pathname = usePathname();
 
   const { setNextPhotoAnimation } = useAppState();
 
-  const isRouteShare = isPathPhotoShare(pathname);
   const previousPhoto = getPreviousPhoto(photo, photos);
   const nextPhoto = getNextPhoto(photo, photos);
 
@@ -34,14 +34,14 @@ export default function PhotoLinks({
       case 'J':
         if (previousPhoto) {
           setNextPhotoAnimation?.(ANIMATION_RIGHT);
-          router.push(pathForPhoto(previousPhoto, isRouteShare));
+          router.push(pathForPhoto(previousPhoto, tag));
         }
         break;
       case 'ARROWRIGHT':
       case 'L':
         if (nextPhoto) {
           setNextPhotoAnimation?.(ANIMATION_LEFT);
-          router.push(pathForPhoto(nextPhoto, isRouteShare));
+          router.push(pathForPhoto(nextPhoto, tag));
         }
         break;
       case 'ESCAPE':
@@ -51,13 +51,14 @@ export default function PhotoLinks({
     };
     window.addEventListener('keyup', onKeyUp);
     return () => window.removeEventListener('keyup', onKeyUp);
-  }, [router, setNextPhotoAnimation, previousPhoto, nextPhoto, isRouteShare]);
+  }, [router, setNextPhotoAnimation, previousPhoto, nextPhoto, tag]);
   
   return (
     <>
       <PhotoLink
         photo={previousPhoto}
         nextPhotoAnimation={ANIMATION_RIGHT}
+        tag={tag}
         prefetch
       >
         PREV
@@ -65,6 +66,7 @@ export default function PhotoLinks({
       <PhotoLink
         photo={nextPhoto}
         nextPhotoAnimation={ANIMATION_LEFT}
+        tag={tag}
         prefetch
       >
         NEXT

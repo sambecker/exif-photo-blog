@@ -11,18 +11,21 @@ export const PATH_ADMIN_UPLOAD_BLOB_HANDLER = `${PATH_ADMIN_UPLOAD}/blob`;
 
 export const ABSOLUTE_PATH_FOR_HOME_IMAGE = `${BASE_URL}/home-image`;
 
-export const pathForPhoto = (photo: Photo, share?: boolean) =>
-  share
-    ? `${PREFIX_PHOTO}/${photo.idShort}/share`
+export const pathForPhoto = (photo: Photo, tag?: string) =>
+  tag
+    ? `${pathForTag(tag)}/${photo.idShort}`
     : `${PREFIX_PHOTO}/${photo.idShort}`;
+
+export const pathForPhotoShare = (photo: Photo, tag?: string) =>
+  `${pathForPhoto(photo, tag)}/share`;
 
 export const pathForPhotoEdit = (photo: Photo) =>
   `${PATH_ADMIN_PHOTOS}/${photo.idShort}/edit`;
 
 export const pathForTag = (tag: string) => `${PREFIX_TAG}/${tag}`;
 
-export const absolutePathForPhoto = (photo: Photo) =>
-  `${BASE_URL}${pathForPhoto(photo)}`;
+export const absolutePathForPhoto = (photo: Photo, tag?: string) =>
+  `${BASE_URL}${pathForPhoto(photo, tag)}`;
 
 export const absolutePathForTag = (tag: string) =>
   `${BASE_URL}${pathForTag(tag)}`;

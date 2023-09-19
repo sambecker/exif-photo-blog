@@ -5,17 +5,19 @@ import { cc } from '@/utility/css';
 import { pathForPhoto } from '@/site/paths';
 
 export default function PhotoTiny({
-  className,
   photo,
+  tag,
   selected,
+  className,
 }: {
-  className?: string
   photo: Photo
+  tag?: string
   selected?: boolean
+  className?: string
 }) {
   return (
     <Link
-      href={pathForPhoto(photo)}
+      href={pathForPhoto(photo, tag)}
       className={cc(
         className,
         'active:brightness-75',
