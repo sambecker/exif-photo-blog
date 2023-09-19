@@ -1,8 +1,13 @@
 import { Photo, dateRangeForPhotos } from '@/photo';
 import { capitalizeWords } from '@/utility/string';
 
-export const titleForTag = (tag: string, photos:Photo[]) =>
-  `${capitalizeWords(tag.replaceAll('-', ' '))} (${photos.length})`;
+const labelForPhotos = (photos: Photo[]) =>
+  photos.length === 1 ? 'Photo' : 'Photos';
+
+export const titleForTag = (tag: string, photos:Photo[]) => [
+  capitalizeWords(tag.replaceAll('-', ' ')),
+  `(${photos.length} ${labelForPhotos(photos)})`,
+].join(' ');
 
 export const descriptionForTaggedPhotos = (
   photos:Photo[],
@@ -10,4 +15,4 @@ export const descriptionForTaggedPhotos = (
 ) =>
   dateBased
     ? dateRangeForPhotos(photos).description.toUpperCase()
-    : `${photos.length} tagged ${photos.length === 1 ? 'photo' : 'photos'}`;
+    : `${photos.length} Tagged ${labelForPhotos(photos)}`;
