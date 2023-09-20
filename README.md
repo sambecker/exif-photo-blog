@@ -1,5 +1,7 @@
 # 📷 `EXIF` Photo Blog
 
+https://github.com/sambecker/exif-photo-blog/assets/169298/62a9caec-e33b-4053-b010-d968ddcb1e13
+
 _This template is in `BETA`._
 
 _Optimizations are still being made around auth and cache behavior._
