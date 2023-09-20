@@ -11,10 +11,7 @@ import { ImageResponse } from '@vercel/og';
 
 export const runtime = 'edge';
 
-export async function GET(
-  request: Request,
-  context: any,
-): Promise<ImageResponse> {
+export async function GET(request: Request, context: any) {
   const photos = await getPhotos(
     undefined,
     MAX_PHOTOS_TO_SHOW_PER_TAG,
