@@ -34,5 +34,5 @@ export async function GET(
   return new ImageResponse(
     <TagImageResponse {...{ photos, request, width, height, fontFamily }}/>,
     { width, height, fonts, headers },
-  );
+  ) as Response;
 }

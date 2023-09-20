@@ -33,5 +33,5 @@ export async function GET(request: Request): Promise<ImageResponse> {
       }}/>
     ),
     { width, height, fonts, headers },
-  );
+  ) as Response;
 }

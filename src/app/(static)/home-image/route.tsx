@@ -23,5 +23,5 @@ export async function GET(request: Request): Promise<ImageResponse> {
   return new ImageResponse(
     <HomeImageResponse {...{ photos, request, width, height }}/>,
     { width, height, headers },
-  );
+  ) as Response;
 }

@@ -12,7 +12,7 @@ import { ImageResponse } from '@vercel/og';
 
 export const runtime = 'edge';
 
-export async function GET(request: Request): Promise<ImageResponse> {
+export async function GET(request: Request) {
   const photos = await getPhotos('priority', MAX_PHOTOS_TO_SHOW_TEMPLATE_TIGHT);
 
   const {
@@ -42,5 +42,5 @@ export async function GET(request: Request): Promise<ImageResponse> {
       fonts,
       headers,
     },
-  );
+  ) as Response;
 }

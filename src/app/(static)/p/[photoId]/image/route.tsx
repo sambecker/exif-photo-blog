@@ -28,5 +28,5 @@ export async function GET(
   return new ImageResponse(
     <PhotoImageResponse {...{ photo, request, width, height, fontFamily }} />,
     { width, height, fonts, headers },
-  );
+  ) as Response;
 }
