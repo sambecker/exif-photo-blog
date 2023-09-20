@@ -7,7 +7,8 @@ import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { getPhotos, getPhotosCount } from '@/services/postgres';
 import { Metadata } from 'next';
 
-export const runtime = 'edge';
+// Revalidate every 12 hours
+export const revalidate = 43_200;
 
 export async function generateMetadata(): Promise<Metadata> {
   const photos = await getPhotos();
