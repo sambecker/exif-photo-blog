@@ -6,7 +6,7 @@ import {
 } from '@/photo/image-response';
 import HomeImageResponse from '@/photo/image-response/HomeImageResponse';
 import { getPhotos } from '@/services/postgres';
-import { ImageResponse } from '@vercel/og';
+import { ImageResponse } from 'next/server';
 
 export const runtime = 'edge';
 
@@ -23,5 +23,5 @@ export async function GET(request: Request) {
   return new ImageResponse(
     <HomeImageResponse {...{ photos, request, width, height }}/>,
     { width, height, headers },
-  ) as Response;
+  );
 }

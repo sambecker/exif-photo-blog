@@ -7,7 +7,7 @@ import {
 import TagImageResponse from '@/photo/image-response/TagImageResponse';
 import { getPhotos } from '@/services/postgres';
 import { getIBMPlexMonoMedium } from '@/site/font';
-import { ImageResponse } from '@vercel/og';
+import { ImageResponse } from 'next/server';
 
 export const runtime = 'edge';
 
@@ -31,5 +31,5 @@ export async function GET(request: Request, context: any) {
   return new ImageResponse(
     <TagImageResponse {...{ photos, request, width, height, fontFamily }}/>,
     { width, height, fonts, headers },
-  ) as Response;
+  );
 }

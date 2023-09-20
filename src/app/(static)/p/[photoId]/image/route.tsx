@@ -4,7 +4,7 @@ import { IMAGE_OG_SIZE } from '@/photo/image-response';
 import PhotoImageResponse from '@/photo/image-response/PhotoImageResponse';
 import { getPhoto } from '@/services/postgres';
 import { getIBMPlexMonoMedium } from '@/site/font';
-import { ImageResponse } from '@vercel/og';
+import { ImageResponse } from 'next/server';
 
 export const runtime = 'edge';
 
@@ -25,5 +25,5 @@ export async function GET(request: Request, context: any){
   return new ImageResponse(
     <PhotoImageResponse {...{ photo, request, width, height, fontFamily }} />,
     { width, height, fonts, headers },
-  ) as Response;
+  );
 }

@@ -8,7 +8,7 @@ import TemplateImageResponse from
   '@/photo/image-response/TemplateImageResponse';
 import { getPhotos } from '@/services/postgres';
 import { getIBMPlexMonoMedium } from '@/site/font';
-import { ImageResponse } from '@vercel/og';
+import { ImageResponse } from 'next/server';
 
 export const runtime = 'edge';
 
@@ -33,5 +33,5 @@ export async function GET(request: Request) {
       }}/>
     ),
     { width, height, fonts, headers },
-  ) as Response;
+  );
 }
