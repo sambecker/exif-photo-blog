@@ -6,6 +6,7 @@ import {
 import { Metadata } from 'next';
 import {
   getPhoto,
+  getPhotos,
   getPhotosTakenAfterPhotoInclusive,
   getPhotosTakenBeforePhoto,
 } from '@/services/postgres';
@@ -13,7 +14,15 @@ import { redirect } from 'next/navigation';
 import { absolutePathForPhoto, absolutePathForPhotoImage } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 
-export const runtime = 'edge';
+// Revalidate every 12 hours
+export const revalidate = 43_200;
+
+export async function generateStaticParams() {
+  const photos = await getPhotos();
+  return photos.map(photo => ({
+    slug: photo.id,
+  }));
+}
 
 export async function generateMetadata({
   params: { photoId },
