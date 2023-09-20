@@ -18,7 +18,7 @@ export async function GET(request: Request, context: any){
   
   const headers = await getImageCacheHeadersForAuth(await auth());
   
-  if (!photo) { return null; }
+  if (!photo) { return new Response('Photo not found', { status: 404 }); }
 
   const { width, height } = IMAGE_OG_SIZE;
   
