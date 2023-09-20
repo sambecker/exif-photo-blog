@@ -10,7 +10,7 @@ import { ImageResponse } from '@vercel/og';
 
 export const runtime = 'edge';
 
-export async function GET(request: Request) {
+export async function GET(request: Request): Promise<ImageResponse> {
   const photos = await getPhotos(
     undefined,
     MAX_PHOTOS_TO_SHOW_HOME,

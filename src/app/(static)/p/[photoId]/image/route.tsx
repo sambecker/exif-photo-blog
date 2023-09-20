@@ -8,7 +8,10 @@ import { ImageResponse } from '@vercel/og';
 
 export const runtime = 'edge';
 
-export async function GET(request: Request, context: any) {
+export async function GET(
+  request: Request,
+  context: any,
+): Promise<ImageResponse | null> {
   const photo = await getPhoto(context.params.photoId);
 
   const {
