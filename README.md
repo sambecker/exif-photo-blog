@@ -1,6 +1,6 @@
 # 📷 `EXIF` Photo Blog
 
-https://github.com/sambecker/exif-photo-blog/assets/169298/7ffa0efa-299c-4d6c-9383-0b68e3a6ab6f
+https://github.com/sambecker/exif-photo-blog/assets/169298/7df7c406-5c89-45ce-8a09-9afff30a7b49
 
 _This template is in `BETA`._
 
