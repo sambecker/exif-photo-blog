@@ -15,14 +15,14 @@ _Database schema changes are possible in the future._
 
 Features
 -
-<img src="/readme/og-image-share.png" alt="OG Image Preview" width=800 />
-
 - Image upload with EXIF extraction
 - Inifite scroll
 - Image tagging
 - Built-in auth
 - Light/dark mode
 - Automatic OG image generation
+
+<img src="/readme/og-image-share.png" alt="OG Image Preview" width=600 />
 
 Installation
 -
