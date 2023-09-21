@@ -14,7 +14,7 @@ const TAG_PHOTOS_COUNT  = 'photos-count';
 const TAG_TAGS          = 'tags';
 
 const getPhotosCacheTags = (options: GetPhotosOptions = {}) => {
-  const tags = [TAG_PHOTOS];
+  const tags = [];
   
   const {
     sortBy,
@@ -37,7 +37,7 @@ const getPhotosCacheTags = (options: GetPhotosOptions = {}) => {
   return tags;
 };
 
-const tagForPhoto = (photoId: string) => `photo-${photoId}`;
+const getPhotoCacheTag = (photoId: string) => `photo-${photoId}`;
 
 export const revalidatePhotosTag = () =>
   revalidateTag(TAG_PHOTOS);
@@ -45,8 +45,8 @@ export const revalidatePhotosTag = () =>
 export const getPhotosCached: typeof getPhotos = (...args) =>
   unstable_cache(
     () => getPhotos(...args),
-    getPhotosCacheTags(...args), {
-      tags: getPhotosCacheTags(...args),
+    [TAG_PHOTOS, ...getPhotosCacheTags(...args)], {
+      tags: [TAG_PHOTOS, ...getPhotosCacheTags(...args)],
     }
   )().then(parseCachedPhotosDates);
 
@@ -61,8 +61,8 @@ export const getPhotosCountCached: typeof getPhotosCount = (...args) =>
 export const getPhotoCached: typeof getPhoto = (...args) =>
   unstable_cache(
     () => getPhoto(...args),
-    [TAG_PHOTOS, tagForPhoto(...args)], {
-      tags: [TAG_PHOTOS, tagForPhoto(...args)],
+    [TAG_PHOTOS, getPhotoCacheTag(...args)], {
+      tags: [TAG_PHOTOS, getPhotoCacheTag(...args)],
     }
   )().then(photo => photo ? parseCachedPhotoDates(photo) : undefined);
 
