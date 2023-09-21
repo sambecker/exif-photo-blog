@@ -15,7 +15,7 @@
     "@typescript-eslint/parser": "^6.7.2",
     "@vercel/analytics": "^1.0.2",
     "@vercel/blob": "^0.12.4",
-    "@vercel/postgres": "^0.3.2",
+    "@vercel/postgres": "0.5.0-b067bd2f-20230921142101",
     "autoprefixer": "10.4.15",
     "camelcase-keys": "^9.0.0",
     "date-fns": "^2.30.0",

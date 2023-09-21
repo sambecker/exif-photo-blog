@@ -9,7 +9,7 @@ specifiers:
   '@typescript-eslint/parser': ^6.7.2
   '@vercel/analytics': ^1.0.2
   '@vercel/blob': ^0.12.4
-  '@vercel/postgres': ^0.3.2
+  '@vercel/postgres': 0.5.0-b067bd2f-20230921142101
   autoprefixer: 10.4.15
   camelcase-keys: ^9.0.0
   date-fns: ^2.30.0
@@ -38,7 +38,7 @@ dependencies:
   '@typescript-eslint/parser': 6.7.2_rngtr6f3b25lvetpihwplgecf4
   '@vercel/analytics': 1.0.2
   '@vercel/blob': 0.12.4
-  '@vercel/postgres': 0.3.2
+  '@vercel/postgres': 0.5.0-b067bd2f-20230921142101
   autoprefixer: 10.4.15_postcss@8.4.30
   camelcase-keys: 9.0.0
   date-fns: 2.30.0
@@ -256,8 +256,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: false
 
-  /@neondatabase/serverless/0.4.15:
-    resolution: {integrity: sha512-fTTcnfj6z4gpOREF3fbzPYltt5vJKB3G9OdfV4diiO45mBAi//0n/ViOirYm4bGxi0luzszf9jGe3BP6hsQ7Ig==}
+  /@neondatabase/serverless/0.6.0:
+    resolution: {integrity: sha512-qXxBRYN0m2v8kVQBfMxbzNGn2xFAhTXFibzQlE++NfJ56Shz3m7+MyBBtXDlEH+3Wfa6lToDXf1MElocY4sJ3w==}
     dependencies:
       '@types/pg': 8.6.6
     dev: false
@@ -654,14 +654,14 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@vercel/postgres/0.3.2:
-    resolution: {integrity: sha512-FZ/EWoxdALIh+N0wq3NWSA+YWm50MTBo75xOpVGSsv0zcgkt39kSSzO74H1graq+k/5dWyuadTVCnmlT5IbFYQ==}
+  /@vercel/postgres/0.5.0-b067bd2f-20230921142101:
+    resolution: {integrity: sha512-sv7+IfvQjyfRp6jdKec/FspW4o5XoXe/m4E23j6PyjDpXq5oZcL3LF5o2eYW42givQitIPFePMxsanIEOevzZg==}
     engines: {node: '>=14.6'}
     dependencies:
-      '@neondatabase/serverless': 0.4.15
+      '@neondatabase/serverless': 0.6.0
       bufferutil: 4.0.7
       utf-8-validate: 6.0.3
-      ws: 8.13.0_2adebc2xdjqbcvbjxkodkhadp4
+      ws: 8.14.2_2adebc2xdjqbcvbjxkodkhadp4
     dev: false
 
   /abab/2.0.6:
@@ -3570,8 +3570,21 @@ packages:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
     dev: false
 
-  /ws/8.13.0_2adebc2xdjqbcvbjxkodkhadp4:
-    resolution: {integrity: sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA==}
+  /ws/8.14.2:
+    resolution: {integrity: sha512-wEBG1ftX4jcglPxgFCMJmZ2PLtSbJ2Peg6TmpJFTbe9GZYOQCDPdMYu/Tm0/bGZkw8paZnJY45J4K2PZrLYq8g==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+    dev: false
+
+  /ws/8.14.2_2adebc2xdjqbcvbjxkodkhadp4:
+    resolution: {integrity: sha512-wEBG1ftX4jcglPxgFCMJmZ2PLtSbJ2Peg6TmpJFTbe9GZYOQCDPdMYu/Tm0/bGZkw8paZnJY45J4K2PZrLYq8g==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -3584,19 +3597,6 @@ packages:
     dependencies:
       bufferutil: 4.0.7
       utf-8-validate: 6.0.3
-    dev: false
-
-  /ws/8.14.2:
-    resolution: {integrity: sha512-wEBG1ftX4jcglPxgFCMJmZ2PLtSbJ2Peg6TmpJFTbe9GZYOQCDPdMYu/Tm0/bGZkw8paZnJY45J4K2PZrLYq8g==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
     dev: false
 
   /xml-name-validator/4.0.0:
