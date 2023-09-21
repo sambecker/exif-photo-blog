@@ -33,13 +33,18 @@ export default async function AdminPage({
 }) {
   const { offset, limit } = getPhotosLimitForQuery(searchParams.next);
 
-  const photos = await getPhotos('createdAt', limit);
-
-  const count = await getPhotosCount();
+  const [
+    photos,
+    count,
+    blobUploadUrls,
+  ] = await Promise.all([
+    await getPhotos({ sortBy: 'createdAt', limit }),
+    await getPhotosCount(),
+    await getBlobUploadUrls(),
+  ]);
 
   const showMorePhotos = count > photos.length;
 
-  const blobUploadUrls = await getBlobUploadUrls(); 
   const blobPhotoUrls = DEBUG_PHOTO_BLOBS
     ? await getBlobPhotoUrls()
     : [];

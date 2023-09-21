@@ -4,14 +4,10 @@ import {
   titleForPhoto,
 } from '@/photo';
 import { Metadata } from 'next';
-import {
-  getPhoto,
-  getPhotosTakenAfterPhotoInclusive,
-  getPhotosTakenBeforePhoto,
-} from '@/services/postgres';
 import { redirect } from 'next/navigation';
 import { absolutePathForPhoto, absolutePathForPhotoImage } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
+import { getPhotoCached, getPhotosCached } from '@/cache';
 
 export const runtime = 'edge';
 
@@ -20,7 +16,7 @@ export async function generateMetadata({
 }: {
   params: { photoId: string }
 }): Promise<Metadata> {
-  const photo = await getPhoto(photoId);
+  const photo = await getPhotoCached(photoId);
 
   if (!photo) { return {}; }
 
@@ -54,15 +50,21 @@ export default async function PhotoPage({
   params: { photoId: string }
   children: React.ReactNode
 }) {
-  const photo = await getPhoto(photoId);
+  const photo = await getPhotoCached(photoId);
 
   if (!photo) { redirect('/'); }
 
-  const photosBefore = await getPhotosTakenBeforePhoto(photo, 1);
-  const photosAfter = await getPhotosTakenAfterPhotoInclusive(
-    photo,
-    GRID_THUMBNAILS_TO_SHOW_MAX + 1,
-  );
+  const [
+    photosBefore,
+    photosAfter,
+  ] = await Promise.all([
+    getPhotosCached({ takenBefore: photo.takenAt, limit: 1 }),
+    getPhotosCached({
+      takenAfterInclusive: photo.takenAt,
+      limit: GRID_THUMBNAILS_TO_SHOW_MAX + 1,
+    }),
+  ]);
+
   const photos = photosBefore.concat(photosAfter);
 
   return <>

@@ -1,7 +1,7 @@
+import { getPhotosCached, getPhotosCountCached } from '@/cache';
 import MorePhotos from '@/components/MorePhotos';
 import { getPhotosLimitForQuery } from '@/photo';
 import StaggeredOgPhotos from '@/photo/StaggeredOgPhotos';
-import { getPhotos, getPhotosCount } from '@/services/postgres';
 
 export const runtime = 'edge';
 
@@ -12,9 +12,9 @@ export default async function GridPage({
 }) {
   const { offset, limit } = getPhotosLimitForQuery(searchParams.next);
 
-  const photos = await getPhotos(undefined, limit);
+  const photos = await getPhotosCached({ limit });
 
-  const count = await getPhotosCount();
+  const count = await getPhotosCountCached();
 
   const showMorePhotos = count > photos.length;
   

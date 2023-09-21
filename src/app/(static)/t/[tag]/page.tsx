@@ -1,6 +1,6 @@
+import { getPhotosCached } from '@/cache';
 import SiteGrid from '@/components/SiteGrid';
 import PhotoGrid from '@/photo/PhotoGrid';
-import { getPhotos } from '@/services/postgres';
 import { absolutePathForTag, absolutePathForTagImage } from '@/site/paths';
 import { descriptionForTaggedPhotos, titleForTag } from '@/tag';
 import TagHeader from '@/tag/TagHeader';
@@ -13,7 +13,7 @@ interface TagProps {
 export async function generateMetadata({
   params: { tag },
 }: TagProps): Promise<Metadata> {
-  const photos = await getPhotos(undefined, undefined, undefined, tag);
+  const photos = await getPhotosCached({ tag });
 
   const url = absolutePathForTag(tag);
   const title = titleForTag(tag, photos);
@@ -38,7 +38,7 @@ export async function generateMetadata({
 }
 
 export default async function TagPage({ params: { tag } }: TagProps) {
-  const photos = await getPhotos(undefined, undefined, undefined, tag);
+  const photos = await getPhotosCached({ tag });
 
   return (
     <SiteGrid

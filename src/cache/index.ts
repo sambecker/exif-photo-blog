@@ -1,40 +1,60 @@
-import { getPhoto, getPhotos } from '@/services/postgres';
 import type { Session } from 'next-auth/types';
-import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
+import { revalidateTag, unstable_cache } from 'next/cache';
+import {
+  GetPhotosOptions,
+  getPhoto,
+  getPhotos,
+  getPhotosCount,
+  getUniqueTags,
+} from '@/services/postgres';
+import { parseCachedPhotosDates, parseCachedPhotoDates } from '@/photo';
 
-const TAG_PHOTOS = 'photos';
+const TAG_PHOTOS        = 'photos';
+const TAG_PHOTOS_COUNT  = 'photos-count';
+const TAG_TAGS          = 'tags';
 
-const PHOTO_PATHS = [
-  '/',
-  '/grid',
-  '/p/[photoId]',
-  '/p/[photoId]/share',
-  '/p/[photoId]/image',
-  '/t/[tag]',
-  '/t/[tag]/[photoId]',
-  '/t/[tag]/[photoId]/share',
-  '/admin/photos',
-  '/admin/photos/[photoId]',
-  '/admin/photos/[photoId]/edit',
-];
+const getPhotosCacheTags = (options: GetPhotosOptions = {}) => {
+  const tags = [TAG_PHOTOS];
+  
+  const {
+    sortBy,
+    limit,
+    offset,
+    tag,
+    takenAfterInclusive,
+    takenBefore,
+  } = options;
+
+  if (sortBy !== undefined) { tags.push(`sortBy-${sortBy}`); }
+  if (limit !== undefined) { tags.push(`limit-${sortBy}`); }
+  if (offset !== undefined) { tags.push(`offset-${sortBy}`); }
+  if (tag !== undefined) { tags.push(`tag-${sortBy}`); }
+  // eslint-disable-next-line max-len
+  if (takenBefore !== undefined) { tags.push(`takenBefore-${takenBefore.toISOString()}`); }
+  // eslint-disable-next-line max-len
+  if (takenAfterInclusive !== undefined) { tags.push(`takenAfterInclusive-${takenAfterInclusive.toISOString()}`); }
+
+  return tags;
+};
 
 const tagForPhoto = (photoId: string) => `photo-${photoId}`;
 
-export const revalidatePhotosTag = (
-  includePhotoPaths?: boolean
-) => {
+export const revalidatePhotosTag = () =>
   revalidateTag(TAG_PHOTOS);
-  if (includePhotoPaths) { revalidateAllPhotoPaths(); }
-};
-
-export const revalidateAllPhotoPaths = () =>
-  PHOTO_PATHS.forEach(path => revalidatePath(path));
 
 export const getPhotosCached: typeof getPhotos = (...args) =>
   unstable_cache(
     () => getPhotos(...args),
-    [TAG_PHOTOS], {
-      tags: [TAG_PHOTOS],
+    getPhotosCacheTags(...args), {
+      tags: getPhotosCacheTags(...args),
+    }
+  )().then(parseCachedPhotosDates);
+
+export const getPhotosCountCached: typeof getPhotosCount = (...args) =>
+  unstable_cache(
+    () => getPhotosCount(...args),
+    [TAG_PHOTOS, TAG_PHOTOS_COUNT], {
+      tags: [TAG_PHOTOS, TAG_PHOTOS_COUNT],
     }
   )();
 
@@ -43,6 +63,14 @@ export const getPhotoCached: typeof getPhoto = (...args) =>
     () => getPhoto(...args),
     [TAG_PHOTOS, tagForPhoto(...args)], {
       tags: [TAG_PHOTOS, tagForPhoto(...args)],
+    }
+  )().then(photo => photo ? parseCachedPhotoDates(photo) : undefined);
+
+export const getUniqueTagsCached: typeof getUniqueTags = (...args) =>
+  unstable_cache(
+    () => getUniqueTags(...args),
+    [TAG_PHOTOS, TAG_TAGS], {
+      tags: [TAG_PHOTOS, TAG_TAGS],
     }
   )();
 

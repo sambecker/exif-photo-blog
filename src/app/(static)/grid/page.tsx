@@ -1,17 +1,22 @@
+import {
+  getPhotosCached,
+  getPhotosCountCached,
+  getUniqueTagsCached,
+} from '@/cache';
 import AnimateItems from '@/components/AnimateItems';
 import MorePhotos from '@/components/MorePhotos';
 import SiteGrid from '@/components/SiteGrid';
 import { generateOgImageMetaForPhotos, getPhotosLimitForQuery } from '@/photo';
 import PhotoGrid from '@/photo/PhotoGrid';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
-import { getPhotos, getPhotosCount, getUniqueTags } from '@/services/postgres';
+import { MAX_PHOTOS_TO_SHOW_HOME } from '@/photo/image-response';
 import PhotoTag from '@/tag/PhotoTag';
 import { Metadata } from 'next';
 
 export const runtime = 'edge';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const photos = await getPhotos();
+  const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_HOME});
   return generateOgImageMetaForPhotos(photos);
 }
 
@@ -22,11 +27,11 @@ export default async function GridPage({
 }) {
   const { offset, limit } = getPhotosLimitForQuery(searchParams.next);
 
-  const photos = await getPhotos(undefined, limit);
+  const photos = await getPhotosCached({ limit });
 
-  const count = await getPhotosCount();
+  const count = await getPhotosCountCached();
 
-  const tags = await getUniqueTags();
+  const tags = await getUniqueTagsCached();
 
   const showMorePhotos = count > photos.length;
   

@@ -3,13 +3,10 @@ import {
   titleForPhoto,
 } from '@/photo';
 import { Metadata } from 'next';
-import {
-  getPhoto,
-  getPhotos,
-} from '@/services/postgres';
 import { redirect } from 'next/navigation';
 import { absolutePathForPhoto, absolutePathForPhotoImage } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
+import { getPhotoCached, getPhotosCached } from '@/cache';
 
 export const runtime = 'edge';
 
@@ -18,7 +15,7 @@ export async function generateMetadata({
 }: {
   params: { photoId: string, tag: string }
 }): Promise<Metadata> {
-  const photo = await getPhoto(photoId);
+  const photo = await getPhotoCached(photoId);
 
   if (!photo) { return {}; }
 
@@ -52,11 +49,11 @@ export default async function PhotoTagPage({
   params: { photoId: string, tag: string }
   children: React.ReactNode
 }) {
-  const photo = await getPhoto(photoId);
+  const photo = await getPhotoCached(photoId);
 
   if (!photo) { redirect('/'); }
 
-  const photos = await getPhotos(undefined, undefined, undefined, tag);
+  const photos = await getPhotosCached({ tag });
 
   return <>
     {children}

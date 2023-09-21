@@ -25,7 +25,7 @@ export async function createPhotoAction(formData: FormData) {
   if (updatedUrl) { photo.url = updatedUrl; }
   await sqlInsertPhotoIntoDb(photo);
 
-  revalidatePhotosTag(true);
+  revalidatePhotosTag();
 
   redirect('/admin/photos');
 }
@@ -35,7 +35,7 @@ export async function updatePhotoAction(formData: FormData) {
 
   await sqlUpdatePhotoInDb(photo);
 
-  revalidatePhotosTag(true);
+  revalidatePhotosTag();
 
   redirect('/admin/photos');
 }
@@ -44,7 +44,7 @@ export async function deletePhotoAction(formData: FormData) {
   await deleteBlobPhoto(formData.get('url') as string);
   await sqlDeletePhoto(formData.get('id') as string);
 
-  revalidatePhotosTag(true);
+  revalidatePhotosTag();
 };
 
 export async function deleteBlobPhotoAction(formData: FormData) {

@@ -1,15 +1,14 @@
 import { auth } from '@/auth';
-import { getImageCacheHeadersForAuth } from '@/cache';
+import { getImageCacheHeadersForAuth, getPhotoCached } from '@/cache';
 import { IMAGE_OG_SIZE } from '@/photo/image-response';
 import PhotoImageResponse from '@/photo/image-response/PhotoImageResponse';
-import { getPhoto } from '@/services/postgres';
 import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/server';
 
 export const runtime = 'edge';
 
 export async function GET(request: Request, context: any){
-  const photo = await getPhoto(context.params.photoId);
+  const photo = await getPhotoCached(context.params.photoId);
 
   const {
     fontFamily,

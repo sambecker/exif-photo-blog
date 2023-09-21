@@ -1,6 +1,6 @@
 import { auth } from './auth';
 import { NextRequest, NextResponse } from 'next/server';
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default function middleware(req: NextRequest, res:NextResponse) {
   const pathname = req.nextUrl.pathname;

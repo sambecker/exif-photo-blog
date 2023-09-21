@@ -91,6 +91,16 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
   };
 };
 
+export const parseCachedPhotoDates = (photo: Photo) => ({
+  ...photo,
+  takenAt: new Date(photo.takenAt),
+  updatedAt: new Date(photo.updatedAt),
+  createdAt: new Date(photo.createdAt),
+});
+
+export const parseCachedPhotosDates = (photos: Photo[]) =>
+  photos.map(parseCachedPhotoDates);
+
 export const convertPhotoToPhotoDbInsert = (
   photo: Photo,
 ): PhotoDbInsert => ({
