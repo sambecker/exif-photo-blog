@@ -74,7 +74,7 @@ export const getUniqueTagsCached: typeof getUniqueTags = (...args) =>
     }
   )();
 
-export const getImageCacheHeadersForAuth = async (session?: Session) => {
+export const getImageCacheHeadersForAuth = (session?: Session) => {
   return {
     'Cache-Control': !session?.user
       ? 's-maxage=3600, stale-while-revalidate=59'

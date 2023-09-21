@@ -12,17 +12,15 @@ import { ImageResponse } from 'next/server';
 export const runtime = 'edge';
 
 export async function GET(request: Request) {
-  const photos = await getPhotosCached({
-    sortBy: 'priority',
-    limit: MAX_PHOTOS_TO_SHOW_TEMPLATE,
-  });
-
-  const {
-    fontFamily,
-    fonts,
-  } = await getIBMPlexMonoMedium();
-  
-  const headers = await getImageCacheHeadersForAuth(await auth());
+  const [
+    photos,
+    { fontFamily, fonts },
+    headers,
+  ] = await Promise.all([
+    getPhotosCached({ sortBy: 'priority', limit: MAX_PHOTOS_TO_SHOW_TEMPLATE }),
+    getIBMPlexMonoMedium(),
+    getImageCacheHeadersForAuth(await auth()),
+  ]);
 
   const { width, height } = GRID_OG_SIZE;
   

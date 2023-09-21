@@ -10,11 +10,13 @@ import { ImageResponse } from 'next/server';
 export const runtime = 'edge';
 
 export async function GET(request: Request) {
-  const photos = await getPhotosCached({
-    limit: MAX_PHOTOS_TO_SHOW_HOME,
-  });
-
-  const headers = await getImageCacheHeadersForAuth(await auth());
+  const [
+    photos,
+    headers,
+  ] = await Promise.all([
+    getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_HOME }),
+    getImageCacheHeadersForAuth(await auth()),
+  ]);
 
   const { width, height } = IMAGE_OG_SMALL_SIZE;
 

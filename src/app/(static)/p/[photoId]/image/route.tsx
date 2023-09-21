@@ -8,14 +8,15 @@ import { ImageResponse } from 'next/server';
 export const runtime = 'edge';
 
 export async function GET(request: Request, context: any){
-  const photo = await getPhotoCached(context.params.photoId);
-
-  const {
-    fontFamily,
-    fonts,
-  } = await getIBMPlexMonoMedium();
-  
-  const headers = await getImageCacheHeadersForAuth(await auth());
+  const [
+    photo,
+    { fontFamily, fonts },
+    headers,
+  ] = await Promise.all([
+    getPhotoCached(context.params.photoId),
+    getIBMPlexMonoMedium(),
+    getImageCacheHeadersForAuth(await auth()),
+  ]);
   
   if (!photo) { return new Response('Photo not found', { status: 404 }); }
 

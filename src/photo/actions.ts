@@ -23,6 +23,7 @@ export async function createPhotoAction(formData: FormData) {
   );
 
   if (updatedUrl) { photo.url = updatedUrl; }
+
   await sqlInsertPhotoIntoDb(photo);
 
   revalidatePhotosTag();
@@ -41,8 +42,10 @@ export async function updatePhotoAction(formData: FormData) {
 }
 
 export async function deletePhotoAction(formData: FormData) {
-  await deleteBlobPhoto(formData.get('url') as string);
-  await sqlDeletePhoto(formData.get('id') as string);
+  await Promise.all([
+    deleteBlobPhoto(formData.get('url') as string),
+    sqlDeletePhoto(formData.get('id') as string),
+  ]);
 
   revalidatePhotosTag();
 };

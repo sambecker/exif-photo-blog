@@ -27,11 +27,15 @@ export default async function GridPage({
 }) {
   const { offset, limit } = getPhotosLimitForQuery(searchParams.next);
 
-  const photos = await getPhotosCached({ limit });
-
-  const count = await getPhotosCountCached();
-
-  const tags = await getUniqueTagsCached();
+  const [
+    photos,
+    count,
+    tags,
+  ] = await Promise.all([
+    getPhotosCached({ limit }),
+    getPhotosCountCached(),
+    getUniqueTagsCached(),
+  ]);
 
   const showMorePhotos = count > photos.length;
   

@@ -11,17 +11,18 @@ import { ImageResponse } from 'next/server';
 export const runtime = 'edge';
 
 export async function GET(request: Request, context: any) {
-  const photos = await getPhotosCached({
-    limit: MAX_PHOTOS_TO_SHOW_PER_TAG,
-    tag: context.params.tag,
-  });
-
-  const {
-    fontFamily,
-    fonts,
-  } = await getIBMPlexMonoMedium();
-
-  const headers = await getImageCacheHeadersForAuth(await auth());
+  const [
+    photos,
+    { fontFamily, fonts },
+    headers,
+  ] = await Promise.all([
+    getPhotosCached({
+      limit: MAX_PHOTOS_TO_SHOW_PER_TAG,
+      tag: context.params.tag,
+    }),
+    getIBMPlexMonoMedium(),
+    getImageCacheHeadersForAuth(await auth()),
+  ]);
 
   const { width, height } = IMAGE_OG_SMALL_SIZE;
 

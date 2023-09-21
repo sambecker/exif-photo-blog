@@ -37,17 +37,15 @@ export default async function AdminPage({
     photos,
     count,
     blobUploadUrls,
+    blobPhotoUrls,
   ] = await Promise.all([
-    await getPhotos({ sortBy: 'createdAt', limit }),
-    await getPhotosCount(),
-    await getBlobUploadUrls(),
+    getPhotos({ sortBy: 'createdAt', limit }),
+    getPhotosCount(),
+    getBlobUploadUrls(),
+    DEBUG_PHOTO_BLOBS ? getBlobPhotoUrls() : [],
   ]);
 
   const showMorePhotos = count > photos.length;
-
-  const blobPhotoUrls = DEBUG_PHOTO_BLOBS
-    ? await getBlobPhotoUrls()
-    : [];
 
   return (
     <SiteGrid

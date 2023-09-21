@@ -21,10 +21,14 @@ export default async function HomePage({
 }) {
   const { offset, limit } = getPhotosLimitForQuery(searchParams.next, 12);
 
-  const photos = await getPhotosCached({ limit });
-
-  const count = await getPhotosCountCached();
-
+  const [
+    photos,
+    count,
+  ] = await Promise.all([
+    getPhotosCached({ limit }),
+    getPhotosCountCached(),
+  ]);
+  
   const showMorePhotos = count > photos.length;
 
   return (
