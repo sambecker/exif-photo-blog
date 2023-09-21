@@ -34,14 +34,14 @@ export default function PhotoLinks({
       case 'J':
         if (previousPhoto) {
           setNextPhotoAnimation?.(ANIMATION_RIGHT);
-          router.push(pathForPhoto(previousPhoto, tag));
+          router.push(pathForPhoto(previousPhoto, tag), { scroll: false });
         }
         break;
       case 'ARROWRIGHT':
       case 'L':
         if (nextPhoto) {
           setNextPhotoAnimation?.(ANIMATION_LEFT);
-          router.push(pathForPhoto(nextPhoto, tag));
+          router.push(pathForPhoto(nextPhoto, tag), { scroll: false });
         }
         break;
       case 'ESCAPE':
