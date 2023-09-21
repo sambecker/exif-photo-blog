@@ -13,7 +13,7 @@ import { getPhotos } from '@/services/postgres';
 export async function generateStaticParams() {
   const photos = await getPhotos();
   return photos.map(photo => ({
-    slug: photo.id,
+    params: { photoId: photo.id },
   }));
 }
 
