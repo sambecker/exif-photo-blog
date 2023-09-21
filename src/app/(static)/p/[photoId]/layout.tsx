@@ -8,8 +8,14 @@ import { redirect } from 'next/navigation';
 import { absolutePathForPhoto, absolutePathForPhotoImage } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotoCached, getPhotosCached } from '@/cache';
+import { getPhotos } from '@/services/postgres';
 
-export const runtime = 'edge';
+export async function generateStaticParams() {
+  const photos = await getPhotos();
+  return photos.map(photo => ({
+    slug: photo.id,
+  }));
+}
 
 export async function generateMetadata({
   params: { photoId },
