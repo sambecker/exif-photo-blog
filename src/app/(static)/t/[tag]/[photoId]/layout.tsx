@@ -7,8 +7,21 @@ import { redirect } from 'next/navigation';
 import { absolutePathForPhoto, absolutePathForPhotoImage } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotoCached, getPhotosCached } from '@/cache';
+import { getPhotos, getUniqueTags } from '@/services/postgres';
 
-export const runtime = 'edge';
+export async function generateStaticParams() {
+  const params: { params: { photoId: string, tag: string }}[] = [];
+
+  const tags = await getUniqueTags();
+  tags.forEach(async tag => {
+    const photos = await getPhotos({ tag });
+    params.push(...photos.map(photo => ({
+      params: { photoId: photo.id, tag },
+    })));
+  });
+
+  return params;
+}
 
 export async function generateMetadata({
   params: { photoId, tag },
