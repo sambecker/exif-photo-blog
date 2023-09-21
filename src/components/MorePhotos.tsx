@@ -31,7 +31,11 @@ export default function MorePhotos({
 
   useEffect(() => {
     const observer = new IntersectionObserver(e => {
-      if (triggerOnView && e[0].isIntersecting) {
+      if (
+        triggerOnView &&
+        e[0].isIntersecting &&
+        !isPending
+      ) {
         advance();
       }
     }, {
@@ -42,7 +46,7 @@ export default function MorePhotos({
     observer.observe(buttonRef.current!);
 
     return () => observer.disconnect();
-  }, [triggerOnView, advance]);
+  }, [triggerOnView, advance, isPending]);
 
   return (
     <button

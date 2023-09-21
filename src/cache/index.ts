@@ -26,9 +26,9 @@ const getPhotosCacheTags = (options: GetPhotosOptions = {}) => {
   } = options;
 
   if (sortBy !== undefined) { tags.push(`sortBy-${sortBy}`); }
-  if (limit !== undefined) { tags.push(`limit-${sortBy}`); }
-  if (offset !== undefined) { tags.push(`offset-${sortBy}`); }
-  if (tag !== undefined) { tags.push(`tag-${sortBy}`); }
+  if (limit !== undefined) { tags.push(`limit-${limit}`); }
+  if (offset !== undefined) { tags.push(`offset-${offset}`); }
+  if (tag !== undefined) { tags.push(`tag-${tag}`); }
   // eslint-disable-next-line max-len
   if (takenBefore !== undefined) { tags.push(`takenBefore-${takenBefore.toISOString()}`); }
   // eslint-disable-next-line max-len
