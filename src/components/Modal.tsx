@@ -28,7 +28,7 @@ export default function Modal({
 
   useClickInsideOutside({
     htmlElements,
-    onClickOutside: () => router.push(onClosePath ?? '/'),
+    onClickOutside: () => router.push(onClosePath ?? '/', { scroll: false}),
   });
 
   return (

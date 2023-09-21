@@ -12,11 +12,13 @@ export default function PhotoLarge({
   tag,
   priority,
   prefetchShare,
+  shouldScrollOnShare,
 }: {
   photo: Photo
   tag?: string
   priority?: boolean
   prefetchShare?: boolean
+  shouldScrollOnShare?: boolean
 }) {
   const tagsToShow = photo.tags.filter(t => t !== tag);
   
@@ -101,6 +103,7 @@ export default function PhotoLarge({
                   photo={photo}
                   tag={tag}
                   prefetch={prefetchShare}
+                  shouldScroll={shouldScrollOnShare}
                 />
               </div>
             </div>

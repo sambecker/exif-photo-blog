@@ -7,16 +7,19 @@ export default function SharePhotoButton({
   photo,
   tag,
   prefetch,
+  shouldScroll,
 }: {
   photo: Photo
   tag?: string
   prefetch?: boolean
+  shouldScroll?: boolean
 }) {
   return (
     <IconPathButton
       icon={<TbPhotoShare size={17} />}
       path={pathForPhotoShare(photo, tag)}
       prefetch={prefetch}
+      shouldScroll={shouldScroll}
     />
   );
 }

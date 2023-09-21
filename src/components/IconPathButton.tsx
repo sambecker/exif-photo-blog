@@ -10,11 +10,13 @@ export default function IconPathButton({
   path,
   prefetch,
   loaderDelay = 250,
+  shouldScroll = true,
 }: {
   icon: JSX.Element
   path: string
   prefetch?: boolean
   loaderDelay?: number
+  shouldScroll?: boolean
 }) {
   const router = useRouter();
 
@@ -43,7 +45,7 @@ export default function IconPathButton({
     <IconButton
       icon={icon}
       onClick={() => startTransition(() =>
-        router.push(path))}
+        router.push(path, { scroll: shouldScroll }))}
       isLoading={shouldShowLoader}
       className={cc(
         'active:translate-y-[1px]',

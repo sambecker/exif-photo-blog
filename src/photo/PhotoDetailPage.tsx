@@ -41,6 +41,7 @@ export default function PhotoDetailPage({
             tag={tag}
             priority
             prefetchShare
+            shouldScrollOnShare={false}
           />,
         ]}
       />
