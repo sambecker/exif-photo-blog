@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
   FORM_METADATA_ENTRIES,
   PhotoFormData,
@@ -11,12 +11,10 @@ import { createPhotoAction, updatePhotoAction } from './actions';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
 import { cc } from '@/utility/css';
+import CanvasBlurCapture from '@/components/CanvasBlurCapture';
 
 const THUMBNAIL_WIDTH = 300;
 const THUMBNAIL_HEIGHT = 200;
-const EDGE_BLUR_COMPENSATION = 10;
-const BLUR_SCALE = 0.5;
-const BLUE_JPEG_QUALITY = 0.9;
 
 export default function PhotoForm({
   initialPhotoForm,
@@ -30,55 +28,16 @@ export default function PhotoForm({
   const [formData, setFormData] =
     useState<Partial<PhotoFormData>>(initialPhotoForm);
 
-  const [showBlur, setShowBlur] = useState(debugBlur);
-
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
   const url = formData.url ?? '';
 
-  useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    
-    const image = new Image();
-    image.crossOrigin = 'anonymous';
-    image.src = url;
-    image.onload = () => {
-      timeout = setTimeout(() => {
-        const canvas = canvasRef.current;
-        if (canvas) {
-          canvas.width = THUMBNAIL_WIDTH * BLUR_SCALE;
-          canvas.height = THUMBNAIL_HEIGHT * BLUR_SCALE;
-          canvas.style.width = `${THUMBNAIL_WIDTH}px`;
-          canvas.style.height = `${THUMBNAIL_HEIGHT}px`;
-          const context = canvasRef.current?.getContext('2d');
-          if (context) {
-            context.scale(BLUR_SCALE, BLUR_SCALE);
-            context.filter =
-              'contrast(1.2) saturate(1.2)' +
-              `blur(${BLUR_SCALE * 10}px)`;
-            context.drawImage(
-              image,
-              -EDGE_BLUR_COMPENSATION,
-              -EDGE_BLUR_COMPENSATION,
-              THUMBNAIL_WIDTH + EDGE_BLUR_COMPENSATION * 2,
-              THUMBNAIL_WIDTH * image.height / image.width
-                + EDGE_BLUR_COMPENSATION * 2,
-            );
-            if (type === 'create') {
-              setFormData(data => ({
-                ...data,
-                blurData: canvas.toDataURL('image/jpeg', BLUE_JPEG_QUALITY),
-              }));
-            }
-          }
-        } else {
-          console.error('Cannot generate blur data: canvas not found');
-        }
-      }, 2000);
-    };
-
-    return () => clearTimeout(timeout);
-  }, [url, type]);
+  const updateBlurData = useCallback((blurData: string) => {
+    if (type === 'create') {
+      setFormData(data => ({
+        ...data,
+        blurData,
+      }));
+    }
+  }, [type]);
 
   const isFormValid = FORM_METADATA_ENTRIES.every(([key, { required }]) =>
     !required || Boolean(formData[key]));
@@ -96,12 +55,13 @@ export default function PhotoForm({
         height={THUMBNAIL_HEIGHT}
         priority
       />
-      <canvas
-        ref={canvasRef}
-        className="hidden"
-        onClick={() => setShowBlur(!showBlur)}
+      <CanvasBlurCapture
+        imageUrl={url}
+        width={THUMBNAIL_WIDTH}
+        height={THUMBNAIL_HEIGHT}
+        onCapture={updateBlurData}
       />
-      {showBlur && formData.blurData &&
+      {debugBlur && formData.blurData &&
         <img
           alt="blur"
           src={formData.blurData}
