@@ -1,10 +1,16 @@
 import { getPhotosCached } from '@/cache';
 import SiteGrid from '@/components/SiteGrid';
 import PhotoGrid from '@/photo/PhotoGrid';
+import { getUniqueTags } from '@/services/postgres';
 import TagHeader from '@/tag/TagHeader';
 import TagShareModal from '@/tag/TagShareModal';
 
-export const runtime = 'edge';
+export async function generateStaticParams() {
+  const tags = await getUniqueTags();
+  return tags.map(tag => ({
+    params: { tag },
+  }));
+}
 
 export default async function Share({
   params: { tag },
