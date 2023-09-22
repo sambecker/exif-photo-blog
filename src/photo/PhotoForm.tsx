@@ -37,11 +37,13 @@ export default function PhotoForm({
   const url = formData.url ?? '';
 
   useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    
     const image = new Image();
     image.crossOrigin = 'anonymous';
     image.src = url;
     image.onload = () => {
-      const timeout = setTimeout(() => {
+      timeout = setTimeout(() => {
         const canvas = canvasRef.current;
         if (canvas) {
           canvas.width = THUMBNAIL_WIDTH * BLUR_SCALE;
@@ -72,9 +74,10 @@ export default function PhotoForm({
         } else {
           console.error('Cannot generate blur data: canvas not found');
         }
-      }, 1000);
-      return () => clearTimeout(timeout);
+      }, 2000);
     };
+
+    return () => clearTimeout(timeout);
   }, [url, type]);
 
   const isFormValid = FORM_METADATA_ENTRIES.every(([key, { required }]) =>
@@ -110,7 +113,7 @@ export default function PhotoForm({
       >
         {FORM_METADATA_ENTRIES.map(([
           key,
-          { label, note, required, readOnly, hideIfEmpty },
+          { label, note, required, readOnly, hideIfEmpty, loadingMessage },
         ]) =>
           (!hideIfEmpty || formData[key]) &&
             <FieldSetWithStatus
@@ -122,6 +125,10 @@ export default function PhotoForm({
               onChange={value => setFormData({ ...formData, [key]: value })}
               required={required}
               readOnly={readOnly}
+              placeholder={loadingMessage && !formData[key]
+                ? loadingMessage
+                : undefined}
+              loading={loadingMessage && !formData[key] ? true : false}
             />)}
         <div className="flex gap-4">
           {type === 'edit' &&

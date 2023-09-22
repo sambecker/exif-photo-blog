@@ -18,16 +18,18 @@ type FormMeta = {
   readOnly?: boolean
   hideIfEmpty?: boolean
   hideTemporarily?: boolean
+  loadingMessage?: string
 };
 
 const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
   title: { label: 'title' },
   tags: { label: 'tags', note: 'comma-separated values' },
   id: { label: 'id', readOnly: true, hideIfEmpty: true },
+  // eslint-disable-next-line max-len
+  blurData: { label: 'blur data', readOnly: true, required: true, loadingMessage: 'Generating blur data ...' },
   url: { label: 'url', readOnly: true },
   extension: { label: 'extension', readOnly: true },
   aspectRatio: { label: 'aspect ratio', readOnly: true },
-  blurData: { label: 'blur data', readOnly: true, required: true },
   make: { label: 'camera make' },
   model: { label: 'camera model' },
   focalLength: { label: 'focal length' },

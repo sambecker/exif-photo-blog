@@ -2,6 +2,7 @@
 
 import { LegacyRef } from 'react';
 import { experimental_useFormStatus as useFormStatus } from 'react-dom';
+import Spinner from './Spinner';
 
 export default function FieldSetWithStatus({
   id,
@@ -9,6 +10,8 @@ export default function FieldSetWithStatus({
   note,
   value,
   onChange,
+  placeholder,
+  loading,
   required,
   readOnly,
   type = 'text',
@@ -19,6 +22,8 @@ export default function FieldSetWithStatus({
   note?: string
   value: string
   onChange?: (value: string) => void
+  placeholder?: string
+  loading?: boolean
   required?: boolean
   readOnly?: boolean
   type?: 'text' | 'password'
@@ -29,7 +34,7 @@ export default function FieldSetWithStatus({
   return (
     <div className="space-y-1">
       <label
-        className="flex gap-2"
+        className="flex gap-2 items-center"
         htmlFor={id}
       >
         {label}
@@ -41,12 +46,17 @@ export default function FieldSetWithStatus({
           <span className="text-gray-400 dark:text-gray-600">
             Required
           </span>}
+        {loading &&
+          <span className="translate-y-[1.5px]">
+            <Spinner />
+          </span>}
       </label>
       <input
         ref={inputRef}
         id={id}
         name={id}
         value={value}
+        placeholder={placeholder}
         onChange={e => onChange?.(e.target.value)}
         type={type}
         autoComplete="off"
