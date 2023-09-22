@@ -5,6 +5,8 @@ const PREFIX_PHOTO = '/p';
 const PREFIX_TAG = '/t';
 const PREFIX_ADMIN = '/admin';
 
+const SHARE = 'share';
+
 export const PATH_ADMIN_PHOTOS = `${PREFIX_ADMIN}/photos`;
 export const PATH_ADMIN_UPLOAD = `${PREFIX_ADMIN}/uploads`;
 export const PATH_ADMIN_UPLOAD_BLOB_HANDLER = `${PATH_ADMIN_UPLOAD}/blob`;
@@ -17,12 +19,15 @@ export const pathForPhoto = (photo: Photo, tag?: string) =>
     : `${PREFIX_PHOTO}/${photo.id}`;
 
 export const pathForPhotoShare = (photo: Photo, tag?: string) =>
-  `${pathForPhoto(photo, tag)}/share`;
+  `${pathForPhoto(photo, tag)}/${SHARE}`;
 
 export const pathForPhotoEdit = (photo: Photo) =>
   `${PATH_ADMIN_PHOTOS}/${photo.id}/edit`;
 
 export const pathForTag = (tag: string) => `${PREFIX_TAG}/${tag}`;
+
+export const pathForTagShare = (tag: string) =>
+  `${pathForTag(tag)}/${SHARE}`;
 
 export const absolutePathForPhoto = (photo: Photo, tag?: string) =>
   `${BASE_URL}${pathForPhoto(photo, tag)}`;

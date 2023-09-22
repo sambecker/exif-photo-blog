@@ -1,5 +1,5 @@
 import { getPhotoCached } from '@/cache';
-import PhotoModal from '@/photo/PhotoModal';
+import PhotoShareModal from '@/photo/PhotoShareModal';
 import { redirect } from 'next/navigation';
 
 export const runtime = 'edge';
@@ -13,5 +13,5 @@ export default async function Share({
 
   if (!photo) { return redirect('/'); }
 
-  return <PhotoModal photo={photo} />;
+  return <PhotoShareModal photo={photo} />;
 }

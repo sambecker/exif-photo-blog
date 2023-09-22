@@ -115,7 +115,7 @@ export const photoStatsAsString = (photo: Photo) => [
   photo.isoFormatted,
 ].join(' ');
 
-export const ogImageDescriptionForPhoto = (photo: Photo) =>
+export const descriptionForPhoto = (photo: Photo) =>
   photo.takenAtNaiveFormatted?.toUpperCase();
 
 export const getPreviousPhoto = (photo: Photo, photos: Photo[]) => {

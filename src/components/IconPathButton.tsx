@@ -48,6 +48,7 @@ export default function IconPathButton({
         router.push(path, { scroll: shouldScroll }))}
       isLoading={shouldShowLoader}
       className={cc(
+        'translate-y-[-0.5px]',
         'active:translate-y-[1px]',
         'text-gray-500 active:text-gray-600',
         'dark:text-gray-400 dark:active:text-gray-300',

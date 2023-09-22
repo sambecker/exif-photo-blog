@@ -13,6 +13,7 @@ export default function PhotoGrid({
   tag,
   offset = 0,
   fast,
+  animate = true,
   animateOnFirstLoadOnly,
   staggerOnFirstLoadOnly = true,
   showMore,
@@ -35,6 +36,7 @@ export default function PhotoGrid({
           'grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
           'items-center',
         )}
+        type={animate === false ? 'none' : undefined}
         duration={fast ? 0.3 : undefined}
         staggerDelay={0.075}
         distanceOffset={40}

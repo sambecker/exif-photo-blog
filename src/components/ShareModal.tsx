@@ -1,26 +1,26 @@
 'use client';
 
 import Modal from '@/components/Modal';
-import PhotoOGTile from '@/photo/PhotoOGTile';
-import { absolutePathForPhoto, pathForPhoto } from '@/site/paths';
 import { TbPhotoShare } from 'react-icons/tb';
 import { cc } from '@/utility/css';
 import { BiCopy } from 'react-icons/bi';
-import { Photo } from '.';
 import { toast } from 'sonner';
 import { FiCheckSquare } from 'react-icons/fi';
+import { ReactNode } from 'react';
 
-export default function PhotoModal({
-  photo,
-  tag,
+export default function ShareModal({
+  title = 'Share',
+  pathShare,
+  pathClose,
+  children,
 }: {
-  photo: Photo
-  tag?: string
+  title?: string
+  pathShare: string
+  pathClose: string
+  children: ReactNode
 }) {
-  const shareUrl = absolutePathForPhoto(photo, tag);
-  
   return (
-    <Modal onClosePath={pathForPhoto(photo, tag)}>
+    <Modal onClosePath={pathClose}>
       <div className="space-y-3 md:space-y-4 w-full">
         <div className={cc(
           'flex items-center gap-x-3',
@@ -28,10 +28,10 @@ export default function PhotoModal({
         )}>
           <TbPhotoShare size={22} className="hidden xs:block" />
           <div className="flex-grow">
-            Share Photo
+            {title}
           </div>
         </div>
-        <PhotoOGTile photo={photo} />
+        {children}
         <div className={cc(
           'rounded-md',
           'w-full overflow-hidden',
@@ -39,7 +39,7 @@ export default function PhotoModal({
           'border border-gray-200 dark:border-gray-800',
         )}>
           <div className="truncate p-2 w-full">
-            {shareUrl}
+            {pathShare}
           </div>
           <div
             className={cc(
@@ -50,7 +50,7 @@ export default function PhotoModal({
               'cursor-pointer',
             )}
             onClick={() => {
-              navigator.clipboard.writeText(shareUrl);
+              navigator.clipboard.writeText(pathShare);
               toast(
                 'Link to photo copied',
                 { icon: <FiCheckSquare size={16} /> },

@@ -3,9 +3,9 @@ import SiteGrid from '@/components/SiteGrid';
 import ImageLarge from '@/components/ImageLarge';
 import { cc } from '@/utility/css';
 import Link from 'next/link';
-import { pathForPhoto } from '@/site/paths';
-import SharePhotoButton from './SharePhotoButton';
+import { pathForPhoto, pathForPhotoShare } from '@/site/paths';
 import PhotoTags from '@/tag/PhotoTags';
+import ShareButton from '@/components/ShareButton';
 
 export default function PhotoLarge({
   photo,
@@ -99,9 +99,8 @@ export default function PhotoLarge({
                 {photo.takenAtNaiveFormatted}
               </div>
               <div className="-translate-x-0.5">
-                <SharePhotoButton
-                  photo={photo}
-                  tag={tag}
+                <ShareButton
+                  path={pathForPhotoShare(photo, tag)}
                   prefetch={prefetchShare}
                   shouldScroll={shouldScrollOnShare}
                 />

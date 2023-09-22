@@ -1,5 +1,5 @@
 import {
-  ogImageDescriptionForPhoto,
+  descriptionForPhoto,
   titleForPhoto,
 } from '@/photo';
 import { Metadata } from 'next';
@@ -33,7 +33,7 @@ export async function generateMetadata({
   if (!photo) { return {}; }
 
   const title = titleForPhoto(photo);
-  const description = ogImageDescriptionForPhoto(photo);
+  const description = descriptionForPhoto(photo);
   const images = absolutePathForPhotoImage(photo);
   const url = absolutePathForPhoto(photo, tag);
 

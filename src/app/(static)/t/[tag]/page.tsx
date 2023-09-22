@@ -45,11 +45,12 @@ export async function generateMetadata({
   };
 }
 
-export default async function TagPage({ params: { tag } }: TagProps) {
+export default async function TagPage({ params: { tag } }:TagProps) {
   const photos = await getPhotosCached({ tag });
 
   return (
     <SiteGrid
+      key="Tag Grid"
       contentMain={<div className="space-y-8 mt-4">
         <TagHeader tag={tag} photos={photos} />
         <PhotoGrid photos={photos} tag={tag} />

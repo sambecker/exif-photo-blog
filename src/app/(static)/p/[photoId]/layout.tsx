@@ -1,6 +1,6 @@
 import {
   GRID_THUMBNAILS_TO_SHOW_MAX,
-  ogImageDescriptionForPhoto,
+  descriptionForPhoto,
   titleForPhoto,
 } from '@/photo';
 import { Metadata } from 'next';
@@ -27,7 +27,7 @@ export async function generateMetadata({
   if (!photo) { return {}; }
 
   const title = titleForPhoto(photo);
-  const description = ogImageDescriptionForPhoto(photo);
+  const description = descriptionForPhoto(photo);
   const images = absolutePathForPhotoImage(photo);
   const url = absolutePathForPhoto(photo);
 
