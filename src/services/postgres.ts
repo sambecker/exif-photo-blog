@@ -44,7 +44,7 @@ const sqlCreatePhotosTable = () =>
   `;
 
 // Must provide id as 8-character nanoid
-export const sqlInsertPhotoIntoDb = (photo: PhotoDbInsert) => {
+export const sqlInsertPhoto = (photo: PhotoDbInsert) => {
   return sql`
     INSERT INTO photos (
       id,
@@ -97,7 +97,7 @@ export const sqlInsertPhotoIntoDb = (photo: PhotoDbInsert) => {
   `;
 };
 
-export const sqlUpdatePhotoInDb = (photo: PhotoDbInsert) =>
+export const sqlUpdatePhoto = (photo: PhotoDbInsert) =>
   sql`
     UPDATE photos SET
     url=${photo.url},
@@ -128,7 +128,7 @@ export const sqlUpdatePhotoInDb = (photo: PhotoDbInsert) =>
 export const sqlDeletePhoto = (id: string) =>
   sql`DELETE FROM photos WHERE id=${id}`;
 
-const sqlGetPhotosFromDb = (
+const sqlGetPhotos = (
   limit = PHOTO_DEFAULT_LIMIT,
   offset = 0,
 ) =>
@@ -138,7 +138,7 @@ const sqlGetPhotosFromDb = (
     LIMIT ${limit} OFFSET ${offset}
   `;
 
-const sqlGetPhotosFromDbSortedByCreatedAt = (
+const sqlGetPhotosSortedByCreatedAt = (
   limit = PHOTO_DEFAULT_LIMIT,
   offset = 0,
 ) =>
@@ -148,7 +148,7 @@ const sqlGetPhotosFromDbSortedByCreatedAt = (
     LIMIT ${limit} OFFSET ${offset}
   `;
 
-const sqlGetPhotosFromDbSortedByPriority = (
+const sqlGetPhotosSortedByPriority = (
   limit = PHOTO_DEFAULT_LIMIT,
   offset = 0,
 ) =>
@@ -158,7 +158,7 @@ const sqlGetPhotosFromDbSortedByPriority = (
     LIMIT ${limit} OFFSET ${offset}
   `;
 
-const sqlGetPhotosFromDbByTag = (
+const sqlGetPhotosByTag = (
   limit = PHOTO_DEFAULT_LIMIT,
   offset = 0,
   tag: string,
@@ -191,8 +191,16 @@ const sqlGetPhotosTakenBeforeDate = (
     LIMIT ${limit}
   `;
 
-const sqlGetPhotoFromDb = (id: string) =>
+const sqlGetPhoto = (id: string) =>
   sql<PhotoDb>`SELECT * FROM photos WHERE id=${id} LIMIT 1`;
+
+const sqlGetPhotosCount = async () => sql`
+  SELECT COUNT(*) FROM photos
+`.then(({ rows }) => parseInt(rows[0].count, 10));
+
+const sqlGetUniqueTags = async () => sql`
+  SELECT DISTINCT unnest(tags) FROM photos
+`.then(({ rows }) => rows.map(row => row.unnest as string));
 
 export type GetPhotosOptions = {
   sortBy?: 'createdAt' | 'takenAt' | 'priority'
@@ -202,6 +210,36 @@ export type GetPhotosOptions = {
   takenBefore?: Date
   takenAfterInclusive?: Date
 }
+
+const safelyQueryPhotos = async <T>(callback: () => Promise<T>): Promise<T> => {
+  let result: T;
+
+  try {
+    result = await callback();
+  } catch (e: any) {
+    if (/relation "photos" does not exist/i.test(e.message)) {
+      console.log(
+        'Creating table "photos" because it did not exist',
+      );
+      await sqlCreatePhotosTable();
+      result = await callback();
+    } else if (/endpoint is in transition/i.test(e.message)) {
+      // Wait 5 seconds and try again
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      try {
+        result = await callback();
+      } catch (e: any) {
+        console.log(`sql get error on retry (after 5000ms): ${e.message} `);
+        throw e;
+      }
+    } else {
+      console.log(`sql get error: ${e.message} `);
+      throw e;
+    }
+  }
+
+  return result;
+};
 
 export const getPhotos = async (options: GetPhotosOptions = {}) => {
   const {
@@ -213,63 +251,31 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
     takenAfterInclusive,
   } = options;
 
-  let photos;
-
   const getPhotosRequest = takenBefore
     ? () => sqlGetPhotosTakenBeforeDate(takenBefore, limit)
     : takenAfterInclusive
       ? () => sqlGetPhotosTakenAfterDateInclusive(takenAfterInclusive, limit)
       : tag
-        ? () => sqlGetPhotosFromDbByTag(limit, offset, tag)
+        ? () => sqlGetPhotosByTag(limit, offset, tag)
         : sortBy === 'createdAt'
-          ? () => sqlGetPhotosFromDbSortedByCreatedAt(limit, offset)
+          ? () => sqlGetPhotosSortedByCreatedAt(limit, offset)
           : sortBy === 'priority' 
-            ? () => sqlGetPhotosFromDbSortedByPriority(limit, offset)
-            : () => sqlGetPhotosFromDb(limit, offset);
+            ? () => sqlGetPhotosSortedByPriority(limit, offset)
+            : () => sqlGetPhotos(limit, offset);
 
-  const getPhotosRequestAndParse = () =>
-    getPhotosRequest().then(({ rows }) => rows.map(parsePhotoFromDb));
-
-  try {
-    photos = await getPhotosRequestAndParse();
-  } catch (e: any) {
-    if (/relation "photos" does not exist/i.test(e.message)) {
-      console.log(
-        'Creating table "photos" because it did not exist',
-      );
-      await sqlCreatePhotosTable();
-      photos = await getPhotosRequestAndParse();
-    } else if (/endpoint is in transition/i.test(e.message)) {
-      // Wait 5 seconds and try again
-      await new Promise(resolve => setTimeout(resolve, 5000));
-      try {
-        photos = await getPhotosRequestAndParse();
-      } catch (e: any) {
-        console.log(`sql get error on retry (after 5000ms): ${e.message} `);
-        throw e;
-      }
-    } else {
-      console.log(`sql get error: ${e.message} `);
-      throw e;
-    }
-  }
-
-  return photos;
+  return safelyQueryPhotos(() => getPhotosRequest())
+    .then(({ rows }) => rows.map(parsePhotoFromDb));
 };
-
-export const getPhotosCount = async () => sql`
-  SELECT COUNT(*) FROM photos
-`.then(({ rows }) => parseInt(rows[0].count, 10));
-
-export const getUniqueTags = async () => sql`
-  SELECT DISTINCT unnest(tags) FROM photos
-`.then(({ rows }) => rows.map(row => row.unnest as string));
 
 export const getPhoto = async (id: string): Promise<Photo | undefined> => {
   // Check for photo id forwarding
   // and convert short ids to uuids
   const photoId = translatePhotoId(id);
-  return sqlGetPhotoFromDb(photoId)
+  return safelyQueryPhotos(() => sqlGetPhoto(photoId))
     .then(({ rows }) => rows.map(parsePhotoFromDb))
     .then(photos => photos.length > 0 ? photos[0] : undefined);
 };
+
+export const getPhotosCount = () => safelyQueryPhotos(sqlGetPhotosCount);
+
+export const getUniqueTags = () => safelyQueryPhotos(sqlGetUniqueTags);

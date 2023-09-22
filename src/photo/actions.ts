@@ -3,8 +3,8 @@
 import { revalidatePath } from 'next/cache';
 import {
   sqlDeletePhoto,
-  sqlInsertPhotoIntoDb,
-  sqlUpdatePhotoInDb,
+  sqlInsertPhoto,
+  sqlUpdatePhoto,
 } from '@/services/postgres';
 import { convertFormDataToPhoto } from './form';
 import { redirect } from 'next/navigation';
@@ -24,7 +24,7 @@ export async function createPhotoAction(formData: FormData) {
 
   if (updatedUrl) { photo.url = updatedUrl; }
 
-  await sqlInsertPhotoIntoDb(photo);
+  await sqlInsertPhoto(photo);
 
   revalidatePhotosTag();
 
@@ -34,7 +34,7 @@ export async function createPhotoAction(formData: FormData) {
 export async function updatePhotoAction(formData: FormData) {
   const photo = convertFormDataToPhoto(formData);
 
-  await sqlUpdatePhotoInDb(photo);
+  await sqlUpdatePhoto(photo);
 
   revalidatePhotosTag();
 
