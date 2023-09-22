@@ -9,7 +9,7 @@ specifiers:
   '@typescript-eslint/parser': ^6.7.2
   '@vercel/analytics': ^1.0.2
   '@vercel/blob': ^0.12.5
-  '@vercel/postgres': 0.5.0-b067bd2f-20230921142101
+  '@vercel/postgres': 0.5.0
   autoprefixer: 10.4.16
   camelcase-keys: ^9.0.0
   date-fns: ^2.30.0
@@ -38,7 +38,7 @@ dependencies:
   '@typescript-eslint/parser': 6.7.2_rngtr6f3b25lvetpihwplgecf4
   '@vercel/analytics': 1.0.2
   '@vercel/blob': 0.12.5
-  '@vercel/postgres': 0.5.0-b067bd2f-20230921142101
+  '@vercel/postgres': 0.5.0
   autoprefixer: 10.4.16_postcss@8.4.30
   camelcase-keys: 9.0.0
   date-fns: 2.30.0
@@ -654,8 +654,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@vercel/postgres/0.5.0-b067bd2f-20230921142101:
-    resolution: {integrity: sha512-sv7+IfvQjyfRp6jdKec/FspW4o5XoXe/m4E23j6PyjDpXq5oZcL3LF5o2eYW42givQitIPFePMxsanIEOevzZg==}
+  /@vercel/postgres/0.5.0:
+    resolution: {integrity: sha512-MFWp9SZmADqBe2x2mzEvwmGLiwOd8PVkUxYeBZx/RqdHl0bd8/1BH0zBR+zSimGyi9P/MVtZoJLdf5dkWw9m5Q==}
     engines: {node: '>=14.6'}
     dependencies:
       '@neondatabase/serverless': 0.6.0
