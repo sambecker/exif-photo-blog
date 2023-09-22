@@ -2,11 +2,11 @@
 
 https://github.com/sambecker/exif-photo-blog/assets/169298/4253ea54-558a-4358-8834-89943cfbafb4
 
-_This template is in `BETA`._
+_This template is in `BETA`_
 
-_Optimizations are still being made around data cache behavior._
+_Optimizations are still being made around data cache behavior_
 
-_Database schema changes are possible in the future._
+_Database schema changes are possible in the future_
 
 1-click Deploy to Vercel
 -
