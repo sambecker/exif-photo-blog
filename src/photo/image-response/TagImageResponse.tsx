@@ -5,12 +5,14 @@ import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
 
 export default function TagImageResponse({
+  tag,
   photos,
   request,
   width,
   height,
   fontFamily,
 }: {
+  tag: string,
   photos: Photo[]
   request: Request
   width: number
@@ -36,7 +38,7 @@ export default function TagImageResponse({
           size={height * .067}
           style={{ transform: `translateY(${height * .02}px)` }}
         />
-        <span>{'Door County'.toUpperCase()}</span>
+        <span>{tag.toUpperCase()}</span>
       </ImageCaption>
     </ImageContainer>
   );
