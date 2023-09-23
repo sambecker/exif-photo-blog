@@ -1,4 +1,5 @@
 import { Photo, dateRangeForPhotos } from '@/photo';
+import { absolutePathForTag, absolutePathForTagImage } from '@/site/paths';
 import { capitalizeWords } from '@/utility/string';
 
 const labelForPhotos = (photos: Photo[]) =>
@@ -16,3 +17,10 @@ export const descriptionForTaggedPhotos = (
   dateBased
     ? dateRangeForPhotos(photos).description.toUpperCase()
     : `${photos.length} Tagged ${labelForPhotos(photos)}`;
+
+export const generateMetaForTag = (tag: string, photos: Photo[]) => ({
+  url: absolutePathForTag(tag),
+  title: titleForTag(tag, photos),
+  description: descriptionForTaggedPhotos(photos, true),
+  images: absolutePathForTagImage(tag),
+});

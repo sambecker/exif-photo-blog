@@ -2,8 +2,7 @@ import { getPhotosCached } from '@/cache';
 import SiteGrid from '@/components/SiteGrid';
 import PhotoGrid from '@/photo/PhotoGrid';
 import { getUniqueTags } from '@/services/postgres';
-import { absolutePathForTag, absolutePathForTagImage } from '@/site/paths';
-import { descriptionForTaggedPhotos, titleForTag } from '@/tag';
+import { generateMetaForTag } from '@/tag';
 import TagHeader from '@/tag/TagHeader';
 import { Metadata } from 'next';
 
@@ -23,10 +22,12 @@ export async function generateMetadata({
 }: TagProps): Promise<Metadata> {
   const photos = await getPhotosCached({ tag });
 
-  const url = absolutePathForTag(tag);
-  const title = titleForTag(tag, photos);
-  const description = descriptionForTaggedPhotos(photos, true);
-  const images = absolutePathForTagImage(tag);
+  const {
+    url,
+    title,
+    description,
+    images,
+  } = generateMetaForTag(tag, photos);
 
   return {
     title,
