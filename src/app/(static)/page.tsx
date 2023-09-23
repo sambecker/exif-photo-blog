@@ -8,6 +8,7 @@ import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { IS_PRO_MODE } from '@/site/config';
 import { Metadata } from 'next';
 
+// Limit edge runtime to Pro due to function size limit
 export const runtime = IS_PRO_MODE ? 'edge' : 'nodejs';
 
 export async function generateMetadata(): Promise<Metadata> {

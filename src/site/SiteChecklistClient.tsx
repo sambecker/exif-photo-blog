@@ -5,7 +5,14 @@ import { useRouter } from 'next/navigation';
 import { cc } from '@/utility/css';
 import ChecklistRow from '../components/ChecklistRow';
 import { FiCheckSquare, FiExternalLink } from 'react-icons/fi';
-import { BiCopy, BiRefresh } from 'react-icons/bi';
+import {
+  BiCog,
+  BiCopy,
+  BiData,
+  BiLockAlt,
+  BiPencil,
+  BiRefresh,
+} from 'react-icons/bi';
 import IconButton from '@/components/IconButton';
 import { toast } from 'sonner';
 import InfoBlock from '@/components/InfoBlock';
@@ -18,6 +25,8 @@ export default function SiteChecklistClient({
   hasBlob,
   hasAuth,
   hasAdminUser,
+  showRepoLink,
+  isProMode,
   showRefreshButton,
   secret,
 }: {
@@ -27,6 +36,8 @@ export default function SiteChecklistClient({
   hasBlob: boolean
   hasAuth: boolean
   hasAdminUser: boolean
+  showRepoLink: boolean
+  isProMode: boolean
   showRefreshButton?: boolean
   secret: string
 }) {
@@ -100,8 +111,11 @@ export default function SiteChecklistClient({
     </div>;
 
   return (
-    <div className="text-sm max-w-xl space-y-4">
-      <Checklist title="Site content">
+    <div className="text-sm max-w-xl space-y-6">
+      <Checklist
+        title="Content"
+        icon={<BiPencil size={16} />}
+      >
         <ChecklistRow
           title="Add title"
           status={hasTitle}
@@ -120,7 +134,10 @@ export default function SiteChecklistClient({
           {renderEnvVars(['NEXT_PUBLIC_SITE_DOMAIN'])}
         </ChecklistRow>
       </Checklist>
-      <Checklist title="Storage">
+      <Checklist
+        title="Storage"
+        icon={<BiData size={16} />}
+      >
         <ChecklistRow
           title="Setup database"
           status={hasPostgres}
@@ -146,7 +163,10 @@ export default function SiteChecklistClient({
           and connect to project
         </ChecklistRow>
       </Checklist>
-      <Checklist title="Authentication">
+      <Checklist
+        title="Authentication"
+        icon={<BiLockAlt size={16} />}
+      >
         <ChecklistRow
           title="Setup auth"
           status={hasAuth}
@@ -182,13 +202,37 @@ export default function SiteChecklistClient({
             'ADMIN_PASSWORD',
           ])}
         </ChecklistRow>
-        {showRefreshButton &&
-          <div className="py-4 space-y-4">
-            <button onClick={refreshPage}>
-              Check
-            </button>
-          </div>}
       </Checklist>
+      <Checklist
+        title="Settings"
+        icon={<BiCog size={16} />}
+      >
+        <ChecklistRow
+          title="Show Repo Link"
+          status={showRepoLink}
+          isPending={isPendingPage}
+          optional
+        >
+          Set environment variable to {'"1"'} to hide footer link:
+          {renderEnvVars(['NEXT_PUBLIC_HIDE_REPO_LINK'])}
+        </ChecklistRow>
+        <ChecklistRow
+          title="Pro Mode"
+          status={isProMode}
+          isPending={isPendingPage}
+          optional
+        >
+          Set environment variable to {'"1"'} to enable Pro Mode
+          (includes additional edge functions and higher quality images):
+          {renderEnvVars(['NEXT_PUBLIC_PRO_MODE'])}
+        </ChecklistRow>
+      </Checklist>
+      {showRefreshButton &&
+        <div className="py-4 space-y-4">
+          <button onClick={refreshPage}>
+            Check
+          </button>
+        </div>}
       <div className="px-10 text-gray-500">
         Changes to environment variables require a redeploy
         or reboot of local dev server

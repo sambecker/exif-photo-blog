@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { cc } from '@/utility/css';
-import Spinner from '@/components/Spinner';
+import StatusIcon from './StatusIcon';
 
 export default function ChecklistRow({
   title,
@@ -21,20 +21,16 @@ export default function ChecklistRow({
       'px-4 pt-2 pb-2.5',
       'text-left',
     )}>
-      <div className="min-w-[1rem] pt-[1px]">
-        {isPending
-          ? <div className="translate-y-0.5">
-            <Spinner size={14} />
-          </div>
-          : <div className="text-[0.8rem]" style={{ fontFamily: 'emoji' }}>
-            {status
-              ? '✅'
-              : optional ? '⚠️' : '❌'}
-          </div>}
-      </div>
+      <StatusIcon
+        type={status ? 'checked' : optional ? 'optional' : 'missing'}
+        loading={isPending}
+      />
       <div className="flex flex-col items-start">
-        <div className="font-bold dark:text-gray-300">
-          {title}{optional && ' (optional)'}
+        <div className={cc(
+          'font-bold dark:text-gray-300',
+        )}>
+          {title}
+          {optional && ' (optional)'}
         </div>
         <div>
           {children}

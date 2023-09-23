@@ -1,21 +1,27 @@
+import { ReactNode } from 'react';
 import { cc } from '@/utility/css';
 
 export default function Checklist({
   title,
+  icon,
   children,
 }: {
-  title?: string
-  children: React.ReactNode
+  title: string
+  icon?: ReactNode
+  children: ReactNode
 }) {
   return (
     <div>
-      {title &&
-        <div className={cc(
-          'font-bold dark:text-gray-300',
-          'pl-4 mb-2',
-        )}>
+      <div className={cc(
+        'flex items-center gap-3',
+        'dark:text-gray-300',
+        'pl-[18px] mb-3',
+      )}>
+        {icon}
+        <div className="text-lg">
           {title}
-        </div>}
+        </div>
+      </div>
       <div className={cc(
         'bg-white dark:bg-black',
         'dark:text-gray-400',
