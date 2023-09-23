@@ -8,10 +8,12 @@ import {
   getUniqueTags,
 } from '@/services/postgres';
 import { parseCachedPhotosDates, parseCachedPhotoDates } from '@/photo';
+import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
 
 const TAG_PHOTOS        = 'photos';
 const TAG_PHOTOS_COUNT  = 'photos-count';
 const TAG_TAGS          = 'tags';
+const TAG_BLOB          = 'blob';
 
 const getPhotosCacheTags = (options: GetPhotosOptions = {}) => {
   const tags = [];
@@ -42,6 +44,14 @@ const getPhotoCacheTag = (photoId: string) => `photo-${photoId}`;
 export const revalidatePhotosTag = () =>
   revalidateTag(TAG_PHOTOS);
 
+export const revalidateBlobTag = () =>
+  revalidateTag(TAG_BLOB);
+
+export const revalidatePhotosAndBlobTag = () => {
+  revalidateTag(TAG_PHOTOS);
+  revalidateTag(TAG_BLOB);
+};
+
 export const getPhotosCached: typeof getPhotos = (...args) =>
   unstable_cache(
     () => getPhotos(...args),
@@ -71,6 +81,22 @@ export const getUniqueTagsCached: typeof getUniqueTags = (...args) =>
     () => getUniqueTags(...args),
     [TAG_PHOTOS, TAG_TAGS], {
       tags: [TAG_PHOTOS, TAG_TAGS],
+    }
+  )();
+
+export const getBlobUploadUrlsCached: typeof getBlobUploadUrls = (...args) =>
+  unstable_cache(
+    () => getBlobUploadUrls(...args),
+    [TAG_BLOB], {
+      tags: [TAG_BLOB],
+    }
+  )();
+
+export const getBlobPhotoUrlsCached: typeof getBlobPhotoUrls = (...args) =>
+  unstable_cache(
+    () => getBlobPhotoUrls(...args),
+    [TAG_BLOB], {
+      tags: [TAG_BLOB],
     }
   )();
 

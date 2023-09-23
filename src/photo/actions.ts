@@ -1,6 +1,5 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
 import {
   sqlDeletePhoto,
   sqlInsertPhoto,
@@ -12,7 +11,11 @@ import {
   convertUploadToPhoto,
   deleteBlobPhoto,
 } from '@/services/blob';
-import { revalidatePhotosTag } from '@/cache';
+import {
+  revalidateBlobTag,
+  revalidatePhotosAndBlobTag,
+  revalidatePhotosTag,
+} from '@/cache';
 
 export async function createPhotoAction(formData: FormData) {
   const photo = convertFormDataToPhoto(formData, true);
@@ -26,7 +29,7 @@ export async function createPhotoAction(formData: FormData) {
 
   await sqlInsertPhoto(photo);
 
-  revalidatePhotosTag();
+  revalidatePhotosAndBlobTag();
 
   redirect('/admin/photos');
 }
@@ -53,5 +56,5 @@ export async function deletePhotoAction(formData: FormData) {
 export async function deleteBlobPhotoAction(formData: FormData) {
   await deleteBlobPhoto(formData.get('url') as string);
 
-  revalidatePath('/admin/photos');
+  revalidateBlobTag();
 };

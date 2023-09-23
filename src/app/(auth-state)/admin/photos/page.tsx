@@ -12,15 +12,16 @@ import {
 } from '@/photo/actions';
 import { FaRegEdit } from 'react-icons/fa';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
-import {
-  pathForBlobUrl,
-  getBlobPhotoUrls,
-  getBlobUploadUrls,
-} from '@/services/blob';
+import { pathForBlobUrl } from '@/services/blob';
 import { pathForPhoto, pathForPhotoEdit } from '@/site/paths';
 import { getPhotosLimitForQuery, titleForPhoto } from '@/photo';
 import MorePhotos from '@/components/MorePhotos';
-import { getPhotosCached, getPhotosCountCached } from '@/cache';
+import {
+  getBlobPhotoUrlsCached,
+  getBlobUploadUrlsCached,
+  getPhotosCached,
+  getPhotosCountCached,
+} from '@/cache';
 
 export const runtime = 'edge';
 
@@ -41,8 +42,8 @@ export default async function AdminPage({
   ] = await Promise.all([
     getPhotosCached({ sortBy: 'createdAt', limit }),
     getPhotosCountCached(),
-    getBlobUploadUrls(),
-    DEBUG_PHOTO_BLOBS ? getBlobPhotoUrls() : [],
+    getBlobUploadUrlsCached(),
+    DEBUG_PHOTO_BLOBS ? getBlobPhotoUrlsCached() : [],
   ]);
 
   const showMorePhotos = count > photos.length;
