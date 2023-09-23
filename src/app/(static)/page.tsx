@@ -5,9 +5,10 @@ import SiteGrid from '@/components/SiteGrid';
 import { generateOgImageMetaForPhotos, getPhotosLimitForQuery } from '@/photo';
 import PhotoLarge from '@/photo/PhotoLarge';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
+import { IS_PRO_MODE } from '@/site/config';
 import { Metadata } from 'next';
 
-export const runtime = 'edge';
+export const runtime = IS_PRO_MODE ? 'edge' : 'nodejs';
 
 export async function generateMetadata(): Promise<Metadata> {
   const photos = await getPhotosCached();

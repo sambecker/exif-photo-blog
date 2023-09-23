@@ -1,5 +1,6 @@
-export const SITE_TITLE = process.env.NEXT_PUBLIC_SITE_TITLE
-  || 'Photo Blog';
+export const SITE_TITLE =
+  process.env.NEXT_PUBLIC_SITE_TITLE ||
+  'Photo Blog';
 
 const VERCEL_BRANCH_URL = process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL;
 const VERCEL_BRANCH = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF;
@@ -19,6 +20,7 @@ export const BASE_URL = process.env.NODE_ENV === 'production'
   : 'http://localhost:3000';
 
 export const SHOW_REPO_LINK = process.env.NEXT_PUBLIC_HIDE_REPO_LINK !== '1';
+export const IS_PRO_MODE = process.env.NEXT_PUBLIC_PRO_MODE === '1';
 
 export const CONFIG_CHECKLIST_STATUS = {
   hasTitle: (process.env.NEXT_PUBLIC_SITE_TITLE ?? '').length > 0,
@@ -30,6 +32,8 @@ export const CONFIG_CHECKLIST_STATUS = {
     (process.env.ADMIN_EMAIL ?? '').length > 0 &&
     (process.env.ADMIN_PASSWORD ?? '').length > 0
   ),
+  showRepoLink: SHOW_REPO_LINK,
+  isProMode: IS_PRO_MODE,
 };
 
 export const IS_CHECKLIST_COMPLETE =

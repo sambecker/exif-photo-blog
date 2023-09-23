@@ -10,10 +10,11 @@ import { generateOgImageMetaForPhotos, getPhotosLimitForQuery } from '@/photo';
 import PhotoGrid from '@/photo/PhotoGrid';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { MAX_PHOTOS_TO_SHOW_HOME } from '@/photo/image-response';
+import { IS_PRO_MODE } from '@/site/config';
 import PhotoTag from '@/tag/PhotoTag';
 import { Metadata } from 'next';
 
-export const runtime = 'edge';
+export const runtime = IS_PRO_MODE ? 'edge' : 'nodejs';
 
 export async function generateMetadata(): Promise<Metadata> {
   const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_HOME});
