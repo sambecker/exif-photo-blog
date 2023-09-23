@@ -14,7 +14,7 @@ export default function Checklist({
     <div>
       <div className={cc(
         'flex items-center gap-3',
-        'dark:text-gray-300',
+        'text-gray-600 dark:text-gray-300',
         'pl-[18px] mb-3',
       )}>
         {icon}
