@@ -17,10 +17,10 @@ import {
   getBlobPhotoUrls,
   getBlobUploadUrls,
 } from '@/services/blob';
-import { getPhotos, getPhotosCount } from '@/services/postgres';
 import { pathForPhoto, pathForPhotoEdit } from '@/site/paths';
 import { getPhotosLimitForQuery, titleForPhoto } from '@/photo';
 import MorePhotos from '@/components/MorePhotos';
+import { getPhotosCached, getPhotosCountCached } from '@/cache';
 
 export const runtime = 'edge';
 
@@ -39,8 +39,8 @@ export default async function AdminPage({
     blobUploadUrls,
     blobPhotoUrls,
   ] = await Promise.all([
-    getPhotos({ sortBy: 'createdAt', limit }),
-    getPhotosCount(),
+    getPhotosCached({ sortBy: 'createdAt', limit }),
+    getPhotosCountCached(),
     getBlobUploadUrls(),
     DEBUG_PHOTO_BLOBS ? getBlobPhotoUrls() : [],
   ]);

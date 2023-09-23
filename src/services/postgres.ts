@@ -251,7 +251,7 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
     takenAfterInclusive,
   } = options;
 
-  const getPhotosRequest = takenBefore
+  const getPhotosSql = takenBefore
     ? () => sqlGetPhotosTakenBeforeDate(takenBefore, limit)
     : takenAfterInclusive
       ? () => sqlGetPhotosTakenAfterDateInclusive(takenAfterInclusive, limit)
@@ -263,7 +263,7 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
             ? () => sqlGetPhotosSortedByPriority(limit, offset)
             : () => sqlGetPhotos(limit, offset);
 
-  return safelyQueryPhotos(() => getPhotosRequest())
+  return safelyQueryPhotos(getPhotosSql)
     .then(({ rows }) => rows.map(parsePhotoFromDb));
 };
 
