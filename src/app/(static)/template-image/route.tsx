@@ -11,7 +11,7 @@ import { ImageResponse } from 'next/server';
 
 export const runtime = 'edge';
 
-export async function GET(request: Request) {
+export async function GET() {
   const [
     photos,
     { fontFamily, fonts },
@@ -28,7 +28,6 @@ export async function GET(request: Request) {
     (
       <TemplateImageResponse {...{
         photos,
-        request,
         width,
         height,
         fontFamily,

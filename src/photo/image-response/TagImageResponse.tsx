@@ -7,14 +7,12 @@ import ImageContainer from './components/ImageContainer';
 export default function TagImageResponse({
   tag,
   photos,
-  request,
   width,
   height,
   fontFamily,
 }: {
   tag: string,
   photos: Photo[]
-  request: Request
   width: number
   height: number
   fontFamily: string
@@ -28,7 +26,6 @@ export default function TagImageResponse({
       <ImagePhotoGrid
         {...{
           photos,
-          request,
           width,
           height,
         }}

@@ -5,14 +5,12 @@ import { getNextImageUrlForRequest } from '@/utility/image';
 
 export default function ImagePhotoGrid({
   photos,
-  request,
   width,
   height,
   imagePosition = 'center',
   gap = 4,
 }: {
   photos: Photo[]
-  request: Request
   width: number
   height: number
   imagePosition?: 'center' | 'top'
@@ -24,7 +22,7 @@ export default function ImagePhotoGrid({
   else if (photos.length >= 4) { count = 4; }
   else if (photos.length >= 2) { count = 2; }
 
-  const imageQuality = count <= 2 ? 1050 : 400;
+  const nextImageWidth = count <= 2 ? 1050 : 640;
 
   let rows = 1;
   if (count > 12) { rows = 4; }
@@ -57,7 +55,7 @@ export default function ImagePhotoGrid({
           }}
         >
           <img {...{
-            src: getNextImageUrlForRequest(url, request, imageQuality),
+            src: getNextImageUrlForRequest(url, nextImageWidth),
             style: {
               width: '100%',
               ...imagePosition === 'center' && {

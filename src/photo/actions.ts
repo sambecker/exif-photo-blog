@@ -16,6 +16,8 @@ import {
   revalidatePhotosAndBlobTag,
   revalidatePhotosTag,
 } from '@/cache';
+import { IS_PRO_MODE } from '@/site/config';
+import { getNextImageUrlForRequest } from '@/utility/image';
 
 export async function createPhotoAction(formData: FormData) {
   const photo = convertFormDataToPhoto(formData, true);
@@ -23,6 +25,10 @@ export async function createPhotoAction(formData: FormData) {
   const updatedUrl = await convertUploadToPhoto(
     photo.url,
     photo.id,
+    !IS_PRO_MODE
+      ? getNextImageUrlForRequest(photo.url, 3840, 90)
+      : undefined,
+    !IS_PRO_MODE ? 'webp' : undefined,
   );
 
   if (updatedUrl) { photo.url = updatedUrl; }

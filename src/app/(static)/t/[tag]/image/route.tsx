@@ -10,7 +10,7 @@ import { ImageResponse } from 'next/server';
 
 export const runtime = 'edge';
 
-export async function GET(request: Request, context: any) {
+export async function GET(_request: Request, context: any) {
   const tag = context.params.tag as string;
 
   const [
@@ -29,7 +29,6 @@ export async function GET(request: Request, context: any) {
     <TagImageResponse {...{
       tag,
       photos,
-      request,
       width,
       height,
       fontFamily,

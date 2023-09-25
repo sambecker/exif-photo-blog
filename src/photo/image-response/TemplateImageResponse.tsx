@@ -5,7 +5,6 @@ import ImagePhotoGrid from './components/ImagePhotoGrid';
 
 export default function TemplateImageResponse({
   photos,
-  request,
   width,
   height,
   fontFamily,
@@ -15,7 +14,6 @@ export default function TemplateImageResponse({
   verticalOffset,
 }: {
   photos: Photo[]
-  request: Request
   width: number
   height: number
   fontFamily: string
@@ -91,7 +89,6 @@ export default function TemplateImageResponse({
       }}>
         <ImagePhotoGrid {...{
           photos,
-          request,
           width: innerWidth,
           height: includeHeader
             ? height - 130 - outerMargin * 2

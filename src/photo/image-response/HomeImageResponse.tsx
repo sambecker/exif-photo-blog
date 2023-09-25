@@ -4,12 +4,10 @@ import ImagePhotoGrid from './components/ImagePhotoGrid';
 
 export default function HomeImageResponse({
   photos,
-  request,
   width,
   height,
 }: {
   photos: Photo[]
-  request: Request
   width: number
   height: number
 }) {
@@ -18,7 +16,6 @@ export default function HomeImageResponse({
       <ImagePhotoGrid
         {...{
           photos,
-          request,
           width,
           height,
         }}

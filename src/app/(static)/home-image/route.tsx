@@ -9,7 +9,7 @@ import { ImageResponse } from 'next/server';
 
 export const runtime = 'edge';
 
-export async function GET(request: Request) {
+export async function GET() {
   const [
     photos,
     headers,
@@ -21,7 +21,7 @@ export async function GET(request: Request) {
   const { width, height } = IMAGE_OG_SMALL_SIZE;
 
   return new ImageResponse(
-    <HomeImageResponse {...{ photos, request, width, height }}/>,
+    <HomeImageResponse {...{ photos, width, height }}/>,
     { width, height, headers },
   );
 }

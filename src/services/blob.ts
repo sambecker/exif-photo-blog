@@ -48,12 +48,14 @@ export const uploadPhotoFromClient = async (
 export const convertUploadToPhoto = async (
   uploadUrl: string,
   photoId?: string,
+  resizeUrl?: string,
+  resizeExtension?: string
 ) => {
-  const file = await fetch(uploadUrl)
+  const file = await fetch(resizeUrl ?? uploadUrl)
     .then((response) => response.blob());
 
   const fileName = photoId ? `${PREFIX_PHOTO}-${photoId}` : `${PREFIX_PHOTO}`;
-  const fileExtension = getExtensionFromBlobUrl(uploadUrl);
+  const fileExtension = resizeExtension ?? getExtensionFromBlobUrl(uploadUrl);
 
   if (file) {
     const { url } = await put(

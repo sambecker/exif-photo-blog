@@ -8,13 +8,11 @@ import ImageContainer from './components/ImageContainer';
 
 export default function PhotoImageResponse({
   photo,
-  request,
   width,
   height,
   fontFamily,
 }: {
   photo: Photo
-  request: Request
   width: NextImageWidth
   height: number
   fontFamily: string
@@ -23,7 +21,6 @@ export default function PhotoImageResponse({
     <ImageContainer {...{ width, height }}>
       <ImagePhotoGrid {...{
         photos: [photo],
-        request,
         width,
         height,
         imagePosition: 'top',
