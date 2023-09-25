@@ -57,9 +57,10 @@ export default function FieldSetWithStatus({
         id={id}
         name={id}
         value={value}
+        checked={type === 'checkbox' ? value === 'true' : undefined}
         placeholder={placeholder}
         onChange={e => onChange?.(type === 'checkbox'
-          ? e.target.value ? 'true' : 'false'
+          ? e.target.value === 'true' ? 'false' : 'true'
           : e.target.value)}
         type={type}
         autoComplete="off"
