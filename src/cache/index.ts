@@ -5,6 +5,7 @@ import {
   getPhoto,
   getPhotos,
   getPhotosCount,
+  getPhotosCountIncludingHidden,
   getUniqueTags,
 } from '@/services/postgres';
 import { parseCachedPhotosDates, parseCachedPhotoDates } from '@/photo';
@@ -25,6 +26,7 @@ const getPhotosCacheTags = (options: GetPhotosOptions = {}) => {
     tag,
     takenAfterInclusive,
     takenBefore,
+    includeHidden,
   } = options;
 
   if (sortBy !== undefined) { tags.push(`sortBy-${sortBy}`); }
@@ -35,6 +37,8 @@ const getPhotosCacheTags = (options: GetPhotosOptions = {}) => {
   if (takenBefore !== undefined) { tags.push(`takenBefore-${takenBefore.toISOString()}`); }
   // eslint-disable-next-line max-len
   if (takenAfterInclusive !== undefined) { tags.push(`takenAfterInclusive-${takenAfterInclusive.toISOString()}`); }
+  // eslint-disable-next-line max-len
+  if (includeHidden !== undefined) { tags.push(`includeHidden-${includeHidden}`); }
 
   return tags;
 };
@@ -67,6 +71,15 @@ export const getPhotosCountCached: typeof getPhotosCount = (...args) =>
       tags: [TAG_PHOTOS, TAG_PHOTOS_COUNT],
     }
   )();
+
+export const getPhotosCountIncludingHiddenCached: typeof getPhotosCount =
+  (...args) =>
+    unstable_cache(
+      () => getPhotosCountIncludingHidden(...args),
+      [TAG_PHOTOS, TAG_PHOTOS_COUNT], {
+        tags: [TAG_PHOTOS, TAG_PHOTOS_COUNT],
+      }
+    )();
 
 export const getPhotoCached: typeof getPhoto = (...args) =>
   unstable_cache(

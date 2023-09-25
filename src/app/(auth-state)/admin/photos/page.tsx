@@ -20,8 +20,9 @@ import {
   getBlobPhotoUrlsCached,
   getBlobUploadUrlsCached,
   getPhotosCached,
-  getPhotosCountCached,
+  getPhotosCountIncludingHiddenCached,
 } from '@/cache';
+import { AiOutlineEyeInvisible } from 'react-icons/ai';
 
 export const runtime = 'edge';
 
@@ -40,8 +41,8 @@ export default async function AdminPage({
     blobUploadUrls,
     blobPhotoUrls,
   ] = await Promise.all([
-    getPhotosCached({ sortBy: 'createdAt', limit }),
-    getPhotosCountCached(),
+    getPhotosCached({ includeHidden: true, sortBy: 'createdAt', limit }),
+    getPhotosCountIncludingHiddenCached(),
     getBlobUploadUrlsCached(),
     DEBUG_PHOTO_BLOBS ? getBlobPhotoUrlsCached() : [],
   ]);
@@ -81,10 +82,17 @@ export default async function AdminPage({
                         href={pathForPhoto(photo)}
                         className="sm:w-[50%] flex items-center gap-2"
                       >
-                        {photo.title ||
-                          <span className="text-gray-400 dark:text-gray-500">
-                            Untitled
-                          </span>}
+                        <span className={cc(
+                          'inline-flex items-center gap-2',
+                          photo.hidden && 'text-gray-400 dark:text-gray-500',
+                        )}>
+                          <span>{photo.title || 'Untitled'}</span>
+                          {photo.hidden &&
+                            <AiOutlineEyeInvisible
+                              className="translate-y-[0.25px]"
+                              size={16}
+                            />}
+                        </span>
                         {photo.priorityOrder !== null &&
                           <span className={cc(
                             'text-xs leading-none px-1.5 py-1 rounded-sm',

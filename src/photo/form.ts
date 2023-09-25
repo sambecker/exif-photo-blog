@@ -19,6 +19,7 @@ type FormMeta = {
   hideIfEmpty?: boolean
   hideTemporarily?: boolean
   loadingMessage?: string
+  checkbox?: boolean
 };
 
 const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
@@ -45,6 +46,7 @@ const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
   priorityOrder: { label: 'priority order' },
   takenAt: { label: 'taken at' },
   takenAtNaive: { label: 'taken at (naive)' },
+  hidden: { label: 'hidden', checkbox: true },
 };
 
 export const FORM_METADATA_ENTRIES =
@@ -146,5 +148,6 @@ export const convertFormDataToPhoto = (
     priorityOrder: photoForm.priorityOrder
       ? parseFloat(photoForm.priorityOrder)
       : undefined,
+    hidden: photoForm.hidden === 'true',
   };
 };

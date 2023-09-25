@@ -71,10 +71,15 @@ export default function PhotoForm({
         action={type === 'create' ? createPhotoAction : updatePhotoAction}
         className="space-y-6 pb-12"
       >
-        {FORM_METADATA_ENTRIES.map(([
-          key,
-          { label, note, required, readOnly, hideIfEmpty, loadingMessage },
-        ]) =>
+        {FORM_METADATA_ENTRIES.map(([key, {
+          label,
+          note,
+          required,
+          readOnly,
+          hideIfEmpty,
+          loadingMessage,
+          checkbox,
+        }]) =>
           (!hideIfEmpty || formData[key]) &&
             <FieldSetWithStatus
               key={key}
@@ -89,6 +94,7 @@ export default function PhotoForm({
                 ? loadingMessage
                 : undefined}
               loading={loadingMessage && !formData[key] ? true : false}
+              type={checkbox ? 'checkbox' : undefined}
             />)}
         <div className="flex gap-4">
           {type === 'edit' &&

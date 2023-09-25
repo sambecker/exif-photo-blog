@@ -43,6 +43,7 @@ export interface PhotoDbInsert extends PhotoExif {
   tags?: string[]
   locationName?: string
   priorityOrder?: number
+  hidden?: boolean
 }
 
 // Raw db response

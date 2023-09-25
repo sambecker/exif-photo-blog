@@ -47,6 +47,10 @@
       file:active:disabled:bg-white
       file:hover:disabled:cursor-not-allowed
   }
+  input[type=checkbox] {
+    @apply
+      rounded-md
+  }
   button, .button {
     @apply
       cursor-pointer

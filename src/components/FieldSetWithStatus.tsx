@@ -3,6 +3,7 @@
 import { LegacyRef } from 'react';
 import { experimental_useFormStatus as useFormStatus } from 'react-dom';
 import Spinner from './Spinner';
+import { cc } from '@/utility/css';
 
 export default function FieldSetWithStatus({
   id,
@@ -26,7 +27,7 @@ export default function FieldSetWithStatus({
   loading?: boolean
   required?: boolean
   readOnly?: boolean
-  type?: 'text' | 'password'
+  type?: 'text' | 'password' | 'checkbox'
   inputRef?: LegacyRef<HTMLInputElement>
 }) {
   const { pending } = useFormStatus();
@@ -34,7 +35,7 @@ export default function FieldSetWithStatus({
   return (
     <div className="space-y-1">
       <label
-        className="flex gap-2 items-center"
+        className="flex gap-2 items-center select-none"
         htmlFor={id}
       >
         {label}
@@ -57,11 +58,13 @@ export default function FieldSetWithStatus({
         name={id}
         value={value}
         placeholder={placeholder}
-        onChange={e => onChange?.(e.target.value)}
+        onChange={e => onChange?.(type === 'checkbox'
+          ? e.target.value ? 'true' : 'false'
+          : e.target.value)}
         type={type}
         autoComplete="off"
         readOnly={readOnly || pending}
-        className="w-full"
+        className={cc(type === 'text' && 'w-full')}
       />
     </div>
   );
