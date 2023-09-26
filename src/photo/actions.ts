@@ -20,13 +20,16 @@ import { IS_PRO_MODE } from '@/site/config';
 import { getNextImageUrlForRequest } from '@/utility/image';
 
 export async function createPhotoAction(formData: FormData) {
+  const requestOrigin = formData.get('requestOrigin') as string | undefined;
+  formData.delete('requestOrigin');
+
   const photo = convertFormDataToPhoto(formData, true);
 
   const updatedUrl = await convertUploadToPhoto(
     photo.url,
     photo.id,
     !IS_PRO_MODE
-      ? getNextImageUrlForRequest(photo.url, 3840, 90)
+      ? getNextImageUrlForRequest(photo.url, 3840, 90, requestOrigin)
       : undefined,
     !IS_PRO_MODE ? 'webp' : undefined,
   );

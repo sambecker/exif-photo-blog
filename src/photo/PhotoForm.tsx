@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   FORM_METADATA_ENTRIES,
   PhotoFormData,
@@ -29,6 +29,11 @@ export default function PhotoForm({
     useState<Partial<PhotoFormData>>(initialPhotoForm);
 
   const url = formData.url ?? '';
+
+  const [requestOrigin, setRequestOrigin] = useState<string>();
+  useEffect(() => {
+    setRequestOrigin(window.location.origin);
+  }, []);
 
   const updateBlurData = useCallback((blurData: string) => {
     if (type === 'create') {
@@ -96,6 +101,13 @@ export default function PhotoForm({
               loading={loadingMessage && !formData[key] ? true : false}
               type={checkbox ? 'checkbox' : undefined}
             />)}
+        {type === 'create' &&
+          <input
+            name="requestOrigin"
+            defaultValue={requestOrigin}
+            readOnly
+            hidden
+          />}
         <div className="flex gap-4">
           {type === 'edit' &&
             <Link

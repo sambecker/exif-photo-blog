@@ -12,8 +12,9 @@ export const getNextImageUrlForRequest = (
   imageUrl: string,
   width: NextImageWidth,
   quality = 75,
+  baseUrl = BASE_URL,
 ) => {
-  const url = new URL(`${BASE_URL}/_next/image`);
+  const url = new URL(`${baseUrl}/_next/image`);
 
   url.searchParams.append('url', imageUrl);
   url.searchParams.append('w', width.toString());
