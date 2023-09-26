@@ -8,12 +8,17 @@ const VERCEL_URL = VERCEL_BRANCH_URL && VERCEL_BRANCH
   ? `${VERCEL_BRANCH_URL.split(`-git-${VERCEL_BRANCH}-`)[0]}.vercel.app`
   : undefined;
 
-const SITE_DOMAIN = process.env.NEXT_PUBLIC_SITE_DOMAIN || VERCEL_URL;
+const SITE_DOMAIN =
+  process.env.NEXT_PUBLIC_SITE_DOMAIN ||
+  VERCEL_URL;
 
-export const SITE_DOMAIN_OR_TITLE = SITE_DOMAIN || SITE_TITLE;
+export const SITE_DOMAIN_OR_TITLE =
+  SITE_DOMAIN ||
+  SITE_TITLE;
 
-export const SITE_DESCRIPTION = process.env.NEXT_PUBLIC_SITE_DESCRIPTION
-  || SITE_DOMAIN;
+export const SITE_DESCRIPTION =
+  process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
+  SITE_DOMAIN;
 
 export const BASE_URL = process.env.NODE_ENV === 'production'
   ? `https://${SITE_DOMAIN}`
