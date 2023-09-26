@@ -1,4 +1,4 @@
-import { ExifData } from 'ts-exif-parser';
+import type { ExifData } from 'ts-exif-parser';
 
 const OFFSET_REGEX = /[+-]\d\d:\d\d/;
 

@@ -11,7 +11,7 @@ import {
   formatFocalLength,
 } from '@/utility/exif';
 import camelcaseKeys from 'camelcase-keys';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 export const GRID_THUMBNAILS_TO_SHOW_MAX = 12;
 
