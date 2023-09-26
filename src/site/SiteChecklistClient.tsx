@@ -120,8 +120,9 @@ export default function SiteChecklistClient({
           title="Add title"
           status={hasTitle}
           isPending={isPendingPage}
+          optional
         >
-          Store in environment variable:
+          Store in environment variable (used in page titles):
           {renderEnvVars(['NEXT_PUBLIC_SITE_TITLE'])}
         </ChecklistRow>
         <ChecklistRow
@@ -130,7 +131,7 @@ export default function SiteChecklistClient({
           isPending={isPendingPage}
           optional
         >
-          Store in environment variable:
+          Store in environment variable (displayed in top-right nav):
           {renderEnvVars(['NEXT_PUBLIC_SITE_DOMAIN'])}
         </ChecklistRow>
       </Checklist>
@@ -222,8 +223,8 @@ export default function SiteChecklistClient({
           isPending={isPendingPage}
           optional
         >
-          Set environment variable to {'"1"'} to enable Pro Mode
-          (includes additional edge functions and higher quality images):
+          Set environment variable to {'"1"'} to enable
+          higher quality image storage:
           {renderEnvVars(['NEXT_PUBLIC_PRO_MODE'])}
         </ChecklistRow>
       </Checklist>

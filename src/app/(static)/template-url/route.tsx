@@ -1,9 +1,12 @@
 /* eslint-disable max-len */
 import { NextResponse } from 'next/server';
 
+const REQUIRE_ENV_VARS = false;
+
 const TITLE = 'Photo Blog';
 const DESCRIPTION = 'Store photos with original camera data';
-const REPO_NAME = 'photo-blog';
+const REPO_TEAM = 'sambecker';
+const REPO_NAME = 'exif-photo-blog';
 
 export function GET() {
   const url = new URL('https://vercel.com/new/clone');
@@ -15,14 +18,16 @@ export function GET() {
   url.searchParams.set('demo-image', 'https://photos.sambecker.com/template-image-tight');
   url.searchParams.set('project-name', TITLE);
   url.searchParams.set('repository-name', REPO_NAME);
-  url.searchParams.set('repository-url', `https://github.com/sambecker/${REPO_NAME}`);
+  url.searchParams.set('repository-url', `https://github.com/${REPO_TEAM}/${REPO_NAME}`);
   url.searchParams.set('from', 'templates');
   url.searchParams.set('skippable-integrations', '1');
-  url.searchParams.set('env-description', 'Configure your photo blog meta');
-  url.searchParams.set('env-link', 'BLANK');
-  url.searchParams.set('env', [
-    'NEXT_PUBLIC_SITE_TITLE',
-  ].join(','));
+  if (REQUIRE_ENV_VARS) {
+    url.searchParams.set('env-description', 'Configure your photo blog meta');
+    url.searchParams.set('env-link', 'BLANK');
+    url.searchParams.set('env', [
+      'NEXT_PUBLIC_SITE_TITLE',
+    ].join(','));
+  }
   url.searchParams.set('teamCreateStatus', 'hidden');
   url.searchParams.set('stores', JSON.stringify([
     { type: 'postgres' },
