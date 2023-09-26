@@ -19,9 +19,9 @@ https://photos.sambecker.com
 
 Features
 -
-- Image upload with EXIF extraction
-- Inifite scroll
-- Image tagging
+- Photo upload with EXIF extraction
+- Photo tagging
+- Infinite scroll
 - Built-in auth
 - Light/dark mode
 - Automatic OG image generation
@@ -67,6 +67,7 @@ Installation
 2. Click "Analytics" tab
 3. Follow "Enable Web Analytics" instructions (`@vercel/analytics` is already part of your project)
 
-### 6. Remove repo link (optional)
+### 6. Optional configuration
 
-1. Set `NEXT_PUBLIC_HIDE_REPO_LINK = 1`
+1. Set `NEXT_PUBLIC_HIDE_REPO_LINK = 1` to remove footer link to repo
+2. Set `NEXT_PUBLIC_PRO_MODE = 1` to enable higher quality image storage
