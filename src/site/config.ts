@@ -28,8 +28,6 @@ export const SHOW_REPO_LINK = process.env.NEXT_PUBLIC_HIDE_REPO_LINK !== '1';
 export const IS_PRO_MODE = process.env.NEXT_PUBLIC_PRO_MODE === '1';
 
 export const CONFIG_CHECKLIST_STATUS = {
-  hasTitle: (process.env.NEXT_PUBLIC_SITE_TITLE ?? '').length > 0,
-  hasDomain: (process.env.NEXT_PUBLIC_SITE_DOMAIN ?? '').length > 0,
   hasPostgres: (process.env.POSTGRES_HOST ?? '').length > 0,
   hasBlob: (process.env.BLOB_READ_WRITE_TOKEN ?? '').length > 0,
   hasAuth: (process.env.AUTH_SECRET ?? '').length > 0,
@@ -37,12 +35,13 @@ export const CONFIG_CHECKLIST_STATUS = {
     (process.env.ADMIN_EMAIL ?? '').length > 0 &&
     (process.env.ADMIN_PASSWORD ?? '').length > 0
   ),
+  hasTitle: (process.env.NEXT_PUBLIC_SITE_TITLE ?? '').length > 0,
+  hasDomain: (process.env.NEXT_PUBLIC_SITE_DOMAIN ?? '').length > 0,
   showRepoLink: SHOW_REPO_LINK,
   isProMode: IS_PRO_MODE,
 };
 
 export const IS_CHECKLIST_COMPLETE =
-  CONFIG_CHECKLIST_STATUS.hasTitle &&
   CONFIG_CHECKLIST_STATUS.hasPostgres &&
   CONFIG_CHECKLIST_STATUS.hasBlob &&
   CONFIG_CHECKLIST_STATUS.hasAuth &&

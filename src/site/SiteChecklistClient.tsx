@@ -19,23 +19,23 @@ import InfoBlock from '@/components/InfoBlock';
 import Checklist from '@/components/Checklist';
 
 export default function SiteChecklistClient({
-  hasTitle,
-  hasDomain,
   hasPostgres,
   hasBlob,
   hasAuth,
   hasAdminUser,
+  hasTitle,
+  hasDomain,
   showRepoLink,
   isProMode,
   showRefreshButton,
   secret,
 }: {
-  hasTitle: boolean
-  hasDomain: boolean
   hasPostgres: boolean
   hasBlob: boolean
   hasAuth: boolean
   hasAdminUser: boolean
+  hasTitle: boolean
+  hasDomain: boolean
   showRepoLink: boolean
   isProMode: boolean
   showRefreshButton?: boolean
@@ -113,29 +113,6 @@ export default function SiteChecklistClient({
   return (
     <div className="text-sm max-w-xl space-y-6">
       <Checklist
-        title="Content"
-        icon={<BiPencil size={16} />}
-      >
-        <ChecklistRow
-          title="Add title"
-          status={hasTitle}
-          isPending={isPendingPage}
-          optional
-        >
-          Store in environment variable (used in page titles):
-          {renderEnvVars(['NEXT_PUBLIC_SITE_TITLE'])}
-        </ChecklistRow>
-        <ChecklistRow
-          title="Add custom domain"
-          status={hasDomain}
-          isPending={isPendingPage}
-          optional
-        >
-          Store in environment variable (displayed in top-right nav):
-          {renderEnvVars(['NEXT_PUBLIC_SITE_DOMAIN'])}
-        </ChecklistRow>
-      </Checklist>
-      <Checklist
         title="Storage"
         icon={<BiData size={16} />}
       >
@@ -202,6 +179,29 @@ export default function SiteChecklistClient({
             'ADMIN_EMAIL',
             'ADMIN_PASSWORD',
           ])}
+        </ChecklistRow>
+      </Checklist>
+      <Checklist
+        title="Content"
+        icon={<BiPencil size={16} />}
+      >
+        <ChecklistRow
+          title="Add title"
+          status={hasTitle}
+          isPending={isPendingPage}
+          optional
+        >
+          Store in environment variable (used in page titles):
+          {renderEnvVars(['NEXT_PUBLIC_SITE_TITLE'])}
+        </ChecklistRow>
+        <ChecklistRow
+          title="Add custom domain"
+          status={hasDomain}
+          isPending={isPendingPage}
+          optional
+        >
+          Store in environment variable (displayed in top-right nav):
+          {renderEnvVars(['NEXT_PUBLIC_SITE_DOMAIN'])}
         </ChecklistRow>
       </Checklist>
       <Checklist
