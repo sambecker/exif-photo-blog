@@ -30,9 +30,9 @@ module.exports = {
       },
       keyframes: {
         'rotate-pulse': {
-          '0%': { rotate: '0deg', scale: '1' },
-          '50%': { rotate: '180deg', scale: '0.8' },
-          '100%': { rotate: '360deg', scale: '1' },
+          '0%': { transform: 'rotate(0deg) scale(1)' },
+          '50%': { transform: 'rotate(180deg) scale(0.8)' },
+          '100%': { transform: 'rotate(360deg) scale(1)' },
         },
       },
     },
