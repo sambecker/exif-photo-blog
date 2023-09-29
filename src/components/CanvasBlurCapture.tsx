@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from 'react';
 
+const RETRY_DELAY = 2000;
+
 export default function CanvasBlurCapture({
   imageUrl,
   onCapture,
@@ -21,23 +23,20 @@ export default function CanvasBlurCapture({
   scale?: number
   quality?: number
 }) {
-  const ref = useRef<HTMLCanvasElement>(null);
+  const refCanvas = useRef<HTMLCanvasElement>(null);
+  const refHasCompleted = useRef(false);
+  const refTimeouts = useRef<NodeJS.Timeout[]>([]);
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    
-    const image = new Image();
-    image.crossOrigin = 'anonymous';
-    image.src = imageUrl;
-    image.onload = () => {
-      timeout = setTimeout(() => {
-        const canvas = ref.current;
+    const capture = () => {
+      if (!refHasCompleted.current) {
+        const canvas = refCanvas.current;
         if (canvas) {
           canvas.width = width * scale;
           canvas.height = height * scale;
           canvas.style.width = `${width}px`;
           canvas.style.height = `${height}px`;
-          const context = ref.current?.getContext('2d');
+          const context = refCanvas.current?.getContext('2d');
           if (context) {
             context.scale(scale, scale);
             context.filter =
@@ -48,18 +47,35 @@ export default function CanvasBlurCapture({
               -edgeCompensation,
               -edgeCompensation,
               width + edgeCompensation * 2,
-              width * image.height / image.width
-                + edgeCompensation * 2,
+              width * image.height / image.width + edgeCompensation * 2,
             );
+            refHasCompleted.current = true;
             onCapture(canvas.toDataURL('image/jpeg', quality));
+          } else {
+            console.error('Cannot get 2d context');
+            // Retry capture in case canvas is not available
+            refTimeouts.current.push(setTimeout(capture, RETRY_DELAY));
           }
         } else {
           console.error('Cannot generate blur data: canvas not found');
+          // Retry capture in case canvas is not available
+          refTimeouts.current.push(setTimeout(capture, RETRY_DELAY));
         }
-      }, 2000);
+      }
     };
 
-    return () => clearTimeout(timeout);
+    const image = new Image();
+    image.crossOrigin = 'anonymous';
+    image.src = imageUrl;
+    image.onload = capture;
+
+    // Attempt delayed capture in case image.onload never fires
+    refTimeouts.current.push(setTimeout(capture, RETRY_DELAY));
+
+    // Store timeout ref to ensure it's closed over
+    // in cleanup function (recommended by exhaustive-deps)
+    const timeouts = refTimeouts.current;
+    return () => timeouts.forEach(clearTimeout);
   }, [
     imageUrl,
     onCapture,
@@ -71,6 +87,6 @@ export default function CanvasBlurCapture({
   ]);
 
   return (
-    <canvas ref={ref} className={hidden ? 'hidden' : undefined} />
+    <canvas ref={refCanvas} className={hidden ? 'hidden' : undefined} />
   );
 }
