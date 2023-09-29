@@ -5,6 +5,7 @@ import SiteGrid from '@/components/SiteGrid';
 import { generateOgImageMetaForPhotos, getPhotosLimitForQuery } from '@/photo';
 import PhotoLarge from '@/photo/PhotoLarge';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
+import { pathForRoot } from '@/site/paths';
 import { Metadata } from 'next';
 
 export const runtime = 'edge';
@@ -49,7 +50,7 @@ export default async function HomePage({
         />
         {showMorePhotos &&
           <SiteGrid
-            contentMain={<MorePhotos path={`?next=${offset + 1}`} />}
+            contentMain={<MorePhotos path={pathForRoot(offset + 1)} />}
           />}
       </div>
       : <PhotosEmptyState />

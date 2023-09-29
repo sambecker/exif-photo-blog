@@ -6,6 +6,7 @@ import { cc } from '@/utility/css';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
 import { useRouter } from 'next/navigation';
 import AnimateItems from './AnimateItems';
+import { PATH_ROOT } from '@/site/paths';
 
 export default function Modal({
   onClosePath,
@@ -28,7 +29,10 @@ export default function Modal({
 
   useClickInsideOutside({
     htmlElements,
-    onClickOutside: () => router.push(onClosePath ?? '/', { scroll: false}),
+    onClickOutside: () => router.push(
+      onClosePath ?? PATH_ROOT,
+      { scroll: false },
+    ),
   });
 
   return (

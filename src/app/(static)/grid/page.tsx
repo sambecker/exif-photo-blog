@@ -10,6 +10,7 @@ import { generateOgImageMetaForPhotos, getPhotosLimitForQuery } from '@/photo';
 import PhotoGrid from '@/photo/PhotoGrid';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { MAX_PHOTOS_TO_SHOW_HOME } from '@/photo/image-response';
+import { pathForGrid } from '@/site/paths';
 import PhotoTag from '@/tag/PhotoTag';
 import { Metadata } from 'next';
 
@@ -45,7 +46,7 @@ export default async function GridPage({
         contentMain={<div className="space-y-4">
           <PhotoGrid photos={photos} />
           {showMorePhotos &&
-            <MorePhotos path={`/grid?next=${offset + 1}`} />}
+            <MorePhotos path={pathForGrid(offset + 1)} />}
         </div>}
         contentSide={tags &&
           <AnimateItems

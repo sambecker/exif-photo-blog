@@ -8,6 +8,8 @@ import { pathForPhoto } from '@/site/paths';
 import { useAppState } from '@/state';
 import { AnimationConfig } from '@/components/AnimateItems';
 
+const LISTENER_KEYUP = 'keyup';
+
 const ANIMATION_LEFT: AnimationConfig = { type: 'left', duration: 0.3 };
 const ANIMATION_RIGHT: AnimationConfig = { type: 'right', duration: 0.3 };
 
@@ -44,14 +46,17 @@ export default function PhotoLinks({
           router.push(pathForPhoto(nextPhoto, tag), { scroll: false });
         }
         break;
-      case 'ESCAPE':
-        router.push('/grid');
-        break;
       };
     };
-    window.addEventListener('keyup', onKeyUp);
-    return () => window.removeEventListener('keyup', onKeyUp);
-  }, [router, setNextPhotoAnimation, previousPhoto, nextPhoto, tag]);
+    window.addEventListener(LISTENER_KEYUP, onKeyUp);
+    return () => window.removeEventListener(LISTENER_KEYUP, onKeyUp);
+  }, [
+    router,
+    setNextPhotoAnimation,
+    previousPhoto,
+    nextPhoto,
+    tag,
+  ]);
   
   return (
     <>

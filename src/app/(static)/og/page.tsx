@@ -2,6 +2,7 @@ import { getPhotosCached, getPhotosCountCached } from '@/cache';
 import MorePhotos from '@/components/MorePhotos';
 import { getPhotosLimitForQuery } from '@/photo';
 import StaggeredOgPhotos from '@/photo/StaggeredOgPhotos';
+import { pathForOg } from '@/site/paths';
 
 export const runtime = 'edge';
 
@@ -28,7 +29,7 @@ export default async function GridPage({
         <StaggeredOgPhotos photos={photos} />
       </div>
       {showMorePhotos &&
-        <MorePhotos path={`/og?next=${offset + 1}`} />}
+        <MorePhotos path={pathForOg(offset + 1)} />}
     </div>
   );
 }

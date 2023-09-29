@@ -13,7 +13,11 @@ import {
 import { FaRegEdit } from 'react-icons/fa';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import { pathForBlobUrl } from '@/services/blob';
-import { pathForPhoto, pathForPhotoEdit } from '@/site/paths';
+import {
+  pathForAdminPhotos,
+  pathForPhoto,
+  pathForPhotoEdit,
+} from '@/site/paths';
 import { getPhotosLimitForQuery, titleForPhoto } from '@/photo';
 import MorePhotos from '@/components/MorePhotos';
 import {
@@ -123,7 +127,7 @@ export default async function AdminPage({
                   </Fragment>)}
               </AdminGrid>
               {showMorePhotos &&
-                <MorePhotos path={`/admin/photos?next=${offset + 1}`} />}
+                <MorePhotos path={pathForAdminPhotos(offset + 1)} />}
             </div>
           </div>
         </div>}

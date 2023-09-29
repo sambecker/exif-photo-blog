@@ -1,6 +1,7 @@
 import { getPhotoCached } from '@/cache';
 import PhotoShareModal from '@/photo/PhotoShareModal';
 import { getPhotos, getUniqueTags } from '@/services/postgres';
+import { PATH_ROOT } from '@/site/paths';
 import { redirect } from 'next/navigation';
 
 export async function generateStaticParams() {
@@ -24,7 +25,7 @@ export default async function Share({
 }) {
   const photo = await getPhotoCached(photoId);
 
-  if (!photo) { return redirect('/'); }
+  if (!photo) { return redirect(PATH_ROOT); }
 
   return <PhotoShareModal photo={photo} tag={tag} />;
 }
