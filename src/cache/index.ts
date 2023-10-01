@@ -1,4 +1,3 @@
-import type { Session } from 'next-auth/types';
 import { revalidateTag, unstable_cache } from 'next/cache';
 import {
   GetPhotosOptions,
@@ -10,6 +9,7 @@ import {
 } from '@/services/postgres';
 import { parseCachedPhotosDates, parseCachedPhotoDates } from '@/photo';
 import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
+import { AuthSession } from 'next-auth';
 
 const TAG_PHOTOS        = 'photos';
 const TAG_PHOTOS_COUNT  = 'photos-count';
@@ -113,7 +113,7 @@ export const getBlobPhotoUrlsCached: typeof getBlobPhotoUrls = (...args) =>
     }
   )();
 
-export const getImageCacheHeadersForAuth = (session?: Session) => {
+export const getImageCacheHeadersForAuth = (session: AuthSession | null) => {
   return {
     'Cache-Control': !session?.user
       ? 's-maxage=3600, stale-while-revalidate=59'
