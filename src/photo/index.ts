@@ -1,7 +1,4 @@
-import {
-  ABSOLUTE_PATH_FOR_HOME_IMAGE,
-  absolutePathForPhotoImage,
-} from '@/site/paths';
+import { ABSOLUTE_PATH_FOR_HOME_IMAGE } from '@/site/paths';
 import { formatDateFromPostgresString } from '@/utility/date';
 import {
   formatAperture,
@@ -146,8 +143,7 @@ export const getPhotosLimitForQuery = (
 };
 
 export const generateOgImageMetaForPhotos = (photos: Photo[]): Metadata => {
-  if (photos.length >= 6) {
-    // Show multiple photos once a 3x2 grid is available
+  if (photos.length > 0) {
     return {
       openGraph: {
         images: ABSOLUTE_PATH_FOR_HOME_IMAGE,
@@ -157,21 +153,10 @@ export const generateOgImageMetaForPhotos = (photos: Photo[]): Metadata => {
         images: ABSOLUTE_PATH_FOR_HOME_IMAGE,
       },
     };
-  } else if (photos.length > 0) {
-    // Otherwise show the first photo
-    const photo = photos[0];
-    return {
-      openGraph: {
-        images: absolutePathForPhotoImage(photo),
-      },
-      twitter: {
-        card: 'summary_large_image',
-        images: absolutePathForPhotoImage(photo),
-      },
-    };
+  } else {
+    // If there are no photos, refrain from showing an OG image
+    return {};
   }
-  // If there are no photos, refrain from showing an OG image
-  return {};
 };
 
 const PHOTO_ID_FORWARDING_TABLE: Record<string, string> = JSON.parse(

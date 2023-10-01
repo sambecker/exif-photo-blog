@@ -28,6 +28,9 @@ export default function ImageCaption({
       bottom: 0,
       left: 0,
       right: 0,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
     }}>
       {children}
     </div>
