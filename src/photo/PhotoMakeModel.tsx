@@ -13,7 +13,10 @@ export default function PhotoMakeModel({
       'uppercase',
     )}>
       {photo.make === 'Apple'
-        ? <AiFillApple className="translate-y-[-0.5px]" />
+        ? <AiFillApple
+          title="Apple"
+          className="translate-y-[-0.5px]"
+        />
         : photo.make}
       &nbsp;
       {photo.model}
