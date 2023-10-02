@@ -194,7 +194,9 @@ const sqlGetPhotosByDevice = async (
   model: string,
 ) => sql<PhotoDb>`
   SELECT * FROM photos
-  WHERE make=${make} AND model=${model}
+  WHERE
+  LOWER(make)=${make} AND
+  LOWER(REPLACE(model, ' ', '-'))=${model}
   ORDER BY taken_at DESC
   LIMIT ${limit}
 `;

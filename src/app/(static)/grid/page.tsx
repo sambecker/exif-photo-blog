@@ -8,7 +8,7 @@ import HeaderList from '@/components/HeaderList';
 import MorePhotos from '@/components/MorePhotos';
 import SiteGrid from '@/components/SiteGrid';
 import { generateOgImageMetaForPhotos, getPhotosLimitForQuery } from '@/photo';
-import PhotoDevice from '@/photo/PhotoDevice';
+import PhotoDevice from '@/device/PhotoDevice';
 import PhotoGrid from '@/photo/PhotoGrid';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { MAX_PHOTOS_TO_SHOW_HOME } from '@/photo/image-response';
@@ -69,6 +69,7 @@ export default async function GridPage({
                 key={device}
                 make={make}
                 model={model}
+                showIcon={false}
                 hideApple
               />)}
           />}

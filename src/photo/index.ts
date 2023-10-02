@@ -169,6 +169,18 @@ export const translatePhotoId = (id: string) =>
 export const titleForPhoto = (photo: Photo) =>
   photo.title || 'Untitled';
 
+export const labelForPhotos = (photos: Photo[]) =>
+  photos.length === 1 ? 'Photo' : 'Photos';
+
+export const descriptionForPhotoSet = (
+  photos:Photo[],
+  descriptor: string,
+  dateBased?: boolean,
+) =>
+  dateBased
+    ? dateRangeForPhotos(photos).description.toUpperCase()
+    : `${photos.length} ${descriptor} ${labelForPhotos(photos)}`;
+
 export const dateRangeForPhotos = (photos: Photo[]) => {
   const start = photos[0].takenAtNaiveFormattedShort;
   const end = photos[photos.length - 1].takenAtNaiveFormattedShort;
