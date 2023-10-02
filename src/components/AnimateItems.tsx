@@ -16,6 +16,7 @@ export interface AnimationConfig {
 
 interface Props extends AnimationConfig {
   className?: string
+  classNameItem?: string
   items: JSX.Element[]
   animateFromAppState?: boolean
   animateOnFirstLoadOnly?: boolean
@@ -24,6 +25,7 @@ interface Props extends AnimationConfig {
 
 function AnimateItems({
   className,
+  classNameItem,
   items,
   type = 'scale',
   duration = 0.6,
@@ -96,6 +98,7 @@ function AnimateItems({
       {items.map((item, index) =>
         <motion.div
           key={index}
+          className={classNameItem}
           style={getInitialVariant()}
           variants={{
             hidden: getInitialVariant(),

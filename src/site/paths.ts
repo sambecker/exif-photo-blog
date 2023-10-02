@@ -1,9 +1,11 @@
 import { Photo } from '@/photo';
 import { BASE_URL } from './config';
+import { parameterize } from '@/utility/string';
 
 // Prefixes
-const PREFIX_PHOTO = '/p';
-const PREFIX_TAG = '/t';
+const PREFIX_PHOTO  = '/p';
+const PREFIX_TAG    = '/t';
+const PREFIX_DEVICE = '/d';
 
 // Modifiers
 const SHARE = 'share';
@@ -54,7 +56,11 @@ export const pathForPhotoShare = (photo: PhotoOrPhotoId, tag?: string) =>
 export const pathForPhotoEdit = (photo: PhotoOrPhotoId) =>
   `${PATH_ADMIN_PHOTOS}/${getPhotoId(photo)}/edit`;
 
-export const pathForTag = (tag: string) => `${PREFIX_TAG}/${tag}`;
+export const pathForTag = (tag: string) =>
+  `${PREFIX_TAG}/${tag}`;
+
+export const pathForDevice = (make?: string, model?: string) =>
+  `${PREFIX_DEVICE}/${parameterize(`${make}-${model}`)}`;
 
 export const pathForTagShare = (tag: string) =>
   `${pathForTag(tag)}/${SHARE}`;

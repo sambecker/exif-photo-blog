@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { pathForPhoto, pathForPhotoShare } from '@/site/paths';
 import PhotoTags from '@/tag/PhotoTags';
 import ShareButton from '@/components/ShareButton';
-import PhotoMakeModel from './PhotoMakeModel';
+import PhotoDevice from './PhotoDevice';
 
 export default function PhotoLarge({
   photo,
@@ -64,7 +64,7 @@ export default function PhotoLarge({
               {tagsToShow.length > 0 &&
                 <PhotoTags tags={tagsToShow} />}
             </div>
-            <PhotoMakeModel photo={photo} />
+            <PhotoDevice make={photo.make} model={photo.model} />
           </>)}
           {renderMiniGrid(<>
             <ul className={cc(

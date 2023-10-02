@@ -188,6 +188,17 @@ const sqlGetPhotosByTag = (
     LIMIT ${limit} OFFSET ${offset}
   `;
 
+const sqlGetPhotosByDevice = async (
+  limit = PHOTO_DEFAULT_LIMIT,
+  make: string,
+  model: string,
+) => sql<PhotoDb>`
+  SELECT * FROM photos
+  WHERE make=${make} AND model=${model}
+  ORDER BY taken_at DESC
+  LIMIT ${limit}
+`;
+
 const sqlGetPhotosTakenAfterDateInclusive = (
   takenAt: Date,
   limit?: number,
@@ -225,15 +236,24 @@ const sqlGetPhotosCountIncludingHidden = async () => sql`
 `.then(({ rows }) => parseInt(rows[0].count, 10));
 
 const sqlGetUniqueTags = async () => sql`
-  SELECT DISTINCT unnest(tags) FROM photos
+  SELECT DISTINCT unnest(tags) as tag FROM photos
   WHERE hidden IS NOT TRUE
-`.then(({ rows }) => rows.map(row => row.unnest as string));
+  ORDER BY tag ASC
+`.then(({ rows }) => rows.map(row => row.tag as string));
+
+const sqlGetUniqueDevices = async () => sql`
+  SELECT DISTINCT make||' '||model as device, make, model FROM photos
+  WHERE hidden IS NOT TRUE
+  ORDER BY device ASC
+`.then(({ rows }) =>
+    rows as { device: string, make: string, model: string }[]);
 
 export type GetPhotosOptions = {
   sortBy?: 'createdAt' | 'takenAt' | 'priority'
   limit?: number
   offset?: number
   tag?: string
+  device?: { make: string, model: string }
   takenBefore?: Date
   takenAfterInclusive?: Date
   includeHidden?: boolean
@@ -246,9 +266,7 @@ const safelyQueryPhotos = async <T>(callback: () => Promise<T>): Promise<T> => {
     result = await callback();
   } catch (e: any) {
     if (/relation "photos" does not exist/i.test(e.message)) {
-      console.log(
-        'Creating table "photos" because it did not exist',
-      );
+      console.log('Creating table "photos" because it did not exist');
       await sqlCreatePhotosTable();
       result = await callback();
     } else if (/endpoint is in transition/i.test(e.message)) {
@@ -275,6 +293,7 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
     limit,
     offset,
     tag,
+    device,
     takenBefore,
     takenAfterInclusive,
     includeHidden,
@@ -291,6 +310,8 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
     getPhotosSql = () => sqlGetPhotosTakenAfterDateInclusive(takenAfterInclusive, limit);
   } else if (tag) {
     getPhotosSql = () => sqlGetPhotosByTag(limit, offset, tag);
+  } else if (device) {
+    getPhotosSql = () => sqlGetPhotosByDevice(limit, device.make, device.model);
   } else if (sortBy === 'createdAt') {
     getPhotosSql = () => sqlGetPhotosSortedByCreatedAt(limit, offset);
   } else if (sortBy === 'priority') {
@@ -316,3 +337,5 @@ export const getPhotosCountIncludingHidden = () =>
   safelyQueryPhotos(sqlGetPhotosCountIncludingHidden);
 
 export const getUniqueTags = () => safelyQueryPhotos(sqlGetUniqueTags);
+
+export const getUniqueDevices = () => safelyQueryPhotos(sqlGetUniqueDevices);

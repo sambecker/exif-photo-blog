@@ -5,6 +5,7 @@ import {
   getPhotos,
   getPhotosCount,
   getPhotosCountIncludingHidden,
+  getUniqueDevices,
   getUniqueTags,
 } from '@/services/postgres';
 import { parseCachedPhotosDates, parseCachedPhotoDates } from '@/photo';
@@ -14,31 +15,45 @@ import { AuthSession } from 'next-auth';
 const TAG_PHOTOS        = 'photos';
 const TAG_PHOTOS_COUNT  = 'photos-count';
 const TAG_TAGS          = 'tags';
+const TAG_DEVICES       = 'devices';
 const TAG_BLOB          = 'blob';
 
-const getPhotosCacheTags = (options: GetPhotosOptions = {}) => {
-  const tags = [];
-  
-  const {
-    sortBy,
-    limit,
-    offset,
-    tag,
-    takenAfterInclusive,
-    takenBefore,
-    includeHidden,
-  } = options;
+// eslint-disable-next-line max-len
+const getPhotosCacheTagForKey = (
+  options: GetPhotosOptions,
+  key: keyof GetPhotosOptions,
+): string | null => {
+  switch (key) {
+  // Primitive keys
+  case 'sortBy': 
+  case 'limit':
+  case 'offset':
+  case 'tag':
+  case 'includeHidden': {
+    const value = options[key];
+    return value ? `${key}-${value}` : null;
+  }
+  // Date keys
+  case 'takenBefore':
+  case 'takenAfterInclusive': {
+    const value = options[key];
+    return value ? `${key}-${value.toISOString()}` : null;
+  }
+  // Complex keys
+  case 'device': {
+    const value = options[key];
+    return value ? `${key}-${value.make}-${value.model}` : null;
+  }
+  }
+};
 
-  if (sortBy !== undefined) { tags.push(`sortBy-${sortBy}`); }
-  if (limit !== undefined) { tags.push(`limit-${limit}`); }
-  if (offset !== undefined) { tags.push(`offset-${offset}`); }
-  if (tag !== undefined) { tags.push(`tag-${tag}`); }
-  // eslint-disable-next-line max-len
-  if (takenBefore !== undefined) { tags.push(`takenBefore-${takenBefore.toISOString()}`); }
-  // eslint-disable-next-line max-len
-  if (takenAfterInclusive !== undefined) { tags.push(`takenAfterInclusive-${takenAfterInclusive.toISOString()}`); }
-  // eslint-disable-next-line max-len
-  if (includeHidden !== undefined) { tags.push(`includeHidden-${includeHidden}`); }
+const getPhotosCacheTags = (options: GetPhotosOptions = {}) => {
+  const tags: string[] = [];
+
+  Object.keys(options).forEach(key => {
+    const tag = getPhotosCacheTagForKey(options, key as keyof GetPhotosOptions);
+    if (tag) { tags.push(tag); }
+  });
 
   return tags;
 };
@@ -48,12 +63,25 @@ const getPhotoCacheTag = (photoId: string) => `photo-${photoId}`;
 export const revalidatePhotosTag = () =>
   revalidateTag(TAG_PHOTOS);
 
+export const revalidateTagsTag = () =>
+  revalidateTag(TAG_TAGS);
+
+export const revalidateDevicesTag = () =>
+  revalidateTag(TAG_DEVICES);
+
 export const revalidateBlobTag = () =>
   revalidateTag(TAG_BLOB);
 
 export const revalidatePhotosAndBlobTag = () => {
   revalidateTag(TAG_PHOTOS);
   revalidateTag(TAG_BLOB);
+};
+
+export const revalidateAllTags = () => {
+  revalidatePhotosTag();
+  revalidateTagsTag();
+  revalidateDevicesTag();
+  revalidateBlobTag();
 };
 
 export const getPhotosCached: typeof getPhotos = (...args) =>
@@ -94,6 +122,14 @@ export const getUniqueTagsCached: typeof getUniqueTags = (...args) =>
     () => getUniqueTags(...args),
     [TAG_PHOTOS, TAG_TAGS], {
       tags: [TAG_PHOTOS, TAG_TAGS],
+    }
+  )();
+
+export const getUniqueDevicesCached: typeof getUniqueDevices = (...args) =>
+  unstable_cache(
+    () => getUniqueDevices(...args),
+    [TAG_PHOTOS, TAG_DEVICES], {
+      tags: [TAG_PHOTOS, TAG_DEVICES],
     }
   )();
 

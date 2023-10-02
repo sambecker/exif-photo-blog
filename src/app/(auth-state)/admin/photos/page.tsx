@@ -9,6 +9,7 @@ import SiteGrid from '@/components/SiteGrid';
 import {
   deletePhotoAction,
   deleteBlobPhotoAction,
+  syncCacheAction,
 } from '@/photo/actions';
 import { FaRegEdit } from 'react-icons/fa';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
@@ -27,6 +28,7 @@ import {
   getPhotosCountIncludingHiddenCached,
 } from '@/cache';
 import { AiOutlineEyeInvisible } from 'react-icons/ai';
+import { BiTrash } from 'react-icons/bi';
 
 export const runtime = 'edge';
 
@@ -58,7 +60,21 @@ export default async function AdminPage({
       contentMain={
         <div className="mt-4 space-y-4">
           <div className="space-y-8">
-            <PhotoUploadInput />
+            <div className="flex items-center">
+              <div className="flex-grow">
+                <PhotoUploadInput />
+              </div>
+              <form
+                className="hidden md:block"
+                action={syncCacheAction}
+              >
+                <SubmitButtonWithStatus
+                  icon={<BiTrash />}
+                >
+                  Clear Cache
+                </SubmitButtonWithStatus>
+              </form>
+            </div>
             {blobUploadUrls.length > 0 &&
               <BlobUrls
                 blobUrls={blobUploadUrls}
