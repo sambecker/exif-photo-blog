@@ -177,12 +177,16 @@ export const photoQuantityText = (photos: Photo[]) =>
 
 export const descriptionForPhotoSet = (
   photos:Photo[],
-  descriptor: string,
+  descriptor?: string,
   dateBased?: boolean,
 ) =>
   dateBased
     ? dateRangeForPhotos(photos).description.toUpperCase()
-    : `${photos.length} ${descriptor} ${labelForPhotos(photos)}`;
+    : [
+      photos.length,
+      descriptor,
+      labelForPhotos(photos),
+    ].join(' ');
 
 export const dateRangeForPhotos = (photos: Photo[]) => {
   const start = photos[0].takenAtNaiveFormattedShort;

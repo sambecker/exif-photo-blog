@@ -1,8 +1,8 @@
 import { Photo } from '@/photo';
 import { absolutePathForCameraImage, pathForCamera } from '@/site/paths';
 import OGTile from '@/components/OGTile';
-import { Camera, titleForCamera } from '.';
-import { descriptionForCameraPhotos } from './meta';
+import { Camera } from '.';
+import { descriptionForCameraPhotos, titleForCamera } from './meta';
 
 export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 

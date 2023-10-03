@@ -22,7 +22,7 @@ export const descriptionForCameraPhotos = (
   photos: Photo[],
   dateBased?: boolean,
 ) =>
-  descriptionForPhotoSet(photos, 'camera', dateBased);
+  descriptionForPhotoSet(photos, undefined, dateBased);
 
 export const generateMetaForCamera = (
   camera: Camera,

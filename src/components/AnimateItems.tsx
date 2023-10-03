@@ -62,16 +62,15 @@ function AnimateItems({
     switch (typeResolved) {
     case 'left': return {
       opacity: 0,
-      translateX: distanceOffset,
+      transform: `translateX(${distanceOffset}px)`,
     };
     case 'right': return {
       opacity: 0,
-      translateX: -distanceOffset,
+      transform: `translateX(${-distanceOffset}px)`,
     };
     default: return {
       opacity: 0,
-      scale: scaleOffset,
-      translateY: distanceOffset,
+      transform: `translateY(${distanceOffset}px) scale(${scaleOffset})`,
     };
     }
   };
@@ -99,14 +98,12 @@ function AnimateItems({
         <motion.div
           key={index}
           className={classNameItem}
-          style={getInitialVariant()}
+          // style={getInitialVariant()}
           variants={{
             hidden: getInitialVariant(),
             show: {
               opacity: 1,
-              scale: 1,
-              translateX: 0,
-              translateY: 0,
+              transform: 'translateX(0) translateY(0) scale(1)',
             },
           }}
           transition={{
