@@ -64,7 +64,7 @@ export default function PhotoLarge({
           {renderMiniGrid(<>
             <div>
               <Link
-                href={pathForPhoto(photo, tag)}
+                href={pathForPhoto(photo)}
                 className="font-bold uppercase"
               >
                 {titleForPhoto(photo)}

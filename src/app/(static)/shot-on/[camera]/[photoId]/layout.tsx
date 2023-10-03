@@ -82,10 +82,6 @@ export default async function PhotoCameraPage({
 
   return <>
     {children}
-    <PhotoDetailPage
-      photo={photo}
-      photos={photos}
-      camera={camera}
-    />
+    <PhotoDetailPage {...{ photo, photos, camera }} />
   </>;
 }

@@ -74,10 +74,6 @@ export default async function PhotoTagPage({
 
   return <>
     {children}
-    <PhotoDetailPage
-      photo={photo}
-      photos={photos}
-      tag={tag}
-    />
+    <PhotoDetailPage {...{ photo, photos, tag }} />
   </>;
 }
