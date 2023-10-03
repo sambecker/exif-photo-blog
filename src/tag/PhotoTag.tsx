@@ -5,22 +5,27 @@ import { cc } from '@/utility/css';
 
 export default function PhotoTag({
   tag,
+  showIcon = true,
 }: {
   tag: string
+  showIcon?: boolean
 }) {
   return (
     <Link
-      key={tag}
       href={pathForTag(tag)}
-      className="flex items-center gap-x-1.5 self-start"
+      className={cc(
+        'flex items-center gap-x-1.5 self-start',
+        'hover:text-gray-900 dark:hover:text-gray-100',
+      )}
     >
-      <FaTag
-        size={11}
-        className={cc(
-          'flex-shrink-0',
-          'text-gray-700 dark:text-gray-300 translate-y-[0.5px]',
-        )}
-      />
+      {showIcon &&
+        <FaTag
+          size={11}
+          className={cc(
+            'flex-shrink-0',
+            'text-gray-700 dark:text-gray-300 translate-y-[0.5px]',
+          )}
+        />}
       <span className="uppercase">
         {tag.replaceAll('-', ' ')}
       </span>

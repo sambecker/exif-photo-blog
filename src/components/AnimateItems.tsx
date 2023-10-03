@@ -16,6 +16,7 @@ export interface AnimationConfig {
 
 interface Props extends AnimationConfig {
   className?: string
+  classNameItem?: string
   items: JSX.Element[]
   animateFromAppState?: boolean
   animateOnFirstLoadOnly?: boolean
@@ -24,6 +25,7 @@ interface Props extends AnimationConfig {
 
 function AnimateItems({
   className,
+  classNameItem,
   items,
   type = 'scale',
   duration = 0.6,
@@ -60,16 +62,15 @@ function AnimateItems({
     switch (typeResolved) {
     case 'left': return {
       opacity: 0,
-      translateX: distanceOffset,
+      transform: `translateX(${distanceOffset}px)`,
     };
     case 'right': return {
       opacity: 0,
-      translateX: -distanceOffset,
+      transform: `translateX(${-distanceOffset}px)`,
     };
     default: return {
       opacity: 0,
-      scale: scaleOffset,
-      translateY: distanceOffset,
+      transform: `translateY(${distanceOffset}px) scale(${scaleOffset})`,
     };
     }
   };
@@ -96,14 +97,13 @@ function AnimateItems({
       {items.map((item, index) =>
         <motion.div
           key={index}
-          style={getInitialVariant()}
+          className={classNameItem}
+          // style={getInitialVariant()}
           variants={{
             hidden: getInitialVariant(),
             show: {
               opacity: 1,
-              scale: 1,
-              translateX: 0,
-              translateY: 0,
+              transform: 'translateX(0) translateY(0) scale(1)',
             },
           }}
           transition={{

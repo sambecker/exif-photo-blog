@@ -5,6 +5,7 @@ import {
   MAX_PHOTOS_TO_SHOW_HOME,
 } from '@/photo/image-response';
 import HomeImageResponse from '@/photo/image-response/HomeImageResponse';
+import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/server';
 
 export const runtime = 'edge';
@@ -13,15 +14,17 @@ export async function GET() {
   const [
     photos,
     headers,
+    { fontFamily, fonts },
   ] = await Promise.all([
     getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_HOME }),
     getImageCacheHeadersForAuth(await auth()),
+    getIBMPlexMonoMedium(),
   ]);
 
   const { width, height } = IMAGE_OG_SMALL_SIZE;
 
   return new ImageResponse(
-    <HomeImageResponse {...{ photos, width, height }}/>,
-    { width, height, headers },
+    <HomeImageResponse {...{ photos, width, height, fontFamily }}/>,
+    { width, height, headers, fonts },
   );
 }

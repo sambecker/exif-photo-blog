@@ -7,6 +7,7 @@ import StateProvider from '@/state/AppStateProvider';
 import ThemeProviderClient from '@/site/ThemeProviderClient';
 import Nav from '@/components/Nav';
 import ToasterWithThemes from '@/components/ToasterWithThemes';
+import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
 
 import '../site/globals.css';
 
@@ -77,6 +78,7 @@ export default function RootLayout({
             </StateProvider>
             <Analytics />
           </main>
+          <PhotoEscapeHandler />
           <ToasterWithThemes />
         </ThemeProviderClient>
       </body>

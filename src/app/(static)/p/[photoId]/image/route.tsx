@@ -7,7 +7,10 @@ import { ImageResponse } from 'next/server';
 
 export const runtime = 'edge';
 
-export async function GET(_request: Request, context: any){
+export async function GET(
+  _: Request,
+  context: { params: { photoId: string } },
+) {
   const [
     photo,
     { fontFamily, fonts },

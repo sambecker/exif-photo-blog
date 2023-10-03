@@ -12,8 +12,8 @@ import {
   deleteBlobPhoto,
 } from '@/services/blob';
 import {
+  revalidateAllTags,
   revalidateBlobTag,
-  revalidatePhotosAndBlobTag,
   revalidatePhotosTag,
 } from '@/cache';
 import { IS_PRO_MODE } from '@/site/config';
@@ -38,7 +38,7 @@ export async function createPhotoAction(formData: FormData) {
 
   await sqlInsertPhoto(photo);
 
-  revalidatePhotosAndBlobTag();
+  revalidateAllTags();
 
   redirect('/admin/photos');
 }
@@ -67,3 +67,7 @@ export async function deleteBlobPhotoAction(formData: FormData) {
 
   revalidateBlobTag();
 };
+
+export async function syncCacheAction() {
+  revalidateAllTags();
+}

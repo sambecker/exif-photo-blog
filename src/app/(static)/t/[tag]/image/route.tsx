@@ -10,8 +10,11 @@ import { ImageResponse } from 'next/server';
 
 export const runtime = 'edge';
 
-export async function GET(_request: Request, context: any) {
-  const tag = context.params.tag as string;
+export async function GET(
+  _: Request,
+  context: { params: { tag: string } },
+) {
+  const tag = context.params.tag;
 
   const [
     photos,

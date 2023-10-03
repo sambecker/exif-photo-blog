@@ -54,7 +54,7 @@ export default async function Share({
 }) {
   const photos = await getPhotosCached({ tag });
   return <>
-    <TagShareModal tag={tag} photos={photos} />
+    <TagShareModal {...{ tag, photos }} />
     <SiteGrid
       key="Tag Grid"
       contentMain={<div className="space-y-8 mt-4">

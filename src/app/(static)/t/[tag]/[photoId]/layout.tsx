@@ -4,7 +4,11 @@ import {
 } from '@/photo';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import { absolutePathForPhoto, absolutePathForPhotoImage } from '@/site/paths';
+import {
+  PATH_ROOT,
+  absolutePathForPhoto,
+  absolutePathForPhotoImage,
+} from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotoCached, getPhotosCached } from '@/cache';
 import { getPhotos, getUniqueTags } from '@/services/postgres';
@@ -64,7 +68,7 @@ export default async function PhotoTagPage({
 }) {
   const photo = await getPhotoCached(photoId);
 
-  if (!photo) { redirect('/'); }
+  if (!photo) { redirect(PATH_ROOT); }
 
   const photos = await getPhotosCached({ tag });
 

@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { pathForPhoto, pathForPhotoShare } from '@/site/paths';
 import PhotoTags from '@/tag/PhotoTags';
 import ShareButton from '@/components/ShareButton';
+import PhotoCamera from '../camera/PhotoCamera';
+import { Camera, cameraFromPhoto } from '@/camera';
 
 export default function PhotoLarge({
   photo,
@@ -13,14 +15,21 @@ export default function PhotoLarge({
   priority,
   prefetchShare,
   shouldScrollOnShare,
+  showCamera = true,
+  shareCamera,
 }: {
   photo: Photo
   tag?: string
+  camera?: Camera
   priority?: boolean
   prefetchShare?: boolean
   shouldScrollOnShare?: boolean
+  showCamera?: boolean
+  shareCamera?: boolean
 }) {
   const tagsToShow = photo.tags.filter(t => t !== tag);
+
+  const camera = cameraFromPhoto(photo);
   
   const renderMiniGrid = (children: JSX.Element) =>
     <div className={cc(
@@ -63,9 +72,12 @@ export default function PhotoLarge({
               {tagsToShow.length > 0 &&
                 <PhotoTags tags={tagsToShow} />}
             </div>
-            <div className="uppercase">
-              {photo.make} {photo.model}
-            </div>
+            {showCamera &&
+              <PhotoCamera
+                camera={camera}
+                showIcon={false}
+                hideApple={false}
+              />}
           </>)}
           {renderMiniGrid(<>
             <ul className={cc(
@@ -100,7 +112,11 @@ export default function PhotoLarge({
               </div>
               <div className="-translate-x-0.5">
                 <ShareButton
-                  path={pathForPhotoShare(photo, tag)}
+                  path={pathForPhotoShare(
+                    photo,
+                    tag,
+                    shareCamera ? camera : undefined,
+                  )}
                   prefetch={prefetchShare}
                   shouldScroll={shouldScrollOnShare}
                 />

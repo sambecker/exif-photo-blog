@@ -15,3 +15,9 @@ export const capitalizeWords = (string: string) =>
     .split(' ')
     .map(capitalize)
     .join(' ');
+
+export const parameterize = (string: string) =>
+  string
+    .trim()
+    .replaceAll(' ', '-')
+    .toLowerCase();
