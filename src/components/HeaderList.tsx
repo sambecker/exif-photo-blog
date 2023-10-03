@@ -14,7 +14,8 @@ export default function HeaderList({
     <AnimateItems
       items={[
         <div key="header" className={cc(
-          'text-gray-900 dark:text-gray-100',
+          'text-gray-900',
+          'dark:text-gray-100',
           'flex items-center mb-0.5',
           'uppercase',
         )}>

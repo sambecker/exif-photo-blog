@@ -1,36 +1,35 @@
 import { getPhotosCached } from '@/cache';
 import SiteGrid from '@/components/SiteGrid';
 import DeviceHeader from '@/device/DeviceHeader';
-import { getMakeModelFromDevice } from '@/device';
+import { getMakeModelFromDeviceString } from '@/device';
 import PhotoGrid from '@/photo/PhotoGrid';
 import { getUniqueDevices } from '@/services/postgres';
-import { generateMetaForTag } from '@/tag';
 import { Metadata } from 'next';
+import { generateMetaForDevice } from '@/device/meta';
 
-interface TagProps {
+interface DeviceProps {
   params: { device: string }
 }
 
 export async function generateStaticParams() {
   const devices = await getUniqueDevices();
-  return devices.map(device => ({
-    params: { device },
+  return devices.map(({ deviceKey }): DeviceProps => ({
+    params: { device: deviceKey },
   }));
 }
 
 export async function generateMetadata({
-  params: { device },
-}: TagProps): Promise<Metadata> {
-  const photos = await getPhotosCached({
-    device: getMakeModelFromDevice(device),
-  });
+  params,
+}: DeviceProps): Promise<Metadata> {
+  const device = getMakeModelFromDeviceString(params.device);
+  const photos = await getPhotosCached({ device });
 
   const {
     url,
     title,
     description,
     images,
-  } = generateMetaForTag(device, photos);
+  } = generateMetaForDevice(device, photos);
 
   return {
     title,
@@ -49,22 +48,17 @@ export async function generateMetadata({
   };
 }
 
-export default async function DevicePage({ params: { device } }:TagProps) {
-  const photos = await getPhotosCached({
-    device: getMakeModelFromDevice(device),
-  });
-
-  // Harvest original make/model with proper spaces/slashes
-  const deviceFormatted = photos.length > 0
-    ? `${photos[0].make} ${photos[0].model}`
-    : device;
+export default async function DevicePage({ params }:DeviceProps) {
+  const device = getMakeModelFromDeviceString(params.device);
+  
+  const photos = await getPhotosCached({ device });
 
   return (
     <SiteGrid
       key="Device Grid"
       contentMain={<div className="space-y-8 mt-4">
-        <DeviceHeader device={deviceFormatted} photos={photos} />
-        <PhotoGrid photos={photos} tag={deviceFormatted} />
+        <DeviceHeader device={device} photos={photos} />
+        <PhotoGrid photos={photos} device={device} />
       </div>}
     />
   );

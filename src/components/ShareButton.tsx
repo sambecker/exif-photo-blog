@@ -20,6 +20,7 @@ export default function ShareButton({
         : undefined} />,
       prefetch,
       shouldScroll,
+      shouldReplace: true,
     }} />
   );
 }

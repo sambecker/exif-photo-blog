@@ -1,26 +1,28 @@
 import { Photo } from '@/photo';
-import { pathForTagShare } from '@/site/paths';
+import { pathForDeviceShare } from '@/site/paths';
 import PhotoHeader from '@/photo/PhotoHeader';
-import { descriptionForDevicePhotos, getMakeModelFromDevice } from '.';
+import { Device, formatDevice } from '.';
 import PhotoDevice from './PhotoDevice';
+import { descriptionForDevicePhotos } from './meta';
 
 export default function DeviceHeader({
-  device,
+  device: deviceFromProps,
   photos,
   selectedPhoto,
 }: {
-  device: string
+  device: Device
   photos: Photo[]
   selectedPhoto?: Photo
 }) {
+  const device = formatDevice(deviceFromProps, photos[0]);
   return (
     <PhotoHeader
-      entity={<PhotoDevice {...getMakeModelFromDevice(device)} />}
+      entity={<PhotoDevice {...{ device }} />}
       entityVerb="Device"
       entityDescription={descriptionForDevicePhotos(photos)}
       photos={photos}
       selectedPhoto={selectedPhoto}
-      sharePath={pathForTagShare(device)}
+      sharePath={pathForDeviceShare(device)}
     />
   );
 }

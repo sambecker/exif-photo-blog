@@ -1,11 +1,15 @@
 import { Photo } from '@/photo';
 import { BASE_URL } from './config';
-import { parameterize } from '@/utility/string';
+import {
+  Device,
+  createDeviceKey,
+  getMakeModelFromDeviceString,
+} from '@/device';
 
 // Prefixes
 const PREFIX_PHOTO  = '/p';
 const PREFIX_TAG    = '/t';
-const PREFIX_DEVICE = '/d';
+const PREFIX_DEVICE = '/shot-on';
 
 // Modifiers
 const SHARE = 'share';
@@ -45,13 +49,23 @@ type PhotoOrPhotoId = Photo | string;
 const getPhotoId = (photoOrPhotoId: PhotoOrPhotoId) =>
   typeof photoOrPhotoId === 'string' ? photoOrPhotoId : photoOrPhotoId.id;
 
-export const pathForPhoto = (photo: PhotoOrPhotoId, tag?: string) =>
+export const pathForPhoto = (
+  photo: PhotoOrPhotoId,
+  tag?: string,
+  device?: Device,
+) =>
   tag
     ? `${pathForTag(tag)}/${getPhotoId(photo)}`
-    : `${PREFIX_PHOTO}/${getPhotoId(photo)}`;
+    : device
+      ? `${pathForDevice(device)}/${getPhotoId(photo)}`
+      : `${PREFIX_PHOTO}/${getPhotoId(photo)}`;
 
-export const pathForPhotoShare = (photo: PhotoOrPhotoId, tag?: string) =>
-  `${pathForPhoto(photo, tag)}/${SHARE}`;
+export const pathForPhotoShare = (
+  photo: PhotoOrPhotoId,
+  tag?: string,
+  device?: Device,
+) =>
+  `${pathForPhoto(photo, tag, device)}/${SHARE}`;
 
 export const pathForPhotoEdit = (photo: PhotoOrPhotoId) =>
   `${PATH_ADMIN_PHOTOS}/${getPhotoId(photo)}/edit`;
@@ -59,23 +73,36 @@ export const pathForPhotoEdit = (photo: PhotoOrPhotoId) =>
 export const pathForTag = (tag: string) =>
   `${PREFIX_TAG}/${tag}`;
 
-export const pathForDevice = (make?: string, model?: string) =>
-  `${PREFIX_DEVICE}/${parameterize(`${make}-${model}`)}`;
-
 export const pathForTagShare = (tag: string) =>
   `${pathForTag(tag)}/${SHARE}`;
 
-export const absolutePathForPhoto = (photo: PhotoOrPhotoId, tag?: string) =>
-  `${BASE_URL}${pathForPhoto(photo, tag)}`;
+export const pathForDevice = ({ make, model }: Device) =>
+  `${PREFIX_DEVICE}/${createDeviceKey(make, model)}`;
+
+export const pathForDeviceShare = (device: Device) =>
+  `${pathForDevice(device)}/${SHARE}`;
+
+export const absolutePathForPhoto = (
+  photo: PhotoOrPhotoId,
+  tag?: string,
+  device?: Device,
+) =>
+  `${BASE_URL}${pathForPhoto(photo, tag, device)}`;
 
 export const absolutePathForTag = (tag: string) =>
   `${BASE_URL}${pathForTag(tag)}`;
+
+export const absolutePathForDevice= (device: Device) =>
+  `${BASE_URL}${pathForDevice(device)}`;
 
 export const absolutePathForPhotoImage = (photo: PhotoOrPhotoId) =>
   `${absolutePathForPhoto(photo)}/image`;
 
 export const absolutePathForTagImage = (tag: string) =>
   `${absolutePathForTag(tag)}/image`;
+
+export const absolutePathForDeviceImage= (device: Device) =>
+  `${absolutePathForDevice(device)}/image`;
 
 // p/[photoId]
 export const isPathPhoto = (pathname = '') =>
@@ -85,21 +112,37 @@ export const isPathPhoto = (pathname = '') =>
 export const isPathPhotoShare = (pathname = '') =>
   /^\/p\/[^/]+\/share\/?$/.test(pathname);
 
-// t/[tagId]
+// t/[tag]
 export const isPathTag = (pathname = '') =>
   /^\/t\/[^/]+\/?$/.test(pathname);
 
-// t/[tagId]/share
+// t/[tag]/share
 export const isPathTagShare = (pathname = '') =>
   /^\/t\/[^/]+\/share\/?$/.test(pathname);
 
-// t/[tagId]/[photoId]
+// t/[tag]/[photoId]
 export const isPathTagPhoto = (pathname = '') =>
   /^\/t\/[^/]+\/[^/]+\/?$/.test(pathname);
 
-// t/[tagId]/[photoId]/share
+// t/[tag]/[photoId]/share
 export const isPathTagPhotoShare = (pathname = '') =>
   /^\/t\/[^/]+\/[^/]+\/share\/?$/.test(pathname);
+
+// shot-on/[device]
+export const isPathDevice = (pathname = '') =>
+  /^\/shot-on\/[^/]+\/?$/.test(pathname);
+
+// shot-on/[device]/share
+export const isPathDeviceShare = (pathname = '') =>
+  /^\/shot-on\/[^/]+\/share\/?$/.test(pathname);
+
+// shot-on/[device]/[photoId]
+export const isPathDevicePhoto = (pathname = '') =>
+  /^\/shot-on\/[^/]+\/[^/]+\/?$/.test(pathname);
+
+// shot-on/[device]/[photoId]/share
+export const isPathDevicePhotoShare = (pathname = '') =>
+  /^\/shot-on\/[^/]+\/[^/]+\/share\/?$/.test(pathname);
 
 export const isPathGrid = (pathname = '') =>
   pathname.startsWith(PATH_GRID);
@@ -117,33 +160,51 @@ export const isPathProtected = (pathname = '') =>
 export const getPathComponents = (pathname = ''): {
   photoId?: string
   tag?: string
+  device?: Device
 } => {
   const photoIdFromPhoto = pathname.match(/^\/p\/([^/]+)/)?.[1];
   const photoIdFromTag = pathname.match(/^\/t\/[^/]+\/((?!share)[^/]+)/)?.[1];
+  // eslint-disable-next-line max-len
+  const photoIdFromDevice = pathname.match(/^\/shot-on\/[^/]+\/((?!share)[^/]+)/)?.[1];
   const tag = pathname.match(/^\/t\/([^/]+)/)?.[1];
+  const deviceString = pathname.match(/^\/shot-on\/([^/]+)/)?.[1];
+  const device = deviceString
+    ? getMakeModelFromDeviceString(deviceString)
+    : undefined;
   return {
     photoId: (
       photoIdFromPhoto ||
-      photoIdFromTag
+      photoIdFromTag ||
+      photoIdFromDevice
     ),
     tag,
+    device,
   };
 };
 
 export const getEscapePath = (pathname?: string) => {
-  const { photoId, tag } = getPathComponents(pathname);
+  const { photoId, tag, device } = getPathComponents(pathname);
   if (
     (photoId && isPathPhoto(pathname)) ||
-    (tag && isPathTag(pathname))
+    (tag && isPathTag(pathname)) ||
+    (device && isPathDevice(pathname))
   ) {
     return PATH_GRID;
   } else if (photoId && isPathTagPhotoShare(pathname)) {
     return pathForPhoto(photoId, tag);
+  } else if (photoId && isPathDevicePhotoShare(pathname)) {
+    return pathForPhoto(photoId, undefined, device);
   } else if (photoId && isPathPhotoShare(pathname)) {
     return pathForPhoto(photoId);
-  } else if (tag && (isPathTagPhoto(pathname) || isPathTagShare(pathname))) {
+  } else if (tag && (
+    isPathTagPhoto(pathname) ||
+    isPathTagShare(pathname)
+  )) {
     return pathForTag(tag);
-  } else if (tag && isPathTagShare(pathname)) {
-    return pathForTag(tag);
+  } else if (device && (
+    isPathDevicePhoto(pathname) ||
+    isPathDeviceShare(pathname)
+  )) {
+    return pathForDevice(device);
   }
 };

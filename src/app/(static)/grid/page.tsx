@@ -59,16 +59,19 @@ export default async function GridPage({
             title='Tags'
             icon={<FaTag size={12} />}
             items={tags.map(tag =>
-              <PhotoTag key={tag} tag={tag} showIcon={false} />)}
+              <PhotoTag
+                key={tag}
+                tag={tag}
+                showIcon={false}
+              />)}
           />}
           {devices.length > 0 && <HeaderList
             title="Devices"
             icon={<IoMdCamera size={13} />}
-            items={devices.map(({ device, make, model }) =>
+            items={devices.map(({ deviceKey, device }) =>
               <PhotoDevice
-                key={device}
-                make={make}
-                model={model}
+                key={deviceKey}
+                device={device}
                 showIcon={false}
                 hideApple
               />)}

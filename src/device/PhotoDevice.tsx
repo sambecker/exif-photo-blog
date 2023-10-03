@@ -3,43 +3,42 @@ import { cc } from '@/utility/css';
 import Link from 'next/link';
 import { pathForDevice } from '@/site/paths';
 import { IoMdCamera } from 'react-icons/io';
+import { Device } from '.';
 
 export default function PhotoDevice({
-  make,
-  model,
+  device,
   showIcon = true,
   hideApple = true,
 }: {
-  make?: string
-  model?: string
+  device: Device
   showIcon?: boolean
   hideApple?: boolean
 }) {
-  console.log({ make, model, showIcon, hideApple });
   return (
     <Link
-      href={pathForDevice(make, model)}
+      href={pathForDevice(device)}
       className={cc(
         'inline-flex items-center self-start',
         'uppercase',
+        'hover:text-gray-900 dark:hover:text-gray-100',
       )}
     >
       {showIcon && <>
         <IoMdCamera size={13} />
         &nbsp;
       </>}
-      {!(hideApple && make?.toLowerCase() === 'apple') &&
+      {!(hideApple && device.make?.toLowerCase() === 'apple') &&
         <>
-          {make?.toLowerCase() === 'apple'
+          {device.make?.toLowerCase() === 'apple'
             ? <AiFillApple
               title="Apple"
               className="translate-y-[-0.5px]"
               size={14}
             />
-            : make}
+            : device.make}
           &nbsp;
         </>}
-      {model}
+      {device.model}
     </Link>
   );
 }

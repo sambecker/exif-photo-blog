@@ -6,6 +6,8 @@ import {
   parsePhotoFromDb,
   Photo,
 } from '@/photo';
+import { Device, createDeviceKey } from '@/device';
+import { parameterize } from '@/utility/string';
 
 const PHOTO_DEFAULT_LIMIT = 100;
 
@@ -195,8 +197,8 @@ const sqlGetPhotosByDevice = async (
 ) => sql<PhotoDb>`
   SELECT * FROM photos
   WHERE
-  LOWER(make)=${make} AND
-  LOWER(REPLACE(model, ' ', '-'))=${model}
+  LOWER(make)=${parameterize(make)} AND
+  LOWER(REPLACE(model, ' ', '-'))=${parameterize(model)}
   ORDER BY taken_at DESC
   LIMIT ${limit}
 `;
@@ -247,15 +249,17 @@ const sqlGetUniqueDevices = async () => sql`
   SELECT DISTINCT make||' '||model as device, make, model FROM photos
   WHERE hidden IS NOT TRUE
   ORDER BY device ASC
-`.then(({ rows }) =>
-    rows as { device: string, make: string, model: string }[]);
+`.then(({ rows }) => rows.map(({ make, model }) => ({
+    deviceKey: createDeviceKey(make, model),
+    device: { make, model } as Device,
+  })));
 
 export type GetPhotosOptions = {
   sortBy?: 'createdAt' | 'takenAt' | 'priority'
   limit?: number
   offset?: number
   tag?: string
-  device?: { make: string, model: string }
+  device?: Device
   takenBefore?: Date
   takenAfterInclusive?: Date
   includeHidden?: boolean

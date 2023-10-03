@@ -6,17 +6,21 @@ import PhotoGrid from './PhotoGrid';
 import { cc } from '@/utility/css';
 import PhotoLinks from './PhotoLinks';
 import TagHeader from '@/tag/TagHeader';
+import { Device } from '@/device';
+import DeviceHeader from '@/device/DeviceHeader';
 
 export default function PhotoDetailPage({
   photo,
   photos,
   photosGrid,
   tag,
+  device,
 }: {
   photo: Photo
   photos: Photo[]
   photosGrid?: Photo[]
   tag?: string
+  device?: Device
 }) {
   return (
     <div>
@@ -31,6 +35,17 @@ export default function PhotoDetailPage({
               selectedPhoto={photo}
             />}
         />}
+      {device &&
+        <SiteGrid
+          className="mt-4 mb-8"
+          contentMain={
+            <DeviceHeader
+              key={tag}
+              device={device}
+              photos={photos}
+              selectedPhoto={photo}
+            />}
+        />}
       <AnimateItems
         className="md:mb-8"
         animateFromAppState
@@ -41,7 +56,9 @@ export default function PhotoDetailPage({
             tag={tag}
             priority
             prefetchShare
+            shareDevice={device !== undefined}
             shouldScrollOnShare={false}
+            showDevice={false}
           />,
         ]}
       />
@@ -58,7 +75,12 @@ export default function PhotoDetailPage({
           'md:flex md:gap-4',
           'user-select-none',
         )}>
-          <PhotoLinks photo={photo} photos={photos} tag={tag} />
+          <PhotoLinks {...{
+            photo,
+            photos,
+            tag,
+            device,
+          }} />
         </div>}
       />
     </div>

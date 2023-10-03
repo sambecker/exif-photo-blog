@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { pathForPhoto } from '@/site/paths';
 import { useAppState } from '@/state';
 import { AnimationConfig } from '@/components/AnimateItems';
+import { Device } from '@/device';
 
 const LISTENER_KEYUP = 'keyup';
 
@@ -17,10 +18,12 @@ export default function PhotoLinks({
   photo,
   photos,
   tag,
+  device,
 }: {
   photo: Photo
   photos: Photo[]
   tag?: string
+  device?: Device
 }) {
   const router = useRouter();
 
@@ -36,14 +39,20 @@ export default function PhotoLinks({
       case 'J':
         if (previousPhoto) {
           setNextPhotoAnimation?.(ANIMATION_RIGHT);
-          router.push(pathForPhoto(previousPhoto, tag), { scroll: false });
+          router.push(
+            pathForPhoto(previousPhoto, tag, device),
+            { scroll: false },
+          );
         }
         break;
       case 'ARROWRIGHT':
       case 'L':
         if (nextPhoto) {
           setNextPhotoAnimation?.(ANIMATION_LEFT);
-          router.push(pathForPhoto(nextPhoto, tag), { scroll: false });
+          router.push(
+            pathForPhoto(nextPhoto, tag, device),
+            { scroll: false },
+          );
         }
         break;
       };
@@ -56,6 +65,7 @@ export default function PhotoLinks({
     previousPhoto,
     nextPhoto,
     tag,
+    device,
   ]);
   
   return (
@@ -64,6 +74,7 @@ export default function PhotoLinks({
         photo={previousPhoto}
         nextPhotoAnimation={ANIMATION_RIGHT}
         tag={tag}
+        device={device}
         prefetch
       >
         PREV
@@ -72,6 +83,7 @@ export default function PhotoLinks({
         photo={nextPhoto}
         nextPhotoAnimation={ANIMATION_LEFT}
         tag={tag}
+        device={device}
         prefetch
       >
         NEXT

@@ -1,17 +1,21 @@
+import { ReactNode } from 'react';
+
 export default function ImageCaption({
   height,
-  children,
   fontFamily,
+  subhead,
+  children,
 }: {
   width: number
   height: number
   fontFamily: string
-  children: React.ReactNode
+  subhead?: ReactNode
+  children: ReactNode
 }) {
   return (
     <div style={{
       display: 'flex',
-      gap: height * .053,
+      flexDirection: 'column',
       position: 'absolute',
       paddingTop: height * .6,
       paddingBottom: height * .075,
@@ -28,11 +32,30 @@ export default function ImageCaption({
       bottom: 0,
       left: 0,
       right: 0,
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap',
     }}>
-      {children}
+      {subhead &&
+        <div
+          style={{
+            display: 'flex',
+            gap: height * .053,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {subhead}
+        </div>}
+      <div
+        style={{
+          display: 'flex',
+          gap: height * .053,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {children}
+      </div>
     </div>
   );
 }
