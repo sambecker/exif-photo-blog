@@ -11,7 +11,7 @@ https://photos.sambecker.com
 Features
 -
 - Photo upload with EXIF extraction
-- Photo tagging
+- Organize photos by tag and camera model
 - Infinite scroll
 - Built-in auth
 - Light/dark mode
