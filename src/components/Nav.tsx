@@ -9,16 +9,21 @@ import ViewSwitcher, { SwitcherSelection } from '@/photo/ViewSwitcher';
 import {
   PATH_ADMIN,
   PATH_ROOT,
+  isPathAdmin,
   isPathGrid,
   isPathProtected,
+  isPathSignIn,
 } from '@/site/paths';
+import AnimateItems from './AnimateItems';
 
 export default function Nav({ showTextLinks }: { showTextLinks?: boolean }) {
   const isLoggedIn = false;
 
   const pathname = usePathname();
 
-  const showNav = !pathname.startsWith('/sign-in');
+  const showNav = !isPathSignIn(pathname);
+
+  const shouldAnimate = !isPathAdmin(pathname);
 
   const renderLink = (
     text: string,
@@ -41,27 +46,34 @@ export default function Nav({ showTextLinks }: { showTextLinks?: boolean }) {
   return (
     <SiteGrid
       contentMain={
-        <div className={cc(
-          'flex items-center',
-          'min-h-[4rem]',
-          'leading-none',
-        )}>
-          {showNav && <>
-            <div className="flex flex-grow items-center gap-4">
-              <ViewSwitcher
-                currentSelection={switcherSelectionForPath()}
-                showAdmin={isLoggedIn}
-              />
-              {showTextLinks && <>
-                {renderLink('Home', PATH_ROOT)}
-                {renderLink('Admin', PATH_ADMIN)}
-              </>}
-            </div>
-            <div className="hidden xs:block">
-              {renderLink(SITE_DOMAIN_OR_TITLE, PATH_ROOT)}
-            </div>
-          </>}
-        </div>
+        <AnimateItems
+          type={!shouldAnimate ? 'none' : undefined}
+          scaleOffset={1}
+          distanceOffset={10}
+          items={showNav
+            ? [<div
+              key="nav"
+              className={cc(
+                'flex items-center',
+                'w-full min-h-[4rem]',
+                'leading-none',
+              )}>
+              <div className="flex flex-grow items-center gap-4">
+                <ViewSwitcher
+                  currentSelection={switcherSelectionForPath()}
+                  showAdmin={isLoggedIn}
+                />
+                {showTextLinks && <>
+                  {renderLink('Home', PATH_ROOT)}
+                  {renderLink('Admin', PATH_ADMIN)}
+                </>}
+              </div>
+              <div className="hidden xs:block">
+                {renderLink(SITE_DOMAIN_OR_TITLE, PATH_ROOT)}
+              </div>
+            </div>]
+            : []}
+        />
       }
     />
   );

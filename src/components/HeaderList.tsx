@@ -12,6 +12,9 @@ export default function HeaderList({
 }) {
   return (
     <AnimateItems
+      scaleOffset={0.95}
+      duration={0.5}
+      staggerDelay={0.05}
       items={[
         <div key="header" className={cc(
           'text-gray-900',
