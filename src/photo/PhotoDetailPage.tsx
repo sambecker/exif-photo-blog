@@ -6,21 +6,21 @@ import PhotoGrid from './PhotoGrid';
 import { cc } from '@/utility/css';
 import PhotoLinks from './PhotoLinks';
 import TagHeader from '@/tag/TagHeader';
-import { Device } from '@/device';
-import DeviceHeader from '@/device/DeviceHeader';
+import { Camera } from '@/camera';
+import CameraHeader from '@/camera/CameraHeader';
 
 export default function PhotoDetailPage({
   photo,
   photos,
   photosGrid,
   tag,
-  device,
+  camera,
 }: {
   photo: Photo
   photos: Photo[]
   photosGrid?: Photo[]
   tag?: string
-  device?: Device
+  camera?: Camera
 }) {
   return (
     <div>
@@ -35,13 +35,13 @@ export default function PhotoDetailPage({
               selectedPhoto={photo}
             />}
         />}
-      {device &&
+      {camera &&
         <SiteGrid
           className="mt-4 mb-8"
           contentMain={
-            <DeviceHeader
+            <CameraHeader
               key={tag}
-              device={device}
+              camera={camera}
               photos={photos}
               selectedPhoto={photo}
             />}
@@ -56,9 +56,9 @@ export default function PhotoDetailPage({
             tag={tag}
             priority
             prefetchShare
-            shareDevice={device !== undefined}
+            shareCamera={camera !== undefined}
             shouldScrollOnShare={false}
-            showDevice={false}
+            showCamera={!camera}
           />,
         ]}
       />
@@ -79,7 +79,7 @@ export default function PhotoDetailPage({
             photo,
             photos,
             tag,
-            device,
+            camera,
           }} />
         </div>}
       />

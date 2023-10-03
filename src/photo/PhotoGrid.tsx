@@ -2,13 +2,13 @@ import { Photo } from '.';
 import PhotoSmall from './PhotoSmall';
 import { cc } from '@/utility/css';
 import AnimateItems from '@/components/AnimateItems';
-import { Device } from '@/device';
+import { Camera } from '@/camera';
 
 export default function PhotoGrid({
   photos,
   selectedPhoto,
   tag,
-  device,
+  camera,
   fast,
   animate = true,
   animateOnFirstLoadOnly,
@@ -17,7 +17,7 @@ export default function PhotoGrid({
   photos: Photo[]
   selectedPhoto?: Photo
   tag?: string
-  device?: Device
+  camera?: Camera
   fast?: boolean
   animate?: boolean
   animateOnFirstLoadOnly?: boolean
@@ -41,7 +41,7 @@ export default function PhotoGrid({
           key={photo.id}
           photo={photo}
           tag={tag}
-          device={device}
+          camera={camera}
           selected={photo.id === selectedPhoto?.id}
         />)}
     />

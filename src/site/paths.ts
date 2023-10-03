@@ -1,15 +1,15 @@
 import { Photo } from '@/photo';
 import { BASE_URL } from './config';
 import {
-  Device,
-  createDeviceKey,
-  getMakeModelFromDeviceString,
-} from '@/device';
+  Camera,
+  createCameraKey,
+  getMakeModelFromCameraString,
+} from '@/camera';
 
 // Prefixes
 const PREFIX_PHOTO  = '/p';
 const PREFIX_TAG    = '/t';
-const PREFIX_DEVICE = '/shot-on';
+const PREFIX_CAMERA = '/shot-on';
 
 // Modifiers
 const SHARE = 'share';
@@ -52,20 +52,20 @@ const getPhotoId = (photoOrPhotoId: PhotoOrPhotoId) =>
 export const pathForPhoto = (
   photo: PhotoOrPhotoId,
   tag?: string,
-  device?: Device,
+  camera?: Camera,
 ) =>
   tag
     ? `${pathForTag(tag)}/${getPhotoId(photo)}`
-    : device
-      ? `${pathForDevice(device)}/${getPhotoId(photo)}`
+    : camera
+      ? `${pathForCamera(camera)}/${getPhotoId(photo)}`
       : `${PREFIX_PHOTO}/${getPhotoId(photo)}`;
 
 export const pathForPhotoShare = (
   photo: PhotoOrPhotoId,
   tag?: string,
-  device?: Device,
+  camera?: Camera,
 ) =>
-  `${pathForPhoto(photo, tag, device)}/${SHARE}`;
+  `${pathForPhoto(photo, tag, camera)}/${SHARE}`;
 
 export const pathForPhotoEdit = (photo: PhotoOrPhotoId) =>
   `${PATH_ADMIN_PHOTOS}/${getPhotoId(photo)}/edit`;
@@ -76,24 +76,24 @@ export const pathForTag = (tag: string) =>
 export const pathForTagShare = (tag: string) =>
   `${pathForTag(tag)}/${SHARE}`;
 
-export const pathForDevice = ({ make, model }: Device) =>
-  `${PREFIX_DEVICE}/${createDeviceKey(make, model)}`;
+export const pathForCamera = ({ make, model }: Camera) =>
+  `${PREFIX_CAMERA}/${createCameraKey(make, model)}`;
 
-export const pathForDeviceShare = (device: Device) =>
-  `${pathForDevice(device)}/${SHARE}`;
+export const pathForCameraShare = (camera: Camera) =>
+  `${pathForCamera(camera)}/${SHARE}`;
 
 export const absolutePathForPhoto = (
   photo: PhotoOrPhotoId,
   tag?: string,
-  device?: Device,
+  camera?: Camera,
 ) =>
-  `${BASE_URL}${pathForPhoto(photo, tag, device)}`;
+  `${BASE_URL}${pathForPhoto(photo, tag, camera)}`;
 
 export const absolutePathForTag = (tag: string) =>
   `${BASE_URL}${pathForTag(tag)}`;
 
-export const absolutePathForDevice= (device: Device) =>
-  `${BASE_URL}${pathForDevice(device)}`;
+export const absolutePathForCamera= (camera: Camera) =>
+  `${BASE_URL}${pathForCamera(camera)}`;
 
 export const absolutePathForPhotoImage = (photo: PhotoOrPhotoId) =>
   `${absolutePathForPhoto(photo)}/image`;
@@ -101,8 +101,8 @@ export const absolutePathForPhotoImage = (photo: PhotoOrPhotoId) =>
 export const absolutePathForTagImage = (tag: string) =>
   `${absolutePathForTag(tag)}/image`;
 
-export const absolutePathForDeviceImage= (device: Device) =>
-  `${absolutePathForDevice(device)}/image`;
+export const absolutePathForCameraImage= (camera: Camera) =>
+  `${absolutePathForCamera(camera)}/image`;
 
 // p/[photoId]
 export const isPathPhoto = (pathname = '') =>
@@ -128,20 +128,20 @@ export const isPathTagPhoto = (pathname = '') =>
 export const isPathTagPhotoShare = (pathname = '') =>
   /^\/t\/[^/]+\/[^/]+\/share\/?$/.test(pathname);
 
-// shot-on/[device]
-export const isPathDevice = (pathname = '') =>
+// shot-on/[camera]
+export const isPathCamera = (pathname = '') =>
   /^\/shot-on\/[^/]+\/?$/.test(pathname);
 
-// shot-on/[device]/share
-export const isPathDeviceShare = (pathname = '') =>
+// shot-on/[camera]/share
+export const isPathCameraShare = (pathname = '') =>
   /^\/shot-on\/[^/]+\/share\/?$/.test(pathname);
 
-// shot-on/[device]/[photoId]
-export const isPathDevicePhoto = (pathname = '') =>
+// shot-on/[camera]/[photoId]
+export const isPathCameraPhoto = (pathname = '') =>
   /^\/shot-on\/[^/]+\/[^/]+\/?$/.test(pathname);
 
-// shot-on/[device]/[photoId]/share
-export const isPathDevicePhotoShare = (pathname = '') =>
+// shot-on/[camera]/[photoId]/share
+export const isPathCameraPhotoShare = (pathname = '') =>
   /^\/shot-on\/[^/]+\/[^/]+\/share\/?$/.test(pathname);
 
 export const isPathGrid = (pathname = '') =>
@@ -160,40 +160,40 @@ export const isPathProtected = (pathname = '') =>
 export const getPathComponents = (pathname = ''): {
   photoId?: string
   tag?: string
-  device?: Device
+  camera?: Camera
 } => {
   const photoIdFromPhoto = pathname.match(/^\/p\/([^/]+)/)?.[1];
   const photoIdFromTag = pathname.match(/^\/t\/[^/]+\/((?!share)[^/]+)/)?.[1];
   // eslint-disable-next-line max-len
-  const photoIdFromDevice = pathname.match(/^\/shot-on\/[^/]+\/((?!share)[^/]+)/)?.[1];
+  const photoIdFromCamera = pathname.match(/^\/shot-on\/[^/]+\/((?!share)[^/]+)/)?.[1];
   const tag = pathname.match(/^\/t\/([^/]+)/)?.[1];
-  const deviceString = pathname.match(/^\/shot-on\/([^/]+)/)?.[1];
-  const device = deviceString
-    ? getMakeModelFromDeviceString(deviceString)
+  const cameraString = pathname.match(/^\/shot-on\/([^/]+)/)?.[1];
+  const camera = cameraString
+    ? getMakeModelFromCameraString(cameraString)
     : undefined;
   return {
     photoId: (
       photoIdFromPhoto ||
       photoIdFromTag ||
-      photoIdFromDevice
+      photoIdFromCamera
     ),
     tag,
-    device,
+    camera,
   };
 };
 
 export const getEscapePath = (pathname?: string) => {
-  const { photoId, tag, device } = getPathComponents(pathname);
+  const { photoId, tag, camera } = getPathComponents(pathname);
   if (
     (photoId && isPathPhoto(pathname)) ||
     (tag && isPathTag(pathname)) ||
-    (device && isPathDevice(pathname))
+    (camera && isPathCamera(pathname))
   ) {
     return PATH_GRID;
   } else if (photoId && isPathTagPhotoShare(pathname)) {
     return pathForPhoto(photoId, tag);
-  } else if (photoId && isPathDevicePhotoShare(pathname)) {
-    return pathForPhoto(photoId, undefined, device);
+  } else if (photoId && isPathCameraPhotoShare(pathname)) {
+    return pathForPhoto(photoId, undefined, camera);
   } else if (photoId && isPathPhotoShare(pathname)) {
     return pathForPhoto(photoId);
   } else if (tag && (
@@ -201,10 +201,10 @@ export const getEscapePath = (pathname?: string) => {
     isPathTagShare(pathname)
   )) {
     return pathForTag(tag);
-  } else if (device && (
-    isPathDevicePhoto(pathname) ||
-    isPathDeviceShare(pathname)
+  } else if (camera && (
+    isPathCameraPhoto(pathname) ||
+    isPathCameraShare(pathname)
   )) {
-    return pathForDevice(device);
+    return pathForCamera(camera);
   }
 };

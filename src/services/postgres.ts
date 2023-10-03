@@ -6,7 +6,7 @@ import {
   parsePhotoFromDb,
   Photo,
 } from '@/photo';
-import { Device, createDeviceKey } from '@/device';
+import { Camera, createCameraKey } from '@/camera';
 import { parameterize } from '@/utility/string';
 
 const PHOTO_DEFAULT_LIMIT = 100;
@@ -190,7 +190,7 @@ const sqlGetPhotosByTag = (
     LIMIT ${limit} OFFSET ${offset}
   `;
 
-const sqlGetPhotosByDevice = async (
+const sqlGetPhotosByCamera = async (
   limit = PHOTO_DEFAULT_LIMIT,
   make: string,
   model: string,
@@ -245,13 +245,13 @@ const sqlGetUniqueTags = async () => sql`
   ORDER BY tag ASC
 `.then(({ rows }) => rows.map(row => row.tag as string));
 
-const sqlGetUniqueDevices = async () => sql`
-  SELECT DISTINCT make||' '||model as device, make, model FROM photos
+const sqlGetUniqueCameras = async () => sql`
+  SELECT DISTINCT make||' '||model as camera, make, model FROM photos
   WHERE hidden IS NOT TRUE
-  ORDER BY device ASC
+  ORDER BY camera ASC
 `.then(({ rows }) => rows.map(({ make, model }) => ({
-    deviceKey: createDeviceKey(make, model),
-    device: { make, model } as Device,
+    cameraKey: createCameraKey(make, model),
+    camera: { make, model } as Camera,
   })));
 
 export type GetPhotosOptions = {
@@ -259,7 +259,7 @@ export type GetPhotosOptions = {
   limit?: number
   offset?: number
   tag?: string
-  device?: Device
+  camera?: Camera
   takenBefore?: Date
   takenAfterInclusive?: Date
   includeHidden?: boolean
@@ -299,7 +299,7 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
     limit,
     offset,
     tag,
-    device,
+    camera,
     takenBefore,
     takenAfterInclusive,
     includeHidden,
@@ -316,8 +316,8 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
     getPhotosSql = () => sqlGetPhotosTakenAfterDateInclusive(takenAfterInclusive, limit);
   } else if (tag) {
     getPhotosSql = () => sqlGetPhotosByTag(limit, offset, tag);
-  } else if (device) {
-    getPhotosSql = () => sqlGetPhotosByDevice(limit, device.make, device.model);
+  } else if (camera) {
+    getPhotosSql = () => sqlGetPhotosByCamera(limit, camera.make, camera.model);
   } else if (sortBy === 'createdAt') {
     getPhotosSql = () => sqlGetPhotosSortedByCreatedAt(limit, offset);
   } else if (sortBy === 'priority') {
@@ -344,4 +344,4 @@ export const getPhotosCountIncludingHidden = () =>
 
 export const getUniqueTags = () => safelyQueryPhotos(sqlGetUniqueTags);
 
-export const getUniqueDevices = () => safelyQueryPhotos(sqlGetUniqueDevices);
+export const getUniqueCameras = () => safelyQueryPhotos(sqlGetUniqueCameras);

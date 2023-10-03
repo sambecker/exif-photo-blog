@@ -169,8 +169,11 @@ export const translatePhotoId = (id: string) =>
 export const titleForPhoto = (photo: Photo) =>
   photo.title || 'Untitled';
 
-export const labelForPhotos = (photos: Photo[]) =>
+const labelForPhotos = (photos: Photo[]) =>
   photos.length === 1 ? 'Photo' : 'Photos';
+
+export const photoQuantityText = (photos: Photo[]) =>
+  `(${photos.length} ${labelForPhotos(photos)})`;
 
 export const descriptionForPhotoSet = (
   photos:Photo[],

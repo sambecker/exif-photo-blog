@@ -1,14 +1,14 @@
 import {
   getPhotosCached,
   getPhotosCountCached,
-  getUniqueDevicesCached,
+  getUniqueCamerasCached,
   getUniqueTagsCached,
 } from '@/cache';
 import HeaderList from '@/components/HeaderList';
 import MorePhotos from '@/components/MorePhotos';
 import SiteGrid from '@/components/SiteGrid';
 import { generateOgImageMetaForPhotos, getPhotosLimitForQuery } from '@/photo';
-import PhotoDevice from '@/device/PhotoDevice';
+import PhotoCamera from '@/camera/PhotoCamera';
 import PhotoGrid from '@/photo/PhotoGrid';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { MAX_PHOTOS_TO_SHOW_HOME } from '@/photo/image-response';
@@ -36,12 +36,12 @@ export default async function GridPage({
     photos,
     count,
     tags,
-    devices,
+    cameras,
   ] = await Promise.all([
     getPhotosCached({ limit }),
     getPhotosCountCached(),
     getUniqueTagsCached(),
-    getUniqueDevicesCached(),
+    getUniqueCamerasCached(),
   ]);
 
   const showMorePhotos = count > photos.length;
@@ -65,13 +65,13 @@ export default async function GridPage({
                 showIcon={false}
               />)}
           />}
-          {devices.length > 0 && <HeaderList
-            title="Devices"
+          {cameras.length > 0 && <HeaderList
+            title="Cameras"
             icon={<IoMdCamera size={13} />}
-            items={devices.map(({ deviceKey, device }) =>
-              <PhotoDevice
-                key={deviceKey}
-                device={device}
+            items={cameras.map(({ cameraKey, camera }) =>
+              <PhotoCamera
+                key={cameraKey}
+                camera={camera}
                 showIcon={false}
                 hideApple
               />)}

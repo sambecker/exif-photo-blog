@@ -1,10 +1,10 @@
-import { Photo, descriptionForPhotoSet, labelForPhotos } from '@/photo';
+import { Photo, descriptionForPhotoSet, photoQuantityText } from '@/photo';
 import { absolutePathForTag, absolutePathForTagImage } from '@/site/paths';
 import { capitalizeWords } from '@/utility/string';
 
 export const titleForTag = (tag: string, photos:Photo[]) => [
   capitalizeWords(tag.replaceAll('-', ' ')),
-  `(${photos.length} ${labelForPhotos(photos)})`,
+  photoQuantityText(photos),
 ].join(' ');
 
 export const descriptionForTaggedPhotos = (

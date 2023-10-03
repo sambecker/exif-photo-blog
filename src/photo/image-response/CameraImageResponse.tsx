@@ -2,23 +2,23 @@ import { Photo } from '..';
 import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
-import { Device, formatDevice } from '@/device';
+import { Camera, cameraFromPhoto } from '@/camera';
 import { IoMdCamera } from 'react-icons/io';
 
-export default function DeviceImageResponse({
-  device: deviceFromProps,
+export default function CameraImageResponse({
+  camera: cameraProp,
   photos,
   width,
   height,
   fontFamily,
 }: {
-  device: Device
+  camera: Camera
   photos: Photo[]
   width: number
   height: number
   fontFamily: string
 }) {
-  const { make, model } = formatDevice(deviceFromProps, photos[0]);
+  const { make, model } = cameraFromPhoto(photos[0], cameraProp);
   return (
     <ImageContainer {...{
       width,

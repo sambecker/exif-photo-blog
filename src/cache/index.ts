@@ -5,7 +5,7 @@ import {
   getPhotos,
   getPhotosCount,
   getPhotosCountIncludingHidden,
-  getUniqueDevices,
+  getUniqueCameras,
   getUniqueTags,
 } from '@/services/postgres';
 import { parseCachedPhotosDates, parseCachedPhotoDates } from '@/photo';
@@ -15,7 +15,7 @@ import { AuthSession } from 'next-auth';
 const TAG_PHOTOS        = 'photos';
 const TAG_PHOTOS_COUNT  = 'photos-count';
 const TAG_TAGS          = 'tags';
-const TAG_DEVICES       = 'devices';
+const TAG_CAMERAS       = 'cameras';
 const TAG_BLOB          = 'blob';
 
 // eslint-disable-next-line max-len
@@ -40,7 +40,7 @@ const getPhotosCacheTagForKey = (
     return value ? `${key}-${value.toISOString()}` : null;
   }
   // Complex keys
-  case 'device': {
+  case 'camera': {
     const value = options[key];
     return value ? `${key}-${value.make}-${value.model}` : null;
   }
@@ -66,8 +66,8 @@ export const revalidatePhotosTag = () =>
 export const revalidateTagsTag = () =>
   revalidateTag(TAG_TAGS);
 
-export const revalidateDevicesTag = () =>
-  revalidateTag(TAG_DEVICES);
+export const revalidateCamerasTag = () =>
+  revalidateTag(TAG_CAMERAS);
 
 export const revalidateBlobTag = () =>
   revalidateTag(TAG_BLOB);
@@ -80,7 +80,7 @@ export const revalidatePhotosAndBlobTag = () => {
 export const revalidateAllTags = () => {
   revalidatePhotosTag();
   revalidateTagsTag();
-  revalidateDevicesTag();
+  revalidateCamerasTag();
   revalidateBlobTag();
 };
 
@@ -125,11 +125,11 @@ export const getUniqueTagsCached: typeof getUniqueTags = (...args) =>
     }
   )();
 
-export const getUniqueDevicesCached: typeof getUniqueDevices = (...args) =>
+export const getUniqueCamerasCached: typeof getUniqueCameras = (...args) =>
   unstable_cache(
-    () => getUniqueDevices(...args),
-    [TAG_PHOTOS, TAG_DEVICES], {
-      tags: [TAG_PHOTOS, TAG_DEVICES],
+    () => getUniqueCameras(...args),
+    [TAG_PHOTOS, TAG_CAMERAS], {
+      tags: [TAG_PHOTOS, TAG_CAMERAS],
     }
   )();
 

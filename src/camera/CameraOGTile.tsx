@@ -1,13 +1,13 @@
 import { Photo } from '@/photo';
-import { absolutePathForDeviceImage, pathForDevice } from '@/site/paths';
+import { absolutePathForCameraImage, pathForCamera } from '@/site/paths';
 import OGTile from '@/components/OGTile';
-import { Device, titleForDevice } from '.';
-import { descriptionForDevicePhotos } from './meta';
+import { Camera, titleForCamera } from '.';
+import { descriptionForCameraPhotos } from './meta';
 
 export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 
-export default function DeviceOGTile({
-  device,
+export default function CameraOGTile({
+  camera,
   photos,
   loadingState: loadingStateExternal,
   riseOnHover,
@@ -15,7 +15,7 @@ export default function DeviceOGTile({
   onFail,
   retryTime,
 }: {
-  device: Device
+  camera: Camera
   photos: Photo[]
   loadingState?: OGLoadingState
   onLoad?: () => void
@@ -25,10 +25,10 @@ export default function DeviceOGTile({
 }) {
   return (
     <OGTile {...{
-      title: titleForDevice(device, photos),
-      description: descriptionForDevicePhotos(photos, true),
-      path: pathForDevice(device),
-      pathImageAbsolute: absolutePathForDeviceImage(device),
+      title: titleForCamera(camera, photos),
+      description: descriptionForCameraPhotos(photos, true),
+      path: pathForCamera(camera),
+      pathImageAbsolute: absolutePathForCameraImage(camera),
       loadingState: loadingStateExternal,
       onLoad,
       onFail,

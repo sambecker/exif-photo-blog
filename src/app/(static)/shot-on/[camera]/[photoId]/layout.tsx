@@ -11,17 +11,21 @@ import {
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotoCached, getPhotosCached } from '@/cache';
-import { getPhotos, getUniqueDevices } from '@/services/postgres';
-import { deviceFromPhoto } from '@/device';
+import { getPhotos, getUniqueCameras } from '@/services/postgres';
+import { cameraFromPhoto } from '@/camera';
+
+interface PhotoCameraProps {
+  params: { photoId: string, camera: string }
+}
 
 export async function generateStaticParams() {
-  const params: { params: { photoId: string, device: string }}[] = [];
+  const params: PhotoCameraProps[] = [];
 
-  const devices = await getUniqueDevices();
-  devices.forEach(async ({ deviceKey, device }) => {
-    const photos = await getPhotos({ device });
+  const cameras = await getUniqueCameras();
+  cameras.forEach(async ({ cameraKey, camera }) => {
+    const photos = await getPhotos({ camera });
     params.push(...photos.map(photo => ({
-      params: { photoId: photo.id, device: deviceKey },
+      params: { photoId: photo.id, camera: cameraKey },
     })));
   });
 
@@ -29,10 +33,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({
-  params: { photoId },
-}: {
-  params: { photoId: string, device: string }
-}): Promise<Metadata> {
+  params: { photoId, camera },
+}: PhotoCameraProps): Promise<Metadata> {
   const photo = await getPhotoCached(photoId);
 
   if (!photo) { return {}; }
@@ -40,7 +42,11 @@ export async function generateMetadata({
   const title = titleForPhoto(photo);
   const description = descriptionForPhoto(photo);
   const images = absolutePathForPhotoImage(photo);
-  const url = absolutePathForPhoto(photo, undefined, deviceFromPhoto(photo));
+  const url = absolutePathForPhoto(
+    photo,
+    undefined,
+    cameraFromPhoto(photo, camera),
+  );
 
   return {
     title,
@@ -60,27 +66,26 @@ export async function generateMetadata({
   };
 }
 
-export default async function PhotoDevicePage({
-  params: { photoId },
+export default async function PhotoCameraPage({
+  params: { photoId, camera: cameraProp },
   children,
-}: {
-  params: { photoId: string, tag: string }
+}: PhotoCameraProps & {
   children: React.ReactNode
 }) {
   const photo = await getPhotoCached(photoId);
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const device = deviceFromPhoto(photo);
+  const camera = cameraFromPhoto(photo, cameraProp);
 
-  const photos = await getPhotosCached({ device });
+  const photos = await getPhotosCached({ camera });
 
   return <>
     {children}
     <PhotoDetailPage
       photo={photo}
       photos={photos}
-      device={device}
+      camera={camera}
     />
   </>;
 }

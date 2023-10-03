@@ -1,22 +1,22 @@
 import { AiFillApple } from 'react-icons/ai';
 import { cc } from '@/utility/css';
 import Link from 'next/link';
-import { pathForDevice } from '@/site/paths';
+import { pathForCamera } from '@/site/paths';
 import { IoMdCamera } from 'react-icons/io';
-import { Device } from '.';
+import { Camera } from '.';
 
-export default function PhotoDevice({
-  device,
+export default function PhotoCamera({
+  camera,
   showIcon = true,
   hideApple = true,
 }: {
-  device: Device
+  camera: Camera
   showIcon?: boolean
   hideApple?: boolean
 }) {
   return (
     <Link
-      href={pathForDevice(device)}
+      href={pathForCamera(camera)}
       className={cc(
         'inline-flex items-center self-start',
         'uppercase',
@@ -27,18 +27,18 @@ export default function PhotoDevice({
         <IoMdCamera size={13} />
         &nbsp;
       </>}
-      {!(hideApple && device.make?.toLowerCase() === 'apple') &&
+      {!(hideApple && camera.make?.toLowerCase() === 'apple') &&
         <>
-          {device.make?.toLowerCase() === 'apple'
+          {camera.make?.toLowerCase() === 'apple'
             ? <AiFillApple
               title="Apple"
               className="translate-y-[-0.5px]"
               size={14}
             />
-            : device.make}
+            : camera.make}
           &nbsp;
         </>}
-      {device.model}
+      {camera.model}
     </Link>
   );
 }

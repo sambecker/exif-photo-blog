@@ -2,10 +2,10 @@ import '@testing-library/jest-dom';
 import {
   getEscapePath,
   getPathComponents,
-  isPathDevice,
-  isPathDevicePhoto,
-  isPathDevicePhotoShare,
-  isPathDeviceShare,
+  isPathCamera,
+  isPathCameraPhoto,
+  isPathCameraPhotoShare,
+  isPathCameraShare,
   isPathPhoto,
   isPathPhotoShare,
   isPathTag,
@@ -13,12 +13,12 @@ import {
   isPathTagPhotoShare,
   isPathTagShare,
 } from '@/site/paths';
-import { getMakeModelFromDeviceString } from '@/device';
+import { getMakeModelFromCameraString } from '@/camera';
 
 const PHOTO_ID = 'UsKSGcbt';
 const TAG = 'tag-name';
-const DEVICE = 'fujifilm-x-t1';
-const DEVICE_OBJECT = getMakeModelFromDeviceString(DEVICE);
+const CAMERA = 'fujifilm-x-t1';
+const CAMERA_OBJECT = getMakeModelFromCameraString(CAMERA);
 const SHARE = 'share';
 
 const PATH_ROOT               = '/';
@@ -33,10 +33,10 @@ const PATH_TAG_SHARE          = `${PATH_TAG}/${SHARE}`;
 const PATH_TAG_PHOTO          = `${PATH_TAG}/${PHOTO_ID}`;
 const PATH_TAG_PHOTO_SHARE    = `${PATH_TAG_PHOTO}/${SHARE}`;
 
-const PATH_DEVICE             = `/shot-on/${DEVICE}`;
-const PATH_DEVICE_SHARE       = `${PATH_DEVICE}/${SHARE}`;
-const PATH_DEVICE_PHOTO       = `${PATH_DEVICE}/${PHOTO_ID}`;
-const PATH_DEVICE_PHOTO_SHARE = `${PATH_DEVICE_PHOTO}/${SHARE}`;
+const PATH_CAMERA             = `/shot-on/${CAMERA}`;
+const PATH_CAMERA_SHARE       = `${PATH_CAMERA}/${SHARE}`;
+const PATH_CAMERA_PHOTO       = `${PATH_CAMERA}/${PHOTO_ID}`;
+const PATH_CAMERA_PHOTO_SHARE = `${PATH_CAMERA_PHOTO}/${SHARE}`;
  
 describe('Paths', () => {
   it('can be classified', () => {
@@ -47,10 +47,10 @@ describe('Paths', () => {
     expect(isPathTagShare(PATH_TAG_SHARE)).toBe(true);
     expect(isPathTagPhoto(PATH_TAG_PHOTO)).toBe(true);
     expect(isPathTagPhotoShare(PATH_TAG_PHOTO_SHARE)).toBe(true);
-    expect(isPathDevice(PATH_DEVICE)).toBe(true);
-    expect(isPathDeviceShare(PATH_DEVICE_SHARE)).toBe(true);
-    expect(isPathDevicePhoto(PATH_DEVICE_PHOTO)).toBe(true);
-    expect(isPathDevicePhotoShare(PATH_DEVICE_PHOTO_SHARE)).toBe(true);
+    expect(isPathCamera(PATH_CAMERA)).toBe(true);
+    expect(isPathCameraShare(PATH_CAMERA_SHARE)).toBe(true);
+    expect(isPathCameraPhoto(PATH_CAMERA_PHOTO)).toBe(true);
+    expect(isPathCameraPhotoShare(PATH_CAMERA_PHOTO_SHARE)).toBe(true);
     // Negative
     expect(isPathPhoto(PATH_TAG_PHOTO_SHARE)).toBe(false);
     expect(isPathPhotoShare(PATH_TAG_PHOTO)).toBe(false);
@@ -58,10 +58,10 @@ describe('Paths', () => {
     expect(isPathTagShare(PATH_TAG)).toBe(false);
     expect(isPathTagPhoto(PATH_PHOTO_SHARE)).toBe(false);
     expect(isPathTagPhotoShare(PATH_PHOTO)).toBe(false);
-    expect(isPathDevice(PATH_TAG_SHARE)).toBe(false);
-    expect(isPathDeviceShare(PATH_TAG)).toBe(false);
-    expect(isPathDevicePhoto(PATH_PHOTO_SHARE)).toBe(false);
-    expect(isPathDevicePhotoShare(PATH_PHOTO)).toBe(false);
+    expect(isPathCamera(PATH_TAG_SHARE)).toBe(false);
+    expect(isPathCameraShare(PATH_TAG)).toBe(false);
+    expect(isPathCameraPhoto(PATH_PHOTO_SHARE)).toBe(false);
+    expect(isPathCameraPhotoShare(PATH_PHOTO)).toBe(false);
   });
   it('can be parsed', () => {
     expect(getPathComponents(PATH_ROOT)).toEqual({});
@@ -85,19 +85,19 @@ describe('Paths', () => {
       photoId: PHOTO_ID,
       tag: TAG,
     });
-    expect(getPathComponents(PATH_DEVICE)).toEqual({
-      device: DEVICE_OBJECT,
+    expect(getPathComponents(PATH_CAMERA)).toEqual({
+      camera: CAMERA_OBJECT,
     });
-    expect(getPathComponents(PATH_DEVICE_SHARE)).toEqual({
-      device: DEVICE_OBJECT,
+    expect(getPathComponents(PATH_CAMERA_SHARE)).toEqual({
+      camera: CAMERA_OBJECT,
     });
-    expect(getPathComponents(PATH_DEVICE_PHOTO)).toEqual({
+    expect(getPathComponents(PATH_CAMERA_PHOTO)).toEqual({
       photoId: PHOTO_ID,
-      device: DEVICE_OBJECT,
+      camera: CAMERA_OBJECT,
     });
-    expect(getPathComponents(PATH_DEVICE_PHOTO_SHARE)).toEqual({
+    expect(getPathComponents(PATH_CAMERA_PHOTO_SHARE)).toEqual({
       photoId: PHOTO_ID,
-      device: DEVICE_OBJECT,
+      camera: CAMERA_OBJECT,
     });
   });
   it('can be escaped', () => {
@@ -113,10 +113,10 @@ describe('Paths', () => {
     expect(getEscapePath(PATH_TAG_SHARE)).toEqual(PATH_TAG);
     expect(getEscapePath(PATH_TAG_PHOTO)).toEqual(PATH_TAG);
     expect(getEscapePath(PATH_TAG_PHOTO_SHARE)).toEqual(PATH_TAG_PHOTO);
-    // Device views
-    expect(getEscapePath(PATH_DEVICE)).toEqual(PATH_GRID);
-    expect(getEscapePath(PATH_DEVICE_SHARE)).toEqual(PATH_DEVICE);
-    expect(getEscapePath(PATH_DEVICE_PHOTO)).toEqual(PATH_DEVICE);
-    expect(getEscapePath(PATH_DEVICE_PHOTO_SHARE)).toEqual(PATH_DEVICE_PHOTO);
+    // Camera views
+    expect(getEscapePath(PATH_CAMERA)).toEqual(PATH_GRID);
+    expect(getEscapePath(PATH_CAMERA_SHARE)).toEqual(PATH_CAMERA);
+    expect(getEscapePath(PATH_CAMERA_PHOTO)).toEqual(PATH_CAMERA);
+    expect(getEscapePath(PATH_CAMERA_PHOTO_SHARE)).toEqual(PATH_CAMERA_PHOTO);
   });
 });
