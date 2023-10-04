@@ -75,24 +75,6 @@ function AnimateItems({
     }
   };
 
-  console.log('Animation debug', {
-    type,
-    duration,
-    staggerDelay,
-    scaleOffset,
-    distanceOffset,
-    animateFromAppState,
-    animateOnFirstLoadOnly,
-    staggerOnFirstLoadOnly,
-    hasLoadedInitial,
-    nextPhotoAnimationInitial,
-    shouldAnimate,
-    shouldStagger,
-    typeResolved,
-    durationResolved,
-    initialVariant: getInitialVariant(),
-  });
-
   return (
     <motion.div
       className={className}
