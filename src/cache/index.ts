@@ -13,13 +13,12 @@ import {
 import { parseCachedPhotosDates, parseCachedPhotoDates } from '@/photo';
 import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
 import { AuthSession } from 'next-auth';
+import { Camera, createCameraKey } from '@/camera';
 
 const TAG_PHOTOS        = 'photos';
 const TAG_PHOTOS_COUNT  = 'photos-count';
 const TAG_TAGS          = 'tags';
-const TAG_TAGS_COUNT    = 'tags-count';
 const TAG_CAMERAS       = 'cameras';
-const TAG_CAMERAS_COUNT = 'cameras-count';
 const TAG_BLOB          = 'blob';
 
 // eslint-disable-next-line max-len
@@ -64,6 +63,12 @@ const getPhotosCacheTags = (options: GetPhotosOptions = {}) => {
 
 const getPhotoCacheTag = (photoId: string) => `photo-${photoId}`;
 
+const getPhotoCameraCountTag = ({ make, model }: Camera) =>
+  `${TAG_PHOTOS_COUNT}-${createCameraKey(make, model)}`;
+
+const getPhotoTagCountTag = (tag: string) =>
+  `${TAG_PHOTOS_COUNT}-${tag}`;
+
 export const revalidatePhotosTag = () =>
   revalidateTag(TAG_PHOTOS);
 
@@ -107,8 +112,8 @@ export const getPhotosCountCached: typeof getPhotosCount = (...args) =>
 export const getPhotosCountTagCached: typeof getPhotosCountTag = (...args) =>
   unstable_cache(
     () => getPhotosCountTag(...args),
-    [TAG_PHOTOS, TAG_TAGS_COUNT], {
-      tags: [TAG_PHOTOS, TAG_TAGS_COUNT],
+    [TAG_PHOTOS, getPhotoTagCountTag(...args)], {
+      tags: [TAG_PHOTOS, getPhotoTagCountTag(...args)],
     }
   )();
 
@@ -116,8 +121,8 @@ export const getPhotosCountTagCached: typeof getPhotosCountTag = (...args) =>
 export const getPhotosCountCameraCached: typeof getPhotosCountCamera = (...args) =>
   unstable_cache(
     () => getPhotosCountCamera(...args),
-    [TAG_PHOTOS, TAG_CAMERAS_COUNT], {
-      tags: [TAG_PHOTOS, TAG_CAMERAS_COUNT],
+    [TAG_PHOTOS, getPhotoCameraCountTag(...args)], {
+      tags: [TAG_PHOTOS, getPhotoCameraCountTag(...args)],
     }
   )();
 
