@@ -2,7 +2,6 @@ import { getPhotosCached, getPhotosCountTagCached } from '@/cache';
 import SiteGrid from '@/components/SiteGrid';
 import { GRID_THUMBNAILS_TO_SHOW_MAX } from '@/photo';
 import PhotoGrid from '@/photo/PhotoGrid';
-import { getUniqueTags } from '@/services/postgres';
 import {
   PaginationParams,
   getPaginationForSearchParams,
@@ -12,15 +11,10 @@ import { generateMetaForTag } from '@/tag';
 import TagHeader from '@/tag/TagHeader';
 import { Metadata } from 'next';
 
+export const runtime = 'edge';
+
 interface TagProps {
   params: { tag: string }
-}
-
-export async function generateStaticParams() {
-  const tags = await getUniqueTags();
-  return tags.map(tag => ({
-    params: { tag },
-  }));
 }
 
 export async function generateMetadata({

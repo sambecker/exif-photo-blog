@@ -5,7 +5,6 @@ import CameraHeader from '@/camera/CameraHeader';
 import CameraShareModal from '@/camera/CameraShareModal';
 import { generateMetaForCamera } from '@/camera/meta';
 import PhotoGrid from '@/photo/PhotoGrid';
-import { getUniqueCameras } from '@/services/postgres';
 import { Metadata } from 'next';
 import { GRID_THUMBNAILS_TO_SHOW_MAX } from '@/photo';
 import { pathForCamera } from '@/site/paths';
@@ -14,15 +13,10 @@ import {
   getPaginationForSearchParams,
 } from '@/site/pagination';
 
+export const runtime = 'edge';
+
 interface CameraProps {
   params: { camera: string }
-}
-
-export async function generateStaticParams() {
-  const camera = await getUniqueCameras();
-  return camera.map(({ cameraKey }): CameraProps => ({
-    params: { camera: cameraKey },
-  }));
 }
 
 export async function generateMetadata({

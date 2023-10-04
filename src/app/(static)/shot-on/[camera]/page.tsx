@@ -3,7 +3,6 @@ import SiteGrid from '@/components/SiteGrid';
 import CameraHeader from '@/camera/CameraHeader';
 import { getMakeModelFromCameraString } from '@/camera';
 import PhotoGrid from '@/photo/PhotoGrid';
-import { getUniqueCameras } from '@/services/postgres';
 import { Metadata } from 'next';
 import { generateMetaForCamera } from '@/camera/meta';
 import { GRID_THUMBNAILS_TO_SHOW_MAX } from '@/photo';
@@ -13,15 +12,10 @@ import {
   getPaginationForSearchParams,
 } from '@/site/pagination';
 
+export const runtime = 'edge';
+
 interface CameraProps {
   params: { camera: string },
-}
-
-export async function generateStaticParams() {
-  const cameras = await getUniqueCameras();
-  return cameras.map(({ cameraKey }): CameraProps => ({
-    params: { camera: cameraKey },
-  }));
 }
 
 export async function generateMetadata({
