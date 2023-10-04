@@ -13,6 +13,7 @@ export default function TagOGTile({
   onLoad,
   onFail,
   retryTime,
+  count,
 }: {
   tag: string
   photos: Photo[]
@@ -21,11 +22,12 @@ export default function TagOGTile({
   onFail?: () => void
   riseOnHover?: boolean
   retryTime?: number
+  count?: number
 }) {
   return (
     <OGTile {...{
       title: titleForTag(tag, photos),
-      description: descriptionForTaggedPhotos(photos, true),
+      description: descriptionForTaggedPhotos(photos, true, count),
       path: pathForTag(tag),
       pathImageAbsolute: absolutePathForTagImage(tag),
       loadingState: loadingStateExternal,

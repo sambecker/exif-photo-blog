@@ -72,14 +72,20 @@ export const pathForPhotoShare = (
 export const pathForPhotoEdit = (photo: PhotoOrPhotoId) =>
   `${PATH_ADMIN_PHOTOS}/${getPhotoId(photo)}/edit`;
 
-export const pathForTag = (tag: string) =>
-  `${PREFIX_TAG}/${tag}`;
+export const pathForTag = (tag: string, next?: number) =>
+  pathWithNext(
+    `${PREFIX_TAG}/${tag}`,
+    next,
+  );
 
 export const pathForTagShare = (tag: string) =>
   `${pathForTag(tag)}/${SHARE}`;
 
-export const pathForCamera = ({ make, model }: Camera) =>
-  `${PREFIX_CAMERA}/${createCameraKey(make, model)}`;
+export const pathForCamera = ({ make, model }: Camera, next?: number) =>
+  pathWithNext(
+    `${PREFIX_CAMERA}/${createCameraKey(make, model)}`,
+    next,
+  );
 
 export const pathForCameraShare = (camera: Camera) =>
   `${pathForCamera(camera)}/${SHARE}`;

@@ -7,9 +7,11 @@ import { Camera } from '.';
 export default function CameraShareModal({
   camera,
   photos,
+  count,
 }: {
   camera: Camera
   photos: Photo[]
+  count?: number
 }) {
   return (
     <ShareModal
@@ -17,7 +19,7 @@ export default function CameraShareModal({
       pathShare={absolutePathForCamera(camera)}
       pathClose={pathForCamera(camera)}
     >
-      <CameraOGTile {...{ camera, photos }} />
+      <CameraOGTile {...{ camera, photos, count }} />
     </ShareModal>
   );
 };

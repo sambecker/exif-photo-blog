@@ -239,6 +239,20 @@ const sqlGetPhotosCountIncludingHidden = async () => sql`
   SELECT COUNT(*) FROM photos
 `.then(({ rows }) => parseInt(rows[0].count, 10));
 
+const sqlGetPhotosCountTag = async (tag: string) => sql`
+  SELECT COUNT(*) FROM photos
+  WHERE ${tag}=ANY(tags) AND
+  hidden IS NOT TRUE
+`.then(({ rows }) => parseInt(rows[0].count, 10));
+
+const sqlGetPhotosCountCamera = async (camera: Camera) => sql`
+  SELECT COUNT(*) FROM photos
+  WHERE
+  LOWER(make)=${parameterize(camera.make)} AND
+  LOWER(REPLACE(model, ' ', '-'))=${parameterize(camera.model)} AND
+  hidden IS NOT TRUE
+`.then(({ rows }) => parseInt(rows[0].count, 10));
+
 const sqlGetUniqueTags = async () => sql`
   SELECT DISTINCT unnest(tags) as tag FROM photos
   WHERE hidden IS NOT TRUE
@@ -337,7 +351,12 @@ export const getPhoto = async (id: string): Promise<Photo | undefined> => {
     .then(photos => photos.length > 0 ? photos[0] : undefined);
 };
 
-export const getPhotosCount = () => safelyQueryPhotos(sqlGetPhotosCount);
+export const getPhotosCount = () =>
+  safelyQueryPhotos(sqlGetPhotosCount);
+export const getPhotosCountTag = (tag: string) =>
+  safelyQueryPhotos(() => sqlGetPhotosCountTag(tag));
+export const getPhotosCountCamera = (camera: Camera) =>
+  safelyQueryPhotos(() => sqlGetPhotosCountCamera(camera));
 
 export const getPhotosCountIncludingHidden = () =>
   safelyQueryPhotos(sqlGetPhotosCountIncludingHidden);

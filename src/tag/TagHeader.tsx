@@ -8,19 +8,22 @@ export default function TagHeader({
   tag,
   photos,
   selectedPhoto,
+  count,
 }: {
   tag: string
   photos: Photo[]
   selectedPhoto?: Photo
+  count?: number
 }) {
   return (
     <PhotoHeader
       entity={<PhotoTag tag={tag} />}
       entityVerb="Tagged"
-      entityDescription={descriptionForTaggedPhotos(photos)}
+      entityDescription={descriptionForTaggedPhotos(photos, undefined, count)}
       photos={photos}
       selectedPhoto={selectedPhoto}
       sharePath={pathForTagShare(tag)}
+      count={count}
     />
   );
 }

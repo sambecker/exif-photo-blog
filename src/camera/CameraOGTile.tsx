@@ -14,6 +14,7 @@ export default function CameraOGTile({
   onLoad,
   onFail,
   retryTime,
+  count,
 }: {
   camera: Camera
   photos: Photo[]
@@ -22,11 +23,12 @@ export default function CameraOGTile({
   onFail?: () => void
   riseOnHover?: boolean
   retryTime?: number
+  count?: number
 }) {
   return (
     <OGTile {...{
-      title: titleForCamera(camera, photos),
-      description: descriptionForCameraPhotos(photos, true),
+      title: titleForCamera(camera, photos, count),
+      description: descriptionForCameraPhotos(photos, true, count),
       path: pathForCamera(camera),
       pathImageAbsolute: absolutePathForCameraImage(camera),
       loadingState: loadingStateExternal,

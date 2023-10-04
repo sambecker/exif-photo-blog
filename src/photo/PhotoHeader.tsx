@@ -9,6 +9,7 @@ export default function PhotoHeader({
   photos,
   selectedPhoto,
   sharePath,
+  count,
 }: {
   entity: JSX.Element
   entityVerb: string
@@ -16,6 +17,7 @@ export default function PhotoHeader({
   photos: Photo[]
   selectedPhoto?: Photo
   sharePath: string
+  count?: number
 }) {
   const { start, end } = dateRangeForPhotos(photos);
 
@@ -35,7 +37,8 @@ export default function PhotoHeader({
         'sm:col-span-2 md:col-span-1 lg:col-span-2',
       )}>
         {selectedPhotoIndex !== undefined
-          ? `${entityVerb} ${selectedPhotoIndex + 1} of ${photos.length}`
+          // eslint-disable-next-line max-len
+          ? `${entityVerb} ${selectedPhotoIndex + 1} of ${count ?? photos.length}`
           : entityDescription}
         {selectedPhotoIndex === undefined &&
           <ShareButton path={sharePath} dim />}

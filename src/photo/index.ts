@@ -130,18 +130,6 @@ export const getNextPhoto = (photo: Photo, photos: Photo[]) => {
     : undefined;
 };
 
-export const getPhotosLimitForQuery = (
-  query?: string,
-  photosPerRequest = 24,
-) => {
-  const offsetInt = parseInt(query ?? '0');
-  const offset = (Number.isNaN(offsetInt) ? 0 : offsetInt);
-  return {
-    offset,
-    limit: photosPerRequest + offset * photosPerRequest,
-  };
-};
-
 export const generateOgImageMetaForPhotos = (photos: Photo[]): Metadata => {
   if (photos.length > 0) {
     return {
@@ -169,23 +157,24 @@ export const translatePhotoId = (id: string) =>
 export const titleForPhoto = (photo: Photo) =>
   photo.title || 'Untitled';
 
-const labelForPhotos = (photos: Photo[]) =>
-  photos.length === 1 ? 'Photo' : 'Photos';
+const photoLabelForCount = (count: number) =>
+  count === 1 ? 'Photo' : 'Photos';
 
-export const photoQuantityText = (photos: Photo[]) =>
-  `(${photos.length} ${labelForPhotos(photos)})`;
+export const photoQuantityText = (count: number) =>
+  `(${count} ${photoLabelForCount(count)})`;
 
 export const descriptionForPhotoSet = (
   photos:Photo[],
   descriptor?: string,
   dateBased?: boolean,
+  explicitCount?: number,
 ) =>
   dateBased
     ? dateRangeForPhotos(photos).description.toUpperCase()
     : [
-      photos.length,
+      explicitCount ?? photos.length,
       descriptor,
-      labelForPhotos(photos),
+      photoLabelForCount(explicitCount ?? photos.length),
     ].join(' ');
 
 export const dateRangeForPhotos = (photos: Photo[]) => {

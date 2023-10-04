@@ -6,9 +6,11 @@ import TagOGTile from './TagOGTile';
 export default function TagShareModal({
   tag,
   photos,
+  count,
 }: {
   tag: string
   photos: Photo[]
+  count?: number
 }) {
   return (
     <ShareModal
@@ -16,7 +18,7 @@ export default function TagShareModal({
       pathShare={absolutePathForTag(tag)}
       pathClose={pathForTag(tag)}
     >
-      <TagOGTile tag={tag} photos={photos} />
+      <TagOGTile {...{ tag, photos, count }} />
     </ShareModal>
   );
 };

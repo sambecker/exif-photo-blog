@@ -12,24 +12,27 @@ import {
 export const titleForCamera = (
   camera: Camera,
   photos: Photo[],
+  explicitCount?: number,
 ) => [
   'Shot on',
   formatCameraText(cameraFromPhoto(photos[0], camera)),
-  photoQuantityText(photos),
+  photoQuantityText(explicitCount ?? photos.length),
 ].join(' ');
 
 export const descriptionForCameraPhotos = (
   photos: Photo[],
   dateBased?: boolean,
+  explicitCount?: number,
 ) =>
-  descriptionForPhotoSet(photos, undefined, dateBased);
+  descriptionForPhotoSet(photos, undefined, dateBased, explicitCount);
 
 export const generateMetaForCamera = (
   camera: Camera,
-  photos: Photo[]
+  photos: Photo[],
+  explicitCount?: number,
 ) => ({
   url: absolutePathForCamera(camera),
-  title: titleForCamera(camera, photos),
-  description: descriptionForCameraPhotos(photos, true),
+  title: titleForCamera(camera, photos, explicitCount),
+  description: descriptionForCameraPhotos(photos, true, explicitCount),
   images: absolutePathForCameraImage(camera),
 });

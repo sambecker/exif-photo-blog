@@ -2,9 +2,13 @@ import { getPhotosCached, getPhotosCountCached } from '@/cache';
 import AnimateItems from '@/components/AnimateItems';
 import MorePhotos from '@/components/MorePhotos';
 import SiteGrid from '@/components/SiteGrid';
-import { generateOgImageMetaForPhotos, getPhotosLimitForQuery } from '@/photo';
+import { generateOgImageMetaForPhotos } from '@/photo';
 import PhotoLarge from '@/photo/PhotoLarge';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
+import {
+  PaginationParams,
+  getPaginationForSearchParams,
+} from '@/site/pagination';
 import { pathForRoot } from '@/site/paths';
 import { Metadata } from 'next';
 
@@ -15,12 +19,8 @@ export async function generateMetadata(): Promise<Metadata> {
   return generateOgImageMetaForPhotos(photos);
 }
 
-export default async function HomePage({
-  searchParams,
-}: {
-  searchParams: { next: string };
-}) {
-  const { offset, limit } = getPhotosLimitForQuery(searchParams.next, 12);
+export default async function HomePage({ searchParams }: PaginationParams) {
+  const { offset, limit } = getPaginationForSearchParams(searchParams, 12);
 
   const [
     photos,

@@ -4,7 +4,9 @@ import {
   getPhoto,
   getPhotos,
   getPhotosCount,
+  getPhotosCountCamera,
   getPhotosCountIncludingHidden,
+  getPhotosCountTag,
   getUniqueCameras,
   getUniqueTags,
 } from '@/services/postgres';
@@ -15,7 +17,9 @@ import { AuthSession } from 'next-auth';
 const TAG_PHOTOS        = 'photos';
 const TAG_PHOTOS_COUNT  = 'photos-count';
 const TAG_TAGS          = 'tags';
+const TAG_TAGS_COUNT    = 'tags-count';
 const TAG_CAMERAS       = 'cameras';
+const TAG_CAMERAS_COUNT = 'cameras-count';
 const TAG_BLOB          = 'blob';
 
 // eslint-disable-next-line max-len
@@ -97,6 +101,23 @@ export const getPhotosCountCached: typeof getPhotosCount = (...args) =>
     () => getPhotosCount(...args),
     [TAG_PHOTOS, TAG_PHOTOS_COUNT], {
       tags: [TAG_PHOTOS, TAG_PHOTOS_COUNT],
+    }
+  )();
+
+export const getPhotosCountTagCached: typeof getPhotosCountTag = (...args) =>
+  unstable_cache(
+    () => getPhotosCountTag(...args),
+    [TAG_PHOTOS, TAG_TAGS_COUNT], {
+      tags: [TAG_PHOTOS, TAG_TAGS_COUNT],
+    }
+  )();
+
+// eslint-disable-next-line max-len
+export const getPhotosCountCameraCached: typeof getPhotosCountCamera = (...args) =>
+  unstable_cache(
+    () => getPhotosCountCamera(...args),
+    [TAG_PHOTOS, TAG_CAMERAS_COUNT], {
+      tags: [TAG_PHOTOS, TAG_CAMERAS_COUNT],
     }
   )();
 

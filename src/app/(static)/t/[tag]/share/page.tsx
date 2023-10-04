@@ -1,7 +1,13 @@
-import { getPhotosCached } from '@/cache';
+import { getPhotosCached, getPhotosCountTagCached } from '@/cache';
 import SiteGrid from '@/components/SiteGrid';
+import { GRID_THUMBNAILS_TO_SHOW_MAX } from '@/photo';
 import PhotoGrid from '@/photo/PhotoGrid';
 import { getUniqueTags } from '@/services/postgres';
+import {
+  PaginationParams,
+  getPaginationForSearchParams,
+} from '@/site/pagination';
+import { pathForTag } from '@/site/paths';
 import { generateMetaForTag } from '@/tag';
 import TagHeader from '@/tag/TagHeader';
 import TagShareModal from '@/tag/TagShareModal';
@@ -21,14 +27,20 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params: { tag },
 }: TagProps): Promise<Metadata> {
-  const photos = await getPhotosCached({ tag });
+  const [
+    photos,
+    count,
+  ] = await Promise.all([
+    getPhotosCached({ tag, limit: GRID_THUMBNAILS_TO_SHOW_MAX }),
+    getPhotosCountTagCached(tag),
+  ]);
 
   const {
     url,
     title,
     description,
     images,
-  } = generateMetaForTag(tag, photos);
+  } = generateMetaForTag(tag, photos, count);
 
   return {
     title,
@@ -49,17 +61,29 @@ export async function generateMetadata({
 
 export default async function Share({
   params: { tag },
-}: {
-  params: { tag: string }
-}) {
-  const photos = await getPhotosCached({ tag });
+  searchParams,
+}: TagProps & PaginationParams) {
+  const { offset, limit } = getPaginationForSearchParams(searchParams);
+
+  const [
+    photos,
+    count,
+  ] = await Promise.all([
+    getPhotosCached({ tag, limit }),
+    getPhotosCountTagCached(tag),
+  ]);
+
+  const showMorePath = count > photos.length
+    ? pathForTag(tag, offset + 1)
+    : undefined;
+
   return <>
-    <TagShareModal {...{ tag, photos }} />
+    <TagShareModal {...{ tag, photos, count }} />
     <SiteGrid
       key="Tag Grid"
       contentMain={<div className="space-y-8 mt-4">
-        <TagHeader tag={tag} photos={photos} />
-        <PhotoGrid photos={photos} tag={tag} animate={false} />
+        <TagHeader {...{ tag, photos }} />
+        <PhotoGrid {...{ photos, tag, showMorePath, animate: false }} />
       </div>}
     />
   </>;

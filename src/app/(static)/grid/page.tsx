@@ -5,9 +5,8 @@ import {
   getUniqueTagsCached,
 } from '@/cache';
 import HeaderList from '@/components/HeaderList';
-import MorePhotos from '@/components/MorePhotos';
 import SiteGrid from '@/components/SiteGrid';
-import { generateOgImageMetaForPhotos, getPhotosLimitForQuery } from '@/photo';
+import { generateOgImageMetaForPhotos } from '@/photo';
 import PhotoCamera from '@/camera/PhotoCamera';
 import PhotoGrid from '@/photo/PhotoGrid';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
@@ -17,6 +16,10 @@ import PhotoTag from '@/tag/PhotoTag';
 import { Metadata } from 'next';
 import { FaTag } from 'react-icons/fa';
 import { IoMdCamera } from 'react-icons/io';
+import {
+  PaginationParams,
+  getPaginationForSearchParams,
+} from '@/site/pagination';
 
 export const runtime = 'edge';
 
@@ -25,12 +28,8 @@ export async function generateMetadata(): Promise<Metadata> {
   return generateOgImageMetaForPhotos(photos);
 }
 
-export default async function GridPage({
-  searchParams,
-}: {
-  searchParams: { next: string };
-}) {
-  const { offset, limit } = getPhotosLimitForQuery(searchParams.next);
+export default async function GridPage({ searchParams }: PaginationParams) {
+  const { offset, limit } = getPaginationForSearchParams(searchParams);
 
   const [
     photos,
@@ -44,16 +43,14 @@ export default async function GridPage({
     getUniqueCamerasCached(),
   ]);
 
-  const showMorePhotos = count > photos.length;
+  const showMorePath = count > photos.length
+    ? pathForGrid(offset + 1)
+    : undefined;
   
   return (
     photos.length > 0
       ? <SiteGrid
-        contentMain={<div className="space-y-4">
-          <PhotoGrid photos={photos} />
-          {showMorePhotos &&
-            <MorePhotos path={pathForGrid(offset + 1)} />}
-        </div>}
+        contentMain={<PhotoGrid {...{ photos, showMorePath }} />}
         contentSide={<div className="sticky top-4 space-y-4">
           {tags.length > 0 && <HeaderList
             title='Tags'

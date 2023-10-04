@@ -1,4 +1,4 @@
-import { getPhotosCached } from '@/cache';
+import { getPhotosCached, getPhotosCountCameraCached } from '@/cache';
 import SiteGrid from '@/components/SiteGrid';
 import { cameraFromPhoto, getMakeModelFromCameraString } from '@/camera';
 import CameraHeader from '@/camera/CameraHeader';
@@ -7,6 +7,12 @@ import { generateMetaForCamera } from '@/camera/meta';
 import PhotoGrid from '@/photo/PhotoGrid';
 import { getUniqueCameras } from '@/services/postgres';
 import { Metadata } from 'next';
+import { GRID_THUMBNAILS_TO_SHOW_MAX } from '@/photo';
+import { pathForCamera } from '@/site/paths';
+import {
+  PaginationParams,
+  getPaginationForSearchParams,
+} from '@/site/pagination';
 
 interface CameraProps {
   params: { camera: string }
@@ -24,14 +30,20 @@ export async function generateMetadata({
 }: CameraProps): Promise<Metadata> {
   const camera = getMakeModelFromCameraString(params.camera);
 
-  const photos = await getPhotosCached({ camera });
+  const [
+    photos,
+    count,
+  ] = await Promise.all([
+    getPhotosCached({ camera, limit: GRID_THUMBNAILS_TO_SHOW_MAX }),
+    getPhotosCountCameraCached(camera),
+  ]);
 
   const {
     url,
     title,
     description,
     images,
-  } = generateMetaForCamera(camera, photos);
+  } = generateMetaForCamera(camera, photos, count);
 
   return {
     title,
@@ -50,20 +62,35 @@ export async function generateMetadata({
   };
 }
 
-export default async function Share({ params }: CameraProps) {
+export default async function Share({
+  params,
+  searchParams,
+}: CameraProps & PaginationParams) {
   const cameraFromParams = getMakeModelFromCameraString(params.camera);
 
-  const photos = await getPhotosCached({ camera: cameraFromParams });
+  const { offset, limit } = getPaginationForSearchParams(searchParams);
+  
+  const [
+    photos,
+    count,
+  ] = await Promise.all([
+    getPhotosCached({ camera: cameraFromParams, limit }),
+    getPhotosCountCameraCached(cameraFromParams),
+  ]);
 
   const camera = cameraFromPhoto(photos[0], cameraFromParams);
 
+  const showMorePath = count > photos.length
+    ? pathForCamera(camera, offset + 1)
+    : undefined;
+
   return <>
-    <CameraShareModal {...{ camera, photos }} />
+    <CameraShareModal {...{ camera, photos, count }} />
     <SiteGrid
       key="Camera Grid"
       contentMain={<div className="space-y-8 mt-4">
-        <CameraHeader camera={camera} photos={photos} />
-        <PhotoGrid photos={photos} camera={camera} />
+        <CameraHeader {...{ camera, photos, count }} />
+        <PhotoGrid {...{ photos, camera, showMorePath, animate: false }} />
       </div>}
     />
   </>;

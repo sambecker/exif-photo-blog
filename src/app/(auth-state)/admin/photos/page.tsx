@@ -19,7 +19,7 @@ import {
   pathForPhoto,
   pathForPhotoEdit,
 } from '@/site/paths';
-import { getPhotosLimitForQuery, titleForPhoto } from '@/photo';
+import { titleForPhoto } from '@/photo';
 import MorePhotos from '@/components/MorePhotos';
 import {
   getBlobPhotoUrlsCached,
@@ -29,17 +29,17 @@ import {
 } from '@/cache';
 import { AiOutlineEyeInvisible } from 'react-icons/ai';
 import { BiTrash } from 'react-icons/bi';
+import {
+  PaginationParams,
+  getPaginationForSearchParams,
+} from '@/site/pagination';
 
 export const runtime = 'edge';
 
 const DEBUG_PHOTO_BLOBS = false;
 
-export default async function AdminPage({
-  searchParams,
-}: {
-  searchParams: { next: string };
-}) {
-  const { offset, limit } = getPhotosLimitForQuery(searchParams.next);
+export default async function AdminPage({ searchParams }: PaginationParams) {
+  const { offset, limit } = getPaginationForSearchParams(searchParams);
 
   const [
     photos,

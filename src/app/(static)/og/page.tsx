@@ -1,17 +1,16 @@
 import { getPhotosCached, getPhotosCountCached } from '@/cache';
 import MorePhotos from '@/components/MorePhotos';
-import { getPhotosLimitForQuery } from '@/photo';
 import StaggeredOgPhotos from '@/photo/StaggeredOgPhotos';
+import {
+  PaginationParams,
+  getPaginationForSearchParams,
+} from '@/site/pagination';
 import { pathForOg } from '@/site/paths';
 
 export const runtime = 'edge';
 
-export default async function GridPage({
-  searchParams,
-}: {
-  searchParams: { next: string };
-}) {
-  const { offset, limit } = getPhotosLimitForQuery(searchParams.next);
+export default async function GridPage({ searchParams }: PaginationParams) {
+  const { offset, limit } = getPaginationForSearchParams(searchParams);
 
   const [
     photos,
