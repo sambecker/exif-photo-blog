@@ -63,11 +63,11 @@ const getPhotosCacheTags = (options: GetPhotosOptions = {}) => {
 
 const getPhotoCacheTag = (photoId: string) => `photo-${photoId}`;
 
-const getPhotoCameraCountTag = ({ make, model }: Camera) =>
-  `${TAG_PHOTOS_COUNT}-${createCameraKey(make, model)}`;
-
 const getPhotoTagCountTag = (tag: string) =>
-  `${TAG_PHOTOS_COUNT}-${tag}`;
+  `${TAG_PHOTOS_COUNT}-${TAG_TAGS}-${tag}`;
+
+const getPhotoCameraCountTag = ({ make, model }: Camera) =>
+  `${TAG_PHOTOS_COUNT}-${TAG_CAMERAS}-${createCameraKey(make, model)}`;
 
 export const revalidatePhotosTag = () =>
   revalidateTag(TAG_PHOTOS);
