@@ -11,20 +11,22 @@ const PREFIX_PHOTO  = '/p';
 const PREFIX_TAG    = '/t';
 const PREFIX_CAMERA = '/shot-on';
 
-// Modifiers
-const SHARE = 'share';
-const NEXT = 'next';
-
 // Core paths
-export const PATH_ROOT  = '/';
-export const PATH_GRID  = '/grid';
-export const PATH_ADMIN = '/admin';
-export const PATH_OG    = '/og';
+export const PATH_ROOT      = '/';
+export const PATH_GRID      = '/grid';
+export const PATH_ADMIN     = '/admin';
+export const PATH_SIGN_IN   = '/sign-in';
+export const PATH_OG        = '/og';
+export const PATH_CHECKLIST = '/checklist';
 
 // Extended paths
 export const PATH_ADMIN_PHOTOS = `${PATH_ADMIN}/photos`;
 export const PATH_ADMIN_UPLOAD = `${PATH_ADMIN}/uploads`;
 export const PATH_ADMIN_UPLOAD_BLOB_HANDLER = `${PATH_ADMIN_UPLOAD}/blob`;
+
+// Modifiers
+const SHARE = 'share';
+const NEXT  = 'next';
 
 // Absolute paths
 export const ABSOLUTE_PATH_FOR_HOME_IMAGE = `${BASE_URL}/home-image`;
@@ -148,14 +150,14 @@ export const isPathGrid = (pathname = '') =>
   pathname.startsWith(PATH_GRID);
 
 export const isPathSignIn = (pathname = '') =>
-  pathname.startsWith('/sign-in');
+  pathname.startsWith(PATH_SIGN_IN);
 
 export const isPathAdmin = (pathname = '') =>
-  pathname.startsWith('/admin');
+  pathname.startsWith(PATH_ADMIN);
 
 export const isPathProtected = (pathname = '') =>
   pathname.startsWith(PATH_ADMIN) ||
-  pathname === '/checklist';
+  pathname === PATH_CHECKLIST;
 
 export const getPathComponents = (pathname = ''): {
   photoId?: string
