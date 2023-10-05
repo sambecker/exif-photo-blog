@@ -20,6 +20,7 @@ export async function generateMetadata({
   const [
     photos,
     count,
+    dateRange,
   ] = await getPhotosTagDataCached({
     tag,
     limit: GRID_THUMBNAILS_TO_SHOW_MAX,
@@ -30,7 +31,7 @@ export async function generateMetadata({
     title,
     description,
     images,
-  } = generateMetaForTag(tag, photos, count);
+  } = generateMetaForTag(tag, photos, count, dateRange);
 
   return {
     title,

@@ -1,4 +1,4 @@
-import { getMakeModelFromCameraString } from '@/camera';
+import { getCameraFromKey } from '@/camera';
 import { Metadata } from 'next';
 import { generateMetaForCamera } from '@/camera/meta';
 import { GRID_THUMBNAILS_TO_SHOW_MAX } from '@/photo';
@@ -18,7 +18,7 @@ interface CameraProps {
 export async function generateMetadata({
   params,
 }: CameraProps): Promise<Metadata> {
-  const camera = getMakeModelFromCameraString(params.camera);
+  const camera = getCameraFromKey(params.camera);
 
   const [
     photos,
@@ -57,7 +57,7 @@ export default async function CameraPage({
   params,
   searchParams,
 }: CameraProps & PaginationParams) {
-  const camera = getMakeModelFromCameraString(params.camera);
+  const camera = getCameraFromKey(params.camera);
 
   const {
     photos,

@@ -69,14 +69,14 @@ const getPhotoCacheTag = (photoId: string) => `photo-${photoId}`;
 const getPhotoTagCountTag = (tag: string) =>
   `${TAG_PHOTOS_COUNT}-${TAG_TAGS}-${tag}`;
 
-const getPhotoCameraCountTag = ({ make, model }: Camera) =>
-  `${TAG_PHOTOS_COUNT}-${TAG_CAMERAS}-${createCameraKey(make, model)}`;
+const getPhotoCameraCountTag = (camera: Camera) =>
+  `${TAG_PHOTOS_COUNT}-${TAG_CAMERAS}-${createCameraKey(camera)}`;
 
 const getPhotoTagDateRangeTag = (tag: string) =>
   `${TAG_PHOTOS_DATE_RANGE}-${TAG_TAGS}-${tag}`;
 
-const getPhotoCameraDateRangeTag = ({ make, model }: Camera) =>
-  `${TAG_PHOTOS_DATE_RANGE}-${TAG_CAMERAS}-${createCameraKey(make, model)}`;
+const getPhotoCameraDateRangeTag = (camera: Camera) =>
+  `${TAG_PHOTOS_DATE_RANGE}-${TAG_CAMERAS}-${createCameraKey(camera)}`;
 
 export const revalidatePhotosTag = () =>
   revalidateTag(TAG_PHOTOS);

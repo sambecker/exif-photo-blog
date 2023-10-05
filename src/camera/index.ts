@@ -8,12 +8,12 @@ export type Camera = {
   model: string
 };
 
-export const createCameraKey = (make: string, model: string) =>
+export const createCameraKey = ({ make, model }: Camera) =>
   parameterize(`${make}-${model}`);
 
 // Assumes no makes ('Fujifilm,' 'Apple,' 'Canon', etc.) have dashes
-export const getMakeModelFromCameraString = (camera: string): Camera => {
-  const [make, model] = camera.toLowerCase().split(/[-| ](.*)/s);
+export const getCameraFromKey = (cameraKey: string): Camera => {
+  const [make, model] = cameraKey.toLowerCase().split(/[-| ](.*)/s);
   return { make, model };
 };
 
@@ -24,7 +24,7 @@ export const cameraFromPhoto = (
   photo?.make && photo?.model
     ? { make: photo.make, model: photo.model }
     : typeof fallback === 'string'
-      ? getMakeModelFromCameraString(fallback)
+      ? getCameraFromKey(fallback)
       : fallback ?? CAMERA_PLACEHOLDER;
 
 export const formatCameraText = ({ make, model }: Camera) =>

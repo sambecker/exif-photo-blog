@@ -3,7 +3,7 @@ import { BASE_URL } from './config';
 import {
   Camera,
   createCameraKey,
-  getMakeModelFromCameraString,
+  getCameraFromKey,
 } from '@/camera';
 
 // Prefixes
@@ -81,11 +81,8 @@ export const pathForTag = (tag: string, next?: number) =>
 export const pathForTagShare = (tag: string) =>
   `${pathForTag(tag)}/${SHARE}`;
 
-export const pathForCamera = ({ make, model }: Camera, next?: number) =>
-  pathWithNext(
-    `${PREFIX_CAMERA}/${createCameraKey(make, model)}`,
-    next,
-  );
+export const pathForCamera = (camera: Camera, next?: number) =>
+  pathWithNext(`${PREFIX_CAMERA}/${createCameraKey(camera)}`, next);
 
 export const pathForCameraShare = (camera: Camera) =>
   `${pathForCamera(camera)}/${SHARE}`;
@@ -177,7 +174,7 @@ export const getPathComponents = (pathname = ''): {
   const tag = pathname.match(/^\/t\/([^/]+)/)?.[1];
   const cameraString = pathname.match(/^\/shot-on\/([^/]+)/)?.[1];
   const camera = cameraString
-    ? getMakeModelFromCameraString(cameraString)
+    ? getCameraFromKey(cameraString)
     : undefined;
   return {
     photoId: (

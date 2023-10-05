@@ -13,12 +13,12 @@ import {
   isPathTagPhotoShare,
   isPathTagShare,
 } from '@/site/paths';
-import { getMakeModelFromCameraString } from '@/camera';
+import { getCameraFromKey } from '@/camera';
 
 const PHOTO_ID = 'UsKSGcbt';
 const TAG = 'tag-name';
 const CAMERA = 'fujifilm-x-t1';
-const CAMERA_OBJECT = getMakeModelFromCameraString(CAMERA);
+const CAMERA_OBJECT = getCameraFromKey(CAMERA);
 const SHARE = 'share';
 
 const PATH_ROOT               = '/';

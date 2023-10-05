@@ -281,7 +281,7 @@ const sqlGetUniqueCameras = async () => sql`
   WHERE hidden IS NOT TRUE
   ORDER BY camera ASC
 `.then(({ rows }) => rows.map(({ make, model }) => ({
-    cameraKey: createCameraKey(make, model),
+    cameraKey: createCameraKey({ make, model }),
     camera: { make, model } as Camera,
   })));
 

@@ -1,4 +1,4 @@
-import { cameraFromPhoto, getMakeModelFromCameraString } from '@/camera';
+import { cameraFromPhoto, getCameraFromKey } from '@/camera';
 import CameraShareModal from '@/camera/CameraShareModal';
 import { generateMetaForCamera } from '@/camera/meta';
 import { Metadata } from 'next';
@@ -19,7 +19,7 @@ interface CameraProps {
 export async function generateMetadata({
   params,
 }: CameraProps): Promise<Metadata> {
-  const camera = getMakeModelFromCameraString(params.camera);
+  const camera = getCameraFromKey(params.camera);
 
   const [
     photos,
@@ -58,7 +58,7 @@ export default async function Share({
   params,
   searchParams,
 }: CameraProps & PaginationParams) {
-  const cameraFromParams = getMakeModelFromCameraString(params.camera);
+  const cameraFromParams = getCameraFromKey(params.camera);
 
   const {
     photos,
