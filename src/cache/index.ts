@@ -19,7 +19,7 @@ import { Camera, createCameraKey } from '@/camera';
 
 const TAG_PHOTOS            = 'photos';
 const TAG_PHOTOS_COUNT      = `${TAG_PHOTOS}-count`;
-const TAG_PHOTOS_DATE_RANGE = `${TAG_PHOTOS}-date-range`;;
+const TAG_PHOTOS_DATE_RANGE = `${TAG_PHOTOS}-date-range`;
 const TAG_TAGS              = 'tags';
 const TAG_CAMERAS           = 'cameras';
 const TAG_BLOB              = 'blob';

@@ -3,6 +3,7 @@
 import {
   sqlDeletePhoto,
   sqlInsertPhoto,
+  sqlDeletePhotoTagGlobally,
   sqlUpdatePhoto,
 } from '@/services/postgres';
 import { convertFormDataToPhoto } from './form';
@@ -61,6 +62,14 @@ export async function deletePhotoAction(formData: FormData) {
 
   revalidatePhotosTag();
 };
+
+export async function deletePhotoTagGloballyAction(formData: FormData) {
+  const tag = formData.get('tag') as string;
+
+  await sqlDeletePhotoTagGlobally(tag);
+
+  revalidatePhotosTag();
+}
 
 export async function deleteBlobPhotoAction(formData: FormData) {
   await deleteBlobPhoto(formData.get('url') as string);
