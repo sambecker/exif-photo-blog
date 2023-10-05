@@ -66,7 +66,7 @@ export default async function Share({
   });
 
   return <>
-    <TagShareModal {...{ tag, photos, count }} />
+    <TagShareModal {...{ tag, photos, count, dateRange }} />
     <TagOverview
       {...{ tag, photos, count, dateRange, showMorePath }}
       animateOnFirstLoadOnly

@@ -1,5 +1,5 @@
 import { absolutePathForTag, pathForTag } from '@/site/paths';
-import { Photo } from '../photo';
+import { Photo, PhotoDateRange } from '../photo';
 import ShareModal from '@/components/ShareModal';
 import TagOGTile from './TagOGTile';
 
@@ -7,10 +7,12 @@ export default function TagShareModal({
   tag,
   photos,
   count,
+  dateRange,
 }: {
   tag: string
   photos: Photo[]
   count?: number
+  dateRange?: PhotoDateRange
 }) {
   return (
     <ShareModal
@@ -18,7 +20,7 @@ export default function TagShareModal({
       pathShare={absolutePathForTag(tag)}
       pathClose={pathForTag(tag)}
     >
-      <TagOGTile {...{ tag, photos, count }} />
+      <TagOGTile {...{ tag, photos, count, dateRange }} />
     </ShareModal>
   );
 };

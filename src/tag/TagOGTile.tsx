@@ -1,4 +1,4 @@
-import { Photo } from '@/photo';
+import { Photo, PhotoDateRange } from '@/photo';
 import { absolutePathForTagImage, pathForTag } from '@/site/paths';
 import OGTile from '@/components/OGTile';
 import { descriptionForTaggedPhotos, titleForTag } from '.';
@@ -14,6 +14,7 @@ export default function TagOGTile({
   onFail,
   retryTime,
   count,
+  dateRange,
 }: {
   tag: string
   photos: Photo[]
@@ -23,11 +24,12 @@ export default function TagOGTile({
   riseOnHover?: boolean
   retryTime?: number
   count?: number
+  dateRange?: PhotoDateRange
 }) {
   return (
     <OGTile {...{
-      title: titleForTag(tag, photos),
-      description: descriptionForTaggedPhotos(photos, true, count),
+      title: titleForTag(tag, photos, count),
+      description: descriptionForTaggedPhotos(photos, true, count, dateRange),
       path: pathForTag(tag),
       pathImageAbsolute: absolutePathForTagImage(tag),
       loadingState: loadingStateExternal,
