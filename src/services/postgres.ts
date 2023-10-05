@@ -132,6 +132,13 @@ export const sqlUpdatePhoto = (photo: PhotoDbInsert) =>
     WHERE id=${photo.id}
   `;
 
+export const sqlRemovePhotoTag = (tag: string) =>
+  sql`
+    UPDATE photos
+    SET tags=array_remove(tags, ${tag})
+    WHERE ${tag}=ANY(tags)
+  `;
+
 export const sqlDeletePhoto = (id: string) =>
   sql`DELETE FROM photos WHERE id=${id}`;
 
