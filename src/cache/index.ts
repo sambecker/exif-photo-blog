@@ -17,104 +17,107 @@ import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
 import { AuthSession } from 'next-auth';
 import { Camera, createCameraKey } from '@/camera';
 
-const TAG_PHOTOS            = 'photos';
-const TAG_PHOTOS_COUNT      = `${TAG_PHOTOS}-count`;
-const TAG_PHOTOS_DATE_RANGE = `${TAG_PHOTOS}-date-range`;
-const TAG_TAGS              = 'tags';
-const TAG_CAMERAS           = 'cameras';
-const TAG_BLOB              = 'blob';
+const KEY_PHOTOS            = 'photos';
+const KEY_PHOTOS_COUNT      = `${KEY_PHOTOS}-count`;
+const KEY_PHOTOS_DATE_RANGE = `${KEY_PHOTOS}-date-range`;
+const KEY_TAGS              = 'tags';
+const KEY_CAMERAS           = 'cameras';
+const KEY_BLOB              = 'blob';
 
 // eslint-disable-next-line max-len
-const getPhotosCacheTagForKey = (
+const getPhotosCacheKeyForOption = (
   options: GetPhotosOptions,
-  key: keyof GetPhotosOptions,
+  option: keyof GetPhotosOptions,
 ): string | null => {
-  switch (key) {
+  switch (option) {
   // Primitive keys
   case 'sortBy': 
   case 'limit':
   case 'offset':
   case 'tag':
   case 'includeHidden': {
-    const value = options[key];
-    return value ? `${key}-${value}` : null;
+    const value = options[option];
+    return value ? `${option}-${value}` : null;
   }
   // Date keys
   case 'takenBefore':
   case 'takenAfterInclusive': {
-    const value = options[key];
-    return value ? `${key}-${value.toISOString()}` : null;
+    const value = options[option];
+    return value ? `${option}-${value.toISOString()}` : null;
   }
   // Complex keys
   case 'camera': {
-    const value = options[key];
-    return value ? `${key}-${value.make}-${value.model}` : null;
+    const value = options[option];
+    return value ? `${option}-${value.make}-${value.model}` : null;
   }
   }
 };
 
-const getPhotosCacheTags = (options: GetPhotosOptions = {}) => {
+const getPhotosCacheKeys = (options: GetPhotosOptions = {}) => {
   const tags: string[] = [];
 
   Object.keys(options).forEach(key => {
-    const tag = getPhotosCacheTagForKey(options, key as keyof GetPhotosOptions);
+    const tag = getPhotosCacheKeyForOption(
+      options,
+      key as keyof GetPhotosOptions
+    );
     if (tag) { tags.push(tag); }
   });
 
   return tags;
 };
 
-const getPhotoCacheTag = (photoId: string) => `photo-${photoId}`;
+const getPhotoCacheKey = (photoId: string) => `photo-${photoId}`;
 
-const getPhotoTagCountTag = (tag: string) =>
-  `${TAG_PHOTOS_COUNT}-${TAG_TAGS}-${tag}`;
+const getPhotoTagCountKey = (tag: string) =>
+  `${KEY_PHOTOS_COUNT}-${KEY_TAGS}-${tag}`;
 
-const getPhotoCameraCountTag = (camera: Camera) =>
-  `${TAG_PHOTOS_COUNT}-${TAG_CAMERAS}-${createCameraKey(camera)}`;
+const getPhotoCameraCountKey = (camera: Camera) =>
+  `${KEY_PHOTOS_COUNT}-${KEY_CAMERAS}-${createCameraKey(camera)}`;
 
-const getPhotoTagDateRangeTag = (tag: string) =>
-  `${TAG_PHOTOS_DATE_RANGE}-${TAG_TAGS}-${tag}`;
+const getPhotoTagDateRangeKey = (tag: string) =>
+  `${KEY_PHOTOS_DATE_RANGE}-${KEY_TAGS}-${tag}`;
 
-const getPhotoCameraDateRangeTag = (camera: Camera) =>
-  `${TAG_PHOTOS_DATE_RANGE}-${TAG_CAMERAS}-${createCameraKey(camera)}`;
+const getPhotoCameraDateRangeKey = (camera: Camera) =>
+  `${KEY_PHOTOS_DATE_RANGE}-${KEY_CAMERAS}-${createCameraKey(camera)}`;
 
-export const revalidatePhotosTag = () =>
-  revalidateTag(TAG_PHOTOS);
+export const revalidatePhotosKey = () =>
+  revalidateTag(KEY_PHOTOS);
 
-export const revalidateTagsTag = () =>
-  revalidateTag(TAG_TAGS);
+export const revalidateTagsKey = () =>
+  revalidateTag(KEY_TAGS);
 
-export const revalidateCamerasTag = () =>
-  revalidateTag(TAG_CAMERAS);
+export const revalidateCamerasKey = () =>
+  revalidateTag(KEY_CAMERAS);
 
-export const revalidateBlobTag = () =>
-  revalidateTag(TAG_BLOB);
+export const revalidateBlobKey = () =>
+  revalidateTag(KEY_BLOB);
 
-export const revalidatePhotosAndBlobTag = () => {
-  revalidateTag(TAG_PHOTOS);
-  revalidateTag(TAG_BLOB);
+export const revalidatePhotosAndBlobKeys = () => {
+  revalidateTag(KEY_PHOTOS);
+  revalidateTag(KEY_BLOB);
 };
 
-export const revalidateAllTags = () => {
-  revalidatePhotosTag();
-  revalidateTagsTag();
-  revalidateCamerasTag();
-  revalidateBlobTag();
+export const revalidateAllKeys = () => {
+  revalidatePhotosKey();
+  revalidateTagsKey();
+  revalidateCamerasKey();
+  revalidateBlobKey();
 };
 
 export const getPhotosCached: typeof getPhotos = (...args) =>
   unstable_cache(
     () => getPhotos(...args),
-    [TAG_PHOTOS, ...getPhotosCacheTags(...args)], {
-      tags: [TAG_PHOTOS, ...getPhotosCacheTags(...args)],
+    [KEY_PHOTOS, ...getPhotosCacheKeys(...args)], {
+      tags: [KEY_PHOTOS, ...getPhotosCacheKeys(...args)],
     }
   )().then(parseCachedPhotosDates);
 
 export const getPhotosCountCached: typeof getPhotosCount = (...args) =>
   unstable_cache(
     () => getPhotosCount(...args),
-    [TAG_PHOTOS, TAG_PHOTOS_COUNT], {
-      tags: [TAG_PHOTOS, TAG_PHOTOS_COUNT],
+    [KEY_PHOTOS, KEY_PHOTOS_COUNT], {
+      tags: [KEY_PHOTOS, KEY_PHOTOS_COUNT],
     }
   )();
 
@@ -122,16 +125,16 @@ export const getPhotosCountIncludingHiddenCached: typeof getPhotosCount =
   (...args) =>
     unstable_cache(
       () => getPhotosCountIncludingHidden(...args),
-      [TAG_PHOTOS, TAG_PHOTOS_COUNT], {
-        tags: [TAG_PHOTOS, TAG_PHOTOS_COUNT],
+      [KEY_PHOTOS, KEY_PHOTOS_COUNT], {
+        tags: [KEY_PHOTOS, KEY_PHOTOS_COUNT],
       }
     )();
 
 export const getPhotosTagCountCached: typeof getPhotosTagCount = (...args) =>
   unstable_cache(
     () => getPhotosTagCount(...args),
-    [TAG_PHOTOS, getPhotoTagCountTag(...args)], {
-      tags: [TAG_PHOTOS, getPhotoTagCountTag(...args)],
+    [KEY_PHOTOS, getPhotoTagCountKey(...args)], {
+      tags: [KEY_PHOTOS, getPhotoTagCountKey(...args)],
     }
   )();
 
@@ -139,8 +142,8 @@ export const getPhotosTagCountCached: typeof getPhotosTagCount = (...args) =>
 export const getPhotosCameraCountCached: typeof getPhotosCameraCount = (...args) =>
   unstable_cache(
     () => getPhotosCameraCount(...args),
-    [TAG_PHOTOS, getPhotoCameraCountTag(...args)], {
-      tags: [TAG_PHOTOS, getPhotoCameraCountTag(...args)],
+    [KEY_PHOTOS, getPhotoCameraCountKey(...args)], {
+      tags: [KEY_PHOTOS, getPhotoCameraCountKey(...args)],
     }
   )();
 
@@ -148,8 +151,8 @@ export const getPhotosCameraCountCached: typeof getPhotosCameraCount = (...args)
 export const getPhotosTagDateRangeCached: typeof getPhotosTagDateRange = (...args) =>
   unstable_cache(
     () => getPhotosTagDateRange(...args),
-    [TAG_PHOTOS, getPhotoTagDateRangeTag(...args)], {
-      tags: [TAG_PHOTOS, getPhotoTagDateRangeTag(...args)],
+    [KEY_PHOTOS, getPhotoTagDateRangeKey(...args)], {
+      tags: [KEY_PHOTOS, getPhotoTagDateRangeKey(...args)],
     }
   )();
 
@@ -157,48 +160,48 @@ export const getPhotosTagDateRangeCached: typeof getPhotosTagDateRange = (...arg
 export const getPhotosCameraDateRangeCached: typeof getPhotosCameraDateRange = (...args) =>
   unstable_cache(
     () => getPhotosCameraDateRange(...args),
-    [TAG_PHOTOS, getPhotoCameraDateRangeTag(...args)], {
-      tags: [TAG_PHOTOS, getPhotoCameraDateRangeTag(...args)],
+    [KEY_PHOTOS, getPhotoCameraDateRangeKey(...args)], {
+      tags: [KEY_PHOTOS, getPhotoCameraDateRangeKey(...args)],
     }
   )();
 
 export const getPhotoCached: typeof getPhoto = (...args) =>
   unstable_cache(
     () => getPhoto(...args),
-    [TAG_PHOTOS, getPhotoCacheTag(...args)], {
-      tags: [TAG_PHOTOS, getPhotoCacheTag(...args)],
+    [KEY_PHOTOS, getPhotoCacheKey(...args)], {
+      tags: [KEY_PHOTOS, getPhotoCacheKey(...args)],
     }
   )().then(photo => photo ? parseCachedPhotoDates(photo) : undefined);
 
 export const getUniqueTagsCached: typeof getUniqueTags = (...args) =>
   unstable_cache(
     () => getUniqueTags(...args),
-    [TAG_PHOTOS, TAG_TAGS], {
-      tags: [TAG_PHOTOS, TAG_TAGS],
+    [KEY_PHOTOS, KEY_TAGS], {
+      tags: [KEY_PHOTOS, KEY_TAGS],
     }
   )();
 
 export const getUniqueCamerasCached: typeof getUniqueCameras = (...args) =>
   unstable_cache(
     () => getUniqueCameras(...args),
-    [TAG_PHOTOS, TAG_CAMERAS], {
-      tags: [TAG_PHOTOS, TAG_CAMERAS],
+    [KEY_PHOTOS, KEY_CAMERAS], {
+      tags: [KEY_PHOTOS, KEY_CAMERAS],
     }
   )();
 
 export const getBlobUploadUrlsCached: typeof getBlobUploadUrls = (...args) =>
   unstable_cache(
     () => getBlobUploadUrls(...args),
-    [TAG_BLOB], {
-      tags: [TAG_BLOB],
+    [KEY_BLOB], {
+      tags: [KEY_BLOB],
     }
   )();
 
 export const getBlobPhotoUrlsCached: typeof getBlobPhotoUrls = (...args) =>
   unstable_cache(
     () => getBlobPhotoUrls(...args),
-    [TAG_BLOB], {
-      tags: [TAG_BLOB],
+    [KEY_BLOB], {
+      tags: [KEY_BLOB],
     }
   )();
 

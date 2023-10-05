@@ -1,4 +1,4 @@
-import { revalidatePhotosAndBlobTag } from '@/cache';
+import { revalidatePhotosAndBlobKeys } from '@/cache';
 import {
   ACCEPTED_PHOTO_FILE_TYPES,
   isUploadPathnameValid,
@@ -27,13 +27,13 @@ export async function POST(request: Request): Promise<NextResponse> {
       },
       // This argument is required, but doesn't seem to fire
       onUploadCompleted: async () => {
-        revalidatePhotosAndBlobTag();
+        revalidatePhotosAndBlobKeys();
       },
     });
-    revalidatePhotosAndBlobTag();
+    revalidatePhotosAndBlobKeys();
     return NextResponse.json(jsonResponse);
   } catch (error) {
-    revalidatePhotosAndBlobTag();
+    revalidatePhotosAndBlobKeys();
     return NextResponse.json(
       { error: (error as Error).message },
       { status: 400 },

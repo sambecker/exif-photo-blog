@@ -13,9 +13,9 @@ import {
   deleteBlobPhoto,
 } from '@/services/blob';
 import {
-  revalidateAllTags,
-  revalidateBlobTag,
-  revalidatePhotosTag,
+  revalidateAllKeys,
+  revalidateBlobKey,
+  revalidatePhotosKey,
 } from '@/cache';
 import { IS_PRO_MODE } from '@/site/config';
 import { getNextImageUrlForRequest } from '@/utility/image';
@@ -39,7 +39,7 @@ export async function createPhotoAction(formData: FormData) {
 
   await sqlInsertPhoto(photo);
 
-  revalidateAllTags();
+  revalidateAllKeys();
 
   redirect('/admin/photos');
 }
@@ -49,7 +49,7 @@ export async function updatePhotoAction(formData: FormData) {
 
   await sqlUpdatePhoto(photo);
 
-  revalidatePhotosTag();
+  revalidatePhotosKey();
 
   redirect('/admin/photos');
 }
@@ -60,7 +60,7 @@ export async function deletePhotoAction(formData: FormData) {
     sqlDeletePhoto(formData.get('id') as string),
   ]);
 
-  revalidatePhotosTag();
+  revalidatePhotosKey();
 };
 
 export async function deletePhotoTagGloballyAction(formData: FormData) {
@@ -68,15 +68,15 @@ export async function deletePhotoTagGloballyAction(formData: FormData) {
 
   await sqlDeletePhotoTagGlobally(tag);
 
-  revalidatePhotosTag();
+  revalidatePhotosKey();
 }
 
 export async function deleteBlobPhotoAction(formData: FormData) {
   await deleteBlobPhoto(formData.get('url') as string);
 
-  revalidateBlobTag();
+  revalidateBlobKey();
 };
 
 export async function syncCacheAction() {
-  revalidateAllTags();
+  revalidateAllKeys();
 }
