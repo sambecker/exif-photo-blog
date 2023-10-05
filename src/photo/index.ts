@@ -60,7 +60,6 @@ export interface Photo extends PhotoDb {
   exposureTimeFormatted?: string
   exposureCompensationFormatted?: string
   takenAtNaiveFormatted: string
-  takenAtNaiveFormattedShort: string
 }
 
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
@@ -84,8 +83,6 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
       formatExposureCompensation(photoDb.exposureCompensation),
     takenAtNaiveFormatted:
       formatDateFromPostgresString(photoDb.takenAtNaive),
-    takenAtNaiveFormattedShort:
-      formatDateFromPostgresString(photoDb.takenAtNaive, true),
   };
 };
 
@@ -163,23 +160,35 @@ const photoLabelForCount = (count: number) =>
 export const photoQuantityText = (count: number) =>
   `(${count} ${photoLabelForCount(count)})`;
 
+export type PhotoDateRange = { start: string, end: string };
+
 export const descriptionForPhotoSet = (
   photos:Photo[],
   descriptor?: string,
   dateBased?: boolean,
   explicitCount?: number,
+  explicitDateRange?: PhotoDateRange,
 ) =>
   dateBased
-    ? dateRangeForPhotos(photos).description.toUpperCase()
+    ? dateRangeForPhotos(photos, explicitDateRange).description.toUpperCase()
     : [
       explicitCount ?? photos.length,
       descriptor,
       photoLabelForCount(explicitCount ?? photos.length),
     ].join(' ');
 
-export const dateRangeForPhotos = (photos: Photo[]) => {
-  const start = photos[0].takenAtNaiveFormattedShort;
-  const end = photos[photos.length - 1].takenAtNaiveFormattedShort;
+export const dateRangeForPhotos = (
+  photos: Photo[],
+  explicitDateRange?: PhotoDateRange,
+) => {
+  const start = formatDateFromPostgresString(
+    explicitDateRange?.start ?? photos[0].takenAtNaive,
+    true,
+  );
+  const end = formatDateFromPostgresString(
+    explicitDateRange?.end ?? photos[photos.length - 1].takenAtNaive,
+    true
+  );
   const description = start === end
     ? start
     : `${start}–${end}`;

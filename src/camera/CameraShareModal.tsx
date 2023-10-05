@@ -1,5 +1,5 @@
 import { absolutePathForCamera, pathForCamera } from '@/site/paths';
-import { Photo } from '../photo';
+import { Photo, PhotoDateRange } from '../photo';
 import ShareModal from '@/components/ShareModal';
 import CameraOGTile from './CameraOGTile';
 import { Camera } from '.';
@@ -8,10 +8,12 @@ export default function CameraShareModal({
   camera,
   photos,
   count,
+  dateRange,
 }: {
   camera: Camera
   photos: Photo[]
-  count?: number
+  count: number
+  dateRange: PhotoDateRange,
 }) {
   return (
     <ShareModal
@@ -19,7 +21,7 @@ export default function CameraShareModal({
       pathShare={absolutePathForCamera(camera)}
       pathClose={pathForCamera(camera)}
     >
-      <CameraOGTile {...{ camera, photos, count }} />
+      <CameraOGTile {...{ camera, photos, count, dateRange }} />
     </ShareModal>
   );
 };

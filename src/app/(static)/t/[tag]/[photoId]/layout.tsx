@@ -10,11 +10,17 @@ import {
   absolutePathForPhotoImage,
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotoCached, getPhotosCached } from '@/cache';
+import { getPhotoCached } from '@/cache';
 import { getPhotos, getUniqueTags } from '@/services/postgres';
+import { getPhotosTagDataCached } from '@/tag/data';
+import { ReactNode } from 'react';
+
+interface PhotoTagProps {
+  params: { photoId: string, tag: string }
+}
 
 export async function generateStaticParams() {
-  const params: { params: { photoId: string, tag: string }}[] = [];
+  const params: PhotoTagProps[] = [];
 
   const tags = await getUniqueTags();
   tags.forEach(async tag => {
@@ -29,9 +35,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({
   params: { photoId, tag },
-}: {
-  params: { photoId: string, tag: string }
-}): Promise<Metadata> {
+}: PhotoTagProps): Promise<Metadata> {
   const photo = await getPhotoCached(photoId);
 
   if (!photo) { return {}; }
@@ -62,18 +66,19 @@ export async function generateMetadata({
 export default async function PhotoTagPage({
   params: { photoId, tag },
   children,
-}: {
-  params: { photoId: string, tag: string }
-  children: React.ReactNode
-}) {
+}: PhotoTagProps & { children: ReactNode }) {
   const photo = await getPhotoCached(photoId);
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const photos = await getPhotosCached({ tag });
+  const [
+    photos,
+    count,
+    dateRange,
+  ] = await getPhotosTagDataCached({ tag });
 
   return <>
     {children}
-    <PhotoDetailPage {...{ photo, photos, tag }} />
+    <PhotoDetailPage {...{ photo, photos, tag, count, dateRange }} />
   </>;
 }

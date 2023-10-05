@@ -1,4 +1,4 @@
-type PaginationSearchParams = { next: string };
+export type PaginationSearchParams = { next: string };
 
 export interface PaginationParams {
   searchParams?: PaginationSearchParams

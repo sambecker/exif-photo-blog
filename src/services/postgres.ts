@@ -5,6 +5,7 @@ import {
   translatePhotoId,
   parsePhotoFromDb,
   Photo,
+  PhotoDateRange,
 } from '@/photo';
 import { Camera, createCameraKey } from '@/camera';
 import { parameterize } from '@/utility/string';
@@ -239,19 +240,35 @@ const sqlGetPhotosCountIncludingHidden = async () => sql`
   SELECT COUNT(*) FROM photos
 `.then(({ rows }) => parseInt(rows[0].count, 10));
 
-const sqlGetPhotosCountTag = async (tag: string) => sql`
+const sqlGetPhotosTagCount = async (tag: string) => sql`
   SELECT COUNT(*) FROM photos
   WHERE ${tag}=ANY(tags) AND
   hidden IS NOT TRUE
 `.then(({ rows }) => parseInt(rows[0].count, 10));
 
-const sqlGetPhotosCountCamera = async (camera: Camera) => sql`
+const sqlGetPhotosCameraCount = async (camera: Camera) => sql`
   SELECT COUNT(*) FROM photos
   WHERE
   LOWER(make)=${parameterize(camera.make)} AND
   LOWER(REPLACE(model, ' ', '-'))=${parameterize(camera.model)} AND
   hidden IS NOT TRUE
 `.then(({ rows }) => parseInt(rows[0].count, 10));
+
+const sqlGetPhotosTagDateRange = async (tag: string) => sql`
+  SELECT MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
+  FROM photos
+  WHERE ${tag}=ANY(tags) AND
+  hidden IS NOT TRUE
+`.then(({ rows }) => rows[0] as PhotoDateRange);
+
+const sqlGetPhotosCameraDateRange = async (camera: Camera) => sql`
+  SELECT MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
+  FROM photos
+  WHERE
+  LOWER(make)=${parameterize(camera.make)} AND
+  LOWER(REPLACE(model, ' ', '-'))=${parameterize(camera.model)} AND
+  hidden IS NOT TRUE
+`.then(({ rows }) => rows[0] as PhotoDateRange);
 
 const sqlGetUniqueTags = async () => sql`
   SELECT DISTINCT unnest(tags) as tag FROM photos
@@ -353,10 +370,15 @@ export const getPhoto = async (id: string): Promise<Photo | undefined> => {
 
 export const getPhotosCount = () =>
   safelyQueryPhotos(sqlGetPhotosCount);
-export const getPhotosCountTag = (tag: string) =>
-  safelyQueryPhotos(() => sqlGetPhotosCountTag(tag));
-export const getPhotosCountCamera = (camera: Camera) =>
-  safelyQueryPhotos(() => sqlGetPhotosCountCamera(camera));
+export const getPhotosTagCount = (tag: string) =>
+  safelyQueryPhotos(() => sqlGetPhotosTagCount(tag));
+export const getPhotosCameraCount = (camera: Camera) =>
+  safelyQueryPhotos(() => sqlGetPhotosCameraCount(camera));
+
+export const getPhotosTagDateRange = (tag: string) =>
+  safelyQueryPhotos(() => sqlGetPhotosTagDateRange(tag));
+export const getPhotosCameraDateRange = (camera: Camera) =>
+  safelyQueryPhotos(() => sqlGetPhotosCameraDateRange(camera));
 
 export const getPhotosCountIncludingHidden = () =>
   safelyQueryPhotos(sqlGetPhotosCountIncludingHidden);

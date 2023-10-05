@@ -1,4 +1,9 @@
-import { Photo, descriptionForPhotoSet, photoQuantityText } from '@/photo';
+import {
+  Photo,
+  PhotoDateRange,
+  descriptionForPhotoSet,
+  photoQuantityText,
+} from '@/photo';
 import { Camera, cameraFromPhoto, formatCameraText } from '.';
 import {
   absolutePathForCamera,
@@ -23,16 +28,25 @@ export const descriptionForCameraPhotos = (
   photos: Photo[],
   dateBased?: boolean,
   explicitCount?: number,
+  explicitDateRange?: PhotoDateRange,
 ) =>
-  descriptionForPhotoSet(photos, undefined, dateBased, explicitCount);
+  descriptionForPhotoSet(
+    photos,
+    undefined,
+    dateBased,
+    explicitCount,
+    explicitDateRange,
+  );
 
 export const generateMetaForCamera = (
   camera: Camera,
   photos: Photo[],
   explicitCount?: number,
+  explicitDateRange?: PhotoDateRange,
 ) => ({
   url: absolutePathForCamera(camera),
   title: titleForCamera(camera, photos, explicitCount),
-  description: descriptionForCameraPhotos(photos, true, explicitCount),
+  description:
+    descriptionForCameraPhotos(photos, true, explicitCount, explicitDateRange),
   images: absolutePathForCameraImage(camera),
 });

@@ -1,5 +1,5 @@
 import AnimateItems from '@/components/AnimateItems';
-import { Photo } from '.';
+import { Photo, PhotoDateRange } from '.';
 import PhotoLarge from './PhotoLarge';
 import SiteGrid from '@/components/SiteGrid';
 import PhotoGrid from './PhotoGrid';
@@ -15,12 +15,16 @@ export default function PhotoDetailPage({
   photosGrid,
   tag,
   camera,
+  count,
+  dateRange,
 }: {
   photo: Photo
   photos: Photo[]
   photosGrid?: Photo[]
   tag?: string
   camera?: Camera
+  count?: number
+  dateRange?: PhotoDateRange
 }) {
   return (
     <div>
@@ -40,10 +44,11 @@ export default function PhotoDetailPage({
           className="mt-4 mb-8"
           contentMain={
             <CameraHeader
-              key={tag}
               camera={camera}
               photos={photos}
               selectedPhoto={photo}
+              count={count}
+              dateRange={dateRange}
             />}
         />}
       <AnimateItems

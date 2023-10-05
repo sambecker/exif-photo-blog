@@ -1,16 +1,13 @@
-import { getPhotosCached, getPhotosCountCameraCached } from '@/cache';
-import SiteGrid from '@/components/SiteGrid';
-import CameraHeader from '@/camera/CameraHeader';
 import { getMakeModelFromCameraString } from '@/camera';
-import PhotoGrid from '@/photo/PhotoGrid';
 import { Metadata } from 'next';
 import { generateMetaForCamera } from '@/camera/meta';
 import { GRID_THUMBNAILS_TO_SHOW_MAX } from '@/photo';
-import { pathForCamera } from '@/site/paths';
+import { PaginationParams } from '@/site/pagination';
 import {
-  PaginationParams,
-  getPaginationForSearchParams,
-} from '@/site/pagination';
+  getPhotosCameraDataCached,
+  getPhotosCameraDataCachedWithPagination,
+} from '@/camera/data';
+import CameraOverview from '@/camera/CameraOverview';
 
 export const runtime = 'edge';
 
@@ -26,17 +23,18 @@ export async function generateMetadata({
   const [
     photos,
     count,
-  ] = await Promise.all([
-    getPhotosCached({ camera, limit: GRID_THUMBNAILS_TO_SHOW_MAX }),
-    getPhotosCountCameraCached(camera),
-  ]);
+    dateRange,
+  ] = await getPhotosCameraDataCached({
+    camera,
+    limit: GRID_THUMBNAILS_TO_SHOW_MAX,
+  });
 
   const {
     url,
     title,
     description,
     images,
-  } = generateMetaForCamera(camera, photos, count);
+  } = generateMetaForCamera(camera, photos, count, dateRange);
 
   return {
     title,
@@ -61,27 +59,17 @@ export default async function CameraPage({
 }: CameraProps & PaginationParams) {
   const camera = getMakeModelFromCameraString(params.camera);
 
-  const { offset, limit } = getPaginationForSearchParams(searchParams);
-  
-  const [
+  const {
     photos,
     count,
-  ] = await Promise.all([
-    getPhotosCached({ camera, limit }),
-    getPhotosCountCameraCached(camera),
-  ]);
-
-  const showMorePath = count > photos.length
-    ? pathForCamera(camera, offset + 1)
-    : undefined;
+    showMorePath,
+    dateRange,
+  } = await getPhotosCameraDataCachedWithPagination({
+    camera,
+    searchParams,
+  });
 
   return (
-    <SiteGrid
-      key="Camera Grid"
-      contentMain={<div className="space-y-8 mt-4">
-        <CameraHeader {...{ camera, photos, count }} />
-        <PhotoGrid {...{ photos, camera, showMorePath }} />
-      </div>}
-    />
+    <CameraOverview {...{ camera, photos, count, dateRange, showMorePath }} />
   );
 }

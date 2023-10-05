@@ -1,10 +1,10 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion } from 'framer-motion';
+import { Variant, motion } from 'framer-motion';
 import { useAppState } from '@/state';
 
-export type AnimationType = 'none' | 'scale' | 'left' | 'right';
+export type AnimationType = 'none' | 'scale' | 'left' | 'right' | 'bottom';
 
 export interface AnimationConfig {
   type?: AnimationType
@@ -58,7 +58,7 @@ function AnimateItems({
     ? (nextPhotoAnimationInitial.current?.duration ?? duration)
     : duration;
 
-  const getInitialVariant = () => {
+  const getInitialVariant = (): Variant => {
     switch (typeResolved) {
     case 'left': return {
       opacity: 0,
@@ -67,6 +67,10 @@ function AnimateItems({
     case 'right': return {
       opacity: 0,
       transform: `translateX(${-distanceOffset}px)`,
+    };
+    case 'bottom': return {
+      opacity: 0,
+      transform: `translateY(${distanceOffset}px)`,
     };
     default: return {
       opacity: 0,
@@ -98,7 +102,6 @@ function AnimateItems({
         <motion.div
           key={index}
           className={classNameItem}
-          // style={getInitialVariant()}
           variants={{
             hidden: getInitialVariant(),
             show: {

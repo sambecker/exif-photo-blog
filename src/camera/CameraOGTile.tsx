@@ -1,4 +1,4 @@
-import { Photo } from '@/photo';
+import { Photo, PhotoDateRange } from '@/photo';
 import { absolutePathForCameraImage, pathForCamera } from '@/site/paths';
 import OGTile from '@/components/OGTile';
 import { Camera } from '.';
@@ -15,6 +15,7 @@ export default function CameraOGTile({
   onFail,
   retryTime,
   count,
+  dateRange,
 }: {
   camera: Camera
   photos: Photo[]
@@ -24,11 +25,12 @@ export default function CameraOGTile({
   riseOnHover?: boolean
   retryTime?: number
   count?: number
+  dateRange?: PhotoDateRange
 }) {
   return (
     <OGTile {...{
       title: titleForCamera(camera, photos, count),
-      description: descriptionForCameraPhotos(photos, true, count),
+      description: descriptionForCameraPhotos(photos, true, count, dateRange),
       path: pathForCamera(camera),
       pathImageAbsolute: absolutePathForCameraImage(camera),
       loadingState: loadingStateExternal,

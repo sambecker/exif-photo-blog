@@ -1,5 +1,5 @@
 import { cc } from '@/utility/css';
-import { Photo, dateRangeForPhotos } from '.';
+import { Photo, PhotoDateRange, dateRangeForPhotos } from '.';
 import ShareButton from '@/components/ShareButton';
 
 export default function PhotoHeader({
@@ -10,6 +10,7 @@ export default function PhotoHeader({
   selectedPhoto,
   sharePath,
   count,
+  dateRange,
 }: {
   entity: JSX.Element
   entityVerb: string
@@ -18,8 +19,9 @@ export default function PhotoHeader({
   selectedPhoto?: Photo
   sharePath: string
   count?: number
+  dateRange?: PhotoDateRange
 }) {
-  const { start, end } = dateRangeForPhotos(photos);
+  const { start, end } = dateRangeForPhotos(photos, dateRange);
 
   const selectedPhotoIndex = selectedPhoto
     ? photos.findIndex(photo => photo.id === selectedPhoto.id)

@@ -4,8 +4,12 @@ import { getPhotos, getUniqueTags } from '@/services/postgres';
 import { PATH_ROOT } from '@/site/paths';
 import { redirect } from 'next/navigation';
 
+interface PhotoTagProps {
+  params: { photoId: string, tag: string }
+}
+
 export async function generateStaticParams() {
-  const params: { params: { photoId: string, tag: string }}[] = [];
+  const params: PhotoTagProps[] = [];
 
   const tags = await getUniqueTags();
   tags.forEach(async tag => {
@@ -20,9 +24,7 @@ export async function generateStaticParams() {
 
 export default async function Share({
   params: { photoId, tag },
-}: {
-  params: { photoId: string, tag: string }
-}) {
+}: PhotoTagProps) {
   const photo = await getPhotoCached(photoId);
 
   if (!photo) { return redirect(PATH_ROOT); }

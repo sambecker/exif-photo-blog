@@ -1,4 +1,9 @@
-import { Photo, descriptionForPhotoSet, photoQuantityText } from '@/photo';
+import {
+  Photo,
+  PhotoDateRange,
+  descriptionForPhotoSet,
+  photoQuantityText,
+} from '@/photo';
 import { absolutePathForTag, absolutePathForTagImage } from '@/site/paths';
 import { capitalizeWords } from '@/utility/string';
 
@@ -15,16 +20,25 @@ export const descriptionForTaggedPhotos = (
   photos: Photo[],
   dateBased?: boolean,
   explicitCount?: number,
+  explicitDateRange?: PhotoDateRange,
 ) =>
-  descriptionForPhotoSet(photos, 'tagged', dateBased, explicitCount);
+  descriptionForPhotoSet(
+    photos,
+    'tagged',
+    dateBased,
+    explicitCount,
+    explicitDateRange,
+  );
 
 export const generateMetaForTag = (
   tag: string,
   photos: Photo[],
   explicitCount?: number,
+  explicitDateRange?: PhotoDateRange,
 ) => ({
   url: absolutePathForTag(tag),
   title: titleForTag(tag, photos, explicitCount),
-  description: descriptionForTaggedPhotos(photos, true),
+  description:
+    descriptionForTaggedPhotos(photos, true, explicitCount, explicitDateRange),
   images: absolutePathForTagImage(tag),
 });

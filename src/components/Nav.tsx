@@ -47,8 +47,7 @@ export default function Nav({ showTextLinks }: { showTextLinks?: boolean }) {
     <SiteGrid
       contentMain={
         <AnimateItems
-          type={!shouldAnimate ? 'none' : undefined}
-          scaleOffset={1}
+          type={!shouldAnimate ? 'none' : 'bottom'}
           distanceOffset={10}
           items={showNav
             ? [<div

@@ -4,22 +4,25 @@ import {
   getPhoto,
   getPhotos,
   getPhotosCount,
-  getPhotosCountCamera,
+  getPhotosCameraCount,
   getPhotosCountIncludingHidden,
-  getPhotosCountTag,
+  getPhotosTagCount,
   getUniqueCameras,
   getUniqueTags,
+  getPhotosTagDateRange,
+  getPhotosCameraDateRange,
 } from '@/services/postgres';
 import { parseCachedPhotosDates, parseCachedPhotoDates } from '@/photo';
 import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
 import { AuthSession } from 'next-auth';
 import { Camera, createCameraKey } from '@/camera';
 
-const TAG_PHOTOS        = 'photos';
-const TAG_PHOTOS_COUNT  = 'photos-count';
-const TAG_TAGS          = 'tags';
-const TAG_CAMERAS       = 'cameras';
-const TAG_BLOB          = 'blob';
+const TAG_PHOTOS            = 'photos';
+const TAG_PHOTOS_COUNT      = `${TAG_PHOTOS}-count`;
+const TAG_PHOTOS_DATE_RANGE = `${TAG_PHOTOS}-date-range`;;
+const TAG_TAGS              = 'tags';
+const TAG_CAMERAS           = 'cameras';
+const TAG_BLOB              = 'blob';
 
 // eslint-disable-next-line max-len
 const getPhotosCacheTagForKey = (
@@ -69,6 +72,12 @@ const getPhotoTagCountTag = (tag: string) =>
 const getPhotoCameraCountTag = ({ make, model }: Camera) =>
   `${TAG_PHOTOS_COUNT}-${TAG_CAMERAS}-${createCameraKey(make, model)}`;
 
+const getPhotoTagDateRangeTag = (tag: string) =>
+  `${TAG_PHOTOS_DATE_RANGE}-${TAG_TAGS}-${tag}`;
+
+const getPhotoCameraDateRangeTag = ({ make, model }: Camera) =>
+  `${TAG_PHOTOS_DATE_RANGE}-${TAG_CAMERAS}-${createCameraKey(make, model)}`;
+
 export const revalidatePhotosTag = () =>
   revalidateTag(TAG_PHOTOS);
 
@@ -109,23 +118,6 @@ export const getPhotosCountCached: typeof getPhotosCount = (...args) =>
     }
   )();
 
-export const getPhotosCountTagCached: typeof getPhotosCountTag = (...args) =>
-  unstable_cache(
-    () => getPhotosCountTag(...args),
-    [TAG_PHOTOS, getPhotoTagCountTag(...args)], {
-      tags: [TAG_PHOTOS, getPhotoTagCountTag(...args)],
-    }
-  )();
-
-// eslint-disable-next-line max-len
-export const getPhotosCountCameraCached: typeof getPhotosCountCamera = (...args) =>
-  unstable_cache(
-    () => getPhotosCountCamera(...args),
-    [TAG_PHOTOS, getPhotoCameraCountTag(...args)], {
-      tags: [TAG_PHOTOS, getPhotoCameraCountTag(...args)],
-    }
-  )();
-
 export const getPhotosCountIncludingHiddenCached: typeof getPhotosCount =
   (...args) =>
     unstable_cache(
@@ -134,6 +126,41 @@ export const getPhotosCountIncludingHiddenCached: typeof getPhotosCount =
         tags: [TAG_PHOTOS, TAG_PHOTOS_COUNT],
       }
     )();
+
+export const getPhotosTagCountCached: typeof getPhotosTagCount = (...args) =>
+  unstable_cache(
+    () => getPhotosTagCount(...args),
+    [TAG_PHOTOS, getPhotoTagCountTag(...args)], {
+      tags: [TAG_PHOTOS, getPhotoTagCountTag(...args)],
+    }
+  )();
+
+// eslint-disable-next-line max-len
+export const getPhotosCameraCountCached: typeof getPhotosCameraCount = (...args) =>
+  unstable_cache(
+    () => getPhotosCameraCount(...args),
+    [TAG_PHOTOS, getPhotoCameraCountTag(...args)], {
+      tags: [TAG_PHOTOS, getPhotoCameraCountTag(...args)],
+    }
+  )();
+
+// eslint-disable-next-line max-len
+export const getPhotosTagDateRangeCached: typeof getPhotosTagDateRange = (...args) =>
+  unstable_cache(
+    () => getPhotosTagDateRange(...args),
+    [TAG_PHOTOS, getPhotoTagDateRangeTag(...args)], {
+      tags: [TAG_PHOTOS, getPhotoTagDateRangeTag(...args)],
+    }
+  )();
+
+// eslint-disable-next-line max-len
+export const getPhotosCameraDateRangeCached: typeof getPhotosCameraDateRange = (...args) =>
+  unstable_cache(
+    () => getPhotosCameraDateRange(...args),
+    [TAG_PHOTOS, getPhotoCameraDateRangeTag(...args)], {
+      tags: [TAG_PHOTOS, getPhotoCameraDateRangeTag(...args)],
+    }
+  )();
 
 export const getPhotoCached: typeof getPhoto = (...args) =>
   unstable_cache(

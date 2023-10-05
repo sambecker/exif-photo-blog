@@ -10,9 +10,14 @@ import {
   absolutePathForPhotoImage,
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotoCached, getPhotosCached } from '@/cache';
-import { getPhotos, getUniqueCameras } from '@/services/postgres';
+import { getPhotoCached } from '@/cache';
+import {
+  getPhotos,
+  getUniqueCameras,
+} from '@/services/postgres';
 import { cameraFromPhoto } from '@/camera';
+import { getPhotosCameraDataCached } from '@/camera/data';
+import { ReactNode } from 'react';
 
 interface PhotoCameraProps {
   params: { photoId: string, camera: string }
@@ -69,19 +74,21 @@ export async function generateMetadata({
 export default async function PhotoCameraPage({
   params: { photoId, camera: cameraProp },
   children,
-}: PhotoCameraProps & {
-  children: React.ReactNode
-}) {
+}: PhotoCameraProps & { children: ReactNode }) {
   const photo = await getPhotoCached(photoId);
 
   if (!photo) { redirect(PATH_ROOT); }
 
   const camera = cameraFromPhoto(photo, cameraProp);
 
-  const photos = await getPhotosCached({ camera });
+  const [
+    photos,
+    count,
+    dateRange,
+  ] = await getPhotosCameraDataCached({ camera });
 
   return <>
     {children}
-    <PhotoDetailPage {...{ photo, photos, camera }} />
+    <PhotoDetailPage {...{ photo, photos, camera, count, dateRange }} />
   </>;
 }
