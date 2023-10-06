@@ -31,7 +31,7 @@ export default async function AdminPhotosPage() {
                     action={deletePhotoTagGloballyAction}
                     confirmText={
                       // eslint-disable-next-line max-len
-                      `Are you sure you want to remove "${tag}?" from ${photoQuantityText(count, false)}?`}
+                      `Are you sure you want to remove "${tag}?" from ${photoQuantityText(count, false).toLowerCase()}?`}
                   >
                     <input type="hidden" name="tag" value={tag} />
                     <DeleteButton />
