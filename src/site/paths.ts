@@ -122,19 +122,19 @@ export const isPathPhoto = (pathname = '') =>
 export const isPathPhotoShare = (pathname = '') =>
   new RegExp(`^${PREFIX_PHOTO}/[^/]+/${SHARE}/?$`).test(pathname);
 
-// t/[tag]
+// tag/[tag]
 export const isPathTag = (pathname = '') =>
   new RegExp(`^${PREFIX_TAG}/[^/]+/?$`).test(pathname);
 
-// t/[tag]/share
+// tag/[tag]/share
 export const isPathTagShare = (pathname = '') =>
   new RegExp(`^${PREFIX_TAG}/[^/]+/${SHARE}/?$`).test(pathname);
 
-// t/[tag]/[photoId]
+// tag/[tag]/[photoId]
 export const isPathTagPhoto = (pathname = '') =>
   new RegExp(`^${PREFIX_TAG}/[^/]+/[^/]+/?$`).test(pathname);
 
-// t/[tag]/[photoId]/share
+// tag/[tag]/[photoId]/share
 export const isPathTagPhotoShare = (pathname = '') =>
   new RegExp(`^${PREFIX_TAG}/[^/]+/[^/]+/${SHARE}/?$`).test(pathname);
 
@@ -172,16 +172,16 @@ export const getPathComponents = (pathname = ''): {
   tag?: string
   camera?: Camera
 } => {
-  // eslint-disable-next-line max-len
-  const photoIdFromPhoto = pathname.match(new RegExp(`^${PREFIX_PHOTO}/([^/]+)`))?.[1];
-  // eslint-disable-next-line max-len
-  const photoIdFromTag = pathname.match(new RegExp(`^${PREFIX_TAG}/[^/]+/((?!${SHARE})[^/]+)`))?.[1];
-  // eslint-disable-next-line max-len
-  const photoIdFromCamera = pathname.match(new RegExp(`^${PREFIX_CAMERA}/[^/]+/((?!${SHARE})[^/]+)`))?.[1];
-  // eslint-disable-next-line max-len
-  const tag = pathname.match(new RegExp(`^${PREFIX_TAG}/([^/]+)`))?.[1];
-  // eslint-disable-next-line max-len
-  const cameraString = pathname.match(new RegExp(`^${PREFIX_CAMERA}/([^/]+)`))?.[1];
+  const photoIdFromPhoto = pathname.match(
+    new RegExp(`^${PREFIX_PHOTO}/([^/]+)`))?.[1];
+  const photoIdFromTag = pathname.match(
+    new RegExp(`^${PREFIX_TAG}/[^/]+/((?!${SHARE})[^/]+)`))?.[1];
+  const photoIdFromCamera = pathname.match(
+    new RegExp(`^${PREFIX_CAMERA}/[^/]+/((?!${SHARE})[^/]+)`))?.[1];
+  const tag = pathname.match(
+    new RegExp(`^${PREFIX_TAG}/([^/]+)`))?.[1];
+  const cameraString = pathname.match(
+    new RegExp(`^${PREFIX_CAMERA}/([^/]+)`))?.[1];
 
   const camera = cameraString
     ? getCameraFromKey(cameraString)
