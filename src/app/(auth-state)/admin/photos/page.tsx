@@ -1,4 +1,4 @@
-import { Fragment, ReactNode } from 'react';
+import { Fragment } from 'react';
 import PhotoUploadInput from '@/photo/PhotoUploadInput';
 import Link from 'next/link';
 import PhotoTiny from '@/photo/PhotoTiny';
@@ -11,7 +11,6 @@ import {
   deleteBlobPhotoAction,
   syncCacheAction,
 } from '@/photo/actions';
-import { FaRegEdit } from 'react-icons/fa';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import { pathForBlobUrl } from '@/services/blob';
 import {
@@ -33,12 +32,17 @@ import {
   PaginationParams,
   getPaginationForSearchParams,
 } from '@/site/pagination';
+import AdminGrid from '@/admin/AdminGrid';
+import DeleteButton from '@/admin/DeleteButton';
+import EditButton from '@/admin/EditButton';
 
 export const runtime = 'edge';
 
 const DEBUG_PHOTO_BLOBS = false;
 
-export default async function AdminPage({ searchParams }: PaginationParams) {
+export default async function AdminTagsPage({
+  searchParams,
+}: PaginationParams) {
   const { offset, limit } = getPaginationForSearchParams(searchParams);
 
   const [
@@ -85,7 +89,7 @@ export default async function AdminPage({ searchParams }: PaginationParams) {
               label={`Photos Files (${blobPhotoUrls.length})`}
             />}
           <div className="space-y-4">
-            <AdminGrid title={`Photos (${count})`}>
+            <AdminGrid>
               {photos.map(photo =>
                 <Fragment key={photo.id}>
                   <PhotoTiny
@@ -147,59 +151,6 @@ export default async function AdminPage({ searchParams }: PaginationParams) {
         </div>}
     />
   );
-}
-
-function AdminGrid ({
-  title,
-  children,
-}: {
-  title: string,
-  children: ReactNode,
-}) {
-  return <div className="space-y-4">
-    <div className="font-bold">
-      {title}
-    </div>
-    <div className="min-w-[14rem] overflow-x-scroll">
-      <div className={cc(
-        'w-full',
-        'grid grid-cols-[auto_1fr_auto_auto] ',
-        'gap-2 sm:gap-3 items-center',
-      )}>
-        {children}
-      </div>
-    </div>
-  </div>;
-}
-
-function EditButton ({
-  href,
-  label = 'Edit',
-}: {
-  href: string,
-  label?: string,
-}) {
-  return (
-    <Link
-      title="Edit"
-      href={href}
-      className="button"
-    >
-      <FaRegEdit className="translate-y-[-0.5px]" />
-      <span className="hidden sm:inline-block">
-        {label}
-      </span>
-    </Link>
-  );
-}
-
-function DeleteButton () {
-  return <SubmitButtonWithStatus
-    title="Delete"
-    icon={<span className="inline-flex text-[18px]">×</span>}
-  >
-    Delete
-  </SubmitButtonWithStatus>;
 }
 
 function BlobUrls ({
