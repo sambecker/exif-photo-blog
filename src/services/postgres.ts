@@ -283,6 +283,17 @@ const sqlGetUniqueTags = async () => sql`
   ORDER BY tag ASC
 `.then(({ rows }) => rows.map(row => row.tag as string));
 
+// Include hidden photos for admin usage
+const sqlGetUniqueTagsWithCount = async () => sql`
+  SELECT DISTINCT unnest(tags) as tag, count(distinct id) as count FROM photos
+  GROUP BY tag
+  ORDER BY count ASC
+`.then(({ rows }) => rows.map(row => ({
+    tag: row.tag as string,
+    count: parseInt(row.count, 10),
+  })));
+
+
 const sqlGetUniqueCameras = async () => sql`
   SELECT DISTINCT make||' '||model as camera, make, model FROM photos
   WHERE hidden IS NOT TRUE
@@ -390,6 +401,9 @@ export const getPhotosCameraDateRange = (camera: Camera) =>
 export const getPhotosCountIncludingHidden = () =>
   safelyQueryPhotos(sqlGetPhotosCountIncludingHidden);
 
-export const getUniqueTags = () => safelyQueryPhotos(sqlGetUniqueTags);
+export const getUniqueTags = () =>
+  safelyQueryPhotos(sqlGetUniqueTags);
+export const getUniqueTagsWithCount = () =>
+  safelyQueryPhotos(sqlGetUniqueTagsWithCount);
 
 export const getUniqueCameras = () => safelyQueryPhotos(sqlGetUniqueCameras);

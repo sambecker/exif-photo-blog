@@ -157,8 +157,10 @@ export const titleForPhoto = (photo: Photo) =>
 const photoLabelForCount = (count: number) =>
   count === 1 ? 'Photo' : 'Photos';
 
-export const photoQuantityText = (count: number) =>
-  `(${count} ${photoLabelForCount(count)})`;
+export const photoQuantityText = (count: number, includeParentheses = true) =>
+  includeParentheses
+    ? `(${count} ${photoLabelForCount(count)})`
+    : `${count} ${photoLabelForCount(count)}`;  
 
 export type PhotoDateRange = { start: string, end: string };
 

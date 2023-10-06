@@ -1,15 +1,16 @@
 import FormWithConfirm from '@/components/FormWithConfirm';
 import SiteGrid from '@/components/SiteGrid';
 import { deletePhotoTagGloballyAction } from '@/photo/actions';
-import { getUniqueTagsCached } from '@/cache';
 import AdminGrid from '@/admin/AdminGrid';
 import { Fragment } from 'react';
 import DeleteButton from '@/admin/DeleteButton';
+import { photoQuantityText } from '@/photo';
+import { getUniqueTagsWithCountCached } from '@/cache';
 
 export const runtime = 'edge';
 
 export default async function AdminPhotosPage() {
-  const tags = await getUniqueTagsCached();
+  const tags = await getUniqueTagsWithCountCached();
 
   return (
     <SiteGrid
@@ -17,18 +18,19 @@ export default async function AdminPhotosPage() {
         <div className="space-y-6">
           <div className="space-y-4">
             <AdminGrid>
-              {tags.map(tag =>
+              {tags.map(({ tag, count }) =>
                 <Fragment key={tag}>
-                  <div className="flex-grow w-full">
+                  <div>
                     {tag}
                   </div>
-                  <div />
-                  <div />
+                  <div className="text-dim">
+                    {photoQuantityText(count, false)}
+                  </div>
                   <FormWithConfirm
                     action={deletePhotoTagGloballyAction}
                     confirmText={
                       // eslint-disable-next-line max-len
-                      `Are you sure you want to remove "${tag}?" from all photos?`}
+                      `Are you sure you want to remove "${tag}?" from ${photoQuantityText(count, false)}?`}
                   >
                     <input type="hidden" name="tag" value={tag} />
                     <DeleteButton />
