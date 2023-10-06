@@ -1,13 +1,18 @@
 import { auth } from './auth';
 import { NextRequest, NextResponse } from 'next/server';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { PREFIX_PHOTO, PREFIX_TAG } from './site/paths';
+import {
+  PATH_ADMIN,
+  PATH_ADMIN_PHOTOS,
+  PREFIX_PHOTO,
+  PREFIX_TAG,
+} from './site/paths';
 
 export default function middleware(req: NextRequest, res:NextResponse) {
   const pathname = req.nextUrl.pathname;
 
-  if (pathname === '/admin') {
-    return NextResponse.redirect(new URL('/admin/photos', req.url));
+  if (pathname === PATH_ADMIN) {
+    return NextResponse.redirect(new URL(PATH_ADMIN_PHOTOS, req.url));
   } else if (/^\/photos\/(.)+$/.test(pathname)) {
     // Accept /photos/* paths, but serve /p/*
     const matches = pathname.match(/^\/photos\/(.+)$/);

@@ -1,9 +1,9 @@
 export const convertStringToArray = (
   string?: string,
-  parameterize = true,
+  shouldParameterize = true,
 ) => string
-  ? string.split(',').map(tag => parameterize
-    ? tag.trim().replaceAll(' ', '-').toLowerCase()
+  ? string.split(',').map(tag => shouldParameterize
+    ? parameterize(tag)
     : tag.trim())
   : undefined;
 
@@ -19,5 +19,5 @@ export const capitalizeWords = (string: string) =>
 export const parameterize = (string: string) =>
   string
     .trim()
-    .replaceAll(' ', '-')
+    .replaceAll(/\s+/g, '-')
     .toLowerCase();

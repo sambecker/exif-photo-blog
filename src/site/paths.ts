@@ -28,6 +28,7 @@ export const PATH_ADMIN_UPLOAD_BLOB = `${PATH_ADMIN_UPLOAD}/blob`;
 // Modifiers
 const SHARE = 'share';
 const NEXT  = 'next';
+const EDIT  = 'edit';
 
 // Absolute paths
 export const ABSOLUTE_PATH_FOR_HOME_IMAGE = `${BASE_URL}/home-image`;
@@ -43,6 +44,12 @@ export const pathForGrid = (next?: number) =>
 
 export const pathForAdminPhotos = (next?: number) =>
   pathWithNext(PATH_ADMIN_PHOTOS, next);
+
+export const pathForAdminPhotoEdit = (photo: PhotoOrPhotoId) =>
+  `${PATH_ADMIN_PHOTOS}/${getPhotoId(photo)}/${EDIT}`;
+
+export const pathForAdminTagEdit = (tag: string) =>
+  `${PATH_ADMIN_TAGS}/${tag}/${EDIT}`;
 
 export const pathForOg = (next?: number) =>
   pathWithNext(PATH_OG, next);
@@ -69,9 +76,6 @@ export const pathForPhotoShare = (
   camera?: Camera,
 ) =>
   `${pathForPhoto(photo, tag, camera)}/${SHARE}`;
-
-export const pathForPhotoEdit = (photo: PhotoOrPhotoId) =>
-  `${PATH_ADMIN_PHOTOS}/${getPhotoId(photo)}/edit`;
 
 export const pathForTag = (tag: string, next?: number) =>
   pathWithNext(

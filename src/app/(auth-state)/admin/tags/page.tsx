@@ -8,6 +8,8 @@ import { photoQuantityText } from '@/photo';
 import { getUniqueTagsWithCountCached } from '@/cache';
 import PhotoTag from '@/tag/PhotoTag';
 import { formatTag } from '@/tag';
+import EditButton from '@/admin/EditButton';
+import { pathForAdminTagEdit } from '@/site/paths';
 
 export const runtime = 'edge';
 
@@ -28,7 +30,7 @@ export default async function AdminPhotosPage() {
                   <div className="text-dim uppercase">
                     {photoQuantityText(count, false)}
                   </div>
-                  <div />
+                  <EditButton href={pathForAdminTagEdit(tag)} />
                   <FormWithConfirm
                     action={deletePhotoTagGloballyAction}
                     confirmText={

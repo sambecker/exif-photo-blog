@@ -16,7 +16,7 @@ import { pathForBlobUrl } from '@/services/blob';
 import {
   pathForAdminPhotos,
   pathForPhoto,
-  pathForPhotoEdit,
+  pathForAdminPhotoEdit,
 } from '@/site/paths';
 import { titleForPhoto } from '@/photo';
 import MorePhotos from '@/components/MorePhotos';
@@ -132,7 +132,7 @@ export default async function AdminTagsPage({
                       {photo.takenAtNaive}
                     </div>
                   </div>
-                  <EditButton href={pathForPhotoEdit(photo)} />
+                  <EditButton href={pathForAdminPhotoEdit(photo)} />
                   <FormWithConfirm
                     action={deletePhotoAction}
                     confirmText={

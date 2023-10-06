@@ -139,10 +139,10 @@ export const sqlDeletePhotoTagGlobally = (tag: string) =>
     WHERE ${tag}=ANY(tags)
   `;
 
-export const sqlRenamePhotoTagGlobally = (tag: string, newTag: string) =>
+export const sqlRenamePhotoTagGlobally = (tag: string, updatedTag: string) =>
   sql`
     UPDATE photos
-    SET tags=ARRAY_REPLACE(tags, ${tag}, ${newTag})
+    SET tags=ARRAY_REPLACE(tags, ${tag}, ${updatedTag})
     WHERE ${tag}=ANY(tags)
   `;
 

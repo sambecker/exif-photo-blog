@@ -20,7 +20,7 @@ export default function AdminNav({
     <SiteGrid
       contentMain={
         <div className={cc(
-          'border-b border-gray-900 pb-2',
+          'border-b border-gray-800 pb-3',
         )}>
           <div className={cc(
             'flex gap-2 md:gap-4',
