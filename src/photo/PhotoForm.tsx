@@ -12,6 +12,7 @@ import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
 import { cc } from '@/utility/css';
 import CanvasBlurCapture from '@/components/CanvasBlurCapture';
+import { PATH_ADMIN_PHOTOS } from '@/site/paths';
 
 const THUMBNAIL_WIDTH = 300;
 const THUMBNAIL_HEIGHT = 200;
@@ -108,11 +109,11 @@ export default function PhotoForm({
             readOnly
             hidden
           />}
-        <div className="flex gap-4">
+        <div className="flex gap-3">
           {type === 'edit' &&
             <Link
               className="button"
-              href="/admin/photos"
+              href={PATH_ADMIN_PHOTOS}
             >
               Cancel
             </Link>}

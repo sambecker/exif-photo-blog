@@ -27,7 +27,7 @@ export default function HeaderList({
           {title}
         </div>,
       ].concat(items)}
-      classNameItem="text-gray-400 dark:text-gray-500"
+      classNameItem="text-dim"
     />
   );
 }

@@ -7,12 +7,15 @@ import {
 import { absolutePathForTag, absolutePathForTagImage } from '@/site/paths';
 import { capitalizeWords } from '@/utility/string';
 
+export const formatTag = (tag: string) =>
+  capitalizeWords(tag.replaceAll('-', ' '));
+
 export const titleForTag = (
   tag: string,
   photos:Photo[],
   explicitCount?: number,
 ) => [
-  capitalizeWords(tag.replaceAll('-', ' ')),
+  formatTag(tag),
   photoQuantityText(explicitCount ?? photos.length),
 ].join(' ');
 

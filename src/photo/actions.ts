@@ -5,6 +5,7 @@ import {
   sqlInsertPhoto,
   sqlDeletePhotoTagGlobally,
   sqlUpdatePhoto,
+  sqlRenamePhotoTagGlobally,
 } from '@/services/postgres';
 import { convertFormDataToPhoto } from './form';
 import { redirect } from 'next/navigation';
@@ -19,6 +20,7 @@ import {
 } from '@/cache';
 import { IS_PRO_MODE } from '@/site/config';
 import { getNextImageUrlForRequest } from '@/utility/image';
+import { PATH_ADMIN_PHOTOS, PATH_ADMIN_TAGS } from '@/site/paths';
 
 export async function createPhotoAction(formData: FormData) {
   const requestOrigin = formData.get('requestOrigin') as string | undefined;
@@ -41,7 +43,7 @@ export async function createPhotoAction(formData: FormData) {
 
   revalidateAllKeys();
 
-  redirect('/admin/photos');
+  redirect(PATH_ADMIN_PHOTOS);
 }
 
 export async function updatePhotoAction(formData: FormData) {
@@ -51,7 +53,7 @@ export async function updatePhotoAction(formData: FormData) {
 
   revalidatePhotosKey();
 
-  redirect('/admin/photos');
+  redirect(PATH_ADMIN_PHOTOS);
 }
 
 export async function deletePhotoAction(formData: FormData) {
@@ -69,6 +71,17 @@ export async function deletePhotoTagGloballyAction(formData: FormData) {
   await sqlDeletePhotoTagGlobally(tag);
 
   revalidatePhotosKey();
+}
+
+export async function renamePhotoTagGloballyAction(formData: FormData) {
+  const tag = formData.get('tag') as string;
+  const updatedTag = formData.get('updatedTag') as string;
+
+  if (tag && updatedTag && tag !== updatedTag) {
+    await sqlRenamePhotoTagGlobally(tag, updatedTag);
+    revalidatePhotosKey();
+    redirect(PATH_ADMIN_TAGS);
+  }
 }
 
 export async function deleteBlobPhotoAction(formData: FormData) {

@@ -35,7 +35,7 @@ export default function PhotoHeader({
       {entity}
       <span className={cc(
         'inline-flex gap-2 items-center self-start',
-        'uppercase text-gray-400 dark:text-gray-500',
+        'uppercase text-dim',
         'sm:col-span-2 md:col-span-1 lg:col-span-2',
       )}>
         {selectedPhotoIndex !== undefined
@@ -48,7 +48,7 @@ export default function PhotoHeader({
       <span className={cc(
         'hidden sm:inline-block',
         'text-right uppercase',
-        'text-gray-400 dark:text-gray-500',
+        'text-dim',
       )}>
         {start === end
           ? start

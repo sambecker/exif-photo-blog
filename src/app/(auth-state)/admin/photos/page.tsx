@@ -1,4 +1,4 @@
-import { Fragment, ReactNode } from 'react';
+import { Fragment } from 'react';
 import PhotoUploadInput from '@/photo/PhotoUploadInput';
 import Link from 'next/link';
 import PhotoTiny from '@/photo/PhotoTiny';
@@ -11,13 +11,12 @@ import {
   deleteBlobPhotoAction,
   syncCacheAction,
 } from '@/photo/actions';
-import { FaRegEdit } from 'react-icons/fa';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import { pathForBlobUrl } from '@/services/blob';
 import {
   pathForAdminPhotos,
   pathForPhoto,
-  pathForPhotoEdit,
+  pathForAdminPhotoEdit,
 } from '@/site/paths';
 import { titleForPhoto } from '@/photo';
 import MorePhotos from '@/components/MorePhotos';
@@ -33,12 +32,17 @@ import {
   PaginationParams,
   getPaginationForSearchParams,
 } from '@/site/pagination';
+import AdminGrid from '@/admin/AdminGrid';
+import DeleteButton from '@/admin/DeleteButton';
+import EditButton from '@/admin/EditButton';
 
 export const runtime = 'edge';
 
 const DEBUG_PHOTO_BLOBS = false;
 
-export default async function AdminPage({ searchParams }: PaginationParams) {
+export default async function AdminTagsPage({
+  searchParams,
+}: PaginationParams) {
   const { offset, limit } = getPaginationForSearchParams(searchParams);
 
   const [
@@ -58,150 +62,95 @@ export default async function AdminPage({ searchParams }: PaginationParams) {
   return (
     <SiteGrid
       contentMain={
-        <div className="mt-4 space-y-4">
-          <div className="space-y-8">
-            <div className="flex items-center">
-              <div className="flex-grow">
-                <PhotoUploadInput />
-              </div>
-              <form
-                className="hidden md:block"
-                action={syncCacheAction}
+        <div className="space-y-6">
+          <div className="flex items-center">
+            <div className="flex-grow">
+              <PhotoUploadInput />
+            </div>
+            <form
+              className="hidden md:block"
+              action={syncCacheAction}
+            >
+              <SubmitButtonWithStatus
+                icon={<BiTrash />}
               >
-                <SubmitButtonWithStatus
-                  icon={<BiTrash />}
-                >
-                  Clear Cache
-                </SubmitButtonWithStatus>
-              </form>
-            </div>
-            {blobUploadUrls.length > 0 &&
-              <BlobUrls
-                blobUrls={blobUploadUrls}
-                label={`Uploads Files (${blobUploadUrls.length})`}
-              />}
-            {blobPhotoUrls.length > 0 &&
-              <BlobUrls
-                blobUrls={blobPhotoUrls}
-                label={`Photos Files (${blobPhotoUrls.length})`}
-              />}
-            <div className="space-y-4">
-              <AdminGrid title={`Photos (${count})`}>
-                {photos.map(photo =>
-                  <Fragment key={photo.id}>
-                    <PhotoTiny
-                      className={cc(
-                        'rounded-sm overflow-hidden',
-                        'border border-gray-200 dark:border-gray-800',
-                      )}
-                      photo={photo}
-                    />
-                    <div className="flex flex-col md:flex-row">
-                      <Link
-                        key={photo.id}
-                        href={pathForPhoto(photo)}
-                        className="sm:w-[50%] flex items-center gap-2"
-                      >
-                        <span className={cc(
-                          'inline-flex items-center gap-2',
-                          photo.hidden && 'text-gray-400 dark:text-gray-500',
-                        )}>
-                          <span>{photo.title || 'Untitled'}</span>
-                          {photo.hidden &&
-                            <AiOutlineEyeInvisible
-                              className="translate-y-[0.25px]"
-                              size={16}
-                            />}
-                        </span>
-                        {photo.priorityOrder !== null &&
-                          <span className={cc(
-                            'text-xs leading-none px-1.5 py-1 rounded-sm',
-                            'dark:text-gray-300',
-                            'bg-gray-100 dark:bg-gray-800',
-                          )}>
-                            {photo.priorityOrder}
-                          </span>}
-                      </Link>
-                      <div className={cc(
-                        'sm:w-[50%] uppercase',
-                        'text-gray-400 dark:text-gray-500',
-                      )}>
-                        {photo.takenAtNaive}
-                      </div>
-                    </div>
-                    <EditButton href={pathForPhotoEdit(photo)} />
-                    <FormWithConfirm
-                      action={deletePhotoAction}
-                      confirmText={
-                        // eslint-disable-next-line max-len
-                        `Are you sure you want to delete "${titleForPhoto(photo)}?"`}
+                Clear Cache
+              </SubmitButtonWithStatus>
+            </form>
+          </div>
+          {blobUploadUrls.length > 0 &&
+            <BlobUrls
+              blobUrls={blobUploadUrls}
+              label={`Uploads Files (${blobUploadUrls.length})`}
+            />}
+          {blobPhotoUrls.length > 0 &&
+            <BlobUrls
+              blobUrls={blobPhotoUrls}
+              label={`Photos Files (${blobPhotoUrls.length})`}
+            />}
+          <div className="space-y-4">
+            <AdminGrid>
+              {photos.map(photo =>
+                <Fragment key={photo.id}>
+                  <PhotoTiny
+                    className={cc(
+                      'rounded-sm overflow-hidden',
+                      'border border-gray-200 dark:border-gray-800',
+                    )}
+                    photo={photo}
+                  />
+                  <div className="flex flex-col md:flex-row">
+                    <Link
+                      key={photo.id}
+                      href={pathForPhoto(photo)}
+                      className="sm:w-[50%] flex items-center gap-2"
                     >
-                      <input type="hidden" name="id" value={photo.id} />
-                      <input type="hidden" name="url" value={photo.url} />
-                      <DeleteButton />
-                    </FormWithConfirm>
-                  </Fragment>)}
-              </AdminGrid>
-              {showMorePhotos &&
-                <MorePhotos path={pathForAdminPhotos(offset + 1)} />}
-            </div>
+                      <span className={cc(
+                        'inline-flex items-center gap-2',
+                        photo.hidden && 'text-dim',
+                      )}>
+                        <span>{photo.title || 'Untitled'}</span>
+                        {photo.hidden &&
+                          <AiOutlineEyeInvisible
+                            className="translate-y-[0.25px]"
+                            size={16}
+                          />}
+                      </span>
+                      {photo.priorityOrder !== null &&
+                        <span className={cc(
+                          'text-xs leading-none px-1.5 py-1 rounded-sm',
+                          'dark:text-gray-300',
+                          'bg-gray-100 dark:bg-gray-800',
+                        )}>
+                          {photo.priorityOrder}
+                        </span>}
+                    </Link>
+                    <div className={cc(
+                      'sm:w-[50%] uppercase',
+                      'text-dim',
+                    )}>
+                      {photo.takenAtNaive}
+                    </div>
+                  </div>
+                  <EditButton href={pathForAdminPhotoEdit(photo)} />
+                  <FormWithConfirm
+                    action={deletePhotoAction}
+                    confirmText={
+                      // eslint-disable-next-line max-len
+                      `Are you sure you want to delete "${titleForPhoto(photo)}?"`}
+                  >
+                    <input type="hidden" name="id" value={photo.id} />
+                    <input type="hidden" name="url" value={photo.url} />
+                    <DeleteButton />
+                  </FormWithConfirm>
+                </Fragment>)}
+            </AdminGrid>
+            {showMorePhotos &&
+              <MorePhotos path={pathForAdminPhotos(offset + 1)} />}
           </div>
         </div>}
     />
   );
-}
-
-function AdminGrid ({
-  title,
-  children,
-}: {
-  title: string,
-  children: ReactNode,
-}) {
-  return <div className="space-y-4">
-    <div className="font-bold">
-      {title}
-    </div>
-    <div className="min-w-[14rem] overflow-x-scroll">
-      <div className={cc(
-        'w-full',
-        'grid grid-cols-[auto_1fr_auto_auto] ',
-        'gap-2 sm:gap-3 items-center',
-      )}>
-        {children}
-      </div>
-    </div>
-  </div>;
-}
-
-function EditButton ({
-  href,
-  label = 'Edit',
-}: {
-  href: string,
-  label?: string,
-}) {
-  return (
-    <Link
-      title="Edit"
-      href={href}
-      className="button"
-    >
-      <FaRegEdit className="translate-y-[-0.5px]" />
-      <span className="hidden sm:inline-block">
-        {label}
-      </span>
-    </Link>
-  );
-}
-
-function DeleteButton () {
-  return <SubmitButtonWithStatus
-    title="Delete"
-    icon={<span className="inline-flex text-[18px]">×</span>}
-  >
-    Delete
-  </SubmitButtonWithStatus>;
 }
 
 function BlobUrls ({

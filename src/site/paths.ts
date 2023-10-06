@@ -7,9 +7,9 @@ import {
 } from '@/camera';
 
 // Prefixes
-const PREFIX_PHOTO  = '/p';
-const PREFIX_TAG    = '/t';
-const PREFIX_CAMERA = '/shot-on';
+export const PREFIX_PHOTO  = '/p';
+export const PREFIX_TAG    = '/tag';
+export const PREFIX_CAMERA = '/shot-on';
 
 // Core paths
 export const PATH_ROOT      = '/';
@@ -19,14 +19,16 @@ export const PATH_SIGN_IN   = '/sign-in';
 export const PATH_OG        = '/og';
 export const PATH_CHECKLIST = '/checklist';
 
-// Extended paths
-export const PATH_ADMIN_PHOTOS = `${PATH_ADMIN}/photos`;
-export const PATH_ADMIN_UPLOAD = `${PATH_ADMIN}/uploads`;
-export const PATH_ADMIN_UPLOAD_BLOB_HANDLER = `${PATH_ADMIN_UPLOAD}/blob`;
+// Admin paths
+export const PATH_ADMIN_PHOTOS      = `${PATH_ADMIN}/photos`;
+export const PATH_ADMIN_TAGS        = `${PATH_ADMIN}/tags`;
+export const PATH_ADMIN_UPLOAD      = `${PATH_ADMIN}/uploads`;
+export const PATH_ADMIN_UPLOAD_BLOB = `${PATH_ADMIN_UPLOAD}/blob`;
 
 // Modifiers
 const SHARE = 'share';
 const NEXT  = 'next';
+const EDIT  = 'edit';
 
 // Absolute paths
 export const ABSOLUTE_PATH_FOR_HOME_IMAGE = `${BASE_URL}/home-image`;
@@ -42,6 +44,12 @@ export const pathForGrid = (next?: number) =>
 
 export const pathForAdminPhotos = (next?: number) =>
   pathWithNext(PATH_ADMIN_PHOTOS, next);
+
+export const pathForAdminPhotoEdit = (photo: PhotoOrPhotoId) =>
+  `${PATH_ADMIN_PHOTOS}/${getPhotoId(photo)}/${EDIT}`;
+
+export const pathForAdminTagEdit = (tag: string) =>
+  `${PATH_ADMIN_TAGS}/${tag}/${EDIT}`;
 
 export const pathForOg = (next?: number) =>
   pathWithNext(PATH_OG, next);
@@ -68,9 +76,6 @@ export const pathForPhotoShare = (
   camera?: Camera,
 ) =>
   `${pathForPhoto(photo, tag, camera)}/${SHARE}`;
-
-export const pathForPhotoEdit = (photo: PhotoOrPhotoId) =>
-  `${PATH_ADMIN_PHOTOS}/${getPhotoId(photo)}/edit`;
 
 export const pathForTag = (tag: string, next?: number) =>
   pathWithNext(
@@ -111,43 +116,43 @@ export const absolutePathForCameraImage= (camera: Camera) =>
 
 // p/[photoId]
 export const isPathPhoto = (pathname = '') =>
-  /^\/p\/[^/]+\/?$/.test(pathname);
+  new RegExp(`^${PREFIX_PHOTO}/[^/]+/?$`).test(pathname);
 
 // p/[photoId]/share
 export const isPathPhotoShare = (pathname = '') =>
-  /^\/p\/[^/]+\/share\/?$/.test(pathname);
+  new RegExp(`^${PREFIX_PHOTO}/[^/]+/${SHARE}/?$`).test(pathname);
 
-// t/[tag]
+// tag/[tag]
 export const isPathTag = (pathname = '') =>
-  /^\/t\/[^/]+\/?$/.test(pathname);
+  new RegExp(`^${PREFIX_TAG}/[^/]+/?$`).test(pathname);
 
-// t/[tag]/share
+// tag/[tag]/share
 export const isPathTagShare = (pathname = '') =>
-  /^\/t\/[^/]+\/share\/?$/.test(pathname);
+  new RegExp(`^${PREFIX_TAG}/[^/]+/${SHARE}/?$`).test(pathname);
 
-// t/[tag]/[photoId]
+// tag/[tag]/[photoId]
 export const isPathTagPhoto = (pathname = '') =>
-  /^\/t\/[^/]+\/[^/]+\/?$/.test(pathname);
+  new RegExp(`^${PREFIX_TAG}/[^/]+/[^/]+/?$`).test(pathname);
 
-// t/[tag]/[photoId]/share
+// tag/[tag]/[photoId]/share
 export const isPathTagPhotoShare = (pathname = '') =>
-  /^\/t\/[^/]+\/[^/]+\/share\/?$/.test(pathname);
+  new RegExp(`^${PREFIX_TAG}/[^/]+/[^/]+/${SHARE}/?$`).test(pathname);
 
 // shot-on/[camera]
 export const isPathCamera = (pathname = '') =>
-  /^\/shot-on\/[^/]+\/?$/.test(pathname);
+  new RegExp(`^${PREFIX_CAMERA}/[^/]+/?$`).test(pathname);
 
 // shot-on/[camera]/share
 export const isPathCameraShare = (pathname = '') =>
-  /^\/shot-on\/[^/]+\/share\/?$/.test(pathname);
+  new RegExp(`^${PREFIX_CAMERA}/[^/]+/${SHARE}/?$`).test(pathname);
 
 // shot-on/[camera]/[photoId]
 export const isPathCameraPhoto = (pathname = '') =>
-  /^\/shot-on\/[^/]+\/[^/]+\/?$/.test(pathname);
+  new RegExp(`^${PREFIX_CAMERA}/[^/]+/[^/]+/?$`).test(pathname);
 
 // shot-on/[camera]/[photoId]/share
 export const isPathCameraPhotoShare = (pathname = '') =>
-  /^\/shot-on\/[^/]+\/[^/]+\/share\/?$/.test(pathname);
+  new RegExp(`^${PREFIX_CAMERA}/[^/]+/[^/]+/${SHARE}/?$`).test(pathname);
 
 export const isPathGrid = (pathname = '') =>
   pathname.startsWith(PATH_GRID);
@@ -167,15 +172,21 @@ export const getPathComponents = (pathname = ''): {
   tag?: string
   camera?: Camera
 } => {
-  const photoIdFromPhoto = pathname.match(/^\/p\/([^/]+)/)?.[1];
-  const photoIdFromTag = pathname.match(/^\/t\/[^/]+\/((?!share)[^/]+)/)?.[1];
-  // eslint-disable-next-line max-len
-  const photoIdFromCamera = pathname.match(/^\/shot-on\/[^/]+\/((?!share)[^/]+)/)?.[1];
-  const tag = pathname.match(/^\/t\/([^/]+)/)?.[1];
-  const cameraString = pathname.match(/^\/shot-on\/([^/]+)/)?.[1];
+  const photoIdFromPhoto = pathname.match(
+    new RegExp(`^${PREFIX_PHOTO}/([^/]+)`))?.[1];
+  const photoIdFromTag = pathname.match(
+    new RegExp(`^${PREFIX_TAG}/[^/]+/((?!${SHARE})[^/]+)`))?.[1];
+  const photoIdFromCamera = pathname.match(
+    new RegExp(`^${PREFIX_CAMERA}/[^/]+/((?!${SHARE})[^/]+)`))?.[1];
+  const tag = pathname.match(
+    new RegExp(`^${PREFIX_TAG}/([^/]+)`))?.[1];
+  const cameraString = pathname.match(
+    new RegExp(`^${PREFIX_CAMERA}/([^/]+)`))?.[1];
+
   const camera = cameraString
     ? getCameraFromKey(cameraString)
     : undefined;
+
   return {
     photoId: (
       photoIdFromPhoto ||

@@ -3,6 +3,7 @@
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import InfoBlock from '@/components/InfoBlock';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
+import { PATH_ADMIN_PHOTOS } from '@/site/paths';
 import { signIn } from 'next-auth/react';
 import { useLayoutEffect, useRef, useState } from 'react';
 
@@ -28,7 +29,7 @@ export default function SignInForm() {
             {
               email,
               password,
-              callbackUrl: '/admin/photos',
+              callbackUrl: PATH_ADMIN_PHOTOS,
             },
           )
             .catch(() => setIsSigningIn(false));

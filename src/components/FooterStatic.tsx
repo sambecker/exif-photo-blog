@@ -18,7 +18,7 @@ export default function FooterStatic({
       contentMain={<div className={cc(
         'my-8',
         'flex items-center',
-        'text-gray-400 dark:text-gray-500',
+        'text-dim',
       )}>
         <div className="flex gap-x-4 gap-y-1 flex-grow flex-wrap">
           <Link

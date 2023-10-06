@@ -15,6 +15,7 @@ export default function PhotoGrid({
   animateOnFirstLoadOnly,
   staggerOnFirstLoadOnly = true,
   showMorePath,
+  small,
 }: {
   photos: Photo[]
   selectedPhoto?: Photo
@@ -25,13 +26,16 @@ export default function PhotoGrid({
   animateOnFirstLoadOnly?: boolean
   staggerOnFirstLoadOnly?: boolean
   showMorePath?: string
+  small?: boolean
 }) {
   return (
     <div className="space-y-4">
       <AnimateItems
         className={cc(
           'grid gap-1',
-          'grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
+          small
+            ? 'grid-cols-4 xs:grid-cols-6'
+            : 'grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
           'items-center',
         )}
         type={animate === false ? 'none' : undefined}

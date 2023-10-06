@@ -3,12 +3,14 @@
 @tailwind utilities;
 
 @layer base {
+  /* Core */
   body {
     @apply
       font-mono text-sm md:text-base
       bg-white dark:bg-black
      text-gray-900 dark:text-gray-100
   }
+  /* Forms */
   label {
     @apply
       font-sans font-medium block uppercase text-xs
@@ -70,9 +72,15 @@
       disabled:bg-transparent dark:disabled:bg-transparent
       disabled:border-gray-100 dark:disabled:border-gray-900
   }
+  /* Toasts */
   .toaster [data-sonner-toast] {
     @apply
       font-mono
       !border-gray-200 dark:!border-gray-800
+  }
+  /* Common Utilities */
+  .text-dim {
+    @apply
+      text-gray-400 dark:text-gray-500
   }
 }

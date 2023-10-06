@@ -28,7 +28,7 @@ const PATH_ADMIN              = '/admin/photos';
 const PATH_PHOTO              = `/p/${PHOTO_ID}`;
 const PATH_PHOTO_SHARE        = `${PATH_PHOTO}/${SHARE}`;
 
-const PATH_TAG                = `/t/${TAG}`;
+const PATH_TAG                = `/tag/${TAG}`;
 const PATH_TAG_SHARE          = `${PATH_TAG}/${SHARE}`;
 const PATH_TAG_PHOTO          = `${PATH_TAG}/${PHOTO_ID}`;
 const PATH_TAG_PHOTO_SHARE    = `${PATH_TAG_PHOTO}/${SHARE}`;
