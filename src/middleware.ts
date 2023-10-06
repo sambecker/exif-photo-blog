@@ -1,6 +1,7 @@
 import { auth } from './auth';
 import { NextRequest, NextResponse } from 'next/server';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { PREFIX_PHOTO, PREFIX_TAG } from './site/paths';
 
 export default function middleware(req: NextRequest, res:NextResponse) {
   const pathname = req.nextUrl.pathname;
@@ -11,7 +12,14 @@ export default function middleware(req: NextRequest, res:NextResponse) {
     // Accept /photos/* paths, but serve /p/*
     const matches = pathname.match(/^\/photos\/(.+)$/);
     return NextResponse.rewrite(new URL(
-      `/p/${matches?.[1]}`,
+      `${PREFIX_PHOTO}/${matches?.[1]}`,
+      req.url,
+    ));
+  } else if (/^\/t\/(.)+$/.test(pathname)) {
+    // Accept /t/* paths, but serve /tag/*
+    const matches = pathname.match(/^\/t\/(.+)$/);
+    return NextResponse.rewrite(new URL(
+      `${PREFIX_TAG}/${matches?.[1]}`,
       req.url,
     ));
   }

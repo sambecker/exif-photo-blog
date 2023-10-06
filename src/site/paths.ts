@@ -7,9 +7,9 @@ import {
 } from '@/camera';
 
 // Prefixes
-const PREFIX_PHOTO  = '/p';
-const PREFIX_TAG    = '/t';
-const PREFIX_CAMERA = '/shot-on';
+export const PREFIX_PHOTO  = '/p';
+export const PREFIX_TAG    = '/tag';
+export const PREFIX_CAMERA = '/shot-on';
 
 // Core paths
 export const PATH_ROOT      = '/';
@@ -112,43 +112,43 @@ export const absolutePathForCameraImage= (camera: Camera) =>
 
 // p/[photoId]
 export const isPathPhoto = (pathname = '') =>
-  /^\/p\/[^/]+\/?$/.test(pathname);
+  new RegExp(`^${PREFIX_PHOTO}/[^/]+/?$`).test(pathname);
 
 // p/[photoId]/share
 export const isPathPhotoShare = (pathname = '') =>
-  /^\/p\/[^/]+\/share\/?$/.test(pathname);
+  new RegExp(`^${PREFIX_PHOTO}/[^/]+/${SHARE}/?$`).test(pathname);
 
 // t/[tag]
 export const isPathTag = (pathname = '') =>
-  /^\/t\/[^/]+\/?$/.test(pathname);
+  new RegExp(`^${PREFIX_TAG}/[^/]+/?$`).test(pathname);
 
 // t/[tag]/share
 export const isPathTagShare = (pathname = '') =>
-  /^\/t\/[^/]+\/share\/?$/.test(pathname);
+  new RegExp(`^${PREFIX_TAG}/[^/]+/${SHARE}/?$`).test(pathname);
 
 // t/[tag]/[photoId]
 export const isPathTagPhoto = (pathname = '') =>
-  /^\/t\/[^/]+\/[^/]+\/?$/.test(pathname);
+  new RegExp(`^${PREFIX_TAG}/[^/]+/[^/]+/?$`).test(pathname);
 
 // t/[tag]/[photoId]/share
 export const isPathTagPhotoShare = (pathname = '') =>
-  /^\/t\/[^/]+\/[^/]+\/share\/?$/.test(pathname);
+  new RegExp(`^${PREFIX_TAG}/[^/]+/[^/]+/${SHARE}/?$`).test(pathname);
 
 // shot-on/[camera]
 export const isPathCamera = (pathname = '') =>
-  /^\/shot-on\/[^/]+\/?$/.test(pathname);
+  new RegExp(`^${PREFIX_CAMERA}/[^/]+/?$`).test(pathname);
 
 // shot-on/[camera]/share
 export const isPathCameraShare = (pathname = '') =>
-  /^\/shot-on\/[^/]+\/share\/?$/.test(pathname);
+  new RegExp(`^${PREFIX_CAMERA}/[^/]+/${SHARE}/?$`).test(pathname);
 
 // shot-on/[camera]/[photoId]
 export const isPathCameraPhoto = (pathname = '') =>
-  /^\/shot-on\/[^/]+\/[^/]+\/?$/.test(pathname);
+  new RegExp(`^${PREFIX_CAMERA}/[^/]+/[^/]+/?$`).test(pathname);
 
 // shot-on/[camera]/[photoId]/share
 export const isPathCameraPhotoShare = (pathname = '') =>
-  /^\/shot-on\/[^/]+\/[^/]+\/share\/?$/.test(pathname);
+  new RegExp(`^${PREFIX_CAMERA}/[^/]+/[^/]+/${SHARE}/?$`).test(pathname);
 
 export const isPathGrid = (pathname = '') =>
   pathname.startsWith(PATH_GRID);
@@ -168,15 +168,21 @@ export const getPathComponents = (pathname = ''): {
   tag?: string
   camera?: Camera
 } => {
-  const photoIdFromPhoto = pathname.match(/^\/p\/([^/]+)/)?.[1];
-  const photoIdFromTag = pathname.match(/^\/t\/[^/]+\/((?!share)[^/]+)/)?.[1];
   // eslint-disable-next-line max-len
-  const photoIdFromCamera = pathname.match(/^\/shot-on\/[^/]+\/((?!share)[^/]+)/)?.[1];
-  const tag = pathname.match(/^\/t\/([^/]+)/)?.[1];
-  const cameraString = pathname.match(/^\/shot-on\/([^/]+)/)?.[1];
+  const photoIdFromPhoto = pathname.match(new RegExp(`^${PREFIX_PHOTO}/([^/]+)`))?.[1];
+  // eslint-disable-next-line max-len
+  const photoIdFromTag = pathname.match(new RegExp(`^${PREFIX_TAG}/[^/]+/((?!${SHARE})[^/]+)`))?.[1];
+  // eslint-disable-next-line max-len
+  const photoIdFromCamera = pathname.match(new RegExp(`^${PREFIX_CAMERA}/[^/]+/((?!${SHARE})[^/]+)`))?.[1];
+  // eslint-disable-next-line max-len
+  const tag = pathname.match(new RegExp(`^${PREFIX_TAG}/([^/]+)`))?.[1];
+  // eslint-disable-next-line max-len
+  const cameraString = pathname.match(new RegExp(`^${PREFIX_CAMERA}/([^/]+)`))?.[1];
+
   const camera = cameraString
     ? getCameraFromKey(cameraString)
     : undefined;
+
   return {
     photoId: (
       photoIdFromPhoto ||
