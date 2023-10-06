@@ -35,7 +35,7 @@ export default async function AdminLayout({
     : [navItemPhotos];
 
   return (
-    <div className="mt-4 space-y-6">
+    <div className="mt-4 space-y-5">
       <AdminNav items={navItems} />
       {children}
     </div>

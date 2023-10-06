@@ -20,6 +20,7 @@ export default async function PhotoPageEdit({ params: { photoId } }: Props) {
     <AdminChildPage
       backPath={PATH_ADMIN_PHOTOS}
       backLabel="Photos"
+      breadcrumb={photo.title || photo.id}
     >
       <PhotoForm
         type="edit"
