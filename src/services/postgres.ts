@@ -287,7 +287,7 @@ const sqlGetUniqueTags = async () => sql`
 const sqlGetUniqueTagsWithCount = async () => sql`
   SELECT DISTINCT unnest(tags) as tag, count(distinct id) as count FROM photos
   GROUP BY tag
-  ORDER BY count ASC
+  ORDER BY count DESC
 `.then(({ rows }) => rows.map(row => ({
     tag: row.tag as string,
     count: parseInt(row.count, 10),

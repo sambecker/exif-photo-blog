@@ -20,12 +20,13 @@ export default async function AdminPhotosPage() {
             <AdminGrid>
               {tags.map(({ tag, count }) =>
                 <Fragment key={tag}>
-                  <div>
+                  <div className="pr-2">
                     {tag}
                   </div>
                   <div className="text-dim">
                     {photoQuantityText(count, false)}
                   </div>
+                  <div />
                   <FormWithConfirm
                     action={deletePhotoTagGloballyAction}
                     confirmText={
