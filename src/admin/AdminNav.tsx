@@ -28,7 +28,7 @@ export default function AdminNav({
             href={href}
             className={cc(
               'flex gap-0.5',
-              !pathname.startsWith(href) && 'text-dim',
+              pathname.startsWith(href) ? 'font-bold' : 'text-dim',
             )}
           >
             <span>{label}</span>
