@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { pathForTag } from '@/site/paths';
 import { FaTag } from 'react-icons/fa';
 import { cc } from '@/utility/css';
+import { formatTag } from '.';
 
 export default function PhotoTag({
   tag,
@@ -27,7 +28,7 @@ export default function PhotoTag({
           )}
         />}
       <span className="uppercase">
-        {tag.replaceAll('-', ' ')}
+        {formatTag(tag)}
       </span>
     </Link>
   );

@@ -5,6 +5,7 @@ import {
   sqlInsertPhoto,
   sqlDeletePhotoTagGlobally,
   sqlUpdatePhoto,
+  sqlRenamePhotoTagGlobally,
 } from '@/services/postgres';
 import { convertFormDataToPhoto } from './form';
 import { redirect } from 'next/navigation';
@@ -69,6 +70,17 @@ export async function deletePhotoTagGloballyAction(formData: FormData) {
   await sqlDeletePhotoTagGlobally(tag);
 
   revalidatePhotosKey();
+}
+
+export async function renamePhotoTagGloballyAction(formData: FormData) {
+  const tag = formData.get('tag') as string;
+  const newTag = formData.get('newTag') as string;
+
+  if (tag && newTag && tag !== newTag) {
+    await sqlRenamePhotoTagGlobally(tag, newTag);
+
+    revalidatePhotosKey();
+  }
 }
 
 export async function deleteBlobPhotoAction(formData: FormData) {

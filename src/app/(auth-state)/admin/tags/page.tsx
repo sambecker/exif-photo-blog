@@ -6,6 +6,8 @@ import { Fragment } from 'react';
 import DeleteButton from '@/admin/DeleteButton';
 import { photoQuantityText } from '@/photo';
 import { getUniqueTagsWithCountCached } from '@/cache';
+import PhotoTag from '@/tag/PhotoTag';
+import { formatTag } from '@/tag';
 
 export const runtime = 'edge';
 
@@ -21,9 +23,9 @@ export default async function AdminPhotosPage() {
               {tags.map(({ tag, count }) =>
                 <Fragment key={tag}>
                   <div className="pr-2">
-                    {tag}
+                    <PhotoTag {...{ tag }} />
                   </div>
-                  <div className="text-dim">
+                  <div className="text-dim uppercase">
                     {photoQuantityText(count, false)}
                   </div>
                   <div />
@@ -31,7 +33,7 @@ export default async function AdminPhotosPage() {
                     action={deletePhotoTagGloballyAction}
                     confirmText={
                       // eslint-disable-next-line max-len
-                      `Are you sure you want to remove "${tag}?" from ${photoQuantityText(count, false).toLowerCase()}?`}
+                      `Are you sure you want to remove "${formatTag(tag)}?" from ${photoQuantityText(count, false).toLowerCase()}?`}
                   >
                     <input type="hidden" name="tag" value={tag} />
                     <DeleteButton />
