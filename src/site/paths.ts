@@ -19,10 +19,11 @@ export const PATH_SIGN_IN   = '/sign-in';
 export const PATH_OG        = '/og';
 export const PATH_CHECKLIST = '/checklist';
 
-// Extended paths
-export const PATH_ADMIN_PHOTOS = `${PATH_ADMIN}/photos`;
-export const PATH_ADMIN_UPLOAD = `${PATH_ADMIN}/uploads`;
-export const PATH_ADMIN_UPLOAD_BLOB_HANDLER = `${PATH_ADMIN_UPLOAD}/blob`;
+// Admin paths
+export const PATH_ADMIN_PHOTOS      = `${PATH_ADMIN}/photos`;
+export const PATH_ADMIN_TAGS        = `${PATH_ADMIN}/tags`;
+export const PATH_ADMIN_UPLOAD      = `${PATH_ADMIN}/uploads`;
+export const PATH_ADMIN_UPLOAD_BLOB = `${PATH_ADMIN_UPLOAD}/blob`;
 
 // Modifiers
 const SHARE = 'share';

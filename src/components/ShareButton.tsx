@@ -16,7 +16,7 @@ export default function ShareButton({
     <IconPathButton {...{
       path,
       icon: <TbPhotoShare size={17} className={dim
-        ? 'text-gray-400 dark:text-gray-500'
+        ? 'text-dim'
         : undefined} />,
       prefetch,
       shouldScroll,

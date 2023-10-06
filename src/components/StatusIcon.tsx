@@ -27,7 +27,7 @@ export default function StatusIcon({
     case 'optional':
       return <BiSolidCheckboxMinus
         size={18}
-        className="text-gray-400 dark:text-gray-500"
+        className="text-dim"
       />;
     }
   };
