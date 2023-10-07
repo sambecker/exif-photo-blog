@@ -4,14 +4,16 @@ import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
 import { PATH_ADMIN_TAGS } from '@/site/paths';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
-import { useMemo, useState } from 'react';
+import { ReactNode, useMemo, useState } from 'react';
 import { renamePhotoTagGloballyAction } from '@/photo/actions';
 import { parameterize } from '@/utility/string';
 
 export default function TagForm({
   tag,
+  children,
 }: {
   tag: string
+  children?: ReactNode
 }) {
   const [updatedTagRaw, setUpdatedTagRaw] = useState(tag);
 
@@ -49,6 +51,7 @@ export default function TagForm({
         hidden
         readOnly
       />
+      {children}
       <div className="flex gap-3">
         <Link
           className="button"

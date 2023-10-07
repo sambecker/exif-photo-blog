@@ -20,7 +20,10 @@ function AdminChildPage({
       contentMain={
         <div className="space-y-6">
           {backPath &&
-            <div className="flex gap-3 items-center h-9">
+            <div className={cc(
+              'flex flex-wrap items-center gap-x-1.5 sm:gap-x-3 gap-y-1',
+              'h-9',
+            )}>
               <Link
                 href={backPath}
                 className="flex gap-1.5 items-center"

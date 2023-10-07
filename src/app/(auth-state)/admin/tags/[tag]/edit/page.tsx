@@ -1,12 +1,13 @@
 import AdminChildPage from '@/components/AdminChildPage';
 import { redirect } from 'next/navigation';
-import { getPhotosCached } from '@/cache';
+import { getPhotosCached, getPhotosTagCountCached } from '@/cache';
 import TagForm from '@/tag/TagForm';
-import { PATH_ADMIN, PATH_ADMIN_TAGS } from '@/site/paths';
-import { getPhotosTagCount } from '@/services/postgres';
+import { PATH_ADMIN, PATH_ADMIN_TAGS, pathForTag } from '@/site/paths';
 import PhotoTag from '@/tag/PhotoTag';
-import { photoQuantityText } from '@/photo';
-import PhotoGrid from '@/photo/PhotoGrid';
+import { photoLabelForCount } from '@/photo';
+import PhotoLightbox from '@/photo/PhotoLightbox';
+
+const MAX_PHOTO_TO_SHOW = 6;
 
 export const runtime = 'edge';
 
@@ -19,8 +20,8 @@ export default async function PhotoPageEdit({ params: { tag } }: Props) {
     count,
     photos,
   ] = await Promise.all([
-    getPhotosTagCount(tag),
-    getPhotosCached({ tag }),
+    getPhotosTagCountCached(tag),
+    getPhotosCached({ tag, limit: MAX_PHOTO_TO_SHOW }),
   ]);
 
   if (count === 0) { redirect(PATH_ADMIN); }
@@ -32,18 +33,21 @@ export default async function PhotoPageEdit({ params: { tag } }: Props) {
       breadcrumb={<div className="flex item gap-2">
         <PhotoTag {...{ tag }} />
         <div className="text-dim uppercase">
-          {photoQuantityText(count, false)}
+          <span>{count}</span>
+          <span className="hidden xs:inline-block">
+            &nbsp;
+            {photoLabelForCount(count)}
+          </span>
         </div>
       </div>}
     >
-      <div className="space-y-8">
-        <PhotoGrid
-          photos={photos.slice(0, 12)}
-          animate={false}
-          small
+      <TagForm {...{ tag, photos }}>
+        <PhotoLightbox
+          {...{ count, photos }}
+          maxPhotosToShow={MAX_PHOTO_TO_SHOW}
+          moreLink={pathForTag(tag)}
         />
-        <TagForm {...{ tag, photos }} />
-      </div>
+      </TagForm>
     </AdminChildPage>
   );
 };

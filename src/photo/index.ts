@@ -154,7 +154,7 @@ export const translatePhotoId = (id: string) =>
 export const titleForPhoto = (photo: Photo) =>
   photo.title || 'Untitled';
 
-const photoLabelForCount = (count: number) =>
+export const photoLabelForCount = (count: number) =>
   count === 1 ? 'Photo' : 'Photos';
 
 export const photoQuantityText = (count: number, includeParentheses = true) =>

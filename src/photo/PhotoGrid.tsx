@@ -15,6 +15,7 @@ export default function PhotoGrid({
   animateOnFirstLoadOnly,
   staggerOnFirstLoadOnly = true,
   showMorePath,
+  additionalTile,
   small,
 }: {
   photos: Photo[]
@@ -26,6 +27,7 @@ export default function PhotoGrid({
   animateOnFirstLoadOnly?: boolean
   staggerOnFirstLoadOnly?: boolean
   showMorePath?: string
+  additionalTile?: JSX.Element
   small?: boolean
 }) {
   return (
@@ -34,7 +36,7 @@ export default function PhotoGrid({
         className={cc(
           'grid gap-1',
           small
-            ? 'grid-cols-4 xs:grid-cols-6'
+            ? 'grid-cols-3 xs:grid-cols-6'
             : 'grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
           'items-center',
         )}
@@ -51,7 +53,7 @@ export default function PhotoGrid({
             tag={tag}
             camera={camera}
             selected={photo.id === selectedPhoto?.id}
-          />)}
+          />).concat(additionalTile ?? [])}
       />
       {showMorePath &&
         <MorePhotos path={showMorePath} />}
