@@ -18,7 +18,7 @@
       tracking-wider
   }
   button, .button,
-  input[type=text], input[type=password] {
+  input[type=text], input[type=email], input[type=password] {
     @apply
       px-2 py-1.5
       border rounded-md
@@ -27,8 +27,9 @@
       font-mono text-base leading-none
       min-h-[2.25rem]
   }
-  input[type=text], input[type=password] {
+  input[type=text], input[type=email], input[type=password] {
     @apply
+      text-[1rem] /* Prevent iOS auto-zoom behavior */
       min-w-[20rem] read-only:cursor-default
       read-only:bg-gray-100
       dark:read-only:bg-gray-900 dark:read-only:text-gray-400
