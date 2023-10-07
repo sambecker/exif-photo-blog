@@ -1,4 +1,7 @@
-import { ABSOLUTE_PATH_FOR_HOME_IMAGE } from '@/site/paths';
+import {
+  ABSOLUTE_PATH_FOR_HOME_IMAGE,
+  absolutePathForPhoto,
+} from '@/site/paths';
 import { formatDateFromPostgresString } from '@/utility/date';
 import {
   formatAperture,
@@ -7,6 +10,7 @@ import {
   formatExposureTime,
   formatFocalLength,
 } from '@/utility/exif';
+import { getNextImageUrlForRequest } from '@/utility/image';
 import camelcaseKeys from 'camelcase-keys';
 import type { Metadata } from 'next';
 
@@ -85,6 +89,21 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
       formatDateFromPostgresString(photoDb.takenAtNaive),
   };
 };
+
+export const parsePhotoForApi = (photo: Photo) => ({
+  id: photo.id,
+  title: photo.title,
+  url: absolutePathForPhoto(photo),
+  ...photo.make && { make: photo.make },
+  ...photo.model && { model: photo.model },
+  ...photo.tags.length > 0 && { tags: photo.tags },
+  takenAtNaive: formatDateFromPostgresString(photo.takenAtNaive),
+  src: {
+    small: getNextImageUrlForRequest(photo.url, 200),
+    medium: getNextImageUrlForRequest(photo.url, 640),
+    large: getNextImageUrlForRequest(photo.url, 1200),
+  },
+});
 
 export const parseCachedPhotoDates = (photo: Photo) => ({
   ...photo,

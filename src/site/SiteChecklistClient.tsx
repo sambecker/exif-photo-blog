@@ -26,7 +26,8 @@ export default function SiteChecklistClient({
   hasTitle,
   hasDomain,
   showRepoLink,
-  isProMode,
+  isProModeEnabled,
+  isPublicApiEnabled,
   showRefreshButton,
   secret,
 }: {
@@ -37,7 +38,8 @@ export default function SiteChecklistClient({
   hasTitle: boolean
   hasDomain: boolean
   showRepoLink: boolean
-  isProMode: boolean
+  isProModeEnabled: boolean
+  isPublicApiEnabled: boolean
   showRefreshButton?: boolean
   secret: string
 }) {
@@ -219,13 +221,23 @@ export default function SiteChecklistClient({
         </ChecklistRow>
         <ChecklistRow
           title="Pro Mode"
-          status={isProMode}
+          status={isProModeEnabled}
           isPending={isPendingPage}
           optional
         >
           Set environment variable to {'"1"'} to enable
           higher quality image storage:
           {renderEnvVars(['NEXT_PUBLIC_PRO_MODE'])}
+        </ChecklistRow>
+        <ChecklistRow
+          title="Public API"
+          status={isPublicApiEnabled}
+          isPending={isPendingPage}
+          optional
+        >
+          Set environment variable to {'"1"'} to enable
+          a public API available at <code>/api</code>:
+          {renderEnvVars(['NEXT_PUBLIC_PUBLIC_API'])}
         </ChecklistRow>
       </Checklist>
       {showRefreshButton &&

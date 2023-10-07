@@ -62,3 +62,4 @@ Installation
 
 1. Set `NEXT_PUBLIC_HIDE_REPO_LINK = 1` to remove footer link to repo
 2. Set `NEXT_PUBLIC_PRO_MODE = 1` to enable higher quality image storage
+3. Set `NEXT_PUBLIC_PUBLIC_API = 1` to enable a public API available at `/api`

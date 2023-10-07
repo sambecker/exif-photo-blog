@@ -18,7 +18,7 @@ import {
   revalidateBlobKey,
   revalidatePhotosKey,
 } from '@/cache';
-import { IS_PRO_MODE } from '@/site/config';
+import { PRO_MODE_ENABLED } from '@/site/config';
 import { getNextImageUrlForRequest } from '@/utility/image';
 import { PATH_ADMIN_PHOTOS, PATH_ADMIN_TAGS } from '@/site/paths';
 
@@ -31,10 +31,10 @@ export async function createPhotoAction(formData: FormData) {
   const updatedUrl = await convertUploadToPhoto(
     photo.url,
     photo.id,
-    !IS_PRO_MODE
+    !PRO_MODE_ENABLED
       ? getNextImageUrlForRequest(photo.url, 3840, 90, requestOrigin)
       : undefined,
-    !IS_PRO_MODE ? 'webp' : undefined,
+    !PRO_MODE_ENABLED ? 'webp' : undefined,
   );
 
   if (updatedUrl) { photo.url = updatedUrl; }

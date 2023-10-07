@@ -25,7 +25,8 @@ export const BASE_URL = process.env.NODE_ENV === 'production'
   : 'http://localhost:3000';
 
 export const SHOW_REPO_LINK = process.env.NEXT_PUBLIC_HIDE_REPO_LINK !== '1';
-export const IS_PRO_MODE = process.env.NEXT_PUBLIC_PRO_MODE === '1';
+export const PRO_MODE_ENABLED = process.env.NEXT_PUBLIC_PRO_MODE === '1';
+export const PUBLIC_API_ENABLED = process.env.NEXT_PUBLIC_PUBLIC_API === '1';
 
 export const CONFIG_CHECKLIST_STATUS = {
   hasPostgres: (process.env.POSTGRES_HOST ?? '').length > 0,
@@ -38,7 +39,8 @@ export const CONFIG_CHECKLIST_STATUS = {
   hasTitle: (process.env.NEXT_PUBLIC_SITE_TITLE ?? '').length > 0,
   hasDomain: (process.env.NEXT_PUBLIC_SITE_DOMAIN ?? '').length > 0,
   showRepoLink: SHOW_REPO_LINK,
-  isProMode: IS_PRO_MODE,
+  isProModeEnabled: PRO_MODE_ENABLED,
+  isPublicApiEnabled: PUBLIC_API_ENABLED,
 };
 
 export const IS_CHECKLIST_COMPLETE =
