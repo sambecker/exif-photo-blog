@@ -33,7 +33,10 @@ export default function CameraImageResponse({
         }}
       />
       <ImageCaption {...{ width, height, fontFamily }}>
-        <IoMdCamera size={height * .09} />
+        <IoMdCamera
+          size={height * .09}
+          style={{ transform: `translateY(${height * 0.002}px)` }}
+        />
         {make.toLowerCase() !== 'apple' &&
           <span style={{textTransform: 'uppercase'}}>{make}</span>}
         <span style={{textTransform: 'uppercase'}}>{model}</span>

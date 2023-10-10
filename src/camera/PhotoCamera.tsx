@@ -24,7 +24,7 @@ export default function PhotoCamera({
       )}
     >
       {showIcon && <>
-        <IoMdCamera size={13} />
+        <IoMdCamera size={13} className="translate-y-[-0.25px]" />
         &nbsp;
       </>}
       {!(hideApple && camera.make?.toLowerCase() === 'apple') &&
