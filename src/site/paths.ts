@@ -21,6 +21,7 @@ export const PATH_CHECKLIST = '/checklist';
 
 // Admin paths
 export const PATH_ADMIN_PHOTOS      = `${PATH_ADMIN}/photos`;
+export const PATH_ADMIN_UPLOADS     = `${PATH_ADMIN}/uploads`;
 export const PATH_ADMIN_TAGS        = `${PATH_ADMIN}/tags`;
 export const PATH_ADMIN_UPLOAD      = `${PATH_ADMIN}/uploads`;
 export const PATH_ADMIN_UPLOAD_BLOB = `${PATH_ADMIN_UPLOAD}/blob`;
@@ -44,6 +45,9 @@ export const pathForGrid = (next?: number) =>
 
 export const pathForAdminPhotos = (next?: number) =>
   pathWithNext(PATH_ADMIN_PHOTOS, next);
+
+export const pathForAdminUploadUrl = (url: string) =>
+  `${PATH_ADMIN_UPLOADS}/${encodeURIComponent(url)}`;
 
 export const pathForAdminPhotoEdit = (photo: PhotoOrPhotoId) =>
   `${PATH_ADMIN_PHOTOS}/${getPhotoId(photo)}/${EDIT}`;

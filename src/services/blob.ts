@@ -23,11 +23,19 @@ const REGEX_UPLOAD_PATH = new RegExp(
   'i',
 );
 
+const REGEX_UPLOAD_ID = new RegExp(
+  `.${PREFIX_UPLOAD}-([a-z0-9]+)\.[a-z]{1,4}$`,
+  'i',
+);
+
 export const pathForBlobUrl = (url: string) =>
   url.replace(`${BLOB_BASE_URL}/`, '');
 
 export const getExtensionFromBlobUrl = (url: string) =>
   url.match(/.([a-z]{1,4})$/i)?.[1];
+
+export const getIdFromBlobUrl = (url: string) =>
+  url.match(REGEX_UPLOAD_ID)?.[1];
 
 export const isUploadPathnameValid = (pathname?: string) =>
   pathname?.match(REGEX_UPLOAD_PATH);

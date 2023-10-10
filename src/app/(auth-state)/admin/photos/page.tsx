@@ -3,16 +3,11 @@ import PhotoUploadInput from '@/photo/PhotoUploadInput';
 import Link from 'next/link';
 import PhotoTiny from '@/photo/PhotoTiny';
 import { cc } from '@/utility/css';
-import ImageTiny from '@/components/ImageTiny';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import SiteGrid from '@/components/SiteGrid';
 import {
-  deletePhotoAction,
-  deleteBlobPhotoAction,
-  syncCacheAction,
-} from '@/photo/actions';
+  deletePhotoAction, syncCacheAction } from '@/photo/actions';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
-import { pathForBlobUrl } from '@/services/blob';
 import {
   pathForAdminPhotos,
   pathForPhoto,
@@ -22,7 +17,6 @@ import { titleForPhoto } from '@/photo';
 import MorePhotos from '@/components/MorePhotos';
 import {
   getBlobPhotoUrlsCached,
-  getBlobUploadUrlsCached,
   getPhotosCached,
   getPhotosCountIncludingHiddenCached,
 } from '@/cache';
@@ -35,6 +29,7 @@ import {
 import AdminGrid from '@/admin/AdminGrid';
 import DeleteButton from '@/admin/DeleteButton';
 import EditButton from '@/admin/EditButton';
+import BlobUrls from '@/admin/BlobUrls';
 
 export const runtime = 'edge';
 
@@ -48,12 +43,10 @@ export default async function AdminTagsPage({
   const [
     photos,
     count,
-    blobUploadUrls,
     blobPhotoUrls,
   ] = await Promise.all([
     getPhotosCached({ includeHidden: true, sortBy: 'createdAt', limit }),
     getPhotosCountIncludingHiddenCached(),
-    getBlobUploadUrlsCached(),
     DEBUG_PHOTO_BLOBS ? getBlobPhotoUrlsCached() : [],
   ]);
 
@@ -78,16 +71,16 @@ export default async function AdminTagsPage({
               </SubmitButtonWithStatus>
             </form>
           </div>
-          {blobUploadUrls.length > 0 &&
-            <BlobUrls
-              blobUrls={blobUploadUrls}
-              label={`Uploads Files (${blobUploadUrls.length})`}
-            />}
           {blobPhotoUrls.length > 0 &&
-            <BlobUrls
-              blobUrls={blobPhotoUrls}
-              label={`Photos Files (${blobPhotoUrls.length})`}
-            />}
+            <div className={cc(
+              'border-b pb-6',
+              'border-gray-200 dark:border-gray-700',
+            )}>
+              <BlobUrls
+                title={`Photo Blobs (${blobPhotoUrls.length})`}
+                urls={blobPhotoUrls}
+              />
+            </div>}
           <div className="space-y-4">
             <AdminGrid>
               {photos.map(photo =>
@@ -151,46 +144,4 @@ export default async function AdminTagsPage({
         </div>}
     />
   );
-}
-
-function BlobUrls ({
-  blobUrls,
-  label,
-}: {
-  blobUrls: string[],
-  label: string,
-}) {
-  return <AdminGrid title={label}>
-    {blobUrls.map(url => {
-      const href = `/admin/uploads/${encodeURIComponent(url)}`;
-      const fileName = url.split('/').pop();
-      return <Fragment key={url}>
-        <Link href={href}>
-          <ImageTiny
-            alt={`Photo: ${fileName}`}
-            src={url}
-            aspectRatio={3.0 / 2.0}
-            className={cc(
-              'rounded-sm overflow-hidden',
-              'border border-gray-200 dark:border-gray-800',
-            )}
-          />
-        </Link>
-        <Link
-          href={href}
-          className="break-all"
-          title={url}
-        >
-          {pathForBlobUrl(url)}
-        </Link>
-        <EditButton href={href} label="Setup" />
-        <FormWithConfirm
-          action={deleteBlobPhotoAction}
-          confirmText="Are you sure you want to delete this upload?"
-        >
-          <input type="hidden" name="url" value={url} />
-          <DeleteButton />
-        </FormWithConfirm>
-      </Fragment>;})}
-  </AdminGrid>;
 }

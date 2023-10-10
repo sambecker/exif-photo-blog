@@ -2,7 +2,8 @@ import PhotoForm from '@/photo/PhotoForm';
 import { ExifParserFactory } from 'ts-exif-parser';
 import { convertExifToFormData } from '@/photo/form';
 import AdminChildPage from '@/components/AdminChildPage';
-import { getExtensionFromBlobUrl } from '@/services/blob';
+import { getExtensionFromBlobUrl, getIdFromBlobUrl } from '@/services/blob';
+import { PATH_ADMIN_UPLOADS } from '@/site/paths';
 
 interface Params {
   params: { uploadPath: string }
@@ -27,7 +28,11 @@ export default async function UploadPage({ params: { uploadPath } }: Params) {
   }
 
   return (
-    <AdminChildPage>
+    <AdminChildPage
+      backPath={PATH_ADMIN_UPLOADS}
+      backLabel="Uploads"
+      breadcrumb={getIdFromBlobUrl(url)}
+    >
       {data
         ? <PhotoForm
           initialPhotoForm={{

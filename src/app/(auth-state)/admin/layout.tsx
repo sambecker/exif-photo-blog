@@ -1,9 +1,14 @@
 import AdminNav from '@/admin/AdminNav';
 import {
+  getBlobUploadUrlsCached,
   getPhotosCountIncludingHiddenCached,
   getUniqueTagsCached,
 } from '@/cache';
-import { PATH_ADMIN_PHOTOS, PATH_ADMIN_TAGS } from '@/site/paths';
+import {
+  PATH_ADMIN_PHOTOS,
+  PATH_ADMIN_TAGS,
+  PATH_ADMIN_UPLOADS,
+} from '@/site/paths';
 
 export default async function AdminLayout({
   children,
@@ -11,28 +16,37 @@ export default async function AdminLayout({
   children: React.ReactNode
 }) {
   const [
-    photosCount,
-    tagsCount,
+    countPhotos,
+    countUploads,
+    countTags,
   ] = await Promise.all([
     getPhotosCountIncludingHiddenCached(),
+    getBlobUploadUrlsCached().then(urls => urls.length),
     getUniqueTagsCached().then(tags => tags.length),
   ]);
 
   const navItemPhotos = {
     label: 'Photos',
     href: PATH_ADMIN_PHOTOS,
-    count: photosCount,
+    count: countPhotos,
+  };
+
+  const navItemUploads = {
+    label: 'Uploads',
+    href: PATH_ADMIN_UPLOADS,
+    count: countUploads,
   };
 
   const navItemTags = {
     label: 'Tags',
     href: PATH_ADMIN_TAGS,
-    count: tagsCount,
+    count: countTags,
   };
 
-  const navItems = tagsCount > 0
-    ? [navItemPhotos, navItemTags]
-    : [navItemPhotos];
+  const navItems = [navItemPhotos];
+
+  if (countUploads > 0) { navItems.push(navItemUploads); }
+  if (countTags > 0) { navItems.push(navItemTags); }
 
   return (
     <div className="mt-4 space-y-5">

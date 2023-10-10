@@ -8,6 +8,7 @@ import {
 } from '@/services/blob';
 import { cc } from '@/utility/css';
 import { useRouter } from 'next/navigation';
+import { pathForAdminUploadUrl } from '@/site/paths';
 
 export default function PhotoUploadInput() {
   const [isUploading, setIsUploading] = useState(false);
@@ -38,7 +39,7 @@ export default function PhotoUploadInput() {
                     // relevant only when a photo isn't added
                     router.refresh();
                     // Redirect to photo detail page
-                    router.push(`/admin/uploads/${encodeURIComponent(url)}`);
+                    router.push(pathForAdminUploadUrl(url));
                   })
                   .catch(error => {
                     setIsUploading(false);

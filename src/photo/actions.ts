@@ -88,6 +88,10 @@ export async function deleteBlobPhotoAction(formData: FormData) {
   await deleteBlobPhoto(formData.get('url') as string);
 
   revalidateBlobKey();
+
+  if (formData.get('redirectToPhotos') === 'true') {
+    redirect(PATH_ADMIN_PHOTOS);
+  }
 };
 
 export async function syncCacheAction() {
