@@ -36,7 +36,10 @@ const fractionForDecimal = (decimal: number, fractionCharacter?: boolean) => {
 };
 
 export const formatExposureCompensation = (exposureCompensation?: number) => {
-  if (exposureCompensation) {
+  if (
+    exposureCompensation !== undefined &&
+    Math.abs(exposureCompensation) >= 0.33
+  ) {
     const decimal = exposureCompensation % 1;
     const whole = Math.abs(exposureCompensation - decimal);
     const fraction = fractionForDecimal(decimal);
