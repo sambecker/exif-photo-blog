@@ -153,7 +153,7 @@ export default function SiteChecklistClient({
           isPending={isPendingPage}
         >
           Store auth secret in environment variable:
-          <InfoBlock className="my-1.5" padding="tight">
+          <InfoBlock className="my-1.5 inline-flex" padding="tight">
             <div className="flex items-center gap-4">
               <span>{secret}</span>
               <div className="flex items-center gap-0.5">

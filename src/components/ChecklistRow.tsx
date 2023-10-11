@@ -25,7 +25,7 @@ export default function ChecklistRow({
         type={status ? 'checked' : optional ? 'optional' : 'missing'}
         loading={isPending}
       />
-      <div className="flex flex-col items-start">
+      <div className="flex flex-col justify-stretch flex-grow">
         <div className={cc(
           'font-bold dark:text-gray-300',
         )}>
