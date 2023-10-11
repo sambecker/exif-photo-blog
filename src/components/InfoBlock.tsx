@@ -28,7 +28,7 @@ export default function InfoBlock({
       className,
     )}>
       <div className={cc(
-        'flex flex-col items-center justify-center',
+        'flex flex-col items-center justify-center w-full',
         'space-y-4',
         'text-gray-500 dark:text-gray-400',
       )}>

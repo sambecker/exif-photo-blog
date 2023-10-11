@@ -113,7 +113,7 @@ export default function SiteChecklistClient({
     </div>;
 
   return (
-    <div className="text-sm max-w-xl space-y-6">
+    <div className="text-sm max-w-xl space-y-6 w-full">
       <Checklist
         title="Storage"
         icon={<BiData size={16} />}
@@ -153,20 +153,25 @@ export default function SiteChecklistClient({
           isPending={isPendingPage}
         >
           Store auth secret in environment variable:
-          <InfoBlock className="my-1.5 inline-flex" padding="tight">
-            <div className="flex items-center gap-4">
-              <span>{secret}</span>
-              <div className="flex items-center gap-0.5">
-                {renderCopyButton('Secret', secret)}
-                <IconButton
-                  icon={<BiRefresh size={18} />}
-                  onClick={refreshSecret}
-                  isLoading={isPendingSecret}
-                  spinnerColor="text"
-                />
+          <div className={cc(
+            'min-w-0 relative',
+            'overflow-x-scroll',
+          )}>
+            <InfoBlock className="my-1.5 inline-flex" padding="tight">
+              <div className="flex items-center gap-4">
+                <span>{secret}</span>
+                <div className="flex items-center gap-0.5">
+                  {renderCopyButton('Secret', secret)}
+                  <IconButton
+                    icon={<BiRefresh size={18} />}
+                    onClick={refreshSecret}
+                    isLoading={isPendingSecret}
+                    spinnerColor="text"
+                  />
+                </div>
               </div>
-            </div>
-          </InfoBlock>
+            </InfoBlock>
+          </div>
           {renderEnvVars(['AUTH_SECRET'])}
         </ChecklistRow>
         <ChecklistRow
