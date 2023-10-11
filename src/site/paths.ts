@@ -17,7 +17,6 @@ export const PATH_GRID      = '/grid';
 export const PATH_ADMIN     = '/admin';
 export const PATH_SIGN_IN   = '/sign-in';
 export const PATH_OG        = '/og';
-export const PATH_CHECKLIST = '/checklist';
 
 // Admin paths
 export const PATH_ADMIN_PHOTOS      = `${PATH_ADMIN}/photos`;
@@ -25,6 +24,7 @@ export const PATH_ADMIN_UPLOADS     = `${PATH_ADMIN}/uploads`;
 export const PATH_ADMIN_TAGS        = `${PATH_ADMIN}/tags`;
 export const PATH_ADMIN_UPLOAD      = `${PATH_ADMIN}/uploads`;
 export const PATH_ADMIN_UPLOAD_BLOB = `${PATH_ADMIN_UPLOAD}/blob`;
+export const PATH_ADMIN_SETTINGS    = `${PATH_ADMIN}/settings`;
 
 // Modifiers
 const SHARE = 'share';
@@ -158,18 +158,23 @@ export const isPathCameraPhoto = (pathname = '') =>
 export const isPathCameraPhotoShare = (pathname = '') =>
   new RegExp(`^${PREFIX_CAMERA}/[^/]+/[^/]+/${SHARE}/?$`).test(pathname);
 
-export const isPathGrid = (pathname = '') =>
-  pathname.startsWith(PATH_GRID);
+export const checkPathPrefix = (pathname = '', prefix: string) =>
+  pathname.toLowerCase().startsWith(prefix);
 
-export const isPathSignIn = (pathname = '') =>
-  pathname.startsWith(PATH_SIGN_IN);
+export const isPathGrid = (pathname?: string) =>
+  checkPathPrefix(pathname, PATH_GRID);
 
-export const isPathAdmin = (pathname = '') =>
-  pathname.startsWith(PATH_ADMIN);
+export const isPathSignIn = (pathname?: string) =>
+  checkPathPrefix(pathname, PATH_SIGN_IN);
 
-export const isPathProtected = (pathname = '') =>
-  pathname.startsWith(PATH_ADMIN) ||
-  pathname === PATH_CHECKLIST;
+export const isPathAdmin = (pathname?: string) =>
+  checkPathPrefix(pathname, PATH_ADMIN);
+
+export const isPathAdminSettings = (pathname?: string) =>
+  checkPathPrefix(pathname, PATH_ADMIN_SETTINGS);
+
+export const isPathProtected = (pathname?: string) =>
+  checkPathPrefix(pathname, PATH_ADMIN);
 
 export const getPathComponents = (pathname = ''): {
   photoId?: string

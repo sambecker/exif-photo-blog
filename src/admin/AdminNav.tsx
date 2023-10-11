@@ -1,9 +1,15 @@
 'use client';
 
 import SiteGrid from '@/components/SiteGrid';
+import {
+  PATH_ADMIN_SETTINGS,
+  checkPathPrefix,
+  isPathAdminSettings,
+} from '@/site/paths';
 import { cc } from '@/utility/css';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { BiCog } from 'react-icons/bi';
 
 export default function AdminNav({
   items,
@@ -20,10 +26,12 @@ export default function AdminNav({
     <SiteGrid
       contentMain={
         <div className={cc(
+          'flex gap-2 md:gap-4',
           'border-b border-gray-200 dark:border-gray-800 pb-3',
         )}>
           <div className={cc(
             'flex gap-2 md:gap-4',
+            'flex-grow',
           )}>
             {items.map(({ label, href, count }) =>
               <Link
@@ -31,13 +39,21 @@ export default function AdminNav({
                 href={href}
                 className={cc(
                   'flex gap-0.5',
-                  pathname.startsWith(href) ? 'font-bold' : 'text-dim',
+                  checkPathPrefix(pathname, href) ? 'font-bold' : 'text-dim',
                 )}
               >
                 <span>{label}</span>
                 <span>({count})</span>
               </Link>)}
           </div>
+          <Link
+            href={PATH_ADMIN_SETTINGS}
+            className={isPathAdminSettings(pathname)
+              ? 'font-bold'
+              : 'text-dim'}
+          >
+            <BiCog />
+          </Link>
         </div>
       }
     />

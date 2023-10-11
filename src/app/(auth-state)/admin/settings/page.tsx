@@ -4,7 +4,7 @@ import SiteChecklist from '@/site/SiteChecklist';
 
 export const runtime = 'edge';
 
-export default async function ChecklistPage() {
+export default async function AdminSettingsPage() {
   return (
     <SiteGrid
       contentMain={<InfoBlock>
