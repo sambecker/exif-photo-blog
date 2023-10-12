@@ -1,6 +1,6 @@
 import { auth } from '@/auth';
 import SignInForm from '@/auth/SignInForm';
-import { PATH_ROOT } from '@/site/paths';
+import { PATH_ADMIN } from '@/site/paths';
 import { cc } from '@/utility/css';
 import { redirect } from 'next/navigation';
 
@@ -10,7 +10,7 @@ export default async function SignInPage() {
   const session = await auth();
 
   if (session?.user) {
-    redirect(PATH_ROOT);
+    redirect(PATH_ADMIN);
   }
   
   return (
