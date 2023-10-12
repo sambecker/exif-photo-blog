@@ -52,7 +52,11 @@ export default function AdminNav({
               ? 'font-bold'
               : 'text-dim'}
           >
-            <BiCog size={16} className="inline-block" />
+            <BiCog
+              size={18}
+              className="inline-block"
+              aria-label="Blog Configuration"
+            />
           </Link>
         </div>
       }
