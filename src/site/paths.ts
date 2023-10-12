@@ -19,12 +19,12 @@ export const PATH_SIGN_IN   = '/sign-in';
 export const PATH_OG        = '/og';
 
 // Admin paths
-export const PATH_ADMIN_PHOTOS      = `${PATH_ADMIN}/photos`;
-export const PATH_ADMIN_UPLOADS     = `${PATH_ADMIN}/uploads`;
-export const PATH_ADMIN_TAGS        = `${PATH_ADMIN}/tags`;
-export const PATH_ADMIN_UPLOAD      = `${PATH_ADMIN}/uploads`;
-export const PATH_ADMIN_UPLOAD_BLOB = `${PATH_ADMIN_UPLOAD}/blob`;
-export const PATH_ADMIN_SETTINGS    = `${PATH_ADMIN}/settings`;
+export const PATH_ADMIN_PHOTOS        = `${PATH_ADMIN}/photos`;
+export const PATH_ADMIN_UPLOADS       = `${PATH_ADMIN}/uploads`;
+export const PATH_ADMIN_TAGS          = `${PATH_ADMIN}/tags`;
+export const PATH_ADMIN_UPLOAD        = `${PATH_ADMIN}/uploads`;
+export const PATH_ADMIN_UPLOAD_BLOB   = `${PATH_ADMIN_UPLOAD}/blob`;
+export const PATH_ADMIN_CONFIGURATION = `${PATH_ADMIN}/configuration`;
 
 // Modifiers
 const SHARE = 'share';
@@ -170,8 +170,8 @@ export const isPathSignIn = (pathname?: string) =>
 export const isPathAdmin = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ADMIN);
 
-export const isPathAdminSettings = (pathname?: string) =>
-  checkPathPrefix(pathname, PATH_ADMIN_SETTINGS);
+export const isPathAdminConfiguration = (pathname?: string) =>
+  checkPathPrefix(pathname, PATH_ADMIN_CONFIGURATION);
 
 export const isPathProtected = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ADMIN);

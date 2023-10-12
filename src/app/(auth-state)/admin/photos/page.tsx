@@ -5,9 +5,7 @@ import PhotoTiny from '@/photo/PhotoTiny';
 import { cc } from '@/utility/css';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import SiteGrid from '@/components/SiteGrid';
-import {
-  deletePhotoAction, syncCacheAction } from '@/photo/actions';
-import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
+import { deletePhotoAction } from '@/photo/actions';
 import {
   pathForAdminPhotos,
   pathForPhoto,
@@ -21,7 +19,6 @@ import {
   getPhotosCountIncludingHiddenCached,
 } from '@/cache';
 import { AiOutlineEyeInvisible } from 'react-icons/ai';
-import { BiTrash } from 'react-icons/bi';
 import {
   PaginationParams,
   getPaginationForSearchParams,
@@ -56,21 +53,7 @@ export default async function AdminTagsPage({
     <SiteGrid
       contentMain={
         <div className="space-y-6">
-          <div className="flex items-center">
-            <div className="flex-grow">
-              <PhotoUploadInput />
-            </div>
-            <form
-              className="hidden md:block"
-              action={syncCacheAction}
-            >
-              <SubmitButtonWithStatus
-                icon={<BiTrash />}
-              >
-                Clear Cache
-              </SubmitButtonWithStatus>
-            </form>
-          </div>
+          <PhotoUploadInput />
           {blobPhotoUrls.length > 0 &&
             <div className={cc(
               'border-b pb-6',

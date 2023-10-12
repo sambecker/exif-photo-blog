@@ -2,9 +2,9 @@
 
 import SiteGrid from '@/components/SiteGrid';
 import {
-  PATH_ADMIN_SETTINGS,
+  PATH_ADMIN_CONFIGURATION,
   checkPathPrefix,
-  isPathAdminSettings,
+  isPathAdminConfiguration,
 } from '@/site/paths';
 import { cc } from '@/utility/css';
 import Link from 'next/link';
@@ -47,8 +47,8 @@ export default function AdminNav({
               </Link>)}
           </div>
           <Link
-            href={PATH_ADMIN_SETTINGS}
-            className={isPathAdminSettings(pathname)
+            href={PATH_ADMIN_CONFIGURATION}
+            className={isPathAdminConfiguration(pathname)
               ? 'font-bold'
               : 'text-dim'}
           >

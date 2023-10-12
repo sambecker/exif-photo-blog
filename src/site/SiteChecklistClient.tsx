@@ -210,7 +210,7 @@ export default function SiteChecklistClient({
         </ChecklistRow>
       </Checklist>
       <Checklist
-        title="Configuration"
+        title="Settings"
         icon={<BiCog size={16} />}
       >
         <ChecklistRow
