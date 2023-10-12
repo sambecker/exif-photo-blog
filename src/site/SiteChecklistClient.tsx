@@ -94,6 +94,7 @@ export default function SiteChecklistClient({
   const renderEnvVar = (variable: string) =>
     <div
       key={variable}
+      className="overflow-x-scroll"
     >
       <span className="inline-flex items-center gap-1">
         <span className={cc(
@@ -153,12 +154,9 @@ export default function SiteChecklistClient({
           isPending={isPendingPage}
         >
           Store auth secret in environment variable:
-          <div className={cc(
-            'min-w-0 relative',
-            'overflow-x-scroll',
-          )}>
+          <div className="overflow-x-auto">
             <InfoBlock className="my-1.5 inline-flex" padding="tight">
-              <div className="flex items-center gap-4">
+              <div className="flex flex-nowrap items-center gap-4">
                 <span>{secret}</span>
                 <div className="flex items-center gap-0.5">
                   {renderCopyButton('Secret', secret)}
@@ -251,7 +249,7 @@ export default function SiteChecklistClient({
             Check
           </button>
         </div>}
-      <div className="px-10 text-gray-500">
+      <div className="px-11 text-gray-500">
         Changes to environment variables require a redeploy
         or reboot of local dev server
       </div>

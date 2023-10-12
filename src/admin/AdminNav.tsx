@@ -31,7 +31,7 @@ export default function AdminNav({
         )}>
           <div className={cc(
             'flex gap-2 md:gap-4',
-            'flex-grow',
+            'flex-grow overflow-x-scroll',
           )}>
             {items.map(({ label, href, count }) =>
               <Link
@@ -52,7 +52,7 @@ export default function AdminNav({
               ? 'font-bold'
               : 'text-dim'}
           >
-            <BiCog />
+            <BiCog size={16} className="inline-block" />
           </Link>
         </div>
       }

@@ -19,16 +19,13 @@ export default function ChecklistRow({
     <div className={cc(
       'flex gap-2.5',
       'px-4 pt-2 pb-2.5',
-      'text-left',
     )}>
       <StatusIcon
         type={status ? 'checked' : optional ? 'optional' : 'missing'}
         loading={isPending}
       />
-      <div className="flex flex-col justify-stretch flex-grow w-full">
-        <div className={cc(
-          'font-bold dark:text-gray-300',
-        )}>
+      <div className="flex flex-col min-w-0">
+        <div className="font-bold dark:text-gray-300">
           {title}
           {optional && ' (optional)'}
         </div>
