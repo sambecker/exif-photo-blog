@@ -5,15 +5,15 @@ import { useRef, useState } from 'react';
 import { CopyExif } from '@/lib/CopyExif';
 import { cc } from '@/utility/css';
 import { AiOutlineCloudUpload } from 'react-icons/ai';
-import { ACCEPTED_PHOTO_FILE_TYPES } from '@/services/blob';
 import Spinner from './Spinner';
+import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
 
 const INPUT_ID = 'file';
 
 export default function ImageInput({
   onBlobReady,
   maxSize,
-  quality = 0.9,
+  quality = 0.8,
   loading,
   debug,
 }: {
@@ -64,7 +64,7 @@ export default function ImageInput({
             onChange={async e => {
               const file = e.currentTarget.files?.[0];
               setFileName(file?.name);
-              const extension = file?.name.split('.').pop();
+              const extension = file?.name.split('.').pop()?.toLowerCase();
               const canvas = ref.current;
               if (file) {
                 if (!maxSize) {
@@ -103,10 +103,10 @@ export default function ImageInput({
                   canvas.toBlob(
                     async blob => {
                       if (blob) {
-                        onBlobReady(
-                          await CopyExif(file, blob, imageType),
-                          extension,
-                        );
+                        // await sleep();
+                        const newBlob = await CopyExif(file, blob, imageType);
+                        // await sleep();
+                        onBlobReady(newBlob, extension);
                       }
                     },
                     imageType,

@@ -12,12 +12,6 @@ export const BLOB_BASE_URL =
 const PREFIX_UPLOAD = 'upload';
 const PREFIX_PHOTO = 'photo';
 
-export const ACCEPTED_PHOTO_FILE_TYPES = [
-  'image/jpg',
-  'image/jpeg',
-  'image/png',
-];
-
 const REGEX_UPLOAD_PATH = new RegExp(
   `(?:${PREFIX_UPLOAD})\.[a-z]{1,4}`,
   'i',

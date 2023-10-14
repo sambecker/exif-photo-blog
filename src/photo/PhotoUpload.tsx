@@ -31,14 +31,14 @@ export default function PhotoUpload({
             maxSize={shouldResize ? MAX_IMAGE_SIZE : undefined}
             loading={isUploading}
             onBlobReady={(blob, extension) => {
-              setIsUploading(true);
-              setUploadError('');
               if (debug) {
                 setDebugDownload({
                   href: URL.createObjectURL(blob),
                   fileName: `debug.${extension}`,
                 });
               } else {
+                setIsUploading(true);
+                setUploadError('');
                 uploadPhotoFromClient(
                   blob,
                   extension,
@@ -60,7 +60,7 @@ export default function PhotoUpload({
           />
         </form>
       </div>
-      {debugDownload &&
+      {debug && debugDownload &&
         <a
           className="block"
           href={debugDownload.href}

@@ -53,7 +53,7 @@ export default async function AdminTagsPage({
     <SiteGrid
       contentMain={
         <div className="space-y-8">
-          <PhotoUpload shouldResize={true} debug />
+          <PhotoUpload shouldResize={true} />
           {blobPhotoUrls.length > 0 &&
             <div className={cc(
               'border-b pb-6',

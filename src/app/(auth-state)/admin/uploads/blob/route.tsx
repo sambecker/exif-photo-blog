@@ -1,8 +1,6 @@
 import { revalidatePhotosAndBlobKeys } from '@/cache';
-import {
-  ACCEPTED_PHOTO_FILE_TYPES,
-  isUploadPathnameValid,
-} from '@/services/blob';
+import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
+import { isUploadPathnameValid } from '@/services/blob';
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { NextResponse } from 'next/server';
 
