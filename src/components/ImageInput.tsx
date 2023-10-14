@@ -11,13 +11,15 @@ import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
 const INPUT_ID = 'file';
 
 export default function ImageInput({
+  onStart,
   onBlobReady,
   maxSize,
   quality = 0.8,
   loading,
   debug,
 }: {
-  onBlobReady: (blob: Blob, extension?: string) => void
+  onStart?: () => void
+  onBlobReady?: (blob: Blob, extension?: string) => void
   maxSize?: number
   quality?: number
   loading?: boolean
@@ -62,6 +64,7 @@ export default function ImageInput({
             accept={ACCEPTED_PHOTO_FILE_TYPES.join(',')}
             disabled={loading}
             onChange={async e => {
+              onStart?.();
               const file = e.currentTarget.files?.[0];
               setFileName(file?.name);
               const extension = file?.name.split('.').pop()?.toLowerCase();
@@ -69,7 +72,7 @@ export default function ImageInput({
               if (file) {
                 if (!maxSize) {
                   // No need to resize
-                  onBlobReady(file);
+                  onBlobReady?.(file);
                 } else if (canvas) {
                   const image = await blobToImage(file);
                   setImage(image);
@@ -106,7 +109,7 @@ export default function ImageInput({
                         // await sleep();
                         const newBlob = await CopyExif(file, blob, imageType);
                         // await sleep();
-                        onBlobReady(newBlob, extension);
+                        onBlobReady?.(newBlob, extension);
                       }
                     },
                     imageType,

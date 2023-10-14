@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { pathForAdminUploadUrl } from '@/site/paths';
 import ImageInput from '../components/ImageInput';
 import { MAX_IMAGE_SIZE } from '@/utility/image';
+import { cc } from '@/utility/css';
 
 export default function PhotoUpload({
   shouldResize,
@@ -24,21 +25,28 @@ export default function PhotoUpload({
   const router = useRouter();
 
   return (
-    <div className="space-y-4">
+    <div className={cc(
+      'space-y-4',
+      isUploading && 'cursor-not-allowed',
+    )}>
       <div className="flex items-center gap-8">
         <form className="flex items-center gap-3">
           <ImageInput
             maxSize={shouldResize ? MAX_IMAGE_SIZE : undefined}
             loading={isUploading}
+            onStart={() => {
+              setIsUploading(true);
+              setUploadError('');
+            }}
             onBlobReady={(blob, extension) => {
               if (debug) {
                 setDebugDownload({
                   href: URL.createObjectURL(blob),
                   fileName: `debug.${extension}`,
                 });
-              } else {
-                setIsUploading(true);
+                setIsUploading(false);
                 setUploadError('');
+              } else {
                 uploadPhotoFromClient(
                   blob,
                   extension,
