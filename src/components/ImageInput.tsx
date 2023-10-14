@@ -70,10 +70,8 @@ export default function ImageInput({
               const extension = file?.name.split('.').pop()?.toLowerCase();
               const canvas = ref.current;
               if (file) {
-                if (!maxSize) {
-                  // No need to resize
-                  onBlobReady?.(file);
-                } else if (canvas) {
+                if (maxSize && canvas) {
+                  // Process images that need resizing
                   const image = await blobToImage(file);
                   setImage(image);
                   const { naturalWidth, naturalHeight } = image;
@@ -87,14 +85,11 @@ export default function ImageInput({
                   canvas.width = width;
                   canvas.height = height;
                   
-                  // Specify wide gamut to avoid data loss during resizing
+                  // Specify wide gamut to avoid data loss while resizing
                   const ctx = canvas.getContext(
                     '2d',
                     { colorSpace: 'display-p3' },
                   );
-
-                  const imageType =
-                    `image/${extension === 'jpg' ? 'jpeg' : extension}`;
 
                   ctx?.drawImage(
                     image,
@@ -106,15 +101,16 @@ export default function ImageInput({
                   canvas.toBlob(
                     async blob => {
                       if (blob) {
-                        // await sleep();
-                        const newBlob = await CopyExif(file, blob, imageType);
-                        // await sleep();
-                        onBlobReady?.(newBlob, extension);
+                        const blobWithExif = await CopyExif(file, blob);
+                        onBlobReady?.(blobWithExif, extension);
                       }
                     },
-                    imageType,
+                    'image/jpeg',
                     quality,
                   );
+                } else {
+                  // No need to process
+                  onBlobReady?.(file);
                 }
               }
             }}

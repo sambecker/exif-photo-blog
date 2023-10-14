@@ -11,7 +11,7 @@ const SOS = 0xffda;
 const APP1 = 0xffe1;
 const EXIF = 0x45786966;
 
-const retrieveExif = (blob: Blob): any =>
+const retrieveExif = (blob: Blob): Promise<Blob> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.addEventListener('load', e => {
