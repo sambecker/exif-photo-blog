@@ -1,4 +1,4 @@
-import { NextImageWidth } from '@/utility/image';
+import { NextImageSize } from '@/utility/image';
 
 export const MAX_PHOTOS_TO_SHOW_HOME = 12;
 export const MAX_PHOTOS_TO_SHOW_PER_TAG = 6;
@@ -7,7 +7,7 @@ export const MAX_PHOTOS_TO_SHOW_TEMPLATE_TIGHT = 12;
 
 // 16:9 og image ratio
 const IMAGE_OG_RATIO = 16 / 9;
-const IMAGE_OG_WIDTH: NextImageWidth = 1200;
+const IMAGE_OG_WIDTH: NextImageSize = 1200;
 const IMAGE_OG_HEIGHT = IMAGE_OG_WIDTH * (1 / IMAGE_OG_RATIO);
 export const IMAGE_OG_SIZE = {
   width: IMAGE_OG_WIDTH,

@@ -6,7 +6,7 @@ const STORE_ID = process.env.BLOB_READ_WRITE_TOKEN?.match(
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
-})
+});
 
 const nextConfig = {
   images: {

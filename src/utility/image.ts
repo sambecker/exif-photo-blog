@@ -4,18 +4,20 @@ import { BASE_URL } from '@/site/config';
 type NextCustomSize = 200 | 400 | 1050;
 type NextImageDeviceSize = 640 | 750 | 828 | 1080 | 1200 | 1920 | 2048 | 3840;
 
-export type NextImageWidth = NextCustomSize | NextImageDeviceSize;
+export type NextImageSize = NextCustomSize | NextImageDeviceSize;
+
+export const MAX_IMAGE_SIZE: NextImageSize = 3840;
 
 export const getNextImageUrlForRequest = (
   imageUrl: string,
-  width: NextImageWidth,
+  size: NextImageSize,
   quality = 75,
   baseUrl = BASE_URL,
 ) => {
   const url = new URL(`${baseUrl}/_next/image`);
 
   url.searchParams.append('url', imageUrl);
-  url.searchParams.append('w', width.toString());
+  url.searchParams.append('w', size.toString());
   url.searchParams.append('q', quality.toString());
 
   return url.toString();

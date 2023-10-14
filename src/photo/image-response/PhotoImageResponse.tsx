@@ -1,5 +1,5 @@
 import { Photo } from '..';
-import { NextImageWidth } from '@/utility/image';
+import { NextImageSize } from '@/utility/image';
 import { formatModelShort } from '@/utility/exif';
 import { AiFillApple } from 'react-icons/ai';
 import ImageCaption from './components/ImageCaption';
@@ -13,7 +13,7 @@ export default function PhotoImageResponse({
   fontFamily,
 }: {
   photo: Photo
-  width: NextImageWidth
+  width: NextImageSize
   height: number
   fontFamily: string
 }) {
