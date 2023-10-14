@@ -27,7 +27,6 @@ import AdminGrid from '@/admin/AdminGrid';
 import DeleteButton from '@/admin/DeleteButton';
 import EditButton from '@/admin/EditButton';
 import BlobUrls from '@/admin/BlobUrls';
-import { PRO_MODE_ENABLED } from '@/site/config';
 
 export const runtime = 'edge';
 
@@ -54,7 +53,7 @@ export default async function AdminTagsPage({
     <SiteGrid
       contentMain={
         <div className="space-y-8">
-          <PhotoUpload shouldResize={PRO_MODE_ENABLED} />
+          <PhotoUpload shouldResize={true} debug />
           {blobPhotoUrls.length > 0 &&
             <div className={cc(
               'border-b pb-6',
