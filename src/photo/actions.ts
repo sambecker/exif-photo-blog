@@ -18,24 +18,12 @@ import {
   revalidateBlobKey,
   revalidatePhotosKey,
 } from '@/cache';
-import { PRO_MODE_ENABLED } from '@/site/config';
-import { getNextImageUrlForRequest } from '@/utility/image';
 import { PATH_ADMIN_PHOTOS, PATH_ADMIN_TAGS } from '@/site/paths';
 
 export async function createPhotoAction(formData: FormData) {
-  const requestOrigin = formData.get('requestOrigin') as string | undefined;
-  formData.delete('requestOrigin');
-
   const photo = convertFormDataToPhoto(formData, true);
 
-  const updatedUrl = await convertUploadToPhoto(
-    photo.url,
-    photo.id,
-    !PRO_MODE_ENABLED
-      ? getNextImageUrlForRequest(photo.url, 3840, 90, requestOrigin)
-      : undefined,
-    !PRO_MODE_ENABLED ? 'webp' : undefined,
-  );
+  const updatedUrl = await convertUploadToPhoto(photo.url, photo.id);
 
   if (updatedUrl) { photo.url = updatedUrl; }
 

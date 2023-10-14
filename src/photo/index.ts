@@ -12,6 +12,11 @@ import type { Metadata } from 'next';
 
 export const GRID_THUMBNAILS_TO_SHOW_MAX = 12;
 
+export const ACCEPTED_PHOTO_FILE_TYPES = [
+  'image/jpg',
+  'image/jpeg',
+];
+
 // Core EXIF data
 export interface PhotoExif {
   aspectRatio: number

@@ -6,9 +6,9 @@
   /* Core */
   body {
     @apply
+      text-main
       font-mono text-sm md:text-base
       bg-white dark:bg-black
-     text-gray-900 dark:text-gray-100
   }
   /* Forms */
   label {
@@ -22,7 +22,7 @@
     @apply
       px-2 py-1.5
       border rounded-md
-      dark:bg-black
+      bg-white dark:bg-black
       border-gray-200 dark:border-gray-700
       font-mono text-base leading-none
       min-h-[2.25rem]
@@ -73,6 +73,20 @@
       disabled:bg-transparent dark:disabled:bg-transparent
       disabled:border-gray-100 dark:disabled:border-gray-900
   }
+  button.primary, .button.primary {
+    @apply
+      text-invert
+      bg-gray-900 dark:bg-gray-100
+      disabled:bg-gray-900 disabled:dark:bg-gray-100
+      border-gray-900 dark:border-gray-100
+      active:bg-gray-700 active:border-gray-700
+      active:dark:bg-gray-300 active:dark:border-gray-300
+      shadow-none
+  }
+  button.primary.disabled, .button.primary.disabled {
+    @apply
+      text-extra-dim
+  }
   /* Toasts */
   .toaster [data-sonner-toast] {
     @apply
@@ -80,8 +94,24 @@
       !border-gray-200 dark:!border-gray-800
   }
   /* Common Utilities */
+  .text-main {
+    @apply
+      text-gray-900 dark:text-gray-100
+  }
+  .text-invert {
+    @apply
+      text-gray-100 dark:text-gray-900
+  }
   .text-dim {
     @apply
       text-gray-400 dark:text-gray-500
+  }
+  .text-extra-dim {
+    @apply
+      text-gray-500 dark:text-gray-400
+  }
+  .text-error {
+    @apply
+      text-red-500 dark:text-red-400
   }
 }
