@@ -1,3 +1,5 @@
+import { makeUrlAbsolute, shortenUrl } from '@/utility/url';
+
 export const SITE_TITLE =
   process.env.NEXT_PUBLIC_SITE_TITLE ||
   'Photo Blog';
@@ -12,8 +14,10 @@ const SITE_DOMAIN =
   process.env.NEXT_PUBLIC_SITE_DOMAIN ||
   VERCEL_URL;
 
+const SITE_DOMAIN_SHORT = shortenUrl(SITE_DOMAIN);
+
 export const SITE_DOMAIN_OR_TITLE =
-  SITE_DOMAIN ||
+  SITE_DOMAIN_SHORT ||
   SITE_TITLE;
 
 export const SITE_DESCRIPTION =
@@ -21,7 +25,7 @@ export const SITE_DESCRIPTION =
   SITE_DOMAIN;
 
 export const BASE_URL = process.env.NODE_ENV === 'production'
-  ? `https://${SITE_DOMAIN}`
+  ? makeUrlAbsolute(SITE_DOMAIN)
   : 'http://localhost:3000';
 
 export const SHOW_REPO_LINK = process.env.NEXT_PUBLIC_HIDE_REPO_LINK !== '1';

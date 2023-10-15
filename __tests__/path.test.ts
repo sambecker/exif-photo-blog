@@ -15,11 +15,11 @@ import {
 } from '@/site/paths';
 import { getCameraFromKey } from '@/camera';
 
-const PHOTO_ID = 'UsKSGcbt';
-const TAG = 'tag-name';
-const CAMERA = 'fujifilm-x-t1';
+const PHOTO_ID      = 'UsKSGcbt';
+const TAG           = 'tag-name';
+const CAMERA        = 'fujifilm-x-t1';
 const CAMERA_OBJECT = getCameraFromKey(CAMERA);
-const SHARE = 'share';
+const SHARE         = 'share';
 
 const PATH_ROOT               = '/';
 const PATH_GRID               = '/grid';
