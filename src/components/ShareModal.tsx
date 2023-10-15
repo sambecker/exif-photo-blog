@@ -7,6 +7,7 @@ import { BiCopy } from 'react-icons/bi';
 import { toast } from 'sonner';
 import { FiCheckSquare } from 'react-icons/fi';
 import { ReactNode } from 'react';
+import { shortenUrl } from '@/utility/url';
 
 export default function ShareModal({
   title = 'Share',
@@ -39,7 +40,7 @@ export default function ShareModal({
           'border border-gray-200 dark:border-gray-800',
         )}>
           <div className="truncate p-2 w-full">
-            {pathShare}
+            {shortenUrl(pathShare)}
           </div>
           <div
             className={cc(
