@@ -28,6 +28,7 @@ export default function SiteChecklistClient({
   showRepoLink,
   isProModeEnabled,
   isPublicApiEnabled,
+  isOgTextBottomAligned,
   showRefreshButton,
   secret,
 }: {
@@ -40,6 +41,7 @@ export default function SiteChecklistClient({
   showRepoLink: boolean
   isProModeEnabled: boolean
   isPublicApiEnabled: boolean
+  isOgTextBottomAligned: boolean
   showRefreshButton?: boolean
   secret: string
 }) {
@@ -241,6 +243,16 @@ export default function SiteChecklistClient({
           Set environment variable to {'"1"'} to enable
           a public API available at <code>/api</code>:
           {renderEnvVars(['NEXT_PUBLIC_PUBLIC_API'])}
+        </ChecklistRow>
+        <ChecklistRow
+          title="OG Text Alignment"
+          status={isOgTextBottomAligned}
+          isPending={isPendingPage}
+          optional
+        >
+          Set environment variable to {'"BOTTOM"'} to
+          keep OG image text bottom aligned (default is top):
+          {renderEnvVars(['NEXT_PUBLIC_OG_TEXT_ALIGNMENT'])}
         </ChecklistRow>
       </Checklist>
       {showRefreshButton &&

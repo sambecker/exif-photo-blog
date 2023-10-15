@@ -5,6 +5,7 @@ import { AiFillApple } from 'react-icons/ai';
 import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
+import { OG_TEXT_BOTTOM_ALIGNMENT } from '@/site/config';
 
 export default function PhotoImageResponse({
   photo,
@@ -23,7 +24,7 @@ export default function PhotoImageResponse({
         photos: [photo],
         width,
         height,
-        imagePosition: 'top',
+        ...OG_TEXT_BOTTOM_ALIGNMENT && { imagePosition: 'top' },
       }} />
       <ImageCaption {...{ width, height, fontFamily }}>
         {photo.make === 'Apple' &&

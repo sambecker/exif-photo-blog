@@ -1,4 +1,7 @@
+import { OG_TEXT_BOTTOM_ALIGNMENT } from '@/site/config';
 import { ReactNode } from 'react';
+
+const GRADIENT_STOPS = 'rgba(0,0,0,0), rgba(0,0,0,0.3), rgba(0,0,0,0.7)';
 
 export default function ImageCaption({
   height,
@@ -17,21 +20,28 @@ export default function ImageCaption({
       display: 'flex',
       flexDirection: 'column',
       position: 'absolute',
-      paddingTop: height * .6,
-      paddingBottom: height * .075,
       paddingLeft: height * .0875,
       paddingRight: height * .0875,
       color: 'white',
-      background:
-        'linear-gradient(to bottom, ' +
-        'rgba(0,0,0,0), rgba(0,0,0,0.3), rgba(0,0,0,0.7))',
       backgroundBlendMode: 'multiply',
       fontFamily,
       fontSize: height *.089,
       lineHeight: 1,
-      bottom: 0,
       left: 0,
       right: 0,
+      ...OG_TEXT_BOTTOM_ALIGNMENT
+        ? {
+          paddingTop: height * .6,
+          paddingBottom: height * .075,
+          background: `linear-gradient(to bottom, ${GRADIENT_STOPS})`,
+          bottom: 0,
+        }
+        : {
+          paddingTop: height * .075,
+          paddingBottom: height * .6,
+          background: `linear-gradient(to top, ${GRADIENT_STOPS})`,
+          top: 0,
+        },
     }}>
       {subhead &&
         <div
