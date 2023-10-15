@@ -1,4 +1,4 @@
-import { revalidatePhotosAndBlobKeys } from '@/cache';
+import { revalidatePhotosAndBlobKeys, revalidateAdminPaths } from '@/cache';
 import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
 import { isUploadPathnameValid } from '@/services/blob';
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
@@ -26,12 +26,13 @@ export async function POST(request: Request): Promise<NextResponse> {
       // This argument is required, but doesn't seem to fire
       onUploadCompleted: async () => {
         revalidatePhotosAndBlobKeys();
+        revalidateAdminPaths();
       },
     });
     revalidatePhotosAndBlobKeys();
+    revalidateAdminPaths();
     return NextResponse.json(jsonResponse);
   } catch (error) {
-    revalidatePhotosAndBlobKeys();
     return NextResponse.json(
       { error: (error as Error).message },
       { status: 400 },

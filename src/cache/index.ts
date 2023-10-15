@@ -1,4 +1,4 @@
-import { revalidateTag, unstable_cache } from 'next/cache';
+import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
 import {
   GetPhotosOptions,
   getPhoto,
@@ -17,6 +17,7 @@ import { parseCachedPhotosDates, parseCachedPhotoDates } from '@/photo';
 import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
 import { AuthSession } from 'next-auth';
 import { Camera, createCameraKey } from '@/camera';
+import { PATHS_ADMIN, PATHS_TO_CACHE } from '@/site/paths';
 
 const KEY_PHOTOS            = 'photos';
 const KEY_PHOTOS_COUNT      = `${KEY_PHOTOS}-count`;
@@ -95,15 +96,23 @@ export const revalidateBlobKey = () =>
   revalidateTag(KEY_BLOB);
 
 export const revalidatePhotosAndBlobKeys = () => {
-  revalidateTag(KEY_PHOTOS);
-  revalidateTag(KEY_BLOB);
+  revalidatePhotosKey();
+  revalidateBlobKey();
 };
 
 export const revalidateAllKeys = () => {
-  revalidatePhotosKey();
+  revalidatePhotosAndBlobKeys();
   revalidateTagsKey();
   revalidateCamerasKey();
-  revalidateBlobKey();
+};
+
+export const revalidateAllKeysAndPaths = () => {
+  revalidateAllKeys();
+  PATHS_TO_CACHE.forEach(path => revalidatePath(path));
+};
+
+export const revalidateAdminPaths = () => {
+  PATHS_ADMIN.forEach(path => revalidatePath(path));
 };
 
 export const getPhotosCached: typeof getPhotos = (...args) =>

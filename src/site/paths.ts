@@ -6,17 +6,22 @@ import {
   getCameraFromKey,
 } from '@/camera';
 
-// Prefixes
-export const PREFIX_PHOTO  = '/p';
-export const PREFIX_TAG    = '/tag';
-export const PREFIX_CAMERA = '/shot-on';
-
 // Core paths
 export const PATH_ROOT      = '/';
 export const PATH_GRID      = '/grid';
 export const PATH_ADMIN     = '/admin';
 export const PATH_SIGN_IN   = '/sign-in';
 export const PATH_OG        = '/og';
+
+// Path prefixes
+export const PREFIX_PHOTO  = '/p';
+export const PREFIX_TAG    = '/tag';
+export const PREFIX_CAMERA = '/shot-on';
+
+// Dynamic paths
+const PATH_PHOTO_DYNAMIC  = `${PREFIX_PHOTO}/:photoId`;
+const PATH_TAG_DYNAMIC    = `${PREFIX_TAG}/:tag`;
+const PATH_CAMERA_DYNAMIC = `${PREFIX_CAMERA}/:camera`;
 
 // Admin paths
 export const PATH_ADMIN_PHOTOS        = `${PATH_ADMIN}/photos`;
@@ -30,6 +35,26 @@ export const PATH_ADMIN_CONFIGURATION = `${PATH_ADMIN}/configuration`;
 const SHARE = 'share';
 const NEXT  = 'next';
 const EDIT  = 'edit';
+
+export const PATHS_ADMIN = [
+  PATH_ADMIN,
+  PATH_ADMIN_PHOTOS,
+  PATH_ADMIN_UPLOADS,
+  PATH_ADMIN_TAGS,
+  PATH_ADMIN_UPLOAD,
+  PATH_ADMIN_UPLOAD_BLOB,
+  PATH_ADMIN_CONFIGURATION,
+];
+
+export const PATHS_TO_CACHE = [
+  PATH_ROOT,
+  PATH_GRID,
+  PATH_OG,
+  PATH_PHOTO_DYNAMIC,
+  PATH_TAG_DYNAMIC,
+  PATH_CAMERA_DYNAMIC,
+  ...PATHS_ADMIN,
+];
 
 // Absolute paths
 export const ABSOLUTE_PATH_FOR_HOME_IMAGE = `${BASE_URL}/home-image`;
