@@ -1,5 +1,5 @@
 import { PATH_ADMIN_UPLOAD_BLOB } from '@/site/paths';
-import { del, list, put } from '@vercel/blob';
+import { copy, del, list } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
 
 const STORE_ID = process.env.BLOB_READ_WRITE_TOKEN?.match(
@@ -50,31 +50,25 @@ export const uploadPhotoFromClient = async (
 export const convertUploadToPhoto = async (
   uploadUrl: string,
   photoId?: string,
-  resizeUrl?: string,
-  resizeExtension?: string
 ) => {
-  const file = await fetch(resizeUrl ?? uploadUrl)
-    .then((response) => response.blob());
-
   const fileName = photoId ? `${PREFIX_PHOTO}-${photoId}` : `${PREFIX_PHOTO}`;
-  const fileExtension = resizeExtension ?? getExtensionFromBlobUrl(uploadUrl);
+  const fileExtension = getExtensionFromBlobUrl(uploadUrl) ?? 'jpg';
+  const photoUrl = `${fileName}.${fileExtension ?? 'jpg'}`;
 
-  if (file) {
-    const { url } = await put(
-      `${fileName}.${fileExtension ?? 'jpg'}`,
-      file,
-      {
-        access: 'public',
-        ...photoId && { addRandomSuffix: false },
-      }
-    );
-
-    if (url) {
-      await del(uploadUrl);
+  const { url } = await copy(
+    uploadUrl,
+    photoUrl,
+    {
+      access: 'public',
+      ...photoId && { addRandomSuffix: false },
     }
+  );
 
-    return url;
+  if (url) {
+    await del(uploadUrl);
   }
+
+  return url;
 };
 
 export const deleteBlobPhoto = (url: string) => del(url);
