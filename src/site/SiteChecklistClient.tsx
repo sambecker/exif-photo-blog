@@ -245,7 +245,7 @@ export default function SiteChecklistClient({
           {renderEnvVars(['NEXT_PUBLIC_PUBLIC_API'])}
         </ChecklistRow>
         <ChecklistRow
-          title="OG Text Alignment"
+          title="Legacy OG Text Alignment"
           status={isOgTextBottomAligned}
           isPending={isPendingPage}
           optional
