@@ -94,13 +94,15 @@ export const convertExifToFormData = (
   latitude: data.tags?.GPSLatitude?.toString(),
   longitude: data.tags?.GPSLongitude?.toString(),
   filmSimulation: undefined,
-  takenAt: convertTimestampWithOffsetToPostgresString(
-    data.tags?.DateTimeOriginal,
-    getOffsetFromExif(data),
-  ),
-  takenAtNaive: convertTimestampToNaivePostgresString(
-    data.tags?.DateTimeOriginal,
-  ),
+  takenAt: data.tags?.DateTimeOriginal
+    ? convertTimestampWithOffsetToPostgresString(
+      data.tags?.DateTimeOriginal,
+      getOffsetFromExif(data),
+    )
+    : undefined,
+  takenAtNaive: data.tags?.DateTimeOriginal
+    ? convertTimestampToNaivePostgresString(data.tags?.DateTimeOriginal)
+    : undefined,
 });
 
 export const convertFormDataToPhoto = (
@@ -109,9 +111,14 @@ export const convertFormDataToPhoto = (
 ): PhotoDbInsert => {
   const photoForm = Object.fromEntries(formData) as PhotoFormData;
   
-  // Remove Server Action ID
+  // Parse FormData:
+  // - remove server action ID
+  // - remove empty strings
   Object.keys(photoForm).forEach(key => {
-    if (key.startsWith('$ACTION_ID_')) {
+    if (
+      key.startsWith('$ACTION_ID_') ||
+      (photoForm as any)[key] === ''
+    ) {
       delete (photoForm as any)[key];
     }
   });

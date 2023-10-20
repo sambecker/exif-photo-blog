@@ -16,24 +16,34 @@ export const formatDateForPostgres = (date: Date) =>
     '$1-$2-$3 $4',
   );
 
-const createNaiveDateWithOffset = (
-  dateTimestamp = 0,
-  offset = '+00:00',
-) => {
-  const date = new Date(dateTimestamp * 1000);
+const dateFromTimestamp = (timestamp?: number) =>
+  timestamp !== undefined ? new Date(timestamp * 1000) : new Date();
+
+const createNaiveDateWithOffset = (timestamp?: number, offset = '+00:00') => {
+  const date = dateFromTimestamp(timestamp);
   const dateString = `${date.toISOString()}`.replace(/\.[\d]+Z/, offset);
   return parseISO(dateString);
 };
 
-export const convertTimestampWithOffsetToPostgresString = (
-  dateTimestamp?: number,
-  offset?: string,
-) => formatDateForPostgres(
-  createNaiveDateWithOffset(dateTimestamp, offset)
-);
+// Run on the server, when there are date/timestamp/offset inputs
 
-export const convertTimestampToNaivePostgresString = (timestamp = 0) =>
-  new Date(timestamp * 1000).toISOString().replace(
-    /(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})(.[\d]+Z)*/,
-    '$1 $2',
-  );
+export const convertTimestampWithOffsetToPostgresString = (
+  timestamp?: number,
+  offset?: string,
+) =>
+  formatDateForPostgres(createNaiveDateWithOffset(timestamp, offset));
+
+export const convertTimestampToNaivePostgresString = (timestamp?: number) =>
+  dateFromTimestamp(timestamp)
+    .toISOString().replace(
+      /(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})(.[\d]+Z)*/,
+      '$1 $2',
+    );
+
+// Run in the browser, to get generate local date time strings
+
+export const generateLocalPostgresString = () =>
+  formatDateForPostgres(new Date());
+
+export const generateLocalNaivePostgresString = () =>
+  format(new Date(), DATE_STRING_FORMAT_POSTGRES);

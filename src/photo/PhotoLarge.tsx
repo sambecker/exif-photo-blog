@@ -1,4 +1,4 @@
-import { Photo, titleForPhoto } from '.';
+import { Photo, photoHasCameraData, photoHasExifData, titleForPhoto } from '.';
 import SiteGrid from '@/components/SiteGrid';
 import ImageLarge from '@/components/ImageLarge';
 import { cc } from '@/utility/css';
@@ -72,7 +72,7 @@ export default function PhotoLarge({
               {tagsToShow.length > 0 &&
                 <PhotoTags tags={tagsToShow} />}
             </div>
-            {showCamera &&
+            {showCamera && photoHasCameraData(photo) &&
               <PhotoCamera
                 camera={camera}
                 showIcon={false}
@@ -80,25 +80,29 @@ export default function PhotoLarge({
               />}
           </>)}
           {renderMiniGrid(<>
-            <ul className={cc(
-              'text-gray-500',
-              'dark:text-gray-400',
-            )}>
-              <li>
-                {photo.focalLengthFormatted}
-                {' '}
-                <span className={cc(
-                  'text-gray-400/80',
-                  'dark:text-gray-400/50',
-                )}>
-                  {photo.focalLengthIn35MmFormatFormatted}
-                </span>
-              </li>
-              <li>{photo.fNumberFormatted}</li>
-              <li>{photo.isoFormatted}</li>
-              <li>{photo.exposureTimeFormatted}</li>
-              <li>{photo.exposureCompensationFormatted ?? '—'}</li>
-            </ul>
+            {photoHasExifData(photo) &&
+              <ul className={cc(
+                'text-gray-500',
+                'dark:text-gray-400',
+              )}>
+                <li>
+                  {photo.focalLengthFormatted}
+                  {photo.focalLengthIn35MmFormatFormatted &&
+                    <>
+                      {' '}
+                      <span className={cc(
+                        'text-gray-400/80',
+                        'dark:text-gray-400/50',
+                      )}>
+                        {photo.focalLengthIn35MmFormatFormatted}
+                      </span>
+                    </>}
+                </li>
+                <li>{photo.fNumberFormatted}</li>
+                <li>{photo.isoFormatted}</li>
+                <li>{photo.exposureTimeFormatted}</li>
+                <li>{photo.exposureCompensationFormatted ?? '—'}</li>
+              </ul>}
             <div className={cc(
               'flex gap-y-4',
               'flex-col sm:flex-row md:flex-col',

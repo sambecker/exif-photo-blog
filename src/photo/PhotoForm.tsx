@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   FORM_METADATA_ENTRIES,
   PhotoFormData,
@@ -13,6 +13,10 @@ import Link from 'next/link';
 import { cc } from '@/utility/css';
 import CanvasBlurCapture from '@/components/CanvasBlurCapture';
 import { PATH_ADMIN_PHOTOS } from '@/site/paths';
+import {
+  generateLocalNaivePostgresString,
+  generateLocalPostgresString,
+} from '@/utility/date';
 
 const THUMBNAIL_WIDTH = 300;
 const THUMBNAIL_HEIGHT = 200;
@@ -28,6 +32,22 @@ export default function PhotoForm({
 }) {
   const [formData, setFormData] =
     useState<Partial<PhotoFormData>>(initialPhotoForm);
+
+  // Generate local date strings when
+  // none can be harvested from EXIF
+  useEffect(() => {
+    if (!formData.takenAt || !formData.takenAtNaive) {
+      setFormData(data => ({
+        ...data,
+        ...!formData.takenAt && {
+          takenAt: generateLocalPostgresString(),
+        },
+        ...!formData.takenAtNaive && {
+          takenAtNaive: generateLocalNaivePostgresString(),
+        },
+      }));
+    }
+  }, [formData.takenAt, formData.takenAtNaive]);
 
   const url = formData.url ?? '';
 

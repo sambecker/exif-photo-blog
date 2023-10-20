@@ -10,16 +10,16 @@ export const getOffsetFromExif = (data: ExifData) =>
     ) as string | undefined;
 
 export const formatFocalLength = (focalLength?: number) =>
-  focalLength !== undefined ? `${focalLength}mm` : undefined;
+  focalLength ? `${focalLength}mm` : undefined;
 
 export const formatAperture = (aperture?: number) =>
-  aperture !== undefined ? `ƒ/${aperture}` : undefined;
+  aperture ? `ƒ/${aperture}` : undefined;
 
 export const formatIso = (iso?: number) =>
-  iso !== undefined ? `ISO ${iso}` : undefined;
+  iso ? `ISO ${iso}` : undefined;
 
 export const formatExposureTime = (exposureTime?: number) =>
-  exposureTime !== undefined
+  exposureTime
     ? `Shutter 1/${Math.floor(1 / (exposureTime ?? 1))}`
     : undefined;
 
@@ -37,7 +37,7 @@ const fractionForDecimal = (decimal: number, fractionCharacter?: boolean) => {
 
 export const formatExposureCompensation = (exposureCompensation?: number) => {
   if (
-    exposureCompensation !== undefined &&
+    exposureCompensation &&
     Math.abs(exposureCompensation) >= 0.33
   ) {
     const decimal = exposureCompensation % 1;

@@ -201,3 +201,15 @@ export const dateRangeForPhotos = (
     : `${start}–${end}`;
   return { start, end, description };
 };
+
+export const photoHasCameraData = (photo: Photo) =>
+  photo.make ||
+  photo.model;
+
+export const photoHasExifData = (photo: Photo) =>
+  photo.focalLength ||
+  photo.focalLengthIn35MmFormat ||
+  photo.fNumberFormatted ||
+  photo.isoFormatted ||
+  photo.exposureTimeFormatted ||
+  photo.exposureCompensationFormatted;
