@@ -7,7 +7,7 @@ import {
   Photo,
   PhotoDateRange,
 } from '@/photo';
-import { Camera, createCameraKey } from '@/camera';
+import { Camera, Cameras, createCameraKey } from '@/camera';
 import { parameterize } from '@/utility/string';
 
 const PHOTO_DEFAULT_LIMIT = 100;
@@ -300,14 +300,13 @@ const sqlGetUniqueTagsWithCount = async () => sql`
     count: parseInt(row.count, 10),
   })));
 
-
 const sqlGetUniqueCameras = async () => sql`
   SELECT DISTINCT make||' '||model as camera, make, model FROM photos
   WHERE hidden IS NOT TRUE
   ORDER BY camera ASC
-`.then(({ rows }) => rows.map(({ make, model }) => ({
+`.then(({ rows }): Cameras => rows.map(({ make, model }) => ({
     cameraKey: createCameraKey({ make, model }),
-    camera: { make, model } as Camera,
+    camera: { make, model },
   })));
 
 export type GetPhotosOptions = {

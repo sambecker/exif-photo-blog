@@ -2,7 +2,7 @@ import { auth } from '@/auth';
 import { getImageCacheHeadersForAuth, getPhotosCached } from '@/cache';
 import {
   IMAGE_OG_SMALL_SIZE,
-  MAX_PHOTOS_TO_SHOW_HOME,
+  MAX_PHOTOS_TO_SHOW_OG,
 } from '@/photo/image-response';
 import HomeImageResponse from '@/photo/image-response/HomeImageResponse';
 import { getIBMPlexMonoMedium } from '@/site/font';
@@ -16,7 +16,7 @@ export async function GET() {
     headers,
     { fontFamily, fonts },
   ] = await Promise.all([
-    getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_HOME }),
+    getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG }),
     getImageCacheHeadersForAuth(await auth()),
     getIBMPlexMonoMedium(),
   ]);

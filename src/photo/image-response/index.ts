@@ -1,6 +1,6 @@
 import { NextImageSize } from '@/utility/image';
 
-export const MAX_PHOTOS_TO_SHOW_HOME = 12;
+export const MAX_PHOTOS_TO_SHOW_OG = 12;
 export const MAX_PHOTOS_TO_SHOW_PER_TAG = 6;
 export const MAX_PHOTOS_TO_SHOW_TEMPLATE = 16;
 export const MAX_PHOTOS_TO_SHOW_TEMPLATE_TIGHT = 12;

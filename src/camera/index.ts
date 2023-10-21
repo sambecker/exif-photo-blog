@@ -8,6 +8,11 @@ export type Camera = {
   model: string
 };
 
+export type Cameras = {
+  cameraKey: string
+  camera: Camera
+}[];
+
 export const createCameraKey = ({ make, model }: Camera) =>
   parameterize(`${make}-${model}`);
 
