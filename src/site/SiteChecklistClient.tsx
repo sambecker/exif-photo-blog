@@ -96,7 +96,7 @@ export default function SiteChecklistClient({
   const renderEnvVar = (variable: string) =>
     <div
       key={variable}
-      className="overflow-x-scroll"
+      className="overflow-x-scroll overflow-y-hidden"
     >
       <span className="inline-flex items-center gap-1">
         <span className={cc(
