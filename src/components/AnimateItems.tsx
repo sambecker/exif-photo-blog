@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { ReactNode, useRef } from 'react';
 import { Variant, motion } from 'framer-motion';
 import { useAppState } from '@/state';
 
@@ -17,7 +17,7 @@ export interface AnimationConfig {
 interface Props extends AnimationConfig {
   className?: string
   classNameItem?: string
-  items: JSX.Element[]
+  items: ReactNode[]
   animateFromAppState?: boolean
   animateOnFirstLoadOnly?: boolean
   staggerOnFirstLoadOnly?: boolean

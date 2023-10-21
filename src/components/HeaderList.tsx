@@ -1,33 +1,37 @@
 import { cc } from '@/utility/css';
 import AnimateItems from './AnimateItems';
+import { ReactNode } from 'react';
 
 export default function HeaderList({
   title,
   icon,
   items,
 }: {
-  title: string,
+  title?: string,
   icon?: JSX.Element,
-  items: JSX.Element[]
+  items: ReactNode[]
 }) {
   return (
     <AnimateItems
       scaleOffset={0.95}
       duration={0.5}
       staggerDelay={0.05}
-      items={[
-        <div key="header" className={cc(
-          'text-gray-900',
-          'dark:text-gray-100',
-          'flex items-center mb-0.5',
-          'uppercase',
-        )}>
-          {icon}
-          {icon && <>&nbsp;</>}
-          {title}
-        </div>,
-      ].concat(items)}
-      classNameItem="text-dim"
+      items={(title || icon
+        ? [
+          <div key="header" className={cc(
+            'text-gray-900',
+            'dark:text-gray-100',
+            'flex items-center mb-0.5',
+            'uppercase',
+          )}>
+            {icon}
+            {icon && title && <>&nbsp;</>}
+            {title}
+          </div>,
+        ]
+        :[] as ReactNode[]
+      ).concat(items)}
+      classNameItem="text-dim uppercase"
     />
   );
 }

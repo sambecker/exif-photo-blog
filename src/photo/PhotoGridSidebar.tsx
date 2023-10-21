@@ -38,10 +38,9 @@ export default function PhotoGridSidebar({
             hideApple
           />)}
       />}
-      {photosCount > 0 &&
-        <div className="text-dim uppercase">
-          {photoQuantityText(photosCount, false)}
-        </div>}
+      {photosCount > 0 && <HeaderList
+        items={[photoQuantityText(photosCount, false)]}
+      />}
     </>
   );
 }
