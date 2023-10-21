@@ -1,25 +1,33 @@
+import { cc } from '@/utility/css';
+
 const SIZE_DEFAULT = 12;
 
-export type SpinnerColor = 'text' | 'light-gray';
+export type SpinnerColor = 'text' | 'dim' | 'light-gray';
 
 export default function Spinner({
   size = SIZE_DEFAULT,
   color = 'light-gray',
+  className,
 }: {
   size?: number
   color?: SpinnerColor
+  className?: string
 }) {
   return (
-    <span {...{
-      ...color === 'light-gray' && {
-        className: 'text-gray-300 dark:text-gray-600',
-      },
-      style: {
+    <span
+      className={cc(
+        className,
+        color === 'light-gray' && 
+          'text-gray-300 dark:text-gray-600',
+        color === 'dim' &&
+          'text-dim',
+      )}
+      style={{
         display: 'inline-flex',
         width: size,
         height: size,
-      },
-    }}>
+      }}
+    >
       <svg
         width={size}
         height={size}

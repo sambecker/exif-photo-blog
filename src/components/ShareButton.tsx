@@ -21,6 +21,7 @@ export default function ShareButton({
       prefetch,
       shouldScroll,
       shouldReplace: true,
+      spinnerColor: 'dim',
     }} />
   );
 }

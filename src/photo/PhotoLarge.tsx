@@ -31,12 +31,12 @@ export default function PhotoLarge({
 
   const camera = cameraFromPhoto(photo);
   
-  const renderMiniGrid = (children: JSX.Element) =>
+  const renderMiniGrid = (children: JSX.Element, rightPadding = true) =>
     <div className={cc(
       'flex gap-y-4',
       'flex-col sm:flex-row md:flex-col',
       '[&>*]:sm:flex-grow',
-      'pr-2',
+      rightPadding && 'pr-2',
     )}>
       {children}
     </div>;
@@ -114,19 +114,17 @@ export default function PhotoLarge({
               )}>
                 {photo.takenAtNaiveFormatted}
               </div>
-              <div className="-translate-x-0.5">
-                <ShareButton
-                  path={pathForPhotoShare(
-                    photo,
-                    tag,
-                    shareCamera ? camera : undefined,
-                  )}
-                  prefetch={prefetchShare}
-                  shouldScroll={shouldScrollOnShare}
-                />
-              </div>
+              <ShareButton
+                path={pathForPhotoShare(
+                  photo,
+                  tag,
+                  shareCamera ? camera : undefined,
+                )}
+                prefetch={prefetchShare}
+                shouldScroll={shouldScrollOnShare}
+              />
             </div>
-          </>)}
+          </>, false)}
         </div>}
     />
   );

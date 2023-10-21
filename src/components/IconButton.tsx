@@ -21,21 +21,26 @@ export default function IconButton({
   return (
     <span className={cc(
       className,
-      'relative inline-flex items-center justify-center',
-      'min-w-[1.2rem] min-h-[1.3rem]',
+      'relative inline-flex items-center',
+      'w-[1rem] h-[1.1rem]',
     )}>
       {!isLoading
-        ? <span
+        ? <button
           onClick={onClick}
           className={cc(
+            'inline-flex items-center justify-center',
+            'p-0 border-none shadow-none',
+            'active:bg-transparent bg-transparent',
+            'translate-x-[-1px]',
             onClick !== undefined && 'cursor-pointer',
             'active:opacity-50',
           )}
         >
           {icon}
-        </span>
+        </button>
         : <span className={cc(
-          'inline-block translate-y-[1.5px]',
+          'inline-flex items-center justify-center',
+          'h-full w-full',
         )}>
           <Spinner
             color={spinnerColor}

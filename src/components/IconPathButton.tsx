@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import IconButton from './IconButton';
 import { useEffect, useState, useTransition } from 'react';
 import { cc } from '@/utility/css';
+import { SpinnerColor } from './Spinner';
 
 export default function IconPathButton({
   icon,
@@ -12,6 +13,7 @@ export default function IconPathButton({
   loaderDelay = 250,
   shouldScroll = true,
   shouldReplace,
+  spinnerColor,
 }: {
   icon: JSX.Element
   path: string
@@ -19,6 +21,7 @@ export default function IconPathButton({
   loaderDelay?: number
   shouldScroll?: boolean
   shouldReplace?: boolean
+  spinnerColor?: SpinnerColor
 }) {
   const router = useRouter();
 
@@ -60,7 +63,7 @@ export default function IconPathButton({
         'text-gray-500 active:text-gray-600',
         'dark:text-gray-400 dark:active:text-gray-300',
       )}
-      spinnerColor="text"
+      spinnerColor={spinnerColor ?? 'text'}
     />
   );
 }
