@@ -50,7 +50,7 @@ export const CONFIG_CHECKLIST_STATUS = {
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,
 };
 
-export const IS_CHECKLIST_COMPLETE =
+export const IS_SITE_READY =
   CONFIG_CHECKLIST_STATUS.hasPostgres &&
   CONFIG_CHECKLIST_STATUS.hasBlob &&
   CONFIG_CHECKLIST_STATUS.hasAuth &&

@@ -1,6 +1,6 @@
 import InfoBlock from '@/components/InfoBlock';
 import SiteGrid from '@/components/SiteGrid';
-import { IS_CHECKLIST_COMPLETE } from '@/site/config';
+import { IS_SITE_READY } from '@/site/config';
 import SiteChecklist from '@/site/SiteChecklist';
 import { cc } from '@/utility/css';
 import Link from 'next/link';
@@ -19,9 +19,9 @@ export default function PhotosEmptyState() {
             'font-bold text-2xl',
             'text-gray-700 dark:text-gray-200',
           )}>
-            {!IS_CHECKLIST_COMPLETE ? 'Finish Setup' : 'Welcome!'}
+            {!IS_SITE_READY ? 'Finish Setup' : 'Welcome!'}
           </div>
-          {!IS_CHECKLIST_COMPLETE
+          {!IS_SITE_READY
             ? <SiteChecklist />
             : <div className="max-w-md leading-[1.7] text-center">
               <div className="mb-2">
