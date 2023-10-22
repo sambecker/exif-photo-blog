@@ -10,9 +10,9 @@ const VERCEL_URL = VERCEL_BRANCH_URL && VERCEL_BRANCH
   ? `${VERCEL_BRANCH_URL.split(`-git-${VERCEL_BRANCH}-`)[0]}.vercel.app`
   : undefined;
 
-const SITE_DOMAIN = process.env.NEXT_PUBLIC_SITE_DOMAIN
-  ? process.env.NEXT_PUBLIC_SITE_DOMAIN.toLowerCase()
-  : VERCEL_URL;
+const SITE_DOMAIN =
+  process.env.NEXT_PUBLIC_SITE_DOMAIN ||
+  VERCEL_URL;
 
 const SITE_DOMAIN_SHORT = shortenUrl(SITE_DOMAIN);
 
@@ -25,7 +25,7 @@ export const SITE_DESCRIPTION =
   SITE_DOMAIN;
 
 export const BASE_URL = process.env.NODE_ENV === 'production'
-  ? makeUrlAbsolute(SITE_DOMAIN)
+  ? makeUrlAbsolute(SITE_DOMAIN).toLowerCase()
   : 'http://localhost:3000';
 
 export const SHOW_REPO_LINK = process.env.NEXT_PUBLIC_HIDE_REPO_LINK !== '1';
