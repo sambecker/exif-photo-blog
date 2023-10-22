@@ -64,3 +64,8 @@ Installation
 - Set `NEXT_PUBLIC_PRO_MODE = 1` to enable higher quality image storage
 - Set `NEXT_PUBLIC_PUBLIC_API = 1` to enable a public API available at `/api`
 - Set `NEXT_PUBLIC_OG_TEXT_ALIGNMENT = BOTTOM` to keep OG image text bottom aligned (default is top)
+
+FAQ
+-
+Q: My images/content have fallen out of sync with my database and/or my production site no longer matches local development. What do I do?<br />
+A: Navigate to `/admin/configuration` and click the "Clear Cache" button.
