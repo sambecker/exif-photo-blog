@@ -90,17 +90,20 @@ export default function PhotoLarge({
                   {photo.focalLengthIn35MmFormatFormatted &&
                     <>
                       {' '}
-                      <span className={cc(
-                        'text-gray-400/80',
-                        'dark:text-gray-400/50',
-                      )}>
+                      <span
+                        className={cc(
+                          'text-gray-400/80',
+                          'dark:text-gray-400/50',
+                        )}
+                        title="35mm equivalent"
+                      >
                         {photo.focalLengthIn35MmFormatFormatted}
                       </span>
                     </>}
                 </li>
                 <li>{photo.fNumberFormatted}</li>
-                <li>{photo.isoFormatted}</li>
                 <li>{photo.exposureTimeFormatted}</li>
+                <li>{photo.isoFormatted}</li>
                 <li>{photo.exposureCompensationFormatted ?? '—'}</li>
               </ul>}
             <div className={cc(

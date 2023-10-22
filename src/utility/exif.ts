@@ -1,4 +1,5 @@
 import type { ExifData } from 'ts-exif-parser';
+import { formatNumberToFraction } from './number';
 
 const OFFSET_REGEX = /[+-]\d\d:\d\d/;
 
@@ -18,33 +19,19 @@ export const formatAperture = (aperture?: number) =>
 export const formatIso = (iso?: number) =>
   iso ? `ISO ${iso}` : undefined;
 
-export const formatExposureTime = (exposureTime?: number) =>
-  exposureTime
-    ? `Shutter 1/${Math.floor(1 / (exposureTime ?? 1))}`
+export const formatExposureTime = (exposureTime = 0) =>
+  exposureTime > 0
+    ? exposureTime < 1
+      ? `1/${Math.floor(1 / exposureTime)}s`
+      : `${exposureTime}s`
     : undefined;
-
-const fractionForDecimal = (decimal: number, fractionCharacter?: boolean) => {
-  switch (Math.abs(Math.floor(decimal * 100))) {
-  case 33:
-    return fractionCharacter ? '⅓' : '1/3';
-  case 50:
-    return fractionCharacter ? '½' : '1/2';
-  case 66:
-  case 67:
-    return fractionCharacter ? '⅔' : '2/3';
-  }
-};
 
 export const formatExposureCompensation = (exposureCompensation?: number) => {
   if (
     exposureCompensation &&
-    Math.abs(exposureCompensation) >= 0.33
+    Math.abs(exposureCompensation) > 0.01
   ) {
-    const decimal = exposureCompensation % 1;
-    const whole = Math.abs(exposureCompensation - decimal);
-    const fraction = fractionForDecimal(decimal);
-    const sign = exposureCompensation > 0 ? '+' : '-';
-    return `${sign}${whole ? `${whole} ` : ''}${fraction ?? ''} EV`;
+    return `${formatNumberToFraction(exposureCompensation)}ev`;
   } else {
     return undefined;
   }
