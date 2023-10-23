@@ -25,6 +25,8 @@ const KEY_PHOTOS_DATE_RANGE = `${KEY_PHOTOS}-date-range`;
 const KEY_TAGS              = 'tags';
 const KEY_CAMERAS           = 'cameras';
 const KEY_BLOB              = 'blob';
+// Temporary key to clear caches on forked blogs
+const KEY_NEW_QUERY         = 'new-query';
 
 // eslint-disable-next-line max-len
 const getPhotosCacheKeyForOption = (
@@ -186,8 +188,8 @@ export const getPhotoCached: typeof getPhoto = (...args) =>
 export const getUniqueTagsCached: typeof getUniqueTags = (...args) =>
   unstable_cache(
     () => getUniqueTags(...args),
-    [KEY_PHOTOS, KEY_TAGS], {
-      tags: [KEY_PHOTOS, KEY_TAGS],
+    [KEY_PHOTOS, KEY_TAGS, KEY_NEW_QUERY], {
+      tags: [KEY_PHOTOS, KEY_TAGS, KEY_NEW_QUERY],
     }
   )();
 
@@ -195,16 +197,16 @@ export const getUniqueTagsCached: typeof getUniqueTags = (...args) =>
 export const getUniqueTagsHiddenCached: typeof getUniqueTagsHidden = (...args) =>
   unstable_cache(
     () => getUniqueTagsHidden(...args),
-    [KEY_PHOTOS, KEY_TAGS], {
-      tags: [KEY_PHOTOS, KEY_TAGS],
+    [KEY_PHOTOS, KEY_TAGS, KEY_NEW_QUERY], {
+      tags: [KEY_PHOTOS, KEY_TAGS, KEY_NEW_QUERY],
     }
   )();
 
 export const getUniqueCamerasCached: typeof getUniqueCameras = (...args) =>
   unstable_cache(
     () => getUniqueCameras(...args),
-    [KEY_PHOTOS, KEY_CAMERAS], {
-      tags: [KEY_PHOTOS, KEY_CAMERAS],
+    [KEY_PHOTOS, KEY_CAMERAS, KEY_NEW_QUERY], {
+      tags: [KEY_PHOTOS, KEY_CAMERAS, KEY_NEW_QUERY],
     }
   )();
 
