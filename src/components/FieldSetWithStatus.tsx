@@ -27,7 +27,7 @@ export default function FieldSetWithStatus({
   loading?: boolean
   required?: boolean
   readOnly?: boolean
-  type?: 'text' | 'password' | 'checkbox'
+  type?: 'text' | 'email' | 'password' | 'checkbox'
   inputRef?: LegacyRef<HTMLInputElement>
 }) {
   const { pending } = useFormStatus();

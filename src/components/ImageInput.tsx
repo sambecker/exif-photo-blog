@@ -70,7 +70,10 @@ export default function ImageInput({
               const extension = file?.name.split('.').pop()?.toLowerCase();
               const canvas = ref.current;
               if (file) {
-                if (maxSize && canvas) {
+                if (!(maxSize && canvas)) {
+                  // No need to process
+                  onBlobReady?.(file);
+                } else {
                   // Process images that need resizing
                   const image = await blobToImage(file);
                   setImage(image);
@@ -108,9 +111,6 @@ export default function ImageInput({
                     'image/jpeg',
                     quality,
                   );
-                } else {
-                  // No need to process
-                  onBlobReady?.(file);
                 }
               }
             }}

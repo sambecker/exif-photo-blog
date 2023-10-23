@@ -40,6 +40,7 @@ export default function SignInForm() {
             id="email"
             inputRef={emailRef}
             label="Admin Email"
+            type="email"
             value={email}
             onChange={setEmail}
             readOnly={isSigningIn}
