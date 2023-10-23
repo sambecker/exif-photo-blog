@@ -10,7 +10,7 @@ export const convertStringToArray = (
 export const capitalize = (string: string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
 
-export const capitalizeWords = (string: string) =>
+export const capitalizeWords = (string = '') =>
   string
     .split(' ')
     .map(capitalize)

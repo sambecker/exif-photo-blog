@@ -12,8 +12,8 @@ export type Tags = {
   count: number
 }[]
 
-export const formatTag = (tag: string) =>
-  capitalizeWords(tag.replaceAll('-', ' '));
+export const formatTag = (tag?: string) =>
+  capitalizeWords(tag?.replaceAll('-', ' '));
 
 export const titleForTag = (
   tag: string,
