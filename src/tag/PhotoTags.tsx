@@ -8,10 +8,9 @@ export default function PhotoTags({
   return (
     <div>
       {tags.map(tag =>
-        <PhotoTag
-          key={tag}
-          tag={tag}
-        />)}
+        <div key={tag}>
+          <PhotoTag tag={tag} />
+        </div>)}
     </div>
   );
 }

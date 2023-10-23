@@ -24,8 +24,10 @@ export default function HeaderList({
             'flex items-center mb-0.5',
             'uppercase',
           )}>
-            {icon}
-            {icon && title && <>&nbsp;</>}
+            {icon &&
+              <span className="w-[17px]">
+                {icon}
+              </span>}
             {title}
           </div>,
         ]

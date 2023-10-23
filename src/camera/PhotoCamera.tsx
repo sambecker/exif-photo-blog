@@ -27,7 +27,10 @@ export default function PhotoCamera({
         )}
       >
         {showIcon && <>
-          <IoMdCamera size={13} className="translate-y-[-0.25px]" />
+          <IoMdCamera
+            size={13}
+            className="text-icon translate-y-[-0.25px]"
+          />
           &nbsp;
         </>}
         {!(hideApple && camera.make?.toLowerCase() === 'apple') &&
@@ -35,7 +38,7 @@ export default function PhotoCamera({
             {camera.make?.toLowerCase() === 'apple'
               ? <AiFillApple
                 title="Apple"
-                className="translate-y-[-0.5px]"
+                className="text-icon translate-y-[-0.5px]"
                 size={14}
               />
               : camera.make}

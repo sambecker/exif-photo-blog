@@ -27,7 +27,7 @@ export default function PhotoTag({
             size={11}
             className={cc(
               'flex-shrink-0',
-              'text-gray-700 dark:text-gray-300 translate-y-[0.5px]',
+              'text-icon translate-y-[0.5px]',
             )}
           />}
         <span className="uppercase">

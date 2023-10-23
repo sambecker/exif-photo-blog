@@ -20,7 +20,7 @@ export default function PhotoGridSidebar({
     <>
       {tags.length > 0 && <HeaderList
         title='Tags'
-        icon={<FaTag size={12} />}
+        icon={<FaTag size={12} className="text-icon" />}
         items={tags.map(({ tag, count }) =>
           <PhotoTag
             key={tag}
@@ -31,7 +31,10 @@ export default function PhotoGridSidebar({
       />}
       {cameras.length > 0 && <HeaderList
         title="Cameras"
-        icon={<IoMdCamera size={13} />}
+        icon={<IoMdCamera
+          size={13}
+          className="text-icon translate-y-[-0.25px]"
+        />}
         items={cameras.map(({ cameraKey, camera, count }) =>
           <PhotoCamera
             key={cameraKey}
