@@ -11,6 +11,7 @@ export type Camera = {
 export type Cameras = {
   cameraKey: string
   camera: Camera
+  count: number
 }[];
 
 export const createCameraKey = ({ make, model }: Camera) =>

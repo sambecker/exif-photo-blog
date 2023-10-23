@@ -12,7 +12,7 @@ export async function generateStaticParams() {
   const params: PhotoTagProps[] = [];
 
   const tags = await getUniqueTags();
-  tags.forEach(async tag => {
+  tags.forEach(async ({ tag }) => {
     const photos = await getPhotos({ tag });
     params.push(...photos.map(photo => ({
       params: { photoId: photo.id, tag },

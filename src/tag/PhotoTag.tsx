@@ -7,29 +7,38 @@ import { formatTag } from '.';
 export default function PhotoTag({
   tag,
   showIcon = true,
+  countOnHover,
 }: {
   tag: string
   showIcon?: boolean
+  countOnHover?: number
 }) {
   return (
-    <Link
-      href={pathForTag(tag)}
-      className={cc(
-        'flex items-center gap-x-1.5 self-start',
-        'hover:text-gray-900 dark:hover:text-gray-100',
-      )}
-    >
-      {showIcon &&
-        <FaTag
-          size={11}
-          className={cc(
-            'flex-shrink-0',
-            'text-gray-700 dark:text-gray-300 translate-y-[0.5px]',
-          )}
-        />}
-      <span className="uppercase">
-        {formatTag(tag)}
-      </span>
-    </Link>
+    <span className="group">
+      <Link
+        href={pathForTag(tag)}
+        className={cc(
+          'inline-flex items-center gap-x-1.5 self-start',
+          'hover:text-gray-900 dark:hover:text-gray-100',
+        )}
+      >
+        {showIcon &&
+          <FaTag
+            size={11}
+            className={cc(
+              'flex-shrink-0',
+              'text-gray-700 dark:text-gray-300 translate-y-[0.5px]',
+            )}
+          />}
+        <span className="uppercase">
+          {formatTag(tag)}
+        </span>
+      </Link>
+      {countOnHover !== undefined &&
+        <span className="hidden group-hover:inline">
+          {' '}
+          {countOnHover}
+        </span>}
+    </span>
   );
 }

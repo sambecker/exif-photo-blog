@@ -5,13 +5,14 @@ import PhotoTag from '@/tag/PhotoTag';
 import { FaTag } from 'react-icons/fa';
 import { IoMdCamera } from 'react-icons/io';
 import { photoQuantityText } from '.';
+import { Tags } from '@/tag';
 
 export default function PhotoGridSidebar({
   tags,
   cameras,
   photosCount,
 }: {
-  tags: string[]
+  tags: Tags
   cameras: Cameras
   photosCount: number
 }) {
@@ -20,21 +21,23 @@ export default function PhotoGridSidebar({
       {tags.length > 0 && <HeaderList
         title='Tags'
         icon={<FaTag size={12} />}
-        items={tags.map(tag =>
+        items={tags.map(({ tag, count }) =>
           <PhotoTag
             key={tag}
             tag={tag}
             showIcon={false}
+            countOnHover={count}
           />)}
       />}
       {cameras.length > 0 && <HeaderList
         title="Cameras"
         icon={<IoMdCamera size={13} />}
-        items={cameras.map(({ cameraKey, camera }) =>
+        items={cameras.map(({ cameraKey, camera, count }) =>
           <PhotoCamera
             key={cameraKey}
             camera={camera}
             showIcon={false}
+            countOnHover={count}
             hideApple
           />)}
       />}

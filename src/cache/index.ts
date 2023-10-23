@@ -11,7 +11,7 @@ import {
   getUniqueTags,
   getPhotosTagDateRange,
   getPhotosCameraDateRange,
-  getUniqueTagsWithCount,
+  getUniqueTagsHidden,
 } from '@/services/postgres';
 import { parseCachedPhotosDates, parseCachedPhotoDates } from '@/photo';
 import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
@@ -192,9 +192,9 @@ export const getUniqueTagsCached: typeof getUniqueTags = (...args) =>
   )();
 
 // eslint-disable-next-line max-len
-export const getUniqueTagsWithCountCached: typeof getUniqueTagsWithCount = (...args) =>
+export const getUniqueTagsHiddenCached: typeof getUniqueTagsHidden = (...args) =>
   unstable_cache(
-    () => getUniqueTagsWithCount(...args),
+    () => getUniqueTagsHidden(...args),
     [KEY_PHOTOS, KEY_TAGS], {
       tags: [KEY_PHOTOS, KEY_TAGS],
     }

@@ -7,6 +7,11 @@ import {
 import { absolutePathForTag, absolutePathForTagImage } from '@/site/paths';
 import { capitalizeWords } from '@/utility/string';
 
+export type Tags = {
+  tag: string
+  count: number
+}[]
+
 export const formatTag = (tag: string) =>
   capitalizeWords(tag.replaceAll('-', ' '));
 

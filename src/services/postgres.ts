@@ -9,6 +9,7 @@ import {
 } from '@/photo';
 import { Camera, Cameras, createCameraKey } from '@/camera';
 import { parameterize } from '@/utility/string';
+import { Tags } from '@/tag';
 
 const PHOTO_DEFAULT_LIMIT = 100;
 
@@ -285,28 +286,36 @@ const sqlGetPhotosCameraDateRange = async (camera: Camera) => sql`
 `.then(({ rows }) => rows[0] as PhotoDateRange);
 
 const sqlGetUniqueTags = async () => sql`
-  SELECT DISTINCT unnest(tags) as tag FROM photos
+  SELECT DISTINCT unnest(tags) as tag, COUNT(*)
+  FROM photos
   WHERE hidden IS NOT TRUE
-  ORDER BY tag ASC
-`.then(({ rows }) => rows.map(row => row.tag as string));
-
-// Include hidden photos for admin usage
-const sqlGetUniqueTagsWithCount = async () => sql`
-  SELECT DISTINCT unnest(tags) as tag, count(distinct id) as count FROM photos
   GROUP BY tag
   ORDER BY count DESC
-`.then(({ rows }) => rows.map(row => ({
-    tag: row.tag as string,
-    count: parseInt(row.count, 10),
+`.then(({ rows }): Tags => rows.map(({ tag, count }) => ({
+    tag: tag as string,
+    count: parseInt(count, 10),
+  })));
+
+const sqlGetUniqueTagsHidden = async () => sql`
+  SELECT DISTINCT unnest(tags) as tag, COUNT(*)
+  FROM photos
+  GROUP BY tag
+  ORDER BY count DESC
+`.then(({ rows }): Tags => rows.map(({ tag, count }) => ({
+    tag: tag as string,
+    count: parseInt(count, 10),
   })));
 
 const sqlGetUniqueCameras = async () => sql`
-  SELECT DISTINCT make||' '||model as camera, make, model FROM photos
+  SELECT DISTINCT make||' '||model as camera, make, model, COUNT(*)
+  FROM photos
   WHERE hidden IS NOT TRUE
-  ORDER BY camera ASC
-`.then(({ rows }): Cameras => rows.map(({ make, model }) => ({
+  GROUP BY make, model
+  ORDER BY camera DESC
+`.then(({ rows }): Cameras => rows.map(({ make, model, count }) => ({
     cameraKey: createCameraKey({ make, model }),
     camera: { make, model },
+    count: parseInt(count, 10),
   })));
 
 export type GetPhotosOptions = {
@@ -348,6 +357,7 @@ const safelyQueryPhotos = async <T>(callback: () => Promise<T>): Promise<T> => {
   return result;
 };
 
+// PHOTOS
 export const getPhotos = async (options: GetPhotosOptions = {}) => {
   const {
     sortBy = 'takenAt',
@@ -382,7 +392,6 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
   return safelyQueryPhotos(getPhotosSql)
     .then(({ rows }) => rows.map(parsePhotoFromDb));
 };
-
 export const getPhoto = async (id: string): Promise<Photo | undefined> => {
   // Check for photo id forwarding
   // and convert short ids to uuids
@@ -391,25 +400,25 @@ export const getPhoto = async (id: string): Promise<Photo | undefined> => {
     .then(({ rows }) => rows.map(parsePhotoFromDb))
     .then(photos => photos.length > 0 ? photos[0] : undefined);
 };
-
 export const getPhotosCount = () =>
   safelyQueryPhotos(sqlGetPhotosCount);
-export const getPhotosTagCount = (tag: string) =>
-  safelyQueryPhotos(() => sqlGetPhotosTagCount(tag));
-export const getPhotosCameraCount = (camera: Camera) =>
-  safelyQueryPhotos(() => sqlGetPhotosCameraCount(camera));
-
-export const getPhotosTagDateRange = (tag: string) =>
-  safelyQueryPhotos(() => sqlGetPhotosTagDateRange(tag));
-export const getPhotosCameraDateRange = (camera: Camera) =>
-  safelyQueryPhotos(() => sqlGetPhotosCameraDateRange(camera));
-
 export const getPhotosCountIncludingHidden = () =>
   safelyQueryPhotos(sqlGetPhotosCountIncludingHidden);
 
+// TAGS
 export const getUniqueTags = () =>
   safelyQueryPhotos(sqlGetUniqueTags);
-export const getUniqueTagsWithCount = () =>
-  safelyQueryPhotos(sqlGetUniqueTagsWithCount);
+export const getUniqueTagsHidden = () =>
+  safelyQueryPhotos(sqlGetUniqueTagsHidden);
+export const getPhotosTagDateRange = (tag: string) =>
+  safelyQueryPhotos(() => sqlGetPhotosTagDateRange(tag));
+export const getPhotosTagCount = (tag: string) =>
+  safelyQueryPhotos(() => sqlGetPhotosTagCount(tag));
 
-export const getUniqueCameras = () => safelyQueryPhotos(sqlGetUniqueCameras);
+// CAMERAS
+export const getUniqueCameras = () =>
+  safelyQueryPhotos(sqlGetUniqueCameras);
+export const getPhotosCameraDateRange = (camera: Camera) =>
+  safelyQueryPhotos(() => sqlGetPhotosCameraDateRange(camera));
+export const getPhotosCameraCount = (camera: Camera) =>
+  safelyQueryPhotos(() => sqlGetPhotosCameraCount(camera));

@@ -5,7 +5,7 @@ import AdminGrid from '@/admin/AdminGrid';
 import { Fragment } from 'react';
 import DeleteButton from '@/admin/DeleteButton';
 import { photoQuantityText } from '@/photo';
-import { getUniqueTagsWithCountCached } from '@/cache';
+import { getUniqueTagsHiddenCached } from '@/cache';
 import PhotoTag from '@/tag/PhotoTag';
 import { formatTag } from '@/tag';
 import EditButton from '@/admin/EditButton';
@@ -14,7 +14,7 @@ import { pathForAdminTagEdit } from '@/site/paths';
 export const runtime = 'edge';
 
 export default async function AdminPhotosPage() {
-  const tags = await getUniqueTagsWithCountCached();
+  const tags = await getUniqueTagsHiddenCached();
 
   return (
     <SiteGrid
