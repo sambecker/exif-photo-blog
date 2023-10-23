@@ -67,5 +67,8 @@ Installation
 
 FAQ
 -
-Q: My images/content have fallen out of sync with my database and/or my production site no longer matches local development. What do I do?<br />
+Q: My images/content have fallen out of sync with my database and/or production site no longer matches local development. What do I do?<br />
 A: Navigate to `/admin/configuration` and click the "Clear Cache" button.
+
+Q: I'm seeing server-side runtime errors when loading a page after updating my fork. What do I do?<br />
+A: Navigate to `/admin/configuration` and click the "Clear Cache" button. If this doesn't help, [open an issue](https://github.com/sambecker/exif-photo-blog/issues/new).
