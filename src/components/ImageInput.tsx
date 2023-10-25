@@ -31,8 +31,8 @@ export default function ImageInput({
   const [image, setImage] = useState<HTMLImageElement>();
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-4">
+    <div className="space-y-4 min-w-0">
+      <div className="flex items-center gap-2 sm:gap-4">
         <label
           htmlFor={INPUT_ID}
           className={cc(
