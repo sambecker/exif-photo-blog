@@ -80,7 +80,8 @@ const getFujifilmMode = (
   case 0x100:
   case 0x110:
   case 0x120:
-  case 0x130: return 'ASTIA / Soft';
+  case 0x130:
+  case 0x300: return 'ASTIA / Soft';
   case 0x200:
   case 0x400: return 'Velvia / Vivid';
   case 0x500: return 'Pro Neg. Std';
