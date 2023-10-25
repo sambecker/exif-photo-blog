@@ -16,24 +16,23 @@ type FujifilmSimulationFromSaturation =
   'Monochrome + R Filter' |
   'Monochrome + G Filter' |
   'Sepia' |
-  'Acros' |
-  'Acros + Ye Filter' |
-  'Acros + R Filter' |
-  'Acros + G Filter';
+  'ACROS' |
+  'ACROS + Ye Filter' |
+  'ACROS + R Filter' |
+  'ACROS + G Filter';
 
 type FujifilmMode =
   'Provia / Standard' |
-  'Astia / Soft' |
+  'ASTIA / Soft' |
   'Velvia / Vivid' |
-  'Studio Portrait' |
   'Pro Neg. Std' |
   'Pro Neg. Hi' |
   'Classic Chrome' |
-  'Eterna / Cinema' |
+  'ETERNA / Cinema' |
   'Classic Neg.' |
-  'Eterna Bleach Bypass' |
+  'ETERNA Bleach Bypass' |
   'Nostalgic Neg.' |
-  'Reala Ace';
+  'REALA ACE';
 
 export type FujifilmSimulation =
   FujifilmSimulationFromSaturation |
@@ -66,10 +65,10 @@ const getFujifilmSimulationFromSaturation = (
   case 0x302: return 'Monochrome + Ye Filter';
   case 0x303: return 'Monochrome + G Filter';
   case 0x310: return 'Sepia';
-  case 0x500: return 'Acros';
-  case 0x501: return 'Acros + R Filter';
-  case 0x502: return 'Acros + Ye Filter';
-  case 0x503: return 'Acros + G Filter';
+  case 0x500: return 'ACROS';
+  case 0x501: return 'ACROS + R Filter';
+  case 0x502: return 'ACROS + Ye Filter';
+  case 0x503: return 'ACROS + G Filter';
   }
 };
 
@@ -81,18 +80,17 @@ const getFujifilmMode = (
   case 0x100:
   case 0x110:
   case 0x120:
-  case 0x130: return 'Astia / Soft';
+  case 0x130: return 'ASTIA / Soft';
   case 0x200:
   case 0x400: return 'Velvia / Vivid';
-  case 0x300: return 'Studio Portrait';
   case 0x500: return 'Pro Neg. Std';
   case 0x501: return 'Pro Neg. Hi';
   case 0x600: return 'Classic Chrome';
-  case 0x700: return 'Eterna / Cinema';
+  case 0x700: return 'ETERNA / Cinema';
   case 0x800: return 'Classic Neg.';
-  case 0x900: return 'Eterna Bleach Bypass';
+  case 0x900: return 'ETERNA Bleach Bypass';
   case 0xa00: return 'Nostalgic Neg.';
-  case 0xb00: return 'Reala Ace';
+  case 0xb00: return 'REALA ACE';
   }
 };
 
