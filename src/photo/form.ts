@@ -8,6 +8,7 @@ import { getOffsetFromExif } from '@/utility/exif';
 import { toFixedNumber } from '@/utility/number';
 import { convertStringToArray } from '@/utility/string';
 import { generateNanoid } from '@/utility/nanoid';
+import { FujifilmSimulation } from '@/utility/fujifilm';
 
 export type PhotoFormData = Record<keyof PhotoDbInsert, string>;
 
@@ -18,6 +19,7 @@ type FormMeta = {
   readOnly?: boolean
   hideIfEmpty?: boolean
   hideTemporarily?: boolean
+  hideBasedOnCamera?: (make?: string, mode?: string) => boolean
   loadingMessage?: string
   checkbox?: boolean
 };
@@ -33,6 +35,11 @@ const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
   aspectRatio: { label: 'aspect ratio', readOnly: true },
   make: { label: 'camera make' },
   model: { label: 'camera model' },
+  filmSimulation: {
+    label: 'fujifilm simulation',
+    readOnly: true,
+    hideBasedOnCamera: make => make !== 'FUJIFILM',
+  },
   focalLength: { label: 'focal length' },
   focalLengthIn35MmFormat: { label: 'focal length 35mm-equivalent' },
   fNumber: { label: 'aperture' },
@@ -42,7 +49,6 @@ const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
   locationName: { label: 'location name', hideTemporarily: true },
   latitude: { label: 'latitude' },
   longitude: { label: 'longitude' },
-  filmSimulation: { label: 'film simulation', hideTemporarily: true },
   priorityOrder: { label: 'priority order' },
   takenAt: { label: 'taken at' },
   takenAtNaive: { label: 'taken at (naive)' },
@@ -77,7 +83,8 @@ export const convertPhotoToFormData = (
 };
 
 export const convertExifToFormData = (
-  data: ExifData
+  data: ExifData,
+  fujifilmSimulation?: FujifilmSimulation,
 ): Record<keyof PhotoExif, string | undefined> => ({
   aspectRatio: (
     (data.imageSize?.width ?? 3.0) /
@@ -93,7 +100,7 @@ export const convertExifToFormData = (
   exposureCompensation: data.tags?.ExposureCompensation?.toString(),
   latitude: data.tags?.GPSLatitude?.toString(),
   longitude: data.tags?.GPSLongitude?.toString(),
-  filmSimulation: undefined,
+  filmSimulation: fujifilmSimulation,
   takenAt: data.tags?.DateTimeOriginal
     ? convertTimestampWithOffsetToPostgresString(
       data.tags?.DateTimeOriginal,

@@ -98,10 +98,14 @@ export default function PhotoForm({
           required,
           readOnly,
           hideIfEmpty,
+          hideBasedOnCamera,
           loadingMessage,
           checkbox,
         }]) =>
-          (!hideIfEmpty || formData[key]) &&
+          (
+            (!hideIfEmpty || formData[key]) &&
+            !hideBasedOnCamera?.(formData.make)
+          ) &&
             <FieldSetWithStatus
               key={key}
               id={key}
