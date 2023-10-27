@@ -8,6 +8,8 @@ import PhotoTags from '@/tag/PhotoTags';
 import ShareButton from '@/components/ShareButton';
 import PhotoCamera from '../camera/PhotoCamera';
 import { Camera, cameraFromPhoto } from '@/camera';
+import PhotoFujifilmSimulation from
+  '@/vendors/fujifilm/PhotoFujifilmSimulation';
 
 export default function PhotoLarge({
   photo,
@@ -73,11 +75,15 @@ export default function PhotoLarge({
                 <PhotoTags tags={tagsToShow} />}
             </div>
             {showCamera && photoHasCameraData(photo) &&
-              <PhotoCamera
-                camera={camera}
-                showIcon={false}
-                hideApple={false}
-              />}
+              <div className="inline-flex items-center">
+                <PhotoCamera
+                  camera={camera}
+                  showIcon={false}
+                  hideApple={false}
+                />
+                &nbsp;
+                <PhotoFujifilmSimulation simulation="Velvia" />
+              </div>}
           </>)}
           {renderMiniGrid(<>
             {photoHasExifData(photo) &&

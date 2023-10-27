@@ -8,7 +8,7 @@ import {
   FujifilmSimulation,
   getFujifilmSimulationFromMakerNote,
   isExifForFujifilm,
-} from '@/utility/fujifilm';
+} from '@/vendors/fujifilm';
 
 interface Params {
   params: { uploadPath: string }

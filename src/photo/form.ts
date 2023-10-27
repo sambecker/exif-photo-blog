@@ -8,7 +8,7 @@ import { getOffsetFromExif } from '@/utility/exif';
 import { toFixedNumber } from '@/utility/number';
 import { convertStringToArray } from '@/utility/string';
 import { generateNanoid } from '@/utility/nanoid';
-import { FujifilmSimulation } from '@/utility/fujifilm';
+import { FujifilmSimulation } from '@/vendors/fujifilm';
 
 export type PhotoFormData = Record<keyof PhotoDbInsert, string>;
 
