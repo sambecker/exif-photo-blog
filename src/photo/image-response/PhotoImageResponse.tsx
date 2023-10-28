@@ -32,7 +32,7 @@ export default function PhotoImageResponse({
             <AiFillApple />
           </div>}
         <div style={{ display: 'flex' }}>
-          {formatModelShort(photo.model)}
+          GEIST/{formatModelShort(photo.model)}
         </div>
         <div style={{ display: 'flex' }}>
           {photo.focalLengthFormatted}

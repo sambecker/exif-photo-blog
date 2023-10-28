@@ -2,7 +2,7 @@ import { auth } from '@/auth';
 import { getImageCacheHeadersForAuth, getPhotoCached } from '@/cache';
 import { IMAGE_OG_SIZE } from '@/photo/image-response';
 import PhotoImageResponse from '@/photo/image-response/PhotoImageResponse';
-import { getIBMPlexMonoMedium } from '@/site/font';
+import { getGeistMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/server';
 
 export const runtime = 'edge';
@@ -17,7 +17,7 @@ export async function GET(
     headers,
   ] = await Promise.all([
     getPhotoCached(context.params.photoId),
-    getIBMPlexMonoMedium(),
+    getGeistMonoMedium(),
     getImageCacheHeadersForAuth(await auth()),
   ]);
   
