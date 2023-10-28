@@ -1,5 +1,5 @@
 // MakerNote tag IDs and values referenced from:
-// github.com/exiftool/exiftool/lib/Image/ExifTool/Fujifilm.pm
+// github.com/exiftool/exiftool/blob/master/lib/Image/ExifTool/FujiFilm.pm
 
 import type { ExifData } from 'ts-exif-parser';
 
