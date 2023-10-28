@@ -82,7 +82,7 @@ export default function PhotoLarge({
                   hideApple={false}
                 />
                 &nbsp;
-                <PhotoFujifilmSimulation simulation="Velvia" />
+                <PhotoFujifilmSimulation simulation="velvia" />
               </div>}
           </>)}
           {renderMiniGrid(<>
