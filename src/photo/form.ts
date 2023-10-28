@@ -8,7 +8,10 @@ import { getOffsetFromExif } from '@/utility/exif';
 import { toFixedNumber } from '@/utility/number';
 import { convertStringToArray } from '@/utility/string';
 import { generateNanoid } from '@/utility/nanoid';
-import { FujifilmSimulation } from '@/vendors/fujifilm';
+import {
+  FILM_SIMULATION_FORM_INPUT_OPTIONS,
+  FujifilmSimulation,
+} from '@/vendors/fujifilm';
 
 export type PhotoFormData = Record<keyof PhotoDbInsert, string>;
 
@@ -22,14 +25,20 @@ type FormMeta = {
   hideBasedOnCamera?: (make?: string, mode?: string) => boolean
   loadingMessage?: string
   checkbox?: boolean
+  options?: { value: string, label: string }[]
+  optionsDefaultLabel?: string
 };
 
 const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
   title: { label: 'title' },
   tags: { label: 'tags', note: 'comma-separated values' },
   id: { label: 'id', readOnly: true, hideIfEmpty: true },
-  // eslint-disable-next-line max-len
-  blurData: { label: 'blur data', readOnly: true, required: true, loadingMessage: 'Generating blur data ...' },
+  blurData: {
+    label: 'blur data',
+    readOnly: true,
+    required: true,
+    loadingMessage: 'Generating blur data ...',
+  },
   url: { label: 'url', readOnly: true },
   extension: { label: 'extension', readOnly: true },
   aspectRatio: { label: 'aspect ratio', readOnly: true },
@@ -37,7 +46,8 @@ const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
   model: { label: 'camera model' },
   filmSimulation: {
     label: 'fujifilm simulation',
-    readOnly: true,
+    options: FILM_SIMULATION_FORM_INPUT_OPTIONS,
+    optionsDefaultLabel: 'Unknown',
     hideBasedOnCamera: make => make !== 'FUJIFILM',
   },
   focalLength: { label: 'focal length' },

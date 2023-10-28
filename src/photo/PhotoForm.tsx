@@ -96,6 +96,8 @@ export default function PhotoForm({
           label,
           note,
           required,
+          options,
+          optionsDefaultLabel,
           readOnly,
           hideIfEmpty,
           hideBasedOnCamera,
@@ -113,6 +115,8 @@ export default function PhotoForm({
               note={note}
               value={formData[key] ?? ''}
               onChange={value => setFormData({ ...formData, [key]: value })}
+              selectOptions={options}
+              selectOptionsDefaultLabel={optionsDefaultLabel}
               required={required}
               readOnly={readOnly}
               placeholder={loadingMessage && !formData[key]

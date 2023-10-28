@@ -11,6 +11,8 @@ export default function FieldSetWithStatus({
   note,
   value,
   onChange,
+  selectOptions,
+  selectOptionsDefaultLabel,
   placeholder,
   loading,
   required,
@@ -23,6 +25,8 @@ export default function FieldSetWithStatus({
   note?: string
   value: string
   onChange?: (value: string) => void
+  selectOptions?: { value: string, label: string }[]
+  selectOptionsDefaultLabel?: string
   placeholder?: string
   loading?: boolean
   required?: boolean
@@ -52,21 +56,43 @@ export default function FieldSetWithStatus({
             <Spinner />
           </span>}
       </label>
-      <input
-        ref={inputRef}
-        id={id}
-        name={id}
-        value={value}
-        checked={type === 'checkbox' ? value === 'true' : undefined}
-        placeholder={placeholder}
-        onChange={e => onChange?.(type === 'checkbox'
-          ? e.target.value === 'true' ? 'false' : 'true'
-          : e.target.value)}
-        type={type}
-        autoComplete="off"
-        readOnly={readOnly || pending}
-        className={cc(type === 'text' && 'w-full')}
-      />
+      {selectOptions
+        ? <select
+          id={id}
+          name={id}
+          value={value}
+          onChange={e => onChange?.(e.target.value)}
+          className={cc(
+            'w-full',
+            // Use special class because `select` can't be readonly
+            readOnly || pending && 'disabled-select',
+          )}
+        >
+          {selectOptionsDefaultLabel &&
+            <option value="">{selectOptionsDefaultLabel}</option>}
+          {selectOptions.map(({ value: optionValue, label: optionLabel }) =>
+            <option
+              key={optionValue}
+              value={optionValue}
+            >
+              {optionLabel}
+            </option>)}
+        </select>
+        : <input
+          ref={inputRef}
+          id={id}
+          name={id}
+          value={value}
+          checked={type === 'checkbox' ? value === 'true' : undefined}
+          placeholder={placeholder}
+          onChange={e => onChange?.(type === 'checkbox'
+            ? e.target.value === 'true' ? 'false' : 'true'
+            : e.target.value)}
+          type={type}
+          autoComplete="off"
+          readOnly={readOnly || pending}
+          className={cc(type === 'text' && 'w-full')}
+        />}
     </div>
   );
 };

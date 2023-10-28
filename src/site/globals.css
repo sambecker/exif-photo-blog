@@ -18,21 +18,31 @@
       tracking-wider
   }
   button, .button,
-  input[type=text], input[type=email], input[type=password] {
+  input[type=text], input[type=email], input[type=password], select {
     @apply
-      px-2 py-1.5
+      px-2.5 py-2
       border rounded-md
       bg-white dark:bg-black
       border-gray-200 dark:border-gray-700
-      font-mono text-base leading-none
+      font-mono text-base leading-tight
       min-h-[2.25rem]
   }
-  input[type=text], input[type=email], input[type=password] {
+  input[type=text], input[type=email], input[type=password], select {
     @apply
       text-[1rem] /* Prevent iOS auto-zoom behavior */
       min-w-[20rem] read-only:cursor-default
+  }
+  input[type=text], input[type=email], input[type=password] {
+    @apply
       read-only:bg-gray-100
       dark:read-only:bg-gray-900 dark:read-only:text-gray-400
+  }
+  /* Required for readonly behavior on <select /> */
+  .disabled-select {
+    @apply
+      bg-gray-100
+      dark:bg-gray-900 dark:text-gray-400
+      pointer-events-none
   }
   input[type=file] {
     @apply
