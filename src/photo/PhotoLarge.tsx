@@ -75,7 +75,7 @@ export default function PhotoLarge({
                 <PhotoTags tags={tagsToShow} />}
             </div>
             {showCamera && photoHasCameraData(photo) &&
-              <div className="inline-flex items-center">
+              <div className="self-start inline-flex items-center">
                 <PhotoCamera
                   camera={camera}
                   showIcon={false}
