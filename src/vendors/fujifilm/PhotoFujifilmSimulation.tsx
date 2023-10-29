@@ -16,15 +16,15 @@ export default function PhotoFujifilmSimulation({
     <span
       title={`Film Simulation: ${large}`}
       className={cc(
-        'inline-flex items-center gap-2 text-medium',
-        'translate-x-[-2px]',
+        'inline-flex items-center gap-1.5',
+        'text-medium uppercase',
       )}
     >
-      <span className="translate-y-[-0.5px]">
-        <PhotoFujifilmSimulationIcon simulation={simulation} />
-      </span>
       <span className="xs:hidden">{small}</span>
       <span className="hidden xs:inline-block">{medium}</span>
+      <span className="translate-y-[-1.25px]">
+        <PhotoFujifilmSimulationIcon simulation={simulation} />
+      </span>
     </span>
   );
 }
