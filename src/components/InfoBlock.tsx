@@ -30,7 +30,7 @@ export default function InfoBlock({
       <div className={cc(
         'flex flex-col items-center justify-center w-full',
         'space-y-4',
-        'text-gray-500 dark:text-gray-400',
+        'text-medium',
       )}>
         {children}
       </div>

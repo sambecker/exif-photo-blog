@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useTransition } from 'react';
-import Spinner from './Spinner';
+import Spinner from '../components/Spinner';
 
 export default function MorePhotos({
   path,

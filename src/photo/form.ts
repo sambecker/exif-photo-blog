@@ -141,9 +141,9 @@ export const convertFormDataToPhoto = (
   });
 
   return {
-    ...photoForm,
+    ...(photoForm as PhotoFormData & { filmSimulation?: FujifilmSimulation }),
     ...(generateId && !photoForm.id) && { id: generateNanoid() },
-    // convert form strings to arrays
+    // Convert form strings to arrays
     tags: convertStringToArray(photoForm.tags),
     // Convert form strings to numbers
     aspectRatio: toFixedNumber(parseFloat(photoForm.aspectRatio), 6),

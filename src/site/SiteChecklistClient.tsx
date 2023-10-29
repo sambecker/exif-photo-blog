@@ -100,9 +100,9 @@ export default function SiteChecklistClient({
     >
       <span className="inline-flex items-center gap-1">
         <span className={cc(
+          'text-medium',
           'rounded-sm',
-          'bg-gray-100 text-gray-500',
-          'dark:bg-gray-800 dark:text-gray-400',
+          'bg-gray-100 dark:bg-gray-800',
         )}>
           `{variable}`
         </span>
@@ -261,7 +261,7 @@ export default function SiteChecklistClient({
             Check
           </button>
         </div>}
-      <div className="px-11 text-gray-500">
+      <div className="px-11 text-dim">
         Changes to environment variables require a redeploy
         or reboot of local dev server
       </div>

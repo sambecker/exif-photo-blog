@@ -7,6 +7,7 @@ import {
   formatExposureTime,
   formatFocalLength,
 } from '@/utility/exif';
+import { FujifilmSimulation } from '@/vendors/fujifilm';
 import camelcaseKeys from 'camelcase-keys';
 import type { Metadata } from 'next';
 
@@ -30,7 +31,7 @@ export interface PhotoExif {
   exposureCompensation?: number
   latitude?: number
   longitude?: number
-  filmSimulation?: string
+  filmSimulation?: FujifilmSimulation
   takenAt: string
   takenAtNaive: string
 }

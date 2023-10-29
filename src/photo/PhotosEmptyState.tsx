@@ -12,7 +12,7 @@ export default function PhotosEmptyState() {
       contentMain={
         <InfoBlock>
           <HiOutlinePhotograph
-            className="text-gray-500 dark:text-gray-400"
+            className="text-medium"
             size={24}
           />
           <div className={cc(

@@ -12,7 +12,7 @@ import {
   pathForAdminPhotoEdit,
 } from '@/site/paths';
 import { titleForPhoto } from '@/photo';
-import MorePhotos from '@/components/MorePhotos';
+import MorePhotos from '@/photo/MorePhotos';
 import {
   getBlobPhotoUrlsCached,
   getPhotosCached,

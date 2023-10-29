@@ -75,22 +75,24 @@ export default function PhotoLarge({
                 <PhotoTags tags={tagsToShow} />}
             </div>
             {showCamera && photoHasCameraData(photo) &&
-              <div className="self-start inline-flex items-center">
+              <div>
                 <PhotoCamera
                   camera={camera}
                   showIcon={false}
                   hideApple={false}
                 />
-                &nbsp;
-                <PhotoFujifilmSimulation simulation="velvia" />
+                {photo.filmSimulation &&
+                  <>
+                    <br />
+                    <PhotoFujifilmSimulation
+                      simulation={photo.filmSimulation}
+                    />
+                  </>}
               </div>}
           </>)}
           {renderMiniGrid(<>
             {photoHasExifData(photo) &&
-              <ul className={cc(
-                'text-gray-500',
-                'dark:text-gray-400',
-              )}>
+              <ul className="text-medium">
                 <li>
                   {photo.focalLengthFormatted}
                   {photo.focalLengthIn35MmFormatFormatted &&
@@ -118,8 +120,7 @@ export default function PhotoLarge({
             )}>
               <div className={cc(
                 'grow uppercase',
-                'text-gray-500',
-                'dark:text-gray-400',
+                'text-medium',
               )}>
                 {photo.takenAtNaiveFormatted}
               </div>

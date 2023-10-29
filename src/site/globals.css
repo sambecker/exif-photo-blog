@@ -14,7 +14,7 @@
   label {
     @apply
       font-sans font-medium block uppercase text-xs
-      text-gray-500 dark:text-gray-400
+      text-medium
       tracking-wider
   }
   button, .button,
@@ -46,7 +46,7 @@
   }
   input[type=file] {
     @apply
-      block font-mono w-full text-gray-500 dark:text-gray-400
+      block font-mono w-full text-medium
       file:bg-white dark:file:bg-gray-950
       file:mr-2 file:my-2 file:px-4 file:py-1.5 file:rounded-md
       file:border-solid file:border
@@ -95,7 +95,7 @@
   }
   button.primary.disabled, .button.primary.disabled {
     @apply
-      text-extra-dim
+      text-medium
   }
   /* Toasts */
   .toaster [data-sonner-toast] {
@@ -112,13 +112,13 @@
     @apply
       text-gray-100 dark:text-gray-900
   }
+  .text-medium {
+    @apply
+      text-gray-500 dark:text-gray-400
+  }
   .text-dim {
     @apply
       text-gray-400 dark:text-gray-500
-  }
-  .text-extra-dim {
-    @apply
-      text-gray-500 dark:text-gray-400
   }
   .text-icon {
     @apply

@@ -5,7 +5,7 @@ import { Metadata } from 'next';
 import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from '@/site/config';
 import StateProvider from '@/state/AppStateProvider';
 import ThemeProviderClient from '@/site/ThemeProviderClient';
-import Nav from '@/components/Nav';
+import Nav from '@/site/Nav';
 import ToasterWithThemes from '@/components/ToasterWithThemes';
 import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
 

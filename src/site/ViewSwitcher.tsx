@@ -1,7 +1,7 @@
 import Switcher from '@/components/Switcher';
 import SwitcherItem from '@/components/SwitcherItem';
-import IconFullFrame from '@/icons/IconFullFrame';
-import IconGrid from '@/icons/IconGrid';
+import IconFullFrame from '@/site/IconFullFrame';
+import IconGrid from '@/site/IconGrid';
 import { PATH_GRID } from '@/site/paths';
 import { BiLockAlt } from 'react-icons/bi';
 

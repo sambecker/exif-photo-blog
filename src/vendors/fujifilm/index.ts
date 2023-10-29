@@ -86,43 +86,149 @@ const getFujifilmMode = (
   }
 };
 
-const FILM_SIMULATION_LABELS: Record<FujifilmSimulation, string> = {
-  'monochrome':             'Monochrome',
-  'monochrome-ye':          'Monochrome + Yellow Filter',
-  'monochrome-r':           'Monochrome + Red Filter',
-  'monochrome-g':           'Monochrome + Green Filter',
-  'sepia':                  'Sepia',
-  'acros':                  'ACROS',
-  'acros-ye':               'ACROS + Yellow Filter',
-  'acros-r':                'ACROS + Red Filter',
-  'acros-g':                'ACROS + Green Filter',
-  'provia':                 'PROVIA / Standard',
-  'portrait':               'Studio Portrait',
-  'portrait-saturation':    'Studio Portrait + Enhanced Saturation',
-  'portrait-skin-tone':     'ASTIA / Soft',
-  'portrait-sharpness':     'Studio Portrait + Enhanced Sharpness',
-  'portrait-ex':            'Studio Portrait Ex',
-  'velvia':                 'Velvia / Vivid',
-  'pro-neg-std':            'PRO Neg. Std',
-  'pro-neg-hi':             'PRO Neg. Hi',
-  'classic-chrome':         'Classic Chrome',
-  'eterna':                 'ETERNA / Cinema',
-  'classic-neg':            'Classic Neg.',
-  'eterna-bleach-bypass':   'ETERNA Bleach Bypass',
-  'nostalgic-neg':          'Nostalgic Neg.',
-  'reala':                  'REALA ACE',
+interface FujifilmSimulationLabel {
+  small: string
+  medium: string
+  large: string
+}
+
+const FILM_SIMULATION_LABELS: Record<
+  FujifilmSimulation,
+  FujifilmSimulationLabel
+> = {
+  'monochrome': {
+    small: 'Monochrome',
+    medium: 'Monochrome',
+    large: 'Monochrome',
+  },
+  'monochrome-ye': {
+    small: 'Monochrome+Ye',
+    medium: 'Monochrome+Ye',
+    large: 'Monochrome + Yellow Filter',
+  },
+  'monochrome-r': {
+    small: 'Monochrome+R',
+    medium: 'Monochrome+R',
+    large: 'Monochrome + Red Filter',
+  },
+  'monochrome-g': {
+    small: 'Monochrome+G',
+    medium: 'Monochrome+G',
+    large: 'Monochrome + Green Filter',
+  },
+  'sepia': {
+    small: 'Sepia',
+    medium: 'Sepia',
+    large: 'Sepia',
+  },
+  'acros': {
+    small: 'ACROS',
+    medium: 'ACROS',
+    large: 'ACROS',
+  },
+  'acros-ye': {
+    small: 'ACROS+Ye',
+    medium: 'ACROS+Ye',
+    large: 'ACROS + Yellow Filter',
+  },
+  'acros-r': {
+    small: 'ACROS+R',
+    medium: 'ACROS+R',
+    large: 'ACROS + Red Filter',
+  },
+  'acros-g': {
+    small: 'ACROS+G',
+    medium: 'ACROS+G',
+    large: 'ACROS + Green Filter',
+  },
+  'provia': {
+    small: 'PROVIA',
+    medium: 'PROVIA/Std',
+    large: 'PROVIA / Standard',
+  },
+  'portrait': {
+    small: 'Portrait',
+    medium: 'Portrait',
+    large: 'Studio Portrait',
+  },
+  'portrait-saturation': {
+    small: 'Portrait+Sat.',
+    medium: 'Portrait+Sat.',
+    large: 'Studio Portrait + Enhanced Saturation',
+  },
+  'portrait-skin-tone': {
+    small: 'ASTIA',
+    medium: 'ASTIA/Soft',
+    large: 'ASTIA / Soft',
+  },
+  'portrait-sharpness': {
+    small: 'Portrait+Sharp.',
+    medium: 'Portrait+Sharp.',
+    large: 'Studio Portrait + Enhanced Sharpness',
+  },
+  'portrait-ex': {
+    small: 'Portrait+Ex',
+    medium: 'Portrait+Ex',
+    large: 'Studio Portrait + Ex',
+  },
+  'velvia': {
+    small: 'Velvia',
+    medium: 'Velvia/Vivid',
+    large: 'Velvia / Vivid',
+  },
+  'pro-neg-std': {
+    small: 'PRO Neg. Std',
+    medium: 'PRO Neg. Std',
+    large: 'PRO Neg. Std',
+  },
+  'pro-neg-hi': {
+    small: 'PRO Neg. Hi',
+    medium: 'PRO Neg. Hi',
+    large: 'PRO Neg. Hi',
+  },
+  'classic-chrome': {
+    small: 'Classic Chrome',
+    medium: 'Classic Chrome',
+    large: 'Classic Chrome',
+  },
+  'eterna': {
+    small: 'ETERNA',
+    medium: 'ETERNA/Cinema',
+    large: 'ETERNA / Cinema',
+  },
+  'classic-neg': {
+    small: 'Classic Neg.',
+    medium: 'Classic Neg.',
+    large: 'Classic Neg.',
+  },
+  'eterna-bleach-bypass': {
+    small: 'ETERNA Bypass',
+    medium: 'ETERNA Bypass',
+    large: 'ETERNA Bleach Bypass',
+  },
+  'nostalgic-neg': {
+    small: 'Nostalgic Neg.',
+    medium: 'Nostalgic Neg.',
+    large: 'Nostalgic Neg.',
+  },
+  'reala': {
+    small: 'REALA',
+    medium: 'REALA ACE',
+    large: 'REALA ACE',
+  },
 };
 
 export const FILM_SIMULATION_FORM_INPUT_OPTIONS = Object
   .entries(FILM_SIMULATION_LABELS)
   .map(([value, label]) => (
-    { value, label } as { value: FujifilmSimulation, label: string }
+    { value, label: label.large } as
+    { value: FujifilmSimulation, label: string }
   ))
   .sort((a, b) => a.label.localeCompare(b.label));
 
 export const getLabelForFilmSimulation = (
   simulation: FujifilmSimulation
-): string =>
+) =>
   FILM_SIMULATION_LABELS[simulation];
 
 const parseFujifilmMakerNote = (
