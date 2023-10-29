@@ -14,7 +14,7 @@ export default function PhotoFujifilmSimulation({
   const { small, medium, large } = getLabelForFilmSimulation(simulation);
   return (
     <span
-      title={large}
+      title={`Film Simulation: ${large}`}
       className={cc(
         'inline-flex items-center gap-2 text-medium',
         'translate-x-[-2px]',
