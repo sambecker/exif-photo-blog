@@ -30,7 +30,7 @@ export default function PhotoUpload({
       isUploading && 'cursor-not-allowed',
     )}>
       <div className="flex items-center gap-8">
-        <form className="flex items-center gap-3">
+        <form className="flex items-center min-w-0">
           <ImageInput
             maxSize={shouldResize ? MAX_IMAGE_SIZE : undefined}
             loading={isUploading}
