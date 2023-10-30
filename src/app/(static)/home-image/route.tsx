@@ -6,7 +6,7 @@ import {
 } from '@/photo/image-response';
 import HomeImageResponse from '@/photo/image-response/HomeImageResponse';
 import { getIBMPlexMonoMedium } from '@/site/font';
-import { ImageResponse } from 'next/server';
+import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
 
