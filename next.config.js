@@ -19,9 +19,6 @@ const nextConfig = {
     }],
     minimumCacheTTL: 31536000,
   },
-  experimental: {
-    serverActions: true,
-  },
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
