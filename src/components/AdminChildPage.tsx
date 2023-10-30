@@ -8,39 +8,49 @@ function AdminChildPage({
   backPath,
   backLabel,
   breadcrumb,
+  accessory,
   children,
 }: {
   backPath?: string
   backLabel?: string
   breadcrumb?: ReactNode
+  accessory?: ReactNode
   children: ReactNode,
 }) {
   return (
     <SiteGrid
       contentMain={
         <div className="space-y-6">
-          {backPath &&
+          {(backPath || breadcrumb || accessory) &&
             <div className={cc(
-              'flex flex-wrap items-center gap-x-1.5 sm:gap-x-3 gap-y-1',
-              'h-9',
+              'flex flex-wrap items-center gap-x-2 gap-y-3',
+              'min-h-[2.25rem]', // min-h-9 equivalent
             )}>
-              <Link
-                href={backPath}
-                className="flex gap-1.5 items-center"
-              >
-                <FiArrowLeft size={16} />
-                {backLabel || 'Back'}
-              </Link>
-              {breadcrumb &&
-                <>
-                  <span>/</span>
-                  <span className={cc(
-                    'py-0.5 px-2 rounded-md bg-gray-100 dark:bg-gray-900',
-                    'border border-gray-200 dark:border-gray-800'
-                  )}>
-                    {breadcrumb}
-                  </span>
-                </>}
+              <div className={cc(
+                'flex flex-wrap items-center gap-x-1.5 sm:gap-x-3 gap-y-1',
+                'flex-grow',
+              )}>
+                {backPath &&
+                  <Link
+                    href={backPath}
+                    className="flex gap-1.5 items-center"
+                  >
+                    <FiArrowLeft size={16} />
+                    {backLabel || 'Back'}
+                  </Link>}
+                {breadcrumb &&
+                  <>
+                    <span>/</span>
+                    <span className={cc(
+                      'py-0.5 px-2 rounded-md bg-gray-100 dark:bg-gray-900',
+                      'border border-gray-200 dark:border-gray-800'
+                    )}>
+                      {breadcrumb}
+                    </span>
+                  </>}
+              </div>
+              {accessory &&
+                <div>{accessory}</div>}
             </div>}
           <div>
             {children}

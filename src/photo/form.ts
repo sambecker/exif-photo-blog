@@ -1,4 +1,4 @@
-import { ExifData } from 'ts-exif-parser';
+import type { ExifData } from 'ts-exif-parser';
 import { Photo, PhotoDbInsert, PhotoExif } from '.';
 import {
   convertTimestampToNaivePostgresString,
@@ -11,6 +11,7 @@ import { generateNanoid } from '@/utility/nanoid';
 import {
   FILM_SIMULATION_FORM_INPUT_OPTIONS,
   FujifilmSimulation,
+  MAKE_FUJIFILM,
 } from '@/vendors/fujifilm';
 
 export type PhotoFormData = Record<keyof PhotoDbInsert, string>;
@@ -48,7 +49,7 @@ const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
     label: 'fujifilm simulation',
     options: FILM_SIMULATION_FORM_INPUT_OPTIONS,
     optionsDefaultLabel: 'Unknown',
-    hideBasedOnCamera: make => make !== 'FUJIFILM',
+    hideBasedOnCamera: make => make !== MAKE_FUJIFILM,
   },
   focalLength: { label: 'focal length' },
   focalLengthIn35MmFormat: { label: 'focal length 35mm-equivalent' },
@@ -59,9 +60,9 @@ const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
   locationName: { label: 'location name', hideTemporarily: true },
   latitude: { label: 'latitude' },
   longitude: { label: 'longitude' },
-  priorityOrder: { label: 'priority order' },
   takenAt: { label: 'taken at' },
   takenAtNaive: { label: 'taken at (naive)' },
+  priorityOrder: { label: 'priority order' },
   hidden: { label: 'hidden', checkbox: true },
 };
 
