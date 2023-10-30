@@ -1,6 +1,6 @@
 'use client';
 
-import InfoBlock from '@/components/InfoBlock';
+import SiteGrid from '@/components/SiteGrid';
 import { cc } from '@/utility/css';
 import { FILM_SIMULATION_FORM_INPUT_OPTIONS } from '@/vendors/fujifilm';
 import PhotoFujifilmSimulation from
@@ -18,16 +18,32 @@ export default function FilmPage() {
   });
 
   return (
-    <InfoBlock className="w-[250px] h-[125px] m-36 scale-150">
-      <div className={cc(
-        'w-[250px] h-[125px]',
-        'flex justify-start items-center pl-12',
+    <SiteGrid
+      contentMain={<div className={cc(
+        'flex items-center justify-center min-h-[30rem]',
       )}>
-        <PhotoFujifilmSimulation
-          simulation={FILM_SIMULATION_FORM_INPUT_OPTIONS[index].value}
-          showIconFirst
-        />
-      </div>
-    </InfoBlock>
+        <div className="w-[250px] scale-150">
+          <div className="dark:text-gray-500/50 uppercase">
+            Film Simulation:
+          </div>
+          <PhotoFujifilmSimulation
+            simulation={FILM_SIMULATION_FORM_INPUT_OPTIONS[index].value}
+            showIconFirst
+          />
+          <div className="mt-4 text-dim relative">
+            <div>
+              <div>35mm 53mm</div>
+              <div>ƒ/1.4</div>
+              <div>1/3200s</div>
+              <div>ISO 125</div>
+            </div>
+            <div className={cc(
+              'absolute top-0 left-[-2px] right-0 bottom-0',
+              'bg-gradient-to-t from-black to-[rgba(0,0,0,0.5)]',
+            )} />
+          </div>
+        </div>
+      </div>}
+    />
   );
 }
