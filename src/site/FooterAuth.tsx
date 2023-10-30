@@ -4,7 +4,7 @@ import { cc } from '@/utility/css';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import ThemeSwitcher from '@/site/ThemeSwitcher';
-import SiteGrid from './SiteGrid';
+import SiteGrid from '../components/SiteGrid';
 import { usePathname } from 'next/navigation';
 import { isPathSignIn } from '@/site/paths';
 

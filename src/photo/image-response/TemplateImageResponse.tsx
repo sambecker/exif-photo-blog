@@ -1,6 +1,6 @@
 import { Photo } from '..';
-import IconFullFrame from '@/icons/IconFullFrame';
-import IconGrid from '@/icons/IconGrid';
+import IconFullFrame from '@/site/IconFullFrame';
+import IconGrid from '@/site/IconGrid';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
 
 export default function TemplateImageResponse({

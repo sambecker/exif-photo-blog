@@ -1,5 +1,5 @@
 import { getPhotosCached, getPhotosCountCached } from '@/cache';
-import MorePhotos from '@/components/MorePhotos';
+import MorePhotos from '@/photo/MorePhotos';
 import StaggeredOgPhotos from '@/photo/StaggeredOgPhotos';
 import {
   PaginationParams,

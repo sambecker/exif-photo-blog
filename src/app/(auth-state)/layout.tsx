@@ -1,4 +1,4 @@
-import FooterAuth from '@/components/FooterAuth';
+import FooterAuth from '@/site/FooterAuth';
 import PageContentContainer from '@/components/PageContentContainer';
 import { SessionProvider } from 'next-auth/react';
 

@@ -8,6 +8,8 @@ import PhotoTags from '@/tag/PhotoTags';
 import ShareButton from '@/components/ShareButton';
 import PhotoCamera from '../camera/PhotoCamera';
 import { Camera, cameraFromPhoto } from '@/camera';
+import PhotoFujifilmSimulation from
+  '@/vendors/fujifilm/PhotoFujifilmSimulation';
 
 export default function PhotoLarge({
   photo,
@@ -73,18 +75,24 @@ export default function PhotoLarge({
                 <PhotoTags tags={tagsToShow} />}
             </div>
             {showCamera && photoHasCameraData(photo) &&
-              <PhotoCamera
-                camera={camera}
-                showIcon={false}
-                hideApple={false}
-              />}
+              <div>
+                <PhotoCamera
+                  camera={camera}
+                  showIcon={false}
+                  hideApple={false}
+                />
+                {photo.filmSimulation &&
+                  <>
+                    <br />
+                    <PhotoFujifilmSimulation
+                      simulation={photo.filmSimulation}
+                    />
+                  </>}
+              </div>}
           </>)}
           {renderMiniGrid(<>
             {photoHasExifData(photo) &&
-              <ul className={cc(
-                'text-gray-500',
-                'dark:text-gray-400',
-              )}>
+              <ul className="text-medium">
                 <li>
                   {photo.focalLengthFormatted}
                   {photo.focalLengthIn35MmFormatFormatted &&
@@ -112,8 +120,7 @@ export default function PhotoLarge({
             )}>
               <div className={cc(
                 'grow uppercase',
-                'text-gray-500',
-                'dark:text-gray-400',
+                'text-medium',
               )}>
                 {photo.takenAtNaiveFormatted}
               </div>

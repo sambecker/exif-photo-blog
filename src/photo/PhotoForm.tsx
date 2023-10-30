@@ -96,12 +96,18 @@ export default function PhotoForm({
           label,
           note,
           required,
+          options,
+          optionsDefaultLabel,
           readOnly,
           hideIfEmpty,
+          hideBasedOnCamera,
           loadingMessage,
           checkbox,
         }]) =>
-          (!hideIfEmpty || formData[key]) &&
+          (
+            (!hideIfEmpty || formData[key]) &&
+            !hideBasedOnCamera?.(formData.make)
+          ) &&
             <FieldSetWithStatus
               key={key}
               id={key}
@@ -109,6 +115,8 @@ export default function PhotoForm({
               note={note}
               value={formData[key] ?? ''}
               onChange={value => setFormData({ ...formData, [key]: value })}
+              selectOptions={options}
+              selectOptionsDefaultLabel={optionsDefaultLabel}
               required={required}
               readOnly={readOnly}
               placeholder={loadingMessage && !formData[key]

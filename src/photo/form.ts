@@ -8,6 +8,10 @@ import { getOffsetFromExif } from '@/utility/exif';
 import { toFixedNumber } from '@/utility/number';
 import { convertStringToArray } from '@/utility/string';
 import { generateNanoid } from '@/utility/nanoid';
+import {
+  FILM_SIMULATION_FORM_INPUT_OPTIONS,
+  FujifilmSimulation,
+} from '@/vendors/fujifilm';
 
 export type PhotoFormData = Record<keyof PhotoDbInsert, string>;
 
@@ -18,21 +22,34 @@ type FormMeta = {
   readOnly?: boolean
   hideIfEmpty?: boolean
   hideTemporarily?: boolean
+  hideBasedOnCamera?: (make?: string, mode?: string) => boolean
   loadingMessage?: string
   checkbox?: boolean
+  options?: { value: string, label: string }[]
+  optionsDefaultLabel?: string
 };
 
 const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
   title: { label: 'title' },
   tags: { label: 'tags', note: 'comma-separated values' },
   id: { label: 'id', readOnly: true, hideIfEmpty: true },
-  // eslint-disable-next-line max-len
-  blurData: { label: 'blur data', readOnly: true, required: true, loadingMessage: 'Generating blur data ...' },
+  blurData: {
+    label: 'blur data',
+    readOnly: true,
+    required: true,
+    loadingMessage: 'Generating blur data ...',
+  },
   url: { label: 'url', readOnly: true },
   extension: { label: 'extension', readOnly: true },
   aspectRatio: { label: 'aspect ratio', readOnly: true },
   make: { label: 'camera make' },
   model: { label: 'camera model' },
+  filmSimulation: {
+    label: 'fujifilm simulation',
+    options: FILM_SIMULATION_FORM_INPUT_OPTIONS,
+    optionsDefaultLabel: 'Unknown',
+    hideBasedOnCamera: make => make !== 'FUJIFILM',
+  },
   focalLength: { label: 'focal length' },
   focalLengthIn35MmFormat: { label: 'focal length 35mm-equivalent' },
   fNumber: { label: 'aperture' },
@@ -42,7 +59,6 @@ const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
   locationName: { label: 'location name', hideTemporarily: true },
   latitude: { label: 'latitude' },
   longitude: { label: 'longitude' },
-  filmSimulation: { label: 'film simulation', hideTemporarily: true },
   priorityOrder: { label: 'priority order' },
   takenAt: { label: 'taken at' },
   takenAtNaive: { label: 'taken at (naive)' },
@@ -77,7 +93,8 @@ export const convertPhotoToFormData = (
 };
 
 export const convertExifToFormData = (
-  data: ExifData
+  data: ExifData,
+  fujifilmSimulation?: FujifilmSimulation,
 ): Record<keyof PhotoExif, string | undefined> => ({
   aspectRatio: (
     (data.imageSize?.width ?? 3.0) /
@@ -93,7 +110,7 @@ export const convertExifToFormData = (
   exposureCompensation: data.tags?.ExposureCompensation?.toString(),
   latitude: data.tags?.GPSLatitude?.toString(),
   longitude: data.tags?.GPSLongitude?.toString(),
-  filmSimulation: undefined,
+  filmSimulation: fujifilmSimulation,
   takenAt: data.tags?.DateTimeOriginal
     ? convertTimestampWithOffsetToPostgresString(
       data.tags?.DateTimeOriginal,
@@ -124,9 +141,9 @@ export const convertFormDataToPhoto = (
   });
 
   return {
-    ...photoForm,
+    ...(photoForm as PhotoFormData & { filmSimulation?: FujifilmSimulation }),
     ...(generateId && !photoForm.id) && { id: generateNanoid() },
-    // convert form strings to arrays
+    // Convert form strings to arrays
     tags: convertStringToArray(photoForm.tags),
     // Convert form strings to numbers
     aspectRatio: toFixedNumber(parseFloat(photoForm.aspectRatio), 6),

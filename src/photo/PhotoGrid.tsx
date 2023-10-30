@@ -3,7 +3,7 @@ import PhotoSmall from './PhotoSmall';
 import { cc } from '@/utility/css';
 import AnimateItems from '@/components/AnimateItems';
 import { Camera } from '@/camera';
-import MorePhotos from '@/components/MorePhotos';
+import MorePhotos from '@/photo/MorePhotos';
 
 export default function PhotoGrid({
   photos,

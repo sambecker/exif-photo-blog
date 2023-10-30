@@ -3,9 +3,9 @@
 import { cc } from '@/utility/css';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import SiteGrid from './SiteGrid';
+import SiteGrid from '../components/SiteGrid';
 import { SITE_DOMAIN_OR_TITLE } from '@/site/config';
-import ViewSwitcher, { SwitcherSelection } from '@/photo/ViewSwitcher';
+import ViewSwitcher, { SwitcherSelection } from '@/site/ViewSwitcher';
 import {
   PATH_ADMIN,
   PATH_ROOT,
@@ -14,7 +14,7 @@ import {
   isPathProtected,
   isPathSignIn,
 } from '@/site/paths';
-import AnimateItems from './AnimateItems';
+import AnimateItems from '../components/AnimateItems';
 
 export default function Nav({ showTextLinks }: { showTextLinks?: boolean }) {
   const isLoggedIn = false;

@@ -1,6 +1,6 @@
 import { getPhotosCached, getPhotosCountCached } from '@/cache';
 import AnimateItems from '@/components/AnimateItems';
-import MorePhotos from '@/components/MorePhotos';
+import MorePhotos from '@/photo/MorePhotos';
 import SiteGrid from '@/components/SiteGrid';
 import { generateOgImageMetaForPhotos } from '@/photo';
 import PhotoLarge from '@/photo/PhotoLarge';

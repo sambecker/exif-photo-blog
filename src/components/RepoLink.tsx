@@ -17,7 +17,7 @@ export default function RepoLink() {
           'hover:underline',
         )}
       >
-        <BiLogoGithub className="translate-y-[1px]" />
+        <BiLogoGithub className="translate-y-[1px] hidden xs:inline-block" />
         exif-photo-blog
       </Link>
     </span>

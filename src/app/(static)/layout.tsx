@@ -1,4 +1,4 @@
-import FooterStatic from '@/components/FooterStatic';
+import FooterStatic from '@/site/FooterStatic';
 import PageContentContainer from '@/components/PageContentContainer';
 
 export default function RootLayout({

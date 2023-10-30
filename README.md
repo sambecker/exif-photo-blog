@@ -16,6 +16,7 @@ Features
 - Built-in auth
 - Light/dark mode
 - Automatic OG image generation
+- Support for Fujifilm film simulations
 
 <img src="/readme/og-image-share.png" alt="OG Image Preview" width=600 />
 

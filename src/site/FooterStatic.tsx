@@ -1,12 +1,12 @@
 'use client';
 
 import { cc } from '@/utility/css';
-import SiteGrid from './SiteGrid';
+import SiteGrid from '../components/SiteGrid';
 import ThemeSwitcher from '@/site/ThemeSwitcher';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { SHOW_REPO_LINK } from '@/site/config';
-import RepoLink from './RepoLink';
+import RepoLink from '../components/RepoLink';
 
 export default function FooterStatic({
   showSignOut,
