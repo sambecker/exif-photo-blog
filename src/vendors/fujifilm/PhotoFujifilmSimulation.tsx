@@ -20,9 +20,19 @@ export default function PhotoFujifilmSimulation({
         'text-medium uppercase',
       )}
     >
-      <span className="xs:hidden">{small}</span>
-      <span className="hidden xs:inline-block">{medium}</span>
-      <span className="translate-y-[-1.25px]">
+      <span className={cc(
+        'xs:hidden',
+        small.endsWith('.') && '-mr-1',
+      )}>
+        {small}
+      </span>
+      <span className={cc(
+        'hidden xs:inline-block',
+        medium.endsWith('.') && '-mr-1',
+      )}>
+        {medium}
+      </span>
+      <span className="translate-y-[-1.25px] text-extra-dim">
         <PhotoFujifilmSimulationIcon simulation={simulation} />
       </span>
     </span>

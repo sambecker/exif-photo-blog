@@ -75,35 +75,29 @@ export default function PhotoLarge({
                 <PhotoTags tags={tagsToShow} />}
             </div>
             {showCamera && photoHasCameraData(photo) &&
-              <div>
-                <PhotoCamera
-                  camera={camera}
-                  showIcon={false}
-                  hideApple={false}
-                />
-                {photo.filmSimulation &&
-                  <>
-                    <br />
-                    <PhotoFujifilmSimulation
-                      simulation={photo.filmSimulation}
-                    />
-                  </>}
-              </div>}
+              <PhotoCamera
+                camera={camera}
+                showIcon={false}
+                hideApple={false}
+              />}
           </>)}
           {renderMiniGrid(<>
             {photoHasExifData(photo) &&
               <ul className="text-medium">
+                {photo.filmSimulation &&
+                  <li>
+                    <PhotoFujifilmSimulation
+                      simulation={photo.filmSimulation}
+                    />
+                  </li>}
                 <li>
                   {photo.focalLengthFormatted}
                   {photo.focalLengthIn35MmFormatFormatted &&
                     <>
                       {' '}
                       <span
-                        className={cc(
-                          'text-gray-400/80',
-                          'dark:text-gray-400/50',
-                        )}
                         title="35mm equivalent"
+                        className="text-extra-dim"
                       >
                         {photo.focalLengthIn35MmFormatFormatted}
                       </span>

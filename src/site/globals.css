@@ -120,6 +120,10 @@
     @apply
       text-gray-400 dark:text-gray-500
   }
+  .text-extra-dim {
+    @apply
+      text-gray-400/80 dark:text-gray-400/50
+  }
   .text-icon {
     @apply
       text-gray-800 dark:text-gray-200
