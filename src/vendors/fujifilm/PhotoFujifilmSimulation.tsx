@@ -8,8 +8,10 @@ import PhotoFujifilmSimulationIcon from './PhotoFujifilmSimulationIcon';
 
 export default function PhotoFujifilmSimulation({
   simulation,
+  showIconFirst,
 }: {
-  simulation: FujifilmSimulation;
+  simulation: FujifilmSimulation
+  showIconFirst?: boolean
 }) {
   const { small, medium, large } = getLabelForFilmSimulation(simulation);
   return (
@@ -32,7 +34,10 @@ export default function PhotoFujifilmSimulation({
       )}>
         {medium}
       </span>
-      <span className="translate-y-[-1.25px] text-extra-dim">
+      <span className={cc(
+        'translate-y-[-1.25px] text-extra-dim',
+        showIconFirst && 'order-first',
+      )}>
         <PhotoFujifilmSimulationIcon simulation={simulation} />
       </span>
     </span>
