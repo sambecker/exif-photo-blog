@@ -51,7 +51,7 @@ Installation
 
 1. Clone code
 2. Run `pnpm i` to install dependencies
-3. Set environment variable `AUTH_URL` to `http://localhost:3000/api/url` (_this is a temporary limitation of `next-auth` v5.0_)
+3. Set environment variable `AUTH_URL` locally (not in production) to `http://localhost:3000/api/url` (_this is a temporary limitation of `next-auth` v5.0_)
 4. Run `vc dev` to start dev server, and utilize Vercel-stored environment variables
 
 ### 5. Add Analytics (optional)
