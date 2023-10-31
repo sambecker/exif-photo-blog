@@ -4,9 +4,9 @@ import { blobToImage } from '@/utility/blob';
 import { useRef, useState } from 'react';
 import { CopyExif } from '@/lib/CopyExif';
 import { cc } from '@/utility/css';
-import { AiOutlineCloudUpload } from 'react-icons/ai';
 import Spinner from './Spinner';
 import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
+import { FiUploadCloud } from 'react-icons/fi';
 
 const INPUT_ID = 'file';
 
@@ -50,7 +50,7 @@ export default function ImageInput({
             <span className="w-4 inline-flex items-center">
               {loading
                 ? <Spinner color="text" />
-                : <AiOutlineCloudUpload
+                : <FiUploadCloud
                   size={18}
                   className="translate-y-[0.5px]"
                 />}

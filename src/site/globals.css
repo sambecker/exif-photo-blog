@@ -72,10 +72,11 @@
       px-4
       text-base
       shadow-sm
-      disabled:bg-gray-100 dark:disabled:bg-gray-900 disabled:cursor-not-allowed
       active:bg-gray-100 dark:active:bg-gray-900
       hover:border-gray-300 dark:hover:border-gray-600
-      hover:disabled:border-gray-200
+      disabled:cursor-not-allowed
+      disabled:bg-gray-100 dark:disabled:bg-gray-900
+      disabled:border-gray-200 disabled:dark:border-gray-700
   }
   button.subtle, .button.subtle {
     @apply
@@ -97,7 +98,7 @@
     @apply
       text-medium
   }
-  button.naked {
+  button.link {
     @apply
       p-0 min-h-0
       border-none active:bg-transparent shadow-none

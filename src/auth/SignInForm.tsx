@@ -19,6 +19,10 @@ export default function SignInForm() {
     emailRef.current?.focus();
   }, []);
 
+  const isFormValid =
+    email.length > 0 &&
+    password.length > 0;
+
   return (
     <InfoBlock>
       <form action={action}>
@@ -44,7 +48,7 @@ export default function SignInForm() {
               onChange={setPassword}
             />
           </div>
-          <SubmitButtonWithStatus>
+          <SubmitButtonWithStatus disabled={!isFormValid}>
             Sign in
           </SubmitButtonWithStatus>
         </div>

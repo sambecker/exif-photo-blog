@@ -39,7 +39,7 @@ export default function FooterAuth() {
                 <form action={signOutAction}>
                   <SubmitButtonWithStatus
                     className={LINK_STYLE}
-                    naked
+                    styleAsLink
                   >
                     Sign Out
                   </SubmitButtonWithStatus>

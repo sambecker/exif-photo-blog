@@ -8,13 +8,13 @@ import { cc } from '@/utility/css';
 
 interface Props extends HTMLProps<HTMLButtonElement> {
   icon?: JSX.Element
-  naked?: boolean
+  styleAsLink?: boolean
 }
 
 export default function SubmitButtonWithStatus(props: Props) {
   const {
     icon,
-    naked,
+    styleAsLink,
     children,
     disabled,
     className,
@@ -31,15 +31,17 @@ export default function SubmitButtonWithStatus(props: Props) {
       className={cc(
         className,
         'inline-flex items-center gap-2',
-        naked && 'naked',
+        styleAsLink && 'link',
       )}
       {...buttonProps}
     >
       {(icon || pending) &&
         <span className={cc(
+          'h-4',
           'min-w-[1rem]',
           'inline-flex justify-center sm:justify-normal',
           '-mx-0.5',
+          'translate-y-[1px]',
         )}>
           {pending
             ? <Spinner size={14} />
