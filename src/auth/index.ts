@@ -1,25 +1,13 @@
 import { isPathProtected } from '@/site/paths';
-import NextAuth, { User, type DefaultSession } from 'next-auth';
+import NextAuth, { User } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-
-declare module 'next-auth' {
-  interface Session {
-    user: {
-      id: string
-    } & DefaultSession['user']
-  }
-}
-
 export const {
   handlers: { GET, POST },
+  signIn,
   auth,
 } = NextAuth({
   providers: [
     Credentials({
-      credentials: {
-        email: { label: 'Email', type: 'text' },
-        password: { label: 'Password', type: 'password' },
-      },
       async authorize({ email, password }) {
         if (
           process.env.ADMIN_EMAIL && process.env.ADMIN_EMAIL === email &&
