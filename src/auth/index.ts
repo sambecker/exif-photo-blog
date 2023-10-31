@@ -1,9 +1,13 @@
 import { isPathProtected } from '@/site/paths';
 import NextAuth, { User } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+
+export const CREDENTIALS_SIGN_IN_ERROR = 'CredentialsSignin';
+
 export const {
   handlers: { GET, POST },
   signIn,
+  signOut,
   auth,
 } = NextAuth({
   providers: [

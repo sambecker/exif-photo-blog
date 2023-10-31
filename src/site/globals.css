@@ -97,6 +97,11 @@
     @apply
       text-medium
   }
+  button.naked {
+    @apply
+      p-0 min-h-0
+      border-none active:bg-transparent shadow-none
+  }
   /* Toasts */
   .toaster [data-sonner-toast] {
     @apply

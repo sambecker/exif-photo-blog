@@ -8,11 +8,13 @@ import { cc } from '@/utility/css';
 
 interface Props extends HTMLProps<HTMLButtonElement> {
   icon?: JSX.Element
+  naked?: boolean
 }
 
 export default function SubmitButtonWithStatus(props: Props) {
   const {
     icon,
+    naked,
     children,
     disabled,
     className,
@@ -29,6 +31,7 @@ export default function SubmitButtonWithStatus(props: Props) {
       className={cc(
         className,
         'inline-flex items-center gap-2',
+        naked && 'naked',
       )}
       {...buttonProps}
     >
