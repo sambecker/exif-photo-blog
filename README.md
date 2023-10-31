@@ -50,8 +50,9 @@ Installation
 ### 4. Develop locally
 
 1. Clone code
-2. Install dependencies `pnpm i`
-3. Run `vc dev` to utilize Vercel-stored environment variables
+2. Run `pnpm i` to install dependencies
+3. Set environment variable `AUTH_URL` locally (not in production) to `http://localhost:3000/api/url` (_this is a temporary limitation of `next-auth` v5.0_)
+4. Run `vc dev` to start dev server, and utilize Vercel-stored environment variables
 
 ### 5. Add Analytics (optional)
 
@@ -68,8 +69,8 @@ Installation
 
 FAQ
 -
-Q: My images/content have fallen out of sync with my database and/or production site no longer matches local development. What do I do?<br />
-A: Navigate to `/admin/configuration` and click the "Clear Cache" button.
+Q: My images/content have fallen out of sync with my database and/or my production site no longer matches local development. What do I do?<br />
+A: Navigate to `/admin/configuration` and click "Clear Cache" button.
 
 Q: I'm seeing server-side runtime errors when loading a page after updating my fork. What do I do?<br />
-A: Navigate to `/admin/configuration` and click the "Clear Cache" button. If this doesn't help, [open an issue](https://github.com/sambecker/exif-photo-blog/issues/new).
+A: Navigate to `/admin/configuration` and click "Clear Cache" button. If this doesn't help, [open an issue](https://github.com/sambecker/exif-photo-blog/issues/new).

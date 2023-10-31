@@ -1,17 +1,20 @@
 'use client';
 
 import { HTMLProps } from 'react';
-import { experimental_useFormStatus as useFormStatus } from 'react-dom';
+// @ts-ignore
+import { useFormStatus } from 'react-dom';
 import Spinner from './Spinner';
 import { cc } from '@/utility/css';
 
 interface Props extends HTMLProps<HTMLButtonElement> {
   icon?: JSX.Element
+  styleAsLink?: boolean
 }
 
 export default function SubmitButtonWithStatus(props: Props) {
   const {
     icon,
+    styleAsLink,
     children,
     disabled,
     className,
@@ -28,14 +31,17 @@ export default function SubmitButtonWithStatus(props: Props) {
       className={cc(
         className,
         'inline-flex items-center gap-2',
+        styleAsLink && 'link',
       )}
       {...buttonProps}
     >
       {(icon || pending) &&
         <span className={cc(
+          'h-4',
           'min-w-[1rem]',
           'inline-flex justify-center sm:justify-normal',
           '-mx-0.5',
+          'translate-y-[1px]',
         )}>
           {pending
             ? <Spinner size={14} />

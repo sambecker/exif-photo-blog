@@ -3,7 +3,7 @@ import { getImageCacheHeadersForAuth, getPhotoCached } from '@/cache';
 import { IMAGE_OG_SIZE } from '@/photo/image-response';
 import PhotoImageResponse from '@/photo/image-response/PhotoImageResponse';
 import { getIBMPlexMonoMedium } from '@/site/font';
-import { ImageResponse } from 'next/server';
+import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
 
