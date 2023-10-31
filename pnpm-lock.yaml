@@ -75,8 +75,8 @@ dependencies:
     specifier: ^14.0.1
     version: 14.0.1(@babel/core@7.23.0)(react-dom@18.2.0)(react@18.2.0)
   next-auth:
-    specifier: 0.0.0-manual.c885ac1d
-    version: 0.0.0-manual.c885ac1d(next@14.0.1)(react@18.2.0)
+    specifier: 5.0.0-beta.3
+    version: 5.0.0-beta.3(next@14.0.1)(react@18.2.0)
   next-themes:
     specifier: ^0.2.1
     version: 0.2.1(next@14.0.1)(react-dom@18.2.0)(react@18.2.0)
@@ -4053,10 +4053,10 @@ packages:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: false
 
-  /next-auth@0.0.0-manual.c885ac1d(next@14.0.1)(react@18.2.0):
-    resolution: {integrity: sha512-kL5Ead+uIQNjfSWjo/MVxzte+jJSD+N/XIGkYmqyjQmNxE5wDvJ6zuwo+h+QPBnTVf+jmOsOlzr65tPN7OY5fA==}
+  /next-auth@5.0.0-beta.3(next@14.0.1)(react@18.2.0):
+    resolution: {integrity: sha512-WOKhATBFGeONV+29HzFmspNmL7NXxrsCWLfaDKmAd/4DD1nqXE0BzNFH8t3SJBx7PUDMnB6F7xB76LM/AaV1MQ==}
     peerDependencies:
-      next: ^13.5.3
+      next: ^14
       nodemailer: ^6.6.5
       react: ^18.2.0
     peerDependenciesMeta:
