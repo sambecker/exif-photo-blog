@@ -6,7 +6,7 @@ import { CopyExif } from '@/lib/CopyExif';
 import { cc } from '@/utility/css';
 import Spinner from './Spinner';
 import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
-import { FiUploadCloud } from 'react-icons/fi';
+import { TbCloudUpload } from 'react-icons/tb';
 
 const INPUT_ID = 'file';
 
@@ -49,10 +49,10 @@ export default function ImageInput({
           >
             <span className="w-4 inline-flex items-center">
               {loading
-                ? <Spinner color="text" />
-                : <FiUploadCloud
-                  size={18}
-                  className="translate-y-[0.5px]"
+                ? <Spinner color="text" className="translate-y-[0.5px]" />
+                : <TbCloudUpload
+                  size={17}
+                  className="translate-y-[0.5px] shrink-0"
                 />}
             </span>
             Upload Photo
