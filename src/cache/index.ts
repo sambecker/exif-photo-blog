@@ -15,7 +15,7 @@ import {
 } from '@/services/postgres';
 import { parseCachedPhotosDates, parseCachedPhotoDates } from '@/photo';
 import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
-import { AuthSession } from 'next-auth';
+import type { Session } from 'next-auth';
 import { Camera, createCameraKey } from '@/camera';
 import { PATHS_ADMIN, PATHS_TO_CACHE } from '@/site/paths';
 
@@ -226,7 +226,7 @@ export const getBlobPhotoUrlsCached: typeof getBlobPhotoUrls = (...args) =>
     }
   )();
 
-export const getImageCacheHeadersForAuth = (session: AuthSession | null) => {
+export const getImageCacheHeadersForAuth = (session: Session | null) => {
   return {
     'Cache-Control': !session?.user
       ? 's-maxage=3600, stale-while-revalidate=59'
