@@ -124,10 +124,12 @@ export const convertExifToFormData = (
 });
 
 export const convertFormDataToPhotoDbInsert = (
-  formData: FormData,
+  formData: FormData | PhotoFormData,
   generateId?: boolean,
 ): PhotoDbInsert => {
-  const photoForm = Object.fromEntries(formData) as PhotoFormData;
+  const photoForm = formData instanceof FormData
+    ? Object.fromEntries(formData) as PhotoFormData
+    : formData;
   
   // Parse FormData:
   // - remove server action ID
@@ -177,21 +179,4 @@ export const convertFormDataToPhotoDbInsert = (
       : undefined,
     hidden: photoForm.hidden === 'true',
   };
-};
-
-const convertPhotoFormDataToFormData = (
-  photoFormData: PhotoFormData,
-) => {
-  const formData = new FormData();
-  for (const key in photoFormData) {
-    formData.append(key, photoFormData[key as keyof PhotoFormData]);
-  }
-  return formData;
-};
-
-export const convertPhotoFormDataToPhotoDbInsert = (
-  photoFormData: PhotoFormData,
-) => {
-  const formData = convertPhotoFormDataToFormData(photoFormData);
-  return convertFormDataToPhotoDbInsert(formData);
 };

@@ -8,24 +8,24 @@ import {
 import { ExifData, ExifParserFactory } from 'ts-exif-parser';
 import { PhotoFormData } from './form';
 
-export const extractFormDataFromUploadPath = async (
-  uploadPath: string
+export const extractExifDataFromBlobPath = async (
+  blobPath: string
 ): Promise<{
   blobId?: string
-  photoForm?: Partial<PhotoFormData>
+  photoFormExif?: Partial<PhotoFormData>
 }> => {
-  const url = decodeURIComponent(uploadPath);
+  const url = decodeURIComponent(blobPath);
 
   const blobId = getIdFromBlobUrl(url);
 
   const extension = getExtensionFromBlobUrl(url);
 
-  const fileBytes = uploadPath
+  const fileBytes = blobPath
     ? await fetch(url)
       .then(res => res.arrayBuffer())
     : undefined;
 
-  let exifDataForm: ExifData | undefined;
+  let exifData: ExifData | undefined;
   let filmSimulation: FujifilmSimulation | undefined;
 
   if (fileBytes) {
@@ -33,10 +33,10 @@ export const extractFormDataFromUploadPath = async (
 
     // Data for form
     parser.enableBinaryFields(false);
-    exifDataForm = parser.parse();
+    exifData = parser.parse();
 
     // Capture film simulation for Fujifilm cameras
-    if (isExifForFujifilm(exifDataForm)) {
+    if (isExifForFujifilm(exifData)) {
       // Parse exif data again with binary fields
       // in order to access MakerNote tag
       parser.enableBinaryFields(true);
@@ -50,11 +50,11 @@ export const extractFormDataFromUploadPath = async (
 
   return {
     blobId,
-    ...exifDataForm && {
-      photoForm: {
-        ...convertExifToFormData(exifDataForm, filmSimulation),
+    ...exifData && {
+      photoFormExif: {
+        ...convertExifToFormData(exifData, filmSimulation),
         extension,
-        url: decodeURIComponent(uploadPath),
+        url,
       },
     },
   };

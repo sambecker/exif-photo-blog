@@ -11,7 +11,6 @@ import {
 import {
   PhotoFormData,
   convertFormDataToPhotoDbInsert,
-  convertPhotoFormDataToPhotoDbInsert,
   convertPhotoToFormData,
 } from './form';
 import { redirect } from 'next/navigation';
@@ -26,7 +25,7 @@ import {
   revalidatePhotosKey,
 } from '@/cache';
 import { PATH_ADMIN_PHOTOS, PATH_ADMIN_TAGS } from '@/site/paths';
-import { extractFormDataFromUploadPath } from './server';
+import { extractExifDataFromBlobPath } from './server';
 
 export async function createPhotoAction(formData: FormData) {
   const photo = convertFormDataToPhotoDbInsert(formData, true);
@@ -98,9 +97,9 @@ export async function getExifDataAction(
 ): Promise<Partial<PhotoFormData>> {
   const { url } = photoFormPrevious;
   if (url) {
-    const { photoForm } = await extractFormDataFromUploadPath(url);
-    if (photoForm) {
-      return photoForm;
+    const { photoFormExif } = await extractExifDataFromBlobPath(url);
+    if (photoFormExif) {
+      return photoFormExif;
     }
   }
   return {};
@@ -111,11 +110,9 @@ export async function syncPhotoExifDataAction(formData: FormData) {
   if (photoId) {
     const photo = await getPhoto(photoId);
     if (photo) {
-      const {
-        photoForm: photoFormExif,
-      } = await extractFormDataFromUploadPath(photo.url);
+      const { photoFormExif } = await extractExifDataFromBlobPath(photo.url);
       if (photoFormExif) {
-        const photoFormDbInsert = convertPhotoFormDataToPhotoDbInsert({
+        const photoFormDbInsert = convertFormDataToPhotoDbInsert({
           ...convertPhotoToFormData(photo),
           ...photoFormExif,
         });

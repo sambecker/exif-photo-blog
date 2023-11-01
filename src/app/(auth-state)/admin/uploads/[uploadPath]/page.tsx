@@ -1,7 +1,8 @@
 import PhotoForm from '@/photo/PhotoForm';
 import AdminChildPage from '@/components/AdminChildPage';
-import { PATH_ADMIN_UPLOADS } from '@/site/paths';
-import { extractFormDataFromUploadPath } from '@/photo/server';
+import { PATH_ADMIN, PATH_ADMIN_UPLOADS } from '@/site/paths';
+import { extractExifDataFromBlobPath } from '@/photo/server';
+import { redirect } from 'next/navigation';
 
 interface Params {
   params: { uploadPath: string }
@@ -10,8 +11,10 @@ interface Params {
 export default async function UploadPage({ params: { uploadPath } }: Params) {
   const {
     blobId,
-    photoForm,
-  } = await extractFormDataFromUploadPath(uploadPath);
+    photoFormExif,
+  } = await extractExifDataFromBlobPath(uploadPath);
+
+  if (!photoFormExif) { redirect(PATH_ADMIN); }
 
   return (
     <AdminChildPage
@@ -19,9 +22,7 @@ export default async function UploadPage({ params: { uploadPath } }: Params) {
       backLabel="Uploads"
       breadcrumb={blobId}
     >
-      {photoForm
-        ? <PhotoForm initialPhotoForm={photoForm} />
-        : null}
+      <PhotoForm initialPhotoForm={photoFormExif} />
     </AdminChildPage>
   );
 };
