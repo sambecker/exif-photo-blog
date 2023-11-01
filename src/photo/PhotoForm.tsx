@@ -23,15 +23,25 @@ const THUMBNAIL_HEIGHT = 200;
 
 export default function PhotoForm({
   initialPhotoForm,
+  updatedExifData,
   type = 'create',
   debugBlur,
 }: {
   initialPhotoForm: Partial<PhotoFormData>
+  updatedExifData?: Partial<PhotoFormData>
   type?: 'create' | 'edit'
   debugBlur?: boolean
 }) {
   const [formData, setFormData] =
     useState<Partial<PhotoFormData>>(initialPhotoForm);
+
+  useEffect(() => {
+    // Update form when EXIF data is refreshed by parent
+    setFormData(currentForm => ({
+      ...currentForm,
+      ...updatedExifData,
+    }));
+  }, [updatedExifData]);
 
   // Generate local date strings when
   // none can be harvested from EXIF

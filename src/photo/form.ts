@@ -123,7 +123,7 @@ export const convertExifToFormData = (
     : undefined,
 });
 
-export const convertFormDataToPhoto = (
+export const convertFormDataToPhotoDbInsert = (
   formData: FormData,
   generateId?: boolean,
 ): PhotoDbInsert => {
@@ -177,4 +177,21 @@ export const convertFormDataToPhoto = (
       : undefined,
     hidden: photoForm.hidden === 'true',
   };
+};
+
+const convertPhotoFormDataToFormData = (
+  photoFormData: PhotoFormData,
+) => {
+  const formData = new FormData();
+  for (const key in photoFormData) {
+    formData.append(key, photoFormData[key as keyof PhotoFormData]);
+  }
+  return formData;
+};
+
+export const convertPhotoFormDataToPhotoDbInsert = (
+  photoFormData: PhotoFormData,
+) => {
+  const formData = convertPhotoFormDataToFormData(photoFormData);
+  return convertFormDataToPhotoDbInsert(formData);
 };

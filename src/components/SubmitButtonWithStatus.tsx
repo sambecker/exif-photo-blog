@@ -1,7 +1,6 @@
 'use client';
 
 import { HTMLProps } from 'react';
-// @ts-ignore
 import { useFormStatus } from 'react-dom';
 import Spinner from './Spinner';
 import { cc } from '@/utility/css';
