@@ -22,7 +22,7 @@ export default function FilmPage() {
       contentMain={<div className={cc(
         'flex items-center justify-center min-h-[30rem]',
       )}>
-        <div className="w-[250px] scale-150">
+        <div className="w-[250px] scale-[2.5]">
           <div className="dark:text-gray-500/50 uppercase">
             Film Simulation:
           </div>
