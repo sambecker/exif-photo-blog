@@ -30,7 +30,7 @@ export default function PhotoFujifilmSimulation({
       <span className={cc(
         'hidden xs:inline-block',
         'bg-gray-100 px-1 py-1 leading-none rounded-md',
-        'text-gray-500 text-[0.7rem] tracking-wide',
+        'text-gray-500 font-medium text-[0.7rem] tracking-wide',
       )}>
         {medium}
       </span>
