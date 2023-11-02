@@ -29,6 +29,7 @@ export default function FilmPage() {
           <PhotoFujifilmSimulation
             simulation={FILM_SIMULATION_FORM_INPUT_OPTIONS[index].value}
             showIconFirst
+            badged={false}
           />
           <div className="mt-4 text-dim relative">
             <div>
