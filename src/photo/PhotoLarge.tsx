@@ -75,21 +75,23 @@ export default function PhotoLarge({
                 <PhotoTags tags={tagsToShow} />}
             </div>
             {showCamera && photoHasCameraData(photo) &&
+            <div className="space-y-0.5">
               <PhotoCamera
                 camera={camera}
                 showIcon={false}
                 hideApple={false}
-              />}
+              />
+              {photo.filmSimulation &&
+                <div className="-translate-x-0.5"> 
+                  <PhotoFujifilmSimulation
+                    simulation={photo.filmSimulation}
+                  />
+                </div>}
+            </div>}
           </>)}
           {renderMiniGrid(<>
             {photoHasExifData(photo) &&
               <ul className="text-medium">
-                {photo.filmSimulation &&
-                  <li>
-                    <PhotoFujifilmSimulation
-                      simulation={photo.filmSimulation}
-                    />
-                  </li>}
                 <li>
                   {photo.focalLengthFormatted}
                   {photo.focalLengthIn35MmFormatFormatted &&

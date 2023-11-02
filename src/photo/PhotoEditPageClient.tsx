@@ -39,7 +39,9 @@ export default function PhotoEditPageClient({
         <form action={action}>
           <input name="photoUrl" value={photo.url} hidden readOnly />
           <SubmitButtonWithStatus
-            icon={<IconGrSync className="translate-y-[0.5px] mr-[4px]"/>}
+            icon={<IconGrSync
+              className="translate-y-[-1px] sm:mr-[4px]"
+            />}
           >
             EXIF
           </SubmitButtonWithStatus>
