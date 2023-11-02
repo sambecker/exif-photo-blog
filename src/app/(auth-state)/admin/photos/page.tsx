@@ -29,7 +29,7 @@ import EditButton from '@/admin/EditButton';
 import BlobUrls from '@/admin/BlobUrls';
 import { PRO_MODE_ENABLED } from '@/site/config';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
-import { GrSync } from 'react-icons/gr';
+import IconGrSync from '@/site/IconGrSync';
 
 export const runtime = 'edge';
 
@@ -125,10 +125,9 @@ export default async function AdminTagsPage({
                       }
                     >
                       <input type="hidden" name="id" value={photo.id} />
-                      <SubmitButtonWithStatus icon={<GrSync
-                        size={15}
-                        className="translate-y-[-0.5px]"
-                      />} />
+                      <SubmitButtonWithStatus
+                        icon={<IconGrSync className="translate-y-[-0.5px]" />}
+                      />
                     </FormWithConfirm>
                     <FormWithConfirm
                       action={deletePhotoAction}

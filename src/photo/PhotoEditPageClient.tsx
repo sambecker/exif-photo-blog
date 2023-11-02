@@ -8,8 +8,8 @@ import { PhotoFormData, convertPhotoToFormData } from './form';
 import PhotoForm from './PhotoForm';
 import { useFormState } from 'react-dom';
 import { getExifDataAction } from './actions';
-import { GrSync } from 'react-icons/gr';
 import { areSimpleObjectsEqual } from '@/utility/object';
+import IconGrSync from '@/site/IconGrSync';
 
 export default function PhotoEditPageClient({
   photo,
@@ -39,10 +39,7 @@ export default function PhotoEditPageClient({
         <form action={action}>
           <input name="photoUrl" value={photo.url} hidden readOnly />
           <SubmitButtonWithStatus
-            icon={<GrSync
-              size={15}
-              className="translate-y-[0.5px] mr-[4px]"
-            />}
+            icon={<IconGrSync className="translate-y-[0.5px] mr-[4px]"/>}
           >
             EXIF
           </SubmitButtonWithStatus>
