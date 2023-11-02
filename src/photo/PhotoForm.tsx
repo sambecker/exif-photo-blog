@@ -17,6 +17,7 @@ import {
   generateLocalNaivePostgresString,
   generateLocalPostgresString,
 } from '@/utility/date';
+import { toastSuccess, toastWarning } from '@/toast';
 
 const THUMBNAIL_WIDTH = 300;
 const THUMBNAIL_HEIGHT = 200;
@@ -35,12 +36,35 @@ export default function PhotoForm({
   const [formData, setFormData] =
     useState<Partial<PhotoFormData>>(initialPhotoForm);
 
+  // Update form when EXIF data
+  // is refreshed by parent
   useEffect(() => {
-    // Update form when EXIF data is refreshed by parent
-    setFormData(currentForm => ({
-      ...currentForm,
-      ...updatedExifData,
-    }));
+    if (Object.keys(updatedExifData ?? {}).length > 0) {
+      const changedKeys: string[] = [];
+
+      setFormData(currentForm => {
+        Object.entries(updatedExifData ?? {})
+          .forEach(([key, value]) => {
+            if (currentForm[key as keyof PhotoFormData] !== value) {
+              changedKeys.push(key);
+            }
+          });
+
+        return {
+          ...currentForm,
+          ...updatedExifData,
+        };
+      });
+
+      if (changedKeys.length > 0) {
+        toastSuccess(
+          `Updated EXIF fields: ${changedKeys.join(', ')}`,
+          8000,
+        );
+      } else {
+        toastWarning('No new EXIF data found');
+      }
+    }
   }, [updatedExifData]);
 
   // Generate local date strings when

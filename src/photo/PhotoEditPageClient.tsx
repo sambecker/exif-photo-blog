@@ -4,21 +4,31 @@ import AdminChildPage from '@/components/AdminChildPage';
 import { Photo } from '.';
 import { PATH_ADMIN_PHOTOS } from '@/site/paths';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
-import { BiRefresh } from 'react-icons/bi';
 import { PhotoFormData, convertPhotoToFormData } from './form';
 import PhotoForm from './PhotoForm';
 import { useFormState } from 'react-dom';
 import { getExifDataAction } from './actions';
+import { GrSync } from 'react-icons/gr';
+import { areSimpleObjectsEqual } from '@/utility/object';
 
 export default function PhotoEditPageClient({
   photo,
 }: {
   photo: Photo
 }) {
+  const seedExifData = { url: photo.url };
+
   const [updatedExifData, action] = useFormState<Partial<PhotoFormData>>(
     getExifDataAction,
-    { url: photo.url},
+    seedExifData,
   );
+
+  const hasExifDataBeenFound = !areSimpleObjectsEqual(
+    updatedExifData,
+    seedExifData,
+  );
+
+  console.log({ hasExifDataBeenFound });
 
   return (
     <AdminChildPage
@@ -29,16 +39,21 @@ export default function PhotoEditPageClient({
         <form action={action}>
           <input name="photoUrl" value={photo.url} hidden readOnly />
           <SubmitButtonWithStatus
-            icon={<BiRefresh size={18} className="translate-y-[-1.5px]" />}
+            icon={<GrSync
+              size={15}
+              className="translate-y-[0.5px] mr-[4px]"
+            />}
           >
-            Refresh EXIF
+            EXIF
           </SubmitButtonWithStatus>
         </form>}
     >
       <PhotoForm
         type="edit"
         initialPhotoForm={convertPhotoToFormData(photo)}
-        updatedExifData={updatedExifData}
+        updatedExifData={hasExifDataBeenFound
+          ? updatedExifData
+          : undefined}
       />
     </AdminChildPage>
   );

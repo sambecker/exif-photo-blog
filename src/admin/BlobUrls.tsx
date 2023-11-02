@@ -41,25 +41,30 @@ export default function BlobUrls({
           >
             {pathForBlobUrl(url)}
           </Link>
-          <EditButton href={href} label="Setup" />
-          <FormWithConfirm
-            action={deleteBlobPhotoAction}
-            confirmText="Are you sure you want to delete this upload?"
-          >
-            <input
-              type="hidden"
-              name="redirectToPhotos"
-              value={urls.length < 2 ? 'true' : 'false'}
-              readOnly
-            />
-            <input
-              type="hidden"
-              name="url"
-              value={url}
-              readOnly
-            />
-            <DeleteButton />
-          </FormWithConfirm>
+          <div className={cc(
+            'flex flex-nowrap',
+            'gap-2 sm:gap-3 items-center',
+          )}>
+            <EditButton href={href} label="Setup" />
+            <FormWithConfirm
+              action={deleteBlobPhotoAction}
+              confirmText="Are you sure you want to delete this upload?"
+            >
+              <input
+                type="hidden"
+                name="redirectToPhotos"
+                value={urls.length < 2 ? 'true' : 'false'}
+                readOnly
+              />
+              <input
+                type="hidden"
+                name="url"
+                value={url}
+                readOnly
+              />
+              <DeleteButton />
+            </FormWithConfirm>
+          </div>
         </Fragment>;})}
     </AdminGrid>
   );

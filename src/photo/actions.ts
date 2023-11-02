@@ -106,7 +106,7 @@ export async function getExifDataAction(
 }
 
 export async function syncPhotoExifDataAction(formData: FormData) {
-  const photoId = formData.get('photoId') as string;
+  const photoId = formData.get('id') as string;
   if (photoId) {
     const photo = await getPhoto(photoId);
     if (photo) {
