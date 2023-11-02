@@ -32,7 +32,7 @@ export default function PhotoFujifilmSimulation({
       className="inline-flex items-center gap-1"
     >
       {badged
-        ? <Badge uppercase>{renderContent()}</Badge>
+        ? <Badge type="secondary" uppercase>{renderContent()}</Badge>
         : <span className="uppercase text-medium">{renderContent()}</span>}
       <span className={cc(
         'translate-y-[-1.25px] text-extra-dim',

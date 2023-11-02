@@ -6,23 +6,27 @@ export default function Badge({
   uppercase,
 }: {
   children: React.ReactNode
-  type?: 'primary' | 'text-only'
+  type?: 'primary' | 'secondary' | 'text-only'
   uppercase?: boolean
 }) {
-  const coreStyles = () => {
+  const baseStyles = () => {
     switch (type) {
     case 'primary': return cc(
+      'px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-900',
+      'border border-gray-200 dark:border-gray-800'
+    );
+    case 'secondary': return cc(
       'px-1 py-1 leading-none rounded-md',
       'bg-gray-100 dark:bg-gray-800/75',
-      'text-gray-500 dark:text-gray-400',
-      'font-medium text-[0.7rem] tracking-wide',
+      'text-medium',
+      'font-medium text-[0.7rem]',
     );
     }
   };
   return (
     <span className={cc(
-      coreStyles(),
-      uppercase && 'uppercase',
+      baseStyles(),
+      uppercase && 'uppercase tracking-wider',
     )}>
       {children}
     </span>

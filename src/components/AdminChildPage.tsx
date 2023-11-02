@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { FiArrowLeft } from 'react-icons/fi';
 import SiteGrid from './SiteGrid';
 import { cc } from '@/utility/css';
+import Badge from './Badge';
 
 function AdminChildPage({
   backPath,
@@ -41,12 +42,9 @@ function AdminChildPage({
                 {breadcrumb &&
                   <>
                     <span>/</span>
-                    <span className={cc(
-                      'py-0.5 px-2 rounded-md bg-gray-100 dark:bg-gray-900',
-                      'border border-gray-200 dark:border-gray-800'
-                    )}>
+                    <Badge>
                       {breadcrumb}
-                    </span>
+                    </Badge>
                   </>}
               </div>
               {accessory &&

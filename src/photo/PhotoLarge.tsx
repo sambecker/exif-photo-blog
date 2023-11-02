@@ -75,7 +75,7 @@ export default function PhotoLarge({
                 <PhotoTags tags={tagsToShow} />}
             </div>
             {showCamera && photoHasCameraData(photo) &&
-            <div>
+            <div className="space-y-0.5">
               <PhotoCamera
                 camera={camera}
                 showIcon={false}
