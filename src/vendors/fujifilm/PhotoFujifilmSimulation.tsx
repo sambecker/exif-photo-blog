@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { cc } from '@/utility/css';
 import {
   FujifilmSimulation,
@@ -18,7 +17,7 @@ export default function PhotoFujifilmSimulation({
     <span
       title={`Film Simulation: ${large}`}
       className={cc(
-        'inline-flex items-center gap-1.5',
+        'inline-flex items-center gap-1',
         'text-medium uppercase',
       )}
     >
@@ -30,7 +29,8 @@ export default function PhotoFujifilmSimulation({
       </span>
       <span className={cc(
         'hidden xs:inline-block',
-        medium.endsWith('.') && '-mr-1',
+        'bg-gray-100 px-1 py-1 leading-none rounded-md',
+        'text-gray-500 text-[0.7rem] tracking-wide',
       )}>
         {medium}
       </span>
