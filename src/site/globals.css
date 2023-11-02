@@ -25,7 +25,7 @@
       bg-white dark:bg-black
       border-gray-200 dark:border-gray-700
       font-mono text-base leading-tight
-      min-h-[2.25rem]
+      min-h-[2.4rem]
   }
   input[type=text], input[type=email], input[type=password], select {
     @apply

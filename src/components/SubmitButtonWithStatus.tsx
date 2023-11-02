@@ -1,7 +1,6 @@
 'use client';
 
 import { HTMLProps } from 'react';
-// @ts-ignore
 import { useFormStatus } from 'react-dom';
 import Spinner from './Spinner';
 import { cc } from '@/utility/css';
@@ -47,11 +46,11 @@ export default function SubmitButtonWithStatus(props: Props) {
             ? <Spinner size={14} />
             : icon}
         </span>}
-      <span className={cc(
+      {children && <span className={cc(
         icon !== undefined && 'hidden sm:inline-block',
       )}>
         {children}
-      </span>
+      </span>}
     </button>
   );
 };

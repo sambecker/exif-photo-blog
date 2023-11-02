@@ -4,10 +4,9 @@ import Modal from '@/components/Modal';
 import { TbPhotoShare } from 'react-icons/tb';
 import { cc } from '@/utility/css';
 import { BiCopy } from 'react-icons/bi';
-import { toast } from 'sonner';
-import { FiCheckSquare } from 'react-icons/fi';
 import { ReactNode } from 'react';
 import { shortenUrl } from '@/utility/url';
+import { toastSuccess } from '@/toast';
 
 export default function ShareModal({
   title = 'Share',
@@ -52,10 +51,7 @@ export default function ShareModal({
             )}
             onClick={() => {
               navigator.clipboard.writeText(pathShare);
-              toast(
-                'Link to photo copied',
-                { icon: <FiCheckSquare size={16} /> },
-              );
+              toastSuccess('Link to photo copied');
             }}
           >
             <BiCopy size={18} />

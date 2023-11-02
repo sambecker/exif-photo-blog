@@ -12,26 +12,60 @@ import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
 import { cc } from '@/utility/css';
 import CanvasBlurCapture from '@/components/CanvasBlurCapture';
-import { PATH_ADMIN_PHOTOS } from '@/site/paths';
+import { PATH_ADMIN_PHOTOS, PATH_ADMIN_UPLOADS } from '@/site/paths';
 import {
   generateLocalNaivePostgresString,
   generateLocalPostgresString,
 } from '@/utility/date';
+import { toastSuccess, toastWarning } from '@/toast';
 
 const THUMBNAIL_WIDTH = 300;
 const THUMBNAIL_HEIGHT = 200;
 
 export default function PhotoForm({
   initialPhotoForm,
+  updatedExifData,
   type = 'create',
   debugBlur,
 }: {
   initialPhotoForm: Partial<PhotoFormData>
+  updatedExifData?: Partial<PhotoFormData>
   type?: 'create' | 'edit'
   debugBlur?: boolean
 }) {
   const [formData, setFormData] =
     useState<Partial<PhotoFormData>>(initialPhotoForm);
+
+  // Update form when EXIF data
+  // is refreshed by parent
+  useEffect(() => {
+    if (Object.keys(updatedExifData ?? {}).length > 0) {
+      const changedKeys: string[] = [];
+
+      setFormData(currentForm => {
+        Object.entries(updatedExifData ?? {})
+          .forEach(([key, value]) => {
+            if (currentForm[key as keyof PhotoFormData] !== value) {
+              changedKeys.push(key);
+            }
+          });
+
+        return {
+          ...currentForm,
+          ...updatedExifData,
+        };
+      });
+
+      if (changedKeys.length > 0) {
+        toastSuccess(
+          `Updated EXIF fields: ${changedKeys.join(', ')}`,
+          8000,
+        );
+      } else {
+        toastWarning('No new EXIF data found');
+      }
+    }
+  }, [updatedExifData]);
 
   // Generate local date strings when
   // none can be harvested from EXIF
@@ -126,13 +160,12 @@ export default function PhotoForm({
               type={checkbox ? 'checkbox' : undefined}
             />)}
         <div className="flex gap-3">
-          {type === 'edit' &&
-            <Link
-              className="button"
-              href={PATH_ADMIN_PHOTOS}
-            >
-              Cancel
-            </Link>}
+          <Link
+            className="button"
+            href={type === 'edit' ? PATH_ADMIN_PHOTOS : PATH_ADMIN_UPLOADS}
+          >
+            Cancel
+          </Link>
           <SubmitButtonWithStatus
             disabled={!isFormValid}
           >
