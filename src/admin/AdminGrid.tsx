@@ -16,7 +16,7 @@ export default function AdminGrid ({
     <div className="min-w-[14rem] overflow-x-scroll">
       <div className={cc(
         'w-full',
-        'grid grid-cols-[auto_1fr_auto_auto] ',
+        'grid grid-cols-[auto_1fr_auto] ',
         'gap-2 sm:gap-3 items-center',
       )}>
         {children}

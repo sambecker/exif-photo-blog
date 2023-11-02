@@ -6,7 +6,7 @@ import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from '@/site/config';
 import StateProvider from '@/state/AppStateProvider';
 import ThemeProviderClient from '@/site/ThemeProviderClient';
 import Nav from '@/site/Nav';
-import ToasterWithThemes from '@/components/ToasterWithThemes';
+import ToasterWithThemes from '@/toast/ToasterWithThemes';
 import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
 
 import '../site/globals.css';

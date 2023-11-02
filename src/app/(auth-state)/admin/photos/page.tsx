@@ -5,7 +5,7 @@ import PhotoTiny from '@/photo/PhotoTiny';
 import { cc } from '@/utility/css';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import SiteGrid from '@/components/SiteGrid';
-import { deletePhotoAction } from '@/photo/actions';
+import { deletePhotoAction, syncPhotoExifDataAction } from '@/photo/actions';
 import {
   pathForAdminPhotos,
   pathForPhoto,
@@ -28,6 +28,8 @@ import DeleteButton from '@/admin/DeleteButton';
 import EditButton from '@/admin/EditButton';
 import BlobUrls from '@/admin/BlobUrls';
 import { PRO_MODE_ENABLED } from '@/site/config';
+import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
+import IconGrSync from '@/site/IconGrSync';
 
 export const runtime = 'edge';
 
@@ -76,11 +78,11 @@ export default async function AdminTagsPage({
                     )}
                     photo={photo}
                   />
-                  <div className="flex flex-col md:flex-row">
+                  <div className="flex flex-col lg:flex-row">
                     <Link
                       key={photo.id}
                       href={pathForPhoto(photo)}
-                      className="sm:w-[50%] flex items-center gap-2"
+                      className="lg:w-[50%] flex items-center gap-2"
                     >
                       <span className={cc(
                         'inline-flex items-center gap-2',
@@ -103,23 +105,41 @@ export default async function AdminTagsPage({
                         </span>}
                     </Link>
                     <div className={cc(
-                      'sm:w-[50%] uppercase',
+                      'lg:w-[50%] uppercase',
                       'text-dim',
                     )}>
                       {photo.takenAtNaive}
                     </div>
                   </div>
-                  <EditButton href={pathForAdminPhotoEdit(photo)} />
-                  <FormWithConfirm
-                    action={deletePhotoAction}
-                    confirmText={
-                      // eslint-disable-next-line max-len
-                      `Are you sure you want to delete "${titleForPhoto(photo)}?"`}
-                  >
-                    <input type="hidden" name="id" value={photo.id} />
-                    <input type="hidden" name="url" value={photo.url} />
-                    <DeleteButton />
-                  </FormWithConfirm>
+                  <div className={cc(
+                    'flex flex-nowrap',
+                    'gap-2 sm:gap-3 items-center',
+                  )}>
+                    <EditButton href={pathForAdminPhotoEdit(photo)} />
+                    <FormWithConfirm
+                      action={syncPhotoExifDataAction}
+                      confirmText={
+                        'Are you sure you want to overwrite EXIF data ' +
+                        `for "${titleForPhoto(photo)}" from source file? ` +
+                        'This action cannot be undone.'
+                      }
+                    >
+                      <input type="hidden" name="id" value={photo.id} />
+                      <SubmitButtonWithStatus
+                        icon={<IconGrSync className="translate-y-[-0.5px]" />}
+                      />
+                    </FormWithConfirm>
+                    <FormWithConfirm
+                      action={deletePhotoAction}
+                      confirmText={
+                        // eslint-disable-next-line max-len
+                        `Are you sure you want to delete "${titleForPhoto(photo)}?"`}
+                    >
+                      <input type="hidden" name="id" value={photo.id} />
+                      <input type="hidden" name="url" value={photo.url} />
+                      <DeleteButton />
+                    </FormWithConfirm>
+                  </div>
                 </Fragment>)}
             </AdminGrid>
             {showMorePhotos &&

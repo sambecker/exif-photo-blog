@@ -10,6 +10,7 @@ import PhotoTag from '@/tag/PhotoTag';
 import { formatTag } from '@/tag';
 import EditButton from '@/admin/EditButton';
 import { pathForAdminTagEdit } from '@/site/paths';
+import { cc } from '@/utility/css';
 
 export const runtime = 'edge';
 
@@ -30,16 +31,21 @@ export default async function AdminPhotosPage() {
                   <div className="text-dim uppercase">
                     {photoQuantityText(count, false)}
                   </div>
-                  <EditButton href={pathForAdminTagEdit(tag)} />
-                  <FormWithConfirm
-                    action={deletePhotoTagGloballyAction}
-                    confirmText={
-                      // eslint-disable-next-line max-len
-                      `Are you sure you want to remove "${formatTag(tag)}?" from ${photoQuantityText(count, false).toLowerCase()}?`}
-                  >
-                    <input type="hidden" name="tag" value={tag} />
-                    <DeleteButton />
-                  </FormWithConfirm>
+                  <div className={cc(
+                    'flex flex-nowrap',
+                    'gap-2 sm:gap-3 items-center',
+                  )}>
+                    <EditButton href={pathForAdminTagEdit(tag)} />
+                    <FormWithConfirm
+                      action={deletePhotoTagGloballyAction}
+                      confirmText={
+                        // eslint-disable-next-line max-len
+                        `Are you sure you want to remove "${formatTag(tag)}?" from ${photoQuantityText(count, false).toLowerCase()}?`}
+                    >
+                      <input type="hidden" name="tag" value={tag} />
+                      <DeleteButton />
+                    </FormWithConfirm>
+                  </div>
                 </Fragment>)}
             </AdminGrid>
           </div>

@@ -3,11 +3,13 @@
 
 import type { ExifData } from 'ts-exif-parser';
 
-const MAKE_FUJIFILM = 'FUJIFILM';
+export const MAKE_FUJIFILM = 'FUJIFILM';
 
+const BYTE_INDEX_TAG_COUNT = 12;
 const BYTE_INDEX_FIRST_TAG = 14;
 const BYTES_PER_TAG = 12;
-const BYTE_OFFSET_FOR_INT_VALUE = 8;
+const BYTE_OFFSET_TAG_TYPE = 2;
+const BYTE_OFFSET_TAG_VALUE = 8;
 
 const TAG_ID_SATURATION = 0x1003;
 const TAG_ID_FILM_MODE  = 0x1401;
@@ -233,16 +235,31 @@ export const getLabelForFilmSimulation = (
 
 const parseFujifilmMakerNote = (
   bytes: Buffer,
-  valueForTag: (tag: number, value: number) => void
+  valueForTagUInt: (tagId: number, value: number) => void
 ) => {
-  for (
-    let i = BYTE_INDEX_FIRST_TAG;
-    i + BYTES_PER_TAG < bytes.length;
-    i += BYTES_PER_TAG
-  ) {
-    const tag = bytes.readUInt16LE(i);
-    const value = bytes.readUInt16LE(i + BYTE_OFFSET_FOR_INT_VALUE);
-    valueForTag(tag, value);
+  const tagCount = bytes.readUint16LE(BYTE_INDEX_TAG_COUNT);
+  for (let i = 0; i < tagCount; i++) {
+    const index = BYTE_INDEX_FIRST_TAG + i * BYTES_PER_TAG;
+    if (index + BYTES_PER_TAG < bytes.length) {
+      const tagId = bytes.readUInt16LE(index);
+      const tagType = bytes.readUInt16LE(index + BYTE_OFFSET_TAG_TYPE);
+      switch (tagType) {
+      // UInt16
+      case 3:
+        valueForTagUInt(
+          tagId,
+          bytes.readUInt16LE(index + BYTE_OFFSET_TAG_VALUE),
+        );
+        break;
+      // UInt32
+      case 4:
+        valueForTagUInt(
+          tagId,
+          bytes.readUInt32LE(index + BYTE_OFFSET_TAG_VALUE),
+        );
+        break;
+      }
+    }
   }
 };
 

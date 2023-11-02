@@ -4,7 +4,7 @@ import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { cc } from '@/utility/css';
 import ChecklistRow from '../components/ChecklistRow';
-import { FiCheckSquare, FiExternalLink } from 'react-icons/fi';
+import { FiExternalLink } from 'react-icons/fi';
 import {
   BiCog,
   BiCopy,
@@ -14,9 +14,9 @@ import {
   BiRefresh,
 } from 'react-icons/bi';
 import IconButton from '@/components/IconButton';
-import { toast } from 'sonner';
 import InfoBlock from '@/components/InfoBlock';
 import Checklist from '@/components/Checklist';
+import { toastSuccess } from '@/toast';
 
 export default function SiteChecklistClient({
   hasPostgres,
@@ -84,12 +84,7 @@ export default function SiteChecklistClient({
       className={cc(subtle && 'text-gray-300 dark:text-gray-700')}
       onClick={() => {
         navigator.clipboard.writeText(text);
-        toast(
-          `${label} copied to clipboard`, {
-            icon: <FiCheckSquare size={16} />,
-            duration: 4000,
-          },
-        );
+        toastSuccess(`${label} copied to clipboard`);
       }}
     />;
 
