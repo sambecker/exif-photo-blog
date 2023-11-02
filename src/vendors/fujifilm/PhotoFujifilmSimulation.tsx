@@ -4,6 +4,7 @@ import {
   getLabelForFilmSimulation,
 } from '@/vendors/fujifilm';
 import PhotoFujifilmSimulationIcon from './PhotoFujifilmSimulationIcon';
+import Badge from '@/components/Badge';
 
 export default function PhotoFujifilmSimulation({
   simulation,
@@ -16,24 +17,16 @@ export default function PhotoFujifilmSimulation({
   return (
     <span
       title={`Film Simulation: ${large}`}
-      className={cc(
-        'inline-flex items-center gap-1',
-        'text-medium uppercase',
-      )}
+      className="inline-flex items-center gap-1"
     >
-      <span className={cc(
-        'xs:hidden',
-        small.endsWith('.') && '-mr-1',
-      )}>
-        {small}
-      </span>
-      <span className={cc(
-        'hidden xs:inline-block',
-        'bg-gray-100 px-1 py-1 leading-none rounded-md',
-        'text-gray-500 font-medium text-[0.7rem] tracking-wide',
-      )}>
-        {medium}
-      </span>
+      <Badge uppercase>
+        <span className="xs:hidden">
+          {small}
+        </span>
+        <span className="hidden xs:inline-block">
+          {medium}
+        </span>
+      </Badge>
       <span className={cc(
         'translate-y-[-1.25px] text-extra-dim',
         showIconFirst && 'order-first',
