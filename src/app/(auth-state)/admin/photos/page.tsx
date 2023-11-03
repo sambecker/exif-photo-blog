@@ -5,7 +5,7 @@ import PhotoTiny from '@/photo/PhotoTiny';
 import { cc } from '@/utility/css';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import SiteGrid from '@/components/SiteGrid';
-import { deletePhotoAction, syncPhotoExifDataAction } from '@/photo/actions';
+import { deletePhotoAction } from '@/photo/actions';
 import {
   pathForAdminPhotos,
   pathForPhoto,
@@ -30,6 +30,7 @@ import BlobUrls from '@/admin/BlobUrls';
 import { PRO_MODE_ENABLED } from '@/site/config';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import IconGrSync from '@/site/IconGrSync';
+import { syncPhotoExifDataAction } from '@/photo/actions-node';
 
 export const runtime = 'edge';
 
