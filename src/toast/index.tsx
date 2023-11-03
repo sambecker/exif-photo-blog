@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { AiOutlineWarning } from 'react-icons/ai';
+import { PiWarningBold } from 'react-icons/pi';
 import { FiCheckSquare } from 'react-icons/fi';
 import { toast } from 'sonner';
 
@@ -20,7 +20,7 @@ export const toastWarning = (
   duration = DEFAULT_DURATION,
 ) => toast(
   message, {
-    icon: <AiOutlineWarning size={16} />,
+    icon: <PiWarningBold size={16} />,
     duration,
   },
 );
