@@ -31,8 +31,6 @@ import { PRO_MODE_ENABLED } from '@/site/config';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import IconGrSync from '@/site/IconGrSync';
 
-export const runtime = 'edge';
-
 const DEBUG_PHOTO_BLOBS = false;
 
 export default async function AdminTagsPage({

@@ -3,8 +3,6 @@ import { getPhotoCached } from '@/cache';
 import { PATH_ADMIN } from '@/site/paths';
 import PhotoEditPageClient from '@/photo/PhotoEditPageClient';
 
-export const runtime = 'edge';
-
 export default async function PhotoEditPage({
   params: { photoId },
 }: {
