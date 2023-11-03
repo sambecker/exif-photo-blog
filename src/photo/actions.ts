@@ -6,9 +6,12 @@ import {
   sqlDeletePhotoTagGlobally,
   sqlUpdatePhoto,
   sqlRenamePhotoTagGlobally,
+  getPhoto,
 } from '@/services/postgres';
 import {
+  PhotoFormData,
   convertFormDataToPhotoDbInsert,
+  convertPhotoToFormData,
 } from './form';
 import { redirect } from 'next/navigation';
 import {
@@ -22,6 +25,7 @@ import {
   revalidatePhotosKey,
 } from '@/cache';
 import { PATH_ADMIN_PHOTOS, PATH_ADMIN_TAGS } from '@/site/paths';
+import { extractExifDataFromBlobPath } from './server';
 
 export async function createPhotoAction(formData: FormData) {
   const photo = convertFormDataToPhotoDbInsert(formData, true);
@@ -85,6 +89,37 @@ export async function deleteBlobPhotoAction(formData: FormData) {
 
   if (formData.get('redirectToPhotos') === 'true') {
     redirect(PATH_ADMIN_PHOTOS);
+  }
+}
+
+export async function getExifDataAction(
+  photoFormPrevious: Partial<PhotoFormData>,
+): Promise<Partial<PhotoFormData>> {
+  const { url } = photoFormPrevious;
+  if (url) {
+    const { photoFormExif } = await extractExifDataFromBlobPath(url);
+    if (photoFormExif) {
+      return photoFormExif;
+    }
+  }
+  return {};
+}
+
+export async function syncPhotoExifDataAction(formData: FormData) {
+  const photoId = formData.get('id') as string;
+  if (photoId) {
+    const photo = await getPhoto(photoId);
+    if (photo) {
+      const { photoFormExif } = await extractExifDataFromBlobPath(photo.url);
+      if (photoFormExif) {
+        const photoFormDbInsert = convertFormDataToPhotoDbInsert({
+          ...convertPhotoToFormData(photo),
+          ...photoFormExif,
+        });
+        await sqlUpdatePhoto(photoFormDbInsert);
+        revalidatePhotosKey();
+      }
+    }
   }
 }
 
