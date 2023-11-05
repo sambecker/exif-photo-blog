@@ -17,6 +17,7 @@ import IconButton from '@/components/IconButton';
 import InfoBlock from '@/components/InfoBlock';
 import Checklist from '@/components/Checklist';
 import { toastSuccess } from '@/toast';
+import { ConfigChecklistStatus } from './config';
 
 export default function SiteChecklistClient({
   hasPostgres,
@@ -26,22 +27,13 @@ export default function SiteChecklistClient({
   hasTitle,
   hasDomain,
   showRepoLink,
+  showFilmSimulations,
   isProModeEnabled,
   isPublicApiEnabled,
   isOgTextBottomAligned,
   showRefreshButton,
   secret,
-}: {
-  hasPostgres: boolean
-  hasBlob: boolean
-  hasAuth: boolean
-  hasAdminUser: boolean
-  hasTitle: boolean
-  hasDomain: boolean
-  showRepoLink: boolean
-  isProModeEnabled: boolean
-  isPublicApiEnabled: boolean
-  isOgTextBottomAligned: boolean
+}: ConfigChecklistStatus & {
   showRefreshButton?: boolean
   secret: string
 }) {
@@ -211,15 +203,6 @@ export default function SiteChecklistClient({
         icon={<BiCog size={16} />}
       >
         <ChecklistRow
-          title="Show Repo Link"
-          status={showRepoLink}
-          isPending={isPendingPage}
-          optional
-        >
-          Set environment variable to {'"1"'} to hide footer link:
-          {renderEnvVars(['NEXT_PUBLIC_HIDE_REPO_LINK'])}
-        </ChecklistRow>
-        <ChecklistRow
           title="Pro Mode"
           status={isProModeEnabled}
           isPending={isPendingPage}
@@ -248,6 +231,25 @@ export default function SiteChecklistClient({
           Set environment variable to {'"BOTTOM"'} to
           keep OG image text bottom aligned (default is top):
           {renderEnvVars(['NEXT_PUBLIC_OG_TEXT_ALIGNMENT'])}
+        </ChecklistRow>
+        <ChecklistRow
+          title="Show Repo Link"
+          status={showRepoLink}
+          isPending={isPendingPage}
+          optional
+        >
+          Set environment variable to {'"1"'} to hide footer link:
+          {renderEnvVars(['NEXT_PUBLIC_HIDE_REPO_LINK'])}
+        </ChecklistRow>
+        <ChecklistRow
+          title="Show Fujifilm simulations"
+          status={showFilmSimulations}
+          isPending={isPendingPage}
+          optional
+        >
+          Set environment variable to {'"1"'} to prevent
+          simulations showing up in <code>/grid</code> sidebar:
+          {renderEnvVars(['NEXT_PUBLIC_HIDE_FILM_SIMULATIONS'])}
         </ChecklistRow>
       </Checklist>
       {showRefreshButton &&

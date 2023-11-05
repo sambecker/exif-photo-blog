@@ -2,6 +2,7 @@ import {
   getPhotosCached,
   getPhotosCountCached,
   getUniqueCamerasCached,
+  getUniqueFilmSimulationsCached,
   getUniqueTagsCached,
 } from '@/cache';
 import SiteGrid from '@/components/SiteGrid';
@@ -16,6 +17,7 @@ import {
   getPaginationForSearchParams,
 } from '@/site/pagination';
 import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
+import { SHOW_FILM_SIMULATIONS } from '@/site/config';
 
 export const runtime = 'edge';
 
@@ -32,11 +34,13 @@ export default async function GridPage({ searchParams }: PaginationParams) {
     photosCount,
     tags,
     cameras,
+    simulations,
   ] = await Promise.all([
     getPhotosCached({ limit }),
     getPhotosCountCached(),
     getUniqueTagsCached(),
     getUniqueCamerasCached(),
+    SHOW_FILM_SIMULATIONS ? getUniqueFilmSimulationsCached() : [],
   ]);
 
   const showMorePath = photosCount > photos.length
@@ -48,7 +52,7 @@ export default async function GridPage({ searchParams }: PaginationParams) {
       ? <SiteGrid
         contentMain={<PhotoGrid {...{ photos, showMorePath }} />}
         contentSide={<div className="sticky top-4 space-y-4">
-          <PhotoGridSidebar {...{ tags, cameras, photosCount }} />
+          <PhotoGridSidebar {...{ tags, cameras, simulations, photosCount }} />
         </div>}
         sideHiddenOnMobile
       />

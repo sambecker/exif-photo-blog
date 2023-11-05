@@ -4,15 +4,18 @@ import { ReactNode } from 'react';
 
 export default function HeaderList({
   title,
+  className,
   icon,
   items,
 }: {
   title?: string,
+  className?: string,
   icon?: JSX.Element,
   items: ReactNode[]
 }) {
   return (
     <AnimateItems
+      className={className}
       scaleOffset={0.95}
       duration={0.5}
       staggerDelay={0.05}

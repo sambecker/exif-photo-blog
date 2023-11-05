@@ -12,6 +12,7 @@ import {
   getPhotosTagDateRange,
   getPhotosCameraDateRange,
   getUniqueTagsHidden,
+  getUniqueFilmSimulations,
 } from '@/services/postgres';
 import { parseCachedPhotosDates, parseCachedPhotoDates } from '@/photo';
 import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
@@ -24,6 +25,7 @@ const KEY_PHOTOS_COUNT      = `${KEY_PHOTOS}-count`;
 const KEY_PHOTOS_DATE_RANGE = `${KEY_PHOTOS}-date-range`;
 const KEY_TAGS              = 'tags';
 const KEY_CAMERAS           = 'cameras';
+const KEY_FILM_SIMULATIONS  = 'film-simulations';
 const KEY_BLOB              = 'blob';
 // Temporary key to clear caches on forked blogs
 const KEY_NEW_QUERY         = 'new-query';
@@ -207,6 +209,15 @@ export const getUniqueCamerasCached: typeof getUniqueCameras = (...args) =>
     () => getUniqueCameras(...args),
     [KEY_PHOTOS, KEY_CAMERAS, KEY_NEW_QUERY], {
       tags: [KEY_PHOTOS, KEY_CAMERAS, KEY_NEW_QUERY],
+    }
+  )();
+
+// eslint-disable-next-line max-len
+export const getUniqueFilmSimulationsCached: typeof getUniqueFilmSimulations = (...args) =>
+  unstable_cache(
+    () => getUniqueFilmSimulations(...args),
+    [KEY_PHOTOS, KEY_FILM_SIMULATIONS], {
+      tags: [KEY_PHOTOS, KEY_FILM_SIMULATIONS],
     }
   )();
 

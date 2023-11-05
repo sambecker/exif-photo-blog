@@ -46,6 +46,11 @@ export type FujifilmSimulation =
   FujifilmSimulationFromSaturation |
   FujifilmMode;
 
+export type FujifilmSimulations = {
+  simulation: FujifilmSimulation
+  count: number
+}[]
+
 export const isExifForFujifilm = (data: ExifData) =>
   data.tags?.Make === MAKE_FUJIFILM;
 

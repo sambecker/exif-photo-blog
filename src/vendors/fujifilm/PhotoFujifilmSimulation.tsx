@@ -8,11 +8,11 @@ import Badge from '@/components/Badge';
 
 export default function PhotoFujifilmSimulation({
   simulation,
-  showIconFirst,
+  type = 'icon-last',
   badged = true,
 }: {
   simulation: FujifilmSimulation
-  showIconFirst?: boolean
+  type?: 'icon-last' | 'icon-first' | 'icon-only' | 'text-only'
   badged?: boolean
 }) {
   const { small, medium, large } = getLabelForFilmSimulation(simulation);
@@ -31,15 +31,17 @@ export default function PhotoFujifilmSimulation({
       title={`Film Simulation: ${large}`}
       className="inline-flex items-center gap-1"
     >
-      {badged
-        ? <Badge type="secondary" uppercase>{renderContent()}</Badge>
-        : <span className="uppercase text-medium">{renderContent()}</span>}
-      <span className={cc(
+      {type !== 'icon-only' && <>
+        {badged
+          ? <Badge type="secondary" uppercase>{renderContent()}</Badge>
+          : <span className="uppercase text-medium">{renderContent()}</span>}
+      </>}
+      {type !== 'text-only' && <span className={cc(
         'translate-y-[-1.25px] text-extra-dim',
-        showIconFirst && 'order-first',
+        type === 'icon-first' && 'order-first',
       )}>
-        <PhotoFujifilmSimulationIcon simulation={simulation} />
-      </span>
+        <PhotoFujifilmSimulationIcon {...{ simulation }} />
+      </span>}
     </span>
   );
 }

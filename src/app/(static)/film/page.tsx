@@ -9,7 +9,7 @@ export default function FilmPage() {
         <div key={value}>
           <PhotoFujifilmSimulation
             simulation={value}
-            showIconFirst
+            type="icon-first"
           />
         </div>)}
     </div>

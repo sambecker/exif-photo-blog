@@ -10,6 +10,7 @@ import {
 import { Camera, Cameras, createCameraKey } from '@/camera';
 import { parameterize } from '@/utility/string';
 import { Tags } from '@/tag';
+import { FujifilmSimulation, FujifilmSimulations } from '@/vendors/fujifilm';
 
 const PHOTO_DEFAULT_LIMIT = 100;
 
@@ -318,6 +319,18 @@ const sqlGetUniqueCameras = async () => sql`
     count: parseInt(count, 10),
   })));
 
+const sqlGetUniqueFilmSimulations = async () => sql`
+  SELECT DISTINCT film_simulation, COUNT(*)
+  FROM photos
+  WHERE hidden IS NOT TRUE AND film_simulation IS NOT NULL
+  GROUP BY film_simulation
+  ORDER BY film_simulation DESC
+`.then(({ rows }): FujifilmSimulations => rows
+    .map(({ film_simulation, count }) => ({
+      simulation: film_simulation as FujifilmSimulation,
+      count: parseInt(count, 10),
+    })));
+
 export type GetPhotosOptions = {
   sortBy?: 'createdAt' | 'takenAt' | 'priority'
   limit?: number
@@ -422,3 +435,7 @@ export const getPhotosCameraDateRange = (camera: Camera) =>
   safelyQueryPhotos(() => sqlGetPhotosCameraDateRange(camera));
 export const getPhotosCameraCount = (camera: Camera) =>
   safelyQueryPhotos(() => sqlGetPhotosCameraCount(camera));
+
+// FILM SIMULATIONS
+export const getUniqueFilmSimulations = () =>
+  safelyQueryPhotos(sqlGetUniqueFilmSimulations);
