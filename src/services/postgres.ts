@@ -196,7 +196,6 @@ const sqlGetPhotosSortedByPriority = (
 
 const sqlGetPhotosByTag = (
   limit = PHOTO_DEFAULT_LIMIT,
-  offset = 0,
   tag: string,
 ) =>
   sql<PhotoDb>`
@@ -204,7 +203,7 @@ const sqlGetPhotosByTag = (
     WHERE ${tag}=ANY(tags)
     AND hidden IS NOT TRUE
     ORDER BY taken_at ASC
-    LIMIT ${limit} OFFSET ${offset}
+    LIMIT ${limit}
   `;
 
 const sqlGetPhotosByCamera = async (
@@ -217,6 +216,17 @@ const sqlGetPhotosByCamera = async (
   LOWER(make)=${parameterize(make)} AND
   LOWER(REPLACE(model, ' ', '-'))=${parameterize(model)}
   ORDER BY taken_at DESC
+  LIMIT ${limit}
+`;
+
+const sqlGetPhotosBySimulation = async (
+  limit = PHOTO_DEFAULT_LIMIT,
+  simulation: FujifilmSimulation,
+) => sql<PhotoDb>`
+  SELECT * FROM photos
+  WHERE film_simulation=${simulation}
+  AND hidden IS NOT TRUE
+  ORDER BY taken_at ASC
   LIMIT ${limit}
 `;
 
@@ -270,6 +280,14 @@ const sqlGetPhotosCameraCount = async (camera: Camera) => sql`
   hidden IS NOT TRUE
 `.then(({ rows }) => parseInt(rows[0].count, 10));
 
+const sqlGetPhotosFilmSimulationCount = async (
+  simulation: FujifilmSimulation,
+) => sql`
+  SELECT COUNT(*) FROM photos
+  WHERE film_simulation=${simulation} AND
+  hidden IS NOT TRUE
+`.then(({ rows }) => parseInt(rows[0].count, 10));
+
 const sqlGetPhotosTagDateRange = async (tag: string) => sql`
   SELECT MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
   FROM photos
@@ -283,6 +301,15 @@ const sqlGetPhotosCameraDateRange = async (camera: Camera) => sql`
   WHERE
   LOWER(make)=${parameterize(camera.make)} AND
   LOWER(REPLACE(model, ' ', '-'))=${parameterize(camera.model)} AND
+  hidden IS NOT TRUE
+`.then(({ rows }) => rows[0] as PhotoDateRange);
+
+const sqlGetPhotosFilmSimulationDateRange = async (
+  simulation: FujifilmSimulation,
+) => sql`
+  SELECT MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
+  FROM photos
+  WHERE film_simulation=${simulation} AND
   hidden IS NOT TRUE
 `.then(({ rows }) => rows[0] as PhotoDateRange);
 
@@ -334,9 +361,9 @@ const sqlGetUniqueFilmSimulations = async () => sql`
 export type GetPhotosOptions = {
   sortBy?: 'createdAt' | 'takenAt' | 'priority'
   limit?: number
-  offset?: number
   tag?: string
   camera?: Camera
+  simulation?: FujifilmSimulation
   takenBefore?: Date
   takenAfterInclusive?: Date
   includeHidden?: boolean
@@ -375,31 +402,33 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
   const {
     sortBy = 'takenAt',
     limit,
-    offset,
     tag,
     camera,
+    simulation,
     takenBefore,
     takenAfterInclusive,
     includeHidden,
   } = options;
 
-  let getPhotosSql = () => sqlGetPhotos(limit, offset);
+  let getPhotosSql = () => sqlGetPhotos(limit);
 
   if (includeHidden) {
-    getPhotosSql = () => sqlGetPhotosIncludingHidden(limit, offset);
+    getPhotosSql = () => sqlGetPhotosIncludingHidden(limit);
   } else if (takenBefore) {
     getPhotosSql = () => sqlGetPhotosTakenBeforeDate(takenBefore, limit);
   } else if (takenAfterInclusive) {
     // eslint-disable-next-line max-len
     getPhotosSql = () => sqlGetPhotosTakenAfterDateInclusive(takenAfterInclusive, limit);
   } else if (tag) {
-    getPhotosSql = () => sqlGetPhotosByTag(limit, offset, tag);
+    getPhotosSql = () => sqlGetPhotosByTag(limit, tag);
   } else if (camera) {
     getPhotosSql = () => sqlGetPhotosByCamera(limit, camera.make, camera.model);
+  } else if (simulation) {
+    getPhotosSql = () => sqlGetPhotosBySimulation(limit, simulation);
   } else if (sortBy === 'createdAt') {
-    getPhotosSql = () => sqlGetPhotosSortedByCreatedAt(limit, offset);
+    getPhotosSql = () => sqlGetPhotosSortedByCreatedAt(limit);
   } else if (sortBy === 'priority') {
-    getPhotosSql = () => sqlGetPhotosSortedByPriority(limit, offset);
+    getPhotosSql = () => sqlGetPhotosSortedByPriority(limit);
   }
 
   return safelyQueryPhotos(getPhotosSql)
@@ -439,3 +468,8 @@ export const getPhotosCameraCount = (camera: Camera) =>
 // FILM SIMULATIONS
 export const getUniqueFilmSimulations = () =>
   safelyQueryPhotos(sqlGetUniqueFilmSimulations);
+export const getPhotosFilmSimulationDateRange =
+  (simulation: FujifilmSimulation) => safelyQueryPhotos(() =>
+    sqlGetPhotosFilmSimulationDateRange(simulation));
+export const getPhotosFilmSimulationCount = (simulation: FujifilmSimulation) =>
+  safelyQueryPhotos(() => sqlGetPhotosFilmSimulationCount(simulation));

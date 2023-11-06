@@ -13,12 +13,15 @@ import {
   getPhotosCameraDateRange,
   getUniqueTagsHidden,
   getUniqueFilmSimulations,
+  getPhotosFilmSimulationDateRange,
+  getPhotosFilmSimulationCount,
 } from '@/services/postgres';
 import { parseCachedPhotosDates, parseCachedPhotoDates } from '@/photo';
 import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
 import type { Session } from 'next-auth';
 import { Camera, createCameraKey } from '@/camera';
 import { PATHS_ADMIN, PATHS_TO_CACHE } from '@/site/paths';
+import { FujifilmSimulation } from '@/vendors/fujifilm';
 
 const KEY_PHOTOS            = 'photos';
 const KEY_PHOTOS_COUNT      = `${KEY_PHOTOS}-count`;
@@ -27,8 +30,6 @@ const KEY_TAGS              = 'tags';
 const KEY_CAMERAS           = 'cameras';
 const KEY_FILM_SIMULATIONS  = 'film-simulations';
 const KEY_BLOB              = 'blob';
-// Temporary key to clear caches on forked blogs
-const KEY_NEW_QUERY         = 'new-query';
 
 // eslint-disable-next-line max-len
 const getPhotosCacheKeyForOption = (
@@ -39,8 +40,8 @@ const getPhotosCacheKeyForOption = (
   // Primitive keys
   case 'sortBy': 
   case 'limit':
-  case 'offset':
   case 'tag':
+  case 'simulation':
   case 'includeHidden': {
     const value = options[option];
     return value ? `${option}-${value}` : null;
@@ -81,11 +82,17 @@ const getPhotoTagCountKey = (tag: string) =>
 const getPhotoCameraCountKey = (camera: Camera) =>
   `${KEY_PHOTOS_COUNT}-${KEY_CAMERAS}-${createCameraKey(camera)}`;
 
+const getPhotoFilmSimulationCountKey = (simulation: FujifilmSimulation) =>
+  `${KEY_PHOTOS_COUNT}-${KEY_FILM_SIMULATIONS}-${simulation}`;
+
 const getPhotoTagDateRangeKey = (tag: string) =>
   `${KEY_PHOTOS_DATE_RANGE}-${KEY_TAGS}-${tag}`;
 
 const getPhotoCameraDateRangeKey = (camera: Camera) =>
   `${KEY_PHOTOS_DATE_RANGE}-${KEY_CAMERAS}-${createCameraKey(camera)}`;
+
+const getPhotoFilmSimulationDateRangeKey = (simulation: FujifilmSimulation) =>
+  `${KEY_PHOTOS_DATE_RANGE}-${KEY_FILM_SIMULATIONS}-${simulation}`;
 
 export const revalidatePhotosKey = () =>
   revalidateTag(KEY_PHOTOS);
@@ -95,6 +102,9 @@ export const revalidateTagsKey = () =>
 
 export const revalidateCamerasKey = () =>
   revalidateTag(KEY_CAMERAS);
+
+export const revalidateFilmSimulationsKey = () =>
+  revalidateTag(KEY_FILM_SIMULATIONS);
 
 export const revalidateBlobKey = () =>
   revalidateTag(KEY_BLOB);
@@ -108,6 +118,7 @@ export const revalidateAllKeys = () => {
   revalidatePhotosAndBlobKeys();
   revalidateTagsKey();
   revalidateCamerasKey();
+  revalidateFilmSimulationsKey();
 };
 
 export const revalidateAllKeysAndPaths = () => {
@@ -162,6 +173,15 @@ export const getPhotosCameraCountCached: typeof getPhotosCameraCount = (...args)
   )();
 
 // eslint-disable-next-line max-len
+export const getPhotosFilmSimulationCountCached: typeof getPhotosFilmSimulationCount = (...args) =>
+  unstable_cache(
+    () => getPhotosFilmSimulationCount(...args),
+    [KEY_PHOTOS, getPhotoFilmSimulationCountKey(...args)], {
+      tags: [KEY_PHOTOS, getPhotoFilmSimulationCountKey(...args)],
+    }
+  )();
+
+// eslint-disable-next-line max-len
 export const getPhotosTagDateRangeCached: typeof getPhotosTagDateRange = (...args) =>
   unstable_cache(
     () => getPhotosTagDateRange(...args),
@@ -179,6 +199,15 @@ export const getPhotosCameraDateRangeCached: typeof getPhotosCameraDateRange = (
     }
   )();
 
+// eslint-disable-next-line max-len
+export const getPhotosFilmSimulationDateRangeCached: typeof getPhotosFilmSimulationDateRange = (...args) =>
+  unstable_cache(
+    () => getPhotosFilmSimulationDateRange(...args),
+    [KEY_PHOTOS, getPhotoFilmSimulationDateRangeKey(...args)], {
+      tags: [KEY_PHOTOS, getPhotoFilmSimulationDateRangeKey(...args)],
+    }
+  )();
+
 export const getPhotoCached: typeof getPhoto = (...args) =>
   unstable_cache(
     () => getPhoto(...args),
@@ -190,8 +219,8 @@ export const getPhotoCached: typeof getPhoto = (...args) =>
 export const getUniqueTagsCached: typeof getUniqueTags = (...args) =>
   unstable_cache(
     () => getUniqueTags(...args),
-    [KEY_PHOTOS, KEY_TAGS, KEY_NEW_QUERY], {
-      tags: [KEY_PHOTOS, KEY_TAGS, KEY_NEW_QUERY],
+    [KEY_PHOTOS, KEY_TAGS], {
+      tags: [KEY_PHOTOS, KEY_TAGS],
     }
   )();
 
@@ -199,16 +228,16 @@ export const getUniqueTagsCached: typeof getUniqueTags = (...args) =>
 export const getUniqueTagsHiddenCached: typeof getUniqueTagsHidden = (...args) =>
   unstable_cache(
     () => getUniqueTagsHidden(...args),
-    [KEY_PHOTOS, KEY_TAGS, KEY_NEW_QUERY], {
-      tags: [KEY_PHOTOS, KEY_TAGS, KEY_NEW_QUERY],
+    [KEY_PHOTOS, KEY_TAGS], {
+      tags: [KEY_PHOTOS, KEY_TAGS],
     }
   )();
 
 export const getUniqueCamerasCached: typeof getUniqueCameras = (...args) =>
   unstable_cache(
     () => getUniqueCameras(...args),
-    [KEY_PHOTOS, KEY_CAMERAS, KEY_NEW_QUERY], {
-      tags: [KEY_PHOTOS, KEY_CAMERAS, KEY_NEW_QUERY],
+    [KEY_PHOTOS, KEY_CAMERAS], {
+      tags: [KEY_PHOTOS, KEY_CAMERAS],
     }
   )();
 
