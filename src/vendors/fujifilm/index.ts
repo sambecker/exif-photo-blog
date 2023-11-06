@@ -29,7 +29,7 @@ type FujifilmMode =
   'provia' |
   'portrait' |
   'portrait-saturation' |
-  'portrait-skin-tone' |
+  'astia' |
   'portrait-sharpness' |
   'portrait-ex' |
   'velvia' |
@@ -72,7 +72,7 @@ const getFujifilmMode = (
   case 0x000: return 'provia';
   case 0x100: return 'portrait';
   case 0x110: return 'portrait-saturation';
-  case 0x120: return 'portrait-skin-tone';
+  case 0x120: return 'astia'; // can be encoded as 'portrait-skin-tone'
   case 0x130: return 'portrait-sharpness';
   case 0x300: return 'portrait-ex';
   case 0x200:
@@ -158,7 +158,7 @@ const FILM_SIMULATION_LABELS: Record<
     medium: 'Portrait+Sat.',
     large: 'Studio Portrait + Enhanced Saturation',
   },
-  'portrait-skin-tone': {
+  'astia': {
     small: 'ASTIA',
     medium: 'ASTIA/Soft',
     large: 'ASTIA / Soft',
