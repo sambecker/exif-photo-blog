@@ -6,11 +6,11 @@ import { FaTag } from 'react-icons/fa';
 import { IoMdCamera } from 'react-icons/io';
 import { photoQuantityText } from '.';
 import { Tags } from '@/tag';
-import PhotoFujifilmSimulation from 
-  '@/vendors/fujifilm/PhotoFujifilmSimulation';
-import { FujifilmSimulations } from '@/vendors/fujifilm';
-import PhotoFujifilmSimulationIcon from
-  '@/vendors/fujifilm/PhotoFujifilmSimulationIcon';
+import PhotoFilmSimulation from 
+  '@/simulation/PhotoFilmSimulation';
+import PhotoFilmSimulationIcon from
+  '@/simulation/PhotoFilmSimulationIcon';
+import { FilmSimulations } from '@/simulation';
 
 export default function PhotoGridSidebar({
   tags,
@@ -20,7 +20,7 @@ export default function PhotoGridSidebar({
 }: {
   tags: Tags
   cameras: Cameras
-  simulations: FujifilmSimulations
+  simulations: FilmSimulations
   photosCount: number
 }) {
   return (
@@ -53,17 +53,17 @@ export default function PhotoGridSidebar({
       />}
       {simulations.length > 0 && <HeaderList
         title="Films"
-        icon={<PhotoFujifilmSimulationIcon
+        icon={<PhotoFilmSimulationIcon
           className="translate-y-[-0.5px]"
         />}
-        className="space-y-0.5"
-        items={simulations.map(({ simulation }) =>
+        items={simulations.map(({ simulation, count }) =>
           <div
             key={simulation}
             className="translate-x-[-2px]"
           >
-            <PhotoFujifilmSimulation
+            <PhotoFilmSimulation
               simulation={simulation}
+              countOnHover={count}
               type="text-only"
             />
           </div>)}

@@ -4,12 +4,14 @@ import { cc } from '@/utility/css';
 import AnimateItems from '@/components/AnimateItems';
 import { Camera } from '@/camera';
 import MorePhotos from '@/photo/MorePhotos';
+import { FilmSimulation } from '@/simulation';
 
 export default function PhotoGrid({
   photos,
   selectedPhoto,
   tag,
   camera,
+  simulation,
   fast,
   animate = true,
   animateOnFirstLoadOnly,
@@ -22,6 +24,7 @@ export default function PhotoGrid({
   selectedPhoto?: Photo
   tag?: string
   camera?: Camera
+  simulation?: FilmSimulation
   fast?: boolean
   animate?: boolean
   animateOnFirstLoadOnly?: boolean
@@ -52,6 +55,7 @@ export default function PhotoGrid({
             photo={photo}
             tag={tag}
             camera={camera}
+            simulation={simulation}
             selected={photo.id === selectedPhoto?.id}
           />).concat(additionalTile ?? [])}
       />

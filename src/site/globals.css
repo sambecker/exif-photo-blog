@@ -40,8 +40,8 @@
   /* Required for readonly behavior on <select /> */
   .disabled-select {
     @apply
-      bg-gray-100
-      dark:bg-gray-900 dark:text-gray-400
+      text-medium
+      bg-gray-100 dark:bg-gray-900
       pointer-events-none
   }
   input[type=file] {

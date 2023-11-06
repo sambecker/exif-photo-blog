@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import '@testing-library/jest-dom';
 import {
   getEscapePath,
@@ -6,6 +7,10 @@ import {
   isPathCameraPhoto,
   isPathCameraPhotoShare,
   isPathCameraShare,
+  isPathFilmSimulation,
+  isPathFilmSimulationPhoto,
+  isPathFilmSimulationPhotoShare,
+  isPathFilmSimulationShare,
   isPathPhoto,
   isPathPhotoShare,
   isPathTag,
@@ -15,28 +20,34 @@ import {
 } from '@/site/paths';
 import { getCameraFromKey } from '@/camera';
 
-const PHOTO_ID      = 'UsKSGcbt';
-const TAG           = 'tag-name';
-const CAMERA        = 'fujifilm-x-t1';
-const CAMERA_OBJECT = getCameraFromKey(CAMERA);
-const SHARE         = 'share';
+const PHOTO_ID        = 'UsKSGcbt';
+const TAG             = 'tag-name';
+const CAMERA          = 'fujifilm-x-t1';
+const CAMERA_OBJECT   = getCameraFromKey(CAMERA);
+const FILM_SIMULATION = 'acros';
+const SHARE           = 'share';
 
-const PATH_ROOT               = '/';
-const PATH_GRID               = '/grid';
-const PATH_ADMIN              = '/admin/photos';
+const PATH_ROOT                         = '/';
+const PATH_GRID                         = '/grid';
+const PATH_ADMIN                        = '/admin/photos';
 
-const PATH_PHOTO              = `/p/${PHOTO_ID}`;
-const PATH_PHOTO_SHARE        = `${PATH_PHOTO}/${SHARE}`;
+const PATH_PHOTO                        = `/p/${PHOTO_ID}`;
+const PATH_PHOTO_SHARE                  = `${PATH_PHOTO}/${SHARE}`;
 
-const PATH_TAG                = `/tag/${TAG}`;
-const PATH_TAG_SHARE          = `${PATH_TAG}/${SHARE}`;
-const PATH_TAG_PHOTO          = `${PATH_TAG}/${PHOTO_ID}`;
-const PATH_TAG_PHOTO_SHARE    = `${PATH_TAG_PHOTO}/${SHARE}`;
+const PATH_TAG                          = `/tag/${TAG}`;
+const PATH_TAG_SHARE                    = `${PATH_TAG}/${SHARE}`;
+const PATH_TAG_PHOTO                    = `${PATH_TAG}/${PHOTO_ID}`;
+const PATH_TAG_PHOTO_SHARE              = `${PATH_TAG_PHOTO}/${SHARE}`;
 
-const PATH_CAMERA             = `/shot-on/${CAMERA}`;
-const PATH_CAMERA_SHARE       = `${PATH_CAMERA}/${SHARE}`;
-const PATH_CAMERA_PHOTO       = `${PATH_CAMERA}/${PHOTO_ID}`;
-const PATH_CAMERA_PHOTO_SHARE = `${PATH_CAMERA_PHOTO}/${SHARE}`;
+const PATH_CAMERA                       = `/shot-on/${CAMERA}`;
+const PATH_CAMERA_SHARE                 = `${PATH_CAMERA}/${SHARE}`;
+const PATH_CAMERA_PHOTO                 = `${PATH_CAMERA}/${PHOTO_ID}`;
+const PATH_CAMERA_PHOTO_SHARE           = `${PATH_CAMERA_PHOTO}/${SHARE}`;
+
+const PATH_FILM_SIMULATION              = `/film/${FILM_SIMULATION}`;
+const PATH_FILM_SIMULATION_SHARE        = `${PATH_FILM_SIMULATION}/${SHARE}`;
+const PATH_FILM_SIMULATION_PHOTO        = `${PATH_FILM_SIMULATION}/${PHOTO_ID}`;
+const PATH_FILM_SIMULATION_PHOTO_SHARE  = `${PATH_FILM_SIMULATION_PHOTO}/${SHARE}`;
  
 describe('Paths', () => {
   it('can be classified', () => {
@@ -51,6 +62,10 @@ describe('Paths', () => {
     expect(isPathCameraShare(PATH_CAMERA_SHARE)).toBe(true);
     expect(isPathCameraPhoto(PATH_CAMERA_PHOTO)).toBe(true);
     expect(isPathCameraPhotoShare(PATH_CAMERA_PHOTO_SHARE)).toBe(true);
+    expect(isPathFilmSimulation(PATH_FILM_SIMULATION)).toBe(true);
+    expect(isPathFilmSimulationShare(PATH_FILM_SIMULATION_SHARE)).toBe(true);
+    expect(isPathFilmSimulationPhoto(PATH_FILM_SIMULATION_PHOTO)).toBe(true);
+    expect(isPathFilmSimulationPhotoShare(PATH_FILM_SIMULATION_PHOTO_SHARE)).toBe(true);
     // Negative
     expect(isPathPhoto(PATH_TAG_PHOTO_SHARE)).toBe(false);
     expect(isPathPhotoShare(PATH_TAG_PHOTO)).toBe(false);
@@ -62,6 +77,10 @@ describe('Paths', () => {
     expect(isPathCameraShare(PATH_TAG)).toBe(false);
     expect(isPathCameraPhoto(PATH_PHOTO_SHARE)).toBe(false);
     expect(isPathCameraPhotoShare(PATH_PHOTO)).toBe(false);
+    expect(isPathFilmSimulation(PATH_TAG_SHARE)).toBe(false);
+    expect(isPathFilmSimulationShare(PATH_TAG)).toBe(false);
+    expect(isPathFilmSimulationPhoto(PATH_PHOTO_SHARE)).toBe(false);
+    expect(isPathFilmSimulationPhotoShare(PATH_PHOTO)).toBe(false);
   });
   it('can be parsed', () => {
     expect(getPathComponents(PATH_ROOT)).toEqual({});
@@ -99,6 +118,20 @@ describe('Paths', () => {
       photoId: PHOTO_ID,
       camera: CAMERA_OBJECT,
     });
+    expect(getPathComponents(PATH_FILM_SIMULATION)).toEqual({
+      simulation: FILM_SIMULATION,
+    });
+    expect(getPathComponents(PATH_FILM_SIMULATION_SHARE)).toEqual({
+      simulation: FILM_SIMULATION,
+    });
+    expect(getPathComponents(PATH_FILM_SIMULATION_PHOTO)).toEqual({
+      photoId: PHOTO_ID,
+      simulation: FILM_SIMULATION,
+    });
+    expect(getPathComponents(PATH_FILM_SIMULATION_PHOTO_SHARE)).toEqual({
+      photoId: PHOTO_ID,
+      simulation: FILM_SIMULATION,
+    });
   });
   it('can be escaped', () => {
     // Root views
@@ -118,5 +151,10 @@ describe('Paths', () => {
     expect(getEscapePath(PATH_CAMERA_SHARE)).toEqual(PATH_CAMERA);
     expect(getEscapePath(PATH_CAMERA_PHOTO)).toEqual(PATH_CAMERA);
     expect(getEscapePath(PATH_CAMERA_PHOTO_SHARE)).toEqual(PATH_CAMERA_PHOTO);
+    // Film Simulation views
+    expect(getEscapePath(PATH_FILM_SIMULATION)).toEqual(PATH_GRID);
+    expect(getEscapePath(PATH_FILM_SIMULATION_SHARE)).toEqual(PATH_FILM_SIMULATION);
+    expect(getEscapePath(PATH_FILM_SIMULATION_PHOTO)).toEqual(PATH_FILM_SIMULATION);
+    expect(getEscapePath(PATH_FILM_SIMULATION_PHOTO_SHARE)).toEqual(PATH_FILM_SIMULATION_PHOTO);
   });
 });

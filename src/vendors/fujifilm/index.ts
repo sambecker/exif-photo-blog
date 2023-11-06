@@ -46,11 +46,6 @@ export type FujifilmSimulation =
   FujifilmSimulationFromSaturation |
   FujifilmMode;
 
-export type FujifilmSimulations = {
-  simulation: FujifilmSimulation
-  count: number
-}[]
-
 export const isExifForFujifilm = (data: ExifData) =>
   data.tags?.Make === MAKE_FUJIFILM;
 
@@ -233,9 +228,7 @@ export const FILM_SIMULATION_FORM_INPUT_OPTIONS = Object
   ))
   .sort((a, b) => a.label.localeCompare(b.label));
 
-export const getLabelForFilmSimulation = (
-  simulation: FujifilmSimulation
-) =>
+export const labelForFilmSimulation = (simulation: FujifilmSimulation) =>
   FILM_SIMULATION_LABELS[simulation];
 
 const parseFujifilmMakerNote = (

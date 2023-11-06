@@ -10,9 +10,9 @@ import { convertStringToArray } from '@/utility/string';
 import { generateNanoid } from '@/utility/nanoid';
 import {
   FILM_SIMULATION_FORM_INPUT_OPTIONS,
-  FujifilmSimulation,
   MAKE_FUJIFILM,
 } from '@/vendors/fujifilm';
+import { FilmSimulation } from '@/simulation';
 
 export type PhotoFormData = Record<keyof PhotoDbInsert, string>;
 
@@ -95,7 +95,7 @@ export const convertPhotoToFormData = (
 
 export const convertExifToFormData = (
   data: ExifData,
-  fujifilmSimulation?: FujifilmSimulation,
+  filmSimulation?: FilmSimulation,
 ): Record<keyof PhotoExif, string | undefined> => ({
   aspectRatio: (
     (data.imageSize?.width ?? 3.0) /
@@ -111,7 +111,7 @@ export const convertExifToFormData = (
   exposureCompensation: data.tags?.ExposureCompensation?.toString(),
   latitude: data.tags?.GPSLatitude?.toString(),
   longitude: data.tags?.GPSLongitude?.toString(),
-  filmSimulation: fujifilmSimulation,
+  filmSimulation,
   takenAt: data.tags?.DateTimeOriginal
     ? convertTimestampWithOffsetToPostgresString(
       data.tags?.DateTimeOriginal,
@@ -144,7 +144,7 @@ export const convertFormDataToPhotoDbInsert = (
   });
 
   return {
-    ...(photoForm as PhotoFormData & { filmSimulation?: FujifilmSimulation }),
+    ...(photoForm as PhotoFormData & { filmSimulation?: FilmSimulation }),
     ...(generateId && !photoForm.id) && { id: generateNanoid() },
     // Convert form strings to arrays
     tags: convertStringToArray(photoForm.tags),

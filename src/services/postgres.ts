@@ -10,7 +10,7 @@ import {
 import { Camera, Cameras, createCameraKey } from '@/camera';
 import { parameterize } from '@/utility/string';
 import { Tags } from '@/tag';
-import { FujifilmSimulation, FujifilmSimulations } from '@/vendors/fujifilm';
+import { FilmSimulation, FilmSimulations } from '@/simulation';
 
 const PHOTO_DEFAULT_LIMIT = 100;
 
@@ -221,7 +221,7 @@ const sqlGetPhotosByCamera = async (
 
 const sqlGetPhotosBySimulation = async (
   limit = PHOTO_DEFAULT_LIMIT,
-  simulation: FujifilmSimulation,
+  simulation: FilmSimulation,
 ) => sql<PhotoDb>`
   SELECT * FROM photos
   WHERE film_simulation=${simulation}
@@ -281,7 +281,7 @@ const sqlGetPhotosCameraCount = async (camera: Camera) => sql`
 `.then(({ rows }) => parseInt(rows[0].count, 10));
 
 const sqlGetPhotosFilmSimulationCount = async (
-  simulation: FujifilmSimulation,
+  simulation: FilmSimulation,
 ) => sql`
   SELECT COUNT(*) FROM photos
   WHERE film_simulation=${simulation} AND
@@ -305,7 +305,7 @@ const sqlGetPhotosCameraDateRange = async (camera: Camera) => sql`
 `.then(({ rows }) => rows[0] as PhotoDateRange);
 
 const sqlGetPhotosFilmSimulationDateRange = async (
-  simulation: FujifilmSimulation,
+  simulation: FilmSimulation,
 ) => sql`
   SELECT MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
   FROM photos
@@ -352,9 +352,9 @@ const sqlGetUniqueFilmSimulations = async () => sql`
   WHERE hidden IS NOT TRUE AND film_simulation IS NOT NULL
   GROUP BY film_simulation
   ORDER BY film_simulation DESC
-`.then(({ rows }): FujifilmSimulations => rows
+`.then(({ rows }): FilmSimulations => rows
     .map(({ film_simulation, count }) => ({
-      simulation: film_simulation as FujifilmSimulation,
+      simulation: film_simulation as FilmSimulation,
       count: parseInt(count, 10),
     })));
 
@@ -363,7 +363,7 @@ export type GetPhotosOptions = {
   limit?: number
   tag?: string
   camera?: Camera
-  simulation?: FujifilmSimulation
+  simulation?: FilmSimulation
   takenBefore?: Date
   takenAfterInclusive?: Date
   includeHidden?: boolean
@@ -469,7 +469,7 @@ export const getPhotosCameraCount = (camera: Camera) =>
 export const getUniqueFilmSimulations = () =>
   safelyQueryPhotos(sqlGetUniqueFilmSimulations);
 export const getPhotosFilmSimulationDateRange =
-  (simulation: FujifilmSimulation) => safelyQueryPhotos(() =>
+  (simulation: FilmSimulation) => safelyQueryPhotos(() =>
     sqlGetPhotosFilmSimulationDateRange(simulation));
-export const getPhotosFilmSimulationCount = (simulation: FujifilmSimulation) =>
+export const getPhotosFilmSimulationCount = (simulation: FilmSimulation) =>
   safelyQueryPhotos(() => sqlGetPhotosFilmSimulationCount(simulation));

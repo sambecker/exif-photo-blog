@@ -21,7 +21,7 @@ import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
 import type { Session } from 'next-auth';
 import { Camera, createCameraKey } from '@/camera';
 import { PATHS_ADMIN, PATHS_TO_CACHE } from '@/site/paths';
-import { FujifilmSimulation } from '@/vendors/fujifilm';
+import { FilmSimulation } from '@/simulation';
 
 const KEY_PHOTOS            = 'photos';
 const KEY_PHOTOS_COUNT      = `${KEY_PHOTOS}-count`;
@@ -82,7 +82,7 @@ const getPhotoTagCountKey = (tag: string) =>
 const getPhotoCameraCountKey = (camera: Camera) =>
   `${KEY_PHOTOS_COUNT}-${KEY_CAMERAS}-${createCameraKey(camera)}`;
 
-const getPhotoFilmSimulationCountKey = (simulation: FujifilmSimulation) =>
+const getPhotoFilmSimulationCountKey = (simulation: FilmSimulation) =>
   `${KEY_PHOTOS_COUNT}-${KEY_FILM_SIMULATIONS}-${simulation}`;
 
 const getPhotoTagDateRangeKey = (tag: string) =>
@@ -91,7 +91,7 @@ const getPhotoTagDateRangeKey = (tag: string) =>
 const getPhotoCameraDateRangeKey = (camera: Camera) =>
   `${KEY_PHOTOS_DATE_RANGE}-${KEY_CAMERAS}-${createCameraKey(camera)}`;
 
-const getPhotoFilmSimulationDateRangeKey = (simulation: FujifilmSimulation) =>
+const getPhotoFilmSimulationDateRangeKey = (simulation: FilmSimulation) =>
   `${KEY_PHOTOS_DATE_RANGE}-${KEY_FILM_SIMULATIONS}-${simulation}`;
 
 export const revalidatePhotosKey = () =>
