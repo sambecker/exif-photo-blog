@@ -102,6 +102,7 @@ export default function PhotoDetailPage({
             photos,
             tag,
             camera,
+            simulation,
           }} />
         </div>}
       />
