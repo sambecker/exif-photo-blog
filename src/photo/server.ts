@@ -1,12 +1,12 @@
 import { getExtensionFromBlobUrl, getIdFromBlobUrl } from '@/services/blob';
 import { convertExifToFormData } from '@/photo/form';
 import {
-  FujifilmSimulation,
   getFujifilmSimulationFromMakerNote,
   isExifForFujifilm,
 } from '@/vendors/fujifilm';
 import { ExifData, ExifParserFactory } from 'ts-exif-parser';
 import { PhotoFormData } from './form';
+import { FilmSimulation } from '@/simulation';
 
 export const extractExifDataFromBlobPath = async (
   blobPath: string
@@ -26,7 +26,7 @@ export const extractExifDataFromBlobPath = async (
     : undefined;
 
   let exifData: ExifData | undefined;
-  let filmSimulation: FujifilmSimulation | undefined;
+  let filmSimulation: FilmSimulation | undefined;
 
   if (fileBytes) {
     const parser = ExifParserFactory.create(Buffer.from(fileBytes));

@@ -29,5 +29,5 @@ export default async function Share({
 
   if (!photo) { return redirect(PATH_ROOT); }
 
-  return <PhotoShareModal photo={photo} tag={tag} />;
+  return <PhotoShareModal {...{ photo, tag }} />;
 }

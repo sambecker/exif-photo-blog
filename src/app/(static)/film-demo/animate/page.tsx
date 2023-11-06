@@ -3,8 +3,8 @@
 import SiteGrid from '@/components/SiteGrid';
 import { cc } from '@/utility/css';
 import { FILM_SIMULATION_FORM_INPUT_OPTIONS } from '@/vendors/fujifilm';
-import PhotoFujifilmSimulation from
-  '@/vendors/fujifilm/PhotoFujifilmSimulation';
+import PhotoFilmSimulation from
+  '@/simulation/PhotoFilmSimulation';
 import { useEffect, useState } from 'react';
 
 export default function FilmPage() {
@@ -26,9 +26,9 @@ export default function FilmPage() {
           <div className="dark:text-gray-500/50 uppercase">
             Film Simulation:
           </div>
-          <PhotoFujifilmSimulation
+          <PhotoFilmSimulation
             simulation={FILM_SIMULATION_FORM_INPUT_OPTIONS[index].value}
-            showIconFirst
+            type="icon-first"
             badged={false}
           />
           <div className="mt-4 text-dim relative">

@@ -1,3 +1,4 @@
+import { FilmSimulation } from '@/simulation';
 import { ABSOLUTE_PATH_FOR_HOME_IMAGE } from '@/site/paths';
 import { formatDateFromPostgresString } from '@/utility/date';
 import {
@@ -7,7 +8,6 @@ import {
   formatExposureTime,
   formatFocalLength,
 } from '@/utility/exif';
-import { FujifilmSimulation } from '@/vendors/fujifilm';
 import camelcaseKeys from 'camelcase-keys';
 import type { Metadata } from 'next';
 
@@ -31,7 +31,7 @@ export interface PhotoExif {
   exposureCompensation?: number
   latitude?: number
   longitude?: number
-  filmSimulation?: FujifilmSimulation
+  filmSimulation?: FilmSimulation
   takenAt: string
   takenAtNaive: string
 }

@@ -7,9 +7,9 @@ import { pathForPhoto, pathForPhotoShare } from '@/site/paths';
 import PhotoTags from '@/tag/PhotoTags';
 import ShareButton from '@/components/ShareButton';
 import PhotoCamera from '../camera/PhotoCamera';
-import { Camera, cameraFromPhoto } from '@/camera';
-import PhotoFujifilmSimulation from
-  '@/vendors/fujifilm/PhotoFujifilmSimulation';
+import { cameraFromPhoto } from '@/camera';
+import PhotoFilmSimulation from
+  '@/simulation/PhotoFilmSimulation';
 
 export default function PhotoLarge({
   photo,
@@ -18,15 +18,16 @@ export default function PhotoLarge({
   prefetchShare,
   shouldScrollOnShare,
   showCamera = true,
+  showSimulation = true,
   shareCamera,
 }: {
   photo: Photo
   tag?: string
-  camera?: Camera
   priority?: boolean
   prefetchShare?: boolean
   shouldScrollOnShare?: boolean
   showCamera?: boolean
+  showSimulation?: boolean
   shareCamera?: boolean
 }) {
   const tagsToShow = photo.tags.filter(t => t !== tag);
@@ -81,9 +82,9 @@ export default function PhotoLarge({
                 showIcon={false}
                 hideApple={false}
               />
-              {photo.filmSimulation &&
+              {showSimulation && photo.filmSimulation &&
                 <div className="-translate-x-0.5"> 
-                  <PhotoFujifilmSimulation
+                  <PhotoFilmSimulation
                     simulation={photo.filmSimulation}
                   />
                 </div>}
@@ -125,6 +126,7 @@ export default function PhotoLarge({
                   photo,
                   tag,
                   shareCamera ? camera : undefined,
+                  photo.filmSimulation,
                 )}
                 prefetch={prefetchShare}
                 shouldScroll={shouldScrollOnShare}

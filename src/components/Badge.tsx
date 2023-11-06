@@ -4,10 +4,12 @@ export default function Badge({
   children,
   type = 'primary',
   uppercase,
+  interactive,
 }: {
   children: React.ReactNode
   type?: 'primary' | 'secondary' | 'text-only'
   uppercase?: boolean
+  interactive?: boolean
 }) {
   const baseStyles = () => {
     switch (type) {
@@ -21,6 +23,8 @@ export default function Badge({
       'bg-gray-100 dark:bg-gray-800/60',
       'text-medium',
       'font-medium text-[0.7rem]',
+      interactive && 'hover:text-black dark:hover:text-white',
+      interactive && 'active:bg-gray-200 dark:active:bg-gray-700/60',
     );
     }
   };

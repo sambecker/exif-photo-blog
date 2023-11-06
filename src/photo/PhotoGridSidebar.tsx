@@ -6,14 +6,21 @@ import { FaTag } from 'react-icons/fa';
 import { IoMdCamera } from 'react-icons/io';
 import { photoQuantityText } from '.';
 import { Tags } from '@/tag';
+import PhotoFilmSimulation from 
+  '@/simulation/PhotoFilmSimulation';
+import PhotoFilmSimulationIcon from
+  '@/simulation/PhotoFilmSimulationIcon';
+import { FilmSimulations } from '@/simulation';
 
 export default function PhotoGridSidebar({
   tags,
   cameras,
+  simulations,
   photosCount,
 }: {
   tags: Tags
   cameras: Cameras
+  simulations: FilmSimulations
   photosCount: number
 }) {
   return (
@@ -43,6 +50,23 @@ export default function PhotoGridSidebar({
             countOnHover={count}
             hideApple
           />)}
+      />}
+      {simulations.length > 0 && <HeaderList
+        title="Films"
+        icon={<PhotoFilmSimulationIcon
+          className="translate-y-[-0.5px]"
+        />}
+        items={simulations.map(({ simulation, count }) =>
+          <div
+            key={simulation}
+            className="translate-x-[-2px]"
+          >
+            <PhotoFilmSimulation
+              simulation={simulation}
+              countOnHover={count}
+              type="text-only"
+            />
+          </div>)}
       />}
       {photosCount > 0 && <HeaderList
         items={[photoQuantityText(photosCount, false)]}
