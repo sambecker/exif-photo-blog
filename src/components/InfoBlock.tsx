@@ -5,10 +5,12 @@ export default function InfoBlock({
   children,
   className,
   padding = 'normal',
+  centered = true,
 }: {
   children: ReactNode
   className?: string
   padding?: 'loose' | 'normal' | 'tight';
+  centered?: boolean;
 } ) {
   const getPaddingClasses = () => {
     switch (padding) {
@@ -28,7 +30,8 @@ export default function InfoBlock({
       className,
     )}>
       <div className={cc(
-        'flex flex-col items-center justify-center w-full',
+        'flex flex-col justify-center w-full',
+        centered && 'items-center',
         'space-y-4',
         'text-medium',
       )}>
