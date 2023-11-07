@@ -7,6 +7,7 @@ import {
 import SiteGrid from '@/components/SiteGrid';
 import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
 import { SHOW_FILM_SIMULATIONS } from '@/site/config';
+import { cc } from '@/utility/css';
 
 export default async function SetsPage() {
   const [
@@ -20,9 +21,12 @@ export default async function SetsPage() {
     getUniqueCamerasCached(),
     SHOW_FILM_SIMULATIONS ? getUniqueFilmSimulationsCached() : [],
   ]);
+
   return (
     <SiteGrid
-      contentMain={<div className="sticky top-4 space-y-4">
+      contentMain={<div className={cc(
+        'top-4 space-y-4 text-base',
+      )}>
         <PhotoGridSidebar {...{
           tags,
           cameras,
