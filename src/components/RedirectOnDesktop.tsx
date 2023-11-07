@@ -6,8 +6,10 @@ import { useEffect } from 'react';
 
 export default function RedirectOnDesktop({
   redirectPath,
+  shouldPrefetch = true,
 }: {
   redirectPath: string
+  shouldPrefetch?: boolean
 }) {
   const router = useRouter();
   
@@ -15,13 +17,17 @@ export default function RedirectOnDesktop({
 
   const isDesktop = useIsDesktop();
 
-  router.prefetch(redirectPath);
+  useEffect(() => {
+    if (shouldPrefetch) {
+      router.prefetch(redirectPath);
+    }
+  }, [router, shouldPrefetch, redirectPath]);
 
   useEffect(() => {
     if (isDesktop && pathname !== redirectPath) {
       router.push(redirectPath);
     }
-  }, [isDesktop, pathname, redirectPath, router]);
+  }, [router, isDesktop, pathname, redirectPath]);
 
   return null;
 }
