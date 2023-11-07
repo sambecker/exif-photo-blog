@@ -4,17 +4,20 @@ import { cc } from '@/utility/css';
 export default function SwitcherItem({
   icon,
   href,
+  className: classNameProp,
   onClick,
   active,
   noPadding,
 }: {
   icon: JSX.Element
   href?: string
+  className?: string
   onClick?: () => void
   active?: boolean
   noPadding?: boolean
 }) {
   const className = cc(
+    classNameProp,
     'py-0.5 px-1.5',
     'cursor-pointer',
     'hover:bg-gray-50 active:bg-gray-100 active:text-gray-400',
