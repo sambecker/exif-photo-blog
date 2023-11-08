@@ -15,10 +15,21 @@ import {
 
 export type FilmSimulation = FujifilmSimulation;
 
-export type FilmSimulations = {
+export type FilmSimulationWithCount = {
   simulation: FilmSimulation
   count: number
-}[]
+}
+
+export type FilmSimulations = FilmSimulationWithCount[]
+
+export const sortFilmSimulationsWithCount = (
+  a: FilmSimulationWithCount,
+  b: FilmSimulationWithCount,
+) => {
+  const aLabel = labelForFilmSimulation(a.simulation).large;
+  const bLabel = labelForFilmSimulation(b.simulation).large;
+  return aLabel.localeCompare(bLabel);
+};
 
 export const titleForFilmSimulation = (
   simulation: FilmSimulation,

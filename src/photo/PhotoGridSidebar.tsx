@@ -10,7 +10,7 @@ import PhotoFilmSimulation from
   '@/simulation/PhotoFilmSimulation';
 import PhotoFilmSimulationIcon from
   '@/simulation/PhotoFilmSimulationIcon';
-import { FilmSimulations } from '@/simulation';
+import { FilmSimulations, sortFilmSimulationsWithCount } from '@/simulation';
 
 export default function PhotoGridSidebar({
   tags,
@@ -56,17 +56,19 @@ export default function PhotoGridSidebar({
         icon={<PhotoFilmSimulationIcon
           className="translate-y-[-0.5px]"
         />}
-        items={simulations.map(({ simulation, count }) =>
-          <div
-            key={simulation}
-            className="translate-x-[-2px]"
-          >
-            <PhotoFilmSimulation
-              simulation={simulation}
-              countOnHover={count}
-              type="text-only"
-            />
-          </div>)}
+        items={simulations
+          .sort(sortFilmSimulationsWithCount)
+          .map(({ simulation, count }) =>
+            <div
+              key={simulation}
+              className="translate-x-[-2px]"
+            >
+              <PhotoFilmSimulation
+                simulation={simulation}
+                countOnHover={count}
+                type="text-only"
+              />
+            </div>)}
       />}
       {photosCount > 0 && <HeaderList
         items={[photoQuantityText(photosCount, false)]}
