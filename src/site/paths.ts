@@ -53,6 +53,7 @@ export const PATHS_ADMIN = [
 export const PATHS_TO_CACHE = [
   PATH_ROOT,
   PATH_GRID,
+  PATH_SETS,
   PATH_OG,
   PATH_PHOTO_DYNAMIC,
   PATH_TAG_DYNAMIC,
