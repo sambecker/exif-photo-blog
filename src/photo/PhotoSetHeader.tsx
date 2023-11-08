@@ -60,7 +60,7 @@ export default function PhotoSetHeader({
         )}>
           {start === end
             ? start
-            : <>{start}<br />– {end}</>}
+            : <>{end}<br />– {start}</>}
         </span>
       </div>]}
     />

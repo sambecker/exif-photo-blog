@@ -185,16 +185,26 @@ export const descriptionForPhotoSet = (
       photoLabelForCount(explicitCount ?? photos.length),
     ].join(' ');
 
+const sortPhotosByDate = (
+  photos: Photo[],
+  order: 'ASC' | 'DESC' = 'DESC'
+) =>
+  [...photos].sort((a, b) => order === 'DESC'
+    ? b.takenAt.getTime() - a.takenAt.getTime()
+    : a.takenAt.getTime() - b.takenAt.getTime());
+
 export const dateRangeForPhotos = (
   photos: Photo[],
   explicitDateRange?: PhotoDateRange,
 ) => {
+  const photosSorted = sortPhotosByDate(photos);
+
   const start = formatDateFromPostgresString(
-    explicitDateRange?.start ?? photos[0].takenAtNaive,
+    explicitDateRange?.start ?? photosSorted[photos.length - 1].takenAtNaive,
     true,
   );
   const end = formatDateFromPostgresString(
-    explicitDateRange?.end ?? photos[photos.length - 1].takenAtNaive,
+    explicitDateRange?.end ?? photosSorted[0].takenAtNaive,
     true
   );
   const description = start === end

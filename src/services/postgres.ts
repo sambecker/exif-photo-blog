@@ -202,7 +202,7 @@ const sqlGetPhotosByTag = (
     SELECT * FROM photos
     WHERE ${tag}=ANY(tags)
     AND hidden IS NOT TRUE
-    ORDER BY taken_at ASC
+    ORDER BY taken_at DESC
     LIMIT ${limit}
   `;
 
@@ -226,7 +226,7 @@ const sqlGetPhotosBySimulation = async (
   SELECT * FROM photos
   WHERE film_simulation=${simulation}
   AND hidden IS NOT TRUE
-  ORDER BY taken_at ASC
+  ORDER BY taken_at DESC
   LIMIT ${limit}
 `;
 

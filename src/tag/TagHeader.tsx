@@ -1,4 +1,4 @@
-import { Photo } from '@/photo';
+import { Photo, PhotoDateRange } from '@/photo';
 import PhotoTag from './PhotoTag';
 import { descriptionForTaggedPhotos } from '.';
 import { pathForTagShare } from '@/site/paths';
@@ -9,11 +9,13 @@ export default function TagHeader({
   photos,
   selectedPhoto,
   count,
+  dateRange,
 }: {
   tag: string
   photos: Photo[]
   selectedPhoto?: Photo
   count?: number
+  dateRange?: PhotoDateRange
 }) {
   return (
     <PhotoSetHeader
@@ -24,6 +26,7 @@ export default function TagHeader({
       selectedPhoto={selectedPhoto}
       sharePath={pathForTagShare(tag)}
       count={count}
+      dateRange={dateRange}
     />
   );
 }

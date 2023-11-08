@@ -41,6 +41,7 @@ export default function PhotoDetailPage({
               tag={tag}
               photos={photos}
               selectedPhoto={photo}
+              dateRange={dateRange}
             />}
         />}
       {camera &&
