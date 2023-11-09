@@ -11,7 +11,7 @@ export default function Badge({
   uppercase?: boolean
   interactive?: boolean
 }) {
-  const baseStyles = () => {
+  const coreStyles = () => {
     switch (type) {
     case 'primary': return cc(
       'px-1.5 py-[0.3rem] leading-none rounded-md',
@@ -30,7 +30,7 @@ export default function Badge({
   };
   return (
     <span className={cc(
-      baseStyles(),
+      coreStyles(),
       uppercase && 'uppercase tracking-wider',
     )}>
       {children}

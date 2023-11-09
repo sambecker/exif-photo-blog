@@ -43,7 +43,7 @@ export default function PhotoFilmSimulation({
             : <span className="uppercase text-medium">{renderContent()}</span>}
         </>}
         {type !== 'text-only' && <span className={cc(
-          'translate-y-[-0.25px] text-dim',
+          'translate-y-[-1px] text-dim',
           type === 'icon-first' && 'order-first',
         )}>
           <PhotoFilmSimulationIcon {...{ simulation }} />
