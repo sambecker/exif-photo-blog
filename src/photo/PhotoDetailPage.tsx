@@ -75,13 +75,15 @@ export default function PhotoDetailPage({
           <PhotoLarge
             key={photo.id}
             photo={photo}
-            tag={tag}
+            primaryTag={tag}
             priority
             prefetchShare
-            shareCamera={camera !== undefined}
-            shouldScrollOnShare={false}
             showCamera={!camera}
             showSimulation={!simulation}
+            shouldShareTag={tag !== undefined}
+            shouldShareCamera={camera !== undefined}
+            shouldShareSimulation={simulation !== undefined}
+            shouldScrollOnShare={false}
           />,
         ]}
       />

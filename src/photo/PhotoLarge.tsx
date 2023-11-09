@@ -13,24 +13,28 @@ import PhotoFilmSimulation from
 
 export default function PhotoLarge({
   photo,
-  tag,
+  primaryTag,
   priority,
   prefetchShare,
-  shouldScrollOnShare,
   showCamera = true,
   showSimulation = true,
-  shareCamera,
+  shouldShareTag,
+  shouldShareCamera,
+  shouldShareSimulation,
+  shouldScrollOnShare,
 }: {
   photo: Photo
-  tag?: string
+  primaryTag?: string
   priority?: boolean
   prefetchShare?: boolean
-  shouldScrollOnShare?: boolean
   showCamera?: boolean
   showSimulation?: boolean
-  shareCamera?: boolean
+  shouldShareTag?: boolean
+  shouldShareCamera?: boolean
+  shouldShareSimulation?: boolean
+  shouldScrollOnShare?: boolean
 }) {
-  const tagsToShow = photo.tags.filter(t => t !== tag);
+  const tagsToShow = photo.tags.filter(t => t !== primaryTag);
 
   const camera = cameraFromPhoto(photo);
   
@@ -50,7 +54,7 @@ export default function PhotoLarge({
         <ImageLarge
           className="w-full"
           alt={titleForPhoto(photo)}
-          href={pathForPhoto(photo, tag)}
+          href={pathForPhoto(photo, primaryTag)}
           src={photo.url}
           aspectRatio={photo.aspectRatio}
           blurData={photo.blurData}
@@ -124,9 +128,9 @@ export default function PhotoLarge({
               <ShareButton
                 path={pathForPhotoShare(
                   photo,
-                  tag,
-                  shareCamera ? camera : undefined,
-                  photo.filmSimulation,
+                  shouldShareTag ? primaryTag : undefined,
+                  shouldShareCamera ? camera : undefined,
+                  shouldShareSimulation ? photo.filmSimulation : undefined,
                 )}
                 prefetch={prefetchShare}
                 shouldScroll={shouldScrollOnShare}
