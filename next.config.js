@@ -9,6 +9,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 
 const nextConfig = {
+  ppr: true,
   images: {
     imageSizes: [200, 400, 1050],
     remotePatterns: [{
