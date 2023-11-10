@@ -33,5 +33,10 @@ export const cameraFromPhoto = (
       ? getCameraFromKey(fallback)
       : fallback ?? CAMERA_PLACEHOLDER;
 
-export const formatCameraText = ({ make, model }: Camera) =>
-  `${make} ${model}`;
+export const formatCameraText = (
+  { make, model }: Camera,
+  includeMakeApple = true,
+) =>
+  make === 'Apple' && !includeMakeApple
+    ? model
+    : `${make} ${model}`;
