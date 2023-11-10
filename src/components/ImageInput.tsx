@@ -60,7 +60,7 @@ export default function ImageInput({
                   className="translate-y-[0.5px] shrink-0"
                 />}
             </span>
-            Upload Photo
+            Upload Photos
           </span>
           <input
             id={INPUT_ID}
