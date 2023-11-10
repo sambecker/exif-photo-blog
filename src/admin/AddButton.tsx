@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { FaRegEdit } from 'react-icons/fa';
+import { BiImageAdd } from 'react-icons/bi';
 
-export default function EditButton ({
+export default function AddButton ({
   href,
-  label = 'Edit',
+  label = 'Add',
 }: {
   href: string,
   label?: string,
@@ -14,7 +14,7 @@ export default function EditButton ({
       href={href}
       className="button"
     >
-      <FaRegEdit className="translate-y-[-0.5px]" />
+      <BiImageAdd size={18} className="translate-y-[1px]" />
       <span className="hidden sm:inline-block">
         {label}
       </span>

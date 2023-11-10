@@ -3,12 +3,12 @@ import AdminGrid from './AdminGrid';
 import Link from 'next/link';
 import ImageTiny from '@/components/ImageTiny';
 import { pathForBlobUrl } from '@/services/blob';
-import EditButton from './EditButton';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import { deleteBlobPhotoAction } from '@/photo/actions';
 import DeleteButton from './DeleteButton';
 import { cc } from '@/utility/css';
 import { pathForAdminUploadUrl } from '@/site/paths';
+import AddButton from './AddButton';
 
 export default function BlobUrls({
   title,
@@ -45,7 +45,7 @@ export default function BlobUrls({
             'flex flex-nowrap',
             'gap-2 sm:gap-3 items-center',
           )}>
-            <EditButton href={href} label="Setup" />
+            <AddButton href={href} />
             <FormWithConfirm
               action={deleteBlobPhotoAction}
               confirmText="Are you sure you want to delete this upload?"

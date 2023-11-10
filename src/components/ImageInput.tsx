@@ -32,8 +32,14 @@ export default function ImageInput({
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
-  const [statusText, setStatusText] = useState<string>();
   const [image, setImage] = useState<HTMLImageElement>();
+  const [filesLength, setFilesLength] = useState(0);
+  const [fileUploadIndex, setFileUploadIndex] = useState(0);
+  const [fileUploadName, setFileUploadName] = useState('');
+
+  const uploadStatusText = filesLength > 1
+    ? `${fileUploadIndex + 1} of ${filesLength}: ${fileUploadName}`
+    : fileUploadName;
 
   return (
     <div className="space-y-4 min-w-0">
@@ -60,7 +66,9 @@ export default function ImageInput({
                   className="translate-y-[0.5px] shrink-0"
                 />}
             </span>
-            Upload Photos
+            {loading
+              ? 'Uploading'
+              : 'Upload Photos'}
           </span>
           <input
             id={INPUT_ID}
@@ -73,79 +81,73 @@ export default function ImageInput({
               onStart?.();
               const { files } = e.currentTarget;
               if (files && files.length > 0) {
-                for (let i = 0; i < files?.length; i++) {
+                setFilesLength(files.length);
+                for (let i = 0; i < files.length; i++) {
                   const file = files[i];
-                  if (file) {
-                    const callbackArgs = {
-                      extension: file.name.split('.').pop()?.toLowerCase(),
-                      hasMultipleUploads: files.length > 1,
-                      isLastBlob: i === files.length - 1,
-                    };
-                    if (files.length > 1) {
-                      setStatusText(
-                        `Uploading ${i + 1} of ${files.length}: ${file.name}`
-                      );
-                    } else {
-                      setStatusText(`Uploading ${file.name}`);
-                    }
-                    const canvas = ref.current;
-                    if (!(maxSize && canvas)) {
-                      // No need to process
-                      await onBlobReady?.({
-                        ...callbackArgs,
-                        blob: file,
-                      });
-                    } else {
-                      // Process images that need resizing
-                      const image = await blobToImage(file);
-                      setImage(image);
-                      const { naturalWidth, naturalHeight } = image;
-                      const ratio = naturalWidth / naturalHeight;
-    
-                      const width =
-                        Math.round(ratio >= 1 ? maxSize : maxSize * ratio);
-                      const height =
-                        Math.round(ratio >= 1 ? maxSize / ratio : maxSize);
-    
-                      canvas.width = width;
-                      canvas.height = height;
-                      
-                      // Specify wide gamut to avoid data loss while resizing
-                      const ctx = canvas.getContext(
-                        '2d',
-                        { colorSpace: 'display-p3' },
-                      );
-    
-                      ctx?.drawImage(
-                        image,
-                        0,
-                        0,
-                        canvas.width,
-                        canvas.height,
-                      );
-                      canvas.toBlob(
-                        async blob => {
-                          if (blob) {
-                            const blobWithExif = await CopyExif(file, blob);
-                            await onBlobReady?.({
-                              ...callbackArgs,
-                              blob: blobWithExif,
-                            });
-                          }
-                        },
-                        'image/jpeg',
-                        quality,
-                      );
-                    }
+                  setFileUploadIndex(i);
+                  setFileUploadName(file.name);
+                  const callbackArgs = {
+                    extension: file.name.split('.').pop()?.toLowerCase(),
+                    hasMultipleUploads: files.length > 1,
+                    isLastBlob: i === files.length - 1,
+                  };
+                  const canvas = ref.current;
+                  if (!(maxSize && canvas)) {
+                    // No need to process
+                    await onBlobReady?.({
+                      ...callbackArgs,
+                      blob: file,
+                    });
+                  } else {
+                    // Process images that need resizing
+                    const image = await blobToImage(file);
+                    setImage(image);
+                    const { naturalWidth, naturalHeight } = image;
+                    const ratio = naturalWidth / naturalHeight;
+  
+                    const width =
+                      Math.round(ratio >= 1 ? maxSize : maxSize * ratio);
+                    const height =
+                      Math.round(ratio >= 1 ? maxSize / ratio : maxSize);
+  
+                    canvas.width = width;
+                    canvas.height = height;
+                    
+                    // Specify wide gamut to avoid data loss while resizing
+                    const ctx = canvas.getContext(
+                      '2d',
+                      { colorSpace: 'display-p3' },
+                    );
+  
+                    ctx?.drawImage(
+                      image,
+                      0,
+                      0,
+                      canvas.width,
+                      canvas.height,
+                    );
+                    canvas.toBlob(
+                      async blob => {
+                        if (blob) {
+                          const blobWithExif = await CopyExif(file, blob);
+                          await onBlobReady?.({
+                            ...callbackArgs,
+                            blob: blobWithExif,
+                          });
+                        }
+                      },
+                      'image/jpeg',
+                      quality,
+                    );
                   }
                 }
               }
             }}
           />
         </label>
-        {statusText &&
+        {filesLength > 0 &&
           <div className="max-w-full truncate text-ellipsis">
-            {statusText}
+            {uploadStatusText}
           </div>}
       </div>
       <canvas
