@@ -8,11 +8,13 @@ export type Camera = {
   model: string
 };
 
-export type Cameras = {
+export type CameraWithCount = {
   cameraKey: string
   camera: Camera
   count: number
-}[];
+}
+
+export type Cameras = CameraWithCount[];
 
 export const createCameraKey = ({ make, model }: Camera) =>
   parameterize(`${make}-${model}`);
@@ -21,6 +23,15 @@ export const createCameraKey = ({ make, model }: Camera) =>
 export const getCameraFromKey = (cameraKey: string): Camera => {
   const [make, model] = cameraKey.toLowerCase().split(/[-| ](.*)/s);
   return { make, model };
+};
+
+export const sortCamerasWithCount = (
+  a: CameraWithCount,
+  b: CameraWithCount,
+) => {
+  const aText = formatCameraText(a.camera);
+  const bText = formatCameraText(b.camera);
+  return aText.localeCompare(bText);
 };
 
 export const cameraFromPhoto = (
@@ -35,7 +46,7 @@ export const cameraFromPhoto = (
 
 export const formatCameraText = (
   { make, model }: Camera,
-  includeMakeApple = true,
+  includeMakeApple?: boolean,
 ) =>
   make === 'Apple' && !includeMakeApple
     ? model

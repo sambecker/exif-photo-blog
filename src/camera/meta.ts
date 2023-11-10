@@ -20,7 +20,7 @@ export const titleForCamera = (
   explicitCount?: number,
 ) => [
   'Shot on',
-  formatCameraText(cameraFromPhoto(photos[0], camera), false),
+  formatCameraText(cameraFromPhoto(photos[0], camera)),
   photoQuantityText(explicitCount ?? photos.length),
 ].join(' ');
 

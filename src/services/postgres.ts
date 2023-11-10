@@ -318,7 +318,7 @@ const sqlGetUniqueTags = async () => sql`
   FROM photos
   WHERE hidden IS NOT TRUE
   GROUP BY tag
-  ORDER BY count DESC
+  ORDER BY tag ASC
 `.then(({ rows }): Tags => rows.map(({ tag, count }) => ({
     tag: tag as string,
     count: parseInt(count, 10),
@@ -328,7 +328,7 @@ const sqlGetUniqueTagsHidden = async () => sql`
   SELECT DISTINCT unnest(tags) as tag, COUNT(*)
   FROM photos
   GROUP BY tag
-  ORDER BY count DESC
+  ORDER BY tag ASC
 `.then(({ rows }): Tags => rows.map(({ tag, count }) => ({
     tag: tag as string,
     count: parseInt(count, 10),
@@ -339,7 +339,7 @@ const sqlGetUniqueCameras = async () => sql`
   FROM photos
   WHERE hidden IS NOT TRUE
   GROUP BY make, model
-  ORDER BY camera DESC
+  ORDER BY camera ASC
 `.then(({ rows }): Cameras => rows.map(({ make, model, count }) => ({
     cameraKey: createCameraKey({ make, model }),
     camera: { make, model },
@@ -351,7 +351,7 @@ const sqlGetUniqueFilmSimulations = async () => sql`
   FROM photos
   WHERE hidden IS NOT TRUE AND film_simulation IS NOT NULL
   GROUP BY film_simulation
-  ORDER BY film_simulation DESC
+  ORDER BY film_simulation ASC
 `.then(({ rows }): FilmSimulations => rows
     .map(({ film_simulation, count }) => ({
       simulation: film_simulation as FilmSimulation,

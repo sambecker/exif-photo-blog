@@ -1,4 +1,4 @@
-import { Cameras } from '@/camera';
+import { Cameras, sortCamerasWithCount } from '@/camera';
 import PhotoCamera from '@/camera/PhotoCamera';
 import HeaderList from '@/components/HeaderList';
 import PhotoTag from '@/tag/PhotoTag';
@@ -42,14 +42,16 @@ export default function PhotoGridSidebar({
           size={13}
           className="text-icon translate-y-[-0.25px]"
         />}
-        items={cameras.map(({ cameraKey, camera, count }) =>
-          <PhotoCamera
-            key={cameraKey}
-            camera={camera}
-            showIcon={false}
-            countOnHover={count}
-            hideApple
-          />)}
+        items={cameras
+          .sort(sortCamerasWithCount)
+          .map(({ cameraKey, camera, count }) =>
+            <PhotoCamera
+              key={cameraKey}
+              camera={camera}
+              showIcon={false}
+              countOnHover={count}
+              hideApple
+            />)}
       />}
       {simulations.length > 0 && <HeaderList
         title="Films"
