@@ -1,4 +1,9 @@
-import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
+import {
+  revalidatePath,
+  revalidateTag,
+  unstable_cache,
+  unstable_noStore,
+} from 'next/cache';
 import {
   GetPhotosOptions,
   getPhoto,
@@ -253,16 +258,21 @@ export const getUniqueFilmSimulationsCached: typeof getUniqueFilmSimulations = (
 export const getBlobUploadUrlsCached: typeof getBlobUploadUrls = (...args) =>
   unstable_cache(
     () => getBlobUploadUrls(...args),
-    [KEY_BLOB], {
-      tags: [KEY_BLOB],
+    [KEY_BLOB, 'uploads'], {
+      tags: [KEY_BLOB, 'uploads'],
     }
   )();
+
+export const getBlobUploadUrlsNoStore: typeof getBlobUploadUrls = (...args) => {
+  unstable_noStore();
+  return getBlobUploadUrls(...args);
+};
 
 export const getBlobPhotoUrlsCached: typeof getBlobPhotoUrls = (...args) =>
   unstable_cache(
     () => getBlobPhotoUrls(...args),
-    [KEY_BLOB], {
-      tags: [KEY_BLOB],
+    [KEY_BLOB, 'photos'], {
+      tags: [KEY_BLOB, 'photos'],
     }
   )();
 

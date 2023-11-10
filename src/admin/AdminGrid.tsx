@@ -13,7 +13,8 @@ export default function AdminGrid ({
       <div className="font-bold">
         {title}
       </div>}
-    <div className="min-w-[14rem] overflow-x-scroll">
+    {/* py-[1px] fixes Safari vertical scroll bug */}
+    <div className="min-w-[14rem] overflow-x-scroll py-[1px]">
       <div className={cc(
         'w-full',
         'grid grid-cols-[auto_1fr_auto] ',

@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { Photo } from '@/photo';
 import { BASE_URL } from './config';
 import {
@@ -31,8 +30,7 @@ const PATH_CAMERA_DYNAMIC = `${PREFIX_CAMERA}/:camera`;
 export const PATH_ADMIN_PHOTOS        = `${PATH_ADMIN}/photos`;
 export const PATH_ADMIN_UPLOADS       = `${PATH_ADMIN}/uploads`;
 export const PATH_ADMIN_TAGS          = `${PATH_ADMIN}/tags`;
-export const PATH_ADMIN_UPLOAD        = `${PATH_ADMIN}/uploads`;
-export const PATH_ADMIN_UPLOAD_BLOB   = `${PATH_ADMIN_UPLOAD}/blob`;
+export const PATH_ADMIN_UPLOAD_BLOB   = `${PATH_ADMIN_UPLOADS}/blob`;
 export const PATH_ADMIN_CONFIGURATION = `${PATH_ADMIN}/configuration`;
 
 // Modifiers
@@ -45,7 +43,6 @@ export const PATHS_ADMIN = [
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_UPLOADS,
   PATH_ADMIN_TAGS,
-  PATH_ADMIN_UPLOAD,
   PATH_ADMIN_UPLOAD_BLOB,
   PATH_ADMIN_CONFIGURATION,
 ];
@@ -166,8 +163,9 @@ export const absolutePathForTagImage = (tag: string) =>
 export const absolutePathForCameraImage= (camera: Camera) =>
   `${absolutePathForCamera(camera)}/image`;
 
-export const absolutePathForFilmSimulationImage = (simulation: FilmSimulation) =>
-  `${absolutePathForFilmSimulation(simulation)}/image`;
+export const absolutePathForFilmSimulationImage =
+  (simulation: FilmSimulation) =>
+    `${absolutePathForFilmSimulation(simulation)}/image`;
 
 // p/[photoId]
 export const isPathPhoto = (pathname = '') =>

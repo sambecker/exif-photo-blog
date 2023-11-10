@@ -2,18 +2,20 @@
 
 import { HTMLProps } from 'react';
 import { useFormStatus } from 'react-dom';
-import Spinner from './Spinner';
+import Spinner, { SpinnerColor } from './Spinner';
 import { cc } from '@/utility/css';
 
 interface Props extends HTMLProps<HTMLButtonElement> {
   icon?: JSX.Element
   styleAsLink?: boolean
+  spinnerColor?: SpinnerColor
 }
 
 export default function SubmitButtonWithStatus(props: Props) {
   const {
     icon,
     styleAsLink,
+    spinnerColor,
     children,
     disabled,
     className,
@@ -43,7 +45,7 @@ export default function SubmitButtonWithStatus(props: Props) {
           'translate-y-[1px]',
         )}>
           {pending
-            ? <Spinner size={14} />
+            ? <Spinner size={14} color={spinnerColor} />
             : icon}
         </span>}
       {children && <span className={cc(
