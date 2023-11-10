@@ -16,7 +16,7 @@ Features
 - Built-in auth
 - Light/dark mode
 - Automatic OG image generation
-- Support for Fujifilm film simulations
+- Support for Fujifilm simulations
 
 <img src="/readme/og-image-share.png" alt="OG Image Preview" width=600 />
 
@@ -75,3 +75,6 @@ A: Navigate to `/admin/configuration` and click "Clear Cache" button.
 
 Q: I'm seeing server-side runtime errors when loading a page after updating my fork. What do I do?<br />
 A: Navigate to `/admin/configuration` and click "Clear Cache" button. If this doesn't help, [open an issue](https://github.com/sambecker/exif-photo-blog/issues/new).
+
+Q: Why aren't my Fujifilm simulations importing alongside EXIF data?<br />
+A: Fujifilm simulation data is stored in vendor-specific Makernote binaries embedded in EXIF data. Under certain circumstances an intermediary may strip out this data for a variety of reasons. For instance, there is a known issue on iOS where editing an image, e.g., cropping it, causes Makernote data loss. If your simulation data appears to be missing, try importing the original file as it was stored by the camera. Additionally, if you can confirm the simulation mode on camera, you can then edit the photo record and manually select it.
