@@ -8,6 +8,8 @@ import ThemeProviderClient from '@/site/ThemeProviderClient';
 import Nav from '@/site/Nav';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
 import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
+import { Suspense } from 'react';
+import PageSpinner from '@/components/PageSpinner';
 
 import '../site/globals.css';
 
@@ -74,7 +76,9 @@ export default function RootLayout({
           )}>
             <Nav />
             <StateProvider>
-              {children}
+              <Suspense fallback={<PageSpinner />}>
+                {children}
+              </Suspense>
             </StateProvider>
             <Analytics />
           </main>
