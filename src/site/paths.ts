@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { Photo } from '@/photo';
 import { BASE_URL } from './config';
 import {
@@ -164,8 +163,9 @@ export const absolutePathForTagImage = (tag: string) =>
 export const absolutePathForCameraImage= (camera: Camera) =>
   `${absolutePathForCamera(camera)}/image`;
 
-export const absolutePathForFilmSimulationImage = (simulation: FilmSimulation) =>
-  `${absolutePathForFilmSimulation(simulation)}/image`;
+export const absolutePathForFilmSimulationImage =
+  (simulation: FilmSimulation) =>
+    `${absolutePathForFilmSimulation(simulation)}/image`;
 
 // p/[photoId]
 export const isPathPhoto = (pathname = '') =>
