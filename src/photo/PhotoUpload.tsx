@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { uploadPhotoFromClient } from '@/services/blob';
 import { useRouter } from 'next/navigation';
-import { pathForAdminUploadUrl } from '@/site/paths';
+import { PATH_ADMIN_UPLOADS, pathForAdminUploadUrl } from '@/site/paths';
 import ImageInput from '../components/ImageInput';
 import { MAX_IMAGE_SIZE } from '@/utility/image';
 import { cc } from '@/utility/css';
@@ -38,7 +38,12 @@ export default function PhotoUpload({
               setIsUploading(true);
               setUploadError('');
             }}
-            onBlobReady={(blob, extension) => {
+            onBlobReady={async ({
+              blob,
+              extension, 
+              hasMultipleUploads,
+              isLastBlob,
+            }) => {
               if (debug) {
                 setDebugDownload({
                   href: URL.createObjectURL(blob),
@@ -47,16 +52,23 @@ export default function PhotoUpload({
                 setIsUploading(false);
                 setUploadError('');
               } else {
-                uploadPhotoFromClient(
+                return uploadPhotoFromClient(
                   blob,
                   extension,
                 )
                   .then(({ url }) => {
-                    // Refresh page to update upload list,
-                    // relevant only when a photo isn't added
-                    router.refresh();
-                    // Redirect to photo detail page
-                    router.push(pathForAdminUploadUrl(url));
+                    if (isLastBlob) {
+                      // Refresh page to update upload list,
+                      // relevant to upload count in nav
+                      router.refresh();
+                      if (hasMultipleUploads) {
+                        // Redirect to view multiple uploads
+                        router.push(PATH_ADMIN_UPLOADS);
+                      } else {
+                        // Redirect to photo detail page
+                        router.push(pathForAdminUploadUrl(url));
+                      }
+                    }
                   })
                   .catch(error => {
                     setIsUploading(false);

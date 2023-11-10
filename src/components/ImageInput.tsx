@@ -19,7 +19,12 @@ export default function ImageInput({
   debug,
 }: {
   onStart?: () => void
-  onBlobReady?: (blob: Blob, extension?: string) => void
+  onBlobReady?: (args: {
+    blob: Blob,
+    extension?: string,
+    hasMultipleUploads?: boolean,
+    isLastBlob?: boolean,
+  }) => Promise<any>
   maxSize?: number
   quality?: number
   loading?: boolean
@@ -27,7 +32,7 @@ export default function ImageInput({
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
-  const [fileName, setFileName] = useState<string>();
+  const [statusText, setStatusText] = useState<string>();
   const [image, setImage] = useState<HTMLImageElement>();
 
   return (
@@ -63,62 +68,84 @@ export default function ImageInput({
             className="!hidden"
             accept={ACCEPTED_PHOTO_FILE_TYPES.join(',')}
             disabled={loading}
+            multiple
             onChange={async e => {
               onStart?.();
-              const file = e.currentTarget.files?.[0];
-              setFileName(file?.name);
-              const extension = file?.name.split('.').pop()?.toLowerCase();
-              const canvas = ref.current;
-              if (file) {
-                if (!(maxSize && canvas)) {
-                  // No need to process
-                  onBlobReady?.(file);
-                } else {
-                  // Process images that need resizing
-                  const image = await blobToImage(file);
-                  setImage(image);
-                  const { naturalWidth, naturalHeight } = image;
-                  const ratio = naturalWidth / naturalHeight;
-
-                  const width =
-                    Math.round(ratio >= 1 ? maxSize : maxSize * ratio);
-                  const height =
-                    Math.round(ratio >= 1 ? maxSize / ratio : maxSize);
-
-                  canvas.width = width;
-                  canvas.height = height;
-                  
-                  // Specify wide gamut to avoid data loss while resizing
-                  const ctx = canvas.getContext(
-                    '2d',
-                    { colorSpace: 'display-p3' },
-                  );
-
-                  ctx?.drawImage(
-                    image,
-                    0,
-                    0,
-                    canvas.width,
-                    canvas.height,
-                  );
-                  canvas.toBlob(
-                    async blob => {
-                      if (blob) {
-                        const blobWithExif = await CopyExif(file, blob);
-                        onBlobReady?.(blobWithExif, extension);
-                      }
-                    },
-                    'image/jpeg',
-                    quality,
-                  );
+              const { files } = e.currentTarget;
+              if (files && files.length > 0) {
+                for (let i = 0; i < files?.length; i++) {
+                  const file = files[i];
+                  if (file) {
+                    const callbackArgs = {
+                      extension: file.name.split('.').pop()?.toLowerCase(),
+                      hasMultipleUploads: files.length > 1,
+                      isLastBlob: i === files.length - 1,
+                    };
+                    if (files.length > 1) {
+                      setStatusText(
+                        `Uploading ${i + 1} of ${files.length}: ${file.name}`
+                      );
+                    } else {
+                      setStatusText(`Uploading ${file.name}`);
+                    }
+                    const canvas = ref.current;
+                    if (!(maxSize && canvas)) {
+                      // No need to process
+                      await onBlobReady?.({
+                        ...callbackArgs,
+                        blob: file,
+                      });
+                    } else {
+                      // Process images that need resizing
+                      const image = await blobToImage(file);
+                      setImage(image);
+                      const { naturalWidth, naturalHeight } = image;
+                      const ratio = naturalWidth / naturalHeight;
+    
+                      const width =
+                        Math.round(ratio >= 1 ? maxSize : maxSize * ratio);
+                      const height =
+                        Math.round(ratio >= 1 ? maxSize / ratio : maxSize);
+    
+                      canvas.width = width;
+                      canvas.height = height;
+                      
+                      // Specify wide gamut to avoid data loss while resizing
+                      const ctx = canvas.getContext(
+                        '2d',
+                        { colorSpace: 'display-p3' },
+                      );
+    
+                      ctx?.drawImage(
+                        image,
+                        0,
+                        0,
+                        canvas.width,
+                        canvas.height,
+                      );
+                      canvas.toBlob(
+                        async blob => {
+                          if (blob) {
+                            const blobWithExif = await CopyExif(file, blob);
+                            await onBlobReady?.({
+                              ...callbackArgs,
+                              blob: blobWithExif,
+                            });
+                          }
+                        },
+                        'image/jpeg',
+                        quality,
+                      );
+                    }
+                  }
                 }
               }
             }}
           />
         </label>
-        {fileName &&
+        {statusText &&
           <div className="max-w-full truncate text-ellipsis">
-            {fileName}
+            {statusText}
           </div>}
       </div>
       <canvas

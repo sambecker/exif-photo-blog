@@ -31,8 +31,7 @@ const PATH_CAMERA_DYNAMIC = `${PREFIX_CAMERA}/:camera`;
 export const PATH_ADMIN_PHOTOS        = `${PATH_ADMIN}/photos`;
 export const PATH_ADMIN_UPLOADS       = `${PATH_ADMIN}/uploads`;
 export const PATH_ADMIN_TAGS          = `${PATH_ADMIN}/tags`;
-export const PATH_ADMIN_UPLOAD        = `${PATH_ADMIN}/uploads`;
-export const PATH_ADMIN_UPLOAD_BLOB   = `${PATH_ADMIN_UPLOAD}/blob`;
+export const PATH_ADMIN_UPLOAD_BLOB   = `${PATH_ADMIN_UPLOADS}/blob`;
 export const PATH_ADMIN_CONFIGURATION = `${PATH_ADMIN}/configuration`;
 
 // Modifiers
@@ -45,7 +44,6 @@ export const PATHS_ADMIN = [
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_UPLOADS,
   PATH_ADMIN_TAGS,
-  PATH_ADMIN_UPLOAD,
   PATH_ADMIN_UPLOAD_BLOB,
   PATH_ADMIN_CONFIGURATION,
 ];
