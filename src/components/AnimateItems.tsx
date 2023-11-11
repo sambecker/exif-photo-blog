@@ -3,6 +3,7 @@
 import { ReactNode, useRef } from 'react';
 import { Variant, motion } from 'framer-motion';
 import { useAppState } from '@/state';
+import usePrefersReducedMotion from '@/utility/usePrefersReducedMotion';
 
 export type AnimationType = 'none' | 'scale' | 'left' | 'right' | 'bottom';
 
@@ -41,11 +42,14 @@ function AnimateItems({
     nextPhotoAnimation,
     clearNextPhotoAnimation,
   } = useAppState();
+
+  const prefersReducedMotion = usePrefersReducedMotion();
   
   const hasLoadedInitial = useRef(hasLoaded);
   const nextPhotoAnimationInitial = useRef(nextPhotoAnimation);
 
   const shouldAnimate = type !== 'none' &&
+    !prefersReducedMotion &&
     !(animateOnFirstLoadOnly && hasLoadedInitial.current);
   const shouldStagger =
     !(staggerOnFirstLoadOnly && hasLoadedInitial.current);
