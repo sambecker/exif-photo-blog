@@ -276,6 +276,11 @@ export const getBlobPhotoUrlsCached: typeof getBlobPhotoUrls = (...args) =>
     }
   )();
 
+export const getBlobPhotoUrlsNoStore: typeof getBlobPhotoUrls = (...args) => {
+  unstable_noStore();
+  return getBlobPhotoUrls(...args);
+};
+
 export const getImageCacheHeadersForAuth = (session: Session | null) => {
   return {
     'Cache-Control': !session?.user

@@ -14,7 +14,7 @@ import {
 import { titleForPhoto } from '@/photo';
 import MorePhotos from '@/photo/MorePhotos';
 import {
-  getBlobPhotoUrlsCached,
+  getBlobPhotoUrlsNoStore,
   getPhotosCached,
   getPhotosCountIncludingHiddenCached,
 } from '@/cache';
@@ -45,7 +45,7 @@ export default async function AdminTagsPage({
   ] = await Promise.all([
     getPhotosCached({ includeHidden: true, sortBy: 'createdAt', limit }),
     getPhotosCountIncludingHiddenCached(),
-    DEBUG_PHOTO_BLOBS ? getBlobPhotoUrlsCached() : [],
+    DEBUG_PHOTO_BLOBS ? getBlobPhotoUrlsNoStore() : [],
   ]);
 
   const showMorePhotos = count > photos.length;
