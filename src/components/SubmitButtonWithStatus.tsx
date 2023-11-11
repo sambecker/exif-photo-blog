@@ -1,29 +1,43 @@
 'use client';
 
-import { HTMLProps } from 'react';
+import { HTMLProps, useEffect, useRef } from 'react';
 import { useFormStatus } from 'react-dom';
 import Spinner, { SpinnerColor } from './Spinner';
 import { cc } from '@/utility/css';
+import { toastSuccess } from '@/toast';
 
 interface Props extends HTMLProps<HTMLButtonElement> {
   icon?: JSX.Element
   styleAsLink?: boolean
   spinnerColor?: SpinnerColor
+  onFormSubmitToastMessage?: string
 }
 
-export default function SubmitButtonWithStatus(props: Props) {
-  const {
-    icon,
-    styleAsLink,
-    spinnerColor,
-    children,
-    disabled,
-    className,
-    type: _type,
-    ...buttonProps
-  } = props;
+export default function SubmitButtonWithStatus({
+  icon,
+  styleAsLink,
+  spinnerColor,
+  onFormSubmitToastMessage,
+  children,
+  disabled,
+  className,
+  type: _type,
+  ...buttonProps
+}: Props) {
 
   const { pending } = useFormStatus();
+  const pendingPrevious = useRef(pending);
+
+  useEffect(() => {
+    if (
+      pendingPrevious.current &&
+      !pending &&
+      onFormSubmitToastMessage
+    ) {
+      toastSuccess(onFormSubmitToastMessage);
+    }
+    pendingPrevious.current = pending;
+  }, [pending, onFormSubmitToastMessage]);
 
   return (
     <button

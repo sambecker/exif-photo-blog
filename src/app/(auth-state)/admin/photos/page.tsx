@@ -125,6 +125,9 @@ export default async function AdminTagsPage({
                       <input type="hidden" name="id" value={photo.id} />
                       <SubmitButtonWithStatus
                         icon={<IconGrSync className="translate-y-[-0.5px]" />}
+                        onFormSubmitToastMessage={`
+                          "${titleForPhoto(photo)}" EXIF data synced
+                        `}
                       />
                     </FormWithConfirm>
                     <FormWithConfirm
