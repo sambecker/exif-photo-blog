@@ -7,6 +7,7 @@ import useClickInsideOutside from '@/utility/useClickInsideOutside';
 import { useRouter } from 'next/navigation';
 import AnimateItems from './AnimateItems';
 import { PATH_ROOT } from '@/site/paths';
+import usePrefersReducedMotion from '@/utility/usePrefersReducedMotion';
 
 export default function Modal({
   onClosePath,
@@ -16,6 +17,8 @@ export default function Modal({
   children: ReactNode
 }) {
   const router = useRouter();
+
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -41,7 +44,9 @@ export default function Modal({
         'fixed inset-0 z-50 flex items-center justify-center',
         'bg-black',
       )}
-      initial={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}
+      initial={!prefersReducedMotion
+        ? { backgroundColor: 'rgba(0, 0, 0, 0)' }
+        : false}
       animate={{ backgroundColor: 'rgba(0, 0, 0, 0.80)' }}
       transition={{ duration: 0.3, easing: 'easeOut' }}
     >
