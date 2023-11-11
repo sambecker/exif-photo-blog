@@ -223,16 +223,6 @@ export default function SiteChecklistClient({
           {renderEnvVars(['NEXT_PUBLIC_PUBLIC_API'])}
         </ChecklistRow>
         <ChecklistRow
-          title="Legacy OG Text Alignment"
-          status={isOgTextBottomAligned}
-          isPending={isPendingPage}
-          optional
-        >
-          Set environment variable to {'"BOTTOM"'} to
-          keep OG image text bottom aligned (default is top):
-          {renderEnvVars(['NEXT_PUBLIC_OG_TEXT_ALIGNMENT'])}
-        </ChecklistRow>
-        <ChecklistRow
           title="Show Repo Link"
           status={showRepoLink}
           isPending={isPendingPage}
@@ -250,6 +240,16 @@ export default function SiteChecklistClient({
           Set environment variable to {'"1"'} to prevent
           simulations showing up in <code>/grid</code> sidebar:
           {renderEnvVars(['NEXT_PUBLIC_HIDE_FILM_SIMULATIONS'])}
+        </ChecklistRow>
+        <ChecklistRow
+          title="Legacy OG Text Alignment"
+          status={isOgTextBottomAligned}
+          isPending={isPendingPage}
+          optional
+        >
+          Set environment variable to {'"BOTTOM"'} to
+          keep OG image text bottom aligned (default is top):
+          {renderEnvVars(['NEXT_PUBLIC_OG_TEXT_ALIGNMENT'])}
         </ChecklistRow>
       </Checklist>
       {showRefreshButton &&

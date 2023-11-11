@@ -30,11 +30,11 @@ export const BASE_URL = process.env.NODE_ENV === 'production'
 
 export const PRO_MODE_ENABLED = process.env.NEXT_PUBLIC_PRO_MODE === '1';
 export const PUBLIC_API_ENABLED = process.env.NEXT_PUBLIC_PUBLIC_API === '1';
-export const OG_TEXT_BOTTOM_ALIGNMENT =
-  (process.env.NEXT_PUBLIC_OG_TEXT_ALIGNMENT ?? '').toUpperCase() === 'BOTTOM';
 export const SHOW_REPO_LINK = process.env.NEXT_PUBLIC_HIDE_REPO_LINK !== '1';
 export const SHOW_FILM_SIMULATIONS =
   process.env.NEXT_PUBLIC_HIDE_FILM_SIMULATIONS !== '1';
+export const OG_TEXT_BOTTOM_ALIGNMENT =
+  (process.env.NEXT_PUBLIC_OG_TEXT_ALIGNMENT ?? '').toUpperCase() === 'BOTTOM';
 
 export const CONFIG_CHECKLIST_STATUS = {
   hasPostgres: (process.env.POSTGRES_HOST ?? '').length > 0,
