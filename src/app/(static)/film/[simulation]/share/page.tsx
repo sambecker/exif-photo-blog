@@ -9,9 +9,7 @@ import {
 import { PaginationParams } from '@/site/pagination';
 import { Metadata } from 'next';
 
-export const runtime = 'edge';
-
-interface FilmSimulationProps {
+export interface FilmSimulationProps {
   params: { simulation: FilmSimulation }
 }
 

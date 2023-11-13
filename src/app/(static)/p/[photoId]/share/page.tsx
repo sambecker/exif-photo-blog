@@ -3,8 +3,6 @@ import PhotoShareModal from '@/photo/PhotoShareModal';
 import { PATH_ROOT } from '@/site/paths';
 import { redirect } from 'next/navigation';
 
-export const runtime = 'edge';
-
 export default async function Share({
   params: { photoId },
 }: {
