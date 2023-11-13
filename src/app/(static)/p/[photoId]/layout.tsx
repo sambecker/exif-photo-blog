@@ -12,14 +12,6 @@ import {
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotoCached, getPhotosCached } from '@/cache';
-import { getPhotos } from '@/services/postgres';
-
-export async function generateStaticParams() {
-  const photos = await getPhotos();
-  return photos.map(photo => ({
-    params: { photoId: photo.id },
-  }));
-}
 
 export async function generateMetadata({
   params: { photoId },

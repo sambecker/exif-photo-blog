@@ -11,26 +11,11 @@ import {
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotoCached } from '@/cache';
-import { getPhotos, getUniqueTags } from '@/services/postgres';
 import { getPhotosTagDataCached } from '@/tag/data';
 import { ReactNode } from 'react';
 
 interface PhotoTagProps {
   params: { photoId: string, tag: string }
-}
-
-export async function generateStaticParams() {
-  const params: PhotoTagProps[] = [];
-
-  const tags = await getUniqueTags();
-  tags.forEach(async ({ tag }) => {
-    const photos = await getPhotos({ tag });
-    params.push(...photos.map(photo => ({
-      params: { photoId: photo.id, tag },
-    })));
-  });
-
-  return params;
 }
 
 export async function generateMetadata({
