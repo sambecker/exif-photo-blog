@@ -18,8 +18,8 @@ import {
 } from '@/site/pagination';
 import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
 import { SHOW_FILM_SIMULATIONS } from '@/site/config';
-
-export const runtime = 'edge';
+import { Suspense } from 'react';
+import PageSpinner from '@/components/PageSpinner';
 
 export async function generateMetadata(): Promise<Metadata> {
   const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG });
@@ -48,14 +48,21 @@ export default async function GridPage({ searchParams }: PaginationParams) {
     : undefined;
   
   return (
-    photos.length > 0
-      ? <SiteGrid
-        contentMain={<PhotoGrid {...{ photos, showMorePath }} />}
-        contentSide={<div className="sticky top-4 space-y-4">
-          <PhotoGridSidebar {...{ tags, cameras, simulations, photosCount }} />
-        </div>}
-        sideHiddenOnMobile
-      />
-      : <PhotosEmptyState />
+    <Suspense fallback={<PageSpinner />}>
+      {photos.length > 0
+        ? <SiteGrid
+          contentMain={<PhotoGrid {...{ photos, showMorePath }} />}
+          contentSide={<div className="sticky top-4 space-y-4">
+            <PhotoGridSidebar {...{
+              tags,
+              cameras,
+              simulations,
+              photosCount,
+            }} />
+          </div>}
+          sideHiddenOnMobile
+        />
+        : <PhotosEmptyState />}
+    </Suspense>
   );
 }

@@ -6,6 +6,7 @@ import {
   getUniqueTagsCached,
 } from '@/cache';
 import InfoBlock from '@/components/InfoBlock';
+import PageSpinner from '@/components/PageSpinner';
 import RedirectOnDesktop from '@/components/RedirectOnDesktop';
 import SiteGrid from '@/components/SiteGrid';
 import { generateOgImageMetaForPhotos } from '@/photo';
@@ -14,8 +15,7 @@ import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
 import { SHOW_FILM_SIMULATIONS } from '@/site/config';
 import { PATH_GRID } from '@/site/paths';
 import { Metadata } from 'next';
-
-export const runtime = 'edge';
+import { Suspense } from 'react';
 
 export async function generateMetadata(): Promise<Metadata> {
   const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG });
@@ -36,21 +36,23 @@ export default async function SetsPage() {
   ]);
 
   return (
-    <SiteGrid
-      contentMain={<InfoBlock
-        padding="tight"
-        centered={false}
-      >
-        <RedirectOnDesktop redirectPath={PATH_GRID} />
-        <div className="text-base space-y-4 p-2">
-          <PhotoGridSidebar {...{
-            tags,
-            cameras,
-            simulations,
-            photosCount,
-          }} />
-        </div>
-      </InfoBlock>}
-    />
+    <Suspense fallback={<PageSpinner />}>
+      <SiteGrid
+        contentMain={<InfoBlock
+          padding="tight"
+          centered={false}
+        >
+          <RedirectOnDesktop redirectPath={PATH_GRID} />
+          <div className="text-base space-y-4 p-2">
+            <PhotoGridSidebar {...{
+              tags,
+              cameras,
+              simulations,
+              photosCount,
+            }} />
+          </div>
+        </InfoBlock>}
+      />
+    </Suspense>
   );
 }

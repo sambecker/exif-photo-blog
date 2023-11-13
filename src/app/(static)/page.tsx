@@ -12,8 +12,8 @@ import {
 import { pathForRoot } from '@/site/paths';
 import { Metadata } from 'next';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
-
-export const runtime = 'edge';
+import { Suspense } from 'react';
+import PageSpinner from '@/components/PageSpinner';
 
 export async function generateMetadata(): Promise<Metadata> {
   const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG });
@@ -34,26 +34,28 @@ export default async function HomePage({ searchParams }: PaginationParams) {
   const showMorePhotos = count > photos.length;
 
   return (
-    photos.length > 0
-      ? <div className="space-y-4">
-        <AnimateItems
-          className="space-y-1"
-          duration={0.7}
-          staggerDelay={0.15}
-          distanceOffset={0}
-          staggerOnFirstLoadOnly
-          items={photos.map((photo, index) =>
-            <PhotoLarge
-              key={photo.id}
-              photo={photo}
-              priority={index <= 1}
-            />)}
-        />
-        {showMorePhotos &&
-          <SiteGrid
-            contentMain={<MorePhotos path={pathForRoot(offset + 1)} />}
-          />}
-      </div>
-      : <PhotosEmptyState />
+    <Suspense fallback={<PageSpinner />}>
+      {photos.length > 0
+        ? <div className="space-y-4">
+          <AnimateItems
+            className="space-y-1"
+            duration={0.7}
+            staggerDelay={0.15}
+            distanceOffset={0}
+            staggerOnFirstLoadOnly
+            items={photos.map((photo, index) =>
+              <PhotoLarge
+                key={photo.id}
+                photo={photo}
+                priority={index <= 1}
+              />)}
+          />
+          {showMorePhotos &&
+            <SiteGrid
+              contentMain={<MorePhotos path={pathForRoot(offset + 1)} />}
+            />}
+        </div>
+        : <PhotosEmptyState />}
+    </Suspense>
   );
 }
