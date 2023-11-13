@@ -30,7 +30,7 @@ export default function IconButton({
           className={cc(
             'inline-flex items-center justify-center',
             'p-0 border-none shadow-none',
-            'active:bg-transparent bg-transparent',
+            'active:bg-transparent bg-transparent dark:bg-transparent',
             'translate-x-[-1px]',
             onClick !== undefined && 'cursor-pointer',
             'active:opacity-50',

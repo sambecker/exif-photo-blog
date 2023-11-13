@@ -28,8 +28,6 @@ export default function PhotoEditPageClient({
     seedExifData,
   );
 
-  console.log({ hasExifDataBeenFound });
-
   return (
     <AdminChildPage
       backPath={PATH_ADMIN_PHOTOS}

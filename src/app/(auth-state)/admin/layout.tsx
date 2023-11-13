@@ -1,6 +1,6 @@
 import AdminNav from '@/admin/AdminNav';
 import {
-  getBlobUploadUrlsCached,
+  getBlobUploadUrlsNoStore,
   getPhotosCountIncludingHiddenCached,
   getUniqueTagsCached,
 } from '@/cache';
@@ -21,7 +21,7 @@ export default async function AdminLayout({
     countTags,
   ] = await Promise.all([
     getPhotosCountIncludingHiddenCached(),
-    getBlobUploadUrlsCached().then(urls => urls.length),
+    getBlobUploadUrlsNoStore().then(urls => urls.length),
     getUniqueTagsCached().then(tags => tags.length),
   ]);
 
