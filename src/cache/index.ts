@@ -143,13 +143,11 @@ export const getPhotosCached: typeof getPhotos = (...args) =>
     }
   )().then(parseCachedPhotosDates);
 
-export const getPhotosCountCached: typeof getPhotosCount = (...args) =>
+export const getPhotosCountCached =
   unstable_cache(
-    () => getPhotosCount(...args),
-    [KEY_PHOTOS, KEY_PHOTOS_COUNT], {
-      tags: [KEY_PHOTOS, KEY_PHOTOS_COUNT],
-    }
-  )();
+    (...args: Parameters<typeof getPhotosCount>) => getPhotosCount(...args),
+    [KEY_PHOTOS, KEY_PHOTOS_COUNT],
+  );
 
 export const getPhotosCountIncludingHiddenCached: typeof getPhotosCount =
   (...args) =>
