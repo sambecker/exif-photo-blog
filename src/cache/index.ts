@@ -28,15 +28,16 @@ import { Camera, createCameraKey } from '@/camera';
 import { PATHS_ADMIN, PATHS_TO_CACHE } from '@/site/paths';
 import { FilmSimulation } from '@/simulation';
 
+// Table key
 const KEY_PHOTOS            = 'photos';
-const KEY_PHOTOS_COUNT      = `${KEY_PHOTOS}-count`;
-const KEY_PHOTOS_DATE_RANGE = `${KEY_PHOTOS}-date-range`;
+// Field keys
 const KEY_TAGS              = 'tags';
 const KEY_CAMERAS           = 'cameras';
 const KEY_FILM_SIMULATIONS  = 'film-simulations';
-const KEY_BLOB              = 'blob';
+// Type keys
+const KEY_COUNT             = 'count';
+const KEY_DATE_RANGE        = 'date-range';
 
-// eslint-disable-next-line max-len
 const getPhotosCacheKeyForOption = (
   options: GetPhotosOptions,
   option: keyof GetPhotosOptions,
@@ -81,23 +82,20 @@ const getPhotosCacheKeys = (options: GetPhotosOptions = {}) => {
 
 const getPhotoCacheKey = (photoId: string) => `photo-${photoId}`;
 
-const getPhotoTagCountKey = (tag: string) =>
-  `${KEY_PHOTOS_COUNT}-${KEY_TAGS}-${tag}`;
-
 const getPhotoCameraCountKey = (camera: Camera) =>
-  `${KEY_PHOTOS_COUNT}-${KEY_CAMERAS}-${createCameraKey(camera)}`;
+  `${KEY_COUNT}-${KEY_CAMERAS}-${createCameraKey(camera)}`;
 
 const getPhotoFilmSimulationCountKey = (simulation: FilmSimulation) =>
-  `${KEY_PHOTOS_COUNT}-${KEY_FILM_SIMULATIONS}-${simulation}`;
+  `${KEY_COUNT}-${KEY_FILM_SIMULATIONS}-${simulation}`;
 
 const getPhotoTagDateRangeKey = (tag: string) =>
-  `${KEY_PHOTOS_DATE_RANGE}-${KEY_TAGS}-${tag}`;
+  `${KEY_DATE_RANGE}-${KEY_TAGS}-${tag}`;
 
 const getPhotoCameraDateRangeKey = (camera: Camera) =>
-  `${KEY_PHOTOS_DATE_RANGE}-${KEY_CAMERAS}-${createCameraKey(camera)}`;
+  `${KEY_DATE_RANGE}-${KEY_CAMERAS}-${createCameraKey(camera)}`;
 
 const getPhotoFilmSimulationDateRangeKey = (simulation: FilmSimulation) =>
-  `${KEY_PHOTOS_DATE_RANGE}-${KEY_FILM_SIMULATIONS}-${simulation}`;
+  `${KEY_DATE_RANGE}-${KEY_FILM_SIMULATIONS}-${simulation}`;
 
 export const revalidatePhotosKey = () =>
   revalidateTag(KEY_PHOTOS);
@@ -111,16 +109,8 @@ export const revalidateCamerasKey = () =>
 export const revalidateFilmSimulationsKey = () =>
   revalidateTag(KEY_FILM_SIMULATIONS);
 
-export const revalidateBlobKey = () =>
-  revalidateTag(KEY_BLOB);
-
-export const revalidatePhotosAndBlobKeys = () => {
-  revalidatePhotosKey();
-  revalidateBlobKey();
-};
-
 export const revalidateAllKeys = () => {
-  revalidatePhotosAndBlobKeys();
+  revalidatePhotosKey();
   revalidateTagsKey();
   revalidateCamerasKey();
   revalidateFilmSimulationsKey();
@@ -135,36 +125,37 @@ export const revalidateAdminPaths = () => {
   PATHS_ADMIN.forEach(path => revalidatePath(path));
 };
 
+// TODO: Test behavior
+// Consider a wrapper function where this is executed at runtime
+// and then parsed for dates
 export const getPhotosCached: typeof getPhotos = (...args) =>
   unstable_cache(
-    () => getPhotos(...args),
+    getPhotos,
     [KEY_PHOTOS, ...getPhotosCacheKeys(...args)], {
       tags: [KEY_PHOTOS, ...getPhotosCacheKeys(...args)],
     }
-  )().then(parseCachedPhotosDates);
+  )(...args).then(parseCachedPhotosDates);
 
 export const getPhotosCountCached =
   unstable_cache(
-    (...args: Parameters<typeof getPhotosCount>) => getPhotosCount(...args),
-    [KEY_PHOTOS, KEY_PHOTOS_COUNT],
+    getPhotosCount,
+    [KEY_PHOTOS, KEY_COUNT],
   );
 
 export const getPhotosCountIncludingHiddenCached: typeof getPhotosCount =
   (...args) =>
     unstable_cache(
       () => getPhotosCountIncludingHidden(...args),
-      [KEY_PHOTOS, KEY_PHOTOS_COUNT], {
-        tags: [KEY_PHOTOS, KEY_PHOTOS_COUNT],
+      [KEY_PHOTOS, KEY_COUNT], {
+        tags: [KEY_PHOTOS, KEY_COUNT],
       }
     )();
 
-export const getPhotosTagCountCached: typeof getPhotosTagCount = (...args) =>
+export const getPhotosTagCountCached =
   unstable_cache(
-    () => getPhotosTagCount(...args),
-    [KEY_PHOTOS, getPhotoTagCountKey(...args)], {
-      tags: [KEY_PHOTOS, getPhotoTagCountKey(...args)],
-    }
-  )();
+    getPhotosTagCount,
+    [KEY_PHOTOS, KEY_TAGS],
+  );
 
 // eslint-disable-next-line max-len
 export const getPhotosCameraCountCached: typeof getPhotosCameraCount = (...args) =>
@@ -253,26 +244,10 @@ export const getUniqueFilmSimulationsCached: typeof getUniqueFilmSimulations = (
     }
   )();
 
-export const getBlobUploadUrlsCached: typeof getBlobUploadUrls = (...args) =>
-  unstable_cache(
-    () => getBlobUploadUrls(...args),
-    [KEY_BLOB, 'uploads'], {
-      tags: [KEY_BLOB, 'uploads'],
-    }
-  )();
-
 export const getBlobUploadUrlsNoStore: typeof getBlobUploadUrls = (...args) => {
   unstable_noStore();
   return getBlobUploadUrls(...args);
 };
-
-export const getBlobPhotoUrlsCached: typeof getBlobPhotoUrls = (...args) =>
-  unstable_cache(
-    () => getBlobPhotoUrls(...args),
-    [KEY_BLOB, 'photos'], {
-      tags: [KEY_BLOB, 'photos'],
-    }
-  )();
 
 export const getBlobPhotoUrlsNoStore: typeof getBlobPhotoUrls = (...args) => {
   unstable_noStore();
