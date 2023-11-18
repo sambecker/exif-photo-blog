@@ -19,8 +19,6 @@ import {
 import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
 import { SHOW_FILM_SIMULATIONS } from '@/site/config';
 
-export const runtime = 'edge';
-
 export async function generateMetadata(): Promise<Metadata> {
   const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG });
   return generateOgImageMetaForPhotos(photos);

@@ -15,8 +15,6 @@ import { SHOW_FILM_SIMULATIONS } from '@/site/config';
 import { PATH_GRID } from '@/site/paths';
 import { Metadata } from 'next';
 
-export const runtime = 'edge';
-
 export async function generateMetadata(): Promise<Metadata> {
   const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG });
   return generateOgImageMetaForPhotos(photos);

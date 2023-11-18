@@ -5,8 +5,6 @@ import { syncCacheAction } from '@/photo/actions';
 import SiteChecklist from '@/site/SiteChecklist';
 import { BiTrash } from 'react-icons/bi';
 
-export const runtime = 'edge';
-
 export default async function AdminConfigurationPage() {
   return (
     <SiteGrid

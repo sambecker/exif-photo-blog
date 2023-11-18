@@ -9,8 +9,6 @@ import {
 } from '@/tag/data';
 import { Metadata } from 'next';
 
-export const runtime = 'edge';
-
 interface TagProps {
   params: { tag: string }
 }

@@ -9,8 +9,6 @@ import PhotoLightbox from '@/photo/PhotoLightbox';
 
 const MAX_PHOTO_TO_SHOW = 6;
 
-export const runtime = 'edge';
-
 interface Props {
   params: { tag: string }
 }
