@@ -56,8 +56,7 @@ export async function deletePhotoAction(formData: FormData) {
     sqlDeletePhoto(formData.get('id') as string),
   ]);
 
-  revalidatePhotosKey();
-  revalidateAdminPaths();
+  revalidateAllKeysAndPaths();
 };
 
 export async function deletePhotoTagGloballyAction(formData: FormData) {

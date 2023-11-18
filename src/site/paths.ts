@@ -22,9 +22,10 @@ export const PREFIX_CAMERA          = '/shot-on';
 export const PREFIX_FILM_SIMULATION = '/film';
 
 // Dynamic paths
-const PATH_PHOTO_DYNAMIC  = `${PREFIX_PHOTO}/:photoId`;
-const PATH_TAG_DYNAMIC    = `${PREFIX_TAG}/:tag`;
-const PATH_CAMERA_DYNAMIC = `${PREFIX_CAMERA}/:camera`;
+const PATH_PHOTO_DYNAMIC            = `${PREFIX_PHOTO}/[photoId]`;
+const PATH_TAG_DYNAMIC              = `${PREFIX_TAG}/[tag]`;
+const PATH_CAMERA_DYNAMIC           = `${PREFIX_CAMERA}/[camera]`;
+const PATH_FILM_SIMULATION_DYNAMIC  = `${PREFIX_FILM_SIMULATION}/[simulation]`;
 
 // Admin paths
 export const PATH_ADMIN_PHOTOS        = `${PATH_ADMIN}/photos`;
@@ -55,6 +56,7 @@ export const PATHS_TO_CACHE = [
   PATH_PHOTO_DYNAMIC,
   PATH_TAG_DYNAMIC,
   PATH_CAMERA_DYNAMIC,
+  PATH_FILM_SIMULATION_DYNAMIC,
   ...PATHS_ADMIN,
 ];
 

@@ -25,7 +25,7 @@ import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
 import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
 import type { Session } from 'next-auth';
 import { createCameraKey } from '@/camera';
-import { PATHS_ADMIN, PATHS_TO_CACHE } from '@/site/paths';
+import { PATHS_ADMIN } from '@/site/paths';
 
 // Table key
 const KEY_PHOTOS            = 'photos';
@@ -102,7 +102,7 @@ export const revalidateAllKeys = () => {
 
 export const revalidateAllKeysAndPaths = () => {
   revalidateAllKeys();
-  PATHS_TO_CACHE.forEach(path => revalidatePath(path));
+  revalidatePath('/', 'layout');
 };
 
 export const revalidateAdminPaths = () => {
@@ -125,10 +125,10 @@ export const getPhotosCountCached =
   );
 
 export const getPhotosCountIncludingHiddenCached =
-    unstable_cache(
-      getPhotosCountIncludingHidden,
-      [KEY_PHOTOS, KEY_COUNT, KEY_HIDDEN],
-    );
+  unstable_cache(
+    getPhotosCountIncludingHidden,
+    [KEY_PHOTOS, KEY_COUNT, KEY_HIDDEN],
+  );
 
 export const getPhotosTagCountCached =
   unstable_cache(
