@@ -11,30 +11,12 @@ import {
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotoCached } from '@/cache';
-import {
-  getPhotos,
-  getUniqueCameras,
-} from '@/services/postgres';
 import { cameraFromPhoto } from '@/camera';
 import { getPhotosCameraDataCached } from '@/camera/data';
 import { ReactNode } from 'react';
 
 interface PhotoCameraProps {
   params: { photoId: string, camera: string }
-}
-
-export async function generateStaticParams() {
-  const params: PhotoCameraProps[] = [];
-
-  const cameras = await getUniqueCameras();
-  cameras.forEach(async ({ cameraKey, camera }) => {
-    const photos = await getPhotos({ camera });
-    params.push(...photos.map(photo => ({
-      params: { photoId: photo.id, camera: cameraKey },
-    })));
-  });
-
-  return params;
 }
 
 export async function generateMetadata({

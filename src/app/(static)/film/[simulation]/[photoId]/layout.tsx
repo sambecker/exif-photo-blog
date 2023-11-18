@@ -11,27 +11,12 @@ import {
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotoCached } from '@/cache';
-import { getPhotos, getUniqueFilmSimulations } from '@/services/postgres';
 import { ReactNode } from 'react';
 import { FilmSimulation } from '@/simulation';
 import { getPhotosFilmSimulationDataCached } from '@/simulation/data';
 
 interface PhotoFilmSimulationProps {
   params: { photoId: string, simulation: FilmSimulation }
-}
-
-export async function generateStaticParams() {
-  const params: PhotoFilmSimulationProps[] = [];
-
-  const simulations = await getUniqueFilmSimulations();
-  simulations.forEach(async ({ simulation }) => {
-    const photos = await getPhotos({ simulation });
-    params.push(...photos.map(photo => ({
-      params: { photoId: photo.id, simulation },
-    })));
-  });
-
-  return params;
 }
 
 export async function generateMetadata({
