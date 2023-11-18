@@ -45,7 +45,7 @@ export async function updatePhotoAction(formData: FormData) {
 
   await sqlUpdatePhoto(photo);
 
-  revalidatePhotosKey();
+  revalidateAllKeysAndPaths();
 
   redirect(PATH_ADMIN_PHOTOS);
 }

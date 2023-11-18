@@ -21,21 +21,22 @@ import {
   getPhotosFilmSimulationDateRange,
   getPhotosFilmSimulationCount,
 } from '@/services/postgres';
-import { parseCachedPhotosDates, parseCachedPhotoDates } from '@/photo';
+import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
 import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
 import type { Session } from 'next-auth';
-import { Camera, createCameraKey } from '@/camera';
+import { createCameraKey } from '@/camera';
 import { PATHS_ADMIN, PATHS_TO_CACHE } from '@/site/paths';
-import { FilmSimulation } from '@/simulation';
 
 // Table key
 const KEY_PHOTOS            = 'photos';
+const KEY_PHOTO             = 'photo';
 // Field keys
 const KEY_TAGS              = 'tags';
 const KEY_CAMERAS           = 'cameras';
 const KEY_FILM_SIMULATIONS  = 'film-simulations';
 // Type keys
 const KEY_COUNT             = 'count';
+const KEY_HIDDEN            = 'hidden';
 const KEY_DATE_RANGE        = 'date-range';
 
 const getPhotosCacheKeyForOption = (
@@ -80,23 +81,6 @@ const getPhotosCacheKeys = (options: GetPhotosOptions = {}) => {
   return tags;
 };
 
-const getPhotoCacheKey = (photoId: string) => `photo-${photoId}`;
-
-const getPhotoCameraCountKey = (camera: Camera) =>
-  `${KEY_COUNT}-${KEY_CAMERAS}-${createCameraKey(camera)}`;
-
-const getPhotoFilmSimulationCountKey = (simulation: FilmSimulation) =>
-  `${KEY_COUNT}-${KEY_FILM_SIMULATIONS}-${simulation}`;
-
-const getPhotoTagDateRangeKey = (tag: string) =>
-  `${KEY_DATE_RANGE}-${KEY_TAGS}-${tag}`;
-
-const getPhotoCameraDateRangeKey = (camera: Camera) =>
-  `${KEY_DATE_RANGE}-${KEY_CAMERAS}-${createCameraKey(camera)}`;
-
-const getPhotoFilmSimulationDateRangeKey = (simulation: FilmSimulation) =>
-  `${KEY_DATE_RANGE}-${KEY_FILM_SIMULATIONS}-${simulation}`;
-
 export const revalidatePhotosKey = () =>
   revalidateTag(KEY_PHOTOS);
 
@@ -125,16 +109,14 @@ export const revalidateAdminPaths = () => {
   PATHS_ADMIN.forEach(path => revalidatePath(path));
 };
 
-// TODO: Test behavior
-// Consider a wrapper function where this is executed at runtime
-// and then parsed for dates
-export const getPhotosCached: typeof getPhotos = (...args) =>
-  unstable_cache(
-    getPhotos,
-    [KEY_PHOTOS, ...getPhotosCacheKeys(...args)], {
-      tags: [KEY_PHOTOS, ...getPhotosCacheKeys(...args)],
-    }
-  )(...args).then(parseCachedPhotosDates);
+// Cache
+
+export const getPhotosCached = (
+  ...args: Parameters<typeof getPhotos>
+) => unstable_cache(
+  getPhotos,
+  [KEY_PHOTOS, ...getPhotosCacheKeys(...args)],
+)(...args).then(parseCachedPhotosDates);
 
 export const getPhotosCountCached =
   unstable_cache(
@@ -142,14 +124,11 @@ export const getPhotosCountCached =
     [KEY_PHOTOS, KEY_COUNT],
   );
 
-export const getPhotosCountIncludingHiddenCached: typeof getPhotosCount =
-  (...args) =>
+export const getPhotosCountIncludingHiddenCached =
     unstable_cache(
-      () => getPhotosCountIncludingHidden(...args),
-      [KEY_PHOTOS, KEY_COUNT], {
-        tags: [KEY_PHOTOS, KEY_COUNT],
-      }
-    )();
+      getPhotosCountIncludingHidden,
+      [KEY_PHOTOS, KEY_COUNT, KEY_HIDDEN],
+    );
 
 export const getPhotosTagCountCached =
   unstable_cache(
@@ -157,92 +136,74 @@ export const getPhotosTagCountCached =
     [KEY_PHOTOS, KEY_TAGS],
   );
 
-// eslint-disable-next-line max-len
-export const getPhotosCameraCountCached: typeof getPhotosCameraCount = (...args) =>
+export const getPhotosCameraCountCached = (
+  ...args: Parameters<typeof getPhotosCameraCount>
+) =>
   unstable_cache(
-    () => getPhotosCameraCount(...args),
-    [KEY_PHOTOS, getPhotoCameraCountKey(...args)], {
-      tags: [KEY_PHOTOS, getPhotoCameraCountKey(...args)],
-    }
-  )();
+    getPhotosCameraCount,
+    [KEY_PHOTOS, KEY_COUNT, createCameraKey(...args)],
+  )(...args);
 
-// eslint-disable-next-line max-len
-export const getPhotosFilmSimulationCountCached: typeof getPhotosFilmSimulationCount = (...args) =>
+export const getPhotosFilmSimulationCountCached =
   unstable_cache(
-    () => getPhotosFilmSimulationCount(...args),
-    [KEY_PHOTOS, getPhotoFilmSimulationCountKey(...args)], {
-      tags: [KEY_PHOTOS, getPhotoFilmSimulationCountKey(...args)],
-    }
-  )();
+    getPhotosFilmSimulationCount,
+    [KEY_PHOTOS, KEY_FILM_SIMULATIONS, KEY_COUNT],
+  );
 
-// eslint-disable-next-line max-len
-export const getPhotosTagDateRangeCached: typeof getPhotosTagDateRange = (...args) =>
+export const getPhotosTagDateRangeCached =
   unstable_cache(
-    () => getPhotosTagDateRange(...args),
-    [KEY_PHOTOS, getPhotoTagDateRangeKey(...args)], {
-      tags: [KEY_PHOTOS, getPhotoTagDateRangeKey(...args)],
-    }
-  )();
+    getPhotosTagDateRange,
+    [KEY_PHOTOS, KEY_TAGS, KEY_DATE_RANGE],
+  );
 
-// eslint-disable-next-line max-len
-export const getPhotosCameraDateRangeCached: typeof getPhotosCameraDateRange = (...args) =>
+export const getPhotosCameraDateRangeCached =
   unstable_cache(
-    () => getPhotosCameraDateRange(...args),
-    [KEY_PHOTOS, getPhotoCameraDateRangeKey(...args)], {
-      tags: [KEY_PHOTOS, getPhotoCameraDateRangeKey(...args)],
-    }
-  )();
+    getPhotosCameraDateRange,
+    [KEY_PHOTOS, KEY_CAMERAS, KEY_DATE_RANGE],
+  );
 
-// eslint-disable-next-line max-len
-export const getPhotosFilmSimulationDateRangeCached: typeof getPhotosFilmSimulationDateRange = (...args) =>
+export const getPhotosFilmSimulationDateRangeCached =
   unstable_cache(
-    () => getPhotosFilmSimulationDateRange(...args),
-    [KEY_PHOTOS, getPhotoFilmSimulationDateRangeKey(...args)], {
-      tags: [KEY_PHOTOS, getPhotoFilmSimulationDateRangeKey(...args)],
-    }
-  )();
+    getPhotosFilmSimulationDateRange,
+    [KEY_PHOTOS, KEY_FILM_SIMULATIONS, KEY_DATE_RANGE],
+  );
 
-export const getPhotoCached: typeof getPhoto = (...args) =>
+export const getPhotoCached = (...args: Parameters<typeof getPhoto>) =>
   unstable_cache(
-    () => getPhoto(...args),
-    [KEY_PHOTOS, getPhotoCacheKey(...args)], {
-      tags: [KEY_PHOTOS, getPhotoCacheKey(...args)],
-    }
-  )().then(photo => photo ? parseCachedPhotoDates(photo) : undefined);
+    getPhoto,
+    [KEY_PHOTOS, KEY_PHOTO]
+  )(...args).then(photo => photo ? parseCachedPhotoDates(photo) : undefined);
 
-export const getUniqueTagsCached: typeof getUniqueTags = (...args) =>
+export const getUniqueTagsCached =
   unstable_cache(
-    () => getUniqueTags(...args),
-    [KEY_PHOTOS, KEY_TAGS], {
-      tags: [KEY_PHOTOS, KEY_TAGS],
-    }
-  )();
+    getUniqueTags,
+    [KEY_PHOTOS, KEY_TAGS],
+  );
 
-// eslint-disable-next-line max-len
-export const getUniqueTagsHiddenCached: typeof getUniqueTagsHidden = (...args) =>
+export const getUniqueTagsHiddenCached =
   unstable_cache(
-    () => getUniqueTagsHidden(...args),
-    [KEY_PHOTOS, KEY_TAGS], {
-      tags: [KEY_PHOTOS, KEY_TAGS],
-    }
-  )();
+    getUniqueTagsHidden,
+    [KEY_PHOTOS, KEY_TAGS, KEY_HIDDEN]
+  );
 
-export const getUniqueCamerasCached: typeof getUniqueCameras = (...args) =>
+export const getUniqueCamerasCached =
   unstable_cache(
-    () => getUniqueCameras(...args),
-    [KEY_PHOTOS, KEY_CAMERAS], {
-      tags: [KEY_PHOTOS, KEY_CAMERAS],
-    }
-  )();
+    getUniqueCameras,
+    [KEY_PHOTOS, KEY_CAMERAS]
+  );
 
-// eslint-disable-next-line max-len
-export const getUniqueFilmSimulationsCached: typeof getUniqueFilmSimulations = (...args) =>
+export const getUniqueFilmSimulationsCached =
   unstable_cache(
-    () => getUniqueFilmSimulations(...args),
-    [KEY_PHOTOS, KEY_FILM_SIMULATIONS], {
-      tags: [KEY_PHOTOS, KEY_FILM_SIMULATIONS],
-    }
-  )();
+    getUniqueFilmSimulations,
+    [KEY_PHOTOS, KEY_FILM_SIMULATIONS],
+  );
+
+// No Store
+
+export const getPhotoNoStore = (...args: Parameters<typeof getPhoto>) => {
+  unstable_noStore();
+  return getPhoto(...args);
+};
 
 export const getBlobUploadUrlsNoStore: typeof getBlobUploadUrls = (...args) => {
   unstable_noStore();

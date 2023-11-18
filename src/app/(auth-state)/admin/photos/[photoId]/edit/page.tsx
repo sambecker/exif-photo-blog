@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { getPhotoCached } from '@/cache';
+import { getPhotoNoStore } from '@/cache';
 import { PATH_ADMIN } from '@/site/paths';
 import PhotoEditPageClient from '@/photo/PhotoEditPageClient';
 
@@ -8,7 +8,7 @@ export default async function PhotoEditPage({
 }: {
   params: { photoId: string }
 }) {
-  const photo = await getPhotoCached(photoId);
+  const photo = await getPhotoNoStore(photoId);
 
   if (!photo) { redirect(PATH_ADMIN); }
 
