@@ -62,7 +62,7 @@ const getPhotosCacheKeyForOption = (
   // Complex keys
   case 'camera': {
     const value = options[option];
-    return value ? `${option}-${value.make}-${value.model}` : null;
+    return value ? `${option}-${createCameraKey(value)}` : null;
   }
   }
 };
