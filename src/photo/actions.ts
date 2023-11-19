@@ -113,6 +113,18 @@ export async function syncPhotoExifDataAction(formData: FormData) {
           ...convertPhotoToFormData(photo),
           ...photoFormExif,
         });
+        console.log(
+          'SYNCING EXIF DATA',
+          photo,
+        );
+        console.log(
+          'convertPhotoToFormData(photo)',
+          convertPhotoToFormData(photo),
+        );
+        console.log(
+          'photoFormExif',
+          photoFormExif,
+        );
         await sqlUpdatePhoto(photoFormDbInsert);
         revalidatePhotosKey();
       }
