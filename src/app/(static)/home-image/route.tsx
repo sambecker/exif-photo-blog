@@ -8,6 +8,8 @@ import HomeImageResponse from '@/photo/image-response/HomeImageResponse';
 import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/og';
 
+export const runtime = 'edge';
+
 export async function GET() {
   const [
     photos,

@@ -5,6 +5,8 @@ import PhotoImageResponse from '@/photo/image-response/PhotoImageResponse';
 import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/og';
 
+export const runtime = 'edge';
+
 export async function GET(
   _: Request,
   context: { params: { photoId: string } },
