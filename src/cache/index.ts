@@ -21,22 +21,24 @@ import {
   getPhotosFilmSimulationDateRange,
   getPhotosFilmSimulationCount,
 } from '@/services/postgres';
-import { parseCachedPhotosDates, parseCachedPhotoDates } from '@/photo';
+import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
 import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
 import type { Session } from 'next-auth';
-import { Camera, createCameraKey } from '@/camera';
-import { PATHS_ADMIN, PATHS_TO_CACHE } from '@/site/paths';
-import { FilmSimulation } from '@/simulation';
+import { createCameraKey } from '@/camera';
+import { PATHS_ADMIN } from '@/site/paths';
 
+// Table key
 const KEY_PHOTOS            = 'photos';
-const KEY_PHOTOS_COUNT      = `${KEY_PHOTOS}-count`;
-const KEY_PHOTOS_DATE_RANGE = `${KEY_PHOTOS}-date-range`;
+const KEY_PHOTO             = 'photo';
+// Field keys
 const KEY_TAGS              = 'tags';
 const KEY_CAMERAS           = 'cameras';
 const KEY_FILM_SIMULATIONS  = 'film-simulations';
-const KEY_BLOB              = 'blob';
+// Type keys
+const KEY_COUNT             = 'count';
+const KEY_HIDDEN            = 'hidden';
+const KEY_DATE_RANGE        = 'date-range';
 
-// eslint-disable-next-line max-len
 const getPhotosCacheKeyForOption = (
   options: GetPhotosOptions,
   option: keyof GetPhotosOptions,
@@ -60,7 +62,7 @@ const getPhotosCacheKeyForOption = (
   // Complex keys
   case 'camera': {
     const value = options[option];
-    return value ? `${option}-${value.make}-${value.model}` : null;
+    return value ? `${option}-${createCameraKey(value)}` : null;
   }
   }
 };
@@ -79,26 +81,6 @@ const getPhotosCacheKeys = (options: GetPhotosOptions = {}) => {
   return tags;
 };
 
-const getPhotoCacheKey = (photoId: string) => `photo-${photoId}`;
-
-const getPhotoTagCountKey = (tag: string) =>
-  `${KEY_PHOTOS_COUNT}-${KEY_TAGS}-${tag}`;
-
-const getPhotoCameraCountKey = (camera: Camera) =>
-  `${KEY_PHOTOS_COUNT}-${KEY_CAMERAS}-${createCameraKey(camera)}`;
-
-const getPhotoFilmSimulationCountKey = (simulation: FilmSimulation) =>
-  `${KEY_PHOTOS_COUNT}-${KEY_FILM_SIMULATIONS}-${simulation}`;
-
-const getPhotoTagDateRangeKey = (tag: string) =>
-  `${KEY_PHOTOS_DATE_RANGE}-${KEY_TAGS}-${tag}`;
-
-const getPhotoCameraDateRangeKey = (camera: Camera) =>
-  `${KEY_PHOTOS_DATE_RANGE}-${KEY_CAMERAS}-${createCameraKey(camera)}`;
-
-const getPhotoFilmSimulationDateRangeKey = (simulation: FilmSimulation) =>
-  `${KEY_PHOTOS_DATE_RANGE}-${KEY_FILM_SIMULATIONS}-${simulation}`;
-
 export const revalidatePhotosKey = () =>
   revalidateTag(KEY_PHOTOS);
 
@@ -111,16 +93,8 @@ export const revalidateCamerasKey = () =>
 export const revalidateFilmSimulationsKey = () =>
   revalidateTag(KEY_FILM_SIMULATIONS);
 
-export const revalidateBlobKey = () =>
-  revalidateTag(KEY_BLOB);
-
-export const revalidatePhotosAndBlobKeys = () => {
-  revalidatePhotosKey();
-  revalidateBlobKey();
-};
-
 export const revalidateAllKeys = () => {
-  revalidatePhotosAndBlobKeys();
+  revalidatePhotosKey();
   revalidateTagsKey();
   revalidateCamerasKey();
   revalidateFilmSimulationsKey();
@@ -128,153 +102,113 @@ export const revalidateAllKeys = () => {
 
 export const revalidateAllKeysAndPaths = () => {
   revalidateAllKeys();
-  PATHS_TO_CACHE.forEach(path => revalidatePath(path));
+  revalidatePath('/', 'layout');
 };
 
 export const revalidateAdminPaths = () => {
   PATHS_ADMIN.forEach(path => revalidatePath(path));
 };
 
-export const getPhotosCached: typeof getPhotos = (...args) =>
-  unstable_cache(
-    () => getPhotos(...args),
-    [KEY_PHOTOS, ...getPhotosCacheKeys(...args)], {
-      tags: [KEY_PHOTOS, ...getPhotosCacheKeys(...args)],
-    }
-  )().then(parseCachedPhotosDates);
+// Cache
 
-export const getPhotosCountCached: typeof getPhotosCount = (...args) =>
-  unstable_cache(
-    () => getPhotosCount(...args),
-    [KEY_PHOTOS, KEY_PHOTOS_COUNT], {
-      tags: [KEY_PHOTOS, KEY_PHOTOS_COUNT],
-    }
-  )();
+export const getPhotosCached = (
+  ...args: Parameters<typeof getPhotos>
+) => unstable_cache(
+  getPhotos,
+  [KEY_PHOTOS, ...getPhotosCacheKeys(...args)],
+)(...args).then(parseCachedPhotosDates);
 
-export const getPhotosCountIncludingHiddenCached: typeof getPhotosCount =
-  (...args) =>
-    unstable_cache(
-      () => getPhotosCountIncludingHidden(...args),
-      [KEY_PHOTOS, KEY_PHOTOS_COUNT], {
-        tags: [KEY_PHOTOS, KEY_PHOTOS_COUNT],
-      }
-    )();
-
-export const getPhotosTagCountCached: typeof getPhotosTagCount = (...args) =>
+export const getPhotosCountCached =
   unstable_cache(
-    () => getPhotosTagCount(...args),
-    [KEY_PHOTOS, getPhotoTagCountKey(...args)], {
-      tags: [KEY_PHOTOS, getPhotoTagCountKey(...args)],
-    }
-  )();
+    getPhotosCount,
+    [KEY_PHOTOS, KEY_COUNT],
+  );
 
-// eslint-disable-next-line max-len
-export const getPhotosCameraCountCached: typeof getPhotosCameraCount = (...args) =>
+export const getPhotosCountIncludingHiddenCached =
   unstable_cache(
-    () => getPhotosCameraCount(...args),
-    [KEY_PHOTOS, getPhotoCameraCountKey(...args)], {
-      tags: [KEY_PHOTOS, getPhotoCameraCountKey(...args)],
-    }
-  )();
+    getPhotosCountIncludingHidden,
+    [KEY_PHOTOS, KEY_COUNT, KEY_HIDDEN],
+  );
 
-// eslint-disable-next-line max-len
-export const getPhotosFilmSimulationCountCached: typeof getPhotosFilmSimulationCount = (...args) =>
+export const getPhotosTagCountCached =
   unstable_cache(
-    () => getPhotosFilmSimulationCount(...args),
-    [KEY_PHOTOS, getPhotoFilmSimulationCountKey(...args)], {
-      tags: [KEY_PHOTOS, getPhotoFilmSimulationCountKey(...args)],
-    }
-  )();
+    getPhotosTagCount,
+    [KEY_PHOTOS, KEY_TAGS],
+  );
 
-// eslint-disable-next-line max-len
-export const getPhotosTagDateRangeCached: typeof getPhotosTagDateRange = (...args) =>
+export const getPhotosCameraCountCached = (
+  ...args: Parameters<typeof getPhotosCameraCount>
+) =>
   unstable_cache(
-    () => getPhotosTagDateRange(...args),
-    [KEY_PHOTOS, getPhotoTagDateRangeKey(...args)], {
-      tags: [KEY_PHOTOS, getPhotoTagDateRangeKey(...args)],
-    }
-  )();
+    getPhotosCameraCount,
+    [KEY_PHOTOS, KEY_COUNT, createCameraKey(...args)],
+  )(...args);
 
-// eslint-disable-next-line max-len
-export const getPhotosCameraDateRangeCached: typeof getPhotosCameraDateRange = (...args) =>
+export const getPhotosFilmSimulationCountCached =
   unstable_cache(
-    () => getPhotosCameraDateRange(...args),
-    [KEY_PHOTOS, getPhotoCameraDateRangeKey(...args)], {
-      tags: [KEY_PHOTOS, getPhotoCameraDateRangeKey(...args)],
-    }
-  )();
+    getPhotosFilmSimulationCount,
+    [KEY_PHOTOS, KEY_FILM_SIMULATIONS, KEY_COUNT],
+  );
 
-// eslint-disable-next-line max-len
-export const getPhotosFilmSimulationDateRangeCached: typeof getPhotosFilmSimulationDateRange = (...args) =>
+export const getPhotosTagDateRangeCached =
   unstable_cache(
-    () => getPhotosFilmSimulationDateRange(...args),
-    [KEY_PHOTOS, getPhotoFilmSimulationDateRangeKey(...args)], {
-      tags: [KEY_PHOTOS, getPhotoFilmSimulationDateRangeKey(...args)],
-    }
-  )();
+    getPhotosTagDateRange,
+    [KEY_PHOTOS, KEY_TAGS, KEY_DATE_RANGE],
+  );
 
-export const getPhotoCached: typeof getPhoto = (...args) =>
+export const getPhotosCameraDateRangeCached =
   unstable_cache(
-    () => getPhoto(...args),
-    [KEY_PHOTOS, getPhotoCacheKey(...args)], {
-      tags: [KEY_PHOTOS, getPhotoCacheKey(...args)],
-    }
-  )().then(photo => photo ? parseCachedPhotoDates(photo) : undefined);
+    getPhotosCameraDateRange,
+    [KEY_PHOTOS, KEY_CAMERAS, KEY_DATE_RANGE],
+  );
 
-export const getUniqueTagsCached: typeof getUniqueTags = (...args) =>
+export const getPhotosFilmSimulationDateRangeCached =
   unstable_cache(
-    () => getUniqueTags(...args),
-    [KEY_PHOTOS, KEY_TAGS], {
-      tags: [KEY_PHOTOS, KEY_TAGS],
-    }
-  )();
+    getPhotosFilmSimulationDateRange,
+    [KEY_PHOTOS, KEY_FILM_SIMULATIONS, KEY_DATE_RANGE],
+  );
 
-// eslint-disable-next-line max-len
-export const getUniqueTagsHiddenCached: typeof getUniqueTagsHidden = (...args) =>
+export const getPhotoCached = (...args: Parameters<typeof getPhoto>) =>
   unstable_cache(
-    () => getUniqueTagsHidden(...args),
-    [KEY_PHOTOS, KEY_TAGS], {
-      tags: [KEY_PHOTOS, KEY_TAGS],
-    }
-  )();
+    getPhoto,
+    [KEY_PHOTOS, KEY_PHOTO]
+  )(...args).then(photo => photo ? parseCachedPhotoDates(photo) : undefined);
 
-export const getUniqueCamerasCached: typeof getUniqueCameras = (...args) =>
+export const getUniqueTagsCached =
   unstable_cache(
-    () => getUniqueCameras(...args),
-    [KEY_PHOTOS, KEY_CAMERAS], {
-      tags: [KEY_PHOTOS, KEY_CAMERAS],
-    }
-  )();
+    getUniqueTags,
+    [KEY_PHOTOS, KEY_TAGS],
+  );
 
-// eslint-disable-next-line max-len
-export const getUniqueFilmSimulationsCached: typeof getUniqueFilmSimulations = (...args) =>
+export const getUniqueTagsHiddenCached =
   unstable_cache(
-    () => getUniqueFilmSimulations(...args),
-    [KEY_PHOTOS, KEY_FILM_SIMULATIONS], {
-      tags: [KEY_PHOTOS, KEY_FILM_SIMULATIONS],
-    }
-  )();
+    getUniqueTagsHidden,
+    [KEY_PHOTOS, KEY_TAGS, KEY_HIDDEN]
+  );
 
-export const getBlobUploadUrlsCached: typeof getBlobUploadUrls = (...args) =>
+export const getUniqueCamerasCached =
   unstable_cache(
-    () => getBlobUploadUrls(...args),
-    [KEY_BLOB, 'uploads'], {
-      tags: [KEY_BLOB, 'uploads'],
-    }
-  )();
+    getUniqueCameras,
+    [KEY_PHOTOS, KEY_CAMERAS]
+  );
+
+export const getUniqueFilmSimulationsCached =
+  unstable_cache(
+    getUniqueFilmSimulations,
+    [KEY_PHOTOS, KEY_FILM_SIMULATIONS],
+  );
+
+// No Store
+
+export const getPhotoNoStore = (...args: Parameters<typeof getPhoto>) => {
+  unstable_noStore();
+  return getPhoto(...args);
+};
 
 export const getBlobUploadUrlsNoStore: typeof getBlobUploadUrls = (...args) => {
   unstable_noStore();
   return getBlobUploadUrls(...args);
 };
-
-export const getBlobPhotoUrlsCached: typeof getBlobPhotoUrls = (...args) =>
-  unstable_cache(
-    () => getBlobPhotoUrls(...args),
-    [KEY_BLOB, 'photos'], {
-      tags: [KEY_BLOB, 'photos'],
-    }
-  )();
 
 export const getBlobPhotoUrlsNoStore: typeof getBlobPhotoUrls = (...args) => {
   unstable_noStore();

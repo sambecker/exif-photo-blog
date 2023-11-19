@@ -7,8 +7,6 @@ import {
 } from '@/site/pagination';
 import { pathForOg } from '@/site/paths';
 
-export const runtime = 'edge';
-
 export default async function GridPage({ searchParams }: PaginationParams) {
   const { offset, limit } = getPaginationForSearchParams(searchParams);
 

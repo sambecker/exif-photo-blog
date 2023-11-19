@@ -12,9 +12,7 @@ import EditButton from '@/admin/EditButton';
 import { pathForAdminTagEdit } from '@/site/paths';
 import { cc } from '@/utility/css';
 
-export const runtime = 'edge';
-
-export default async function AdminPhotosPage() {
+export default async function AdminTagsPage() {
   const tags = await getUniqueTagsHiddenCached();
 
   return (

@@ -33,7 +33,7 @@ import IconGrSync from '@/site/IconGrSync';
 
 const DEBUG_PHOTO_BLOBS = false;
 
-export default async function AdminTagsPage({
+export default async function AdminPhotosPage({
   searchParams,
 }: PaginationParams) {
   const { offset, limit } = getPaginationForSearchParams(searchParams);

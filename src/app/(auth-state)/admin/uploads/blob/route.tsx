@@ -1,10 +1,8 @@
-import { revalidatePhotosAndBlobKeys, revalidateAdminPaths } from '@/cache';
+import { revalidateAdminPaths, revalidatePhotosKey } from '@/cache';
 import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
 import { isUploadPathnameValid } from '@/services/blob';
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { NextResponse } from 'next/server';
-
-export const runtime = 'edge';
 
 export async function POST(request: Request): Promise<NextResponse> {
   const body = (await request.json()) as HandleUploadBody;
@@ -25,11 +23,11 @@ export async function POST(request: Request): Promise<NextResponse> {
       },
       // This argument is required, but doesn't seem to fire
       onUploadCompleted: async () => {
-        revalidatePhotosAndBlobKeys();
+        revalidatePhotosKey();
         revalidateAdminPaths();
       },
     });
-    revalidatePhotosAndBlobKeys();
+    revalidatePhotosKey();
     revalidateAdminPaths();
     return NextResponse.json(jsonResponse);
   } catch (error) {

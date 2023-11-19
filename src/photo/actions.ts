@@ -21,7 +21,6 @@ import {
 import {
   revalidateAdminPaths,
   revalidateAllKeysAndPaths,
-  revalidateBlobKey,
   revalidatePhotosKey,
 } from '@/cache';
 import { PATH_ADMIN_PHOTOS, PATH_ADMIN_TAGS } from '@/site/paths';
@@ -46,7 +45,7 @@ export async function updatePhotoAction(formData: FormData) {
 
   await sqlUpdatePhoto(photo);
 
-  revalidatePhotosKey();
+  revalidateAllKeysAndPaths();
 
   redirect(PATH_ADMIN_PHOTOS);
 }
@@ -57,8 +56,7 @@ export async function deletePhotoAction(formData: FormData) {
     sqlDeletePhoto(formData.get('id') as string),
   ]);
 
-  revalidatePhotosKey();
-  revalidateAdminPaths();
+  revalidateAllKeysAndPaths();
 };
 
 export async function deletePhotoTagGloballyAction(formData: FormData) {
@@ -84,7 +82,6 @@ export async function renamePhotoTagGloballyAction(formData: FormData) {
 export async function deleteBlobPhotoAction(formData: FormData) {
   await deleteBlobPhoto(formData.get('url') as string);
 
-  revalidateBlobKey();
   revalidateAdminPaths();
 
   if (formData.get('redirectToPhotos') === 'true') {

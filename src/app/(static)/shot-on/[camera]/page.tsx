@@ -9,8 +9,6 @@ import {
 } from '@/camera/data';
 import CameraOverview from '@/camera/CameraOverview';
 
-export const runtime = 'edge';
-
 interface CameraProps {
   params: { camera: string },
 }

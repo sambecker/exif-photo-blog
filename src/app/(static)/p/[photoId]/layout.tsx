@@ -12,20 +12,14 @@ import {
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotoCached, getPhotosCached } from '@/cache';
-import { getPhotos } from '@/services/postgres';
 
-export async function generateStaticParams() {
-  const photos = await getPhotos();
-  return photos.map(photo => ({
-    params: { photoId: photo.id },
-  }));
+interface PhotoProps {
+  params: { photoId: string }
 }
 
 export async function generateMetadata({
   params: { photoId },
-}: {
-  params: { photoId: string }
-}): Promise<Metadata> {
+}:PhotoProps): Promise<Metadata> {
   const photo = await getPhotoCached(photoId);
 
   if (!photo) { return {}; }
@@ -56,10 +50,8 @@ export async function generateMetadata({
 export default async function PhotoPage({
   params: { photoId },
   children,
-}: {
-  params: { photoId: string }
-  children: React.ReactNode
-}) {
+}:
+  PhotoProps & { children: React.ReactNode }) {
   const photo = await getPhotoCached(photoId);
 
   if (!photo) { redirect(PATH_ROOT); }

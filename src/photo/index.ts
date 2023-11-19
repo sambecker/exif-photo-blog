@@ -97,7 +97,7 @@ export const parseCachedPhotoDates = (photo: Photo) => ({
   takenAt: new Date(photo.takenAt),
   updatedAt: new Date(photo.updatedAt),
   createdAt: new Date(photo.createdAt),
-});
+} as Photo);
 
 export const parseCachedPhotosDates = (photos: Photo[]) =>
   photos.map(parseCachedPhotoDates);
