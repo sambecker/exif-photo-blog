@@ -23,7 +23,7 @@ export default function Badge({
       'bg-gray-100 dark:bg-gray-800/60',
       'text-medium',
       'font-medium text-[0.7rem]',
-      interactive && 'hover:text-black dark:hover:text-white',
+      interactive && 'hover:text-gray-900 dark:hover:text-gray-100',
       interactive && 'active:bg-gray-200 dark:active:bg-gray-700/60',
     );
     }

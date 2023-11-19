@@ -8,8 +8,7 @@ import PhotoTags from '@/tag/PhotoTags';
 import ShareButton from '@/components/ShareButton';
 import PhotoCamera from '../camera/PhotoCamera';
 import { cameraFromPhoto } from '@/camera';
-import PhotoFilmSimulation from
-  '@/simulation/PhotoFilmSimulation';
+import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
 
 export default function PhotoLarge({
   photo,
@@ -87,7 +86,7 @@ export default function PhotoLarge({
                 hideApple={false}
               />
               {showSimulation && photo.filmSimulation &&
-                <div className="-translate-x-0.5"> 
+                <div className="-translate-x-1.5"> 
                   <PhotoFilmSimulation
                     simulation={photo.filmSimulation}
                   />
