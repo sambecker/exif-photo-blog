@@ -1,28 +1,36 @@
 /* eslint-disable jsx-a11y/alt-text */
 
 import { Photo } from '@/photo';
-import { getNextImageUrlForRequest } from '@/utility/image';
+import {
+  NextImageSize,
+  getNextImageUrlForRequest,
+} from '@/services/next-image';
 
 export default function ImagePhotoGrid({
   photos,
   width,
+  widthArbitrary,
   height,
   imagePosition = 'center',
   gap = 4,
-}: {
+}: ({
   photos: Photo[]
-  width: number
   height: number
   imagePosition?: 'center' | 'top'
   gap?: number
-}) {
+} & (
+  { width: NextImageSize, widthArbitrary?: undefined } |
+  { width?: undefined, widthArbitrary: number }
+))) {
   let count = 1;
   if (photos.length >= 12) { count = 12; }
   else if (photos.length >= 6) { count = 6; }
   else if (photos.length >= 4) { count = 4; }
   else if (photos.length >= 2) { count = 2; }
 
-  const nextImageWidth = count <= 2 ? 1050 : 640;
+  const nextImageWidth: NextImageSize = count <= 2
+    ? width ?? 1080
+    : 640;
 
   let rows = 1;
   if (count > 12) { rows = 4; }
@@ -31,7 +39,7 @@ export default function ImagePhotoGrid({
 
   const imagesPerRow = count / rows;
 
-  const cellWidth = width / imagesPerRow -
+  const cellWidth = (width ?? widthArbitrary) / imagesPerRow -
     (imagesPerRow - 1) * gap / (imagesPerRow);
   const cellHeight= height / rows -
     (rows - 1) * gap / rows;

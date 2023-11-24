@@ -8,6 +8,7 @@ import {
 import PhotoFilmSimulationIcon from 
   '@/simulation/PhotoFilmSimulationIcon';
 import { FilmSimulation } from '@/simulation';
+import { NextImageSize } from '@/services/next-image';
 
 export default function FilmSimulationImageResponse({
   simulation,
@@ -18,7 +19,7 @@ export default function FilmSimulationImageResponse({
 }: {
   simulation: FilmSimulation,
   photos: Photo[]
-  width: number
+  width: NextImageSize
   height: number
   fontFamily: string
 }) {  

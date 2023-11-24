@@ -4,6 +4,7 @@ import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
 import { Camera, cameraFromPhoto } from '@/camera';
 import { IoMdCamera } from 'react-icons/io';
+import { NextImageSize } from '@/services/next-image';
 
 export default function CameraImageResponse({
   camera: cameraProp,
@@ -14,7 +15,7 @@ export default function CameraImageResponse({
 }: {
   camera: Camera
   photos: Photo[]
-  width: number
+  width: NextImageSize
   height: number
   fontFamily: string
 }) {

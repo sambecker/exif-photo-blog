@@ -2,6 +2,7 @@ import { Photo } from '..';
 import IconFullFrame from '@/site/IconFullFrame';
 import IconGrid from '@/site/IconGrid';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
+import { NextImageSize } from '@/services/next-image';
 
 export default function TemplateImageResponse({
   photos,
@@ -14,7 +15,7 @@ export default function TemplateImageResponse({
   verticalOffset,
 }: {
   photos: Photo[]
-  width: number
+  width: NextImageSize
   height: number
   fontFamily: string
   outerMargin?: number
@@ -89,7 +90,7 @@ export default function TemplateImageResponse({
       }}>
         <ImagePhotoGrid {...{
           photos,
-          width: innerWidth,
+          widthArbitrary: innerWidth,
           height: includeHeader
             ? height - 130 - outerMargin * 2
             : height,

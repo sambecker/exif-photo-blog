@@ -5,7 +5,7 @@ import { uploadPhotoFromClient } from '@/services/blob';
 import { useRouter } from 'next/navigation';
 import { PATH_ADMIN_UPLOADS, pathForAdminUploadUrl } from '@/site/paths';
 import ImageInput from '../components/ImageInput';
-import { MAX_IMAGE_SIZE } from '@/utility/image';
+import { MAX_IMAGE_SIZE } from '@/services/next-image';
 import { cc } from '@/utility/css';
 
 export default function PhotoUpload({

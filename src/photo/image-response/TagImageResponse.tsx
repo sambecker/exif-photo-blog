@@ -3,6 +3,7 @@ import { FaTag } from 'react-icons/fa';
 import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
+import { NextImageSize } from '@/services/next-image';
 
 export default function TagImageResponse({
   tag,
@@ -13,7 +14,7 @@ export default function TagImageResponse({
 }: {
   tag: string,
   photos: Photo[]
-  width: number
+  width: NextImageSize
   height: number
   fontFamily: string
 }) {  

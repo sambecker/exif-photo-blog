@@ -10,7 +10,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const nextConfig = {
   images: {
-    imageSizes: [200, 400, 1050],
+    imageSizes: [200],
     remotePatterns: [{
       protocol: 'https',
       hostname: `${STORE_ID}.public.blob.vercel-storage.com`,
