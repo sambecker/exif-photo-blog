@@ -86,7 +86,7 @@ export default function PhotoLarge({
                 hideApple={false}
               />
               {showSimulation && photo.filmSimulation &&
-                <div className="-translate-x-1.5"> 
+                <div className="translate-x-[-0.3rem]"> 
                   <PhotoFilmSimulation
                     simulation={photo.filmSimulation}
                   />

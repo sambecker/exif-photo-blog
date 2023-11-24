@@ -19,7 +19,7 @@ export default function Badge({
       'border border-gray-200/60 dark:border-gray-800/75'
     );
     case 'secondary': return cc(
-      'px-1.5 py-1 leading-none rounded-[0.25rem]',
+      'px-[0.3rem] py-1 leading-none rounded-[0.25rem]',
       'bg-gray-100 dark:bg-gray-800/60',
       'text-medium',
       'font-medium text-[0.7rem]',
