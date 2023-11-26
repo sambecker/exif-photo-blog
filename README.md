@@ -68,6 +68,42 @@ Installation
 - `NEXT_PUBLIC_HIDE_REPO_LINK = 1` removes footer link to repo
 - `NEXT_PUBLIC_HIDE_FILM_SIMULATIONS = 1` prevents Fujifilm simulations showing up in `/grid` sidebar
 
+### Setup alternate storage
+
+#### AWS S3
+
+1. [Create bucket](https://s3.console.aws.amazon.com/s3) with "Block all public access" turned off
+   - Setup CORS:
+     ```
+     [{
+      "AllowedHeaders": [],
+        "AllowedMethods": [
+          "GET"
+        ],
+        "AllowedOrigins": [
+          "http://localhost:*",
+          "{PRODUCTION_DOMAIN}",
+          "https://*${VERCEL_PROJECT}.vercel.app"
+        ],
+        "ExposeHeaders": []
+     }]
+     ```
+   - Store configuration 
+     - `NEXT_PUBLIC_S3_BUCKET`
+     - `NEXT_PUBLIC_S3_REGION`
+2. [Create IAM policy](https://console.aws.amazon.com/iam/home#/policies) for client uploads (JSON editor recommended)
+   - Action: `s3:PutObject`
+   - Resource: `arn:aws:s3:::{BUCKET_NAME}/uploads/*`
+3. [Create IAM policy](https://console.aws.amazon.com/iam/home#/policies) for admin actions (JSON editor recommended)
+   - Action: `s3:PutObject`, `s3:GetObject`, `s3:ListBucket`, `s3:DeleteObject`
+   - Resource: `arn:aws:s3:::{BUCKET_NAME}`, `arn:aws:s3:::{BUCKET_NAME}/*`
+4. [Create IAM user](https://console.aws.amazon.com/iam/home#/users) for upload policy (by choosing "Attach policies directly"), create access key under "Security credentials," choose "Application running outside AWS," and store credentials
+   - `NEXT_PUBLIC_S3_UPLOAD_ACCESS_KEY`
+   - `NEXT_PUBLIC_S3_UPLOAD_SECRET_ACCESS_KEY`
+5. [Create IAM user](https://console.aws.amazon.com/iam/home#/users), for admin policy (by choosing "Attach policies directly"), , create access key under "Security credentials," choose "Application running outside AWS," and store credentials (_ensure admin environment variables are not prefixed with `NEXT_PUBLIC`_)
+   - `S3_ADMIN_ACCESS_KEY`
+   - `S3_ADMIN_SECRET_ACCESS_KEY`
+
 FAQ
 -
 Q: My images/content have fallen out of sync with my database and/or my production site no longer matches local development. What do I do?<br />

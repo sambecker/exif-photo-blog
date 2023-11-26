@@ -1,5 +1,7 @@
 import { makeUrlAbsolute, shortenUrl } from '@/utility/url';
 
+// META / DOMAINS
+
 export const SITE_TITLE =
   process.env.NEXT_PUBLIC_SITE_TITLE ||
   'Photo Blog';
@@ -28,6 +30,20 @@ export const BASE_URL = process.env.NODE_ENV === 'production'
   ? makeUrlAbsolute(SITE_DOMAIN).toLowerCase()
   : 'http://localhost:3000';
 
+// STORAGE
+
+const hasVercelBlob = (process.env.BLOB_READ_WRITE_TOKEN ?? '').length > 0;
+const hasAwsS3Storage =
+  (process.env.NEXT_PUBLIC_S3_BUCKET ?? '').length > 0 &&
+  (process.env.NEXT_PUBLIC_S3_REGION ?? '').length > 0 &&
+  (process.env.NEXT_PUBLIC_S3_UPLOAD_ACCESS_ID ?? '').length > 0 &&
+  (process.env.NEXT_PUBLIC_S3_UPLOAD_SECRET ?? '').length > 0 &&
+  (process.env.S3_ADMIN_ACCESS_ID ?? '').length > 0 &&
+  (process.env.S3_ADMIN_ACCESS_SECRET ?? '').length > 0;
+  
+
+// SETTINGS
+
 export const PRO_MODE_ENABLED = process.env.NEXT_PUBLIC_PRO_MODE === '1';
 export const PUBLIC_API_ENABLED = process.env.NEXT_PUBLIC_PUBLIC_API === '1';
 export const SHOW_REPO_LINK = process.env.NEXT_PUBLIC_HIDE_REPO_LINK !== '1';
@@ -38,7 +54,7 @@ export const OG_TEXT_BOTTOM_ALIGNMENT =
 
 export const CONFIG_CHECKLIST_STATUS = {
   hasPostgres: (process.env.POSTGRES_HOST ?? '').length > 0,
-  hasBlob: (process.env.BLOB_READ_WRITE_TOKEN ?? '').length > 0,
+  hasBlob: hasVercelBlob || hasAwsS3Storage,
   hasAuth: (process.env.AUTH_SECRET ?? '').length > 0,
   hasAdminUser: (
     (process.env.ADMIN_EMAIL ?? '').length > 0 &&
