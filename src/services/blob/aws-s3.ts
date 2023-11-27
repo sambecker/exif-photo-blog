@@ -27,7 +27,7 @@ export const HAS_AWS_S3_STORAGE =
 const client = () => new S3Client({
   region: S3_REGION,
   credentials: {
-    // Fallback on upload credentials if admin credentials are not available
+    // Fall back on upload credentials if admin credentials are not available
     accessKeyId: S3_ADMIN_ACCESS_KEY ?? S3_UPLOAD_ACCESS_KEY,
     secretAccessKey: S3_ADMIN_SECRET_ACCESS_KEY ?? S3_UPLOAD_SECRET_ACCESS_KEY,
   },
