@@ -72,13 +72,14 @@ Installation
 
 #### AWS S3
 
-1. [Create bucket](https://s3.console.aws.amazon.com/s3) with "Block all public access" turned off
+1. [Create bucket](https://s3.console.aws.amazon.com/s3) with "ACLs enabled," and "Block all public access" turned off
    - Setup CORS:
      ```
      [{
-      "AllowedHeaders": [],
+      "AllowedHeaders": ["*"],
         "AllowedMethods": [
-          "GET"
+         "GET",
+         "PUT"
         ],
         "AllowedOrigins": [
           "http://localhost:*",
@@ -92,10 +93,10 @@ Installation
      - `NEXT_PUBLIC_S3_BUCKET`
      - `NEXT_PUBLIC_S3_REGION`
 2. [Create IAM policy](https://console.aws.amazon.com/iam/home#/policies) for client uploads (JSON editor recommended)
-   - Action: `s3:PutObject`
-   - Resource: `arn:aws:s3:::{BUCKET_NAME}/uploads/*`
+   - Action: `s3:PutObject`, `s3:PutObjectACL`
+   - Resource: `arn:aws:s3:::{BUCKET_NAME}/upload-*`
 3. [Create IAM policy](https://console.aws.amazon.com/iam/home#/policies) for admin actions (JSON editor recommended)
-   - Action: `s3:PutObject`, `s3:GetObject`, `s3:ListBucket`, `s3:DeleteObject`
+   - Action: `s3:PutObject`, `s3:PutObjectACL`, `s3:GetObject`, `s3:ListBucket`, `s3:DeleteObject`
    - Resource: `arn:aws:s3:::{BUCKET_NAME}`, `arn:aws:s3:::{BUCKET_NAME}/*`
 4. [Create IAM user](https://console.aws.amazon.com/iam/home#/users) for upload policy (by choosing "Attach policies directly"), create access key under "Security credentials," choose "Application running outside AWS," and store credentials
    - `NEXT_PUBLIC_S3_UPLOAD_ACCESS_KEY`

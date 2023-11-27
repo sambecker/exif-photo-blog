@@ -56,7 +56,7 @@ export default function PhotoUpload({
                   blob,
                   extension,
                 )
-                  .then(({ url }) => {
+                  .then(url => {
                     if (isLastBlob) {
                       // Refresh page to update upload list,
                       // relevant to upload count in nav

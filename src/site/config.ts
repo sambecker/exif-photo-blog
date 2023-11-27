@@ -36,10 +36,10 @@ const hasVercelBlob = (process.env.BLOB_READ_WRITE_TOKEN ?? '').length > 0;
 const hasAwsS3Storage =
   (process.env.NEXT_PUBLIC_S3_BUCKET ?? '').length > 0 &&
   (process.env.NEXT_PUBLIC_S3_REGION ?? '').length > 0 &&
-  (process.env.NEXT_PUBLIC_S3_UPLOAD_ACCESS_ID ?? '').length > 0 &&
-  (process.env.NEXT_PUBLIC_S3_UPLOAD_SECRET ?? '').length > 0 &&
-  (process.env.S3_ADMIN_ACCESS_ID ?? '').length > 0 &&
-  (process.env.S3_ADMIN_ACCESS_SECRET ?? '').length > 0;
+  (process.env.NEXT_PUBLIC_S3_UPLOAD_ACCESS_KEY ?? '').length > 0 &&
+  (process.env.NEXT_PUBLIC_S3_UPLOAD_SECRET_ACCESS_KEY ?? '').length > 0 &&
+  (process.env.S3_ADMIN_ACCESS_KEY ?? '').length > 0 &&
+  (process.env.S3_ADMIN_SECRET_ACCESS_KEY ?? '').length > 0;
   
 
 // SETTINGS

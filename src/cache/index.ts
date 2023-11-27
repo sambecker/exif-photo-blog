@@ -20,7 +20,7 @@ import {
   getUniqueFilmSimulations,
   getPhotosFilmSimulationDateRange,
   getPhotosFilmSimulationCount,
-} from '@/services/postgres';
+} from '@/services/vercel-postgres';
 import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
 import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
 import type { Session } from 'next-auth';
