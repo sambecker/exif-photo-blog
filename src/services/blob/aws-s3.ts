@@ -41,6 +41,8 @@ export const isUrlFromAwsS3 = (url: string) =>
 
 const urlForKey = (key?: string) => `${AWS_S3_BASE_URL}/${key}`;
 
+const generateBlobId = () => generateNanoid(16);
+
 export const awsS3UploadFromClient = async (
   file: File | Blob,
   fileName: string,
@@ -48,7 +50,7 @@ export const awsS3UploadFromClient = async (
   addRandomSuffix?: boolean,
 ) => {
   const Key = addRandomSuffix
-    ? `${fileName}-${generateNanoid()}.${extension}`
+    ? `${fileName}-${generateBlobId()}.${extension}`
     : `${fileName}.${extension}`;
   return client().send(new PutObjectCommand({
     Bucket: S3_BUCKET,
@@ -67,7 +69,7 @@ export const awsS3Copy = async (
   const name = fileNameSource.split('.')[0];
   const extension = fileNameSource.split('.')[1];
   const Key = addRandomSuffix
-    ? `${name}-${generateNanoid()}.${extension}`
+    ? `${name}-${generateBlobId()}.${extension}`
     : fileNameDestination;
   return client().send(new CopyObjectCommand({
     Bucket: S3_BUCKET,
