@@ -24,7 +24,7 @@ export const HAS_AWS_S3_STORAGE =
   S3_UPLOAD_ACCESS_KEY.length > 0 &&
   S3_UPLOAD_SECRET_ACCESS_KEY.length > 0;
 
-const client = new S3Client({
+const client = () => new S3Client({
   region: S3_REGION,
   credentials: {
     // Fallback on upload credentials if admin credentials are not available
@@ -50,7 +50,7 @@ export const awsS3UploadFromClient = async (
   const Key = addRandomSuffix
     ? `${fileName}-${generateNanoid()}.${extension}`
     : `${fileName}.${extension}`;
-  return client.send(new PutObjectCommand({
+  return client().send(new PutObjectCommand({
     Bucket: S3_BUCKET,
     Key,
     Body: file,
@@ -69,7 +69,7 @@ export const awsS3Copy = async (
   const Key = addRandomSuffix
     ? `${name}-${generateNanoid()}.${extension}`
     : fileNameDestination;
-  return client.send(new CopyObjectCommand({
+  return client().send(new CopyObjectCommand({
     Bucket: S3_BUCKET,
     CopySource: fileNameSource,
     Key,
@@ -79,14 +79,14 @@ export const awsS3Copy = async (
 };
 
 export const awsS3Delete = async (Key: string) => {
-  client.send(new DeleteObjectCommand({
+  client().send(new DeleteObjectCommand({
     Bucket: S3_BUCKET,
     Key,
   }));
 };
 
 export const awsS3List = async (Prefix: string) =>
-  client.send(new ListObjectsCommand({
+  client().send(new ListObjectsCommand({
     Bucket: S3_BUCKET,
     Prefix,
   }))
