@@ -7,7 +7,7 @@ import {
   sqlUpdatePhoto,
   sqlRenamePhotoTagGlobally,
   getPhoto,
-} from '@/services/postgres';
+} from '@/services/vercel-postgres';
 import {
   PhotoFormData,
   convertFormDataToPhotoDbInsert,
@@ -16,7 +16,7 @@ import {
 import { redirect } from 'next/navigation';
 import {
   convertUploadToPhoto,
-  deleteBlobPhoto,
+  deleteBlobUrl,
 } from '@/services/blob';
 import {
   revalidateAdminPaths,
@@ -52,7 +52,7 @@ export async function updatePhotoAction(formData: FormData) {
 
 export async function deletePhotoAction(formData: FormData) {
   await Promise.all([
-    deleteBlobPhoto(formData.get('url') as string),
+    deleteBlobUrl(formData.get('url') as string),
     sqlDeletePhoto(formData.get('id') as string),
   ]);
 
@@ -80,7 +80,7 @@ export async function renamePhotoTagGloballyAction(formData: FormData) {
 }
 
 export async function deleteBlobPhotoAction(formData: FormData) {
-  await deleteBlobPhoto(formData.get('url') as string);
+  await deleteBlobUrl(formData.get('url') as string);
 
   revalidateAdminPaths();
 

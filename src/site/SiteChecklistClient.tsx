@@ -121,16 +121,30 @@ export default function SiteChecklistClient({
           and connect to project
         </ChecklistRow>
         <ChecklistRow
-          title="Setup blob store"
+          title="Setup blob store (one of the following)"
           status={hasBlob}
           isPending={isPendingPage}
         >
-          {renderLink(
-            'https://vercel.com/docs/storage/vercel-blob/quickstart',
-            'Create Vercel Blob store',
-          )}
-          {' '}
-          and connect to project
+          <ol className="list-decimal list-inside">
+            <li>
+              Vercel Blob:
+              {' '}
+              {renderLink(
+                'https://vercel.com/docs/storage/vercel-blob/quickstart',
+                'create store',
+              )}
+              {' '} 
+              and connect to project
+            </li>
+            <li>
+              AWS S3:
+              {' '}
+              {renderLink(
+                'https://github.com/sambecker/exif-photo-blog#aws-s3',
+                'create/configure bucket',
+              )}
+            </li>
+          </ol>
         </ChecklistRow>
       </Checklist>
       <Checklist
