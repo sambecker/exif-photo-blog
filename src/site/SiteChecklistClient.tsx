@@ -1,6 +1,6 @@
 'use client';
 
-import { useTransition } from 'react';
+import { ComponentProps, ReactNode, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { cc } from '@/utility/css';
 import ChecklistRow from '../components/ChecklistRow';
@@ -18,10 +18,13 @@ import InfoBlock from '@/components/InfoBlock';
 import Checklist from '@/components/Checklist';
 import { toastSuccess } from '@/toast';
 import { ConfigChecklistStatus } from './config';
+import StatusIcon from '@/components/StatusIcon';
 
 export default function SiteChecklistClient({
   hasPostgres,
   hasBlob,
+  hasVercelBlob,
+  hasAwsS3Storage,
   hasAuth,
   hasAdminUser,
   hasTitle,
@@ -102,6 +105,17 @@ export default function SiteChecklistClient({
       {variables.map(renderEnvVar)}
     </div>;
 
+  const renderSubStatus = (
+    type: ComponentProps<typeof StatusIcon>['type'],
+    label: ReactNode,
+  ) =>
+    <div className="flex gap-1.5">
+      <StatusIcon {...{ type }} />
+      <span>
+        {label}
+      </span>
+    </div>;
+
   return (
     <div className="text-sm max-w-xl space-y-6 w-full">
       <Checklist
@@ -125,8 +139,9 @@ export default function SiteChecklistClient({
           status={hasBlob}
           isPending={isPendingPage}
         >
-          <ol className="list-decimal list-inside">
-            <li>
+          {renderSubStatus(
+            hasVercelBlob ? 'checked' : 'optional',
+            <>
               Vercel Blob:
               {' '}
               {renderLink(
@@ -135,16 +150,19 @@ export default function SiteChecklistClient({
               )}
               {' '} 
               and connect to project
-            </li>
-            <li>
+            </>,
+          )}
+          {renderSubStatus(
+            hasAwsS3Storage ? 'checked' : 'optional',
+            <>
               AWS S3:
               {' '}
               {renderLink(
                 'https://github.com/sambecker/exif-photo-blog#aws-s3',
                 'create/configure bucket',
               )}
-            </li>
-          </ol>
+            </>
+          )}
         </ChecklistRow>
       </Checklist>
       <Checklist

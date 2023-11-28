@@ -18,16 +18,10 @@ const S3_ADMIN_ACCESS_KEY =
 const S3_ADMIN_SECRET_ACCESS_KEY =
   process.env.S3_ADMIN_SECRET_ACCESS_KEY;
 
-export const HAS_AWS_S3_STORAGE =
-  S3_BUCKET.length > 0 &&
-  S3_REGION.length > 0 &&
-  S3_UPLOAD_ACCESS_KEY.length > 0 &&
-  S3_UPLOAD_SECRET_ACCESS_KEY.length > 0;
-
 const client = () => new S3Client({
   region: S3_REGION,
   credentials: {
-    // Fall back on upload credentials if admin credentials are not available
+    // Fall back on upload credentials when admin credentials aren't available
     accessKeyId: S3_ADMIN_ACCESS_KEY ?? S3_UPLOAD_ACCESS_KEY,
     secretAccessKey: S3_ADMIN_SECRET_ACCESS_KEY ?? S3_UPLOAD_SECRET_ACCESS_KEY,
   },

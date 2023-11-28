@@ -30,14 +30,19 @@ export const BASE_URL = process.env.NODE_ENV === 'production'
   ? makeUrlAbsolute(SITE_DOMAIN).toLowerCase()
   : 'http://localhost:3000';
 
-// STORAGE
+// STORAGE: VERCEL BLOB
+export const HAS_VERCEL_BLOB =
+  (process.env.BLOB_READ_WRITE_TOKEN ?? '').length > 0;
 
-const hasVercelBlob = (process.env.BLOB_READ_WRITE_TOKEN ?? '').length > 0;
-const hasAwsS3Storage =
+// STORAGE: AWS S3
+// Includes separate check for client-side usage, i.e., uploading,
+export const HAS_AWS_S3_STORAGE_CLIENT =
   (process.env.NEXT_PUBLIC_S3_BUCKET ?? '').length > 0 &&
   (process.env.NEXT_PUBLIC_S3_REGION ?? '').length > 0 &&
   (process.env.NEXT_PUBLIC_S3_UPLOAD_ACCESS_KEY ?? '').length > 0 &&
-  (process.env.NEXT_PUBLIC_S3_UPLOAD_SECRET_ACCESS_KEY ?? '').length > 0 &&
+  (process.env.NEXT_PUBLIC_S3_UPLOAD_SECRET_ACCESS_KEY ?? '').length > 0;
+export const HAS_AWS_S3_STORAGE =
+  HAS_AWS_S3_STORAGE_CLIENT &&
   (process.env.S3_ADMIN_ACCESS_KEY ?? '').length > 0 &&
   (process.env.S3_ADMIN_SECRET_ACCESS_KEY ?? '').length > 0;
   
@@ -54,7 +59,9 @@ export const OG_TEXT_BOTTOM_ALIGNMENT =
 
 export const CONFIG_CHECKLIST_STATUS = {
   hasPostgres: (process.env.POSTGRES_HOST ?? '').length > 0,
-  hasBlob: hasVercelBlob || hasAwsS3Storage,
+  hasBlob: HAS_VERCEL_BLOB || HAS_AWS_S3_STORAGE,
+  hasVercelBlob: HAS_VERCEL_BLOB,
+  hasAwsS3Storage: HAS_AWS_S3_STORAGE,
   hasAuth: (process.env.AUTH_SECRET ?? '').length > 0,
   hasAdminUser: (
     (process.env.ADMIN_EMAIL ?? '').length > 0 &&

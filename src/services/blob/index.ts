@@ -7,13 +7,13 @@ import {
 } from './vercel-blob';
 import {
   AWS_S3_BASE_URL,
-  HAS_AWS_S3_STORAGE,
   awsS3Copy,
   awsS3Delete,
   awsS3List,
   awsS3UploadFromClient,
   isUrlFromAwsS3,
 } from './aws-s3';
+import { HAS_AWS_S3_STORAGE_CLIENT, HAS_AWS_S3_STORAGE } from '@/site/config';
 
 const PREFIX_UPLOAD = 'upload';
 const PREFIX_PHOTO = 'photo';
@@ -47,7 +47,7 @@ const getFileNameFromBlobUrl = (url: string) =>
 export const uploadPhotoFromClient = async (
   file: File | Blob,
   extension = 'jpg',
-) => HAS_AWS_S3_STORAGE
+) => HAS_AWS_S3_STORAGE_CLIENT
   ? awsS3UploadFromClient(file, PREFIX_UPLOAD, extension, true)
   : vercelBlobUploadFromClient(file, `${PREFIX_UPLOAD}.${extension}`);
 
@@ -59,12 +59,14 @@ export const convertUploadToPhoto = async (
   const fileExtension = getExtensionFromBlobUrl(uploadUrl);
   const photoUrl = `${fileName}.${fileExtension ?? 'jpg'}`;
 
-  const url = await (HAS_AWS_S3_STORAGE
+  const useAwsS3 = HAS_AWS_S3_STORAGE && isUrlFromAwsS3(uploadUrl);
+
+  const url = await (useAwsS3
     ? awsS3Copy(uploadUrl, photoUrl, photoId === undefined)
     : vercelBlobCopy(uploadUrl, photoUrl, photoId === undefined));
 
   if (url) {
-    await (HAS_AWS_S3_STORAGE
+    await (useAwsS3
       ? awsS3Delete(getFileNameFromBlobUrl(uploadUrl))
       : vercelBlobDelete(uploadUrl));
   }
