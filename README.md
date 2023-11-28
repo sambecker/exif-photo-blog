@@ -115,3 +115,6 @@ A: Navigate to `/admin/configuration` and click "Clear Cache" button. If this do
 
 Q: Why aren't my Fujifilm simulations importing alongside EXIF data?<br />
 A: Fujifilm simulation data is stored in vendor-specific Makernote binaries embedded in EXIF data. Under certain circumstances an intermediary may strip out this data for a variety of reasons. For instance, there is a known issue on iOS where editing an image, e.g., cropping it, causes Makernote data loss. If your simulation data appears to be missing, try importing the original file as it was stored by the camera. Additionally, if you can confirm the simulation mode on camera, you can then edit the photo record and manually select it.
+
+Q: Why do my images appear flipped/rotated incorrectly?<br />
+A: For a number of reasons, only EXIF orientations: 1, 3, 6, and 8 are supported. Orientations 2, 4, 5, and 7—which make use of mirroring—are not supported.
