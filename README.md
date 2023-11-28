@@ -101,7 +101,7 @@ Installation
 4. [Create IAM user](https://console.aws.amazon.com/iam/home#/users) for upload policy (by choosing "Attach policies directly"), create access key under "Security credentials," choose "Application running outside AWS," and store credentials
    - `NEXT_PUBLIC_S3_UPLOAD_ACCESS_KEY`
    - `NEXT_PUBLIC_S3_UPLOAD_SECRET_ACCESS_KEY`
-5. [Create IAM user](https://console.aws.amazon.com/iam/home#/users), for admin policy (by choosing "Attach policies directly"), , create access key under "Security credentials," choose "Application running outside AWS," and store credentials (_ensure admin environment variables are not prefixed with `NEXT_PUBLIC`_)
+5. [Create IAM user](https://console.aws.amazon.com/iam/home#/users), for admin policy (by choosing "Attach policies directly"), create access key under "Security credentials," choose "Application running outside AWS," and store credentials (⚠️ _Ensure admin environment variables are not prefixed with `NEXT_PUBLIC`_)
    - `S3_ADMIN_ACCESS_KEY`
    - `S3_ADMIN_SECRET_ACCESS_KEY`
 
