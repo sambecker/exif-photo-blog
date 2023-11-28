@@ -72,9 +72,10 @@ Installation
 
 #### AWS S3
 
-1. [Create bucket](https://s3.console.aws.amazon.com/s3) with "ACLs enabled," and "Block all public access" turned off
-   - Setup CORS:
-     ```
+1. Setup bucket
+   - [Create S3 bucket](https://s3.console.aws.amazon.com/s3) with "ACLs enabled," and "Block all public access" turned off
+   - Setup CORS under bucket permissions:
+     ```json
      [{
       "AllowedHeaders": ["*"],
       "AllowedMethods": [
@@ -92,18 +93,54 @@ Installation
    - Store configuration 
      - Bucket name: `NEXT_PUBLIC_S3_BUCKET`
      - Bucket region: `NEXT_PUBLIC_S3_REGION`
-2. [Create IAM policy](https://console.aws.amazon.com/iam/home#/policies) for client uploads (JSON editor recommended)
-   - Action: `s3:PutObject`, `s3:PutObjectACL`
-   - Resource: `arn:aws:s3:::{BUCKET_NAME}/upload-*`
-3. [Create IAM policy](https://console.aws.amazon.com/iam/home#/policies) for admin actions (JSON editor recommended)
-   - Action: `s3:PutObject`, `s3:PutObjectACL`, `s3:GetObject`, `s3:ListBucket`, `s3:DeleteObject`
-   - Resource: `arn:aws:s3:::{BUCKET_NAME}`, `arn:aws:s3:::{BUCKET_NAME}/*`
-4. [Create IAM user](https://console.aws.amazon.com/iam/home#/users) for upload policy (by choosing "Attach policies directly"), create access key under "Security credentials," choose "Application running outside AWS," and store credentials
-   - `NEXT_PUBLIC_S3_UPLOAD_ACCESS_KEY`
-   - `NEXT_PUBLIC_S3_UPLOAD_SECRET_ACCESS_KEY`
-5. [Create IAM user](https://console.aws.amazon.com/iam/home#/users) for admin policy (by choosing "Attach policies directly"), create access key under "Security credentials," choose "Application running outside AWS," and store credentials (⚠️ _Ensure admin environment variables are not prefixed with `NEXT_PUBLIC`_)
-   - `S3_ADMIN_ACCESS_KEY`
-   - `S3_ADMIN_SECRET_ACCESS_KEY`
+2. Setup client upload credentials
+   - [Create IAM policy](https://console.aws.amazon.com/iam/home#/policies) using JSON editor:
+     ```json
+     {
+       "Version": "2012-10-17",
+       "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "s3:PutObject",
+              "s3:PutObjectACL"
+            ],
+            "Resource": [
+              "arn:aws:s3:::{BUCKET_NAME}/upload-*"
+            ]
+          }
+       ]
+     }
+     ```
+   - [Create IAM user](https://console.aws.amazon.com/iam/home#/users) by choosing "Attach policies directly." Create access key under "Security credentials," choose "Application running outside AWS," and store credentials:
+     - `NEXT_PUBLIC_S3_UPLOAD_ACCESS_KEY`
+     - `NEXT_PUBLIC_S3_UPLOAD_SECRET_ACCESS_KEY`
+3. Setup server admin credentials
+   - [Create IAM policy](https://console.aws.amazon.com/iam/home#/policies) using JSON editor:
+     ```json
+     {
+       "Version": "2012-10-17",
+       "Statement": [
+         {
+           "Effect": "Allow",
+           "Action": [
+             "s3:PutObject",
+             "s3:PutObjectACL",
+             "s3:GetObject",
+             "s3:ListBucket",
+             "s3:DeleteObject"
+           ],
+           "Resource": [
+             "arn:aws:s3:::{BUCKET_NAME}",
+             "arn:aws:s3:::{BUCKET_NAME}/*"
+           ]
+         }
+       ]
+     }
+     ```
+   - [Create IAM user](https://console.aws.amazon.com/iam/home#/users) by choosing "Attach policies directly." Create access key under "Security credentials," choose "Application running outside AWS," and store credentials (⚠️ _Ensure admin environment variables are not prefixed with `NEXT_PUBLIC`_):
+     - `S3_ADMIN_ACCESS_KEY`
+     - `S3_ADMIN_SECRET_ACCESS_KEY`
 
 FAQ
 -
