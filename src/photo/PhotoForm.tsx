@@ -18,9 +18,9 @@ import {
   generateLocalPostgresString,
 } from '@/utility/date';
 import { toastSuccess, toastWarning } from '@/toast';
+import { getDimensionsFromSize } from '@/utility/size';
 
-const THUMBNAIL_WIDTH = 300;
-const THUMBNAIL_HEIGHT = 200;
+const THUMBNAIL_SIZE = 300;
 
 export default function PhotoForm({
   initialPhotoForm,
@@ -67,6 +67,11 @@ export default function PhotoForm({
     }
   }, [updatedExifData]);
 
+  const {
+    width,
+    height,
+  } = getDimensionsFromSize(THUMBNAIL_SIZE, formData.aspectRatio);
+
   // Generate local date strings when
   // none can be harvested from EXIF
   useEffect(() => {
@@ -99,29 +104,36 @@ export default function PhotoForm({
 
   return (
     <div className="space-y-8 max-w-[38rem]">
-      <NextImage
-        alt="Upload"
-        src={url}
-        className={cc(
-          'border rounded-md overflow-hidden',
-          'border-gray-200 dark:border-gray-700'
-        )}
-        width={THUMBNAIL_WIDTH}
-        height={THUMBNAIL_HEIGHT}
-        priority
-      />
-      <CanvasBlurCapture
-        imageUrl={url}
-        width={THUMBNAIL_WIDTH}
-        height={THUMBNAIL_HEIGHT}
-        onCapture={updateBlurData}
-      />
-      {debugBlur && formData.blurData &&
-        <img
-          alt="blur"
-          src={formData.blurData}
-          width={1000}
-        />}
+      <div className="flex gap-2">
+        <NextImage
+          alt="Upload"
+          src={url}
+          className={cc(
+            'border rounded-md overflow-hidden',
+            'border-gray-200 dark:border-gray-700'
+          )}
+          width={width}
+          height={height}
+          priority
+        />
+        <CanvasBlurCapture
+          imageUrl={url}
+          width={width}
+          height={height}
+          onCapture={updateBlurData}
+        />
+        {debugBlur && formData.blurData &&
+          <img
+            alt="blur"
+            src={formData.blurData}
+            className={cc(
+              'border rounded-md overflow-hidden',
+              'border-gray-200 dark:border-gray-700'
+            )}
+            width={width}
+            height={height}
+          />}
+      </div>
       <form
         action={type === 'create' ? createPhotoAction : updatePhotoAction}
         className="space-y-6 pb-12"

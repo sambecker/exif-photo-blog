@@ -1,7 +1,7 @@
 import { auth } from '@/auth';
 import { getImageCacheHeadersForAuth, getPhotosCached } from '@/cache';
 import {
-  IMAGE_OG_SMALL_SIZE,
+  IMAGE_OG_DIMENSION_SMALL,
   MAX_PHOTOS_TO_SHOW_OG,
 } from '@/photo/image-response';
 import HomeImageResponse from '@/photo/image-response/HomeImageResponse';
@@ -21,7 +21,7 @@ export async function GET() {
     getIBMPlexMonoMedium(),
   ]);
 
-  const { width, height } = IMAGE_OG_SMALL_SIZE;
+  const { width, height } = IMAGE_OG_DIMENSION_SMALL;
 
   return new ImageResponse(
     <HomeImageResponse {...{ photos, width, height, fontFamily }}/>,

@@ -5,7 +5,7 @@ import { cc } from '@/utility/css';
 import Link from 'next/link';
 import { BiError } from 'react-icons/bi';
 import Spinner from '@/components/Spinner';
-import { IMAGE_OG_SIZE } from '../photo/image-response';
+import { IMAGE_OG_DIMENSION } from '../photo/image-response';
 
 export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 
@@ -44,7 +44,7 @@ export default function OGTile({
     }
   }, [loadingStateExternal, loadingStateInternal]);
 
-  const { width, height, ratio } = IMAGE_OG_SIZE;
+  const { width, height, aspectRatio } = IMAGE_OG_DIMENSION;
 
   return (
     <Link
@@ -59,7 +59,7 @@ export default function OGTile({
     >
       <div
         className="relative"
-        style={{ aspectRatio: ratio }}
+        style={{ aspectRatio }}
       >
         {loadingState === 'loading' &&
           <div className={cc(

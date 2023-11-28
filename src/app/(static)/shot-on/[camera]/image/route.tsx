@@ -2,7 +2,7 @@ import { auth } from '@/auth';
 import { getImageCacheHeadersForAuth, getPhotosCached } from '@/cache';
 import { getCameraFromKey } from '@/camera';
 import {
-  IMAGE_OG_SMALL_SIZE,
+  IMAGE_OG_DIMENSION_SMALL,
   MAX_PHOTOS_TO_SHOW_PER_TAG,
 } from '@/photo/image-response';
 import CameraImageResponse from '@/photo/image-response/CameraImageResponse';
@@ -30,7 +30,7 @@ export async function GET(
     getImageCacheHeadersForAuth(await auth()),
   ]);
 
-  const { width, height } = IMAGE_OG_SMALL_SIZE;
+  const { width, height } = IMAGE_OG_DIMENSION_SMALL;
 
   return new ImageResponse(
     <CameraImageResponse {...{
