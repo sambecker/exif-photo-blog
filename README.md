@@ -90,8 +90,8 @@ Installation
      }]
      ```
    - Store configuration 
-     - `NEXT_PUBLIC_S3_BUCKET`
-     - `NEXT_PUBLIC_S3_REGION`
+     - Bucket name: `NEXT_PUBLIC_S3_BUCKET`
+     - Bucket region: `NEXT_PUBLIC_S3_REGION`
 2. [Create IAM policy](https://console.aws.amazon.com/iam/home#/policies) for client uploads (JSON editor recommended)
    - Action: `s3:PutObject`, `s3:PutObjectACL`
    - Resource: `arn:aws:s3:::{BUCKET_NAME}/upload-*`
