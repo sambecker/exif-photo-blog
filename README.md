@@ -83,7 +83,7 @@ Installation
         ],
         "AllowedOrigins": [
           "http://localhost:*",
-          "https://${VERCEL_PROJECT_NAME}*.vercel.app"
+          "https://{VERCEL_PROJECT_NAME}*.vercel.app"
           "{PRODUCTION_DOMAIN}",
         ],
         "ExposeHeaders": []
