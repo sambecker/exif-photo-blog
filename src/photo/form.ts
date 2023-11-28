@@ -4,7 +4,7 @@ import {
   convertTimestampToNaivePostgresString,
   convertTimestampWithOffsetToPostgresString,
 } from '@/utility/date';
-import { getOffsetFromExif } from '@/utility/exif';
+import { getAspectRatioFromExif, getOffsetFromExif } from '@/utility/exif';
 import { toFixedNumber } from '@/utility/number';
 import { convertStringToArray } from '@/utility/string';
 import { generateNanoid } from '@/utility/nanoid';
@@ -97,10 +97,7 @@ export const convertExifToFormData = (
   data: ExifData,
   filmSimulation?: FilmSimulation,
 ): Record<keyof PhotoExif, string | undefined> => ({
-  aspectRatio: (
-    (data.imageSize?.width ?? 3.0) /
-    (data.imageSize?.height ?? 2.0)
-  ).toString(),
+  aspectRatio: getAspectRatioFromExif(data).toString(),
   make: data.tags?.Make,
   model: data.tags?.Model,
   focalLength: data.tags?.FocalLength?.toString(),

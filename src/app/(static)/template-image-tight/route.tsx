@@ -1,7 +1,7 @@
 import { auth } from '@/auth';
 import { getImageCacheHeadersForAuth, getPhotosCached } from '@/cache';
 import {
-  IMAGE_OG_SIZE,
+  IMAGE_OG_DIMENSION,
   MAX_PHOTOS_TO_SHOW_TEMPLATE_TIGHT,
 } from '@/photo/image-response';
 import TemplateImageResponse from
@@ -25,7 +25,7 @@ export async function GET() {
     getImageCacheHeadersForAuth(await auth()),
   ]);
 
-  const { width, height } = IMAGE_OG_SIZE;
+  const { width, height } = IMAGE_OG_DIMENSION;
 
   return new ImageResponse(
     (

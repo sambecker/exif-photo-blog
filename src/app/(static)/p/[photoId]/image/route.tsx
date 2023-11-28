@@ -1,6 +1,6 @@
 import { auth } from '@/auth';
 import { getImageCacheHeadersForAuth, getPhotoCached } from '@/cache';
-import { IMAGE_OG_SIZE } from '@/photo/image-response';
+import { IMAGE_OG_DIMENSION } from '@/photo/image-response';
 import PhotoImageResponse from '@/photo/image-response/PhotoImageResponse';
 import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/og';
@@ -23,7 +23,7 @@ export async function GET(
   
   if (!photo) { return new Response('Photo not found', { status: 404 }); }
 
-  const { width, height } = IMAGE_OG_SIZE;
+  const { width, height } = IMAGE_OG_DIMENSION;
   
   return new ImageResponse(
     <PhotoImageResponse {...{ photo, width, height, fontFamily }} />,

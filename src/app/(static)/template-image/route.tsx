@@ -1,7 +1,7 @@
 import { auth } from '@/auth';
 import { getImageCacheHeadersForAuth, getPhotosCached } from '@/cache';
 import {
-  GRID_OG_SIZE,
+  GRID_OG_DIMENSION,
   MAX_PHOTOS_TO_SHOW_TEMPLATE,
 } from '@/photo/image-response';
 import TemplateImageResponse from
@@ -22,7 +22,7 @@ export async function GET() {
     getImageCacheHeadersForAuth(await auth()),
   ]);
 
-  const { width, height } = GRID_OG_SIZE;
+  const { width, height } = GRID_OG_DIMENSION;
   
   return new ImageResponse(
     (
