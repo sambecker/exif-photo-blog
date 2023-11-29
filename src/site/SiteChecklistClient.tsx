@@ -109,7 +109,7 @@ export default function SiteChecklistClient({
     type: ComponentProps<typeof StatusIcon>['type'],
     label: ReactNode,
   ) =>
-    <div className="flex gap-1.5">
+    <div className="flex gap-1 -translate-x-1">
       <StatusIcon {...{ type }} />
       <span>
         {label}
