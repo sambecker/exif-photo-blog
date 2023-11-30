@@ -7,10 +7,10 @@ settings:
 dependencies:
   '@aws-sdk/client-s3':
     specifier: ^3.461.0
-    version: 3.461.0
+    version: 3.462.0
   '@aws-sdk/s3-request-presigner':
     specifier: ^3.461.0
-    version: 3.461.0
+    version: 3.462.0
   '@next/bundle-analyzer':
     specifier: 14.0.3
     version: 14.0.3
@@ -158,7 +158,7 @@ packages:
     resolution: {integrity: sha512-IzSgsrxUcsrejQbPVilIKy16kAT52EwB6zSaI+M3xxIhKh5+aldEyvI+z6erM7TCLB2BJsFrtHjp6/4/sr+3dA==}
     dependencies:
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.451.0
+      '@aws-sdk/types': 3.460.0
       tslib: 1.14.1
     dev: false
 
@@ -218,19 +218,19 @@ packages:
   /@aws-crypto/util@3.0.0:
     resolution: {integrity: sha512-2OJlpeJpCR48CC8r+uKVChzs9Iungj9wkZrl8Z041DWEWvyIHILYKCPNzJghKsivj+S3mLo6BVc7mBNzdxA46w==}
     dependencies:
-      '@aws-sdk/types': 3.451.0
+      '@aws-sdk/types': 3.460.0
       '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
     dev: false
 
-  /@aws-sdk/client-s3@3.461.0:
-    resolution: {integrity: sha512-pvEWMb2djn3bjD9lelYQhyG8KKKrUMm5MlSaSPwqVTL97iKm/Zbk+Ord6n8qMyPl5JHGmNdfg0tZFxC1qXeHTw==}
+  /@aws-sdk/client-s3@3.462.0:
+    resolution: {integrity: sha512-nyBmsS45b5/YI926dtJp6OA8Fx7yItcdK8lqJq5bgfbskyEqycFCXzykog1AkIBETOeUn3Saztw7HCGZKRad0g==}
     engines: {node: '>=14.0.0'}
     dependencies:
       '@aws-crypto/sha1-browser': 3.0.0
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sts': 3.461.0
+      '@aws-sdk/client-sts': 3.462.0
       '@aws-sdk/core': 3.451.0
       '@aws-sdk/credential-provider-node': 3.460.0
       '@aws-sdk/middleware-bucket-endpoint': 3.460.0
@@ -332,8 +332,8 @@ packages:
       - aws-crt
     dev: false
 
-  /@aws-sdk/client-sts@3.461.0:
-    resolution: {integrity: sha512-1u+t31m23vuc9zkiUk51L4QbwuRQEuBeMArHK/thmq4V+A0VmjoAr/x2D0eQ0deOuBqG5YC62oaqUfIhj03SIw==}
+  /@aws-sdk/client-sts@3.462.0:
+    resolution: {integrity: sha512-oO6SVGB9kR0dwc4T/M3++TcioBVv26cEpxZGS4BcKMDxSjkCLqJ/jE37aCNNPGTlCAhnuOAwqGjFqYrsehsI1Q==}
     engines: {node: '>=14.0.0'}
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
@@ -615,8 +615,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@aws-sdk/s3-request-presigner@3.461.0:
-    resolution: {integrity: sha512-EffKSCd8tbBw32+AZyxTAIzpicqPu9A+97q7p/9tJo5175j1HTHwf68zmiR/C60kdJNHu+A4YNdQ9pLeg47CFA==}
+  /@aws-sdk/s3-request-presigner@3.462.0:
+    resolution: {integrity: sha512-yZbO45lJdJ8P8Q+ODWZeg84ORaCy+ZzAZouTsNcBfwxnhatrk4E6sP1xsUCF4knL/vC53frM4LnY858E9Z/NVg==}
     engines: {node: '>=14.0.0'}
     dependencies:
       '@aws-sdk/signature-v4-multi-region': 3.461.0
@@ -684,14 +684,6 @@ packages:
       tslib: 2.6.2
     transitivePeerDependencies:
       - aws-crt
-    dev: false
-
-  /@aws-sdk/types@3.451.0:
-    resolution: {integrity: sha512-rhK+qeYwCIs+laJfWCcrYEjay2FR/9VABZJ2NRM89jV/fKqGVQR52E5DQqrI+oEIL5JHMhhnr4N4fyECMS35lw==}
-    engines: {node: '>=14.0.0'}
-    dependencies:
-      '@smithy/types': 2.6.0
-      tslib: 2.6.2
     dev: false
 
   /@aws-sdk/types@3.460.0:
