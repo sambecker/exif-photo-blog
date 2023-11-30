@@ -1,6 +1,8 @@
 import { auth } from '@/auth';
 import { awsS3GetSignedUploadUrl } from '@/services/blob/aws-s3';
 
+export const runtime = 'edge';
+
 export async function GET(
   _: Request,
   { params: { key } }: { params: { key: string } },
