@@ -116,7 +116,7 @@ Installation
        ]
      }
      ```
-   - [Create IAM user](https://console.aws.amazon.com/iam/home#/users) by choosing "Attach policies directly." Create access key under "Security credentials," choose "Application running outside AWS," and store credentials (⚠️ _Ensure credential environment variables are not prefixed with `NEXT_PUBLIC`_):
+   - [Create IAM user](https://console.aws.amazon.com/iam/home#/users) by choosing "Attach policies directly," and selecting the policy created above. Create access key under "Security credentials," choose "Application running outside AWS," and store credentials (⚠️ _Ensure credential environment variables are not prefixed with `NEXT_PUBLIC`_):
      - `AWS_S3_ACCESS_KEY`
      - `AWS_S3_SECRET_ACCESS_KEY`
 
