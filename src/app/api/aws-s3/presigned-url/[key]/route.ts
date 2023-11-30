@@ -1,5 +1,9 @@
 import { auth } from '@/auth';
-import { awsS3GetSignedUploadUrl } from '@/services/blob/aws-s3';
+import {
+  awsS3Client,
+  awsS3PutObjectCommandForKey,
+} from '@/services/blob/aws-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 export const runtime = 'edge';
 
@@ -9,7 +13,11 @@ export async function GET(
 ) {
   const session = await auth();
   if (session?.user && key) {
-    const url = await awsS3GetSignedUploadUrl(key);
+    const url = await getSignedUrl(
+      awsS3Client(),
+      awsS3PutObjectCommandForKey(key),
+      { expiresIn: 3600 }
+    );
     return new Response(
       url,
       { headers: { 'content-type': 'text/plain' } },
