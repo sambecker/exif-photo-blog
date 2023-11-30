@@ -1,3 +1,4 @@
+import { auth } from '@/auth';
 import { revalidateAdminPaths, revalidatePhotosKey } from '@/cache';
 import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
 import { isUploadPathnameValid } from '@/services/blob';
@@ -12,13 +13,18 @@ export async function POST(request: Request): Promise<NextResponse> {
       body,
       request,
       onBeforeGenerateToken: async (pathname) => {
-        if (isUploadPathnameValid(pathname)) {
-          return {
-            maximumSizeInBytes: 40_000_000,
-            allowedContentTypes: ACCEPTED_PHOTO_FILE_TYPES,
-          };
+        const session = await auth();
+        if (session?.user) {
+          if (isUploadPathnameValid(pathname)) {
+            return {
+              maximumSizeInBytes: 40_000_000,
+              allowedContentTypes: ACCEPTED_PHOTO_FILE_TYPES,
+            };
+          } else {
+            throw new Error('Invalid upload');
+          }
         } else {
-          throw new Error('Invalid upload');
+          throw new Error('Unauthenticated upload');
         }
       },
       // This argument is required, but doesn't seem to fire
