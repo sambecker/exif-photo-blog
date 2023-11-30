@@ -6,24 +6,20 @@ import {
   ListObjectsCommand,
   PutObjectCommand,
 } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
-const S3_BUCKET = process.env.NEXT_PUBLIC_S3_BUCKET ?? '';
-const S3_REGION = process.env.NEXT_PUBLIC_S3_REGION ?? '';
-const S3_UPLOAD_ACCESS_KEY =
-  process.env.NEXT_PUBLIC_S3_UPLOAD_ACCESS_KEY ?? '';
-const S3_UPLOAD_SECRET_ACCESS_KEY =
-  process.env.NEXT_PUBLIC_S3_UPLOAD_SECRET_ACCESS_KEY ?? '';
-const S3_ADMIN_ACCESS_KEY =
-  process.env.S3_ADMIN_ACCESS_KEY;
-const S3_ADMIN_SECRET_ACCESS_KEY =
-  process.env.S3_ADMIN_SECRET_ACCESS_KEY;
+const S3_BUCKET = process.env.NEXT_PUBLIC_AWS_S3_BUCKET ?? '';
+const S3_REGION = process.env.NEXT_PUBLIC_AWS_S3_REGION ?? '';
+const S3_ACCESS_KEY = process.env.AWS_S3_ACCESS_KEY ?? '';
+const S3_SECRET_ACCESS_KEY = process.env.AWS_S3_SECRET_ACCESS_KEY ?? '';
+
+const API_PATH_PRESIGNED_URL = '/api/aws-s3/presigned-url';
 
 const client = () => new S3Client({
   region: S3_REGION,
   credentials: {
-    // Fall back on upload credentials when admin credentials aren't available
-    accessKeyId: S3_ADMIN_ACCESS_KEY ?? S3_UPLOAD_ACCESS_KEY,
-    secretAccessKey: S3_ADMIN_SECRET_ACCESS_KEY ?? S3_UPLOAD_SECRET_ACCESS_KEY,
+    accessKeyId: S3_ACCESS_KEY,
+    secretAccessKey: S3_SECRET_ACCESS_KEY,
   },
 });
 
@@ -37,22 +33,30 @@ const urlForKey = (key?: string) => `${AWS_S3_BASE_URL}/${key}`;
 
 const generateBlobId = () => generateNanoid(16);
 
+// Runs on server
+export const awsS3GetSignedUploadUrl = async (Key: string) =>
+  getSignedUrl(
+    client(),
+    new PutObjectCommand({ Bucket: S3_BUCKET, Key, ACL: 'public-read' }),
+    { expiresIn: 3600 }
+  );
+
+// Runs on client
 export const awsS3UploadFromClient = async (
   file: File | Blob,
   fileName: string,
   extension: string,
   addRandomSuffix?: boolean,
 ) => {
-  const Key = addRandomSuffix
+  const key = addRandomSuffix
     ? `${fileName}-${generateBlobId()}.${extension}`
     : `${fileName}.${extension}`;
-  return client().send(new PutObjectCommand({
-    Bucket: S3_BUCKET,
-    Key,
-    Body: file,
-    ACL: 'public-read',
-  }))
-    .then(() => urlForKey(Key));
+
+  const url = await fetch(`${API_PATH_PRESIGNED_URL}/${key}`)
+    .then((response) => response.text());
+
+  return fetch(url, { method: 'PUT', body: file })
+    .then(() => urlForKey(key));
 };
 
 export const awsS3Copy = async (

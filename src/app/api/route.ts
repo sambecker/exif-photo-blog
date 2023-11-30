@@ -19,6 +19,6 @@ export async function GET() {
       photos: photos.map(formatPhotoForApi),
     });
   } else {
-    return Response.json({ message: 'API is disabled' });
+    return new Response('API access disabled', { status: 404 });
   }
 }

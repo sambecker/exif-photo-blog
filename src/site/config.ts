@@ -35,17 +35,15 @@ export const HAS_VERCEL_BLOB =
   (process.env.BLOB_READ_WRITE_TOKEN ?? '').length > 0;
 
 // STORAGE: AWS S3
-// Includes separate check for client-side usage, i.e., uploading,
+// Includes separate check for client-side usage,
+// i.e., uploading, url construction
 export const HAS_AWS_S3_STORAGE_CLIENT =
-  (process.env.NEXT_PUBLIC_S3_BUCKET ?? '').length > 0 &&
-  (process.env.NEXT_PUBLIC_S3_REGION ?? '').length > 0 &&
-  (process.env.NEXT_PUBLIC_S3_UPLOAD_ACCESS_KEY ?? '').length > 0 &&
-  (process.env.NEXT_PUBLIC_S3_UPLOAD_SECRET_ACCESS_KEY ?? '').length > 0;
+  (process.env.NEXT_PUBLIC_AWS_S3_BUCKET ?? '').length > 0 &&
+  (process.env.NEXT_PUBLIC_AWS_S3_REGION ?? '').length > 0;
 export const HAS_AWS_S3_STORAGE =
   HAS_AWS_S3_STORAGE_CLIENT &&
-  (process.env.S3_ADMIN_ACCESS_KEY ?? '').length > 0 &&
-  (process.env.S3_ADMIN_SECRET_ACCESS_KEY ?? '').length > 0;
-  
+  (process.env.AWS_S3_ACCESS_KEY ?? '').length > 0 &&
+  (process.env.AWS_S3_SECRET_ACCESS_KEY ?? '').length > 0;
 
 // SETTINGS
 
