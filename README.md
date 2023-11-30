@@ -91,31 +91,9 @@ Installation
      }]
      ```
    - Store configuration 
-     - Bucket name: `NEXT_PUBLIC_S3_BUCKET`
-     - Bucket region: `NEXT_PUBLIC_S3_REGION`
-2. Setup client upload credentials
-   - [Create IAM policy](https://console.aws.amazon.com/iam/home#/policies) using JSON editor:
-     ```json
-     {
-       "Version": "2012-10-17",
-       "Statement": [
-          {
-            "Effect": "Allow",
-            "Action": [
-              "s3:PutObject",
-              "s3:PutObjectACL"
-            ],
-            "Resource": [
-              "arn:aws:s3:::{BUCKET_NAME}/upload-*"
-            ]
-          }
-       ]
-     }
-     ```
-   - [Create IAM user](https://console.aws.amazon.com/iam/home#/users) by choosing "Attach policies directly." Create access key under "Security credentials," choose "Application running outside AWS," and store credentials:
-     - `NEXT_PUBLIC_S3_UPLOAD_ACCESS_KEY`
-     - `NEXT_PUBLIC_S3_UPLOAD_SECRET_ACCESS_KEY`
-3. Setup server admin credentials
+     - Bucket name: `NEXT_PUBLIC_AWS_S3_BUCKET`
+     - Bucket region: `NEXT_PUBLIC_AWS_S3_REGION`
+2. Setup credentials
    - [Create IAM policy](https://console.aws.amazon.com/iam/home#/policies) using JSON editor:
      ```json
      {
@@ -138,9 +116,9 @@ Installation
        ]
      }
      ```
-   - [Create IAM user](https://console.aws.amazon.com/iam/home#/users) by choosing "Attach policies directly." Create access key under "Security credentials," choose "Application running outside AWS," and store credentials (⚠️ _Ensure admin environment variables are not prefixed with `NEXT_PUBLIC`_):
-     - `S3_ADMIN_ACCESS_KEY`
-     - `S3_ADMIN_SECRET_ACCESS_KEY`
+   - [Create IAM user](https://console.aws.amazon.com/iam/home#/users) by choosing "Attach policies directly." Create access key under "Security credentials," choose "Application running outside AWS," and store credentials (⚠️ _Ensure credential environment variables are not prefixed with `NEXT_PUBLIC`_):
+     - `AWS_S3_ACCESS_KEY`
+     - `AWS_S3_SECRET_ACCESS_KEY`
 
 FAQ
 -

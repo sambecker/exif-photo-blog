@@ -7,28 +7,23 @@ import {
   PutObjectCommand,
 } from '@aws-sdk/client-s3';
 
-const S3_BUCKET = process.env.NEXT_PUBLIC_S3_BUCKET ?? '';
-const S3_REGION = process.env.NEXT_PUBLIC_S3_REGION ?? '';
-const S3_UPLOAD_ACCESS_KEY =
-  process.env.NEXT_PUBLIC_S3_UPLOAD_ACCESS_KEY ?? '';
-const S3_UPLOAD_SECRET_ACCESS_KEY =
-  process.env.NEXT_PUBLIC_S3_UPLOAD_SECRET_ACCESS_KEY ?? '';
-const S3_ADMIN_ACCESS_KEY =
-  process.env.S3_ADMIN_ACCESS_KEY;
-const S3_ADMIN_SECRET_ACCESS_KEY =
-  process.env.S3_ADMIN_SECRET_ACCESS_KEY;
+const AWS_S3_BUCKET = process.env.NEXT_PUBLIC_AWS_S3_BUCKET ?? '';
+const AWS_S3_REGION = process.env.NEXT_PUBLIC_AWS_S3_REGION ?? '';
+const AWS_S3_ACCESS_KEY = process.env.AWS_S3_ACCESS_KEY ?? '';
+const AWS_S3_SECRET_ACCESS_KEY = process.env.AWS_S3_SECRET_ACCESS_KEY ?? '';
 
-const client = () => new S3Client({
-  region: S3_REGION,
+const API_PATH_PRESIGNED_URL = '/api/aws-s3/presigned-url';
+
+export const awsS3Client = () => new S3Client({
+  region: AWS_S3_REGION,
   credentials: {
-    // Fall back on upload credentials when admin credentials aren't available
-    accessKeyId: S3_ADMIN_ACCESS_KEY ?? S3_UPLOAD_ACCESS_KEY,
-    secretAccessKey: S3_ADMIN_SECRET_ACCESS_KEY ?? S3_UPLOAD_SECRET_ACCESS_KEY,
+    accessKeyId: AWS_S3_ACCESS_KEY,
+    secretAccessKey: AWS_S3_SECRET_ACCESS_KEY,
   },
 });
 
 export const AWS_S3_BASE_URL =
-  `https://${S3_BUCKET}.s3.${S3_REGION}.amazonaws.com`;
+  `https://${AWS_S3_BUCKET}.s3.${AWS_S3_REGION}.amazonaws.com`;
 
 export const isUrlFromAwsS3 = (url: string) =>
   url.startsWith(AWS_S3_BASE_URL);
@@ -37,22 +32,24 @@ const urlForKey = (key?: string) => `${AWS_S3_BASE_URL}/${key}`;
 
 const generateBlobId = () => generateNanoid(16);
 
+export const awsS3PutObjectCommandForKey = (Key: string) =>
+  new PutObjectCommand({ Bucket: AWS_S3_BUCKET, Key, ACL: 'public-read' });
+
 export const awsS3UploadFromClient = async (
   file: File | Blob,
   fileName: string,
   extension: string,
   addRandomSuffix?: boolean,
 ) => {
-  const Key = addRandomSuffix
+  const key = addRandomSuffix
     ? `${fileName}-${generateBlobId()}.${extension}`
     : `${fileName}.${extension}`;
-  return client().send(new PutObjectCommand({
-    Bucket: S3_BUCKET,
-    Key,
-    Body: file,
-    ACL: 'public-read',
-  }))
-    .then(() => urlForKey(Key));
+
+  const url = await fetch(`${API_PATH_PRESIGNED_URL}/${key}`)
+    .then((response) => response.text());
+
+  return fetch(url, { method: 'PUT', body: file })
+    .then(() => urlForKey(key));
 };
 
 export const awsS3Copy = async (
@@ -65,8 +62,8 @@ export const awsS3Copy = async (
   const Key = addRandomSuffix
     ? `${name}-${generateBlobId()}.${extension}`
     : fileNameDestination;
-  return client().send(new CopyObjectCommand({
-    Bucket: S3_BUCKET,
+  return awsS3Client().send(new CopyObjectCommand({
+    Bucket: AWS_S3_BUCKET,
     CopySource: fileNameSource,
     Key,
     ACL: 'public-read',
@@ -75,15 +72,15 @@ export const awsS3Copy = async (
 };
 
 export const awsS3Delete = async (Key: string) => {
-  client().send(new DeleteObjectCommand({
-    Bucket: S3_BUCKET,
+  awsS3Client().send(new DeleteObjectCommand({
+    Bucket: AWS_S3_BUCKET,
     Key,
   }));
 };
 
 export const awsS3List = async (Prefix: string) =>
-  client().send(new ListObjectsCommand({
-    Bucket: S3_BUCKET,
+  awsS3Client().send(new ListObjectsCommand({
+    Bucket: AWS_S3_BUCKET,
     Prefix,
   }))
     .then((data) => data.Contents?.map(({ Key }) => urlForKey(Key)) ?? []);

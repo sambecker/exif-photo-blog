@@ -13,7 +13,7 @@ import {
   awsS3UploadFromClient,
   isUrlFromAwsS3,
 } from './aws-s3';
-import { HAS_AWS_S3_STORAGE_CLIENT, HAS_AWS_S3_STORAGE } from '@/site/config';
+import { HAS_AWS_S3_STORAGE, HAS_AWS_S3_STORAGE_CLIENT } from '@/site/config';
 
 const PREFIX_UPLOAD = 'upload';
 const PREFIX_PHOTO = 'photo';
