@@ -91,13 +91,11 @@ export default function PhotoForm({
   const url = formData.url ?? '';
 
   const updateBlurData = useCallback((blurData: string) => {
-    if (type === 'create') {
-      setFormData(data => ({
-        ...data,
-        blurData,
-      }));
-    }
-  }, [type]);
+    setFormData(data => ({
+      ...data,
+      blurData,
+    }));
+  }, []);
 
   const isFormValid = FORM_METADATA_ENTRIES.every(([key, { required }]) =>
     !required || Boolean(formData[key]));

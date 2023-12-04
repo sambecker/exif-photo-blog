@@ -24,43 +24,40 @@ export default function CanvasBlurCapture({
   quality?: number
 }) {
   const refCanvas = useRef<HTMLCanvasElement>(null);
-  const refHasCompleted = useRef(false);
   const refTimeouts = useRef<NodeJS.Timeout[]>([]);
 
   useEffect(() => {
     const capture = () => {
-      if (!refHasCompleted.current) {
-        const canvas = refCanvas.current;
-        if (canvas) {
-          canvas.width = width * scale;
-          canvas.height = height * scale;
-          canvas.style.width = `${width}px`;
-          canvas.style.height = `${height}px`;
-          const context = refCanvas.current?.getContext('2d');
-          if (context) {
-            context.scale(scale, scale);
-            context.filter =
-              'contrast(1.2) saturate(1.2)' +
-              `blur(${scale * 10}px)`;
-            context.drawImage(
-              image,
-              -edgeCompensation,
-              -edgeCompensation,
-              width + edgeCompensation * 2,
-              width * image.height / image.width + edgeCompensation * 2,
-            );
-            refHasCompleted.current = true;
-            onCapture(canvas.toDataURL('image/jpeg', quality));
-          } else {
-            console.error('Cannot get 2d context');
-            // Retry capture in case canvas is not available
-            refTimeouts.current.push(setTimeout(capture, RETRY_DELAY));
-          }
+      const canvas = refCanvas.current;
+      if (canvas) {
+        canvas.width = width * scale;
+        canvas.height = height * scale;
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        const context = refCanvas.current?.getContext('2d');
+        if (context) {
+          context.scale(scale, scale);
+          context.filter =
+            'contrast(1.2) saturate(1.2)' +
+            `blur(${scale * 10}px)`;
+          context.drawImage(
+            image,
+            -edgeCompensation,
+            -edgeCompensation,
+            width + edgeCompensation * 2,
+            width * image.height / image.width + edgeCompensation * 2,
+          );
+          refTimeouts.current.forEach(clearTimeout);
+          onCapture(canvas.toDataURL('image/jpeg', quality));
         } else {
-          console.error('Cannot generate blur data: canvas not found');
+          console.error('Cannot get 2d context');
           // Retry capture in case canvas is not available
           refTimeouts.current.push(setTimeout(capture, RETRY_DELAY));
         }
+      } else {
+        console.error('Cannot generate blur data: canvas not found');
+        // Retry capture in case canvas is not available
+        refTimeouts.current.push(setTimeout(capture, RETRY_DELAY));
       }
     };
 
