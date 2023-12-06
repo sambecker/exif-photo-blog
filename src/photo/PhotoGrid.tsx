@@ -62,7 +62,7 @@ export default function PhotoGrid({
                 'aspect-square',
                 'overflow-hidden',
                 '[&>*]:flex [&>*]:w-full [&>*]:h-full',
-                '[&>*>*]:object-cover',
+                '[&>*>*]:object-cover [&>*>*]:min-h-full',
               )
               : undefined}
             style={{
