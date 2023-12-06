@@ -7,6 +7,8 @@ import MorePhotos from '@/photo/MorePhotos';
 import { FilmSimulation } from '@/simulation';
 import { GRID_ASPECT_RATIO } from '@/site/config';
 
+const HIGH_DENSITY = GRID_ASPECT_RATIO <= 1;
+
 export default function PhotoGrid({
   photos,
   selectedPhoto,
@@ -41,7 +43,9 @@ export default function PhotoGrid({
           'grid gap-1',
           small
             ? 'grid-cols-3 xs:grid-cols-6'
-            : 'grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
+            : HIGH_DENSITY
+              ? 'grid-cols-2 xs:grid-cols-4 lg:grid-cols-5'
+              : 'grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
           'items-center',
         )}
         type={animate === false ? 'none' : undefined}
