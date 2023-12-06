@@ -63,7 +63,7 @@ export default function PhotoGrid({
               : undefined}
             style={{
               ...GRID_ASPECT_RATIO !== 0 && {
-                aspectRatio: GRID_ASPECT_RATIO ?? 1,
+                aspectRatio: GRID_ASPECT_RATIO,
               },
             }}
           >

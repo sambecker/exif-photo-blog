@@ -52,11 +52,11 @@ export const PUBLIC_API_ENABLED = process.env.NEXT_PUBLIC_PUBLIC_API === '1';
 export const SHOW_REPO_LINK = process.env.NEXT_PUBLIC_HIDE_REPO_LINK !== '1';
 export const SHOW_FILM_SIMULATIONS =
   process.env.NEXT_PUBLIC_HIDE_FILM_SIMULATIONS !== '1';
-export const OG_TEXT_BOTTOM_ALIGNMENT =
-  (process.env.NEXT_PUBLIC_OG_TEXT_ALIGNMENT ?? '').toUpperCase() === 'BOTTOM';
 export const GRID_ASPECT_RATIO = process.env.NEXT_PUBLIC_GRID_ASPECT_RATIO
   ? parseFloat(process.env.NEXT_PUBLIC_GRID_ASPECT_RATIO)
-  : undefined;
+  : 1;
+export const OG_TEXT_BOTTOM_ALIGNMENT =
+  (process.env.NEXT_PUBLIC_OG_TEXT_ALIGNMENT ?? '').toUpperCase() === 'BOTTOM';
 
 export const CONFIG_CHECKLIST_STATUS = {
   hasPostgres: (process.env.POSTGRES_HOST ?? '').length > 0,
@@ -75,6 +75,7 @@ export const CONFIG_CHECKLIST_STATUS = {
   isProModeEnabled: PRO_MODE_ENABLED,
   isPublicApiEnabled: PUBLIC_API_ENABLED,
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,
+  gridAspectRatio: GRID_ASPECT_RATIO,
 };
 
 export type ConfigChecklistStatus = typeof CONFIG_CHECKLIST_STATUS;
