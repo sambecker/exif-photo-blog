@@ -5,6 +5,7 @@ import AnimateItems from '@/components/AnimateItems';
 import { Camera } from '@/camera';
 import MorePhotos from '@/photo/MorePhotos';
 import { FilmSimulation } from '@/simulation';
+import { GRID_ASPECT_RATIO } from '@/site/config';
 
 export default function PhotoGrid({
   photos,
@@ -50,14 +51,30 @@ export default function PhotoGrid({
         animateOnFirstLoadOnly={animateOnFirstLoadOnly}
         staggerOnFirstLoadOnly={staggerOnFirstLoadOnly}
         items={photos.map(photo =>
-          <PhotoSmall
+          <div
             key={photo.id}
-            photo={photo}
-            tag={tag}
-            camera={camera}
-            simulation={simulation}
-            selected={photo.id === selectedPhoto?.id}
-          />).concat(additionalTile ?? [])}
+            className={GRID_ASPECT_RATIO !== 0
+              ? cc(
+                'aspect-square',
+                'overflow-hidden',
+                '[&>*]:flex [&>*]:w-full [&>*]:h-full',
+                '[&>*>*]:object-cover',
+              )
+              : undefined}
+            style={{
+              ...GRID_ASPECT_RATIO !== 0 && {
+                aspectRatio: GRID_ASPECT_RATIO ?? 1,
+              },
+            }}
+          >
+            <PhotoSmall {...{
+              photo,
+              tag,
+              camera,
+              simulation,
+              selected: photo.id === selectedPhoto?.id,
+            }} />
+          </div>).concat(additionalTile ?? [])}
       />
       {showMorePath &&
         <MorePhotos path={showMorePath} />}
