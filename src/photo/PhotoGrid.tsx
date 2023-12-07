@@ -40,7 +40,7 @@ export default function PhotoGrid({
     <div className="space-y-4">
       <AnimateItems
         className={cc(
-          'grid gap-1',
+          'grid gap-0.5 sm:gap-1',
           small
             ? 'grid-cols-3 xs:grid-cols-6'
             : HIGH_DENSITY

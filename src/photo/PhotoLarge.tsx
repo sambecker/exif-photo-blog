@@ -63,6 +63,7 @@ export default function PhotoLarge({
         <div className={cc(
           'sticky top-4 self-start',
           'grid grid-cols-2 md:grid-cols-1',
+          'gap-x-0.5 sm:gap-x-1',
           'gap-y-4',
           '-translate-y-1',
           'mb-4',
