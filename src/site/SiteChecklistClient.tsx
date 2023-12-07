@@ -35,6 +35,7 @@ export default function SiteChecklistClient({
   isPublicApiEnabled,
   isOgTextBottomAligned,
   showRefreshButton,
+  gridAspectRatio,
   secret,
 }: ConfigChecklistStatus & {
   showRefreshButton?: boolean
@@ -272,6 +273,17 @@ export default function SiteChecklistClient({
           Set environment variable to {'"1"'} to prevent
           simulations showing up in <code>/grid</code> sidebar:
           {renderEnvVars(['NEXT_PUBLIC_HIDE_FILM_SIMULATIONS'])}
+        </ChecklistRow>
+        <ChecklistRow
+          title={`Grid Aspect Ratio: ${gridAspectRatio}`}
+          status={gridAspectRatio !== 0}
+          isPending={isPendingPage}
+          optional
+        >
+          Set environment variable to any number to enforce aspect ratio
+          {' '}
+          (defaults to {'"1"'}, i.e., square)—set to {'"0"'} to disable:
+          {renderEnvVars(['NEXT_PUBLIC_GRID_ASPECT_RATIO'])}
         </ChecklistRow>
         <ChecklistRow
           title="Legacy OG Text Alignment"

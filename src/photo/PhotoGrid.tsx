@@ -5,6 +5,9 @@ import AnimateItems from '@/components/AnimateItems';
 import { Camera } from '@/camera';
 import MorePhotos from '@/photo/MorePhotos';
 import { FilmSimulation } from '@/simulation';
+import { GRID_ASPECT_RATIO } from '@/site/config';
+
+const HIGH_DENSITY = GRID_ASPECT_RATIO <= 1;
 
 export default function PhotoGrid({
   photos,
@@ -37,10 +40,12 @@ export default function PhotoGrid({
     <div className="space-y-4">
       <AnimateItems
         className={cc(
-          'grid gap-1',
+          'grid gap-0.5 sm:gap-1',
           small
             ? 'grid-cols-3 xs:grid-cols-6'
-            : 'grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
+            : HIGH_DENSITY
+              ? 'grid-cols-2 xs:grid-cols-4 lg:grid-cols-5'
+              : 'grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
           'items-center',
         )}
         type={animate === false ? 'none' : undefined}
@@ -50,14 +55,30 @@ export default function PhotoGrid({
         animateOnFirstLoadOnly={animateOnFirstLoadOnly}
         staggerOnFirstLoadOnly={staggerOnFirstLoadOnly}
         items={photos.map(photo =>
-          <PhotoSmall
+          <div
             key={photo.id}
-            photo={photo}
-            tag={tag}
-            camera={camera}
-            simulation={simulation}
-            selected={photo.id === selectedPhoto?.id}
-          />).concat(additionalTile ?? [])}
+            className={GRID_ASPECT_RATIO !== 0
+              ? cc(
+                'aspect-square',
+                'overflow-hidden',
+                '[&>*]:flex [&>*]:w-full [&>*]:h-full',
+                '[&>*>*]:object-cover [&>*>*]:min-h-full',
+              )
+              : undefined}
+            style={{
+              ...GRID_ASPECT_RATIO !== 0 && {
+                aspectRatio: GRID_ASPECT_RATIO,
+              },
+            }}
+          >
+            <PhotoSmall {...{
+              photo,
+              tag,
+              camera,
+              simulation,
+              selected: photo.id === selectedPhoto?.id,
+            }} />
+          </div>).concat(additionalTile ?? [])}
       />
       {showMorePath &&
         <MorePhotos path={showMorePath} />}

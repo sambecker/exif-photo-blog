@@ -97,6 +97,7 @@ export default function PhotoDetailPage({
         />}
         contentSide={<div className={cc(
           'grid grid-cols-2',
+          'gap-0.5 sm:gap-1',
           'md:flex md:gap-4',
           'user-select-none',
         )}>

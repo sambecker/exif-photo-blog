@@ -64,9 +64,10 @@ Installation
 
 - `NEXT_PUBLIC_PRO_MODE = 1` enables higher quality image storage
 - `NEXT_PUBLIC_PUBLIC_API = 1` enables public API available at `/api`
-- `NEXT_PUBLIC_OG_TEXT_ALIGNMENT = BOTTOM` keeps OG image text bottom aligned (default is top)
 - `NEXT_PUBLIC_HIDE_REPO_LINK = 1` removes footer link to repo
 - `NEXT_PUBLIC_HIDE_FILM_SIMULATIONS = 1` prevents Fujifilm simulations showing up in `/grid` sidebar
+- `NEXT_PUBLIC_GRID_ASPECT_RATIO = 1.5` sets aspect ratio for grid tiles (defaults to `1`—setting to `0` removes the constraint)
+- `NEXT_PUBLIC_OG_TEXT_ALIGNMENT = BOTTOM` keeps OG image text bottom aligned (default is top)
 
 ### Setup alternate storage
 
