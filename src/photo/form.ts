@@ -13,6 +13,7 @@ import {
   MAKE_FUJIFILM,
 } from '@/vendors/fujifilm';
 import { FilmSimulation } from '@/simulation';
+import { GEO_PRIVACY_ENABLED } from '@/site/config';
 
 export type PhotoFormData = Record<keyof PhotoDbInsert, string>;
 
@@ -106,8 +107,10 @@ export const convertExifToFormData = (
   iso: data.tags?.ISO?.toString(),
   exposureTime: data.tags?.ExposureTime?.toString(),
   exposureCompensation: data.tags?.ExposureCompensation?.toString(),
-  latitude: data.tags?.GPSLatitude?.toString(),
-  longitude: data.tags?.GPSLongitude?.toString(),
+  latitude:
+    !GEO_PRIVACY_ENABLED ? data.tags?.GPSLatitude?.toString() : undefined,
+  longitude:
+    !GEO_PRIVACY_ENABLED ? data.tags?.GPSLongitude?.toString() : undefined,
   filmSimulation,
   takenAt: data.tags?.DateTimeOriginal
     ? convertTimestampWithOffsetToPostgresString(

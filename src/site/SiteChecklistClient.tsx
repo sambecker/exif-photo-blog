@@ -32,6 +32,7 @@ export default function SiteChecklistClient({
   showRepoLink,
   showFilmSimulations,
   isProModeEnabled,
+  isGeoPrivacyEnabled,
   isPublicApiEnabled,
   isOgTextBottomAligned,
   showRefreshButton,
@@ -244,6 +245,16 @@ export default function SiteChecklistClient({
           Set environment variable to {'"1"'} to enable
           higher quality image storage:
           {renderEnvVars(['NEXT_PUBLIC_PRO_MODE'])}
+        </ChecklistRow>
+        <ChecklistRow
+          title="Geo Privacy"
+          status={isGeoPrivacyEnabled}
+          isPending={isPendingPage}
+          optional
+        >
+          Set environment variable to {'"1"'} to disable
+          collection/display of location-based data
+          {renderEnvVars(['NEXT_PUBLIC_GEO_PRIVACY'])}
         </ChecklistRow>
         <ChecklistRow
           title="Public API"

@@ -48,6 +48,7 @@ export const HAS_AWS_S3_STORAGE =
 // SETTINGS
 
 export const PRO_MODE_ENABLED = process.env.NEXT_PUBLIC_PRO_MODE === '1';
+export const GEO_PRIVACY_ENABLED = process.env.NEXT_PUBLIC_GEO_PRIVACY === '1';
 export const PUBLIC_API_ENABLED = process.env.NEXT_PUBLIC_PUBLIC_API === '1';
 export const SHOW_REPO_LINK = process.env.NEXT_PUBLIC_HIDE_REPO_LINK !== '1';
 export const SHOW_FILM_SIMULATIONS =
@@ -73,6 +74,7 @@ export const CONFIG_CHECKLIST_STATUS = {
   showRepoLink: SHOW_REPO_LINK,
   showFilmSimulations: SHOW_FILM_SIMULATIONS,
   isProModeEnabled: PRO_MODE_ENABLED,
+  isGeoPrivacyEnabled: GEO_PRIVACY_ENABLED,
   isPublicApiEnabled: PUBLIC_API_ENABLED,
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,
   gridAspectRatio: GRID_ASPECT_RATIO,
