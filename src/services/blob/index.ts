@@ -17,7 +17,9 @@ import { HAS_AWS_S3_STORAGE, HAS_AWS_S3_STORAGE_CLIENT } from '@/site/config';
 
 const PREFIX_UPLOAD = 'upload';
 const PREFIX_PHOTO = 'photo';
-const BLOB_BASE_URL = AWS_S3_BASE_URL ?? VERCEL_BLOB_BASE_URL;
+const BLOB_BASE_URL = HAS_AWS_S3_STORAGE_CLIENT
+  ? AWS_S3_BASE_URL
+  : VERCEL_BLOB_BASE_URL;
 
 const REGEX_UPLOAD_PATH = new RegExp(
   `(?:${PREFIX_UPLOAD})\.[a-z]{1,4}`,
