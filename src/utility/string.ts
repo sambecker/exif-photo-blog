@@ -19,5 +19,8 @@ export const capitalizeWords = (string = '') =>
 export const parameterize = (string: string) =>
   string
     .trim()
-    .replaceAll(/\s+/g, '-')
+    // Replaces spaces, underscores, and dashes with dashes
+    .replaceAll(/[\s_–—]/gi, '-')
+    // Removes all non-alphanumeric characters
+    .replaceAll(/([^a-z0-9-])/gi, '')
     .toLowerCase();
