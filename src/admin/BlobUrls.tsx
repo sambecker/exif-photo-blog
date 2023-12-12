@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import AdminGrid from './AdminGrid';
 import Link from 'next/link';
 import ImageTiny from '@/components/ImageTiny';
-import { pathForBlobUrl } from '@/services/blob';
+import { fileNameForBlobUrl } from '@/services/blob';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import { deleteBlobPhotoAction } from '@/photo/actions';
 import DeleteButton from './DeleteButton';
@@ -20,12 +20,12 @@ export default function BlobUrls({
   return (
     <AdminGrid {...{ title }} >
       {urls.map(url => {
-        const href = pathForAdminUploadUrl(url);
-        const fileName = url.split('/').pop();
+        const addUploadPath = pathForAdminUploadUrl(url);
+        const uploadFileName = fileNameForBlobUrl(url);
         return <Fragment key={url}>
-          <Link href={href}>
+          <Link href={addUploadPath}>
             <ImageTiny
-              alt={`Photo: ${fileName}`}
+              alt={`Upload: ${uploadFileName}`}
               src={url}
               aspectRatio={3.0 / 2.0}
               className={cc(
@@ -35,17 +35,17 @@ export default function BlobUrls({
             />
           </Link>
           <Link
-            href={href}
+            href={addUploadPath}
             className="break-all"
             title={url}
           >
-            {pathForBlobUrl(url)}
+            {uploadFileName}
           </Link>
           <div className={cc(
             'flex flex-nowrap',
             'gap-2 sm:gap-3 items-center',
           )}>
-            <AddButton href={href} />
+            <AddButton href={addUploadPath} />
             <FormWithConfirm
               action={deleteBlobPhotoAction}
               confirmText="Are you sure you want to delete this upload?"

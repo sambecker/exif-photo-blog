@@ -31,7 +31,7 @@ const REGEX_UPLOAD_ID = new RegExp(
   'i',
 );
 
-export const pathForBlobUrl = (url: string) =>
+export const fileNameForBlobUrl = (url: string) =>
   url.replace(`${BLOB_BASE_URL}/`, '');
 
 export const getExtensionFromBlobUrl = (url: string) =>
