@@ -16,6 +16,7 @@ specifiers:
   '@vercel/analytics': ^1.1.1
   '@vercel/blob': ^0.16.0
   '@vercel/postgres': 0.5.1
+  '@vercel/speed-insights': ^1.0.1
   autoprefixer: 10.4.16
   camelcase-keys: ^9.1.2
   date-fns: ^2.30.0
@@ -54,6 +55,7 @@ dependencies:
   '@vercel/analytics': 1.1.1
   '@vercel/blob': 0.16.0
   '@vercel/postgres': 0.5.1
+  '@vercel/speed-insights': 1.0.1
   autoprefixer: 10.4.16_postcss@8.4.32
   camelcase-keys: 9.1.2
   date-fns: 2.30.0
@@ -2355,6 +2357,11 @@ packages:
       bufferutil: 4.0.8
       utf-8-validate: 6.0.3
       ws: 8.14.2_6b7822804369846f865cfde5bcbd60fd
+    dev: false
+
+  /@vercel/speed-insights/1.0.1:
+    resolution: {integrity: sha512-cm8KTTsDgS1AbWsgIEZuMoyPUjclzeqJihyLp0tnA21B/x9iTE8hu2S5zM+/DBzihuHxWL1dx9pCWk22ctMFWQ==}
+    requiresBuild: true
     dev: false
 
   /abab/2.0.6:
