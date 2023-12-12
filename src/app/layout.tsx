@@ -1,4 +1,5 @@
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { cc } from '@/utility/css';
 import { IBM_Plex_Mono } from 'next/font/google';
 import { Metadata } from 'next';
@@ -77,6 +78,7 @@ export default function RootLayout({
               {children}
             </StateProvider>
             <Analytics />
+            <SpeedInsights />
           </main>
           <PhotoEscapeHandler />
           <ToasterWithThemes />
