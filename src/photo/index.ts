@@ -201,7 +201,7 @@ export const dateRangeForPhotos = (
   let end = '';
   let description = '';
 
-  if (explicitDateRange || photos.length >= 0) {
+  if (explicitDateRange || photos.length > 0) {
     const photosSorted = sortPhotosByDate(photos);
     start = formatDateFromPostgresString(
       explicitDateRange?.start ?? photosSorted[photos.length - 1].takenAtNaive,
