@@ -1,6 +1,7 @@
 import {
   getPhotosCached,
   getPhotosCountCached,
+  getPhotosDateRangeCached,
   getUniqueCamerasCached,
   getUniqueFilmSimulationsCached,
   getUniqueTagsCached,
@@ -32,12 +33,14 @@ export default async function GridPage({ searchParams }: PaginationParams) {
   const [
     photos,
     photosCount,
+    photosDateRange,
     tags,
     cameras,
     simulations,
   ] = await Promise.all([
     getPhotosCached({ limit }),
     getPhotosCountCached(),
+    getPhotosDateRangeCached(),
     getUniqueTagsCached(),
     getUniqueCamerasCached(),
     SHOW_FILM_SIMULATIONS ? getUniqueFilmSimulationsCached() : [],
@@ -52,7 +55,13 @@ export default async function GridPage({ searchParams }: PaginationParams) {
       ? <SiteGrid
         contentMain={<PhotoGrid {...{ photos, showMorePath }} />}
         contentSide={<div className="sticky top-4 space-y-4">
-          <PhotoGridSidebar {...{ tags, cameras, simulations, photosCount }} />
+          <PhotoGridSidebar {...{
+            tags,
+            cameras,
+            simulations,
+            photosCount,
+            photosDateRange,
+          }} />
         </div>}
         sideHiddenOnMobile
       />

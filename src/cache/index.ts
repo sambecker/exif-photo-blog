@@ -20,6 +20,7 @@ import {
   getUniqueFilmSimulations,
   getPhotosFilmSimulationDateRange,
   getPhotosFilmSimulationCount,
+  getPhotosDateRange,
 } from '@/services/vercel-postgres';
 import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
 import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
@@ -117,6 +118,12 @@ export const getPhotosCached = (
   getPhotos,
   [KEY_PHOTOS, ...getPhotosCacheKeys(...args)],
 )(...args).then(parseCachedPhotosDates);
+
+export const getPhotosDateRangeCached =
+  unstable_cache(
+    getPhotosDateRange,
+    [KEY_PHOTOS, KEY_DATE_RANGE],
+  );
 
 export const getPhotosCountCached =
   unstable_cache(

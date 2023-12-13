@@ -194,7 +194,7 @@ const sortPhotosByDate = (
     : a.takenAt.getTime() - b.takenAt.getTime());
 
 export const dateRangeForPhotos = (
-  photos: Photo[],
+  photos: Photo[] = [],
   explicitDateRange?: PhotoDateRange,
 ) => {
   const photosSorted = sortPhotosByDate(photos);
