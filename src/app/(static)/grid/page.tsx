@@ -1,7 +1,6 @@
 import {
   getPhotosCached,
   getPhotosCountCached,
-  getPhotosDateRangeCached,
   getUniqueCamerasCached,
   getUniqueFilmSimulationsCached,
   getUniqueTagsCached,
@@ -33,14 +32,12 @@ export default async function GridPage({ searchParams }: PaginationParams) {
   const [
     photos,
     photosCount,
-    photosDateRange,
     tags,
     cameras,
     simulations,
   ] = await Promise.all([
     getPhotosCached({ limit }),
     getPhotosCountCached(),
-    getPhotosDateRangeCached(),
     getUniqueTagsCached(),
     getUniqueCamerasCached(),
     SHOW_FILM_SIMULATIONS ? getUniqueFilmSimulationsCached() : [],
@@ -60,7 +57,6 @@ export default async function GridPage({ searchParams }: PaginationParams) {
             cameras,
             simulations,
             photosCount,
-            photosDateRange,
           }} />
         </div>}
         sideHiddenOnMobile

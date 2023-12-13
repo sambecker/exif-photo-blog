@@ -1,7 +1,6 @@
 import {
   getPhotosCached,
   getPhotosCountCached,
-  getPhotosDateRangeCached,
   getUniqueCamerasCached,
   getUniqueFilmSimulationsCached,
   getUniqueTagsCached,
@@ -24,13 +23,11 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function SetsPage() {
   const [
     photosCount,
-    photosDateRange,
     tags,
     cameras,
     simulations,
   ] = await Promise.all([
     getPhotosCountCached(),
-    getPhotosDateRangeCached(),
     getUniqueTagsCached(),
     getUniqueCamerasCached(),
     SHOW_FILM_SIMULATIONS ? getUniqueFilmSimulationsCached() : [],
@@ -49,7 +46,6 @@ export default async function SetsPage() {
             cameras,
             simulations,
             photosCount,
-            photosDateRange,
           }} />
         </div>
       </InfoBlock>}

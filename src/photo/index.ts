@@ -197,19 +197,25 @@ export const dateRangeForPhotos = (
   photos: Photo[] = [],
   explicitDateRange?: PhotoDateRange,
 ) => {
-  const photosSorted = sortPhotosByDate(photos);
+  let start = '';
+  let end = '';
+  let description = '';
 
-  const start = formatDateFromPostgresString(
-    explicitDateRange?.start ?? photosSorted[photos.length - 1].takenAtNaive,
-    true,
-  );
-  const end = formatDateFromPostgresString(
-    explicitDateRange?.end ?? photosSorted[0].takenAtNaive,
-    true
-  );
-  const description = start === end
-    ? start
-    : `${start}–${end}`;
+  if (explicitDateRange || photos.length >= 0) {
+    const photosSorted = sortPhotosByDate(photos);
+    start = formatDateFromPostgresString(
+      explicitDateRange?.start ?? photosSorted[photos.length - 1].takenAtNaive,
+      true,
+    );
+    end = formatDateFromPostgresString(
+      explicitDateRange?.end ?? photosSorted[0].takenAtNaive,
+      true
+    );
+    description = start === end
+      ? start
+      : `${start}–${end}`;
+  }
+
   return { start, end, description };
 };
 

@@ -76,12 +76,16 @@ export default function PhotoGridSidebar({
               />
             </div>)}
       />}
-      {photosCount > 0 && <HeaderList
-        title={photoQuantityText(photosCount, false)}
-        items={start === end
-          ? [start]
-          : [`${end} –`, start]}
-      />}
+      {photosCount > 0 && start
+        ? <HeaderList
+          title={photoQuantityText(photosCount, false)}
+          items={start === end
+            ? [start]
+            : [`${end} –`, start]}
+        />
+        : <HeaderList
+          items={[photoQuantityText(photosCount, false)]}
+        />}
     </>
   );
 }
