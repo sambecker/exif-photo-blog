@@ -37,7 +37,7 @@ export default function PhotoSetHeader({
       items={[<div
         key="PhotosHeader"
         className={cc(
-          'flex flex-col gap-y-0.5',
+          'flex flex-col gap-y-0.5 items-start',
           'xs:grid grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
         )}>
         {entity}

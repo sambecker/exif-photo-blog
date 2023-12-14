@@ -2,19 +2,18 @@ import { labelForFilmSimulation } from '@/vendors/fujifilm';
 import PhotoFilmSimulationIcon from './PhotoFilmSimulationIcon';
 import { pathForFilmSimulation } from '@/site/paths';
 import { FilmSimulation } from '.';
-import EntityLink, { EntityType } from '@/components/EntityLink';
+import EntityLink, { EntityLinkExternalProps } from '@/components/EntityLink';
 
 export default function PhotoFilmSimulation({
   simulation,
   type = 'icon-last',
   badged = true,
+  dim,
   countOnHover,
 }: {
   simulation: FilmSimulation
-  type?: EntityType
-  badged?: boolean
   countOnHover?: number
-}) {
+} & EntityLinkExternalProps) {
   const { small, medium, large } = labelForFilmSimulation(simulation);
 
   return (
@@ -22,10 +21,14 @@ export default function PhotoFilmSimulation({
       label={medium}
       labelSmall={small}
       href={pathForFilmSimulation(simulation)}
-      icon={<PhotoFilmSimulationIcon {...{ simulation }} />}
+      icon={<PhotoFilmSimulationIcon
+        simulation={simulation}
+        className="translate-y-[-1px]"
+      />}
       title={`Film Simulation: ${large}`}
       type={type}
       badged={badged}
+      dim={dim}
       hoverEntity={countOnHover}
     />
   );

@@ -83,8 +83,8 @@ export default function PhotoLarge({
             <div className="space-y-0.5">
               <PhotoCamera
                 camera={camera}
-                showIcon={false}
-                hideApple={false}
+                type="text-only"
+                hideAppleIcon={false}
               />
               {showSimulation && photo.filmSimulation &&
                 <div className="translate-x-[-0.3rem]"> 

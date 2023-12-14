@@ -36,8 +36,9 @@ export default function PhotoGridSidebar({
           <PhotoTag
             key={tag}
             tag={tag}
-            showIcon={false}
+            type="text-only"
             countOnHover={count}
+            dim
           />)}
       />}
       {cameras.length > 0 && <HeaderList
@@ -52,9 +53,10 @@ export default function PhotoGridSidebar({
             <PhotoCamera
               key={cameraKey}
               camera={camera}
-              showIcon={false}
+              type="text-only"
               countOnHover={count}
-              hideApple
+              hideAppleIcon
+              dim
             />)}
       />}
       {simulations.length > 0 && <HeaderList

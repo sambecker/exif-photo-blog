@@ -3,7 +3,11 @@ import { ReactNode } from 'react';
 import Badge from './Badge';
 import { cc } from '@/utility/css';
 
-export type EntityType = 'icon-last' | 'icon-first' | 'icon-only' | 'text-only';
+export interface EntityLinkExternalProps {
+  type?: 'icon-last' | 'icon-first' | 'icon-only' | 'text-only';
+  badged?: boolean
+  dim?: boolean
+}
 
 export default function EntityLink({
   label,
@@ -11,18 +15,20 @@ export default function EntityLink({
   href,
   icon,
   title,
-  type = 'icon-last',
+  type = 'icon-first',
   badged,
   hoverEntity,
+  dim,
 }: {
-  label: string
-  labelSmall?: string
+  label: ReactNode
+  labelSmall?: ReactNode
   href: string
   icon?: ReactNode
   title?: string
   type?: EntityType
   badged?: boolean
   hoverEntity?: ReactNode
+  dim?: boolean
 }) {
   const renderContent = () => <>
     <span className="xs:hidden">
@@ -34,27 +40,34 @@ export default function EntityLink({
   </>;
 
   return (
-    <span className="group h-6 inline-flex items-center gap-2">
+    <span className="group inline-flex items-center gap-3 overflow-hidden">
       <Link
         href={href}
         title={title}
-        className="inline-flex items-center gap-1"
+        className={cc(
+          'inline-flex items-center gap-1',
+          !badged && 'text-main hover:text-gray-900 dark:hover:text-gray-100',
+          dim && 'text-dim',
+        )}
       >
         {type !== 'icon-only' && <>
           {badged
-            ? <Badge type="secondary" uppercase interactive>
-              {renderContent()}
-            </Badge>
-            : <span className="uppercase text-medium">
+            ? <span className="h-6 inline-flex items-center">
+              <Badge type="secondary" uppercase interactive>
+                {renderContent()}
+              </Badge>
+            </span>
+            : <span className="uppercase">
               {renderContent()}
             </span>}
         </>}
-        {icon && type !== 'text-only' && <span className={cc(
-          'translate-y-[-1px] text-dim',
-          type === 'icon-first' && 'order-first',
-        )}>
-          {icon}
-        </span>}
+        {icon && type !== 'text-only' &&
+          <span className={cc(
+            'text-dim inline-flex min-w-[1rem]',
+            type === 'icon-first' && 'order-first',
+          )}>
+            {icon}
+          </span>}
       </Link>
       {hoverEntity !== undefined &&
         <span className="hidden group-hover:inline">
