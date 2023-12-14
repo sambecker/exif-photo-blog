@@ -38,7 +38,7 @@ export default function PhotoGridSidebar({
             tag={tag}
             type="text-only"
             countOnHover={count}
-            dim
+            badged
           />)}
       />}
       {cameras.length > 0 && <HeaderList
@@ -56,7 +56,7 @@ export default function PhotoGridSidebar({
               type="text-only"
               countOnHover={count}
               hideAppleIcon
-              dim
+              badged
             />)}
       />}
       {simulations.length > 0 && <HeaderList
