@@ -4,7 +4,7 @@ import Badge from './Badge';
 import { cc } from '@/utility/css';
 
 export interface EntityLinkExternalProps {
-  type?: 'icon-last' | 'icon-first' | 'icon-only' | 'text-only';
+  type?: 'icon-last' | 'icon-first' | 'icon-only' | 'text-only'
   badged?: boolean
   dim?: boolean
 }
@@ -25,11 +25,8 @@ export default function EntityLink({
   href: string
   icon?: ReactNode
   title?: string
-  type?: EntityType
-  badged?: boolean
   hoverEntity?: ReactNode
-  dim?: boolean
-}) {
+} & EntityLinkExternalProps) {
   const renderContent = () => <>
     <span className="xs:hidden">
       {labelSmall ?? label}
