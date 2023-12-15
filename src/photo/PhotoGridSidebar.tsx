@@ -62,7 +62,7 @@ export default function PhotoGridSidebar({
       {simulations.length > 0 && <HeaderList
         title="Films"
         icon={<PhotoFilmSimulationIcon
-          className="translate-y-[-0.5px]"
+          className="translate-y-[0.5px]"
         />}
         items={simulations
           .sort(sortFilmSimulationsWithCount)

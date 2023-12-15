@@ -24,11 +24,11 @@ export default function HeaderList({
           <div key="header" className={cc(
             'text-gray-900',
             'dark:text-gray-100',
-            'flex items-center mb-0.5',
+            'flex items-center mb-0.5 gap-1',
             'uppercase',
           )}>
             {icon &&
-              <span className="w-[17px]">
+              <span className="w-[1rem]">
                 {icon}
               </span>}
             {title}
