@@ -37,7 +37,7 @@ export default function EntityLink({
   </>;
 
   return (
-    <span className="group inline-flex items-center gap-3 overflow-hidden">
+    <span className="group inline-flex items-center gap-2 overflow-hidden">
       <Link
         href={href}
         title={title}
