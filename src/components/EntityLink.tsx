@@ -42,7 +42,7 @@ export default function EntityLink({
         href={href}
         title={title}
         className={cc(
-          'inline-flex items-center gap-1',
+          'inline-flex gap-1',
           !badged && 'text-main hover:text-gray-900 dark:hover:text-gray-100',
           dim && 'text-dim',
         )}
@@ -61,6 +61,7 @@ export default function EntityLink({
         {icon && type !== 'text-only' &&
           <span className={cc(
             'text-dim inline-flex min-w-[1rem]',
+            'translate-y-[4px]',
             type === 'icon-first' && 'order-first',
           )}>
             {icon}

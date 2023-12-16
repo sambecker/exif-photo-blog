@@ -3,10 +3,11 @@ import { pathForCamera } from '@/site/paths';
 import { IoMdCamera } from 'react-icons/io';
 import { Camera } from '.';
 import EntityLink, { EntityLinkExternalProps } from '@/components/EntityLink';
+import { cc } from '@/utility/css';
 
 export default function PhotoCamera({
   camera,
-  hideAppleIcon = true,
+  hideAppleIcon,
   type = 'icon-first',
   badged,
   dim,
@@ -29,14 +30,17 @@ export default function PhotoCamera({
       icon={showAppleIcon
         ? <AiFillApple
           title="Apple"
-          className="text-icon translate-y-[-0.5px]"
+          className={cc(
+            'text-icon',
+            'translate-x-[-2.5px] translate-y-[-2px]',
+          )}
           size={14}
         />
         : <IoMdCamera
           size={13}
           className="text-icon translate-y-[-0.25px]"
         />}
-      type={type}
+      type={showAppleIcon && isCameraApple ? 'icon-first' : type}
       badged={badged}
       dim={dim}
       hoverEntity={countOnHover}
