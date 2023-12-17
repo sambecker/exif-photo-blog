@@ -3,6 +3,7 @@ import { Photo, PhotoDateRange, dateRangeForPhotos } from '.';
 import ShareButton from '@/components/ShareButton';
 import AnimateItems from '@/components/AnimateItems';
 import { ReactNode } from 'react';
+import { HIGH_DENSITY_GRID } from '@/site/config';
 
 export default function PhotoSetHeader({
   entity,
@@ -37,14 +38,22 @@ export default function PhotoSetHeader({
       items={[<div
         key="PhotosHeader"
         className={cc(
-          'flex flex-col gap-y-0.5 items-start',
-          'xs:grid grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
+          'grid gap-0.5 sm:gap-1',
+          HIGH_DENSITY_GRID
+            ? 'xs:grid-cols-2 sm:grid-cols-4 lg:grid-cols-5'
+            : 'xs:grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
         )}>
-        {entity}
+        <span className={HIGH_DENSITY_GRID
+          ? 'sm:col-span-2'
+          : undefined}>
+          {entity}
+        </span>
         <span className={cc(
           'inline-flex gap-2 items-center self-start',
           'uppercase text-dim',
-          'sm:col-span-2 md:col-span-1 lg:col-span-2',
+          HIGH_DENSITY_GRID
+            ? 'lg:col-span-2'
+            : 'sm:col-span-2 md:col-span-1 lg:col-span-2',
         )}>
           {selectedPhotoIndex !== undefined
             // eslint-disable-next-line max-len

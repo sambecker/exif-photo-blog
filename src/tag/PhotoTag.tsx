@@ -22,7 +22,7 @@ export default function PhotoTag({
         size={11}
         className={cc(
           'flex-shrink-0',
-          'text-icon translate-y-[0.5px]',
+          'text-icon translate-y-[1px]',
         )}
       />}
       type={type}

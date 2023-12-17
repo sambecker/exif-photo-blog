@@ -32,13 +32,13 @@ export default function PhotoCamera({
           title="Apple"
           className={cc(
             'text-icon',
-            'translate-x-[-2.5px] translate-y-[-2px]',
+            'translate-x-[-2.5px] translate-y-[-1.5px]',
           )}
           size={14}
         />
         : <IoMdCamera
           size={13}
-          className="text-icon translate-y-[-0.25px]"
+          className="text-icon translate-x-[-1px] translate-y-[-0.5px]"
         />}
       type={showAppleIcon && isCameraApple ? 'icon-first' : type}
       badged={badged}

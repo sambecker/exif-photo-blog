@@ -59,6 +59,8 @@ export const GRID_ASPECT_RATIO = process.env.NEXT_PUBLIC_GRID_ASPECT_RATIO
 export const OG_TEXT_BOTTOM_ALIGNMENT =
   (process.env.NEXT_PUBLIC_OG_TEXT_ALIGNMENT ?? '').toUpperCase() === 'BOTTOM';
 
+export const HIGH_DENSITY_GRID = GRID_ASPECT_RATIO <= 1;
+
 export const CONFIG_CHECKLIST_STATUS = {
   hasPostgres: (process.env.POSTGRES_HOST ?? '').length > 0,
   hasBlob: HAS_VERCEL_BLOB || HAS_AWS_S3_STORAGE,

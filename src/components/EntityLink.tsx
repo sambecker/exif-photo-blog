@@ -27,7 +27,7 @@ export default function EntityLink({
   title?: string
   hoverEntity?: ReactNode
 } & EntityLinkExternalProps) {
-  const renderContent = () => <>
+  const renderLabel = () => <>
     <span className="xs:hidden">
       {labelSmall ?? label}
     </span>
@@ -42,7 +42,7 @@ export default function EntityLink({
         href={href}
         title={title}
         className={cc(
-          'inline-flex gap-1',
+          'inline-flex gap-[0.2rem]',
           !badged && 'text-main hover:text-gray-900 dark:hover:text-gray-100',
           dim && 'text-dim',
         )}
@@ -51,16 +51,16 @@ export default function EntityLink({
           {badged
             ? <span className="h-6 inline-flex items-center">
               <Badge type="secondary" uppercase interactive>
-                {renderContent()}
+                {renderLabel()}
               </Badge>
             </span>
             : <span className="uppercase">
-              {renderContent()}
+              {renderLabel()}
             </span>}
         </>}
         {icon && type !== 'text-only' &&
           <span className={cc(
-            'text-dim inline-flex min-w-[1rem]',
+            'text-dim inline-flex min-w-[0.8rem]',
             'translate-y-[4px]',
             type === 'icon-first' && 'order-first',
           )}>
