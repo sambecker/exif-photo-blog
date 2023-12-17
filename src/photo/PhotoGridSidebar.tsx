@@ -4,7 +4,7 @@ import HeaderList from '@/components/HeaderList';
 import PhotoTag from '@/tag/PhotoTag';
 import { FaTag } from 'react-icons/fa';
 import { IoMdCamera } from 'react-icons/io';
-import { photoQuantityText } from '.';
+import { PhotoDateRange, dateRangeForPhotos, photoQuantityText } from '.';
 import { Tags } from '@/tag';
 import PhotoFilmSimulation from 
   '@/simulation/PhotoFilmSimulation';
@@ -17,12 +17,16 @@ export default function PhotoGridSidebar({
   cameras,
   simulations,
   photosCount,
+  photosDateRange,
 }: {
   tags: Tags
   cameras: Cameras
   simulations: FilmSimulations
   photosCount: number
+  photosDateRange?: PhotoDateRange
 }) {
+  const { start, end } = dateRangeForPhotos(undefined, photosDateRange);
+
   return (
     <>
       {tags.length > 0 && <HeaderList
@@ -32,8 +36,9 @@ export default function PhotoGridSidebar({
           <PhotoTag
             key={tag}
             tag={tag}
-            showIcon={false}
+            type="text-only"
             countOnHover={count}
+            badged
           />)}
       />}
       {cameras.length > 0 && <HeaderList
@@ -48,15 +53,16 @@ export default function PhotoGridSidebar({
             <PhotoCamera
               key={cameraKey}
               camera={camera}
-              showIcon={false}
+              type="text-only"
               countOnHover={count}
-              hideApple
+              hideAppleIcon
+              badged
             />)}
       />}
       {simulations.length > 0 && <HeaderList
         title="Films"
         icon={<PhotoFilmSimulationIcon
-          className="translate-y-[-0.5px]"
+          className="translate-y-[0.5px]"
         />}
         items={simulations
           .sort(sortFilmSimulationsWithCount)
@@ -72,9 +78,16 @@ export default function PhotoGridSidebar({
               />
             </div>)}
       />}
-      {photosCount > 0 && <HeaderList
-        items={[photoQuantityText(photosCount, false)]}
-      />}
+      {photosCount > 0 && start
+        ? <HeaderList
+          title={photoQuantityText(photosCount, false)}
+          items={start === end
+            ? [start]
+            : [`${end} –`, start]}
+        />
+        : <HeaderList
+          items={[photoQuantityText(photosCount, false)]}
+        />}
     </>
   );
 }

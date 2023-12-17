@@ -52,7 +52,12 @@ export default async function GridPage({ searchParams }: PaginationParams) {
       ? <SiteGrid
         contentMain={<PhotoGrid {...{ photos, showMorePath }} />}
         contentSide={<div className="sticky top-4 space-y-4">
-          <PhotoGridSidebar {...{ tags, cameras, simulations, photosCount }} />
+          <PhotoGridSidebar {...{
+            tags,
+            cameras,
+            simulations,
+            photosCount,
+          }} />
         </div>}
         sideHiddenOnMobile
       />

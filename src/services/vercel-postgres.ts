@@ -288,6 +288,12 @@ const sqlGetPhotosFilmSimulationCount = async (
   hidden IS NOT TRUE
 `.then(({ rows }) => parseInt(rows[0].count, 10));
 
+const sqlGetPhotosDateRange = async () => sql`
+  SELECT MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
+  FROM photos
+  WHERE hidden IS NOT TRUE
+`.then(({ rows }) => rows[0] as PhotoDateRange);
+
 const sqlGetPhotosTagDateRange = async (tag: string) => sql`
   SELECT MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
   FROM photos
@@ -442,6 +448,8 @@ export const getPhoto = async (id: string): Promise<Photo | undefined> => {
     .then(({ rows }) => rows.map(parsePhotoFromDb))
     .then(photos => photos.length > 0 ? photos[0] : undefined);
 };
+export const getPhotosDateRange = () =>
+  safelyQueryPhotos(sqlGetPhotosDateRange);
 export const getPhotosCount = () =>
   safelyQueryPhotos(sqlGetPhotosCount);
 export const getPhotosCountIncludingHidden = () =>
