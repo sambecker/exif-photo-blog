@@ -6,7 +6,7 @@ export default function PhotoTags({
   tags: string[]
 }) {
   return (
-    <div>
+    <div className="-space-y-0.5">
       {tags.map(tag =>
         <div key={tag}>
           <PhotoTag tag={tag} />
