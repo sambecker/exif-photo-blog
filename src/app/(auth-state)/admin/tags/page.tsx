@@ -23,7 +23,7 @@ export default async function AdminTagsPage() {
             <AdminGrid>
               {tags.map(({ tag, count }) =>
                 <Fragment key={tag}>
-                  <div className="pr-2">
+                  <div className="pr-2 -translate-y-0.5">
                     <PhotoTag {...{ tag }} />
                   </div>
                   <div className="text-dim uppercase">
