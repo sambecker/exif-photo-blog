@@ -42,7 +42,7 @@ export default function EntityLink({
         href={href}
         title={title}
         className={cc(
-          'inline-flex gap-[0.2rem]',
+          'inline-flex gap-[0.23rem]',
           !badged && 'text-main hover:text-gray-900 dark:hover:text-gray-100',
           dim && 'text-dim',
         )}
