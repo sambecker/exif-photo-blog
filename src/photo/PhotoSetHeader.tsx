@@ -38,14 +38,15 @@ export default function PhotoSetHeader({
       items={[<div
         key="PhotosHeader"
         className={cc(
-          'grid gap-0.5 sm:gap-1',
+          'grid gap-0.5 sm:gap-1 items-start',
           HIGH_DENSITY_GRID
             ? 'xs:grid-cols-2 sm:grid-cols-4 lg:grid-cols-5'
             : 'xs:grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
         )}>
-        <span className={HIGH_DENSITY_GRID
-          ? 'sm:col-span-2'
-          : undefined}>
+        <span className={cc(
+          'inline-flex',
+          HIGH_DENSITY_GRID && 'sm:col-span-2',
+        )}>
           {entity}
         </span>
         <span className={cc(

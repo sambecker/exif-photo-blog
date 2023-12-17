@@ -60,9 +60,10 @@ export default function EntityLink({
         </>}
         {icon && type !== 'text-only' &&
           <span className={cc(
-            'text-dim inline-flex min-w-[0.8rem]',
-            'translate-y-[4px]',
+            'flex-shrink-0',
+            'text-dim inline-flex min-w-[0.9rem]',
             type === 'icon-first' && 'order-first',
+            badged && 'translate-y-[4px]',
           )}>
             {icon}
           </span>}

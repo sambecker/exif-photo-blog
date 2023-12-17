@@ -1,6 +1,5 @@
 import { pathForTag } from '@/site/paths';
 import { FaTag } from 'react-icons/fa';
-import { cc } from '@/utility/css';
 import { formatTag } from '.';
 import EntityLink, { EntityLinkExternalProps } from '@/components/EntityLink';
 
@@ -20,10 +19,7 @@ export default function PhotoTag({
       href={pathForTag(tag)}
       icon={<FaTag
         size={11}
-        className={cc(
-          'flex-shrink-0',
-          'text-icon translate-y-[1px]',
-        )}
+        className="text-icon translate-y-[5px]"
       />}
       type={type}
       badged={badged}

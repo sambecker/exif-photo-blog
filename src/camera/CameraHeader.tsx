@@ -21,7 +21,7 @@ export default function CameraHeader({
   const camera = cameraFromPhoto(photos[0], cameraProp);
   return (
     <PhotoSetHeader
-      entity={<PhotoCamera {...{ camera }} />}
+      entity={<PhotoCamera {...{ camera }} hideAppleIcon />}
       entityVerb="Photo"
       entityDescription={
         descriptionForCameraPhotos(photos, undefined, count, dateRange)}
