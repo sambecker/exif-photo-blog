@@ -61,6 +61,7 @@ export default function PhotoLarge({
         />}
       contentSide={
         <div className={cc(
+          'leading-snug',
           'sticky top-4 self-start',
           'grid grid-cols-2 md:grid-cols-1',
           'gap-x-0.5 sm:gap-x-1',
