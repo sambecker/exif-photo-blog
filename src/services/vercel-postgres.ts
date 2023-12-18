@@ -381,11 +381,6 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
 
   const client = await db.connect();
 
-  console.log({
-    sql,
-    values,
-  });
-
   return safelyQueryPhotos(() => client.query(sql, values))
     .then(({ rows }) => rows.map(parsePhotoFromDb));
 };
