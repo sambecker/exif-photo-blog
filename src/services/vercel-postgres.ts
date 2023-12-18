@@ -271,6 +271,8 @@ export type GetPhotosOptions = {
   simulation?: FilmSimulation
   takenBefore?: Date
   takenAfterInclusive?: Date
+  beforePriorityOrder?: number
+  afterPriorityOrderInclusive?: number
   includeHidden?: boolean
 }
 
@@ -312,6 +314,8 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
     simulation,
     takenBefore,
     takenAfterInclusive,
+    beforePriorityOrder,
+    afterPriorityOrderInclusive,
     includeHidden,
   } = options;
 
@@ -345,6 +349,14 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
   if (simulation) {
     wheres.push(`film_simulation=$${valueNumber++}`);
     values.push(simulation);
+  }
+  if (beforePriorityOrder !== undefined) {
+    wheres.push(`id < $${valueNumber++}`);
+    values.push(beforePriorityOrder);
+  }
+  if (afterPriorityOrderInclusive !== undefined) {
+    wheres.push(`id >= $${valueNumber++}`);
+    values.push(afterPriorityOrderInclusive);
   }
   if (wheres.length > 0) {
     sql += ` WHERE ${wheres.join(' AND ')}`;

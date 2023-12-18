@@ -12,6 +12,7 @@ import {
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotoCached, getPhotosCached } from '@/cache';
+import { PRIORITY_ORDER_ENABLED } from '@/site/config';
 
 interface PhotoProps {
   params: { photoId: string }
@@ -60,9 +61,16 @@ export default async function PhotoPage({
     photosBefore,
     photosAfter,
   ] = await Promise.all([
-    getPhotosCached({ takenBefore: photo.takenAt, limit: 1 }),
     getPhotosCached({
-      takenAfterInclusive: photo.takenAt,
+      ...(PRIORITY_ORDER_ENABLED && photo.priorityOrder !== undefined)
+        ? { beforePriorityOrder: photo.priorityOrder }
+        : { takenBefore: photo.takenAt },
+      limit: 1,
+    }),
+    getPhotosCached({
+      ...(PRIORITY_ORDER_ENABLED && photo.priorityOrder !== undefined)
+        ? { afterPriorityOrderInclusive: photo.priorityOrder }
+        : { takenAfterInclusive: photo.takenAt },
       limit: GRID_THUMBNAILS_TO_SHOW_MAX + 1,
     }),
   ]);

@@ -51,9 +51,11 @@ const getPhotosCacheKeyForOption = (
   case 'offset':
   case 'tag':
   case 'simulation':
+  case 'beforePriorityOrder':
+  case 'afterPriorityOrderInclusive':
   case 'includeHidden': {
     const value = options[option];
-    return value ? `${option}-${value}` : null;
+    return value !== undefined ? `${option}-${value}` : null;
   }
   // Date keys
   case 'takenBefore':
