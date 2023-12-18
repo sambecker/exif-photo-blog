@@ -319,69 +319,70 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
     includeHidden,
   } = options;
 
-  let sql = 'SELECT * FROM photos';
+  let sql = ['SELECT * FROM photos'];
+  let values = [] as (string | number)[];
+  let valueIndex = 1;
 
   // WHERE
   let wheres = [] as string[];
-  let values = [] as (string | number)[];
-  let valueNumber = 1;
   if (!includeHidden) {
     wheres.push('hidden IS NOT TRUE');
   }
   if (takenBefore) {
-    wheres.push(`taken_at > $${valueNumber++}`);
+    wheres.push(`taken_at > $${valueIndex++}`);
     values.push(takenBefore.toISOString());
   }
   if (takenAfterInclusive) {
-    wheres.push(`taken_at <= $${valueNumber++}`);
+    wheres.push(`taken_at <= $${valueIndex++}`);
     values.push(takenAfterInclusive.toISOString());
   }
   if (tag) {
-    wheres.push(`$${valueNumber++}=ANY(tags)`);
+    wheres.push(`$${valueIndex++}=ANY(tags)`);
     values.push(tag);
   }
   if (camera) {
-    wheres.push(`LOWER(make)=$${valueNumber++}`);
-    wheres.push(`LOWER(REPLACE(model, ' ', '-'))=$${valueNumber++}`);
+    wheres.push(`LOWER(make)=$${valueIndex++}`);
+    wheres.push(`LOWER(REPLACE(model, ' ', '-'))=$${valueIndex++}`);
     values.push(parameterize(camera.make));
     values.push(parameterize(camera.model));
   }
   if (simulation) {
-    wheres.push(`film_simulation=$${valueNumber++}`);
+    wheres.push(`film_simulation=$${valueIndex++}`);
     values.push(simulation);
   }
   if (beforePriorityOrder !== undefined) {
-    wheres.push(`id < $${valueNumber++}`);
+    wheres.push(`priority_order < $${valueIndex++}`);
     values.push(beforePriorityOrder);
   }
   if (afterPriorityOrderInclusive !== undefined) {
-    wheres.push(`id >= $${valueNumber++}`);
+    // eslint-disable-next-line max-len
+    wheres.push(`priority_order >= $${valueIndex++} OR priority_order IS NULL`);
     values.push(afterPriorityOrderInclusive);
   }
   if (wheres.length > 0) {
-    sql += ` WHERE ${wheres.join(' AND ')}`;
+    sql.push(`WHERE ${wheres.join(' AND ')}`);
   }
 
   // ORDER BY
   switch (sortBy) {
   case 'createdAt':
-    sql += ' ORDER BY created_at DESC';
+    sql.push('ORDER BY created_at DESC');
     break;
   case 'takenAt':
-    sql += ' ORDER BY taken_at DESC';
+    sql.push('ORDER BY taken_at DESC');
     break;
   case 'priority':
-    sql += ' ORDER BY priority_order ASC, taken_at DESC';
+    sql.push('ORDER BY priority_order ASC, taken_at DESC');
     break;
   }
 
   // LIMIT + OFFSET
-  sql += ` LIMIT $${valueNumber++} OFFSET $${valueNumber++}`;
+  sql.push(`LIMIT $${valueIndex++} OFFSET $${valueIndex++}`);
   values.push(limit, offset);
 
   const client = await db.connect();
 
-  return safelyQueryPhotos(() => client.query(sql, values))
+  return safelyQueryPhotos(() => client.query(sql.join(' '), values))
     .then(({ rows }) => rows.map(parsePhotoFromDb));
 };
 

@@ -62,13 +62,13 @@ export default async function PhotoPage({
     photosAfter,
   ] = await Promise.all([
     getPhotosCached({
-      ...(PRIORITY_ORDER_ENABLED && photo.priorityOrder !== undefined)
+      ...(PRIORITY_ORDER_ENABLED && photo.priorityOrder !== null)
         ? { beforePriorityOrder: photo.priorityOrder }
         : { takenBefore: photo.takenAt },
       limit: 1,
     }),
     getPhotosCached({
-      ...(PRIORITY_ORDER_ENABLED && photo.priorityOrder !== undefined)
+      ...(PRIORITY_ORDER_ENABLED && photo.priorityOrder !== null)
         ? { afterPriorityOrderInclusive: photo.priorityOrder }
         : { takenAfterInclusive: photo.takenAt },
       limit: GRID_THUMBNAILS_TO_SHOW_MAX + 1,
