@@ -33,6 +33,7 @@ export default function SiteChecklistClient({
   showFilmSimulations,
   isProModeEnabled,
   isGeoPrivacyEnabled,
+  isPriorityOrderEnabled,
   isPublicApiEnabled,
   isOgTextBottomAligned,
   showRefreshButton,
@@ -255,6 +256,16 @@ export default function SiteChecklistClient({
           Set environment variable to {'"1"'} to disable
           collection/display of location-based data
           {renderEnvVars(['NEXT_PUBLIC_GEO_PRIVACY'])}
+        </ChecklistRow>
+        <ChecklistRow
+          title="Priority Order"
+          status={isPriorityOrderEnabled}
+          isPending={isPendingPage}
+          optional
+        >
+          Set environment variable to {'"1"'} to prevent
+          priority order photo field affecting photo order
+          {renderEnvVars(['NEXT_PUBLIC_IGNORE_PRIORITY_ORDER'])}
         </ChecklistRow>
         <ChecklistRow
           title="Public API"

@@ -48,6 +48,7 @@ const getPhotosCacheKeyForOption = (
   // Primitive keys
   case 'sortBy': 
   case 'limit':
+  case 'offset':
   case 'tag':
   case 'simulation':
   case 'includeHidden': {

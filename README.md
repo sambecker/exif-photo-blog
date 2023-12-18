@@ -64,6 +64,7 @@ Installation
 
 - `NEXT_PUBLIC_PRO_MODE = 1` enables higher quality image storage
 - `NEXT_PUBLIC_GEO_PRIVACY = 1` disables collection/display of location-based data
+- `NEXT_PUBLIC_IGNORE_PRIORITY_ORDER = 1` prevents `priority_order` field affecting photo order
 - `NEXT_PUBLIC_PUBLIC_API = 1` enables public API available at `/api`
 - `NEXT_PUBLIC_HIDE_REPO_LINK = 1` removes footer link to repo
 - `NEXT_PUBLIC_HIDE_FILM_SIMULATIONS = 1` prevents Fujifilm simulations showing up in `/grid` sidebar
