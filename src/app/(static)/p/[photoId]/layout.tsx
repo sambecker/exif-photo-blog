@@ -11,7 +11,7 @@ import {
   absolutePathForPhotoImage,
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotoCached, getPhotosCached } from '@/cache';
+import { getPhotoCached, getPhotosNearIdCached } from '@/cache';
 
 interface PhotoProps {
   params: { photoId: string }
@@ -50,31 +50,29 @@ export async function generateMetadata({
 export default async function PhotoPage({
   params: { photoId },
   children,
-}:
-  PhotoProps & { children: React.ReactNode }) {
-  const photo = await getPhotoCached(photoId);
+}: PhotoProps & { children: React.ReactNode }) {
+  const photos = await getPhotosNearIdCached(
+    photoId,
+    GRID_THUMBNAILS_TO_SHOW_MAX + 2,
+  );
+
+  const photo = photos.find(p => p.id === photoId);
 
   if (!photo) { redirect(PATH_ROOT); }
-
-  const [
-    photosBefore,
-    photosAfter,
-  ] = await Promise.all([
-    getPhotosCached({ takenBefore: photo.takenAt, limit: 1 }),
-    getPhotosCached({
-      takenAfterInclusive: photo.takenAt,
-      limit: GRID_THUMBNAILS_TO_SHOW_MAX + 1,
-    }),
-  ]);
-
-  const photos = photosBefore.concat(photosAfter);
+  
+  const isPhotoFirst = photos.findIndex(p => p.id === photoId) === 0;
 
   return <>
     {children}
     <PhotoDetailPage
       photo={photo}
       photos={photos}
-      photosGrid={photosAfter.slice(1)}
+      photosGrid={photos.slice(
+        isPhotoFirst ? 1 : 2,
+        isPhotoFirst
+          ? GRID_THUMBNAILS_TO_SHOW_MAX + 1
+          : GRID_THUMBNAILS_TO_SHOW_MAX + 2,
+      )}
     />
   </>;
 }

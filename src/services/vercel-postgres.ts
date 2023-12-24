@@ -1,4 +1,4 @@
-import { sql } from '@vercel/postgres';
+import { db, sql } from '@vercel/postgres';
 import {
   PhotoDb,
   PhotoDbInsert,
@@ -11,6 +11,7 @@ import { Camera, Cameras, createCameraKey } from '@/camera';
 import { parameterize } from '@/utility/string';
 import { Tags } from '@/tag';
 import { FilmSimulation, FilmSimulations } from '@/simulation';
+import { PRIORITY_ORDER_ENABLED } from '@/site/config';
 
 const PHOTO_DEFAULT_LIMIT = 100;
 
@@ -151,109 +152,6 @@ export const sqlRenamePhotoTagGlobally = (tag: string, updatedTag: string) =>
 export const sqlDeletePhoto = (id: string) =>
   sql`DELETE FROM photos WHERE id=${id}`;
 
-const sqlGetPhotos = (
-  limit = PHOTO_DEFAULT_LIMIT,
-  offset = 0,
-) =>
-  sql<PhotoDb>`
-    SELECT * FROM photos
-    WHERE hidden IS NOT TRUE
-    ORDER BY taken_at DESC
-    LIMIT ${limit} OFFSET ${offset}
-  `;
-
-const sqlGetPhotosIncludingHidden = (
-  limit = PHOTO_DEFAULT_LIMIT,
-  offset = 0,
-) =>
-  sql<PhotoDb>`
-    SELECT * FROM photos
-    ORDER BY created_at DESC
-    LIMIT ${limit} OFFSET ${offset}
-  `;
-
-const sqlGetPhotosSortedByCreatedAt = (
-  limit = PHOTO_DEFAULT_LIMIT,
-  offset = 0,
-) =>
-  sql<PhotoDb>`
-    SELECT * FROM photos
-    WHERE hidden IS NOT TRUE
-    ORDER BY created_at DESC
-    LIMIT ${limit} OFFSET ${offset}
-  `;
-
-const sqlGetPhotosSortedByPriority = (
-  limit = PHOTO_DEFAULT_LIMIT,
-  offset = 0,
-) =>
-  sql<PhotoDb>`
-    SELECT * FROM photos
-    WHERE hidden IS NOT TRUE
-    ORDER BY priority_order ASC, taken_at DESC
-    LIMIT ${limit} OFFSET ${offset}
-  `;
-
-const sqlGetPhotosByTag = (
-  limit = PHOTO_DEFAULT_LIMIT,
-  tag: string,
-) =>
-  sql<PhotoDb>`
-    SELECT * FROM photos
-    WHERE ${tag}=ANY(tags)
-    AND hidden IS NOT TRUE
-    ORDER BY taken_at DESC
-    LIMIT ${limit}
-  `;
-
-const sqlGetPhotosByCamera = async (
-  limit = PHOTO_DEFAULT_LIMIT,
-  make: string,
-  model: string,
-) => sql<PhotoDb>`
-  SELECT * FROM photos
-  WHERE
-  LOWER(make)=${parameterize(make)} AND
-  LOWER(REPLACE(model, ' ', '-'))=${parameterize(model)}
-  ORDER BY taken_at DESC
-  LIMIT ${limit}
-`;
-
-const sqlGetPhotosBySimulation = async (
-  limit = PHOTO_DEFAULT_LIMIT,
-  simulation: FilmSimulation,
-) => sql<PhotoDb>`
-  SELECT * FROM photos
-  WHERE film_simulation=${simulation}
-  AND hidden IS NOT TRUE
-  ORDER BY taken_at DESC
-  LIMIT ${limit}
-`;
-
-const sqlGetPhotosTakenAfterDateInclusive = (
-  takenAt: Date,
-  limit?: number,
-) =>
-  sql<PhotoDb>`
-    SELECT * FROM photos
-    WHERE taken_at <= ${takenAt.toISOString()}
-    AND hidden IS NOT TRUE
-    ORDER BY taken_at DESC
-    LIMIT ${limit}
-  `;
-
-const sqlGetPhotosTakenBeforeDate = (
-  takenAt: Date,
-  limit?: number,
-) =>
-  sql<PhotoDb>`
-    SELECT * FROM photos
-    WHERE taken_at > ${takenAt.toISOString()}
-    AND hidden IS NOT TRUE
-    ORDER BY taken_at ASC
-    LIMIT ${limit}
-  `;
-
 const sqlGetPhoto = (id: string) =>
   sql<PhotoDb>`SELECT * FROM photos WHERE id=${id} LIMIT 1`;
 
@@ -367,6 +265,7 @@ const sqlGetUniqueFilmSimulations = async () => sql`
 export type GetPhotosOptions = {
   sortBy?: 'createdAt' | 'takenAt' | 'priority'
   limit?: number
+  offset?: number
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
@@ -403,11 +302,11 @@ const safelyQueryPhotos = async <T>(callback: () => Promise<T>): Promise<T> => {
   return result;
 };
 
-// PHOTOS
 export const getPhotos = async (options: GetPhotosOptions = {}) => {
   const {
-    sortBy = 'takenAt',
-    limit,
+    sortBy = PRIORITY_ORDER_ENABLED ? 'priority' : 'takenAt',
+    limit = PHOTO_DEFAULT_LIMIT,
+    offset = 0,
     tag,
     camera,
     simulation,
@@ -416,30 +315,95 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
     includeHidden,
   } = options;
 
-  let getPhotosSql = () => sqlGetPhotos(limit);
+  let sql = ['SELECT * FROM photos'];
+  let values = [] as (string | number)[];
+  let valueIndex = 1;
 
-  if (includeHidden) {
-    getPhotosSql = () => sqlGetPhotosIncludingHidden(limit);
-  } else if (takenBefore) {
-    getPhotosSql = () => sqlGetPhotosTakenBeforeDate(takenBefore, limit);
-  } else if (takenAfterInclusive) {
-    // eslint-disable-next-line max-len
-    getPhotosSql = () => sqlGetPhotosTakenAfterDateInclusive(takenAfterInclusive, limit);
-  } else if (tag) {
-    getPhotosSql = () => sqlGetPhotosByTag(limit, tag);
-  } else if (camera) {
-    getPhotosSql = () => sqlGetPhotosByCamera(limit, camera.make, camera.model);
-  } else if (simulation) {
-    getPhotosSql = () => sqlGetPhotosBySimulation(limit, simulation);
-  } else if (sortBy === 'createdAt') {
-    getPhotosSql = () => sqlGetPhotosSortedByCreatedAt(limit);
-  } else if (sortBy === 'priority') {
-    getPhotosSql = () => sqlGetPhotosSortedByPriority(limit);
+  // WHERE
+  let wheres = [] as string[];
+  if (!includeHidden) {
+    wheres.push('hidden IS NOT TRUE');
+  }
+  if (takenBefore) {
+    wheres.push(`taken_at > $${valueIndex++}`);
+    values.push(takenBefore.toISOString());
+  }
+  if (takenAfterInclusive) {
+    wheres.push(`taken_at <= $${valueIndex++}`);
+    values.push(takenAfterInclusive.toISOString());
+  }
+  if (tag) {
+    wheres.push(`$${valueIndex++}=ANY(tags)`);
+    values.push(tag);
+  }
+  if (camera) {
+    wheres.push(`LOWER(make)=$${valueIndex++}`);
+    wheres.push(`LOWER(REPLACE(model, ' ', '-'))=$${valueIndex++}`);
+    values.push(parameterize(camera.make));
+    values.push(parameterize(camera.model));
+  }
+  if (simulation) {
+    wheres.push(`film_simulation=$${valueIndex++}`);
+    values.push(simulation);
+  }
+  if (wheres.length > 0) {
+    sql.push(`WHERE ${wheres.join(' AND ')}`);
   }
 
-  return safelyQueryPhotos(getPhotosSql)
+  // ORDER BY
+  switch (sortBy) {
+  case 'createdAt':
+    sql.push('ORDER BY created_at DESC');
+    break;
+  case 'takenAt':
+    sql.push('ORDER BY taken_at DESC');
+    break;
+  case 'priority':
+    sql.push('ORDER BY priority_order ASC, taken_at DESC');
+    break;
+  }
+
+  // LIMIT + OFFSET
+  sql.push(`LIMIT $${valueIndex++} OFFSET $${valueIndex++}`);
+  values.push(limit, offset);
+
+  return safelyQueryPhotos(async () => {
+    const client = await db.connect();
+    return client.query(sql.join(' '), values);
+  })
     .then(({ rows }) => rows.map(parsePhotoFromDb));
 };
+
+export const getPhotosNearId = async (
+  id: string,
+  limit: number,
+) => {
+  const orderBy = PRIORITY_ORDER_ENABLED
+    ? 'ORDER BY priority_order ASC, taken_at DESC'
+    : 'ORDER BY taken_at DESC';
+
+  return safelyQueryPhotos(async () => {
+    const client = await db.connect();
+    return client.query(
+      `
+        WITH twi AS (
+          SELECT *, row_number()
+          OVER (${orderBy}) as row_number
+          FROM photos
+          WHERE hidden IS NOT TRUE
+        ),
+        current AS (SELECT row_number FROM twi WHERE id = $1)
+        SELECT twi.*
+        FROM twi, current
+        WHERE twi.row_number >= current.row_number - 1
+        LIMIT $2
+      `,
+      [id, limit]
+    );
+  })
+    .then(({ rows }) => rows.map(parsePhotoFromDb));
+};
+
 export const getPhoto = async (id: string): Promise<Photo | undefined> => {
   // Check for photo id forwarding
   // and convert short ids to uuids
