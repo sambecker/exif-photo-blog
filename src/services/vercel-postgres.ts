@@ -271,8 +271,6 @@ export type GetPhotosOptions = {
   simulation?: FilmSimulation
   takenBefore?: Date
   takenAfterInclusive?: Date
-  beforePriorityOrder?: number
-  afterPriorityOrderInclusive?: number
   includeHidden?: boolean
 }
 
@@ -314,8 +312,6 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
     simulation,
     takenBefore,
     takenAfterInclusive,
-    beforePriorityOrder,
-    afterPriorityOrderInclusive,
     includeHidden,
   } = options;
 
@@ -350,15 +346,6 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
     wheres.push(`film_simulation=$${valueIndex++}`);
     values.push(simulation);
   }
-  if (beforePriorityOrder !== undefined) {
-    wheres.push(`priority_order < $${valueIndex++}`);
-    values.push(beforePriorityOrder);
-  }
-  if (afterPriorityOrderInclusive !== undefined) {
-    // eslint-disable-next-line max-len
-    wheres.push(`priority_order >= $${valueIndex++} OR priority_order IS NULL`);
-    values.push(afterPriorityOrderInclusive);
-  }
   if (wheres.length > 0) {
     sql.push(`WHERE ${wheres.join(' AND ')}`);
   }
@@ -380,9 +367,40 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
   sql.push(`LIMIT $${valueIndex++} OFFSET $${valueIndex++}`);
   values.push(limit, offset);
 
-  const client = await db.connect();
+  return safelyQueryPhotos(async () => {
+    const client = await db.connect();
+    return client.query(sql.join(' '), values);
+  })
+    .then(({ rows }) => rows.map(parsePhotoFromDb));
+};
 
-  return safelyQueryPhotos(() => client.query(sql.join(' '), values))
+export const getPhotosNearId = async (
+  id: string,
+  limit: number,
+) => {
+  const orderBy = PRIORITY_ORDER_ENABLED
+    ? 'ORDER BY priority_order ASC, taken_at DESC'
+    : 'ORDER BY taken_at DESC';
+
+  return safelyQueryPhotos(async () => {
+    const client = await db.connect();
+    return client.query(
+      `
+        WITH twi AS (
+          SELECT *, row_number()
+          OVER (${orderBy}) as row_number
+          FROM photos
+          WHERE hidden IS NOT TRUE
+        ),
+        current AS (SELECT row_number FROM twi WHERE id = $1)
+        SELECT twi.*
+        FROM twi, current
+        WHERE twi.row_number >= current.row_number - 1
+        LIMIT $2
+      `,
+      [id, limit]
+    );
+  })
     .then(({ rows }) => rows.map(parsePhotoFromDb));
 };
 

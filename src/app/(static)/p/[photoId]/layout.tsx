@@ -11,8 +11,7 @@ import {
   absolutePathForPhotoImage,
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotoCached, getPhotosCached } from '@/cache';
-import { PRIORITY_ORDER_ENABLED } from '@/site/config';
+import { getPhotoCached, getPhotosNearIdCached } from '@/cache';
 
 interface PhotoProps {
   params: { photoId: string }
@@ -51,38 +50,24 @@ export async function generateMetadata({
 export default async function PhotoPage({
   params: { photoId },
   children,
-}:
-  PhotoProps & { children: React.ReactNode }) {
-  const photo = await getPhotoCached(photoId);
+}: PhotoProps & { children: React.ReactNode }) {
+  const photos = await getPhotosNearIdCached(
+    photoId,
+    GRID_THUMBNAILS_TO_SHOW_MAX + 2,
+  );
+
+  const photo = photos.find(p => p.id === photoId);
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const [
-    photosBefore,
-    photosAfter,
-  ] = await Promise.all([
-    getPhotosCached({
-      ...(PRIORITY_ORDER_ENABLED && photo.priorityOrder !== null)
-        ? { beforePriorityOrder: photo.priorityOrder }
-        : { takenBefore: photo.takenAt },
-      limit: 1,
-    }),
-    getPhotosCached({
-      ...(PRIORITY_ORDER_ENABLED && photo.priorityOrder !== null)
-        ? { afterPriorityOrderInclusive: photo.priorityOrder }
-        : { takenAfterInclusive: photo.takenAt },
-      limit: GRID_THUMBNAILS_TO_SHOW_MAX + 1,
-    }),
-  ]);
-
-  const photos = photosBefore.concat(photosAfter);
+  const index = photos.findIndex(p => p.id === photoId);
 
   return <>
     {children}
     <PhotoDetailPage
       photo={photo}
       photos={photos}
-      photosGrid={photosAfter.slice(1)}
+      photosGrid={photos.slice(index === 0 ? 1 : 2)}
     />
   </>;
 }

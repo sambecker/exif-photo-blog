@@ -21,6 +21,7 @@ import {
   getPhotosFilmSimulationDateRange,
   getPhotosFilmSimulationCount,
   getPhotosDateRange,
+  getPhotosNearId,
 } from '@/services/vercel-postgres';
 import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
 import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
@@ -45,29 +46,20 @@ const getPhotosCacheKeyForOption = (
   option: keyof GetPhotosOptions,
 ): string | null => {
   switch (option) {
-  // Primitive keys
-  case 'sortBy': 
-  case 'limit':
-  case 'offset':
-  case 'tag':
-  case 'simulation':
-  case 'beforePriorityOrder':
-  case 'afterPriorityOrderInclusive':
-  case 'includeHidden': {
-    const value = options[option];
-    return value !== undefined ? `${option}-${value}` : null;
-  }
-  // Date keys
-  case 'takenBefore':
-  case 'takenAfterInclusive': {
-    const value = options[option];
-    return value ? `${option}-${value.toISOString()}` : null;
-  }
   // Complex keys
   case 'camera': {
     const value = options[option];
     return value ? `${option}-${createCameraKey(value)}` : null;
   }
+  case 'takenBefore':
+  case 'takenAfterInclusive': {
+    const value = options[option];
+    return value ? `${option}-${value.toISOString()}` : null;
+  }
+  // Primitive keys
+  default:
+    const value = options[option];
+    return value !== undefined ? `${option}-${value}` : null;
   }
 };
 
@@ -120,6 +112,13 @@ export const getPhotosCached = (
 ) => unstable_cache(
   getPhotos,
   [KEY_PHOTOS, ...getPhotosCacheKeys(...args)],
+)(...args).then(parseCachedPhotosDates);
+
+export const getPhotosNearIdCached = (
+  ...args: Parameters<typeof getPhotosNearId>
+) => unstable_cache(
+  getPhotosNearId,
+  [KEY_PHOTOS],
 )(...args).then(parseCachedPhotosDates);
 
 export const getPhotosDateRangeCached =
