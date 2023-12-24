@@ -59,15 +59,20 @@ export default async function PhotoPage({
   const photo = photos.find(p => p.id === photoId);
 
   if (!photo) { redirect(PATH_ROOT); }
-
-  const index = photos.findIndex(p => p.id === photoId);
+  
+  const isPhotoFirst = photos.findIndex(p => p.id === photoId) === 0;
 
   return <>
     {children}
     <PhotoDetailPage
       photo={photo}
       photos={photos}
-      photosGrid={photos.slice(index === 0 ? 1 : 2)}
+      photosGrid={photos.slice(
+        isPhotoFirst ? 1 : 2,
+        isPhotoFirst
+          ? GRID_THUMBNAILS_TO_SHOW_MAX + 1
+          : GRID_THUMBNAILS_TO_SHOW_MAX + 2,
+      )}
     />
   </>;
 }
