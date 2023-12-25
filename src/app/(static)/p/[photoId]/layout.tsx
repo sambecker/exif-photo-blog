@@ -13,6 +13,8 @@ import {
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotoCached, getPhotosNearIdCached } from '@/cache';
 
+export const runtime = 'edge';
+
 interface PhotoProps {
   params: { photoId: string }
 }
