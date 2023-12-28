@@ -9,8 +9,6 @@ import ThemeProviderClient from '@/site/ThemeProviderClient';
 import Nav from '@/site/Nav';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
 import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
-import { Suspense } from 'react';
-import PageSpinner from '@/components/PageSpinner';
 
 import '../site/globals.css';
 
@@ -70,23 +68,21 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className={ibmPlexMono.variable}>
-        <Suspense fallback={<PageSpinner />}>
-          <ThemeProviderClient>
-            <main className={cc(
-              'px-3 pb-3',
-              'lg:px-6 lg:pb-6',
-            )}>     
-              <Nav />
-              <StateProvider>
-                {children}
-              </StateProvider>
-              <Analytics />
-              <SpeedInsights />
-            </main>
-            <PhotoEscapeHandler />
-            <ToasterWithThemes />
-          </ThemeProviderClient>
-        </Suspense>
+        <ThemeProviderClient>
+          <main className={cc(
+            'px-3 pb-3',
+            'lg:px-6 lg:pb-6',
+          )}>     
+            <Nav />
+            <StateProvider>
+              {children}
+            </StateProvider>
+            <Analytics />
+            <SpeedInsights />
+          </main>
+          <PhotoEscapeHandler />
+          <ToasterWithThemes />
+        </ThemeProviderClient>
       </body>
     </html>
   );

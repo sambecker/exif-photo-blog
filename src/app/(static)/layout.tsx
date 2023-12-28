@@ -1,5 +1,7 @@
 import FooterStatic from '@/site/FooterStatic';
 import PageContentContainer from '@/components/PageContentContainer';
+import { Suspense } from 'react';
+import PageSpinner from '@/components/PageSpinner';
 
 export default function RootLayout({
   children,
@@ -9,7 +11,9 @@ export default function RootLayout({
   return (
     <>
       <PageContentContainer>
-        {children}
+        <Suspense fallback={<PageSpinner />}>
+          {children}
+        </Suspense>
       </PageContentContainer>
       <FooterStatic />
     </>
