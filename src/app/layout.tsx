@@ -70,23 +70,23 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className={ibmPlexMono.variable}>
-        <ThemeProviderClient>
-          <main className={cc(
-            'px-3 pb-3',
-            'lg:px-6 lg:pb-6',
-          )}>
-            <Nav />
-            <StateProvider>
-              <Suspense fallback={<PageSpinner />}>
+        <Suspense fallback={<PageSpinner />}>
+          <ThemeProviderClient>
+            <main className={cc(
+              'px-3 pb-3',
+              'lg:px-6 lg:pb-6',
+            )}>     
+              <Nav />
+              <StateProvider>
                 {children}
-              </Suspense>
-            </StateProvider>
-            <Analytics />
-            <SpeedInsights />
-          </main>
-          <PhotoEscapeHandler />
-          <ToasterWithThemes />
-        </ThemeProviderClient>
+              </StateProvider>
+              <Analytics />
+              <SpeedInsights />
+            </main>
+            <PhotoEscapeHandler />
+            <ToasterWithThemes />
+          </ThemeProviderClient>
+        </Suspense>
       </body>
     </html>
   );
