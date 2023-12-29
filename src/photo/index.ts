@@ -18,6 +18,8 @@ export const ACCEPTED_PHOTO_FILE_TYPES = [
   'image/jpeg',
 ];
 
+export const MAX_PHOTO_UPLOAD_SIZE_IN_BYTES = 50_000_000;
+
 // Core EXIF data
 export interface PhotoExif {
   aspectRatio: number

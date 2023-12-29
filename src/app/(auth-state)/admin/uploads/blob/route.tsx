@@ -1,6 +1,9 @@
 import { auth } from '@/auth';
 import { revalidateAdminPaths, revalidatePhotosKey } from '@/cache';
-import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
+import {
+  ACCEPTED_PHOTO_FILE_TYPES,
+  MAX_PHOTO_UPLOAD_SIZE_IN_BYTES,
+} from '@/photo';
 import { isUploadPathnameValid } from '@/services/blob';
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { NextResponse } from 'next/server';
@@ -17,7 +20,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         if (session?.user) {
           if (isUploadPathnameValid(pathname)) {
             return {
-              maximumSizeInBytes: 40_000_000,
+              maximumSizeInBytes: MAX_PHOTO_UPLOAD_SIZE_IN_BYTES,
               allowedContentTypes: ACCEPTED_PHOTO_FILE_TYPES,
             };
           } else {
