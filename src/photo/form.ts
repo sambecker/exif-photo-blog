@@ -22,6 +22,7 @@ type FormMeta = {
   note?: string
   required?: boolean
   readOnly?: boolean
+  capitalize?: boolean
   hideIfEmpty?: boolean
   hideTemporarily?: boolean
   hideBasedOnCamera?: (make?: string, mode?: string) => boolean
@@ -32,7 +33,7 @@ type FormMeta = {
 };
 
 const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
-  title: { label: 'title' },
+  title: { label: 'title', capitalize: true },
   tags: { label: 'tags', note: 'comma-separated values' },
   id: { label: 'id', readOnly: true, hideIfEmpty: true },
   blurData: {

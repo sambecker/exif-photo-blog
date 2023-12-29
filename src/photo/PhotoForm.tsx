@@ -143,6 +143,7 @@ export default function PhotoForm({
           options,
           optionsDefaultLabel,
           readOnly,
+          capitalize,
           hideIfEmpty,
           hideBasedOnCamera,
           loadingMessage,
@@ -163,6 +164,7 @@ export default function PhotoForm({
               selectOptionsDefaultLabel={optionsDefaultLabel}
               required={required}
               readOnly={readOnly}
+              capitalize={capitalize}
               placeholder={loadingMessage && !formData[key]
                 ? loadingMessage
                 : undefined}

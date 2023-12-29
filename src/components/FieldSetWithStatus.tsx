@@ -17,6 +17,7 @@ export default function FieldSetWithStatus({
   loading,
   required,
   readOnly,
+  capitalize,
   type = 'text',
   inputRef,
 }: {
@@ -31,6 +32,7 @@ export default function FieldSetWithStatus({
   loading?: boolean
   required?: boolean
   readOnly?: boolean
+  capitalize?: boolean
   type?: 'text' | 'email' | 'password' | 'checkbox'
   inputRef?: LegacyRef<HTMLInputElement>
 }) {
@@ -92,7 +94,7 @@ export default function FieldSetWithStatus({
           autoComplete="off"
           readOnly={readOnly || pending}
           className={cc(type === 'text' && 'w-full')}
-          autoCapitalize="off"
+          autoCapitalize={!capitalize ? 'off' : undefined}
         />}
     </div>
   );
