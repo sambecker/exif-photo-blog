@@ -92,6 +92,7 @@ export default function FieldSetWithStatus({
           autoComplete="off"
           readOnly={readOnly || pending}
           className={cc(type === 'text' && 'w-full')}
+          autoCapitalize="off"
         />}
     </div>
   );
