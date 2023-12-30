@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 
 export default function Checklist({
   title,
@@ -12,7 +12,7 @@ export default function Checklist({
 }) {
   return (
     <div>
-      <div className={cc(
+      <div className={clsx(
         'flex items-center gap-3',
         'text-gray-600 dark:text-gray-300',
         'pl-[18px] mb-3',
@@ -22,7 +22,7 @@ export default function Checklist({
           {title}
         </div>
       </div>
-      <div className={cc(
+      <div className={clsx(
         'bg-white dark:bg-black',
         'dark:text-gray-400',
         'border border-gray-200 dark:border-gray-800 rounded-md',

@@ -3,7 +3,7 @@
 import { LegacyRef } from 'react';
 import { useFormStatus } from 'react-dom';
 import Spinner from './Spinner';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 
 export default function FieldSetWithStatus({
   id,
@@ -64,7 +64,7 @@ export default function FieldSetWithStatus({
           name={id}
           value={value}
           onChange={e => onChange?.(e.target.value)}
-          className={cc(
+          className={clsx(
             'w-full',
             // Use special class because `select` can't be readonly
             readOnly || pending && 'disabled-select',
@@ -93,7 +93,7 @@ export default function FieldSetWithStatus({
           type={type}
           autoComplete="off"
           readOnly={readOnly || pending}
-          className={cc(type === 'text' && 'w-full')}
+          className={clsx(type === 'text' && 'w-full')}
           autoCapitalize={!capitalize ? 'off' : undefined}
         />}
     </div>

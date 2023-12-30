@@ -1,7 +1,7 @@
 'use client';
 
 import SiteGrid from '@/components/SiteGrid';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import { FILM_SIMULATION_FORM_INPUT_OPTIONS } from '@/vendors/fujifilm';
 import PhotoFilmSimulation from
   '@/simulation/PhotoFilmSimulation';
@@ -19,7 +19,7 @@ export default function FilmPage() {
 
   return (
     <SiteGrid
-      contentMain={<div className={cc(
+      contentMain={<div className={clsx(
         'flex items-center justify-center min-h-[30rem]',
       )}>
         <div className="w-[250px] scale-[2.5]">
@@ -38,7 +38,7 @@ export default function FilmPage() {
               <div>1/3200s</div>
               <div>ISO 125</div>
             </div>
-            <div className={cc(
+            <div className={clsx(
               'absolute top-0 left-[-2px] right-0 bottom-0',
               'bg-gradient-to-t',
               'from-white to-[rgba(255,255,255,0.5)]',

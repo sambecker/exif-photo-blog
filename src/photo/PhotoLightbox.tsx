@@ -1,4 +1,4 @@
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import { Photo } from '.';
 import PhotoGrid from './PhotoGrid';
 import Link from 'next/link';
@@ -23,7 +23,7 @@ export default function PhotoLightbox({
   const showOverageTile = countNotShown > 0;
 
   return (
-    <div className={cc(
+    <div className={clsx(
       'border dark:border-gray-800 p-1.5 lg:p-2 rounded-md',
       'bg-gray-50 dark:bg-gray-950',
     )}>
@@ -33,7 +33,7 @@ export default function PhotoLightbox({
         additionalTile={showOverageTile
           ? <Link
             href={moreLink}
-            className={cc(
+            className={clsx(
               'flex flex-col items-center justify-center',
               'gap-0.5 lg:gap-1',
             )}

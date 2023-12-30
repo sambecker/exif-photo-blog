@@ -4,7 +4,7 @@ import { blobToImage } from '@/utility/blob';
 import { useRef, useState } from 'react';
 import { CopyExif } from '@/lib/CopyExif';
 import exifr from 'exifr';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import Spinner from './Spinner';
 import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
 import { FiUploadCloud } from 'react-icons/fi';
@@ -47,13 +47,13 @@ export default function ImageInput({
       <div className="flex items-center gap-2 sm:gap-4">
         <label
           htmlFor={INPUT_ID}
-          className={cc(
+          className={clsx(
             'shrink-0 select-none text-main',
             loading && 'pointer-events-none cursor-not-allowed',
           )}
         >
           <span
-            className={cc(
+            className={clsx(
               'button primary normal-case',
               loading && 'disabled'
             )}
@@ -212,7 +212,7 @@ export default function ImageInput({
       </div>
       <canvas
         ref={ref}
-        className={cc(
+        className={clsx(
           'bg-gray-50 dark:bg-gray-900/50 rounded-md',
           'border border-gray-200 dark:border-gray-800',
           'w-[400px]',

@@ -1,6 +1,6 @@
 'use client';
 
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import SiteGrid from '../components/SiteGrid';
@@ -55,7 +55,7 @@ export default function Nav({ showTextLinks }: { showTextLinks?: boolean }) {
           items={showNav
             ? [<div
               key="nav"
-              className={cc(
+              className={clsx(
                 'flex items-center',
                 'w-full min-h-[4rem]',
                 'leading-none',

@@ -1,6 +1,6 @@
 import { Photo } from '.';
 import PhotoSmall from './PhotoSmall';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import AnimateItems from '@/components/AnimateItems';
 import { Camera } from '@/camera';
 import MorePhotos from '@/photo/MorePhotos';
@@ -37,7 +37,7 @@ export default function PhotoGrid({
   return (
     <div className="space-y-4">
       <AnimateItems
-        className={cc(
+        className={clsx(
           'grid gap-0.5 sm:gap-1',
           small
             ? 'grid-cols-3 xs:grid-cols-6'
@@ -56,7 +56,7 @@ export default function PhotoGrid({
           <div
             key={photo.id}
             className={GRID_ASPECT_RATIO !== 0
-              ? cc(
+              ? clsx(
                 'aspect-square',
                 'overflow-hidden',
                 '[&>*]:flex [&>*]:w-full [&>*]:h-full',

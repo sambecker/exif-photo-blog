@@ -6,7 +6,7 @@ import { fileNameForBlobUrl } from '@/services/blob';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import { deleteBlobPhotoAction } from '@/photo/actions';
 import DeleteButton from './DeleteButton';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import { pathForAdminUploadUrl } from '@/site/paths';
 import AddButton from './AddButton';
 
@@ -28,7 +28,7 @@ export default function BlobUrls({
               alt={`Upload: ${uploadFileName}`}
               src={url}
               aspectRatio={3.0 / 2.0}
-              className={cc(
+              className={clsx(
                 'rounded-sm overflow-hidden',
                 'border border-gray-200 dark:border-gray-800',
               )}
@@ -41,7 +41,7 @@ export default function BlobUrls({
           >
             {uploadFileName}
           </Link>
-          <div className={cc(
+          <div className={clsx(
             'flex flex-nowrap',
             'gap-2 sm:gap-3 items-center',
           )}>

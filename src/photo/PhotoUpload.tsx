@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { PATH_ADMIN_UPLOADS, pathForAdminUploadUrl } from '@/site/paths';
 import ImageInput from '../components/ImageInput';
 import { MAX_IMAGE_SIZE } from '@/services/next-image';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 
 export default function PhotoUpload({
   shouldResize,
@@ -25,7 +25,7 @@ export default function PhotoUpload({
   const router = useRouter();
 
   return (
-    <div className={cc(
+    <div className={clsx(
       'space-y-4',
       isUploading && 'cursor-not-allowed',
     )}>

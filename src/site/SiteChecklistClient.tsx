@@ -2,7 +2,7 @@
 
 import { ComponentProps, ReactNode, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import ChecklistRow from '../components/ChecklistRow';
 import { FiExternalLink } from 'react-icons/fi';
 import {
@@ -60,7 +60,7 @@ export default function SiteChecklistClient({
       <a {...{
         href,
         ...external && { target: '_blank', rel: 'noopener noreferrer' },
-        className: cc(
+        className: clsx(
           'underline hover:no-underline',
         ),
       }}>
@@ -79,7 +79,7 @@ export default function SiteChecklistClient({
   const renderCopyButton = (label: string, text: string, subtle?: boolean) =>
     <IconButton
       icon={<BiCopy size={15} />}
-      className={cc(subtle && 'text-gray-300 dark:text-gray-700')}
+      className={clsx(subtle && 'text-gray-300 dark:text-gray-700')}
       onClick={() => {
         navigator.clipboard.writeText(text);
         toastSuccess(`${label} copied to clipboard`);
@@ -92,7 +92,7 @@ export default function SiteChecklistClient({
       className="overflow-x-scroll overflow-y-hidden"
     >
       <span className="inline-flex items-center gap-1">
-        <span className={cc(
+        <span className={clsx(
           'text-medium',
           'rounded-sm',
           'bg-gray-100 dark:bg-gray-800',

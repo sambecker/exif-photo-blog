@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import IconButton from './IconButton';
 import { useEffect, useState, useTransition } from 'react';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import { SpinnerColor } from './Spinner';
 
 export default function IconPathButton({
@@ -57,7 +57,7 @@ export default function IconPathButton({
         }
       })}
       isLoading={shouldShowLoader}
-      className={cc(
+      className={clsx(
         'translate-y-[-0.5px]',
         'active:translate-y-[1px]',
         'text-medium',

@@ -1,4 +1,4 @@
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 
 export default function SiteGrid({
   className,
@@ -14,7 +14,7 @@ export default function SiteGrid({
   sideHiddenOnMobile?: boolean
 }) {
   return (
-    <div className={cc(
+    <div className={clsx(
       className,
       'grid',
       'grid-cols-1 md:grid-cols-12',
@@ -22,14 +22,14 @@ export default function SiteGrid({
       'gap-y-4',
       'max-w-7xl',
     )}>
-      <div className={cc(
+      <div className={clsx(
         'col-span-1 md:col-span-9',
         sideFirstOnMobile && 'order-2 md:order-none',
       )}>
         {contentMain}
       </div>
       {contentSide &&
-        <div className={cc(
+        <div className={clsx(
           'col-span-1 md:col-span-3',
           sideFirstOnMobile && 'order-1 md:order-none',
           sideHiddenOnMobile && 'hidden md:block',

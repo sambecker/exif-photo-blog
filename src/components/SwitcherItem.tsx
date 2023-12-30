@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 
 export default function SwitcherItem({
   icon,
@@ -16,7 +16,7 @@ export default function SwitcherItem({
   active?: boolean
   noPadding?: boolean
 }) {
-  const className = cc(
+  const className = clsx(
     classNameProp,
     'py-0.5 px-1.5',
     'cursor-pointer',

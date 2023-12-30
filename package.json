@@ -27,6 +27,7 @@
     "@vercel/speed-insights": "^1.0.2",
     "autoprefixer": "10.4.16",
     "camelcase-keys": "^9.1.2",
+    "clsx": "^2.1.0",
     "date-fns": "^3.0.6",
     "eslint": "8.56.0",
     "eslint-config-next": "14.0.4",

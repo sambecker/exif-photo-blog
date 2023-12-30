@@ -1,6 +1,6 @@
 'use client';
 
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import { useTheme } from 'next-themes';
 import { Toaster } from 'sonner';
 
@@ -11,7 +11,7 @@ export default function ToasterWithThemes() {
       theme={theme as 'system' | 'light' | 'dark'}
       toastOptions={{
         classNames: {
-          toast: cc(
+          toast: clsx(
             'font-mono font-normal',
             '!border-gray-200 dark:!border-gray-800',
           ),

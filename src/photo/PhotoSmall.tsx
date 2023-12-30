@@ -1,7 +1,7 @@
 import { Photo, titleForPhoto } from '.';
 import ImageSmall from '@/components/ImageSmall';
 import Link from 'next/link';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import { pathForPhoto } from '@/site/paths';
 import { Camera } from '@/camera';
 import { FilmSimulation } from '@/simulation';
@@ -22,7 +22,7 @@ export default function PhotoSmall({
   return (
     <Link
       href={pathForPhoto(photo, tag, camera, simulation)}
-      className={cc(
+      className={clsx(
         'active:brightness-75',
         selected && 'brightness-50',
       )}

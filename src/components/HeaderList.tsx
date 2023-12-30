@@ -1,4 +1,4 @@
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import AnimateItems from './AnimateItems';
 import { ReactNode } from 'react';
 
@@ -22,7 +22,7 @@ export default function HeaderList({
       items={(title || icon
         ? [<div
           key="header"
-          className={cc(
+          className={clsx(
             'text-gray-900',
             'dark:text-gray-100',
             'flex items-center mb-0.5 gap-1',

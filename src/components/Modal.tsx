@@ -2,7 +2,7 @@
 
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
 import { useRouter } from 'next/navigation';
 import AnimateItems from './AnimateItems';
@@ -40,7 +40,7 @@ export default function Modal({
 
   return (
     <motion.div
-      className={cc(
+      className={clsx(
         'fixed inset-0 z-50 flex items-center justify-center',
         'bg-black',
       )}
@@ -54,7 +54,7 @@ export default function Modal({
         duration={0.3}
         items={[<div
           key="modalContent"
-          className={cc(
+          className={clsx(
             'p-3 rounded-lg',
             'bg-white dark:bg-black',
             'dark:border dark:border-gray-800',

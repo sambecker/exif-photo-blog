@@ -1,4 +1,4 @@
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import { Photo, PhotoDateRange, dateRangeForPhotos } from '.';
 import ShareButton from '@/components/ShareButton';
 import AnimateItems from '@/components/AnimateItems';
@@ -37,19 +37,19 @@ export default function PhotoSetHeader({
       animateOnFirstLoadOnly
       items={[<div
         key="PhotosHeader"
-        className={cc(
+        className={clsx(
           'grid gap-0.5 sm:gap-1 items-start',
           HIGH_DENSITY_GRID
             ? 'xs:grid-cols-2 sm:grid-cols-4 lg:grid-cols-5'
             : 'xs:grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
         )}>
-        <span className={cc(
+        <span className={clsx(
           'inline-flex',
           HIGH_DENSITY_GRID && 'sm:col-span-2',
         )}>
           {entity}
         </span>
-        <span className={cc(
+        <span className={clsx(
           'inline-flex gap-2 items-center self-start',
           'uppercase text-dim',
           HIGH_DENSITY_GRID
@@ -63,7 +63,7 @@ export default function PhotoSetHeader({
           {selectedPhotoIndex === undefined &&
             <ShareButton path={sharePath} dim />}
         </span>
-        <span className={cc(
+        <span className={clsx(
           'hidden sm:inline-block',
           'text-right uppercase',
           'text-dim',

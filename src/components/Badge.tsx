@@ -1,4 +1,4 @@
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 
 export default function Badge({
   children,
@@ -13,12 +13,12 @@ export default function Badge({
 }) {
   const stylesForType = () => {
     switch (type) {
-    case 'primary': return cc(
+    case 'primary': return clsx(
       'px-1.5 py-[0.3rem] rounded-md',
       'bg-gray-100/80 dark:bg-gray-900/80',
       'border border-gray-200/60 dark:border-gray-800/75'
     );
-    case 'secondary': return cc(
+    case 'secondary': return clsx(
       'px-[0.3rem] py-1 rounded-[0.25rem]',
       'bg-gray-300/30 dark:bg-gray-700/50',
       'text-medium',
@@ -29,7 +29,7 @@ export default function Badge({
     }
   };
   return (
-    <span className={cc(
+    <span className={clsx(
       'leading-none',
       stylesForType(),
       uppercase && 'uppercase tracking-wider',

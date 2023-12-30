@@ -1,6 +1,6 @@
 'use client';
 
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import ThemeSwitcher from '@/site/ThemeSwitcher';
@@ -10,7 +10,7 @@ import { isPathSignIn } from '@/site/paths';
 import { signOutAction } from '@/auth/action';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 
-const LINK_STYLE = cc(
+const LINK_STYLE = clsx(
   'cursor-pointer',
   'hover:text-gray-300',
   'hover:dark:text-gray-600',
@@ -23,7 +23,7 @@ export default function FooterAuth() {
 
   return (
     <SiteGrid
-      contentMain={<div className={cc(
+      contentMain={<div className={clsx(
         'flex items-center',
         'my-8',
         'text-dim',

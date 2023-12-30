@@ -1,4 +1,4 @@
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 
 const SIZE_DEFAULT = 12;
 
@@ -15,7 +15,7 @@ export default function Spinner({
 }) {
   return (
     <span
-      className={cc(
+      className={clsx(
         className,
         color === 'light-gray' && 
           'text-gray-300 dark:text-gray-600',

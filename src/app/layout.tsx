@@ -1,6 +1,6 @@
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import { IBM_Plex_Mono } from 'next/font/google';
 import { Metadata } from 'next';
 import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from '@/site/config';
@@ -69,7 +69,7 @@ export default function RootLayout({
     >
       <body className={ibmPlexMono.variable}>
         <ThemeProviderClient>
-          <main className={cc(
+          <main className={clsx(
             'px-3 pb-3',
             'lg:px-6 lg:pb-6',
           )}>

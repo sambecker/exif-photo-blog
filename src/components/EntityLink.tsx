@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ReactNode } from 'react';
 import Badge from './Badge';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 
 export interface EntityLinkExternalProps {
   type?: 'icon-last' | 'icon-first' | 'icon-only' | 'text-only'
@@ -41,7 +41,7 @@ export default function EntityLink({
       <Link
         href={href}
         title={title}
-        className={cc(
+        className={clsx(
           'inline-flex gap-[0.23rem]',
           !badged && 'text-main hover:text-gray-900 dark:hover:text-gray-100',
           dim && 'text-dim',
@@ -59,7 +59,7 @@ export default function EntityLink({
             </span>}
         </>}
         {icon && type !== 'text-only' &&
-          <span className={cc(
+          <span className={clsx(
             'flex-shrink-0',
             'text-dim inline-flex min-w-[0.9rem]',
             type === 'icon-first' && 'order-first',

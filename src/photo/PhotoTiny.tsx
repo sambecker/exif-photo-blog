@@ -1,7 +1,7 @@
 import { Photo, titleForPhoto } from '.';
 import ImageTiny from '@/components/ImageTiny';
 import Link from 'next/link';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import { pathForPhoto } from '@/site/paths';
 
 export default function PhotoTiny({
@@ -18,7 +18,7 @@ export default function PhotoTiny({
   return (
     <Link
       href={pathForPhoto(photo, tag)}
-      className={cc(
+      className={clsx(
         className,
         'active:brightness-75',
         selected && 'brightness-50',

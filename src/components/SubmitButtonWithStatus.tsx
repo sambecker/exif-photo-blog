@@ -3,7 +3,7 @@
 import { HTMLProps, useEffect, useRef } from 'react';
 import { useFormStatus } from 'react-dom';
 import Spinner, { SpinnerColor } from './Spinner';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import { toastSuccess } from '@/toast';
 
 interface Props extends HTMLProps<HTMLButtonElement> {
@@ -43,7 +43,7 @@ export default function SubmitButtonWithStatus({
     <button
       type="submit"
       disabled={disabled}
-      className={cc(
+      className={clsx(
         className,
         'inline-flex items-center gap-2',
         styleAsLink && 'link',
@@ -51,7 +51,7 @@ export default function SubmitButtonWithStatus({
       {...buttonProps}
     >
       {(icon || pending) &&
-        <span className={cc(
+        <span className={clsx(
           'h-4',
           'min-w-[1rem]',
           'inline-flex justify-center sm:justify-normal',
@@ -62,7 +62,7 @@ export default function SubmitButtonWithStatus({
             ? <Spinner size={14} color={spinnerColor} />
             : icon}
         </span>}
-      {children && <span className={cc(
+      {children && <span className={clsx(
         icon !== undefined && 'hidden sm:inline-block',
       )}>
         {children}

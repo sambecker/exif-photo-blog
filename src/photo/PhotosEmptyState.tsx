@@ -2,7 +2,7 @@ import InfoBlock from '@/components/InfoBlock';
 import SiteGrid from '@/components/SiteGrid';
 import { IS_SITE_READY } from '@/site/config';
 import SiteChecklist from '@/site/SiteChecklist';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import Link from 'next/link';
 import { HiOutlinePhotograph } from 'react-icons/hi';
 
@@ -15,7 +15,7 @@ export default function PhotosEmptyState() {
             className="text-medium"
             size={24}
           />
-          <div className={cc(
+          <div className={clsx(
             'font-bold text-2xl',
             'text-gray-700 dark:text-gray-200',
           )}>
@@ -40,7 +40,7 @@ export default function PhotosEmptyState() {
                 2. Change the name of this blog and other configuration
                 by editing environment variables referenced in
                 {' '}
-                <span className={cc(
+                <span className={clsx(
                   'px-1.5',
                   'bg-gray-100',
                   'border border-gray-200 dark:border-gray-700',

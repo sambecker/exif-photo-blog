@@ -1,4 +1,4 @@
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import { ReactNode } from 'react';
 
 export default function InfoBlock({
@@ -21,7 +21,7 @@ export default function InfoBlock({
   };
 
   return (
-    <div className={cc(
+    <div className={clsx(
       'flex flex-col items-center justify-center',
       'rounded-lg border',
       'bg-gray-50 border-gray-200',
@@ -29,7 +29,7 @@ export default function InfoBlock({
       getPaddingClasses(),
       className,
     )}>
-      <div className={cc(
+      <div className={clsx(
         'flex flex-col justify-center w-full',
         centered && 'items-center',
         'space-y-4',

@@ -10,7 +10,7 @@ import NextImage from 'next/image';
 import { createPhotoAction, updatePhotoAction } from './actions';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import CanvasBlurCapture from '@/components/CanvasBlurCapture';
 import { PATH_ADMIN_PHOTOS, PATH_ADMIN_UPLOADS } from '@/site/paths';
 import {
@@ -106,7 +106,7 @@ export default function PhotoForm({
         <NextImage
           alt="Upload"
           src={url}
-          className={cc(
+          className={clsx(
             'border rounded-md overflow-hidden',
             'border-gray-200 dark:border-gray-700'
           )}
@@ -124,7 +124,7 @@ export default function PhotoForm({
           <img
             alt="blur"
             src={formData.blurData}
-            className={cc(
+            className={clsx(
               'border rounded-md overflow-hidden',
               'border-gray-200 dark:border-gray-700'
             )}

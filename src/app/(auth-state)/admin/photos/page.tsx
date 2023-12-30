@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import PhotoUpload from '@/photo/PhotoUpload';
 import Link from 'next/link';
 import PhotoTiny from '@/photo/PhotoTiny';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import SiteGrid from '@/components/SiteGrid';
 import { deletePhotoAction, syncPhotoExifDataAction } from '@/photo/actions';
@@ -56,7 +56,7 @@ export default async function AdminPhotosPage({
         <div className="space-y-8">
           <PhotoUpload shouldResize={!PRO_MODE_ENABLED} />
           {blobPhotoUrls.length > 0 &&
-            <div className={cc(
+            <div className={clsx(
               'border-b pb-6',
               'border-gray-200 dark:border-gray-700',
             )}>
@@ -70,7 +70,7 @@ export default async function AdminPhotosPage({
               {photos.map(photo =>
                 <Fragment key={photo.id}>
                   <PhotoTiny
-                    className={cc(
+                    className={clsx(
                       'rounded-sm overflow-hidden',
                       'border border-gray-200 dark:border-gray-800',
                     )}
@@ -82,7 +82,7 @@ export default async function AdminPhotosPage({
                       href={pathForPhoto(photo)}
                       className="lg:w-[50%] flex items-center gap-2"
                     >
-                      <span className={cc(
+                      <span className={clsx(
                         'inline-flex items-center gap-2',
                         photo.hidden && 'text-dim',
                       )}>
@@ -94,7 +94,7 @@ export default async function AdminPhotosPage({
                           />}
                       </span>
                       {photo.priorityOrder !== null &&
-                        <span className={cc(
+                        <span className={clsx(
                           'text-xs leading-none px-1.5 py-1 rounded-sm',
                           'dark:text-gray-300',
                           'bg-gray-100 dark:bg-gray-800',
@@ -102,14 +102,14 @@ export default async function AdminPhotosPage({
                           {photo.priorityOrder}
                         </span>}
                     </Link>
-                    <div className={cc(
+                    <div className={clsx(
                       'lg:w-[50%] uppercase',
                       'text-dim',
                     )}>
                       {photo.takenAtNaive}
                     </div>
                   </div>
-                  <div className={cc(
+                  <div className={clsx(
                     'flex flex-nowrap',
                     'gap-2 sm:gap-3 items-center',
                   )}>

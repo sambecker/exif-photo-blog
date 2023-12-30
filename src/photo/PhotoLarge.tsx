@@ -1,7 +1,7 @@
 import { Photo, photoHasCameraData, photoHasExifData, titleForPhoto } from '.';
 import SiteGrid from '@/components/SiteGrid';
 import ImageLarge from '@/components/ImageLarge';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import Link from 'next/link';
 import { pathForPhoto, pathForPhotoShare } from '@/site/paths';
 import PhotoTags from '@/tag/PhotoTags';
@@ -38,7 +38,7 @@ export default function PhotoLarge({
   const camera = cameraFromPhoto(photo);
   
   const renderMiniGrid = (children: JSX.Element, rightPadding = true) =>
-    <div className={cc(
+    <div className={clsx(
       'flex gap-y-4',
       'flex-col sm:flex-row md:flex-col',
       '[&>*]:sm:flex-grow',
@@ -60,7 +60,7 @@ export default function PhotoLarge({
           priority={priority}
         />}
       contentSide={
-        <div className={cc(
+        <div className={clsx(
           'leading-snug',
           'sticky top-4 self-start',
           'grid grid-cols-2 md:grid-cols-1',
@@ -115,11 +115,11 @@ export default function PhotoLarge({
                 <li>{photo.isoFormatted}</li>
                 <li>{photo.exposureCompensationFormatted ?? '—'}</li>
               </ul>}
-            <div className={cc(
+            <div className={clsx(
               'flex gap-y-4',
               'flex-col sm:flex-row md:flex-col',
             )}>
-              <div className={cc(
+              <div className={clsx(
                 'grow uppercase',
                 'text-medium',
               )}>

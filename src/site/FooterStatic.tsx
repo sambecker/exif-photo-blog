@@ -1,6 +1,6 @@
 'use client';
 
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import SiteGrid from '../components/SiteGrid';
 import ThemeSwitcher from '@/site/ThemeSwitcher';
 import { signOut } from 'next-auth/react';
@@ -15,7 +15,7 @@ export default function FooterStatic({
 }) {
   return (
     <SiteGrid
-      contentMain={<div className={cc(
+      contentMain={<div className={clsx(
         'my-8',
         'flex items-center',
         'text-dim',
@@ -31,7 +31,7 @@ export default function FooterStatic({
             <RepoLink />}
           {showSignOut &&
             <div
-              className={cc(
+              className={clsx(
                 'cursor-pointer',
                 'hover:text-gray-600 dark:hover:text-gray-400',
               )}

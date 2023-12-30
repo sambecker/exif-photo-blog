@@ -2,7 +2,7 @@
 
 import Modal from '@/components/Modal';
 import { TbPhotoShare } from 'react-icons/tb';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import { BiCopy } from 'react-icons/bi';
 import { ReactNode } from 'react';
 import { shortenUrl } from '@/utility/url';
@@ -22,7 +22,7 @@ export default function ShareModal({
   return (
     <Modal onClosePath={pathClose}>
       <div className="space-y-3 md:space-y-4 w-full">
-        <div className={cc(
+        <div className={clsx(
           'flex items-center gap-x-3',
           'text-xl md:text-3xl leading-snug',
         )}>
@@ -32,7 +32,7 @@ export default function ShareModal({
           </div>
         </div>
         {children}
-        <div className={cc(
+        <div className={clsx(
           'rounded-md',
           'w-full overflow-hidden',
           'flex items-center justify-stretch',
@@ -42,7 +42,7 @@ export default function ShareModal({
             {shortenUrl(pathShare)}
           </div>
           <div
-            className={cc(
+            className={clsx(
               'p-3 border-l',
               'border-gray-200 bg-gray-100 active:bg-gray-200',
               // eslint-disable-next-line max-len

@@ -1,4 +1,4 @@
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import { BiErrorAlt } from 'react-icons/bi';
 
 export default function ErrorNote({
@@ -7,7 +7,7 @@ export default function ErrorNote({
   children: React.ReactNode
 }) {
   return (
-    <div className={cc(
+    <div className={clsx(
       'flex items-center gap-3',
       'px-3 py-2 border',
       'text-red-600 dark:text-red-500/90',

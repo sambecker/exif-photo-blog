@@ -1,6 +1,6 @@
 'use client';
 
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 import Spinner, { SpinnerColor } from './Spinner';
 
 export default function IconButton({
@@ -19,7 +19,7 @@ export default function IconButton({
   spinnerSize?: number
 }) {
   return (
-    <span className={cc(
+    <span className={clsx(
       className,
       'relative inline-flex items-center',
       'w-[1rem] h-[1.1rem]',
@@ -27,7 +27,7 @@ export default function IconButton({
       {!isLoading
         ? <button
           onClick={onClick}
-          className={cc(
+          className={clsx(
             'inline-flex items-center justify-center',
             'p-0 border-none shadow-none',
             'active:bg-transparent bg-transparent dark:bg-transparent',
@@ -38,7 +38,7 @@ export default function IconButton({
         >
           {icon}
         </button>
-        : <span className={cc(
+        : <span className={clsx(
           'inline-flex items-center justify-center',
           'h-full w-full',
         )}>

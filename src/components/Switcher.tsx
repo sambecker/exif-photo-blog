@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 
 export default function Switcher({
   children,
@@ -7,7 +7,7 @@ export default function Switcher({
   children: ReactNode
 }) {
   return (
-    <div className={cc(
+    <div className={clsx(
       'flex divide-x',
       'divide-gray-300 dark:divide-gray-800',
       'border rounded-[0.25rem]',

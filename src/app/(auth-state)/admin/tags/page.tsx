@@ -10,7 +10,7 @@ import PhotoTag from '@/tag/PhotoTag';
 import { formatTag } from '@/tag';
 import EditButton from '@/admin/EditButton';
 import { pathForAdminTagEdit } from '@/site/paths';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx';
 
 export default async function AdminTagsPage() {
   const tags = await getUniqueTagsHiddenCached();
@@ -29,7 +29,7 @@ export default async function AdminTagsPage() {
                   <div className="text-dim uppercase">
                     {photoQuantityText(count, false)}
                   </div>
-                  <div className={cc(
+                  <div className={clsx(
                     'flex flex-nowrap',
                     'gap-2 sm:gap-3 items-center',
                   )}>
