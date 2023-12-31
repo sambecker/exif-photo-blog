@@ -5,12 +5,11 @@ import PhotoTag from '@/tag/PhotoTag';
 import { FaTag } from 'react-icons/fa';
 import { IoMdCamera } from 'react-icons/io';
 import { PhotoDateRange, dateRangeForPhotos, photoQuantityText } from '.';
-import { Tags } from '@/tag';
-import PhotoFilmSimulation from 
-  '@/simulation/PhotoFilmSimulation';
-import PhotoFilmSimulationIcon from
-  '@/simulation/PhotoFilmSimulationIcon';
+import { TAG_FAVS, Tags } from '@/tag';
+import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
+import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
 import { FilmSimulations, sortFilmSimulationsWithCount } from '@/simulation';
+import FavsTag from '../tag/FavsTag';
 
 export default function PhotoGridSidebar({
   tags,
@@ -32,8 +31,14 @@ export default function PhotoGridSidebar({
       {tags.length > 0 && <HeaderList
         title='Tags'
         icon={<FaTag size={12} className="text-icon" />}
-        items={tags.map(({ tag, count }) =>
-          <PhotoTag
+        items={tags.map(({ tag, count }) => tag === TAG_FAVS
+          ? <FavsTag
+            key={TAG_FAVS}
+            countOnHover={count}
+            type="icon-last"
+            badged
+          />
+          : <PhotoTag
             key={tag}
             tag={tag}
             type="text-only"

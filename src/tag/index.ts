@@ -7,6 +7,8 @@ import {
 import { absolutePathForTag, absolutePathForTagImage } from '@/site/paths';
 import { capitalizeWords } from '@/utility/string';
 
+export const TAG_FAVS = 'favs';
+
 export type Tags = {
   tag: string
   count: number
@@ -50,3 +52,5 @@ export const generateMetaForTag = (
     descriptionForTaggedPhotos(photos, true, explicitCount, explicitDateRange),
   images: absolutePathForTagImage(tag),
 });
+
+export const isTagFavs = (tag: string) => tag === TAG_FAVS;

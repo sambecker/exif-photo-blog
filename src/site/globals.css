@@ -132,4 +132,8 @@
     @apply
       text-red-500 dark:text-red-400
   }
+  .bg-main {
+    @apply
+      bg-gray-900 dark:bg-gray-100
+  }
 }

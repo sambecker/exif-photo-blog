@@ -1,17 +1,11 @@
-import {
-  getPhotosCached,
-  getPhotosCountCached,
-  getUniqueCamerasCached,
-  getUniqueFilmSimulationsCached,
-  getUniqueTagsCached,
-} from '@/cache';
+import { getPhotosCached } from '@/cache';
 import InfoBlock from '@/components/InfoBlock';
 import RedirectOnDesktop from '@/components/RedirectOnDesktop';
 import SiteGrid from '@/components/SiteGrid';
 import { generateOgImageMetaForPhotos } from '@/photo';
 import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
+import { getPhotoSidebarDataCached } from '@/photo/data';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
-import { SHOW_FILM_SIMULATIONS } from '@/site/config';
 import { PATH_GRID } from '@/site/paths';
 import { Metadata } from 'next';
 
@@ -26,12 +20,7 @@ export default async function SetsPage() {
     tags,
     cameras,
     simulations,
-  ] = await Promise.all([
-    getPhotosCountCached(),
-    getUniqueTagsCached(),
-    getUniqueCamerasCached(),
-    SHOW_FILM_SIMULATIONS ? getUniqueFilmSimulationsCached() : [],
-  ]);
+  ] = await Promise.all(getPhotoSidebarDataCached());
 
   return (
     <SiteGrid
