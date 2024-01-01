@@ -64,6 +64,10 @@
     @apply
       rounded-md
   }
+  input.error, select.error {
+    @apply
+      border-red-500 dark:border-red-400
+  }
   button, .button {
     @apply
       cursor-pointer

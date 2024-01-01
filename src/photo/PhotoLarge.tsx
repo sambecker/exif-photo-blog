@@ -9,6 +9,7 @@ import ShareButton from '@/components/ShareButton';
 import PhotoCamera from '../camera/PhotoCamera';
 import { cameraFromPhoto } from '@/camera';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
+import { sortTags } from '@/tag';
 
 export default function PhotoLarge({
   photo,
@@ -33,7 +34,7 @@ export default function PhotoLarge({
   shouldShareSimulation?: boolean
   shouldScrollOnShare?: boolean
 }) {
-  const tagsToShow = photo.tags.filter(t => t !== primaryTag);
+  const tags = sortTags(photo.tags, primaryTag);
 
   const camera = cameraFromPhoto(photo);
   
@@ -77,8 +78,8 @@ export default function PhotoLarge({
               >
                 {titleForPhoto(photo)}
               </Link>
-              {tagsToShow.length > 0 &&
-                <PhotoTags tags={tagsToShow} />}
+              {tags.length > 0 &&
+                <PhotoTags tags={tags} />}
             </div>
             {showCamera && photoHasCameraData(photo) &&
             <div className="space-y-0.5">

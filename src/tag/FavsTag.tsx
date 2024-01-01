@@ -2,6 +2,7 @@ import { FaStar } from 'react-icons/fa';
 import EntityLink, { EntityLinkExternalProps } from '@/components/EntityLink';
 import { TAG_FAVS } from '.';
 import { pathForTag } from '@/site/paths';
+import clsx from 'clsx';
 
 export default function FavsTag({
   type,
@@ -27,7 +28,10 @@ export default function FavsTag({
       icon={!badged &&
         <FaStar
           size={12}
-          className="text-amber-500 translate-y-[4px]"
+          className={clsx(
+            'text-amber-500',
+            'translate-x-[-1px] translate-y-[3.5px]',
+          )}
         />}
       type={type}
       hoverEntity={countOnHover}

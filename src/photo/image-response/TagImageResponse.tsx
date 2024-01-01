@@ -1,9 +1,10 @@
 import { Photo } from '..';
-import { FaTag } from 'react-icons/fa';
+import { FaStar, FaTag } from 'react-icons/fa';
 import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
 import { NextImageSize } from '@/services/next-image';
+import { isTagFavs } from '@/tag';
 
 export default function TagImageResponse({
   tag,
@@ -32,10 +33,19 @@ export default function TagImageResponse({
         }}
       />
       <ImageCaption {...{ width, height, fontFamily }}>
-        <FaTag
-          size={height * .067}
-          style={{ transform: `translateY(${height * .02}px)` }}
-        />
+        {isTagFavs(tag)
+          ? <FaStar
+            size={height * .074}
+            style={{
+              transform: `translateY(${height * .01}px)`,
+              // Fix horizontal distortion in icon size
+              width: height * .08,
+            }}
+          />
+          : <FaTag
+            size={height * .067}
+            style={{ transform: `translateY(${height * .02}px)` }}
+          />}
         <span>{tag.toUpperCase()}</span>
       </ImageCaption>
     </ImageContainer>

@@ -9,6 +9,7 @@ export default function FieldSetWithStatus({
   id,
   label,
   note,
+  error,
   value,
   onChange,
   selectOptions,
@@ -24,6 +25,7 @@ export default function FieldSetWithStatus({
   id: string
   label: string
   note?: string
+  error?: string
   value: string
   onChange?: (value: string) => void
   selectOptions?: { value: string, label: string }[]
@@ -45,9 +47,13 @@ export default function FieldSetWithStatus({
         htmlFor={id}
       >
         {label}
-        {note &&
+        {note && !error &&
           <span className="text-gray-400 dark:text-gray-600">
             ({note})
+          </span>}
+        {error &&
+          <span className="text-error">
+            {error}
           </span>}
         {required &&
           <span className="text-gray-400 dark:text-gray-600">
@@ -93,7 +99,10 @@ export default function FieldSetWithStatus({
           type={type}
           autoComplete="off"
           readOnly={readOnly || pending}
-          className={clsx(type === 'text' && 'w-full')}
+          className={clsx(
+            type === 'text' && 'w-full',
+            error && 'error',
+          )}
           autoCapitalize={!capitalize ? 'off' : undefined}
         />}
     </div>

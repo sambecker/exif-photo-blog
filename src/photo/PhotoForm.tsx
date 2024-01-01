@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   FORM_METADATA_ENTRIES,
   PhotoFormData,
+  getInitialErrors,
+  isFormValid,
 } from './form';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import NextImage from 'next/image';
@@ -35,6 +37,8 @@ export default function PhotoForm({
 }) {
   const [formData, setFormData] =
     useState<Partial<PhotoFormData>>(initialPhotoForm);
+  const [formErrors, setFormErrors] =
+    useState(getInitialErrors(initialPhotoForm));
 
   // Update form when EXIF data
   // is refreshed by parent
@@ -97,9 +101,6 @@ export default function PhotoForm({
     }));
   }, []);
 
-  const isFormValid = FORM_METADATA_ENTRIES.every(([key, { required }]) =>
-    !required || Boolean(formData[key]));
-
   return (
     <div className="space-y-8 max-w-[38rem]">
       <div className="flex gap-2">
@@ -143,6 +144,7 @@ export default function PhotoForm({
           options,
           optionsDefaultLabel,
           readOnly,
+          validate,
           capitalize,
           hideIfEmpty,
           hideBasedOnCamera,
@@ -158,8 +160,14 @@ export default function PhotoForm({
               id={key}
               label={label}
               note={note}
+              error={formErrors[key]}
               value={formData[key] ?? ''}
-              onChange={value => setFormData({ ...formData, [key]: value })}
+              onChange={value => {
+                setFormData({ ...formData, [key]: value });
+                if (validate) {
+                  setFormErrors({ ...formErrors, [key]: validate(value) });
+                }
+              }}
               selectOptions={options}
               selectOptionsDefaultLabel={optionsDefaultLabel}
               required={required}
@@ -179,7 +187,7 @@ export default function PhotoForm({
             Cancel
           </Link>
           <SubmitButtonWithStatus
-            disabled={!isFormValid}
+            disabled={!isFormValid(formData)}
           >
             {type === 'create' ? 'Create' : 'Update'}
           </SubmitButtonWithStatus>
