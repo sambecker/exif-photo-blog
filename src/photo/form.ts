@@ -100,6 +100,8 @@ export const isFormValid = (formData: Partial<PhotoFormData>) =>
       (validate?.(formData[key]) === undefined)
   );
 
+// CREATE FORM DATA: FROM PHOTO
+
 export const convertPhotoToFormData = (
   photo: Photo,
 ): PhotoFormData => {
@@ -126,6 +128,8 @@ export const convertPhotoToFormData = (
     favorite: photo.tags.includes(TAG_FAVS) ? 'true' : 'false',
   } as PhotoFormData);
 };
+
+// CREATE FORM DATA: FROM EXIF
 
 export const convertExifToFormData = (
   data: ExifData,
@@ -155,6 +159,8 @@ export const convertExifToFormData = (
     ? convertTimestampToNaivePostgresString(data.tags?.DateTimeOriginal)
     : undefined,
 });
+
+// PREPARE FORM FOR DB INSERT
 
 export const convertFormDataToPhotoDbInsert = (
   formData: FormData | PhotoFormData,
