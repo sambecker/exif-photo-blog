@@ -5,7 +5,9 @@ import {
   photoQuantityText,
 } from '@/photo';
 import { absolutePathForTag, absolutePathForTagImage } from '@/site/paths';
-import { capitalizeWords } from '@/utility/string';
+import { capitalizeWords, convertStringToArray } from '@/utility/string';
+
+export const TAG_FAVS = 'favs';
 
 export type Tags = {
   tag: string
@@ -15,6 +17,9 @@ export type Tags = {
 export const formatTag = (tag?: string) =>
   capitalizeWords(tag?.replaceAll('-', ' '));
 
+export const doesTagsStringIncludeFavs = (tags?: string) =>
+  convertStringToArray(tags)?.some(tag => isTagFavs(tag));
+
 export const titleForTag = (
   tag: string,
   photos:Photo[],
@@ -23,6 +28,13 @@ export const titleForTag = (
   formatTag(tag),
   photoQuantityText(explicitCount ?? photos.length),
 ].join(' ');
+
+export const sortTags = (
+  tags: string[],
+  tagToHide?: string,
+) => tags
+  .filter(t => t !== tagToHide)
+  .sort((a, b) => isTagFavs(a) ? -1 : a.localeCompare(b));
 
 export const descriptionForTaggedPhotos = (
   photos: Photo[],
@@ -50,3 +62,5 @@ export const generateMetaForTag = (
     descriptionForTaggedPhotos(photos, true, explicitCount, explicitDateRange),
   images: absolutePathForTagImage(tag),
 });
+
+export const isTagFavs = (tag: string) => tag.toLowerCase() === TAG_FAVS;

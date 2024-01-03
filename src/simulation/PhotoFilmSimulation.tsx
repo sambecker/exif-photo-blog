@@ -8,7 +8,7 @@ export default function PhotoFilmSimulation({
   simulation,
   type = 'icon-last',
   badged = true,
-  dim,
+  contrast,
   countOnHover,
 }: {
   simulation: FilmSimulation
@@ -28,7 +28,7 @@ export default function PhotoFilmSimulation({
       title={`Film Simulation: ${large}`}
       type={type}
       badged={badged}
-      dim={dim}
+      contrast={contrast}
       hoverEntity={countOnHover}
     />
   );

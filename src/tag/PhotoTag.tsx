@@ -7,7 +7,7 @@ export default function PhotoTag({
   tag,
   type,
   badged,
-  dim,
+  contrast,
   countOnHover,
 }: {
   tag: string
@@ -23,7 +23,7 @@ export default function PhotoTag({
       />}
       type={type}
       badged={badged}
-      dim={dim}
+      contrast={contrast}
       hoverEntity={countOnHover}
     />
   );

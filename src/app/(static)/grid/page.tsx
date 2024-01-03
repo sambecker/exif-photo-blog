@@ -1,10 +1,4 @@
-import {
-  getPhotosCached,
-  getPhotosCountCached,
-  getUniqueCamerasCached,
-  getUniqueFilmSimulationsCached,
-  getUniqueTagsCached,
-} from '@/cache';
+import { getPhotosCached } from '@/cache';
 import SiteGrid from '@/components/SiteGrid';
 import { generateOgImageMetaForPhotos } from '@/photo';
 import PhotoGrid from '@/photo/PhotoGrid';
@@ -17,7 +11,7 @@ import {
   getPaginationForSearchParams,
 } from '@/site/pagination';
 import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
-import { SHOW_FILM_SIMULATIONS } from '@/site/config';
+import { getPhotoSidebarDataCached } from '@/photo/data';
 
 export const runtime = 'edge';
 
@@ -37,10 +31,7 @@ export default async function GridPage({ searchParams }: PaginationParams) {
     simulations,
   ] = await Promise.all([
     getPhotosCached({ limit }),
-    getPhotosCountCached(),
-    getUniqueTagsCached(),
-    getUniqueCamerasCached(),
-    SHOW_FILM_SIMULATIONS ? getUniqueFilmSimulationsCached() : [],
+    ...getPhotoSidebarDataCached(),
   ]);
 
   const showMorePath = photosCount > photos.length

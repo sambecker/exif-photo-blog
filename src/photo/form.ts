@@ -14,14 +14,19 @@ import {
 } from '@/vendors/fujifilm';
 import { FilmSimulation } from '@/simulation';
 import { GEO_PRIVACY_ENABLED } from '@/site/config';
+import { TAG_FAVS, doesTagsStringIncludeFavs } from '@/tag';
 
-export type PhotoFormData = Record<keyof PhotoDbInsert, string>;
+type VirtualFields = 'favorite';
+
+export type PhotoFormData = Record<keyof PhotoDbInsert | VirtualFields, string>;
 
 type FormMeta = {
   label: string
   note?: string
   required?: boolean
+  virtual?: boolean
   readOnly?: boolean
+  validate?: (value?: string) => string | undefined
   capitalize?: boolean
   hideIfEmpty?: boolean
   hideTemporarily?: boolean
@@ -34,7 +39,13 @@ type FormMeta = {
 
 const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
   title: { label: 'title', capitalize: true },
-  tags: { label: 'tags', note: 'comma-separated values' },
+  tags: {
+    label: 'tags',
+    note: 'comma-separated values',
+    validate: tags => doesTagsStringIncludeFavs(tags)
+      ? `'${TAG_FAVS}' is a reserved tag`
+      : undefined,
+  },
   id: { label: 'id', readOnly: true, hideIfEmpty: true },
   blurData: {
     label: 'blur data',
@@ -65,6 +76,7 @@ const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
   takenAt: { label: 'taken at' },
   takenAtNaive: { label: 'taken at (naive)' },
   priorityOrder: { label: 'priority order' },
+  favorite: { label: 'favorite', checkbox: true, virtual: true },
   hidden: { label: 'hidden', checkbox: true },
 };
 
@@ -72,13 +84,33 @@ export const FORM_METADATA_ENTRIES =
   (Object.entries(FORM_METADATA) as [keyof PhotoFormData, FormMeta][])
     .filter(([_, meta]) => !meta.hideTemporarily);
 
+export const getInitialErrors = (
+  formData: Partial<PhotoFormData>
+): Partial<Record<keyof PhotoFormData, string>> =>
+  Object.keys(formData).reduce((acc, key) => ({
+    ...acc,
+    [key]: FORM_METADATA_ENTRIES.find(([k]) => k === key)?.[1]
+      .validate?.(formData[key as keyof PhotoFormData]),
+  }), {});
+
+export const isFormValid = (formData: Partial<PhotoFormData>) =>
+  FORM_METADATA_ENTRIES.every(
+    ([key, { required, validate }]) =>
+      (!required || Boolean(formData[key])) &&
+      (validate?.(formData[key]) === undefined)
+  );
+
+// CREATE FORM DATA: FROM PHOTO
+
 export const convertPhotoToFormData = (
   photo: Photo,
 ): PhotoFormData => {
   const valueForKey = (key: keyof Photo, value: any) => {
     switch (key) {
     case 'tags':
-      return value?.join ? value.join(', ') : value;
+      return (value ?? [])
+        .filter((tag: string) => tag !== TAG_FAVS)
+        .join(', ');
     case 'takenAt':
       return value?.toISOString ? value.toISOString() : value;
     case 'hidden':
@@ -92,8 +124,12 @@ export const convertPhotoToFormData = (
   return Object.entries(photo).reduce((photoForm, [key, value]) => ({
     ...photoForm,
     [key]: valueForKey(key as keyof Photo, value),
-  }), {} as PhotoFormData);
+  }), {
+    favorite: photo.tags.includes(TAG_FAVS) ? 'true' : 'false',
+  } as PhotoFormData);
 };
+
+// CREATE FORM DATA: FROM EXIF
 
 export const convertExifToFormData = (
   data: ExifData,
@@ -124,6 +160,8 @@ export const convertExifToFormData = (
     : undefined,
 });
 
+// PREPARE FORM FOR DB INSERT
+
 export const convertFormDataToPhotoDbInsert = (
   formData: FormData | PhotoFormData,
   generateId?: boolean,
@@ -131,6 +169,11 @@ export const convertFormDataToPhotoDbInsert = (
   const photoForm = formData instanceof FormData
     ? Object.fromEntries(formData) as PhotoFormData
     : formData;
+
+  const tags = convertStringToArray(photoForm.tags) ?? [];
+  if (photoForm.favorite === 'true') {
+    tags.push(TAG_FAVS);
+  }
   
   // Parse FormData:
   // - remove server action ID
@@ -138,7 +181,8 @@ export const convertFormDataToPhotoDbInsert = (
   Object.keys(photoForm).forEach(key => {
     if (
       key.startsWith('$ACTION_ID_') ||
-      (photoForm as any)[key] === ''
+      (photoForm as any)[key] === '' ||
+      FORM_METADATA[key as keyof PhotoFormData]?.virtual
     ) {
       delete (photoForm as any)[key];
     }
@@ -148,7 +192,7 @@ export const convertFormDataToPhotoDbInsert = (
     ...(photoForm as PhotoFormData & { filmSimulation?: FilmSimulation }),
     ...(generateId && !photoForm.id) && { id: generateNanoid() },
     // Convert form strings to arrays
-    tags: convertStringToArray(photoForm.tags),
+    tags: tags.length > 0 ? tags : undefined,
     // Convert form strings to numbers
     aspectRatio: toFixedNumber(parseFloat(photoForm.aspectRatio), 6),
     focalLength: photoForm.focalLength
