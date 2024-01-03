@@ -1,4 +1,4 @@
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import { Photo } from '.';
 import PhotoGrid from './PhotoGrid';
 import Link from 'next/link';

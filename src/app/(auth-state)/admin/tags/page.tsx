@@ -10,7 +10,7 @@ import PhotoTag from '@/tag/PhotoTag';
 import { formatTag } from '@/tag';
 import EditButton from '@/admin/EditButton';
 import { pathForAdminTagEdit } from '@/site/paths';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 
 export default async function AdminTagsPage() {
   const tags = await getUniqueTagsHiddenCached();

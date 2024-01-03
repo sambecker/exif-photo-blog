@@ -1,4 +1,4 @@
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import { ReactNode } from 'react';
 
 export default function InfoBlock({

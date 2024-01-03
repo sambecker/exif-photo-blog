@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import StatusIcon from './StatusIcon';
 
 export default function ChecklistRow({

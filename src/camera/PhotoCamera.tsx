@@ -3,7 +3,7 @@ import { pathForCamera } from '@/site/paths';
 import { IoMdCamera } from 'react-icons/io';
 import { Camera } from '.';
 import EntityLink, { EntityLinkExternalProps } from '@/components/EntityLink';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 
 export default function PhotoCamera({
   camera,

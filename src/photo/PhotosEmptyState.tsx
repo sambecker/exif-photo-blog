@@ -2,7 +2,7 @@ import InfoBlock from '@/components/InfoBlock';
 import SiteGrid from '@/components/SiteGrid';
 import { IS_SITE_READY } from '@/site/config';
 import SiteChecklist from '@/site/SiteChecklist';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import Link from 'next/link';
 import { HiOutlinePhotograph } from 'react-icons/hi';
 

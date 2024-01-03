@@ -1,6 +1,6 @@
 import { Photo } from '.';
 import PhotoSmall from './PhotoSmall';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import AnimateItems from '@/components/AnimateItems';
 import { Camera } from '@/camera';
 import MorePhotos from '@/photo/MorePhotos';

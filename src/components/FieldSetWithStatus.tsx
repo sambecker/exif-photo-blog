@@ -3,7 +3,7 @@
 import { LegacyRef } from 'react';
 import { useFormStatus } from 'react-dom';
 import Spinner from './Spinner';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 
 export default function FieldSetWithStatus({
   id,

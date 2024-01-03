@@ -1,6 +1,6 @@
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import { IBM_Plex_Mono } from 'next/font/google';
 import { Metadata } from 'next';
 import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from '@/site/config';

@@ -1,5 +1,5 @@
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import { BiTrash } from 'react-icons/bi';
 
 export default function DeleteButton () {

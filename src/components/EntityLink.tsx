@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ReactNode } from 'react';
 import Badge from './Badge';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 
 export interface EntityLinkExternalProps {
   type?: 'icon-last' | 'icon-first' | 'icon-only' | 'text-only'

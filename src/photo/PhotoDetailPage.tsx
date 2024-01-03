@@ -3,7 +3,7 @@ import { Photo, PhotoDateRange } from '.';
 import PhotoLarge from './PhotoLarge';
 import SiteGrid from '@/components/SiteGrid';
 import PhotoGrid from './PhotoGrid';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import PhotoLinks from './PhotoLinks';
 import TagHeader from '@/tag/TagHeader';
 import { Camera } from '@/camera';
