@@ -1,4 +1,4 @@
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import AnimateItems from './AnimateItems';
 import { ReactNode } from 'react';
 

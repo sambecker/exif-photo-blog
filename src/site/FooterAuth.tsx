@@ -1,6 +1,6 @@
 'use client';
 
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import ThemeSwitcher from '@/site/ThemeSwitcher';

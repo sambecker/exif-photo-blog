@@ -1,6 +1,6 @@
 'use client';
 
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import Spinner, { SpinnerColor } from './Spinner';
 
 export default function IconButton({

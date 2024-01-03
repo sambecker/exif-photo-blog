@@ -2,7 +2,7 @@
 
 import { ComponentProps, ReactNode, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import ChecklistRow from '../components/ChecklistRow';
 import { FiExternalLink } from 'react-icons/fi';
 import {

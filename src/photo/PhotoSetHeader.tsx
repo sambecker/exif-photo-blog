@@ -1,4 +1,4 @@
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import { Photo, PhotoDateRange, dateRangeForPhotos } from '.';
 import ShareButton from '@/components/ShareButton';
 import AnimateItems from '@/components/AnimateItems';

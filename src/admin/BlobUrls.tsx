@@ -6,7 +6,7 @@ import { fileNameForBlobUrl } from '@/services/blob';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import { deleteBlobPhotoAction } from '@/photo/actions';
 import DeleteButton from './DeleteButton';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import { pathForAdminUploadUrl } from '@/site/paths';
 import AddButton from './AddButton';
 

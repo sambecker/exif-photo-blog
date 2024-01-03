@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { PATH_ADMIN_UPLOADS, pathForAdminUploadUrl } from '@/site/paths';
 import ImageInput from '../components/ImageInput';
 import { MAX_IMAGE_SIZE } from '@/services/next-image';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 
 export default function PhotoUpload({
   shouldResize,

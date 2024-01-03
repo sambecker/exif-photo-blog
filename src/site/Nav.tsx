@@ -1,6 +1,6 @@
 'use client';
 
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import SiteGrid from '../components/SiteGrid';

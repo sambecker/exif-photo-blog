@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import PhotoUpload from '@/photo/PhotoUpload';
 import Link from 'next/link';
 import PhotoTiny from '@/photo/PhotoTiny';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import SiteGrid from '@/components/SiteGrid';
 import { deletePhotoAction, syncPhotoExifDataAction } from '@/photo/actions';

@@ -3,7 +3,7 @@
 import { HTMLProps, useEffect, useRef } from 'react';
 import { useFormStatus } from 'react-dom';
 import Spinner, { SpinnerColor } from './Spinner';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import { toastSuccess } from '@/toast';
 
 interface Props extends HTMLProps<HTMLButtonElement> {

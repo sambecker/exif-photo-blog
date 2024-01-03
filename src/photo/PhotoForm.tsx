@@ -12,7 +12,7 @@ import NextImage from 'next/image';
 import { createPhotoAction, updatePhotoAction } from './actions';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import CanvasBlurCapture from '@/components/CanvasBlurCapture';
 import { PATH_ADMIN_PHOTOS, PATH_ADMIN_UPLOADS } from '@/site/paths';
 import {

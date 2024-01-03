@@ -4,7 +4,7 @@ import { blobToImage } from '@/utility/blob';
 import { useRef, useState } from 'react';
 import { CopyExif } from '@/lib/CopyExif';
 import exifr from 'exifr';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import Spinner from './Spinner';
 import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
 import { FiUploadCloud } from 'react-icons/fi';

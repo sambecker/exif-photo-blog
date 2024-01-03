@@ -1,7 +1,7 @@
 'use client';
 
 import SiteGrid from '@/components/SiteGrid';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import { FILM_SIMULATION_FORM_INPUT_OPTIONS } from '@/vendors/fujifilm';
 import PhotoFilmSimulation from
   '@/simulation/PhotoFilmSimulation';

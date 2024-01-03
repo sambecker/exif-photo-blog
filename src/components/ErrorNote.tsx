@@ -1,4 +1,4 @@
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import { BiErrorAlt } from 'react-icons/bi';
 
 export default function ErrorNote({

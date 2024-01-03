@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 
 export default function SwitcherItem({
   icon,

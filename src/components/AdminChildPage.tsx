@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import Link from 'next/link';
 import { FiArrowLeft } from 'react-icons/fi';
 import SiteGrid from './SiteGrid';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import Badge from './Badge';
 
 function AdminChildPage({

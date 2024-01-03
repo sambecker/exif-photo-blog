@@ -1,6 +1,6 @@
 'use client';
 
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import { useTheme } from 'next-themes';
 import { Toaster } from 'sonner';
 

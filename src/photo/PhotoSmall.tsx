@@ -1,7 +1,7 @@
 import { Photo, titleForPhoto } from '.';
 import ImageSmall from '@/components/ImageSmall';
 import Link from 'next/link';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import { pathForPhoto } from '@/site/paths';
 import { Camera } from '@/camera';
 import { FilmSimulation } from '@/simulation';

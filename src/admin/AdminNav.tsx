@@ -6,7 +6,7 @@ import {
   checkPathPrefix,
   isPathAdminConfiguration,
 } from '@/site/paths';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BiCog } from 'react-icons/bi';

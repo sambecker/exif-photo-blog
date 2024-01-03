@@ -1,4 +1,4 @@
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 
 export default function SiteGrid({
   className,

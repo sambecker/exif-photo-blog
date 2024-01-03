@@ -1,6 +1,6 @@
 'use client';
 
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import SiteGrid from '../components/SiteGrid';
 import ThemeSwitcher from '@/site/ThemeSwitcher';
 import { signOut } from 'next-auth/react';

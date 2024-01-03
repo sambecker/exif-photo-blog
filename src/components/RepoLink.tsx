@@ -1,4 +1,4 @@
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import Link from 'next/link';
 import { BiLogoGithub } from 'react-icons/bi';
 

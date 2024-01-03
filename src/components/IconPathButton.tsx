@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import IconButton from './IconButton';
 import { useEffect, useState, useTransition } from 'react';
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import { SpinnerColor } from './Spinner';
 
 export default function IconPathButton({
