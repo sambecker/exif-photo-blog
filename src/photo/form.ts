@@ -14,7 +14,7 @@ import {
 } from '@/vendors/fujifilm';
 import { FilmSimulation } from '@/simulation';
 import { GEO_PRIVACY_ENABLED } from '@/site/config';
-import { TAG_FAVS } from '@/tag';
+import { TAG_FAVS, doesTagsStringIncludeFavs } from '@/tag';
 
 type VirtualFields = 'favorite';
 
@@ -42,7 +42,7 @@ const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
   tags: {
     label: 'tags',
     note: 'comma-separated values',
-    validate: tags => tags?.toLowerCase().includes(TAG_FAVS)
+    validate: tags => doesTagsStringIncludeFavs(tags)
       ? `'${TAG_FAVS}' is a reserved tag`
       : undefined,
   },

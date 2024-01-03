@@ -5,7 +5,7 @@ import {
   photoQuantityText,
 } from '@/photo';
 import { absolutePathForTag, absolutePathForTagImage } from '@/site/paths';
-import { capitalizeWords } from '@/utility/string';
+import { capitalizeWords, convertStringToArray } from '@/utility/string';
 
 export const TAG_FAVS = 'favs';
 
@@ -16,6 +16,9 @@ export type Tags = {
 
 export const formatTag = (tag?: string) =>
   capitalizeWords(tag?.replaceAll('-', ' '));
+
+export const doesTagsStringIncludeFavs = (tags?: string) =>
+  convertStringToArray(tags)?.some(tag => isTagFavs(tag));
 
 export const titleForTag = (
   tag: string,
