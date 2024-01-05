@@ -5,7 +5,6 @@ import PhotoImageResponse from '@/photo/image-response/PhotoImageResponse';
 import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/og';
 
-export const runtime = 'edge';
 export const revalidate = 30;
 
 export async function GET(
