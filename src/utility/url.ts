@@ -6,7 +6,7 @@ export const shortenUrl = (url?: string) => url
   : undefined;
 
 // Add protocol to url and remove trailing slash
-export const makeUrlAbsolute = (url = '') =>
-  (!url.startsWith('http')
-    ? `https://${url}`
-    : url).replace(/\/$/, '');
+export const makeUrlAbsolute = (url?: string) => url !== undefined
+  ? (!url.startsWith('http') ? `https://${url}` : url)
+    .replace(/\/$/, '')
+  : undefined;

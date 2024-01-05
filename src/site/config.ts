@@ -27,7 +27,7 @@ export const SITE_DESCRIPTION =
   SITE_DOMAIN;
 
 export const BASE_URL = process.env.NODE_ENV === 'production'
-  ? makeUrlAbsolute(SITE_DOMAIN).toLowerCase()
+  ? makeUrlAbsolute(SITE_DOMAIN)?.toLowerCase()
   : 'http://localhost:3000';
 
 // STORAGE: VERCEL BLOB

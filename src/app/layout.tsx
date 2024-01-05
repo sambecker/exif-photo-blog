@@ -21,7 +21,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: SITE_TITLE,
   description: SITE_DESCRIPTION,
-  metadataBase: new URL(BASE_URL),
+  ...BASE_URL && { metadataBase: new URL(BASE_URL) },
   openGraph: {
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
