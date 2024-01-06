@@ -9,6 +9,7 @@ import ThemeProviderClient from '@/site/ThemeProviderClient';
 import Nav from '@/site/Nav';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
 import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
+import Footer from '@/site/Footer';
 
 import '../site/globals.css';
 
@@ -68,21 +69,27 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className={ibmPlexMono.variable}>
-        <ThemeProviderClient>
-          <main className={clsx(
-            'px-3 pb-3',
-            'lg:px-6 lg:pb-6',
-          )}>
-            <Nav />
-            <StateProvider>
-              {children}
-            </StateProvider>
-            <Analytics />
-            <SpeedInsights />
-          </main>
-          <PhotoEscapeHandler />
-          <ToasterWithThemes />
-        </ThemeProviderClient>
+        <StateProvider>
+          <ThemeProviderClient>
+            <main className={clsx(
+              'mx-3 mb-3',
+              'lg:mx-6 lg:mb-6',
+            )}>
+              <Nav />
+              <div className={clsx(
+                'min-h-[16rem] sm:min-h-[30rem]',
+                'mb-12',
+              )}>
+                {children}
+              </div>
+              <Footer />
+            </main>
+          </ThemeProviderClient>
+        </StateProvider>
+        <Analytics />
+        <SpeedInsights />
+        <PhotoEscapeHandler />
+        <ToasterWithThemes />
       </body>
     </html>
   );

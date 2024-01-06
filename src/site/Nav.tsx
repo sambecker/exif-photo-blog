@@ -7,7 +7,6 @@ import SiteGrid from '../components/SiteGrid';
 import { SITE_DOMAIN_OR_TITLE } from '@/site/config';
 import ViewSwitcher, { SwitcherSelection } from '@/site/ViewSwitcher';
 import {
-  PATH_ADMIN,
   PATH_ROOT,
   isPathAdmin,
   isPathGrid,
@@ -17,9 +16,7 @@ import {
 } from '@/site/paths';
 import AnimateItems from '../components/AnimateItems';
 
-export default function Nav({ showTextLinks }: { showTextLinks?: boolean }) {
-  const isLoggedIn = false;
-
+export default function Nav() {
   const pathname = usePathname();
 
   const showNav = !isPathSignIn(pathname);
@@ -63,12 +60,8 @@ export default function Nav({ showTextLinks }: { showTextLinks?: boolean }) {
               <div className="flex flex-grow items-center gap-4">
                 <ViewSwitcher
                   currentSelection={switcherSelectionForPath()}
-                  showAdmin={isLoggedIn}
+                  showAdmin={true}
                 />
-                {showTextLinks && <>
-                  {renderLink('Home', PATH_ROOT)}
-                  {renderLink('Admin', PATH_ADMIN)}
-                </>}
               </div>
               <div className="hidden xs:block">
                 {renderLink(SITE_DOMAIN_OR_TITLE, PATH_ROOT)}

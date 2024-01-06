@@ -12,12 +12,15 @@ export default function RepoLink() {
         href="http://github.com/sambecker/exif-photo-blog"
         target="_blank"
         className={clsx(
-          'flex items-center gap-1',
-          'text-black dark:text-white',
+          'flex items-center gap-0.5',
+          'text-main hover:text-main',
           'hover:underline',
         )}
       >
-        <BiLogoGithub className="translate-y-[1px] hidden xs:inline-block" />
+        <BiLogoGithub
+          size={16}
+          className="translate-y-[0.5px] hidden xs:inline-block"
+        />
         exif-photo-blog
       </Link>
     </span>

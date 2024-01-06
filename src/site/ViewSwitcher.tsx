@@ -38,7 +38,7 @@ export default function ViewSwitcher({
       />
       {showAdmin &&
         <SwitcherItem
-          icon={<BiLockAlt size={15} className="-translate-y-[1px]" />}
+          icon={<BiLockAlt size={16} className="translate-y-[-0.5px]" />}
           href="/admin/photos"
           active={currentSelection === 'admin'}
         />}
