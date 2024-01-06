@@ -10,6 +10,9 @@ import Nav from '@/site/Nav';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
 import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
 import Footer from '@/site/Footer';
+import { Suspense } from 'react';
+import FooterClient from '@/site/FooterClient';
+import NavClient from '@/site/NavClient';
 
 import '../site/globals.css';
 
@@ -75,14 +78,18 @@ export default function RootLayout({
               'mx-3 mb-3',
               'lg:mx-6 lg:mb-6',
             )}>
-              <Nav />
+              <Suspense fallback={<NavClient />}>
+                <Nav />
+              </Suspense>
               <div className={clsx(
                 'min-h-[16rem] sm:min-h-[30rem]',
                 'mb-12',
               )}>
                 {children}
               </div>
-              <Footer />
+              <Suspense fallback={<FooterClient />}>
+                <Footer />
+              </Suspense>
             </main>
           </ThemeProviderClient>
         </StateProvider>

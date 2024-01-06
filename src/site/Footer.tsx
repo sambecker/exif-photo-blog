@@ -1,12 +1,9 @@
-import FooterClient from './FooterClient';
-import { Suspense } from 'react';
 import { authCached } from '@/cache';
+import FooterClient from './FooterClient';
 
 export default async function Footer() {
   const session = await authCached();
   return (
-    <Suspense fallback={<FooterClient />}>
-      <FooterClient userEmail={session?.user?.email} />
-    </Suspense>
+    <FooterClient userEmail={session?.user?.email} />
   );
 }
