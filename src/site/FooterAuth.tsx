@@ -1,8 +1,6 @@
 'use client';
 
 import { clsx } from 'clsx/lite';
-import Link from 'next/link';
-import { useSession } from 'next-auth/react';
 import ThemeSwitcher from '@/site/ThemeSwitcher';
 import SiteGrid from '../components/SiteGrid';
 import { usePathname } from 'next/navigation';
@@ -16,9 +14,11 @@ const LINK_STYLE = clsx(
   'hover:dark:text-gray-600',
 );
 
-export default function FooterAuth() {
-  const { data: session, status  } = useSession();
-
+export default function FooterAuth({
+  email,
+}: {
+  email: string | null | undefined
+}) {
   const path = usePathname();
 
   return (
@@ -29,29 +29,15 @@ export default function FooterAuth() {
         'text-dim',
       )}>
         <div className="flex gap-x-4 gap-y-1 flex-wrap items-center flex-grow">
-          {status === 'loading'
-            ? <>Loading ...</>
-            : <>
-              {session?.user?.email && <div>
-                {session.user.email}
-              </div>}
-              {status === 'authenticated' &&
-                <form action={signOutAction}>
-                  <SubmitButtonWithStatus
-                    className={LINK_STYLE}
-                    styleAsLink
-                  >
-                    Sign Out
-                  </SubmitButtonWithStatus>
-                </form>}
-              {status === 'unauthenticated' &&
-                <Link
-                  href="/sign-in"
-                  className={LINK_STYLE}
-                >
-                  Sign In
-                </Link>}
-            </>}
+          <div>{email}</div>
+          <form action={signOutAction}>
+            <SubmitButtonWithStatus
+              className={LINK_STYLE}
+              styleAsLink
+            >
+              Sign Out
+            </SubmitButtonWithStatus>
+          </form>
         </div>
         {!isPathSignIn(path) && <ThemeSwitcher />}
       </div>}
