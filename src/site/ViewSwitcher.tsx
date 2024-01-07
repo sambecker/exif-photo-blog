@@ -2,7 +2,7 @@ import Switcher from '@/components/Switcher';
 import SwitcherItem from '@/components/SwitcherItem';
 import IconFullFrame from '@/site/IconFullFrame';
 import IconGrid from '@/site/IconGrid';
-import { PATH_GRID, PATH_SETS } from '@/site/paths';
+import { PATH_ADMIN_PHOTOS, PATH_GRID, PATH_SETS } from '@/site/paths';
 import { BiLockAlt } from 'react-icons/bi';
 import IconSets from './IconSets';
 
@@ -39,7 +39,7 @@ export default function ViewSwitcher({
       {showAdmin &&
         <SwitcherItem
           icon={<BiLockAlt size={16} className="translate-y-[-0.5px]" />}
-          href="/admin/photos"
+          href={PATH_ADMIN_PHOTOS}
           active={currentSelection === 'admin'}
         />}
     </Switcher>
