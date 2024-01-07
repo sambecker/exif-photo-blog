@@ -27,8 +27,10 @@ export default async function HomePage({ searchParams }: PaginationParams) {
     photos,
     count,
   ] = await Promise.all([
-    getPhotosCached({ limit }),
-    getPhotosCountCached(),
+    // Make homepage queries resilient to error
+    // for initial setup when database may not exist
+    getPhotosCached({ limit }).catch(() => []),
+    getPhotosCountCached().catch(() => 0),
   ]);
   
   const showMorePhotos = count > photos.length;
