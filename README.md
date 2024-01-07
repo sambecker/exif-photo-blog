@@ -25,7 +25,7 @@ Installation
 ### 1. Deploy to Vercel
 
 1. Click Deploy
-2. Add required storage ([Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres) + [Vercel Blob](https://vercel.com/docs/storage/vercel-blob))
+2. Add required storage ([Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres/quickstart#create-a-postgres-database) + [Vercel Blob](https://vercel.com/docs/storage/vercel-blob/quickstart#create-a-blob-store))
 3. Add environment variables
 - `NEXT_PUBLIC_SITE_TITLE` (e.g., My Photos)
 - `NEXT_PUBLIC_SITE_DOMAIN` (e.g., photos.domain.com)
@@ -87,15 +87,15 @@ Installation
       ],
       "AllowedOrigins": [
         "http://localhost:*",
-        "https://{VERCEL_PROJECT_NAME}*.vercel.app"
-        "{PRODUCTION_DOMAIN}",
+        "https://{VERCEL_PROJECT_NAME}*.vercel.app",
+        "{PRODUCTION_DOMAIN}"
       ],
       "ExposeHeaders": []
      }]
      ```
    - Store configuration 
-     - Bucket name: `NEXT_PUBLIC_AWS_S3_BUCKET`
-     - Bucket region: `NEXT_PUBLIC_AWS_S3_REGION`
+     - `NEXT_PUBLIC_AWS_S3_BUCKET`: bucket name
+     - `NEXT_PUBLIC_AWS_S3_REGION`: bucket region, e.g., "us-east-1"
 2. Setup credentials
    - [Create IAM policy](https://console.aws.amazon.com/iam/home#/policies) using JSON editor:
      ```json
@@ -119,7 +119,7 @@ Installation
        ]
      }
      ```
-   - [Create IAM user](https://console.aws.amazon.com/iam/home#/users) by choosing "Attach policies directly," and selecting the policy created above. Create access key under "Security credentials," choose "Application running outside AWS," and store credentials (⚠️ _Ensure access keys are not prefixed with `NEXT_PUBLIC`_):
+   - [Create IAM user](https://console.aws.amazon.com/iam/home#/users) by choosing "Attach policies directly," and selecting the policy created above. Create "Access key" under "Security credentials," choose "Application running outside AWS," and store credentials (⚠️ _Ensure access keys are not prefixed with `NEXT_PUBLIC`_):
      - `AWS_S3_ACCESS_KEY`
      - `AWS_S3_SECRET_ACCESS_KEY`
 
