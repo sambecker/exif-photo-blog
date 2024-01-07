@@ -16,7 +16,9 @@ import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
 export const runtime = 'edge';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG });
+  // Make homepage queries resilient to error on first time setup
+  const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG })
+    .catch(() => []);
   return generateOgImageMetaForPhotos(photos);
 }
 
@@ -27,8 +29,7 @@ export default async function HomePage({ searchParams }: PaginationParams) {
     photos,
     count,
   ] = await Promise.all([
-    // Make homepage queries resilient to error
-    // for initial setup when database may not exist
+    // Make homepage queries resilient to error on first time setup
     getPhotosCached({ limit }).catch(() => []),
     getPhotosCountCached().catch(() => 0),
   ]);
