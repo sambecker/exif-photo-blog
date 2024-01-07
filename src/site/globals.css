@@ -107,6 +107,11 @@
       p-0 min-h-0
       border-none active:bg-transparent shadow-none
   }
+  a, .link {
+    @apply
+      hover:text-gray-600
+      hover:dark:text-gray-400
+  }
   /* Common Utilities */
   .text-main {
     @apply

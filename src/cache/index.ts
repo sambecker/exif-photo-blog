@@ -28,6 +28,8 @@ import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
 import type { Session } from 'next-auth';
 import { createCameraKey } from '@/camera';
 import { PATHS_ADMIN } from '@/site/paths';
+import { cache } from 'react';
+import { auth } from '@/auth';
 
 // Table key
 const KEY_PHOTOS            = 'photos';
@@ -206,6 +208,8 @@ export const getUniqueFilmSimulationsCached =
     getUniqueFilmSimulations,
     [KEY_PHOTOS, KEY_FILM_SIMULATIONS],
   );
+
+export const authCached = cache(auth);
 
 // No Store
 

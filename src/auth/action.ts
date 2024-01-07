@@ -9,7 +9,7 @@ export const signInAction = async (
   try {
     await signIn('credentials', Object.fromEntries(formData));
   } catch (error) {
-    if ((error as Error).message.includes(CREDENTIALS_SIGN_IN_ERROR)) {
+    if ((`${error}`).includes(CREDENTIALS_SIGN_IN_ERROR)) {
       return CREDENTIALS_SIGN_IN_ERROR;
     }
     throw error;
