@@ -131,7 +131,8 @@ export default function SiteChecklistClient({
           isPending={isPendingPage}
         >
           {renderLink(
-            'https://vercel.com/docs/storage/vercel-postgres/quickstart',
+            // eslint-disable-next-line max-len
+            'https://vercel.com/docs/storage/vercel-postgres/quickstart#create-a-postgres-database',
             'Create Vercel Postgres store',
           )}
           {' '}
@@ -148,7 +149,8 @@ export default function SiteChecklistClient({
               Vercel Blob:
               {' '}
               {renderLink(
-                'https://vercel.com/docs/storage/vercel-blob/quickstart',
+                // eslint-disable-next-line max-len
+                'https://vercel.com/docs/storage/vercel-blob/quickstart#create-a-blob-store',
                 'create store',
               )}
               {' '} 
