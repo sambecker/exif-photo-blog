@@ -7,10 +7,18 @@ import Link from 'next/link';
 import { HiOutlinePhotograph } from 'react-icons/hi';
 
 export default function PhotosEmptyState() {
+  const renderLink = (href: string) =>
+    <Link
+      href={href}
+      className="hover:underline hover:text-main"
+    >
+      {href}
+    </Link>;
+
   return (
     <SiteGrid
       contentMain={
-        <InfoBlock>
+        <InfoBlock padding="loose">
           <HiOutlinePhotograph
             className="text-medium"
             size={24}
@@ -23,16 +31,11 @@ export default function PhotosEmptyState() {
           </div>
           {!IS_SITE_READY
             ? <SiteChecklist />
-            : <div className="max-w-md leading-[1.7] text-center">
-              <div className="mb-2">
+            : <div className="max-w-md leading-relaxed text-center">
+              <div className="mb-3">
                 1. Visit
                 {' '}
-                <Link
-                  href="/admin"
-                  className="hover:text-gray-800 hover:dark:text-gray-100"
-                >
-                  /admin
-                </Link>
+                {renderLink('/admin/photos')}
                 {' '}
                 to add your first photo
               </div>
@@ -40,15 +43,7 @@ export default function PhotosEmptyState() {
                 2. Change the name of this blog and other configuration
                 by editing environment variables referenced in
                 {' '}
-                <span className={clsx(
-                  'px-1.5',
-                  'bg-gray-100',
-                  'border border-gray-200 dark:border-gray-700',
-                  'dark:bg-gray-800 dark:text-gray-400',
-                  'rounded-md',
-                )}>
-                  src/site/config.ts
-                </span>
+                {renderLink('/admin/configuration')}
               </div>
             </div>}
         </InfoBlock>}
