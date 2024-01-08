@@ -45,9 +45,27 @@ export const cameraFromPhoto = (
       : fallback ?? CAMERA_PLACEHOLDER;
 
 export const formatCameraText = (
-  { make, model }: Camera,
+  { make, model: modelRaw }: Camera,
   includeMakeApple?: boolean,
-) =>
-  make === 'Apple' && !includeMakeApple
+) => {
+  // Remove potential duplicate make from model
+  const model = modelRaw.replace(`${make} `, '');
+  return make === 'Apple' && !includeMakeApple
     ? model
     : `${make} ${model}`;
+};
+
+export const formatCameraModelText = (
+  { make, model: modelRaw }: Camera,
+) => {
+  // Remove potential duplicate make from model
+  const model = modelRaw.replace(`${make} `, '');
+  const textLength = model?.length ?? 0;
+  if (textLength > 0 && textLength <= 8) {
+    return model;
+  } else if (model?.includes('iPhone')) {
+    return model.split('iPhone')[1];
+  } else {
+    return undefined;
+  }
+};

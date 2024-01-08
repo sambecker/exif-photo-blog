@@ -1,11 +1,11 @@
 import { Photo } from '..';
-import { formatModelShort } from '@/utility/exif';
 import { AiFillApple } from 'react-icons/ai';
 import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
 import { OG_TEXT_BOTTOM_ALIGNMENT } from '@/site/config';
 import { NextImageSize } from '@/services/next-image';
+import { cameraFromPhoto, formatCameraModelText } from '@/camera';
 
 export default function PhotoImageResponse({
   photo,
@@ -18,6 +18,10 @@ export default function PhotoImageResponse({
   height: number
   fontFamily: string
 }) {
+  const model = photo.model
+    ? formatCameraModelText(cameraFromPhoto(photo))
+    : undefined;
+
   return (
     <ImageContainer {...{ width, height }}>
       <ImagePhotoGrid {...{
@@ -31,9 +35,10 @@ export default function PhotoImageResponse({
           <div style={{ display: 'flex' }}>
             <AiFillApple />
           </div>}
-        <div style={{ display: 'flex' }}>
-          {formatModelShort(photo.model)}
-        </div>
+        {model &&
+          <div style={{ display: 'flex' }}>
+            {model}
+          </div>}
         <div style={{ display: 'flex' }}>
           {photo.focalLengthFormatted}
         </div>

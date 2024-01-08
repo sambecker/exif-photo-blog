@@ -82,18 +82,18 @@ export default function PhotoLarge({
                 <PhotoTags tags={tags} />}
             </div>
             {showCamera && photoHasCameraData(photo) &&
-            <div className="space-y-0.5">
-              <PhotoCamera
-                camera={camera}
-                type="text-only"
-              />
-              {showSimulation && photo.filmSimulation &&
-                <div className="translate-x-[-0.3rem]"> 
-                  <PhotoFilmSimulation
-                    simulation={photo.filmSimulation}
-                  />
-                </div>}
-            </div>}
+              <div className="space-y-0.5">
+                <PhotoCamera
+                  camera={camera}
+                  type="text-only"
+                />
+                {showSimulation && photo.filmSimulation &&
+                  <div className="translate-x-[-0.3rem]"> 
+                    <PhotoFilmSimulation
+                      simulation={photo.filmSimulation}
+                    />
+                  </div>}
+              </div>}
           </>)}
           {renderMiniGrid(<>
             {photoHasExifData(photo) &&

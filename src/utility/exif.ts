@@ -57,14 +57,3 @@ export const formatExposureCompensation = (exposureCompensation?: number) => {
     return undefined;
   }
 };
-
-export const formatModelShort = (model?: string) => {
-  const textLength = model?.length ?? 0;
-  if (textLength > 0 && textLength <= 8) {
-    return model;
-  } else if (model?.includes('iPhone')) {
-    return model.split('iPhone')[1];
-  } else {
-    return undefined;
-  }
-};
