@@ -4,6 +4,8 @@ const DATE_STRING_FORMAT_SHORT    = 'dd MMM yyyy';
 const DATE_STRING_FORMAT          = 'd MMM yyyy h:mma';
 const DATE_STRING_FORMAT_POSTGRES = 'yyyy-MM-dd HH:mm:ss';
 
+type AmbiguousTimestamp = number | string;
+
 export const formatDate = (date: Date, short?: boolean) =>
   format(date, short? DATE_STRING_FORMAT_SHORT : DATE_STRING_FORMAT);
 
@@ -16,10 +18,19 @@ export const formatDateForPostgres = (date: Date) =>
     '$1-$2-$3 $4',
   );
 
-const dateFromTimestamp = (timestamp?: number) =>
-  timestamp !== undefined ? new Date(timestamp * 1000) : new Date();
+const dateFromTimestamp = (timestamp?: AmbiguousTimestamp): Date =>
+  typeof timestamp === 'number'
+    ? new Date(timestamp * 1000)
+    : typeof timestamp === 'string'
+      ? /.+Z/i.test(timestamp)
+        ? new Date(timestamp)
+        : new Date(`${timestamp}Z`)
+      : new Date();
 
-const createNaiveDateWithOffset = (timestamp?: number, offset = '+00:00') => {
+const createNaiveDateWithOffset = (
+  timestamp?: AmbiguousTimestamp,
+  offset = '+00:00',
+) => {
   const date = dateFromTimestamp(timestamp);
   const dateString = `${date.toISOString()}`.replace(/\.[\d]+Z/, offset);
   return parseISO(dateString);
@@ -28,12 +39,14 @@ const createNaiveDateWithOffset = (timestamp?: number, offset = '+00:00') => {
 // Run on the server, when there are date/timestamp/offset inputs
 
 export const convertTimestampWithOffsetToPostgresString = (
-  timestamp?: number,
+  timestamp?: AmbiguousTimestamp,
   offset?: string,
 ) =>
   formatDateForPostgres(createNaiveDateWithOffset(timestamp, offset));
 
-export const convertTimestampToNaivePostgresString = (timestamp?: number) =>
+export const convertTimestampToNaivePostgresString = (
+  timestamp?: AmbiguousTimestamp,
+) =>
   dateFromTimestamp(timestamp)
     .toISOString().replace(
       /(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})(.[\d]+Z)*/,
