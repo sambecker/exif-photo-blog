@@ -8,7 +8,7 @@ export default function PhotoFilmSimulation({
   simulation,
   type = 'icon-last',
   badged = true,
-  contrast,
+  contrast = 'low',
   countOnHover,
 }: {
   simulation: FilmSimulation
