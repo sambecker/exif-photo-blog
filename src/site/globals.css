@@ -112,7 +112,7 @@
       hover:text-gray-600
       hover:dark:text-gray-400
   }
-  /* Common Utilities */
+  /* Common Utilities: Text */
   .text-main {
     @apply
       text-gray-900 dark:text-gray-100
@@ -141,7 +141,13 @@
     @apply
       text-red-500 dark:text-red-400
   }
-  .bg-main {
+  /* Common Utilities: Background */
+  .bg-content {
+    @apply
+      bg-white border-gray-200
+      dark:bg-black dark:border-gray-800
+  }
+  .bg-primary {
     @apply
       bg-gray-900 dark:bg-gray-100
   }
