@@ -1,15 +1,12 @@
 'use client';
 
+import { ComponentProps } from 'react';
 import { pathForAdminPhotoEdit } from '@/site/paths';
-import { Menu } from '@headlessui/react';
-import clsx from 'clsx/lite';
-import Link from 'next/link';
-import { FiMoreHorizontal } from 'react-icons/fi';
+import MoreMenu from '../components/MoreMenu';
 
-export interface AdminPhotoMenuClientProps {
+export interface AdminPhotoMenuClientProps
+  extends ComponentProps<typeof MoreMenu> {
   photoId: string
-  className?: string
-  buttonClassName?: string
 }
 
 export default function AdminPhotoMenuClient({
@@ -18,35 +15,10 @@ export default function AdminPhotoMenuClient({
   buttonClassName,
 }: AdminPhotoMenuClientProps) {
   return (
-    <div className={clsx(
+    <MoreMenu {...{
+      items: [{ href: pathForAdminPhotoEdit(photoId), label: 'Edit Photo' }],
       className,
-      'relative',
-    )}>
-      <Menu>
-        <Menu.Button className={clsx(
-          buttonClassName,
-          'p-1 py-1 min-h-0 border-none shadow-none',
-          'text-dim',
-        )}
-        >
-          <FiMoreHorizontal size={16} />
-        </Menu.Button>
-        <Menu.Items className={clsx(
-          'absolute top-6 right-1',
-          'text-sm',
-          'px-3 py-1.5 rounded-md border',
-          'bg-content',
-        )}>
-          <Menu.Item>
-            <Link
-              className="whitespace-nowrap"
-              href={pathForAdminPhotoEdit(photoId)}
-            >
-              Edit Photo
-            </Link>
-          </Menu.Item>
-        </Menu.Items>
-      </Menu>
-    </div>
+      buttonClassName,
+    }}/>
   );
 }
