@@ -74,8 +74,8 @@ export default function PhotoLarge({
         )}>
           {renderMiniGrid(<>
             <div className="-space-y-0.5">
-              <div className="relative flex gap-1 items-start">
-                <div className="flex-grow">
+              <div className="relative flex gap-2 items-start">
+                <div className="md:flex-grow">
                   <Link
                     href={pathForPhoto(photo)}
                     className="font-bold uppercase"
@@ -86,7 +86,7 @@ export default function PhotoLarge({
                 <Suspense>
                   <AdminPhotoMenu
                     photoId={photo.id}
-                    buttonClassName="translate-y-[-3px]"
+                    buttonClassName="translate-y-[-3.5px]"
                   />
                 </Suspense>
               </div>

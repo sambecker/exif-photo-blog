@@ -16,7 +16,7 @@ export default function MoreMenu({
   return (
     <div className={clsx(
       className,
-      'relative',
+      'relative z-10',
     )}>
       <Menu>
         <Menu.Button className={clsx(
@@ -25,13 +25,14 @@ export default function MoreMenu({
           'text-dim',
         )}
         >
-          <FiMoreHorizontal size={16} />
+          <FiMoreHorizontal size={18} />
         </Menu.Button>
         <Menu.Items className={clsx(
-          'block',
-          'absolute top-6 right-1 outline-none h-auto',
+          'block outline-none h-auto',
+          'absolute top-6',
+          'md:right-1',
           'text-sm',
-          'p-0.5 rounded-md border',
+          'p-1 rounded-md border',
           'bg-content',
         )}>
           {items.map(({ href, label }) =>
@@ -40,7 +41,7 @@ export default function MoreMenu({
                 href={href}
                 className={clsx(
                   'block',
-                  'px-3 py-1.5 rounded-[4px]',
+                  'px-3 py-1.5 rounded-[3px]',
                   'hover:text-main',
                   'hover:bg-gray-50 active:bg-gray-100',
                   'hover:dark:bg-gray-900/75 active:dark:bg-gray-900',
