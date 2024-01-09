@@ -33,8 +33,15 @@ export const sortTags = (
   tags: string[],
   tagToHide?: string,
 ) => tags
-  .filter(t => t !== tagToHide)
+  .filter(tag => tag !== tagToHide)
   .sort((a, b) => isTagFavs(a) ? -1 : a.localeCompare(b));
+
+export const sortTagsObject = (
+  tags: Tags,
+  tagToHide?: string,
+) => tags
+  .filter(({ tag }) => tag!== tagToHide)
+  .sort(({ tag: a }, { tag: b }) => isTagFavs(a) ? -1 : a.localeCompare(b));
 
 export const descriptionForTaggedPhotos = (
   photos: Photo[],

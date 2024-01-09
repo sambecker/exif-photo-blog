@@ -6,6 +6,8 @@ import { PATH_ADMIN, PATH_ADMIN_TAGS, pathForTag } from '@/site/paths';
 import PhotoTag from '@/tag/PhotoTag';
 import { photoLabelForCount } from '@/photo';
 import PhotoLightbox from '@/photo/PhotoLightbox';
+import FavsTag from '@/tag/FavsTag';
+import { isTagFavs } from '@/tag';
 
 const MAX_PHOTO_TO_SHOW = 6;
 
@@ -28,8 +30,14 @@ export default async function PhotoPageEdit({ params: { tag } }: Props) {
     <AdminChildPage
       backPath={PATH_ADMIN_TAGS}
       backLabel="Tags"
-      breadcrumb={<div className="flex item gap-2">
-        <PhotoTag {...{ tag }} />
+      breadcrumb={<div className="flex items-center gap-2">
+        {isTagFavs(tag)
+          ? <div className="[&>*>*>*>svg]:translate-y-[0.5px]">
+            <FavsTag />
+          </div>
+          : <div className="[&>*>*>*>svg]:translate-y-[1.5px]">
+            <PhotoTag {...{ tag }} />
+          </div>}
         <div className="text-dim uppercase">
           <span>{count}</span>
           <span className="hidden xs:inline-block">

@@ -7,10 +7,11 @@ import DeleteButton from '@/admin/DeleteButton';
 import { photoQuantityText } from '@/photo';
 import { getUniqueTagsHiddenCached } from '@/cache';
 import PhotoTag from '@/tag/PhotoTag';
-import { formatTag } from '@/tag';
+import { formatTag, isTagFavs, sortTagsObject } from '@/tag';
 import EditButton from '@/admin/EditButton';
 import { pathForAdminTagEdit } from '@/site/paths';
 import { clsx } from 'clsx/lite';
+import FavsTag from '@/tag/FavsTag';
 
 export default async function AdminTagsPage() {
   const tags = await getUniqueTagsHiddenCached();
@@ -21,10 +22,12 @@ export default async function AdminTagsPage() {
         <div className="space-y-6">
           <div className="space-y-4">
             <AdminGrid>
-              {tags.map(({ tag, count }) =>
+              {sortTagsObject(tags).map(({ tag, count }) =>
                 <Fragment key={tag}>
                   <div className="pr-2 -translate-y-0.5">
-                    <PhotoTag {...{ tag }} />
+                    {isTagFavs(tag)
+                      ? <FavsTag />
+                      : <PhotoTag {...{ tag }} />}
                   </div>
                   <div className="text-dim uppercase">
                     {photoQuantityText(count, false)}
