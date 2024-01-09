@@ -51,6 +51,7 @@ export default function NavClient({
     <SiteGrid
       contentMain={
         <AnimateItems
+          animateOnFirstLoadOnly
           type={!shouldAnimate ? 'none' : 'bottom'}
           distanceOffset={10}
           items={showNav

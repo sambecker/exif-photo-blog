@@ -28,6 +28,7 @@ export default function FooterClient({
     <SiteGrid
       contentMain={
         <AnimateItems
+          animateOnFirstLoadOnly
           type={!shouldAnimate ? 'none' : 'bottom'}
           distanceOffset={10}
           items={showFooter
