@@ -5,13 +5,13 @@ import { FiMoreHorizontal } from 'react-icons/fi';
 import { ReactNode } from 'react';
 
 export default function MoreMenu({
+  items,
   className,
   buttonClassName,
-  items,
 }: {
+  items: { href: string, label: ReactNode }[]
   className?: string
   buttonClassName?: string
-  items: { href: string, label: ReactNode }[],
 }) {
   return (
     <div className={clsx(

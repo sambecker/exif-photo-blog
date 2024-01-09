@@ -5,20 +5,18 @@ import { pathForAdminPhotoEdit } from '@/site/paths';
 import MoreMenu from '../components/MoreMenu';
 
 export interface AdminPhotoMenuClientProps
-  extends ComponentProps<typeof MoreMenu> {
+  extends Omit<ComponentProps<typeof MoreMenu>, 'items'> {
   photoId: string
 }
 
 export default function AdminPhotoMenuClient({
   photoId,
-  className,
-  buttonClassName,
+  ...props
 }: AdminPhotoMenuClientProps) {
   return (
     <MoreMenu {...{
       items: [{ href: pathForAdminPhotoEdit(photoId), label: 'Edit Photo' }],
-      className,
-      buttonClassName,
+      ...props,
     }}/>
   );
 }
