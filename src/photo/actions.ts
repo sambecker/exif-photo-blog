@@ -25,6 +25,8 @@ import {
 } from '@/cache';
 import { PATH_ADMIN_PHOTOS, PATH_ADMIN_TAGS } from '@/site/paths';
 import { extractExifDataFromBlobPath } from './server';
+import { TAG_FAVS, isTagFavs } from '@/tag';
+import { convertPhotoToPhotoDbInsert } from '.';
 
 export async function createPhotoAction(formData: FormData) {
   const photo = convertFormDataToPhotoDbInsert(formData, true);
@@ -48,6 +50,18 @@ export async function updatePhotoAction(formData: FormData) {
   revalidateAllKeysAndPaths();
 
   redirect(PATH_ADMIN_PHOTOS);
+}
+
+export async function toggleFavoritePhoto(photoId: string) {
+  const photo = await getPhoto(photoId);
+  if (photo) {
+    const { tags } = photo;
+    photo.tags = tags.some(tag => tag === TAG_FAVS)
+      ? tags.filter(tag => !isTagFavs(tag))
+      : [...tags, TAG_FAVS];
+    await sqlUpdatePhoto(convertPhotoToPhotoDbInsert(photo));
+    revalidateAllKeysAndPaths();
+  }
 }
 
 export async function deletePhotoAction(formData: FormData) {
