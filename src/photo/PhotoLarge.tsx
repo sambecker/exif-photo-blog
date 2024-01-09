@@ -10,6 +10,8 @@ import PhotoCamera from '../camera/PhotoCamera';
 import { cameraFromPhoto } from '@/camera';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
 import { sortTags } from '@/tag';
+import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
+import { Suspense } from 'react';
 
 export default function PhotoLarge({
   photo,
@@ -72,12 +74,22 @@ export default function PhotoLarge({
         )}>
           {renderMiniGrid(<>
             <div className="-space-y-0.5">
-              <Link
-                href={pathForPhoto(photo)}
-                className="font-bold uppercase"
-              >
-                {titleForPhoto(photo)}
-              </Link>
+              <div className="relative flex gap-2 items-start">
+                <div className="md:flex-grow">
+                  <Link
+                    href={pathForPhoto(photo)}
+                    className="font-bold uppercase"
+                  >
+                    {titleForPhoto(photo)}
+                  </Link>
+                </div>
+                <Suspense>
+                  <AdminPhotoMenu
+                    photoId={photo.id}
+                    buttonClassName="translate-y-[-3.5px]"
+                  />
+                </Suspense>
+              </div>
               {tags.length > 0 &&
                 <PhotoTags tags={tags} />}
             </div>
