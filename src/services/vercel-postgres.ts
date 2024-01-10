@@ -242,6 +242,8 @@ const sqlGetUniqueCameras = async () => sql`
   SELECT DISTINCT make||' '||model as camera, make, model, COUNT(*)
   FROM photos
   WHERE hidden IS NOT TRUE
+  AND make IS NOT NULL
+  AND model IS NOT NULL
   GROUP BY make, model
   ORDER BY camera ASC
 `.then(({ rows }): Cameras => rows.map(({ make, model, count }) => ({

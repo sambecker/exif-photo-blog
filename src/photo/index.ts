@@ -222,7 +222,7 @@ export const dateRangeForPhotos = (
 };
 
 export const photoHasCameraData = (photo: Photo) =>
-  photo.make ||
+  photo.make &&
   photo.model;
 
 export const photoHasExifData = (photo: Photo) =>
