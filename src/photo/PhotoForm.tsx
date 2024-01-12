@@ -135,7 +135,7 @@ export default function PhotoForm({
       </div>
       <form
         action={type === 'create' ? createPhotoAction : updatePhotoAction}
-        className="space-y-6 pb-12"
+        className="space-y-6"
       >
         {FORM_METADATA_ENTRIES.map(([key, {
           label,
