@@ -13,7 +13,7 @@ import { pathForRoot } from '@/site/paths';
 import { Metadata } from 'next';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
 
-export const runtime = 'edge';
+export const revalidate = 30;
 
 export async function generateMetadata(): Promise<Metadata> {
   // Make homepage queries resilient to error on first time setup
