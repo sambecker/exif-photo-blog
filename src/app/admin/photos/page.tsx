@@ -12,7 +12,7 @@ import {
   pathForAdminPhotoEdit,
 } from '@/site/paths';
 import { titleForPhoto } from '@/photo';
-import MorePhotos from '@/photo/MorePhotos';
+import MoreComponentsClient from '@/components/MoreComponentsClient';
 import {
   getBlobPhotoUrlsNoStore,
   getPhotosCached,
@@ -144,7 +144,10 @@ export default async function AdminPhotosPage({
                 </Fragment>)}
             </AdminGrid>
             {showMorePhotos &&
-              <MorePhotos path={pathForAdminPhotos(offset + 1)} />}
+              <MoreComponentsClient
+                label="More photos"
+                path={pathForAdminPhotos(offset + 1)}
+              />}
           </div>
         </div>}
     />

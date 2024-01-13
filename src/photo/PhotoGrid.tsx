@@ -3,7 +3,7 @@ import PhotoSmall from './PhotoSmall';
 import { clsx } from 'clsx/lite';
 import AnimateItems from '@/components/AnimateItems';
 import { Camera } from '@/camera';
-import MorePhotos from '@/photo/MorePhotos';
+import MoreComponentsClient from '@/components/MoreComponentsClient';
 import { FilmSimulation } from '@/simulation';
 import { GRID_ASPECT_RATIO, HIGH_DENSITY_GRID } from '@/site/config';
 
@@ -79,7 +79,10 @@ export default function PhotoGrid({
           </div>).concat(additionalTile ?? [])}
       />
       {showMorePath &&
-        <MorePhotos path={showMorePath} />}
+        <MoreComponentsClient
+          label="More photos"
+          path={showMorePath}
+        />}
     </div>
   );
 };

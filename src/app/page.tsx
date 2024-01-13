@@ -1,19 +1,10 @@
-import { getPhotosCached, getPhotosCountCached } from '@/cache';
-import AnimateItems from '@/components/AnimateItems';
-import MorePhotos from '@/photo/MorePhotos';
-import SiteGrid from '@/components/SiteGrid';
+import { getPhotosCached } from '@/cache';
 import { generateOgImageMetaForPhotos } from '@/photo';
-import PhotoLarge from '@/photo/PhotoLarge';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
-import {
-  PaginationParams,
-  getPaginationForSearchParams,
-} from '@/site/pagination';
-import { pathForRoot } from '@/site/paths';
 import { Metadata } from 'next';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
-
-export const dynamic = 'force-static';
+import MoreComponents from '@/components/MoreComponents';
+import PhotosLarge from '@/photo/PhotosLarge';
 
 export async function generateMetadata(): Promise<Metadata> {
   // Make homepage queries resilient to error on first time setup
@@ -22,40 +13,24 @@ export async function generateMetadata(): Promise<Metadata> {
   return generateOgImageMetaForPhotos(photos);
 }
 
-export default async function HomePage({ searchParams }: PaginationParams) {
-  const { offset, limit } = getPaginationForSearchParams(searchParams, 12);
-
-  const [
-    photos,
-    count,
-  ] = await Promise.all([
-    // Make homepage queries resilient to error on first time setup
-    getPhotosCached({ limit }).catch(() => []),
-    getPhotosCountCached().catch(() => 0),
-  ]);
-  
-  const showMorePhotos = count > photos.length;
+export default async function HomePage() {
+  // Make homepage queries resilient to error on first time setup
+  const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG })
+    .catch(() => []);
 
   return (
     photos.length > 0
-      ? <div className="space-y-4">
-        <AnimateItems
-          className="space-y-1"
-          duration={0.7}
-          staggerDelay={0.15}
-          distanceOffset={0}
-          staggerOnFirstLoadOnly
-          items={photos.map((photo, index) =>
-            <PhotoLarge
-              key={photo.id}
-              photo={photo}
-              priority={index <= 1}
-            />)}
+      ? <div className="space-y-1">
+        <PhotosLarge photos={photos} />
+        <MoreComponents
+          itemsPerRequest={MAX_PHOTOS_TO_SHOW_OG}
+          componentLoader={async (limit: number) => {
+            'use server';
+            return <PhotosLarge
+              photos={await getPhotosCached({ limit })}
+            />;
+          }}
         />
-        {showMorePhotos &&
-          <SiteGrid
-            contentMain={<MorePhotos path={pathForRoot(offset + 1)} />}
-          />}
       </div>
       : <PhotosEmptyState />
   );
