@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Spinner from './Spinner';
 
 export default function MoreComponents({
@@ -19,20 +19,22 @@ export default function MoreComponents({
 }) {
   const [offset, setOffset] = useState(1);
   const [components, setComponents] = useState<JSX.Element[]>([]);
-
-  const [isPending, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(false);
 
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const advance = useCallback(() => startTransition(() => {
+  const advance = useCallback(() => {
+    setIsLoading(true);
     const getMoreComponentsAsync = async () => {
       return componentLoader(itemsPerRequest * offset);
     };
-    getMoreComponentsAsync().then((component) => {
-      setComponents([component]);
-      setOffset(o => o + 1);
-    });
-  }), [componentLoader, itemsPerRequest, offset]);
+    getMoreComponentsAsync()
+      .then(component => {
+        setComponents([component]);
+        setOffset(o => o + 1);
+      })
+      .finally(() => setIsLoading(false));
+  }, [componentLoader, itemsPerRequest, offset]);
 
   useEffect(() => {
     // Only add observer if button is rendered
@@ -41,7 +43,7 @@ export default function MoreComponents({
         if (
           triggerOnView &&
           e[0].isIntersecting &&
-          !isPending
+          !isLoading
         ) {
           advance();
         }
@@ -54,7 +56,7 @@ export default function MoreComponents({
   
       return () => observer.disconnect();
     }
-  }, [triggerOnView, advance, isPending]);
+  }, [triggerOnView, advance, isLoading]);
 
   const showMoreButton = itemsTotalCount > itemsPerRequest * offset;
 
@@ -65,9 +67,9 @@ export default function MoreComponents({
         ref={buttonRef}
         className="block w-full subtle"
         onClick={!triggerOnView ? advance : undefined}
-        disabled={triggerOnView || isPending}
+        disabled={triggerOnView || isLoading}
       >
-        {isPending
+        {isLoading
           ? <span className="relative inline-block translate-y-[3px]">
             <Spinner size={16} />
           </span>
