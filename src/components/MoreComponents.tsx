@@ -25,18 +25,14 @@ export default function MoreComponents({
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const advance = useCallback(() => startTransition(() => {
-    setOffset(o => o + 1);
-  }), []);
-
-  useEffect(() => {
     const getMoreComponentsAsync = async () => {
-      console.log('getMoreComponentsAsync', itemsPerRequest * offset);
       return componentLoader(itemsPerRequest * offset);
     };
     getMoreComponentsAsync().then((component) => {
       setComponents([component]);
+      setOffset(o => o + 1);
     });
-  }, [componentLoader, itemsPerRequest, offset]);
+  }), [componentLoader, itemsPerRequest, offset]);
 
   useEffect(() => {
     // Only add observer if button is rendered

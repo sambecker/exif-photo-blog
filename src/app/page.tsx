@@ -1,5 +1,5 @@
 import { getPhotosCached, getPhotosCountCached } from '@/cache';
-import { generateOgImageMetaForPhotos } from '@/photo';
+import { LARGE_PHOTOS_TO_SHOW, generateOgImageMetaForPhotos } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
@@ -19,7 +19,7 @@ export default async function HomePage() {
     count,
   ] = await Promise.all([
     // Make homepage queries resilient to error on first time setup
-    getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG }).catch(() => []),
+    getPhotosCached({ limit: LARGE_PHOTOS_TO_SHOW }).catch(() => []),
     getPhotosCountCached().catch(() => 0),
   ]);
 
@@ -29,13 +29,13 @@ export default async function HomePage() {
         <PhotosLarge photos={photos} />
         <MoreComponents
           label="More photos"
-          itemsPerRequest={MAX_PHOTOS_TO_SHOW_OG}
+          itemsPerRequest={LARGE_PHOTOS_TO_SHOW}
           itemsTotalCount={count}
           componentLoader={async (limit: number) => {
             'use server';
             return <PhotosLarge
               photos={(await getPhotosCached({ limit }))
-                .slice(MAX_PHOTOS_TO_SHOW_OG)}
+                .slice(LARGE_PHOTOS_TO_SHOW)}
             />;
           }}
         />
