@@ -6,7 +6,7 @@ import {
   getPhotosTagDataCached,
   getPhotosTagDataCachedWithPagination,
 } from '@/tag/data';
-import { Metadata } from 'next';
+import { Metadata } from 'next/types';
 
 interface TagProps {
   params: { tag: string }

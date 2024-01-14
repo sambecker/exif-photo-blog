@@ -7,7 +7,7 @@ import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
 import { getPhotoSidebarDataCached } from '@/photo/data';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
 import { PATH_GRID } from '@/site/paths';
-import { Metadata } from 'next';
+import { Metadata } from 'next/types';
 
 export const runtime = 'edge';
 

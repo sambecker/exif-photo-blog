@@ -5,7 +5,7 @@ import PhotoGrid from '@/photo/PhotoGrid';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
 import { pathForGrid } from '@/site/paths';
-import { Metadata } from 'next';
+import { Metadata } from 'next/types';
 import {
   PaginationParams,
   getPaginationForSearchParams,

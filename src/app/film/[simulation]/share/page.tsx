@@ -7,7 +7,7 @@ import {
   getPhotosFilmSimulationDataCachedWithPagination,
 } from '@/simulation/data';
 import { PaginationParams } from '@/site/pagination';
-import { Metadata } from 'next';
+import { Metadata } from 'next/types';
 
 interface FilmSimulationProps {
   params: { simulation: FilmSimulation }
