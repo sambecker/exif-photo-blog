@@ -7,6 +7,8 @@ import MoreComponents from '@/components/MoreComponents';
 import PhotosLarge from '@/photo/PhotosLarge';
 import { Suspense } from 'react';
 
+export const revalidate = 30;
+
 export async function generateMetadata(): Promise<Metadata> {
   // Make homepage queries resilient to error on first time setup
   const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG })

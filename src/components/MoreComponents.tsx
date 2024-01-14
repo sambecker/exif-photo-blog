@@ -17,7 +17,7 @@ export default function MoreComponents({
   triggerOnView?: boolean
   prefetch?: boolean
 }) {
-  const [offset, setOffset] = useState(1);
+  const [offset, setOffset] = useState(2);
   const [components, setComponents] = useState<JSX.Element[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
