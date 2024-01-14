@@ -5,6 +5,7 @@ import { Metadata } from 'next';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
 import MoreComponents from '@/components/MoreComponents';
 import PhotosLarge from '@/photo/PhotosLarge';
+import { Suspense } from 'react';
 
 export async function generateMetadata(): Promise<Metadata> {
   // Make homepage queries resilient to error on first time setup
@@ -27,18 +28,20 @@ export default async function HomePage() {
     photos.length > 0
       ? <div className="space-y-1">
         <PhotosLarge photos={photos} />
-        <MoreComponents
-          label="More photos"
-          itemsPerRequest={LARGE_PHOTOS_TO_SHOW}
-          itemsTotalCount={count}
-          componentLoader={async (limit: number) => {
-            'use server';
-            return <PhotosLarge
-              photos={(await getPhotosCached({ limit }))
-                .slice(LARGE_PHOTOS_TO_SHOW)}
-            />;
-          }}
-        />
+        <Suspense>
+          <MoreComponents
+            label="More photos"
+            itemsPerRequest={LARGE_PHOTOS_TO_SHOW}
+            itemsTotalCount={count}
+            componentLoader={async (limit: number) => {
+              'use server';
+              return <PhotosLarge
+                photos={(await getPhotosCached({ limit }))
+                  .slice(LARGE_PHOTOS_TO_SHOW)}
+              />;
+            }}
+          />
+        </Suspense>
       </div>
       : <PhotosEmptyState />
   );
