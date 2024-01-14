@@ -1,4 +1,3 @@
-import { getPhotosCached, getPhotosCountCached } from '@/cache';
 import { LARGE_PHOTOS_TO_SHOW, generateOgImageMetaForPhotos } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
@@ -6,12 +5,13 @@ import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
 import MoreComponents from '@/components/MoreComponents';
 import PhotosLarge from '@/photo/PhotosLarge';
 import { Suspense } from 'react';
+import { getPhotos, getPhotosCount } from '@/services/vercel-postgres';
 
 export const revalidate = 30;
 
 export async function generateMetadata(): Promise<Metadata> {
   // Make homepage queries resilient to error on first time setup
-  const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG })
+  const photos = await getPhotos({ limit: MAX_PHOTOS_TO_SHOW_OG })
     .catch(() => []);
   return generateOgImageMetaForPhotos(photos);
 }
@@ -22,8 +22,8 @@ export default async function HomePage() {
     count,
   ] = await Promise.all([
     // Make homepage queries resilient to error on first time setup
-    getPhotosCached({ limit: LARGE_PHOTOS_TO_SHOW }).catch(() => []),
-    getPhotosCountCached().catch(() => 0),
+    getPhotos({ limit: LARGE_PHOTOS_TO_SHOW }).catch(() => []),
+    getPhotosCount().catch(() => 0),
   ]);
 
   return (
@@ -38,7 +38,7 @@ export default async function HomePage() {
             componentLoader={async (limit: number) => {
               'use server';
               return <PhotosLarge
-                photos={(await getPhotosCached({ limit }))
+                photos={(await getPhotos({ limit }))
                   .slice(LARGE_PHOTOS_TO_SHOW)}
               />;
             }}
