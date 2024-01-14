@@ -1,27 +1,81 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
+import Spinner from './Spinner';
 
 export default function MoreComponents({
-  initialOffset = 1,
   itemsPerRequest,
+  itemsTotalCount,
   componentLoader,
+  label = 'Load more',
+  triggerOnView = true,
 }: {
-  initialOffset?: number
   itemsPerRequest: number
+  itemsTotalCount: number
   componentLoader: (limit: number) => Promise<JSX.Element>
+  label?: string
+  triggerOnView?: boolean
+  prefetch?: boolean
 }) {
-  const [offset] = useState(initialOffset);
+  const [offset, setOffset] = useState(1);
   const [components, setComponents] = useState<JSX.Element[]>([]);
 
+  const [isPending, startTransition] = useTransition();
+
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const advance = useCallback(() => startTransition(() => {
+    setOffset(o => o + 1);
+  }), []);
+
   useEffect(() => {
-    const getPhotosLargeComponentAsync = async () => {
+    const getMoreComponentsAsync = async () => {
+      console.log('getMoreComponentsAsync', itemsPerRequest * offset);
       return componentLoader(itemsPerRequest * offset);
     };
-    getPhotosLargeComponentAsync().then((component) => {
+    getMoreComponentsAsync().then((component) => {
       setComponents([component]);
     });
   }, [componentLoader, itemsPerRequest, offset]);
 
-  return components;
+  useEffect(() => {
+    // Only add observer if button is rendered
+    if (buttonRef.current) {
+      const observer = new IntersectionObserver(e => {
+        if (
+          triggerOnView &&
+          e[0].isIntersecting &&
+          !isPending
+        ) {
+          advance();
+        }
+      }, {
+        root: null,
+        threshold: 0,
+      });
+  
+      observer.observe(buttonRef.current);
+  
+      return () => observer.disconnect();
+    }
+  }, [triggerOnView, advance, isPending]);
+
+  const showMoreButton = itemsTotalCount > itemsPerRequest * offset;
+
+  return <div className="space-y-4">
+    {components}
+    {showMoreButton &&
+      <button
+        ref={buttonRef}
+        className="block w-full subtle"
+        onClick={!triggerOnView ? advance : undefined}
+        disabled={triggerOnView || isPending}
+      >
+        {isPending
+          ? <span className="relative inline-block translate-y-[3px]">
+            <Spinner size={16} />
+          </span>
+          : label}
+      </button>}
+  </div>;
 }
