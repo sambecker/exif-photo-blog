@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Spinner from './Spinner';
+import SiteGrid from './SiteGrid';
 
 export default function MoreComponents({
   itemsPerRequest,
@@ -58,22 +59,25 @@ export default function MoreComponents({
     }
   }, [triggerOnView, advance, isLoading]);
 
-  const showMoreButton = itemsTotalCount > itemsPerRequest * offset;
+  const showMoreButton = itemsTotalCount > itemsPerRequest * (offset - 1);
 
-  return <div className="space-y-4">
+  return <>
     {components}
     {showMoreButton &&
-      <button
-        ref={buttonRef}
-        className="block w-full subtle"
-        onClick={!triggerOnView ? advance : undefined}
-        disabled={triggerOnView || isLoading}
-      >
-        {isLoading
-          ? <span className="relative inline-block translate-y-[3px]">
-            <Spinner size={16} />
-          </span>
-          : label}
-      </button>}
-  </div>;
+      <SiteGrid
+        contentMain={
+          <button
+            ref={buttonRef}
+            className="block w-full mt-4 subtle"
+            onClick={!triggerOnView ? advance : undefined}
+            disabled={triggerOnView || isLoading}
+          >
+            {isLoading
+              ? <span className="relative inline-block translate-y-[3px]">
+                <Spinner size={16} />
+              </span>
+              : label}
+          </button>}
+      />}
+  </>;
 }
