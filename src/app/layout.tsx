@@ -2,7 +2,6 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { clsx } from 'clsx/lite';
 import { IBM_Plex_Mono } from 'next/font/google';
-import { Metadata } from 'next';
 import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from '@/site/config';
 import StateProvider from '@/state/AppStateProvider';
 import ThemeProviderClient from '@/site/ThemeProviderClient';
@@ -13,6 +12,7 @@ import Footer from '@/site/Footer';
 import { Suspense } from 'react';
 import FooterClient from '@/site/FooterClient';
 import NavClient from '@/site/NavClient';
+import { Metadata } from 'next/types';
 
 import '../site/globals.css';
 

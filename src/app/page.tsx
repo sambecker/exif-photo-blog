@@ -1,7 +1,7 @@
 import { getPhotosCached, getPhotosCountCached } from '@/cache';
 import { LARGE_PHOTOS_TO_SHOW, generateOgImageMetaForPhotos } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
-import { Metadata } from 'next';
+import { Metadata } from 'next/types';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
 import MoreComponents from '@/components/MoreComponents';
 import PhotosLarge from '@/photo/PhotosLarge';

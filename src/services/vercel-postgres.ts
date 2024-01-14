@@ -282,7 +282,11 @@ const safelyQueryPhotos = async <T>(callback: () => Promise<T>): Promise<T> => {
   try {
     result = await callback();
   } catch (e: any) {
-    if (/relation "photos" does not exist/i.test(e.message)) {
+    if (/ppr-caught-error/.test(e.message) && e.sourceError) {
+      // PPR errors, if caught, must be re-thrown in order to
+      // postpone rendering
+      throw e.sourceError;
+    } else if (/relation "photos" does not exist/i.test(e.message)) {
       console.log('Creating table "photos" because it did not exist');
       await sqlCreatePhotosTable();
       result = await callback();
