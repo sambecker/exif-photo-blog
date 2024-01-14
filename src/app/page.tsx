@@ -34,13 +34,14 @@ export default async function HomePage() {
           <MoreComponents
             label="More photos"
             itemsPerRequest={LARGE_PHOTOS_TO_SHOW}
-            itemsTotalCount={count}
             componentLoader={async (limit: number) => {
               'use server';
-              return <PhotosLarge
-                photos={(await getPhotosCached({ limit }))
-                  .slice(LARGE_PHOTOS_TO_SHOW)}
-              />;
+              return {
+                component: <PhotosLarge
+                  photos={(await getPhotosCached({ limit }))
+                    .slice(LARGE_PHOTOS_TO_SHOW)} />,
+                isFinished: limit > count,
+              };
             }}
           />
         </Suspense>

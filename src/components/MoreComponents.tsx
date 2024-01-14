@@ -6,14 +6,16 @@ import SiteGrid from './SiteGrid';
 
 export default function MoreComponents({
   itemsPerRequest,
-  itemsTotalCount,
   componentLoader,
   label = 'Load more',
   triggerOnView = true,
+  prefetch = true,
 }: {
   itemsPerRequest: number
-  itemsTotalCount: number
-  componentLoader: (limit: number) => Promise<JSX.Element>
+  componentLoader: (start: number, offset: number) => Promise<{
+    component: JSX.Element,
+    isFinished: boolean,
+  }>
   label?: string
   triggerOnView?: boolean
   prefetch?: boolean
@@ -21,21 +23,30 @@ export default function MoreComponents({
   const [offset, setOffset] = useState(2);
   const [components, setComponents] = useState<JSX.Element[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
 
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const advance = useCallback(() => {
     setIsLoading(true);
     const getMoreComponentsAsync = async () => {
-      return componentLoader(itemsPerRequest * offset);
+      return componentLoader(0, itemsPerRequest * offset);
     };
     getMoreComponentsAsync()
-      .then(component => {
+      .then(({ component, isFinished }) => {
         setComponents([component]);
+        setIsFinished(isFinished);
         setOffset(o => o + 1);
       })
       .finally(() => setIsLoading(false));
   }, [componentLoader, itemsPerRequest, offset]);
+
+  // useEffect(() => {
+  //   if (prefetch && components.length < offset) {
+  //     console.log('prefetching');
+  //     advance();
+  //   }
+  // }, [prefetch, advance, components.length, offset]);
 
   useEffect(() => {
     // Only add observer if button is rendered
@@ -59,11 +70,9 @@ export default function MoreComponents({
     }
   }, [triggerOnView, advance, isLoading]);
 
-  const showMoreButton = itemsTotalCount > itemsPerRequest * (offset - 1);
-
   return <>
     {components}
-    {showMoreButton &&
+    {!isFinished &&
       <SiteGrid
         contentMain={
           <button
