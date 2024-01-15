@@ -7,9 +7,12 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import { signInAction } from './actions';
 import { useFormState } from 'react-dom';
 import ErrorNote from '@/components/ErrorNote';
-import { CREDENTIALS_SIGN_IN_ERROR } from '.';
+import { KEY_CALLBACK_URL, KEY_CREDENTIALS_SIGN_IN_ERROR } from '.';
+import { useSearchParams } from 'next/navigation';
 
 export default function SignInForm() {
+  const params = useSearchParams();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [response, action] = useFormState(signInAction, undefined);
@@ -27,7 +30,7 @@ export default function SignInForm() {
     <InfoBlock>
       <form action={action}>
         <div className="space-y-8">
-          {response === CREDENTIALS_SIGN_IN_ERROR &&
+          {response === KEY_CREDENTIALS_SIGN_IN_ERROR &&
             <ErrorNote>
               Invalid email/password
             </ErrorNote>}
@@ -46,6 +49,11 @@ export default function SignInForm() {
               type="password"
               value={password}
               onChange={setPassword}
+            />
+            <input
+              type="hidden"
+              name={KEY_CALLBACK_URL}
+              value={params.get(KEY_CALLBACK_URL) ?? ''}
             />
           </div>
           <SubmitButtonWithStatus disabled={!isFormValid}>
