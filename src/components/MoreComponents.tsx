@@ -22,31 +22,41 @@ export default function MoreComponents({
   triggerOnView?: boolean
   prefetch?: boolean
 }) {
-  const [indexToLoad, setIndexToLoad] = useState(prefetch ? 1 : 0);
   const [indexToView, setIndexToView] = useState(0);
   const [indexLoaded, setIndexLoaded] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [lastIndexToLoad, setLastIndexToLoad] = useState<number>();
   const [components, setComponents] = useState<JSX.Element[]>([]);
-  const [isFinished, setIsFinished] = useState(false);
+
+  const indexToLoad = lastIndexToLoad
+    ?? (prefetch ? indexToView + 1 : indexToView);
 
   useEffect(() => {
-    if (!isLoading && indexToLoad > indexLoaded) {
+    if (
+      !isLoading &&
+      // (lastIndexToLoad === undefined || indexToLoad <= lastIndexToLoad) &&
+      indexToLoad > indexToView &&
+      indexToLoad > indexLoaded
+    ) {
       setIsLoading(true);
       getNextComponent(
-        initialOffset + (indexToLoad - 1) * itemsPerRequest,
+        initialOffset + indexToLoad * itemsPerRequest,
         itemsPerRequest,
       )
         .then(({ nextComponent, isFinished }) => {
           setComponents(current => [...current, nextComponent]);
-          setIsFinished(isFinished);
-          setIndexLoaded(i => i + 1);
+          setIndexLoaded(indexToLoad);
+          if (isFinished) {
+            setLastIndexToLoad(indexToLoad);
+          }
         })
         .finally(() => setIsLoading(false));
     }
   }, [
     isLoading,
+    // lastIndexToLoad,
     indexToLoad,
+    indexToView,
     indexLoaded,
     getNextComponent,
     initialOffset,
@@ -56,13 +66,10 @@ export default function MoreComponents({
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const advance = useCallback(() => {
-    if (!isFinished && !isLoading) {
-      setIndexToLoad(i => i + 1); 
-    }
-    if (indexToView < indexToLoad) {
+    if (indexToView < indexLoaded) {
       setIndexToView(i => i + 1);
     }
-  }, [isLoading, isFinished, indexToView, indexToLoad]);
+  }, [indexToView, indexLoaded]);
 
   useEffect(() => {
     // Only add observer if button is rendered
@@ -81,6 +88,8 @@ export default function MoreComponents({
       return () => observer.disconnect();
     }
   }, [triggerOnView, advance]);
+
+  console.log({ indexToLoad, indexToView, indexLoaded, lastIndexToLoad });
 
   return <>
     {components.slice(0, indexToView)}
