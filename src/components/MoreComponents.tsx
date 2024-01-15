@@ -31,6 +31,12 @@ export default function MoreComponents({
   const indexToLoad = lastIndexToLoad
     ?? (prefetch ? indexToView + 1 : indexToView);
 
+  const showMoreButton =
+    lastIndexToLoad === undefined ||
+    lastIndexToLoad > indexToView;
+
+  // (lastIndexToLoad ?? 0) > indexToView;
+
   useEffect(() => {
     if (
       !isLoading &&
@@ -105,7 +111,7 @@ export default function MoreComponents({
 
   return <>
     {components.slice(0, indexToView + 1)}
-    {indexToView < indexLoaded &&
+    {showMoreButton &&
       <SiteGrid
         contentMain={
           <button
