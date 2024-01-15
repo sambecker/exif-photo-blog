@@ -9,7 +9,7 @@ import RepoLink from '../components/RepoLink';
 import { usePathname } from 'next/navigation';
 import { isPathAdmin, isPathSignIn, pathForAdminPhotos } from './paths';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
-import { signOutAction } from '@/auth/action';
+import { signOutAction } from '@/auth/actions';
 import Spinner from '@/components/Spinner';
 import AnimateItems from '@/components/AnimateItems';
 
