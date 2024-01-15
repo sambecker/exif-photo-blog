@@ -37,10 +37,11 @@ export default async function HomePage() {
             itemsPerRequest={LARGE_PHOTOS_TO_SHOW}
             getNextComponent={async (offset, limit) => {
               'use server';
-              // console.log('Getting next component', { offset, limit });
               const photos = await getPhotosCached({ limit: offset + limit });
-              const nextPhotos = photos.slice(-limit);
-              console.log(`Sending ${nextPhotos.length} photos`);
+              console.log(photos.length);
+              const nextPhotos = photos.slice(offset);
+              console.log('Getting next component', { offset, limit });
+              console.log(`Sending: ${nextPhotos.map(p => p.id).join(', ')}`);
               return {
                 nextComponent: <PhotosLarge photos={nextPhotos} />,
                 isFinished: offset + limit >= count,

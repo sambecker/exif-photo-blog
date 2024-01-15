@@ -35,16 +35,21 @@ export default function MoreComponents({
     if (
       !isLoading &&
       // (lastIndexToLoad === undefined || indexToLoad <= lastIndexToLoad) &&
+      // indexToLoad >= 1 &&
       indexToLoad > indexToView &&
       indexToLoad > indexLoaded
     ) {
       setIsLoading(true);
       getNextComponent(
-        initialOffset + indexToLoad * itemsPerRequest,
+        initialOffset + (indexToLoad - 1) * itemsPerRequest,
         itemsPerRequest,
       )
         .then(({ nextComponent, isFinished }) => {
-          setComponents(current => [...current, nextComponent]);
+          setComponents(current => {
+            const updatedComponents = [...current];
+            updatedComponents[indexToLoad] = nextComponent;
+            return updatedComponents;
+          });
           setIndexLoaded(indexToLoad);
           if (isFinished) {
             setLastIndexToLoad(indexToLoad);
@@ -89,10 +94,17 @@ export default function MoreComponents({
     }
   }, [triggerOnView, advance]);
 
-  console.log({ indexToLoad, indexToView, indexLoaded, lastIndexToLoad });
+  // console.log({
+  //   indexToLoad,
+  //   indexToView,
+  //   // indexLoaded,
+  //   lastIndexToLoad,
+  //   componentsLength: components.length,
+  //   componentsToView: components.slice(0, indexToView + 1).length,
+  // });
 
   return <>
-    {components.slice(0, indexToView)}
+    {components.slice(0, indexToView + 1)}
     {indexToView < indexLoaded &&
       <SiteGrid
         contentMain={
