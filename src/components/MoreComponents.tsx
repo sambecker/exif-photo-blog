@@ -5,58 +5,70 @@ import Spinner from './Spinner';
 import SiteGrid from './SiteGrid';
 
 export default function MoreComponents({
+  initialOffset,
   itemsPerRequest,
-  componentLoader,
+  getNextComponent,
   label = 'Load more',
   triggerOnView = true,
   prefetch = true,
 }: {
+  initialOffset: number
   itemsPerRequest: number
-  componentLoader: (start: number, offset: number) => Promise<{
-    component: JSX.Element,
+  getNextComponent: (offset: number, limit: number) => Promise<{
+    nextComponent: JSX.Element,
     isFinished: boolean,
   }>
   label?: string
   triggerOnView?: boolean
   prefetch?: boolean
 }) {
-  const [offset, setOffset] = useState(2);
-  const [components, setComponents] = useState<JSX.Element[]>([]);
+  const [indexToLoad, setIndexToLoad] = useState(prefetch ? 1 : 0);
+  const [indexToView, setIndexToView] = useState(0);
+  const [indexLoaded, setIndexLoaded] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [components, setComponents] = useState<JSX.Element[]>([]);
   const [isFinished, setIsFinished] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading && indexToLoad > indexLoaded) {
+      setIsLoading(true);
+      getNextComponent(
+        initialOffset + (indexToLoad - 1) * itemsPerRequest,
+        itemsPerRequest,
+      )
+        .then(({ nextComponent, isFinished }) => {
+          setComponents(current => [...current, nextComponent]);
+          setIsFinished(isFinished);
+          setIndexLoaded(i => i + 1);
+        })
+        .finally(() => setIsLoading(false));
+    }
+  }, [
+    isLoading,
+    indexToLoad,
+    indexLoaded,
+    getNextComponent,
+    initialOffset,
+    itemsPerRequest,
+  ]);
 
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const advance = useCallback(() => {
-    setIsLoading(true);
-    const getMoreComponentsAsync = async () => {
-      return componentLoader(0, itemsPerRequest * offset);
-    };
-    getMoreComponentsAsync()
-      .then(({ component, isFinished }) => {
-        setComponents([component]);
-        setIsFinished(isFinished);
-        setOffset(o => o + 1);
-      })
-      .finally(() => setIsLoading(false));
-  }, [componentLoader, itemsPerRequest, offset]);
-
-  // useEffect(() => {
-  //   if (prefetch && components.length < offset) {
-  //     console.log('prefetching');
-  //     advance();
-  //   }
-  // }, [prefetch, advance, components.length, offset]);
+    if (!isFinished && !isLoading) {
+      setIndexToLoad(i => i + 1); 
+    }
+    if (indexToView < indexToLoad) {
+      setIndexToView(i => i + 1);
+    }
+  }, [isLoading, isFinished, indexToView, indexToLoad]);
 
   useEffect(() => {
     // Only add observer if button is rendered
     if (buttonRef.current) {
       const observer = new IntersectionObserver(e => {
-        if (
-          triggerOnView &&
-          e[0].isIntersecting &&
-          !isLoading
-        ) {
+        if (triggerOnView && e[0].isIntersecting) {
           advance();
         }
       }, {
@@ -68,11 +80,11 @@ export default function MoreComponents({
   
       return () => observer.disconnect();
     }
-  }, [triggerOnView, advance, isLoading]);
+  }, [triggerOnView, advance]);
 
   return <>
-    {components}
-    {!isFinished &&
+    {components.slice(0, indexToView)}
+    {indexToView < indexLoaded &&
       <SiteGrid
         contentMain={
           <button

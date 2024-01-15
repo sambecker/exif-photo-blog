@@ -33,14 +33,16 @@ export default async function HomePage() {
         <Suspense>
           <MoreComponents
             label="More photos"
+            initialOffset={LARGE_PHOTOS_TO_SHOW + 1}
             itemsPerRequest={LARGE_PHOTOS_TO_SHOW}
-            componentLoader={async (limit: number) => {
+            getNextComponent={async (offset, limit) => {
               'use server';
+              console.log('Getting next component', { offset, limit});
+              const photos = await getPhotosCached({ limit: offset + limit });
+              const nextPhotos = photos.slice(-limit);
               return {
-                component: <PhotosLarge
-                  photos={(await getPhotosCached({ limit }))
-                    .slice(LARGE_PHOTOS_TO_SHOW)} />,
-                isFinished: limit > count,
+                nextComponent: <PhotosLarge photos={nextPhotos} />,
+                isFinished: offset + limit >= count,
               };
             }}
           />
