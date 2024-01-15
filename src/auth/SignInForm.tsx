@@ -4,7 +4,7 @@ import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import InfoBlock from '@/components/InfoBlock';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import { useLayoutEffect, useRef, useState } from 'react';
-import { signInAction } from './action';
+import { signInAction } from './actions';
 import { useFormState } from 'react-dom';
 import ErrorNote from '@/components/ErrorNote';
 import { CREDENTIALS_SIGN_IN_ERROR } from '.';

@@ -11,6 +11,8 @@ export const signInAction = async (
   } catch (error) {
     if ((`${error}`).includes(CREDENTIALS_SIGN_IN_ERROR)) {
       return CREDENTIALS_SIGN_IN_ERROR;
+    } else {
+      console.log('Next Auth Error', error);
     }
     throw error;
   }
