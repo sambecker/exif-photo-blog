@@ -15,8 +15,9 @@ export default function MoreComponents({
   initialOffset: number
   itemsPerRequest: number
   getNextComponent: (offset: number, limit: number) => Promise<{
-    nextComponent: JSX.Element,
-    isFinished: boolean,
+    nextComponent?: JSX.Element,
+    isFinished?: boolean,
+    didError?: boolean,
   }>
   label?: string
   triggerOnView?: boolean
@@ -35,14 +36,10 @@ export default function MoreComponents({
     lastIndexToLoad === undefined ||
     lastIndexToLoad > indexToView;
 
-  // (lastIndexToLoad ?? 0) > indexToView;
-
   useEffect(() => {
     if (
       !isLoading &&
-      // (lastIndexToLoad === undefined || indexToLoad <= lastIndexToLoad) &&
-      // indexToLoad >= 1 &&
-      indexToLoad > indexToView &&
+      indexToLoad >= indexToView &&
       indexToLoad > indexLoaded
     ) {
       setIsLoading(true);
@@ -50,22 +47,23 @@ export default function MoreComponents({
         initialOffset + (indexToLoad - 1) * itemsPerRequest,
         itemsPerRequest,
       )
-        .then(({ nextComponent, isFinished }) => {
-          setComponents(current => {
-            const updatedComponents = [...current];
-            updatedComponents[indexToLoad] = nextComponent;
-            return updatedComponents;
-          });
-          setIndexLoaded(indexToLoad);
-          if (isFinished) {
-            setLastIndexToLoad(indexToLoad);
+        .then(({ nextComponent, isFinished, didError }) => {
+          if (!didError && nextComponent) {
+            setComponents(current => {
+              const updatedComponents = [...current];
+              updatedComponents[indexToLoad] = nextComponent;
+              return updatedComponents;
+            });
+            setIndexLoaded(indexToLoad);
+            if (isFinished) {
+              setLastIndexToLoad(indexToLoad);
+            }
           }
         })
         .finally(() => setIsLoading(false));
     }
   }, [
     isLoading,
-    // lastIndexToLoad,
     indexToLoad,
     indexToView,
     indexLoaded,
@@ -77,7 +75,7 @@ export default function MoreComponents({
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const advance = useCallback(() => {
-    if (indexToView < indexLoaded) {
+    if (indexToView <= indexLoaded) {
       setIndexToView(i => i + 1);
     }
   }, [indexToView, indexLoaded]);
@@ -100,15 +98,6 @@ export default function MoreComponents({
     }
   }, [triggerOnView, advance]);
 
-  // console.log({
-  //   indexToLoad,
-  //   indexToView,
-  //   // indexLoaded,
-  //   lastIndexToLoad,
-  //   componentsLength: components.length,
-  //   componentsToView: components.slice(0, indexToView + 1).length,
-  // });
-
   return <>
     {components.slice(0, indexToView + 1)}
     {showMoreButton &&
@@ -120,7 +109,7 @@ export default function MoreComponents({
             onClick={!triggerOnView ? advance : undefined}
             disabled={triggerOnView || isLoading}
           >
-            {isLoading
+            {isLoading || triggerOnView
               ? <span className="relative inline-block translate-y-[3px]">
                 <Spinner size={16} />
               </span>
