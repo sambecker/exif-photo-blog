@@ -2,7 +2,7 @@
 
 import { ReactNode, useRef } from 'react';
 import { Variant, motion } from 'framer-motion';
-import { useAppState } from '@/state';
+import { useAppState } from '@/state/AppState';
 import usePrefersReducedMotion from '@/utility/usePrefersReducedMotion';
 
 export type AnimationType = 'none' | 'scale' | 'left' | 'right' | 'bottom';

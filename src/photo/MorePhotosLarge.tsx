@@ -13,6 +13,7 @@ export function MorePhotosLarge({
 }) {
   return (
     <MoreComponents
+      stateKey="PhotosLarge"
       label="More photos"
       initialOffset={initialOffset}
       itemsPerRequest={itemsPerRequest}

@@ -1,14 +1,20 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import Spinner from './Spinner';
 import SiteGrid from './SiteGrid';
+import {
+  MoreComponentsKey,
+  MoreComponentsStateForKeyArgument,
+  useMoreComponentsState,
+} from '@/state/MoreComponentsState';
 
 const MAX_ATTEMPTS_PER_REQUEST = 5;
 const MAX_TOTAL_REQUESTS = 500;
 const RETRY_DELAY_IN_SECONDS = 1.5;
 
 export default function MoreComponents({
+  stateKey,
   initialOffset,
   itemsPerRequest,
   getNextComponent,
@@ -16,6 +22,7 @@ export default function MoreComponents({
   triggerOnView = true,
   prefetch = true,
 }: {
+  stateKey: MoreComponentsKey
   initialOffset: number
   itemsPerRequest: number
   getNextComponent: (offset: number, limit: number) => Promise<{
@@ -27,11 +34,20 @@ export default function MoreComponents({
   triggerOnView?: boolean
   prefetch?: boolean
 }) {
-  const [indexToView, setIndexToView] = useState(0);
-  const [indexLoaded, setIndexLoaded] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [lastIndexToLoad, setLastIndexToLoad] = useState<number>();
-  const [components, setComponents] = useState<JSX.Element[]>([]);
+  const { state, setStateForKey } = useMoreComponentsState();
+
+  const setState = useCallback(
+    (stateForKey: MoreComponentsStateForKeyArgument) =>
+      setStateForKey(stateKey, stateForKey),
+    [setStateForKey, stateKey]);
+
+  const {
+    indexToView,
+    indexLoaded,
+    isLoading,
+    lastIndexToLoad,
+    components,
+  } = state[stateKey];
 
   // When prefetching, always stay one request ahead of what's visible
   const indexToLoad = lastIndexToLoad
@@ -53,7 +69,7 @@ export default function MoreComponents({
       if (totalRequests.current < MAX_TOTAL_REQUESTS) {
         attemptsPerRequest.current += 1;
         totalRequests.current += 1;
-        setIsLoading(true);
+        setState({ isLoading: true });
         const handleError = () => {
           setTimeout(() => {
             attempt();
@@ -65,14 +81,17 @@ export default function MoreComponents({
         )
           .then(({ nextComponent, isFinished, didFail }) => {
             if (!didFail && nextComponent) {
-              setComponents(current => {
-                const updatedComponents = [...current];
+              setState(state => {
+                const updatedComponents = [...state.components];
                 updatedComponents[indexToLoad] = nextComponent;
-                return updatedComponents;
+                return {
+                  ...state,
+                  components: updatedComponents,
+                  indexLoaded: indexToLoad,
+                };
               });
-              setIndexLoaded(indexToLoad);
               if (isFinished) {
-                setLastIndexToLoad(indexToLoad);
+                setState({ lastIndexToLoad: indexToLoad });
               }
               attemptsPerRequest.current = 0;
             } else {
@@ -80,7 +99,7 @@ export default function MoreComponents({
             }
           })
           .catch(handleError)
-          .finally(() => setIsLoading(false));
+          .finally(() => setState({ isLoading: false }));
       } else {
         console.error(
           `Max total attempts reached (${MAX_TOTAL_REQUESTS})`
@@ -92,9 +111,10 @@ export default function MoreComponents({
       );
     }
   }, [
+    setState,
     getNextComponent,
-    indexToLoad,
     initialOffset,
+    indexToLoad,
     itemsPerRequest,
   ]);
 
@@ -118,9 +138,9 @@ export default function MoreComponents({
 
   const advance = useCallback(() => {
     if (indexToView <= indexLoaded) {
-      setIndexToView(i => i + 1);
+      setState({ indexToView: indexToView + 1 });
     }
-  }, [indexToView, indexLoaded]);
+  }, [setState, indexToView, indexLoaded]);
 
   useEffect(() => {
     // Only add observer if button is rendered
