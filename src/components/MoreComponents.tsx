@@ -124,6 +124,7 @@ export default function MoreComponents({
       indexToLoad >= indexToView &&
       indexToLoad > indexLoaded
     ) {
+      console.log('Attempting', { isLoading });
       attempt();
     }
   }, [
