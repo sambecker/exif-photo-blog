@@ -11,7 +11,8 @@ import {
 import camelcaseKeys from 'camelcase-keys';
 import type { Metadata } from 'next';
 
-export const LARGE_PHOTOS_TO_SHOW = 12;
+export const LARGE_PHOTOS_TO_SHOW =
+  process.env.NODE_ENV === 'development' ? 2 : 12;
 export const GRID_THUMBNAILS_TO_SHOW_MAX = 12;
 
 export const ACCEPTED_PHOTO_FILE_TYPES = [

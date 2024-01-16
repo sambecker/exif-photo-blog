@@ -19,6 +19,12 @@ export function MorePhotosLarge({
       itemsPerRequest={itemsPerRequest}
       getNextComponent={async (offset, limit) => {
         'use server';
+        if (
+          process.env.NODE_ENV === 'development' &&
+          Math.random() < 0.95
+        ) {
+          return { didFail: true };
+        }
         const photos = await getPhotosCached({ limit: offset + limit })
           .catch(() => undefined);
         if (!photos) {
