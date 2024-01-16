@@ -4,6 +4,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Spinner from './Spinner';
 import SiteGrid from './SiteGrid';
 
+const MAX_ATTEMPTS_PER_REQUEST = 5;
+const MAX_TOTAL_REQUESTS = 500;
+const RETRY_DELAY_IN_SECONDS = 1.5;
+
 export default function MoreComponents({
   initialOffset,
   itemsPerRequest,
@@ -29,12 +33,70 @@ export default function MoreComponents({
   const [lastIndexToLoad, setLastIndexToLoad] = useState<number>();
   const [components, setComponents] = useState<JSX.Element[]>([]);
 
+  // When prefetching, always stay one request ahead of what's visible
   const indexToLoad = lastIndexToLoad
     ?? (prefetch ? indexToView + 1 : indexToView);
 
-  const showMoreButton =
+  const attemptsPerRequest = useRef(0);
+  const totalRequests = useRef(0);
+
+  const showMoreButton = (
     lastIndexToLoad === undefined ||
-    lastIndexToLoad > indexToView;
+    lastIndexToLoad > indexToView
+  ) && (
+    attemptsPerRequest.current < MAX_ATTEMPTS_PER_REQUEST &&
+    totalRequests.current < MAX_TOTAL_REQUESTS
+  );
+
+  const attempt = useCallback(() => {  
+    if (attemptsPerRequest.current < MAX_ATTEMPTS_PER_REQUEST) {
+      if (totalRequests.current < MAX_TOTAL_REQUESTS) {
+        attemptsPerRequest.current += 1;
+        totalRequests.current += 1;
+        setIsLoading(true);
+        const handleError = () => {
+          setTimeout(() => {
+            attempt();
+          }, RETRY_DELAY_IN_SECONDS * 1000);
+        };
+        getNextComponent(
+          initialOffset + (indexToLoad - 1) * itemsPerRequest,
+          itemsPerRequest,
+        )
+          .then(({ nextComponent, isFinished, didError }) => {
+            if (!didError && nextComponent) {
+              setComponents(current => {
+                const updatedComponents = [...current];
+                updatedComponents[indexToLoad] = nextComponent;
+                return updatedComponents;
+              });
+              setIndexLoaded(indexToLoad);
+              if (isFinished) {
+                setLastIndexToLoad(indexToLoad);
+              }
+              attemptsPerRequest.current = 0;
+            } else {
+              handleError();
+            }
+          })
+          .catch(handleError)
+          .finally(() => setIsLoading(false));
+      } else {
+        console.error(
+          `Max total attempts reached (${MAX_TOTAL_REQUESTS})`
+        );
+      }
+    } else {
+      console.error(
+        `Max attempts per request reached ${MAX_ATTEMPTS_PER_REQUEST}`
+      );
+    }
+  }, [
+    getNextComponent,
+    indexToLoad,
+    initialOffset,
+    itemsPerRequest,
+  ]);
 
   useEffect(() => {
     if (
@@ -42,34 +104,14 @@ export default function MoreComponents({
       indexToLoad >= indexToView &&
       indexToLoad > indexLoaded
     ) {
-      setIsLoading(true);
-      getNextComponent(
-        initialOffset + (indexToLoad - 1) * itemsPerRequest,
-        itemsPerRequest,
-      )
-        .then(({ nextComponent, isFinished, didError }) => {
-          if (!didError && nextComponent) {
-            setComponents(current => {
-              const updatedComponents = [...current];
-              updatedComponents[indexToLoad] = nextComponent;
-              return updatedComponents;
-            });
-            setIndexLoaded(indexToLoad);
-            if (isFinished) {
-              setLastIndexToLoad(indexToLoad);
-            }
-          }
-        })
-        .finally(() => setIsLoading(false));
+      attempt();
     }
   }, [
     isLoading,
     indexToLoad,
     indexToView,
     indexLoaded,
-    getNextComponent,
-    initialOffset,
-    itemsPerRequest,
+    attempt,
   ]);
 
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -91,9 +133,7 @@ export default function MoreComponents({
         root: null,
         threshold: 0,
       });
-  
       observer.observe(buttonRef.current);
-  
       return () => observer.disconnect();
     }
   }, [triggerOnView, advance]);
