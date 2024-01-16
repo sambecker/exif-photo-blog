@@ -3,9 +3,9 @@ import { LARGE_PHOTOS_TO_SHOW, generateOgImageMetaForPhotos } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
-import MoreComponents from '@/components/MoreComponents';
 import PhotosLarge from '@/photo/PhotosLarge';
 import { Suspense } from 'react';
+import { MorePhotosLarge } from '@/photo/MorePhotosLarge';
 
 export const revalidate = 3600;
 
@@ -31,24 +31,10 @@ export default async function HomePage() {
       ? <div className="space-y-1">
         <PhotosLarge photos={photos} />
         <Suspense>
-          <MoreComponents
-            label="More photos"
+          <MorePhotosLarge
             initialOffset={LARGE_PHOTOS_TO_SHOW}
             itemsPerRequest={LARGE_PHOTOS_TO_SHOW}
-            getNextComponent={async (offset, limit) => {
-              'use server';
-              const photos = await getPhotosCached({ limit: offset + limit })
-                .catch(() => undefined);
-              if (!photos) {
-                return { didError: true };
-              } else {
-                const nextPhotos = photos.slice(offset);
-                return {
-                  nextComponent: <PhotosLarge photos={nextPhotos} />,
-                  isFinished: offset + limit >= count,
-                };
-              }
-            }}
+            totalPhotosCount={count}
           />
         </Suspense>
       </div>

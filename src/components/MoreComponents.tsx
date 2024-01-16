@@ -21,7 +21,7 @@ export default function MoreComponents({
   getNextComponent: (offset: number, limit: number) => Promise<{
     nextComponent?: JSX.Element,
     isFinished?: boolean,
-    didError?: boolean,
+    didFail?: boolean,
   }>
   label?: string
   triggerOnView?: boolean
@@ -63,8 +63,8 @@ export default function MoreComponents({
           initialOffset + (indexToLoad - 1) * itemsPerRequest,
           itemsPerRequest,
         )
-          .then(({ nextComponent, isFinished, didError }) => {
-            if (!didError && nextComponent) {
+          .then(({ nextComponent, isFinished, didFail }) => {
+            if (!didFail && nextComponent) {
               setComponents(current => {
                 const updatedComponents = [...current];
                 updatedComponents[indexToLoad] = nextComponent;
