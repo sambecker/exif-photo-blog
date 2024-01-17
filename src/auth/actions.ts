@@ -21,9 +21,13 @@ export const signInAction = async (
       `${error}`.includes(KEY_CREDENTIALS_SIGN_IN_ERROR) || 
       `${error}`.includes(KEY_CREDENTIALS_SIGN_IN_ERROR_URL)
     ) {
-      // Rethrow credentials error to display on the sign in page.
+      // Return credentials error to display on sign-in page.
       return KEY_CREDENTIALS_SIGN_IN_ERROR;
     } else if (!`${error}`.includes('NEXT_REDIRECT')) {
+      console.log('Sign in error:', {
+        errorText: `${error}`,
+        error,
+      });
       // Rethrow non-redirect errors
       throw error;
     }
