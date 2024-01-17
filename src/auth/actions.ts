@@ -24,7 +24,7 @@ export const signInAction = async (
       // Return credentials error to display on sign-in page.
       return KEY_CREDENTIALS_SIGN_IN_ERROR;
     } else if (!`${error}`.includes('NEXT_REDIRECT')) {
-      console.log('Sign in error:', {
+      console.log('Unknown sign in error:', {
         errorText: `${error}`,
         error,
       });
