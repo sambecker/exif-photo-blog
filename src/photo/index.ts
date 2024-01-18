@@ -14,7 +14,7 @@ import type { Metadata } from 'next';
 export const PHOTO_LOAD_MULTIPLE_ROOT =
   process.env.NODE_ENV === 'development' ? 2 : 12;
 export const PHOTO_LOAD_MULTIPLE_GRID =
-  process.env.NODE_ENV === 'development' ? 4 : 24;
+  process.env.NODE_ENV === 'development' ? 4 : 36;
 
 export const GRID_THUMBNAILS_TO_SHOW_MAX = 12;
 
