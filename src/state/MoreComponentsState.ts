@@ -8,6 +8,7 @@ export interface MoreComponentsStateForKey {
   indexLoaded: number
   isLoading: boolean
   lastIndexToLoad?: number
+  haveAttemptsPerRequestBeenExceeded: boolean
   components: JSX.Element[]
 }
 
@@ -16,6 +17,7 @@ export const createInitialStateForKey =
     indexToView: 0,
     indexLoaded: 0,
     isLoading: false,
+    haveAttemptsPerRequestBeenExceeded: false,
     components: [],
   });
 

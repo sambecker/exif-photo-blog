@@ -64,17 +64,17 @@ export default function MoreComponents({
     totalRequests.current < MAX_TOTAL_REQUESTS
   );
 
-  const attempt = useCallback(() => {  
+  const attempt = useCallback(() => {
+    const handleError = () => {
+      setTimeout(() => {
+        attempt();
+      }, RETRY_DELAY_IN_SECONDS * 1000);
+    };
     if (attemptsPerRequest.current < MAX_ATTEMPTS_PER_REQUEST) {
       if (totalRequests.current < MAX_TOTAL_REQUESTS) {
         attemptsPerRequest.current += 1;
         totalRequests.current += 1;
         setState({ isLoading: true });
-        const handleError = () => {
-          setTimeout(() => {
-            attempt();
-          }, RETRY_DELAY_IN_SECONDS * 1000);
-        };
         getNextComponent(
           initialOffset + (indexToLoad - 1) * itemsPerRequest,
           itemsPerRequest,
@@ -88,27 +88,30 @@ export default function MoreComponents({
                   ...state,
                   components: updatedComponents,
                   indexLoaded: indexToLoad,
+                  isLoading: false,
+                  ...isFinished && { lastIndexToLoad: indexToLoad },
                 };
               });
-              if (isFinished) {
-                setState({ lastIndexToLoad: indexToLoad });
-              }
               attemptsPerRequest.current = 0;
             } else {
               handleError();
             }
           })
-          .catch(handleError)
-          .finally(() => setState({ isLoading: false }));
+          .catch(handleError);
       } else {
         console.error(
           `Max total attempts reached (${MAX_TOTAL_REQUESTS})`
         );
+        setState({ isLoading: false });
       }
     } else {
       console.error(
         `Max attempts per request reached ${MAX_ATTEMPTS_PER_REQUEST}`
       );
+      setState({
+        isLoading: false,
+        haveAttemptsPerRequestBeenExceeded: true,
+      });
     }
   }, [
     setState,
