@@ -2,7 +2,7 @@ import MoreComponents from '@/components/MoreComponents';
 import PhotosLarge from './PhotosLarge';
 import { getPhotosCached } from '@/cache';
 
-export function MorePhotosLarge({
+export function MorePhotosRoot({
   initialOffset,
   itemsPerRequest,
   totalPhotosCount,
@@ -13,7 +13,7 @@ export function MorePhotosLarge({
 }) {
   return (
     <MoreComponents
-      stateKey="PhotosLarge"
+      stateKey="PhotosRoot"
       label="More photos"
       initialOffset={initialOffset}
       itemsPerRequest={itemsPerRequest}

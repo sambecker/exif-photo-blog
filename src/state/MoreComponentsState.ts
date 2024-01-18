@@ -1,7 +1,8 @@
 import { createContext, useContext } from 'react';
 
 export type MoreComponentsKey = 
-  'PhotosLarge';
+  'PhotosRoot' |
+  'PhotosGrid';
 
 export interface MoreComponentsStateForKey {
   indexToView: number
@@ -39,7 +40,8 @@ export interface MoreComponentsContext {
 }
 
 export const MORE_COMPONENTS_INITIAL_STATE: MoreComponentsState = {
-  PhotosLarge: createInitialStateForKey(),
+  PhotosRoot: createInitialStateForKey(),
+  PhotosGrid: createInitialStateForKey(),
 };
 
 export const  MoreComponentsContext =

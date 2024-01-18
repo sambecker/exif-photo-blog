@@ -1,11 +1,14 @@
 import { getPhotosCached, getPhotosCountCached } from '@/cache';
-import { LARGE_PHOTOS_TO_SHOW, generateOgImageMetaForPhotos } from '@/photo';
+import {
+  PHOTO_LOAD_MULTIPLE_ROOT,
+  generateOgImageMetaForPhotos,
+} from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
 import PhotosLarge from '@/photo/PhotosLarge';
 import { Suspense } from 'react';
-import { MorePhotosLarge } from '@/photo/MorePhotosLarge';
+import { MorePhotosRoot } from '@/photo/MorePhotosRoot';
 
 export const revalidate = 3600;
 
@@ -22,7 +25,7 @@ export default async function HomePage() {
     count,
   ] = await Promise.all([
     // Make homepage queries resilient to error on first time setup
-    getPhotosCached({ limit: LARGE_PHOTOS_TO_SHOW }).catch(() => []),
+    getPhotosCached({ limit: PHOTO_LOAD_MULTIPLE_ROOT }).catch(() => []),
     getPhotosCountCached().catch(() => 0),
   ]);
 
@@ -31,9 +34,9 @@ export default async function HomePage() {
       ? <div className="space-y-1">
         <PhotosLarge photos={photos} />
         <Suspense>
-          <MorePhotosLarge
-            initialOffset={LARGE_PHOTOS_TO_SHOW}
-            itemsPerRequest={LARGE_PHOTOS_TO_SHOW}
+          <MorePhotosRoot
+            initialOffset={PHOTO_LOAD_MULTIPLE_ROOT}
+            itemsPerRequest={PHOTO_LOAD_MULTIPLE_ROOT}
             totalPhotosCount={count}
           />
         </Suspense>

@@ -1,26 +1,24 @@
 import { getPhotosCached } from '@/cache';
 import SiteGrid from '@/components/SiteGrid';
-import { generateOgImageMetaForPhotos } from '@/photo';
+import {
+  PHOTO_LOAD_MULTIPLE_GRID,
+  generateOgImageMetaForPhotos,
+} from '@/photo';
 import PhotoGrid from '@/photo/PhotoGrid';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
-import { pathForGrid } from '@/site/paths';
 import { Metadata } from 'next/types';
-import {
-  PaginationParams,
-  getPaginationForSearchParams,
-} from '@/site/pagination';
 import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
 import { getPhotoSidebarDataCached } from '@/photo/data';
+import { MorePhotosGrid } from '@/photo/MorePhotosGrid';
+import { Suspense } from 'react';
 
 export async function generateMetadata(): Promise<Metadata> {
   const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG });
   return generateOgImageMetaForPhotos(photos);
 }
 
-export default async function GridPage({ searchParams }: PaginationParams) {
-  const { offset, limit } = getPaginationForSearchParams(searchParams);
-
+export default async function GridPage() {
   const [
     photos,
     photosCount,
@@ -28,18 +26,23 @@ export default async function GridPage({ searchParams }: PaginationParams) {
     cameras,
     simulations,
   ] = await Promise.all([
-    getPhotosCached({ limit }),
+    getPhotosCached({ limit: PHOTO_LOAD_MULTIPLE_GRID }),
     ...getPhotoSidebarDataCached(),
   ]);
 
-  const showMorePath = photosCount > photos.length
-    ? pathForGrid(offset + 1)
-    : undefined;
-  
   return (
     photos.length > 0
       ? <SiteGrid
-        contentMain={<PhotoGrid {...{ photos, showMorePath }} />}
+        contentMain={<div className="space-y-0.5 sm:space-y-1">
+          <PhotoGrid {...{ photos }} />
+          <Suspense>
+            <MorePhotosGrid
+              initialOffset={PHOTO_LOAD_MULTIPLE_GRID}
+              itemsPerRequest={PHOTO_LOAD_MULTIPLE_GRID}
+              totalPhotosCount={photosCount}
+            />
+          </Suspense>
+        </div>}
         contentSide={<div className="sticky top-4 space-y-4">
           <PhotoGridSidebar {...{
             tags,
