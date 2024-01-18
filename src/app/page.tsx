@@ -41,6 +41,8 @@ export default async function HomePage() {
           />
         </Suspense>
       </div>
-      : <PhotosEmptyState />
+      : <Suspense>
+        <PhotosEmptyState />
+      </Suspense>
   );
 }
