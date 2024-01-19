@@ -11,6 +11,8 @@ import {
 import camelcaseKeys from 'camelcase-keys';
 import type { Metadata } from 'next';
 
+export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
+
 export const PHOTO_LOAD_MULTIPLE_ROOT =
   process.env.NODE_ENV === 'development' ? 2 : 12;
 export const PHOTO_LOAD_MULTIPLE_GRID =
