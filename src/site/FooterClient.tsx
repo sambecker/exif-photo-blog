@@ -36,15 +36,22 @@ export default function FooterClient({
               key="footer"
               className={clsx(
                 'flex items-center',
-                'text-dim min-h-[4rem]',
+                'text-dim min-h-10',
               )}>
-              <div className="flex gap-x-4 gap-y-1 flex-grow flex-wrap h-4">
+              <div className={clsx(
+                'flex items-center flex-grow flex-wrap h-10',
+                'gap-x-4 min-w-0',
+              )}>
                 {isPathAdmin(pathname)
                   ? <>
                     {userEmail === undefined &&
                       <Spinner />}
                     {userEmail && <>
-                      <div>{userEmail}</div>
+                      <div className={clsx(
+                        'truncate max-w-full',
+                      )}>
+                        {userEmail}
+                      </div>
                       <form action={signOutAction}>
                         <SubmitButtonWithStatus styleAsLink>
                           Sign out
@@ -60,7 +67,7 @@ export default function FooterClient({
                       <RepoLink />}
                   </>}
               </div>
-              <div className="flex items-center h-4">
+              <div className="flex items-center h-10">
                 <ThemeSwitcher />
               </div>
             </div>]
