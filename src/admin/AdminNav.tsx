@@ -11,8 +11,6 @@ import {
 import AdminNavClient from './AdminNavClient';
 
 export default async function AdminNav() {
-  // await sleep(20_000);
-
   const [
     countPhotos,
     countUploads,

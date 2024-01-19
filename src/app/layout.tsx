@@ -87,7 +87,9 @@ export default function RootLayout({
                   'min-h-[16rem] sm:min-h-[30rem]',
                   'mb-12',
                 )}>
-                  {children}
+                  <Suspense>
+                    {children}
+                  </Suspense>
                 </div>
                 <Suspense fallback={<FooterClient />}>
                   <Footer />
