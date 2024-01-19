@@ -19,7 +19,12 @@ export default async function AdminNav() {
     countTags,
   ] = await Promise.all([
     getPhotosCountIncludingHiddenCached(),
-    getBlobUploadUrlsNoStore().then(urls => urls.length),
+    getBlobUploadUrlsNoStore()
+      .then(urls => urls.length)
+      .catch(e => {
+        console.error(`Error getting blob upload urls: ${e}`);
+        return 0;
+      }),
     getUniqueTagsCached().then(tags => tags.length),
   ]);
 
