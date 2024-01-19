@@ -99,13 +99,13 @@ export default function MoreComponents({
           })
           .catch(handleError);
       } else {
-        console.error(
+        console.log(
           `Max total attempts reached (${MAX_TOTAL_REQUESTS})`
         );
         setState({ isLoading: false });
       }
     } else {
-      console.error(
+      console.log(
         `Max attempts per request reached ${MAX_ATTEMPTS_PER_REQUEST}`
       );
       setState({
