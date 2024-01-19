@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   FORM_METADATA_ENTRIES,
   PhotoFormData,
+  convertFormKeysToLabels,
   getInitialErrors,
   isFormValid,
 } from './form';
@@ -44,13 +45,13 @@ export default function PhotoForm({
   // is refreshed by parent
   useEffect(() => {
     if (Object.keys(updatedExifData ?? {}).length > 0) {
-      const changedKeys: string[] = [];
+      const changedKeys: (keyof PhotoFormData)[] = [];
 
       setFormData(currentForm => {
         Object.entries(updatedExifData ?? {})
           .forEach(([key, value]) => {
             if (currentForm[key as keyof PhotoFormData] !== value) {
-              changedKeys.push(key);
+              changedKeys.push(key as keyof PhotoFormData);
             }
           });
 
@@ -61,8 +62,9 @@ export default function PhotoForm({
       });
 
       if (changedKeys.length > 0) {
+        const fields = convertFormKeysToLabels(changedKeys);
         toastSuccess(
-          `Updated EXIF fields: ${changedKeys.join(', ')}`,
+          `Updated EXIF fields: ${fields.join(', ')}`,
           8000,
         );
       } else {

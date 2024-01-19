@@ -84,6 +84,9 @@ export const FORM_METADATA_ENTRIES =
   (Object.entries(FORM_METADATA) as [keyof PhotoFormData, FormMeta][])
     .filter(([_, meta]) => !meta.hideTemporarily);
 
+export const convertFormKeysToLabels = (keys: (keyof PhotoFormData)[]) =>
+  keys.map(key => FORM_METADATA[key].label.toUpperCase());
+
 export const getInitialErrors = (
   formData: Partial<PhotoFormData>
 ): Partial<Record<keyof PhotoFormData, string>> =>
