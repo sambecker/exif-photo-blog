@@ -13,6 +13,8 @@ export default function ToasterWithThemes() {
         classNames: {
           toast: clsx(
             'font-mono font-normal',
+            '!text-gray-900 dark:!text-gray-100',
+            '!bg-white dark:!bg-black',
             '!border-gray-200 dark:!border-gray-800',
           ),
         },
