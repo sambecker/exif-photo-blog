@@ -410,6 +410,13 @@ export const getPhotosNearId = async (
     .then(({ rows }) => rows.map(parsePhotoFromDb));
 };
 
+export const getPhotoIds = async ({ limit }: { limit?: number }) => {
+  return safelyQueryPhotos(() => limit
+    ? sql`SELECT id FROM photos LIMIT ${limit}`
+    : sql`SELECT id FROM photos`)
+    .then(({ rows }) => rows.map(({ id }) => id as string));
+};
+
 export const getPhoto = async (id: string): Promise<Photo | undefined> => {
   // Check for photo id forwarding
   // and convert short ids to uuids
