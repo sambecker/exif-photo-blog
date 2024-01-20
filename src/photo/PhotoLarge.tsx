@@ -84,10 +84,9 @@ export default function PhotoLarge({
                   </Link>
                 </div>
                 <Suspense>
-                  <AdminPhotoMenu
-                    photoId={photo.id}
-                    buttonClassName="translate-y-[-3.5px]"
-                  />
+                  <div className="h-4 translate-y-[-3.5px]">
+                    <AdminPhotoMenu photoId={photo.id} />
+                  </div>
                 </Suspense>
               </div>
               {tags.length > 0 &&
