@@ -20,7 +20,7 @@ export const {
           process.env.ADMIN_EMAIL && process.env.ADMIN_EMAIL === email &&
           process.env.ADMIN_PASSWORD && process.env.ADMIN_PASSWORD === password
         ) {
-          const user: User = { id: '1', email, name: 'Admin User' };
+          const user: User = { email, name: 'Admin User' };
           return user;
         } else {
           return null;
