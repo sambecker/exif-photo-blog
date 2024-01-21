@@ -1,4 +1,4 @@
-import { PATH_ADMIN_UPLOAD_BLOB } from '@/site/paths';
+import { PATH_API_VERCEL_BLOB_UPLOAD } from '@/site/paths';
 import { copy, del, list } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
 
@@ -18,7 +18,7 @@ export const vercelBlobUploadFromClient = async (
     file,
     {
       access: 'public',
-      handleUploadUrl: PATH_ADMIN_UPLOAD_BLOB,
+      handleUploadUrl: PATH_API_VERCEL_BLOB_UPLOAD,
     },
   )
     .then(({ url }) => url);

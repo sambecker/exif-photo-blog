@@ -18,6 +18,7 @@ import {
 } from '@/site/config';
 import { generateNanoid } from '@/utility/nanoid';
 import { CLOUDFLARE_R2_BASE_URL_PUBLIC } from './cloudflare-r2';
+import { PATH_API_PRESIGNED_URL } from '@/site/paths';
 
 export const generateBlobId = () => generateNanoid(16);
 
@@ -43,8 +44,6 @@ const blobBaseUrlForStorage = (type: StorageType) => {
 };
 
 export const BLOB_BASE_URL = blobBaseUrlForStorage(STORAGE_PREFERENCE);
-
-const API_PATH_PRESIGNED_URL = '/api/storage/presigned-url';
 
 const PREFIX_UPLOAD = 'upload';
 const PREFIX_PHOTO = 'photo';
@@ -84,7 +83,7 @@ export const uploadFromClientViaPresignedUrl = async (
     ? `${fileName}-${generateBlobId()}.${extension}`
     : `${fileName}.${extension}`;
 
-  const url = await fetch(`${API_PATH_PRESIGNED_URL}/${key}`)
+  const url = await fetch(`${PATH_API_PRESIGNED_URL}/${key}`)
     .then((response) => response.text());
 
   return fetch(url, { method: 'PUT', body: file })
