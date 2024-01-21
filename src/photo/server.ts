@@ -1,7 +1,7 @@
 import {
-  getExtensionFromBlobUrl,
-  getIdFromBlobUrl,
-} from '@/services/blob';
+  getExtensionFromStorageUrl,
+  getIdFromStorageUrl,
+} from '@/services/storage';
 import { convertExifToFormData } from '@/photo/form';
 import {
   getFujifilmSimulationFromMakerNote,
@@ -19,9 +19,9 @@ export const extractExifDataFromBlobPath = async (
 }> => {
   const url = decodeURIComponent(blobPath);
 
-  const blobId = getIdFromBlobUrl(url);
+  const blobId = getIdFromStorageUrl(url);
 
-  const extension = getExtensionFromBlobUrl(url);
+  const extension = getExtensionFromStorageUrl(url);
 
   const fileBytes = blobPath
     ? await fetch(url)

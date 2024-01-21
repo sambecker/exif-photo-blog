@@ -1,12 +1,12 @@
-import BlobUrls from '@/admin/BlobUrls';
-import { getBlobUploadUrlsNoStore } from '@/cache';
+import StorageUrls from '@/admin/StorageUrls';
+import { getStorageUploadUrlsNoStore } from '@/cache';
 import SiteGrid from '@/components/SiteGrid';
 
 export default async function AdminUploadsPage() {
-  const blobUrls = await getBlobUploadUrlsNoStore();
+  const storageUrls = await getStorageUploadUrlsNoStore();
   return (
     <SiteGrid
-      contentMain={<BlobUrls urls={blobUrls} />}
+      contentMain={<StorageUrls urls={storageUrls} />}
     />
   );
 }

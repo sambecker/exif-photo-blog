@@ -16,8 +16,8 @@ import {
 import { redirect } from 'next/navigation';
 import {
   convertUploadToPhoto,
-  deleteBlobUrl,
-} from '@/services/blob';
+  deleteStorageUrl,
+} from '@/services/storage';
 import {
   revalidateAdminPaths,
   revalidateAllKeysAndPaths,
@@ -66,7 +66,7 @@ export async function toggleFavoritePhoto(photoId: string) {
 
 export async function deletePhotoAction(formData: FormData) {
   await Promise.all([
-    deleteBlobUrl(formData.get('url') as string),
+    deleteStorageUrl(formData.get('url') as string),
     sqlDeletePhoto(formData.get('id') as string),
   ]);
 
@@ -94,7 +94,7 @@ export async function renamePhotoTagGloballyAction(formData: FormData) {
 }
 
 export async function deleteBlobPhotoAction(formData: FormData) {
-  await deleteBlobUrl(formData.get('url') as string);
+  await deleteStorageUrl(formData.get('url') as string);
 
   revalidateAdminPaths();
 

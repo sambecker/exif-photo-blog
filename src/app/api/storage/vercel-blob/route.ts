@@ -4,12 +4,12 @@ import {
   ACCEPTED_PHOTO_FILE_TYPES,
   MAX_PHOTO_UPLOAD_SIZE_IN_BYTES,
 } from '@/photo';
-import { isUploadPathnameValid } from '@/services/blob';
+import { isUploadPathnameValid } from '@/services/storage';
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request): Promise<NextResponse> {
-  const body = (await request.json()) as HandleUploadBody;
+  const body: HandleUploadBody = await request.json();
 
   try {
     const jsonResponse = await handleUpload({
