@@ -35,6 +35,7 @@ export default function SiteChecklistClient({
   hasDomain,
   showRepoLink,
   showFilmSimulations,
+  showExifInfo,
   isProModeEnabled,
   isGeoPrivacyEnabled,
   isPriorityOrderEnabled,
@@ -316,6 +317,15 @@ export default function SiteChecklistClient({
           Set environment variable to {'"1"'} to prevent
           simulations showing up in <code>/grid</code> sidebar:
           {renderEnvVars(['NEXT_PUBLIC_HIDE_FILM_SIMULATIONS'])}
+        </ChecklistRow>
+        <ChecklistRow
+          title="Show EXIF data"
+          status={showExifInfo}
+          isPending={isPendingPage}
+          optional
+        >
+          Set environment variable to {'"1"'} to hide EXIF data:
+          {renderEnvVars(['NEXT_PUBLIC_HIDE_EXIF_DATA'])}
         </ChecklistRow>
         <ChecklistRow
           title={`Grid Aspect Ratio: ${gridAspectRatio}`}

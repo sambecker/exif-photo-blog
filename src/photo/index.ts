@@ -1,4 +1,5 @@
 import { FilmSimulation } from '@/simulation';
+import { SHOW_EXIF_DATA } from '@/site/config';
 import { ABSOLUTE_PATH_FOR_HOME_IMAGE } from '@/site/paths';
 import { formatDateFromPostgresString } from '@/utility/date';
 import {
@@ -221,14 +222,20 @@ export const dateRangeForPhotos = (
   return { start, end, description };
 };
 
-export const photoHasCameraData = (photo: Photo) =>
+const photoHasCameraData = (photo: Photo) =>
   photo.make &&
   photo.model;
 
-export const photoHasExifData = (photo: Photo) =>
+const photoHasExifData = (photo: Photo) =>
   photo.focalLength ||
   photo.focalLengthIn35MmFormat ||
   photo.fNumberFormatted ||
   photo.isoFormatted ||
   photo.exposureTimeFormatted ||
   photo.exposureCompensationFormatted;
+
+export const shouldShowCameraDataForPhoto = (photo: Photo) =>
+  SHOW_EXIF_DATA && photoHasCameraData(photo);
+
+export const shouldShowExifDataForPhoto = (photo: Photo) =>
+  SHOW_EXIF_DATA && photoHasExifData(photo);

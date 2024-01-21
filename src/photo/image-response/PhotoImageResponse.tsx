@@ -1,4 +1,4 @@
-import { Photo, photoHasExifData } from '..';
+import { Photo, shouldShowExifDataForPhoto } from '..';
 import { AiFillApple } from 'react-icons/ai';
 import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
@@ -30,7 +30,7 @@ export default function PhotoImageResponse({
         height,
         ...OG_TEXT_BOTTOM_ALIGNMENT && { imagePosition: 'top' },
       }} />
-      {photoHasExifData(photo) &&
+      {shouldShowExifDataForPhoto(photo) &&
         <ImageCaption {...{ width, height, fontFamily }}>
           {photo.make === 'Apple' &&
             <div style={{ display: 'flex' }}>
