@@ -71,11 +71,11 @@ Installation
 - `NEXT_PUBLIC_GRID_ASPECT_RATIO = 1.5` sets aspect ratio for grid tiles (defaults to `1`—setting to `0` removes the constraint)
 - `NEXT_PUBLIC_OG_TEXT_ALIGNMENT = BOTTOM` keeps OG image text bottom aligned (default is top)
 
-### Configure alternate storage
+## Configure alternate storage
 
 Only one storage adapter—Vercel Blob, Cloudflare R2, or AWS S3—can be used at a time. Ideally, this is configured before photos are uploaded (see [Issue #34](https://github.com/sambecker/exif-photo-blog/issues/34) for migration considerations). If you have multiple adapters, you can set one as preferred by storing "aws-s3," "cloudflare-r2," or "vercel-blob" in `NEXT_PUBLIC_STORAGE_PREFERENCE`.
 
-#### Cloudflare R2
+### Cloudflare R2
 
 1. Setup bucket
    - [Create R2 bucket](https://developers.cloudflare.com/r2/) with default settings
@@ -106,7 +106,7 @@ Only one storage adapter—Vercel Blob, Cloudflare R2, or AWS S3—can be used a
      - `CLOUDFLARE_R2_ACCESS_KEY`
      - `CLOUDFLARE_R2_SECRET_ACCESS_KEY`
 
-#### AWS S3
+### AWS S3
 
 1. Setup bucket
    - [Create S3 bucket](https://s3.console.aws.amazon.com/s3) with "ACLs enabled," and "Block all public access" turned off
