@@ -147,7 +147,8 @@ export default function SiteChecklistClient({
           title={!hasStorage
             ? 'Setup storage (one of the following)'
             : hasMultipleStorageProviders
-              ? `Setup storage (current: ${labelForStorage(currentStorage)})`
+              // eslint-disable-next-line max-len
+              ? `Setup storage (new uploads go to: ${labelForStorage(currentStorage)})`
               : 'Setup storage'}
           status={hasStorage}
           isPending={isPendingPage}
