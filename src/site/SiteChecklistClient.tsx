@@ -144,7 +144,7 @@ export default function SiteChecklistClient({
         <ChecklistRow
           title={hasStorage
             // eslint-disable-next-line max-len
-            ? `Setup storage (preferred adapter: ${labelForStorage(storagePreference)})`
+            ? `Setup storage (preferred: ${labelForStorage(storagePreference)})`
             : 'Setup storage (one of the following)'}
           status={hasStorage}
           isPending={isPendingPage}
