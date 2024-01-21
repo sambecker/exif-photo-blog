@@ -1,4 +1,4 @@
-import { Photo } from '..';
+import { Photo, photoHasExifData } from '..';
 import { AiFillApple } from 'react-icons/ai';
 import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
@@ -30,25 +30,26 @@ export default function PhotoImageResponse({
         height,
         ...OG_TEXT_BOTTOM_ALIGNMENT && { imagePosition: 'top' },
       }} />
-      <ImageCaption {...{ width, height, fontFamily }}>
-        {photo.make === 'Apple' &&
+      {photoHasExifData(photo) &&
+        <ImageCaption {...{ width, height, fontFamily }}>
+          {photo.make === 'Apple' &&
+            <div style={{ display: 'flex' }}>
+              <AiFillApple />
+            </div>}
+          {model &&
+            <div style={{ display: 'flex' }}>
+              {model}
+            </div>}
           <div style={{ display: 'flex' }}>
-            <AiFillApple />
-          </div>}
-        {model &&
+            {photo.focalLengthFormatted}
+          </div>
           <div style={{ display: 'flex' }}>
-            {model}
-          </div>}
-        <div style={{ display: 'flex' }}>
-          {photo.focalLengthFormatted}
-        </div>
-        <div style={{ display: 'flex' }}>
-          {photo.fNumberFormatted}
-        </div>
-        <div>
-          {photo.isoFormatted}
-        </div>
-      </ImageCaption>
+            {photo.fNumberFormatted}
+          </div>
+          <div>
+            {photo.isoFormatted}
+          </div>
+        </ImageCaption>}
     </ImageContainer>
   );
 };
