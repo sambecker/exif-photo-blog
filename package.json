@@ -9,8 +9,8 @@
     "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "3.495.0",
-    "@aws-sdk/s3-request-presigner": "3.495.0",
+    "@aws-sdk/client-s3": "3.496.0",
+    "@aws-sdk/s3-request-presigner": "3.496.0",
     "@headlessui/react": "2.0.0-alpha.4",
     "@next/bundle-analyzer": "14.1.0",
     "@tailwindcss/forms": "^0.5.7",
@@ -37,7 +37,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "nanoid": "^5.0.4",
-    "next": "14.1.1-canary.1",
+    "next": "14.1.1-canary.4",
     "next-auth": "5.0.0-beta.4",
     "next-themes": "^0.2.1",
     "postcss": "8.4.33",

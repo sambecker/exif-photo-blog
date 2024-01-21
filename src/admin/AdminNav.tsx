@@ -1,5 +1,5 @@
 import {
-  getBlobUploadUrlsNoStore,
+  getStorageUploadUrlsNoStore,
   getPhotosCountIncludingHiddenCached,
   getUniqueTagsCached,
 } from '@/cache';
@@ -17,7 +17,7 @@ export default async function AdminNav() {
     countTags,
   ] = await Promise.all([
     getPhotosCountIncludingHiddenCached(),
-    getBlobUploadUrlsNoStore()
+    getStorageUploadUrlsNoStore()
       .then(urls => urls.length)
       .catch(e => {
         console.error(`Error getting blob upload urls: ${e}`);
