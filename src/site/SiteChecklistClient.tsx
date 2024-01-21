@@ -27,7 +27,8 @@ export default function SiteChecklistClient({
   hasVercelBlobStorage,
   hasCloudflareR2Storage,
   hasAwsS3Storage,
-  storagePreference,
+  hasMultipleStorageProviders,
+  currentStorage,
   hasAuth,
   hasAdminUser,
   hasTitle,
@@ -142,10 +143,11 @@ export default function SiteChecklistClient({
           and connect to project
         </ChecklistRow>
         <ChecklistRow
-          title={hasStorage
-            // eslint-disable-next-line max-len
-            ? `Setup storage (preferred: ${labelForStorage(storagePreference)})`
-            : 'Setup storage (one of the following)'}
+          title={!hasStorage
+            ? 'Setup storage (one of the following)'
+            : hasMultipleStorageProviders
+              ? `Setup storage (current: ${labelForStorage(currentStorage)})`
+              : 'Setup storage'}
           status={hasStorage}
           isPending={isPendingPage}
         >

@@ -56,9 +56,15 @@ export const HAS_AWS_S3_STORAGE =
   (process.env.AWS_S3_ACCESS_KEY ?? '').length > 0 &&
   (process.env.AWS_S3_SECRET_ACCESS_KEY ?? '').length > 0;
 
-// Storage preference relies on client-only keys
-// so that it's available in the browser when uploading
-export const STORAGE_PREFERENCE: StorageType =
+export const HAS_MULTIPLE_STORAGE_PROVIDERS = [
+  HAS_VERCEL_BLOB_STORAGE,
+  HAS_CLOUDFLARE_R2_STORAGE,
+  HAS_AWS_S3_STORAGE,
+].filter(Boolean).length > 1;
+
+// Storage preference requires client-available keys
+// so it can be reached in the browser when uploading
+export const CURRENT_STORAGE: StorageType =
   (process.env.NEXT_PUBLIC_STORAGE_PREFERENCE as StorageType | undefined) || (
     HAS_CLOUDFLARE_R2_STORAGE_CLIENT
       ? 'cloudflare-r2'
@@ -94,7 +100,8 @@ export const CONFIG_CHECKLIST_STATUS = {
     HAS_VERCEL_BLOB_STORAGE ||
     HAS_CLOUDFLARE_R2_STORAGE ||
     HAS_AWS_S3_STORAGE,
-  storagePreference: STORAGE_PREFERENCE,
+  hasMultipleStorageProviders: HAS_MULTIPLE_STORAGE_PROVIDERS,
+  currentStorage: CURRENT_STORAGE,
   hasAuth: (process.env.AUTH_SECRET ?? '').length > 0,
   hasAdminUser: (
     (process.env.ADMIN_EMAIL ?? '').length > 0 &&

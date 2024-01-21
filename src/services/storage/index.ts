@@ -13,7 +13,7 @@ import {
   isUrlFromAwsS3,
 } from './aws-s3';
 import {
-  STORAGE_PREFERENCE,
+  CURRENT_STORAGE,
   HAS_AWS_S3_STORAGE,
   HAS_VERCEL_BLOB_STORAGE,
   HAS_CLOUDFLARE_R2_STORAGE,
@@ -111,15 +111,15 @@ export const uploadFromClientViaPresignedUrl = async (
     .then((response) => response.text());
 
   return fetch(url, { method: 'PUT', body: file })
-    .then(() => `${baseUrlForStorage(STORAGE_PREFERENCE)}/${key}`);
+    .then(() => `${baseUrlForStorage(CURRENT_STORAGE)}/${key}`);
 };
 
 export const uploadPhotoFromClient = async (
   file: File | Blob,
   extension = 'jpg',
 ) => (
-  STORAGE_PREFERENCE === 'cloudflare-r2' ||
-  STORAGE_PREFERENCE === 'aws-s3'
+  CURRENT_STORAGE === 'cloudflare-r2' ||
+  CURRENT_STORAGE === 'aws-s3'
 )
   ? uploadFromClientViaPresignedUrl(file, PREFIX_UPLOAD, extension, true)
   : vercelBlobUploadFromClient(file, `${PREFIX_UPLOAD}.${extension}`);
