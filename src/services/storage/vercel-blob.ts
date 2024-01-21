@@ -9,6 +9,9 @@ const VERCEL_BLOB_STORE_ID = process.env.BLOB_READ_WRITE_TOKEN?.match(
 export const VERCEL_BLOB_BASE_URL =
   `https://${VERCEL_BLOB_STORE_ID}.public.blob.vercel-storage.com`;
 
+export const isUrlFromVercelBlob = (url: string) =>
+  url.startsWith(VERCEL_BLOB_BASE_URL);
+
 export const vercelBlobUploadFromClient = async (
   file: File | Blob,
   fileName: string,

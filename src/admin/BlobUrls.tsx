@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import AdminGrid from './AdminGrid';
 import Link from 'next/link';
 import ImageTiny from '@/components/ImageTiny';
-import { fileNameForBlobUrl } from '@/services/storage';
+import { fileNameForStorageUrl } from '@/services/storage';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import { deleteBlobPhotoAction } from '@/photo/actions';
 import DeleteButton from './DeleteButton';
@@ -21,7 +21,7 @@ export default function BlobUrls({
     <AdminGrid {...{ title }} >
       {urls.map(url => {
         const addUploadPath = pathForAdminUploadUrl(url);
-        const uploadFileName = fileNameForBlobUrl(url);
+        const uploadFileName = fileNameForStorageUrl(url);
         return <Fragment key={url}>
           <Link href={addUploadPath}>
             <ImageTiny

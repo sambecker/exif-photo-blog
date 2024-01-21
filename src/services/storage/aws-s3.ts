@@ -22,10 +22,10 @@ export const awsS3Client = () => new S3Client({
   },
 });
 
+const urlForKey = (key?: string) => `${AWS_S3_BASE_URL}/${key}`;
+
 export const isUrlFromAwsS3 = (url: string) =>
   url.startsWith(AWS_S3_BASE_URL);
-
-const urlForKey = (key?: string) => `${AWS_S3_BASE_URL}/${key}`;
 
 export const awsS3PutObjectCommandForKey = (Key: string) =>
   new PutObjectCommand({ Bucket: AWS_S3_BUCKET, Key, ACL: 'public-read' });
@@ -49,16 +49,16 @@ export const awsS3Copy = async (
     .then(() => urlForKey(fileNameDestination));
 };
 
-export const awsS3Delete = async (Key: string) => {
-  awsS3Client().send(new DeleteObjectCommand({
-    Bucket: AWS_S3_BUCKET,
-    Key,
-  }));
-};
-
 export const awsS3List = async (Prefix: string) =>
   awsS3Client().send(new ListObjectsCommand({
     Bucket: AWS_S3_BUCKET,
     Prefix,
   }))
     .then((data) => data.Contents?.map(({ Key }) => urlForKey(Key)) ?? []);
+
+export const awsS3Delete = async (Key: string) => {
+  awsS3Client().send(new DeleteObjectCommand({
+    Bucket: AWS_S3_BUCKET,
+    Key,
+  }));
+};
