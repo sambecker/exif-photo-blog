@@ -40,8 +40,8 @@ export default function SiteChecklistClient({
   isPriorityOrderEnabled,
   isPublicApiEnabled,
   isOgTextBottomAligned,
-  showRefreshButton,
   gridAspectRatio,
+  showRefreshButton,
   secret,
 }: ConfigChecklistStatus & {
   showRefreshButton?: boolean
