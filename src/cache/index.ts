@@ -24,7 +24,7 @@ import {
   getPhotosNearId,
 } from '@/services/vercel-postgres';
 import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
-import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
+import { getStoragePhotoUrls, getStorageUploadUrls } from '@/services/storage';
 import type { Session } from 'next-auth';
 import { createCameraKey } from '@/camera';
 import { PATHS_ADMIN } from '@/site/paths';
@@ -218,15 +218,17 @@ export const getPhotoNoStore = (...args: Parameters<typeof getPhoto>) => {
   return getPhoto(...args);
 };
 
-export const getBlobUploadUrlsNoStore: typeof getBlobUploadUrls = (...args) => {
-  unstable_noStore();
-  return getBlobUploadUrls(...args);
-};
+export const getStorageUploadUrlsNoStore: typeof getStorageUploadUrls =
+  (...args) => {
+    unstable_noStore();
+    return getStorageUploadUrls(...args);
+  };
 
-export const getBlobPhotoUrlsNoStore: typeof getBlobPhotoUrls = (...args) => {
-  unstable_noStore();
-  return getBlobPhotoUrls(...args);
-};
+export const getStoragePhotoUrlsNoStore: typeof getStoragePhotoUrls =
+  (...args) => {
+    unstable_noStore();
+    return getStoragePhotoUrls(...args);
+  };
 
 export const getImageCacheHeadersForAuth = (session: Session | null) => {
   return {

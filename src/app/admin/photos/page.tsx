@@ -14,7 +14,7 @@ import {
 import { titleForPhoto } from '@/photo';
 import MorePhotos from '@/photo/MorePhotos';
 import {
-  getBlobPhotoUrlsNoStore,
+  getStoragePhotoUrlsNoStore,
   getPhotosCached,
   getPhotosCountIncludingHiddenCached,
 } from '@/cache';
@@ -26,7 +26,7 @@ import {
 import AdminGrid from '@/admin/AdminGrid';
 import DeleteButton from '@/admin/DeleteButton';
 import EditButton from '@/admin/EditButton';
-import BlobUrls from '@/admin/BlobUrls';
+import StorageUrls from '@/admin/StorageUrls';
 import { PRO_MODE_ENABLED } from '@/site/config';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import IconGrSync from '@/site/IconGrSync';
@@ -45,7 +45,7 @@ export default async function AdminPhotosPage({
   ] = await Promise.all([
     getPhotosCached({ includeHidden: true, sortBy: 'createdAt', limit }),
     getPhotosCountIncludingHiddenCached(),
-    DEBUG_PHOTO_BLOBS ? getBlobPhotoUrlsNoStore() : [],
+    DEBUG_PHOTO_BLOBS ? getStoragePhotoUrlsNoStore() : [],
   ]);
 
   const showMorePhotos = count > photos.length;
@@ -60,7 +60,7 @@ export default async function AdminPhotosPage({
               'border-b pb-6',
               'border-gray-200 dark:border-gray-700',
             )}>
-              <BlobUrls
+              <StorageUrls
                 title={`Photo Blobs (${blobPhotoUrls.length})`}
                 urls={blobPhotoUrls}
               />

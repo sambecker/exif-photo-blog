@@ -6,6 +6,11 @@ const VERCEL_BLOB_HOSTNAME = VERCEL_BLOB_STORE_ID
   ? `${VERCEL_BLOB_STORE_ID}.public.blob.vercel-storage.com`
   : undefined;
 
+const CLOUDFLARE_R2_HOSTNAME =
+  process.env.NEXT_PUBLIC_CLOUDFLARE_R2_DEV_SUBDOMAIN
+    ? `${process.env.NEXT_PUBLIC_CLOUDFLARE_R2_DEV_SUBDOMAIN}.r2.dev`
+    : undefined;
+
 const AWS_S3_HOSTNAME =
   process.env.NEXT_PUBLIC_AWS_S3_BUCKET &&
   process.env.NEXT_PUBLIC_AWS_S3_REGION
@@ -28,6 +33,7 @@ const nextConfig = {
     imageSizes: [200],
     remotePatterns: []
       .concat(createRemotePattern(VERCEL_BLOB_HOSTNAME))
+      .concat(createRemotePattern(CLOUDFLARE_R2_HOSTNAME))
       .concat(createRemotePattern(AWS_S3_HOSTNAME)),
     minimumCacheTTL: 31536000,
   },
