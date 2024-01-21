@@ -71,7 +71,42 @@ Installation
 - `NEXT_PUBLIC_GRID_ASPECT_RATIO = 1.5` sets aspect ratio for grid tiles (defaults to `1`—setting to `0` removes the constraint)
 - `NEXT_PUBLIC_OG_TEXT_ALIGNMENT = BOTTOM` keeps OG image text bottom aligned (default is top)
 
-### Setup alternate storage
+### Configure alternate storage
+
+Only one storage adapter—Vercel Blob, Cloudflare R2, or AWS S3—can be used at a time. Ideally, this is configured before photos are uploaded (see [Issue #34](https://github.com/sambecker/exif-photo-blog/issues/34) for migration considerations).
+
+If you have multiple adapters, you can set one as preferred by storing `aws-s3`, `cloudflare-r2`, or `vercel-blob` in `NEXT_PUBLIC_STORAGE_PREFERENCE`.
+
+#### Cloudflare R2
+
+1. Setup bucket
+   - [Create R2 bucket](https://developers.cloudflare.com/r2/) with default settings
+   - Setup CORS under bucket settings:
+   ```json
+   [{
+       "AllowedHeaders": ["*"]
+       "AllowedOrigins": [
+          "http://localhost:3000",
+          "https://{VERCEL_PROJECT_NAME}*.vercel.app",
+          "{PRODUCTION_DOMAIN}"
+       ],
+       "AllowedMethods": [
+         "GET",
+         "PUT"
+       ],
+   }]
+   ```
+   - Enable R2.dev subdomain (necessary in order to serve files publicly without a custom domain)
+   - Store configuration:
+     - `NEXT_PUBLIC_CLOUDFLARE_R2_BUCKET`: bucket name
+     - `NEXT_PUBLIC_CLOUDFLARE_R2_ACCOUNT_ID`: account id (found on R2 overview page)
+     - `NEXT_PUBLIC_CLOUDFLARE_R2_DEV_SUBDOMAIN`: r2.dev subdomain, e.g., "pub-jf90908..."
+2. Setup credentials
+   - Create API token by selecting "Manage R2 API Tokens," and clicking "Create API Token"
+   - Select "Object Read & Write," choose "Apply to specific buckets only," and select the bucket created in Step 1.
+   - Store credentials (⚠️ _Ensure access keys are not prefixed with `NEXT_PUBLIC`_):
+     - `CLOUDFLARE_R2_ACCESS_KEY`
+     - `CLOUDFLARE_R2_SECRET_ACCESS_KEY`
 
 #### AWS S3
 

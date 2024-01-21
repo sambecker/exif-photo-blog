@@ -24,7 +24,7 @@ import {
   getPhotosNearId,
 } from '@/services/vercel-postgres';
 import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
-import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/blob';
+import { getBlobPhotoUrls, getBlobUploadUrls } from '@/services/storage';
 import type { Session } from 'next-auth';
 import { createCameraKey } from '@/camera';
 import { PATHS_ADMIN } from '@/site/paths';

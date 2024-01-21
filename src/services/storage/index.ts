@@ -10,16 +10,44 @@ import {
   awsS3Copy,
   awsS3Delete,
   awsS3List,
-  awsS3UploadFromClient,
   isUrlFromAwsS3,
 } from './aws-s3';
-import { HAS_AWS_S3_STORAGE, HAS_AWS_S3_STORAGE_CLIENT } from '@/site/config';
+import {
+  STORAGE_PREFERENCE,
+  HAS_AWS_S3_STORAGE,
+} from '@/site/config';
+import { generateNanoid } from '@/utility/nanoid';
+import { CLOUDFLARE_R2_BASE_URL_PUBLIC } from './cloudflare-r2';
+
+export const generateBlobId = () => generateNanoid(16);
+
+export type StorageType =
+  'vercel-blob' |
+  'aws-s3' |
+  'cloudflare-r2';
+
+export const labelForStorage = (type: StorageType): string => {
+  switch (type) {
+  case 'vercel-blob': return 'Vercel Blob';
+  case 'cloudflare-r2': return 'Cloudflare R2';
+  case 'aws-s3': return 'AWS S3';
+  }
+};
+
+const blobBaseUrlForStorage = (type: StorageType) => {
+  switch (type) {
+  case 'vercel-blob': return VERCEL_BLOB_BASE_URL;
+  case 'cloudflare-r2': return CLOUDFLARE_R2_BASE_URL_PUBLIC;
+  case 'aws-s3': return AWS_S3_BASE_URL;
+  }
+};
+
+export const BLOB_BASE_URL = blobBaseUrlForStorage(STORAGE_PREFERENCE);
+
+const API_PATH_PRESIGNED_URL = '/api/storage/presigned-url';
 
 const PREFIX_UPLOAD = 'upload';
 const PREFIX_PHOTO = 'photo';
-const BLOB_BASE_URL = HAS_AWS_S3_STORAGE_CLIENT
-  ? AWS_S3_BASE_URL
-  : VERCEL_BLOB_BASE_URL;
 
 const REGEX_UPLOAD_PATH = new RegExp(
   `(?:${PREFIX_UPLOAD})\.[a-z]{1,4}`,
@@ -46,11 +74,31 @@ export const isUploadPathnameValid = (pathname?: string) =>
 const getFileNameFromBlobUrl = (url: string) =>
   (new URL(url).pathname.match(/\/(.+)$/)?.[1]) ?? '';
 
+export const uploadFromClientViaPresignedUrl = async (
+  file: File | Blob,
+  fileName: string,
+  extension: string,
+  addRandomSuffix?: boolean,
+) => {
+  const key = addRandomSuffix
+    ? `${fileName}-${generateBlobId()}.${extension}`
+    : `${fileName}.${extension}`;
+
+  const url = await fetch(`${API_PATH_PRESIGNED_URL}/${key}`)
+    .then((response) => response.text());
+
+  return fetch(url, { method: 'PUT', body: file })
+    .then(() => `${BLOB_BASE_URL}/${key}`);
+};
+
 export const uploadPhotoFromClient = async (
   file: File | Blob,
   extension = 'jpg',
-) => HAS_AWS_S3_STORAGE_CLIENT
-  ? awsS3UploadFromClient(file, PREFIX_UPLOAD, extension, true)
+) => (
+  STORAGE_PREFERENCE === 'cloudflare-r2' ||
+  STORAGE_PREFERENCE === 'aws-s3'
+)
+  ? uploadFromClientViaPresignedUrl(file, PREFIX_UPLOAD, extension, true)
   : vercelBlobUploadFromClient(file, `${PREFIX_UPLOAD}.${extension}`);
 
 export const convertUploadToPhoto = async (

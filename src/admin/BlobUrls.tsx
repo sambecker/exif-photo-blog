@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import AdminGrid from './AdminGrid';
 import Link from 'next/link';
 import ImageTiny from '@/components/ImageTiny';
-import { fileNameForBlobUrl } from '@/services/blob';
+import { fileNameForBlobUrl } from '@/services/storage';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import { deleteBlobPhotoAction } from '@/photo/actions';
 import DeleteButton from './DeleteButton';

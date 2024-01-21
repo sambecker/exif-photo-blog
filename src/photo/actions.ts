@@ -17,7 +17,7 @@ import { redirect } from 'next/navigation';
 import {
   convertUploadToPhoto,
   deleteBlobUrl,
-} from '@/services/blob';
+} from '@/services/storage';
 import {
   revalidateAdminPaths,
   revalidateAllKeysAndPaths,

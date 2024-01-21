@@ -1,7 +1,7 @@
 import {
   getExtensionFromBlobUrl,
   getIdFromBlobUrl,
-} from '@/services/blob';
+} from '@/services/storage';
 import { convertExifToFormData } from '@/photo/form';
 import {
   getFujifilmSimulationFromMakerNote,

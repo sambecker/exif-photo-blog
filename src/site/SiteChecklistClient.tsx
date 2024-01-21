@@ -19,12 +19,15 @@ import Checklist from '@/components/Checklist';
 import { toastSuccess } from '@/toast';
 import { ConfigChecklistStatus } from './config';
 import StatusIcon from '@/components/StatusIcon';
+import { labelForStorage } from '@/services/storage';
 
 export default function SiteChecklistClient({
   hasPostgres,
-  hasBlob,
-  hasVercelBlob,
+  hasStorage,
+  hasVercelBlobStorage,
+  hasCloudflareR2Storage,
   hasAwsS3Storage,
+  storagePreference,
   hasAuth,
   hasAdminUser,
   hasTitle,
@@ -139,14 +142,17 @@ export default function SiteChecklistClient({
           and connect to project
         </ChecklistRow>
         <ChecklistRow
-          title="Setup blob store (one of the following)"
-          status={hasBlob}
+          title={hasStorage
+            // eslint-disable-next-line max-len
+            ? `Setup storage (preferred adapter: ${labelForStorage(storagePreference)})`
+            : 'Setup storage (one of the following)'}
+          status={hasStorage}
           isPending={isPendingPage}
         >
           {renderSubStatus(
-            hasVercelBlob ? 'checked' : 'optional',
+            hasVercelBlobStorage ? 'checked' : 'optional',
             <>
-              Vercel Blob:
+              {labelForStorage('vercel-blob')}:
               {' '}
               {renderLink(
                 // eslint-disable-next-line max-len
@@ -158,9 +164,20 @@ export default function SiteChecklistClient({
             </>,
           )}
           {renderSubStatus(
+            hasCloudflareR2Storage ? 'checked' : 'optional',
+            <>
+              {labelForStorage('cloudflare-r2')}:
+              {' '}
+              {renderLink(
+                'https://github.com/sambecker/exif-photo-blog#cloudflare-r2',
+                'create/configure bucket',
+              )}
+            </>
+          )}
+          {renderSubStatus(
             hasAwsS3Storage ? 'checked' : 'optional',
             <>
-              AWS S3:
+              {labelForStorage('aws-s3')}:
               {' '}
               {renderLink(
                 'https://github.com/sambecker/exif-photo-blog#aws-s3',
