@@ -10,7 +10,7 @@ import { clsx } from 'clsx/lite';
 import { pathForAdminUploadUrl } from '@/site/paths';
 import AddButton from './AddButton';
 
-export default function BlobUrls({
+export default function StorageUrls({
   title,
   urls,
 }: {

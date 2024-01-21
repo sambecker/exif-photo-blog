@@ -3,7 +3,9 @@ import {
   ListObjectsCommand,
   PutObjectCommand,
   DeleteObjectCommand,
+  CopyObjectCommand,
 } from '@aws-sdk/client-s3';
+import { generateStorageId } from '.';
 
 const CLOUDFLARE_R2_BUCKET =
   process.env.NEXT_PUBLIC_CLOUDFLARE_R2_BUCKET ?? '';
@@ -43,6 +45,24 @@ export const isUrlFromCloudflareR2 = (url: string) =>
 
 export const cloudflareR2PutObjectCommandForKey = (Key: string) =>
   new PutObjectCommand({ Bucket: CLOUDFLARE_R2_BUCKET, Key });
+
+export const cloudflareR2Copy = async (
+  fileNameSource: string,
+  fileNameDestination: string,
+  addRandomSuffix?: boolean,
+) => {
+  const name = fileNameSource.split('.')[0];
+  const extension = fileNameSource.split('.')[1];
+  const Key = addRandomSuffix
+    ? `${name}-${generateStorageId()}.${extension}`
+    : fileNameDestination;
+  return cloudflareR2Client().send(new CopyObjectCommand({
+    Bucket: CLOUDFLARE_R2_BUCKET,
+    CopySource: `${CLOUDFLARE_R2_BUCKET}/${fileNameSource}`,
+    Key,
+  }))
+    .then(() => urlForKey(fileNameDestination));
+};
 
 export const cloudflareR2List = async (Prefix: string) =>
   cloudflareR2Client().send(new ListObjectsCommand({

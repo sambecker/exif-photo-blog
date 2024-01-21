@@ -5,7 +5,7 @@ import {
   ListObjectsCommand,
   PutObjectCommand,
 } from '@aws-sdk/client-s3';
-import { generateBlobId } from '.';
+import { generateStorageId } from '.';
 
 const AWS_S3_BUCKET = process.env.NEXT_PUBLIC_AWS_S3_BUCKET ?? '';
 const AWS_S3_REGION = process.env.NEXT_PUBLIC_AWS_S3_REGION ?? '';
@@ -38,7 +38,7 @@ export const awsS3Copy = async (
   const name = fileNameSource.split('.')[0];
   const extension = fileNameSource.split('.')[1];
   const Key = addRandomSuffix
-    ? `${name}-${generateBlobId()}.${extension}`
+    ? `${name}-${generateStorageId()}.${extension}`
     : fileNameDestination;
   return awsS3Client().send(new CopyObjectCommand({
     Bucket: AWS_S3_BUCKET,

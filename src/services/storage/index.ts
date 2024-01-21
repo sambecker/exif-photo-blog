@@ -21,13 +21,14 @@ import {
 import { generateNanoid } from '@/utility/nanoid';
 import {
   CLOUDFLARE_R2_BASE_URL_PUBLIC,
+  cloudflareR2Copy,
   cloudflareR2Delete,
   cloudflareR2List,
   isUrlFromCloudflareR2,
 } from './cloudflare-r2';
 import { PATH_API_PRESIGNED_URL } from '@/site/paths';
 
-export const generateBlobId = () => generateNanoid(16);
+export const generateStorageId = () => generateNanoid(16);
 
 export type StorageType =
   'vercel-blob' |
@@ -42,7 +43,7 @@ export const labelForStorage = (type: StorageType): string => {
   }
 };
 
-export const blobBaseUrlForStorage = (type: StorageType) => {
+export const baseUrlForStorage = (type: StorageType) => {
   switch (type) {
   case 'vercel-blob': return VERCEL_BLOB_BASE_URL;
   case 'cloudflare-r2': return CLOUDFLARE_R2_BASE_URL_PUBLIC;
@@ -93,7 +94,7 @@ export const getIdFromStorageUrl = (url: string) =>
 export const isUploadPathnameValid = (pathname?: string) =>
   pathname?.match(REGEX_UPLOAD_PATH);
 
-const getFileNameFromBlobUrl = (url: string) =>
+const getFileNameFromStorageUrl = (url: string) =>
   (new URL(url).pathname.match(/\/(.+)$/)?.[1]) ?? '';
 
 export const uploadFromClientViaPresignedUrl = async (
@@ -103,14 +104,14 @@ export const uploadFromClientViaPresignedUrl = async (
   addRandomSuffix?: boolean,
 ) => {
   const key = addRandomSuffix
-    ? `${fileName}-${generateBlobId()}.${extension}`
+    ? `${fileName}-${generateStorageId()}.${extension}`
     : `${fileName}.${extension}`;
 
   const url = await fetch(`${PATH_API_PRESIGNED_URL}/${key}`)
     .then((response) => response.text());
 
   return fetch(url, { method: 'PUT', body: file })
-    .then(() => `${blobBaseUrlForStorage(STORAGE_PREFERENCE)}/${key}`);
+    .then(() => `${baseUrlForStorage(STORAGE_PREFERENCE)}/${key}`);
 };
 
 export const uploadPhotoFromClient = async (
@@ -131,45 +132,74 @@ export const convertUploadToPhoto = async (
   const fileExtension = getExtensionFromStorageUrl(uploadUrl);
   const photoUrl = `${fileName}.${fileExtension ?? 'jpg'}`;
 
-  const useAwsS3 = HAS_AWS_S3_STORAGE && isUrlFromAwsS3(uploadUrl);
+  const storageType = storageTypeFromUrl(uploadUrl);
 
-  const url = await (useAwsS3
-    ? awsS3Copy(uploadUrl, photoUrl, photoId === undefined)
-    : vercelBlobCopy(uploadUrl, photoUrl, photoId === undefined));
+  let url: string | undefined;
 
+  // Copy file
+  switch (storageType) {
+  case 'vercel-blob':
+    url = await vercelBlobCopy(uploadUrl, photoUrl, photoId === undefined);
+    break;
+  case 'cloudflare-r2':
+    url = await cloudflareR2Copy(
+      getFileNameFromStorageUrl(uploadUrl),
+      photoUrl,
+      photoId === undefined,
+    );
+    break;
+  case 'aws-s3':
+    url = await awsS3Copy(uploadUrl, photoUrl, photoId === undefined);
+    break;
+  }
+
+  // If successful, delete original file
   if (url) {
-    await (useAwsS3
-      ? awsS3Delete(getFileNameFromBlobUrl(uploadUrl))
-      : vercelBlobDelete(uploadUrl));
+    switch (storageType) {
+    case 'vercel-blob':
+      await vercelBlobDelete(uploadUrl);
+      break;
+    case 'cloudflare-r2':
+      await cloudflareR2Delete(getFileNameFromStorageUrl(uploadUrl));
+      break;
+    case 'aws-s3':
+      await awsS3Delete(getFileNameFromStorageUrl(uploadUrl));
+      break;
+    }
   }
 
   return url;
 };
 
-export const deleteBlobUrl = (url: string) => {
+export const deleteStorageUrl = (url: string) => {
   switch (storageTypeFromUrl(url)) {
-  case 'vercel-blob': return vercelBlobDelete(url);
-  case 'cloudflare-r2': return cloudflareR2Delete(getFileNameFromBlobUrl(url));
-  case 'aws-s3': return awsS3Delete(getFileNameFromBlobUrl(url));
+  case 'vercel-blob':
+    return vercelBlobDelete(url);
+  case 'cloudflare-r2':
+    return cloudflareR2Delete(getFileNameFromStorageUrl(url));
+  case 'aws-s3':
+    return awsS3Delete(getFileNameFromStorageUrl(url));
   }
 };
 
-export const getBlobUploadUrls = async (): Promise<string[]> => {
+const getStorageUrlsForPrefix = async (prefix = ''): Promise<string[]> => {
   const urls: string[] = [];
 
   if (HAS_VERCEL_BLOB_STORAGE) {
-    urls.push(...await vercelBlobList(`${PREFIX_UPLOAD}-`));
+    urls.push(...await vercelBlobList(prefix));
   }
   if (HAS_AWS_S3_STORAGE) {
-    urls.push(...await awsS3List(`${PREFIX_UPLOAD}-`));
+    urls.push(...await awsS3List(prefix));
   }
   if (HAS_CLOUDFLARE_R2_STORAGE) {
-    urls.push(...await cloudflareR2List(`${PREFIX_UPLOAD}-`));
+    urls.push(...await cloudflareR2List(prefix));
   }
 
   return urls;
 };
 
-export const getBlobPhotoUrls = (): Promise<string[]> => HAS_AWS_S3_STORAGE
-  ? awsS3List(`${PREFIX_PHOTO}-`)
-  : vercelBlobList(`${PREFIX_PHOTO}-`);
+export const getStorageUploadUrls = () =>
+  getStorageUrlsForPrefix(`${PREFIX_UPLOAD}-`);
+
+export const getStoragePhotoUrls = () =>
+  getStorageUrlsForPrefix(`${PREFIX_PHOTO}-`);
