@@ -5,7 +5,7 @@ import {
   ListObjectsCommand,
   PutObjectCommand,
 } from '@aws-sdk/client-s3';
-import { generateStorageId } from '.';
+import { StorageListResponse, generateStorageId } from '.';
 
 const AWS_S3_BUCKET = process.env.NEXT_PUBLIC_AWS_S3_BUCKET ?? '';
 const AWS_S3_REGION = process.env.NEXT_PUBLIC_AWS_S3_REGION ?? '';
@@ -26,8 +26,8 @@ export const awsS3Client = () => new S3Client({
 
 const urlForKey = (key?: string) => `${AWS_S3_BASE_URL}/${key}`;
 
-export const isUrlFromAwsS3 = (url: string) =>
-  AWS_S3_BASE_URL && url.startsWith(AWS_S3_BASE_URL);
+export const isUrlFromAwsS3 = (url?: string) =>
+  AWS_S3_BASE_URL && url?.startsWith(AWS_S3_BASE_URL);
 
 export const awsS3PutObjectCommandForKey = (Key: string) =>
   new PutObjectCommand({ Bucket: AWS_S3_BUCKET, Key, ACL: 'public-read' });
@@ -51,12 +51,17 @@ export const awsS3Copy = async (
     .then(() => urlForKey(fileNameDestination));
 };
 
-export const awsS3List = async (Prefix: string) =>
+export const awsS3List = async (
+  Prefix: string,
+): Promise<StorageListResponse> =>
   awsS3Client().send(new ListObjectsCommand({
     Bucket: AWS_S3_BUCKET,
     Prefix,
   }))
-    .then((data) => data.Contents?.map(({ Key }) => urlForKey(Key)) ?? []);
+    .then((data) => data.Contents?.map(({ Key, LastModified }) => ({
+      url: urlForKey(Key),
+      uploadedAt: LastModified,
+    })) ?? []);
 
 export const awsS3Delete = async (Key: string) => {
   awsS3Client().send(new DeleteObjectCommand({
