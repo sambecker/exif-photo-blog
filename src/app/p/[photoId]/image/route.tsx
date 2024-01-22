@@ -1,5 +1,6 @@
-import { auth } from '@/auth';
-import { getImageCacheHeadersForAuth, getPhotoCached } from '@/cache';
+// import { auth } from '@/auth';
+// import { getImageCacheHeadersForAuth, getPhotoCached } from '@/cache';
+import { getPhotoCached } from '@/cache';
 import { IMAGE_OG_DIMENSION } from '@/photo/image-response';
 import PhotoImageResponse from '@/photo/image-response/PhotoImageResponse';
 import { getIBMPlexMonoMedium } from '@/site/font';
@@ -14,11 +15,11 @@ export async function GET(
   const [
     photo,
     { fontFamily, fonts },
-    headers,
+    // headers,
   ] = await Promise.all([
     getPhotoCached(context.params.photoId),
     getIBMPlexMonoMedium(),
-    getImageCacheHeadersForAuth(await auth()),
+    // getImageCacheHeadersForAuth(await auth()),
   ]);
   
   if (!photo) { return new Response('Photo not found', { status: 404 }); }
@@ -27,6 +28,6 @@ export async function GET(
   
   return new ImageResponse(
     <PhotoImageResponse {...{ photo, width, height, fontFamily }} />,
-    { width, height, fonts, headers },
+    { width, height, fonts },
   );
 }
