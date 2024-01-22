@@ -70,7 +70,7 @@ export default async function PhotoPage({
   const isPhotoFirst = photos.findIndex(p => p.id === photoId) === 0;
 
   // Warm OG image without waiting on response
-  fetch(absolutePathForPhotoImage(photo));
+  // fetch(absolutePathForPhotoImage(photo));
 
   return <>
     {children}
