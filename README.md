@@ -97,8 +97,8 @@ Only one storage adapter—Vercel Blob, Cloudflare R2, or AWS S3—can be used a
    ```
    - Enable public hosting by doing one of the following:
        - Select "Connect Custom Domain" and choose a Cloudflare domain
+       - OR
        - Select "Allow Access" from R2.dev subdomain
-   - Enable R2.dev subdomain (necessary in order to serve files publicly without a custom domain)
    - Store public configuration:
      - `NEXT_PUBLIC_CLOUDFLARE_R2_BUCKET`: bucket name
      - `NEXT_PUBLIC_CLOUDFLARE_R2_ACCOUNT_ID`: account id (found on R2 overview page)
