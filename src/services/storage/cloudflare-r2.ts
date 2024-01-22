@@ -40,8 +40,11 @@ const urlForKey = (key?: string, isPublic = true) => isPublic
   : `${CLOUDFLARE_R2_BASE_URL_PRIVATE}/${key}`;
 
 export const isUrlFromCloudflareR2 = (url: string) =>
-  url.startsWith(CLOUDFLARE_R2_BASE_URL_PRIVATE) ||
-  url.startsWith(CLOUDFLARE_R2_BASE_URL_PUBLIC);
+  Boolean(CLOUDFLARE_R2_BASE_URL_PRIVATE) &&
+  Boolean(CLOUDFLARE_R2_BASE_URL_PUBLIC) && (
+    url.startsWith(CLOUDFLARE_R2_BASE_URL_PRIVATE) ||
+    url.startsWith(CLOUDFLARE_R2_BASE_URL_PUBLIC)
+  );
 
 export const cloudflareR2PutObjectCommandForKey = (Key: string) =>
   new PutObjectCommand({ Bucket: CLOUDFLARE_R2_BUCKET, Key });

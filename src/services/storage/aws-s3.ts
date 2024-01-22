@@ -25,6 +25,7 @@ export const awsS3Client = () => new S3Client({
 const urlForKey = (key?: string) => `${AWS_S3_BASE_URL}/${key}`;
 
 export const isUrlFromAwsS3 = (url: string) =>
+  Boolean(AWS_S3_BASE_URL) &&
   url.startsWith(AWS_S3_BASE_URL);
 
 export const awsS3PutObjectCommandForKey = (Key: string) =>

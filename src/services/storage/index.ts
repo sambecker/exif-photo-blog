@@ -130,7 +130,7 @@ export const convertUploadToPhoto = async (
 ): Promise<string> => {
   const fileName = photoId ? `${PREFIX_PHOTO}-${photoId}` : `${PREFIX_PHOTO}`;
   const fileExtension = getExtensionFromStorageUrl(uploadUrl);
-  const photoUrl = `${fileName}.${fileExtension ?? 'jpg'}`;
+  const photoPath = `${fileName}.${fileExtension ?? 'jpg'}`;
 
   const storageType = storageTypeFromUrl(uploadUrl);
 
@@ -139,17 +139,17 @@ export const convertUploadToPhoto = async (
   // Copy file
   switch (storageType) {
   case 'vercel-blob':
-    url = await vercelBlobCopy(uploadUrl, photoUrl, photoId === undefined);
+    url = await vercelBlobCopy(uploadUrl, photoPath, photoId === undefined);
     break;
   case 'cloudflare-r2':
     url = await cloudflareR2Copy(
       getFileNameFromStorageUrl(uploadUrl),
-      photoUrl,
+      photoPath,
       photoId === undefined,
     );
     break;
   case 'aws-s3':
-    url = await awsS3Copy(uploadUrl, photoUrl, photoId === undefined);
+    url = await awsS3Copy(uploadUrl, photoPath, photoId === undefined);
     break;
   }
 
