@@ -30,6 +30,11 @@ import { PATH_API_PRESIGNED_URL } from '@/site/paths';
 
 export const generateStorageId = () => generateNanoid(16);
 
+export type StorageListResponse = {
+  url: string
+  uploadedAt?: Date
+}[];
+
 export type StorageType =
   'vercel-blob' |
   'aws-s3' |
@@ -182,8 +187,8 @@ export const deleteStorageUrl = (url: string) => {
   }
 };
 
-const getStorageUrlsForPrefix = async (prefix = ''): Promise<string[]> => {
-  const urls: string[] = [];
+const getStorageUrlsForPrefix = async (prefix = '') => {
+  const urls: StorageListResponse = [];
 
   if (HAS_VERCEL_BLOB_STORAGE) {
     urls.push(...await vercelBlobList(prefix));
@@ -195,7 +200,12 @@ const getStorageUrlsForPrefix = async (prefix = ''): Promise<string[]> => {
     urls.push(...await cloudflareR2List(prefix));
   }
 
-  return urls;
+  return urls
+    .sort((a, b) => {
+      if (!a.uploadedAt) { return 1; }
+      if (!b.uploadedAt) { return -1; }
+      return b.uploadedAt.getTime() - a.uploadedAt.getTime();
+    });
 };
 
 export const getStorageUploadUrls = () =>

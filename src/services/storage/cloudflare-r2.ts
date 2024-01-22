@@ -5,7 +5,7 @@ import {
   DeleteObjectCommand,
   CopyObjectCommand,
 } from '@aws-sdk/client-s3';
-import { generateStorageId } from '.';
+import { StorageListResponse, generateStorageId } from '.';
 
 const CLOUDFLARE_R2_BUCKET =
   process.env.NEXT_PUBLIC_CLOUDFLARE_R2_BUCKET ?? '';
@@ -42,12 +42,12 @@ const urlForKey = (key?: string, isPublic = true) => isPublic
   ? `${CLOUDFLARE_R2_BASE_URL_PUBLIC}/${key}`
   : `${CLOUDFLARE_R2_BASE_URL_PRIVATE}/${key}`;
 
-export const isUrlFromCloudflareR2 = (url: string) => (
+export const isUrlFromCloudflareR2 = (url?: string) => (
   CLOUDFLARE_R2_BASE_URL_PRIVATE &&
-  url.startsWith(CLOUDFLARE_R2_BASE_URL_PRIVATE)
+  url?.startsWith(CLOUDFLARE_R2_BASE_URL_PRIVATE)
 ) || (
   CLOUDFLARE_R2_BASE_URL_PUBLIC &&
-  url.startsWith(CLOUDFLARE_R2_BASE_URL_PUBLIC)
+  url?.startsWith(CLOUDFLARE_R2_BASE_URL_PUBLIC)
 );
 
 export const cloudflareR2PutObjectCommandForKey = (Key: string) =>
@@ -71,12 +71,17 @@ export const cloudflareR2Copy = async (
     .then(() => urlForKey(fileNameDestination));
 };
 
-export const cloudflareR2List = async (Prefix: string) =>
+export const cloudflareR2List = async (
+  Prefix: string,
+): Promise<StorageListResponse> =>
   cloudflareR2Client().send(new ListObjectsCommand({
     Bucket: CLOUDFLARE_R2_BUCKET,
     Prefix,
   }))
-    .then((data) => data.Contents?.map(({ Key }) => urlForKey(Key)) ?? []);
+    .then((data) => data.Contents?.map(({ Key, LastModified }) => ({
+      url: urlForKey(Key),
+      uploadedAt: LastModified,
+    })) ?? []);
 
 export const cloudflareR2Delete = async (Key: string) => {
   cloudflareR2Client().send(new DeleteObjectCommand({

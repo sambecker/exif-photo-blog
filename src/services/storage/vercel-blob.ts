@@ -10,9 +10,9 @@ export const VERCEL_BLOB_BASE_URL = VERCEL_BLOB_STORE_ID
   ? `https://${VERCEL_BLOB_STORE_ID}.public.blob.vercel-storage.com`
   : undefined;
 
-export const isUrlFromVercelBlob = (url: string) =>
+export const isUrlFromVercelBlob = (url?: string) =>
   VERCEL_BLOB_BASE_URL &&
-  url.startsWith(VERCEL_BLOB_BASE_URL);
+  url?.startsWith(VERCEL_BLOB_BASE_URL);
 
 export const vercelBlobUploadFromClient = async (
   file: File | Blob,
@@ -46,4 +46,7 @@ export const vercelBlobCopy = (
 export const vercelBlobDelete = (fileName: string) => del(fileName);
 
 export const vercelBlobList = (prefix: string) => list({ prefix })
-  .then(({ blobs }) => blobs.map(({ url }) => url));
+  .then(({ blobs }) => blobs.map(({ url, uploadedAt }) => ({
+    url,
+    uploadedAt,
+  })));
