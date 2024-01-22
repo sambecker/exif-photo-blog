@@ -40,7 +40,7 @@ export const HAS_VERCEL_BLOB_STORAGE =
 export const HAS_CLOUDFLARE_R2_STORAGE_CLIENT =
   (process.env.NEXT_PUBLIC_CLOUDFLARE_R2_BUCKET ?? '').length > 0 &&
   (process.env.NEXT_PUBLIC_CLOUDFLARE_R2_ACCOUNT_ID ?? '').length > 0 &&
-  (process.env.NEXT_PUBLIC_CLOUDFLARE_R2_DEV_SUBDOMAIN ?? '').length > 0;
+  (process.env.NEXT_PUBLIC_CLOUDFLARE_R2_PUBLIC_DOMAIN ?? '').length > 0;
 export const HAS_CLOUDFLARE_R2_STORAGE =
   HAS_CLOUDFLARE_R2_STORAGE_CLIENT &&
   (process.env.CLOUDFLARE_R2_ACCESS_KEY ?? '').length > 0 &&
@@ -83,6 +83,7 @@ export const PUBLIC_API_ENABLED = process.env.NEXT_PUBLIC_PUBLIC_API === '1';
 export const SHOW_REPO_LINK = process.env.NEXT_PUBLIC_HIDE_REPO_LINK !== '1';
 export const SHOW_FILM_SIMULATIONS =
   process.env.NEXT_PUBLIC_HIDE_FILM_SIMULATIONS !== '1';
+export const SHOW_EXIF_DATA = process.env.NEXT_PUBLIC_HIDE_EXIF_DATA !== '1';
 export const GRID_ASPECT_RATIO = process.env.NEXT_PUBLIC_GRID_ASPECT_RATIO
   ? parseFloat(process.env.NEXT_PUBLIC_GRID_ASPECT_RATIO)
   : 1;
@@ -111,6 +112,7 @@ export const CONFIG_CHECKLIST_STATUS = {
   hasDomain: (process.env.NEXT_PUBLIC_SITE_DOMAIN ?? '').length > 0,
   showRepoLink: SHOW_REPO_LINK,
   showFilmSimulations: SHOW_FILM_SIMULATIONS,
+  showExifInfo: SHOW_EXIF_DATA,
   isProModeEnabled: PRO_MODE_ENABLED,
   isGeoPrivacyEnabled: GEO_PRIVACY_ENABLED,
   isPriorityOrderEnabled: PRIORITY_ORDER_ENABLED,
