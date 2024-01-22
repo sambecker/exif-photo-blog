@@ -40,7 +40,7 @@ export const HAS_VERCEL_BLOB_STORAGE =
 export const HAS_CLOUDFLARE_R2_STORAGE_CLIENT =
   (process.env.NEXT_PUBLIC_CLOUDFLARE_R2_BUCKET ?? '').length > 0 &&
   (process.env.NEXT_PUBLIC_CLOUDFLARE_R2_ACCOUNT_ID ?? '').length > 0 &&
-  (process.env.NEXT_PUBLIC_CLOUDFLARE_R2_DEV_SUBDOMAIN ?? '').length > 0;
+  (process.env.NEXT_PUBLIC_CLOUDFLARE_R2_PUBLIC_DOMAIN ?? '').length > 0;
 export const HAS_CLOUDFLARE_R2_STORAGE =
   HAS_CLOUDFLARE_R2_STORAGE_CLIENT &&
   (process.env.CLOUDFLARE_R2_ACCESS_KEY ?? '').length > 0 &&

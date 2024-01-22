@@ -83,24 +83,27 @@ Only one storage adapter—Vercel Blob, Cloudflare R2, or AWS S3—can be used a
    - Setup CORS under bucket settings:
    ```json
    [{
-       "AllowedHeaders": ["*"]
-       "AllowedOrigins": [
-          "http://localhost:3000",
-          "https://{VERCEL_PROJECT_NAME}*.vercel.app",
-          "{PRODUCTION_DOMAIN}"
-       ],
+       "AllowedHeaders": ["*"],
        "AllowedMethods": [
          "GET",
          "PUT"
        ],
+       "AllowedOrigins": [
+          "http://localhost:3000",
+          "https://{VERCEL_PROJECT_NAME}*.vercel.app",
+          "{PRODUCTION_DOMAIN}"
+       ]
    }]
    ```
+   - Enable public hosting by doing one of the following:
+       - Select "Connect Custom Domain" and choose a Cloudflare domain
+       - Select "Allow Access" from R2.dev subdomain
    - Enable R2.dev subdomain (necessary in order to serve files publicly without a custom domain)
-   - Store configuration:
+   - Store public configuration:
      - `NEXT_PUBLIC_CLOUDFLARE_R2_BUCKET`: bucket name
      - `NEXT_PUBLIC_CLOUDFLARE_R2_ACCOUNT_ID`: account id (found on R2 overview page)
-     - `NEXT_PUBLIC_CLOUDFLARE_R2_DEV_SUBDOMAIN`: r2.dev subdomain, e.g., "pub-jf90908..."
-2. Setup credentials
+     - `NEXT_PUBLIC_CLOUDFLARE_R2_PUBLIC_DOMAIN`: e.g., either "pub-jf90908...r2.dev" or "custom-domain.com"
+2. Setup private credentials
    - Create API token by selecting "Manage R2 API Tokens," and clicking "Create API Token"
    - Select "Object Read & Write," choose "Apply to specific buckets only," and select the bucket created in Step 1.
    - Store credentials (⚠️ _Ensure access keys are not prefixed with `NEXT_PUBLIC`_):
@@ -127,10 +130,10 @@ Only one storage adapter—Vercel Blob, Cloudflare R2, or AWS S3—can be used a
       "ExposeHeaders": []
      }]
      ```
-   - Store configuration 
+   - Store public configuration
      - `NEXT_PUBLIC_AWS_S3_BUCKET`: bucket name
      - `NEXT_PUBLIC_AWS_S3_REGION`: bucket region, e.g., "us-east-1"
-2. Setup credentials
+2. Setup private credentials
    - [Create IAM policy](https://console.aws.amazon.com/iam/home#/policies) using JSON editor:
      ```json
      {
