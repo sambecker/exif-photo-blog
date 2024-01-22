@@ -1,9 +1,7 @@
-// import { auth } from '@/auth';
-// import { getImageCacheHeadersForAuth, getPhotoCached } from '@/cache';
-// import { getPhotoCached } from '@/cache';
+import { auth } from '@/auth';
+import { getImageCacheHeadersForAuth, getPhotoCached } from '@/cache';
 import { IMAGE_OG_DIMENSION } from '@/photo/image-response';
 import PhotoImageResponse from '@/photo/image-response/PhotoImageResponse';
-import { getPhoto } from '@/services/vercel-postgres';
 import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/og';
 
@@ -18,9 +16,9 @@ export async function GET(
     { fontFamily, fonts },
     // headers,
   ] = await Promise.all([
-    getPhoto(context.params.photoId),
+    getPhotoCached(context.params.photoId),
     getIBMPlexMonoMedium(),
-    // getImageCacheHeadersForAuth(await auth()),
+    getImageCacheHeadersForAuth(await auth()),
   ]);
   
   if (!photo) { return new Response('Photo not found', { status: 404 }); }
