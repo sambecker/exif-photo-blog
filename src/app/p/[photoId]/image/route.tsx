@@ -1,8 +1,9 @@
 // import { auth } from '@/auth';
 // import { getImageCacheHeadersForAuth, getPhotoCached } from '@/cache';
-import { getPhotoCached } from '@/cache';
+// import { getPhotoCached } from '@/cache';
 import { IMAGE_OG_DIMENSION } from '@/photo/image-response';
 import PhotoImageResponse from '@/photo/image-response/PhotoImageResponse';
+import { getPhoto } from '@/services/vercel-postgres';
 import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/og';
 
@@ -17,7 +18,7 @@ export async function GET(
     { fontFamily, fonts },
     // headers,
   ] = await Promise.all([
-    getPhotoCached(context.params.photoId),
+    getPhoto(context.params.photoId),
     getIBMPlexMonoMedium(),
     // getImageCacheHeadersForAuth(await auth()),
   ]);

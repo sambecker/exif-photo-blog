@@ -1,5 +1,5 @@
-import { getPhotoCached } from '@/cache';
 import PhotoShareModal from '@/photo/PhotoShareModal';
+import { getPhoto } from '@/services/vercel-postgres';
 import { PATH_ROOT } from '@/site/paths';
 import { redirect } from 'next/navigation';
 
@@ -8,7 +8,7 @@ export default async function Share({
 }: {
   params: { photoId: string }
 }) {
-  const photo = await getPhotoCached(photoId);
+  const photo = await getPhoto(photoId);
 
   if (!photo) { return redirect(PATH_ROOT); }
 
