@@ -1,5 +1,4 @@
 import {
-  // GENERATE_STATIC_PARAMS_LIMIT,
   GRID_THUMBNAILS_TO_SHOW_MAX,
   descriptionForPhoto,
   titleForPhoto,
@@ -13,12 +12,6 @@ import {
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotoCached, getPhotosNearIdCached } from '@/cache';
-import { getPhotoIds } from '@/services/vercel-postgres';
-
-export async function generateStaticParams() {
-  const photos = await getPhotoIds({ limit: 10 });
-  return photos.map(id => ({ photoId: id }));
-}
 
 interface PhotoProps {
   params: { photoId: string }
@@ -68,9 +61,6 @@ export default async function PhotoPage({
   if (!photo) { redirect(PATH_ROOT); }
   
   const isPhotoFirst = photos.findIndex(p => p.id === photoId) === 0;
-
-  // Warm OG image without waiting on response
-  fetch(absolutePathForPhotoImage(photo));
 
   return <>
     {children}
