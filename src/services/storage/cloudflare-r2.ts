@@ -17,14 +17,17 @@ const CLOUDFLARE_R2_ACCESS_KEY =
   process.env.CLOUDFLARE_R2_ACCESS_KEY ?? '';
 const CLOUDFLARE_R2_SECRET_ACCESS_KEY =
   process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY ?? '';
-const CLOUDFLARE_R2_ENDPOINT =
-  `https://${CLOUDFLARE_R2_ACCOUNT_ID}.r2.cloudflarestorage.com`;
+const CLOUDFLARE_R2_ENDPOINT = CLOUDFLARE_R2_ACCOUNT_ID
+  ? `https://${CLOUDFLARE_R2_ACCOUNT_ID}.r2.cloudflarestorage.com`
+  : undefined;
 
-export const CLOUDFLARE_R2_BASE_URL_PUBLIC =
-  `https://${CLOUDFLARE_R2_PUBLIC_DOMAIN}`;
-
+export const CLOUDFLARE_R2_BASE_URL_PUBLIC = CLOUDFLARE_R2_PUBLIC_DOMAIN
+  ? `https://${CLOUDFLARE_R2_PUBLIC_DOMAIN}`
+  : undefined;
 export const CLOUDFLARE_R2_BASE_URL_PRIVATE =
-  `${CLOUDFLARE_R2_ENDPOINT}/${CLOUDFLARE_R2_BUCKET}`;
+  CLOUDFLARE_R2_ENDPOINT && CLOUDFLARE_R2_BUCKET
+    ? `${CLOUDFLARE_R2_ENDPOINT}/${CLOUDFLARE_R2_BUCKET}`
+    : undefined;
 
 export const cloudflareR2Client = () => new S3Client({
   region: 'auto',
@@ -39,12 +42,13 @@ const urlForKey = (key?: string, isPublic = true) => isPublic
   ? `${CLOUDFLARE_R2_BASE_URL_PUBLIC}/${key}`
   : `${CLOUDFLARE_R2_BASE_URL_PRIVATE}/${key}`;
 
-export const isUrlFromCloudflareR2 = (url: string) =>
-  Boolean(CLOUDFLARE_R2_BASE_URL_PRIVATE) &&
-  Boolean(CLOUDFLARE_R2_BASE_URL_PUBLIC) && (
-    url.startsWith(CLOUDFLARE_R2_BASE_URL_PRIVATE) ||
-    url.startsWith(CLOUDFLARE_R2_BASE_URL_PUBLIC)
-  );
+export const isUrlFromCloudflareR2 = (url: string) => (
+  CLOUDFLARE_R2_BASE_URL_PRIVATE &&
+  url.startsWith(CLOUDFLARE_R2_BASE_URL_PRIVATE)
+) || (
+  CLOUDFLARE_R2_BASE_URL_PUBLIC &&
+  url.startsWith(CLOUDFLARE_R2_BASE_URL_PUBLIC)
+);
 
 export const cloudflareR2PutObjectCommandForKey = (Key: string) =>
   new PutObjectCommand({ Bucket: CLOUDFLARE_R2_BUCKET, Key });
