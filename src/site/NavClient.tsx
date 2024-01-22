@@ -68,7 +68,7 @@ export default function NavClient({
                   showAdmin={showAdmin}
                 />
               </div>
-              <div className="hidden xs:block">
+              <div className="hidden xs:block text-right text-balance">
                 {renderLink(SITE_DOMAIN_OR_TITLE, PATH_ROOT)}
               </div>
             </div>]
