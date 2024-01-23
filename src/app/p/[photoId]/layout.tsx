@@ -11,7 +11,16 @@ import {
   absolutePathForPhotoImage,
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotoCached, getPhotosNearIdCached } from '@/cache';
+import {
+  getPhotoCached,
+  getPhotosNearIdCached,
+} from '@/cache';
+import { getPhotoIds } from '@/services/vercel-postgres';
+
+export async function generateStaticParams() {
+  const photos = await getPhotoIds({ limit: 10 });
+  return photos.map(id => ({ photoId: id }));
+}
 
 interface PhotoProps {
   params: { photoId: string }
