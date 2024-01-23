@@ -1,5 +1,6 @@
 import {
   GENERATE_STATIC_PARAMS_LIMIT,
+  GRID_THUMBNAILS_TO_SHOW_MAX,
   descriptionForPhoto,
   titleForPhoto,
 } from '@/photo';
@@ -11,10 +12,7 @@ import {
   absolutePathForPhotoImage,
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import {
-  getPhotoCached,
-  // getPhotosNearIdCached,
-} from '@/cache';
+import { getPhotosNearIdCached } from '@/cache';
 import { getPhotoIds } from '@/services/vercel-postgres';
 
 export async function generateStaticParams() {
@@ -29,7 +27,12 @@ interface PhotoProps {
 export async function generateMetadata({
   params: { photoId },
 }:PhotoProps): Promise<Metadata> {
-  const photo = await getPhotoCached(photoId);
+  const photos = await getPhotosNearIdCached(
+    photoId,
+    GRID_THUMBNAILS_TO_SHOW_MAX + 2,
+  );
+
+  const photo = photos.find(p => p.id === photoId);
 
   if (!photo) { return {}; }
 
@@ -60,31 +63,28 @@ export default async function PhotoPage({
   params: { photoId },
   children,
 }: PhotoProps & { children: React.ReactNode }) {
-  // const photos = await getPhotosNearIdCached(
-  //   photoId,
-  //   GRID_THUMBNAILS_TO_SHOW_MAX + 2,
-  // );
+  const photos = await getPhotosNearIdCached(
+    photoId,
+    GRID_THUMBNAILS_TO_SHOW_MAX + 2,
+  );
 
-  const photo = await getPhotoCached(photoId);
-
-  // const photo = photos.find(p => p.id === photoId);
+  const photo = photos.find(p => p.id === photoId);
 
   if (!photo) { redirect(PATH_ROOT); }
   
-  // const isPhotoFirst = photos.findIndex(p => p.id === photoId) === 0;
+  const isPhotoFirst = photos.findIndex(p => p.id === photoId) === 0;
 
   return <>
     {children}
     <PhotoDetailPage
       photo={photo}
-      // photos={photos}
-      photos={[]}
-      // photosGrid={photos.slice(
-      //   isPhotoFirst ? 1 : 2,
-      //   isPhotoFirst
-      //     ? GRID_THUMBNAILS_TO_SHOW_MAX + 1
-      //     : GRID_THUMBNAILS_TO_SHOW_MAX + 2,
-      // )}
+      photos={photos}
+      photosGrid={photos.slice(
+        isPhotoFirst ? 1 : 2,
+        isPhotoFirst
+          ? GRID_THUMBNAILS_TO_SHOW_MAX + 1
+          : GRID_THUMBNAILS_TO_SHOW_MAX + 2,
+      )}
     />
   </>;
 }
