@@ -1,5 +1,5 @@
 import {
-  GRID_THUMBNAILS_TO_SHOW_MAX,
+  // GRID_THUMBNAILS_TO_SHOW_MAX,
   descriptionForPhoto,
   titleForPhoto,
 } from '@/photo';
@@ -13,7 +13,7 @@ import {
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import {
   getPhotoCached,
-  getPhotosNearIdCached,
+  // getPhotosNearIdCached,
 } from '@/cache';
 import { getPhotoIds } from '@/services/vercel-postgres';
 
@@ -60,28 +60,31 @@ export default async function PhotoPage({
   params: { photoId },
   children,
 }: PhotoProps & { children: React.ReactNode }) {
-  const photos = await getPhotosNearIdCached(
-    photoId,
-    GRID_THUMBNAILS_TO_SHOW_MAX + 2,
-  );
+  // const photos = await getPhotosNearIdCached(
+  //   photoId,
+  //   GRID_THUMBNAILS_TO_SHOW_MAX + 2,
+  // );
 
-  const photo = photos.find(p => p.id === photoId);
+  const photo = await getPhotoCached(photoId);
+
+  // const photo = photos.find(p => p.id === photoId);
 
   if (!photo) { redirect(PATH_ROOT); }
   
-  const isPhotoFirst = photos.findIndex(p => p.id === photoId) === 0;
+  // const isPhotoFirst = photos.findIndex(p => p.id === photoId) === 0;
 
   return <>
     {children}
     <PhotoDetailPage
       photo={photo}
-      photos={photos}
-      photosGrid={photos.slice(
-        isPhotoFirst ? 1 : 2,
-        isPhotoFirst
-          ? GRID_THUMBNAILS_TO_SHOW_MAX + 1
-          : GRID_THUMBNAILS_TO_SHOW_MAX + 2,
-      )}
+      // photos={photos}
+      photos={[]}
+      // photosGrid={photos.slice(
+      //   isPhotoFirst ? 1 : 2,
+      //   isPhotoFirst
+      //     ? GRID_THUMBNAILS_TO_SHOW_MAX + 1
+      //     : GRID_THUMBNAILS_TO_SHOW_MAX + 2,
+      // )}
     />
   </>;
 }
