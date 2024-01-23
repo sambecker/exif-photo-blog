@@ -1,5 +1,5 @@
 import {
-  // GRID_THUMBNAILS_TO_SHOW_MAX,
+  GRID_THUMBNAILS_TO_SHOW_MAX,
   descriptionForPhoto,
   titleForPhoto,
 } from '@/photo';
@@ -18,7 +18,7 @@ import {
 import { getPhotoIds } from '@/services/vercel-postgres';
 
 export async function generateStaticParams() {
-  const photos = await getPhotoIds({ limit: 10 });
+  const photos = await getPhotoIds({ limit: GRID_THUMBNAILS_TO_SHOW_MAX });
   return photos.map(id => ({ photoId: id }));
 }
 
