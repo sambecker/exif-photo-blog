@@ -1,5 +1,4 @@
 import {
-  GENERATE_STATIC_PARAMS_LIMIT,
   GRID_THUMBNAILS_TO_SHOW_MAX,
   descriptionForPhoto,
   titleForPhoto,
@@ -13,12 +12,6 @@ import {
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotosNearIdCached } from '@/cache';
-import { getPhotoIds } from '@/services/vercel-postgres';
-
-export async function generateStaticParams() {
-  const photos = await getPhotoIds({ limit: GENERATE_STATIC_PARAMS_LIMIT });
-  return photos.map(id => ({ photoId: id }));
-}
 
 interface PhotoProps {
   params: { photoId: string }
