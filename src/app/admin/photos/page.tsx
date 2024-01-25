@@ -27,7 +27,7 @@ import AdminGrid from '@/admin/AdminGrid';
 import DeleteButton from '@/admin/DeleteButton';
 import EditButton from '@/admin/EditButton';
 import StorageUrls from '@/admin/StorageUrls';
-import { PRO_MODE_ENABLED } from '@/site/config';
+import { DOMAIN_META_TO_LOG, PRO_MODE_ENABLED } from '@/site/config';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import IconGrSync from '@/site/IconGrSync';
 
@@ -49,6 +49,8 @@ export default async function AdminPhotosPage({
   ]);
 
   const showMorePhotos = count > photos.length;
+
+  console.log(DOMAIN_META_TO_LOG);
 
   return (
     <SiteGrid

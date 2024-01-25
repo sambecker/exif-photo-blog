@@ -17,6 +17,23 @@ const SITE_DOMAIN =
   process.env.NEXT_PUBLIC_SITE_DOMAIN ||
   VERCEL_URL;
 
+export const DOMAIN_META_TO_LOG = {
+  vercel: {
+    VERCEL_URL: process.env.VERCEL_URL,
+    VERCEL_BRANCH_URL: process.env.VERCEL_BRANCH_URL,
+    VERCEL_REGION: process.env.VERCEL_REGION,
+    NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL,
+    NEXT_PUBLIC_VERCEL_BRANCH_URL: process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL,
+  },
+  app: {
+    VERCEL_BRANCH_URL,
+    VERCEL_BRANCH,
+    VERCEL_URL,
+    PUBLIC_SITE_DOMAIN: process.env.NEXT_PUBLIC_SITE_DOMAIN,
+    SITE_DOMAIN,
+  },
+};
+
 const SITE_DOMAIN_SHORT = shortenUrl(SITE_DOMAIN);
 
 export const SITE_DOMAIN_OR_TITLE =
