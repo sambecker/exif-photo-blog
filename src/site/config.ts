@@ -14,14 +14,13 @@ const VERCEL_BRANCH = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF;
 const VERCEL_PROJECT_URL = VERCEL_BRANCH_URL && VERCEL_BRANCH
   ? `${VERCEL_BRANCH_URL.split(`-git-${VERCEL_BRANCH}-`)[0]}.vercel.app`
   : undefined;
-// const VERCEL_URL = VERCEL_PROJECT_URL || VERCEL_DEPLOYMENT_URL;
 
-// User-facing domain and potential site title
+// User-facing domain, potential site title
 const SITE_DOMAIN =
   process.env.NEXT_PUBLIC_SITE_DOMAIN ||
   VERCEL_PROJECT_URL;
 
-// Used for absolute references like OG images
+// Used primarily for absolute references such as OG images
 export const BASE_URL = makeUrlAbsolute(VERCEL_ENV === 'production'
   ? SITE_DOMAIN
   : VERCEL_ENV === 'preview'
