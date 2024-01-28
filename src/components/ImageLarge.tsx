@@ -1,6 +1,6 @@
 import { IMAGE_LARGE_WIDTH } from '@/site';
-import Image from 'next/image';
 import Link from 'next/link';
+import ImageBlurFallback from './ImageBlurFallback';
 
 export default function ImageLarge({
   className,
@@ -16,7 +16,7 @@ export default function ImageLarge({
   src: string
   alt: string
   aspectRatio: number
-  blurData: string
+  blurData?: string
   priority?: boolean
 }) {
   return (
@@ -24,13 +24,12 @@ export default function ImageLarge({
       href={href}
       className="active:brightness-75"
     >
-      <Image {...{
+      <ImageBlurFallback {...{
         className,
         src,
         alt,
         priority,
         blurDataURL: blurData,
-        placeholder: 'blur',
         width: IMAGE_LARGE_WIDTH,
         height: Math.round(IMAGE_LARGE_WIDTH / aspectRatio),
       }} />

@@ -9,7 +9,6 @@ import {
   isFormValid,
 } from './form';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
-import NextImage from 'next/image';
 import { createPhotoAction, updatePhotoAction } from './actions';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
@@ -22,6 +21,7 @@ import {
 } from '@/utility/date';
 import { toastSuccess, toastWarning } from '@/toast';
 import { getDimensionsFromSize } from '@/utility/size';
+import ImageBlurFallback from '@/components/ImageBlurFallback';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -106,7 +106,7 @@ export default function PhotoForm({
   return (
     <div className="space-y-8 max-w-[38rem]">
       <div className="flex gap-2">
-        <NextImage
+        <ImageBlurFallback
           alt="Upload"
           src={url}
           className={clsx(
