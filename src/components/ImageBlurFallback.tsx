@@ -8,14 +8,14 @@ export default function ImageBlurFallback(props: ImageProps) {
     <Image {...{
       ...props,
       ...BLUR_ENABLED && props.blurDataURL ? {
-        blurDataURL: props.blurDataURL,
         placeholder: 'blur',
+        blurDataURL: props.blurDataURL,
       }: {
+        placeholder: 'empty',
         className: clsx(
           props.className,
           'bg-gray-100/50 dark:bg-gray-900/50',
         ),
-        placeholder: 'empty',
       },
     }} />
   );
