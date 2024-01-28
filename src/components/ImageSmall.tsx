@@ -1,5 +1,5 @@
 import { IMAGE_SMALL_WIDTH } from '@/site';
-import Image from 'next/image';
+import ImageBlurFallback from './ImageBlurFallback';
 
 export default function ImageSmall({
   className,
@@ -12,10 +12,10 @@ export default function ImageSmall({
   src: string
   alt: string
   aspectRatio: number
-  blurData: string
+  blurData?: string
 }) {
   return (
-    <Image {...{
+    <ImageBlurFallback {...{
       className,
       src,
       alt,

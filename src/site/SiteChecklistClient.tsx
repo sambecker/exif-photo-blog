@@ -37,6 +37,7 @@ export default function SiteChecklistClient({
   showFilmSimulations,
   showExifInfo,
   isProModeEnabled,
+  isBlurEnabled,
   isGeoPrivacyEnabled,
   isPriorityOrderEnabled,
   isPublicApiEnabled,
@@ -269,6 +270,16 @@ export default function SiteChecklistClient({
           Set environment variable to {'"1"'} to enable
           higher quality image storage:
           {renderEnvVars(['NEXT_PUBLIC_PRO_MODE'])}
+        </ChecklistRow>
+        <ChecklistRow
+          title="Image Blur"
+          status={isBlurEnabled}
+          isPending={isPendingPage}
+          optional
+        >
+          Set environment variable to {'"1"'} to prevent
+          image blur data being stored and displayed
+          {renderEnvVars(['NEXT_PUBLIC_BLUR_DISABLED'])}
         </ChecklistRow>
         <ChecklistRow
           title="Geo Privacy"
