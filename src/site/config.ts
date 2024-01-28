@@ -82,7 +82,7 @@ export const CURRENT_STORAGE: StorageType =
 // SETTINGS
 
 export const PRO_MODE_ENABLED = process.env.NEXT_PUBLIC_PRO_MODE === '1';
-export const BLUR_DISABLED = process.env.NEXT_PUBLIC_BLUR_DISABLED === '1';
+export const BLUR_ENABLED = process.env.NEXT_PUBLIC_BLUR_DISABLED !== '1';
 export const GEO_PRIVACY_ENABLED = process.env.NEXT_PUBLIC_GEO_PRIVACY === '1';
 export const PRIORITY_ORDER_ENABLED =
   process.env.NEXT_PUBLIC_IGNORE_PRIORITY_ORDER !== '1';
@@ -121,7 +121,7 @@ export const CONFIG_CHECKLIST_STATUS = {
   showFilmSimulations: SHOW_FILM_SIMULATIONS,
   showExifInfo: SHOW_EXIF_DATA,
   isProModeEnabled: PRO_MODE_ENABLED,
-  isBlurEnabled: !BLUR_DISABLED,
+  isBlurEnabled: BLUR_ENABLED,
   isGeoPrivacyEnabled: GEO_PRIVACY_ENABLED,
   isPriorityOrderEnabled: PRIORITY_ORDER_ENABLED,
   isPublicApiEnabled: PUBLIC_API_ENABLED,

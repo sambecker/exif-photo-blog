@@ -22,6 +22,7 @@ import {
 import { toastSuccess, toastWarning } from '@/toast';
 import { getDimensionsFromSize } from '@/utility/size';
 import ImageBlurFallback from '@/components/ImageBlurFallback';
+import { BLUR_ENABLED } from '@/site/config';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -97,10 +98,12 @@ export default function PhotoForm({
   const url = formData.url ?? '';
 
   const updateBlurData = useCallback((blurData: string) => {
-    setFormData(data => ({
-      ...data,
-      blurData,
-    }));
+    if (BLUR_ENABLED) {
+      setFormData(data => ({
+        ...data,
+        blurData,
+      }));
+    }
   }, []);
 
   return (
