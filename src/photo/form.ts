@@ -13,7 +13,7 @@ import {
   MAKE_FUJIFILM,
 } from '@/vendors/fujifilm';
 import { FilmSimulation } from '@/simulation';
-import { GEO_PRIVACY_ENABLED } from '@/site/config';
+import { BLUR_ENABLED, GEO_PRIVACY_ENABLED } from '@/site/config';
 import { TAG_FAVS, doesTagsStringIncludeFavs } from '@/tag';
 
 type VirtualFields = 'favorite';
@@ -28,8 +28,8 @@ type FormMeta = {
   readOnly?: boolean
   validate?: (value?: string) => string | undefined
   capitalize?: boolean
+  hide?: boolean
   hideIfEmpty?: boolean
-  hideTemporarily?: boolean
   hideBasedOnCamera?: (make?: string, mode?: string) => boolean
   loadingMessage?: string
   checkbox?: boolean
@@ -50,7 +50,8 @@ const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
   blurData: {
     label: 'blur data',
     readOnly: true,
-    required: true,
+    required: BLUR_ENABLED,
+    hideIfEmpty: !BLUR_ENABLED,
     loadingMessage: 'Generating blur data ...',
   },
   url: { label: 'url', readOnly: true },
@@ -70,7 +71,7 @@ const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
   iso: { label: 'ISO' },
   exposureTime: { label: 'exposure time' },
   exposureCompensation: { label: 'exposure compensation' },
-  locationName: { label: 'location name', hideTemporarily: true },
+  locationName: { label: 'location name', hide: true },
   latitude: { label: 'latitude' },
   longitude: { label: 'longitude' },
   takenAt: { label: 'taken at' },
@@ -82,7 +83,7 @@ const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
 
 export const FORM_METADATA_ENTRIES =
   (Object.entries(FORM_METADATA) as [keyof PhotoFormData, FormMeta][])
-    .filter(([_, meta]) => !meta.hideTemporarily);
+    .filter(([_, meta]) => !meta.hide);
 
 export const convertFormKeysToLabels = (keys: (keyof PhotoFormData)[]) =>
   keys.map(key => FORM_METADATA[key].label.toUpperCase());
