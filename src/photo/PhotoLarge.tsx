@@ -104,7 +104,7 @@ export default function PhotoLarge({
                   type="text-only"
                 />
                 {showSimulation && photo.filmSimulation &&
-                  <div className="translate-x-[-0.3rem]"> 
+                  <div className="translate-x-[-0.3rem] relative -z-10"> 
                     <PhotoFilmSimulation
                       simulation={photo.filmSimulation}
                     />
