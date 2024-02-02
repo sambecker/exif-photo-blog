@@ -7,9 +7,9 @@ import {
   convertFormKeysToLabels,
   getInitialErrors,
   isFormValid,
-} from './form';
+} from '.';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
-import { createPhotoAction, updatePhotoAction } from './actions';
+import { createPhotoAction, updatePhotoAction } from '../actions';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
@@ -23,6 +23,7 @@ import { toastSuccess, toastWarning } from '@/toast';
 import { getDimensionsFromSize } from '@/utility/size';
 import ImageBlurFallback from '@/components/ImageBlurFallback';
 import { BLUR_ENABLED } from '@/site/config';
+import { sortTagsWithoutFavs } from '@/tag';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -30,11 +31,13 @@ export default function PhotoForm({
   initialPhotoForm,
   updatedExifData,
   type = 'create',
+  uniqueTags,
   debugBlur,
 }: {
   initialPhotoForm: Partial<PhotoFormData>
   updatedExifData?: Partial<PhotoFormData>
   type?: 'create' | 'edit'
+  uniqueTags?: string[]
   debugBlur?: boolean
 }) {
   const [formData, setFormData] =
@@ -140,6 +143,7 @@ export default function PhotoForm({
       </div>
       <form
         action={type === 'create' ? createPhotoAction : updatePhotoAction}
+        onSubmit={() => blur()}
         className="space-y-6"
       >
         {FORM_METADATA_ENTRIES.map(([key, {
@@ -154,7 +158,7 @@ export default function PhotoForm({
           hideIfEmpty,
           hideBasedOnCamera,
           loadingMessage,
-          checkbox,
+          type,
         }]) =>
           (
             (!hideIfEmpty || formData[key]) &&
@@ -175,6 +179,9 @@ export default function PhotoForm({
               }}
               selectOptions={options}
               selectOptionsDefaultLabel={optionsDefaultLabel}
+              commaSeparatedOptions={key === 'tags'
+                ? sortTagsWithoutFavs(uniqueTags ?? [])
+                : undefined}
               required={required}
               readOnly={readOnly}
               capitalize={capitalize}
@@ -182,7 +189,7 @@ export default function PhotoForm({
                 ? loadingMessage
                 : undefined}
               loading={loadingMessage && !formData[key] ? true : false}
-              type={checkbox ? 'checkbox' : undefined}
+              type={type}
             />)}
         <div className="flex gap-3">
           <Link

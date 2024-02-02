@@ -1,8 +1,9 @@
-import PhotoForm from '@/photo/PhotoForm';
+import PhotoForm from '@/photo/form/PhotoForm';
 import AdminChildPage from '@/components/AdminChildPage';
 import { PATH_ADMIN, PATH_ADMIN_UPLOADS } from '@/site/paths';
 import { extractExifDataFromBlobPath } from '@/photo/server';
 import { redirect } from 'next/navigation';
+import { getUniqueTagsCached } from '@/cache';
 
 interface Params {
   params: { uploadPath: string }
@@ -14,6 +15,8 @@ export default async function UploadPage({ params: { uploadPath } }: Params) {
     photoFormExif,
   } = await extractExifDataFromBlobPath(uploadPath);
 
+  const uniqueTags = (await getUniqueTagsCached()).map(tag => tag.tag);
+
   if (!photoFormExif) { redirect(PATH_ADMIN); }
 
   return (
@@ -22,7 +25,10 @@ export default async function UploadPage({ params: { uploadPath } }: Params) {
       backLabel="Uploads"
       breadcrumb={blobId}
     >
-      <PhotoForm initialPhotoForm={photoFormExif} />
+      <PhotoForm
+        initialPhotoForm={photoFormExif}
+        uniqueTags={uniqueTags}
+      />
     </AdminChildPage>
   );
 };

@@ -5,7 +5,7 @@ import { Photo } from '.';
 import { PATH_ADMIN_PHOTOS } from '@/site/paths';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import { PhotoFormData, convertPhotoToFormData } from './form';
-import PhotoForm from './PhotoForm';
+import PhotoForm from './form/PhotoForm';
 import { useFormState } from 'react-dom';
 import { areSimpleObjectsEqual } from '@/utility/object';
 import IconGrSync from '@/site/IconGrSync';
@@ -13,8 +13,10 @@ import { getExifDataAction } from './actions';
 
 export default function PhotoEditPageClient({
   photo,
+  uniqueTags,
 }: {
   photo: Photo
+  uniqueTags?: string[]
 }) {
   const seedExifData = { url: photo.url };
 
@@ -51,6 +53,7 @@ export default function PhotoEditPageClient({
         updatedExifData={hasExifDataBeenFound
           ? updatedExifData
           : undefined}
+        uniqueTags={uniqueTags}
       />
     </AdminChildPage>
   );
