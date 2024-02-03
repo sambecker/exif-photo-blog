@@ -18,6 +18,9 @@ export default function CommaSeparatedInput({
   onChange?: (value: string) => void
   options?: string[]
 } & Omit<React.HTMLProps<HTMLInputElement>, 'onChange'>) {
+  const lastTerm = value?.split(',').slice(-1)?.[0].trim();
+  const hasLastTerm = lastTerm && !optionsRaw.includes(lastTerm);
+
   const items = (convertStringToArray(value) ?? [])
     .map(tag => tag.trim())
     .filter(Boolean);
@@ -57,10 +60,16 @@ export default function CommaSeparatedInput({
               />
             </Combobox.Button>}
         </div>
-        {options &&
+        {(options || hasLastTerm) &&
           <Combobox.Options className={clsx(
             'control px-1.5 absolute mt-4 w-full',
           )}>
+            {hasLastTerm &&
+              <Combobox.Option
+                value={lastTerm}
+              >
+                Create {`"${lastTerm}"`}
+              </Combobox.Option>}
             {options.map((tag) => (
               <Combobox.Option
                 key={tag}
