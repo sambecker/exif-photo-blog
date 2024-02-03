@@ -18,9 +18,6 @@ export default function CommaSeparatedInput({
   onChange?: (value: string) => void
   options?: string[]
 } & Omit<React.HTMLProps<HTMLInputElement>, 'onChange'>) {
-  const lastTerm = value?.split(',').slice(-1)?.[0].trim();
-  const hasLastTerm = lastTerm && !optionsRaw.includes(lastTerm);
-
   const items = (convertStringToArray(value) ?? [])
     .map(tag => tag.trim())
     .filter(Boolean);
@@ -60,31 +57,29 @@ export default function CommaSeparatedInput({
               />
             </Combobox.Button>}
         </div>
-        {(options || hasLastTerm) &&
+        {options &&
           <Combobox.Options className={clsx(
             'control px-1.5 absolute mt-4 w-full',
+            'max-h-48 overflow-y-auto',
           )}>
-            {hasLastTerm &&
-              <Combobox.Option
-                value={lastTerm}
-              >
-                Create {`"${lastTerm}"`}
-              </Combobox.Option>}
             {options.map((tag) => (
               <Combobox.Option
                 key={tag}
                 value={tag}
                 className={({ focus }) => clsx(
                   'p-1 rounded-[0.2rem] !hover:cursor',
-                  focus && 'text-invert bg-invert',
+                  focus && 'bg-gray-100 dark:bg-gray-900',
                 )}
               >
                 {({ selected }) => <div className="flex items-center">
+                  <span className="w-6">
+                    {selected &&
+                      <FaCheck size={12} className="translate-y-[1px]" />}
+                  </span>
                   <span className="grow">
                     {tag}
                   </span>
-                  {selected &&
-                    <FaCheck size={12} className="translate-y-[1px]" />}
+                  
                 </div>}
               </Combobox.Option>
             ))}
