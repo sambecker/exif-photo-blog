@@ -56,7 +56,8 @@ export default function TagInput({
           : option,
       ]
         .filter(Boolean)
-        .map(option => option.toLocaleLowerCase().trim()).join(','));
+        .map(parameterize)
+        .join(','));
       setSelectedOptionIndex(undefined);
     }
   }, [onChange, selectedOptions]);
@@ -110,7 +111,9 @@ export default function TagInput({
         break;
       case 'ArrowDown':
         setSelectedOptionIndex(i => {
-          if (i === undefined || i >= optionsFiltered.length - 1) {
+          if (i === undefined) {
+            return 1;
+          } else if (i >= optionsFiltered.length - 1) {
             return 0;
           } else {
             return i + 1;
@@ -120,7 +123,8 @@ export default function TagInput({
       case 'ArrowUp':
         setSelectedOptionIndex(i => {
           if (i === undefined || i === 0) {
-            return optionsFiltered.length - 1;
+            inputRef.current?.focus();
+            return undefined;
           } else {
             return i - 1;
           }
@@ -162,7 +166,8 @@ export default function TagInput({
     >
       <div className={clsx(
         className,
-        'w-full control !py-0 inline-flex items-center gap-2',
+        'w-full control !py-2',
+        'inline-flex flex-wrap items-center gap-2',
         readOnly && 'cursor-not-allowed',
         readOnly && 'bg-gray-100 dark:bg-gray-900 dark:text-gray-400',
       )}>
@@ -187,9 +192,10 @@ export default function TagInput({
           ref={inputRef}
           type="text"
           className={clsx(
-            'grow !min-w-0 !p-0 text-lg',
+            'grow !min-w-0 !p-0 -my-2 text-xl',
             '!border-none !ring-transparent',
           )}
+          size={12}
           value={inputText}
           onChange={e => setInputText(e.target.value)}
           autoComplete="off"
@@ -198,39 +204,40 @@ export default function TagInput({
         />
         <input type="hidden" name={name} value={value} />
       </div>
-      <div className="relative">
-        {hasFocus && optionsFiltered.length > 0 &&
-          <div
-            ref={optionsRef}
-            className={clsx(
-              'control absolute top-0 mt-4 w-full z-10 !px-1.5 !py-1.5',
-              'flex flex-col gap-y-1',
-              'text-xl shadow-lg dark:shadow-xl',
-            )}
-          >
-            {optionsFiltered.map((option, index) =>
-              <div
-                key={option}
-                tabIndex={0}
-                className={clsx(
-                  'cursor-pointer',
-                  'px-1 py-1 rounded-sm',
-                  index === 0 && selectedOptionIndex === undefined &&
-                    'bg-gray-100 dark:bg-gray-800',
-                  'hover:bg-gray-100 dark:hover:bg-gray-800',
-                  'active:bg-gray-50 dark:active:bg-gray-900',
-                  'focus:bg-gray-100 dark:focus:bg-gray-800',
-                  'outline-gray-200 dark:outline-gray-700',
-                )}
-                onClick={() => {
-                  addOption(option);
-                  inputRef.current?.focus();
-                  setInputText('');
-                }}
-              >
-                {option}
-              </div>)}
-          </div>}
+      <div className="relative min-h-0">
+        <div
+          ref={optionsRef}
+          className={clsx(
+            !(hasFocus && optionsFiltered.length > 0) && 'hidden',
+            'control absolute top-0 mt-4 w-full z-10 !px-1.5 !py-1.5',
+            'max-h-[7.5rem] overflow-y-auto',
+            'flex flex-col gap-y-1',
+            'text-xl shadow-lg dark:shadow-xl',
+          )}
+        >
+          {optionsFiltered.map((option, index) =>
+            <div
+              key={option}
+              tabIndex={0}
+              className={clsx(
+                'cursor-pointer',
+                'px-1 py-1 rounded-sm',
+                index === 0 && selectedOptionIndex === undefined &&
+                  'bg-gray-100 dark:bg-gray-800',
+                'hover:bg-gray-100 dark:hover:bg-gray-800',
+                'active:bg-gray-50 dark:active:bg-gray-900',
+                'focus:bg-gray-100 dark:focus:bg-gray-800',
+                'outline-none',
+              )}
+              onClick={() => {
+                addOption(option);
+                inputRef.current?.focus();
+                setInputText('');
+              }}
+            >
+              {option}
+            </div>)}
+        </div>
       </div>
     </div>
   );
