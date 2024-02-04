@@ -1,4 +1,4 @@
-import clsx from 'clsx/lite';
+import { clsx}  from 'clsx/lite';
 import Link from 'next/link';
 import { Menu } from '@headlessui/react';
 import { FiMoreHorizontal } from 'react-icons/fi';

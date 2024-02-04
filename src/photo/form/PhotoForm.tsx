@@ -198,9 +198,7 @@ export default function PhotoForm({
           >
             Cancel
           </Link>
-          <SubmitButtonWithStatus
-            disabled={!isFormValid(formData)}
-          >
+          <SubmitButtonWithStatus disabled={!isFormValid(formData)}>
             {type === 'create' ? 'Create' : 'Update'}
           </SubmitButtonWithStatus>
         </div>

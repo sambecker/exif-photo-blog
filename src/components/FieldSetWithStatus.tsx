@@ -6,7 +6,6 @@ import Spinner from './Spinner';
 import { clsx } from 'clsx/lite';
 import { FieldSetType } from '@/photo/form';
 import TagInput from './TagInput';
-import { convertStringToArray } from '@/utility/string';
 
 export default function FieldSetWithStatus({
   id,
@@ -77,6 +76,7 @@ export default function FieldSetWithStatus({
           onChange={e => onChange?.(e.target.value)}
           className={clsx(
             'w-full',
+            clsx(Boolean(error) && 'error'),
             // Use special class because `select` can't be readonly
             readOnly || pending && 'disabled-select',
           )}
@@ -92,14 +92,12 @@ export default function FieldSetWithStatus({
             </option>)}
         </select>
         : commaSeparatedOptions
-          ?
-          <TagInput
+          ? <TagInput
+            name={id}
+            value={value}
             options={commaSeparatedOptions}
-            selectedOptions={convertStringToArray(value)}
-            onChange={value => {
-              onChange?.(value.join(', '));
-              console.log(value.join(', '));
-            }}
+            onChange={onChange}
+            className={clsx(Boolean(error) && 'error')}
             readOnly={readOnly || pending}
           />
           : <input
@@ -118,7 +116,7 @@ export default function FieldSetWithStatus({
             readOnly={readOnly || pending}
             className={clsx(
               type === 'text' && 'w-full',
-              error && 'error',
+              Boolean(error) && 'error',
             )}
           />}
     </div>

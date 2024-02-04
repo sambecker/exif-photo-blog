@@ -1,19 +1,23 @@
-import clsx from 'clsx';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { convertStringToArray, parameterize } from '@/utility/string';
+import { clsx } from 'clsx/lite';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 const KEYDOWN_KEY = 'keydown';
-
 const CREATE_LABEL = 'Create ';
 
 export default function TagInput({
+  name,
+  value = '',
   options = [],
-  selectedOptions = [],
   onChange,
+  className,
   readOnly,
 }: {
+  name: string
+  value?: string
   options?: string[]
-  selectedOptions?: string[]
-  onChange?: (options: string[]) => void
+  onChange?: (value: string) => void
+  className?: string
   readOnly?: boolean
 }) {
   const containerRef = useRef<HTMLInputElement>(null);
@@ -24,56 +28,64 @@ export default function TagInput({
   const [inputText, setInputText] = useState('');
   const [selectedOptionIndex, setSelectedOptionIndex] = useState<number>();
 
-  const inputTextFormatted = inputText.toLocaleLowerCase().trim();
-  const isInputTextNew =
+  const selectedOptions = useMemo(() =>
+    convertStringToArray(value) ?? []
+  , [value]);
+
+  const inputTextFormatted = parameterize(inputText);
+  const isInputTextUnique =
     inputTextFormatted &&
     !selectedOptions.includes(inputTextFormatted);
 
-  let optionsFiltered = options
+  const optionsFiltered = (isInputTextUnique
+    ? [`${CREATE_LABEL}"${inputTextFormatted}"`]
+    : []).concat(options
     .filter(option =>
       !selectedOptions.includes(option) &&
       (
         !inputTextFormatted ||
         option.includes(inputTextFormatted)
-      ));
+      )));
 
-  if (isInputTextNew) {
-    optionsFiltered = [
-      `${CREATE_LABEL}"${inputTextFormatted}"`,
-      ...optionsFiltered,
-    ];
-  }
-
-  const addOption = useCallback((option: string) => {
-    onChange?.([
-      ...selectedOptions,
-      option.startsWith(CREATE_LABEL)
-        ? option.slice(CREATE_LABEL.length + 1, -1)
-        : option,
-    ]
-      .filter(Boolean)
-      .map(option => option.toLocaleLowerCase().trim()));
-    setSelectedOptionIndex(undefined);
+  const addOption = useCallback((option?: string) => {
+    if (option && !selectedOptions.includes(option)) {
+      onChange?.([
+        ...selectedOptions,
+        option.startsWith(CREATE_LABEL)
+          ? option.slice(CREATE_LABEL.length + 1, -1)
+          : option,
+      ]
+        .filter(Boolean)
+        .map(option => option.toLocaleLowerCase().trim()).join(','));
+      setSelectedOptionIndex(undefined);
+    }
   }, [onChange, selectedOptions]);
 
+  const removeOption = useCallback((option: string) => {
+    onChange?.(selectedOptions.filter(o => o !== option).join(','));
+  }, [onChange, selectedOptions]);
+
+  // Reset selected option index when focus is lost
   useEffect(() => {
     if (!hasFocus) { setSelectedOptionIndex(undefined); }
   }, [hasFocus]);
 
+  // Focus option in the DOM when selected index changes
   useEffect(() => {
     if (selectedOptionIndex !== undefined) {
-      const ref = optionsRef.current;
-      const options = ref?.querySelectorAll('div');
+      const options = optionsRef.current?.querySelectorAll('div');
       const option = options?.[selectedOptionIndex] as HTMLElement | undefined;
       option?.focus();
     }
   }, [selectedOptionIndex]);
 
+  // Setup keyboard listener
   useEffect(() => {
     const ref = containerRef.current;
     const listener = (e: KeyboardEvent) => {
+      // Keys which always trap focus
       switch (e.key) {
-      case 'Enter':
+      case ',':
       case 'ArrowDown':
       case 'ArrowUp':
       case 'Escape':
@@ -82,8 +94,18 @@ export default function TagInput({
       }
       switch (e.key) {
       case 'Enter':
+        // Only trap focus if there are options to select
+        // otherwise allow form to submit
+        if (optionsFiltered.length > 0) {
+          e.stopImmediatePropagation();
+          e.preventDefault();
+        }
         addOption(optionsFiltered[selectedOptionIndex ?? 0]);
         inputRef.current?.focus();
+        setInputText('');
+        break;
+      case ',':
+        addOption(inputText);
         setInputText('');
         break;
       case 'ArrowDown':
@@ -105,9 +127,8 @@ export default function TagInput({
         });
         break;
       case 'Backspace':
-        if (inputText === '') {
-          onChange?.(selectedOptions.slice(0, -1));
-          // setHasFocus(false);
+        if (inputText === '' && selectedOptions.length > 0) {
+          removeOption(selectedOptions[selectedOptions.length - 1]);
         }
         break;
       case 'Escape':
@@ -119,7 +140,7 @@ export default function TagInput({
     return () => ref?.removeEventListener(KEYDOWN_KEY, listener);
   }, [
     inputText,
-    onChange,
+    removeOption,
     hasFocus,
     selectedOptions,
     selectedOptionIndex,
@@ -139,7 +160,12 @@ export default function TagInput({
         }
       }}
     >
-      <div className="w-full control !py-0 inline-flex items-center gap-2">
+      <div className={clsx(
+        className,
+        'w-full control !py-0 inline-flex items-center gap-2',
+        readOnly && 'cursor-not-allowed',
+        readOnly && 'bg-gray-100 dark:bg-gray-900 dark:text-gray-400',
+      )}>
         {selectedOptions
           .filter(Boolean)
           .map(option =>
@@ -150,10 +176,10 @@ export default function TagInput({
                 'whitespace-nowrap',
                 'px-1.5 py-0.5',
                 'bg-gray-100 dark:bg-gray-800',
+                'active:bg-gray-50 dark:active:bg-gray-900',
                 'rounded-sm',
               )}
-              onClick={() =>
-                onChange?.(selectedOptions.filter(o => o !== option))}
+              onClick={() => removeOption(option)}
             >
               {option}
             </span>)}
@@ -161,7 +187,7 @@ export default function TagInput({
           ref={inputRef}
           type="text"
           className={clsx(
-            'grow !min-w-0 !p-0',
+            'grow !min-w-0 !p-0 text-lg',
             '!border-none !ring-transparent',
           )}
           value={inputText}
@@ -170,29 +196,32 @@ export default function TagInput({
           autoCapitalize="off"
           readOnly={readOnly}
         />
+        <input type="hidden" name={name} value={value} />
       </div>
       <div className="relative">
         {hasFocus && optionsFiltered.length > 0 &&
           <div
-            tabIndex={0}
             ref={optionsRef}
             className={clsx(
               'control absolute top-0 mt-4 w-full z-10 !px-1.5 !py-1.5',
-              'text-xl',
-              'shadow-xl',
+              'flex flex-col gap-y-1',
+              'text-xl shadow-lg dark:shadow-xl',
             )}
           >
             {optionsFiltered.map((option, index) =>
               <div
                 key={option}
+                tabIndex={0}
                 className={clsx(
                   'cursor-pointer',
                   'px-1 py-1 rounded-sm',
+                  index === 0 && selectedOptionIndex === undefined &&
+                    'bg-gray-100 dark:bg-gray-800',
                   'hover:bg-gray-100 dark:hover:bg-gray-800',
+                  'active:bg-gray-50 dark:active:bg-gray-900',
                   'focus:bg-gray-100 dark:focus:bg-gray-800',
-                  'focus:border-none focus:ring-transparent',
+                  'outline-gray-200 dark:outline-gray-700',
                 )}
-                tabIndex={index + 1}
                 onClick={() => {
                   addOption(option);
                   inputRef.current?.focus();

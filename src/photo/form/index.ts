@@ -47,7 +47,6 @@ const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
   title: { label: 'title', capitalize: true },
   tags: {
     label: 'tags',
-    note: 'comma-separated values',
     validate: tags => doesTagsStringIncludeFavs(tags)
       ? `'${TAG_FAVS}' is a reserved tag`
       : undefined,
