@@ -65,7 +65,6 @@ export default function TagInput({
       const ref = optionsRef.current;
       const options = ref?.querySelectorAll('div');
       const option = options?.[selectedOptionIndex] as HTMLElement | undefined;
-      console.log({options, option: option?.innerHTML});
       option?.focus();
     }
   }, [selectedOptionIndex]);
@@ -198,7 +197,6 @@ export default function TagInput({
                   addOption(option);
                   inputRef.current?.focus();
                   setInputText('');
-                  // setHasFocus(false);
                 }}
               >
                 {option}
