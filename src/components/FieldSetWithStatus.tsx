@@ -5,7 +5,8 @@ import { useFormStatus } from 'react-dom';
 import Spinner from './Spinner';
 import { clsx } from 'clsx/lite';
 import { FieldSetType } from '@/photo/form';
-import CommaSeparatedInput from '@/components/CommaSeparatedInput';
+import TagInput from './TagInput';
+import { convertStringToArray } from '@/utility/string';
 
 export default function FieldSetWithStatus({
   id,
@@ -91,20 +92,15 @@ export default function FieldSetWithStatus({
             </option>)}
         </select>
         : commaSeparatedOptions
-          ? <CommaSeparatedInput
-            id={id}
-            name={id}
-            value={value}
-            placeholder={placeholder}
-            onChange={onChange}
+          ?
+          <TagInput
             options={commaSeparatedOptions}
-            type={type}
-            autoCapitalize={!capitalize ? 'off' : undefined}
+            selectedOptions={convertStringToArray(value)}
+            onChange={value => {
+              onChange?.(value.join(', '));
+              console.log(value.join(', '));
+            }}
             readOnly={readOnly || pending}
-            className={clsx(
-              type === 'text' && 'w-full',
-              error && 'error',
-            )}
           />
           : <input
             ref={inputRef}
