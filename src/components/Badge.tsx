@@ -26,7 +26,7 @@ export default function Badge({
         'px-[0.3rem] py-1 rounded-[0.25rem]',
         'text-[0.7rem] font-medium',
         highContrast
-          ? 'text-invert bg-primary'
+          ? 'text-invert bg-invert'
           : 'text-medium bg-gray-300/30 dark:bg-gray-700/50',
         interactive && highContrast
           ? 'hover:opacity-70'

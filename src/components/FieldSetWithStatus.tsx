@@ -4,6 +4,8 @@ import { LegacyRef } from 'react';
 import { useFormStatus } from 'react-dom';
 import Spinner from './Spinner';
 import { clsx } from 'clsx/lite';
+import { FieldSetType } from '@/photo/form';
+import TagInput from './TagInput';
 
 export default function FieldSetWithStatus({
   id,
@@ -14,6 +16,7 @@ export default function FieldSetWithStatus({
   onChange,
   selectOptions,
   selectOptionsDefaultLabel,
+  commaSeparatedOptions,
   placeholder,
   loading,
   required,
@@ -30,12 +33,13 @@ export default function FieldSetWithStatus({
   onChange?: (value: string) => void
   selectOptions?: { value: string, label: string }[]
   selectOptionsDefaultLabel?: string
+  commaSeparatedOptions?: string[]
   placeholder?: string
   loading?: boolean
   required?: boolean
   readOnly?: boolean
   capitalize?: boolean
-  type?: 'text' | 'email' | 'password' | 'checkbox'
+  type?: FieldSetType
   inputRef?: LegacyRef<HTMLInputElement>
 }) {
   const { pending } = useFormStatus();
@@ -72,6 +76,7 @@ export default function FieldSetWithStatus({
           onChange={e => onChange?.(e.target.value)}
           className={clsx(
             'w-full',
+            clsx(Boolean(error) && 'error'),
             // Use special class because `select` can't be readonly
             readOnly || pending && 'disabled-select',
           )}
@@ -86,25 +91,34 @@ export default function FieldSetWithStatus({
               {optionLabel}
             </option>)}
         </select>
-        : <input
-          ref={inputRef}
-          id={id}
-          name={id}
-          value={value}
-          checked={type === 'checkbox' ? value === 'true' : undefined}
-          placeholder={placeholder}
-          onChange={e => onChange?.(type === 'checkbox'
-            ? e.target.value === 'true' ? 'false' : 'true'
-            : e.target.value)}
-          type={type}
-          autoComplete="off"
-          readOnly={readOnly || pending}
-          className={clsx(
-            type === 'text' && 'w-full',
-            error && 'error',
-          )}
-          autoCapitalize={!capitalize ? 'off' : undefined}
-        />}
+        : commaSeparatedOptions
+          ? <TagInput
+            name={id}
+            value={value}
+            options={commaSeparatedOptions}
+            onChange={onChange}
+            className={clsx(Boolean(error) && 'error')}
+            readOnly={readOnly || pending}
+          />
+          : <input
+            ref={inputRef}
+            id={id}
+            name={id}
+            value={value}
+            checked={type === 'checkbox' ? value === 'true' : undefined}
+            placeholder={placeholder}
+            onChange={e => onChange?.(type === 'checkbox'
+              ? e.target.value === 'true' ? 'false' : 'true'
+              : e.target.value)}
+            type={type}
+            autoComplete="off"
+            autoCapitalize={!capitalize ? 'off' : undefined}
+            readOnly={readOnly || pending}
+            className={clsx(
+              type === 'text' && 'w-full',
+              Boolean(error) && 'error',
+            )}
+          />}
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import type { ExifData } from 'ts-exif-parser';
-import { Photo, PhotoDbInsert, PhotoExif } from '.';
+import { Photo, PhotoDbInsert, PhotoExif } from '..';
 import {
   convertTimestampToNaivePostgresString,
   convertTimestampWithOffsetToPostgresString,
@@ -20,6 +20,12 @@ type VirtualFields = 'favorite';
 
 export type PhotoFormData = Record<keyof PhotoDbInsert | VirtualFields, string>;
 
+export type FieldSetType =
+  'text' |
+  'email' |
+  'password' |
+  'checkbox';
+
 type FormMeta = {
   label: string
   note?: string
@@ -32,7 +38,7 @@ type FormMeta = {
   hideIfEmpty?: boolean
   hideBasedOnCamera?: (make?: string, mode?: string) => boolean
   loadingMessage?: string
-  checkbox?: boolean
+  type?: FieldSetType
   options?: { value: string, label: string }[]
   optionsDefaultLabel?: string
 };
@@ -41,7 +47,6 @@ const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
   title: { label: 'title', capitalize: true },
   tags: {
     label: 'tags',
-    note: 'comma-separated values',
     validate: tags => doesTagsStringIncludeFavs(tags)
       ? `'${TAG_FAVS}' is a reserved tag`
       : undefined,
@@ -77,8 +82,8 @@ const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
   takenAt: { label: 'taken at' },
   takenAtNaive: { label: 'taken at (naive)' },
   priorityOrder: { label: 'priority order' },
-  favorite: { label: 'favorite', checkbox: true, virtual: true },
-  hidden: { label: 'hidden', checkbox: true },
+  favorite: { label: 'favorite', type: 'checkbox', virtual: true },
+  hidden: { label: 'hidden', type: 'checkbox' },
 };
 
 export const FORM_METADATA_ENTRIES =
