@@ -35,6 +35,7 @@ export default function TagInput({
   const inputTextFormatted = parameterize(inputText);
   const isInputTextUnique =
     inputTextFormatted &&
+    !options.includes(inputTextFormatted) &&
     !selectedOptions.includes(inputTextFormatted);
 
   const optionsFiltered = (isInputTextUnique
