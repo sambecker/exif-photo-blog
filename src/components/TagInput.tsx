@@ -218,6 +218,7 @@ export default function TagInput({
           autoComplete="off"
           autoCapitalize="off"
           readOnly={readOnly}
+          onFocus={() => setSelectedOptionIndex(undefined)}
         />
         <input type="hidden" name={name} value={value} />
       </div>
