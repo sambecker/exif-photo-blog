@@ -61,11 +61,13 @@ export default function TagInput({
         .join(','));
     }
     setSelectedOptionIndex(undefined);
+    inputRef.current?.focus();
   }, [onChange, selectedOptions]);
 
   const removeOption = useCallback((option: string) => {
     onChange?.(selectedOptions.filter(o => o !== option).join(','));
     setSelectedOptionIndex(undefined);
+    inputRef.current?.focus();
   }, [onChange, selectedOptions]);
 
   // Reset selected option index when focus is lost
@@ -75,10 +77,12 @@ export default function TagInput({
 
   // Focus option in the DOM when selected index changes
   useEffect(() => {
+    const options = optionsRef.current?.querySelectorAll('div');
     if (selectedOptionIndex !== undefined) {
-      const options = optionsRef.current?.querySelectorAll('div');
       const option = options?.[selectedOptionIndex] as HTMLElement | undefined;
       option?.focus();
+    } else {
+      inputRef.current?.focus();
     }
   }, [selectedOptionIndex]);
 
@@ -104,7 +108,6 @@ export default function TagInput({
           e.preventDefault();
         }
         addOption(optionsFiltered[selectedOptionIndex ?? 0]);
-        inputRef.current?.focus();
         setInputText('');
         break;
       case ',':
@@ -138,6 +141,7 @@ export default function TagInput({
         }
         break;
       case 'Escape':
+        inputRef.current?.blur();
         setHasFocus(false);
         break;
       }
@@ -233,7 +237,6 @@ export default function TagInput({
               )}
               onClick={() => {
                 addOption(option);
-                inputRef.current?.focus();
                 setInputText('');
               }}
             >
