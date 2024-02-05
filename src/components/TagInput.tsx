@@ -2,8 +2,8 @@ import { convertStringToArray, parameterize } from '@/utility/string';
 import { clsx } from 'clsx/lite';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-const KEYDOWN_KEY = 'keydown';
-const CREATE_LABEL = 'Create ';
+const KEY_KEYDOWN = 'keydown';
+const CREATE_LABEL = 'Create';
 
 export default function TagInput({
   name,
@@ -24,7 +24,7 @@ export default function TagInput({
   const inputRef = useRef<HTMLInputElement>(null);
   const optionsRef = useRef<HTMLInputElement>(null);
 
-  const [hasFocus, setHasFocus] = useState(false);
+  const [shouldShowMenu, setShouldShowMenu] = useState(false);
   const [inputText, setInputText] = useState('');
   const [selectedOptionIndex, setSelectedOptionIndex] = useState<number>();
 
@@ -39,7 +39,7 @@ export default function TagInput({
     !selectedOptions.includes(inputTextFormatted);
 
   const optionsFiltered = (isInputTextUnique
-    ? [`${CREATE_LABEL}"${inputTextFormatted}"`]
+    ? [`${CREATE_LABEL} "${inputTextFormatted}"`]
     : []).concat(options
     .filter(option =>
       !selectedOptions.includes(option) &&
@@ -48,12 +48,20 @@ export default function TagInput({
         option.includes(inputTextFormatted)
       )));
 
+  const hideMenu = useCallback((shouldBlurInput?: boolean) => {
+    setShouldShowMenu(false);
+    setSelectedOptionIndex(undefined);
+    if (shouldBlurInput) {
+      inputRef.current?.blur();
+    }
+  }, []);
+
   const addOption = useCallback((option?: string) => {
     if (option && !selectedOptions.includes(option)) {
       onChange?.([
         ...selectedOptions,
         option.startsWith(CREATE_LABEL)
-          ? option.slice(CREATE_LABEL.length + 1, -1)
+          ? option.slice(CREATE_LABEL.length, -1)
           : option,
       ]
         .filter(Boolean)
@@ -71,10 +79,12 @@ export default function TagInput({
     inputRef.current?.focus();
   }, [onChange, selectedOptions]);
 
-  // Reset selected option index when focus is lost
+  // Show options when input text changes
   useEffect(() => {
-    if (!hasFocus) { setSelectedOptionIndex(undefined); }
-  }, [hasFocus]);
+    if (inputText) {
+      setShouldShowMenu(true);
+    }
+  }, [inputText]);
 
   // Focus option in the DOM when selected index changes
   useEffect(() => {
@@ -88,6 +98,7 @@ export default function TagInput({
   // Setup keyboard listener
   useEffect(() => {
     const ref = containerRef.current;
+
     const listener = (e: KeyboardEvent) => {
       // Keys which always trap focus
       switch (e.key) {
@@ -137,20 +148,22 @@ export default function TagInput({
       case 'Backspace':
         if (inputText === '' && selectedOptions.length > 0) {
           removeOption(selectedOptions[selectedOptions.length - 1]);
+          hideMenu();
         }
         break;
       case 'Escape':
-        inputRef.current?.blur();
-        setHasFocus(false);
+        hideMenu(true);
         break;
       }
     };
-    ref?.addEventListener(KEYDOWN_KEY, listener);
-    return () => ref?.removeEventListener(KEYDOWN_KEY, listener);
+
+    ref?.addEventListener(KEY_KEYDOWN, listener);
+
+    return () => ref?.removeEventListener(KEY_KEYDOWN, listener);
   }, [
     inputText,
     removeOption,
-    hasFocus,
+    hideMenu,
     selectedOptions,
     selectedOptionIndex,
     optionsFiltered,
@@ -161,11 +174,10 @@ export default function TagInput({
     <div
       ref={containerRef}
       className="flex flex-col w-full"
-      onFocus={() => setHasFocus(true)}
+      onFocus={() => setShouldShowMenu(true)}
       onBlur={e => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
-          setHasFocus(false);
-          setSelectedOptionIndex(undefined);
+          hideMenu();
         }
       }}
     >
@@ -213,7 +225,7 @@ export default function TagInput({
         <div
           ref={optionsRef}
           className={clsx(
-            !(hasFocus && optionsFiltered.length > 0) && 'hidden',
+            !(shouldShowMenu && optionsFiltered.length > 0) && 'hidden',
             'control absolute top-0 mt-3 w-full z-10 !px-1.5 !py-1.5',
             'max-h-[8rem] overflow-y-auto',
             'flex flex-col gap-y-1',
@@ -238,6 +250,7 @@ export default function TagInput({
                 addOption(option);
                 setInputText('');
               }}
+              onFocus={() => setSelectedOptionIndex(index)}
             >
               {option}
             </div>)}
