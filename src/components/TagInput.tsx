@@ -65,7 +65,8 @@ export default function TagInput({
   }, [onChange, selectedOptions]);
 
   const removeOption = useCallback((option: string) => {
-    onChange?.(selectedOptions.filter(o => o !== option).join(','));
+    onChange?.(selectedOptions.filter(o =>
+      o !== parameterize(option)).join(','));
     setSelectedOptionIndex(undefined);
     inputRef.current?.focus();
   }, [onChange, selectedOptions]);
@@ -159,7 +160,7 @@ export default function TagInput({
   return (
     <div
       ref={containerRef}
-      className="w-full"
+      className="flex flex-col w-full"
       onFocus={() => setHasFocus(true)}
       onBlur={e => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
@@ -170,7 +171,7 @@ export default function TagInput({
     >
       <div className={clsx(
         className,
-        'w-full control !py-2',
+        'w-full control !px-2 !py-2',
         'inline-flex flex-wrap items-center gap-2',
         readOnly && 'cursor-not-allowed',
         readOnly && 'bg-gray-100 dark:bg-gray-900 dark:text-gray-400',
@@ -208,12 +209,12 @@ export default function TagInput({
         />
         <input type="hidden" name={name} value={value} />
       </div>
-      <div className="relative min-h-0">
+      <div className="relative">
         <div
           ref={optionsRef}
           className={clsx(
             !(hasFocus && optionsFiltered.length > 0) && 'hidden',
-            'control absolute top-0 mt-4 w-full z-10 !px-1.5 !py-1.5',
+            'control absolute top-0 mt-3 w-full z-10 !px-1.5 !py-1.5',
             'max-h-[8rem] overflow-y-auto',
             'flex flex-col gap-y-1',
             'text-xl shadow-lg dark:shadow-xl',
