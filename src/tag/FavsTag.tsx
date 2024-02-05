@@ -2,7 +2,7 @@ import { FaStar } from 'react-icons/fa';
 import EntityLink, { EntityLinkExternalProps } from '@/components/EntityLink';
 import { TAG_FAVS } from '.';
 import { pathForTag } from '@/site/paths';
-import clsx from 'clsx';
+import { clsx } from 'clsx/lite';
 
 export default function FavsTag({
   type,

@@ -1,5 +1,5 @@
 import { BLUR_ENABLED } from '@/site/config';
-import clsx from 'clsx/lite';
+import { clsx}  from 'clsx/lite';
 import Image, { ImageProps } from 'next/image';
 
 export default function ImageBlurFallback(props: ImageProps) {
