@@ -77,12 +77,10 @@ export default function TagInput({
 
   // Focus option in the DOM when selected index changes
   useEffect(() => {
-    const options = optionsRef.current?.querySelectorAll('div');
     if (selectedOptionIndex !== undefined) {
+      const options = optionsRef.current?.querySelectorAll('div');
       const option = options?.[selectedOptionIndex] as HTMLElement | undefined;
       option?.focus();
-    } else {
-      inputRef.current?.focus();
     }
   }, [selectedOptionIndex]);
 
@@ -216,7 +214,7 @@ export default function TagInput({
           className={clsx(
             !(hasFocus && optionsFiltered.length > 0) && 'hidden',
             'control absolute top-0 mt-4 w-full z-10 !px-1.5 !py-1.5',
-            'max-h-[7.5rem] overflow-y-auto',
+            'max-h-[8rem] overflow-y-auto',
             'flex flex-col gap-y-1',
             'text-xl shadow-lg dark:shadow-xl',
           )}
