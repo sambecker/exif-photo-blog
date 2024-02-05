@@ -59,12 +59,13 @@ export default function TagInput({
         .filter(Boolean)
         .map(parameterize)
         .join(','));
-      setSelectedOptionIndex(undefined);
     }
+    setSelectedOptionIndex(undefined);
   }, [onChange, selectedOptions]);
 
   const removeOption = useCallback((option: string) => {
     onChange?.(selectedOptions.filter(o => o !== option).join(','));
+    setSelectedOptionIndex(undefined);
   }, [onChange, selectedOptions]);
 
   // Reset selected option index when focus is lost
@@ -178,7 +179,7 @@ export default function TagInput({
             <span
               key={option}
               className={clsx(
-                'cursor-pointer',
+                'cursor-pointer select-none',
                 'whitespace-nowrap',
                 'px-1.5 py-0.5',
                 'bg-gray-100 dark:bg-gray-800',
@@ -196,7 +197,7 @@ export default function TagInput({
             'grow !min-w-0 !p-0 -my-2 text-xl',
             '!border-none !ring-transparent',
           )}
-          size={12}
+          size={10}
           value={inputText}
           onChange={e => setInputText(e.target.value)}
           autoComplete="off"
@@ -221,7 +222,7 @@ export default function TagInput({
               key={option}
               tabIndex={0}
               className={clsx(
-                'cursor-pointer',
+                'cursor-pointer select-none',
                 'px-1 py-1 rounded-sm',
                 index === 0 && selectedOptionIndex === undefined &&
                   'bg-gray-100 dark:bg-gray-800',
