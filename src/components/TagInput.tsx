@@ -89,7 +89,7 @@ export default function TagInput({
   // Focus option in the DOM when selected index changes
   useEffect(() => {
     if (selectedOptionIndex !== undefined) {
-      const options = optionsRef.current?.querySelectorAll('div');
+      const options = optionsRef.current?.querySelectorAll(':scope > div');
       const option = options?.[selectedOptionIndex] as HTMLElement | undefined;
       option?.focus();
     }
