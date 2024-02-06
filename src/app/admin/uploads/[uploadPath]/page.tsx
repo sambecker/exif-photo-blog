@@ -15,7 +15,7 @@ export default async function UploadPage({ params: { uploadPath } }: Params) {
     photoFormExif,
   } = await extractExifDataFromBlobPath(uploadPath);
 
-  const uniqueTags = (await getUniqueTagsCached()).map(tag => tag.tag);
+  const uniqueTags = await getUniqueTagsCached();
 
   if (!photoFormExif) { redirect(PATH_ADMIN); }
 

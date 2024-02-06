@@ -26,6 +26,8 @@ export type FieldSetType =
   'password' |
   'checkbox';
 
+export type AnnotatedTag = { value: string, annotation?: string };
+
 type FormMeta = {
   label: string
   note?: string
@@ -39,14 +41,18 @@ type FormMeta = {
   hideBasedOnCamera?: (make?: string, mode?: string) => boolean
   loadingMessage?: string
   type?: FieldSetType
-  options?: { value: string, label: string }[]
-  optionsDefaultLabel?: string
+  selectOptions?: { value: string, label: string }[]
+  selectOptionsDefaultLabel?: string
+  tagOptions?: AnnotatedTag[]
 };
 
-const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
+const FORM_METADATA = (
+  tagOptions?: AnnotatedTag[]
+): Record<keyof PhotoFormData, FormMeta> => ({
   title: { label: 'title', capitalize: true },
   tags: {
     label: 'tags',
+    tagOptions,
     validate: tags => doesTagsStringIncludeFavs(tags)
       ? `'${TAG_FAVS}' is a reserved tag`
       : undefined,
@@ -66,8 +72,8 @@ const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
   model: { label: 'camera model' },
   filmSimulation: {
     label: 'fujifilm simulation',
-    options: FILM_SIMULATION_FORM_INPUT_OPTIONS,
-    optionsDefaultLabel: 'Unknown',
+    selectOptions: FILM_SIMULATION_FORM_INPUT_OPTIONS,
+    selectOptionsDefaultLabel: 'Unknown',
     hideBasedOnCamera: make => make !== MAKE_FUJIFILM,
   },
   focalLength: { label: 'focal length' },
@@ -84,26 +90,28 @@ const FORM_METADATA: Record<keyof PhotoFormData, FormMeta> = {
   priorityOrder: { label: 'priority order' },
   favorite: { label: 'favorite', type: 'checkbox', virtual: true },
   hidden: { label: 'hidden', type: 'checkbox' },
-};
+});
 
-export const FORM_METADATA_ENTRIES =
-  (Object.entries(FORM_METADATA) as [keyof PhotoFormData, FormMeta][])
+export const FORM_METADATA_ENTRIES = (
+  ...args: Parameters<typeof FORM_METADATA>
+) =>
+  (Object.entries(FORM_METADATA(...args)) as [keyof PhotoFormData, FormMeta][])
     .filter(([_, meta]) => !meta.hide);
 
 export const convertFormKeysToLabels = (keys: (keyof PhotoFormData)[]) =>
-  keys.map(key => FORM_METADATA[key].label.toUpperCase());
+  keys.map(key => FORM_METADATA()[key].label.toUpperCase());
 
-export const getInitialErrors = (
+export const getFormErrors = (
   formData: Partial<PhotoFormData>
 ): Partial<Record<keyof PhotoFormData, string>> =>
   Object.keys(formData).reduce((acc, key) => ({
     ...acc,
-    [key]: FORM_METADATA_ENTRIES.find(([k]) => k === key)?.[1]
+    [key]: FORM_METADATA_ENTRIES().find(([k]) => k === key)?.[1]
       .validate?.(formData[key as keyof PhotoFormData]),
   }), {});
 
 export const isFormValid = (formData: Partial<PhotoFormData>) =>
-  FORM_METADATA_ENTRIES.every(
+  FORM_METADATA_ENTRIES().every(
     ([key, { required, validate }]) =>
       (!required || Boolean(formData[key])) &&
       (validate?.(formData[key]) === undefined)
@@ -191,7 +199,7 @@ export const convertFormDataToPhotoDbInsert = (
     if (
       key.startsWith('$ACTION_ID_') ||
       (photoForm as any)[key] === '' ||
-      FORM_METADATA[key as keyof PhotoFormData]?.virtual
+      FORM_METADATA()[key as keyof PhotoFormData]?.virtual
     ) {
       delete (photoForm as any)[key];
     }

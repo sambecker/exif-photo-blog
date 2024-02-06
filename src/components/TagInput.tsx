@@ -1,3 +1,4 @@
+import { AnnotatedTag } from '@/photo/form';
 import { convertStringToArray, parameterize } from '@/utility/string';
 import { clsx } from 'clsx/lite';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -15,7 +16,7 @@ export default function TagInput({
 }: {
   name: string
   value?: string
-  options?: string[]
+  options?: AnnotatedTag[]
   onChange?: (value: string) => void
   className?: string
   readOnly?: boolean
@@ -28,6 +29,10 @@ export default function TagInput({
   const [inputText, setInputText] = useState('');
   const [selectedOptionIndex, setSelectedOptionIndex] = useState<number>();
 
+  const optionValues = useMemo(() =>
+    options.map(({ value }) => value)
+  , [options]);
+
   const selectedOptions = useMemo(() =>
     convertStringToArray(value) ?? []
   , [value]);
@@ -35,18 +40,21 @@ export default function TagInput({
   const inputTextFormatted = parameterize(inputText);
   const isInputTextUnique =
     inputTextFormatted &&
-    !options.includes(inputTextFormatted) &&
+    !optionValues.includes(inputTextFormatted) &&
     !selectedOptions.includes(inputTextFormatted);
 
-  const optionsFiltered = (isInputTextUnique
-    ? [`${CREATE_LABEL} "${inputTextFormatted}"`]
-    : []).concat(options
-    .filter(option =>
-      !selectedOptions.includes(option) &&
-      (
-        !inputTextFormatted ||
-        option.includes(inputTextFormatted)
-      )));
+  const optionsFiltered = useMemo<AnnotatedTag[]>(() =>
+    (isInputTextUnique
+      ? [{ value: `${CREATE_LABEL} "${inputTextFormatted}"` }]
+      : []
+    ).concat(options
+      .filter(({ value }) =>
+        !selectedOptions.includes(value) &&
+        (
+          !inputTextFormatted ||
+          value.includes(inputTextFormatted)
+        )))
+  , [inputTextFormatted, isInputTextUnique, options, selectedOptions]);
 
   const hideMenu = useCallback((shouldBlurInput?: boolean) => {
     setShouldShowMenu(false);
@@ -117,7 +125,7 @@ export default function TagInput({
           e.stopImmediatePropagation();
           e.preventDefault();
         }
-        addOption(optionsFiltered[selectedOptionIndex ?? 0]);
+        addOption(optionsFiltered[selectedOptionIndex ?? 0].value);
         setInputText('');
         break;
       case ',':
@@ -137,7 +145,12 @@ export default function TagInput({
         break;
       case 'ArrowUp':
         setSelectedOptionIndex(i => {
-          if (i === undefined || i === 0) {
+          if (
+            document.activeElement === inputRef.current &&
+            optionsFiltered.length > 0
+          ) {
+            return optionsFiltered.length - 1;
+          } else if (i === undefined || i === 0) {
             inputRef.current?.focus();
             return undefined;
           } else {
@@ -197,8 +210,8 @@ export default function TagInput({
                 'cursor-pointer select-none',
                 'whitespace-nowrap',
                 'px-1.5 py-0.5',
-                'bg-gray-100 dark:bg-gray-800',
-                'active:bg-gray-50 dark:active:bg-gray-900',
+                'bg-gray-200/60 dark:bg-gray-800',
+                'active:bg-gray-200 dark:active:bg-gray-900',
                 'rounded-sm',
               )}
               onClick={() => removeOption(option)}
@@ -233,27 +246,40 @@ export default function TagInput({
             'text-xl shadow-lg dark:shadow-xl',
           )}
         >
-          {optionsFiltered.map((option, index) =>
+          {optionsFiltered.map(({ value, annotation }, index) =>
             <div
-              key={option}
+              key={value}
               tabIndex={0}
               className={clsx(
+                'group flex items-center gap-1',
                 'cursor-pointer select-none',
-                'px-1 py-1 rounded-sm',
-                index === 0 && selectedOptionIndex === undefined &&
-                  'bg-gray-100 dark:bg-gray-800',
+                'px-1.5 py-1 rounded-sm',
                 'hover:bg-gray-100 dark:hover:bg-gray-800',
                 'active:bg-gray-50 dark:active:bg-gray-900',
                 'focus:bg-gray-100 dark:focus:bg-gray-800',
+                index === 0 && selectedOptionIndex === undefined &&
+                  'bg-gray-100 dark:bg-gray-800',
                 'outline-none',
               )}
               onClick={() => {
-                addOption(option);
+                addOption(value);
                 setInputText('');
               }}
               onFocus={() => setSelectedOptionIndex(index)}
             >
-              {option}
+              <span className="grow min-w-0 truncate">
+                {value}
+              </span>
+              {annotation &&
+                <span className={clsx(
+                  'whitespace-nowrap text-dim text-sm',
+                  'group-focus:inline-block group-hover:inline-block',
+                  index === 0 && selectedOptionIndex === undefined
+                    ? 'inline-block'
+                    : 'hidden',
+                )}>
+                  {annotation}
+                </span>}
             </div>)}
         </div>
       </div>
