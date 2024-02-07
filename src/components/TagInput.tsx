@@ -1,9 +1,13 @@
+import { AnnotatedTag } from '@/photo/form';
 import { convertStringToArray, parameterize } from '@/utility/string';
 import { clsx } from 'clsx/lite';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-const KEYDOWN_KEY = 'keydown';
-const CREATE_LABEL = 'Create ';
+const KEY_KEYDOWN = 'keydown';
+const CREATE_LABEL = 'Create';
+
+const ARIA_ID_TAG_CONTROL = 'tag-control';
+const ARIA_ID_TAG_OPTIONS = 'tag-options';
 
 export default function TagInput({
   name,
@@ -15,7 +19,7 @@ export default function TagInput({
 }: {
   name: string
   value?: string
-  options?: string[]
+  options?: AnnotatedTag[]
   onChange?: (value: string) => void
   className?: string
   readOnly?: boolean
@@ -24,9 +28,13 @@ export default function TagInput({
   const inputRef = useRef<HTMLInputElement>(null);
   const optionsRef = useRef<HTMLInputElement>(null);
 
-  const [hasFocus, setHasFocus] = useState(false);
+  const [shouldShowMenu, setShouldShowMenu] = useState(false);
   const [inputText, setInputText] = useState('');
   const [selectedOptionIndex, setSelectedOptionIndex] = useState<number>();
+
+  const optionValues = useMemo(() =>
+    options.map(({ value }) => value)
+  , [options]);
 
   const selectedOptions = useMemo(() =>
     convertStringToArray(value) ?? []
@@ -35,25 +43,36 @@ export default function TagInput({
   const inputTextFormatted = parameterize(inputText);
   const isInputTextUnique =
     inputTextFormatted &&
-    !options.includes(inputTextFormatted) &&
+    !optionValues.includes(inputTextFormatted) &&
     !selectedOptions.includes(inputTextFormatted);
 
-  const optionsFiltered = (isInputTextUnique
-    ? [`${CREATE_LABEL}"${inputTextFormatted}"`]
-    : []).concat(options
-    .filter(option =>
-      !selectedOptions.includes(option) &&
-      (
-        !inputTextFormatted ||
-        option.includes(inputTextFormatted)
-      )));
+  const optionsFiltered = useMemo<AnnotatedTag[]>(() =>
+    (isInputTextUnique
+      ? [{ value: `${CREATE_LABEL} "${inputTextFormatted}"` }]
+      : []
+    ).concat(options
+      .filter(({ value }) =>
+        !selectedOptions.includes(value) &&
+        (
+          !inputTextFormatted ||
+          value.includes(inputTextFormatted)
+        )))
+  , [inputTextFormatted, isInputTextUnique, options, selectedOptions]);
+
+  const hideMenu = useCallback((shouldBlurInput?: boolean) => {
+    setShouldShowMenu(false);
+    setSelectedOptionIndex(undefined);
+    if (shouldBlurInput) {
+      inputRef.current?.blur();
+    }
+  }, []);
 
   const addOption = useCallback((option?: string) => {
     if (option && !selectedOptions.includes(option)) {
       onChange?.([
         ...selectedOptions,
         option.startsWith(CREATE_LABEL)
-          ? option.slice(CREATE_LABEL.length + 1, -1)
+          ? option.slice(CREATE_LABEL.length, -1)
           : option,
       ]
         .filter(Boolean)
@@ -71,15 +90,17 @@ export default function TagInput({
     inputRef.current?.focus();
   }, [onChange, selectedOptions]);
 
-  // Reset selected option index when focus is lost
+  // Show options when input text changes
   useEffect(() => {
-    if (!hasFocus) { setSelectedOptionIndex(undefined); }
-  }, [hasFocus]);
+    if (inputText) {
+      setShouldShowMenu(true);
+    }
+  }, [inputText]);
 
   // Focus option in the DOM when selected index changes
   useEffect(() => {
     if (selectedOptionIndex !== undefined) {
-      const options = optionsRef.current?.querySelectorAll('div');
+      const options = optionsRef.current?.querySelectorAll(':scope > div');
       const option = options?.[selectedOptionIndex] as HTMLElement | undefined;
       option?.focus();
     }
@@ -88,6 +109,7 @@ export default function TagInput({
   // Setup keyboard listener
   useEffect(() => {
     const ref = containerRef.current;
+
     const listener = (e: KeyboardEvent) => {
       // Keys which always trap focus
       switch (e.key) {
@@ -102,12 +124,12 @@ export default function TagInput({
       case 'Enter':
         // Only trap focus if there are options to select
         // otherwise allow form to submit
-        if (optionsFiltered.length > 0) {
+        if (shouldShowMenu && optionsFiltered.length > 0) {
           e.stopImmediatePropagation();
           e.preventDefault();
+          addOption(optionsFiltered[selectedOptionIndex ?? 0].value);
+          setInputText('');
         }
-        addOption(optionsFiltered[selectedOptionIndex ?? 0]);
-        setInputText('');
         break;
       case ',':
         addOption(inputText);
@@ -126,7 +148,12 @@ export default function TagInput({
         break;
       case 'ArrowUp':
         setSelectedOptionIndex(i => {
-          if (i === undefined || i === 0) {
+          if (
+            document.activeElement === inputRef.current &&
+            optionsFiltered.length > 0
+          ) {
+            return optionsFiltered.length - 1;
+          } else if (i === undefined || i === 0) {
             inputRef.current?.focus();
             return undefined;
           } else {
@@ -137,56 +164,76 @@ export default function TagInput({
       case 'Backspace':
         if (inputText === '' && selectedOptions.length > 0) {
           removeOption(selectedOptions[selectedOptions.length - 1]);
+          hideMenu();
         }
         break;
       case 'Escape':
-        inputRef.current?.blur();
-        setHasFocus(false);
+        hideMenu(true);
         break;
       }
     };
-    ref?.addEventListener(KEYDOWN_KEY, listener);
-    return () => ref?.removeEventListener(KEYDOWN_KEY, listener);
+
+    ref?.addEventListener(KEY_KEYDOWN, listener);
+
+    return () => ref?.removeEventListener(KEY_KEYDOWN, listener);
   }, [
     inputText,
     removeOption,
-    hasFocus,
+    hideMenu,
     selectedOptions,
     selectedOptionIndex,
     optionsFiltered,
     addOption,
+    shouldShowMenu,
   ]);
 
   return (
     <div
       ref={containerRef}
-      className="flex flex-col w-full"
-      onFocus={() => setHasFocus(true)}
+      className="flex flex-col w-full group"
+      onFocus={() => setShouldShowMenu(true)}
       onBlur={e => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
-          setHasFocus(false);
-          setSelectedOptionIndex(undefined);
+          hideMenu();
         }
       }}
     >
-      <div className={clsx(
-        className,
-        'w-full control !px-2 !py-2',
-        'inline-flex flex-wrap items-center gap-2',
-        readOnly && 'cursor-not-allowed',
-        readOnly && 'bg-gray-100 dark:bg-gray-900 dark:text-gray-400',
-      )}>
+      <div
+        id={ARIA_ID_TAG_CONTROL}
+        role="region"
+        aria-live="polite"
+        className="sr-only mb-3 text-dim"
+      >
+        {selectedOptions.length === 0
+          ? 'No tags selected'
+          : selectedOptions.join(', ') +
+            ` tag${selectedOptions.length !== 1 ? 's' : ''} selected`}
+      </div>
+      <div
+        aria-controls={ARIA_ID_TAG_CONTROL}
+        className={clsx(
+          className,
+          'w-full control !px-2 !py-2',
+          'outline-1 outline-blue-600',
+          'group-focus-within:outline group-active:outline',
+          'inline-flex flex-wrap items-center gap-2',
+          readOnly && 'cursor-not-allowed',
+          readOnly && 'bg-gray-100 dark:bg-gray-900 dark:text-gray-400',
+        )}
+      >
         {selectedOptions
           .filter(Boolean)
           .map(option =>
             <span
               key={option}
+              role="button"
+              aria-label={`Remove tag "${option}"`}
               className={clsx(
                 'cursor-pointer select-none',
                 'whitespace-nowrap',
                 'px-1.5 py-0.5',
-                'bg-gray-100 dark:bg-gray-800',
-                'active:bg-gray-50 dark:active:bg-gray-900',
+                'bg-gray-200/60 dark:bg-gray-800',
+                'active:bg-gray-200 dark:active:bg-gray-900',
                 'rounded-sm',
               )}
               onClick={() => removeOption(option)}
@@ -206,43 +253,64 @@ export default function TagInput({
           autoComplete="off"
           autoCapitalize="off"
           readOnly={readOnly}
+          onFocus={() => setSelectedOptionIndex(undefined)}
+          aria-autocomplete="list"
+          aria-expanded={shouldShowMenu}
+          aria-haspopup="true"
+          aria-controls={shouldShowMenu ? ARIA_ID_TAG_OPTIONS : undefined}
+          role="combobox"
         />
         <input type="hidden" name={name} value={value} />
       </div>
-      <div className="relative">
-        <div
-          ref={optionsRef}
-          className={clsx(
-            !(hasFocus && optionsFiltered.length > 0) && 'hidden',
-            'control absolute top-0 mt-3 w-full z-10 !px-1.5 !py-1.5',
-            'max-h-[8rem] overflow-y-auto',
-            'flex flex-col gap-y-1',
-            'text-xl shadow-lg dark:shadow-xl',
-          )}
-        >
-          {optionsFiltered.map((option, index) =>
-            <div
-              key={option}
-              tabIndex={0}
-              className={clsx(
-                'cursor-pointer select-none',
-                'px-1 py-1 rounded-sm',
-                index === 0 && selectedOptionIndex === undefined &&
-                  'bg-gray-100 dark:bg-gray-800',
-                'hover:bg-gray-100 dark:hover:bg-gray-800',
-                'active:bg-gray-50 dark:active:bg-gray-900',
-                'focus:bg-gray-100 dark:focus:bg-gray-800',
-                'outline-none',
-              )}
-              onClick={() => {
-                addOption(option);
-                setInputText('');
-              }}
-            >
-              {option}
-            </div>)}
-        </div>
-      </div>
+      {shouldShowMenu && optionsFiltered.length > 0 &&
+        <div className="relative">
+          <div
+            id={ARIA_ID_TAG_OPTIONS}
+            role="listbox"
+            ref={optionsRef}
+            className={clsx(
+              'control absolute top-0 mt-3 w-full z-10 !px-1.5 !py-1.5',
+              'max-h-[8rem] overflow-y-auto',
+              'flex flex-col gap-y-1',
+              'text-xl shadow-lg dark:shadow-xl',
+            )}
+          >
+            {optionsFiltered.map(({ value, annotation }, index) =>
+              <div
+                key={value}
+                role="option"
+                aria-selected={
+                  index === selectedOptionIndex ||
+                  (index === 0 && selectedOptionIndex === undefined)
+                }
+                tabIndex={0}
+                className={clsx(
+                  'group flex items-center gap-1',
+                  'cursor-pointer select-none',
+                  'px-1.5 py-1 rounded-sm',
+                  'hover:bg-gray-100 dark:hover:bg-gray-800',
+                  'active:bg-gray-50 dark:active:bg-gray-900',
+                  'focus:bg-gray-100 dark:focus:bg-gray-800',
+                  index === 0 && selectedOptionIndex === undefined &&
+                    'bg-gray-100 dark:bg-gray-800',
+                  'outline-none',
+                )}
+                onClick={() => {
+                  addOption(value);
+                  setInputText('');
+                }}
+                onFocus={() => setSelectedOptionIndex(index)}
+              >
+                <span className="grow min-w-0 truncate">
+                  {value}
+                </span>
+                {annotation &&
+                  <span className="whitespace-nowrap text-dim text-sm">
+                    {annotation}
+                  </span>}
+              </div>)}
+          </div>
+        </div>}
     </div>
   );
 }

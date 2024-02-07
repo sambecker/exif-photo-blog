@@ -5,7 +5,7 @@ import {
   FORM_METADATA_ENTRIES,
   PhotoFormData,
   convertFormKeysToLabels,
-  getInitialErrors,
+  getFormErrors,
   isFormValid,
 } from '.';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
@@ -23,7 +23,7 @@ import { toastSuccess, toastWarning } from '@/toast';
 import { getDimensionsFromSize } from '@/utility/size';
 import ImageBlurFallback from '@/components/ImageBlurFallback';
 import { BLUR_ENABLED } from '@/site/config';
-import { sortTagsWithoutFavs } from '@/tag';
+import { Tags, sortTagsObjectWithoutFavs } from '@/tag';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -37,13 +37,13 @@ export default function PhotoForm({
   initialPhotoForm: Partial<PhotoFormData>
   updatedExifData?: Partial<PhotoFormData>
   type?: 'create' | 'edit'
-  uniqueTags?: string[]
+  uniqueTags?: Tags
   debugBlur?: boolean
 }) {
   const [formData, setFormData] =
     useState<Partial<PhotoFormData>>(initialPhotoForm);
   const [formErrors, setFormErrors] =
-    useState(getInitialErrors(initialPhotoForm));
+    useState(getFormErrors(initialPhotoForm));
 
   // Update form when EXIF data
   // is refreshed by parent
@@ -146,51 +146,57 @@ export default function PhotoForm({
         onSubmit={() => blur()}
         className="space-y-6"
       >
-        {FORM_METADATA_ENTRIES.map(([key, {
-          label,
-          note,
-          required,
-          options,
-          optionsDefaultLabel,
-          readOnly,
-          validate,
-          capitalize,
-          hideIfEmpty,
-          hideBasedOnCamera,
-          loadingMessage,
-          type,
-        }]) =>
-          (
-            (!hideIfEmpty || formData[key]) &&
-            !hideBasedOnCamera?.(formData.make)
-          ) &&
-            <FieldSetWithStatus
-              key={key}
-              id={key}
-              label={label}
-              note={note}
-              error={formErrors[key]}
-              value={formData[key] ?? ''}
-              onChange={value => {
-                setFormData({ ...formData, [key]: value });
-                if (validate) {
-                  setFormErrors({ ...formErrors, [key]: validate(value) });
-                }
-              }}
-              selectOptions={options}
-              selectOptionsDefaultLabel={optionsDefaultLabel}
-              commaSeparatedOptions={key === 'tags'
-                ? sortTagsWithoutFavs(uniqueTags ?? [])
-                : undefined}
-              required={required}
-              readOnly={readOnly}
-              capitalize={capitalize}
-              placeholder={loadingMessage && !formData[key]
-                ? loadingMessage
-                : undefined}
-              loading={loadingMessage && !formData[key] ? true : false}
-              type={type}
-            />)}
+        {FORM_METADATA_ENTRIES(
+          sortTagsObjectWithoutFavs(uniqueTags ?? [])
+            .map(({ tag, count }) => ({
+              value: tag,
+              annotation: `× ${count}`,
+            }))
+        )
+          .map(([key, {
+            label,
+            note,
+            required,
+            selectOptions,
+            selectOptionsDefaultLabel,
+            tagOptions,
+            readOnly,
+            validate,
+            capitalize,
+            hideIfEmpty,
+            hideBasedOnCamera,
+            loadingMessage,
+            type,
+          }]) =>
+            (
+              (!hideIfEmpty || formData[key]) &&
+              !hideBasedOnCamera?.(formData.make)
+            ) &&
+              <FieldSetWithStatus
+                key={key}
+                id={key}
+                label={label}
+                note={note}
+                error={formErrors[key]}
+                value={formData[key] ?? ''}
+                onChange={value => {
+                  setFormData({ ...formData, [key]: value });
+                  if (validate) {
+                    setFormErrors({ ...formErrors, [key]: validate(value) });
+                  }
+                }}
+                selectOptions={selectOptions}
+                selectOptionsDefaultLabel={selectOptionsDefaultLabel}
+                tagOptions={tagOptions}
+                required={required}
+                readOnly={readOnly}
+                capitalize={capitalize}
+                placeholder={loadingMessage && !formData[key]
+                  ? loadingMessage
+                  : undefined}
+                loading={loadingMessage && !formData[key] ? true : false}
+                type={type}
+              />)}
         <div className="flex gap-3">
           <Link
             className="button"

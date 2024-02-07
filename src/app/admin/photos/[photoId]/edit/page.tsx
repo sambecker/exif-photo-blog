@@ -12,7 +12,7 @@ export default async function PhotoEditPage({
 
   if (!photo) { redirect(PATH_ADMIN); }
 
-  const uniqueTags = (await getUniqueTagsCached()).map(tag => tag.tag);
+  const uniqueTags = await getUniqueTagsCached();
 
   return (
     <PhotoEditPageClient {...{ photo, uniqueTags }} />

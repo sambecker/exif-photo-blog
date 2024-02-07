@@ -4,7 +4,7 @@ import { LegacyRef } from 'react';
 import { useFormStatus } from 'react-dom';
 import Spinner from './Spinner';
 import { clsx } from 'clsx/lite';
-import { FieldSetType } from '@/photo/form';
+import { FieldSetType, AnnotatedTag } from '@/photo/form';
 import TagInput from './TagInput';
 
 export default function FieldSetWithStatus({
@@ -16,7 +16,7 @@ export default function FieldSetWithStatus({
   onChange,
   selectOptions,
   selectOptionsDefaultLabel,
-  commaSeparatedOptions,
+  tagOptions,
   placeholder,
   loading,
   required,
@@ -33,7 +33,7 @@ export default function FieldSetWithStatus({
   onChange?: (value: string) => void
   selectOptions?: { value: string, label: string }[]
   selectOptionsDefaultLabel?: string
-  commaSeparatedOptions?: string[]
+  tagOptions?: AnnotatedTag []
   placeholder?: string
   loading?: boolean
   required?: boolean
@@ -91,11 +91,11 @@ export default function FieldSetWithStatus({
               {optionLabel}
             </option>)}
         </select>
-        : commaSeparatedOptions
+        : tagOptions
           ? <TagInput
             name={id}
             value={value}
-            options={commaSeparatedOptions}
+            options={tagOptions}
             onChange={onChange}
             className={clsx(Boolean(error) && 'error')}
             readOnly={readOnly || pending}

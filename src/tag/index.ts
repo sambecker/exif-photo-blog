@@ -46,6 +46,9 @@ export const sortTagsObject = (
 export const sortTagsWithoutFavs = (tags: string[]) =>
   sortTags(tags, TAG_FAVS);
 
+export const sortTagsObjectWithoutFavs = (tags: Tags) =>
+  sortTagsObject(tags, TAG_FAVS);
+
 export const descriptionForTaggedPhotos = (
   photos: Photo[],
   dateBased?: boolean,
