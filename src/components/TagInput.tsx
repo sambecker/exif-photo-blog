@@ -214,7 +214,8 @@ export default function TagInput({
         className={clsx(
           className,
           'w-full control !px-2 !py-2',
-          'group-focus-within:outline outline-1 outline-blue-600',
+          'outline-1 outline-blue-600',
+          'group-focus-within:outline group-active:outline',
           'inline-flex flex-wrap items-center gap-2',
           readOnly && 'cursor-not-allowed',
           readOnly && 'bg-gray-100 dark:bg-gray-900 dark:text-gray-400',
