@@ -121,12 +121,12 @@ export default function TagInput({
       case 'Enter':
         // Only trap focus if there are options to select
         // otherwise allow form to submit
-        if (optionsFiltered.length > 0) {
+        if (shouldShowMenu && optionsFiltered.length > 0) {
           e.stopImmediatePropagation();
           e.preventDefault();
+          addOption(optionsFiltered[selectedOptionIndex ?? 0].value);
+          setInputText('');
         }
-        addOption(optionsFiltered[selectedOptionIndex ?? 0].value);
-        setInputText('');
         break;
       case ',':
         addOption(inputText);
@@ -181,6 +181,7 @@ export default function TagInput({
     selectedOptionIndex,
     optionsFiltered,
     addOption,
+    shouldShowMenu,
   ]);
 
   return (
@@ -272,13 +273,7 @@ export default function TagInput({
                 {value}
               </span>
               {annotation &&
-                <span className={clsx(
-                  'whitespace-nowrap text-dim text-sm',
-                  'group-focus:inline-block group-hover:inline-block',
-                  index === 0 && selectedOptionIndex === undefined
-                    ? 'inline-block'
-                    : 'hidden',
-                )}>
+                <span className="whitespace-nowrap text-dim text-sm">
                   {annotation}
                 </span>}
             </div>)}
