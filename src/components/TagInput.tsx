@@ -186,7 +186,7 @@ export default function TagInput({
   return (
     <div
       ref={containerRef}
-      className="flex flex-col w-full"
+      className="flex flex-col w-full group"
       onFocus={() => setShouldShowMenu(true)}
       onBlur={e => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
@@ -197,6 +197,7 @@ export default function TagInput({
       <div className={clsx(
         className,
         'w-full control !px-2 !py-2',
+        'group-focus-within:outline outline-1 outline-blue-600',
         'inline-flex flex-wrap items-center gap-2',
         readOnly && 'cursor-not-allowed',
         readOnly && 'bg-gray-100 dark:bg-gray-900 dark:text-gray-400',
