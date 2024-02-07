@@ -6,6 +6,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 const KEY_KEYDOWN = 'keydown';
 const CREATE_LABEL = 'Create';
 
+const ARIA_ID_TAG_CONTROL = 'tag-control';
+const ARIA_ID_TAG_OPTIONS = 'tag-options';
+
 export default function TagInput({
   name,
   value = '',
@@ -195,19 +198,35 @@ export default function TagInput({
         }
       }}
     >
-      <div className={clsx(
-        className,
-        'w-full control !px-2 !py-2',
-        'group-focus-within:outline outline-1 outline-blue-600',
-        'inline-flex flex-wrap items-center gap-2',
-        readOnly && 'cursor-not-allowed',
-        readOnly && 'bg-gray-100 dark:bg-gray-900 dark:text-gray-400',
-      )}>
+      <div
+        id={ARIA_ID_TAG_CONTROL}
+        role="region"
+        aria-live="polite"
+        className="sr-only mb-3 text-dim"
+      >
+        {selectedOptions.length === 0
+          ? 'No tags selected'
+          : selectedOptions.join(', ') +
+            ` tag${selectedOptions.length !== 1 ? 's' : ''} selected`}
+      </div>
+      <div
+        aria-controls={ARIA_ID_TAG_CONTROL}
+        className={clsx(
+          className,
+          'w-full control !px-2 !py-2',
+          'group-focus-within:outline outline-1 outline-blue-600',
+          'inline-flex flex-wrap items-center gap-2',
+          readOnly && 'cursor-not-allowed',
+          readOnly && 'bg-gray-100 dark:bg-gray-900 dark:text-gray-400',
+        )}
+      >
         {selectedOptions
           .filter(Boolean)
           .map(option =>
             <span
               key={option}
+              role="button"
+              aria-label={`Remove tag "${option}"`}
               className={clsx(
                 'cursor-pointer select-none',
                 'whitespace-nowrap',
@@ -234,51 +253,63 @@ export default function TagInput({
           autoCapitalize="off"
           readOnly={readOnly}
           onFocus={() => setSelectedOptionIndex(undefined)}
+          aria-autocomplete="list"
+          aria-expanded={shouldShowMenu}
+          aria-haspopup="true"
+          aria-controls={shouldShowMenu ? ARIA_ID_TAG_OPTIONS : undefined}
+          role="combobox"
         />
         <input type="hidden" name={name} value={value} />
       </div>
-      <div className="relative">
-        <div
-          ref={optionsRef}
-          className={clsx(
-            !(shouldShowMenu && optionsFiltered.length > 0) && 'hidden',
-            'control absolute top-0 mt-3 w-full z-10 !px-1.5 !py-1.5',
-            'max-h-[8rem] overflow-y-auto',
-            'flex flex-col gap-y-1',
-            'text-xl shadow-lg dark:shadow-xl',
-          )}
-        >
-          {optionsFiltered.map(({ value, annotation }, index) =>
-            <div
-              key={value}
-              tabIndex={0}
-              className={clsx(
-                'group flex items-center gap-1',
-                'cursor-pointer select-none',
-                'px-1.5 py-1 rounded-sm',
-                'hover:bg-gray-100 dark:hover:bg-gray-800',
-                'active:bg-gray-50 dark:active:bg-gray-900',
-                'focus:bg-gray-100 dark:focus:bg-gray-800',
-                index === 0 && selectedOptionIndex === undefined &&
-                  'bg-gray-100 dark:bg-gray-800',
-                'outline-none',
-              )}
-              onClick={() => {
-                addOption(value);
-                setInputText('');
-              }}
-              onFocus={() => setSelectedOptionIndex(index)}
-            >
-              <span className="grow min-w-0 truncate">
-                {value}
-              </span>
-              {annotation &&
-                <span className="whitespace-nowrap text-dim text-sm">
-                  {annotation}
-                </span>}
-            </div>)}
-        </div>
-      </div>
+      {shouldShowMenu && optionsFiltered.length > 0 &&
+        <div className="relative">
+          <div
+            id={ARIA_ID_TAG_OPTIONS}
+            role="listbox"
+            ref={optionsRef}
+            className={clsx(
+              'control absolute top-0 mt-3 w-full z-10 !px-1.5 !py-1.5',
+              'max-h-[8rem] overflow-y-auto',
+              'flex flex-col gap-y-1',
+              'text-xl shadow-lg dark:shadow-xl',
+            )}
+          >
+            {optionsFiltered.map(({ value, annotation }, index) =>
+              <div
+                key={value}
+                role="option"
+                aria-selected={
+                  index === selectedOptionIndex ||
+                  (index === 0 && selectedOptionIndex === undefined)
+                }
+                tabIndex={0}
+                className={clsx(
+                  'group flex items-center gap-1',
+                  'cursor-pointer select-none',
+                  'px-1.5 py-1 rounded-sm',
+                  'hover:bg-gray-100 dark:hover:bg-gray-800',
+                  'active:bg-gray-50 dark:active:bg-gray-900',
+                  'focus:bg-gray-100 dark:focus:bg-gray-800',
+                  index === 0 && selectedOptionIndex === undefined &&
+                    'bg-gray-100 dark:bg-gray-800',
+                  'outline-none',
+                )}
+                onClick={() => {
+                  addOption(value);
+                  setInputText('');
+                }}
+                onFocus={() => setSelectedOptionIndex(index)}
+              >
+                <span className="grow min-w-0 truncate">
+                  {value}
+                </span>
+                {annotation &&
+                  <span className="whitespace-nowrap text-dim text-sm">
+                    {annotation}
+                  </span>}
+              </div>)}
+          </div>
+        </div>}
     </div>
   );
 }
