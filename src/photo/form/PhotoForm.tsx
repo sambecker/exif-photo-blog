@@ -151,6 +151,8 @@ export default function PhotoForm({
             .map(({ tag, count }) => ({
               value: tag,
               annotation: `× ${count}`,
+              annotationAria:
+                `tagged in ${count} photo${count === 1 ? '' : 's'}`,
             }))
         )
           .map(([key, {
