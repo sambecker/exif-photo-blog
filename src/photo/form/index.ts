@@ -26,7 +26,11 @@ export type FieldSetType =
   'password' |
   'checkbox';
 
-export type AnnotatedTag = { value: string, annotation?: string };
+export type AnnotatedTag = {
+  value: string,
+  annotation?: string,
+  annotationAria?: string,
+};
 
 type FormMeta = {
   label: string

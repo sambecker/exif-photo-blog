@@ -136,15 +136,19 @@ export default function TagInput({
         setInputText('');
         break;
       case 'ArrowDown':
-        setSelectedOptionIndex(i => {
-          if (i === undefined) {
-            return 1;
-          } else if (i >= optionsFiltered.length - 1) {
-            return 0;
-          } else {
-            return i + 1;
-          }
-        });
+        if (shouldShowMenu) {
+          setSelectedOptionIndex(i => {
+            if (i === undefined) {
+              return optionsFiltered.length > 1 ? 1 : 0;
+            } else if (i >= optionsFiltered.length - 1) {
+              return 0;
+            } else {
+              return i + 1;
+            }
+          });
+        } else {
+          setShouldShowMenu(true);
+        }
         break;
       case 'ArrowUp':
         setSelectedOptionIndex(i => {
@@ -275,7 +279,11 @@ export default function TagInput({
               'text-xl shadow-lg dark:shadow-xl',
             )}
           >
-            {optionsFiltered.map(({ value, annotation }, index) =>
+            {optionsFiltered.map(({
+              value,
+              annotation,
+              annotationAria,
+            }, index) =>
               <div
                 key={value}
                 role="option"
@@ -305,8 +313,13 @@ export default function TagInput({
                   {value}
                 </span>
                 {annotation &&
-                  <span className="whitespace-nowrap text-dim text-sm">
-                    {annotation}
+                  <span
+                    className="whitespace-nowrap text-dim text-sm"
+                    aria-label={annotationAria}
+                  >
+                    <span aria-hidden={Boolean(annotationAria)}>
+                      {annotation}
+                    </span>
                   </span>}
               </div>)}
           </div>
