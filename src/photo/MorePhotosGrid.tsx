@@ -1,5 +1,5 @@
 import MoreComponents from '@/components/MoreComponents';
-import { getPhotosCached } from '@/cache';
+import { getPhotosCached } from '@/photo/cache';
 import PhotoGrid from './PhotoGrid';
 
 export function MorePhotosGrid({

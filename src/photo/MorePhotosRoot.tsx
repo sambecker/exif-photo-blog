@@ -1,6 +1,6 @@
 import MoreComponents from '@/components/MoreComponents';
 import PhotosLarge from './PhotosLarge';
-import { getPhotosCached } from '@/cache';
+import { getPhotosCached } from '@/photo/cache';
 
 export function MorePhotosRoot({
   initialOffset,

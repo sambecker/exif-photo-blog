@@ -1,8 +1,8 @@
+import { getStorageUploadUrlsNoStore } from '@/services/storage/cache';
 import {
-  getStorageUploadUrlsNoStore,
   getPhotosCountIncludingHiddenCached,
   getUniqueTagsCached,
-} from '@/cache';
+} from '@/photo/cache';
 import {
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_TAGS,
