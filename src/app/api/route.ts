@@ -1,4 +1,4 @@
-import { getPhotosCached } from '@/cache';
+import { getPhotosCached } from '@/photo/cache';
 import { API_PHOTO_REQUEST_LIMIT, formatPhotoForApi } from '@/site/api';
 import {
   BASE_URL,

@@ -24,12 +24,8 @@ import {
   getPhotosNearId,
 } from '@/services/vercel-postgres';
 import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
-import { getStoragePhotoUrls, getStorageUploadUrls } from '@/services/storage';
-import type { Session } from 'next-auth';
 import { createCameraKey } from '@/camera';
 import { PATHS_ADMIN } from '@/site/paths';
-import { cache } from 'react';
-import { auth } from '@/auth';
 
 // Table key
 const KEY_PHOTOS            = 'photos';
@@ -209,31 +205,9 @@ export const getUniqueFilmSimulationsCached =
     [KEY_PHOTOS, KEY_FILM_SIMULATIONS],
   );
 
-export const authCached = cache(auth);
-
-// No Store
+// No store
 
 export const getPhotoNoStore = (...args: Parameters<typeof getPhoto>) => {
   unstable_noStore();
   return getPhoto(...args);
-};
-
-export const getStorageUploadUrlsNoStore: typeof getStorageUploadUrls =
-  (...args) => {
-    unstable_noStore();
-    return getStorageUploadUrls(...args);
-  };
-
-export const getStoragePhotoUrlsNoStore: typeof getStoragePhotoUrls =
-  (...args) => {
-    unstable_noStore();
-    return getStoragePhotoUrls(...args);
-  };
-
-export const getImageCacheHeadersForAuth = (session: Session | null) => {
-  return {
-    'Cache-Control': !session?.user
-      ? 's-maxage=3600, stale-while-revalidate=59'
-      : 's-maxage=1, stale-while-revalidate=59',
-  };
 };

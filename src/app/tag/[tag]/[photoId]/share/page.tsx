@@ -1,4 +1,4 @@
-import { getPhotoCached } from '@/cache';
+import { getPhotoCached } from '@/photo/cache';
 import PhotoShareModal from '@/photo/PhotoShareModal';
 import { PATH_ROOT } from '@/site/paths';
 import { redirect } from 'next/navigation';

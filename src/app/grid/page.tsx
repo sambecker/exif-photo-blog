@@ -1,9 +1,9 @@
-import { getPhotosCached } from '@/cache';
+import { getPhotosCached } from '@/photo/cache';
 import SiteGrid from '@/components/SiteGrid';
 import { generateOgImageMetaForPhotos } from '@/photo';
 import PhotoGrid from '@/photo/PhotoGrid';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
-import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
+import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
 import { pathForGrid } from '@/site/paths';
 import { Metadata } from 'next';
 import {

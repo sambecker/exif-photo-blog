@@ -1,4 +1,4 @@
-import { authCached } from '@/cache';
+import { authCached } from '@/auth/cache';
 import NavClient from './NavClient';
 
 export default async function Nav() {

@@ -1,4 +1,4 @@
-import { Photo, shouldShowExifDataForPhoto } from '..';
+import { Photo, shouldShowExifDataForPhoto } from '../photo';
 import { AiFillApple } from 'react-icons/ai';
 import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';

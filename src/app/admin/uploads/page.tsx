@@ -1,5 +1,5 @@
 import StorageUrls from '@/admin/StorageUrls';
-import { getStorageUploadUrlsNoStore } from '@/cache';
+import { getStorageUploadUrlsNoStore } from '@/services/storage/cache';
 import SiteGrid from '@/components/SiteGrid';
 
 export default async function AdminUploadsPage() {

@@ -11,7 +11,7 @@ import {
   absolutePathForPhotoImage,
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotoCached, getPhotosNearIdCached } from '@/cache';
+import { getPhotoCached, getPhotosNearIdCached } from '@/photo/cache';
 
 export const runtime = 'edge';
 

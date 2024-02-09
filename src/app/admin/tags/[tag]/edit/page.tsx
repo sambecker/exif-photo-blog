@@ -1,6 +1,6 @@
 import AdminChildPage from '@/components/AdminChildPage';
 import { redirect } from 'next/navigation';
-import { getPhotosCached, getPhotosTagCountCached } from '@/cache';
+import { getPhotosCached, getPhotosTagCountCached } from '@/photo/cache';
 import TagForm from '@/tag/TagForm';
 import { PATH_ADMIN, PATH_ADMIN_TAGS, pathForTag } from '@/site/paths';
 import PhotoTag from '@/tag/PhotoTag';

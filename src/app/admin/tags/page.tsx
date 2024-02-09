@@ -5,7 +5,7 @@ import AdminGrid from '@/admin/AdminGrid';
 import { Fragment } from 'react';
 import DeleteButton from '@/admin/DeleteButton';
 import { photoQuantityText } from '@/photo';
-import { getUniqueTagsHiddenCached } from '@/cache';
+import { getUniqueTagsHiddenCached } from '@/photo/cache';
 import PhotoTag from '@/tag/PhotoTag';
 import { formatTag, isTagFavs, sortTagsObject } from '@/tag';
 import EditButton from '@/admin/EditButton';

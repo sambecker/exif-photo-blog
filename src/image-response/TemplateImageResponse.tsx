@@ -1,4 +1,4 @@
-import { Photo } from '..';
+import { Photo } from '../photo';
 import IconFullFrame from '@/site/IconFullFrame';
 import IconGrid from '@/site/IconGrid';
 import ImagePhotoGrid from './components/ImagePhotoGrid';

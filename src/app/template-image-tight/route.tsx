@@ -1,13 +1,13 @@
-import { auth } from '@/auth';
-import { getImageCacheHeadersForAuth, getPhotosCached } from '@/cache';
+import { getPhotosCached } from '@/photo/cache';
 import {
   IMAGE_OG_DIMENSION,
   MAX_PHOTOS_TO_SHOW_TEMPLATE_TIGHT,
-} from '@/photo/image-response';
+} from '@/image-response';
 import TemplateImageResponse from
-  '@/photo/image-response/TemplateImageResponse';
+  '@/image-response/TemplateImageResponse';
 import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/og';
+import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 
 export const runtime = 'edge';
 
@@ -22,7 +22,7 @@ export async function GET() {
       limit: MAX_PHOTOS_TO_SHOW_TEMPLATE_TIGHT,
     }),
     getIBMPlexMonoMedium(),
-    getImageCacheHeadersForAuth(await auth()),
+    getImageResponseCacheControlHeaders(),
   ]);
 
   const { width, height } = IMAGE_OG_DIMENSION;
