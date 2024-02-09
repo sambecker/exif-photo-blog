@@ -14,10 +14,9 @@ import {
 import { titleForPhoto } from '@/photo';
 import MoreComponentsClient from '@/components/MoreComponentsClient';
 import {
-  getStoragePhotoUrlsNoStore,
   getPhotosCached,
   getPhotosCountIncludingHiddenCached,
-} from '@/cache';
+} from '@/photo/cache';
 import { AiOutlineEyeInvisible } from 'react-icons/ai';
 import {
   PaginationParams,
@@ -30,6 +29,7 @@ import StorageUrls from '@/admin/StorageUrls';
 import { PRO_MODE_ENABLED } from '@/site/config';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import IconGrSync from '@/site/IconGrSync';
+import { getStoragePhotoUrlsNoStore } from '@/services/storage/cache';
 
 const DEBUG_PHOTO_BLOBS = false;
 

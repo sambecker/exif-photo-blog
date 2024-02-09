@@ -10,7 +10,7 @@ import {
   absolutePathForPhotoImage,
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotoCached } from '@/cache';
+import { getPhotoCached } from '@/photo/cache';
 import { cameraFromPhoto } from '@/camera';
 import { getPhotosCameraDataCached } from '@/camera/data';
 import { ReactNode } from 'react';

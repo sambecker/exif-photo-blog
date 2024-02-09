@@ -1,9 +1,9 @@
-import { auth } from '@/auth';
-import { getImageCacheHeadersForAuth, getPhotoCached } from '@/cache';
-import { IMAGE_OG_DIMENSION } from '@/photo/image-response';
-import PhotoImageResponse from '@/photo/image-response/PhotoImageResponse';
+import { getPhotoCached } from '@/photo/cache';
+import { IMAGE_OG_DIMENSION } from '@/image-response';
+import PhotoImageResponse from '@/image-response/PhotoImageResponse';
 import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/og';
+import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 
 export const runtime = 'edge';
 
@@ -18,7 +18,7 @@ export async function GET(
   ] = await Promise.all([
     getPhotoCached(context.params.photoId),
     getIBMPlexMonoMedium(),
-    getImageCacheHeadersForAuth(await auth()),
+    getImageResponseCacheControlHeaders(),
   ]);
   
   if (!photo) { return new Response('Photo not found', { status: 404 }); }

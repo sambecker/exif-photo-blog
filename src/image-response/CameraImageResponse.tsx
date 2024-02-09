@@ -1,24 +1,25 @@
-import { Photo } from '..';
-import { FaStar, FaTag } from 'react-icons/fa';
+import { Photo } from '../photo';
 import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
+import { Camera, cameraFromPhoto, formatCameraText } from '@/camera';
+import { IoMdCamera } from 'react-icons/io';
 import { NextImageSize } from '@/services/next-image';
-import { isTagFavs } from '@/tag';
 
-export default function TagImageResponse({
-  tag,
+export default function CameraImageResponse({
+  camera: cameraProp,
   photos,
   width,
   height,
   fontFamily,
 }: {
-  tag: string,
+  camera: Camera
   photos: Photo[]
   width: NextImageSize
   height: number
   fontFamily: string
-}) {  
+}) {
+  const camera = cameraFromPhoto(photos[0], cameraProp);
   return (
     <ImageContainer {...{
       width,
@@ -33,20 +34,13 @@ export default function TagImageResponse({
         }}
       />
       <ImageCaption {...{ width, height, fontFamily }}>
-        {isTagFavs(tag)
-          ? <FaStar
-            size={height * .074}
-            style={{
-              transform: `translateY(${height * .01}px)`,
-              // Fix horizontal distortion in icon size
-              width: height * .08,
-            }}
-          />
-          : <FaTag
-            size={height * .067}
-            style={{ transform: `translateY(${height * .02}px)` }}
-          />}
-        <span>{tag.toUpperCase()}</span>
+        <IoMdCamera
+          size={height * .09}
+          style={{ transform: `translateY(${height * 0.002}px)` }}
+        />
+        <span style={{textTransform: 'uppercase'}}>
+          {formatCameraText(camera)}
+        </span>
       </ImageCaption>
     </ImageContainer>
   );

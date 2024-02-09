@@ -1,4 +1,4 @@
-import { getPhotosCached } from '@/cache';
+import { getPhotosCached } from '@/photo/cache';
 import SiteGrid from '@/components/SiteGrid';
 import {
   PHOTO_LOAD_MULTIPLE_GRID,
@@ -6,7 +6,7 @@ import {
 } from '@/photo';
 import PhotoGrid from '@/photo/PhotoGrid';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
-import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
+import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
 import { Metadata } from 'next/types';
 import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
 import { getPhotoSidebarDataCached } from '@/photo/data';

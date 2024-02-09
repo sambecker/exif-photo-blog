@@ -12,7 +12,7 @@ import {
   absolutePathForPhotoImage,
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotosNearIdCached } from '@/cache';
+import { getPhotosNearIdCached } from '@/photo/cache';
 import { getPhotoIds } from '@/services/vercel-postgres';
 
 export async function generateStaticParams() {

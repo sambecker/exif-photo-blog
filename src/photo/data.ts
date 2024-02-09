@@ -3,7 +3,7 @@ import {
   getUniqueCamerasCached,
   getUniqueFilmSimulationsCached,
   getUniqueTagsCached,
-} from '@/cache';
+} from '@/photo/cache';
 import { SHOW_FILM_SIMULATIONS } from '@/site/config';
 import { TAG_FAVS } from '@/tag';
 

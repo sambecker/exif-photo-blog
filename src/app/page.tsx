@@ -1,11 +1,11 @@
-import { getPhotosCached, getPhotosCountCached } from '@/cache';
+import { getPhotosCached, getPhotosCountCached } from '@/photo/cache';
 import {
   PHOTO_LOAD_MULTIPLE_ROOT,
   generateOgImageMetaForPhotos,
 } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
-import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
+import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
 import PhotosLarge from '@/photo/PhotosLarge';
 import { Suspense } from 'react';
 import { MorePhotosRoot } from '@/photo/MorePhotosRoot';

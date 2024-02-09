@@ -1,4 +1,4 @@
-import { getPhotosCached, getPhotosCountCached } from '@/cache';
+import { getPhotosCached, getPhotosCountCached } from '@/photo/cache';
 import MoreComponentsClient from '@/components/MoreComponentsClient';
 import StaggeredOgPhotos from '@/photo/StaggeredOgPhotos';
 import {

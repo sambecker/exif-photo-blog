@@ -1,11 +1,11 @@
-import { getPhotosCached } from '@/cache';
+import { getPhotosCached } from '@/photo/cache';
 import InfoBlock from '@/components/InfoBlock';
 import RedirectOnDesktop from '@/components/RedirectOnDesktop';
 import SiteGrid from '@/components/SiteGrid';
 import { generateOgImageMetaForPhotos } from '@/photo';
 import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
 import { getPhotoSidebarDataCached } from '@/photo/data';
-import { MAX_PHOTOS_TO_SHOW_OG } from '@/photo/image-response';
+import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
 import { PATH_GRID } from '@/site/paths';
 import { Metadata } from 'next/types';
 
