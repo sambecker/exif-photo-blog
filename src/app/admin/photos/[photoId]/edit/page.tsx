@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { getPhotoNoStore, getUniqueTagsCached } from '@/cache';
+import { getPhotoNoStore, getUniqueTagsCached } from '@/photo/cache';
 import { PATH_ADMIN } from '@/site/paths';
 import PhotoEditPageClient from '@/photo/PhotoEditPageClient';
 

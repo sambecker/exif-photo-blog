@@ -2,7 +2,7 @@ import {
   getPhotosCached,
   getPhotosFilmSimulationCountCached,
   getPhotosFilmSimulationDateRangeCached,
-} from '@/cache';
+} from '@/photo/cache';
 import {
   PaginationSearchParams,
   getPaginationForSearchParams,

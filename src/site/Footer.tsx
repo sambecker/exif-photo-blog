@@ -1,4 +1,4 @@
-import { authCached } from '@/cache';
+import { authCached } from '@/auth/cache';
 import FooterClient from './FooterClient';
 
 export default async function Footer() {

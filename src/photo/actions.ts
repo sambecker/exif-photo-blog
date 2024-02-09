@@ -22,7 +22,7 @@ import {
   revalidateAdminPaths,
   revalidateAllKeysAndPaths,
   revalidatePhotosKey,
-} from '@/cache';
+} from '@/photo/cache';
 import { PATH_ADMIN_PHOTOS, PATH_ADMIN_TAGS } from '@/site/paths';
 import { extractExifDataFromBlobPath } from './server';
 import { TAG_FAVS, isTagFavs } from '@/tag';

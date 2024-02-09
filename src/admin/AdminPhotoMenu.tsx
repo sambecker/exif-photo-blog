@@ -1,4 +1,4 @@
-import { authCached } from '@/cache';
+import { authCached } from '@/auth/cache';
 import AdminPhotoMenuClient, { AdminPhotoMenuClientProps }
   from './AdminPhotoMenuClient';
 

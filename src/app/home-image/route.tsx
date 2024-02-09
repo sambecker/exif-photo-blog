@@ -1,12 +1,12 @@
-import { auth } from '@/auth';
-import { getImageCacheHeadersForAuth, getPhotosCached } from '@/cache';
+import { getPhotosCached } from '@/photo/cache';
 import {
   IMAGE_OG_DIMENSION_SMALL,
   MAX_PHOTOS_TO_SHOW_OG,
-} from '@/photo/image-response';
-import HomeImageResponse from '@/photo/image-response/HomeImageResponse';
+} from '@/image-response';
+import HomeImageResponse from '@/image-response/HomeImageResponse';
 import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/og';
+import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 
 export const runtime = 'edge';
 
@@ -17,7 +17,7 @@ export async function GET() {
     { fontFamily, fonts },
   ] = await Promise.all([
     getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG }),
-    getImageCacheHeadersForAuth(await auth()),
+    getImageResponseCacheControlHeaders(),
     getIBMPlexMonoMedium(),
   ]);
 

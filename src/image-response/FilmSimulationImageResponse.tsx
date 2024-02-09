@@ -1,25 +1,28 @@
-import { Photo } from '..';
+import { Photo } from '../photo';
 import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
-import { Camera, cameraFromPhoto, formatCameraText } from '@/camera';
-import { IoMdCamera } from 'react-icons/io';
+import {
+  labelForFilmSimulation,
+} from '@/vendors/fujifilm';
+import PhotoFilmSimulationIcon from 
+  '@/simulation/PhotoFilmSimulationIcon';
+import { FilmSimulation } from '@/simulation';
 import { NextImageSize } from '@/services/next-image';
 
-export default function CameraImageResponse({
-  camera: cameraProp,
+export default function FilmSimulationImageResponse({
+  simulation,
   photos,
   width,
   height,
   fontFamily,
 }: {
-  camera: Camera
+  simulation: FilmSimulation,
   photos: Photo[]
   width: NextImageSize
   height: number
   fontFamily: string
-}) {
-  const camera = cameraFromPhoto(photos[0], cameraProp);
+}) {  
   return (
     <ImageContainer {...{
       width,
@@ -34,12 +37,13 @@ export default function CameraImageResponse({
         }}
       />
       <ImageCaption {...{ width, height, fontFamily }}>
-        <IoMdCamera
-          size={height * .09}
-          style={{ transform: `translateY(${height * 0.002}px)` }}
+        <PhotoFilmSimulationIcon
+          simulation={simulation}
+          height={40}
+          style={{ marginRight: -10 }}
         />
-        <span style={{textTransform: 'uppercase'}}>
-          {formatCameraText(camera)}
+        <span style={{ textTransform: 'uppercase' }}>
+          {labelForFilmSimulation(simulation).medium}
         </span>
       </ImageCaption>
     </ImageContainer>

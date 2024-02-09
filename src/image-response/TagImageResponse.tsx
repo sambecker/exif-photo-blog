@@ -1,23 +1,19 @@
-import { Photo } from '..';
+import { Photo } from '../photo';
+import { FaStar, FaTag } from 'react-icons/fa';
 import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
-import {
-  labelForFilmSimulation,
-} from '@/vendors/fujifilm';
-import PhotoFilmSimulationIcon from 
-  '@/simulation/PhotoFilmSimulationIcon';
-import { FilmSimulation } from '@/simulation';
 import { NextImageSize } from '@/services/next-image';
+import { isTagFavs } from '@/tag';
 
-export default function FilmSimulationImageResponse({
-  simulation,
+export default function TagImageResponse({
+  tag,
   photos,
   width,
   height,
   fontFamily,
 }: {
-  simulation: FilmSimulation,
+  tag: string,
   photos: Photo[]
   width: NextImageSize
   height: number
@@ -37,14 +33,20 @@ export default function FilmSimulationImageResponse({
         }}
       />
       <ImageCaption {...{ width, height, fontFamily }}>
-        <PhotoFilmSimulationIcon
-          simulation={simulation}
-          height={40}
-          style={{ marginRight: -10 }}
-        />
-        <span style={{ textTransform: 'uppercase' }}>
-          {labelForFilmSimulation(simulation).medium}
-        </span>
+        {isTagFavs(tag)
+          ? <FaStar
+            size={height * .074}
+            style={{
+              transform: `translateY(${height * .01}px)`,
+              // Fix horizontal distortion in icon size
+              width: height * .08,
+            }}
+          />
+          : <FaTag
+            size={height * .067}
+            style={{ transform: `translateY(${height * .02}px)` }}
+          />}
+        <span>{tag.toUpperCase()}</span>
       </ImageCaption>
     </ImageContainer>
   );

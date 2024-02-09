@@ -1,9 +1,9 @@
 import AdminNav from '@/admin/AdminNav';
 import {
-  getStorageUploadUrlsNoStore,
   getPhotosCountIncludingHiddenCached,
   getUniqueTagsCached,
-} from '@/cache';
+} from '@/photo/cache';
+import { getStorageUploadUrlsNoStore } from '@/services/storage/cache';
 import {
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_TAGS,

@@ -1,14 +1,14 @@
-import { auth } from '@/auth';
-import { getImageCacheHeadersForAuth, getPhotosCached } from '@/cache';
+import { getPhotosCached } from '@/photo/cache';
 import {
   IMAGE_OG_DIMENSION_SMALL,
   MAX_PHOTOS_TO_SHOW_PER_TAG,
-} from '@/photo/image-response';
+} from '@/image-response';
 import FilmSimulationImageResponse from
-  '@/photo/image-response/FilmSimulationImageResponse';
+  '@/image-response/FilmSimulationImageResponse';
 import { FilmSimulation } from '@/simulation';
 import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/og';
+import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 
 export const runtime = 'edge';
 
@@ -25,7 +25,7 @@ export async function GET(
   ] = await Promise.all([
     getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_PER_TAG, simulation }),
     getIBMPlexMonoMedium(),
-    getImageCacheHeadersForAuth(await auth()),
+    getImageResponseCacheControlHeaders(),
   ]);
 
   const { width, height } = IMAGE_OG_DIMENSION_SMALL;
