@@ -29,7 +29,7 @@ export default function SiteChecklistClient({
   hasAwsS3Storage,
   hasMultipleStorageProviders,
   currentStorage,
-  hasAuth,
+  hasAuthSecret,
   hasAdminUser,
   hasTitle,
   hasDomain,
@@ -198,26 +198,27 @@ export default function SiteChecklistClient({
       >
         <ChecklistRow
           title="Setup auth"
-          status={hasAuth}
+          status={hasAuthSecret}
           isPending={isPendingPage}
         >
           Store auth secret in environment variable:
-          <div className="overflow-x-auto">
-            <InfoBlock className="my-1.5 inline-flex" padding="tight">
-              <div className="flex flex-nowrap items-center gap-4">
-                <span>{secret}</span>
-                <div className="flex items-center gap-0.5">
-                  {renderCopyButton('Secret', secret)}
-                  <IconButton
-                    icon={<BiRefresh size={18} />}
-                    onClick={refreshSecret}
-                    isLoading={isPendingSecret}
-                    spinnerColor="text"
-                  />
+          {!hasAuthSecret &&
+            <div className="overflow-x-auto">
+              <InfoBlock className="my-1.5 inline-flex" padding="tight">
+                <div className="flex flex-nowrap items-center gap-4">
+                  <span>{secret}</span>
+                  <div className="flex items-center gap-0.5">
+                    {renderCopyButton('Secret', secret)}
+                    <IconButton
+                      icon={<BiRefresh size={18} />}
+                      onClick={refreshSecret}
+                      isLoading={isPendingSecret}
+                      spinnerColor="text"
+                    />
+                  </div>
                 </div>
-              </div>
-            </InfoBlock>
-          </div>
+              </InfoBlock>
+            </div>}
           {renderEnvVars(['AUTH_SECRET'])}
         </ChecklistRow>
         <ChecklistRow
@@ -237,6 +238,7 @@ export default function SiteChecklistClient({
       <Checklist
         title="Content"
         icon={<BiPencil size={16} />}
+        optional
       >
         <ChecklistRow
           title="Add title"
@@ -260,6 +262,7 @@ export default function SiteChecklistClient({
       <Checklist
         title="Settings"
         icon={<BiCog size={16} />}
+        optional
       >
         <ChecklistRow
           title="Pro Mode"

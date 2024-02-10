@@ -4,10 +4,12 @@ import { clsx } from 'clsx/lite';
 export default function Checklist({
   title,
   icon,
+  optional,
   children,
 }: {
   title: string
   icon?: ReactNode
+  optional?: boolean
   children: ReactNode
 }) {
   return (
@@ -15,11 +17,13 @@ export default function Checklist({
       <div className={clsx(
         'flex items-center gap-3',
         'text-gray-600 dark:text-gray-300',
-        'pl-[18px] mb-3',
+        'pl-[18px] mb-3 text-lg',
       )}>
         {icon}
-        <div className="text-lg">
-          {title}
+        <div className="flex gap-1.5">
+          <div>{title}</div>
+          {optional &&
+            <div className="text-dim">(Optional)</div>}
         </div>
       </div>
       <div className={clsx(
