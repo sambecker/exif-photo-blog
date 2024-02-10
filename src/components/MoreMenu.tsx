@@ -34,6 +34,7 @@ export default function MoreMenu({
           'text-sm',
           'p-1 rounded-md border',
           'bg-content',
+          'shadow-lg dark:shadow-xl',
         )}>
           {items.map(({ href, label }) =>
             <Menu.Item key={href}>
