@@ -29,6 +29,7 @@ export default function MoreMenu({
     'hover:bg-gray-50 active:bg-gray-100',
     'hover:dark:bg-gray-900/75 active:dark:bg-gray-900',
     'whitespace-nowrap',
+    'shadow-none',
     isLoading && 'cursor-not-allowed opacity-50',
   );
 
@@ -56,11 +57,10 @@ export default function MoreMenu({
           <FiMoreHorizontal size={18} />
         </Menu.Button>
         <Menu.Items className={clsx(
-          'block outline-none h-auto',
           'absolute top-6',
-          'text-left',
+          'min-w-[9rem]',
+          'text-sm text-left',
           'md:right-1',
-          'text-sm',
           'p-1 rounded-md border',
           'bg-content',
           'shadow-lg dark:shadow-xl',

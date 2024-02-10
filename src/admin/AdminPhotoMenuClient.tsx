@@ -4,10 +4,9 @@ import { ComponentProps } from 'react';
 import { pathForAdminPhotoEdit } from '@/site/paths';
 import MoreMenu from '../components/MoreMenu';
 import { toggleFavoritePhoto } from '@/photo/actions';
-import { FaRegEdit, FaStar } from 'react-icons/fa';
+import { FaRegEdit, FaRegStar, FaStar } from 'react-icons/fa';
 import { Photo } from '@/photo';
 import { isPathFavs, isPhotoFav } from '@/tag';
-import clsx from 'clsx/lite';
 import { usePathname } from 'next/navigation';
 
 export default function AdminPhotoMenuClient({
@@ -28,10 +27,15 @@ export default function AdminPhotoMenuClient({
           href: pathForAdminPhotoEdit(photo.id),
         }, {
           label: isFav ? 'Unfavorite' : 'Favorite',
-          icon: <FaStar stroke='text-amber-500' className={clsx(
-            'translate-x-[-1px]',
-            isFav && 'text-amber-500',
-          )} />,
+          icon: isFav
+            ? <FaStar
+              size={14}
+              className="translate-y-[-1px] text-amber-500"
+            />
+            : <FaRegStar
+              size={14}
+              className="translate-x-[-1px]"
+            />,
           action: () => toggleFavoritePhoto(photo.id, shouldRedirect),
         },
       ],
