@@ -62,7 +62,7 @@ export default function MoreMenu({
           'text-sm text-left',
           'md:right-1',
           'p-1 rounded-md border',
-          'bg-content',
+          'bg-content outline-none',
           'shadow-lg dark:shadow-xl',
         )}>
           {items.map(({ label, icon, href, action }) =>
