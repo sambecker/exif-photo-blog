@@ -4,7 +4,11 @@ import {
   descriptionForPhotoSet,
   photoQuantityText,
 } from '@/photo';
-import { absolutePathForTag, absolutePathForTagImage } from '@/site/paths';
+import {
+  absolutePathForTag,
+  absolutePathForTagImage,
+  getPathComponents,
+} from '@/site/paths';
 import { capitalizeWords, convertStringToArray } from '@/utility/string';
 
 export const TAG_FAVS = 'favs';
@@ -77,3 +81,8 @@ export const generateMetaForTag = (
 });
 
 export const isTagFavs = (tag: string) => tag.toLowerCase() === TAG_FAVS;
+
+export const isPhotoFav = ({ tags }: Photo) => tags.some(isTagFavs);
+
+export const isPathFavs = (pathname?: string) =>
+  getPathComponents(pathname).tag === TAG_FAVS;

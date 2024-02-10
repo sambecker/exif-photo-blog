@@ -23,7 +23,7 @@ import {
   revalidateAllKeysAndPaths,
   revalidatePhotosKey,
 } from '@/photo/cache';
-import { PATH_ADMIN_PHOTOS, PATH_ADMIN_TAGS } from '@/site/paths';
+import { PATH_ADMIN_PHOTOS, PATH_ADMIN_TAGS, PATH_ROOT } from '@/site/paths';
 import { extractExifDataFromBlobPath } from './server';
 import { TAG_FAVS, isTagFavs } from '@/tag';
 import { convertPhotoToPhotoDbInsert } from '.';
@@ -52,7 +52,10 @@ export async function updatePhotoAction(formData: FormData) {
   redirect(PATH_ADMIN_PHOTOS);
 }
 
-export async function toggleFavoritePhoto(photoId: string) {
+export async function toggleFavoritePhoto(
+  photoId: string,
+  shouldRedirect?: boolean,
+) {
   const photo = await getPhoto(photoId);
   if (photo) {
     const { tags } = photo;
@@ -61,6 +64,9 @@ export async function toggleFavoritePhoto(photoId: string) {
       : [...tags, TAG_FAVS];
     await sqlUpdatePhoto(convertPhotoToPhotoDbInsert(photo));
     revalidateAllKeysAndPaths();
+    if (shouldRedirect) {
+      redirect(PATH_ROOT);
+    }
   }
 }
 

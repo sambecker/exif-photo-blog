@@ -90,7 +90,7 @@ export default function PhotoLarge({
                 </div>
                 <Suspense>
                   <div className="h-4 translate-y-[-3.5px] z-10">
-                    <AdminPhotoMenu photoId={photo.id} />
+                    <AdminPhotoMenu photo={photo} />
                   </div>
                 </Suspense>
               </div>

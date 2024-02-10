@@ -2,17 +2,45 @@ import { clsx}  from 'clsx/lite';
 import Link from 'next/link';
 import { Menu } from '@headlessui/react';
 import { FiMoreHorizontal } from 'react-icons/fi';
-import { ReactNode } from 'react';
+import { Fragment, ReactNode, useState } from 'react';
 
 export default function MoreMenu({
   items,
   className,
   buttonClassName,
 }: {
-  items: { href: string, label: ReactNode }[]
+  items: {
+    label: ReactNode,
+    icon?: ReactNode,
+    href?: string,
+    action?: () => Promise<void>,
+  }[]
   className?: string
   buttonClassName?: string
 }) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const itemClass = clsx(
+    'block w-full',
+    'border-none min-h-0 bg-transparent',
+    'text-left',
+    'px-3 py-1.5 rounded-[3px]',
+    'hover:text-main',
+    'hover:bg-gray-50 active:bg-gray-100',
+    'hover:dark:bg-gray-900/75 active:dark:bg-gray-900',
+    'whitespace-nowrap',
+    isLoading && 'cursor-not-allowed opacity-50',
+  );
+
+  const renderItemContent = (
+    label: ReactNode,
+    icon?: ReactNode,
+  ) =>
+    <div className="flex items-center">
+      <span className="w-6">{icon}</span>
+      <span>{label}</span>
+    </div>;
+
   return (
     <div className={clsx(
       className,
@@ -30,27 +58,38 @@ export default function MoreMenu({
         <Menu.Items className={clsx(
           'block outline-none h-auto',
           'absolute top-6',
+          'text-left',
           'md:right-1',
           'text-sm',
           'p-1 rounded-md border',
           'bg-content',
           'shadow-lg dark:shadow-xl',
         )}>
-          {items.map(({ href, label }) =>
-            <Menu.Item key={href}>
-              <Link
-                href={href}
-                className={clsx(
-                  'block',
-                  'px-3 py-1.5 rounded-[3px]',
-                  'hover:text-main',
-                  'hover:bg-gray-50 active:bg-gray-100',
-                  'hover:dark:bg-gray-900/75 active:dark:bg-gray-900',
-                  'whitespace-nowrap',
-                )}
-              >
-                {label}
-              </Link>
+          {items.map(({ label, icon, href, action }) =>
+            <Menu.Item
+              key={`${label}`}
+              disabled={isLoading}
+              as={Fragment}
+            >
+              <>
+                {href &&
+                  <Link
+                    href={href}
+                    className={itemClass}
+                  >
+                    {renderItemContent(label, icon)}
+                  </Link>}
+                {action &&
+                  <button
+                    onClick={() => {
+                      setIsLoading(true);
+                      action().finally(() => setIsLoading(false));
+                    }}
+                    className={itemClass}
+                  >
+                    {renderItemContent(label, icon)}
+                  </button>}
+              </>
             </Menu.Item>
           )}
         </Menu.Items>
