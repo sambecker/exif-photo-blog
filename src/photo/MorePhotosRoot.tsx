@@ -37,6 +37,7 @@ export function MorePhotosRoot({
           };
         }
       }}
+      wrapMoreButtonInSiteGrid
     />
   );
 }

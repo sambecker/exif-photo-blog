@@ -1,7 +1,7 @@
 import { getPhotosCached } from '@/photo/cache';
 import SiteGrid from '@/components/SiteGrid';
 import {
-  PHOTO_LOAD_MULTIPLE_GRID,
+  INFINITE_SCROLL_MULTIPLE_GRID,
   generateOgImageMetaForPhotos,
 } from '@/photo';
 import PhotoGrid from '@/photo/PhotoGrid';
@@ -28,7 +28,7 @@ export default async function GridPage() {
     cameras,
     simulations,
   ] = await Promise.all([
-    getPhotosCached({ limit: PHOTO_LOAD_MULTIPLE_GRID }),
+    getPhotosCached({ limit: INFINITE_SCROLL_MULTIPLE_GRID }),
     ...getPhotoSidebarDataCached(),
   ]);
 
@@ -39,8 +39,8 @@ export default async function GridPage() {
           <PhotoGrid {...{ photos }} />
           <Suspense>
             <MorePhotosGrid
-              initialOffset={PHOTO_LOAD_MULTIPLE_GRID}
-              itemsPerRequest={PHOTO_LOAD_MULTIPLE_GRID}
+              initialOffset={INFINITE_SCROLL_MULTIPLE_GRID}
+              itemsPerRequest={INFINITE_SCROLL_MULTIPLE_GRID}
               totalPhotosCount={photosCount}
             />
           </Suspense>

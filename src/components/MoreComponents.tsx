@@ -21,6 +21,7 @@ export default function MoreComponents({
   label = 'Load more',
   triggerOnView = true,
   prefetch = true,
+  wrapMoreButtonInSiteGrid,
 }: {
   stateKey: MoreComponentsKey
   initialOffset: number
@@ -33,6 +34,7 @@ export default function MoreComponents({
   label?: string
   triggerOnView?: boolean
   prefetch?: boolean
+  wrapMoreButtonInSiteGrid?: boolean
 }) {
   const { state, setStateForKey } = useMoreComponentsState();
 
@@ -162,23 +164,26 @@ export default function MoreComponents({
     }
   }, [triggerOnView, advance]);
 
+  const renderMoreButton = () => 
+    <button
+      ref={buttonRef}
+      className="block w-full subtle"
+      onClick={!triggerOnView ? advance : undefined}
+      disabled={triggerOnView || isLoading}
+    >
+      {isLoading || triggerOnView
+        ? <span className="relative inline-block translate-y-[3px]">
+          <Spinner size={16} />
+        </span>
+        : label}
+    </button>;
+
   return <>
-    {components.slice(0, indexToView + 1)}
-    {showMoreButton &&
-      <SiteGrid
-        contentMain={
-          <button
-            ref={buttonRef}
-            className="block w-full mt-4 subtle"
-            onClick={!triggerOnView ? advance : undefined}
-            disabled={triggerOnView || isLoading}
-          >
-            {isLoading || triggerOnView
-              ? <span className="relative inline-block translate-y-[3px]">
-                <Spinner size={16} />
-              </span>
-              : label}
-          </button>}
-      />}
+    <div className="space-y-4">
+      <div>{components.slice(0, indexToView + 1)}</div>
+      {(showMoreButton || true) && wrapMoreButtonInSiteGrid
+        ? <SiteGrid contentMain={renderMoreButton()} />
+        : renderMoreButton()}
+    </div>
   </>;
 }
