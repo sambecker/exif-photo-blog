@@ -27,7 +27,6 @@ export default function ChecklistRow({
       <div className="flex flex-col min-w-0">
         <div className="font-bold dark:text-gray-300">
           {title}
-          {optional && ' (optional)'}
         </div>
         <div>
           {children}

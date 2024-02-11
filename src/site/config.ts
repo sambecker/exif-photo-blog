@@ -110,7 +110,7 @@ export const CONFIG_CHECKLIST_STATUS = {
     HAS_AWS_S3_STORAGE,
   hasMultipleStorageProviders: HAS_MULTIPLE_STORAGE_PROVIDERS,
   currentStorage: CURRENT_STORAGE,
-  hasAuth: (process.env.AUTH_SECRET ?? '').length > 0,
+  hasAuthSecret: (process.env.AUTH_SECRET ?? '').length > 0,
   hasAdminUser: (
     (process.env.ADMIN_EMAIL ?? '').length > 0 &&
     (process.env.ADMIN_PASSWORD ?? '').length > 0
@@ -134,5 +134,5 @@ export type ConfigChecklistStatus = typeof CONFIG_CHECKLIST_STATUS;
 export const IS_SITE_READY =
   CONFIG_CHECKLIST_STATUS.hasPostgres &&
   CONFIG_CHECKLIST_STATUS.hasStorage &&
-  CONFIG_CHECKLIST_STATUS.hasAuth &&
+  CONFIG_CHECKLIST_STATUS.hasAuthSecret &&
   CONFIG_CHECKLIST_STATUS.hasAdminUser;

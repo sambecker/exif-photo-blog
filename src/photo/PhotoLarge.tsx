@@ -89,8 +89,8 @@ export default function PhotoLarge({
                   </Link>
                 </div>
                 <Suspense>
-                  <div className="h-4 translate-y-[-3.5px]">
-                    <AdminPhotoMenu photoId={photo.id} />
+                  <div className="h-4 translate-y-[-3.5px] z-10">
+                    <AdminPhotoMenu photo={photo} />
                   </div>
                 </Suspense>
               </div>
@@ -104,7 +104,7 @@ export default function PhotoLarge({
                   type="text-only"
                 />
                 {showSimulation && photo.filmSimulation &&
-                  <div className="translate-x-[-0.3rem] relative -z-10"> 
+                  <div className="translate-x-[-0.3rem]"> 
                     <PhotoFilmSimulation
                       simulation={photo.filmSimulation}
                     />
