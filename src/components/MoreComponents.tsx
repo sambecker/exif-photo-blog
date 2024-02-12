@@ -69,10 +69,16 @@ export default function MoreComponents({
   const attemptsPerRequest = useRef(0);
   const totalRequests = useRef(0);
 
+  const hasFinalIndexBeenReached =
+    finalIndex !== undefined &&
+    finalIndex <= components.length - 1;
+  
+  const areAllComponentsVisible =
+    (indexInView ?? 0) >= components.length - 1;
+
   const showMoreButton =
-    isLoading ||
-    finalIndex === undefined ||
-    finalIndex >= components.length;
+    !hasFinalIndexBeenReached ||
+    !areAllComponentsVisible;
 
   const currentTimeout = useRef<NodeJS.Timeout>();
 
@@ -153,7 +159,7 @@ export default function MoreComponents({
     ) {
       attempt();
     }
-  }, [isLoading, indexToLoad, indexInView, attempt, components.length]);
+  }, [isLoading, indexToLoad, attempt, components.length]);
 
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -168,8 +174,10 @@ export default function MoreComponents({
     if (indexInView === undefined) {
       setState({ indexInView: 0 });
     } else if (
-      (indexInView <= components.length) &&
-      (finalIndex === undefined || indexInView < finalIndex)      
+      indexInView <= components.length - 1 && (
+        finalIndex === undefined ||
+        indexInView < finalIndex
+      )
     ) {
       setState({ indexInView: indexInView + 1});
     }
@@ -207,11 +215,14 @@ export default function MoreComponents({
           : label}
     </button>;
 
-  console.log({
-    indexInView,
-    componentsLength: components.length,
-  });
-
+  if (debug) {
+    console.log({
+      indexInView,
+      componentsLength: components.length,
+      finalIndex,
+    });
+  }
+  
   return <>
     <div className="space-y-4">
       <div className={itemsClass}>
