@@ -21,6 +21,7 @@ export default function MoreComponents({
   label = 'Load more',
   triggerOnView = true,
   prefetch = true,
+  itemsClass,
   wrapMoreButtonInSiteGrid,
   debug,
 }: {
@@ -35,6 +36,7 @@ export default function MoreComponents({
   label?: string
   triggerOnView?: boolean
   prefetch?: boolean
+  itemsClass?: string
   wrapMoreButtonInSiteGrid?: boolean
   debug?: boolean
 }) {
@@ -207,7 +209,9 @@ export default function MoreComponents({
 
   return <>
     <div className="space-y-4">
-      <div>{components.slice(0, (indexInView ?? 0) + 1)}</div>
+      <div className={itemsClass}>
+        {components.slice(0, (indexInView ?? 0) + 1)}
+      </div>
       {showMoreButton && (
         wrapMoreButtonInSiteGrid
           ? <SiteGrid contentMain={renderMoreButton()} />

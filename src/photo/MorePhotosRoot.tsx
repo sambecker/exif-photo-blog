@@ -42,6 +42,7 @@ export function MorePhotosRoot({
       initialOffset={initialOffset}
       itemsPerRequest={itemsPerRequest}
       getNextComponent={getNextComponent}
+      itemsClass="space-y-1"
       wrapMoreButtonInSiteGrid
     />
   );
