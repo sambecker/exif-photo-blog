@@ -5,20 +5,17 @@ export type MoreComponentsKey =
   'PhotosGrid';
 
 export interface MoreComponentsStateForKey {
-  indexToView: number
-  indexLoaded: number
   isLoading: boolean
-  lastIndexToLoad?: number
-  haveAttemptsPerRequestBeenExceeded: boolean
+  indexInView?: number
+  finalIndex?: number
+  didReachMaximumRequests: boolean
   components: JSX.Element[]
 }
 
 export const createInitialStateForKey =
   (): MoreComponentsStateForKey => ({
-    indexToView: 0,
-    indexLoaded: 0,
     isLoading: false,
-    haveAttemptsPerRequestBeenExceeded: false,
+    didReachMaximumRequests: false,
     components: [],
   });
 

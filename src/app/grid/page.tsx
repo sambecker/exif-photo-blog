@@ -55,8 +55,6 @@ export default async function GridPage() {
         </div>}
         sideHiddenOnMobile
       />
-      : <Suspense>
-        <PhotosEmptyState />
-      </Suspense> 
+      : <PhotosEmptyState />
   );
 }

@@ -17,7 +17,7 @@ export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 export const INFINITE_SCROLL_MULTIPLE_ROOT =
   process.env.NODE_ENV === 'development' ? 2 : 12;
 export const INFINITE_SCROLL_MULTIPLE_GRID = HIGH_DENSITY_GRID
-  ? process.env.NODE_ENV === 'development' ? 5 : 20
+  ? process.env.NODE_ENV === 'development' ? 4 : 20
   : process.env.NODE_ENV === 'development' ? 4 : 24;
 
 export const GRID_THUMBNAILS_TO_SHOW_MAX = 12;

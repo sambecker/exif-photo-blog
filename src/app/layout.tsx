@@ -96,8 +96,8 @@ export default function RootLayout({
             </ThemeProviderClient>
           </MoreComponentsProvider>
         </AppStateProvider>
-        <Analytics />
-        <SpeedInsights />
+        <Analytics debug={false} />
+        <SpeedInsights debug={false}  />
         <PhotoEscapeHandler />
         <ToasterWithThemes />
       </body>

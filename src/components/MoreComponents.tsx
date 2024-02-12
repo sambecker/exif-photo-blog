@@ -10,8 +10,8 @@ import {
 } from '@/state/MoreComponentsState';
 
 const MAX_ATTEMPTS_PER_REQUEST = 5;
-const MAX_TOTAL_REQUESTS = 500;
-const RETRY_DELAY_IN_SECONDS = 1.5;
+const MAX_TOTAL_REQUESTS = 100;
+const RETRY_DELAY_IN_SECONDS = 1;
 
 export default function MoreComponents({
   stateKey,
@@ -22,6 +22,7 @@ export default function MoreComponents({
   triggerOnView = true,
   prefetch = true,
   wrapMoreButtonInSiteGrid,
+  debug,
 }: {
   stateKey: MoreComponentsKey
   initialOffset: number
@@ -35,6 +36,7 @@ export default function MoreComponents({
   triggerOnView?: boolean
   prefetch?: boolean
   wrapMoreButtonInSiteGrid?: boolean
+  debug?: boolean
 }) {
   const { state, setStateForKey } = useMoreComponentsState();
 
@@ -44,57 +46,72 @@ export default function MoreComponents({
     [setStateForKey, stateKey]);
 
   const {
-    indexToView,
-    indexLoaded,
     isLoading,
-    lastIndexToLoad,
+    indexInView,
+    finalIndex,
+    didReachMaximumRequests,
     components,
   } = state[stateKey];
 
   // When prefetching, always stay one request ahead of what's visible
-  const indexToLoad = lastIndexToLoad
-    ?? (prefetch ? indexToView + 1 : indexToView);
+  const furthestIndexToLoad = Math.min(
+    prefetch ? (indexInView ?? 0) + 1 : (indexInView ?? 0),
+    finalIndex ?? Infinity,
+  );
+
+  const indexToLoad = Math.min(
+    components.length,
+    furthestIndexToLoad,
+  );
 
   const attemptsPerRequest = useRef(0);
   const totalRequests = useRef(0);
 
-  const showMoreButton = (
-    lastIndexToLoad === undefined ||
-    lastIndexToLoad > indexToView
-  ) && (
-    attemptsPerRequest.current < MAX_ATTEMPTS_PER_REQUEST &&
-    totalRequests.current < MAX_TOTAL_REQUESTS
-  );
+  const showMoreButton =
+    isLoading ||
+    finalIndex === undefined ||
+    finalIndex >= components.length;
+
+  const currentTimeout = useRef<NodeJS.Timeout>();
 
   const attempt = useCallback(() => {
     const handleError = () => {
-      setTimeout(() => {
-        attempt();
-      }, RETRY_DELAY_IN_SECONDS * 1000);
+      if (currentTimeout.current) {
+        clearTimeout(currentTimeout.current);
+      }
+      currentTimeout.current =
+        setTimeout(attempt, RETRY_DELAY_IN_SECONDS * 1000);
     };
     if (attemptsPerRequest.current < MAX_ATTEMPTS_PER_REQUEST) {
       if (totalRequests.current < MAX_TOTAL_REQUESTS) {
         attemptsPerRequest.current += 1;
         totalRequests.current += 1;
         setState({ isLoading: true });
+        if (debug) {
+          // eslint-disable-next-line max-len
+          console.log(`GETTING INDEX: #${indexToLoad}, ATTEMPT: #${attemptsPerRequest.current}`);
+        }
         getNextComponent(
-          initialOffset + (indexToLoad - 1) * itemsPerRequest,
+          initialOffset + indexToLoad * itemsPerRequest,
           itemsPerRequest,
         )
           .then(({ nextComponent, isFinished, didFail }) => {
-            if (!didFail && nextComponent) {
+            if (!didFail) {
+              attemptsPerRequest.current = 0;
               setState(state => {
                 const updatedComponents = [...state.components];
-                updatedComponents[indexToLoad] = nextComponent;
+                if (nextComponent) {
+                  updatedComponents[indexToLoad] = nextComponent;
+                }
                 return {
                   ...state,
-                  components: updatedComponents,
-                  indexLoaded: indexToLoad,
+                  ...nextComponent && { components: updatedComponents},
+                  latestIndexLoaded: indexToLoad,
                   isLoading: false,
-                  ...isFinished && { lastIndexToLoad: indexToLoad },
+                  didReachMaximumRequests: false,
+                  ...isFinished && { finalIndex: indexToLoad },
                 };
               });
-              attemptsPerRequest.current = 0;
             } else {
               handleError();
             }
@@ -104,7 +121,10 @@ export default function MoreComponents({
         console.log(
           `Max total attempts reached (${MAX_TOTAL_REQUESTS})`
         );
-        setState({ isLoading: false });
+        setState({
+          isLoading: false,
+          didReachMaximumRequests: true,
+        });
       }
     } else {
       console.log(
@@ -112,7 +132,7 @@ export default function MoreComponents({
       );
       setState({
         isLoading: false,
-        haveAttemptsPerRequestBeenExceeded: true,
+        didReachMaximumRequests: true,
       });
     }
   }, [
@@ -121,32 +141,37 @@ export default function MoreComponents({
     initialOffset,
     indexToLoad,
     itemsPerRequest,
+    debug,
   ]);
 
   useEffect(() => {
     if (
       !isLoading &&
-      indexToLoad >= indexToView &&
-      indexToLoad > indexLoaded
+      indexToLoad >= components.length
     ) {
-      console.log('Attempting', { isLoading });
       attempt();
     }
-  }, [
-    isLoading,
-    indexToLoad,
-    indexToView,
-    indexLoaded,
-    attempt,
-  ]);
+  }, [isLoading, indexToLoad, indexInView, attempt, components.length]);
 
   const buttonRef = useRef<HTMLButtonElement>(null);
 
+  const resetRequestsAndRetry = useCallback(() => {
+    attemptsPerRequest.current = 0;
+    totalRequests.current = 0;
+    setState({ didReachMaximumRequests: false });
+    attempt();
+  }, [attempt, setState]);
+
   const advance = useCallback(() => {
-    if (indexToView <= indexLoaded) {
-      setState({ indexToView: indexToView + 1 });
+    if (indexInView === undefined) {
+      setState({ indexInView: 0 });
+    } else if (
+      (indexInView <= components.length) &&
+      (finalIndex === undefined || indexInView < finalIndex)      
+    ) {
+      setState({ indexInView: indexInView + 1});
     }
-  }, [setState, indexToView, indexLoaded]);
+  }, [components.length, finalIndex, indexInView, setState]);
 
   useEffect(() => {
     // Only add observer if button is rendered
@@ -168,22 +193,26 @@ export default function MoreComponents({
     <button
       ref={buttonRef}
       className="block w-full subtle"
-      onClick={!triggerOnView ? advance : undefined}
-      disabled={triggerOnView || isLoading}
+      onClick={didReachMaximumRequests ? resetRequestsAndRetry : advance}
+      disabled={isLoading}
     >
-      {isLoading || triggerOnView
+      {isLoading
         ? <span className="relative inline-block translate-y-[3px]">
           <Spinner size={16} />
         </span>
-        : label}
+        : didReachMaximumRequests
+          ? 'Try again …'
+          : label}
     </button>;
 
   return <>
     <div className="space-y-4">
-      <div>{components.slice(0, indexToView + 1)}</div>
-      {(showMoreButton || true) && wrapMoreButtonInSiteGrid
-        ? <SiteGrid contentMain={renderMoreButton()} />
-        : renderMoreButton()}
+      <div>{components.slice(0, (indexInView ?? 0) + 1)}</div>
+      {showMoreButton && (
+        wrapMoreButtonInSiteGrid
+          ? <SiteGrid contentMain={renderMoreButton()} />
+          : renderMoreButton()
+      )}
     </div>
   </>;
 }
