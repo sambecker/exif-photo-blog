@@ -23,7 +23,7 @@ export default function MoreComponents({
   prefetch = true,
   itemsClass,
   wrapMoreButtonInSiteGrid,
-  debug,
+  debug = true,
 }: {
   stateKey: MoreComponentsKey
   initialOffset: number
@@ -206,6 +206,11 @@ export default function MoreComponents({
           ? 'Try again …'
           : label}
     </button>;
+
+  console.log({
+    indexInView,
+    componentsLength: components.length,
+  });
 
   return <>
     <div className="space-y-4">

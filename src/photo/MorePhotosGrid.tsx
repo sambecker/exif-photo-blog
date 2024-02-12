@@ -41,6 +41,7 @@ export function MorePhotosGrid({
     <MoreComponents
       stateKey="PhotosGrid"
       label="More photos"
+      itemsClass='space-y-0.5 sm:space-y-1'
       initialOffset={initialOffset}
       itemsPerRequest={itemsPerRequest}
       getNextComponent={getNextComponent}
