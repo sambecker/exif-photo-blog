@@ -47,7 +47,12 @@ export default function MoreComponents({
       setStateForKey(stateKey, stateForKey),
     [setStateForKey, stateKey]);
 
+  useEffect(() => {
+    setState({ hasMounted: true });
+  }, [setState]);
+
   const {
+    hasMounted,
     isLoading,
     indexInView,
     finalIndex,
@@ -84,7 +89,9 @@ export default function MoreComponents({
   const currentTimeout = useRef<NodeJS.Timeout>();
 
   const attempt = useCallback(() => {
-    const handleError = () => {
+    // Consider creating temp, anonymous function
+    // for error handling
+    const attemptRetry = () => {
       if (currentTimeout.current) {
         clearTimeout(currentTimeout.current);
       }
@@ -118,14 +125,17 @@ export default function MoreComponents({
                   latestIndexLoaded: indexToLoad,
                   isLoading: false,
                   didReachMaximumRequests: false,
-                  ...isFinished && { finalIndex: indexToLoad },
+                  ...isFinished && {
+                    // Special case when finished on first request
+                    finalIndex: indexToLoad === 0 ? -1 : indexToLoad,
+                  },
                 };
               });
             } else {
-              handleError();
+              attemptRetry();
             }
           })
-          .catch(handleError);
+          .catch(attemptRetry);
       } else {
         console.log(
           `Max total attempts reached (${MAX_TOTAL_REQUESTS})`
@@ -207,7 +217,7 @@ export default function MoreComponents({
       onClick={didReachMaximumRequests ? resetRequestsAndRetry : advance}
       disabled={isLoading}
     >
-      {isLoading
+      {isLoading || !hasMounted
         ? <span className="relative inline-block translate-y-[3px]">
           <Spinner size={16} />
         </span>
@@ -221,6 +231,9 @@ export default function MoreComponents({
       indexInView,
       componentsLength: components.length,
       finalIndex,
+      hasFinalIndexBeenReached,
+      areAllComponentsVisible,
+      isLoading,
     });
   }
   

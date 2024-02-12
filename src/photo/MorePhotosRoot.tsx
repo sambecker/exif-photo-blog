@@ -35,15 +35,18 @@ export function MorePhotosRoot({
       };
     }
   }, [totalPhotosCount]);
+
   return (
-    <MoreComponents
-      stateKey="PhotosRoot"
-      label="More photos"
-      initialOffset={initialOffset}
-      itemsPerRequest={itemsPerRequest}
-      getNextComponent={getNextComponent}
-      itemsClass="space-y-1"
-      wrapMoreButtonInSiteGrid
-    />
+    initialOffset <= totalPhotosCount
+      ? <MoreComponents
+        stateKey="PhotosRoot"
+        label="More photos"
+        initialOffset={initialOffset}
+        itemsPerRequest={itemsPerRequest}
+        getNextComponent={getNextComponent}
+        itemsClass="space-y-1"
+        wrapMoreButtonInSiteGrid
+      />
+      :null
   );
 }

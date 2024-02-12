@@ -5,6 +5,7 @@ export type MoreComponentsKey =
   'PhotosGrid';
 
 export interface MoreComponentsStateForKey {
+  hasMounted: boolean
   isLoading: boolean
   indexInView?: number
   finalIndex?: number
@@ -14,6 +15,7 @@ export interface MoreComponentsStateForKey {
 
 export const createInitialStateForKey =
   (): MoreComponentsStateForKey => ({
+    hasMounted: false,
     isLoading: false,
     didReachMaximumRequests: false,
     components: [],

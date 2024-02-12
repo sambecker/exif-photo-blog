@@ -37,14 +37,17 @@ export function MorePhotosGrid({
       };
     }
   }, [totalPhotosCount]);
+
   return (
-    <MoreComponents
-      stateKey="PhotosGrid"
-      label="More photos"
-      itemsClass='space-y-0.5 sm:space-y-1'
-      initialOffset={initialOffset}
-      itemsPerRequest={itemsPerRequest}
-      getNextComponent={getNextComponent}
-    />
+    initialOffset <= totalPhotosCount
+      ? <MoreComponents
+        stateKey="PhotosGrid"
+        label="More photos"
+        itemsClass='space-y-0.5 sm:space-y-1'
+        initialOffset={initialOffset}
+        itemsPerRequest={itemsPerRequest}
+        getNextComponent={getNextComponent}
+      />
+      : null
   );
 }
