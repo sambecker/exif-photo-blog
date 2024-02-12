@@ -77,6 +77,7 @@ export default function MoreComponents({
     (indexInView ?? 0) >= components.length - 1;
 
   const showMoreButton =
+    isLoading ||
     !hasFinalIndexBeenReached ||
     !areAllComponentsVisible;
 
