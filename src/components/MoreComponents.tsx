@@ -23,7 +23,7 @@ export default function MoreComponents({
   prefetch = true,
   itemsClass,
   wrapMoreButtonInSiteGrid,
-  debug = true,
+  debug,
 }: {
   stateKey: MoreComponentsKey
   initialOffset: number
