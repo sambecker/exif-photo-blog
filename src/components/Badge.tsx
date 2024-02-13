@@ -2,12 +2,14 @@ import { clsx } from 'clsx/lite';
 
 export default function Badge({
   children,
+  className,
   type = 'large',
   highContrast,
   uppercase,
   interactive,
 }: {
   children: React.ReactNode
+  className?: string
   type?: 'large' | 'small' | 'text-only'
   highContrast?: boolean
   uppercase?: boolean
@@ -39,6 +41,7 @@ export default function Badge({
   };
   return (
     <span className={clsx(
+      className,
       'leading-none',
       stylesForType(),
       uppercase && 'uppercase tracking-wider',

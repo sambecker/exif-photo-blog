@@ -37,6 +37,7 @@ export default function SiteChecklistClient({
   showFilmSimulations,
   showExifInfo,
   isProModeEnabled,
+  isStaticallyOptimized,
   isBlurEnabled,
   isGeoPrivacyEnabled,
   isPriorityOrderEnabled,
@@ -273,6 +274,17 @@ export default function SiteChecklistClient({
           Set environment variable to {'"1"'} to enable
           higher quality image storage:
           {renderEnvVars(['NEXT_PUBLIC_PRO_MODE'])}
+        </ChecklistRow>
+        <ChecklistRow
+          title="Static Optimization"
+          status={isStaticallyOptimized}
+          isPending={isPendingPage}
+          optional
+          experimental
+        >
+          Set environment variable to {'"1"'} to enable
+          PPR and static optimization, i.e., building pages ahead of time:
+          {renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE'])}
         </ChecklistRow>
         <ChecklistRow
           title="Image Blur"

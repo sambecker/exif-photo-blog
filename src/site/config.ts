@@ -81,21 +81,31 @@ export const CURRENT_STORAGE: StorageType =
 
 // SETTINGS
 
-export const PRO_MODE_ENABLED = process.env.NEXT_PUBLIC_PRO_MODE === '1';
-export const BLUR_ENABLED = process.env.NEXT_PUBLIC_BLUR_DISABLED !== '1';
-export const GEO_PRIVACY_ENABLED = process.env.NEXT_PUBLIC_GEO_PRIVACY === '1';
+export const PRO_MODE_ENABLED =
+  process.env.NEXT_PUBLIC_PRO_MODE === '1';
+export const STATICALLY_OPTIMIZED =
+  process.env.NEXT_PUBLIC_STATICALLY_OPTIMIZE === '1';
+export const BLUR_ENABLED =
+  process.env.NEXT_PUBLIC_BLUR_DISABLED !== '1';
+export const GEO_PRIVACY_ENABLED =
+  process.env.NEXT_PUBLIC_GEO_PRIVACY === '1';
 export const PRIORITY_ORDER_ENABLED =
   process.env.NEXT_PUBLIC_IGNORE_PRIORITY_ORDER !== '1';
-export const PUBLIC_API_ENABLED = process.env.NEXT_PUBLIC_PUBLIC_API === '1';
-export const SHOW_REPO_LINK = process.env.NEXT_PUBLIC_HIDE_REPO_LINK !== '1';
+export const PUBLIC_API_ENABLED =
+  process.env.NEXT_PUBLIC_PUBLIC_API === '1';
+export const SHOW_REPO_LINK =
+  process.env.NEXT_PUBLIC_HIDE_REPO_LINK !== '1';
 export const SHOW_FILM_SIMULATIONS =
   process.env.NEXT_PUBLIC_HIDE_FILM_SIMULATIONS !== '1';
-export const SHOW_EXIF_DATA = process.env.NEXT_PUBLIC_HIDE_EXIF_DATA !== '1';
-export const GRID_ASPECT_RATIO = process.env.NEXT_PUBLIC_GRID_ASPECT_RATIO
-  ? parseFloat(process.env.NEXT_PUBLIC_GRID_ASPECT_RATIO)
-  : 1;
+export const SHOW_EXIF_DATA =
+  process.env.NEXT_PUBLIC_HIDE_EXIF_DATA !== '1';
+export const GRID_ASPECT_RATIO =
+  process.env.NEXT_PUBLIC_GRID_ASPECT_RATIO
+    ? parseFloat(process.env.NEXT_PUBLIC_GRID_ASPECT_RATIO)
+    : 1;
 export const OG_TEXT_BOTTOM_ALIGNMENT =
-  (process.env.NEXT_PUBLIC_OG_TEXT_ALIGNMENT ?? '').toUpperCase() === 'BOTTOM';
+  (process.env.NEXT_PUBLIC_OG_TEXT_ALIGNMENT ?? '')
+    .toUpperCase() === 'BOTTOM';
 
 export const HIGH_DENSITY_GRID = GRID_ASPECT_RATIO <= 1;
 
@@ -121,6 +131,7 @@ export const CONFIG_CHECKLIST_STATUS = {
   showFilmSimulations: SHOW_FILM_SIMULATIONS,
   showExifInfo: SHOW_EXIF_DATA,
   isProModeEnabled: PRO_MODE_ENABLED,
+  isStaticallyOptimized: STATICALLY_OPTIMIZED,
   isBlurEnabled: BLUR_ENABLED,
   isGeoPrivacyEnabled: GEO_PRIVACY_ENABLED,
   isPriorityOrderEnabled: PRIORITY_ORDER_ENABLED,

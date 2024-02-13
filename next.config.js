@@ -35,8 +35,8 @@ const nextConfig = {
       .concat(createRemotePattern(AWS_S3_HOSTNAME)),
     minimumCacheTTL: 31536000,
   },
-  experimental: {
-    ppr: true,
+  ...process.env.NEXT_PUBLIC_STATICALLY_OPTIMIZE === '1' && {
+    experimental: { ppr: true },
   },
 };
 
