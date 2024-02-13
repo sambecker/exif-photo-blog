@@ -23,7 +23,7 @@ export default function MoreMenu({
   const itemClass = clsx(
     'block w-full',
     'border-none min-h-0 bg-transparent',
-    'text-left text-main',
+    'text-base text-main text-left',
     'px-3 py-1.5 rounded-[3px]',
     'hover:text-main',
     'hover:bg-gray-50 active:bg-gray-100',
