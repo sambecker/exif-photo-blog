@@ -34,7 +34,7 @@ export default function ChecklistRow({
           {title}
           {experimental &&
             <span className={clsx(
-              'text-[0.7rem] font-medium uppercase tracking-wide leading-none',
+              'text-[9px] font-medium uppercase tracking-wide leading-none',
               'px-[3px] py-[2px] rounded-[0.2rem]',
               'text-pink-500 dark:text-pink-800',
               'bg-pink-50 dark:bg-pink-200/90',
