@@ -36,9 +36,9 @@ export default function ChecklistRow({
             <span className={clsx(
               'text-[9px] font-medium uppercase tracking-wide leading-none',
               'px-[3px] py-[2px] rounded-[0.2rem]',
-              'text-pink-500 dark:text-pink-800',
-              'bg-pink-50 dark:bg-pink-200/90',
-              'border border-pink-200/75 dark:border-pink-700/50',
+              'text-pink-500 dark:text-white',
+              'bg-pink-50 dark:bg-pink-500',
+              'border border-pink-200/50 dark:border-pink-500',
             )}>
               Experimental
             </span>}
