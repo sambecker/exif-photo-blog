@@ -8,13 +8,15 @@ import { clsx } from 'clsx/lite';
 import Spinner from './Spinner';
 import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
 import { FiUploadCloud } from 'react-icons/fi';
+import { MAX_IMAGE_SIZE } from '@/services/next-image';
 
 const INPUT_ID = 'file';
 
 export default function ImageInput({
   onStart,
   onBlobReady,
-  maxSize,
+  shouldResize,
+  maxSize = MAX_IMAGE_SIZE,
   quality = 0.8,
   loading,
   debug,
@@ -26,6 +28,7 @@ export default function ImageInput({
     hasMultipleUploads?: boolean,
     isLastBlob?: boolean,
   }) => Promise<any>
+  shouldResize?: boolean
   maxSize?: number
   quality?: number
   loading?: boolean
@@ -92,6 +95,8 @@ export default function ImageInput({
                     hasMultipleUploads: files.length > 1,
                     isLastBlob: i === files.length - 1,
                   };
+
+                  const isPng = callbackArgs.extension === 'png';
                   
                   const canvas = ref.current;
 
@@ -100,7 +105,7 @@ export default function ImageInput({
                     '2d', { colorSpace: 'display-p3' }
                   );
 
-                  if (maxSize && canvas && ctx) {
+                  if ((shouldResize || isPng) && canvas && ctx) {
                     // Process images that need resizing
                     const image = await blobToImage(file);
 
@@ -108,18 +113,24 @@ export default function ImageInput({
 
                     ctx.save();
                     
-                    let orientation = await exifr.orientation(file) ?? 1;
-                    // Reverse engineer orientation
-                    // so preserved EXIF data can be copied
-                    switch (orientation) {
-                    case 1: orientation = 1; break;
-                    case 2: orientation = 1; break;
-                    case 3: orientation = 3; break;
-                    case 4: orientation = 1; break;
-                    case 5: orientation = 1; break;
-                    case 6: orientation = 8; break;
-                    case 7: orientation = 1; break;
-                    case 8: orientation = 6; break;
+                    let orientation = await exifr
+                      .orientation(file)
+                      .catch(() => 1) ?? 1;
+
+                    // Preserve EXIF data for PNGs
+                    if (!isPng) {
+                      // Reverse engineer orientation
+                      // so preserved EXIF data can be copied
+                      switch (orientation) {
+                      case 1: orientation = 1; break;
+                      case 2: orientation = 1; break;
+                      case 3: orientation = 3; break;
+                      case 4: orientation = 1; break;
+                      case 5: orientation = 1; break;
+                      case 6: orientation = 8; break;
+                      case 7: orientation = 1; break;
+                      case 8: orientation = 6; break;
+                      }
                     }
 
                     const ratio = image.width / image.height;
@@ -183,7 +194,10 @@ export default function ImageInput({
                     canvas.toBlob(
                       async blob => {
                         if (blob) {
-                          const blobWithExif = await CopyExif(file, blob);
+                          const blobWithExif = await CopyExif(file, blob)
+                            // Fallback to original blob if EXIF data is missing
+                            // or image is in PNG format which cannot be parsed
+                            .catch(() => blob);
                           await onBlobReady?.({
                             ...callbackArgs,
                             blob: blobWithExif,
