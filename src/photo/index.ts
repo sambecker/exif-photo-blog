@@ -25,6 +25,7 @@ export const GRID_THUMBNAILS_TO_SHOW_MAX = 12;
 export const ACCEPTED_PHOTO_FILE_TYPES = [
   'image/jpg',
   'image/jpeg',
+  'image/png',
 ];
 
 export const MAX_PHOTO_UPLOAD_SIZE_IN_BYTES = 50_000_000;
