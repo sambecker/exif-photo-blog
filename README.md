@@ -58,11 +58,17 @@ Installation
 
 1. Open project on Vercel
 2. Click "Analytics" tab
-3. Follow "Enable Web Analytics" instructions (`@vercel/analytics` is already part of your project)
+3. Follow "Enable Web Analytics" instructions (`@vercel/analytics` already included)
 
-### 6. Optional configuration
+### 6. Add Speed Insights (optional)
 
-- `NEXT_PUBLIC_PRO_MODE = 1` enables higher quality image storage (will result in increased storage usage)
+1. Open project on Vercel
+2. Click "Speed Insights" tab
+3. Follow "Enable Speed Insights" instructions (`@vercel/speed-insights` already included)
+
+### 7. Optional configuration
+
+- `NEXT_PUBLIC_PRO_MODE = 1` enables higher quality image storage for jpgs (will result in increased storage usage)
 - `NEXT_PUBLIC_BLUR_DISABLED = 1` prevents image blur data being stored and displayed (potentially useful for limiting Postgres usage)
 - `NEXT_PUBLIC_GEO_PRIVACY = 1` disables collection/display of location-based data
 - `NEXT_PUBLIC_IGNORE_PRIORITY_ORDER = 1` prevents `priority_order` field affecting photo order
