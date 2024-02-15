@@ -50,7 +50,7 @@ export default function PhotoSetHeader({
           {entity}
         </span>
         <span className={clsx(
-          'inline-flex gap-2 items-center self-start',
+          'inline-flex gap-2 self-start',
           'uppercase text-dim',
           HIGH_DENSITY_GRID
             ? 'lg:col-span-2'
@@ -61,7 +61,9 @@ export default function PhotoSetHeader({
             ? `${entityVerb} ${selectedPhotoIndex + 1} of ${count ?? photos.length}`
             : entityDescription}
           {selectedPhotoIndex === undefined &&
-            <ShareButton path={sharePath} dim />}
+            <span className="translate-y-[1px]">
+              <ShareButton path={sharePath} dim />
+            </span>}
         </span>
         <span className={clsx(
           'hidden sm:inline-block',
