@@ -52,7 +52,7 @@ export async function updatePhotoAction(formData: FormData) {
   redirect(PATH_ADMIN_PHOTOS);
 }
 
-export async function toggleFavoritePhoto(
+export async function toggleFavoritePhotoAction(
   photoId: string,
   shouldRedirect?: boolean,
 ) {
@@ -70,13 +70,26 @@ export async function toggleFavoritePhoto(
   }
 }
 
-export async function deletePhotoAction(formData: FormData) {
+export async function deletePhotoAction(
+  photoId: string,
+  photoUrl: string,
+  shouldRedirect?: boolean,
+) {
   await Promise.all([
-    deleteStorageUrl(formData.get('url') as string),
-    sqlDeletePhoto(formData.get('id') as string),
+    deleteStorageUrl(photoUrl),
+    sqlDeletePhoto(photoId),
   ]);
-
   revalidateAllKeysAndPaths();
+  if (shouldRedirect) {
+    redirect(PATH_ROOT);
+  }
+};
+
+export async function deletePhotoFormAction(formData: FormData) {
+  return deletePhotoAction(
+    formData.get('url') as string,
+    formData.get('id') as string,
+  );
 };
 
 export async function deletePhotoTagGloballyAction(formData: FormData) {
