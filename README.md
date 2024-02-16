@@ -68,8 +68,8 @@ Installation
 
 ### 7. Optional configuration
 
-- `NEXT_PUBLIC_PRO_MODE = 1` enables higher quality image storage for jpgs (will result in increased storage usage)
-- `NEXT_PUBLIC_STATICALLY_OPTIMIZE = 1` enables PPR and static optimization, i.e., building pages ahead of time (will results in increased storage usage)—⚠️ _Experimental_
+- `NEXT_PUBLIC_PRO_MODE = 1` enables higher quality image storage for jpgs (results in increased storage usage)
+- `NEXT_PUBLIC_STATICALLY_OPTIMIZE = 1` enables PPR and static optimization, i.e., building pages ahead of time (results in increased storage usage)—⚠️ _Experimental_
 - `NEXT_PUBLIC_BLUR_DISABLED = 1` prevents image blur data being stored and displayed (potentially useful for limiting Postgres usage)
 - `NEXT_PUBLIC_GEO_PRIVACY = 1` disables collection/display of location-based data
 - `NEXT_PUBLIC_IGNORE_PRIORITY_ORDER = 1` prevents `priority_order` field affecting photo order
