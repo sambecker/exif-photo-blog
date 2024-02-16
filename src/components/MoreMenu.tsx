@@ -35,9 +35,9 @@ export default function MoreMenu({
         <button
           className={clsx(
             buttonClassName,
-            'p-1 py-1 min-h-0 border-none shadow-none outline-none',
-            'hover:bg-gray-50 active:bg-gray-100',
-            'hover:dark:bg-gray-900/75 active:dark:bg-gray-900',
+            'p-1 min-h-0 border-none shadow-none hover:outline-none',
+            'hover:bg-gray-100 active:bg-gray-100',
+            'hover:dark:bg-gray-800/75 active:dark:bg-gray-900',
             'text-dim',
           )}
           aria-label={`Choose an action for photo: ${'photo'}`}
@@ -54,7 +54,7 @@ export default function MoreMenu({
             'min-w-[8rem]',
             'ml-2.5',
             'p-1 rounded-md border',
-            'bg-content outline-none',
+            'bg-content',
             'shadow-lg dark:shadow-xl',
           )}
         >
@@ -65,7 +65,7 @@ export default function MoreMenu({
               className={clsx(
                 'block w-full',
                 'border-none min-h-0 bg-transparent',
-                'select-none outline-none',
+                'select-none hover:outline-none',
                 'text-sm text-main text-left',
                 'px-3 py-1.5 rounded-[3px]',
                 'hover:text-main',
