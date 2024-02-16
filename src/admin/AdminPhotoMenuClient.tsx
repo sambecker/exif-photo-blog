@@ -22,15 +22,15 @@ export default function AdminPhotoMenuClient({
     <MoreMenu {...{
       items: [
         {
-          label: 'Edit Photo',
-          icon: <FaRegEdit size={14} className="translate-y-[-0.5px]" />,
+          label: 'Edit',
+          icon: <FaRegEdit size={14} />,
           href: pathForAdminPhotoEdit(photo.id),
         }, {
           label: isFav ? 'Unfavorite' : 'Favorite',
           icon: isFav
             ? <FaStar
               size={14}
-              className="translate-y-[-1px] text-amber-500"
+              className="text-amber-500"
             />
             : <FaRegStar
               size={14}

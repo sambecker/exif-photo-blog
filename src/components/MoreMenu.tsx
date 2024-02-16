@@ -23,7 +23,7 @@ export default function MoreMenu({
   const itemClass = clsx(
     'block w-full',
     'border-none min-h-0 bg-transparent',
-    'text-base text-main text-left',
+    'text-sm text-main text-left',
     'px-3 py-1.5 rounded-[3px]',
     'hover:text-main',
     'hover:bg-gray-50 active:bg-gray-100',
@@ -58,7 +58,7 @@ export default function MoreMenu({
         </Menu.Button>
         <Menu.Items className={clsx(
           'absolute top-6',
-          'min-w-[9rem]',
+          'min-w-[8rem]',
           'text-left',
           'md:right-1',
           'p-1 rounded-md border',
