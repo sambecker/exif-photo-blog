@@ -5,14 +5,16 @@ import PhotoTiny from '@/photo/PhotoTiny';
 import { clsx } from 'clsx/lite';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import SiteGrid from '@/components/SiteGrid';
-import { deletePhotoAction, syncPhotoExifDataAction } from '@/photo/actions';
+import {
+  deletePhotoFormAction,
+  syncPhotoExifDataAction,
+} from '@/photo/actions';
 import {
   pathForAdminPhotos,
   pathForPhoto,
   pathForAdminPhotoEdit,
 } from '@/site/paths';
-import { titleForPhoto } from '@/photo';
-import MoreComponentsClient from '@/components/MoreComponentsClient';
+import { deleteConfirmationTextForPhoto, titleForPhoto } from '@/photo';
 import {
   getPhotosCached,
   getPhotosCountIncludingHiddenCached,
@@ -30,6 +32,7 @@ import { PRO_MODE_ENABLED } from '@/site/config';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import IconGrSync from '@/site/IconGrSync';
 import { getStoragePhotoUrlsNoStore } from '@/services/storage/cache';
+import MoreComponentsClient from '@/components/MoreComponentsClient';
 
 const DEBUG_PHOTO_BLOBS = false;
 
@@ -131,10 +134,8 @@ export default async function AdminPhotosPage({
                       />
                     </FormWithConfirm>
                     <FormWithConfirm
-                      action={deletePhotoAction}
-                      confirmText={
-                        // eslint-disable-next-line max-len
-                        `Are you sure you want to delete "${titleForPhoto(photo)}?"`}
+                      action={deletePhotoFormAction}
+                      confirmText={deleteConfirmationTextForPhoto(photo)}
                     >
                       <input type="hidden" name="id" value={photo.id} />
                       <input type="hidden" name="url" value={photo.url} />

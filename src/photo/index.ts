@@ -180,6 +180,9 @@ export const photoQuantityText = (count: number, includeParentheses = true) =>
     ? `(${count} ${photoLabelForCount(count)})`
     : `${count} ${photoLabelForCount(count)}`;  
 
+export const deleteConfirmationTextForPhoto = (photo: Photo) =>
+  `Are you sure you want to delete "${titleForPhoto(photo)}?"`;
+
 export type PhotoDateRange = { start: string, end: string };
 
 export const descriptionForPhotoSet = (
