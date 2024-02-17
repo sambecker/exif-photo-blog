@@ -15,6 +15,7 @@ export default function PhotoSmall({
   simulation,
   selected,
   showAdminMenu,
+  priority,
 }: {
   photo: Photo
   tag?: string
@@ -22,6 +23,7 @@ export default function PhotoSmall({
   simulation?: FilmSimulation
   selected?: boolean
   showAdminMenu?: boolean
+  priority?: boolean
 }) {
   return (
     <Link
@@ -48,6 +50,7 @@ export default function PhotoSmall({
         blurData={photo.blurData}
         className="w-full"
         alt={titleForPhoto(photo)}
+        priority={priority}
       />
     </Link>
   );

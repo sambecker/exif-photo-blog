@@ -7,18 +7,21 @@ export default function ImageSmall({
   alt,
   aspectRatio,
   blurData,
+  priority,
 }: {
   className?: string
   src: string
   alt: string
   aspectRatio: number
   blurData?: string
+  priority?: boolean
 }) {
   return (
     <ImageBlurFallback {...{
       className,
       src,
       alt,
+      priority,
       blurDataURL: blurData,
       placeholder: 'blur',
       width: IMAGE_SMALL_WIDTH,

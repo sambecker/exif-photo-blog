@@ -12,6 +12,7 @@ export default function PhotoGrid({
   tag,
   camera,
   simulation,
+  photoPriority,
   fast,
   animate = true,
   animateOnFirstLoadOnly,
@@ -24,6 +25,7 @@ export default function PhotoGrid({
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
+  photoPriority?: boolean
   fast?: boolean
   animate?: boolean
   animateOnFirstLoadOnly?: boolean
@@ -72,6 +74,7 @@ export default function PhotoGrid({
             camera,
             simulation,
             selected: photo.id === selectedPhoto?.id,
+            priority: photoPriority,
           }} />
         </div>).concat(additionalTile ?? [])}
     />
