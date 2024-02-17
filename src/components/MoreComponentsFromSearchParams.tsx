@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useTransition } from 'react';
 import Spinner from './Spinner';
 
-export default function MoreComponentsClient({
+export default function MoreComponentsFromSearchParams({
   path,
   label = 'Load more',
   triggerOnView = true,

@@ -22,7 +22,7 @@ import {
 import { AiOutlineEyeInvisible } from 'react-icons/ai';
 import {
   PaginationParams,
-  getPaginationForSearchParams,
+  getPaginationFromSearchParams,
 } from '@/site/pagination';
 import AdminGrid from '@/admin/AdminGrid';
 import DeleteButton from '@/admin/DeleteButton';
@@ -32,14 +32,15 @@ import { PRO_MODE_ENABLED } from '@/site/config';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import IconGrSync from '@/site/IconGrSync';
 import { getStoragePhotoUrlsNoStore } from '@/services/storage/cache';
-import MoreComponentsClient from '@/components/MoreComponentsClient';
+import MoreComponentsFromSearchParams from
+  '@/components/MoreComponentsFromSearchParams';
 
 const DEBUG_PHOTO_BLOBS = false;
 
 export default async function AdminPhotosPage({
   searchParams,
 }: PaginationParams) {
-  const { offset, limit } = getPaginationForSearchParams(searchParams);
+  const { offset, limit } = getPaginationFromSearchParams(searchParams);
 
   const [
     photos,
@@ -145,7 +146,7 @@ export default async function AdminPhotosPage({
                 </Fragment>)}
             </AdminGrid>
             {showMorePhotos &&
-              <MoreComponentsClient
+              <MoreComponentsFromSearchParams
                 label="More photos"
                 path={pathForAdminPhotos(offset + 1)}
               />}

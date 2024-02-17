@@ -4,7 +4,7 @@ export interface PaginationParams {
   searchParams?: PaginationSearchParams
 }
 
-export const getPaginationForSearchParams = (
+export const getPaginationFromSearchParams = (
   query?: PaginationSearchParams,
   limitPerOffset = 24,
 ) => {

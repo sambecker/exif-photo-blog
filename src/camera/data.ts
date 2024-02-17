@@ -1,6 +1,6 @@
 import { 
   PaginationSearchParams,
-  getPaginationForSearchParams,
+  getPaginationFromSearchParams,
 } from '@/site/pagination';
 import { Camera } from '.';
 import {
@@ -32,7 +32,7 @@ export const getPhotosCameraDataCachedWithPagination = async ({
   limit?: number,
   searchParams?: PaginationSearchParams,
 }) => {
-  const { offset, limit } = getPaginationForSearchParams(searchParams);
+  const { offset, limit } = getPaginationFromSearchParams(searchParams);
 
   const [photos, count, dateRange] =
     await getPhotosCameraDataCached({

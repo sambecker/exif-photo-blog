@@ -5,7 +5,7 @@ import {
 } from '@/photo/cache';
 import {
   PaginationSearchParams,
-  getPaginationForSearchParams,
+  getPaginationFromSearchParams,
 } from '@/site/pagination';
 import { pathForFilmSimulation } from '@/site/paths';
 import { FilmSimulation } from '.';
@@ -32,7 +32,7 @@ export const getPhotosFilmSimulationDataCachedWithPagination = async ({
   limit?: number,
   searchParams?: PaginationSearchParams,
 }) => {
-  const { offset, limit } = getPaginationForSearchParams(searchParams);
+  const { offset, limit } = getPaginationFromSearchParams(searchParams);
 
   const [photos, count, dateRange] =
     await getPhotosFilmSimulationDataCached({
