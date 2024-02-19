@@ -7,8 +7,18 @@ import { clsx } from 'clsx/lite';
 import { useDebounce } from 'use-debounce';
 import Spinner from './Spinner';
 import { useRouter } from 'next/navigation';
+import { useTheme } from 'next-themes';
 
 const LISTENER_KEYDOWN = 'keydown';
+
+export type CommandKSection = {
+  heading: string
+  items: {
+    label: string
+    path?: string
+    action?: () => void
+  }[]
+}
 
 export default function CommandKClient({
   isLoading,
@@ -17,17 +27,13 @@ export default function CommandKClient({
 }: {
   isLoading?: boolean
   onQueryChange?: (query: string) => void
-  sections?: {
-    heading: string
-    items: {
-      label: string
-      path: string
-    }[]
-  }[]
+  sections?: CommandKSection[]
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [queryDebounced] = useDebounce(query, 1000);
+
+  const { setTheme } = useTheme();
 
   const router = useRouter();
 
@@ -78,12 +84,26 @@ export default function CommandKClient({
             aria-hidden="true"
             className={clsx(
               'absolute bottom-4 inset-x-0 h-6 z-10 pointer-events-none',
-              'bg-gradient-to-t from-white to-transparent',
+              'bg-gradient-to-t to-transparent',
+              'from-white dark:from-black',
             )}
           />
           <Command.List className="relative max-h-72 pb-4 overflow-y-scroll">
             <Command.Empty>No results found.</Command.Empty>
-            {sections
+            {[{
+              heading: 'Theme',
+              items: [{
+                label: 'System',
+                action: () => setTheme('system'),
+              }, {
+                label: 'Light',
+                action: () => setTheme('light'),
+              }, {
+                label: 'Dark',
+                action: () => setTheme('dark'),
+              }],
+            } as CommandKSection]
+              .concat(sections)
               .filter(({ items }) => items.length > 0)
               .map(({ heading, items }) =>
                 <Command.Group
@@ -91,9 +111,9 @@ export default function CommandKClient({
                   heading={heading}
                   className="select-none"
                 >
-                  {items.map(({ label, path }) =>
+                  {items.map(({ label, path, action }) =>
                     <Command.Item
-                      key={label}
+                      key={`${heading}-${label}`}
                       className={clsx(
                         'p-1 rounded-md cursor-pointer',
                         'data-[selected=true]:bg-gray-100',
@@ -101,8 +121,11 @@ export default function CommandKClient({
                         'data-[active=true]:bg-green-400'
                       )}
                       onSelect={() => {
-                        setOpen(false);
-                        router.push(path);
+                        action?.();
+                        if (path) {
+                          setOpen(false);
+                          router.push(path);
+                        }
                       }}
                     >
                       {label}
