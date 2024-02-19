@@ -92,13 +92,13 @@ export default function RootLayout({
                 <Footer />
               </Suspense>
             </main>
+            <CommandK />
           </ThemeProviderClient>
         </StateProvider>
         <Analytics />
         <SpeedInsights />
         <PhotoEscapeHandler />
         <ToasterWithThemes />
-        <CommandK />
       </body>
     </html>
   );
