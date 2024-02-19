@@ -13,6 +13,7 @@ import Footer from '@/site/Footer';
 import { Suspense } from 'react';
 import FooterClient from '@/site/FooterClient';
 import NavClient from '@/site/NavClient';
+import CommandK from '@/components/CommandK';
 
 import '../site/globals.css';
 
@@ -97,6 +98,7 @@ export default function RootLayout({
         <SpeedInsights />
         <PhotoEscapeHandler />
         <ToasterWithThemes />
+        <CommandK />
       </body>
     </html>
   );
