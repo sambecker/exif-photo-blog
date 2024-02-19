@@ -75,10 +75,7 @@ export async function deletePhotoAction(
   photoUrl: string,
   shouldRedirect?: boolean,
 ) {
-  await Promise.all([
-    deleteStorageUrl(photoUrl),
-    sqlDeletePhoto(photoId),
-  ]);
+  await sqlDeletePhoto(photoId).then(() => deleteStorageUrl(photoUrl));
   revalidateAllKeysAndPaths();
   if (shouldRedirect) {
     redirect(PATH_ROOT);
@@ -87,8 +84,8 @@ export async function deletePhotoAction(
 
 export async function deletePhotoFormAction(formData: FormData) {
   return deletePhotoAction(
-    formData.get('url') as string,
     formData.get('id') as string,
+    formData.get('url') as string,
   );
 };
 
