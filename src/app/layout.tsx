@@ -13,7 +13,7 @@ import Footer from '@/site/Footer';
 import { Suspense } from 'react';
 import FooterClient from '@/site/FooterClient';
 import NavClient from '@/site/NavClient';
-import CommandK from '@/components/CommandK';
+import CommandK from '@/site/CommandK';
 
 import '../site/globals.css';
 
