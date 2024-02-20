@@ -31,7 +31,7 @@ export default function CommandKClient({
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
-  const [queryDebounced] = useDebounce(query, 1000);
+  const [queryDebounced] = useDebounce(query, 500);
 
   const [isLoading, setIsLoading] = useState(false);
   const [queriedSections, setQueriedSections] = useState<CommandKSection[]>([]);
@@ -114,11 +114,8 @@ export default function CommandKClient({
               </span>}
           </div>
           <Command.List className="relative max-h-72 overflow-y-scroll">
-            <Command.Empty
-              hidden={isLoading}
-              className="mt-1 pl-3 text-dim"
-            >
-              No results found
+            <Command.Empty className="mt-1 pl-3 text-dim">
+              {isLoading ? 'Loading ...' : 'No results found'}
             </Command.Empty>
             {queriedSections
               .concat(sections)
