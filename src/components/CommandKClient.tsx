@@ -54,6 +54,20 @@ export default function CommandKClient({
     }
   }, [queryDebounced, onQueryChange]);
 
+  const sectionTheme: CommandKSection = {
+    heading: 'Theme',
+    items: [{
+      label: 'System',
+      action: () => setTheme('system'),
+    }, {
+      label: 'Light',
+      action: () => setTheme('light'),
+    }, {
+      label: 'Dark',
+      action: () => setTheme('dark'),
+    }],
+  };
+
   return (
     <Command.Dialog
       open={open}
@@ -66,64 +80,54 @@ export default function CommandKClient({
         fast
       >
         <div className="space-y-3">
-          <div className="text-sm uppercase text-dim">
-            Search for photos, tags, cameras, and film
-          </div>
           <div className="relative">
             <Command.Input
               onChangeCapture={(e) => setQuery(e.currentTarget.value)}
-              className="w-full !min-w-0"
+              className={clsx(
+                'w-full',
+                'placeholder:text-gray-400',
+                'placeholder:dark:text-gray-700',
+              )}
               style={{ paddingRight: '2rem' }}
+              placeholder="Search photos, views, settings ..."
             />
             {isLoading &&
               <span className="absolute top-2.5 right-3">
                 <Spinner size={16} />
               </span>}
           </div>
-          <div
-            aria-hidden="true"
-            className={clsx(
-              'absolute bottom-4 inset-x-0 h-6 z-10 pointer-events-none',
-              'bg-gradient-to-t to-transparent',
-              'from-white dark:from-black',
-            )}
-          />
-          <Command.List className="relative max-h-72 pb-4 overflow-y-scroll">
+          <Command.List className="relative max-h-72 overflow-y-scroll">
             <Command.Empty>No results found.</Command.Empty>
-            {[{
-              heading: 'Theme',
-              items: [{
-                label: 'System',
-                action: () => setTheme('system'),
-              }, {
-                label: 'Light',
-                action: () => setTheme('light'),
-              }, {
-                label: 'Dark',
-                action: () => setTheme('dark'),
-              }],
-            } as CommandKSection]
-              .concat(sections)
+            {sections
+              .concat(sectionTheme)
               .filter(({ items }) => items.length > 0)
               .map(({ heading, items }) =>
                 <Command.Group
                   key={heading}
                   heading={heading}
-                  className="select-none"
+                  className={clsx(
+                    'uppercase',
+                    'select-none',
+                    '[&>*:first-child]:py-1.5',
+                    '[&>*:first-child]:font-medium',
+                    '[&>*:first-child]:text-dim',
+                    '[&>*:first-child]:text-xs',
+                    '[&>*:first-child]:tracking-wider',
+                  )}
                 >
                   {items.map(({ label, path, action }) =>
                     <Command.Item
                       key={`${heading}-${label}`}
                       className={clsx(
-                        'p-1 rounded-md cursor-pointer',
+                        'py-1 px-2 rounded-md cursor-pointer',
                         'data-[selected=true]:bg-gray-100',
                         'data-[selected=true]:dark:bg-gray-900/75',
                         'data-[active=true]:bg-green-400'
                       )}
                       onSelect={() => {
                         action?.();
+                        setOpen(false);
                         if (path) {
-                          setOpen(false);
                           router.push(path);
                         }
                       }}
