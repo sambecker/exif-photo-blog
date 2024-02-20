@@ -72,13 +72,7 @@ export default async function AdminPhotosPage({
             <AdminGrid>
               {photos.map(photo =>
                 <Fragment key={photo.id}>
-                  <PhotoTiny
-                    className={clsx(
-                      'rounded-sm overflow-hidden',
-                      'border border-gray-200 dark:border-gray-800',
-                    )}
-                    photo={photo}
-                  />
+                  <PhotoTiny photo={photo} />
                   <div className="flex flex-col lg:flex-row">
                     <Link
                       key={photo.id}

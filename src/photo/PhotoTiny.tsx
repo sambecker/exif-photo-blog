@@ -23,6 +23,8 @@ export default function PhotoTiny({
         'active:brightness-75',
         selected && 'brightness-50',
         'min-w-[50px]',
+        'rounded-sm overflow-hidden',
+        'border border-gray-200 dark:border-gray-800',
       )}
     >
       <ImageTiny

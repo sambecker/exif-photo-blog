@@ -1,7 +1,7 @@
 'use client';
 
 import { Command } from 'cmdk';
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import Modal from './Modal';
 import { clsx } from 'clsx/lite';
 import { useDebounce } from 'use-debounce';
@@ -13,25 +13,28 @@ const LISTENER_KEYDOWN = 'keydown';
 
 export type CommandKSection = {
   heading: string
+  accessory?: ReactNode
   items: {
     label: string
+    accessory?: ReactNode
     path?: string
     action?: () => void
   }[]
 }
 
 export default function CommandKClient({
-  isLoading,
   onQueryChange,
   sections = [],
 }: {
-  isLoading?: boolean
-  onQueryChange?: (query: string) => void
+  onQueryChange?: (query: string) => Promise<CommandKSection[]>
   sections?: CommandKSection[]
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [queryDebounced] = useDebounce(query, 1000);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [queriedSections, setQueriedSections] = useState<CommandKSection[]>([]);
 
   const { setTheme } = useTheme();
 
@@ -50,9 +53,19 @@ export default function CommandKClient({
 
   useEffect(() => {
     if (queryDebounced) {
-      onQueryChange?.(queryDebounced);
+      setIsLoading(true);
+      onQueryChange?.(queryDebounced).then(querySections => {
+        setQueriedSections(querySections);
+        setIsLoading(false);
+      });
     }
   }, [queryDebounced, onQueryChange]);
+
+  useEffect(() => {
+    if (query === '') {
+      setQueriedSections([]);
+    }
+  }, [query]);
 
   const sectionTheme: CommandKSection = {
     heading: 'Theme',
@@ -73,19 +86,23 @@ export default function CommandKClient({
       open={open}
       onOpenChange={setOpen}
       label="Global Command Menu"
+      loop
     >
       <Modal
         anchor='top'
         onClose={() => setOpen(false)}
         fast
       >
-        <div className="space-y-3">
+        <div className="space-y-1.5">
           <div className="relative">
             <Command.Input
               onChangeCapture={(e) => setQuery(e.currentTarget.value)}
               className={clsx(
                 'w-full',
-                'placeholder:text-gray-400',
+                'focus:ring-0',
+                '!border-gray-200 dark:!border-gray-800',
+                'focus:border-gray-200 focus:dark:border-gray-800',
+                'placeholder:text-gray-400/80',
                 'placeholder:dark:text-gray-700',
               )}
               style={{ paddingRight: '2rem' }}
@@ -97,8 +114,14 @@ export default function CommandKClient({
               </span>}
           </div>
           <Command.List className="relative max-h-72 overflow-y-scroll">
-            <Command.Empty>No results found.</Command.Empty>
-            {sections
+            <Command.Empty
+              hidden={isLoading}
+              className="mt-1 pl-3 text-dim"
+            >
+              No results found
+            </Command.Empty>
+            {queriedSections
+              .concat(sections)
               .concat(sectionTheme)
               .filter(({ items }) => items.length > 0)
               .map(({ heading, items }) =>
@@ -108,21 +131,23 @@ export default function CommandKClient({
                   className={clsx(
                     'uppercase',
                     'select-none',
-                    '[&>*:first-child]:py-1.5',
+                    '[&>*:first-child]:py-1',
                     '[&>*:first-child]:font-medium',
                     '[&>*:first-child]:text-dim',
                     '[&>*:first-child]:text-xs',
                     '[&>*:first-child]:tracking-wider',
                   )}
                 >
-                  {items.map(({ label, path, action }) =>
+                  {items.map(({ accessory, label, path, action }) =>
                     <Command.Item
                       key={`${heading}-${label}`}
+                      value={`${heading}-${label}`}
                       className={clsx(
-                        'py-1 px-2 rounded-md cursor-pointer',
+                        'px-2',
+                        accessory ? 'py-2' : 'py-1',
+                        'rounded-md cursor-pointer tracking-wide',
                         'data-[selected=true]:bg-gray-100',
                         'data-[selected=true]:dark:bg-gray-900/75',
-                        'data-[active=true]:bg-green-400'
                       )}
                       onSelect={() => {
                         action?.();
@@ -132,7 +157,10 @@ export default function CommandKClient({
                         }
                       }}
                     >
-                      {label}
+                      <div className="flex items-center gap-2">
+                        {accessory}
+                        {label}
+                      </div>
                     </Command.Item>)}
                 </Command.Group>)}
           </Command.List>

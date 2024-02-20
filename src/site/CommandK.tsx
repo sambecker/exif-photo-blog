@@ -11,10 +11,14 @@ import {
   PATH_ADMIN_UPLOADS,
   pathForCamera,
   pathForFilmSimulation,
+  pathForPhoto,
   pathForTag,
 } from './paths';
 import { formatCameraText } from '@/camera';
 import { authCached } from '@/auth/cache';
+import { getPhotos } from '@/services/vercel-postgres';
+import { titleForPhoto } from '@/photo';
+import PhotoTiny from '@/photo/PhotoTiny';
 
 export default async function CommandK() {
   const [
@@ -85,5 +89,20 @@ export default async function CommandK() {
       SECTION_FILM,
       SECTION_PAGES,
     ]}
+    onQueryChange={async (query) => {
+      'use server';
+      const photos = (await getPhotos({ title: query }))
+        .filter(({ title }) => Boolean(title));
+      return photos.length > 0
+        ? [{
+          heading: 'Photos',
+          items: photos.map(photo => ({
+            accessory: <PhotoTiny photo={photo} />,
+            label: titleForPhoto(photo),
+            path: pathForPhoto(photo),
+          })),
+        }]
+        : [];
+    }}
   />;
 }
