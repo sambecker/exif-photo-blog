@@ -20,6 +20,13 @@ import { getPhotos } from '@/services/vercel-postgres';
 import { titleForPhoto } from '@/photo';
 import PhotoTiny from '@/photo/PhotoTiny';
 import { formatDate } from '@/utility/date';
+import { formatCount, formatCountDescriptive } from '@/utility/string';
+import { BiLockAlt } from 'react-icons/bi';
+import { sortTagsObject } from '@/tag';
+import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
+import { IoMdCamera } from 'react-icons/io';
+import { FaTag } from 'react-icons/fa';
+import { TbPhoto } from 'react-icons/tb';
 
 export default async function CommandK() {
   const [
@@ -38,47 +45,65 @@ export default async function CommandK() {
 
   const SECTION_TAGS: CommandKSection = {
     heading: 'Tags',
-    items: tags.map(({ tag }) => ({
+    accessory: <FaTag
+      size={10}
+      className="translate-x-[1px] translate-y-[0.5px]"
+    />,
+    items: sortTagsObject(tags).map(({ tag, count }) => ({
       label: tag,
+      annotation: formatCount(count),
+      annotationAria: formatCountDescriptive(count),
       path: pathForTag(tag),
     })),
   };
 
   const SECTION_CAMERAS: CommandKSection = {
     heading: 'Cameras',
-    items: cameras.map(({ camera }) => ({
+    accessory: <IoMdCamera />,
+    items: cameras.map(({ camera, count }) => ({
       label: formatCameraText(camera),
+      annotation: formatCount(count),
+      annotationAria: formatCountDescriptive(count),
       path: pathForCamera(camera),
     })),
   };
 
   const SECTION_FILM: CommandKSection = {
     heading: 'Film Simulations',
-    items: filmSimulations.map(({ simulation }) => ({
+    accessory: <span className="w-3">
+      <PhotoFilmSimulationIcon />
+    </span>,
+    items: filmSimulations.map(({ simulation, count }) => ({
       label: simulation,
+      annotation: formatCount(count),
+      annotationAria: formatCountDescriptive(count),
       path: pathForFilmSimulation(simulation),
     })),
   };
 
   const SECTION_PAGES: CommandKSection = {
     heading: 'Pages',
-    items: [{
+    items: ([{
       label: 'Home',
       path: '/',
     }, {
       label: 'Grid',
       path:'/grid',
-    }].concat(showAdminPages ? [{
-      label: 'Admin » Photos',
+    }] as CommandKSection['items']).concat(showAdminPages ? [{
+      label: 'Admin / Photos',
+      annotation: <BiLockAlt />,
       path: PATH_ADMIN_PHOTOS,
     }, {
-      label: 'Admin » Uploads',
+      label: 'Admin / Uploads',
+      annotation: <BiLockAlt />,
       path: PATH_ADMIN_UPLOADS,
     }, {
-      label: 'Admin » Tags',
+      label: 'Admin / Tags',
+      annotation: <BiLockAlt />,
       path: PATH_ADMIN_TAGS,
     }, {
-      label: 'Admin » Config',
+      label: 'Admin / Config',
+      annotation: <BiLockAlt />,
       path: PATH_ADMIN_CONFIGURATION,
     }] : []),
   };
@@ -97,10 +122,11 @@ export default async function CommandK() {
       return photos.length > 0
         ? [{
           heading: 'Photos',
+          accessory: <TbPhoto size={14} />,
           items: photos.map(photo => ({
             accessory: <PhotoTiny photo={photo} />,
             label: titleForPhoto(photo),
-            note: formatDate(photo.takenAt),
+            annotation: formatDate(photo.takenAt),
             path: pathForPhoto(photo),
           })),
         }]

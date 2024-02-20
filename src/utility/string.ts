@@ -24,3 +24,14 @@ export const parameterize = (string: string) =>
     // Removes all non-alphanumeric characters
     .replaceAll(/([^a-z0-9-])/gi, '')
     .toLowerCase();
+
+export const formatCount = (count: number) => `× ${count}`;
+
+export const formatCountDescriptive = (
+  count: number,
+  verb = 'found',
+  noun = 'photo',
+  singular = '',
+  plural = 's',
+) =>
+  `${verb} in ${count} ${noun}${count === 1 ? singular : plural}`;

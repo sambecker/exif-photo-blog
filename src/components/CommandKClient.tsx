@@ -8,6 +8,7 @@ import { useDebounce } from 'use-debounce';
 import Spinner from './Spinner';
 import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
+import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
 
 const LISTENER_KEYDOWN = 'keydown';
 
@@ -16,7 +17,8 @@ export type CommandKSection = {
   accessory?: ReactNode
   items: {
     label: string
-    note?: string
+    annotation?: ReactNode
+    annotationAria?: string
     accessory?: ReactNode
     path?: string
     action?: () => void
@@ -32,7 +34,7 @@ export default function CommandKClient({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [queryRaw, setQueryRaw] = useState('');
-  const [queryDebounced] = useDebounce(queryRaw, 500);
+  const [queryDebounced] = useDebounce(queryRaw, 500, { trailing: true });
 
   const [isLoading, setIsLoading] = useState(false);
   const [queriedSections, setQueriedSections] = useState<CommandKSection[]>([]);
@@ -70,16 +72,27 @@ export default function CommandKClient({
     }
   }, [queryRaw]);
 
+  useEffect(() => {
+    if (!isOpen) {
+      setQueryRaw('');
+      setQueriedSections([]);
+      setIsLoading(false);
+    }
+  }, [isOpen]);
+
   const sectionTheme: CommandKSection = {
     heading: 'Theme',
     items: [{
       label: 'Use System',
+      annotation: <BiDesktop />,
       action: () => setTheme('system'),
     }, {
       label: 'Light Mode',
+      annotation: <BiSun size={16} className="translate-x-[1.25px]" />,
       action: () => setTheme('light'),
     }, {
       label: 'Dark Mode',
+      annotation: <BiMoon className="translate-x-[1px]" />,
       action: () => setTheme('dark'),
     }],
   };
@@ -87,13 +100,7 @@ export default function CommandKClient({
   return (
     <Command.Dialog
       open={isOpen}
-      onOpenChange={isOpen => {
-        if (!isOpen) {
-          setQueryRaw('');
-          setQueriedSections([]);
-        }
-        setIsOpen(isOpen);
-      }}
+      onOpenChange={setIsOpen}
       label="Global Command Menu"
       filter={(value, search) =>
         value.toLowerCase().includes(search.toLowerCase()) ? 1 : 0}
@@ -132,10 +139,17 @@ export default function CommandKClient({
               .concat(sections)
               .concat(sectionTheme)
               .filter(({ items }) => items.length > 0)
-              .map(({ heading, items }) =>
+              .map(({ heading, accessory, items }) =>
                 <Command.Group
                   key={heading}
-                  heading={heading}
+                  heading={<div className={clsx(
+                    'flex items-center',
+                    'px-2',
+                  )}>
+                    {accessory &&
+                      <div className="w-5">{accessory}</div>}
+                    {heading}
+                  </div>}
                   className={clsx(
                     'uppercase',
                     'select-none',
@@ -146,7 +160,14 @@ export default function CommandKClient({
                     '[&>*:first-child]:tracking-wider',
                   )}
                 >
-                  {items.map(({ accessory, label, note, path, action }) =>
+                  {items.map(({
+                    accessory,
+                    label,
+                    annotation,
+                    annotationAria,
+                    path,
+                    action,
+                  }) =>
                     <Command.Item
                       key={`${heading}-${label}`}
                       value={`${heading}-${label}`}
@@ -170,9 +191,14 @@ export default function CommandKClient({
                         <span className="grow text-ellipsis truncate">
                           {label}
                         </span>
-                        {note &&
-                          <span className="text-dim whitespace-nowrap">
-                            {note}
+                        {annotation &&
+                          <span
+                            className="text-dim whitespace-nowrap"
+                            aria-label={annotationAria}
+                          >
+                            <span aria-hidden={Boolean(annotationAria)}>
+                              {annotation}
+                            </span>
                           </span>}
                       </div>
                     </Command.Item>)}
