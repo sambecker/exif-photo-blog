@@ -96,6 +96,8 @@ export default function CommandKClient({
       open={open}
       onOpenChange={setOpen}
       label="Global Command Menu"
+      filter={(value, search) =>
+        value.toLowerCase().includes(search.toLowerCase()) ? 1 : 0}
       loop
     >
       <Modal
