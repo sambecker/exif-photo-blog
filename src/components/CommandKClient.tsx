@@ -30,9 +30,9 @@ export default function CommandKClient({
   onQueryChange?: (query: string) => Promise<CommandKSection[]>
   sections?: CommandKSection[]
 }) {
-  const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState('');
-  const [queryDebounced] = useDebounce(query, 500);
+  const [isOpen, setIsOpen] = useState(false);
+  const [queryRaw, setQueryRaw] = useState('');
+  const [queryDebounced] = useDebounce(queryRaw, 500);
 
   const [isLoading, setIsLoading] = useState(false);
   const [queriedSections, setQueriedSections] = useState<CommandKSection[]>([]);
@@ -45,7 +45,7 @@ export default function CommandKClient({
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        setOpen((open) => !open);
+        setIsOpen((open) => !open);
       }
     };
     document.addEventListener(LISTENER_KEYDOWN, down);
@@ -63,19 +63,12 @@ export default function CommandKClient({
   }, [queryDebounced, onQueryChange]);
 
   useEffect(() => {
-    if (query === '') {
+    if (queryRaw === '') {
       setQueriedSections([]);
     } else {
       setIsLoading(true);
     }
-  }, [query]);
-
-  useEffect(() => {
-    if (!open) {
-      setQuery('');
-      setQueriedSections([]);
-    }
-  }, [open]);
+  }, [queryRaw]);
 
   const sectionTheme: CommandKSection = {
     heading: 'Theme',
@@ -93,8 +86,14 @@ export default function CommandKClient({
 
   return (
     <Command.Dialog
-      open={open}
-      onOpenChange={setOpen}
+      open={isOpen}
+      onOpenChange={isOpen => {
+        if (!isOpen) {
+          setQueryRaw('');
+          setQueriedSections([]);
+        }
+        setIsOpen(isOpen);
+      }}
       label="Global Command Menu"
       filter={(value, search) =>
         value.toLowerCase().includes(search.toLowerCase()) ? 1 : 0}
@@ -102,13 +101,13 @@ export default function CommandKClient({
     >
       <Modal
         anchor='top'
-        onClose={() => setOpen(false)}
+        onClose={() => setIsOpen(false)}
         fast
       >
         <div className="space-y-1.5">
           <div className="relative">
             <Command.Input
-              onChangeCapture={(e) => setQuery(e.currentTarget.value)}
+              onChangeCapture={(e) => setQueryRaw(e.currentTarget.value)}
               className={clsx(
                 'w-full',
                 'focus:ring-0',
@@ -159,7 +158,7 @@ export default function CommandKClient({
                         'data-[selected=true]:dark:bg-gray-900/75',
                       )}
                       onSelect={() => {
-                        setOpen(false);
+                        setIsOpen(false);
                         action?.();
                         if (path) {
                           router.push(path);
