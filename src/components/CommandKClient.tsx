@@ -16,6 +16,7 @@ export type CommandKSection = {
   accessory?: ReactNode
   items: {
     label: string
+    note?: string
     accessory?: ReactNode
     path?: string
     action?: () => void
@@ -64,19 +65,28 @@ export default function CommandKClient({
   useEffect(() => {
     if (query === '') {
       setQueriedSections([]);
+    } else {
+      setIsLoading(true);
     }
   }, [query]);
+
+  useEffect(() => {
+    if (!open) {
+      setQuery('');
+      setQueriedSections([]);
+    }
+  }, [open]);
 
   const sectionTheme: CommandKSection = {
     heading: 'Theme',
     items: [{
-      label: 'System',
+      label: 'Use System',
       action: () => setTheme('system'),
     }, {
-      label: 'Light',
+      label: 'Light Mode',
       action: () => setTheme('light'),
     }, {
-      label: 'Dark',
+      label: 'Dark Mode',
       action: () => setTheme('dark'),
     }],
   };
@@ -135,7 +145,7 @@ export default function CommandKClient({
                     '[&>*:first-child]:tracking-wider',
                   )}
                 >
-                  {items.map(({ accessory, label, path, action }) =>
+                  {items.map(({ accessory, label, note, path, action }) =>
                     <Command.Item
                       key={`${heading}-${label}`}
                       value={`${heading}-${label}`}
@@ -147,16 +157,22 @@ export default function CommandKClient({
                         'data-[selected=true]:dark:bg-gray-900/75',
                       )}
                       onSelect={() => {
-                        action?.();
                         setOpen(false);
+                        action?.();
                         if (path) {
                           router.push(path);
                         }
                       }}
                     >
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 sm:gap-3">
                         {accessory}
-                        {label}
+                        <span className="grow text-ellipsis truncate">
+                          {label}
+                        </span>
+                        {note &&
+                          <span className="text-dim whitespace-nowrap">
+                            {note}
+                          </span>}
                       </div>
                     </Command.Item>)}
                 </Command.Group>)}

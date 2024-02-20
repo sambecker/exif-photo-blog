@@ -19,6 +19,7 @@ import { authCached } from '@/auth/cache';
 import { getPhotos } from '@/services/vercel-postgres';
 import { titleForPhoto } from '@/photo';
 import PhotoTiny from '@/photo/PhotoTiny';
+import { formatDate } from '@/utility/date';
 
 export default async function CommandK() {
   const [
@@ -99,6 +100,7 @@ export default async function CommandK() {
           items: photos.map(photo => ({
             accessory: <PhotoTiny photo={photo} />,
             label: titleForPhoto(photo),
+            note: formatDate(photo.takenAt),
             path: pathForPhoto(photo),
           })),
         }]
