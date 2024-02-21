@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { clsx } from 'clsx/lite';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import AnimateItems from './AnimateItems';
 import { PATH_ROOT } from '@/site/paths';
 import usePrefersReducedMotion from '@/utility/usePrefersReducedMotion';
+import { useTheme } from 'next-themes';
 
 export default function Modal({
   onClosePath,
@@ -38,6 +39,19 @@ export default function Modal({
     }
   }, []);
 
+  const { resolvedTheme } = useTheme();
+  useLayoutEffect(() => {
+    if (resolvedTheme === 'light') {
+      // Temporarily create meta tag for overlays in light mode,
+      // which prevents stale headers on theme changes
+      const meta = document.createElement('meta');
+      meta.name = 'theme-color';
+      meta.content = '#333';
+      document.getElementsByTagName('head')[0]?.appendChild(meta);
+      return () => meta.remove();
+    }
+  }, [resolvedTheme]);
+
   useClickInsideOutside({
     htmlElements,
     onClickOutside: () => {
@@ -57,7 +71,7 @@ export default function Modal({
       className={clsx(
         'fixed inset-0 z-50 flex justify-center',
         anchor === 'top'
-          ? 'items-start pt-4 xs:pt-12 sm:pt-24'
+          ? 'items-start pt-4 sm:pt-24'
           : 'items-center',
         'bg-black',
       )}
@@ -73,7 +87,7 @@ export default function Modal({
           ref={contentRef}
           key="modalContent"
           className={clsx(
-            'w-[calc(100vw-1.5rem)] xs:w-[min(500px,90vw)]',
+            'w-[calc(100vw-1.5rem)] sm:w-[min(500px,90vw)]',
             'p-3 rounded-lg',
             'md:p-4 md:rounded-xl',
             'bg-white dark:bg-black',

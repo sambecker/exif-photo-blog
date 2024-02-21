@@ -158,8 +158,7 @@ export default function CommandKClient({
           </div>
           <Command.List className={clsx(
             'relative overflow-y-scroll',
-            'h-36 sm:h-auto',
-            'sm:max-h-72',
+            'max-h-48 sm:max-h-72',
           )}>
             <Command.Empty className="mt-1 pl-3 text-dim">
               {isLoading ? 'Searching ...' : 'No results found'}
