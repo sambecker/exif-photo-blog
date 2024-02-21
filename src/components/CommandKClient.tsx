@@ -139,7 +139,7 @@ export default function CommandKClient({
           </div>
           <Command.List className="relative max-h-72 overflow-y-scroll">
             <Command.Empty className="mt-1 pl-3 text-dim">
-              {isLoading ? 'Loading ...' : 'No results found'}
+              {isLoading ? 'Searching ...' : 'No results found'}
             </Command.Empty>
             {queriedSections
               .concat(sections)
