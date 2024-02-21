@@ -11,10 +11,18 @@ import usePrefersReducedMotion from '@/utility/usePrefersReducedMotion';
 
 export default function Modal({
   onClosePath,
+  onClose,
+  className,
+  anchor = 'center',
   children,
+  fast,
 }: {
   onClosePath?: string
+  onClose?: () => void
+  className?: string
+  anchor?: 'top' | 'center'
   children: ReactNode
+  fast?: boolean
 }) {
   const router = useRouter();
 
@@ -32,16 +40,25 @@ export default function Modal({
 
   useClickInsideOutside({
     htmlElements,
-    onClickOutside: () => router.push(
-      onClosePath ?? PATH_ROOT,
-      { scroll: false },
-    ),
+    onClickOutside: () => {
+      if (onClose) {
+        onClose();
+      } else {
+        router.push(
+          onClosePath ?? PATH_ROOT,
+          { scroll: false },
+        );
+      }
+    },
   });
 
   return (
     <motion.div
       className={clsx(
-        'fixed inset-0 z-50 flex items-center justify-center',
+        'fixed inset-0 z-50 flex justify-center',
+        anchor === 'top'
+          ? 'items-start pt-4 sm:pt-24'
+          : 'items-center',
         'bg-black',
       )}
       initial={!prefersReducedMotion
@@ -51,7 +68,7 @@ export default function Modal({
       transition={{ duration: 0.3, easing: 'easeOut' }}
     >
       <AnimateItems
-        duration={0.3}
+        duration={fast ? 0.1 : 0.3}
         items={[<div
           key="modalContent"
           className={clsx(
@@ -59,6 +76,7 @@ export default function Modal({
             'bg-white dark:bg-black',
             'dark:border dark:border-gray-800',
             'md:p-4 md:rounded-xl',
+            className,
           )}
           style={{ width: 'min(500px, 90vw)' }}
           ref={contentRef}

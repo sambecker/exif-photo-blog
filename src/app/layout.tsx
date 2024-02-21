@@ -14,6 +14,7 @@ import FooterClient from '@/site/FooterClient';
 import NavClient from '@/site/NavClient';
 import { Metadata } from 'next/types';
 import MoreComponentsProvider from '@/state/MoreComponentsProvider';
+import CommandK from '@/site/CommandK';
 
 import '../site/globals.css';
 
@@ -93,6 +94,7 @@ export default function RootLayout({
                   <Footer />
                 </Suspense>
               </main>
+              <CommandK />
             </ThemeProviderClient>
           </MoreComponentsProvider>
         </AppStateProvider>

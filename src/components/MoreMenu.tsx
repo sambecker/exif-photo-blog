@@ -1,6 +1,6 @@
 import React, { ReactNode, useState } from 'react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import clsx from 'clsx';
+import { clsx } from 'clsx/lite';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import Link from 'next/link';
 
