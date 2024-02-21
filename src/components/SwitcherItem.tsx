@@ -21,7 +21,6 @@ export default function SwitcherItem({
     'py-0.5 px-1.5',
     'cursor-pointer',
     'hover:bg-gray-100/60 active:bg-gray-100',
-    // eslint-disable-next-line max-len
     'dark:hover:bg-gray-900/75 dark:active:bg-gray-900',
     active
       ? 'text-black dark:text-white'
