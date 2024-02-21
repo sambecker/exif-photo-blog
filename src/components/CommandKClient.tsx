@@ -12,6 +12,7 @@ import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
 // import { IoInvertModeSharp } from 'react-icons/io5';
 
 const LISTENER_KEYDOWN = 'keydown';
+const MINIMUM_QUERY_LENGTH = 2;
 
 export type CommandKSection = {
   heading: string
@@ -33,8 +34,6 @@ export default function CommandKClient({
   onQueryChange?: (query: string) => Promise<CommandKSection[]>
   sections?: CommandKSection[]
 }) {
-  const MINIMUM_QUERY_LENGTH = 2;
-
   const [isOpen, setIsOpen] = useState(false);
   const [queryRaw, setQueryRaw] = useState('');
   const [queryDebounced] = useDebounce(queryRaw, 500, { trailing: true });
