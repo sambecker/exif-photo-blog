@@ -12,7 +12,6 @@ import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
 import { IoInvertModeSharp } from 'react-icons/io5';
 
 const LISTENER_KEYDOWN = 'keydown';
-
 const MINIMUM_QUERY_LENGTH = 2;
 
 export type CommandKSection = {
