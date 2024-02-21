@@ -12,6 +12,8 @@ import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
 
 const LISTENER_KEYDOWN = 'keydown';
 
+const MINIMUM_QUERY_LENGTH = 2;
+
 export type CommandKSection = {
   heading: string
   accessory?: ReactNode
@@ -55,7 +57,7 @@ export default function CommandKClient({
   }, []);
 
   useEffect(() => {
-    if (queryDebounced) {
+    if (queryDebounced.length >= MINIMUM_QUERY_LENGTH) {
       setIsLoading(true);
       onQueryChange?.(queryDebounced).then(querySections => {
         setQueriedSections(querySections);
@@ -67,7 +69,7 @@ export default function CommandKClient({
   useEffect(() => {
     if (queryRaw === '') {
       setQueriedSections([]);
-    } else {
+    } else if (queryRaw.length >= MINIMUM_QUERY_LENGTH) {
       setIsLoading(true);
     }
   }, [queryRaw]);
