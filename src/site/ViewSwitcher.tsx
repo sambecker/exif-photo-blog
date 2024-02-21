@@ -40,7 +40,7 @@ export default function ViewSwitcher({
             active={currentSelection === 'admin'}
           />}
       </Switcher>
-      <Switcher>
+      <Switcher type="borderless">
         <SwitcherItem
           icon={<IconSearch />}
           onClick={() => setIsCommandKOpen?.(true)}

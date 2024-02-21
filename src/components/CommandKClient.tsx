@@ -134,11 +134,11 @@ export default function CommandKClient({
         fast
       >
         <div className="space-y-1.5">
-          <div className="relative w-full max-w-full min-w-0">
+          <div className="relative">
             <Command.Input
               onChangeCapture={(e) => setQueryLive(e.currentTarget.value)}
               className={clsx(
-                'w-full  !max-w-full !min-w-0',
+                'w-full !min-w-0',
                 'focus:ring-0',
                 isPlaceholderVisible || isLoading && '!pr-8',
                 '!border-gray-200 dark:!border-gray-800',

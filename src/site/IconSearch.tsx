@@ -19,9 +19,9 @@ export default function IconSearch({
       stroke="currentColor"
       xmlns="http://www.w3.org/2000/svg"
     >
-      {includeTitle && <title>Search</title>}
-      <circle cx="13.5" cy="11.5" r="4.875" strokeWidth="1.25" />
-      <path d="M17 15L21 19" strokeWidth="1.25" strokeLinecap="round" />
+      {includeTitle && <title>Search ⌘K</title>}
+      <circle cx="13.5" cy="11.5" r="4.875" strokeWidth="1.5" />
+      <path d="M17 15L21 19" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   );
 }

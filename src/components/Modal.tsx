@@ -87,7 +87,7 @@ export default function Modal({
           ref={contentRef}
           key="modalContent"
           className={clsx(
-            'w-[calc(100vw-1.5rem)] sm:w-[min(500px,90vw)]',
+            'w-[calc(100vw-1.5rem)] sm:w-[min(540px,90vw)]',
             'p-3 rounded-lg',
             'md:p-4 md:rounded-xl',
             'bg-white dark:bg-black',
