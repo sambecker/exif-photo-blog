@@ -9,6 +9,7 @@ import Spinner from './Spinner';
 import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
+import { IoInvertModeSharp } from 'react-icons/io5';
 
 const LISTENER_KEYDOWN = 'keydown';
 
@@ -84,6 +85,10 @@ export default function CommandKClient({
 
   const sectionTheme: CommandKSection = {
     heading: 'Theme',
+    accessory: <IoInvertModeSharp
+      size={14}
+      className="translate-y-[0.5px] translate-x-[-1px]"
+    />,
     items: [{
       label: 'Use System',
       annotation: <BiDesktop />,

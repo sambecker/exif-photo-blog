@@ -24,9 +24,10 @@ import { formatCount, formatCountDescriptive } from '@/utility/string';
 import { BiLockAlt } from 'react-icons/bi';
 import { sortTagsObject } from '@/tag';
 import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
-import { IoMdCamera } from 'react-icons/io';
+import { IoDocumentText } from 'react-icons/io5';
 import { FaTag } from 'react-icons/fa';
 import { TbPhoto } from 'react-icons/tb';
+import { IoMdCamera } from 'react-icons/io';
 
 export default async function CommandK() {
   const [
@@ -47,7 +48,7 @@ export default async function CommandK() {
     heading: 'Tags',
     accessory: <FaTag
       size={10}
-      className="translate-x-[1px] translate-y-[0.5px]"
+      className="translate-x-[1px] translate-y-[0.75px]"
     />,
     items: sortTagsObject(tags).map(({ tag, count }) => ({
       label: tag,
@@ -83,6 +84,7 @@ export default async function CommandK() {
 
   const SECTION_PAGES: CommandKSection = {
     heading: 'Pages',
+    accessory: <IoDocumentText size={14} className="translate-x-[-1px]" />,
     items: ([{
       label: 'Home',
       path: '/',
