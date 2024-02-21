@@ -5,7 +5,7 @@ import { AppStateContext } from '.';
 import { AnimationConfig } from '@/components/AnimateItems';
 import usePathnames from '@/utility/usePathnames';
 
-export default function StateProvider({
+export default function AppStateProvider({
   children,
 }: {
   children: ReactNode
@@ -16,6 +16,8 @@ export default function StateProvider({
   
   const [nextPhotoAnimation, setNextPhotoAnimation] =
     useState<AnimationConfig>();
+
+  const [isCommandKOpen, setIsCommandKOpen] = useState(false);
 
   useEffect(() => {
     setHasLoaded?.(true);
@@ -28,6 +30,8 @@ export default function StateProvider({
         hasLoaded,
         setHasLoaded,
         nextPhotoAnimation,
+        isCommandKOpen,
+        setIsCommandKOpen,
         setNextPhotoAnimation,
         clearNextPhotoAnimation: () => setNextPhotoAnimation?.(undefined),
       }}

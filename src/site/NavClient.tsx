@@ -11,7 +11,6 @@ import {
   isPathAdmin,
   isPathGrid,
   isPathProtected,
-  isPathSets,
   isPathSignIn,
 } from '@/site/paths';
 import AnimateItems from '../components/AnimateItems';
@@ -40,8 +39,6 @@ export default function NavClient({
       return 'full-frame';
     } else if (isPathGrid(pathname)) {
       return 'grid';
-    } else if (isPathSets(pathname)) {
-      return 'sets';
     } else if (isPathProtected(pathname)) {
       return 'admin';
     }

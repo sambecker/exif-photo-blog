@@ -57,7 +57,7 @@ export default function Modal({
       className={clsx(
         'fixed inset-0 z-50 flex justify-center',
         anchor === 'top'
-          ? 'items-start pt-4 sm:pt-24'
+          ? 'items-start pt-4 xs:pt-12 sm:pt-24'
           : 'items-center',
         'bg-black',
       )}
@@ -70,16 +70,16 @@ export default function Modal({
       <AnimateItems
         duration={fast ? 0.1 : 0.3}
         items={[<div
+          ref={contentRef}
           key="modalContent"
           className={clsx(
+            'w-[calc(100vw-1.5rem)] xs:w-[min(500px,90vw)]',
             'p-3 rounded-lg',
+            'md:p-4 md:rounded-xl',
             'bg-white dark:bg-black',
             'dark:border dark:border-gray-800',
-            'md:p-4 md:rounded-xl',
             className,
           )}
-          style={{ width: 'min(500px, 90vw)' }}
-          ref={contentRef}
         >
           {children}
         </div>]}

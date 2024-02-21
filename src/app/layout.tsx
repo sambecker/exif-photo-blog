@@ -4,7 +4,7 @@ import { clsx } from 'clsx/lite';
 import { IBM_Plex_Mono } from 'next/font/google';
 import { Metadata } from 'next';
 import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from '@/site/config';
-import StateProvider from '@/state/AppStateProvider';
+import AppStateProvider from '@/state/AppStateProvider';
 import ThemeProviderClient from '@/site/ThemeProviderClient';
 import Nav from '@/site/Nav';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
@@ -73,7 +73,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className={ibmPlexMono.variable}>
-        <StateProvider>
+        <AppStateProvider>
           <ThemeProviderClient>
             <main className={clsx(
               'mx-3 mb-3',
@@ -94,7 +94,7 @@ export default function RootLayout({
             </main>
             <CommandK />
           </ThemeProviderClient>
-        </StateProvider>
+        </AppStateProvider>
         <Analytics />
         <SpeedInsights />
         <PhotoEscapeHandler />
