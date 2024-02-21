@@ -24,7 +24,7 @@ import { formatCount, formatCountDescriptive } from '@/utility/string';
 import { BiLockAlt } from 'react-icons/bi';
 import { sortTagsObject } from '@/tag';
 import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
-import { IoDocumentText } from 'react-icons/io5';
+// import { IoDocumentText } from 'react-icons/io5';
 import { FaTag } from 'react-icons/fa';
 import { TbPhoto } from 'react-icons/tb';
 import { IoMdCamera } from 'react-icons/io';
@@ -84,7 +84,7 @@ export default async function CommandK() {
 
   const SECTION_PAGES: CommandKSection = {
     heading: 'Pages',
-    accessory: <IoDocumentText size={14} className="translate-x-[-1px]" />,
+    // accessory: <IoDocumentText size={14} className="translate-x-[-1px]" />,
     items: ([{
       label: 'Home',
       path: '/',

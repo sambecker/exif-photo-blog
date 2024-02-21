@@ -9,11 +9,9 @@ import Spinner from './Spinner';
 import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
-import { IoInvertModeSharp } from 'react-icons/io5';
+// import { IoInvertModeSharp } from 'react-icons/io5';
 
 const LISTENER_KEYDOWN = 'keydown';
-
-const MINIMUM_QUERY_LENGTH = 2;
 
 export type CommandKSection = {
   heading: string
@@ -35,6 +33,8 @@ export default function CommandKClient({
   onQueryChange?: (query: string) => Promise<CommandKSection[]>
   sections?: CommandKSection[]
 }) {
+  const MINIMUM_QUERY_LENGTH = 2;
+
   const [isOpen, setIsOpen] = useState(false);
   const [queryRaw, setQueryRaw] = useState('');
   const [queryDebounced] = useDebounce(queryRaw, 500, { trailing: true });
@@ -85,10 +85,10 @@ export default function CommandKClient({
 
   const sectionTheme: CommandKSection = {
     heading: 'Theme',
-    accessory: <IoInvertModeSharp
-      size={14}
-      className="translate-y-[0.5px] translate-x-[-1px]"
-    />,
+    // accessory: <IoInvertModeSharp
+    //   size={14}
+    //   className="translate-y-[0.5px] translate-x-[-1px]"
+    // />,
     items: [{
       label: 'Use System',
       annotation: <BiDesktop />,
