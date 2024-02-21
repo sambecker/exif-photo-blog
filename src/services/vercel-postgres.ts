@@ -268,6 +268,7 @@ export type GetPhotosOptions = {
   sortBy?: 'createdAt' | 'takenAt' | 'priority'
   limit?: number
   offset?: number
+  title?: string
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
@@ -309,6 +310,7 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
     sortBy = PRIORITY_ORDER_ENABLED ? 'priority' : 'takenAt',
     limit = PHOTO_DEFAULT_LIMIT,
     offset = 0,
+    title,
     tag,
     camera,
     simulation,
@@ -333,6 +335,10 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
   if (takenAfterInclusive) {
     wheres.push(`taken_at <= $${valueIndex++}`);
     values.push(takenAfterInclusive.toISOString());
+  }
+  if (title) {
+    wheres.push(`LOWER(title) LIKE $${valueIndex++}`);
+    values.push(`%${title.toLowerCase()}%`);
   }
   if (tag) {
     wheres.push(`$${valueIndex++}=ANY(tags)`);

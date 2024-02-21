@@ -13,6 +13,7 @@ import Footer from '@/site/Footer';
 import { Suspense } from 'react';
 import FooterClient from '@/site/FooterClient';
 import NavClient from '@/site/NavClient';
+import CommandK from '@/site/CommandK';
 
 import '../site/globals.css';
 
@@ -91,6 +92,7 @@ export default function RootLayout({
                 <Footer />
               </Suspense>
             </main>
+            <CommandK />
           </ThemeProviderClient>
         </StateProvider>
         <Analytics />

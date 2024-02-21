@@ -24,6 +24,7 @@ import { getDimensionsFromSize } from '@/utility/size';
 import ImageBlurFallback from '@/components/ImageBlurFallback';
 import { BLUR_ENABLED } from '@/site/config';
 import { Tags, sortTagsObjectWithoutFavs } from '@/tag';
+import { formatCount, formatCountDescriptive } from '@/utility/string';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -150,9 +151,8 @@ export default function PhotoForm({
           sortTagsObjectWithoutFavs(uniqueTags ?? [])
             .map(({ tag, count }) => ({
               value: tag,
-              annotation: `× ${count}`,
-              annotationAria:
-                `tagged in ${count} photo${count === 1 ? '' : 's'}`,
+              annotation: formatCount(count),
+              annotationAria: formatCountDescriptive(count, 'tagged'),
             }))
         )
           .map(([key, {
