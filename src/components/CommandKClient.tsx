@@ -1,7 +1,7 @@
 'use client';
 
 import { Command } from 'cmdk';
-import { ReactNode, useEffect, useMemo, useState } from 'react';
+import { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import Modal from './Modal';
 import { clsx } from 'clsx/lite';
 import { useDebounce } from 'use-debounce';
@@ -43,6 +43,8 @@ export default function CommandKClient({
     setIsCommandKOpen: setIsOpen,
   } = useAppState();
 
+  const isOpenRef = useRef(isOpen);
+
   // Raw query values
   const [queryLiveRaw, setQueryLive] = useState('');
   const [queryDebouncedRaw] =
@@ -63,6 +65,10 @@ export default function CommandKClient({
   const router = useRouter();
 
   useEffect(() => {
+    isOpenRef.current = isOpen;
+  }, [isOpen]);
+
+  useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
@@ -77,7 +83,12 @@ export default function CommandKClient({
     if (queryDebounced.length >= MINIMUM_QUERY_LENGTH) {
       setIsLoading(true);
       onQueryChange?.(queryDebounced).then(querySections => {
-        setQueriedSections(querySections);
+        if (isOpenRef.current) {
+          setQueriedSections(querySections);
+        } else {
+          // Ignore stale requests that come in after dialog is closed
+          setQueriedSections([]);
+        }
         setIsLoading(false);
       });
     }
