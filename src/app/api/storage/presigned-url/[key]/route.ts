@@ -10,8 +10,6 @@ import {
 import { CURRENT_STORAGE } from '@/site/config';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
-export const runtime = 'edge';
-
 export async function GET(
   _: Request,
   { params: { key } }: { params: { key: string } },
