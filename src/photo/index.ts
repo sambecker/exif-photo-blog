@@ -36,8 +36,8 @@ export interface PhotoExif {
   latitude?: number
   longitude?: number
   filmSimulation?: FilmSimulation
-  takenAt: string
-  takenAtNaive: string
+  takenAt?: string
+  takenAtNaive?: string
 }
 
 // Raw db insert
@@ -51,6 +51,8 @@ export interface PhotoDbInsert extends PhotoExif {
   locationName?: string
   priorityOrder?: number
   hidden?: boolean
+  takenAt: string
+  takenAtNaive: string
 }
 
 // Raw db response
