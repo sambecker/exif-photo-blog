@@ -11,7 +11,6 @@ import { useTheme } from 'next-themes';
 import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
 import { IoInvertModeSharp } from 'react-icons/io5';
 import { useAppState } from '@/state';
-import { parameterize } from '@/utility/string';
 
 const LISTENER_KEYDOWN = 'keydown';
 const MINIMUM_QUERY_LENGTH = 2;
@@ -53,9 +52,9 @@ export default function CommandKClient({
 
   // Parameterized query values
   const queryLive = useMemo(() =>
-    parameterize(queryLiveRaw), [queryLiveRaw]);
+    queryLiveRaw.trim().toLocaleLowerCase(), [queryLiveRaw]);
   const queryDebounced = useMemo(() =>
-    parameterize(queryDebouncedRaw), [queryDebouncedRaw]);
+    queryDebouncedRaw.trim().toLocaleLowerCase(), [queryDebouncedRaw]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [queriedSections, setQueriedSections] = useState<CommandKSection[]>([]);
