@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { clsx } from 'clsx/lite';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import AnimateItems from './AnimateItems';
 import { PATH_ROOT } from '@/site/paths';
 import usePrefersReducedMotion from '@/utility/usePrefersReducedMotion';
-import { useTheme } from 'next-themes';
+import useMetaThemeColor from '@/site/useMetaThemeColor';
 
 export default function Modal({
   onClosePath,
@@ -39,18 +39,7 @@ export default function Modal({
     }
   }, []);
 
-  const { resolvedTheme } = useTheme();
-  useLayoutEffect(() => {
-    if (resolvedTheme === 'light') {
-      // Temporarily create meta tag for overlays in light mode,
-      // which prevents stale headers on theme changes
-      const meta = document.createElement('meta');
-      meta.name = 'theme-color';
-      meta.content = '#333';
-      document.getElementsByTagName('head')[0]?.appendChild(meta);
-      return () => meta.remove();
-    }
-  }, [resolvedTheme]);
+  useMetaThemeColor({ colorLight: '#333' });
 
   useClickInsideOutside({
     htmlElements,
