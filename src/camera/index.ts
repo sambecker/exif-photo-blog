@@ -1,4 +1,4 @@
-import { Photo } from '@/photo';
+import type { Photo } from '@/photo';
 import { parameterize } from '@/utility/string';
 
 const CAMERA_PLACEHOLDER: Camera = { make: 'Camera', model: 'Model' };
