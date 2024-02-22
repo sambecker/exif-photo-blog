@@ -59,7 +59,7 @@ export default function NavClient({
                 'w-full min-h-[4rem]',
                 'leading-none',
               )}>
-              <div className="flex flex-grow items-center gap-4">
+              <div className="flex-grow">
                 <ViewSwitcher
                   currentSelection={switcherSelectionForPath()}
                   showAdmin={showAdmin}

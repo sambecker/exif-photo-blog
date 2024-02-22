@@ -1,5 +1,6 @@
 import CommandKClient, { CommandKSection } from '@/components/CommandKClient';
 import {
+  getPhotosCountCached,
   getUniqueCamerasCached,
   getUniqueFilmSimulationsCached,
   getUniqueTagsCached,
@@ -17,7 +18,7 @@ import {
 import { formatCameraText } from '@/camera';
 import { authCached } from '@/auth/cache';
 import { getPhotos } from '@/services/vercel-postgres';
-import { titleForPhoto } from '@/photo';
+import { photoQuantityText, titleForPhoto } from '@/photo';
 import PhotoTiny from '@/photo/PhotoTiny';
 import { formatDate } from '@/utility/date';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
@@ -31,10 +32,12 @@ import { HiDocumentText } from 'react-icons/hi';
 
 export default async function CommandK() {
   const [
+    count,
     tags,
     cameras,
     filmSimulations,
   ] = await Promise.all([
+    getPhotosCountCached().catch(() => 0),
     getUniqueTagsCached().catch(() => []),
     getUniqueCamerasCached().catch(() => []),
     getUniqueFilmSimulationsCached().catch(() => []),
@@ -119,7 +122,7 @@ export default async function CommandK() {
     ]}
     onQueryChange={async (query) => {
       'use server';
-      const photos = (await getPhotos({ title: query }))
+      const photos = (await getPhotos({ title: query, limit: 10 }))
         .filter(({ title }) => Boolean(title));
       return photos.length > 0
         ? [{
@@ -134,5 +137,6 @@ export default async function CommandK() {
         }]
         : [];
     }}
+    footer={photoQuantityText(count, false)}
   />;
 }

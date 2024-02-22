@@ -32,9 +32,11 @@ export type CommandKSection = {
 export default function CommandKClient({
   onQueryChange,
   sections = [],
+  footer,
 }: {
   onQueryChange?: (query: string) => Promise<CommandKSection[]>
   sections?: CommandKSection[]
+  footer?: string
 }) {
   const {
     isCommandKOpen: isOpen,
@@ -231,6 +233,10 @@ export default function CommandKClient({
                       </div>
                     </Command.Item>)}
                 </Command.Group>)}
+            {footer && !queryLive &&
+              <div className="text-center text-dim pt-3 sm:pt-4">
+                {footer}
+              </div>}
           </Command.List>
         </div>
       </Modal>

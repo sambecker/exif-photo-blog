@@ -19,7 +19,7 @@ export default function ViewSwitcher({
   const { setIsCommandKOpen } = useAppState();
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-1 sm:gap-2">
       <Switcher>
         <SwitcherItem
           icon={<IconFullFrame />}
