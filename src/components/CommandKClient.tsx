@@ -209,8 +209,8 @@ export default function CommandKClient({
                     action,
                   }) =>
                     <Command.Item
-                      key={`${heading}-${label}`}
-                      value={`${heading}-${label}`}
+                      key={`${heading} ${label}`}
+                      value={`${heading} ${label}`}
                       className={clsx(
                         'px-2',
                         accessory ? 'py-2' : 'py-1',
