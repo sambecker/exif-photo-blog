@@ -56,12 +56,7 @@ export default function PhotoGrid({
           <div
             key={photo.id}
             className={GRID_ASPECT_RATIO !== 0
-              ? clsx(
-                'aspect-square',
-                'overflow-hidden',
-                '[&>*]:flex [&>*]:w-full [&>*]:h-full',
-                '[&>*>*]:object-cover [&>*>*]:min-h-full',
-              )
+              ? 'aspect-square overflow-hidden'
               : undefined}
             style={{
               ...GRID_ASPECT_RATIO !== 0 && {
