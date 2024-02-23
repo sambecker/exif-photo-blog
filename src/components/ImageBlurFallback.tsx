@@ -23,15 +23,19 @@ export default function ImageBlurFallback(props: ImageProps) {
   const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    const timeout = setTimeout(() =>
-      setIsLoading(imgRef.current?.complete !== true)
-    , 100);
+    const timeout = setTimeout(() => {
+      // Check if image has already loaded/is cached
+      // in order to not show blur placeholder on every load
+      setIsLoading(imgRef.current?.complete !== true);
+      setDidLoad(imgRef.current?.complete === true);
+    }, 100);
     return () => clearTimeout(timeout);
   }, []);
 
   useEffect(() => {
     if (didLoad) {
       const timeout = setTimeout(() =>
+        // Hide blurred placeholder after image has faded in after 300ms
         setHideBlurPlaceholder(true)
       , 500);
       return () => clearTimeout(timeout);
@@ -59,7 +63,7 @@ export default function ImageBlurFallback(props: ImageProps) {
           imageClassName,
           'relative z-10',
           'transition-opacity duration-300 ease-in',
-          !isLoading || !showPlaceholder ? 'opacity-100' : 'opacity-0',
+          (!isLoading || !showPlaceholder) ? 'opacity-100' : 'opacity-0',
         ),
         onLoad: () => {
           setIsLoading(false);
