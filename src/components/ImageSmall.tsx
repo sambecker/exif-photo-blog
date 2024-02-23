@@ -20,7 +20,6 @@ export default function ImageSmall({
       src,
       alt,
       blurDataURL: blurData,
-      placeholder: 'blur',
       width: IMAGE_SMALL_WIDTH,
       height: Math.round(IMAGE_SMALL_WIDTH / aspectRatio),
     }} />

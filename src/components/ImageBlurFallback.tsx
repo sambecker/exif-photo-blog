@@ -14,10 +14,8 @@ export default function ImageBlurFallback(props: ImageProps) {
     ...rest
   } = props;
 
-  const [wasCached, setWasCached] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
-  const [didError, setDidError] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [didLoad, setDidLoad] = useState(false);
   const [hideBlurPlaceholder, setHideBlurPlaceholder] = useState(false);
 
   const imageClassName = 'object-cover h-full';
@@ -25,21 +23,20 @@ export default function ImageBlurFallback(props: ImageProps) {
   const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    const timeout = setTimeout(
-      () => setWasCached(imgRef.current?.complete ?? false),
-      100,
-    );
+    const timeout = setTimeout(() =>
+      setIsLoading(imgRef.current?.complete !== true)
+    , 100);
     return () => clearTimeout(timeout);
   }, []);
 
   useEffect(() => {
-    if (!isLoading && !didError) {
-      const timeout = setTimeout(() => {
-        setHideBlurPlaceholder(true);
-      }, 1000);
+    if (didLoad) {
+      const timeout = setTimeout(() =>
+        setHideBlurPlaceholder(true)
+      , 500);
       return () => clearTimeout(timeout);
     }
-  }, [isLoading, didError]);
+  }, [didLoad]);
 
   const showPlaceholder =
     BLUR_ENABLED &&
@@ -62,11 +59,15 @@ export default function ImageBlurFallback(props: ImageProps) {
           imageClassName,
           'z-10',
           'transition-opacity duration-300 ease-in',
-          (wasCached || !isLoading) ? 'opacity-100' : 'opacity-0',
+          isLoading ? 'opacity-0' : 'opacity-100',
         ),
-        placeholder: 'empty',
-        onLoad: () => setIsLoading(false),
-        onError: () => setDidError(true),
+        onLoad: () => {
+          setIsLoading(false);
+          setDidLoad(true);
+        },
+        onError: () => {
+          setIsLoading(false);
+        },
       }} />
       {showPlaceholder &&
         <img {...{
