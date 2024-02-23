@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
 import { IoInvertModeSharp } from 'react-icons/io5';
-import { useAppState } from '@/state';
+import { useAppState } from '@/state/AppState';
 
 const LISTENER_KEYDOWN = 'keydown';
 const MINIMUM_QUERY_LENGTH = 2;
