@@ -155,7 +155,10 @@ export const convertPhotoToFormData = (
 export const convertExifToFormData = (
   data: ExifData,
   filmSimulation?: FilmSimulation,
-): Record<keyof PhotoExif, string | undefined> => ({
+): Omit<
+  Record<keyof PhotoExif, string | undefined>,
+  'takenAt' | 'takenAtNaive'
+> => ({
   aspectRatio: getAspectRatioFromExif(data).toString(),
   make: data.tags?.Make,
   model: data.tags?.Model,
@@ -170,15 +173,14 @@ export const convertExifToFormData = (
   longitude:
     !GEO_PRIVACY_ENABLED ? data.tags?.GPSLongitude?.toString() : undefined,
   filmSimulation,
-  takenAt: data.tags?.DateTimeOriginal
-    ? convertTimestampWithOffsetToPostgresString(
-      data.tags?.DateTimeOriginal,
+  ...data.tags?.DateTimeOriginal && {
+    takenAt: convertTimestampWithOffsetToPostgresString(
+      data.tags.DateTimeOriginal,
       getOffsetFromExif(data),
-    )
-    : undefined,
-  takenAtNaive: data.tags?.DateTimeOriginal
-    ? convertTimestampToNaivePostgresString(data.tags?.DateTimeOriginal)
-    : undefined,
+    ),
+    takenAtNaive:
+      convertTimestampToNaivePostgresString(data.tags.DateTimeOriginal),
+  },
 });
 
 // PREPARE FORM FOR DB INSERT

@@ -30,40 +30,46 @@ export default function PhotoLinks({
 }) {
   const router = useRouter();
 
-  const { setNextPhotoAnimation } = useAppState();
+  const {
+    setNextPhotoAnimation,
+    shouldRespondToKeyboardCommands,
+  } = useAppState();
 
   const previousPhoto = getPreviousPhoto(photo, photos);
   const nextPhoto = getNextPhoto(photo, photos);
 
   useEffect(() => {
-    const onKeyUp = (e: KeyboardEvent) => {
-      switch (e.key.toUpperCase()) {
-      case 'ARROWLEFT':
-      case 'J':
-        if (previousPhoto) {
-          setNextPhotoAnimation?.(ANIMATION_RIGHT);
-          router.push(
-            pathForPhoto(previousPhoto, tag, camera, simulation),
-            { scroll: false },
-          );
-        }
-        break;
-      case 'ARROWRIGHT':
-      case 'L':
-        if (nextPhoto) {
-          setNextPhotoAnimation?.(ANIMATION_LEFT);
-          router.push(
-            pathForPhoto(nextPhoto, tag, camera, simulation),
-            { scroll: false },
-          );
-        }
-        break;
+    if (shouldRespondToKeyboardCommands) {
+      const onKeyUp = (e: KeyboardEvent) => {
+        switch (e.key.toUpperCase()) {
+        case 'ARROWLEFT':
+        case 'J':
+          if (previousPhoto) {
+            setNextPhotoAnimation?.(ANIMATION_RIGHT);
+            router.push(
+              pathForPhoto(previousPhoto, tag, camera, simulation),
+              { scroll: false },
+            );
+          }
+          break;
+        case 'ARROWRIGHT':
+        case 'L':
+          if (nextPhoto) {
+            setNextPhotoAnimation?.(ANIMATION_LEFT);
+            router.push(
+              pathForPhoto(nextPhoto, tag, camera, simulation),
+              { scroll: false },
+            );
+          }
+          break;
+        };
       };
-    };
-    window.addEventListener(LISTENER_KEYUP, onKeyUp);
-    return () => window.removeEventListener(LISTENER_KEYUP, onKeyUp);
+      window.addEventListener(LISTENER_KEYUP, onKeyUp);
+      return () => window.removeEventListener(LISTENER_KEYUP, onKeyUp);
+    }
   }, [
     router,
+    shouldRespondToKeyboardCommands,
     setNextPhotoAnimation,
     previousPhoto,
     nextPhoto,

@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import AnimateItems from './AnimateItems';
 import { PATH_ROOT } from '@/site/paths';
 import usePrefersReducedMotion from '@/utility/usePrefersReducedMotion';
+import useMetaThemeColor from '@/site/useMetaThemeColor';
 
 export default function Modal({
   onClosePath,
@@ -37,6 +38,8 @@ export default function Modal({
       setHtmlElements([contentRef.current]);
     }
   }, []);
+
+  useMetaThemeColor({ colorLight: '#333' });
 
   useClickInsideOutside({
     htmlElements,
@@ -70,16 +73,16 @@ export default function Modal({
       <AnimateItems
         duration={fast ? 0.1 : 0.3}
         items={[<div
+          ref={contentRef}
           key="modalContent"
           className={clsx(
+            'w-[calc(100vw-1.5rem)] sm:w-[min(540px,90vw)]',
             'p-3 rounded-lg',
+            'md:p-4 md:rounded-xl',
             'bg-white dark:bg-black',
             'dark:border dark:border-gray-800',
-            'md:p-4 md:rounded-xl',
             className,
           )}
-          style={{ width: 'min(500px, 90vw)' }}
-          ref={contentRef}
         >
           {children}
         </div>]}

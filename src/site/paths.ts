@@ -10,7 +10,6 @@ import { FilmSimulation } from '@/simulation';
 // Core paths
 export const PATH_ROOT      = '/';
 export const PATH_GRID      = '/grid';
-export const PATH_SETS      = '/sets';
 export const PATH_ADMIN     = '/admin';
 export const PATH_API       = '/api';
 export const PATH_SIGN_IN   = '/sign-in';
@@ -55,7 +54,6 @@ export const PATHS_ADMIN = [
 export const PATHS_TO_CACHE = [
   PATH_ROOT,
   PATH_GRID,
-  PATH_SETS,
   PATH_OG,
   PATH_PHOTO_DYNAMIC,
   PATH_TAG_DYNAMIC,
@@ -235,9 +233,6 @@ export const checkPathPrefix = (pathname = '', prefix: string) =>
 
 export const isPathGrid = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_GRID);
-
-export const isPathSets = (pathname?: string) =>
-  checkPathPrefix(pathname, PATH_SETS);
 
 export const isPathSignIn = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_SIGN_IN);

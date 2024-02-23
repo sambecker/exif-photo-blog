@@ -1,9 +1,9 @@
-import { Photo } from '../photo';
+import type { Photo } from '../photo';
 import { FaStar, FaTag } from 'react-icons/fa';
 import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
-import { NextImageSize } from '@/services/next-image';
+import type { NextImageSize } from '@/services/next-image';
 import { isTagFavs } from '@/tag';
 
 export default function TagImageResponse({

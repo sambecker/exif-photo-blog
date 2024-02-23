@@ -1,7 +1,7 @@
 'use client';
 
 import { Command } from 'cmdk';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import Modal from './Modal';
 import { clsx } from 'clsx/lite';
 import { useDebounce } from 'use-debounce';
@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
 import { IoInvertModeSharp } from 'react-icons/io5';
+import { useAppState } from '@/state';
 
 const LISTENER_KEYDOWN = 'keydown';
 const MINIMUM_QUERY_LENGTH = 2;
@@ -30,13 +31,31 @@ export type CommandKSection = {
 export default function CommandKClient({
   onQueryChange,
   sections = [],
+  footer,
 }: {
   onQueryChange?: (query: string) => Promise<CommandKSection[]>
   sections?: CommandKSection[]
+  footer?: string
 }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [queryRaw, setQueryRaw] = useState('');
-  const [queryDebounced] = useDebounce(queryRaw, 500, { trailing: true });
+  const {
+    isCommandKOpen: isOpen,
+    setIsCommandKOpen: setIsOpen,
+    setShouldRespondToKeyboardCommands,
+  } = useAppState();
+
+  const isOpenRef = useRef(isOpen);
+
+  // Raw query values
+  const [queryLiveRaw, setQueryLive] = useState('');
+  const [queryDebouncedRaw] =
+    useDebounce(queryLiveRaw, 500, { trailing: true });
+  const isPlaceholderVisible = queryLiveRaw === '';
+
+  // Parameterized query values
+  const queryLive = useMemo(() =>
+    queryLiveRaw.trim().toLocaleLowerCase(), [queryLiveRaw]);
+  const queryDebounced = useMemo(() =>
+    queryDebouncedRaw.trim().toLocaleLowerCase(), [queryDebouncedRaw]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [queriedSections, setQueriedSections] = useState<CommandKSection[]>([]);
@@ -46,41 +65,54 @@ export default function CommandKClient({
   const router = useRouter();
 
   useEffect(() => {
+    isOpenRef.current = isOpen;
+  }, [isOpen]);
+
+  useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        setIsOpen((open) => !open);
+        setIsOpen?.((open) => !open);
       }
     };
     document.addEventListener(LISTENER_KEYDOWN, down);
     return () => document.removeEventListener(LISTENER_KEYDOWN, down);
-  }, []);
+  }, [setIsOpen]);
 
   useEffect(() => {
     if (queryDebounced.length >= MINIMUM_QUERY_LENGTH) {
       setIsLoading(true);
       onQueryChange?.(queryDebounced).then(querySections => {
-        setQueriedSections(querySections);
+        if (isOpenRef.current) {
+          setQueriedSections(querySections);
+        } else {
+          // Ignore stale requests that come in after dialog is closed
+          setQueriedSections([]);
+        }
         setIsLoading(false);
       });
     }
   }, [queryDebounced, onQueryChange]);
 
   useEffect(() => {
-    if (queryRaw === '') {
-      setQueriedSections([]);
-    } else if (queryRaw.length >= MINIMUM_QUERY_LENGTH) {
-      setIsLoading(true);
-    }
-  }, [queryRaw]);
-
-  useEffect(() => {
-    if (!isOpen) {
-      setQueryRaw('');
+    if (queryLive === '') {
       setQueriedSections([]);
       setIsLoading(false);
+    } else if (queryLive.length >= MINIMUM_QUERY_LENGTH) {
+      setIsLoading(true);
     }
-  }, [isOpen]);
+  }, [queryLive]);
+
+  useEffect(() => {
+    if (isOpen) {
+      setShouldRespondToKeyboardCommands?.(false);
+    } else if (!isOpen) {
+      setQueryLive('');
+      setQueriedSections([]);
+      setIsLoading(false);
+      setTimeout(() => setShouldRespondToKeyboardCommands?.(true), 500);
+    }
+  }, [isOpen, setShouldRespondToKeyboardCommands]);
 
   const sectionTheme: CommandKSection = {
     heading: 'Theme',
@@ -114,32 +146,38 @@ export default function CommandKClient({
     >
       <Modal
         anchor='top'
-        onClose={() => setIsOpen(false)}
+        onClose={() => setIsOpen?.(false)}
         fast
       >
         <div className="space-y-1.5">
           <div className="relative">
             <Command.Input
-              onChangeCapture={(e) => setQueryRaw(e.currentTarget.value)}
+              onChangeCapture={(e) => setQueryLive(e.currentTarget.value)}
               className={clsx(
-                'w-full',
+                'w-full !min-w-0',
                 'focus:ring-0',
+                isPlaceholderVisible || isLoading && '!pr-8',
                 '!border-gray-200 dark:!border-gray-800',
                 'focus:border-gray-200 focus:dark:border-gray-800',
                 'placeholder:text-gray-400/80',
                 'placeholder:dark:text-gray-700',
               )}
-              style={{ paddingRight: '2rem' }}
               placeholder="Search photos, views, settings ..."
             />
             {isLoading &&
-              <span className="absolute top-2.5 right-3">
+              <span className={clsx(
+                'absolute top-2.5 right-0 w-8',
+                'flex items-center justify-center translate-y-[2px]',
+              )}>
                 <Spinner size={16} />
               </span>}
           </div>
-          <Command.List className="relative max-h-72 overflow-y-scroll">
+          <Command.List className={clsx(
+            'relative overflow-y-scroll',
+            'max-h-48 sm:max-h-72',
+          )}>
             <Command.Empty className="mt-1 pl-3 text-dim">
-              {isLoading ? 'Loading ...' : 'No results found'}
+              {isLoading ? 'Searching ...' : 'No results found'}
             </Command.Empty>
             {queriedSections
               .concat(sections)
@@ -175,8 +213,8 @@ export default function CommandKClient({
                     action,
                   }) =>
                     <Command.Item
-                      key={`${heading}-${label}`}
-                      value={`${heading}-${label}`}
+                      key={`${heading} ${label}`}
+                      value={`${heading} ${label}`}
                       className={clsx(
                         'px-2',
                         accessory ? 'py-2' : 'py-1',
@@ -185,7 +223,7 @@ export default function CommandKClient({
                         'data-[selected=true]:dark:bg-gray-900/75',
                       )}
                       onSelect={() => {
-                        setIsOpen(false);
+                        setIsOpen?.(false);
                         action?.();
                         if (path) {
                           router.push(path);
@@ -209,6 +247,10 @@ export default function CommandKClient({
                       </div>
                     </Command.Item>)}
                 </Command.Group>)}
+            {footer && !queryLive &&
+              <div className="text-center text-dim pt-3 sm:pt-4">
+                {footer}
+              </div>}
           </Command.List>
         </div>
       </Modal>

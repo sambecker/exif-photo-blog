@@ -20,12 +20,14 @@ export default function SwitcherItem({
     classNameProp,
     'py-0.5 px-1.5',
     'cursor-pointer',
-    'hover:bg-gray-50 active:bg-gray-100 active:text-gray-400',
-    // eslint-disable-next-line max-len
-    'dark:hover:bg-gray-950 dark:active:bg-gray-900/75 dark:active:text-gray-600',
+    'hover:bg-gray-100/60 active:bg-gray-100',
+    'dark:hover:bg-gray-900/75 dark:active:bg-gray-900',
     active
       ? 'text-black dark:text-white'
-      : 'text-gray-300 dark:text-gray-700',
+      : 'text-gray-400 dark:text-gray-600',
+    active
+      ? 'hover:text-black hover:dark:text-white'
+      : 'hover:text-gray-700 dark:hover:text-gray-400',
   );
 
   const renderIcon = () => noPadding

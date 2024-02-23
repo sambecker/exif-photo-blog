@@ -97,11 +97,11 @@ export default function RootLayout({
               <CommandK />
             </ThemeProviderClient>
           </MoreComponentsProvider>
+          <Analytics debug={false} />
+          <SpeedInsights debug={false}  />
+          <PhotoEscapeHandler />
+          <ToasterWithThemes />
         </AppStateProvider>
-        <Analytics debug={false} />
-        <SpeedInsights debug={false}  />
-        <PhotoEscapeHandler />
-        <ToasterWithThemes />
       </body>
     </html>
   );
