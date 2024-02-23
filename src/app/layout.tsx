@@ -94,11 +94,11 @@ export default function RootLayout({
             </main>
             <CommandK />
           </ThemeProviderClient>
+          <Analytics debug={false} />
+          <SpeedInsights debug={false} />
+          <PhotoEscapeHandler />
+          <ToasterWithThemes />
         </AppStateProvider>
-        <Analytics />
-        <SpeedInsights />
-        <PhotoEscapeHandler />
-        <ToasterWithThemes />
       </body>
     </html>
   );

@@ -6,9 +6,11 @@ export interface AppStateContext {
   hasLoaded?: boolean
   setHasLoaded?: Dispatch<SetStateAction<boolean>>
   nextPhotoAnimation?: AnimationConfig
+  setNextPhotoAnimation?: Dispatch<SetStateAction<AnimationConfig | undefined>>
+  shouldRespondToKeyboardCommands?: boolean
+  setShouldRespondToKeyboardCommands?: Dispatch<SetStateAction<boolean>>
   isCommandKOpen?: boolean
   setIsCommandKOpen?: Dispatch<SetStateAction<boolean>>
-  setNextPhotoAnimation?: (animation?: AnimationConfig) => void
   clearNextPhotoAnimation?: () => void
 }
 

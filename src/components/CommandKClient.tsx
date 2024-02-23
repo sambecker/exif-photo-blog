@@ -40,6 +40,7 @@ export default function CommandKClient({
   const {
     isCommandKOpen: isOpen,
     setIsCommandKOpen: setIsOpen,
+    setShouldRespondToKeyboardCommands,
   } = useAppState();
 
   const isOpenRef = useRef(isOpen);
@@ -103,12 +104,15 @@ export default function CommandKClient({
   }, [queryLive]);
 
   useEffect(() => {
-    if (!isOpen) {
+    if (isOpen) {
+      setShouldRespondToKeyboardCommands?.(false);
+    } else if (!isOpen) {
       setQueryLive('');
       setQueriedSections([]);
       setIsLoading(false);
+      setTimeout(() => setShouldRespondToKeyboardCommands?.(true), 500);
     }
-  }, [isOpen]);
+  }, [isOpen, setShouldRespondToKeyboardCommands]);
 
   const sectionTheme: CommandKSection = {
     heading: 'Theme',

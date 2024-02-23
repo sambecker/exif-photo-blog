@@ -17,6 +17,9 @@ export default function AppStateProvider({
   const [nextPhotoAnimation, setNextPhotoAnimation] =
     useState<AnimationConfig>();
 
+  const [shouldRespondToKeyboardCommands, setShouldRespondToKeyboardCommands] =
+    useState(true);
+
   const [isCommandKOpen, setIsCommandKOpen] = useState(false);
 
   useEffect(() => {
@@ -30,9 +33,11 @@ export default function AppStateProvider({
         hasLoaded,
         setHasLoaded,
         nextPhotoAnimation,
+        setNextPhotoAnimation,
+        shouldRespondToKeyboardCommands,
+        setShouldRespondToKeyboardCommands,
         isCommandKOpen,
         setIsCommandKOpen,
-        setNextPhotoAnimation,
         clearNextPhotoAnimation: () => setNextPhotoAnimation?.(undefined),
       }}
     >
