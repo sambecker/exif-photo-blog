@@ -51,7 +51,7 @@ export default function ImageBlurFallback(props: ImageProps) {
     <div
       className={clsx(
         className,
-        'flex relative',
+        'flex relative overflow-hidden',
         'bg-gray-100/50 dark:bg-gray-900/50',
       )}
     >
