@@ -5,8 +5,6 @@ import { clsx } from 'clsx/lite';
 import { pathForPhoto } from '@/site/paths';
 import { Camera } from '@/camera';
 import { FilmSimulation } from '@/simulation';
-import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
-import { Suspense } from 'react';
 
 export default function PhotoSmall({
   photo,
@@ -14,7 +12,6 @@ export default function PhotoSmall({
   camera,
   simulation,
   selected,
-  showAdminMenu,
   priority,
 }: {
   photo: Photo
@@ -22,28 +19,17 @@ export default function PhotoSmall({
   camera?: Camera
   simulation?: FilmSimulation
   selected?: boolean
-  showAdminMenu?: boolean
   priority?: boolean
 }) {
   return (
     <Link
       href={pathForPhoto(photo, tag, camera, simulation)}
       className={clsx(
-        'relative group',
+        'flex w-full h-full',
         'active:brightness-75',
         selected && 'brightness-50',
       )}
     >
-      <Suspense>
-        {showAdminMenu &&
-          <AdminPhotoMenu
-            buttonClassName={clsx(
-              'absolute top-1 right-1 opacity-0',
-              'group-hover:opacity-100 group-focus:opacity-100',
-            )}
-            photo={photo}
-          />}
-      </Suspense>
       <ImageSmall
         src={photo.url}
         aspectRatio={photo.aspectRatio}
