@@ -19,10 +19,7 @@ export default function ImageTiny({
       className,
       src,
       alt,
-      ...blurData && {
-        blurDataURL: blurData,
-        placeholder: 'blur',
-      },
+      blurDataURL: blurData,
       width: IMAGE_TINY_WIDTH,
       height: Math.round(IMAGE_TINY_WIDTH / aspectRatio),
     }} />
