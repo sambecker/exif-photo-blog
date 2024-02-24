@@ -28,7 +28,6 @@ export default function ImageLarge({
         className,
         src,
         alt,
-        layout: 'responsive',
         priority,
         blurDataURL: blurData,
         width: IMAGE_LARGE_WIDTH,
