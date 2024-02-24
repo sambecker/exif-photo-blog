@@ -1,7 +1,14 @@
 'use client';
 
 import { Command } from 'cmdk';
-import { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from 'react';
 import Modal from './Modal';
 import { clsx } from 'clsx/lite';
 import { useDebounce } from 'use-debounce';
@@ -44,6 +51,16 @@ export default function CommandKClient({
   } = useAppState();
 
   const isOpenRef = useRef(isOpen);
+  
+  const [isPending, startTransition] = useTransition();
+  const shouldCloseAfterPending = useRef(false);
+
+  useEffect(() => {
+    if (!isPending && shouldCloseAfterPending.current) {
+      setIsOpen?.(false);
+      shouldCloseAfterPending.current = false;
+    }
+  }, [isPending, setIsOpen]);
 
   // Raw query values
   const [queryLiveRaw, setQueryLive] = useState('');
@@ -149,7 +166,7 @@ export default function CommandKClient({
         onClose={() => setIsOpen?.(false)}
         fast
       >
-        <div className="space-y-1.5">
+        <div className={clsx('space-y-1.5', isPending && 'opacity-30')}>
           <div className="relative">
             <Command.Input
               onChangeCapture={(e) => setQueryLive(e.currentTarget.value)}
@@ -163,6 +180,7 @@ export default function CommandKClient({
                 'placeholder:dark:text-gray-700',
               )}
               placeholder="Search photos, views, settings ..."
+              disabled={isPending}
             />
             {isLoading &&
               <span className={clsx(
@@ -223,10 +241,14 @@ export default function CommandKClient({
                         'data-[selected=true]:dark:bg-gray-900/75',
                       )}
                       onSelect={() => {
-                        setIsOpen?.(false);
-                        action?.();
                         if (path) {
-                          router.push(path);
+                          startTransition(() => {
+                            shouldCloseAfterPending.current = true;
+                            router.push(path, { scroll: true });
+                          });
+                        } else {
+                          setIsOpen?.(false);
+                          action?.();
                         }
                       }}
                     >
