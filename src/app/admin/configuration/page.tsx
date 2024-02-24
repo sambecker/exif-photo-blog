@@ -12,7 +12,7 @@ export default async function AdminConfigurationPage() {
         <div className="space-y-6">
           <div className="flex items-center">
             <div className="flex-grow">
-              Blog Configuration
+              App Configuration
             </div>
             <form action={syncCacheAction}>
               <SubmitButtonWithStatus

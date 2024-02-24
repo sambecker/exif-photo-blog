@@ -56,7 +56,7 @@ export default function AdminNavClient({
             <BiCog
               size={18}
               className="inline-block"
-              aria-label="Blog Configuration"
+              aria-label="App Configuration"
             />
           </Link>
         </div>
