@@ -28,7 +28,7 @@ const createRemotePattern = (hostname) => hostname
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    imageSizes: [200, 1080],
+    imageSizes: [200],
     remotePatterns: []
       .concat(createRemotePattern(HOSTNAME_VERCEL_BLOB))
       .concat(createRemotePattern(HOSTNAME_CLOUDFLARE_R2))
