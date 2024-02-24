@@ -78,7 +78,6 @@ export default function ImageBlurFallback(props: ImageProps) {
         ...rest,
         ref: imgRef,
         priority,
-        layout: 'responsive',
         className: imageClassName,
         onLoad: () => setIsLoading(false),
         onError: () => setDidError(true),
