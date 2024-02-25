@@ -16,16 +16,16 @@ import { getPhotosNearIdCached } from '@/photo/cache';
 import { getPhotoIds } from '@/services/vercel-postgres';
 import { STATICALLY_OPTIMIZED } from '@/site/config';
 
-export async function generateStaticParams() {
-  if (STATICALLY_OPTIMIZED) {
+const generateStaticParams = STATICALLY_OPTIMIZED
+  ? async () => {
     const photos = await getPhotoIds({ limit: GENERATE_STATIC_PARAMS_LIMIT });
     return photos.map(photoId => ({
       params: { photoId },
     }));
-  } else {
-    return [];
   }
-}
+  : undefined;
+
+export { generateStaticParams };
 
 interface PhotoProps {
   params: { photoId: string }
