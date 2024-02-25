@@ -14,7 +14,7 @@ import type { Metadata } from 'next';
 
 export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 
-export const INFINITE_SCROLL_MULTIPLE_ROOT =
+export const INFINITE_SCROLL_MULTIPLE_HOME =
   process.env.NODE_ENV === 'development' ? 2 : 12;
 export const INFINITE_SCROLL_MULTIPLE_GRID = HIGH_DENSITY_GRID
   ? process.env.NODE_ENV === 'development' ? 4 : 20

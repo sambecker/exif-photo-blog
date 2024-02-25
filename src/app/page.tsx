@@ -1,6 +1,6 @@
 import { getPhotosCached, getPhotosCountCached } from '@/photo/cache';
 import {
-  INFINITE_SCROLL_MULTIPLE_ROOT,
+  INFINITE_SCROLL_MULTIPLE_HOME,
   generateOgImageMetaForPhotos,
 } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
@@ -25,7 +25,7 @@ export default async function HomePage() {
     count,
   ] = await Promise.all([
     // Make homepage queries resilient to error on first time setup
-    getPhotosCached({ limit: INFINITE_SCROLL_MULTIPLE_ROOT }).catch(() => []),
+    getPhotosCached({ limit: INFINITE_SCROLL_MULTIPLE_HOME }).catch(() => []),
     getPhotosCountCached().catch(() => 0),
   ]);
 
@@ -35,8 +35,8 @@ export default async function HomePage() {
         <PhotosLarge photos={photos} />
         <Suspense>
           <MorePhotosRoot
-            initialOffset={INFINITE_SCROLL_MULTIPLE_ROOT}
-            itemsPerRequest={INFINITE_SCROLL_MULTIPLE_ROOT}
+            initialOffset={INFINITE_SCROLL_MULTIPLE_HOME}
+            itemsPerRequest={INFINITE_SCROLL_MULTIPLE_HOME}
             totalPhotosCount={count}
           />
         </Suspense>
