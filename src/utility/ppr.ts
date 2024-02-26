@@ -12,7 +12,8 @@ export const screenForPPR = <T>(
     );
     throw error.sourceError;
   } else if (sourceToLog) {
-    console.error(sourceToLog, error.sourceError);
+    console.error(sourceToLog, error.message);
   }
   return fallback;
 };
+
