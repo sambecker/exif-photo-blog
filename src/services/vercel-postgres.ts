@@ -12,6 +12,7 @@ import { parameterize } from '@/utility/string';
 import { Tags } from '@/tag';
 import { FilmSimulation, FilmSimulations } from '@/simulation';
 import { PRIORITY_ORDER_ENABLED } from '@/site/config';
+import { screenForPPR } from '@/utility/ppr';
 
 const PHOTO_DEFAULT_LIMIT = 100;
 
@@ -283,11 +284,8 @@ const safelyQueryPhotos = async <T>(callback: () => Promise<T>): Promise<T> => {
   try {
     result = await callback();
   } catch (e: any) {
-    if (/ppr-caught-error/.test(e.message) && e.sourceError) {
-      // PPR errors, if caught, must be re-thrown in order to
-      // postpone rendering
-      throw e.sourceError;
-    } else if (/relation "photos" does not exist/i.test(e.message)) {
+    screenForPPR(e, undefined, 'neon postgres');
+    if (/relation "photos" does not exist/i.test(e.message)) {
       console.log('Creating table "photos" because it did not exist');
       await sqlCreatePhotosTable();
       result = await callback();

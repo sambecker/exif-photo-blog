@@ -17,7 +17,7 @@ import {
   pathForTag,
 } from './paths';
 import { formatCameraText } from '@/camera';
-import { authCached } from '@/auth/cache';
+import { authCachedSafe } from '@/auth/cache';
 import { getPhotos } from '@/services/vercel-postgres';
 import { photoQuantityText, titleForPhoto } from '@/photo';
 import PhotoTiny from '@/photo/PhotoTiny';
@@ -45,7 +45,7 @@ export default async function CommandK() {
     getUniqueFilmSimulationsCached().catch(() => []),
   ]);
 
-  const session = await authCached().catch(() => null);
+  const session = await authCachedSafe();
 
   const isAdminLoggedIn = Boolean(session?.user?.email);
 

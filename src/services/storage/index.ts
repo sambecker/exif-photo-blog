@@ -27,6 +27,7 @@ import {
   isUrlFromCloudflareR2,
 } from './cloudflare-r2';
 import { PATH_API_PRESIGNED_URL } from '@/site/paths';
+import { screenForPPR } from '@/utility/ppr';
 
 export const generateStorageId = () => generateNanoid(16);
 
@@ -191,13 +192,16 @@ const getStorageUrlsForPrefix = async (prefix = '') => {
   const urls: StorageListResponse = [];
 
   if (HAS_VERCEL_BLOB_STORAGE) {
-    urls.push(...await vercelBlobList(prefix));
+    urls.push(...await vercelBlobList(prefix)
+      .catch(e => screenForPPR(e, [], 'vercel blob')));
   }
   if (HAS_AWS_S3_STORAGE) {
-    urls.push(...await awsS3List(prefix));
+    urls.push(...await awsS3List(prefix)
+      .catch(e => screenForPPR(e, [], 'aws blob')));
   }
   if (HAS_CLOUDFLARE_R2_STORAGE) {
-    urls.push(...await cloudflareR2List(prefix));
+    urls.push(...await cloudflareR2List(prefix)
+      .catch(e => screenForPPR(e, [], 'cloudflare blob')));
   }
 
   return urls
