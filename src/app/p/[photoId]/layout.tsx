@@ -17,7 +17,8 @@ import { getPhotoIds } from '@/services/vercel-postgres';
 import { STATICALLY_OPTIMIZED } from '@/site/config';
 
 export let generateStaticParams:
-  (() => Promise<{ params: { photoId: string } }[]>) | undefined;
+  (() => Promise<{ params: { photoId: string } }[]>) |
+  undefined = undefined;
 
 if (STATICALLY_OPTIMIZED) {
   generateStaticParams = async () => {
