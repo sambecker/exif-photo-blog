@@ -17,7 +17,7 @@ export type CameraWithCount = {
 export type Cameras = CameraWithCount[];
 
 export const createCameraKey = ({ make, model }: Camera) =>
-  parameterize(`${make}-${model}`);
+  parameterize(`${make}-${model}`, true);
 
 // Assumes no makes ('Fujifilm,' 'Apple,' 'Canon', etc.) have dashes
 export const getCameraFromKey = (cameraKey: string): Camera => {

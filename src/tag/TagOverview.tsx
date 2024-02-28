@@ -15,7 +15,7 @@ export default function TagOverview({
   tag: string,
   photos: Photo[],
   count: number,
-  dateRange: PhotoDateRange,
+  dateRange?: PhotoDateRange,
   showMorePath?: string,
   animateOnFirstLoadOnly?: boolean,
 }) {
