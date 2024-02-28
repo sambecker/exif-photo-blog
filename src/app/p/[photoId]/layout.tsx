@@ -14,20 +14,13 @@ import {
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotosNearIdCached } from '@/photo/cache';
 import { getPhotoIds } from '@/services/vercel-postgres';
-import { STATICALLY_OPTIMIZED } from '@/site/config';
 
-export let generateStaticParams:
-  (() => Promise<{ params: { photoId: string } }[]>) |
-  undefined = undefined;
-
-if (STATICALLY_OPTIMIZED) {
-  generateStaticParams = async () => {
-    const photos = await getPhotoIds({ limit: GENERATE_STATIC_PARAMS_LIMIT });
-    return photos.map(photoId => ({
-      params: { photoId },
-    }));
-  };
-}
+export const generateStaticParams = async () => {
+  const photos = await getPhotoIds({ limit: GENERATE_STATIC_PARAMS_LIMIT });
+  return photos.map(photoId => ({
+    params: { photoId },
+  }));
+};
 
 interface PhotoProps {
   params: { photoId: string }
