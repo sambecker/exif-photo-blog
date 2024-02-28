@@ -24,7 +24,7 @@ export default function StorageUrls({
         const addUploadPath = pathForAdminUploadUrl(url);
         const uploadFileName = fileNameForStorageUrl(url);
         return <Fragment key={url}>
-          <Link href={addUploadPath}>
+          <Link href={addUploadPath} prefetch={false}>
             <ImageTiny
               alt={`Upload: ${uploadFileName}`}
               src={url}
@@ -41,6 +41,7 @@ export default function StorageUrls({
             title={uploadedAt
               ? `${url} @ ${formatDate(uploadedAt, 'yyyy-MM-dd HH:mm:ss')}`
               : url}
+            prefetch={false}
           >
             {uploadFileName}
           </Link>

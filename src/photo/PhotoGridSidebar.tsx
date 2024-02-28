@@ -36,6 +36,7 @@ export default function PhotoGridSidebar({
             key={TAG_FAVS}
             countOnHover={count}
             type="icon-last"
+            prefetch={false}
             badged
           />
           : <PhotoTag
@@ -43,6 +44,7 @@ export default function PhotoGridSidebar({
             tag={tag}
             type="text-only"
             countOnHover={count}
+            prefetch={false}
             badged
           />)}
       />}
@@ -60,6 +62,7 @@ export default function PhotoGridSidebar({
               camera={camera}
               type="text-only"
               countOnHover={count}
+              prefetch={false}
               hideAppleIcon
               badged
             />)}
@@ -80,6 +83,7 @@ export default function PhotoGridSidebar({
                 simulation={simulation}
                 countOnHover={count}
                 type="text-only"
+                prefetch={false}
               />
             </div>)}
       />}

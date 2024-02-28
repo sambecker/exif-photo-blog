@@ -79,6 +79,7 @@ export default async function AdminPhotosPage({
                       key={photo.id}
                       href={pathForPhoto(photo)}
                       className="lg:w-[50%] flex items-center gap-2"
+                      prefetch={false}
                     >
                       <span className={clsx(
                         'inline-flex items-center gap-2',

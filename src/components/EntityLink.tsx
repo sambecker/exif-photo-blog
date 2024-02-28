@@ -7,6 +7,7 @@ export interface EntityLinkExternalProps {
   type?: 'icon-last' | 'icon-first' | 'icon-only' | 'text-only'
   badged?: boolean
   contrast?: 'low' | 'medium' | 'high'
+  prefetch?: boolean
 }
 
 export default function EntityLink({
@@ -18,6 +19,7 @@ export default function EntityLink({
   type = 'icon-first',
   badged,
   contrast,
+  prefetch,
   hoverEntity,
 }: {
   label: ReactNode
@@ -46,6 +48,7 @@ export default function EntityLink({
           !badged && 'text-main hover:text-gray-900 dark:hover:text-gray-100',
           contrast === 'low' && 'text-dim',
         )}
+        prefetch={prefetch}
       >
         {type !== 'icon-only' && <>
           {badged
