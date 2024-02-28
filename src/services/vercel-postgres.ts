@@ -173,8 +173,8 @@ const sqlGetPhotosTagCount = async (tag: string) => sql`
 const sqlGetPhotosCameraCount = async (camera: Camera) => sql`
   SELECT COUNT(*) FROM photos
   WHERE
-  LOWER(make)=${parameterize(camera.make)} AND
-  LOWER(REPLACE(model, ' ', '-'))=${parameterize(camera.model)} AND
+  LOWER(make)=${parameterize(camera.make, true)} AND
+  LOWER(REPLACE(model, ' ', '-'))=${parameterize(camera.model, true)} AND
   hidden IS NOT TRUE
 `.then(({ rows }) => parseInt(rows[0].count, 10));
 
@@ -203,8 +203,8 @@ const sqlGetPhotosCameraDateRange = async (camera: Camera) => sql`
   SELECT MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
   FROM photos
   WHERE
-  LOWER(make)=${parameterize(camera.make)} AND
-  LOWER(REPLACE(model, ' ', '-'))=${parameterize(camera.model)} AND
+  LOWER(make)=${parameterize(camera.make, true)} AND
+  LOWER(REPLACE(model, ' ', '-'))=${parameterize(camera.model, true)} AND
   hidden IS NOT TRUE
 `.then(({ rows }) => rows[0] as PhotoDateRange);
 
@@ -347,8 +347,8 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
   if (camera) {
     wheres.push(`LOWER(make)=$${valueIndex++}`);
     wheres.push(`LOWER(REPLACE(model, ' ', '-'))=$${valueIndex++}`);
-    values.push(parameterize(camera.make));
-    values.push(parameterize(camera.model));
+    values.push(parameterize(camera.make, true));
+    values.push(parameterize(camera.model, true));
   }
   if (simulation) {
     wheres.push(`film_simulation=$${valueIndex++}`);

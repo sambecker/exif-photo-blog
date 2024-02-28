@@ -2,9 +2,9 @@ export const convertStringToArray = (
   string?: string,
   shouldParameterize = true,
 ) => string
-  ? string.split(',').map(tag => shouldParameterize
-    ? parameterize(tag)
-    : tag.trim())
+  ? string.split(',').map(item => shouldParameterize
+    ? parameterize(item)
+    : item.trim())
   : undefined;
 
 export const capitalize = (string: string) =>
@@ -16,14 +16,22 @@ export const capitalizeWords = (string = '') =>
     .map(capitalize)
     .join(' ');
 
-export const parameterize = (string: string) =>
+export const parameterize = (
+  string: string,
+  shouldRemoveNonAlphanumeric?: boolean,
+) =>
   string
     .trim()
     // Replaces spaces, underscores, and dashes with dashes
     .replaceAll(/[\s_–—]/gi, '-')
     // Removes all non-alphanumeric characters
-    .replaceAll(/([^a-z0-9-])/gi, '')
-    .toLowerCase();
+    .replaceAll(
+      shouldRemoveNonAlphanumeric
+        ? /([^a-z0-9-])/gi
+        : /''/gi,
+      '',
+    )
+    .toLocaleLowerCase();
 
 export const formatCount = (count: number) => `× ${count}`;
 

@@ -15,7 +15,11 @@ interface Props {
   params: { tag: string }
 }
 
-export default async function PhotoPageEdit({ params: { tag } }: Props) {
+export default async function PhotoPageEdit({
+  params: { tag: tagFromParams } }: Props
+) {
+  const tag = decodeURIComponent(tagFromParams);
+  
   const [
     count,
     photos,

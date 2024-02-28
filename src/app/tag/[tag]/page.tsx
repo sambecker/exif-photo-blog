@@ -6,15 +6,17 @@ import {
   getPhotosTagDataCached,
   getPhotosTagDataCachedWithPagination,
 } from '@/tag/data';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 interface TagProps {
   params: { tag: string }
 }
 
 export async function generateMetadata({
-  params: { tag },
+  params: { tag: tagFromParams },
 }: TagProps): Promise<Metadata> {
+  const tag = decodeURIComponent(tagFromParams);
+
   const [
     photos,
     count,
@@ -49,9 +51,11 @@ export async function generateMetadata({
 }
 
 export default async function TagPage({
-  params: { tag },
+  params: { tag: tagFromParams },
   searchParams,
 }:TagProps & PaginationParams) {
+  const tag = decodeURIComponent(tagFromParams);
+
   const {
     photos,
     count,

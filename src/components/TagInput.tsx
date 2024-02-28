@@ -72,11 +72,11 @@ export default function TagInput({
       onChange?.([
         ...selectedOptions,
         option.startsWith(CREATE_LABEL)
-          ? option.slice(CREATE_LABEL.length, -1)
+          ? option.match(new RegExp(`^${CREATE_LABEL} "(.+)"$`))?.[1] ?? option
           : option,
       ]
         .filter(Boolean)
-        .map(parameterize)
+        .map(item => parameterize(item))
         .join(','));
     }
     setSelectedOptionIndex(undefined);

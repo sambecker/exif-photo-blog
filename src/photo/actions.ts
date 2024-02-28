@@ -22,6 +22,7 @@ import {
   revalidateAdminPaths,
   revalidateAllKeysAndPaths,
   revalidatePhotosKey,
+  revalidateTagsKey,
 } from '@/photo/cache';
 import { PATH_ADMIN_PHOTOS, PATH_ADMIN_TAGS, PATH_ROOT } from '@/site/paths';
 import { extractExifDataFromBlobPath } from './server';
@@ -105,6 +106,7 @@ export async function renamePhotoTagGloballyAction(formData: FormData) {
   if (tag && updatedTag && tag !== updatedTag) {
     await sqlRenamePhotoTagGlobally(tag, updatedTag);
     revalidatePhotosKey();
+    revalidateTagsKey();
     redirect(PATH_ADMIN_TAGS);
   }
 }
