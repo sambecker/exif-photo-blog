@@ -13,7 +13,7 @@ export default function CameraShareModal({
   camera: Camera
   photos: Photo[]
   count: number
-  dateRange: PhotoDateRange,
+  dateRange?: PhotoDateRange,
 }) {
   return (
     <ShareModal

@@ -190,14 +190,18 @@ const sqlGetPhotosDateRange = async () => sql`
   SELECT MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
   FROM photos
   WHERE hidden IS NOT TRUE
-`.then(({ rows }) => rows[0] as PhotoDateRange);
+`.then(({ rows }) => rows[0]?.start && rows[0]?.end
+    ? rows[0] as PhotoDateRange
+    : undefined);
 
 const sqlGetPhotosTagDateRange = async (tag: string) => sql`
   SELECT MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
   FROM photos
   WHERE ${tag}=ANY(tags) AND
   hidden IS NOT TRUE
-`.then(({ rows }) => rows[0] as PhotoDateRange);
+`.then(({ rows }) => rows[0]?.start && rows[0]?.end
+    ? rows[0] as PhotoDateRange
+    : undefined);
 
 const sqlGetPhotosCameraDateRange = async (camera: Camera) => sql`
   SELECT MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
@@ -206,7 +210,9 @@ const sqlGetPhotosCameraDateRange = async (camera: Camera) => sql`
   LOWER(make)=${parameterize(camera.make, true)} AND
   LOWER(REPLACE(model, ' ', '-'))=${parameterize(camera.model, true)} AND
   hidden IS NOT TRUE
-`.then(({ rows }) => rows[0] as PhotoDateRange);
+`.then(({ rows }) => rows[0]?.start && rows[0]?.end
+    ? rows[0] as PhotoDateRange
+    : undefined);
 
 const sqlGetPhotosFilmSimulationDateRange = async (
   simulation: FilmSimulation,
@@ -215,7 +221,9 @@ const sqlGetPhotosFilmSimulationDateRange = async (
   FROM photos
   WHERE film_simulation=${simulation} AND
   hidden IS NOT TRUE
-`.then(({ rows }) => rows[0] as PhotoDateRange);
+`.then(({ rows }) => rows[0]?.start && rows[0]?.end
+    ? rows[0] as PhotoDateRange
+    : undefined);
 
 const sqlGetUniqueTags = async () => sql`
   SELECT DISTINCT unnest(tags) as tag, COUNT(*)

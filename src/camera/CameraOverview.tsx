@@ -16,7 +16,7 @@ export default function CameraOverview({
   camera: Camera,
   photos: Photo[],
   count: number,
-  dateRange: PhotoDateRange,
+  dateRange?: PhotoDateRange,
   showMorePath?: string,
   animateOnFirstLoadOnly?: boolean,
 }) {
