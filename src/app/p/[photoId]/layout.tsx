@@ -16,10 +16,13 @@ import { getPhotosNearIdCached } from '@/photo/cache';
 import { getPhotoIds } from '@/services/vercel-postgres';
 import { STATICALLY_OPTIMIZED } from '@/site/config';
 
+export let revalidate: number | undefined;
+
 export let generateStaticParams:
-  (() => Promise<{ params: { photoId: string } }[]>) | undefined = undefined;
+  (() => Promise<{ params: { photoId: string } }[]>) | undefined;
 
 if (STATICALLY_OPTIMIZED) {
+  revalidate = 3600;
   generateStaticParams = async () => {
     const photos = await getPhotoIds({ limit: GENERATE_STATIC_PARAMS_LIMIT });
     return photos.map(photoId => ({
