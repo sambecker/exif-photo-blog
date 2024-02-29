@@ -41,7 +41,8 @@
     "WRHGZC",
     "wxyz",
     "zadd",
-    "zrange"
+    "zrange",
+    "datetime"
   ],
   "files.associations": {
     "*.css": "tailwindcss"

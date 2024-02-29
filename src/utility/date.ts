@@ -21,7 +21,7 @@ export const formatDateForPostgres = (date: Date) =>
 const dateFromTimestamp = (timestamp?: AmbiguousTimestamp): Date =>
   typeof timestamp === 'number'
     ? new Date(timestamp * 1000)
-    : typeof timestamp === 'string'
+    : typeof timestamp === 'string' && timestamp.trim().length > 0
       ? /.+Z/i.test(timestamp)
         ? new Date(timestamp)
         : new Date(`${timestamp}Z`)
