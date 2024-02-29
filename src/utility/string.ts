@@ -24,6 +24,8 @@ export const parameterize = (
     .trim()
     // Replaces spaces, underscores, and dashes with dashes
     .replaceAll(/[\s_–—]/gi, '-')
+    // Removes punctuation
+    .replaceAll(/['"!@#$%^&*()_+=[\]{};:/?,.<>\\|`~]/gi, '')
     // Removes all non-alphanumeric characters
     .replaceAll(
       shouldRemoveNonAlphanumeric

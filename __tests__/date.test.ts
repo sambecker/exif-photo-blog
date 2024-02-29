@@ -30,4 +30,16 @@ describe('Date utility', () => {
         .toBe('2023-12-02 16:38:36');
     });
   });
+  it('Empty string', () => {
+    const timestamp = '             ';
+    const offset = undefined;
+    expect(convertTimestampWithOffsetToPostgresString(
+      timestamp,
+      offset
+    ))
+      .toBe(convertTimestampWithOffsetToPostgresString(
+        new Date().toISOString(),
+        offset
+      ));
+  });
 });
