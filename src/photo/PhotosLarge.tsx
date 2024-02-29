@@ -4,8 +4,10 @@ import PhotoLarge from './PhotoLarge';
 
 export default function PhotosLarge({
   photos,
+  prefetchFirstPhotoLinks,
 }: {
   photos: Photo[]
+  prefetchFirstPhotoLinks?: boolean
 }) {
   return (
     <AnimateItems
@@ -19,6 +21,7 @@ export default function PhotosLarge({
           key={photo.id}
           photo={photo}
           priority={index <= 1}
+          prefetchRelatedLinks={prefetchFirstPhotoLinks && index === 0}
         />)}
     />
   );

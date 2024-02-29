@@ -32,7 +32,7 @@ export default async function HomePage() {
   return (
     photos.length > 0
       ? <div className="space-y-1">
-        <PhotosLarge photos={photos} />
+        <PhotosLarge photos={photos} prefetchFirstPhotoLinks={true} />
         <Suspense>
           <MorePhotosRoot
             initialOffset={INFINITE_SCROLL_MULTIPLE_HOME}

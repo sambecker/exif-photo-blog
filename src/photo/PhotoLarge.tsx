@@ -22,7 +22,7 @@ export default function PhotoLarge({
   photo,
   primaryTag,
   priority,
-  prefetchShare,
+  prefetchRelatedLinks = false,
   showCamera = true,
   showSimulation = true,
   shouldShareTag,
@@ -33,7 +33,7 @@ export default function PhotoLarge({
   photo: Photo
   primaryTag?: string
   priority?: boolean
-  prefetchShare?: boolean
+  prefetchRelatedLinks?: boolean
   showCamera?: boolean
   showSimulation?: boolean
   shouldShareTag?: boolean
@@ -95,18 +95,23 @@ export default function PhotoLarge({
                 </Suspense>
               </div>
               {tags.length > 0 &&
-                <PhotoTags tags={tags} />}
+                <PhotoTags
+                  tags={tags}
+                  prefetch={prefetchRelatedLinks}
+                />}
             </div>
             {showCamera && shouldShowCameraDataForPhoto(photo) &&
               <div className="space-y-0.5">
                 <PhotoCamera
                   camera={camera}
                   type="text-only"
+                  prefetch={prefetchRelatedLinks}
                 />
                 {showSimulation && photo.filmSimulation &&
                   <div className="translate-x-[-0.3rem]"> 
                     <PhotoFilmSimulation
                       simulation={photo.filmSimulation}
+                      prefetch={prefetchRelatedLinks}
                     />
                   </div>}
               </div>}
@@ -149,7 +154,7 @@ export default function PhotoLarge({
                   shouldShareCamera ? camera : undefined,
                   shouldShareSimulation ? photo.filmSimulation : undefined,
                 )}
-                prefetch={prefetchShare}
+                prefetch={prefetchRelatedLinks}
                 shouldScroll={shouldScrollOnShare}
               />
             </div>
