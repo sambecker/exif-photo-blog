@@ -191,13 +191,16 @@ const getStorageUrlsForPrefix = async (prefix = '') => {
   const urls: StorageListResponse = [];
 
   if (HAS_VERCEL_BLOB_STORAGE) {
-    urls.push(...await vercelBlobList(prefix));
+    urls.push(...await vercelBlobList(prefix)
+      .catch(() => []));
   }
   if (HAS_AWS_S3_STORAGE) {
-    urls.push(...await awsS3List(prefix));
+    urls.push(...await awsS3List(prefix)
+      .catch(() => []));
   }
   if (HAS_CLOUDFLARE_R2_STORAGE) {
-    urls.push(...await cloudflareR2List(prefix));
+    urls.push(...await cloudflareR2List(prefix)
+      .catch(() => []));
   }
 
   return urls
