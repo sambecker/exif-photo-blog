@@ -16,4 +16,3 @@ export const screenForPPR = <T>(
   }
   return fallback;
 };
-
