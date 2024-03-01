@@ -23,15 +23,19 @@ export default function CanvasBlurCapture({
   scale?: number
   quality?: number
 }) {
-  const refCanvas = useRef<HTMLCanvasElement>(null);
+  const refCanvas = useRef<HTMLCanvasElement | null>(null);
+  const refImage = useRef<HTMLImageElement | null>(null);
   const refTimeouts = useRef<NodeJS.Timeout[]>([]);
   const refShouldCapture = useRef(true);
 
   useEffect(() => {
     const capture = () => {
       if (refShouldCapture.current) {
-        const canvas = refCanvas.current;
-        if (canvas) {
+        if (
+          refCanvas.current &&
+          refImage.current?.complete
+        ) {
+          const canvas = refCanvas.current;
           canvas.width = width * scale;
           canvas.height = height * scale;
           canvas.style.width = `${width}px`;
@@ -43,7 +47,7 @@ export default function CanvasBlurCapture({
               'contrast(1.2) saturate(1.2)' +
               `blur(${scale * 10}px)`;
             context.drawImage(
-              image,
+              refImage.current,
               -edgeCompensation,
               -edgeCompensation,
               width + edgeCompensation * 2,
@@ -58,7 +62,8 @@ export default function CanvasBlurCapture({
             refTimeouts.current.push(setTimeout(capture, RETRY_DELAY));
           }
         } else {
-          console.error('Cannot generate blur data: canvas not found');
+          // eslint-disable-next-line max-len
+          console.error('Cannot generate blur data: canvas/image not ready');
           // Retry capture in case canvas is not available
           refTimeouts.current.push(setTimeout(capture, RETRY_DELAY));
         }
@@ -69,6 +74,7 @@ export default function CanvasBlurCapture({
     image.crossOrigin = 'anonymous';
     image.src = imageUrl;
     image.onload = capture;
+    refImage.current = image;
 
     // Attempt delayed capture in case image.onload never fires
     refTimeouts.current.push(setTimeout(capture, RETRY_DELAY));
