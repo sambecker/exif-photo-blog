@@ -30,4 +30,18 @@ describe('Date utility', () => {
         .toBe('2023-12-02 16:38:36');
     });
   });
+  it('Malformed date string', () => {
+    const timestamp = '2024/01a/01 Z';
+    expect(convertTimestampWithOffsetToPostgresString(timestamp))
+      .toBe(convertTimestampWithOffsetToPostgresString(
+        new Date().toISOString(),
+      ));
+  });
+  it('Empty string', () => {
+    const timestamp = '             ';
+    expect(convertTimestampWithOffsetToPostgresString(timestamp))
+      .toBe(convertTimestampWithOffsetToPostgresString(
+        new Date().toISOString(),
+      ));
+  });
 });

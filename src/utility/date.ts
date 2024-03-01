@@ -18,14 +18,16 @@ export const formatDateForPostgres = (date: Date) =>
     '$1-$2-$3 $4',
   );
 
-const dateFromTimestamp = (timestamp?: AmbiguousTimestamp): Date =>
-  typeof timestamp === 'number'
+const dateFromTimestamp = (timestamp?: AmbiguousTimestamp): Date => {
+  const date = typeof timestamp === 'number'
     ? new Date(timestamp * 1000)
     : typeof timestamp === 'string'
       ? /.+Z/i.test(timestamp)
         ? new Date(timestamp)
         : new Date(`${timestamp}Z`)
-      : new Date();
+      : undefined;
+  return date && !isNaN(date.getTime()) ? date : new Date();
+};
 
 const createNaiveDateWithOffset = (
   timestamp?: AmbiguousTimestamp,
