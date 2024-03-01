@@ -28,6 +28,7 @@ export default function CanvasBlurCapture({
 
   useEffect(() => {
     const capture = () => {
+      console.log(`Attempting to capture blur data: ${imageUrl}`);
       const canvas = refCanvas.current;
       if (canvas) {
         canvas.width = width * scale;
