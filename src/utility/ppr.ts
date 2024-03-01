@@ -8,18 +8,23 @@ export const screenForPPR = <T>(
 
   if (error.sourceError?.message?.includes('ppr-caught-error')) {
     console.log(
-      sourceToLog ? `${sourceToLog}: PPR error caught` : 'PPR error caught',
-      error.sourceError?.message,
+      // eslint-disable-next-line max-len
+      sourceToLog ? `screenForPPR A: ${sourceToLog}: PPR error caught` : 'PPR error caught',
+      error,
     );
-    throw error.sourceError.message;
+    throw error.sourceError;
   } else if (error.message?.includes('ppr-caught-error')) {
     console.log(
-      sourceToLog ? `${sourceToLog}: PPR error caught` : 'PPR error caught',
-      error.message,
+      // eslint-disable-next-line max-len
+      sourceToLog ? `screenForPPR B: ${sourceToLog}: PPR error caught` : 'PPR error caught',
+      error,
     );
-    throw error.message;
+    throw error;
   } else if (sourceToLog) {
-    console.error(sourceToLog, error);
+    console.log(// eslint-disable-next-line max-len
+      sourceToLog ? `screenForPPR C: ${sourceToLog}: PPR error caught` : 'PPR error caught',
+      error
+    );
   }
 
   return fallback;
