@@ -9,11 +9,13 @@ export default function PhotoTiny({
   tag,
   selected,
   className,
+  prefetch = false,
 }: {
   photo: Photo
   tag?: string
   selected?: boolean
   className?: string
+  prefetch?: boolean
 }) {
   return (
     <Link
@@ -26,7 +28,7 @@ export default function PhotoTiny({
         'rounded-[0.15rem] overflow-hidden',
         'border border-gray-200 dark:border-gray-800',
       )}
-      prefetch={false}
+      prefetch={prefetch}
     >
       <ImageTiny
         src={photo.url}

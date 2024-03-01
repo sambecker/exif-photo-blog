@@ -22,6 +22,7 @@ export default function PhotoLarge({
   photo,
   primaryTag,
   priority,
+  prefetch = false,
   prefetchRelatedLinks = false,
   showCamera = true,
   showSimulation = true,
@@ -33,6 +34,7 @@ export default function PhotoLarge({
   photo: Photo
   primaryTag?: string
   priority?: boolean
+  prefetch?: boolean
   prefetchRelatedLinks?: boolean
   showCamera?: boolean
   showSimulation?: boolean
@@ -58,15 +60,20 @@ export default function PhotoLarge({
   return (
     <SiteGrid
       contentMain={
-        <ImageLarge
-          className="w-full"
-          alt={titleForPhoto(photo)}
+        <Link
           href={pathForPhoto(photo, primaryTag)}
-          src={photo.url}
-          aspectRatio={photo.aspectRatio}
-          blurData={photo.blurData}
-          priority={priority}
-        />}
+          className="active:brightness-75"
+          prefetch={prefetch}
+        >
+          <ImageLarge
+            className="w-full"
+            alt={titleForPhoto(photo)}
+            src={photo.url}
+            aspectRatio={photo.aspectRatio}
+            blurData={photo.blurData}
+            priority={priority}
+          />
+        </Link>}
       contentSide={
         <div className={clsx(
           'leading-snug',
@@ -82,9 +89,9 @@ export default function PhotoLarge({
               <div className="relative flex gap-2 items-start">
                 <div className="md:flex-grow">
                   <Link
-                    href={pathForPhoto(photo)}
+                    href={pathForPhoto(photo, primaryTag)}
                     className="font-bold uppercase"
-                    prefetch={false}
+                    prefetch={prefetch}
                   >
                     {titleForPhoto(photo)}
                   </Link>

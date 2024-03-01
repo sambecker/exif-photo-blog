@@ -13,6 +13,7 @@ export default function PhotoSmall({
   simulation,
   selected,
   priority,
+  prefetch = false,
 }: {
   photo: Photo
   tag?: string
@@ -20,6 +21,7 @@ export default function PhotoSmall({
   simulation?: FilmSimulation
   selected?: boolean
   priority?: boolean
+  prefetch?: boolean
 }) {
   return (
     <Link
@@ -29,7 +31,7 @@ export default function PhotoSmall({
         'active:brightness-75',
         selected && 'brightness-50',
       )}
-      prefetch={false}
+      prefetch={prefetch}
     >
       <ImageSmall
         src={photo.url}
