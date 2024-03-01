@@ -12,7 +12,7 @@ import { parameterize } from '@/utility/string';
 import { Tags } from '@/tag';
 import { FilmSimulation, FilmSimulations } from '@/simulation';
 import { PRIORITY_ORDER_ENABLED } from '@/site/config';
-import { screenForPPR } from '@/utility/ppr';
+// import { screenForPPR } from '@/utility/ppr';
 
 const PHOTO_DEFAULT_LIMIT = 100;
 
@@ -20,36 +20,36 @@ export const convertArrayToPostgresString = (array?: string[]) => array
   ? `{${array.join(',')}}`
   : null;
 
-const sqlCreatePhotosTable = () =>
-  sql`
-    CREATE TABLE IF NOT EXISTS photos (
-      id VARCHAR(8) PRIMARY KEY,
-      url VARCHAR(255) NOT NULL,
-      extension VARCHAR(255) NOT NULL,
-      aspect_ratio REAL DEFAULT 1.5,
-      blur_data TEXT,
-      title VARCHAR(255),
-      tags VARCHAR(255)[],
-      make VARCHAR(255),
-      model VARCHAR(255),
-      focal_length SMALLINT,
-      focal_length_in_35mm_format SMALLINT,
-      f_number REAL,
-      iso SMALLINT,
-      exposure_time DOUBLE PRECISION,
-      exposure_compensation REAL,
-      location_name VARCHAR(255),
-      latitude DOUBLE PRECISION,
-      longitude DOUBLE PRECISION,
-      film_simulation VARCHAR(255),
-      priority_order REAL,
-      taken_at TIMESTAMP WITH TIME ZONE NOT NULL,
-      taken_at_naive VARCHAR(255) NOT NULL,
-      hidden BOOLEAN,
-      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-    )
-  `;
+// const sqlCreatePhotosTable = () =>
+//   sql`
+//     CREATE TABLE IF NOT EXISTS photos (
+//       id VARCHAR(8) PRIMARY KEY,
+//       url VARCHAR(255) NOT NULL,
+//       extension VARCHAR(255) NOT NULL,
+//       aspect_ratio REAL DEFAULT 1.5,
+//       blur_data TEXT,
+//       title VARCHAR(255),
+//       tags VARCHAR(255)[],
+//       make VARCHAR(255),
+//       model VARCHAR(255),
+//       focal_length SMALLINT,
+//       focal_length_in_35mm_format SMALLINT,
+//       f_number REAL,
+//       iso SMALLINT,
+//       exposure_time DOUBLE PRECISION,
+//       exposure_compensation REAL,
+//       location_name VARCHAR(255),
+//       latitude DOUBLE PRECISION,
+//       longitude DOUBLE PRECISION,
+//       film_simulation VARCHAR(255),
+//       priority_order REAL,
+//       taken_at TIMESTAMP WITH TIME ZONE NOT NULL,
+//       taken_at_naive VARCHAR(255) NOT NULL,
+//       hidden BOOLEAN,
+//       updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+//       created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+//     )
+//   `;
 
 // Must provide id as 8-character nanoid
 export const sqlInsertPhoto = (photo: PhotoDbInsert) => {
@@ -289,29 +289,32 @@ export type GetPhotosOptions = {
 const safelyQueryPhotos = async <T>(callback: () => Promise<T>): Promise<T> => {
   let result: T;
 
-  try {
-    result = await callback();
-  } catch (e: any) {
-    screenForPPR(e, undefined, 'neon postgres');
-    if (/relation "photos" does not exist/i.test(e.message)) {
-      console.log('Creating table "photos" because it did not exist');
-      await sqlCreatePhotosTable();
-      result = await callback();
-    } else if (/endpoint is in transition/i.test(e.message)) {
-      console.log('sql get error: endpoint is in transition (setting timeout)');
-      // Wait 5 seconds and try again
-      await new Promise(resolve => setTimeout(resolve, 5000));
-      try {
-        result = await callback();
-      } catch (e: any) {
-        console.log(`sql get error on retry (after 5000ms): ${e.message} `);
-        throw e;
-      }
-    } else {
-      console.log(`sql get error: ${e.message} `);
-      throw e;
-    }
-  }
+  result = await callback();
+
+  // try {
+  //   result = await callback();
+  // } catch (e: any) {
+  //   screenForPPR(e, undefined, 'neon postgres');
+  //   if (/relation "photos" does not exist/i.test(e.message)) {
+  //     console.log('Creating table "photos" because it did not exist');
+  //     await sqlCreatePhotosTable();
+  //     result = await callback();
+  //   } else if (/endpoint is in transition/i.test(e.message)) {
+  // eslint-disable-next-line max-len
+  //     console.log('sql get error: endpoint is in transition (setting timeout)');
+  //     // Wait 5 seconds and try again
+  //     await new Promise(resolve => setTimeout(resolve, 5000));
+  //     try {
+  //       result = await callback();
+  //     } catch (e: any) {
+  //       console.log(`sql get error on retry (after 5000ms): ${e.message} `);
+  //       throw e;
+  //     }
+  //   } else {
+  //     console.log(`sql get error: ${e.message} `);
+  //     throw e;
+  //   }
+  // }
 
   return result;
 };
