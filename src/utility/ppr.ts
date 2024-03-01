@@ -3,16 +3,24 @@ export const screenForPPR = <T>(
   fallback: T,
   sourceToLog?: string,
 ): T => {
-  if (/ppr-caught-error/.test(error.message) && error.sourceError) {
-    // PPR errors, if caught, must be re-thrown in order to
-    // postpone rendering
+  // PPR errors, if caught, must be re-thrown in order to
+  // postpone rendering
+
+  if (error.sourceError?.message.includes('ppr-caught-error')) {
     console.log(
       sourceToLog ? `${sourceToLog}: PPR error caught` : 'PPR error caught',
-      error.sourceError,
+      error.sourceError.message,
     );
-    throw error.sourceError;
+    throw error.sourceError.message;
+  } else if (error.message?.includes('ppr-caught-error')) {
+    console.log(
+      sourceToLog ? `${sourceToLog}: PPR error caught` : 'PPR error caught',
+      error.message,
+    );
+    throw error.message;
   } else if (sourceToLog) {
-    console.error(sourceToLog, error.message);
+    console.error(sourceToLog, error);
   }
+
   return fallback;
 };
