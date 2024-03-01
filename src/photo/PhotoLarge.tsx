@@ -84,6 +84,7 @@ export default function PhotoLarge({
                   <Link
                     href={pathForPhoto(photo)}
                     className="font-bold uppercase"
+                    prefetch={false}
                   >
                     {titleForPhoto(photo)}
                   </Link>

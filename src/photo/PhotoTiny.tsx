@@ -26,6 +26,7 @@ export default function PhotoTiny({
         'rounded-[0.15rem] overflow-hidden',
         'border border-gray-200 dark:border-gray-800',
       )}
+      prefetch={false}
     >
       <ImageTiny
         src={photo.url}
