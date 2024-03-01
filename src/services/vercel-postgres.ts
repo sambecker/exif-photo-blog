@@ -298,6 +298,7 @@ const safelyQueryPhotos = async <T>(callback: () => Promise<T>): Promise<T> => {
       await sqlCreatePhotosTable();
       result = await callback();
     } else if (/endpoint is in transition/i.test(e.message)) {
+      console.log('sql get error: endpoint is in transition (setting timeout)');
       // Wait 5 seconds and try again
       await new Promise(resolve => setTimeout(resolve, 5000));
       try {
