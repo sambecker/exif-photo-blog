@@ -24,7 +24,7 @@ export default function CanvasBlurCapture({
   quality?: number
 }) {
   const refCanvas = useRef<HTMLCanvasElement | null>(null);
-  const refImage = useRef<HTMLImageElement | null>(null);
+  const refImage = useRef<HTMLImageElement>();
   const refTimeouts = useRef<NodeJS.Timeout[]>([]);
   const refShouldCapture = useRef(true);
 
@@ -51,7 +51,8 @@ export default function CanvasBlurCapture({
               -edgeCompensation,
               -edgeCompensation,
               width + edgeCompensation * 2,
-              width * image.height / image.width + edgeCompensation * 2,
+              width * refImage.current.height / refImage.current.width +
+              edgeCompensation * 2,
             );
             refTimeouts.current.forEach(clearTimeout);
             onCapture(canvas.toDataURL('image/jpeg', quality));
@@ -70,11 +71,12 @@ export default function CanvasBlurCapture({
       }
     };
 
-    const image = new Image();
-    image.crossOrigin = 'anonymous';
-    image.src = imageUrl;
-    image.onload = capture;
-    refImage.current = image;
+    if (!refImage.current) {
+      refImage.current = new Image();
+    }
+    refImage.current.crossOrigin = 'anonymous';
+    refImage.current.src = imageUrl;
+    refImage.current.onload = capture;
 
     // Attempt delayed capture in case image.onload never fires
     refTimeouts.current.push(setTimeout(capture, RETRY_DELAY));
