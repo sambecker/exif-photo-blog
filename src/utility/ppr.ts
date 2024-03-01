@@ -10,7 +10,7 @@ export const screenForPPR = <T>(
       sourceToLog ? `${sourceToLog}: PPR error caught` : 'PPR error caught',
       error.sourceError,
     );
-    throw error.sourceError;
+    throw error;
   } else if (sourceToLog) {
     console.error(sourceToLog, error.message);
   }
