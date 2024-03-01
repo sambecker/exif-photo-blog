@@ -23,42 +23,50 @@ export default function CanvasBlurCapture({
   scale?: number
   quality?: number
 }) {
-  const refCanvas = useRef<HTMLCanvasElement>(null);
+  const refCanvas = useRef<HTMLCanvasElement | null>(null);
+  const refImage = useRef<HTMLImageElement | null>(null);
   const refTimeouts = useRef<NodeJS.Timeout[]>([]);
+  const refShouldCapture = useRef(true);
 
   useEffect(() => {
     const capture = () => {
-      console.log(`Attempting to capture blur data: ${imageUrl}`);
-      const canvas = refCanvas.current;
-      if (canvas) {
-        canvas.width = width * scale;
-        canvas.height = height * scale;
-        canvas.style.width = `${width}px`;
-        canvas.style.height = `${height}px`;
-        const context = refCanvas.current?.getContext('2d');
-        if (context) {
-          context.scale(scale, scale);
-          context.filter =
-            'contrast(1.2) saturate(1.2)' +
-            `blur(${scale * 10}px)`;
-          context.drawImage(
-            image,
-            -edgeCompensation,
-            -edgeCompensation,
-            width + edgeCompensation * 2,
-            width * image.height / image.width + edgeCompensation * 2,
-          );
-          refTimeouts.current.forEach(clearTimeout);
-          onCapture(canvas.toDataURL('image/jpeg', quality));
+      if (refShouldCapture.current) {
+        if (
+          refCanvas.current &&
+          refImage.current?.complete
+        ) {
+          const canvas = refCanvas.current;
+          canvas.width = width * scale;
+          canvas.height = height * scale;
+          canvas.style.width = `${width}px`;
+          canvas.style.height = `${height}px`;
+          const context = refCanvas.current?.getContext('2d');
+          if (context) {
+            context.scale(scale, scale);
+            context.filter =
+              'contrast(1.2) saturate(1.2)' +
+              `blur(${scale * 10}px)`;
+            context.drawImage(
+              refImage.current,
+              -edgeCompensation,
+              -edgeCompensation,
+              width + edgeCompensation * 2,
+              width * image.height / image.width + edgeCompensation * 2,
+            );
+            refTimeouts.current.forEach(clearTimeout);
+            onCapture(canvas.toDataURL('image/jpeg', quality));
+            refShouldCapture.current = false;
+          } else {
+            console.error('Cannot get 2d context');
+            // Retry capture in case canvas is not available
+            refTimeouts.current.push(setTimeout(capture, RETRY_DELAY));
+          }
         } else {
-          console.error('Cannot get 2d context');
+          // eslint-disable-next-line max-len
+          console.error('Cannot generate blur data: canvas/image not ready');
           // Retry capture in case canvas is not available
           refTimeouts.current.push(setTimeout(capture, RETRY_DELAY));
         }
-      } else {
-        console.error('Cannot generate blur data: canvas not found');
-        // Retry capture in case canvas is not available
-        refTimeouts.current.push(setTimeout(capture, RETRY_DELAY));
       }
     };
 
@@ -66,6 +74,7 @@ export default function CanvasBlurCapture({
     image.crossOrigin = 'anonymous';
     image.src = imageUrl;
     image.onload = capture;
+    refImage.current = image;
 
     // Attempt delayed capture in case image.onload never fires
     refTimeouts.current.push(setTimeout(capture, RETRY_DELAY));
