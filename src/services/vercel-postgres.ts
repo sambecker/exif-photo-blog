@@ -286,10 +286,15 @@ export type GetPhotosOptions = {
   includeHidden?: boolean
 }
 
-const safelyQueryPhotos = async <T>(callback: () => Promise<T>): Promise<T> => {
+const safelyQueryPhotos = async <T>(
+  callback: () => Promise<T>,
+  debugMessage: string
+): Promise<T> => {
   let result: T;
 
-  console.log('Executing sql query (neon postgres)');
+  if (debugMessage) {
+    console.log(`Executing sql query: ${debugMessage}`);
+  }
 
   try {
     result = await callback();
@@ -391,7 +396,7 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
   return safelyQueryPhotos(async () => {
     const client = await db.connect();
     return client.query(sql.join(' '), values);
-  })
+  }, sql.join(' '))
     .then(({ rows }) => rows.map(parsePhotoFromDb));
 };
 
@@ -421,14 +426,15 @@ export const getPhotosNearId = async (
       `,
       [id, limit]
     );
-  })
+  }, 'getPhotosNearId')
     .then(({ rows }) => rows.map(parsePhotoFromDb));
 };
 
 export const getPhotoIds = async ({ limit }: { limit?: number }) => {
   return safelyQueryPhotos(() => limit
     ? sql`SELECT id FROM photos LIMIT ${limit}`
-    : sql`SELECT id FROM photos`)
+    : sql`SELECT id FROM photos`,
+  'getPhotoIds')
     .then(({ rows }) => rows.map(({ id }) => id as string));
 };
 
@@ -436,40 +442,60 @@ export const getPhoto = async (id: string): Promise<Photo | undefined> => {
   // Check for photo id forwarding
   // and convert short ids to uuids
   const photoId = translatePhotoId(id);
-  return safelyQueryPhotos(() => sqlGetPhoto(photoId))
+  return safelyQueryPhotos(() => sqlGetPhoto(photoId), 'getPhoto')
     .then(({ rows }) => rows.map(parsePhotoFromDb))
     .then(photos => photos.length > 0 ? photos[0] : undefined);
 };
 export const getPhotosDateRange = () =>
-  safelyQueryPhotos(sqlGetPhotosDateRange);
+  safelyQueryPhotos(sqlGetPhotosDateRange, 'getPhotosDateRange');
 export const getPhotosCount = () =>
-  safelyQueryPhotos(sqlGetPhotosCount);
+  safelyQueryPhotos(sqlGetPhotosCount, 'getPhotosCount');
 export const getPhotosCountIncludingHidden = () =>
-  safelyQueryPhotos(sqlGetPhotosCountIncludingHidden);
+  safelyQueryPhotos(
+    sqlGetPhotosCountIncludingHidden,
+    'getPhotosCountIncludingHidden',
+  );
 
 // TAGS
 export const getUniqueTags = () =>
-  safelyQueryPhotos(sqlGetUniqueTags);
+  safelyQueryPhotos(sqlGetUniqueTags, 'getUniqueTags');
 export const getUniqueTagsHidden = () =>
-  safelyQueryPhotos(sqlGetUniqueTagsHidden);
+  safelyQueryPhotos(sqlGetUniqueTagsHidden, 'getUniqueTagsHidden');
 export const getPhotosTagDateRange = (tag: string) =>
-  safelyQueryPhotos(() => sqlGetPhotosTagDateRange(tag));
+  safelyQueryPhotos(
+    () => sqlGetPhotosTagDateRange(tag),
+    'getPhotosTagDateRange',
+  );
 export const getPhotosTagCount = (tag: string) =>
-  safelyQueryPhotos(() => sqlGetPhotosTagCount(tag));
+  safelyQueryPhotos(
+    () => sqlGetPhotosTagCount(tag),
+    'getPhotosTagCount',
+  );
 
 // CAMERAS
 export const getUniqueCameras = () =>
-  safelyQueryPhotos(sqlGetUniqueCameras);
+  safelyQueryPhotos(sqlGetUniqueCameras, 'getUniqueCameras');
 export const getPhotosCameraDateRange = (camera: Camera) =>
-  safelyQueryPhotos(() => sqlGetPhotosCameraDateRange(camera));
+  safelyQueryPhotos(
+    () => sqlGetPhotosCameraDateRange(camera),
+    'getPhotosCameraDateRange',
+  );
 export const getPhotosCameraCount = (camera: Camera) =>
-  safelyQueryPhotos(() => sqlGetPhotosCameraCount(camera));
+  safelyQueryPhotos(
+    () => sqlGetPhotosCameraCount(camera),
+    'getPhotosCameraCount',
+  );
 
 // FILM SIMULATIONS
 export const getUniqueFilmSimulations = () =>
-  safelyQueryPhotos(sqlGetUniqueFilmSimulations);
+  safelyQueryPhotos(sqlGetUniqueFilmSimulations, 'getUniqueFilmSimulations');
 export const getPhotosFilmSimulationDateRange =
-  (simulation: FilmSimulation) => safelyQueryPhotos(() =>
-    sqlGetPhotosFilmSimulationDateRange(simulation));
+  (simulation: FilmSimulation) => safelyQueryPhotos(
+    () => sqlGetPhotosFilmSimulationDateRange(simulation),
+    'getPhotosFilmSimulationDateRange',
+  );
 export const getPhotosFilmSimulationCount = (simulation: FilmSimulation) =>
-  safelyQueryPhotos(() => sqlGetPhotosFilmSimulationCount(simulation));
+  safelyQueryPhotos(
+    () => sqlGetPhotosFilmSimulationCount(simulation),
+    'getPhotosFilmSimulationCount',
+  );
