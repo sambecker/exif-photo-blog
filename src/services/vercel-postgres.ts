@@ -289,6 +289,8 @@ export type GetPhotosOptions = {
 const safelyQueryPhotos = async <T>(callback: () => Promise<T>): Promise<T> => {
   let result: T;
 
+  console.log('Executing sql query (neon postgres)');
+
   try {
     result = await callback();
   } catch (e: any) {
