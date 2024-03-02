@@ -15,10 +15,7 @@ import {
   pathForAdminPhotoEdit,
 } from '@/site/paths';
 import { deleteConfirmationTextForPhoto, titleForPhoto } from '@/photo';
-import {
-  getPhotosCached,
-  getPhotosCountIncludingHiddenCached,
-} from '@/photo/cache';
+import { getPhotosCountIncludingHiddenCached } from '@/photo/cache';
 import { AiOutlineEyeInvisible } from 'react-icons/ai';
 import {
   PaginationParams,
@@ -34,6 +31,7 @@ import IconGrSync from '@/site/IconGrSync';
 import { getStoragePhotoUrlsNoStore } from '@/services/storage/cache';
 import MoreComponentsFromSearchParams from
   '@/components/MoreComponentsFromSearchParams';
+import { getPhotos } from '@/services/vercel-postgres';
 
 const DEBUG_PHOTO_BLOBS = false;
 
@@ -47,7 +45,7 @@ export default async function AdminPhotosPage({
     count,
     blobPhotoUrls,
   ] = await Promise.all([
-    getPhotosCached({ includeHidden: true, sortBy: 'createdAt', limit }),
+    getPhotos({ includeHidden: true, sortBy: 'createdAt', limit }),
     getPhotosCountIncludingHiddenCached(),
     DEBUG_PHOTO_BLOBS ? getStoragePhotoUrlsNoStore() : [],
   ]);

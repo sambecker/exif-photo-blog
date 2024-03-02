@@ -25,7 +25,7 @@ import {
 } from '@/services/vercel-postgres';
 import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
 import { createCameraKey } from '@/camera';
-import { PATHS_ADMIN } from '@/site/paths';
+import { PATHS_ADMIN, PATH_ADMIN, pathForPhoto } from '@/site/paths';
 
 // Table key
 const KEY_PHOTOS            = 'photos';
@@ -101,6 +101,14 @@ export const revalidateAllKeysAndPaths = () => {
 
 export const revalidateAdminPaths = () => {
   PATHS_ADMIN.forEach(path => revalidatePath(path));
+};
+
+export const revalidatePhoto = (photoId: string) => {
+  revalidateTag(photoId);
+  revalidateTagsKey();
+  revalidatePath('/');
+  revalidatePath(pathForPhoto(photoId));
+  revalidatePath(PATH_ADMIN, 'layout');
 };
 
 // Cache

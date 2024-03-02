@@ -21,10 +21,15 @@ import {
 import {
   revalidateAdminPaths,
   revalidateAllKeysAndPaths,
+  revalidatePhoto,
   revalidatePhotosKey,
   revalidateTagsKey,
 } from '@/photo/cache';
-import { PATH_ADMIN_PHOTOS, PATH_ADMIN_TAGS, PATH_ROOT } from '@/site/paths';
+import {
+  PATH_ADMIN_PHOTOS,
+  PATH_ADMIN_TAGS,
+  PATH_ROOT,
+} from '@/site/paths';
 import { extractExifDataFromBlobPath } from './server';
 import { TAG_FAVS, isTagFavs } from '@/tag';
 import { convertPhotoToPhotoDbInsert } from '.';
@@ -48,7 +53,7 @@ export async function updatePhotoAction(formData: FormData) {
 
   await sqlUpdatePhoto(photo);
 
-  revalidateAllKeysAndPaths();
+  revalidatePhoto(photo.id);
 
   redirect(PATH_ADMIN_PHOTOS);
 }
