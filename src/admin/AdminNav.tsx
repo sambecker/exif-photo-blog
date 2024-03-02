@@ -16,14 +16,14 @@ export default async function AdminNav() {
     countUploads,
     countTags,
   ] = await Promise.all([
-    getPhotosCountIncludingHiddenCached(),
+    getPhotosCountIncludingHiddenCached().catch(() => 0),
     getStorageUploadUrlsNoStore()
       .then(urls => urls.length)
       .catch(e => {
         console.error(`Error getting blob upload urls: ${e}`);
         return 0;
       }),
-    getUniqueTagsCached().then(tags => tags.length),
+    getUniqueTagsCached().then(tags => tags.length).catch(() => 0),
   ]);
 
   const navItemPhotos = {
