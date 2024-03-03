@@ -17,6 +17,7 @@ import MoreComponentsProvider from '@/state/MoreComponentsProvider';
 import CommandK from '@/site/CommandK';
 
 import '../site/globals.css';
+import CommandKClient from '@/components/CommandKClient';
 
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ['latin'],
@@ -94,7 +95,9 @@ export default function RootLayout({
                   <Footer />
                 </Suspense>
               </main>
-              <CommandK />
+              <Suspense fallback={<CommandKClient />}>
+                <CommandK />
+              </Suspense>
             </ThemeProviderClient>
           </MoreComponentsProvider>
           <Analytics debug={false} />
