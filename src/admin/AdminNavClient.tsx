@@ -41,6 +41,7 @@ export default function AdminNavClient({
                   'flex gap-0.5',
                   checkPathPrefix(pathname, href) ? 'font-bold' : 'text-dim',
                 )}
+                prefetch={false}
               >
                 <span>{label}</span>
                 {count > 0 &&
