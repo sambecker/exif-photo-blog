@@ -58,8 +58,7 @@ export default async function PhotoTagPage({
 
   const [
     photos,
-    count,
-    dateRange,
+    { count, dateRange },
   ] = await getPhotosTagDataCached({ tag });
 
   return <>

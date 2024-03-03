@@ -13,10 +13,13 @@ import { capitalizeWords, convertStringToArray } from '@/utility/string';
 
 export const TAG_FAVS = 'favs';
 
-export type Tags = {
+export type TagWithMeta = {
   tag: string
   count: number
-}[]
+  dataRange?: PhotoDateRange
+}
+
+export type TagsWithMeta = Omit<TagWithMeta, 'dateRange'>[]
 
 export const formatTag = (tag?: string) =>
   capitalizeWords(tag?.replaceAll('-', ' '));
@@ -41,7 +44,7 @@ export const sortTags = (
   .sort((a, b) => isTagFavs(a) ? -1 : a.localeCompare(b));
 
 export const sortTagsObject = (
-  tags: Tags,
+  tags: TagsWithMeta,
   tagToHide?: string,
 ) => tags
   .filter(({ tag }) => tag!== tagToHide)
@@ -50,7 +53,7 @@ export const sortTagsObject = (
 export const sortTagsWithoutFavs = (tags: string[]) =>
   sortTags(tags, TAG_FAVS);
 
-export const sortTagsObjectWithoutFavs = (tags: Tags) =>
+export const sortTagsObjectWithoutFavs = (tags: TagsWithMeta) =>
   sortTagsObject(tags, TAG_FAVS);
 
 export const descriptionForTaggedPhotos = (

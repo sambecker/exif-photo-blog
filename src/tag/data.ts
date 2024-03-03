@@ -1,7 +1,6 @@
 import {
   getPhotosCached,
-  getPhotosTagCountCached,
-  getPhotosTagDateRangeCached,
+  getPhotosTagMetaCached,
 } from '@/photo/cache';
 import {
   PaginationSearchParams,
@@ -18,8 +17,7 @@ export const getPhotosTagDataCached = ({
 }) =>
   Promise.all([
     getPhotosCached({ tag, limit }),
-    getPhotosTagCountCached(tag),
-    getPhotosTagDateRangeCached(tag),
+    getPhotosTagMetaCached(tag),
   ]);
 
 export const getPhotosTagDataCachedWithPagination = async ({
@@ -33,7 +31,7 @@ export const getPhotosTagDataCachedWithPagination = async ({
 }) => {
   const { offset, limit } = getPaginationFromSearchParams(searchParams);
 
-  const [photos, count, dateRange] =
+  const [photos, { count, dateRange }] =
     await getPhotosTagDataCached({
       tag,
       limit: limitProp ?? limit,

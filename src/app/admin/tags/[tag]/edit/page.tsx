@@ -1,6 +1,6 @@
 import AdminChildPage from '@/components/AdminChildPage';
 import { redirect } from 'next/navigation';
-import { getPhotosCached, getPhotosTagCountCached } from '@/photo/cache';
+import { getPhotosCached } from '@/photo/cache';
 import TagForm from '@/tag/TagForm';
 import { PATH_ADMIN, PATH_ADMIN_TAGS, pathForTag } from '@/site/paths';
 import PhotoTag from '@/tag/PhotoTag';
@@ -8,6 +8,7 @@ import { photoLabelForCount } from '@/photo';
 import PhotoLightbox from '@/photo/PhotoLightbox';
 import FavsTag from '@/tag/FavsTag';
 import { isTagFavs } from '@/tag';
+import { getPhotosTagMeta } from '@/services/vercel-postgres';
 
 const MAX_PHOTO_TO_SHOW = 6;
 
@@ -21,10 +22,10 @@ export default async function PhotoPageEdit({
   const tag = decodeURIComponent(tagFromParams);
   
   const [
-    count,
+    { count },
     photos,
   ] = await Promise.all([
-    getPhotosTagCountCached(tag),
+    getPhotosTagMeta(tag),
     getPhotosCached({ tag, limit: MAX_PHOTO_TO_SHOW }),
   ]);
 

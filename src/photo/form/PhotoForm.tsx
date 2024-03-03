@@ -23,7 +23,7 @@ import { toastSuccess, toastWarning } from '@/toast';
 import { getDimensionsFromSize } from '@/utility/size';
 import ImageBlurFallback from '@/components/ImageBlurFallback';
 import { BLUR_ENABLED } from '@/site/config';
-import { Tags, sortTagsObjectWithoutFavs } from '@/tag';
+import { TagsWithMeta, sortTagsObjectWithoutFavs } from '@/tag';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 
 const THUMBNAIL_SIZE = 300;
@@ -38,7 +38,7 @@ export default function PhotoForm({
   initialPhotoForm: Partial<PhotoFormData>
   updatedExifData?: Partial<PhotoFormData>
   type?: 'create' | 'edit'
-  uniqueTags?: Tags
+  uniqueTags?: TagsWithMeta
   debugBlur?: boolean
 }) {
   const [formData, setFormData] =

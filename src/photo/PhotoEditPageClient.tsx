@@ -10,14 +10,14 @@ import { useFormState } from 'react-dom';
 import { areSimpleObjectsEqual } from '@/utility/object';
 import IconGrSync from '@/site/IconGrSync';
 import { getExifDataAction } from './actions';
-import { Tags } from '@/tag';
+import { TagsWithMeta } from '@/tag';
 
 export default function PhotoEditPageClient({
   photo,
   uniqueTags,
 }: {
   photo: Photo
-  uniqueTags?: Tags
+  uniqueTags?: TagsWithMeta
 }) {
   const seedExifData = { url: photo.url };
 

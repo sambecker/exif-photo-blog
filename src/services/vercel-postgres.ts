@@ -9,7 +9,7 @@ import {
 } from '@/photo';
 import { Camera, Cameras, createCameraKey } from '@/camera';
 import { parameterize } from '@/utility/string';
-import { Tags } from '@/tag';
+import { TagsWithMeta } from '@/tag';
 import { FilmSimulation, FilmSimulations } from '@/simulation';
 import { PRIORITY_ORDER_ENABLED } from '@/site/config';
 import { screenForPPR } from '@/utility/ppr';
@@ -165,12 +165,6 @@ const sqlGetPhotosCountIncludingHidden = async () => sql`
   SELECT COUNT(*) FROM photos
 `.then(({ rows }) => parseInt(rows[0].count, 10));
 
-const sqlGetPhotosTagCount = async (tag: string) => sql`
-  SELECT COUNT(*) FROM photos
-  WHERE ${tag}=ANY(tags) AND
-  hidden IS NOT TRUE
-`.then(({ rows }) => parseInt(rows[0].count, 10));
-
 const sqlGetPhotosCameraCount = async (camera: Camera) => sql`
   SELECT COUNT(*) FROM photos
   WHERE
@@ -195,14 +189,17 @@ const sqlGetPhotosDateRange = async () => sql`
     ? rows[0] as PhotoDateRange
     : undefined);
 
-const sqlGetPhotosTagDateRange = async (tag: string) => sql`
-  SELECT MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
+const sqlGetPhotosTagMeta = async (tag: string) => sql`
+  SELECT COUNT(*), MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
   FROM photos
   WHERE ${tag}=ANY(tags) AND
   hidden IS NOT TRUE
-`.then(({ rows }) => rows[0]?.start && rows[0]?.end
-    ? rows[0] as PhotoDateRange
-    : undefined);
+`.then(({ rows }) => ({
+    count: parseInt(rows[0].count, 10),
+    ...rows[0]?.start && rows[0]?.end
+      ? { dateRange: rows[0] as PhotoDateRange }
+      : undefined,
+  }));
 
 const sqlGetPhotosCameraDateRange = async (camera: Camera) => sql`
   SELECT MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
@@ -232,7 +229,7 @@ const sqlGetUniqueTags = async () => sql`
   WHERE hidden IS NOT TRUE
   GROUP BY tag
   ORDER BY tag ASC
-`.then(({ rows }): Tags => rows.map(({ tag, count }) => ({
+`.then(({ rows }): TagsWithMeta => rows.map(({ tag, count }) => ({
     tag: tag as string,
     count: parseInt(count, 10),
   })));
@@ -242,7 +239,7 @@ const sqlGetUniqueTagsHidden = async () => sql`
   FROM photos
   GROUP BY tag
   ORDER BY tag ASC
-`.then(({ rows }): Tags => rows.map(({ tag, count }) => ({
+`.then(({ rows }): TagsWithMeta => rows.map(({ tag, count }) => ({
     tag: tag as string,
     count: parseInt(count, 10),
   })));
@@ -461,15 +458,10 @@ export const getUniqueTags = () =>
   safelyQueryPhotos(sqlGetUniqueTags, 'getUniqueTags');
 export const getUniqueTagsHidden = () =>
   safelyQueryPhotos(sqlGetUniqueTagsHidden, 'getUniqueTagsHidden');
-export const getPhotosTagDateRange = (tag: string) =>
+export const getPhotosTagMeta = (tag: string) =>
   safelyQueryPhotos(
-    () => sqlGetPhotosTagDateRange(tag),
-    'getPhotosTagDateRange',
-  );
-export const getPhotosTagCount = (tag: string) =>
-  safelyQueryPhotos(
-    () => sqlGetPhotosTagCount(tag),
-    'getPhotosTagCount',
+    () => sqlGetPhotosTagMeta(tag),
+    'getPhotosTagMeta',
   );
 
 // CAMERAS

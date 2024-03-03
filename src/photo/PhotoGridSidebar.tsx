@@ -5,7 +5,7 @@ import PhotoTag from '@/tag/PhotoTag';
 import { FaTag } from 'react-icons/fa';
 import { IoMdCamera } from 'react-icons/io';
 import { PhotoDateRange, dateRangeForPhotos, photoQuantityText } from '.';
-import { TAG_FAVS, Tags } from '@/tag';
+import { TAG_FAVS, TagsWithMeta } from '@/tag';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
 import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
 import { FilmSimulations, sortFilmSimulationsWithCount } from '@/simulation';
@@ -18,7 +18,7 @@ export default function PhotoGridSidebar({
   photosCount,
   photosDateRange,
 }: {
-  tags: Tags
+  tags: TagsWithMeta
   cameras: Cameras
   simulations: FilmSimulations
   photosCount: number

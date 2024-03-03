@@ -11,10 +11,9 @@ import {
   getPhotosCount,
   getPhotosCameraCount,
   getPhotosCountIncludingHidden,
-  getPhotosTagCount,
   getUniqueCameras,
   getUniqueTags,
-  getPhotosTagDateRange,
+  getPhotosTagMeta,
   getPhotosCameraDateRange,
   getUniqueTagsHidden,
   getUniqueFilmSimulations,
@@ -162,12 +161,6 @@ export const getPhotosCountIncludingHiddenCached =
     [KEY_PHOTOS, KEY_COUNT, KEY_HIDDEN],
   );
 
-export const getPhotosTagCountCached =
-  unstable_cache(
-    getPhotosTagCount,
-    [KEY_PHOTOS, KEY_TAGS],
-  );
-
 export const getPhotosCameraCountCached = (
   ...args: Parameters<typeof getPhotosCameraCount>
 ) =>
@@ -182,9 +175,9 @@ export const getPhotosFilmSimulationCountCached =
     [KEY_PHOTOS, KEY_FILM_SIMULATIONS, KEY_COUNT],
   );
 
-export const getPhotosTagDateRangeCached =
+export const getPhotosTagMetaCached =
   unstable_cache(
-    getPhotosTagDateRange,
+    getPhotosTagMeta,
     [KEY_PHOTOS, KEY_TAGS, KEY_DATE_RANGE],
   );
 
