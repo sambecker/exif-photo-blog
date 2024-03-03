@@ -67,18 +67,22 @@ export default function TagInput({
     }
   }, []);
 
-  const addOption = useCallback((option?: string) => {
-    if (option && !selectedOptions.includes(option)) {
+  const addOptions = useCallback((options: (string | undefined)[]) => {
+    const optionsToAdd = (options
+      .filter(Boolean) as string[])
+      .map(option => option.startsWith(CREATE_LABEL)
+        ? option.match(new RegExp(`^${CREATE_LABEL} "(.+)"$`))?.[1] ?? option
+        : option)
+      .map(option => parameterize(option))
+      .filter(option => !selectedOptions.includes(option));
+
+    if (optionsToAdd.length > 0) {
       onChange?.([
         ...selectedOptions,
-        option.startsWith(CREATE_LABEL)
-          ? option.match(new RegExp(`^${CREATE_LABEL} "(.+)"$`))?.[1] ?? option
-          : option,
-      ]
-        .filter(Boolean)
-        .map(item => parameterize(item))
-        .join(','));
+        ...optionsToAdd,
+      ].join(','));
     }
+
     setSelectedOptionIndex(undefined);
     inputRef.current?.focus();
   }, [onChange, selectedOptions]);
@@ -93,9 +97,14 @@ export default function TagInput({
   // Show options when input text changes
   useEffect(() => {
     if (inputText) {
-      setShouldShowMenu(true);
+      if (inputText.includes(',')) {
+        addOptions(inputText.split(','));
+        setInputText('');
+      } else {
+        setShouldShowMenu(true);
+      }
     }
-  }, [inputText]);
+  }, [inputText, addOptions, selectedOptions]);
 
   // Focus option in the DOM when selected index changes
   useEffect(() => {
@@ -113,7 +122,6 @@ export default function TagInput({
     const listener = (e: KeyboardEvent) => {
       // Keys which always trap focus
       switch (e.key) {
-      case ',':
       case 'ArrowDown':
       case 'ArrowUp':
       case 'Escape':
@@ -127,13 +135,9 @@ export default function TagInput({
         if (shouldShowMenu && optionsFiltered.length > 0) {
           e.stopImmediatePropagation();
           e.preventDefault();
-          addOption(optionsFiltered[selectedOptionIndex ?? 0].value);
+          addOptions([optionsFiltered[selectedOptionIndex ?? 0].value]);
           setInputText('');
         }
-        break;
-      case ',':
-        addOption(inputText);
-        setInputText('');
         break;
       case 'ArrowDown':
         if (shouldShowMenu) {
@@ -187,7 +191,7 @@ export default function TagInput({
     selectedOptions,
     selectedOptionIndex,
     optionsFiltered,
-    addOption,
+    addOptions,
     shouldShowMenu,
   ]);
 
@@ -304,7 +308,7 @@ export default function TagInput({
                   'outline-none',
                 )}
                 onClick={() => {
-                  addOption(value);
+                  addOptions([value]);
                   setInputText('');
                 }}
                 onFocus={() => setSelectedOptionIndex(index)}
