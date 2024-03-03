@@ -18,6 +18,7 @@ import { useTheme } from 'next-themes';
 import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
 import { IoInvertModeSharp } from 'react-icons/io5';
 import { useAppState } from '@/state/AppState';
+import { getPhotoItemsAction } from '@/photo/actions';
 
 const LISTENER_KEYDOWN = 'keydown';
 const MINIMUM_QUERY_LENGTH = 2;
@@ -36,11 +37,9 @@ export type CommandKSection = {
 }
 
 export default function CommandKClient({
-  onQueryChange,
   sections = [],
   footer,
 }: {
-  onQueryChange?: (query: string) => Promise<CommandKSection[]>
   sections?: CommandKSection[]
   footer?: string
 }) {
@@ -99,7 +98,7 @@ export default function CommandKClient({
   useEffect(() => {
     if (queryDebounced.length >= MINIMUM_QUERY_LENGTH) {
       setIsLoading(true);
-      onQueryChange?.(queryDebounced).then(querySections => {
+      getPhotoItemsAction(queryDebounced).then(querySections => {
         if (isOpenRef.current) {
           setQueriedSections(querySections);
         } else {
@@ -109,7 +108,7 @@ export default function CommandKClient({
         setIsLoading(false);
       });
     }
-  }, [queryDebounced, onQueryChange]);
+  }, [queryDebounced]);
 
   useEffect(() => {
     if (queryLive === '') {

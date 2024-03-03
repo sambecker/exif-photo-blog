@@ -7,6 +7,7 @@ import {
   sqlUpdatePhoto,
   sqlRenamePhotoTagGlobally,
   getPhoto,
+  getPhotos,
 } from '@/services/vercel-postgres';
 import {
   PhotoFormData,
@@ -29,10 +30,14 @@ import {
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_TAGS,
   PATH_ROOT,
+  pathForPhoto,
 } from '@/site/paths';
 import { extractExifDataFromBlobPath } from './server';
 import { TAG_FAVS, isTagFavs } from '@/tag';
-import { convertPhotoToPhotoDbInsert } from '.';
+import { convertPhotoToPhotoDbInsert, titleForPhoto } from '.';
+import { TbPhoto } from 'react-icons/tb';
+import PhotoTiny from './PhotoTiny';
+import { formatDate } from '@/utility/date';
 
 export async function createPhotoAction(formData: FormData) {
   const photo = convertFormDataToPhotoDbInsert(formData, true);
@@ -159,4 +164,20 @@ export async function syncPhotoExifDataAction(formData: FormData) {
 
 export async function syncCacheAction() {
   revalidateAllKeysAndPaths();
+}
+
+export async function getPhotoItemsAction(query: string) {
+  const photos = await getPhotos({ title: query, limit: 10 });
+  return photos.length > 0
+    ? [{
+      heading: 'Photos',
+      accessory: <TbPhoto size={14} />,
+      items: photos.map(photo => ({
+        accessory: <PhotoTiny photo={photo} />,
+        label: titleForPhoto(photo),
+        annotation: formatDate(photo.takenAt),
+        path: pathForPhoto(photo),
+      })),
+    }]
+    : [];
 }

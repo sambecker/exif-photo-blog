@@ -13,21 +13,16 @@ import {
   PATH_SIGN_IN,
   pathForCamera,
   pathForFilmSimulation,
-  pathForPhoto,
   pathForTag,
 } from './paths';
 import { formatCameraText } from '@/camera';
 import { authCachedSafe } from '@/auth/cache';
-import { getPhotos } from '@/services/vercel-postgres';
-import { photoQuantityText, titleForPhoto } from '@/photo';
-import PhotoTiny from '@/photo/PhotoTiny';
-import { formatDate } from '@/utility/date';
+import { photoQuantityText } from '@/photo';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 import { BiLockAlt, BiSolidUser } from 'react-icons/bi';
 import { sortTagsObject } from '@/tag';
 import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
 import { FaTag } from 'react-icons/fa';
-import { TbPhoto } from 'react-icons/tb';
 import { IoMdCamera } from 'react-icons/io';
 import { HiDocumentText } from 'react-icons/hi';
 import { signOutAction } from '@/auth/actions';
@@ -137,23 +132,6 @@ export default async function CommandK() {
       SECTION_PAGES,
       SECTION_ADMIN,
     ]}
-    onQueryChange={async (query) => {
-      'use server';
-      const photos = (await getPhotos({ title: query, limit: 10 }))
-        .filter(({ title }) => Boolean(title));
-      return photos.length > 0
-        ? [{
-          heading: 'Photos',
-          accessory: <TbPhoto size={14} />,
-          items: photos.map(photo => ({
-            accessory: <PhotoTiny photo={photo} />,
-            label: titleForPhoto(photo),
-            annotation: formatDate(photo.takenAt),
-            path: pathForPhoto(photo),
-          })),
-        }]
-        : [];
-    }}
     footer={photoQuantityText(count, false)}
   />;
 }
