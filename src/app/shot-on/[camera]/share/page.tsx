@@ -21,8 +21,7 @@ export async function generateMetadata({
 
   const [
     photos,
-    count,
-    dateRange,
+    { count, dateRange },
   ] = await getPhotosCameraDataCached({
     camera,
     limit: GRID_THUMBNAILS_TO_SHOW_MAX,

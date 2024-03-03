@@ -17,8 +17,7 @@ export async function generateMetadata({
 }: FilmSimulationProps): Promise<Metadata> {
   const [
     photos,
-    count,
-    dateRange,
+    { count, dateRange },
   ] = await getPhotosFilmSimulationDataCached({
     simulation,
     limit: GRID_THUMBNAILS_TO_SHOW_MAX,

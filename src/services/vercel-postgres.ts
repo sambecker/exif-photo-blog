@@ -165,22 +165,6 @@ const sqlGetPhotosCountIncludingHidden = async () => sql`
   SELECT COUNT(*) FROM photos
 `.then(({ rows }) => parseInt(rows[0].count, 10));
 
-const sqlGetPhotosCameraCount = async (camera: Camera) => sql`
-  SELECT COUNT(*) FROM photos
-  WHERE
-  LOWER(make)=${parameterize(camera.make, true)} AND
-  LOWER(REPLACE(model, ' ', '-'))=${parameterize(camera.model, true)} AND
-  hidden IS NOT TRUE
-`.then(({ rows }) => parseInt(rows[0].count, 10));
-
-const sqlGetPhotosFilmSimulationCount = async (
-  simulation: FilmSimulation,
-) => sql`
-  SELECT COUNT(*) FROM photos
-  WHERE film_simulation=${simulation} AND
-  hidden IS NOT TRUE
-`.then(({ rows }) => parseInt(rows[0].count, 10));
-
 const sqlGetPhotosDateRange = async () => sql`
   SELECT MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
   FROM photos
@@ -201,27 +185,33 @@ const sqlGetPhotosTagMeta = async (tag: string) => sql`
       : undefined,
   }));
 
-const sqlGetPhotosCameraDateRange = async (camera: Camera) => sql`
-  SELECT MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
+const sqlGetPhotosCameraMeta = async (camera: Camera) => sql`
+  SELECT COUNT(*), MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
   FROM photos
   WHERE
   LOWER(make)=${parameterize(camera.make, true)} AND
   LOWER(REPLACE(model, ' ', '-'))=${parameterize(camera.model, true)} AND
   hidden IS NOT TRUE
-`.then(({ rows }) => rows[0]?.start && rows[0]?.end
-    ? rows[0] as PhotoDateRange
-    : undefined);
+`.then(({ rows }) => ({
+    count: parseInt(rows[0].count, 10),
+    ...rows[0]?.start && rows[0]?.end
+      ? { dateRange: rows[0] as PhotoDateRange }
+      : undefined,
+  }));
 
-const sqlGetPhotosFilmSimulationDateRange = async (
+const sqlGetPhotosFilmSimulationMeta = async (
   simulation: FilmSimulation,
 ) => sql`
-  SELECT MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
+  SELECT COUNT(*), MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
   FROM photos
   WHERE film_simulation=${simulation} AND
   hidden IS NOT TRUE
-`.then(({ rows }) => rows[0]?.start && rows[0]?.end
-    ? rows[0] as PhotoDateRange
-    : undefined);
+`.then(({ rows }) => ({
+    count: parseInt(rows[0].count, 10),
+    ...rows[0]?.start && rows[0]?.end
+      ? { dateRange: rows[0] as PhotoDateRange }
+      : undefined,
+  }));
 
 const sqlGetUniqueTags = async () => sql`
   SELECT DISTINCT unnest(tags) as tag, COUNT(*)
@@ -467,27 +457,17 @@ export const getPhotosTagMeta = (tag: string) =>
 // CAMERAS
 export const getUniqueCameras = () =>
   safelyQueryPhotos(sqlGetUniqueCameras, 'getUniqueCameras');
-export const getPhotosCameraDateRange = (camera: Camera) =>
+export const getPhotosCameraMeta = (camera: Camera) =>
   safelyQueryPhotos(
-    () => sqlGetPhotosCameraDateRange(camera),
-    'getPhotosCameraDateRange',
-  );
-export const getPhotosCameraCount = (camera: Camera) =>
-  safelyQueryPhotos(
-    () => sqlGetPhotosCameraCount(camera),
-    'getPhotosCameraCount',
+    () => sqlGetPhotosCameraMeta(camera),
+    'getPhotosCameraMeta',
   );
 
 // FILM SIMULATIONS
 export const getUniqueFilmSimulations = () =>
   safelyQueryPhotos(sqlGetUniqueFilmSimulations, 'getUniqueFilmSimulations');
-export const getPhotosFilmSimulationDateRange =
+export const getPhotosFilmSimulationMeta =
   (simulation: FilmSimulation) => safelyQueryPhotos(
-    () => sqlGetPhotosFilmSimulationDateRange(simulation),
-    'getPhotosFilmSimulationDateRange',
-  );
-export const getPhotosFilmSimulationCount = (simulation: FilmSimulation) =>
-  safelyQueryPhotos(
-    () => sqlGetPhotosFilmSimulationCount(simulation),
-    'getPhotosFilmSimulationCount',
+    () => sqlGetPhotosFilmSimulationMeta(simulation),
+    'getPhotosFilmSimulationMeta',
   );

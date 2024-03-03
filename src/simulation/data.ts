@@ -1,7 +1,6 @@
 import {
   getPhotosCached,
-  getPhotosFilmSimulationCountCached,
-  getPhotosFilmSimulationDateRangeCached,
+  getPhotosFilmSimulationMetaCached,
 } from '@/photo/cache';
 import {
   PaginationSearchParams,
@@ -19,8 +18,7 @@ export const getPhotosFilmSimulationDataCached = ({
 }) =>
   Promise.all([
     getPhotosCached({ simulation, limit }),
-    getPhotosFilmSimulationCountCached(simulation),
-    getPhotosFilmSimulationDateRangeCached(simulation),
+    getPhotosFilmSimulationMetaCached(simulation),
   ]);
 
 export const getPhotosFilmSimulationDataCachedWithPagination = async ({
@@ -34,7 +32,7 @@ export const getPhotosFilmSimulationDataCachedWithPagination = async ({
 }) => {
   const { offset, limit } = getPaginationFromSearchParams(searchParams);
 
-  const [photos, count, dateRange] =
+  const [photos, { count, dateRange }] =
     await getPhotosFilmSimulationDataCached({
       simulation,
       limit: limitProp ?? limit,

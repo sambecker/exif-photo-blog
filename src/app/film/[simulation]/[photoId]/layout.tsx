@@ -59,8 +59,7 @@ export default async function PhotoFilmSimulationPage({
 
   const [
     photos,
-    count,
-    dateRange,
+    { count, dateRange },
   ] = await getPhotosFilmSimulationDataCached({ simulation });
 
   return <>

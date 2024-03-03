@@ -5,8 +5,7 @@ import {
 import { Camera } from '.';
 import {
   getPhotosCached,
-  getPhotosCameraCountCached,
-  getPhotosCameraDateRangeCached,
+  getPhotosCameraMetaCached,
 } from '@/photo/cache';
 import { pathForCamera } from '@/site/paths';
 
@@ -19,8 +18,7 @@ export const getPhotosCameraDataCached = ({
 }) =>
   Promise.all([
     getPhotosCached({ camera, limit }),
-    getPhotosCameraCountCached(camera),
-    getPhotosCameraDateRangeCached(camera),
+    getPhotosCameraMetaCached(camera),
   ]);
 
 export const getPhotosCameraDataCachedWithPagination = async ({
@@ -34,7 +32,7 @@ export const getPhotosCameraDataCachedWithPagination = async ({
 }) => {
   const { offset, limit } = getPaginationFromSearchParams(searchParams);
 
-  const [photos, count, dateRange] =
+  const [photos, { count, dateRange }] =
     await getPhotosCameraDataCached({
       camera,
       limit: limitProp ?? limit,

@@ -9,16 +9,14 @@ import {
   getPhoto,
   getPhotos,
   getPhotosCount,
-  getPhotosCameraCount,
   getPhotosCountIncludingHidden,
   getUniqueCameras,
   getUniqueTags,
   getPhotosTagMeta,
-  getPhotosCameraDateRange,
+  getPhotosCameraMeta,
   getUniqueTagsHidden,
   getUniqueFilmSimulations,
-  getPhotosFilmSimulationDateRange,
-  getPhotosFilmSimulationCount,
+  getPhotosFilmSimulationMeta,
   getPhotosDateRange,
   getPhotosNearId,
 } from '@/services/vercel-postgres';
@@ -161,35 +159,21 @@ export const getPhotosCountIncludingHiddenCached =
     [KEY_PHOTOS, KEY_COUNT, KEY_HIDDEN],
   );
 
-export const getPhotosCameraCountCached = (
-  ...args: Parameters<typeof getPhotosCameraCount>
-) =>
-  unstable_cache(
-    getPhotosCameraCount,
-    [KEY_PHOTOS, KEY_COUNT, createCameraKey(...args)],
-  )(...args);
-
-export const getPhotosFilmSimulationCountCached =
-  unstable_cache(
-    getPhotosFilmSimulationCount,
-    [KEY_PHOTOS, KEY_FILM_SIMULATIONS, KEY_COUNT],
-  );
-
 export const getPhotosTagMetaCached =
   unstable_cache(
     getPhotosTagMeta,
     [KEY_PHOTOS, KEY_TAGS, KEY_DATE_RANGE],
   );
 
-export const getPhotosCameraDateRangeCached =
+export const getPhotosCameraMetaCached =
   unstable_cache(
-    getPhotosCameraDateRange,
+    getPhotosCameraMeta,
     [KEY_PHOTOS, KEY_CAMERAS, KEY_DATE_RANGE],
   );
 
-export const getPhotosFilmSimulationDateRangeCached =
+export const getPhotosFilmSimulationMetaCached =
   unstable_cache(
-    getPhotosFilmSimulationDateRange,
+    getPhotosFilmSimulationMeta,
     [KEY_PHOTOS, KEY_FILM_SIMULATIONS, KEY_DATE_RANGE],
   );
 

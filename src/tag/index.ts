@@ -13,13 +13,10 @@ import { capitalizeWords, convertStringToArray } from '@/utility/string';
 
 export const TAG_FAVS = 'favs';
 
-export type TagWithMeta = {
+export type TagsWithMeta = {
   tag: string
   count: number
-  dataRange?: PhotoDateRange
-}
-
-export type TagsWithMeta = Omit<TagWithMeta, 'dateRange'>[]
+}[]
 
 export const formatTag = (tag?: string) =>
   capitalizeWords(tag?.replaceAll('-', ' '));

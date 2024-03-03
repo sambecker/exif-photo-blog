@@ -65,8 +65,7 @@ export default async function PhotoCameraPage({
 
   const [
     photos,
-    count,
-    dateRange,
+    { count, dateRange },
   ] = await getPhotosCameraDataCached({ camera });
 
   return <>
