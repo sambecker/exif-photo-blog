@@ -15,9 +15,9 @@ import NavClient from '@/site/NavClient';
 import { Metadata } from 'next/types';
 import MoreComponentsProvider from '@/state/MoreComponentsProvider';
 import CommandK from '@/site/CommandK';
+import CommandKClient from '@/components/CommandKClient';
 
 import '../site/globals.css';
-import CommandKClient from '@/components/CommandKClient';
 
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ['latin'],

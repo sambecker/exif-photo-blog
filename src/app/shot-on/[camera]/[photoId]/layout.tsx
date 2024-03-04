@@ -13,7 +13,10 @@ import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotoCached } from '@/photo/cache';
 import { cameraFromPhoto } from '@/camera';
 import { getPhotosCameraDataCached } from '@/camera/data';
-import { ReactNode } from 'react';
+import { ReactNode, cache } from 'react';
+
+const getPhotoCachedCached =
+  cache((photoId: string) => getPhotoCached(photoId));
 
 interface PhotoCameraProps {
   params: { photoId: string, camera: string }
@@ -22,7 +25,7 @@ interface PhotoCameraProps {
 export async function generateMetadata({
   params: { photoId, camera },
 }: PhotoCameraProps): Promise<Metadata> {
-  const photo = await getPhotoCached(photoId);
+  const photo = await getPhotoCachedCached(photoId);
 
   if (!photo) { return {}; }
 
@@ -57,7 +60,7 @@ export default async function PhotoCameraPage({
   params: { photoId, camera: cameraProp },
   children,
 }: PhotoCameraProps & { children: ReactNode }) {
-  const photo = await getPhotoCached(photoId);
+  const photo = await getPhotoCachedCached(photoId);
 
   if (!photo) { redirect(PATH_ROOT); }
 
