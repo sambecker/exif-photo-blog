@@ -61,7 +61,7 @@ export default function PhotoLarge({
     <SiteGrid
       contentMain={
         <Link
-          href={pathForPhoto(photo, primaryTag)}
+          href={pathForPhoto(photo)}
           className="active:brightness-75"
           prefetch={prefetch}
         >
@@ -89,7 +89,7 @@ export default function PhotoLarge({
               <div className="relative flex gap-2 items-start">
                 <div className="md:flex-grow">
                   <Link
-                    href={pathForPhoto(photo, primaryTag)}
+                    href={pathForPhoto(photo)}
                     className="font-bold uppercase"
                     prefetch={prefetch}
                   >
