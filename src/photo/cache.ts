@@ -134,6 +134,7 @@ export const getPhotosCached = (
   getPhotos,
   [KEY_PHOTOS, ...getPhotosCacheKeys(...args)],
 )(...args).then(parseCachedPhotosDates);
+export const getPhotosCachedCached = cache(getPhotosCached);
 
 const getPhotosNearIdCached = (
   ...args: Parameters<typeof getPhotosNearId>
