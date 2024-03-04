@@ -414,7 +414,13 @@ export const getPhotosNearId = async (
       [id, limit]
     );
   }, 'getPhotosNearId')
-    .then(({ rows }) => rows.map(parsePhotoFromDb));
+    .then(({ rows }) => {
+      const photos = rows.map(parsePhotoFromDb);
+      return {
+        photos,
+        photo: photos.find(photo => photo.id === id),
+      };
+    });
 };
 
 export const getPhotoIds = async ({ limit }: { limit?: number }) => {

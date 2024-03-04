@@ -14,7 +14,7 @@ export async function GET(
   const [
     photo,
     { fontFamily, fonts },
-    // headers,
+    headers,
   ] = await Promise.all([
     getPhotoCached(context.params.photoId),
     getIBMPlexMonoMedium(),
@@ -27,6 +27,6 @@ export async function GET(
   
   return new ImageResponse(
     <PhotoImageResponse {...{ photo, width, height, fontFamily }} />,
-    { width, height, fonts },
+    { width, height, fonts, headers },
   );
 }
