@@ -15,7 +15,7 @@ import { ReactNode, cache } from 'react';
 import { FilmSimulation } from '@/simulation';
 import { getPhotosFilmSimulationDataCached } from '@/simulation/data';
 
-export const getPhotoCachedCached =
+const getPhotoCachedCached =
   cache((photoId: string) => getPhotoCached(photoId));
 
 interface PhotoFilmSimulationProps {
