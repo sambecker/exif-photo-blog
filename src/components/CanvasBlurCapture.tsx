@@ -83,7 +83,10 @@ export default function CanvasBlurCapture({
     // Store timeout ref to ensure it's closed over
     // in cleanup function (recommended by exhaustive-deps)
     const timeouts = refTimeouts.current;
-    return () => timeouts.forEach(clearTimeout);
+    return () => {
+      refShouldCapture.current = false;
+      timeouts.forEach(clearTimeout);
+    };
   }, [
     imageUrl,
     onCapture,
