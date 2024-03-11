@@ -29,6 +29,8 @@ export default function CanvasBlurCapture({
   const refShouldCapture = useRef(true);
 
   useEffect(() => {
+    refShouldCapture.current = true;
+  
     const capture = () => {
       if (refShouldCapture.current) {
         if (
@@ -44,7 +46,7 @@ export default function CanvasBlurCapture({
           if (context) {
             context.scale(scale, scale);
             context.filter =
-              'contrast(1.2) saturate(1.2)' +
+              'contrast(1.2) saturate(1.2) ' +
               `blur(${scale * 10}px)`;
             context.drawImage(
               refImage.current,
