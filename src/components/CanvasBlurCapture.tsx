@@ -29,6 +29,8 @@ export default function CanvasBlurCapture({
   const refShouldCapture = useRef(true);
 
   useEffect(() => {
+    refShouldCapture.current = true;
+  
     const capture = () => {
       if (refShouldCapture.current) {
         if (
@@ -44,7 +46,7 @@ export default function CanvasBlurCapture({
           if (context) {
             context.scale(scale, scale);
             context.filter =
-              'contrast(1.2) saturate(1.2)' +
+              'contrast(1.2) saturate(1.2) ' +
               `blur(${scale * 10}px)`;
             context.drawImage(
               refImage.current,
@@ -83,7 +85,10 @@ export default function CanvasBlurCapture({
     // Store timeout ref to ensure it's closed over
     // in cleanup function (recommended by exhaustive-deps)
     const timeouts = refTimeouts.current;
-    return () => timeouts.forEach(clearTimeout);
+    return () => {
+      refShouldCapture.current = false;
+      timeouts.forEach(clearTimeout);
+    };
   }, [
     imageUrl,
     onCapture,
