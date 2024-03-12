@@ -4,18 +4,21 @@ import { FiArrowLeft } from 'react-icons/fi';
 import SiteGrid from './SiteGrid';
 import { clsx } from 'clsx/lite';
 import Badge from './Badge';
+import Spinner from './Spinner';
 
 function AdminChildPage({
   backPath,
   backLabel,
   breadcrumb,
   accessory,
+  isLoading,
   children,
 }: {
   backPath?: string
   backLabel?: string
   breadcrumb?: ReactNode
   accessory?: ReactNode
+  isLoading?: boolean
   children: ReactNode,
 }) {
   return (
@@ -42,10 +45,14 @@ function AdminChildPage({
                 {breadcrumb &&
                   <>
                     <span>/</span>
-                    <Badge>
-                      {breadcrumb}
-                    </Badge>
+                    <span className={clsx(isLoading && 'opacity-50')}>
+                      <Badge>
+                        {breadcrumb}
+                      </Badge>
+                    </span>
                   </>}
+                {isLoading &&
+                  <Spinner />}
               </div>
               {accessory &&
                 <div>{accessory}</div>}
