@@ -34,12 +34,14 @@ export default function PhotoForm({
   type = 'create',
   uniqueTags,
   debugBlur,
+  onFormStatusChange,
 }: {
   initialPhotoForm: Partial<PhotoFormData>
   updatedExifData?: Partial<PhotoFormData>
   type?: 'create' | 'edit'
   uniqueTags?: Tags
   debugBlur?: boolean
+  onFormStatusChange?: (pending: boolean) => void
 }) {
   const [formData, setFormData] =
     useState<Partial<PhotoFormData>>(initialPhotoForm);
@@ -206,7 +208,10 @@ export default function PhotoForm({
           >
             Cancel
           </Link>
-          <SubmitButtonWithStatus disabled={!isFormValid(formData)}>
+          <SubmitButtonWithStatus
+            disabled={!isFormValid(formData)}
+            onFormStatusChange={onFormStatusChange}
+          >
             {type === 'create' ? 'Create' : 'Update'}
           </SubmitButtonWithStatus>
         </div>

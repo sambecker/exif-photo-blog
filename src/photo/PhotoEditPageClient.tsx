@@ -11,6 +11,7 @@ import { areSimpleObjectsEqual } from '@/utility/object';
 import IconGrSync from '@/site/IconGrSync';
 import { getExifDataAction } from './actions';
 import { Tags } from '@/tag';
+import { useState } from 'react';
 
 export default function PhotoEditPageClient({
   photo,
@@ -25,6 +26,8 @@ export default function PhotoEditPageClient({
     getExifDataAction,
     seedExifData,
   );
+
+  const [pending, setIsPending] = useState(false);
 
   const hasExifDataBeenFound = !areSimpleObjectsEqual(
     updatedExifData,
@@ -47,6 +50,7 @@ export default function PhotoEditPageClient({
             EXIF
           </SubmitButtonWithStatus>
         </form>}
+      isLoading={pending}
     >
       <PhotoForm
         type="edit"
@@ -55,6 +59,7 @@ export default function PhotoEditPageClient({
           ? updatedExifData
           : undefined}
         uniqueTags={uniqueTags}
+        onFormStatusChange={setIsPending}
       />
     </AdminChildPage>
   );

@@ -10,6 +10,7 @@ interface Props extends HTMLProps<HTMLButtonElement> {
   icon?: JSX.Element
   styleAsLink?: boolean
   spinnerColor?: SpinnerColor
+  onFormStatusChange?: (pending: boolean) => void
   onFormSubmitToastMessage?: string
 }
 
@@ -17,6 +18,7 @@ export default function SubmitButtonWithStatus({
   icon,
   styleAsLink,
   spinnerColor,
+  onFormStatusChange,
   onFormSubmitToastMessage,
   children,
   disabled,
@@ -24,8 +26,8 @@ export default function SubmitButtonWithStatus({
   type: _type,
   ...buttonProps
 }: Props) {
-
   const { pending } = useFormStatus();
+
   const pendingPrevious = useRef(pending);
 
   useEffect(() => {
@@ -38,6 +40,10 @@ export default function SubmitButtonWithStatus({
     }
     pendingPrevious.current = pending;
   }, [pending, onFormSubmitToastMessage]);
+
+  useEffect(() => {
+    onFormStatusChange?.(pending);
+  }, [onFormStatusChange, pending]);
 
   return (
     <button
