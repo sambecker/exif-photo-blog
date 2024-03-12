@@ -93,6 +93,7 @@ export default function FieldSetWithStatus({
         </select>
         : tagOptions
           ? <TagInput
+            id={id}
             name={id}
             value={value}
             options={tagOptions}
