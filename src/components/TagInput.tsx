@@ -10,6 +10,7 @@ const ARIA_ID_TAG_CONTROL = 'tag-control';
 const ARIA_ID_TAG_OPTIONS = 'tag-options';
 
 export default function TagInput({
+  id,
   name,
   value = '',
   options = [],
@@ -17,6 +18,7 @@ export default function TagInput({
   className,
   readOnly,
 }: {
+  id?: string
   name: string
   value?: string
   options?: AnnotatedTag[]
@@ -249,6 +251,7 @@ export default function TagInput({
               {option}
             </span>)}
         <input
+          id={id}
           ref={inputRef}
           type="text"
           className={clsx(
