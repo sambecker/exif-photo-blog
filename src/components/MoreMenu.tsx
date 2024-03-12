@@ -10,10 +10,11 @@ export default function MoreMenu({
   buttonClassName,
 }: {
   items: {
-    label: ReactNode,
-    icon?: ReactNode,
-    href?: string,
-    action?: () => Promise<void> | void,
+    label: ReactNode
+    icon?: ReactNode
+    href?: string
+    prefetch?: boolean
+    action?: () => Promise<void> | void
   }[]
   className?: string
   buttonClassName?: string
@@ -58,7 +59,7 @@ export default function MoreMenu({
             'shadow-lg dark:shadow-xl',
           )}
         >
-          {items.map(({ label, icon, href, action }) =>
+          {items.map(({ label, icon, href, prefetch = false, action }) =>
             <DropdownMenu.Item
               key={`${label}`}
               disabled={isLoading}
@@ -91,6 +92,7 @@ export default function MoreMenu({
                   <Link
                     href={href}
                     className="hover:text-main"
+                    prefetch={prefetch}
                   >
                     {renderItemContent(label, icon)}
                   </Link>}
