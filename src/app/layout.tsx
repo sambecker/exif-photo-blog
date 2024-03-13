@@ -5,7 +5,6 @@ import { IBM_Plex_Mono } from 'next/font/google';
 import { Metadata } from 'next';
 import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from '@/site/config';
 import AppStateProvider from '@/state/AppStateProvider';
-import ThemeProviderClient from '@/site/ThemeProviderClient';
 import Nav from '@/site/Nav';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
 import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
@@ -14,6 +13,7 @@ import { Suspense } from 'react';
 import FooterClient from '@/site/FooterClient';
 import NavClient from '@/site/NavClient';
 import CommandK from '@/site/CommandK';
+import { ThemeProvider } from 'next-themes';
 
 import '../site/globals.css';
 
@@ -74,7 +74,7 @@ export default function RootLayout({
     >
       <body className={ibmPlexMono.variable}>
         <AppStateProvider>
-          <ThemeProviderClient>
+          <ThemeProvider attribute="class">
             <main className={clsx(
               'mx-3 mb-3',
               'lg:mx-6 lg:mb-6',
@@ -93,7 +93,7 @@ export default function RootLayout({
               </Suspense>
             </main>
             <CommandK />
-          </ThemeProviderClient>
+          </ThemeProvider>
           <Analytics debug={false} />
           <SpeedInsights debug={false} />
           <PhotoEscapeHandler />
