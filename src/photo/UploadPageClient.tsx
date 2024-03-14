@@ -17,17 +17,21 @@ export default function UploadPageClient({
   uniqueTags: Tags
 }) {
   const [pending, setIsPending] = useState(false);
+  const [updatedTitle, setUpdatedTitle] = useState('');
 
   return (
     <AdminChildPage
       backPath={PATH_ADMIN_UPLOADS}
       backLabel="Uploads"
-      breadcrumb={blobId}
+      breadcrumb={pending && updatedTitle
+        ? updatedTitle
+        : blobId}
       isLoading={pending}
     >
       <PhotoForm
         initialPhotoForm={photoFormExif}
         uniqueTags={uniqueTags}
+        onTitleChange={setUpdatedTitle}
         onFormStatusChange={setIsPending}
       />
     </AdminChildPage>

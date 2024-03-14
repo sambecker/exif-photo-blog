@@ -34,6 +34,7 @@ export default function PhotoForm({
   type = 'create',
   uniqueTags,
   debugBlur,
+  onTitleChange,
   onFormStatusChange,
 }: {
   initialPhotoForm: Partial<PhotoFormData>
@@ -41,6 +42,7 @@ export default function PhotoForm({
   type?: 'create' | 'edit'
   uniqueTags?: Tags
   debugBlur?: boolean
+  onTitleChange?: (updatedTitle: string) => void
   onFormStatusChange?: (pending: boolean) => void
 }) {
   const [formData, setFormData] =
@@ -86,7 +88,7 @@ export default function PhotoForm({
   } = getDimensionsFromSize(THUMBNAIL_SIZE, formData.aspectRatio);
 
   // Generate local date strings when
-  // none can be harvested from EXIF
+  // none can be extracted from EXIF
   useEffect(() => {
     if (!formData.takenAt || !formData.takenAtNaive) {
       setFormData(data => ({
@@ -187,6 +189,9 @@ export default function PhotoForm({
                   setFormData({ ...formData, [key]: value });
                   if (validate) {
                     setFormErrors({ ...formErrors, [key]: validate(value) });
+                  }
+                  if (key === 'title') {
+                    onTitleChange?.(value.trim());
                   }
                 }}
                 selectOptions={selectOptions}
