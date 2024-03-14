@@ -16,6 +16,7 @@ import CommandK from '@/site/CommandK';
 import { ThemeProvider } from 'next-themes';
 
 import '../site/globals.css';
+import '../site/sonner.css';
 
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ['latin'],

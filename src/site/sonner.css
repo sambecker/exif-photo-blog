@@ -1,0 +1,35 @@
+/* Align toasts to site breakpoints + margins */
+
+@media (max-width: 639px) {
+  [data-sonner-toaster] {
+    position: fixed;
+    --mobile-offset: 12px !important;
+    right: var(--mobile-offset);
+    left: var(--mobile-offset);
+    width: 100% !important;
+  }
+
+  [data-sonner-toaster] [data-sonner-toast] {
+    left: 0;
+    right: 0;
+    width: calc(100% - var(--mobile-offset) * 2) !important;
+  }
+
+  [data-sonner-toaster][data-x-position='left'] {
+    left: var(--mobile-offset);
+  }
+
+  [data-sonner-toaster][data-y-position='bottom'] {
+    bottom: 20px !important;
+  }
+
+  [data-sonner-toaster][data-y-position='top'] {
+    top: 20px;
+  }
+
+  [data-sonner-toaster][data-x-position='center'] {
+    left: var(--mobile-offset);
+    right: var(--mobile-offset);
+    transform: none;
+  }
+}
