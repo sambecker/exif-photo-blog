@@ -167,7 +167,8 @@ export async function syncCacheAction() {
 }
 
 export async function getPhotoItemsAction(query: string) {
-  const photos = await getPhotos({ title: query, limit: 10 });
+  const photos = (await getPhotos({ title: query, limit: 10 }))
+    .filter(({ title }) => Boolean(title));
   return photos.length > 0
     ? [{
       heading: 'Photos',
@@ -175,7 +176,14 @@ export async function getPhotoItemsAction(query: string) {
       items: photos.map(photo => ({
         accessory: <PhotoTiny photo={photo} />,
         label: titleForPhoto(photo),
-        annotation: formatDate(photo.takenAt),
+        annotation: <>
+          <span className="hidden sm:inline-block">
+            {formatDate(photo.takenAt)}
+          </span>
+          <span className="inline-block sm:hidden">
+            {formatDate(photo.takenAt, true)}
+          </span>
+        </>,
         path: pathForPhoto(photo),
       })),
     }]
