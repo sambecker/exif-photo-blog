@@ -4,6 +4,7 @@ export default function Badge({
   children,
   className,
   type = 'large',
+  dimContent,
   highContrast,
   uppercase,
   interactive,
@@ -11,6 +12,7 @@ export default function Badge({
   children: React.ReactNode
   className?: string
   type?: 'large' | 'small' | 'text-only'
+  dimContent?: boolean
   highContrast?: boolean
   uppercase?: boolean
   interactive?: boolean
@@ -21,7 +23,7 @@ export default function Badge({
       return clsx(
         'px-1.5 py-[0.3rem] rounded-md',
         'bg-gray-100/80 dark:bg-gray-900/80',
-        'border border-gray-200/60 dark:border-gray-800/75'
+        'border border-gray-200/60 dark:border-gray-800/75',
       );
     case 'small':
       return clsx(
@@ -46,7 +48,9 @@ export default function Badge({
       stylesForType(),
       uppercase && 'uppercase tracking-wider',
     )}>
-      {children}
+      <span className={clsx(dimContent && 'opacity-50')}>
+        {children}
+      </span>
     </span>
   );
 }
