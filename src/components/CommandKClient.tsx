@@ -96,7 +96,7 @@ export default function CommandKClient({
   }, [setIsOpen]);
 
   useEffect(() => {
-    if (queryDebounced.length >= MINIMUM_QUERY_LENGTH) {
+    if (queryDebounced.length >= MINIMUM_QUERY_LENGTH && !isPending) {
       setIsLoading(true);
       getPhotoItemsAction(queryDebounced).then(querySections => {
         if (isOpenRef.current) {
@@ -108,7 +108,7 @@ export default function CommandKClient({
         setIsLoading(false);
       });
     }
-  }, [queryDebounced]);
+  }, [queryDebounced, isPending]);
 
   useEffect(() => {
     if (queryLive === '') {
@@ -181,7 +181,7 @@ export default function CommandKClient({
               placeholder="Search photos, views, settings ..."
               disabled={isPending}
             />
-            {isLoading &&
+            {isLoading && !isPending &&
               <span className={clsx(
                 'absolute top-2.5 right-0 w-8',
                 'flex items-center justify-center translate-y-[2px]',
