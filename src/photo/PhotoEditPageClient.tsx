@@ -28,6 +28,7 @@ export default function PhotoEditPageClient({
   );
 
   const [pending, setIsPending] = useState(false);
+  const [updatedTitle, setUpdatedTitle] = useState('');
 
   const hasExifDataBeenFound = !areSimpleObjectsEqual(
     updatedExifData,
@@ -38,7 +39,9 @@ export default function PhotoEditPageClient({
     <AdminChildPage
       backPath={PATH_ADMIN_PHOTOS}
       backLabel="Photos"
-      breadcrumb={photo.title || photo.id}
+      breadcrumb={pending && updatedTitle
+        ? updatedTitle
+        : photo.title || photo.id}
       accessory={
         <form action={action}>
           <input name="photoUrl" value={photo.url} hidden readOnly />
@@ -59,6 +62,7 @@ export default function PhotoEditPageClient({
           ? updatedExifData
           : undefined}
         uniqueTags={uniqueTags}
+        onTitleChange={setUpdatedTitle}
         onFormStatusChange={setIsPending}
       />
     </AdminChildPage>
