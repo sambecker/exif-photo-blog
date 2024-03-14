@@ -20,6 +20,7 @@ export default function AdminPhotoMenuClient({
   const path = usePathname();
   const shouldRedirectFav = isPathFavs(path) && isFav;
   const shouldRedirectDelete = pathForPhoto(photo.id) === path;
+
   return (
     <>
       <MoreMenu {...{

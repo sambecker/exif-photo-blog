@@ -76,7 +76,7 @@ export async function toggleFavoritePhotoAction(
     await sqlUpdatePhoto(convertPhotoToPhotoDbInsert(photo));
     revalidateAllKeysAndPaths();
     if (shouldRedirect) {
-      redirect(PATH_ROOT);
+      redirect(pathForPhoto(photoId));
     }
   }
 }
