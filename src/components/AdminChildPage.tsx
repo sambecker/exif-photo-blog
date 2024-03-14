@@ -45,11 +45,9 @@ function AdminChildPage({
                 {breadcrumb &&
                   <>
                     <span>/</span>
-                    <span className={clsx(isLoading && 'opacity-50')}>
-                      <Badge>
-                        {breadcrumb}
-                      </Badge>
-                    </span>
+                    <Badge dimContent={isLoading}>
+                      {breadcrumb}
+                    </Badge>
                   </>}
                 {isLoading &&
                   <Spinner />}
