@@ -4,7 +4,6 @@ import { clsx } from 'clsx/lite';
 import { IBM_Plex_Mono } from 'next/font/google';
 import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from '@/site/config';
 import AppStateProvider from '@/state/AppStateProvider';
-import ThemeProviderClient from '@/site/ThemeProviderClient';
 import Nav from '@/site/Nav';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
 import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
@@ -16,8 +15,10 @@ import { Metadata } from 'next/types';
 import MoreComponentsProvider from '@/state/MoreComponentsProvider';
 import CommandK from '@/site/CommandK';
 import CommandKClient from '@/components/CommandKClient';
+import { ThemeProvider } from 'next-themes';
 
 import '../site/globals.css';
+import '../site/sonner.css';
 
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ['latin'],
@@ -77,7 +78,7 @@ export default function RootLayout({
       <body className={ibmPlexMono.variable}>
         <AppStateProvider>
           <MoreComponentsProvider>
-            <ThemeProviderClient>
+            <ThemeProvider attribute="class">
               <main className={clsx(
                 'mx-3 mb-3',
                 'lg:mx-6 lg:mb-6',
@@ -98,7 +99,7 @@ export default function RootLayout({
               <Suspense fallback={<CommandKClient />}>
                 <CommandK />
               </Suspense>
-            </ThemeProviderClient>
+            </ThemeProvider>
           </MoreComponentsProvider>
           <Analytics debug={false} />
           <SpeedInsights debug={false}  />
