@@ -148,7 +148,14 @@ export default async function CommandK() {
           items: photos.map(photo => ({
             accessory: <PhotoTiny photo={photo} />,
             label: titleForPhoto(photo),
-            annotation: formatDate(photo.takenAt),
+            annotation: <>
+              <span className="hidden sm:inline-block">
+                {formatDate(photo.takenAt)}
+              </span>
+              <span className="inline-block sm:hidden">
+                {formatDate(photo.takenAt, true)}
+              </span>
+            </>,
             path: pathForPhoto(photo),
           })),
         }]
