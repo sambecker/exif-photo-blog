@@ -4,7 +4,7 @@
 import { BLUR_ENABLED } from '@/site/config';
 import { clsx}  from 'clsx/lite';
 import Image, { ImageProps } from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export default function ImageBlurFallback(props: ImageProps) {
   const {
@@ -17,6 +17,9 @@ export default function ImageBlurFallback(props: ImageProps) {
   const [wasCached, setWasCached] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [didError, setDidError] = useState(false);
+
+  const onLoad = useCallback(() => setIsLoading(false), []);
+  const onError = useCallback(() => setDidError(true), []);
 
   const [hideBlurPlaceholder, setHideBlurPlaceholder] = useState(false);
 
@@ -80,8 +83,8 @@ export default function ImageBlurFallback(props: ImageProps) {
         ref: imgRef,
         priority,
         className: imageClassName,
-        onLoad: () => setIsLoading(false),
-        onError: () => setDidError(true),
+        onLoad,
+        onError,
       }} />
     </div>
   );
