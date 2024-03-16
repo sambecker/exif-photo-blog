@@ -168,6 +168,7 @@ export default function PhotoForm({
             tagOptions,
             readOnly,
             validate,
+            validateStringMaxLength,
             capitalize,
             hideIfEmpty,
             shouldHide,
@@ -189,6 +190,13 @@ export default function PhotoForm({
                   setFormData({ ...formData, [key]: value });
                   if (validate) {
                     setFormErrors({ ...formErrors, [key]: validate(value) });
+                  } else if (validateStringMaxLength !== undefined) {
+                    setFormErrors({
+                      ...formErrors,
+                      [key]: value.length > validateStringMaxLength
+                        ? `${validateStringMaxLength} characters or less`
+                        : undefined,
+                    });
                   }
                   if (key === 'title') {
                     onTitleChange?.(value.trim());

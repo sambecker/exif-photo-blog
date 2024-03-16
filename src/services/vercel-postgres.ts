@@ -52,7 +52,7 @@ const sqlCreatePhotosTable = () =>
     )
   `;
 
-// MIGRATION 01
+// Migration 01
 const MIGRATION_FIELDS_01 = ['caption', 'description'];
 const sqlRunMigration01 = () =>
   sql`
