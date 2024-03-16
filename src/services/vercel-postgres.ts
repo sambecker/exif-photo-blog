@@ -57,8 +57,8 @@ const MIGRATION_FIELDS_01 = ['caption', 'description'];
 const sqlRunMigration01 = () =>
   sql`
     ALTER TABLE photos
-    ADD COLUMN caption TEXT,
-    ADD COLUMN description TEXT
+    ADD COLUMN IF NOT EXISTS caption TEXT,
+    ADD COLUMN IF NOT EXISTS description TEXT
   `;
 
 // Must provide id as 8-character nanoid
