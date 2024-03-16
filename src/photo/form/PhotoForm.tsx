@@ -170,13 +170,13 @@ export default function PhotoForm({
             validate,
             capitalize,
             hideIfEmpty,
-            hideBasedOnCamera,
+            shouldHide,
             loadingMessage,
             type,
           }]) =>
             (
               (!hideIfEmpty || formData[key]) &&
-              !hideBasedOnCamera?.(formData.make)
+              !shouldHide?.(formData)
             ) &&
               <FieldSetWithStatus
                 key={key}

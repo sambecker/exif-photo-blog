@@ -42,7 +42,7 @@ type FormMeta = {
   capitalize?: boolean
   hide?: boolean
   hideIfEmpty?: boolean
-  hideBasedOnCamera?: (make?: string, mode?: string) => boolean
+  shouldHide?: (formData: Partial<PhotoFormData>) => boolean
   loadingMessage?: string
   type?: FieldSetType
   selectOptions?: { value: string, label: string }[]
@@ -54,7 +54,11 @@ const FORM_METADATA = (
   tagOptions?: AnnotatedTag[]
 ): Record<keyof PhotoFormData, FormMeta> => ({
   title: { label: 'title', capitalize: true },
-  caption: { label: 'caption', capitalize: true },
+  caption: {
+    label: 'caption',
+    capitalize: true,
+    shouldHide: ({ title, caption }) => !title && !caption,
+  },
   description: { label: 'description', capitalize: true, hide: true},
   tags: {
     label: 'tags',
@@ -80,7 +84,7 @@ const FORM_METADATA = (
     label: 'fujifilm simulation',
     selectOptions: FILM_SIMULATION_FORM_INPUT_OPTIONS,
     selectOptionsDefaultLabel: 'Unknown',
-    hideBasedOnCamera: make => make !== MAKE_FUJIFILM,
+    shouldHide: ({ make }) => make !== MAKE_FUJIFILM,
   },
   focalLength: { label: 'focal length' },
   focalLengthIn35MmFormat: { label: 'focal length 35mm-equivalent' },
