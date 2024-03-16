@@ -47,6 +47,8 @@ export interface PhotoDbInsert extends PhotoExif {
   extension: string
   blurData?: string
   title?: string
+  caption?: string
+  description?: string
   tags?: string[]
   locationName?: string
   priorityOrder?: number

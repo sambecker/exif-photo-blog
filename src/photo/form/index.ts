@@ -54,6 +54,8 @@ const FORM_METADATA = (
   tagOptions?: AnnotatedTag[]
 ): Record<keyof PhotoFormData, FormMeta> => ({
   title: { label: 'title', capitalize: true },
+  caption: { label: 'caption', capitalize: true },
+  description: { label: 'description', capitalize: true, hide: true},
   tags: {
     label: 'tags',
     tagOptions,
