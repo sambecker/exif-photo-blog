@@ -63,6 +63,7 @@ export default function PhotoLarge({
           'sticky top-4 self-start -translate-y-1',
           'grid grid-cols-2 sm:grid-cols-4 md:grid-cols-1',
           'gap-y-4',
+          'pb-4',
         )}>
           {/* Meta */}
           <div className="row-span-3 sm:row-span-1">
@@ -134,12 +135,11 @@ export default function PhotoLarge({
           {/* Date + Share */}
           <div>
             <div className={clsx(
-              'flex flex-col gap-4',
-              'sm:flex-col',
+              'flex gap-2',
+              'md:flex-col md:gap-5',
             )}>
               <div className={clsx(
-                'grow pr-1',
-                'text-medium uppercase',
+                'text-medium uppercase pr-1',
               )}>
                 {photo.takenAtNaiveFormatted}
               </div>
