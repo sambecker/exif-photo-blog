@@ -36,6 +36,7 @@ export default function PhotoGridSidebar({
             key={TAG_FAVS}
             countOnHover={count}
             type="icon-last"
+            contrast="low"
             badged
           />
           : <PhotoTag
@@ -43,6 +44,7 @@ export default function PhotoGridSidebar({
             tag={tag}
             type="text-only"
             countOnHover={count}
+            contrast="low"
             badged
           />)}
       />}
@@ -60,6 +62,7 @@ export default function PhotoGridSidebar({
               camera={camera}
               type="text-only"
               countOnHover={count}
+              contrast="low"
               hideAppleIcon
               badged
             />)}

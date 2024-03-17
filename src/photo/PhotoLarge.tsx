@@ -44,16 +44,6 @@ export default function PhotoLarge({
   const tags = sortTags(photo.tags, primaryTag);
 
   const camera = cameraFromPhoto(photo);
-  
-  const renderMiniGrid = (children: JSX.Element, rightPadding = true) =>
-    <div className={clsx(
-      'flex gap-y-4',
-      'flex-col sm:flex-row md:flex-col',
-      '[&>*]:sm:flex-grow',
-      rightPadding && 'pr-2',
-    )}>
-      {children}
-    </div>;
 
   return (
     <SiteGrid
@@ -70,15 +60,13 @@ export default function PhotoLarge({
       contentSide={
         <div className={clsx(
           'leading-snug',
-          'sticky top-4 self-start',
-          'grid grid-cols-2 md:grid-cols-1',
-          'gap-x-0.5 sm:gap-x-1',
+          'sticky top-4 self-start -translate-y-1',
+          'grid grid-cols-2 sm:grid-cols-4 md:grid-cols-1',
           'gap-y-4',
-          '-translate-y-1',
-          'mb-4',
         )}>
-          {renderMiniGrid(<>
-            <div className="-space-y-0.5">
+          {/* Meta */}
+          <div className="row-span-3 sm:row-span-1">
+            <div className="pr-2">
               <div className="relative flex gap-2 items-start">
                 <div className="md:flex-grow">
                   <Link
@@ -94,9 +82,18 @@ export default function PhotoLarge({
                   </div>
                 </Suspense>
               </div>
+              {photo.caption && <>
+                <div className="text-medium uppercase pt-0.5">
+                  {photo.caption}
+                </div>
+                {tags.length > 0 && <div className="text-medium">—</div>}
+              </>}
               {tags.length > 0 &&
-                <PhotoTags tags={tags} />}
+                <PhotoTags tags={tags} contrast="medium" />}
             </div>
+          </div>
+          {/* EXIF: Camera + Film Simulation */}
+          <div>
             {showCamera && shouldShowCameraDataForPhoto(photo) &&
               <div className="space-y-0.5">
                 <PhotoCamera
@@ -110,8 +107,9 @@ export default function PhotoLarge({
                     />
                   </div>}
               </div>}
-          </>)}
-          {renderMiniGrid(<>
+          </div>
+          {/* EXIF: Details */}
+          <div>
             {shouldShowExifDataForPhoto(photo) &&
               <ul className="text-medium">
                 <li>
@@ -132,13 +130,16 @@ export default function PhotoLarge({
                 <li>{photo.isoFormatted}</li>
                 <li>{photo.exposureCompensationFormatted ?? '—'}</li>
               </ul>}
+          </div>
+          {/* Date + Share */}
+          <div>
             <div className={clsx(
-              'flex gap-y-4',
-              'flex-col sm:flex-row md:flex-col',
+              'flex flex-col gap-4',
+              'sm:flex-col',
             )}>
               <div className={clsx(
-                'grow uppercase',
-                'text-medium',
+                'grow pr-1',
+                'text-medium uppercase',
               )}>
                 {photo.takenAtNaiveFormatted}
               </div>
@@ -153,7 +154,7 @@ export default function PhotoLarge({
                 shouldScroll={shouldScrollOnShare}
               />
             </div>
-          </>, false)}
+          </div>
         </div>}
     />
   );
