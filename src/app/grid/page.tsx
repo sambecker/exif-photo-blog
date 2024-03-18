@@ -42,7 +42,7 @@ export default async function GridPage({ searchParams }: PaginationParams) {
     photos.length > 0
       ? <SiteGrid
         contentMain={<PhotoGrid {...{ photos, showMorePath }} />}
-        contentSide={<div className="sticky space-y-4 mt-[-4px]">
+        contentSide={<div className="sticky top-4 space-y-4 mt-[-4px]">
           <PhotoGridSidebar {...{
             tags,
             cameras,
