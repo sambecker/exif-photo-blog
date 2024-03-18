@@ -45,9 +45,9 @@ export default function PhotoLarge({
 
   const camera = cameraFromPhoto(photo);
 
-  const showCameraRow = showCamera && shouldShowCameraDataForPhoto(photo);
-
-  const showExifRow = shouldShowExifDataForPhoto(photo);
+  const showCameraContent = showCamera && shouldShowCameraDataForPhoto(photo);
+  const showTagsContent = tags.length > 0;
+  const showExifContent = shouldShowExifDataForPhoto(photo);
 
   return (
     <SiteGrid
@@ -63,50 +63,50 @@ export default function PhotoLarge({
         />}
       contentSide={
         <div className={clsx(
+          'relative',
           'leading-snug',
           'sticky top-4 self-start -translate-y-1',
           'grid grid-cols-2 md:grid-cols-1',
           'gap-x-0.5 sm:gap-x-1 gap-y-4',
           'pb-6',
-          '[&>*:not(:last-child)]:pr-3',
         )}>
           {/* Meta */}
-          <div className="space-y-4">
-            <div>
-              <div className="relative flex gap-2 items-start">
-                <div className="md:flex-grow">
-                  <Link
-                    href={pathForPhoto(photo)}
-                    className="font-bold uppercase"
-                  >
-                    {titleForPhoto(photo)}
-                  </Link>
-                </div>
-                <Suspense>
-                  <div className="h-4 translate-y-[-4px] z-10">
-                    <AdminPhotoMenu photo={photo} />
-                  </div>
-                </Suspense>
+          <div className="pr-3 md:pr-0">
+            <div className="md:relative flex gap-2 items-start">
+              <div className="flex-grow">
+                <Link
+                  href={pathForPhoto(photo)}
+                  className="font-bold uppercase"
+                >
+                  {titleForPhoto(photo)}
+                </Link>
               </div>
+              <Suspense>
+                <div className="absolute right-0 translate-y-[-4px] z-10">
+                  <AdminPhotoMenu photo={photo} />
+                </div>
+              </Suspense>
+            </div>
+            <div className="space-y-4">
               {photo.caption &&
                 <div className="uppercase">
                   {photo.caption}
                 </div>}
+              {(showCameraContent || showTagsContent) &&
+                <div>
+                  {showCameraContent &&
+                    <PhotoCamera
+                      camera={camera}
+                      contrast="medium"
+                    />}
+                  {showTagsContent &&
+                    <PhotoTags tags={tags} contrast="medium" />}
+                </div>}
             </div>
-            {(showCameraRow || tags.length > 0) &&
-              <div>
-                {showCameraRow &&
-                  <PhotoCamera
-                    camera={camera}
-                    contrast="medium"
-                  />}
-                {tags.length > 0 &&
-                  <PhotoTags tags={tags} contrast="medium" />}
-              </div>}
           </div>
           {/* EXIF Data */}
           <div className="space-y-4">
-            {showExifRow &&
+            {showExifContent &&
               <>
                 <ul className="text-medium">
                   <li>
