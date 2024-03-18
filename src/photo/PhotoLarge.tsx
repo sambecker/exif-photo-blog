@@ -16,7 +16,7 @@ import { cameraFromPhoto } from '@/camera';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
 import { sortTags } from '@/tag';
 import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
-import { Suspense, useMemo } from 'react';
+import { Suspense } from 'react';
 
 export default function PhotoLarge({
   photo,
@@ -49,13 +49,6 @@ export default function PhotoLarge({
 
   const showExifRow = shouldShowExifDataForPhoto(photo);
 
-  const rowCount = useMemo(() => {
-    let count = 1;
-    if (showCameraRow) { count++; }
-    if (showExifRow) { count++; }
-    return count;
-  }, [showCameraRow, showExifRow]);
-
   return (
     <SiteGrid
       contentMain={
@@ -72,99 +65,93 @@ export default function PhotoLarge({
         <div className={clsx(
           'leading-snug',
           'sticky top-4 self-start -translate-y-1',
-          'grid grid-cols-2 sm:grid-cols-4 md:grid-cols-1',
-          'gap-y-4 pb-6',
+          'grid grid-cols-2 md:grid-cols-1',
+          'gap-x-0.5 sm:gap-x-1 gap-y-4',
+          'pb-6',
           '[&>*:not(:last-child)]:pr-3',
         )}>
           {/* Meta */}
-          <div className={clsx(
-            rowCount === 1 && 'row-span-1',
-            rowCount === 2 && 'row-span-2',
-            rowCount === 3 && 'row-span-3',
-            'sm:row-span-1',
-          )}>
-            <div className="relative flex gap-2 items-start">
-              <div className="md:flex-grow">
-                <Link
-                  href={pathForPhoto(photo)}
-                  className="font-bold uppercase"
-                >
-                  {titleForPhoto(photo)}
-                </Link>
-              </div>
-              <Suspense>
-                <div className="h-4 translate-y-[-3.5px] z-10">
-                  <AdminPhotoMenu photo={photo} />
+          <div className="space-y-4">
+            <div>
+              <div className="relative flex gap-2 items-start">
+                <div className="md:flex-grow">
+                  <Link
+                    href={pathForPhoto(photo)}
+                    className="font-bold uppercase"
+                  >
+                    {titleForPhoto(photo)}
+                  </Link>
                 </div>
-              </Suspense>
-            </div>
-            {photo.caption && <>
-              <div className="text-medium uppercase pt-0.5">
-                {photo.caption}
+                <Suspense>
+                  <div className="h-4 translate-y-[-4px] z-10">
+                    <AdminPhotoMenu photo={photo} />
+                  </div>
+                </Suspense>
               </div>
-              {tags.length > 0 &&
-                <div className="text-medium">—</div>}
-            </>}
-            {tags.length > 0 &&
-              <PhotoTags tags={tags} contrast="medium" />}
+              {photo.caption &&
+                <div className="uppercase">
+                  {photo.caption}
+                </div>}
+            </div>
+            {(showCameraRow || tags.length > 0) &&
+              <div>
+                {showCameraRow &&
+                  <PhotoCamera
+                    camera={camera}
+                    contrast="medium"
+                  />}
+                {tags.length > 0 &&
+                  <PhotoTags tags={tags} contrast="medium" />}
+              </div>}
           </div>
-          {/* EXIF: Camera + Film Simulation */}
-          {showCameraRow &&
-            <div className="space-y-0.5">
-              <PhotoCamera
-                camera={camera}
-                type="text-only"
-              />
-              {showSimulation && photo.filmSimulation &&
-                <div className="translate-x-[-0.3rem] translate-y-[-3px]"> 
+          {/* EXIF Data */}
+          <div className="space-y-4">
+            {showExifRow &&
+              <>
+                <ul className="text-medium">
+                  <li>
+                    {photo.focalLengthFormatted}
+                    {photo.focalLengthIn35MmFormatFormatted &&
+                      <>
+                        {' '}
+                        <span
+                          title="35mm equivalent"
+                          className="text-extra-dim"
+                        >
+                          {photo.focalLengthIn35MmFormatFormatted}
+                        </span>
+                      </>}
+                  </li>
+                  <li>{photo.fNumberFormatted}</li>
+                  <li>{photo.exposureTimeFormatted}</li>
+                  <li>{photo.isoFormatted}</li>
+                  <li>{photo.exposureCompensationFormatted ?? '0ev'}</li>
+                </ul>
+                {showSimulation && photo.filmSimulation &&
                   <PhotoFilmSimulation
                     simulation={photo.filmSimulation}
-                  />
-                </div>}
-            </div>}
-          {/* EXIF: Details */}
-          {showExifRow &&
-            <ul className="text-medium">
-              <li>
-                {photo.focalLengthFormatted}
-                {photo.focalLengthIn35MmFormatFormatted &&
-                  <>
-                    {' '}
-                    <span
-                      title="35mm equivalent"
-                      className="text-extra-dim"
-                    >
-                      {photo.focalLengthIn35MmFormatFormatted}
-                    </span>
-                  </>}
-              </li>
-              <li>{photo.fNumberFormatted}</li>
-              <li>{photo.exposureTimeFormatted}</li>
-              <li>{photo.isoFormatted}</li>
-              <li>{photo.exposureCompensationFormatted ?? '—'}</li>
-            </ul>}
-          {/* Date + Share */}
-          <div className={clsx(
-            'flex gap-2 sm:justify-end',
-            'md:flex-col md:gap-5 md:justify-normal',
-            rowCount === 1 && 'col-span-3',
-            rowCount === 2 && 'col-span-2',
-          )}>
+                  />}
+              </>}
             <div className={clsx(
-              'text-medium uppercase pr-1',
+              'flex gap-2',
+              'md:flex-col md:gap-4 md:justify-normal',
             )}>
-              {photo.takenAtNaiveFormatted}
+              <div className={clsx(
+                'text-medium uppercase pr-1',
+              )}>
+                {photo.takenAtNaiveFormatted}
+              </div>
+              <ShareButton
+                path={pathForPhotoShare(
+                  photo,
+                  shouldShareTag ? primaryTag : undefined,
+                  shouldShareCamera ? camera : undefined,
+                  shouldShareSimulation ? photo.filmSimulation : undefined,
+                )}
+                prefetch={prefetchShare}
+                shouldScroll={shouldScrollOnShare}
+              />
             </div>
-            <ShareButton
-              path={pathForPhotoShare(
-                photo,
-                shouldShareTag ? primaryTag : undefined,
-                shouldShareCamera ? camera : undefined,
-                shouldShareSimulation ? photo.filmSimulation : undefined,
-              )}
-              prefetch={prefetchShare}
-              shouldScroll={shouldScrollOnShare}
-            />
           </div>
         </div>}
     />
