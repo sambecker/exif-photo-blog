@@ -68,8 +68,8 @@ const FORM_METADATA = (
     validateStringMaxLength: STRING_MAX_LENGTH_LONG,
     shouldHide: ({ title, caption }) => !title && !caption,
   },
-  description: {
-    label: 'description',
+  semanticDescription: {
+    label: 'semantic description',
     capitalize: true,
     validateStringMaxLength: STRING_MAX_LENGTH_LONG,
     hide: true,

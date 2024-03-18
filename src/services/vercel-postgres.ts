@@ -29,7 +29,7 @@ const sqlCreatePhotosTable = () =>
       blur_data TEXT,
       title VARCHAR(255),
       caption TEXT,
-      description TEXT,
+      semantic_description TEXT,
       tags VARCHAR(255)[],
       make VARCHAR(255),
       model VARCHAR(255),
@@ -53,12 +53,12 @@ const sqlCreatePhotosTable = () =>
   `;
 
 // Migration 01
-const MIGRATION_FIELDS_01 = ['caption', 'description'];
+const MIGRATION_FIELDS_01 = ['caption', 'semantic_description'];
 const sqlRunMigration01 = () =>
   sql`
     ALTER TABLE photos
     ADD COLUMN IF NOT EXISTS caption TEXT,
-    ADD COLUMN IF NOT EXISTS description TEXT
+    ADD COLUMN IF NOT EXISTS semantic_description TEXT
   `;
 
 // Must provide id as 8-character nanoid
@@ -72,7 +72,7 @@ export const sqlInsertPhoto = (photo: PhotoDbInsert) =>
       blur_data,
       title,
       caption,
-      description,
+      semantic_description,
       tags,
       make,
       model,
@@ -99,7 +99,7 @@ export const sqlInsertPhoto = (photo: PhotoDbInsert) =>
       ${photo.blurData},
       ${photo.title},
       ${photo.caption},
-      ${photo.description},
+      ${photo.semanticDescription},
       ${convertArrayToPostgresString(photo.tags)},
       ${photo.make},
       ${photo.model},
@@ -129,7 +129,7 @@ export const sqlUpdatePhoto = (photo: PhotoDbInsert) =>
     blur_data=${photo.blurData},
     title=${photo.title},
     caption=${photo.caption},
-    description=${photo.description},
+    semantic_description=${photo.semanticDescription},
     tags=${convertArrayToPostgresString(photo.tags)},
     make=${photo.make},
     model=${photo.model},
