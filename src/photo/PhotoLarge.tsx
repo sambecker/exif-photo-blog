@@ -44,16 +44,10 @@ export default function PhotoLarge({
   const tags = sortTags(photo.tags, primaryTag);
 
   const camera = cameraFromPhoto(photo);
-  
-  const renderMiniGrid = (children: JSX.Element, rightPadding = true) =>
-    <div className={clsx(
-      'flex gap-y-4',
-      'flex-col sm:flex-row md:flex-col',
-      '[&>*]:sm:flex-grow',
-      rightPadding && 'pr-2',
-    )}>
-      {children}
-    </div>;
+
+  const showCameraContent = showCamera && shouldShowCameraDataForPhoto(photo);
+  const showTagsContent = tags.length > 0;
+  const showExifContent = shouldShowExifDataForPhoto(photo);
 
   return (
     <SiteGrid
@@ -69,76 +63,81 @@ export default function PhotoLarge({
         />}
       contentSide={
         <div className={clsx(
+          'relative',
           'leading-snug',
-          'sticky top-4 self-start',
+          'sticky top-4 self-start -translate-y-1',
           'grid grid-cols-2 md:grid-cols-1',
-          'gap-x-0.5 sm:gap-x-1',
-          'gap-y-4',
-          '-translate-y-1',
-          'mb-4',
+          'gap-x-0.5 sm:gap-x-1 gap-y-4',
+          'pb-6',
         )}>
-          {renderMiniGrid(<>
-            <div className="-space-y-0.5">
-              <div className="relative flex gap-2 items-start">
-                <div className="md:flex-grow">
-                  <Link
-                    href={pathForPhoto(photo)}
-                    className="font-bold uppercase"
-                  >
-                    {titleForPhoto(photo)}
-                  </Link>
-                </div>
-                <Suspense>
-                  <div className="h-4 translate-y-[-3.5px] z-10">
-                    <AdminPhotoMenu photo={photo} />
-                  </div>
-                </Suspense>
+          {/* Meta */}
+          <div className="pr-3 md:pr-0">
+            <div className="md:relative flex gap-2 items-start">
+              <div className="flex-grow">
+                <Link
+                  href={pathForPhoto(photo)}
+                  className="font-bold uppercase"
+                >
+                  {titleForPhoto(photo)}
+                </Link>
               </div>
-              {tags.length > 0 &&
-                <PhotoTags tags={tags} />}
+              <Suspense>
+                <div className="absolute right-0 translate-y-[-4px] z-10">
+                  <AdminPhotoMenu photo={photo} />
+                </div>
+              </Suspense>
             </div>
-            {showCamera && shouldShowCameraDataForPhoto(photo) &&
-              <div className="space-y-0.5">
-                <PhotoCamera
-                  camera={camera}
-                  type="text-only"
-                />
+            <div className="space-y-4">
+              {photo.caption &&
+                <div className="uppercase">
+                  {photo.caption}
+                </div>}
+              {(showCameraContent || showTagsContent) &&
+                <div>
+                  {showCameraContent &&
+                    <PhotoCamera
+                      camera={camera}
+                      contrast="medium"
+                    />}
+                  {showTagsContent &&
+                    <PhotoTags tags={tags} contrast="medium" />}
+                </div>}
+            </div>
+          </div>
+          {/* EXIF Data */}
+          <div className="space-y-4">
+            {showExifContent &&
+              <>
+                <ul className="text-medium">
+                  <li>
+                    {photo.focalLengthFormatted}
+                    {photo.focalLengthIn35MmFormatFormatted &&
+                      <>
+                        {' '}
+                        <span
+                          title="35mm equivalent"
+                          className="text-extra-dim"
+                        >
+                          {photo.focalLengthIn35MmFormatFormatted}
+                        </span>
+                      </>}
+                  </li>
+                  <li>{photo.fNumberFormatted}</li>
+                  <li>{photo.exposureTimeFormatted}</li>
+                  <li>{photo.isoFormatted}</li>
+                  <li>{photo.exposureCompensationFormatted ?? '0ev'}</li>
+                </ul>
                 {showSimulation && photo.filmSimulation &&
-                  <div className="translate-x-[-0.3rem]"> 
-                    <PhotoFilmSimulation
-                      simulation={photo.filmSimulation}
-                    />
-                  </div>}
-              </div>}
-          </>)}
-          {renderMiniGrid(<>
-            {shouldShowExifDataForPhoto(photo) &&
-              <ul className="text-medium">
-                <li>
-                  {photo.focalLengthFormatted}
-                  {photo.focalLengthIn35MmFormatFormatted &&
-                    <>
-                      {' '}
-                      <span
-                        title="35mm equivalent"
-                        className="text-extra-dim"
-                      >
-                        {photo.focalLengthIn35MmFormatFormatted}
-                      </span>
-                    </>}
-                </li>
-                <li>{photo.fNumberFormatted}</li>
-                <li>{photo.exposureTimeFormatted}</li>
-                <li>{photo.isoFormatted}</li>
-                <li>{photo.exposureCompensationFormatted ?? '—'}</li>
-              </ul>}
+                  <PhotoFilmSimulation
+                    simulation={photo.filmSimulation}
+                  />}
+              </>}
             <div className={clsx(
-              'flex gap-y-4',
-              'flex-col sm:flex-row md:flex-col',
+              'flex gap-2',
+              'md:flex-col md:gap-4 md:justify-normal',
             )}>
               <div className={clsx(
-                'grow uppercase',
-                'text-medium',
+                'text-medium uppercase pr-1',
               )}>
                 {photo.takenAtNaiveFormatted}
               </div>
@@ -153,7 +152,7 @@ export default function PhotoLarge({
                 shouldScroll={shouldScrollOnShare}
               />
             </div>
-          </>, false)}
+          </div>
         </div>}
     />
   );

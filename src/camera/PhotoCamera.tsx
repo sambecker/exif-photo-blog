@@ -3,7 +3,6 @@ import { pathForCamera } from '@/site/paths';
 import { IoMdCamera } from 'react-icons/io';
 import { Camera, formatCameraText } from '.';
 import EntityLink, { EntityLinkExternalProps } from '@/components/EntityLink';
-import { clsx } from 'clsx/lite';
 
 export default function PhotoCamera({
   camera,
@@ -27,18 +26,12 @@ export default function PhotoCamera({
       icon={showAppleIcon
         ? <AiFillApple
           title="Apple"
-          className={clsx(
-            'text-icon',
-            'translate-x-[-2.5px] translate-y-[2px]',
-          )}
+          className="translate-x-[-2.5px] translate-y-[2px]"
           size={15}
         />
         : <IoMdCamera
-          size={13}
-          className={clsx(
-            'text-icon',
-            'translate-x-[-1px] translate-y-[3.5px]',
-          )}
+          size={12}
+          className="translate-x-[-1px] translate-y-[3.5px]"
         />}
       type={showAppleIcon && isCameraApple ? 'icon-first' : type}
       badged={badged}

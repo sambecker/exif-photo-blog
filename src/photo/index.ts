@@ -47,6 +47,8 @@ export interface PhotoDbInsert extends PhotoExif {
   extension: string
   blurData?: string
   title?: string
+  caption?: string
+  semanticDescription?: string
   tags?: string[]
   locationName?: string
   priorityOrder?: number
@@ -229,16 +231,16 @@ export const dateRangeForPhotos = (
 };
 
 const photoHasCameraData = (photo: Photo) =>
-  photo.make &&
-  photo.model;
+  Boolean(photo.make) &&
+  Boolean(photo.model);
 
 const photoHasExifData = (photo: Photo) =>
-  photo.focalLength ||
-  photo.focalLengthIn35MmFormat ||
-  photo.fNumberFormatted ||
-  photo.isoFormatted ||
-  photo.exposureTimeFormatted ||
-  photo.exposureCompensationFormatted;
+  Boolean(photo.focalLength) ||
+  Boolean(photo.focalLengthIn35MmFormat) ||
+  Boolean(photo.fNumberFormatted) ||
+  Boolean(photo.isoFormatted) ||
+  Boolean(photo.exposureTimeFormatted) ||
+  Boolean(photo.exposureCompensationFormatted);
 
 export const shouldShowCameraDataForPhoto = (photo: Photo) =>
   SHOW_EXIF_DATA && photoHasCameraData(photo);

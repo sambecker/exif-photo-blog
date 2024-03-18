@@ -28,6 +28,8 @@ const sqlCreatePhotosTable = () =>
       aspect_ratio REAL DEFAULT 1.5,
       blur_data TEXT,
       title VARCHAR(255),
+      caption TEXT,
+      semantic_description TEXT,
       tags VARCHAR(255)[],
       make VARCHAR(255),
       model VARCHAR(255),
@@ -50,9 +52,18 @@ const sqlCreatePhotosTable = () =>
     )
   `;
 
+// Migration 01
+const MIGRATION_FIELDS_01 = ['caption', 'semantic_description'];
+const sqlRunMigration01 = () =>
+  sql`
+    ALTER TABLE photos
+    ADD COLUMN IF NOT EXISTS caption TEXT,
+    ADD COLUMN IF NOT EXISTS semantic_description TEXT
+  `;
+
 // Must provide id as 8-character nanoid
-export const sqlInsertPhoto = (photo: PhotoDbInsert) => {
-  return sql`
+export const sqlInsertPhoto = (photo: PhotoDbInsert) =>
+  safelyQueryPhotos(() => sql`
     INSERT INTO photos (
       id,
       url,
@@ -60,6 +71,8 @@ export const sqlInsertPhoto = (photo: PhotoDbInsert) => {
       aspect_ratio,
       blur_data,
       title,
+      caption,
+      semantic_description,
       tags,
       make,
       model,
@@ -85,6 +98,8 @@ export const sqlInsertPhoto = (photo: PhotoDbInsert) => {
       ${photo.aspectRatio},
       ${photo.blurData},
       ${photo.title},
+      ${photo.caption},
+      ${photo.semanticDescription},
       ${convertArrayToPostgresString(photo.tags)},
       ${photo.make},
       ${photo.model},
@@ -103,17 +118,18 @@ export const sqlInsertPhoto = (photo: PhotoDbInsert) => {
       ${photo.takenAt},
       ${photo.takenAtNaive}
     )
-  `;
-};
+  `);
 
 export const sqlUpdatePhoto = (photo: PhotoDbInsert) =>
-  sql`
+  safelyQueryPhotos(() => sql`
     UPDATE photos SET
     url=${photo.url},
     extension=${photo.extension},
     aspect_ratio=${photo.aspectRatio},
     blur_data=${photo.blurData},
     title=${photo.title},
+    caption=${photo.caption},
+    semantic_description=${photo.semanticDescription},
     tags=${convertArrayToPostgresString(photo.tags)},
     make=${photo.make},
     model=${photo.model},
@@ -133,27 +149,29 @@ export const sqlUpdatePhoto = (photo: PhotoDbInsert) =>
     taken_at_naive=${photo.takenAtNaive},
     updated_at=${(new Date()).toISOString()}
     WHERE id=${photo.id}
-  `;
+  `);
 
 export const sqlDeletePhotoTagGlobally = (tag: string) =>
-  sql`
+  safelyQueryPhotos(() => sql`
     UPDATE photos
     SET tags=ARRAY_REMOVE(tags, ${tag})
     WHERE ${tag}=ANY(tags)
-  `;
+  `);
 
 export const sqlRenamePhotoTagGlobally = (tag: string, updatedTag: string) =>
-  sql`
+  safelyQueryPhotos(() => sql`
     UPDATE photos
     SET tags=ARRAY_REPLACE(tags, ${tag}, ${updatedTag})
     WHERE ${tag}=ANY(tags)
-  `;
+  `);
 
 export const sqlDeletePhoto = (id: string) =>
-  sql`DELETE FROM photos WHERE id=${id}`;
+  safelyQueryPhotos(() => sql`DELETE FROM photos WHERE id=${id}`);
 
 const sqlGetPhoto = (id: string) =>
-  sql<PhotoDb>`SELECT * FROM photos WHERE id=${id} LIMIT 1`;
+  safelyQueryPhotos(() =>
+    sql<PhotoDb>`SELECT * FROM photos WHERE id=${id} LIMIT 1`
+  );
 
 const sqlGetPhotosCount = async () => sql`
   SELECT COUNT(*) FROM photos
@@ -291,8 +309,16 @@ const safelyQueryPhotos = async <T>(callback: () => Promise<T>): Promise<T> => {
   try {
     result = await callback();
   } catch (e: any) {
-    if (/relation "photos" does not exist/i.test(e.message)) {
-      console.log('Creating table "photos" because it did not exist');
+    if (MIGRATION_FIELDS_01.some(field => new RegExp(
+      `column "${field}" of relation "photos" does not exist`,
+      'i',
+    ).test(e.message))) {
+      console.log('Running migration 01 ...');
+      await sqlRunMigration01();
+      result = await callback();
+    } else if (/relation "photos" does not exist/i.test(e.message)) {
+      // If the table does not exist, create it
+      console.log('Creating photos table ...');
       await sqlCreatePhotosTable();
       result = await callback();
     } else if (/endpoint is in transition/i.test(e.message)) {

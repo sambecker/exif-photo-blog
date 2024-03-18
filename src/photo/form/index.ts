@@ -39,10 +39,11 @@ type FormMeta = {
   virtual?: boolean
   readOnly?: boolean
   validate?: (value?: string) => string | undefined
+  validateStringMaxLength?: number
   capitalize?: boolean
   hide?: boolean
   hideIfEmpty?: boolean
-  hideBasedOnCamera?: (make?: string, mode?: string) => boolean
+  shouldHide?: (formData: Partial<PhotoFormData>) => boolean
   loadingMessage?: string
   type?: FieldSetType
   selectOptions?: { value: string, label: string }[]
@@ -50,10 +51,29 @@ type FormMeta = {
   tagOptions?: AnnotatedTag[]
 };
 
+const STRING_MAX_LENGTH_SHORT = 255;
+const STRING_MAX_LENGTH_LONG  = 1000;
+
 const FORM_METADATA = (
   tagOptions?: AnnotatedTag[]
 ): Record<keyof PhotoFormData, FormMeta> => ({
-  title: { label: 'title', capitalize: true },
+  title: {
+    label: 'title',
+    capitalize: true,
+    validateStringMaxLength: STRING_MAX_LENGTH_SHORT,
+  },
+  caption: {
+    label: 'caption',
+    capitalize: true,
+    validateStringMaxLength: STRING_MAX_LENGTH_LONG,
+    shouldHide: ({ title, caption }) => !title && !caption,
+  },
+  semanticDescription: {
+    label: 'semantic description',
+    capitalize: true,
+    validateStringMaxLength: STRING_MAX_LENGTH_LONG,
+    hide: true,
+  },
   tags: {
     label: 'tags',
     tagOptions,
@@ -78,7 +98,7 @@ const FORM_METADATA = (
     label: 'fujifilm simulation',
     selectOptions: FILM_SIMULATION_FORM_INPUT_OPTIONS,
     selectOptionsDefaultLabel: 'Unknown',
-    hideBasedOnCamera: make => make !== MAKE_FUJIFILM,
+    shouldHide: ({ make }) => make !== MAKE_FUJIFILM,
   },
   focalLength: { label: 'focal length' },
   focalLengthIn35MmFormat: { label: 'focal length 35mm-equivalent' },
@@ -116,9 +136,12 @@ export const getFormErrors = (
 
 export const isFormValid = (formData: Partial<PhotoFormData>) =>
   FORM_METADATA_ENTRIES().every(
-    ([key, { required, validate }]) =>
+    ([key, { required, validate, validateStringMaxLength }]) =>
       (!required || Boolean(formData[key])) &&
-      (validate?.(formData[key]) === undefined)
+      (validate?.(formData[key]) === undefined) &&
+      // eslint-disable-next-line max-len
+      (!validateStringMaxLength || (formData[key]?.length ?? 0) <= validateStringMaxLength) &&
+      (key !== 'tags' || !doesTagsStringIncludeFavs(formData.tags ?? ''))
   );
 
 // CREATE FORM DATA: FROM PHOTO

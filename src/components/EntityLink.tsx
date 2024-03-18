@@ -17,7 +17,7 @@ export default function EntityLink({
   title,
   type = 'icon-first',
   badged,
-  contrast,
+  contrast = 'high',
   hoverEntity,
 }: {
   label: ReactNode
@@ -36,15 +36,26 @@ export default function EntityLink({
     </span>
   </>;
 
+  const classForContrast = () => {
+    switch (contrast) {
+    case 'low':
+      return 'text-dim';
+    case 'high':
+      return 'text-main';
+    default:
+      return 'text-medium';
+    }
+  };
+
   return (
-    <span className="group inline-flex items-center gap-2">
+    <span className="group inline-flex items-center gap-2 h-5">
       <Link
         href={href}
         title={title}
         className={clsx(
           'inline-flex gap-[0.23rem]',
           !badged && 'text-main hover:text-gray-900 dark:hover:text-gray-100',
-          contrast === 'low' && 'text-dim',
+          classForContrast(),
         )}
       >
         {type !== 'icon-only' && <>
@@ -67,7 +78,9 @@ export default function EntityLink({
           <span className={clsx(
             'flex-shrink-0',
             'inline-flex min-w-[0.9rem]',
-            contrast === 'low' ? 'text-dim' : 'text-main',
+            contrast === 'high'
+              ? 'text-icon'
+              : classForContrast(),
             type === 'icon-first' && 'order-first',
             badged && 'translate-y-[4px]',
             hoverEntity !== undefined && 'group-hover:hidden',
