@@ -49,6 +49,8 @@ export default function PhotoForm({
     useState<Partial<PhotoFormData>>(initialPhotoForm);
   const [formErrors, setFormErrors] =
     useState(getFormErrors(initialPhotoForm));
+  const [imageData, setImageData] =
+    useState<string>();
 
   // Update form when EXIF data
   // is refreshed by parent
@@ -116,6 +118,9 @@ export default function PhotoForm({
 
   return (
     <div className="space-y-8 max-w-[38rem]">
+      <button onClick={() => console.log(imageData)}>
+        Generate Text ✨
+      </button>
       <div className="flex gap-2">
         <ImageBlurFallback
           alt="Upload"
@@ -132,6 +137,7 @@ export default function PhotoForm({
           imageUrl={url}
           width={width}
           height={height}
+          onLoad={setImageData}
           onCapture={updateBlurData}
         />
         {debugBlur && formData.blurData &&

@@ -6,6 +6,7 @@ const RETRY_DELAY = 2000;
 
 export default function CanvasBlurCapture({
   imageUrl,
+  onLoad,
   onCapture,
   width,
   height,
@@ -15,7 +16,8 @@ export default function CanvasBlurCapture({
   quality = 0.9,
 }: {
   imageUrl: string
-  onCapture: (blurData: string) => void
+  onLoad?: (imageData: string) => void
+  onCapture: (imageData: string) => void
   width: number
   height: number
   hidden?: boolean
@@ -44,7 +46,18 @@ export default function CanvasBlurCapture({
           canvas.style.height = `${height}px`;
           const context = refCanvas.current?.getContext('2d');
           if (context) {
+            // Draw scaled image
             context.scale(scale, scale);
+            context.drawImage(
+              refImage.current,
+              -edgeCompensation,
+              -edgeCompensation,
+              width + edgeCompensation * 2,
+              width * refImage.current.height / refImage.current.width +
+              edgeCompensation * 2,
+            );
+            onLoad?.(canvas.toDataURL('image/jpeg', quality));
+            // Draw blurred image
             context.filter =
               'contrast(1.2) saturate(1.2) ' +
               `blur(${scale * 10}px)`;
@@ -56,8 +69,8 @@ export default function CanvasBlurCapture({
               width * refImage.current.height / refImage.current.width +
               edgeCompensation * 2,
             );
-            refTimeouts.current.forEach(clearTimeout);
             onCapture(canvas.toDataURL('image/jpeg', quality));
+            refTimeouts.current.forEach(clearTimeout);
             refShouldCapture.current = false;
           } else {
             console.error('Cannot get 2d context');
@@ -92,6 +105,7 @@ export default function CanvasBlurCapture({
   }, [
     imageUrl,
     onCapture,
+    onLoad,
     width,
     height,
     edgeCompensation,
