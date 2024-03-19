@@ -44,6 +44,17 @@ export const {
   },
 });
 
+export const safelyRunServerAdminAction = async <T>(
+  callback: () => T,
+): Promise<T> => {
+  const session = await auth();
+  if (session?.user) {
+    return callback();
+  } else {
+    throw new Error('Unauthorized server action request');
+  }
+};
+
 export const generateAuthSecret = () => fetch(
   'https://generate-secret.vercel.app/32',
   { cache: 'no-cache' },
