@@ -15,7 +15,10 @@ export default function HeaderList({
 }) {
   return (
     <AnimateItems
-      className={className}
+      className={clsx(
+        className,
+        'space-y-0.5',
+      )}
       scaleOffset={0.95}
       duration={0.5}
       staggerDelay={0.05}
@@ -25,7 +28,7 @@ export default function HeaderList({
           className={clsx(
             'text-gray-900',
             'dark:text-gray-100',
-            'flex items-center mb-0.5 gap-1',
+            'flex items-center mb-1 gap-1',
             'uppercase',
           )}
         >

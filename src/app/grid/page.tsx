@@ -45,7 +45,7 @@ export default async function GridPage() {
             />
           </Suspense>
         </div>}
-        contentSide={<div className="sticky top-4 space-y-4">
+        contentSide={<div className="sticky top-4 space-y-4 mt-[-4px]">
           <PhotoGridSidebar {...{
             tags,
             cameras,

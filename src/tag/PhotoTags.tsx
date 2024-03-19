@@ -1,21 +1,21 @@
 import PhotoTag from '@/tag/PhotoTag';
 import { isTagFavs } from '.';
 import FavsTag from './FavsTag';
+import { EntityLinkExternalProps } from '@/components/EntityLink';
 
 export default function PhotoTags({
   tags,
-  prefetch,
+  contrast,
 }: {
   tags: string[]
-  prefetch?: boolean
-}) {
+} & EntityLinkExternalProps) {
   return (
     <div className="-space-y-0.5">
       {tags.map(tag =>
         <div key={tag}>
           {isTagFavs(tag)
-            ? <FavsTag {...{ prefetch }} />
-            : <PhotoTag {...{ tag, prefetch }} />}
+            ? <FavsTag {...{ contrast }} />
+            : <PhotoTag {...{ tag, contrast }} />}
         </div>)}
     </div>
   );
