@@ -9,11 +9,7 @@ import {
   isFormValid,
 } from '.';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
-import {
-  createPhotoAction,
-  streamImageQueryAction,
-  updatePhotoAction,
-} from '../actions';
+import { createPhotoAction, updatePhotoAction } from '../actions';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
@@ -29,7 +25,6 @@ import ImageBlurFallback from '@/components/ImageBlurFallback';
 import { BLUR_ENABLED } from '@/site/config';
 import { Tags, sortTagsObjectWithoutFavs } from '@/tag';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
-import { readStreamableValue } from 'ai/rsc';
 import Spinner from '@/components/Spinner';
 import useImageQuery from '../ai/useImageQuery';
 
@@ -129,63 +124,28 @@ export default function PhotoForm({
     isLoadingTitle,
   ] = useImageQuery(imageData, 'title');
 
-  const [aiTags, setAiTags] = useState({
-    two: '',
-    three: '',
-  });
-  const [isLoadingAi, setIsLoadingAi] = useState({
-    two: false,
-    three: false,
-  });
+  const [
+    requestTags,
+    tags,
+    isLoadingTags,
+  ] = useImageQuery(imageData, 'tags');
+
+  const [
+    requestDescription,
+    description,
+    isLoadingDescription,
+  ] = useImageQuery(imageData, 'description');
 
   return (
     <div className="space-y-8 max-w-[38rem]">
       <div className="flex gap-2">
-        <button onClick={requestTitle}>
+        <button onClick={requestTitle} disabled={isLoadingTitle}>
           Title ✨
         </button>
-        <button onClick={async () => {
-          setIsLoadingAi(current => ({
-            ...current,
-            two: true,
-          }));
-          const textStream = await streamImageQueryAction(
-            imageData ?? '',
-            'tags',
-          );
-          for await (const text of readStreamableValue(textStream)) {
-            setAiTags(current => ({
-              ...current,
-              two: text ?? '',
-            }));
-          }
-          setIsLoadingAi(current => ({
-            ...current,
-            two: false,
-          }));
-        }}>
+        <button onClick={requestTags} disabled={isLoadingTags}>
           Tags ✨
         </button>
-        <button onClick={async () => {
-          setIsLoadingAi(current => ({
-            ...current,
-            three: true,
-          }));
-          const textStream = await streamImageQueryAction(
-            imageData ?? '',
-            'description',
-          );
-          for await (const text of readStreamableValue(textStream)) {
-            setAiTags(current => ({
-              ...current,
-              three: text ?? '',
-            }));
-          }
-          setIsLoadingAi(current => ({
-            ...current,
-            three: false,
-          }));
-        }}>
+        <button onClick={requestDescription} disabled={isLoadingDescription}>
           Description ✨
         </button>
       </div>
@@ -228,14 +188,14 @@ export default function PhotoForm({
         </>}
       </p>
       <p>
-        AI RESPONSE 02: {aiTags.two} {isLoadingAi.two && <>
+        AI RESPONSE 02: {tags} {isLoadingTags && <>
           <span className="inline-flex translate-y-[1.5px]">
             <Spinner />
           </span>
         </>}
       </p>
       <p>
-        AI RESPONSE 01: {aiTags.three} {isLoadingAi.three && <>
+        AI RESPONSE 01: {description} {isLoadingDescription && <>
           <span className="inline-flex translate-y-[1.5px]">
             <Spinner />
           </span>
