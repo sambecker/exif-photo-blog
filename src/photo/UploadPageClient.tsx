@@ -11,10 +11,12 @@ export default function UploadPageClient({
   blobId,
   photoFormExif,
   uniqueTags,
+  aiTextGeneration,
 }: {
   blobId?: string
   photoFormExif: Partial<PhotoFormData>
   uniqueTags: Tags
+  aiTextGeneration: boolean
 }) {
   const [pending, setIsPending] = useState(false);
   const [updatedTitle, setUpdatedTitle] = useState('');
@@ -31,6 +33,7 @@ export default function UploadPageClient({
       <PhotoForm
         initialPhotoForm={photoFormExif}
         uniqueTags={uniqueTags}
+        aiTextGeneration={aiTextGeneration}
         onTitleChange={setUpdatedTitle}
         onFormStatusChange={setIsPending}
       />

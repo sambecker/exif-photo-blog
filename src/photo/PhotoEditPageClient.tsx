@@ -16,9 +16,11 @@ import { useState } from 'react';
 export default function PhotoEditPageClient({
   photo,
   uniqueTags,
+  aiTextGeneration,
 }: {
   photo: Photo
-  uniqueTags?: Tags
+  uniqueTags: Tags
+  aiTextGeneration: boolean
 }) {
   const seedExifData = { url: photo.url };
 
@@ -62,6 +64,7 @@ export default function PhotoEditPageClient({
           ? updatedExifData
           : undefined}
         uniqueTags={uniqueTags}
+        aiTextGeneration={aiTextGeneration}
         onTitleChange={setUpdatedTitle}
         onFormStatusChange={setIsPending}
       />

@@ -35,6 +35,7 @@ export default function PhotoForm({
   updatedExifData,
   type = 'create',
   uniqueTags,
+  aiTextGeneration,
   debugBlur,
   onTitleChange,
   onFormStatusChange,
@@ -43,6 +44,7 @@ export default function PhotoForm({
   updatedExifData?: Partial<PhotoFormData>
   type?: 'create' | 'edit'
   uniqueTags?: Tags
+  aiTextGeneration?: boolean
   debugBlur?: boolean
   onTitleChange?: (updatedTitle: string) => void
   onFormStatusChange?: (pending: boolean) => void
@@ -322,7 +324,8 @@ export default function PhotoForm({
               value: tag,
               annotation: formatCount(count),
               annotationAria: formatCountDescriptive(count, 'tagged'),
-            }))
+            })),
+          aiTextGeneration,
         )
           .map(([key, {
             label,

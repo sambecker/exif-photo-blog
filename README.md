@@ -10,12 +10,14 @@ https://photos.sambecker.com
 
 Features
 -
+- Built-in auth
 - Photo upload with EXIF extraction
 - Organize photos by tag and camera model
 - Infinite scroll
-- Built-in auth
 - Light/dark mode
+- CMD-K menu with photo search
 - Automatic OG image generation
+- Experimental support for AI-generated descriptions
 - Support for Fujifilm simulations
 
 <img src="/readme/og-image-share.png" alt="OG Image Preview" width=600 />
@@ -71,6 +73,7 @@ Installation
 - `NEXT_PUBLIC_PRO_MODE = 1` enables higher quality image storage for jpgs (will result in increased storage usage)
 - `NEXT_PUBLIC_BLUR_DISABLED = 1` prevents image blur data being stored and displayed (potentially useful for limiting Postgres usage)
 - `NEXT_PUBLIC_GEO_PRIVACY = 1` disables collection/display of location-based data
+- `OPENAI_SECRET_KEY = [Your Key]` enables experimental support for AI-generated text descriptions
 - `NEXT_PUBLIC_IGNORE_PRIORITY_ORDER = 1` prevents `priority_order` field affecting photo order
 - `NEXT_PUBLIC_PUBLIC_API = 1` enables public API available at `/api`
 - `NEXT_PUBLIC_HIDE_REPO_LINK = 1` removes footer link to repo

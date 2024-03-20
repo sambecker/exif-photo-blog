@@ -84,6 +84,8 @@ export const CURRENT_STORAGE: StorageType =
 export const PRO_MODE_ENABLED = process.env.NEXT_PUBLIC_PRO_MODE === '1';
 export const BLUR_ENABLED = process.env.NEXT_PUBLIC_BLUR_DISABLED !== '1';
 export const GEO_PRIVACY_ENABLED = process.env.NEXT_PUBLIC_GEO_PRIVACY === '1';
+export const AI_TEXT_GENERATION_ENABLED =
+  Boolean(process.env.OPENAI_SECRET_KEY);
 export const PRIORITY_ORDER_ENABLED =
   process.env.NEXT_PUBLIC_IGNORE_PRIORITY_ORDER !== '1';
 export const PUBLIC_API_ENABLED = process.env.NEXT_PUBLIC_PUBLIC_API === '1';
@@ -123,6 +125,7 @@ export const CONFIG_CHECKLIST_STATUS = {
   isProModeEnabled: PRO_MODE_ENABLED,
   isBlurEnabled: BLUR_ENABLED,
   isGeoPrivacyEnabled: GEO_PRIVACY_ENABLED,
+  isAiTextGenerationEnabled: AI_TEXT_GENERATION_ENABLED,
   isPriorityOrderEnabled: PRIORITY_ORDER_ENABLED,
   isPublicApiEnabled: PUBLIC_API_ENABLED,
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,

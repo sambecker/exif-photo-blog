@@ -13,7 +13,10 @@ import {
   MAKE_FUJIFILM,
 } from '@/vendors/fujifilm';
 import { FilmSimulation } from '@/simulation';
-import { BLUR_ENABLED, GEO_PRIVACY_ENABLED } from '@/site/config';
+import {
+  BLUR_ENABLED,
+  GEO_PRIVACY_ENABLED,
+} from '@/site/config';
 import { TAG_FAVS, doesTagsStringIncludeFavs } from '@/tag';
 
 type VirtualFields = 'favorite';
@@ -55,7 +58,8 @@ const STRING_MAX_LENGTH_SHORT = 255;
 const STRING_MAX_LENGTH_LONG  = 1000;
 
 const FORM_METADATA = (
-  tagOptions?: AnnotatedTag[]
+  tagOptions?: AnnotatedTag[],
+  aiTextGeneration?: boolean,
 ): Record<keyof PhotoFormData, FormMeta> => ({
   title: {
     label: 'title',
@@ -72,7 +76,7 @@ const FORM_METADATA = (
     label: 'semantic description',
     capitalize: true,
     validateStringMaxLength: STRING_MAX_LENGTH_LONG,
-    hide: true,
+    hide: !aiTextGeneration,
   },
   tags: {
     label: 'tags',
