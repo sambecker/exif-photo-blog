@@ -1,14 +1,16 @@
 'use server';
 
 import OpenAI from 'openai';
-import { OpenAIStream, StreamingTextResponse } from 'ai';
+import { createStreamableValue, render } from 'ai/rsc';
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
+const provider = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
 
-const queryImage = async (imageBase64: string, query: string) => {
-  const response = await openai.chat.completions.create({
+const streamImageQueryRaw = async (imageBase64: string, query: string) => {
+  const stream = createStreamableValue('');
+
+  render({
+    provider,
     model: 'gpt-4-vision-preview',
-    stream: true,
     messages: [{
       'role': 'user',
       'content': [
@@ -23,15 +25,26 @@ const queryImage = async (imageBase64: string, query: string) => {
         },
       ],
     }],
+    text: ({ content, done }): any => {
+      if (done) {
+        stream.done(content);
+      } else {
+        stream.update(content);
+      }
+    },
   });
 
-  const stream = OpenAIStream(response);
-
-  return new StreamingTextResponse(stream);
+  return stream.value;
 };
 
-export const tagImage = async (imageBase64: string) =>
-  queryImage(
-    imageBase64,
-    'Describe this image three or less comma-separated keywords',
-  );
+export type ImageQuery = 'title' | 'caption' | 'tags' | 'description';
+
+export const IMAGE_QUERIES: Record<ImageQuery, string> = {
+  title: 'What is the title of this image?',
+  caption: 'What is the caption of this image?',
+  tags: 'Describe this image three or less comma-separated keywords',
+  description: 'Describe this image in detail',
+};
+
+export const streamImageQuery = (imageBase64: string, query: ImageQuery) =>
+  streamImageQueryRaw(imageBase64, IMAGE_QUERIES[query]);

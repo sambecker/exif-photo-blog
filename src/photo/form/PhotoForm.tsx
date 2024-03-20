@@ -25,6 +25,9 @@ import ImageBlurFallback from '@/components/ImageBlurFallback';
 import { BLUR_ENABLED } from '@/site/config';
 import { Tags, sortTagsObjectWithoutFavs } from '@/tag';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
+import { streamImageQuery } from '@/services/openai';
+import { readStreamableValue } from 'ai/rsc';
+import Spinner from '@/components/Spinner';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -116,9 +119,22 @@ export default function PhotoForm({
     }
   }, []);
 
+  const [aiTags, setAiTags] = useState('');
+  const [isLoadingAi, setIsLoadingAi] = useState(false);
+
   return (
     <div className="space-y-8 max-w-[38rem]">
-      <button onClick={() => console.log(imageData)}>
+      <button onClick={async () => {
+        setIsLoadingAi(true);
+        const textStream = await streamImageQuery(
+          imageData ?? '',
+          'description',
+        );
+        for await (const text of readStreamableValue(textStream)) {
+          setAiTags(text ?? '');
+        }
+        setIsLoadingAi(false);
+      }}>
         Generate Text ✨
       </button>
       <div className="flex gap-2">
@@ -152,6 +168,13 @@ export default function PhotoForm({
             height={height}
           />}
       </div>
+      <p>
+        AI RESPONSE: {aiTags} {isLoadingAi && <>
+          <span className="inline-flex translate-y-[1.5px]">
+            <Spinner />
+          </span>
+        </>}
+      </p>
       <form
         action={type === 'create' ? createPhotoAction : updatePhotoAction}
         onSubmit={() => blur()}

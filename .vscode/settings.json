@@ -10,6 +10,7 @@
     "cloudflarestorage",
     "cmdk",
     "CredentialsSignin",
+    "datetime",
     "Eterna",
     "exif",
     "exifr",
@@ -33,6 +34,7 @@
     "Reala",
     "skippable",
     "sonner",
+    "Streamable",
     "thephotoblog",
     "trpc",
     "unnest",
@@ -41,8 +43,7 @@
     "WRHGZC",
     "wxyz",
     "zadd",
-    "zrange",
-    "datetime"
+    "zrange"
   ],
   "files.associations": {
     "*.css": "tailwindcss"
