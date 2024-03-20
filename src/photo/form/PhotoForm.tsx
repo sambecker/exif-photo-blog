@@ -9,7 +9,11 @@ import {
   isFormValid,
 } from '.';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
-import { createPhotoAction, updatePhotoAction } from '../actions';
+import {
+  createPhotoAction,
+  streamImageQueryAction,
+  updatePhotoAction,
+} from '../actions';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
@@ -25,7 +29,6 @@ import ImageBlurFallback from '@/components/ImageBlurFallback';
 import { BLUR_ENABLED } from '@/site/config';
 import { Tags, sortTagsObjectWithoutFavs } from '@/tag';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
-import { streamImageQuery } from '@/services/openai';
 import { readStreamableValue } from 'ai/rsc';
 import Spinner from '@/components/Spinner';
 
@@ -126,7 +129,7 @@ export default function PhotoForm({
     <div className="space-y-8 max-w-[38rem]">
       <button onClick={async () => {
         setIsLoadingAi(true);
-        const textStream = await streamImageQuery(
+        const textStream = await streamImageQueryAction(
           imageData ?? '',
           'description',
         );
