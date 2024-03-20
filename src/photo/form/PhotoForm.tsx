@@ -158,11 +158,19 @@ export default function PhotoForm({
       onClick={onClick}
       disabled={!imageData || isLoading}
       className={clsx(
+        'flex gap-2 items-center justify-center',
         'disabled:opacity-50 text-sm px-2.5 min-h-0 py-1.5',
         Boolean(error) && 'error text-error',
       )}
     >
-      {label} ✨
+      <span>
+        {label}
+      </span>
+      <span className="min-w-4">
+        {isLoading
+          ? <Spinner className="translate-y-[1.5px]" />
+          : <>✨</>}
+      </span>
     </button>;
 
   return (
