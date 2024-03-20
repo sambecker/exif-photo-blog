@@ -181,21 +181,21 @@ export default function PhotoForm({
           />}
       </div>
       <p>
-        AI RESPONSE 01: {title} {isLoadingTitle && <>
+        ✨ TITLE: {title} {isLoadingTitle && <>
           <span className="inline-flex translate-y-[1.5px]">
             <Spinner />
           </span>
         </>}
       </p>
       <p>
-        AI RESPONSE 02: {tags} {isLoadingTags && <>
+        ✨ TAGS: {tags} {isLoadingTags && <>
           <span className="inline-flex translate-y-[1.5px]">
             <Spinner />
           </span>
         </>}
       </p>
       <p>
-        AI RESPONSE 01: {description} {isLoadingDescription && <>
+        ✨ DESCRIPTION: {description} {isLoadingDescription && <>
           <span className="inline-flex translate-y-[1.5px]">
             <Spinner />
           </span>

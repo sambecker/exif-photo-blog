@@ -8,19 +8,25 @@ export default function useImageQuery(
   query: ImageQuery,
 ) {
   const [text, setText] = useState('');
+  const [error, setError] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
 
   const request = useCallback(async () => {
     if (imageBase64) {
       setIsLoading(true);
-      const textStream = await streamImageQueryAction(
-        imageBase64 ?? '',
-        query,
-      );
-      for await (const text of readStreamableValue(textStream)) {
-        setText(text ?? '');
+      try {
+        const textStream = await streamImageQueryAction(
+          imageBase64 ?? '',
+          query,
+        );
+        for await (const text of readStreamableValue(textStream)) {
+          setText(text ?? '');
+        }
+        setIsLoading(false);
+      } catch (e) {
+        setError(e);
+        setIsLoading(false);
       }
-      setIsLoading(false);
     }
   }, [imageBase64, query]);
 
@@ -28,5 +34,6 @@ export default function useImageQuery(
     request,
     text,
     isLoading,
+    error,
   ] as const;
 };
