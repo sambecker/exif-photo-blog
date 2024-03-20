@@ -16,7 +16,7 @@ export default function useImageQuery(
       setIsLoading(true);
       try {
         const textStream = await streamImageQueryAction(
-          imageBase64 ?? '',
+          imageBase64,
           query,
         );
         for await (const text of readStreamableValue(textStream)) {
@@ -30,9 +30,12 @@ export default function useImageQuery(
     }
   }, [imageBase64, query]);
 
+  // Withhold streaming text if it's a null response
+  const isTextError = text.toLocaleLowerCase().startsWith('sorry');
+
   return [
     request,
-    text,
+    isTextError ? '' : text,
     isLoading,
     error,
   ] as const;

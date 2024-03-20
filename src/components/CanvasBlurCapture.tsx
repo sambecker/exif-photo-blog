@@ -72,18 +72,20 @@ export default function CanvasBlurCapture({
               edgeCompensation * 2,
             );
             onCapture(canvas.toDataURL('image/jpeg', quality));
+            onError?.('');
             refTimeouts.current.forEach(clearTimeout);
             refShouldCapture.current = false;
           } else {
-            console.error('Cannot get 2d context');
-            onError?.('Cannot get 2d context');
+            console.error('Cannot get 2d context ... retrying');
+            onError?.('Cannot get 2d context ... retrying');
             // Retry capture in case canvas is not available
             refTimeouts.current.push(setTimeout(capture, RETRY_DELAY));
           }
         } else {
           // eslint-disable-next-line max-len
-          console.error('Cannot generate blur data: canvas/image not ready');
-          onError?.('Cannot generate blur data: canvas/image not ready');
+          console.error('Cannot generate blur data: canvas/image not ready ... retrying');
+          // eslint-disable-next-line max-len
+          onError?.('Cannot generate blur data: canvas/image not ready ... retrying');
           // Retry capture in case canvas is not available
           refTimeouts.current.push(setTimeout(capture, RETRY_DELAY));
         }

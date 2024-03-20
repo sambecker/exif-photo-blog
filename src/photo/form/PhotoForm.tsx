@@ -120,12 +120,19 @@ export default function PhotoForm({
     }
   }, []);
 
-  const [
-    requestTitle,
-    title,
-    isLoadingTitle,
-    errorTitle,
-  ] = useImageQuery(imageData, 'title');
+  // const [
+  //   requestTitle,
+  //   title,
+  //   isLoadingTitle,
+  //   errorTitle,
+  // ] = useImageQuery(imageData, 'title');
+
+  // const [
+  //   requestCaption,
+  //   caption,
+  //   isLoadingCaption,
+  //   errorCaption,
+  // ] = useImageQuery(imageData, 'caption');
 
   const [
     requestTags,
@@ -135,18 +142,25 @@ export default function PhotoForm({
   ] = useImageQuery(imageData, 'tags');
 
   const [
-    requestDescriptionSmall,
-    descriptionSmall,
-    isLoadingDescriptionSmall,
-    errorDescriptionSmall,
-  ] = useImageQuery(imageData, 'descriptionSmall');
+    requestRich,
+    rich,
+    isLoadingRich,
+    errorRich,
+  ] = useImageQuery(imageData, 'rich');
+
+  // const [
+  //   requestDescriptionSmall,
+  //   descriptionSmall,
+  //   isLoadingDescriptionSmall,
+  //   errorDescriptionSmall,
+  // ] = useImageQuery(imageData, 'descriptionSmall');
 
   const [
-    requestDescriptionLarge,
-    descriptionLarge,
-    isLoadingDescriptionLarge,
-    errorDescriptionLarge,
-  ] = useImageQuery(imageData, 'descriptionLarge');
+    requestSemantic,
+    semantic,
+    isLoadingSemantic,
+    errorSemantic,
+  ] = useImageQuery(imageData, 'semantic');
 
   const renderAiButton = (
     label: string,
@@ -180,11 +194,29 @@ export default function PhotoForm({
           {blurError}
         </div>}
       <div className="flex gap-2 flex-wrap">
-        {renderAiButton(
+        {/* {renderAiButton(
           'Title',
           requestTitle,
           isLoadingTitle,
           errorTitle,
+        )}
+        {renderAiButton(
+          'Caption',
+          requestCaption,
+          isLoadingCaption,
+          errorCaption,
+        )}
+        {renderAiButton(
+          'Tags',
+          requestTags,
+          isLoadingTags,
+          errorTags,
+        )} */}
+        {renderAiButton(
+          'Rich',
+          requestRich,
+          isLoadingRich,
+          errorRich,
         )}
         {renderAiButton(
           'Tags',
@@ -193,17 +225,17 @@ export default function PhotoForm({
           errorTags,
         )}
         {renderAiButton(
-          'Description (S)',
+          'Semantic',
+          requestSemantic,
+          isLoadingSemantic,
+          errorSemantic,
+        )}
+        {/* {renderAiButton(
+          'Description',
           requestDescriptionSmall,
           isLoadingDescriptionSmall,
           errorDescriptionSmall,
-        )}
-        {renderAiButton(
-          'Description (L)',
-          requestDescriptionLarge,
-          isLoadingDescriptionLarge,
-          errorDescriptionLarge,
-        )}
+        )} */}
       </div>
       <div className="flex gap-2">
         <ImageBlurFallback
@@ -237,8 +269,22 @@ export default function PhotoForm({
             height={height}
           />}
       </div>
-      <p>
+      {/* <p>
         ✨ TITLE: {title} {isLoadingTitle && <>
+          <span className="inline-flex translate-y-[1.5px]">
+            <Spinner />
+          </span>
+        </>}
+      </p>
+      <p>
+        ✨ CAPTION: {caption} {isLoadingCaption && <>
+          <span className="inline-flex translate-y-[1.5px]">
+            <Spinner />
+          </span>
+        </>}
+      </p> */}
+      <p>
+        ✨ RICH: {rich} {isLoadingRich && <>
           <span className="inline-flex translate-y-[1.5px]">
             <Spinner />
           </span>
@@ -252,19 +298,19 @@ export default function PhotoForm({
         </>}
       </p>
       <p>
-        ✨ DESCRIPTION (S): {descriptionSmall} {isLoadingDescriptionSmall && <>
+        ✨ SEMANTIC: {semantic} {isLoadingSemantic && <>
           <span className="inline-flex translate-y-[1.5px]">
             <Spinner />
           </span>
         </>}
       </p>
-      <p>
-        ✨ DESCRIPTION (L): {descriptionLarge} {isLoadingDescriptionLarge && <>
+      {/* <p>
+        ✨ DESCRIPTION: {descriptionSmall} {isLoadingDescriptionSmall && <>
           <span className="inline-flex translate-y-[1.5px]">
             <Spinner />
           </span>
         </>}
-      </p>
+      </p> */}
       <form
         action={type === 'create' ? createPhotoAction : updatePhotoAction}
         onSubmit={() => blur()}
