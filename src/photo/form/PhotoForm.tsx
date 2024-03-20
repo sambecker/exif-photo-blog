@@ -122,35 +122,43 @@ export default function PhotoForm({
     requestTitle,
     title,
     isLoadingTitle,
+    errorTitle,
   ] = useImageQuery(imageData, 'title');
 
   const [
     requestTags,
     tags,
     isLoadingTags,
+    errorTags,
   ] = useImageQuery(imageData, 'tags');
 
   const [
     requestDescriptionSmall,
     descriptionSmall,
     isLoadingDescriptionSmall,
+    errorDescriptionSmall,
   ] = useImageQuery(imageData, 'descriptionSmall');
 
   const [
     requestDescriptionLarge,
     descriptionLarge,
     isLoadingDescriptionLarge,
+    errorDescriptionLarge,
   ] = useImageQuery(imageData, 'descriptionLarge');
 
   const renderAiButton = (
     label: string,
     onClick: () => void,
     isLoading: boolean,
+    error?: any,
   ) =>
     <button
       onClick={onClick}
       disabled={!imageData || isLoading}
-      className="disabled:opacity-50 text-sm px-2.5 min-h-0 py-1.5"
+      className={clsx(
+        'disabled:opacity-50 text-sm px-2.5 min-h-0 py-1.5',
+        Boolean(error) && 'error text-error',
+      )}
     >
       {label} ✨
     </button>;
@@ -158,17 +166,29 @@ export default function PhotoForm({
   return (
     <div className="space-y-8 max-w-[38rem]">
       <div className="flex gap-2 flex-wrap">
-        {renderAiButton('Title', requestTitle, isLoadingTitle)}
-        {renderAiButton('Tags', requestTags, isLoadingTags)}
+        {renderAiButton(
+          'Title',
+          requestTitle,
+          isLoadingTitle,
+          errorTitle,
+        )}
+        {renderAiButton(
+          'Tags',
+          requestTags,
+          isLoadingTags,
+          errorTags,
+        )}
         {renderAiButton(
           'Description (S)',
           requestDescriptionSmall,
           isLoadingDescriptionSmall,
+          errorDescriptionSmall,
         )}
         {renderAiButton(
           'Description (L)',
           requestDescriptionLarge,
           isLoadingDescriptionLarge,
+          errorDescriptionLarge,
         )}
       </div>
       <div className="flex gap-2">
