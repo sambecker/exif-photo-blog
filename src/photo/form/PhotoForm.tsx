@@ -142,27 +142,34 @@ export default function PhotoForm({
     isLoadingDescriptionLarge,
   ] = useImageQuery(imageData, 'descriptionLarge');
 
+  const renderAiButton = (
+    label: string,
+    onClick: () => void,
+    isLoading: boolean,
+  ) =>
+    <button
+      onClick={onClick}
+      disabled={!imageData || isLoading}
+      className="disabled:opacity-50 text-sm px-2.5 min-h-0 py-1.5"
+    >
+      {label} ✨
+    </button>;
+
   return (
     <div className="space-y-8 max-w-[38rem]">
-      <div className="flex gap-2">
-        <button onClick={requestTitle} disabled={isLoadingTitle}>
-          Title ✨
-        </button>
-        <button onClick={requestTags} disabled={isLoadingTags}>
-          Tags ✨
-        </button>
-        <button
-          onClick={requestDescriptionSmall}
-          disabled={isLoadingDescriptionSmall}
-        >
-          Description (S) ✨
-        </button>
-        <button
-          onClick={requestDescriptionLarge}
-          disabled={isLoadingDescriptionLarge}
-        >
-          Description (L) ✨
-        </button>
+      <div className="flex gap-2 flex-wrap">
+        {renderAiButton('Title', requestTitle, isLoadingTitle)}
+        {renderAiButton('Tags', requestTags, isLoadingTags)}
+        {renderAiButton(
+          'Description (S)',
+          requestDescriptionSmall,
+          isLoadingDescriptionSmall,
+        )}
+        {renderAiButton(
+          'Description (L)',
+          requestDescriptionLarge,
+          isLoadingDescriptionLarge,
+        )}
       </div>
       <div className="flex gap-2">
         <ImageBlurFallback
