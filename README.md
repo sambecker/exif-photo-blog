@@ -68,12 +68,25 @@ Installation
 2. Click "Speed Insights" tab
 3. Follow "Enable Speed Insights" instructions (`@vercel/speed-insights` already included)
 
-### 7. Optional configuration
+### 7. Add experimental AI text generation
+
+_⚠️ READ BEFORE PROCEEDING_
+- _Usage of this feature will result in fees from OpenAI._
+- _When enabling AI text generation, follow all recommended mitigations in order to avoid unexpected charges and attacks._
+- _Make sure your OpenAI secret key is not prefixed with NEXT_PUBLIC._
+
+1. Setup OpenAI
+   - If you don't already have one, create an [OpenAI](https://openai.com) account
+   - Generate an API key and store as `OPENAI_SECRET_KEY`
+   - Setup usage limits to avoid unexpected charges (_recommended_)
+2. Add rate limiting (_recommended_)
+   - As an additional precaution, create a [Vercel KV](https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database) store and link it to your project in order to enable rate limiting
+
+### 8. Optional configuration
 
 - `NEXT_PUBLIC_PRO_MODE = 1` enables higher quality image storage for jpgs (will result in increased storage usage)
 - `NEXT_PUBLIC_BLUR_DISABLED = 1` prevents image blur data being stored and displayed (potentially useful for limiting Postgres usage)
 - `NEXT_PUBLIC_GEO_PRIVACY = 1` disables collection/display of location-based data
-- `OPENAI_SECRET_KEY = [Your Key]` enables experimental support for AI-generated text descriptions
 - `NEXT_PUBLIC_IGNORE_PRIORITY_ORDER = 1` prevents `priority_order` field affecting photo order
 - `NEXT_PUBLIC_PUBLIC_API = 1` enables public API available at `/api`
 - `NEXT_PUBLIC_HIDE_REPO_LINK = 1` removes footer link to repo

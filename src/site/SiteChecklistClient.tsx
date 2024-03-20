@@ -20,10 +20,12 @@ import { toastSuccess } from '@/toast';
 import { ConfigChecklistStatus } from './config';
 import StatusIcon from '@/components/StatusIcon';
 import { labelForStorage } from '@/services/storage';
+import { HiSparkles } from 'react-icons/hi';
 
 export default function SiteChecklistClient({
-  hasPostgres,
-  hasStorage,
+  hasVercelPostgres,
+  hasVercelKV,
+  hasStorageProvider,
   hasVercelBlobStorage,
   hasCloudflareR2Storage,
   hasAwsS3Storage,
@@ -140,7 +142,7 @@ export default function SiteChecklistClient({
       >
         <ChecklistRow
           title="Setup database"
-          status={hasPostgres}
+          status={hasVercelPostgres}
           isPending={isPendingPage}
         >
           {renderLink(
@@ -152,13 +154,13 @@ export default function SiteChecklistClient({
           and connect to project
         </ChecklistRow>
         <ChecklistRow
-          title={!hasStorage
+          title={!hasStorageProvider
             ? 'Setup storage (one of the following)'
             : hasMultipleStorageProviders
               // eslint-disable-next-line max-len
               ? `Setup storage (new uploads go to: ${labelForStorage(currentStorage)})`
               : 'Setup storage'}
-          status={hasStorage}
+          status={hasStorageProvider}
           isPending={isPendingPage}
         >
           {renderSubStatus(
@@ -267,6 +269,38 @@ export default function SiteChecklistClient({
         </ChecklistRow>
       </Checklist>
       <Checklist
+        title="AI Text Generation"
+        icon={<HiSparkles />}
+        optional
+      >
+        <ChecklistRow
+          title="Add OpenAI Secret Key"
+          status={isAiTextGenerationEnabled}
+          isPending={isPendingPage}
+          experimental
+          optional
+        >
+          Store your OpenAI secret key in order to add experimental support
+          for AI-generated text descriptions and enable an invisible field
+          called {'"Semantic Description"'} used to support CMD-K search
+          {renderEnvVars(['OPENAI_SECRET_KEY'])}
+        </ChecklistRow>
+        <ChecklistRow
+          title="Rate Limiting"
+          status={hasVercelKV}
+          isPending={isPendingPage}
+          optional
+        >
+          {renderLink(
+            // eslint-disable-next-line max-len
+            'https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database',
+            'Create Vercel KV store',
+          )}
+          {' '}
+          and connect to project in order to enable rate limiting
+        </ChecklistRow>
+      </Checklist>
+      <Checklist
         title="Settings"
         icon={<BiCog size={16} />}
         optional
@@ -300,18 +334,6 @@ export default function SiteChecklistClient({
           Set environment variable to {'"1"'} to disable
           collection/display of location-based data
           {renderEnvVars(['NEXT_PUBLIC_GEO_PRIVACY'])}
-        </ChecklistRow>
-        <ChecklistRow
-          title="AI-generated Text"
-          status={isAiTextGenerationEnabled}
-          isPending={isPendingPage}
-          experimental
-          optional
-        >
-          Store your OpenAI secret key in order to add experimental support
-          for AI-generated text descriptions and enable an invisible field
-          called {'"Semantic Description"'} used to support CMD-K search
-          {renderEnvVars(['OPENAI_SECRET_KEY'])}
         </ChecklistRow>
         <ChecklistRow
           title="Priority Order"

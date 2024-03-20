@@ -37,6 +37,15 @@ export const SITE_DESCRIPTION =
   process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
   SITE_DOMAIN;
 
+// STORAGE: VERCEL POSTGRES
+export const HAS_VERCEL_POSTGRES =
+  (process.env.POSTGRES_HOST ?? '').length > 0;
+
+// STORAGE: VERCEL KV
+export const HAS_VERCEL_KV =
+  (process.env.REDIS_REST_API_URL ?? '').length > 0 &&
+  (process.env.REDIS_REST_API_TOKEN ?? '').length > 0;
+
 // STORAGE: VERCEL BLOB
 export const HAS_VERCEL_BLOB_STORAGE =
   (process.env.BLOB_READ_WRITE_TOKEN ?? '').length > 0;
@@ -102,11 +111,12 @@ export const OG_TEXT_BOTTOM_ALIGNMENT =
 export const HIGH_DENSITY_GRID = GRID_ASPECT_RATIO <= 1;
 
 export const CONFIG_CHECKLIST_STATUS = {
-  hasPostgres: (process.env.POSTGRES_HOST ?? '').length > 0,
+  hasVercelPostgres: HAS_VERCEL_POSTGRES,
+  hasVercelKV: HAS_VERCEL_KV,
   hasVercelBlobStorage: HAS_VERCEL_BLOB_STORAGE,
   hasCloudflareR2Storage: HAS_CLOUDFLARE_R2_STORAGE,
   hasAwsS3Storage: HAS_AWS_S3_STORAGE,
-  hasStorage:
+  hasStorageProvider:
     HAS_VERCEL_BLOB_STORAGE ||
     HAS_CLOUDFLARE_R2_STORAGE ||
     HAS_AWS_S3_STORAGE,
@@ -135,7 +145,7 @@ export const CONFIG_CHECKLIST_STATUS = {
 export type ConfigChecklistStatus = typeof CONFIG_CHECKLIST_STATUS;
 
 export const IS_SITE_READY =
-  CONFIG_CHECKLIST_STATUS.hasPostgres &&
-  CONFIG_CHECKLIST_STATUS.hasStorage &&
+  CONFIG_CHECKLIST_STATUS.hasVercelPostgres &&
+  CONFIG_CHECKLIST_STATUS.hasStorageProvider &&
   CONFIG_CHECKLIST_STATUS.hasAuthSecret &&
   CONFIG_CHECKLIST_STATUS.hasAdminUser;
