@@ -131,10 +131,16 @@ export default function PhotoForm({
   ] = useImageQuery(imageData, 'tags');
 
   const [
-    requestDescription,
-    description,
-    isLoadingDescription,
-  ] = useImageQuery(imageData, 'description');
+    requestDescriptionSmall,
+    descriptionSmall,
+    isLoadingDescriptionSmall,
+  ] = useImageQuery(imageData, 'descriptionSmall');
+
+  const [
+    requestDescriptionLarge,
+    descriptionLarge,
+    isLoadingDescriptionLarge,
+  ] = useImageQuery(imageData, 'descriptionLarge');
 
   return (
     <div className="space-y-8 max-w-[38rem]">
@@ -145,8 +151,17 @@ export default function PhotoForm({
         <button onClick={requestTags} disabled={isLoadingTags}>
           Tags ✨
         </button>
-        <button onClick={requestDescription} disabled={isLoadingDescription}>
-          Description ✨
+        <button
+          onClick={requestDescriptionSmall}
+          disabled={isLoadingDescriptionSmall}
+        >
+          Description (S) ✨
+        </button>
+        <button
+          onClick={requestDescriptionLarge}
+          disabled={isLoadingDescriptionLarge}
+        >
+          Description (L) ✨
         </button>
       </div>
       <div className="flex gap-2">
@@ -195,7 +210,14 @@ export default function PhotoForm({
         </>}
       </p>
       <p>
-        ✨ DESCRIPTION: {description} {isLoadingDescription && <>
+        ✨ DESCRIPTION (S): {descriptionSmall} {isLoadingDescriptionSmall && <>
+          <span className="inline-flex translate-y-[1.5px]">
+            <Spinner />
+          </span>
+        </>}
+      </p>
+      <p>
+        ✨ DESCRIPTION (L): {descriptionLarge} {isLoadingDescriptionLarge && <>
           <span className="inline-flex translate-y-[1.5px]">
             <Spinner />
           </span>
