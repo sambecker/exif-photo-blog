@@ -7,12 +7,14 @@ export default function ChecklistRow({
   status,
   isPending,
   optional,
+  experimental,
   children,
 }: {
   title: string
   status: boolean
   isPending: boolean
   optional?: boolean
+  experimental?: boolean
   children: ReactNode
 }) {
   return (
@@ -25,8 +27,21 @@ export default function ChecklistRow({
         loading={isPending}
       />
       <div className="flex flex-col min-w-0">
-        <div className="font-bold dark:text-gray-300">
+        <div className={clsx(
+          'flex flex-wrap items-center gap-2',
+          'font-bold dark:text-gray-300',
+        )}>
           {title}
+          {experimental &&
+            <span className={clsx(
+              'text-[9px] font-medium uppercase tracking-wide leading-none',
+              'px-[3px] py-[2px] rounded-[0.2rem] translate-y-[0.5px]',
+              'text-pink-500 dark:text-white',
+              'bg-pink-50 dark:bg-pink-600',
+              'border border-pink-200/50 dark:border-pink-600',
+            )}>
+              Experimental
+            </span>}
         </div>
         <div>
           {children}

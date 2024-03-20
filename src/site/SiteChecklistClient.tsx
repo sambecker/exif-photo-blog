@@ -305,6 +305,7 @@ export default function SiteChecklistClient({
           title="AI-generated Text"
           status={isAiTextGenerationEnabled}
           isPending={isPendingPage}
+          experimental
           optional
         >
           Store your OpenAI secret key in order to add experimental support
