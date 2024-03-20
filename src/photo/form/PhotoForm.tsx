@@ -51,6 +51,8 @@ export default function PhotoForm({
     useState<Partial<PhotoFormData>>(initialPhotoForm);
   const [formErrors, setFormErrors] =
     useState(getFormErrors(initialPhotoForm));
+  const [blurError, setBlurError] =
+    useState<string>();
   const [imageData, setImageData] =
     useState<string>();
 
@@ -165,6 +167,10 @@ export default function PhotoForm({
 
   return (
     <div className="space-y-8 max-w-[38rem]">
+      {blurError &&
+        <div className="border error text-error rounded-md px-2 py-1">
+          {blurError}
+        </div>}
       <div className="flex gap-2 flex-wrap">
         {renderAiButton(
           'Title',
@@ -209,6 +215,7 @@ export default function PhotoForm({
           height={height}
           onLoad={setImageData}
           onCapture={updateBlurData}
+          onError={setBlurError}
         />
         {debugBlur && formData.blurData &&
           <img

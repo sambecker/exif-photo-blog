@@ -8,6 +8,7 @@ export default function CanvasBlurCapture({
   imageUrl,
   onLoad,
   onCapture,
+  onError,
   width,
   height,
   hidden = true,
@@ -18,6 +19,7 @@ export default function CanvasBlurCapture({
   imageUrl: string
   onLoad?: (imageData: string) => void
   onCapture: (imageData: string) => void
+  onError?: (error: string) => void
   width: number
   height: number
   hidden?: boolean
@@ -74,12 +76,14 @@ export default function CanvasBlurCapture({
             refShouldCapture.current = false;
           } else {
             console.error('Cannot get 2d context');
+            onError?.('Cannot get 2d context');
             // Retry capture in case canvas is not available
             refTimeouts.current.push(setTimeout(capture, RETRY_DELAY));
           }
         } else {
           // eslint-disable-next-line max-len
           console.error('Cannot generate blur data: canvas/image not ready');
+          onError?.('Cannot generate blur data: canvas/image not ready');
           // Retry capture in case canvas is not available
           refTimeouts.current.push(setTimeout(capture, RETRY_DELAY));
         }
@@ -106,6 +110,7 @@ export default function CanvasBlurCapture({
     imageUrl,
     onCapture,
     onLoad,
+    onError,
     width,
     height,
     edgeCompensation,
