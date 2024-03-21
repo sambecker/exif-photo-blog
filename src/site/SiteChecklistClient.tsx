@@ -286,7 +286,7 @@ export default function SiteChecklistClient({
           {renderEnvVars(['OPENAI_SECRET_KEY'])}
         </ChecklistRow>
         <ChecklistRow
-          title="Rate Limiting"
+          title="Enable Rate Limiting"
           status={hasVercelKV}
           isPending={isPendingPage}
           optional

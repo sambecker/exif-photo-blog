@@ -43,8 +43,7 @@ export const HAS_VERCEL_POSTGRES =
 
 // STORAGE: VERCEL KV
 export const HAS_VERCEL_KV =
-  (process.env.REDIS_REST_API_URL ?? '').length > 0 &&
-  (process.env.REDIS_REST_API_TOKEN ?? '').length > 0;
+  (process.env.KV_URL ?? '').length > 0;
 
 // STORAGE: VERCEL BLOB
 export const HAS_VERCEL_BLOB_STORAGE =
