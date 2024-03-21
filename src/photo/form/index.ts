@@ -72,18 +72,18 @@ const FORM_METADATA = (
     validateStringMaxLength: STRING_MAX_LENGTH_LONG,
     shouldHide: ({ title, caption }) => !title && !caption,
   },
-  semanticDescription: {
-    label: 'semantic description',
-    capitalize: true,
-    validateStringMaxLength: STRING_MAX_LENGTH_LONG,
-    hide: !aiTextGeneration,
-  },
   tags: {
     label: 'tags',
     tagOptions,
     validate: tags => doesTagsStringIncludeFavs(tags)
       ? `'${TAG_FAVS}' is a reserved tag`
       : undefined,
+  },
+  semanticDescription: {
+    label: 'semantic description',
+    capitalize: true,
+    validateStringMaxLength: STRING_MAX_LENGTH_LONG,
+    hide: !aiTextGeneration,
   },
   id: { label: 'id', readOnly: true, hideIfEmpty: true },
   blurData: {

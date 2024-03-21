@@ -34,7 +34,7 @@ import { extractExifDataFromBlobPath } from './server';
 import { TAG_FAVS, isTagFavs } from '@/tag';
 import { convertPhotoToPhotoDbInsert } from '.';
 import { safelyRunAdminServerAction } from '@/auth';
-import { ImageQuery, streamImageQuery } from './ai';
+import { AiImageQuery, streamAiImageQuery } from './ai';
 
 export async function createPhotoAction(formData: FormData) {
   return safelyRunAdminServerAction(async () => {
@@ -183,10 +183,10 @@ export async function syncCacheAction() {
   return safelyRunAdminServerAction(revalidateAllKeysAndPaths);
 }
 
-export async function streamImageQueryAction(
+export async function streamAiImageQueryAction(
   imageBase64: string,
-  query: ImageQuery,
+  query: AiImageQuery,
 ) {
   return safelyRunAdminServerAction(async () =>
-    streamImageQuery(imageBase64, query));
+    streamAiImageQuery(imageBase64, query));
 }

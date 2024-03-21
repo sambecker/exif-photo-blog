@@ -12,6 +12,9 @@ import IconGrSync from '@/site/IconGrSync';
 import { getExifDataAction } from './actions';
 import { Tags } from '@/tag';
 import { useState } from 'react';
+import useImageQueries from './ai/useImageQueries';
+import { HiSparkles } from 'react-icons/hi';
+import Spinner from '@/components/Spinner';
 
 export default function PhotoEditPageClient({
   photo,
@@ -37,6 +40,8 @@ export default function PhotoEditPageClient({
     seedExifData,
   );
 
+  const aiContent = useImageQueries();
+
   return (
     <AdminChildPage
       backPath={PATH_ADMIN_PHOTOS}
@@ -45,16 +50,27 @@ export default function PhotoEditPageClient({
         ? updatedTitle
         : photo.title || photo.id}
       accessory={
-        <form action={action}>
-          <input name="photoUrl" value={photo.url} hidden readOnly />
-          <SubmitButtonWithStatus
-            icon={<IconGrSync
-              className="translate-y-[-1px] sm:mr-[4px]"
-            />}
+        <div className="flex gap-2">
+          <button
+            className="min-w-[3.25rem] flex justify-center"
+            onClick={aiContent.request}
+            disabled={!aiContent.isReady || aiContent.isLoading}
           >
-            EXIF
-          </SubmitButtonWithStatus>
-        </form>}
+            {aiContent.isLoading
+              ? <Spinner />
+              : <HiSparkles size={16} />}
+          </button>
+          <form action={action}>
+            <input name="photoUrl" value={photo.url} hidden readOnly />
+            <SubmitButtonWithStatus
+              icon={<IconGrSync
+                className="translate-y-[-1px] sm:mr-[4px]"
+              />}
+            >
+              EXIF
+            </SubmitButtonWithStatus>
+          </form>
+        </div>}
       isLoading={pending}
     >
       <PhotoForm
@@ -64,7 +80,7 @@ export default function PhotoEditPageClient({
           ? updatedExifData
           : undefined}
         uniqueTags={uniqueTags}
-        aiTextGeneration={aiTextGeneration}
+        aiContent={aiTextGeneration ? aiContent : undefined}
         onTitleChange={setUpdatedTitle}
         onFormStatusChange={setIsPending}
       />

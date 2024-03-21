@@ -1,29 +1,27 @@
+/* eslint-disable max-len */
+
 import { streamOpenAiImageQuery } from '@/services/openai';
 
-export type ImageQuery =
+export type AiImageQuery =
   'title' |
   'caption' |
+  'title-and-caption' |
   'tags' |
-  'descriptionSmall' |
-  'descriptionMedium' |
-  'descriptionLarge' |
-  'rich' |
+  'description-small' |
+  'description' |
+  'description-large' |
   'semantic';
 
-export const IMAGE_QUERIES: Record<ImageQuery, string> = {
-  // title: 'Provide a short title for this image',
-  title: 'Provide a short title for this image in 3 words or less',
-  caption: 'What is a pithy caption for this image in 8 words or less?',
-  // eslint-disable-next-line max-len
-  tags: 'Describe this image three or less comma-separated keywords with no adjective or adverbs',
-  descriptionSmall: 'Describe this image succinctly',
-  descriptionMedium: 'Describe this image',
-  descriptionLarge: 'Describe this image in detail',
-  // eslint-disable-next-line max-len
-  rich: 'What is a short title and pithy caption of 8 words or less for this image?',
-  // eslint-disable-next-line max-len
-  semantic: 'List up to 5 things in this image without description as a comma-separated list',
+export const AI_IMAGE_QUERIES: Record<AiImageQuery, string> = {
+  'title': 'Provide a short title for this image in 3 words or less',
+  'caption': 'What is a pithy caption for this image in 8 words or less?',
+  'title-and-caption': 'Write a short title and pithy caption of 8 words or less for this image, using the format Title: "title" Caption: "caption"',
+  'tags': 'Describe this image three or less comma-separated keywords with no adjective or adverbs',
+  'description-small': 'Describe this image succinctly',
+  'description': 'Describe this image',
+  'description-large': 'Describe this image in detail',
+  'semantic': 'List up to 5 things in this image without description as a comma-separated list',
 };
 
-export const streamImageQuery = (imageBase64: string, query: ImageQuery) =>
-  streamOpenAiImageQuery(imageBase64, IMAGE_QUERIES[query]);
+export const streamAiImageQuery = (imageBase64: string, query: AiImageQuery) =>
+  streamOpenAiImageQuery(imageBase64, AI_IMAGE_QUERIES[query]);

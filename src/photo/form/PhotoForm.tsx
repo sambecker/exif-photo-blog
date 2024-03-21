@@ -25,8 +25,7 @@ import ImageBlurFallback from '@/components/ImageBlurFallback';
 import { BLUR_ENABLED } from '@/site/config';
 import { Tags, sortTagsObjectWithoutFavs } from '@/tag';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
-import Spinner from '@/components/Spinner';
-import useImageQuery from '../ai/useImageQuery';
+import { AiContent } from '../ai/useImageQueries';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -35,7 +34,7 @@ export default function PhotoForm({
   updatedExifData,
   type = 'create',
   uniqueTags,
-  aiTextGeneration,
+  aiContent,
   debugBlur,
   onTitleChange,
   onFormStatusChange,
@@ -44,7 +43,8 @@ export default function PhotoForm({
   updatedExifData?: Partial<PhotoFormData>
   type?: 'create' | 'edit'
   uniqueTags?: Tags
-  aiTextGeneration?: boolean
+  aiContent?: AiContent
+  setImageData?: (imageData: string) => void
   debugBlur?: boolean
   onTitleChange?: (updatedTitle: string) => void
   onFormStatusChange?: (pending: boolean) => void
@@ -54,8 +54,6 @@ export default function PhotoForm({
   const [formErrors, setFormErrors] =
     useState(getFormErrors(initialPhotoForm));
   const [blurError, setBlurError] =
-    useState<string>();
-  const [imageData, setImageData] =
     useState<string>();
 
   // Update form when EXIF data
@@ -122,123 +120,12 @@ export default function PhotoForm({
     }
   }, []);
 
-  // const [
-  //   requestTitle,
-  //   title,
-  //   isLoadingTitle,
-  //   errorTitle,
-  // ] = useImageQuery(imageData, 'title');
-
-  // const [
-  //   requestCaption,
-  //   caption,
-  //   isLoadingCaption,
-  //   errorCaption,
-  // ] = useImageQuery(imageData, 'caption');
-
-  const [
-    requestTags,
-    tags,
-    isLoadingTags,
-    errorTags,
-  ] = useImageQuery(imageData, 'tags');
-
-  const [
-    requestRich,
-    rich,
-    isLoadingRich,
-    errorRich,
-  ] = useImageQuery(imageData, 'rich');
-
-  // const [
-  //   requestDescriptionSmall,
-  //   descriptionSmall,
-  //   isLoadingDescriptionSmall,
-  //   errorDescriptionSmall,
-  // ] = useImageQuery(imageData, 'descriptionSmall');
-
-  const [
-    requestSemantic,
-    semantic,
-    isLoadingSemantic,
-    errorSemantic,
-  ] = useImageQuery(imageData, 'semantic');
-
-  const renderAiButton = (
-    label: string,
-    onClick: () => void,
-    isLoading: boolean,
-    error?: any,
-  ) =>
-    <button
-      onClick={onClick}
-      disabled={!imageData || isLoading}
-      className={clsx(
-        'flex gap-2 items-center justify-center',
-        'disabled:opacity-50 text-sm px-2.5 min-h-0 py-1.5',
-        Boolean(error) && 'error text-error',
-      )}
-    >
-      <span>
-        {label}
-      </span>
-      <span className="min-w-4">
-        {isLoading
-          ? <Spinner className="translate-y-[1.5px]" />
-          : <>✨</>}
-      </span>
-    </button>;
-
   return (
     <div className="space-y-8 max-w-[38rem]">
-      {blurError &&
+      {debugBlur && blurError &&
         <div className="border error text-error rounded-md px-2 py-1">
           {blurError}
         </div>}
-      <div className="flex gap-2 flex-wrap">
-        {/* {renderAiButton(
-          'Title',
-          requestTitle,
-          isLoadingTitle,
-          errorTitle,
-        )}
-        {renderAiButton(
-          'Caption',
-          requestCaption,
-          isLoadingCaption,
-          errorCaption,
-        )}
-        {renderAiButton(
-          'Tags',
-          requestTags,
-          isLoadingTags,
-          errorTags,
-        )} */}
-        {renderAiButton(
-          'Rich',
-          requestRich,
-          isLoadingRich,
-          errorRich,
-        )}
-        {renderAiButton(
-          'Tags',
-          requestTags,
-          isLoadingTags,
-          errorTags,
-        )}
-        {renderAiButton(
-          'Semantic',
-          requestSemantic,
-          isLoadingSemantic,
-          errorSemantic,
-        )}
-        {/* {renderAiButton(
-          'Description',
-          requestDescriptionSmall,
-          isLoadingDescriptionSmall,
-          errorDescriptionSmall,
-        )} */}
-      </div>
       <div className="flex gap-2">
         <ImageBlurFallback
           alt="Upload"
@@ -255,7 +142,7 @@ export default function PhotoForm({
           imageUrl={url}
           width={width}
           height={height}
-          onLoad={setImageData}
+          onLoad={aiContent?.setImageData}
           onCapture={updateBlurData}
           onError={setBlurError}
         />
@@ -271,48 +158,10 @@ export default function PhotoForm({
             height={height}
           />}
       </div>
-      {/* <p>
-        ✨ TITLE: {title} {isLoadingTitle && <>
-          <span className="inline-flex translate-y-[1.5px]">
-            <Spinner />
-          </span>
-        </>}
-      </p>
-      <p>
-        ✨ CAPTION: {caption} {isLoadingCaption && <>
-          <span className="inline-flex translate-y-[1.5px]">
-            <Spinner />
-          </span>
-        </>}
-      </p> */}
-      <p>
-        ✨ RICH: {rich} {isLoadingRich && <>
-          <span className="inline-flex translate-y-[1.5px]">
-            <Spinner />
-          </span>
-        </>}
-      </p>
-      <p>
-        ✨ TAGS: {tags} {isLoadingTags && <>
-          <span className="inline-flex translate-y-[1.5px]">
-            <Spinner />
-          </span>
-        </>}
-      </p>
-      <p>
-        ✨ SEMANTIC: {semantic} {isLoadingSemantic && <>
-          <span className="inline-flex translate-y-[1.5px]">
-            <Spinner />
-          </span>
-        </>}
-      </p>
-      {/* <p>
-        ✨ DESCRIPTION: {descriptionSmall} {isLoadingDescriptionSmall && <>
-          <span className="inline-flex translate-y-[1.5px]">
-            <Spinner />
-          </span>
-        </>}
-      </p> */}
+      <div>Title: {aiContent?.title}</div>
+      <div>Caption: {aiContent?.caption}</div>
+      <div>Tags: {aiContent?.tags}</div>
+      <div>Semantic: {aiContent?.semantic}</div>
       <form
         action={type === 'create' ? createPhotoAction : updatePhotoAction}
         onSubmit={() => blur()}
@@ -325,7 +174,7 @@ export default function PhotoForm({
               annotation: formatCount(count),
               annotationAria: formatCountDescriptive(count, 'tagged'),
             })),
-          aiTextGeneration,
+          aiContent !== undefined,
         )
           .map(([key, {
             label,
