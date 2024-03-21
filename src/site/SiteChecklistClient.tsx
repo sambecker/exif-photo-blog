@@ -271,13 +271,13 @@ export default function SiteChecklistClient({
       <Checklist
         title="AI Text Generation"
         icon={<HiSparkles />}
+        experimental
         optional
       >
         <ChecklistRow
           title="Add OpenAI Secret Key"
           status={isAiTextGenerationEnabled}
           isPending={isPendingPage}
-          experimental
           optional
         >
           Store your OpenAI secret key in order to add experimental support
