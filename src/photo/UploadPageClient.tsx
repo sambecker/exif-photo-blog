@@ -37,7 +37,8 @@ export default function UploadPageClient({
         ? updatedTitle
         : blobId}
       breadcrumbEllipsis
-      accessory={<AiButton {...{ aiContent, shouldConfirm: hasTextContent }} />}
+      accessory={hasAiTextGeneration &&
+        <AiButton {...{ aiContent, shouldConfirm: hasTextContent }} />}
       isLoading={pending}
     >
       <PhotoForm

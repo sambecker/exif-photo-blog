@@ -60,7 +60,8 @@ export default function PhotoEditPageClient({
       breadcrumbEllipsis
       accessory={
         <div className="flex gap-2">
-          <AiButton {...{ aiContent, shouldConfirm: hasTextContent }} />
+          {hasAiTextGeneration &&
+            <AiButton {...{ aiContent, shouldConfirm: hasTextContent }} />}
           <form action={action}>
             <input name="photoUrl" value={photo.url} hidden readOnly />
             <SubmitButtonWithStatus
