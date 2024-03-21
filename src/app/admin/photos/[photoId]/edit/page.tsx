@@ -15,13 +15,13 @@ export default async function PhotoEditPage({
 
   const uniqueTags = await getUniqueTagsCached();
 
-  const aiTextGeneration = AI_TEXT_GENERATION_ENABLED;
+  const hasAiTextGeneration = AI_TEXT_GENERATION_ENABLED;
 
   return (
     <PhotoEditPageClient {...{
       photo,
       uniqueTags,
-      aiTextGeneration,
+      hasAiTextGeneration,
     }} />
   );
 };

@@ -5,6 +5,7 @@ import {
   FORM_METADATA_ENTRIES,
   PhotoFormData,
   convertFormKeysToLabels,
+  formHasTextContent,
   getFormErrors,
   isFormValid,
 } from '.';
@@ -37,6 +38,7 @@ export default function PhotoForm({
   aiContent,
   debugBlur,
   onTitleChange,
+  onTextContentChange,
   onFormStatusChange,
 }: {
   initialPhotoForm: Partial<PhotoFormData>
@@ -47,6 +49,7 @@ export default function PhotoForm({
   setImageData?: (imageData: string) => void
   debugBlur?: boolean
   onTitleChange?: (updatedTitle: string) => void
+  onTextContentChange?: (hasContent: boolean) => void,
   onFormStatusChange?: (pending: boolean) => void
 }) {
   const [formData, setFormData] =
@@ -135,9 +138,9 @@ export default function PhotoForm({
   const isFieldGeneratingAi = (key: keyof PhotoFormData) => {
     switch (key) {
     case 'title':
-      return aiContent?.isLoadingTitleCaption;
+      return aiContent?.isLoadingTitle;
     case 'caption':
-      return aiContent?.isLoadingTitleCaption;
+      return aiContent?.isLoadingCaption;
     case 'tags':
       return aiContent?.isLoadingTags;
     case 'semanticDescription':
@@ -227,7 +230,9 @@ export default function PhotoForm({
                 error={formErrors[key]}
                 value={formData[key] ?? ''}
                 onChange={value => {
-                  setFormData({ ...formData, [key]: value });
+                  const formUpdated = { ...formData, [key]: value };
+                  setFormData(formUpdated);
+                  onTextContentChange?.(formHasTextContent(formUpdated));
                   if (validate) {
                     setFormErrors({ ...formErrors, [key]: validate(value) });
                   } else if (validateStringMaxLength !== undefined) {

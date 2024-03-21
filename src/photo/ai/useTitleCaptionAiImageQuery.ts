@@ -13,7 +13,7 @@ export default function useTitleCaptionAiImageQuery(
 
   const { title, caption } = useMemo(() => {
     const matches = text.includes('Title')
-      ? text.match(/^[`']*Title: "*(.*?)\.*"* Caption: "*(.*?)\.*"*[`']*$/)
+      ? text.match(/^[`']*Title: "*(.*?)"* Caption: "*(.*?)\.*"*[`']*$/)
       : text.match(/^(.*?): (.*?)$/);
 
     return {
@@ -22,11 +22,15 @@ export default function useTitleCaptionAiImageQuery(
     };
   }, [text]);
 
+  const isLoadingTitle = isLoading && !caption;
+  const isLoadingCaption = isLoading;
+
   return [
     request,
     title,
     caption,
-    isLoading,
+    isLoadingTitle,
+    isLoadingCaption,
     error,
   ] as const;
 }

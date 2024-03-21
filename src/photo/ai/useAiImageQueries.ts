@@ -13,7 +13,8 @@ export default function useAiImageQueries() {
     requestTitleCaption,
     title,
     caption,
-    isLoadingTitleCaption,
+    isLoadingTitle,
+    isLoadingCaption,
   ] = useTitleCaptionAiImageQuery(imageData);
 
   const [
@@ -26,7 +27,7 @@ export default function useAiImageQueries() {
     requestSemantic,
     semanticDescription,
     isLoadingSemantic,
-  ] = useAiImageQuery(imageData, 'description-semantic');
+  ] = useAiImageQuery(imageData, 'description-small');
 
   const hasContent = Boolean(
     title ||
@@ -36,13 +37,13 @@ export default function useAiImageQueries() {
   );
 
   const isLoading =
-    isLoadingTitleCaption ||
+    isLoadingTitle ||
+    isLoadingCaption ||
     isLoadingTags ||
     isLoadingSemantic;
 
   const request = useCallback(async () => {
     if (!isLoading) {
-      console.log('REQUESTING ALL IMAGE QUERIES');
       requestTitleCaption();
       requestTags();
       requestSemantic();
@@ -58,7 +59,8 @@ export default function useAiImageQueries() {
     isReady,
     hasContent,
     isLoading,
-    isLoadingTitleCaption,
+    isLoadingTitle,
+    isLoadingCaption,
     isLoadingTags,
     isLoadingSemantic,
     setImageData,

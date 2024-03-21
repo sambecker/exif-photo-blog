@@ -27,7 +27,8 @@ export type FieldSetType =
   'text' |
   'email' |
   'password' |
-  'checkbox';
+  'checkbox' |
+  'textarea';
 
 export type AnnotatedTag = {
   value: string,
@@ -70,7 +71,8 @@ const FORM_METADATA = (
     label: 'caption',
     capitalize: true,
     validateStringMaxLength: STRING_MAX_LENGTH_LONG,
-    shouldHide: ({ title, caption }) => !title && !caption,
+    shouldHide: ({ title, caption }) =>
+      !aiTextGeneration && (!title && !caption),
   },
   tags: {
     label: 'tags',
@@ -80,6 +82,7 @@ const FORM_METADATA = (
       : undefined,
   },
   semanticDescription: {
+    type: 'textarea',
     label: 'semantic description (not visible)',
     capitalize: true,
     validateStringMaxLength: STRING_MAX_LENGTH_LONG,
@@ -147,6 +150,14 @@ export const isFormValid = (formData: Partial<PhotoFormData>) =>
       (!validateStringMaxLength || (formData[key]?.length ?? 0) <= validateStringMaxLength) &&
       (key !== 'tags' || !doesTagsStringIncludeFavs(formData.tags ?? ''))
   );
+
+export const formHasTextContent = ({
+  title,
+  caption,
+  tags,
+  semanticDescription,
+}: Partial<PhotoFormData>) =>
+  Boolean(title || caption || tags || semanticDescription);
 
 // CREATE FORM DATA: FROM PHOTO
 

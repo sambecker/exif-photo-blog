@@ -101,25 +101,38 @@ export default function FieldSetWithStatus({
             className={clsx(Boolean(error) && 'error')}
             readOnly={readOnly || pending || loading}
           />
-          : <input
-            ref={inputRef}
-            id={id}
-            name={id}
-            value={value}
-            checked={type === 'checkbox' ? value === 'true' : undefined}
-            placeholder={placeholder}
-            onChange={e => onChange?.(type === 'checkbox'
-              ? e.target.value === 'true' ? 'false' : 'true'
-              : e.target.value)}
-            type={type}
-            autoComplete="off"
-            autoCapitalize={!capitalize ? 'off' : undefined}
-            readOnly={readOnly || pending || loading}
-            className={clsx(
-              type === 'text' && 'w-full',
-              Boolean(error) && 'error',
-            )}
-          />}
+          : type === 'textarea'
+            ? <textarea
+              id={id}
+              name={id}
+              value={value}
+              placeholder={placeholder}
+              onChange={e => onChange?.(e.target.value)}
+              readOnly={readOnly || pending || loading}
+              className={clsx(
+                'w-full h-24 resize-none',
+                Boolean(error) && 'error',
+              )}
+            />
+            : <input
+              ref={inputRef}
+              id={id}
+              name={id}
+              value={value}
+              checked={type === 'checkbox' ? value === 'true' : undefined}
+              placeholder={placeholder}
+              onChange={e => onChange?.(type === 'checkbox'
+                ? e.target.value === 'true' ? 'false' : 'true'
+                : e.target.value)}
+              type={type}
+              autoComplete="off"
+              autoCapitalize={!capitalize ? 'off' : undefined}
+              readOnly={readOnly || pending || loading}
+              className={clsx(
+                type === 'text' && 'w-full',
+                Boolean(error) && 'error',
+              )}
+            />}
     </div>
   );
 };

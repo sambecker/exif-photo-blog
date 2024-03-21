@@ -17,7 +17,7 @@ export const AI_IMAGE_QUERIES: Record<AiImageQuery, string> = {
   'caption': 'What is a pithy caption for this image in 8 words or less?',
   'title-and-caption': 'Write a short title and pithy caption of 8 words or less for this image, using the format Title: "title" Caption: "caption"',
   'tags': 'Describe this image three or less comma-separated keywords with no adjective or adverbs',
-  'description-small': 'Describe this image succinctly',
+  'description-small': 'Describe this image succinctly without the initial text "This image shows" or "This is a picture of"',
   'description': 'Describe this image',
   'description-large': 'Describe this image in detail',
   'description-semantic': 'List up to 5 things in this image without description as a comma-separated list',

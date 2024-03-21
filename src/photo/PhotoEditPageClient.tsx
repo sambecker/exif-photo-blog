@@ -4,7 +4,11 @@ import AdminChildPage from '@/components/AdminChildPage';
 import { Photo } from '.';
 import { PATH_ADMIN_PHOTOS } from '@/site/paths';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
-import { PhotoFormData, convertPhotoToFormData } from './form';
+import {
+  PhotoFormData,
+  convertPhotoToFormData,
+  formHasTextContent,
+} from './form';
 import PhotoForm from './form/PhotoForm';
 import { useFormState } from 'react-dom';
 import { areSimpleObjectsEqual } from '@/utility/object';
@@ -13,17 +17,16 @@ import { getExifDataAction } from './actions';
 import { Tags } from '@/tag';
 import { useState } from 'react';
 import useAiImageQueries from './ai/useAiImageQueries';
-import { HiSparkles } from 'react-icons/hi';
-import Spinner from '@/components/Spinner';
+import AiButton from './ai/AiButton';
 
 export default function PhotoEditPageClient({
   photo,
   uniqueTags,
-  aiTextGeneration,
+  hasAiTextGeneration,
 }: {
   photo: Photo
   uniqueTags: Tags
-  aiTextGeneration: boolean
+  hasAiTextGeneration: boolean
 }) {
   const seedExifData = { url: photo.url };
 
@@ -32,8 +35,12 @@ export default function PhotoEditPageClient({
     seedExifData,
   );
 
+  const photoForm = convertPhotoToFormData(photo);
+
   const [pending, setIsPending] = useState(false);
   const [updatedTitle, setUpdatedTitle] = useState('');
+  const [hasTextContent, setHasTextContent] =
+    useState(formHasTextContent(photoForm));
 
   const hasExifDataBeenFound = !areSimpleObjectsEqual(
     updatedExifData,
@@ -51,15 +58,7 @@ export default function PhotoEditPageClient({
         : photo.title || photo.id}
       accessory={
         <div className="flex gap-2">
-          <button
-            className="min-w-[3.25rem] flex justify-center"
-            onClick={aiContent.request}
-            disabled={!aiContent.isReady || aiContent.isLoading}
-          >
-            {aiContent.isLoading
-              ? <Spinner />
-              : <HiSparkles size={16} />}
-          </button>
+          <AiButton {...{ aiContent, shouldConfirm: hasTextContent }} />
           <form action={action}>
             <input name="photoUrl" value={photo.url} hidden readOnly />
             <SubmitButtonWithStatus
@@ -75,13 +74,14 @@ export default function PhotoEditPageClient({
     >
       <PhotoForm
         type="edit"
-        initialPhotoForm={convertPhotoToFormData(photo)}
+        initialPhotoForm={photoForm}
         updatedExifData={hasExifDataBeenFound
           ? updatedExifData
           : undefined}
         uniqueTags={uniqueTags}
-        aiContent={aiTextGeneration ? aiContent : undefined}
+        aiContent={hasAiTextGeneration ? aiContent : undefined}
         onTitleChange={setUpdatedTitle}
+        onTextContentChange={setHasTextContent}
         onFormStatusChange={setIsPending}
       />
     </AdminChildPage>
