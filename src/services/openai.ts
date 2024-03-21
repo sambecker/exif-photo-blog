@@ -4,12 +4,14 @@ import OpenAI from 'openai';
 import { createStreamableValue, render } from 'ai/rsc';
 import { kv } from '@vercel/kv';
 import { Ratelimit } from '@upstash/ratelimit';
-import { HAS_VERCEL_KV } from '@/site/config';
+import { AI_TEXT_GENERATION_ENABLED, HAS_VERCEL_KV } from '@/site/config';
 
 const RATE_LIMIT_IDENTIFIER = 'openai-image-query';
 const RATE_LIMIT_MAX_QUERIES_PER_HOUR = 100;
 
-const provider = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
+const provider = AI_TEXT_GENERATION_ENABLED
+  ? new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY })
+  : undefined;
 
 // Allows 100 requests per hour
 const ratelimit = HAS_VERCEL_KV
@@ -33,31 +35,33 @@ export const streamOpenAiImageQuery = async (
 
   const stream = createStreamableValue('');
 
-  render({
-    provider,
-    model: 'gpt-4-vision-preview',
-    messages: [{
-      'role': 'user',
-      'content': [
-        {
-          'type': 'text',
-          'text': query,
-        }, {
-          'type': 'image_url',
-          'image_url': {
-            'url': imageBase64,
+  if (provider) {
+    render({
+      provider,
+      model: 'gpt-4-vision-preview',
+      messages: [{
+        'role': 'user',
+        'content': [
+          {
+            'type': 'text',
+            'text': query,
+          }, {
+            'type': 'image_url',
+            'image_url': {
+              'url': imageBase64,
+            },
           },
-        },
-      ],
-    }],
-    text: ({ content, done }): any => {
-      if (done) {
-        stream.done(content);
-      } else {
-        stream.update(content);
-      }
-    },
-  });
+        ],
+      }],
+      text: ({ content, done }): any => {
+        if (done) {
+          stream.done(content);
+        } else {
+          stream.update(content);
+        }
+      },
+    });
+  }
 
   return stream.value;
 };
