@@ -7,7 +7,6 @@ import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import {
   PhotoFormData,
   convertPhotoToFormData,
-  formHasTextContent,
 } from './form';
 import PhotoForm from './form/PhotoForm';
 import { useFormState } from 'react-dom';
@@ -15,9 +14,8 @@ import { areSimpleObjectsEqual } from '@/utility/object';
 import IconGrSync from '@/site/IconGrSync';
 import { getExifDataAction } from './actions';
 import { Tags } from '@/tag';
-import { useState } from 'react';
-import useAiImageQueries from './ai/useAiImageQueries';
 import AiButton from './ai/AiButton';
+import usePhotoFormParent from './form/usePhotoFormParent';
 
 export default function PhotoEditPageClient({
   photo,
@@ -35,19 +33,22 @@ export default function PhotoEditPageClient({
     seedExifData,
   );
 
-  const photoForm = convertPhotoToFormData(photo);
-
-  const [pending, setIsPending] = useState(false);
-  const [updatedTitle, setUpdatedTitle] = useState('');
-  const [hasTextContent, setHasTextContent] =
-    useState(formHasTextContent(photoForm));
-
   const hasExifDataBeenFound = !areSimpleObjectsEqual(
     updatedExifData,
     seedExifData,
   );
 
-  const aiContent = useAiImageQueries();
+  const photoForm = convertPhotoToFormData(photo);
+
+  const {
+    pending,
+    setIsPending,
+    updatedTitle,
+    setUpdatedTitle,
+    hasTextContent,
+    setHasTextContent,
+    aiContent,
+  } = usePhotoFormParent(photoForm);
 
   return (
     <AdminChildPage
