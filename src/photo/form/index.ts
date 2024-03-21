@@ -80,7 +80,7 @@ const FORM_METADATA = (
       : undefined,
   },
   semanticDescription: {
-    label: 'semantic description',
+    label: 'semantic description (not visible)',
     capitalize: true,
     validateStringMaxLength: STRING_MAX_LENGTH_LONG,
     hide: !aiTextGeneration,

@@ -99,7 +99,7 @@ export default function FieldSetWithStatus({
             options={tagOptions}
             onChange={onChange}
             className={clsx(Boolean(error) && 'error')}
-            readOnly={readOnly || pending}
+            readOnly={readOnly || pending || loading}
           />
           : <input
             ref={inputRef}
@@ -114,7 +114,7 @@ export default function FieldSetWithStatus({
             type={type}
             autoComplete="off"
             autoCapitalize={!capitalize ? 'off' : undefined}
-            readOnly={readOnly || pending}
+            readOnly={readOnly || pending || loading}
             className={clsx(
               type === 'text' && 'w-full',
               Boolean(error) && 'error',

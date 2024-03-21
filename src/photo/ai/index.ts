@@ -10,7 +10,7 @@ export type AiImageQuery =
   'description-small' |
   'description' |
   'description-large' |
-  'semantic';
+  'description-semantic';
 
 export const AI_IMAGE_QUERIES: Record<AiImageQuery, string> = {
   'title': 'Provide a short title for this image in 3 words or less',
@@ -20,7 +20,7 @@ export const AI_IMAGE_QUERIES: Record<AiImageQuery, string> = {
   'description-small': 'Describe this image succinctly',
   'description': 'Describe this image',
   'description-large': 'Describe this image in detail',
-  'semantic': 'List up to 5 things in this image without description as a comma-separated list',
+  'description-semantic': 'List up to 5 things in this image without description as a comma-separated list',
 };
 
 export const streamAiImageQuery = (imageBase64: string, query: AiImageQuery) =>

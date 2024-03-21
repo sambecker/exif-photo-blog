@@ -24,11 +24,21 @@ export default function useImageQueries() {
 
   const [
     requestSemantic,
-    semantic,
+    semanticDescription,
     isLoadingSemantic,
-  ] = useImageQuery(imageData, 'semantic');
+  ] = useImageQuery(imageData, 'description-semantic');
 
-  const isLoading = isLoadingTitleCaption || isLoadingTags || isLoadingSemantic;
+  const hasContent = Boolean(
+    title ||
+    caption ||
+    tags ||
+    semanticDescription
+  );
+
+  const isLoading =
+    isLoadingTitleCaption ||
+    isLoadingTags ||
+    isLoadingSemantic;
 
   const request = useCallback(async () => {
     if (!isLoading) {
@@ -44,8 +54,9 @@ export default function useImageQueries() {
     title,
     caption,
     tags,
-    semantic,
+    semanticDescription,
     isReady,
+    hasContent,
     isLoading,
     isLoadingTitleCaption,
     isLoadingTags,

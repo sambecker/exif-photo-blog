@@ -120,6 +120,33 @@ export default function PhotoForm({
     }
   }, []);
 
+  useEffect(() => {
+    if (aiContent?.hasContent) {
+      setFormData(data => ({
+        ...data,
+        title: aiContent.title,
+        caption: aiContent.caption,
+        tags: aiContent.tags,
+        semanticDescription: aiContent.semanticDescription,
+      }));
+    }
+  }, [aiContent]);
+
+  const isFieldGeneratingAi = (key: keyof PhotoFormData) => {
+    switch (key) {
+    case 'title':
+      return aiContent?.isLoadingTitleCaption;
+    case 'caption':
+      return aiContent?.isLoadingTitleCaption;
+    case 'tags':
+      return aiContent?.isLoadingTags;
+    case 'semanticDescription':
+      return aiContent?.isLoadingSemantic;
+    default:
+      return false;
+    }
+  };
+
   return (
     <div className="space-y-8 max-w-[38rem]">
       {debugBlur && blurError &&
@@ -158,10 +185,6 @@ export default function PhotoForm({
             height={height}
           />}
       </div>
-      <div>Title: {aiContent?.title}</div>
-      <div>Caption: {aiContent?.caption}</div>
-      <div>Tags: {aiContent?.tags}</div>
-      <div>Semantic: {aiContent?.semantic}</div>
       <form
         action={type === 'create' ? createPhotoAction : updatePhotoAction}
         onSubmit={() => blur()}
@@ -228,7 +251,9 @@ export default function PhotoForm({
                 placeholder={loadingMessage && !formData[key]
                   ? loadingMessage
                   : undefined}
-                loading={loadingMessage && !formData[key] ? true : false}
+                loading={
+                  (loadingMessage && !formData[key] ? true : false) ||
+                  isFieldGeneratingAi(key)}
                 type={type}
               />)}
         <div className="flex gap-3">
