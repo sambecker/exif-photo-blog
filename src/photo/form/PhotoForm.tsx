@@ -123,17 +123,21 @@ export default function PhotoForm({
     }
   }, []);
 
-  useEffect(() => {
-    if (aiContent?.hasContent) {
-      setFormData(data => ({
-        ...data,
-        title: aiContent.title,
-        caption: aiContent.caption,
-        tags: aiContent.tags,
-        semanticDescription: aiContent.semanticDescription,
-      }));
-    }
-  }, [aiContent]);
+  useEffect(() => setFormData(data =>
+    ({ ...data, title: aiContent?.title })),
+  [aiContent?.title]);
+
+  useEffect(() => setFormData(data =>
+    ({ ...data, caption: aiContent?.caption })),
+  [aiContent?.caption]);
+
+  useEffect(() => setFormData(data =>
+    ({ ...data, tags: aiContent?.tags })),
+  [aiContent?.tags]);
+
+  useEffect(() => setFormData(data =>
+    ({ ...data, semanticDescription: aiContent?.semanticDescription })),
+  [aiContent?.semanticDescription]);
 
   const isFieldGeneratingAi = (key: keyof PhotoFormData) => {
     switch (key) {
