@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import useAiImageQuery from './useAiImageQuery';
+import { parseTitleAndCaption } from '.';
 
 export default function useTitleCaptionAiImageQuery(
   imageBase64: string | undefined,
@@ -11,16 +12,8 @@ export default function useTitleCaptionAiImageQuery(
     error,
   ] = useAiImageQuery(imageBase64, 'title-and-caption');
 
-  const { title, caption } = useMemo(() => {
-    const matches = text.includes('Title')
-      ? text.match(/^[`']*Title: "*(.*?)"* Caption: "*(.*?)\.*"*[`']*$/)
-      : text.match(/^(.*?): (.*?)$/);
-
-    return {
-      title: matches?.[1] ?? '',
-      caption: matches?.[2] ?? '',
-    };
-  }, [text]);
+  const { title, caption } = useMemo(() =>
+    parseTitleAndCaption(text), [text]);
 
   const isLoadingTitle = isLoading && !caption;
   const isLoadingCaption = isLoading;

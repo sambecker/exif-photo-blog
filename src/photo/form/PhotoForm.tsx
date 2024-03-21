@@ -123,21 +123,33 @@ export default function PhotoForm({
     }
   }, []);
 
-  useEffect(() => setFormData(data =>
-    ({ ...data, title: aiContent?.title })),
-  [aiContent?.title]);
+  useEffect(() =>
+    setFormData(data => aiContent?.hasContent
+      ? { ...data, title: aiContent?.title }
+      : data),
+  [aiContent?.title, aiContent?.hasContent]);
 
-  useEffect(() => setFormData(data =>
-    ({ ...data, caption: aiContent?.caption })),
-  [aiContent?.caption]);
+  useEffect(() =>
+    setFormData(data => aiContent?.hasContent
+      ? { ...data, caption: aiContent?.caption }
+      : data),
+  [aiContent?.caption, aiContent?.hasContent]);
 
-  useEffect(() => setFormData(data =>
-    ({ ...data, tags: aiContent?.tags })),
-  [aiContent?.tags]);
+  useEffect(() =>
+    setFormData(data => aiContent?.hasContent
+      ? { ...data, tags: aiContent?.tags }
+      : data),
+  [aiContent?.tags, aiContent?.hasContent]);
 
-  useEffect(() => setFormData(data =>
-    ({ ...data, semanticDescription: aiContent?.semanticDescription })),
-  [aiContent?.semanticDescription]);
+  useEffect(() =>
+    setFormData(data => aiContent?.hasContent
+      ? { ...data, semanticDescription: aiContent?.semanticDescription }
+      : data),
+  [aiContent?.semanticDescription, aiContent?.hasContent]);
+
+  useEffect(() => {
+    onTextContentChange?.(formHasTextContent(formData));
+  }, [onTextContentChange, formData]);
 
   const isFieldGeneratingAi = (key: keyof PhotoFormData) => {
     switch (key) {
@@ -236,7 +248,6 @@ export default function PhotoForm({
                 onChange={value => {
                   const formUpdated = { ...formData, [key]: value };
                   setFormData(formUpdated);
-                  onTextContentChange?.(formHasTextContent(formUpdated));
                   if (validate) {
                     setFormErrors({ ...formErrors, [key]: validate(value) });
                   } else if (validateStringMaxLength !== undefined) {
@@ -273,7 +284,7 @@ export default function PhotoForm({
             Cancel
           </Link>
           <SubmitButtonWithStatus
-            disabled={!isFormValid(formData)}
+            disabled={!isFormValid(formData) || aiContent?.isLoading}
             onFormStatusChange={onFormStatusChange}
           >
             {type === 'create' ? 'Create' : 'Update'}

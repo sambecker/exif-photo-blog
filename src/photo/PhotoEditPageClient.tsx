@@ -48,7 +48,7 @@ export default function PhotoEditPageClient({
     hasTextContent,
     setHasTextContent,
     aiContent,
-  } = usePhotoFormParent(photoForm);
+  } = usePhotoFormParent({ photoForm });
 
   return (
     <AdminChildPage

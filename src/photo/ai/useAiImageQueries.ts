@@ -1,10 +1,12 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import useAiImageQuery from './useAiImageQuery';
 import useTitleCaptionAiImageQuery from './useTitleCaptionAiImageQuery';
 
 export type AiContent = ReturnType<typeof useAiImageQueries>;
 
-export default function useAiImageQueries() {
+export default function useAiImageQueries(
+  shouldAutoGenerateText?: boolean,
+) {
   const [imageData, setImageData] = useState<string>();
 
   const isReady = Boolean(imageData);
@@ -42,13 +44,23 @@ export default function useAiImageQueries() {
     isLoadingTags ||
     isLoadingSemantic;
 
+  const hasRunAllQueriesOnce = useRef(false);
+
   const request = useCallback(async () => {
-    if (!isLoading) {
-      requestTitleCaption();
-      requestTags();
-      requestSemantic();
+    console.log('RUNNING ALL AI QUERIES');
+    hasRunAllQueriesOnce.current = true;
+    requestTitleCaption();
+    requestTags();
+    requestSemantic();
+  }, [requestTitleCaption, requestTags, requestSemantic]);
+
+  useEffect(() => {
+    if (shouldAutoGenerateText && imageData) {
+      if (!hasRunAllQueriesOnce.current) {
+        request();
+      }
     }
-  }, [isLoading, requestTitleCaption, requestTags, requestSemantic]);
+  }, [shouldAutoGenerateText, imageData, request]);
 
   return {
     request,

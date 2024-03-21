@@ -27,7 +27,7 @@ export default function UploadPageClient({
     hasTextContent,
     setHasTextContent,
     aiContent,
-  } = usePhotoFormParent();
+  } = usePhotoFormParent({ shouldAutoGenerateText: hasAiTextGeneration });
 
   return (
     <AdminChildPage

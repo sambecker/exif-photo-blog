@@ -1,7 +1,5 @@
 /* eslint-disable max-len */
 
-import { streamOpenAiImageQuery } from '@/services/openai';
-
 export type AiImageQuery =
   'title' |
   'caption' |
@@ -23,5 +21,13 @@ export const AI_IMAGE_QUERIES: Record<AiImageQuery, string> = {
   'description-semantic': 'List up to 5 things in this image without description as a comma-separated list',
 };
 
-export const streamAiImageQuery = (imageBase64: string, query: AiImageQuery) =>
-  streamOpenAiImageQuery(imageBase64, AI_IMAGE_QUERIES[query]);
+export const parseTitleAndCaption = (text: string) => {
+  const matches = text.includes('Title')
+    ? text.match(/^[`'"]*Title: ["']*(.*?)["']*[ ]*Caption: ["']*(.*?)\.*["']*[`'"]*$/)
+    : text.match(/^(.*?): (.*?)$/);
+
+  return {
+    title: matches?.[1] ?? '',
+    caption: matches?.[2] ?? '',
+  };
+};
