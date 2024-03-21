@@ -25,7 +25,7 @@ import ImageBlurFallback from '@/components/ImageBlurFallback';
 import { BLUR_ENABLED } from '@/site/config';
 import { Tags, sortTagsObjectWithoutFavs } from '@/tag';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
-import { AiContent } from '../ai/useImageQueries';
+import { AiContent } from '../ai/useAiImageQueries';
 
 const THUMBNAIL_SIZE = 300;
 

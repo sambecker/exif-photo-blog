@@ -12,7 +12,7 @@ import IconGrSync from '@/site/IconGrSync';
 import { getExifDataAction } from './actions';
 import { Tags } from '@/tag';
 import { useState } from 'react';
-import useImageQueries from './ai/useImageQueries';
+import useAiImageQueries from './ai/useAiImageQueries';
 import { HiSparkles } from 'react-icons/hi';
 import Spinner from '@/components/Spinner';
 
@@ -40,7 +40,7 @@ export default function PhotoEditPageClient({
     seedExifData,
   );
 
-  const aiContent = useImageQueries();
+  const aiContent = useAiImageQueries();
 
   return (
     <AdminChildPage

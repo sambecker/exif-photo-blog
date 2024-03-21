@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import useImageQuery from './useImageQuery';
+import useAiImageQuery from './useAiImageQuery';
 
-export default function useTitleCaptionImageQuery(
+export default function useTitleCaptionAiImageQuery(
   imageBase64: string | undefined,
 ) {
   const [
@@ -9,7 +9,7 @@ export default function useTitleCaptionImageQuery(
     text,
     isLoading,
     error,
-  ] = useImageQuery(imageBase64, 'title-and-caption');
+  ] = useAiImageQuery(imageBase64, 'title-and-caption');
 
   const { title, caption } = useMemo(() => {
     const matches = text.includes('Title')

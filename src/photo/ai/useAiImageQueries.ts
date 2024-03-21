@@ -1,10 +1,10 @@
 import { useCallback, useState } from 'react';
-import useImageQuery from './useImageQuery';
-import useTitleCaptionImageQuery from './useTitleCaptionImageQuery';
+import useAiImageQuery from './useAiImageQuery';
+import useTitleCaptionAiImageQuery from './useTitleCaptionAiImageQuery';
 
-export type AiContent = ReturnType<typeof useImageQueries>;
+export type AiContent = ReturnType<typeof useAiImageQueries>;
 
-export default function useImageQueries() {
+export default function useAiImageQueries() {
   const [imageData, setImageData] = useState<string>();
 
   const isReady = Boolean(imageData);
@@ -14,19 +14,19 @@ export default function useImageQueries() {
     title,
     caption,
     isLoadingTitleCaption,
-  ] = useTitleCaptionImageQuery(imageData);
+  ] = useTitleCaptionAiImageQuery(imageData);
 
   const [
     requestTags,
     tags,
     isLoadingTags,
-  ] = useImageQuery(imageData, 'tags');
+  ] = useAiImageQuery(imageData, 'tags');
 
   const [
     requestSemantic,
     semanticDescription,
     isLoadingSemantic,
-  ] = useImageQuery(imageData, 'description-semantic');
+  ] = useAiImageQuery(imageData, 'description-semantic');
 
   const hasContent = Boolean(
     title ||
