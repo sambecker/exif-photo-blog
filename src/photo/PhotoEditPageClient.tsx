@@ -57,6 +57,7 @@ export default function PhotoEditPageClient({
       breadcrumb={pending && updatedTitle
         ? updatedTitle
         : photo.title || photo.id}
+      breadcrumbEllipsis
       accessory={
         <div className="flex gap-2">
           <AiButton {...{ aiContent, shouldConfirm: hasTextContent }} />

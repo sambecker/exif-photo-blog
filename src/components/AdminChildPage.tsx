@@ -10,6 +10,7 @@ function AdminChildPage({
   backPath,
   backLabel,
   breadcrumb,
+  breadcrumbEllipsis,
   accessory,
   isLoading,
   children,
@@ -17,6 +18,7 @@ function AdminChildPage({
   backPath?: string
   backLabel?: string
   breadcrumb?: ReactNode
+  breadcrumbEllipsis?: boolean
   accessory?: ReactNode
   isLoading?: boolean
   children: ReactNode,
@@ -27,12 +29,14 @@ function AdminChildPage({
         <div className="space-y-6">
           {(backPath || breadcrumb || accessory) &&
             <div className={clsx(
-              'flex flex-wrap items-center gap-x-2 gap-y-3',
+              'flex items-center gap-x-2 gap-y-3',
+              !breadcrumbEllipsis && 'flex-wrap',
               'min-h-[2.25rem]', // min-h-9 equivalent
             )}>
               <div className={clsx(
-                'flex flex-wrap items-center gap-x-1.5 sm:gap-x-3 gap-y-1',
+                'flex items-center gap-x-1.5 sm:gap-x-3 gap-y-1',
                 'flex-grow',
+                breadcrumbEllipsis ? 'min-w-0' : 'flex-wrap',
               )}>
                 {backPath &&
                   <Link
@@ -40,12 +44,19 @@ function AdminChildPage({
                     className="flex gap-1.5 items-center"
                   >
                     <FiArrowLeft size={16} />
-                    {backLabel || 'Back'}
+                    <span className="hidden xs:inline-block">
+                      {backLabel || 'Back'}
+                    </span>
                   </Link>}
                 {breadcrumb &&
                   <>
                     <span>/</span>
-                    <Badge dimContent={isLoading}>
+                    <Badge
+                      dimContent={isLoading}
+                      className={clsx(
+                        breadcrumbEllipsis && 'text-ellipsis truncate',
+                      )}
+                    >
                       {breadcrumb}
                     </Badge>
                   </>}

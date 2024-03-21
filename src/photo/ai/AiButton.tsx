@@ -11,7 +11,7 @@ export default function AiButton({
 }) {
   return (
     <button
-      className="min-w-[3.25rem] flex justify-center"
+      className="flex min-w-[3.25rem] min-h-9 justify-center"
       onClick={() => {
         if (
           !shouldConfirm ||
