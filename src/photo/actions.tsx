@@ -37,7 +37,11 @@ import { TAG_FAVS, isTagFavs } from '@/tag';
 import { TbPhoto } from 'react-icons/tb';
 import PhotoTiny from './PhotoTiny';
 import { formatDate } from '@/utility/date';
-import { convertPhotoToPhotoDbInsert, titleForPhoto } from '.';
+import {
+  convertPhotoToPhotoDbInsert,
+  getKeywordsForPhoto,
+  titleForPhoto,
+} from '.';
 import { safelyRunAdminServerAction } from '@/auth';
 import { AI_IMAGE_QUERIES, AiImageQuery } from './ai';
 import { streamOpenAiImageQuery } from '@/services/openai';
@@ -205,8 +209,8 @@ export async function getPhotoItemsAction(query: string) {
       heading: 'Photos',
       accessory: <TbPhoto size={14} />,
       items: photos.map(photo => ({
-        accessory: <PhotoTiny photo={photo} />,
         label: titleForPhoto(photo),
+        keywords: getKeywordsForPhoto(photo),
         annotation: <>
           <span className="hidden sm:inline-block">
             {formatDate(photo.takenAt)}
@@ -215,6 +219,7 @@ export async function getPhotoItemsAction(query: string) {
             {formatDate(photo.takenAt, true)}
           </span>
         </>,
+        accessory: <PhotoTiny photo={photo} />,
         path: pathForPhoto(photo),
       })),
     }]
