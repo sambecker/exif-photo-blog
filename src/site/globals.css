@@ -30,7 +30,7 @@
   input[type=text], input[type=email], input[type=password], select, textarea {
     @apply
       text-[1rem] /* Prevent iOS auto-zoom behavior */
-      min-w-[20rem] read-only:cursor-default
+      read-only:cursor-default
   }
   input[type=text], input[type=email], input[type=password], select {
     @apply
