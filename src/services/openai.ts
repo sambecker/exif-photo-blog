@@ -28,7 +28,13 @@ export const streamOpenAiImageQuery = async (
 ) => {
   return safelyRunAdminServerAction(async () => {
     if (ratelimit) {
-      const { success } = await ratelimit.limit(RATE_LIMIT_IDENTIFIER);
+      let success = false;
+      try {
+        success = (await ratelimit.limit(RATE_LIMIT_IDENTIFIER)).success;
+      } catch (e: any) {
+        console.error('Failed to rate limit OpenAI', e);
+        throw new Error('Failed to rate limit OpenAI');
+      }
       if (!success) {
         console.error('OpenAI rate limit exceeded');
         throw new Error('OpenAI rate limit exceeded');

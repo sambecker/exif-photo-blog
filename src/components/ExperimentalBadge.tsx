@@ -1,4 +1,4 @@
-import clsx from 'clsx/lite';
+import { clsx } from 'clsx/lite';
 import Badge from './Badge';
 
 export default function ExperimentalBadge({

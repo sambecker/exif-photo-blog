@@ -27,6 +27,7 @@ import { BLUR_ENABLED } from '@/site/config';
 import { Tags, sortTagsObjectWithoutFavs } from '@/tag';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 import { AiContent } from '../ai/useAiImageQueries';
+import AiButton from '../ai/AiButton';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -166,6 +167,40 @@ export default function PhotoForm({
     }
   };
 
+  const aiButtonForField = (key: keyof PhotoFormData) => {
+    if (aiContent) {
+      switch (key) {
+      case 'title':
+        return <AiButton
+          aiContent={aiContent}
+          requestFields={['title']}
+          shouldConfirm={Boolean(formData.title)}
+          className="h-full"
+        />;
+      case 'caption':
+        return <AiButton
+          aiContent={aiContent}
+          requestFields={['caption']}
+          shouldConfirm={Boolean(formData.caption)}
+          className="h-full"
+        />;
+      case 'tags':
+        return <AiButton
+          aiContent={aiContent}
+          requestFields={['tags']}
+          shouldConfirm={Boolean(formData.tags)}
+          className="h-full"
+        />;
+      case 'semanticDescription':
+        return <AiButton
+          aiContent={aiContent}
+          requestFields={['semantic']}
+          shouldConfirm={Boolean(formData.semanticDescription)}
+        />;
+      }
+    }
+  };
+
   return (
     <div className="space-y-8 max-w-[38rem]">
       {debugBlur && blurError &&
@@ -275,6 +310,7 @@ export default function PhotoForm({
                   (loadingMessage && !formData[key] ? true : false) ||
                   isFieldGeneratingAi(key)}
                 type={type}
+                accessory={aiButtonForField(key)}
               />)}
         <div className="flex gap-3">
           <Link

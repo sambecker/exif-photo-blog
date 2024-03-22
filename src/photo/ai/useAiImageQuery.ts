@@ -14,6 +14,7 @@ export default function useAiImageQuery(
   const request = useCallback(async () => {
     if (imageBase64) {
       setIsLoading(true);
+      setText('');
       try {
         const textStream = await streamAiImageQueryAction(
           imageBase64,
@@ -22,6 +23,7 @@ export default function useAiImageQuery(
         for await (const text of readStreamableValue(textStream)) {
           setText((text ?? '')
             .replaceAll('\n', ' ')
+            .replaceAll('"', '')
             .replace(/\.$/, ''));
         }
         setIsLoading(false);
@@ -32,6 +34,12 @@ export default function useAiImageQuery(
     }
   }, [imageBase64, query]);
 
+  const reset = useCallback(() => {
+    setText('');
+    setError(undefined);
+    setIsLoading(false);
+  }, []);
+
   // Withhold streaming text if it's a null response
   const isTextError = text.toLocaleLowerCase().startsWith('sorry');
 
@@ -39,6 +47,7 @@ export default function useAiImageQuery(
     request,
     isTextError ? '' : text,
     isLoading,
+    reset,
     error,
   ] as const;
 };

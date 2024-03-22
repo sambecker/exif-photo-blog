@@ -80,6 +80,9 @@ _⚠️ READ BEFORE PROCEEDING_
    - Setup usage limits to avoid unexpected charges (_recommended_)
 2. Add rate limiting (_recommended_)
    - As an additional precaution, create a [Vercel KV](https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database) store and link it to your project in order to enable rate limiting
+3. Configure auto-generated fields (optional) 
+   - Set which text fields should auto-generate when uploading a photo by storing a comma-separated list, e.g., `AI_TEXT_AUTO_GENERATED_FIELDS = title, semantic`
+   - Accepted values: title, caption, tags, description, all, or none (default is "all")
 
 ### 8. Optional configuration
 
