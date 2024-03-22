@@ -7,6 +7,7 @@ export default function Badge({
   highContrast,
   uppercase,
   interactive,
+  className,
 }: {
   children: React.ReactNode
   type?: 'large' | 'small' | 'text-only'
@@ -14,6 +15,7 @@ export default function Badge({
   highContrast?: boolean
   uppercase?: boolean
   interactive?: boolean
+  className?: string
 }) {
   const stylesForType = () => {
     switch (type) {
@@ -44,6 +46,7 @@ export default function Badge({
       'leading-none',
       stylesForType(),
       uppercase && 'uppercase tracking-wider',
+      className,
     )}>
       <span className={clsx(dimContent && 'opacity-50')}>
         {children}

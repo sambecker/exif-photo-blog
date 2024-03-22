@@ -5,6 +5,7 @@ import {
   FORM_METADATA_ENTRIES,
   PhotoFormData,
   convertFormKeysToLabels,
+  formHasTextContent,
   getFormErrors,
   isFormValid,
 } from '.';
@@ -25,6 +26,8 @@ import ImageBlurFallback from '@/components/ImageBlurFallback';
 import { BLUR_ENABLED } from '@/site/config';
 import { Tags, sortTagsObjectWithoutFavs } from '@/tag';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
+import { AiContent } from '../ai/useAiImageQueries';
+import AiButton from '../ai/AiButton';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -33,22 +36,29 @@ export default function PhotoForm({
   updatedExifData,
   type = 'create',
   uniqueTags,
+  aiContent,
   debugBlur,
   onTitleChange,
+  onTextContentChange,
   onFormStatusChange,
 }: {
   initialPhotoForm: Partial<PhotoFormData>
   updatedExifData?: Partial<PhotoFormData>
   type?: 'create' | 'edit'
   uniqueTags?: Tags
+  aiContent?: AiContent
+  setImageData?: (imageData: string) => void
   debugBlur?: boolean
   onTitleChange?: (updatedTitle: string) => void
+  onTextContentChange?: (hasContent: boolean) => void,
   onFormStatusChange?: (pending: boolean) => void
 }) {
   const [formData, setFormData] =
     useState<Partial<PhotoFormData>>(initialPhotoForm);
   const [formErrors, setFormErrors] =
     useState(getFormErrors(initialPhotoForm));
+  const [blurError, setBlurError] =
+    useState<string>();
 
   // Update form when EXIF data
   // is refreshed by parent
@@ -114,8 +124,89 @@ export default function PhotoForm({
     }
   }, []);
 
+  useEffect(() =>
+    setFormData(data => aiContent?.hasContent
+      ? { ...data, title: aiContent?.title }
+      : data),
+  [aiContent?.title, aiContent?.hasContent]);
+
+  useEffect(() =>
+    setFormData(data => aiContent?.hasContent
+      ? { ...data, caption: aiContent?.caption }
+      : data),
+  [aiContent?.caption, aiContent?.hasContent]);
+
+  useEffect(() =>
+    setFormData(data => aiContent?.hasContent
+      ? { ...data, tags: aiContent?.tags }
+      : data),
+  [aiContent?.tags, aiContent?.hasContent]);
+
+  useEffect(() =>
+    setFormData(data => aiContent?.hasContent
+      ? { ...data, semanticDescription: aiContent?.semanticDescription }
+      : data),
+  [aiContent?.semanticDescription, aiContent?.hasContent]);
+
+  useEffect(() => {
+    onTextContentChange?.(formHasTextContent(formData));
+  }, [onTextContentChange, formData]);
+
+  const isFieldGeneratingAi = (key: keyof PhotoFormData) => {
+    switch (key) {
+    case 'title':
+      return aiContent?.isLoadingTitle;
+    case 'caption':
+      return aiContent?.isLoadingCaption;
+    case 'tags':
+      return aiContent?.isLoadingTags;
+    case 'semanticDescription':
+      return aiContent?.isLoadingSemantic;
+    default:
+      return false;
+    }
+  };
+
+  const aiButtonForField = (key: keyof PhotoFormData) => {
+    if (aiContent) {
+      switch (key) {
+      case 'title':
+        return <AiButton
+          aiContent={aiContent}
+          requestFields={['title']}
+          shouldConfirm={Boolean(formData.title)}
+          className="h-full"
+        />;
+      case 'caption':
+        return <AiButton
+          aiContent={aiContent}
+          requestFields={['caption']}
+          shouldConfirm={Boolean(formData.caption)}
+          className="h-full"
+        />;
+      case 'tags':
+        return <AiButton
+          aiContent={aiContent}
+          requestFields={['tags']}
+          shouldConfirm={Boolean(formData.tags)}
+          className="h-full"
+        />;
+      case 'semanticDescription':
+        return <AiButton
+          aiContent={aiContent}
+          requestFields={['semantic']}
+          shouldConfirm={Boolean(formData.semanticDescription)}
+        />;
+      }
+    }
+  };
+
   return (
     <div className="space-y-8 max-w-[38rem]">
+      {debugBlur && blurError &&
+        <div className="border error text-error rounded-md px-2 py-1">
+          {blurError}
+        </div>}
       <div className="flex gap-2">
         <ImageBlurFallback
           alt="Upload"
@@ -132,7 +223,9 @@ export default function PhotoForm({
           imageUrl={url}
           width={width}
           height={height}
+          onLoad={aiContent?.setImageData}
           onCapture={updateBlurData}
+          onError={setBlurError}
         />
         {debugBlur && formData.blurData &&
           <img
@@ -157,7 +250,8 @@ export default function PhotoForm({
               value: tag,
               annotation: formatCount(count),
               annotationAria: formatCountDescriptive(count, 'tagged'),
-            }))
+            })),
+          aiContent !== undefined,
         )
           .map(([key, {
             label,
@@ -187,7 +281,8 @@ export default function PhotoForm({
                 error={formErrors[key]}
                 value={formData[key] ?? ''}
                 onChange={value => {
-                  setFormData({ ...formData, [key]: value });
+                  const formUpdated = { ...formData, [key]: value };
+                  setFormData(formUpdated);
                   if (validate) {
                     setFormErrors({ ...formErrors, [key]: validate(value) });
                   } else if (validateStringMaxLength !== undefined) {
@@ -211,8 +306,11 @@ export default function PhotoForm({
                 placeholder={loadingMessage && !formData[key]
                   ? loadingMessage
                   : undefined}
-                loading={loadingMessage && !formData[key] ? true : false}
+                loading={
+                  (loadingMessage && !formData[key] ? true : false) ||
+                  isFieldGeneratingAi(key)}
                 type={type}
+                accessory={aiButtonForField(key)}
               />)}
         <div className="flex gap-3">
           <Link
@@ -222,7 +320,7 @@ export default function PhotoForm({
             Cancel
           </Link>
           <SubmitButtonWithStatus
-            disabled={!isFormValid(formData)}
+            disabled={!isFormValid(formData) || aiContent?.isLoading}
             onFormStatusChange={onFormStatusChange}
           >
             {type === 'create' ? 'Create' : 'Update'}

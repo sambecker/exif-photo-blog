@@ -19,7 +19,7 @@ import {
 import { formatCameraText } from '@/camera';
 import { authCached } from '@/auth/cache';
 import { getPhotos } from '@/services/vercel-postgres';
-import { photoQuantityText, titleForPhoto } from '@/photo';
+import { getKeywordsForPhoto, photoQuantityText, titleForPhoto } from '@/photo';
 import PhotoTiny from '@/photo/PhotoTiny';
 import { formatDate } from '@/utility/date';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
@@ -139,15 +139,14 @@ export default async function CommandK() {
     ]}
     onQueryChange={async (query) => {
       'use server';
-      const photos = (await getPhotos({ title: query, limit: 10 }))
-        .filter(({ title }) => Boolean(title));
+      const photos = (await getPhotos({ query, limit: 10 }));
       return photos.length > 0
         ? [{
           heading: 'Photos',
           accessory: <TbPhoto size={14} />,
           items: photos.map(photo => ({
-            accessory: <PhotoTiny photo={photo} />,
             label: titleForPhoto(photo),
+            keywords: getKeywordsForPhoto(photo),
             annotation: <>
               <span className="hidden sm:inline-block">
                 {formatDate(photo.takenAt)}
@@ -156,6 +155,7 @@ export default async function CommandK() {
                 {formatDate(photo.takenAt, true)}
               </span>
             </>,
+            accessory: <PhotoTiny photo={photo} />,
             path: pathForPhoto(photo),
           })),
         }]

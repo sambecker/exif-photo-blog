@@ -10,12 +10,14 @@ https://photos.sambecker.com
 
 Features
 -
+- Built-in auth
 - Photo upload with EXIF extraction
 - Organize photos by tag and camera model
 - Infinite scroll
-- Built-in auth
 - Light/dark mode
+- CMD-K menu with photo search
 - Automatic OG image generation
+- Experimental support for AI-generated descriptions
 - Support for Fujifilm simulations
 
 <img src="/readme/og-image-share.png" alt="OG Image Preview" width=600 />
@@ -66,7 +68,25 @@ Installation
 2. Click "Speed Insights" tab
 3. Follow "Enable Speed Insights" instructions (`@vercel/speed-insights` already included)
 
-### 7. Optional configuration
+### 7. Add experimental AI text generation
+
+_⚠️ READ BEFORE PROCEEDING_
+
+> _Usage of this feature will result in fees from OpenAI. When enabling AI text generation, follow all recommended mitigations in order to avoid unexpected charges and attacks. Make sure your OpenAI secret key environment variable is not prefixed with NEXT_PUBLIC._
+
+1. Setup OpenAI
+   - If you don't already have one, create an [OpenAI](https://openai.com) account
+   - Generate an API key and store in environment variable `OPENAI_SECRET_KEY`
+   - Setup usage limits to avoid unexpected charges (_recommended_)
+2. Add rate limiting (_recommended_)
+   - As an additional precaution, create a [Vercel KV](https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database) store and link it to your project in order to enable rate limiting
+3. Configure auto-generated fields (optional) 
+   - Set which text fields should auto-generate when uploading a photo by storing a comma-separated list, e.g., `AI_TEXT_AUTO_GENERATED_FIELDS = title, semantic`
+   - Accepted values: title, caption, tags, description, all, or none (default is "all")
+
+### 8. Optional configuration
+
+Application behavior can be changed by configuring the following environment variables:
 
 - `NEXT_PUBLIC_PRO_MODE = 1` enables higher quality image storage for jpgs (will result in increased storage usage)
 - `NEXT_PUBLIC_BLUR_DISABLED = 1` prevents image blur data being stored and displayed (potentially useful for limiting Postgres usage)

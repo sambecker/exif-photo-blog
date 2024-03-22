@@ -1,4 +1,4 @@
-import { Photo, titleForPhoto } from '.';
+import { Photo, altTextForPhoto } from '.';
 import ImageSmall from '@/components/ImageSmall';
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
@@ -34,7 +34,7 @@ export default function PhotoSmall({
         aspectRatio={photo.aspectRatio}
         blurData={photo.blurData}
         className="w-full"
-        alt={titleForPhoto(photo)}
+        alt={altTextForPhoto(photo)}
       />
     </Link>
   );

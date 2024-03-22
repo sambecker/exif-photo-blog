@@ -1,5 +1,6 @@
 import {
   Photo,
+  altTextForPhoto,
   shouldShowCameraDataForPhoto,
   shouldShowExifDataForPhoto,
   titleForPhoto,
@@ -54,7 +55,7 @@ export default function PhotoLarge({
       contentMain={
         <ImageLarge
           className="w-full"
-          alt={titleForPhoto(photo)}
+          alt={altTextForPhoto(photo)}
           href={pathForPhoto(photo, primaryTag)}
           src={photo.url}
           aspectRatio={photo.aspectRatio}
