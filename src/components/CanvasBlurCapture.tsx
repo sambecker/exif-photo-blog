@@ -6,7 +6,9 @@ const RETRY_DELAY = 2000;
 
 export default function CanvasBlurCapture({
   imageUrl,
+  onLoad,
   onCapture,
+  onError,
   width,
   height,
   hidden = true,
@@ -15,7 +17,9 @@ export default function CanvasBlurCapture({
   quality = 0.9,
 }: {
   imageUrl: string
-  onCapture: (blurData: string) => void
+  onLoad?: (imageData: string) => void
+  onCapture: (imageData: string) => void
+  onError?: (error: string) => void
   width: number
   height: number
   hidden?: boolean
@@ -44,7 +48,18 @@ export default function CanvasBlurCapture({
           canvas.style.height = `${height}px`;
           const context = refCanvas.current?.getContext('2d');
           if (context) {
+            // Draw scaled image
             context.scale(scale, scale);
+            context.drawImage(
+              refImage.current,
+              -edgeCompensation,
+              -edgeCompensation,
+              width + edgeCompensation * 2,
+              width * refImage.current.height / refImage.current.width +
+              edgeCompensation * 2,
+            );
+            onLoad?.(canvas.toDataURL('image/jpeg', quality));
+            // Draw blurred image
             context.filter =
               'contrast(1.2) saturate(1.2) ' +
               `blur(${scale * 10}px)`;
@@ -56,17 +71,21 @@ export default function CanvasBlurCapture({
               width * refImage.current.height / refImage.current.width +
               edgeCompensation * 2,
             );
-            refTimeouts.current.forEach(clearTimeout);
             onCapture(canvas.toDataURL('image/jpeg', quality));
+            onError?.('');
+            refTimeouts.current.forEach(clearTimeout);
             refShouldCapture.current = false;
           } else {
-            console.error('Cannot get 2d context');
+            console.error('Cannot get 2d context ... retrying');
+            onError?.('Cannot get 2d context ... retrying');
             // Retry capture in case canvas is not available
             refTimeouts.current.push(setTimeout(capture, RETRY_DELAY));
           }
         } else {
           // eslint-disable-next-line max-len
-          console.error('Cannot generate blur data: canvas/image not ready');
+          console.error('Cannot generate blur data: canvas/image not ready ... retrying');
+          // eslint-disable-next-line max-len
+          onError?.('Cannot generate blur data: canvas/image not ready ... retrying');
           // Retry capture in case canvas is not available
           refTimeouts.current.push(setTimeout(capture, RETRY_DELAY));
         }
@@ -92,6 +111,8 @@ export default function CanvasBlurCapture({
   }, [
     imageUrl,
     onCapture,
+    onLoad,
+    onError,
     width,
     height,
     edgeCompensation,

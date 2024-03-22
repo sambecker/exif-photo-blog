@@ -19,21 +19,24 @@
   }
   .control,
   button, .button,
-  input[type=text], input[type=email], input[type=password], select {
+  input[type=text], input[type=email], input[type=password], select, textarea {
     @apply
       px-2.5 py-2
       border rounded-md
       bg-main
       border-gray-200 dark:border-gray-700
-      font-mono text-base leading-tight
-      min-h-[2.4rem]
+      font-mono text-base leading-tight      
+  }
+  input[type=text], input[type=email], input[type=password], select, textarea {
+    @apply
+      text-[1rem] /* Prevent iOS auto-zoom behavior */
+      read-only:cursor-default
   }
   input[type=text], input[type=email], input[type=password], select {
     @apply
-      text-[1rem] /* Prevent iOS auto-zoom behavior */
-      min-w-[20rem] read-only:cursor-default
+      min-h-[2.4rem]
   }
-  input[type=text], input[type=email], input[type=password] {
+  input[type=text], input[type=email], input[type=password], textarea {
     @apply
       read-only:bg-gray-100
       dark:read-only:bg-gray-900 dark:read-only:text-gray-400

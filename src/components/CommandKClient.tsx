@@ -28,6 +28,7 @@ export type CommandKSection = {
   accessory?: ReactNode
   items: {
     label: string
+    keywords?: string[]
     annotation?: ReactNode
     annotationAria?: string
     accessory?: ReactNode
@@ -156,8 +157,13 @@ export default function CommandKClient({
       open={isOpen}
       onOpenChange={setIsOpen}
       label="Global Command Menu"
-      filter={(value, search) =>
-        value.toLowerCase().includes(search.toLowerCase()) ? 1 : 0}
+      filter={(value, search, keywords) => {
+        const searchFormatted = search.trim().toLocaleLowerCase();
+        return (
+          value.toLocaleLowerCase().includes(searchFormatted) ||
+          keywords?.includes(searchFormatted)
+        ) ? 1 : 0 ;
+      }}
       loop
     >
       <Modal
@@ -222,16 +228,18 @@ export default function CommandKClient({
                   )}
                 >
                   {items.map(({
-                    accessory,
                     label,
+                    keywords,
                     annotation,
                     annotationAria,
+                    accessory,
                     path,
                     action,
                   }) =>
                     <Command.Item
                       key={`${heading} ${label}`}
                       value={`${heading} ${label}`}
+                      keywords={keywords}
                       className={clsx(
                         'px-2',
                         accessory ? 'py-2' : 'py-1',

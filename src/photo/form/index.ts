@@ -13,7 +13,10 @@ import {
   MAKE_FUJIFILM,
 } from '@/vendors/fujifilm';
 import { FilmSimulation } from '@/simulation';
-import { BLUR_ENABLED, GEO_PRIVACY_ENABLED } from '@/site/config';
+import {
+  BLUR_ENABLED,
+  GEO_PRIVACY_ENABLED,
+} from '@/site/config';
 import { TAG_FAVS, doesTagsStringIncludeFavs } from '@/tag';
 
 type VirtualFields = 'favorite';
@@ -24,7 +27,8 @@ export type FieldSetType =
   'text' |
   'email' |
   'password' |
-  'checkbox';
+  'checkbox' |
+  'textarea';
 
 export type AnnotatedTag = {
   value: string,
@@ -55,7 +59,8 @@ const STRING_MAX_LENGTH_SHORT = 255;
 const STRING_MAX_LENGTH_LONG  = 1000;
 
 const FORM_METADATA = (
-  tagOptions?: AnnotatedTag[]
+  tagOptions?: AnnotatedTag[],
+  aiTextGeneration?: boolean,
 ): Record<keyof PhotoFormData, FormMeta> => ({
   title: {
     label: 'title',
@@ -66,13 +71,8 @@ const FORM_METADATA = (
     label: 'caption',
     capitalize: true,
     validateStringMaxLength: STRING_MAX_LENGTH_LONG,
-    shouldHide: ({ title, caption }) => !title && !caption,
-  },
-  semanticDescription: {
-    label: 'semantic description',
-    capitalize: true,
-    validateStringMaxLength: STRING_MAX_LENGTH_LONG,
-    hide: true,
+    shouldHide: ({ title, caption }) =>
+      !aiTextGeneration && (!title && !caption),
   },
   tags: {
     label: 'tags',
@@ -80,6 +80,13 @@ const FORM_METADATA = (
     validate: tags => doesTagsStringIncludeFavs(tags)
       ? `'${TAG_FAVS}' is a reserved tag`
       : undefined,
+  },
+  semanticDescription: {
+    type: 'textarea',
+    label: 'semantic description (not visible)',
+    capitalize: true,
+    validateStringMaxLength: STRING_MAX_LENGTH_LONG,
+    hide: !aiTextGeneration,
   },
   id: { label: 'id', readOnly: true, hideIfEmpty: true },
   blurData: {
@@ -143,6 +150,14 @@ export const isFormValid = (formData: Partial<PhotoFormData>) =>
       (!validateStringMaxLength || (formData[key]?.length ?? 0) <= validateStringMaxLength) &&
       (key !== 'tags' || !doesTagsStringIncludeFavs(formData.tags ?? ''))
   );
+
+export const formHasTextContent = ({
+  title,
+  caption,
+  tags,
+  semanticDescription,
+}: Partial<PhotoFormData>) =>
+  Boolean(title || caption || tags || semanticDescription);
 
 // CREATE FORM DATA: FROM PHOTO
 

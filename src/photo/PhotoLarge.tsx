@@ -1,5 +1,6 @@
 import {
   Photo,
+  altTextForPhoto,
   shouldShowCameraDataForPhoto,
   shouldShowExifDataForPhoto,
   titleForPhoto,
@@ -61,7 +62,7 @@ export default function PhotoLarge({
         >
           <ImageLarge
             className="w-full"
-            alt={titleForPhoto(photo)}
+            alt={altTextForPhoto(photo)}
             src={photo.url}
             aspectRatio={photo.aspectRatio}
             blurData={photo.blurData}

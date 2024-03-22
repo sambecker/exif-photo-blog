@@ -38,10 +38,12 @@ import { TbPhoto } from 'react-icons/tb';
 import PhotoTiny from './PhotoTiny';
 import { formatDate } from '@/utility/date';
 import { convertPhotoToPhotoDbInsert, titleForPhoto } from '.';
-import { safelyRunServerAdminAction } from '@/auth';
+import { safelyRunAdminServerAction } from '@/auth';
+import { AI_IMAGE_QUERIES, AiImageQuery } from './ai';
+import { streamOpenAiImageQuery } from '@/services/openai';
 
 export async function createPhotoAction(formData: FormData) {
-  return safelyRunServerAdminAction(async () => {
+  return safelyRunAdminServerAction(async () => {
     const photo = convertFormDataToPhotoDbInsert(formData, true);
 
     const updatedUrl = await convertUploadToPhoto(photo.url, photo.id);
@@ -57,7 +59,7 @@ export async function createPhotoAction(formData: FormData) {
 }
 
 export async function updatePhotoAction(formData: FormData) {
-  return safelyRunServerAdminAction(async () => {
+  return safelyRunAdminServerAction(async () => {
     const photo = convertFormDataToPhotoDbInsert(formData);
 
     await sqlUpdatePhoto(photo);
@@ -72,7 +74,7 @@ export async function toggleFavoritePhotoAction(
   photoId: string,
   shouldRedirect?: boolean,
 ) {
-  return safelyRunServerAdminAction(async () => {
+  return safelyRunAdminServerAction(async () => {
     const photo = await getPhoto(photoId);
     if (photo) {
       const { tags } = photo;
@@ -93,7 +95,7 @@ export async function deletePhotoAction(
   photoUrl: string,
   shouldRedirect?: boolean,
 ) {
-  return safelyRunServerAdminAction(async () => {
+  return safelyRunAdminServerAction(async () => {
     await sqlDeletePhoto(photoId).then(() => deleteStorageUrl(photoUrl));
     revalidateAllKeysAndPaths();
     if (shouldRedirect) {
@@ -103,7 +105,7 @@ export async function deletePhotoAction(
 };
 
 export async function deletePhotoFormAction(formData: FormData) {
-  return safelyRunServerAdminAction(async () =>
+  return safelyRunAdminServerAction(async () =>
     deletePhotoAction(
       formData.get('id') as string,
       formData.get('url') as string,
@@ -112,7 +114,7 @@ export async function deletePhotoFormAction(formData: FormData) {
 };
 
 export async function deletePhotoTagGloballyAction(formData: FormData) {
-  return safelyRunServerAdminAction(async () => {
+  return safelyRunAdminServerAction(async () => {
     const tag = formData.get('tag') as string;
 
     await sqlDeletePhotoTagGlobally(tag);
@@ -123,7 +125,7 @@ export async function deletePhotoTagGloballyAction(formData: FormData) {
 }
 
 export async function renamePhotoTagGloballyAction(formData: FormData) {
-  return safelyRunServerAdminAction(async () => {
+  return safelyRunAdminServerAction(async () => {
     const tag = formData.get('tag') as string;
     const updatedTag = formData.get('updatedTag') as string;
 
@@ -137,7 +139,7 @@ export async function renamePhotoTagGloballyAction(formData: FormData) {
 }
 
 export async function deleteBlobPhotoAction(formData: FormData) {
-  return safelyRunServerAdminAction(async () => {
+  return safelyRunAdminServerAction(async () => {
     await deleteStorageUrl(formData.get('url') as string);
 
     revalidateAdminPaths();
@@ -151,7 +153,7 @@ export async function deleteBlobPhotoAction(formData: FormData) {
 export async function getExifDataAction(
   photoFormPrevious: Partial<PhotoFormData>,
 ): Promise<Partial<PhotoFormData>> {
-  return safelyRunServerAdminAction(async () => {
+  return safelyRunAdminServerAction(async () => {
     const { url } = photoFormPrevious;
     if (url) {
       const { photoFormExif } = await extractExifDataFromBlobPath(url);
@@ -164,7 +166,7 @@ export async function getExifDataAction(
 }
 
 export async function syncPhotoExifDataAction(formData: FormData) {
-  return safelyRunServerAdminAction(async () => {
+  return safelyRunAdminServerAction(async () => {
     const photoId = formData.get('id') as string;
     if (photoId) {
       const photo = await getPhoto(photoId);
@@ -184,11 +186,19 @@ export async function syncPhotoExifDataAction(formData: FormData) {
 }
 
 export async function syncCacheAction() {
-  return safelyRunServerAdminAction(revalidateAllKeysAndPaths);
+  return safelyRunAdminServerAction(revalidateAllKeysAndPaths);
+}
+
+export async function streamAiImageQueryAction(
+  imageBase64: string,
+  query: AiImageQuery,
+) {
+  return safelyRunAdminServerAction(async () =>
+    streamOpenAiImageQuery(imageBase64, AI_IMAGE_QUERIES[query]));
 }
 
 export async function getPhotoItemsAction(query: string) {
-  const photos = (await getPhotos({ title: query, limit: 10 }))
+  const photos = (await getPhotos({ query, limit: 10 }))
     .filter(({ title }) => Boolean(title));
   return photos.length > 0
     ? [{

@@ -176,6 +176,9 @@ export const translatePhotoId = (id: string) =>
 export const titleForPhoto = (photo: Photo) =>
   photo.title || 'Untitled';
 
+export const altTextForPhoto = (photo: Photo) =>
+  photo.semanticDescription || titleForPhoto(photo);
+
 export const photoLabelForCount = (count: number) =>
   count === 1 ? 'Photo' : 'Photos';
 
@@ -255,3 +258,9 @@ export const shouldShowCameraDataForPhoto = (photo: Photo) =>
 
 export const shouldShowExifDataForPhoto = (photo: Photo) =>
   SHOW_EXIF_DATA && photoHasExifData(photo);
+
+export const getKeywordsForPhoto = (photo: Photo) =>
+  (photo.caption ?? '').split(' ')
+    .concat((photo.semanticDescription ?? '').split(' '))
+    .filter(Boolean)
+    .map(keyword => keyword.toLocaleLowerCase());

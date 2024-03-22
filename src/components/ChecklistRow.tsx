@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { clsx } from 'clsx/lite';
 import StatusIcon from './StatusIcon';
+import ExperimentalBadge from './ExperimentalBadge';
 
 export default function ChecklistRow({
   title,
@@ -33,15 +34,7 @@ export default function ChecklistRow({
         )}>
           {title}
           {experimental &&
-            <span className={clsx(
-              'text-[9px] font-medium uppercase tracking-wide leading-none',
-              'px-[3px] py-[2px] rounded-[0.2rem] translate-y-[0.5px]',
-              'text-pink-500 dark:text-white',
-              'bg-pink-50 dark:bg-pink-600',
-              'border border-pink-200/50 dark:border-pink-600',
-            )}>
-              Experimental
-            </span>}
+            <ExperimentalBadge className="translate-y-[0.5px]" />}
         </div>
         <div>
           {children}
