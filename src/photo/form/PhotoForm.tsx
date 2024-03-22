@@ -125,28 +125,28 @@ export default function PhotoForm({
   }, []);
 
   useEffect(() =>
-    setFormData(data => aiContent?.hasContent
+    setFormData(data => aiContent?.title
       ? { ...data, title: aiContent?.title }
       : data),
-  [aiContent?.title, aiContent?.hasContent]);
+  [aiContent?.title]);
 
   useEffect(() =>
-    setFormData(data => aiContent?.hasContent
+    setFormData(data => aiContent?.caption
       ? { ...data, caption: aiContent?.caption }
       : data),
-  [aiContent?.caption, aiContent?.hasContent]);
+  [aiContent?.caption]);
 
   useEffect(() =>
-    setFormData(data => aiContent?.hasContent
+    setFormData(data => aiContent?.tags
       ? { ...data, tags: aiContent?.tags }
       : data),
-  [aiContent?.tags, aiContent?.hasContent]);
+  [aiContent?.tags]);
 
   useEffect(() =>
-    setFormData(data => aiContent?.hasContent
+    setFormData(data => aiContent?.semanticDescription
       ? { ...data, semanticDescription: aiContent?.semanticDescription }
       : data),
-  [aiContent?.semanticDescription, aiContent?.hasContent]);
+  [aiContent?.semanticDescription]);
 
   useEffect(() => {
     onTextContentChange?.(formHasTextContent(formData));

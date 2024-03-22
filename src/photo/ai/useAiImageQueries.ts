@@ -53,13 +53,6 @@ export default function useAiImageQueries(
   const isLoadingTitle = _isLoadingTitle || isLoadingTitleSolo;
   const isLoadingCaption = _isLoadingCaption || isLoadingCaptionSolo;
 
-  const hasContent = Boolean(
-    title ||
-    caption ||
-    tags ||
-    semanticDescription
-  );
-
   const isLoading =
     isLoadingTitle ||
     isLoadingCaption ||
@@ -123,7 +116,6 @@ export default function useAiImageQueries(
     tags,
     semanticDescription,
     isReady,
-    hasContent,
     isLoading,
     isLoadingTitle,
     isLoadingCaption,
