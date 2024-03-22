@@ -1,4 +1,4 @@
-import { Photo, titleForPhoto } from '.';
+import { Photo, altTextForPhoto } from '.';
 import ImageTiny from '@/components/ImageTiny';
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
@@ -31,7 +31,7 @@ export default function PhotoTiny({
         src={photo.url}
         aspectRatio={photo.aspectRatio}
         blurData={photo.blurData}
-        alt={titleForPhoto(photo)}
+        alt={altTextForPhoto(photo)}
       />
     </Link>
   );

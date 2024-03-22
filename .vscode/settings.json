@@ -21,6 +21,7 @@
     "headlessui",
     "hgetall",
     "hset",
+    "ILIKE",
     "jpgs",
     "Lightbox",
     "Makernote",

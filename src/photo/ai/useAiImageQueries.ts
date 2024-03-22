@@ -47,7 +47,9 @@ export default function useAiImageQueries(
   const hasRunAllQueriesOnce = useRef(false);
 
   const request = useCallback(async () => {
-    console.log('RUNNING ALL AI QUERIES');
+    if (process.env.NODE_ENV === 'development') {
+      console.log('RUNNING ALL AI QUERIES');
+    }
     hasRunAllQueriesOnce.current = true;
     requestTitleCaption();
     requestTags();
