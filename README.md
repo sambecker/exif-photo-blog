@@ -12,11 +12,11 @@ Features
 -
 - Built-in auth
 - Photo upload with EXIF extraction
-- Organize photos by tag and camera model
+- Organize photos by tag
 - Infinite scroll
 - Light/dark mode
-- CMD-K menu with photo search
 - Automatic OG image generation
+- CMD-K menu with photo search
 - Experimental support for AI-generated descriptions
 - Support for Fujifilm simulations
 
@@ -28,7 +28,7 @@ Installation
 
 1. Click Deploy
 2. Add required storage ([Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres/quickstart#create-a-postgres-database) + [Vercel Blob](https://vercel.com/docs/storage/vercel-blob/quickstart#create-a-blob-store))
-3. Add environment variables
+3. Add environment variables:
 - `NEXT_PUBLIC_SITE_TITLE` (e.g., My Photos)
 - `NEXT_PUBLIC_SITE_DOMAIN` (e.g., photos.domain.com)
 - `NEXT_PUBLIC_SITE_DESCRIPTION` (optional—mainly used for OG meta)
@@ -53,8 +53,9 @@ Installation
 
 1. Clone code
 2. Run `pnpm i` to install dependencies
-3. Set environment variable `AUTH_URL` locally (not in production) to `http://localhost:3000/api/url` (_this is a temporary limitation of `next-auth` v5.0_)
-4. Run `vc dev` to start dev server, and utilize Vercel-stored environment variables
+3. Set environment variable `AUTH_URL` locally (not in production) to `http://localhost:3000/api/url` (_this is a temporary limitation of `next-auth` v5.0 Beta_)
+4. Install [Vercel CLI](https://vercel.com/docs/cli#installing-vercel-cli)
+5. Run `vc dev` to start dev server with Vercel-stored environment variables
 
 ### 5. Add Analytics (optional)
 
@@ -81,7 +82,7 @@ _⚠️ READ BEFORE PROCEEDING_
 2. Add rate limiting (_recommended_)
    - As an additional precaution, create a [Vercel KV](https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database) store and link it to your project in order to enable rate limiting
 3. Configure auto-generated fields (optional) 
-   - Set which text fields should auto-generate when uploading a photo by storing a comma-separated list, e.g., `AI_TEXT_AUTO_GENERATED_FIELDS = title, semantic`
+   - Set which text fields auto-generate when uploading a photo by storing a comma-separated list, e.g., `AI_TEXT_AUTO_GENERATED_FIELDS = title, semantic`
    - Accepted values: title, caption, tags, description, all, or none (default is "all")
 
 ### 8. Optional configuration
@@ -199,7 +200,7 @@ FAQ
 > Navigate to `/admin/configuration` and click "Clear Cache." If this doesn't help, [open an issue](https://github.com/sambecker/exif-photo-blog/issues/new).
 
 #### Why aren't my Fujifilm simulations importing alongside EXIF data?
-> Fujifilm simulation data is stored in vendor-specific Makernote binaries embedded in EXIF data. Under certain circumstances an intermediary may strip out this data for a variety of reasons. For instance, there is a known issue on iOS where editing an image, e.g., cropping it, causes Makernote data loss. If your simulation data appears to be missing, try importing the original file as it was stored by the camera. Additionally, if you can confirm the simulation mode on camera, you can then edit the photo record and manually select it.
+> Fujifilm simulation data is stored in vendor-specific Makernote binaries embedded in EXIF data. Under certain circumstances an intermediary may strip out this data. For instance, there is a known issue on iOS where editing an image, e.g., cropping it, causes Makernote data loss. If your simulation data appears to be missing, try importing the original file as it was stored by the camera. Additionally, if you can confirm the simulation mode on camera, you can then edit the photo record and manually select it.
 
 #### Why do my images appear flipped/rotated incorrectly?
 > For a number of reasons, only EXIF orientations: 1, 3, 6, and 8 are supported. Orientations 2, 4, 5, and 7—which make use of mirroring—are not supported.
