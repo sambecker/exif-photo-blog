@@ -32,6 +32,7 @@ export default function AdminNav({
           <div className={clsx(
             'flex gap-2 md:gap-4',
             'flex-grow overflow-x-scroll',
+            '[&::-webkit-scrollbar]:hidden',
           )}>
             {items.map(({ label, href, count }) =>
               <Link
