@@ -13,7 +13,7 @@ import { useFormState } from 'react-dom';
 import { areSimpleObjectsEqual } from '@/utility/object';
 import IconGrSync from '@/site/IconGrSync';
 import { getExifDataAction } from './actions';
-import { Tags } from '@/tag';
+import { TagsWithMeta } from '@/tag';
 import AiButton from './ai/AiButton';
 import usePhotoFormParent from './form/usePhotoFormParent';
 
@@ -23,7 +23,7 @@ export default function PhotoEditPageClient({
   hasAiTextGeneration,
 }: {
   photo: Photo
-  uniqueTags: Tags
+  uniqueTags: TagsWithMeta
   hasAiTextGeneration: boolean
 }) {
   const seedExifData = { url: photo.url };

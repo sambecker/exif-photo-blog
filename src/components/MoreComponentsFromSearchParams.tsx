@@ -2,14 +2,16 @@
 
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useTransition } from 'react';
-import Spinner from '../components/Spinner';
+import Spinner from './Spinner';
 
-export default function MorePhotos({
+export default function MoreComponentsFromSearchParams({
   path,
+  label = 'Load more',
   triggerOnView = true,
   prefetch = true,
 }: {
   path: string
+  label?: string
   triggerOnView?: boolean
   prefetch?: boolean
 }) {
@@ -59,7 +61,7 @@ export default function MorePhotos({
         ? <span className="relative inline-block translate-y-[3px]">
           <Spinner size={16} />
         </span>
-        : 'More photos'}
+        : label}
     </button>
   );
 }

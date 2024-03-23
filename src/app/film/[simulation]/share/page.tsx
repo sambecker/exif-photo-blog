@@ -7,7 +7,7 @@ import {
   getPhotosFilmSimulationDataCachedWithPagination,
 } from '@/simulation/data';
 import { PaginationParams } from '@/site/pagination';
-import { Metadata } from 'next';
+import { Metadata } from 'next/types';
 
 interface FilmSimulationProps {
   params: { simulation: FilmSimulation }
@@ -18,8 +18,7 @@ export async function generateMetadata({
 }: FilmSimulationProps): Promise<Metadata> {
   const [
     photos,
-    count,
-    dateRange,
+    { count, dateRange },
   ] = await getPhotosFilmSimulationDataCached({
     simulation,
     limit: GRID_THUMBNAILS_TO_SHOW_MAX,

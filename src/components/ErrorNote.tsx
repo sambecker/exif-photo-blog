@@ -1,10 +1,11 @@
 import { clsx } from 'clsx/lite';
+import { ReactNode } from 'react';
 import { BiErrorAlt } from 'react-icons/bi';
 
 export default function ErrorNote({
   children,
 }: {
-  children: React.ReactNode
+  children: ReactNode
 }) {
   return (
     <div className={clsx(

@@ -26,8 +26,8 @@ export default async function AdminTagsPage() {
                 <Fragment key={tag}>
                   <div className="pr-2 -translate-y-0.5">
                     {isTagFavs(tag)
-                      ? <FavsTag />
-                      : <PhotoTag {...{ tag }} />}
+                      ? <FavsTag prefetch={false} />
+                      : <PhotoTag {...{ tag, prefetch: false }} />}
                   </div>
                   <div className="text-dim uppercase">
                     {photoQuantityText(count, false)}

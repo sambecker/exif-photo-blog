@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 import { Photo } from '@/photo';
 import Link from 'next/link';
 import { AnimationConfig } from '../components/AnimateItems';
-import { useAppState } from '@/state';
+import { useAppState } from '@/state/AppState';
 import { pathForPhoto } from '@/site/paths';
 import { Camera } from '@/camera';
 import { FilmSimulation } from '@/simulation';

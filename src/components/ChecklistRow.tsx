@@ -29,12 +29,12 @@ export default function ChecklistRow({
       />
       <div className="flex flex-col min-w-0">
         <div className={clsx(
-          'flex flex-wrap items-center gap-2',
+          'flex flex-wrap items-center gap-2 pb-1',
           'font-bold dark:text-gray-300',
         )}>
           {title}
           {experimental &&
-            <ExperimentalBadge className="translate-y-[0.5px]" />}
+            <ExperimentalBadge className="translate-y-[-0.5px]" />}
         </div>
         <div>
           {children}

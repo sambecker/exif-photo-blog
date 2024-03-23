@@ -7,6 +7,7 @@ import {
   sqlUpdatePhoto,
   sqlRenamePhotoTagGlobally,
   getPhoto,
+  getPhotos,
 } from '@/services/vercel-postgres';
 import {
   PhotoFormData,
@@ -21,6 +22,7 @@ import {
 import {
   revalidateAdminPaths,
   revalidateAllKeysAndPaths,
+  revalidatePhoto,
   revalidatePhotosKey,
   revalidateTagsKey,
 } from '@/photo/cache';
@@ -32,7 +34,14 @@ import {
 } from '@/site/paths';
 import { extractExifDataFromBlobPath } from './server';
 import { TAG_FAVS, isTagFavs } from '@/tag';
-import { convertPhotoToPhotoDbInsert } from '.';
+import { TbPhoto } from 'react-icons/tb';
+import PhotoTiny from './PhotoTiny';
+import { formatDate } from '@/utility/date';
+import {
+  convertPhotoToPhotoDbInsert,
+  getKeywordsForPhoto,
+  titleForPhoto,
+} from '.';
 import { safelyRunAdminServerAction } from '@/auth';
 import { AI_IMAGE_QUERIES, AiImageQuery } from './ai';
 import { streamOpenAiImageQuery } from '@/services/openai';
@@ -59,7 +68,7 @@ export async function updatePhotoAction(formData: FormData) {
 
     await sqlUpdatePhoto(photo);
 
-    revalidateAllKeysAndPaths();
+    revalidatePhoto(photo.id);
 
     redirect(PATH_ADMIN_PHOTOS);
   });
@@ -190,4 +199,29 @@ export async function streamAiImageQueryAction(
 ) {
   return safelyRunAdminServerAction(async () =>
     streamOpenAiImageQuery(imageBase64, AI_IMAGE_QUERIES[query]));
+}
+
+export async function getPhotoItemsAction(query: string) {
+  const photos = (await getPhotos({ query, limit: 10 }))
+    .filter(({ title }) => Boolean(title));
+  return photos.length > 0
+    ? [{
+      heading: 'Photos',
+      accessory: <TbPhoto size={14} />,
+      items: photos.map(photo => ({
+        label: titleForPhoto(photo),
+        keywords: getKeywordsForPhoto(photo),
+        annotation: <>
+          <span className="hidden sm:inline-block">
+            {formatDate(photo.takenAt)}
+          </span>
+          <span className="inline-block sm:hidden">
+            {formatDate(photo.takenAt, true)}
+          </span>
+        </>,
+        accessory: <PhotoTiny photo={photo} />,
+        path: pathForPhoto(photo),
+      })),
+    }]
+    : [];
 }

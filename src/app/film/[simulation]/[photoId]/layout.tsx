@@ -2,7 +2,7 @@ import {
   descriptionForPhoto,
   titleForPhoto,
 } from '@/photo';
-import { Metadata } from 'next';
+import { Metadata } from 'next/types';
 import { redirect } from 'next/navigation';
 import {
   PATH_ROOT,
@@ -11,9 +11,12 @@ import {
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotoCached } from '@/photo/cache';
-import { ReactNode } from 'react';
+import { ReactNode, cache } from 'react';
 import { FilmSimulation } from '@/simulation';
 import { getPhotosFilmSimulationDataCached } from '@/simulation/data';
+
+const getPhotoCachedCached =
+  cache((photoId: string) => getPhotoCached(photoId));
 
 interface PhotoFilmSimulationProps {
   params: { photoId: string, simulation: FilmSimulation }
@@ -22,7 +25,7 @@ interface PhotoFilmSimulationProps {
 export async function generateMetadata({
   params: { photoId, simulation },
 }: PhotoFilmSimulationProps): Promise<Metadata> {
-  const photo = await getPhotoCached(photoId);
+  const photo = await getPhotoCachedCached(photoId);
 
   if (!photo) { return {}; }
 
@@ -53,14 +56,13 @@ export default async function PhotoFilmSimulationPage({
   params: { photoId, simulation },
   children,
 }: PhotoFilmSimulationProps & { children: ReactNode }) {
-  const photo = await getPhotoCached(photoId);
+  const photo = await getPhotoCachedCached(photoId);
 
   if (!photo) { redirect(PATH_ROOT); }
 
   const [
     photos,
-    count,
-    dateRange,
+    { count, dateRange },
   ] = await getPhotosFilmSimulationDataCached({ simulation });
 
   return <>

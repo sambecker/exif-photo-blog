@@ -8,6 +8,7 @@ export default function FavsTag({
   type,
   badged,
   contrast,
+  prefetch,
   countOnHover,
 }: {
   countOnHover?: number
@@ -37,6 +38,7 @@ export default function FavsTag({
       hoverEntity={countOnHover}
       badged={badged}
       contrast={contrast}
+      prefetch={prefetch}
     />
   );
 }

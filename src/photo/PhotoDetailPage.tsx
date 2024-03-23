@@ -77,7 +77,7 @@ export default function PhotoDetailPage({
             photo={photo}
             primaryTag={tag}
             priority
-            prefetchShare
+            prefetchRelatedLinks
             showCamera={!camera}
             showSimulation={!simulation}
             shouldShareTag={tag !== undefined}

@@ -1,9 +1,10 @@
 import {
+  GENERATE_STATIC_PARAMS_LIMIT,
   GRID_THUMBNAILS_TO_SHOW_MAX,
   descriptionForPhoto,
   titleForPhoto,
 } from '@/photo';
-import { Metadata } from 'next';
+import { Metadata } from 'next/types';
 import { redirect } from 'next/navigation';
 import {
   PATH_ROOT,
@@ -11,9 +12,21 @@ import {
   absolutePathForPhotoImage,
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotoCached, getPhotosNearIdCached } from '@/photo/cache';
+import { getPhotoIds } from '@/services/vercel-postgres';
+import { STATICALLY_OPTIMIZED } from '@/site/config';
+import { getPhotosNearIdCachedCached } from '@/photo/cache';
 
-export const runtime = 'edge';
+export let generateStaticParams:
+  (() => Promise<{ params: { photoId: string } }[]>) | undefined = undefined;
+
+if (STATICALLY_OPTIMIZED) {
+  generateStaticParams = async () => {
+    const photos = await getPhotoIds({ limit: GENERATE_STATIC_PARAMS_LIMIT });
+    return photos.map(photoId => ({
+      params: { photoId },
+    }));
+  };
+}
 
 interface PhotoProps {
   params: { photoId: string }
@@ -22,7 +35,10 @@ interface PhotoProps {
 export async function generateMetadata({
   params: { photoId },
 }:PhotoProps): Promise<Metadata> {
-  const photo = await getPhotoCached(photoId);
+  const { photo } = await getPhotosNearIdCachedCached(
+    photoId,
+    GRID_THUMBNAILS_TO_SHOW_MAX + 2,
+  );
 
   if (!photo) { return {}; }
 
@@ -53,19 +69,14 @@ export default async function PhotoPage({
   params: { photoId },
   children,
 }: PhotoProps & { children: React.ReactNode }) {
-  const photos = await getPhotosNearIdCached(
+  const { photos, photo } = await getPhotosNearIdCachedCached(
     photoId,
     GRID_THUMBNAILS_TO_SHOW_MAX + 2,
   );
 
-  const photo = photos.find(p => p.id === photoId);
-
   if (!photo) { redirect(PATH_ROOT); }
   
   const isPhotoFirst = photos.findIndex(p => p.id === photoId) === 0;
-
-  // Warm OG image without waiting on response
-  fetch(absolutePathForPhotoImage(photo));
 
   return <>
     {children}

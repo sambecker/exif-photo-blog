@@ -23,7 +23,8 @@ export default function PhotoLarge({
   photo,
   primaryTag,
   priority,
-  prefetchShare,
+  prefetch = false,
+  prefetchRelatedLinks = false,
   showCamera = true,
   showSimulation = true,
   shouldShareTag,
@@ -34,7 +35,8 @@ export default function PhotoLarge({
   photo: Photo
   primaryTag?: string
   priority?: boolean
-  prefetchShare?: boolean
+  prefetch?: boolean
+  prefetchRelatedLinks?: boolean
   showCamera?: boolean
   showSimulation?: boolean
   shouldShareTag?: boolean
@@ -53,15 +55,20 @@ export default function PhotoLarge({
   return (
     <SiteGrid
       contentMain={
-        <ImageLarge
-          className="w-full"
-          alt={altTextForPhoto(photo)}
-          href={pathForPhoto(photo, primaryTag)}
-          src={photo.url}
-          aspectRatio={photo.aspectRatio}
-          blurData={photo.blurData}
-          priority={priority}
-        />}
+        <Link
+          href={pathForPhoto(photo)}
+          className="active:brightness-75"
+          prefetch={prefetch}
+        >
+          <ImageLarge
+            className="w-full"
+            alt={altTextForPhoto(photo)}
+            src={photo.url}
+            aspectRatio={photo.aspectRatio}
+            blurData={photo.blurData}
+            priority={priority}
+          />
+        </Link>}
       contentSide={
         <div className={clsx(
           'relative',
@@ -149,7 +156,7 @@ export default function PhotoLarge({
                   shouldShareCamera ? camera : undefined,
                   shouldShareSimulation ? photo.filmSimulation : undefined,
                 )}
-                prefetch={prefetchShare}
+                prefetch={prefetchRelatedLinks}
                 shouldScroll={shouldScrollOnShare}
               />
             </div>

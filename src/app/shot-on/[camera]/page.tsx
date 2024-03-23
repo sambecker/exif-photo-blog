@@ -1,5 +1,5 @@
 import { getCameraFromKey } from '@/camera';
-import { Metadata } from 'next';
+import { Metadata } from 'next/types';
 import { generateMetaForCamera } from '@/camera/meta';
 import { GRID_THUMBNAILS_TO_SHOW_MAX } from '@/photo';
 import { PaginationParams } from '@/site/pagination';
@@ -20,8 +20,7 @@ export async function generateMetadata({
 
   const [
     photos,
-    count,
-    dateRange,
+    { count, dateRange },
   ] = await getPhotosCameraDataCached({
     camera,
     limit: GRID_THUMBNAILS_TO_SHOW_MAX,

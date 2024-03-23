@@ -1,5 +1,5 @@
 import { FilmSimulation } from '@/simulation';
-import { SHOW_EXIF_DATA } from '@/site/config';
+import { HIGH_DENSITY_GRID, SHOW_EXIF_DATA } from '@/site/config';
 import { ABSOLUTE_PATH_FOR_HOME_IMAGE } from '@/site/paths';
 import { formatDateFromPostgresString } from '@/utility/date';
 import {
@@ -11,6 +11,14 @@ import {
 } from '@/utility/exif';
 import camelcaseKeys from 'camelcase-keys';
 import type { Metadata } from 'next';
+
+export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
+
+export const INFINITE_SCROLL_MULTIPLE_HOME =
+  process.env.NODE_ENV === 'development' ? 2 : 12;
+export const INFINITE_SCROLL_MULTIPLE_GRID = HIGH_DENSITY_GRID
+  ? process.env.NODE_ENV === 'development' ? 4 : 20
+  : process.env.NODE_ENV === 'development' ? 4 : 24;
 
 export const GRID_THUMBNAILS_TO_SHOW_MAX = 12;
 

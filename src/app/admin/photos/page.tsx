@@ -15,15 +15,11 @@ import {
   pathForAdminPhotoEdit,
 } from '@/site/paths';
 import { deleteConfirmationTextForPhoto, titleForPhoto } from '@/photo';
-import MorePhotos from '@/photo/MorePhotos';
-import {
-  getPhotosCached,
-  getPhotosCountIncludingHiddenCached,
-} from '@/photo/cache';
+import { getPhotosCountIncludingHiddenCached } from '@/photo/cache';
 import { AiOutlineEyeInvisible } from 'react-icons/ai';
 import {
   PaginationParams,
-  getPaginationForSearchParams,
+  getPaginationFromSearchParams,
 } from '@/site/pagination';
 import AdminGrid from '@/admin/AdminGrid';
 import DeleteButton from '@/admin/DeleteButton';
@@ -33,20 +29,23 @@ import { PRO_MODE_ENABLED } from '@/site/config';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import IconGrSync from '@/site/IconGrSync';
 import { getStoragePhotoUrlsNoStore } from '@/services/storage/cache';
+import MoreComponentsFromSearchParams from
+  '@/components/MoreComponentsFromSearchParams';
+import { getPhotos } from '@/services/vercel-postgres';
 
 const DEBUG_PHOTO_BLOBS = false;
 
 export default async function AdminPhotosPage({
   searchParams,
 }: PaginationParams) {
-  const { offset, limit } = getPaginationForSearchParams(searchParams);
+  const { offset, limit } = getPaginationFromSearchParams(searchParams);
 
   const [
     photos,
     count,
     blobPhotoUrls,
   ] = await Promise.all([
-    getPhotosCached({ includeHidden: true, sortBy: 'createdAt', limit }),
+    getPhotos({ includeHidden: true, sortBy: 'createdAt', limit }),
     getPhotosCountIncludingHiddenCached(),
     DEBUG_PHOTO_BLOBS ? getStoragePhotoUrlsNoStore() : [],
   ]);
@@ -78,6 +77,7 @@ export default async function AdminPhotosPage({
                       key={photo.id}
                       href={pathForPhoto(photo)}
                       className="lg:w-[50%] flex items-center gap-2"
+                      prefetch={false}
                     >
                       <span className={clsx(
                         'inline-flex items-center gap-2',
@@ -139,7 +139,10 @@ export default async function AdminPhotosPage({
                 </Fragment>)}
             </AdminGrid>
             {showMorePhotos &&
-              <MorePhotos path={pathForAdminPhotos(offset + 1)} />}
+              <MoreComponentsFromSearchParams
+                label="More photos"
+                path={pathForAdminPhotos(offset + 1)}
+              />}
           </div>
         </div>}
     />

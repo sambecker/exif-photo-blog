@@ -1,9 +1,8 @@
-import { authCached } from '@/auth/cache';
+import { authCachedSafe } from '@/auth/cache';
 import FooterClient from './FooterClient';
 
 export default async function Footer() {
-  // Make footer auth resilient to error on first time setup
-  const session = await authCached().catch(() => null);
+  const session = await authCachedSafe();
   return (
     <FooterClient userEmail={session?.user?.email} />
   );
