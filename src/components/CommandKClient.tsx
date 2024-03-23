@@ -197,7 +197,7 @@ export default function CommandKClient({
               </span>}
           </div>
           <Command.List className={clsx(
-            'relative overflow-y-scroll',
+            'relative overflow-y-auto',
             'max-h-48 sm:max-h-72',
           )}>
             <Command.Empty className="mt-1 pl-3 text-dim">

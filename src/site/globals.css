@@ -159,14 +159,4 @@
     @apply
       bg-gray-900 dark:bg-gray-100
   }
-  /* Common Utilities: Scrollbars */
-  /* Explicitly hide scrollbars on Windows */
-  /* .hide-scrollbar {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  .hide-scrollbar::-webkit-scrollbar {
-    @apply
-      hidden
-  } */
 }
