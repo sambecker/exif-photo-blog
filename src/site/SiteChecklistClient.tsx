@@ -106,7 +106,7 @@ export default function SiteChecklistClient({
     <div
       key={variable}
       className={clsx(
-        'overflow-x-scroll overflow-y-hidden',
+        'overflow-x-auto overflow-y-hidden',
         minimal && 'inline-flex',
       )}
     >
