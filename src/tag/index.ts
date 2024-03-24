@@ -4,8 +4,14 @@ import {
   descriptionForPhotoSet,
   photoQuantityText,
 } from '@/photo';
-import { absolutePathForTag, absolutePathForTagImage } from '@/site/paths';
-import { capitalizeWords } from '@/utility/string';
+import {
+  absolutePathForTag,
+  absolutePathForTagImage,
+  getPathComponents,
+} from '@/site/paths';
+import { capitalizeWords, convertStringToArray } from '@/utility/string';
+
+export const TAG_FAVS = 'favs';
 
 export type Tags = {
   tag: string
@@ -15,6 +21,9 @@ export type Tags = {
 export const formatTag = (tag?: string) =>
   capitalizeWords(tag?.replaceAll('-', ' '));
 
+export const doesTagsStringIncludeFavs = (tags?: string) =>
+  convertStringToArray(tags)?.some(tag => isTagFavs(tag));
+
 export const titleForTag = (
   tag: string,
   photos:Photo[],
@@ -23,6 +32,26 @@ export const titleForTag = (
   formatTag(tag),
   photoQuantityText(explicitCount ?? photos.length),
 ].join(' ');
+
+export const sortTags = (
+  tags: string[],
+  tagToHide?: string,
+) => tags
+  .filter(tag => tag !== tagToHide)
+  .sort((a, b) => isTagFavs(a) ? -1 : a.localeCompare(b));
+
+export const sortTagsObject = (
+  tags: Tags,
+  tagToHide?: string,
+) => tags
+  .filter(({ tag }) => tag!== tagToHide)
+  .sort(({ tag: a }, { tag: b }) => isTagFavs(a) ? -1 : a.localeCompare(b));
+
+export const sortTagsWithoutFavs = (tags: string[]) =>
+  sortTags(tags, TAG_FAVS);
+
+export const sortTagsObjectWithoutFavs = (tags: Tags) =>
+  sortTagsObject(tags, TAG_FAVS);
 
 export const descriptionForTaggedPhotos = (
   photos: Photo[],
@@ -50,3 +79,10 @@ export const generateMetaForTag = (
     descriptionForTaggedPhotos(photos, true, explicitCount, explicitDateRange),
   images: absolutePathForTagImage(tag),
 });
+
+export const isTagFavs = (tag: string) => tag.toLowerCase() === TAG_FAVS;
+
+export const isPhotoFav = ({ tags }: Photo) => tags.some(isTagFavs);
+
+export const isPathFavs = (pathname?: string) =>
+  getPathComponents(pathname).tag === TAG_FAVS;

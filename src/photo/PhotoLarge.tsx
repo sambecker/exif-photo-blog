@@ -1,7 +1,13 @@
-import { Photo, photoHasCameraData, photoHasExifData, titleForPhoto } from '.';
+import {
+  Photo,
+  altTextForPhoto,
+  shouldShowCameraDataForPhoto,
+  shouldShowExifDataForPhoto,
+  titleForPhoto,
+} from '.';
 import SiteGrid from '@/components/SiteGrid';
 import ImageLarge from '@/components/ImageLarge';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx/lite';
 import Link from 'next/link';
 import { pathForPhoto, pathForPhotoShare } from '@/site/paths';
 import PhotoTags from '@/tag/PhotoTags';
@@ -9,6 +15,9 @@ import ShareButton from '@/components/ShareButton';
 import PhotoCamera from '../camera/PhotoCamera';
 import { cameraFromPhoto } from '@/camera';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
+import { sortTags } from '@/tag';
+import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
+import { Suspense } from 'react';
 
 export default function PhotoLarge({
   photo,
@@ -33,26 +42,20 @@ export default function PhotoLarge({
   shouldShareSimulation?: boolean
   shouldScrollOnShare?: boolean
 }) {
-  const tagsToShow = photo.tags.filter(t => t !== primaryTag);
+  const tags = sortTags(photo.tags, primaryTag);
 
   const camera = cameraFromPhoto(photo);
-  
-  const renderMiniGrid = (children: JSX.Element, rightPadding = true) =>
-    <div className={cc(
-      'flex gap-y-4',
-      'flex-col sm:flex-row md:flex-col',
-      '[&>*]:sm:flex-grow',
-      rightPadding && 'pr-2',
-    )}>
-      {children}
-    </div>;
+
+  const showCameraContent = showCamera && shouldShowCameraDataForPhoto(photo);
+  const showTagsContent = tags.length > 0;
+  const showExifContent = shouldShowExifDataForPhoto(photo);
 
   return (
     <SiteGrid
       contentMain={
         <ImageLarge
           className="w-full"
-          alt={titleForPhoto(photo)}
+          alt={altTextForPhoto(photo)}
           href={pathForPhoto(photo, primaryTag)}
           src={photo.url}
           aspectRatio={photo.aspectRatio}
@@ -60,68 +63,82 @@ export default function PhotoLarge({
           priority={priority}
         />}
       contentSide={
-        <div className={cc(
-          'sticky top-4 self-start',
+        <div className={clsx(
+          'relative',
+          'leading-snug',
+          'sticky top-4 self-start -translate-y-1',
           'grid grid-cols-2 md:grid-cols-1',
-          'gap-x-0.5 sm:gap-x-1',
-          'gap-y-4',
-          '-translate-y-1',
-          'mb-4',
+          'gap-x-0.5 sm:gap-x-1 gap-y-4',
+          'pb-6',
         )}>
-          {renderMiniGrid(<>
-            <div>
-              <Link
-                href={pathForPhoto(photo)}
-                className="font-bold uppercase"
-              >
-                {titleForPhoto(photo)}
-              </Link>
-              {tagsToShow.length > 0 &&
-                <PhotoTags tags={tagsToShow} />}
+          {/* Meta */}
+          <div className="pr-3 md:pr-0">
+            <div className="md:relative flex gap-2 items-start">
+              <div className="flex-grow">
+                <Link
+                  href={pathForPhoto(photo)}
+                  className="font-bold uppercase"
+                >
+                  {titleForPhoto(photo)}
+                </Link>
+              </div>
+              <Suspense>
+                <div className="absolute right-0 translate-y-[-4px] z-10">
+                  <AdminPhotoMenu photo={photo} />
+                </div>
+              </Suspense>
             </div>
-            {showCamera && photoHasCameraData(photo) &&
-            <div className="space-y-0.5">
-              <PhotoCamera
-                camera={camera}
-                showIcon={false}
-                hideApple={false}
-              />
-              {showSimulation && photo.filmSimulation &&
-                <div className="translate-x-[-0.3rem]"> 
+            <div className="space-y-4">
+              {photo.caption &&
+                <div className="uppercase">
+                  {photo.caption}
+                </div>}
+              {(showCameraContent || showTagsContent) &&
+                <div>
+                  {showCameraContent &&
+                    <PhotoCamera
+                      camera={camera}
+                      contrast="medium"
+                    />}
+                  {showTagsContent &&
+                    <PhotoTags tags={tags} contrast="medium" />}
+                </div>}
+            </div>
+          </div>
+          {/* EXIF Data */}
+          <div className="space-y-4">
+            {showExifContent &&
+              <>
+                <ul className="text-medium">
+                  <li>
+                    {photo.focalLengthFormatted}
+                    {photo.focalLengthIn35MmFormatFormatted &&
+                      <>
+                        {' '}
+                        <span
+                          title="35mm equivalent"
+                          className="text-extra-dim"
+                        >
+                          {photo.focalLengthIn35MmFormatFormatted}
+                        </span>
+                      </>}
+                  </li>
+                  <li>{photo.fNumberFormatted}</li>
+                  <li>{photo.exposureTimeFormatted}</li>
+                  <li>{photo.isoFormatted}</li>
+                  <li>{photo.exposureCompensationFormatted ?? '0ev'}</li>
+                </ul>
+                {showSimulation && photo.filmSimulation &&
                   <PhotoFilmSimulation
                     simulation={photo.filmSimulation}
-                  />
-                </div>}
-            </div>}
-          </>)}
-          {renderMiniGrid(<>
-            {photoHasExifData(photo) &&
-              <ul className="text-medium">
-                <li>
-                  {photo.focalLengthFormatted}
-                  {photo.focalLengthIn35MmFormatFormatted &&
-                    <>
-                      {' '}
-                      <span
-                        title="35mm equivalent"
-                        className="text-extra-dim"
-                      >
-                        {photo.focalLengthIn35MmFormatFormatted}
-                      </span>
-                    </>}
-                </li>
-                <li>{photo.fNumberFormatted}</li>
-                <li>{photo.exposureTimeFormatted}</li>
-                <li>{photo.isoFormatted}</li>
-                <li>{photo.exposureCompensationFormatted ?? '—'}</li>
-              </ul>}
-            <div className={cc(
-              'flex gap-y-4',
-              'flex-col sm:flex-row md:flex-col',
+                  />}
+              </>}
+            <div className={clsx(
+              'flex gap-2',
+              'md:flex-col md:gap-4 md:justify-normal',
             )}>
-              <div className={cc(
-                'grow uppercase',
-                'text-medium',
+              <div className={clsx(
+                'text-medium uppercase pr-1',
               )}>
                 {photo.takenAtNaiveFormatted}
               </div>
@@ -136,7 +153,7 @@ export default function PhotoLarge({
                 shouldScroll={shouldScrollOnShare}
               />
             </div>
-          </>, false)}
+          </div>
         </div>}
     />
   );

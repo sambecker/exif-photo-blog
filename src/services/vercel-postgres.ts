@@ -1,4 +1,4 @@
-import { sql } from '@vercel/postgres';
+import { db, sql } from '@vercel/postgres';
 import {
   PhotoDb,
   PhotoDbInsert,
@@ -11,6 +11,7 @@ import { Camera, Cameras, createCameraKey } from '@/camera';
 import { parameterize } from '@/utility/string';
 import { Tags } from '@/tag';
 import { FilmSimulation, FilmSimulations } from '@/simulation';
+import { PRIORITY_ORDER_ENABLED } from '@/site/config';
 
 const PHOTO_DEFAULT_LIMIT = 100;
 
@@ -27,6 +28,8 @@ const sqlCreatePhotosTable = () =>
       aspect_ratio REAL DEFAULT 1.5,
       blur_data TEXT,
       title VARCHAR(255),
+      caption TEXT,
+      semantic_description TEXT,
       tags VARCHAR(255)[],
       make VARCHAR(255),
       model VARCHAR(255),
@@ -49,9 +52,18 @@ const sqlCreatePhotosTable = () =>
     )
   `;
 
+// Migration 01
+const MIGRATION_FIELDS_01 = ['caption', 'semantic_description'];
+const sqlRunMigration01 = () =>
+  sql`
+    ALTER TABLE photos
+    ADD COLUMN IF NOT EXISTS caption TEXT,
+    ADD COLUMN IF NOT EXISTS semantic_description TEXT
+  `;
+
 // Must provide id as 8-character nanoid
-export const sqlInsertPhoto = (photo: PhotoDbInsert) => {
-  return sql`
+export const sqlInsertPhoto = (photo: PhotoDbInsert) =>
+  safelyQueryPhotos(() => sql`
     INSERT INTO photos (
       id,
       url,
@@ -59,6 +71,8 @@ export const sqlInsertPhoto = (photo: PhotoDbInsert) => {
       aspect_ratio,
       blur_data,
       title,
+      caption,
+      semantic_description,
       tags,
       make,
       model,
@@ -84,6 +98,8 @@ export const sqlInsertPhoto = (photo: PhotoDbInsert) => {
       ${photo.aspectRatio},
       ${photo.blurData},
       ${photo.title},
+      ${photo.caption},
+      ${photo.semanticDescription},
       ${convertArrayToPostgresString(photo.tags)},
       ${photo.make},
       ${photo.model},
@@ -102,17 +118,18 @@ export const sqlInsertPhoto = (photo: PhotoDbInsert) => {
       ${photo.takenAt},
       ${photo.takenAtNaive}
     )
-  `;
-};
+  `);
 
 export const sqlUpdatePhoto = (photo: PhotoDbInsert) =>
-  sql`
+  safelyQueryPhotos(() => sql`
     UPDATE photos SET
     url=${photo.url},
     extension=${photo.extension},
     aspect_ratio=${photo.aspectRatio},
     blur_data=${photo.blurData},
     title=${photo.title},
+    caption=${photo.caption},
+    semantic_description=${photo.semanticDescription},
     tags=${convertArrayToPostgresString(photo.tags)},
     make=${photo.make},
     model=${photo.model},
@@ -132,130 +149,29 @@ export const sqlUpdatePhoto = (photo: PhotoDbInsert) =>
     taken_at_naive=${photo.takenAtNaive},
     updated_at=${(new Date()).toISOString()}
     WHERE id=${photo.id}
-  `;
+  `);
 
 export const sqlDeletePhotoTagGlobally = (tag: string) =>
-  sql`
+  safelyQueryPhotos(() => sql`
     UPDATE photos
     SET tags=ARRAY_REMOVE(tags, ${tag})
     WHERE ${tag}=ANY(tags)
-  `;
+  `);
 
 export const sqlRenamePhotoTagGlobally = (tag: string, updatedTag: string) =>
-  sql`
+  safelyQueryPhotos(() => sql`
     UPDATE photos
     SET tags=ARRAY_REPLACE(tags, ${tag}, ${updatedTag})
     WHERE ${tag}=ANY(tags)
-  `;
+  `);
 
 export const sqlDeletePhoto = (id: string) =>
-  sql`DELETE FROM photos WHERE id=${id}`;
-
-const sqlGetPhotos = (
-  limit = PHOTO_DEFAULT_LIMIT,
-  offset = 0,
-) =>
-  sql<PhotoDb>`
-    SELECT * FROM photos
-    WHERE hidden IS NOT TRUE
-    ORDER BY taken_at DESC
-    LIMIT ${limit} OFFSET ${offset}
-  `;
-
-const sqlGetPhotosIncludingHidden = (
-  limit = PHOTO_DEFAULT_LIMIT,
-  offset = 0,
-) =>
-  sql<PhotoDb>`
-    SELECT * FROM photos
-    ORDER BY created_at DESC
-    LIMIT ${limit} OFFSET ${offset}
-  `;
-
-const sqlGetPhotosSortedByCreatedAt = (
-  limit = PHOTO_DEFAULT_LIMIT,
-  offset = 0,
-) =>
-  sql<PhotoDb>`
-    SELECT * FROM photos
-    WHERE hidden IS NOT TRUE
-    ORDER BY created_at DESC
-    LIMIT ${limit} OFFSET ${offset}
-  `;
-
-const sqlGetPhotosSortedByPriority = (
-  limit = PHOTO_DEFAULT_LIMIT,
-  offset = 0,
-) =>
-  sql<PhotoDb>`
-    SELECT * FROM photos
-    WHERE hidden IS NOT TRUE
-    ORDER BY priority_order ASC, taken_at DESC
-    LIMIT ${limit} OFFSET ${offset}
-  `;
-
-const sqlGetPhotosByTag = (
-  limit = PHOTO_DEFAULT_LIMIT,
-  tag: string,
-) =>
-  sql<PhotoDb>`
-    SELECT * FROM photos
-    WHERE ${tag}=ANY(tags)
-    AND hidden IS NOT TRUE
-    ORDER BY taken_at DESC
-    LIMIT ${limit}
-  `;
-
-const sqlGetPhotosByCamera = async (
-  limit = PHOTO_DEFAULT_LIMIT,
-  make: string,
-  model: string,
-) => sql<PhotoDb>`
-  SELECT * FROM photos
-  WHERE
-  LOWER(make)=${parameterize(make)} AND
-  LOWER(REPLACE(model, ' ', '-'))=${parameterize(model)}
-  ORDER BY taken_at DESC
-  LIMIT ${limit}
-`;
-
-const sqlGetPhotosBySimulation = async (
-  limit = PHOTO_DEFAULT_LIMIT,
-  simulation: FilmSimulation,
-) => sql<PhotoDb>`
-  SELECT * FROM photos
-  WHERE film_simulation=${simulation}
-  AND hidden IS NOT TRUE
-  ORDER BY taken_at DESC
-  LIMIT ${limit}
-`;
-
-const sqlGetPhotosTakenAfterDateInclusive = (
-  takenAt: Date,
-  limit?: number,
-) =>
-  sql<PhotoDb>`
-    SELECT * FROM photos
-    WHERE taken_at <= ${takenAt.toISOString()}
-    AND hidden IS NOT TRUE
-    ORDER BY taken_at DESC
-    LIMIT ${limit}
-  `;
-
-const sqlGetPhotosTakenBeforeDate = (
-  takenAt: Date,
-  limit?: number,
-) =>
-  sql<PhotoDb>`
-    SELECT * FROM photos
-    WHERE taken_at > ${takenAt.toISOString()}
-    AND hidden IS NOT TRUE
-    ORDER BY taken_at ASC
-    LIMIT ${limit}
-  `;
+  safelyQueryPhotos(() => sql`DELETE FROM photos WHERE id=${id}`);
 
 const sqlGetPhoto = (id: string) =>
-  sql<PhotoDb>`SELECT * FROM photos WHERE id=${id} LIMIT 1`;
+  safelyQueryPhotos(() =>
+    sql<PhotoDb>`SELECT * FROM photos WHERE id=${id} LIMIT 1`
+  );
 
 const sqlGetPhotosCount = async () => sql`
   SELECT COUNT(*) FROM photos
@@ -275,8 +191,8 @@ const sqlGetPhotosTagCount = async (tag: string) => sql`
 const sqlGetPhotosCameraCount = async (camera: Camera) => sql`
   SELECT COUNT(*) FROM photos
   WHERE
-  LOWER(make)=${parameterize(camera.make)} AND
-  LOWER(REPLACE(model, ' ', '-'))=${parameterize(camera.model)} AND
+  LOWER(make)=${parameterize(camera.make, true)} AND
+  LOWER(REPLACE(model, ' ', '-'))=${parameterize(camera.model, true)} AND
   hidden IS NOT TRUE
 `.then(({ rows }) => parseInt(rows[0].count, 10));
 
@@ -288,21 +204,33 @@ const sqlGetPhotosFilmSimulationCount = async (
   hidden IS NOT TRUE
 `.then(({ rows }) => parseInt(rows[0].count, 10));
 
+const sqlGetPhotosDateRange = async () => sql`
+  SELECT MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
+  FROM photos
+  WHERE hidden IS NOT TRUE
+`.then(({ rows }) => rows[0]?.start && rows[0]?.end
+    ? rows[0] as PhotoDateRange
+    : undefined);
+
 const sqlGetPhotosTagDateRange = async (tag: string) => sql`
   SELECT MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
   FROM photos
   WHERE ${tag}=ANY(tags) AND
   hidden IS NOT TRUE
-`.then(({ rows }) => rows[0] as PhotoDateRange);
+`.then(({ rows }) => rows[0]?.start && rows[0]?.end
+    ? rows[0] as PhotoDateRange
+    : undefined);
 
 const sqlGetPhotosCameraDateRange = async (camera: Camera) => sql`
   SELECT MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
   FROM photos
   WHERE
-  LOWER(make)=${parameterize(camera.make)} AND
-  LOWER(REPLACE(model, ' ', '-'))=${parameterize(camera.model)} AND
+  LOWER(make)=${parameterize(camera.make, true)} AND
+  LOWER(REPLACE(model, ' ', '-'))=${parameterize(camera.model, true)} AND
   hidden IS NOT TRUE
-`.then(({ rows }) => rows[0] as PhotoDateRange);
+`.then(({ rows }) => rows[0]?.start && rows[0]?.end
+    ? rows[0] as PhotoDateRange
+    : undefined);
 
 const sqlGetPhotosFilmSimulationDateRange = async (
   simulation: FilmSimulation,
@@ -311,7 +239,9 @@ const sqlGetPhotosFilmSimulationDateRange = async (
   FROM photos
   WHERE film_simulation=${simulation} AND
   hidden IS NOT TRUE
-`.then(({ rows }) => rows[0] as PhotoDateRange);
+`.then(({ rows }) => rows[0]?.start && rows[0]?.end
+    ? rows[0] as PhotoDateRange
+    : undefined);
 
 const sqlGetUniqueTags = async () => sql`
   SELECT DISTINCT unnest(tags) as tag, COUNT(*)
@@ -338,6 +268,8 @@ const sqlGetUniqueCameras = async () => sql`
   SELECT DISTINCT make||' '||model as camera, make, model, COUNT(*)
   FROM photos
   WHERE hidden IS NOT TRUE
+  AND trim(make) <> ''
+  AND trim(model) <> ''
   GROUP BY make, model
   ORDER BY camera ASC
 `.then(({ rows }): Cameras => rows.map(({ make, model, count }) => ({
@@ -361,6 +293,8 @@ const sqlGetUniqueFilmSimulations = async () => sql`
 export type GetPhotosOptions = {
   sortBy?: 'createdAt' | 'takenAt' | 'priority'
   limit?: number
+  offset?: number
+  query?: string
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
@@ -375,8 +309,16 @@ const safelyQueryPhotos = async <T>(callback: () => Promise<T>): Promise<T> => {
   try {
     result = await callback();
   } catch (e: any) {
-    if (/relation "photos" does not exist/i.test(e.message)) {
-      console.log('Creating table "photos" because it did not exist');
+    if (MIGRATION_FIELDS_01.some(field => new RegExp(
+      `column "${field}" of relation "photos" does not exist`,
+      'i',
+    ).test(e.message))) {
+      console.log('Running migration 01 ...');
+      await sqlRunMigration01();
+      result = await callback();
+    } else if (/relation "photos" does not exist/i.test(e.message)) {
+      // If the table does not exist, create it
+      console.log('Creating photos table ...');
       await sqlCreatePhotosTable();
       result = await callback();
     } else if (/endpoint is in transition/i.test(e.message)) {
@@ -397,11 +339,12 @@ const safelyQueryPhotos = async <T>(callback: () => Promise<T>): Promise<T> => {
   return result;
 };
 
-// PHOTOS
 export const getPhotos = async (options: GetPhotosOptions = {}) => {
   const {
-    sortBy = 'takenAt',
-    limit,
+    sortBy = PRIORITY_ORDER_ENABLED ? 'priority' : 'takenAt',
+    limit = PHOTO_DEFAULT_LIMIT,
+    offset = 0,
+    query,
     tag,
     camera,
     simulation,
@@ -410,30 +353,100 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
     includeHidden,
   } = options;
 
-  let getPhotosSql = () => sqlGetPhotos(limit);
+  let sql = ['SELECT * FROM photos'];
+  let values = [] as (string | number)[];
+  let valueIndex = 1;
 
-  if (includeHidden) {
-    getPhotosSql = () => sqlGetPhotosIncludingHidden(limit);
-  } else if (takenBefore) {
-    getPhotosSql = () => sqlGetPhotosTakenBeforeDate(takenBefore, limit);
-  } else if (takenAfterInclusive) {
+  // WHERE
+  let wheres = [] as string[];
+  if (!includeHidden) {
+    wheres.push('hidden IS NOT TRUE');
+  }
+  if (takenBefore) {
+    wheres.push(`taken_at > $${valueIndex++}`);
+    values.push(takenBefore.toISOString());
+  }
+  if (takenAfterInclusive) {
+    wheres.push(`taken_at <= $${valueIndex++}`);
+    values.push(takenAfterInclusive.toISOString());
+  }
+  if (query) {
     // eslint-disable-next-line max-len
-    getPhotosSql = () => sqlGetPhotosTakenAfterDateInclusive(takenAfterInclusive, limit);
-  } else if (tag) {
-    getPhotosSql = () => sqlGetPhotosByTag(limit, tag);
-  } else if (camera) {
-    getPhotosSql = () => sqlGetPhotosByCamera(limit, camera.make, camera.model);
-  } else if (simulation) {
-    getPhotosSql = () => sqlGetPhotosBySimulation(limit, simulation);
-  } else if (sortBy === 'createdAt') {
-    getPhotosSql = () => sqlGetPhotosSortedByCreatedAt(limit);
-  } else if (sortBy === 'priority') {
-    getPhotosSql = () => sqlGetPhotosSortedByPriority(limit);
+    wheres.push(`CONCAT(title, ' ', caption, ' ', semantic_description) ILIKE $${valueIndex++}`);
+    values.push(`%${query.toLocaleLowerCase()}%`);
+  }
+  if (tag) {
+    wheres.push(`$${valueIndex++}=ANY(tags)`);
+    values.push(tag);
+  }
+  if (camera) {
+    wheres.push(`LOWER(make)=$${valueIndex++}`);
+    wheres.push(`LOWER(REPLACE(model, ' ', '-'))=$${valueIndex++}`);
+    values.push(parameterize(camera.make, true));
+    values.push(parameterize(camera.model, true));
+  }
+  if (simulation) {
+    wheres.push(`film_simulation=$${valueIndex++}`);
+    values.push(simulation);
+  }
+  if (wheres.length > 0) {
+    sql.push(`WHERE ${wheres.join(' AND ')}`);
   }
 
-  return safelyQueryPhotos(getPhotosSql)
+  // ORDER BY
+  switch (sortBy) {
+  case 'createdAt':
+    sql.push('ORDER BY created_at DESC');
+    break;
+  case 'takenAt':
+    sql.push('ORDER BY taken_at DESC');
+    break;
+  case 'priority':
+    sql.push('ORDER BY priority_order ASC, taken_at DESC');
+    break;
+  }
+
+  // LIMIT + OFFSET
+  sql.push(`LIMIT $${valueIndex++} OFFSET $${valueIndex++}`);
+  values.push(limit, offset);
+
+  return safelyQueryPhotos(async () => {
+    const client = await db.connect();
+    return client.query(sql.join(' '), values);
+  })
     .then(({ rows }) => rows.map(parsePhotoFromDb));
 };
+
+export const getPhotosNearId = async (
+  id: string,
+  limit: number,
+) => {
+  const orderBy = PRIORITY_ORDER_ENABLED
+    ? 'ORDER BY priority_order ASC, taken_at DESC'
+    : 'ORDER BY taken_at DESC';
+
+  return safelyQueryPhotos(async () => {
+    const client = await db.connect();
+    return client.query(
+      `
+        WITH twi AS (
+          SELECT *, row_number()
+          OVER (${orderBy}) as row_number
+          FROM photos
+          WHERE hidden IS NOT TRUE
+        ),
+        current AS (SELECT row_number FROM twi WHERE id = $1)
+        SELECT twi.*
+        FROM twi, current
+        WHERE twi.row_number >= current.row_number - 1
+        LIMIT $2
+      `,
+      [id, limit]
+    );
+  })
+    .then(({ rows }) => rows.map(parsePhotoFromDb));
+};
+
 export const getPhoto = async (id: string): Promise<Photo | undefined> => {
   // Check for photo id forwarding
   // and convert short ids to uuids
@@ -442,6 +455,8 @@ export const getPhoto = async (id: string): Promise<Photo | undefined> => {
     .then(({ rows }) => rows.map(parsePhotoFromDb))
     .then(photos => photos.length > 0 ? photos[0] : undefined);
 };
+export const getPhotosDateRange = () =>
+  safelyQueryPhotos(sqlGetPhotosDateRange);
 export const getPhotosCount = () =>
   safelyQueryPhotos(sqlGetPhotosCount);
 export const getPhotosCountIncludingHidden = () =>

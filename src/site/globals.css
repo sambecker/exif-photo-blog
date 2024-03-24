@@ -7,8 +7,8 @@
   body {
     @apply
       text-main
+      bg-main
       font-mono text-sm md:text-base
-      bg-white dark:bg-black
   }
   /* Forms */
   label {
@@ -17,22 +17,26 @@
       text-medium
       tracking-wider
   }
+  .control,
   button, .button,
-  input[type=text], input[type=email], input[type=password], select {
+  input[type=text], input[type=email], input[type=password], select, textarea {
     @apply
       px-2.5 py-2
       border rounded-md
-      bg-white dark:bg-black
+      bg-main
       border-gray-200 dark:border-gray-700
-      font-mono text-base leading-tight
-      min-h-[2.4rem]
+      font-mono text-base leading-tight      
+  }
+  input[type=text], input[type=email], input[type=password], select, textarea {
+    @apply
+      text-[1rem] /* Prevent iOS auto-zoom behavior */
+      read-only:cursor-default
   }
   input[type=text], input[type=email], input[type=password], select {
     @apply
-      text-[1rem] /* Prevent iOS auto-zoom behavior */
-      min-w-[20rem] read-only:cursor-default
+      min-h-[2.4rem]
   }
-  input[type=text], input[type=email], input[type=password] {
+  input[type=text], input[type=email], input[type=password], textarea {
     @apply
       read-only:bg-gray-100
       dark:read-only:bg-gray-900 dark:read-only:text-gray-400
@@ -63,6 +67,10 @@
   input[type=checkbox] {
     @apply
       rounded-md
+  }
+  .error {
+    @apply
+      border-red-500 dark:border-red-400
   }
   button, .button {
     @apply
@@ -103,7 +111,12 @@
       p-0 min-h-0
       border-none active:bg-transparent shadow-none
   }
-  /* Common Utilities */
+  a, .link {
+    @apply
+      hover:text-gray-600
+      hover:dark:text-gray-400
+  }
+  /* Common Utilities: Text */
   .text-main {
     @apply
       text-gray-900 dark:text-gray-100
@@ -131,5 +144,19 @@
   .text-error {
     @apply
       text-red-500 dark:text-red-400
+  }
+  /* Common Utilities: Background */
+  .bg-main {
+    @apply
+      bg-white dark:bg-black
+  }
+  .bg-content {
+    @apply
+      bg-white border-gray-200
+      dark:bg-black dark:border-gray-800
+  }
+  .bg-invert {
+    @apply
+      bg-gray-900 dark:bg-gray-100
   }
 }

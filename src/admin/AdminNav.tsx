@@ -6,7 +6,7 @@ import {
   checkPathPrefix,
   isPathAdminConfiguration,
 } from '@/site/paths';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx/lite';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BiCog } from 'react-icons/bi';
@@ -25,19 +25,19 @@ export default function AdminNav({
   return (
     <SiteGrid
       contentMain={
-        <div className={cc(
+        <div className={clsx(
           'flex gap-2 md:gap-4',
           'border-b border-gray-200 dark:border-gray-800 pb-3',
         )}>
-          <div className={cc(
+          <div className={clsx(
             'flex gap-2 md:gap-4',
-            'flex-grow overflow-x-scroll',
+            'flex-grow overflow-x-auto',
           )}>
             {items.map(({ label, href, count }) =>
               <Link
                 key={label}
                 href={href}
-                className={cc(
+                className={clsx(
                   'flex gap-0.5',
                   checkPathPrefix(pathname, href) ? 'font-bold' : 'text-dim',
                 )}
@@ -55,7 +55,7 @@ export default function AdminNav({
             <BiCog
               size={18}
               className="inline-block"
-              aria-label="Blog Configuration"
+              aria-label="App Configuration"
             />
           </Link>
         </div>

@@ -1,4 +1,5 @@
 import { FilmSimulation } from '@/simulation';
+import { SHOW_EXIF_DATA } from '@/site/config';
 import { ABSOLUTE_PATH_FOR_HOME_IMAGE } from '@/site/paths';
 import { formatDateFromPostgresString } from '@/utility/date';
 import {
@@ -16,7 +17,10 @@ export const GRID_THUMBNAILS_TO_SHOW_MAX = 12;
 export const ACCEPTED_PHOTO_FILE_TYPES = [
   'image/jpg',
   'image/jpeg',
+  'image/png',
 ];
+
+export const MAX_PHOTO_UPLOAD_SIZE_IN_BYTES = 50_000_000;
 
 // Core EXIF data
 export interface PhotoExif {
@@ -32,8 +36,8 @@ export interface PhotoExif {
   latitude?: number
   longitude?: number
   filmSimulation?: FilmSimulation
-  takenAt: string
-  takenAtNaive: string
+  takenAt?: string
+  takenAtNaive?: string
 }
 
 // Raw db insert
@@ -41,12 +45,16 @@ export interface PhotoDbInsert extends PhotoExif {
   id: string
   url: string
   extension: string
-  blurData: string
+  blurData?: string
   title?: string
+  caption?: string
+  semanticDescription?: string
   tags?: string[]
   locationName?: string
   priorityOrder?: number
   hidden?: boolean
+  takenAt: string
+  takenAtNaive: string
 }
 
 // Raw db response
@@ -160,6 +168,9 @@ export const translatePhotoId = (id: string) =>
 export const titleForPhoto = (photo: Photo) =>
   photo.title || 'Untitled';
 
+export const altTextForPhoto = (photo: Photo) =>
+  photo.semanticDescription || titleForPhoto(photo);
+
 export const photoLabelForCount = (count: number) =>
   count === 1 ? 'Photo' : 'Photos';
 
@@ -167,6 +178,9 @@ export const photoQuantityText = (count: number, includeParentheses = true) =>
   includeParentheses
     ? `(${count} ${photoLabelForCount(count)})`
     : `${count} ${photoLabelForCount(count)}`;  
+
+export const deleteConfirmationTextForPhoto = (photo: Photo) =>
+  `Are you sure you want to delete "${titleForPhoto(photo)}?"`;
 
 export type PhotoDateRange = { start: string, end: string };
 
@@ -194,33 +208,51 @@ const sortPhotosByDate = (
     : a.takenAt.getTime() - b.takenAt.getTime());
 
 export const dateRangeForPhotos = (
-  photos: Photo[],
+  photos: Photo[] = [],
   explicitDateRange?: PhotoDateRange,
 ) => {
-  const photosSorted = sortPhotosByDate(photos);
+  let start = '';
+  let end = '';
+  let description = '';
 
-  const start = formatDateFromPostgresString(
-    explicitDateRange?.start ?? photosSorted[photos.length - 1].takenAtNaive,
-    true,
-  );
-  const end = formatDateFromPostgresString(
-    explicitDateRange?.end ?? photosSorted[0].takenAtNaive,
-    true
-  );
-  const description = start === end
-    ? start
-    : `${start}–${end}`;
+  if (explicitDateRange || photos.length > 0) {
+    const photosSorted = sortPhotosByDate(photos);
+    start = formatDateFromPostgresString(
+      explicitDateRange?.start ?? photosSorted[photos.length - 1].takenAtNaive,
+      true,
+    );
+    end = formatDateFromPostgresString(
+      explicitDateRange?.end ?? photosSorted[0].takenAtNaive,
+      true
+    );
+    description = start === end
+      ? start
+      : `${start}–${end}`;
+  }
+
   return { start, end, description };
 };
 
-export const photoHasCameraData = (photo: Photo) =>
-  photo.make ||
-  photo.model;
+const photoHasCameraData = (photo: Photo) =>
+  Boolean(photo.make) &&
+  Boolean(photo.model);
 
-export const photoHasExifData = (photo: Photo) =>
-  photo.focalLength ||
-  photo.focalLengthIn35MmFormat ||
-  photo.fNumberFormatted ||
-  photo.isoFormatted ||
-  photo.exposureTimeFormatted ||
-  photo.exposureCompensationFormatted;
+const photoHasExifData = (photo: Photo) =>
+  Boolean(photo.focalLength) ||
+  Boolean(photo.focalLengthIn35MmFormat) ||
+  Boolean(photo.fNumberFormatted) ||
+  Boolean(photo.isoFormatted) ||
+  Boolean(photo.exposureTimeFormatted) ||
+  Boolean(photo.exposureCompensationFormatted);
+
+export const shouldShowCameraDataForPhoto = (photo: Photo) =>
+  SHOW_EXIF_DATA && photoHasCameraData(photo);
+
+export const shouldShowExifDataForPhoto = (photo: Photo) =>
+  SHOW_EXIF_DATA && photoHasExifData(photo);
+
+export const getKeywordsForPhoto = (photo: Photo) =>
+  (photo.caption ?? '').split(' ')
+    .concat((photo.semanticDescription ?? '').split(' '))
+    .filter(Boolean)
+    .map(keyword => keyword.toLocaleLowerCase());

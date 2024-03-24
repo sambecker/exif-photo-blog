@@ -10,8 +10,8 @@ import { FilmSimulation } from '@/simulation';
 // Core paths
 export const PATH_ROOT      = '/';
 export const PATH_GRID      = '/grid';
-export const PATH_SETS      = '/sets';
 export const PATH_ADMIN     = '/admin';
+export const PATH_API       = '/api';
 export const PATH_SIGN_IN   = '/sign-in';
 export const PATH_OG        = '/og';
 
@@ -31,8 +31,12 @@ const PATH_FILM_SIMULATION_DYNAMIC  = `${PREFIX_FILM_SIMULATION}/[simulation]`;
 export const PATH_ADMIN_PHOTOS        = `${PATH_ADMIN}/photos`;
 export const PATH_ADMIN_UPLOADS       = `${PATH_ADMIN}/uploads`;
 export const PATH_ADMIN_TAGS          = `${PATH_ADMIN}/tags`;
-export const PATH_ADMIN_UPLOAD_BLOB   = `${PATH_ADMIN_UPLOADS}/blob`;
 export const PATH_ADMIN_CONFIGURATION = `${PATH_ADMIN}/configuration`;
+
+// API paths
+export const PATH_API_STORAGE = `${PATH_API}/storage`;
+export const PATH_API_VERCEL_BLOB_UPLOAD = `${PATH_API_STORAGE}/vercel-blob`;
+export const PATH_API_PRESIGNED_URL = `${PATH_API_STORAGE}/presigned-url`;
 
 // Modifiers
 const SHARE = 'share';
@@ -44,14 +48,12 @@ export const PATHS_ADMIN = [
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_UPLOADS,
   PATH_ADMIN_TAGS,
-  PATH_ADMIN_UPLOAD_BLOB,
   PATH_ADMIN_CONFIGURATION,
 ];
 
 export const PATHS_TO_CACHE = [
   PATH_ROOT,
   PATH_GRID,
-  PATH_SETS,
   PATH_OG,
   PATH_PHOTO_DYNAMIC,
   PATH_TAG_DYNAMIC,
@@ -231,9 +233,6 @@ export const checkPathPrefix = (pathname = '', prefix: string) =>
 
 export const isPathGrid = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_GRID);
-
-export const isPathSets = (pathname?: string) =>
-  checkPathPrefix(pathname, PATH_SETS);
 
 export const isPathSignIn = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_SIGN_IN);

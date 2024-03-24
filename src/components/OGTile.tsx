@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx/lite';
 import Link from 'next/link';
 import { BiError } from 'react-icons/bi';
 import Spinner from '@/components/Spinner';
-import { IMAGE_OG_DIMENSION } from '../photo/image-response';
+import { IMAGE_OG_DIMENSION } from '../image-response';
 
 export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 
@@ -49,7 +49,7 @@ export default function OGTile({
   return (
     <Link
       href={path}
-      className={cc(
+      className={clsx(
         'group',
         'block w-full rounded-md overflow-hidden',
         'border shadow-sm',
@@ -62,14 +62,14 @@ export default function OGTile({
         style={{ aspectRatio }}
       >
         {loadingState === 'loading' &&
-          <div className={cc(
+          <div className={clsx(
             'absolute top-0 left-0 right-0 bottom-0 z-10',
             'flex items-center justify-center',
           )}>
             <Spinner size={40} />
           </div>}
         {loadingState === 'failed' &&
-          <div className={cc(
+          <div className={clsx(
             'absolute top-0 left-0 right-0 bottom-0 z-[11]',
             'flex items-center justify-center',
             'text-red-400',
@@ -79,7 +79,7 @@ export default function OGTile({
         {(loadingState === 'loading' || loadingState === 'loaded') &&
           <img
             alt={title}
-            className={cc(
+            className={clsx(
               'absolute top-0 left-0 right-0 bottom-0 z-0',
               'w-full',
               loadingState === 'loading' && 'opacity-0',
@@ -109,7 +109,7 @@ export default function OGTile({
             }}
           />}
       </div>
-      <div className={cc(
+      <div className={clsx(
         'md:text-lg',
         'flex flex-col gap-1 p-3',
         'font-sans leading-none',

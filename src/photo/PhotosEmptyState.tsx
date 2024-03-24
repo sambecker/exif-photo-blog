@@ -1,54 +1,56 @@
 import InfoBlock from '@/components/InfoBlock';
 import SiteGrid from '@/components/SiteGrid';
 import { IS_SITE_READY } from '@/site/config';
+import { PATH_ADMIN_CONFIGURATION, PATH_ADMIN_PHOTOS } from '@/site/paths';
 import SiteChecklist from '@/site/SiteChecklist';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx/lite';
 import Link from 'next/link';
+import { FaArrowRight } from 'react-icons/fa';
 import { HiOutlinePhotograph } from 'react-icons/hi';
 
 export default function PhotosEmptyState() {
   return (
     <SiteGrid
       contentMain={
-        <InfoBlock>
+        <InfoBlock
+          className="min-h-[20rem] sm:min-h-[30rem] px-8"
+          padding="loose"
+        >
           <HiOutlinePhotograph
             className="text-medium"
             size={24}
           />
-          <div className={cc(
+          <div className={clsx(
             'font-bold text-2xl',
             'text-gray-700 dark:text-gray-200',
           )}>
-            {!IS_SITE_READY ? 'Finish Setup' : 'Welcome!'}
+            {!IS_SITE_READY ? 'Finish Setup' : 'Setup Complete!'}
           </div>
           {!IS_SITE_READY
             ? <SiteChecklist />
-            : <div className="max-w-md leading-[1.7] text-center">
-              <div className="mb-2">
-                1. Visit
-                {' '}
+            : <div className="max-w-md text-center space-y-6">
+              <div className="space-y-2">
+                <div>
+                  Add your first photo:
+                </div>
                 <Link
-                  href="/admin"
-                  className="hover:text-gray-800 hover:dark:text-gray-100"
+                  href={PATH_ADMIN_PHOTOS}
+                  className="button primary"
                 >
-                  /admin
+                  <span>Admin Dashboard</span>
+                  <FaArrowRight size={10} />
                 </Link>
-                {' '}
-                to add your first photo
               </div>
               <div>
-                2. Change the name of this blog and other configuration
+                Change the name of this blog and other configuration
                 by editing environment variables referenced in
                 {' '}
-                <span className={cc(
-                  'px-1.5',
-                  'bg-gray-100',
-                  'border border-gray-200 dark:border-gray-700',
-                  'dark:bg-gray-800 dark:text-gray-400',
-                  'rounded-md',
-                )}>
-                  src/site/config.ts
-                </span>
+                <Link
+                  href={PATH_ADMIN_CONFIGURATION}
+                  className="text-main hover:underline"
+                >
+                  /admin/configuration
+                </Link>
               </div>
             </div>}
         </InfoBlock>}

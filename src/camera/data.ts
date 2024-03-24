@@ -7,7 +7,7 @@ import {
   getPhotosCached,
   getPhotosCameraCountCached,
   getPhotosCameraDateRangeCached,
-} from '@/cache';
+} from '@/photo/cache';
 import { pathForCamera } from '@/site/paths';
 
 export const getPhotosCameraDataCached = ({

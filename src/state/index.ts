@@ -1,12 +1,16 @@
-import { createContext, useContext } from 'react';
+import { Dispatch, SetStateAction, createContext, useContext } from 'react';
 import { AnimationConfig } from '@/components/AnimateItems';
 
 export interface AppStateContext {
   previousPathname?: string
   hasLoaded?: boolean
-  setHasLoaded?: (hasLoaded: boolean) => void
+  setHasLoaded?: Dispatch<SetStateAction<boolean>>
   nextPhotoAnimation?: AnimationConfig
-  setNextPhotoAnimation?: (animation?: AnimationConfig) => void
+  setNextPhotoAnimation?: Dispatch<SetStateAction<AnimationConfig | undefined>>
+  shouldRespondToKeyboardCommands?: boolean
+  setShouldRespondToKeyboardCommands?: Dispatch<SetStateAction<boolean>>
+  isCommandKOpen?: boolean
+  setIsCommandKOpen?: Dispatch<SetStateAction<boolean>>
   clearNextPhotoAnimation?: () => void
 }
 

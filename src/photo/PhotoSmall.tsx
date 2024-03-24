@@ -1,7 +1,7 @@
-import { Photo, titleForPhoto } from '.';
+import { Photo, altTextForPhoto } from '.';
 import ImageSmall from '@/components/ImageSmall';
 import Link from 'next/link';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx/lite';
 import { pathForPhoto } from '@/site/paths';
 import { Camera } from '@/camera';
 import { FilmSimulation } from '@/simulation';
@@ -22,7 +22,9 @@ export default function PhotoSmall({
   return (
     <Link
       href={pathForPhoto(photo, tag, camera, simulation)}
-      className={cc(
+      className={clsx(
+        'group',
+        'flex relative w-full h-full',
         'active:brightness-75',
         selected && 'brightness-50',
       )}
@@ -32,7 +34,7 @@ export default function PhotoSmall({
         aspectRatio={photo.aspectRatio}
         blurData={photo.blurData}
         className="w-full"
-        alt={titleForPhoto(photo)}
+        alt={altTextForPhoto(photo)}
       />
     </Link>
   );

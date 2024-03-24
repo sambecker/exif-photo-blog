@@ -1,28 +1,38 @@
 import { ReactNode } from 'react';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx/lite';
+import ExperimentalBadge from './ExperimentalBadge';
+import Badge from './Badge';
 
 export default function Checklist({
   title,
   icon,
+  optional,
+  experimental,
   children,
 }: {
   title: string
   icon?: ReactNode
+  optional?: boolean
+  experimental?: boolean
   children: ReactNode
 }) {
   return (
     <div>
-      <div className={cc(
-        'flex items-center gap-3',
+      <div className={clsx(
+        'inline-flex items-center',
         'text-gray-600 dark:text-gray-300',
-        'pl-[18px] mb-3',
+        'pl-[18px] mb-3 text-lg',
       )}>
-        {icon}
-        <div className="text-lg">
+        <span className="w-7 shrink-0">{icon}</span>
+        <span className="inline-flex flex-wrap items-center gap-y-1 gap-x-1.5">
           {title}
-        </div>
+          {optional &&
+            <Badge type="small">Optional</Badge>}
+          {experimental &&
+            <ExperimentalBadge />}
+        </span>
       </div>
-      <div className={cc(
+      <div className={clsx(
         'bg-white dark:bg-black',
         'dark:text-gray-400',
         'border border-gray-200 dark:border-gray-800 rounded-md',

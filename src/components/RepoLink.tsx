@@ -1,4 +1,4 @@
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx/lite';
 import Link from 'next/link';
 import { BiLogoGithub } from 'react-icons/bi';
 
@@ -11,13 +11,16 @@ export default function RepoLink() {
       <Link
         href="http://github.com/sambecker/exif-photo-blog"
         target="_blank"
-        className={cc(
-          'flex items-center gap-1',
-          'text-black dark:text-white',
+        className={clsx(
+          'flex items-center gap-0.5',
+          'text-main hover:text-main',
           'hover:underline',
         )}
       >
-        <BiLogoGithub className="translate-y-[1px] hidden xs:inline-block" />
+        <BiLogoGithub
+          size={16}
+          className="translate-y-[0.5px] hidden xs:inline-block"
+        />
         exif-photo-blog
       </Link>
     </span>

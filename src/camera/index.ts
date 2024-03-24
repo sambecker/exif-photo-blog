@@ -1,4 +1,4 @@
-import { Photo } from '@/photo';
+import type { Photo } from '@/photo';
 import { parameterize } from '@/utility/string';
 
 const CAMERA_PLACEHOLDER: Camera = { make: 'Camera', model: 'Model' };
@@ -17,7 +17,7 @@ export type CameraWithCount = {
 export type Cameras = CameraWithCount[];
 
 export const createCameraKey = ({ make, model }: Camera) =>
-  parameterize(`${make}-${model}`);
+  parameterize(`${make}-${model}`, true);
 
 // Assumes no makes ('Fujifilm,' 'Apple,' 'Canon', etc.) have dashes
 export const getCameraFromKey = (cameraKey: string): Camera => {
@@ -45,9 +45,27 @@ export const cameraFromPhoto = (
       : fallback ?? CAMERA_PLACEHOLDER;
 
 export const formatCameraText = (
-  { make, model }: Camera,
+  { make, model: modelRaw }: Camera,
   includeMakeApple?: boolean,
-) =>
-  make === 'Apple' && !includeMakeApple
+) => {
+  // Remove potential duplicate make from model
+  const model = modelRaw.replace(`${make} `, '');
+  return make === 'Apple' && !includeMakeApple
     ? model
     : `${make} ${model}`;
+};
+
+export const formatCameraModelText = (
+  { make, model: modelRaw }: Camera,
+) => {
+  // Remove potential duplicate make from model
+  const model = modelRaw.replace(`${make} `, '');
+  const textLength = model?.length ?? 0;
+  if (textLength > 0 && textLength <= 8) {
+    return model;
+  } else if (model?.includes('iPhone')) {
+    return model.split('iPhone')[1];
+  } else {
+    return undefined;
+  }
+};

@@ -3,7 +3,7 @@ import { Photo, PhotoDateRange } from '.';
 import PhotoLarge from './PhotoLarge';
 import SiteGrid from '@/components/SiteGrid';
 import PhotoGrid from './PhotoGrid';
-import { cc } from '@/utility/css';
+import { clsx } from 'clsx/lite';
 import PhotoLinks from './PhotoLinks';
 import TagHeader from '@/tag/TagHeader';
 import { Camera } from '@/camera';
@@ -95,20 +95,29 @@ export default function PhotoDetailPage({
           tag={tag}
           animateOnFirstLoadOnly
         />}
-        contentSide={<div className={cc(
-          'grid grid-cols-2',
-          'gap-0.5 sm:gap-1',
-          'md:flex md:gap-4',
-          'user-select-none',
-        )}>
-          <PhotoLinks {...{
-            photo,
-            photos,
-            tag,
-            camera,
-            simulation,
-          }} />
-        </div>}
+        contentSide={<AnimateItems
+          animateOnFirstLoadOnly
+          type="bottom"
+          items={[
+            <div
+              key="PhotoLinks"
+              className={clsx(
+                'grid grid-cols-2',
+                'gap-0.5 sm:gap-1',
+                'md:flex md:gap-4',
+                'user-select-none',
+              )}
+            >
+              <PhotoLinks {...{
+                photo,
+                photos,
+                tag,
+                camera,
+                simulation,
+              }} />
+            </div>,
+          ]}
+        />}
       />
     </div>
   );
