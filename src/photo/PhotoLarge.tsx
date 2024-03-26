@@ -69,7 +69,6 @@ export default function PhotoLarge({
           'grid grid-cols-2 md:grid-cols-1',
           'gap-x-0.5 sm:gap-x-1 gap-y-baseline',
           'pb-6',
-          'debug-baseline-grid',
         )}>
           {/* Meta */}
           <div className="pr-3 md:pr-0">
