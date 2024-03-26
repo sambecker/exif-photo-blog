@@ -2,7 +2,9 @@ import { labelForFilmSimulation } from '@/vendors/fujifilm';
 import PhotoFilmSimulationIcon from './PhotoFilmSimulationIcon';
 import { pathForFilmSimulation } from '@/site/paths';
 import { FilmSimulation } from '.';
-import EntityLink, { EntityLinkExternalProps } from '@/components/EntityLink';
+import EntityLink, {
+  EntityLinkExternalProps,
+} from '@/components/primitives/EntityLink';
 
 export default function PhotoFilmSimulation({
   simulation,

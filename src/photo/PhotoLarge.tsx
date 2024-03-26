@@ -65,11 +65,11 @@ export default function PhotoLarge({
       contentSide={
         <div className={clsx(
           'relative',
-          'leading-snug',
           'sticky top-4 self-start -translate-y-1',
           'grid grid-cols-2 md:grid-cols-1',
-          'gap-x-0.5 sm:gap-x-1 gap-y-4',
+          'gap-x-0.5 sm:gap-x-1 gap-y-baseline',
           'pb-6',
+          'debug-baseline-grid',
         )}>
           {/* Meta */}
           <div className="pr-3 md:pr-0">
@@ -88,7 +88,7 @@ export default function PhotoLarge({
                 </div>
               </Suspense>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-baseline">
               {photo.caption &&
                 <div className="uppercase">
                   {photo.caption}
@@ -106,7 +106,7 @@ export default function PhotoLarge({
             </div>
           </div>
           {/* EXIF Data */}
-          <div className="space-y-4">
+          <div className="space-y-baseline">
             {showExifContent &&
               <>
                 <ul className="text-medium">
@@ -134,8 +134,8 @@ export default function PhotoLarge({
                   />}
               </>}
             <div className={clsx(
-              'flex gap-2',
-              'md:flex-col md:gap-4 md:justify-normal',
+              'flex gap-x-1.5 gap-y-baseline',
+              'md:flex-col md:justify-normal',
             )}>
               <div className={clsx(
                 'text-medium uppercase pr-1',

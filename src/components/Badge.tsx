@@ -27,8 +27,9 @@ export default function Badge({
       );
     case 'small':
       return clsx(
-        'px-[0.3rem] py-1 rounded-[0.25rem]',
-        'text-[0.7rem] font-medium',
+        'px-[4px] py-[2.5px]',
+        'md:px-[4.5px] md:py-[3px]',
+        'text-[0.7rem] font-medium rounded-[0.25rem]',
         highContrast
           ? 'text-invert bg-invert'
           : 'text-medium bg-gray-300/30 dark:bg-gray-700/50',
@@ -43,7 +44,7 @@ export default function Badge({
   };
   return (
     <span className={clsx(
-      'leading-none',
+      'leading-none inline-flex',
       stylesForType(),
       uppercase && 'uppercase tracking-wider',
       className,
