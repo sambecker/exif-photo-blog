@@ -174,7 +174,9 @@
   }
   .debug-baseline-grid {
     @apply
-      bg-[repeating-linear-gradient(to_bottom,#222,#222_1px,transparent_1px,transparent_1.125rem)]
-      md:bg-[repeating-linear-gradient(to_bottom,#222,#222_1px,transparent_1px,transparent_1.25rem)]
+      bg-[repeating-linear-gradient(to_bottom,#eee,#eee_1px,transparent_1px,transparent_1.125rem)]
+      md:bg-[repeating-linear-gradient(to_bottom,#eee,#eee_1px,transparent_1px,transparent_1.25rem)]
+      dark:bg-[repeating-linear-gradient(to_bottom,#222,#222_1px,transparent_1px,transparent_1.125rem)]
+      dark:md:bg-[repeating-linear-gradient(to_bottom,#222,#222_1px,transparent_1px,transparent_1.25rem)]
   }
 }
