@@ -18,6 +18,8 @@ import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
 import { sortTags } from '@/tag';
 import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
 import { Suspense } from 'react';
+import DebugBaselineGridContainer from
+  '@/components/DebugBaselineGridContainer';
 
 export default function PhotoLarge({
   photo,
@@ -63,7 +65,7 @@ export default function PhotoLarge({
           priority={priority}
         />}
       contentSide={
-        <div className={clsx(
+        <DebugBaselineGridContainer className={clsx(
           'relative',
           'sticky top-4 self-start -translate-y-1',
           'grid grid-cols-2 md:grid-cols-1',
@@ -153,7 +155,7 @@ export default function PhotoLarge({
               />
             </div>
           </div>
-        </div>}
+        </DebugBaselineGridContainer>}
     />
   );
 };

@@ -12,15 +12,16 @@ export default function AppStateProvider({
 }) {
   const { previousPathname } = usePathnames();
 
-  const [hasLoaded, setHasLoaded] = useState(false);
-  
+  const [hasLoaded, setHasLoaded] =
+    useState(false);
   const [nextPhotoAnimation, setNextPhotoAnimation] =
     useState<AnimationConfig>();
-
   const [shouldRespondToKeyboardCommands, setShouldRespondToKeyboardCommands] =
     useState(true);
-
-  const [isCommandKOpen, setIsCommandKOpen] = useState(false);
+  const [isCommandKOpen, setIsCommandKOpen] =
+    useState(false);
+  const [shouldShowBaselineGrid, setShouldShowBaselineGrid] =
+    useState(false);
 
   useEffect(() => {
     setHasLoaded?.(true);
@@ -38,6 +39,8 @@ export default function AppStateProvider({
         setShouldRespondToKeyboardCommands,
         isCommandKOpen,
         setIsCommandKOpen,
+        shouldShowBaselineGrid,
+        setShouldShowBaselineGrid,
         clearNextPhotoAnimation: () => setNextPhotoAnimation?.(undefined),
       }}
     >

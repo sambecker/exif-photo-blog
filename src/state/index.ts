@@ -11,6 +11,8 @@ export interface AppStateContext {
   setShouldRespondToKeyboardCommands?: Dispatch<SetStateAction<boolean>>
   isCommandKOpen?: boolean
   setIsCommandKOpen?: Dispatch<SetStateAction<boolean>>
+  shouldShowBaselineGrid?: boolean
+  setShouldShowBaselineGrid?: Dispatch<SetStateAction<boolean>>
   clearNextPhotoAnimation?: () => void
 }
 

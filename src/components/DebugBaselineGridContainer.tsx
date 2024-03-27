@@ -1,0 +1,24 @@
+'use client';
+
+import { useAppState } from '@/state';
+import { clsx } from 'clsx/lite';
+import { ReactNode } from 'react';
+
+export default function DebugBaselineGridContainer({
+  children,
+  className,
+}: {
+  children: ReactNode
+  className?: string
+}) {
+  const { shouldShowBaselineGrid } = useAppState();
+
+  return (
+    <div className={clsx(
+      className,
+      shouldShowBaselineGrid && 'bg-baseline-grid',
+    )}>
+      {children}
+    </div>
+  );
+}

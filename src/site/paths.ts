@@ -32,6 +32,7 @@ export const PATH_ADMIN_PHOTOS        = `${PATH_ADMIN}/photos`;
 export const PATH_ADMIN_UPLOADS       = `${PATH_ADMIN}/uploads`;
 export const PATH_ADMIN_TAGS          = `${PATH_ADMIN}/tags`;
 export const PATH_ADMIN_CONFIGURATION = `${PATH_ADMIN}/configuration`;
+export const PATH_ADMIN_BASELINE      = `${PATH_ADMIN}/baseline`;
 
 // API paths
 export const PATH_API_STORAGE = `${PATH_API}/storage`;
