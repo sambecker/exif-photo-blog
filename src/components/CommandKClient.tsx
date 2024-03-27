@@ -18,7 +18,6 @@ import { useTheme } from 'next-themes';
 import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
 import { IoInvertModeSharp } from 'react-icons/io5';
 import { useAppState } from '@/state';
-import { ADMIN_DEBUG_TOOLS_ENABLED } from '@/site/config';
 import { RiToolsFill } from 'react-icons/ri';
 
 const LISTENER_KEYDOWN = 'keydown';
@@ -41,10 +40,12 @@ export type CommandKSection = {
 export default function CommandKClient({
   onQueryChange,
   serverSections = [],
+  showDebugTools,
   footer,
 }: {
   onQueryChange?: (query: string) => Promise<CommandKSection[]>
   serverSections?: CommandKSection[]
+  showDebugTools?: boolean
   footer?: string
 }) {
   const {
@@ -156,7 +157,7 @@ export default function CommandKClient({
     }],
   }];
 
-  if (ADMIN_DEBUG_TOOLS_ENABLED) {
+  if (showDebugTools) {
     clientSections.push({
       heading: 'Debug Tools',
       accessory: <RiToolsFill size={16} className="translate-x-[-1px]" />,

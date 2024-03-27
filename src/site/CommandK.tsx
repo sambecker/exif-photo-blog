@@ -163,6 +163,7 @@ export default async function CommandK() {
         }]
         : [];
     }}
+    showDebugTools={isAdminLoggedIn && ADMIN_DEBUG_TOOLS_ENABLED}
     footer={photoQuantityText(count, false)}
   />;
 }
