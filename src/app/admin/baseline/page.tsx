@@ -1,7 +1,6 @@
 'use client';
 
-import DebugBaselineGridContainer from
-  '@/components/DebugBaselineGridContainer';
+import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import SiteGrid from '@/components/SiteGrid';
 import EntityLink from '@/components/primitives/EntityLink';
@@ -55,7 +54,7 @@ export default function ComponentsPage() {
             />
           </div>
         </h1>
-        <DebugBaselineGridContainer className="flex gap-8">
+        <DivDebugBaselineGrid className="flex gap-8">
           <div className="[&>*]:flex">
             <div>
               <LabeledIcon
@@ -188,7 +187,7 @@ export default function ComponentsPage() {
               </div>
             )}
           </div>
-        </DebugBaselineGridContainer>
+        </DivDebugBaselineGrid>
       </>}
     />
   );
