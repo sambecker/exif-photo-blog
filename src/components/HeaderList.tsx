@@ -17,7 +17,7 @@ export default function HeaderList({
     <AnimateItems
       className={clsx(
         className,
-        'space-y-0.5',
+        'space-y-1',
       )}
       scaleOffset={0.95}
       duration={0.5}
