@@ -14,8 +14,8 @@ export default function PhotoTags({
       {tags.map(tag =>
         <>
           {isTagFavs(tag)
-            ? <FavsTag {...{ key:tag, contrast }} />
-            : <PhotoTag {...{ key:tag, tag, contrast }} />}
+            ? <FavsTag key={tag} {...{ contrast }} />
+            : <PhotoTag key={tag} {...{ tag, contrast }} />}
         </>)}
     </div>
   );
