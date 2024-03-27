@@ -38,7 +38,7 @@ export default function FooterClient({
                 'flex items-center',
                 'text-dim min-h-[4rem]',
               )}>
-              <div className="flex gap-x-4 gap-y-1 flex-grow flex-wrap h-4">
+              <div className="flex gap-x-4 gap-y-0.5 flex-grow flex-wrap">
                 {isPathAdmin(pathname)
                   ? <>
                     {userEmail === undefined &&

@@ -57,7 +57,6 @@ export default function NavClient({
               className={clsx(
                 'flex items-center',
                 'w-full min-h-[4rem]',
-                'leading-none',
               )}>
               <div className="flex-grow">
                 <ViewSwitcher

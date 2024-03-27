@@ -24,7 +24,7 @@ export default function ShareModal({
       <div className="space-y-3 md:space-y-4 w-full">
         <div className={clsx(
           'flex items-center gap-x-3',
-          'text-xl md:text-3xl leading-snug',
+          'text-2xl leading-snug',
         )}>
           <TbPhotoShare size={22} className="hidden xs:block" />
           <div className="flex-grow">
