@@ -52,7 +52,7 @@ export default function ComponentsPage() {
       <div
         className={clsx(
           'flex gap-8',
-          debugGrid && 'debug-baseline-grid'
+          debugGrid && 'bg-baseline-grid'
         )}
       >
         <div className="[&>*]:flex">

@@ -23,10 +23,7 @@ export default function PhotoFilmSimulation({
       label={medium}
       labelSmall={small}
       href={pathForFilmSimulation(simulation)}
-      icon={<PhotoFilmSimulationIcon
-        simulation={simulation}
-        className="translate-y-[-0.5px]"
-      />}
+      icon={<PhotoFilmSimulationIcon simulation={simulation} />}
       title={`Film Simulation: ${large}`}
       type={type}
       badged={badged}

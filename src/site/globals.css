@@ -162,21 +162,25 @@
   /* Utilities: Baseline Grid */
   .space-y-baseline {
     @apply
-      space-y-[1.125rem] md:space-y-[1.25rem]
+      space-y-[1.1875rem] md:space-y-[1.25rem]
   }
   .gap-y-baseline {
     @apply
-      gap-y-[1.125rem] md:gap-y-[1.25rem]
+      gap-y-[1.1875rem] md:gap-y-[1.25rem]
   }
   .gap-baseline {
     @apply
-      gap-[1.125rem] md:gap-[1.25rem]
+      gap-[1.1875rem] md:gap-[1.25rem]
   }
-  .debug-baseline-grid {
+  .max-h-baseline {
     @apply
-      bg-[repeating-linear-gradient(to_bottom,#eee,#eee_1px,transparent_1px,transparent_1.125rem)]
+      max-h-[1.1875rem] md:max-h-[1.25rem]
+  }
+  .bg-baseline-grid {
+    @apply
+      bg-[repeating-linear-gradient(to_bottom,#eee,#eee_1px,transparent_1px,transparent_1.1875rem)]
       md:bg-[repeating-linear-gradient(to_bottom,#eee,#eee_1px,transparent_1px,transparent_1.25rem)]
-      dark:bg-[repeating-linear-gradient(to_bottom,#222,#222_1px,transparent_1px,transparent_1.125rem)]
+      dark:bg-[repeating-linear-gradient(to_bottom,#222,#222_1px,transparent_1px,transparent_1.1875rem)]
       dark:md:bg-[repeating-linear-gradient(to_bottom,#222,#222_1px,transparent_1px,transparent_1.25rem)]
   }
 }
