@@ -21,7 +21,6 @@ import { authCached } from '@/auth/cache';
 import { getPhotos } from '@/services/vercel-postgres';
 import { getKeywordsForPhoto, photoQuantityText, titleForPhoto } from '@/photo';
 import PhotoTiny from '@/photo/PhotoTiny';
-import { formatDate } from '@/utility/date';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 import { BiLockAlt, BiSolidUser } from 'react-icons/bi';
 import { sortTagsObject } from '@/tag';
@@ -31,6 +30,7 @@ import { TbPhoto } from 'react-icons/tb';
 import { IoMdCamera } from 'react-icons/io';
 import { HiDocumentText } from 'react-icons/hi';
 import { signOutAction } from '@/auth/actions';
+import PhotoDate from '@/photo/PhotoDate';
 
 export default async function CommandK() {
   const [
@@ -147,14 +147,7 @@ export default async function CommandK() {
           items: photos.map(photo => ({
             label: titleForPhoto(photo),
             keywords: getKeywordsForPhoto(photo),
-            annotation: <>
-              <span className="hidden sm:inline-block">
-                {formatDate(photo.takenAt)}
-              </span>
-              <span className="inline-block sm:hidden">
-                {formatDate(photo.takenAt, true)}
-              </span>
-            </>,
+            annotation: <PhotoDate {...{ photo }} />,
             accessory: <PhotoTiny photo={photo} />,
             path: pathForPhoto(photo),
           })),

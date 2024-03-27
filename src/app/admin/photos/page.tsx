@@ -33,6 +33,7 @@ import { PRO_MODE_ENABLED } from '@/site/config';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import IconGrSync from '@/site/IconGrSync';
 import { getStoragePhotoUrlsNoStore } from '@/services/storage/cache';
+import PhotoDate from '@/photo/PhotoDate';
 
 const DEBUG_PHOTO_BLOBS = false;
 
@@ -103,7 +104,7 @@ export default async function AdminPhotosPage({
                       'lg:w-[50%] uppercase',
                       'text-dim',
                     )}>
-                      {photo.takenAtNaive}
+                      <PhotoDate {...{ photo }} />
                     </div>
                   </div>
                   <div className={clsx(
