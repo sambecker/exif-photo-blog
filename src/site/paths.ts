@@ -1,11 +1,8 @@
 import { Photo } from '@/photo';
 import { BASE_URL } from './config';
-import {
-  Camera,
-  createCameraKey,
-  getCameraFromKey,
-} from '@/camera';
+import { Camera } from '@/camera';
 import { FilmSimulation } from '@/simulation';
+import { parameterize } from '@/utility/string';
 
 // Core paths
 export const PATH_ROOT      = '/';
@@ -24,7 +21,7 @@ export const PREFIX_FILM_SIMULATION = '/film';
 // Dynamic paths
 const PATH_PHOTO_DYNAMIC            = `${PREFIX_PHOTO}/[photoId]`;
 const PATH_TAG_DYNAMIC              = `${PREFIX_TAG}/[tag]`;
-const PATH_CAMERA_DYNAMIC           = `${PREFIX_CAMERA}/[camera]`;
+const PATH_CAMERA_DYNAMIC           = `${PREFIX_CAMERA}/[make]/[model]`;
 const PATH_FILM_SIMULATION_DYNAMIC  = `${PREFIX_FILM_SIMULATION}/[simulation]`;
 
 // Admin paths
@@ -126,8 +123,11 @@ export const pathForTag = (tag: string, next?: number) =>
 export const pathForTagShare = (tag: string) =>
   `${pathForTag(tag)}/${SHARE}`;
 
-export const pathForCamera = (camera: Camera, next?: number) =>
-  pathWithNext(`${PREFIX_CAMERA}/${createCameraKey(camera)}`, next);
+export const pathForCamera = ({ make, model }: Camera, next?: number) =>
+  pathWithNext(
+    `${PREFIX_CAMERA}/${parameterize(make, true)}/${parameterize(model, true)}`,
+    next,
+  );
 
 export const pathForCameraShare = (camera: Camera) =>
   `${pathForCamera(camera)}/${SHARE}`;
@@ -196,21 +196,21 @@ export const isPathTagPhoto = (pathname = '') =>
 export const isPathTagPhotoShare = (pathname = '') =>
   new RegExp(`^${PREFIX_TAG}/[^/]+/[^/]+/${SHARE}/?$`).test(pathname);
 
-// shot-on/[camera]
+// shot-on/[make]/[model]
 export const isPathCamera = (pathname = '') =>
-  new RegExp(`^${PREFIX_CAMERA}/[^/]+/?$`).test(pathname);
-
-// shot-on/[camera]/share
-export const isPathCameraShare = (pathname = '') =>
-  new RegExp(`^${PREFIX_CAMERA}/[^/]+/${SHARE}/?$`).test(pathname);
-
-// shot-on/[camera]/[photoId]
-export const isPathCameraPhoto = (pathname = '') =>
   new RegExp(`^${PREFIX_CAMERA}/[^/]+/[^/]+/?$`).test(pathname);
 
-// shot-on/[camera]/[photoId]/share
-export const isPathCameraPhotoShare = (pathname = '') =>
+// shot-on/[make]/[model]/share
+export const isPathCameraShare = (pathname = '') =>
   new RegExp(`^${PREFIX_CAMERA}/[^/]+/[^/]+/${SHARE}/?$`).test(pathname);
+
+// shot-on/[make]/[model]/[photoId]
+export const isPathCameraPhoto = (pathname = '') =>
+  new RegExp(`^${PREFIX_CAMERA}/[^/]+/[^/]+/[^/]+/?$`).test(pathname);
+
+// shot-on/[make]/[model]/[photoId]/share
+export const isPathCameraPhotoShare = (pathname = '') =>
+  new RegExp(`^${PREFIX_CAMERA}/[^/]+/[^/]+/[^/]+/${SHARE}/?$`).test(pathname);
 
 // film/[simulation]
 export const isPathFilmSimulation = (pathname = '') =>
@@ -258,18 +258,20 @@ export const getPathComponents = (pathname = ''): {
   const photoIdFromTag = pathname.match(
     new RegExp(`^${PREFIX_TAG}/[^/]+/((?!${SHARE})[^/]+)`))?.[1];
   const photoIdFromCamera = pathname.match(
-    new RegExp(`^${PREFIX_CAMERA}/[^/]+/((?!${SHARE})[^/]+)`))?.[1];
+    new RegExp(`^${PREFIX_CAMERA}/[^/]+/[^/]+/((?!${SHARE})[^/]+)`))?.[1];
   const photoIdFromFilmSimulation = pathname.match(
     new RegExp(`^${PREFIX_FILM_SIMULATION}/[^/]+/((?!${SHARE})[^/]+)`))?.[1];
   const tag = pathname.match(
     new RegExp(`^${PREFIX_TAG}/([^/]+)`))?.[1];
-  const cameraString = pathname.match(
+  const cameraMake = pathname.match(
     new RegExp(`^${PREFIX_CAMERA}/([^/]+)`))?.[1];
+  const cameraModel = pathname.match(
+    new RegExp(`^${PREFIX_CAMERA}/[^/]+/([^/]+)`))?.[1];
   const simulation = pathname.match(
     new RegExp(`^${PREFIX_FILM_SIMULATION}/([^/]+)`))?.[1] as FilmSimulation;
 
-  const camera = cameraString
-    ? getCameraFromKey(cameraString)
+  const camera = cameraMake && cameraModel
+    ? { make: cameraMake, model: cameraModel }
     : undefined;
 
   return {

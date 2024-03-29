@@ -1,7 +1,6 @@
-import { cameraFromPhoto, getCameraFromKey } from '@/camera';
-import CameraShareModal from '@/camera/CameraShareModal';
-import { generateMetaForCamera } from '@/camera/meta';
+import { CameraProps, getCameraFromParams } from '@/camera';
 import { Metadata } from 'next';
+import { generateMetaForCamera } from '@/camera/meta';
 import { GRID_THUMBNAILS_TO_SHOW_MAX } from '@/photo';
 import { PaginationParams } from '@/site/pagination';
 import {
@@ -10,14 +9,10 @@ import {
 } from '@/camera/data';
 import CameraOverview from '@/camera/CameraOverview';
 
-interface CameraProps {
-  params: { camera: string }
-}
-
 export async function generateMetadata({
   params,
 }: CameraProps): Promise<Metadata> {
-  const camera = getCameraFromKey(params.camera);
+  const camera = getCameraFromParams(params);
 
   const [
     photos,
@@ -52,29 +47,23 @@ export async function generateMetadata({
   };
 }
 
-export default async function Share({
+export default async function CameraPage({
   params,
   searchParams,
 }: CameraProps & PaginationParams) {
-  const cameraFromParams = getCameraFromKey(params.camera);
+  const camera = getCameraFromParams(params);
 
   const {
     photos,
     count,
-    dateRange,
     showMorePath,
+    dateRange,
   } = await getPhotosCameraDataCachedWithPagination({
-    camera: cameraFromParams,
+    camera,
     searchParams,
   });
 
-  const camera = cameraFromPhoto(photos[0], cameraFromParams);
-
-  return <>
-    <CameraShareModal {...{ camera, photos, count, dateRange }} />
-    <CameraOverview
-      {...{ camera, photos, count, dateRange, showMorePath }}
-      animateOnFirstLoadOnly
-    />
-  </>;
+  return (
+    <CameraOverview {...{ camera, photos, count, dateRange, showMorePath }} />
+  );
 }
