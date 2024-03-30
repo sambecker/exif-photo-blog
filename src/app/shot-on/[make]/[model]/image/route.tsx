@@ -1,5 +1,5 @@
 import { getPhotosCached } from '@/photo/cache';
-import { getCameraFromKey } from '@/camera';
+import { CameraProps, getCameraFromParams } from '@/camera';
 import {
   IMAGE_OG_DIMENSION_SMALL,
   MAX_PHOTOS_TO_SHOW_PER_TAG,
@@ -13,9 +13,9 @@ export const runtime = 'edge';
 
 export async function GET(
   _: Request,
-  context: { params: { camera: string } },
+  context: CameraProps,
 ) {
-  const camera = getCameraFromKey(context.params.camera);
+  const camera = getCameraFromParams(context.params);
 
   const [
     photos,

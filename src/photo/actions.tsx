@@ -36,7 +36,6 @@ import { extractExifDataFromBlobPath } from './server';
 import { TAG_FAVS, isTagFavs } from '@/tag';
 import { TbPhoto } from 'react-icons/tb';
 import PhotoTiny from './PhotoTiny';
-import { formatDate } from '@/utility/date';
 import {
   convertPhotoToPhotoDbInsert,
   getKeywordsForPhoto,
@@ -45,6 +44,7 @@ import {
 import { safelyRunAdminServerAction } from '@/auth';
 import { AI_IMAGE_QUERIES, AiImageQuery } from './ai';
 import { streamOpenAiImageQuery } from '@/services/openai';
+import PhotoDate from './PhotoDate';
 
 export async function createPhotoAction(formData: FormData) {
   return safelyRunAdminServerAction(async () => {
@@ -211,14 +211,7 @@ export async function getPhotoItemsAction(query: string) {
       items: photos.map(photo => ({
         label: titleForPhoto(photo),
         keywords: getKeywordsForPhoto(photo),
-        annotation: <>
-          <span className="hidden sm:inline-block">
-            {formatDate(photo.takenAt)}
-          </span>
-          <span className="inline-block sm:hidden">
-            {formatDate(photo.takenAt, true)}
-          </span>
-        </>,
+        annotation: <PhotoDate {...{ photo }} />,
         accessory: <PhotoTiny photo={photo} />,
         path: pathForPhoto(photo),
       })),

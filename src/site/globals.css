@@ -116,7 +116,7 @@
       hover:text-gray-600
       hover:dark:text-gray-400
   }
-  /* Common Utilities: Text */
+  /* Utilities: Text */
   .text-main {
     @apply
       text-gray-900 dark:text-gray-100
@@ -145,7 +145,7 @@
     @apply
       text-red-500 dark:text-red-400
   }
-  /* Common Utilities: Background */
+  /* Utilities: Background */
   .bg-main {
     @apply
       bg-white dark:bg-black
@@ -158,5 +158,29 @@
   .bg-invert {
     @apply
       bg-gray-900 dark:bg-gray-100
+  }
+  /* Utilities: Baseline Grid */
+  .space-y-baseline {
+    @apply
+      space-y-[1.1875rem] md:space-y-[1.25rem]
+  }
+  .gap-y-baseline {
+    @apply
+      gap-y-[1.1875rem] md:gap-y-[1.25rem]
+  }
+  .gap-baseline {
+    @apply
+      gap-[1.1875rem] md:gap-[1.25rem]
+  }
+  .max-h-baseline {
+    @apply
+      max-h-[1.1875rem] md:max-h-[1.25rem]
+  }
+  .bg-baseline-grid {
+    @apply
+      bg-[repeating-linear-gradient(to_bottom,#eee,#eee_1px,transparent_1px,transparent_1.1875rem)]
+      md:bg-[repeating-linear-gradient(to_bottom,#eee,#eee_1px,transparent_1px,transparent_1.25rem)]
+      dark:bg-[repeating-linear-gradient(to_bottom,#222,#222_1px,transparent_1px,transparent_1.1875rem)]
+      dark:md:bg-[repeating-linear-gradient(to_bottom,#222,#222_1px,transparent_1px,transparent_1.25rem)]
   }
 }

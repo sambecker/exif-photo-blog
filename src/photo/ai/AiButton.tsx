@@ -41,6 +41,7 @@ export default function AiButton({
 
   return (
     <button
+      type="button"
       className={clsx(
         'flex min-w-[3.25rem] min-h-9 justify-center',
         className,

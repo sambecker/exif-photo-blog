@@ -19,6 +19,7 @@ import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
 import { IoInvertModeSharp } from 'react-icons/io5';
 import { useAppState } from '@/state/AppState';
 import { getPhotoItemsAction } from '@/photo/actions';
+import { RiToolsFill } from 'react-icons/ri';
 
 const LISTENER_KEYDOWN = 'keydown';
 const MINIMUM_QUERY_LENGTH = 2;
@@ -38,16 +39,19 @@ export type CommandKSection = {
 }
 
 export default function CommandKClient({
-  sections = [],
+  serverSections = [],
+  showDebugTools,
   footer,
 }: {
-  sections?: CommandKSection[]
+  serverSections?: CommandKSection[]
+  showDebugTools?: boolean
   footer?: string
 }) {
   const {
     isCommandKOpen: isOpen,
     setIsCommandKOpen: setIsOpen,
     setShouldRespondToKeyboardCommands,
+    setShouldShowBaselineGrid,
   } = useAppState();
 
   const isOpenRef = useRef(isOpen);
@@ -131,7 +135,7 @@ export default function CommandKClient({
     }
   }, [isOpen, setShouldRespondToKeyboardCommands]);
 
-  const sectionTheme: CommandKSection = {
+  const clientSections: CommandKSection[] = [{
     heading: 'Theme',
     accessory: <IoInvertModeSharp
       size={14}
@@ -150,7 +154,18 @@ export default function CommandKClient({
       annotation: <BiMoon className="translate-x-[1px]" />,
       action: () => setTheme('dark'),
     }],
-  };
+  }];
+
+  if (showDebugTools) {
+    clientSections.push({
+      heading: 'Debug Tools',
+      accessory: <RiToolsFill size={16} className="translate-x-[-1px]" />,
+      items: [{
+        label: 'Toggle Baseline Grid',
+        action: () => setShouldShowBaselineGrid?.(prev => !prev),
+      }],
+    });
+  }
 
   return (
     <Command.Dialog
@@ -203,8 +218,8 @@ export default function CommandKClient({
               {isLoading ? 'Searching ...' : 'No results found'}
             </Command.Empty>
             {queriedSections
-              .concat(sections)
-              .concat(sectionTheme)
+              .concat(serverSections)
+              .concat(clientSections)
               .filter(({ items }) => items.length > 0)
               .map(({ heading, accessory, items }) =>
                 <Command.Group

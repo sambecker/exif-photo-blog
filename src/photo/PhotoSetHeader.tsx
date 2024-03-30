@@ -4,6 +4,7 @@ import ShareButton from '@/components/ShareButton';
 import AnimateItems from '@/components/AnimateItems';
 import { ReactNode } from 'react';
 import { HIGH_DENSITY_GRID } from '@/site/config';
+import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 
 export default function PhotoSetHeader({
   entity,
@@ -35,7 +36,7 @@ export default function PhotoSetHeader({
       type="bottom"
       distanceOffset={10}
       animateOnFirstLoadOnly
-      items={[<div
+      items={[<DivDebugBaselineGrid
         key="PhotosHeader"
         className={clsx(
           'grid gap-0.5 sm:gap-1 items-start',
@@ -74,7 +75,7 @@ export default function PhotoSetHeader({
             ? start
             : <>{end}<br />– {start}</>}
         </span>
-      </div>]}
+      </DivDebugBaselineGrid>]}
     />
   );
 }

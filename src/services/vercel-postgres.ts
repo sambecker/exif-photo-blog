@@ -211,7 +211,7 @@ const sqlGetPhotosCameraMeta = async (camera: Camera) => sql`
   SELECT COUNT(*), MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
   FROM photos
   WHERE
-  LOWER(make)=${parameterize(camera.make, true)} AND
+  LOWER(REPLACE(make, ' ', '-'))=${parameterize(camera.make, true)} AND
   LOWER(REPLACE(model, ' ', '-'))=${parameterize(camera.model, true)} AND
   hidden IS NOT TRUE
 `.then(({ rows }) => ({
@@ -381,7 +381,7 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
     values.push(tag);
   }
   if (camera) {
-    wheres.push(`LOWER(make)=$${valueIndex++}`);
+    wheres.push(`LOWER(REPLACE(make, ' ', '-'))=$${valueIndex++}`);
     wheres.push(`LOWER(REPLACE(model, ' ', '-'))=$${valueIndex++}`);
     values.push(parameterize(camera.make, true));
     values.push(parameterize(camera.model, true));

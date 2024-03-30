@@ -1,7 +1,7 @@
 import PhotoTag from '@/tag/PhotoTag';
 import { isTagFavs } from '.';
 import FavsTag from './FavsTag';
-import { EntityLinkExternalProps } from '@/components/EntityLink';
+import { EntityLinkExternalProps } from '@/components/primitives/EntityLink';
 
 export default function PhotoTags({
   tags,
@@ -10,13 +10,13 @@ export default function PhotoTags({
   tags: string[]
 } & EntityLinkExternalProps) {
   return (
-    <div className="-space-y-0.5">
+    <div className="flex flex-col">
       {tags.map(tag =>
-        <div key={tag}>
+        <>
           {isTagFavs(tag)
-            ? <FavsTag {...{ contrast }} />
-            : <PhotoTag {...{ tag, contrast }} />}
-        </div>)}
+            ? <FavsTag key={tag} {...{ contrast }} />
+            : <PhotoTag key={tag} {...{ tag, contrast }} />}
+        </>)}
     </div>
   );
 }

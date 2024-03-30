@@ -139,7 +139,7 @@ export default function SiteChecklistClient({
     </div>;
 
   return (
-    <div className="text-sm max-w-xl space-y-6 w-full">
+    <div className="max-w-xl space-y-6 w-full">
       <Checklist
         title="Storage"
         icon={<BiData size={16} />}

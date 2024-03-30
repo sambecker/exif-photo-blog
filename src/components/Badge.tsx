@@ -27,8 +27,9 @@ export default function Badge({
       );
     case 'small':
       return clsx(
-        'px-[0.3rem] py-1 rounded-[0.25rem]',
-        'text-[0.7rem] font-medium',
+        'h-max-baseline',
+        'px-[5px] py-[2.75px]',
+        'text-[0.7rem] font-medium rounded-[0.25rem]',
         highContrast
           ? 'text-invert bg-invert'
           : 'text-medium bg-gray-300/30 dark:bg-gray-700/50',

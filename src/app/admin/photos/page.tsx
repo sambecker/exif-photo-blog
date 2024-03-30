@@ -32,6 +32,7 @@ import { getStoragePhotoUrlsNoStore } from '@/services/storage/cache';
 import MoreComponentsFromSearchParams from
   '@/components/MoreComponentsFromSearchParams';
 import { getPhotos } from '@/services/vercel-postgres';
+import PhotoDate from '@/photo/PhotoDate';
 
 const DEBUG_PHOTO_BLOBS = false;
 
@@ -103,7 +104,7 @@ export default async function AdminPhotosPage({
                       'lg:w-[50%] uppercase',
                       'text-dim',
                     )}>
-                      {photo.takenAtNaive}
+                      <PhotoDate {...{ photo }} />
                     </div>
                   </div>
                   <div className={clsx(

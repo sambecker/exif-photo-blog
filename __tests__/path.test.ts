@@ -18,12 +18,12 @@ import {
   isPathTagPhotoShare,
   isPathTagShare,
 } from '@/site/paths';
-import { getCameraFromKey } from '@/camera';
 
 const PHOTO_ID        = 'UsKSGcbt';
 const TAG             = 'tag-name';
-const CAMERA          = 'fujifilm-x-t1';
-const CAMERA_OBJECT   = getCameraFromKey(CAMERA);
+const CAMERA_MAKE     = 'fujifilm';
+const CAMERA_MODEL    = 'x-t1';
+const CAMERA_OBJECT   = { make: CAMERA_MAKE, model: CAMERA_MODEL };
 const FILM_SIMULATION = 'acros';
 const SHARE           = 'share';
 
@@ -39,7 +39,7 @@ const PATH_TAG_SHARE                    = `${PATH_TAG}/${SHARE}`;
 const PATH_TAG_PHOTO                    = `${PATH_TAG}/${PHOTO_ID}`;
 const PATH_TAG_PHOTO_SHARE              = `${PATH_TAG_PHOTO}/${SHARE}`;
 
-const PATH_CAMERA                       = `/shot-on/${CAMERA}`;
+const PATH_CAMERA                       = `/shot-on/${CAMERA_MAKE}/${CAMERA_MODEL}`;
 const PATH_CAMERA_SHARE                 = `${PATH_CAMERA}/${SHARE}`;
 const PATH_CAMERA_PHOTO                 = `${PATH_CAMERA}/${PHOTO_ID}`;
 const PATH_CAMERA_PHOTO_SHARE           = `${PATH_CAMERA_PHOTO}/${SHARE}`;
