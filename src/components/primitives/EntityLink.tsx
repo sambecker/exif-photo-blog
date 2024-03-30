@@ -7,6 +7,7 @@ export interface EntityLinkExternalProps {
   type?: LabeledIconType
   badged?: boolean
   contrast?: 'low' | 'medium' | 'high'
+  prefetch?: boolean
 }
 
 export default function EntityLink({
