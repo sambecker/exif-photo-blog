@@ -29,6 +29,8 @@ import { formatCount, formatCountDescriptive } from '@/utility/string';
 import { AiContent } from '../ai/useAiImageQueries';
 import AiButton from '../ai/AiButton';
 import Spinner from '@/components/Spinner';
+import { getNextImageUrlForRequest } from '@/services/next-image';
+import useDelay from '@/utility/useDelay';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -61,13 +63,17 @@ export default function PhotoForm({
   const [blurError, setBlurError] =
     useState<string>();
   const [hasBlurData, setHasBlurData] = useState(false);
+  
+  const didLoad1000msAgo = useDelay(1000);
 
   // Show image loading status when necessary for
   // blur data or AI analysis
-  const showImageLoadingStatus = !hasBlurData && (
-    BLUR_ENABLED ||
-    aiContent !== undefined
-  );
+  const showImageLoadingStatus =
+    !hasBlurData &&
+    didLoad1000msAgo && (
+      (BLUR_ENABLED && !formData.blurData) ||
+      aiContent !== undefined
+    );
 
   // Update form when EXIF data
   // is refreshed by parent
@@ -254,7 +260,7 @@ export default function PhotoForm({
           </div>
         </div>
         <CanvasBlurCapture
-          imageUrl={url}
+          imageUrl={getNextImageUrlForRequest(url, 640)}
           width={width}
           height={height}
           onLoad={aiContent?.setImageData}
