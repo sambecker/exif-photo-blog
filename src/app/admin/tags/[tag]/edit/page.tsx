@@ -8,6 +8,7 @@ import { photoLabelForCount } from '@/photo';
 import PhotoLightbox from '@/photo/PhotoLightbox';
 import FavsTag from '@/tag/FavsTag';
 import { isTagFavs } from '@/tag';
+import { clsx } from 'clsx/lite';
 
 const MAX_PHOTO_TO_SHOW = 6;
 
@@ -34,14 +35,14 @@ export default async function PhotoPageEdit({
     <AdminChildPage
       backPath={PATH_ADMIN_TAGS}
       backLabel="Tags"
-      breadcrumb={<div className="flex items-center gap-2">
+      breadcrumb={<div className={clsx(
+        'flex items-center gap-2',
+        // Fix nested EntityLink-in-Badge quirk for tags
+        '[&>*>*:first-child]:items-center',
+      )}>
         {isTagFavs(tag)
-          ? <div className="[&>*>*>*>svg]:translate-y-[0.5px]">
-            <FavsTag />
-          </div>
-          : <div className="[&>*>*>*>svg]:translate-y-[1.5px]">
-            <PhotoTag {...{ tag }} />
-          </div>}
+          ? <FavsTag />
+          : <PhotoTag {...{ tag }} />}
         <div className="text-dim uppercase">
           <span>{count}</span>
           <span className="hidden xs:inline-block">
