@@ -28,6 +28,9 @@ import { TagsWithMeta, sortTagsObjectWithoutFavs } from '@/tag';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 import { AiContent } from '../ai/useAiImageQueries';
 import AiButton from '../ai/AiButton';
+import Spinner from '@/components/Spinner';
+import { getNextImageUrlForRequest } from '@/services/next-image';
+import useDelay from '@/utility/useDelay';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -59,6 +62,18 @@ export default function PhotoForm({
     useState(getFormErrors(initialPhotoForm));
   const [blurError, setBlurError] =
     useState<string>();
+  const [hasBlurData, setHasBlurData] = useState(false);
+  
+  const didLoad1000msAgo = useDelay(1000);
+
+  // Show image loading status when necessary for
+  // blur data or AI analysis
+  const showImageLoadingStatus =
+    !hasBlurData &&
+    didLoad1000msAgo && (
+      (BLUR_ENABLED && !formData.blurData) ||
+      aiContent !== undefined
+    );
 
   // Update form when EXIF data
   // is refreshed by parent
@@ -122,6 +137,7 @@ export default function PhotoForm({
         blurData,
       }));
     }
+    setHasBlurData(true);
   }, []);
 
   useEffect(() =>
@@ -208,19 +224,43 @@ export default function PhotoForm({
           {blurError}
         </div>}
       <div className="flex gap-2">
-        <ImageBlurFallback
-          alt="Upload"
-          src={url}
-          className={clsx(
-            'border rounded-md overflow-hidden',
-            'border-gray-200 dark:border-gray-700'
-          )}
-          width={width}
-          height={height}
-          priority
-        />
+        <div className="relative">
+          <ImageBlurFallback
+            alt="Upload"
+            src={url}
+            className={clsx(
+              'border rounded-md overflow-hidden',
+              'border-gray-200 dark:border-gray-700',
+            )}
+            width={width}
+            height={height}
+            priority
+          />
+          <div className={clsx(
+            'absolute top-2 left-2 transition-opacity duration-500',
+            showImageLoadingStatus ? 'opacity-100' : 'opacity-0',
+          )}>
+            <div className={clsx(
+              'leading-none text-xs font-medium uppercase tracking-wide',
+              'px-1.5 py-1 rounded-[4px]',
+              'inline-flex items-center gap-2',
+              'bg-white/70 dark:bg-black/60 backdrop-blur-md',
+              'border border-gray-900/10 dark:border-gray-700/70',
+            )}>
+              <Spinner
+                color="text"
+                size={9}
+                className={clsx(
+                  'text-extra-dim',
+                  'translate-x-[1px] translate-y-[0.5px]'
+                )}
+              />
+              Analyzing image
+            </div>
+          </div>
+        </div>
         <CanvasBlurCapture
-          imageUrl={url}
+          imageUrl={getNextImageUrlForRequest(url, 640)}
           width={width}
           height={height}
           onLoad={aiContent?.setImageData}

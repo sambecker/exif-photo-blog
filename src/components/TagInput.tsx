@@ -300,6 +300,7 @@ export default function TagInput({
                 }
                 tabIndex={0}
                 className={clsx(
+                  'text-base',
                   'group flex items-center gap-1',
                   'cursor-pointer select-none',
                   'px-1.5 py-1 rounded-sm',
