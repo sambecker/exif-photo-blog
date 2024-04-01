@@ -9,9 +9,11 @@ import { clsx } from 'clsx/lite';
 
 export default function PhotoUpload({
   shouldResize,
+  onLastUpload,
   debug,
 }: {
   shouldResize?: boolean
+  onLastUpload?: () => Promise<void>
   debug?: boolean
 }) {
   const [isUploading, setIsUploading] = useState(false);
@@ -55,11 +57,9 @@ export default function PhotoUpload({
                   blob,
                   extension,
                 )
-                  .then(url => {
+                  .then(async url => {
                     if (isLastBlob) {
-                      // Refresh page to update upload list,
-                      // relevant to upload count in nav
-                      router.refresh();
+                      await onLastUpload?.();
                       if (hasMultipleUploads) {
                         // Redirect to view multiple uploads
                         router.push(PATH_ADMIN_UPLOADS);
