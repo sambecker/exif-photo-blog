@@ -3,7 +3,7 @@ import { absolutePathForPhoto } from './paths';
 import { formatDateFromPostgresString } from '@/utility/date';
 import { getNextImageUrlForRequest } from '@/services/next-image';
 
-export const API_PHOTO_REQUEST_LIMIT = 20;
+export const API_PHOTO_REQUEST_LIMIT = 40;
 
 export interface PublicApi {
   meta: {
