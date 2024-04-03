@@ -33,6 +33,7 @@ import MoreComponentsFromSearchParams from
   '@/components/MoreComponentsFromSearchParams';
 import { getPhotos } from '@/services/vercel-postgres';
 import PhotoDate from '@/photo/PhotoDate';
+import { revalidatePath } from 'next/cache';
 
 const DEBUG_PHOTO_BLOBS = false;
 
@@ -57,7 +58,14 @@ export default async function AdminPhotosPage({
     <SiteGrid
       contentMain={
         <div className="space-y-8">
-          <PhotoUpload shouldResize={!PRO_MODE_ENABLED} />
+          <PhotoUpload
+            shouldResize={!PRO_MODE_ENABLED}
+            onLastUpload={async () => {
+              'use server';
+              // Update upload count in admin nav
+              revalidatePath('/admin', 'layout');
+            }}
+          />
           {blobPhotoUrls.length > 0 &&
             <div className={clsx(
               'border-b pb-6',
