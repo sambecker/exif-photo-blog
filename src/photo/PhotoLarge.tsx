@@ -72,7 +72,7 @@ export default function PhotoLarge({
           'pb-6',
         )}>
           {/* Meta */}
-          <div className="pr-3 md:pr-0">
+          <div className="pr-2 md:pr-0">
             <div className="md:relative flex gap-2 items-start">
               <div className="flex-grow">
                 <Link
