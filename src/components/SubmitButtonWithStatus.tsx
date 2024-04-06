@@ -12,6 +12,7 @@ interface Props extends HTMLProps<HTMLButtonElement> {
   spinnerColor?: SpinnerColor
   onFormStatusChange?: (pending: boolean) => void
   onFormSubmitToastMessage?: string
+  primary?: boolean
 }
 
 export default function SubmitButtonWithStatus({
@@ -23,6 +24,7 @@ export default function SubmitButtonWithStatus({
   children,
   disabled,
   className,
+  primary,
   type: _type,
   ...buttonProps
 }: Props) {
@@ -52,6 +54,7 @@ export default function SubmitButtonWithStatus({
       className={clsx(
         className,
         'inline-flex items-center gap-2',
+        primary && 'primary',
         styleAsLink && 'link',
       )}
       {...buttonProps}

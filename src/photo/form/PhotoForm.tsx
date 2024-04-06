@@ -218,7 +218,7 @@ export default function PhotoForm({
   };
 
   return (
-    <div className="space-y-8 max-w-[38rem]">
+    <div className="space-y-8 max-w-[38rem] relative">
       {debugBlur && blurError &&
         <div className="border error text-error rounded-md px-2 py-1">
           {blurError}
@@ -282,77 +282,86 @@ export default function PhotoForm({
       <form
         action={type === 'create' ? createPhotoAction : updatePhotoAction}
         onSubmit={() => blur()}
-        className="space-y-6"
       >
-        {FORM_METADATA_ENTRIES(
-          sortTagsObjectWithoutFavs(uniqueTags ?? [])
-            .map(({ tag, count }) => ({
-              value: tag,
-              annotation: formatCount(count),
-              annotationAria: formatCountDescriptive(count, 'tagged'),
-            })),
-          aiContent !== undefined,
-        )
-          .map(([key, {
-            label,
-            note,
-            required,
-            selectOptions,
-            selectOptionsDefaultLabel,
-            tagOptions,
-            readOnly,
-            validate,
-            validateStringMaxLength,
-            capitalize,
-            hideIfEmpty,
-            shouldHide,
-            loadingMessage,
-            type,
-          }]) =>
-            (
-              (!hideIfEmpty || formData[key]) &&
-              !shouldHide?.(formData)
-            ) &&
-              <FieldSetWithStatus
-                key={key}
-                id={key}
-                label={label}
-                note={note}
-                error={formErrors[key]}
-                value={formData[key] ?? ''}
-                onChange={value => {
-                  const formUpdated = { ...formData, [key]: value };
-                  setFormData(formUpdated);
-                  if (validate) {
-                    setFormErrors({ ...formErrors, [key]: validate(value) });
-                  } else if (validateStringMaxLength !== undefined) {
-                    setFormErrors({
-                      ...formErrors,
-                      [key]: value.length > validateStringMaxLength
-                        ? `${validateStringMaxLength} characters or less`
-                        : undefined,
-                    });
-                  }
-                  if (key === 'title') {
-                    onTitleChange?.(value.trim());
-                  }
-                }}
-                selectOptions={selectOptions}
-                selectOptionsDefaultLabel={selectOptionsDefaultLabel}
-                tagOptions={tagOptions}
-                required={required}
-                readOnly={readOnly}
-                capitalize={capitalize}
-                placeholder={loadingMessage && !formData[key]
-                  ? loadingMessage
-                  : undefined}
-                loading={
-                  (loadingMessage && !formData[key] ? true : false) ||
-                  isFieldGeneratingAi(key)}
-                type={type}
-                accessory={aiButtonForField(key)}
-              />)}
-        <div className="flex gap-3">
+        {/* Fields */}
+        <div className="space-y-6">
+          {FORM_METADATA_ENTRIES(
+            sortTagsObjectWithoutFavs(uniqueTags ?? [])
+              .map(({ tag, count }) => ({
+                value: tag,
+                annotation: formatCount(count),
+                annotationAria: formatCountDescriptive(count, 'tagged'),
+              })),
+            aiContent !== undefined,
+          )
+            .map(([key, {
+              label,
+              note,
+              required,
+              selectOptions,
+              selectOptionsDefaultLabel,
+              tagOptions,
+              readOnly,
+              validate,
+              validateStringMaxLength,
+              capitalize,
+              hideIfEmpty,
+              shouldHide,
+              loadingMessage,
+              type,
+            }]) =>
+              (
+                (!hideIfEmpty || formData[key]) &&
+                !shouldHide?.(formData)
+              ) &&
+                <FieldSetWithStatus
+                  key={key}
+                  id={key}
+                  label={label}
+                  note={note}
+                  error={formErrors[key]}
+                  value={formData[key] ?? ''}
+                  onChange={value => {
+                    const formUpdated = { ...formData, [key]: value };
+                    setFormData(formUpdated);
+                    if (validate) {
+                      setFormErrors({ ...formErrors, [key]: validate(value) });
+                    } else if (validateStringMaxLength !== undefined) {
+                      setFormErrors({
+                        ...formErrors,
+                        [key]: value.length > validateStringMaxLength
+                          ? `${validateStringMaxLength} characters or less`
+                          : undefined,
+                      });
+                    }
+                    if (key === 'title') {
+                      onTitleChange?.(value.trim());
+                    }
+                  }}
+                  selectOptions={selectOptions}
+                  selectOptionsDefaultLabel={selectOptionsDefaultLabel}
+                  tagOptions={tagOptions}
+                  required={required}
+                  readOnly={readOnly}
+                  capitalize={capitalize}
+                  placeholder={loadingMessage && !formData[key]
+                    ? loadingMessage
+                    : undefined}
+                  loading={
+                    (loadingMessage && !formData[key] ? true : false) ||
+                    isFieldGeneratingAi(key)}
+                  type={type}
+                  accessory={aiButtonForField(key)}
+                />)}
+        </div>
+        {/* Actions */}
+        <div className={clsx(
+          'flex gap-3 sticky bottom-0',
+          'pb-4 md:pb-8 pt-10',
+          'bg-gradient-to-t from-60% to-transparent',
+          'from-white/90',
+          'dark:from-black/95',
+        )}>
           <Link
             className="button"
             href={type === 'edit' ? PATH_ADMIN_PHOTOS : PATH_ADMIN_UPLOADS}
@@ -362,6 +371,7 @@ export default function PhotoForm({
           <SubmitButtonWithStatus
             disabled={!isFormValid(formData) || aiContent?.isLoading}
             onFormStatusChange={onFormStatusChange}
+            primary
           >
             {type === 'create' ? 'Create' : 'Update'}
           </SubmitButtonWithStatus>
