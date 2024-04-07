@@ -358,7 +358,7 @@ export default function PhotoForm({
         <div className={clsx(
           'flex gap-3 sticky bottom-0',
           'pb-4 md:pb-8 pt-10',
-          'bg-gradient-to-t from-60% to-transparent',
+          'bg-gradient-to-t from-60%',
           'from-white/90',
           'dark:from-black/95',
         )}>
