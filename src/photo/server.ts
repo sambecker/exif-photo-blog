@@ -12,7 +12,8 @@ import { PhotoFormData } from './form';
 import { FilmSimulation } from '@/simulation';
 
 export const extractExifDataFromBlobPath = async (
-  blobPath: string
+  blobPath: string,
+  includeInitialPhotoFields?: boolean,
 ): Promise<{
   blobId?: string
   photoFormExif?: Partial<PhotoFormData>
@@ -55,9 +56,13 @@ export const extractExifDataFromBlobPath = async (
     blobId,
     ...exifData && {
       photoFormExif: {
+        ...includeInitialPhotoFields && {
+          hidden: 'false',
+          favorite: 'false',
+          extension,
+          url,
+        },
         ...convertExifToFormData(exifData, filmSimulation),
-        extension,
-        url,
       },
     },
   };
