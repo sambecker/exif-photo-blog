@@ -2,7 +2,7 @@ import {
   getExtensionFromStorageUrl,
   getIdFromStorageUrl,
 } from '@/services/storage';
-import { convertExifToFormData, generateTakenAtFields } from '@/photo/form';
+import { convertExifToFormData } from '@/photo/form';
 import {
   getFujifilmSimulationFromMakerNote,
   isExifForFujifilm,
@@ -57,7 +57,6 @@ export const extractExifDataFromBlobPath = async (
     ...exifData && {
       photoFormExif: {
         ...includeInitialPhotoFields && {
-          ...generateTakenAtFields(),
           hidden: 'false',
           favorite: 'false',
           extension,
