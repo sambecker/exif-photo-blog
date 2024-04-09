@@ -2,7 +2,7 @@ import {
   getExtensionFromStorageUrl,
   getIdFromStorageUrl,
 } from '@/services/storage';
-import { convertExifToFormData } from '@/photo/form';
+import { convertExifToFormData, generateTakenAtFields } from '@/photo/form';
 import {
   getFujifilmSimulationFromMakerNote,
   isExifForFujifilm,
@@ -12,7 +12,8 @@ import { PhotoFormData } from './form';
 import { FilmSimulation } from '@/simulation';
 
 export const extractExifDataFromBlobPath = async (
-  blobPath: string
+  blobPath: string,
+  includeInitialPhotoFields?: boolean,
 ): Promise<{
   blobId?: string
   photoFormExif?: Partial<PhotoFormData>
@@ -55,9 +56,14 @@ export const extractExifDataFromBlobPath = async (
     blobId,
     ...exifData && {
       photoFormExif: {
+        ...includeInitialPhotoFields && {
+          ...generateTakenAtFields(),
+          hidden: 'false',
+          favorite: 'false',
+          extension,
+          url,
+        },
         ...convertExifToFormData(exifData, filmSimulation),
-        extension,
-        url,
       },
     },
   };

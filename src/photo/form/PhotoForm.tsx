@@ -1,11 +1,12 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   FORM_METADATA_ENTRIES,
   PhotoFormData,
   convertFormKeysToLabels,
   formHasTextContent,
+  getChangedFormFields,
   getFormErrors,
   isFormValid,
 } from '.';
@@ -16,10 +17,6 @@ import Link from 'next/link';
 import { clsx } from 'clsx/lite';
 import CanvasBlurCapture from '@/components/CanvasBlurCapture';
 import { PATH_ADMIN_PHOTOS, PATH_ADMIN_UPLOADS } from '@/site/paths';
-import {
-  generateLocalNaivePostgresString,
-  generateLocalPostgresString,
-} from '@/utility/date';
 import { toastSuccess, toastWarning } from '@/toast';
 import { getDimensionsFromSize } from '@/utility/size';
 import ImageBlurFallback from '@/components/ImageBlurFallback';
@@ -31,6 +28,7 @@ import AiButton from '../ai/AiButton';
 import Spinner from '@/components/Spinner';
 import { getNextImageUrlForRequest } from '@/services/next-image';
 import useDelay from '@/utility/useDelay';
+import usePreventNavigation from '@/utility/usePreventNavigation';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -63,6 +61,21 @@ export default function PhotoForm({
   const [blurError, setBlurError] =
     useState<string>();
   const [hasBlurData, setHasBlurData] = useState(false);
+
+  const changedFormKeys = useMemo(() =>
+    getChangedFormFields(initialPhotoForm, formData),
+  [initialPhotoForm, formData]);
+  const formHasChanged = changedFormKeys.length > 0;
+  const onlyChangedFieldIsBlurData =
+    changedFormKeys.length === 1 &&
+    changedFormKeys[0] === 'blurData';
+
+  usePreventNavigation(formHasChanged && !onlyChangedFieldIsBlurData);
+
+  const canFormBeSubmitted =
+    (type === 'create' || formHasChanged) &&
+    isFormValid(formData) &&
+    !aiContent?.isLoading;
   
   const didLoad1000msAgo = useDelay(1000);
 
@@ -111,22 +124,6 @@ export default function PhotoForm({
     width,
     height,
   } = getDimensionsFromSize(THUMBNAIL_SIZE, formData.aspectRatio);
-
-  // Generate local date strings when
-  // none can be extracted from EXIF
-  useEffect(() => {
-    if (!formData.takenAt || !formData.takenAtNaive) {
-      setFormData(data => ({
-        ...data,
-        ...!formData.takenAt && {
-          takenAt: generateLocalPostgresString(),
-        },
-        ...!formData.takenAtNaive && {
-          takenAtNaive: generateLocalNaivePostgresString(),
-        },
-      }));
-    }
-  }, [formData.takenAt, formData.takenAtNaive]);
 
   const url = formData.url ?? '';
 
@@ -321,6 +318,7 @@ export default function PhotoForm({
                   note={note}
                   error={formErrors[key]}
                   value={formData[key] ?? ''}
+                  isModified={changedFormKeys.includes(key)}
                   onChange={value => {
                     const formUpdated = { ...formData, [key]: value };
                     setFormData(formUpdated);
@@ -357,10 +355,7 @@ export default function PhotoForm({
         {/* Actions */}
         <div className={clsx(
           'flex gap-3 sticky bottom-0',
-          'pb-4 md:pb-8 pt-10',
-          'bg-gradient-to-t from-60%',
-          'from-white/90',
-          'dark:from-black/95',
+          'pb-4 md:pb-8 mt-12',
         )}>
           <Link
             className="button"
@@ -369,12 +364,19 @@ export default function PhotoForm({
             Cancel
           </Link>
           <SubmitButtonWithStatus
-            disabled={!isFormValid(formData) || aiContent?.isLoading}
+            disabled={!canFormBeSubmitted}
             onFormStatusChange={onFormStatusChange}
             primary
           >
             {type === 'create' ? 'Create' : 'Update'}
           </SubmitButtonWithStatus>
+          <div className={clsx(
+            'absolute -top-16 -left-2 right-0 bottom-0 -z-10',
+            'pointer-events-none',
+            'bg-gradient-to-t',
+            'from-white/90 from-60%',
+            'dark:from-black/90 dark:from-50%',
+          )} />
         </div>
       </form>
     </div>

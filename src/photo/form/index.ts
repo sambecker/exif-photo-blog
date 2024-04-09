@@ -3,6 +3,8 @@ import { Photo, PhotoDbInsert, PhotoExif } from '..';
 import {
   convertTimestampToNaivePostgresString,
   convertTimestampWithOffsetToPostgresString,
+  generateLocalNaivePostgresString,
+  generateLocalPostgresString,
 } from '@/utility/date';
 import { getAspectRatioFromExif, getOffsetFromExif } from '@/utility/exif';
 import { toFixedNumber } from '@/utility/number';
@@ -284,5 +286,25 @@ export const convertFormDataToPhotoDbInsert = (
       ? parseFloat(photoForm.priorityOrder)
       : undefined,
     hidden: photoForm.hidden === 'true',
+    ...generateTakenAtFields(photoForm),
   };
 };
+
+export const getChangedFormFields = (
+  original: Partial<PhotoFormData>,
+  current: Partial<PhotoFormData>,
+) => {
+  return Object
+    .keys(current)
+    .filter(key =>
+      (original[key as keyof PhotoFormData] ?? '') !==
+      (current[key as keyof PhotoFormData] ?? '')
+    ) as (keyof PhotoFormData)[];
+};
+
+export const generateTakenAtFields = (
+  form?: Partial<PhotoFormData>
+): { takenAt: string, takenAtNaive: string } => ({
+  takenAt: form?.takenAt || generateLocalPostgresString(),
+  takenAtNaive: form?.takenAtNaive || generateLocalNaivePostgresString(),
+});

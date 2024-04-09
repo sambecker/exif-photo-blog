@@ -16,7 +16,7 @@ export default async function UploadPage({ params: { uploadPath } }: Params) {
   const {
     blobId,
     photoFormExif,
-  } = await extractExifDataFromBlobPath(uploadPath);
+  } = await extractExifDataFromBlobPath(uploadPath, true);
 
   if (!photoFormExif) { redirect(PATH_ADMIN); }
 

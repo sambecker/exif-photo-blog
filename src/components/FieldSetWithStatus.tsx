@@ -13,6 +13,7 @@ export default function FieldSetWithStatus({
   note,
   error,
   value,
+  isModified,
   onChange,
   selectOptions,
   selectOptionsDefaultLabel,
@@ -31,6 +32,7 @@ export default function FieldSetWithStatus({
   note?: string
   error?: string
   value: string
+  isModified?: boolean
   onChange?: (value: string) => void
   selectOptions?: { value: string, label: string }[]
   selectOptionsDefaultLabel?: string
@@ -56,6 +58,12 @@ export default function FieldSetWithStatus({
         {note && !error &&
           <span className="text-gray-400 dark:text-gray-600">
             ({note})
+          </span>}
+        {isModified &&
+          <span className={clsx(
+            'text-main font-medium text-[0.9rem] -ml-1.5 translate-y-[-1px]'
+          )}>
+            *
           </span>}
         {error &&
           <span className="text-error">

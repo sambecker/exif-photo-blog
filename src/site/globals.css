@@ -96,7 +96,9 @@
     @apply
       text-invert
       bg-gray-900 dark:bg-gray-100
-      disabled:bg-gray-900 disabled:dark:bg-gray-100
+      disabled:text-gray-300 disabled:dark:text-gray-700
+      disabled:bg-white disabled:dark:bg-black
+      disabled:border-gray-200 disabled:dark:border-gray-700
       border-gray-900 dark:border-gray-100
       active:bg-gray-700 active:border-gray-700
       active:dark:bg-gray-300 active:dark:border-gray-300
