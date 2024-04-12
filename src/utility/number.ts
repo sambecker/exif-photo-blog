@@ -39,7 +39,7 @@ const formatDecimalToFraction = (_decimal: number) => {
 
 const STICKY_THRESHOLD = 0.011;
 const STICKY_DECIMALS = [0.25, 0.33, 0.5, 0.66, 0.75];
-const MAX_FRACTION_LENGTH = 4; // 1/64 not 1/100
+const MAX_FRACTION_LENGTH = 4; // Permit 1/64 but not 1/100
 
 export const formatNumberToFraction = (number: number) => {
   const sign = number >= 0 ? '+' : '-';
