@@ -12,23 +12,35 @@ describe('EXIF', () => {
       expect(formatExposureTime(1.5)).toBe('1.5s');
     });
     it('exposure compensation', () => {
+      expect(formatExposureCompensation(1)).toBe('+1ev');
       expect(formatExposureCompensation(-1)).toBe('-1ev');
       expect(formatExposureCompensation(0)).toBe(undefined);
       expect(formatExposureCompensation(0.25)).toBe('+1/4ev');
       expect(formatExposureCompensation(0.33)).toBe('+1/3ev');
       expect(formatExposureCompensation(0.333)).toBe('+1/3ev');
+      expect(formatExposureCompensation(-0.25)).toBe('-1/4ev');
+      expect(formatExposureCompensation(-0.33)).toBe('-1/3ev');
+      expect(formatExposureCompensation(-0.333)).toBe('-1/3ev');
       expect(formatExposureCompensation(0.5)).toBe('+1/2ev');
+      expect(formatExposureCompensation(0.4998458896569944)).toBe('+1/2ev');
       expect(formatExposureCompensation(0.66)).toBe('+2/3ev');
       expect(formatExposureCompensation(0.67)).toBe('+2/3ev');
       expect(formatExposureCompensation(0.015625)).toBe('+1/64ev');
       expect(formatExposureCompensation(-0.015625)).toBe('-1/64ev');
       expect(formatExposureCompensation(1)).toBe('+1ev');
+      expect(formatExposureCompensation(1.1)).toBe('+1 1/10ev');
+      expect(formatExposureCompensation(-1.1)).toBe('-1 1/10ev');
+      expect(formatExposureCompensation(1.7)).toBe('+1 7/10ev');
+      expect(formatExposureCompensation(-1.7)).toBe('-1 7/10ev');
       expect(formatExposureCompensation(-1.33)).toBe('-1 1/3ev');
       expect(formatExposureCompensation(1.33)).toBe('+1 1/3ev');
       expect(formatExposureCompensation(1.333)).toBe('+1 1/3ev');
       expect(formatExposureCompensation(1.3333)).toBe('+1 1/3ev');
       expect(formatExposureCompensation(1.5)).toBe('+1 1/2ev');
+      expect(formatExposureCompensation(2.5)).toBe('+2 1/2ev');
+      expect(formatExposureCompensation(-2.5)).toBe('-2 1/2ev');
       expect(formatExposureCompensation(1.9960938)).toBe('+2ev');
+      expect(formatExposureCompensation(-1.9960938)).toBe('-2ev');
       // Ignore long fractions
       expect(formatExposureCompensation(-0.119)).toBe('-0.12ev');
       expect(formatExposureCompensation(-0.112340989)).toBe('-0.11ev');
