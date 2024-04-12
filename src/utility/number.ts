@@ -73,7 +73,6 @@ export const formatNumberToFraction = (number: number) => {
       : fraction ? '' : '0';
     return `${sign}${integerString}${fraction}`;
   } else {
-    // console.log({ fraction });
     const decimalFormatted = decimal.toPrecision(2).replace(/^-*0+/, '');
     return `${sign}${integer}${decimalFormatted}`;
   }
