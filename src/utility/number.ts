@@ -42,9 +42,15 @@ export const formatNumberToFraction = (number: number) => {
   const fraction = decimal !== 0
     ? formatDecimalToFraction(Math.abs(decimal))
     : '';
-  const sign = number > 0 ? '+' : '-';
-  const whole = integer > 0
-    ? fraction ? `${integer} ` : integer
-    : '';
-  return `${sign}${whole}${fraction}`;
+  const sign = number >= 0 ? '+' : '-';
+  // Ensure fractions are not too long
+  if (!fraction || fraction.length <= 4) {
+    const whole = integer > 0
+      ? fraction ? `${integer} ` : integer
+      : fraction ? '' : '0';
+    return `${sign}${whole}${fraction}`;
+  } else {
+    const decimalFormatted = decimal.toPrecision(2).replace(/^-*0+/, '');
+    return `${sign}${integer}${decimalFormatted}`;
+  }
 };
