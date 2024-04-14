@@ -18,8 +18,7 @@ const querySupabaseConnectionPool = async <T extends QueryResultRow>(
   values: Primitive[],
 ) => {
   const pool = new Pool({
-    // eslint-disable-next-line max-len
-    connectionString: `${process.env.DATABASE_URL}?sslmode=require?workaround=supabase-pooler.vercel`,
+    connectionString: `${process.env.DATABASE_URL}?-pooler.`,
   });
   const connection = await pool.connect();
   const result = await pool.query<T>(query, values);
