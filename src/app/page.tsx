@@ -14,7 +14,11 @@ import { Metadata } from 'next';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
 import { EDGE_RUNTIME_IF_POSSIBLE } from '@/site/config';
 
-export const runtime = EDGE_RUNTIME_IF_POSSIBLE;
+export let runtime: 'edge' | 'nodejs';
+
+if (EDGE_RUNTIME_IF_POSSIBLE === 'edge') {
+  runtime = 'edge';
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   // Make homepage queries resilient to error on first time setup
