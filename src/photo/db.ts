@@ -1,4 +1,3 @@
-import { db, sql } from '@vercel/postgres';
 import {
   PhotoDb,
   PhotoDbInsert,
@@ -12,12 +11,13 @@ import { parameterize } from '@/utility/string';
 import { Tags } from '@/tag';
 import { FilmSimulation, FilmSimulations } from '@/simulation';
 import { PRIORITY_ORDER_ENABLED } from '@/site/config';
+import {
+  convertArrayToPostgresString,
+  directQuery,
+  sql,
+} from '@/services/database';
 
 const PHOTO_DEFAULT_LIMIT = 100;
-
-export const convertArrayToPostgresString = (array?: string[]) => array
-  ? `{${array.join(',')}}`
-  : null;
 
 const sqlCreatePhotosTable = () =>
   sql`
@@ -410,10 +410,7 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
   sql.push(`LIMIT $${valueIndex++} OFFSET $${valueIndex++}`);
   values.push(limit, offset);
 
-  return safelyQueryPhotos(async () => {
-    const client = await db.connect();
-    return client.query(sql.join(' '), values);
-  })
+  return safelyQueryPhotos(() => directQuery(sql.join(' '), values))
     .then(({ rows }) => rows.map(parsePhotoFromDb));
 };
 
@@ -425,25 +422,22 @@ export const getPhotosNearId = async (
     ? 'ORDER BY priority_order ASC, taken_at DESC'
     : 'ORDER BY taken_at DESC';
 
-  return safelyQueryPhotos(async () => {
-    const client = await db.connect();
-    return client.query(
-      `
-        WITH twi AS (
-          SELECT *, row_number()
-          OVER (${orderBy}) as row_number
-          FROM photos
-          WHERE hidden IS NOT TRUE
-        ),
-        current AS (SELECT row_number FROM twi WHERE id = $1)
-        SELECT twi.*
-        FROM twi, current
-        WHERE twi.row_number >= current.row_number - 1
-        LIMIT $2
-      `,
-      [id, limit]
-    );
-  })
+  return safelyQueryPhotos(() => directQuery(
+    `
+      WITH twi AS (
+        SELECT *, row_number()
+        OVER (${orderBy}) as row_number
+        FROM photos
+        WHERE hidden IS NOT TRUE
+      ),
+      current AS (SELECT row_number FROM twi WHERE id = $1)
+      SELECT twi.*
+      FROM twi, current
+      WHERE twi.row_number >= current.row_number - 1
+      LIMIT $2
+    `,
+    [id, limit]
+  ))
     .then(({ rows }) => rows.map(parsePhotoFromDb));
 };
 

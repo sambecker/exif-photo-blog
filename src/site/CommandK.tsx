@@ -19,7 +19,7 @@ import {
 } from './paths';
 import { formatCameraText } from '@/camera';
 import { authCached } from '@/auth/cache';
-import { getPhotos } from '@/services/vercel-postgres';
+import { getPhotos } from '@/photo/db';
 import { getKeywordsForPhoto, photoQuantityText, titleForPhoto } from '@/photo';
 import PhotoTiny from '@/photo/PhotoTiny';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
