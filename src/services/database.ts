@@ -3,8 +3,8 @@ import {
   sql as sqlVercel,
   QueryResultRow,
   QueryResult,
+  createPool,
 } from '@vercel/postgres';
-import { Pool } from '@neondatabase/serverless';
 import { DATABASE_PREFERENCE } from '@/site/config';
 
 export type DatabaseProvider =
@@ -17,14 +17,14 @@ const querySupabaseConnectionPool = async <T extends QueryResultRow>(
   query: string,
   values: Primitive[],
 ) => {
-  const pool = new Pool({
+  const client = createPool({
     // eslint-disable-next-line max-len
-    connectionString: `${process.env.DATABASE_URL}?sslmode=require?workaround=supabase-pooler.vercel`,
+    connectionString: `${process.env.POSTGRES_URL}?workaround=supabase-pooler.vercel`,
   });
-  const connection = await pool.connect();
-  const result = await pool.query<T>(query, values);
+  const connection = await client.connect();
+  const result = await client.query<T>(query, values);
   connection.release();
-  await pool.end();
+  await client.end();
   return result;
 };
 

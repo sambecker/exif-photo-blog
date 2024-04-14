@@ -11,9 +11,6 @@ dependencies:
   '@aws-sdk/s3-request-presigner':
     specifier: 3.554.0
     version: 3.554.0
-  '@neondatabase/serverless':
-    specifier: ^0.9.0
-    version: 0.9.0
   '@next/bundle-analyzer':
     specifier: 14.2.1
     version: 14.2.1
@@ -1577,12 +1574,6 @@ packages:
 
   /@neondatabase/serverless@0.7.2:
     resolution: {integrity: sha512-wU3WA2uTyNO7wjPs3Mg0G01jztAxUxzd9/mskMmtPwPTjf7JKWi9AW5/puOGXLxmZ9PVgRFeBVRVYq5nBPhsCg==}
-    dependencies:
-      '@types/pg': 8.6.6
-    dev: false
-
-  /@neondatabase/serverless@0.9.0:
-    resolution: {integrity: sha512-mmJnUAzlzvxNSZuuhI6kgJjH+JgFdBMYUWxihtq/nj0Tjt+Y5UU3W+SvRFoucnd5NObYkuLYQzk+zV5DGFKGJg==}
     dependencies:
       '@types/pg': 8.6.6
     dev: false

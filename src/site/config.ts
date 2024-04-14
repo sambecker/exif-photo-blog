@@ -41,7 +41,7 @@ export const SITE_DESCRIPTION =
 
 // STORAGE: VERCEL POSTGRES
 export const HAS_VERCEL_POSTGRES =
-  (process.env.DATABASE_URL ?? '').length > 0;
+  (process.env.POSTGRES_URL ?? '').length > 0;
 export const DATABASE_PREFERENCE: DatabaseProvider =
   process.env.DATABASE_PREFERENCE as DatabaseProvider || 'vercel';
 
