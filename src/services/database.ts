@@ -32,7 +32,7 @@ export const convertArrayToPostgresString = (array?: string[]) => array
   ? `{${array.join(',')}}`
   : null;
 
-const sqlSupabase = async <T extends QueryResultRow>(
+export const sqlSupabase = async <T extends QueryResultRow>(
   strings: TemplateStringsArray,
   ...values: Primitive[]
 ): Promise<QueryResult<T>> => {
@@ -66,9 +66,9 @@ const isTemplateStringsArray = (
 };
 
 export const sql = DATABASE_PREFERENCE === 'supabase'
-  ? sqlSupabase
+  ? sqlVercel
   : sqlVercel;
 
 export const directQuery = DATABASE_PREFERENCE === 'supabase'
-  ? querySupabaseConnectionPool<any>
+  ? db.query
   : db.query;
