@@ -12,8 +12,9 @@ import {
 } from '@/site/pagination';
 import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
 import { getPhotoSidebarDataCached } from '@/photo/data';
+import { EDGE_RUNTIME_IF_POSSIBLE } from '@/site/config';
 
-export const runtime = 'edge';
+export const runtime = EDGE_RUNTIME_IF_POSSIBLE;
 
 export async function generateMetadata(): Promise<Metadata> {
   const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG });

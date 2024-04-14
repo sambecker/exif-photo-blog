@@ -12,8 +12,9 @@ import {
 import { pathForRoot } from '@/site/paths';
 import { Metadata } from 'next';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
+import { EDGE_RUNTIME_IF_POSSIBLE } from '@/site/config';
 
-export const runtime = 'edge';
+export const runtime = EDGE_RUNTIME_IF_POSSIBLE;
 
 export async function generateMetadata(): Promise<Metadata> {
   // Make homepage queries resilient to error on first time setup
