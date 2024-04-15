@@ -4,7 +4,7 @@ import {
   QueryResultRow,
   QueryResult,
 } from '@vercel/postgres';
-import { Pool } from 'pg';
+import { Client } from 'pg';
 import { DATABASE_PREFERENCE } from '@/site/config';
 
 export type DatabaseProvider =
@@ -17,12 +17,12 @@ const querySupabaseConnectionPool = async <T extends QueryResultRow>(
   query: string,
   values: Primitive[],
 ): Promise<QueryResult<T>> => {
-  const pool = new Pool({
+  const client = new Client({
     connectionString: process.env.POSTGRES_URL,
   });
-  const client = await pool.connect();
-  const result = await pool.query<T>(query, values);
-  client.release();
+  await client.connect();
+  const result = await client.query<T>(query, values);
+  await client.end();
   return result as QueryResult<T>;
 };
 
