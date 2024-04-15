@@ -7,8 +7,10 @@ import HomeImageResponse from '@/image-response/HomeImageResponse';
 import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
+import { SHOULD_USE_EDGE_RUNTIME } from '@/site/config';
 
-export const runtime = 'edge';
+export let runtime: 'edge' | 'nodejs';
+if (SHOULD_USE_EDGE_RUNTIME) { runtime = 'edge'; }
 
 export async function GET() {
   const [

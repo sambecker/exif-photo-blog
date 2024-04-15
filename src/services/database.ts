@@ -3,8 +3,8 @@ import {
   sql as sqlVercel,
   QueryResultRow,
   QueryResult,
-  createPool,
 } from '@vercel/postgres';
+import { Pool } from 'pg';
 import { DATABASE_PREFERENCE } from '@/site/config';
 
 export type DatabaseProvider =
@@ -16,23 +16,21 @@ export type Primitive = string | number | boolean | undefined | null;
 const querySupabaseConnectionPool = async <T extends QueryResultRow>(
   query: string,
   values: Primitive[],
-) => {
-  const client = createPool({
-    // eslint-disable-next-line max-len
-    connectionString: `${process.env.POSTGRES_URL}?workaround=supabase-pooler.vercel`,
+): Promise<QueryResult<T>> => {
+  const pool = new Pool({
+    connectionString: process.env.POSTGRES_URL,
   });
-  const connection = await client.connect();
-  const result = await client.query<T>(query, values);
-  connection.release();
-  await client.end();
-  return result;
+  const client = await pool.connect();
+  const result = await pool.query<T>(query, values);
+  client.release();
+  return result as QueryResult<T>;
 };
 
 export const convertArrayToPostgresString = (array?: string[]) => array
   ? `{${array.join(',')}}`
   : null;
 
-export const sqlSupabase = async <T extends QueryResultRow>(
+const sqlSupabase = async <T extends QueryResultRow>(
   strings: TemplateStringsArray,
   ...values: Primitive[]
 ): Promise<QueryResult<T>> => {
@@ -66,9 +64,9 @@ const isTemplateStringsArray = (
 };
 
 export const sql = DATABASE_PREFERENCE === 'supabase'
-  ? sqlVercel
+  ? sqlSupabase
   : sqlVercel;
 
 export const directQuery = DATABASE_PREFERENCE === 'supabase'
-  ? db.query
+  ? querySupabaseConnectionPool<any>
   : db.query;

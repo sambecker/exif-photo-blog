@@ -3,10 +3,12 @@ import { API_PHOTO_REQUEST_LIMIT, formatPhotoForApi } from '@/site/api';
 import {
   BASE_URL,
   PUBLIC_API_ENABLED,
+  SHOULD_USE_EDGE_RUNTIME,
   SITE_TITLE,
 } from '@/site/config';
 
-export const runtime = 'edge';
+export let runtime: 'edge' | 'nodejs';
+if (SHOULD_USE_EDGE_RUNTIME) { runtime = 'edge'; }
 
 export async function GET() {
   if (PUBLIC_API_ENABLED) {

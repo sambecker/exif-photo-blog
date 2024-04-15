@@ -91,9 +91,7 @@ export const CURRENT_STORAGE: StorageType =
         : 'vercel-blob'
   );
 
-export const EDGE_RUNTIME_IF_POSSIBLE = DATABASE_PREFERENCE === 'vercel'
-  ? 'edge'
-  : 'nodejs';
+export const SHOULD_USE_EDGE_RUNTIME = DATABASE_PREFERENCE === 'vercel';
 
 // SETTINGS
 

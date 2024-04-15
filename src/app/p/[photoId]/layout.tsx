@@ -12,8 +12,10 @@ import {
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotoCached, getPhotosNearIdCached } from '@/photo/cache';
+import { SHOULD_USE_EDGE_RUNTIME } from '@/site/config';
 
-export const runtime = 'edge';
+export let runtime: 'edge' | 'nodejs';
+if (SHOULD_USE_EDGE_RUNTIME) { runtime = 'edge'; }
 
 interface PhotoProps {
   params: { photoId: string }
