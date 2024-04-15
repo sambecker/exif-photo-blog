@@ -7,10 +7,11 @@ import {
   cloudflareR2Client,
   cloudflareR2PutObjectCommandForKey,
 } from '@/services/storage/cloudflare-r2';
-import { CURRENT_STORAGE } from '@/site/config';
+import { CURRENT_STORAGE, SHOULD_USE_EDGE_RUNTIME } from '@/site/config';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
-export const runtime = 'edge';
+export let runtime: 'edge' | 'nodejs';
+if (SHOULD_USE_EDGE_RUNTIME) { runtime = 'edge'; }
 
 export async function GET(
   _: Request,
