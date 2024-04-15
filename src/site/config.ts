@@ -92,6 +92,7 @@ export const CURRENT_STORAGE: StorageType =
   );
 
 export const SHOULD_USE_EDGE_RUNTIME = DATABASE_PREFERENCE === 'vercel';
+export const runtime = DATABASE_PREFERENCE === 'supabase' ? 'nodejs' : 'edge';
 
 // SETTINGS
 

@@ -13,11 +13,7 @@ import { pathForRoot } from '@/site/paths';
 import { Metadata } from 'next';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
 
-export const config = {
-  runtime: process.env.DATABASE_PREFERENCE === 'supabase'
-    ? 'nodejs'
-    : 'edge',
-};
+export { runtime } from '@/site/config';
 
 export async function generateMetadata(): Promise<Metadata> {
   // Make homepage queries resilient to error on first time setup
