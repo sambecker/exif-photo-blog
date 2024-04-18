@@ -29,11 +29,16 @@ export default function MoreComponentsProvider({
     }));
   }, []);
 
+  const clearMoreComponentsState = useCallback(() => {
+    setState(MORE_COMPONENTS_INITIAL_STATE);
+  }, []);
+
   return (
     <MoreComponentsContext.Provider
       value={{
         state,
         setStateForKey,
+        clearMoreComponentsState,
       }}
     >
       {children}

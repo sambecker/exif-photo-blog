@@ -12,6 +12,7 @@ interface Props extends HTMLProps<HTMLButtonElement> {
   spinnerColor?: SpinnerColor
   onFormStatusChange?: (pending: boolean) => void
   onFormSubmitToastMessage?: string
+  onFormSubmit?: () => void
   primary?: boolean
 }
 
@@ -21,6 +22,7 @@ export default function SubmitButtonWithStatus({
   spinnerColor,
   onFormStatusChange,
   onFormSubmitToastMessage,
+  onFormSubmit,
   children,
   disabled,
   className,
@@ -39,9 +41,10 @@ export default function SubmitButtonWithStatus({
       onFormSubmitToastMessage
     ) {
       toastSuccess(onFormSubmitToastMessage);
+      onFormSubmit?.();
     }
     pendingPrevious.current = pending;
-  }, [pending, onFormSubmitToastMessage]);
+  }, [pending, onFormSubmitToastMessage, onFormSubmit]);
 
   useEffect(() => {
     onFormStatusChange?.(pending);

@@ -1,9 +1,7 @@
+import ClearCacheButton from '@/admin/ClearCacheButton';
 import InfoBlock from '@/components/InfoBlock';
 import SiteGrid from '@/components/SiteGrid';
-import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
-import { syncCacheAction } from '@/photo/actions';
 import SiteChecklist from '@/site/SiteChecklist';
-import { BiTrash } from 'react-icons/bi';
 
 export default async function AdminConfigurationPage() {
   return (
@@ -14,13 +12,7 @@ export default async function AdminConfigurationPage() {
             <div className="flex-grow">
               App Configuration
             </div>
-            <form action={syncCacheAction}>
-              <SubmitButtonWithStatus
-                icon={<BiTrash />}
-              >
-                Clear Cache
-              </SubmitButtonWithStatus>
-            </form>
+            <ClearCacheButton />
           </div>
           <InfoBlock>
             <SiteChecklist />

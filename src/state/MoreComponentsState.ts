@@ -36,6 +36,7 @@ export interface MoreComponentsContext {
     key: MoreComponentsKey,
     state: MoreComponentsStateForKeyArgument,
   ) => void
+  clearMoreComponentsState: () => void
 }
 
 export const MORE_COMPONENTS_INITIAL_STATE: MoreComponentsState = {
@@ -47,6 +48,7 @@ export const  MoreComponentsContext =
   createContext<MoreComponentsContext>({
     state: MORE_COMPONENTS_INITIAL_STATE,
     setStateForKey: () => {},
+    clearMoreComponentsState: () => {},
   });
 
 export const useMoreComponentsState = () =>
