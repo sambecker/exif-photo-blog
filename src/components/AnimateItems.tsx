@@ -19,6 +19,7 @@ interface Props extends AnimationConfig {
   className?: string
   classNameItem?: string
   items: ReactNode[]
+  itemKeys?: string[]
   animateFromAppState?: boolean
   animateOnFirstLoadOnly?: boolean
   staggerOnFirstLoadOnly?: boolean
@@ -28,6 +29,7 @@ function AnimateItems({
   className,
   classNameItem,
   items,
+  itemKeys,
   type = 'scale',
   duration = 0.6,
   staggerDelay = 0.1,
@@ -104,7 +106,7 @@ function AnimateItems({
     >
       {items.map((item, index) =>
         <motion.div
-          key={index}
+          key={itemKeys ? itemKeys[index] : index}
           className={classNameItem}
           variants={{
             hidden: getInitialVariant(),

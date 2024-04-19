@@ -8,7 +8,6 @@ import { SITE_DOMAIN_OR_TITLE } from '@/site/config';
 import ViewSwitcher, { SwitcherSelection } from '@/site/ViewSwitcher';
 import {
   PATH_ROOT,
-  isPathAdmin,
   isPathGrid,
   isPathProtected,
   isPathSignIn,
@@ -17,14 +16,14 @@ import AnimateItems from '../components/AnimateItems';
 
 export default function NavClient({
   showAdmin,
+  animate,
 }: {
   showAdmin?: boolean,
+  animate?: boolean,
 }) {
   const pathname = usePathname();
 
   const showNav = !isPathSignIn(pathname);
-
-  const shouldAnimate = !isPathAdmin(pathname);
 
   const renderLink = (
     text: string,
@@ -49,7 +48,7 @@ export default function NavClient({
       contentMain={
         <AnimateItems
           animateOnFirstLoadOnly
-          type={!shouldAnimate ? 'none' : 'bottom'}
+          type={animate ? 'bottom' : 'none'}
           distanceOffset={10}
           items={showNav
             ? [<div

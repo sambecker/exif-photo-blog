@@ -19,7 +19,7 @@ export function MorePhotosRoot({
     'use server';
     if (
       process.env.NODE_ENV === 'development' &&
-      Math.random() < 0.5
+      Math.random() < 0.1
     ) {
       return { didFail: true };
     }

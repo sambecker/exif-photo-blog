@@ -72,6 +72,7 @@ export default function PhotoGrid({
             priority: photoPriority,
           }} />
         </div>).concat(additionalTile ?? [])}
+      itemKeys={photos.map(photo => photo.id)}
     />
   );
 };
