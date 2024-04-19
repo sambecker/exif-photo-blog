@@ -301,9 +301,7 @@ const safelyQueryPhotos = async <T>(
 ): Promise<T> => {
   let result: T;
 
-  if (debugMessage) {
-    console.log(`Executing sql query: ${debugMessage}`);
-  }
+  const start = new Date();
 
   try {
     result = await callback();
@@ -335,6 +333,12 @@ const safelyQueryPhotos = async <T>(
       console.log(`sql get error: ${e.message} `);
       throw e;
     }
+  }
+
+  if (debugMessage) {
+    const time =
+      (((new Date()).getTime() - start.getTime()) / 1000).toFixed(2);
+    console.log(`Executing sql query: ${debugMessage} (${time} seconds)`);
   }
 
   return result;
@@ -412,8 +416,7 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
   values.push(limit, offset);
 
   return safelyQueryPhotos(async () => {
-    const client = await db.connect();
-    return client.query(sql.join(' '), values);
+    return db.query(sql.join(' '), values);
   }, sql.join(' '))
     .then(({ rows }) => rows.map(parsePhotoFromDb));
 };
@@ -427,8 +430,7 @@ export const getPhotosNearId = async (
     : 'ORDER BY taken_at DESC';
 
   return safelyQueryPhotos(async () => {
-    const client = await db.connect();
-    return client.query(
+    return db.query(
       `
         WITH twi AS (
           SELECT *, row_number()
@@ -444,7 +446,7 @@ export const getPhotosNearId = async (
       `,
       [id, limit]
     );
-  }, 'getPhotosNearId')
+  }, `getPhotosNearId: ${id}`)
     .then(({ rows }) => {
       const photos = rows.map(parsePhotoFromDb);
       return {

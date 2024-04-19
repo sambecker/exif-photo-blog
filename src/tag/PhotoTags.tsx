@@ -6,6 +6,7 @@ import { EntityLinkExternalProps } from '@/components/primitives/EntityLink';
 export default function PhotoTags({
   tags,
   contrast,
+  prefetch,
 }: {
   tags: string[]
 } & EntityLinkExternalProps) {
@@ -14,8 +15,8 @@ export default function PhotoTags({
       {tags.map(tag =>
         <>
           {isTagFavs(tag)
-            ? <FavsTag key={tag} {...{ contrast }} />
-            : <PhotoTag key={tag} {...{ tag, contrast }} />}
+            ? <FavsTag key={tag} {...{ contrast, prefetch }} />
+            : <PhotoTag key={tag} {...{ tag, contrast, prefetch }} />}
         </>)}
     </div>
   );

@@ -15,8 +15,8 @@ importers:
         specifier: 3.556.0
         version: 3.556.0
       '@next/bundle-analyzer':
-        specifier: 14.2.1
-        version: 14.2.1(bufferutil@4.0.8)(utf-8-validate@6.0.3)
+        specifier: 14.2.2
+        version: 14.2.2(bufferutil@4.0.8)(utf-8-validate@6.0.3)
       '@radix-ui/react-dropdown-menu':
         specifier: ^2.0.6
         version: 2.0.6(@types/react-dom@18.2.25)(@types/react@18.2.79)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -57,13 +57,13 @@ importers:
         specifier: ^1.2.2
         version: 1.2.2(next@14.3.0-canary.8(@babel/core@7.23.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
       '@vercel/blob':
-        specifier: ^0.23.0
-        version: 0.23.0
+        specifier: ^0.23.2
+        version: 0.23.2
       '@vercel/kv':
         specifier: ^1.0.1
         version: 1.0.1
       '@vercel/postgres':
-        specifier: 0.8.0
+        specifier: ^0.8.0
         version: 0.8.0
       '@vercel/speed-insights':
         specifier: ^1.0.10
@@ -90,14 +90,14 @@ importers:
         specifier: 8.57.0
         version: 8.57.0
       eslint-config-next:
-        specifier: 14.2.1
-        version: 14.2.1(eslint@8.57.0)(typescript@5.4.5)
+        specifier: 14.2.2
+        version: 14.2.2(eslint@8.57.0)(typescript@5.4.5)
       exifr:
         specifier: ^7.1.3
         version: 7.1.3
       framer-motion:
-        specifier: ^11.1.3
-        version: 11.1.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: ^11.1.5
+        version: 11.1.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.12.7)
@@ -117,8 +117,8 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       openai:
-        specifier: ^4.37.1
-        version: 4.37.1
+        specifier: ^4.38.0
+        version: 4.38.0
       postcss:
         specifier: 8.4.38
         version: 8.4.38
@@ -688,14 +688,14 @@ packages:
   '@neondatabase/serverless@0.7.2':
     resolution: {integrity: sha512-wU3WA2uTyNO7wjPs3Mg0G01jztAxUxzd9/mskMmtPwPTjf7JKWi9AW5/puOGXLxmZ9PVgRFeBVRVYq5nBPhsCg==}
 
-  '@next/bundle-analyzer@14.2.1':
-    resolution: {integrity: sha512-Qwy3Mu/dfnu4rs2xzCy7gKZlwzZzYtiq/rjPcK/7xq3BHSyLthkHf1NAF8NNfjVTouDwo2KchisHrmAamUNWWw==}
+  '@next/bundle-analyzer@14.2.2':
+    resolution: {integrity: sha512-Zp2xG3VTPHUquOcBaRtrr0/n7mqnjKUmprGcJXPEKGgP5rAsLymIfWKm3jIVWIw5Eb4fNOfX4v+L+qiSvs+OJw==}
 
   '@next/env@14.3.0-canary.8':
     resolution: {integrity: sha512-vkUEnZHkrSnJjC9t9U1aQf/SQ0wR0t1jjbLBgYWgJPesQLGnhogmMm2ScROdKTB6iVjz6IiLtjOdgWTKGIgkSg==}
 
-  '@next/eslint-plugin-next@14.2.1':
-    resolution: {integrity: sha512-Fp+mthEBjkn8r9qd6o4JgxKp0IDEzW0VYHD8ZC05xS5/lFNwHKuOdr2kVhWG7BQCO9L6eeepshM1Wbs2T+LgSg==}
+  '@next/eslint-plugin-next@14.2.2':
+    resolution: {integrity: sha512-q+Ec2648JtBpKiu/FSJm8HAsFXlNvioHeBCbTP12T1SGcHYwhqHULSfQgFkPgHDu3kzNp2Kem4J54bK4rPQ5SQ==}
 
   '@next/swc-darwin-arm64@14.3.0-canary.8':
     resolution: {integrity: sha512-dnWrvcTS0sYJpOTU/p98x7M8lpRKiIF+gQ164yyKNVC57vDh0zbSIKweQjvlLCeFVGli0QjboDrUV/j3UMbqxg==}
@@ -1498,8 +1498,8 @@ packages:
       react:
         optional: true
 
-  '@vercel/blob@0.23.0':
-    resolution: {integrity: sha512-FLXiy4SCXJ39gov5qnw7I5YPQq3NBUh5z+swcPw6lBdWN4YQoOho6cVMVncsu1Hc8kemth6ZaTZAnWrNRtbaZw==}
+  '@vercel/blob@0.23.2':
+    resolution: {integrity: sha512-wejIdxb/CJkQpV18/TgGDuQFzZ2BCV+T2F786bmtt7LytmJmfhH8wHuJ70odOyvmiO3RIL57ht5GLZmeV8jqiA==}
     engines: {node: '>=16.14'}
 
   '@vercel/kv@1.0.1':
@@ -2150,8 +2150,8 @@ packages:
     engines: {node: '>=6.0'}
     hasBin: true
 
-  eslint-config-next@14.2.1:
-    resolution: {integrity: sha512-BgD0kPCWMlqoItRf3xe9fG0MqwObKfVch+f2ccwDpZiCJA8ghkz2wrASH+bI6nLZzGcOJOpMm1v1Q1euhfpt4Q==}
+  eslint-config-next@14.2.2:
+    resolution: {integrity: sha512-12/uFc0KX+wUs7EDpOUGKMXBXZJiBVGdK5/m/QgXOCg2mQ0bQWoKSWNrCeOg7Vum6Kw1d1TW453W6xh+GbHquw==}
     peerDependencies:
       eslint: ^7.23.0 || ^8.0.0
       typescript: '>=3.3.1'
@@ -2352,8 +2352,8 @@ packages:
   fraction.js@4.3.7:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
 
-  framer-motion@11.1.3:
-    resolution: {integrity: sha512-/t74b1WQu+mpZtra6xFSfsRfdTymJjNYgFudVIsUmoOWjznr3x5o9HbrX7Jt9655OCA2Js0W79bMZEKE7owp9w==}
+  framer-motion@11.1.5:
+    resolution: {integrity: sha512-ogK5fc0GBUT3AjzMXPx7f74m5V1ByRqkKQARBVHpdkYTNDxb/WriANYD+5JBo1wklQQJ1HayDZtmofQLqZFcbw==}
     peerDependencies:
       '@emotion/is-prop-valid': '*'
       react: ^18.0.0
@@ -3206,8 +3206,8 @@ packages:
     resolution: {integrity: sha512-kbpaSSGJTWdAY5KPVeMOKXSrPtr8C8C7wodJbcsd51jRnmD+GZu8Y0VoU6Dm5Z4vWr0Ig/1NKuWRKf7j5aaYSg==}
     engines: {node: '>=6'}
 
-  openai@4.37.1:
-    resolution: {integrity: sha512-YVuhylpDeTNCWgsfhZe38+c4dDWZuW9VgzNY/sdYiNt6K9pvijroyYENp8YGEUHnuIAKtsLneZX9Qb/iB5XHkw==}
+  openai@4.38.0:
+    resolution: {integrity: sha512-q1w04cRm+7CgUAGDXqt+OMa89zXBffHrEK0FcVDRhD+zL1S1aAatu4iYO5sIxR2QFEP//i8CM3QaxGVTNajxuw==}
     hasBin: true
 
   opener@1.5.2:
@@ -3279,8 +3279,8 @@ packages:
     resolution: {integrity: sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==}
     engines: {node: '>=4.0.0'}
 
-  pg-protocol@1.6.0:
-    resolution: {integrity: sha512-M+PDm637OY5WM307051+bsDia5Xej6d9IR4GwJse1qA1DIhiKlksvrneZOYQq42OM+spubpcNYEo2FcKQrDk+Q==}
+  pg-protocol@1.6.1:
+    resolution: {integrity: sha512-jPIlvgoD63hrEuihvIg+tJhoGjUsLPn6poJY9N5CnlPd91c2T18T/9zBtLxZSb1EhYxBRoZJtzScCaWlYLtktg==}
 
   pg-types@2.2.0:
     resolution: {integrity: sha512-qTAAlrEsl8s4OiEQY69wDvcMIdQN6wdz5ojQiOy6YRMuynxenON0O5oCpJI6lshc6scgAY8qvJ2On/p+CXY0GA==}
@@ -5148,7 +5148,7 @@ snapshots:
     dependencies:
       '@types/pg': 8.6.6
 
-  '@next/bundle-analyzer@14.2.1(bufferutil@4.0.8)(utf-8-validate@6.0.3)':
+  '@next/bundle-analyzer@14.2.2(bufferutil@4.0.8)(utf-8-validate@6.0.3)':
     dependencies:
       webpack-bundle-analyzer: 4.10.1(bufferutil@4.0.8)(utf-8-validate@6.0.3)
     transitivePeerDependencies:
@@ -5157,7 +5157,7 @@ snapshots:
 
   '@next/env@14.3.0-canary.8': {}
 
-  '@next/eslint-plugin-next@14.2.1':
+  '@next/eslint-plugin-next@14.2.2':
     dependencies:
       glob: 10.3.10
 
@@ -5940,7 +5940,7 @@ snapshots:
   '@types/pg@8.6.6':
     dependencies:
       '@types/node': 20.12.7
-      pg-protocol: 1.6.0
+      pg-protocol: 1.6.1
       pg-types: 2.2.0
 
   '@types/prop-types@15.7.11': {}
@@ -6117,7 +6117,7 @@ snapshots:
       next: 14.3.0-canary.8(@babel/core@7.23.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
 
-  '@vercel/blob@0.23.0':
+  '@vercel/blob@0.23.2':
     dependencies:
       async-retry: 1.3.3
       bytes: 3.1.2
@@ -6845,9 +6845,9 @@ snapshots:
     optionalDependencies:
       source-map: 0.6.1
 
-  eslint-config-next@14.2.1(eslint@8.57.0)(typescript@5.4.5):
+  eslint-config-next@14.2.2(eslint@8.57.0)(typescript@5.4.5):
     dependencies:
-      '@next/eslint-plugin-next': 14.2.1
+      '@next/eslint-plugin-next': 14.2.2
       '@rushstack/eslint-patch': 1.7.2
       '@typescript-eslint/parser': 6.21.0(eslint@8.57.0)(typescript@5.4.5)
       eslint: 8.57.0
@@ -7160,7 +7160,7 @@ snapshots:
 
   fraction.js@4.3.7: {}
 
-  framer-motion@11.1.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  framer-motion@11.1.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       tslib: 2.6.2
     optionalDependencies:
@@ -8166,7 +8166,7 @@ snapshots:
     dependencies:
       mimic-fn: 2.1.0
 
-  openai@4.37.1:
+  openai@4.38.0:
     dependencies:
       '@types/node': 18.19.24
       '@types/node-fetch': 2.6.11
@@ -8246,7 +8246,7 @@ snapshots:
 
   pg-int8@1.0.1: {}
 
-  pg-protocol@1.6.0: {}
+  pg-protocol@1.6.1: {}
 
   pg-types@2.2.0:
     dependencies:

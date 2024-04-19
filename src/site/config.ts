@@ -22,8 +22,10 @@ const SITE_DOMAIN =
   VERCEL_PROJECT_URL;
 
 // Used primarily for absolute references such as OG images
-export const BASE_URL = makeUrlAbsolute(VERCEL_ENV === 'production'
-  ? SITE_DOMAIN
+export const BASE_URL = makeUrlAbsolute((
+  process.env.NODE_ENV === 'production' &&
+  VERCEL_ENV !== 'preview'
+) ? SITE_DOMAIN
   : VERCEL_ENV === 'preview'
     ? VERCEL_BRANCH_URL || VERCEL_DEPLOYMENT_URL
     : 'http://localhost:3000')?.toLocaleLowerCase();

@@ -3,7 +3,6 @@ import {
   altTextForPhoto,
   shouldShowCameraDataForPhoto,
   shouldShowExifDataForPhoto,
-  titleForPhoto,
 } from '.';
 import SiteGrid from '@/components/SiteGrid';
 import ImageLarge from '@/components/ImageLarge';
@@ -19,6 +18,7 @@ import { sortTags } from '@/tag';
 import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
 import { Suspense } from 'react';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
+import PhotoLink from './PhotoLink';
 
 export default function PhotoLarge({
   photo,
@@ -81,14 +81,11 @@ export default function PhotoLarge({
           {/* Meta */}
           <div className="pr-2 md:pr-0">
             <div className="md:relative flex gap-2 items-start">
-              <div className="flex-grow">
-                <Link
-                  href={pathForPhoto(photo)}
-                  className="font-bold uppercase"
-                >
-                  {titleForPhoto(photo)}
-                </Link>
-              </div>
+              <PhotoLink
+                photo={photo}
+                className="font-bold uppercase flex-grow"
+                prefetch={prefetch}
+              />
               <Suspense>
                 <div className="absolute right-0 translate-y-[-4px] z-10">
                   <AdminPhotoMenu photo={photo} />
@@ -106,9 +103,14 @@ export default function PhotoLarge({
                     <PhotoCamera
                       camera={camera}
                       contrast="medium"
+                      prefetch={prefetchRelatedLinks}
                     />}
                   {showTagsContent &&
-                    <PhotoTags tags={tags} contrast="medium" />}
+                    <PhotoTags
+                      tags={tags}
+                      contrast="medium"
+                      prefetch={prefetchRelatedLinks}
+                    />}
                 </div>}
             </div>
           </div>
@@ -138,6 +140,7 @@ export default function PhotoLarge({
                 {showSimulation && photo.filmSimulation &&
                   <PhotoFilmSimulation
                     simulation={photo.filmSimulation}
+                    prefetch={prefetchRelatedLinks}
                   />}
               </>}
             <div className={clsx(
