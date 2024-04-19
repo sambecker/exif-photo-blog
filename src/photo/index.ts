@@ -1,3 +1,4 @@
+import { getNextImageUrlForRequest } from '@/services/next-image';
 import { FilmSimulation } from '@/simulation';
 import { HIGH_DENSITY_GRID, SHOW_EXIF_DATA } from '@/site/config';
 import { ABSOLUTE_PATH_FOR_HOME_IMAGE } from '@/site/paths';
@@ -264,3 +265,8 @@ export const getKeywordsForPhoto = (photo: Photo) =>
     .concat((photo.semanticDescription ?? '').split(' '))
     .filter(Boolean)
     .map(keyword => keyword.toLocaleLowerCase());
+
+export const isNextImageReadyBasedOnPhotos = async (photos: Photo[]) =>
+  photos.length > 0 && fetch(getNextImageUrlForRequest(photos[0].url, 640))
+    .then(response => response.ok)
+    .catch(() => false);

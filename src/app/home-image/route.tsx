@@ -7,6 +7,7 @@ import HomeImageResponse from '@/image-response/HomeImageResponse';
 import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
+import { isNextImageReadyBasedOnPhotos } from '@/photo';
 
 export async function GET() {
   const [
@@ -21,8 +22,17 @@ export async function GET() {
 
   const { width, height } = IMAGE_OG_DIMENSION_SMALL;
 
+  // Make sure next/image can be reached from absolute urls,
+  // which may not exist on first pre-render
+  const isNextImageReady = await isNextImageReadyBasedOnPhotos(photos);
+
   return new ImageResponse(
-    <HomeImageResponse {...{ photos, width, height, fontFamily }}/>,
+    <HomeImageResponse {...{
+      photos: isNextImageReady ? photos : [],
+      width,
+      height,
+      fontFamily,
+    }}/>,
     { width, height, headers, fonts },
   );
 }

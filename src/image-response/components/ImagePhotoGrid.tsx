@@ -52,14 +52,8 @@ export default function ImagePhotoGrid({
       justifyContent: 'center',
       gap,
     }}>
-      {photos.slice(0, count).map(async ({ id, url }) => {
-        const src = getNextImageUrlForRequest(url, nextImageWidth);
-        // Make sure next/image can be reached from absolute url,
-        // which may not exist on first pre-render
-        const doesNextImageExist = await fetch(src)
-          .then(response => response.ok)
-          .catch(() => false);
-        return <div
+      {photos.slice(0, count).map(({ id, url }) =>
+        <div
           key={id}
           style={{
             display: 'flex',
@@ -68,27 +62,18 @@ export default function ImagePhotoGrid({
             overflow: 'hidden',
           }}
         >
-          {doesNextImageExist
-            ? <img {...{
-              src,
-              style: {
-                width: '100%',
-                ...imagePosition === 'center' && {
-                  height: '100%',
-                },
-                objectFit: 'cover',
-              },
-            }} />
-            : <div style={{
-              display: 'flex',
+          <img {...{
+            src: getNextImageUrlForRequest(url, nextImageWidth),
+            style: {
               width: '100%',
               ...imagePosition === 'center' && {
                 height: '100%',
               },
               objectFit: 'cover',
-            }} />}
-        </div>;
-      })}
+            },
+          }} />
+        </div>
+      )}
     </div>
   );
 }
