@@ -3,13 +3,14 @@ import ImageTiny from '@/components/ImageTiny';
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
 import { pathForPhoto } from '@/site/paths';
+import { SHOULD_PREFETCH } from '@/site/config';
 
 export default function PhotoTiny({
   photo,
   tag,
   selected,
   className,
-  prefetch = false,
+  prefetch = SHOULD_PREFETCH,
 }: {
   photo: Photo
   tag?: string
