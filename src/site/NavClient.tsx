@@ -16,7 +16,7 @@ import AnimateItems from '../components/AnimateItems';
 
 export default function NavClient({
   showAdmin,
-  animate,
+  animate = true,
 }: {
   showAdmin?: boolean,
   animate?: boolean,

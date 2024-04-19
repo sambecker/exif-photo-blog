@@ -34,7 +34,6 @@ export default async function HomePage() {
       ? <div className="space-y-1">
         <PhotosLarge
           photos={photos}
-          animate={false}
           prefetchFirstPhotoLinks={true}
         />
         <Suspense>
