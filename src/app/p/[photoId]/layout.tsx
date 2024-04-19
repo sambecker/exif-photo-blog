@@ -17,14 +17,12 @@ import { STATICALLY_OPTIMIZED } from '@/site/config';
 import { getPhotosNearIdCachedCached } from '@/photo/cache';
 
 export let generateStaticParams:
-  (() => Promise<{ params: { photoId: string } }[]>) | undefined = undefined;
+  (() => Promise<{ photoId: string }[]>) | undefined = undefined;
 
 if (STATICALLY_OPTIMIZED) {
   generateStaticParams = async () => {
     const photos = await getPhotoIds({ limit: GENERATE_STATIC_PARAMS_LIMIT });
-    return photos.map(photoId => ({
-      params: { photoId },
-    }));
+    return photos.map(photoId => ({ photoId }));
   };
 }
 
