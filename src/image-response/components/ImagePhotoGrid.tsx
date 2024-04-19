@@ -68,16 +68,25 @@ export default function ImagePhotoGrid({
             overflow: 'hidden',
           }}
         >
-          {doesNextImageExist && <img {...{
-            src,
-            style: {
+          {doesNextImageExist
+            ? <img {...{
+              src,
+              style: {
+                width: '100%',
+                ...imagePosition === 'center' && {
+                  height: '100%',
+                },
+                objectFit: 'cover',
+              },
+            }} />
+            : <div style={{
+              display: 'flex',
               width: '100%',
               ...imagePosition === 'center' && {
                 height: '100%',
               },
               objectFit: 'cover',
-            },
-          }} />}
+            }} />}
         </div>;
       })}
     </div>
