@@ -19,14 +19,14 @@ import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
 import { Suspense } from 'react';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import PhotoLink from './PhotoLink';
-import { SHOULD_PREFETCH_GLOBAL } from '@/site/config';
+import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
 
 export default function PhotoLarge({
   photo,
   primaryTag,
   priority,
-  prefetch = SHOULD_PREFETCH_GLOBAL,
-  prefetchRelatedLinks = SHOULD_PREFETCH_GLOBAL,
+  prefetch = SHOULD_PREFETCH_ALL_LINKS,
+  prefetchRelatedLinks = SHOULD_PREFETCH_ALL_LINKS,
   showCamera = true,
   showSimulation = true,
   shouldShareTag,

@@ -11,7 +11,7 @@ import { Camera, Cameras, createCameraKey } from '@/camera';
 import { parameterize } from '@/utility/string';
 import { TagsWithMeta } from '@/tag';
 import { FilmSimulation, FilmSimulations } from '@/simulation';
-import { PRIORITY_ORDER_ENABLED } from '@/site/config';
+import { SHOULD_DEBUG_SQL, PRIORITY_ORDER_ENABLED } from '@/site/config';
 import { screenForPPR } from '@/utility/ppr';
 
 const PHOTO_DEFAULT_LIMIT = 100;
@@ -335,7 +335,7 @@ const safelyQueryPhotos = async <T>(
     }
   }
 
-  if (debugMessage) {
+  if (SHOULD_DEBUG_SQL && debugMessage) {
     const time =
       (((new Date()).getTime() - start.getTime()) / 1000).toFixed(2);
     console.log(`Executing sql query: ${debugMessage} (${time} seconds)`);
