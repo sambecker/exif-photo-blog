@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
-import { SHOULD_PREFETCH } from '@/site/config';
+import { SHOULD_PREFETCH_GLOBAL } from '@/site/config';
 
 export default function SwitcherItem({
   icon,
@@ -9,7 +9,7 @@ export default function SwitcherItem({
   onClick,
   active,
   noPadding,
-  prefetch = SHOULD_PREFETCH,
+  prefetch = SHOULD_PREFETCH_GLOBAL,
 }: {
   icon: JSX.Element
   href?: string

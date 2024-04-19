@@ -5,7 +5,7 @@ import { clsx } from 'clsx/lite';
 import { pathForPhoto } from '@/site/paths';
 import { Camera } from '@/camera';
 import { FilmSimulation } from '@/simulation';
-import { SHOULD_PREFETCH } from '@/site/config';
+import { SHOULD_PREFETCH_GLOBAL } from '@/site/config';
 
 export default function PhotoSmall({
   photo,
@@ -14,7 +14,7 @@ export default function PhotoSmall({
   simulation,
   selected,
   priority,
-  prefetch = SHOULD_PREFETCH,
+  prefetch = SHOULD_PREFETCH_GLOBAL,
 }: {
   photo: Photo
   tag?: string
