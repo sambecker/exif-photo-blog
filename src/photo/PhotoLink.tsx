@@ -15,6 +15,7 @@ export default function PhotoLink({
   tag,
   camera,
   simulation,
+  scroll,
   prefetch,
   nextPhotoAnimation,
   className,
@@ -24,6 +25,7 @@ export default function PhotoLink({
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
+  scroll?: boolean
   prefetch?: boolean
   nextPhotoAnimation?: AnimationConfig
   className?: string
@@ -42,7 +44,7 @@ export default function PhotoLink({
           }
         }}
         className={className}
-        scroll={false}
+        scroll={scroll}
       >
         {children ?? titleForPhoto(photo)}
       </Link>

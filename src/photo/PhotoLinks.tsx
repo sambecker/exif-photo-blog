@@ -86,6 +86,7 @@ export default function PhotoLinks({
         tag={tag}
         camera={camera}
         simulation={simulation}
+        scroll={false}
         prefetch
       >
         PREV
@@ -96,6 +97,7 @@ export default function PhotoLinks({
         tag={tag}
         camera={camera}
         simulation={simulation}
+        scroll={false}
         prefetch
       >
         NEXT
