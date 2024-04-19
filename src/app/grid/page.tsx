@@ -13,6 +13,8 @@ import { getPhotoSidebarDataCached } from '@/photo/data';
 import { MorePhotosGrid } from '@/photo/MorePhotosGrid';
 import { Suspense } from 'react';
 
+export const revalidate = 3600;
+
 export async function generateMetadata(): Promise<Metadata> {
   const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG });
   return generateOgImageMetaForPhotos(photos);
