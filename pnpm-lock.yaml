@@ -51,14 +51,14 @@ importers:
         specifier: ^7.7.0
         version: 7.7.0(eslint@8.57.0)(typescript@5.4.5)
       '@upstash/ratelimit':
-        specifier: ^1.1.1
-        version: 1.1.1
+        specifier: ^1.1.2
+        version: 1.1.2
       '@vercel/analytics':
         specifier: ^1.2.2
         version: 1.2.2(next@14.2.2(@babel/core@7.23.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
       '@vercel/blob':
-        specifier: ^0.23.0
-        version: 0.23.0
+        specifier: ^0.23.2
+        version: 0.23.2
       '@vercel/kv':
         specifier: ^1.0.1
         version: 1.0.1
@@ -69,8 +69,8 @@ importers:
         specifier: ^1.0.10
         version: 1.0.10(next@14.2.2(@babel/core@7.23.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(svelte@4.2.12)(vue@3.4.21(typescript@5.4.5))
       ai:
-        specifier: ^3.0.23
-        version: 3.0.23(react@18.2.0)(solid-js@1.8.15)(svelte@4.2.12)(vue@3.4.21(typescript@5.4.5))(zod@3.22.4)
+        specifier: ^3.0.24
+        version: 3.0.24(react@18.2.0)(solid-js@1.8.15)(svelte@4.2.12)(vue@3.4.21(typescript@5.4.5))(zod@3.22.4)
       autoprefixer:
         specifier: 10.4.19
         version: 10.4.19(postcss@8.4.38)
@@ -96,8 +96,8 @@ importers:
         specifier: ^7.1.3
         version: 7.1.3
       framer-motion:
-        specifier: ^11.1.3
-        version: 11.1.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: ^11.1.7
+        version: 11.1.7(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.12.7)
@@ -117,8 +117,8 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       openai:
-        specifier: ^4.37.1
-        version: 4.37.1
+        specifier: ^4.38.2
+        version: 4.38.2
       postcss:
         specifier: 8.4.38
         version: 8.4.38
@@ -1474,12 +1474,12 @@ packages:
   '@ungap/structured-clone@1.2.0':
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
 
-  '@upstash/core-analytics@0.0.7':
-    resolution: {integrity: sha512-lC2j5efqb1haX/fpTGaPUx1rue1WUkOZBVHDzCB7eMIVsRdFFp4xiHtyH/G9omiR1zj39fU5SCTWFiKJH3KOpw==}
+  '@upstash/core-analytics@0.0.8':
+    resolution: {integrity: sha512-MCJoF+Y8fkzq4NRLG7kEHjtGyMsZ2DICBdmEdwoK9umoSrfkzgBlYdZiHTIaewyt9PGaMZCHOasz0LAuMpxwxQ==}
     engines: {node: '>=16.0.0'}
 
-  '@upstash/ratelimit@1.1.1':
-    resolution: {integrity: sha512-e9xnKkHOYzOoqt5eH5bCB90UslkW/sKcKaDwcd07QZ40lkAPHE8DEuzgZwXuKfuywWp8XDE/c6HwDXcsTsNfww==}
+  '@upstash/ratelimit@1.1.2':
+    resolution: {integrity: sha512-u9aGWwJ9rojcoZoD3EyBJ0F/fLOtD4dlugCYcRTFXNPPDnMAQ8Y8CoXb02hucT24q62xb3ikyS4NdZyj4aqESQ==}
 
   '@upstash/redis@1.25.1':
     resolution: {integrity: sha512-ACj0GhJ4qrQyBshwFgPod6XufVEfKX2wcaihsEvSdLYnY+m+pa13kGt1RXm/yTHKf4TQi/Dy2A8z/y6WUEOmlg==}
@@ -1498,8 +1498,8 @@ packages:
       react:
         optional: true
 
-  '@vercel/blob@0.23.0':
-    resolution: {integrity: sha512-FLXiy4SCXJ39gov5qnw7I5YPQq3NBUh5z+swcPw6lBdWN4YQoOho6cVMVncsu1Hc8kemth6ZaTZAnWrNRtbaZw==}
+  '@vercel/blob@0.23.2':
+    resolution: {integrity: sha512-wejIdxb/CJkQpV18/TgGDuQFzZ2BCV+T2F786bmtt7LytmJmfhH8wHuJ70odOyvmiO3RIL57ht5GLZmeV8jqiA==}
     engines: {node: '>=16.14'}
 
   '@vercel/kv@1.0.1':
@@ -1595,8 +1595,8 @@ packages:
     resolution: {integrity: sha512-5GG/5IbQQpC9FpkRGsSvZI5QYeSCzlJHdpBQntCsuTOxhKD8lqKhrleg2Yi7yvMIf82Ycmmqln9U8V9qwEiJew==}
     engines: {node: '>= 8.0.0'}
 
-  ai@3.0.23:
-    resolution: {integrity: sha512-VL8Fx9euEtffzIu0BpLDZkACB+oU6zj4vHXSsSoT5VfwAzE009FJedOMPK1M4u60RpYw/DgwlD7OLN7XQfvSHw==}
+  ai@3.0.24:
+    resolution: {integrity: sha512-x2enc2aIbOjsvC6N+xS8cTEiAPXGSzN1MjqNu4jo9YlBKmGR+83slScoXhgFZQnaHHeT9miPUVoMRqde11Bc8Q==}
     engines: {node: '>=18'}
     peerDependencies:
       react: ^18.2.0
@@ -2352,8 +2352,8 @@ packages:
   fraction.js@4.3.7:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
 
-  framer-motion@11.1.3:
-    resolution: {integrity: sha512-/t74b1WQu+mpZtra6xFSfsRfdTymJjNYgFudVIsUmoOWjznr3x5o9HbrX7Jt9655OCA2Js0W79bMZEKE7owp9w==}
+  framer-motion@11.1.7:
+    resolution: {integrity: sha512-cW11Pu53eDAXUEhv5hEiWuIXWhfkbV32PlgVISn7jRdcAiVrJ1S03YQQ0/DzoswGYYwKi4qYmHHjCzAH52eSdQ==}
     peerDependencies:
       '@emotion/is-prop-valid': '*'
       react: ^18.0.0
@@ -3206,8 +3206,8 @@ packages:
     resolution: {integrity: sha512-kbpaSSGJTWdAY5KPVeMOKXSrPtr8C8C7wodJbcsd51jRnmD+GZu8Y0VoU6Dm5Z4vWr0Ig/1NKuWRKf7j5aaYSg==}
     engines: {node: '>=6'}
 
-  openai@4.37.1:
-    resolution: {integrity: sha512-YVuhylpDeTNCWgsfhZe38+c4dDWZuW9VgzNY/sdYiNt6K9pvijroyYENp8YGEUHnuIAKtsLneZX9Qb/iB5XHkw==}
+  openai@4.38.2:
+    resolution: {integrity: sha512-M16ehj0D84Gjq5cjvBzXRb5X+UvtWlxPDRAWAWMC0EN+6nHqnULIn5fWWeiexDPup25FeSZYv/ldp8KefcZVJQ==}
     hasBin: true
 
   opener@1.5.2:
@@ -6094,13 +6094,13 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@upstash/core-analytics@0.0.7':
+  '@upstash/core-analytics@0.0.8':
     dependencies:
       '@upstash/redis': 1.28.4
 
-  '@upstash/ratelimit@1.1.1':
+  '@upstash/ratelimit@1.1.2':
     dependencies:
-      '@upstash/core-analytics': 0.0.7
+      '@upstash/core-analytics': 0.0.8
 
   '@upstash/redis@1.25.1':
     dependencies:
@@ -6117,7 +6117,7 @@ snapshots:
       next: 14.2.2(@babel/core@7.23.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
 
-  '@vercel/blob@0.23.0':
+  '@vercel/blob@0.23.2':
     dependencies:
       async-retry: 1.3.3
       bytes: 3.1.2
@@ -6224,7 +6224,7 @@ snapshots:
     dependencies:
       humanize-ms: 1.2.1
 
-  ai@3.0.23(react@18.2.0)(solid-js@1.8.15)(svelte@4.2.12)(vue@3.4.21(typescript@5.4.5))(zod@3.22.4):
+  ai@3.0.24(react@18.2.0)(solid-js@1.8.15)(svelte@4.2.12)(vue@3.4.21(typescript@5.4.5))(zod@3.22.4):
     dependencies:
       '@ai-sdk/provider': 0.0.0
       '@ai-sdk/provider-utils': 0.0.1(zod@3.22.4)
@@ -7160,7 +7160,7 @@ snapshots:
 
   fraction.js@4.3.7: {}
 
-  framer-motion@11.1.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  framer-motion@11.1.7(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       tslib: 2.6.2
     optionalDependencies:
@@ -8166,7 +8166,7 @@ snapshots:
     dependencies:
       mimic-fn: 2.1.0
 
-  openai@4.37.1:
+  openai@4.38.2:
     dependencies:
       '@types/node': 18.19.24
       '@types/node-fetch': 2.6.11
