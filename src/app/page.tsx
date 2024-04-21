@@ -7,7 +7,6 @@ import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
 import PhotosLarge from '@/photo/PhotosLarge';
-import { Suspense } from 'react';
 import { MorePhotosRoot } from '@/photo/MorePhotosRoot';
 
 export const revalidate = 3600;
@@ -36,13 +35,11 @@ export default async function HomePage() {
           photos={photos}
           prefetchFirstPhotoLinks={true}
         />
-        <Suspense>
-          <MorePhotosRoot
-            initialOffset={INFINITE_SCROLL_MULTIPLE_HOME}
-            itemsPerRequest={INFINITE_SCROLL_MULTIPLE_HOME}
-            totalPhotosCount={count}
-          />
-        </Suspense>
+        <MorePhotosRoot
+          initialOffset={INFINITE_SCROLL_MULTIPLE_HOME}
+          itemsPerRequest={INFINITE_SCROLL_MULTIPLE_HOME}
+          totalPhotosCount={count}
+        />
       </div>
       : <PhotosEmptyState />
   );
