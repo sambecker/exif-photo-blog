@@ -4,7 +4,7 @@ import { makeUrlAbsolute, shortenUrl } from '@/utility/url';
 
 // Hard-coded configuration
 export const SHOULD_PREFETCH_ALL_LINKS: boolean | undefined = undefined;
-export const SHOULD_DEBUG_SQL = false;
+export const SHOULD_DEBUG_SQL = true;
 
 // META / DOMAINS
 
