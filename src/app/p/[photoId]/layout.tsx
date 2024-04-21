@@ -16,8 +16,6 @@ import { getPhotoIds, getPhotosNearId } from '@/services/vercel-postgres';
 import { STATICALLY_OPTIMIZED } from '@/site/config';
 import { cache } from 'react';
 
-export const dynamic = 'auto';
-
 const getPhotosNearIdCached = cache(getPhotosNearId);
 
 export let generateStaticParams:
