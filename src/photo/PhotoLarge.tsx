@@ -15,11 +15,10 @@ import PhotoCamera from '../camera/PhotoCamera';
 import { cameraFromPhoto } from '@/camera';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
 import { sortTags } from '@/tag';
-import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
-import { Suspense } from 'react';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import PhotoLink from './PhotoLink';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
+import AdminPhotoMenuClient from '@/admin/AdminPhotoMenuClient';
 
 export default function PhotoLarge({
   photo,
@@ -87,11 +86,9 @@ export default function PhotoLarge({
                 className="font-bold uppercase flex-grow"
                 prefetch={prefetch}
               />
-              <Suspense>
-                <div className="absolute right-0 translate-y-[-4px] z-10">
-                  <AdminPhotoMenu photo={photo} />
-                </div>
-              </Suspense>
+              <div className="absolute right-0 translate-y-[-4px] z-10">
+                <AdminPhotoMenuClient photo={photo} />
+              </div>
             </div>
             <div className="space-y-baseline">
               {photo.caption &&
