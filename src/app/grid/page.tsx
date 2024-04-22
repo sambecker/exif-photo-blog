@@ -12,7 +12,7 @@ import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
 import { getPhotoSidebarDataCached } from '@/photo/data';
 import { MorePhotosGrid } from '@/photo/MorePhotosGrid';
 
-export const revalidate = 3600;
+export const dynamic = 'force-static';
 
 export async function generateMetadata(): Promise<Metadata> {
   const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG });
