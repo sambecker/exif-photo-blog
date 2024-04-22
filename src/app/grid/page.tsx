@@ -11,7 +11,6 @@ import { Metadata } from 'next/types';
 import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
 import { getPhotoSidebarDataCached } from '@/photo/data';
 import { MorePhotosGrid } from '@/photo/MorePhotosGrid';
-import { Suspense } from 'react';
 
 export const revalidate = 3600;
 
@@ -37,13 +36,11 @@ export default async function GridPage() {
       ? <SiteGrid
         contentMain={<div className="space-y-0.5 sm:space-y-1">
           <PhotoGrid {...{ photos, photoPriority: true }} />
-          <Suspense>
-            <MorePhotosGrid
-              initialOffset={INFINITE_SCROLL_MULTIPLE_GRID}
-              itemsPerRequest={INFINITE_SCROLL_MULTIPLE_GRID}
-              totalPhotosCount={photosCount}
-            />
-          </Suspense>
+          <MorePhotosGrid
+            initialOffset={INFINITE_SCROLL_MULTIPLE_GRID}
+            itemsPerRequest={INFINITE_SCROLL_MULTIPLE_GRID}
+            totalPhotosCount={photosCount}
+          />
         </div>}
         contentSide={<div className="sticky top-4 space-y-4 mt-[-4px]">
           <PhotoGridSidebar {...{

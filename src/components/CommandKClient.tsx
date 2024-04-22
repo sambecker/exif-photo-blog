@@ -9,6 +9,14 @@ import {
   useState,
   useTransition,
 } from 'react';
+import {
+  PATH_ADMIN_BASELINE,
+  PATH_ADMIN_CONFIGURATION,
+  PATH_ADMIN_PHOTOS,
+  PATH_ADMIN_TAGS,
+  PATH_ADMIN_UPLOADS,
+  PATH_SIGN_IN,
+} from '../site/paths';
 import Modal from './Modal';
 import { clsx } from 'clsx/lite';
 import { useDebounce } from 'use-debounce';
@@ -20,22 +28,27 @@ import { IoInvertModeSharp } from 'react-icons/io5';
 import { useAppState } from '@/state/AppState';
 import { getPhotoItemsAction } from '@/photo/actions';
 import { RiToolsFill } from 'react-icons/ri';
+import { BiLockAlt, BiSolidUser } from 'react-icons/bi';
+import { HiDocumentText } from 'react-icons/hi';
+import { signOutAndRedirectAction } from '@/auth/actions';
 
 const LISTENER_KEYDOWN = 'keydown';
 const MINIMUM_QUERY_LENGTH = 2;
 
+type CommandKItem = {
+  label: string
+  keywords?: string[]
+  annotation?: ReactNode
+  annotationAria?: string
+  accessory?: ReactNode
+  path?: string
+  action?: () => void | Promise<void>
+}
+
 export type CommandKSection = {
   heading: string
   accessory?: ReactNode
-  items: {
-    label: string
-    keywords?: string[]
-    annotation?: ReactNode
-    annotationAria?: string
-    accessory?: ReactNode
-    path?: string
-    action?: () => void
-  }[]
+  items: CommandKItem[]
 }
 
 export default function CommandKClient({
@@ -48,6 +61,8 @@ export default function CommandKClient({
   footer?: string
 }) {
   const {
+    isUserSignedIn,
+    setUserEmail,
     isCommandKOpen: isOpen,
     setIsCommandKOpen: setIsOpen,
     setShouldRespondToKeyboardCommands,
@@ -167,6 +182,57 @@ export default function CommandKClient({
     });
   }
 
+  const sectionPages: CommandKSection = {
+    heading: 'Pages',
+    accessory: <HiDocumentText size={15} className="translate-x-[-1px]" />,
+    items: ([{
+      label: 'Home',
+      path: '/',
+    }, {
+      label: 'Grid',
+      path:'/grid',
+    }]),
+  };
+
+  const adminSection: CommandKSection = {
+    heading: 'Admin',
+    accessory: <BiSolidUser size={15} className="translate-x-[-1px]" />,
+    items: isUserSignedIn
+      ? ([{
+        label: 'Manage Photos',
+        annotation: <BiLockAlt />,
+        path: PATH_ADMIN_PHOTOS,
+      }, {
+        label: 'Manage Uploads',
+        annotation: <BiLockAlt />,
+        path: PATH_ADMIN_UPLOADS,
+      }, {
+        label: 'Manage Tags',
+        annotation: <BiLockAlt />,
+        path: PATH_ADMIN_TAGS,
+      }, {
+        label: 'App Config',
+        annotation: <BiLockAlt />,
+        path: PATH_ADMIN_CONFIGURATION,
+      }] as CommandKItem[])
+        .concat(showDebugTools
+          ? [{
+            label: 'Baseline Overview',
+            path: PATH_ADMIN_BASELINE,
+          }]
+          : [])
+        .concat({
+          label: 'Sign Out',
+          action: () => {
+            signOutAndRedirectAction().then(() => setUserEmail?.(undefined));
+          },
+        })
+      : [{
+        label: 'Sign In',
+        path: PATH_SIGN_IN,
+      }],
+  };
+
   return (
     <Command.Dialog
       open={isOpen}
@@ -219,6 +285,8 @@ export default function CommandKClient({
             </Command.Empty>
             {queriedSections
               .concat(serverSections)
+              .concat(sectionPages)
+              .concat(adminSection)
               .concat(clientSections)
               .filter(({ items }) => items.length > 0)
               .map(({ heading, accessory, items }) =>

@@ -9,12 +9,12 @@ import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
 import { Metadata } from 'next/types';
 import MoreComponentsProvider from '@/state/MoreComponentsProvider';
 import { ThemeProvider } from 'next-themes';
+import Nav from '@/site/Nav';
+import Footer from '@/site/Footer';
+import CommandK from '@/site/CommandK';
 
 import '../site/globals.css';
 import '../site/sonner.css';
-import NavClient from '@/site/NavClient';
-import CommandKClient from '@/components/CommandKClient';
-import FooterClient from '@/site/FooterClient';
 
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ['latin'],
@@ -78,16 +78,16 @@ export default function RootLayout({
                 'mx-3 mb-3',
                 'lg:mx-6 lg:mb-6',
               )}>
-                <NavClient />
+                <Nav />
                 <div className={clsx(
                   'min-h-[16rem] sm:min-h-[30rem]',
                   'mb-12',
                 )}>
                   {children}
                 </div>
-                <FooterClient />
+                <Footer />
               </main>
-              <CommandKClient />
+              <CommandK />
             </ThemeProvider>
           </MoreComponentsProvider>
           <Analytics debug={false} />

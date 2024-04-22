@@ -4,6 +4,7 @@ import { useState, useEffect, ReactNode } from 'react';
 import { AppStateContext } from './AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import usePathnames from '@/utility/usePathnames';
+import { getCurrentUser } from '@/auth/actions';
 
 export default function AppStateProvider({
   children,
@@ -14,6 +15,8 @@ export default function AppStateProvider({
 
   const [hasLoaded, setHasLoaded] =
     useState(false);
+  const [userEmail, setUserEmail] =
+    useState<string>();
   const [nextPhotoAnimation, setNextPhotoAnimation] =
     useState<AnimationConfig>();
   const [shouldRespondToKeyboardCommands, setShouldRespondToKeyboardCommands] =
@@ -25,6 +28,7 @@ export default function AppStateProvider({
 
   useEffect(() => {
     setHasLoaded?.(true);
+    getCurrentUser().then(user => setUserEmail?.(user?.email ?? undefined));
   }, [setHasLoaded]);
 
   return (
@@ -33,6 +37,9 @@ export default function AppStateProvider({
         previousPathname,
         hasLoaded,
         setHasLoaded,
+        isUserSignedIn: userEmail !== undefined,
+        userEmail,
+        setUserEmail,
         nextPhotoAnimation,
         setNextPhotoAnimation,
         shouldRespondToKeyboardCommands,

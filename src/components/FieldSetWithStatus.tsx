@@ -144,9 +144,9 @@ export default function FieldSetWithStatus({
                   Boolean(error) && 'error',
                 )}
               />}
-        <div>
+        {accessory && <div>
           {accessory}
-        </div>
+        </div>}
       </div>
     </div>
   );

@@ -4,6 +4,9 @@ import { AnimationConfig } from '@/components/AnimateItems';
 export interface AppStateContext {
   previousPathname?: string
   hasLoaded?: boolean
+  userEmail?: string
+  setUserEmail?: Dispatch<SetStateAction<string | undefined>>
+  isUserSignedIn?: boolean
   setHasLoaded?: Dispatch<SetStateAction<boolean>>
   nextPhotoAnimation?: AnimationConfig
   setNextPhotoAnimation?: Dispatch<SetStateAction<AnimationConfig | undefined>>

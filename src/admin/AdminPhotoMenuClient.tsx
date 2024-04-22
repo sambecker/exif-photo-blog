@@ -9,6 +9,7 @@ import { isPathFavs, isPhotoFav } from '@/tag';
 import { usePathname } from 'next/navigation';
 import { BiTrash } from 'react-icons/bi';
 import MoreMenu from '@/components/MoreMenu';
+import { useAppState } from '@/state/AppState';
 
 export default function AdminPhotoMenuClient({
   photo,
@@ -16,14 +17,16 @@ export default function AdminPhotoMenuClient({
 }: Omit<ComponentProps<typeof MoreMenu>, 'items'> & {
   photo: Photo
 }) {
+  const { isUserSignedIn } = useAppState();
+
   const isFav = isPhotoFav(photo);
   const path = usePathname();
   const shouldRedirectFav = isPathFavs(path) && isFav;
   const shouldRedirectDelete = pathForPhoto(photo.id) === path;
 
   return (
-    <>
-      <MoreMenu {...{
+    isUserSignedIn
+      ? <MoreMenu {...{
         items: [
           {
             label: 'Edit',
@@ -63,6 +66,6 @@ export default function AdminPhotoMenuClient({
         ],
         ...props,
       }}/>
-    </>
+      : null
   );
 }
