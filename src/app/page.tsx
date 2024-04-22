@@ -9,7 +9,7 @@ import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
 import PhotosLarge from '@/photo/PhotosLarge';
 import { MorePhotosRoot } from '@/photo/MorePhotosRoot';
 
-export const revalidate = 3600;
+export const dynamic = 'force-static';
 
 export async function generateMetadata(): Promise<Metadata> {
   // Make homepage queries resilient to error on first time setup
