@@ -171,7 +171,7 @@ export default function CommandKClient({
     }],
   }];
 
-  if (showDebugTools) {
+  if (isUserSignedIn && showDebugTools) {
     clientSections.push({
       heading: 'Debug Tools',
       accessory: <RiToolsFill size={16} className="translate-x-[-1px]" />,

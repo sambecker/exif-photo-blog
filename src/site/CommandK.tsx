@@ -11,7 +11,6 @@ import {
   pathForTag,
 } from './paths';
 import { formatCameraText } from '@/camera';
-import { authCachedSafe } from '@/auth/cache';
 import { photoQuantityText } from '@/photo';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 import { sortTagsObject } from '@/tag';
@@ -32,10 +31,6 @@ export default async function CommandK() {
     getUniqueCamerasCached().catch(() => []),
     getUniqueFilmSimulationsCached().catch(() => []),
   ]);
-
-  const session = await authCachedSafe();
-
-  const isAdminLoggedIn = Boolean(session?.user?.email);
 
   const SECTION_TAGS: CommandKSection = {
     heading: 'Tags',
@@ -81,7 +76,7 @@ export default async function CommandK() {
       SECTION_CAMERAS,
       SECTION_FILM,
     ]}
-    showDebugTools={isAdminLoggedIn && ADMIN_DEBUG_TOOLS_ENABLED}
+    showDebugTools={ADMIN_DEBUG_TOOLS_ENABLED}
     footer={photoQuantityText(count, false)}
   />;
 }
