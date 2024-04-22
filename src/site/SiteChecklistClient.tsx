@@ -338,8 +338,8 @@ export default function SiteChecklistClient({
           optional
           experimental
         >
-          Set environment variable to {'"1"'} to enable PPR
-          and static optimization, i.e., build pages ahead of time:
+          Set environment variable to {'"1"'} to enable
+          static optimization, i.e., build pages ahead of time:
           {renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE'])}
         </ChecklistRow>
         <ChecklistRow
