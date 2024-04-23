@@ -58,13 +58,14 @@ export default function NavClient({
                 'flex items-center',
                 'w-full min-h-[4rem]',
               )}>
-              <div className="flex-grow">
-                <ViewSwitcher
-                  currentSelection={switcherSelectionForPath()}
-                  showAdmin={showAdmin}
-                />
-              </div>
-              <div className="hidden xs:block text-right text-balance">
+              <ViewSwitcher
+                currentSelection={switcherSelectionForPath()}
+                showAdmin={showAdmin}
+              />
+              <div className={clsx(
+                'flex-grow text-right text-ellipsis overflow-hidden',
+                'hidden xs:block',
+              )}>
                 {renderLink(SITE_DOMAIN_OR_TITLE, PATH_ROOT)}
               </div>
             </div>]
