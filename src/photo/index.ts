@@ -64,7 +64,6 @@ export interface PhotoDbInsert extends PhotoExif {
   hidden?: boolean
   takenAt: string
   takenAtNaive: string
-  cacheKey?: string
 }
 
 // Raw db response
