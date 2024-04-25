@@ -29,6 +29,7 @@ import Spinner from '@/components/Spinner';
 import { getNextImageUrlForRequest } from '@/services/next-image';
 import useDelay from '@/utility/useDelay';
 import usePreventNavigation from '@/utility/usePreventNavigation';
+import useSwrClear from '@/state/useSwrClear';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -214,6 +215,8 @@ export default function PhotoForm({
     }
   };
 
+  const clearSwr = useSwrClear();
+
   return (
     <div className="space-y-8 max-w-[38rem] relative">
       {debugBlur && blurError &&
@@ -366,6 +369,7 @@ export default function PhotoForm({
           <SubmitButtonWithStatus
             disabled={!canFormBeSubmitted}
             onFormStatusChange={onFormStatusChange}
+            onSubmit={clearSwr}
             primary
           >
             {type === 'create' ? 'Create' : 'Update'}
