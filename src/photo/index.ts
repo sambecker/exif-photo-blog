@@ -64,6 +64,7 @@ export interface PhotoDbInsert extends PhotoExif {
   hidden?: boolean
   takenAt: string
   takenAtNaive: string
+  cacheKey?: string
 }
 
 // Raw db response
@@ -83,6 +84,7 @@ export interface Photo extends PhotoDb {
   exposureTimeFormatted?: string
   exposureCompensationFormatted?: string
   takenAtNaiveFormatted: string
+  cacheKey?: string
 }
 
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {

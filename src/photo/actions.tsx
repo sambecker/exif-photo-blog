@@ -220,5 +220,14 @@ export async function getPhotoItemsAction(query: string) {
     : [];
 }
 
-export const getPhotosAction = async (offset: number, limit: number) =>
-  getPhotosCachedCached({ offset, limit });
+export const getPhotosAction = async (
+  offset: number,
+  limit: number,
+  cacheKey: string,
+) =>
+  getPhotosCachedCached({ offset, limit }).then(photos =>
+    photos.map(photo => ({
+      ...photo,
+      cacheKey,
+    }))
+  );

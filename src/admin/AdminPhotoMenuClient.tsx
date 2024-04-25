@@ -10,6 +10,7 @@ import { usePathname } from 'next/navigation';
 import { BiTrash } from 'react-icons/bi';
 import MoreMenu from '@/components/MoreMenu';
 import { useAppState } from '@/state/AppState';
+import { useSWRConfig } from 'swr';
 
 export default function AdminPhotoMenuClient({
   photo,
@@ -23,6 +24,8 @@ export default function AdminPhotoMenuClient({
   const path = usePathname();
   const shouldRedirectFav = isPathFavs(path) && isFav;
   const shouldRedirectDelete = pathForPhoto(photo.id) === path;
+
+  const { mutate } = useSWRConfig();
 
   return (
     isUserSignedIn
@@ -46,7 +49,9 @@ export default function AdminPhotoMenuClient({
             action: () => toggleFavoritePhotoAction(
               photo.id,
               shouldRedirectFav,
-            ),
+            ).then(() => {
+              if (photo.cacheKey) { mutate( photo.cacheKey ); }
+            }),             
           }, {
             label: 'Delete',
             icon: <BiTrash

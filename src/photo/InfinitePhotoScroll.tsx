@@ -15,7 +15,7 @@ export default function InfinitePhotoScroll({
   itemsPerPage = 12,
   prefetch = true,
   triggerOnView = true,
-  debug,
+  debug = true,
 }: {
   key?: string
   initialOffset?: number
@@ -34,6 +34,7 @@ export default function InfinitePhotoScroll({
     return getPhotosAction(
       initialOffset + offset * itemsPerPage,
       itemsPerPage,
+      key,
     );
   }, [initialOffset, itemsPerPage, debug]);
 
