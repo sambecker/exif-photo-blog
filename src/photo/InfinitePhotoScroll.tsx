@@ -8,8 +8,10 @@ import SiteGrid from '@/components/SiteGrid';
 import Spinner from '@/components/Spinner';
 import { getPhotosAction } from '@/photo/actions';
 import { useAppState } from '@/state/AppState';
+import { Photo } from '.';
 
 export default function InfinitePhotoScroll({
+  initialPhotos,
   key = 'PHOTOS',
   initialOffset = 0,
   itemsPerPage = 12,
@@ -17,6 +19,7 @@ export default function InfinitePhotoScroll({
   triggerOnView = true,
   debug = true,
 }: {
+  initialPhotos?: Photo[]
   key?: string
   initialOffset?: number
   itemsPerPage?: number
@@ -29,8 +32,8 @@ export default function InfinitePhotoScroll({
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const fetcher = useCallback((key: string) => {
+    if (debug) { console.log('Fetching', key); }
     const offset = parseInt(key.split('-')[1]);
-    if (debug) { console.log('Fetching', offset); }
     return getPhotosAction(
       initialOffset + offset * itemsPerPage,
       itemsPerPage,
@@ -39,15 +42,16 @@ export default function InfinitePhotoScroll({
   }, [initialOffset, itemsPerPage, debug]);
 
   const { data, isLoading, error, mutate, size, setSize } = useSwrInfinite(
-    (size, prev: []) => prev && prev.length === 0
+    (size: number, prev: []) => prev && prev.length === 0
       ? null
       :`${key}-${size}`,
     fetcher,
-    { 
+    {
       revalidateOnFocus: isUserSignedIn,
       revalidateOnReconnect: isUserSignedIn,
       revalidateFirstPage: isUserSignedIn,
-    }
+      ...initialPhotos && { fallbackData: [initialPhotos] },
+    },
   );
 
   const isFinished = useMemo(() =>
@@ -56,7 +60,7 @@ export default function InfinitePhotoScroll({
 
   useEffect(() => {
     if (prefetch) {
-      preload(`${key}-${size}`, fetcher);
+      preload(`${key}-${size ?? 0 + 1}`, fetcher);
     }
   }, [prefetch, key, size, fetcher]);
 
