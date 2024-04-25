@@ -50,7 +50,7 @@ export default function AdminPhotoMenuClient({
               photo.id,
               shouldRedirectFav,
             ).then(() => {
-              if (photo.cacheKey) { mutate( photo.cacheKey ); }
+              if (photo.cacheKey) { mutate(photo.cacheKey); }
             }),             
           }, {
             label: 'Delete',
