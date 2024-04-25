@@ -135,8 +135,8 @@ importers:
         specifier: ^1.4.41
         version: 1.4.41(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       swr:
-        specifier: ^2.2.5
-        version: 2.2.5(react@18.2.0)
+        specifier: ^2.2.6-beta.1
+        version: 2.2.6-beta.1(react@18.2.0)
       tailwindcss:
         specifier: 3.4.3
         version: 3.4.3
@@ -3773,8 +3773,8 @@ packages:
     peerDependencies:
       react: ^16.11.0 || ^17.0.0 || ^18.0.0
 
-  swr@2.2.5:
-    resolution: {integrity: sha512-QtxqyclFeAsxEUeZIYmsaQ0UjimSq1RZ9Un7I68/0ClKK/U3LoyQunwkQfJZr2fc22DfIXLNDc2wFyTEikCUpg==}
+  swr@2.2.6-beta.1:
+    resolution: {integrity: sha512-YqC6vjeuHoGnx2JSMK/sophBhqO7+oQPNRM9kHWZ0mpb3RtyeqTmRr5osBywZHd24muvLziroPjYY60h/nuohw==}
     peerDependencies:
       react: ^16.11.0 || ^17.0.0 || ^18.0.0
 
@@ -8741,9 +8741,8 @@ snapshots:
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
 
-  swr@2.2.5(react@18.2.0):
+  swr@2.2.6-beta.1(react@18.2.0):
     dependencies:
-      client-only: 0.0.1
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
 
