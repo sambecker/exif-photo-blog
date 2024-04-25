@@ -20,6 +20,7 @@ import {
   deleteStorageUrl,
 } from '@/services/storage';
 import {
+  getPhotosCachedCached,
   revalidateAdminPaths,
   revalidateAllKeysAndPaths,
   revalidatePhoto,
@@ -218,3 +219,6 @@ export async function getPhotoItemsAction(query: string) {
     }]
     : [];
 }
+
+export const getPhotosAction = async (offset: number, limit: number) =>
+  getPhotosCachedCached({ offset, limit });

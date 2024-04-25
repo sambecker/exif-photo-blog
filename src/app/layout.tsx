@@ -12,6 +12,7 @@ import { ThemeProvider } from 'next-themes';
 import Nav from '@/site/Nav';
 import Footer from '@/site/Footer';
 import CommandK from '@/site/CommandK';
+import SWRConfigClient from '../state/SWRConfigClient';
 
 import '../site/globals.css';
 import '../site/sonner.css';
@@ -72,24 +73,26 @@ export default function RootLayout({
     >
       <body className={ibmPlexMono.variable}>
         <AppStateProvider>
-          <MoreComponentsProvider>
-            <ThemeProvider attribute="class">
-              <main className={clsx(
-                'mx-3 mb-3',
-                'lg:mx-6 lg:mb-6',
-              )}>
-                <Nav />
-                <div className={clsx(
-                  'min-h-[16rem] sm:min-h-[30rem]',
-                  'mb-12',
+          <SWRConfigClient>
+            <MoreComponentsProvider>
+              <ThemeProvider attribute="class">
+                <main className={clsx(
+                  'mx-3 mb-3',
+                  'lg:mx-6 lg:mb-6',
                 )}>
-                  {children}
-                </div>
-                <Footer />
-              </main>
-              <CommandK />
-            </ThemeProvider>
-          </MoreComponentsProvider>
+                  <Nav />
+                  <div className={clsx(
+                    'min-h-[16rem] sm:min-h-[30rem]',
+                    'mb-12',
+                  )}>
+                    {children}
+                  </div>
+                  <Footer />
+                </main>
+                <CommandK />
+              </ThemeProvider>
+            </MoreComponentsProvider>
+          </SWRConfigClient>
           <Analytics debug={false} />
           <SpeedInsights debug={false}  />
           <PhotoEscapeHandler />
