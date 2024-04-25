@@ -2,7 +2,7 @@
 
 import { SWRConfig } from 'swr';
 
-export default function SwrConfigClient({
+export default function SWRConfigClient({
   children,
 }: {
   children: React.ReactNode

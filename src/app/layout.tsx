@@ -12,7 +12,7 @@ import { ThemeProvider } from 'next-themes';
 import Nav from '@/site/Nav';
 import Footer from '@/site/Footer';
 import CommandK from '@/site/CommandK';
-import SwrConfigClient from '../state/SwrConfigClient';
+import SWRConfigClient from '../state/SWRConfigClient';
 
 import '../site/globals.css';
 import '../site/sonner.css';
@@ -73,7 +73,7 @@ export default function RootLayout({
     >
       <body className={ibmPlexMono.variable}>
         <AppStateProvider>
-          <SwrConfigClient>
+          <SWRConfigClient>
             <MoreComponentsProvider>
               <ThemeProvider attribute="class">
                 <main className={clsx(
@@ -92,7 +92,7 @@ export default function RootLayout({
                 <CommandK />
               </ThemeProvider>
             </MoreComponentsProvider>
-          </SwrConfigClient>
+          </SWRConfigClient>
           <Analytics debug={false} />
           <SpeedInsights debug={false}  />
           <PhotoEscapeHandler />
