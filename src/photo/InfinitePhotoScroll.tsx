@@ -7,6 +7,7 @@ import { useCallback, useEffect, useMemo, useRef } from 'react';
 import SiteGrid from '@/components/SiteGrid';
 import Spinner from '@/components/Spinner';
 import { getPhotosAction } from '@/photo/actions';
+import { useAppState } from '@/state/AppState';
 
 export default function InfinitePhotoScroll({
   key = 'PHOTOS',
@@ -23,6 +24,8 @@ export default function InfinitePhotoScroll({
   triggerOnView?: boolean
   debug?: boolean
 }) {
+  const { isUserSignedIn } = useAppState();
+
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const fetcher = useCallback((key: string) => {
@@ -40,9 +43,9 @@ export default function InfinitePhotoScroll({
       :`${key}-${size}`,
     fetcher,
     { 
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateFirstPage: false,
+      revalidateOnFocus: isUserSignedIn,
+      revalidateOnReconnect: isUserSignedIn,
+      revalidateFirstPage: isUserSignedIn,
     }
   );
 
