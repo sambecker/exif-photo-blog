@@ -10,7 +10,8 @@ import { getPhotosAction } from '@/photo/actions';
 import { useAppState } from '@/state/AppState';
 import { Photo } from '.';
 
-export type RevalidatePhotos = (
+export type RevalidatePhoto = (
+  photoId: string,
   revalidateRemainingPhotos?: boolean,
 ) => Promise<any>;
 
@@ -80,21 +81,22 @@ export default function InfinitePhotoScroll({
     }
   }, [triggerOnView, advance]);
 
+  const photos = useMemo(() => (data ?? [])?.flat(), [data]);
+
+  const revalidatePhoto: RevalidatePhoto = useCallback((
+    photoId: string,
+    revalidateRemainingPhotos?: boolean,
+  ) => mutate(data, {
+    revalidate: (_data: Photo[], [_, size]:[string, number]) => {
+      const i = (data ?? []).findIndex(photos =>
+        photos.some(photo => photo.id === photoId));
+      return revalidateRemainingPhotos ? size >= i : size === i;
+    },
+  } as any), [data, mutate]);
+
   return (
     <div className="space-y-4">
-      {data && <div className="space-y-1">
-        {data.map((photos, i) =>
-          <PhotosLarge
-            key={i}
-            photos={photos}
-            revalidatePhotos={(revalidateRemainingPhotos?: boolean) =>
-              mutate(data, {
-                revalidate: (_data: any, [_, size]:[string, number]) =>
-                  revalidateRemainingPhotos ? size >= i : size === i,
-              } as any)
-            }
-          />)}
-      </div>}
+      <PhotosLarge {...{ photos, revalidatePhoto }} />
       {!isFinished &&
         <SiteGrid
           contentMain={

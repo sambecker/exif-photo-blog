@@ -21,7 +21,7 @@ import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import PhotoLink from './PhotoLink';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
 import AdminPhotoMenuClient from '@/admin/AdminPhotoMenuClient';
-import { RevalidatePhotos } from './InfinitePhotoScroll';
+import { RevalidatePhoto } from './InfinitePhotoScroll';
 
 export default function PhotoLarge({
   photo,
@@ -42,7 +42,7 @@ export default function PhotoLarge({
   priority?: boolean
   prefetch?: boolean
   prefetchRelatedLinks?: boolean
-  revalidatePhoto?: RevalidatePhotos
+  revalidatePhoto?: RevalidatePhoto
   showCamera?: boolean
   showSimulation?: boolean
   shouldShareTag?: boolean

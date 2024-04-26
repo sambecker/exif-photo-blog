@@ -10,7 +10,7 @@ import { usePathname } from 'next/navigation';
 import { BiTrash } from 'react-icons/bi';
 import MoreMenu from '@/components/MoreMenu';
 import { useAppState } from '@/state/AppState';
-import { RevalidatePhotos } from '@/photo/InfinitePhotoScroll';
+import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 
 export default function AdminPhotoMenuClient({
   photo,
@@ -18,7 +18,7 @@ export default function AdminPhotoMenuClient({
   ...props
 }: Omit<ComponentProps<typeof MoreMenu>, 'items'> & {
   photo: Photo
-  revalidatePhoto?: RevalidatePhotos
+  revalidatePhoto?: RevalidatePhoto
 }) {
   const { isUserSignedIn } = useAppState();
 
@@ -49,7 +49,7 @@ export default function AdminPhotoMenuClient({
             action: () => toggleFavoritePhotoAction(
               photo.id,
               shouldRedirectFav,
-            ).then(() => revalidatePhoto?.()),
+            ).then(() => revalidatePhoto?.(photo.id)),
           }, {
             label: 'Delete',
             icon: <BiTrash
@@ -62,7 +62,7 @@ export default function AdminPhotoMenuClient({
                   photo.id,
                   photo.url,
                   shouldRedirectDelete,
-                ).then(() => revalidatePhoto?.(true));
+                ).then(() => revalidatePhoto?.(photo.id, true));
               }
             },
           },
