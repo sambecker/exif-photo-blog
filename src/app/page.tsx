@@ -7,6 +7,7 @@ import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
 import InfinitePhotoScroll from '../photo/InfinitePhotoScroll';
+import PhotosLarge from '@/photo/PhotosLarge';
 
 export const dynamic = 'force-static';
 
@@ -29,8 +30,9 @@ export default async function HomePage() {
   return (
     photos.length > 0
       ? <div className="space-y-1">
+        <PhotosLarge {...{ photos }} />
         <InfinitePhotoScroll
-          initialPhotos={photos}
+          initialOffset={INFINITE_SCROLL_MULTIPLE_HOME}
           itemsPerPage={INFINITE_SCROLL_MULTIPLE_HOME}
         />
       </div>

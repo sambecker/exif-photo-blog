@@ -8,10 +8,8 @@ import SiteGrid from '@/components/SiteGrid';
 import Spinner from '@/components/Spinner';
 import { getPhotosAction } from '@/photo/actions';
 import { useAppState } from '@/state/AppState';
-import { Photo } from '.';
 
 export default function InfinitePhotoScroll({
-  initialPhotos,
   key = 'PHOTOS',
   initialOffset = 0,
   itemsPerPage = 12,
@@ -19,7 +17,6 @@ export default function InfinitePhotoScroll({
   triggerOnView = true,
   debug = true,
 }: {
-  initialPhotos?: Photo[]
   key?: string
   initialOffset?: number
   itemsPerPage?: number
@@ -50,7 +47,6 @@ export default function InfinitePhotoScroll({
       revalidateOnFocus: isUserSignedIn,
       revalidateOnReconnect: isUserSignedIn,
       revalidateFirstPage: isUserSignedIn,
-      ...initialPhotos && { fallbackData: [initialPhotos] },
     },
   );
 
@@ -88,20 +84,21 @@ export default function InfinitePhotoScroll({
     <div className="space-y-4">
       {photos && <PhotosLarge photos={photos} />}
       {!isFinished &&
-        <SiteGrid contentMain={
-          <button
-            ref={buttonRef}
-            onClick={error ? () => mutate() : advance}
-            disabled={isLoading}
-            className="w-full flex justify-center"
-          >
-            {error
-              ? 'Try Again'
-              : isLoading
-                ? <Spinner size={20} />
-                : 'Load More'}
-          </button>
-        } />}
+        <SiteGrid
+          contentMain={
+            <button
+              ref={buttonRef}
+              onClick={error ? () => mutate() : advance}
+              disabled={isLoading}
+              className="w-full flex justify-center"
+            >
+              {error
+                ? 'Try Again'
+                : isLoading
+                  ? <Spinner size={20} />
+                  : 'Load More'}
+            </button>
+          } />}
     </div>
   );
 }
