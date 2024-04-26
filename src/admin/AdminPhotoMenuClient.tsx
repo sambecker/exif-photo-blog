@@ -62,9 +62,7 @@ export default function AdminPhotoMenuClient({
                   photo.id,
                   photo.url,
                   shouldRedirectDelete,
-                ).then(() => {
-                  revalidatePhoto?.(true);
-                });
+                ).then(() => revalidatePhoto?.(true));
               }
             },
           },

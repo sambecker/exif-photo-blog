@@ -10,7 +10,9 @@ import { getPhotosAction } from '@/photo/actions';
 import { useAppState } from '@/state/AppState';
 import { Photo } from '.';
 
-export type RevalidatePhotos = (revalidateRemainingPhotos?: boolean) => void;
+export type RevalidatePhotos = (
+  revalidateRemainingPhotos?: boolean,
+) => Promise<any>;
 
 export default function InfinitePhotoScroll({
   key = 'PHOTOS',
@@ -85,12 +87,12 @@ export default function InfinitePhotoScroll({
           <PhotosLarge
             key={i}
             photos={photos}
-            revalidatePhotos={(revalidateRemainingPhotos?: boolean) => {
+            revalidatePhotos={(revalidateRemainingPhotos?: boolean) =>
               mutate(data, {
                 revalidate: (_data: any, [_, size]:[string, number]) =>
                   revalidateRemainingPhotos ? size >= i : size === i,
-              } as any);
-            }}
+              } as any)
+            }
           />)}
       </div>}
       {!isFinished &&
