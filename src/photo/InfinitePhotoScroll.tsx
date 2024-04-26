@@ -9,6 +9,9 @@ import Spinner from '@/components/Spinner';
 import { getPhotosAction } from '@/photo/actions';
 import { useAppState } from '@/state/AppState';
 import { Photo } from '.';
+import PhotoGrid from './PhotoGrid';
+
+const KEY = 'PHOTOS';
 
 export type RevalidatePhoto = (
   photoId: string,
@@ -16,13 +19,13 @@ export type RevalidatePhoto = (
 ) => Promise<any>;
 
 export default function InfinitePhotoScroll({
-  key = 'PHOTOS',
+  type = 'full-frame',
   initialOffset = 0,
   itemsPerPage = 12,
   prefetch = true,
   triggerOnView = true,
 }: {
-  key?: string
+  type?: 'full-frame' | 'grid'
   initialOffset?: number
   itemsPerPage?: number
   prefetch?: boolean
@@ -44,7 +47,7 @@ export default function InfinitePhotoScroll({
     useSwrInfinite<Photo[]>(
       (size: number, prev: []) => prev && prev.length === 0
         ? null
-        : [key, size],
+        : [KEY, size],
       fetcher,
       {
         revalidateOnFocus: isUserSignedIn,
@@ -59,9 +62,9 @@ export default function InfinitePhotoScroll({
 
   useEffect(() => {
     if (prefetch) {
-      preload([key, size ?? 0 + 1], fetcher);
+      preload([KEY, size ?? 0 + 1], fetcher);
     }
-  }, [prefetch, key, size, fetcher]);
+  }, [prefetch, size, fetcher]);
 
   const advance = useCallback(() => setSize(size => size + 1), [setSize]);
 
@@ -94,25 +97,28 @@ export default function InfinitePhotoScroll({
     },
   } as any), [data, mutate]);
 
+  const renderMoreButton = () =>
+    <button
+      ref={buttonRef}
+      onClick={error ? () => mutate() : advance}
+      disabled={isLoading}
+      className="w-full flex justify-center"
+    >
+      {error
+        ? 'Try Again'
+        : isLoading
+          ? <Spinner size={20} />
+          : 'Load More'}
+    </button>;
+
   return (
     <div className="space-y-4">
-      <PhotosLarge {...{ photos, revalidatePhoto }} />
-      {!isFinished &&
-        <SiteGrid
-          contentMain={
-            <button
-              ref={buttonRef}
-              onClick={error ? () => mutate() : advance}
-              disabled={isLoading}
-              className="w-full flex justify-center"
-            >
-              {error
-                ? 'Try Again'
-                : isLoading
-                  ? <Spinner size={20} />
-                  : 'Load More'}
-            </button>
-          } />}
+      {type === 'full-frame'
+        ? <PhotosLarge {...{ photos, revalidatePhoto }} />
+        : <PhotoGrid {...{ photos }} />}
+      {!isFinished && type === 'full-frame'
+        ? <SiteGrid contentMain={renderMoreButton()} />
+        : renderMoreButton()}
     </div>
   );
 }

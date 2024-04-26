@@ -10,7 +10,7 @@ import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
 import { Metadata } from 'next/types';
 import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
 import { getPhotoSidebarDataCached } from '@/photo/data';
-import { MorePhotosGrid } from '@/photo/MorePhotosGrid';
+import InfinitePhotoScroll from '@/photo/InfinitePhotoScroll';
 
 export const dynamic = 'force-static';
 
@@ -36,10 +36,10 @@ export default async function GridPage() {
       ? <SiteGrid
         contentMain={<div className="space-y-0.5 sm:space-y-1">
           <PhotoGrid {...{ photos, photoPriority: true }} />
-          <MorePhotosGrid
+          <InfinitePhotoScroll
+            type='grid'
             initialOffset={INFINITE_SCROLL_MULTIPLE_GRID}
-            itemsPerRequest={INFINITE_SCROLL_MULTIPLE_GRID}
-            totalPhotosCount={photosCount}
+            itemsPerPage={INFINITE_SCROLL_MULTIPLE_GRID}
           />
         </div>}
         contentSide={<div className="sticky top-4 space-y-4 mt-[-4px]">
