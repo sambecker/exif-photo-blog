@@ -78,11 +78,11 @@ export default function InfinitePhotoScroll({
     }
   }, [triggerOnView, advance]);
 
-  const photos = useMemo(() => data?.flat(), [data]);
-
   return (
     <div className="space-y-4">
-      {photos && <PhotosLarge photos={photos} />}
+      {data && <div className="space-y-1">
+        {data.map((photos, i) => <PhotosLarge key={i} photos={photos} />)}
+      </div>}
       {!isFinished &&
         <SiteGrid
           contentMain={
