@@ -1,15 +1,18 @@
 import AnimateItems from '@/components/AnimateItems';
 import { Photo } from '.';
 import PhotoLarge from './PhotoLarge';
+import { RevalidatePhotos } from './InfinitePhotoScroll';
 
 export default function PhotosLarge({
   photos,
   animate = true,
   prefetchFirstPhotoLinks,
+  revalidatePhotos,
 }: {
   photos: Photo[]
   animate?: boolean
   prefetchFirstPhotoLinks?: boolean
+  revalidatePhotos?: RevalidatePhotos
 }) {
   return (
     <AnimateItems
@@ -25,6 +28,7 @@ export default function PhotosLarge({
           photo={photo}
           priority={index <= 1}
           prefetchRelatedLinks={prefetchFirstPhotoLinks && index === 0}
+          revalidatePhoto={revalidatePhotos}
         />)}
       itemKeys={photos.map(photo => photo.id)}
     />

@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Photo,
   altTextForPhoto,
@@ -19,6 +21,7 @@ import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import PhotoLink from './PhotoLink';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
 import AdminPhotoMenuClient from '@/admin/AdminPhotoMenuClient';
+import { RevalidatePhotos } from './InfinitePhotoScroll';
 
 export default function PhotoLarge({
   photo,
@@ -26,6 +29,7 @@ export default function PhotoLarge({
   priority,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
   prefetchRelatedLinks = SHOULD_PREFETCH_ALL_LINKS,
+  revalidatePhoto,
   showCamera = true,
   showSimulation = true,
   shouldShareTag,
@@ -38,6 +42,7 @@ export default function PhotoLarge({
   priority?: boolean
   prefetch?: boolean
   prefetchRelatedLinks?: boolean
+  revalidatePhoto?: RevalidatePhotos
   showCamera?: boolean
   showSimulation?: boolean
   shouldShareTag?: boolean
@@ -87,7 +92,10 @@ export default function PhotoLarge({
                 prefetch={prefetch}
               />
               <div className="absolute right-0 translate-y-[-4px] z-10">
-                <AdminPhotoMenuClient photo={photo} />
+                <AdminPhotoMenuClient {...{
+                  photo,
+                  revalidatePhoto,
+                }} />
               </div>
             </div>
             <div className="space-y-baseline">

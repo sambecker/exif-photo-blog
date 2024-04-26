@@ -83,7 +83,6 @@ export interface Photo extends PhotoDb {
   exposureTimeFormatted?: string
   exposureCompensationFormatted?: string
   takenAtNaiveFormatted: string
-  cacheKey?: string
 }
 
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
