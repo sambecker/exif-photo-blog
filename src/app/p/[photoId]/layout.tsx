@@ -12,11 +12,9 @@ import {
   absolutePathForPhotoImage,
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotoIds, getPhotosNearId } from '@/services/vercel-postgres';
+import { getPhotoIds } from '@/services/vercel-postgres';
 import { STATICALLY_OPTIMIZED } from '@/site/config';
-import { cache } from 'react';
-
-const getPhotosNearIdCached = cache(getPhotosNearId);
+import { getPhotosNearIdCachedCached } from '@/photo/cache';
 
 export let generateStaticParams:
   (() => Promise<{ photoId: string }[]>) | undefined = undefined;
@@ -35,7 +33,7 @@ interface PhotoProps {
 export async function generateMetadata({
   params: { photoId },
 }:PhotoProps): Promise<Metadata> {
-  const { photo } = await getPhotosNearIdCached(
+  const { photo } = await getPhotosNearIdCachedCached(
     photoId,
     GRID_THUMBNAILS_TO_SHOW_MAX + 2,
   );
@@ -69,7 +67,7 @@ export default async function PhotoPage({
   params: { photoId },
   children,
 }: PhotoProps & { children: React.ReactNode }) {
-  const { photos, photo } = await getPhotosNearIdCached(
+  const { photos, photo } = await getPhotosNearIdCachedCached(
     photoId,
     GRID_THUMBNAILS_TO_SHOW_MAX + 2,
   );
