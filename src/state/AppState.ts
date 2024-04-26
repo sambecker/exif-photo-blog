@@ -4,6 +4,8 @@ import { AnimationConfig } from '@/components/AnimateItems';
 export interface AppStateContext {
   previousPathname?: string
   hasLoaded?: boolean
+  swrTimestamp?: number
+  invalidateSwr?: () => void
   userEmail?: string
   setUserEmail?: Dispatch<SetStateAction<string | undefined>>
   isUserSignedIn?: boolean

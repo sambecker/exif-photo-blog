@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import AdminGrid from './AdminGrid';
+import AdminTable from './AdminTable';
 import Link from 'next/link';
 import ImageTiny from '@/components/ImageTiny';
 import { StorageListResponse, fileNameForStorageUrl } from '@/services/storage';
@@ -19,7 +19,7 @@ export default function StorageUrls({
   urls: StorageListResponse
 }) {
   return (
-    <AdminGrid {...{ title }} >
+    <AdminTable {...{ title }} >
       {urls.map(({ url, uploadedAt }) => {
         const addUploadPath = pathForAdminUploadUrl(url);
         const uploadFileName = fileNameForStorageUrl(url);
@@ -70,6 +70,6 @@ export default function StorageUrls({
             </FormWithConfirm>
           </div>
         </Fragment>;})}
-    </AdminGrid>
+    </AdminTable>
   );
 }

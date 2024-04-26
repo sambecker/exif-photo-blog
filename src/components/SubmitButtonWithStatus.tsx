@@ -35,12 +35,10 @@ export default function SubmitButtonWithStatus({
   const pendingPrevious = useRef(pending);
 
   useEffect(() => {
-    if (
-      pendingPrevious.current &&
-      !pending &&
-      onFormSubmitToastMessage
-    ) {
-      toastSuccess(onFormSubmitToastMessage);
+    if (pending && !pendingPrevious.current) {
+      if (onFormSubmitToastMessage) {
+        toastSuccess(onFormSubmitToastMessage);
+      }
       onFormSubmit?.();
     }
     pendingPrevious.current = pending;

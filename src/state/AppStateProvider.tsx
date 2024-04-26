@@ -15,6 +15,8 @@ export default function AppStateProvider({
 
   const [hasLoaded, setHasLoaded] =
     useState(false);
+  const [swrTimestamp, setSwrTimestamp] =
+    useState(Date.now());
   const [userEmail, setUserEmail] =
     useState<string>();
   const [nextPhotoAnimation, setNextPhotoAnimation] =
@@ -25,6 +27,8 @@ export default function AppStateProvider({
     useState(false);
   const [shouldShowBaselineGrid, setShouldShowBaselineGrid] =
     useState(false);
+
+  const invalidateSwr = useCallback(() => setSwrTimestamp(Date.now()), []);
 
   const captureUser = useCallback(() =>
     getCurrentUser().then(user => setUserEmail?.(user?.email ?? undefined))
@@ -40,6 +44,8 @@ export default function AppStateProvider({
       value={{
         previousPathname,
         hasLoaded,
+        swrTimestamp,
+        invalidateSwr,
         setHasLoaded,
         isUserSignedIn: userEmail !== undefined,
         userEmail,

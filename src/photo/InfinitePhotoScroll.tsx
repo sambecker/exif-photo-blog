@@ -10,6 +10,7 @@ import { getPhotosAction } from '@/photo/actions';
 import { Photo } from '.';
 import PhotoGrid from './PhotoGrid';
 import { clsx } from 'clsx/lite';
+import { useAppState } from '@/state/AppState';
 
 export type RevalidatePhoto = (
   photoId: string,
@@ -17,14 +18,12 @@ export type RevalidatePhoto = (
 ) => Promise<any>;
 
 export default function InfinitePhotoScroll({
-  swrKey,
   type = 'full-frame',
   initialOffset = 0,
   itemsPerPage = 12,
   prefetch = true,
   triggerOnView = true,
 }: {
-  swrKey: string
   type?: 'full-frame' | 'grid'
   initialOffset?: number
   itemsPerPage?: number
@@ -32,9 +31,15 @@ export default function InfinitePhotoScroll({
   triggerOnView?: boolean
   debug?: boolean
 }) {
-  const key = `${swrKey}-${type}`;
+  const { swrTimestamp } = useAppState();
 
-  const buttonContainerRef = useRef<HTMLDivElement>(null);
+  const key = `${swrTimestamp}-${type}`;
+
+  const keyGenerator = useCallback(
+    (size: number, prev: Photo[]) => prev && prev.length === 0
+      ? null
+      : [key, size]
+    , [key]);
 
   const fetcher = useCallback(([_key, size]: [string, number]) =>
     getPhotosAction(
@@ -45,13 +50,13 @@ export default function InfinitePhotoScroll({
 
   const { data, isLoading, isValidating, error, mutate, size, setSize } =
     useSwrInfinite<Photo[]>(
-      (size: number, prev: []) => prev && prev.length === 0
-        ? null
-        : [key, size],
+      keyGenerator,
       fetcher,
       { revalidateFirstPage: false },
     );
 
+  const buttonContainerRef = useRef<HTMLDivElement>(null);
+  
   const isLoadingOrValidating = isLoading || isValidating;
 
   const isFinished = useMemo(() =>

@@ -1,7 +1,7 @@
 import { clsx } from 'clsx/lite';
 import { ReactNode } from 'react';
 
-export default function AdminGrid ({
+export default function AdminTable ({
   title,
   children,
 }: {

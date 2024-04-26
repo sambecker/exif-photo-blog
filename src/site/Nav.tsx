@@ -8,6 +8,7 @@ import { SITE_DOMAIN_OR_TITLE } from '@/site/config';
 import ViewSwitcher, { SwitcherSelection } from '@/site/ViewSwitcher';
 import {
   PATH_ROOT,
+  isPathAdmin,
   isPathGrid,
   isPathProtected,
   isPathSignIn,
@@ -15,11 +16,7 @@ import {
 import AnimateItems from '../components/AnimateItems';
 import { useAppState } from '@/state/AppState';
 
-export default function Nav({
-  animate = true,
-}: {
-  animate?: boolean,
-}) {
+export default function Nav() {
   const pathname = usePathname();
 
   const { isUserSignedIn } = useAppState();
@@ -49,7 +46,7 @@ export default function Nav({
       contentMain={
         <AnimateItems
           animateOnFirstLoadOnly
-          type={animate ? 'bottom' : 'none'}
+          type={!isPathAdmin(pathname) ? 'bottom' : 'none'}
           distanceOffset={10}
           items={showNav
             ? [<div
