@@ -11,8 +11,6 @@ import { useAppState } from '@/state/AppState';
 import { Photo } from '.';
 import PhotoGrid from './PhotoGrid';
 
-const KEY = 'PHOTOS';
-
 export type RevalidatePhoto = (
   photoId: string,
   revalidateRemainingPhotos?: boolean,
@@ -32,6 +30,8 @@ export default function InfinitePhotoScroll({
   triggerOnView?: boolean
   debug?: boolean
 }) {
+  const key = type;
+
   const { isUserSignedIn } = useAppState();
 
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -47,7 +47,7 @@ export default function InfinitePhotoScroll({
     useSwrInfinite<Photo[]>(
       (size: number, prev: []) => prev && prev.length === 0
         ? null
-        : [KEY, size],
+        : [key, size],
       fetcher,
       {
         revalidateOnFocus: isUserSignedIn,
@@ -62,9 +62,9 @@ export default function InfinitePhotoScroll({
 
   useEffect(() => {
     if (prefetch) {
-      preload([KEY, size ?? 0 + 1], fetcher);
+      preload([key, size ?? 0 + 1], fetcher);
     }
-  }, [prefetch, size, fetcher]);
+  }, [prefetch, key, size, fetcher]);
 
   const advance = useCallback(() => setSize(size => size + 1), [setSize]);
 
