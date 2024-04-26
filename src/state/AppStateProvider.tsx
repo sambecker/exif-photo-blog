@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, ReactNode } from 'react';
+import { useState, useEffect, ReactNode, useCallback } from 'react';
 import { AppStateContext } from './AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import usePathnames from '@/utility/usePathnames';
@@ -26,10 +26,14 @@ export default function AppStateProvider({
   const [shouldShowBaselineGrid, setShouldShowBaselineGrid] =
     useState(false);
 
+  const captureUser = useCallback(() =>
+    getCurrentUser().then(user => setUserEmail?.(user?.email ?? undefined))
+  , []);
+
   useEffect(() => {
     setHasLoaded?.(true);
-    getCurrentUser().then(user => setUserEmail?.(user?.email ?? undefined));
-  }, [setHasLoaded]);
+    captureUser().catch(() => setTimeout(captureUser, 2000));
+  }, [captureUser]);
 
   return (
     <AppStateContext.Provider
