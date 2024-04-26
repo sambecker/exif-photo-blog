@@ -72,7 +72,7 @@ export default function InfinitePhotoScroll({
     // Only add observer if button is rendered
     if (buttonRef.current) {
       const observer = new IntersectionObserver(e => {
-        if (triggerOnView && e[0].isIntersecting) {
+        if (triggerOnView && e.some(e => e.isIntersecting)) {
           advance();
         }
       }, {
@@ -116,9 +116,9 @@ export default function InfinitePhotoScroll({
       {type === 'full-frame'
         ? <PhotosLarge {...{ photos, revalidatePhoto }} />
         : <PhotoGrid {...{ photos }} />}
-      {!isFinished && type === 'full-frame'
+      {!isFinished && (type === 'full-frame'
         ? <SiteGrid contentMain={renderMoreButton()} />
-        : renderMoreButton()}
+        : renderMoreButton())}
     </div>
   );
 }
