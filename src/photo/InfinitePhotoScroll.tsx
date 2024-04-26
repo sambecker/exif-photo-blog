@@ -50,6 +50,8 @@ export default function InfinitePhotoScroll({
       { revalidateFirstPage: false },
     );
 
+  const isLoadingOrValidating = isLoading || isValidating;
+
   const isFinished = useMemo(() =>
     data && data[data.length - 1]?.length < itemsPerPage
   , [data, itemsPerPage]);
@@ -60,18 +62,26 @@ export default function InfinitePhotoScroll({
     }
   }, [prefetch, isFinished, key, size, fetcher]);
 
-  const advance = useCallback(() => {
-    if (!isFinished) {
+  const advance = useCallback((advanceWhileStillVisible?: boolean) => {
+    if (!isFinished && !isLoadingOrValidating) {
       setSize(size => size + 1);
+      if (advanceWhileStillVisible) {
+        setTimeout(() => {
+          const rect = buttonContainerRef.current?.getBoundingClientRect();
+          if (rect && rect.top >= 0) {
+            advance(true);
+          }
+        }, 1000);
+      }
     }
-  }, [isFinished, setSize]);
+  }, [isFinished, setSize, isLoadingOrValidating]);
 
   useEffect(() => {
     // Only add observer if button is rendered
     if (buttonContainerRef.current) {
       const observer = new IntersectionObserver(e => {
         if (triggerOnView && e[0].isIntersecting) {
-          advance();
+          advance(true);
         }
       }, {
         root: null,
@@ -102,16 +112,16 @@ export default function InfinitePhotoScroll({
       className="-translate-y-32 pt-32 -mb-32"
     >
       <button
-        onClick={error ? () => mutate() : advance}
+        onClick={() => error ? mutate() : advance()}
         disabled={isLoading || isValidating}
         className={clsx(
           'w-full flex justify-center',
-          isLoading || isValidating && 'subtle',
+          isLoadingOrValidating && 'subtle',
         )}
       >
         {error
           ? 'Try Again'
-          : isLoading || isValidating
+          : isLoadingOrValidating
             ? <Spinner size={20} />
             : 'Load More'}
       </button>
