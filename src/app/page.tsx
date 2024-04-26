@@ -31,10 +31,11 @@ export default async function HomePage() {
     photos.length > 0
       ? <div className="space-y-1">
         <PhotosLarge {...{ photos }} />
-        <InfinitePhotoScroll
-          initialOffset={INFINITE_SCROLL_MULTIPLE_HOME}
-          itemsPerPage={INFINITE_SCROLL_MULTIPLE_HOME}
-        />
+        {photos.length >= INFINITE_SCROLL_MULTIPLE_HOME &&
+          <InfinitePhotoScroll
+            initialOffset={INFINITE_SCROLL_MULTIPLE_HOME}
+            itemsPerPage={INFINITE_SCROLL_MULTIPLE_HOME}
+          />}
       </div>
       : <PhotosEmptyState />
   );

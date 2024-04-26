@@ -36,11 +36,12 @@ export default async function GridPage() {
       ? <SiteGrid
         contentMain={<div className="space-y-0.5 sm:space-y-1">
           <PhotoGrid {...{ photos, photoPriority: true }} />
-          <InfinitePhotoScroll
-            type='grid'
-            initialOffset={INFINITE_SCROLL_MULTIPLE_GRID}
-            itemsPerPage={INFINITE_SCROLL_MULTIPLE_GRID}
-          />
+          {photos.length >= INFINITE_SCROLL_MULTIPLE_GRID &&
+            <InfinitePhotoScroll
+              type='grid'
+              initialOffset={INFINITE_SCROLL_MULTIPLE_GRID}
+              itemsPerPage={INFINITE_SCROLL_MULTIPLE_GRID}
+            />}
         </div>}
         contentSide={<div className="sticky top-4 space-y-4 mt-[-4px]">
           <PhotoGridSidebar {...{

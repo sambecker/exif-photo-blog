@@ -7,9 +7,9 @@ import { useCallback, useEffect, useMemo, useRef } from 'react';
 import SiteGrid from '@/components/SiteGrid';
 import Spinner from '@/components/Spinner';
 import { getPhotosAction } from '@/photo/actions';
-import { useAppState } from '@/state/AppState';
 import { Photo } from '.';
 import PhotoGrid from './PhotoGrid';
+import { clsx } from 'clsx/lite';
 
 export type RevalidatePhoto = (
   photoId: string,
@@ -32,9 +32,7 @@ export default function InfinitePhotoScroll({
 }) {
   const key = type;
 
-  const { isUserSignedIn } = useAppState();
-
-  const buttonRef = useRef<HTMLButtonElement>(null);
+  const buttonContainerRef = useRef<HTMLDivElement>(null);
 
   const fetcher = useCallback(([_key, size]: [string, number]) =>
     getPhotosAction(
@@ -43,17 +41,13 @@ export default function InfinitePhotoScroll({
     )
   , [initialOffset, itemsPerPage]);
 
-  const { data, isLoading, error, mutate, size, setSize } =
+  const { data, isLoading, isValidating, error, mutate, size, setSize } =
     useSwrInfinite<Photo[]>(
       (size: number, prev: []) => prev && prev.length === 0
         ? null
         : [key, size],
       fetcher,
-      {
-        revalidateOnFocus: isUserSignedIn,
-        revalidateOnReconnect: isUserSignedIn,
-        revalidateFirstPage: isUserSignedIn,
-      },
+      { revalidateFirstPage: false },
     );
 
   const isFinished = useMemo(() =>
@@ -61,25 +55,29 @@ export default function InfinitePhotoScroll({
   , [data, itemsPerPage]);
 
   useEffect(() => {
-    if (prefetch) {
-      preload([key, size ?? 0 + 1], fetcher);
+    if (prefetch && !isFinished) {
+      preload([key, (size ?? 0) + 1], fetcher);
     }
-  }, [prefetch, key, size, fetcher]);
+  }, [prefetch, isFinished, key, size, fetcher]);
 
-  const advance = useCallback(() => setSize(size => size + 1), [setSize]);
+  const advance = useCallback(() => {
+    if (!isFinished) {
+      setSize(size => size + 1);
+    }
+  }, [isFinished, setSize]);
 
   useEffect(() => {
     // Only add observer if button is rendered
-    if (buttonRef.current) {
+    if (buttonContainerRef.current) {
       const observer = new IntersectionObserver(e => {
-        if (triggerOnView && e.some(e => e.isIntersecting)) {
+        if (triggerOnView && e[0].isIntersecting) {
           advance();
         }
       }, {
         root: null,
         threshold: 0,
       });
-      observer.observe(buttonRef.current);
+      observer.observe(buttonContainerRef.current);
       return () => observer.disconnect();
     }
   }, [triggerOnView, advance]);
@@ -98,18 +96,26 @@ export default function InfinitePhotoScroll({
   } as any), [data, mutate]);
 
   const renderMoreButton = () =>
-    <button
-      ref={buttonRef}
-      onClick={error ? () => mutate() : advance}
-      disabled={isLoading}
-      className="w-full flex justify-center"
+    <div
+      ref={buttonContainerRef}
+      // Make button bounding visible earlier
+      className="-translate-y-32 pt-32 -mb-32"
     >
-      {error
-        ? 'Try Again'
-        : isLoading
-          ? <Spinner size={20} />
-          : 'Load More'}
-    </button>;
+      <button
+        onClick={error ? () => mutate() : advance}
+        disabled={isLoading || isValidating}
+        className={clsx(
+          'w-full flex justify-center',
+          isLoading || isValidating && 'subtle',
+        )}
+      >
+        {error
+          ? 'Try Again'
+          : isLoading || isValidating
+            ? <Spinner size={20} />
+            : 'Load More'}
+      </button>
+    </div>;
 
   return (
     <div className="space-y-4">
