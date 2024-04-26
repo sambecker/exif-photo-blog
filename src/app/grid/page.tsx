@@ -38,6 +38,7 @@ export default async function GridPage() {
           <PhotoGrid {...{ photos, photoPriority: true }} />
           {photos.length >= INFINITE_SCROLL_MULTIPLE_GRID &&
             <InfinitePhotoScroll
+              swrKey={photos[0].id}
               type='grid'
               initialOffset={INFINITE_SCROLL_MULTIPLE_GRID}
               itemsPerPage={INFINITE_SCROLL_MULTIPLE_GRID}

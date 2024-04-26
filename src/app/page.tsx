@@ -33,6 +33,8 @@ export default async function HomePage() {
         <PhotosLarge {...{ photos }} />
         {photos.length >= INFINITE_SCROLL_MULTIPLE_HOME &&
           <InfinitePhotoScroll
+            swrKey={photos[0].id}
+            type="full-frame"
             initialOffset={INFINITE_SCROLL_MULTIPLE_HOME}
             itemsPerPage={INFINITE_SCROLL_MULTIPLE_HOME}
           />}

@@ -17,12 +17,14 @@ export type RevalidatePhoto = (
 ) => Promise<any>;
 
 export default function InfinitePhotoScroll({
+  swrKey,
   type = 'full-frame',
   initialOffset = 0,
   itemsPerPage = 12,
   prefetch = true,
   triggerOnView = true,
 }: {
+  swrKey: string
   type?: 'full-frame' | 'grid'
   initialOffset?: number
   itemsPerPage?: number
@@ -30,7 +32,7 @@ export default function InfinitePhotoScroll({
   triggerOnView?: boolean
   debug?: boolean
 }) {
-  const key = type;
+  const key = `${swrKey}-${type}`;
 
   const buttonContainerRef = useRef<HTMLDivElement>(null);
 
