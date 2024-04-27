@@ -80,7 +80,7 @@ export default function InfinitePhotoScroll({
       if (advanceWhileStillVisible) {
         setTimeout(() => {
           const rect = buttonContainerRef.current?.getBoundingClientRect();
-          if (rect && rect.top >= 0) {
+          if (rect && rect.top <= window.innerHeight) {
             advance(true);
           }
         }, 1000);
