@@ -10,7 +10,6 @@ import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
 import InfinitePhotoScroll from '../photo/InfinitePhotoScroll';
 import PhotosLarge from '@/photo/PhotosLarge';
 
-export const dynamic = 'force-static';
 export const revalidate = 1;
 
 export async function generateMetadata(): Promise<Metadata> {
