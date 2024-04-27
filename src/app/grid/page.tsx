@@ -1,6 +1,7 @@
 import { getPhotosCached } from '@/photo/cache';
 import SiteGrid from '@/components/SiteGrid';
 import {
+  INFINITE_SCROLL_INITIAL_GRID,
   INFINITE_SCROLL_MULTIPLE_GRID,
   generateOgImageMetaForPhotos,
 } from '@/photo';
@@ -27,7 +28,7 @@ export default async function GridPage() {
     cameras,
     simulations,
   ] = await Promise.all([
-    getPhotosCached({ limit: INFINITE_SCROLL_MULTIPLE_GRID }),
+    getPhotosCached({ limit: INFINITE_SCROLL_INITIAL_GRID }),
     ...getPhotoSidebarDataCached(),
   ]);
 
@@ -36,10 +37,10 @@ export default async function GridPage() {
       ? <SiteGrid
         contentMain={<div className="space-y-0.5 sm:space-y-1">
           <PhotoGrid {...{ photos }} />
-          {photos.length >= INFINITE_SCROLL_MULTIPLE_GRID &&
+          {photosCount >= photos.length &&
             <InfinitePhotoScroll
               type='grid'
-              initialOffset={INFINITE_SCROLL_MULTIPLE_GRID}
+              initialOffset={INFINITE_SCROLL_INITIAL_GRID}
               itemsPerPage={INFINITE_SCROLL_MULTIPLE_GRID}
             />}
         </div>}

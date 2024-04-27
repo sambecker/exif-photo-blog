@@ -22,12 +22,12 @@ export type RevalidatePhoto = (
 
 export default function InfinitePhotoScroll({
   type = 'full-frame',
-  initialOffset = 0,
-  itemsPerPage = 12,
+  initialOffset,
+  itemsPerPage,
 }: {
-  type?: 'full-frame' | 'grid'
-  initialOffset?: number
-  itemsPerPage?: number
+  type: 'full-frame' | 'grid'
+  initialOffset: number
+  itemsPerPage: number
   debug?: boolean
 }) {
   const { swrTimestamp, isUserSignedIn } = useAppState();

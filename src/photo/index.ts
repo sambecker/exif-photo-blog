@@ -15,11 +15,19 @@ import type { Metadata } from 'next';
 
 export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 
-export const INFINITE_SCROLL_MULTIPLE_HOME =
+// ROOT PAGE
+export const INFINITE_SCROLL_INITIAL_HOME =
   process.env.NODE_ENV === 'development' ? 2 : 12;
-export const INFINITE_SCROLL_MULTIPLE_GRID = HIGH_DENSITY_GRID
+export const INFINITE_SCROLL_MULTIPLE_HOME =
+  process.env.NODE_ENV === 'development' ? 2 : 24;
+
+// GRID PAGE
+export const INFINITE_SCROLL_INITIAL_GRID = HIGH_DENSITY_GRID
   ? process.env.NODE_ENV === 'development' ? 4 : 20
   : process.env.NODE_ENV === 'development' ? 4 : 24;
+export const INFINITE_SCROLL_MULTIPLE_GRID = HIGH_DENSITY_GRID
+  ? process.env.NODE_ENV === 'development' ? 4 : 40
+  : process.env.NODE_ENV === 'development' ? 4 : 48;
 
 export const GRID_THUMBNAILS_TO_SHOW_MAX = 12;
 
