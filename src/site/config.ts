@@ -19,7 +19,9 @@ const VERCEL_PRODUCTION_URL =
 const VERCEL_DEPLOYMENT_URL = process.env.NEXT_PUBLIC_VERCEL_URL;
 const VERCEL_BRANCH_URL = process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL;
 const VERCEL_BRANCH = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF;
-const VERCEL_PROJECT_URL = VERCEL_BRANCH_URL && VERCEL_BRANCH
+
+// Cannot reliably be used
+export const VERCEL_PROJECT_URL = VERCEL_BRANCH_URL && VERCEL_BRANCH
   ? `${VERCEL_BRANCH_URL.split(`-git-${VERCEL_BRANCH}-`)[0]}.vercel.app`
   : undefined;
 
@@ -27,7 +29,7 @@ const VERCEL_PROJECT_URL = VERCEL_BRANCH_URL && VERCEL_BRANCH
 const SITE_DOMAIN =
   process.env.NEXT_PUBLIC_SITE_DOMAIN ||
   VERCEL_PRODUCTION_URL ||
-  VERCEL_PROJECT_URL;
+  VERCEL_DEPLOYMENT_URL;
 
 // Used primarily for absolute references such as OG images
 export const BASE_URL = makeUrlAbsolute((
