@@ -29,6 +29,7 @@ export const VERCEL_PROJECT_URL = VERCEL_BRANCH_URL && VERCEL_BRANCH
 const SITE_DOMAIN =
   process.env.NEXT_PUBLIC_SITE_DOMAIN ||
   VERCEL_PRODUCTION_URL ||
+  process.env.VERCEL_PROJECT_PRODUCTION_URL ||
   VERCEL_DEPLOYMENT_URL;
 
 // Used primarily for absolute references such as OG images
