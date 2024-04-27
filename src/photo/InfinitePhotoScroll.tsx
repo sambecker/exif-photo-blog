@@ -3,7 +3,12 @@
 import { preload } from 'swr';
 import useSwrInfinite from 'swr/infinite';
 import PhotosLarge from '@/photo/PhotosLarge';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import SiteGrid from '@/components/SiteGrid';
 import Spinner from '@/components/Spinner';
 import { getPhotosAction } from '@/photo/actions';
@@ -74,17 +79,9 @@ export default function InfinitePhotoScroll({
     }
   }, [prefetch, isFinished, key, size, fetcher]);
 
-  const advance = useCallback((advanceWhileStillVisible?: boolean) => {
+  const advance = useCallback(() => {
     if (!isFinished && !isLoadingOrValidating) {
       setSize(size => size + 1);
-      if (advanceWhileStillVisible) {
-        setTimeout(() => {
-          const rect = buttonContainerRef.current?.getBoundingClientRect();
-          if (rect && rect.top <= window.innerHeight) {
-            advance(true);
-          }
-        }, 1000);
-      }
     }
   }, [isFinished, setSize, isLoadingOrValidating]);
 
@@ -93,7 +90,7 @@ export default function InfinitePhotoScroll({
     if (buttonContainerRef.current) {
       const observer = new IntersectionObserver(e => {
         if (triggerOnView && e[0].isIntersecting) {
-          advance(true);
+          advance();
         }
       }, {
         root: null,
@@ -103,6 +100,19 @@ export default function InfinitePhotoScroll({
       return () => observer.disconnect();
     }
   }, [triggerOnView, advance]);
+
+  // Poll for button getting stuck
+  useEffect(() => {
+    if (triggerOnView && !isFinished && !isLoadingOrValidating) {
+      const interval = setInterval(() => {
+        const rect = buttonContainerRef.current?.getBoundingClientRect();
+        if (rect && rect.top <= window.innerHeight) {
+          advance();
+        }
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [advance, isFinished, isLoadingOrValidating, triggerOnView]);
 
   const photos = useMemo(() => (data ?? [])?.flat(), [data]);
 
