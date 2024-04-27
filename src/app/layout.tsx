@@ -7,7 +7,6 @@ import AppStateProvider from '@/state/AppStateProvider';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
 import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
 import { Metadata } from 'next/types';
-import MoreComponentsProvider from '@/state/MoreComponentsProvider';
 import { ThemeProvider } from 'next-themes';
 import Nav from '@/site/Nav';
 import Footer from '@/site/Footer';
@@ -74,24 +73,22 @@ export default function RootLayout({
       <body className={ibmPlexMono.variable}>
         <AppStateProvider>
           <SwrConfigClient>
-            <MoreComponentsProvider>
-              <ThemeProvider attribute="class">
-                <main className={clsx(
-                  'mx-3 mb-3',
-                  'lg:mx-6 lg:mb-6',
+            <ThemeProvider attribute="class">
+              <main className={clsx(
+                'mx-3 mb-3',
+                'lg:mx-6 lg:mb-6',
+              )}>
+                <Nav />
+                <div className={clsx(
+                  'min-h-[16rem] sm:min-h-[30rem]',
+                  'mb-12',
                 )}>
-                  <Nav />
-                  <div className={clsx(
-                    'min-h-[16rem] sm:min-h-[30rem]',
-                    'mb-12',
-                  )}>
-                    {children}
-                  </div>
-                  <Footer />
-                </main>
-                <CommandK />
-              </ThemeProvider>
-            </MoreComponentsProvider>
+                  {children}
+                </div>
+                <Footer />
+              </main>
+              <CommandK />
+            </ThemeProvider>
           </SwrConfigClient>
           <Analytics debug={false} />
           <SpeedInsights debug={false}  />
