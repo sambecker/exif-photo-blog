@@ -24,6 +24,7 @@ import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
 import { createCameraKey } from '@/camera';
 import {
   PATHS_ADMIN,
+  PATHS_TO_CACHE,
   PATH_ADMIN,
   PATH_GRID,
   PATH_ROOT,
@@ -101,13 +102,13 @@ export const revalidateAllKeys = () => {
   revalidateFilmSimulationsKey();
 };
 
-export const revalidateAllKeysAndPaths = () => {
-  revalidateAllKeys();
-  revalidatePath('/', 'layout');
-};
-
 export const revalidateAdminPaths = () => {
   PATHS_ADMIN.forEach(path => revalidatePath(path));
+};
+
+export const revalidateAllKeysAndPaths = () => {
+  revalidateAllKeys();
+  PATHS_TO_CACHE.forEach(path => revalidatePath(path, 'layout'));
 };
 
 export const revalidatePhoto = (photoId: string) => {
