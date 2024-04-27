@@ -13,8 +13,6 @@ import {
 import camelcaseKeys from 'camelcase-keys';
 import type { Metadata } from 'next';
 
-export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
-
 // ROOT PAGE
 export const INFINITE_SCROLL_INITIAL_HOME =
   process.env.NODE_ENV === 'development' ? 2 : 12;

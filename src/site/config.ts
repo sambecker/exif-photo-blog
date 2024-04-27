@@ -103,8 +103,6 @@ export const CURRENT_STORAGE: StorageType =
 
 export const PRO_MODE_ENABLED =
   process.env.NEXT_PUBLIC_PRO_MODE === '1';
-export const STATICALLY_OPTIMIZED =
-  process.env.NEXT_PUBLIC_STATICALLY_OPTIMIZE === '1';
 export const BLUR_ENABLED =
   process.env.NEXT_PUBLIC_BLUR_DISABLED !== '1';
 export const GEO_PRIVACY_ENABLED =
@@ -156,7 +154,6 @@ export const CONFIG_CHECKLIST_STATUS = {
   showFilmSimulations: SHOW_FILM_SIMULATIONS,
   showExifInfo: SHOW_EXIF_DATA,
   isProModeEnabled: PRO_MODE_ENABLED,
-  isStaticallyOptimized: STATICALLY_OPTIMIZED,
   isBlurEnabled: BLUR_ENABLED,
   isGeoPrivacyEnabled: GEO_PRIVACY_ENABLED,
   isAiTextGenerationEnabled: AI_TEXT_GENERATION_ENABLED,
