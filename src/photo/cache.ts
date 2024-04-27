@@ -119,7 +119,7 @@ export const revalidatePhoto = (photoId: string) => {
   // Paths
   revalidatePath(pathForPhoto(photoId), 'layout');
   revalidatePath(PATH_ROOT, 'layout');
-  revalidatePath(PATH_GRID);
+  revalidatePath(PATH_GRID, 'layout');
   revalidatePath(PREFIX_TAG, 'layout');
   revalidatePath(PREFIX_CAMERA, 'layout');
   revalidatePath(PREFIX_FILM_SIMULATION, 'layout');
