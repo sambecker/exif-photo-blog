@@ -35,17 +35,10 @@ import {
 } from '@/site/paths';
 import { extractExifDataFromBlobPath } from './server';
 import { TAG_FAVS, isTagFavs } from '@/tag';
-import { TbPhoto } from 'react-icons/tb';
-import PhotoTiny from './PhotoTiny';
-import {
-  convertPhotoToPhotoDbInsert,
-  getKeywordsForPhoto,
-  titleForPhoto,
-} from '.';
+import { convertPhotoToPhotoDbInsert } from '.';
 import { safelyRunAdminServerAction } from '@/auth';
 import { AI_IMAGE_QUERIES, AiImageQuery } from './ai';
 import { streamOpenAiImageQuery } from '@/services/openai';
-import PhotoDate from './PhotoDate';
 
 export async function createPhotoAction(formData: FormData) {
   return safelyRunAdminServerAction(async () => {
@@ -202,23 +195,9 @@ export async function streamAiImageQueryAction(
     streamOpenAiImageQuery(imageBase64, AI_IMAGE_QUERIES[query]));
 }
 
-export async function getPhotoItemsAction(query: string) {
-  const photos = (await getPhotos({ query, limit: 10 }))
-    .filter(({ title }) => Boolean(title));
-  return photos.length > 0
-    ? [{
-      heading: 'Photos',
-      accessory: <TbPhoto size={14} />,
-      items: photos.map(photo => ({
-        label: titleForPhoto(photo),
-        keywords: getKeywordsForPhoto(photo),
-        annotation: <PhotoDate {...{ photo }} />,
-        accessory: <PhotoTiny photo={photo} />,
-        path: pathForPhoto(photo),
-      })),
-    }]
-    : [];
-}
-
 export const getPhotosAction = async (offset: number, limit: number) =>
   getPhotosCachedCached({ offset, limit });
+
+export const queryPhotosByTitleAction = async (query: string) =>
+  (await getPhotos({ query, limit: 10 }))
+    .filter(({ title }) => Boolean(title));

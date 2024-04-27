@@ -16,6 +16,7 @@ import {
   PATH_ADMIN_TAGS,
   PATH_ADMIN_UPLOADS,
   PATH_SIGN_IN,
+  pathForPhoto,
 } from '../site/paths';
 import Modal from './Modal';
 import { clsx } from 'clsx/lite';
@@ -26,11 +27,15 @@ import { useTheme } from 'next-themes';
 import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
 import { IoInvertModeSharp } from 'react-icons/io5';
 import { useAppState } from '@/state/AppState';
-import { getPhotoItemsAction } from '@/photo/actions';
+import { queryPhotosByTitleAction } from '@/photo/actions';
 import { RiToolsFill } from 'react-icons/ri';
 import { BiLockAlt, BiSolidUser } from 'react-icons/bi';
 import { HiDocumentText } from 'react-icons/hi';
 import { signOutAndRedirectAction } from '@/auth/actions';
+import { TbPhoto } from 'react-icons/tb';
+import { getKeywordsForPhoto, titleForPhoto } from '@/photo';
+import PhotoDate from '@/photo/PhotoDate';
+import PhotoTiny from '@/photo/PhotoTiny';
 
 const LISTENER_KEYDOWN = 'keydown';
 const MINIMUM_QUERY_LENGTH = 2;
@@ -118,9 +123,21 @@ export default function CommandKClient({
   useEffect(() => {
     if (queryDebounced.length >= MINIMUM_QUERY_LENGTH && !isPending) {
       setIsLoading(true);
-      getPhotoItemsAction(queryDebounced).then(querySections => {
+      queryPhotosByTitleAction(queryDebounced).then(photos => {
         if (isOpenRef.current) {
-          setQueriedSections(querySections);
+          setQueriedSections(photos.length > 0
+            ? [{
+              heading: 'Photos',
+              accessory: <TbPhoto size={14} />,
+              items: photos.map(photo => ({
+                label: titleForPhoto(photo),
+                keywords: getKeywordsForPhoto(photo),
+                annotation: <PhotoDate {...{ photo }} />,
+                accessory: <PhotoTiny photo={photo} />,
+                path: pathForPhoto(photo),
+              })),
+            }]
+            : []);
         } else {
           // Ignore stale requests that come in after dialog is closed
           setQueriedSections([]);
