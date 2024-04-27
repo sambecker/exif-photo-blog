@@ -118,7 +118,7 @@ export const revalidatePhoto = (photoId: string) => {
   revalidateFilmSimulationsKey();
   // Paths
   revalidatePath(pathForPhoto(photoId), 'layout');
-  revalidatePath(PATH_ROOT);
+  revalidatePath(PATH_ROOT, 'layout');
   revalidatePath(PATH_GRID);
   revalidatePath(PREFIX_TAG, 'layout');
   revalidatePath(PREFIX_CAMERA, 'layout');
