@@ -14,6 +14,8 @@ export const SITE_TITLE =
   'Photo Blog';
 
 const VERCEL_ENV = process.env.NEXT_PUBLIC_VERCEL_ENV;
+const VERCEL_PRODUCTION_URL =
+  process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL;
 const VERCEL_DEPLOYMENT_URL = process.env.NEXT_PUBLIC_VERCEL_URL;
 const VERCEL_BRANCH_URL = process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL;
 const VERCEL_BRANCH = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF;
@@ -24,6 +26,7 @@ const VERCEL_PROJECT_URL = VERCEL_BRANCH_URL && VERCEL_BRANCH
 // User-facing domain, potential site title
 const SITE_DOMAIN =
   process.env.NEXT_PUBLIC_SITE_DOMAIN ||
+  VERCEL_PRODUCTION_URL ||
   VERCEL_PROJECT_URL;
 
 // Used primarily for absolute references such as OG images
