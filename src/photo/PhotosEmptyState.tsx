@@ -27,7 +27,7 @@ export default function PhotosEmptyState() {
             {!IS_SITE_READY ? 'Finish Setup' : 'Setup Complete!'}
           </div>
           {!IS_SITE_READY
-            ? <SiteChecklist />
+            ? <SiteChecklist simplifiedView />
             : <div className="max-w-md text-center space-y-6">
               <div className="space-y-2">
                 <div>
