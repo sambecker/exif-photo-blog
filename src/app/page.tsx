@@ -11,6 +11,7 @@ import InfinitePhotoScroll from '../photo/InfinitePhotoScroll';
 import PhotosLarge from '@/photo/PhotosLarge';
 
 export const dynamic = 'force-static';
+export const revalidate = 1;
 
 export async function generateMetadata(): Promise<Metadata> {
   // Make homepage queries resilient to error on first time setup

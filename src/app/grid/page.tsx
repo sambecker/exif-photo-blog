@@ -14,6 +14,7 @@ import { getPhotoSidebarDataCached } from '@/photo/data';
 import InfinitePhotoScroll from '@/photo/InfinitePhotoScroll';
 
 export const dynamic = 'force-static';
+export const revalidate = 1;
 
 export async function generateMetadata(): Promise<Metadata> {
   const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG });
