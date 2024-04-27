@@ -39,7 +39,7 @@ export default async function HomePage() {
     photos.length > 0
       ? <div className="space-y-1">
         <PhotosLarge {...{ photos }} />
-        {photosCount >= photos.length &&
+        {photosCount > photos.length &&
           <InfinitePhotoScroll
             type="full-frame"
             initialOffset={INFINITE_SCROLL_INITIAL_HOME}

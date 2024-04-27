@@ -37,7 +37,7 @@ export default async function GridPage() {
       ? <SiteGrid
         contentMain={<div className="space-y-0.5 sm:space-y-1">
           <PhotoGrid {...{ photos }} />
-          {photosCount >= photos.length &&
+          {photosCount > photos.length &&
             <InfinitePhotoScroll
               type='grid'
               initialOffset={INFINITE_SCROLL_INITIAL_GRID}
