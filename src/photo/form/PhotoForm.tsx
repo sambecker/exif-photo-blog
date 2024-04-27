@@ -260,7 +260,12 @@ export default function PhotoForm({
           </div>
         </div>
         <CanvasBlurCapture
-          imageUrl={getNextImageUrlForRequest(url, 640)}
+          imageUrl={getNextImageUrlForRequest(
+            url,
+            640,
+            undefined,
+            window.location.origin,
+          )}
           width={width}
           height={height}
           onLoad={aiContent?.setImageData}
