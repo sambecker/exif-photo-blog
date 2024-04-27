@@ -12,7 +12,7 @@ import { ThemeProvider } from 'next-themes';
 import Nav from '@/site/Nav';
 import Footer from '@/site/Footer';
 import CommandK from '@/site/CommandK';
-import SWRConfigClient from '../state/SWRConfigClient';
+import SWRConfigClient from '../state/SWRConfigClient2';
 
 import '../site/globals.css';
 import '../site/sonner.css';
