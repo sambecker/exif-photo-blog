@@ -2,7 +2,12 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { clsx } from 'clsx/lite';
 import { IBM_Plex_Mono } from 'next/font/google';
-import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from '@/site/config';
+import {
+  BASE_URL,
+  SITE_DESCRIPTION,
+  SITE_DOMAIN_OR_TITLE,
+  SITE_TITLE,
+} from '@/site/config';
 import AppStateProvider from '@/state/AppStateProvider';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
 import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
@@ -78,7 +83,7 @@ export default function RootLayout({
                 'mx-3 mb-3',
                 'lg:mx-6 lg:mb-6',
               )}>
-                <Nav />
+                <Nav siteDomainOrTitle={SITE_DOMAIN_OR_TITLE} />
                 <div className={clsx(
                   'min-h-[16rem] sm:min-h-[30rem]',
                   'mb-12',

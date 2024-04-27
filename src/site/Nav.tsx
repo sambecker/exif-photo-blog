@@ -4,7 +4,6 @@ import { clsx } from 'clsx/lite';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import SiteGrid from '../components/SiteGrid';
-import { SITE_DOMAIN_OR_TITLE } from '@/site/config';
 import ViewSwitcher, { SwitcherSelection } from '@/site/ViewSwitcher';
 import {
   PATH_ROOT,
@@ -16,7 +15,11 @@ import {
 import AnimateItems from '../components/AnimateItems';
 import { useAppState } from '@/state/AppState';
 
-export default function Nav() {
+export default function Nav({
+  siteDomainOrTitle,
+}: {
+  siteDomainOrTitle: string;
+}) {
   const pathname = usePathname();
 
   const { isUserSignedIn } = useAppState();
@@ -63,7 +66,7 @@ export default function Nav() {
                 'flex-grow text-right text-ellipsis overflow-hidden',
                 'hidden xs:block',
               )}>
-                {renderLink(SITE_DOMAIN_OR_TITLE, PATH_ROOT)}
+                {renderLink(siteDomainOrTitle, PATH_ROOT)}
               </div>
             </div>]
             : []}
