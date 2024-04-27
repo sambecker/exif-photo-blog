@@ -8,11 +8,13 @@ export default function PhotosLarge({
   animate = true,
   prefetchFirstPhotoLinks,
   revalidatePhoto,
+  onLastPhotoVisible,
 }: {
   photos: Photo[]
   animate?: boolean
   prefetchFirstPhotoLinks?: boolean
   revalidatePhoto?: RevalidatePhoto
+  onLastPhotoVisible?: () => void
 }) {
   return (
     <AnimateItems
@@ -29,6 +31,9 @@ export default function PhotosLarge({
           priority={index <= 1}
           prefetchRelatedLinks={prefetchFirstPhotoLinks && index === 0}
           revalidatePhoto={revalidatePhoto}
+          onVisible={index === photos.length - 1
+            ? onLastPhotoVisible
+            : undefined}
         />)}
       itemKeys={photos.map(photo => photo.id)}
     />

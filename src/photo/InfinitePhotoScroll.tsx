@@ -1,11 +1,9 @@
 'use client';
 
-import { preload } from 'swr';
 import useSwrInfinite from 'swr/infinite';
 import PhotosLarge from '@/photo/PhotosLarge';
 import {
   useCallback,
-  useEffect,
   useMemo,
   useRef,
 } from 'react';
@@ -26,14 +24,10 @@ export default function InfinitePhotoScroll({
   type = 'full-frame',
   initialOffset = 0,
   itemsPerPage = 12,
-  prefetch = true,
-  triggerOnView = true,
 }: {
   type?: 'full-frame' | 'grid'
   initialOffset?: number
   itemsPerPage?: number
-  prefetch?: boolean
-  triggerOnView?: boolean
   debug?: boolean
 }) {
   const { swrTimestamp, isUserSignedIn } = useAppState();
@@ -46,20 +40,21 @@ export default function InfinitePhotoScroll({
       : [key, size]
     , [key]);
 
-  const fetcher = useCallback(([_key, size]: [string, number]) =>
-    getPhotosAction(
+  const fetcher = useCallback(([_key, size]: [string, number]) => {
+    console.log('Fetching', size);
+    return getPhotosAction(
       initialOffset + size * itemsPerPage,
       itemsPerPage,
-    )
-  , [initialOffset, itemsPerPage]);
+    );
+  }, [initialOffset, itemsPerPage]);
 
-  const { data, isLoading, isValidating, error, mutate, size, setSize } =
+  const { data, isLoading, isValidating, error, mutate, setSize } =
     useSwrInfinite<Photo[]>(
       keyGenerator,
       fetcher,
       {
-        revalidateFirstPage: Boolean(isUserSignedIn),
-        revalidateOnMount: Boolean(isUserSignedIn),
+        initialSize: 2,
+        revalidateFirstPage: false,
         revalidateOnFocus: Boolean(isUserSignedIn),
         revalidateOnReconnect: Boolean(isUserSignedIn),
       },
@@ -73,46 +68,11 @@ export default function InfinitePhotoScroll({
     data && data[data.length - 1]?.length < itemsPerPage
   , [data, itemsPerPage]);
 
-  useEffect(() => {
-    if (prefetch && !isFinished) {
-      preload([key, (size ?? 0) + 1], fetcher);
-    }
-  }, [prefetch, isFinished, key, size, fetcher]);
-
   const advance = useCallback(() => {
     if (!isFinished && !isLoadingOrValidating) {
       setSize(size => size + 1);
     }
-  }, [isFinished, setSize, isLoadingOrValidating]);
-
-  useEffect(() => {
-    // Only add observer if button is rendered
-    if (buttonContainerRef.current) {
-      const observer = new IntersectionObserver(e => {
-        if (triggerOnView && e[0].isIntersecting) {
-          advance();
-        }
-      }, {
-        root: null,
-        threshold: 0,
-      });
-      observer.observe(buttonContainerRef.current);
-      return () => observer.disconnect();
-    }
-  }, [triggerOnView, advance]);
-
-  // Poll for button getting stuck
-  useEffect(() => {
-    if (triggerOnView && !isFinished && !isLoadingOrValidating) {
-      const interval = setInterval(() => {
-        const rect = buttonContainerRef.current?.getBoundingClientRect();
-        if (rect && rect.top <= window.innerHeight) {
-          advance();
-        }
-      }, 1000);
-      return () => clearInterval(interval);
-    }
-  }, [advance, isFinished, isLoadingOrValidating, triggerOnView]);
+  }, [isFinished, isLoadingOrValidating, setSize]);
 
   const photos = useMemo(() => (data ?? [])?.flat(), [data]);
 
@@ -128,11 +88,7 @@ export default function InfinitePhotoScroll({
   } as any), [data, mutate]);
 
   const renderMoreButton = () =>
-    <div
-      ref={buttonContainerRef}
-      // Make button bounding visible earlier
-      className="-translate-y-32 pt-32 -mb-32"
-    >
+    <div ref={buttonContainerRef}>
       <button
         onClick={() => error ? mutate() : advance()}
         disabled={isLoading || isValidating}
@@ -152,8 +108,15 @@ export default function InfinitePhotoScroll({
   return (
     <div className="space-y-4">
       {type === 'full-frame'
-        ? <PhotosLarge {...{ photos, revalidatePhoto }} />
-        : <PhotoGrid {...{ photos }} />}
+        ? <PhotosLarge {...{
+          photos,
+          revalidatePhoto,
+          onLastPhotoVisible: advance,
+        }} />
+        : <PhotoGrid {...{
+          photos,
+          onLastPhotoVisible: advance,
+        }} />}
       {!isFinished && (type === 'full-frame'
         ? <SiteGrid contentMain={renderMoreButton()} />
         : renderMoreButton())}

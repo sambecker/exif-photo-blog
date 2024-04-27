@@ -1,12 +1,15 @@
 import { clsx } from 'clsx/lite';
+import { RefObject } from 'react';
 
 export default function SiteGrid({
+  containerRef,
   className,
   contentMain,
   contentSide,
   sideFirstOnMobile,
   sideHiddenOnMobile,
 }: {
+  containerRef?: RefObject<HTMLDivElement>
   className?: string
   contentMain: JSX.Element
   contentSide?: JSX.Element
@@ -14,14 +17,17 @@ export default function SiteGrid({
   sideHiddenOnMobile?: boolean
 }) {
   return (
-    <div className={clsx(
-      className,
-      'grid',
-      'grid-cols-1 md:grid-cols-12',
-      'gap-x-4 lg:gap-x-6',
-      'gap-y-4',
-      'max-w-7xl',
-    )}>
+    <div
+      ref={containerRef}
+      className={clsx(
+        className,
+        'grid',
+        'grid-cols-1 md:grid-cols-12',
+        'gap-x-4 lg:gap-x-6',
+        'gap-y-4',
+        'max-w-7xl',
+      )}
+    >
       <div className={clsx(
         'col-span-1 md:col-span-9',
         sideFirstOnMobile && 'order-2 md:order-none',

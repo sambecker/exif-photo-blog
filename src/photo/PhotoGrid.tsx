@@ -19,6 +19,7 @@ export default function PhotoGrid({
   staggerOnFirstLoadOnly = true,
   additionalTile,
   small,
+  onLastPhotoVisible,
 }: {
   photos: Photo[]
   selectedPhoto?: Photo
@@ -33,6 +34,7 @@ export default function PhotoGrid({
   showMorePath?: string
   additionalTile?: JSX.Element
   small?: boolean
+  onLastPhotoVisible?: () => void
 }) {
   return (
     <AnimateItems
@@ -51,7 +53,7 @@ export default function PhotoGrid({
       distanceOffset={40}
       animateOnFirstLoadOnly={animateOnFirstLoadOnly}
       staggerOnFirstLoadOnly={staggerOnFirstLoadOnly}
-      items={photos.map(photo =>
+      items={photos.map((photo, index) =>
         <div
           key={photo.id}
           className={GRID_ASPECT_RATIO !== 0
@@ -70,6 +72,9 @@ export default function PhotoGrid({
             simulation,
             selected: photo.id === selectedPhoto?.id,
             priority: photoPriority,
+            onVisible: index === photos.length - 1
+              ? onLastPhotoVisible
+              : undefined,
           }} />
         </div>).concat(additionalTile ?? [])}
       itemKeys={photos.map(photo => photo.id)
