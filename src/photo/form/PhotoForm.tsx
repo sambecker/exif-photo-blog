@@ -30,6 +30,7 @@ import { getNextImageUrlForRequest } from '@/services/next-image';
 import useDelay from '@/utility/useDelay';
 import usePreventNavigation from '@/utility/usePreventNavigation';
 import { useAppState } from '@/state/AppState';
+import { useRouter } from 'next/navigation';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -64,6 +65,13 @@ export default function PhotoForm({
   const [hasBlurData, setHasBlurData] = useState(false);
 
   const { invalidateSwr } = useAppState();
+
+  const router = useRouter();
+
+  const clearLocalState = useCallback(() => {
+    invalidateSwr?.();
+    router.refresh();
+  }, [invalidateSwr, router]);
 
   const changedFormKeys = useMemo(() =>
     getChangedFormFields(initialPhotoForm, formData),
@@ -374,14 +382,7 @@ export default function PhotoForm({
           <SubmitButtonWithStatus
             disabled={!canFormBeSubmitted}
             onFormStatusChange={onFormStatusChange}
-            onFormSubmitToastMessage={type === 'edit'
-              ? formData.title
-                ? `"${formData.title}" updated`
-                : 'Photo updated'
-              : formData.title
-                ? `"${formData.title}" created`
-                : 'Photo created'}
-            onFormSubmit={invalidateSwr}
+            onFormSubmit={clearLocalState}
             primary
           >
             {type === 'create' ? 'Create' : 'Update'}
