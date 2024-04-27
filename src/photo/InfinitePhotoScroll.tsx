@@ -31,7 +31,7 @@ export default function InfinitePhotoScroll({
   triggerOnView?: boolean
   debug?: boolean
 }) {
-  const { swrTimestamp } = useAppState();
+  const { swrTimestamp, isUserSignedIn } = useAppState();
 
   const key = `${swrTimestamp}-${type}`;
 
@@ -52,7 +52,12 @@ export default function InfinitePhotoScroll({
     useSwrInfinite<Photo[]>(
       keyGenerator,
       fetcher,
-      { revalidateFirstPage: false },
+      {
+        revalidateFirstPage: Boolean(isUserSignedIn),
+        revalidateOnMount: Boolean(isUserSignedIn),
+        revalidateOnFocus: Boolean(isUserSignedIn),
+        revalidateOnReconnect: Boolean(isUserSignedIn),
+      },
     );
 
   const buttonContainerRef = useRef<HTMLDivElement>(null);
