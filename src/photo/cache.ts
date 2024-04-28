@@ -35,7 +35,6 @@ import {
   pathForPhoto,
 } from '@/site/paths';
 import { cache } from 'react';
-import sleep from '@/utility/sleep';
 
 // Table key
 const KEY_PHOTOS            = 'photos';
@@ -108,19 +107,17 @@ export const revalidateAdminPaths = () => {
   PATHS_ADMIN.forEach(path => revalidatePath(path));
 };
 
-export const revalidateAllKeysAndPaths = async () => {
+export const revalidateAllKeysAndPaths = () => {
   revalidateAllKeys();
-  await sleep(2000);
   PATHS_TO_CACHE.forEach(path => revalidatePath(path, 'layout'));
 };
 
-export const revalidatePhoto = async (photoId: string) => {
+export const revalidatePhoto = (photoId: string) => {
   // Tags
   revalidateTag(photoId);
   revalidateTagsKey();
   revalidateCamerasKey();
   revalidateFilmSimulationsKey();
-  await sleep(2000);
   // Paths
   revalidatePath(pathForPhoto(photoId), 'layout');
   revalidatePath(PATH_ROOT, 'layout');
