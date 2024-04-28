@@ -7,14 +7,14 @@ export default function PhotosLarge({
   photos,
   animate = true,
   prefetchFirstPhotoLinks,
-  revalidatePhoto,
   onLastPhotoVisible,
+  revalidatePhoto,
 }: {
   photos: Photo[]
   animate?: boolean
   prefetchFirstPhotoLinks?: boolean
-  revalidatePhoto?: RevalidatePhoto
   onLastPhotoVisible?: () => void
+  revalidatePhoto?: RevalidatePhoto
 }) {
   return (
     <AnimateItems

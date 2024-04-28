@@ -241,6 +241,9 @@ export const isPathSignIn = (pathname?: string) =>
 export const isPathAdmin = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ADMIN);
 
+export const isPathTopLevelAdmin = (pathname?: string) =>
+  PATHS_ADMIN.some(path => path === pathname);
+
 export const isPathAdminConfiguration = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ADMIN_CONFIGURATION);
 

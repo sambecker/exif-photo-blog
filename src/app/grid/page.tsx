@@ -1,4 +1,3 @@
-import { getPhotosCached } from '@/photo/cache';
 import SiteGrid from '@/components/SiteGrid';
 import {
   INFINITE_SCROLL_INITIAL_GRID,
@@ -10,10 +9,14 @@ import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
 import { Metadata } from 'next/types';
 import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
-import { getPhotoSidebarDataCached } from '@/photo/data';
-import InfinitePhotoScroll from '@/photo/InfinitePhotoScroll';
+import { getPhotoSidebarData } from '@/photo/data';
+import { getPhotos } from '@/services/vercel-postgres';
+import { cache } from 'react';
+import PhotoGridInfinite from '@/photo/PhotoGridInfinite';
 
 export const dynamic = 'force-static';
+
+const getPhotosCached = cache(getPhotos);
 
 export async function generateMetadata(): Promise<Metadata> {
   const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG });
@@ -29,7 +32,7 @@ export default async function GridPage() {
     simulations,
   ] = await Promise.all([
     getPhotosCached({ limit: INFINITE_SCROLL_INITIAL_GRID }),
-    ...getPhotoSidebarDataCached(),
+    ...getPhotoSidebarData(),
   ]);
 
   return (
@@ -38,8 +41,7 @@ export default async function GridPage() {
         contentMain={<div className="space-y-0.5 sm:space-y-1">
           <PhotoGrid {...{ photos }} />
           {photosCount > photos.length &&
-            <InfinitePhotoScroll
-              type='grid'
+            <PhotoGridInfinite
               initialOffset={INFINITE_SCROLL_INITIAL_GRID}
               itemsPerPage={INFINITE_SCROLL_MULTIPLE_GRID}
             />}

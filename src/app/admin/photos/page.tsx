@@ -1,39 +1,35 @@
 import PhotoUpload from '@/photo/PhotoUpload';
 import { clsx } from 'clsx/lite';
 import SiteGrid from '@/components/SiteGrid';
-import { pathForAdminPhotos } from '@/site/paths';
 import { getPhotosCountIncludingHiddenCached } from '@/photo/cache';
-import {
-  PaginationParams,
-  getPaginationFromSearchParams,
-} from '@/site/pagination';
 import StorageUrls from '@/admin/StorageUrls';
 import { PRO_MODE_ENABLED } from '@/site/config';
 import { getStoragePhotoUrlsNoStore } from '@/services/storage/cache';
-import MoreComponentsFromSearchParams from
-  '@/components/MoreComponentsFromSearchParams';
 import { getPhotos } from '@/services/vercel-postgres';
 import { revalidatePath } from 'next/cache';
 import AdminPhotoTable from '@/admin/AdminPhotoTable';
+import AdminPhotoTableInfinite from
+  '@/admin/AdminPhotoTableInfinite';
 
 const DEBUG_PHOTO_BLOBS = false;
 
-export default async function AdminPhotosPage({
-  searchParams,
-}: PaginationParams) {
-  const { offset, limit } = getPaginationFromSearchParams(searchParams);
+const INFINITE_SCROLL_INITIAL_ADMIN_PHOTOS = 25;
+const INFINITE_SCROLL_MULTIPLE_ADMIN_PHOTOS = 50;
 
+export default async function AdminPhotosPage() {
   const [
     photos,
-    count,
+    photosCount,
     blobPhotoUrls,
   ] = await Promise.all([
-    getPhotos({ includeHidden: true, sortBy: 'createdAt', limit }),
+    getPhotos({
+      includeHidden: true,
+      sortBy: 'createdAt',
+      limit: INFINITE_SCROLL_INITIAL_ADMIN_PHOTOS,
+    }),
     getPhotosCountIncludingHiddenCached(),
     DEBUG_PHOTO_BLOBS ? getStoragePhotoUrlsNoStore() : [],
   ]);
-
-  const showMorePhotos = count > photos.length;
 
   return (
     <SiteGrid
@@ -59,10 +55,10 @@ export default async function AdminPhotosPage({
             </div>}
           <div className="space-y-4">
             <AdminPhotoTable photos={photos} />
-            {showMorePhotos &&
-              <MoreComponentsFromSearchParams
-                label="More photos"
-                path={pathForAdminPhotos(offset + 1)}
+            {photosCount > photos.length &&
+              <AdminPhotoTableInfinite
+                initialOffset={INFINITE_SCROLL_INITIAL_ADMIN_PHOTOS}
+                itemsPerPage={INFINITE_SCROLL_MULTIPLE_ADMIN_PHOTOS}
               />}
           </div>
         </div>}

@@ -24,7 +24,7 @@ export default function InfoBlock({
     case 'blue': return [
       'text-main',
       'bg-blue-50/50 border-blue-200',
-      'dark:bg-blue-950/30 dark:border-blue-700/45',
+      'dark:bg-blue-950/30 dark:border-blue-600/50',
     ];
     }
   };

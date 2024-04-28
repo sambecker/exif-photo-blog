@@ -6,6 +6,7 @@ import {
   PATH_ADMIN_CONFIGURATION,
   checkPathPrefix,
   isPathAdminConfiguration,
+  isPathTopLevelAdmin,
 } from '@/site/paths';
 import { useAppState } from '@/state/AppState';
 import { clsx } from 'clsx/lite';
@@ -16,6 +17,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { BiCog } from 'react-icons/bi';
 import { FaRegClock } from 'react-icons/fa';
 
+// Updates considered recent if they occurred in past 5 minutes
 const areTimesRecent = (dates: Date[]) => dates
   .some(date => differenceInMinutes(new Date(), date) < 5);
 
@@ -39,16 +41,19 @@ export default function AdminNavClient({
       .concat(adminUpdateTimes)
   , [mostRecentPhotoUpdateTime, adminUpdateTimes]);
 
-  const [shouldShowBanner, setShouldShowBanner] =
+  const [hasRecentUpdates, setHasRecentUpdates] =
     useState(areTimesRecent(updateTimes));
 
   useEffect(() => {
-    // Check every 10 seconds if update times are recent
-    const timeout = setTimeout(() =>
-      setShouldShowBanner(areTimesRecent(updateTimes))
-    , 10_000);
-    return () => clearTimeout(timeout);
+    // Check every 5 seconds if update times are recent
+    setHasRecentUpdates(areTimesRecent(updateTimes));
+    const interval = setInterval(() =>
+      setHasRecentUpdates(areTimesRecent(updateTimes))
+    , 5_000);
+    return () => clearInterval(interval);
   }, [updateTimes]);
+
+  const shouldShowBanner = hasRecentUpdates && isPathTopLevelAdmin(pathname);
 
   return (
     <SiteGrid
@@ -94,7 +99,7 @@ export default function AdminNavClient({
             <InfoBlock centered={false} padding="tight" color="blue">
               <div className="flex items-center gap-3">
                 <FaRegClock className="flex-shrink-0" />
-                Updates detected—they may take several minutes to show up
+                Photo updates detected—they may take several minutes to show up
                 for visitors
               </div>
             </InfoBlock>}

@@ -22,7 +22,8 @@ import PhotoLink from './PhotoLink';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
 import AdminPhotoMenuClient from '@/admin/AdminPhotoMenuClient';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
+import useOnVisible from '@/utility/useOnVisible';
 
 export default function PhotoLarge({
   photo,
@@ -63,20 +64,7 @@ export default function PhotoLarge({
   const showTagsContent = tags.length > 0;
   const showExifContent = shouldShowExifDataForPhoto(photo);
 
-  useEffect(() => {
-    if (onVisible && ref.current) {
-      const observer = new IntersectionObserver(e => {
-        if (e[0].isIntersecting) {
-          onVisible();
-        }
-      }, {
-        root: null,
-        threshold: 0,
-      });
-      observer.observe(ref.current);
-      return () => observer.disconnect();
-    }
-  }, [onVisible]);
+  useOnVisible(ref, onVisible);
 
   return (
     <SiteGrid

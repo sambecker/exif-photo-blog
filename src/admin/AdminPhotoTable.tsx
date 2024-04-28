@@ -19,19 +19,29 @@ import {
   syncPhotoExifDataAction,
 } from '@/photo/actions';
 import { useAppState } from '@/state/AppState';
+import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 
 export default function AdminPhotoTable({
   photos,
+  onLastPhotoVisible,
+  revalidatePhoto,
 }: {
   photos: Photo[],
+  onLastPhotoVisible?: () => void
+  revalidatePhoto?: RevalidatePhoto
 }) {
   const { invalidateSwr } = useAppState();
 
   return (
     <AdminTable>
-      {photos.map(photo =>
+      {photos.map((photo, index) =>
         <Fragment key={photo.id}>
-          <PhotoTiny photo={photo} />
+          <PhotoTiny
+            photo={photo}
+            onVisible={index === photos.length - 1
+              ? onLastPhotoVisible
+              : undefined}
+          />
           <div className="flex flex-col lg:flex-row">
             <Link
               key={photo.id}
@@ -43,7 +53,7 @@ export default function AdminPhotoTable({
                 'inline-flex items-center gap-2',
                 photo.hidden && 'text-dim',
               )}>
-                <span>{photo.title || 'Untitled'}</span>
+                <span>{titleForPhoto(photo)}</span>
                 {photo.hidden &&
                   <AiOutlineEyeInvisible
                     className="translate-y-[0.25px]"
@@ -91,6 +101,7 @@ export default function AdminPhotoTable({
             <FormWithConfirm
               action={deletePhotoFormAction}
               confirmText={deleteConfirmationTextForPhoto(photo)}
+              onSubmit={() => revalidatePhoto?.(photo.id, true)}
             >
               <input type="hidden" name="id" value={photo.id} />
               <input type="hidden" name="url" value={photo.url} />
