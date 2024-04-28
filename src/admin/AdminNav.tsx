@@ -16,7 +16,7 @@ export default async function AdminNav() {
     countPhotos,
     countUploads,
     countTags,
-    mostRecentUpdate,
+    mostRecentPhotoUpdateTime,
   ] = await Promise.all([
     getPhotosCountIncludingHiddenCached().catch(() => 0),
     getStorageUploadUrlsNoStore()
@@ -53,6 +53,6 @@ export default async function AdminNav() {
   if (countTags > 0) { items.push(navItemTags); }
 
   return (
-    <AdminNavClient {...{ items, mostRecentUpdate }} />
+    <AdminNavClient {...{ items, mostRecentPhotoUpdateTime }} />
   );
 }

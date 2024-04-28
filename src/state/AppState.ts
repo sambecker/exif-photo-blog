@@ -16,8 +16,8 @@ export interface AppStateContext {
   setShouldRespondToKeyboardCommands?: Dispatch<SetStateAction<boolean>>
   isCommandKOpen?: boolean
   setIsCommandKOpen?: Dispatch<SetStateAction<boolean>>
-  adminUpdates?: Date[]
-  addAdminUpdate?: () => void
+  adminUpdateTimes?: Date[]
+  registerAdminUpdate?: () => void
   shouldShowBaselineGrid?: boolean
   setShouldShowBaselineGrid?: Dispatch<SetStateAction<boolean>>
   clearNextPhotoAnimation?: () => void

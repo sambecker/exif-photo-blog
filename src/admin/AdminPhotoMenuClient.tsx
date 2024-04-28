@@ -20,7 +20,7 @@ export default function AdminPhotoMenuClient({
   photo: Photo
   revalidatePhoto?: RevalidatePhoto
 }) {
-  const { isUserSignedIn, addAdminUpdate } = useAppState();
+  const { isUserSignedIn, registerAdminUpdate } = useAppState();
 
   const isFav = isPhotoFav(photo);
   const path = usePathname();
@@ -64,7 +64,7 @@ export default function AdminPhotoMenuClient({
                   shouldRedirectDelete,
                 ).then(() => {
                   revalidatePhoto?.(photo.id, true);
-                  addAdminUpdate?.();
+                  registerAdminUpdate?.();
                 });
               }
             },

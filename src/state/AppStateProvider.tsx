@@ -26,7 +26,7 @@ export default function AppStateProvider({
     useState(true);
   const [isCommandKOpen, setIsCommandKOpen] =
     useState(false);
-  const [adminUpdates, setAdminUpdates] = useState<Date[]>([]);
+  const [adminUpdateTimes, setAdminUpdateTimes] = useState<Date[]>([]);
   const [shouldShowBaselineGrid, setShouldShowBaselineGrid] =
     useState(false);
 
@@ -35,8 +35,8 @@ export default function AppStateProvider({
   const { data } = useSWR('getCurrentUser', getCurrentUser);
   useEffect(() => setUserEmail(data?.email ?? undefined), [data]);
 
-  const addAdminUpdate = useCallback(() =>
-    setAdminUpdates(updates => [...updates, new Date()])
+  const registerAdminUpdate = useCallback(() =>
+    setAdminUpdateTimes(updates => [...updates, new Date()])
   , []);
 
   useEffect(() => {
@@ -60,8 +60,8 @@ export default function AppStateProvider({
         setShouldRespondToKeyboardCommands,
         isCommandKOpen,
         setIsCommandKOpen,
-        adminUpdates,
-        addAdminUpdate,
+        adminUpdateTimes,
+        registerAdminUpdate,
         shouldShowBaselineGrid,
         setShouldShowBaselineGrid,
         clearNextPhotoAnimation: () => setNextPhotoAnimation?.(undefined),

@@ -17,15 +17,15 @@ export default function DeleteButton (
     ...rest
   } = props;
 
-  const { invalidateSwr, addAdminUpdate } = useAppState();
+  const { invalidateSwr, registerAdminUpdate } = useAppState();
 
   const onFormSubmit = useCallback(() => {
     onFormSubmitProps?.();
     if (clearLocalState) {
       invalidateSwr?.();
-      addAdminUpdate?.();
+      registerAdminUpdate?.();
     }
-  }, [onFormSubmitProps, clearLocalState, invalidateSwr, addAdminUpdate]);
+  }, [onFormSubmitProps, clearLocalState, invalidateSwr, registerAdminUpdate]);
 
   return <SubmitButtonWithStatus
     {...rest}

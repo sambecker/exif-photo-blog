@@ -12,31 +12,43 @@ import { clsx } from 'clsx/lite';
 import { differenceInMinutes } from 'date-fns';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { BiCog } from 'react-icons/bi';
 import { FaRegClock } from 'react-icons/fa';
 
-const RECENCY_THRESHOLD = 5;
+const areTimesRecent = (dates: Date[]) => dates
+  .some(date => differenceInMinutes(new Date(), date) < 5);
 
 export default function AdminNavClient({
   items,
-  mostRecentUpdate,
+  mostRecentPhotoUpdateTime,
 }: {
   items: {
     label: string,
     href: string,
     count: number,
   }[]
-  mostRecentUpdate?: Date
+  mostRecentPhotoUpdateTime?: Date
 }) {
   const pathname = usePathname();
 
-  const { adminUpdates = [] } = useAppState();
+  const { adminUpdateTimes = [] } = useAppState();
 
-  const shouldShowBanner = useMemo(() =>
-    ((mostRecentUpdate ? [mostRecentUpdate] : []).concat(adminUpdates))
-      .some(date => differenceInMinutes(new Date(), date) < RECENCY_THRESHOLD)
-  , [mostRecentUpdate, adminUpdates]);
+  const updateTimes = useMemo(() =>
+    (mostRecentPhotoUpdateTime ? [mostRecentPhotoUpdateTime] : [])
+      .concat(adminUpdateTimes)
+  , [mostRecentPhotoUpdateTime, adminUpdateTimes]);
+
+  const [shouldShowBanner, setShouldShowBanner] =
+    useState(areTimesRecent(updateTimes));
+
+  useEffect(() => {
+    // Check every 10 seconds if update times are recent
+    const timeout = setTimeout(() =>
+      setShouldShowBanner(areTimesRecent(updateTimes))
+    , 10_000);
+    return () => clearTimeout(timeout);
+  }, [updateTimes]);
 
   return (
     <SiteGrid
