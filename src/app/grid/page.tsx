@@ -12,7 +12,7 @@ import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
 import { getPhotoSidebarData } from '@/photo/data';
 import { getPhotos } from '@/services/vercel-postgres';
 import { cache } from 'react';
-import InfinitePhotoScrollGrid from '@/photo/InfinitePhotoScrollGrid';
+import PhotoGridInfinite from '@/photo/PhotoGridInfinite';
 
 export const dynamic = 'force-static';
 
@@ -41,7 +41,7 @@ export default async function GridPage() {
         contentMain={<div className="space-y-0.5 sm:space-y-1">
           <PhotoGrid {...{ photos }} />
           {photosCount > photos.length &&
-            <InfinitePhotoScrollGrid
+            <PhotoGridInfinite
               initialOffset={INFINITE_SCROLL_INITIAL_GRID}
               itemsPerPage={INFINITE_SCROLL_MULTIPLE_GRID}
             />}

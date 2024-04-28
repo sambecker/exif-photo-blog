@@ -195,11 +195,19 @@ export async function streamAiImageQueryAction(
     streamOpenAiImageQuery(imageBase64, AI_IMAGE_QUERIES[query]));
 }
 
-export const getPhotosCachedAction = async (offset: number, limit: number) =>
-  getPhotosCachedCached({ offset, limit });
+export const getPhotosCachedAction = async (
+  offset: number,
+  limit: number,
+  includeHidden?: boolean,
+) =>
+  getPhotosCachedCached({ offset, includeHidden, limit });
 
-export const getPhotosAction = async (offset: number, limit: number) =>
-  getPhotos({ offset, limit });
+export const getPhotosAction = async (
+  offset: number,
+  limit: number,
+  includeHidden?: boolean,
+) =>
+  getPhotos({ offset, includeHidden, limit });
 
 export const queryPhotosByTitleAction = async (query: string) =>
   (await getPhotos({ query, limit: 10 }))

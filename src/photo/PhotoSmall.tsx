@@ -8,7 +8,8 @@ import { pathForPhoto } from '@/site/paths';
 import { Camera } from '@/camera';
 import { FilmSimulation } from '@/simulation';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
+import useOnVisible from '@/utility/useOnVisible';
 
 export default function PhotoSmall({
   photo,
@@ -31,20 +32,7 @@ export default function PhotoSmall({
 }) {
   const ref = useRef<HTMLAnchorElement>(null);
 
-  useEffect(() => {
-    if (onVisible && ref.current) {
-      const observer = new IntersectionObserver(e => {
-        if (e[0].isIntersecting) {
-          onVisible();
-        }
-      }, {
-        root: null,
-        threshold: 0,
-      });
-      observer.observe(ref.current);
-      return () => observer.disconnect();
-    }
-  }, [onVisible]);
+  useOnVisible(ref, onVisible);
 
   return (
     <Link

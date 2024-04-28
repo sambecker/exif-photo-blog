@@ -5,7 +5,7 @@ import InfinitePhotoScroll, {
 } from './InfinitePhotoScroll';
 import PhotoGrid from './PhotoGrid';
 
-export default function InfinitePhotoScrollGrid({
+export default function PhotoGridInfinite({
   initialOffset,
   itemsPerPage,
 }: InfinitePhotoScrollExternalProps) {
@@ -14,13 +14,12 @@ export default function InfinitePhotoScrollGrid({
       cacheKey="Grid"
       initialOffset={initialOffset}
       itemsPerPage={itemsPerPage}
-      wrapMoreButtonInGrid={false}
     >
       {({ photos, onLastPhotoVisible }) =>
-        <PhotoGrid {...{
-          photos,
-          onLastPhotoVisible,
-        }} />}
+        <PhotoGrid
+          photos={photos}
+          onLastPhotoVisible={onLastPhotoVisible}
+        />}
     </InfinitePhotoScroll>
   );
 }

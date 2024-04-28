@@ -30,11 +30,13 @@ export default function InfinitePhotoScroll({
   itemsPerPage,
   wrapMoreButtonInGrid,
   useCachedPhotos = true,
+  includeHiddenPhotos,
   children,
 }: InfinitePhotoScrollExternalProps & {
   cacheKey: string
-  wrapMoreButtonInGrid: boolean
+  wrapMoreButtonInGrid?: boolean
   useCachedPhotos?: boolean
+  includeHiddenPhotos?: boolean
   children: (props: {
     photos: Photo[]
     onLastPhotoVisible: () => void
@@ -56,12 +58,14 @@ export default function InfinitePhotoScroll({
       ? getPhotosCachedAction(
         initialOffset + size * itemsPerPage,
         itemsPerPage,
+        includeHiddenPhotos,
       )
       : getPhotosAction(
         initialOffset + size * itemsPerPage,
         itemsPerPage,
+        includeHiddenPhotos,
       )
-  , [useCachedPhotos, initialOffset, itemsPerPage]);
+  , [useCachedPhotos, initialOffset, itemsPerPage, includeHiddenPhotos]);
 
   const { data, isLoading, isValidating, error, mutate, setSize } =
     useSwrInfinite<Photo[]>(

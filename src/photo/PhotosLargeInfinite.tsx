@@ -5,7 +5,7 @@ import InfinitePhotoScroll, {
 } from './InfinitePhotoScroll';
 import PhotosLarge from './PhotosLarge';
 
-export default function InfinitePhotoScrollPhotosLarge({
+export default function PhotosLargeInfinite({
   initialOffset,
   itemsPerPage,
 }: InfinitePhotoScrollExternalProps) {
@@ -17,11 +17,11 @@ export default function InfinitePhotoScrollPhotosLarge({
       wrapMoreButtonInGrid
     >
       {({ photos, onLastPhotoVisible, revalidatePhoto }) =>
-        <PhotosLarge {...{
-          photos,
-          onLastPhotoVisible,
-          revalidatePhoto,
-        }} />}
+        <PhotosLarge
+          photos={photos}
+          onLastPhotoVisible={onLastPhotoVisible}
+          revalidatePhoto={revalidatePhoto}
+        />}
     </InfinitePhotoScroll>
   );
 }

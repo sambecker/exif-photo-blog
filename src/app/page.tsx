@@ -9,8 +9,7 @@ import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
 import PhotosLarge from '@/photo/PhotosLarge';
 import { cache } from 'react';
 import { getPhotos, getPhotosCount } from '@/services/vercel-postgres';
-import InfinitePhotoScrollPhotosLarge from
-  '@/photo/InfinitePhotoScrollPhotosLarge';
+import PhotosLargeInfinite from '@/photo/PhotosLargeInfinite';
 
 export const dynamic = 'force-static';
 
@@ -44,7 +43,7 @@ export default async function HomePage() {
       ? <div className="space-y-1">
         <PhotosLarge {...{ photos }} />
         {photosCount > photos.length &&
-          <InfinitePhotoScrollPhotosLarge
+          <PhotosLargeInfinite
             initialOffset={INFINITE_SCROLL_INITIAL_HOME}
             itemsPerPage={INFINITE_SCROLL_MULTIPLE_HOME}
           />}
