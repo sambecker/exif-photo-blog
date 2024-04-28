@@ -41,7 +41,6 @@ export default function InfinitePhotoScroll({
     , [key]);
 
   const fetcher = useCallback(([_key, size]: [string, number]) => {
-    console.log('Fetching', size);
     return getPhotosAction(
       initialOffset + size * itemsPerPage,
       itemsPerPage,
