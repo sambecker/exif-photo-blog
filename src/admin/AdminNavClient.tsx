@@ -6,6 +6,7 @@ import {
   PATH_ADMIN_CONFIGURATION,
   checkPathPrefix,
   isPathAdminConfiguration,
+  isPathTopLevelAdmin,
 } from '@/site/paths';
 import { useAppState } from '@/state/AppState';
 import { clsx } from 'clsx/lite';
@@ -39,16 +40,18 @@ export default function AdminNavClient({
       .concat(adminUpdateTimes)
   , [mostRecentPhotoUpdateTime, adminUpdateTimes]);
 
-  const [shouldShowBanner, setShouldShowBanner] =
+  const [hasRecentUpdates, setHasRecentUpdates] =
     useState(areTimesRecent(updateTimes));
 
   useEffect(() => {
     // Check every 10 seconds if update times are recent
     const timeout = setTimeout(() =>
-      setShouldShowBanner(areTimesRecent(updateTimes))
+      setHasRecentUpdates(areTimesRecent(updateTimes))
     , 10_000);
     return () => clearTimeout(timeout);
   }, [updateTimes]);
+
+  const shouldShowBanner = hasRecentUpdates && isPathTopLevelAdmin(pathname);
 
   return (
     <SiteGrid
