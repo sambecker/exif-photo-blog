@@ -10,10 +10,12 @@ import { clsx } from 'clsx/lite';
 export default function PhotoUpload({
   shouldResize,
   onLastUpload,
+  showUploadStatus,
   debug,
 }: {
   shouldResize?: boolean
   onLastUpload?: () => Promise<void>
+  showUploadStatus?: boolean
   debug?: boolean
 }) {
   const [isUploading, setIsUploading] = useState(false);
@@ -75,6 +77,7 @@ export default function PhotoUpload({
                   });
               }
             }}
+            showUploadStatus={showUploadStatus}
             debug={debug}
           />
         </form>
