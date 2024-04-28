@@ -19,6 +19,7 @@ import {
   getPhotosFilmSimulationMeta,
   getPhotosDateRange,
   getPhotosNearId,
+  getPhotosMostRecentUpdate,
 } from '@/services/vercel-postgres';
 import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
 import { createCameraKey } from '@/camera';
@@ -164,6 +165,12 @@ export const getPhotosCountIncludingHiddenCached =
   unstable_cache(
     getPhotosCountIncludingHidden,
     [KEY_PHOTOS, KEY_COUNT, KEY_HIDDEN],
+  );
+
+export const getPhotosMostRecentUpdateCached =
+  unstable_cache(
+    () => getPhotosMostRecentUpdate(),
+    [KEY_PHOTOS, KEY_COUNT, KEY_DATE_RANGE],
   );
 
 export const getPhotosTagMetaCached =

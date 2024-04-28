@@ -1,6 +1,7 @@
 import { getStorageUploadUrlsNoStore } from '@/services/storage/cache';
 import {
   getPhotosCountIncludingHiddenCached,
+  getPhotosMostRecentUpdateCached,
   getUniqueTagsCached,
 } from '@/photo/cache';
 import {
@@ -15,6 +16,7 @@ export default async function AdminNav() {
     countPhotos,
     countUploads,
     countTags,
+    mostRecentUpdate,
   ] = await Promise.all([
     getPhotosCountIncludingHiddenCached().catch(() => 0),
     getStorageUploadUrlsNoStore()
@@ -24,6 +26,7 @@ export default async function AdminNav() {
         return 0;
       }),
     getUniqueTagsCached().then(tags => tags.length).catch(() => 0),
+    getPhotosMostRecentUpdateCached(),
   ]);
 
   const navItemPhotos = {
@@ -44,12 +47,12 @@ export default async function AdminNav() {
     count: countTags,
   };
 
-  const navItems = [navItemPhotos];
+  const items = [navItemPhotos];
 
-  if (countUploads > 0) { navItems.push(navItemUploads); }
-  if (countTags > 0) { navItems.push(navItemTags); }
+  if (countUploads > 0) { items.push(navItemUploads); }
+  if (countTags > 0) { items.push(navItemTags); }
 
   return (
-    <AdminNavClient items={navItems} />
+    <AdminNavClient {...{ items, mostRecentUpdate }} />
   );
 }

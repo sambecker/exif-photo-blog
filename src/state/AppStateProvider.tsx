@@ -5,6 +5,7 @@ import { AppStateContext } from './AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import usePathnames from '@/utility/usePathnames';
 import { getCurrentUser } from '@/auth/actions';
+import useSWR from 'swr';
 
 export default function AppStateProvider({
   children,
@@ -25,19 +26,22 @@ export default function AppStateProvider({
     useState(true);
   const [isCommandKOpen, setIsCommandKOpen] =
     useState(false);
+  const [adminUpdates, setAdminUpdates] = useState<Date[]>([]);
   const [shouldShowBaselineGrid, setShouldShowBaselineGrid] =
     useState(false);
 
   const invalidateSwr = useCallback(() => setSwrTimestamp(Date.now()), []);
 
-  const captureUser = useCallback(() =>
-    getCurrentUser().then(user => setUserEmail?.(user?.email ?? undefined))
+  const { data } = useSWR('getCurrentUser', getCurrentUser);
+  useEffect(() => setUserEmail(data?.email ?? undefined), [data]);
+
+  const addAdminUpdate = useCallback(() =>
+    setAdminUpdates(updates => [...updates, new Date()])
   , []);
 
   useEffect(() => {
     setHasLoaded?.(true);
-    captureUser().catch(() => setTimeout(captureUser, 2000));
-  }, [captureUser]);
+  }, []);
 
   return (
     <AppStateContext.Provider
@@ -56,6 +60,8 @@ export default function AppStateProvider({
         setShouldRespondToKeyboardCommands,
         isCommandKOpen,
         setIsCommandKOpen,
+        adminUpdates,
+        addAdminUpdate,
         shouldShowBaselineGrid,
         setShouldShowBaselineGrid,
         clearNextPhotoAnimation: () => setNextPhotoAnimation?.(undefined),

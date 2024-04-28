@@ -1,13 +1,34 @@
+'use client';
+
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
+import { useAppState } from '@/state/AppState';
 import { clsx } from 'clsx/lite';
-import { ComponentProps } from 'react';
+import { ComponentProps, useCallback } from 'react';
 import { BiTrash } from 'react-icons/bi';
 
 export default function DeleteButton (
-  props: ComponentProps<typeof SubmitButtonWithStatus>
+  props: ComponentProps<typeof SubmitButtonWithStatus> & {
+    clearLocalState?: boolean
+  }
 ) {
+  const {
+    onFormSubmit: onFormSubmitProps,
+    clearLocalState,
+    ...rest
+  } = props;
+
+  const { invalidateSwr, addAdminUpdate } = useAppState();
+
+  const onFormSubmit = useCallback(() => {
+    onFormSubmitProps?.();
+    if (clearLocalState) {
+      invalidateSwr?.();
+      addAdminUpdate?.();
+    }
+  }, [onFormSubmitProps, clearLocalState, invalidateSwr, addAdminUpdate]);
+
   return <SubmitButtonWithStatus
-    {...props}
+    {...rest}
     title="Delete"
     icon={<BiTrash size={16} className="translate-y-[-1.5px]" />}
     spinnerColor="text"
@@ -17,5 +38,6 @@ export default function DeleteButton (
       '!border-red-200 hover:!border-red-300',
       'dark:!border-red-900/75 dark:hover:!border-red-900',
     )}
+    onFormSubmit={onFormSubmit}
   />;
 }

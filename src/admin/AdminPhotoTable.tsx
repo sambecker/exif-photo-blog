@@ -94,7 +94,7 @@ export default function AdminPhotoTable({
             >
               <input type="hidden" name="id" value={photo.id} />
               <input type="hidden" name="url" value={photo.url} />
-              <DeleteButton onFormSubmit={invalidateSwr} />
+              <DeleteButton clearLocalState />
             </FormWithConfirm>
           </div>
         </Fragment>)}

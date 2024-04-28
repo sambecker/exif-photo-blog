@@ -1,5 +1,3 @@
-'use client';
-
 import FormWithConfirm from '@/components/FormWithConfirm';
 import { deletePhotoTagGloballyAction } from '@/photo/actions';
 import AdminTable from '@/admin/AdminTable';
@@ -11,15 +9,12 @@ import EditButton from '@/admin/EditButton';
 import { pathForAdminTagEdit } from '@/site/paths';
 import { clsx } from 'clsx/lite';
 import AdminTagBadge from './AdminTagBadge';
-import { useAppState } from '@/state/AppState';
 
 export default function AdminTagTable({
   tags,
 }: {
   tags: TagsWithMeta
 }) {
-  const { invalidateSwr } = useAppState();
-
   return (
     <AdminTable>
       {sortTagsObject(tags).map(({ tag, count }) =>
@@ -39,7 +34,7 @@ export default function AdminTagTable({
                 `Are you sure you want to remove "${formatTag(tag)}" from ${photoQuantityText(count, false).toLowerCase()}?`}
             >
               <input type="hidden" name="tag" value={tag} />
-              <DeleteButton onFormSubmit={invalidateSwr} />
+              <DeleteButton clearLocalState />
             </FormWithConfirm>
           </div>
         </Fragment>)}
