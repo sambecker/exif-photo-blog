@@ -17,6 +17,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { BiCog } from 'react-icons/bi';
 import { FaRegClock } from 'react-icons/fa';
 
+// Updates considered recent if they occurred in past 5 minutes
 const areTimesRecent = (dates: Date[]) => dates
   .some(date => differenceInMinutes(new Date(), date) < 5);
 
@@ -44,11 +45,12 @@ export default function AdminNavClient({
     useState(areTimesRecent(updateTimes));
 
   useEffect(() => {
-    // Check every 10 seconds if update times are recent
-    const timeout = setTimeout(() =>
+    // Check every 5 seconds if update times are recent
+    setHasRecentUpdates(areTimesRecent(updateTimes));
+    const interval = setInterval(() =>
       setHasRecentUpdates(areTimesRecent(updateTimes))
-    , 10_000);
-    return () => clearTimeout(timeout);
+    , 5_000);
+    return () => clearInterval(interval);
   }, [updateTimes]);
 
   const shouldShowBanner = hasRecentUpdates && isPathTopLevelAdmin(pathname);
