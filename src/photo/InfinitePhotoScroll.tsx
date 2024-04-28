@@ -1,17 +1,16 @@
 'use client';
 
 import useSwrInfinite from 'swr/infinite';
-import PhotosLarge from '@/photo/PhotosLarge';
 import {
+  ReactNode,
   useCallback,
   useMemo,
   useRef,
 } from 'react';
 import SiteGrid from '@/components/SiteGrid';
 import Spinner from '@/components/Spinner';
-import { getPhotosAction } from '@/photo/actions';
+import { getPhotosCachedAction, getPhotosAction } from '@/photo/actions';
 import { Photo } from '.';
-import PhotoGrid from './PhotoGrid';
 import { clsx } from 'clsx/lite';
 import { useAppState } from '@/state/AppState';
 
@@ -20,19 +19,31 @@ export type RevalidatePhoto = (
   revalidateRemainingPhotos?: boolean,
 ) => Promise<any>;
 
-export default function InfinitePhotoScroll({
-  type = 'full-frame',
-  initialOffset,
-  itemsPerPage,
-}: {
-  type: 'full-frame' | 'grid'
+export type InfinitePhotoScrollExternalProps = {
   initialOffset: number
   itemsPerPage: number
-  debug?: boolean
+}
+
+export default function InfinitePhotoScroll({
+  cacheKey,
+  initialOffset,
+  itemsPerPage,
+  wrapMoreButtonInGrid,
+  useCachedPhotos = true,
+  children,
+}: InfinitePhotoScrollExternalProps & {
+  cacheKey: string
+  wrapMoreButtonInGrid: boolean
+  useCachedPhotos?: boolean
+  children: (props: {
+    photos: Photo[]
+    onLastPhotoVisible: () => void
+    revalidatePhoto?: RevalidatePhoto
+  }) => ReactNode
 }) {
   const { swrTimestamp, isUserSignedIn } = useAppState();
 
-  const key = `${swrTimestamp}-${type}`;
+  const key = `${swrTimestamp}-${cacheKey}`;
 
   const keyGenerator = useCallback(
     (size: number, prev: Photo[]) => prev && prev.length === 0
@@ -40,12 +51,17 @@ export default function InfinitePhotoScroll({
       : [key, size]
     , [key]);
 
-  const fetcher = useCallback(([_key, size]: [string, number]) => {
-    return getPhotosAction(
-      initialOffset + size * itemsPerPage,
-      itemsPerPage,
-    );
-  }, [initialOffset, itemsPerPage]);
+  const fetcher = useCallback(([_key, size]: [string, number]) =>
+    useCachedPhotos
+      ? getPhotosCachedAction(
+        initialOffset + size * itemsPerPage,
+        itemsPerPage,
+      )
+      : getPhotosAction(
+        initialOffset + size * itemsPerPage,
+        itemsPerPage,
+      )
+  , [useCachedPhotos, initialOffset, itemsPerPage]);
 
   const { data, isLoading, isValidating, error, mutate, setSize } =
     useSwrInfinite<Photo[]>(
@@ -106,17 +122,12 @@ export default function InfinitePhotoScroll({
 
   return (
     <div className="space-y-4">
-      {type === 'full-frame'
-        ? <PhotosLarge {...{
-          photos,
-          revalidatePhoto,
-          onLastPhotoVisible: advance,
-        }} />
-        : <PhotoGrid {...{
-          photos,
-          onLastPhotoVisible: advance,
-        }} />}
-      {!isFinished && (type === 'full-frame'
+      {children({
+        photos, 
+        onLastPhotoVisible: advance,
+        revalidatePhoto,
+      })}
+      {!isFinished && (wrapMoreButtonInGrid
         ? <SiteGrid contentMain={renderMoreButton()} />
         : renderMoreButton())}
     </div>
