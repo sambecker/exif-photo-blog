@@ -38,7 +38,7 @@ export default async function AdminPhotosPage({
   return (
     <SiteGrid
       contentMain={
-        <div className="space-y-8">
+        <div className="space-y-4">
           <PhotoUpload
             shouldResize={!PRO_MODE_ENABLED}
             onLastUpload={async () => {

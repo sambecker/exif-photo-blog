@@ -22,10 +22,10 @@ export default function InfoBlock({
       'dark:bg-gray-900/40 dark:border-gray-800',
     ];
     case 'blue': return [
-      'text-gray-700/70',
-      'dark:text-gray-300/75',
-      'bg-blue-50 border-blue-200',
-      'dark:bg-blue-900/25 dark:border-blue-800/35',
+      'text-gray-700/80',
+      'dark:text-gray-300/60',
+      'bg-blue-50/50 border-blue-200',
+      'dark:bg-blue-950/30 dark:border-blue-700/45',
     ];
     }
   };
