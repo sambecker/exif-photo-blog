@@ -50,7 +50,7 @@ export async function createPhotoAction(formData: FormData) {
   
     await sqlInsertPhoto(photo);
   
-    revalidateAllKeysAndPaths();
+    await revalidateAllKeysAndPaths();
   
     redirect(PATH_ADMIN_PHOTOS);
   });
@@ -62,7 +62,7 @@ export async function updatePhotoAction(formData: FormData) {
 
     await sqlUpdatePhoto(photo);
 
-    revalidatePhoto(photo.id);
+    await revalidatePhoto(photo.id);
 
     redirect(PATH_ADMIN_PHOTOS);
   });
