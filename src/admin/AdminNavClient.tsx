@@ -97,7 +97,7 @@ export default function AdminNavClient({
             <InfoBlock centered={false} padding="tight" color="blue">
               <div className="flex items-center gap-3">
                 <FaRegClock className="flex-shrink-0" />
-                Updates detected—they may take several minutes to show up
+                Photo updates detected—they may take several minutes to show up
                 for visitors
               </div>
             </InfoBlock>}
