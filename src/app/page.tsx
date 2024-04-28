@@ -1,4 +1,3 @@
-import { getPhotosCachedCached, getPhotosCountCached } from '@/photo/cache';
 import {
   INFINITE_SCROLL_INITIAL_HOME,
   INFINITE_SCROLL_MULTIPLE_HOME,
@@ -9,12 +8,16 @@ import { Metadata } from 'next/types';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
 import InfinitePhotoScroll from '../photo/InfinitePhotoScroll';
 import PhotosLarge from '@/photo/PhotosLarge';
+import { cache } from 'react';
+import { getPhotos, getPhotosCount } from '@/services/vercel-postgres';
 
 export const dynamic = 'force-static';
 
+const getPhotosCached = cache(getPhotos);
+
 export async function generateMetadata(): Promise<Metadata> {
   // Make homepage queries resilient to error on first time setup
-  const photos = await getPhotosCachedCached({
+  const photos = await getPhotosCached({
     limit: MAX_PHOTOS_TO_SHOW_OG,
   })
     .catch(() => []);
@@ -27,11 +30,11 @@ export default async function HomePage() {
     photos,
     photosCount,
   ] = await Promise.all([
-    getPhotosCachedCached({ 
+    getPhotosCached({ 
       limit: INFINITE_SCROLL_INITIAL_HOME,
     })
       .catch(() => []),
-    getPhotosCountCached()
+    getPhotosCount()
       .catch(() => 0),
   ]);
 
