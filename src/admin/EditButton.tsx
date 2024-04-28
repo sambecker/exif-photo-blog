@@ -13,6 +13,7 @@ export default function EditButton ({
       title={label}
       href={href}
       className="button"
+      prefetch={false}
     >
       <FaRegEdit className="translate-y-[-0.5px]" />
       <span className="hidden sm:inline-block">

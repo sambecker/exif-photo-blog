@@ -1,9 +1,10 @@
+'use client';
+
 import {
   Photo,
   altTextForPhoto,
   shouldShowCameraDataForPhoto,
   shouldShowExifDataForPhoto,
-  titleForPhoto,
 } from '.';
 import SiteGrid from '@/components/SiteGrid';
 import ImageLarge from '@/components/ImageLarge';
@@ -16,33 +17,44 @@ import PhotoCamera from '../camera/PhotoCamera';
 import { cameraFromPhoto } from '@/camera';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
 import { sortTags } from '@/tag';
-import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
-import { Suspense } from 'react';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
+import PhotoLink from './PhotoLink';
+import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
+import AdminPhotoMenuClient from '@/admin/AdminPhotoMenuClient';
+import { RevalidatePhoto } from './InfinitePhotoScroll';
+import { useEffect, useRef } from 'react';
 
 export default function PhotoLarge({
   photo,
   primaryTag,
   priority,
-  prefetchShare,
+  prefetch = SHOULD_PREFETCH_ALL_LINKS,
+  prefetchRelatedLinks = SHOULD_PREFETCH_ALL_LINKS,
+  revalidatePhoto,
   showCamera = true,
   showSimulation = true,
   shouldShareTag,
   shouldShareCamera,
   shouldShareSimulation,
   shouldScrollOnShare,
+  onVisible,
 }: {
   photo: Photo
   primaryTag?: string
   priority?: boolean
-  prefetchShare?: boolean
+  prefetch?: boolean
+  prefetchRelatedLinks?: boolean
+  revalidatePhoto?: RevalidatePhoto
   showCamera?: boolean
   showSimulation?: boolean
   shouldShareTag?: boolean
   shouldShareCamera?: boolean
   shouldShareSimulation?: boolean
   shouldScrollOnShare?: boolean
+  onVisible?: () => void
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+
   const tags = sortTags(photo.tags, primaryTag);
 
   const camera = cameraFromPhoto(photo);
@@ -51,18 +63,39 @@ export default function PhotoLarge({
   const showTagsContent = tags.length > 0;
   const showExifContent = shouldShowExifDataForPhoto(photo);
 
+  useEffect(() => {
+    if (onVisible && ref.current) {
+      const observer = new IntersectionObserver(e => {
+        if (e[0].isIntersecting) {
+          onVisible();
+        }
+      }, {
+        root: null,
+        threshold: 0,
+      });
+      observer.observe(ref.current);
+      return () => observer.disconnect();
+    }
+  }, [onVisible]);
+
   return (
     <SiteGrid
+      containerRef={ref}
       contentMain={
-        <ImageLarge
-          className="w-full"
-          alt={altTextForPhoto(photo)}
-          href={pathForPhoto(photo, primaryTag)}
-          src={photo.url}
-          aspectRatio={photo.aspectRatio}
-          blurData={photo.blurData}
-          priority={priority}
-        />}
+        <Link
+          href={pathForPhoto(photo)}
+          className="active:brightness-75"
+          prefetch={prefetch}
+        >
+          <ImageLarge
+            className="w-full"
+            alt={altTextForPhoto(photo)}
+            src={photo.url}
+            aspectRatio={photo.aspectRatio}
+            blurData={photo.blurData}
+            priority={priority}
+          />
+        </Link>}
       contentSide={
         <DivDebugBaselineGrid className={clsx(
           'relative',
@@ -74,19 +107,17 @@ export default function PhotoLarge({
           {/* Meta */}
           <div className="pr-2 md:pr-0">
             <div className="md:relative flex gap-2 items-start">
-              <div className="flex-grow">
-                <Link
-                  href={pathForPhoto(photo)}
-                  className="font-bold uppercase"
-                >
-                  {titleForPhoto(photo)}
-                </Link>
+              <PhotoLink
+                photo={photo}
+                className="font-bold uppercase flex-grow"
+                prefetch={prefetch}
+              />
+              <div className="absolute right-0 translate-y-[-4px] z-10">
+                <AdminPhotoMenuClient {...{
+                  photo,
+                  revalidatePhoto,
+                }} />
               </div>
-              <Suspense>
-                <div className="absolute right-0 translate-y-[-4px] z-10">
-                  <AdminPhotoMenu photo={photo} />
-                </div>
-              </Suspense>
             </div>
             <div className="space-y-baseline">
               {photo.caption &&
@@ -99,9 +130,14 @@ export default function PhotoLarge({
                     <PhotoCamera
                       camera={camera}
                       contrast="medium"
+                      prefetch={prefetchRelatedLinks}
                     />}
                   {showTagsContent &&
-                    <PhotoTags tags={tags} contrast="medium" />}
+                    <PhotoTags
+                      tags={tags}
+                      contrast="medium"
+                      prefetch={prefetchRelatedLinks}
+                    />}
                 </div>}
             </div>
           </div>
@@ -131,6 +167,7 @@ export default function PhotoLarge({
                 {showSimulation && photo.filmSimulation &&
                   <PhotoFilmSimulation
                     simulation={photo.filmSimulation}
+                    prefetch={prefetchRelatedLinks}
                   />}
               </>}
             <div className={clsx(
@@ -149,7 +186,7 @@ export default function PhotoLarge({
                   shouldShareCamera ? camera : undefined,
                   shouldShareSimulation ? photo.filmSimulation : undefined,
                 )}
-                prefetch={prefetchShare}
+                prefetch={prefetchRelatedLinks}
                 shouldScroll={shouldScrollOnShare}
               />
             </div>

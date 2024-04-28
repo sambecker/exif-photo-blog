@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
+import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
 
 export default function SwitcherItem({
   icon,
@@ -8,6 +9,7 @@ export default function SwitcherItem({
   onClick,
   active,
   noPadding,
+  prefetch = SHOULD_PREFETCH_ALL_LINKS,
 }: {
   icon: JSX.Element
   href?: string
@@ -15,6 +17,7 @@ export default function SwitcherItem({
   onClick?: () => void
   active?: boolean
   noPadding?: boolean
+  prefetch?: boolean
 }) {
   const className = clsx(
     classNameProp,
@@ -38,7 +41,9 @@ export default function SwitcherItem({
 
   return (
     href
-      ? <Link {...{ href, className }}>{renderIcon()}</Link>
+      ? <Link {...{ href, className, prefetch }}>
+        {renderIcon()}
+      </Link>
       : <div {...{ onClick, className }}>{renderIcon()}</div>
   );
 };

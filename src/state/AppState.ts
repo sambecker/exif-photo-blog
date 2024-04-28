@@ -4,6 +4,11 @@ import { AnimationConfig } from '@/components/AnimateItems';
 export interface AppStateContext {
   previousPathname?: string
   hasLoaded?: boolean
+  swrTimestamp?: number
+  invalidateSwr?: () => void
+  userEmail?: string
+  setUserEmail?: Dispatch<SetStateAction<string | undefined>>
+  isUserSignedIn?: boolean
   setHasLoaded?: Dispatch<SetStateAction<boolean>>
   nextPhotoAnimation?: AnimationConfig
   setNextPhotoAnimation?: Dispatch<SetStateAction<AnimationConfig | undefined>>
@@ -11,6 +16,8 @@ export interface AppStateContext {
   setShouldRespondToKeyboardCommands?: Dispatch<SetStateAction<boolean>>
   isCommandKOpen?: boolean
   setIsCommandKOpen?: Dispatch<SetStateAction<boolean>>
+  adminUpdates?: Date[]
+  addAdminUpdate?: () => void
   shouldShowBaselineGrid?: boolean
   setShouldShowBaselineGrid?: Dispatch<SetStateAction<boolean>>
   clearNextPhotoAnimation?: () => void

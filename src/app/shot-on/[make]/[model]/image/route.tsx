@@ -9,8 +9,6 @@ import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 
-export const runtime = 'edge';
-
 export async function GET(
   _: Request,
   context: CameraProps,

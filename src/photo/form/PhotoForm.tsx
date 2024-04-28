@@ -21,7 +21,7 @@ import { toastSuccess, toastWarning } from '@/toast';
 import { getDimensionsFromSize } from '@/utility/size';
 import ImageBlurFallback from '@/components/ImageBlurFallback';
 import { BLUR_ENABLED } from '@/site/config';
-import { Tags, sortTagsObjectWithoutFavs } from '@/tag';
+import { TagsWithMeta, sortTagsObjectWithoutFavs } from '@/tag';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 import { AiContent } from '../ai/useAiImageQueries';
 import AiButton from '../ai/AiButton';
@@ -29,6 +29,7 @@ import Spinner from '@/components/Spinner';
 import { getNextImageUrlForRequest } from '@/services/next-image';
 import useDelay from '@/utility/useDelay';
 import usePreventNavigation from '@/utility/usePreventNavigation';
+import { useAppState } from '@/state/AppState';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -46,7 +47,7 @@ export default function PhotoForm({
   initialPhotoForm: Partial<PhotoFormData>
   updatedExifData?: Partial<PhotoFormData>
   type?: 'create' | 'edit'
-  uniqueTags?: Tags
+  uniqueTags?: TagsWithMeta
   aiContent?: AiContent
   setImageData?: (imageData: string) => void
   debugBlur?: boolean
@@ -61,6 +62,8 @@ export default function PhotoForm({
   const [blurError, setBlurError] =
     useState<string>();
   const [hasBlurData, setHasBlurData] = useState(false);
+
+  const { invalidateSwr } = useAppState();
 
   const changedFormKeys = useMemo(() =>
     getChangedFormFields(initialPhotoForm, formData),
@@ -257,7 +260,12 @@ export default function PhotoForm({
           </div>
         </div>
         <CanvasBlurCapture
-          imageUrl={getNextImageUrlForRequest(url, 640)}
+          imageUrl={getNextImageUrlForRequest(
+            url,
+            640,
+            undefined,
+            window.location.origin,
+          )}
           width={width}
           height={height}
           onLoad={aiContent?.setImageData}
@@ -366,6 +374,7 @@ export default function PhotoForm({
           <SubmitButtonWithStatus
             disabled={!canFormBeSubmitted}
             onFormStatusChange={onFormStatusChange}
+            onFormSubmit={invalidateSwr}
             primary
           >
             {type === 'create' ? 'Create' : 'Update'}

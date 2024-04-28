@@ -11,6 +11,7 @@ export default function PhotoFilmSimulation({
   type = 'icon-last',
   badged = true,
   contrast = 'low',
+  prefetch,
   countOnHover,
 }: {
   simulation: FilmSimulation
@@ -28,6 +29,7 @@ export default function PhotoFilmSimulation({
       type={type}
       badged={badged}
       contrast={contrast}
+      prefetch={prefetch}
       hoverEntity={countOnHover}
       iconWide
     />

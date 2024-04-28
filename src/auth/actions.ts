@@ -4,10 +4,11 @@ import {
   KEY_CALLBACK_URL,
   KEY_CREDENTIALS_SIGN_IN_ERROR,
   KEY_CREDENTIALS_SIGN_IN_ERROR_URL,
+  auth,
   signIn,
   signOut,
 } from '@/auth';
-import { PATH_ADMIN_PHOTOS } from '@/site/paths';
+import { PATH_ADMIN_PHOTOS, PATH_ROOT } from '@/site/paths';
 import { redirect } from 'next/navigation';
 
 export const signInAction = async (
@@ -35,6 +36,7 @@ export const signInAction = async (
   redirect(formData.get(KEY_CALLBACK_URL) as string || PATH_ADMIN_PHOTOS);
 };
 
-export const signOutAction = async () => {
-  await signOut();
-};
+export const signOutAndRedirectAction = async () =>
+  signOut({ redirectTo: PATH_ROOT });
+
+export const getCurrentUser = async () => (await auth())?.user;

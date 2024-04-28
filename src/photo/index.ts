@@ -1,5 +1,6 @@
+import { getNextImageUrlForRequest } from '@/services/next-image';
 import { FilmSimulation } from '@/simulation';
-import { SHOW_EXIF_DATA } from '@/site/config';
+import { HIGH_DENSITY_GRID, SHOW_EXIF_DATA } from '@/site/config';
 import { ABSOLUTE_PATH_FOR_HOME_IMAGE } from '@/site/paths';
 import { formatDateFromPostgresString } from '@/utility/date';
 import {
@@ -11,6 +12,20 @@ import {
 } from '@/utility/exif';
 import camelcaseKeys from 'camelcase-keys';
 import type { Metadata } from 'next';
+
+// ROOT PAGE
+export const INFINITE_SCROLL_INITIAL_HOME =
+  process.env.NODE_ENV === 'development' ? 2 : 12;
+export const INFINITE_SCROLL_MULTIPLE_HOME =
+  process.env.NODE_ENV === 'development' ? 2 : 24;
+
+// GRID PAGE
+export const INFINITE_SCROLL_INITIAL_GRID = HIGH_DENSITY_GRID
+  ? process.env.NODE_ENV === 'development' ? 4 : 20
+  : process.env.NODE_ENV === 'development' ? 4 : 24;
+export const INFINITE_SCROLL_MULTIPLE_GRID = HIGH_DENSITY_GRID
+  ? process.env.NODE_ENV === 'development' ? 4 : 40
+  : process.env.NODE_ENV === 'development' ? 4 : 48;
 
 export const GRID_THUMBNAILS_TO_SHOW_MAX = 12;
 
@@ -256,3 +271,8 @@ export const getKeywordsForPhoto = (photo: Photo) =>
     .concat((photo.semanticDescription ?? '').split(' '))
     .filter(Boolean)
     .map(keyword => keyword.toLocaleLowerCase());
+
+export const isNextImageReadyBasedOnPhotos = async (photos: Photo[]) =>
+  photos.length > 0 && fetch(getNextImageUrlForRequest(photos[0].url, 640))
+    .then(response => response.ok)
+    .catch(() => false);

@@ -6,8 +6,6 @@ import {
   SITE_TITLE,
 } from '@/site/config';
 
-export const runtime = 'edge';
-
 export async function GET() {
   if (PUBLIC_API_ENABLED) {
     const photos = await getPhotosCached({ limit: API_PHOTO_REQUEST_LIMIT });

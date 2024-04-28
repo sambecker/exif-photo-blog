@@ -4,8 +4,8 @@ import IconFullFrame from '@/site/IconFullFrame';
 import IconGrid from '@/site/IconGrid';
 import { PATH_ADMIN_PHOTOS, PATH_GRID } from '@/site/paths';
 import { BiLockAlt } from 'react-icons/bi';
-import { useAppState } from '@/state';
 import IconSearch from './IconSearch';
+import { useAppState } from '@/state/AppState';
 
 export type SwitcherSelection = 'full-frame' | 'grid' | 'sets' | 'admin';
 

@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import AdminGrid from './AdminGrid';
+import AdminTable from './AdminTable';
 import Link from 'next/link';
 import ImageTiny from '@/components/ImageTiny';
 import { StorageListResponse, fileNameForStorageUrl } from '@/services/storage';
@@ -19,12 +19,12 @@ export default function StorageUrls({
   urls: StorageListResponse
 }) {
   return (
-    <AdminGrid {...{ title }} >
+    <AdminTable {...{ title }} >
       {urls.map(({ url, uploadedAt }) => {
         const addUploadPath = pathForAdminUploadUrl(url);
         const uploadFileName = fileNameForStorageUrl(url);
         return <Fragment key={url}>
-          <Link href={addUploadPath}>
+          <Link href={addUploadPath} prefetch={false}>
             <ImageTiny
               alt={`Upload: ${uploadFileName}`}
               src={url}
@@ -41,6 +41,7 @@ export default function StorageUrls({
             title={uploadedAt
               ? `${url} @ ${formatDate(uploadedAt, 'yyyy-MM-dd HH:mm:ss')}`
               : url}
+            prefetch={false}
           >
             {uploadFileName}
           </Link>
@@ -69,6 +70,6 @@ export default function StorageUrls({
             </FormWithConfirm>
           </div>
         </Fragment>;})}
-    </AdminGrid>
+    </AdminTable>
   );
 }

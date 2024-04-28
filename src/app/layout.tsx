@@ -2,18 +2,21 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { clsx } from 'clsx/lite';
 import { IBM_Plex_Mono } from 'next/font/google';
-import { Metadata } from 'next';
-import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from '@/site/config';
+import {
+  BASE_URL,
+  SITE_DESCRIPTION,
+  SITE_DOMAIN_OR_TITLE,
+  SITE_TITLE,
+} from '@/site/config';
 import AppStateProvider from '@/state/AppStateProvider';
-import Nav from '@/site/Nav';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
 import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
-import Footer from '@/site/Footer';
-import { Suspense } from 'react';
-import FooterClient from '@/site/FooterClient';
-import NavClient from '@/site/NavClient';
-import CommandK from '@/site/CommandK';
+import { Metadata } from 'next/types';
 import { ThemeProvider } from 'next-themes';
+import Nav from '@/site/Nav';
+import Footer from '@/site/Footer';
+import CommandK from '@/site/CommandK';
+import SwrConfigClient from '../state/SwrConfigClient';
 
 import '../site/globals.css';
 import '../site/sonner.css';
@@ -69,34 +72,31 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      // Suppress hydration errors due to
-      // next-themes behavior
+      // Suppress hydration errors due to next-themes behavior
       suppressHydrationWarning
     >
       <body className={ibmPlexMono.variable}>
         <AppStateProvider>
-          <ThemeProvider attribute="class">
-            <main className={clsx(
-              'mx-3 mb-3',
-              'lg:mx-6 lg:mb-6',
-            )}>
-              <Suspense fallback={<NavClient />}>
-                <Nav />
-              </Suspense>
-              <div className={clsx(
-                'min-h-[16rem] sm:min-h-[30rem]',
-                'mb-12',
+          <SwrConfigClient>
+            <ThemeProvider attribute="class">
+              <main className={clsx(
+                'mx-3 mb-3',
+                'lg:mx-6 lg:mb-6',
               )}>
-                {children}
-              </div>
-              <Suspense fallback={<FooterClient />}>
+                <Nav siteDomainOrTitle={SITE_DOMAIN_OR_TITLE} />
+                <div className={clsx(
+                  'min-h-[16rem] sm:min-h-[30rem]',
+                  'mb-12',
+                )}>
+                  {children}
+                </div>
                 <Footer />
-              </Suspense>
-            </main>
-            <CommandK />
-          </ThemeProvider>
+              </main>
+              <CommandK />
+            </ThemeProvider>
+          </SwrConfigClient>
           <Analytics debug={false} />
-          <SpeedInsights debug={false} />
+          <SpeedInsights debug={false}  />
           <PhotoEscapeHandler />
           <ToasterWithThemes />
         </AppStateProvider>

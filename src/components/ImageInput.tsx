@@ -19,6 +19,7 @@ export default function ImageInput({
   maxSize = MAX_IMAGE_SIZE,
   quality = 0.8,
   loading,
+  showUploadStatus = true,
   debug,
 }: {
   onStart?: () => void
@@ -32,6 +33,7 @@ export default function ImageInput({
   maxSize?: number
   quality?: number
   loading?: boolean
+  showUploadStatus?: boolean
   debug?: boolean
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -62,7 +64,7 @@ export default function ImageInput({
             )}
             aria-disabled={loading}
           >
-            <span className="w-4 inline-flex items-center">
+            <span className="w-4 inline-flex items-center mr-1">
               {loading
                 ? <Spinner color="text" className="translate-y-[0.5px]" />
                 : <FiUploadCloud
@@ -219,7 +221,7 @@ export default function ImageInput({
             }}
           />
         </label>
-        {filesLength > 0 &&
+        {showUploadStatus && filesLength > 0 &&
           <div className="max-w-full truncate text-ellipsis">
             {uploadStatusText}
           </div>}

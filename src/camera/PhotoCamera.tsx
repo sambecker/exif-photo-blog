@@ -12,6 +12,7 @@ export default function PhotoCamera({
   type = 'icon-first',
   badged,
   contrast,
+  prefetch,
   countOnHover,
 }: {
   camera: Camera
@@ -38,6 +39,7 @@ export default function PhotoCamera({
       type={showAppleIcon && isCameraApple ? 'icon-first' : type}
       badged={badged}
       contrast={contrast}
+      prefetch={prefetch}
       hoverEntity={countOnHover}
     />
   );

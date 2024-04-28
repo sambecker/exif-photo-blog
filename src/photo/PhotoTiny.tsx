@@ -3,17 +3,20 @@ import ImageTiny from '@/components/ImageTiny';
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
 import { pathForPhoto } from '@/site/paths';
+import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
 
 export default function PhotoTiny({
   photo,
   tag,
   selected,
   className,
+  prefetch = SHOULD_PREFETCH_ALL_LINKS,
 }: {
   photo: Photo
   tag?: string
   selected?: boolean
   className?: string
+  prefetch?: boolean
 }) {
   return (
     <Link
@@ -26,6 +29,7 @@ export default function PhotoTiny({
         'rounded-[0.15rem] overflow-hidden',
         'border border-gray-200 dark:border-gray-800',
       )}
+      prefetch={prefetch}
     >
       <ImageTiny
         src={photo.url}

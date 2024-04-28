@@ -10,6 +10,7 @@ export default function PhotoTag({
   type,
   badged,
   contrast,
+  prefetch,
   countOnHover,
 }: {
   tag: string
@@ -26,6 +27,7 @@ export default function PhotoTag({
       type={type}
       badged={badged}
       contrast={contrast}
+      prefetch={prefetch}
       hoverEntity={countOnHover}
     />
   );

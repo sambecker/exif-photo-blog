@@ -1,6 +1,6 @@
 'use client';
 
-import { useAppState } from '@/state';
+import { useAppState } from '@/state/AppState';
 import { clsx } from 'clsx/lite';
 import { ReactNode } from 'react';
 

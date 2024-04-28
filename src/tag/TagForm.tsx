@@ -7,6 +7,7 @@ import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import { ReactNode, useMemo, useState } from 'react';
 import { renamePhotoTagGloballyAction } from '@/photo/actions';
 import { parameterize } from '@/utility/string';
+import { useAppState } from '@/state/AppState';
 
 export default function TagForm({
   tag,
@@ -15,6 +16,8 @@ export default function TagForm({
   tag: string
   children?: ReactNode
 }) {
+  const { invalidateSwr } = useAppState();
+
   const [updatedTagRaw, setUpdatedTagRaw] = useState(tag);
 
   const updatedTag = useMemo(() =>
@@ -61,6 +64,7 @@ export default function TagForm({
         </Link>
         <SubmitButtonWithStatus
           disabled={!isFormValid}
+          onFormSubmit={invalidateSwr}
         >
           Update
         </SubmitButtonWithStatus>

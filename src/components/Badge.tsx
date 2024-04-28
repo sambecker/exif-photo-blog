@@ -2,20 +2,20 @@ import { clsx } from 'clsx/lite';
 
 export default function Badge({
   children,
+  className,
   type = 'large',
   dimContent,
   highContrast,
   uppercase,
   interactive,
-  className,
 }: {
   children: React.ReactNode
+  className?: string
   type?: 'large' | 'small' | 'text-only'
   dimContent?: boolean
   highContrast?: boolean
   uppercase?: boolean
   interactive?: boolean
-  className?: string
 }) {
   const stylesForType = () => {
     switch (type) {
@@ -44,6 +44,7 @@ export default function Badge({
   };
   return (
     <span className={clsx(
+      className,
       'leading-none',
       stylesForType(),
       uppercase && 'uppercase tracking-wider',

@@ -7,6 +7,7 @@ import {
   sqlUpdatePhoto,
   sqlRenamePhotoTagGlobally,
   getPhoto,
+  getPhotos,
 } from '@/services/vercel-postgres';
 import {
   PhotoFormData,
@@ -19,8 +20,10 @@ import {
   deleteStorageUrl,
 } from '@/services/storage';
 import {
+  getPhotosCachedCached,
   revalidateAdminPaths,
   revalidateAllKeysAndPaths,
+  revalidatePhoto,
   revalidatePhotosKey,
   revalidateTagsKey,
 } from '@/photo/cache';
@@ -59,7 +62,7 @@ export async function updatePhotoAction(formData: FormData) {
 
     await sqlUpdatePhoto(photo);
 
-    revalidateAllKeysAndPaths();
+    revalidatePhoto(photo.id);
 
     redirect(PATH_ADMIN_PHOTOS);
   });
@@ -191,3 +194,10 @@ export async function streamAiImageQueryAction(
   return safelyRunAdminServerAction(async () =>
     streamOpenAiImageQuery(imageBase64, AI_IMAGE_QUERIES[query]));
 }
+
+export const getPhotosAction = async (offset: number, limit: number) =>
+  getPhotosCachedCached({ offset, limit });
+
+export const queryPhotosByTitleAction = async (query: string) =>
+  (await getPhotos({ query, limit: 10 }))
+    .filter(({ title }) => Boolean(title));

@@ -8,8 +8,7 @@ import TemplateImageResponse from
 import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
-
-export const runtime = 'edge';
+import { isNextImageReadyBasedOnPhotos } from '@/photo';
 
 export async function GET() {
   const [
@@ -27,10 +26,14 @@ export async function GET() {
 
   const { width, height } = IMAGE_OG_DIMENSION;
 
+  // Make sure next/image can be reached from absolute urls,
+  // which may not exist on first pre-render
+  const isNextImageReady = await isNextImageReadyBasedOnPhotos(photos);
+
   return new ImageResponse(
     (
       <TemplateImageResponse {...{
-        photos,
+        photos: isNextImageReady ? photos : [],
         includeHeader: false,
         outerMargin: 0,
         width,
