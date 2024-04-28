@@ -4,14 +4,25 @@ import {
   getUniqueFilmSimulationsCached,
   getUniqueTagsCached,
 } from '@/photo/cache';
+import {
+  getPhotosCount,
+  getUniqueCameras,
+  getUniqueFilmSimulations,
+  getUniqueTags,
+} from '@/services/vercel-postgres';
 import { SHOW_FILM_SIMULATIONS } from '@/site/config';
-import { TAG_FAVS } from '@/tag';
+import { sortTagsObject } from '@/tag';
+
+export const getPhotoSidebarData = () => [
+  getPhotosCount(),
+  getUniqueTags().then(sortTagsObject),
+  getUniqueCameras(),
+  SHOW_FILM_SIMULATIONS ? getUniqueFilmSimulations() : [],
+] as const;
 
 export const getPhotoSidebarDataCached = () => [
   getPhotosCountCached(),
-  getUniqueTagsCached().then(tags =>
-    tags.filter(({ tag }) => tag === TAG_FAVS).concat(
-      tags.filter(({ tag }) => tag !== TAG_FAVS))),
+  getUniqueTagsCached().then(sortTagsObject),
   getUniqueCamerasCached(),
   SHOW_FILM_SIMULATIONS ? getUniqueFilmSimulationsCached() : [],
 ] as const;
