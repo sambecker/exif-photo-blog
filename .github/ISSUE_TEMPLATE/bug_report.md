@@ -10,8 +10,10 @@ assignees: ''
 **Describe the bug**
 A clear and concise description of what the bug is.
 
-**To Reproduce**
-Steps to reproduce the behavior:
+**Does your template use custom code?**
+If so, how have you modified the template?
+
+**Steps to Reproduce**
 1. Go to '...'
 2. Click on '....'
 
