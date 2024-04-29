@@ -11,7 +11,7 @@ assignees: ''
 A clear and concise description of what the bug is.
 
 **Does your template use custom code?**
-If so, how have you modified the template?
+If so, what features/customizations have you added?
 
 **Steps to Reproduce**
 1. Go to '...'
