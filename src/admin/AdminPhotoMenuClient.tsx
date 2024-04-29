@@ -9,21 +9,27 @@ import { isPathFavs, isPhotoFav } from '@/tag';
 import { usePathname } from 'next/navigation';
 import { BiTrash } from 'react-icons/bi';
 import MoreMenu from '@/components/MoreMenu';
+import { useAppState } from '@/state/AppState';
+import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 
 export default function AdminPhotoMenuClient({
   photo,
+  revalidatePhoto,
   ...props
 }: Omit<ComponentProps<typeof MoreMenu>, 'items'> & {
   photo: Photo
+  revalidatePhoto?: RevalidatePhoto
 }) {
+  const { isUserSignedIn, registerAdminUpdate } = useAppState();
+
   const isFav = isPhotoFav(photo);
   const path = usePathname();
   const shouldRedirectFav = isPathFavs(path) && isFav;
   const shouldRedirectDelete = pathForPhoto(photo.id) === path;
 
   return (
-    <>
-      <MoreMenu {...{
+    isUserSignedIn
+      ? <MoreMenu {...{
         items: [
           {
             label: 'Edit',
@@ -43,7 +49,7 @@ export default function AdminPhotoMenuClient({
             action: () => toggleFavoritePhotoAction(
               photo.id,
               shouldRedirectFav,
-            ),
+            ).then(() => revalidatePhoto?.(photo.id)),
           }, {
             label: 'Delete',
             icon: <BiTrash
@@ -56,13 +62,16 @@ export default function AdminPhotoMenuClient({
                   photo.id,
                   photo.url,
                   shouldRedirectDelete,
-                );
+                ).then(() => {
+                  revalidatePhoto?.(photo.id, true);
+                  registerAdminUpdate?.();
+                });
               }
             },
           },
         ],
         ...props,
       }}/>
-    </>
+      : null
   );
 }

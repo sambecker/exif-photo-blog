@@ -5,7 +5,7 @@ import { Photo, getNextPhoto, getPreviousPhoto } from '@/photo';
 import PhotoLink from './PhotoLink';
 import { useRouter } from 'next/navigation';
 import { pathForPhoto } from '@/site/paths';
-import { useAppState } from '@/state';
+import { useAppState } from '@/state/AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import { Camera } from '@/camera';
 import { FilmSimulation } from '@/simulation';
@@ -86,6 +86,7 @@ export default function PhotoLinks({
         tag={tag}
         camera={camera}
         simulation={simulation}
+        scroll={false}
         prefetch
       >
         PREV
@@ -96,6 +97,7 @@ export default function PhotoLinks({
         tag={tag}
         camera={camera}
         simulation={simulation}
+        scroll={false}
         prefetch
       >
         NEXT

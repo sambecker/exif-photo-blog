@@ -1,22 +1,24 @@
 import PhotoTag from '@/tag/PhotoTag';
 import { isTagFavs } from '.';
 import FavsTag from './FavsTag';
-import { EntityLinkExternalProps } from '@/components/EntityLink';
+import { EntityLinkExternalProps } from '@/components/primitives/EntityLink';
+import { Fragment } from 'react';
 
 export default function PhotoTags({
   tags,
   contrast,
+  prefetch,
 }: {
   tags: string[]
 } & EntityLinkExternalProps) {
   return (
-    <div className="-space-y-0.5">
+    <div className="flex flex-col">
       {tags.map(tag =>
-        <div key={tag}>
+        <Fragment key={tag}>
           {isTagFavs(tag)
-            ? <FavsTag {...{ contrast }} />
-            : <PhotoTag {...{ tag, contrast }} />}
-        </div>)}
+            ? <FavsTag {...{ contrast, prefetch }} />
+            : <PhotoTag {...{ tag, contrast, prefetch }} />}
+        </Fragment>)}
     </div>
   );
 }

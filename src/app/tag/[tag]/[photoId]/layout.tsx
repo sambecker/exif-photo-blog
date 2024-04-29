@@ -2,7 +2,7 @@ import {
   descriptionForPhoto,
   titleForPhoto,
 } from '@/photo';
-import { Metadata } from 'next';
+import { Metadata } from 'next/types';
 import { redirect } from 'next/navigation';
 import {
   PATH_ROOT,
@@ -12,7 +12,9 @@ import {
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotoCached } from '@/photo/cache';
 import { getPhotosTagDataCached } from '@/tag/data';
-import { ReactNode } from 'react';
+import { ReactNode, cache } from 'react';
+
+const getPhotoCachedCached = cache(getPhotoCached);
 
 interface PhotoTagProps {
   params: { photoId: string, tag: string }
@@ -21,7 +23,7 @@ interface PhotoTagProps {
 export async function generateMetadata({
   params: { photoId, tag },
 }: PhotoTagProps): Promise<Metadata> {
-  const photo = await getPhotoCached(photoId);
+  const photo = await getPhotoCachedCached(photoId);
 
   if (!photo) { return {}; }
 
@@ -52,14 +54,13 @@ export default async function PhotoTagPage({
   params: { photoId, tag },
   children,
 }: PhotoTagProps & { children: ReactNode }) {
-  const photo = await getPhotoCached(photoId);
+  const photo = await getPhotoCachedCached(photoId);
 
   if (!photo) { redirect(PATH_ROOT); }
 
   const [
     photos,
-    count,
-    dateRange,
+    { count, dateRange },
   ] = await getPhotosTagDataCached({ tag });
 
   return <>

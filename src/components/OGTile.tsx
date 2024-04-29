@@ -110,9 +110,8 @@ export default function OGTile({
           />}
       </div>
       <div className={clsx(
-        'md:text-lg',
+        'font-sans leading-tight',
         'flex flex-col gap-1 p-3',
-        'font-sans leading-none',
         'bg-gray-50 dark:bg-gray-900/50',
         'group-active:bg-gray-50 group-active:dark:bg-gray-900/50',
         'group-hover:bg-gray-100 group-hover:dark:bg-gray-900/70',

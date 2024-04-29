@@ -9,6 +9,15 @@ import {
   useState,
   useTransition,
 } from 'react';
+import {
+  PATH_ADMIN_BASELINE,
+  PATH_ADMIN_CONFIGURATION,
+  PATH_ADMIN_PHOTOS,
+  PATH_ADMIN_TAGS,
+  PATH_ADMIN_UPLOADS,
+  PATH_SIGN_IN,
+  pathForPhoto,
+} from '../site/paths';
 import Modal from './Modal';
 import { clsx } from 'clsx/lite';
 import { useDebounce } from 'use-debounce';
@@ -17,38 +26,52 @@ import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
 import { IoInvertModeSharp } from 'react-icons/io5';
-import { useAppState } from '@/state';
+import { useAppState } from '@/state/AppState';
+import { queryPhotosByTitleAction } from '@/photo/actions';
+import { RiToolsFill } from 'react-icons/ri';
+import { BiLockAlt, BiSolidUser } from 'react-icons/bi';
+import { HiDocumentText } from 'react-icons/hi';
+import { signOutAndRedirectAction } from '@/auth/actions';
+import { TbPhoto } from 'react-icons/tb';
+import { getKeywordsForPhoto, titleForPhoto } from '@/photo';
+import PhotoDate from '@/photo/PhotoDate';
+import PhotoTiny from '@/photo/PhotoTiny';
 
 const LISTENER_KEYDOWN = 'keydown';
 const MINIMUM_QUERY_LENGTH = 2;
 
+type CommandKItem = {
+  label: string
+  keywords?: string[]
+  annotation?: ReactNode
+  annotationAria?: string
+  accessory?: ReactNode
+  path?: string
+  action?: () => void | Promise<void>
+}
+
 export type CommandKSection = {
   heading: string
   accessory?: ReactNode
-  items: {
-    label: string
-    keywords?: string[]
-    annotation?: ReactNode
-    annotationAria?: string
-    accessory?: ReactNode
-    path?: string
-    action?: () => void
-  }[]
+  items: CommandKItem[]
 }
 
 export default function CommandKClient({
-  onQueryChange,
-  sections = [],
+  serverSections = [],
+  showDebugTools,
   footer,
 }: {
-  onQueryChange?: (query: string) => Promise<CommandKSection[]>
-  sections?: CommandKSection[]
+  serverSections?: CommandKSection[]
+  showDebugTools?: boolean
   footer?: string
 }) {
   const {
+    isUserSignedIn,
+    setUserEmail,
     isCommandKOpen: isOpen,
     setIsCommandKOpen: setIsOpen,
     setShouldRespondToKeyboardCommands,
+    setShouldShowBaselineGrid,
   } = useAppState();
 
   const isOpenRef = useRef(isOpen);
@@ -100,9 +123,21 @@ export default function CommandKClient({
   useEffect(() => {
     if (queryDebounced.length >= MINIMUM_QUERY_LENGTH && !isPending) {
       setIsLoading(true);
-      onQueryChange?.(queryDebounced).then(querySections => {
+      queryPhotosByTitleAction(queryDebounced).then(photos => {
         if (isOpenRef.current) {
-          setQueriedSections(querySections);
+          setQueriedSections(photos.length > 0
+            ? [{
+              heading: 'Photos',
+              accessory: <TbPhoto size={14} />,
+              items: photos.map(photo => ({
+                label: titleForPhoto(photo),
+                keywords: getKeywordsForPhoto(photo),
+                annotation: <PhotoDate {...{ photo }} />,
+                accessory: <PhotoTiny photo={photo} />,
+                path: pathForPhoto(photo),
+              })),
+            }]
+            : []);
         } else {
           // Ignore stale requests that come in after dialog is closed
           setQueriedSections([]);
@@ -110,7 +145,7 @@ export default function CommandKClient({
         setIsLoading(false);
       });
     }
-  }, [queryDebounced, onQueryChange, isPending]);
+  }, [queryDebounced, isPending]);
 
   useEffect(() => {
     if (queryLive === '') {
@@ -132,7 +167,7 @@ export default function CommandKClient({
     }
   }, [isOpen, setShouldRespondToKeyboardCommands]);
 
-  const sectionTheme: CommandKSection = {
+  const clientSections: CommandKSection[] = [{
     heading: 'Theme',
     accessory: <IoInvertModeSharp
       size={14}
@@ -151,6 +186,68 @@ export default function CommandKClient({
       annotation: <BiMoon className="translate-x-[1px]" />,
       action: () => setTheme('dark'),
     }],
+  }];
+
+  if (isUserSignedIn && showDebugTools) {
+    clientSections.push({
+      heading: 'Debug Tools',
+      accessory: <RiToolsFill size={16} className="translate-x-[-1px]" />,
+      items: [{
+        label: 'Toggle Baseline Grid',
+        action: () => setShouldShowBaselineGrid?.(prev => !prev),
+      }],
+    });
+  }
+
+  const sectionPages: CommandKSection = {
+    heading: 'Pages',
+    accessory: <HiDocumentText size={15} className="translate-x-[-1px]" />,
+    items: ([{
+      label: 'Home',
+      path: '/',
+    }, {
+      label: 'Grid',
+      path:'/grid',
+    }]),
+  };
+
+  const adminSection: CommandKSection = {
+    heading: 'Admin',
+    accessory: <BiSolidUser size={15} className="translate-x-[-1px]" />,
+    items: isUserSignedIn
+      ? ([{
+        label: 'Manage Photos',
+        annotation: <BiLockAlt />,
+        path: PATH_ADMIN_PHOTOS,
+      }, {
+        label: 'Manage Uploads',
+        annotation: <BiLockAlt />,
+        path: PATH_ADMIN_UPLOADS,
+      }, {
+        label: 'Manage Tags',
+        annotation: <BiLockAlt />,
+        path: PATH_ADMIN_TAGS,
+      }, {
+        label: 'App Config',
+        annotation: <BiLockAlt />,
+        path: PATH_ADMIN_CONFIGURATION,
+      }] as CommandKItem[])
+        .concat(showDebugTools
+          ? [{
+            label: 'Baseline Overview',
+            path: PATH_ADMIN_BASELINE,
+          }]
+          : [])
+        .concat({
+          label: 'Sign Out',
+          action: () => {
+            signOutAndRedirectAction().then(() => setUserEmail?.(undefined));
+          },
+        })
+      : [{
+        label: 'Sign In',
+        path: PATH_SIGN_IN,
+      }],
   };
 
   return (
@@ -204,8 +301,10 @@ export default function CommandKClient({
               {isLoading ? 'Searching ...' : 'No results found'}
             </Command.Empty>
             {queriedSections
-              .concat(sections)
-              .concat(sectionTheme)
+              .concat(serverSections)
+              .concat(sectionPages)
+              .concat(adminSection)
+              .concat(clientSections)
               .filter(({ items }) => items.length > 0)
               .map(({ heading, accessory, items }) =>
                 <Command.Group

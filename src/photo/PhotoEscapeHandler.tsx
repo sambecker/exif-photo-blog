@@ -1,7 +1,7 @@
 'use client';
 
 import { getEscapePath } from '@/site/paths';
-import { useAppState } from '@/state';
+import { useAppState } from '@/state/AppState';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 

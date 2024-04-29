@@ -1,60 +1,51 @@
-import { getPhotosCached, getPhotosCountCached } from '@/photo/cache';
-import AnimateItems from '@/components/AnimateItems';
-import MorePhotos from '@/photo/MorePhotos';
-import SiteGrid from '@/components/SiteGrid';
-import { generateOgImageMetaForPhotos } from '@/photo';
-import PhotoLarge from '@/photo/PhotoLarge';
-import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import {
-  PaginationParams,
-  getPaginationForSearchParams,
-} from '@/site/pagination';
-import { pathForRoot } from '@/site/paths';
-import { Metadata } from 'next';
+  INFINITE_SCROLL_INITIAL_HOME,
+  INFINITE_SCROLL_MULTIPLE_HOME,
+  generateOgImageMetaForPhotos,
+} from '@/photo';
+import PhotosEmptyState from '@/photo/PhotosEmptyState';
+import { Metadata } from 'next/types';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
+import PhotosLarge from '@/photo/PhotosLarge';
+import { cache } from 'react';
+import { getPhotos, getPhotosCount } from '@/services/vercel-postgres';
+import PhotosLargeInfinite from '@/photo/PhotosLargeInfinite';
 
-export const runtime = 'edge';
+export const dynamic = 'force-static';
+
+const getPhotosCached = cache(getPhotos);
 
 export async function generateMetadata(): Promise<Metadata> {
   // Make homepage queries resilient to error on first time setup
-  const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG })
+  const photos = await getPhotosCached({
+    limit: MAX_PHOTOS_TO_SHOW_OG,
+  })
     .catch(() => []);
   return generateOgImageMetaForPhotos(photos);
 }
 
-export default async function HomePage({ searchParams }: PaginationParams) {
-  const { offset, limit } = getPaginationForSearchParams(searchParams, 12);
-
+export default async function HomePage() {
+  // Make homepage queries resilient to error on first time setup
   const [
     photos,
-    count,
+    photosCount,
   ] = await Promise.all([
-    // Make homepage queries resilient to error on first time setup
-    getPhotosCached({ limit }).catch(() => []),
-    getPhotosCountCached().catch(() => 0),
+    getPhotosCached({ 
+      limit: INFINITE_SCROLL_INITIAL_HOME,
+    })
+      .catch(() => []),
+    getPhotosCount()
+      .catch(() => 0),
   ]);
-  
-  const showMorePhotos = count > photos.length;
 
   return (
     photos.length > 0
-      ? <div className="space-y-4">
-        <AnimateItems
-          className="space-y-1"
-          duration={0.7}
-          staggerDelay={0.15}
-          distanceOffset={0}
-          staggerOnFirstLoadOnly
-          items={photos.map((photo, index) =>
-            <PhotoLarge
-              key={photo.id}
-              photo={photo}
-              priority={index <= 1}
-            />)}
-        />
-        {showMorePhotos &&
-          <SiteGrid
-            contentMain={<MorePhotos path={pathForRoot(offset + 1)} />}
+      ? <div className="space-y-1">
+        <PhotosLarge {...{ photos }} />
+        {photosCount > photos.length &&
+          <PhotosLargeInfinite
+            initialOffset={INFINITE_SCROLL_INITIAL_HOME}
+            itemsPerPage={INFINITE_SCROLL_MULTIPLE_HOME}
           />}
       </div>
       : <PhotosEmptyState />

@@ -1,65 +1,58 @@
-'use client';
-
-import SiteGrid from '@/components/SiteGrid';
+import { getStorageUploadUrlsNoStore } from '@/services/storage/cache';
 import {
-  PATH_ADMIN_CONFIGURATION,
-  checkPathPrefix,
-  isPathAdminConfiguration,
+  getPhotosCountIncludingHiddenCached,
+  getPhotosMostRecentUpdateCached,
+  getUniqueTagsCached,
+} from '@/photo/cache';
+import {
+  PATH_ADMIN_PHOTOS,
+  PATH_ADMIN_TAGS,
+  PATH_ADMIN_UPLOADS,
 } from '@/site/paths';
-import { clsx } from 'clsx/lite';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { BiCog } from 'react-icons/bi';
+import AdminNavClient from './AdminNavClient';
 
-export default function AdminNav({
-  items,
-}: {
-  items: {
-    label: string,
-    href: string,
-    count: number,
-  }[]
-}) {
-  const pathname = usePathname();
+export default async function AdminNav() {
+  const [
+    countPhotos,
+    countUploads,
+    countTags,
+    mostRecentPhotoUpdateTime,
+  ] = await Promise.all([
+    getPhotosCountIncludingHiddenCached().catch(() => 0),
+    getStorageUploadUrlsNoStore()
+      .then(urls => urls.length)
+      .catch(e => {
+        console.error(`Error getting blob upload urls: ${e}`);
+        return 0;
+      }),
+    getUniqueTagsCached().then(tags => tags.length).catch(() => 0),
+    getPhotosMostRecentUpdateCached(),
+  ]);
+
+  const navItemPhotos = {
+    label: 'Photos',
+    href: PATH_ADMIN_PHOTOS,
+    count: countPhotos,
+  };
+
+  const navItemUploads = {
+    label: 'Uploads',
+    href: PATH_ADMIN_UPLOADS,
+    count: countUploads,
+  };
+
+  const navItemTags = {
+    label: 'Tags',
+    href: PATH_ADMIN_TAGS,
+    count: countTags,
+  };
+
+  const items = [navItemPhotos];
+
+  if (countUploads > 0) { items.push(navItemUploads); }
+  if (countTags > 0) { items.push(navItemTags); }
 
   return (
-    <SiteGrid
-      contentMain={
-        <div className={clsx(
-          'flex gap-2 md:gap-4',
-          'border-b border-gray-200 dark:border-gray-800 pb-3',
-        )}>
-          <div className={clsx(
-            'flex gap-2 md:gap-4',
-            'flex-grow overflow-x-auto',
-          )}>
-            {items.map(({ label, href, count }) =>
-              <Link
-                key={label}
-                href={href}
-                className={clsx(
-                  'flex gap-0.5',
-                  checkPathPrefix(pathname, href) ? 'font-bold' : 'text-dim',
-                )}
-              >
-                <span>{label}</span>
-                <span>({count})</span>
-              </Link>)}
-          </div>
-          <Link
-            href={PATH_ADMIN_CONFIGURATION}
-            className={isPathAdminConfiguration(pathname)
-              ? 'font-bold'
-              : 'text-dim'}
-          >
-            <BiCog
-              size={18}
-              className="inline-block"
-              aria-label="App Configuration"
-            />
-          </Link>
-        </div>
-      }
-    />
+    <AdminNavClient {...{ items, mostRecentPhotoUpdateTime }} />
   );
 }

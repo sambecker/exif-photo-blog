@@ -1,19 +1,17 @@
 import { getPhotoCached } from '@/photo/cache';
-import { cameraFromPhoto } from '@/camera';
+import { PhotoCameraProps, cameraFromPhoto } from '@/camera';
 import PhotoShareModal from '@/photo/PhotoShareModal';
 import { PATH_ROOT } from '@/site/paths';
 import { redirect } from 'next/navigation';
 
 export default async function Share({
-  params: { photoId, camera: cameraProp },
-}: {
-  params: { photoId: string, camera: string }
-}) {
+  params: { photoId, make, model },
+}: PhotoCameraProps) {
   const photo = await getPhotoCached(photoId);
 
   if (!photo) { return redirect(PATH_ROOT); }
 
-  const camera = cameraFromPhoto(photo, cameraProp);
+  const camera = cameraFromPhoto(photo, { make, model });
 
   return <PhotoShareModal {...{ photo, camera }} />;
 }

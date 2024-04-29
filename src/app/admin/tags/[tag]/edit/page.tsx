@@ -1,13 +1,11 @@
 import AdminChildPage from '@/components/AdminChildPage';
 import { redirect } from 'next/navigation';
-import { getPhotosCached, getPhotosTagCountCached } from '@/photo/cache';
+import { getPhotosCached } from '@/photo/cache';
 import TagForm from '@/tag/TagForm';
 import { PATH_ADMIN, PATH_ADMIN_TAGS, pathForTag } from '@/site/paths';
-import PhotoTag from '@/tag/PhotoTag';
-import { photoLabelForCount } from '@/photo';
 import PhotoLightbox from '@/photo/PhotoLightbox';
-import FavsTag from '@/tag/FavsTag';
-import { isTagFavs } from '@/tag';
+import { getPhotosTagMeta } from '@/services/vercel-postgres';
+import AdminTagBadge from '@/admin/AdminTagBadge';
 
 const MAX_PHOTO_TO_SHOW = 6;
 
@@ -21,10 +19,10 @@ export default async function PhotoPageEdit({
   const tag = decodeURIComponent(tagFromParams);
   
   const [
-    count,
+    { count },
     photos,
   ] = await Promise.all([
-    getPhotosTagCountCached(tag),
+    getPhotosTagMeta(tag),
     getPhotosCached({ tag, limit: MAX_PHOTO_TO_SHOW }),
   ]);
 
@@ -34,22 +32,7 @@ export default async function PhotoPageEdit({
     <AdminChildPage
       backPath={PATH_ADMIN_TAGS}
       backLabel="Tags"
-      breadcrumb={<div className="flex items-center gap-2">
-        {isTagFavs(tag)
-          ? <div className="[&>*>*>*>svg]:translate-y-[0.5px]">
-            <FavsTag />
-          </div>
-          : <div className="[&>*>*>*>svg]:translate-y-[1.5px]">
-            <PhotoTag {...{ tag }} />
-          </div>}
-        <div className="text-dim uppercase">
-          <span>{count}</span>
-          <span className="hidden xs:inline-block">
-            &nbsp;
-            {photoLabelForCount(count)}
-          </span>
-        </div>
-      </div>}
+      breadcrumb={<AdminTagBadge {...{ tag, count, hideBadge: true }} />}
     >
       <TagForm {...{ tag, photos }}>
         <PhotoLightbox

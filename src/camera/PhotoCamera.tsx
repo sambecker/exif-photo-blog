@@ -2,7 +2,9 @@ import { AiFillApple } from 'react-icons/ai';
 import { pathForCamera } from '@/site/paths';
 import { IoMdCamera } from 'react-icons/io';
 import { Camera, formatCameraText } from '.';
-import EntityLink, { EntityLinkExternalProps } from '@/components/EntityLink';
+import EntityLink, {
+  EntityLinkExternalProps,
+} from '@/components/primitives/EntityLink';
 
 export default function PhotoCamera({
   camera,
@@ -10,6 +12,7 @@ export default function PhotoCamera({
   type = 'icon-first',
   badged,
   contrast,
+  prefetch,
   countOnHover,
 }: {
   camera: Camera
@@ -26,16 +29,17 @@ export default function PhotoCamera({
       icon={showAppleIcon
         ? <AiFillApple
           title="Apple"
-          className="translate-x-[-2.5px] translate-y-[2px]"
+          className="translate-x-[-0.5px]"
           size={15}
         />
         : <IoMdCamera
           size={12}
-          className="translate-x-[-1px] translate-y-[3.5px]"
+          className="translate-x-[-1px]"
         />}
       type={showAppleIcon && isCameraApple ? 'icon-first' : type}
       badged={badged}
       contrast={contrast}
+      prefetch={prefetch}
       hoverEntity={countOnHover}
     />
   );

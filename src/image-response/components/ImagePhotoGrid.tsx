@@ -60,6 +60,7 @@ export default function ImagePhotoGrid({
             width: cellWidth,
             height: cellHeight,
             overflow: 'hidden',
+            filter: 'saturate(1.1)',
           }}
         >
           <img {...{

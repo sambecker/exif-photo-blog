@@ -1,11 +1,11 @@
+import AdminCTA from '@/admin/AdminCTA';
 import InfoBlock from '@/components/InfoBlock';
 import SiteGrid from '@/components/SiteGrid';
 import { IS_SITE_READY } from '@/site/config';
-import { PATH_ADMIN_CONFIGURATION, PATH_ADMIN_PHOTOS } from '@/site/paths';
+import { PATH_ADMIN_CONFIGURATION } from '@/site/paths';
 import SiteChecklist from '@/site/SiteChecklist';
 import { clsx } from 'clsx/lite';
 import Link from 'next/link';
-import { FaArrowRight } from 'react-icons/fa';
 import { HiOutlinePhotograph } from 'react-icons/hi';
 
 export default function PhotosEmptyState() {
@@ -27,19 +27,13 @@ export default function PhotosEmptyState() {
             {!IS_SITE_READY ? 'Finish Setup' : 'Setup Complete!'}
           </div>
           {!IS_SITE_READY
-            ? <SiteChecklist />
+            ? <SiteChecklist simplifiedView />
             : <div className="max-w-md text-center space-y-6">
               <div className="space-y-2">
                 <div>
                   Add your first photo:
                 </div>
-                <Link
-                  href={PATH_ADMIN_PHOTOS}
-                  className="button primary"
-                >
-                  <span>Admin Dashboard</span>
-                  <FaArrowRight size={10} />
-                </Link>
+                <AdminCTA />
               </div>
               <div>
                 Change the name of this blog and other configuration

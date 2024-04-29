@@ -2,20 +2,20 @@ import { clsx } from 'clsx/lite';
 
 export default function Badge({
   children,
+  className,
   type = 'large',
   dimContent,
   highContrast,
   uppercase,
   interactive,
-  className,
 }: {
   children: React.ReactNode
+  className?: string
   type?: 'large' | 'small' | 'text-only'
   dimContent?: boolean
   highContrast?: boolean
   uppercase?: boolean
   interactive?: boolean
-  className?: string
 }) {
   const stylesForType = () => {
     switch (type) {
@@ -27,8 +27,9 @@ export default function Badge({
       );
     case 'small':
       return clsx(
-        'px-[0.3rem] py-1 rounded-[0.25rem]',
-        'text-[0.7rem] font-medium',
+        'h-max-baseline',
+        'px-[5px] py-[2.75px]',
+        'text-[0.7rem] font-medium rounded-[0.25rem]',
         highContrast
           ? 'text-invert bg-invert'
           : 'text-medium bg-gray-300/30 dark:bg-gray-700/50',
@@ -43,6 +44,7 @@ export default function Badge({
   };
   return (
     <span className={clsx(
+      className,
       'leading-none',
       stylesForType(),
       uppercase && 'uppercase tracking-wider',
