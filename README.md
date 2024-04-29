@@ -28,48 +28,40 @@ Installation
 
 1. Click Deploy
 2. Add required storage ([Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres/quickstart#create-a-postgres-database) + [Vercel Blob](https://vercel.com/docs/storage/vercel-blob/quickstart#create-a-blob-store))
-3. Add environment variables:
+3. Configure environment variables:
 - `NEXT_PUBLIC_SITE_TITLE` (e.g., My Photos)
 - `NEXT_PUBLIC_SITE_DOMAIN` (e.g., photos.domain.com)
 - `NEXT_PUBLIC_SITE_DESCRIPTION` (optional—mainly used for OG meta)
 
 ### 2. Setup Auth
 
-1. [Generate auth secret](https://generate-secret.vercel.app/32)
-2. Add to environment variables:
+1. [Generate auth secret](https://generate-secret.vercel.app/32) and add to environment variables:
 - `AUTH_SECRET`
-3. Add admin user to environment variables:
+2. Add admin user to environment variables:
 - `ADMIN_EMAIL`
 - `ADMIN_PASSWORD`
+3. Trigger redeploy
+- Visit project on Vercel, navigate to "Deployments" tab, click ••• button next to most recent deployment, and select "Redeploy"
 
-
-### 3. Upload your first photo
+### 3. Upload your first photo 🎉
 1. Visit `/admin`
-2. Click "Choose File"
-3. Title your photo
+2. Sign in with credentials supplied in Step 2
+2. Click "Upload Photos"
+3. Add optional title
 4. Click "Create"
 
-### 4. Develop locally
-
+Develop locally
+-
 1. Clone code
 2. Run `pnpm i` to install dependencies
 3. Set environment variable `AUTH_URL` locally (not in production) to `http://localhost:3000/api/url` (_this is a temporary limitation of `next-auth` v5.0 Beta_)
-4. Install [Vercel CLI](https://vercel.com/docs/cli#installing-vercel-cli)
-5. Run `vc dev` to start dev server with Vercel-stored environment variables
+4. If necessary, install [Vercel CLI](https://vercel.com/docs/cli#installing-vercel-cli) and log in by running `vercel login`
+5. Run `vercel link` to connect the CLI to your project
+5. Run `vercel dev` to start dev server with Vercel-managed environment variables
 
-### 5. Add Analytics (optional)
-
-1. Open project on Vercel
-2. Click "Analytics" tab
-3. Follow "Enable Web Analytics" instructions (`@vercel/analytics` already included)
-
-### 6. Add Speed Insights (optional)
-
-1. Open project on Vercel
-2. Click "Speed Insights" tab
-3. Follow "Enable Speed Insights" instructions (`@vercel/speed-insights` already included)
-
-### 7. Add experimental AI text generation
+Further customization
+-
+### Experimental AI text generation
 
 _⚠️ READ BEFORE PROCEEDING_
 
@@ -85,7 +77,19 @@ _⚠️ READ BEFORE PROCEEDING_
    - Set which text fields auto-generate when uploading a photo by storing a comma-separated list, e.g., `AI_TEXT_AUTO_GENERATED_FIELDS = title, semantic`
    - Accepted values: title, caption, tags, description, all, or none (default is "all")
 
-### 8. Optional configuration
+### Web Analytics
+
+1. Open project on Vercel
+2. Click "Analytics" tab
+3. Follow "Enable Web Analytics" instructions (`@vercel/analytics` already included)
+
+### Speed Insights
+
+1. Open project on Vercel
+2. Click "Speed Insights" tab
+3. Follow "Enable Speed Insights" instructions (`@vercel/speed-insights` already included)
+
+### Optional configuration
 
 Application behavior can be changed by configuring the following environment variables:
 
