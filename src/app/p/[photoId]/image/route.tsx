@@ -4,6 +4,19 @@ import PhotoImageResponse from '@/image-response/PhotoImageResponse';
 import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
+import { STATICALLY_OPTIMIZED } from '@/site/config';
+import { getPhotoIds } from '@/services/vercel-postgres';
+import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo';
+
+export let generateStaticParams:
+  (() => Promise<{ photoId: string }[]>) | undefined = undefined;
+
+if (STATICALLY_OPTIMIZED) {
+  generateStaticParams = async () => {
+    const photos = await getPhotoIds({ limit: GENERATE_STATIC_PARAMS_LIMIT });
+    return photos.map(photoId => ({ photoId }));
+  };
+}
 
 export async function GET(
   _: Request,
