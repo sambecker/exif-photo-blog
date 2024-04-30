@@ -1,7 +1,9 @@
+import { POSTGRES_SSL_ENABLED } from '@/site/config';
 import { Pool, QueryResult, QueryResultRow } from 'pg';
 
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
+  ...POSTGRES_SSL_ENABLED && { ssl: true },
 });
 
 export type Primitive = string | number | boolean | undefined | null;

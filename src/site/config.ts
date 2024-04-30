@@ -52,7 +52,8 @@ export const SITE_DESCRIPTION =
 // STORAGE: DATABASE
 export const HAS_DATABASE =
   (process.env.POSTGRES_URL ?? '').length > 0;
-
+export const POSTGRES_SSL_ENABLED =
+  process.env.DISABLE_POSTGRES_SSL === '1' ? false : true;
 // STORAGE: VERCEL KV
 export const HAS_VERCEL_KV =
   (process.env.KV_URL ?? '').length > 0;
@@ -133,6 +134,7 @@ export const HIGH_DENSITY_GRID = GRID_ASPECT_RATIO <= 1;
 
 export const CONFIG_CHECKLIST_STATUS = {
   hasDatabase: HAS_DATABASE,
+  isPostgresSSLEnabled: POSTGRES_SSL_ENABLED,
   hasVercelKV: HAS_VERCEL_KV,
   hasVercelBlobStorage: HAS_VERCEL_BLOB_STORAGE,
   hasCloudflareR2Storage: HAS_CLOUDFLARE_R2_STORAGE,
