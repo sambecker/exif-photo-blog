@@ -26,9 +26,11 @@ export default async function AdminPhotosPage() {
       includeHidden: true,
       sortBy: 'createdAt',
       limit: INFINITE_SCROLL_INITIAL_ADMIN_PHOTOS,
-    }),
-    getPhotosCountIncludingHiddenCached(),
-    DEBUG_PHOTO_BLOBS ? getStoragePhotoUrlsNoStore() : [],
+    }).catch(() => []),
+    getPhotosCountIncludingHiddenCached().catch(() => 0),
+    DEBUG_PHOTO_BLOBS
+      ? getStoragePhotoUrlsNoStore()
+      : [],
   ]);
 
   return (

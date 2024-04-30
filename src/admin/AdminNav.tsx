@@ -26,7 +26,7 @@ export default async function AdminNav() {
         return 0;
       }),
     getUniqueTagsCached().then(tags => tags.length).catch(() => 0),
-    getPhotosMostRecentUpdateCached(),
+    getPhotosMostRecentUpdateCached().catch(() => undefined),
   ]);
 
   const navItemPhotos = {

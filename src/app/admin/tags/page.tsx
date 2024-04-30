@@ -3,7 +3,7 @@ import SiteGrid from '@/components/SiteGrid';
 import { getUniqueTagsHiddenCached } from '@/photo/cache';
 
 export default async function AdminTagsPage() {
-  const tags = await getUniqueTagsHiddenCached();
+  const tags = await getUniqueTagsHiddenCached().catch(() => []);
 
   return (
     <SiteGrid

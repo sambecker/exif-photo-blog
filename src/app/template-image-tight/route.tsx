@@ -19,7 +19,7 @@ export async function GET() {
     getPhotosCached({
       sortBy: 'priority',
       limit: MAX_PHOTOS_TO_SHOW_TEMPLATE_TIGHT,
-    }),
+    }).catch(() => []),
     getIBMPlexMonoMedium(),
     getImageResponseCacheControlHeaders(),
   ]);
