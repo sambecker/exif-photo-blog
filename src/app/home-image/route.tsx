@@ -9,6 +9,8 @@ import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { isNextImageReadyBasedOnPhotos } from '@/photo';
 
+export const dynamic = 'force-static';
+
 export async function GET() {
   const [
     photos,
