@@ -1,4 +1,8 @@
-import { db, sql } from '@vercel/postgres';
+import {
+  sql,
+  directQuery,
+  convertArrayToPostgresString,
+} from '@/services/postgres';
 import {
   PhotoDb,
   PhotoDbInsert,
@@ -15,10 +19,6 @@ import { SHOULD_DEBUG_SQL, PRIORITY_ORDER_ENABLED } from '@/site/config';
 import { screenForPPR } from '@/utility/ppr';
 
 const PHOTO_DEFAULT_LIMIT = 100;
-
-export const convertArrayToPostgresString = (array?: string[]) => array
-  ? `{${array.join(',')}}`
-  : null;
 
 const sqlCreatePhotosTable = () =>
   sql`
@@ -420,7 +420,7 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
   values.push(limit, offset);
 
   return safelyQueryPhotos(async () => {
-    return db.query(sql.join(' '), values);
+    return directQuery(sql.join(' '), values);
   }, sql.join(' '))
     .then(({ rows }) => rows.map(parsePhotoFromDb));
 };
@@ -434,7 +434,7 @@ export const getPhotosNearId = async (
     : 'ORDER BY taken_at DESC';
 
   return safelyQueryPhotos(async () => {
-    return db.query(
+    return directQuery(
       `
         WITH twi AS (
           SELECT *, row_number()

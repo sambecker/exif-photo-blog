@@ -5,7 +5,7 @@ import { getPhotosCountIncludingHiddenCached } from '@/photo/cache';
 import StorageUrls from '@/admin/StorageUrls';
 import { PRO_MODE_ENABLED } from '@/site/config';
 import { getStoragePhotoUrlsNoStore } from '@/services/storage/cache';
-import { getPhotos } from '@/services/vercel-postgres';
+import { getPhotos } from '@/photo/db';
 import { revalidatePath } from 'next/cache';
 import AdminPhotoTable from '@/admin/AdminPhotoTable';
 import AdminPhotoTableInfinite from

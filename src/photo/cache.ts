@@ -20,7 +20,7 @@ import {
   getPhotosDateRange,
   getPhotosNearId,
   getPhotosMostRecentUpdate,
-} from '@/services/vercel-postgres';
+} from '@/photo/db';
 import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
 import { createCameraKey } from '@/camera';
 import {
