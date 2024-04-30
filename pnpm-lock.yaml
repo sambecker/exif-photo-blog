@@ -122,6 +122,9 @@ importers:
       postcss:
         specifier: 8.4.38
         version: 8.4.38
+      postgres:
+        specifier: ^3.4.4
+        version: 3.4.4
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -3401,6 +3404,10 @@ packages:
   postgres-interval@1.2.0:
     resolution: {integrity: sha512-9ZhXKM/rw350N1ovuWHbGxnGh/SNJ4cnxHiM0rxE4VN41wsg8P8zWn9hv/buK00RP4WvlOyr/RBDiptyxVbkZQ==}
     engines: {node: '>=0.10.0'}
+
+  postgres@3.4.4:
+    resolution: {integrity: sha512-IbyN+9KslkqcXa8AO9fxpk97PA4pzewvpi2B3Dwy9u4zpV32QicaEdgmF3eSQUzdRk7ttDHQejNgAEr4XoeH4A==}
+    engines: {node: '>=12'}
 
   preact-render-to-string@5.2.3:
     resolution: {integrity: sha512-aPDxUn5o3GhWdtJtW0svRC2SS/l8D9MAgo2+AWml+BhDImb27ALf04Q2d+AHqUUOc6RdSXFIBVa2gxzgMKgtZA==}
@@ -8422,6 +8429,8 @@ snapshots:
   postgres-interval@1.2.0:
     dependencies:
       xtend: 4.0.2
+
+  postgres@3.4.4: {}
 
   preact-render-to-string@5.2.3(preact@10.11.3):
     dependencies:
