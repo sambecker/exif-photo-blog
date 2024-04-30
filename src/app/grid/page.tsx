@@ -19,7 +19,10 @@ export const dynamic = 'force-static';
 const getPhotosCached = cache(getPhotos);
 
 export async function generateMetadata(): Promise<Metadata> {
-  const photos = await getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_OG });
+  const photos = await getPhotosCached({
+    limit: MAX_PHOTOS_TO_SHOW_OG,
+  })
+    .catch(() => []);
   return generateOgImageMetaForPhotos(photos);
 }
 
@@ -31,7 +34,7 @@ export default async function GridPage() {
     cameras,
     simulations,
   ] = await Promise.all([
-    getPhotosCached({ limit: INFINITE_SCROLL_INITIAL_GRID }),
+    getPhotosCached({ limit: INFINITE_SCROLL_INITIAL_GRID }).catch(() => []),
     ...getPhotoSidebarData(),
   ]);
 

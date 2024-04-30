@@ -16,7 +16,6 @@ export const dynamic = 'force-static';
 const getPhotosCached = cache(getPhotos);
 
 export async function generateMetadata(): Promise<Metadata> {
-  // Make homepage queries resilient to error on first time setup
   const photos = await getPhotosCached({
     limit: MAX_PHOTOS_TO_SHOW_OG,
   })
@@ -25,7 +24,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  // Make homepage queries resilient to error on first time setup
   const [
     photos,
     photosCount,

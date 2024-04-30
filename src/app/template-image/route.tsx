@@ -16,7 +16,10 @@ export async function GET() {
     { fontFamily, fonts },
     headers,
   ] = await Promise.all([
-    getPhotosCached({ sortBy: 'priority', limit: MAX_PHOTOS_TO_SHOW_TEMPLATE }),
+    getPhotosCached({
+      sortBy: 'priority',
+      limit: MAX_PHOTOS_TO_SHOW_TEMPLATE,
+    }).catch(() => []),
     getIBMPlexMonoMedium(),
     getImageResponseCacheControlHeaders(),
   ]);
