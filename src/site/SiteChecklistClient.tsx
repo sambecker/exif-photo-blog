@@ -23,7 +23,7 @@ import { labelForStorage } from '@/services/storage';
 import { HiSparkles } from 'react-icons/hi';
 
 export default function SiteChecklistClient({
-  hasVercelPostgres,
+  hasDatabase,
   hasVercelKV,
   hasStorageProvider,
   hasVercelBlobStorage,
@@ -147,7 +147,7 @@ export default function SiteChecklistClient({
       >
         <ChecklistRow
           title="Setup database"
-          status={hasVercelPostgres}
+          status={hasDatabase}
           isPending={isPendingPage}
         >
           {renderLink(
