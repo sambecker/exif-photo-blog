@@ -1,4 +1,9 @@
-import { Client, QueryResultRow } from 'pg';
+import { Pool, QueryResult, QueryResultRow } from 'pg';
+
+const pool = new Pool({
+  connectionString: process.env.POSTGRES_URL,
+  ssl: true,
+});
 
 export type Primitive = string | number | boolean | undefined | null;
 
@@ -6,13 +11,15 @@ export const directQuery = async <T extends QueryResultRow = any>(
   queryString: string,
   values: Primitive[],
 ) => {
-  const client = new Client({
-    connectionString: process.env.POSTGRES_URL,
-    ssl: true,
-  });
-  await client.connect();
-  const response = await client.query<T>(queryString, values);
-  await client.end();
+  const client = await pool.connect();
+  let response: QueryResult<T>;
+  try {
+    response = await client.query<T>(queryString, values);
+  } catch (error) {
+    throw error;
+  } finally {
+    client.release();
+  }
   return response;
 };
 
