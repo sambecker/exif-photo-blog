@@ -24,6 +24,8 @@ import { HiSparkles } from 'react-icons/hi';
 
 export default function SiteChecklistClient({
   hasDatabase,
+  isPostgresSSLEnabled,
+  hasVercelPostgres,
   hasVercelKV,
   hasStorageProvider,
   hasVercelBlobStorage,
@@ -150,13 +152,25 @@ export default function SiteChecklistClient({
           status={hasDatabase}
           isPending={isPendingPage}
         >
-          {renderLink(
-            // eslint-disable-next-line max-len
-            'https://vercel.com/docs/storage/vercel-postgres/quickstart#create-a-postgres-database',
-            'Create Vercel Postgres store',
-          )}
-          {' '}
-          and connect to project
+          {renderSubStatus(
+            hasVercelPostgres ? 'checked' : 'optional',
+            <>
+              Vercel Postgres:
+              {' '}
+              {renderLink(
+                // eslint-disable-next-line max-len
+                'https://vercel.com/docs/storage/vercel-postgres/quickstart#create-a-postgres-database',
+                'create store',
+              )}
+              {' '}
+              and connect to project
+            </>)}
+          {hasDatabase && !hasVercelPostgres &&
+            renderSubStatus('checked', <>
+              Postgres-compatible database
+              {' '}
+              (SSL {isPostgresSSLEnabled ? 'enabled' : 'disabled'})
+            </>)}
         </ChecklistRow>
         <ChecklistRow
           title={!hasStorageProvider
