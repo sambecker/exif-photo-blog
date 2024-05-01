@@ -45,6 +45,7 @@
     "next": "^14.2.3",
     "next-auth": "5.0.0-beta.15",
     "next-themes": "^0.3.0",
+    "next-view-transitions": "^0.1.1",
     "openai": "^4.38.5",
     "postcss": "8.4.38",
     "react": "18.3.1",

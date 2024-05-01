@@ -2,6 +2,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { clsx } from 'clsx/lite';
 import { IBM_Plex_Mono } from 'next/font/google';
+import { ViewTransitions } from 'next-view-transitions'
 import {
   BASE_URL,
   SITE_DESCRIPTION,
@@ -70,37 +71,39 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html
-      lang="en"
-      // Suppress hydration errors due to next-themes behavior
-      suppressHydrationWarning
-    >
-      <body className={ibmPlexMono.variable}>
-        <AppStateProvider>
-          <SwrConfigClient>
-            <ThemeProvider attribute="class">
-              <main className={clsx(
-                'mx-3 mb-3',
-                'lg:mx-6 lg:mb-6',
-              )}>
-                <Nav siteDomainOrTitle={SITE_DOMAIN_OR_TITLE} />
-                <div className={clsx(
-                  'min-h-[16rem] sm:min-h-[30rem]',
-                  'mb-12',
+    <ViewTransitions>
+      <html
+        lang="en"
+        // Suppress hydration errors due to next-themes behavior
+        suppressHydrationWarning
+      >
+        <body className={ibmPlexMono.variable}>
+          <AppStateProvider>
+            <SwrConfigClient>
+              <ThemeProvider attribute="class">
+                <main className={clsx(
+                  'mx-3 mb-3',
+                  'lg:mx-6 lg:mb-6',
                 )}>
-                  {children}
-                </div>
-                <Footer />
-              </main>
-              <CommandK />
-            </ThemeProvider>
-          </SwrConfigClient>
-          <Analytics debug={false} />
-          <SpeedInsights debug={false}  />
-          <PhotoEscapeHandler />
-          <ToasterWithThemes />
-        </AppStateProvider>
-      </body>
-    </html>
+                  <Nav siteDomainOrTitle={SITE_DOMAIN_OR_TITLE} />
+                  <div className={clsx(
+                    'min-h-[16rem] sm:min-h-[30rem]',
+                    'mb-12',
+                  )}>
+                    {children}
+                  </div>
+                  <Footer />
+                </main>
+                <CommandK />
+              </ThemeProvider>
+            </SwrConfigClient>
+            <Analytics debug={false} />
+            <SpeedInsights debug={false}  />
+            <PhotoEscapeHandler />
+            <ToasterWithThemes />
+          </AppStateProvider>
+        </body>
+      </html>
+    </ViewTransitions>
   );
 }
