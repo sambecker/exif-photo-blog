@@ -152,9 +152,9 @@ export default function SiteChecklistClient({
           status={hasDatabase}
           isPending={isPendingPage}
         >
-          {renderSubStatus(
-            hasVercelPostgres ? 'checked' : 'optional',
-            <>
+          {hasVercelPostgres
+            ? renderSubStatus('checked', 'Vercel Postgres: connected')
+            : renderSubStatus('optional', <>
               Vercel Postgres:
               {' '}
               {renderLink(
@@ -167,7 +167,7 @@ export default function SiteChecklistClient({
             </>)}
           {hasDatabase && !hasVercelPostgres &&
             renderSubStatus('checked', <>
-              Postgres-compatible database
+              Postgres-compatible: connected
               {' '}
               (SSL {isPostgresSSLEnabled ? 'enabled' : 'disabled'})
             </>)}
@@ -182,9 +182,9 @@ export default function SiteChecklistClient({
           status={hasStorageProvider}
           isPending={isPendingPage}
         >
-          {renderSubStatus(
-            hasVercelBlobStorage ? 'checked' : 'optional',
-            <>
+          {hasVercelBlobStorage
+            ? renderSubStatus('checked', 'Vercel Blob: connected')
+            : renderSubStatus('optional', <>
               {labelForStorage('vercel-blob')}:
               {' '}
               {renderLink(
@@ -194,30 +194,28 @@ export default function SiteChecklistClient({
               )}
               {' '} 
               and connect to project
-            </>,
-          )}
-          {renderSubStatus(
-            hasCloudflareR2Storage ? 'checked' : 'optional',
-            <>
+            </>
+            )}
+          {hasCloudflareR2Storage
+            ? renderSubStatus('checked', 'Cloudflare R2: connected')
+            : renderSubStatus('optional', <>
               {labelForStorage('cloudflare-r2')}:
               {' '}
               {renderLink(
                 'https://github.com/sambecker/exif-photo-blog#cloudflare-r2',
                 'create/configure bucket',
               )}
-            </>
-          )}
-          {renderSubStatus(
-            hasAwsS3Storage ? 'checked' : 'optional',
-            <>
+            </>)}
+          {hasAwsS3Storage
+            ? renderSubStatus('checked', 'AWS S3: connected')
+            : renderSubStatus('optional', <>
               {labelForStorage('aws-s3')}:
               {' '}
               {renderLink(
                 'https://github.com/sambecker/exif-photo-blog#aws-s3',
                 'create/configure bucket',
               )}
-            </>
-          )}
+            </>)}
         </ChecklistRow>
       </Checklist>
       <Checklist
