@@ -72,7 +72,7 @@ export const extractExifDataFromBlobPath = async (
 export const blurImage = async (url: string) =>
   Jimp.read(decodeURIComponent(url))
     .then(image => {
-      image.resize(300, Jimp.AUTO);
-      image.blur(30);
+      image.resize(100, Jimp.AUTO);
+      image.blur(20);
       return image.getBase64Async(Jimp.MIME_JPEG);
     });
