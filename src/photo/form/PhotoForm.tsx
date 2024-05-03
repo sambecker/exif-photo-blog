@@ -264,7 +264,7 @@ export default function PhotoForm({
             url,
             640,
             undefined,
-            window.location.origin,
+            typeof window !== 'undefined' ? window.location.origin : undefined,
           )}
           width={width}
           height={height}
