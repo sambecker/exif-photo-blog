@@ -104,14 +104,6 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_GRID_ASPECT_RATIO = 1.5` sets aspect ratio for grid tiles (defaults to `1`—setting to `0` removes the constraint)
 - `NEXT_PUBLIC_OG_TEXT_ALIGNMENT = BOTTOM` keeps OG image text bottom aligned (default is top)
 
-## Alternate database providers (experimental)
-
-Vercel Postgres can be switched to another Postgres-compatible, pooling provider by updating `POSTGRES_URL`. Some providers only work when SSL is disabled, which can configured by setting `DISABLE_POSTGRES_SSL = 1`.
-
-### Supabase
-1. Ensure connection string is set to "Transaction Mode" via port `6543`
-2. Disable SSL by setting `DISABLE_POSTGRES_SSL = 1`
-
 ## Alternate storage providers
 
 Only one storage adapter—Vercel Blob, Cloudflare R2, or AWS S3—can be used at a time. Ideally, this is configured before photos are uploaded (see [Issue #34](https://github.com/sambecker/exif-photo-blog/issues/34) for migration considerations). If you have multiple adapters, you can set one as preferred by storing "aws-s3," "cloudflare-r2," or "vercel-blob" in `NEXT_PUBLIC_STORAGE_PREFERENCE`.
@@ -199,6 +191,14 @@ Only one storage adapter—Vercel Blob, Cloudflare R2, or AWS S3—can be used a
    - [Create IAM user](https://console.aws.amazon.com/iam/home#/users) by choosing "Attach policies directly," and selecting the policy created above. Create "Access key" under "Security credentials," choose "Application running outside AWS," and store credentials (⚠️ _Ensure access keys are not prefixed with `NEXT_PUBLIC`_):
      - `AWS_S3_ACCESS_KEY`
      - `AWS_S3_SECRET_ACCESS_KEY`
+
+## Alternate database providers (experimental)
+
+Vercel Postgres can be switched to another Postgres-compatible, pooling provider by updating `POSTGRES_URL`. Some providers only work when SSL is disabled, which can configured by setting `DISABLE_POSTGRES_SSL = 1`.
+
+### Supabase
+1. Ensure connection string is set to "Transaction Mode" via port `6543`
+2. Disable SSL by setting `DISABLE_POSTGRES_SSL = 1`
 
 FAQ
 -
