@@ -8,7 +8,7 @@ const pool = new Pool({
 
 export type Primitive = string | number | boolean | undefined | null;
 
-export const directQuery = async <T extends QueryResultRow = any>(
+export const query = async <T extends QueryResultRow = any>(
   queryString: string,
   values: Primitive[],
 ) => {
@@ -38,7 +38,7 @@ export const sql = <T extends QueryResultRow>(
     result += `$${i}${strings[i] ?? ''}`;
   }
 
-  return directQuery<T>(result, values);
+  return query<T>(result, values);
 };
 
 export const convertArrayToPostgresString = (array?: string[]) => array
