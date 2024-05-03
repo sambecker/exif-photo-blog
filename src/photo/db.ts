@@ -1,4 +1,8 @@
-import { db, sql } from '@vercel/postgres';
+import {
+  sql,
+  query,
+  convertArrayToPostgresString,
+} from '@/services/postgres';
 import {
   PhotoDb,
   PhotoDbInsert,
@@ -15,10 +19,6 @@ import { SHOULD_DEBUG_SQL, PRIORITY_ORDER_ENABLED } from '@/site/config';
 import { screenForPPR } from '@/utility/ppr';
 
 const PHOTO_DEFAULT_LIMIT = 100;
-
-export const convertArrayToPostgresString = (array?: string[]) => array
-  ? `{${array.join(',')}}`
-  : null;
 
 const sqlCreatePhotosTable = () =>
   sql`
@@ -353,7 +353,7 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
     sortBy = PRIORITY_ORDER_ENABLED ? 'priority' : 'takenAt',
     limit = PHOTO_DEFAULT_LIMIT,
     offset = 0,
-    query,
+    query: queryOption,
     tag,
     camera,
     simulation,
@@ -379,10 +379,10 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
     wheres.push(`taken_at <= $${valueIndex++}`);
     values.push(takenAfterInclusive.toISOString());
   }
-  if (query) {
+  if (queryOption) {
     // eslint-disable-next-line max-len
     wheres.push(`CONCAT(title, ' ', caption, ' ', semantic_description) ILIKE $${valueIndex++}`);
-    values.push(`%${query.toLocaleLowerCase()}%`);
+    values.push(`%${queryOption.toLocaleLowerCase()}%`);
   }
   if (tag) {
     wheres.push(`$${valueIndex++}=ANY(tags)`);
@@ -420,7 +420,7 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
   values.push(limit, offset);
 
   return safelyQueryPhotos(async () => {
-    return db.query(sql.join(' '), values);
+    return query(sql.join(' '), values);
   }, sql.join(' '))
     .then(({ rows }) => rows.map(parsePhotoFromDb));
 };
@@ -434,7 +434,7 @@ export const getPhotosNearId = async (
     : 'ORDER BY taken_at DESC';
 
   return safelyQueryPhotos(async () => {
-    return db.query(
+    return query(
       `
         WITH twi AS (
           SELECT *, row_number()

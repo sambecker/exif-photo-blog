@@ -49,10 +49,11 @@ export const SITE_DESCRIPTION =
   process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
   SITE_DOMAIN;
 
-// STORAGE: VERCEL POSTGRES
-export const HAS_VERCEL_POSTGRES =
-  (process.env.POSTGRES_HOST ?? '').length > 0;
-
+// STORAGE: DATABASE
+export const HAS_DATABASE =
+  (process.env.POSTGRES_URL ?? '').length > 0;
+export const POSTGRES_SSL_ENABLED =
+  process.env.DISABLE_POSTGRES_SSL === '1' ? false : true;
 // STORAGE: VERCEL KV
 export const HAS_VERCEL_KV =
   (process.env.KV_URL ?? '').length > 0;
@@ -132,7 +133,10 @@ export const ADMIN_DEBUG_TOOLS_ENABLED = process.env.ADMIN_DEBUG_TOOLS === '1';
 export const HIGH_DENSITY_GRID = GRID_ASPECT_RATIO <= 1;
 
 export const CONFIG_CHECKLIST_STATUS = {
-  hasVercelPostgres: HAS_VERCEL_POSTGRES,
+  hasDatabase: HAS_DATABASE,
+  isPostgresSSLEnabled: POSTGRES_SSL_ENABLED,
+  hasVercelPostgres: /\.vercel-storage\.com\//
+    .test(process.env.POSTGRES_URL ?? ''),
   hasVercelKV: HAS_VERCEL_KV,
   hasVercelBlobStorage: HAS_VERCEL_BLOB_STORAGE,
   hasCloudflareR2Storage: HAS_CLOUDFLARE_R2_STORAGE,
@@ -174,7 +178,7 @@ export const CONFIG_CHECKLIST_STATUS = {
 export type ConfigChecklistStatus = typeof CONFIG_CHECKLIST_STATUS;
 
 export const IS_SITE_READY =
-  CONFIG_CHECKLIST_STATUS.hasVercelPostgres &&
+  CONFIG_CHECKLIST_STATUS.hasDatabase &&
   CONFIG_CHECKLIST_STATUS.hasStorageProvider &&
   CONFIG_CHECKLIST_STATUS.hasAuthSecret &&
   CONFIG_CHECKLIST_STATUS.hasAdminUser;

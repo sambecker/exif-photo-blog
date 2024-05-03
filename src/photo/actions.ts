@@ -8,7 +8,7 @@ import {
   sqlRenamePhotoTagGlobally,
   getPhoto,
   getPhotos,
-} from '@/services/vercel-postgres';
+} from '@/photo/db';
 import {
   PhotoFormData,
   convertFormDataToPhotoDbInsert,

@@ -9,7 +9,7 @@ import {
   getUniqueCameras,
   getUniqueFilmSimulations,
   getUniqueTags,
-} from '@/services/vercel-postgres';
+} from '@/photo/db';
 import { SHOW_FILM_SIMULATIONS } from '@/site/config';
 import { sortTagsObject } from '@/tag';
 
