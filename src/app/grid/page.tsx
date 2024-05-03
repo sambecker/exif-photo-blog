@@ -10,7 +10,7 @@ import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
 import { Metadata } from 'next/types';
 import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
 import { getPhotoSidebarData } from '@/photo/data';
-import { getPhotos } from '@/services/vercel-postgres';
+import { getPhotos } from '@/photo/db';
 import { cache } from 'react';
 import PhotoGridInfinite from '@/photo/PhotoGridInfinite';
 
