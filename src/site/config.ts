@@ -135,8 +135,10 @@ export const HIGH_DENSITY_GRID = GRID_ASPECT_RATIO <= 1;
 export const CONFIG_CHECKLIST_STATUS = {
   hasDatabase: HAS_DATABASE,
   isPostgresSSLEnabled: POSTGRES_SSL_ENABLED,
-  hasVercelPostgres: /\.vercel-storage\.com\//
-    .test(process.env.POSTGRES_URL ?? ''),
+  hasVercelPostgres: (
+    /\/verceldb\?/.test(process.env.POSTGRES_URL ?? '') ||
+    /\.vercel-storage\.com\//.test(process.env.POSTGRES_URL ?? '')
+  ),
   hasVercelKV: HAS_VERCEL_KV,
   hasVercelBlobStorage: HAS_VERCEL_BLOB_STORAGE,
   hasCloudflareR2Storage: HAS_CLOUDFLARE_R2_STORAGE,
