@@ -5,7 +5,7 @@ import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { STATICALLY_OPTIMIZED } from '@/site/config';
-import { getPhotoIds } from '@/services/vercel-postgres';
+import { getPhotoIds } from '@/photo/db';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo';
 
 export let generateStaticParams:

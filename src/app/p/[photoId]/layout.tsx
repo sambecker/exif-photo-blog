@@ -14,7 +14,7 @@ import {
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotosNearIdCachedCached } from '@/photo/cache';
 import { STATICALLY_OPTIMIZED } from '@/site/config';
-import { getPhotoIds } from '@/services/vercel-postgres';
+import { getPhotoIds } from '@/photo/db';
 
 export let generateStaticParams:
   (() => Promise<{ photoId: string }[]>) | undefined = undefined;
