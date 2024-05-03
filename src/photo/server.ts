@@ -10,6 +10,7 @@ import {
 import { ExifData, ExifParserFactory } from 'ts-exif-parser';
 import { PhotoFormData } from './form';
 import { FilmSimulation } from '@/simulation';
+import Jimp from 'jimp';
 
 export const extractExifDataFromBlobPath = async (
   blobPath: string,
@@ -67,3 +68,11 @@ export const extractExifDataFromBlobPath = async (
     },
   };
 };
+
+export const blurImage = async (url: string) =>
+  Jimp.read(decodeURIComponent(url))
+    .then(image => {
+      image.resize(300, Jimp.AUTO);
+      image.blur(30);
+      return image.getBase64Async(Jimp.MIME_JPEG);
+    });
