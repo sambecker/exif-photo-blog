@@ -35,9 +35,9 @@ const nextConfig = {
       .concat(createRemotePattern(HOSTNAME_AWS_S3)),
     minimumCacheTTL: 31536000,
   },
-  experimental: {
-    serverComponentsExternalPackages: ['jimp'],
-  },
+  // experimental: {
+  //   serverComponentsExternalPackages: ['jimp'],
+  // },
 };
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
