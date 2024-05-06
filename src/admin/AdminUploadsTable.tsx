@@ -11,7 +11,7 @@ import { pathForAdminUploadUrl } from '@/site/paths';
 import AddButton from './AddButton';
 import { formatDate } from 'date-fns';
 
-export default function StorageUrls({
+export default function AdminUploadsTable({
   title,
   urls,
 }: {

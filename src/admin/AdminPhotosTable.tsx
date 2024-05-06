@@ -21,7 +21,7 @@ import {
 import { useAppState } from '@/state/AppState';
 import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 
-export default function AdminPhotoTable({
+export default function AdminPhotosTable({
   photos,
   onLastPhotoVisible,
   revalidatePhoto,
