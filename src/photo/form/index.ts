@@ -42,7 +42,7 @@ type FormMeta = {
   label: string
   note?: string
   required?: boolean
-  virtual?: boolean
+  excludeFromInsert?: boolean
   readOnly?: boolean
   validate?: (value?: string) => string | undefined
   validateStringMaxLength?: number
@@ -55,6 +55,7 @@ type FormMeta = {
   selectOptions?: { value: string, label: string }[]
   selectOptionsDefaultLabel?: string
   tagOptions?: AnnotatedTag[]
+  nullOverride?: boolean
 };
 
 const STRING_MAX_LENGTH_SHORT = 255;
@@ -97,6 +98,7 @@ const FORM_METADATA = (
     required: BLUR_ENABLED,
     hideIfEmpty: !BLUR_ENABLED,
     loadingMessage: 'Generating blur data ...',
+    nullOverride: !BLUR_ENABLED,
   },
   url: { label: 'url', readOnly: true },
   extension: { label: 'extension', readOnly: true },
@@ -121,7 +123,7 @@ const FORM_METADATA = (
   takenAt: { label: 'taken at' },
   takenAtNaive: { label: 'taken at (naive)' },
   priorityOrder: { label: 'priority order' },
-  favorite: { label: 'favorite', type: 'checkbox', virtual: true },
+  favorite: { label: 'favorite', type: 'checkbox', excludeFromInsert: true },
   hidden: { label: 'hidden', type: 'checkbox' },
 });
 
@@ -242,12 +244,15 @@ export const convertFormDataToPhotoDbInsert = (
   // - remove server action ID
   // - remove empty strings
   Object.keys(photoForm).forEach(key => {
+    const meta = FORM_METADATA()[key as keyof PhotoFormData];
     if (
       key.startsWith('$ACTION_ID_') ||
       (photoForm as any)[key] === '' ||
-      FORM_METADATA()[key as keyof PhotoFormData]?.virtual
+      meta?.excludeFromInsert
     ) {
       delete (photoForm as any)[key];
+    } else if (meta?.nullOverride) {
+      (photoForm as any)[key] = null;
     }
   });
 

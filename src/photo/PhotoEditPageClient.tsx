@@ -21,10 +21,12 @@ export default function PhotoEditPageClient({
   photo,
   uniqueTags,
   hasAiTextGeneration,
+  imageThumbnailBase64,
 }: {
   photo: Photo
   uniqueTags: TagsWithMeta
   hasAiTextGeneration: boolean
+  imageThumbnailBase64: string
 }) {
   const seedExifData = { url: photo.url };
 
@@ -48,7 +50,10 @@ export default function PhotoEditPageClient({
     hasTextContent,
     setHasTextContent,
     aiContent,
-  } = usePhotoFormParent({ photoForm });
+  } = usePhotoFormParent({
+    photoForm,
+    imageThumbnailBase64,
+  });
 
   return (
     <AdminChildPage

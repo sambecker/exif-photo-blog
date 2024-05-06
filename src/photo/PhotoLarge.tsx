@@ -3,6 +3,7 @@
 import {
   Photo,
   altTextForPhoto,
+  doesPhotoNeedBlurCompatibility,
   shouldShowCameraDataForPhoto,
   shouldShowExifDataForPhoto,
 } from '.';
@@ -81,6 +82,7 @@ export default function PhotoLarge({
             src={photo.url}
             aspectRatio={photo.aspectRatio}
             blurData={photo.blurData}
+            blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
             priority={priority}
           />
         </Link>}

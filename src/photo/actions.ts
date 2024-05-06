@@ -33,7 +33,7 @@ import {
   PATH_ROOT,
   pathForPhoto,
 } from '@/site/paths';
-import { extractExifDataFromBlobPath } from './server';
+import { blurImageFromUrl, extractImageDataFromBlobPath } from './server';
 import { TAG_FAVS, isTagFavs } from '@/tag';
 import { convertPhotoToPhotoDbInsert } from '.';
 import { safelyRunAdminServerAction } from '@/auth';
@@ -154,7 +154,10 @@ export async function getExifDataAction(
   return safelyRunAdminServerAction(async () => {
     const { url } = photoFormPrevious;
     if (url) {
-      const { photoFormExif } = await extractExifDataFromBlobPath(url);
+      const { photoFormExif } = await extractImageDataFromBlobPath(
+        url, {
+          generateBlurData: true,
+        });
       if (photoFormExif) {
         return photoFormExif;
       }
@@ -169,7 +172,10 @@ export async function syncPhotoExifDataAction(formData: FormData) {
     if (photoId) {
       const photo = await getPhoto(photoId);
       if (photo) {
-        const { photoFormExif } = await extractExifDataFromBlobPath(photo.url);
+        const { photoFormExif } = await extractImageDataFromBlobPath(
+          photo.url, {
+            generateBlurData: true,
+          });
         if (photoFormExif) {
           const photoFormDbInsert = convertFormDataToPhotoDbInsert({
             ...convertPhotoToFormData(photo),
@@ -208,6 +214,9 @@ export const getPhotosAction = async (
   includeHidden?: boolean,
 ) =>
   getPhotos({ offset, includeHidden, limit });
+
+export const getImageBlurAction = async (url: string) =>
+  blurImageFromUrl(url);
 
 export const queryPhotosByTitleAction = async (query: string) =>
   (await getPhotos({ query, limit: 10 }))

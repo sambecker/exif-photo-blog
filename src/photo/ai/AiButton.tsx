@@ -56,7 +56,7 @@ export default function AiButton({
           e.preventDefault();
         }
       }}
-      disabled={!aiContent.isReady || isLoading}
+      disabled={isLoading}
     >
       {isLoading ? <Spinner /> : <HiSparkles size={16} />}
     </button>

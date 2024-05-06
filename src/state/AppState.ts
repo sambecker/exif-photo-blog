@@ -20,6 +20,8 @@ export interface AppStateContext {
   registerAdminUpdate?: () => void
   shouldShowBaselineGrid?: boolean
   setShouldShowBaselineGrid?: Dispatch<SetStateAction<boolean>>
+  shouldDebugBlur?: boolean
+  setShouldDebugBlur?: Dispatch<SetStateAction<boolean>>
   clearNextPhotoAnimation?: () => void
 }
 

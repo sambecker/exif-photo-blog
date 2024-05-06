@@ -1,5 +1,5 @@
 import { PATH_ADMIN } from '@/site/paths';
-import { blurImage, extractExifDataFromBlobPath } from '@/photo/server';
+import { extractImageDataFromBlobPath } from '@/photo/server';
 import { redirect } from 'next/navigation';
 import { getUniqueTagsCached } from '@/photo/cache';
 import UploadPageClient from '@/photo/UploadPageClient';
@@ -16,11 +16,14 @@ export default async function UploadPage({ params: { uploadPath } }: Params) {
   const {
     blobId,
     photoFormExif,
-  } = await extractExifDataFromBlobPath(uploadPath, true);
+    imageResizedBase64: imageThumbnailBase64,
+  } = await extractImageDataFromBlobPath( uploadPath, {
+    includeInitialPhotoFields: true,
+    generateBlurData: true,
+    generateResizedImage: true,
+  });
 
-  const blurBase64 = await blurImage(uploadPath);
-
-  if (!photoFormExif) { redirect(PATH_ADMIN); }
+  if (!photoFormExif || !imageThumbnailBase64) { redirect(PATH_ADMIN); }
 
   const uniqueTags = await getUniqueTagsCached();
 
@@ -29,18 +32,13 @@ export default async function UploadPage({ params: { uploadPath } }: Params) {
   const textFieldsToAutoGenerate = AI_TEXT_AUTO_GENERATED_FIELDS;
 
   return (
-    <>
-      <img
-        alt="Blur Debug"
-        src={blurBase64}
-      />
-      <UploadPageClient {...{
-        blobId,
-        photoFormExif,
-        uniqueTags,
-        hasAiTextGeneration,
-        textFieldsToAutoGenerate,
-      }} />
-    </>
+    <UploadPageClient {...{
+      blobId,
+      photoFormExif,
+      uniqueTags,
+      hasAiTextGeneration,
+      textFieldsToAutoGenerate,
+      imageThumbnailBase64,
+    }} />
   );
 };
