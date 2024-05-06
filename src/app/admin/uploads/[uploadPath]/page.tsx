@@ -17,7 +17,7 @@ export default async function UploadPage({ params: { uploadPath } }: Params) {
     blobId,
     photoFormExif,
     imageResizedBase64: imageThumbnailBase64,
-  } = await extractImageDataFromBlobPath( uploadPath, {
+  } = await extractImageDataFromBlobPath(uploadPath, {
     includeInitialPhotoFields: true,
     generateBlurData: true,
     generateResizedImage: true,

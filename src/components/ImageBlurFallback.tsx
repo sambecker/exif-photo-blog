@@ -61,13 +61,13 @@ export default function ImageBlurFallback(props: ImageProps & {
         'flex relative',
       )}
     >
-      {showPlaceholder || shouldDebugBlur &&
+      {(showPlaceholder || shouldDebugBlur) &&
         <div className={clsx(
           '@container',
           'absolute inset-0',
           'bg-main overflow-hidden',
           'transition-opacity duration-300 ease-in',
-          isLoading || shouldDebugBlur ? 'opacity-100' : 'opacity-0',
+          (isLoading || shouldDebugBlur) ? 'opacity-100' : 'opacity-0',
         )}>
           {(BLUR_ENABLED && props.blurDataURL)
             ? <img {...{
