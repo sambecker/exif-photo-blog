@@ -49,7 +49,7 @@ export default function AdminUploadsTable({
             'flex flex-nowrap',
             'gap-2 sm:gap-3 items-center',
           )}>
-            <AddButton href={addUploadPath} />
+            <AddButton path={addUploadPath} />
             <FormWithConfirm
               action={deleteBlobPhotoAction}
               confirmText="Are you sure you want to delete this upload?"
