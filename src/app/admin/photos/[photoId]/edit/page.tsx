@@ -19,9 +19,10 @@ export default async function PhotoEditPage({
 
   const hasAiTextGeneration = AI_TEXT_GENERATION_ENABLED;
   
-  const imageThumbnailBase64 = await resizeImageFromUrl(
-    getNextImageUrlForRequest(photo.url,  640),
-  );
+  // Only generate image thumbnails when AI generation is enabled
+  const imageThumbnailBase64 = AI_TEXT_GENERATION_ENABLED
+    ? await resizeImageFromUrl(getNextImageUrlForRequest(photo.url,  640))
+    : '';
 
   return (
     <PhotoEditPageClient {...{
