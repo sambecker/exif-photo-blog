@@ -22,11 +22,13 @@ export default function PhotoEditPageClient({
   uniqueTags,
   hasAiTextGeneration,
   imageThumbnailBase64,
+  blurData,
 }: {
   photo: Photo
   uniqueTags: TagsWithMeta
   hasAiTextGeneration: boolean
   imageThumbnailBase64: string
+  blurData: string
 }) {
   const seedExifData = { url: photo.url };
 
@@ -86,6 +88,7 @@ export default function PhotoEditPageClient({
         updatedExifData={hasExifDataBeenFound
           ? updatedExifData
           : undefined}
+        updatedBlurData={blurData}
         uniqueTags={uniqueTags}
         aiContent={hasAiTextGeneration ? aiContent : undefined}
         onTitleChange={setUpdatedTitle}

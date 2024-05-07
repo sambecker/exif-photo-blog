@@ -3,8 +3,8 @@ import { getPhotoNoStore, getUniqueTagsCached } from '@/photo/cache';
 import { PATH_ADMIN } from '@/site/paths';
 import PhotoEditPageClient from '@/photo/PhotoEditPageClient';
 import { AI_TEXT_GENERATION_ENABLED } from '@/site/config';
-import { resizeImageFromUrl } from '@/photo/server';
-import { getNextImageUrlForRequest } from '@/services/next-image';
+import { blurImageFromUrl, resizeImageFromUrl } from '@/photo/server';
+import { getNextImageUrlForManipulation } from '@/services/next-image';
 
 export default async function PhotoEditPage({
   params: { photoId },
@@ -21,8 +21,12 @@ export default async function PhotoEditPage({
   
   // Only generate image thumbnails when AI generation is enabled
   const imageThumbnailBase64 = AI_TEXT_GENERATION_ENABLED
-    ? await resizeImageFromUrl(getNextImageUrlForRequest(photo.url,  640))
+    ? await resizeImageFromUrl(getNextImageUrlForManipulation(photo.url))
     : '';
+
+  const blurData = await blurImageFromUrl(
+    getNextImageUrlForManipulation(photo.url)
+  );
 
   return (
     <PhotoEditPageClient {...{
@@ -30,6 +34,7 @@ export default async function PhotoEditPage({
       uniqueTags,
       hasAiTextGeneration,
       imageThumbnailBase64,
+      blurData,
     }} />
   );
 };

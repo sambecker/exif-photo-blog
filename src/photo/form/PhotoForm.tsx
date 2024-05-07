@@ -27,22 +27,25 @@ import Spinner from '@/components/Spinner';
 import usePreventNavigation from '@/utility/usePreventNavigation';
 import { useAppState } from '@/state/AppState';
 import UpdateBlurDataButton from '../UpdateBlurDataButton';
+import { getNextImageUrlForManipulation } from '@/services/next-image';
 
 const THUMBNAIL_SIZE = 300;
 
 export default function PhotoForm({
+  type = 'create',
   initialPhotoForm,
   updatedExifData,
-  type = 'create',
+  updatedBlurData,
   uniqueTags,
   aiContent,
   onTitleChange,
   onTextContentChange,
   onFormStatusChange,
 }: {
+  type?: 'create' | 'edit'
   initialPhotoForm: Partial<PhotoFormData>
   updatedExifData?: Partial<PhotoFormData>
-  type?: 'create' | 'edit'
+  updatedBlurData?: string
   uniqueTags?: TagsWithMeta
   aiContent?: AiContent
   onTitleChange?: (updatedTitle: string) => void
@@ -109,6 +112,12 @@ export default function PhotoForm({
   } = getDimensionsFromSize(THUMBNAIL_SIZE, formData.aspectRatio);
 
   const url = formData.url ?? '';
+
+  useEffect(() =>
+    setFormData(data => updatedBlurData
+      ? { ...data, blurData: updatedBlurData }
+      : data)
+  , [updatedBlurData]);
 
   useEffect(() =>
     setFormData(data => aiContent?.title
@@ -184,9 +193,9 @@ export default function PhotoForm({
           shouldConfirm={Boolean(formData.semanticDescription)}
         />;
       case 'blurData':
-        return type === 'edit'
+        return shouldDebugBlur && type === 'edit' && formData.url
           ? <UpdateBlurDataButton
-            photoUrl={formData.url}
+            photoUrl={getNextImageUrlForManipulation(formData.url)}
             onUpdatedBlurData={blurData =>
               setFormData(data => ({ ...data, blurData }))}
           />
