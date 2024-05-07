@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { getPhotoNoStore, getUniqueTagsCached } from '@/photo/cache';
 import { PATH_ADMIN } from '@/site/paths';
 import PhotoEditPageClient from '@/photo/PhotoEditPageClient';
-import { AI_TEXT_GENERATION_ENABLED } from '@/site/config';
+import { AI_TEXT_GENERATION_ENABLED, BLUR_ENABLED } from '@/site/config';
 import { blurImageFromUrl, resizeImageFromUrl } from '@/photo/server';
 import { getNextImageUrlForManipulation } from '@/services/next-image';
 
@@ -24,9 +24,11 @@ export default async function PhotoEditPage({
     ? await resizeImageFromUrl(getNextImageUrlForManipulation(photo.url))
     : '';
 
-  const blurData = await blurImageFromUrl(
-    getNextImageUrlForManipulation(photo.url)
-  );
+  const blurData = BLUR_ENABLED
+    ? await blurImageFromUrl(
+      getNextImageUrlForManipulation(photo.url)
+    )
+    : '';
 
   return (
     <PhotoEditPageClient {...{

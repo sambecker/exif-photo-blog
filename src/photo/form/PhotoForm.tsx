@@ -113,11 +113,13 @@ export default function PhotoForm({
 
   const url = formData.url ?? '';
 
-  useEffect(() =>
-    setFormData(data => updatedBlurData
-      ? { ...data, blurData: updatedBlurData }
-      : data)
-  , [updatedBlurData]);
+  useEffect(() => {
+    if (updatedBlurData) {
+      setFormData(data => updatedBlurData
+        ? { ...data, blurData: updatedBlurData }
+        : data);
+    }
+  }, [updatedBlurData]);
 
   useEffect(() =>
     setFormData(data => aiContent?.title
