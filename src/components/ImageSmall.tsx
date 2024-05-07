@@ -7,6 +7,7 @@ export default function ImageSmall({
   alt,
   aspectRatio,
   blurData,
+  blurCompatibilityMode,
   priority,
 }: {
   className?: string
@@ -14,6 +15,7 @@ export default function ImageSmall({
   alt: string
   aspectRatio: number
   blurData?: string
+  blurCompatibilityMode?: boolean
   priority?: boolean
 }) {
   return (
@@ -21,8 +23,9 @@ export default function ImageSmall({
       className,
       src,
       alt,
-      priority,
       blurDataURL: blurData,
+      blurCompatibilityLevel: blurCompatibilityMode ? 'high' : 'none',
+      priority,
       width: IMAGE_SMALL_WIDTH,
       height: Math.round(IMAGE_SMALL_WIDTH / aspectRatio),
     }} />

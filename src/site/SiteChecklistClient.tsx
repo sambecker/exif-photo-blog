@@ -13,7 +13,6 @@ import {
   BiPencil,
   BiRefresh,
 } from 'react-icons/bi';
-import IconButton from '@/components/IconButton';
 import InfoBlock from '@/components/InfoBlock';
 import Checklist from '@/components/Checklist';
 import { toastSuccess } from '@/toast';
@@ -21,6 +20,7 @@ import { ConfigChecklistStatus } from './config';
 import StatusIcon from '@/components/StatusIcon';
 import { labelForStorage } from '@/services/storage';
 import { HiSparkles } from 'react-icons/hi';
+import LoaderButton from '@/components/primitives/LoaderButton';
 
 export default function SiteChecklistClient({
   hasDatabase,
@@ -93,13 +93,17 @@ export default function SiteChecklistClient({
     </>;
 
   const renderCopyButton = (label: string, text: string, subtle?: boolean) =>
-    <IconButton
+    <LoaderButton
       icon={<BiCopy size={15} />}
-      className={clsx(subtle && 'text-gray-300 dark:text-gray-700')}
+      className={clsx(
+        'translate-y-[2px]',
+        subtle && 'text-gray-300 dark:text-gray-700',
+      )}
       onClick={() => {
         navigator.clipboard.writeText(text);
         toastSuccess(`${label} copied to clipboard`);
       }}
+      styleAsLink
     />;
 
   const renderEnvVar = (
@@ -235,11 +239,12 @@ export default function SiteChecklistClient({
                   <span>{secret}</span>
                   <div className="flex items-center gap-0.5">
                     {renderCopyButton('Secret', secret)}
-                    <IconButton
+                    <LoaderButton
                       icon={<BiRefresh size={18} />}
                       onClick={refreshSecret}
                       isLoading={isPendingSecret}
                       spinnerColor="text"
+                      styleAsLink
                     />
                   </div>
                 </div>

@@ -15,10 +15,7 @@ import {
   MAKE_FUJIFILM,
 } from '@/vendors/fujifilm';
 import { FilmSimulation } from '@/simulation';
-import {
-  BLUR_ENABLED,
-  GEO_PRIVACY_ENABLED,
-} from '@/site/config';
+import { GEO_PRIVACY_ENABLED } from '@/site/config';
 import { TAG_FAVS, doesTagsStringIncludeFavs } from '@/tag';
 
 type VirtualFields = 'favorite';
@@ -42,7 +39,7 @@ type FormMeta = {
   label: string
   note?: string
   required?: boolean
-  virtual?: boolean
+  excludeFromInsert?: boolean
   readOnly?: boolean
   validate?: (value?: string) => string | undefined
   validateStringMaxLength?: number
@@ -94,9 +91,6 @@ const FORM_METADATA = (
   blurData: {
     label: 'blur data',
     readOnly: true,
-    required: BLUR_ENABLED,
-    hideIfEmpty: !BLUR_ENABLED,
-    loadingMessage: 'Generating blur data ...',
   },
   url: { label: 'url', readOnly: true },
   extension: { label: 'extension', readOnly: true },
@@ -121,7 +115,7 @@ const FORM_METADATA = (
   takenAt: { label: 'taken at' },
   takenAtNaive: { label: 'taken at (naive)' },
   priorityOrder: { label: 'priority order' },
-  favorite: { label: 'favorite', type: 'checkbox', virtual: true },
+  favorite: { label: 'favorite', type: 'checkbox', excludeFromInsert: true },
   hidden: { label: 'hidden', type: 'checkbox' },
 });
 
@@ -242,10 +236,11 @@ export const convertFormDataToPhotoDbInsert = (
   // - remove server action ID
   // - remove empty strings
   Object.keys(photoForm).forEach(key => {
+    const meta = FORM_METADATA()[key as keyof PhotoFormData];
     if (
       key.startsWith('$ACTION_ID_') ||
       (photoForm as any)[key] === '' ||
-      FORM_METADATA()[key as keyof PhotoFormData]?.virtual
+      meta?.excludeFromInsert
     ) {
       delete (photoForm as any)[key];
     }

@@ -1,4 +1,4 @@
-import { Photo, altTextForPhoto } from '.';
+import { Photo, altTextForPhoto, doesPhotoNeedBlurCompatibility } from '.';
 import ImageTiny from '@/components/ImageTiny';
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
@@ -44,6 +44,7 @@ export default function PhotoTiny({
         src={photo.url}
         aspectRatio={photo.aspectRatio}
         blurData={photo.blurData}
+        blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
         alt={altTextForPhoto(photo)}
       />
     </Link>

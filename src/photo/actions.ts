@@ -33,15 +33,18 @@ import {
   PATH_ROOT,
   pathForPhoto,
 } from '@/site/paths';
-import { extractExifDataFromBlobPath } from './server';
+import { blurImageFromUrl, extractImageDataFromBlobPath } from './server';
 import { TAG_FAVS, isTagFavs } from '@/tag';
 import { convertPhotoToPhotoDbInsert } from '.';
 import { safelyRunAdminServerAction } from '@/auth';
 import { AI_IMAGE_QUERIES, AiImageQuery } from './ai';
 import { streamOpenAiImageQuery } from '@/services/openai';
+import { BLUR_ENABLED } from '@/site/config';
 
-export async function createPhotoAction(formData: FormData) {
-  return safelyRunAdminServerAction(async () => {
+// Private actions
+
+export const createPhotoAction = async (formData: FormData) =>
+  safelyRunAdminServerAction(async () => {
     const photo = convertFormDataToPhotoDbInsert(formData, true);
 
     const updatedUrl = await convertUploadToPhoto(photo.url, photo.id);
@@ -54,10 +57,9 @@ export async function createPhotoAction(formData: FormData) {
   
     redirect(PATH_ADMIN_PHOTOS);
   });
-}
 
-export async function updatePhotoAction(formData: FormData) {
-  return safelyRunAdminServerAction(async () => {
+export const updatePhotoAction = async (formData: FormData) =>
+  safelyRunAdminServerAction(async () => {
     const photo = convertFormDataToPhotoDbInsert(formData);
 
     await sqlUpdatePhoto(photo);
@@ -66,13 +68,12 @@ export async function updatePhotoAction(formData: FormData) {
 
     redirect(PATH_ADMIN_PHOTOS);
   });
-}
 
-export async function toggleFavoritePhotoAction(
+export const toggleFavoritePhotoAction = async (
   photoId: string,
   shouldRedirect?: boolean,
-) {
-  return safelyRunAdminServerAction(async () => {
+) =>
+  safelyRunAdminServerAction(async () => {
     const photo = await getPhoto(photoId);
     if (photo) {
       const { tags } = photo;
@@ -86,33 +87,30 @@ export async function toggleFavoritePhotoAction(
       }
     }
   });
-}
 
-export async function deletePhotoAction(
+export const deletePhotoAction = async (
   photoId: string,
   photoUrl: string,
   shouldRedirect?: boolean,
-) {
-  return safelyRunAdminServerAction(async () => {
+) =>
+  safelyRunAdminServerAction(async () => {
     await sqlDeletePhoto(photoId).then(() => deleteStorageUrl(photoUrl));
     revalidateAllKeysAndPaths();
     if (shouldRedirect) {
       redirect(PATH_ROOT);
     }
   });
-};
 
-export async function deletePhotoFormAction(formData: FormData) {
-  return safelyRunAdminServerAction(async () =>
+export const deletePhotoFormAction = async (formData: FormData) =>
+  safelyRunAdminServerAction(() =>
     deletePhotoAction(
       formData.get('id') as string,
       formData.get('url') as string,
     )
   );
-};
 
-export async function deletePhotoTagGloballyAction(formData: FormData) {
-  return safelyRunAdminServerAction(async () => {
+export const deletePhotoTagGloballyAction = async (formData: FormData) =>
+  safelyRunAdminServerAction(async () => {
     const tag = formData.get('tag') as string;
 
     await sqlDeletePhotoTagGlobally(tag);
@@ -120,10 +118,9 @@ export async function deletePhotoTagGloballyAction(formData: FormData) {
     revalidatePhotosKey();
     revalidateAdminPaths();
   });
-}
 
-export async function renamePhotoTagGloballyAction(formData: FormData) {
-  return safelyRunAdminServerAction(async () => {
+export const renamePhotoTagGloballyAction = async (formData: FormData) =>
+  safelyRunAdminServerAction(async () => {
     const tag = formData.get('tag') as string;
     const updatedTag = formData.get('updatedTag') as string;
 
@@ -134,10 +131,9 @@ export async function renamePhotoTagGloballyAction(formData: FormData) {
       redirect(PATH_ADMIN_TAGS);
     }
   });
-}
 
-export async function deleteBlobPhotoAction(formData: FormData) {
-  return safelyRunAdminServerAction(async () => {
+export const deleteBlobPhotoAction = async (formData: FormData) =>
+  safelyRunAdminServerAction(async () => {
     await deleteStorageUrl(formData.get('url') as string);
 
     revalidateAdminPaths();
@@ -146,30 +142,35 @@ export async function deleteBlobPhotoAction(formData: FormData) {
       redirect(PATH_ADMIN_PHOTOS);
     }
   });
-}
 
-export async function getExifDataAction(
+// Accessed from admin photo edit page
+// will not update blur data
+export const getExifDataAction = async (
   photoFormPrevious: Partial<PhotoFormData>,
-): Promise<Partial<PhotoFormData>> {
-  return safelyRunAdminServerAction(async () => {
+): Promise<Partial<PhotoFormData>> =>
+  safelyRunAdminServerAction(async () => {
     const { url } = photoFormPrevious;
     if (url) {
-      const { photoFormExif } = await extractExifDataFromBlobPath(url);
+      const { photoFormExif } = await extractImageDataFromBlobPath(url);
       if (photoFormExif) {
         return photoFormExif;
       }
     }
     return {};
   });
-}
 
-export async function syncPhotoExifDataAction(formData: FormData) {
-  return safelyRunAdminServerAction(async () => {
+// Accessed from admin photo table
+// will update blur data
+export const syncPhotoExifDataAction = async (formData: FormData) =>
+  safelyRunAdminServerAction(async () => {
     const photoId = formData.get('id') as string;
     if (photoId) {
       const photo = await getPhoto(photoId);
       if (photo) {
-        const { photoFormExif } = await extractExifDataFromBlobPath(photo.url);
+        const { photoFormExif } = await extractImageDataFromBlobPath(
+          photo.url, {
+            generateBlurData: BLUR_ENABLED,
+          });
         if (photoFormExif) {
           const photoFormDbInsert = convertFormDataToPhotoDbInsert({
             ...convertPhotoToFormData(photo),
@@ -181,26 +182,21 @@ export async function syncPhotoExifDataAction(formData: FormData) {
       }
     }
   });
-}
 
-export async function syncCacheAction() {
-  return safelyRunAdminServerAction(revalidateAllKeysAndPaths);
-}
+export const syncCacheAction = async () =>
+  safelyRunAdminServerAction(revalidateAllKeysAndPaths);
 
-export async function streamAiImageQueryAction(
+export const streamAiImageQueryAction = async (
   imageBase64: string,
   query: AiImageQuery,
-) {
-  return safelyRunAdminServerAction(async () =>
-    streamOpenAiImageQuery(imageBase64, AI_IMAGE_QUERIES[query]));
-}
-
-export const getPhotosCachedAction = async (
-  offset: number,
-  limit: number,
-  includeHidden?: boolean,
 ) =>
-  getPhotosCachedCached({ offset, includeHidden, limit });
+  safelyRunAdminServerAction(() =>
+    streamOpenAiImageQuery(imageBase64, AI_IMAGE_QUERIES[query]));
+
+export const getImageBlurAction = async (url: string) =>
+  safelyRunAdminServerAction(() => blurImageFromUrl(url));
+
+// Public actions
 
 export const getPhotosAction = async (
   offset: number,
@@ -208,6 +204,13 @@ export const getPhotosAction = async (
   includeHidden?: boolean,
 ) =>
   getPhotos({ offset, includeHidden, limit });
+
+export const getPhotosCachedAction = async (
+  offset: number,
+  limit: number,
+  includeHidden?: boolean,
+) =>
+  getPhotosCachedCached({ offset, includeHidden, limit });
 
 export const queryPhotosByTitleAction = async (query: string) =>
   (await getPhotos({ query, limit: 10 }))

@@ -77,12 +77,13 @@
       cursor-pointer
       hover:no-underline
       inline-flex gap-2 items-center
-      px-4
+      px-3
       text-base
       shadow-sm
       active:bg-gray-100 dark:active:bg-gray-900
       hover:border-gray-300 dark:hover:border-gray-600
       disabled:cursor-not-allowed
+      disabled:text-dim
       disabled:bg-gray-100 dark:disabled:bg-gray-900
       disabled:border-gray-200 disabled:dark:border-gray-700
   }
@@ -111,7 +112,7 @@
   button.link {
     @apply
       p-0 min-h-0
-      border-none bg-transparent active:bg-transparent shadow-none
+      border-none bg-transparent active:bg-transparent shadow-none rounded-none
   }
   a, .link {
     @apply

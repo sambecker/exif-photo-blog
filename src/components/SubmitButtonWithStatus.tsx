@@ -2,9 +2,10 @@
 
 import { HTMLProps, useEffect, useRef } from 'react';
 import { useFormStatus } from 'react-dom';
-import Spinner, { SpinnerColor } from './Spinner';
+import { SpinnerColor } from './Spinner';
 import { clsx } from 'clsx/lite';
 import { toastSuccess } from '@/toast';
+import LoaderButton from '@/components/primitives/LoaderButton';
 
 interface Props extends HTMLProps<HTMLButtonElement> {
   icon?: JSX.Element
@@ -49,34 +50,21 @@ export default function SubmitButtonWithStatus({
   }, [onFormStatusChange, pending]);
 
   return (
-    <button
+    <LoaderButton
       type="submit"
       disabled={disabled}
       className={clsx(
         className,
         'inline-flex items-center gap-2',
         primary && 'primary',
-        styleAsLink && 'link',
       )}
+      icon={icon}
+      spinnerColor={spinnerColor}
+      styleAsLink={styleAsLink}
+      isLoading={pending}
       {...buttonProps}
     >
-      {(icon || pending) &&
-        <span className={clsx(
-          'h-4',
-          'min-w-[1rem]',
-          'inline-flex justify-center sm:justify-normal',
-          '-mx-0.5',
-          'translate-y-[1px]',
-        )}>
-          {pending
-            ? <Spinner size={14} color={spinnerColor} />
-            : icon}
-        </span>}
-      {children && <span className={clsx(
-        icon !== undefined && 'hidden sm:inline-block',
-      )}>
-        {children}
-      </span>}
-    </button>
+      {children}
+    </LoaderButton>
   );
 };

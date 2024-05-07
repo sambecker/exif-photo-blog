@@ -21,7 +21,7 @@ import {
 import { useAppState } from '@/state/AppState';
 import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 
-export default function AdminPhotoTable({
+export default function AdminPhotosTable({
   photos,
   onLastPhotoVisible,
   revalidatePhoto,
@@ -80,7 +80,7 @@ export default function AdminPhotoTable({
             'flex flex-nowrap',
             'gap-2 sm:gap-3 items-center',
           )}>
-            <EditButton href={pathForAdminPhotoEdit(photo)} />
+            <EditButton path={pathForAdminPhotoEdit(photo)} />
             <FormWithConfirm
               action={syncPhotoExifDataAction}
               confirmText={
@@ -91,7 +91,9 @@ export default function AdminPhotoTable({
             >
               <input type="hidden" name="id" value={photo.id} />
               <SubmitButtonWithStatus
-                icon={<IconGrSync className="translate-y-[-0.5px]" />}
+                icon={<IconGrSync
+                  className="translate-x-[1px] translate-y-[0.5px]"
+                />}
                 onFormSubmitToastMessage={`
                   "${titleForPhoto(photo)}" EXIF data synced
                 `}
