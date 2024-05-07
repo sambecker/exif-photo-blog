@@ -170,6 +170,10 @@ export default function PhotoLarge({
                 {photo.takenAtNaiveFormatted}
               </div>
               <ShareButton
+                className={clsx(
+                  'md:translate-x-[-2.5px]',
+                  'translate-y-[1.5px] md:translate-y-0',
+                )}
                 path={pathForPhotoShare(
                   photo,
                   shouldShareTag ? primaryTag : undefined,

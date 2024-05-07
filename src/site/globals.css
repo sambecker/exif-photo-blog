@@ -112,7 +112,7 @@
   button.link {
     @apply
       p-0 min-h-0
-      border-none bg-transparent active:bg-transparent shadow-none
+      border-none bg-transparent active:bg-transparent shadow-none rounded-none
   }
   a, .link {
     @apply

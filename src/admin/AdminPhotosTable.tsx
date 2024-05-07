@@ -80,7 +80,7 @@ export default function AdminPhotosTable({
             'flex flex-nowrap',
             'gap-2 sm:gap-3 items-center',
           )}>
-            <EditButton href={pathForAdminPhotoEdit(photo)} />
+            <EditButton path={pathForAdminPhotoEdit(photo)} />
             <FormWithConfirm
               action={syncPhotoExifDataAction}
               confirmText={

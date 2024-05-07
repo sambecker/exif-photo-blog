@@ -26,7 +26,7 @@ export default function AdminTagTable({
             'flex flex-nowrap',
             'gap-2 sm:gap-3 items-center',
           )}>
-            <EditButton href={pathForAdminTagEdit(tag)} />
+            <EditButton path={pathForAdminTagEdit(tag)} />
             <FormWithConfirm
               action={deletePhotoTagGloballyAction}
               confirmText={

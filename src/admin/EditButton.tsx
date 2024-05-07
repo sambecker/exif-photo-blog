@@ -1,14 +1,14 @@
-import PathLoaderButton from '@/components/PathLoaderButton';
+import PathLoaderButton from '@/components/primitives/PathLoaderButton';
 import { FaRegEdit } from 'react-icons/fa';
 
 export default function EditButton ({
-  href,
+  path,
 }: {
-  href: string,
+  path: string,
 }) {
   return (
     <PathLoaderButton
-      path={href}
+      path={path}
       icon={<FaRegEdit size={15} className="translate-y-[0.5px]" />}
     >
       Edit

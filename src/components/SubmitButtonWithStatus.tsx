@@ -5,7 +5,7 @@ import { useFormStatus } from 'react-dom';
 import { SpinnerColor } from './Spinner';
 import { clsx } from 'clsx/lite';
 import { toastSuccess } from '@/toast';
-import LoaderButton from '@/admin/LoaderButton';
+import LoaderButton from '@/components/primitives/LoaderButton';
 
 interface Props extends HTMLProps<HTMLButtonElement> {
   icon?: JSX.Element

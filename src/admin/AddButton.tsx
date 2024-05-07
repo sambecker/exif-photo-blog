@@ -1,5 +1,5 @@
 import { BiImageAdd } from 'react-icons/bi';
-import PathLoaderButton from '@/components/PathLoaderButton';
+import PathLoaderButton from '@/components/primitives/PathLoaderButton';
 
 export default function AddButton({
   path,

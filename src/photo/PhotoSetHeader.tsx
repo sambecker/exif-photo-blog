@@ -62,9 +62,11 @@ export default function PhotoSetHeader({
             ? `${entityVerb} ${selectedPhotoIndex + 1} of ${count ?? photos.length}`
             : entityDescription}
           {selectedPhotoIndex === undefined &&
-            <span className="translate-y-[1px]">
-              <ShareButton path={sharePath} dim />
-            </span>}
+            <ShareButton
+              className="translate-y-[1.5px]"
+              path={sharePath}
+              dim
+            />}
         </span>
         <span className={clsx(
           'hidden sm:inline-block',
