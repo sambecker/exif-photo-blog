@@ -215,7 +215,12 @@ export default function PhotoForm({
     hideIfEmpty?: boolean,
     shouldHide?: (formData: Partial<PhotoFormData>) => boolean,
   ) => {
-    if (key === 'blurData' && type === 'create' && !shouldDebugBlur) {
+    if (
+      key === 'blurData' &&
+      type === 'create' &&
+      !BLUR_ENABLED &&
+      !shouldDebugBlur
+    ) {
       return true;
     } else {
       return (
