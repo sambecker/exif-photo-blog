@@ -36,6 +36,7 @@ import { TbPhoto } from 'react-icons/tb';
 import { getKeywordsForPhoto, titleForPhoto } from '@/photo';
 import PhotoDate from '@/photo/PhotoDate';
 import PhotoTiny from '@/photo/PhotoTiny';
+import { FaCheck } from 'react-icons/fa6';
 
 const LISTENER_KEYDOWN = 'keydown';
 const MINIMUM_QUERY_LENGTH = 2;
@@ -69,9 +70,12 @@ export default function CommandKClient({
     isUserSignedIn,
     setUserEmail,
     isCommandKOpen: isOpen,
+    shouldShowBaselineGrid,
+    shouldDebugBlur,
     setIsCommandKOpen: setIsOpen,
     setShouldRespondToKeyboardCommands,
     setShouldShowBaselineGrid,
+    setShouldDebugBlur,
   } = useAppState();
 
   const isOpenRef = useRef(isOpen);
@@ -193,8 +197,13 @@ export default function CommandKClient({
       heading: 'Debug Tools',
       accessory: <RiToolsFill size={16} className="translate-x-[-1px]" />,
       items: [{
+        label: 'Toggle Blur Debug',
+        action: () => setShouldDebugBlur?.(prev => !prev),
+        annotation: shouldDebugBlur ? <FaCheck size={12} /> : undefined,
+      }, {
         label: 'Toggle Baseline Grid',
         action: () => setShouldShowBaselineGrid?.(prev => !prev),
+        annotation: shouldShowBaselineGrid ? <FaCheck size={12} /> : undefined,
       }],
     });
   }

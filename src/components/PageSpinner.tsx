@@ -1,4 +1,4 @@
-import clsx from 'clsx/lite';
+import { clsx } from 'clsx/lite';
 import Spinner from './Spinner';
 import SiteGrid from './SiteGrid';
 

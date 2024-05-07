@@ -1,23 +1,17 @@
-import Link from 'next/link';
 import { BiImageAdd } from 'react-icons/bi';
+import PathLoaderButton from '@/components/primitives/PathLoaderButton';
 
-export default function AddButton ({
-  href,
-  label = 'Add',
+export default function AddButton({
+  path,
 }: {
-  href: string,
-  label?: string,
+  path: string,
 }) {
   return (
-    <Link
-      title={label}
-      href={href}
-      className="button"
+    <PathLoaderButton
+      path={path}
+      icon={<BiImageAdd size={18} className="translate-x-[1px]" />}
     >
-      <BiImageAdd size={18} className="translate-y-[1px]" />
-      <span className="hidden sm:inline-block">
-        {label}
-      </span>
-    </Link>
+      Add
+    </PathLoaderButton>
   );
 }

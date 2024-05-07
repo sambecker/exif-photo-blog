@@ -3,6 +3,7 @@
 import {
   Photo,
   altTextForPhoto,
+  doesPhotoNeedBlurCompatibility,
   shouldShowCameraDataForPhoto,
   shouldShowExifDataForPhoto,
 } from '.';
@@ -81,6 +82,7 @@ export default function PhotoLarge({
             src={photo.url}
             aspectRatio={photo.aspectRatio}
             blurData={photo.blurData}
+            blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
             priority={priority}
           />
         </Link>}
@@ -168,6 +170,10 @@ export default function PhotoLarge({
                 {photo.takenAtNaiveFormatted}
               </div>
               <ShareButton
+                className={clsx(
+                  'md:translate-x-[-2.5px]',
+                  'translate-y-[1.5px] md:translate-y-0',
+                )}
                 path={pathForPhotoShare(
                   photo,
                   shouldShareTag ? primaryTag : undefined,

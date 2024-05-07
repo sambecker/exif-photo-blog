@@ -1,27 +1,32 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import IconButton from './IconButton';
-import { useEffect, useState, useTransition } from 'react';
-import { clsx } from 'clsx/lite';
-import { SpinnerColor } from './Spinner';
+import { ReactNode, useEffect, useState, useTransition } from 'react';
+import { SpinnerColor } from '../Spinner';
+import LoaderButton from '@/components/primitives/LoaderButton';
 
-export default function IconPathButton({
-  icon,
+export default function PathLoaderButton({
   path,
+  icon,
   prefetch,
-  loaderDelay = 250,
+  loaderDelay = 100,
   shouldScroll = true,
   shouldReplace,
   spinnerColor,
+  styleAsLink,
+  className,
+  children,
 }: {
-  icon: JSX.Element
   path: string
+  icon?: JSX.Element
   prefetch?: boolean
   loaderDelay?: number
   shouldScroll?: boolean
   shouldReplace?: boolean
   spinnerColor?: SpinnerColor
+  styleAsLink?: boolean
+  className?: string
+  children?: ReactNode
 }) {
   const router = useRouter();
 
@@ -47,8 +52,9 @@ export default function IconPathButton({
   }, [prefetch, router, path]);
 
   return (
-    <IconButton
+    <LoaderButton
       icon={icon}
+      className={className}
       onClick={() => startTransition(() => {
         if (shouldReplace) {
           router.replace(path, { scroll: shouldScroll });
@@ -57,13 +63,10 @@ export default function IconPathButton({
         }
       })}
       isLoading={shouldShowLoader}
-      className={clsx(
-        'translate-y-[-0.5px]',
-        'active:translate-y-[1px]',
-        'text-medium',
-        'active:text-gray-600 dark:active:text-gray-300',
-      )}
-      spinnerColor={spinnerColor ?? 'text'}
-    />
+      spinnerColor={spinnerColor}
+      styleAsLink={styleAsLink}
+    >
+      {children}
+    </LoaderButton>
   );
 }

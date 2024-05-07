@@ -3,9 +3,9 @@
 import InfinitePhotoScroll, {
   InfinitePhotoScrollExternalProps,
 } from '../photo/InfinitePhotoScroll';
-import AdminPhotoTable from './AdminPhotoTable';
+import AdminPhotosTable from './AdminPhotosTable';
 
-export default function AdminPhotoTableInfinite({
+export default function AdminPhotosTableInfinite({
   initialOffset,
   itemsPerPage,
 }: InfinitePhotoScrollExternalProps) {
@@ -18,7 +18,7 @@ export default function AdminPhotoTableInfinite({
       includeHiddenPhotos
     >
       {({ photos, onLastPhotoVisible, revalidatePhoto }) =>
-        <AdminPhotoTable
+        <AdminPhotosTable
           photos={photos}
           onLastPhotoVisible={onLastPhotoVisible}
           revalidatePhoto={revalidatePhoto}

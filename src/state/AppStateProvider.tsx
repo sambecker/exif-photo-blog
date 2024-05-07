@@ -29,6 +29,8 @@ export default function AppStateProvider({
   const [adminUpdateTimes, setAdminUpdateTimes] = useState<Date[]>([]);
   const [shouldShowBaselineGrid, setShouldShowBaselineGrid] =
     useState(false);
+  const [shouldDebugBlur, setShouldDebugBlur] =
+    useState(false);
 
   const invalidateSwr = useCallback(() => setSwrTimestamp(Date.now()), []);
 
@@ -63,6 +65,8 @@ export default function AppStateProvider({
         adminUpdateTimes,
         registerAdminUpdate,
         shouldShowBaselineGrid,
+        shouldDebugBlur,
+        setShouldDebugBlur,
         setShouldShowBaselineGrid,
         clearNextPhotoAnimation: () => setNextPhotoAnimation?.(undefined),
       }}

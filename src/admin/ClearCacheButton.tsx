@@ -11,7 +11,7 @@ export default function ClearCacheButton() {
   return (
     <form action={syncCacheAction}>
       <SubmitButtonWithStatus
-        icon={<BiTrash />}
+        icon={<BiTrash size={16} />}
         onFormSubmit={invalidateSwr}
       >
         Clear Cache

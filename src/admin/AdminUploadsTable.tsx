@@ -11,7 +11,7 @@ import { pathForAdminUploadUrl } from '@/site/paths';
 import AddButton from './AddButton';
 import { formatDate } from 'date-fns';
 
-export default function StorageUrls({
+export default function AdminUploadsTable({
   title,
   urls,
 }: {
@@ -49,7 +49,7 @@ export default function StorageUrls({
             'flex flex-nowrap',
             'gap-2 sm:gap-3 items-center',
           )}>
-            <AddButton href={addUploadPath} />
+            <AddButton path={addUploadPath} />
             <FormWithConfirm
               action={deleteBlobPhotoAction}
               confirmText="Are you sure you want to delete this upload?"

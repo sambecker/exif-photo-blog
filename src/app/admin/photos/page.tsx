@@ -2,14 +2,14 @@ import PhotoUpload from '@/photo/PhotoUpload';
 import { clsx } from 'clsx/lite';
 import SiteGrid from '@/components/SiteGrid';
 import { getPhotosCountIncludingHiddenCached } from '@/photo/cache';
-import StorageUrls from '@/admin/StorageUrls';
+import AdminUploadsTable from '@/admin/AdminUploadsTable';
 import { PRO_MODE_ENABLED } from '@/site/config';
 import { getStoragePhotoUrlsNoStore } from '@/services/storage/cache';
 import { getPhotos } from '@/photo/db';
 import { revalidatePath } from 'next/cache';
-import AdminPhotoTable from '@/admin/AdminPhotoTable';
-import AdminPhotoTableInfinite from
-  '@/admin/AdminPhotoTableInfinite';
+import AdminPhotosTable from '@/admin/AdminPhotosTable';
+import AdminPhotosTableInfinite from
+  '@/admin/AdminPhotosTableInfinite';
 
 const DEBUG_PHOTO_BLOBS = false;
 
@@ -50,15 +50,15 @@ export default async function AdminPhotosPage() {
               'border-b pb-6',
               'border-gray-200 dark:border-gray-700',
             )}>
-              <StorageUrls
+              <AdminUploadsTable
                 title={`Photo Blobs (${blobPhotoUrls.length})`}
                 urls={blobPhotoUrls}
               />
             </div>}
           <div className="space-y-4">
-            <AdminPhotoTable photos={photos} />
+            <AdminPhotosTable photos={photos} />
             {photosCount > photos.length &&
-              <AdminPhotoTableInfinite
+              <AdminPhotosTableInfinite
                 initialOffset={INFINITE_SCROLL_INITIAL_ADMIN_PHOTOS}
                 itemsPerPage={INFINITE_SCROLL_MULTIPLE_ADMIN_PHOTOS}
               />}

@@ -1,6 +1,6 @@
 'use client';
 
-import { Photo, altTextForPhoto } from '.';
+import { Photo, altTextForPhoto, doesPhotoNeedBlurCompatibility } from '.';
 import ImageSmall from '@/components/ImageSmall';
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
@@ -49,6 +49,7 @@ export default function PhotoSmall({
         src={photo.url}
         aspectRatio={photo.aspectRatio}
         blurData={photo.blurData}
+        blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
         className="w-full"
         alt={altTextForPhoto(photo)}
         priority={priority}
