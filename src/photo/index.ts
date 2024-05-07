@@ -11,7 +11,7 @@ import {
   formatFocalLength,
 } from '@/utility/exif';
 import camelcaseKeys from 'camelcase-keys';
-import { isAfter } from 'date-fns';
+import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
 
 // ROOT PAGE
@@ -279,4 +279,4 @@ export const isNextImageReadyBasedOnPhotos = async (photos: Photo[]) =>
     .catch(() => false);
 
 export const doesPhotoNeedBlurCompatibility = (photo: Photo) =>
-  isAfter(photo.updatedAt, new Date('2024-05-07'));
+  isBefore(photo.updatedAt, new Date('2024-05-07'));

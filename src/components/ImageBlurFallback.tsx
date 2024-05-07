@@ -8,13 +8,13 @@ import Image, { ImageProps } from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 export default function ImageBlurFallback(props: ImageProps & {
-  blurCompatibilityMode?: boolean
+  blurCompatibilityLevel?: 'none' | 'low' | 'high';
 }) {
   const {
     className,
     priority,
     blurDataURL,
-    blurCompatibilityMode,
+    blurCompatibilityLevel = 'low',
     ...rest
   } = props;
 
@@ -54,6 +54,16 @@ export default function ImageBlurFallback(props: ImageProps & {
     !wasCached &&
     !hideBlurPlaceholder;
 
+  const getBlurClass = () => {
+    switch (blurCompatibilityLevel) {
+    case 'high':
+      // Fix poorly blurred placeholder data generated on client
+      return 'blur-[4px] @xs:blue-md scale-[1.05]';
+    case 'low':
+      return 'blur-[2px] @xs:blue-md scale-[1.01]';
+    }
+  };
+
   return (
     <div
       className={clsx(
@@ -75,10 +85,7 @@ export default function ImageBlurFallback(props: ImageProps & {
               src: blurDataURL,
               className: clsx(
                 imageClassName,
-                // Fix poorly blurred placeholder data generated on client
-                blurCompatibilityMode
-                  ? 'blur-[4px] @xs:blue-md scale-[1.05]'
-                  : 'blur-[2px] @xs:blue-md scale-[1.01]',
+                getBlurClass(),
               ),
             }} />
             :  <div className={clsx(

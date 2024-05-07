@@ -24,7 +24,7 @@ export default function ImageSmall({
       src,
       alt,
       blurDataURL: blurData,
-      blurCompatibilityMode,
+      blurCompatibilityLevel: blurCompatibilityMode ? 'high' : 'none',
       priority,
       width: IMAGE_SMALL_WIDTH,
       height: Math.round(IMAGE_SMALL_WIDTH / aspectRatio),

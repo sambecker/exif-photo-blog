@@ -22,7 +22,7 @@ export default function ImageTiny({
       src,
       alt,
       blurDataURL: blurData,
-      blurCompatibilityMode,
+      blurCompatibilityLevel: blurCompatibilityMode ? 'high' : 'none',
       width: IMAGE_TINY_WIDTH,
       height: Math.round(IMAGE_TINY_WIDTH / aspectRatio),
     }} />

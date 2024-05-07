@@ -214,9 +214,16 @@ export default function PhotoForm({
     key: keyof PhotoDbInsert | 'favorite',
     hideIfEmpty?: boolean,
     shouldHide?: (formData: Partial<PhotoFormData>) => boolean,
-  ) => 
-    (hideIfEmpty && !formData[key]) ||
-    shouldHide?.(formData);
+  ) => {
+    if (key === 'blurData' && type === 'create' && !shouldDebugBlur) {
+      return true;
+    } else {
+      return (
+        (hideIfEmpty && !formData[key]) ||
+        shouldHide?.(formData)
+      );
+    }
+  };
     
   return (
     <div className="space-y-8 max-w-[38rem] relative">
@@ -230,6 +237,7 @@ export default function PhotoForm({
               'border-gray-200 dark:border-gray-700',
             )}
             blurDataURL={formData.blurData}
+            blurCompatibilityLevel="none"
             width={width}
             height={height}
             priority

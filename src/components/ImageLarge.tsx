@@ -24,7 +24,7 @@ export default function ImageLarge({
       src,
       alt,
       blurDataURL: blurData,
-      blurCompatibilityMode,
+      blurCompatibilityLevel: blurCompatibilityMode ? 'high' : 'none',
       priority,
       width: IMAGE_LARGE_WIDTH,
       height: Math.round(IMAGE_LARGE_WIDTH / aspectRatio),
