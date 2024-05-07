@@ -15,10 +15,7 @@ import {
   MAKE_FUJIFILM,
 } from '@/vendors/fujifilm';
 import { FilmSimulation } from '@/simulation';
-import {
-  BLUR_ENABLED,
-  GEO_PRIVACY_ENABLED,
-} from '@/site/config';
+import { GEO_PRIVACY_ENABLED } from '@/site/config';
 import { TAG_FAVS, doesTagsStringIncludeFavs } from '@/tag';
 
 type VirtualFields = 'favorite';
@@ -55,7 +52,6 @@ type FormMeta = {
   selectOptions?: { value: string, label: string }[]
   selectOptionsDefaultLabel?: string
   tagOptions?: AnnotatedTag[]
-  nullOverride?: boolean
 };
 
 const STRING_MAX_LENGTH_SHORT = 255;
@@ -95,10 +91,6 @@ const FORM_METADATA = (
   blurData: {
     label: 'blur data',
     readOnly: true,
-    required: BLUR_ENABLED,
-    hideIfEmpty: !BLUR_ENABLED,
-    loadingMessage: 'Generating blur data ...',
-    nullOverride: !BLUR_ENABLED,
   },
   url: { label: 'url', readOnly: true },
   extension: { label: 'extension', readOnly: true },
@@ -251,8 +243,6 @@ export const convertFormDataToPhotoDbInsert = (
       meta?.excludeFromInsert
     ) {
       delete (photoForm as any)[key];
-    } else if (meta?.nullOverride) {
-      (photoForm as any)[key] = null;
     }
   });
 

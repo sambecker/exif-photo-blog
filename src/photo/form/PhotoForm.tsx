@@ -28,6 +28,8 @@ import usePreventNavigation from '@/utility/usePreventNavigation';
 import { useAppState } from '@/state/AppState';
 import UpdateBlurDataButton from '../UpdateBlurDataButton';
 import { getNextImageUrlForManipulation } from '@/services/next-image';
+import { BLUR_ENABLED } from '@/site/config';
+import { PhotoDbInsert } from '..';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -118,6 +120,8 @@ export default function PhotoForm({
       setFormData(data => updatedBlurData
         ? { ...data, blurData: updatedBlurData }
         : data);
+    } else if (!BLUR_ENABLED) {
+      setFormData(data => ({ ...data, blurData: '' }));
     }
   }, [updatedBlurData]);
 
@@ -206,6 +210,14 @@ export default function PhotoForm({
     }
   };
 
+  const shouldHideField = (
+    key: keyof PhotoDbInsert | 'favorite',
+    hideIfEmpty?: boolean,
+    shouldHide?: (formData: Partial<PhotoFormData>) => boolean,
+  ) => 
+    (hideIfEmpty && !formData[key]) ||
+    shouldHide?.(formData);
+    
   return (
     <div className="space-y-8 max-w-[38rem] relative">
       <div className="flex gap-2">
@@ -278,10 +290,7 @@ export default function PhotoForm({
               loadingMessage,
               type,
             }]) =>
-              (
-                (!hideIfEmpty || formData[key]) &&
-                !shouldHide?.(formData)
-              ) &&
+              !shouldHideField(key, hideIfEmpty, shouldHide) &&
                 <FieldSetWithStatus
                   key={key}
                   id={key}

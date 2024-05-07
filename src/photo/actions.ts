@@ -39,6 +39,7 @@ import { convertPhotoToPhotoDbInsert } from '.';
 import { safelyRunAdminServerAction } from '@/auth';
 import { AI_IMAGE_QUERIES, AiImageQuery } from './ai';
 import { streamOpenAiImageQuery } from '@/services/openai';
+import { BLUR_ENABLED } from '@/site/config';
 
 // Private actions
 
@@ -168,7 +169,7 @@ export const syncPhotoExifDataAction = async (formData: FormData) =>
       if (photo) {
         const { photoFormExif } = await extractImageDataFromBlobPath(
           photo.url, {
-            generateBlurData: true,
+            generateBlurData: BLUR_ENABLED,
           });
         if (photoFormExif) {
           const photoFormDbInsert = convertFormDataToPhotoDbInsert({
