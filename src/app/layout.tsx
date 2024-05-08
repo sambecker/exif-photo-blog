@@ -17,7 +17,6 @@ import Nav from '@/site/Nav';
 import Footer from '@/site/Footer';
 import CommandK from '@/site/CommandK';
 import SwrConfigClient from '../state/SwrConfigClient';
-import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 import '../site/globals.css';
 import '../site/sonner.css';
@@ -76,7 +75,6 @@ export default function RootLayout({
       // Suppress hydration errors due to next-themes behavior
       suppressHydrationWarning
     >
-      <GoogleAnalytics />
       <body className={ibmPlexMono.variable}>
         <AppStateProvider>
           <SwrConfigClient>
