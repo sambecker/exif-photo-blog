@@ -22,6 +22,7 @@ import GoogleAnalytics from '@/components/GoogleAnalytics';
 import '../site/globals.css';
 import '../site/sonner.css';
 import CookieBot from '@/components/CookieBot';
+import GoogleTagManager from '@/components/GoogleTagManager';
 
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ['latin'],
@@ -78,8 +79,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <GoogleAnalytics />
-      <CookieBot />
+      <GoogleTagManager mode='head' />
       <body className={ibmPlexMono.variable}>
+        <GoogleTagManager mode='body' />
         <AppStateProvider>
           <SwrConfigClient>
             <ThemeProvider attribute="class">
