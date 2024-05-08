@@ -42,6 +42,8 @@ export default function SiteChecklistClient({
   showExifInfo,
   isProModeEnabled,
   isStaticallyOptimized,
+  arePagesStaticallyOptimized,
+  areOGImagesStaticallyOptimized,
   isBlurEnabled,
   isGeoPrivacyEnabled,
   isPriorityOrderEnabled,
@@ -120,7 +122,8 @@ export default function SiteChecklistClient({
     >
       <span className="inline-flex items-center gap-1">
         <span className={clsx(
-          'text-medium',
+          'text-xs font-medium tracking-wide',
+          'px-0.5 py-0.5',
           'rounded-sm',
           'bg-gray-100 dark:bg-gray-800',
         )}>
@@ -138,10 +141,13 @@ export default function SiteChecklistClient({
   const renderSubStatus = (
     type: ComponentProps<typeof StatusIcon>['type'],
     label: ReactNode,
+    iconClassName?: string,
   ) =>
     <div className="flex gap-1 -translate-x-1">
-      <StatusIcon {...{ type }} />
-      <span>
+      <span className={iconClassName}>
+        <StatusIcon {...{ type }} />
+      </span>
+      <span className="min-w-0">
         {label}
       </span>
     </div>;
@@ -360,7 +366,16 @@ export default function SiteChecklistClient({
           >
             Set environment variable to {'"1"'} to enable static optimization,
             i.e., rendering pages and images at build time:
-            {renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE'])}
+            {renderSubStatus(
+              arePagesStaticallyOptimized ? 'checked' : 'optional',
+              renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES']),
+              'translate-y-[4.5px]',
+            )}
+            {renderSubStatus(
+              areOGImagesStaticallyOptimized ? 'checked' : 'optional',
+              renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES']),
+              'translate-y-[4.5px]',
+            )}
           </ChecklistRow>
           <ChecklistRow
             title="Image Blur"
