@@ -104,6 +104,10 @@ export const CURRENT_STORAGE: StorageType =
 
 export const PRO_MODE_ENABLED =
   process.env.NEXT_PUBLIC_PRO_MODE === '1';
+export const STATICALLY_OPTIMIZED_PAGES =
+  process.env.NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES === '1';
+export const STATICALLY_OPTIMIZED_OG_IMAGES =
+  process.env.NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES === '1';
 export const BLUR_ENABLED =
   process.env.NEXT_PUBLIC_BLUR_DISABLED !== '1';
 export const GEO_PRIVACY_ENABLED =
@@ -143,10 +147,11 @@ export const CONFIG_CHECKLIST_STATUS = {
   hasVercelBlobStorage: HAS_VERCEL_BLOB_STORAGE,
   hasCloudflareR2Storage: HAS_CLOUDFLARE_R2_STORAGE,
   hasAwsS3Storage: HAS_AWS_S3_STORAGE,
-  hasStorageProvider:
+  hasStorageProvider: (
     HAS_VERCEL_BLOB_STORAGE ||
     HAS_CLOUDFLARE_R2_STORAGE ||
-    HAS_AWS_S3_STORAGE,
+    HAS_AWS_S3_STORAGE
+  ),
   hasMultipleStorageProviders: HAS_MULTIPLE_STORAGE_PROVIDERS,
   currentStorage: CURRENT_STORAGE,
   hasAuthSecret: (process.env.AUTH_SECRET ?? '').length > 0,
@@ -160,6 +165,12 @@ export const CONFIG_CHECKLIST_STATUS = {
   showFilmSimulations: SHOW_FILM_SIMULATIONS,
   showExifInfo: SHOW_EXIF_DATA,
   isProModeEnabled: PRO_MODE_ENABLED,
+  isStaticallyOptimized: (
+    STATICALLY_OPTIMIZED_PAGES ||
+    STATICALLY_OPTIMIZED_OG_IMAGES
+  ),
+  arePagesStaticallyOptimized: STATICALLY_OPTIMIZED_PAGES,
+  areOGImagesStaticallyOptimized: STATICALLY_OPTIMIZED_OG_IMAGES,
   isBlurEnabled: BLUR_ENABLED,
   isGeoPrivacyEnabled: GEO_PRIVACY_ENABLED,
   isAiTextGenerationEnabled: AI_TEXT_GENERATION_ENABLED,
@@ -184,3 +195,4 @@ export const IS_SITE_READY =
   CONFIG_CHECKLIST_STATUS.hasStorageProvider &&
   CONFIG_CHECKLIST_STATUS.hasAuthSecret &&
   CONFIG_CHECKLIST_STATUS.hasAdminUser;
+  
