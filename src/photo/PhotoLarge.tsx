@@ -25,6 +25,7 @@ import AdminPhotoMenuClient from '@/admin/AdminPhotoMenuClient';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
 import { useRef } from 'react';
 import useOnVisible from '@/utility/useOnVisible';
+import PhotoDate from './PhotoDate';
 
 export default function PhotoLarge({
   photo,
@@ -161,14 +162,13 @@ export default function PhotoLarge({
                   />}
               </>}
             <div className={clsx(
-              'flex gap-x-1.5 gap-y-baseline',
+              'flex gap-x-2 gap-y-baseline',
               'md:flex-col md:justify-normal',
             )}>
-              <div className={clsx(
-                'text-medium uppercase pr-1',
-              )}>
-                {photo.takenAtNaiveFormatted}
-              </div>
+              <PhotoDate
+                photo={photo}
+                className="text-medium"
+              />
               <ShareButton
                 className={clsx(
                   'md:translate-x-[-2.5px]',

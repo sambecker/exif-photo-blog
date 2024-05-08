@@ -1,16 +1,27 @@
 import { format, parseISO, parse } from 'date-fns';
 
 const DATE_STRING_FORMAT_SHORT    = 'dd MMM yyyy';
+const DATE_STRING_FORMAT_MEDIUM   = 'dd MMM yy h:mma';
 const DATE_STRING_FORMAT          = 'dd MMM yyyy h:mma';
 const DATE_STRING_FORMAT_POSTGRES = 'yyyy-MM-dd HH:mm:ss';
 
 type AmbiguousTimestamp = number | string;
 
-export const formatDate = (date: Date, short?: boolean) =>
-  format(date, short ? DATE_STRING_FORMAT_SHORT : DATE_STRING_FORMAT);
+type Length = 'short' | 'medium' | 'long';
 
-export const formatDateFromPostgresString = (date: string, short?: boolean) =>
-  formatDate(parse(date, DATE_STRING_FORMAT_POSTGRES, new Date()), short);
+export const formatDate = (date: Date, length: Length = 'long') => {
+  switch (length) {
+  case 'short':
+    return format(date, DATE_STRING_FORMAT_SHORT);
+  case 'medium':
+    return format(date, DATE_STRING_FORMAT_MEDIUM);
+  default:
+    return format(date, DATE_STRING_FORMAT);
+  }
+};
+
+export const formatDateFromPostgresString = (date: string, length?: Length) =>
+  formatDate(parse(date, DATE_STRING_FORMAT_POSTGRES, new Date()), length);
 
 export const formatDateForPostgres = (date: Date) =>
   date.toISOString().replace(

@@ -21,6 +21,8 @@ export default function ShareButton({
       className={clsx(
         className,
         dim ? 'text-dim' : 'text-medium',
+        '-mx-0.5 translate-x-0.5',
+        'sm:mx-0 sm:translate-x-0',
       )}
       icon={<TbPhotoShare size={17} />}
       spinnerColor="dim"
