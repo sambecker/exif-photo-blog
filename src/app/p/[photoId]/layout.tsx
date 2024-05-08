@@ -18,7 +18,7 @@ import { GENERATE_STATIC_PARAMS_LIMIT, getPhotoIds } from '@/photo/db';
 export let generateStaticParams:
   (() => Promise<{ photoId: string }[]>) | undefined = undefined;
 
-if (STATICALLY_OPTIMIZED_PAGES) {
+if (STATICALLY_OPTIMIZED_PAGES && process.env.NODE_ENV === 'production') {
   generateStaticParams = async () => {
     const photos = await getPhotoIds({ limit: GENERATE_STATIC_PARAMS_LIMIT });
     return photos.map(photoId => ({ photoId }));
