@@ -21,6 +21,7 @@ import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 import '../site/globals.css';
 import '../site/sonner.css';
+import CookieBot from '@/components/CookieBot';
 
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ['latin'],
@@ -77,6 +78,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <GoogleAnalytics />
+      <CookieBot />
       <body className={ibmPlexMono.variable}>
         <AppStateProvider>
           <SwrConfigClient>
@@ -98,7 +100,7 @@ export default function RootLayout({
             </ThemeProvider>
           </SwrConfigClient>
           <Analytics debug={false} />
-          <SpeedInsights debug={false}  />
+          <SpeedInsights debug={false} />
           <PhotoEscapeHandler />
           <ToasterWithThemes />
         </AppStateProvider>
