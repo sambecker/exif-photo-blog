@@ -5,8 +5,7 @@ import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { STATICALLY_OPTIMIZED } from '@/site/config';
-import { getPhotoIds } from '@/photo/db';
-import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo';
+import { GENERATE_STATIC_PARAMS_LIMIT, getPhotoIds } from '@/photo/db';
 
 export let generateStaticParams:
   (() => Promise<{ photoId: string }[]>) | undefined = undefined;

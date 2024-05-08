@@ -35,16 +35,6 @@ const nextConfig = {
       .concat(createRemotePattern(HOSTNAME_AWS_S3)),
     minimumCacheTTL: 31536000,
   },
-  ...process.env.NEXT_PUBLIC_STATICALLY_OPTIMIZE === '1' && {
-    experimental: { ppr: true },
-  },
-  webpack: (config) => {
-    config.optimization ??= {};
-    if (process.env.NODE_ENV !== 'production') {
-      config.optimization.minimize = false;
-    }
-    return config;
-  },
 };
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({

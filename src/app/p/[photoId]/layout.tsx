@@ -1,5 +1,4 @@
 import {
-  GENERATE_STATIC_PARAMS_LIMIT,
   GRID_THUMBNAILS_TO_SHOW_MAX,
   descriptionForPhoto,
   titleForPhoto,
@@ -14,7 +13,7 @@ import {
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotosNearIdCachedCached } from '@/photo/cache';
 import { STATICALLY_OPTIMIZED } from '@/site/config';
-import { getPhotoIds } from '@/photo/db';
+import { GENERATE_STATIC_PARAMS_LIMIT, getPhotoIds } from '@/photo/db';
 
 export let generateStaticParams:
   (() => Promise<{ photoId: string }[]>) | undefined = undefined;

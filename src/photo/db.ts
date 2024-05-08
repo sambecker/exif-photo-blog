@@ -16,7 +16,8 @@ import { parameterize } from '@/utility/string';
 import { TagsWithMeta } from '@/tag';
 import { FilmSimulation, FilmSimulations } from '@/simulation';
 import { SHOULD_DEBUG_SQL, PRIORITY_ORDER_ENABLED } from '@/site/config';
-import { screenForPPR } from '@/utility/ppr';
+
+export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 
 const PHOTO_DEFAULT_LIMIT = 100;
 
@@ -310,7 +311,6 @@ const safelyQueryPhotos = async <T>(
   try {
     result = await callback();
   } catch (e: any) {
-    screenForPPR(e, undefined, 'neon postgres');
     if (MIGRATION_FIELDS_01.some(field => new RegExp(
       `column "${field}" of relation "photos" does not exist`,
       'i',
