@@ -44,7 +44,6 @@ export default function Badge({
   };
   return (
     <span className={clsx(
-      className,
       'leading-none',
       stylesForType(),
       uppercase && 'uppercase tracking-wider',
