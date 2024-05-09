@@ -26,6 +26,7 @@ import { RevalidatePhoto } from './InfinitePhotoScroll';
 import { useRef } from 'react';
 import useOnVisible from '@/utility/useOnVisible';
 import PhotoDate from './PhotoDate';
+import { useAppState } from '@/state/AppState';
 
 export default function PhotoLarge({
   photo,
@@ -68,17 +69,31 @@ export default function PhotoLarge({
 
   useOnVisible(ref, onVisible);
 
+  const { matteSetting } = useAppState();
+
   return (
     <SiteGrid
       containerRef={ref}
       contentMain={
         <Link
           href={pathForPhoto(photo)}
-          className="active:brightness-75"
+          className={clsx(
+            'active:brightness-75',
+            Boolean(matteSetting) &&
+              'flex items-center justify-center aspect-[3/2]',
+            matteSetting === 'light' && 'bg-invert',
+            matteSetting === 'dark' && 'bg-dim',
+          )}
           prefetch={prefetch}
         >
           <ImageLarge
-            className="w-full"
+            className={clsx(Boolean(matteSetting) &&
+              'flex items-center justify-center h-full')}
+            imgClassName={clsx(
+              Boolean(matteSetting) && 'object-scale-down',
+              Boolean(matteSetting) &&
+                photo.aspectRatio >= 1 ? 'max-h-[80%]' : 'max-h-[90%]'
+            )}
             alt={altTextForPhoto(photo)}
             src={photo.url}
             aspectRatio={photo.aspectRatio}

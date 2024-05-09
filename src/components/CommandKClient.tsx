@@ -70,6 +70,8 @@ export default function CommandKClient({
     isUserSignedIn,
     setUserEmail,
     isCommandKOpen: isOpen,
+    matteSetting,
+    setMatteSetting,
     shouldShowBaselineGrid,
     shouldDebugBlur,
     setIsCommandKOpen: setIsOpen,
@@ -197,6 +199,16 @@ export default function CommandKClient({
       heading: 'Debug Tools',
       accessory: <RiToolsFill size={16} className="translate-x-[-1px]" />,
       items: [{
+        label: 'Toggle Matte Setting',
+        action: () => setMatteSetting?.(prev => {
+          if (!prev) {
+            return 'light';
+          } else if (prev === 'light') {
+            return 'dark';
+          }
+        }),
+        annotation: Boolean(matteSetting) ? <FaCheck size={12} /> : undefined,
+      }, {
         label: 'Toggle Blur Debug',
         action: () => setShouldDebugBlur?.(prev => !prev),
         annotation: shouldDebugBlur ? <FaCheck size={12} /> : undefined,

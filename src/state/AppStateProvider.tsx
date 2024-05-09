@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, ReactNode, useCallback } from 'react';
-import { AppStateContext } from './AppState';
+import { AppStateContext, MatteSetting } from './AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import usePathnames from '@/utility/usePathnames';
 import { getAuthAction } from '@/auth/actions';
@@ -16,6 +16,8 @@ export default function AppStateProvider({
 
   const [hasLoaded, setHasLoaded] =
     useState(false);
+  const [matteSetting, setMatteSetting] =
+    useState<MatteSetting>();
   const [swrTimestamp, setSwrTimestamp] =
     useState(Date.now());
   const [userEmail, setUserEmail] =
@@ -50,6 +52,8 @@ export default function AppStateProvider({
       value={{
         previousPathname,
         hasLoaded,
+        matteSetting,
+        setMatteSetting,
         swrTimestamp,
         invalidateSwr,
         setHasLoaded,

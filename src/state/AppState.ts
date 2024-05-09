@@ -1,9 +1,13 @@
 import { Dispatch, SetStateAction, createContext, useContext } from 'react';
 import { AnimationConfig } from '@/components/AnimateItems';
 
+export type MatteSetting = 'light' | 'dark' | undefined;
+
 export interface AppStateContext {
   previousPathname?: string
   hasLoaded?: boolean
+  matteSetting?: MatteSetting
+  setMatteSetting?: Dispatch<SetStateAction<MatteSetting>>
   swrTimestamp?: number
   invalidateSwr?: () => void
   userEmail?: string
