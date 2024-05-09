@@ -23,6 +23,12 @@ const VERCEL_PROJECT_URL = VERCEL_BRANCH_URL && VERCEL_BRANCH
   ? `${VERCEL_BRANCH_URL.split(`-git-${VERCEL_BRANCH}-`)[0]}.vercel.app`
   : undefined;
 
+export const IS_PRODUCTION = process.env.NODE_ENV === 'production' && (
+  // Make environment checks resilient to non-Vercel deployments
+  VERCEL_ENV === 'production' ||
+  !VERCEL_ENV
+);
+
 // User-facing domain, potential site title
 const SITE_DOMAIN =
   process.env.NEXT_PUBLIC_SITE_DOMAIN ||
