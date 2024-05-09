@@ -140,7 +140,11 @@ export default function FieldSetWithStatus({
                 autoCapitalize={!capitalize ? 'off' : undefined}
                 readOnly={readOnly || pending || loading}
                 className={clsx(
-                  type === 'text' && 'w-full',
+                  (
+                    type === 'text' ||
+                    type === 'email' ||
+                    type === 'password'
+                  ) && 'w-full',
                   Boolean(error) && 'error',
                 )}
               />}
