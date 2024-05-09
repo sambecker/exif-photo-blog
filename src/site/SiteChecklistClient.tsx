@@ -44,6 +44,7 @@ export default function SiteChecklistClient({
   isStaticallyOptimized,
   arePagesStaticallyOptimized,
   areOGImagesStaticallyOptimized,
+  matteSetting,
   isBlurEnabled,
   isGeoPrivacyEnabled,
   isPriorityOrderEnabled,
@@ -376,6 +377,19 @@ export default function SiteChecklistClient({
               renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES']),
               'translate-y-[4.5px]',
             )}
+          </ChecklistRow>
+          <ChecklistRow
+            title={'Photo Matte' + (matteSetting
+              ? `: ${matteSetting?.toLocaleUpperCase()}`
+              : '')}
+            status={Boolean(matteSetting)}
+            isPending={isPendingPage}
+            optional
+          >
+            Set environment variable to {'"light"'} or {'"dark"'} to
+            {' '}
+            constrain the size of each photo, and enable a surrounding border:
+            {renderEnvVars(['NEXT_PUBLIC_MATTE_SETTING'])}
           </ChecklistRow>
           <ChecklistRow
             title="Image Blur"

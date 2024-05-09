@@ -6,6 +6,7 @@ import { AnimationConfig } from '@/components/AnimateItems';
 import usePathnames from '@/utility/usePathnames';
 import { getAuthAction } from '@/auth/actions';
 import useSWR from 'swr';
+import { MATTE_SETTING } from '@/site/config';
 
 export default function AppStateProvider({
   children,
@@ -17,7 +18,7 @@ export default function AppStateProvider({
   const [hasLoaded, setHasLoaded] =
     useState(false);
   const [matteSetting, setMatteSetting] =
-    useState<MatteSetting>();
+    useState<MatteSetting>(MATTE_SETTING);
   const [swrTimestamp, setSwrTimestamp] =
     useState(Date.now());
   const [userEmail, setUserEmail] =
