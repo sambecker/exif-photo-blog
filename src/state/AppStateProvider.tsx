@@ -4,7 +4,7 @@ import { useState, useEffect, ReactNode, useCallback } from 'react';
 import { AppStateContext } from './AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import usePathnames from '@/utility/usePathnames';
-import { getCurrentUser } from '@/auth/actions';
+import { getAuthAction } from '@/auth/actions';
 import useSWR from 'swr';
 
 export default function AppStateProvider({
@@ -34,8 +34,8 @@ export default function AppStateProvider({
 
   const invalidateSwr = useCallback(() => setSwrTimestamp(Date.now()), []);
 
-  const { data } = useSWR('getCurrentUser', getCurrentUser);
-  useEffect(() => setUserEmail(data?.email ?? undefined), [data]);
+  const { data } = useSWR('getAuth', getAuthAction);
+  useEffect(() => setUserEmail(data?.user?.email ?? undefined), [data]);
 
   const registerAdminUpdate = useCallback(() =>
     setAdminUpdateTimes(updates => [...updates, new Date()])

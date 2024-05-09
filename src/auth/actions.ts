@@ -39,4 +39,4 @@ export const signInAction = async (
 export const signOutAndRedirectAction = async () =>
   signOut({ redirectTo: PATH_ROOT });
 
-export const getCurrentUser = async () => (await auth())?.user;
+export const getAuthAction = () => auth();
