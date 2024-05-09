@@ -207,7 +207,7 @@ FAQ
 #### Why don't my photo changes show up immediately?
 > This template statically optimizes core views such as `/` and `/grid` to minimize visitor load times. Consequently, when photos are added, edited, or removed, it might take several minutes for those changes to propagate. If it seems like a change is not taking effect, try navigating to `/admin/configuration` and clicking "Clear Cache."
 
-#### Why don’t my OG images load when I share a link to a photo?
+#### Why don’t my OG images load when I share a link?
 > Many services such as iMessage, Slack, and X, require near-instant responses when unfurling link-based content. In order to guarantee sufficient responsiveness, consider rendering pages and image assets ahead of time by enabling static optimization by setting `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES` and `NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES` to `1`. Keep in mind that this will increase platform usage.
 
 #### Why are my thumbnails square?
