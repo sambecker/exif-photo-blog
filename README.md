@@ -209,16 +209,19 @@ FAQ
 > This template statically optimizes core views such as `/` and `/grid` to minimize visitor load times. Consequently, when photos are added, edited, or removed, it might take several minutes for those changes to propagate. If it seems like a change is not taking effect, try navigating to `/admin/configuration` and clicking "Clear Cache."
 
 #### Why don’t my OG images load when I share a link?
-> Many services such as iMessage, Slack, and X, require near-instant responses when unfurling link-based content. In order to guarantee sufficient responsiveness, consider rendering pages and image assets ahead of time by enabling static optimization by setting `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES` and `NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES` to `1`. Keep in mind that this will increase platform usage.
+> Many services such as iMessage, Slack, and X, require near-instant responses when unfurling link-based content. In order to guarantee sufficient responsiveness, consider rendering pages and image assets ahead of time by enabling static optimization by setting `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES = 1` and `NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES = 1`. Keep in mind that this will increase platform usage.
 
-#### Why are my thumbnails square?
-> Absent configuration, the default grid aspect ratio is `1`. It can be set to any number (for instance `1.5` for 3:2 images) via `NEXT_PUBLIC_GRID_ASPECT_RATIO` or ignored entirely by setting to `0`.
+#### Why do my vertical images take up so much space?
+> By default, all photos are shown full-width, regardless of orientation. Enable matting to showcase horizontal and vertical photos at a similar scale by setting `NEXT_PUBLIC_MATTE_PHOTOS = 1`.
 
 #### My images/content have fallen out of sync with my database and/or my production site no longer matches local development. What do I do?
 > Navigate to `/admin/configuration` and click "Clear Cache."
 
 #### I'm seeing server-side runtime errors when loading a page after updating my fork. What do I do?
 > Navigate to `/admin/configuration` and click "Clear Cache." If this doesn't help, [open an issue](https://github.com/sambecker/exif-photo-blog/issues/new).
+
+#### Why are my thumbnails square?
+> Absent configuration, the default grid aspect ratio is `1`. `NEXT_PUBLIC_GRID_ASPECT_RATIO` can be set to any number (for instance, `1.5` for 3:2 images) or ignored by setting to `0`.
 
 #### Why aren't my Fujifilm simulations importing alongside EXIF data?
 > Fujifilm simulation data is stored in vendor-specific Makernote binaries embedded in EXIF data. Under certain circumstances an intermediary may strip out this data. For instance, there is a known issue on iOS where editing an image, e.g., cropping it, causes Makernote data loss. If your simulation data appears to be missing, try importing the original file as it was stored by the camera. Additionally, if you can confirm the simulation mode on camera, you can then edit the photo record and manually select it.
