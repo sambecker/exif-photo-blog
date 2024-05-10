@@ -1,17 +1,19 @@
 'use server';
 
-import OpenAI from 'openai';
-import { createStreamableValue, render } from 'ai/rsc';
+import { streamText } from 'ai';
+import { createStreamableValue } from 'ai/rsc';
+import { createOpenAI } from '@ai-sdk/openai';
 import { kv } from '@vercel/kv';
 import { Ratelimit } from '@upstash/ratelimit';
 import { AI_TEXT_GENERATION_ENABLED, HAS_VERCEL_KV } from '@/site/config';
 import { safelyRunAdminServerAction } from '@/auth';
+import { removeBase64Prefix } from '@/utility/image';
 
 const RATE_LIMIT_IDENTIFIER = 'openai-image-query';
 const RATE_LIMIT_MAX_QUERIES_PER_HOUR = 100;
 
-const provider = AI_TEXT_GENERATION_ENABLED
-  ? new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY })
+const openai = AI_TEXT_GENERATION_ENABLED
+  ? createOpenAI({ apiKey: process.env.OPENAI_SECRET_KEY })
   : undefined;
 
 // Allows 100 requests per hour
@@ -43,32 +45,28 @@ export const streamOpenAiImageQuery = async (
 
     const stream = createStreamableValue('');
 
-    if (provider) {
-      render({
-        provider,
-        model: 'gpt-4-vision-preview',
-        messages: [{
-          'role': 'user',
-          'content': [
-            {
-              'type': 'text',
-              'text': query,
-            }, {
-              'type': 'image_url',
-              'image_url': {
-                'url': imageBase64,
+    if (openai) {
+      (async () => {
+        const { textStream } = await streamText({
+          model: openai('gpt-4-vision-preview'),
+          messages: [{
+            'role': 'user',
+            'content': [
+              {
+                'type': 'text',
+                'text': query,
+              }, {
+                'type': 'image',
+                'image': removeBase64Prefix(imageBase64),
               },
-            },
-          ],
-        }],
-        text: ({ content, done }): any => {
-          if (done) {
-            stream.done(content);
-          } else {
-            stream.update(content);
-          }
-        },
-      });
+            ],
+          }],
+        });
+        for await (const delta of textStream) {
+          stream.update(delta);
+        }
+        stream.done();
+      })();
     }
 
     return stream.value;
