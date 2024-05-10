@@ -26,6 +26,7 @@ import { RevalidatePhoto } from './InfinitePhotoScroll';
 import { useRef } from 'react';
 import useOnVisible from '@/utility/useOnVisible';
 import PhotoDate from './PhotoDate';
+import { useAppState } from '@/state/AppState';
 
 export default function PhotoLarge({
   photo,
@@ -68,24 +69,38 @@ export default function PhotoLarge({
 
   useOnVisible(ref, onVisible);
 
+  const { arePhotosMatted } = useAppState();
+
   return (
     <SiteGrid
       containerRef={ref}
       contentMain={
         <Link
           href={pathForPhoto(photo)}
-          className="active:brightness-75"
+          className={clsx(arePhotosMatted &&
+            'flex items-center aspect-[3/2] bg-gray-100',
+          )}
           prefetch={prefetch}
         >
-          <ImageLarge
-            className="w-full"
-            alt={altTextForPhoto(photo)}
-            src={photo.url}
-            aspectRatio={photo.aspectRatio}
-            blurData={photo.blurData}
-            blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
-            priority={priority}
-          />
+          <div className={clsx(
+            arePhotosMatted &&
+              'flex items-center justify-center w-full',
+            arePhotosMatted && photo.aspectRatio >= 1
+              ? 'h-[80%]'
+              : 'h-[90%]',
+          )}>
+            <ImageLarge
+              className={clsx(arePhotosMatted && 'h-full')}
+              imgClassName={clsx(arePhotosMatted &&
+                'object-contain w-full h-full')}
+              alt={altTextForPhoto(photo)}
+              src={photo.url}
+              aspectRatio={photo.aspectRatio}
+              blurData={photo.blurData}
+              blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
+              priority={priority}
+            />
+          </div>
         </Link>}
       contentSide={
         <DivDebugBaselineGrid className={clsx(

@@ -29,7 +29,7 @@ export default function ChecklistRow({
       />
       <div className="flex flex-col min-w-0">
         <div className={clsx(
-          'flex flex-wrap items-center gap-2 pb-1',
+          'flex flex-wrap items-center gap-2 pb-0.5',
           'font-bold dark:text-gray-300',
         )}>
           {title}
