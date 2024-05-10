@@ -8,13 +8,15 @@ import Image, { ImageProps } from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 export default function ImageBlurFallback(props: ImageProps & {
-  blurCompatibilityLevel?: 'none' | 'low' | 'high';
+  blurCompatibilityLevel?: 'none' | 'low' | 'high'
+  imgClassName?: string
 }) {
   const {
     className,
     priority,
     blurDataURL,
     blurCompatibilityLevel = 'low',
+    imgClassName = 'object-cover h-full',
     ...rest
   } = props;
 
@@ -28,8 +30,6 @@ export default function ImageBlurFallback(props: ImageProps & {
   const onError = useCallback(() => setDidError(true), []);
 
   const [hideBlurPlaceholder, setHideBlurPlaceholder] = useState(false);
-
-  const imageClassName = 'object-cover h-full';
 
   const imgRef = useRef<HTMLImageElement>(null);
 
@@ -75,8 +75,9 @@ export default function ImageBlurFallback(props: ImageProps & {
         <div className={clsx(
           '@container',
           'absolute inset-0',
-          'bg-main overflow-hidden',
+          'overflow-hidden',
           'transition-opacity duration-300 ease-in',
+          !(BLUR_ENABLED && props.blurDataURL) && 'bg-main',
           (isLoading || shouldDebugBlur) ? 'opacity-100' : 'opacity-0',
         )}>
           {(BLUR_ENABLED && props.blurDataURL)
@@ -84,7 +85,7 @@ export default function ImageBlurFallback(props: ImageProps & {
               ...rest,
               src: blurDataURL,
               className: clsx(
-                imageClassName,
+                imgClassName,
                 getBlurClass(),
               ),
             }} />
@@ -97,7 +98,7 @@ export default function ImageBlurFallback(props: ImageProps & {
         ...rest,
         ref: imgRef,
         priority,
-        className: imageClassName,
+        className: imgClassName,
         onLoad,
         onError,
       }} />

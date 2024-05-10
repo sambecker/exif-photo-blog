@@ -70,11 +70,13 @@ export default function CommandKClient({
     isUserSignedIn,
     setUserEmail,
     isCommandKOpen: isOpen,
+    arePhotosMatted,
     shouldShowBaselineGrid,
     shouldDebugBlur,
     setIsCommandKOpen: setIsOpen,
     setShouldRespondToKeyboardCommands,
     setShouldShowBaselineGrid,
+    setArePhotosMatted,
     setShouldDebugBlur,
   } = useAppState();
 
@@ -197,6 +199,10 @@ export default function CommandKClient({
       heading: 'Debug Tools',
       accessory: <RiToolsFill size={16} className="translate-x-[-1px]" />,
       items: [{
+        label: 'Toggle Photo Matting',
+        action: () => setArePhotosMatted?.(prev => !prev),
+        annotation: arePhotosMatted ? <FaCheck size={12} /> : undefined,
+      }, {
         label: 'Toggle Blur Debug',
         action: () => setShouldDebugBlur?.(prev => !prev),
         annotation: shouldDebugBlur ? <FaCheck size={12} /> : undefined,

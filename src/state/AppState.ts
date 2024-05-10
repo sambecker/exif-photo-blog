@@ -4,6 +4,8 @@ import { AnimationConfig } from '@/components/AnimateItems';
 export interface AppStateContext {
   previousPathname?: string
   hasLoaded?: boolean
+  arePhotosMatted?: boolean
+  setArePhotosMatted?: Dispatch<SetStateAction<boolean>>
   swrTimestamp?: number
   invalidateSwr?: () => void
   userEmail?: string
