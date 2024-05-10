@@ -77,10 +77,8 @@ export default function PhotoLarge({
       contentMain={
         <Link
           href={pathForPhoto(photo)}
-          className={clsx(
-            'active:brightness-75',
-            arePhotosMatted &&
-              'flex items-center aspect-[3/2] bg-gray-100',
+          className={clsx(arePhotosMatted &&
+            'flex items-center aspect-[3/2] bg-gray-100',
           )}
           prefetch={prefetch}
         >
