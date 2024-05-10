@@ -75,8 +75,9 @@ export default function ImageBlurFallback(props: ImageProps & {
         <div className={clsx(
           '@container',
           'absolute inset-0',
-          'bg-main overflow-hidden',
+          'overflow-hidden',
           'transition-opacity duration-300 ease-in',
+          !(BLUR_ENABLED && props.blurDataURL) && 'bg-main',
           (isLoading || shouldDebugBlur) ? 'opacity-100' : 'opacity-0',
         )}>
           {(BLUR_ENABLED && props.blurDataURL)

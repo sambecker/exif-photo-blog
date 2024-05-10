@@ -44,7 +44,7 @@ export default function SiteChecklistClient({
   isStaticallyOptimized,
   arePagesStaticallyOptimized,
   areOGImagesStaticallyOptimized,
-  matteSetting,
+  arePhotosMatted,
   isBlurEnabled,
   isGeoPrivacyEnabled,
   isPriorityOrderEnabled,
@@ -123,9 +123,9 @@ export default function SiteChecklistClient({
     >
       <span className="inline-flex items-center gap-1">
         <span className={clsx(
-          'text-xs font-medium tracking-wide',
-          'px-0.5 py-0.5',
-          'rounded-sm',
+          'text-[11px] font-medium tracking-wide',
+          'px-0.5 py-[0.5px]',
+          'rounded-[5px]',
           'bg-gray-100 dark:bg-gray-800',
         )}>
           `{variable}`
@@ -135,7 +135,7 @@ export default function SiteChecklistClient({
     </div>;
 
   const renderEnvVars = (variables: string[]) =>
-    <div className="py-1 space-y-1">
+    <div className="py-0.5">
       {variables.map(envVar => renderEnvVar(envVar))}
     </div>;
 
@@ -370,26 +370,24 @@ export default function SiteChecklistClient({
             {renderSubStatus(
               arePagesStaticallyOptimized ? 'checked' : 'optional',
               renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES']),
-              'translate-y-[4.5px]',
+              'translate-y-[3.5px]',
             )}
             {renderSubStatus(
               areOGImagesStaticallyOptimized ? 'checked' : 'optional',
               renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES']),
-              'translate-y-[4.5px]',
+              'translate-y-[3.5px]',
             )}
           </ChecklistRow>
           <ChecklistRow
-            title={'Photo Matte' + (matteSetting
-              ? `: ${matteSetting?.toLocaleUpperCase()}`
-              : '')}
-            status={Boolean(matteSetting)}
+            title="Photo Matting"
+            status={arePhotosMatted}
             isPending={isPendingPage}
             optional
           >
-            Set environment variable to {'"light"'} or {'"dark"'} to
+            Set environment variable to {'"1"'} to constrain the size
             {' '}
-            constrain the size of each photo, and enable a surrounding border:
-            {renderEnvVars(['NEXT_PUBLIC_MATTE_SETTING'])}
+            of each photo, and enable a surrounding border:
+            {renderEnvVars(['NEXT_PUBLIC_MATTE_PHOTOS'])}
           </ChecklistRow>
           <ChecklistRow
             title="Image Blur"

@@ -69,7 +69,7 @@ export default function PhotoLarge({
 
   useOnVisible(ref, onVisible);
 
-  const { matteSetting } = useAppState();
+  const { arePhotosMatted } = useAppState();
 
   return (
     <SiteGrid
@@ -79,28 +79,30 @@ export default function PhotoLarge({
           href={pathForPhoto(photo)}
           className={clsx(
             'active:brightness-75',
-            Boolean(matteSetting) &&
-              'flex items-center justify-center aspect-[3/2]',
-            matteSetting === 'light' && 'bg-invert',
-            matteSetting === 'dark' && 'bg-dim',
+            arePhotosMatted &&
+              'flex items-center aspect-[3/2] bg-gray-100',
           )}
           prefetch={prefetch}
         >
-          <ImageLarge
-            className={clsx(Boolean(matteSetting) &&
-              'flex items-center justify-center h-full')}
-            imgClassName={clsx(
-              Boolean(matteSetting) && 'object-scale-down',
-              Boolean(matteSetting) &&
-                photo.aspectRatio >= 1 ? 'max-h-[80%]' : 'max-h-[90%]'
-            )}
-            alt={altTextForPhoto(photo)}
-            src={photo.url}
-            aspectRatio={photo.aspectRatio}
-            blurData={photo.blurData}
-            blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
-            priority={priority}
-          />
+          <div className={clsx(
+            arePhotosMatted &&
+              'flex items-center justify-center w-full',
+            arePhotosMatted && photo.aspectRatio >= 1
+              ? 'h-[80%]'
+              : 'h-[90%]',
+          )}>
+            <ImageLarge
+              className={clsx(arePhotosMatted && 'h-full')}
+              imgClassName={clsx(arePhotosMatted &&
+                'object-contain w-full h-full')}
+              alt={altTextForPhoto(photo)}
+              src={photo.url}
+              aspectRatio={photo.aspectRatio}
+              blurData={photo.blurData}
+              blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
+              priority={priority}
+            />
+          </div>
         </Link>}
       contentSide={
         <DivDebugBaselineGrid className={clsx(

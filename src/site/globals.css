@@ -162,10 +162,6 @@
     @apply
       bg-gray-900 dark:bg-gray-100
   }
-  .bg-dim {
-    @apply
-      bg-gray-200/40 dark:bg-gray-800/40
-  }
   /* Utilities: Baseline Grid */
   .space-y-baseline {
     @apply

@@ -96,7 +96,7 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_PRO_MODE = 1` enables higher quality image storage (results in increased storage usage)
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES = 1` enables static optimization for pages, i.e., renders pages at build time (results in increased project usage)—⚠️ _Experimental_
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES = 1` enables static optimization for OG images, i.e., renders images at build time (results in increased project usage)—⚠️ _Experimental_
-- `NEXT_PUBLIC_MATTE_SETTING = light` constrains the size of each photo, and enables a surrounding border (can be set to `light` or `dark`)
+- `NEXT_PUBLIC_MATTE_PHOTOS = 1` constrains the size of each photo, and enables a surrounding border (potentially useful for photos with tall aspect ratios)
 - `NEXT_PUBLIC_BLUR_DISABLED = 1` prevents image blur data being stored and displayed (potentially useful for limiting Postgres usage)
 - `NEXT_PUBLIC_GEO_PRIVACY = 1` disables collection/display of location-based data
 - `NEXT_PUBLIC_IGNORE_PRIORITY_ORDER = 1` prevents `priority_order` field affecting photo order

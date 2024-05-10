@@ -70,13 +70,13 @@ export default function CommandKClient({
     isUserSignedIn,
     setUserEmail,
     isCommandKOpen: isOpen,
-    matteSetting,
-    setMatteSetting,
+    arePhotosMatted,
     shouldShowBaselineGrid,
     shouldDebugBlur,
     setIsCommandKOpen: setIsOpen,
     setShouldRespondToKeyboardCommands,
     setShouldShowBaselineGrid,
+    setArePhotosMatted,
     setShouldDebugBlur,
   } = useAppState();
 
@@ -199,15 +199,9 @@ export default function CommandKClient({
       heading: 'Debug Tools',
       accessory: <RiToolsFill size={16} className="translate-x-[-1px]" />,
       items: [{
-        label: 'Toggle Matte Setting',
-        action: () => setMatteSetting?.(prev => {
-          if (!prev) {
-            return 'light';
-          } else if (prev === 'light') {
-            return 'dark';
-          }
-        }),
-        annotation: Boolean(matteSetting) ? <FaCheck size={12} /> : undefined,
+        label: 'Toggle Photo Matting',
+        action: () => setArePhotosMatted?.(prev => !prev),
+        annotation: arePhotosMatted ? <FaCheck size={12} /> : undefined,
       }, {
         label: 'Toggle Blur Debug',
         action: () => setShouldDebugBlur?.(prev => !prev),
