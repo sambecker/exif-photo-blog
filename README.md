@@ -54,9 +54,8 @@ Develop locally
 -
 1. Clone code
 2. Run `pnpm i` to install dependencies
-3. Set environment variable `AUTH_URL` locally (not in production) to `http://localhost:3000/api/url` (_this is a temporary limitation of `next-auth` v5.0 Beta_)
-4. If necessary, install [Vercel CLI](https://vercel.com/docs/cli#installing-vercel-cli) and log in by running `vercel login`
-5. Run `vercel link` to connect the CLI to your project
+3. If necessary, install [Vercel CLI](https://vercel.com/docs/cli#installing-vercel-cli) and authenticate by running `vercel login`
+4. Run `vercel link` to connect the CLI to your project
 5. Run `vercel dev` to start dev server with Vercel-managed environment variables
 
 Further customization
