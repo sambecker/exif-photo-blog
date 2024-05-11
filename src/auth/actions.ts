@@ -9,6 +9,7 @@ import {
   signOut,
 } from '@/auth';
 import { PATH_ADMIN_PHOTOS, PATH_ROOT } from '@/site/paths';
+import type { Session } from 'next-auth';
 import { redirect } from 'next/navigation';
 
 export const signInAction = async (
@@ -40,3 +41,6 @@ export const signOutAndRedirectAction = async () =>
   signOut({ redirectTo: PATH_ROOT });
 
 export const getAuthAction = () => auth();
+
+export const logClientAuthUpdate = (data: Session | null | undefined) =>
+  console.log('Client auth update', data);

@@ -4,7 +4,7 @@ import { useState, useEffect, ReactNode, useCallback } from 'react';
 import { AppStateContext } from './AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import usePathnames from '@/utility/usePathnames';
-import { getAuthAction } from '@/auth/actions';
+import { getAuthAction, logClientAuthUpdate } from '@/auth/actions';
 import useSWR from 'swr';
 import { MATTE_PHOTOS } from '@/site/config';
 
@@ -38,7 +38,10 @@ export default function AppStateProvider({
   const invalidateSwr = useCallback(() => setSwrTimestamp(Date.now()), []);
 
   const { data } = useSWR('getAuth', getAuthAction);
-  useEffect(() => setUserEmail(data?.user?.email ?? undefined), [data]);
+  useEffect(() => {
+    setUserEmail(data?.user?.email ?? undefined);
+    logClientAuthUpdate(data);
+  }, [data]);
 
   const registerAdminUpdate = useCallback(() =>
     setAdminUpdateTimes(updates => [...updates, new Date()])
