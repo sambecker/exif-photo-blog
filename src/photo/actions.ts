@@ -1,6 +1,7 @@
 'use server';
 
 import {
+  GetPhotosOptions,
   sqlDeletePhoto,
   sqlInsertPhoto,
   sqlDeletePhotoTagGlobally,
@@ -201,16 +202,16 @@ export const getImageBlurAction = async (url: string) =>
 export const getPhotosAction = async (
   offset: number,
   limit: number,
-  includeHidden?: boolean,
+  hidden?: GetPhotosOptions['hidden'],
 ) =>
-  getPhotos({ offset, includeHidden, limit });
+  getPhotos({ offset, hidden, limit });
 
 export const getPhotosCachedAction = async (
   offset: number,
   limit: number,
-  includeHidden?: boolean,
+  hidden?: GetPhotosOptions['hidden'],
 ) =>
-  getPhotosCachedCached({ offset, includeHidden, limit });
+  getPhotosCachedCached({ offset, hidden, limit });
 
 export const queryPhotosByTitleAction = async (query: string) =>
   (await getPhotos({ query, limit: 10 }))
