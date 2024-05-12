@@ -5,7 +5,7 @@ import { PATH_ROOT, absolutePathForPhoto } from '@/site/paths';
 import { TAG_HIDDEN } from '@/tag';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import { ReactNode, cache } from 'react';
+import { cache } from 'react';
 
 const getPhotoCachedCached = cache(getPhotoCached);
 
@@ -40,10 +40,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function PhotoTagPage({
+export default async function PhotoTagHiddenPage({
   params: { photoId },
-  children,
-}: PhotoTagProps & { children: ReactNode }) {
+}: PhotoTagProps) {
   const photo = await getPhotoCachedCached(photoId, true);
 
   if (!photo) { redirect(PATH_ROOT); }
@@ -51,8 +50,7 @@ export default async function PhotoTagPage({
   const photos = await getPhotosCached({ hidden: 'only' });
   const count = photos.length;
 
-  return <>
-    {children}
+  return (
     <PhotoDetailPage {...{ photo, photos, count, tag: TAG_HIDDEN }} />
-  </>;
+  );
 }
