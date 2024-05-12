@@ -50,7 +50,7 @@ export default async function HiddenTagPage() {
   ]);
   return (
     <SiteGrid
-      contentMain={<div className="space-y-8 mt-4">
+      contentMain={<div className="space-y-4 mt-4">
         <AnimateItems
           type="bottom"
           items={[<HiddenHeader
@@ -59,10 +59,12 @@ export default async function HiddenTagPage() {
           />]}
           animateOnFirstLoadOnly
         />
-        <Banner animate>
-          Only authenticated admins can see hidden photos.
-        </Banner>
-        <PhotoGrid {...{ photos }} />
+        <div className="space-y-6">
+          <Banner animate>
+            Only visible to authenticated admins
+          </Banner>
+          <PhotoGrid {...{ photos }} />
+        </div>
       </div>}
     />
   );

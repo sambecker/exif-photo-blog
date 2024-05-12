@@ -91,3 +91,14 @@ export const isPhotoFav = ({ tags }: Photo) => tags.some(isTagFavs);
 
 export const isPathFavs = (pathname?: string) =>
   getPathComponents(pathname).tag === TAG_FAVS;
+
+export const addHiddenToTags = (tags: TagsWithMeta, hiddenPhotosCount = 0) => {
+  if (hiddenPhotosCount > 0) {
+    return tags
+      .filter(({ tag }) => tag === TAG_FAVS)
+      .concat({ tag: TAG_HIDDEN, count: hiddenPhotosCount })
+      .concat(tags.filter(({ tag }) => tag !== TAG_FAVS));
+  } else {
+    return tags;
+  }
+};

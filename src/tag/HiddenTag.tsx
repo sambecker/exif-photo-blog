@@ -19,7 +19,10 @@ export default function HiddenTag({
       label={badged
         ? <span className="inline-flex gap-1">
           {TAG_HIDDEN}
-          <AiOutlineEyeInvisible size={14} />
+          <AiOutlineEyeInvisible
+            size={13}
+            className="translate-y-[-1.5px]"
+          />
         </span>
         : TAG_HIDDEN}
       href={pathForTag(TAG_HIDDEN)}
