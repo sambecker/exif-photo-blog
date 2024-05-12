@@ -173,11 +173,10 @@ export const sqlDeletePhoto = (id: string) =>
     'sqlDeletePhoto',
   );
 
-const sqlGetPhoto = (id: string) =>
-  safelyQueryPhotos(
-    () => sql<PhotoDb>`SELECT * FROM photos WHERE id=${id} LIMIT 1`,
-    'sqlGetPhoto',
-  );
+const sqlGetPhoto = (id: string, includeHidden?: boolean) => includeHidden
+  ? sql<PhotoDb>`SELECT * FROM photos WHERE id=${id} LIMIT 1`
+  // eslint-disable-next-line max-len
+  : sql<PhotoDb>`SELECT * FROM photos WHERE id=${id} AND hidden IS NOT TRUE LIMIT 1`;
 
 const sqlGetPhotosCount = async () => sql`
   SELECT COUNT(*) FROM photos
@@ -206,6 +205,17 @@ const sqlGetPhotosTagMeta = async (tag: string) => sql`
   WHERE ${tag}=ANY(tags) AND
   hidden IS NOT TRUE
 `.then(({ rows }) => ({
+    count: parseInt(rows[0].count, 10),
+    ...rows[0]?.start && rows[0]?.end
+      ? { dateRange: rows[0] as PhotoDateRange }
+      : undefined,
+  }));
+
+const sqlGetPhotosTagHiddenMeta = async () => sql`
+  SELECT COUNT(*), MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
+  FROM photos
+  WHERE hidden IS TRUE
+  `.then(({ rows }) => ({
     count: parseInt(rows[0].count, 10),
     ...rows[0]?.start && rows[0]?.end
       ? { dateRange: rows[0] as PhotoDateRange }
@@ -297,7 +307,7 @@ export type GetPhotosOptions = {
   simulation?: FilmSimulation
   takenBefore?: Date
   takenAfterInclusive?: Date
-  includeHidden?: boolean
+  hidden?: 'exclude' | 'include' | 'only'
 }
 
 const safelyQueryPhotos = async <T>(
@@ -359,7 +369,7 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
     simulation,
     takenBefore,
     takenAfterInclusive,
-    includeHidden,
+    hidden = 'exclude',
   } = options;
 
   let sql = ['SELECT * FROM photos'];
@@ -368,8 +378,14 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
 
   // WHERE
   let wheres = [] as string[];
-  if (!includeHidden) {
+
+  switch (hidden) {
+  case 'exclude':
     wheres.push('hidden IS NOT TRUE');
+    break;
+  case 'only':
+    wheres.push('hidden IS TRUE');
+    break;
   }
   if (takenBefore) {
     wheres.push(`taken_at > $${valueIndex++}`);
@@ -428,6 +444,7 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
 export const getPhotosNearId = async (
   id: string,
   limit: number,
+  onlyHidden?: boolean,
 ) => {
   const orderBy = PRIORITY_ORDER_ENABLED
     ? 'ORDER BY priority_order ASC, taken_at DESC'
@@ -440,7 +457,7 @@ export const getPhotosNearId = async (
           SELECT *, row_number()
           OVER (${orderBy}) as row_number
           FROM photos
-          WHERE hidden IS NOT TRUE
+          WHERE hidden is ${onlyHidden ? 'TRUE' : 'NOT TRUE'}
         ),
         current AS (SELECT row_number FROM twi WHERE id = $1)
         SELECT twi.*
@@ -468,11 +485,15 @@ export const getPhotoIds = async ({ limit }: { limit?: number }) => {
     .then(({ rows }) => rows.map(({ id }) => id as string));
 };
 
-export const getPhoto = async (id: string): Promise<Photo | undefined> => {
+export const getPhoto = async (
+  id: string,
+  includeHidden?: boolean,
+): Promise<Photo | undefined> => {
   // Check for photo id forwarding
   // and convert short ids to uuids
   const photoId = translatePhotoId(id);
-  return safelyQueryPhotos(() => sqlGetPhoto(photoId), 'getPhoto')
+  return safelyQueryPhotos(() =>
+    sqlGetPhoto(photoId, includeHidden), 'sqlGetPhoto')
     .then(({ rows }) => rows.map(parsePhotoFromDb))
     .then(photos => photos.length > 0 ? photos[0] : undefined);
 };
@@ -497,10 +518,9 @@ export const getUniqueTags = () =>
 export const getUniqueTagsHidden = () =>
   safelyQueryPhotos(sqlGetUniqueTagsHidden, 'getUniqueTagsHidden');
 export const getPhotosTagMeta = (tag: string) =>
-  safelyQueryPhotos(
-    () => sqlGetPhotosTagMeta(tag),
-    'getPhotosTagMeta',
-  );
+  safelyQueryPhotos(() => sqlGetPhotosTagMeta(tag), 'getPhotosTagMeta');
+export const getPhotosTagHiddenMeta = () =>
+  safelyQueryPhotos(sqlGetPhotosTagHiddenMeta, 'sqlGetPhotosTagHiddenMeta');
 
 // CAMERAS
 export const getUniqueCameras = () =>

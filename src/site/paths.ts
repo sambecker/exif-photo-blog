@@ -3,6 +3,7 @@ import { BASE_URL } from './config';
 import { Camera } from '@/camera';
 import { FilmSimulation } from '@/simulation';
 import { parameterize } from '@/utility/string';
+import { TAG_HIDDEN } from '@/tag';
 
 // Core paths
 export const PATH_ROOT      = '/';
@@ -98,13 +99,15 @@ export const pathForPhoto = (
   camera?: Camera,
   simulation?: FilmSimulation,
 ) =>
-  tag
-    ? `${pathForTag(tag)}/${getPhotoId(photo)}`
-    : camera
-      ? `${pathForCamera(camera)}/${getPhotoId(photo)}`
-      : simulation
-        ? `${pathForFilmSimulation(simulation)}/${getPhotoId(photo)}`
-        : `${PREFIX_PHOTO}/${getPhotoId(photo)}`;
+  typeof photo !== 'string' && photo.hidden
+    ? `${pathForTag(TAG_HIDDEN)}/${getPhotoId(photo)}`
+    : tag
+      ? `${pathForTag(tag)}/${getPhotoId(photo)}`
+      : camera
+        ? `${pathForCamera(camera)}/${getPhotoId(photo)}`
+        : simulation
+          ? `${pathForFilmSimulation(simulation)}/${getPhotoId(photo)}`
+          : `${PREFIX_PHOTO}/${getPhotoId(photo)}`;
 
 export const pathForPhotoShare = (
   photo: PhotoOrPhotoId,
@@ -248,7 +251,8 @@ export const isPathAdminConfiguration = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ADMIN_CONFIGURATION);
 
 export const isPathProtected = (pathname?: string) =>
-  checkPathPrefix(pathname, PATH_ADMIN);
+  checkPathPrefix(pathname, PATH_ADMIN) ||
+  checkPathPrefix(pathname, pathForTag(TAG_HIDDEN));
 
 export const getPathComponents = (pathname = ''): {
   photoId?: string
