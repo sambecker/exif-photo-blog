@@ -49,7 +49,7 @@ export const createPhotoAction = async (formData: FormData) =>
   safelyRunAdminServerAction(async () => {
     const photo = convertFormDataToPhotoDbInsert(formData, true);
 
-    const updatedUrl = await convertUploadToPhoto(photo.url, photo.id);
+    const updatedUrl = await convertUploadToPhoto(photo.url);
   
     if (updatedUrl) { photo.url = updatedUrl; }
   
@@ -63,6 +63,14 @@ export const createPhotoAction = async (formData: FormData) =>
 export const updatePhotoAction = async (formData: FormData) =>
   safelyRunAdminServerAction(async () => {
     const photo = convertFormDataToPhotoDbInsert(formData);
+
+    let url: string | undefined;
+    if (photo.hidden && photo.url.includes(photo.id)) {
+      // Anonymize storage url on update if necessary by
+      // re-running image upload transfer logic
+      url = await convertUploadToPhoto(photo.url);
+      if (url) { photo.url = url; }
+    }
 
     await sqlUpdatePhoto(photo);
 
