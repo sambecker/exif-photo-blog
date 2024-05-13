@@ -49,11 +49,16 @@ export default function AppStateProvider({
     setUserEmail(data?.user?.email ?? undefined);
     logClientAuthUpdate(data);
   }, [data]);
-  const isUserSignedIn = userEmail !== undefined;
+  const isUserSignedIn = Boolean(userEmail);
   useEffect(() => {
     if (isUserSignedIn) {
-      getPhotosTagHiddenMetaCachedAction().then(({ count }) =>
-        setHiddenPhotosCount(count));
+      const timeout = setTimeout(() =>
+        getPhotosTagHiddenMetaCachedAction().then(({ count }) =>
+          setHiddenPhotosCount(count))
+      , 100);
+      return () => clearTimeout(timeout);
+    } else {
+      setHiddenPhotosCount(0);
     }
   }, [isUserSignedIn]);
 
