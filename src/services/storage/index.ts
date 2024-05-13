@@ -27,7 +27,6 @@ import {
   isUrlFromCloudflareR2,
 } from './cloudflare-r2';
 import { PATH_API_PRESIGNED_URL } from '@/site/paths';
-import { screenForPPR } from '@/utility/ppr';
 
 export const generateStorageId = () => generateNanoid(16);
 
@@ -130,51 +129,64 @@ export const uploadPhotoFromClient = async (
   ? uploadFromClientViaPresignedUrl(file, PREFIX_UPLOAD, extension, true)
   : vercelBlobUploadFromClient(file, `${PREFIX_UPLOAD}.${extension}`);
 
-export const convertUploadToPhoto = async (
-  uploadUrl: string,
-  photoId?: string,
-): Promise<string> => {
-  const fileName = photoId ? `${PREFIX_PHOTO}-${photoId}` : `${PREFIX_PHOTO}`;
-  const fileExtension = getExtensionFromStorageUrl(uploadUrl);
-  const photoPath = `${fileName}.${fileExtension ?? 'jpg'}`;
-
-  const storageType = storageTypeFromUrl(uploadUrl);
+const moveFile = async (
+  originUrl: string,
+  destinationFileName: string,
+) => {
+  const storageType = storageTypeFromUrl(originUrl);
 
   let url: string | undefined;
 
   // Copy file
   switch (storageType) {
   case 'vercel-blob':
-    url = await vercelBlobCopy(uploadUrl, photoPath, photoId === undefined);
+    url = await vercelBlobCopy(
+      originUrl,
+      destinationFileName,
+      false,
+    );
     break;
   case 'cloudflare-r2':
     url = await cloudflareR2Copy(
-      getFileNameFromStorageUrl(uploadUrl),
-      photoPath,
-      photoId === undefined,
+      getFileNameFromStorageUrl(originUrl),
+      destinationFileName,
+      false,
     );
     break;
   case 'aws-s3':
-    url = await awsS3Copy(uploadUrl, photoPath, photoId === undefined);
+    url = await awsS3Copy(
+      originUrl,
+      destinationFileName,
+      false,
+    );
     break;
   }
-
+  
   // If successful, delete original file
   if (url) {
     switch (storageType) {
     case 'vercel-blob':
-      await vercelBlobDelete(uploadUrl);
+      await vercelBlobDelete(originUrl);
       break;
     case 'cloudflare-r2':
-      await cloudflareR2Delete(getFileNameFromStorageUrl(uploadUrl));
+      await cloudflareR2Delete(getFileNameFromStorageUrl(originUrl));
       break;
     case 'aws-s3':
-      await awsS3Delete(getFileNameFromStorageUrl(uploadUrl));
+      await awsS3Delete(getFileNameFromStorageUrl(originUrl));
       break;
     }
   }
-
+  
   return url;
+};
+
+export const convertUploadToPhoto = async (
+  urlOrigin: string,
+): Promise<string> => {
+  const fileName = `${PREFIX_PHOTO}-${generateStorageId()}`;
+  const fileExtension = getExtensionFromStorageUrl(urlOrigin);
+  const photoPath = `${fileName}.${fileExtension || 'jpg'}`;
+  return moveFile(urlOrigin, photoPath);
 };
 
 export const deleteStorageUrl = (url: string) => {
@@ -193,15 +205,15 @@ const getStorageUrlsForPrefix = async (prefix = '') => {
 
   if (HAS_VERCEL_BLOB_STORAGE) {
     urls.push(...await vercelBlobList(prefix)
-      .catch(e => screenForPPR(e, [], 'vercel blob')));
+      .catch(() => []));
   }
   if (HAS_AWS_S3_STORAGE) {
     urls.push(...await awsS3List(prefix)
-      .catch(e => screenForPPR(e, [], 'aws blob')));
+      .catch(() => []));
   }
   if (HAS_CLOUDFLARE_R2_STORAGE) {
     urls.push(...await cloudflareR2List(prefix)
-      .catch(e => screenForPPR(e, [], 'cloudflare blob')));
+      .catch(() => []));
   }
 
   return urls

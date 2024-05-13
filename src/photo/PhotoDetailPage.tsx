@@ -10,6 +10,8 @@ import { Camera } from '@/camera';
 import CameraHeader from '@/camera/CameraHeader';
 import { FilmSimulation } from '@/simulation';
 import FilmSimulationHeader from '@/simulation/FilmSimulationHeader';
+import { TAG_HIDDEN } from '@/tag';
+import HiddenHeader from '@/tag/HiddenHeader';
 
 export default function PhotoDetailPage({
   photo,
@@ -35,8 +37,13 @@ export default function PhotoDetailPage({
       {tag &&
         <SiteGrid
           className="mt-4 mb-8"
-          contentMain={
-            <TagHeader
+          contentMain={tag === TAG_HIDDEN
+            ? <HiddenHeader
+              photos={photos}
+              selectedPhoto={photo}
+              count={count ?? 0}
+            />
+            : <TagHeader
               key={tag}
               tag={tag}
               photos={photos}

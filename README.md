@@ -54,9 +54,8 @@ Develop locally
 -
 1. Clone code
 2. Run `pnpm i` to install dependencies
-3. Set environment variable `AUTH_URL` locally (not in production) to `http://localhost:3000/api/url` (_this is a temporary limitation of `next-auth` v5.0 Beta_)
-4. If necessary, install [Vercel CLI](https://vercel.com/docs/cli#installing-vercel-cli) and log in by running `vercel login`
-5. Run `vercel link` to connect the CLI to your project
+3. If necessary, install [Vercel CLI](https://vercel.com/docs/cli#installing-vercel-cli) and authenticate by running `vercel login`
+4. Run `vercel link` to connect the CLI to your project
 5. Run `vercel dev` to start dev server with Vercel-managed environment variables
 
 Further customization
@@ -94,6 +93,9 @@ _⚠️ READ BEFORE PROCEEDING_
 Application behavior can be changed by configuring the following environment variables:
 
 - `NEXT_PUBLIC_PRO_MODE = 1` enables higher quality image storage (results in increased storage usage)
+- `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES = 1` enables static optimization for pages, i.e., renders pages at build time (results in increased project usage)—⚠️ _Experimental_
+- `NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES = 1` enables static optimization for OG images, i.e., renders images at build time (results in increased project usage)—⚠️ _Experimental_
+- `NEXT_PUBLIC_MATTE_PHOTOS = 1` constrains the size of each photo, and enables a surrounding border (potentially useful for photos with tall aspect ratios)
 - `NEXT_PUBLIC_BLUR_DISABLED = 1` prevents image blur data being stored and displayed (potentially useful for limiting Postgres usage)
 - `NEXT_PUBLIC_GEO_PRIVACY = 1` disables collection/display of location-based data
 - `NEXT_PUBLIC_IGNORE_PRIORITY_ORDER = 1` prevents `priority_order` field affecting photo order
@@ -202,17 +204,26 @@ Vercel Postgres can be switched to another Postgres-compatible, pooling provider
 
 FAQ
 -
-#### Why are my thumbnails square?
-> Absent configuration, the default grid aspect ratio is `1`. It can be set to any number (for instance `1.5` for 3:2 images) via `NEXT_PUBLIC_GRID_ASPECT_RATIO` or ignored entirely by setting to `0`.
-
 #### Why don't my photo changes show up immediately?
 > This template statically optimizes core views such as `/` and `/grid` to minimize visitor load times. Consequently, when photos are added, edited, or removed, it might take several minutes for those changes to propagate. If it seems like a change is not taking effect, try navigating to `/admin/configuration` and clicking "Clear Cache."
+
+#### Why don’t my OG images load when I share a link?
+> Many services such as iMessage, Slack, and X, require near-instant responses when unfurling link-based content. In order to guarantee sufficient responsiveness, consider rendering pages and image assets ahead of time by enabling static optimization by setting `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES = 1` and `NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES = 1`. Keep in mind that this will increase platform usage.
+
+#### Why do vertical images take up so much space?
+> By default, all photos are shown full-width, regardless of orientation. Enable matting to showcase horizontal and vertical photos at similar scales by setting `NEXT_PUBLIC_MATTE_PHOTOS = 1`.
+
+#### How secure are photos marked “hidden?”
+> While all hidden paths (`/tag/hidden/*`) require authentication, raw links to individual photo assets remain publicly accessible. Randomly generated urls from storage providers are only secure via obscurity. Use with caution.
 
 #### My images/content have fallen out of sync with my database and/or my production site no longer matches local development. What do I do?
 > Navigate to `/admin/configuration` and click "Clear Cache."
 
 #### I'm seeing server-side runtime errors when loading a page after updating my fork. What do I do?
 > Navigate to `/admin/configuration` and click "Clear Cache." If this doesn't help, [open an issue](https://github.com/sambecker/exif-photo-blog/issues/new).
+
+#### Why are my thumbnails square?
+> Absent configuration, the default grid aspect ratio is `1`. `NEXT_PUBLIC_GRID_ASPECT_RATIO` can be set to any number (for instance, `1.5` for 3:2 images) or ignored by setting to `0`.
 
 #### Why aren't my Fujifilm simulations importing alongside EXIF data?
 > Fujifilm simulation data is stored in vendor-specific Makernote binaries embedded in EXIF data. Under certain circumstances an intermediary may strip out this data. For instance, there is a known issue on iOS where editing an image, e.g., cropping it, causes Makernote data loss. If your simulation data appears to be missing, try importing the original file as it was stored by the camera. Additionally, if you can confirm the simulation mode on camera, you can then edit the photo record and manually select it.

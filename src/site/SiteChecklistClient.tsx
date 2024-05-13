@@ -41,6 +41,10 @@ export default function SiteChecklistClient({
   showFilmSimulations,
   showExifInfo,
   isProModeEnabled,
+  isStaticallyOptimized,
+  arePagesStaticallyOptimized,
+  areOGImagesStaticallyOptimized,
+  arePhotosMatted,
   isBlurEnabled,
   isGeoPrivacyEnabled,
   isPriorityOrderEnabled,
@@ -119,8 +123,9 @@ export default function SiteChecklistClient({
     >
       <span className="inline-flex items-center gap-1">
         <span className={clsx(
-          'text-medium',
-          'rounded-sm',
+          'text-[11px] font-medium tracking-wide',
+          'px-0.5 py-[0.5px]',
+          'rounded-[5px]',
           'bg-gray-100 dark:bg-gray-800',
         )}>
           `{variable}`
@@ -130,17 +135,20 @@ export default function SiteChecklistClient({
     </div>;
 
   const renderEnvVars = (variables: string[]) =>
-    <div className="py-1 space-y-1">
+    <div className="py-0.5">
       {variables.map(envVar => renderEnvVar(envVar))}
     </div>;
 
   const renderSubStatus = (
     type: ComponentProps<typeof StatusIcon>['type'],
     label: ReactNode,
+    iconClassName?: string,
   ) =>
     <div className="flex gap-1 -translate-x-1">
-      <StatusIcon {...{ type }} />
-      <span>
+      <span className={iconClassName}>
+        <StatusIcon {...{ type }} />
+      </span>
+      <span className="min-w-0">
         {label}
       </span>
     </div>;
@@ -349,6 +357,37 @@ export default function SiteChecklistClient({
             Set environment variable to {'"1"'} to enable
             higher quality image storage:
             {renderEnvVars(['NEXT_PUBLIC_PRO_MODE'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Static Optimization"
+            status={isStaticallyOptimized}
+            isPending={isPendingPage}
+            optional
+            experimental
+          >
+            Set environment variable to {'"1"'} to enable static optimization,
+            i.e., rendering pages and images at build time:
+            {renderSubStatus(
+              arePagesStaticallyOptimized ? 'checked' : 'optional',
+              renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES']),
+              'translate-y-[3.5px]',
+            )}
+            {renderSubStatus(
+              areOGImagesStaticallyOptimized ? 'checked' : 'optional',
+              renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES']),
+              'translate-y-[3.5px]',
+            )}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Photo Matting"
+            status={arePhotosMatted}
+            isPending={isPendingPage}
+            optional
+          >
+            Set environment variable to {'"1"'} to constrain the size
+            {' '}
+            of each photo, and enable a surrounding border:
+            {renderEnvVars(['NEXT_PUBLIC_MATTE_PHOTOS'])}
           </ChecklistRow>
           <ChecklistRow
             title="Image Blur"

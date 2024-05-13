@@ -8,14 +8,12 @@ import {
 import {
   pathForCamera,
   pathForFilmSimulation,
-  pathForTag,
 } from './paths';
 import { formatCameraText } from '@/camera';
 import { photoQuantityText } from '@/photo';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
-import { sortTagsObject } from '@/tag';
+import { TagsWithMeta } from '@/tag';
 import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
-import { FaTag } from 'react-icons/fa';
 import { IoMdCamera } from 'react-icons/io';
 import { ADMIN_DEBUG_TOOLS_ENABLED } from './config';
 
@@ -27,24 +25,10 @@ export default async function CommandK() {
     filmSimulations,
   ] = await Promise.all([
     getPhotosCountCached().catch(() => 0),
-    getUniqueTagsCached().catch(() => []),
+    getUniqueTagsCached().catch(() => [] as TagsWithMeta),
     getUniqueCamerasCached().catch(() => []),
     getUniqueFilmSimulationsCached().catch(() => []),
   ]);
-
-  const SECTION_TAGS: CommandKSection = {
-    heading: 'Tags',
-    accessory: <FaTag
-      size={10}
-      className="translate-x-[1px] translate-y-[0.75px]"
-    />,
-    items: sortTagsObject(tags).map(({ tag, count }) => ({
-      label: tag,
-      annotation: formatCount(count),
-      annotationAria: formatCountDescriptive(count),
-      path: pathForTag(tag),
-    })),
-  };
 
   const SECTION_CAMERAS: CommandKSection = {
     heading: 'Cameras',
@@ -71,8 +55,8 @@ export default async function CommandK() {
   };
 
   return <CommandKClient
+    tags={tags}
     serverSections={[
-      SECTION_TAGS,
       SECTION_CAMERAS,
       SECTION_FILM,
     ]}

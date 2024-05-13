@@ -12,11 +12,13 @@ export default function PhotoImageResponse({
   width,
   height,
   fontFamily,
+  isNextImageReady = true,
 }: {
   photo: Photo
   width: NextImageSize
   height: number
   fontFamily: string
+  isNextImageReady: boolean
 }) {
   const model = photo.model
     ? formatCameraModelTextShort(cameraFromPhoto(photo))
@@ -25,7 +27,7 @@ export default function PhotoImageResponse({
   return (
     <ImageContainer {...{ width, height }}>
       <ImagePhotoGrid {...{
-        photos: [photo],
+        photos: isNextImageReady ? [photo] : [],
         width,
         height,
         ...OG_TEXT_BOTTOM_ALIGNMENT && { imagePosition: 'top' },

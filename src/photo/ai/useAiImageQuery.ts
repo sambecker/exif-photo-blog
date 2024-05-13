@@ -21,7 +21,7 @@ export default function useAiImageQuery(
           query,
         );
         for await (const text of readStreamableValue(textStream)) {
-          setText((text ?? '')
+          setText(current => `${current}${text ?? ''}`
             .replaceAll('\n', ' ')
             .replaceAll('"', '')
             .replace(/\.$/, ''));

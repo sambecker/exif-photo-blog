@@ -41,7 +41,7 @@ export default function Footer() {
                 {isPathAdmin(pathname)
                   ? <>
                     {userEmail === undefined &&
-                      <Spinner />}
+                      <Spinner size={14} className="translate-y-[2px]" />}
                     {userEmail && <>
                       <div className={clsx(
                         'truncate max-w-full',

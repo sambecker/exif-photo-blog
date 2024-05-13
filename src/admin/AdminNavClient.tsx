@@ -1,6 +1,6 @@
 'use client';
 
-import InfoBlock from '@/components/InfoBlock';
+import Banner from '@/components/Banner';
 import SiteGrid from '@/components/SiteGrid';
 import {
   PATH_ADMIN_CONFIGURATION,
@@ -96,13 +96,10 @@ export default function AdminNavClient({
             </Link>
           </div>
           {shouldShowBanner &&
-            <InfoBlock centered={false} padding="tight" color="blue">
-              <div className="flex items-center gap-3">
-                <FaRegClock className="flex-shrink-0" />
-                Photo updates detected—they may take several minutes to show up
-                for visitors
-              </div>
-            </InfoBlock>}
+            <Banner icon={<FaRegClock className="flex-shrink-0" />}>
+              Photo updates detected—they may take several minutes to show upe
+              for visitors
+            </Banner>}
         </div>
       }
     />

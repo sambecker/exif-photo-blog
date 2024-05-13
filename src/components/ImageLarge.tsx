@@ -3,6 +3,7 @@ import ImageBlurFallback from './ImageBlurFallback';
 
 export default function ImageLarge({
   className,
+  imgClassName,
   src,
   alt,
   aspectRatio,
@@ -11,6 +12,7 @@ export default function ImageLarge({
   priority,
 }: {
   className?: string
+  imgClassName?: string
   src: string
   alt: string
   aspectRatio: number
@@ -21,6 +23,7 @@ export default function ImageLarge({
   return (
     <ImageBlurFallback {...{
       className,
+      imgClassName,
       src,
       alt,
       blurDataURL: blurData,

@@ -23,7 +23,7 @@ export default async function AdminPhotosPage() {
     blobPhotoUrls,
   ] = await Promise.all([
     getPhotos({
-      includeHidden: true,
+      hidden: 'include',
       sortBy: 'createdAt',
       limit: INFINITE_SCROLL_INITIAL_ADMIN_PHOTOS,
     }).catch(() => []),
