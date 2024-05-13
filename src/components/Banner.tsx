@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import InfoBlock from './InfoBlock';
 import AnimateItems from './AnimateItems';
+import { IoInformationCircleOutline } from 'react-icons/io5';
 
 export default function Banner({
   icon,
@@ -24,8 +25,11 @@ export default function Banner({
           padding="tight"
           color="blue"
         >
-          <div className="flex items-center gap-3">
-            {icon}
+          <div className="flex items-center gap-2.5">
+            {icon ?? <IoInformationCircleOutline
+              size={17}
+              className="translate-y-[1px]"
+            />}
             {children}
           </div>
         </InfoBlock>,
