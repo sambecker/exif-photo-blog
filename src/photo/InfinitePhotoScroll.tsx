@@ -58,12 +58,12 @@ export default function InfinitePhotoScroll({
       ? getPhotosCachedAction(
         initialOffset + size * itemsPerPage,
         itemsPerPage,
-        includeHiddenPhotos,
+        includeHiddenPhotos ? 'include' : 'exclude',
       )
       : getPhotosAction(
         initialOffset + size * itemsPerPage,
         itemsPerPage,
-        includeHiddenPhotos,
+        includeHiddenPhotos ? 'include' : 'exclude',
       )
   , [useCachedPhotos, initialOffset, itemsPerPage, includeHiddenPhotos]);
 

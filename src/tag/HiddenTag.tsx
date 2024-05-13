@@ -1,12 +1,11 @@
-import { FaStar } from 'react-icons/fa';
-import { TAG_FAVS } from '.';
+import { TAG_HIDDEN } from '.';
 import { pathForTag } from '@/site/paths';
-import { clsx } from 'clsx/lite';
 import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/primitives/EntityLink';
+import { AiOutlineEyeInvisible } from 'react-icons/ai';
 
-export default function FavsTag({
+export default function HiddenTag({
   type,
   badged,
   contrast,
@@ -19,22 +18,15 @@ export default function FavsTag({
     <EntityLink
       label={badged
         ? <span className="inline-flex gap-1">
-          {TAG_FAVS}
-          <FaStar
-            size={10}
-            className="text-amber-500"
+          {TAG_HIDDEN}
+          <AiOutlineEyeInvisible
+            size={13}
+            className="translate-y-[-1.5px]"
           />
         </span>
-        : TAG_FAVS}
-      href={pathForTag(TAG_FAVS)}
-      icon={!badged &&
-        <FaStar
-          size={12}
-          className={clsx(
-            'text-amber-500',
-            'translate-x-[-1px] translate-y-[-0.5px]',
-          )}
-        />}
+        : TAG_HIDDEN}
+      href={pathForTag(TAG_HIDDEN)}
+      icon={!badged && <AiOutlineEyeInvisible size={16} />}
       type={type}
       hoverEntity={countOnHover}
       badged={badged}

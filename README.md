@@ -213,6 +213,9 @@ FAQ
 #### Why do my vertical images take up so much space?
 > By default, all photos are shown full-width, regardless of orientation. Enable matting to showcase horizontal and vertical photos at a similar scale by setting `NEXT_PUBLIC_MATTE_PHOTOS = 1`.
 
+#### How secure are photos marked “hidden?”
+> While all hidden paths (`/tag/hidden/*`) require authentication, raw links to individual photo files remain publicly accessible. Their randomly generated file names are only secure via obscurity.
+
 #### My images/content have fallen out of sync with my database and/or my production site no longer matches local development. What do I do?
 > Navigate to `/admin/configuration` and click "Clear Cache."
 

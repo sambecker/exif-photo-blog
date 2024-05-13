@@ -2,29 +2,33 @@ import { Dispatch, SetStateAction, createContext, useContext } from 'react';
 import { AnimationConfig } from '@/components/AnimateItems';
 
 export interface AppStateContext {
+  // CORE
   previousPathname?: string
   hasLoaded?: boolean
-  arePhotosMatted?: boolean
-  setArePhotosMatted?: Dispatch<SetStateAction<boolean>>
+  setHasLoaded?: Dispatch<SetStateAction<boolean>>
   swrTimestamp?: number
   invalidateSwr?: () => void
-  userEmail?: string
-  setUserEmail?: Dispatch<SetStateAction<string | undefined>>
-  isUserSignedIn?: boolean
-  setHasLoaded?: Dispatch<SetStateAction<boolean>>
   nextPhotoAnimation?: AnimationConfig
   setNextPhotoAnimation?: Dispatch<SetStateAction<AnimationConfig | undefined>>
+  clearNextPhotoAnimation?: () => void
   shouldRespondToKeyboardCommands?: boolean
   setShouldRespondToKeyboardCommands?: Dispatch<SetStateAction<boolean>>
   isCommandKOpen?: boolean
   setIsCommandKOpen?: Dispatch<SetStateAction<boolean>>
+  //  ADMIN
+  userEmail?: string
+  setUserEmail?: Dispatch<SetStateAction<string | undefined>>
+  isUserSignedIn?: boolean
   adminUpdateTimes?: Date[]
   registerAdminUpdate?: () => void
-  shouldShowBaselineGrid?: boolean
-  setShouldShowBaselineGrid?: Dispatch<SetStateAction<boolean>>
+  hiddenPhotosCount?: number
+  // DEBUG
+  arePhotosMatted?: boolean
+  setArePhotosMatted?: Dispatch<SetStateAction<boolean>>
   shouldDebugBlur?: boolean
   setShouldDebugBlur?: Dispatch<SetStateAction<boolean>>
-  clearNextPhotoAnimation?: () => void
+  shouldShowBaselineGrid?: boolean
+  setShouldShowBaselineGrid?: Dispatch<SetStateAction<boolean>>
 }
 
 export const AppStateContext = createContext<AppStateContext>({});

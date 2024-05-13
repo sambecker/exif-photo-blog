@@ -20,6 +20,7 @@ import {
   getPhotosDateRange,
   getPhotosNearId,
   getPhotosMostRecentUpdate,
+  getPhotosTagHiddenMeta,
 } from '@/photo/db';
 import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
 import { createCameraKey } from '@/camera';
@@ -177,6 +178,12 @@ export const getPhotosTagMetaCached =
   unstable_cache(
     getPhotosTagMeta,
     [KEY_PHOTOS, KEY_TAGS, KEY_DATE_RANGE],
+  );
+
+export const getPhotosTagHiddenMetaCached =
+  unstable_cache(
+    getPhotosTagHiddenMeta,
+    [KEY_PHOTOS, KEY_TAGS, KEY_HIDDEN, KEY_DATE_RANGE],
   );
 
 export const getPhotosCameraMetaCached =

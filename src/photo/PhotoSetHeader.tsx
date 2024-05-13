@@ -17,11 +17,11 @@ export default function PhotoSetHeader({
   dateRange,
 }: {
   entity: ReactNode
-  entityVerb: string
+  entityVerb?: string
   entityDescription: string
   photos: Photo[]
   selectedPhoto?: Photo
-  sharePath: string
+  sharePath?: string
   count?: number
   dateRange?: PhotoDateRange
 }) {
@@ -45,7 +45,7 @@ export default function PhotoSetHeader({
             : 'xs:grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
         )}>
         <span className={clsx(
-          'inline-flex',
+          'inline-flex uppercase',
           HIGH_DENSITY_GRID && 'sm:col-span-2',
         )}>
           {entity}
@@ -59,9 +59,9 @@ export default function PhotoSetHeader({
         )}>
           {selectedPhotoIndex !== undefined
             // eslint-disable-next-line max-len
-            ? `${entityVerb} ${selectedPhotoIndex + 1} of ${count ?? photos.length}`
+            ? `${entityVerb ? `${entityVerb} ` : ''}${selectedPhotoIndex + 1} of ${count ?? photos.length}`
             : entityDescription}
-          {selectedPhotoIndex === undefined &&
+          {selectedPhotoIndex === undefined && sharePath &&
             <ShareButton
               className="translate-y-[1.5px]"
               path={sharePath}
