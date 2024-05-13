@@ -1,5 +1,6 @@
 import { GRID_THUMBNAILS_TO_SHOW_MAX } from '@/photo';
 import { PaginationParams } from '@/site/pagination';
+import { PATH_ROOT } from '@/site/paths';
 import { generateMetaForTag } from '@/tag';
 import TagOverview from '@/tag/TagOverview';
 import {
@@ -7,6 +8,7 @@ import {
   getPhotosTagDataCachedWithPagination,
 } from '@/tag/data';
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 
 interface TagProps {
   params: { tag: string }
@@ -24,6 +26,8 @@ export async function generateMetadata({
     tag,
     limit: GRID_THUMBNAILS_TO_SHOW_MAX,
   });
+
+  if (photos.length === 0) { return {}; }
 
   const {
     url,
@@ -64,6 +68,8 @@ export default async function TagPage({
     tag,
     searchParams,
   });
+
+  if (photos.length === 0) { redirect(PATH_ROOT); }
 
   return (
     <TagOverview {...{ tag, photos, count, dateRange, showMorePath }} />
