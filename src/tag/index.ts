@@ -11,7 +11,9 @@ import {
 } from '@/site/paths';
 import { capitalizeWords, convertStringToArray } from '@/utility/string';
 
-export const TAG_FAVS = 'favs';
+// Reserved/virtual tags
+export const TAG_FAVS   = 'favs';   // Reserved
+export const TAG_HIDDEN = 'hidden'; // Virtual 
 
 export type TagsWithMeta = {
   tag: string
@@ -21,12 +23,15 @@ export type TagsWithMeta = {
 export const formatTag = (tag?: string) =>
   capitalizeWords(tag?.replaceAll('-', ' '));
 
-export const doesTagsStringIncludeFavs = (tags?: string) =>
-  convertStringToArray(tags)?.some(tag => isTagFavs(tag));
+export const doesStringContainReservedTags = (tags?: string) =>
+  convertStringToArray(tags)?.some(tag => (
+    isTagFavs(tag) ||
+    tag.toLowerCase() === TAG_HIDDEN
+  ));
 
 export const titleForTag = (
   tag: string,
-  photos:Photo[],
+  photos:Photo[] = [],
   explicitCount?: number,
 ) => [
   formatTag(tag),
@@ -54,7 +59,7 @@ export const sortTagsObjectWithoutFavs = (tags: TagsWithMeta) =>
   sortTagsObject(tags, TAG_FAVS);
 
 export const descriptionForTaggedPhotos = (
-  photos: Photo[],
+  photos: Photo[] = [],
   dateBased?: boolean,
   explicitCount?: number,
   explicitDateRange?: PhotoDateRange,
@@ -86,3 +91,14 @@ export const isPhotoFav = ({ tags }: Photo) => tags.some(isTagFavs);
 
 export const isPathFavs = (pathname?: string) =>
   getPathComponents(pathname).tag === TAG_FAVS;
+
+export const addHiddenToTags = (tags: TagsWithMeta, hiddenPhotosCount = 0) => {
+  if (hiddenPhotosCount > 0) {
+    return tags
+      .filter(({ tag }) => tag === TAG_FAVS)
+      .concat({ tag: TAG_HIDDEN, count: hiddenPhotosCount })
+      .concat(tags.filter(({ tag }) => tag !== TAG_FAVS));
+  } else {
+    return tags;
+  }
+};

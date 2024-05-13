@@ -1,6 +1,7 @@
 'use server';
 
 import {
+  GetPhotosOptions,
   sqlDeletePhoto,
   sqlInsertPhoto,
   sqlDeletePhotoTagGlobally,
@@ -21,6 +22,7 @@ import {
 } from '@/services/storage';
 import {
   getPhotosCachedCached,
+  getPhotosTagHiddenMetaCached,
   revalidateAdminPaths,
   revalidateAllKeysAndPaths,
   revalidatePhoto,
@@ -47,7 +49,7 @@ export const createPhotoAction = async (formData: FormData) =>
   safelyRunAdminServerAction(async () => {
     const photo = convertFormDataToPhotoDbInsert(formData, true);
 
-    const updatedUrl = await convertUploadToPhoto(photo.url, photo.id);
+    const updatedUrl = await convertUploadToPhoto(photo.url);
   
     if (updatedUrl) { photo.url = updatedUrl; }
   
@@ -61,6 +63,14 @@ export const createPhotoAction = async (formData: FormData) =>
 export const updatePhotoAction = async (formData: FormData) =>
   safelyRunAdminServerAction(async () => {
     const photo = convertFormDataToPhotoDbInsert(formData);
+
+    let url: string | undefined;
+    if (photo.hidden && photo.url.includes(photo.id)) {
+      // Anonymize storage url on update if necessary by
+      // re-running image upload transfer logic
+      url = await convertUploadToPhoto(photo.url);
+      if (url) { photo.url = url; }
+    }
 
     await sqlUpdatePhoto(photo);
 
@@ -196,21 +206,30 @@ export const streamAiImageQueryAction = async (
 export const getImageBlurAction = async (url: string) =>
   safelyRunAdminServerAction(() => blurImageFromUrl(url));
 
-// Public actions
+export const getPhotosTagHiddenMetaCachedAction = async () =>
+  safelyRunAdminServerAction(getPhotosTagHiddenMetaCached);
+
+// Public/Private actions
 
 export const getPhotosAction = async (
   offset: number,
   limit: number,
-  includeHidden?: boolean,
-) =>
-  getPhotos({ offset, includeHidden, limit });
+  hidden?: GetPhotosOptions['hidden'],
+) => (hidden === 'include' || hidden === 'only')
+  ? safelyRunAdminServerAction(() =>
+    getPhotos({ offset, hidden, limit }))
+  : getPhotos({ offset, hidden, limit });
 
 export const getPhotosCachedAction = async (
   offset: number,
   limit: number,
-  includeHidden?: boolean,
-) =>
-  getPhotosCachedCached({ offset, includeHidden, limit });
+  hidden?: GetPhotosOptions['hidden'],
+) => (hidden === 'include' || hidden === 'only')
+  ? safelyRunAdminServerAction(() =>
+    getPhotosCachedCached({ offset, hidden, limit }))
+  : getPhotosCachedCached({ offset, hidden, limit });
+
+// Public actions
 
 export const queryPhotosByTitleAction = async (query: string) =>
   (await getPhotos({ query, limit: 10 }))

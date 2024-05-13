@@ -4,12 +4,14 @@ import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import InfoBlock from '@/components/InfoBlock';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { getCurrentUser, signInAction } from './actions';
+import { getAuthAction, signInAction } from './actions';
 import { useFormState } from 'react-dom';
 import ErrorNote from '@/components/ErrorNote';
 import { KEY_CALLBACK_URL, KEY_CREDENTIALS_SIGN_IN_ERROR } from '.';
 import { useSearchParams } from 'next/navigation';
 import { useAppState } from '@/state/AppState';
+import { clsx } from 'clsx/lite';
+import { FiLock } from 'react-icons/fi';
 
 export default function SignInForm() {
   const params = useSearchParams();
@@ -28,7 +30,8 @@ export default function SignInForm() {
   useEffect(() => {
     return () => {
       // Capture user email before unmounting
-      getCurrentUser().then(user => setUserEmail?.(user?.email ?? undefined));
+      getAuthAction().then(auth =>
+        setUserEmail?.(auth?.user?.email ?? undefined));
     };
   }, [setUserEmail]);
 
@@ -37,14 +40,29 @@ export default function SignInForm() {
     password.length > 0;
 
   return (
-    <InfoBlock>
-      <form action={action}>
-        <div className="space-y-8">
+    <InfoBlock className={clsx(
+      'w-[calc(100vw-1.5rem)] sm:w-[min(360px,90vw)]',
+      'px-6 py-5',
+    )}>
+      <h1 className={clsx(
+        'flex gap-3 items-center justify-center',
+        'self-start text-2xl mb-3.5',
+      )}>
+        <FiLock className="text-main translate-y-[0.5px]" />
+        <span className="text-main">
+          Sign in
+        </span>
+      </h1>
+      <form
+        action={action}
+        className="w-full"
+      >
+        <div className="space-y-6 w-full -translate-y-0.5">
           {response === KEY_CREDENTIALS_SIGN_IN_ERROR &&
             <ErrorNote>
               Invalid email/password
             </ErrorNote>}
-          <div className="space-y-4">
+          <div className="space-y-4 w-full">
             <FieldSetWithStatus
               id="email"
               inputRef={emailRef}

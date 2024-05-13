@@ -26,9 +26,12 @@ export default function LoaderButton(props: {
       type={type}
       className={clsx(
         className,
-        styleAsLink
-          ? 'link h-4 hover:text-dim active:text-medium'
-          : 'h-9',
+        ...(styleAsLink
+          ? [
+            'link h-4 hover:text-dim active:text-medium',
+            'disabled:!bg-transparent',
+          ]
+          : ['h-9']),
         'inline-flex items-center gap-2 self-start',
       )}
       disabled={isLoading || disabled}

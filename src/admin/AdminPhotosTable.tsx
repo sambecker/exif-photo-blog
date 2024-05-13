@@ -50,15 +50,16 @@ export default function AdminPhotosTable({
               prefetch={false}
             >
               <span className={clsx(
-                'inline-flex items-center gap-2',
                 photo.hidden && 'text-dim',
               )}>
-                <span>{titleForPhoto(photo)}</span>
-                {photo.hidden &&
+                {titleForPhoto(photo)}
+                {photo.hidden && <span className="whitespace-nowrap">
+                  {' '}
                   <AiOutlineEyeInvisible
-                    className="translate-y-[0.25px]"
+                    className="inline translate-y-[-0.5px]"
                     size={16}
-                  />}
+                  />
+                </span>}
               </span>
               {photo.priorityOrder !== null &&
                 <span className={clsx(

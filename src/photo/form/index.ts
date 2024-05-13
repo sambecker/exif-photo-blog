@@ -16,7 +16,7 @@ import {
 } from '@/vendors/fujifilm';
 import { FilmSimulation } from '@/simulation';
 import { GEO_PRIVACY_ENABLED } from '@/site/config';
-import { TAG_FAVS, doesTagsStringIncludeFavs } from '@/tag';
+import { TAG_FAVS, TAG_HIDDEN, doesStringContainReservedTags } from '@/tag';
 
 type VirtualFields = 'favorite';
 
@@ -76,8 +76,8 @@ const FORM_METADATA = (
   tags: {
     label: 'tags',
     tagOptions,
-    validate: tags => doesTagsStringIncludeFavs(tags)
-      ? `'${TAG_FAVS}' is a reserved tag`
+    validate: tags => doesStringContainReservedTags(tags)
+      ? `Reserved tags (${TAG_FAVS}, ${TAG_HIDDEN})`
       : undefined,
   },
   semanticDescription: {
@@ -141,10 +141,9 @@ export const isFormValid = (formData: Partial<PhotoFormData>) =>
   FORM_METADATA_ENTRIES().every(
     ([key, { required, validate, validateStringMaxLength }]) =>
       (!required || Boolean(formData[key])) &&
-      (validate?.(formData[key]) === undefined) &&
+      (!validate?.(formData[key])) &&
       // eslint-disable-next-line max-len
-      (!validateStringMaxLength || (formData[key]?.length ?? 0) <= validateStringMaxLength) &&
-      (key !== 'tags' || !doesTagsStringIncludeFavs(formData.tags ?? ''))
+      (!validateStringMaxLength || (formData[key]?.length ?? 0) <= validateStringMaxLength)
   );
 
 export const formHasTextContent = ({

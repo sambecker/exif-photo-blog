@@ -35,6 +35,6 @@ export default function AdminTagBadge({
   return (
     hideBadge
       ? renderBadgeContent()
-      : <Badge>{renderBadgeContent()}</Badge>
+      : <Badge className="!py-[3px]">{renderBadgeContent()}</Badge>
   );
 }

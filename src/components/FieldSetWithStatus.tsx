@@ -59,7 +59,7 @@ export default function FieldSetWithStatus({
           <span className="text-gray-400 dark:text-gray-600">
             ({note})
           </span>}
-        {isModified &&
+        {isModified && !error &&
           <span className={clsx(
             'text-main font-medium text-[0.9rem] -ml-1.5 translate-y-[-1px]'
           )}>
@@ -140,7 +140,11 @@ export default function FieldSetWithStatus({
                 autoCapitalize={!capitalize ? 'off' : undefined}
                 readOnly={readOnly || pending || loading}
                 className={clsx(
-                  type === 'text' && 'w-full',
+                  (
+                    type === 'text' ||
+                    type === 'email' ||
+                    type === 'password'
+                  ) && 'w-full',
                   Boolean(error) && 'error',
                 )}
               />}

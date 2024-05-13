@@ -1,5 +1,4 @@
 /* eslint-disable max-len */
-import '@testing-library/jest-dom';
 import {
   getEscapePath,
   getPathComponents,
@@ -13,11 +12,13 @@ import {
   isPathFilmSimulationShare,
   isPathPhoto,
   isPathPhotoShare,
+  isPathProtected,
   isPathTag,
   isPathTagPhoto,
   isPathTagPhotoShare,
   isPathTagShare,
 } from '@/site/paths';
+import { TAG_HIDDEN } from '@/tag';
 
 const PHOTO_ID        = 'UsKSGcbt';
 const TAG             = 'tag-name';
@@ -39,6 +40,11 @@ const PATH_TAG_SHARE                    = `${PATH_TAG}/${SHARE}`;
 const PATH_TAG_PHOTO                    = `${PATH_TAG}/${PHOTO_ID}`;
 const PATH_TAG_PHOTO_SHARE              = `${PATH_TAG_PHOTO}/${SHARE}`;
 
+const PATH_TAG_HIDDEN                   = `/tag/${TAG_HIDDEN}`;
+const PATH_TAG_HIDDEN_SHARE             = `${PATH_TAG_HIDDEN}/${SHARE}`;
+const PATH_TAG_HIDDEN_PHOTO             = `${PATH_TAG_HIDDEN}/${PHOTO_ID}`;
+const PATH_TAG_HIDDEN_PHOTO_SHARE       = `${PATH_TAG_HIDDEN_PHOTO}/${SHARE}`;
+
 const PATH_CAMERA                       = `/shot-on/${CAMERA_MAKE}/${CAMERA_MODEL}`;
 const PATH_CAMERA_SHARE                 = `${PATH_CAMERA}/${SHARE}`;
 const PATH_CAMERA_PHOTO                 = `${PATH_CAMERA}/${PHOTO_ID}`;
@@ -50,6 +56,21 @@ const PATH_FILM_SIMULATION_PHOTO        = `${PATH_FILM_SIMULATION}/${PHOTO_ID}`;
 const PATH_FILM_SIMULATION_PHOTO_SHARE  = `${PATH_FILM_SIMULATION_PHOTO}/${SHARE}`;
  
 describe('Paths', () => {
+  it('can be protected', () => {
+    // Public
+    expect(isPathProtected(PATH_ROOT)).toBe(false);
+    expect(isPathProtected(PATH_PHOTO)).toBe(false);
+    expect(isPathProtected(PATH_TAG)).toBe(false);
+    expect(isPathProtected(PATH_TAG_PHOTO)).toBe(false);
+    expect(isPathProtected(PATH_CAMERA)).toBe(false);
+    expect(isPathProtected(PATH_FILM_SIMULATION)).toBe(false);
+    // Private
+    expect(isPathProtected(PATH_ADMIN)).toBe(true);
+    expect(isPathProtected(PATH_TAG_HIDDEN)).toBe(true);
+    expect(isPathProtected(PATH_TAG_HIDDEN_SHARE)).toBe(true);
+    expect(isPathProtected(PATH_TAG_HIDDEN_PHOTO)).toBe(true);
+    expect(isPathProtected(PATH_TAG_HIDDEN_PHOTO_SHARE)).toBe(true);
+  });
   it('can be classified', () => {
     // Positive
     expect(isPathPhoto(PATH_PHOTO)).toBe(true);

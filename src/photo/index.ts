@@ -201,7 +201,7 @@ export const deleteConfirmationTextForPhoto = (photo: Photo) =>
 export type PhotoDateRange = { start: string, end: string };
 
 export const descriptionForPhotoSet = (
-  photos:Photo[],
+  photos:Photo[] = [],
   descriptor?: string,
   dateBased?: boolean,
   explicitCount?: number,
