@@ -210,11 +210,11 @@ FAQ
 #### Why don’t my OG images load when I share a link?
 > Many services such as iMessage, Slack, and X, require near-instant responses when unfurling link-based content. In order to guarantee sufficient responsiveness, consider rendering pages and image assets ahead of time by enabling static optimization by setting `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES = 1` and `NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES = 1`. Keep in mind that this will increase platform usage.
 
-#### Why do my vertical images take up so much space?
-> By default, all photos are shown full-width, regardless of orientation. Enable matting to showcase horizontal and vertical photos at a similar scale by setting `NEXT_PUBLIC_MATTE_PHOTOS = 1`.
+#### Why do vertical images take up so much space?
+> By default, all photos are shown full-width, regardless of orientation. Enable matting to showcase horizontal and vertical photos at similar scales by setting `NEXT_PUBLIC_MATTE_PHOTOS = 1`.
 
 #### How secure are photos marked “hidden?”
-> While all hidden paths (`/tag/hidden/*`) require authentication, raw links to individual photo files remain publicly accessible. Their randomly generated file names are only secure via obscurity.
+> While all hidden paths (`/tag/hidden/*`) require authentication, raw links to individual photo assets remain publicly accessible. Randomly generated urls from storage providers are only secure via obscurity. Use with caution.
 
 #### My images/content have fallen out of sync with my database and/or my production site no longer matches local development. What do I do?
 > Navigate to `/admin/configuration` and click "Clear Cache."
