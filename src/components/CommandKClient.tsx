@@ -228,7 +228,7 @@ export default function CommandKClient({
         action: () => setArePhotosMatted?.(prev => !prev),
         annotation: arePhotosMatted ? <FaCheck size={12} /> : undefined,
       }, {
-        label: 'Toggle Image Fallback',
+        label: 'Toggle Image Fallbacks',
         action: () => setShouldDebugImageFallbacks?.(prev => !prev),
         annotation: shouldDebugImageFallbacks
           ? <FaCheck size={12} />
