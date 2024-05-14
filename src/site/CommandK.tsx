@@ -15,7 +15,7 @@ import { formatCount, formatCountDescriptive } from '@/utility/string';
 import { TagsWithMeta } from '@/tag';
 import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
 import { IoMdCamera } from 'react-icons/io';
-import { ADMIN_DEBUG_TOOLS_ENABLED } from './config';
+import { ADMIN_DEBUG_TOOLS_ENABLED, SHOW_FILM_SIMULATIONS } from './config';
 
 export default async function CommandK() {
   const [
@@ -27,7 +27,9 @@ export default async function CommandK() {
     getPhotosCountCached().catch(() => 0),
     getUniqueTagsCached().catch(() => [] as TagsWithMeta),
     getUniqueCamerasCached().catch(() => []),
-    getUniqueFilmSimulationsCached().catch(() => []),
+    SHOW_FILM_SIMULATIONS
+      ? getUniqueFilmSimulationsCached().catch(() => [])
+      : [],
   ]);
 
   const SECTION_CAMERAS: CommandKSection = {
