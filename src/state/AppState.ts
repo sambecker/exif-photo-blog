@@ -25,8 +25,8 @@ export interface AppStateContext {
   // DEBUG
   arePhotosMatted?: boolean
   setArePhotosMatted?: Dispatch<SetStateAction<boolean>>
-  shouldDebugBlur?: boolean
-  setShouldDebugBlur?: Dispatch<SetStateAction<boolean>>
+  shouldDebugImageFallbacks?: boolean
+  setShouldDebugImageFallbacks?: Dispatch<SetStateAction<boolean>>
   shouldShowBaselineGrid?: boolean
   setShouldShowBaselineGrid?: Dispatch<SetStateAction<boolean>>
 }

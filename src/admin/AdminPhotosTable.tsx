@@ -3,7 +3,7 @@
 import { Photo, deleteConfirmationTextForPhoto, titleForPhoto } from '@/photo';
 import AdminTable from './AdminTable';
 import { Fragment } from 'react';
-import PhotoTiny from '@/photo/PhotoTiny';
+import PhotoSmall from '@/photo/PhotoSmall';
 import { clsx } from 'clsx/lite';
 import { pathForAdminPhotoEdit, pathForPhoto } from '@/site/paths';
 import Link from 'next/link';
@@ -36,7 +36,7 @@ export default function AdminPhotosTable({
     <AdminTable>
       {photos.map((photo, index) =>
         <Fragment key={photo.id}>
-          <PhotoTiny
+          <PhotoSmall
             photo={photo}
             onVisible={index === photos.length - 1
               ? onLastPhotoVisible

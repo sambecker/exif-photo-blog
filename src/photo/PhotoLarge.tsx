@@ -8,7 +8,7 @@ import {
   shouldShowExifDataForPhoto,
 } from '.';
 import SiteGrid from '@/components/SiteGrid';
-import ImageLarge from '@/components/ImageLarge';
+import ImageLarge from '@/components/image/ImageLarge';
 import { clsx } from 'clsx/lite';
 import Link from 'next/link';
 import { pathForPhoto, pathForPhotoShare } from '@/site/paths';
@@ -96,7 +96,7 @@ export default function PhotoLarge({
               alt={altTextForPhoto(photo)}
               src={photo.url}
               aspectRatio={photo.aspectRatio}
-              blurData={photo.blurData}
+              blurDataURL={photo.blurData}
               blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
               priority={priority}
             />

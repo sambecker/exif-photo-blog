@@ -1,12 +1,8 @@
-'use client';
-
 import { Photo, altTextForPhoto, doesPhotoNeedBlurCompatibility } from '.';
-import ImageSmall from '@/components/ImageSmall';
+import ImageSmall from '@/components/image/ImageSmall';
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
 import { pathForPhoto } from '@/site/paths';
-import { Camera } from '@/camera';
-import { FilmSimulation } from '@/simulation';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
 import { useRef } from 'react';
 import useOnVisible from '@/utility/useOnVisible';
@@ -14,19 +10,15 @@ import useOnVisible from '@/utility/useOnVisible';
 export default function PhotoSmall({
   photo,
   tag,
-  camera,
-  simulation,
   selected,
-  priority,
+  className,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
   onVisible,
 }: {
   photo: Photo
   tag?: string
-  camera?: Camera
-  simulation?: FilmSimulation
   selected?: boolean
-  priority?: boolean
+  className?: string
   prefetch?: boolean
   onVisible?: () => void
 }) {
@@ -37,22 +29,23 @@ export default function PhotoSmall({
   return (
     <Link
       ref={ref}
-      href={pathForPhoto(photo, tag, camera, simulation)}
+      href={pathForPhoto(photo, tag)}
       className={clsx(
-        'flex w-full h-full',
+        className,
         'active:brightness-75',
         selected && 'brightness-50',
+        'min-w-[50px]',
+        'rounded-[0.15rem] overflow-hidden',
+        'border border-gray-200 dark:border-gray-800',
       )}
       prefetch={prefetch}
     >
       <ImageSmall
         src={photo.url}
         aspectRatio={photo.aspectRatio}
-        blurData={photo.blurData}
+        blurDataURL={photo.blurData}
         blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
-        className="w-full"
         alt={altTextForPhoto(photo)}
-        priority={priority}
       />
     </Link>
   );
