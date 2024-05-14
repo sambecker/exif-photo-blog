@@ -1,5 +1,5 @@
 import { Photo } from '.';
-import PhotoSmall from './PhotoSmall';
+import PhotoMedium from './PhotoMedium';
 import { clsx } from 'clsx/lite';
 import AnimateItems from '@/components/AnimateItems';
 import { Camera } from '@/camera';
@@ -65,7 +65,7 @@ export default function PhotoGrid({
             },
           }}
         >
-          <PhotoSmall
+          <PhotoMedium
             className="flex w-full h-full"
             {...{
               photo,

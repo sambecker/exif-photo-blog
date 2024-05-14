@@ -36,7 +36,7 @@ import { signOutAndRedirectAction } from '@/auth/actions';
 import { TbPhoto } from 'react-icons/tb';
 import { getKeywordsForPhoto, titleForPhoto } from '@/photo';
 import PhotoDate from '@/photo/PhotoDate';
-import PhotoTiny from '@/photo/PhotoTiny';
+import PhotoSmall from '@/photo/PhotoSmall';
 import { FaCheck } from 'react-icons/fa6';
 import { TagsWithMeta, addHiddenToTags } from '@/tag';
 import { FaTag } from 'react-icons/fa';
@@ -79,12 +79,12 @@ export default function CommandKClient({
     hiddenPhotosCount,
     arePhotosMatted,
     shouldShowBaselineGrid,
-    shouldDebugBlur,
+    shouldDebugImageFallbacks,
     setIsCommandKOpen: setIsOpen,
     setShouldRespondToKeyboardCommands,
     setShouldShowBaselineGrid,
     setArePhotosMatted,
-    setShouldDebugBlur,
+    setShouldDebugImageFallbacks,
   } = useAppState();
 
   const isOpenRef = useRef(isOpen);
@@ -146,7 +146,7 @@ export default function CommandKClient({
                 label: titleForPhoto(photo),
                 keywords: getKeywordsForPhoto(photo),
                 annotation: <PhotoDate {...{ photo }} />,
-                accessory: <PhotoTiny photo={photo} />,
+                accessory: <PhotoSmall photo={photo} />,
                 path: pathForPhoto(photo),
               })),
             }]
@@ -228,9 +228,11 @@ export default function CommandKClient({
         action: () => setArePhotosMatted?.(prev => !prev),
         annotation: arePhotosMatted ? <FaCheck size={12} /> : undefined,
       }, {
-        label: 'Toggle Blur Debug',
-        action: () => setShouldDebugBlur?.(prev => !prev),
-        annotation: shouldDebugBlur ? <FaCheck size={12} /> : undefined,
+        label: 'Toggle Image Fallback',
+        action: () => setShouldDebugImageFallbacks?.(prev => !prev),
+        annotation: shouldDebugImageFallbacks
+          ? <FaCheck size={12} />
+          : undefined,
       }, {
         label: 'Toggle Baseline Grid',
         action: () => setShouldShowBaselineGrid?.(prev => !prev),
