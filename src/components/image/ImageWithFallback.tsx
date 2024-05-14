@@ -7,7 +7,7 @@ import { clsx}  from 'clsx/lite';
 import Image, { ImageProps } from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-export default function ImageBlurFallback(props: ImageProps & {
+export default function ImageWithFallback(props: ImageProps & {
   blurCompatibilityLevel?: 'none' | 'low' | 'high'
   imgClassName?: string
 }) {
@@ -20,7 +20,7 @@ export default function ImageBlurFallback(props: ImageProps & {
     ...rest
   } = props;
 
-  const { shouldDebugBlur } = useAppState();
+  const { shouldDebugImageFallbacks } = useAppState();
 
   const [wasCached, setWasCached] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,7 +29,7 @@ export default function ImageBlurFallback(props: ImageProps & {
   const onLoad = useCallback(() => setIsLoading(false), []);
   const onError = useCallback(() => setDidError(true), []);
 
-  const [hideBlurPlaceholder, setHideBlurPlaceholder] = useState(false);
+  const [hideFallback, setHideFallback] = useState(false);
 
   const imgRef = useRef<HTMLImageElement>(null);
 
@@ -44,15 +44,15 @@ export default function ImageBlurFallback(props: ImageProps & {
   useEffect(() => {
     if (!isLoading && !didError) {
       const timeout = setTimeout(() => {
-        setHideBlurPlaceholder(true);
+        setHideFallback(true);
       }, 1000);
       return () => clearTimeout(timeout);
     }
   }, [isLoading, didError]);
 
-  const showPlaceholder =
+  const showFallback =
     !wasCached &&
-    !hideBlurPlaceholder;
+    !hideFallback;
 
   const getBlurClass = () => {
     switch (blurCompatibilityLevel) {
@@ -71,16 +71,18 @@ export default function ImageBlurFallback(props: ImageProps & {
         'flex relative',
       )}
     >
-      {(showPlaceholder || shouldDebugBlur) &&
+      {(showFallback || shouldDebugImageFallbacks) &&
         <div className={clsx(
           '@container',
           'absolute inset-0',
           'overflow-hidden',
           'transition-opacity duration-300 ease-in',
-          !(BLUR_ENABLED && props.blurDataURL) && 'bg-main',
-          (isLoading || shouldDebugBlur) ? 'opacity-100' : 'opacity-0',
+          !(BLUR_ENABLED && blurDataURL) && 'bg-main',
+          (isLoading || shouldDebugImageFallbacks)
+            ? 'opacity-100'
+            : 'opacity-0',
         )}>
-          {(BLUR_ENABLED && props.blurDataURL)
+          {(BLUR_ENABLED && blurDataURL)
             ? <img {...{
               ...rest,
               src: blurDataURL,

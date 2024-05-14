@@ -1,7 +1,6 @@
 import { Fragment } from 'react';
 import AdminTable from './AdminTable';
 import Link from 'next/link';
-import ImageTiny from '@/components/ImageTiny';
 import { StorageListResponse, fileNameForStorageUrl } from '@/services/storage';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import { deleteBlobPhotoAction } from '@/photo/actions';
@@ -10,6 +9,7 @@ import { clsx } from 'clsx/lite';
 import { pathForAdminUploadUrl } from '@/site/paths';
 import AddButton from './AddButton';
 import { formatDate } from 'date-fns';
+import ImageSmall from '@/components/image/ImageSmall';
 
 export default function AdminUploadsTable({
   title,
@@ -25,7 +25,7 @@ export default function AdminUploadsTable({
         const uploadFileName = fileNameForStorageUrl(url);
         return <Fragment key={url}>
           <Link href={addUploadPath} prefetch={false}>
-            <ImageTiny
+            <ImageSmall
               alt={`Upload: ${uploadFileName}`}
               src={url}
               aspectRatio={3.0 / 2.0}

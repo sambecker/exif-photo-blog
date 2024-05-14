@@ -1,5 +1,5 @@
 import { Photo } from '.';
-import PhotoSmall from './PhotoSmall';
+import PhotoMedium from './PhotoMedium';
 import { clsx } from 'clsx/lite';
 import AnimateItems from '@/components/AnimateItems';
 import { Camera } from '@/camera';
@@ -57,7 +57,7 @@ export default function PhotoGrid({
         <div
           key={photo.id}
           className={GRID_ASPECT_RATIO !== 0
-            ? 'aspect-square overflow-hidden'
+            ? 'flex relative overflow-hidden'
             : undefined}
           style={{
             ...GRID_ASPECT_RATIO !== 0 && {
@@ -65,17 +65,20 @@ export default function PhotoGrid({
             },
           }}
         >
-          <PhotoSmall {...{
-            photo,
-            tag,
-            camera,
-            simulation,
-            selected: photo.id === selectedPhoto?.id,
-            priority: photoPriority,
-            onVisible: index === photos.length - 1
-              ? onLastPhotoVisible
-              : undefined,
-          }} />
+          <PhotoMedium
+            className="flex w-full h-full"
+            {...{
+              photo,
+              tag,
+              camera,
+              simulation,
+              selected: photo.id === selectedPhoto?.id,
+              priority: photoPriority,
+              onVisible: index === photos.length - 1
+                ? onLastPhotoVisible
+                : undefined,
+            }}
+          />
         </div>).concat(additionalTile ?? [])}
       itemKeys={photos.map(photo => photo.id)
         .concat(additionalTile ? ['more'] : [])}
