@@ -18,7 +18,7 @@ import { clsx } from 'clsx/lite';
 import { PATH_ADMIN_PHOTOS, PATH_ADMIN_UPLOADS } from '@/site/paths';
 import { toastSuccess, toastWarning } from '@/toast';
 import { getDimensionsFromSize } from '@/utility/size';
-import ImageBlurFallback from '@/components/ImageBlurFallback';
+import ImageWithFallback from '@/components/ImageWithFallback';
 import { TagsWithMeta, sortTagsObjectWithoutFavs } from '@/tag';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 import { AiContent } from '../ai/useAiImageQueries';
@@ -234,7 +234,7 @@ export default function PhotoForm({
     <div className="space-y-8 max-w-[38rem] relative">
       <div className="flex gap-2">
         <div className="relative">
-          <ImageBlurFallback
+          <ImageWithFallback
             alt="Upload"
             src={url}
             className={clsx(

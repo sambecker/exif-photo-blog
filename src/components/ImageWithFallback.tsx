@@ -7,7 +7,7 @@ import { clsx}  from 'clsx/lite';
 import Image, { ImageProps } from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-export default function ImageBlurFallback(props: ImageProps & {
+export default function ImageWithFallback(props: ImageProps & {
   blurCompatibilityLevel?: 'none' | 'low' | 'high'
   imgClassName?: string
 }) {

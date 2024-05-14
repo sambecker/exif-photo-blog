@@ -1,5 +1,5 @@
 import { IMAGE_LARGE_WIDTH } from '@/site';
-import ImageBlurFallback from './ImageBlurFallback';
+import ImageWithFallback from './ImageWithFallback';
 
 export default function ImageLarge({
   className,
@@ -21,7 +21,7 @@ export default function ImageLarge({
   priority?: boolean
 }) {
   return (
-    <ImageBlurFallback {...{
+    <ImageWithFallback {...{
       className,
       imgClassName,
       src,

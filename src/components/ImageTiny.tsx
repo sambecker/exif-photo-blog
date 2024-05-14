@@ -1,8 +1,9 @@
 import { IMAGE_TINY_WIDTH } from '@/site';
-import ImageBlurFallback from './ImageBlurFallback';
+import ImageWithFallback from './ImageWithFallback';
 
 export default function ImageTiny({
   className,
+  imgClassName,
   src,
   alt,
   aspectRatio,
@@ -10,6 +11,7 @@ export default function ImageTiny({
   blurCompatibilityMode,
 }: {
   className?: string
+  imgClassName?: string
   src: string
   alt: string
   aspectRatio: number
@@ -17,8 +19,9 @@ export default function ImageTiny({
   blurCompatibilityMode?: boolean
 }) {
   return (
-    <ImageBlurFallback {...{
+    <ImageWithFallback {...{
       className,
+      imgClassName,
       src,
       alt,
       blurDataURL: blurData,

@@ -19,6 +19,7 @@ export default function PhotoSmall({
   selected,
   priority,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
+  className,
   onVisible,
 }: {
   photo: Photo
@@ -28,6 +29,7 @@ export default function PhotoSmall({
   selected?: boolean
   priority?: boolean
   prefetch?: boolean
+  className?: string
   onVisible?: () => void
 }) {
   const ref = useRef<HTMLAnchorElement>(null);
@@ -39,9 +41,9 @@ export default function PhotoSmall({
       ref={ref}
       href={pathForPhoto(photo, tag, camera, simulation)}
       className={clsx(
-        'flex w-full h-full',
         'active:brightness-75',
         selected && 'brightness-50',
+        className,
       )}
       prefetch={prefetch}
     >
@@ -50,7 +52,8 @@ export default function PhotoSmall({
         aspectRatio={photo.aspectRatio}
         blurData={photo.blurData}
         blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
-        className="w-full"
+        className="flex object-cover w-full h-full"
+        imgClassName="object-cover w-full h-full"
         alt={altTextForPhoto(photo)}
         priority={priority}
       />

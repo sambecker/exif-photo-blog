@@ -24,7 +24,7 @@ export default function ShareButton({
         '-mx-0.5 translate-x-0.5',
         'sm:mx-0 sm:translate-x-0',
       )}
-      icon={<TbPhotoShare size={17} />}
+      icon={<TbPhotoShare size={16} />}
       spinnerColor="dim"
       prefetch={prefetch}
       shouldScroll={shouldScroll}
