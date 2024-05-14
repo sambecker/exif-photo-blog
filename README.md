@@ -73,13 +73,13 @@ _⚠️ READ BEFORE PROCEEDING_
 2. Add rate limiting (_recommended_)
    - As an additional precaution, create a [Vercel KV](https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database) store and link it to your project in order to enable rate limiting
 3. Configure auto-generated fields (optional) 
-   - Set which text fields auto-generate when uploading a photo by storing a comma-separated list, e.g., `AI_TEXT_AUTO_GENERATED_FIELDS = title,semantic`
+   - Set which text fields auto-generate when uploading a photo by storing a comma-separated list, e.g., `AI_TEXT_AUTO_GENERATED_FIELDS = title, semantic`
    - Accepted values:
      - `all` (default)
      - `title`
      - `caption`
      - `tags`
-     - `description`
+     - `semantic`
      - `none`
 
 ### Web Analytics
