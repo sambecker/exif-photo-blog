@@ -96,7 +96,7 @@ export default function PhotoLarge({
               alt={altTextForPhoto(photo)}
               src={photo.url}
               aspectRatio={photo.aspectRatio}
-              blurDataUrl={photo.blurData}
+              blurDataURL={photo.blurData}
               blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
               priority={priority}
             />

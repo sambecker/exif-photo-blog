@@ -12,6 +12,6 @@ export interface ImageProps {
   imgClassName?: string
   src: string
   alt: string
-  blurDataUrl?: string
+  blurDataURL?: string
   priority?: boolean
 }

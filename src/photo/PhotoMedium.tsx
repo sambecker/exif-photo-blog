@@ -50,7 +50,7 @@ export default function PhotoMedium({
       <ImageMedium
         src={photo.url}
         aspectRatio={photo.aspectRatio}
-        blurDataUrl={photo.blurData}
+        blurDataURL={photo.blurData}
         blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
         className="flex object-cover w-full h-full"
         imgClassName="object-cover w-full h-full"

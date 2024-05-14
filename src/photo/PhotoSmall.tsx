@@ -43,7 +43,7 @@ export default function PhotoSmall({
       <ImageSmall
         src={photo.url}
         aspectRatio={photo.aspectRatio}
-        blurDataUrl={photo.blurData}
+        blurDataURL={photo.blurData}
         blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
         alt={altTextForPhoto(photo)}
       />
