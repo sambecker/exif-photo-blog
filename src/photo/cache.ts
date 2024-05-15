@@ -230,6 +230,11 @@ export const getUniqueFilmSimulationsCached =
 
 // No store
 
+export const getPhotosNoStore = (...args: Parameters<typeof getPhotos>) => {
+  unstable_noStore();
+  return getPhotos(...args);
+};
+
 export const getPhotoNoStore = (...args: Parameters<typeof getPhoto>) => {
   unstable_noStore();
   return getPhoto(...args);
