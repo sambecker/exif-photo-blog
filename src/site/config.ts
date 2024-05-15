@@ -144,6 +144,8 @@ export const ADMIN_DEBUG_TOOLS_ENABLED = process.env.ADMIN_DEBUG_TOOLS === '1';
 
 export const HIGH_DENSITY_GRID = GRID_ASPECT_RATIO <= 1;
 
+export const GOOGLE_TAG_ID = process.env.NEXT_PUBLIC_GOOGLE_TAG_ID;
+
 export const CONFIG_CHECKLIST_STATUS = {
   hasDatabase: HAS_DATABASE,
   isPostgresSSLEnabled: POSTGRES_SSL_ENABLED,
@@ -204,4 +206,3 @@ export const IS_SITE_READY =
   CONFIG_CHECKLIST_STATUS.hasStorageProvider &&
   CONFIG_CHECKLIST_STATUS.hasAuthSecret &&
   CONFIG_CHECKLIST_STATUS.hasAdminUser;
-  
