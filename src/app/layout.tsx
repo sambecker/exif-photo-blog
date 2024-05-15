@@ -4,6 +4,7 @@ import { clsx } from 'clsx/lite';
 import { IBM_Plex_Mono } from 'next/font/google';
 import {
   BASE_URL,
+  GOOGLE_TAG_ID,
   SITE_DESCRIPTION,
   SITE_DOMAIN_OR_TITLE,
   SITE_TITLE,
@@ -17,6 +18,7 @@ import Nav from '@/site/Nav';
 import Footer from '@/site/Footer';
 import CommandK from '@/site/CommandK';
 import SwrConfigClient from '../state/SwrConfigClient';
+import { GoogleTagManager } from '@next/third-parties/google';
 
 import '../site/globals.css';
 import '../site/sonner.css';
@@ -75,6 +77,7 @@ export default function RootLayout({
       // Suppress hydration errors due to next-themes behavior
       suppressHydrationWarning
     >
+      <GoogleTagManager gtmId={GOOGLE_TAG_ID || ''} />
       <body className={ibmPlexMono.variable}>
         <AppStateProvider>
           <SwrConfigClient>
@@ -96,7 +99,7 @@ export default function RootLayout({
             </ThemeProvider>
           </SwrConfigClient>
           <Analytics debug={false} />
-          <SpeedInsights debug={false}  />
+          <SpeedInsights debug={false} />
           <PhotoEscapeHandler />
           <ToasterWithThemes />
         </AppStateProvider>
