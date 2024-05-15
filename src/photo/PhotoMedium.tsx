@@ -1,25 +1,35 @@
+'use client';
+
 import { Photo, altTextForPhoto, doesPhotoNeedBlurCompatibility } from '.';
-import ImageTiny from '@/components/ImageTiny';
+import ImageMedium from '@/components/image/ImageMedium';
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
 import { pathForPhoto } from '@/site/paths';
+import { Camera } from '@/camera';
+import { FilmSimulation } from '@/simulation';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
 import { useRef } from 'react';
 import useOnVisible from '@/utility/useOnVisible';
 
-export default function PhotoTiny({
+export default function PhotoMedium({
   photo,
   tag,
+  camera,
+  simulation,
   selected,
-  className,
+  priority,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
+  className,
   onVisible,
 }: {
   photo: Photo
   tag?: string
+  camera?: Camera
+  simulation?: FilmSimulation
   selected?: boolean
-  className?: string
+  priority?: boolean
   prefetch?: boolean
+  className?: string
   onVisible?: () => void
 }) {
   const ref = useRef<HTMLAnchorElement>(null);
@@ -29,23 +39,23 @@ export default function PhotoTiny({
   return (
     <Link
       ref={ref}
-      href={pathForPhoto(photo, tag)}
+      href={pathForPhoto(photo, tag, camera, simulation)}
       className={clsx(
-        className,
         'active:brightness-75',
         selected && 'brightness-50',
-        'min-w-[50px]',
-        'rounded-[0.15rem] overflow-hidden',
-        'border border-gray-200 dark:border-gray-800',
+        className,
       )}
       prefetch={prefetch}
     >
-      <ImageTiny
+      <ImageMedium
         src={photo.url}
         aspectRatio={photo.aspectRatio}
-        blurData={photo.blurData}
+        blurDataURL={photo.blurData}
         blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
+        className="flex object-cover w-full h-full"
+        imgClassName="object-cover w-full h-full"
         alt={altTextForPhoto(photo)}
+        priority={priority}
       />
     </Link>
   );

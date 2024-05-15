@@ -18,7 +18,7 @@ import { clsx } from 'clsx/lite';
 import { PATH_ADMIN_PHOTOS, PATH_ADMIN_UPLOADS } from '@/site/paths';
 import { toastSuccess, toastWarning } from '@/toast';
 import { getDimensionsFromSize } from '@/utility/size';
-import ImageBlurFallback from '@/components/ImageBlurFallback';
+import ImageWithFallback from '@/components/image/ImageWithFallback';
 import { TagsWithMeta, sortTagsObjectWithoutFavs } from '@/tag';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 import { AiContent } from '../ai/useAiImageQueries';
@@ -59,7 +59,7 @@ export default function PhotoForm({
   const [formErrors, setFormErrors] =
     useState(getFormErrors(initialPhotoForm));
 
-  const { invalidateSwr, shouldDebugBlur } = useAppState();
+  const { invalidateSwr, shouldDebugImageFallbacks } = useAppState();
 
   const changedFormKeys = useMemo(() =>
     getChangedFormFields(initialPhotoForm, formData),
@@ -199,7 +199,7 @@ export default function PhotoForm({
           shouldConfirm={Boolean(formData.semanticDescription)}
         />;
       case 'blurData':
-        return shouldDebugBlur && type === 'edit' && formData.url
+        return shouldDebugImageFallbacks && type === 'edit' && formData.url
           ? <UpdateBlurDataButton
             photoUrl={getNextImageUrlForManipulation(formData.url)}
             onUpdatedBlurData={blurData =>
@@ -219,7 +219,7 @@ export default function PhotoForm({
       key === 'blurData' &&
       type === 'create' &&
       !BLUR_ENABLED &&
-      !shouldDebugBlur
+      !shouldDebugImageFallbacks
     ) {
       return true;
     } else {
@@ -234,7 +234,7 @@ export default function PhotoForm({
     <div className="space-y-8 max-w-[38rem] relative">
       <div className="flex gap-2">
         <div className="relative">
-          <ImageBlurFallback
+          <ImageWithFallback
             alt="Upload"
             src={url}
             className={clsx(
@@ -307,9 +307,11 @@ export default function PhotoForm({
                 <FieldSetWithStatus
                   key={key}
                   id={key}
-                  label={label + (key === 'blurData' && shouldDebugBlur
-                    ? ` (${(formData[key] ?? '').length} chars.)`
-                    : '')}
+                  label={label + (
+                    key === 'blurData' && shouldDebugImageFallbacks
+                      ? ` (${(formData[key] ?? '').length} chars.)`
+                      : ''
+                  )}
                   note={note}
                   error={formErrors[key]}
                   value={formData[key] ?? ''}

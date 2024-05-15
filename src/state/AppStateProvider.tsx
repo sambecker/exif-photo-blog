@@ -37,7 +37,7 @@ export default function AppStateProvider({
   // DEBUG
   const [arePhotosMatted, setArePhotosMatted] =
     useState(MATTE_PHOTOS);
-  const [shouldDebugBlur, setShouldDebugBlur] =
+  const [shouldDebugImageFallbacks, setShouldDebugImageFallbacks] =
     useState(false);
   const [shouldShowBaselineGrid, setShouldShowBaselineGrid] =
     useState(false);
@@ -96,10 +96,10 @@ export default function AppStateProvider({
         // DEBUG
         arePhotosMatted,
         setArePhotosMatted,
-        setShouldDebugBlur,
-        setShouldShowBaselineGrid,
+        shouldDebugImageFallbacks,
+        setShouldDebugImageFallbacks,
         shouldShowBaselineGrid,
-        shouldDebugBlur,
+        setShouldShowBaselineGrid,
       }}
     >
       {children}

@@ -445,7 +445,8 @@ export default function SiteChecklistClient({
             optional
           >
             Set environment variable to {'"1"'} to prevent
-            simulations showing up in <code>/grid</code> sidebar:
+            simulations showing up in /grid sidebar and
+            CMD-K search results:
             {renderEnvVars(['NEXT_PUBLIC_HIDE_FILM_SIMULATIONS'])}
           </ChecklistRow>
           <ChecklistRow
