@@ -15,6 +15,7 @@ export default function PhotoOGTile({
   onLoad,
   onFail,
   retryTime,
+  onVisible,
 }: {
   photo: Photo
   loadingState?: OGLoadingState
@@ -22,6 +23,7 @@ export default function PhotoOGTile({
   onFail?: () => void
   riseOnHover?: boolean
   retryTime?: number
+  onVisible?: () => void
 }) {
   return (
     <OGTile {...{
@@ -34,6 +36,7 @@ export default function PhotoOGTile({
       onFail,
       riseOnHover,
       retryTime,
+      onVisible,
     }}/>
   );
 };

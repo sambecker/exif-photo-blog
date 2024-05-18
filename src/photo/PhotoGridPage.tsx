@@ -7,6 +7,7 @@ import { clsx } from 'clsx/lite';
 import AnimateItems from '@/components/AnimateItems';
 
 export default function PhotoGridPage({
+  cacheKey,
   photos,
   count,
   camera,
@@ -14,6 +15,7 @@ export default function PhotoGridPage({
   header,
   sidebar,
 }: {
+  cacheKey: string
   photos: Photo[]
   count: number
   camera?: Camera
@@ -36,6 +38,7 @@ export default function PhotoGridPage({
           <PhotoGrid {...{ photos, camera, animateOnFirstLoadOnly }} />
           {count > photos.length &&
             <PhotoGridInfinite {...{
+              cacheKey,
               initialOffset: photos.length,
               camera,
               animateOnFirstLoadOnly,

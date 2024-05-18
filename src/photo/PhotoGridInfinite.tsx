@@ -6,17 +6,19 @@ import InfinitePhotoScroll from './InfinitePhotoScroll';
 import PhotoGrid from './PhotoGrid';
 
 export default function PhotoGridInfinite({
+  cacheKey,
   initialOffset,
   camera,
   animateOnFirstLoadOnly,
 }: {
-  initialOffset: number,
-  camera?: Camera,
-  animateOnFirstLoadOnly?: boolean,
+  cacheKey: string
+  initialOffset: number
+  camera?: Camera
+  animateOnFirstLoadOnly?: boolean
 }) {
   return (
     <InfinitePhotoScroll
-      cacheKey="Grid"
+      cacheKey={cacheKey}
       initialOffset={initialOffset}
       itemsPerPage={INFINITE_SCROLL_MULTIPLE_GRID}
       camera={camera}

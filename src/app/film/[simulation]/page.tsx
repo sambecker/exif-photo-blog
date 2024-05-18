@@ -1,11 +1,7 @@
 import { GRID_THUMBNAILS_TO_SHOW_MAX } from '@/photo';
 import { FilmSimulation, generateMetaForFilmSimulation } from '@/simulation';
 import FilmSimulationOverview from '@/simulation/FilmSimulationOverview';
-import {
-  getPhotosFilmSimulationDataCached,
-  getPhotosFilmSimulationDataCachedWithPagination,
-} from '@/simulation/data';
-import { PaginationParams } from '@/site/pagination';
+import { getPhotosFilmSimulationDataCached } from '@/simulation/data';
 import { Metadata } from 'next/types';
 
 interface FilmSimulationProps {
@@ -49,16 +45,13 @@ export async function generateMetadata({
 
 export default async function FilmSimulationPage({
   params: { simulation },
-  searchParams,
-}: FilmSimulationProps & PaginationParams) {
-  const {
+}: FilmSimulationProps) {
+  const [
     photos,
-    count,
-    showMorePath,
-    dateRange,
-  } = await getPhotosFilmSimulationDataCachedWithPagination({
+    { count, dateRange },
+  ] =  await getPhotosFilmSimulationDataCached({
     simulation,
-    searchParams,
+    limit: GRID_THUMBNAILS_TO_SHOW_MAX,
   });
 
   return (
@@ -67,7 +60,6 @@ export default async function FilmSimulationPage({
       photos,
       count,
       dateRange,
-      showMorePath,
     }} />
   );
 }
