@@ -1,25 +1,33 @@
 'use client';
 
-import InfinitePhotoScroll, {
-  InfinitePhotoScrollExternalProps,
-} from './InfinitePhotoScroll';
+import { Camera } from '@/camera';
+import { INFINITE_SCROLL_MULTIPLE_GRID } from '.';
+import InfinitePhotoScroll from './InfinitePhotoScroll';
 import PhotoGrid from './PhotoGrid';
 
 export default function PhotoGridInfinite({
   initialOffset,
-  itemsPerPage,
-}: InfinitePhotoScrollExternalProps) {
+  camera,
+  animateOnFirstLoadOnly,
+}: {
+  initialOffset: number,
+  camera?: Camera,
+  animateOnFirstLoadOnly?: boolean,
+}) {
   return (
     <InfinitePhotoScroll
       cacheKey="Grid"
       initialOffset={initialOffset}
-      itemsPerPage={itemsPerPage}
+      itemsPerPage={INFINITE_SCROLL_MULTIPLE_GRID}
+      camera={camera}
     >
       {({ photos, onLastPhotoVisible }) =>
-        <PhotoGrid
-          photos={photos}
-          onLastPhotoVisible={onLastPhotoVisible}
-        />}
+        <PhotoGrid {...{
+          photos,
+          camera,
+          onLastPhotoVisible,
+          animateOnFirstLoadOnly,
+        }} />}
     </InfinitePhotoScroll>
   );
 }

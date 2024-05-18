@@ -211,23 +211,17 @@ export const getPhotosTagHiddenMetaCachedAction = async () =>
 
 // Public/Private actions
 
-export const getPhotosAction = async (
-  offset: number,
-  limit: number,
-  hidden?: GetPhotosOptions['hidden'],
-) => (hidden === 'include' || hidden === 'only')
-  ? safelyRunAdminServerAction(() =>
-    getPhotos({ offset, hidden, limit }))
-  : getPhotos({ offset, hidden, limit });
+export const getPhotosAction = async (options: GetPhotosOptions) =>
+  (options.hidden === 'include' || options.hidden === 'only')
+    ? safelyRunAdminServerAction(() =>
+      getPhotos(options))
+    : getPhotos(options);
 
-export const getPhotosCachedAction = async (
-  offset: number,
-  limit: number,
-  hidden?: GetPhotosOptions['hidden'],
-) => (hidden === 'include' || hidden === 'only')
-  ? safelyRunAdminServerAction(() =>
-    getPhotosCachedCached({ offset, hidden, limit }))
-  : getPhotosCachedCached({ offset, hidden, limit });
+export const getPhotosCachedAction = async (options: GetPhotosOptions) =>
+  (options.hidden === 'include' || options.hidden === 'only')
+    ? safelyRunAdminServerAction(() =>
+      getPhotosCachedCached(options))
+    : getPhotosCachedCached(options);
 
 // Public actions
 

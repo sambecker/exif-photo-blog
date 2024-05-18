@@ -1,13 +1,8 @@
-import { 
-  PaginationSearchParams,
-  getPaginationFromSearchParams,
-} from '@/site/pagination';
 import { Camera } from '.';
 import {
   getPhotosCached,
   getPhotosCameraMetaCached,
 } from '@/photo/cache';
-import { pathForCamera } from '@/site/paths';
 
 export const getPhotosCameraDataCached = ({
   camera,
@@ -20,32 +15,3 @@ export const getPhotosCameraDataCached = ({
     getPhotosCached({ camera, limit }),
     getPhotosCameraMetaCached(camera),
   ]);
-
-export const getPhotosCameraDataCachedWithPagination = async ({
-  camera,
-  limit: limitProp,
-  searchParams,
-}: {
-  camera: Camera,
-  limit?: number,
-  searchParams?: PaginationSearchParams,
-}) => {
-  const { offset, limit } = getPaginationFromSearchParams(searchParams);
-
-  const [photos, { count, dateRange }] =
-    await getPhotosCameraDataCached({
-      camera,
-      limit: limitProp ?? limit,
-    });
-
-  const showMorePath = count > photos.length
-    ? pathForCamera(camera, offset + 1)
-    : undefined;
-
-  return {
-    photos,
-    count,
-    dateRange,
-    showMorePath,
-  };
-};
