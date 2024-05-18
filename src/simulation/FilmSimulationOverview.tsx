@@ -21,6 +21,7 @@ export default function FilmSimulationOverview({
       cacheKey: `simulation-${simulation}`, 
       photos,
       count,
+      simulation,
       header: <FilmSimulationHeader {...{
         simulation,
         photos,

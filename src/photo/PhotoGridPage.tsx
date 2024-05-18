@@ -5,12 +5,15 @@ import PhotoGridInfinite from './PhotoGridInfinite';
 import { Camera } from '@/camera';
 import { clsx } from 'clsx/lite';
 import AnimateItems from '@/components/AnimateItems';
+import { FilmSimulation } from '@/simulation';
 
 export default function PhotoGridPage({
   cacheKey,
   photos,
   count,
+  tag,
   camera,
+  simulation,
   animateOnFirstLoadOnly,
   header,
   sidebar,
@@ -18,7 +21,9 @@ export default function PhotoGridPage({
   cacheKey: string
   photos: Photo[]
   count: number
+  tag?: string
   camera?: Camera
+  simulation?: FilmSimulation
   animateOnFirstLoadOnly?: boolean
   header?: JSX.Element
   sidebar?: JSX.Element
@@ -35,12 +40,20 @@ export default function PhotoGridPage({
             animateOnFirstLoadOnly
           />}
         <div className="space-y-0.5 sm:space-y-1">
-          <PhotoGrid {...{ photos, camera, animateOnFirstLoadOnly }} />
+          <PhotoGrid {...{
+            photos,
+            tag,
+            camera,
+            simulation,
+            animateOnFirstLoadOnly,
+          }} />
           {count > photos.length &&
             <PhotoGridInfinite {...{
               cacheKey,
               initialOffset: photos.length,
+              tag,
               camera,
+              simulation,
               animateOnFirstLoadOnly,
             }} />}
         </div>

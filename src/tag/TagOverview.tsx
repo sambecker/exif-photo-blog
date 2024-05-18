@@ -20,6 +20,7 @@ export default function TagOverview({
       cacheKey: `tag-${tag}`,
       photos,
       count,
+      tag,
       header: <TagHeader {...{
         tag,
         photos,
