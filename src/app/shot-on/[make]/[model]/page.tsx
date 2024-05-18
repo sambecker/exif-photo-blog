@@ -7,6 +7,9 @@ import {
 } from '@/photo';
 import { getPhotosCameraDataCached } from '@/camera/data';
 import CameraOverview from '@/camera/CameraOverview';
+import { cache } from 'react';
+
+const getPhotosCameraDataCachedCached = cache(getPhotosCameraDataCached);
 
 export async function generateMetadata({
   params,
@@ -16,7 +19,7 @@ export async function generateMetadata({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosCameraDataCached({
+  ] = await getPhotosCameraDataCachedCached({
     camera,
     limit: GRID_THUMBNAILS_TO_SHOW_MAX,
   });
@@ -51,7 +54,7 @@ export default async function CameraPage({ params }: CameraProps) {
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosCameraDataCached({
+  ] = await getPhotosCameraDataCachedCached({
     camera,
     limit: INFINITE_SCROLL_INITIAL_GRID,
   });

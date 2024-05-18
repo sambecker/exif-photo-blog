@@ -15,8 +15,7 @@ import { PhotoCameraProps, cameraFromPhoto } from '@/camera';
 import { getPhotosCameraDataCached } from '@/camera/data';
 import { ReactNode, cache } from 'react';
 
-const getPhotoCachedCached =
-  cache((photoId: string) => getPhotoCached(photoId));
+const getPhotoCachedCached = cache(getPhotoCached);
 
 export async function generateMetadata({
   params: { photoId, make, model },

@@ -5,6 +5,9 @@ import TagOverview from '@/tag/TagOverview';
 import { getPhotosTagDataCached } from '@/tag/data';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
+import { cache } from 'react';
+
+const getPhotosTagDataCachedCached = cache(getPhotosTagDataCached);
 
 interface TagProps {
   params: { tag: string }
@@ -18,7 +21,7 @@ export async function generateMetadata({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosTagDataCached({
+  ] = await getPhotosTagDataCachedCached({
     tag,
     limit: GRID_THUMBNAILS_TO_SHOW_MAX,
   });
@@ -57,7 +60,7 @@ export default async function TagPage({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosTagDataCached({
+  ] = await getPhotosTagDataCachedCached({
     tag,
     limit: GRID_THUMBNAILS_TO_SHOW_MAX,
   });
