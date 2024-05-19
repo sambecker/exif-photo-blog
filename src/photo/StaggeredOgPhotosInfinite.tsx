@@ -1,10 +1,10 @@
 'use client';
 
-import { PATH_ROOT } from '@/site/paths';
+import { PATH_OG } from '@/site/paths';
 import InfinitePhotoScroll from './InfinitePhotoScroll';
-import PhotosLarge from './PhotosLarge';
+import StaggeredOgPhotos from './StaggeredOgPhotos';
 
-export default function PhotosLargeInfinite({
+export default function StaggeredOgPhotosInfinite({
   initialOffset,
   itemsPerPage,
 }: {
@@ -13,16 +13,14 @@ export default function PhotosLargeInfinite({
 }) {
   return (
     <InfinitePhotoScroll
-      cacheKey={`page-${PATH_ROOT}`}
+      cacheKey={`page-${PATH_OG}`}
       initialOffset={initialOffset}
       itemsPerPage={itemsPerPage}
-      wrapMoreButtonInGrid
     >
-      {({ photos, onLastPhotoVisible, revalidatePhoto }) =>
-        <PhotosLarge
+      {({ photos, onLastPhotoVisible }) =>
+        <StaggeredOgPhotos
           photos={photos}
           onLastPhotoVisible={onLastPhotoVisible}
-          revalidatePhoto={revalidatePhoto}
         />}
     </InfinitePhotoScroll>
   );

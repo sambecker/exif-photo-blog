@@ -31,7 +31,6 @@ export default function PhotoGrid({
   animate?: boolean
   animateOnFirstLoadOnly?: boolean
   staggerOnFirstLoadOnly?: boolean
-  showMorePath?: string
   additionalTile?: JSX.Element
   small?: boolean
   onLastPhotoVisible?: () => void

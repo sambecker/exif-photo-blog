@@ -1,17 +1,19 @@
 'use client';
 
-import InfinitePhotoScroll, {
-  InfinitePhotoScrollExternalProps,
-} from '../photo/InfinitePhotoScroll';
+import { PATH_ADMIN_PHOTOS } from '@/site/paths';
+import InfinitePhotoScroll from '../photo/InfinitePhotoScroll';
 import AdminPhotosTable from './AdminPhotosTable';
 
 export default function AdminPhotosTableInfinite({
   initialOffset,
   itemsPerPage,
-}: InfinitePhotoScrollExternalProps) {
+}: {
+  initialOffset: number
+  itemsPerPage: number
+}) {
   return (
     <InfinitePhotoScroll
-      cacheKey="AdminPhotoTable"
+      cacheKey={`page-${PATH_ADMIN_PHOTOS}`}
       initialOffset={initialOffset}
       itemsPerPage={itemsPerPage}
       useCachedPhotos={false}

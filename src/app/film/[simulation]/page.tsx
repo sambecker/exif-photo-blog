@@ -1,12 +1,12 @@
 import { GRID_THUMBNAILS_TO_SHOW_MAX } from '@/photo';
 import { FilmSimulation, generateMetaForFilmSimulation } from '@/simulation';
 import FilmSimulationOverview from '@/simulation/FilmSimulationOverview';
-import {
-  getPhotosFilmSimulationDataCached,
-  getPhotosFilmSimulationDataCachedWithPagination,
-} from '@/simulation/data';
-import { PaginationParams } from '@/site/pagination';
+import { getPhotosFilmSimulationDataCached } from '@/simulation/data';
 import { Metadata } from 'next/types';
+import { cache } from 'react';
+
+const getPhotosFilmSimulationDataCachedCached =
+  cache(getPhotosFilmSimulationDataCached);
 
 interface FilmSimulationProps {
   params: { simulation: FilmSimulation }
@@ -18,7 +18,7 @@ export async function generateMetadata({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosFilmSimulationDataCached({
+  ] = await getPhotosFilmSimulationDataCachedCached({
     simulation,
     limit: GRID_THUMBNAILS_TO_SHOW_MAX,
   });
@@ -49,16 +49,13 @@ export async function generateMetadata({
 
 export default async function FilmSimulationPage({
   params: { simulation },
-  searchParams,
-}: FilmSimulationProps & PaginationParams) {
-  const {
+}: FilmSimulationProps) {
+  const [
     photos,
-    count,
-    showMorePath,
-    dateRange,
-  } = await getPhotosFilmSimulationDataCachedWithPagination({
+    { count, dateRange },
+  ] =  await getPhotosFilmSimulationDataCachedCached({
     simulation,
-    searchParams,
+    limit: GRID_THUMBNAILS_TO_SHOW_MAX,
   });
 
   return (
@@ -67,7 +64,6 @@ export default async function FilmSimulationPage({
       photos,
       count,
       dateRange,
-      showMorePath,
     }} />
   );
 }

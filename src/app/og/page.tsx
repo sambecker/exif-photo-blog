@@ -1,36 +1,30 @@
-import { getPhotosCached, getPhotosCountCached } from '@/photo/cache';
-import MoreComponentsFromSearchParams from
-  '@/components/MoreComponentsFromSearchParams';
-import StaggeredOgPhotos from '@/photo/StaggeredOgPhotos';
 import {
-  PaginationParams,
-  getPaginationFromSearchParams,
-} from '@/site/pagination';
-import { pathForOg } from '@/site/paths';
+  INFINITE_SCROLL_INITIAL_GRID,
+  INFINITE_SCROLL_MULTIPLE_GRID,
+} from '@/photo';
+import { getPhotosCached, getPhotosCountCached } from '@/photo/cache';
+import StaggeredOgPhotos from '@/photo/StaggeredOgPhotos';
+import StaggeredOgPhotosInfinite from '@/photo/StaggeredOgPhotosInfinite';
 
-export default async function GridPage({ searchParams }: PaginationParams) {
-  const { offset, limit } = getPaginationFromSearchParams(searchParams);
-
+export default async function GridPage() {
   const [
     photos,
     count,
   ] = await Promise.all([
-    getPhotosCached({ limit }),
+    getPhotosCached({ limit: INFINITE_SCROLL_INITIAL_GRID }),
     getPhotosCountCached(),
   ]);
-
-  const showMorePhotos = count > photos.length;
   
   return (
-    <div className="space-y-3">
-      <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        <StaggeredOgPhotos photos={photos} />
-      </div>
-      {showMorePhotos &&
-        <MoreComponentsFromSearchParams
-          label="More photos"
-          path={pathForOg(offset + 1)}
-        />}
-    </div>
+    <>
+      <StaggeredOgPhotos {...{ photos }} />
+      {count > photos.length &&
+        <div className="mt-3">
+          <StaggeredOgPhotosInfinite
+            initialOffset={photos.length}
+            itemsPerPage={INFINITE_SCROLL_MULTIPLE_GRID}
+          />
+        </div>}
+    </>
   );
 }

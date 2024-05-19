@@ -252,7 +252,8 @@ export const isPathAdminConfiguration = (pathname?: string) =>
 
 export const isPathProtected = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ADMIN) ||
-  checkPathPrefix(pathname, pathForTag(TAG_HIDDEN));
+  checkPathPrefix(pathname, pathForTag(TAG_HIDDEN)) ||
+  pathname === PATH_OG;
 
 export const getPathComponents = (pathname = ''): {
   photoId?: string

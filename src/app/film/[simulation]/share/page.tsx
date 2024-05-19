@@ -2,12 +2,12 @@ import { GRID_THUMBNAILS_TO_SHOW_MAX } from '@/photo';
 import { FilmSimulation, generateMetaForFilmSimulation } from '@/simulation';
 import FilmSimulationOverview from '@/simulation/FilmSimulationOverview';
 import FilmSimulationShareModal from '@/simulation/FilmSimulationShareModal';
-import {
-  getPhotosFilmSimulationDataCached,
-  getPhotosFilmSimulationDataCachedWithPagination,
-} from '@/simulation/data';
-import { PaginationParams } from '@/site/pagination';
+import { getPhotosFilmSimulationDataCached } from '@/simulation/data';
 import { Metadata } from 'next/types';
+import { cache } from 'react';
+
+const getPhotosFilmSimulationDataCachedCached =
+  cache(getPhotosFilmSimulationDataCached);
 
 interface FilmSimulationProps {
   params: { simulation: FilmSimulation }
@@ -19,7 +19,7 @@ export async function generateMetadata({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosFilmSimulationDataCached({
+  ] = await getPhotosFilmSimulationDataCachedCached({
     simulation,
     limit: GRID_THUMBNAILS_TO_SHOW_MAX,
   });
@@ -50,22 +50,19 @@ export async function generateMetadata({
 
 export default async function Share({
   params: { simulation },
-  searchParams,
-}: FilmSimulationProps & PaginationParams) {
-  const {
+}: FilmSimulationProps) {
+  const [
     photos,
-    count,
-    dateRange,
-    showMorePath,
-  } = await getPhotosFilmSimulationDataCachedWithPagination({
+    { count, dateRange },
+  ] = await getPhotosFilmSimulationDataCachedCached({
     simulation,
-    searchParams,
+    limit: GRID_THUMBNAILS_TO_SHOW_MAX,
   });
 
   return <>
     <FilmSimulationShareModal {...{ simulation, photos, count, dateRange }} />
     <FilmSimulationOverview
-      {...{ simulation, photos, count, dateRange, showMorePath }}
+      {...{ simulation, photos, count, dateRange }}
       animateOnFirstLoadOnly
     />
   </>;

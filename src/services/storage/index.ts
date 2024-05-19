@@ -182,7 +182,7 @@ const moveFile = async (
 
 export const convertUploadToPhoto = async (
   urlOrigin: string,
-): Promise<string> => {
+) => {
   const fileName = `${PREFIX_PHOTO}-${generateStorageId()}`;
   const fileExtension = getExtensionFromStorageUrl(urlOrigin);
   const photoPath = `${fileName}.${fileExtension || 'jpg'}`;

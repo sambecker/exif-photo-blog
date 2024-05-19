@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { clsx } from 'clsx/lite';
 import Link from 'next/link';
 import { BiError } from 'react-icons/bi';
 import Spinner from '@/components/Spinner';
 import { IMAGE_OG_DIMENSION } from '../image-response';
+import useOnVisible from '@/utility/useOnVisible';
 
 export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 
@@ -19,6 +20,7 @@ export default function OGTile({
   onLoad,
   onFail,
   retryTime,
+  onVisible,
 }: {
   title: string
   description: string
@@ -29,7 +31,10 @@ export default function OGTile({
   onFail?: () => void
   riseOnHover?: boolean
   retryTime?: number
+  onVisible?: () => void
 }) {
+  const ref = useRef<HTMLAnchorElement>(null);
+
   const [loadingStateInternal, setLoadingStateInternal] =
     useState(loadingStateExternal ?? 'unloaded');
 
@@ -46,8 +51,11 @@ export default function OGTile({
 
   const { width, height, aspectRatio } = IMAGE_OG_DIMENSION;
 
+  useOnVisible(ref, onVisible);
+
   return (
     <Link
+      ref={ref}
       href={path}
       className={clsx(
         'group',

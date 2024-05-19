@@ -1,10 +1,7 @@
-import SiteGrid from '@/components/SiteGrid';
 import {
   INFINITE_SCROLL_INITIAL_GRID,
-  INFINITE_SCROLL_MULTIPLE_GRID,
   generateOgImageMetaForPhotos,
 } from '@/photo';
-import PhotoGrid from '@/photo/PhotoGrid';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
 import { Metadata } from 'next/types';
@@ -12,7 +9,8 @@ import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
 import { getPhotoSidebarData } from '@/photo/data';
 import { getPhotos } from '@/photo/db';
 import { cache } from 'react';
-import PhotoGridInfinite from '@/photo/PhotoGridInfinite';
+import PhotoGridPage from '@/photo/PhotoGridPage';
+import { PATH_GRID } from '@/site/paths';
 
 export const dynamic = 'force-static';
 
@@ -40,16 +38,11 @@ export default async function GridPage() {
 
   return (
     photos.length > 0
-      ? <SiteGrid
-        contentMain={<div className="space-y-0.5 sm:space-y-1">
-          <PhotoGrid {...{ photos }} />
-          {photosCount > photos.length &&
-            <PhotoGridInfinite
-              initialOffset={INFINITE_SCROLL_INITIAL_GRID}
-              itemsPerPage={INFINITE_SCROLL_MULTIPLE_GRID}
-            />}
-        </div>}
-        contentSide={<div className="sticky top-4 space-y-4 mt-[-4px]">
+      ? <PhotoGridPage
+        cacheKey={`page-${PATH_GRID}`}
+        photos={photos}
+        count={photosCount}
+        sidebar={<div className="sticky top-4 space-y-4 mt-[-4px]">
           <PhotoGridSidebar {...{
             tags,
             cameras,
@@ -57,7 +50,6 @@ export default async function GridPage() {
             photosCount,
           }} />
         </div>}
-        sideHiddenOnMobile
       />
       : <PhotosEmptyState />
   );

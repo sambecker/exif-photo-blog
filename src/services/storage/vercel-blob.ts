@@ -29,13 +29,13 @@ export const vercelBlobUploadFromClient = async (
     .then(({ url }) => url);
 
 export const vercelBlobCopy = (
-  fileNameSource: string,
-  fileNameDestination: string,
+  sourceUrl: string,
+  destinationFileName: string,
   addRandomSuffix?: boolean,
 ): Promise<string> =>
   copy(
-    fileNameSource,
-    fileNameDestination,
+    sourceUrl,
+    destinationFileName,
     {
       access: 'public',
       addRandomSuffix,

@@ -1,13 +1,15 @@
 import { Metadata } from 'next/types';
 import { CameraProps, getCameraFromParams } from '@/camera';
 import { generateMetaForCamera } from '@/camera/meta';
-import { GRID_THUMBNAILS_TO_SHOW_MAX } from '@/photo';
-import { PaginationParams } from '@/site/pagination';
 import {
-  getPhotosCameraDataCached,
-  getPhotosCameraDataCachedWithPagination,
-} from '@/camera/data';
+  GRID_THUMBNAILS_TO_SHOW_MAX,
+  INFINITE_SCROLL_INITIAL_GRID,
+} from '@/photo';
+import { getPhotosCameraDataCached } from '@/camera/data';
 import CameraOverview from '@/camera/CameraOverview';
+import { cache } from 'react';
+
+const getPhotosCameraDataCachedCached = cache(getPhotosCameraDataCached);
 
 export async function generateMetadata({
   params,
@@ -17,7 +19,7 @@ export async function generateMetadata({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosCameraDataCached({
+  ] = await getPhotosCameraDataCachedCached({
     camera,
     limit: GRID_THUMBNAILS_TO_SHOW_MAX,
   });
@@ -46,23 +48,18 @@ export async function generateMetadata({
   };
 }
 
-export default async function CameraPage({
-  params,
-  searchParams,
-}: CameraProps & PaginationParams) {
+export default async function CameraPage({ params }: CameraProps) {
   const camera = getCameraFromParams(params);
 
-  const {
+  const [
     photos,
-    count,
-    showMorePath,
-    dateRange,
-  } = await getPhotosCameraDataCachedWithPagination({
+    { count, dateRange },
+  ] = await getPhotosCameraDataCachedCached({
     camera,
-    searchParams,
+    limit: INFINITE_SCROLL_INITIAL_GRID,
   });
 
   return (
-    <CameraOverview {...{ camera, photos, count, dateRange, showMorePath }} />
+    <CameraOverview {...{ camera, photos, count, dateRange }} />
   );
 }
