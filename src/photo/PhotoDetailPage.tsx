@@ -100,6 +100,8 @@ export default function PhotoDetailPage({
           photos={photosGrid ?? photos}
           selectedPhoto={photo}
           tag={tag}
+          camera={camera}
+          simulation={simulation}
           animateOnFirstLoadOnly
         />}
         contentSide={<AnimateItems

@@ -9,6 +9,7 @@ import { FilmSimulation } from '@/simulation';
 export default function PhotoGridInfinite({
   cacheKey,
   initialOffset,
+  canStart,
   tag,
   camera,
   simulation,
@@ -16,6 +17,7 @@ export default function PhotoGridInfinite({
 }: {
   cacheKey: string
   initialOffset: number
+  canStart?: boolean
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
@@ -33,6 +35,7 @@ export default function PhotoGridInfinite({
       {({ photos, onLastPhotoVisible }) =>
         <PhotoGrid {...{
           photos,
+          canStart,
           tag,
           camera,
           simulation,

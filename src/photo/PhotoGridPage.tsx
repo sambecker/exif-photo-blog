@@ -1,3 +1,5 @@
+'use client';
+
 import SiteGrid from '@/components/SiteGrid';
 import { Photo } from '.';
 import PhotoGrid from './PhotoGrid';
@@ -6,6 +8,7 @@ import { Camera } from '@/camera';
 import { clsx } from 'clsx/lite';
 import AnimateItems from '@/components/AnimateItems';
 import { FilmSimulation } from '@/simulation';
+import { useCallback, useState } from 'react';
 
 export default function PhotoGridPage({
   cacheKey,
@@ -28,6 +31,16 @@ export default function PhotoGridPage({
   header?: JSX.Element
   sidebar?: JSX.Element
 }) {
+  const [
+    shouldAnimateDynamicItems,
+    setShouldAnimateDynamicItems,
+  ] = useState(false);
+
+  const onAnimationComplete = useCallback(() =>
+    setShouldAnimateDynamicItems(true), []);
+
+  const initialOffset = photos.length;
+
   return (
     <SiteGrid
       contentMain={<div className={clsx(
@@ -46,11 +59,13 @@ export default function PhotoGridPage({
             camera,
             simulation,
             animateOnFirstLoadOnly,
+            onAnimationComplete,
           }} />
-          {count > photos.length &&
+          {count > initialOffset &&
             <PhotoGridInfinite {...{
               cacheKey,
-              initialOffset: photos.length,
+              initialOffset,
+              canStart: shouldAnimateDynamicItems,
               tag,
               camera,
               simulation,

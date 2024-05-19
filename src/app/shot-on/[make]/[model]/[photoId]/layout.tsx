@@ -1,4 +1,5 @@
 import {
+  INFINITE_SCROLL_GRID_PHOTO_INITIAL,
   descriptionForPhoto,
   titleForPhoto,
 } from '@/photo';
@@ -59,12 +60,15 @@ export default async function PhotoCameraPage({
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const camera = cameraFromPhoto(photo, { make, model });
-
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosCameraDataCached({ camera });
+    camera,
+  ] = await getPhotosCameraDataCached(
+    make,
+    model,
+    INFINITE_SCROLL_GRID_PHOTO_INITIAL,
+  );
 
   return <>
     {children}

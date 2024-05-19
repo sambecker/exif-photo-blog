@@ -15,11 +15,13 @@ export default function PhotoGrid({
   photoPriority,
   fast,
   animate = true,
+  canStart,
   animateOnFirstLoadOnly,
   staggerOnFirstLoadOnly = true,
   additionalTile,
   small,
   onLastPhotoVisible,
+  onAnimationComplete,
 }: {
   photos: Photo[]
   selectedPhoto?: Photo
@@ -29,11 +31,13 @@ export default function PhotoGrid({
   photoPriority?: boolean
   fast?: boolean
   animate?: boolean
+  canStart?: boolean
   animateOnFirstLoadOnly?: boolean
   staggerOnFirstLoadOnly?: boolean
   additionalTile?: JSX.Element
   small?: boolean
   onLastPhotoVisible?: () => void
+  onAnimationComplete?: () => void
 }) {
   return (
     <AnimateItems
@@ -47,11 +51,13 @@ export default function PhotoGrid({
         'items-center',
       )}
       type={animate === false ? 'none' : undefined}
+      canStart={canStart}
       duration={fast ? 0.3 : undefined}
       staggerDelay={0.075}
       distanceOffset={40}
       animateOnFirstLoadOnly={animateOnFirstLoadOnly}
       staggerOnFirstLoadOnly={staggerOnFirstLoadOnly}
+      onAnimationComplete={onAnimationComplete}
       items={photos.map((photo, index) =>
         <div
           key={photo.id}
