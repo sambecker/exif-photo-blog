@@ -30,6 +30,7 @@ import UpdateBlurDataButton from '../UpdateBlurDataButton';
 import { getNextImageUrlForManipulation } from '@/services/next-image';
 import { BLUR_ENABLED } from '@/site/config';
 import { PhotoDbInsert } from '..';
+import ErrorNote from '@/components/ErrorNote';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -58,6 +59,7 @@ export default function PhotoForm({
     useState<Partial<PhotoFormData>>(initialPhotoForm);
   const [formErrors, setFormErrors] =
     useState(getFormErrors(initialPhotoForm));
+  const [formActionErrorMessage, setFormActionErrorMessage] = useState('');
 
   const { invalidateSwr, shouldDebugImageFallbacks } = useAppState();
 
@@ -272,9 +274,18 @@ export default function PhotoForm({
           </div>
         </div>
       </div>
+      {formActionErrorMessage &&
+        <ErrorNote>{formActionErrorMessage}</ErrorNote>}
       <form
-        action={type === 'create' ? createPhotoAction : updatePhotoAction}
-        onSubmit={() => blur()}
+        action={data => (type === 'create'
+          ? createPhotoAction
+          : updatePhotoAction
+        )(data)
+          .catch(e => setFormActionErrorMessage(e.message))}
+        onSubmit={() => {
+          setFormActionErrorMessage('');
+          (document.activeElement as HTMLElement)?.blur?.();
+        }}
       >
         {/* Fields */}
         <div className="space-y-6">

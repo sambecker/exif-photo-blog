@@ -50,14 +50,13 @@ export const createPhotoAction = async (formData: FormData) =>
     const photo = convertFormDataToPhotoDbInsert(formData, true);
 
     const updatedUrl = await convertUploadToPhoto(photo.url);
-  
-    if (updatedUrl) { photo.url = updatedUrl; }
-  
-    await sqlInsertPhoto(photo);
-  
-    revalidateAllKeysAndPaths();
-  
-    redirect(PATH_ADMIN_PHOTOS);
+    
+    if (updatedUrl) {
+      photo.url = updatedUrl;
+      await sqlInsertPhoto(photo);
+      revalidateAllKeysAndPaths();
+      redirect(PATH_ADMIN_PHOTOS);
+    }
   });
 
 export const updatePhotoAction = async (formData: FormData) =>
