@@ -1,6 +1,6 @@
 import {
-  INFINITE_SCROLL_INITIAL_GRID,
-  INFINITE_SCROLL_MULTIPLE_GRID,
+  INFINITE_SCROLL_GRID_PHOTO_INITIAL,
+  INFINITE_SCROLL_GRID_PHOTO_MULTIPLE,
 } from '@/photo';
 import { getPhotosCached, getPhotosCountCached } from '@/photo/cache';
 import StaggeredOgPhotos from '@/photo/StaggeredOgPhotos';
@@ -11,7 +11,7 @@ export default async function GridPage() {
     photos,
     count,
   ] = await Promise.all([
-    getPhotosCached({ limit: INFINITE_SCROLL_INITIAL_GRID }),
+    getPhotosCached({ limit: INFINITE_SCROLL_GRID_PHOTO_INITIAL }),
     getPhotosCountCached(),
   ]);
   
@@ -22,7 +22,7 @@ export default async function GridPage() {
         <div className="mt-3">
           <StaggeredOgPhotosInfinite
             initialOffset={photos.length}
-            itemsPerPage={INFINITE_SCROLL_MULTIPLE_GRID}
+            itemsPerPage={INFINITE_SCROLL_GRID_PHOTO_MULTIPLE}
           />
         </div>}
     </>

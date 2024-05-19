@@ -1,6 +1,6 @@
 import {
-  INFINITE_SCROLL_INITIAL_HOME,
-  INFINITE_SCROLL_MULTIPLE_HOME,
+  INFINITE_SCROLL_LARGE_PHOTO_INITIAL,
+  INFINITE_SCROLL_LARGE_PHOTO_MULTIPLE,
   generateOgImageMetaForPhotos,
 } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
@@ -29,7 +29,7 @@ export default async function HomePage() {
     photosCount,
   ] = await Promise.all([
     getPhotosCached({ 
-      limit: INFINITE_SCROLL_INITIAL_HOME,
+      limit: INFINITE_SCROLL_LARGE_PHOTO_INITIAL,
     })
       .catch(() => []),
     getPhotosCount()
@@ -42,8 +42,8 @@ export default async function HomePage() {
         <PhotosLarge {...{ photos }} />
         {photosCount > photos.length &&
           <PhotosLargeInfinite
-            initialOffset={INFINITE_SCROLL_INITIAL_HOME}
-            itemsPerPage={INFINITE_SCROLL_MULTIPLE_HOME}
+            initialOffset={INFINITE_SCROLL_LARGE_PHOTO_INITIAL}
+            itemsPerPage={INFINITE_SCROLL_LARGE_PHOTO_MULTIPLE}
           />}
       </div>
       : <PhotosEmptyState />

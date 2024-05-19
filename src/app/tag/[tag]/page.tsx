@@ -1,4 +1,4 @@
-import { GRID_THUMBNAILS_TO_SHOW_MAX } from '@/photo';
+import { INFINITE_SCROLL_GRID_PHOTO_INITIAL } from '@/photo';
 import { PATH_ROOT } from '@/site/paths';
 import { generateMetaForTag } from '@/tag';
 import TagOverview from '@/tag/TagOverview';
@@ -7,7 +7,8 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 
-const getPhotosTagDataCachedCached = cache(getPhotosTagDataCached);
+const getPhotosTagDataCachedCached = cache((tag: string) =>
+  getPhotosTagDataCached({ tag, limit: INFINITE_SCROLL_GRID_PHOTO_INITIAL}));
 
 interface TagProps {
   params: { tag: string }
@@ -21,10 +22,7 @@ export async function generateMetadata({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosTagDataCachedCached({
-    tag,
-    limit: GRID_THUMBNAILS_TO_SHOW_MAX,
-  });
+  ] = await getPhotosTagDataCachedCached(tag);
 
   if (photos.length === 0) { return {}; }
 
@@ -60,10 +58,7 @@ export default async function TagPage({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosTagDataCachedCached({
-    tag,
-    limit: GRID_THUMBNAILS_TO_SHOW_MAX,
-  });
+  ] = await getPhotosTagDataCachedCached(tag);
 
   if (photos.length === 0) { redirect(PATH_ROOT); }
 

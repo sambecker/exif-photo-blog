@@ -1,9 +1,8 @@
 import {
-  INFINITE_SCROLL_INITIAL_GRID,
+  INFINITE_SCROLL_GRID_PHOTO_INITIAL,
   generateOgImageMetaForPhotos,
 } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
-import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
 import { Metadata } from 'next/types';
 import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
 import { getPhotoSidebarData } from '@/photo/data';
@@ -14,12 +13,12 @@ import { PATH_GRID } from '@/site/paths';
 
 export const dynamic = 'force-static';
 
-const getPhotosCached = cache(getPhotos);
+const getPhotosCached = cache(() => getPhotos({
+  limit: INFINITE_SCROLL_GRID_PHOTO_INITIAL,
+}));
 
 export async function generateMetadata(): Promise<Metadata> {
-  const photos = await getPhotosCached({
-    limit: MAX_PHOTOS_TO_SHOW_OG,
-  })
+  const photos = await getPhotosCached()
     .catch(() => []);
   return generateOgImageMetaForPhotos(photos);
 }
@@ -32,7 +31,8 @@ export default async function GridPage() {
     cameras,
     simulations,
   ] = await Promise.all([
-    getPhotosCached({ limit: INFINITE_SCROLL_INITIAL_GRID }).catch(() => []),
+    getPhotosCached()
+      .catch(() => []),
     ...getPhotoSidebarData(),
   ]);
 

@@ -14,21 +14,22 @@ import camelcaseKeys from 'camelcase-keys';
 import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
 
-// ROOT PAGE
-export const INFINITE_SCROLL_INITIAL_HOME =
+// INFINITE SCROLL: LARGE PHOTOS
+export const INFINITE_SCROLL_LARGE_PHOTO_INITIAL =
   process.env.NODE_ENV === 'development' ? 2 : 12;
-export const INFINITE_SCROLL_MULTIPLE_HOME =
+export const INFINITE_SCROLL_LARGE_PHOTO_MULTIPLE =
   process.env.NODE_ENV === 'development' ? 2 : 24;
 
-// GRID PAGE
-export const INFINITE_SCROLL_INITIAL_GRID = HIGH_DENSITY_GRID
-  ? process.env.NODE_ENV === 'development' ? 4 : 20
-  : process.env.NODE_ENV === 'development' ? 4 : 24;
-export const INFINITE_SCROLL_MULTIPLE_GRID = HIGH_DENSITY_GRID
-  ? process.env.NODE_ENV === 'development' ? 4 : 40
-  : process.env.NODE_ENV === 'development' ? 4 : 48;
+// INFINITE SCROLL: GRID PHOTOS
+export const INFINITE_SCROLL_GRID_PHOTO_INITIAL = HIGH_DENSITY_GRID
+  ? process.env.NODE_ENV === 'development' ? 8 : 20
+  : process.env.NODE_ENV === 'development' ? 8 : 24;
+export const INFINITE_SCROLL_GRID_PHOTO_MULTIPLE = HIGH_DENSITY_GRID
+  ? process.env.NODE_ENV === 'development' ? 8 : 40
+  : process.env.NODE_ENV === 'development' ? 8 : 48;
 
-export const GRID_THUMBNAILS_TO_SHOW_MAX = 12;
+// Thumbnails below /p/[photoId]
+export const RELATED_GRID_PHOTOS_TO_SHOW = 12;
 
 export const ACCEPTED_PHOTO_FILE_TYPES = [
   'image/jpg',

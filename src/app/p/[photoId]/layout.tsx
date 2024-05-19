@@ -1,5 +1,5 @@
 import {
-  GRID_THUMBNAILS_TO_SHOW_MAX,
+  RELATED_GRID_PHOTOS_TO_SHOW,
   descriptionForPhoto,
   titleForPhoto,
 } from '@/photo';
@@ -34,7 +34,7 @@ export async function generateMetadata({
 }:PhotoProps): Promise<Metadata> {
   const { photo } = await getPhotosNearIdCachedCached(
     photoId,
-    GRID_THUMBNAILS_TO_SHOW_MAX + 2,
+    RELATED_GRID_PHOTOS_TO_SHOW + 2,
   );
 
   if (!photo) { return {}; }
@@ -68,7 +68,7 @@ export default async function PhotoPage({
 }: PhotoProps & { children: React.ReactNode }) {
   const { photos, photo } = await getPhotosNearIdCachedCached(
     photoId,
-    GRID_THUMBNAILS_TO_SHOW_MAX + 2,
+    RELATED_GRID_PHOTOS_TO_SHOW + 2,
   );
 
   if (!photo) { redirect(PATH_ROOT); }
@@ -83,8 +83,8 @@ export default async function PhotoPage({
       photosGrid={photos.slice(
         isPhotoFirst ? 1 : 2,
         isPhotoFirst
-          ? GRID_THUMBNAILS_TO_SHOW_MAX + 1
-          : GRID_THUMBNAILS_TO_SHOW_MAX + 2,
+          ? RELATED_GRID_PHOTOS_TO_SHOW + 1
+          : RELATED_GRID_PHOTOS_TO_SHOW + 2,
       )}
     />
   </>;
