@@ -22,7 +22,7 @@ import {
 } from '@/services/storage';
 import {
   getPhotosCached,
-  getPhotosTagHiddenMetaCached,
+  getPhotosMetaCached,
   revalidateAdminPaths,
   revalidateAllKeysAndPaths,
   revalidatePhoto,
@@ -205,21 +205,20 @@ export const streamAiImageQueryAction = async (
 export const getImageBlurAction = async (url: string) =>
   runAuthenticatedAdminServerAction(() => blurImageFromUrl(url));
 
-export const getPhotosTagHiddenMetaCachedAction = async () =>
-  runAuthenticatedAdminServerAction(getPhotosTagHiddenMetaCached);
+export const getPhotosHiddenMetaCachedAction = async () =>
+  runAuthenticatedAdminServerAction(() =>
+    getPhotosMetaCached({ hidden: 'only' }));
 
 // Public/Private actions
 
 export const getPhotosAction = async (options: GetPhotosOptions) =>
   (options.hidden === 'include' || options.hidden === 'only')
-    ? runAuthenticatedAdminServerAction(() =>
-      getPhotos(options))
+    ? runAuthenticatedAdminServerAction(() => getPhotos(options))
     : getPhotos(options);
 
 export const getPhotosCachedAction = async (options: GetPhotosOptions) =>
   (options.hidden === 'include' || options.hidden === 'only')
-    ? runAuthenticatedAdminServerAction(() =>
-      getPhotosCached (options))
+    ? runAuthenticatedAdminServerAction(() => getPhotosCached (options))
     : getPhotosCached(options);
 
 // Public actions
