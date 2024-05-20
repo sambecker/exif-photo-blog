@@ -9,12 +9,14 @@ export default function FilmSimulationHeader({
   simulation,
   photos,
   selectedPhoto,
+  indexNumber,
   count,
   dateRange,
 }: {
   simulation: FilmSimulation
   photos: Photo[]
   selectedPhoto?: Photo
+  indexNumber?: number
   count?: number
   dateRange?: PhotoDateRange
 }) {
@@ -27,6 +29,7 @@ export default function FilmSimulationHeader({
       photos={photos}
       selectedPhoto={selectedPhoto}
       sharePath={pathForFilmSimulationShare(simulation)}
+      indexNumber={indexNumber}
       count={count}
       dateRange={dateRange}
     />

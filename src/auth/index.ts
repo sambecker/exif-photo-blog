@@ -44,7 +44,7 @@ export const {
   },
 });
 
-export const safelyRunAdminServerAction = async <T>(
+export const runAuthenticatedAdminServerAction = async <T>(
   callback: () => T,
 ): Promise<T> => {
   const session = await auth();

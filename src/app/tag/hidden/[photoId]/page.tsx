@@ -1,13 +1,24 @@
-import { descriptionForPhoto, titleForPhoto } from '@/photo';
+import {
+  RELATED_GRID_PHOTOS_TO_SHOW,
+  descriptionForPhoto,
+  titleForPhoto,
+} from '@/photo';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotoCached, getPhotosCached } from '@/photo/cache';
+import {
+  getPhotosNearIdCached,
+  getPhotosTagHiddenMetaCached,
+} from '@/photo/cache';
 import { PATH_ROOT, absolutePathForPhoto } from '@/site/paths';
 import { TAG_HIDDEN } from '@/tag';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 
-const getPhotoCachedCached = cache(getPhotoCached);
+const getPhotosNearIdCachedCached = cache((photoId: string) =>
+  getPhotosNearIdCached(
+    photoId,
+    { hidden: 'only' , limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 },
+  ));
 
 interface PhotoTagProps {
   params: { photoId: string }
@@ -16,7 +27,7 @@ interface PhotoTagProps {
 export async function generateMetadata({
   params: { photoId },
 }: PhotoTagProps): Promise<Metadata> {
-  const photo = await getPhotoCachedCached(photoId, true);
+  const { photo } = await getPhotosNearIdCachedCached(photoId);
 
   if (!photo) { return {}; }
 
@@ -43,14 +54,22 @@ export async function generateMetadata({
 export default async function PhotoTagHiddenPage({
   params: { photoId },
 }: PhotoTagProps) {
-  const photo = await getPhotoCachedCached(photoId, true);
+  const { photo, photos, photosGrid, indexNumber } =
+    await getPhotosNearIdCachedCached(photoId);
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const photos = await getPhotosCached({ hidden: 'only' });
-  const count = photos.length;
+  const { count, dateRange } = await getPhotosTagHiddenMetaCached();
 
   return (
-    <PhotoDetailPage {...{ photo, photos, count, tag: TAG_HIDDEN }} />
+    <PhotoDetailPage {...{
+      photo,
+      photos,
+      photosGrid,
+      indexNumber,
+      count,
+      dateRange,
+      tag: TAG_HIDDEN,
+    }} />
   );
 }

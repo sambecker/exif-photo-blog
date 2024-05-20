@@ -38,7 +38,7 @@ import {
 import { blurImageFromUrl, extractImageDataFromBlobPath } from './server';
 import { TAG_FAVS, isTagFavs } from '@/tag';
 import { convertPhotoToPhotoDbInsert } from '.';
-import { safelyRunAdminServerAction } from '@/auth';
+import { runAuthenticatedAdminServerAction } from '@/auth';
 import { AI_IMAGE_QUERIES, AiImageQuery } from './ai';
 import { streamOpenAiImageQuery } from '@/services/openai';
 import { BLUR_ENABLED } from '@/site/config';
@@ -46,7 +46,7 @@ import { BLUR_ENABLED } from '@/site/config';
 // Private actions
 
 export const createPhotoAction = async (formData: FormData) =>
-  safelyRunAdminServerAction(async () => {
+  runAuthenticatedAdminServerAction(async () => {
     const photo = convertFormDataToPhotoDbInsert(formData, true);
 
     const updatedUrl = await convertUploadToPhoto(photo.url);
@@ -60,7 +60,7 @@ export const createPhotoAction = async (formData: FormData) =>
   });
 
 export const updatePhotoAction = async (formData: FormData) =>
-  safelyRunAdminServerAction(async () => {
+  runAuthenticatedAdminServerAction(async () => {
     const photo = convertFormDataToPhotoDbInsert(formData);
 
     let url: string | undefined;
@@ -82,7 +82,7 @@ export const toggleFavoritePhotoAction = async (
   photoId: string,
   shouldRedirect?: boolean,
 ) =>
-  safelyRunAdminServerAction(async () => {
+  runAuthenticatedAdminServerAction(async () => {
     const photo = await getPhoto(photoId);
     if (photo) {
       const { tags } = photo;
@@ -102,7 +102,7 @@ export const deletePhotoAction = async (
   photoUrl: string,
   shouldRedirect?: boolean,
 ) =>
-  safelyRunAdminServerAction(async () => {
+  runAuthenticatedAdminServerAction(async () => {
     await sqlDeletePhoto(photoId).then(() => deleteStorageUrl(photoUrl));
     revalidateAllKeysAndPaths();
     if (shouldRedirect) {
@@ -111,7 +111,7 @@ export const deletePhotoAction = async (
   });
 
 export const deletePhotoFormAction = async (formData: FormData) =>
-  safelyRunAdminServerAction(() =>
+  runAuthenticatedAdminServerAction(() =>
     deletePhotoAction(
       formData.get('id') as string,
       formData.get('url') as string,
@@ -119,7 +119,7 @@ export const deletePhotoFormAction = async (formData: FormData) =>
   );
 
 export const deletePhotoTagGloballyAction = async (formData: FormData) =>
-  safelyRunAdminServerAction(async () => {
+  runAuthenticatedAdminServerAction(async () => {
     const tag = formData.get('tag') as string;
 
     await sqlDeletePhotoTagGlobally(tag);
@@ -129,7 +129,7 @@ export const deletePhotoTagGloballyAction = async (formData: FormData) =>
   });
 
 export const renamePhotoTagGloballyAction = async (formData: FormData) =>
-  safelyRunAdminServerAction(async () => {
+  runAuthenticatedAdminServerAction(async () => {
     const tag = formData.get('tag') as string;
     const updatedTag = formData.get('updatedTag') as string;
 
@@ -142,7 +142,7 @@ export const renamePhotoTagGloballyAction = async (formData: FormData) =>
   });
 
 export const deleteBlobPhotoAction = async (formData: FormData) =>
-  safelyRunAdminServerAction(async () => {
+  runAuthenticatedAdminServerAction(async () => {
     await deleteStorageUrl(formData.get('url') as string);
 
     revalidateAdminPaths();
@@ -157,7 +157,7 @@ export const deleteBlobPhotoAction = async (formData: FormData) =>
 export const getExifDataAction = async (
   photoFormPrevious: Partial<PhotoFormData>,
 ): Promise<Partial<PhotoFormData>> =>
-  safelyRunAdminServerAction(async () => {
+  runAuthenticatedAdminServerAction(async () => {
     const { url } = photoFormPrevious;
     if (url) {
       const { photoFormExif } = await extractImageDataFromBlobPath(url);
@@ -171,7 +171,7 @@ export const getExifDataAction = async (
 // Accessed from admin photo table
 // will update blur data
 export const syncPhotoExifDataAction = async (formData: FormData) =>
-  safelyRunAdminServerAction(async () => {
+  runAuthenticatedAdminServerAction(async () => {
     const photoId = formData.get('id') as string;
     if (photoId) {
       const photo = await getPhoto(photoId);
@@ -193,32 +193,32 @@ export const syncPhotoExifDataAction = async (formData: FormData) =>
   });
 
 export const syncCacheAction = async () =>
-  safelyRunAdminServerAction(revalidateAllKeysAndPaths);
+  runAuthenticatedAdminServerAction(revalidateAllKeysAndPaths);
 
 export const streamAiImageQueryAction = async (
   imageBase64: string,
   query: AiImageQuery,
 ) =>
-  safelyRunAdminServerAction(() =>
+  runAuthenticatedAdminServerAction(() =>
     streamOpenAiImageQuery(imageBase64, AI_IMAGE_QUERIES[query]));
 
 export const getImageBlurAction = async (url: string) =>
-  safelyRunAdminServerAction(() => blurImageFromUrl(url));
+  runAuthenticatedAdminServerAction(() => blurImageFromUrl(url));
 
 export const getPhotosTagHiddenMetaCachedAction = async () =>
-  safelyRunAdminServerAction(getPhotosTagHiddenMetaCached);
+  runAuthenticatedAdminServerAction(getPhotosTagHiddenMetaCached);
 
 // Public/Private actions
 
 export const getPhotosAction = async (options: GetPhotosOptions) =>
   (options.hidden === 'include' || options.hidden === 'only')
-    ? safelyRunAdminServerAction(() =>
+    ? runAuthenticatedAdminServerAction(() =>
       getPhotos(options))
     : getPhotos(options);
 
 export const getPhotosCachedAction = async (options: GetPhotosOptions) =>
   (options.hidden === 'include' || options.hidden === 'only')
-    ? safelyRunAdminServerAction(() =>
+    ? runAuthenticatedAdminServerAction(() =>
       getPhotosCached (options))
     : getPhotosCached(options);
 

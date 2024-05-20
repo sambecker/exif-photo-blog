@@ -141,11 +141,23 @@ export const getPhotosNearIdCached = (
   ...args: Parameters<typeof getPhotosNearId>
 ) => unstable_cache(
   getPhotosNearId,
-  [KEY_PHOTOS],
-)(...args).then(({ photos, photo }) => ({
-  photos: parseCachedPhotosDates(photos),
-  photo: photo ? parseCachedPhotoDates(photo) : undefined,
-}));
+  [KEY_PHOTOS, ...getPhotosCacheKeys(args[1])],
+)(...args).then(({ photos, indexNumber }) => {
+  const [photoId, { limit }] = args;
+  const photo = photos.find(({ id }) => id === photoId);
+  const isPhotoFirst = photos.findIndex(p => p.id === photoId) === 0;
+  return {
+    photo: photo ? parseCachedPhotoDates(photo) : undefined,
+    photos: parseCachedPhotosDates(photos),
+    ...limit && {
+      photosGrid: photos.slice(
+        isPhotoFirst ? 1 : 2,
+        isPhotoFirst ? limit - 1 : limit,
+      ),
+    },
+    indexNumber,
+  };
+});
 
 export const getPhotosDateRangeCached =
   unstable_cache(

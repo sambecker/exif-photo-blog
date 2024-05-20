@@ -1,5 +1,5 @@
 import {
-  INFINITE_SCROLL_GRID_PHOTO_INITIAL,
+  RELATED_GRID_PHOTOS_TO_SHOW,
   descriptionForPhoto,
   titleForPhoto,
 } from '@/photo';
@@ -11,17 +11,33 @@ import {
   absolutePathForPhotoImage,
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotoCached } from '@/photo/cache';
-import { PhotoCameraProps, cameraFromPhoto } from '@/camera';
-import { getPhotosCameraDataCached } from '@/camera/data';
+import {
+  getPhotosCameraMetaCached,
+  getPhotosNearIdCached,
+} from '@/photo/cache';
+import {
+  PhotoCameraProps,
+  cameraFromPhoto,
+  getCameraFromParams,
+} from '@/camera';
 import { ReactNode, cache } from 'react';
 
-const getPhotoCachedCached = cache(getPhotoCached);
+const getPhotosNearIdCachedCached = cache((
+  photoId: string,
+  make: string,
+  model: string,
+) =>
+  getPhotosNearIdCached(
+    photoId, {
+      camera: getCameraFromParams({ make, model }),
+      limit: RELATED_GRID_PHOTOS_TO_SHOW + 2,
+    },
+  ));
 
 export async function generateMetadata({
   params: { photoId, make, model },
 }: PhotoCameraProps): Promise<Metadata> {
-  const photo = await getPhotoCachedCached(photoId);
+  const { photo } = await getPhotosNearIdCachedCached(photoId, make, model);
 
   if (!photo) { return {}; }
 
@@ -56,22 +72,25 @@ export default async function PhotoCameraPage({
   params: { photoId, make, model },
   children,
 }: PhotoCameraProps & { children: ReactNode }) {
-  const photo = await getPhotoCachedCached(photoId);
+  const { photo, photos, photosGrid, indexNumber } =
+    await getPhotosNearIdCachedCached(photoId, make, model);
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const [
-    photos,
-    { count, dateRange },
-    camera,
-  ] = await getPhotosCameraDataCached(
-    make,
-    model,
-    INFINITE_SCROLL_GRID_PHOTO_INITIAL,
-  );
+  const camera = cameraFromPhoto(photo, { make, model });
+
+  const { count, dateRange } = await getPhotosCameraMetaCached(camera);
 
   return <>
     {children}
-    <PhotoDetailPage {...{ photo, photos, camera, count, dateRange }} />
+    <PhotoDetailPage {...{
+      photo,
+      photos,
+      photosGrid,
+      camera,
+      indexNumber,
+      count,
+      dateRange,
+    }} />
   </>;
 }

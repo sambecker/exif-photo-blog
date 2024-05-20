@@ -488,10 +488,11 @@ export const getPhotosNearId = async (
   );
 }, `getPhotosNearId: ${photoId}`)
   .then(({ rows }) => {
-    const photos = rows.map(parsePhotoFromDb);
+    const photo = rows.find(({ id }) => id === photoId);
+    const indexNumber = photo ? parseInt(photo.row_number) : undefined;
     return {
-      photos,
-      photo: photos.find(photo => photo.id === photoId),
+      photos: rows.map(parsePhotoFromDb),
+      indexNumber,
     };
   });
 
