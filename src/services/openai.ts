@@ -6,7 +6,7 @@ import { createOpenAI } from '@ai-sdk/openai';
 import { kv } from '@vercel/kv';
 import { Ratelimit } from '@upstash/ratelimit';
 import { AI_TEXT_GENERATION_ENABLED, HAS_VERCEL_KV } from '@/site/config';
-import { safelyRunAdminServerAction } from '@/auth';
+import { runAuthenticatedAdminServerAction } from '@/auth';
 import { removeBase64Prefix } from '@/utility/image';
 
 const RATE_LIMIT_IDENTIFIER = 'openai-image-query';
@@ -28,7 +28,7 @@ export const streamOpenAiImageQuery = async (
   imageBase64: string,
   query: string,
 ) => {
-  return safelyRunAdminServerAction(async () => {
+  return runAuthenticatedAdminServerAction(async () => {
     if (ratelimit) {
       let success = false;
       try {

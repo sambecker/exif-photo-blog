@@ -97,7 +97,7 @@ export default function AdminNavClient({
           </div>
           {shouldShowBanner &&
             <Banner icon={<FaRegClock className="flex-shrink-0" />}>
-              Photo updates detected—they may take several minutes to show upe
+              Photo updates detected—they may take several minutes to show up
               for visitors
             </Banner>}
         </div>

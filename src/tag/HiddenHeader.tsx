@@ -5,10 +5,12 @@ import HiddenTag from './HiddenTag';
 export default function HiddenHeader({
   photos,
   selectedPhoto,
+  indexNumber,
   count,
 }: {
   photos: Photo[]
   selectedPhoto?: Photo
+  indexNumber?: number
   count: number
 }) {
   return (
@@ -18,6 +20,8 @@ export default function HiddenHeader({
       entityDescription={photoQuantityText(count, false)}
       photos={photos}
       selectedPhoto={selectedPhoto}
+      indexNumber={indexNumber}
+      count={count}
     />
   );
 }

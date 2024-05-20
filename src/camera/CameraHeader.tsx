@@ -9,12 +9,14 @@ export default function CameraHeader({
   camera: cameraProp,
   photos,
   selectedPhoto,
+  indexNumber,
   count,
   dateRange,
 }: {
   camera: Camera
   photos: Photo[]
   selectedPhoto?: Photo
+  indexNumber?: number
   count?: number
   dateRange?: PhotoDateRange
 }) {
@@ -28,6 +30,7 @@ export default function CameraHeader({
       photos={photos}
       selectedPhoto={selectedPhoto}
       sharePath={pathForCameraShare(camera)}
+      indexNumber={indexNumber}
       count={count}
       dateRange={dateRange}
     />

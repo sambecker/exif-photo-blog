@@ -20,6 +20,7 @@ export default function PhotoDetailPage({
   tag,
   camera,
   simulation,
+  indexNumber,
   count,
   dateRange,
 }: {
@@ -29,6 +30,7 @@ export default function PhotoDetailPage({
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
+  indexNumber?: number
   count?: number
   dateRange?: PhotoDateRange
 }) {
@@ -41,6 +43,7 @@ export default function PhotoDetailPage({
             ? <HiddenHeader
               photos={photos}
               selectedPhoto={photo}
+              indexNumber={indexNumber}
               count={count ?? 0}
             />
             : <TagHeader
@@ -48,6 +51,8 @@ export default function PhotoDetailPage({
               tag={tag}
               photos={photos}
               selectedPhoto={photo}
+              indexNumber={indexNumber}
+              count={count}
               dateRange={dateRange}
             />}
         />}
@@ -59,6 +64,7 @@ export default function PhotoDetailPage({
               camera={camera}
               photos={photos}
               selectedPhoto={photo}
+              indexNumber={indexNumber}
               count={count}
               dateRange={dateRange}
             />}
@@ -71,6 +77,7 @@ export default function PhotoDetailPage({
               simulation={simulation}
               photos={photos}
               selectedPhoto={photo}
+              indexNumber={indexNumber}
               count={count}
               dateRange={dateRange}
             />}
@@ -100,6 +107,8 @@ export default function PhotoDetailPage({
           photos={photosGrid ?? photos}
           selectedPhoto={photo}
           tag={tag}
+          camera={camera}
+          simulation={simulation}
           animateOnFirstLoadOnly
         />}
         contentSide={<AnimateItems

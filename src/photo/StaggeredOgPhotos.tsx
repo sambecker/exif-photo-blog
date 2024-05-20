@@ -11,9 +11,11 @@ type PhotoLoadingState = Record<string, OGLoadingState>;
 export default function StaggeredOgPhotos({
   photos,
   maxConcurrency = DEFAULT_MAX_CONCURRENCY,
+  onLastPhotoVisible,
 }: {
   photos: Photo[]
   maxConcurrency?: number
+  onLastPhotoVisible?: () => void
 }) {
   const [loadingState, setLoadingState] = useState(
     photos.reduce((acc, photo) => ({
@@ -52,13 +54,20 @@ export default function StaggeredOgPhotos({
     recomputeLoadingState();
   }, [recomputeLoadingState]);
 
-  return photos.map(photo =>
-    <PhotoOGTile
-      key={photo.id}
-      photo={photo}
-      loadingState={loadingState[photo.id]}
-      onLoad={() => recomputeLoadingState({ [photo.id]: 'loaded' })}
-      onFail={() => recomputeLoadingState({ [photo.id]: 'failed' })}
-      riseOnHover
-    />);
+  return (
+    <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      {photos.map((photo, index) =>
+        <PhotoOGTile
+          key={photo.id}
+          photo={photo}
+          loadingState={loadingState[photo.id]}
+          onLoad={() => recomputeLoadingState({ [photo.id]: 'loaded' })}
+          onFail={() => recomputeLoadingState({ [photo.id]: 'failed' })}
+          onVisible={index === photos.length - 1
+            ? onLastPhotoVisible
+            :undefined}
+          riseOnHover
+        />)}
+    </div>
+  );
 };

@@ -3,17 +3,18 @@ import Banner from '@/components/Banner';
 import SiteGrid from '@/components/SiteGrid';
 import PhotoGrid from '@/photo/PhotoGrid';
 import { getPhotosNoStore } from '@/photo/cache';
-import { getPhotosTagHiddenMeta } from '@/photo/db';
+import { getPhotosMeta } from '@/photo/db/query';
 import { absolutePathForTag } from '@/site/paths';
 import { TAG_HIDDEN, descriptionForTaggedPhotos, titleForTag } from '@/tag';
 import HiddenHeader from '@/tag/HiddenHeader';
 import { Metadata } from 'next';
 import { cache } from 'react';
 
-const getPhotosTagHiddenMetaCached = cache(getPhotosTagHiddenMeta);
+const getPhotosHiddenMetaCached = cache(() =>
+  getPhotosMeta({ hidden: 'only' }));
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { count, dateRange } = await getPhotosTagHiddenMetaCached();
+  const { count, dateRange } = await getPhotosHiddenMetaCached();
 
   if (count === 0) { return {}; }
 
@@ -47,7 +48,7 @@ export default async function HiddenTagPage() {
     { count, dateRange },
   ] = await Promise.all([
     getPhotosNoStore({ hidden: 'only' }),
-    getPhotosTagHiddenMetaCached(),
+    getPhotosHiddenMetaCached(),
   ]);
 
   return (

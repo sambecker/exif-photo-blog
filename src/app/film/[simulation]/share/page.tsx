@@ -1,13 +1,16 @@
-import { GRID_THUMBNAILS_TO_SHOW_MAX } from '@/photo';
+import { INFINITE_SCROLL_GRID_PHOTO_INITIAL } from '@/photo';
 import { FilmSimulation, generateMetaForFilmSimulation } from '@/simulation';
 import FilmSimulationOverview from '@/simulation/FilmSimulationOverview';
 import FilmSimulationShareModal from '@/simulation/FilmSimulationShareModal';
-import {
-  getPhotosFilmSimulationDataCached,
-  getPhotosFilmSimulationDataCachedWithPagination,
-} from '@/simulation/data';
-import { PaginationParams } from '@/site/pagination';
+import { getPhotosFilmSimulationDataCached } from '@/simulation/data';
 import { Metadata } from 'next/types';
+import { cache } from 'react';
+
+const getPhotosFilmSimulationDataCachedCached =
+  cache((simulation: FilmSimulation) => getPhotosFilmSimulationDataCached({
+    simulation,
+    limit: INFINITE_SCROLL_GRID_PHOTO_INITIAL,
+  }));
 
 interface FilmSimulationProps {
   params: { simulation: FilmSimulation }
@@ -19,10 +22,7 @@ export async function generateMetadata({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosFilmSimulationDataCached({
-    simulation,
-    limit: GRID_THUMBNAILS_TO_SHOW_MAX,
-  });
+  ] = await getPhotosFilmSimulationDataCachedCached(simulation);
 
   const {
     url,
@@ -50,22 +50,16 @@ export async function generateMetadata({
 
 export default async function Share({
   params: { simulation },
-  searchParams,
-}: FilmSimulationProps & PaginationParams) {
-  const {
+}: FilmSimulationProps) {
+  const [
     photos,
-    count,
-    dateRange,
-    showMorePath,
-  } = await getPhotosFilmSimulationDataCachedWithPagination({
-    simulation,
-    searchParams,
-  });
+    { count, dateRange },
+  ] = await getPhotosFilmSimulationDataCachedCached(simulation);
 
   return <>
     <FilmSimulationShareModal {...{ simulation, photos, count, dateRange }} />
     <FilmSimulationOverview
-      {...{ simulation, photos, count, dateRange, showMorePath }}
+      {...{ simulation, photos, count, dateRange }}
       animateOnFirstLoadOnly
     />
   </>;

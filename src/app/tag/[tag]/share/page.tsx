@@ -1,13 +1,13 @@
-import { GRID_THUMBNAILS_TO_SHOW_MAX } from '@/photo';
-import { PaginationParams } from '@/site/pagination';
+import { INFINITE_SCROLL_GRID_PHOTO_INITIAL } from '@/photo';
 import { generateMetaForTag } from '@/tag';
 import TagOverview from '@/tag/TagOverview';
 import TagShareModal from '@/tag/TagShareModal';
-import {
-  getPhotosTagDataCached,
-  getPhotosTagDataCachedWithPagination,
-} from '@/tag/data';
+import { getPhotosTagDataCached } from '@/tag/data';
 import type { Metadata } from 'next';
+import { cache } from 'react';
+
+const getPhotosTagDataCachedCached = cache((tag: string) =>
+  getPhotosTagDataCached({ tag, limit: INFINITE_SCROLL_GRID_PHOTO_INITIAL }));
 
 interface TagProps {
   params: { tag: string }
@@ -21,10 +21,7 @@ export async function generateMetadata({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosTagDataCached({
-    tag,
-    limit: GRID_THUMBNAILS_TO_SHOW_MAX,
-  });
+  ] = await getPhotosTagDataCachedCached(tag);
 
   const {
     url,
@@ -52,24 +49,18 @@ export async function generateMetadata({
 
 export default async function Share({
   params: { tag: tagFromParams },
-  searchParams,
-}: TagProps & PaginationParams) {
+}: TagProps) {
   const tag = decodeURIComponent(tagFromParams);
-  
-  const {
+
+  const [
     photos,
-    count,
-    dateRange,
-    showMorePath,
-  } = await getPhotosTagDataCachedWithPagination({
-    tag,
-    searchParams,
-  });
+    { count, dateRange },
+  ] = await getPhotosTagDataCachedCached(tag);
 
   return <>
     <TagShareModal {...{ tag, photos, count, dateRange }} />
     <TagOverview
-      {...{ tag, photos, count, dateRange, showMorePath }}
+      {...{ tag, photos, count, dateRange }}
       animateOnFirstLoadOnly
     />
   </>;

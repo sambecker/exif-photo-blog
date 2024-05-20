@@ -1,51 +1,22 @@
-import { 
-  PaginationSearchParams,
-  getPaginationFromSearchParams,
-} from '@/site/pagination';
-import { Camera } from '.';
+import { cameraFromPhoto, getCameraFromParams } from '.';
 import {
   getPhotosCached,
-  getPhotosCameraMetaCached,
+  getPhotosMetaCached,
 } from '@/photo/cache';
-import { pathForCamera } from '@/site/paths';
 
-export const getPhotosCameraDataCached = ({
-  camera,
-  limit,
-}: {
-  camera: Camera,
-  limit?: number,
-}) =>
-  Promise.all([
+export const getPhotosCameraDataCached = async (
+  make: string,
+  model: string,
+  limit: number,
+) => {
+  const camera = getCameraFromParams({ make, model });
+  return Promise.all([
     getPhotosCached({ camera, limit }),
-    getPhotosCameraMetaCached(camera),
-  ]);
-
-export const getPhotosCameraDataCachedWithPagination = async ({
-  camera,
-  limit: limitProp,
-  searchParams,
-}: {
-  camera: Camera,
-  limit?: number,
-  searchParams?: PaginationSearchParams,
-}) => {
-  const { offset, limit } = getPaginationFromSearchParams(searchParams);
-
-  const [photos, { count, dateRange }] =
-    await getPhotosCameraDataCached({
-      camera,
-      limit: limitProp ?? limit,
-    });
-
-  const showMorePath = count > photos.length
-    ? pathForCamera(camera, offset + 1)
-    : undefined;
-
-  return {
-    photos,
-    count,
-    dateRange,
-    showMorePath,
-  };
+    getPhotosMetaCached({ camera }),
+  ])
+    .then(([photos, meta]) => [
+      photos,
+      meta,
+      cameraFromPhoto(photos[0], camera),
+    ] as const);
 };

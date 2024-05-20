@@ -13,26 +13,31 @@ import { getPhotosCachedAction, getPhotosAction } from '@/photo/actions';
 import { Photo } from '.';
 import { clsx } from 'clsx/lite';
 import { useAppState } from '@/state/AppState';
+import { Camera } from '@/camera';
+import { FilmSimulation } from '@/simulation';
 
 export type RevalidatePhoto = (
   photoId: string,
   revalidateRemainingPhotos?: boolean,
 ) => Promise<any>;
 
-export type InfinitePhotoScrollExternalProps = {
-  initialOffset: number
-  itemsPerPage: number
-}
-
 export default function InfinitePhotoScroll({
   cacheKey,
   initialOffset,
   itemsPerPage,
+  tag,
+  camera,
+  simulation,
   wrapMoreButtonInGrid,
   useCachedPhotos = true,
   includeHiddenPhotos,
   children,
-}: InfinitePhotoScrollExternalProps & {
+}: {
+  initialOffset: number
+  itemsPerPage: number
+  tag?: string
+  camera?: Camera
+  simulation?: FilmSimulation
   cacheKey: string
   wrapMoreButtonInGrid?: boolean
   useCachedPhotos?: boolean
@@ -55,17 +60,31 @@ export default function InfinitePhotoScroll({
 
   const fetcher = useCallback(([_key, size]: [string, number]) =>
     useCachedPhotos
-      ? getPhotosCachedAction(
-        initialOffset + size * itemsPerPage,
-        itemsPerPage,
-        includeHiddenPhotos ? 'include' : 'exclude',
-      )
-      : getPhotosAction(
-        initialOffset + size * itemsPerPage,
-        itemsPerPage,
-        includeHiddenPhotos ? 'include' : 'exclude',
-      )
-  , [useCachedPhotos, initialOffset, itemsPerPage, includeHiddenPhotos]);
+      ? getPhotosCachedAction({
+        offset: initialOffset + size * itemsPerPage,
+        limit: itemsPerPage,
+        hidden: includeHiddenPhotos ? 'include' : 'exclude',
+        tag,
+        camera,
+        simulation,
+      })
+      : getPhotosAction({
+        offset: initialOffset + size * itemsPerPage,
+        limit: itemsPerPage,
+        hidden: includeHiddenPhotos ? 'include' : 'exclude',
+        tag,
+        camera,
+        simulation,
+      })
+  , [
+    useCachedPhotos,
+    initialOffset,
+    itemsPerPage,
+    includeHiddenPhotos,
+    tag,
+    camera,
+    simulation,
+  ]);
 
   const { data, isLoading, isValidating, error, mutate, setSize } =
     useSwrInfinite<Photo[]>(

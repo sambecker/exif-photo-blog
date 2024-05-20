@@ -1,4 +1,5 @@
 import {
+  RELATED_GRID_PHOTOS_TO_SHOW,
   descriptionForPhoto,
   titleForPhoto,
 } from '@/photo';
@@ -10,13 +11,21 @@ import {
   absolutePathForPhotoImage,
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotoCached } from '@/photo/cache';
 import { ReactNode, cache } from 'react';
 import { FilmSimulation } from '@/simulation';
-import { getPhotosFilmSimulationDataCached } from '@/simulation/data';
+import {
+  getPhotosMetaCached,
+  getPhotosNearIdCached,
+} from '@/photo/cache';
 
-const getPhotoCachedCached =
-  cache((photoId: string) => getPhotoCached(photoId));
+const getPhotosNearIdCachedCached = cache((
+  photoId: string,
+  simulation: FilmSimulation,
+) =>
+  getPhotosNearIdCached(
+    photoId,
+    { simulation, limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 },
+  ));
 
 interface PhotoFilmSimulationProps {
   params: { photoId: string, simulation: FilmSimulation }
@@ -25,7 +34,7 @@ interface PhotoFilmSimulationProps {
 export async function generateMetadata({
   params: { photoId, simulation },
 }: PhotoFilmSimulationProps): Promise<Metadata> {
-  const photo = await getPhotoCachedCached(photoId);
+  const { photo } = await getPhotosNearIdCachedCached(photoId, simulation);
 
   if (!photo) { return {}; }
 
@@ -56,17 +65,23 @@ export default async function PhotoFilmSimulationPage({
   params: { photoId, simulation },
   children,
 }: PhotoFilmSimulationProps & { children: ReactNode }) {
-  const photo = await getPhotoCachedCached(photoId);
+  const { photo, photos, photosGrid, indexNumber } =
+    await getPhotosNearIdCachedCached(photoId, simulation);
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const [
-    photos,
-    { count, dateRange },
-  ] = await getPhotosFilmSimulationDataCached({ simulation });
+  const { count, dateRange } = await getPhotosMetaCached({ simulation });
 
   return <>
     {children}
-    <PhotoDetailPage {...{ photo, photos, simulation, count, dateRange }} />
+    <PhotoDetailPage {...{
+      photo,
+      photos,
+      photosGrid,
+      simulation,
+      indexNumber,
+      count,
+      dateRange,
+    }} />
   </>;
 }

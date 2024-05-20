@@ -1,15 +1,15 @@
 import PhotoUpload from '@/photo/PhotoUpload';
 import { clsx } from 'clsx/lite';
 import SiteGrid from '@/components/SiteGrid';
-import { getPhotosCountIncludingHiddenCached } from '@/photo/cache';
 import AdminUploadsTable from '@/admin/AdminUploadsTable';
 import { PRO_MODE_ENABLED } from '@/site/config';
 import { getStoragePhotoUrlsNoStore } from '@/services/storage/cache';
-import { getPhotos } from '@/photo/db';
+import { getPhotos } from '@/photo/db/query';
 import { revalidatePath } from 'next/cache';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import AdminPhotosTableInfinite from
   '@/admin/AdminPhotosTableInfinite';
+import { getPhotosMetaCached } from '@/photo/cache';
 
 const DEBUG_PHOTO_BLOBS = false;
 
@@ -27,7 +27,9 @@ export default async function AdminPhotosPage() {
       sortBy: 'createdAt',
       limit: INFINITE_SCROLL_INITIAL_ADMIN_PHOTOS,
     }).catch(() => []),
-    getPhotosCountIncludingHiddenCached().catch(() => 0),
+    getPhotosMetaCached({ hidden: 'include'})
+      .then(({ count }) => count)
+      .catch(() => 0),
     DEBUG_PHOTO_BLOBS
       ? getStoragePhotoUrlsNoStore()
       : [],

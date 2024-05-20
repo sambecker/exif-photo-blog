@@ -1,31 +1,29 @@
-import {
-  CameraProps,
-  cameraFromPhoto,
-  getCameraFromParams,
-} from '@/camera';
+import { CameraProps } from '@/camera';
 import CameraShareModal from '@/camera/CameraShareModal';
 import { generateMetaForCamera } from '@/camera/meta';
 import { Metadata } from 'next/types';
-import { GRID_THUMBNAILS_TO_SHOW_MAX } from '@/photo';
-import { PaginationParams } from '@/site/pagination';
-import {
-  getPhotosCameraDataCached,
-  getPhotosCameraDataCachedWithPagination,
-} from '@/camera/data';
+import { INFINITE_SCROLL_GRID_PHOTO_INITIAL } from '@/photo';
+import { getPhotosCameraDataCached } from '@/camera/data';
 import CameraOverview from '@/camera/CameraOverview';
+import { cache } from 'react';
+
+const getPhotosCameraDataCachedCached = cache((
+  make: string,
+  model: string,
+) => getPhotosCameraDataCached(
+  make,
+  model,
+  INFINITE_SCROLL_GRID_PHOTO_INITIAL,
+));
 
 export async function generateMetadata({
-  params,
+  params: { make, model },
 }: CameraProps): Promise<Metadata> {
-  const camera = getCameraFromParams(params);
-
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosCameraDataCached({
     camera,
-    limit: GRID_THUMBNAILS_TO_SHOW_MAX,
-  });
+  ] = await getPhotosCameraDataCachedCached(make, model);
 
   const {
     url,
@@ -51,28 +49,17 @@ export async function generateMetadata({
   };
 }
 
-export default async function Share({
-  params,
-  searchParams,
-}: CameraProps & PaginationParams) {
-  const cameraFromParams = getCameraFromParams(params);
-
-  const {
+export default async function Share({ params: { make, model } }: CameraProps) {
+  const [
     photos,
-    count,
-    dateRange,
-    showMorePath,
-  } = await getPhotosCameraDataCachedWithPagination({
-    camera: cameraFromParams,
-    searchParams,
-  });
-
-  const camera = cameraFromPhoto(photos[0], cameraFromParams);
+    { count, dateRange },
+    camera,
+  ] = await getPhotosCameraDataCachedCached(make, model);
 
   return <>
     <CameraShareModal {...{ camera, photos, count, dateRange }} />
     <CameraOverview
-      {...{ camera, photos, count, dateRange, showMorePath }}
+      {...{ camera, photos, count, dateRange }}
       animateOnFirstLoadOnly
     />
   </>;
