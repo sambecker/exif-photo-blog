@@ -12,10 +12,8 @@ import {
   getPhotosCountIncludingHidden,
   getUniqueCameras,
   getUniqueTags,
-  getPhotosCameraMeta,
   getUniqueTagsHidden,
   getUniqueFilmSimulations,
-  getPhotosFilmSimulationMeta,
   getPhotosDateRange,
   getPhotosNearId,
   getPhotosMostRecentUpdate,
@@ -187,18 +185,6 @@ export const getPhotosMostRecentUpdateCached =
   unstable_cache(
     () => getPhotosMostRecentUpdate(),
     [KEY_PHOTOS, KEY_COUNT, KEY_DATE_RANGE],
-  );
-
-export const getPhotosCameraMetaCached =
-  unstable_cache(
-    getPhotosCameraMeta,
-    [KEY_PHOTOS, KEY_CAMERAS, KEY_DATE_RANGE],
-  );
-
-export const getPhotosFilmSimulationMetaCached =
-  unstable_cache(
-    getPhotosFilmSimulationMeta,
-    [KEY_PHOTOS, KEY_FILM_SIMULATIONS, KEY_DATE_RANGE],
   );
 
 export const getPhotoCached = (...args: Parameters<typeof getPhoto>) =>

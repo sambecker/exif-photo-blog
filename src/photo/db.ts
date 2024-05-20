@@ -199,34 +199,6 @@ const sqlGetPhotosDateRange = async () => sql`
     ? rows[0] as PhotoDateRange
     : undefined);
 
-const sqlGetPhotosCameraMeta = async (camera: Camera) => sql`
-  SELECT COUNT(*), MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
-  FROM photos
-  WHERE
-  LOWER(REPLACE(make, ' ', '-'))=${parameterize(camera.make, true)} AND
-  LOWER(REPLACE(model, ' ', '-'))=${parameterize(camera.model, true)} AND
-  hidden IS NOT TRUE
-`.then(({ rows }) => ({
-    count: parseInt(rows[0].count, 10),
-    ...rows[0]?.start && rows[0]?.end
-      ? { dateRange: rows[0] as PhotoDateRange }
-      : undefined,
-  }));
-
-const sqlGetPhotosFilmSimulationMeta = async (
-  simulation: FilmSimulation,
-) => sql`
-  SELECT COUNT(*), MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
-  FROM photos
-  WHERE film_simulation=${simulation} AND
-  hidden IS NOT TRUE
-`.then(({ rows }) => ({
-    count: parseInt(rows[0].count, 10),
-    ...rows[0]?.start && rows[0]?.end
-      ? { dateRange: rows[0] as PhotoDateRange }
-      : undefined,
-  }));
-
 const sqlGetUniqueTags = async () => sql`
   SELECT DISTINCT unnest(tags) as tag, COUNT(*)
   FROM photos
@@ -553,26 +525,12 @@ export const getPhotosMostRecentUpdate = () =>
     'getPhotosMostRecentUpdate',
   );
 
-// TAGS
+// UNIQUE META
 export const getUniqueTags = () =>
   safelyQueryPhotos(sqlGetUniqueTags, 'getUniqueTags');
 export const getUniqueTagsHidden = () =>
   safelyQueryPhotos(sqlGetUniqueTagsHidden, 'getUniqueTagsHidden');
-
-// CAMERAS
 export const getUniqueCameras = () =>
   safelyQueryPhotos(sqlGetUniqueCameras, 'getUniqueCameras');
-export const getPhotosCameraMeta = (camera: Camera) =>
-  safelyQueryPhotos(
-    () => sqlGetPhotosCameraMeta(camera),
-    'getPhotosCameraMeta',
-  );
-
-// FILM SIMULATIONS
 export const getUniqueFilmSimulations = () =>
   safelyQueryPhotos(sqlGetUniqueFilmSimulations, 'getUniqueFilmSimulations');
-export const getPhotosFilmSimulationMeta =
-  (simulation: FilmSimulation) => safelyQueryPhotos(
-    () => sqlGetPhotosFilmSimulationMeta(simulation),
-    'getPhotosFilmSimulationMeta',
-  );
