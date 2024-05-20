@@ -182,52 +182,64 @@ const sqlGetPhotosMostRecentUpdate = async () => sql`
   SELECT updated_at FROM photos ORDER BY updated_at DESC LIMIT 1
 `.then(({ rows }) => rows[0] ? rows[0].updated_at as Date : undefined);
 
-const sqlGetUniqueTags = async () => sql`
-  SELECT DISTINCT unnest(tags) as tag, COUNT(*)
-  FROM photos
-  WHERE hidden IS NOT TRUE
-  GROUP BY tag
-  ORDER BY tag ASC
-`.then(({ rows }): TagsWithMeta => rows.map(({ tag, count }) => ({
-    tag: tag as string,
-    count: parseInt(count, 10),
-  })));
-
-const sqlGetUniqueTagsHidden = async () => sql`
-  SELECT DISTINCT unnest(tags) as tag, COUNT(*)
-  FROM photos
-  GROUP BY tag
-  ORDER BY tag ASC
-`.then(({ rows }): TagsWithMeta => rows.map(({ tag, count }) => ({
-    tag: tag as string,
-    count: parseInt(count, 10),
-  })));
-
-const sqlGetUniqueCameras = async () => sql`
-  SELECT DISTINCT make||' '||model as camera, make, model, COUNT(*)
-  FROM photos
-  WHERE hidden IS NOT TRUE
-  AND trim(make) <> ''
-  AND trim(model) <> ''
-  GROUP BY make, model
-  ORDER BY camera ASC
-`.then(({ rows }): Cameras => rows.map(({ make, model, count }) => ({
-    cameraKey: createCameraKey({ make, model }),
-    camera: { make, model },
-    count: parseInt(count, 10),
-  })));
-
-const sqlGetUniqueFilmSimulations = async () => sql`
-  SELECT DISTINCT film_simulation, COUNT(*)
-  FROM photos
-  WHERE hidden IS NOT TRUE AND film_simulation IS NOT NULL
-  GROUP BY film_simulation
-  ORDER BY film_simulation ASC
-`.then(({ rows }): FilmSimulations => rows
-    .map(({ film_simulation, count }) => ({
-      simulation: film_simulation as FilmSimulation,
+export const getUniqueTags = async () =>
+  safelyQueryPhotos(() => sql`
+    SELECT DISTINCT unnest(tags) as tag, COUNT(*)
+    FROM photos
+    WHERE hidden IS NOT TRUE
+    GROUP BY tag
+    ORDER BY tag ASC
+  `.then(({ rows }): TagsWithMeta => rows.map(({ tag, count }) => ({
+      tag: tag as string,
       count: parseInt(count, 10),
-    })));
+    }))),
+  'getUniqueTags',
+  );
+
+export const getUniqueTagsHidden = async () =>
+  safelyQueryPhotos(() => sql`
+    SELECT DISTINCT unnest(tags) as tag, COUNT(*)
+    FROM photos
+    GROUP BY tag
+    ORDER BY tag ASC
+  `.then(({ rows }): TagsWithMeta => rows.map(({ tag, count }) => ({
+      tag: tag as string,
+      count: parseInt(count, 10),
+    }))),
+  'getUniqueTagsHidden',
+  );
+
+export const getUniqueCameras = async () =>
+  safelyQueryPhotos(() => sql`
+    SELECT DISTINCT make||' '||model as camera, make, model, COUNT(*)
+    FROM photos
+    WHERE hidden IS NOT TRUE
+    AND trim(make) <> ''
+    AND trim(model) <> ''
+    GROUP BY make, model
+    ORDER BY camera ASC
+  `.then(({ rows }): Cameras => rows.map(({ make, model, count }) => ({
+      cameraKey: createCameraKey({ make, model }),
+      camera: { make, model },
+      count: parseInt(count, 10),
+    }))),
+  'getUniqueCameras',
+  );
+
+export const getUniqueFilmSimulations = async () =>
+  safelyQueryPhotos(() => sql`
+    SELECT DISTINCT film_simulation, COUNT(*)
+    FROM photos
+    WHERE hidden IS NOT TRUE AND film_simulation IS NOT NULL
+    GROUP BY film_simulation
+    ORDER BY film_simulation ASC
+  `.then(({ rows }): FilmSimulations => rows
+      .map(({ film_simulation, count }) => ({
+        simulation: film_simulation as FilmSimulation,
+        count: parseInt(count, 10),
+      }))),
+  'getUniqueFilmSimulations',
+  );
 
 export type GetPhotosOptions = {
   sortBy?: 'createdAt' | 'takenAt' | 'priority'
@@ -484,27 +496,17 @@ export const getPhotoIds = async ({ limit }: { limit?: number }) =>
 export const getPhoto = async (
   id: string,
   includeHidden?: boolean,
-): Promise<Photo | undefined> => {
-  // Check for photo id forwarding
-  // and convert short ids to uuids
-  const photoId = translatePhotoId(id);
-  return safelyQueryPhotos(() =>
-    sqlGetPhoto(photoId, includeHidden), 'sqlGetPhoto')
+): Promise<Photo | undefined> =>
+  safelyQueryPhotos(() => {
+    // Check for photo id forwarding and convert short ids to uuids
+    const photoId = translatePhotoId(id);
+    return sqlGetPhoto(photoId, includeHidden);
+  }, 'sqlGetPhoto')
     .then(({ rows }) => rows.map(parsePhotoFromDb))
     .then(photos => photos.length > 0 ? photos[0] : undefined);
-};
+
 export const getPhotosMostRecentUpdate = () =>
   safelyQueryPhotos(
     sqlGetPhotosMostRecentUpdate,
     'getPhotosMostRecentUpdate',
   );
-
-// UNIQUE META
-export const getUniqueTags = () =>
-  safelyQueryPhotos(sqlGetUniqueTags, 'getUniqueTags');
-export const getUniqueTagsHidden = () =>
-  safelyQueryPhotos(sqlGetUniqueTagsHidden, 'getUniqueTagsHidden');
-export const getUniqueCameras = () =>
-  safelyQueryPhotos(sqlGetUniqueCameras, 'getUniqueCameras');
-export const getUniqueFilmSimulations = () =>
-  safelyQueryPhotos(sqlGetUniqueFilmSimulations, 'getUniqueFilmSimulations');
