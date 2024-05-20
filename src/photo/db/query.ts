@@ -312,9 +312,22 @@ export const getPhotos = async (options: GetPhotosOptions = {}) =>
     sql.push(limitAndOffset);
     values.push(...limitAndOffsetValues);
 
-    return query(sql.join(' '), values)
-      .then(({ rows }) => rows.map(parsePhotoFromDb));
-  }, 'getPhotos');
+    console.log('getPhotos 01', {
+      sql: sql.join(' '),
+      values,
+    });
+
+    return query(sql.join(' '), values);
+  }, 'getPhotos')
+    .then(response => {
+      console.log('getPhotos 02', response);
+      console.log('getPhotos 03', response.rows);
+      return response.rows.map(parsePhotoFromDb);
+    })
+    .catch(e => {
+      console.log('getPhotos 04', e);
+      return [];
+    });
 
 export const getPhotosNearId = async (
   photoId: string,
