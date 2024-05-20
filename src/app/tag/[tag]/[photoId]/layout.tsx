@@ -13,7 +13,7 @@ import {
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotosNearIdCached } from '@/photo/cache';
 import { ReactNode, cache } from 'react';
-import { getPhotosMeta } from '@/photo/db';
+import { getPhotosMeta } from '@/photo/db/query';
 
 const getPhotosNearIdCachedCached = cache((photoId: string, tag: string) =>
   getPhotosNearIdCached(

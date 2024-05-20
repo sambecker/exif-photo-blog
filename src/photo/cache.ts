@@ -5,7 +5,6 @@ import {
   unstable_noStore,
 } from 'next/cache';
 import {
-  GetPhotosOptions,
   getPhoto,
   getPhotos,
   getUniqueCameras,
@@ -15,7 +14,8 @@ import {
   getPhotosNearId,
   getPhotosMostRecentUpdate,
   getPhotosMeta,
-} from '@/photo/db';
+} from '@/photo/db/query';
+import { GetPhotosOptions } from './db';
 import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
 import { createCameraKey } from '@/camera';
 import {

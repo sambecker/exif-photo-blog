@@ -13,7 +13,8 @@ import {
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotosNearIdCached } from '@/photo/cache';
 import { IS_PRODUCTION, STATICALLY_OPTIMIZED_PAGES } from '@/site/config';
-import { GENERATE_STATIC_PARAMS_LIMIT, getPhotoIds } from '@/photo/db';
+import { getPhotoIds } from '@/photo/db/query';
+import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { ReactNode, cache } from 'react';
 
 const getPhotosNearIdCachedCached = cache((photoId: string) =>

@@ -11,28 +11,16 @@ import {
   Photo,
   PhotoDateRange,
 } from '@/photo';
-import { Camera, Cameras, createCameraKey } from '@/camera';
-import { parameterize } from '@/utility/string';
+import { Cameras, createCameraKey } from '@/camera';
 import { TagsWithMeta } from '@/tag';
 import { FilmSimulation, FilmSimulations } from '@/simulation';
-import { SHOULD_DEBUG_SQL, PRIORITY_ORDER_ENABLED } from '@/site/config';
-
-export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
-
-const PHOTO_DEFAULT_LIMIT = 100;
-
-export type GetPhotosOptions = {
-  sortBy?: 'createdAt' | 'takenAt' | 'priority'
-  limit?: number
-  offset?: number
-  query?: string
-  tag?: string
-  camera?: Camera
-  simulation?: FilmSimulation
-  takenBefore?: Date
-  takenAfterInclusive?: Date
-  hidden?: 'exclude' | 'include' | 'only'
-}
+import { SHOULD_DEBUG_SQL } from '@/site/config';
+import {
+  GetPhotosOptions,
+  getLimitAndOffsetFromOptions,
+  getOrderByFromOptions,
+} from '.';
+import { getWheresFromOptions } from '.';
 
 const createPhotosTable = () =>
   sql`
@@ -75,6 +63,55 @@ const runMigration01 = () =>
     ADD COLUMN IF NOT EXISTS caption TEXT,
     ADD COLUMN IF NOT EXISTS semantic_description TEXT
   `;
+
+// Wrapper for most queries for JIT table creation/migration running
+const safelyQueryPhotos = async <T>(
+  callback: () => Promise<T>,
+  debugMessage: string
+): Promise<T> => {
+  let result: T;
+
+  const start = new Date();
+
+  try {
+    result = await callback();
+  } catch (e: any) {
+    if (MIGRATION_FIELDS_01.some(field => new RegExp(
+      `column "${field}" of relation "photos" does not exist`,
+      'i',
+    ).test(e.message))) {
+      console.log('Running migration 01 ...');
+      await runMigration01();
+      result = await callback();
+    } else if (/relation "photos" does not exist/i.test(e.message)) {
+      // If the table does not exist, create it
+      console.log('Creating photos table ...');
+      await createPhotosTable();
+      result = await callback();
+    } else if (/endpoint is in transition/i.test(e.message)) {
+      console.log('sql get error: endpoint is in transition (setting timeout)');
+      // Wait 5 seconds and try again
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      try {
+        result = await callback();
+      } catch (e: any) {
+        console.log(`sql get error on retry (after 5000ms): ${e.message} `);
+        throw e;
+      }
+    } else {
+      console.log(`sql get error: ${e.message} `);
+      throw e;
+    }
+  }
+
+  if (SHOULD_DEBUG_SQL && debugMessage) {
+    const time =
+      (((new Date()).getTime() - start.getTime()) / 1000).toFixed(2);
+    console.log(`Executing sql query: ${debugMessage} (${time} seconds)`);
+  }
+
+  return result;
+};
 
 // Must provide id as 8-character nanoid
 export const insertPhoto = (photo: PhotoDbInsert) =>
@@ -181,16 +218,15 @@ export const renamePhotoTagGlobally = (tag: string, updatedTag: string) =>
   `, 'renamePhotoTagGlobally');
 
 export const deletePhoto = (id: string) =>
-  safelyQueryPhotos(
-    () => sql`DELETE FROM photos WHERE id=${id}`,
-    'deletePhoto',
-  );
+  safelyQueryPhotos(() => sql`
+    DELETE FROM photos WHERE id=${id}
+  `, 'deletePhoto');
 
 export const getPhotosMostRecentUpdate = async () =>
   safelyQueryPhotos(() => sql`
     SELECT updated_at FROM photos ORDER BY updated_at DESC LIMIT 1
-  `.then(({ rows }) => rows[0] ? rows[0].updated_at as Date : undefined),
-  'getPhotosMostRecentUpdate');
+  `.then(({ rows }) => rows[0] ? rows[0].updated_at as Date : undefined)
+  , 'getPhotosMostRecentUpdate');
 
 export const getUniqueTags = async () =>
   safelyQueryPhotos(() => sql`
@@ -202,8 +238,8 @@ export const getUniqueTags = async () =>
   `.then(({ rows }): TagsWithMeta => rows.map(({ tag, count }) => ({
       tag: tag as string,
       count: parseInt(count, 10),
-    }))),
-  'getUniqueTags');
+    })))
+  , 'getUniqueTags');
 
 export const getUniqueTagsHidden = async () =>
   safelyQueryPhotos(() => sql`
@@ -214,8 +250,8 @@ export const getUniqueTagsHidden = async () =>
   `.then(({ rows }): TagsWithMeta => rows.map(({ tag, count }) => ({
       tag: tag as string,
       count: parseInt(count, 10),
-    }))),
-  'getUniqueTagsHidden');
+    })))
+  , 'getUniqueTagsHidden');
 
 export const getUniqueCameras = async () =>
   safelyQueryPhotos(() => sql`
@@ -230,8 +266,8 @@ export const getUniqueCameras = async () =>
       cameraKey: createCameraKey({ make, model }),
       camera: { make, model },
       count: parseInt(count, 10),
-    }))),
-  'getUniqueCameras');
+    })))
+  , 'getUniqueCameras');
 
 export const getUniqueFilmSimulations = async () =>
   safelyQueryPhotos(() => sql`
@@ -244,151 +280,8 @@ export const getUniqueFilmSimulations = async () =>
       .map(({ film_simulation, count }) => ({
         simulation: film_simulation as FilmSimulation,
         count: parseInt(count, 10),
-      }))),
-  'getUniqueFilmSimulations');
-
-const safelyQueryPhotos = async <T>(
-  callback: () => Promise<T>,
-  debugMessage: string
-): Promise<T> => {
-  let result: T;
-
-  const start = new Date();
-
-  try {
-    result = await callback();
-  } catch (e: any) {
-    if (MIGRATION_FIELDS_01.some(field => new RegExp(
-      `column "${field}" of relation "photos" does not exist`,
-      'i',
-    ).test(e.message))) {
-      console.log('Running migration 01 ...');
-      await runMigration01();
-      result = await callback();
-    } else if (/relation "photos" does not exist/i.test(e.message)) {
-      // If the table does not exist, create it
-      console.log('Creating photos table ...');
-      await createPhotosTable();
-      result = await callback();
-    } else if (/endpoint is in transition/i.test(e.message)) {
-      console.log('sql get error: endpoint is in transition (setting timeout)');
-      // Wait 5 seconds and try again
-      await new Promise(resolve => setTimeout(resolve, 5000));
-      try {
-        result = await callback();
-      } catch (e: any) {
-        console.log(`sql get error on retry (after 5000ms): ${e.message} `);
-        throw e;
-      }
-    } else {
-      console.log(`sql get error: ${e.message} `);
-      throw e;
-    }
-  }
-
-  if (SHOULD_DEBUG_SQL && debugMessage) {
-    const time =
-      (((new Date()).getTime() - start.getTime()) / 1000).toFixed(2);
-    console.log(`Executing sql query: ${debugMessage} (${time} seconds)`);
-  }
-
-  return result;
-};
-
-const getWheresFromOptions = (
-  options: GetPhotosOptions,
-  initialValuesIndex = 1,
-) => {
-  const {
-    hidden = 'exclude',
-    takenBefore,
-    takenAfterInclusive,
-    query,
-    tag,
-    camera,
-    simulation,
-  } = options;
-
-  const wheres = [] as string[];
-  const wheresValues = [] as (string | number)[];
-  let valuesIndex = initialValuesIndex;
-
-  switch (hidden) {
-  case 'exclude':
-    wheres.push('hidden IS NOT TRUE');
-    break;
-  case 'only':
-    wheres.push('hidden IS TRUE');
-    break;
-  }
-  if (takenBefore) {
-    wheres.push(`taken_at > $${valuesIndex++}`);
-    wheresValues.push(takenBefore.toISOString());
-  }
-  if (takenAfterInclusive) {
-    wheres.push(`taken_at <= $${valuesIndex++}`);
-    wheresValues.push(takenAfterInclusive.toISOString());
-  }
-  if (query) {
-    // eslint-disable-next-line max-len
-    wheres.push(`CONCAT(title, ' ', caption, ' ', semantic_description) ILIKE $${valuesIndex++}`);
-    wheresValues.push(`%${query.toLocaleLowerCase()}%`);
-  }
-  if (tag) {
-    wheres.push(`$${valuesIndex++}=ANY(tags)`);
-    wheresValues.push(tag);
-  }
-  if (camera) {
-    wheres.push(`LOWER(REPLACE(make, ' ', '-'))=$${valuesIndex++}`);
-    wheres.push(`LOWER(REPLACE(model, ' ', '-'))=$${valuesIndex++}`);
-    wheresValues.push(parameterize(camera.make, true));
-    wheresValues.push(parameterize(camera.model, true));
-  }
-  if (simulation) {
-    wheres.push(`film_simulation=$${valuesIndex++}`);
-    wheresValues.push(simulation);
-  }
-
-  return {
-    wheres: wheres.length > 0
-      ? `WHERE ${wheres.join(' AND ')}`
-      : '',
-    wheresValues,
-    lastValuesIndex: valuesIndex,
-  };
-};
-
-const getOrderByFromOptions = (options: GetPhotosOptions) => {
-  const {
-    sortBy = PRIORITY_ORDER_ENABLED ? 'priority' : 'takenAt',
-  } = options;
-
-  switch (sortBy) {
-  case 'createdAt':
-    return 'ORDER BY created_at DESC';
-  case 'takenAt':
-    return 'ORDER BY taken_at DESC';
-  case 'priority':
-    return 'ORDER BY priority_order ASC, taken_at DESC';
-  }
-};
-
-const getLimitAndOffsetFromOptions = (
-  options: GetPhotosOptions,
-  initialValuesIndex = 1,
-) => {
-  const {
-    limit = PHOTO_DEFAULT_LIMIT,
-    offset = 0,
-  } = options;
-
-  let valuesIndex = initialValuesIndex;
-
-  return {
-    limitAndOffset: `LIMIT $${valuesIndex++} OFFSET $${valuesIndex++}`,
-    limitAndOffsetValues: [limit, offset],
-  };
-};
+      })))
+  , 'getUniqueFilmSimulations');
 
 export const getPhotos = async (options: GetPhotosOptions = {}) =>
   safelyQueryPhotos(async () => {
@@ -483,8 +376,8 @@ export const getPhotoIds = async ({ limit }: { limit?: number }) =>
   safelyQueryPhotos(() => (limit
     ? sql`SELECT id FROM photos LIMIT ${limit}`
     : sql`SELECT id FROM photos`)
-    .then(({ rows }) => rows.map(({ id }) => id as string)),
-  'getPhotoIds');
+    .then(({ rows }) => rows.map(({ id }) => id as string))
+  , 'getPhotoIds');
 
 export const getPhoto = async (
   id: string,

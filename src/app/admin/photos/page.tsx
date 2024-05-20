@@ -4,7 +4,7 @@ import SiteGrid from '@/components/SiteGrid';
 import AdminUploadsTable from '@/admin/AdminUploadsTable';
 import { PRO_MODE_ENABLED } from '@/site/config';
 import { getStoragePhotoUrlsNoStore } from '@/services/storage/cache';
-import { getPhotos } from '@/photo/db';
+import { getPhotos } from '@/photo/db/query';
 import { revalidatePath } from 'next/cache';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import AdminPhotosTableInfinite from

@@ -6,7 +6,7 @@ import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
 import { getPhotoSidebarData } from '@/photo/data';
-import { getPhotos } from '@/photo/db';
+import { getPhotos } from '@/photo/db/query';
 import { cache } from 'react';
 import PhotoGridPage from '@/photo/PhotoGridPage';
 import { PATH_GRID } from '@/site/paths';

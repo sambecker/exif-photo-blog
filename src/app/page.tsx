@@ -8,7 +8,7 @@ import { Metadata } from 'next/types';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
 import PhotosLarge from '@/photo/PhotosLarge';
 import { cache } from 'react';
-import { getPhotos, getPhotosMeta } from '@/photo/db';
+import { getPhotos, getPhotosMeta } from '@/photo/db/query';
 import PhotosLargeInfinite from '@/photo/PhotosLargeInfinite';
 
 export const dynamic = 'force-static';

@@ -4,7 +4,7 @@ import { getPhotosCached } from '@/photo/cache';
 import TagForm from '@/tag/TagForm';
 import { PATH_ADMIN, PATH_ADMIN_TAGS, pathForTag } from '@/site/paths';
 import PhotoLightbox from '@/photo/PhotoLightbox';
-import { getPhotosMeta } from '@/photo/db';
+import { getPhotosMeta } from '@/photo/db/query';
 import AdminTagBadge from '@/admin/AdminTagBadge';
 
 const MAX_PHOTO_TO_SHOW = 6;

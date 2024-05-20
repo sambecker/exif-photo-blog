@@ -7,7 +7,7 @@ import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import {
   getPhotosNearIdCached,
 } from '@/photo/cache';
-import { getPhotosMeta } from '@/photo/db';
+import { getPhotosMeta } from '@/photo/db/query';
 import { PATH_ROOT, absolutePathForPhoto } from '@/site/paths';
 import { TAG_HIDDEN } from '@/tag';
 import { Metadata } from 'next';

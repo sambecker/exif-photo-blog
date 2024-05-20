@@ -3,7 +3,7 @@ import {
   INFINITE_SCROLL_GRID_PHOTO_MULTIPLE,
 } from '@/photo';
 import { getPhotosCached } from '@/photo/cache';
-import { getPhotosMeta } from '@/photo/db';
+import { getPhotosMeta } from '@/photo/db/query';
 import StaggeredOgPhotos from '@/photo/StaggeredOgPhotos';
 import StaggeredOgPhotosInfinite from '@/photo/StaggeredOgPhotosInfinite';
 

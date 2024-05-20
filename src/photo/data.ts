@@ -9,7 +9,7 @@ import {
   getUniqueCameras,
   getUniqueFilmSimulations,
   getUniqueTags,
-} from '@/photo/db';
+} from '@/photo/db/query';
 import { SHOW_FILM_SIMULATIONS } from '@/site/config';
 import { sortTagsObject } from '@/tag';
 

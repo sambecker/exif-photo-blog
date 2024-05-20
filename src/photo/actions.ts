@@ -1,7 +1,6 @@
 'use server';
 
 import {
-  GetPhotosOptions,
   deletePhoto,
   insertPhoto,
   deletePhotoTagGlobally,
@@ -9,7 +8,8 @@ import {
   renamePhotoTagGlobally,
   getPhoto,
   getPhotos,
-} from '@/photo/db';
+} from '@/photo/db/query';
+import { GetPhotosOptions } from './db';
 import {
   PhotoFormData,
   convertFormDataToPhotoDbInsert,

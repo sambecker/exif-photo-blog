@@ -3,7 +3,7 @@ import Banner from '@/components/Banner';
 import SiteGrid from '@/components/SiteGrid';
 import PhotoGrid from '@/photo/PhotoGrid';
 import { getPhotosNoStore } from '@/photo/cache';
-import { getPhotosMeta } from '@/photo/db';
+import { getPhotosMeta } from '@/photo/db/query';
 import { absolutePathForTag } from '@/site/paths';
 import { TAG_HIDDEN, descriptionForTaggedPhotos, titleForTag } from '@/tag';
 import HiddenHeader from '@/tag/HiddenHeader';
