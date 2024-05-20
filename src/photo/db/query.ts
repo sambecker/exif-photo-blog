@@ -21,6 +21,7 @@ import {
   getOrderByFromOptions,
 } from '.';
 import { getWheresFromOptions } from '.';
+import { screenForPPR } from '@/utility/ppr';
 
 const createPhotosTable = () =>
   sql`
@@ -76,6 +77,7 @@ const safelyQueryPhotos = async <T>(
   try {
     result = await callback();
   } catch (e: any) {
+    screenForPPR(e, undefined, 'neon postgres');
     if (MIGRATION_FIELDS_01.some(field => new RegExp(
       `column "${field}" of relation "photos" does not exist`,
       'i',
