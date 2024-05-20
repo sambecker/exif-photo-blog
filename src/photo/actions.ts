@@ -2,11 +2,11 @@
 
 import {
   GetPhotosOptions,
-  sqlDeletePhoto,
-  sqlInsertPhoto,
-  sqlDeletePhotoTagGlobally,
-  sqlUpdatePhoto,
-  sqlRenamePhotoTagGlobally,
+  deletePhoto,
+  insertPhoto,
+  deletePhotoTagGlobally,
+  updatePhoto,
+  renamePhotoTagGlobally,
   getPhoto,
   getPhotos,
 } from '@/photo/db';
@@ -53,7 +53,7 @@ export const createPhotoAction = async (formData: FormData) =>
     
     if (updatedUrl) {
       photo.url = updatedUrl;
-      await sqlInsertPhoto(photo);
+      await insertPhoto(photo);
       revalidateAllKeysAndPaths();
       redirect(PATH_ADMIN_PHOTOS);
     }
@@ -71,7 +71,7 @@ export const updatePhotoAction = async (formData: FormData) =>
       if (url) { photo.url = url; }
     }
 
-    await sqlUpdatePhoto(photo);
+    await updatePhoto(photo);
 
     revalidatePhoto(photo.id);
 
@@ -89,7 +89,7 @@ export const toggleFavoritePhotoAction = async (
       photo.tags = tags.some(tag => tag === TAG_FAVS)
         ? tags.filter(tag => !isTagFavs(tag))
         : [...tags, TAG_FAVS];
-      await sqlUpdatePhoto(convertPhotoToPhotoDbInsert(photo));
+      await updatePhoto(convertPhotoToPhotoDbInsert(photo));
       revalidateAllKeysAndPaths();
       if (shouldRedirect) {
         redirect(pathForPhoto(photoId));
@@ -103,7 +103,7 @@ export const deletePhotoAction = async (
   shouldRedirect?: boolean,
 ) =>
   runAuthenticatedAdminServerAction(async () => {
-    await sqlDeletePhoto(photoId).then(() => deleteStorageUrl(photoUrl));
+    await deletePhoto(photoId).then(() => deleteStorageUrl(photoUrl));
     revalidateAllKeysAndPaths();
     if (shouldRedirect) {
       redirect(PATH_ROOT);
@@ -122,7 +122,7 @@ export const deletePhotoTagGloballyAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
     const tag = formData.get('tag') as string;
 
-    await sqlDeletePhotoTagGlobally(tag);
+    await deletePhotoTagGlobally(tag);
 
     revalidatePhotosKey();
     revalidateAdminPaths();
@@ -134,7 +134,7 @@ export const renamePhotoTagGloballyAction = async (formData: FormData) =>
     const updatedTag = formData.get('updatedTag') as string;
 
     if (tag && updatedTag && tag !== updatedTag) {
-      await sqlRenamePhotoTagGlobally(tag, updatedTag);
+      await renamePhotoTagGlobally(tag, updatedTag);
       revalidatePhotosKey();
       revalidateTagsKey();
       redirect(PATH_ADMIN_TAGS);
@@ -185,7 +185,7 @@ export const syncPhotoExifDataAction = async (formData: FormData) =>
             ...convertPhotoToFormData(photo),
             ...photoFormExif,
           });
-          await sqlUpdatePhoto(photoFormDbInsert);
+          await updatePhoto(photoFormDbInsert);
           revalidatePhotosKey();
         }
       }

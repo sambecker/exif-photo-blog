@@ -21,7 +21,20 @@ export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 
 const PHOTO_DEFAULT_LIMIT = 100;
 
-const sqlCreatePhotosTable = () =>
+export type GetPhotosOptions = {
+  sortBy?: 'createdAt' | 'takenAt' | 'priority'
+  limit?: number
+  offset?: number
+  query?: string
+  tag?: string
+  camera?: Camera
+  simulation?: FilmSimulation
+  takenBefore?: Date
+  takenAfterInclusive?: Date
+  hidden?: 'exclude' | 'include' | 'only'
+}
+
+const createPhotosTable = () =>
   sql`
     CREATE TABLE IF NOT EXISTS photos (
       id VARCHAR(8) PRIMARY KEY,
@@ -56,7 +69,7 @@ const sqlCreatePhotosTable = () =>
 
 // Migration 01
 const MIGRATION_FIELDS_01 = ['caption', 'semantic_description'];
-const sqlRunMigration01 = () =>
+const runMigration01 = () =>
   sql`
     ALTER TABLE photos
     ADD COLUMN IF NOT EXISTS caption TEXT,
@@ -64,7 +77,7 @@ const sqlRunMigration01 = () =>
   `;
 
 // Must provide id as 8-character nanoid
-export const sqlInsertPhoto = (photo: PhotoDbInsert) =>
+export const insertPhoto = (photo: PhotoDbInsert) =>
   safelyQueryPhotos(() => sql`
     INSERT INTO photos (
       id,
@@ -120,9 +133,9 @@ export const sqlInsertPhoto = (photo: PhotoDbInsert) =>
       ${photo.takenAt},
       ${photo.takenAtNaive}
     )
-  `, 'sqlInsertPhoto');
+  `, 'insertPhoto');
 
-export const sqlUpdatePhoto = (photo: PhotoDbInsert) =>
+export const updatePhoto = (photo: PhotoDbInsert) =>
   safelyQueryPhotos(() => sql`
     UPDATE photos SET
     url=${photo.url},
@@ -151,36 +164,33 @@ export const sqlUpdatePhoto = (photo: PhotoDbInsert) =>
     taken_at_naive=${photo.takenAtNaive},
     updated_at=${(new Date()).toISOString()}
     WHERE id=${photo.id}
-  `, 'sqlUpdatePhoto');
+  `, 'updatePhoto');
 
-export const sqlDeletePhotoTagGlobally = (tag: string) =>
+export const deletePhotoTagGlobally = (tag: string) =>
   safelyQueryPhotos(() => sql`
     UPDATE photos
     SET tags=ARRAY_REMOVE(tags, ${tag})
     WHERE ${tag}=ANY(tags)
-  `, 'sqlDeletePhotoTagGlobally');
+  `, 'deletePhotoTagGlobally');
 
-export const sqlRenamePhotoTagGlobally = (tag: string, updatedTag: string) =>
+export const renamePhotoTagGlobally = (tag: string, updatedTag: string) =>
   safelyQueryPhotos(() => sql`
     UPDATE photos
     SET tags=ARRAY_REPLACE(tags, ${tag}, ${updatedTag})
     WHERE ${tag}=ANY(tags)
-  `, 'sqlRenamePhotoTagGlobally');
+  `, 'renamePhotoTagGlobally');
 
-export const sqlDeletePhoto = (id: string) =>
+export const deletePhoto = (id: string) =>
   safelyQueryPhotos(
     () => sql`DELETE FROM photos WHERE id=${id}`,
-    'sqlDeletePhoto',
+    'deletePhoto',
   );
 
-const sqlGetPhoto = (id: string, includeHidden?: boolean) => includeHidden
-  ? sql<PhotoDb>`SELECT * FROM photos WHERE id=${id} LIMIT 1`
-  // eslint-disable-next-line max-len
-  : sql<PhotoDb>`SELECT * FROM photos WHERE id=${id} AND hidden IS NOT TRUE LIMIT 1`;
-
-const sqlGetPhotosMostRecentUpdate = async () => sql`
-  SELECT updated_at FROM photos ORDER BY updated_at DESC LIMIT 1
-`.then(({ rows }) => rows[0] ? rows[0].updated_at as Date : undefined);
+export const getPhotosMostRecentUpdate = async () =>
+  safelyQueryPhotos(() => sql`
+    SELECT updated_at FROM photos ORDER BY updated_at DESC LIMIT 1
+  `.then(({ rows }) => rows[0] ? rows[0].updated_at as Date : undefined),
+  'getPhotosMostRecentUpdate');
 
 export const getUniqueTags = async () =>
   safelyQueryPhotos(() => sql`
@@ -193,8 +203,7 @@ export const getUniqueTags = async () =>
       tag: tag as string,
       count: parseInt(count, 10),
     }))),
-  'getUniqueTags',
-  );
+  'getUniqueTags');
 
 export const getUniqueTagsHidden = async () =>
   safelyQueryPhotos(() => sql`
@@ -206,8 +215,7 @@ export const getUniqueTagsHidden = async () =>
       tag: tag as string,
       count: parseInt(count, 10),
     }))),
-  'getUniqueTagsHidden',
-  );
+  'getUniqueTagsHidden');
 
 export const getUniqueCameras = async () =>
   safelyQueryPhotos(() => sql`
@@ -223,8 +231,7 @@ export const getUniqueCameras = async () =>
       camera: { make, model },
       count: parseInt(count, 10),
     }))),
-  'getUniqueCameras',
-  );
+  'getUniqueCameras');
 
 export const getUniqueFilmSimulations = async () =>
   safelyQueryPhotos(() => sql`
@@ -238,21 +245,7 @@ export const getUniqueFilmSimulations = async () =>
         simulation: film_simulation as FilmSimulation,
         count: parseInt(count, 10),
       }))),
-  'getUniqueFilmSimulations',
-  );
-
-export type GetPhotosOptions = {
-  sortBy?: 'createdAt' | 'takenAt' | 'priority'
-  limit?: number
-  offset?: number
-  query?: string
-  tag?: string
-  camera?: Camera
-  simulation?: FilmSimulation
-  takenBefore?: Date
-  takenAfterInclusive?: Date
-  hidden?: 'exclude' | 'include' | 'only'
-}
+  'getUniqueFilmSimulations');
 
 const safelyQueryPhotos = async <T>(
   callback: () => Promise<T>,
@@ -270,12 +263,12 @@ const safelyQueryPhotos = async <T>(
       'i',
     ).test(e.message))) {
       console.log('Running migration 01 ...');
-      await sqlRunMigration01();
+      await runMigration01();
       result = await callback();
     } else if (/relation "photos" does not exist/i.test(e.message)) {
       // If the table does not exist, create it
       console.log('Creating photos table ...');
-      await sqlCreatePhotosTable();
+      await createPhotosTable();
       result = await callback();
     } else if (/endpoint is in transition/i.test(e.message)) {
       console.log('sql get error: endpoint is in transition (setting timeout)');
@@ -426,9 +419,9 @@ export const getPhotos = async (options: GetPhotosOptions = {}) =>
     sql.push(limitAndOffset);
     values.push(...limitAndOffsetValues);
 
-    return query(sql.join(' '), values);
-  }, 'getPhotos')
-    .then(({ rows }) => rows.map(parsePhotoFromDb));
+    return query(sql.join(' '), values)
+      .then(({ rows }) => rows.map(parsePhotoFromDb));
+  }, 'getPhotos');
 
 export const getPhotosNearId = async (
   photoId: string,
@@ -460,16 +453,16 @@ export const getPhotosNearId = async (
         LIMIT $${valuesIndex++}
       `,
       [...wheresValues, photoId, limit]
-    );
-  }, `getPhotosNearId: ${photoId}`)
-    .then(({ rows }) => {
-      const photo = rows.find(({ id }) => id === photoId);
-      const indexNumber = photo ? parseInt(photo.row_number) : undefined;
-      return {
-        photos: rows.map(parsePhotoFromDb),
-        indexNumber,
-      };
-    });
+    )
+      .then(({ rows }) => {
+        const photo = rows.find(({ id }) => id === photoId);
+        const indexNumber = photo ? parseInt(photo.row_number) : undefined;
+        return {
+          photos: rows.map(parsePhotoFromDb),
+          indexNumber,
+        };
+      });
+  }, `getPhotosNearId: ${photoId}`);    
 
 export const getPhotosMeta = (options: GetPhotosOptions = {}) =>
   safelyQueryPhotos(async () => {
@@ -477,36 +470,33 @@ export const getPhotosMeta = (options: GetPhotosOptions = {}) =>
     let sql = 'SELECT COUNT(*), MIN(taken_at_naive) as start, MAX(taken_at_naive) as end FROM photos';
     const { wheres, wheresValues } = getWheresFromOptions(options);
     if (wheres) { sql += ` ${wheres}`; }
-    return query(sql, wheresValues);
-  }, 'getPhotosMeta')
-    .then(({ rows }) => ({
-      count: parseInt(rows[0].count, 10),
-      ...rows[0]?.start && rows[0]?.end
-        ? { dateRange: rows[0] as PhotoDateRange }
-        : undefined,
-    }));
+    return query(sql, wheresValues)
+      .then(({ rows }) => ({
+        count: parseInt(rows[0].count, 10),
+        ...rows[0]?.start && rows[0]?.end
+          ? { dateRange: rows[0] as PhotoDateRange }
+          : undefined,
+      }));
+  }, 'getPhotosMeta');
 
 export const getPhotoIds = async ({ limit }: { limit?: number }) =>
-  safelyQueryPhotos(() => limit
+  safelyQueryPhotos(() => (limit
     ? sql`SELECT id FROM photos LIMIT ${limit}`
-    : sql`SELECT id FROM photos`,
-  'getPhotoIds')
-    .then(({ rows }) => rows.map(({ id }) => id as string));
+    : sql`SELECT id FROM photos`)
+    .then(({ rows }) => rows.map(({ id }) => id as string)),
+  'getPhotoIds');
 
 export const getPhoto = async (
   id: string,
   includeHidden?: boolean,
 ): Promise<Photo | undefined> =>
-  safelyQueryPhotos(() => {
+  safelyQueryPhotos(async () => {
     // Check for photo id forwarding and convert short ids to uuids
     const photoId = translatePhotoId(id);
-    return sqlGetPhoto(photoId, includeHidden);
-  }, 'sqlGetPhoto')
-    .then(({ rows }) => rows.map(parsePhotoFromDb))
-    .then(photos => photos.length > 0 ? photos[0] : undefined);
-
-export const getPhotosMostRecentUpdate = () =>
-  safelyQueryPhotos(
-    sqlGetPhotosMostRecentUpdate,
-    'getPhotosMostRecentUpdate',
-  );
+    return (includeHidden
+      ? sql<PhotoDb>`SELECT * FROM photos WHERE id=${photoId} LIMIT 1`
+      // eslint-disable-next-line max-len
+      : sql<PhotoDb>`SELECT * FROM photos WHERE id=${photoId} AND hidden IS NOT TRUE LIMIT 1`)
+      .then(({ rows }) => rows.map(parsePhotoFromDb))
+      .then(photos => photos.length > 0 ? photos[0] : undefined);
+  }, 'getPhoto');
