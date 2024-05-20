@@ -358,26 +358,20 @@ const safelyQueryPhotos = async <T>(
   return result;
 };
 
-export const getPhotos = async (options: GetPhotosOptions = {}) => {
+const getWheresFromOptions = (options: GetPhotosOptions) => {
   const {
-    sortBy = PRIORITY_ORDER_ENABLED ? 'priority' : 'takenAt',
-    limit = PHOTO_DEFAULT_LIMIT,
-    offset = 0,
-    query: queryOption,
+    hidden = 'exclude',
+    takenBefore,
+    takenAfterInclusive,
+    query,
     tag,
     camera,
     simulation,
-    takenBefore,
-    takenAfterInclusive,
-    hidden = 'exclude',
   } = options;
 
-  let sql = ['SELECT * FROM photos'];
-  let values = [] as (string | number)[];
-  let valueIndex = 1;
-
-  // WHERE
-  let wheres = [] as string[];
+  const wheres = [] as string[];
+  const values = [] as (string | number)[];
+  let valuesIndex = 1;
 
   switch (hidden) {
   case 'exclude':
@@ -388,35 +382,56 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
     break;
   }
   if (takenBefore) {
-    wheres.push(`taken_at > $${valueIndex++}`);
+    wheres.push(`taken_at > $${valuesIndex++}`);
     values.push(takenBefore.toISOString());
   }
   if (takenAfterInclusive) {
-    wheres.push(`taken_at <= $${valueIndex++}`);
+    wheres.push(`taken_at <= $${valuesIndex++}`);
     values.push(takenAfterInclusive.toISOString());
   }
-  if (queryOption) {
+  if (query) {
     // eslint-disable-next-line max-len
-    wheres.push(`CONCAT(title, ' ', caption, ' ', semantic_description) ILIKE $${valueIndex++}`);
-    values.push(`%${queryOption.toLocaleLowerCase()}%`);
+    wheres.push(`CONCAT(title, ' ', caption, ' ', semantic_description) ILIKE $${valuesIndex++}`);
+    values.push(`%${query.toLocaleLowerCase()}%`);
   }
   if (tag) {
-    wheres.push(`$${valueIndex++}=ANY(tags)`);
+    wheres.push(`$${valuesIndex++}=ANY(tags)`);
     values.push(tag);
   }
   if (camera) {
-    wheres.push(`LOWER(REPLACE(make, ' ', '-'))=$${valueIndex++}`);
-    wheres.push(`LOWER(REPLACE(model, ' ', '-'))=$${valueIndex++}`);
+    wheres.push(`LOWER(REPLACE(make, ' ', '-'))=$${valuesIndex++}`);
+    wheres.push(`LOWER(REPLACE(model, ' ', '-'))=$${valuesIndex++}`);
     values.push(parameterize(camera.make, true));
     values.push(parameterize(camera.model, true));
   }
   if (simulation) {
-    wheres.push(`film_simulation=$${valueIndex++}`);
+    wheres.push(`film_simulation=$${valuesIndex++}`);
     values.push(simulation);
   }
-  if (wheres.length > 0) {
-    sql.push(`WHERE ${wheres.join(' AND ')}`);
-  }
+
+  return {
+    wheres: wheres.length > 0
+      ? `WHERE ${wheres.join(' AND ')}`
+      : '',
+    values,
+    lastValuesIndex: valuesIndex,
+  };
+};
+
+export const getPhotos = async (options: GetPhotosOptions = {}) => {
+  const {
+    sortBy = PRIORITY_ORDER_ENABLED ? 'priority' : 'takenAt',
+    limit = PHOTO_DEFAULT_LIMIT,
+    offset = 0,
+  } = options;
+
+  let sql = ['SELECT * FROM photos'];
+
+  const { wheres, values, lastValuesIndex } = getWheresFromOptions(options);
+
+  let valuesIndex = lastValuesIndex;
+  
+  if (wheres) { sql.push(wheres); }
 
   // ORDER BY
   switch (sortBy) {
@@ -432,7 +447,7 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
   }
 
   // LIMIT + OFFSET
-  sql.push(`LIMIT $${valueIndex++} OFFSET $${valueIndex++}`);
+  sql.push(`LIMIT $${valuesIndex++} OFFSET $${valuesIndex++}`);
   values.push(limit, offset);
 
   return safelyQueryPhotos(async () => {
@@ -442,40 +457,43 @@ export const getPhotos = async (options: GetPhotosOptions = {}) => {
 };
 
 export const getPhotosNearId = async (
-  id: string,
-  limit: number,
-  onlyHidden?: boolean,
-) => {
+  photoId: string,
+  options: GetPhotosOptions,
+) => safelyQueryPhotos(async () => {
+  const { limit } = options;
+
   const orderBy = PRIORITY_ORDER_ENABLED
     ? 'ORDER BY priority_order ASC, taken_at DESC'
     : 'ORDER BY taken_at DESC';
 
-  return safelyQueryPhotos(async () => {
-    return query(
-      `
-        WITH twi AS (
-          SELECT *, row_number()
-          OVER (${orderBy}) as row_number
-          FROM photos
-          WHERE hidden is ${onlyHidden ? 'TRUE' : 'NOT TRUE'}
-        ),
-        current AS (SELECT row_number FROM twi WHERE id = $1)
-        SELECT twi.*
-        FROM twi, current
-        WHERE twi.row_number >= current.row_number - 1
-        LIMIT $2
-      `,
-      [id, limit]
-    );
-  }, `getPhotosNearId: ${id}`)
-    .then(({ rows }) => {
-      const photos = rows.map(parsePhotoFromDb);
-      return {
-        photos,
-        photo: photos.find(photo => photo.id === id),
-      };
-    });
-};
+  const { wheres, values, lastValuesIndex } = getWheresFromOptions(options);
+
+  let valuesIndex = lastValuesIndex;
+
+  return query(
+    `
+      WITH twi AS (
+        SELECT *, row_number()
+        OVER (${orderBy}) as row_number
+        FROM photos
+        ${wheres}
+      ),
+      current AS (SELECT row_number FROM twi WHERE id = $${valuesIndex++})
+      SELECT twi.*
+      FROM twi, current
+      WHERE twi.row_number >= current.row_number - 1
+      LIMIT $${valuesIndex++}
+    `,
+    [...values, photoId, limit]
+  );
+}, `getPhotosNearId: ${photoId}`)
+  .then(({ rows }) => {
+    const photos = rows.map(parsePhotoFromDb);
+    return {
+      photos,
+      photo: photos.find(photo => photo.id === photoId),
+    };
+  });
 
 export const getPhotoIds = async ({ limit }: { limit?: number }) => {
   return safelyQueryPhotos(() => limit

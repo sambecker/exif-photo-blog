@@ -11,9 +11,13 @@ import {
   absolutePathForPhotoImage,
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotosNearIdCachedCached } from '@/photo/cache';
+import { getPhotosNearIdCached } from '@/photo/cache';
 import { IS_PRODUCTION, STATICALLY_OPTIMIZED_PAGES } from '@/site/config';
 import { GENERATE_STATIC_PARAMS_LIMIT, getPhotoIds } from '@/photo/db';
+import { cache } from 'react';
+
+const getPhotosNearIdCachedCached = cache((photoId: string, limit: number) =>
+  getPhotosNearIdCached(photoId, { limit }));
 
 export let generateStaticParams:
   (() => Promise<{ photoId: string }[]>) | undefined = undefined;

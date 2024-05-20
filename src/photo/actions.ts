@@ -21,7 +21,7 @@ import {
   deleteStorageUrl,
 } from '@/services/storage';
 import {
-  getPhotosCachedCached,
+  getPhotosCached,
   getPhotosTagHiddenMetaCached,
   revalidateAdminPaths,
   revalidateAllKeysAndPaths,
@@ -219,8 +219,8 @@ export const getPhotosAction = async (options: GetPhotosOptions) =>
 export const getPhotosCachedAction = async (options: GetPhotosOptions) =>
   (options.hidden === 'include' || options.hidden === 'only')
     ? safelyRunAdminServerAction(() =>
-      getPhotosCachedCached(options))
-    : getPhotosCachedCached(options);
+      getPhotosCached (options))
+    : getPhotosCached(options);
 
 // Public actions
 

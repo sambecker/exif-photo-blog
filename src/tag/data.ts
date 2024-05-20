@@ -1,5 +1,5 @@
 import {
-  getPhotosCachedCached,
+  getPhotosCached,
   getPhotosTagMetaCached,
 } from '@/photo/cache';
 
@@ -11,7 +11,7 @@ export const getPhotosTagDataCached = ({
   limit?: number,
 }) =>
   Promise.all([
-    getPhotosCachedCached({ tag, limit }),
+    getPhotosCached({ tag, limit }),
     getPhotosTagMetaCached(tag),
   ]);
 
