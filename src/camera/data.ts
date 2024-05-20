@@ -1,7 +1,7 @@
 import { cameraFromPhoto, getCameraFromParams } from '.';
 import {
   getPhotosCached,
-  getPhotosCameraMetaCached,
+  getPhotosMetaCached,
 } from '@/photo/cache';
 
 export const getPhotosCameraDataCached = async (
@@ -12,7 +12,7 @@ export const getPhotosCameraDataCached = async (
   const camera = getCameraFromParams({ make, model });
   return Promise.all([
     getPhotosCached({ camera, limit }),
-    getPhotosCameraMetaCached(camera),
+    getPhotosMetaCached({ camera }),
   ])
     .then(([photos, meta]) => [
       photos,

@@ -1,6 +1,6 @@
 import { getStorageUploadUrlsNoStore } from '@/services/storage/cache';
 import {
-  getPhotosCountIncludingHiddenCached,
+  getPhotosMetaCached,
   getPhotosMostRecentUpdateCached,
   getUniqueTagsCached,
 } from '@/photo/cache';
@@ -18,7 +18,9 @@ export default async function AdminNav() {
     countTags,
     mostRecentPhotoUpdateTime,
   ] = await Promise.all([
-    getPhotosCountIncludingHiddenCached().catch(() => 0),
+    getPhotosMetaCached({ hidden: 'include' })
+      .then(({ count }) => count)
+      .catch(() => 0),
     getStorageUploadUrlsNoStore()
       .then(urls => urls.length)
       .catch(e => {

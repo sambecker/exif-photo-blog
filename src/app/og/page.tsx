@@ -2,7 +2,8 @@ import {
   INFINITE_SCROLL_GRID_PHOTO_INITIAL,
   INFINITE_SCROLL_GRID_PHOTO_MULTIPLE,
 } from '@/photo';
-import { getPhotosCached, getPhotosCountCached } from '@/photo/cache';
+import { getPhotosCached } from '@/photo/cache';
+import { getPhotosMeta } from '@/photo/db/query';
 import StaggeredOgPhotos from '@/photo/StaggeredOgPhotos';
 import StaggeredOgPhotosInfinite from '@/photo/StaggeredOgPhotosInfinite';
 
@@ -12,7 +13,9 @@ export default async function GridPage() {
     count,
   ] = await Promise.all([
     getPhotosCached({ limit: INFINITE_SCROLL_GRID_PHOTO_INITIAL }),
-    getPhotosCountCached(),
+    getPhotosMeta()
+      .then(({ count }) => count)
+      .catch(() => 0),
   ]);
   
   return (

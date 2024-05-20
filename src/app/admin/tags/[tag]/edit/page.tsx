@@ -4,7 +4,7 @@ import { getPhotosCached } from '@/photo/cache';
 import TagForm from '@/tag/TagForm';
 import { PATH_ADMIN, PATH_ADMIN_TAGS, pathForTag } from '@/site/paths';
 import PhotoLightbox from '@/photo/PhotoLightbox';
-import { getPhotosTagMeta } from '@/photo/db';
+import { getPhotosMeta } from '@/photo/db/query';
 import AdminTagBadge from '@/admin/AdminTagBadge';
 
 const MAX_PHOTO_TO_SHOW = 6;
@@ -22,7 +22,7 @@ export default async function PhotoPageEdit({
     { count },
     photos,
   ] = await Promise.all([
-    getPhotosTagMeta(tag),
+    getPhotosMeta({ tag }),
     getPhotosCached({ tag, limit: MAX_PHOTO_TO_SHOW }),
   ]);
 

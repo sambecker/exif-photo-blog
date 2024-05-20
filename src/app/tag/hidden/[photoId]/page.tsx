@@ -6,8 +6,8 @@ import {
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import {
   getPhotosNearIdCached,
-  getPhotosTagHiddenMetaCached,
 } from '@/photo/cache';
+import { getPhotosMeta } from '@/photo/db/query';
 import { PATH_ROOT, absolutePathForPhoto } from '@/site/paths';
 import { TAG_HIDDEN } from '@/tag';
 import { Metadata } from 'next';
@@ -59,7 +59,7 @@ export default async function PhotoTagHiddenPage({
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const { count, dateRange } = await getPhotosTagHiddenMetaCached();
+  const { count, dateRange } = await getPhotosMeta({ hidden: 'only' });
 
   return (
     <PhotoDetailPage {...{

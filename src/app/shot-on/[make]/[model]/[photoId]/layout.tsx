@@ -12,7 +12,7 @@ import {
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import {
-  getPhotosCameraMetaCached,
+  getPhotosMetaCached,
   getPhotosNearIdCached,
 } from '@/photo/cache';
 import {
@@ -79,7 +79,7 @@ export default async function PhotoCameraPage({
 
   const camera = cameraFromPhoto(photo, { make, model });
 
-  const { count, dateRange } = await getPhotosCameraMetaCached(camera);
+  const { count, dateRange } = await getPhotosMetaCached({ camera });
 
   return <>
     {children}

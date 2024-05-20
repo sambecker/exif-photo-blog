@@ -14,7 +14,7 @@ import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { ReactNode, cache } from 'react';
 import { FilmSimulation } from '@/simulation';
 import {
-  getPhotosFilmSimulationMetaCached,
+  getPhotosMetaCached,
   getPhotosNearIdCached,
 } from '@/photo/cache';
 
@@ -70,8 +70,7 @@ export default async function PhotoFilmSimulationPage({
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const { count, dateRange } =
-    await getPhotosFilmSimulationMetaCached(simulation);
+  const { count, dateRange } = await getPhotosMetaCached({ simulation });
 
   return <>
     {children}

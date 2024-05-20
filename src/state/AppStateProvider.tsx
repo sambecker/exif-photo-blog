@@ -7,7 +7,7 @@ import usePathnames from '@/utility/usePathnames';
 import { getAuthAction, logClientAuthUpdate } from '@/auth/actions';
 import useSWR from 'swr';
 import { MATTE_PHOTOS } from '@/site/config';
-import { getPhotosTagHiddenMetaCachedAction } from '@/photo/actions';
+import { getPhotosHiddenMetaCachedAction } from '@/photo/actions';
 
 export default function AppStateProvider({
   children,
@@ -53,7 +53,7 @@ export default function AppStateProvider({
   useEffect(() => {
     if (isUserSignedIn) {
       const timeout = setTimeout(() =>
-        getPhotosTagHiddenMetaCachedAction().then(({ count }) =>
+        getPhotosHiddenMetaCachedAction().then(({ count }) =>
           setHiddenPhotosCount(count))
       , 100);
       return () => clearTimeout(timeout);
