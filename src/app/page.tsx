@@ -5,7 +5,6 @@ import {
 } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
-import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
 import PhotosLarge from '@/photo/PhotosLarge';
 import { cache } from 'react';
 import { getPhotos, getPhotosMeta } from '@/photo/db/query';
@@ -13,12 +12,12 @@ import PhotosLargeInfinite from '@/photo/PhotosLargeInfinite';
 
 export const dynamic = 'force-static';
 
-const getPhotosCached = cache(getPhotos);
+const getPhotosCached = cache(() => getPhotos({
+  limit: INFINITE_SCROLL_LARGE_PHOTO_INITIAL,
+}));
 
 export async function generateMetadata(): Promise<Metadata> {
-  const photos = await getPhotosCached({
-    limit: MAX_PHOTOS_TO_SHOW_OG,
-  })
+  const photos = await getPhotosCached()
     .catch(() => []);
   return generateOgImageMetaForPhotos(photos);
 }
@@ -28,9 +27,7 @@ export default async function HomePage() {
     photos,
     photosCount,
   ] = await Promise.all([
-    getPhotosCached({ 
-      limit: INFINITE_SCROLL_LARGE_PHOTO_INITIAL,
-    })
+    getPhotosCached()
       .catch(() => []),
     getPhotosMeta()
       .then(({ count }) => count)
