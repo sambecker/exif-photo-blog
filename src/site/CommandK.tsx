@@ -1,6 +1,6 @@
 import CommandKClient, { CommandKSection } from '@/components/CommandKClient';
 import {
-  getPhotosCountCached,
+  getPhotosMetaCached,
   getUniqueCamerasCached,
   getUniqueFilmSimulationsCached,
   getUniqueTagsCached,
@@ -24,7 +24,9 @@ export default async function CommandK() {
     cameras,
     filmSimulations,
   ] = await Promise.all([
-    getPhotosCountCached().catch(() => 0),
+    getPhotosMetaCached()
+      .then(({ count }) => count)
+      .catch(() => 0),
     getUniqueTagsCached().catch(() => [] as TagsWithMeta),
     getUniqueCamerasCached().catch(() => []),
     SHOW_FILM_SIMULATIONS

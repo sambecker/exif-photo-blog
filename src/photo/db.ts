@@ -178,26 +178,9 @@ const sqlGetPhoto = (id: string, includeHidden?: boolean) => includeHidden
   // eslint-disable-next-line max-len
   : sql<PhotoDb>`SELECT * FROM photos WHERE id=${id} AND hidden IS NOT TRUE LIMIT 1`;
 
-const sqlGetPhotosCount = async () => sql`
-  SELECT COUNT(*) FROM photos
-  WHERE hidden IS NOT TRUE
-`.then(({ rows }) => parseInt(rows[0].count, 10));
-
-const sqlGetPhotosCountIncludingHidden = async () => sql`
-  SELECT COUNT(*) FROM photos
-`.then(({ rows }) => parseInt(rows[0].count, 10));
-
 const sqlGetPhotosMostRecentUpdate = async () => sql`
   SELECT updated_at FROM photos ORDER BY updated_at DESC LIMIT 1
 `.then(({ rows }) => rows[0] ? rows[0].updated_at as Date : undefined);
-
-const sqlGetPhotosDateRange = async () => sql`
-  SELECT MIN(taken_at_naive) as start, MAX(taken_at_naive) as end
-  FROM photos
-  WHERE hidden IS NOT TRUE
-`.then(({ rows }) => rows[0]?.start && rows[0]?.end
-    ? rows[0] as PhotoDateRange
-    : undefined);
 
 const sqlGetUniqueTags = async () => sql`
   SELECT DISTINCT unnest(tags) as tag, COUNT(*)
@@ -510,15 +493,6 @@ export const getPhoto = async (
     .then(({ rows }) => rows.map(parsePhotoFromDb))
     .then(photos => photos.length > 0 ? photos[0] : undefined);
 };
-export const getPhotosDateRange = () =>
-  safelyQueryPhotos(sqlGetPhotosDateRange, 'getPhotosDateRange');
-export const getPhotosCount = () =>
-  safelyQueryPhotos(sqlGetPhotosCount, 'getPhotosCount');
-export const getPhotosCountIncludingHidden = () =>
-  safelyQueryPhotos(
-    sqlGetPhotosCountIncludingHidden,
-    'getPhotosCountIncludingHidden',
-  );
 export const getPhotosMostRecentUpdate = () =>
   safelyQueryPhotos(
     sqlGetPhotosMostRecentUpdate,

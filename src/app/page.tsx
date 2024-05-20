@@ -8,7 +8,7 @@ import { Metadata } from 'next/types';
 import { MAX_PHOTOS_TO_SHOW_OG } from '@/image-response';
 import PhotosLarge from '@/photo/PhotosLarge';
 import { cache } from 'react';
-import { getPhotos, getPhotosCount } from '@/photo/db';
+import { getPhotos, getPhotosMeta } from '@/photo/db';
 import PhotosLargeInfinite from '@/photo/PhotosLargeInfinite';
 
 export const dynamic = 'force-static';
@@ -32,7 +32,8 @@ export default async function HomePage() {
       limit: INFINITE_SCROLL_LARGE_PHOTO_INITIAL,
     })
       .catch(() => []),
-    getPhotosCount()
+    getPhotosMeta()
+      .then(({ count }) => count)
       .catch(() => 0),
   ]);
 
