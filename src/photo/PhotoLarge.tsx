@@ -11,7 +11,11 @@ import SiteGrid from '@/components/SiteGrid';
 import ImageLarge from '@/components/image/ImageLarge';
 import { clsx } from 'clsx/lite';
 import Link from 'next/link';
-import { pathForPhoto, pathForPhotoShare } from '@/site/paths';
+import {
+  pathForFocalLength,
+  pathForPhoto,
+  pathForPhotoShare,
+} from '@/site/paths';
 import PhotoTags from '@/tag/PhotoTags';
 import ShareButton from '@/components/ShareButton';
 import PhotoCamera from '../camera/PhotoCamera';
@@ -155,7 +159,10 @@ export default function PhotoLarge({
               <>
                 <ul className="text-medium">
                   <li>
-                    {photo.focalLengthFormatted}
+                    {photo.focalLength &&
+                      <Link href={pathForFocalLength(photo.focalLength)}>
+                        {photo.focalLengthFormatted}
+                      </Link>}
                     {photo.focalLengthIn35MmFormatFormatted &&
                       <>
                         {' '}
