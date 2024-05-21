@@ -30,8 +30,8 @@ const CAMERA_MAKE         = 'fujifilm';
 const CAMERA_MODEL        = 'x-t1';
 const CAMERA_OBJECT       = { make: CAMERA_MAKE, model: CAMERA_MODEL };
 const FILM_SIMULATION     = 'acros';
-const FOCAL_LENGTH_NUMBER = 90;
-const FOCAL_LENGTH        = `${FOCAL_LENGTH_NUMBER}mm`;
+const FOCAL_LENGTH        = 90;
+const FOCAL_LENGTH_STRING = `${FOCAL_LENGTH}mm`;
 const SHARE               = 'share';
 
 const PATH_ROOT                         = '/';
@@ -61,7 +61,7 @@ const PATH_FILM_SIMULATION_SHARE        = `${PATH_FILM_SIMULATION}/${SHARE}`;
 const PATH_FILM_SIMULATION_PHOTO        = `${PATH_FILM_SIMULATION}/${PHOTO_ID}`;
 const PATH_FILM_SIMULATION_PHOTO_SHARE  = `${PATH_FILM_SIMULATION_PHOTO}/${SHARE}`;
 
-const PATH_FOCAL_LENGTH                 = `/focal/${FOCAL_LENGTH}`;
+const PATH_FOCAL_LENGTH                 = `/focal/${FOCAL_LENGTH_STRING}`;
 const PATH_FOCAL_LENGTH_SHARE           = `${PATH_FOCAL_LENGTH}/${SHARE}`;
 const PATH_FOCAL_LENGTH_PHOTO           = `${PATH_FOCAL_LENGTH}/${PHOTO_ID}`;
 const PATH_FOCAL_LENGTH_PHOTO_SHARE     = `${PATH_FOCAL_LENGTH_PHOTO}/${SHARE}`;
@@ -178,18 +178,18 @@ describe('Paths', () => {
     });
     // Focal Length
     expect(getPathComponents(PATH_FOCAL_LENGTH)).toEqual({
-      focal: FOCAL_LENGTH_NUMBER,
+      focal: FOCAL_LENGTH,
     });
     expect(getPathComponents(PATH_FOCAL_LENGTH_SHARE)).toEqual({
-      focal: FOCAL_LENGTH_NUMBER,
+      focal: FOCAL_LENGTH,
     });
     expect(getPathComponents(PATH_FOCAL_LENGTH_PHOTO)).toEqual({
       photoId: PHOTO_ID,
-      focal: FOCAL_LENGTH_NUMBER,
+      focal: FOCAL_LENGTH,
     });
     expect(getPathComponents(PATH_FOCAL_LENGTH_PHOTO_SHARE)).toEqual({
       photoId: PHOTO_ID,
-      focal: FOCAL_LENGTH_NUMBER,
+      focal: FOCAL_LENGTH,
     });
   });
   it('can be escaped', () => {
