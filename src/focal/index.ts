@@ -1,0 +1,50 @@
+import {
+  Photo,
+  PhotoDateRange,
+  descriptionForPhotoSet,
+  photoQuantityText,
+} from '@/photo';
+import {
+  absolutePathForFocalLength,
+  absolutePathForFocalLengthImage,
+} from '@/site/paths';
+
+export const titleForFocalLength = (
+  focal: number,
+  photos: Photo[],
+  explicitCount?: number,
+) => [
+  `${focal}mm`,
+  photoQuantityText(explicitCount ?? photos.length),
+].join(' ');
+
+export const descriptionForFocalLengthPhotos = (
+  photos: Photo[],
+  dateBased?: boolean,
+  explicitCount?: number,
+  explicitDateRange?: PhotoDateRange,
+) =>
+  descriptionForPhotoSet(
+    photos,
+    undefined,
+    dateBased,
+    explicitCount,
+    explicitDateRange,
+  );
+
+export const generateMetaForFocalLength = (
+  focal: number,
+  photos: Photo[],
+  explicitCount?: number,
+  explicitDateRange?: PhotoDateRange,
+) => ({
+  url: absolutePathForFocalLength(focal),
+  title: titleForFocalLength(focal, photos, explicitCount),
+  description: descriptionForFocalLengthPhotos(
+    photos,
+    true,
+    explicitCount,
+    explicitDateRange,
+  ),
+  images: absolutePathForFocalLengthImage(focal),
+});
