@@ -5,24 +5,20 @@ import ShareModal from '@/components/ShareModal';
 import { Camera } from '@/camera';
 import { FilmSimulation } from '@/simulation';
 
-export default function PhotoShareModal({
-  photo,
-  tag,
-  camera,
-  simulation,
-}: {
+export default function PhotoShareModal(props: {
   photo: Photo
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
+  focal?: number
 }) {
   return (
     <ShareModal
       title="Share Photo"
-      pathShare={absolutePathForPhoto(photo, tag, camera, simulation)}
-      pathClose={pathForPhoto(photo, tag, camera, simulation)}
+      pathShare={absolutePathForPhoto(props)}
+      pathClose={pathForPhoto(props)}
     >
-      <PhotoOGTile photo={photo} />
+      <PhotoOGTile photo={props.photo} />
     </ShareModal>
   );
 };

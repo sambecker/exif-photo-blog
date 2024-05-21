@@ -40,6 +40,7 @@ export default function PhotoLarge({
   shouldShareTag,
   shouldShareCamera,
   shouldShareSimulation,
+  shouldShareFocalLength,
   shouldScrollOnShare,
   onVisible,
 }: {
@@ -54,6 +55,7 @@ export default function PhotoLarge({
   shouldShareTag?: boolean
   shouldShareCamera?: boolean
   shouldShareSimulation?: boolean
+  shouldShareFocalLength?: boolean
   shouldScrollOnShare?: boolean
   onVisible?: () => void
 }) {
@@ -76,7 +78,7 @@ export default function PhotoLarge({
       containerRef={ref}
       contentMain={
         <Link
-          href={pathForPhoto(photo)}
+          href={pathForPhoto({ photo })}
           className={clsx(arePhotosMatted &&
             'flex items-center aspect-[3/2] bg-gray-100',
           )}
@@ -189,12 +191,14 @@ export default function PhotoLarge({
                   'md:translate-x-[-2.5px]',
                   'translate-y-[1.5px] md:translate-y-0',
                 )}
-                path={pathForPhotoShare(
+                path={pathForPhotoShare({
                   photo,
-                  shouldShareTag ? primaryTag : undefined,
-                  shouldShareCamera ? camera : undefined,
-                  shouldShareSimulation ? photo.filmSimulation : undefined,
-                )}
+                  tag: shouldShareTag ? primaryTag : undefined,
+                  camera: shouldShareCamera ? camera : undefined,
+                  // eslint-disable-next-line max-len
+                  simulation: shouldShareSimulation ? photo.filmSimulation : undefined,
+                  focal: shouldShareFocalLength ? photo.focalLength : undefined,
+                })}
                 prefetch={prefetchRelatedLinks}
                 shouldScroll={shouldScrollOnShare}
               />

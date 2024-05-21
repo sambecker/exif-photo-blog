@@ -44,11 +44,10 @@ export async function generateMetadata({
   const title = titleForPhoto(photo);
   const description = descriptionForPhoto(photo);
   const images = absolutePathForPhotoImage(photo);
-  const url = absolutePathForPhoto(
+  const url = absolutePathForPhoto({
     photo,
-    undefined,
-    cameraFromPhoto(photo, { make, model }),
-  );
+    camera: cameraFromPhoto(photo, { make, model }),
+  });
 
   return {
     title,

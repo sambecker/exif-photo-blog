@@ -63,6 +63,14 @@ export const PATHS_TO_CACHE = [
   ...PATHS_ADMIN,
 ];
 
+interface PhotoPathParams {
+  photo: PhotoOrPhotoId
+  tag?: string
+  camera?: Camera
+  simulation?: FilmSimulation
+  focal?: number
+}
+
 // Absolute paths
 export const ABSOLUTE_PATH_FOR_HOME_IMAGE = `${BASE_URL}/home-image`;
 
@@ -80,13 +88,13 @@ type PhotoOrPhotoId = Photo | string;
 const getPhotoId = (photoOrPhotoId: PhotoOrPhotoId) =>
   typeof photoOrPhotoId === 'string' ? photoOrPhotoId : photoOrPhotoId.id;
 
-export const pathForPhoto = (
-  photo: PhotoOrPhotoId,
-  tag?: string,
-  camera?: Camera,
-  simulation?: FilmSimulation,
-  focal?: number,
-) =>
+export const pathForPhoto = ({
+  photo,
+  tag,
+  camera,
+  simulation,
+  focal,
+}: PhotoPathParams) =>
   typeof photo !== 'string' && photo.hidden
     ? `${pathForTag(TAG_HIDDEN)}/${getPhotoId(photo)}`
     : tag
@@ -99,13 +107,8 @@ export const pathForPhoto = (
             ? `${pathForFocalLength(focal)}/${getPhotoId(photo)}`
             : `${PREFIX_PHOTO}/${getPhotoId(photo)}`;
 
-export const pathForPhotoShare = (
-  photo: PhotoOrPhotoId,
-  tag?: string,
-  camera?: Camera,
-  simulation?: FilmSimulation,
-) =>
-  `${pathForPhoto(photo, tag, camera, simulation)}/${SHARE}`;
+export const pathForPhotoShare = (params: PhotoPathParams) =>
+  `${pathForPhoto(params)}/${SHARE}`;
 
 export const pathForTag = (tag: string) =>
   `${PREFIX_TAG}/${tag}`;
@@ -128,13 +131,8 @@ export const pathForFocalLength = (focal: number) =>
 export const pathForFilmSimulationShare = (simulation: FilmSimulation) =>
   `${pathForFilmSimulation(simulation)}/${SHARE}`;
 
-export const absolutePathForPhoto = (
-  photo: PhotoOrPhotoId,
-  tag?: string,
-  camera?: Camera,
-  simulation?: FilmSimulation
-) =>
-  `${BASE_URL}${pathForPhoto(photo, tag, camera, simulation)}`;
+export const absolutePathForPhoto = (params: PhotoPathParams) =>
+  `${BASE_URL}${pathForPhoto(params)}`;
 
 export const absolutePathForTag = (tag: string) =>
   `${BASE_URL}${pathForTag(tag)}`;
@@ -149,7 +147,7 @@ export const absolutePathForFocalLength = (focal: number) =>
   `${BASE_URL}${pathForFocalLength(focal)}`;
 
 export const absolutePathForPhotoImage = (photo: PhotoOrPhotoId) =>
-  `${absolutePathForPhoto(photo)}/image`;
+  `${absolutePathForPhoto({ photo })}/image`;
 
 export const absolutePathForTagImage = (tag: string) =>
   `${absolutePathForTag(tag)}/image`;
@@ -329,15 +327,15 @@ export const getEscapePath = (pathname?: string) => {
   ) {
     return PATH_GRID;
   } else if (photoId && isPathTagPhotoShare(pathname)) {
-    return pathForPhoto(photoId, tag);
+    return pathForPhoto({ photo: photoId, tag });
   } else if (photoId && isPathCameraPhotoShare(pathname)) {
-    return pathForPhoto(photoId, undefined, camera);
+    return pathForPhoto({ photo: photoId, camera });
   } else if (photoId && isPathFilmSimulationPhotoShare(pathname)) {
-    return pathForPhoto(photoId, undefined, undefined, simulation);
+    return pathForPhoto({ photo: photoId, simulation });
   } else if (photoId && isPathFocalLengthPhotoShare(pathname)) {
-    return pathForPhoto(photoId, undefined, undefined, undefined, focal);
+    return pathForPhoto({ photo: photoId, focal });
   } else if (photoId && isPathPhotoShare(pathname)) {
-    return pathForPhoto(photoId);
+    return pathForPhoto({ photo: photoId });
   } else if (tag && (
     isPathTagPhoto(pathname) ||
     isPathTagShare(pathname)

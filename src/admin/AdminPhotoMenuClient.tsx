@@ -25,7 +25,7 @@ export default function AdminPhotoMenuClient({
   const isFav = isPhotoFav(photo);
   const path = usePathname();
   const shouldRedirectFav = isPathFavs(path) && isFav;
-  const shouldRedirectDelete = pathForPhoto(photo.id) === path;
+  const shouldRedirectDelete = pathForPhoto({ photo: photo.id }) === path;
 
   return (
     isUserSignedIn

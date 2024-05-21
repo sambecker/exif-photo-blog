@@ -92,7 +92,7 @@ export const toggleFavoritePhotoAction = async (
       await updatePhoto(convertPhotoToPhotoDbInsert(photo));
       revalidateAllKeysAndPaths();
       if (shouldRedirect) {
-        redirect(pathForPhoto(photoId));
+        redirect(pathForPhoto({ photo: photoId }));
       }
     }
   });
