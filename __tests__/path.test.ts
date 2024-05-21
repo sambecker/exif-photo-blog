@@ -10,6 +10,10 @@ import {
   isPathFilmSimulationPhoto,
   isPathFilmSimulationPhotoShare,
   isPathFilmSimulationShare,
+  isPathFocalLength,
+  isPathFocalLengthPhoto,
+  isPathFocalLengthPhotoShare,
+  isPathFocalLengthShare,
   isPathPhoto,
   isPathPhotoShare,
   isPathProtected,
@@ -20,13 +24,15 @@ import {
 } from '@/site/paths';
 import { TAG_HIDDEN } from '@/tag';
 
-const PHOTO_ID        = 'UsKSGcbt';
-const TAG             = 'tag-name';
-const CAMERA_MAKE     = 'fujifilm';
-const CAMERA_MODEL    = 'x-t1';
-const CAMERA_OBJECT   = { make: CAMERA_MAKE, model: CAMERA_MODEL };
-const FILM_SIMULATION = 'acros';
-const SHARE           = 'share';
+const PHOTO_ID            = 'UsKSGcbt';
+const TAG                 = 'tag-name';
+const CAMERA_MAKE         = 'fujifilm';
+const CAMERA_MODEL        = 'x-t1';
+const CAMERA_OBJECT       = { make: CAMERA_MAKE, model: CAMERA_MODEL };
+const FILM_SIMULATION     = 'acros';
+const FOCAL_LENGTH        = 90;
+const FOCAL_LENGTH_STRING = `${FOCAL_LENGTH}mm`;
+const SHARE               = 'share';
 
 const PATH_ROOT                         = '/';
 const PATH_GRID                         = '/grid';
@@ -54,6 +60,11 @@ const PATH_FILM_SIMULATION              = `/film/${FILM_SIMULATION}`;
 const PATH_FILM_SIMULATION_SHARE        = `${PATH_FILM_SIMULATION}/${SHARE}`;
 const PATH_FILM_SIMULATION_PHOTO        = `${PATH_FILM_SIMULATION}/${PHOTO_ID}`;
 const PATH_FILM_SIMULATION_PHOTO_SHARE  = `${PATH_FILM_SIMULATION_PHOTO}/${SHARE}`;
+
+const PATH_FOCAL_LENGTH                 = `/focal/${FOCAL_LENGTH_STRING}`;
+const PATH_FOCAL_LENGTH_SHARE           = `${PATH_FOCAL_LENGTH}/${SHARE}`;
+const PATH_FOCAL_LENGTH_PHOTO           = `${PATH_FOCAL_LENGTH}/${PHOTO_ID}`;
+const PATH_FOCAL_LENGTH_PHOTO_SHARE     = `${PATH_FOCAL_LENGTH_PHOTO}/${SHARE}`;
  
 describe('Paths', () => {
   it('can be protected', () => {
@@ -87,6 +98,10 @@ describe('Paths', () => {
     expect(isPathFilmSimulationShare(PATH_FILM_SIMULATION_SHARE)).toBe(true);
     expect(isPathFilmSimulationPhoto(PATH_FILM_SIMULATION_PHOTO)).toBe(true);
     expect(isPathFilmSimulationPhotoShare(PATH_FILM_SIMULATION_PHOTO_SHARE)).toBe(true);
+    expect(isPathFocalLength(PATH_FOCAL_LENGTH)).toBe(true);
+    expect(isPathFocalLengthShare(PATH_FOCAL_LENGTH_SHARE)).toBe(true);
+    expect(isPathFocalLengthPhoto(PATH_FOCAL_LENGTH_PHOTO)).toBe(true);
+    expect(isPathFocalLengthPhotoShare(PATH_FOCAL_LENGTH_PHOTO_SHARE)).toBe(true);
     // Negative
     expect(isPathPhoto(PATH_TAG_PHOTO_SHARE)).toBe(false);
     expect(isPathPhotoShare(PATH_TAG_PHOTO)).toBe(false);
@@ -102,8 +117,13 @@ describe('Paths', () => {
     expect(isPathFilmSimulationShare(PATH_TAG)).toBe(false);
     expect(isPathFilmSimulationPhoto(PATH_PHOTO_SHARE)).toBe(false);
     expect(isPathFilmSimulationPhotoShare(PATH_PHOTO)).toBe(false);
+    expect(isPathFocalLength(PATH_FILM_SIMULATION)).toBe(false);
+    expect(isPathFocalLengthShare(PATH_FILM_SIMULATION_SHARE)).toBe(false);
+    expect(isPathFocalLengthPhoto(PATH_FILM_SIMULATION_PHOTO)).toBe(false);
+    expect(isPathFocalLengthPhotoShare(PATH_FILM_SIMULATION_PHOTO_SHARE)).toBe(false);
   });
   it('can be parsed', () => {
+    // Core
     expect(getPathComponents(PATH_ROOT)).toEqual({});
     expect(getPathComponents(PATH_PHOTO)).toEqual({
       photoId: PHOTO_ID,
@@ -111,6 +131,7 @@ describe('Paths', () => {
     expect(getPathComponents(PATH_PHOTO_SHARE)).toEqual({
       photoId: PHOTO_ID,
     });
+    // Tag
     expect(getPathComponents(PATH_TAG)).toEqual({
       tag: TAG,
     });
@@ -125,6 +146,7 @@ describe('Paths', () => {
       photoId: PHOTO_ID,
       tag: TAG,
     });
+    // Camera
     expect(getPathComponents(PATH_CAMERA)).toEqual({
       camera: CAMERA_OBJECT,
     });
@@ -139,6 +161,7 @@ describe('Paths', () => {
       photoId: PHOTO_ID,
       camera: CAMERA_OBJECT,
     });
+    // Film Simulation
     expect(getPathComponents(PATH_FILM_SIMULATION)).toEqual({
       simulation: FILM_SIMULATION,
     });
@@ -153,29 +176,49 @@ describe('Paths', () => {
       photoId: PHOTO_ID,
       simulation: FILM_SIMULATION,
     });
+    // Focal Length
+    expect(getPathComponents(PATH_FOCAL_LENGTH)).toEqual({
+      focal: FOCAL_LENGTH,
+    });
+    expect(getPathComponents(PATH_FOCAL_LENGTH_SHARE)).toEqual({
+      focal: FOCAL_LENGTH,
+    });
+    expect(getPathComponents(PATH_FOCAL_LENGTH_PHOTO)).toEqual({
+      photoId: PHOTO_ID,
+      focal: FOCAL_LENGTH,
+    });
+    expect(getPathComponents(PATH_FOCAL_LENGTH_PHOTO_SHARE)).toEqual({
+      photoId: PHOTO_ID,
+      focal: FOCAL_LENGTH,
+    });
   });
   it('can be escaped', () => {
-    // Root views
+    // Root
     expect(getEscapePath(PATH_ROOT)).toEqual(undefined);
     expect(getEscapePath(PATH_GRID)).toEqual(undefined);
     expect(getEscapePath(PATH_ADMIN)).toEqual(undefined);
-    // Photo views
+    // Photo
     expect(getEscapePath(PATH_PHOTO)).toEqual(PATH_GRID);
     expect(getEscapePath(PATH_PHOTO_SHARE)).toEqual(PATH_PHOTO);
-    // Tag views
+    // Tag
     expect(getEscapePath(PATH_TAG)).toEqual(PATH_GRID);
     expect(getEscapePath(PATH_TAG_SHARE)).toEqual(PATH_TAG);
     expect(getEscapePath(PATH_TAG_PHOTO)).toEqual(PATH_TAG);
     expect(getEscapePath(PATH_TAG_PHOTO_SHARE)).toEqual(PATH_TAG_PHOTO);
-    // Camera views
+    // Camera
     expect(getEscapePath(PATH_CAMERA)).toEqual(PATH_GRID);
     expect(getEscapePath(PATH_CAMERA_SHARE)).toEqual(PATH_CAMERA);
     expect(getEscapePath(PATH_CAMERA_PHOTO)).toEqual(PATH_CAMERA);
     expect(getEscapePath(PATH_CAMERA_PHOTO_SHARE)).toEqual(PATH_CAMERA_PHOTO);
-    // Film Simulation views
+    // Film Simulation
     expect(getEscapePath(PATH_FILM_SIMULATION)).toEqual(PATH_GRID);
     expect(getEscapePath(PATH_FILM_SIMULATION_SHARE)).toEqual(PATH_FILM_SIMULATION);
     expect(getEscapePath(PATH_FILM_SIMULATION_PHOTO)).toEqual(PATH_FILM_SIMULATION);
     expect(getEscapePath(PATH_FILM_SIMULATION_PHOTO_SHARE)).toEqual(PATH_FILM_SIMULATION_PHOTO);
+    // Focal Length
+    expect(getEscapePath(PATH_FOCAL_LENGTH)).toEqual(PATH_GRID);
+    expect(getEscapePath(PATH_FOCAL_LENGTH_SHARE)).toEqual(PATH_FOCAL_LENGTH);
+    expect(getEscapePath(PATH_FOCAL_LENGTH_PHOTO)).toEqual(PATH_FOCAL_LENGTH);
+    expect(getEscapePath(PATH_FOCAL_LENGTH_PHOTO_SHARE)).toEqual(PATH_FOCAL_LENGTH_PHOTO);
   });
 });

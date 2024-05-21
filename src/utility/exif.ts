@@ -31,9 +31,6 @@ export const getAspectRatioFromExif = (data: ExifData): number => {
   }
 };
 
-export const formatFocalLength = (focalLength?: number) =>
-  focalLength ? `${focalLength}mm` : undefined;
-
 export const formatAperture = (aperture?: number) =>
   aperture ? `ƒ/${aperture}` : undefined;
 

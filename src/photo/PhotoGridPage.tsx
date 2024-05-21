@@ -17,6 +17,7 @@ export default function PhotoGridPage({
   tag,
   camera,
   simulation,
+  focal,
   animateOnFirstLoadOnly,
   header,
   sidebar,
@@ -27,6 +28,7 @@ export default function PhotoGridPage({
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
+  focal?: number
   animateOnFirstLoadOnly?: boolean
   header?: JSX.Element
   sidebar?: JSX.Element
@@ -58,6 +60,7 @@ export default function PhotoGridPage({
             tag,
             camera,
             simulation,
+            focal,
             animateOnFirstLoadOnly,
             onAnimationComplete,
           }} />
@@ -69,6 +72,7 @@ export default function PhotoGridPage({
               tag,
               camera,
               simulation,
+              focal,
               animateOnFirstLoadOnly,
             }} />}
         </div>

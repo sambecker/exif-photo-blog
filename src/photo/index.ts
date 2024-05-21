@@ -1,3 +1,4 @@
+import { formatFocalLength } from '@/focal';
 import { getNextImageUrlForRequest } from '@/services/next-image';
 import { FilmSimulation } from '@/simulation';
 import { HIGH_DENSITY_GRID, SHOW_EXIF_DATA } from '@/site/config';
@@ -8,7 +9,6 @@ import {
   formatIso,
   formatExposureCompensation,
   formatExposureTime,
-  formatFocalLength,
 } from '@/utility/exif';
 import camelcaseKeys from 'camelcase-keys';
 import { isBefore } from 'date-fns';

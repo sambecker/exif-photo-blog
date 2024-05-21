@@ -7,16 +7,17 @@ export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 export const PHOTO_DEFAULT_LIMIT = 100;
 
 export type GetPhotosOptions = {
-  sortBy?: 'createdAt' | 'takenAt' | 'priority';
-  limit?: number;
-  offset?: number;
-  query?: string;
-  tag?: string;
-  camera?: Camera;
-  simulation?: FilmSimulation;
-  takenBefore?: Date;
-  takenAfterInclusive?: Date;
-  hidden?: 'exclude' | 'include' | 'only';
+  sortBy?: 'createdAt' | 'takenAt' | 'priority'
+  limit?: number
+  offset?: number
+  query?: string
+  tag?: string
+  camera?: Camera
+  simulation?: FilmSimulation
+  focal?: number
+  takenBefore?: Date
+  takenAfterInclusive?: Date
+  hidden?: 'exclude' | 'include' | 'only'
 };
 
 export const getWheresFromOptions = (
@@ -31,6 +32,7 @@ export const getWheresFromOptions = (
     tag,
     camera,
     simulation,
+    focal,
   } = options;
 
   const wheres = [] as string[];
@@ -72,6 +74,10 @@ export const getWheresFromOptions = (
   if (simulation) {
     wheres.push(`film_simulation=$${valuesIndex++}`);
     wheresValues.push(simulation);
+  }
+  if (focal) {
+    wheres.push(`focal_length=$${valuesIndex++}`);
+    wheresValues.push(focal);
   }
 
   return {

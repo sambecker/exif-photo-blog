@@ -33,7 +33,7 @@ export async function generateMetadata({
 
   const title = titleForPhoto(photo);
   const description = descriptionForPhoto(photo);
-  const url = absolutePathForPhoto(photo, TAG_HIDDEN);
+  const url = absolutePathForPhoto({ photo, tag: TAG_HIDDEN });
 
   return {
     title,

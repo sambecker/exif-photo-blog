@@ -33,7 +33,7 @@ export const sortFilmSimulationsWithCount = (
 
 export const titleForFilmSimulation = (
   simulation: FilmSimulation,
-  photos:Photo[],
+  photos: Photo[],
   explicitCount?: number,
 ) => [
   labelForFilmSimulation(simulation).large,

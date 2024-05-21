@@ -11,37 +11,34 @@ import {
   absolutePathForPhotoImage,
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
+import { getPhotosNearIdCached } from '@/photo/cache';
 import { ReactNode, cache } from 'react';
-import { FilmSimulation } from '@/simulation';
-import {
-  getPhotosMetaCached,
-  getPhotosNearIdCached,
-} from '@/photo/cache';
+import { getPhotosMeta } from '@/photo/db/query';
+import { getFocalLengthFromString } from '@/focal';
 
-const getPhotosNearIdCachedCached = cache((
-  photoId: string,
-  simulation: FilmSimulation,
-) =>
+const getPhotosNearIdCachedCached = cache((photoId: string, focal: number) =>
   getPhotosNearIdCached(
     photoId,
-    { simulation, limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 },
+    { focal, limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 },
   ));
 
-interface PhotoFilmSimulationProps {
-  params: { photoId: string, simulation: FilmSimulation }
+interface PhotoFocalLengthProps {
+  params: { photoId: string, focal: string }
 }
 
 export async function generateMetadata({
-  params: { photoId, simulation },
-}: PhotoFilmSimulationProps): Promise<Metadata> {
-  const { photo } = await getPhotosNearIdCachedCached(photoId, simulation);
+  params: { photoId, focal: focalString },
+}: PhotoFocalLengthProps): Promise<Metadata> {
+  const focal = getFocalLengthFromString(focalString);
+
+  const { photo } = await getPhotosNearIdCachedCached(photoId, focal);
 
   if (!photo) { return {}; }
 
   const title = titleForPhoto(photo);
   const description = descriptionForPhoto(photo);
   const images = absolutePathForPhotoImage(photo);
-  const url = absolutePathForPhoto({ photo, simulation });
+  const url = absolutePathForPhoto({ photo, focal });
 
   return {
     title,
@@ -61,16 +58,18 @@ export async function generateMetadata({
   };
 }
 
-export default async function PhotoFilmSimulationPage({
-  params: { photoId, simulation },
+export default async function PhotoFocalLengthPage({
+  params: { photoId, focal: focalString },
   children,
-}: PhotoFilmSimulationProps & { children: ReactNode }) {
+}: PhotoFocalLengthProps & { children: ReactNode }) {
+  const focal = getFocalLengthFromString(focalString);
+
   const { photo, photos, photosGrid, indexNumber } =
-    await getPhotosNearIdCachedCached(photoId, simulation);
+    await getPhotosNearIdCachedCached(photoId, focal);
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const { count, dateRange } = await getPhotosMetaCached({ simulation });
+  const { count, dateRange } = await getPhotosMeta({ focal });
 
   return <>
     {children}
@@ -78,7 +77,7 @@ export default async function PhotoFilmSimulationPage({
       photo,
       photos,
       photosGrid,
-      simulation,
+      focal,
       indexNumber,
       count,
       dateRange,

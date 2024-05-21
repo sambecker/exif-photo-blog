@@ -29,7 +29,7 @@ export default function PhotoOGTile({
     <OGTile {...{
       title: titleForPhoto(photo),
       description: descriptionForPhoto(photo),
-      path: pathForPhoto(photo),
+      path: pathForPhoto({ photo }),
       pathImageAbsolute: absolutePathForPhotoImage(photo),
       loadingState: loadingStateExternal,
       onLoad,
