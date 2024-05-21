@@ -23,7 +23,7 @@ export const titleForFocalLength = (
   photos: Photo[],
   explicitCount?: number,
 ) => [
-  formatFocalLength(focal),
+  `${formatFocalLength(focal)} Focal Length`,
   photoQuantityText(explicitCount ?? photos.length),
 ].join(' ');
 

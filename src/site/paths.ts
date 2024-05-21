@@ -125,11 +125,14 @@ export const pathForCameraShare = (camera: Camera) =>
 export const pathForFilmSimulation = (simulation: FilmSimulation) =>
   `${PREFIX_FILM_SIMULATION}/${simulation}`;
 
+export const pathForFilmSimulationShare = (simulation: FilmSimulation) =>
+  `${pathForFilmSimulation(simulation)}/${SHARE}`;
+
 export const pathForFocalLength = (focal: number) =>
   `${PREFIX_FOCAL_LENGTH}/${focal}mm`;
 
-export const pathForFilmSimulationShare = (simulation: FilmSimulation) =>
-  `${pathForFilmSimulation(simulation)}/${SHARE}`;
+export const pathForFocalLengthShare = (focal: number) =>
+  `${pathForFocalLength(focal)}/${SHARE}`;;
 
 export const absolutePathForPhoto = (params: PhotoPathParams) =>
   `${BASE_URL}${pathForPhoto(params)}`;

@@ -101,6 +101,7 @@ export default function PhotoLinks({
         tag={tag}
         camera={camera}
         simulation={simulation}
+        focal={focal}
         scroll={false}
         prefetch
       >
@@ -112,6 +113,7 @@ export default function PhotoLinks({
         tag={tag}
         camera={camera}
         simulation={simulation}
+        focal={focal}
         scroll={false}
         prefetch
       >

@@ -1,6 +1,6 @@
 import { Photo, PhotoDateRange } from '@/photo';
 import { descriptionForFocalLengthPhotos } from '.';
-import { pathForFocalLength } from '@/site/paths';
+import { pathForFocalLengthShare } from '@/site/paths';
 import PhotoSetHeader from '@/photo/PhotoSetHeader';
 import PhotoFocalLength from './PhotoFocalLength';
 
@@ -22,7 +22,6 @@ export default function FocalLengthHeader({
   return (
     <PhotoSetHeader
       entity={<PhotoFocalLength focal={focal} contrast="high" />}
-      entityVerb="Tagged"
       entityDescription={descriptionForFocalLengthPhotos(
         photos,
         undefined,
@@ -30,7 +29,7 @@ export default function FocalLengthHeader({
       )}
       photos={photos}
       selectedPhoto={selectedPhoto}
-      sharePath={pathForFocalLength(focal)}
+      sharePath={pathForFocalLengthShare(focal)}
       indexNumber={indexNumber}
       count={count}
       dateRange={dateRange}

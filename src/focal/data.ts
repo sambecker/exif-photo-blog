@@ -3,7 +3,7 @@ import {
   getPhotosMetaCached,
 } from '@/photo/cache';
 
-export const getPhotosFocalDataCached = ({
+export const getPhotosFocalLengthDataCached = ({
   focal,
   limit,
 }: {
