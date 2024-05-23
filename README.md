@@ -1,5 +1,5 @@
 # 拉取原项目commit
-git remote add upstream https://github.com/sambecker/exif-photo-blog/assets/169298/4253ea54-558a-4358-8834-89943cfbafb4
+git remote add upstream https://github.com/sambecker/exif-photo-blog
 git remote -v
 git fetch upstream
 git checkout main  # 切换到你的主分支
@@ -9,7 +9,7 @@ git push origin main
 
 
 # 原项目地址：
-https://github.com/sambecker/exif-photo-blog/assets/169298/4253ea54-558a-4358-8834-89943cfbafb4
+https://github.com/sambecker/exif-photo-blog
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?demo-title=Photo+Blog&demo-description=Store+photos+with+original+camera+data&demo-url=https%3A%2F%2Fphotos.sambecker.com&demo-image=https%3A%2F%2Fphotos.sambecker.com%2Ftemplate-image-tight&project-name=Photo+Blog&repository-name=exif-photo-blog&repository-url=https%3A%2F%2Fgithub.com%2Fsambecker%2Fexif-photo-blog&from=templates&skippable-integrations=1&teamCreateStatus=hidden&stores=%5B%7B%22type%22%3A%22postgres%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D)
 
