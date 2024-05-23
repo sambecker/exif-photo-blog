@@ -27,6 +27,11 @@ const createRemotePattern = (hostname) => hostname
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
   images: {
     imageSizes: [200],
     remotePatterns: []
