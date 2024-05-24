@@ -8,8 +8,7 @@ import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
 
 export default function ThemeSwitcher () {
   const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
-
+  const { theme, setTheme } = useTheme();//theme默认值是'light'
   // useEffect only runs on the client, so now we can safely show the UI
   useEffect(() => {
     setMounted(true);
@@ -21,11 +20,11 @@ export default function ThemeSwitcher () {
 
   return (
     <Switcher>
-      <SwitcherItem
+      {/* <SwitcherItem
         icon={<BiDesktop size={16} />}
         onClick={() => setTheme('system')}
         active={theme === 'system'}
-      />
+      /> */}
       <SwitcherItem
         icon={<BiSun size={18} />}
         onClick={() => setTheme('light')}
