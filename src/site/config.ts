@@ -11,7 +11,7 @@ export const SHOULD_DEBUG_SQL = false;
 
 export const SITE_TITLE =
   process.env.NEXT_PUBLIC_SITE_TITLE ||
-  'Photo Blog';
+  'J-Rear-Window';
 
 const VERCEL_ENV = process.env.NEXT_PUBLIC_VERCEL_ENV;
 const VERCEL_PRODUCTION_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL;

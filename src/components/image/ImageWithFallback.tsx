@@ -16,7 +16,7 @@ export default function ImageWithFallback(props: ImageProps & {
     priority,
     blurDataURL,
     blurCompatibilityLevel = 'low',
-    imgClassName = 'object-cover h-full',
+    imgClassName = 'object-cover h-full w-auto',
     ...rest
   } = props;
 

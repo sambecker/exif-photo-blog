@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 const REQUIRE_ENV_VARS = false;
 
-const TITLE = 'Photo Blog';
+const TITLE = 'J-Rear-Window';
 const DESCRIPTION = 'Store photos with original camera data';
 const REPO_TEAM = 'sambecker';
 const REPO_NAME = 'exif-photo-blog';

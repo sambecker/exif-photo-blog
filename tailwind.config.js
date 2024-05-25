@@ -43,5 +43,10 @@ module.exports = {
   plugins: [
     require('@tailwindcss/forms'),
     require('@tailwindcss/container-queries'),
+    require('daisyui'),
   ],
+  // daisyUI config (optional - here are the default values)
+  daisyui: {
+    prefix: "", // prefix for daisyUI classnames (components, modifiers and responsive class names. Not colors)
+  },
 };
