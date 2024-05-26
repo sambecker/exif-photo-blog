@@ -4,7 +4,7 @@ import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
 import type { NextImageSize } from '@/services/next-image';
-import { isTagFavs } from '@/tag';
+import { formatTag, isTagFavs } from '@/tag';
 
 export default function TagImageResponse({
   tag,
@@ -43,18 +43,18 @@ export default function TagImageResponse({
               transform: `translateY(${height * .0095}px)`,
               // Fix horizontal distortion in icon size
               width: height * .076,
-              marginRight: height * .01,
+              marginRight: height * .015,
             }}
           />
           : <FaTag
             size={height * .06}
             style={{
               transform: `translateY(${height * .016}px)`,
-              marginRight: height * .015,
+              marginRight: height * .02,
             }}
           />,
       }}>
-        {tag.toLocaleUpperCase()}
+        {formatTag(tag).toLocaleUpperCase()}
       </ImageCaption>
     </ImageContainer>
   );

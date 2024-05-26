@@ -36,7 +36,7 @@ export const titleForTag = (
 ].join(' ');
 
 export const shareTextForTag = (tag: string) =>
-  isTagFavs(tag) ? 'Favorite photos' : `Photos tagged '${tag}'`;
+  isTagFavs(tag) ? 'Favorite photos' : `Photos tagged '${formatTag(tag)}'`;
 
 export const sortTags = (
   tags: string[],
