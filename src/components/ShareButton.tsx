@@ -1,6 +1,6 @@
 import { TbPhotoShare } from 'react-icons/tb';
 import PathLoaderButton from './primitives/PathLoaderButton';
-import clsx from 'clsx';
+import { clsx } from 'clsx/lite';
 
 export default function ShareButton({
   path,
