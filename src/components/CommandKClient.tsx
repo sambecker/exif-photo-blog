@@ -38,7 +38,7 @@ import { getKeywordsForPhoto, titleForPhoto } from '@/photo';
 import PhotoDate from '@/photo/PhotoDate';
 import PhotoSmall from '@/photo/PhotoSmall';
 import { FaCheck } from 'react-icons/fa6';
-import { TagsWithMeta, addHiddenToTags } from '@/tag';
+import { TagsWithMeta, addHiddenToTags, formatTag } from '@/tag';
 import { FaTag } from 'react-icons/fa';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 
@@ -191,7 +191,7 @@ export default function CommandKClient({
       className="translate-x-[1px] translate-y-[0.75px]"
     />,
     items: tagsIncludingHidden.map(({ tag, count }) => ({
-      label: tag,
+      label: formatTag(tag),
       annotation: formatCount(count),
       annotationAria: formatCountDescriptive(count),
       path: pathForTag(tag),
