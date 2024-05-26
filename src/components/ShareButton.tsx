@@ -28,8 +28,8 @@ export default function ShareButton({
       spinnerColor="dim"
       prefetch={prefetch}
       shouldScroll={shouldScroll}
+      styleAs="link"
       shouldReplace
-      styleAsLink
     />
   );
 }

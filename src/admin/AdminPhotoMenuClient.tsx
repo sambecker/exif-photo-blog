@@ -8,7 +8,7 @@ import { Photo, deleteConfirmationTextForPhoto } from '@/photo';
 import { isPathFavs, isPhotoFav } from '@/tag';
 import { usePathname } from 'next/navigation';
 import { BiTrash } from 'react-icons/bi';
-import MoreMenu from '@/components/MoreMenu';
+import MoreMenu from '@/components/more/MoreMenu';
 import { useAppState } from '@/state/AppState';
 import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 
