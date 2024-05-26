@@ -41,6 +41,7 @@ export default function PhotoLarge({
   revalidatePhoto,
   showCamera = true,
   showSimulation = true,
+  shouldShare = true,
   shouldShareTag,
   shouldShareCamera,
   shouldShareSimulation,
@@ -56,6 +57,7 @@ export default function PhotoLarge({
   revalidatePhoto?: RevalidatePhoto
   showCamera?: boolean
   showSimulation?: boolean
+  shouldShare?: boolean
   shouldShareTag?: boolean
   shouldShareCamera?: boolean
   shouldShareSimulation?: boolean
@@ -193,22 +195,24 @@ export default function PhotoLarge({
                 photo={photo}
                 className="text-medium"
               />
-              <ShareButton
-                className={clsx(
-                  'md:translate-x-[-2.5px]',
-                  'translate-y-[1.5px] md:translate-y-0',
-                )}
-                path={pathForPhotoShare({
-                  photo,
-                  tag: shouldShareTag ? primaryTag : undefined,
-                  camera: shouldShareCamera ? camera : undefined,
-                  // eslint-disable-next-line max-len
-                  simulation: shouldShareSimulation ? photo.filmSimulation : undefined,
-                  focal: shouldShareFocalLength ? photo.focalLength : undefined,
-                })}
-                prefetch={prefetchRelatedLinks}
-                shouldScroll={shouldScrollOnShare}
-              />
+              {shouldShare &&
+                <ShareButton
+                  className={clsx(
+                    'md:translate-x-[-2.5px]',
+                    'translate-y-[1.5px] md:translate-y-0',
+                  )}
+                  path={pathForPhotoShare({
+                    photo,
+                    tag: shouldShareTag ? primaryTag : undefined,
+                    camera: shouldShareCamera ? camera : undefined,
+                    // eslint-disable-next-line max-len
+                    simulation: shouldShareSimulation ? photo.filmSimulation : undefined,
+                    // eslint-disable-next-line max-len
+                    focal: shouldShareFocalLength ? photo.focalLength : undefined,
+                  })}
+                  prefetch={prefetchRelatedLinks}
+                  shouldScroll={shouldScrollOnShare}
+                />}
             </div>
           </div>
         </DivDebugBaselineGrid>}
