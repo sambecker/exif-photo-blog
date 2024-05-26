@@ -14,16 +14,16 @@ const focal = 90;
 
 export default async function OGOverviewPage() {
   const [
-    photosBasic,
-    photosIcon,
+    photoBasic,
+    photoIcon,
     photosTag,
     photosFavs,
     photosCamera,
     photosSimulation,
     photosFocal,
   ] = await Promise.all([
-    getPhotosCached({ limit: 1 }),
-    getPhotosCached({ limit: 1, camera: cameraIcon }),
+    getPhotosCached({ limit: 1 }).then(photos => photos[0]),
+    getPhotosCached({ limit: 1, camera: cameraIcon }).then(photos => photos[0]),
     getPhotosCached({ limit: 1, tag }),
     getPhotosCached({ limit: 1, tag: TAG_FAVS }),
     getPhotosCached({ limit: 1, camera }),
@@ -31,12 +31,10 @@ export default async function OGOverviewPage() {
     getPhotosCached({ limit: 1, focal }),
   ]);
 
-  console.log(photosIcon);
-
   return (
     <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      <PhotoOGTile photo={photosBasic[0]} />
-      <PhotoOGTile photo={photosIcon[0]} />
+      {photoBasic && <PhotoOGTile photo={photoBasic} />}
+      {photoIcon && <PhotoOGTile photo={photoIcon} />}
       <TagOGTile tag={tag} photos={photosTag} />
       <TagOGTile tag={TAG_FAVS} photos={photosFavs} />
       <CameraOGTile camera={camera} photos={photosCamera} />
