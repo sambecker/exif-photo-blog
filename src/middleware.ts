@@ -11,7 +11,6 @@ import {
 } from './site/paths';
 
 export default function middleware(req: NextRequest, res:NextResponse) {
-  console.log('MIDDLEWARE', req.nextUrl.pathname);
   const pathname = req.nextUrl.pathname;
 
   if (pathname === PATH_ADMIN) {
