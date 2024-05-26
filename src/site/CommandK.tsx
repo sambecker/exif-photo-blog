@@ -1,4 +1,6 @@
-import CommandKClient, { CommandKSection } from '@/components/CommandKClient';
+import CommandKClient, {
+  CommandKSection,
+} from '@/components/cmdk/CommandKClient';
 import {
   getPhotosMetaCached,
   getUniqueCamerasCached,
