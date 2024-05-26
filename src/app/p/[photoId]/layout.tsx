@@ -1,5 +1,5 @@
 import {
-  GRID_THUMBNAILS_TO_SHOW_MAX,
+  RELATED_GRID_PHOTOS_TO_SHOW,
   descriptionForPhoto,
   titleForPhoto,
 } from '@/photo';
@@ -11,9 +11,14 @@ import {
   absolutePathForPhotoImage,
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotosNearIdCachedCached } from '@/photo/cache';
+import { getPhotosNearIdCached } from '@/photo/cache';
 import { IS_PRODUCTION, STATICALLY_OPTIMIZED_PAGES } from '@/site/config';
-import { GENERATE_STATIC_PARAMS_LIMIT, getPhotoIds } from '@/photo/db';
+import { getPhotoIds } from '@/photo/db/query';
+import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
+import { ReactNode, cache } from 'react';
+
+const getPhotosNearIdCachedCached = cache((photoId: string) =>
+  getPhotosNearIdCached(photoId, { limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 }));
 
 export let generateStaticParams:
   (() => Promise<{ photoId: string }[]>) | undefined = undefined;
@@ -32,17 +37,14 @@ interface PhotoProps {
 export async function generateMetadata({
   params: { photoId },
 }:PhotoProps): Promise<Metadata> {
-  const { photo } = await getPhotosNearIdCachedCached(
-    photoId,
-    GRID_THUMBNAILS_TO_SHOW_MAX + 2,
-  );
+  const { photo } = await getPhotosNearIdCachedCached(photoId);
 
   if (!photo) { return {}; }
 
   const title = titleForPhoto(photo);
   const description = descriptionForPhoto(photo);
   const images = absolutePathForPhotoImage(photo);
-  const url = absolutePathForPhoto(photo);
+  const url = absolutePathForPhoto({ photo });
 
   return {
     title,
@@ -65,27 +67,14 @@ export async function generateMetadata({
 export default async function PhotoPage({
   params: { photoId },
   children,
-}: PhotoProps & { children: React.ReactNode }) {
-  const { photos, photo } = await getPhotosNearIdCachedCached(
-    photoId,
-    GRID_THUMBNAILS_TO_SHOW_MAX + 2,
-  );
+}: PhotoProps & { children: ReactNode }) {
+  const { photo, photos, photosGrid } =
+    await getPhotosNearIdCachedCached(photoId);
 
   if (!photo) { redirect(PATH_ROOT); }
-  
-  const isPhotoFirst = photos.findIndex(p => p.id === photoId) === 0;
 
   return <>
     {children}
-    <PhotoDetailPage
-      photo={photo}
-      photos={photos}
-      photosGrid={photos.slice(
-        isPhotoFirst ? 1 : 2,
-        isPhotoFirst
-          ? GRID_THUMBNAILS_TO_SHOW_MAX + 1
-          : GRID_THUMBNAILS_TO_SHOW_MAX + 2,
-      )}
-    />
+    <PhotoDetailPage {...{ photo, photos, photosGrid }} />
   </>;
 }

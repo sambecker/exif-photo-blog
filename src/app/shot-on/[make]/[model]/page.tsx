@@ -1,28 +1,28 @@
 import { Metadata } from 'next/types';
-import { CameraProps, getCameraFromParams } from '@/camera';
+import { CameraProps } from '@/camera';
 import { generateMetaForCamera } from '@/camera/meta';
-import {
-  GRID_THUMBNAILS_TO_SHOW_MAX,
-  INFINITE_SCROLL_INITIAL_GRID,
-} from '@/photo';
+import { INFINITE_SCROLL_GRID_PHOTO_INITIAL } from '@/photo';
 import { getPhotosCameraDataCached } from '@/camera/data';
 import CameraOverview from '@/camera/CameraOverview';
 import { cache } from 'react';
 
-const getPhotosCameraDataCachedCached = cache(getPhotosCameraDataCached);
+const getPhotosCameraDataCachedCached = cache((
+  make: string,
+  model: string,
+) => getPhotosCameraDataCached(
+  make,
+  model,
+  INFINITE_SCROLL_GRID_PHOTO_INITIAL,
+));
 
 export async function generateMetadata({
-  params,
+  params: { make, model },
 }: CameraProps): Promise<Metadata> {
-  const camera = getCameraFromParams(params);
-
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosCameraDataCachedCached({
     camera,
-    limit: GRID_THUMBNAILS_TO_SHOW_MAX,
-  });
+  ] = await getPhotosCameraDataCachedCached(make, model);
 
   const {
     url,
@@ -48,16 +48,14 @@ export async function generateMetadata({
   };
 }
 
-export default async function CameraPage({ params }: CameraProps) {
-  const camera = getCameraFromParams(params);
-
+export default async function CameraPage({
+  params: { make, model },
+}: CameraProps) {
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosCameraDataCachedCached({
     camera,
-    limit: INFINITE_SCROLL_INITIAL_GRID,
-  });
+  ] = await getPhotosCameraDataCachedCached(make, model);
 
   return (
     <CameraOverview {...{ camera, photos, count, dateRange }} />

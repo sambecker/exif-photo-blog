@@ -1,10 +1,17 @@
-export const toFixedNumber = (
+export const roundToString = (
   number: number,
-  digits: number,
-  base = 10) => {
-  const pow = Math.pow(base ?? 10, digits);
-  return Math.round(number * pow) / pow;
+  place = 1,
+  includeZero?: boolean,
+) => {
+  const precision = Math.pow(10, place);
+  const result = Math.round(number * precision) / precision;
+  return includeZero ? result.toFixed(place) : result.toString();
 };
+
+export const roundToNumber = (
+  ...args: Parameters<typeof roundToString>
+) =>
+  parseFloat(roundToString(...args));
 
 const gcd = (a: number, b: number): number => {
   if (b <= 0.0000001) {

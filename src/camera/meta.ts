@@ -24,6 +24,15 @@ export const titleForCamera = (
   photoQuantityText(explicitCount ?? photos.length),
 ].join(' ');
 
+export const shareTextForCamera = (
+  camera: Camera,
+  photos: Photo[],
+) =>
+  [
+    'Photos shot on',
+    formatCameraText(cameraFromPhoto(photos[0], camera)),
+  ].join(' ');
+
 export const descriptionForCameraPhotos = (
   photos: Photo[],
   dateBased?: boolean,

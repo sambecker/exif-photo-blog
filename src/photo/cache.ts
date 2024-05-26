@@ -5,23 +5,17 @@ import {
   unstable_noStore,
 } from 'next/cache';
 import {
-  GetPhotosOptions,
   getPhoto,
   getPhotos,
-  getPhotosCount,
-  getPhotosCountIncludingHidden,
   getUniqueCameras,
   getUniqueTags,
-  getPhotosTagMeta,
-  getPhotosCameraMeta,
   getUniqueTagsHidden,
   getUniqueFilmSimulations,
-  getPhotosFilmSimulationMeta,
-  getPhotosDateRange,
   getPhotosNearId,
   getPhotosMostRecentUpdate,
-  getPhotosTagHiddenMeta,
-} from '@/photo/db';
+  getPhotosMeta,
+} from '@/photo/db/query';
+import { GetPhotosOptions } from './db';
 import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
 import { createCameraKey } from '@/camera';
 import {
@@ -35,7 +29,6 @@ import {
   PREFIX_TAG,
   pathForPhoto,
 } from '@/site/paths';
-import { cache } from 'react';
 
 // Table key
 const KEY_PHOTOS            = 'photos';
@@ -120,7 +113,7 @@ export const revalidatePhoto = (photoId: string) => {
   revalidateCamerasKey();
   revalidateFilmSimulationsKey();
   // Paths
-  revalidatePath(pathForPhoto(photoId), 'layout');
+  revalidatePath(pathForPhoto({ photo: photoId }), 'layout');
   revalidatePath(PATH_ROOT, 'layout');
   revalidatePath(PATH_GRID, 'layout');
   revalidatePath(PREFIX_TAG, 'layout');
@@ -137,65 +130,40 @@ export const getPhotosCached = (
   getPhotos,
   [KEY_PHOTOS, ...getPhotosCacheKeys(...args)],
 )(...args).then(parseCachedPhotosDates);
-export const getPhotosCachedCached = cache(getPhotosCached);
 
-const getPhotosNearIdCached = (
+export const getPhotosNearIdCached = (
   ...args: Parameters<typeof getPhotosNearId>
 ) => unstable_cache(
   getPhotosNearId,
-  [KEY_PHOTOS],
-)(...args).then(({ photos, photo }) => ({
-  photos: parseCachedPhotosDates(photos),
-  photo: photo ? parseCachedPhotoDates(photo) : undefined,
-}));
-export const getPhotosNearIdCachedCached = cache(getPhotosNearIdCached);
+  [KEY_PHOTOS, ...getPhotosCacheKeys(args[1])],
+)(...args).then(({ photos, indexNumber }) => {
+  const [photoId, { limit }] = args;
+  const photo = photos.find(({ id }) => id === photoId);
+  const isPhotoFirst = photos.findIndex(p => p.id === photoId) === 0;
+  return {
+    photo: photo ? parseCachedPhotoDates(photo) : undefined,
+    photos: parseCachedPhotosDates(photos),
+    ...limit && {
+      photosGrid: photos.slice(
+        isPhotoFirst ? 1 : 2,
+        isPhotoFirst ? limit - 1 : limit,
+      ),
+    },
+    indexNumber,
+  };
+});
 
-export const getPhotosDateRangeCached =
-  unstable_cache(
-    getPhotosDateRange,
-    [KEY_PHOTOS, KEY_DATE_RANGE],
-  );
-
-export const getPhotosCountCached =
-  unstable_cache(
-    getPhotosCount,
-    [KEY_PHOTOS, KEY_COUNT],
-  );
-
-export const getPhotosCountIncludingHiddenCached =
-  unstable_cache(
-    getPhotosCountIncludingHidden,
-    [KEY_PHOTOS, KEY_COUNT, KEY_HIDDEN],
-  );
+export const getPhotosMetaCached = (
+  ...args: Parameters<typeof getPhotosMeta>
+) => unstable_cache(
+  getPhotosMeta,
+  [KEY_PHOTOS, KEY_COUNT, KEY_DATE_RANGE, ...getPhotosCacheKeys(...args)],
+)(...args);
 
 export const getPhotosMostRecentUpdateCached =
   unstable_cache(
     () => getPhotosMostRecentUpdate(),
     [KEY_PHOTOS, KEY_COUNT, KEY_DATE_RANGE],
-  );
-
-export const getPhotosTagMetaCached =
-  unstable_cache(
-    getPhotosTagMeta,
-    [KEY_PHOTOS, KEY_TAGS, KEY_DATE_RANGE],
-  );
-
-export const getPhotosTagHiddenMetaCached =
-  unstable_cache(
-    getPhotosTagHiddenMeta,
-    [KEY_PHOTOS, KEY_TAGS, KEY_HIDDEN, KEY_DATE_RANGE],
-  );
-
-export const getPhotosCameraMetaCached =
-  unstable_cache(
-    getPhotosCameraMeta,
-    [KEY_PHOTOS, KEY_CAMERAS, KEY_DATE_RANGE],
-  );
-
-export const getPhotosFilmSimulationMetaCached =
-  unstable_cache(
-    getPhotosFilmSimulationMeta,
-    [KEY_PHOTOS, KEY_FILM_SIMULATIONS, KEY_DATE_RANGE],
   );
 
 export const getPhotoCached = (...args: Parameters<typeof getPhoto>) =>

@@ -5,6 +5,8 @@ import { Variant, motion } from 'framer-motion';
 import { useAppState } from '@/state/AppState';
 import usePrefersReducedMotion from '@/utility/usePrefersReducedMotion';
 
+const IGNORE_CAN_START = true;
+
 export type AnimationType = 'none' | 'scale' | 'left' | 'right' | 'bottom';
 
 export interface AnimationConfig {
@@ -20,9 +22,11 @@ interface Props extends AnimationConfig {
   classNameItem?: string
   items: ReactNode[]
   itemKeys?: string[]
+  canStart?: boolean
   animateFromAppState?: boolean
   animateOnFirstLoadOnly?: boolean
   staggerOnFirstLoadOnly?: boolean
+  onAnimationComplete?: () => void
 }
 
 function AnimateItems({
@@ -30,6 +34,7 @@ function AnimateItems({
   classNameItem,
   items,
   itemKeys,
+  canStart = true,
   type = 'scale',
   duration = 0.6,
   staggerDelay = 0.1,
@@ -38,6 +43,7 @@ function AnimateItems({
   animateFromAppState,
   animateOnFirstLoadOnly,
   staggerOnFirstLoadOnly,
+  onAnimationComplete,
 }: Props) {
   const {
     hasLoaded,
@@ -89,7 +95,7 @@ function AnimateItems({
     <motion.div
       className={className}
       initial={shouldAnimate ? 'hidden' : false}
-      animate="show"
+      animate={canStart || IGNORE_CAN_START ? 'show' : 'hidden'}
       variants={shouldStagger
         ? {
           show: {
@@ -102,6 +108,7 @@ function AnimateItems({
         if (animateFromAppState) {
           clearNextPhotoAnimation?.();
         }
+        onAnimationComplete?.();
       }}
     >
       {items.map((item, index) =>

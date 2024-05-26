@@ -9,12 +9,14 @@ export default function TagHeader({
   tag,
   photos,
   selectedPhoto,
+  indexNumber,
   count,
   dateRange,
 }: {
   tag: string
   photos: Photo[]
   selectedPhoto?: Photo
+  indexNumber?: number
   count?: number
   dateRange?: PhotoDateRange
 }) {
@@ -28,6 +30,7 @@ export default function TagHeader({
       photos={photos}
       selectedPhoto={selectedPhoto}
       sharePath={pathForTagShare(tag)}
+      indexNumber={indexNumber}
       count={count}
       dateRange={dateRange}
     />

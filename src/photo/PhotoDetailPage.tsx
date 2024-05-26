@@ -12,6 +12,7 @@ import { FilmSimulation } from '@/simulation';
 import FilmSimulationHeader from '@/simulation/FilmSimulationHeader';
 import { TAG_HIDDEN } from '@/tag';
 import HiddenHeader from '@/tag/HiddenHeader';
+import FocalLengthHeader from '@/focal/FocalLengthHeader';
 
 export default function PhotoDetailPage({
   photo,
@@ -20,6 +21,8 @@ export default function PhotoDetailPage({
   tag,
   camera,
   simulation,
+  focal,
+  indexNumber,
   count,
   dateRange,
 }: {
@@ -29,6 +32,8 @@ export default function PhotoDetailPage({
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
+  focal?: number
+  indexNumber?: number
   count?: number
   dateRange?: PhotoDateRange
 }) {
@@ -41,6 +46,7 @@ export default function PhotoDetailPage({
             ? <HiddenHeader
               photos={photos}
               selectedPhoto={photo}
+              indexNumber={indexNumber}
               count={count ?? 0}
             />
             : <TagHeader
@@ -48,6 +54,8 @@ export default function PhotoDetailPage({
               tag={tag}
               photos={photos}
               selectedPhoto={photo}
+              indexNumber={indexNumber}
+              count={count}
               dateRange={dateRange}
             />}
         />}
@@ -59,6 +67,7 @@ export default function PhotoDetailPage({
               camera={camera}
               photos={photos}
               selectedPhoto={photo}
+              indexNumber={indexNumber}
               count={count}
               dateRange={dateRange}
             />}
@@ -71,6 +80,20 @@ export default function PhotoDetailPage({
               simulation={simulation}
               photos={photos}
               selectedPhoto={photo}
+              indexNumber={indexNumber}
+              count={count}
+              dateRange={dateRange}
+            />}
+        />}
+      {focal &&
+        <SiteGrid
+          className="mt-4 mb-8"
+          contentMain={
+            <FocalLengthHeader
+              focal={focal}
+              photos={photos}
+              selectedPhoto={photo}
+              indexNumber={indexNumber}
               count={count}
               dateRange={dateRange}
             />}
@@ -100,6 +123,9 @@ export default function PhotoDetailPage({
           photos={photosGrid ?? photos}
           selectedPhoto={photo}
           tag={tag}
+          camera={camera}
+          simulation={simulation}
+          focal={focal}
           animateOnFirstLoadOnly
         />}
         contentSide={<AnimateItems
@@ -121,6 +147,7 @@ export default function PhotoDetailPage({
                 tag,
                 camera,
                 simulation,
+                focal,
               }} />
             </div>,
           ]}

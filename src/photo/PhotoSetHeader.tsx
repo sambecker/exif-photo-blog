@@ -13,6 +13,7 @@ export default function PhotoSetHeader({
   photos,
   selectedPhoto,
   sharePath,
+  indexNumber,
   count,
   dateRange,
 }: {
@@ -22,6 +23,7 @@ export default function PhotoSetHeader({
   photos: Photo[]
   selectedPhoto?: Photo
   sharePath?: string
+  indexNumber?: number
   count?: number
   dateRange?: PhotoDateRange
 }) {
@@ -59,7 +61,7 @@ export default function PhotoSetHeader({
         )}>
           {selectedPhotoIndex !== undefined
             // eslint-disable-next-line max-len
-            ? `${entityVerb ? `${entityVerb} ` : ''}${selectedPhotoIndex + 1} of ${count ?? photos.length}`
+            ? `${entityVerb ? `${entityVerb} ` : ''}${indexNumber || (selectedPhotoIndex + 1)} of ${count ?? photos.length}`
             : entityDescription}
           {selectedPhotoIndex === undefined && sharePath &&
             <ShareButton

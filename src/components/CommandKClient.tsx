@@ -147,7 +147,7 @@ export default function CommandKClient({
                 keywords: getKeywordsForPhoto(photo),
                 annotation: <PhotoDate {...{ photo }} />,
                 accessory: <PhotoSmall photo={photo} />,
-                path: pathForPhoto(photo),
+                path: pathForPhoto({ photo }),
               })),
             }]
             : []);

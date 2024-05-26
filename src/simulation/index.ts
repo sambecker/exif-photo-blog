@@ -33,12 +33,17 @@ export const sortFilmSimulationsWithCount = (
 
 export const titleForFilmSimulation = (
   simulation: FilmSimulation,
-  photos:Photo[],
+  photos: Photo[],
   explicitCount?: number,
 ) => [
   labelForFilmSimulation(simulation).large,
   photoQuantityText(explicitCount ?? photos.length),
 ].join(' ');
+
+export const shareTextForFilmSimulation = (
+  simulation: FilmSimulation,
+) =>
+  `Photos shot on Fujifilm ${labelForFilmSimulation(simulation).large}`;
 
 export const descriptionForFilmSimulationPhotos = (
   photos: Photo[],

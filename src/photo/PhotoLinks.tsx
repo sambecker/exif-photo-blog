@@ -21,12 +21,14 @@ export default function PhotoLinks({
   tag,
   camera,
   simulation,
+  focal,
 }: {
   photo: Photo
   photos: Photo[]
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
+  focal?: number
 }) {
   const router = useRouter();
 
@@ -47,7 +49,13 @@ export default function PhotoLinks({
           if (previousPhoto) {
             setNextPhotoAnimation?.(ANIMATION_RIGHT);
             router.push(
-              pathForPhoto(previousPhoto, tag, camera, simulation),
+              pathForPhoto({
+                photo: previousPhoto,
+                tag,
+                camera,
+                simulation,
+                focal,
+              }),
               { scroll: false },
             );
           }
@@ -57,7 +65,13 @@ export default function PhotoLinks({
           if (nextPhoto) {
             setNextPhotoAnimation?.(ANIMATION_LEFT);
             router.push(
-              pathForPhoto(nextPhoto, tag, camera, simulation),
+              pathForPhoto({
+                photo: nextPhoto,
+                tag,
+                camera, 
+                simulation,
+                focal,
+              }),
               { scroll: false },
             );
           }
@@ -76,6 +90,7 @@ export default function PhotoLinks({
     tag,
     camera,
     simulation,
+    focal,
   ]);
   
   return (
@@ -86,6 +101,7 @@ export default function PhotoLinks({
         tag={tag}
         camera={camera}
         simulation={simulation}
+        focal={focal}
         scroll={false}
         prefetch
       >
@@ -97,6 +113,7 @@ export default function PhotoLinks({
         tag={tag}
         camera={camera}
         simulation={simulation}
+        focal={focal}
         scroll={false}
         prefetch
       >

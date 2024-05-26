@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { SHOW_REPO_LINK } from '@/site/config';
 import RepoLink from '../components/RepoLink';
 import { usePathname } from 'next/navigation';
-import { isPathAdmin, isPathSignIn, pathForAdminPhotos } from './paths';
+import { PATH_ADMIN_PHOTOS, isPathAdmin, isPathSignIn } from './paths';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import { signOutAndRedirectAction } from '@/auth/actions';
 import Spinner from '@/components/Spinner';
@@ -57,7 +57,7 @@ export default function Footer() {
                     </>}
                   </>
                   : <>
-                    <Link href={pathForAdminPhotos()}>
+                    <Link href={PATH_ADMIN_PHOTOS}>
                       Admin
                     </Link>
                     {SHOW_REPO_LINK &&

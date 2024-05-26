@@ -1,20 +1,22 @@
 import {
-  getPhotosCountCached,
+  getPhotosMetaCached,
   getUniqueCamerasCached,
   getUniqueFilmSimulationsCached,
   getUniqueTagsCached,
 } from '@/photo/cache';
 import {
-  getPhotosCount,
+  getPhotosMeta,
   getUniqueCameras,
   getUniqueFilmSimulations,
   getUniqueTags,
-} from '@/photo/db';
+} from '@/photo/db/query';
 import { SHOW_FILM_SIMULATIONS } from '@/site/config';
 import { sortTagsObject } from '@/tag';
 
 export const getPhotoSidebarData = () => [
-  getPhotosCount().catch(() => 0),
+  getPhotosMeta()
+    .then(({ count }) => count)
+    .catch(() => 0),
   getUniqueTags().then(sortTagsObject).catch(() => []),
   getUniqueCameras().catch(() => []),
   SHOW_FILM_SIMULATIONS
@@ -23,7 +25,9 @@ export const getPhotoSidebarData = () => [
 ] as const;
 
 export const getPhotoSidebarDataCached = () => [
-  getPhotosCountCached(),
+  getPhotosMetaCached()
+    .then(({ count }) => count)
+    .catch(() => 0),
   getUniqueTagsCached().then(sortTagsObject),
   getUniqueCamerasCached(),
   SHOW_FILM_SIMULATIONS ? getUniqueFilmSimulationsCached() : [],

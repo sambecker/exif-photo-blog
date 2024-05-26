@@ -7,7 +7,7 @@ import {
   generateLocalPostgresString,
 } from '@/utility/date';
 import { getAspectRatioFromExif, getOffsetFromExif } from '@/utility/exif';
-import { toFixedNumber } from '@/utility/number';
+import { roundToNumber } from '@/utility/number';
 import { convertStringToArray } from '@/utility/string';
 import { generateNanoid } from '@/utility/nanoid';
 import {
@@ -251,7 +251,7 @@ export const convertFormDataToPhotoDbInsert = (
     // Convert form strings to arrays
     tags: tags.length > 0 ? tags : undefined,
     // Convert form strings to numbers
-    aspectRatio: toFixedNumber(parseFloat(photoForm.aspectRatio), 6),
+    aspectRatio: roundToNumber(parseFloat(photoForm.aspectRatio), 6),
     focalLength: photoForm.focalLength
       ? parseInt(photoForm.focalLength)
       : undefined,

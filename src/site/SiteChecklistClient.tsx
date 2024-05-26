@@ -38,6 +38,7 @@ export default function SiteChecklistClient({
   hasTitle,
   hasDomain,
   showRepoLink,
+  showSocial,
   showFilmSimulations,
   showExifInfo,
   isProModeEnabled,
@@ -437,6 +438,17 @@ export default function SiteChecklistClient({
           >
             Set environment variable to {'"1"'} to hide footer link:
             {renderEnvVars(['NEXT_PUBLIC_HIDE_REPO_LINK'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Show social"
+            status={showSocial}
+            isPending={isPendingPage}
+            optional
+          >
+            Set environment variable to {'"1"'} to hide
+            {' '}
+            X button from share modal:
+            {renderEnvVars(['NEXT_PUBLIC_HIDE_SOCIAL'])}
           </ChecklistRow>
           <ChecklistRow
             title="Show Fujifilm simulations"

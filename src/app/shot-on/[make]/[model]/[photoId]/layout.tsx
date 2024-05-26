@@ -1,4 +1,5 @@
 import {
+  RELATED_GRID_PHOTOS_TO_SHOW,
   descriptionForPhoto,
   titleForPhoto,
 } from '@/photo';
@@ -10,28 +11,43 @@ import {
   absolutePathForPhotoImage,
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotoCached } from '@/photo/cache';
-import { PhotoCameraProps, cameraFromPhoto } from '@/camera';
-import { getPhotosCameraDataCached } from '@/camera/data';
+import {
+  getPhotosMetaCached,
+  getPhotosNearIdCached,
+} from '@/photo/cache';
+import {
+  PhotoCameraProps,
+  cameraFromPhoto,
+  getCameraFromParams,
+} from '@/camera';
 import { ReactNode, cache } from 'react';
 
-const getPhotoCachedCached = cache(getPhotoCached);
+const getPhotosNearIdCachedCached = cache((
+  photoId: string,
+  make: string,
+  model: string,
+) =>
+  getPhotosNearIdCached(
+    photoId, {
+      camera: getCameraFromParams({ make, model }),
+      limit: RELATED_GRID_PHOTOS_TO_SHOW + 2,
+    },
+  ));
 
 export async function generateMetadata({
   params: { photoId, make, model },
 }: PhotoCameraProps): Promise<Metadata> {
-  const photo = await getPhotoCachedCached(photoId);
+  const { photo } = await getPhotosNearIdCachedCached(photoId, make, model);
 
   if (!photo) { return {}; }
 
   const title = titleForPhoto(photo);
   const description = descriptionForPhoto(photo);
   const images = absolutePathForPhotoImage(photo);
-  const url = absolutePathForPhoto(
+  const url = absolutePathForPhoto({
     photo,
-    undefined,
-    cameraFromPhoto(photo, { make, model }),
-  );
+    camera: cameraFromPhoto(photo, { make, model }),
+  });
 
   return {
     title,
@@ -55,19 +71,25 @@ export default async function PhotoCameraPage({
   params: { photoId, make, model },
   children,
 }: PhotoCameraProps & { children: ReactNode }) {
-  const photo = await getPhotoCachedCached(photoId);
+  const { photo, photos, photosGrid, indexNumber } =
+    await getPhotosNearIdCachedCached(photoId, make, model);
 
   if (!photo) { redirect(PATH_ROOT); }
 
   const camera = cameraFromPhoto(photo, { make, model });
 
-  const [
-    photos,
-    { count, dateRange },
-  ] = await getPhotosCameraDataCached({ camera });
+  const { count, dateRange } = await getPhotosMetaCached({ camera });
 
   return <>
     {children}
-    <PhotoDetailPage {...{ photo, photos, camera, count, dateRange }} />
+    <PhotoDetailPage {...{
+      photo,
+      photos,
+      photosGrid,
+      camera,
+      indexNumber,
+      count,
+      dateRange,
+    }} />
   </>;
 }

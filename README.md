@@ -107,6 +107,7 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_IGNORE_PRIORITY_ORDER = 1` prevents `priority_order` field affecting photo order
 - `NEXT_PUBLIC_PUBLIC_API = 1` enables public API available at `/api`
 - `NEXT_PUBLIC_HIDE_REPO_LINK = 1` removes footer link to repo
+- `NEXT_PUBLIC_HIDE_SOCIAL = 1` removes X button from share modal
 - `NEXT_PUBLIC_HIDE_FILM_SIMULATIONS = 1` prevents Fujifilm simulations showing up in `/grid` sidebar and CMD-K search results
 - `NEXT_PUBLIC_HIDE_EXIF_DATA = 1` hides EXIF data in photo details and OG images (potentially useful for portfolios, which don't focus on photography)
 - `NEXT_PUBLIC_GRID_ASPECT_RATIO = 1.5` sets aspect ratio for grid tiles (defaults to `1`—setting to `0` removes the constraint)
