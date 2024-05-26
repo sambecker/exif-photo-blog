@@ -47,6 +47,7 @@ export default function PhotoLarge({
   shouldShareSimulation,
   shouldShareFocalLength,
   shouldScrollOnShare,
+  includeFavoriteInAdminMenu,
   onVisible,
 }: {
   photo: Photo
@@ -63,6 +64,7 @@ export default function PhotoLarge({
   shouldShareSimulation?: boolean
   shouldShareFocalLength?: boolean
   shouldScrollOnShare?: boolean
+  includeFavoriteInAdminMenu?: boolean
   onVisible?: () => void
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -130,6 +132,7 @@ export default function PhotoLarge({
                 <AdminPhotoMenuClient {...{
                   photo,
                   revalidatePhoto,
+                  includeFavorite: includeFavoriteInAdminMenu,
                 }} />
               </div>
             </div>

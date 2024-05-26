@@ -4,17 +4,19 @@ import { clsx } from 'clsx/lite';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import MoreMenuItem from './MoreMenuItem';
 
+export interface MoreMenuItem {
+  label: ReactNode
+  icon?: ReactNode
+  href?: string
+  action?: () => Promise<void> | void
+}
+
 export default function MoreMenu({
   items,
   className,
   buttonClassName,
 }: {
-  items: {
-    label: ReactNode
-    icon?: ReactNode
-    href?: string
-    action?: () => Promise<void> | void
-  }[]
+  items: MoreMenuItem[]
   className?: string
   buttonClassName?: string
 }){

@@ -26,6 +26,7 @@ export default function PhotoDetailPage({
   count,
   dateRange,
   shouldShare,
+  includeFavoriteInAdminMenu,
 }: {
   photo: Photo
   photos: Photo[]
@@ -38,6 +39,7 @@ export default function PhotoDetailPage({
   count?: number
   dateRange?: PhotoDateRange
   shouldShare?: boolean
+  includeFavoriteInAdminMenu?: boolean
 }) {
   return (
     <div>
@@ -117,6 +119,7 @@ export default function PhotoDetailPage({
             shouldShareCamera={camera !== undefined}
             shouldShareSimulation={simulation !== undefined}
             shouldScrollOnShare={false}
+            includeFavoriteInAdminMenu={includeFavoriteInAdminMenu}
           />,
         ]}
       />
