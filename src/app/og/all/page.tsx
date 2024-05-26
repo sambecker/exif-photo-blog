@@ -7,7 +7,7 @@ import { getPhotosMeta } from '@/photo/db/query';
 import StaggeredOgPhotos from '@/photo/StaggeredOgPhotos';
 import StaggeredOgPhotosInfinite from '@/photo/StaggeredOgPhotosInfinite';
 
-export default async function GridPage() {
+export default async function OGPage() {
   const [
     photos,
     count,

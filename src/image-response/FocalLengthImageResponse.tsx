@@ -32,14 +32,19 @@ export default function FocalLengthImageResponse({
           height,
         }}
       />
-      <ImageCaption {...{ width, height, fontFamily }}>
-        <TbCone
-          size={height * .08}
+      <ImageCaption {...{
+        width,
+        height,
+        fontFamily,
+        icon: <TbCone
+          size={height * .075}
           style={{
-            transform: `translateY(${height * .01}px) rotate(270deg)`,
+            transform: `translateY(${height * .007}px) rotate(270deg)`,
+            marginRight: height * .01,
           }}
-        />
-        <span>{formatFocalLength(focal)}</span>
+        />,
+      }}>
+        {formatFocalLength(focal)}
       </ImageCaption>
     </ImageContainer>
   );

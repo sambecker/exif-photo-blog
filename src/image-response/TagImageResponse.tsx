@@ -32,21 +32,29 @@ export default function TagImageResponse({
           height,
         }}
       />
-      <ImageCaption {...{ width, height, fontFamily }}>
-        {isTagFavs(tag)
+      <ImageCaption {...{
+        width,
+        height,
+        fontFamily,
+        icon: isTagFavs(tag)
           ? <FaStar
-            size={height * .074}
+            size={height * .066}
             style={{
-              transform: `translateY(${height * .01}px)`,
+              transform: `translateY(${height * .0095}px)`,
               // Fix horizontal distortion in icon size
-              width: height * .08,
+              width: height * .076,
+              marginRight: height * .01,
             }}
           />
           : <FaTag
-            size={height * .067}
-            style={{ transform: `translateY(${height * .02}px)` }}
-          />}
-        <span>{tag.toUpperCase()}</span>
+            size={height * .06}
+            style={{
+              transform: `translateY(${height * .016}px)`,
+              marginRight: height * .015,
+            }}
+          />,
+      }}>
+        {tag.toLocaleUpperCase()}
       </ImageCaption>
     </ImageContainer>
   );

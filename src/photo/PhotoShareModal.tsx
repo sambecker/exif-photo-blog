@@ -14,9 +14,9 @@ export default function PhotoShareModal(props: {
 }) {
   return (
     <ShareModal
-      title="Share Photo"
       pathShare={absolutePathForPhoto(props)}
       pathClose={pathForPhoto(props)}
+      socialText="Check out this photo"
     >
       <PhotoOGTile photo={props.photo} />
     </ShareModal>

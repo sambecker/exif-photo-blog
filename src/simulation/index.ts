@@ -40,6 +40,11 @@ export const titleForFilmSimulation = (
   photoQuantityText(explicitCount ?? photos.length),
 ].join(' ');
 
+export const shareTextForFilmSimulation = (
+  simulation: FilmSimulation,
+) =>
+  `Photos shot on Fujifilm ${labelForFilmSimulation(simulation).large}`;
+
 export const descriptionForFilmSimulationPhotos = (
   photos: Photo[],
   dateBased?: boolean,

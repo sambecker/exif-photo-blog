@@ -27,6 +27,9 @@ export const titleForFocalLength = (
   photoQuantityText(explicitCount ?? photos.length),
 ].join(' ');
 
+export const shareTextFocalLength = (focal: number) =>
+  `Photos shot at ${formatFocalLength(focal)}`;
+
 export const descriptionForFocalLengthPhotos = (
   photos: Photo[],
   dateBased?: boolean,

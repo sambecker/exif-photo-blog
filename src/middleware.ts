@@ -4,15 +4,20 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import {
   PATH_ADMIN,
   PATH_ADMIN_PHOTOS,
+  PATH_OG,
+  PATH_OG_SAMPLE,
   PREFIX_PHOTO,
   PREFIX_TAG,
 } from './site/paths';
 
 export default function middleware(req: NextRequest, res:NextResponse) {
+  console.log('MIDDLEWARE', req.nextUrl.pathname);
   const pathname = req.nextUrl.pathname;
 
   if (pathname === PATH_ADMIN) {
     return NextResponse.redirect(new URL(PATH_ADMIN_PHOTOS, req.url));
+  } else if (pathname === PATH_OG) {
+    return NextResponse.redirect(new URL(PATH_OG_SAMPLE, req.url));
   } else if (/^\/photos\/(.)+$/.test(pathname)) {
     // Accept /photos/* paths, but serve /p/*
     const matches = pathname.match(/^\/photos\/(.+)$/);

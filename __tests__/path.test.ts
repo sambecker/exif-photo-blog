@@ -37,6 +37,9 @@ const SHARE               = 'share';
 const PATH_ROOT                         = '/';
 const PATH_GRID                         = '/grid';
 const PATH_ADMIN                        = '/admin/photos';
+const PATH_OG                           = '/og';
+const PATH_OG_ALL                       = `${PATH_OG}/all`;
+const PATH_OG_SAMPLE                    = `${PATH_OG}/sample`;
 
 const PATH_PHOTO                        = `/p/${PHOTO_ID}`;
 const PATH_PHOTO_SHARE                  = `${PATH_PHOTO}/${SHARE}`;
@@ -77,6 +80,9 @@ describe('Paths', () => {
     expect(isPathProtected(PATH_FILM_SIMULATION)).toBe(false);
     // Private
     expect(isPathProtected(PATH_ADMIN)).toBe(true);
+    expect(isPathProtected(PATH_OG)).toBe(true);
+    expect(isPathProtected(PATH_OG_ALL)).toBe(true);
+    expect(isPathProtected(PATH_OG_SAMPLE)).toBe(true);
     expect(isPathProtected(PATH_TAG_HIDDEN)).toBe(true);
     expect(isPathProtected(PATH_TAG_HIDDEN_SHARE)).toBe(true);
     expect(isPathProtected(PATH_TAG_HIDDEN_PHOTO)).toBe(true);
