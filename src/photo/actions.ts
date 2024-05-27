@@ -41,7 +41,8 @@ import { convertPhotoToPhotoDbInsert } from '.';
 import { runAuthenticatedAdminServerAction } from '@/auth';
 import { AI_IMAGE_QUERIES, AiImageQuery } from './ai';
 import { streamOpenAiImageQuery } from '@/services/openai';
-import { BLUR_ENABLED } from '@/site/config';
+import { AI_TEXT_GENERATION_ENABLED, BLUR_ENABLED } from '@/site/config';
+import { getStorageUploadUrlsNoStore } from '@/services/storage/cache';
 
 // Private actions
 
@@ -56,6 +57,47 @@ export const createPhotoAction = async (formData: FormData) =>
       await insertPhoto(photo);
       revalidateAllKeysAndPaths();
       redirect(PATH_ADMIN_PHOTOS);
+    }
+  });
+
+export const addAllUploads = async ({
+  tags,
+  takenAtLocal,
+  takenAtNaiveLocal,
+}: {
+  tags: string[]
+  takenAtLocal: string
+  takenAtNaiveLocal: string
+}) =>
+  runAuthenticatedAdminServerAction(async () => {
+    const uploadUrls = await getStorageUploadUrlsNoStore();
+    for (const { url } of uploadUrls) {
+      const {
+        photoFormExif,
+        imageResizedBase64,
+      } = await extractImageDataFromBlobPath(url, {
+        includeInitialPhotoFields: true,
+        generateBlurData: BLUR_ENABLED,
+        generateResizedImage: AI_TEXT_GENERATION_ENABLED,
+      });
+
+      if (photoFormExif) {
+        const form = {
+          ...photoFormExif,
+          tags,
+          takenAt: photoFormExif.takenAt || takenAtLocal,
+          takenAtNaive: photoFormExif.takenAtNaive || takenAtNaiveLocal,
+        };
+      }
+      // const updatedUrl = await convertUploadToPhoto(url);
+      // if (updatedUrl) {
+      //   const photo = convertFormDataToPhotoDbInsert(new FormData(), true);
+      //   photo.url = updatedUrl;
+      //   await insertPhoto(photo);
+      // }
+      // const photo = convertFormDataToPhotoDbInsert(new FormData(), true);
+      // photo.url = url;
+      // await insertPhoto(photo);
     }
   });
 

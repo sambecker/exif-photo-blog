@@ -16,7 +16,7 @@ import {
 } from '@/vendors/fujifilm';
 import { FilmSimulation } from '@/simulation';
 import { GEO_PRIVACY_ENABLED } from '@/site/config';
-import { TAG_FAVS, TAG_HIDDEN, doesStringContainReservedTags } from '@/tag';
+import { TAG_FAVS, getValidationMessageForTags } from '@/tag';
 
 type VirtualFields = 'favorite';
 
@@ -76,9 +76,7 @@ const FORM_METADATA = (
   tags: {
     label: 'tags',
     tagOptions,
-    validate: tags => doesStringContainReservedTags(tags)
-      ? `Reserved tags (${TAG_FAVS}, ${TAG_HIDDEN})`
-      : undefined,
+    validate: getValidationMessageForTags,
   },
   semanticDescription: {
     type: 'textarea',
