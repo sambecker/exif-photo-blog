@@ -41,14 +41,19 @@ import { convertPhotoToPhotoDbInsert } from '.';
 import { runAuthenticatedAdminServerAction } from '@/auth';
 import { AI_IMAGE_QUERIES, AiImageQuery } from './ai';
 import { streamOpenAiImageQuery } from '@/services/openai';
-import { AI_TEXT_GENERATION_ENABLED, BLUR_ENABLED } from '@/site/config';
+import {
+  AI_TEXT_AUTO_GENERATED_FIELDS,
+  AI_TEXT_GENERATION_ENABLED,
+  BLUR_ENABLED,
+} from '@/site/config';
 import { getStorageUploadUrlsNoStore } from '@/services/storage/cache';
+import { generateAiImageQueries } from './ai/server';
 
 // Private actions
 
 export const createPhotoAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
-    const photo = convertFormDataToPhotoDbInsert(formData, true);
+    const photo = convertFormDataToPhotoDbInsert(formData);
 
     const updatedUrl = await convertUploadToPhoto(photo.url);
     
@@ -60,17 +65,18 @@ export const createPhotoAction = async (formData: FormData) =>
     }
   });
 
-export const addAllUploads = async ({
+export const addAllUploadsAction = async ({
   tags,
   takenAtLocal,
   takenAtNaiveLocal,
 }: {
-  tags: string[]
+  tags?: string
   takenAtLocal: string
   takenAtNaiveLocal: string
 }) =>
   runAuthenticatedAdminServerAction(async () => {
     const uploadUrls = await getStorageUploadUrlsNoStore();
+
     for (const { url } of uploadUrls) {
       const {
         photoFormExif,
@@ -82,23 +88,38 @@ export const addAllUploads = async ({
       });
 
       if (photoFormExif) {
-        const form = {
+        const {
+          title,
+          caption,
+          tags: aiTags,
+          semanticDescription,
+        } = await generateAiImageQueries(
+          imageResizedBase64,
+          AI_TEXT_AUTO_GENERATED_FIELDS,
+        );
+
+        const form: Partial<PhotoFormData> = {
           ...photoFormExif,
-          tags,
+          title,
+          caption,
+          tags: tags || aiTags,
+          semanticDescription,
           takenAt: photoFormExif.takenAt || takenAtLocal,
           takenAtNaive: photoFormExif.takenAtNaive || takenAtNaiveLocal,
         };
+
+        const updatedUrl = await convertUploadToPhoto(url);
+        if (updatedUrl) {
+          const photo = convertFormDataToPhotoDbInsert(form);
+          console.log(photo);
+          photo.url = updatedUrl;
+          await insertPhoto(photo);
+        }
       }
-      // const updatedUrl = await convertUploadToPhoto(url);
-      // if (updatedUrl) {
-      //   const photo = convertFormDataToPhotoDbInsert(new FormData(), true);
-      //   photo.url = updatedUrl;
-      //   await insertPhoto(photo);
-      // }
-      // const photo = convertFormDataToPhotoDbInsert(new FormData(), true);
-      // photo.url = url;
-      // await insertPhoto(photo);
     }
+
+    revalidateAllKeysAndPaths();
+    redirect(PATH_ADMIN_PHOTOS);
   });
 
 export const updatePhotoAction = async (formData: FormData) =>

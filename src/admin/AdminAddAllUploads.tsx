@@ -4,7 +4,7 @@ import ErrorNote from '@/components/ErrorNote';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import InfoBlock from '@/components/InfoBlock';
 import LoaderButton from '@/components/primitives/LoaderButton';
-import { addAllUploads } from '@/photo/actions';
+import { addAllUploadsAction } from '@/photo/actions';
 import { PATH_ADMIN_PHOTOS } from '@/site/paths';
 import {
   TagsWithMeta,
@@ -15,8 +15,7 @@ import {
   generateLocalNaivePostgresString,
   generateLocalPostgresString,
 } from '@/utility/date';
-import { convertStringToArray } from '@/utility/string';
-import clsx from 'clsx';
+import { clsx } from 'clsx/lite';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { BiImageAdd } from 'react-icons/bi';
@@ -66,6 +65,7 @@ export default function AdminAddAllUploads({
                   , 100);
                 }
               }}
+              readOnly={isLoading}
             />
           </div>
           <div
@@ -81,6 +81,7 @@ export default function AdminAddAllUploads({
                 setTags(tags);
                 setTagErrorMessage(getValidationMessageForTags(tags) ?? '');
               }}
+              readOnly={isLoading}
               error={tagErrorMessage}
               required={false}
               hideLabel
@@ -97,10 +98,8 @@ export default function AdminAddAllUploads({
                   `Are you sure you want to add all ${storageUrlCount} uploads?`
                 )) {
                   setIsLoading(true);
-                  addAllUploads({
-                    tags: showTags && tags
-                      ? convertStringToArray(tags) ?? []
-                      : [],
+                  addAllUploadsAction({
+                    tags: showTags ? tags : undefined,
                     takenAtLocal: generateLocalPostgresString(),
                     takenAtNaiveLocal: generateLocalNaivePostgresString(),
                   })

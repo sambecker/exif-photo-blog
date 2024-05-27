@@ -1,5 +1,5 @@
 import type { ExifData } from 'ts-exif-parser';
-import { Photo, PhotoDbInsert, PhotoExif } from '..';
+import { DEFAULT_ASPECT_RATIO, Photo, PhotoDbInsert, PhotoExif } from '..';
 import {
   convertTimestampToNaivePostgresString,
   convertTimestampWithOffsetToPostgresString,
@@ -20,7 +20,7 @@ import { TAG_FAVS, getValidationMessageForTags } from '@/tag';
 
 type VirtualFields = 'favorite';
 
-export type PhotoFormData = Record<keyof PhotoDbInsert | VirtualFields, string>;
+export type PhotoFormData = Record<keyof PhotoDbInsert | VirtualFields, string>
 
 export type FieldSetType =
   'text' |
@@ -217,8 +217,7 @@ export const convertExifToFormData = (
 // PREPARE FORM FOR DB INSERT
 
 export const convertFormDataToPhotoDbInsert = (
-  formData: FormData | PhotoFormData,
-  generateId?: boolean,
+  formData: FormData | Partial<PhotoFormData>,
 ): PhotoDbInsert => {
   const photoForm = formData instanceof FormData
     ? Object.fromEntries(formData) as PhotoFormData
@@ -245,11 +244,13 @@ export const convertFormDataToPhotoDbInsert = (
 
   return {
     ...(photoForm as PhotoFormData & { filmSimulation?: FilmSimulation }),
-    ...(generateId && !photoForm.id) && { id: generateNanoid() },
+    ...!photoForm.id && { id: generateNanoid() },
     // Convert form strings to arrays
     tags: tags.length > 0 ? tags : undefined,
     // Convert form strings to numbers
-    aspectRatio: roundToNumber(parseFloat(photoForm.aspectRatio), 6),
+    aspectRatio: photoForm.aspectRatio
+      ? roundToNumber(parseFloat(photoForm.aspectRatio), 6)
+      : DEFAULT_ASPECT_RATIO,
     focalLength: photoForm.focalLength
       ? parseInt(photoForm.focalLength)
       : undefined,

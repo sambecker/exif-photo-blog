@@ -149,12 +149,18 @@ export default function FieldSetWithStatus({
                 autoComplete="off"
                 autoCapitalize={!capitalize ? 'off' : undefined}
                 readOnly={readOnly || pending || loading}
+                disabled={type === 'checkbox' && (
+                  readOnly || pending || loading
+                )}
                 className={clsx(
                   (
                     type === 'text' ||
                     type === 'email' ||
                     type === 'password'
                   ) && 'w-full',
+                  type === 'checkbox' && (
+                    readOnly || pending || loading
+                  ) && 'opacity-50 cursor-not-allowed',
                   Boolean(error) && 'error',
                 )}
               />}

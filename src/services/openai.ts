@@ -101,6 +101,6 @@ export const generateOpenAiImageQuery = async (
           },
         ],
       }],
-    });
+    }).then(({ text }) => text);
   }
 };
