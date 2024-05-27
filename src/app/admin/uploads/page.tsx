@@ -4,6 +4,8 @@ import SiteGrid from '@/components/SiteGrid';
 import AdminAddAllUploads from '@/admin/AdminAddAllUploads';
 import { getUniqueTagsCached } from '@/photo/cache';
 
+export const maxDuration = 300;
+
 export default async function AdminUploadsPage() {
   const storageUrls = await getStorageUploadUrlsNoStore();
   const uniqueTags = await getUniqueTagsCached();
