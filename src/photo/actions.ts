@@ -48,6 +48,7 @@ import {
 } from '@/site/config';
 import { getStorageUploadUrlsNoStore } from '@/services/storage/cache';
 import { generateAiImageQueries } from './ai/server';
+import { createStreamableValue } from 'ai/rsc';
 
 // Private actions
 
@@ -76,50 +77,97 @@ export const addAllUploadsAction = async ({
 }) =>
   runAuthenticatedAdminServerAction(async () => {
     const uploadUrls = await getStorageUploadUrlsNoStore();
+    const uploadTotal = uploadUrls.length;
+    const addedUploadUrls: string[] = [];
 
-    for (const { url } of uploadUrls) {
-      const {
-        photoFormExif,
-        imageResizedBase64,
-      } = await extractImageDataFromBlobPath(url, {
-        includeInitialPhotoFields: true,
-        generateBlurData: BLUR_ENABLED,
-        generateResizedImage: AI_TEXT_GENERATION_ENABLED,
-      });
+    const stream = createStreamableValue<{
+      headline: string,
+      subhead?: string,
+      addedUploadUrls: string,
+    }, string>({
+      headline: `Adding ${uploadTotal} Photos...`,
+      addedUploadUrls: '',
+    });
 
-      if (photoFormExif) {
-        const {
-          title,
-          caption,
-          tags: aiTags,
-          semanticDescription,
-        } = await generateAiImageQueries(
-          imageResizedBase64,
-          AI_TEXT_AUTO_GENERATED_FIELDS,
-        );
+    (async () => {
+      try {
+        for (const [index, { url }] of uploadUrls.entries()) {
+          const headline = `Adding ${index + 1} of ${uploadTotal}`;
 
-        const form: Partial<PhotoFormData> = {
-          ...photoFormExif,
-          title,
-          caption,
-          tags: tags || aiTags,
-          semanticDescription,
-          takenAt: photoFormExif.takenAt || takenAtLocal,
-          takenAtNaive: photoFormExif.takenAtNaive || takenAtNaiveLocal,
-        };
+          stream.update({
+            headline,
+            subhead: 'Parsing EXIF data',
+            addedUploadUrls: addedUploadUrls.join(','),
+          });
 
-        const updatedUrl = await convertUploadToPhoto(url);
-        if (updatedUrl) {
-          const photo = convertFormDataToPhotoDbInsert(form);
-          console.log(photo);
-          photo.url = updatedUrl;
-          await insertPhoto(photo);
+          const {
+            photoFormExif,
+            imageResizedBase64,
+          } = await extractImageDataFromBlobPath(url, {
+            includeInitialPhotoFields: true,
+            generateBlurData: BLUR_ENABLED,
+            generateResizedImage: AI_TEXT_GENERATION_ENABLED,
+          });
+
+          if (photoFormExif) {
+            if (AI_TEXT_GENERATION_ENABLED) {
+              stream.update({
+                headline,
+                subhead: 'Generating AI text',
+                addedUploadUrls: addedUploadUrls.join(','),
+              });
+            }
+
+            const {
+              title,
+              caption,
+              tags: aiTags,
+              semanticDescription,
+            } = await generateAiImageQueries(
+              imageResizedBase64,
+              AI_TEXT_AUTO_GENERATED_FIELDS,
+            );
+
+            const form: Partial<PhotoFormData> = {
+              ...photoFormExif,
+              title,
+              caption,
+              tags: tags || aiTags,
+              semanticDescription,
+              takenAt: photoFormExif.takenAt || takenAtLocal,
+              takenAtNaive: photoFormExif.takenAtNaive || takenAtNaiveLocal,
+            };
+
+            stream.update({
+              headline,
+              subhead: 'Moving upload to photo storage',
+              addedUploadUrls: addedUploadUrls.join(','),
+            });
+
+            const updatedUrl = await convertUploadToPhoto(url);
+            if (updatedUrl) {
+              stream.update({
+                headline,
+                subhead: 'Adding to database',
+                addedUploadUrls: addedUploadUrls.join(','),
+              });
+              const photo = convertFormDataToPhotoDbInsert(form);
+              photo.url = updatedUrl;
+              await insertPhoto(photo);
+              addedUploadUrls.push(url);
+            }
+          }
         }
+      } catch (error: any) {
+        // eslint-disable-next-line max-len
+        stream.error(`${error.message} (${addedUploadUrls.length} of ${uploadTotal} photos successfully added)`);
+      } finally {
+        revalidateAllKeysAndPaths();
       }
-    }
+      stream.done();
+    })();
 
-    revalidateAllKeysAndPaths();
-    redirect(PATH_ADMIN_PHOTOS);
+    return stream.value;
   });
 
 export const updatePhotoAction = async (formData: FormData) =>

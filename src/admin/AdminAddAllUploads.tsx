@@ -15,6 +15,7 @@ import {
   generateLocalNaivePostgresString,
   generateLocalPostgresString,
 } from '@/utility/date';
+import { readStreamableValue } from 'ai/rsc';
 import { clsx } from 'clsx/lite';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
@@ -23,13 +24,20 @@ import { BiImageAdd } from 'react-icons/bi';
 export default function AdminAddAllUploads({
   storageUrlCount,
   uniqueTags,
+  isAdding,
+  setIsAdding,
+  onUploadAdded,
 }: {
   storageUrlCount: number
   uniqueTags?: TagsWithMeta
+  isAdding: boolean
+  setIsAdding: (isAdding: boolean) => void
+  onUploadAdded?: (addedUploadUrls: string[]) => void
 }) {
   const divRef = useRef<HTMLDivElement>(null);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [buttonText, setButtonText] = useState('Add All Uploads');
+  const [buttonSubheadText, setButtonSubheadText] = useState('');
   const [showTags, setShowTags] = useState(false);
   const [tags, setTags] = useState('');
   const [actionErrorMessage, setActionErrorMessage] = useState('');
@@ -65,12 +73,12 @@ export default function AdminAddAllUploads({
                   , 100);
                 }
               }}
-              readOnly={isLoading}
+              readOnly={isAdding}
             />
           </div>
           <div
             ref={divRef}
-            className={showTags ? undefined : 'hidden'}
+            className={showTags && !actionErrorMessage ? undefined : 'hidden'}
           >
             <FieldSetWithStatus
               id="tags"
@@ -81,40 +89,50 @@ export default function AdminAddAllUploads({
                 setTags(tags);
                 setTagErrorMessage(getValidationMessageForTags(tags) ?? '');
               }}
-              readOnly={isLoading}
+              readOnly={isAdding}
               error={tagErrorMessage}
               required={false}
               hideLabel
             />
           </div>
-          <div>
+          <div className="space-y-2">
             <LoaderButton
               className="primary w-full justify-center"
-              isLoading={isLoading}
+              isLoading={isAdding}
               disabled={Boolean(tagErrorMessage)}
               icon={<BiImageAdd size={18} className="translate-x-[1px]" />}
-              onClick={() => {
+              onClick={async () => {
                 if (confirm(
                   `Are you sure you want to add all ${storageUrlCount} uploads?`
                 )) {
-                  setIsLoading(true);
-                  addAllUploadsAction({
-                    tags: showTags ? tags : undefined,
-                    takenAtLocal: generateLocalPostgresString(),
-                    takenAtNaiveLocal: generateLocalNaivePostgresString(),
-                  })
-                    .then(() =>
-                      router.push(PATH_ADMIN_PHOTOS))
-                    .catch(e => {
-                      setIsLoading(false);
-                      setActionErrorMessage(e.message);
+                  setIsAdding(true);
+                  try {
+                    const stream = await addAllUploadsAction({
+                      tags: showTags ? tags : undefined,
+                      takenAtLocal: generateLocalPostgresString(),
+                      takenAtNaiveLocal: generateLocalNaivePostgresString(),
                     });
+                    for await (const data of readStreamableValue(stream)) {
+                      setButtonText(data?.headline ?? '');
+                      setButtonSubheadText(data?.subhead ?? '');
+                      onUploadAdded?.(data?.addedUploadUrls.split(',') ?? []);
+                    }
+                    router.push(PATH_ADMIN_PHOTOS);
+                  } catch (e: any) {
+                    setIsAdding(false);
+                    setButtonText('Try Again');
+                    setActionErrorMessage(e);
+                  }
                 }
               }}
               hideTextOnMobile={false}
             >
-              Add all {storageUrlCount} uploads
+              {buttonText}
             </LoaderButton>
+            {buttonSubheadText &&
+              <div className="text-dim text-sm text-center">
+                {buttonSubheadText}
+              </div>}
           </div>
         </div>
       </InfoBlock>
