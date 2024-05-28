@@ -6,6 +6,7 @@ import {
   doesPhotoNeedBlurCompatibility,
   shouldShowCameraDataForPhoto,
   shouldShowExifDataForPhoto,
+  titleForPhoto,
 } from '.';
 import SiteGrid from '@/components/SiteGrid';
 import ImageLarge from '@/components/image/ImageLarge';
@@ -133,6 +134,7 @@ export default function PhotoLarge({
                   photo,
                   revalidatePhoto,
                   includeFavorite: includeFavoriteInAdminMenu,
+                  ariaLabel: `Admin menu for '${titleForPhoto(photo)}' photo`,
                 }} />
               </div>
             </div>

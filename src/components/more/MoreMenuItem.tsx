@@ -2,9 +2,9 @@
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { clsx } from 'clsx/lite';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, useTransition } from 'react';
 import LoaderButton from '../primitives/LoaderButton';
-import PathLoaderButton from '../primitives/PathLoaderButton';
+import { useRouter } from 'next/navigation';
 
 export default function MoreMenuItem({
   label,
@@ -17,6 +17,10 @@ export default function MoreMenuItem({
   href?: string
   action?: () => Promise<void> | void
 }) {
+  const router = useRouter();
+
+  const [isPending, startTransition] = useTransition();
+
   const [isLoading, setIsLoading] = useState(false);
 
   return (
@@ -32,36 +36,28 @@ export default function MoreMenuItem({
           ? 'cursor-not-allowed opacity-50'
           : 'cursor-pointer',
       )}
+      onClick={e => {
+        e.preventDefault();
+        if (href) {
+          startTransition(() => router.push(href));
+        } else {
+          const result = action?.();
+          if (result instanceof Promise) {
+            setIsLoading(true);
+            result.finally(() => setIsLoading(false));
+          }
+        }
+      }}
     >
-      {href &&
-        <PathLoaderButton
-          path={href}
-          icon={icon}
-          hideTextOnMobile={false}
-          shouldPreventDefault
-          styleAs="link-without-hover"
-        >
-          {label}
-        </PathLoaderButton>}
-      {action &&
-        <LoaderButton
-          icon={icon}
-          isLoading={isLoading}
-          hideTextOnMobile={false}
-          styleAs="link-without-hover"
-          onClick={e => {
-            if (!href) {
-              const result = action?.();
-              if (result instanceof Promise) {
-                e.preventDefault();
-                setIsLoading(true);
-                result.finally(() => setIsLoading(false));
-              }
-            }
-          }}
-        >
-          {label}
-        </LoaderButton>}
+      <LoaderButton
+        icon={icon}
+        isLoading={isLoading || isPending}
+        hideTextOnMobile={false}
+        styleAs="link-without-hover"
+        className="translate-y-[1px]"
+      >
+        {label}
+      </LoaderButton>
     </DropdownMenu.Item>
   );
 }

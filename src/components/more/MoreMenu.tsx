@@ -15,10 +15,12 @@ export default function MoreMenu({
   items,
   className,
   buttonClassName,
+  ariaLabel,
 }: {
   items: MoreMenuItem[]
   className?: string
   buttonClassName?: string
+  ariaLabel: string
 }){
   return (
     <DropdownMenu.Root>
@@ -31,7 +33,7 @@ export default function MoreMenu({
             'hover:dark:bg-gray-800/75 active:dark:bg-gray-900',
             'text-dim',
           )}
-          aria-label={`Choose an action for photo: ${'photo'}`}
+          aria-label={ariaLabel}
         >
           <FiMoreHorizontal size={18} />
         </button>
