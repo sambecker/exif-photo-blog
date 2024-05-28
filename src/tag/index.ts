@@ -9,7 +9,12 @@ import {
   absolutePathForTagImage,
   getPathComponents,
 } from '@/site/paths';
-import { capitalizeWords, convertStringToArray } from '@/utility/string';
+import {
+  capitalizeWords,
+  convertStringToArray,
+  formatCount,
+  formatCountDescriptive,
+} from '@/utility/string';
 
 // Reserved tags
 export const TAG_FAVS   = 'favs';
@@ -23,8 +28,14 @@ export type TagsWithMeta = {
 export const formatTag = (tag?: string) =>
   capitalizeWords(tag?.replaceAll('-', ' '));
 
-export const doesStringContainReservedTags = (tags?: string) =>
-  convertStringToArray(tags)?.some(tag => isTagFavs(tag) || isTagHidden(tag));
+export const getValidationMessageForTags = (tags?: string) => {
+  const reservedTags = (convertStringToArray(tags) ?? [])
+    .filter(tag => isTagFavs(tag) || isTagHidden(tag))
+    .map(tag => tag.toLocaleUpperCase());
+  return reservedTags.length
+    ? `Reserved tags: ${reservedTags.join(', ').toLocaleLowerCase()}`
+    : undefined;
+};
 
 export const titleForTag = (
   tag: string,
@@ -85,7 +96,7 @@ export const generateMetaForTag = (
   images: absolutePathForTagImage(tag),
 });
 
-export const isTagFavs = (tag: string) => tag.toLowerCase() === TAG_FAVS;
+export const isTagFavs = (tag: string) => tag.toLocaleLowerCase() === TAG_FAVS;
 
 export const isPhotoFav = ({ tags }: Photo) => tags.some(isTagFavs);
 
@@ -104,3 +115,11 @@ export const addHiddenToTags = (tags: TagsWithMeta, hiddenPhotosCount = 0) => {
     return tags;
   }
 };
+
+export const convertTagsForForm = (tags: TagsWithMeta = []) =>
+  sortTagsObjectWithoutFavs(tags)
+    .map(({ tag, count }) => ({
+      value: tag,
+      annotation: formatCount(count),
+      annotationAria: formatCountDescriptive(count, 'tagged'),
+    }));

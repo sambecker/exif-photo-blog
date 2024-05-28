@@ -70,6 +70,8 @@ export default async function PhotoTagHiddenPage({
       count,
       dateRange,
       tag: TAG_HIDDEN,
+      shouldShare: false,
+      includeFavoriteInAdminMenu: false,
     }} />
   );
 }

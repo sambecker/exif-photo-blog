@@ -63,3 +63,11 @@ export const parseTitleAndCaption = (text: string) => {
     caption: matches?.[2] ?? '',
   };
 };
+
+export const cleanUpAiTextResponse = (text?: string) => text
+  ? text
+    .replaceAll('\n', ' ')
+    .replaceAll('"', '')
+    .replace(/\.$/, '')
+    .trim()
+  : undefined;

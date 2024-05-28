@@ -17,6 +17,7 @@ export default function TagInput({
   onChange,
   className,
   readOnly,
+  placeholder,
 }: {
   id?: string
   name: string
@@ -25,6 +26,7 @@ export default function TagInput({
   onChange?: (value: string) => void
   className?: string
   readOnly?: boolean
+  placeholder?: string
 }) {
   const containerRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -239,6 +241,7 @@ export default function TagInput({
               role="button"
               aria-label={`Remove tag "${option}"`}
               className={clsx(
+                'text-main',
                 'cursor-pointer select-none',
                 'whitespace-nowrap',
                 'px-1.5 py-0.5',
@@ -257,6 +260,7 @@ export default function TagInput({
           className={clsx(
             'grow !min-w-0 !p-0 -my-2 text-xl',
             '!border-none !ring-transparent',
+            'placeholder:text-dim',
           )}
           size={10}
           value={inputText}
@@ -264,6 +268,7 @@ export default function TagInput({
           autoComplete="off"
           autoCapitalize="off"
           readOnly={readOnly}
+          placeholder={selectedOptions.length === 0 ? placeholder : undefined}
           onFocus={() => setSelectedOptionIndex(undefined)}
           aria-autocomplete="list"
           aria-expanded={shouldShowMenu}

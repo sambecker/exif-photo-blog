@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { streamAiImageQueryAction } from '../actions';
 import { readStreamableValue } from 'ai/rsc';
-import { AiImageQuery } from '.';
+import { AiImageQuery, cleanUpAiTextResponse } from '.';
 
 export default function useAiImageQuery(
   imageBase64: string | undefined,
@@ -21,10 +21,9 @@ export default function useAiImageQuery(
           query,
         );
         for await (const text of readStreamableValue(textStream)) {
-          setText(current => `${current}${text ?? ''}`
-            .replaceAll('\n', ' ')
-            .replaceAll('"', '')
-            .replace(/\.$/, ''));
+          setText(current =>
+            cleanUpAiTextResponse(`${current}${text ?? ''}`) ?? ''
+          );
         }
         setIsLoading(false);
       } catch (e) {

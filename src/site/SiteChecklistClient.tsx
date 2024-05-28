@@ -108,7 +108,7 @@ export default function SiteChecklistClient({
         navigator.clipboard.writeText(text);
         toastSuccess(`${label} copied to clipboard`);
       }}
-      styleAsLink
+      styleAs="link"
     />;
 
   const renderEnvVar = (
@@ -253,7 +253,7 @@ export default function SiteChecklistClient({
                       onClick={refreshSecret}
                       isLoading={isPendingSecret}
                       spinnerColor="text"
-                      styleAsLink
+                      styleAs="link"
                     />
                   </div>
                 </div>

@@ -31,6 +31,8 @@ export const INFINITE_SCROLL_GRID_PHOTO_MULTIPLE = HIGH_DENSITY_GRID
 // Thumbnails below /p/[photoId]
 export const RELATED_GRID_PHOTOS_TO_SHOW = 12;
 
+export const DEFAULT_ASPECT_RATIO = 1.5;
+
 export const ACCEPTED_PHOTO_FILE_TYPES = [
   'image/jpg',
   'image/jpeg',

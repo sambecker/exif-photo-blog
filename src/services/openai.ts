@@ -1,12 +1,9 @@
-'use server';
-
-import { streamText } from 'ai';
+import { generateText, streamText } from 'ai';
 import { createStreamableValue } from 'ai/rsc';
 import { createOpenAI } from '@ai-sdk/openai';
 import { kv } from '@vercel/kv';
 import { Ratelimit } from '@upstash/ratelimit';
 import { AI_TEXT_GENERATION_ENABLED, HAS_VERCEL_KV } from '@/site/config';
-import { runAuthenticatedAdminServerAction } from '@/auth';
 import { removeBase64Prefix } from '@/utility/image';
 
 const RATE_LIMIT_IDENTIFIER = 'openai-image-query';
@@ -28,47 +25,82 @@ export const streamOpenAiImageQuery = async (
   imageBase64: string,
   query: string,
 ) => {
-  return runAuthenticatedAdminServerAction(async () => {
-    if (ratelimit) {
-      let success = false;
-      try {
-        success = (await ratelimit.limit(RATE_LIMIT_IDENTIFIER)).success;
-      } catch (e: any) {
-        console.error('Failed to rate limit OpenAI', e);
-        throw new Error('Failed to rate limit OpenAI');
-      }
-      if (!success) {
-        console.error('OpenAI rate limit exceeded');
-        throw new Error('OpenAI rate limit exceeded');
-      }
+  if (ratelimit) {
+    let success = false;
+    try {
+      success = (await ratelimit.limit(RATE_LIMIT_IDENTIFIER)).success;
+    } catch (e: any) {
+      console.error('Failed to rate limit OpenAI', e);
+      throw new Error('Failed to rate limit OpenAI');
     }
-
-    const stream = createStreamableValue('');
-
-    if (openai) {
-      (async () => {
-        const { textStream } = await streamText({
-          model: openai('gpt-4-vision-preview'),
-          messages: [{
-            'role': 'user',
-            'content': [
-              {
-                'type': 'text',
-                'text': query,
-              }, {
-                'type': 'image',
-                'image': removeBase64Prefix(imageBase64),
-              },
-            ],
-          }],
-        });
-        for await (const delta of textStream) {
-          stream.update(delta);
-        }
-        stream.done();
-      })();
+    if (!success) {
+      console.error('OpenAI rate limit exceeded');
+      throw new Error('OpenAI rate limit exceeded');
     }
+  }
 
-    return stream.value;
-  });
+  const stream = createStreamableValue('');
+
+  if (openai) {
+    (async () => {
+      const { textStream } = await streamText({
+        model: openai('gpt-4-vision-preview'),
+        messages: [{
+          'role': 'user',
+          'content': [
+            {
+              'type': 'text',
+              'text': query,
+            }, {
+              'type': 'image',
+              'image': removeBase64Prefix(imageBase64),
+            },
+          ],
+        }],
+      });
+      for await (const delta of textStream) {
+        stream.update(delta);
+      }
+      stream.done();
+    })();
+  }
+
+  return stream.value;
+};
+
+export const generateOpenAiImageQuery = async (
+  imageBase64: string,
+  query: string,
+) => {
+  if (ratelimit) {
+    let success = false;
+    try {
+      success = (await ratelimit.limit(RATE_LIMIT_IDENTIFIER)).success;
+    } catch (e: any) {
+      console.error('Failed to rate limit OpenAI', e);
+      throw new Error('Failed to rate limit OpenAI');
+    }
+    if (!success) {
+      console.error('OpenAI rate limit exceeded');
+      throw new Error('OpenAI rate limit exceeded');
+    }
+  }
+
+  if (openai) {
+    return generateText({
+      model: openai('gpt-4-vision-preview'),
+      messages: [{
+        'role': 'user',
+        'content': [
+          {
+            'type': 'text',
+            'text': query,
+          }, {
+            'type': 'image',
+            'image': removeBase64Prefix(imageBase64),
+          },
+        ],
+      }],
+    }).then(({ text }) => text);
+  }
 };

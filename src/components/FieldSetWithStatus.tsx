@@ -26,6 +26,7 @@ export default function FieldSetWithStatus({
   type = 'text',
   inputRef,
   accessory,
+  hideLabel,
 }: {
   id: string
   label: string
@@ -45,39 +46,47 @@ export default function FieldSetWithStatus({
   type?: FieldSetType
   inputRef?: LegacyRef<HTMLInputElement>
   accessory?: React.ReactNode
+  hideLabel?: boolean
 }) {
   const { pending } = useFormStatus();
 
   return (
-    <div className="space-y-1">
-      <label
-        className="flex gap-2 items-center select-none"
-        htmlFor={id}
-      >
-        {label}
-        {note && !error &&
-          <span className="text-gray-400 dark:text-gray-600">
-            ({note})
-          </span>}
-        {isModified && !error &&
-          <span className={clsx(
-            'text-main font-medium text-[0.9rem] -ml-1.5 translate-y-[-1px]'
-          )}>
-            *
-          </span>}
-        {error &&
-          <span className="text-error">
-            {error}
-          </span>}
-        {required &&
-          <span className="text-gray-400 dark:text-gray-600">
-            Required
-          </span>}
-        {loading &&
-          <span className="translate-y-[1.5px]">
-            <Spinner />
-          </span>}
-      </label>
+    <div className={clsx(
+      'space-y-1',
+      type === 'checkbox' && 'flex items-center gap-2',
+    )}>
+      {!hideLabel &&
+        <label
+          className={clsx(
+            'flex gap-2 items-center select-none',
+            type === 'checkbox' && 'order-2 pt-[3px]',
+          )}
+          htmlFor={id}
+        >
+          {label}
+          {note && !error &&
+            <span className="text-gray-400 dark:text-gray-600">
+              ({note})
+            </span>}
+          {isModified && !error &&
+            <span className={clsx(
+              'text-main font-medium text-[0.9rem] -ml-1.5 translate-y-[-1px]'
+            )}>
+              *
+            </span>}
+          {error &&
+            <span className="text-error">
+              {error}
+            </span>}
+          {required &&
+            <span className="text-gray-400 dark:text-gray-600">
+              Required
+            </span>}
+          {loading &&
+            <span className="translate-y-[1.5px]">
+              <Spinner />
+            </span>}
+        </label>}
       <div className="flex gap-2">
         {selectOptions
           ? <select
@@ -111,6 +120,7 @@ export default function FieldSetWithStatus({
               onChange={onChange}
               className={clsx(Boolean(error) && 'error')}
               readOnly={readOnly || pending || loading}
+              placeholder={placeholder}
             />
             : type === 'textarea'
               ? <textarea
@@ -139,12 +149,18 @@ export default function FieldSetWithStatus({
                 autoComplete="off"
                 autoCapitalize={!capitalize ? 'off' : undefined}
                 readOnly={readOnly || pending || loading}
+                disabled={type === 'checkbox' && (
+                  readOnly || pending || loading
+                )}
                 className={clsx(
                   (
                     type === 'text' ||
                     type === 'email' ||
                     type === 'password'
                   ) && 'w-full',
+                  type === 'checkbox' && (
+                    readOnly || pending || loading
+                  ) && 'opacity-50 cursor-not-allowed',
                   Boolean(error) && 'error',
                 )}
               />}
