@@ -5,52 +5,61 @@ import { ButtonHTMLAttributes, ReactNode } from 'react';
 export default function LoaderButton(props: {
   children?: ReactNode
   isLoading?: boolean
-  icon?: JSX.Element
+  icon?: ReactNode
   spinnerColor?: SpinnerColor
-  styleAsLink?: boolean
+  styleAs?: 'button' | 'link' | 'link-without-hover'
+  hideTextOnMobile?: boolean
 } & ButtonHTMLAttributes<HTMLButtonElement>) {
   const {
     children,
     isLoading,
     icon,
     spinnerColor,
-    styleAsLink,
+    styleAs = 'button',
+    hideTextOnMobile = true,
     type = 'button',
     disabled,
     className,
     ...rest
   } = props;
+
   return (
     <button
       {...rest}
       type={type}
       className={clsx(
-        className,
-        ...(styleAsLink
+        ...(styleAs !== 'button'
           ? [
-            'link h-4 hover:text-dim active:text-medium',
+            'link h-4 active:text-medium',
             'disabled:!bg-transparent',
           ]
           : ['h-9']),
+        styleAs === 'link' && 'hover:text-dim',
+        styleAs === 'link-without-hover' && 'hover:text-main',
         'inline-flex items-center gap-2 self-start',
+        className,
       )}
       disabled={isLoading || disabled}
     >
       {(icon || isLoading) &&
         <span className={clsx(
-          'min-w-[1.25rem] h-4 translate-y-[-0.5px]',
+          'min-w-[1.25rem] h-4',
+          styleAs === 'button' ? 'translate-y-[-0.5px]' : 'translate-y-[0.5px]',
           'inline-flex justify-center',
         )}>
           {isLoading
             ? <Spinner
               size={14}
               color={spinnerColor}
-              className="translate-y-[2px]"
+              className={styleAs === 'button'
+                ? 'translate-y-[2px]'
+                : 'translate-y-[0.5px]'}
             />
             : icon}
         </span>}
       {children && <span className={clsx(
-        icon !== undefined && 'hidden sm:inline-block',
+        styleAs !== 'button' && isLoading && 'text-dim',
+        hideTextOnMobile && icon !== undefined && 'hidden sm:inline-block',
       )}>
         {children}
       </span>}

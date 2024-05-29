@@ -130,6 +130,8 @@ export const PUBLIC_API_ENABLED =
   process.env.NEXT_PUBLIC_PUBLIC_API === '1';
 export const SHOW_REPO_LINK =
   process.env.NEXT_PUBLIC_HIDE_REPO_LINK !== '1';
+export const SHOW_SOCIAL =
+  process.env.NEXT_PUBLIC_HIDE_SOCIAL !== '1';
 export const SHOW_FILM_SIMULATIONS =
   process.env.NEXT_PUBLIC_HIDE_FILM_SIMULATIONS !== '1';
 export const SHOW_EXIF_DATA =
@@ -170,6 +172,7 @@ export const CONFIG_CHECKLIST_STATUS = {
   hasTitle: (process.env.NEXT_PUBLIC_SITE_TITLE ?? '').length > 0,
   hasDomain: (process.env.NEXT_PUBLIC_SITE_DOMAIN ?? '').length > 0,
   showRepoLink: SHOW_REPO_LINK,
+  showSocial: SHOW_SOCIAL,
   showFilmSimulations: SHOW_FILM_SIMULATIONS,
   showExifInfo: SHOW_EXIF_DATA,
   isProModeEnabled: PRO_MODE_ENABLED,

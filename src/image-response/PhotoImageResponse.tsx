@@ -20,9 +20,16 @@ export default function PhotoImageResponse({
   fontFamily: string
   isNextImageReady: boolean
 }) {
-  const model = photo.model
-    ? formatCameraModelTextShort(cameraFromPhoto(photo))
-    : undefined;
+  const caption = [
+    photo.model
+      ? formatCameraModelTextShort(cameraFromPhoto(photo))
+      : undefined,
+    photo.focalLengthFormatted,
+    photo.fNumberFormatted,
+    photo.isoFormatted,
+  ]
+    .join(' ')
+    .trim();
 
   return (
     <ImageContainer {...{ width, height }}>
@@ -33,24 +40,15 @@ export default function PhotoImageResponse({
         ...OG_TEXT_BOTTOM_ALIGNMENT && { imagePosition: 'top' },
       }} />
       {shouldShowExifDataForPhoto(photo) &&
-        <ImageCaption {...{ width, height, fontFamily }}>
-          {photo.make === 'Apple' &&
-            <div style={{ display: 'flex' }}>
-              <AiFillApple />
-            </div>}
-          {model &&
-            <div style={{ display: 'flex' }}>
-              {model}
-            </div>}
-          <div style={{ display: 'flex' }}>
-            {photo.focalLengthFormatted}
-          </div>
-          <div style={{ display: 'flex' }}>
-            {photo.fNumberFormatted}
-          </div>
-          <div>
-            {photo.isoFormatted}
-          </div>
+        <ImageCaption {...{
+          width,
+          height,
+          fontFamily,
+          ...photo.make === 'Apple' && { icon: <AiFillApple style={{
+            marginRight: height * .01,
+          }} /> },
+        }}>
+          {caption}
         </ImageCaption>}
     </ImageContainer>
   );

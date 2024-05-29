@@ -18,11 +18,11 @@ import {
   PATH_SIGN_IN,
   pathForPhoto,
   pathForTag,
-} from '../site/paths';
-import Modal from './Modal';
+} from '../../site/paths';
+import Modal from '../Modal';
 import { clsx } from 'clsx/lite';
 import { useDebounce } from 'use-debounce';
-import Spinner from './Spinner';
+import Spinner from '../Spinner';
 import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
@@ -38,9 +38,10 @@ import { getKeywordsForPhoto, titleForPhoto } from '@/photo';
 import PhotoDate from '@/photo/PhotoDate';
 import PhotoSmall from '@/photo/PhotoSmall';
 import { FaCheck } from 'react-icons/fa6';
-import { TagsWithMeta, addHiddenToTags } from '@/tag';
+import { TagsWithMeta, addHiddenToTags, formatTag } from '@/tag';
 import { FaTag } from 'react-icons/fa';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
+import CommandKItem from './CommandKItem';
 
 const LISTENER_KEYDOWN = 'keydown';
 const MINIMUM_QUERY_LENGTH = 2;
@@ -191,7 +192,7 @@ export default function CommandKClient({
       className="translate-x-[1px] translate-y-[0.75px]"
     />,
     items: tagsIncludingHidden.map(({ tag, count }) => ({
-      label: tag,
+      label: formatTag(tag),
       annotation: formatCount(count),
       annotationAria: formatCountDescriptive(count),
       path: pathForTag(tag),
@@ -373,23 +374,17 @@ export default function CommandKClient({
                   {items.map(({
                     label,
                     keywords,
+                    accessory,
                     annotation,
                     annotationAria,
-                    accessory,
                     path,
                     action,
                   }) =>
-                    <Command.Item
+                    <CommandKItem
                       key={`${heading} ${label}`}
+                      label={label}
                       value={`${heading} ${label}`}
                       keywords={keywords}
-                      className={clsx(
-                        'px-2',
-                        accessory ? 'py-2' : 'py-1',
-                        'rounded-md cursor-pointer tracking-wide',
-                        'data-[selected=true]:bg-gray-100',
-                        'data-[selected=true]:dark:bg-gray-900/75',
-                      )}
                       onSelect={() => {
                         if (path) {
                           startTransition(() => {
@@ -401,23 +396,11 @@ export default function CommandKClient({
                           action?.();
                         }
                       }}
-                    >
-                      <div className="flex items-center gap-2 sm:gap-3">
-                        {accessory}
-                        <span className="grow text-ellipsis truncate">
-                          {label}
-                        </span>
-                        {annotation &&
-                          <span
-                            className="text-dim whitespace-nowrap"
-                            aria-label={annotationAria}
-                          >
-                            <span aria-hidden={Boolean(annotationAria)}>
-                              {annotation}
-                            </span>
-                          </span>}
-                      </div>
-                    </Command.Item>)}
+                      accessory={accessory}
+                      annotation={annotation}
+                      annotationAria={annotationAria}
+                      showSpinner={Boolean(path)}
+                    />)}
                 </Command.Group>)}
             {footer && !queryLive &&
               <div className="text-center text-dim pt-3 sm:pt-4">

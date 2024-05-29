@@ -60,7 +60,7 @@ export default function SubmitButtonWithStatus({
       )}
       icon={icon}
       spinnerColor={spinnerColor}
-      styleAsLink={styleAsLink}
+      styleAs={styleAsLink ? 'link' : undefined}
       isLoading={pending}
       {...buttonProps}
     >

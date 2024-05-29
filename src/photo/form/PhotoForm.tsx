@@ -19,8 +19,7 @@ import { PATH_ADMIN_PHOTOS, PATH_ADMIN_UPLOADS } from '@/site/paths';
 import { toastSuccess, toastWarning } from '@/toast';
 import { getDimensionsFromSize } from '@/utility/size';
 import ImageWithFallback from '@/components/image/ImageWithFallback';
-import { TagsWithMeta, sortTagsObjectWithoutFavs } from '@/tag';
-import { formatCount, formatCountDescriptive } from '@/utility/string';
+import { TagsWithMeta, convertTagsForForm } from '@/tag';
 import { AiContent } from '../ai/useAiImageQueries';
 import AiButton from '../ai/AiButton';
 import Spinner from '@/components/Spinner';
@@ -290,12 +289,7 @@ export default function PhotoForm({
         {/* Fields */}
         <div className="space-y-6">
           {FORM_METADATA_ENTRIES(
-            sortTagsObjectWithoutFavs(uniqueTags ?? [])
-              .map(({ tag, count }) => ({
-                value: tag,
-                annotation: formatCount(count),
-                annotationAria: formatCountDescriptive(count, 'tagged'),
-              })),
+            convertTagsForForm(uniqueTags),
             aiContent !== undefined,
           )
             .map(([key, {
