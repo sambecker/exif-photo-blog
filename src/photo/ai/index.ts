@@ -69,5 +69,4 @@ export const cleanUpAiTextResponse = (text?: string) => text
     .replaceAll('\n', ' ')
     .replaceAll('"', '')
     .replace(/\.$/, '')
-    .trim()
   : undefined;

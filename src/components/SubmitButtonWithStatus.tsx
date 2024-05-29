@@ -1,16 +1,12 @@
 'use client';
 
-import { HTMLProps, useEffect, useRef } from 'react';
+import { ComponentProps, useEffect, useRef } from 'react';
 import { useFormStatus } from 'react-dom';
-import { SpinnerColor } from './Spinner';
 import { clsx } from 'clsx/lite';
 import { toastSuccess } from '@/toast';
 import LoaderButton from '@/components/primitives/LoaderButton';
 
-interface Props extends HTMLProps<HTMLButtonElement> {
-  icon?: JSX.Element
-  styleAsLink?: boolean
-  spinnerColor?: SpinnerColor
+interface Props extends ComponentProps<typeof LoaderButton> {
   onFormStatusChange?: (pending: boolean) => void
   onFormSubmitToastMessage?: string
   onFormSubmit?: () => void
@@ -19,7 +15,7 @@ interface Props extends HTMLProps<HTMLButtonElement> {
 
 export default function SubmitButtonWithStatus({
   icon,
-  styleAsLink,
+  styleAs,
   spinnerColor,
   onFormStatusChange,
   onFormSubmitToastMessage,
@@ -36,7 +32,7 @@ export default function SubmitButtonWithStatus({
   const pendingPrevious = useRef(pending);
 
   useEffect(() => {
-    if (pending && !pendingPrevious.current) {
+    if (!pending && pendingPrevious.current) {
       if (onFormSubmitToastMessage) {
         toastSuccess(onFormSubmitToastMessage);
       }
@@ -60,7 +56,7 @@ export default function SubmitButtonWithStatus({
       )}
       icon={icon}
       spinnerColor={spinnerColor}
-      styleAs={styleAsLink ? 'link' : undefined}
+      styleAs={styleAs}
       isLoading={pending}
       {...buttonProps}
     >
