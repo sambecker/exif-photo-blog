@@ -6,12 +6,17 @@ import {
   doesPhotoNeedBlurCompatibility,
   shouldShowCameraDataForPhoto,
   shouldShowExifDataForPhoto,
+  titleForPhoto,
 } from '.';
 import SiteGrid from '@/components/SiteGrid';
 import ImageLarge from '@/components/image/ImageLarge';
 import { clsx } from 'clsx/lite';
 import Link from 'next/link';
-import { pathForPhoto, pathForPhotoShare } from '@/site/paths';
+import {
+  pathForFocalLength,
+  pathForPhoto,
+  pathForPhotoShare,
+} from '@/site/paths';
 import PhotoTags from '@/tag/PhotoTags';
 import ShareButton from '@/components/ShareButton';
 import PhotoCamera from '../camera/PhotoCamera';
@@ -37,10 +42,13 @@ export default function PhotoLarge({
   revalidatePhoto,
   showCamera = true,
   showSimulation = true,
+  shouldShare = true,
   shouldShareTag,
   shouldShareCamera,
   shouldShareSimulation,
+  shouldShareFocalLength,
   shouldScrollOnShare,
+  includeFavoriteInAdminMenu,
   onVisible,
 }: {
   photo: Photo
@@ -51,10 +59,13 @@ export default function PhotoLarge({
   revalidatePhoto?: RevalidatePhoto
   showCamera?: boolean
   showSimulation?: boolean
+  shouldShare?: boolean
   shouldShareTag?: boolean
   shouldShareCamera?: boolean
   shouldShareSimulation?: boolean
+  shouldShareFocalLength?: boolean
   shouldScrollOnShare?: boolean
+  includeFavoriteInAdminMenu?: boolean
   onVisible?: () => void
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -76,7 +87,7 @@ export default function PhotoLarge({
       containerRef={ref}
       contentMain={
         <Link
-          href={pathForPhoto(photo)}
+          href={pathForPhoto({ photo })}
           className={clsx(arePhotosMatted &&
             'flex items-center aspect-[3/2] bg-gray-100',
           )}
@@ -122,6 +133,8 @@ export default function PhotoLarge({
                 <AdminPhotoMenuClient {...{
                   photo,
                   revalidatePhoto,
+                  includeFavorite: includeFavoriteInAdminMenu,
+                  ariaLabel: `Admin menu for '${titleForPhoto(photo)}' photo`,
                 }} />
               </div>
             </div>
@@ -153,7 +166,10 @@ export default function PhotoLarge({
               <>
                 <ul className="text-medium">
                   <li>
-                    {photo.focalLengthFormatted}
+                    {photo.focalLength &&
+                      <Link href={pathForFocalLength(photo.focalLength)}>
+                        {photo.focalLengthFormatted}
+                      </Link>}
                     {photo.focalLengthIn35MmFormatFormatted &&
                       <>
                         {' '}
@@ -184,20 +200,24 @@ export default function PhotoLarge({
                 photo={photo}
                 className="text-medium"
               />
-              <ShareButton
-                className={clsx(
-                  'md:translate-x-[-2.5px]',
-                  'translate-y-[1.5px] md:translate-y-0',
-                )}
-                path={pathForPhotoShare(
-                  photo,
-                  shouldShareTag ? primaryTag : undefined,
-                  shouldShareCamera ? camera : undefined,
-                  shouldShareSimulation ? photo.filmSimulation : undefined,
-                )}
-                prefetch={prefetchRelatedLinks}
-                shouldScroll={shouldScrollOnShare}
-              />
+              {shouldShare &&
+                <ShareButton
+                  className={clsx(
+                    'md:translate-x-[-2.5px]',
+                    'translate-y-[1.5px] md:translate-y-0',
+                  )}
+                  path={pathForPhotoShare({
+                    photo,
+                    tag: shouldShareTag ? primaryTag : undefined,
+                    camera: shouldShareCamera ? camera : undefined,
+                    // eslint-disable-next-line max-len
+                    simulation: shouldShareSimulation ? photo.filmSimulation : undefined,
+                    // eslint-disable-next-line max-len
+                    focal: shouldShareFocalLength ? photo.focalLength : undefined,
+                  })}
+                  prefetch={prefetchRelatedLinks}
+                  shouldScroll={shouldScrollOnShare}
+                />}
             </div>
           </div>
         </DivDebugBaselineGrid>}

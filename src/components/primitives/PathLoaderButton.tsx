@@ -13,18 +13,22 @@ export default function PathLoaderButton({
   shouldScroll = true,
   shouldReplace,
   spinnerColor,
-  styleAsLink,
+  shouldPreventDefault,
+  styleAs,
+  hideTextOnMobile,
   className,
   children,
 }: {
   path: string
-  icon?: JSX.Element
+  icon?: ReactNode
   prefetch?: boolean
   loaderDelay?: number
   shouldScroll?: boolean
   shouldReplace?: boolean
   spinnerColor?: SpinnerColor
-  styleAsLink?: boolean
+  shouldPreventDefault?: boolean
+  styleAs?: 'button' | 'link' | 'link-without-hover'
+  hideTextOnMobile?: boolean
   className?: string
   children?: ReactNode
 }) {
@@ -55,16 +59,20 @@ export default function PathLoaderButton({
     <LoaderButton
       icon={icon}
       className={className}
-      onClick={() => startTransition(() => {
-        if (shouldReplace) {
-          router.replace(path, { scroll: shouldScroll });
-        } else {
-          router.push(path, { scroll: shouldScroll });
-        }
-      })}
+      onClick={e => {
+        if (shouldPreventDefault) { e.preventDefault(); }
+        startTransition(() => {
+          if (shouldReplace) {
+            router.replace(path, { scroll: shouldScroll });
+          } else {
+            router.push(path, { scroll: shouldScroll });
+          }
+        });
+      }}
       isLoading={shouldShowLoader}
       spinnerColor={spinnerColor}
-      styleAsLink={styleAsLink}
+      styleAs={styleAs}
+      hideTextOnMobile={hideTextOnMobile}
     >
       {children}
     </LoaderButton>

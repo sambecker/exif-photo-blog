@@ -41,13 +41,20 @@ import { convertPhotoToPhotoDbInsert } from '.';
 import { runAuthenticatedAdminServerAction } from '@/auth';
 import { AI_IMAGE_QUERIES, AiImageQuery } from './ai';
 import { streamOpenAiImageQuery } from '@/services/openai';
-import { BLUR_ENABLED } from '@/site/config';
+import {
+  AI_TEXT_AUTO_GENERATED_FIELDS,
+  AI_TEXT_GENERATION_ENABLED,
+  BLUR_ENABLED,
+} from '@/site/config';
+import { getStorageUploadUrlsNoStore } from '@/services/storage/cache';
+import { generateAiImageQueries } from './ai/server';
+import { createStreamableValue } from 'ai/rsc';
 
 // Private actions
 
 export const createPhotoAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
-    const photo = convertFormDataToPhotoDbInsert(formData, true);
+    const photo = convertFormDataToPhotoDbInsert(formData);
 
     const updatedUrl = await convertUploadToPhoto(photo.url);
     
@@ -57,6 +64,110 @@ export const createPhotoAction = async (formData: FormData) =>
       revalidateAllKeysAndPaths();
       redirect(PATH_ADMIN_PHOTOS);
     }
+  });
+
+export const addAllUploadsAction = async ({
+  tags,
+  takenAtLocal,
+  takenAtNaiveLocal,
+}: {
+  tags?: string
+  takenAtLocal: string
+  takenAtNaiveLocal: string
+}) =>
+  runAuthenticatedAdminServerAction(async () => {
+    const uploadUrls = await getStorageUploadUrlsNoStore();
+    const uploadTotal = uploadUrls.length;
+    const addedUploadUrls: string[] = [];
+
+    const stream = createStreamableValue<{
+      headline: string,
+      subhead?: string,
+      addedUploadUrls: string,
+    }, string>({
+      headline: `Adding ${uploadTotal} Photos...`,
+      addedUploadUrls: '',
+    });
+
+    (async () => {
+      try {
+        for (const [index, { url }] of uploadUrls.entries()) {
+          const headline = `Adding ${index + 1} of ${uploadTotal}`;
+
+          stream.update({
+            headline,
+            subhead: 'Parsing EXIF data',
+            addedUploadUrls: addedUploadUrls.join(','),
+          });
+
+          const {
+            photoFormExif,
+            imageResizedBase64,
+          } = await extractImageDataFromBlobPath(url, {
+            includeInitialPhotoFields: true,
+            generateBlurData: BLUR_ENABLED,
+            generateResizedImage: AI_TEXT_GENERATION_ENABLED,
+          });
+
+          if (photoFormExif) {
+            if (AI_TEXT_GENERATION_ENABLED) {
+              stream.update({
+                headline,
+                subhead: 'Generating AI text',
+                addedUploadUrls: addedUploadUrls.join(','),
+              });
+            }
+
+            const {
+              title,
+              caption,
+              tags: aiTags,
+              semanticDescription,
+            } = await generateAiImageQueries(
+              imageResizedBase64,
+              AI_TEXT_AUTO_GENERATED_FIELDS,
+            );
+
+            const form: Partial<PhotoFormData> = {
+              ...photoFormExif,
+              title,
+              caption,
+              tags: tags || aiTags,
+              semanticDescription,
+              takenAt: photoFormExif.takenAt || takenAtLocal,
+              takenAtNaive: photoFormExif.takenAtNaive || takenAtNaiveLocal,
+            };
+
+            stream.update({
+              headline,
+              subhead: 'Moving upload to photo storage',
+              addedUploadUrls: addedUploadUrls.join(','),
+            });
+
+            const updatedUrl = await convertUploadToPhoto(url);
+            if (updatedUrl) {
+              stream.update({
+                headline,
+                subhead: 'Adding to database',
+                addedUploadUrls: addedUploadUrls.join(','),
+              });
+              const photo = convertFormDataToPhotoDbInsert(form);
+              photo.url = updatedUrl;
+              await insertPhoto(photo);
+              addedUploadUrls.push(url);
+            }
+          }
+        }
+      } catch (error: any) {
+        // eslint-disable-next-line max-len
+        stream.error(`${error.message} (${addedUploadUrls.length} of ${uploadTotal} photos successfully added)`);
+      } finally {
+        revalidateAllKeysAndPaths();
+      }
+      stream.done();
+    })();
+
+    return stream.value;
   });
 
 export const updatePhotoAction = async (formData: FormData) =>
@@ -92,7 +203,7 @@ export const toggleFavoritePhotoAction = async (
       await updatePhoto(convertPhotoToPhotoDbInsert(photo));
       revalidateAllKeysAndPaths();
       if (shouldRedirect) {
-        redirect(pathForPhoto(photoId));
+        redirect(pathForPhoto({ photo: photoId }));
       }
     }
   });

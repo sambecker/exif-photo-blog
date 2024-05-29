@@ -1,6 +1,6 @@
 import { TbPhotoShare } from 'react-icons/tb';
 import PathLoaderButton from './primitives/PathLoaderButton';
-import clsx from 'clsx';
+import { clsx } from 'clsx/lite';
 
 export default function ShareButton({
   path,
@@ -28,8 +28,8 @@ export default function ShareButton({
       spinnerColor="dim"
       prefetch={prefetch}
       shouldScroll={shouldScroll}
+      styleAs="link"
       shouldReplace
-      styleAsLink
     />
   );
 }

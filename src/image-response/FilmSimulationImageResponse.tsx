@@ -36,15 +36,17 @@ export default function FilmSimulationImageResponse({
           height,
         }}
       />
-      <ImageCaption {...{ width, height, fontFamily }}>
-        <PhotoFilmSimulationIcon
+      <ImageCaption {...{
+        width,
+        height,
+        fontFamily,
+        icon: <PhotoFilmSimulationIcon
           simulation={simulation}
-          height={40}
-          style={{ marginRight: -10 }}
-        />
-        <span style={{ textTransform: 'uppercase' }}>
-          {labelForFilmSimulation(simulation).medium}
-        </span>
+          height={height * .081}
+          style={{ transform: `translateY(${height * .001}px)`}}
+        />,
+      }}>
+        {labelForFilmSimulation(simulation).medium.toLocaleUpperCase()}
       </ImageCaption>
     </ImageContainer>
   );

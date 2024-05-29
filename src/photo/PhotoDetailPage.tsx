@@ -12,6 +12,7 @@ import { FilmSimulation } from '@/simulation';
 import FilmSimulationHeader from '@/simulation/FilmSimulationHeader';
 import { TAG_HIDDEN } from '@/tag';
 import HiddenHeader from '@/tag/HiddenHeader';
+import FocalLengthHeader from '@/focal/FocalLengthHeader';
 
 export default function PhotoDetailPage({
   photo,
@@ -20,9 +21,12 @@ export default function PhotoDetailPage({
   tag,
   camera,
   simulation,
+  focal,
   indexNumber,
   count,
   dateRange,
+  shouldShare,
+  includeFavoriteInAdminMenu,
 }: {
   photo: Photo
   photos: Photo[]
@@ -30,9 +34,12 @@ export default function PhotoDetailPage({
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
+  focal?: number
   indexNumber?: number
   count?: number
   dateRange?: PhotoDateRange
+  shouldShare?: boolean
+  includeFavoriteInAdminMenu?: boolean
 }) {
   return (
     <div>
@@ -82,6 +89,19 @@ export default function PhotoDetailPage({
               dateRange={dateRange}
             />}
         />}
+      {focal &&
+        <SiteGrid
+          className="mt-4 mb-8"
+          contentMain={
+            <FocalLengthHeader
+              focal={focal}
+              photos={photos}
+              selectedPhoto={photo}
+              indexNumber={indexNumber}
+              count={count}
+              dateRange={dateRange}
+            />}
+        />}
       <AnimateItems
         className="md:mb-8"
         animateFromAppState
@@ -94,10 +114,12 @@ export default function PhotoDetailPage({
             prefetchRelatedLinks
             showCamera={!camera}
             showSimulation={!simulation}
+            shouldShare={shouldShare}
             shouldShareTag={tag !== undefined}
             shouldShareCamera={camera !== undefined}
             shouldShareSimulation={simulation !== undefined}
             shouldScrollOnShare={false}
+            includeFavoriteInAdminMenu={includeFavoriteInAdminMenu}
           />,
         ]}
       />
@@ -109,6 +131,7 @@ export default function PhotoDetailPage({
           tag={tag}
           camera={camera}
           simulation={simulation}
+          focal={focal}
           animateOnFirstLoadOnly
         />}
         contentSide={<AnimateItems
@@ -130,6 +153,7 @@ export default function PhotoDetailPage({
                 tag,
                 camera,
                 simulation,
+                focal,
               }} />
             </div>,
           ]}

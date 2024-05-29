@@ -15,6 +15,7 @@ export default function PhotoLink({
   tag,
   camera,
   simulation,
+  focal,
   scroll,
   prefetch,
   nextPhotoAnimation,
@@ -25,6 +26,7 @@ export default function PhotoLink({
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
+  focal?: number
   scroll?: boolean
   prefetch?: boolean
   nextPhotoAnimation?: AnimationConfig
@@ -36,7 +38,7 @@ export default function PhotoLink({
   return (
     photo
       ? <Link
-        href={pathForPhoto(photo, tag, camera, simulation)}
+        href={pathForPhoto({ photo, tag, camera, simulation, focal })}
         prefetch={prefetch}
         onClick={() => {
           if (nextPhotoAnimation) {

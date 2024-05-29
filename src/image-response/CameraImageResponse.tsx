@@ -33,14 +33,19 @@ export default function CameraImageResponse({
           height,
         }}
       />
-      <ImageCaption {...{ width, height, fontFamily }}>
-        <IoMdCamera
-          size={height * .09}
-          style={{ transform: `translateY(${height * 0.002}px)` }}
-        />
-        <span style={{textTransform: 'uppercase'}}>
-          {formatCameraText(camera)}
-        </span>
+      <ImageCaption {...{
+        width,
+        height,
+        fontFamily,
+        icon: <IoMdCamera
+          size={height * .079}
+          style={{
+            transform: `translateY(${height * .003}px)`,
+            marginRight: height * .015,
+          }}
+        />,
+      }}>
+        {formatCameraText(camera).toLocaleUpperCase()}
       </ImageCaption>
     </ImageContainer>
   );

@@ -5,7 +5,7 @@ import {
 import { Photo, PhotoDateRange } from '../photo';
 import ShareModal from '@/components/ShareModal';
 import FilmSimulationOGTile from './FilmSimulationOGTile';
-import { FilmSimulation } from '.';
+import { FilmSimulation, shareTextForFilmSimulation } from '.';
 
 export default function FilmSimulationShareModal({
   simulation,
@@ -20,9 +20,9 @@ export default function FilmSimulationShareModal({
 }) {
   return (
     <ShareModal
-      title="Share Photos"
       pathShare={absolutePathForFilmSimulation(simulation)}
       pathClose={pathForFilmSimulation(simulation)}
+      socialText={shareTextForFilmSimulation(simulation)}
     >
       <FilmSimulationOGTile {...{ simulation, photos, count, dateRange }} />
     </ShareModal>

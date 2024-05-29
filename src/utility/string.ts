@@ -8,7 +8,7 @@ export const convertStringToArray = (
   : undefined;
 
 export const capitalize = (string: string) =>
-  string.charAt(0).toUpperCase() + string.slice(1);
+  string.charAt(0).toLocaleUpperCase() + string.slice(1);
 
 export const capitalizeWords = (string = '') =>
   string

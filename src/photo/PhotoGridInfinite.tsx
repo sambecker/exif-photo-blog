@@ -13,6 +13,7 @@ export default function PhotoGridInfinite({
   tag,
   camera,
   simulation,
+  focal,
   animateOnFirstLoadOnly,
 }: {
   cacheKey: string
@@ -21,6 +22,7 @@ export default function PhotoGridInfinite({
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
+  focal?: number
   animateOnFirstLoadOnly?: boolean
 }) {
   return (
@@ -39,6 +41,7 @@ export default function PhotoGridInfinite({
           tag,
           camera,
           simulation,
+          focal,
           onLastPhotoVisible,
           animateOnFirstLoadOnly,
         }} />}

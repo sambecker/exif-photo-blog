@@ -1,3 +1,4 @@
+import { formatFocalLength } from '@/focal';
 import { getNextImageUrlForRequest } from '@/services/next-image';
 import { FilmSimulation } from '@/simulation';
 import { HIGH_DENSITY_GRID, SHOW_EXIF_DATA } from '@/site/config';
@@ -8,7 +9,6 @@ import {
   formatIso,
   formatExposureCompensation,
   formatExposureTime,
-  formatFocalLength,
 } from '@/utility/exif';
 import camelcaseKeys from 'camelcase-keys';
 import { isBefore } from 'date-fns';
@@ -30,6 +30,8 @@ export const INFINITE_SCROLL_GRID_PHOTO_MULTIPLE = HIGH_DENSITY_GRID
 
 // Thumbnails below /p/[photoId]
 export const RELATED_GRID_PHOTOS_TO_SHOW = 12;
+
+export const DEFAULT_ASPECT_RATIO = 1.5;
 
 export const ACCEPTED_PHOTO_FILE_TYPES = [
   'image/jpg',

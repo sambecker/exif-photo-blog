@@ -6,10 +6,15 @@ import { pathForPhoto } from '@/site/paths';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
 import { useRef } from 'react';
 import useOnVisible from '@/utility/useOnVisible';
+import { Camera } from '@/camera';
+import { FilmSimulation } from '@/simulation';
 
 export default function PhotoSmall({
   photo,
   tag,
+  camera,
+  simulation,
+  focal,
   selected,
   className,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
@@ -17,6 +22,9 @@ export default function PhotoSmall({
 }: {
   photo: Photo
   tag?: string
+  camera?: Camera
+  simulation?: FilmSimulation
+  focal?: number
   selected?: boolean
   className?: string
   prefetch?: boolean
@@ -29,7 +37,7 @@ export default function PhotoSmall({
   return (
     <Link
       ref={ref}
-      href={pathForPhoto(photo, tag)}
+      href={pathForPhoto({ photo, tag, camera, simulation, focal })}
       className={clsx(
         className,
         'active:brightness-75',

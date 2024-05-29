@@ -33,7 +33,7 @@ export async function generateMetadata({
 
   const title = titleForPhoto(photo);
   const description = descriptionForPhoto(photo);
-  const url = absolutePathForPhoto(photo, TAG_HIDDEN);
+  const url = absolutePathForPhoto({ photo, tag: TAG_HIDDEN });
 
   return {
     title,
@@ -70,6 +70,8 @@ export default async function PhotoTagHiddenPage({
       count,
       dateRange,
       tag: TAG_HIDDEN,
+      shouldShare: false,
+      includeFavoriteInAdminMenu: false,
     }} />
   );
 }

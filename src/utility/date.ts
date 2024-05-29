@@ -66,7 +66,7 @@ export const convertTimestampToNaivePostgresString = (
       '$1 $2',
     );
 
-// Run in the browser, to get generate local date time strings
+// Run in browser to generate local date time strings
 
 export const generateLocalPostgresString = () =>
   formatDateForPostgres(new Date());

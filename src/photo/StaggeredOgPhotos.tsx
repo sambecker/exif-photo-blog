@@ -65,7 +65,7 @@ export default function StaggeredOgPhotos({
           onFail={() => recomputeLoadingState({ [photo.id]: 'failed' })}
           onVisible={index === photos.length - 1
             ? onLastPhotoVisible
-            :undefined}
+            : undefined}
           riseOnHover
         />)}
     </div>

@@ -16,6 +16,7 @@ export default function PhotoMedium({
   tag,
   camera,
   simulation,
+  focal,
   selected,
   priority,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
@@ -26,6 +27,7 @@ export default function PhotoMedium({
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
+  focal?: number
   selected?: boolean
   priority?: boolean
   prefetch?: boolean
@@ -39,7 +41,7 @@ export default function PhotoMedium({
   return (
     <Link
       ref={ref}
-      href={pathForPhoto(photo, tag, camera, simulation)}
+      href={pathForPhoto({ photo, tag, camera, simulation, focal })}
       className={clsx(
         'active:brightness-75',
         selected && 'brightness-50',

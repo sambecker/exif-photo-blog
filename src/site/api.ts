@@ -30,7 +30,7 @@ interface PublicApiPhoto {
 export const formatPhotoForApi = (photo: Photo): PublicApiPhoto => ({
   id: photo.id,
   title: photo.title,
-  url: absolutePathForPhoto(photo),
+  url: absolutePathForPhoto({ photo }),
   ...photo.make && { make: photo.make },
   ...photo.model && { model: photo.model },
   ...photo.tags.length > 0 && { tags: photo.tags },

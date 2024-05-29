@@ -45,7 +45,7 @@ export default function AdminPhotosTable({
           <div className="flex flex-col lg:flex-row">
             <Link
               key={photo.id}
-              href={pathForPhoto(photo)}
+              href={pathForPhoto({ photo })}
               className="lg:w-[50%] flex items-center gap-2"
               prefetch={false}
             >

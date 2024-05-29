@@ -1,4 +1,6 @@
-import CommandKClient, { CommandKSection } from '@/components/CommandKClient';
+import CommandKClient, {
+  CommandKSection,
+} from '@/components/cmdk/CommandKClient';
 import {
   getPhotosMetaCached,
   getUniqueCamerasCached,
@@ -16,6 +18,7 @@ import { TagsWithMeta } from '@/tag';
 import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
 import { IoMdCamera } from 'react-icons/io';
 import { ADMIN_DEBUG_TOOLS_ENABLED, SHOW_FILM_SIMULATIONS } from './config';
+import { labelForFilmSimulation } from '@/vendors/fujifilm';
 
 export default async function CommandK() {
   const [
@@ -51,7 +54,7 @@ export default async function CommandK() {
       <PhotoFilmSimulationIcon className="translate-y-[0.5px]" />
     </span>,
     items: filmSimulations.map(({ simulation, count }) => ({
-      label: simulation,
+      label: labelForFilmSimulation(simulation).medium,
       annotation: formatCount(count),
       annotationAria: formatCountDescriptive(count),
       path: pathForFilmSimulation(simulation),

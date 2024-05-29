@@ -12,6 +12,7 @@ export default function PhotoGrid({
   tag,
   camera,
   simulation,
+  focal,
   photoPriority,
   fast,
   animate = true,
@@ -28,6 +29,7 @@ export default function PhotoGrid({
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
+  focal?: number
   photoPriority?: boolean
   fast?: boolean
   animate?: boolean
@@ -46,7 +48,7 @@ export default function PhotoGrid({
         small
           ? 'grid-cols-3 xs:grid-cols-6'
           : HIGH_DENSITY_GRID
-            ? 'grid-cols-2 xs:grid-cols-4 lg:grid-cols-5'
+            ? 'grid-cols-2 xs:grid-cols-4 lg:grid-cols-6'
             : 'grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
         'items-center',
       )}
@@ -77,6 +79,7 @@ export default function PhotoGrid({
               tag,
               camera,
               simulation,
+              focal,
               selected: photo.id === selectedPhoto?.id,
               priority: photoPriority,
               onVisible: index === photos.length - 1
