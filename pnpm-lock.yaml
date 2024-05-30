@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@ai-sdk/openai':
-        specifier: ^0.0.17
-        version: 0.0.17(zod@3.23.8)
+        specifier: ^0.0.18
+        version: 0.0.18(zod@3.23.8)
       '@aws-sdk/client-s3':
         specifier: 3.583.0
         version: 3.583.0
@@ -72,8 +72,8 @@ importers:
         specifier: ^1.0.11
         version: 1.0.11(next@14.2.3(@babel/core@7.24.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(svelte@4.2.17)(vue@3.4.27(typescript@5.4.5))
       ai:
-        specifier: ^3.1.18
-        version: 3.1.18(react@18.3.1)(solid-js@1.8.17)(svelte@4.2.17)(vue@3.4.27(typescript@5.4.5))(zod@3.23.8)
+        specifier: ^3.1.21
+        version: 3.1.21(react@18.3.1)(solid-js@1.8.17)(svelte@4.2.17)(vue@3.4.27(typescript@5.4.5))(zod@3.23.8)
       autoprefixer:
         specifier: 10.4.19
         version: 10.4.19(postcss@8.4.38)
@@ -164,8 +164,8 @@ packages:
   '@adobe/css-tools@4.3.3':
     resolution: {integrity: sha512-rE0Pygv0sEZ4vBWHlAgJLGDU7Pm8xoO6p3wsEceb7GYAjScrOHpEo8KK/eVkAcnSM+slAEtXjA2JpdjLp4fJQQ==}
 
-  '@ai-sdk/openai@0.0.17':
-    resolution: {integrity: sha512-5Es+u9ICw23FZnRfRQLwn9AxkRcTDxGMFKcZjaLdj8suBeUd3B/CioUTNgXUTvfRCOPhkH/sbLrMyo746LkOAg==}
+  '@ai-sdk/openai@0.0.18':
+    resolution: {integrity: sha512-5iJ+/mbns0uLbNpACMYGUONUqQmqGJYrPbQvmGC+XVD4DZLvyZqBi0NDoQguOrZTz6u5O7rl51o9PDO+bEtmcA==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.0.0
@@ -1704,8 +1704,8 @@ packages:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
     engines: {node: '>= 6.0.0'}
 
-  ai@3.1.18:
-    resolution: {integrity: sha512-/4fIiaD3uwxsnmoAPS7jWbRchImh9pDcuWs+yuTTQl+bp+FmVKgIQ1q+PIEndZI6hEq9M4/atlz2jZWcgW1bzg==}
+  ai@3.1.21:
+    resolution: {integrity: sha512-s/3L2pqbeC1EwFS0u5kyw1amtC3KOXPWzRCmEcXAK23xdv5RLlxxK8juuvdIDgGplb/AgfkJ7BjIlbmPQTYu9g==}
     engines: {node: '>=18'}
     peerDependencies:
       openai: ^4.42.0
@@ -4299,7 +4299,7 @@ snapshots:
 
   '@adobe/css-tools@4.3.3': {}
 
-  '@ai-sdk/openai@0.0.17(zod@3.23.8)':
+  '@ai-sdk/openai@0.0.18(zod@3.23.8)':
     dependencies:
       '@ai-sdk/provider': 0.0.8
       '@ai-sdk/provider-utils': 0.0.11(zod@3.23.8)
@@ -6440,7 +6440,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ai@3.1.18(react@18.3.1)(solid-js@1.8.17)(svelte@4.2.17)(vue@3.4.27(typescript@5.4.5))(zod@3.23.8):
+  ai@3.1.21(react@18.3.1)(solid-js@1.8.17)(svelte@4.2.17)(vue@3.4.27(typescript@5.4.5))(zod@3.23.8):
     dependencies:
       '@ai-sdk/provider': 0.0.8
       '@ai-sdk/provider-utils': 0.0.11(zod@3.23.8)

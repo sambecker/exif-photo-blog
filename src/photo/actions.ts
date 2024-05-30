@@ -325,7 +325,7 @@ export const syncPhotoAction = async (formData: FormData) =>
           ...!photo.caption && { caption: aiCaption },
           ...photo.tags.length === 0 && { tags: aiTags },
           ...!photo.semanticDescription &&
-          { semanticDescription: aiSemanticDescription },
+            { semanticDescription: aiSemanticDescription },
         });
 
         await updatePhoto(photoFormDbInsert);
