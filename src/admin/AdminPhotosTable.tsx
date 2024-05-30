@@ -14,7 +14,7 @@ import EditButton from './EditButton';
 import DeleteButton from './DeleteButton';
 import {
   deletePhotoFormAction,
-  syncPhotoExifDataAction,
+  syncPhotoAction,
 } from '@/photo/actions';
 import { useAppState } from '@/state/AppState';
 import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
@@ -24,10 +24,12 @@ export default function AdminPhotosTable({
   photos,
   onLastPhotoVisible,
   revalidatePhoto,
+  hasAiTextGeneration,
 }: {
   photos: Photo[],
   onLastPhotoVisible?: () => void
   revalidatePhoto?: RevalidatePhoto
+  hasAiTextGeneration?: boolean
 }) {
   const { invalidateSwr } = useAppState();
 
@@ -82,11 +84,11 @@ export default function AdminPhotosTable({
           )}>
             <EditButton path={pathForAdminPhotoEdit(photo)} />
             <PhotoSyncButton
-              action={syncPhotoExifDataAction}
+              action={syncPhotoAction}
               photoTitle={titleForPhoto(photo)}
               formData={{ photoId: photo.id }}
               onFormSubmit={invalidateSwr}
-              includeLabel={false}
+              hasAiTextGeneration={hasAiTextGeneration}
               shouldConfirm
               shouldToast
             />

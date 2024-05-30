@@ -70,6 +70,7 @@ export default function PhotoEditPageClient({
             <AiButton {...{ aiContent, shouldConfirm: hasTextContent }} />}
           <PhotoSyncButton
             action={action}
+            label="EXIF"
             formData={{ photoUrl: photo.url }}
           />
         </div>}

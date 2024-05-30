@@ -279,31 +279,62 @@ export const getExifDataAction = async (
     return {};
   });
 
-// Accessed from admin photo table
-// will update blur data
-export const syncPhotoExifDataAction = async (formData: FormData) =>
+// Accessed from admin photo table, will:
+// - update EXIF data
+// - anonymize storage url if necessary
+// - update blur data (or destroy if blur is disabled)
+// - generate AI text data, if enabled, and auto-generated fields are empty
+export const syncPhotoAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
-    const photoId = formData.get('id') as string;
-    if (photoId) {
-      const photo = await getPhoto(photoId);
-      if (photo) {
-        const { photoFormExif } = await extractImageDataFromBlobPath(
-          photo.url, {
-            generateBlurData: BLUR_ENABLED,
-          });
-        if (photoFormExif) {
-          const photoFormDbInsert = convertFormDataToPhotoDbInsert({
-            ...convertPhotoToFormData(photo),
-            ...photoFormExif,
-          });
-          await updatePhoto(photoFormDbInsert);
-          revalidatePhotosKey();
+    const photoId = formData.get('photoId') as string | undefined;
+    const photo = await getPhoto(photoId ?? '', true);
+
+    if (photo) {
+      const {
+        photoFormExif,
+        imageResizedBase64,
+      } = await extractImageDataFromBlobPath(photo.url, {
+        includeInitialPhotoFields: false,
+        generateBlurData: BLUR_ENABLED,
+        generateResizedImage: AI_TEXT_GENERATION_ENABLED,
+      });
+
+      if (photoFormExif) {
+        if (photo.url.includes(photo.id)) {
+          // Anonymize storage url on update if necessary by
+          // re-running image upload transfer logic
+          const url = await convertUploadToPhoto(photo.url);
+          if (url) { photo.url = url; }
         }
+
+        const {
+          title: atTitle,
+          caption: aiCaption,
+          tags: aiTags,
+          semanticDescription: aiSemanticDescription,
+        } = await generateAiImageQueries(
+          imageResizedBase64,
+          AI_TEXT_AUTO_GENERATED_FIELDS
+        );
+
+        const photoFormDbInsert = convertFormDataToPhotoDbInsert({
+          ...convertPhotoToFormData(photo),
+          ...photoFormExif,
+          ...!BLUR_ENABLED && { blurData: undefined },
+          ...!photo.title && { title: atTitle },
+          ...!photo.caption && { caption: aiCaption },
+          ...photo.tags.length === 0 && { tags: aiTags },
+          ...!photo.semanticDescription &&
+          { semanticDescription: aiSemanticDescription },
+        });
+
+        await updatePhoto(photoFormDbInsert);
+        revalidateAllKeysAndPaths();
       }
     }
   });
 
-export const syncCacheAction = async () =>
+export const clearCacheAction = async () =>
   runAuthenticatedAdminServerAction(revalidateAllKeysAndPaths);
 
 export const streamAiImageQueryAction = async (

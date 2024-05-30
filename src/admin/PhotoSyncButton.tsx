@@ -6,35 +6,38 @@ import { ComponentProps } from 'react';
 
 export default function PhotoSyncButton({
   action,
-  includeLabel = true,
+  label,
   onFormSubmit,
   formData: { photoId, photoUrl } = {},
   photoTitle,
+  hasAiTextGeneration,
   shouldConfirm,
   shouldToast,
 }: {
   action: (formData: FormData) => void
-  includeLabel?: boolean
+  label?: string
   formData?: {
     photoId?: string
     photoUrl?: string
   }
   photoTitle?: string
+  hasAiTextGeneration?: boolean
   shouldConfirm?: boolean
   shouldToast?: boolean
 } & ComponentProps<typeof SubmitButtonWithStatus>) {
-  const confirmText =
-    'Are you sure you want to overwrite EXIF data ' + (photoTitle
-      ? `for "${photoTitle}" from source file? `
-      : 'from source file? '
-    ) + 'This action cannot be undone.';
+  const confirmText = ['Overwrite'];
+  if (photoTitle) { confirmText.push(`"${photoTitle}"`); }
+  confirmText.push('data from original file?');
+  if (hasAiTextGeneration) { confirmText.push(
+    'This will also auto-generate AI text for undefined fields.'); }
+  confirmText.push('This action cannot be undone.');
   return (
     <FormWithConfirm
       action={action}
-      confirmText={shouldConfirm ? confirmText : undefined}
+      confirmText={shouldConfirm ? confirmText.join(' ') : undefined}
     >
       {photoId && 
-        <input name="id" value={photoId} hidden readOnly />}
+        <input name="photoId" value={photoId} hidden readOnly />}
       {photoUrl && 
         <input name="photoUrl" value={photoUrl} hidden readOnly />}
       <SubmitButtonWithStatus
@@ -42,16 +45,16 @@ export default function PhotoSyncButton({
         icon={<IconGrSync
           className={clsx(
             'translate-y-[0.5px] translate-x-[0.5px]',
-            includeLabel && 'sm:translate-x-[-0.5px]',
+            label && 'sm:translate-x-[-0.5px]',
           )} />}
         onFormSubmitToastMessage={shouldToast
           ? photoTitle
-            ? `"${photoTitle}" EXIF data synced`
-            : 'EXIF data synced'
+            ? `"${photoTitle}" data synced`
+            : 'Data synced'
           : undefined}
         onFormSubmit={onFormSubmit}
       >
-        {includeLabel ? 'EXIF' : null}
+        {label}
       </SubmitButtonWithStatus>
     </FormWithConfirm>
   );
