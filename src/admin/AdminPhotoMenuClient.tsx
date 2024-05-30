@@ -29,6 +29,8 @@ export default function AdminPhotoMenuClient({
   const shouldRedirectFav = isPathFavs(path) && isFav;
   const shouldRedirectDelete = pathForPhoto({ photo: photo.id }) === path;
 
+  const favIconClass = 'translate-x-[-1.5px] translate-y-[0.5px]';
+
   const items = useMemo(() => {
     const items: MoreMenuItem[] = [{
       label: 'Edit',
@@ -41,11 +43,11 @@ export default function AdminPhotoMenuClient({
         icon: isFav
           ? <FaStar
             size={14}
-            className="text-amber-500 translate-x-[-1.5px]"
+            className={`text-amber-500 ${favIconClass}`}
           />
           : <FaRegStar
             size={14}
-            className="translate-x-[-2px]"
+            className={favIconClass}
           />,
         action: () => toggleFavoritePhotoAction(
           photo.id,

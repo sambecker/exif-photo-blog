@@ -167,7 +167,10 @@ export default function PhotoLarge({
                 <ul className="text-medium">
                   <li>
                     {photo.focalLength &&
-                      <Link href={pathForFocalLength(photo.focalLength)}>
+                      <Link
+                        href={pathForFocalLength(photo.focalLength)}
+                        className="hover:text-main active:text-medium"
+                      >
                         {photo.focalLengthFormatted}
                       </Link>}
                     {photo.focalLengthIn35MmFormatFormatted &&

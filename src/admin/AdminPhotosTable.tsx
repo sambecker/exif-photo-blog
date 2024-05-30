@@ -11,24 +11,25 @@ import { AiOutlineEyeInvisible } from 'react-icons/ai';
 import PhotoDate from '@/photo/PhotoDate';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import EditButton from './EditButton';
-import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
-import IconGrSync from '@/site/IconGrSync';
 import DeleteButton from './DeleteButton';
 import {
   deletePhotoFormAction,
-  syncPhotoExifDataAction,
+  syncPhotoAction,
 } from '@/photo/actions';
 import { useAppState } from '@/state/AppState';
 import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
+import PhotoSyncButton from './PhotoSyncButton';
 
 export default function AdminPhotosTable({
   photos,
   onLastPhotoVisible,
   revalidatePhoto,
+  hasAiTextGeneration,
 }: {
   photos: Photo[],
   onLastPhotoVisible?: () => void
   revalidatePhoto?: RevalidatePhoto
+  hasAiTextGeneration?: boolean
 }) {
   const { invalidateSwr } = useAppState();
 
@@ -82,25 +83,15 @@ export default function AdminPhotosTable({
             'gap-2 sm:gap-3 items-center',
           )}>
             <EditButton path={pathForAdminPhotoEdit(photo)} />
-            <FormWithConfirm
-              action={syncPhotoExifDataAction}
-              confirmText={
-                'Are you sure you want to overwrite EXIF data ' +
-                `for "${titleForPhoto(photo)}" from source file? ` +
-                'This action cannot be undone.'
-              }
-            >
-              <input type="hidden" name="id" value={photo.id} />
-              <SubmitButtonWithStatus
-                icon={<IconGrSync
-                  className="translate-x-[1px] translate-y-[0.5px]"
-                />}
-                onFormSubmitToastMessage={`
-                  "${titleForPhoto(photo)}" EXIF data synced
-                `}
-                onFormSubmit={invalidateSwr}
-              />
-            </FormWithConfirm>
+            <PhotoSyncButton
+              action={syncPhotoAction}
+              photoTitle={titleForPhoto(photo)}
+              formData={{ photoId: photo.id }}
+              onFormSubmit={invalidateSwr}
+              hasAiTextGeneration={hasAiTextGeneration}
+              shouldConfirm
+              shouldToast
+            />
             <FormWithConfirm
               action={deletePhotoFormAction}
               confirmText={deleteConfirmationTextForPhoto(photo)}
