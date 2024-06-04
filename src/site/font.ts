@@ -9,11 +9,11 @@ const getFontData = async () => {
   if (typeof fs !== 'undefined') {
     data = fs.readFileSync(path.join(
       cwd(),
-      '/public/fonts/IBMPlexMono-Medium.ttf',
+      '../../public/fonts/IBMPlexMono-Medium.ttf',
     ));
   } else {
     data = await fetch(new URL(
-      '/public/fonts/IBMPlexMono-Medium.ttf',
+      '../../public/fonts/IBMPlexMono-Medium.ttf',
       import.meta.url
     )).then(res => res.arrayBuffer());
   }
