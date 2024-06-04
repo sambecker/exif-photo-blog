@@ -14,58 +14,65 @@ export const generateAiImageQueries = async (
   caption?: string
   tags?: string
   semanticDescription?: string
+  error?: string
 }> => {
   let title: string | undefined;
   let caption: string | undefined;
   let tags: string | undefined;
   let semanticDescription: string | undefined;
+  let error: string | undefined;
 
-  if (imageBase64) {
-    if (
-      textFieldsToGenerate.includes('title') &&
-      textFieldsToGenerate.includes('caption')
-    ) {
-      const titleAndCaption = await generateOpenAiImageQuery(
-        imageBase64,
-        AI_IMAGE_QUERIES['title-and-caption'],
-      );
-      if (titleAndCaption) {
-        const titleAndCaptionParsed = parseTitleAndCaption(titleAndCaption);
-        title = titleAndCaptionParsed.title;
-        caption = titleAndCaptionParsed.caption;
+  try {
+    if (imageBase64) {
+      if (
+        textFieldsToGenerate.includes('title') &&
+        textFieldsToGenerate.includes('caption')
+      ) {
+        const titleAndCaption = await generateOpenAiImageQuery(
+          imageBase64,
+          AI_IMAGE_QUERIES['title-and-caption'],
+        );
+        if (titleAndCaption) {
+          const titleAndCaptionParsed = parseTitleAndCaption(titleAndCaption);
+          title = titleAndCaptionParsed.title;
+          caption = titleAndCaptionParsed.caption;
+        }
+      } else {
+        if (textFieldsToGenerate.includes('title')) {
+          title = cleanUpAiTextResponse(
+            await generateOpenAiImageQuery(
+              imageBase64,
+              AI_IMAGE_QUERIES['title'],
+            ));
+        }
+        if (textFieldsToGenerate.includes('caption')) {
+          caption = cleanUpAiTextResponse(
+            await generateOpenAiImageQuery(
+              imageBase64,
+              AI_IMAGE_QUERIES['caption'],
+            ));
+        }
       }
-    } else {
-      if (textFieldsToGenerate.includes('title')) {
-        title = cleanUpAiTextResponse(
+  
+      if (textFieldsToGenerate.includes('tags')) {
+        tags = cleanUpAiTextResponse(
           await generateOpenAiImageQuery(
             imageBase64,
-            AI_IMAGE_QUERIES['title'],
+            AI_IMAGE_QUERIES['tags'],
           ));
       }
-      if (textFieldsToGenerate.includes('caption')) {
-        caption = cleanUpAiTextResponse(
+  
+      if (textFieldsToGenerate.includes('semantic')) {
+        semanticDescription = cleanUpAiTextResponse(
           await generateOpenAiImageQuery(
             imageBase64,
-            AI_IMAGE_QUERIES['caption'],
+            AI_IMAGE_QUERIES['description-small'],
           ));
       }
     }
-
-    if (textFieldsToGenerate.includes('tags')) {
-      tags = cleanUpAiTextResponse(
-        await generateOpenAiImageQuery(
-          imageBase64,
-          AI_IMAGE_QUERIES['tags'],
-        ));
-    }
-
-    if (textFieldsToGenerate.includes('semantic')) {
-      semanticDescription = cleanUpAiTextResponse(
-        await generateOpenAiImageQuery(
-          imageBase64,
-          AI_IMAGE_QUERIES['description-small'],
-        ));
-    }
+  } catch (e: any) {
+    error = e.message;
+    console.log('Error generating AI image text', e.message);
   }
 
   return {
@@ -73,5 +80,6 @@ export const generateAiImageQueries = async (
     caption,
     tags,
     semanticDescription,
+    error,
   };
 };
