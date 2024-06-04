@@ -25,14 +25,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-	console.time("zidingyishijianaaaaaaaaaaaaaaa");
 	const [photos, photosCount] = await Promise.all([
 		getPhotosCached().catch(() => []),
 		getPhotosMeta()
 			.then(({ count }) => count)
 			.catch(() => 0),
 	]);
-	console.timeEnd('zidingyishijianaaaaaaaaaaaaaaa');
 	// console.time('111111111111'); // 开始计时第一个请求
 	// const photos = await getPhotosCached().catch(() => []);
 	// console.timeEnd('111111111111'); // 结束第一个请求计时
