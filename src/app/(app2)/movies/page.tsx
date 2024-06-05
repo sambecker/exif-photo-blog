@@ -17,7 +17,7 @@ export default function page() {
 	const [isPosterShow, setIsPosterShow] = useState(true);
 	const [url, setUrl] = useState('');
 	const ref = useRef('');
-	const getPost = (data) => {
+	const getPost = (data: any) => {
 		const box = document.querySelector('.box');
 		fetch(
 			`https://api.themoviedb.org/3/search/movie?query=${data.movie}&include_adult=true&language=en-US&page=1&year=${data.year}`,
@@ -32,15 +32,12 @@ export default function page() {
 		)
 			.then((response) => response.json())
 			.then((response) => {
-				console.log(response);
 				let backdrop_path = response.results[0]?.backdrop_path;
 				let poster_path = response.results[0]?.poster_path;
 				if (backdrop_path) {
 					let poster_link = isLandscape
 						? `https://image.tmdb.org/t/p/original${backdrop_path}`
 						: `https://image.tmdb.org/t/p/original${poster_path}`;
-					// setUrl(poster_link);
-					// console.log(poster_link);
 					box.style.transition = 'opacity 1s';
 					box.style.opacity = 0;
 					setTimeout(() => {
@@ -59,7 +56,6 @@ export default function page() {
 	const handleClick = () => {
 		//get movie quote
 		const data = movieQuote.getSomeRandom(1)[0];
-		console.log(data);
 		setQuote(data.quote);
 		setMovie(data.movie);
 		setYear(data.year);
@@ -70,12 +66,7 @@ export default function page() {
 	};
 
 	//switch black mode or post mode
-	const onSwitch = (e) => {
-		console.log(
-			'%c@@@@e',
-			'background: gray; color: white; font-size: 16px;',
-			e,
-		);
+	const onSwitch = (e: any) => {
 		e.stopPropagation();
 		setIsPosterShow((current) => !current);
 	};
