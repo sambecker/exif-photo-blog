@@ -6,7 +6,8 @@ git checkout main  # 切换到你的主分支
 git merge upstream/main  # 将 upstream 的 main 分支合并到本地
 git add .
 git push origin main
-
+# 注意最好在本地打包，确认可以成功后再推到remote git
+# 考虑新建dev分支进行开发
 
 # 原项目地址：
 https://github.com/sambecker/exif-photo-blog
