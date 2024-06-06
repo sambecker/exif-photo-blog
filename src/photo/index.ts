@@ -48,6 +48,8 @@ export interface PhotoExif {
   model?: string
   focalLength?: number
   focalLengthIn35MmFormat?: number
+  lensMake?: string
+  lensModel?: string
   fNumber?: number
   iso?: number
   exposureTime?: number

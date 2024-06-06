@@ -39,6 +39,8 @@ const createPhotosTable = () =>
       model VARCHAR(255),
       focal_length SMALLINT,
       focal_length_in_35mm_format SMALLINT,
+      lens_make VARCHAR(255),
+      lens_model VARCHAR(255),
       f_number REAL,
       iso SMALLINT,
       exposure_time DOUBLE PRECISION,
@@ -65,6 +67,15 @@ const runMigration01 = () =>
     ADD COLUMN IF NOT EXISTS semantic_description TEXT
   `;
 
+// Migration 02
+const MIGRATION_FIELDS_02 = ['lens_make', 'lens_model'];
+const runMigration02 = () =>
+  sql`
+    ALTER TABLE photos
+    ADD COLUMN IF NOT EXISTS lens_make VARCHAR(255),
+    ADD COLUMN IF NOT EXISTS lens_model VARCHAR(255)
+  `;
+
 // Wrapper for most queries for JIT table creation/migration running
 const safelyQueryPhotos = async <T>(
   callback: () => Promise<T>,
@@ -83,6 +94,13 @@ const safelyQueryPhotos = async <T>(
     ).test(e.message))) {
       console.log('Running migration 01 ...');
       await runMigration01();
+      result = await callback();
+    } else if (MIGRATION_FIELDS_02.some(field => new RegExp(
+      `column "${field}" of relation "photos" does not exist`,
+      'i',
+    ).test(e.message))) {
+      console.log('Running migration 02 ...');
+      await runMigration02();
       result = await callback();
     } else if (/relation "photos" does not exist/i.test(e.message)) {
       // If the table does not exist, create it
@@ -131,6 +149,8 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       model,
       focal_length,
       focal_length_in_35mm_format,
+      lens_make,
+      lens_model,
       f_number,
       iso,
       exposure_time,
@@ -158,6 +178,8 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       ${photo.model},
       ${photo.focalLength},
       ${photo.focalLengthIn35MmFormat},
+      ${photo.lensMake},
+      ${photo.lensModel},
       ${photo.fNumber},
       ${photo.iso},
       ${photo.exposureTime},
@@ -188,6 +210,8 @@ export const updatePhoto = (photo: PhotoDbInsert) =>
     model=${photo.model},
     focal_length=${photo.focalLength},
     focal_length_in_35mm_format=${photo.focalLengthIn35MmFormat},
+    lens_make=${photo.lensMake},
+    lens_model=${photo.lensModel},
     f_number=${photo.fNumber},
     iso=${photo.iso},
     exposure_time=${photo.exposureTime},
