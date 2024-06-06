@@ -21,6 +21,7 @@ import {
   getOrderByFromOptions,
 } from '.';
 import { getWheresFromOptions } from '.';
+import { FocalLengths } from '@/focal';
 
 const createPhotosTable = () =>
   sql`
@@ -282,6 +283,20 @@ export const getUniqueFilmSimulations = async () =>
         count: parseInt(count, 10),
       })))
   , 'getUniqueFilmSimulations');
+
+export const getUniqueFocalLengths = async () =>
+  safelyQueryPhotos(() => sql`
+    SELECT DISTINCT focal_length, COUNT(*)
+    FROM photos
+    WHERE hidden IS NOT TRUE AND focal_length IS NOT NULL
+    GROUP BY focal_length
+    ORDER BY focal_length ASC
+  `.then(({ rows }): FocalLengths => rows
+      .map(({ focal_length, count }) => ({
+        focal: parseInt(focal_length, 10),
+        count: parseInt(count, 10),
+      })))
+  , 'getUniqueFocalLengths');
 
 export const getPhotos = async (options: GetPhotosOptions = {}) =>
   safelyQueryPhotos(async () => {
