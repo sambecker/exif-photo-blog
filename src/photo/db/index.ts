@@ -1,4 +1,5 @@
 import { Camera } from '@/camera';
+import { Lens } from '@/lens';
 import { FilmSimulation } from '@/simulation';
 import { PRIORITY_ORDER_ENABLED } from '@/site/config';
 import { parameterize } from '@/utility/string';
@@ -13,6 +14,7 @@ export type GetPhotosOptions = {
   query?: string
   tag?: string
   camera?: Camera
+  lens?: Lens
   simulation?: FilmSimulation
   focal?: number
   takenBefore?: Date
@@ -31,6 +33,7 @@ export const getWheresFromOptions = (
     query,
     tag,
     camera,
+    lens,
     simulation,
     focal,
   } = options;
@@ -70,6 +73,12 @@ export const getWheresFromOptions = (
     wheres.push(`LOWER(REPLACE(model, ' ', '-'))=$${valuesIndex++}`);
     wheresValues.push(parameterize(camera.make, true));
     wheresValues.push(parameterize(camera.model, true));
+  }
+  if (lens) {
+    wheres.push(`LOWER(REPLACE(lens_make, ' ', '-'))=$${valuesIndex++}`);
+    wheres.push(`LOWER(REPLACE(lens_model, ' ', '-'))=$${valuesIndex++}`);
+    wheresValues.push(parameterize(lens.make, true));
+    wheresValues.push(parameterize(lens.model, true));
   }
   if (simulation) {
     wheres.push(`film_simulation=$${valuesIndex++}`);

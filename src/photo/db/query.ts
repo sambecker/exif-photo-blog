@@ -22,6 +22,7 @@ import {
 } from '.';
 import { getWheresFromOptions } from '.';
 import { FocalLengths } from '@/focal';
+import { Lenses, createLensKey } from '@/lens';
 
 const createPhotosTable = () =>
   sql`
@@ -292,6 +293,24 @@ export const getUniqueCameras = async () =>
       camera: { make, model },
       count: parseInt(count, 10),
     })))
+  , 'getUniqueCameras');
+
+export const getUniqueLenses = async () =>
+  safelyQueryPhotos(() => sql`
+    SELECT DISTINCT lens_make||' '||lens_model as lens,
+    lens_make, lens_model, COUNT(*)
+    FROM photos
+    WHERE hidden IS NOT TRUE
+    AND trim(lens_make) <> ''
+    AND trim(lens_model) <> ''
+    GROUP BY lens_make, lens_model
+    ORDER BY lens ASC
+  `.then(({ rows }): Lenses => rows
+      .map(({ lens_make: make, lens_model: model, count }) => ({
+        lensKey: createLensKey({ make, model }),
+        lens: { make, model },
+        count: parseInt(count, 10),
+      })))
   , 'getUniqueCameras');
 
 export const getUniqueFilmSimulations = async () =>
