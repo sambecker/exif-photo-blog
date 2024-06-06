@@ -9,6 +9,11 @@ import {
   absolutePathForFocalLengthImage,
 } from '@/site/paths';
 
+export type FocalLengths = {
+  focal: number
+  count: number
+}[]
+
 export const getFocalLengthFromString = (focalString?: string) => {
   const focal = focalString?.match(/^([0-9]+)mm/)?.[1];
   return focal ? parseInt(focal, 10) : 0;

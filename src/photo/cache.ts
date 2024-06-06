@@ -14,6 +14,7 @@ import {
   getPhotosNearId,
   getPhotosMostRecentUpdate,
   getPhotosMeta,
+  getUniqueFocalLengths,
 } from '@/photo/db/query';
 import { GetPhotosOptions } from './db';
 import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
@@ -37,6 +38,7 @@ const KEY_PHOTO             = 'photo';
 const KEY_TAGS              = 'tags';
 const KEY_CAMERAS           = 'cameras';
 const KEY_FILM_SIMULATIONS  = 'film-simulations';
+const KEY_FOCAL_LENGTHS     = 'focal-lengths';
 // Type keys
 const KEY_COUNT             = 'count';
 const KEY_HIDDEN            = 'hidden';
@@ -194,6 +196,12 @@ export const getUniqueFilmSimulationsCached =
   unstable_cache(
     getUniqueFilmSimulations,
     [KEY_PHOTOS, KEY_FILM_SIMULATIONS],
+  );
+
+export const getUniqueFocalLengthsCached =
+  unstable_cache(
+    getUniqueFocalLengths,
+    [KEY_PHOTOS, KEY_FOCAL_LENGTHS],
   );
 
 // No store
