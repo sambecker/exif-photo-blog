@@ -149,4 +149,5 @@ export const removeGpsData = async (image: ArrayBuffer) =>
         GPSAltitudeRef: '-',
       },
     })
+    .jpeg({ quality: 100 })
   );
