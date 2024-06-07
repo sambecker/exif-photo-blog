@@ -11,6 +11,7 @@ import { ExifData, ExifParserFactory } from 'ts-exif-parser';
 import { PhotoFormData } from './form';
 import { FilmSimulation } from '@/simulation';
 import sharp, { Sharp } from 'sharp';
+import { GEO_PRIVACY_ENABLED } from '@/site/config';
 
 const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
@@ -26,6 +27,7 @@ export const extractImageDataFromBlobPath = async (
   blobId?: string
   photoFormExif?: Partial<PhotoFormData>
   imageResizedBase64?: string
+  shouldStripGpsData?: boolean
 }> => {
   const {
     includeInitialPhotoFields,
@@ -47,6 +49,7 @@ export const extractImageDataFromBlobPath = async (
   let filmSimulation: FilmSimulation | undefined;
   let blurData: string | undefined;
   let imageResizedBase64: string | undefined;
+  let shouldStripGpsData = false;
 
   if (fileBytes) {
     const parser = ExifParserFactory.create(Buffer.from(fileBytes));
@@ -74,6 +77,11 @@ export const extractImageDataFromBlobPath = async (
     if (generateResizedImage) {
       imageResizedBase64 = await resizeImage(fileBytes);
     }
+
+    shouldStripGpsData = GEO_PRIVACY_ENABLED && (
+      Boolean(exifData.tags?.GPSLatitude) ||
+      Boolean(exifData.tags?.GPSLongitude)
+    );
   }
 
   return {
@@ -91,6 +99,7 @@ export const extractImageDataFromBlobPath = async (
       },
     },
     imageResizedBase64,
+    shouldStripGpsData,
   };
 };
 

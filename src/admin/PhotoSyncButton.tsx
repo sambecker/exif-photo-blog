@@ -29,7 +29,7 @@ export default function PhotoSyncButton({
   if (photoTitle) { confirmText.push(`"${photoTitle}"`); }
   confirmText.push('data from original file?');
   if (hasAiTextGeneration) { confirmText.push(
-    'This will also auto-generate AI text for undefined fields.'); }
+    'AI text will be generated for undefined fields.'); }
   confirmText.push('This action cannot be undone.');
   return (
     <FormWithConfirm

@@ -18,6 +18,7 @@ export default async function UploadPage({ params: { uploadPath } }: Params) {
     blobId,
     photoFormExif,
     imageResizedBase64: imageThumbnailBase64,
+    shouldStripGpsData,
   } = await extractImageDataFromBlobPath(uploadPath, {
     includeInitialPhotoFields: true,
     generateBlurData: BLUR_ENABLED,
@@ -45,6 +46,7 @@ export default async function UploadPage({ params: { uploadPath } }: Params) {
       hasAiTextGeneration,
       textFieldsToAutoGenerate,
       imageThumbnailBase64,
+      shouldStripGpsData,
     }} />
   );
 };

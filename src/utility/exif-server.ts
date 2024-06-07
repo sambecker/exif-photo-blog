@@ -1,6 +1,6 @@
 import * as PiExif from 'piexifjs';
 
-export const removeGpsFromFile = async (
+export const stripGpsFromFile = async (
   fileBytes: ArrayBuffer
 ): Promise<Blob> => {
   const base64 = Buffer.from(fileBytes).toString('base64');
