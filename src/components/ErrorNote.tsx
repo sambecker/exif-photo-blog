@@ -21,7 +21,7 @@ export default function ErrorNote({
     )}>
       <BiErrorAlt
         size={18}
-        className="text-red-600/80 dark:text-red-500/70"
+        className="text-red-600/80 dark:text-red-500/70 shrink-0"
       />
       {children}
     </div>
