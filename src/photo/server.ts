@@ -133,3 +133,15 @@ export const blurImageFromUrl = async (url: string) =>
   fetch(decodeURIComponent(url))
     .then(res => res.arrayBuffer())
     .then(buffer => blurImage(buffer));
+
+export const removeGpsData = async (image: ArrayBuffer) =>
+  generateBase64(image, sharp => sharp
+    .withExifMerge({
+      IFD3: {
+        GPSLatitudeRef: '',
+        GPSLatitude: '',
+        GPSLongitudeRef: '',
+        GPSLongitude: '',
+      },
+    })
+  );
