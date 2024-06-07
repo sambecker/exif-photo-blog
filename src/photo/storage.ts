@@ -15,11 +15,18 @@ export const convertUploadToPhoto = async (
   const fileExtension = getExtensionFromStorageUrl(urlOrigin);
   const photoPath = `${fileName}.${fileExtension || 'jpg'}`;
   if (stripGps) {
+    console.log('Fetching original file');
     const fileBytes = await fetch(urlOrigin, { cache: 'no-store' })
       .then(res => res.arrayBuffer());
     const fileWithoutGps = await stripGpsFromFile(fileBytes);
+    console.log('Uploading file without GPS');
     return putFile(fileWithoutGps, photoPath).then(async url => {
-      if (url) { await deleteFile(urlOrigin); }
+      if (url) {
+        console.log('Deleting original file');
+        await deleteFile(urlOrigin);
+      } else {
+        console.log('No url found');
+      }
       return url;
     });
   } else {
