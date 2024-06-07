@@ -1,8 +1,9 @@
 import * as PiExif from 'piexifjs';
+import { b64toBlob } from './data';
 
-export const stripGpsFromFile = async (
+export const stripGpsFromFile = (
   fileBytes: ArrayBuffer
-): Promise<Blob> => {
+): Blob => {
   const base64 = Buffer.from(fileBytes).toString('base64');
   const base64Url = `data:image/jpeg;base64,${base64}`;
 
@@ -17,5 +18,7 @@ export const stripGpsFromFile = async (
     base64Url,
   );
 
-  return fetch(data, { cache: 'no-store' }).then(res => res.blob());
+  console.log('EXIF updated');
+
+  return b64toBlob(data);
 };

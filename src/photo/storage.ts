@@ -18,7 +18,7 @@ export const convertUploadToPhoto = async (
     console.log('Fetching original file');
     const fileBytes = await fetch(urlOrigin, { cache: 'no-store' })
       .then(res => res.arrayBuffer());
-    const fileWithoutGps = await stripGpsFromFile(fileBytes);
+    const fileWithoutGps = stripGpsFromFile(fileBytes);
     console.log('Uploading file without GPS');
     return putFile(fileWithoutGps, photoPath).then(async url => {
       if (url) {
