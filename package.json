@@ -47,6 +47,7 @@
     "next-auth": "5.0.0-beta.18",
     "next-themes": "^0.3.0",
     "pg": "^8.12.0",
+    "piexifjs": "^1.0.6",
     "postcss": "8.4.38",
     "react": "18.3.1",
     "react-dom": "18.3.1",
