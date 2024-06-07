@@ -138,10 +138,15 @@ export const removeGpsData = async (image: ArrayBuffer) =>
   generateBase64(image, sharp => sharp
     .withExifMerge({
       IFD3: {
-        GPSLatitudeRef: '',
-        GPSLatitude: '',
-        GPSLongitudeRef: '',
-        GPSLongitude: '',
+        GPSVersionID: '-',
+        GPSMapDatum: '-',
+        GPSLatitudeRef: '-',
+        GPSLatitude: '-',
+        GPSLongitudeRef: '-',
+        GPSLongitude: '-',
+        GPSTimeStamp: '-',
+        GPSAltitude: '-',
+        GPSAltitudeRef: '-',
       },
     })
   );
