@@ -136,7 +136,7 @@ export const uploadPhotoFromClient = async (
   : vercelBlobUploadFromClient(file, `${PREFIX_UPLOAD}.${extension}`);
 
 export const putFile = (
-  file: File | Blob,
+  file: Blob,
   fileName: string,
 ) => {
   switch (CURRENT_STORAGE) {
