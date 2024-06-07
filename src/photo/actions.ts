@@ -52,11 +52,14 @@ import { convertUploadToPhoto } from './storage';
 
 export const createPhotoAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
+    const shouldStripGpsData = formData.get('shouldStripGpsData') === 'true';
+    formData.delete('shouldStripGpsData');
+
     const photo = convertFormDataToPhotoDbInsert(formData);
 
     const updatedUrl = await convertUploadToPhoto(
       photo.url,
-      formData.get('shouldStripGpsData') === 'true',
+      shouldStripGpsData,
     );
     
     if (updatedUrl) {
