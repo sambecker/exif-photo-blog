@@ -53,14 +53,14 @@ export const isUrlFromCloudflareR2 = (url?: string) => (
 export const cloudflareR2PutObjectCommandForKey = (Key: string) =>
   new PutObjectCommand({ Bucket: CLOUDFLARE_R2_BUCKET, Key });
 
-export const cloudflareR2Put = (
+export const cloudflareR2Put = async (
   file: Blob,
   fileName: string,
 ): Promise<string> =>
   cloudflareR2Client().send(new PutObjectCommand({
     Bucket: CLOUDFLARE_R2_BUCKET,
     Key: fileName,
-    Body: new File([file], fileName),
+    Body: Buffer.from(await file.arrayBuffer()),
   }))
     .then(() => urlForKey(fileName));
 
