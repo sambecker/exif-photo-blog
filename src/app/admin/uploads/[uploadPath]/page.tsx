@@ -9,6 +9,8 @@ import {
   BLUR_ENABLED,
 } from '@/site/config';
 
+export const maxDuration = 60;
+
 interface Params {
   params: { uploadPath: string }
 }
