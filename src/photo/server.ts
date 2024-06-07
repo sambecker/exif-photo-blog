@@ -40,7 +40,7 @@ export const extractImageDataFromBlobPath = async (
   const extension = getExtensionFromStorageUrl(url);
 
   const fileBytes = blobPath
-    ? await fetch(url).then(res => res.arrayBuffer())
+    ? await fetch(url, { cache: 'no-store' }).then(res => res.arrayBuffer())
     : undefined;
 
   let exifData: ExifData | undefined;
