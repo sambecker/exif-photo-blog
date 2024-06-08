@@ -11,7 +11,7 @@ import { ExifData, ExifParserFactory } from 'ts-exif-parser';
 import { PhotoFormData } from './form';
 import { FilmSimulation } from '@/simulation';
 import sharp, { Sharp } from 'sharp';
-import { GEO_PRIVACY_ENABLED } from '@/site/config';
+import { GEO_PRIVACY_ENABLED, PRO_MODE_ENABLED } from '@/site/config';
 
 const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
@@ -28,6 +28,7 @@ export const extractImageDataFromBlobPath = async (
   photoFormExif?: Partial<PhotoFormData>
   imageResizedBase64?: string
   shouldStripGpsData?: boolean
+  fileBytes?: ArrayBuffer
 }> => {
   const {
     includeInitialPhotoFields,
@@ -100,6 +101,7 @@ export const extractImageDataFromBlobPath = async (
     },
     imageResizedBase64,
     shouldStripGpsData,
+    fileBytes,
   };
 };
 
@@ -134,20 +136,27 @@ export const blurImageFromUrl = async (url: string) =>
     .then(res => res.arrayBuffer())
     .then(buffer => blurImage(buffer));
 
+const GPS_NULL_STRING = '-';
+
 export const removeGpsData = async (image: ArrayBuffer) =>
-  generateBase64(image, sharp => sharp
+  sharp(image)
     .withExifMerge({
       IFD3: {
-        GPSVersionID: '-',
-        GPSMapDatum: '-',
-        GPSLatitudeRef: '-',
-        GPSLatitude: '-',
-        GPSLongitudeRef: '-',
-        GPSLongitude: '-',
-        GPSTimeStamp: '-',
-        GPSAltitude: '-',
-        GPSAltitudeRef: '-',
+        GPSMapDatum: GPS_NULL_STRING,
+        GPSLatitudeRef: GPS_NULL_STRING,
+        GPSLatitude: GPS_NULL_STRING,
+        GPSLongitudeRef: GPS_NULL_STRING,
+        GPSLongitude: GPS_NULL_STRING,
+        GPSTimeStamp: GPS_NULL_STRING,
+        GPSAltitude: GPS_NULL_STRING,
+        GPSAltitudeRef: GPS_NULL_STRING,
+        GPSSatellites: GPS_NULL_STRING,
+        GPSDestLatitude: GPS_NULL_STRING,
+        GPSDestLongitudeRef: GPS_NULL_STRING,
+        GPSDestDistance: GPS_NULL_STRING,
+        GPSDestDistanceRef: GPS_NULL_STRING,
+        GPSAreaInformation: GPS_NULL_STRING,
       },
     })
-    .jpeg({ quality: 100 })
-  );
+    .toFormat('jpeg', { quality: PRO_MODE_ENABLED ? 100 : 80 })
+    .toBuffer();

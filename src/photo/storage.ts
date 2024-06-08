@@ -5,28 +5,23 @@ import {
   moveFile,
   putFile,
 } from '@/services/storage';
-import { stripGpsFromFile } from '@/utility/exif-server';
+import { removeGpsData } from './server';
 
 export const convertUploadToPhoto = async (
   urlOrigin: string,
   stripGps?: boolean,
+  fileBytes?: ArrayBuffer,
 ) => {
   const fileName = generateRandomFileNameForPhoto();
   const fileExtension = getExtensionFromStorageUrl(urlOrigin);
   const photoPath = `${fileName}.${fileExtension || 'jpg'}`;
   if (stripGps) {
-    console.log('Fetching original file');
-    const fileBytes = await fetch(urlOrigin, { cache: 'no-store' })
-      .then(res => res.arrayBuffer());
-    const fileWithoutGps = await stripGpsFromFile(fileBytes);
-    console.log('Uploading file without GPS');
+    const fileWithoutGps = await removeGpsData(
+      fileBytes ?? await fetch(urlOrigin, { cache: 'no-store' })
+        .then(res => res.arrayBuffer())
+    );
     return putFile(fileWithoutGps, photoPath).then(async url => {
-      if (url) {
-        console.log('Deleting original file');
-        await deleteFile(urlOrigin);
-      } else {
-        console.log('No url found');
-      }
+      if (url) { await deleteFile(urlOrigin); }
       return url;
     });
   } else {

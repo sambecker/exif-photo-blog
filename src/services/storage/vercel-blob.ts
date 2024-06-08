@@ -29,7 +29,7 @@ export const vercelBlobUploadFromClient = async (
     .then(({ url }) => url);
 
 export const vercelBlobPut = (
-  file: File | Blob,
+  file: Buffer,
   fileName: string,
 ): Promise<string> =>
   put(fileName, file, {

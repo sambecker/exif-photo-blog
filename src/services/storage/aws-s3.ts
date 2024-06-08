@@ -33,13 +33,13 @@ export const awsS3PutObjectCommandForKey = (Key: string) =>
   new PutObjectCommand({ Bucket: AWS_S3_BUCKET, Key, ACL: 'public-read' });
 
 export const awsS3Put = async (
-  file: Blob,
+  file: Buffer,
   fileName: string,
 ): Promise<string> =>
   awsS3Client().send(new PutObjectCommand({
     Bucket: AWS_S3_BUCKET,
     Key: fileName,
-    Body: Buffer.from(await file.arrayBuffer()),
+    Body: file,
     ACL: 'public-read',
   }))
     .then(() => urlForKey(fileName));

@@ -108,6 +108,7 @@ export const addAllUploadsAction = async ({
             photoFormExif,
             imageResizedBase64,
             shouldStripGpsData,
+            fileBytes,
           } = await extractImageDataFromBlobPath(url, {
             includeInitialPhotoFields: true,
             generateBlurData: BLUR_ENABLED,
@@ -152,6 +153,7 @@ export const addAllUploadsAction = async ({
             const updatedUrl = await convertUploadToPhoto(
               url,
               shouldStripGpsData,
+              fileBytes,
             );
             if (updatedUrl) {
               stream.update({
@@ -184,6 +186,7 @@ export const updatePhotoAction = async (formData: FormData) =>
 
     let url: string | undefined;
     if (photo.hidden && photo.url.includes(photo.id)) {
+      // Backfill:
       // Anonymize storage url on update if necessary by
       // re-running image upload transfer logic
       url = await convertUploadToPhoto(photo.url);
@@ -303,6 +306,7 @@ export const syncPhotoAction = async (formData: FormData) =>
         photoFormExif,
         imageResizedBase64,
         shouldStripGpsData,
+        fileBytes,
       } = await extractImageDataFromBlobPath(photo.url, {
         includeInitialPhotoFields: false,
         generateBlurData: BLUR_ENABLED,
@@ -316,6 +320,7 @@ export const syncPhotoAction = async (formData: FormData) =>
           const url = await convertUploadToPhoto(
             photo.url,
             shouldStripGpsData,
+            fileBytes,
           );
           if (url) { photo.url = url; }
         }

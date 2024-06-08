@@ -359,6 +359,7 @@ export default function PhotoForm({
             type="hidden"
             name="shouldStripGpsData"
             value={shouldStripGpsData ? 'true' : 'false'}
+            readOnly
           />
         </div>
         {/* Actions */}
