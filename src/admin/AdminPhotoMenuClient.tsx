@@ -11,6 +11,7 @@ import { BiTrash } from 'react-icons/bi';
 import MoreMenu, { MoreMenuItem } from '@/components/more/MoreMenu';
 import { useAppState } from '@/state/AppState';
 import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
+import { MdOutlineFileDownload } from 'react-icons/md';
 
 export default function AdminPhotoMenuClient({
   photo,
@@ -29,7 +30,7 @@ export default function AdminPhotoMenuClient({
   const shouldRedirectFav = isPathFavs(path) && isFav;
   const shouldRedirectDelete = pathForPhoto({ photo: photo.id }) === path;
 
-  const favIconClass = 'translate-x-[-1.5px] translate-y-[0.5px]';
+  const favIconClass = 'translate-x-[-1px] translate-y-[0.5px]';
 
   const items = useMemo(() => {
     const items: MoreMenuItem[] = [{
@@ -56,10 +57,19 @@ export default function AdminPhotoMenuClient({
       });
     }
     items.push({
+      label: 'Download',
+      icon: <MdOutlineFileDownload
+        size={17}
+        className="translate-x-[-1.5px] translate-y-[-0.5px]"
+      />,
+      href: photo.url,
+      hrefDownloadName: photo.url.split('/').pop(),
+    });
+    items.push({
       label: 'Delete',
       icon: <BiTrash
         size={15}
-        className="translate-x-[-1.5px] "
+        className="translate-x-[-1.5px]"
       />,
       action: () => {
         if (confirm(deleteConfirmationTextForPhoto(photo))) {

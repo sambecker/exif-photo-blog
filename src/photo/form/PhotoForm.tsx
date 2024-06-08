@@ -40,6 +40,7 @@ export default function PhotoForm({
   updatedBlurData,
   uniqueTags,
   aiContent,
+  shouldStripGpsData,
   onTitleChange,
   onTextContentChange,
   onFormStatusChange,
@@ -50,6 +51,7 @@ export default function PhotoForm({
   updatedBlurData?: string
   uniqueTags?: TagsWithMeta
   aiContent?: AiContent
+  shouldStripGpsData?: boolean
   onTitleChange?: (updatedTitle: string) => void
   onTextContentChange?: (hasContent: boolean) => void,
   onFormStatusChange?: (pending: boolean) => void
@@ -353,6 +355,12 @@ export default function PhotoForm({
                   type={type}
                   accessory={accessoryForField(key)}
                 />)}
+          <input
+            type="hidden"
+            name="shouldStripGpsData"
+            value={shouldStripGpsData ? 'true' : 'false'}
+            readOnly
+          />
         </div>
         {/* Actions */}
         <div className={clsx(

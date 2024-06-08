@@ -11,6 +11,7 @@ import { ExifData, ExifParserFactory } from 'ts-exif-parser';
 import { PhotoFormData } from './form';
 import { FilmSimulation } from '@/simulation';
 import sharp, { Sharp } from 'sharp';
+import { GEO_PRIVACY_ENABLED, PRO_MODE_ENABLED } from '@/site/config';
 
 const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
@@ -26,6 +27,8 @@ export const extractImageDataFromBlobPath = async (
   blobId?: string
   photoFormExif?: Partial<PhotoFormData>
   imageResizedBase64?: string
+  shouldStripGpsData?: boolean
+  fileBytes?: ArrayBuffer
 }> => {
   const {
     includeInitialPhotoFields,
@@ -47,6 +50,7 @@ export const extractImageDataFromBlobPath = async (
   let filmSimulation: FilmSimulation | undefined;
   let blurData: string | undefined;
   let imageResizedBase64: string | undefined;
+  let shouldStripGpsData = false;
 
   if (fileBytes) {
     const parser = ExifParserFactory.create(Buffer.from(fileBytes));
@@ -74,6 +78,11 @@ export const extractImageDataFromBlobPath = async (
     if (generateResizedImage) {
       imageResizedBase64 = await resizeImage(fileBytes);
     }
+
+    shouldStripGpsData = GEO_PRIVACY_ENABLED && (
+      Boolean(exifData.tags?.GPSLatitude) ||
+      Boolean(exifData.tags?.GPSLongitude)
+    );
   }
 
   return {
@@ -91,6 +100,8 @@ export const extractImageDataFromBlobPath = async (
       },
     },
     imageResizedBase64,
+    shouldStripGpsData,
+    fileBytes,
   };
 };
 
@@ -124,3 +135,30 @@ export const blurImageFromUrl = async (url: string) =>
   fetch(decodeURIComponent(url))
     .then(res => res.arrayBuffer())
     .then(buffer => blurImage(buffer));
+
+const GPS_NULL_STRING = '-';
+
+export const removeGpsData = async (image: ArrayBuffer) =>
+  sharp(image)
+    .withExifMerge({
+      IFD3: {
+        GPSMapDatum: GPS_NULL_STRING,
+        GPSLatitude: GPS_NULL_STRING,
+        GPSLongitude: GPS_NULL_STRING,
+        GPSDateStamp: GPS_NULL_STRING,
+        GPSDateTime: GPS_NULL_STRING,
+        GPSTimeStamp: GPS_NULL_STRING,
+        GPSAltitude: GPS_NULL_STRING,
+        GPSSatellites: GPS_NULL_STRING,
+        GPSAreaInformation: GPS_NULL_STRING,
+        GPSSpeed: GPS_NULL_STRING,
+        GPSImgDirection: GPS_NULL_STRING,
+        GPSDestLatitude: GPS_NULL_STRING,
+        GPSDestLongitude: GPS_NULL_STRING,
+        GPSDestBearing: GPS_NULL_STRING,
+        GPSDestDistance: GPS_NULL_STRING,
+        GPSHPositioningError: GPS_NULL_STRING,
+      },
+    })
+    .toFormat('jpeg', { quality: PRO_MODE_ENABLED ? 95 : 80 })
+    .toBuffer();

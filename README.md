@@ -103,7 +103,7 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES = 1` enables static optimization for OG images, i.e., renders images at build time (results in increased project usage)—⚠️ _Experimental_
 - `NEXT_PUBLIC_MATTE_PHOTOS = 1` constrains the size of each photo, and enables a surrounding border (potentially useful for photos with tall aspect ratios)
 - `NEXT_PUBLIC_BLUR_DISABLED = 1` prevents image blur data being stored and displayed (potentially useful for limiting Postgres usage)
-- `NEXT_PUBLIC_GEO_PRIVACY = 1` disables collection/display of location-based data
+- `NEXT_PUBLIC_GEO_PRIVACY = 1` disables collection/display of location-based data (⚠️ re-compresses uploaded images in order to remove GPS information)
 - `NEXT_PUBLIC_IGNORE_PRIORITY_ORDER = 1` prevents `priority_order` field affecting photo order
 - `NEXT_PUBLIC_PUBLIC_API = 1` enables public API available at `/api`
 - `NEXT_PUBLIC_HIDE_REPO_LINK = 1` removes footer link to repo
