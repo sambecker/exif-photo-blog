@@ -8,6 +8,7 @@ export interface MoreMenuItem {
   label: ReactNode
   icon?: ReactNode
   href?: string
+  hrefTargetBlank?: boolean
   action?: () => Promise<void> | void
 }
 
@@ -51,12 +52,13 @@ export default function MoreMenu({
             'shadow-lg dark:shadow-xl',
           )}
         >
-          {items.map(({ label, icon, href, action }) =>
+          {items.map(({ label, icon, href, hrefTargetBlank, action }) =>
             <MoreMenuItem
               key={`${label}`}
               label={label}
               icon={icon}
               href={href}
+              hrefTargetBlank={hrefTargetBlank}
               action={action}
             />
           )}

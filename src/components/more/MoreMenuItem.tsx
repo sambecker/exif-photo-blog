@@ -10,11 +10,13 @@ export default function MoreMenuItem({
   label,
   icon,
   href,
+  hrefTargetBlank,
   action,
 }: {
   label: ReactNode
   icon?: ReactNode
   href?: string
+  hrefTargetBlank?: boolean
   action?: () => Promise<void> | void
 }) {
   const router = useRouter();
@@ -39,7 +41,11 @@ export default function MoreMenuItem({
       onClick={e => {
         e.preventDefault();
         if (href) {
-          startTransition(() => router.push(href));
+          if (hrefTargetBlank) {
+            window.open(href, '_blank');
+          } else {
+            startTransition(() => router.push(href));
+          }
         } else {
           const result = action?.();
           if (result instanceof Promise) {
