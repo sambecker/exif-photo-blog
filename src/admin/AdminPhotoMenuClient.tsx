@@ -63,7 +63,7 @@ export default function AdminPhotoMenuClient({
         className="translate-x-[-1.5px] translate-y-[-0.5px]"
       />,
       href: photo.url,
-      hrefTargetBlank: true,
+      hrefDownloadName: photo.url.split('/').pop(),
     });
     items.push({
       label: 'Delete',

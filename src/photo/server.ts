@@ -143,20 +143,22 @@ export const removeGpsData = async (image: ArrayBuffer) =>
     .withExifMerge({
       IFD3: {
         GPSMapDatum: GPS_NULL_STRING,
-        GPSLatitudeRef: GPS_NULL_STRING,
         GPSLatitude: GPS_NULL_STRING,
-        GPSLongitudeRef: GPS_NULL_STRING,
         GPSLongitude: GPS_NULL_STRING,
+        GPSDateStamp: GPS_NULL_STRING,
+        GPSDateTime: GPS_NULL_STRING,
         GPSTimeStamp: GPS_NULL_STRING,
         GPSAltitude: GPS_NULL_STRING,
-        GPSAltitudeRef: GPS_NULL_STRING,
         GPSSatellites: GPS_NULL_STRING,
-        GPSDestLatitude: GPS_NULL_STRING,
-        GPSDestLongitudeRef: GPS_NULL_STRING,
-        GPSDestDistance: GPS_NULL_STRING,
-        GPSDestDistanceRef: GPS_NULL_STRING,
         GPSAreaInformation: GPS_NULL_STRING,
+        GPSSpeed: GPS_NULL_STRING,
+        GPSImgDirection: GPS_NULL_STRING,
+        GPSDestLatitude: GPS_NULL_STRING,
+        GPSDestLongitude: GPS_NULL_STRING,
+        GPSDestBearing: GPS_NULL_STRING,
+        GPSDestDistance: GPS_NULL_STRING,
+        GPSHPositioningError: GPS_NULL_STRING,
       },
     })
-    .toFormat('jpeg', { quality: PRO_MODE_ENABLED ? 100 : 80 })
+    .toFormat('jpeg', { quality: PRO_MODE_ENABLED ? 95 : 80 })
     .toBuffer();
