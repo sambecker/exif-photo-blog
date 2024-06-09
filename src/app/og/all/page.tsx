@@ -12,7 +12,8 @@ export default async function OGPage() {
     photos,
     count,
   ] = await Promise.all([
-    getPhotosCached({ limit: INFINITE_SCROLL_GRID_PHOTO_INITIAL }),
+    getPhotosCached({ limit: INFINITE_SCROLL_GRID_PHOTO_INITIAL })
+      .catch(() => []),
     getPhotosMeta()
       .then(({ count }) => count)
       .catch(() => 0),
