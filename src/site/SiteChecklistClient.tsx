@@ -136,7 +136,7 @@ export default function SiteChecklistClient({
     </div>;
 
   const renderEnvVars = (variables: string[]) =>
-    <div className="py-0.5">
+    <div className="pt-1 space-y-1">
       {variables.map(envVar => renderEnvVar(envVar))}
     </div>;
 
@@ -244,9 +244,11 @@ export default function SiteChecklistClient({
           {!hasAuthSecret &&
             <div className="overflow-x-auto">
               <InfoBlock className="my-1.5 inline-flex" padding="tight">
-                <div className="flex flex-nowrap items-center gap-4">
+                <div className={clsx(
+                  'flex flex-nowrap items-center gap-2 leading-none -mx-1',
+                )}>
                   <span>{secret}</span>
-                  <div className="flex items-center gap-0.5">
+                  <div className="flex items-center gap-0.5 translate-y-[-2px]">
                     {renderCopyButton('Secret', secret)}
                     <LoaderButton
                       icon={<BiRefresh size={18} />}
