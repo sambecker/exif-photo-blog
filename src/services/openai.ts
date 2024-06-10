@@ -44,7 +44,7 @@ export const streamOpenAiImageQuery = async (
   if (openai) {
     (async () => {
       const { textStream } = await streamText({
-        model: openai('gpt-4-vision-preview'),
+        model: openai('gpt-4o'),
         messages: [{
           'role': 'user',
           'content': [

@@ -40,14 +40,13 @@ export default function middleware(req: NextRequest, res:NextResponse) {
 }
 
 export const config = {
-  /* Excludes:
-     - /api + /api/auth*
-     - /_next/static*
-     - /_next/image*
-     - /favicon.ico + /favicons/*
-     - /grid
-     - / (root)
-  */
+  // Excludes:
+  // - /api + /api/auth*
+  // - /_next/static*
+  // - /_next/image*
+  // - /favicon.ico + /favicons/*
+  // - /grid
+  // - / (root)
   // eslint-disable-next-line max-len
   matcher: ['/((?!api$|api/auth|_next/static|_next/image|favicon.ico$|favicons/|grid$|$).*)'],
 };

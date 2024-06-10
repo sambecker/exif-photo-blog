@@ -22,13 +22,20 @@ export default async function OGOverviewPage() {
     photosSimulation,
     photosFocal,
   ] = await Promise.all([
-    getPhotosCached({ limit: 1 }).then(photos => photos[0]),
-    getPhotosCached({ limit: 1, camera: cameraIcon }).then(photos => photos[0]),
-    getPhotosCached({ limit: 1, tag }),
-    getPhotosCached({ limit: 1, tag: TAG_FAVS }),
-    getPhotosCached({ limit: 1, camera }),
-    getPhotosCached({ limit: 1, simulation }),
-    getPhotosCached({ limit: 1, focal }),
+    getPhotosCached({ limit: 1 }).then(photos => photos[0])
+      .catch(() => undefined),
+    getPhotosCached({ limit: 1, camera: cameraIcon }).then(photos => photos[0])
+      .catch(() => undefined),
+    getPhotosCached({ limit: 1, tag })
+      .catch(() => []),
+    getPhotosCached({ limit: 1, tag: TAG_FAVS })
+      .catch(() => []),
+    getPhotosCached({ limit: 1, camera })
+      .catch(() => []),
+    getPhotosCached({ limit: 1, simulation })
+      .catch(() => []),
+    getPhotosCached({ limit: 1, focal })
+      .catch(() => []),
   ]);
 
   return (

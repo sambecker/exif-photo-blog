@@ -91,12 +91,16 @@ export default function CommandKClient({
   const isOpenRef = useRef(isOpen);
   
   const [isPending, startTransition] = useTransition();
+  const [keyPending, setKeyPending] = useState<string>();
   const shouldCloseAfterPending = useRef(false);
 
   useEffect(() => {
-    if (!isPending && shouldCloseAfterPending.current) {
-      setIsOpen?.(false);
-      shouldCloseAfterPending.current = false;
+    if (!isPending) {
+      setKeyPending(undefined);
+      if (shouldCloseAfterPending.current) {
+        setIsOpen?.(false);
+        shouldCloseAfterPending.current = false;
+      }
     }
   }, [isPending, setIsOpen]);
 
@@ -312,7 +316,7 @@ export default function CommandKClient({
         onClose={() => setIsOpen?.(false)}
         fast
       >
-        <div className={clsx('space-y-1.5', isPending && 'opacity-30')}>
+        <div className="space-y-1.5">
           <div className="relative">
             <Command.Input
               onChangeCapture={(e) => setQueryLive(e.currentTarget.value)}
@@ -324,6 +328,7 @@ export default function CommandKClient({
                 'focus:border-gray-200 focus:dark:border-gray-800',
                 'placeholder:text-gray-400/80',
                 'placeholder:dark:text-gray-700',
+                isPending && 'opacity-20',
               )}
               placeholder="Search photos, views, settings ..."
               disabled={isPending}
@@ -356,6 +361,7 @@ export default function CommandKClient({
                   heading={<div className={clsx(
                     'flex items-center',
                     'px-2',
+                    isPending && 'opacity-20',
                   )}>
                     {accessory &&
                       <div className="w-5">{accessory}</div>}
@@ -379,15 +385,17 @@ export default function CommandKClient({
                     annotationAria,
                     path,
                     action,
-                  }) =>
-                    <CommandKItem
-                      key={`${heading} ${label}`}
+                  }) => {
+                    const key = `${heading} ${label}`;
+                    return <CommandKItem
+                      key={key}
                       label={label}
-                      value={`${heading} ${label}`}
+                      value={key}
                       keywords={keywords}
                       onSelect={() => {
                         if (path) {
-                          startTransition(() => {
+                          setKeyPending(key);
+                          startTransition(async () => {
                             shouldCloseAfterPending.current = true;
                             router.push(path, { scroll: true });
                           });
@@ -399,8 +407,10 @@ export default function CommandKClient({
                       accessory={accessory}
                       annotation={annotation}
                       annotationAria={annotationAria}
-                      showSpinner={Boolean(path)}
-                    />)}
+                      loading={key === keyPending}
+                      disabled={isPending && key !== keyPending}
+                    />;
+                  })}
                 </Command.Group>)}
             {footer && !queryLive &&
               <div className="text-center text-dim pt-3 sm:pt-4">

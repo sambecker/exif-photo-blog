@@ -3,12 +3,12 @@ import { clsx } from 'clsx/lite';
 import { ButtonHTMLAttributes, ReactNode } from 'react';
 
 export default function LoaderButton(props: {
-  children?: ReactNode
   isLoading?: boolean
   icon?: ReactNode
   spinnerColor?: SpinnerColor
   styleAs?: 'button' | 'link' | 'link-without-hover'
   hideTextOnMobile?: boolean
+  shouldPreventDefault?: boolean
 } & ButtonHTMLAttributes<HTMLButtonElement>) {
   const {
     children,
@@ -17,7 +17,9 @@ export default function LoaderButton(props: {
     spinnerColor,
     styleAs = 'button',
     hideTextOnMobile = true,
+    shouldPreventDefault,
     type = 'button',
+    onClick,
     disabled,
     className,
     ...rest
@@ -27,6 +29,10 @@ export default function LoaderButton(props: {
     <button
       {...rest}
       type={type}
+      onClick={e => {
+        if (shouldPreventDefault) { e.preventDefault(); }
+        onClick?.(e);
+      }}
       className={clsx(
         ...(styleAs !== 'button'
           ? [

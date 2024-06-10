@@ -59,8 +59,7 @@ export default function PathLoaderButton({
     <LoaderButton
       icon={icon}
       className={className}
-      onClick={e => {
-        if (shouldPreventDefault) { e.preventDefault(); }
+      onClick={() => {
         startTransition(() => {
           if (shouldReplace) {
             router.replace(path, { scroll: shouldScroll });
@@ -69,6 +68,7 @@ export default function PathLoaderButton({
           }
         });
       }}
+      shouldPreventDefault={shouldPreventDefault}
       isLoading={shouldShowLoader}
       spinnerColor={spinnerColor}
       styleAs={styleAs}

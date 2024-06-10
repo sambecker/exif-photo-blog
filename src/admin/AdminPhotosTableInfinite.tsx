@@ -7,9 +7,11 @@ import AdminPhotosTable from './AdminPhotosTable';
 export default function AdminPhotosTableInfinite({
   initialOffset,
   itemsPerPage,
+  hasAiTextGeneration,
 }: {
   initialOffset: number
   itemsPerPage: number
+  hasAiTextGeneration?: boolean
 }) {
   return (
     <InfinitePhotoScroll
@@ -24,6 +26,7 @@ export default function AdminPhotosTableInfinite({
           photos={photos}
           onLastPhotoVisible={onLastPhotoVisible}
           revalidatePhoto={revalidatePhoto}
+          hasAiTextGeneration={hasAiTextGeneration}
         />}
     </InfinitePhotoScroll>
   );

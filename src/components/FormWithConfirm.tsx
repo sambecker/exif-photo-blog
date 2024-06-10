@@ -8,8 +8,8 @@ export default function FormWithConfirm({
   onSubmit,
   children,
 }: {
-  action: (data: FormData) => Promise<void>
-  confirmText: string
+  action: (formData: FormData) => void
+  confirmText?: string
   onSubmit?: () => void
   children: ReactNode
 }) {
@@ -17,11 +17,11 @@ export default function FormWithConfirm({
     <form
       action={action}
       onSubmit={e => {
-        if (!confirm(confirmText)) {
-          e.preventDefault();
-        } else {
+        if (!confirmText || confirm(confirmText)) {
           e.currentTarget.requestSubmit();
           onSubmit?.();
+        } else {
+          e.preventDefault();
         }
       }}
     >

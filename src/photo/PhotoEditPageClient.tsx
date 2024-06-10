@@ -3,7 +3,6 @@
 import AdminChildPage from '@/components/AdminChildPage';
 import { Photo } from '.';
 import { PATH_ADMIN_PHOTOS } from '@/site/paths';
-import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import {
   PhotoFormData,
   convertPhotoToFormData,
@@ -11,11 +10,11 @@ import {
 import PhotoForm from './form/PhotoForm';
 import { useFormState } from 'react-dom';
 import { areSimpleObjectsEqual } from '@/utility/object';
-import IconGrSync from '@/site/IconGrSync';
 import { getExifDataAction } from './actions';
 import { TagsWithMeta } from '@/tag';
 import AiButton from './ai/AiButton';
 import usePhotoFormParent from './form/usePhotoFormParent';
+import PhotoSyncButton from '@/admin/PhotoSyncButton';
 
 export default function PhotoEditPageClient({
   photo,
@@ -69,16 +68,11 @@ export default function PhotoEditPageClient({
         <div className="flex gap-2">
           {hasAiTextGeneration &&
             <AiButton {...{ aiContent, shouldConfirm: hasTextContent }} />}
-          <form action={action}>
-            <input name="photoUrl" value={photo.url} hidden readOnly />
-            <SubmitButtonWithStatus
-              icon={<IconGrSync
-                className="translate-y-[-1px] sm:mr-[4px]"
-              />}
-            >
-              EXIF
-            </SubmitButtonWithStatus>
-          </form>
+          <PhotoSyncButton
+            action={action}
+            label="EXIF"
+            formData={{ photoUrl: photo.url }}
+          />
         </div>}
       isLoading={pending}
     >

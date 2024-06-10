@@ -22,11 +22,11 @@ export const INFINITE_SCROLL_LARGE_PHOTO_MULTIPLE =
 
 // INFINITE SCROLL: GRID PHOTOS
 export const INFINITE_SCROLL_GRID_PHOTO_INITIAL = HIGH_DENSITY_GRID
-  ? process.env.NODE_ENV === 'development' ? 8 : 20
-  : process.env.NODE_ENV === 'development' ? 8 : 24;
+  ? process.env.NODE_ENV === 'development' ? 12 : 24
+  : process.env.NODE_ENV === 'development' ? 12 : 24;
 export const INFINITE_SCROLL_GRID_PHOTO_MULTIPLE = HIGH_DENSITY_GRID
-  ? process.env.NODE_ENV === 'development' ? 8 : 40
-  : process.env.NODE_ENV === 'development' ? 8 : 48;
+  ? process.env.NODE_ENV === 'development' ? 12 : 48
+  : process.env.NODE_ENV === 'development' ? 12 : 48;
 
 // Thumbnails below /p/[photoId]
 export const RELATED_GRID_PHOTOS_TO_SHOW = 12;
@@ -48,6 +48,8 @@ export interface PhotoExif {
   model?: string
   focalLength?: number
   focalLengthIn35MmFormat?: number
+  lensMake?: string
+  lensModel?: string
   fNumber?: number
   iso?: number
   exposureTime?: number
