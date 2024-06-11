@@ -1,6 +1,10 @@
 'use client';
 
-import { ComponentProps, ReactNode, useTransition } from 'react';
+import { 
+  ComponentProps,
+  ReactNode,
+  useTransition,
+} from 'react';
 import { useRouter } from 'next/navigation';
 import { clsx } from 'clsx/lite';
 import ChecklistRow from '../components/ChecklistRow';
@@ -21,8 +25,11 @@ import StatusIcon from '@/components/StatusIcon';
 import { labelForStorage } from '@/services/storage';
 import { HiSparkles } from 'react-icons/hi';
 import LoaderButton from '@/components/primitives/LoaderButton';
+import { testConnectionsAction } from '@/admin/actions';
+import ErrorNote from '@/components/ErrorNote';
 
 export default function SiteChecklistClient({
+  // Config checklist
   hasDatabase,
   isPostgresSSLEnabled,
   hasVercelPostgres,
@@ -56,10 +63,16 @@ export default function SiteChecklistClient({
   isOgTextBottomAligned,
   gridAspectRatio,
   hasGridAspectRatio,
+  // Connection status
+  databaseError,
+  storageError,
+  aiError,
+  // Component props
   simplifiedView,
   showRefreshButton,
   secret,
-}: ConfigChecklistStatus & {
+}: ConfigChecklistStatus &
+  Partial<Awaited<ReturnType<typeof testConnectionsAction>>> & {
   simplifiedView?: boolean
   showRefreshButton?: boolean
   secret: string
@@ -124,7 +137,7 @@ export default function SiteChecklistClient({
     >
       <span className="inline-flex items-center gap-1">
         <span className={clsx(
-          'text-[11px] font-medium tracking-wide',
+          'text-[11px] font-medium tracking-wider',
           'px-0.5 py-[0.5px]',
           'rounded-[5px]',
           'bg-gray-100 dark:bg-gray-800',
@@ -145,7 +158,7 @@ export default function SiteChecklistClient({
     label: ReactNode,
     iconClassName?: string,
   ) =>
-    <div className="flex gap-1 -translate-x-1">
+    <div className="flex gap-2 translate-x-[-3px]">
       <span className={iconClassName}>
         <StatusIcon {...{ type }} />
       </span>
@@ -153,6 +166,11 @@ export default function SiteChecklistClient({
         {label}
       </span>
     </div>;
+
+  const renderConnectionError = (provider: string, error: string) =>
+    <ErrorNote size="small" className="mt-2 mb-3">
+      {provider} connection error: {`"${error}"`}
+    </ErrorNote>;
 
   return (
     <div className="max-w-xl space-y-6 w-full">
@@ -165,6 +183,8 @@ export default function SiteChecklistClient({
           status={hasDatabase}
           isPending={isPendingPage}
         >
+          {databaseError &&
+            renderConnectionError('Database', databaseError)}
           {hasVercelPostgres
             ? renderSubStatus('checked', 'Vercel Postgres: connected')
             : renderSubStatus('optional', <>
@@ -195,6 +215,8 @@ export default function SiteChecklistClient({
           status={hasStorageProvider}
           isPending={isPendingPage}
         >
+          {storageError &&
+            renderConnectionError('Storage', storageError)}
           {hasVercelBlobStorage
             ? renderSubStatus('checked', 'Vercel Blob: connected')
             : renderSubStatus('optional', <>
@@ -314,6 +336,8 @@ export default function SiteChecklistClient({
             isPending={isPendingPage}
             optional
           >
+            {aiError &&
+              renderConnectionError('OpenAI', aiError)}
             Store your OpenAI secret key in order to add experimental support
             for AI-generated text descriptions and enable an invisible field
             called {'"Semantic Description"'} used to support CMD-K search

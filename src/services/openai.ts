@@ -88,7 +88,7 @@ export const generateOpenAiImageQuery = async (
 
   if (openai) {
     return generateText({
-      model: openai('gpt-4-vision-preview'),
+      model: openai('gpt-4o'),
       messages: [{
         'role': 'user',
         'content': [
@@ -98,6 +98,36 @@ export const generateOpenAiImageQuery = async (
           }, {
             'type': 'image',
             'image': removeBase64Prefix(imageBase64),
+          },
+        ],
+      }],
+    }).then(({ text }) => text);
+  }
+};
+
+export const testOpenAiConnection = async () => {
+  if (ratelimit) {
+    let success = false;
+    try {
+      success = (await ratelimit.limit(RATE_LIMIT_IDENTIFIER)).success;
+    } catch (e: any) {
+      console.error('Failed to rate limit OpenAI', e);
+      throw new Error('Failed to rate limit OpenAI');
+    }
+    if (!success) {
+      console.error('OpenAI rate limit exceeded');
+      throw new Error('OpenAI rate limit exceeded');
+    }
+  }
+  if (openai) {
+    return generateText({
+      model: openai('gpt-4o'),
+      messages: [{
+        'role': 'user',
+        'content': [
+          {
+            'type': 'text',
+            'text': 'Test connection',
           },
         ],
       }],
