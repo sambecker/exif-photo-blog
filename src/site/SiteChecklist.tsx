@@ -14,7 +14,7 @@ export default function SiteChecklist({
       isTestingConnections: true,
       simplifiedView,
     }} /> }>
-      <SiteChecklistServer />
+      <SiteChecklistServer {...{ simplifiedView }} />
     </Suspense>
   );
 }
