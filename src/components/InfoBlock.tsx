@@ -7,12 +7,14 @@ export default function InfoBlock({
   color = 'gray',
   padding = 'normal',
   centered = true,
+  spaceChildren = true,
 }: {
   children: ReactNode
   className?: string
   color?: 'gray' | 'blue'
-  padding?: 'loose' | 'normal' | 'tight';
-  centered?: boolean;
+  padding?: 'loose' | 'normal' | 'tight'
+  centered?: boolean
+  spaceChildren?: boolean
 } ) {
   const getColorClasses = () => {
     switch (color) {
@@ -48,7 +50,7 @@ export default function InfoBlock({
       <div className={clsx(
         'flex flex-col justify-center w-full',
         centered && 'items-center',
-        'space-y-4',
+        spaceChildren && 'space-y-4',
       )}>
         {children}
       </div>

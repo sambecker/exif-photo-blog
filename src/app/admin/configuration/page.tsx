@@ -14,7 +14,7 @@ export default async function AdminConfigurationPage() {
             </div>
             <ClearCacheButton />
           </div>
-          <InfoBlock>
+          <InfoBlock spaceChildren={false}>
             <SiteChecklist />
           </InfoBlock>
         </div>}
