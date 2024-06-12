@@ -5,6 +5,7 @@ import { kv } from '@vercel/kv';
 import { Ratelimit } from '@upstash/ratelimit';
 import { AI_TEXT_GENERATION_ENABLED, HAS_VERCEL_KV } from '@/site/config';
 import { removeBase64Prefix } from '@/utility/image';
+import { cleanUpAiTextResponse } from '@/photo/ai';
 
 const RATE_LIMIT_IDENTIFIER = 'openai-image-query';
 const RATE_LIMIT_MAX_QUERIES_PER_HOUR = 100;
@@ -73,7 +74,7 @@ export const streamOpenAiImageQuery = async (
     (async () => {
       const { textStream } = await streamText(args);
       for await (const delta of textStream) {
-        stream.update(delta);
+        stream.update(cleanUpAiTextResponse(delta));
       }
       stream.done();
     })();
@@ -92,7 +93,7 @@ export const generateOpenAiImageQuery = async (
 
   if (args) {
     return generateText(args)
-      .then(({ text }) => text);
+      .then(({ text }) => cleanUpAiTextResponse(text));
   }
 };
 

@@ -64,9 +64,8 @@ export const parseTitleAndCaption = (text: string) => {
   };
 };
 
-export const cleanUpAiTextResponse = (text?: string) => text
-  ? text
+export const cleanUpAiTextResponse = (text: string) =>
+  text
     .replaceAll('\n', ' ')
     .replaceAll('"', '')
-    .replace(/\.$/, '')
-  : undefined;
+    .replace(/\.$/, '');
