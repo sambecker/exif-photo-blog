@@ -13,7 +13,7 @@ export default function ChecklistRow({
 }: {
   title: string
   status: boolean
-  isPending: boolean
+  isPending?: boolean
   optional?: boolean
   experimental?: boolean
   children: ReactNode
