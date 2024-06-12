@@ -28,10 +28,11 @@ export const generateAiImageQueries = async (
         textFieldsToGenerate.includes('title') &&
         textFieldsToGenerate.includes('caption')
       ) {
-        const titleAndCaption = await generateOpenAiImageQuery(
-          imageBase64,
-          AI_IMAGE_QUERIES['title-and-caption'],
-        );
+        const titleAndCaption = cleanUpAiTextResponse(
+          await generateOpenAiImageQuery(
+            imageBase64,
+            AI_IMAGE_QUERIES['title-and-caption'],
+          ));
         if (titleAndCaption) {
           const titleAndCaptionParsed = parseTitleAndCaption(titleAndCaption);
           title = titleAndCaptionParsed.title;
