@@ -50,7 +50,7 @@ export default function Footer() {
                       </div>
                       <form action={() => signOutAndRedirectAction()
                         .then(() => setUserEmail?.(undefined))}>
-                        <SubmitButtonWithStatus styleAsLink>
+                        <SubmitButtonWithStatus styleAs="link">
                           Sign out
                         </SubmitButtonWithStatus>
                       </form>

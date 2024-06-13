@@ -4,7 +4,7 @@ import { useState, useEffect, ReactNode, useCallback } from 'react';
 import { AppStateContext } from './AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import usePathnames from '@/utility/usePathnames';
-import { getAuthAction, logClientAuthUpdate } from '@/auth/actions';
+import { getAuthAction } from '@/auth/actions';
 import useSWR from 'swr';
 import { MATTE_PHOTOS } from '@/site/config';
 import { getPhotosHiddenMetaCachedAction } from '@/photo/actions';
@@ -47,7 +47,6 @@ export default function AppStateProvider({
   const { data } = useSWR('getAuth', getAuthAction);
   useEffect(() => {
     setUserEmail(data?.user?.email ?? undefined);
-    logClientAuthUpdate(data);
   }, [data]);
   const isUserSignedIn = Boolean(userEmail);
   useEffect(() => {

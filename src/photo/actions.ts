@@ -16,10 +16,7 @@ import {
   convertPhotoToFormData,
 } from './form';
 import { redirect } from 'next/navigation';
-import {
-  convertUploadToPhoto,
-  deleteStorageUrl,
-} from '@/services/storage';
+import { deleteFile } from '@/services/storage';
 import {
   getPhotosCached,
   getPhotosMetaCached,
@@ -49,14 +46,21 @@ import {
 import { getStorageUploadUrlsNoStore } from '@/services/storage/cache';
 import { generateAiImageQueries } from './ai/server';
 import { createStreamableValue } from 'ai/rsc';
+import { convertUploadToPhoto } from './storage';
 
 // Private actions
 
 export const createPhotoAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
+    const shouldStripGpsData = formData.get('shouldStripGpsData') === 'true';
+    formData.delete('shouldStripGpsData');
+
     const photo = convertFormDataToPhotoDbInsert(formData);
 
-    const updatedUrl = await convertUploadToPhoto(photo.url);
+    const updatedUrl = await convertUploadToPhoto(
+      photo.url,
+      shouldStripGpsData,
+    );
     
     if (updatedUrl) {
       photo.url = updatedUrl;
@@ -103,6 +107,8 @@ export const addAllUploadsAction = async ({
           const {
             photoFormExif,
             imageResizedBase64,
+            shouldStripGpsData,
+            fileBytes,
           } = await extractImageDataFromBlobPath(url, {
             includeInitialPhotoFields: true,
             generateBlurData: BLUR_ENABLED,
@@ -144,7 +150,11 @@ export const addAllUploadsAction = async ({
               addedUploadUrls: addedUploadUrls.join(','),
             });
 
-            const updatedUrl = await convertUploadToPhoto(url);
+            const updatedUrl = await convertUploadToPhoto(
+              url,
+              shouldStripGpsData,
+              fileBytes,
+            );
             if (updatedUrl) {
               stream.update({
                 headline,
@@ -176,6 +186,7 @@ export const updatePhotoAction = async (formData: FormData) =>
 
     let url: string | undefined;
     if (photo.hidden && photo.url.includes(photo.id)) {
+      // Backfill:
       // Anonymize storage url on update if necessary by
       // re-running image upload transfer logic
       url = await convertUploadToPhoto(photo.url);
@@ -214,7 +225,7 @@ export const deletePhotoAction = async (
   shouldRedirect?: boolean,
 ) =>
   runAuthenticatedAdminServerAction(async () => {
-    await deletePhoto(photoId).then(() => deleteStorageUrl(photoUrl));
+    await deletePhoto(photoId).then(() => deleteFile(photoUrl));
     revalidateAllKeysAndPaths();
     if (shouldRedirect) {
       redirect(PATH_ROOT);
@@ -254,7 +265,7 @@ export const renamePhotoTagGloballyAction = async (formData: FormData) =>
 
 export const deleteBlobPhotoAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
-    await deleteStorageUrl(formData.get('url') as string);
+    await deleteFile(formData.get('url') as string);
 
     revalidateAdminPaths();
 
@@ -279,31 +290,69 @@ export const getExifDataAction = async (
     return {};
   });
 
-// Accessed from admin photo table
-// will update blur data
-export const syncPhotoExifDataAction = async (formData: FormData) =>
+// Accessed from admin photo table, will:
+// - update EXIF data
+// - anonymize storage url if necessary
+// - strip GPS data if necessary
+// - update blur data (or destroy if blur is disabled)
+// - generate AI text data, if enabled, and auto-generated fields are empty
+export const syncPhotoAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
-    const photoId = formData.get('id') as string;
-    if (photoId) {
-      const photo = await getPhoto(photoId);
-      if (photo) {
-        const { photoFormExif } = await extractImageDataFromBlobPath(
-          photo.url, {
-            generateBlurData: BLUR_ENABLED,
-          });
-        if (photoFormExif) {
-          const photoFormDbInsert = convertFormDataToPhotoDbInsert({
-            ...convertPhotoToFormData(photo),
-            ...photoFormExif,
-          });
-          await updatePhoto(photoFormDbInsert);
-          revalidatePhotosKey();
+    const photoId = formData.get('photoId') as string | undefined;
+    const photo = await getPhoto(photoId ?? '', true);
+
+    if (photo) {
+      const {
+        photoFormExif,
+        imageResizedBase64,
+        shouldStripGpsData,
+        fileBytes,
+      } = await extractImageDataFromBlobPath(photo.url, {
+        includeInitialPhotoFields: false,
+        generateBlurData: BLUR_ENABLED,
+        generateResizedImage: AI_TEXT_GENERATION_ENABLED,
+      });
+
+      if (photoFormExif) {
+        if (photo.url.includes(photo.id) || shouldStripGpsData) {
+          // Anonymize storage url on update if necessary by
+          // re-running image upload transfer logic
+          const url = await convertUploadToPhoto(
+            photo.url,
+            shouldStripGpsData,
+            fileBytes,
+          );
+          if (url) { photo.url = url; }
         }
+
+        const {
+          title: atTitle,
+          caption: aiCaption,
+          tags: aiTags,
+          semanticDescription: aiSemanticDescription,
+        } = await generateAiImageQueries(
+          imageResizedBase64,
+          AI_TEXT_AUTO_GENERATED_FIELDS
+        );
+
+        const photoFormDbInsert = convertFormDataToPhotoDbInsert({
+          ...convertPhotoToFormData(photo),
+          ...photoFormExif,
+          ...!BLUR_ENABLED && { blurData: undefined },
+          ...!photo.title && { title: atTitle },
+          ...!photo.caption && { caption: aiCaption },
+          ...photo.tags.length === 0 && { tags: aiTags },
+          ...!photo.semanticDescription &&
+            { semanticDescription: aiSemanticDescription },
+        });
+
+        await updatePhoto(photoFormDbInsert);
+        revalidateAllKeysAndPaths();
       }
     }
   });
 
-export const syncCacheAction = async () =>
+export const clearCacheAction = async () =>
   runAuthenticatedAdminServerAction(revalidateAllKeysAndPaths);
 
 export const streamAiImageQueryAction = async (

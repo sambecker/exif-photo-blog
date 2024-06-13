@@ -1,5 +1,5 @@
 import { POSTGRES_SSL_ENABLED } from '@/site/config';
-import { Pool, QueryResult, QueryResultRow } from 'pg';
+import { Pool, QueryResult, QueryResultRow } from 'pg'; 
 
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
@@ -10,7 +10,7 @@ export type Primitive = string | number | boolean | undefined | null;
 
 export const query = async <T extends QueryResultRow = any>(
   queryString: string,
-  values: Primitive[],
+  values: Primitive[] = [],
 ) => {
   const client = await pool.connect();
   let response: QueryResult<T>;
@@ -52,3 +52,6 @@ const isTemplateStringsArray = (
     Array.isArray(strings) && 'raw' in strings && Array.isArray(strings.raw)
   );
 };
+
+export const testDatabaseConnection = async () =>
+  query('SELECt COUNT(*) FROM pg_stat_user_tables');

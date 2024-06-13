@@ -1,18 +1,20 @@
-import { generateAuthSecret } from '@/auth';
-import SiteChecklistClient from './SiteChecklistClient';
+import { Suspense } from 'react';
 import { CONFIG_CHECKLIST_STATUS } from '@/site/config';
+import SiteChecklistServer from './SiteChecklistServer';
+import SiteChecklistClient from './SiteChecklistClient';
 
-export default async function SiteChecklist({
+export default function SiteChecklist({
   simplifiedView,
 }: {
   simplifiedView?: boolean
 }) {
-  const secret = await generateAuthSecret();
   return (
-    <SiteChecklistClient {...{
+    <Suspense fallback={<SiteChecklistClient {...{
       ...CONFIG_CHECKLIST_STATUS,
+      isTestingConnections: true,
       simplifiedView,
-      secret,
-    }} />
+    }} /> }>
+      <SiteChecklistServer {...{ simplifiedView }} />
+    </Suspense>
   );
 }

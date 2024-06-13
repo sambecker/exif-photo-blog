@@ -14,6 +14,8 @@ import {
   getPhotosNearId,
   getPhotosMostRecentUpdate,
   getPhotosMeta,
+  getUniqueFocalLengths,
+  getUniqueLenses,
 } from '@/photo/db/query';
 import { GetPhotosOptions } from './db';
 import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
@@ -29,6 +31,7 @@ import {
   PREFIX_TAG,
   pathForPhoto,
 } from '@/site/paths';
+import { createLensKey } from '@/lens';
 
 // Table key
 const KEY_PHOTOS            = 'photos';
@@ -36,7 +39,9 @@ const KEY_PHOTO             = 'photo';
 // Field keys
 const KEY_TAGS              = 'tags';
 const KEY_CAMERAS           = 'cameras';
+const KEY_LENSES            = 'lenses';
 const KEY_FILM_SIMULATIONS  = 'film-simulations';
+const KEY_FOCAL_LENGTHS     = 'focal-lengths';
 // Type keys
 const KEY_COUNT             = 'count';
 const KEY_HIDDEN            = 'hidden';
@@ -51,6 +56,10 @@ const getPhotosCacheKeyForOption = (
   case 'camera': {
     const value = options[option];
     return value ? `${option}-${createCameraKey(value)}` : null;
+  }
+  case 'lens': {
+    const value = options[option];
+    return value ? `${option}-${createLensKey(value)}` : null;
   }
   case 'takenBefore':
   case 'takenAfterInclusive': {
@@ -190,10 +199,22 @@ export const getUniqueCamerasCached =
     [KEY_PHOTOS, KEY_CAMERAS]
   );
 
+export const getUniqueLensesCached =
+  unstable_cache(
+    getUniqueLenses,
+    [KEY_PHOTOS, KEY_LENSES]
+  );
+
 export const getUniqueFilmSimulationsCached =
   unstable_cache(
     getUniqueFilmSimulations,
     [KEY_PHOTOS, KEY_FILM_SIMULATIONS],
+  );
+
+export const getUniqueFocalLengthsCached =
+  unstable_cache(
+    getUniqueFocalLengths,
+    [KEY_PHOTOS, KEY_FOCAL_LENGTHS],
   );
 
 // No store

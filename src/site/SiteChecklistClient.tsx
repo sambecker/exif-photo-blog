@@ -1,7 +1,9 @@
 'use client';
 
-import { ComponentProps, ReactNode, useTransition } from 'react';
-import { useRouter } from 'next/navigation';
+import {
+  ComponentProps,
+  ReactNode,
+} from 'react';
 import { clsx } from 'clsx/lite';
 import ChecklistRow from '../components/ChecklistRow';
 import { FiExternalLink } from 'react-icons/fi';
@@ -11,7 +13,6 @@ import {
   BiData,
   BiLockAlt,
   BiPencil,
-  BiRefresh,
 } from 'react-icons/bi';
 import InfoBlock from '@/components/InfoBlock';
 import Checklist from '@/components/Checklist';
@@ -21,12 +22,16 @@ import StatusIcon from '@/components/StatusIcon';
 import { labelForStorage } from '@/services/storage';
 import { HiSparkles } from 'react-icons/hi';
 import LoaderButton from '@/components/primitives/LoaderButton';
+import { testConnectionsAction } from '@/admin/actions';
+import ErrorNote from '@/components/ErrorNote';
+import Spinner from '@/components/Spinner';
 
 export default function SiteChecklistClient({
+  // Config checklist
   hasDatabase,
-  isPostgresSSLEnabled,
+  isPostgresSslEnabled,
   hasVercelPostgres,
-  hasVercelKV,
+  hasVercelKv,
   hasStorageProvider,
   hasVercelBlobStorage,
   hasCloudflareR2Storage,
@@ -56,26 +61,21 @@ export default function SiteChecklistClient({
   isOgTextBottomAligned,
   gridAspectRatio,
   hasGridAspectRatio,
+  // Connection status
+  databaseError,
+  storageError,
+  kvError,
+  aiError,
+  // Component props
   simplifiedView,
-  showRefreshButton,
+  isTestingConnections,
   secret,
-}: ConfigChecklistStatus & {
+}: ConfigChecklistStatus &
+  Partial<Awaited<ReturnType<typeof testConnectionsAction>>> & {
   simplifiedView?: boolean
-  showRefreshButton?: boolean
-  secret: string
+  isTestingConnections?: boolean
+  secret?: string
 }) {
-  const router = useRouter();
-
-  const [isPendingPage, startTransitionPage] = useTransition();
-  const [isPendingSecret, startTransitionSecret] = useTransition();
-
-  const refreshPage = () => {
-    startTransitionPage(router.refresh);
-  };
-  const refreshSecret = () => {
-    startTransitionSecret(router.refresh);
-  };
-
   const renderLink = (href: string, text: string, external = true) =>
     <>
       <a {...{
@@ -97,18 +97,21 @@ export default function SiteChecklistClient({
         </>}
     </>;
 
-  const renderCopyButton = (label: string, text: string, subtle?: boolean) =>
+  const renderCopyButton = (label: string, text?: string, subtle?: boolean) =>
     <LoaderButton
       icon={<BiCopy size={15} />}
       className={clsx(
         'translate-y-[2px]',
         subtle && 'text-gray-300 dark:text-gray-700',
       )}
-      onClick={() => {
-        navigator.clipboard.writeText(text);
-        toastSuccess(`${label} copied to clipboard`);
-      }}
+      onClick={text
+        ? () => {
+          navigator.clipboard.writeText(text);
+          toastSuccess(`${label} copied to clipboard`);
+        }
+        : undefined}
       styleAs="link"
+      disabled={!text}
     />;
 
   const renderEnvVar = (
@@ -124,7 +127,7 @@ export default function SiteChecklistClient({
     >
       <span className="inline-flex items-center gap-1">
         <span className={clsx(
-          'text-[11px] font-medium tracking-wide',
+          'text-[11px] font-medium tracking-wider',
           'px-0.5 py-[0.5px]',
           'rounded-[5px]',
           'bg-gray-100 dark:bg-gray-800',
@@ -136,7 +139,7 @@ export default function SiteChecklistClient({
     </div>;
 
   const renderEnvVars = (variables: string[]) =>
-    <div className="py-0.5">
+    <div className="pt-1 space-y-1">
       {variables.map(envVar => renderEnvVar(envVar))}
     </div>;
 
@@ -145,7 +148,7 @@ export default function SiteChecklistClient({
     label: ReactNode,
     iconClassName?: string,
   ) =>
-    <div className="flex gap-1 -translate-x-1">
+    <div className="flex gap-2 translate-x-[-3px]">
       <span className={iconClassName}>
         <StatusIcon {...{ type }} />
       </span>
@@ -154,6 +157,11 @@ export default function SiteChecklistClient({
       </span>
     </div>;
 
+  const renderConnectionError = (provider: string, error: string) =>
+    <ErrorNote size="small" className="mt-2 mb-3">
+      {provider} connection error: {`"${error}"`}
+    </ErrorNote>;
+
   return (
     <div className="max-w-xl space-y-6 w-full">
       <Checklist
@@ -161,10 +169,14 @@ export default function SiteChecklistClient({
         icon={<BiData size={16} />}
       >
         <ChecklistRow
-          title="Setup database"
+          title={hasDatabase && isTestingConnections
+            ? 'Testing database connection'
+            : 'Setup database'}
           status={hasDatabase}
-          isPending={isPendingPage}
+          isPending={hasDatabase && isTestingConnections}
         >
+          {databaseError &&
+            renderConnectionError('Database', databaseError)}
           {hasVercelPostgres
             ? renderSubStatus('checked', 'Vercel Postgres: connected')
             : renderSubStatus('optional', <>
@@ -182,19 +194,24 @@ export default function SiteChecklistClient({
             renderSubStatus('checked', <>
               Postgres-compatible: connected
               {' '}
-              (SSL {isPostgresSSLEnabled ? 'enabled' : 'disabled'})
+              (SSL {isPostgresSslEnabled ? 'enabled' : 'disabled'})
             </>)}
         </ChecklistRow>
         <ChecklistRow
-          title={!hasStorageProvider
-            ? 'Setup storage (one of the following)'
-            : hasMultipleStorageProviders
-              // eslint-disable-next-line max-len
-              ? `Setup storage (new uploads go to: ${labelForStorage(currentStorage)})`
-              : 'Setup storage'}
+          title={
+            hasStorageProvider && isTestingConnections
+              ? 'Testing storage connection'
+              : !hasStorageProvider
+                ? 'Setup storage (one of the following)'
+                : hasMultipleStorageProviders
+                  // eslint-disable-next-line max-len
+                  ? `Setup storage (new uploads go to: ${labelForStorage(currentStorage)})`
+                  : 'Setup storage'}
           status={hasStorageProvider}
-          isPending={isPendingPage}
+          isPending={hasStorageProvider && isTestingConnections}
         >
+          {storageError &&
+            renderConnectionError('Storage', storageError)}
           {hasVercelBlobStorage
             ? renderSubStatus('checked', 'Vercel Blob: connected')
             : renderSubStatus('optional', <>
@@ -236,25 +253,22 @@ export default function SiteChecklistClient({
         icon={<BiLockAlt size={16} />}
       >
         <ChecklistRow
-          title="Setup auth"
+          title={!hasAuthSecret && isTestingConnections
+            ? 'Generating secret'
+            : 'Setup auth'}
           status={hasAuthSecret}
-          isPending={isPendingPage}
+          isPending={!hasAuthSecret && isTestingConnections}
         >
           Store auth secret in environment variable:
           {!hasAuthSecret &&
             <div className="overflow-x-auto">
               <InfoBlock className="my-1.5 inline-flex" padding="tight">
-                <div className="flex flex-nowrap items-center gap-4">
-                  <span>{secret}</span>
-                  <div className="flex items-center gap-0.5">
+                <div className={clsx(
+                  'flex flex-nowrap items-center gap-2 leading-none -mx-1',
+                )}>
+                  {secret ? <span>{secret}</span> : <Spinner />}
+                  <div className="flex items-center gap-0.5 translate-y-[-2px]">
                     {renderCopyButton('Secret', secret)}
-                    <LoaderButton
-                      icon={<BiRefresh size={18} />}
-                      onClick={refreshSecret}
-                      isLoading={isPendingSecret}
-                      spinnerColor="text"
-                      styleAs="link"
-                    />
                   </div>
                 </div>
               </InfoBlock>
@@ -264,7 +278,6 @@ export default function SiteChecklistClient({
         <ChecklistRow
           title="Setup admin user"
           status={hasAdminUser}
-          isPending={isPendingPage}
         >
           Store admin email/password
           {' '}
@@ -283,7 +296,6 @@ export default function SiteChecklistClient({
         <ChecklistRow
           title="Add title"
           status={hasTitle}
-          isPending={isPendingPage}
           optional
         >
           Store in environment variable (used in page titles):
@@ -292,7 +304,6 @@ export default function SiteChecklistClient({
         <ChecklistRow
           title="Add custom domain"
           status={hasDomain}
-          isPending={isPendingPage}
           optional
         >
           Store in environment variable (displayed in top-right nav):
@@ -307,22 +318,30 @@ export default function SiteChecklistClient({
           optional
         >
           <ChecklistRow
-            title="Add OpenAI Secret Key"
+            title={isAiTextGenerationEnabled && isTestingConnections
+              ? 'Testing OpenAI connection'
+              : 'Add OpenAI Secret Key'}
             status={isAiTextGenerationEnabled}
-            isPending={isPendingPage}
+            isPending={isAiTextGenerationEnabled && isTestingConnections}
             optional
           >
+            {aiError &&
+              renderConnectionError('OpenAI', aiError)}
             Store your OpenAI secret key in order to add experimental support
             for AI-generated text descriptions and enable an invisible field
             called {'"Semantic Description"'} used to support CMD-K search
             {renderEnvVars(['OPENAI_SECRET_KEY'])}
           </ChecklistRow>
           <ChecklistRow
-            title="Enable Rate Limiting"
-            status={hasVercelKV}
-            isPending={isPendingPage}
+            title={hasVercelKv && isTestingConnections
+              ? 'Testing KV connection'
+              : 'Enable Rate Limiting'}
+            status={hasVercelKv}
+            isPending={hasVercelKv && isTestingConnections}
             optional
           >
+            {kvError &&
+              renderConnectionError('Vercel KV', kvError)}
             {renderLink(
               // eslint-disable-next-line max-len
               'https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database',
@@ -335,7 +354,6 @@ export default function SiteChecklistClient({
             // eslint-disable-next-line max-len
             title={`Auto-generated fields: ${aiTextAutoGeneratedFields.join(', ')}`}
             status={hasAiTextAutoGeneratedFields}
-            isPending={isPendingPage}
             optional
           >
             Comma-separated fields to auto-generate when
@@ -352,7 +370,6 @@ export default function SiteChecklistClient({
           <ChecklistRow
             title="Pro mode"
             status={isProModeEnabled}
-            isPending={isPendingPage}
             optional
           >
             Set environment variable to {'"1"'} to enable
@@ -362,7 +379,6 @@ export default function SiteChecklistClient({
           <ChecklistRow
             title="Static Optimization"
             status={isStaticallyOptimized}
-            isPending={isPendingPage}
             optional
             experimental
           >
@@ -382,7 +398,6 @@ export default function SiteChecklistClient({
           <ChecklistRow
             title="Photo Matting"
             status={arePhotosMatted}
-            isPending={isPendingPage}
             optional
           >
             Set environment variable to {'"1"'} to constrain the size
@@ -393,7 +408,6 @@ export default function SiteChecklistClient({
           <ChecklistRow
             title="Image Blur"
             status={isBlurEnabled}
-            isPending={isPendingPage}
             optional
           >
             Set environment variable to {'"1"'} to prevent
@@ -403,7 +417,6 @@ export default function SiteChecklistClient({
           <ChecklistRow
             title="Geo privacy"
             status={isGeoPrivacyEnabled}
-            isPending={isPendingPage}
             optional
           >
             Set environment variable to {'"1"'} to disable
@@ -413,7 +426,6 @@ export default function SiteChecklistClient({
           <ChecklistRow
             title="Priority order"
             status={isPriorityOrderEnabled}
-            isPending={isPendingPage}
             optional
           >
             Set environment variable to {'"1"'} to prevent
@@ -423,7 +435,6 @@ export default function SiteChecklistClient({
           <ChecklistRow
             title="Public API"
             status={isPublicApiEnabled}
-            isPending={isPendingPage}
             optional
           >
             Set environment variable to {'"1"'} to enable
@@ -433,7 +444,6 @@ export default function SiteChecklistClient({
           <ChecklistRow
             title="Show repo link"
             status={showRepoLink}
-            isPending={isPendingPage}
             optional
           >
             Set environment variable to {'"1"'} to hide footer link:
@@ -442,7 +452,6 @@ export default function SiteChecklistClient({
           <ChecklistRow
             title="Show social"
             status={showSocial}
-            isPending={isPendingPage}
             optional
           >
             Set environment variable to {'"1"'} to hide
@@ -453,7 +462,6 @@ export default function SiteChecklistClient({
           <ChecklistRow
             title="Show Fujifilm simulations"
             status={showFilmSimulations}
-            isPending={isPendingPage}
             optional
           >
             Set environment variable to {'"1"'} to prevent
@@ -464,7 +472,6 @@ export default function SiteChecklistClient({
           <ChecklistRow
             title="Show EXIF data"
             status={showExifInfo}
-            isPending={isPendingPage}
             optional
           >
             Set environment variable to {'"1"'} to hide EXIF data:
@@ -473,7 +480,6 @@ export default function SiteChecklistClient({
           <ChecklistRow
             title={`Grid aspect ratio: ${gridAspectRatio}`}
             status={hasGridAspectRatio}
-            isPending={isPendingPage}
             optional
           >
             Set environment variable to any number to enforce aspect ratio
@@ -484,7 +490,6 @@ export default function SiteChecklistClient({
           <ChecklistRow
             title="Legacy OG text alignment"
             status={isOgTextBottomAligned}
-            isPending={isPendingPage}
             optional
           >
             Set environment variable to {'"BOTTOM"'} to
@@ -493,12 +498,6 @@ export default function SiteChecklistClient({
           </ChecklistRow>
         </Checklist>
       </>}
-      {showRefreshButton &&
-        <div className="py-4 space-y-4">
-          <button onClick={refreshPage}>
-            Check
-          </button>
-        </div>}
       <div className="px-11 text-dim">
         Changes to environment variables require a redeploy
         or reboot of local dev server
