@@ -54,6 +54,8 @@ export default async function AdminPhotosPage() {
           <AdminPhotosTable
             photos={photos}
             hasAiTextGeneration={AI_TEXT_GENERATION_ENABLED}
+            canEdit={false}
+            canDelete={false}
           />
         </div>
       </div>

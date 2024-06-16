@@ -25,11 +25,15 @@ export default function AdminPhotosTable({
   onLastPhotoVisible,
   revalidatePhoto,
   hasAiTextGeneration,
+  canEdit = true,
+  canDelete = true,
 }: {
   photos: Photo[],
   onLastPhotoVisible?: () => void
   revalidatePhoto?: RevalidatePhoto
   hasAiTextGeneration?: boolean
+  canEdit?: boolean
+  canDelete?: boolean
 }) {
   const { invalidateSwr } = useAppState();
 
@@ -82,7 +86,8 @@ export default function AdminPhotosTable({
             'flex flex-nowrap',
             'gap-2 sm:gap-3 items-center',
           )}>
-            <EditButton path={pathForAdminPhotoEdit(photo)} />
+            {canEdit &&
+              <EditButton path={pathForAdminPhotoEdit(photo)} />}
             <PhotoSyncButton
               action={syncPhotoAction}
               photoTitle={titleForPhoto(photo)}
@@ -92,15 +97,16 @@ export default function AdminPhotosTable({
               shouldConfirm
               shouldToast
             />
-            <FormWithConfirm
-              action={deletePhotoFormAction}
-              confirmText={deleteConfirmationTextForPhoto(photo)}
-              onSubmit={() => revalidatePhoto?.(photo.id, true)}
-            >
-              <input type="hidden" name="id" value={photo.id} />
-              <input type="hidden" name="url" value={photo.url} />
-              <DeleteButton clearLocalState />
-            </FormWithConfirm>
+            {canDelete &&
+              <FormWithConfirm
+                action={deletePhotoFormAction}
+                confirmText={deleteConfirmationTextForPhoto(photo)}
+                onSubmit={() => revalidatePhoto?.(photo.id, true)}
+              >
+                <input type="hidden" name="id" value={photo.id} />
+                <input type="hidden" name="url" value={photo.url} />
+                <DeleteButton clearLocalState />
+              </FormWithConfirm>}
           </div>
         </Fragment>)}
     </AdminTable>
