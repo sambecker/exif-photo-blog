@@ -74,13 +74,16 @@ export const addAllUploadsAction = async ({
   tags,
   takenAtLocal,
   takenAtNaiveLocal,
+  limit,
 }: {
   tags?: string
   takenAtLocal: string
   takenAtNaiveLocal: string
+  limit?: number
 }) =>
   runAuthenticatedAdminServerAction(async () => {
-    const uploadUrls = await getStorageUploadUrlsNoStore();
+    const uploadUrls = (await getStorageUploadUrlsNoStore())
+      .slice(0, limit);
     const uploadTotal = uploadUrls.length;
     const addedUploadUrls: string[] = [];
 
