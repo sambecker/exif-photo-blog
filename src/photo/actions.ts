@@ -43,7 +43,6 @@ import {
   AI_TEXT_GENERATION_ENABLED,
   BLUR_ENABLED,
 } from '@/site/config';
-import { getStorageUploadUrlsNoStore } from '@/services/storage/cache';
 import { generateAiImageQueries } from './ai/server';
 import { createStreamableValue } from 'ai/rsc';
 import { convertUploadToPhoto } from './storage';
@@ -71,38 +70,29 @@ export const createPhotoAction = async (formData: FormData) =>
   });
 
 export const addAllUploadsAction = async ({
+  uploadUrls,
   tags,
   takenAtLocal,
   takenAtNaiveLocal,
-  limit,
 }: {
+  uploadUrls: string[]
   tags?: string
   takenAtLocal: string
   takenAtNaiveLocal: string
-  limit?: number
 }) =>
   runAuthenticatedAdminServerAction(async () => {
-    const uploadUrls = (await getStorageUploadUrlsNoStore())
-      .slice(0, limit);
     const uploadTotal = uploadUrls.length;
     const addedUploadUrls: string[] = [];
 
-    const stream = createStreamableValue<{
-      headline: string,
-      subhead?: string,
-      addedUploadUrls: string,
-    }, string>({
-      headline: `Adding ${uploadTotal} Photos...`,
+    const stream = createStreamableValue({
+      subhead: '',
       addedUploadUrls: '',
     });
 
     (async () => {
       try {
-        for (const [index, { url }] of uploadUrls.entries()) {
-          const headline = `Adding ${index + 1} of ${uploadTotal}`;
-
+        for (const url of uploadUrls) {
           stream.update({
-            headline,
             subhead: 'Parsing EXIF data',
             addedUploadUrls: addedUploadUrls.join(','),
           });
@@ -121,7 +111,6 @@ export const addAllUploadsAction = async ({
           if (photoFormExif) {
             if (AI_TEXT_GENERATION_ENABLED) {
               stream.update({
-                headline,
                 subhead: 'Generating AI text',
                 addedUploadUrls: addedUploadUrls.join(','),
               });
@@ -148,7 +137,6 @@ export const addAllUploadsAction = async ({
             };
 
             stream.update({
-              headline,
               subhead: 'Moving upload to photo storage',
               addedUploadUrls: addedUploadUrls.join(','),
             });
@@ -159,24 +147,28 @@ export const addAllUploadsAction = async ({
               fileBytes,
             );
             if (updatedUrl) {
+              const subhead = 'Adding to database';
               stream.update({
-                headline,
-                subhead: 'Adding to database',
+                subhead,
                 addedUploadUrls: addedUploadUrls.join(','),
               });
               const photo = convertFormDataToPhotoDbInsert(form);
               photo.url = updatedUrl;
               await insertPhoto(photo);
               addedUploadUrls.push(url);
+              // Re-submit with updated url
+              stream.update({
+                subhead,
+                addedUploadUrls: addedUploadUrls.join(','),
+              });
             }
           }
-        }
+        };
       } catch (error: any) {
         // eslint-disable-next-line max-len
         stream.error(`${error.message} (${addedUploadUrls.length} of ${uploadTotal} photos successfully added)`);
-      } finally {
-        revalidateAllKeysAndPaths();
       }
+      revalidateAllKeysAndPaths();
       stream.done();
     })();
 
