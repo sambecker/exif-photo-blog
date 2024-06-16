@@ -10,6 +10,10 @@ import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import AdminPhotosTableInfinite from
   '@/admin/AdminPhotosTableInfinite';
 import { getPhotosMetaCached } from '@/photo/cache';
+import { IoInformationCircleOutline } from 'react-icons/io5';
+import PathLoaderButton from '@/components/primitives/PathLoaderButton';
+import { PATH_ADMIN_OUTDATED } from '@/site/paths';
+import { OUTDATED_THRESHOLD } from '@/photo';
 
 const DEBUG_PHOTO_BLOBS = false;
 
@@ -20,6 +24,7 @@ export default async function AdminPhotosPage() {
   const [
     photos,
     photosCount,
+    photosCountOutdated,
     blobPhotoUrls,
   ] = await Promise.all([
     getPhotos({
@@ -28,6 +33,12 @@ export default async function AdminPhotosPage() {
       limit: INFINITE_SCROLL_INITIAL_ADMIN_PHOTOS,
     }).catch(() => []),
     getPhotosMetaCached({ hidden: 'include'})
+      .then(({ count }) => count)
+      .catch(() => 0),
+    getPhotosMetaCached({
+      hidden: 'include',
+      takenBefore: OUTDATED_THRESHOLD,
+    })
       .then(({ count }) => count)
       .catch(() => 0),
     DEBUG_PHOTO_BLOBS
@@ -39,14 +50,28 @@ export default async function AdminPhotosPage() {
     <SiteGrid
       contentMain={
         <div className="space-y-4">
-          <PhotoUpload
-            shouldResize={!PRO_MODE_ENABLED}
-            onLastUpload={async () => {
-              'use server';
-              // Update upload count in admin nav
-              revalidatePath('/admin', 'layout');
-            }}
-          />
+          <div className="flex">
+            <div className="grow">
+              <PhotoUpload
+                shouldResize={!PRO_MODE_ENABLED}
+                onLastUpload={async () => {
+                  'use server';
+                  // Update upload count in admin nav
+                  revalidatePath('/admin', 'layout');
+                }}
+              />
+            </div>
+            {photosCountOutdated > 0 && <PathLoaderButton
+              path={PATH_ADMIN_OUTDATED}
+              icon={<IoInformationCircleOutline
+                size={18}
+              />}
+              title={`${photosCountOutdated} Outdated Photos`}
+              hideTextOnMobile={false}
+            >
+              {photosCountOutdated}
+            </PathLoaderButton>}
+          </div>
           {blobPhotoUrls.length > 0 &&
             <div className={clsx(
               'border-b pb-6',

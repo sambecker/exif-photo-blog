@@ -63,8 +63,8 @@ export default function ImageInput({
             isLoading={loading}
             className="primary"
             icon={<FiUploadCloud
-              size={17}
-              className="translate-y-[0.5px]"
+              size={18}
+              className="translate-x-[-0.5px] translate-y-[0.5px]"
             />}
             aria-disabled={loading}
             onClick={() => inputRef.current?.click()}

@@ -8,6 +8,7 @@ import LoaderButton from '@/components/primitives/LoaderButton';
 export default function PathLoaderButton({
   path,
   icon,
+  title,
   prefetch,
   loaderDelay = 100,
   shouldScroll = true,
@@ -21,6 +22,7 @@ export default function PathLoaderButton({
 }: {
   path: string
   icon?: ReactNode
+  title?: string
   prefetch?: boolean
   loaderDelay?: number
   shouldScroll?: boolean
@@ -58,6 +60,7 @@ export default function PathLoaderButton({
   return (
     <LoaderButton
       icon={icon}
+      title={title}
       className={className}
       onClick={() => {
         startTransition(() => {
