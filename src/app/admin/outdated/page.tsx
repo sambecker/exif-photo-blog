@@ -29,10 +29,10 @@ export default async function AdminPhotosPage() {
         className="primary"
       >
         <span className="hidden sm:inline-block">
-          Sync oldest {UPDATE_BATCH_SIZE} photos
+          Sync Oldest {UPDATE_BATCH_SIZE} Photos
         </span>
         <span className="sm:hidden">
-          Sync oldest
+          Sync Oldest
         </span>
       </LoaderButton>}
     >
@@ -56,6 +56,7 @@ export default async function AdminPhotosPage() {
             hasAiTextGeneration={AI_TEXT_GENERATION_ENABLED}
             canEdit={false}
             canDelete={false}
+            showCreatedAt
           />
         </div>
       </div>

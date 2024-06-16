@@ -25,6 +25,7 @@ export default function AdminPhotosTable({
   onLastPhotoVisible,
   revalidatePhoto,
   hasAiTextGeneration,
+  showCreatedAt,
   canEdit = true,
   canDelete = true,
 }: {
@@ -32,6 +33,7 @@ export default function AdminPhotosTable({
   onLastPhotoVisible?: () => void
   revalidatePhoto?: RevalidatePhoto
   hasAiTextGeneration?: boolean
+  showCreatedAt?: boolean
   canEdit?: boolean
   canDelete?: boolean
 }) {
@@ -79,7 +81,9 @@ export default function AdminPhotosTable({
               'lg:w-[50%] uppercase',
               'text-dim',
             )}>
-              <PhotoDate {...{ photo }} />
+              {showCreatedAt
+                ? <PhotoDate {...{ photo, dateType: 'createdAt' }} />
+                : <PhotoDate {...{ photo }} />}
             </div>
           </div>
           <div className={clsx(
