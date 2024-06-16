@@ -67,6 +67,7 @@
   input[type=checkbox] {
     @apply
       rounded-md
+      dark:bg-transparent
   }
   .error {
     @apply
