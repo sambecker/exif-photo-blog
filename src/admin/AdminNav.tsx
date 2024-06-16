@@ -5,20 +5,29 @@ import {
   getUniqueTagsCached,
 } from '@/photo/cache';
 import {
+  PATH_ADMIN_OUTDATED,
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_TAGS,
   PATH_ADMIN_UPLOADS,
 } from '@/site/paths';
 import AdminNavClient from './AdminNavClient';
+import { OUTDATED_THRESHOLD } from '@/photo';
 
 export default async function AdminNav() {
   const [
     countPhotos,
+    countPhotosOutdated,
     countUploads,
     countTags,
     mostRecentPhotoUpdateTime,
   ] = await Promise.all([
     getPhotosMetaCached({ hidden: 'include' })
+      .then(({ count }) => count)
+      .catch(() => 0),
+    getPhotosMetaCached({
+      hidden: 'include',
+      takenBefore: OUTDATED_THRESHOLD,
+    })
       .then(({ count }) => count)
       .catch(() => 0),
     getStorageUploadUrlsNoStore()
@@ -31,28 +40,33 @@ export default async function AdminNav() {
     getPhotosMostRecentUpdateCached().catch(() => undefined),
   ]);
 
-  const navItemPhotos = {
+  // Photos
+  const items = [{
     label: 'Photos',
     href: PATH_ADMIN_PHOTOS,
     count: countPhotos,
-  };
+  }];
 
-  const navItemUploads = {
+  // Outdated Photos
+  if (countPhotosOutdated > 0) { items.push({
+    label: 'Outdated',
+    href: PATH_ADMIN_OUTDATED,
+    count: countPhotosOutdated,
+  }); }
+
+  // Uploads
+  if (countUploads > 0) { items.push({
     label: 'Uploads',
     href: PATH_ADMIN_UPLOADS,
     count: countUploads,
-  };
+  }); }
 
-  const navItemTags = {
+  // Tags
+  if (countTags > 0) { items.push({
     label: 'Tags',
     href: PATH_ADMIN_TAGS,
     count: countTags,
-  };
-
-  const items = [navItemPhotos];
-
-  if (countUploads > 0) { items.push(navItemUploads); }
-  if (countTags > 0) { items.push(navItemTags); }
+  }); }
 
   return (
     <AdminNavClient {...{ items, mostRecentPhotoUpdateTime }} />

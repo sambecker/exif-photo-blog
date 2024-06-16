@@ -8,7 +8,7 @@ export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 export const PHOTO_DEFAULT_LIMIT = 100;
 
 export type GetPhotosOptions = {
-  sortBy?: 'createdAt' | 'takenAt' | 'priority'
+  sortBy?: 'createdAt' | 'createdAtAsc' | 'takenAt' | 'priority'
   limit?: number
   offset?: number
   query?: string
@@ -106,6 +106,8 @@ export const getOrderByFromOptions = (options: GetPhotosOptions) => {
   switch (sortBy) {
   case 'createdAt':
     return 'ORDER BY created_at DESC';
+  case 'createdAtAsc':
+    return 'ORDER BY created_at ASC';
   case 'takenAt':
     return 'ORDER BY taken_at DESC';
   case 'priority':

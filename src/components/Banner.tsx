@@ -27,8 +27,8 @@ export default function Banner({
         >
           <div className="flex items-center gap-2.5">
             {icon ?? <IoInformationCircleOutline
-              size={17}
-              className="translate-y-[1px]"
+              size={18}
+              className="translate-y-[1px] shrink-0"
             />}
             {children}
           </div>
