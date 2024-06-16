@@ -52,11 +52,11 @@ export const getWheresFromOptions = (
   }
 
   if (takenBefore) {
-    wheres.push(`taken_at > $${valuesIndex++}`);
+    wheres.push(`taken_at < $${valuesIndex++}`);
     wheresValues.push(takenBefore.toISOString());
   }
   if (takenAfterInclusive) {
-    wheres.push(`taken_at <= $${valuesIndex++}`);
+    wheres.push(`taken_at >= $${valuesIndex++}`);
     wheresValues.push(takenAfterInclusive.toISOString());
   }
   if (query) {

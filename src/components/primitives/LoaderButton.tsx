@@ -51,7 +51,7 @@ export default function LoaderButton(props: {
         <span className={clsx(
           'min-w-[1.25rem] h-4',
           styleAs === 'button' ? 'translate-y-[-0.5px]' : 'translate-y-[0.5px]',
-          'inline-flex justify-center',
+          'inline-flex justify-center shrink-0',
         )}>
           {isLoading
             ? <Spinner
