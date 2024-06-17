@@ -56,10 +56,10 @@ export const createPhotoAction = async (formData: FormData) =>
 
     const photo = convertFormDataToPhotoDbInsert(formData);
 
-    const updatedUrl = await convertUploadToPhoto(
-      photo.url,
+    const updatedUrl = await convertUploadToPhoto({
+      urlOrigin: photo.url,
       shouldStripGpsData,
-    );
+    });
     
     if (updatedUrl) {
       photo.url = updatedUrl;
@@ -141,11 +141,11 @@ export const addAllUploadsAction = async ({
               addedUploadUrls: addedUploadUrls.join(','),
             });
 
-            const updatedUrl = await convertUploadToPhoto(
-              url,
-              shouldStripGpsData,
+            const updatedUrl = await convertUploadToPhoto({
+              urlOrigin: url,
               fileBytes,
-            );
+              shouldStripGpsData,
+            });
             if (updatedUrl) {
               const subhead = 'Adding to database';
               stream.update({
@@ -179,16 +179,25 @@ export const updatePhotoAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
     const photo = convertFormDataToPhotoDbInsert(formData);
 
-    let url: string | undefined;
+    let urlToDelete: string | undefined;
     if (photo.hidden && photo.url.includes(photo.id)) {
       // Backfill:
       // Anonymize storage url on update if necessary by
       // re-running image upload transfer logic
-      url = await convertUploadToPhoto(photo.url);
-      if (url) { photo.url = url; }
+      const url = await convertUploadToPhoto({
+        urlOrigin: photo.url,
+        shouldDeleteOrigin: false,
+      });
+      if (url) {
+        urlToDelete = photo.url;
+        photo.url = url;
+      }
     }
 
-    await updatePhoto(photo);
+    await updatePhoto(photo)
+      .then(async () => {
+        if (urlToDelete) { await deleteFile(urlToDelete); }
+      });
 
     revalidatePhoto(photo.id);
 
@@ -307,16 +316,21 @@ export const syncPhotoAction = async (photoId: string) =>
         generateResizedImage: AI_TEXT_GENERATION_ENABLED,
       });
 
+      let urlToDelete: string | undefined;
       if (photoFormExif) {
         if (photo.url.includes(photo.id) || shouldStripGpsData) {
           // Anonymize storage url on update if necessary by
           // re-running image upload transfer logic
-          const url = await convertUploadToPhoto(
-            photo.url,
-            shouldStripGpsData,
+          const url = await convertUploadToPhoto({
+            urlOrigin: photo.url,
             fileBytes,
-          );
-          if (url) { photo.url = url; }
+            shouldStripGpsData,
+            shouldDeleteOrigin: false,
+          });
+          if (url) {
+            urlToDelete = photo.url;
+            photo.url = url;
+          }
         }
 
         const {
@@ -340,7 +354,11 @@ export const syncPhotoAction = async (photoId: string) =>
             { semanticDescription: aiSemanticDescription },
         });
 
-        await updatePhoto(photoFormDbInsert);
+        await updatePhoto(photoFormDbInsert)
+          .then(async () => {
+            if (urlToDelete) { await deleteFile(urlToDelete); }
+          });
+
         revalidateAllKeysAndPaths();
       }
     }
