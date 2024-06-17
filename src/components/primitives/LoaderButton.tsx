@@ -1,3 +1,5 @@
+'use client';
+
 import Spinner, { SpinnerColor } from '@/components/Spinner';
 import { clsx } from 'clsx/lite';
 import { ButtonHTMLAttributes, ReactNode } from 'react';
@@ -42,7 +44,7 @@ export default function LoaderButton(props: {
           : ['h-9']),
         styleAs === 'link' && 'hover:text-dim',
         styleAs === 'link-without-hover' && 'hover:text-main',
-        'inline-flex items-center gap-2 self-start',
+        'inline-flex items-center gap-2 self-start whitespace-nowrap',
         className,
       )}
       disabled={isLoading || disabled}
@@ -51,7 +53,7 @@ export default function LoaderButton(props: {
         <span className={clsx(
           'min-w-[1.25rem] h-4',
           styleAs === 'button' ? 'translate-y-[-0.5px]' : 'translate-y-[0.5px]',
-          'inline-flex justify-center',
+          'inline-flex justify-center shrink-0',
         )}>
           {isLoading
             ? <Spinner

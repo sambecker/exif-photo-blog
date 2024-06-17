@@ -14,7 +14,7 @@ import { getExifDataAction } from './actions';
 import { TagsWithMeta } from '@/tag';
 import AiButton from './ai/AiButton';
 import usePhotoFormParent from './form/usePhotoFormParent';
-import PhotoSyncButton from '@/admin/PhotoSyncButton';
+import ExifSyncButton from '@/admin/ExifSyncButton';
 
 export default function PhotoEditPageClient({
   photo,
@@ -68,10 +68,10 @@ export default function PhotoEditPageClient({
         <div className="flex gap-2">
           {hasAiTextGeneration &&
             <AiButton {...{ aiContent, shouldConfirm: hasTextContent }} />}
-          <PhotoSyncButton
+          <ExifSyncButton
             action={action}
             label="EXIF"
-            formData={{ photoUrl: photo.url }}
+            photoUrl={photo.url}
           />
         </div>}
       isLoading={pending}

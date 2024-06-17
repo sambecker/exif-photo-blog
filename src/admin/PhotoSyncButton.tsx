@@ -1,61 +1,61 @@
-import FormWithConfirm from '@/components/FormWithConfirm';
-import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
+import LoaderButton from '@/components/primitives/LoaderButton';
+import { syncPhotoAction } from '@/photo/actions';
 import IconGrSync from '@/site/IconGrSync';
-import { clsx } from 'clsx/lite';
-import { ComponentProps } from 'react';
+import { toastSuccess } from '@/toast';
+import { ComponentProps, useState } from 'react';
 
 export default function PhotoSyncButton({
-  action,
-  label,
-  onFormSubmit,
-  formData: { photoId, photoUrl } = {},
+  photoId,
   photoTitle,
+  onSyncComplete,
+  className,
+  isSyncingExternal,
   hasAiTextGeneration,
+  disabled,
   shouldConfirm,
   shouldToast,
 }: {
-  action: (formData: FormData) => void
-  label?: string
-  formData?: {
-    photoId?: string
-    photoUrl?: string
-  }
+  photoId: string
   photoTitle?: string
+  onSyncComplete?: () => void
+  isSyncingExternal?: boolean
   hasAiTextGeneration?: boolean
   shouldConfirm?: boolean
   shouldToast?: boolean
-} & ComponentProps<typeof SubmitButtonWithStatus>) {
+} & ComponentProps<typeof LoaderButton>) {
+  const [isSyncing, setIsSyncing] = useState(false);
+
   const confirmText = ['Overwrite'];
   if (photoTitle) { confirmText.push(`"${photoTitle}"`); }
   confirmText.push('data from original file?');
   if (hasAiTextGeneration) { confirmText.push(
     'AI text will be generated for undefined fields.'); }
   confirmText.push('This action cannot be undone.');
+
   return (
-    <FormWithConfirm
-      action={action}
-      confirmText={shouldConfirm ? confirmText.join(' ') : undefined}
-    >
-      {photoId && 
-        <input name="photoId" value={photoId} hidden readOnly />}
-      {photoUrl && 
-        <input name="photoUrl" value={photoUrl} hidden readOnly />}
-      <SubmitButtonWithStatus
-        title="Update photo from original file"
-        icon={<IconGrSync
-          className={clsx(
-            'translate-y-[0.5px] translate-x-[0.5px]',
-            label && 'sm:translate-x-[-0.5px]',
-          )} />}
-        onFormSubmitToastMessage={shouldToast
-          ? photoTitle
-            ? `"${photoTitle}" data synced`
-            : 'Data synced'
-          : undefined}
-        onFormSubmit={onFormSubmit}
-      >
-        {label}
-      </SubmitButtonWithStatus>
-    </FormWithConfirm>
+    <LoaderButton
+      title="Update photo from original file"
+      className={className}
+      icon={<IconGrSync
+        className="translate-y-[0.5px] translate-x-[0.5px]"
+      />}
+      onClick={() => {
+        if (!shouldConfirm || window.confirm(confirmText.join(' '))) {
+          setIsSyncing(true);
+          syncPhotoAction(photoId)
+            .then(() => {
+              onSyncComplete?.();
+              if (shouldToast) {
+                toastSuccess(photoTitle
+                  ? `"${photoTitle}" data synced`
+                  : 'Data synced');
+              }
+            })
+            .finally(() => setIsSyncing(false));
+        }
+      }}
+      isLoading={isSyncing || isSyncingExternal}
+      disabled={disabled}
+    />
   );
 }

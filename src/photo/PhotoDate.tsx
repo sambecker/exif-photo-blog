@@ -3,17 +3,44 @@ import { Photo } from '.';
 import { useMemo } from 'react';
 
 export default function PhotoDate({
-  photo: { takenAtNaive },
+  photo,
   className,
+  dateType = 'takenAt',
 }: {
   photo: Photo
   className?: string
+  dateType?: 'takenAt' | 'createdAt' | 'updatedAt'
 }) {
   const date = useMemo(() => {
-    const date = new Date(takenAtNaive);
+    const date = new Date(dateType === 'takenAt'
+      ? photo.takenAt
+      : dateType === 'createdAt'
+        ? photo.createdAt
+        : photo.updatedAt);
     return isNaN(date.getTime()) ? new Date() : date;
-  }, [takenAtNaive]);
+  }, [
+    dateType,
+    photo.takenAt,
+    photo.createdAt,
+    photo.updatedAt,
+  ]);
+
+  const getTitleLabel = () => {
+    switch (dateType) {
+    case 'takenAt':
+      return 'TAKEN';
+    case 'createdAt':
+      return 'CREATED';
+    case 'updatedAt':
+      return 'UPDATED';
+    }
+  };
+
   return (
-    <ResponsiveDate {...{ date, className }} />
+    <ResponsiveDate {...{
+      date,
+      className,
+      titleLabel: getTitleLabel(),
+    }} />
   );
 }
