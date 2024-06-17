@@ -5,6 +5,8 @@ import { OUTDATED_THRESHOLD } from '@/photo';
 import AdminPhotosClient from '@/admin/AdminPhotosClient';
 import { revalidatePath } from 'next/cache';
 
+export const maxDuration = 60;
+
 const DEBUG_PHOTO_BLOBS = false;
 
 const INFINITE_SCROLL_INITIAL_ADMIN_PHOTOS = 25;

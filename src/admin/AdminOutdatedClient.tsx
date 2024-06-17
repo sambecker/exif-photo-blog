@@ -50,11 +50,16 @@ export default function AdminOutdatedClient({
             const photosToSync = photos
               .slice(0, UPDATE_BATCH_SIZE)
               .map(photo => photo.id);
+            const isFinalBatch = photosToSync.length >= photos.length;
             setPhotoIdsSyncing(photosToSync);
             syncPhotosAction(photosToSync)
               .finally(() => {
-                setPhotoIdsSyncing([]);
-                router.refresh();
+                if (isFinalBatch) {
+                  router.push(PATH_ADMIN_PHOTOS);
+                } else {
+                  setPhotoIdsSyncing([]);
+                  router.refresh();
+                }
               });
           }
         }}
@@ -78,7 +83,7 @@ export default function AdminOutdatedClient({
             {photos.length}
             {' '}
             {photos.length === 1 ? 'photo' : 'photos'}
-            {' ('}uploaded before
+            {' ('}last updated before
             {' '}
             {new Date(OUTDATED_THRESHOLD).toLocaleDateString()}{')'}
             {' '}
