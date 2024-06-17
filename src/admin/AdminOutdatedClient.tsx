@@ -42,7 +42,7 @@ export default function AdminOutdatedClient({
         className="primary"
         onClick={async () => {
           // eslint-disable-next-line max-len
-          if (window.confirm(`Are you sure you want to sync the oldest ${UPDATE_BATCH_SIZE} photos?`)) {
+          if (window.confirm(`Are you sure you want to sync the oldest ${UPDATE_BATCH_SIZE} photos? This action cannot be undone.`)) {
             const photosToSync = photos
               .slice(0, UPDATE_BATCH_SIZE)
               .map(photo => photo.id);
