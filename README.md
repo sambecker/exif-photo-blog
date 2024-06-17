@@ -67,7 +67,7 @@ _⚠️ READ BEFORE PROCEEDING_
 > _Usage of this feature will result in fees from OpenAI. When enabling AI text generation, follow all recommended mitigations in order to avoid unexpected charges and attacks. Make sure your OpenAI secret key environment variable is not prefixed with NEXT_PUBLIC._
 
 1. Setup OpenAI
-   - If you don't already have one, create an [OpenAI](https://openai.com) account and purchase a subscription
+   - If you don't already have one, create an [OpenAI](https://openai.com) account and fund it (see [this thread](https://github.com/sambecker/exif-photo-blog/issues/110) if you're having issues)
    - Generate an API key and store in environment variable `OPENAI_SECRET_KEY`
    - Setup usage limits to avoid unexpected charges (_recommended_)
 2. Add rate limiting (_recommended_)
