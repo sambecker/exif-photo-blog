@@ -12,7 +12,7 @@ import { PATH_ADMIN_OUTDATED } from '@/site/paths';
 import { Photo } from '@/photo';
 import { StorageListResponse } from '@/services/storage';
 import { useState } from 'react';
-import { FaRegClock } from 'react-icons/fa6';
+import { LiaBroomSolid } from 'react-icons/lia';
 
 export default function AdminPhotosClient({
   photos,
@@ -48,7 +48,7 @@ export default function AdminPhotosClient({
             </div>
             {photosCountOutdated > 0 && <PathLoaderButton
               path={PATH_ADMIN_OUTDATED}
-              icon={<FaRegClock size={15} className="translate-y-[1px]" />}
+              icon={<LiaBroomSolid size={18} className="translate-y-[-1px]" />}
               title={`${photosCountOutdated} Outdated Photos`}
               className={clsx(
                 isUploading && 'hidden md:inline-flex',

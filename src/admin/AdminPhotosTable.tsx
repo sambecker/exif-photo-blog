@@ -12,10 +12,7 @@ import PhotoDate from '@/photo/PhotoDate';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import EditButton from './EditButton';
 import DeleteButton from './DeleteButton';
-import {
-  deletePhotoFormAction,
-  syncPhotoAction,
-} from '@/photo/actions';
+import { deletePhotoFormAction } from '@/photo/actions';
 import { useAppState } from '@/state/AppState';
 import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 import PhotoSyncButton from './PhotoSyncButton';
@@ -24,20 +21,27 @@ export default function AdminPhotosTable({
   photos,
   onLastPhotoVisible,
   revalidatePhoto,
+  photoIdsSyncing = [],
   hasAiTextGeneration,
-  showCreatedAt,
+  showUpdatedAt,
   canEdit = true,
   canDelete = true,
 }: {
   photos: Photo[],
   onLastPhotoVisible?: () => void
   revalidatePhoto?: RevalidatePhoto
-  hasAiTextGeneration?: boolean
-  showCreatedAt?: boolean
+  photoIdsSyncing?: string[]
+  hasAiTextGeneration: boolean
+  showUpdatedAt?: boolean
   canEdit?: boolean
   canDelete?: boolean
 }) {
   const { invalidateSwr } = useAppState();
+
+  const opacityForPhotoId = (photoId: string) =>
+    photoIdsSyncing.length > 0 && !photoIdsSyncing.includes(photoId)
+      ? 'opacity-40'
+      : undefined;
 
   return (
     <AdminTable>
@@ -48,8 +52,12 @@ export default function AdminPhotosTable({
             onVisible={index === photos.length - 1
               ? onLastPhotoVisible
               : undefined}
+            className={opacityForPhotoId(photo.id)}
           />
-          <div className="flex flex-col lg:flex-row">
+          <div className={clsx(
+            'flex flex-col lg:flex-row',
+            opacityForPhotoId(photo.id),
+          )}>
             <Link
               key={photo.id}
               href={pathForPhoto({ photo })}
@@ -81,9 +89,10 @@ export default function AdminPhotosTable({
               'lg:w-[50%] uppercase',
               'text-dim',
             )}>
-              {showCreatedAt
-                ? <PhotoDate {...{ photo, dateType: 'createdAt' }} />
-                : <PhotoDate {...{ photo }} />}
+              <PhotoDate {...{
+                photo,
+                dateType: showUpdatedAt ? 'updatedAt' : undefined,
+              }} />
             </div>
           </div>
           <div className={clsx(
@@ -93,11 +102,13 @@ export default function AdminPhotosTable({
             {canEdit &&
               <EditButton path={pathForAdminPhotoEdit(photo)} />}
             <PhotoSyncButton
-              action={syncPhotoAction}
+              photoId={photo.id}
               photoTitle={titleForPhoto(photo)}
-              formData={{ photoId: photo.id }}
-              onFormSubmit={invalidateSwr}
+              onSyncComplete={invalidateSwr}
+              isSyncingExternal={photoIdsSyncing.includes(photo.id)}
               hasAiTextGeneration={hasAiTextGeneration}
+              disabled={photoIdsSyncing.length > 0}
+              className={opacityForPhotoId(photo.id)}
               shouldConfirm
               shouldToast
             />

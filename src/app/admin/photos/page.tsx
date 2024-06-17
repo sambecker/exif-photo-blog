@@ -27,7 +27,7 @@ export default async function AdminPhotosPage() {
       .catch(() => 0),
     getPhotosMetaCached({
       hidden: 'include',
-      takenBefore: OUTDATED_THRESHOLD,
+      updatedBefore: OUTDATED_THRESHOLD,
     })
       .then(({ count }) => count)
       .catch(() => 0),

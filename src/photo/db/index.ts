@@ -19,6 +19,7 @@ export type GetPhotosOptions = {
   focal?: number
   takenBefore?: Date
   takenAfterInclusive?: Date
+  updatedBefore?: Date
   hidden?: 'exclude' | 'include' | 'only'
 };
 
@@ -30,6 +31,7 @@ export const getWheresFromOptions = (
     hidden = 'exclude',
     takenBefore,
     takenAfterInclusive,
+    updatedBefore,
     query,
     tag,
     camera,
@@ -58,6 +60,10 @@ export const getWheresFromOptions = (
   if (takenAfterInclusive) {
     wheres.push(`taken_at >= $${valuesIndex++}`);
     wheresValues.push(takenAfterInclusive.toISOString());
+  }
+  if (updatedBefore) {
+    wheres.push(`updated_at < $${valuesIndex++}`);
+    wheresValues.push(updatedBefore.toISOString());
   }
   if (query) {
     // eslint-disable-next-line max-len
