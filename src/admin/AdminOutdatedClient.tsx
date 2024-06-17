@@ -22,6 +22,8 @@ export default function AdminOutdatedClient({
 }) {
   const [photoIdsSyncing, setPhotoIdsSyncing] = useState<string[]>([]);
 
+  const arePhotoIdsSyncing = photoIdsSyncing.length > 0;
+
   const router = useRouter();
 
   return (
@@ -41,8 +43,10 @@ export default function AdminOutdatedClient({
         hideTextOnMobile={false}
         className="primary"
         onClick={async () => {
-          // eslint-disable-next-line max-len
-          if (window.confirm(`Are you sure you want to sync the oldest ${UPDATE_BATCH_SIZE} photos? This action cannot be undone.`)) {
+          if (window.confirm(
+            // eslint-disable-next-line max-len
+            `Are you sure you want to sync the oldest ${UPDATE_BATCH_SIZE} photos? This action cannot be undone.`
+          )) {
             const photosToSync = photos
               .slice(0, UPDATE_BATCH_SIZE)
               .map(photo => photo.id);
@@ -54,13 +58,18 @@ export default function AdminOutdatedClient({
               });
           }
         }}
+        isLoading={arePhotoIdsSyncing}
       >
-        <span className="hidden sm:inline-block">
-          Sync {UPDATE_BATCH_SIZE} Oldest Photos
-        </span>
-        <span className="sm:hidden">
-          Sync {UPDATE_BATCH_SIZE} Oldest
-        </span>
+        {arePhotoIdsSyncing
+          ? 'Syncing'
+          : <>
+            <span className="hidden sm:inline-block">
+              Sync {UPDATE_BATCH_SIZE} Oldest Photos
+            </span>
+            <span className="sm:hidden">
+              Sync {UPDATE_BATCH_SIZE} Oldest
+            </span>
+          </>}
       </LoaderButton>}
     >
       <div className="space-y-6">
