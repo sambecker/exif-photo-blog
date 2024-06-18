@@ -68,7 +68,8 @@ export default function AdminPhotosClient({
                 urls={blobPhotoUrls}
               />
             </div>}
-          <div className="space-y-4">
+          {/* Use custom spacing to address gap/space-y compatibility quirks */}
+          <div className="space-y-[6px] sm:space-y-[10px]">
             <AdminPhotosTable
               photos={photos}
               hasAiTextGeneration={AI_TEXT_GENERATION_ENABLED}
