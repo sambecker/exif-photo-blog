@@ -516,7 +516,11 @@ export default function SiteChecklistClient({
         {!simplifiedView &&
           <div className="text-dim">
             <div>Base Url: {baseUrl || 'Not Defined'}</div>
-            <div>Commit:&nbsp;&nbsp; {commitSha || 'Not Found'}</div>
+            <div>
+              Commit:&nbsp;&nbsp;
+              {' '}
+              {commitSha ? commitSha.slice(0, 7) : 'Not Found'}
+            </div>
           </div>}
       </div>
     </div>
