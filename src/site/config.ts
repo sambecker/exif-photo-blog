@@ -7,11 +7,17 @@ import { makeUrlAbsolute, shortenUrl } from '@/utility/url';
 export const SHOULD_PREFETCH_ALL_LINKS: boolean | undefined = undefined;
 export const SHOULD_DEBUG_SQL = false;
 
-// META / DOMAINS
+// META / SOURCE / DOMAINS
 
 export const SITE_TITLE =
   process.env.NEXT_PUBLIC_SITE_TITLE ||
   'Photo Blog';
+
+// SOURCE
+export const VERCEL_COMMIT_MESSAGE =
+  process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE;
+export const VERCEL_COMMIT_SHA =
+  process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA;
 
 const VERCEL_ENV = process.env.NEXT_PUBLIC_VERCEL_ENV;
 const VERCEL_PRODUCTION_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL;
@@ -199,6 +205,9 @@ export const CONFIG_CHECKLIST_STATUS = {
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,
   gridAspectRatio: GRID_ASPECT_RATIO,
   hasGridAspectRatio: Boolean(process.env.NEXT_PUBLIC_GRID_ASPECT_RATIO),
+  baseUrl: BASE_URL,
+  commitMessage: VERCEL_COMMIT_MESSAGE,
+  commitSha: VERCEL_COMMIT_SHA,
 };
 
 export type ConfigChecklistStatus = typeof CONFIG_CHECKLIST_STATUS;

@@ -71,6 +71,8 @@ export default function SiteChecklistClient({
   simplifiedView,
   isTestingConnections,
   secret,
+  baseUrl,
+  commitSha,
 }: ConfigChecklistStatus &
   Partial<Awaited<ReturnType<typeof testConnectionsAction>>> & {
   simplifiedView?: boolean
@@ -506,9 +508,16 @@ export default function SiteChecklistClient({
           </ChecklistRow>
         </Checklist>
       </>}
-      <div className="px-11 text-dim">
-        Changes to environment variables require a redeploy
-        or reboot of local dev server
+      <div className="px-11 space-y-5 pt-0.5">
+        <div>
+          Changes to environment variables require a redeploy
+          or reboot of local dev server
+        </div>
+        {!simplifiedView &&
+          <div className="text-dim">
+            <div>Base Url: {baseUrl || 'Not Defined'}</div>
+            <div>Commit:&nbsp;&nbsp; {commitSha || 'Not Found'}</div>
+          </div>}
       </div>
     </div>
   );
