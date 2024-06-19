@@ -19,11 +19,17 @@ export default function ResponsiveDate({
       className={clsx(className, 'uppercase')}
     >
       {/* Small */}
-      <span className="xs:hidden">
+      <span
+        className="xs:hidden"
+        aria-hidden
+      >
         {formatDate(date, 'short')}
       </span>
       {/* Medium */}
-      <span className="hidden xs:inline-block sm:hidden">
+      <span
+        className="hidden xs:inline-block sm:hidden"
+        aria-hidden
+      >
         {formatDate(date, 'medium')}
       </span>
       {/* Large */}

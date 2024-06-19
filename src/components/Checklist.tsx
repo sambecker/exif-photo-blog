@@ -2,15 +2,18 @@ import { ReactNode } from 'react';
 import { clsx } from 'clsx/lite';
 import ExperimentalBadge from './ExperimentalBadge';
 import Badge from './Badge';
+import ResponsiveText from './primitives/ResponsiveText';
 
 export default function Checklist({
   title,
+  titleShort,
   icon,
   optional,
   experimental,
   children,
 }: {
   title: string
+  titleShort?: string
   icon?: ReactNode
   optional?: boolean
   experimental?: boolean
@@ -25,7 +28,9 @@ export default function Checklist({
       )}>
         <span className="w-7 shrink-0">{icon}</span>
         <span className="inline-flex flex-wrap items-center gap-y-1 gap-x-1.5">
-          {title}
+          <ResponsiveText shortText={titleShort}>
+            {title}
+          </ResponsiveText>
           {optional &&
             <Badge type="small">Optional</Badge>}
           {experimental &&

@@ -207,7 +207,7 @@ export const CONFIG_CHECKLIST_STATUS = {
   hasGridAspectRatio: Boolean(process.env.NEXT_PUBLIC_GRID_ASPECT_RATIO),
   baseUrl: BASE_URL,
   commitMessage: VERCEL_COMMIT_MESSAGE,
-  commitSha: VERCEL_COMMIT_SHA,
+  commitSha: VERCEL_COMMIT_SHA ? VERCEL_COMMIT_SHA.slice(0, 7) : undefined,
 };
 
 export type ConfigChecklistStatus = typeof CONFIG_CHECKLIST_STATUS;

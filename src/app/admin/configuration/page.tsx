@@ -7,7 +7,7 @@ export default async function AdminConfigurationPage() {
   return (
     <SiteGrid
       contentMain={
-        <div className="space-y-6">
+        <div className="space-y-4">
           <div className="flex items-center">
             <div className="flex-grow">
               App Configuration

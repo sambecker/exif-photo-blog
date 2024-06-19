@@ -166,360 +166,371 @@ export default function SiteChecklistClient({
     </ErrorNote>;
 
   return (
-    <div className="max-w-xl space-y-6 w-full">
-      <Checklist
-        title="Storage"
-        icon={<BiData size={16} />}
-      >
-        <ChecklistRow
-          title={hasDatabase && isTestingConnections
-            ? 'Testing database connection'
-            : 'Setup database'}
-          status={hasDatabase}
-          isPending={hasDatabase && isTestingConnections}
+    <div className="max-w-xl w-full">
+      <div className="space-y-6">
+        <Checklist
+          title="Storage"
+          icon={<BiData size={16} />}
         >
-          {databaseError &&
-            renderConnectionError('Database', databaseError)}
-          {hasVercelPostgres
-            ? renderSubStatus('checked', 'Vercel Postgres: connected')
-            : renderSubStatus('optional', <>
-              Vercel Postgres:
-              {' '}
-              {renderLink(
-                // eslint-disable-next-line max-len
-                'https://vercel.com/docs/storage/vercel-postgres/quickstart#create-a-postgres-database',
-                'create store',
-              )}
-              {' '}
-              and connect to project
-            </>)}
-          {hasDatabase && !hasVercelPostgres &&
-            renderSubStatus('checked', <>
-              Postgres-compatible: connected
-              {' '}
-              (SSL {isPostgresSslEnabled ? 'enabled' : 'disabled'})
-            </>)}
-        </ChecklistRow>
-        <ChecklistRow
-          title={
-            hasStorageProvider && isTestingConnections
-              ? 'Testing storage connection'
-              : !hasStorageProvider
-                ? 'Setup storage (one of the following)'
-                : hasMultipleStorageProviders
+          <ChecklistRow
+            title={hasDatabase && isTestingConnections
+              ? 'Testing database connection'
+              : 'Setup database'}
+            status={hasDatabase}
+            isPending={hasDatabase && isTestingConnections}
+          >
+            {databaseError &&
+              renderConnectionError('Database', databaseError)}
+            {hasVercelPostgres
+              ? renderSubStatus('checked', 'Vercel Postgres: connected')
+              : renderSubStatus('optional', <>
+                Vercel Postgres:
+                {' '}
+                {renderLink(
                   // eslint-disable-next-line max-len
-                  ? `Setup storage (new uploads go to: ${labelForStorage(currentStorage)})`
-                  : 'Setup storage'}
-          status={hasStorageProvider}
-          isPending={hasStorageProvider && isTestingConnections}
+                  'https://vercel.com/docs/storage/vercel-postgres/quickstart#create-a-postgres-database',
+                  'create store',
+                )}
+                {' '}
+                and connect to project
+              </>)}
+            {hasDatabase && !hasVercelPostgres &&
+              renderSubStatus('checked', <>
+                Postgres-compatible: connected
+                {' '}
+                (SSL {isPostgresSslEnabled ? 'enabled' : 'disabled'})
+              </>)}
+          </ChecklistRow>
+          <ChecklistRow
+            title={
+              hasStorageProvider && isTestingConnections
+                ? 'Testing storage connection'
+                : !hasStorageProvider
+                  ? 'Setup storage (one of the following)'
+                  : hasMultipleStorageProviders
+                    // eslint-disable-next-line max-len
+                    ? `Setup storage (new uploads go to: ${labelForStorage(currentStorage)})`
+                    : 'Setup storage'}
+            status={hasStorageProvider}
+            isPending={hasStorageProvider && isTestingConnections}
+          >
+            {storageError &&
+              renderConnectionError('Storage', storageError)}
+            {hasVercelBlobStorage
+              ? renderSubStatus('checked', 'Vercel Blob: connected')
+              : renderSubStatus('optional', <>
+                {labelForStorage('vercel-blob')}:
+                {' '}
+                {renderLink(
+                  // eslint-disable-next-line max-len
+                  'https://vercel.com/docs/storage/vercel-blob/quickstart#create-a-blob-store',
+                  'create store',
+                )}
+                {' '} 
+                and connect to project
+              </>
+              )}
+            {hasCloudflareR2Storage
+              ? renderSubStatus('checked', 'Cloudflare R2: connected')
+              : renderSubStatus('optional', <>
+                {labelForStorage('cloudflare-r2')}:
+                {' '}
+                {renderLink(
+                  'https://github.com/sambecker/exif-photo-blog#cloudflare-r2',
+                  'create/configure bucket',
+                )}
+              </>)}
+            {hasAwsS3Storage
+              ? renderSubStatus('checked', 'AWS S3: connected')
+              : renderSubStatus('optional', <>
+                {labelForStorage('aws-s3')}:
+                {' '}
+                {renderLink(
+                  'https://github.com/sambecker/exif-photo-blog#aws-s3',
+                  'create/configure bucket',
+                )}
+              </>)}
+          </ChecklistRow>
+        </Checklist>
+        <Checklist
+          title="Authentication"
+          icon={<BiLockAlt size={16} />}
         >
-          {storageError &&
-            renderConnectionError('Storage', storageError)}
-          {hasVercelBlobStorage
-            ? renderSubStatus('checked', 'Vercel Blob: connected')
-            : renderSubStatus('optional', <>
-              {labelForStorage('vercel-blob')}:
-              {' '}
+          <ChecklistRow
+            title={!hasAuthSecret && isTestingConnections
+              ? 'Generating secret'
+              : 'Setup auth'}
+            status={hasAuthSecret}
+            isPending={!hasAuthSecret && isTestingConnections}
+          >
+            Store auth secret in environment variable:
+            {!hasAuthSecret &&
+              <div className="overflow-x-auto">
+                <InfoBlock className="my-1.5 inline-flex" padding="tight">
+                  <div className={clsx(
+                    'flex flex-nowrap items-center gap-2 leading-none -mx-1',
+                  )}>
+                    {secret ? <span>{secret}</span> : <Spinner />}
+                    <div
+                      className="flex items-center gap-0.5 translate-y-[-2px]"
+                    >
+                      {renderCopyButton('Secret', secret)}
+                    </div>
+                  </div>
+                </InfoBlock>
+              </div>}
+            {renderEnvVars(['AUTH_SECRET'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Setup admin user"
+            status={hasAdminUser}
+          >
+            Store admin email/password
+            {' '}
+            in environment variables:
+            {renderEnvVars([
+              'ADMIN_EMAIL',
+              'ADMIN_PASSWORD',
+            ])}
+          </ChecklistRow>
+        </Checklist>
+        <Checklist
+          title="Content"
+          icon={<BiPencil size={16} />}
+        >
+          <ChecklistRow
+            title="Add custom domain"
+            status={hasDomain}
+          >
+            Store in environment variable (displayed in top-right nav):
+            {renderEnvVars(['NEXT_PUBLIC_SITE_DOMAIN'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Add title"
+            status={hasTitle}
+            optional
+          >
+            Store in environment variable (used in page titles):
+            {renderEnvVars(['NEXT_PUBLIC_SITE_TITLE'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Add description"
+            status={hasDescription}
+            optional
+          >
+            Store in environment variable (mainly used for OG meta):
+            {renderEnvVars(['NEXT_PUBLIC_SITE_DESCRIPTION'])}
+          </ChecklistRow>
+          
+        </Checklist>
+        {!simplifiedView && <>
+          <Checklist
+            title="AI Text Generation"
+            titleShort="AI"
+            icon={<HiSparkles />}
+            experimental
+            optional
+          >
+            <ChecklistRow
+              title={isAiTextGenerationEnabled && isTestingConnections
+                ? 'Testing OpenAI connection'
+                : 'Add OpenAI Secret Key'}
+              status={isAiTextGenerationEnabled}
+              isPending={isAiTextGenerationEnabled && isTestingConnections}
+              optional
+            >
+              {aiError &&
+                renderConnectionError('OpenAI', aiError)}
+              Store your OpenAI secret key in order to add experimental support
+              for AI-generated text descriptions and enable an invisible field
+              called {'"Semantic Description"'} used to support CMD-K search
+              {renderEnvVars(['OPENAI_SECRET_KEY'])}
+            </ChecklistRow>
+            <ChecklistRow
+              title={hasVercelKv && isTestingConnections
+                ? 'Testing KV connection'
+                : 'Enable Rate Limiting'}
+              status={hasVercelKv}
+              isPending={hasVercelKv && isTestingConnections}
+              optional
+            >
+              {kvError &&
+                renderConnectionError('Vercel KV', kvError)}
               {renderLink(
                 // eslint-disable-next-line max-len
-                'https://vercel.com/docs/storage/vercel-blob/quickstart#create-a-blob-store',
-                'create store',
+                'https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database',
+                'Create Vercel KV store',
               )}
-              {' '} 
-              and connect to project
-            </>
-            )}
-          {hasCloudflareR2Storage
-            ? renderSubStatus('checked', 'Cloudflare R2: connected')
-            : renderSubStatus('optional', <>
-              {labelForStorage('cloudflare-r2')}:
               {' '}
-              {renderLink(
-                'https://github.com/sambecker/exif-photo-blog#cloudflare-r2',
-                'create/configure bucket',
-              )}
-            </>)}
-          {hasAwsS3Storage
-            ? renderSubStatus('checked', 'AWS S3: connected')
-            : renderSubStatus('optional', <>
-              {labelForStorage('aws-s3')}:
-              {' '}
-              {renderLink(
-                'https://github.com/sambecker/exif-photo-blog#aws-s3',
-                'create/configure bucket',
-              )}
-            </>)}
-        </ChecklistRow>
-      </Checklist>
-      <Checklist
-        title="Authentication"
-        icon={<BiLockAlt size={16} />}
-      >
-        <ChecklistRow
-          title={!hasAuthSecret && isTestingConnections
-            ? 'Generating secret'
-            : 'Setup auth'}
-          status={hasAuthSecret}
-          isPending={!hasAuthSecret && isTestingConnections}
-        >
-          Store auth secret in environment variable:
-          {!hasAuthSecret &&
-            <div className="overflow-x-auto">
-              <InfoBlock className="my-1.5 inline-flex" padding="tight">
-                <div className={clsx(
-                  'flex flex-nowrap items-center gap-2 leading-none -mx-1',
-                )}>
-                  {secret ? <span>{secret}</span> : <Spinner />}
-                  <div className="flex items-center gap-0.5 translate-y-[-2px]">
-                    {renderCopyButton('Secret', secret)}
-                  </div>
-                </div>
-              </InfoBlock>
-            </div>}
-          {renderEnvVars(['AUTH_SECRET'])}
-        </ChecklistRow>
-        <ChecklistRow
-          title="Setup admin user"
-          status={hasAdminUser}
-        >
-          Store admin email/password
-          {' '}
-          in environment variables:
-          {renderEnvVars([
-            'ADMIN_EMAIL',
-            'ADMIN_PASSWORD',
-          ])}
-        </ChecklistRow>
-      </Checklist>
-      <Checklist
-        title="Content"
-        icon={<BiPencil size={16} />}
-      >
-        <ChecklistRow
-          title="Add custom domain"
-          status={hasDomain}
-        >
-          Store in environment variable (displayed in top-right nav):
-          {renderEnvVars(['NEXT_PUBLIC_SITE_DOMAIN'])}
-        </ChecklistRow>
-        <ChecklistRow
-          title="Add title"
-          status={hasTitle}
-          optional
-        >
-          Store in environment variable (used in page titles):
-          {renderEnvVars(['NEXT_PUBLIC_SITE_TITLE'])}
-        </ChecklistRow>
-        <ChecklistRow
-          title="Add description"
-          status={hasDescription}
-          optional
-        >
-          Store in environment variable (mainly used for OG meta):
-          {renderEnvVars(['NEXT_PUBLIC_SITE_DESCRIPTION'])}
-        </ChecklistRow>
-        
-      </Checklist>
-      {!simplifiedView && <>
-        <Checklist
-          title="AI Text Generation"
-          icon={<HiSparkles />}
-          experimental
-          optional
-        >
-          <ChecklistRow
-            title={isAiTextGenerationEnabled && isTestingConnections
-              ? 'Testing OpenAI connection'
-              : 'Add OpenAI Secret Key'}
-            status={isAiTextGenerationEnabled}
-            isPending={isAiTextGenerationEnabled && isTestingConnections}
-            optional
-          >
-            {aiError &&
-              renderConnectionError('OpenAI', aiError)}
-            Store your OpenAI secret key in order to add experimental support
-            for AI-generated text descriptions and enable an invisible field
-            called {'"Semantic Description"'} used to support CMD-K search
-            {renderEnvVars(['OPENAI_SECRET_KEY'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title={hasVercelKv && isTestingConnections
-              ? 'Testing KV connection'
-              : 'Enable Rate Limiting'}
-            status={hasVercelKv}
-            isPending={hasVercelKv && isTestingConnections}
-            optional
-          >
-            {kvError &&
-              renderConnectionError('Vercel KV', kvError)}
-            {renderLink(
+              and connect to project in order to enable rate limiting
+            </ChecklistRow>
+            <ChecklistRow
               // eslint-disable-next-line max-len
-              'https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database',
-              'Create Vercel KV store',
-            )}
-            {' '}
-            and connect to project in order to enable rate limiting
-          </ChecklistRow>
-          <ChecklistRow
-            // eslint-disable-next-line max-len
-            title={`Auto-generated fields: ${aiTextAutoGeneratedFields.join(', ')}`}
-            status={hasAiTextAutoGeneratedFields}
+              title={`Auto-generated fields: ${aiTextAutoGeneratedFields.join(', ')}`}
+              status={hasAiTextAutoGeneratedFields}
+              optional
+            >
+              Comma-separated fields to auto-generate when
+              uploading photos. Accepted values: title, caption,
+              tags, description, all, or none (default is {'"all"'}).
+              {renderEnvVars(['AI_TEXT_AUTO_GENERATED_FIELDS'])}
+            </ChecklistRow>
+          </Checklist>
+          <Checklist
+            title="Settings"
+            icon={<BiCog size={16} />}
             optional
           >
-            Comma-separated fields to auto-generate when
-            uploading photos. Accepted values: title, caption,
-            tags, description, all, or none (default is {'"all"'}).
-            {renderEnvVars(['AI_TEXT_AUTO_GENERATED_FIELDS'])}
-          </ChecklistRow>
-        </Checklist>
-        <Checklist
-          title="Settings"
-          icon={<BiCog size={16} />}
-          optional
-        >
-          <ChecklistRow
-            title="Pro mode"
-            status={isProModeEnabled}
-            optional
-          >
-            Set environment variable to {'"1"'} to enable
-            higher quality image storage:
-            {renderEnvVars(['NEXT_PUBLIC_PRO_MODE'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title="Static Optimization"
-            status={isStaticallyOptimized}
-            optional
-            experimental
-          >
-            Set environment variable to {'"1"'} to enable static optimization,
-            i.e., rendering pages and images at build time:
-            {renderSubStatus(
-              arePagesStaticallyOptimized ? 'checked' : 'optional',
-              renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES']),
-              'translate-y-[3.5px]',
-            )}
-            {renderSubStatus(
-              areOGImagesStaticallyOptimized ? 'checked' : 'optional',
-              renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES']),
-              'translate-y-[3.5px]',
-            )}
-          </ChecklistRow>
-          <ChecklistRow
-            title="Photo Matting"
-            status={arePhotosMatted}
-            optional
-          >
-            Set environment variable to {'"1"'} to constrain the size
-            {' '}
-            of each photo, and enable a surrounding border:
-            {renderEnvVars(['NEXT_PUBLIC_MATTE_PHOTOS'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title="Image Blur"
-            status={isBlurEnabled}
-            optional
-          >
-            Set environment variable to {'"1"'} to prevent
-            image blur data being stored and displayed
-            {renderEnvVars(['NEXT_PUBLIC_BLUR_DISABLED'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title="Geo privacy"
-            status={isGeoPrivacyEnabled}
-            optional
-          >
-            Set environment variable to {'"1"'} to disable
-            collection/display of location-based data
-            {renderEnvVars(['NEXT_PUBLIC_GEO_PRIVACY'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title="Priority order"
-            status={isPriorityOrderEnabled}
-            optional
-          >
-            Set environment variable to {'"1"'} to prevent
-            priority order photo field affecting photo order
-            {renderEnvVars(['NEXT_PUBLIC_IGNORE_PRIORITY_ORDER'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title="Public API"
-            status={isPublicApiEnabled}
-            optional
-          >
-            Set environment variable to {'"1"'} to enable
-            a public API available at <code>/api</code>:
-            {renderEnvVars(['NEXT_PUBLIC_PUBLIC_API'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title="Show repo link"
-            status={showRepoLink}
-            optional
-          >
-            Set environment variable to {'"1"'} to hide footer link:
-            {renderEnvVars(['NEXT_PUBLIC_HIDE_REPO_LINK'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title="Show social"
-            status={showSocial}
-            optional
-          >
-            Set environment variable to {'"1"'} to hide
-            {' '}
-            X button from share modal:
-            {renderEnvVars(['NEXT_PUBLIC_HIDE_SOCIAL'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title="Show Fujifilm simulations"
-            status={showFilmSimulations}
-            optional
-          >
-            Set environment variable to {'"1"'} to prevent
-            simulations showing up in /grid sidebar and
-            CMD-K search results:
-            {renderEnvVars(['NEXT_PUBLIC_HIDE_FILM_SIMULATIONS'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title="Show EXIF data"
-            status={showExifInfo}
-            optional
-          >
-            Set environment variable to {'"1"'} to hide EXIF data:
-            {renderEnvVars(['NEXT_PUBLIC_HIDE_EXIF_DATA'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title={`Grid aspect ratio: ${gridAspectRatio}`}
-            status={hasGridAspectRatio}
-            optional
-          >
-            Set environment variable to any number to enforce aspect ratio
-            {' '}
-            (default is {'"1"'}, i.e., square)—set to {'"0"'} to disable:
-            {renderEnvVars(['NEXT_PUBLIC_GRID_ASPECT_RATIO'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title="Legacy OG text alignment"
-            status={isOgTextBottomAligned}
-            optional
-          >
-            Set environment variable to {'"BOTTOM"'} to
-            keep OG image text bottom aligned (default is {'"top"'}):
-            {renderEnvVars(['NEXT_PUBLIC_OG_TEXT_ALIGNMENT'])}
-          </ChecklistRow>
-        </Checklist>
-      </>}
-      <div className="px-11 space-y-5 pt-0.5">
+            <ChecklistRow
+              title="Pro mode"
+              status={isProModeEnabled}
+              optional
+            >
+              Set environment variable to {'"1"'} to enable
+              higher quality image storage:
+              {renderEnvVars(['NEXT_PUBLIC_PRO_MODE'])}
+            </ChecklistRow>
+            <ChecklistRow
+              title="Static Optimization"
+              status={isStaticallyOptimized}
+              optional
+              experimental
+            >
+              Set environment variable to {'"1"'} to enable static optimization,
+              i.e., rendering pages and images at build time:
+              {renderSubStatus(
+                arePagesStaticallyOptimized ? 'checked' : 'optional',
+                renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES']),
+                'translate-y-[3.5px]',
+              )}
+              {renderSubStatus(
+                areOGImagesStaticallyOptimized ? 'checked' : 'optional',
+                renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES']),
+                'translate-y-[3.5px]',
+              )}
+            </ChecklistRow>
+            <ChecklistRow
+              title="Photo Matting"
+              status={arePhotosMatted}
+              optional
+            >
+              Set environment variable to {'"1"'} to constrain the size
+              {' '}
+              of each photo, and enable a surrounding border:
+              {renderEnvVars(['NEXT_PUBLIC_MATTE_PHOTOS'])}
+            </ChecklistRow>
+            <ChecklistRow
+              title="Image Blur"
+              status={isBlurEnabled}
+              optional
+            >
+              Set environment variable to {'"1"'} to prevent
+              image blur data being stored and displayed
+              {renderEnvVars(['NEXT_PUBLIC_BLUR_DISABLED'])}
+            </ChecklistRow>
+            <ChecklistRow
+              title="Geo privacy"
+              status={isGeoPrivacyEnabled}
+              optional
+            >
+              Set environment variable to {'"1"'} to disable
+              collection/display of location-based data
+              {renderEnvVars(['NEXT_PUBLIC_GEO_PRIVACY'])}
+            </ChecklistRow>
+            <ChecklistRow
+              title="Priority order"
+              status={isPriorityOrderEnabled}
+              optional
+            >
+              Set environment variable to {'"1"'} to prevent
+              priority order photo field affecting photo order
+              {renderEnvVars(['NEXT_PUBLIC_IGNORE_PRIORITY_ORDER'])}
+            </ChecklistRow>
+            <ChecklistRow
+              title="Public API"
+              status={isPublicApiEnabled}
+              optional
+            >
+              Set environment variable to {'"1"'} to enable
+              a public API available at <code>/api</code>:
+              {renderEnvVars(['NEXT_PUBLIC_PUBLIC_API'])}
+            </ChecklistRow>
+            <ChecklistRow
+              title="Show repo link"
+              status={showRepoLink}
+              optional
+            >
+              Set environment variable to {'"1"'} to hide footer link:
+              {renderEnvVars(['NEXT_PUBLIC_HIDE_REPO_LINK'])}
+            </ChecklistRow>
+            <ChecklistRow
+              title="Show social"
+              status={showSocial}
+              optional
+            >
+              Set environment variable to {'"1"'} to hide
+              {' '}
+              X button from share modal:
+              {renderEnvVars(['NEXT_PUBLIC_HIDE_SOCIAL'])}
+            </ChecklistRow>
+            <ChecklistRow
+              title="Show Fujifilm simulations"
+              status={showFilmSimulations}
+              optional
+            >
+              Set environment variable to {'"1"'} to prevent
+              simulations showing up in /grid sidebar and
+              CMD-K search results:
+              {renderEnvVars(['NEXT_PUBLIC_HIDE_FILM_SIMULATIONS'])}
+            </ChecklistRow>
+            <ChecklistRow
+              title="Show EXIF data"
+              status={showExifInfo}
+              optional
+            >
+              Set environment variable to {'"1"'} to hide EXIF data:
+              {renderEnvVars(['NEXT_PUBLIC_HIDE_EXIF_DATA'])}
+            </ChecklistRow>
+            <ChecklistRow
+              title={`Grid aspect ratio: ${gridAspectRatio}`}
+              status={hasGridAspectRatio}
+              optional
+            >
+              Set environment variable to any number to enforce aspect ratio
+              {' '}
+              (default is {'"1"'}, i.e., square)—set to {'"0"'} to disable:
+              {renderEnvVars(['NEXT_PUBLIC_GRID_ASPECT_RATIO'])}
+            </ChecklistRow>
+            <ChecklistRow
+              title="Legacy OG text alignment"
+              status={isOgTextBottomAligned}
+              optional
+            >
+              Set environment variable to {'"BOTTOM"'} to
+              keep OG image text bottom aligned (default is {'"top"'}):
+              {renderEnvVars(['NEXT_PUBLIC_OG_TEXT_ALIGNMENT'])}
+            </ChecklistRow>
+          </Checklist>
+        </>}
+      </div>
+      <div className="pl-11 pr-2 sm:pr-11 mt-4 sm:mt-7">
         <div>
           Changes to environment variables require a redeploy
           or reboot of local dev server
         </div>
         {!simplifiedView &&
-          <div className="text-dim">
-            <div>Base Url: {baseUrl || 'Not Defined'}</div>
+          <div className="text-dim before:content-['—']">
+            <div className="flex whitespace-nowrap">
+              <span className="font-bold">Base Url</span>
+              &nbsp;&nbsp;
+              <span className="w-full flex overflow-x-auto">
+                {baseUrl || 'Not Defined'}
+              </span>
+            </div>
             <div>
-              Commit:&nbsp;&nbsp;
-              {' '}
-              {commitSha ? commitSha.slice(0, 7) : 'Not Found'}
+              <span className="font-bold">Commit</span>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              {commitSha || 'Not Found'}
             </div>
           </div>}
       </div>
