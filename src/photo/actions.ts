@@ -43,7 +43,6 @@ import {
   AI_TEXT_GENERATION_ENABLED,
   BLUR_ENABLED,
 } from '@/site/config';
-import { getStorageUploadUrlsNoStore } from '@/services/storage/cache';
 import { generateAiImageQueries } from './ai/server';
 import { createStreamableValue } from 'ai/rsc';
 import { convertUploadToPhoto } from './storage';
@@ -57,10 +56,10 @@ export const createPhotoAction = async (formData: FormData) =>
 
     const photo = convertFormDataToPhotoDbInsert(formData);
 
-    const updatedUrl = await convertUploadToPhoto(
-      photo.url,
+    const updatedUrl = await convertUploadToPhoto({
+      urlOrigin: photo.url,
       shouldStripGpsData,
-    );
+    });
     
     if (updatedUrl) {
       photo.url = updatedUrl;
@@ -71,35 +70,29 @@ export const createPhotoAction = async (formData: FormData) =>
   });
 
 export const addAllUploadsAction = async ({
+  uploadUrls,
   tags,
   takenAtLocal,
   takenAtNaiveLocal,
 }: {
+  uploadUrls: string[]
   tags?: string
   takenAtLocal: string
   takenAtNaiveLocal: string
 }) =>
   runAuthenticatedAdminServerAction(async () => {
-    const uploadUrls = await getStorageUploadUrlsNoStore();
     const uploadTotal = uploadUrls.length;
     const addedUploadUrls: string[] = [];
 
-    const stream = createStreamableValue<{
-      headline: string,
-      subhead?: string,
-      addedUploadUrls: string,
-    }, string>({
-      headline: `Adding ${uploadTotal} Photos...`,
+    const stream = createStreamableValue({
+      subhead: '',
       addedUploadUrls: '',
     });
 
     (async () => {
       try {
-        for (const [index, { url }] of uploadUrls.entries()) {
-          const headline = `Adding ${index + 1} of ${uploadTotal}`;
-
+        for (const url of uploadUrls) {
           stream.update({
-            headline,
             subhead: 'Parsing EXIF data',
             addedUploadUrls: addedUploadUrls.join(','),
           });
@@ -118,7 +111,6 @@ export const addAllUploadsAction = async ({
           if (photoFormExif) {
             if (AI_TEXT_GENERATION_ENABLED) {
               stream.update({
-                headline,
                 subhead: 'Generating AI text',
                 addedUploadUrls: addedUploadUrls.join(','),
               });
@@ -145,35 +137,38 @@ export const addAllUploadsAction = async ({
             };
 
             stream.update({
-              headline,
               subhead: 'Moving upload to photo storage',
               addedUploadUrls: addedUploadUrls.join(','),
             });
 
-            const updatedUrl = await convertUploadToPhoto(
-              url,
-              shouldStripGpsData,
+            const updatedUrl = await convertUploadToPhoto({
+              urlOrigin: url,
               fileBytes,
-            );
+              shouldStripGpsData,
+            });
             if (updatedUrl) {
+              const subhead = 'Adding to database';
               stream.update({
-                headline,
-                subhead: 'Adding to database',
+                subhead,
                 addedUploadUrls: addedUploadUrls.join(','),
               });
               const photo = convertFormDataToPhotoDbInsert(form);
               photo.url = updatedUrl;
               await insertPhoto(photo);
               addedUploadUrls.push(url);
+              // Re-submit with updated url
+              stream.update({
+                subhead,
+                addedUploadUrls: addedUploadUrls.join(','),
+              });
             }
           }
-        }
+        };
       } catch (error: any) {
         // eslint-disable-next-line max-len
         stream.error(`${error.message} (${addedUploadUrls.length} of ${uploadTotal} photos successfully added)`);
-      } finally {
-        revalidateAllKeysAndPaths();
       }
+      revalidateAllKeysAndPaths();
       stream.done();
     })();
 
@@ -184,16 +179,25 @@ export const updatePhotoAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
     const photo = convertFormDataToPhotoDbInsert(formData);
 
-    let url: string | undefined;
+    let urlToDelete: string | undefined;
     if (photo.hidden && photo.url.includes(photo.id)) {
       // Backfill:
       // Anonymize storage url on update if necessary by
       // re-running image upload transfer logic
-      url = await convertUploadToPhoto(photo.url);
-      if (url) { photo.url = url; }
+      const url = await convertUploadToPhoto({
+        urlOrigin: photo.url,
+        shouldDeleteOrigin: false,
+      });
+      if (url) {
+        urlToDelete = photo.url;
+        photo.url = url;
+      }
     }
 
-    await updatePhoto(photo);
+    await updatePhoto(photo)
+      .then(async () => {
+        if (urlToDelete) { await deleteFile(urlToDelete); }
+      });
 
     revalidatePhoto(photo.id);
 
@@ -296,9 +300,8 @@ export const getExifDataAction = async (
 // - strip GPS data if necessary
 // - update blur data (or destroy if blur is disabled)
 // - generate AI text data, if enabled, and auto-generated fields are empty
-export const syncPhotoAction = async (formData: FormData) =>
+export const syncPhotoAction = async (photoId: string) =>
   runAuthenticatedAdminServerAction(async () => {
-    const photoId = formData.get('photoId') as string | undefined;
     const photo = await getPhoto(photoId ?? '', true);
 
     if (photo) {
@@ -313,16 +316,21 @@ export const syncPhotoAction = async (formData: FormData) =>
         generateResizedImage: AI_TEXT_GENERATION_ENABLED,
       });
 
+      let urlToDelete: string | undefined;
       if (photoFormExif) {
         if (photo.url.includes(photo.id) || shouldStripGpsData) {
           // Anonymize storage url on update if necessary by
           // re-running image upload transfer logic
-          const url = await convertUploadToPhoto(
-            photo.url,
-            shouldStripGpsData,
+          const url = await convertUploadToPhoto({
+            urlOrigin: photo.url,
             fileBytes,
-          );
-          if (url) { photo.url = url; }
+            shouldStripGpsData,
+            shouldDeleteOrigin: false,
+          });
+          if (url) {
+            urlToDelete = photo.url;
+            photo.url = url;
+          }
         }
 
         const {
@@ -346,10 +354,22 @@ export const syncPhotoAction = async (formData: FormData) =>
             { semanticDescription: aiSemanticDescription },
         });
 
-        await updatePhoto(photoFormDbInsert);
+        await updatePhoto(photoFormDbInsert)
+          .then(async () => {
+            if (urlToDelete) { await deleteFile(urlToDelete); }
+          });
+
         revalidateAllKeysAndPaths();
       }
     }
+  });
+
+export const syncPhotosAction = async (photoIds: string[]) =>
+  runAuthenticatedAdminServerAction(async () => {
+    for (const photoId of photoIds) {
+      await syncPhotoAction(photoId);
+    }
+    revalidateAllKeysAndPaths();
   });
 
 export const clearCacheAction = async () =>

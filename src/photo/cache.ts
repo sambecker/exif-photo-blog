@@ -62,7 +62,8 @@ const getPhotosCacheKeyForOption = (
     return value ? `${option}-${createLensKey(value)}` : null;
   }
   case 'takenBefore':
-  case 'takenAfterInclusive': {
+  case 'takenAfterInclusive': 
+  case 'updatedBefore': {
     const value = options[option];
     return value ? `${option}-${value.toISOString()}` : null;
   }

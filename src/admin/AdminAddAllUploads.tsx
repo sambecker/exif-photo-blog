@@ -15,24 +15,27 @@ import {
   generateLocalNaivePostgresString,
   generateLocalPostgresString,
 } from '@/utility/date';
+import sleep from '@/utility/sleep';
 import { readStreamableValue } from 'ai/rsc';
 import { clsx } from 'clsx/lite';
 import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
-import { BiImageAdd } from 'react-icons/bi';
+import { Dispatch, SetStateAction, useRef, useState } from 'react';
+import { BiCheckCircle, BiImageAdd } from 'react-icons/bi';
+
+const UPLOAD_BATCH_SIZE = 4;
 
 export default function AdminAddAllUploads({
-  storageUrlCount,
+  storageUrls,
   uniqueTags,
   isAdding,
   setIsAdding,
-  onUploadAdded,
+  setAddedUploadUrls,
 }: {
-  storageUrlCount: number
+  storageUrls: string[]
   uniqueTags?: TagsWithMeta
   isAdding: boolean
   setIsAdding: (isAdding: boolean) => void
-  onUploadAdded?: (addedUploadUrls: string[]) => void
+  setAddedUploadUrls?: Dispatch<SetStateAction<string[]>>
 }) {
   const divRef = useRef<HTMLDivElement>(null);
 
@@ -42,8 +45,40 @@ export default function AdminAddAllUploads({
   const [tags, setTags] = useState('');
   const [actionErrorMessage, setActionErrorMessage] = useState('');
   const [tagErrorMessage, setTagErrorMessage] = useState('');
+  const [isAddingComplete, setIsAddingComplete] = useState(false);
 
   const router = useRouter();
+
+  const addedUploadUrls = useRef<string[]>([]);
+  const addUploadUrls = async (uploadUrls: string[]) => {
+    try {
+      const stream = await addAllUploadsAction({
+        uploadUrls,
+        tags: showTags ? tags : undefined,
+        takenAtLocal: generateLocalPostgresString(),
+        takenAtNaiveLocal: generateLocalNaivePostgresString(),
+      });
+      for await (const data of readStreamableValue(stream)) {
+        setButtonText(addedUploadUrls.current.length === 0
+          ? `Adding ${storageUrls.length} uploads`
+          : `Adding ${addedUploadUrls.current.length} of ${storageUrls.length}`
+        );
+        setButtonSubheadText(data?.subhead ?? '');
+        setAddedUploadUrls?.(current => {
+          const urls = data?.addedUploadUrls.split(',') ?? [];
+          const updatedUrls = current
+            .filter(url => !urls.includes(url))
+            .concat(urls);
+          addedUploadUrls.current = updatedUrls;
+          return updatedUrls;
+        });
+      }
+    } catch (e: any) {
+      setIsAdding(false);
+      setButtonText('Try Again');
+      setActionErrorMessage(e);
+    }
+  };
 
   return (
     <>
@@ -58,7 +93,7 @@ export default function AdminAddAllUploads({
             )}>
               {showTags
                 ? tagErrorMessage || 'Add tags to all uploads'
-                : `Found ${storageUrlCount} uploads`}
+                : `Found ${storageUrls.length} uploads`}
             </div>
             <FieldSetWithStatus
               id="show-tags"
@@ -99,25 +134,28 @@ export default function AdminAddAllUploads({
             <LoaderButton
               className="primary w-full justify-center"
               isLoading={isAdding}
-              disabled={Boolean(tagErrorMessage)}
-              icon={<BiImageAdd size={18} className="translate-x-[1px]" />}
+              disabled={Boolean(tagErrorMessage) || isAddingComplete}
+              icon={isAddingComplete
+                ? <BiCheckCircle size={18} className="translate-x-[1px]" />
+                : <BiImageAdd size={18} className="translate-x-[1px]" />
+              }
               onClick={async () => {
-                if (confirm(
-                  `Are you sure you want to add all ${storageUrlCount} uploads?`
-                )) {
+                // eslint-disable-next-line max-len
+                if (confirm(`Are you sure you want to add all ${storageUrls.length} uploads?`)) {
                   setIsAdding(true);
+                  let uploadsToAdd = storageUrls.slice();
                   try {
-                    const stream = await addAllUploadsAction({
-                      tags: showTags ? tags : undefined,
-                      takenAtLocal: generateLocalPostgresString(),
-                      takenAtNaiveLocal: generateLocalNaivePostgresString(),
-                    });
-                    for await (const data of readStreamableValue(stream)) {
-                      setButtonText(data?.headline ?? '');
-                      setButtonSubheadText(data?.subhead ?? '');
-                      onUploadAdded?.(data?.addedUploadUrls.split(',') ?? []);
+                    while (uploadsToAdd.length > 0) {
+                      await addUploadUrls(
+                        uploadsToAdd.splice(0, UPLOAD_BATCH_SIZE),
+                      );
                     }
-                    router.push(PATH_ADMIN_PHOTOS);
+                    setButtonText('Complete');
+                    setButtonSubheadText('All uploads added');
+                    setIsAdding(false);
+                    setIsAddingComplete(true);
+                    await sleep(1000).then(() =>
+                      router.push(PATH_ADMIN_PHOTOS));
                   } catch (e: any) {
                     setIsAdding(false);
                     setButtonText('Try Again');

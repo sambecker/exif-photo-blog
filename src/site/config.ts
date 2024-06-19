@@ -57,37 +57,37 @@ export const SITE_DESCRIPTION =
 
 // STORAGE: DATABASE
 export const HAS_DATABASE =
-  (process.env.POSTGRES_URL ?? '').length > 0;
+  Boolean(process.env.POSTGRES_URL);
 export const POSTGRES_SSL_ENABLED =
   process.env.DISABLE_POSTGRES_SSL === '1' ? false : true;
 // STORAGE: VERCEL KV
 export const HAS_VERCEL_KV =
-  (process.env.KV_URL ?? '').length > 0;
+  Boolean(process.env.KV_URL);
 
 // STORAGE: VERCEL BLOB
 export const HAS_VERCEL_BLOB_STORAGE =
-  (process.env.BLOB_READ_WRITE_TOKEN ?? '').length > 0;
+  Boolean(process.env.BLOB_READ_WRITE_TOKEN);
 
 // STORAGE: Cloudflare R2
 // Includes separate check for client-side usage, i.e., url construction
 export const HAS_CLOUDFLARE_R2_STORAGE_CLIENT =
-  (process.env.NEXT_PUBLIC_CLOUDFLARE_R2_BUCKET ?? '').length > 0 &&
-  (process.env.NEXT_PUBLIC_CLOUDFLARE_R2_ACCOUNT_ID ?? '').length > 0 &&
-  (process.env.NEXT_PUBLIC_CLOUDFLARE_R2_PUBLIC_DOMAIN ?? '').length > 0;
+  Boolean(process.env.NEXT_PUBLIC_CLOUDFLARE_R2_BUCKET) &&
+  Boolean(process.env.NEXT_PUBLIC_CLOUDFLARE_R2_ACCOUNT_ID) &&
+  Boolean(process.env.NEXT_PUBLIC_CLOUDFLARE_R2_PUBLIC_DOMAIN);
 export const HAS_CLOUDFLARE_R2_STORAGE =
   HAS_CLOUDFLARE_R2_STORAGE_CLIENT &&
-  (process.env.CLOUDFLARE_R2_ACCESS_KEY ?? '').length > 0 &&
-  (process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY ?? '').length > 0;
+  Boolean(process.env.CLOUDFLARE_R2_ACCESS_KEY) &&
+  Boolean(process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY);
 
 // STORAGE: AWS S3
 // Includes separate check for client-side usage, i.e., url construction
 export const HAS_AWS_S3_STORAGE_CLIENT =
-  (process.env.NEXT_PUBLIC_AWS_S3_BUCKET ?? '').length > 0 &&
-  (process.env.NEXT_PUBLIC_AWS_S3_REGION ?? '').length > 0;
+  Boolean(process.env.NEXT_PUBLIC_AWS_S3_BUCKET) &&
+  Boolean(process.env.NEXT_PUBLIC_AWS_S3_REGION);
 export const HAS_AWS_S3_STORAGE =
   HAS_AWS_S3_STORAGE_CLIENT &&
-  (process.env.AWS_S3_ACCESS_KEY ?? '').length > 0 &&
-  (process.env.AWS_S3_SECRET_ACCESS_KEY ?? '').length > 0;
+  Boolean(process.env.AWS_S3_ACCESS_KEY) &&
+  Boolean(process.env.AWS_S3_SECRET_ACCESS_KEY);
 
 export const HAS_MULTIPLE_STORAGE_PROVIDERS = [
   HAS_VERCEL_BLOB_STORAGE,
@@ -164,13 +164,14 @@ export const CONFIG_CHECKLIST_STATUS = {
   ),
   hasMultipleStorageProviders: HAS_MULTIPLE_STORAGE_PROVIDERS,
   currentStorage: CURRENT_STORAGE,
-  hasAuthSecret: (process.env.AUTH_SECRET ?? '').length > 0,
+  hasAuthSecret: Boolean(process.env.AUTH_SECRET),
   hasAdminUser: (
-    (process.env.ADMIN_EMAIL ?? '').length > 0 &&
-    (process.env.ADMIN_PASSWORD ?? '').length > 0
+    Boolean(process.env.ADMIN_EMAIL) &&
+    Boolean(process.env.ADMIN_PASSWORD)
   ),
-  hasTitle: (process.env.NEXT_PUBLIC_SITE_TITLE ?? '').length > 0,
-  hasDomain: (process.env.NEXT_PUBLIC_SITE_DOMAIN ?? '').length > 0,
+  hasDomain: Boolean(process.env.NEXT_PUBLIC_SITE_DOMAIN),
+  hasTitle: Boolean(process.env.NEXT_PUBLIC_SITE_TITLE),
+  hasDescription: Boolean(process.env.NEXT_PUBLIC_SITE_DESCRIPTION),
   showRepoLink: SHOW_REPO_LINK,
   showSocial: SHOW_SOCIAL,
   showFilmSimulations: SHOW_FILM_SIMULATIONS,

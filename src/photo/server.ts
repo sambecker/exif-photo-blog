@@ -129,12 +129,20 @@ const blurImage = async (image: ArrayBuffer) =>
 export const resizeImageFromUrl = async (url: string) => 
   fetch(decodeURIComponent(url))
     .then(res => res.arrayBuffer())
-    .then(buffer => resizeImage(buffer));
+    .then(buffer => resizeImage(buffer))
+    .catch(e => {
+      console.log(`Error resizing image from URL (${url})`, e);
+      return '';
+    });
 
 export const blurImageFromUrl = async (url: string) => 
   fetch(decodeURIComponent(url))
     .then(res => res.arrayBuffer())
-    .then(buffer => blurImage(buffer));
+    .then(buffer => blurImage(buffer))
+    .catch(e => {
+      console.log(`Error blurring image from URL (${url})`, e);
+      return '';
+    });
 
 const GPS_NULL_STRING = '-';
 

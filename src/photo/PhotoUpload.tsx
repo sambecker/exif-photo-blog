@@ -10,15 +10,18 @@ import { clsx } from 'clsx/lite';
 export default function PhotoUpload({
   shouldResize,
   onLastUpload,
+  isUploading,
+  setIsUploading,
   showUploadStatus,
   debug,
 }: {
   shouldResize?: boolean
   onLastUpload?: () => Promise<void>
+  isUploading: boolean
+  setIsUploading: (isUploading: boolean) => void
   showUploadStatus?: boolean
   debug?: boolean
 }) {
-  const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string>();
   const [debugDownload, setDebugDownload] = useState<{
     href: string

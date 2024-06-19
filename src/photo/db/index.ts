@@ -8,7 +8,7 @@ export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 export const PHOTO_DEFAULT_LIMIT = 100;
 
 export type GetPhotosOptions = {
-  sortBy?: 'createdAt' | 'takenAt' | 'priority'
+  sortBy?: 'createdAt' | 'createdAtAsc' | 'takenAt' | 'priority'
   limit?: number
   offset?: number
   query?: string
@@ -19,6 +19,7 @@ export type GetPhotosOptions = {
   focal?: number
   takenBefore?: Date
   takenAfterInclusive?: Date
+  updatedBefore?: Date
   hidden?: 'exclude' | 'include' | 'only'
 };
 
@@ -30,6 +31,7 @@ export const getWheresFromOptions = (
     hidden = 'exclude',
     takenBefore,
     takenAfterInclusive,
+    updatedBefore,
     query,
     tag,
     camera,
@@ -52,12 +54,16 @@ export const getWheresFromOptions = (
   }
 
   if (takenBefore) {
-    wheres.push(`taken_at > $${valuesIndex++}`);
+    wheres.push(`taken_at < $${valuesIndex++}`);
     wheresValues.push(takenBefore.toISOString());
   }
   if (takenAfterInclusive) {
-    wheres.push(`taken_at <= $${valuesIndex++}`);
+    wheres.push(`taken_at >= $${valuesIndex++}`);
     wheresValues.push(takenAfterInclusive.toISOString());
+  }
+  if (updatedBefore) {
+    wheres.push(`updated_at < $${valuesIndex++}`);
+    wheresValues.push(updatedBefore.toISOString());
   }
   if (query) {
     // eslint-disable-next-line max-len
@@ -106,6 +112,8 @@ export const getOrderByFromOptions = (options: GetPhotosOptions) => {
   switch (sortBy) {
   case 'createdAt':
     return 'ORDER BY created_at DESC';
+  case 'createdAtAsc':
+    return 'ORDER BY created_at ASC';
   case 'takenAt':
     return 'ORDER BY taken_at DESC';
   case 'priority':

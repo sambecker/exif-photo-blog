@@ -5,10 +5,10 @@ import { useRef, useState } from 'react';
 import { CopyExif } from '@/lib/CopyExif';
 import exifr from 'exifr';
 import { clsx } from 'clsx/lite';
-import Spinner from './Spinner';
 import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
 import { FiUploadCloud } from 'react-icons/fi';
 import { MAX_IMAGE_SIZE } from '@/services/next-image';
+import LoaderButton from './primitives/LoaderButton';
 
 const INPUT_ID = 'file';
 
@@ -36,7 +36,8 @@ export default function ImageInput({
   showUploadStatus?: boolean
   debug?: boolean
 }) {
-  const ref = useRef<HTMLCanvasElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [image, setImage] = useState<HTMLImageElement>();
   const [filesLength, setFilesLength] = useState(0);
@@ -57,26 +58,24 @@ export default function ImageInput({
             loading && 'pointer-events-none cursor-not-allowed',
           )}
         >
-          <span
-            className={clsx(
-              'button primary normal-case',
-              loading && 'disabled'
-            )}
+          <LoaderButton
+            type="button"
+            isLoading={loading}
+            className="primary"
+            icon={<FiUploadCloud
+              size={18}
+              className="translate-x-[-0.5px] translate-y-[0.5px]"
+            />}
             aria-disabled={loading}
+            onClick={() => inputRef.current?.click()}
+            hideTextOnMobile={false}
           >
-            <span className="w-4 inline-flex items-center mr-1">
-              {loading
-                ? <Spinner color="text" className="translate-y-[0.5px]" />
-                : <FiUploadCloud
-                  size={17}
-                  className="translate-y-[0.5px] shrink-0"
-                />}
-            </span>
             {loading
               ? 'Uploading'
               : 'Upload Photos'}
-          </span>
+          </LoaderButton>
           <input
+            ref={inputRef}
             id={INPUT_ID}
             type="file"
             className="!hidden"
@@ -100,7 +99,7 @@ export default function ImageInput({
 
                   const isPng = callbackArgs.extension === 'png';
                   
-                  const canvas = ref.current;
+                  const canvas = canvasRef.current;
 
                   // Specify wide gamut to avoid data loss while resizing
                   const ctx = canvas?.getContext(
@@ -227,7 +226,7 @@ export default function ImageInput({
           </div>}
       </div>
       <canvas
-        ref={ref}
+        ref={canvasRef}
         className={clsx(
           'bg-gray-50 dark:bg-gray-900/50 rounded-md',
           'border border-gray-200 dark:border-gray-800',

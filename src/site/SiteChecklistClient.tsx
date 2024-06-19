@@ -40,8 +40,9 @@ export default function SiteChecklistClient({
   currentStorage,
   hasAuthSecret,
   hasAdminUser,
-  hasTitle,
   hasDomain,
+  hasTitle,
+  hasDescription,
   showRepoLink,
   showSocial,
   showFilmSimulations,
@@ -291,8 +292,14 @@ export default function SiteChecklistClient({
       <Checklist
         title="Content"
         icon={<BiPencil size={16} />}
-        optional
       >
+        <ChecklistRow
+          title="Add custom domain"
+          status={hasDomain}
+        >
+          Store in environment variable (displayed in top-right nav):
+          {renderEnvVars(['NEXT_PUBLIC_SITE_DOMAIN'])}
+        </ChecklistRow>
         <ChecklistRow
           title="Add title"
           status={hasTitle}
@@ -302,13 +309,14 @@ export default function SiteChecklistClient({
           {renderEnvVars(['NEXT_PUBLIC_SITE_TITLE'])}
         </ChecklistRow>
         <ChecklistRow
-          title="Add custom domain"
-          status={hasDomain}
+          title="Add description"
+          status={hasDescription}
           optional
         >
-          Store in environment variable (displayed in top-right nav):
-          {renderEnvVars(['NEXT_PUBLIC_SITE_DOMAIN'])}
+          Store in environment variable (mainly used for OG meta):
+          {renderEnvVars(['NEXT_PUBLIC_SITE_DESCRIPTION'])}
         </ChecklistRow>
+        
       </Checklist>
       {!simplifiedView && <>
         <Checklist
