@@ -513,7 +513,7 @@ export default function SiteChecklistClient({
           </Checklist>
         </>}
       </div>
-      <div className="pl-11 pr-2 sm:pr-11 mt-4 sm:mt-7">
+      <div className="pl-11 pr-2 sm:pr-11 mt-4 md:mt-7">
         <div>
           Changes to environment variables require a redeploy
           or reboot of local dev server
