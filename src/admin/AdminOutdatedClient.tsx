@@ -69,10 +69,10 @@ export default function AdminOutdatedClient({
           ? 'Syncing'
           : <>
             <span className="hidden sm:inline-block">
-              Sync {UPDATE_BATCH_SIZE} Oldest Photos
+              Sync Next {UPDATE_BATCH_SIZE} Photos
             </span>
             <span className="sm:hidden">
-              Sync {UPDATE_BATCH_SIZE} Oldest
+              Sync Next {UPDATE_BATCH_SIZE}
             </span>
           </>}
       </LoaderButton>}
