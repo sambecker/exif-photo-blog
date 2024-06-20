@@ -10,6 +10,7 @@ import { PATH_ADMIN_PHOTOS } from '@/site/paths';
 import { useState } from 'react';
 import { syncPhotosAction } from '@/photo/actions';
 import { useRouter } from 'next/navigation';
+import ResponsiveText from '@/components/primitives/ResponsiveText';
 
 const UPDATE_BATCH_SIZE = 4;
 
@@ -67,14 +68,9 @@ export default function AdminOutdatedClient({
       >
         {arePhotoIdsSyncing
           ? 'Syncing'
-          : <>
-            <span className="hidden sm:inline-block">
-              Sync Next {UPDATE_BATCH_SIZE} Photos
-            </span>
-            <span className="sm:hidden">
-              Sync Next {UPDATE_BATCH_SIZE}
-            </span>
-          </>}
+          : <ResponsiveText shortText={`Sync Next ${UPDATE_BATCH_SIZE}`}>
+            Sync Next {UPDATE_BATCH_SIZE} Photos
+          </ResponsiveText>}
       </LoaderButton>}
     >
       <div className="space-y-6">
