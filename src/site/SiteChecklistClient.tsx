@@ -160,9 +160,18 @@ export default function SiteChecklistClient({
       </span>
     </div>;
 
-  const renderConnectionError = (provider: string, error: string) =>
+  const renderError = ({
+    connection,
+    message,
+  }: {
+    connection?: { provider: string, error: string }
+    message?: string
+  }) =>
     <ErrorNote size="small" className="mt-2 mb-3">
-      {provider} connection error: {`"${error}"`}
+      {connection && <>
+        {connection.provider} connection error: {`"${connection.error}"`}
+      </>}
+      {message}
     </ErrorNote>;
 
   return (
@@ -179,8 +188,9 @@ export default function SiteChecklistClient({
             status={hasDatabase}
             isPending={hasDatabase && isTestingConnections}
           >
-            {databaseError &&
-              renderConnectionError('Database', databaseError)}
+            {databaseError && renderError({
+              connection: { provider: 'Database', error: databaseError},
+            })}
             {hasVercelPostgres
               ? renderSubStatus('checked', 'Vercel Postgres: connected')
               : renderSubStatus('optional', <>
@@ -214,8 +224,9 @@ export default function SiteChecklistClient({
             status={hasStorageProvider}
             isPending={hasStorageProvider && isTestingConnections}
           >
-            {storageError &&
-              renderConnectionError('Storage', storageError)}
+            {storageError && renderError({
+              connection: { provider: 'Storage', error: storageError},
+            })}
             {hasVercelBlobStorage
               ? renderSubStatus('checked', 'Vercel Blob: connected')
               : renderSubStatus('optional', <>
@@ -299,9 +310,14 @@ export default function SiteChecklistClient({
           icon={<BiPencil size={16} />}
         >
           <ChecklistRow
-            title="Add custom domain"
+            title="Configure domain"
             status={hasDomain}
           >
+            {!hasDomain &&
+              renderError({message:
+                'Not configuring a domain may cause ' + 
+                'certain features to behave unexpectedly',
+              })}
             Store in environment variable (displayed in top-right nav):
             {renderEnvVars(['NEXT_PUBLIC_SITE_DOMAIN'])}
           </ChecklistRow>
@@ -339,8 +355,9 @@ export default function SiteChecklistClient({
               isPending={isAiTextGenerationEnabled && isTestingConnections}
               optional
             >
-              {aiError &&
-                renderConnectionError('OpenAI', aiError)}
+              {aiError && renderError({
+                connection: { provider: 'OpenAI', error: aiError},
+              })}
               Store your OpenAI secret key in order to add experimental support
               for AI-generated text descriptions and enable an invisible field
               called {'"Semantic Description"'} used to support CMD-K search
@@ -354,8 +371,9 @@ export default function SiteChecklistClient({
               isPending={hasVercelKv && isTestingConnections}
               optional
             >
-              {kvError &&
-                renderConnectionError('Vercel KV', kvError)}
+              {kvError && renderError({
+                connection: { provider: 'Vercel KV', error: kvError},
+              })}
               {renderLink(
                 // eslint-disable-next-line max-len
                 'https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database',
@@ -521,7 +539,7 @@ export default function SiteChecklistClient({
         {!simplifiedView &&
           <div className="text-dim before:content-['—']">
             <div className="flex whitespace-nowrap">
-              <span className="font-bold">Base Url</span>
+              <span className="font-bold">Domain</span>
               &nbsp;&nbsp;
               <span className="w-full flex overflow-x-auto">
                 {baseUrl || 'Not Defined'}
@@ -529,7 +547,7 @@ export default function SiteChecklistClient({
             </div>
             <div>
               <span className="font-bold">Commit</span>
-              &nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;
               {commitSha || 'Not Found'}
             </div>
           </div>}
