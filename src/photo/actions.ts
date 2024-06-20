@@ -9,7 +9,7 @@ import {
   getPhoto,
   getPhotos,
 } from '@/photo/db/query';
-import { GetPhotosOptions } from './db';
+import { GetPhotosOptions, areOptionsSensitive } from './db';
 import {
   PhotoFormData,
   convertFormDataToPhotoDbInsert,
@@ -392,13 +392,13 @@ export const getPhotosHiddenMetaCachedAction = async () =>
 // Public/Private actions
 
 export const getPhotosAction = async (options: GetPhotosOptions) =>
-  (options.hidden === 'include' || options.hidden === 'only')
+  areOptionsSensitive(options)
     ? runAuthenticatedAdminServerAction(() => getPhotos(options))
     : getPhotos(options);
 
 export const getPhotosCachedAction = async (options: GetPhotosOptions) =>
-  (options.hidden === 'include' || options.hidden === 'only')
-    ? runAuthenticatedAdminServerAction(() => getPhotosCached (options))
+  areOptionsSensitive(options)
+    ? runAuthenticatedAdminServerAction(() => getPhotosCached(options))
     : getPhotosCached(options);
 
 // Public actions
