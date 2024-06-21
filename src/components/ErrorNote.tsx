@@ -14,7 +14,7 @@ export default function ErrorNote({
       color="red"
       padding="tight"
       className={className}
-      icon={<BiErrorAlt size={18} />}
+      icon={<BiErrorAlt size={18} className="translate-x-[0.5px]" />}
     >
       {children}
     </Note>

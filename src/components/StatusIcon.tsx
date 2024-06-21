@@ -27,7 +27,7 @@ export default function StatusIcon({
     case 'warning':
       return <BiSolidXSquare
         size={14}
-        className="text-amber-400 translate-x-[2px] translate-y-[1.5px]"
+        className="text-amber-500 translate-x-[2px] translate-y-[1.5px]"
       />;
     case 'optional':
       return <BiSolidCheckboxMinus

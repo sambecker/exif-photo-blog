@@ -327,6 +327,7 @@ export default function SiteChecklistClient({
           <ChecklistRow
             title="Configure domain"
             status={hasDomain}
+            showWarning
           >
             {!hasDomain &&
               renderWarning({message:

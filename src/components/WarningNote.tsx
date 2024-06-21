@@ -14,7 +14,7 @@ export default function WarningNote({
       color="yellow"
       padding="tight"
       className={className}
-      icon={<PiWarningBold size={18} />}
+      icon={<PiWarningBold size={17} className="translate-x-[0.5px]" />}
     >
       {children}
     </Note>

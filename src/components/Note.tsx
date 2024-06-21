@@ -2,6 +2,7 @@ import { ComponentProps, ReactNode } from 'react';
 import Container from './Container';
 import AnimateItems from './AnimateItems';
 import { IoInformationCircleOutline } from 'react-icons/io5';
+import { clsx } from 'clsx/lite';
 
 export default function Note({
   children,
@@ -24,14 +25,19 @@ export default function Note({
           padding="tight"
           color={color}
         >
-          <div className="flex items-center gap-2.5">
-            <span className="shrink-0 opacity-90">
+          <div className="flex items-center gap-2.5 pb-[1px]">
+            <span className={clsx(
+              'w-5 flex justify-center shrink-0',
+              'opacity-90',
+            )}>
               {icon ?? <IoInformationCircleOutline
-                size={18}
-                className="translate-y-[1px]"
+                size={19}
+                className="translate-x-[0.5px] translate-y-[0.5px]"
               />}
             </span>
-            {children}
+            <span className="text-sm">
+              {children}
+            </span>
           </div>
         </Container>,
       ]}
