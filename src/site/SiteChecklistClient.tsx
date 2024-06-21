@@ -14,7 +14,7 @@ import {
   BiLockAlt,
   BiPencil,
 } from 'react-icons/bi';
-import InfoBlock from '@/components/InfoBlock';
+import Container from '@/components/Container';
 import Checklist from '@/components/Checklist';
 import { toastSuccess } from '@/toast';
 import { ConfigChecklistStatus } from './config';
@@ -25,6 +25,7 @@ import LoaderButton from '@/components/primitives/LoaderButton';
 import { testConnectionsAction } from '@/admin/actions';
 import ErrorNote from '@/components/ErrorNote';
 import Spinner from '@/components/Spinner';
+import WarningNote from '@/components/WarningNote';
 
 export default function SiteChecklistClient({
   // Config checklist
@@ -167,12 +168,26 @@ export default function SiteChecklistClient({
     connection?: { provider: string, error: string }
     message?: string
   }) =>
-    <ErrorNote size="small" className="mt-2 mb-3">
+    <ErrorNote className="mt-2 mb-3">
       {connection && <>
         {connection.provider} connection error: {`"${connection.error}"`}
       </>}
       {message}
     </ErrorNote>;
+
+  const renderWarning = ({
+    connection,
+    message,
+  }: {
+    connection?: { provider: string, error: string }
+    message?: string
+  }) =>
+    <WarningNote className="mt-2 mb-3">
+      {connection && <>
+        {connection.provider} connection error: {`"${connection.error}"`}
+      </>}
+      {message}
+    </WarningNote>;
 
   return (
     <div className="max-w-xl w-full">
@@ -277,7 +292,7 @@ export default function SiteChecklistClient({
             Store auth secret in environment variable:
             {!hasAuthSecret &&
               <div className="overflow-x-auto">
-                <InfoBlock className="my-1.5 inline-flex" padding="tight">
+                <Container className="my-1.5 inline-flex" padding="tight">
                   <div className={clsx(
                     'flex flex-nowrap items-center gap-2 leading-none -mx-1',
                   )}>
@@ -288,7 +303,7 @@ export default function SiteChecklistClient({
                       {renderCopyButton('Secret', secret)}
                     </div>
                   </div>
-                </InfoBlock>
+                </Container>
               </div>}
             {renderEnvVars(['AUTH_SECRET'])}
           </ChecklistRow>
@@ -314,8 +329,8 @@ export default function SiteChecklistClient({
             status={hasDomain}
           >
             {!hasDomain &&
-              renderError({message:
-                'Not configuring a domain may cause ' + 
+              renderWarning({message:
+                'Not explicitly setting a domain may cause ' + 
                 'certain features to behave unexpectedly',
               })}
             Store in environment variable (displayed in top-right nav):

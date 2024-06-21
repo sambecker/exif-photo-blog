@@ -1,5 +1,5 @@
 import ClearCacheButton from '@/admin/ClearCacheButton';
-import InfoBlock from '@/components/InfoBlock';
+import Container from '@/components/Container';
 import SiteGrid from '@/components/SiteGrid';
 import SiteChecklist from '@/site/SiteChecklist';
 
@@ -14,9 +14,9 @@ export default async function AdminConfigurationPage() {
             </div>
             <ClearCacheButton />
           </div>
-          <InfoBlock spaceChildren={false}>
+          <Container spaceChildren={false}>
             <SiteChecklist />
-          </InfoBlock>
+          </Container>
         </div>}
     />
   );

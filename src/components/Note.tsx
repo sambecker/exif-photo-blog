@@ -1,38 +1,39 @@
-import { ReactNode } from 'react';
-import InfoBlock from './InfoBlock';
+import { ComponentProps, ReactNode } from 'react';
+import Container from './Container';
 import AnimateItems from './AnimateItems';
 import { IoInformationCircleOutline } from 'react-icons/io5';
 
-export default function Banner({
-  icon,
+export default function Note({
   children,
-  animate,
   className,
+  color = 'blue',
+  icon,
+  animate,
 }: {
   icon?: ReactNode
-  children: ReactNode
   animate?: boolean
-  className?: string
-}) {
+} & ComponentProps<typeof Container>) {
   return (
     <AnimateItems
       type={animate ? 'bottom' : 'none'}
       items={[
-        <InfoBlock
+        <Container
           key="Banner"
           className={className}
           centered={false}
           padding="tight"
-          color="blue"
+          color={color}
         >
           <div className="flex items-center gap-2.5">
-            {icon ?? <IoInformationCircleOutline
-              size={18}
-              className="translate-y-[1px] shrink-0"
-            />}
+            <span className="shrink-0 opacity-90">
+              {icon ?? <IoInformationCircleOutline
+                size={18}
+                className="translate-y-[1px]"
+              />}
+            </span>
             {children}
           </div>
-        </InfoBlock>,
+        </Container>,
       ]}
       animateOnFirstLoadOnly
     />

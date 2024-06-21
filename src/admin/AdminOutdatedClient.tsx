@@ -4,7 +4,7 @@ import { OUTDATED_THRESHOLD, Photo } from '@/photo';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import IconGrSync from '@/site/IconGrSync';
-import Banner from '@/components/Banner';
+import Note from '@/components/Note';
 import AdminChildPage from '@/components/AdminChildPage';
 import { PATH_ADMIN_PHOTOS } from '@/site/paths';
 import { useState } from 'react';
@@ -74,7 +74,7 @@ export default function AdminOutdatedClient({
       </LoaderButton>}
     >
       <div className="space-y-6">
-        <Banner>
+        <Note>
           <div className="space-y-1.5">
             {photos.length}
             {' '}
@@ -88,7 +88,7 @@ export default function AdminOutdatedClient({
             undesired privacy settings
             {hasAiTextGeneration && ', missing AI-generated text'}
           </div>
-        </Banner>
+        </Note>
         <div className="space-y-4">
           <AdminPhotosTable
             photos={photos}
