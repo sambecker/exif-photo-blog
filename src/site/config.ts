@@ -7,11 +7,17 @@ import { makeUrlAbsolute, shortenUrl } from '@/utility/url';
 export const SHOULD_PREFETCH_ALL_LINKS: boolean | undefined = undefined;
 export const SHOULD_DEBUG_SQL = false;
 
-// META / DOMAINS
+// META / SOURCE / DOMAINS
 
 export const SITE_TITLE =
   process.env.NEXT_PUBLIC_SITE_TITLE ||
   'Photo Blog';
+
+// SOURCE
+export const VERCEL_COMMIT_MESSAGE =
+  process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE;
+export const VERCEL_COMMIT_SHA =
+  process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA;
 
 const VERCEL_ENV = process.env.NEXT_PUBLIC_VERCEL_ENV;
 const VERCEL_PRODUCTION_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL;
@@ -57,37 +63,37 @@ export const SITE_DESCRIPTION =
 
 // STORAGE: DATABASE
 export const HAS_DATABASE =
-  (process.env.POSTGRES_URL ?? '').length > 0;
+  Boolean(process.env.POSTGRES_URL);
 export const POSTGRES_SSL_ENABLED =
   process.env.DISABLE_POSTGRES_SSL === '1' ? false : true;
 // STORAGE: VERCEL KV
 export const HAS_VERCEL_KV =
-  (process.env.KV_URL ?? '').length > 0;
+  Boolean(process.env.KV_URL);
 
 // STORAGE: VERCEL BLOB
 export const HAS_VERCEL_BLOB_STORAGE =
-  (process.env.BLOB_READ_WRITE_TOKEN ?? '').length > 0;
+  Boolean(process.env.BLOB_READ_WRITE_TOKEN);
 
 // STORAGE: Cloudflare R2
 // Includes separate check for client-side usage, i.e., url construction
 export const HAS_CLOUDFLARE_R2_STORAGE_CLIENT =
-  (process.env.NEXT_PUBLIC_CLOUDFLARE_R2_BUCKET ?? '').length > 0 &&
-  (process.env.NEXT_PUBLIC_CLOUDFLARE_R2_ACCOUNT_ID ?? '').length > 0 &&
-  (process.env.NEXT_PUBLIC_CLOUDFLARE_R2_PUBLIC_DOMAIN ?? '').length > 0;
+  Boolean(process.env.NEXT_PUBLIC_CLOUDFLARE_R2_BUCKET) &&
+  Boolean(process.env.NEXT_PUBLIC_CLOUDFLARE_R2_ACCOUNT_ID) &&
+  Boolean(process.env.NEXT_PUBLIC_CLOUDFLARE_R2_PUBLIC_DOMAIN);
 export const HAS_CLOUDFLARE_R2_STORAGE =
   HAS_CLOUDFLARE_R2_STORAGE_CLIENT &&
-  (process.env.CLOUDFLARE_R2_ACCESS_KEY ?? '').length > 0 &&
-  (process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY ?? '').length > 0;
+  Boolean(process.env.CLOUDFLARE_R2_ACCESS_KEY) &&
+  Boolean(process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY);
 
 // STORAGE: AWS S3
 // Includes separate check for client-side usage, i.e., url construction
 export const HAS_AWS_S3_STORAGE_CLIENT =
-  (process.env.NEXT_PUBLIC_AWS_S3_BUCKET ?? '').length > 0 &&
-  (process.env.NEXT_PUBLIC_AWS_S3_REGION ?? '').length > 0;
+  Boolean(process.env.NEXT_PUBLIC_AWS_S3_BUCKET) &&
+  Boolean(process.env.NEXT_PUBLIC_AWS_S3_REGION);
 export const HAS_AWS_S3_STORAGE =
   HAS_AWS_S3_STORAGE_CLIENT &&
-  (process.env.AWS_S3_ACCESS_KEY ?? '').length > 0 &&
-  (process.env.AWS_S3_SECRET_ACCESS_KEY ?? '').length > 0;
+  Boolean(process.env.AWS_S3_ACCESS_KEY) &&
+  Boolean(process.env.AWS_S3_SECRET_ACCESS_KEY);
 
 export const HAS_MULTIPLE_STORAGE_PROVIDERS = [
   HAS_VERCEL_BLOB_STORAGE,
@@ -150,12 +156,12 @@ export const GOOGLE_TAG_ID = process.env.NEXT_PUBLIC_GOOGLE_TAG_ID;
 
 export const CONFIG_CHECKLIST_STATUS = {
   hasDatabase: HAS_DATABASE,
-  isPostgresSSLEnabled: POSTGRES_SSL_ENABLED,
+  isPostgresSslEnabled: POSTGRES_SSL_ENABLED,
   hasVercelPostgres: (
     /\/verceldb\?/.test(process.env.POSTGRES_URL ?? '') ||
     /\.vercel-storage\.com\//.test(process.env.POSTGRES_URL ?? '')
   ),
-  hasVercelKV: HAS_VERCEL_KV,
+  hasVercelKv: HAS_VERCEL_KV,
   hasVercelBlobStorage: HAS_VERCEL_BLOB_STORAGE,
   hasCloudflareR2Storage: HAS_CLOUDFLARE_R2_STORAGE,
   hasAwsS3Storage: HAS_AWS_S3_STORAGE,
@@ -166,13 +172,14 @@ export const CONFIG_CHECKLIST_STATUS = {
   ),
   hasMultipleStorageProviders: HAS_MULTIPLE_STORAGE_PROVIDERS,
   currentStorage: CURRENT_STORAGE,
-  hasAuthSecret: (process.env.AUTH_SECRET ?? '').length > 0,
+  hasAuthSecret: Boolean(process.env.AUTH_SECRET),
   hasAdminUser: (
-    (process.env.ADMIN_EMAIL ?? '').length > 0 &&
-    (process.env.ADMIN_PASSWORD ?? '').length > 0
+    Boolean(process.env.ADMIN_EMAIL) &&
+    Boolean(process.env.ADMIN_PASSWORD)
   ),
-  hasTitle: (process.env.NEXT_PUBLIC_SITE_TITLE ?? '').length > 0,
-  hasDomain: (process.env.NEXT_PUBLIC_SITE_DOMAIN ?? '').length > 0,
+  hasDomain: Boolean(process.env.NEXT_PUBLIC_SITE_DOMAIN),
+  hasTitle: Boolean(process.env.NEXT_PUBLIC_SITE_TITLE),
+  hasDescription: Boolean(process.env.NEXT_PUBLIC_SITE_DESCRIPTION),
   showRepoLink: SHOW_REPO_LINK,
   showSocial: SHOW_SOCIAL,
   showFilmSimulations: SHOW_FILM_SIMULATIONS,
@@ -200,6 +207,9 @@ export const CONFIG_CHECKLIST_STATUS = {
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,
   gridAspectRatio: GRID_ASPECT_RATIO,
   hasGridAspectRatio: Boolean(process.env.NEXT_PUBLIC_GRID_ASPECT_RATIO),
+  baseUrl: BASE_URL,
+  commitMessage: VERCEL_COMMIT_MESSAGE,
+  commitSha: VERCEL_COMMIT_SHA ? VERCEL_COMMIT_SHA.slice(0, 7) : undefined,
 };
 
 export type ConfigChecklistStatus = typeof CONFIG_CHECKLIST_STATUS;

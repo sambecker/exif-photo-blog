@@ -67,11 +67,11 @@ _⚠️ READ BEFORE PROCEEDING_
 > _Usage of this feature will result in fees from OpenAI. When enabling AI text generation, follow all recommended mitigations in order to avoid unexpected charges and attacks. Make sure your OpenAI secret key environment variable is not prefixed with NEXT_PUBLIC._
 
 1. Setup OpenAI
-   - If you don't already have one, create an [OpenAI](https://openai.com) account
+   - If you don't already have one, create an [OpenAI](https://openai.com) account and fund it (see [this thread](https://github.com/sambecker/exif-photo-blog/issues/110) if you're having issues)
    - Generate an API key and store in environment variable `OPENAI_SECRET_KEY`
    - Setup usage limits to avoid unexpected charges (_recommended_)
 2. Add rate limiting (_recommended_)
-   - As an additional precaution, create a [Vercel KV](https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database) store and link it to your project in order to enable rate limiting
+   - As an additional precaution, create a [Vercel KV](https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database) store and link it to your project in order to enable rate limiting—no further configuration necessary
 3. Configure auto-generated fields (optional) 
    - Set which text fields auto-generate when uploading a photo by storing a comma-separated list, e.g., `AI_TEXT_AUTO_GENERATED_FIELDS = title, semantic`
    - Accepted values:
@@ -213,6 +213,9 @@ FAQ
 -
 #### Why don't my photo changes show up immediately?
 > This template statically optimizes core views such as `/` and `/grid` to minimize visitor load times. Consequently, when photos are added, edited, or removed, it might take several minutes for those changes to propagate. If it seems like a change is not taking effect, try navigating to `/admin/configuration` and clicking "Clear Cache."
+
+#### Why don't my older photos look right?
+> As the template has evolved, EXIF fields (such as lenses) have been added, blur data is generated through a different method, and AI/privacy features have been added. In order to bring older photos up to date, either click the 'sync' button next to a photo or use the outdated photo page (`/admin/outdated`) to make batch updates.
 
 #### Why don’t my OG images load when I share a link?
 > Many services such as iMessage, Slack, and X, require near-instant responses when unfurling link-based content. In order to guarantee sufficient responsiveness, consider rendering pages and image assets ahead of time by enabling static optimization by setting `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES = 1` and `NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES = 1`. Keep in mind that this will increase platform usage.

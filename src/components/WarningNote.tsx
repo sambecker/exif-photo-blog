@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
-import { BiErrorAlt } from 'react-icons/bi';
+import { PiWarningBold } from 'react-icons/pi';
 import Note from './Note';
 
-export default function ErrorNote({
+export default function WarningNote({
   className,
   children,
 }: {
@@ -11,10 +11,10 @@ export default function ErrorNote({
 }) {
   return (
     <Note
-      color="red"
+      color="yellow"
       padding="tight"
       className={className}
-      icon={<BiErrorAlt size={18} className="translate-x-[0.5px]" />}
+      icon={<PiWarningBold size={17} className="translate-x-[0.5px]" />}
     >
       {children}
     </Note>

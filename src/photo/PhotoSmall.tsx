@@ -43,7 +43,7 @@ export default function PhotoSmall({
         'active:brightness-75',
         selected && 'brightness-50',
         'min-w-[50px]',
-        'rounded-[0.15rem] overflow-hidden',
+        'rounded-[3px] overflow-hidden',
         'border border-gray-200 dark:border-gray-800',
       )}
       prefetch={prefetch}

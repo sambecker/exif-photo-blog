@@ -11,6 +11,7 @@ import { getPhotos, getPhotosMeta } from '@/photo/db/query';
 import PhotosLargeInfinite from '@/photo/PhotosLargeInfinite';
 
 export const dynamic = 'force-static';
+export const maxDuration = 60;
 
 const getPhotosCached = cache(() => getPhotos({
   limit: INFINITE_SCROLL_LARGE_PHOTO_INITIAL,

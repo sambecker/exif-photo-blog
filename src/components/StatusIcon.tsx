@@ -9,7 +9,7 @@ export default function StatusIcon({
   type,
   loading,
 }: {
-  type: 'checked' | 'missing' | 'optional'
+  type: 'checked' | 'missing' | 'warning' | 'optional'
   loading?: boolean
 }) {
   const getIcon = () => {
@@ -23,6 +23,11 @@ export default function StatusIcon({
       return <BiSolidXSquare
         size={14}
         className="text-red-400 translate-x-[2px] translate-y-[1.5px]"
+      />;
+    case 'warning':
+      return <BiSolidXSquare
+        size={14}
+        className="text-amber-500 translate-x-[2px] translate-y-[1.5px]"
       />;
     case 'optional':
       return <BiSolidCheckboxMinus

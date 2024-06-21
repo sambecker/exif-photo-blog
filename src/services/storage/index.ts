@@ -225,3 +225,6 @@ export const getStorageUploadUrls = () =>
 
 export const getStoragePhotoUrls = () =>
   getStorageUrlsForPrefix(`${PREFIX_PHOTO}-`);
+
+export const testStorageConnection = () =>
+  getStorageUrlsForPrefix();

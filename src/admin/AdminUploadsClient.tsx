@@ -21,11 +21,11 @@ export default function AdminUploadsClient({
     <div className="space-y-4">
       {urls.length > 1 &&
         <AdminAddAllUploads
-          storageUrlCount={urls.length}
+          storageUrls={urls.map(({ url }) => url)}
           uniqueTags={uniqueTags}
           isAdding={isAdding}
           setIsAdding={setIsAdding}
-          onUploadAdded={setAddedUploadUrls}
+          setAddedUploadUrls={setAddedUploadUrls}
         />}
       <AdminUploadsTable {...{ title, urls, isAdding, addedUploadUrls }} />
     </div>

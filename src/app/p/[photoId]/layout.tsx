@@ -17,6 +17,8 @@ import { getPhotoIds } from '@/photo/db/query';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { ReactNode, cache } from 'react';
 
+export const maxDuration = 60;
+
 const getPhotosNearIdCachedCached = cache((photoId: string) =>
   getPhotosNearIdCached(photoId, { limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 }));
 

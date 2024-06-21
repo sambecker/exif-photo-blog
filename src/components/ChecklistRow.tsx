@@ -8,13 +8,15 @@ export default function ChecklistRow({
   status,
   isPending,
   optional,
+  showWarning,
   experimental,
   children,
 }: {
   title: string
   status: boolean
-  isPending: boolean
+  isPending?: boolean
   optional?: boolean
+  showWarning?: boolean
   experimental?: boolean
   children: ReactNode
 }) {
@@ -24,10 +26,14 @@ export default function ChecklistRow({
       'px-4 pt-2 pb-2.5',
     )}>
       <StatusIcon
-        type={status ? 'checked' : optional ? 'optional' : 'missing'}
+        type={status
+          ? 'checked'
+          : showWarning
+            ? 'warning'
+            : optional ? 'optional' : 'missing'}
         loading={isPending}
       />
-      <div className="flex flex-col min-w-0">
+      <div className="flex flex-col min-w-0 flex-grow">
         <div className={clsx(
           'flex flex-wrap items-center gap-2 pb-0.5',
           'font-bold dark:text-gray-300',
