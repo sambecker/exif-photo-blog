@@ -1,6 +1,6 @@
 'use client';
 
-import Banner from '@/components/Banner';
+import Note from '@/components/Note';
 import SiteGrid from '@/components/SiteGrid';
 import {
   PATH_ADMIN_CONFIGURATION,
@@ -96,10 +96,10 @@ export default function AdminNavClient({
             </Link>
           </div>
           {shouldShowBanner &&
-            <Banner icon={<FaRegClock className="flex-shrink-0" />}>
+            <Note icon={<FaRegClock className="flex-shrink-0" />}>
               Photo updates detected—they may take several minutes to show up
               for visitors
-            </Banner>}
+            </Note>}
         </div>
       }
     />

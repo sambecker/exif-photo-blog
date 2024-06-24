@@ -8,7 +8,7 @@ export default async function SiteChecklistServer({
 }: {
   simplifiedView?: boolean
 }) {
-  const secret = await generateAuthSecret();
+  const secret = await generateAuthSecret().catch(() => 'TRY AGAIN');
   const connectionErrors = await testConnectionsAction().catch(() => ({}));
   return (
     <SiteChecklistClient {...{

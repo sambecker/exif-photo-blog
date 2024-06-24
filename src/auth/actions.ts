@@ -2,6 +2,7 @@
 
 import {
   KEY_CALLBACK_URL,
+  KEY_CREDENTIALS_CALLBACK_ROUTE_ERROR_URL,
   KEY_CREDENTIALS_SIGN_IN_ERROR,
   KEY_CREDENTIALS_SIGN_IN_ERROR_URL,
   auth,
@@ -21,7 +22,9 @@ export const signInAction = async (
   } catch (error) {
     if (
       `${error}`.includes(KEY_CREDENTIALS_SIGN_IN_ERROR) || 
-      `${error}`.includes(KEY_CREDENTIALS_SIGN_IN_ERROR_URL)
+      `${error}`.includes(KEY_CREDENTIALS_SIGN_IN_ERROR_URL) ||
+      // New error thrown in next-auth 5.0.0-beta.19 for incorrect credentials
+      `${error}`.includes(KEY_CREDENTIALS_CALLBACK_ROUTE_ERROR_URL)
     ) {
       // Return credentials error to display on sign-in page.
       return KEY_CREDENTIALS_SIGN_IN_ERROR;

@@ -1,5 +1,5 @@
 import AdminCTA from '@/admin/AdminCTA';
-import InfoBlock from '@/components/InfoBlock';
+import Container from '@/components/Container';
 import SiteGrid from '@/components/SiteGrid';
 import { IS_SITE_READY } from '@/site/config';
 import { PATH_ADMIN_CONFIGURATION } from '@/site/paths';
@@ -12,7 +12,7 @@ export default function PhotosEmptyState() {
   return (
     <SiteGrid
       contentMain={
-        <InfoBlock
+        <Container
           className="min-h-[20rem] sm:min-h-[30rem] px-8"
           padding="loose"
         >
@@ -47,7 +47,7 @@ export default function PhotosEmptyState() {
                 </Link>
               </div>
             </div>}
-        </InfoBlock>}
+        </Container>}
     />
   );
 };

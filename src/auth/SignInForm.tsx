@@ -1,7 +1,7 @@
 'use client';
 
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
-import InfoBlock from '@/components/InfoBlock';
+import Container from '@/components/Container';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { getAuthAction, signInAction } from './actions';
@@ -40,7 +40,7 @@ export default function SignInForm() {
     password.length > 0;
 
   return (
-    <InfoBlock className={clsx(
+    <Container className={clsx(
       'w-[calc(100vw-1.5rem)] sm:w-[min(360px,90vw)]',
       'px-6 py-5',
     )}>
@@ -89,6 +89,6 @@ export default function SignInForm() {
           </SubmitButtonWithStatus>
         </div>
       </form>
-    </InfoBlock>
+    </Container>
   );
 }

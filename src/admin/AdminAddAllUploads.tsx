@@ -2,7 +2,7 @@
 
 import ErrorNote from '@/components/ErrorNote';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
-import InfoBlock from '@/components/InfoBlock';
+import Container from '@/components/Container';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import { addAllUploadsAction } from '@/photo/actions';
 import { PATH_ADMIN_PHOTOS } from '@/site/paths';
@@ -84,7 +84,7 @@ export default function AdminAddAllUploads({
     <>
       {actionErrorMessage &&
         <ErrorNote>{actionErrorMessage}</ErrorNote>}
-      <InfoBlock padding="tight">
+      <Container padding="tight">
         <div className="w-full space-y-4 py-1">
           <div className="flex">
             <div className={clsx(
@@ -173,7 +173,7 @@ export default function AdminAddAllUploads({
               </div>}
           </div>
         </div>
-      </InfoBlock>
+      </Container>
     </>
   );
 }

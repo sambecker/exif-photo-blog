@@ -1,5 +1,5 @@
 import AnimateItems from '@/components/AnimateItems';
-import Banner from '@/components/Banner';
+import Note from '@/components/Note';
 import SiteGrid from '@/components/SiteGrid';
 import PhotoGrid from '@/photo/PhotoGrid';
 import { getPhotosNoStore } from '@/photo/cache';
@@ -63,9 +63,9 @@ export default async function HiddenTagPage() {
           animateOnFirstLoadOnly
         />
         <div className="space-y-6">
-          <Banner animate>
+          <Note animate>
             Only visible to authenticated admins
-          </Banner>
+          </Note>
           <PhotoGrid {...{ photos }} />
         </div>
       </div>}

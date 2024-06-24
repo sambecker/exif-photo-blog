@@ -23,6 +23,9 @@ export type GetPhotosOptions = {
   hidden?: 'exclude' | 'include' | 'only'
 };
 
+export const areOptionsSensitive = (options: GetPhotosOptions) =>
+  options.hidden === 'include' || options.hidden === 'only';
+
 export const getWheresFromOptions = (
   options: GetPhotosOptions,
   initialValuesIndex = 1
