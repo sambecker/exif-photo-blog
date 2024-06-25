@@ -12,7 +12,7 @@ import { isNextImageReadyBasedOnPhotos } from '@/photo';
 export let generateStaticParams:
   (() => Promise<{ photoId: string }[]>) | undefined = undefined;
 
-if (STATICALLY_OPTIMIZED_OG_IMAGES &&  IS_PRODUCTION) {
+if (STATICALLY_OPTIMIZED_OG_IMAGES && IS_PRODUCTION) {
   generateStaticParams = async () => {
     const photos = await getPhotoIds({ limit: GENERATE_STATIC_PARAMS_LIMIT });
     return photos.map(photoId => ({ photoId }));
