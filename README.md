@@ -246,3 +246,6 @@ FAQ
 
 #### Why are large, multi-photo uploads not finishing?
 > The default timeout for processing multiple uploads is 60 seconds (the limit for Hobby accounts). This can be extended to 5 minutes on Pro accounts by setting `maxDuration = 300` in `src/app/admin/uploads/page.tsx`.
+
+#### Can this template run in a docker image?
+> Possibly. See [Issue #116](https://github.com/sambecker/exif-photo-blog/issues/116) for an attempted solution.
