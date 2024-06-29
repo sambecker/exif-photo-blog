@@ -91,7 +91,7 @@ export default function AdminPhotosTable({
             )}>
               <PhotoDate {...{
                 photo,
-                dateType: showUpdatedAt ? 'updatedAt' : undefined,
+                dateType: showUpdatedAt ? 'updatedAt' : 'createdAt',
               }} />
             </div>
           </div>
