@@ -4,7 +4,7 @@ import { StorageListResponse } from '@/services/storage';
 import AdminAddAllUploads from './AdminAddAllUploads';
 import AdminUploadsTable from './AdminUploadsTable';
 import { useState } from 'react';
-import { TagsWithMeta } from '@/tag';
+import { Tags } from '@/tag';
 
 export default function AdminUploadsClient({
   title,
@@ -13,7 +13,7 @@ export default function AdminUploadsClient({
 }: {
   title?: string
   urls: StorageListResponse
-  uniqueTags?: TagsWithMeta
+  uniqueTags?: Tags
 }) {
   const [isAdding, setIsAdding] = useState(false);
   const [addedUploadUrls, setAddedUploadUrls] = useState<string[]>([]);

@@ -20,7 +20,7 @@ import {
 export const TAG_FAVS   = 'favs';
 export const TAG_HIDDEN = 'hidden';
 
-export type TagsWithMeta = {
+export type Tags = {
   tag: string
   count: number
 }[]
@@ -57,7 +57,7 @@ export const sortTags = (
   .sort((a, b) => isTagFavs(a) ? -1 : a.localeCompare(b));
 
 export const sortTagsObject = (
-  tags: TagsWithMeta,
+  tags: Tags,
   tagToHide?: string,
 ) => tags
   .filter(({ tag }) => tag!== tagToHide)
@@ -66,7 +66,7 @@ export const sortTagsObject = (
 export const sortTagsWithoutFavs = (tags: string[]) =>
   sortTags(tags, TAG_FAVS);
 
-export const sortTagsObjectWithoutFavs = (tags: TagsWithMeta) =>
+export const sortTagsObjectWithoutFavs = (tags: Tags) =>
   sortTagsObject(tags, TAG_FAVS);
 
 export const descriptionForTaggedPhotos = (
@@ -105,7 +105,7 @@ export const isPathFavs = (pathname?: string) =>
 
 export const isTagHidden = (tag: string) => tag.toLowerCase() === TAG_HIDDEN;
 
-export const addHiddenToTags = (tags: TagsWithMeta, hiddenPhotosCount = 0) => {
+export const addHiddenToTags = (tags: Tags, hiddenPhotosCount = 0) => {
   if (hiddenPhotosCount > 0) {
     return tags
       .filter(({ tag }) => tag === TAG_FAVS)
@@ -116,7 +116,7 @@ export const addHiddenToTags = (tags: TagsWithMeta, hiddenPhotosCount = 0) => {
   }
 };
 
-export const convertTagsForForm = (tags: TagsWithMeta = []) =>
+export const convertTagsForForm = (tags: Tags = []) =>
   sortTagsObjectWithoutFavs(tags)
     .map(({ tag, count }) => ({
       value: tag,

@@ -2,7 +2,7 @@ import { CameraProps } from '@/camera';
 import CameraShareModal from '@/camera/CameraShareModal';
 import { generateMetaForCamera } from '@/camera/meta';
 import { Metadata } from 'next/types';
-import { INFINITE_SCROLL_GRID_PHOTO_INITIAL } from '@/photo';
+import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getPhotosCameraDataCached } from '@/camera/data';
 import CameraOverview from '@/camera/CameraOverview';
 import { cache } from 'react';
@@ -13,7 +13,7 @@ const getPhotosCameraDataCachedCached = cache((
 ) => getPhotosCameraDataCached(
   make,
   model,
-  INFINITE_SCROLL_GRID_PHOTO_INITIAL,
+  INFINITE_SCROLL_GRID_INITIAL,
 ));
 
 export async function generateMetadata({

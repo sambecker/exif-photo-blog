@@ -1,5 +1,5 @@
 import { Photo, PhotoDateRange } from '@/photo';
-import PhotoGridPage from '@/photo/PhotoGridPage';
+import PhotoGridContainer from '@/photo/PhotoGridContainer';
 import FocalLengthHeader from './FocalLengthHeader';
 
 export default function FocalLengthOverview({
@@ -16,7 +16,7 @@ export default function FocalLengthOverview({
   animateOnFirstLoadOnly?: boolean,
 }) {
   return (
-    <PhotoGridPage {...{
+    <PhotoGridContainer {...{
       cacheKey: `focal-${focal}`,
       photos,
       count,

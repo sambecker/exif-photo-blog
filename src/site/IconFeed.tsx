@@ -3,7 +3,7 @@
 const INTRINSIC_WIDTH = 28;
 const INTRINSIC_HEIGHT = 24;
 
-export default function IconFullFrame({
+export default function IconFeed({
   width = INTRINSIC_WIDTH,
   includeTitle = true,
 }: {

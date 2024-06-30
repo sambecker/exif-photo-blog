@@ -1,4 +1,4 @@
-import { INFINITE_SCROLL_GRID_PHOTO_INITIAL } from '@/photo';
+import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { FilmSimulation, generateMetaForFilmSimulation } from '@/simulation';
 import FilmSimulationOverview from '@/simulation/FilmSimulationOverview';
 import { getPhotosFilmSimulationDataCached } from '@/simulation/data';
@@ -20,7 +20,7 @@ export async function generateMetadata({
     { count, dateRange },
   ] = await getPhotosFilmSimulationDataCachedCached({
     simulation,
-    limit: INFINITE_SCROLL_GRID_PHOTO_INITIAL,
+    limit: INFINITE_SCROLL_GRID_INITIAL,
   });
 
   const {
@@ -55,7 +55,7 @@ export default async function FilmSimulationPage({
     { count, dateRange },
   ] =  await getPhotosFilmSimulationDataCachedCached({
     simulation,
-    limit: INFINITE_SCROLL_GRID_PHOTO_INITIAL,
+    limit: INFINITE_SCROLL_GRID_INITIAL,
   });
 
   return (
