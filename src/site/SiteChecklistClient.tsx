@@ -358,7 +358,7 @@ export default function SiteChecklistClient({
         </Checklist>
         {!simplifiedView && <>
           <Checklist
-            title="AI Text Generation"
+            title="AI text generation"
             titleShort="AI"
             icon={<HiSparkles />}
             experimental
@@ -367,7 +367,7 @@ export default function SiteChecklistClient({
             <ChecklistRow
               title={isAiTextGenerationEnabled && isTestingConnections
                 ? 'Testing OpenAI connection'
-                : 'Add OpenAI Secret Key'}
+                : 'Add OpenAI secret key'}
               status={isAiTextGenerationEnabled}
               isPending={isAiTextGenerationEnabled && isTestingConnections}
               optional
@@ -383,7 +383,7 @@ export default function SiteChecklistClient({
             <ChecklistRow
               title={hasVercelKv && isTestingConnections
                 ? 'Testing KV connection'
-                : 'Enable Rate Limiting'}
+                : 'Enable rate limiting'}
               status={hasVercelKv}
               isPending={hasVercelKv && isTestingConnections}
               optional
@@ -426,7 +426,7 @@ export default function SiteChecklistClient({
               {renderEnvVars(['NEXT_PUBLIC_PRO_MODE'])}
             </ChecklistRow>
             <ChecklistRow
-              title="Show grid first"
+              title="Grid homepage"
               status={isGridFirst}
               optional
             >
@@ -435,7 +435,7 @@ export default function SiteChecklistClient({
               {renderEnvVars(['NEXT_PUBLIC_SHOW_GRID_FIRST'])}
             </ChecklistRow>
             <ChecklistRow
-              title="Static Optimization"
+              title="Static optimization"
               status={isStaticallyOptimized}
               optional
               experimental
@@ -454,7 +454,7 @@ export default function SiteChecklistClient({
               )}
             </ChecklistRow>
             <ChecklistRow
-              title="Photo Matting"
+              title="Photo matting"
               status={arePhotosMatted}
               optional
             >
@@ -464,7 +464,7 @@ export default function SiteChecklistClient({
               {renderEnvVars(['NEXT_PUBLIC_MATTE_PHOTOS'])}
             </ChecklistRow>
             <ChecklistRow
-              title="Image Blur"
+              title="Image blur"
               status={isBlurEnabled}
               optional
             >
