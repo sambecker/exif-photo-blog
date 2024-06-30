@@ -1,7 +1,7 @@
 import { generateMetaForFocalLength, getFocalLengthFromString } from '@/focal';
 import FocalLengthOverview from '@/focal/FocalLengthOverview';
 import { getPhotosFocalLengthDataCached } from '@/focal/data';
-import { INFINITE_SCROLL_GRID_PHOTO_INITIAL } from '@/photo';
+import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { PATH_ROOT } from '@/site/paths';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
@@ -10,7 +10,7 @@ import { cache } from 'react';
 const getPhotosFocalDataCachedCached = cache((focal: number) =>
   getPhotosFocalLengthDataCached({
     focal,
-    limit: INFINITE_SCROLL_GRID_PHOTO_INITIAL,
+    limit: INFINITE_SCROLL_GRID_INITIAL,
   }));
 
 interface FocalLengthProps {

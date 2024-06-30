@@ -8,12 +8,14 @@ import ViewSwitcher, { SwitcherSelection } from '@/site/ViewSwitcher';
 import {
   PATH_ROOT,
   isPathAdmin,
+  isPathFeed,
   isPathGrid,
   isPathProtected,
   isPathSignIn,
 } from '@/site/paths';
 import AnimateItems from '../components/AnimateItems';
 import { useAppState } from '@/state/AppState';
+import { GRID_HOMEPAGE_ENABLED } from './config';
 
 export default function Nav({
   siteDomainOrTitle,
@@ -36,9 +38,11 @@ export default function Nav({
 
   const switcherSelectionForPath = (): SwitcherSelection | undefined => {
     if (pathname === PATH_ROOT) {
-      return 'full-frame';
+      return GRID_HOMEPAGE_ENABLED ? 'grid' : 'feed';
     } else if (isPathGrid(pathname)) {
       return 'grid';
+    } else if (isPathFeed(pathname)) {
+      return 'feed';
     } else if (isPathProtected(pathname)) {
       return 'admin';
     }

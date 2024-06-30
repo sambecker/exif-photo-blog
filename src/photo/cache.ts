@@ -24,6 +24,7 @@ import {
   PATHS_ADMIN,
   PATHS_TO_CACHE,
   PATH_ADMIN,
+  PATH_FEED,
   PATH_GRID,
   PATH_ROOT,
   PREFIX_CAMERA,
@@ -126,6 +127,7 @@ export const revalidatePhoto = (photoId: string) => {
   revalidatePath(pathForPhoto({ photo: photoId }), 'layout');
   revalidatePath(PATH_ROOT, 'layout');
   revalidatePath(PATH_GRID, 'layout');
+  revalidatePath(PATH_FEED, 'layout');
   revalidatePath(PREFIX_TAG, 'layout');
   revalidatePath(PREFIX_CAMERA, 'layout');
   revalidatePath(PREFIX_FILM_SIMULATION, 'layout');

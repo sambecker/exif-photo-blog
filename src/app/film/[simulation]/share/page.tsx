@@ -1,4 +1,4 @@
-import { INFINITE_SCROLL_GRID_PHOTO_INITIAL } from '@/photo';
+import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { FilmSimulation, generateMetaForFilmSimulation } from '@/simulation';
 import FilmSimulationOverview from '@/simulation/FilmSimulationOverview';
 import FilmSimulationShareModal from '@/simulation/FilmSimulationShareModal';
@@ -9,7 +9,7 @@ import { cache } from 'react';
 const getPhotosFilmSimulationDataCachedCached =
   cache((simulation: FilmSimulation) => getPhotosFilmSimulationDataCached({
     simulation,
-    limit: INFINITE_SCROLL_GRID_PHOTO_INITIAL,
+    limit: INFINITE_SCROLL_GRID_INITIAL,
   }));
 
 interface FilmSimulationProps {

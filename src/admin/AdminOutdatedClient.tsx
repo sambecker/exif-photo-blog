@@ -12,7 +12,7 @@ import { syncPhotosAction } from '@/photo/actions';
 import { useRouter } from 'next/navigation';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 
-const UPDATE_BATCH_SIZE = 4;
+const UPDATE_BATCH_SIZE_MAX = 4;
 
 export default function AdminOutdatedClient({
   photos,
@@ -21,6 +21,8 @@ export default function AdminOutdatedClient({
   photos: Photo[]
   hasAiTextGeneration: boolean
 }) {
+  const updateBatchSize = Math.min(UPDATE_BATCH_SIZE_MAX, photos.length);
+
   const [photoIdsSyncing, setPhotoIdsSyncing] = useState<string[]>([]);
 
   const arePhotoIdsSyncing = photoIdsSyncing.length > 0;
@@ -46,10 +48,10 @@ export default function AdminOutdatedClient({
         onClick={async () => {
           if (window.confirm(
             // eslint-disable-next-line max-len
-            `Are you sure you want to sync the oldest ${UPDATE_BATCH_SIZE} photos? This action cannot be undone.`
+            `Are you sure you want to sync the oldest ${updateBatchSize} photos? This action cannot be undone.`
           )) {
             const photosToSync = photos
-              .slice(0, UPDATE_BATCH_SIZE)
+              .slice(0, updateBatchSize)
               .map(photo => photo.id);
             const isFinalBatch = photosToSync.length >= photos.length;
             setPhotoIdsSyncing(photosToSync);
@@ -68,8 +70,8 @@ export default function AdminOutdatedClient({
       >
         {arePhotoIdsSyncing
           ? 'Syncing'
-          : <ResponsiveText shortText={`Sync Next ${UPDATE_BATCH_SIZE}`}>
-            Sync Next {UPDATE_BATCH_SIZE} Photos
+          : <ResponsiveText shortText={`Sync Next ${updateBatchSize}`}>
+            Sync Next {updateBatchSize} Photos
           </ResponsiveText>}
       </LoaderButton>}
     >

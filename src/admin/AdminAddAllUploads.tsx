@@ -7,7 +7,7 @@ import LoaderButton from '@/components/primitives/LoaderButton';
 import { addAllUploadsAction } from '@/photo/actions';
 import { PATH_ADMIN_PHOTOS } from '@/site/paths';
 import {
-  TagsWithMeta,
+  Tags,
   convertTagsForForm,
   getValidationMessageForTags,
 } from '@/tag';
@@ -32,7 +32,7 @@ export default function AdminAddAllUploads({
   setAddedUploadUrls,
 }: {
   storageUrls: string[]
-  uniqueTags?: TagsWithMeta
+  uniqueTags?: Tags
   isAdding: boolean
   setIsAdding: (isAdding: boolean) => void
   setAddedUploadUrls?: Dispatch<SetStateAction<string[]>>

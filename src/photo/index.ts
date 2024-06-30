@@ -16,17 +16,17 @@ import type { Metadata } from 'next';
 
 export const OUTDATED_THRESHOLD = new Date('2024-06-16');
 
-// INFINITE SCROLL: LARGE PHOTOS
-export const INFINITE_SCROLL_LARGE_PHOTO_INITIAL =
+// INFINITE SCROLL: FEED
+export const INFINITE_SCROLL_FEED_INITIAL =
   process.env.NODE_ENV === 'development' ? 2 : 12;
-export const INFINITE_SCROLL_LARGE_PHOTO_MULTIPLE =
+export const INFINITE_SCROLL_FEED_MULTIPLE =
   process.env.NODE_ENV === 'development' ? 2 : 24;
 
-// INFINITE SCROLL: GRID PHOTOS
-export const INFINITE_SCROLL_GRID_PHOTO_INITIAL = HIGH_DENSITY_GRID
+// INFINITE SCROLL: GRID
+export const INFINITE_SCROLL_GRID_INITIAL = HIGH_DENSITY_GRID
   ? process.env.NODE_ENV === 'development' ? 12 : 24
   : process.env.NODE_ENV === 'development' ? 12 : 24;
-export const INFINITE_SCROLL_GRID_PHOTO_MULTIPLE = HIGH_DENSITY_GRID
+export const INFINITE_SCROLL_GRID_MULTIPLE = HIGH_DENSITY_GRID
   ? process.env.NODE_ENV === 'development' ? 12 : 48
   : process.env.NODE_ENV === 'development' ? 12 : 48;
 

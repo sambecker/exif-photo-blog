@@ -38,7 +38,7 @@ import { getKeywordsForPhoto, titleForPhoto } from '@/photo';
 import PhotoDate from '@/photo/PhotoDate';
 import PhotoSmall from '@/photo/PhotoSmall';
 import { FaCheck } from 'react-icons/fa6';
-import { TagsWithMeta, addHiddenToTags, formatTag } from '@/tag';
+import { Tags, addHiddenToTags, formatTag } from '@/tag';
 import { FaTag } from 'react-icons/fa';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 import CommandKItem from './CommandKItem';
@@ -68,7 +68,7 @@ export default function CommandKClient({
   showDebugTools,
   footer,
 }: {
-  tags: TagsWithMeta
+  tags: Tags
   serverSections?: CommandKSection[]
   showDebugTools?: boolean
   footer?: string

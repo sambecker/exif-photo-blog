@@ -1,7 +1,7 @@
 'use client';
 
 import { Camera } from '@/camera';
-import { INFINITE_SCROLL_GRID_PHOTO_MULTIPLE } from '.';
+import { INFINITE_SCROLL_GRID_MULTIPLE } from '.';
 import InfinitePhotoScroll from './InfinitePhotoScroll';
 import PhotoGrid from './PhotoGrid';
 import { FilmSimulation } from '@/simulation';
@@ -29,7 +29,7 @@ export default function PhotoGridInfinite({
     <InfinitePhotoScroll
       cacheKey={cacheKey}
       initialOffset={initialOffset}
-      itemsPerPage={INFINITE_SCROLL_GRID_PHOTO_MULTIPLE}
+      itemsPerPage={INFINITE_SCROLL_GRID_MULTIPLE}
       tag={tag}
       camera={camera}
       simulation={simulation}

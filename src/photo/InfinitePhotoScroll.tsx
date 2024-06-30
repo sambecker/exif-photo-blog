@@ -15,6 +15,7 @@ import { clsx } from 'clsx/lite';
 import { useAppState } from '@/state/AppState';
 import { Camera } from '@/camera';
 import { FilmSimulation } from '@/simulation';
+import { GetPhotosOptions } from './db';
 
 export type RevalidatePhoto = (
   photoId: string,
@@ -25,6 +26,7 @@ export default function InfinitePhotoScroll({
   cacheKey,
   initialOffset,
   itemsPerPage,
+  sortBy,
   tag,
   camera,
   simulation,
@@ -35,6 +37,7 @@ export default function InfinitePhotoScroll({
 }: {
   initialOffset: number
   itemsPerPage: number
+  sortBy?: GetPhotosOptions['sortBy']
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
@@ -59,25 +62,18 @@ export default function InfinitePhotoScroll({
     , [key]);
 
   const fetcher = useCallback(([_key, size]: [string, number]) =>
-    useCachedPhotos
-      ? getPhotosCachedAction({
-        offset: initialOffset + size * itemsPerPage,
-        limit: itemsPerPage,
-        hidden: includeHiddenPhotos ? 'include' : 'exclude',
-        tag,
-        camera,
-        simulation,
-      })
-      : getPhotosAction({
-        offset: initialOffset + size * itemsPerPage,
-        limit: itemsPerPage,
-        hidden: includeHiddenPhotos ? 'include' : 'exclude',
-        tag,
-        camera,
-        simulation,
-      })
+    (useCachedPhotos ? getPhotosCachedAction : getPhotosAction)({
+      offset: initialOffset + size * itemsPerPage,
+      sortBy,
+      limit: itemsPerPage,
+      hidden: includeHiddenPhotos ? 'include' : 'exclude',
+      tag,
+      camera,
+      simulation,
+    })
   , [
     useCachedPhotos,
+    sortBy,
     initialOffset,
     itemsPerPage,
     includeHiddenPhotos,
