@@ -116,6 +116,8 @@ export const CURRENT_STORAGE: StorageType =
 
 export const PRO_MODE_ENABLED =
   process.env.NEXT_PUBLIC_PRO_MODE === '1';
+export const GRID_HOMEPAGE_ENABLED =
+  process.env.NEXT_PUBLIC_GRID_HOMEPAGE === '1';
 export const STATICALLY_OPTIMIZED_PAGES =
   process.env.NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES === '1';
 export const STATICALLY_OPTIMIZED_OG_IMAGES =
@@ -183,6 +185,7 @@ export const CONFIG_CHECKLIST_STATUS = {
   showFilmSimulations: SHOW_FILM_SIMULATIONS,
   showExifInfo: SHOW_EXIF_DATA,
   isProModeEnabled: PRO_MODE_ENABLED,
+  isGridHomepageEnabled: GRID_HOMEPAGE_ENABLED,
   isStaticallyOptimized: (
     STATICALLY_OPTIMIZED_PAGES ||
     STATICALLY_OPTIMIZED_OG_IMAGES

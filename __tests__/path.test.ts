@@ -36,6 +36,7 @@ const SHARE               = 'share';
 
 const PATH_ROOT                         = '/';
 const PATH_GRID                         = '/grid';
+const PATH_FEED                         = '/feed';
 const PATH_ADMIN                        = '/admin/photos';
 const PATH_OG                           = '/og';
 const PATH_OG_ALL                       = `${PATH_OG}/all`;
@@ -202,27 +203,28 @@ describe('Paths', () => {
     // Root
     expect(getEscapePath(PATH_ROOT)).toEqual(undefined);
     expect(getEscapePath(PATH_GRID)).toEqual(undefined);
+    expect(getEscapePath(PATH_FEED)).toEqual(undefined);
     expect(getEscapePath(PATH_ADMIN)).toEqual(undefined);
     // Photo
-    expect(getEscapePath(PATH_PHOTO)).toEqual(PATH_GRID);
+    expect(getEscapePath(PATH_PHOTO)).toEqual(PATH_ROOT);
     expect(getEscapePath(PATH_PHOTO_SHARE)).toEqual(PATH_PHOTO);
     // Tag
-    expect(getEscapePath(PATH_TAG)).toEqual(PATH_GRID);
+    expect(getEscapePath(PATH_TAG)).toEqual(PATH_ROOT);
     expect(getEscapePath(PATH_TAG_SHARE)).toEqual(PATH_TAG);
     expect(getEscapePath(PATH_TAG_PHOTO)).toEqual(PATH_TAG);
     expect(getEscapePath(PATH_TAG_PHOTO_SHARE)).toEqual(PATH_TAG_PHOTO);
     // Camera
-    expect(getEscapePath(PATH_CAMERA)).toEqual(PATH_GRID);
+    expect(getEscapePath(PATH_CAMERA)).toEqual(PATH_ROOT);
     expect(getEscapePath(PATH_CAMERA_SHARE)).toEqual(PATH_CAMERA);
     expect(getEscapePath(PATH_CAMERA_PHOTO)).toEqual(PATH_CAMERA);
     expect(getEscapePath(PATH_CAMERA_PHOTO_SHARE)).toEqual(PATH_CAMERA_PHOTO);
     // Film Simulation
-    expect(getEscapePath(PATH_FILM_SIMULATION)).toEqual(PATH_GRID);
+    expect(getEscapePath(PATH_FILM_SIMULATION)).toEqual(PATH_ROOT);
     expect(getEscapePath(PATH_FILM_SIMULATION_SHARE)).toEqual(PATH_FILM_SIMULATION);
     expect(getEscapePath(PATH_FILM_SIMULATION_PHOTO)).toEqual(PATH_FILM_SIMULATION);
     expect(getEscapePath(PATH_FILM_SIMULATION_PHOTO_SHARE)).toEqual(PATH_FILM_SIMULATION_PHOTO);
     // Focal Length
-    expect(getEscapePath(PATH_FOCAL_LENGTH)).toEqual(PATH_GRID);
+    expect(getEscapePath(PATH_FOCAL_LENGTH)).toEqual(PATH_ROOT);
     expect(getEscapePath(PATH_FOCAL_LENGTH_SHARE)).toEqual(PATH_FOCAL_LENGTH);
     expect(getEscapePath(PATH_FOCAL_LENGTH_PHOTO)).toEqual(PATH_FOCAL_LENGTH);
     expect(getEscapePath(PATH_FOCAL_LENGTH_PHOTO_SHARE)).toEqual(PATH_FOCAL_LENGTH_PHOTO);

@@ -1,4 +1,4 @@
-import { INFINITE_SCROLL_GRID_PHOTO_INITIAL } from '@/photo';
+import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { generateMetaForTag } from '@/tag';
 import TagOverview from '@/tag/TagOverview';
 import TagShareModal from '@/tag/TagShareModal';
@@ -7,7 +7,7 @@ import type { Metadata } from 'next';
 import { cache } from 'react';
 
 const getPhotosTagDataCachedCached = cache((tag: string) =>
-  getPhotosTagDataCached({ tag, limit: INFINITE_SCROLL_GRID_PHOTO_INITIAL }));
+  getPhotosTagDataCached({ tag, limit: INFINITE_SCROLL_GRID_INITIAL }));
 
 interface TagProps {
   params: { tag: string }

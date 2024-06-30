@@ -4,7 +4,7 @@ import AdminTable from '@/admin/AdminTable';
 import { Fragment } from 'react';
 import DeleteButton from '@/admin/DeleteButton';
 import { photoQuantityText } from '@/photo';
-import { TagsWithMeta, formatTag, sortTagsObject } from '@/tag';
+import { Tags, formatTag, sortTagsObject } from '@/tag';
 import EditButton from '@/admin/EditButton';
 import { pathForAdminTagEdit } from '@/site/paths';
 import { clsx } from 'clsx/lite';
@@ -13,7 +13,7 @@ import AdminTagBadge from './AdminTagBadge';
 export default function AdminTagTable({
   tags,
 }: {
-  tags: TagsWithMeta
+  tags: Tags
 }) {
   return (
     <AdminTable>

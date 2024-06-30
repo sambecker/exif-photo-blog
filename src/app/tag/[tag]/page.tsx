@@ -1,4 +1,4 @@
-import { INFINITE_SCROLL_GRID_PHOTO_INITIAL } from '@/photo';
+import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { PATH_ROOT } from '@/site/paths';
 import { generateMetaForTag } from '@/tag';
 import TagOverview from '@/tag/TagOverview';
@@ -8,7 +8,7 @@ import { redirect } from 'next/navigation';
 import { cache } from 'react';
 
 const getPhotosTagDataCachedCached = cache((tag: string) =>
-  getPhotosTagDataCached({ tag, limit: INFINITE_SCROLL_GRID_PHOTO_INITIAL}));
+  getPhotosTagDataCached({ tag, limit: INFINITE_SCROLL_GRID_INITIAL}));
 
 interface TagProps {
   params: { tag: string }

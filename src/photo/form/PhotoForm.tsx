@@ -19,7 +19,7 @@ import { PATH_ADMIN_PHOTOS, PATH_ADMIN_UPLOADS } from '@/site/paths';
 import { toastSuccess, toastWarning } from '@/toast';
 import { getDimensionsFromSize } from '@/utility/size';
 import ImageWithFallback from '@/components/image/ImageWithFallback';
-import { TagsWithMeta, convertTagsForForm } from '@/tag';
+import { Tags, convertTagsForForm } from '@/tag';
 import { AiContent } from '../ai/useAiImageQueries';
 import AiButton from '../ai/AiButton';
 import Spinner from '@/components/Spinner';
@@ -49,7 +49,7 @@ export default function PhotoForm({
   initialPhotoForm: Partial<PhotoFormData>
   updatedExifData?: Partial<PhotoFormData>
   updatedBlurData?: string
-  uniqueTags?: TagsWithMeta
+  uniqueTags?: Tags
   aiContent?: AiContent
   shouldStripGpsData?: boolean
   onTitleChange?: (updatedTitle: string) => void

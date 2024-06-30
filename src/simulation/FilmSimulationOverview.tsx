@@ -1,7 +1,7 @@
 import { Photo, PhotoDateRange } from '@/photo';
 import FilmSimulationHeader from './FilmSimulationHeader';
 import { FilmSimulation } from '.';
-import PhotoGridPage from '@/photo/PhotoGridPage';
+import PhotoGridContainer from '@/photo/PhotoGridContainer';
 
 export default function FilmSimulationOverview({
   simulation,
@@ -17,7 +17,7 @@ export default function FilmSimulationOverview({
   animateOnFirstLoadOnly?: boolean,
 }) {
   return (
-    <PhotoGridPage {...{
+    <PhotoGridContainer {...{
       cacheKey: `simulation-${simulation}`, 
       photos,
       count,

@@ -11,7 +11,7 @@ import PhotoForm from './form/PhotoForm';
 import { useFormState } from 'react-dom';
 import { areSimpleObjectsEqual } from '@/utility/object';
 import { getExifDataAction } from './actions';
-import { TagsWithMeta } from '@/tag';
+import { Tags } from '@/tag';
 import AiButton from './ai/AiButton';
 import usePhotoFormParent from './form/usePhotoFormParent';
 import ExifSyncButton from '@/admin/ExifSyncButton';
@@ -24,7 +24,7 @@ export default function PhotoEditPageClient({
   blurData,
 }: {
   photo: Photo
-  uniqueTags: TagsWithMeta
+  uniqueTags: Tags
   hasAiTextGeneration: boolean
   imageThumbnailBase64: string
   blurData: string

@@ -49,6 +49,7 @@ export default function SiteChecklistClient({
   showFilmSimulations,
   showExifInfo,
   isProModeEnabled,
+  isGridHomepageEnabled: isGridFirst,
   isStaticallyOptimized,
   arePagesStaticallyOptimized,
   areOGImagesStaticallyOptimized,
@@ -357,7 +358,7 @@ export default function SiteChecklistClient({
         </Checklist>
         {!simplifiedView && <>
           <Checklist
-            title="AI Text Generation"
+            title="AI text generation"
             titleShort="AI"
             icon={<HiSparkles />}
             experimental
@@ -366,7 +367,7 @@ export default function SiteChecklistClient({
             <ChecklistRow
               title={isAiTextGenerationEnabled && isTestingConnections
                 ? 'Testing OpenAI connection'
-                : 'Add OpenAI Secret Key'}
+                : 'Add OpenAI secret key'}
               status={isAiTextGenerationEnabled}
               isPending={isAiTextGenerationEnabled && isTestingConnections}
               optional
@@ -382,7 +383,7 @@ export default function SiteChecklistClient({
             <ChecklistRow
               title={hasVercelKv && isTestingConnections
                 ? 'Testing KV connection'
-                : 'Enable Rate Limiting'}
+                : 'Enable rate limiting'}
               status={hasVercelKv}
               isPending={hasVercelKv && isTestingConnections}
               optional
@@ -425,7 +426,16 @@ export default function SiteChecklistClient({
               {renderEnvVars(['NEXT_PUBLIC_PRO_MODE'])}
             </ChecklistRow>
             <ChecklistRow
-              title="Static Optimization"
+              title="Grid homepage"
+              status={isGridFirst}
+              optional
+            >
+              Set environment variable to {'"1"'} to show grid layout
+              on homepage:
+              {renderEnvVars(['NEXT_PUBLIC_GRID_HOMEPAGE'])}
+            </ChecklistRow>
+            <ChecklistRow
+              title="Static optimization"
               status={isStaticallyOptimized}
               optional
               experimental
@@ -444,7 +454,7 @@ export default function SiteChecklistClient({
               )}
             </ChecklistRow>
             <ChecklistRow
-              title="Photo Matting"
+              title="Photo matting"
               status={arePhotosMatted}
               optional
             >
@@ -454,7 +464,7 @@ export default function SiteChecklistClient({
               {renderEnvVars(['NEXT_PUBLIC_MATTE_PHOTOS'])}
             </ChecklistRow>
             <ChecklistRow
-              title="Image Blur"
+              title="Image blur"
               status={isBlurEnabled}
               optional
             >

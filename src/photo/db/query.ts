@@ -12,7 +12,7 @@ import {
   PhotoDateRange,
 } from '@/photo';
 import { Cameras, createCameraKey } from '@/camera';
-import { TagsWithMeta } from '@/tag';
+import { Tags } from '@/tag';
 import { FilmSimulation, FilmSimulations } from '@/simulation';
 import { SHOULD_DEBUG_SQL } from '@/site/config';
 import {
@@ -261,7 +261,7 @@ export const getUniqueTags = async () =>
     WHERE hidden IS NOT TRUE
     GROUP BY tag
     ORDER BY tag ASC
-  `.then(({ rows }): TagsWithMeta => rows.map(({ tag, count }) => ({
+  `.then(({ rows }): Tags => rows.map(({ tag, count }) => ({
       tag: tag as string,
       count: parseInt(count, 10),
     })))
@@ -273,7 +273,7 @@ export const getUniqueTagsHidden = async () =>
     FROM photos
     GROUP BY tag
     ORDER BY tag ASC
-  `.then(({ rows }): TagsWithMeta => rows.map(({ tag, count }) => ({
+  `.then(({ rows }): Tags => rows.map(({ tag, count }) => ({
       tag: tag as string,
       count: parseInt(count, 10),
     })))
