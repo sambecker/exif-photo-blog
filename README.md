@@ -212,6 +212,9 @@ Vercel Postgres can be switched to another Postgres-compatible, pooling provider
 
 FAQ
 -
+#### How do I receive template updates?
+> For forked repos, click "Code," then "Update branch" from the main repo page. If you originally cloned the code, you can [create a fork](https://github.com/sambecker/exif-photo-blog/fork) from GitHub, then update your Git connection from your Vercel project settings. Once you've done this, you may need to go to your project deployments page, click •••, select "Create deployment," and choose `main`.
+
 #### Why don't my photo changes show up immediately?
 > This template statically optimizes core views such as `/` and `/grid` to minimize visitor load times. Consequently, when photos are added, edited, or removed, it might take several minutes for those changes to propagate. If it seems like a change is not taking effect, try navigating to `/admin/configuration` and clicking "Clear Cache."
 
@@ -236,8 +239,8 @@ FAQ
 #### Why are my thumbnails square?
 > Absent configuration, the default grid aspect ratio is `1`. `NEXT_PUBLIC_GRID_ASPECT_RATIO` can be set to any number (for instance, `1.5` for 3:2 images) or ignored by setting to `0`.
 
-#### Why aren't my Fujifilm simulations importing alongside EXIF data?
-> Fujifilm simulation data is stored in vendor-specific Makernote binaries embedded in EXIF data. Under certain circumstances an intermediary may strip out this data. For instance, there is a known issue on iOS where editing an image, e.g., cropping it, causes Makernote data loss. If your simulation data appears to be missing, try importing the original file as it was stored by the camera. Additionally, if you can confirm the simulation mode on camera, you can then edit the photo record and manually select it.
+#### Why aren't Fujifilm simulations importing alongside EXIF data?
+> Fujifilm simulation data is stored in vendor-specific Makernote binaries embedded in EXIF data. Under certain circumstances an intermediary may strip out this data. For instance, there is a known issue on iOS where editing an image, e.g., cropping it, causes Makernote data loss. If simulation data appears to be missing, try importing the original file as it was stored by the camera. Additionally, if you can confirm the simulation mode, you can edit the photo and manually select it.
 
 #### Why do my images appear flipped/rotated incorrectly?
 > For a number of reasons, only EXIF orientations: 1, 3, 6, and 8 are supported. Orientations 2, 4, 5, and 7—which make use of mirroring—are not supported.
