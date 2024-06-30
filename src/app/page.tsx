@@ -7,7 +7,7 @@ import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import { cache } from 'react';
 import { getPhotos, getPhotosMeta } from '@/photo/db/query';
-import { SHOW_GRID_FIRST } from '@/site/config';
+import { GRID_HOMEPAGE_ENABLED } from '@/site/config';
 import { getPhotoSidebarData } from '@/photo/data';
 import PhotoGridPage from '@/photo/PhotoGridPage';
 import PhotoFeedPage from '@/photo/PhotoFeedPage';
@@ -16,7 +16,7 @@ export const dynamic = 'force-static';
 export const maxDuration = 60;
 
 const getPhotosCached = cache(() => getPhotos({
-  limit: SHOW_GRID_FIRST
+  limit: GRID_HOMEPAGE_ENABLED
     ? INFINITE_SCROLL_GRID_INITIAL
     : INFINITE_SCROLL_FEED_INITIAL,
 }));
@@ -40,14 +40,14 @@ export default async function HomePage() {
     getPhotosMeta()
       .then(({ count }) => count)
       .catch(() => 0),
-    ...(SHOW_GRID_FIRST
+    ...(GRID_HOMEPAGE_ENABLED
       ? getPhotoSidebarData()
       : [[], [], []]),
   ]);
 
   return (
     photos.length > 0
-      ? SHOW_GRID_FIRST
+      ? GRID_HOMEPAGE_ENABLED
         ? <PhotoGridPage
           {...{ photos, photosCount, tags, cameras, simulations }}
         />

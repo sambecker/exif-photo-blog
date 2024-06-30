@@ -49,7 +49,7 @@ export default function SiteChecklistClient({
   showFilmSimulations,
   showExifInfo,
   isProModeEnabled,
-  isGridFirst,
+  isGridHomepageEnabled: isGridFirst,
   isStaticallyOptimized,
   arePagesStaticallyOptimized,
   areOGImagesStaticallyOptimized,
@@ -432,7 +432,7 @@ export default function SiteChecklistClient({
             >
               Set environment variable to {'"1"'} to show grid layout
               on homepage:
-              {renderEnvVars(['NEXT_PUBLIC_SHOW_GRID_FIRST'])}
+              {renderEnvVars(['NEXT_PUBLIC_GRID_HOMEPAGE'])}
             </ChecklistRow>
             <ChecklistRow
               title="Static optimization"

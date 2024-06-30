@@ -15,7 +15,7 @@ import {
 } from '@/site/paths';
 import AnimateItems from '../components/AnimateItems';
 import { useAppState } from '@/state/AppState';
-import { SHOW_GRID_FIRST } from './config';
+import { GRID_HOMEPAGE_ENABLED } from './config';
 
 export default function Nav({
   siteDomainOrTitle,
@@ -38,7 +38,7 @@ export default function Nav({
 
   const switcherSelectionForPath = (): SwitcherSelection | undefined => {
     if (pathname === PATH_ROOT) {
-      return SHOW_GRID_FIRST ? 'grid' : 'feed';
+      return GRID_HOMEPAGE_ENABLED ? 'grid' : 'feed';
     } else if (isPathGrid(pathname)) {
       return 'grid';
     } else if (isPathFeed(pathname)) {

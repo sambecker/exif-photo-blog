@@ -11,7 +11,7 @@ import {
 import { BiLockAlt } from 'react-icons/bi';
 import IconSearch from './IconSearch';
 import { useAppState } from '@/state/AppState';
-import { SHOW_GRID_FIRST } from './config';
+import { GRID_HOMEPAGE_ENABLED } from './config';
 
 export type SwitcherSelection = 'feed' | 'grid' | 'admin';
 
@@ -27,7 +27,7 @@ export default function ViewSwitcher({
   const renderItemFeed = () =>
     <SwitcherItem
       icon={<IconFeed />}
-      href={SHOW_GRID_FIRST ? PATH_FEED : PATH_ROOT}
+      href={GRID_HOMEPAGE_ENABLED ? PATH_FEED : PATH_ROOT}
       active={currentSelection === 'feed'}
       noPadding
     />;
@@ -35,7 +35,7 @@ export default function ViewSwitcher({
   const renderItemGrid = () =>
     <SwitcherItem
       icon={<IconGrid />}
-      href={SHOW_GRID_FIRST ? PATH_ROOT : PATH_GRID}
+      href={GRID_HOMEPAGE_ENABLED ? PATH_ROOT : PATH_GRID}
       active={currentSelection === 'grid'}
       noPadding
     />;
@@ -43,8 +43,8 @@ export default function ViewSwitcher({
   return (
     <div className="flex gap-1 sm:gap-2">
       <Switcher>
-        {SHOW_GRID_FIRST ? renderItemGrid() : renderItemFeed()}
-        {SHOW_GRID_FIRST ? renderItemFeed() : renderItemGrid()}
+        {GRID_HOMEPAGE_ENABLED ? renderItemGrid() : renderItemFeed()}
+        {GRID_HOMEPAGE_ENABLED ? renderItemFeed() : renderItemGrid()}
         {showAdmin &&
           <SwitcherItem
             icon={<BiLockAlt size={16} className="translate-y-[-0.5px]" />}
