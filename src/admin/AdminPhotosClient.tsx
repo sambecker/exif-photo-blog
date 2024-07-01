@@ -38,7 +38,7 @@ export default function AdminPhotosClient({
       contentMain={
         <div className="space-y-4">
           <div className="flex">
-            <div className="grow">
+            <div className="grow min-w-0">
               <PhotoUpload
                 shouldResize={!PRO_MODE_ENABLED}
                 isUploading={isUploading}

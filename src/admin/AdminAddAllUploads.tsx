@@ -3,7 +3,6 @@
 import ErrorNote from '@/components/ErrorNote';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import Container from '@/components/Container';
-import LoaderButton from '@/components/primitives/LoaderButton';
 import { addAllUploadsAction } from '@/photo/actions';
 import { PATH_ADMIN_PHOTOS } from '@/site/paths';
 import {
@@ -21,6 +20,7 @@ import { clsx } from 'clsx/lite';
 import { useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
 import { BiCheckCircle, BiImageAdd } from 'react-icons/bi';
+import ProgressButton from '@/components/primitives/ProgressButton';
 
 const UPLOAD_BATCH_SIZE = 4;
 
@@ -45,6 +45,7 @@ export default function AdminAddAllUploads({
   const [tags, setTags] = useState('');
   const [actionErrorMessage, setActionErrorMessage] = useState('');
   const [tagErrorMessage, setTagErrorMessage] = useState('');
+  const [addingProgress, setAddingProgress] = useState<number>();
   const [isAddingComplete, setIsAddingComplete] = useState(false);
 
   const router = useRouter();
@@ -64,6 +65,10 @@ export default function AdminAddAllUploads({
           : `Adding ${addedUploadUrls.current.length} of ${storageUrls.length}`
         );
         setButtonSubheadText(data?.subhead ?? '');
+        setAddingProgress((
+          addedUploadUrls.current.length /
+          storageUrls.length
+        ) * 0.95);
         setAddedUploadUrls?.(current => {
           const urls = data?.addedUploadUrls.split(',') ?? [];
           const updatedUrls = current
@@ -76,6 +81,7 @@ export default function AdminAddAllUploads({
     } catch (e: any) {
       setIsAdding(false);
       setButtonText('Try Again');
+      setAddingProgress(undefined);
       setActionErrorMessage(e);
     }
   };
@@ -131,8 +137,10 @@ export default function AdminAddAllUploads({
             />
           </div>
           <div className="space-y-2">
-            <LoaderButton
-              className="primary w-full justify-center"
+            <ProgressButton
+              primary
+              className="w-full justify-center"
+              progress={addingProgress}
               isLoading={isAdding}
               disabled={Boolean(tagErrorMessage) || isAddingComplete}
               icon={isAddingComplete
@@ -152,11 +160,13 @@ export default function AdminAddAllUploads({
                     }
                     setButtonText('Complete');
                     setButtonSubheadText('All uploads added');
+                    setAddingProgress(1);
                     setIsAdding(false);
                     setIsAddingComplete(true);
                     await sleep(1000).then(() =>
                       router.push(PATH_ADMIN_PHOTOS));
                   } catch (e: any) {
+                    setAddingProgress(undefined);
                     setIsAdding(false);
                     setButtonText('Try Again');
                     setActionErrorMessage(e);
@@ -166,7 +176,7 @@ export default function AdminAddAllUploads({
               hideTextOnMobile={false}
             >
               {buttonText}
-            </LoaderButton>
+            </ProgressButton>
             {buttonSubheadText &&
               <div className="text-dim text-sm text-center">
                 {buttonSubheadText}
