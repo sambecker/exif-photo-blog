@@ -124,11 +124,11 @@ export default function PhotoLarge({
           {/* Meta */}
           <div className="pr-2 md:pr-0">
             <div className="md:relative flex gap-2 items-start">
-              <PhotoLink
+              {/* <PhotoLink
                 photo={photo}
                 className="font-bold uppercase flex-grow"
                 prefetch={prefetch}
-              />
+              /> */}
               <div className="absolute right-0 translate-y-[-4px] z-10">
                 <AdminPhotoMenuClient {...{
                   photo,
