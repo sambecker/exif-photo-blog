@@ -35,6 +35,14 @@ const nextConfig = {
       .concat(createRemotePattern(HOSTNAME_AWS_S3)),
     minimumCacheTTL: 31536000,
   },
+  experimental: { ppr: true },
+  webpack: (config) => {
+    config.optimization ??= {};
+    if (process.env.NODE_ENV !== 'production') {
+      config.optimization.minimize = false;
+    }
+    return config;
+  },
 };
 
 module.exports = process.env.ANALYZE === 'true'
