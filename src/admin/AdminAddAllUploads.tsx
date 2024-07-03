@@ -73,11 +73,17 @@ export default function AdminAddAllUploads({
           addedUploadUrls.current = updatedUrls;
           return updatedUrls;
         });
-        setAddingProgress((
-          // eslint-disable-next-line max-len
-          (((addedUploadUrls.current.length || 1) - 1) + (data?.progress ?? 0)) /
-          storageUrls.length
-        ) * 0.95);
+        setAddingProgress((current = 0) => {
+          const updatedProgress = (
+            (
+              ((addedUploadUrls.current.length || 1) - 1) +
+              (data?.progress ?? 0)
+            ) /
+            storageUrls.length
+          ) * 0.95;
+          // Prevent out-of-order updates causing progress to go backwards
+          return Math.max(current, updatedProgress);
+        });
       }
     } catch (e: any) {
       setIsAdding(false);

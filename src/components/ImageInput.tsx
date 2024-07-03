@@ -44,10 +44,6 @@ export default function ImageInput({
   const [fileUploadIndex, setFileUploadIndex] = useState(0);
   const [fileUploadName, setFileUploadName] = useState('');
 
-  const uploadStatusText = filesLength > 1
-    ? `${fileUploadIndex + 1} of ${filesLength}: ${fileUploadName}`
-    : fileUploadName;
-
   return (
     <div className="space-y-4 min-w-0">
       <div className="flex items-center gap-2 sm:gap-4">
@@ -74,7 +70,9 @@ export default function ImageInput({
             primary
           >
             {loading
-              ? 'Uploading'
+              ? filesLength > 1
+                ? `Uploading ${fileUploadIndex + 1} of ${filesLength}`
+                : 'Uploading'
               : 'Upload Photos'}
           </ProgressButton>
           <input
@@ -225,7 +223,7 @@ export default function ImageInput({
         </label>
         {showUploadStatus && filesLength > 0 &&
           <div className="max-w-full truncate text-ellipsis">
-            {uploadStatusText}
+            {fileUploadName}
           </div>}
       </div>
       <canvas
