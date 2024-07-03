@@ -81,21 +81,29 @@ export const addAllUploadsAction = async ({
   takenAtNaiveLocal: string
 }) =>
   runAuthenticatedAdminServerAction(async () => {
-    const uploadTotal = uploadUrls.length;
-    const addedUploadUrls: string[] = [];
+    const PROGRESS_TASK_COUNT = AI_TEXT_GENERATION_ENABLED ? 5 : 4;
 
-    const stream = createStreamableValue({
-      subhead: '',
-      addedUploadUrls: '',
-    });
+    const addedUploadUrls: string[] = [];
+    let progress = 0;
+
+    const stream = createStreamableValue<{
+      subhead: string
+      addedUploadUrls: string
+      progress: number
+    }>();
+
+    const streamUpdate = (subhead: string) =>
+      stream.update({
+        subhead,
+        addedUploadUrls: addedUploadUrls.join(','),
+        progress: ++progress / PROGRESS_TASK_COUNT,
+      });
 
     (async () => {
       try {
         for (const url of uploadUrls) {
-          stream.update({
-            subhead: 'Parsing EXIF data',
-            addedUploadUrls: addedUploadUrls.join(','),
-          });
+          progress = 0;
+          streamUpdate('Parsing EXIF data');
 
           const {
             photoFormExif,
@@ -110,10 +118,7 @@ export const addAllUploadsAction = async ({
 
           if (photoFormExif) {
             if (AI_TEXT_GENERATION_ENABLED) {
-              stream.update({
-                subhead: 'Generating AI text',
-                addedUploadUrls: addedUploadUrls.join(','),
-              });
+              streamUpdate('Generating AI text');
             }
 
             const {
@@ -136,10 +141,7 @@ export const addAllUploadsAction = async ({
               takenAtNaive: photoFormExif.takenAtNaive || takenAtNaiveLocal,
             };
 
-            stream.update({
-              subhead: 'Moving upload to photo storage',
-              addedUploadUrls: addedUploadUrls.join(','),
-            });
+            streamUpdate('Moving upload to photo storage');
 
             const updatedUrl = await convertUploadToPhoto({
               urlOrigin: url,
@@ -147,26 +149,20 @@ export const addAllUploadsAction = async ({
               shouldStripGpsData,
             });
             if (updatedUrl) {
-              const subhead = 'Adding to database';
-              stream.update({
-                subhead,
-                addedUploadUrls: addedUploadUrls.join(','),
-              });
+              const subheadFinal = 'Adding to database';
+              streamUpdate(subheadFinal);
               const photo = convertFormDataToPhotoDbInsert(form);
               photo.url = updatedUrl;
               await insertPhoto(photo);
               addedUploadUrls.push(url);
               // Re-submit with updated url
-              stream.update({
-                subhead,
-                addedUploadUrls: addedUploadUrls.join(','),
-              });
+              streamUpdate(subheadFinal);
             }
           }
         };
       } catch (error: any) {
         // eslint-disable-next-line max-len
-        stream.error(`${error.message} (${addedUploadUrls.length} of ${uploadTotal} photos successfully added)`);
+        stream.error(`${error.message} (${addedUploadUrls.length} of ${uploadUrls.length} photos successfully added)`);
       }
       revalidateAllKeysAndPaths();
       stream.done();
