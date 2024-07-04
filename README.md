@@ -251,5 +251,8 @@ FAQ
 #### Why are large, multi-photo uploads not finishing?
 > The default timeout for processing multiple uploads is 60 seconds (the limit for Hobby accounts). This can be extended to 5 minutes on Pro accounts by setting `maxDuration = 300` in `src/app/admin/uploads/page.tsx`.
 
+#### I've added my OpenAI key but can't seem to make it work. Why am I seeing connection errors?
+> You may need to pre-purchase credits before accessing the OpenAI API. See [Issue #110](https://github.com/sambecker/exif-photo-blog/issues/110) for discussion.
+
 #### Can this template run in a docker image?
 > Possibly. See [Issue #116](https://github.com/sambecker/exif-photo-blog/issues/116) for discussion.
