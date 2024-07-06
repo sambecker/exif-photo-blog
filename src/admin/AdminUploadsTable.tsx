@@ -11,8 +11,8 @@ import AddButton from './AddButton';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import { deleteBlobPhotoAction } from '@/photo/actions';
 import DeleteButton from './DeleteButton';
-import { formatDate } from '@/utility/date';
 import { AddedUrlStatus } from './AdminUploadsClient';
+import ResponsiveDate from '@/components/ResponsiveDate';
 
 export default function AdminUploadsTable({
   isAdding,
@@ -46,11 +46,13 @@ export default function AdminUploadsTable({
                 src={url}
                 alt={url}
                 aspectRatio={3.0 / 2.0}
-                className="rounded-sm overflow-hidden"
+                className="rounded-[3px] overflow-hidden shrink-0"
               />
-              <span className="grow">
-                <div>{getIdFromStorageUrl(url)}</div>
-                <div className="text-dim">
+              <span className="grow min-w-0">
+                <div className="overflow-hidden text-ellipsis">
+                  {getIdFromStorageUrl(url)}
+                </div>
+                <div className="text-dim overflow-hidden text-ellipsis">
                   {isAdding || isComplete
                     ? status === 'added'
                       ? 'Complete'
@@ -58,9 +60,7 @@ export default function AdminUploadsTable({
                         ? statusMessage ?? 'Adding ...'
                         : 'Waiting'
                     : uploadedAt
-                      ? <span className="uppercase">
-                        {formatDate(uploadedAt, 'medium')}
-                      </span>
+                      ? <ResponsiveDate date={uploadedAt} />
                       : '—'}
                 </div>
               </span>
