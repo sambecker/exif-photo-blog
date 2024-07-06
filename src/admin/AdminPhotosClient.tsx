@@ -67,7 +67,7 @@ export default function AdminPhotosClient({
               <div className="font-bold">
                 Photo Blobs ({blobPhotoUrls.length})
               </div>
-              <AdminUploadsTable urls={blobPhotoUrls} />
+              <AdminUploadsTable urlAddStatuses={blobPhotoUrls} />
             </div>}
           {/* Use custom spacing to address gap/space-y compatibility quirks */}
           <div className="space-y-[6px] sm:space-y-[10px]">
