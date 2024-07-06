@@ -11,21 +11,21 @@ import AddButton from './AddButton';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import { deleteBlobPhotoAction } from '@/photo/actions';
 import DeleteButton from './DeleteButton';
-import { AddedUrlStatus } from './AdminUploadsClient';
+import { UrlAddStatus } from './AdminUploadsClient';
 import ResponsiveDate from '@/components/ResponsiveDate';
 
 export default function AdminUploadsTable({
   isAdding,
-  urls,
+  urlAddStatuses,
 }: {
   isAdding?: boolean
-  urls: AddedUrlStatus[]
+  urlAddStatuses: UrlAddStatus[]
 }) {
-  const isComplete = urls.every(({ status }) => status === 'added');
+  const isComplete = urlAddStatuses.every(({ status }) => status === 'added');
 
   return (
     <div className="space-y-4">
-      {urls.map(({ url, status, statusMessage, uploadedAt }) => {
+      {urlAddStatuses.map(({ url, status, statusMessage, uploadedAt }) => {
         const addUploadPath = pathForAdminUploadUrl(url);
         return <div key={url}>
           <div className={clsx(
@@ -33,14 +33,12 @@ export default function AdminUploadsTable({
           )}>
             <motion.div
               className="flex items-center grow gap-2"
-              animate={isAdding
+              animate={isAdding && !isComplete
                 ? {
-                  opacity: status === 'adding' || isComplete ? 1 : 0.5,
-                  translateX: isComplete
-                    ? 0
-                    : status === 'adding' || isComplete ? -4 : 4,
+                  translateX: status === 'adding' ? -4 : 4,
+                  opacity: status === 'adding' ? 1 : 0.5,
                 }
-                : { opacity: 1, translateX: 0 }}
+                : { translateX: 0, opacity: 1 }}
             >
               <ImageSmall
                 src={url}
@@ -55,7 +53,7 @@ export default function AdminUploadsTable({
                 <div className="text-dim overflow-hidden text-ellipsis">
                   {isAdding || isComplete
                     ? status === 'added'
-                      ? 'Complete'
+                      ? 'Added'
                       : status === 'adding'
                         ? statusMessage ?? 'Adding ...'
                         : 'Waiting'
@@ -88,7 +86,7 @@ export default function AdminUploadsTable({
                     <input
                       type="hidden"
                       name="redirectToPhotos"
-                      value={urls.length < 2 ? 'true' : 'false'}
+                      value={urlAddStatuses.length < 2 ? 'true' : 'false'}
                       readOnly
                     />
                     <input

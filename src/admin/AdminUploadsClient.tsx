@@ -2,11 +2,11 @@
 
 import { StorageListResponse } from '@/services/storage';
 import AdminAddAllUploads from './AdminAddAllUploads';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Tags } from '@/tag';
 import AdminUploadsTable from './AdminUploadsTable';
 
-export type AddedUrlStatus = {
+export type UrlAddStatus = {
   url: string
   uploadedAt?: Date
   status?: 'waiting' | 'adding' | 'added'
@@ -22,24 +22,21 @@ export default function AdminUploadsClient({
   uniqueTags?: Tags
 }) {
   const [isAdding, setIsAdding] = useState(false);
-  const [addedUrlStatuses, setAddedUrlStatuses] =
-    useState<AddedUrlStatus[]>(urls.map(({ url, uploadedAt }) => ({
-      url,
-      uploadedAt,
-      status: 'waiting',
-    })));
+  const [urlAddStatuses, setUrlAddStatuses] = useState<UrlAddStatus[]>(urls);
+
+  const storageUrls = useMemo(() => urls.map(({ url }) => url), [urls]);
 
   return (
     <div className="space-y-4">
       {urls.length > 1 &&
-        <AdminAddAllUploads
-          storageUrls={urls.map(({ url }) => url)}
-          uniqueTags={uniqueTags}
-          isAdding={isAdding}
-          setIsAdding={setIsAdding}
-          setAddedUrlStatuses={setAddedUrlStatuses}
-        />}
-      <AdminUploadsTable {...{ isAdding, urls: addedUrlStatuses }} />
+        <AdminAddAllUploads {...{
+          storageUrls,
+          uniqueTags,
+          isAdding,
+          setIsAdding,
+          setUrlAddStatuses,
+        }} />}
+      <AdminUploadsTable {...{ isAdding, urlAddStatuses }} />
     </div>
   );
 }

@@ -46,7 +46,7 @@ import {
 import { generateAiImageQueries } from './ai/server';
 import { createStreamableValue } from 'ai/rsc';
 import { convertUploadToPhoto } from './storage';
-import { AddedUrlStatus } from '@/admin/AdminUploadsClient';
+import { UrlAddStatus } from '@/admin/AdminUploadsClient';
 
 // Private actions
 
@@ -88,11 +88,11 @@ export const addAllUploadsAction = async ({
     let currentUploadUrl = '';
     let progress = 0;
 
-    const stream = createStreamableValue<AddedUrlStatus>();
+    const stream = createStreamableValue<UrlAddStatus>();
 
     const streamUpdate = (
       statusMessage: string,
-      status: AddedUrlStatus['status'] = 'adding',
+      status: UrlAddStatus['status'] = 'adding',
     ) =>
       stream.update({
         url: currentUploadUrl,
@@ -144,7 +144,7 @@ export const addAllUploadsAction = async ({
               takenAtNaive: photoFormExif.takenAtNaive || takenAtNaiveLocal,
             };
 
-            streamUpdate('Moving upload to photo storage');
+            streamUpdate('Transferring to photo storage');
 
             const updatedUrl = await convertUploadToPhoto({
               urlOrigin: url,
