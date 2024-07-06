@@ -2,21 +2,33 @@
 
 import { StorageListResponse } from '@/services/storage';
 import AdminAddAllUploads from './AdminAddAllUploads';
-import AdminUploadsTable from './AdminUploadsTable';
 import { useState } from 'react';
 import { Tags } from '@/tag';
+import AdminUploadsTable from './AdminUploadsTable';
+
+export type AddedUrlStatus = {
+  url: string
+  uploadedAt?: Date
+  status?: 'waiting' | 'adding' | 'added'
+  statusMessage?: string
+  progress?: number
+};
 
 export default function AdminUploadsClient({
-  title,
   urls,
   uniqueTags,
 }: {
-  title?: string
   urls: StorageListResponse
   uniqueTags?: Tags
 }) {
   const [isAdding, setIsAdding] = useState(false);
-  const [addedUploadUrls, setAddedUploadUrls] = useState<string[]>([]);
+  const [addedUrlStatuses, setAddedUrlStatuses] =
+    useState<AddedUrlStatus[]>(urls.map(({ url, uploadedAt }) => ({
+      url,
+      uploadedAt,
+      status: 'waiting',
+    })));
+
   return (
     <div className="space-y-4">
       {urls.length > 1 &&
@@ -25,9 +37,9 @@ export default function AdminUploadsClient({
           uniqueTags={uniqueTags}
           isAdding={isAdding}
           setIsAdding={setIsAdding}
-          setAddedUploadUrls={setAddedUploadUrls}
+          setAddedUrlStatuses={setAddedUrlStatuses}
         />}
-      <AdminUploadsTable {...{ title, urls, isAdding, addedUploadUrls }} />
+      <AdminUploadsTable {...{ isAdding, urls: addedUrlStatuses }} />
     </div>
   );
 }

@@ -1,99 +1,109 @@
-import { Fragment } from 'react';
-import AdminTable from './AdminTable';
-import Link from 'next/link';
-import {
-  StorageListResponse,
-  fileNameForStorageUrl,
-  getIdFromStorageUrl,
-} from '@/services/storage';
+'use client';
+
+import ImageSmall from '@/components/image/ImageSmall';
+import Spinner from '@/components/Spinner';
+import { getIdFromStorageUrl } from '@/services/storage';
+import { clsx } from 'clsx/lite';
+import { motion } from 'framer-motion';
+import { FaRegCircleCheck } from 'react-icons/fa6';
+import { pathForAdminUploadUrl } from '@/site/paths';
+import AddButton from './AddButton';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import { deleteBlobPhotoAction } from '@/photo/actions';
 import DeleteButton from './DeleteButton';
-import { clsx } from 'clsx/lite';
-import { pathForAdminUploadUrl } from '@/site/paths';
-import AddButton from './AddButton';
-import { formatDate } from 'date-fns';
-import ImageSmall from '@/components/image/ImageSmall';
-import { FaRegCircleCheck } from 'react-icons/fa6';
-import Spinner from '@/components/Spinner';
+import { formatDate } from '@/utility/date';
+import { AddedUrlStatus } from './AdminUploadsClient';
 
 export default function AdminUploadsTable({
-  title,
-  urls,
-  addedUploadUrls,
   isAdding,
+  urls,
 }: {
-  title?: string
-  urls: StorageListResponse
-  addedUploadUrls?: string[]
   isAdding?: boolean
+  urls: AddedUrlStatus[]
 }) {
+  const isComplete = urls.every(({ status }) => status === 'added');
+
   return (
-    <AdminTable {...{ title }} >
-      {urls.map(({ url, uploadedAt }) => {
+    <div className="space-y-4">
+      {urls.map(({ url, status, statusMessage, uploadedAt }) => {
         const addUploadPath = pathForAdminUploadUrl(url);
-        const uploadFileName = fileNameForStorageUrl(url);
-        const uploadId = getIdFromStorageUrl(url);
-        return <Fragment key={url}>
-          <Link href={addUploadPath} prefetch={false}>
-            <ImageSmall
-              alt={`Upload: ${uploadFileName}`}
-              src={url}
-              aspectRatio={3.0 / 2.0}
-              className={clsx(
-                'rounded-[3px] overflow-hidden',
-                'border border-gray-200 dark:border-gray-800',
-              )}
-            />
-          </Link>
-          <Link
-            href={addUploadPath}
-            className="break-all"
-            title={uploadedAt
-              ? `${url} @ ${formatDate(uploadedAt, 'yyyy-MM-dd HH:mm:ss')}`
-              : url}
-            prefetch={false}
-          >
-            {uploadId}
-          </Link>
+        return <div key={url}>
           <div className={clsx(
-            'flex flex-nowrap',
-            'gap-2 sm:gap-3 items-center',
+            'flex items-center gap-2 w-full min-h-8',
           )}>
-            {addedUploadUrls?.includes(url) || isAdding
-              ? <span className={clsx(
-                'h-9 flex items-center justify-end w-full pr-3',
-              )}>
-                {addedUploadUrls?.includes(url)
-                  ? <FaRegCircleCheck size={18} />
-                  : <Spinner
-                    size={19}
-                    className="translate-y-[2px]"
-                  />}
+            <motion.div
+              className="flex items-center grow gap-2"
+              animate={isAdding
+                ? {
+                  opacity: status === 'adding' || isComplete ? 1 : 0.5,
+                  translateX: isComplete
+                    ? 0
+                    : status === 'adding' || isComplete ? -4 : 4,
+                }
+                : { opacity: 1, translateX: 0 }}
+            >
+              <ImageSmall
+                src={url}
+                alt={url}
+                aspectRatio={3.0 / 2.0}
+                className="rounded-sm overflow-hidden"
+              />
+              <span className="grow">
+                <div>{getIdFromStorageUrl(url)}</div>
+                <div className="text-dim">
+                  {isAdding || isComplete
+                    ? status === 'added'
+                      ? 'Complete'
+                      : status === 'adding'
+                        ? statusMessage ?? 'Adding ...'
+                        : 'Waiting'
+                    : uploadedAt
+                      ? <span className="uppercase">
+                        {formatDate(uploadedAt, 'medium')}
+                      </span>
+                      : '—'}
+                </div>
               </span>
-              : <>
-                <AddButton path={addUploadPath} />
-                <FormWithConfirm
-                  action={deleteBlobPhotoAction}
-                  confirmText="Are you sure you want to delete this upload?"
-                >
-                  <input
-                    type="hidden"
-                    name="redirectToPhotos"
-                    value={urls.length < 2 ? 'true' : 'false'}
-                    readOnly
-                  />
-                  <input
-                    type="hidden"
-                    name="url"
-                    value={url}
-                    readOnly
-                  />
-                  <DeleteButton />
-                </FormWithConfirm>
-              </>}
+            </motion.div>
+            <span className="flex items-center gap-2">
+              {isAdding || isComplete
+                ? <>
+                  {status === 'added'
+                    ? <FaRegCircleCheck size={18} />
+                    : status === 'adding'
+                      ? <Spinner
+                        size={19}
+                        className="translate-y-[2px]"
+                      />
+                      : <span className="pr-1.5 text-dim">
+                        —
+                      </span>}
+                </>
+                : <>
+                  <AddButton path={addUploadPath} />
+                  <FormWithConfirm
+                    action={deleteBlobPhotoAction}
+                    confirmText="Are you sure you want to delete this upload?"
+                  >
+                    <input
+                      type="hidden"
+                      name="redirectToPhotos"
+                      value={urls.length < 2 ? 'true' : 'false'}
+                      readOnly
+                    />
+                    <input
+                      type="hidden"
+                      name="url"
+                      value={url}
+                      readOnly
+                    />
+                    <DeleteButton />
+                  </FormWithConfirm>
+                </>}
+            </span>
           </div>
-        </Fragment>;})}
-    </AdminTable>
+        </div>;
+      })}
+    </div>
   );
 }
