@@ -280,17 +280,15 @@ export const deleteBlobPhotoAction = async (formData: FormData) =>
 // Accessed from admin photo edit page
 // will not update blur data
 export const getExifDataAction = async (
-  photoFormPrevious: Partial<PhotoFormData>,
+  url: string,
 ): Promise<Partial<PhotoFormData>> =>
   runAuthenticatedAdminServerAction(async () => {
-    const { url } = photoFormPrevious;
-    if (url) {
-      const { photoFormExif } = await extractImageDataFromBlobPath(url);
-      if (photoFormExif) {
-        return photoFormExif;
-      }
+    const { photoFormExif } = await extractImageDataFromBlobPath(url);
+    if (photoFormExif) {
+      return photoFormExif;
+    } else {
+      return {};
     }
-    return {};
   });
 
 // Accessed from admin photo table, will:
