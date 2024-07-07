@@ -33,7 +33,7 @@ export default function AdminUploadsTable({
               className={clsx(
                 'flex items-center grow gap-2',
                 'transition-opacity',
-                isAdding && !isComplete && status !== 'adding' && 'opacity-40',
+                isAdding && !isComplete && status !== 'adding' && 'opacity-30',
               )}
             >
               <div className={clsx(
