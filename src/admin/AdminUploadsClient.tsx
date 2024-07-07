@@ -28,7 +28,7 @@ export default function AdminUploadsClient({
 
   return (
     <div className="space-y-4">
-      {urls.length > 1 &&
+      {(urls.length > 1 || isAdding) &&
         <AdminAddAllUploads {...{
           storageUrls,
           uniqueTags,

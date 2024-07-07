@@ -52,7 +52,7 @@ export default function AdminUploadsTable({
                     'rounded-[3px] overflow-hidden',
                     'border-subtle',
                     isAdding && !isComplete && status === 'adding' &&
-                      'animate-hover-wobble shadow-lg',
+                      'animate-hover-drift shadow-lg',
                   )}
                 />
               </div>
