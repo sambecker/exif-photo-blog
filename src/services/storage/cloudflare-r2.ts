@@ -91,6 +91,7 @@ export const cloudflareR2List = async (
   }))
     .then((data) => data.Contents?.map(({ Key, LastModified }) => ({
       url: urlForKey(Key),
+      fileName: Key ?? '',
       uploadedAt: LastModified,
     })) ?? []);
 

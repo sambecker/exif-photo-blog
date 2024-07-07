@@ -46,6 +46,7 @@ import {
 import { generateAiImageQueries } from './ai/server';
 import { createStreamableValue } from 'ai/rsc';
 import { convertUploadToPhoto } from './storage';
+import { UrlAddStatus } from '@/admin/AdminUploadsClient';
 
 // Private actions
 
@@ -84,24 +85,26 @@ export const addAllUploadsAction = async ({
     const PROGRESS_TASK_COUNT = AI_TEXT_GENERATION_ENABLED ? 5 : 4;
 
     const addedUploadUrls: string[] = [];
+    let currentUploadUrl = '';
     let progress = 0;
 
-    const stream = createStreamableValue<{
-      subhead: string
-      addedUploadUrls: string
-      progress: number
-    }>();
+    const stream = createStreamableValue<UrlAddStatus>();
 
-    const streamUpdate = (subhead: string) =>
+    const streamUpdate = (
+      statusMessage: string,
+      status: UrlAddStatus['status'] = 'adding',
+    ) =>
       stream.update({
-        subhead,
-        addedUploadUrls: addedUploadUrls.join(','),
+        url: currentUploadUrl,
+        status,
+        statusMessage,
         progress: ++progress / PROGRESS_TASK_COUNT,
       });
 
     (async () => {
       try {
         for (const url of uploadUrls) {
+          currentUploadUrl = url;
           progress = 0;
           streamUpdate('Parsing EXIF data');
 
@@ -141,7 +144,7 @@ export const addAllUploadsAction = async ({
               takenAtNaive: photoFormExif.takenAtNaive || takenAtNaiveLocal,
             };
 
-            streamUpdate('Moving upload to photo storage');
+            streamUpdate('Transferring to photo storage');
 
             const updatedUrl = await convertUploadToPhoto({
               urlOrigin: url,
@@ -156,7 +159,7 @@ export const addAllUploadsAction = async ({
               await insertPhoto(photo);
               addedUploadUrls.push(url);
               // Re-submit with updated url
-              streamUpdate(subheadFinal);
+              streamUpdate(subheadFinal, 'added');
             }
           }
         };

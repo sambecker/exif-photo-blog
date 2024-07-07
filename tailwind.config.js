@@ -27,12 +27,32 @@ module.exports = {
       animation: {
         'rotate-pulse':
           'rotate-pulse 0.75s linear infinite normal both running',
+        'hover-drift':
+          'hover-drift 8s linear infinite',
+        'hover-wobble':
+          'hover-wobble 6s linear infinite normal both running',
       },
       keyframes: {
         'rotate-pulse': {
           '0%': { transform: 'rotate(0deg) scale(1)' },
           '50%': { transform: 'rotate(180deg) scale(0.8)' },
           '100%': { transform: 'rotate(360deg) scale(1)' },
+        },
+        'hover-drift': {
+          '0%': { transform: 'translate(0, 0)' },
+          '20%': { transform: 'translate(1px, -2px)' },
+          '40%': { transform: 'translate(1px, 1.5px)' },
+          '60%': { transform: 'translate(-1px, 2px)' },
+          '80%': { transform: 'translate(-1.5px, -1.75px)' },
+          '100%': { transform: 'translate(0, 0)' },
+        },
+        'hover-wobble': {
+          '0%': { transform: 'rotate(0deg)' },
+          '20%': { transform: 'rotate(3.5deg)' },
+          '40%': { transform: 'rotate(-2deg)' },
+          '60%': { transform: 'rotate(2.5deg)' },
+          '80%': { transform: 'rotate(-2.5deg)' },
+          '100%': { transform: 'rotate(0deg)' },
         },
       },
     },

@@ -72,6 +72,7 @@ export const awsS3List = async (
   }))
     .then((data) => data.Contents?.map(({ Key, LastModified }) => ({
       url: urlForKey(Key),
+      fileName: Key ?? '',
       uploadedAt: LastModified,
     })) ?? []);
 
