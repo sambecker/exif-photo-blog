@@ -34,6 +34,8 @@ export default function AppStateProvider({
     useState<Date[]>([]);
   const [hiddenPhotosCount, setHiddenPhotosCount] =
     useState(0);
+  const [selectedPhotoIds, setSelectedPhotoIds] =
+    useState<string[]>([]);
   // DEBUG
   const [arePhotosMatted, setArePhotosMatted] =
     useState(MATTE_PHOTOS);
@@ -92,6 +94,8 @@ export default function AppStateProvider({
         adminUpdateTimes,
         registerAdminUpdate,
         hiddenPhotosCount,
+        selectedPhotoIds,
+        setSelectedPhotoIds,
         // DEBUG
         arePhotosMatted,
         setArePhotosMatted,

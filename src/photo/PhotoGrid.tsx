@@ -1,3 +1,5 @@
+'use client';
+
 import { Photo } from '.';
 import PhotoMedium from './PhotoMedium';
 import { clsx } from 'clsx/lite';
@@ -5,6 +7,7 @@ import AnimateItems from '@/components/AnimateItems';
 import { Camera } from '@/camera';
 import { FilmSimulation } from '@/simulation';
 import { GRID_ASPECT_RATIO, HIGH_DENSITY_GRID } from '@/site/config';
+import { useAppState } from '@/state/AppState';
 
 export default function PhotoGrid({
   photos,
@@ -21,6 +24,7 @@ export default function PhotoGrid({
   staggerOnFirstLoadOnly = true,
   additionalTile,
   small,
+  canSelect,
   onLastPhotoVisible,
   onAnimationComplete,
 }: {
@@ -38,9 +42,16 @@ export default function PhotoGrid({
   staggerOnFirstLoadOnly?: boolean
   additionalTile?: JSX.Element
   small?: boolean
+  canSelect?: boolean
   onLastPhotoVisible?: () => void
   onAnimationComplete?: () => void
 }) {
+  const {
+    isUserSignedIn,
+    selectedPhotoIds = [],
+    setSelectedPhotoIds,
+  } = useAppState();
+
   return (
     <AnimateItems
       className={clsx(
@@ -60,12 +71,14 @@ export default function PhotoGrid({
       animateOnFirstLoadOnly={animateOnFirstLoadOnly}
       staggerOnFirstLoadOnly={staggerOnFirstLoadOnly}
       onAnimationComplete={onAnimationComplete}
-      items={photos.map((photo, index) =>
-        <div
+      items={photos.map((photo, index) =>{
+        const isSelected = selectedPhotoIds.includes(photo.id);
+        return <div
           key={photo.id}
-          className={GRID_ASPECT_RATIO !== 0
-            ? 'flex relative overflow-hidden'
-            : undefined}
+          className={clsx(
+            GRID_ASPECT_RATIO !== 0 && 'flex relative overflow-hidden',
+            'group',
+          )}
           style={{
             ...GRID_ASPECT_RATIO !== 0 && {
               aspectRatio: GRID_ASPECT_RATIO,
@@ -87,7 +100,37 @@ export default function PhotoGrid({
                 : undefined,
             }}
           />
-        </div>).concat(additionalTile ?? [])}
+          {canSelect && isUserSignedIn &&
+            <>
+              {/* Admin Select Border */}
+              <div className={clsx(
+                'absolute w-full h-full pointer-events-none',
+              )}>
+                <div
+                  className={clsx(
+                    'w-full h-full border-black dark:border-white',
+                    isSelected && 'border-4',
+                  )}
+                />
+              </div>
+              {/* Admin Select Action */}
+              <div className="absolute top-0 right-0">
+                <input
+                  type="checkbox"
+                  className={clsx(
+                    'absolute top-2 right-2',
+                    !isSelected && 'hidden group-hover:block',
+                  )}
+                  checked={isSelected}
+                  onChange={() => setSelectedPhotoIds?.(isSelected
+                    ? selectedPhotoIds.filter(id => id !== photo.id)
+                    : selectedPhotoIds.concat(photo.id),
+                  )}
+                />
+              </div>
+            </>}
+        </div>;
+      }).concat(additionalTile ?? [])}
       itemKeys={photos.map(photo => photo.id)
         .concat(additionalTile ? ['more'] : [])}
     />

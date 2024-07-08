@@ -10,9 +10,11 @@ export default function Note({
   color = 'blue',
   icon,
   animate,
+  cta,
 }: {
   icon?: ReactNode
   animate?: boolean
+  cta?: ReactNode
 } & ComponentProps<typeof Container>) {
   return (
     <AnimateItems
@@ -35,9 +37,13 @@ export default function Note({
                 className="translate-x-[0.5px] translate-y-[0.5px]"
               />}
             </span>
-            <span className="text-sm">
+            <span className="text-sm grow">
               {children}
             </span>
+            {cta &&
+              <span className="translate-x-1">
+                {cta}
+              </span>}
           </div>
         </Container>,
       ]}
