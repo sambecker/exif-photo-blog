@@ -39,10 +39,9 @@ export default function AdminUploadsTable({
               <div className={clsx(
                 'shrink-0 transition-transform',
                 isAdding && !isComplete && status === 'adding' &&
-                  'translate-x-[-2px] scale-[1.15]',
-                isAdding && !isComplete && status !== 'adding'
-                  ? 'scale-90'
-                  : 'scale-100',
+                  'translate-x-[-2px] scale-[1.125] shadow-lg',
+                isAdding && !isComplete && status !== 'adding' &&
+                  'scale-90',
               )}>
                 <ImageSmall
                   src={url}
@@ -51,8 +50,6 @@ export default function AdminUploadsTable({
                   className={clsx(
                     'rounded-[3px] overflow-hidden',
                     'border-subtle',
-                    isAdding && !isComplete && status === 'adding' &&
-                      'animate-hover-drift shadow-lg',
                   )}
                 />
               </div>
