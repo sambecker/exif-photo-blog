@@ -113,10 +113,11 @@ export default function PhotoGrid({
               )}>
                 <div
                   className={clsx(
-                    'w-full h-full transition-opacity',
+                    'w-full h-full',
                     'border-black dark:border-white',
-                    'group-hover:opacity-100',
+                    'transition-opacity',
                     !isSelected && 'opacity-0',
+                    'group-hover:opacity-100',
                     // eslint-disable-next-line max-len
                     'bg-[radial-gradient(169.40%_89.55%_at_94.76%_6.29%,rgba(1,0,0,0.40)_0%,rgba(255,255,255,0.00)_75%)]',
                     isSelected && 'border-4',
@@ -127,7 +128,10 @@ export default function PhotoGrid({
               <div className="absolute top-0 right-0 p-2">
                 <Checkbox
                   className={clsx(
-                    !isSelected && 'hidden group-hover:block',
+                    // Required to prevent Safari jitter
+                    'translate-x-[0.1px]',
+                    'text-white',
+                    !isSelected && 'opacity-0 group-hover:opacity-100',
                   )}
                   checked={isSelected}
                   onChange={() => setSelectedPhotoIds?.(isSelected
