@@ -352,7 +352,6 @@ export default function CommandKClient({
               .concat(SECTION_TAGS)
               .concat(serverSections)
               .concat(sectionPages)
-              .concat(adminSection)
               .concat(clientSections)
               .filter(({ items }) => items.length > 0)
               .map(({ heading, accessory, items }) =>
