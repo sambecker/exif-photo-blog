@@ -8,7 +8,7 @@ import { Camera } from '@/camera';
 import { FilmSimulation } from '@/simulation';
 import { GRID_ASPECT_RATIO, HIGH_DENSITY_GRID } from '@/site/config';
 import { useAppState } from '@/state/AppState';
-import Checkbox from '@/components/primitives/Checkbox';
+import SelectTileOverlay from '@/components/SelectTileOverlay';
 
 export default function PhotoGrid({
   photos,
@@ -106,41 +106,13 @@ export default function PhotoGrid({
             }}
           />
           {canSelect && isUserSignedIn &&
-            <>
-              {/* Admin Select Border */}
-              <div className={clsx(
-                'absolute w-full h-full pointer-events-none',
-              )}>
-                <div
-                  className={clsx(
-                    'w-full h-full',
-                    'border-black dark:border-white',
-                    'transition-opacity',
-                    !isSelected && 'opacity-0',
-                    'group-hover:opacity-100',
-                    // eslint-disable-next-line max-len
-                    'bg-[radial-gradient(169.40%_89.55%_at_94.76%_6.29%,rgba(1,0,0,0.40)_0%,rgba(255,255,255,0.00)_75%)]',
-                    isSelected && 'border-4',
-                  )}
-                />
-              </div>
-              {/* Admin Select Action */}
-              <div className="absolute top-0 right-0 p-2">
-                <Checkbox
-                  className={clsx(
-                    // Required to prevent Safari jitter
-                    'translate-x-[0.1px]',
-                    'text-white',
-                    !isSelected && 'opacity-0 group-hover:opacity-100',
-                  )}
-                  checked={isSelected}
-                  onChange={() => setSelectedPhotoIds?.(isSelected
-                    ? selectedPhotoIds.filter(id => id !== photo.id)
-                    : selectedPhotoIds.concat(photo.id),
-                  )}
-                />
-              </div>
-            </>}
+            <SelectTileOverlay
+              isSelected={isSelected}
+              onSelectChange={() => setSelectedPhotoIds?.(isSelected
+                ? selectedPhotoIds.filter(id => id !== photo.id)
+                : selectedPhotoIds.concat(photo.id),
+              )}
+            />}
         </div>;
       }).concat(additionalTile ?? [])}
       itemKeys={photos.map(photo => photo.id)
