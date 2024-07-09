@@ -4,7 +4,7 @@ import Note from '@/components/Note';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import SiteGrid from '@/components/SiteGrid';
 import { useAppState } from '@/state/AppState';
-import clsx from 'clsx';
+import { clsx } from 'clsx/lite';
 
 export default function AdminBatchEditPanel() {
   const {

@@ -8,6 +8,7 @@ import { Camera } from '@/camera';
 import { FilmSimulation } from '@/simulation';
 import { GRID_ASPECT_RATIO, HIGH_DENSITY_GRID } from '@/site/config';
 import { useAppState } from '@/state/AppState';
+import Checkbox from '@/components/primitives/Checkbox';
 
 export default function PhotoGrid({
   photos,
@@ -86,7 +87,11 @@ export default function PhotoGrid({
           }}
         >
           <PhotoMedium
-            className="flex w-full h-full"
+            className={clsx(
+              'flex w-full h-full',
+              // Prevent accidental navigation when selecting
+              selectedPhotoIds.length > 0 && 'pointer-events-none',
+            )}
             {...{
               photo,
               tag,
@@ -108,17 +113,20 @@ export default function PhotoGrid({
               )}>
                 <div
                   className={clsx(
-                    'w-full h-full border-black dark:border-white',
+                    'w-full h-full transition-opacity',
+                    'border-black dark:border-white',
+                    'group-hover:opacity-100',
+                    !isSelected && 'opacity-0',
+                    // eslint-disable-next-line max-len
+                    'bg-[radial-gradient(169.40%_89.55%_at_94.76%_6.29%,rgba(1,0,0,0.40)_0%,rgba(255,255,255,0.00)_75%)]',
                     isSelected && 'border-4',
                   )}
                 />
               </div>
               {/* Admin Select Action */}
-              <div className="absolute top-0 right-0">
-                <input
-                  type="checkbox"
+              <div className="absolute top-0 right-0 p-2">
+                <Checkbox
                   className={clsx(
-                    'absolute top-2 right-2',
                     !isSelected && 'hidden group-hover:block',
                   )}
                   checked={isSelected}
