@@ -1,37 +1,39 @@
-import FormWithConfirm from '@/components/FormWithConfirm';
+'use client';
+
+import LoaderButton from '@/components/primitives/LoaderButton';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
+import { getExifDataAction } from '@/photo/actions';
+import { PhotoFormData } from '@/photo/form';
 import IconGrSync from '@/site/IconGrSync';
 import { clsx } from 'clsx/lite';
-import { ComponentProps } from 'react';
+import { ComponentProps, useState } from 'react';
 
 export default function ExifSyncButton({
-  action,
-  label,
-  onFormSubmit,
   photoUrl,
-  className,
+  onSync,
 }: {
-  action: (formData: FormData) => void
-  label?: string
-  photoUrl?: string
+  photoUrl: string
+  onSync?: (data: Partial<PhotoFormData>) => void
 } & ComponentProps<typeof SubmitButtonWithStatus>) {
+  const [isLoading, setIsLoading] = useState(false);
+
   return (
-    <FormWithConfirm
-      action={action}
-      className={className}
+    <LoaderButton
+      title="Update photo from original file"
+      isLoading={isLoading}
+      onClick={() => {
+        setIsLoading(true);
+        getExifDataAction(photoUrl)
+          .then(onSync)
+          .finally(() => setIsLoading(false));
+      }}
+      icon={<IconGrSync
+        className={clsx(
+          'translate-y-[0.5px] translate-x-[0.5px]',
+          'sm:translate-x-[-0.5px]',
+        )} />}
     >
-      <input name="photoUrl" value={photoUrl} hidden readOnly />
-      <SubmitButtonWithStatus
-        title="Update photo from original file"
-        icon={<IconGrSync
-          className={clsx(
-            'translate-y-[0.5px] translate-x-[0.5px]',
-            label && 'sm:translate-x-[-0.5px]',
-          )} />}
-        onFormSubmit={onFormSubmit}
-      >
-        {label}
-      </SubmitButtonWithStatus>
-    </FormWithConfirm>
+      EXIF
+    </LoaderButton>
   );
 }

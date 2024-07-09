@@ -243,6 +243,19 @@ export const renamePhotoTagGlobally = (tag: string, updatedTag: string) =>
     WHERE ${tag}=ANY(tags)
   `, 'renamePhotoTagGlobally');
 
+export const addTagsToPhotos = (tags: string[], photoIds: string[]) =>
+  safelyQueryPhotos(() => sql`
+    UPDATE photos 
+    SET tags = (
+      SELECT array_agg(DISTINCT elem)
+      FROM unnest(
+        array_cat(tags, ARRAY${convertArrayToPostgresString(tags, 'brackets')})
+      ) AS elem
+    )
+    WHERE id IN ${convertArrayToPostgresString(photoIds, 'brackets')}
+    LIMIT ${photoIds.length}
+  `, 'addTagsToPhotos');
+
 export const deletePhoto = (id: string) =>
   safelyQueryPhotos(() => sql`
     DELETE FROM photos WHERE id=${id}

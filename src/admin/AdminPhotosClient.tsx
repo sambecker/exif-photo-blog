@@ -3,7 +3,6 @@
 import PhotoUpload from '@/photo/PhotoUpload';
 import { clsx } from 'clsx/lite';
 import SiteGrid from '@/components/SiteGrid';
-import AdminUploadsTable from '@/admin/AdminUploadsTable';
 import { AI_TEXT_GENERATION_ENABLED, PRO_MODE_ENABLED } from '@/site/config';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import AdminPhotosTableInfinite from '@/admin/AdminPhotosTableInfinite';
@@ -13,6 +12,7 @@ import { Photo } from '@/photo';
 import { StorageListResponse } from '@/services/storage';
 import { useState } from 'react';
 import { LiaBroomSolid } from 'react-icons/lia';
+import AdminUploadsTable from './AdminUploadsTable';
 
 export default function AdminPhotosClient({
   photos,
@@ -58,15 +58,16 @@ export default function AdminPhotosClient({
               {photosCountOutdated}
             </PathLoaderButton>}
           </div>
-          {!isUploading && blobPhotoUrls.length > 0 &&
+          {blobPhotoUrls.length > 0 &&
             <div className={clsx(
               'border-b pb-6',
               'border-gray-200 dark:border-gray-700',
+              'space-y-4',
             )}>
-              <AdminUploadsTable
-                title={`Photo Blobs (${blobPhotoUrls.length})`}
-                urls={blobPhotoUrls}
-              />
+              <div className="font-bold">
+                Photo Blobs ({blobPhotoUrls.length})
+              </div>
+              <AdminUploadsTable urlAddStatuses={blobPhotoUrls} />
             </div>}
           {/* Use custom spacing to address gap/space-y compatibility quirks */}
           <div className="space-y-[6px] sm:space-y-[10px]">
