@@ -49,7 +49,7 @@ export default function PhotoGrid({
 }) {
   const {
     isUserSignedIn,
-    selectedPhotoIds = [],
+    selectedPhotoIds,
     setSelectedPhotoIds,
   } = useAppState();
 
@@ -73,7 +73,7 @@ export default function PhotoGrid({
       staggerOnFirstLoadOnly={staggerOnFirstLoadOnly}
       onAnimationComplete={onAnimationComplete}
       items={photos.map((photo, index) =>{
-        const isSelected = selectedPhotoIds.includes(photo.id);
+        const isSelected = selectedPhotoIds?.includes(photo.id) ?? false;
         return <div
           key={photo.id}
           className={clsx(
@@ -89,8 +89,8 @@ export default function PhotoGrid({
           <PhotoMedium
             className={clsx(
               'flex w-full h-full',
-              // Prevent accidental navigation when selecting
-              selectedPhotoIds.length > 0 && 'pointer-events-none',
+              // Prevent photo navigation when selecting
+              selectedPhotoIds?.length !== undefined && 'pointer-events-none',
             )}
             {...{
               photo,
@@ -105,12 +105,12 @@ export default function PhotoGrid({
                 : undefined,
             }}
           />
-          {canSelect && isUserSignedIn &&
+          {isUserSignedIn && canSelect && selectedPhotoIds !== undefined &&
             <SelectTileOverlay
               isSelected={isSelected}
               onSelectChange={() => setSelectedPhotoIds?.(isSelected
-                ? selectedPhotoIds.filter(id => id !== photo.id)
-                : selectedPhotoIds.concat(photo.id),
+                ? (selectedPhotoIds ?? []).filter(id => id !== photo.id)
+                : (selectedPhotoIds ?? []).concat(photo.id),
               )}
             />}
         </div>;

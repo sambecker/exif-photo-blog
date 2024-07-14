@@ -23,7 +23,7 @@ export interface AppStateContext {
   registerAdminUpdate?: () => void
   hiddenPhotosCount?: number
   selectedPhotoIds?: string[]
-  setSelectedPhotoIds?: Dispatch<SetStateAction<string[]>>
+  setSelectedPhotoIds?: Dispatch<SetStateAction<string[] | undefined>>
   // DEBUG
   arePhotosMatted?: boolean
   setArePhotosMatted?: Dispatch<SetStateAction<boolean>>

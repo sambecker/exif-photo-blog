@@ -16,6 +16,7 @@ import {
 import AnimateItems from '../components/AnimateItems';
 import { useAppState } from '@/state/AppState';
 import { GRID_HOMEPAGE_ENABLED } from './config';
+import AdminAppMenu from '@/admin/AdminAppMenu';
 
 export default function Nav({
   siteDomainOrTitle,
@@ -76,6 +77,17 @@ export default function Nav({
             : []}
         />
       }
+      contentSide={isUserSignedIn && !isPathAdmin(pathname)
+        ? <div
+          className={clsx(
+            'flex items-center translate-x-[-6px]',
+            'w-full min-h-[4rem]',
+          )}
+        >
+          <AdminAppMenu />
+        </div>
+        : undefined}
+      sideHiddenOnMobile
     />
   );
 };

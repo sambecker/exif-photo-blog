@@ -35,7 +35,7 @@ export default function AppStateProvider({
   const [hiddenPhotosCount, setHiddenPhotosCount] =
     useState(0);
   const [selectedPhotoIds, setSelectedPhotoIds] =
-    useState<string[]>([]);
+    useState<string[] | undefined>();
   // DEBUG
   const [arePhotosMatted, setArePhotosMatted] =
     useState(MATTE_PHOTOS);
