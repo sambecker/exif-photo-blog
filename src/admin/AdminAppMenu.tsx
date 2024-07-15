@@ -5,8 +5,8 @@ import { GRID_HOMEPAGE_ENABLED } from '@/site/config';
 import { PATH_ADMIN_CONFIGURATION, PATH_GRID, PATH_ROOT } from '@/site/paths';
 import { useAppState } from '@/state/AppState';
 import { BiCog } from 'react-icons/bi';
-import { FaTimes } from 'react-icons/fa';
 import { ImCheckboxUnchecked } from 'react-icons/im';
+import { IoCloseSharp } from 'react-icons/io5';
 
 export default function AdminAppMenu() {
   const {
@@ -27,11 +27,11 @@ export default function AdminAppMenu() {
           ? 'Exit Select'
           : 'Select Multiple',
         icon: isSelecting
-          ? <FaTimes
-            className="translate-y-[1px]"
+          ? <IoCloseSharp
+            className="text-[18px] translate-y-[-0.5px]"
           />
           : <ImCheckboxUnchecked
-            className="text-[0.75rem] translate-y-[2px]"
+            className="text-[0.75rem]"
           />,
         href: GRID_HOMEPAGE_ENABLED ? PATH_ROOT : PATH_GRID,
         action: () => {

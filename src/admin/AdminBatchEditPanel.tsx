@@ -26,20 +26,28 @@ export default function AdminBatchEditPanel() {
           '!bg-gray-100/90 dark:!bg-gray-900/70'
         )}
         cta={<div className="flex gap-2">
-          <LoaderButton>
-            Tag ...
-          </LoaderButton>
-          <DeleteButton />
+          {selectedPhotoIds.length > 0 &&
+            <>
+              <LoaderButton>
+                Tag ...
+              </LoaderButton>
+              <DeleteButton />
+            </>}
           <LoaderButton
             icon={<IoCloseSharp size={20} className="translate-y-[-1.5px]" />}
             onClick={() => setSelectedPhotoIds?.(undefined)}
           />
         </div>}
+        hideIcon
       >
-        {selectedPhotoIds.length}
-        {selectedPhotoIds.length === 1 ? ' photo' : ' photos'}
-        {' '}
-        selected
+        {selectedPhotoIds.length === 0
+          ? 'Select photos below'
+          : <>
+            {selectedPhotoIds.length}
+            {selectedPhotoIds.length === 1 ? ' photo' : ' photos'}
+            {' '}
+            selected
+          </>}
       </Note>} />
     : null;
 }
