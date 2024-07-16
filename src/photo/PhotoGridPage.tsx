@@ -26,7 +26,10 @@ export default function PhotoGridPage({
   const { setSelectedPhotoIds } = useAppState();
   
   useEffect(
-    () => () => setSelectedPhotoIds?.(undefined),
+    () => {
+      console.log('PhotoGridPage: unmount');
+      return () => setSelectedPhotoIds?.(undefined);
+    },
     [setSelectedPhotoIds]
   );
 
