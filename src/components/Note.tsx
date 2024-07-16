@@ -4,32 +4,34 @@ import AnimateItems from './AnimateItems';
 import { IoInformationCircleOutline } from 'react-icons/io5';
 import { clsx } from 'clsx/lite';
 
-export default function Note({
-  children,
-  className,
-  color = 'blue',
-  icon,
-  animate,
-  cta,
-  hideIcon,
-}: {
+export default function Note(props: {
   icon?: ReactNode
   animate?: boolean
   cta?: ReactNode
   hideIcon?: boolean
 } & ComponentProps<typeof Container>) {
+  const {
+    icon,
+    animate,
+    cta,
+    hideIcon,
+    color = 'blue',
+    padding,
+    children,
+    ...rest
+  } = props;
+
   return (
     <AnimateItems
       type={animate ? 'bottom' : 'none'}
       items={[
         <Container
           key="Banner"
-          className={className}
-          centered={false}
-          padding="tight"
           color={color}
+          padding={padding ?? (cta ? 'tight-cta-right' : 'tight')}
+          {...rest}
         >
-          <div className="flex items-center gap-2.5 pb-[1px]">
+          <div className="flex items-center gap-2.5 w-full">
             {!hideIcon &&
               <span className={clsx(
                 'w-5 flex justify-center shrink-0',
@@ -44,7 +46,7 @@ export default function Note({
               {children}
             </span>
             {cta &&
-              <span className="translate-x-1">
+              <span>
                 {cta}
               </span>}
           </div>

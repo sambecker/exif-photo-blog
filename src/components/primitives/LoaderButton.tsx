@@ -10,6 +10,7 @@ export default function LoaderButton(props: {
   spinnerColor?: SpinnerColor
   styleAs?: 'button' | 'link' | 'link-without-hover'
   hideTextOnMobile?: boolean
+  confirmText?: string
   shouldPreventDefault?: boolean
   primary?: boolean
 } & ButtonHTMLAttributes<HTMLButtonElement>) {
@@ -20,6 +21,7 @@ export default function LoaderButton(props: {
     spinnerColor,
     styleAs = 'button',
     hideTextOnMobile = true,
+    confirmText,
     shouldPreventDefault,
     primary,
     type = 'button',
@@ -35,7 +37,9 @@ export default function LoaderButton(props: {
       type={type}
       onClick={e => {
         if (shouldPreventDefault) { e.preventDefault(); }
-        onClick?.(e);
+        if (!confirmText || confirm(confirmText)) {
+          onClick?.(e);
+        }
       }}
       className={clsx(
         ...(styleAs !== 'button'
