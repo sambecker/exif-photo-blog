@@ -42,19 +42,20 @@ export default function MoreMenuItem({
           ? 'cursor-not-allowed opacity-50'
           : 'cursor-pointer',
       )}
-      onClick={e => {
+      onClick={async e => {
         if (shouldPreventDefault) { e.preventDefault(); }
+        if (action) {
+          const result = action();
+          if (result instanceof Promise) {
+            setIsLoading(true);
+            await result.finally(() => setIsLoading(false));
+          }
+        }
         if (href && href !== pathname) {
           if (Boolean(hrefDownloadName)) {
             window.open(href, '_blank');
           } else {
             startTransition(() => router.push(href));
-          }
-        } else {
-          const result = action?.();
-          if (result instanceof Promise) {
-            setIsLoading(true);
-            result.finally(() => setIsLoading(false));
           }
         }
       }}
