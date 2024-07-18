@@ -15,6 +15,9 @@ import {
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_TAGS,
   PATH_ADMIN_UPLOADS,
+  PATH_FEED_INFERRED,
+  PATH_GRID_INFERRED,
+  PATH_ROOT,
   PATH_SIGN_IN,
   pathForPhoto,
   pathForTag,
@@ -23,7 +26,7 @@ import Modal from '../Modal';
 import { clsx } from 'clsx/lite';
 import { useDebounce } from 'use-debounce';
 import Spinner from '../Spinner';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
 import { IoInvertModeSharp } from 'react-icons/io5';
@@ -42,6 +45,7 @@ import { Tags, addHiddenToTags, formatTag } from '@/tag';
 import { FaTag } from 'react-icons/fa';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 import CommandKItem from './CommandKItem';
+import { GRID_HOMEPAGE_ENABLED } from '@/site/config';
 
 const LISTENER_KEYDOWN = 'keydown';
 const MINIMUM_QUERY_LENGTH = 2;
@@ -73,11 +77,15 @@ export default function CommandKClient({
   showDebugTools?: boolean
   footer?: string
 }) {
+  const pathname = usePathname();
+
   const {
     isUserSignedIn,
     setUserEmail,
     isCommandKOpen: isOpen,
     hiddenPhotosCount,
+    selectedPhotoIds,
+    setSelectedPhotoIds,
     arePhotosMatted,
     shouldShowBaselineGrid,
     shouldDebugImageFallbacks,
@@ -246,16 +254,27 @@ export default function CommandKClient({
     });
   }
 
+  const pagesItems: CommandKItem[] = [{
+    label: 'Home',
+    path: PATH_ROOT,
+  }];
+
+  if (GRID_HOMEPAGE_ENABLED) {
+    pagesItems.push({
+      label: 'Feed',
+      path: PATH_FEED_INFERRED,
+    });
+  } else {
+    pagesItems.push({
+      label: 'Grid',
+      path: PATH_GRID_INFERRED,
+    });
+  }
+
   const sectionPages: CommandKSection = {
     heading: 'Pages',
     accessory: <HiDocumentText size={15} className="translate-x-[-1px]" />,
-    items: ([{
-      label: 'Home',
-      path: '/',
-    }, {
-      label: 'Grid',
-      path:'/grid',
-    }]),
+    items: pagesItems,
   };
 
   const adminSection: CommandKSection = {
@@ -278,6 +297,17 @@ export default function CommandKClient({
         label: 'App Config',
         annotation: <BiLockAlt />,
         path: PATH_ADMIN_CONFIGURATION,
+      }, {
+        label: selectedPhotoIds === undefined
+          ? 'Select Multiple Photos'
+          : 'Exit Select Multiple Photos',
+        annotation: <BiLockAlt />,
+        path: selectedPhotoIds === undefined
+          ? PATH_GRID_INFERRED
+          : undefined,
+        action: selectedPhotoIds === undefined
+          ? () => setSelectedPhotoIds?.([])
+          : () => setSelectedPhotoIds?.(undefined),
       }] as CommandKItem[])
         .concat(showDebugTools
           ? [{
@@ -393,15 +423,20 @@ export default function CommandKClient({
                       value={key}
                       keywords={keywords}
                       onSelect={() => {
+                        if (action) {
+                          action();
+                          if (!path) { setIsOpen?.(false); }
+                        }
                         if (path) {
-                          setKeyPending(key);
-                          startTransition(async () => {
-                            shouldCloseAfterPending.current = true;
-                            router.push(path, { scroll: true });
-                          });
-                        } else {
-                          setIsOpen?.(false);
-                          action?.();
+                          if (path !== pathname) {
+                            setKeyPending(key);
+                            startTransition(async () => {
+                              shouldCloseAfterPending.current = true;
+                              router.push(path, { scroll: true });
+                            });
+                          } else {
+                            setIsOpen?.(false);
+                          }
                         }
                       }}
                       accessory={accessory}

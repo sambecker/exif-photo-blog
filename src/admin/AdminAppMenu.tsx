@@ -1,8 +1,7 @@
 'use client';
 
 import MoreMenu from '@/components/more/MoreMenu';
-import { GRID_HOMEPAGE_ENABLED } from '@/site/config';
-import { PATH_ADMIN_CONFIGURATION, PATH_GRID, PATH_ROOT } from '@/site/paths';
+import { PATH_ADMIN_CONFIGURATION, PATH_GRID_INFERRED } from '@/site/paths';
 import { useAppState } from '@/state/AppState';
 import { BiCog } from 'react-icons/bi';
 import { ImCheckboxUnchecked } from 'react-icons/im';
@@ -33,7 +32,7 @@ export default function AdminAppMenu() {
           : <ImCheckboxUnchecked
             className="text-[0.75rem]"
           />,
-        href: GRID_HOMEPAGE_ENABLED ? PATH_ROOT : PATH_GRID,
+        href: PATH_GRID_INFERRED,
         action: () => {
           if (isSelecting) {
             setSelectedPhotoIds?.(undefined);
