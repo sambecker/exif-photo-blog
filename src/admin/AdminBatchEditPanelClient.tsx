@@ -9,7 +9,7 @@ import { IoCloseSharp } from 'react-icons/io5';
 import DeleteButton from './DeleteButton';
 import { useState } from 'react';
 import TagInput from '@/components/TagInput';
-import { convertTagsForForm, Tags } from '@/tag';
+import { convertTagsForForm, getValidationMessageForTags, Tags } from '@/tag';
 import { usePathname } from 'next/navigation';
 import { PATH_GRID_INFERRED } from '@/site/paths';
 
@@ -27,6 +27,7 @@ export default function AdminBatchEditPanelClient({
   } = useAppState();
 
   const [tags, setTags] = useState<string>();
+  const tagValidationMessage = getValidationMessageForTags(tags);
   const isTagging = tags !== undefined;
 
   const photosPlural = selectedPhotoIds?.length === 1 ? 'photo' : 'photos';
@@ -47,6 +48,7 @@ export default function AdminBatchEditPanelClient({
         className="min-h-[2.5rem]"
         // eslint-disable-next-line max-len
         confirmText={`Are you sure you want to apply tags to ${selectedPhotoIds?.length} ${photosPlural}? This action cannot be undone.`}
+        disabled={!tags || Boolean(tagValidationMessage)}
         primary
       >
         Apply Tags
@@ -95,6 +97,9 @@ export default function AdminBatchEditPanelClient({
             options={convertTagsForForm(existingTags)}
             onChange={setTags}
             placeholder={`Tag ${selectedPhotoIds?.length} ${photosPlural} ...`}
+            className={clsx(
+              Boolean(tagValidationMessage) && 'error',
+            )}
           />
           : <div className="text-base">
             {renderPhotoText()}
