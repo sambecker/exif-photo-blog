@@ -8,15 +8,15 @@ import { clsx } from 'clsx/lite';
 import { IoCloseSharp } from 'react-icons/io5';
 import DeleteButton from './DeleteButton';
 import { useState } from 'react';
-import TagInput from '@/components/TagInput';
-import { convertTagsForForm, getValidationMessageForTags, Tags } from '@/tag';
+import { Tags } from '@/tag';
 import { usePathname } from 'next/navigation';
 import { PATH_GRID_INFERRED } from '@/site/paths';
+import PhotoTagFieldset from './PhotoTagFieldset';
 
 export default function AdminBatchEditPanelClient({
-  existingTags,
+  uniqueTags,
 }: {
-  existingTags: Tags
+  uniqueTags: Tags
 }) {
   const pathname = usePathname();
 
@@ -27,7 +27,7 @@ export default function AdminBatchEditPanelClient({
   } = useAppState();
 
   const [tags, setTags] = useState<string>();
-  const tagValidationMessage = getValidationMessageForTags(tags);
+  const [tagErrorMessage, setTagErrorMessage] = useState('');
   const isTagging = tags !== undefined;
 
   const photosPlural = selectedPhotoIds?.length === 1 ? 'photo' : 'photos';
@@ -40,7 +40,10 @@ export default function AdminBatchEditPanelClient({
     ? <>
       <LoaderButton
         className="min-h-[2.5rem]"
-        onClick={() => setTags(undefined)}
+        onClick={() => {
+          setTags(undefined);
+          setTagErrorMessage('');
+        }}
       >
         Cancel
       </LoaderButton>
@@ -48,7 +51,7 @@ export default function AdminBatchEditPanelClient({
         className="min-h-[2.5rem]"
         // eslint-disable-next-line max-len
         confirmText={`Are you sure you want to apply tags to ${selectedPhotoIds?.length} ${photosPlural}? This action cannot be undone.`}
-        disabled={!tags || Boolean(tagValidationMessage)}
+        disabled={!tags || Boolean(tagErrorMessage)}
         primary
       >
         Apply Tags
@@ -75,35 +78,42 @@ export default function AdminBatchEditPanelClient({
   )
     ? <SiteGrid
       className="sticky top-0 z-10 mb-5 -mt-2 pt-2"
-      contentMain={<Note
-        color="gray"
-        className={clsx(
-          'min-h-[3.5rem]',
-          'backdrop-blur-lg !border-transparent',
-          '!text-gray-900 dark:!text-gray-100',
-          '!bg-gray-100/90 dark:!bg-gray-900/70',
-        )}
-        padding={isTagging ? 'tight-cta-right-left' : 'tight-cta-right'}
-        cta={<div className="flex items-center gap-2.5">
-          {renderActions()}
-        </div>}
-        spaceChildren={false}
-        hideIcon
-      >
-        {isTagging
-          ? <TagInput
-            name="tags"
-            value={tags}
-            options={convertTagsForForm(existingTags)}
-            onChange={setTags}
-            placeholder={`Tag ${selectedPhotoIds?.length} ${photosPlural} ...`}
-            className={clsx(
-              Boolean(tagValidationMessage) && 'error',
-            )}
-          />
-          : <div className="text-base">
-            {renderPhotoText()}
+      contentMain={<div className="flex flex-col gap-2">
+        <Note
+          color="gray"
+          className={clsx(
+            'min-h-[3.5rem]',
+            'backdrop-blur-lg !border-transparent',
+            '!text-gray-900 dark:!text-gray-100',
+            '!bg-gray-100/90 dark:!bg-gray-900/70',
+          )}
+          padding={isTagging ? 'tight-cta-right-left' : 'tight-cta-right'}
+          cta={<div className="flex items-center gap-2.5">
+            {renderActions()}
           </div>}
-      </Note>} />
+          spaceChildren={false}
+          hideIcon
+        >
+          {isTagging
+            ? <PhotoTagFieldset
+              tags={tags}
+              tagOptions={uniqueTags}
+              placeholder={
+                `Tag ${selectedPhotoIds?.length} ${photosPlural} ...`
+              }
+              onChange={setTags}
+              onError={setTagErrorMessage}
+              openOnLoad
+              hideLabel
+            />
+            : <div className="text-base">
+              {renderPhotoText()}
+            </div>}
+        </Note>
+        {tagErrorMessage &&
+          <div className="text-error pl-4">
+            {tagErrorMessage}
+          </div>}
+      </div>} />
     : null;
 }

@@ -30,7 +30,7 @@ export default function AdminAppMenu() {
             className="text-[18px] translate-y-[-0.5px]"
           />
           : <ImCheckboxUnchecked
-            className="text-[0.75rem]"
+            className="text-[0.75rem] translate-y-[-0.5px]"
           />,
         href: PATH_GRID_INFERRED,
         action: () => {

@@ -2,8 +2,8 @@ import { getUniqueTagsCached } from '@/photo/cache';
 import AdminBatchEditPanelClient from './AdminBatchEditPanelClient';
 
 export default async function AdminBatchEditPanel() {
-  const existingTags = await getUniqueTagsCached();
+  const uniqueTags = await getUniqueTagsCached();
   return (
-    <AdminBatchEditPanelClient {...{ existingTags }} />
+    <AdminBatchEditPanelClient {...{ uniqueTags }} />
   );
 }
