@@ -91,12 +91,6 @@ export default function AdminBatchEditPanelClient({
     : <>
       {(selectedPhotoIds?.length ?? 0) > 0 &&
         <>
-          <LoaderButton
-            onClick={() => setTags('')}
-            disabled={isPerformingSelectEdit}
-          >
-            Tag ...
-          </LoaderButton>
           <DeletePhotosButton
             photoIds={selectedPhotoIds}
             disabled={isPerformingSelectEdit}
@@ -104,6 +98,12 @@ export default function AdminBatchEditPanelClient({
             onDelete={resetForm}
             onFinish={() => setIsPerformingSelectEdit?.(false)}
           />
+          <LoaderButton
+            onClick={() => setTags('')}
+            disabled={isPerformingSelectEdit}
+          >
+            Tag ...
+          </LoaderButton>
         </>}
       <LoaderButton
         icon={<IoCloseSharp size={20} className="translate-y-[0.5px]" />}
