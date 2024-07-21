@@ -15,6 +15,7 @@ import FavsTag from '../tag/FavsTag';
 import { useAppState } from '@/state/AppState';
 import { useMemo } from 'react';
 import HiddenTag from '@/tag/HiddenTag';
+import { SITE_ABOUT } from '@/site/config';
 
 export default function PhotoGridSidebar({
   tags,
@@ -39,6 +40,14 @@ export default function PhotoGridSidebar({
 
   return (
     <>
+      {SITE_ABOUT && <HeaderList
+        items={[<p
+          key="about"
+          className="max-w-60 normal-case text-main"
+        >
+          {SITE_ABOUT}
+        </p>]}
+      />}
       {tags.length > 0 && <HeaderList
         title='Tags'
         icon={<FaTag size={12} className="text-icon" />}

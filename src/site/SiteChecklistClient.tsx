@@ -44,6 +44,7 @@ export default function SiteChecklistClient({
   hasDomain,
   hasTitle,
   hasDescription,
+  hasAbout,
   showRepoLink,
   showSocial,
   showFilmSimulations,
@@ -335,7 +336,7 @@ export default function SiteChecklistClient({
                 'Not explicitly setting a domain may cause ' + 
                 'certain features to behave unexpectedly',
               })}
-            Store in environment variable (displayed in top-right nav):
+            Store in environment variable (seen in top-right nav):
             {renderEnvVars(['NEXT_PUBLIC_SITE_DOMAIN'])}
           </ChecklistRow>
           <ChecklistRow
@@ -343,7 +344,7 @@ export default function SiteChecklistClient({
             status={hasTitle}
             optional
           >
-            Store in environment variable (used in page titles):
+            Store in environment variable (seen in browser tab):
             {renderEnvVars(['NEXT_PUBLIC_SITE_TITLE'])}
           </ChecklistRow>
           <ChecklistRow
@@ -351,10 +352,17 @@ export default function SiteChecklistClient({
             status={hasDescription}
             optional
           >
-            Store in environment variable (mainly used for OG meta):
+            Store in environment variable (seen in nav, under title):
             {renderEnvVars(['NEXT_PUBLIC_SITE_DESCRIPTION'])}
           </ChecklistRow>
-          
+          <ChecklistRow
+            title="Add about"
+            status={hasAbout}
+            optional
+          >
+            Store in environment variable (seen in grid sidebar):
+            {renderEnvVars(['NEXT_PUBLIC_SITE_ABOUT'])}
+          </ChecklistRow>
         </Checklist>
         {!simplifiedView && <>
           <Checklist
