@@ -43,7 +43,7 @@ export default function PhotoGridSidebar({
       {SITE_ABOUT && <HeaderList
         items={[<p
           key="about"
-          className="max-w-72 normal-case text-main"
+          className="max-w-60 normal-case text-main"
         >
           {SITE_ABOUT}
         </p>]}

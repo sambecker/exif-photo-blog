@@ -87,7 +87,10 @@ export default function Nav({
                   {renderLink(siteDomainOrTitle, PATH_ROOT)}
                 </div>
                 {HAS_DEFINED_SITE_DESCRIPTION &&
-                  <div className="hidden sm:block truncate overflow-hidden">
+                  <div className={clsx(
+                    'hidden sm:block truncate overflow-hidden',
+                    'leading-tight',
+                  )}>
                     {SITE_DESCRIPTION}
                   </div>}
               </div>
