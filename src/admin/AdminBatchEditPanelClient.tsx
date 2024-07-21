@@ -100,7 +100,9 @@ export default function AdminBatchEditPanelClient({
           <DeletePhotosButton
             photoIds={selectedPhotoIds}
             disabled={isPerformingSelectEdit}
+            onClick={() => setIsPerformingSelectEdit?.(true)}
             onDelete={resetForm}
+            onFinish={() => setIsPerformingSelectEdit?.(false)}
           />
         </>}
       <LoaderButton
