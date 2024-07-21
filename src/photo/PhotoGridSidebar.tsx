@@ -40,10 +40,14 @@ export default function PhotoGridSidebar({
 
   return (
     <>
-      {SITE_ABOUT &&
-        <p className="max-w-72">
+      {SITE_ABOUT && <HeaderList
+        items={[<p
+          key="about"
+          className="max-w-72 normal-case text-main"
+        >
           {SITE_ABOUT}
-        </p>}
+        </p>]}
+      />}
       {tags.length > 0 && <HeaderList
         title='Tags'
         icon={<FaTag size={12} className="text-icon" />}
