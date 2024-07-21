@@ -28,11 +28,8 @@ Installation
 
 1. Click [Deploy](https://vercel.com/new/clone?demo-title=Photo+Blog&demo-description=Store+photos+with+original+camera+data&demo-url=https%3A%2F%2Fphotos.sambecker.com&demo-image=https%3A%2F%2Fphotos.sambecker.com%2Ftemplate-image-tight&project-name=Photo+Blog&repository-name=exif-photo-blog&repository-url=https%3A%2F%2Fgithub.com%2Fsambecker%2Fexif-photo-blog&from=templates&skippable-integrations=1&teamCreateStatus=hidden&stores=%5B%7B%22type%22%3A%22postgres%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D)
 2. Add required storage ([Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres/quickstart#create-a-postgres-database) + [Vercel Blob](https://vercel.com/docs/storage/vercel-blob/quickstart#create-a-blob-store)) as part of template installation
-3. Configure environment variables from project settings:
-   - `NEXT_PUBLIC_SITE_DOMAIN` (e.g., photos.domain.com)
-   - `NEXT_PUBLIC_SITE_TITLE` (seen in browser tab)
-   - `NEXT_PUBLIC_SITE_DESCRIPTION` (seen in nav, under title)
-   - `NEXT_PUBLIC_SITE_ABOUT` (e.g., seen in grid sidebar)
+3. Configure environment variable for production domain in project settings
+   - `NEXT_PUBLIC_SITE_DOMAIN` (e.g., photos.domain.com—used in permalinks and seen in top-right nav)
 
 ### 2. Setup Auth
 
@@ -99,8 +96,14 @@ _⚠️ READ BEFORE PROCEEDING_
 
 Application behavior can be changed by configuring the following environment variables:
 
-- `NEXT_PUBLIC_PRO_MODE = 1` enables higher quality image storage (results in increased storage usage)
+#### Site meta
+- `NEXT_PUBLIC_SITE_TITLE` (seen in browser tab)
+- `NEXT_PUBLIC_SITE_DESCRIPTION` (seen in nav, under title)
+- `NEXT_PUBLIC_SITE_ABOUT` (e.g., seen in grid sidebar)
+
+#### Site behavior
 - `NEXT_PUBLIC_GRID_HOMEPAGE = 1` shows grid layout on homepage
+- `NEXT_PUBLIC_PRO_MODE = 1` enables higher quality image storage (results in increased storage usage)
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES = 1` enables static optimization for pages, i.e., renders pages at build time (results in increased project usage)—⚠️ _Experimental_
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES = 1` enables static optimization for OG images, i.e., renders images at build time (results in increased project usage)—⚠️ _Experimental_
 - `NEXT_PUBLIC_MATTE_PHOTOS = 1` constrains the size of each photo, and enables a surrounding border (potentially useful for photos with tall aspect ratios)
