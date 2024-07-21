@@ -260,14 +260,6 @@ export const deletePhotoAction = async (
     }
   });
 
-export const deletePhotoFormAction = async (formData: FormData) =>
-  runAuthenticatedAdminServerAction(() =>
-    deletePhotoAction(
-      formData.get('id') as string,
-      formData.get('url') as string,
-    )
-  );
-
 export const deletePhotoTagGloballyAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
     const tag = formData.get('tag') as string;

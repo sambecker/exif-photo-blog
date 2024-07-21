@@ -9,7 +9,7 @@ import { pathForAdminUploadUrl } from '@/site/paths';
 import AddButton from './AddButton';
 import FormWithConfirm from '@/components/FormWithConfirm';
 import { deleteBlobPhotoAction } from '@/photo/actions';
-import DeleteButton from './DeleteButton';
+import DeleteFormButton from './DeleteFormButton';
 import { UrlAddStatus } from './AdminUploadsClient';
 import ResponsiveDate from '@/components/ResponsiveDate';
 
@@ -102,7 +102,7 @@ export default function AdminUploadsTable({
                       value={url}
                       readOnly
                     />
-                    <DeleteButton />
+                    <DeleteFormButton />
                   </FormWithConfirm>
                 </>}
             </span>

@@ -3,6 +3,7 @@
 import LoaderButton from '@/components/primitives/LoaderButton';
 import { photoQuantityText } from '@/photo';
 import { deletePhotosAction } from '@/photo/actions';
+import { useAppState } from '@/state/AppState';
 import { toastSuccess, toastWarning } from '@/toast';
 import { clsx } from 'clsx/lite';
 import { ComponentProps, useState } from 'react';
@@ -11,15 +12,22 @@ import { BiTrash } from 'react-icons/bi';
 export default function DeletePhotosButton({
   photoIds = [],
   onDelete,
+  clearLocalState = true,
   className,
+  confirmText,
+  toastText,
   ...rest
 }: {
   photoIds?: string[]
   onDelete?: () => void
+  clearLocalState?: boolean
+  toastText?: string
 } & ComponentProps<typeof LoaderButton>) {
   const [isLoading, setIsLoading] = useState(false);
 
   const photosText = photoQuantityText(photoIds.length, false);
+
+  const { invalidateSwr, registerAdminUpdate } = useAppState();
 
   return (
     <LoaderButton
@@ -37,12 +45,16 @@ export default function DeletePhotosButton({
       )}
       isLoading={isLoading}
       // eslint-disable-next-line max-len
-      confirmText={`Are you sure you want to delete ${photosText}? This action cannot be undone.`}
+      confirmText={confirmText ?? `Are you sure you want to delete ${photosText}? This action cannot be undone.`}
       onClick={() => {
         setIsLoading(true);
         deletePhotosAction(photoIds)
           .then(() => {
-            toastSuccess(`${photosText} deleted`);
+            toastSuccess(toastText ?? `${photosText} deleted`);
+            if (clearLocalState) {
+              invalidateSwr?.();
+              registerAdminUpdate?.();
+            }
             onDelete?.();
           })
           .catch(() => toastWarning(`Failed to delete ${photosText}`))

@@ -6,7 +6,7 @@ import { clsx } from 'clsx/lite';
 import { ComponentProps, useCallback } from 'react';
 import { BiTrash } from 'react-icons/bi';
 
-export default function DeleteButton (
+export default function DeleteFormButton (
   props: ComponentProps<typeof SubmitButtonWithStatus> & {
     clearLocalState?: boolean
   }
