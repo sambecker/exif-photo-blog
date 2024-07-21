@@ -13,6 +13,7 @@ import { usePathname } from 'next/navigation';
 import { PATH_GRID_INFERRED } from '@/site/paths';
 import PhotoTagFieldset from './PhotoTagFieldset';
 import { tagMultiplePhotosAction } from '@/photo/actions';
+import { toastSuccess } from '@/toast';
 
 export default function AdminBatchEditPanelClient({
   uniqueTags,
@@ -32,6 +33,12 @@ export default function AdminBatchEditPanelClient({
   const [tags, setTags] = useState<string>();
   const [tagErrorMessage, setTagErrorMessage] = useState('');
   const isTagging = tags !== undefined;
+
+  const resetForm = () => {
+    setSelectedPhotoIds?.(undefined);
+    setTags(undefined);
+    setTagErrorMessage('');
+  };
 
   const photosPlural = selectedPhotoIds?.length === 1 ? 'photo' : 'photos';
 
@@ -61,9 +68,20 @@ export default function AdminBatchEditPanelClient({
             tags,
             selectedPhotoIds ?? [],
           )
+            .then(() => {
+              toastSuccess(
+                `Tags applied to ${selectedPhotoIds?.length} ${photosPlural}`
+              );
+              resetForm();
+            })
             .finally(() => setIsLoading(false));
         }}
-        disabled={!tags || Boolean(tagErrorMessage) || isLoading}
+        disabled={
+          !tags ||
+          Boolean(tagErrorMessage) ||
+          (selectedPhotoIds?.length ?? 0) === 0 ||
+          isLoading
+        }
         primary
       >
         Apply Tags
