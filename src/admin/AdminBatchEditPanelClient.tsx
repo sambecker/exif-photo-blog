@@ -7,7 +7,7 @@ import { useAppState } from '@/state/AppState';
 import { clsx } from 'clsx/lite';
 import { IoCloseSharp } from 'react-icons/io5';
 import { useState } from 'react';
-import { Tags } from '@/tag';
+import { TAG_FAVS, Tags } from '@/tag';
 import { usePathname } from 'next/navigation';
 import { PATH_GRID_INFERRED } from '@/site/paths';
 import PhotoTagFieldset from './PhotoTagFieldset';
@@ -15,6 +15,7 @@ import { tagMultiplePhotosAction } from '@/photo/actions';
 import { toastSuccess } from '@/toast';
 import DeletePhotosButton from './DeletePhotosButton';
 import { photoQuantityText } from '@/photo';
+import { FaArrowDown, FaRegStar } from 'react-icons/fa6';
 
 export default function AdminBatchEditPanelClient({
   uniqueTags,
@@ -41,11 +42,15 @@ export default function AdminBatchEditPanelClient({
     setTagErrorMessage('');
   };
 
-  const photosText = photoQuantityText(selectedPhotoIds?.length ?? 0, false);
+  const photosText = photoQuantityText(
+    selectedPhotoIds?.length ?? 0,
+    false,
+    false,
+  );
 
-  const renderPhotoText = () => selectedPhotoIds?.length === 0
-    ? 'Select photos below'
-    : `${photosText} selected`;
+  const renderPhotoCTA = () => selectedPhotoIds?.length === 0
+    ? <><FaArrowDown /> Select photos below</>
+    : <>{photosText} selected</>;
 
   const renderActions = () => isInTagMode
     ? <>
@@ -70,9 +75,7 @@ export default function AdminBatchEditPanelClient({
             selectedPhotoIds ?? [],
           )
             .then(() => {
-              toastSuccess(
-                `Tags applied to ${photosText}`
-              );
+              toastSuccess(`${photosText} tagged`);
               resetForm();
             })
             .finally(() => setIsPerformingSelectEdit?.(false));
@@ -97,6 +100,23 @@ export default function AdminBatchEditPanelClient({
             onClick={() => setIsPerformingSelectEdit?.(true)}
             onDelete={resetForm}
             onFinish={() => setIsPerformingSelectEdit?.(false)}
+          />
+          <LoaderButton
+            icon={<FaRegStar />}
+            disabled={isPerformingSelectEdit}
+            confirmText={`Are you sure you want to favorite ${photosText}?`}
+            onClick={() => {
+              setIsPerformingSelectEdit?.(true);
+              tagMultiplePhotosAction(
+                TAG_FAVS,
+                selectedPhotoIds ?? [],
+              )
+                .then(() => {
+                  toastSuccess(`${photosText} favorited`);
+                  resetForm();
+                })
+                .finally(() => setIsPerformingSelectEdit?.(false));
+            }}
           />
           <LoaderButton
             onClick={() => setTags('')}
@@ -145,8 +165,8 @@ export default function AdminBatchEditPanelClient({
               openOnLoad
               hideLabel
             />
-            : <div className="text-base">
-              {renderPhotoText()}
+            : <div className="text-base flex gap-2 items-center">
+              {renderPhotoCTA()}
             </div>}
         </Note>
         {tagErrorMessage &&

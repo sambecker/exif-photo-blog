@@ -29,7 +29,7 @@ export default function DeletePhotosButton({
 } & ComponentProps<typeof LoaderButton>) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const photosText = photoQuantityText(photoIds.length, false);
+  const photosText = photoQuantityText(photoIds.length, false, false);
 
   const { invalidateSwr, registerAdminUpdate } = useAppState();
 
