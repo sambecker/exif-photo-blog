@@ -59,7 +59,7 @@ export default function LoaderButton(props: {
     >
       {(icon || isLoading) &&
         <span className={clsx(
-          'min-w-[1.25rem] max-h-4 overflow-hidden',
+          'min-w-[1.25rem] max-h-5 overflow-hidden',
           styleAs === 'button' ? 'translate-y-[-0.5px]' : 'translate-y-[0.5px]',
           'inline-flex justify-center shrink-0',
         )}>
@@ -67,9 +67,7 @@ export default function LoaderButton(props: {
             ? <Spinner
               size={14}
               color={spinnerColor}
-              className={styleAs === 'button'
-                ? 'translate-y-[2px]'
-                : 'translate-y-[0.5px]'}
+              className="translate-y-[0.5px]"
             />
             : icon}
         </span>}
