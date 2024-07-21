@@ -1,5 +1,9 @@
+'use client';
+
 import { clsx } from 'clsx/lite';
 import Checkbox from './primitives/Checkbox';
+import { useAppState } from '@/state/AppState';
+import Spinner from './Spinner';
 
 export default function SelectTileOverlay({
   isSelected,
@@ -8,10 +12,13 @@ export default function SelectTileOverlay({
   isSelected: boolean
   onSelectChange: () => void
 }) {
+  const { isPerformingSelectEdit } = useAppState();
+
   return (
     <div className={clsx(
       'absolute w-full h-full cursor-pointer',
       'active:bg-gray-950/40 active:dark:bg-gray-950/60',
+      isPerformingSelectEdit && 'pointer-events-none',
     )}>
       {/* Admin Select Border */}
       <div
@@ -30,15 +37,23 @@ export default function SelectTileOverlay({
       </div>
       {/* Admin Select Action */}
       <div className="absolute top-0 right-0 p-2">
-        <Checkbox
-          className={clsx(
-            'text-white',
-            // Required to prevent Safari jitter
-            'translate-x-[0.1px]',
-          )}
-          checked={isSelected}
-          onChange={onSelectChange}
-        />
+        {isPerformingSelectEdit
+          ? isSelected
+            ? <Spinner
+              size={16}
+              color="text"
+              className="m-[1px]"
+            />
+            : null
+          : <Checkbox
+            className={clsx(
+              'text-white',
+              // Required to prevent Safari jitter
+              'translate-x-[0.1px]',
+            )}
+            checked={isSelected}
+            onChange={onSelectChange}
+          />}
       </div>
     </div>
   );

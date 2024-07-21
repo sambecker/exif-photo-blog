@@ -36,6 +36,8 @@ export default function AppStateProvider({
     useState(0);
   const [selectedPhotoIds, setSelectedPhotoIds] =
     useState<string[] | undefined>();
+  const [isPerformingSelectEdit, setIsPerformingSelectEdit] =
+    useState(false);
   // DEBUG
   const [arePhotosMatted, setArePhotosMatted] =
     useState(MATTE_PHOTOS);
@@ -96,6 +98,8 @@ export default function AppStateProvider({
         hiddenPhotosCount,
         selectedPhotoIds,
         setSelectedPhotoIds,
+        isPerformingSelectEdit,
+        setIsPerformingSelectEdit,
         // DEBUG
         arePhotosMatted,
         setArePhotosMatted,

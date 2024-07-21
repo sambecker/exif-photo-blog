@@ -14,6 +14,7 @@ import PhotoTagFieldset from './PhotoTagFieldset';
 import { tagMultiplePhotosAction } from '@/photo/actions';
 import { toastSuccess } from '@/toast';
 import DeletePhotosButton from './DeletePhotosButton';
+import { photoQuantityText } from '@/photo';
 
 export default function AdminBatchEditPanelClient({
   uniqueTags,
@@ -26,13 +27,13 @@ export default function AdminBatchEditPanelClient({
     isUserSignedIn,
     selectedPhotoIds,
     setSelectedPhotoIds,
+    isPerformingSelectEdit,
+    setIsPerformingSelectEdit,
   } = useAppState();
-
-  const [isLoading, setIsLoading] = useState(false);
 
   const [tags, setTags] = useState<string>();
   const [tagErrorMessage, setTagErrorMessage] = useState('');
-  const isTagging = tags !== undefined;
+  const isInTagMode = tags !== undefined;
 
   const resetForm = () => {
     setSelectedPhotoIds?.(undefined);
@@ -40,13 +41,13 @@ export default function AdminBatchEditPanelClient({
     setTagErrorMessage('');
   };
 
-  const photosPlural = selectedPhotoIds?.length === 1 ? 'photo' : 'photos';
+  const photosText = photoQuantityText(selectedPhotoIds?.length ?? 0, false);
 
   const renderPhotoText = () => selectedPhotoIds?.length === 0
     ? 'Select photos below'
-    : `${selectedPhotoIds?.length ?? 0} ${photosPlural} selected`;
+    : `${photosText} selected`;
 
-  const renderActions = () => isTagging
+  const renderActions = () => isInTagMode
     ? <>
       <LoaderButton
         className="min-h-[2.5rem]"
@@ -54,33 +55,33 @@ export default function AdminBatchEditPanelClient({
           setTags(undefined);
           setTagErrorMessage('');
         }}
-        disabled={isLoading}
+        disabled={isPerformingSelectEdit}
       >
         Cancel
       </LoaderButton>
       <LoaderButton
         className="min-h-[2.5rem]"
         // eslint-disable-next-line max-len
-        confirmText={`Are you sure you want to apply tags to ${selectedPhotoIds?.length} ${photosPlural}? This action cannot be undone.`}
+        confirmText={`Are you sure you want to apply tags to ${photosText}? This action cannot be undone.`}
         onClick={() => {
-          setIsLoading(true);
+          setIsPerformingSelectEdit?.(true);
           tagMultiplePhotosAction(
             tags,
             selectedPhotoIds ?? [],
           )
             .then(() => {
               toastSuccess(
-                `Tags applied to ${selectedPhotoIds?.length} ${photosPlural}`
+                `Tags applied to ${photosText}`
               );
               resetForm();
             })
-            .finally(() => setIsLoading(false));
+            .finally(() => setIsPerformingSelectEdit?.(false));
         }}
         disabled={
           !tags ||
           Boolean(tagErrorMessage) ||
           (selectedPhotoIds?.length ?? 0) === 0 ||
-          isLoading
+          isPerformingSelectEdit
         }
         primary
       >
@@ -92,18 +93,18 @@ export default function AdminBatchEditPanelClient({
         <>
           <LoaderButton
             onClick={() => setTags('')}
-            isLoading={isLoading}
+            disabled={isPerformingSelectEdit}
           >
             Tag ...
           </LoaderButton>
           <DeletePhotosButton
             photoIds={selectedPhotoIds}
-            disabled={isLoading}
+            disabled={isPerformingSelectEdit}
             onDelete={resetForm}
           />
         </>}
       <LoaderButton
-        icon={<IoCloseSharp size={20} className="translate-y-[-1.5px]" />}
+        icon={<IoCloseSharp size={20} className="translate-y-[0.5px]" />}
         onClick={() => setSelectedPhotoIds?.(undefined)}
       />
     </>;
@@ -124,22 +125,21 @@ export default function AdminBatchEditPanelClient({
             '!text-gray-900 dark:!text-gray-100',
             '!bg-gray-100/90 dark:!bg-gray-900/70',
           )}
-          padding={isTagging ? 'tight-cta-right-left' : 'tight-cta-right'}
+          padding={isInTagMode ? 'tight-cta-right-left' : 'tight-cta-right'}
           cta={<div className="flex items-center gap-2.5">
             {renderActions()}
           </div>}
           spaceChildren={false}
           hideIcon
         >
-          {isTagging
+          {isInTagMode
             ? <PhotoTagFieldset
               tags={tags}
               tagOptions={uniqueTags}
-              placeholder={
-                `Tag ${selectedPhotoIds?.length} ${photosPlural} ...`
-              }
+              placeholder={`Tag ${photosText} ...`}
               onChange={setTags}
               onError={setTagErrorMessage}
+              readOnly={isPerformingSelectEdit}
               openOnLoad
               hideLabel
             />
