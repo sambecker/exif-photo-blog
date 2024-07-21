@@ -215,6 +215,9 @@ FAQ
 #### How do I receive template updates?
 > For forked repos, click "Code," then "Update branch" from the main repo page. If you originally cloned the code, you can [create a fork](https://github.com/sambecker/exif-photo-blog/fork) from GitHub, then update your Git connection from your Vercel project settings. Once you've done this, you may need to go to your project deployments page, click •••, select "Create deployment," and choose `main`.
 
+#### How do I edit multiple photos?
+> On desktop, select ••• menu in the top right next to site title and choose, "Select Multiple." On mobile, "Select Multiple Photos" can be accessed from the search menu. From there, you can perform bulk tag, favorite, and delete actions.
+
 #### Why don't my photo changes show up immediately?
 > This template statically optimizes core views such as `/` and `/grid` to minimize visitor load times. Consequently, when photos are added, edited, or removed, it might take several minutes for those changes to propagate. If it seems like a change is not taking effect, try navigating to `/admin/configuration` and clicking "Clear Cache."
 

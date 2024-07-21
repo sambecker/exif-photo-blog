@@ -1,10 +1,9 @@
 'use client';
 
-import { Camera } from '@/camera';
 import { INFINITE_SCROLL_GRID_MULTIPLE } from '.';
 import InfinitePhotoScroll from './InfinitePhotoScroll';
 import PhotoGrid from './PhotoGrid';
-import { FilmSimulation } from '@/simulation';
+import { ComponentProps } from 'react';
 
 export default function PhotoGridInfinite({
   cacheKey,
@@ -15,16 +14,11 @@ export default function PhotoGridInfinite({
   simulation,
   focal,
   animateOnFirstLoadOnly,
+  canSelect,
 }: {
   cacheKey: string
   initialOffset: number
-  canStart?: boolean
-  tag?: string
-  camera?: Camera
-  simulation?: FilmSimulation
-  focal?: number
-  animateOnFirstLoadOnly?: boolean
-}) {
+} & Omit<ComponentProps<typeof PhotoGrid>, 'photos'>) {
   return (
     <InfinitePhotoScroll
       cacheKey={cacheKey}
@@ -44,6 +38,7 @@ export default function PhotoGridInfinite({
           focal,
           onLastPhotoVisible,
           animateOnFirstLoadOnly,
+          canSelect,
         }} />}
     </InfinitePhotoScroll>
   );

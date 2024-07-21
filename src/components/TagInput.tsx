@@ -260,7 +260,9 @@ export default function TagInput({
           className={clsx(
             'grow !min-w-0 !p-0 -my-2 text-xl',
             '!border-none !ring-transparent',
-            'placeholder:text-dim',
+            'placeholder:text-dim placeholder:text-[14px]',
+            'placeholder:translate-x-[2px]',
+            'placeholder:translate-y-[-1.5px]',
           )}
           size={10}
           value={inputText}

@@ -194,13 +194,19 @@ export const titleForPhoto = (photo: Photo) =>
 export const altTextForPhoto = (photo: Photo) =>
   photo.semanticDescription || titleForPhoto(photo);
 
-export const photoLabelForCount = (count: number) =>
-  count === 1 ? 'Photo' : 'Photos';
+export const photoLabelForCount = (count: number, capitalize = true) =>
+  capitalize
+    ? count === 1 ? 'Photo' : 'Photos'
+    : count === 1 ? 'photo' : 'photos';
 
-export const photoQuantityText = (count: number, includeParentheses = true) =>
+export const photoQuantityText = (
+  count: number,
+  includeParentheses = true,
+  capitalize?: boolean,
+) =>
   includeParentheses
-    ? `(${count} ${photoLabelForCount(count)})`
-    : `${count} ${photoLabelForCount(count)}`;  
+    ? `(${count} ${photoLabelForCount(count, capitalize)})`
+    : `${count} ${photoLabelForCount(count, capitalize)}`;  
 
 export const deleteConfirmationTextForPhoto = (photo: Photo) =>
   `Are you sure you want to delete "${titleForPhoto(photo)}?"`;
@@ -219,7 +225,7 @@ export const descriptionForPhotoSet = (
     : [
       explicitCount ?? photos.length,
       descriptor,
-      photoLabelForCount(explicitCount ?? photos.length),
+      photoLabelForCount(explicitCount ?? photos.length, false),
     ].join(' ');
 
 const sortPhotosByDate = (

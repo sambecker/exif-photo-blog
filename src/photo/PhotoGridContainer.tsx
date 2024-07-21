@@ -1,14 +1,11 @@
 'use client';
 
 import SiteGrid from '@/components/SiteGrid';
-import { Photo } from '.';
 import PhotoGrid from './PhotoGrid';
 import PhotoGridInfinite from './PhotoGridInfinite';
-import { Camera } from '@/camera';
 import { clsx } from 'clsx/lite';
 import AnimateItems from '@/components/AnimateItems';
-import { FilmSimulation } from '@/simulation';
-import { useCallback, useState } from 'react';
+import { ComponentProps, useCallback, useState } from 'react';
 
 export default function PhotoGridContainer({
   cacheKey,
@@ -21,18 +18,13 @@ export default function PhotoGridContainer({
   animateOnFirstLoadOnly,
   header,
   sidebar,
+  canSelect,
 }: {
   cacheKey: string
-  photos: Photo[]
   count: number
-  tag?: string
-  camera?: Camera
-  simulation?: FilmSimulation
-  focal?: number
-  animateOnFirstLoadOnly?: boolean
   header?: JSX.Element
   sidebar?: JSX.Element
-}) {
+} & ComponentProps<typeof PhotoGrid>) {
   const [
     shouldAnimateDynamicItems,
     setShouldAnimateDynamicItems,
@@ -63,6 +55,7 @@ export default function PhotoGridContainer({
             focal,
             animateOnFirstLoadOnly,
             onAnimationComplete,
+            canSelect,
           }} />
           {count > initialOffset &&
             <PhotoGridInfinite {...{
@@ -74,6 +67,7 @@ export default function PhotoGridContainer({
               simulation,
               focal,
               animateOnFirstLoadOnly,
+              canSelect,
             }} />}
         </div>
       </div>}

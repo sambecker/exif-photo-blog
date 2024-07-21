@@ -8,10 +8,11 @@ import { Photo, deleteConfirmationTextForPhoto } from '@/photo';
 import { isPathFavs, isPhotoFav } from '@/tag';
 import { usePathname } from 'next/navigation';
 import { BiTrash } from 'react-icons/bi';
-import MoreMenu, { MoreMenuItem } from '@/components/more/MoreMenu';
+import MoreMenu from '@/components/more/MoreMenu';
 import { useAppState } from '@/state/AppState';
 import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 import { MdOutlineFileDownload } from 'react-icons/md';
+import MoreMenuItem from '@/components/more/MoreMenuItem';
 
 export default function AdminPhotoMenuClient({
   photo,
@@ -33,7 +34,7 @@ export default function AdminPhotoMenuClient({
   const favIconClass = 'translate-x-[-1px] translate-y-[0.5px]';
 
   const items = useMemo(() => {
-    const items: MoreMenuItem[] = [{
+    const items: ComponentProps<typeof MoreMenuItem>[] = [{
       label: 'Edit',
       icon: <FaRegEdit size={14} />,
       href: pathForAdminPhotoEdit(photo.id),

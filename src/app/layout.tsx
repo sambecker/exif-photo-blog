@@ -17,6 +17,7 @@ import Nav from '@/site/Nav';
 import Footer from '@/site/Footer';
 import CommandK from '@/site/CommandK';
 import SwrConfigClient from '../state/SwrConfigClient';
+import AdminBatchEditPanel from '@/admin/AdminBatchEditPanel';
 
 import '../site/globals.css';
 import '../site/sonner.css';
@@ -84,6 +85,7 @@ export default function RootLayout({
                 'lg:mx-6 lg:mb-6',
               )}>
                 <Nav siteDomainOrTitle={SITE_DOMAIN_OR_TITLE} />
+                <AdminBatchEditPanel />
                 <div className={clsx(
                   'min-h-[16rem] sm:min-h-[30rem]',
                   'mb-12',

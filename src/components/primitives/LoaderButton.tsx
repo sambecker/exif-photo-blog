@@ -10,6 +10,7 @@ export default function LoaderButton(props: {
   spinnerColor?: SpinnerColor
   styleAs?: 'button' | 'link' | 'link-without-hover'
   hideTextOnMobile?: boolean
+  confirmText?: string
   shouldPreventDefault?: boolean
   primary?: boolean
 } & ButtonHTMLAttributes<HTMLButtonElement>) {
@@ -20,6 +21,7 @@ export default function LoaderButton(props: {
     spinnerColor,
     styleAs = 'button',
     hideTextOnMobile = true,
+    confirmText,
     shouldPreventDefault,
     primary,
     type = 'button',
@@ -35,7 +37,9 @@ export default function LoaderButton(props: {
       type={type}
       onClick={e => {
         if (shouldPreventDefault) { e.preventDefault(); }
-        onClick?.(e);
+        if (!confirmText || confirm(confirmText)) {
+          onClick?.(e);
+        }
       }}
       className={clsx(
         ...(styleAs !== 'button'
@@ -55,7 +59,7 @@ export default function LoaderButton(props: {
     >
       {(icon || isLoading) &&
         <span className={clsx(
-          'min-w-[1.25rem] h-4',
+          'min-w-[1.25rem] max-h-5 overflow-hidden',
           styleAs === 'button' ? 'translate-y-[-0.5px]' : 'translate-y-[0.5px]',
           'inline-flex justify-center shrink-0',
         )}>
@@ -63,9 +67,7 @@ export default function LoaderButton(props: {
             ? <Spinner
               size={14}
               color={spinnerColor}
-              className={styleAs === 'button'
-                ? 'translate-y-[2px]'
-                : 'translate-y-[0.5px]'}
+              className="translate-y-[0.5px]"
             />
             : icon}
         </span>}

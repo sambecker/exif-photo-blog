@@ -4,9 +4,8 @@ import IconFeed from '@/site/IconFeed';
 import IconGrid from '@/site/IconGrid';
 import {
   PATH_ADMIN_PHOTOS,
-  PATH_FEED,
-  PATH_GRID,
-  PATH_ROOT,
+  PATH_FEED_INFERRED,
+  PATH_GRID_INFERRED,
 } from '@/site/paths';
 import { BiLockAlt } from 'react-icons/bi';
 import IconSearch from './IconSearch';
@@ -27,7 +26,7 @@ export default function ViewSwitcher({
   const renderItemFeed = () =>
     <SwitcherItem
       icon={<IconFeed />}
-      href={GRID_HOMEPAGE_ENABLED ? PATH_FEED : PATH_ROOT}
+      href={PATH_FEED_INFERRED}
       active={currentSelection === 'feed'}
       noPadding
     />;
@@ -35,7 +34,7 @@ export default function ViewSwitcher({
   const renderItemGrid = () =>
     <SwitcherItem
       icon={<IconGrid />}
-      href={GRID_HOMEPAGE_ENABLED ? PATH_ROOT : PATH_GRID}
+      href={PATH_GRID_INFERRED}
       active={currentSelection === 'grid'}
       noPadding
     />;

@@ -8,6 +8,7 @@ import {
   renamePhotoTagGlobally,
   getPhoto,
   getPhotos,
+  addTagsToPhotos,
 } from '@/photo/db/query';
 import { GetPhotosOptions, areOptionsSensitive } from './db';
 import {
@@ -47,6 +48,7 @@ import { generateAiImageQueries } from './ai/server';
 import { createStreamableValue } from 'ai/rsc';
 import { convertUploadToPhoto } from './storage';
 import { UrlAddStatus } from '@/admin/AdminUploadsClient';
+import { convertStringToArray } from '@/utility/string';
 
 // Private actions
 
@@ -203,6 +205,18 @@ export const updatePhotoAction = async (formData: FormData) =>
     redirect(PATH_ADMIN_PHOTOS);
   });
 
+export const tagMultiplePhotosAction = (
+  tags: string,
+  photoIds: string[],
+) =>
+  runAuthenticatedAdminServerAction(async () => {
+    await addTagsToPhotos(
+      convertStringToArray(tags, false) ?? [],
+      photoIds,
+    );
+    revalidateAllKeysAndPaths();
+  });
+
 export const toggleFavoritePhotoAction = async (
   photoId: string,
   shouldRedirect?: boolean,
@@ -222,6 +236,17 @@ export const toggleFavoritePhotoAction = async (
     }
   });
 
+export const deletePhotosAction = async (photoIds: string[]) =>
+  runAuthenticatedAdminServerAction(async () => {
+    for (const photoId of photoIds) {
+      const photo = await getPhoto(photoId);
+      if (photo) {
+        await deletePhoto(photoId).then(() => deleteFile(photo.url));
+      }
+    }
+    revalidateAllKeysAndPaths();
+  });
+
 export const deletePhotoAction = async (
   photoId: string,
   photoUrl: string,
@@ -234,14 +259,6 @@ export const deletePhotoAction = async (
       redirect(PATH_ROOT);
     }
   });
-
-export const deletePhotoFormAction = async (formData: FormData) =>
-  runAuthenticatedAdminServerAction(() =>
-    deletePhotoAction(
-      formData.get('id') as string,
-      formData.get('url') as string,
-    )
-  );
 
 export const deletePhotoTagGloballyAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
