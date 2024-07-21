@@ -61,6 +61,11 @@ export const SITE_DESCRIPTION =
   process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
   SITE_DOMAIN;
 
+export const SITE_ABOUT = process.env.NEXT_PUBLIC_SITE_ABOUT;
+
+export const HAS_DEFINED_SITE_DESCRIPTION =
+  Boolean(process.env.NEXT_PUBLIC_SITE_DESCRIPTION);
+
 // STORAGE: DATABASE
 export const HAS_DATABASE =
   Boolean(process.env.POSTGRES_URL);
@@ -179,7 +184,8 @@ export const CONFIG_CHECKLIST_STATUS = {
   ),
   hasDomain: Boolean(process.env.NEXT_PUBLIC_SITE_DOMAIN),
   hasTitle: Boolean(process.env.NEXT_PUBLIC_SITE_TITLE),
-  hasDescription: Boolean(process.env.NEXT_PUBLIC_SITE_DESCRIPTION),
+  hasDescription: HAS_DEFINED_SITE_DESCRIPTION,
+  hasAbout: Boolean(process.env.NEXT_PUBLIC_SITE_ABOUT),
   showRepoLink: SHOW_REPO_LINK,
   showSocial: SHOW_SOCIAL,
   showFilmSimulations: SHOW_FILM_SIMULATIONS,
