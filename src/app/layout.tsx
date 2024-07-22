@@ -4,6 +4,7 @@ import { clsx } from 'clsx/lite';
 import { IBM_Plex_Mono } from 'next/font/google';
 import {
   BASE_URL,
+  DEFAULT_THEME,
   SITE_DESCRIPTION,
   SITE_DOMAIN_OR_TITLE,
   SITE_TITLE,
@@ -79,7 +80,10 @@ export default function RootLayout({
       <body className={ibmPlexMono.variable}>
         <AppStateProvider>
           <SwrConfigClient>
-            <ThemeProvider attribute="class">
+            <ThemeProvider
+              attribute="class"
+              defaultTheme={DEFAULT_THEME}
+            >
               <main className={clsx(
                 'mx-3 mb-3',
                 'lg:mx-6 lg:mb-6',

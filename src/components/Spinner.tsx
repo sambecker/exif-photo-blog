@@ -16,14 +16,14 @@ export default function Spinner({
   return (
     <span
       className={clsx(
-        className,
+        'inline-flex',
         color === 'light-gray' && 
           'text-gray-300 dark:text-gray-600',
         color === 'dim' &&
           'text-dim',
+        className,
       )}
       style={{
-        display: 'inline-flex',
         width: size,
         height: size,
       }}
