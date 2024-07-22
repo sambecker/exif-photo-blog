@@ -33,6 +33,7 @@ export default function MoreMenuItem({
     <DropdownMenu.Item
       disabled={isLoading}
       className={clsx(
+        'flex items-center h-8',
         'px-2 py-1.5 rounded-[3px]',
         'select-none hover:outline-none',
         'hover:bg-gray-50 active:bg-gray-100',
