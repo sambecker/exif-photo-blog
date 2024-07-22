@@ -16,6 +16,7 @@ import { toastSuccess } from '@/toast';
 import DeletePhotosButton from './DeletePhotosButton';
 import { photoQuantityText } from '@/photo';
 import { FaArrowDown, FaRegStar } from 'react-icons/fa6';
+import ResponsiveText from '@/components/primitives/ResponsiveText';
 
 export default function AdminBatchEditPanelClient({
   uniqueTags,
@@ -49,8 +50,13 @@ export default function AdminBatchEditPanelClient({
   );
 
   const renderPhotoCTA = () => selectedPhotoIds?.length === 0
-    ? <><FaArrowDown /> Select photos below</>
-    : <>{photosText} selected</>;
+    ? <>
+      <FaArrowDown />
+      Select photos below
+    </>
+    : <ResponsiveText shortText={photosText}>
+      {photosText} selected
+    </ResponsiveText>;
 
   const renderActions = () => isInTagMode
     ? <>
@@ -88,7 +94,9 @@ export default function AdminBatchEditPanelClient({
         }
         primary
       >
-        Apply Tags
+        <ResponsiveText shortText="Apply">
+          Apply Tags
+        </ResponsiveText>
       </LoaderButton>
     </>
     : <>
@@ -122,7 +130,9 @@ export default function AdminBatchEditPanelClient({
             onClick={() => setTags('')}
             disabled={isPerformingSelectEdit}
           >
-            Tag ...
+            <ResponsiveText shortText="Tag">
+              Tag ...
+            </ResponsiveText>
           </LoaderButton>
         </>}
       <LoaderButton
