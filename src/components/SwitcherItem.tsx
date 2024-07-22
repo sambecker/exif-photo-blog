@@ -4,6 +4,7 @@ import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
 
 export default function SwitcherItem({
   icon,
+  title,
   href,
   className: classNameProp,
   onClick,
@@ -12,6 +13,7 @@ export default function SwitcherItem({
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
 }: {
   icon: JSX.Element
+  title?: string
   href?: string
   className?: string
   onClick?: () => void
@@ -41,9 +43,9 @@ export default function SwitcherItem({
 
   return (
     href
-      ? <Link {...{ href, className, prefetch }}>
+      ? <Link {...{ title, href, className, prefetch }}>
         {renderIcon()}
       </Link>
-      : <div {...{ onClick, className }}>{renderIcon()}</div>
+      : <div {...{ title, onClick, className }}>{renderIcon()}</div>
   );
 };
