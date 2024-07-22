@@ -26,12 +26,14 @@ export default function Note(props: {
       type={animate ? 'bottom' : 'none'}
       items={[
         <Container
+          {...rest}
           key="Banner"
           color={color}
           padding={padding ?? (cta ? 'tight-cta-right' : 'tight')}
-          {...rest}
         >
-          <div className="flex items-center gap-2.5 w-full">
+          <div className={clsx(
+            'flex items-center w-full gap-2.5',
+          )}>
             {!hideIcon &&
               <span className={clsx(
                 'w-5 flex justify-center shrink-0',

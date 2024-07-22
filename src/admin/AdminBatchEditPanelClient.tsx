@@ -15,7 +15,7 @@ import { tagMultiplePhotosAction } from '@/photo/actions';
 import { toastSuccess } from '@/toast';
 import DeletePhotosButton from './DeletePhotosButton';
 import { photoQuantityText } from '@/photo';
-import { FaArrowDown, FaRegStar } from 'react-icons/fa6';
+import { FaArrowDown, FaCheck, FaRegStar } from 'react-icons/fa6';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 
 export default function AdminBatchEditPanelClient({
@@ -62,6 +62,10 @@ export default function AdminBatchEditPanelClient({
     ? <>
       <LoaderButton
         className="min-h-[2.5rem]"
+        icon={<IoCloseSharp
+          size={19}
+          className="translate-y-[0.5px]"
+        />}
         onClick={() => {
           setTags(undefined);
           setTagErrorMessage('');
@@ -72,6 +76,7 @@ export default function AdminBatchEditPanelClient({
       </LoaderButton>
       <LoaderButton
         className="min-h-[2.5rem]"
+        icon={<FaCheck size={15} />}
         // eslint-disable-next-line max-len
         confirmText={`Are you sure you want to apply tags to ${photosText}? This action cannot be undone.`}
         onClick={() => {
@@ -94,9 +99,7 @@ export default function AdminBatchEditPanelClient({
         }
         primary
       >
-        <ResponsiveText shortText="Apply">
-          Apply Tags
-        </ResponsiveText>
+        Apply Tags
       </LoaderButton>
     </>
     : <>
@@ -156,9 +159,11 @@ export default function AdminBatchEditPanelClient({
             'backdrop-blur-lg !border-transparent',
             '!text-gray-900 dark:!text-gray-100',
             '!bg-gray-100/90 dark:!bg-gray-900/70',
+            // Override default <Note /> content spacing
+            '[&>*>*:first-child]:gap-1.5 [&>*>*:first-child]:sm:gap-2.5',
           )}
           padding={isInTagMode ? 'tight-cta-right-left' : 'tight-cta-right'}
-          cta={<div className="flex items-center gap-2.5">
+          cta={<div className="flex items-center gap-1.5 sm:gap-2.5">
             {renderActions()}
           </div>}
           spaceChildren={false}
