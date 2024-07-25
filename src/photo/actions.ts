@@ -239,7 +239,7 @@ export const toggleFavoritePhotoAction = async (
 export const deletePhotosAction = async (photoIds: string[]) =>
   runAuthenticatedAdminServerAction(async () => {
     for (const photoId of photoIds) {
-      const photo = await getPhoto(photoId);
+      const photo = await getPhoto(photoId, true);
       if (photo) {
         await deletePhoto(photoId).then(() => deleteFile(photo.url));
       }
