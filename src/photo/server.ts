@@ -110,17 +110,18 @@ const generateBase64 = async (
   middleware: (sharp: Sharp) => Sharp,
 ) => 
   middleware(sharp(image))
+    .withMetadata()
     .toFormat('jpeg', { quality: 90 })
     .toBuffer()
     .then(data => `data:image/jpeg;base64,${data.toString('base64')}`);
 
 const resizeImage = async (image: ArrayBuffer) => 
-  generateBase64(image, sharp =>  sharp
+  generateBase64(image, sharp => sharp
     .resize(IMAGE_WIDTH_RESIZE)
   );
 
 const blurImage = async (image: ArrayBuffer) => 
-  generateBase64(image, sharp =>  sharp
+  generateBase64(image, sharp => sharp
     .resize(IMAGE_WIDTH_BLUR)
     .modulate({ saturation: 1.15 })
     .blur(4)
