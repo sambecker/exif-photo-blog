@@ -283,15 +283,10 @@ export const renamePhotoTagGloballyAction = async (formData: FormData) =>
     }
   });
 
-export const deleteBlobPhotoAction = async (formData: FormData) =>
+export const deleteUploadAction = async (url: string) =>
   runAuthenticatedAdminServerAction(async () => {
-    await deleteFile(formData.get('url') as string);
-
+    await deleteFile(url);
     revalidateAdminPaths();
-
-    if (formData.get('redirectToPhotos') === 'true') {
-      redirect(PATH_ADMIN_PHOTOS);
-    }
   });
 
 // Accessed from admin photo edit page

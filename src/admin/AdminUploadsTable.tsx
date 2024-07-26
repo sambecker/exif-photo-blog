@@ -7,18 +7,18 @@ import { clsx } from 'clsx/lite';
 import { FaRegCircleCheck } from 'react-icons/fa6';
 import { pathForAdminUploadUrl } from '@/site/paths';
 import AddButton from './AddButton';
-import FormWithConfirm from '@/components/FormWithConfirm';
-import { deleteBlobPhotoAction } from '@/photo/actions';
-import DeleteFormButton from './DeleteFormButton';
 import { UrlAddStatus } from './AdminUploadsClient';
 import ResponsiveDate from '@/components/ResponsiveDate';
+import DeleteBlobButton from './DeleteBlobButton';
 
 export default function AdminUploadsTable({
   isAdding,
   urlAddStatuses,
+  setUrlAddStatuses,
 }: {
   isAdding?: boolean
   urlAddStatuses: UrlAddStatus[]
+  setUrlAddStatuses?: (urlAddStatuses: UrlAddStatus[]) => void
 }) {
   const isComplete = urlAddStatuses.every(({ status }) => status === 'added');
 
@@ -86,24 +86,13 @@ export default function AdminUploadsTable({
                 </>
                 : <>
                   <AddButton path={pathForAdminUploadUrl(url)} />
-                  <FormWithConfirm
-                    action={deleteBlobPhotoAction}
-                    confirmText="Are you sure you want to delete this upload?"
-                  >
-                    <input
-                      type="hidden"
-                      name="redirectToPhotos"
-                      value={urlAddStatuses.length < 2 ? 'true' : 'false'}
-                      readOnly
-                    />
-                    <input
-                      type="hidden"
-                      name="url"
-                      value={url}
-                      readOnly
-                    />
-                    <DeleteFormButton />
-                  </FormWithConfirm>
+                  <DeleteBlobButton
+                    url={url}
+                    shouldRedirectToAdminPhotos={urlAddStatuses.length <= 1}
+                    onDelete={() => setUrlAddStatuses?.(urlAddStatuses.filter(
+                      ({ url: urlToRemove }) => urlToRemove !== url,
+                    ))}
+                  />
                 </>}
             </span>
           </div>

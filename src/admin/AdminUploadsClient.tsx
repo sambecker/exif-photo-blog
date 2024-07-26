@@ -36,7 +36,7 @@ export default function AdminUploadsClient({
           setIsAdding,
           setUrlAddStatuses,
         }} />}
-      <AdminUploadsTable {...{ isAdding, urlAddStatuses }} />
+      <AdminUploadsTable {...{ isAdding, urlAddStatuses, setUrlAddStatuses }} />
     </div>
   );
 }
