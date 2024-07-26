@@ -6,7 +6,11 @@ import {
   generateLocalNaivePostgresString,
   generateLocalPostgresString,
 } from '@/utility/date';
-import { getAspectRatioFromExif, getOffsetFromExif } from '@/utility/exif';
+import {
+  convertApertureValueToFNumber,
+  getAspectRatioFromExif,
+  getOffsetFromExif,
+} from '@/utility/exif';
 import { roundToNumber } from '@/utility/number';
 import { convertStringToArray } from '@/utility/string';
 import { generateNanoid } from '@/utility/nanoid';
@@ -199,8 +203,11 @@ export const convertExifToFormData = (
   focalLengthIn35MmFormat: data.tags?.FocalLengthIn35mmFormat?.toString(),
   lensMake: data.tags?.LensMake,
   lensModel: data.tags?.LensModel,
-  fNumber: data.tags?.FNumber?.toString(),
-  iso: data.tags?.ISO?.toString(),
+  fNumber: (
+    data.tags?.FNumber?.toString() ||
+    convertApertureValueToFNumber(data.tags?.ApertureValue)
+  ),
+  iso: data.tags?.ISO?.toString() || data.tags?.ISOSpeed?.toString(),
   exposureTime: data.tags?.ExposureTime?.toString(),
   exposureCompensation: data.tags?.ExposureCompensation?.toString(),
   latitude:
