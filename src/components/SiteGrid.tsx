@@ -32,10 +32,10 @@ export default function SiteGrid({
     >
       <div className={clsx(
         // 'col-span-1 md:col-span-9', // original
-        // 'col-span-1 md:col-span-9 md:col-start-2', // without env variable
+        // 'col-span-1 md:col-span-9 xl:col-start-2', // without env variable
         CENTERED_LARGE_SCREENS
-          // ? 'col-span-1 md:col-span-9 md:col-start-2' // option for medium screens and up
-          ? 'col-span-1 md:col-span-9 lg:col-start-2'
+          // ? 'col-span-1 md:col-span-9 lg:col-start-2' // option for lg screens and up
+          ? 'col-span-1 md:col-span-9 xl:col-start-2'
           : 'col-span-1 md:col-span-9',
         sideFirstOnMobile && 'order-2 md:order-none',
       )}>
@@ -44,10 +44,10 @@ export default function SiteGrid({
       {contentSide &&
         <div className={clsx(
           // 'col-span-1 md:col-span-3', // original
-          // 'col-span-1 md:col-span-2', // without env variable
+          // 'col-span-1 md:col-span-3 xl:col-span-2', // without env variable
           CENTERED_LARGE_SCREENS
-            // ? 'col-span-1 md:col-span-2' // option for medium screens and up
-            ? 'col-span-1 md:col-span-3 lg:col-span-2'
+            // ? 'col-span-1 lg:col-span-2' // option for lg screens and up
+            ? 'col-span-1 md:col-span-3 xl:col-span-2'
             : 'col-span-1 md:col-span-3',
           sideFirstOnMobile && 'order-1 md:order-none',
           sideHiddenOnMobile && 'hidden md:block',
