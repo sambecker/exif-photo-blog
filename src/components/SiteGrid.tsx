@@ -2,13 +2,12 @@ import { clsx } from 'clsx/lite';
 import { RefObject } from 'react';
 
 /*
-  Max widths
+  MAX WIDTHS
   Main: 954px +
   Sidebar: 302px +
   Gap: 24px =
-  Total: 1280px (7xl)
+  Total: 1280px
   -
-  Used for main content offset (app/layout.tsx)
   Column offset: (302px + 24px) / 2 = 163px
 */
 
@@ -35,7 +34,8 @@ export default function SiteGrid({
         'grid-cols-1 md:grid-cols-12',
         'gap-x-4 lg:gap-x-6',
         'gap-y-4',
-        'max-w-7xl',
+        'max-w-[1280px]',
+        // Offset sidebar width when centering on large screens
         '3xl:translate-x-[163px]',
         className,
       )}
