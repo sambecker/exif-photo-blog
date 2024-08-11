@@ -28,9 +28,7 @@ export default function Badge({
     case 'small':
       return clsx(
         'h-max-baseline',
-        // 'px-[5px] py-[2.75px]', //original padding
-        'block', // added to keep gray background around text when overflowed
-        'px-[6px] py-[5px]', // increased padding for block and to stop content shift
+        'px-[5px] py-[2.75px]',
         'text-[0.7rem] font-medium rounded-[0.25rem]',
         highContrast
           ? 'text-invert bg-invert'

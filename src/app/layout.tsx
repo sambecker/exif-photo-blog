@@ -4,7 +4,6 @@ import { clsx } from 'clsx/lite';
 import { IBM_Plex_Mono } from 'next/font/google';
 import {
   BASE_URL,
-  CENTERED_LARGE_SCREENS,
   DEFAULT_THEME,
   SITE_DESCRIPTION,
   SITE_DOMAIN_OR_TITLE,
@@ -28,8 +27,6 @@ const ibmPlexMono = IBM_Plex_Mono({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
   variable: '--font-ibm-plex-mono',
-  display: 'swap', // font wouldn't load in vercel dev environment, solution from link below
-  // https://stackoverflow.com/a/76484168
 });
 
 export const metadata: Metadata = {
