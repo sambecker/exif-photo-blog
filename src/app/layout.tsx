@@ -88,9 +88,8 @@ export default function RootLayout({
                 'mx-3 mb-3',
                 'lg:mx-6 lg:mb-6',
                 '3xl:mx-auto',
+                // Width defined in components/SiteGrid.tsx
                 '3xl:w-[1280px]',
-                // Offset defined in components/SiteGrid.tsx
-                '3xl:translate-x-[163px]',
               )}>
                 <Nav siteDomainOrTitle={SITE_DOMAIN_OR_TITLE} />
                 <AdminBatchEditPanel />
