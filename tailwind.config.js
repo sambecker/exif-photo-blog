@@ -10,6 +10,7 @@ module.exports = {
     screens: {
       'xs': '390px',
       ...defaultTheme.screens,
+      '3xl': '1640px',
     },
     fontSize: {
       'xs':   ['0.75rem', '1rem'],          // 12px on 16px

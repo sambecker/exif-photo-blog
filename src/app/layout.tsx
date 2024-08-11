@@ -87,6 +87,9 @@ export default function RootLayout({
               <main className={clsx(
                 'mx-3 mb-3',
                 'lg:mx-6 lg:mb-6',
+                // Center on large screens
+                // 1280px width defined in components/SiteGrid.tsx
+                '3xl:mx-auto 3xl:w-[1280px]',
               )}>
                 <Nav siteDomainOrTitle={SITE_DOMAIN_OR_TITLE} />
                 <AdminBatchEditPanel />
