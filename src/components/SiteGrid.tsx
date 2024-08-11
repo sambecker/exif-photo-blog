@@ -2,11 +2,14 @@ import { clsx } from 'clsx/lite';
 import { RefObject } from 'react';
 
 /*
-  Max widths (lg and up)
+  Max widths
   Main: 954px +
   Sidebar: 302px +
   Gap: 24px =
-  Total: 1280px
+  Total: 1280px (7xl)
+  -
+  Used for main content offset (app/layout.tsx)
+  Column offset: (302px + 24px) / 2 = 163px
 */
 
 export default function SiteGrid({
