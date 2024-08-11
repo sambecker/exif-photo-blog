@@ -155,6 +155,8 @@ export const SHOW_FILM_SIMULATIONS =
   process.env.NEXT_PUBLIC_HIDE_FILM_SIMULATIONS !== '1';
 export const SHOW_EXIF_DATA =
   process.env.NEXT_PUBLIC_HIDE_EXIF_DATA !== '1';
+export const CENTERED_LARGE_SCREENS =
+  process.env.NEXT_PUBLIC_CENTERED_ON_LARGE_SCREENS === '1';
 export const GRID_ASPECT_RATIO =
   process.env.NEXT_PUBLIC_GRID_ASPECT_RATIO
     ? parseFloat(process.env.NEXT_PUBLIC_GRID_ASPECT_RATIO)
