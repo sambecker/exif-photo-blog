@@ -186,6 +186,10 @@
     @apply
       max-h-[1.1875rem] md:max-h-[1.25rem]
   }
+  .-mt-baseline {
+    @apply
+      -mt-[1.1875rem] md:-mt-[1.25rem]
+  }
   .bg-baseline-grid {
     @apply
       bg-[repeating-linear-gradient(to_bottom,#eee,#eee_1px,transparent_1px,transparent_1.1875rem)]

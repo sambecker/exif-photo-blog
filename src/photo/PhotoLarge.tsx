@@ -25,7 +25,10 @@ import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
 import { sortTags } from '@/tag';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import PhotoLink from './PhotoLink';
-import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
+import {
+  SHOULD_PREFETCH_ALL_LINKS,
+  SHOW_PHOTO_TITLE_FALLBACK_TEXT,
+} from '@/site/config';
 import AdminPhotoMenuClient from '@/admin/AdminPhotoMenuClient';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
 import { useRef } from 'react';
@@ -80,7 +83,21 @@ export default function PhotoLarge({
 
   useOnVisible(ref, onVisible);
 
-  const { arePhotosMatted } = useAppState();
+  const { arePhotosMatted, isUserSignedIn } = useAppState();
+
+  const hasTitleContent =
+    photo.title ||
+    SHOW_PHOTO_TITLE_FALLBACK_TEXT ||
+    photo.caption;
+
+  const hasMetaContent =
+    showCameraContent ||
+    showTagsContent ||
+    showExifContent;
+
+  const hasNonDateContent =
+    hasTitleContent ||
+    hasMetaContent;
 
   return (
     <SiteGrid
@@ -124,11 +141,12 @@ export default function PhotoLarge({
           {/* Meta */}
           <div className="pr-2 md:pr-0">
             <div className="md:relative flex gap-2 items-start">
-              <PhotoLink
-                photo={photo}
-                className="font-bold uppercase flex-grow"
-                prefetch={prefetch}
-              />
+              {(photo.title || SHOW_PHOTO_TITLE_FALLBACK_TEXT) &&
+                <PhotoLink
+                  photo={photo}
+                  className="font-bold uppercase flex-grow"
+                  prefetch={prefetch}
+                />}
               <div className="absolute right-0 translate-y-[-4px] z-10">
                 <AdminPhotoMenuClient {...{
                   photo,
@@ -161,7 +179,10 @@ export default function PhotoLarge({
             </div>
           </div>
           {/* EXIF Data */}
-          <div className="space-y-baseline">
+          <div className={clsx(
+            'space-y-baseline',
+            !hasTitleContent && 'md:-mt-baseline',
+          )}>
             {showExifContent &&
               <>
                 <ul className="text-medium">
@@ -201,7 +222,11 @@ export default function PhotoLarge({
             )}>
               <PhotoDate
                 photo={photo}
-                className="text-medium"
+                className={clsx(
+                  'text-medium',
+                  // Prevent date collision with admin button
+                  !hasNonDateContent && isUserSignedIn && 'md:pr-7',
+                )}
               />
               {shouldShare &&
                 <ShareButton
