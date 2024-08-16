@@ -15,7 +15,16 @@ import {
 } from '@/site/paths';
 import AnimateItems from '../components/AnimateItems';
 import { useAppState } from '@/state/AppState';
-import { GRID_HOMEPAGE_ENABLED } from './config';
+import {
+  GRID_HOMEPAGE_ENABLED,
+  HAS_DEFINED_SITE_DESCRIPTION,
+  SITE_DESCRIPTION,
+} from './config';
+import AdminAppMenu from '@/admin/AdminAppMenu';
+
+const NAV_HEIGHT_CLASS = HAS_DEFINED_SITE_DESCRIPTION
+  ? 'min-h-[4rem] sm:min-h-[5rem]'
+  : 'min-h-[4rem]';
 
 export default function Nav({
   siteDomainOrTitle,
@@ -59,23 +68,47 @@ export default function Nav({
             ? [<div
               key="nav"
               className={clsx(
-                'flex items-center',
-                'w-full min-h-[4rem]',
+                'flex items-center w-full',
+                NAV_HEIGHT_CLASS,
               )}>
               <ViewSwitcher
                 currentSelection={switcherSelectionForPath()}
                 showAdmin={isUserSignedIn}
               />
               <div className={clsx(
-                'flex-grow text-right text-ellipsis overflow-hidden',
+                'flex-grow text-right min-w-0',
                 'hidden xs:block',
+                'translate-y-[-1px]',
               )}>
-                {renderLink(siteDomainOrTitle, PATH_ROOT)}
+                <div className={clsx(
+                  'truncate overflow-hidden',
+                  HAS_DEFINED_SITE_DESCRIPTION && 'sm:font-bold',
+                )}>
+                  {renderLink(siteDomainOrTitle, PATH_ROOT)}
+                </div>
+                {HAS_DEFINED_SITE_DESCRIPTION &&
+                  <div className={clsx(
+                    'hidden sm:block truncate overflow-hidden',
+                    'leading-tight',
+                  )}>
+                    {SITE_DESCRIPTION}
+                  </div>}
               </div>
             </div>]
             : []}
         />
       }
+      contentSide={isUserSignedIn && !isPathAdmin(pathname)
+        ? <div
+          className={clsx(
+            'flex items-center translate-x-[-6px] w-full',
+            NAV_HEIGHT_CLASS,
+          )}
+        >
+          <AdminAppMenu />
+        </div>
+        : undefined}
+      sideHiddenOnMobile
     />
   );
 };

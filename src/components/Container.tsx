@@ -12,7 +12,12 @@ export default function Container({
   children: ReactNode
   className?: string
   color?: 'gray' | 'blue' | 'red' | 'yellow'
-  padding?: 'loose' | 'normal' | 'tight'
+  padding?:
+    'loose' |
+    'normal' |
+    'tight' |
+    'tight-cta-right' |
+    'tight-cta-right-left'
   centered?: boolean
   spaceChildren?: boolean
 } ) {
@@ -46,6 +51,8 @@ export default function Container({
     case 'loose': return 'p-4 md:p-24';
     case 'normal': return 'p-4 md:p-8';
     case 'tight': return 'py-1.5 px-2.5';
+    case 'tight-cta-right': return 'py-1.5 pl-2.5 pr-1.5';
+    case 'tight-cta-right-left': return 'py-1.5 px-1.5';
     }
   };
 

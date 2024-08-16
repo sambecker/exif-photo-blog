@@ -42,9 +42,9 @@ export default function AdminOutdatedClient({
         </span>
       </>}
       accessory={<LoaderButton
+        primary
         icon={<IconGrSync className="translate-y-[1px]" />}
         hideTextOnMobile={false}
-        className="primary"
         onClick={async () => {
           if (window.confirm(
             // eslint-disable-next-line max-len

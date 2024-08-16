@@ -1,5 +1,5 @@
 import { Photo } from '@/photo';
-import { BASE_URL } from './config';
+import { BASE_URL, GRID_HOMEPAGE_ENABLED } from './config';
 import { Camera } from '@/camera';
 import { FilmSimulation } from '@/simulation';
 import { parameterize } from '@/utility/string';
@@ -13,6 +13,10 @@ export const PATH_ADMIN               = '/admin';
 export const PATH_API                 = '/api';
 export const PATH_SIGN_IN             = '/sign-in';
 export const PATH_OG                  = '/og';
+// eslint-disable-next-line max-len
+export const PATH_GRID_INFERRED       = GRID_HOMEPAGE_ENABLED ? PATH_ROOT : PATH_GRID;
+// eslint-disable-next-line max-len
+export const PATH_FEED_INFERRED       = GRID_HOMEPAGE_ENABLED ? PATH_FEED : PATH_ROOT;
 
 // Path prefixes
 export const PREFIX_PHOTO             = '/p';

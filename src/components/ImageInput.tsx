@@ -8,7 +8,7 @@ import { clsx } from 'clsx/lite';
 import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
 import { FiUploadCloud } from 'react-icons/fi';
 import { MAX_IMAGE_SIZE } from '@/services/next-image';
-import LoaderButton from './primitives/LoaderButton';
+import ProgressButton from './primitives/ProgressButton';
 
 const INPUT_ID = 'file';
 
@@ -44,10 +44,6 @@ export default function ImageInput({
   const [fileUploadIndex, setFileUploadIndex] = useState(0);
   const [fileUploadName, setFileUploadName] = useState('');
 
-  const uploadStatusText = filesLength > 1
-    ? `${fileUploadIndex + 1} of ${filesLength}: ${fileUploadName}`
-    : fileUploadName;
-
   return (
     <div className="space-y-4 min-w-0">
       <div className="flex items-center gap-2 sm:gap-4">
@@ -58,10 +54,12 @@ export default function ImageInput({
             loading && 'pointer-events-none cursor-not-allowed',
           )}
         >
-          <LoaderButton
+          <ProgressButton
             type="button"
             isLoading={loading}
-            className="primary"
+            progress={filesLength > 1
+              ? (fileUploadIndex + 1) / filesLength * 0.95
+              : undefined}
             icon={<FiUploadCloud
               size={18}
               className="translate-x-[-0.5px] translate-y-[0.5px]"
@@ -69,11 +67,14 @@ export default function ImageInput({
             aria-disabled={loading}
             onClick={() => inputRef.current?.click()}
             hideTextOnMobile={false}
+            primary
           >
             {loading
-              ? 'Uploading'
+              ? filesLength > 1
+                ? `Uploading ${fileUploadIndex + 1} of ${filesLength}`
+                : 'Uploading'
               : 'Upload Photos'}
-          </LoaderButton>
+          </ProgressButton>
           <input
             ref={inputRef}
             id={INPUT_ID}
@@ -222,7 +223,7 @@ export default function ImageInput({
         </label>
         {showUploadStatus && filesLength > 0 &&
           <div className="max-w-full truncate text-ellipsis">
-            {uploadStatusText}
+            {fileUploadName}
           </div>}
       </div>
       <canvas

@@ -29,7 +29,7 @@ export default function FieldSetWithStatus({
   hideLabel,
 }: {
   id: string
-  label: string
+  label?: string
   note?: string
   error?: string
   value: string
@@ -37,7 +37,7 @@ export default function FieldSetWithStatus({
   onChange?: (value: string) => void
   selectOptions?: { value: string, label: string }[]
   selectOptionsDefaultLabel?: string
-  tagOptions?: AnnotatedTag []
+  tagOptions?: AnnotatedTag[]
   placeholder?: string
   loading?: boolean
   required?: boolean
@@ -55,7 +55,7 @@ export default function FieldSetWithStatus({
       'space-y-1',
       type === 'checkbox' && 'flex items-center gap-2',
     )}>
-      {!hideLabel &&
+      {!hideLabel && label &&
         <label
           className={clsx(
             'flex gap-2 items-center select-none',

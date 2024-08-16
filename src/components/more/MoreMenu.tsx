@@ -1,16 +1,8 @@
-import { ReactNode } from 'react';
+import { ComponentProps } from 'react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { clsx } from 'clsx/lite';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import MoreMenuItem from './MoreMenuItem';
-
-export interface MoreMenuItem {
-  label: ReactNode
-  icon?: ReactNode
-  href?: string
-  hrefDownloadName?: string
-  action?: () => Promise<void> | void
-}
 
 export default function MoreMenu({
   items,
@@ -18,7 +10,7 @@ export default function MoreMenu({
   buttonClassName,
   ariaLabel,
 }: {
-  items: MoreMenuItem[]
+  items: ComponentProps<typeof MoreMenuItem> []
   className?: string
   buttonClassName?: string
   ariaLabel: string
@@ -44,23 +36,17 @@ export default function MoreMenu({
         <DropdownMenu.Content
           align="end"
           className={clsx(
-            className,
+            'z-10',
             'min-w-[8rem]',
             'ml-2.5',
             'p-1 rounded-md border',
             'bg-content',
             'shadow-lg dark:shadow-xl',
+            className,
           )}
         >
-          {items.map(({ label, icon, href, hrefDownloadName, action }) =>
-            <MoreMenuItem
-              key={`${label}`}
-              label={label}
-              icon={icon}
-              href={href}
-              hrefDownloadName={hrefDownloadName}
-              action={action}
-            />
+          {items.map(props =>
+            <MoreMenuItem key={`${props.label}`} {...props} />
           )}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>

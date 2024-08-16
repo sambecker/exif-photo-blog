@@ -41,8 +41,15 @@ export const sql = <T extends QueryResultRow>(
   return query<T>(result, values);
 };
 
-export const convertArrayToPostgresString = (array?: string[]) => array
-  ? `{${array.join(',')}}`
+export const convertArrayToPostgresString = (
+  array?: string[],
+  type: 'braces' | 'brackets' | 'parentheses' = 'braces', 
+) => array
+  ? type === 'braces'
+    ? `{${array.join(',')}}`
+    : type === 'brackets'
+      ? `[${array.map(i => `'${i}'`).join(',')}]`
+      : `(${array.map(i => `'${i}'`).join(',')})`
   : null;
 
 const isTemplateStringsArray = (

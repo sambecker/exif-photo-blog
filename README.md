@@ -28,10 +28,8 @@ Installation
 
 1. Click [Deploy](https://vercel.com/new/clone?demo-title=Photo+Blog&demo-description=Store+photos+with+original+camera+data&demo-url=https%3A%2F%2Fphotos.sambecker.com&demo-image=https%3A%2F%2Fphotos.sambecker.com%2Ftemplate-image-tight&project-name=Photo+Blog&repository-name=exif-photo-blog&repository-url=https%3A%2F%2Fgithub.com%2Fsambecker%2Fexif-photo-blog&from=templates&skippable-integrations=1&teamCreateStatus=hidden&stores=%5B%7B%22type%22%3A%22postgres%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D)
 2. Add required storage ([Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres/quickstart#create-a-postgres-database) + [Vercel Blob](https://vercel.com/docs/storage/vercel-blob/quickstart#create-a-blob-store)) as part of template installation
-3. Configure environment variables from project settings:
-   - `NEXT_PUBLIC_SITE_TITLE` (e.g., My Photos)
-   - `NEXT_PUBLIC_SITE_DOMAIN` (e.g., photos.domain.com)
-   - `NEXT_PUBLIC_SITE_DESCRIPTION` (optional—mainly used for OG meta)
+3. Configure environment variable for production domain in project settings
+   - `NEXT_PUBLIC_SITE_DOMAIN` (e.g., photos.domain.com—used in permalinks and seen in top-right nav)
 
 ### 2. Setup Auth
 
@@ -98,13 +96,21 @@ _⚠️ READ BEFORE PROCEEDING_
 
 Application behavior can be changed by configuring the following environment variables:
 
-- `NEXT_PUBLIC_PRO_MODE = 1` enables higher quality image storage (results in increased storage usage)
+#### Site meta
+- `NEXT_PUBLIC_SITE_TITLE` (seen in browser tab)
+- `NEXT_PUBLIC_SITE_DESCRIPTION` (seen in nav, under title)
+- `NEXT_PUBLIC_SITE_ABOUT` (e.g., seen in grid sidebar)
+
+#### Site behavior
 - `NEXT_PUBLIC_GRID_HOMEPAGE = 1` shows grid layout on homepage
+- `NEXT_PUBLIC_DEFAULT_THEME = light | dark` sets preferred initial theme (defaults to `system` when not configured)
+- `NEXT_PUBLIC_PRO_MODE = 1` enables higher quality image storage (results in increased storage usage)
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES = 1` enables static optimization for pages, i.e., renders pages at build time (results in increased project usage)—⚠️ _Experimental_
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES = 1` enables static optimization for OG images, i.e., renders images at build time (results in increased project usage)—⚠️ _Experimental_
 - `NEXT_PUBLIC_MATTE_PHOTOS = 1` constrains the size of each photo, and enables a surrounding border (potentially useful for photos with tall aspect ratios)
 - `NEXT_PUBLIC_BLUR_DISABLED = 1` prevents image blur data being stored and displayed (potentially useful for limiting Postgres usage)
 - `NEXT_PUBLIC_GEO_PRIVACY = 1` disables collection/display of location-based data (⚠️ re-compresses uploaded images in order to remove GPS information)
+- `NEXT_PUBLIC_HIDE_TITLE_FALLBACK_TEXT = 1` prevents showing "Untitled" for photos without titles
 - `NEXT_PUBLIC_IGNORE_PRIORITY_ORDER = 1` prevents `priority_order` field affecting photo order
 - `NEXT_PUBLIC_PUBLIC_API = 1` enables public API available at `/api`
 - `NEXT_PUBLIC_HIDE_REPO_LINK = 1` removes footer link to repo
@@ -215,6 +221,9 @@ FAQ
 #### How do I receive template updates?
 > For forked repos, click "Code," then "Update branch" from the main repo page. If you originally cloned the code, you can [create a fork](https://github.com/sambecker/exif-photo-blog/fork) from GitHub, then update your Git connection from your Vercel project settings. Once you've done this, you may need to go to your project deployments page, click •••, select "Create deployment," and choose `main`.
 
+#### How do I edit multiple photos?
+> On desktop, select ••• menu in the top right next to site title and choose, "Select Multiple." On mobile, "Select Multiple Photos" can be accessed from the search menu. From there, you can perform bulk tag, favorite, and delete actions.
+
 #### Why don't my photo changes show up immediately?
 > This template statically optimizes core views such as `/` and `/grid` to minimize visitor load times. Consequently, when photos are added, edited, or removed, it might take several minutes for those changes to propagate. If it seems like a change is not taking effect, try navigating to `/admin/configuration` and clicking "Clear Cache."
 
@@ -226,6 +235,9 @@ FAQ
 
 #### Why do vertical images take up so much space?
 > By default, all photos are shown full-width, regardless of orientation. Enable matting to showcase horizontal and vertical photos at similar scales by setting `NEXT_PUBLIC_MATTE_PHOTOS = 1`.
+
+#### Why are my grid thumbnails so small?
+Thumbnail grid density (seen on `/grid`, tag overviews, and other photo sets) is dependent on the aspect ratio configuration (ratios of 1 and under have larger amounts of photos per row). This can be overridden by setting `NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS = 1`.
 
 #### How secure are photos marked “hidden?”
 > While all hidden paths (`/tag/hidden/*`) require authentication, raw links to individual photo assets remain publicly accessible. Randomly generated urls from storage providers are only secure via obscurity. Use with caution.
@@ -250,6 +262,9 @@ FAQ
 
 #### Why are large, multi-photo uploads not finishing?
 > The default timeout for processing multiple uploads is 60 seconds (the limit for Hobby accounts). This can be extended to 5 minutes on Pro accounts by setting `maxDuration = 300` in `src/app/admin/uploads/page.tsx`.
+
+#### I've added my OpenAI key but can't seem to make it work. Why am I seeing connection errors?
+> You may need to pre-purchase credits before accessing the OpenAI API. See [Issue #110](https://github.com/sambecker/exif-photo-blog/issues/110) for discussion.
 
 #### Can this template run in a docker image?
 > Possibly. See [Issue #116](https://github.com/sambecker/exif-photo-blog/issues/116) for discussion.

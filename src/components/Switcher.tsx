@@ -12,7 +12,7 @@ export default function Switcher({
     <div className={clsx(
       'flex divide-x overflow-hidden',
       'divide-gray-300 dark:divide-gray-800',
-      'border rounded-[0.25rem]',
+      'border rounded-md',
       type === 'regular'
         ? 'border-gray-300 dark:border-gray-800'
         : 'border-transparent',

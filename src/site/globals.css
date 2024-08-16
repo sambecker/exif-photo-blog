@@ -150,6 +150,11 @@
     @apply
       text-red-500 dark:text-red-400
   }
+  /* Utilities: Border */
+  .border-subtle {
+    @apply
+      border border-gray-200 dark:border-gray-800
+  }
   /* Utilities: Background */
   .bg-main {
     @apply
@@ -180,6 +185,10 @@
   .max-h-baseline {
     @apply
       max-h-[1.1875rem] md:max-h-[1.25rem]
+  }
+  .-mt-baseline {
+    @apply
+      -mt-[1.1875rem] md:-mt-[1.25rem]
   }
   .bg-baseline-grid {
     @apply

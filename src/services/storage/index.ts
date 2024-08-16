@@ -36,6 +36,7 @@ export const generateStorageId = () => generateNanoid(16);
 
 export type StorageListResponse = {
   url: string
+  fileName: string
   uploadedAt?: Date
 }[];
 
