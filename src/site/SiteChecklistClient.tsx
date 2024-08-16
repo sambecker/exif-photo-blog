@@ -68,6 +68,8 @@ export default function SiteChecklistClient({
   isOgTextBottomAligned,
   gridAspectRatio,
   hasGridAspectRatio,
+  gridDensity,
+  hasGridDensityPreference,
   // Connection status
   databaseError,
   storageError,
@@ -576,6 +578,16 @@ export default function SiteChecklistClient({
               {' '}
               (default is {'"1"'}, i.e., square)—set to {'"0"'} to disable:
               {renderEnvVars(['NEXT_PUBLIC_GRID_ASPECT_RATIO'])}
+            </ChecklistRow>
+            <ChecklistRow
+              title={`Grid density: ${gridDensity ? 'low' : 'high'}`}
+              status={hasGridDensityPreference}
+              optional
+            >
+              Set environment variable to {'"1"'} to ensure large thumbnails
+              on photo grid views (if not configured, density is based on
+              aspect ratio configuration):
+              {renderEnvVars(['NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS'])}
             </ChecklistRow>
             <ChecklistRow
               title="Legacy OG text alignment"

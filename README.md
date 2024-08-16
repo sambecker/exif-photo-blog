@@ -236,6 +236,9 @@ FAQ
 #### Why do vertical images take up so much space?
 > By default, all photos are shown full-width, regardless of orientation. Enable matting to showcase horizontal and vertical photos at similar scales by setting `NEXT_PUBLIC_MATTE_PHOTOS = 1`.
 
+#### Why are my grid thumbnails so small?
+Thumbnail grid density (seen on `/grid`, tag overviews, and other photo sets) is dependent on the aspect ratio configuration (ratios of 1 and under have larger amounts of photos per row). This can be overridden by setting `NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS = 1`.
+
 #### How secure are photos marked “hidden?”
 > While all hidden paths (`/tag/hidden/*`) require authentication, raw links to individual photo assets remain publicly accessible. Randomly generated urls from storage providers are only secure via obscurity. Use with caution.
 

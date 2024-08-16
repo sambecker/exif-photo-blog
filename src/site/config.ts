@@ -165,7 +165,11 @@ export const OG_TEXT_BOTTOM_ALIGNMENT =
   (process.env.NEXT_PUBLIC_OG_TEXT_ALIGNMENT ?? '').toUpperCase() === 'BOTTOM';
 export const ADMIN_DEBUG_TOOLS_ENABLED = process.env.ADMIN_DEBUG_TOOLS === '1';
 
-export const HIGH_DENSITY_GRID = GRID_ASPECT_RATIO <= 1;
+export const PREFERS_LOW_DENSITY_GRID =
+  process.env.NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS === '1';
+export const HIGH_DENSITY_GRID =
+  GRID_ASPECT_RATIO <= 1 &&
+  !PREFERS_LOW_DENSITY_GRID;
 
 export const CONFIG_CHECKLIST_STATUS = {
   hasDatabase: HAS_DATABASE,
@@ -225,9 +229,12 @@ export const CONFIG_CHECKLIST_STATUS = {
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,
   gridAspectRatio: GRID_ASPECT_RATIO,
   hasGridAspectRatio: Boolean(process.env.NEXT_PUBLIC_GRID_ASPECT_RATIO),
+  gridDensity: HIGH_DENSITY_GRID,
+  hasGridDensityPreference:
+    Boolean(process.env.NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS),
   baseUrl: BASE_URL,
-  commitMessage: VERCEL_COMMIT_MESSAGE,
   commitSha: VERCEL_COMMIT_SHA ? VERCEL_COMMIT_SHA.slice(0, 7) : undefined,
+  commitMessage: VERCEL_COMMIT_MESSAGE,
 };
 
 export type ConfigChecklistStatus = typeof CONFIG_CHECKLIST_STATUS;
