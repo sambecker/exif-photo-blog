@@ -28,10 +28,10 @@ export default function SwitcherItem({
     'hover:bg-gray-100/60 active:bg-gray-100',
     'dark:hover:bg-gray-900/75 dark:active:bg-gray-900',
     active
-      ? 'text-black dark:text-white'
+      ? 'text-gray-950 dark:text-gray-50'
       : 'text-gray-400 dark:text-gray-600',
     active
-      ? 'hover:text-black hover:dark:text-white'
+      ? 'hover:text-gray-950 hover:dark:text-gray-50'
       : 'hover:text-gray-700 dark:hover:text-gray-400',
   );
 

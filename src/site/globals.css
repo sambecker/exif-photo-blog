@@ -51,7 +51,7 @@
   input[type=file] {
     @apply
       block font-mono w-full text-medium
-      file:bg-white dark:file:bg-gray-950
+      file:bg-gray-50 dark:file:bg-gray-950
       file:mr-2 file:my-2 file:px-4 file:py-1.5 file:rounded-md
       file:border-solid file:border
       file:border-gray-200 dark:file:border-gray-700
@@ -61,7 +61,7 @@
       file:disabled:bg-gray-100
       file:hover:border-gray-300 file:dark:hover:border-gray-600
       file:hover:disabled:border-gray-200 file:dark:hover:disabled:border-gray-700
-      file:active:disabled:bg-white
+      file:active:disabled:bg-gray-50
       file:hover:disabled:cursor-not-allowed
   }
   input[type=checkbox] {
@@ -128,7 +128,7 @@
   }
   .text-invert {
     @apply
-      text-white dark:text-black
+      text-gray-50 dark:text-gray-950/25
   }
   .text-medium {
     @apply
@@ -158,12 +158,12 @@
   /* Utilities: Background */
   .bg-main {
     @apply
-      bg-white dark:bg-black
+      bg-gray-50 dark:bg-gray-950/25
   }
   .bg-content {
     @apply
-      bg-white border-gray-200
-      dark:bg-black dark:border-gray-800
+      bg-main
+      border-gray-200 dark:border-gray-800
   }
   .bg-invert {
     @apply

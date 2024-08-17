@@ -1,4 +1,5 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
+const colors = require('tailwindcss/colors');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -22,6 +23,9 @@ module.exports = {
       '3xl':  ['1.5rem', '1.5rem'],         // 24px on 24px
     },
     extend: {
+      colors :{
+        gray: colors.pink,
+      },
       fontFamily: {
         'mono': ['var(--font-ibm-plex-mono)', ...defaultTheme.fontFamily.mono],
       },
