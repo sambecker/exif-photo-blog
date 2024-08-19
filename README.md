@@ -113,6 +113,7 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_HIDE_TITLE_FALLBACK_TEXT = 1` prevents showing "Untitled" for photos without titles
 - `NEXT_PUBLIC_IGNORE_PRIORITY_ORDER = 1` prevents `priority_order` field affecting photo order
 - `NEXT_PUBLIC_PUBLIC_API = 1` enables public API available at `/api`
+- `NEXT_PUBLIC_ALLOW_PUBLIC_DOWNLOADS = 1` enables public image downloads
 - `NEXT_PUBLIC_HIDE_REPO_LINK = 1` removes footer link to repo
 - `NEXT_PUBLIC_HIDE_SOCIAL = 1` removes X button from share modal
 - `NEXT_PUBLIC_HIDE_FILM_SIMULATIONS = 1` prevents Fujifilm simulations showing up in `/grid` sidebar and CMD-K search results
