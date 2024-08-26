@@ -3,8 +3,7 @@ import { Photo, PhotoDateRange } from '.';
 import PhotoLarge from './PhotoLarge';
 import SiteGrid from '@/components/SiteGrid';
 import PhotoGrid from './PhotoGrid';
-import { clsx } from 'clsx/lite';
-import PhotoLinks from './PhotoLinks';
+import PhotoNav from './PhotoNav';
 import TagHeader from '@/tag/TagHeader';
 import { Camera } from '@/camera';
 import CameraHeader from '@/camera/CameraHeader';
@@ -103,6 +102,24 @@ export default function PhotoDetailPage({
             />}
         />}
       <AnimateItems
+        animateOnFirstLoadOnly
+        items={[
+          <SiteGrid
+            key="photo-nav"
+            className="mb-4"
+            contentMain={<PhotoNav {...{
+              photo,
+              photos,
+              className: 'border-t border-gray-100 pt-4',
+              tag,
+              camera,
+              simulation,
+              focal,
+            }} />}
+          />,
+        ]}
+      />
+      <AnimateItems
         className="md:mb-8"
         animateFromAppState
         items={[
@@ -112,6 +129,7 @@ export default function PhotoDetailPage({
             primaryTag={tag}
             priority
             prefetchRelatedLinks
+            showTitle={false}
             showCamera={!camera}
             showSimulation={!simulation}
             shouldShare={shouldShare}
@@ -133,30 +151,6 @@ export default function PhotoDetailPage({
           simulation={simulation}
           focal={focal}
           animateOnFirstLoadOnly
-        />}
-        contentSide={<AnimateItems
-          animateOnFirstLoadOnly
-          type="bottom"
-          items={[
-            <div
-              key="PhotoLinks"
-              className={clsx(
-                'grid grid-cols-2',
-                'gap-0.5 sm:gap-1',
-                'md:flex md:gap-4',
-                'user-select-none',
-              )}
-            >
-              <PhotoLinks {...{
-                photo,
-                photos,
-                tag,
-                camera,
-                simulation,
-                focal,
-              }} />
-            </div>,
-          ]}
         />}
       />
     </div>

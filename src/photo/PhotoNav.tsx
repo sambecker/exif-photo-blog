@@ -9,26 +9,33 @@ import { useAppState } from '@/state/AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import { Camera } from '@/camera';
 import { FilmSimulation } from '@/simulation';
+import { SHOW_PHOTO_TITLE_FALLBACK_TEXT } from '@/site/config';
+import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
+import { clsx } from 'clsx/lite';
 
 const LISTENER_KEYUP = 'keyup';
 
 const ANIMATION_LEFT: AnimationConfig = { type: 'left', duration: 0.3 };
 const ANIMATION_RIGHT: AnimationConfig = { type: 'right', duration: 0.3 };
 
-export default function PhotoLinks({
+export default function PhotoNav({
   photo,
   photos,
+  className,
   tag,
   camera,
   simulation,
   focal,
+  prefetch,
 }: {
   photo: Photo
   photos: Photo[]
+  className?: string
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
   focal?: number
+  prefetch?: boolean
 }) {
   const router = useRouter();
 
@@ -94,7 +101,10 @@ export default function PhotoLinks({
   ]);
   
   return (
-    <>
+    <div className={clsx(
+      'flex items-center',
+      className,
+    )}>
       <PhotoLink
         photo={previousPhoto}
         nextPhotoAnimation={ANIMATION_RIGHT}
@@ -105,8 +115,24 @@ export default function PhotoLinks({
         scroll={false}
         prefetch
       >
-        PREV
+        <span className="group inline-flex gap-1 items-center">
+          <BiChevronLeft
+            className={clsx(
+              'text-[1.25rem] transition-transform',
+              'group-hover:-translate-x-1',
+            )}
+          />
+          PREV
+        </span>
       </PhotoLink>
+      <div className="grow text-center">
+        {(photo.title || SHOW_PHOTO_TITLE_FALLBACK_TEXT) &&
+          <PhotoLink
+            photo={photo}
+            className="uppercase font-bold"
+            prefetch={prefetch}
+          />}
+      </div>
       <PhotoLink
         photo={nextPhoto}
         nextPhotoAnimation={ANIMATION_LEFT}
@@ -117,8 +143,16 @@ export default function PhotoLinks({
         scroll={false}
         prefetch
       >
-        NEXT
+        <span className="group inline-flex gap-1 items-center">
+          NEXT
+          <BiChevronRight
+            className={clsx(
+              'text-[1.25rem] transition-transform',
+              'group-hover:translate-x-1',
+            )}
+          />
+        </span>
       </PhotoLink>
-    </>
+    </div>
   );
 };
