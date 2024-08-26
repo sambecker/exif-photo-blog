@@ -110,7 +110,7 @@ export default function PhotoDetailPage({
             contentMain={<PhotoNav {...{
               photo,
               photos,
-              className: 'border-t border-gray-100 pt-4',
+              className: 'border-t pt-4 border-gray-100 dark:border-gray-900',
               tag,
               camera,
               simulation,
