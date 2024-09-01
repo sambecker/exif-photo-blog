@@ -1,16 +1,17 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Photo, getNextPhoto, getPreviousPhoto } from '@/photo';
+import {
+  Photo,
+  PhotoSetAttributes,
+  getNextPhoto,
+  getPreviousPhoto,
+} from '@/photo';
 import PhotoLink from './PhotoLink';
 import { useRouter } from 'next/navigation';
 import { pathForPhoto } from '@/site/paths';
 import { useAppState } from '@/state/AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
-import { Camera } from '@/camera';
-import { FilmSimulation } from '@/simulation';
-import { SHOW_PHOTO_TITLE_FALLBACK_TEXT } from '@/site/config';
-import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import { clsx } from 'clsx/lite';
 
 const LISTENER_KEYUP = 'keyup';
@@ -18,25 +19,19 @@ const LISTENER_KEYUP = 'keyup';
 const ANIMATION_LEFT: AnimationConfig = { type: 'left', duration: 0.3 };
 const ANIMATION_RIGHT: AnimationConfig = { type: 'right', duration: 0.3 };
 
-export default function PhotoNav({
+export default function PhotoPrevNext({
   photo,
-  photos,
+  photos = [],
   className,
   tag,
   camera,
   simulation,
   focal,
-  prefetch,
 }: {
-  photo: Photo
-  photos: Photo[]
+  photo?: Photo
+  photos?: Photo[]
   className?: string
-  tag?: string
-  camera?: Camera
-  simulation?: FilmSimulation
-  focal?: number
-  prefetch?: boolean
-}) {
+} & PhotoSetAttributes) {
   const router = useRouter();
 
   const {
@@ -44,8 +39,8 @@ export default function PhotoNav({
     shouldRespondToKeyboardCommands,
   } = useAppState();
 
-  const previousPhoto = getPreviousPhoto(photo, photos);
-  const nextPhoto = getNextPhoto(photo, photos);
+  const previousPhoto = photo ? getPreviousPhoto(photo, photos) : undefined;
+  const nextPhoto = photo ? getNextPhoto(photo, photos) : undefined;
 
   useEffect(() => {
     if (shouldRespondToKeyboardCommands) {
@@ -105,54 +100,39 @@ export default function PhotoNav({
       'flex items-center',
       className,
     )}>
-      <PhotoLink
-        photo={previousPhoto}
-        nextPhotoAnimation={ANIMATION_RIGHT}
-        tag={tag}
-        camera={camera}
-        simulation={simulation}
-        focal={focal}
-        scroll={false}
-        prefetch
-      >
-        <span className="group inline-flex gap-1 items-center">
-          <BiChevronLeft
-            className={clsx(
-              'text-[1.25rem] transition-transform',
-              'group-hover:-translate-x-1',
-            )}
-          />
-          PREV
-        </span>
-      </PhotoLink>
-      <div className="grow text-center">
-        {(photo.title || SHOW_PHOTO_TITLE_FALLBACK_TEXT) &&
-          <PhotoLink
-            photo={photo}
-            className="uppercase font-bold"
-            prefetch={prefetch}
-          />}
+      <div className="flex items-center gap-2">
+        <PhotoLink
+          photo={previousPhoto}
+          className="select-none"
+          nextPhotoAnimation={ANIMATION_RIGHT}
+          tag={tag}
+          camera={camera}
+          simulation={simulation}
+          focal={focal}
+          scroll={false}
+          prefetch
+        >
+          <span className="group inline-flex gap-1 items-center">
+            PREV
+          </span>
+        </PhotoLink>
+        <span className="text-extra-extra-dim">/</span>
+        <PhotoLink
+          photo={nextPhoto}
+          className="select-none"
+          nextPhotoAnimation={ANIMATION_LEFT}
+          tag={tag}
+          camera={camera}
+          simulation={simulation}
+          focal={focal}
+          scroll={false}
+          prefetch
+        >
+          <span className="group inline-flex gap-1 items-center">
+            NEXT
+          </span>
+        </PhotoLink>
       </div>
-      <PhotoLink
-        photo={nextPhoto}
-        nextPhotoAnimation={ANIMATION_LEFT}
-        tag={tag}
-        camera={camera}
-        simulation={simulation}
-        focal={focal}
-        scroll={false}
-        prefetch
-      >
-        <span className="group inline-flex gap-1 items-center">
-          NEXT
-          <BiChevronRight
-            className={clsx(
-              'text-[1.25rem] transition-transform',
-              'group-hover:translate-x-1',
-            )}
-          />
-        </span>
-      </PhotoLink>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { Photo, PhotoDateRange } from '@/photo';
 import { FilmSimulation, descriptionForFilmSimulationPhotos } from '.';
 import { pathForFilmSimulationShare } from '@/site/paths';
-import PhotoSetHeader from '@/photo/PhotoSetHeader';
+import PhotoHeader from '@/photo/PhotoHeader';
 import PhotoFilmSimulation from
   '@/simulation/PhotoFilmSimulation';
 
@@ -21,7 +21,8 @@ export default function FilmSimulationHeader({
   dateRange?: PhotoDateRange
 }) {
   return (
-    <PhotoSetHeader
+    <PhotoHeader
+      simulation={simulation}
       entity={<PhotoFilmSimulation {...{ simulation }} />}
       entityVerb="Photo"
       entityDescription={descriptionForFilmSimulationPhotos(

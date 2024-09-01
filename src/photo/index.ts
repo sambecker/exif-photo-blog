@@ -1,4 +1,6 @@
+import { Camera } from '@/camera';
 import { formatFocalLength } from '@/focal';
+import { Lens } from '@/lens';
 import { getNextImageUrlForRequest } from '@/services/next-image';
 import { FilmSimulation } from '@/simulation';
 import { HIGH_DENSITY_GRID, SHOW_EXIF_DATA } from '@/site/config';
@@ -97,6 +99,14 @@ export interface Photo extends PhotoDb {
   exposureTimeFormatted?: string
   exposureCompensationFormatted?: string
   takenAtNaiveFormatted: string
+}
+
+export interface PhotoSetAttributes {
+  tag?: string
+  camera?: Camera
+  simulation?: FilmSimulation
+  focal?: number
+  lens?: Lens // Unimplemented as a set
 }
 
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {

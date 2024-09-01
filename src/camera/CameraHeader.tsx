@@ -1,6 +1,6 @@
 import { Photo, PhotoDateRange } from '@/photo';
 import { pathForCameraShare } from '@/site/paths';
-import PhotoSetHeader from '@/photo/PhotoSetHeader';
+import PhotoHeader from '@/photo/PhotoHeader';
 import { Camera, cameraFromPhoto } from '.';
 import PhotoCamera from './PhotoCamera';
 import { descriptionForCameraPhotos } from './meta';
@@ -22,7 +22,8 @@ export default function CameraHeader({
 }) {
   const camera = cameraFromPhoto(photos[0], cameraProp);
   return (
-    <PhotoSetHeader
+    <PhotoHeader
+      camera={camera}
       entity={<PhotoCamera {...{ camera }} contrast="high" hideAppleIcon />}
       entityVerb="Photo"
       entityDescription={

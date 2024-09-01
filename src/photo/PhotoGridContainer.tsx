@@ -38,7 +38,7 @@ export default function PhotoGridContainer({
   return (
     <SiteGrid
       contentMain={<div className={clsx(
-        header && 'space-y-8 mt-4',
+        header && 'space-y-8 mt-2',
       )}>
         {header &&
           <AnimateItems
