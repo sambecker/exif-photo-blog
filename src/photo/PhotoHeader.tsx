@@ -13,6 +13,7 @@ import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import PhotoPrevNext from './PhotoPrevNext';
 import PhotoLink from './PhotoLink';
 import { formatDate } from '@/utility/date';
+import ResponsiveText from '@/components/primitives/ResponsiveText';
 
 export default function PhotoHeader({
   tag,
@@ -45,6 +46,10 @@ export default function PhotoHeader({
     ? photos.findIndex(photo => photo.id === selectedPhoto.id)
     : undefined;
 
+  const paginationLabel =
+    (indexNumber || (selectedPhotoIndex ?? 0 + 1)) + ' of ' +
+    (count ?? photos.length);
+
   const renderPrevNext = () =>
     <PhotoPrevNext {...{
       photo: selectedPhoto,
@@ -72,11 +77,14 @@ export default function PhotoHeader({
         className={clsx(
           'grid gap-0.5 sm:gap-1 items-start grid-cols-4',
           HIGH_DENSITY_GRID
-            ? 'lg:grid-cols-5'
+            ? 'lg:grid-cols-6'
             : 'md:grid-cols-3 lg:grid-cols-4',
         )}>
         <span className={clsx(
-          'inline-flex uppercase col-span-2 md:col-span-1',
+          'inline-flex uppercase',
+          HIGH_DENSITY_GRID
+            ? 'col-span-2 sm:col-span-1 lg:col-span-2'
+            : 'col-span-2 md:col-span-1',
         )}>
           {entity ?? (selectedPhoto
             ? <PhotoLink
@@ -91,14 +99,19 @@ export default function PhotoHeader({
           'inline-flex',
           'gap-2 self-start',
           'uppercase text-dim',
-          HIGH_DENSITY_GRID
-            ? 'lg:col-span-2'
-            : 'lg:col-span-2',
+          selectedPhotoIndex === undefined
+            ? HIGH_DENSITY_GRID
+              ? 'col-span-2 sm:col-span-1 md:col-span-2 lg:col-span-3'
+              : 'col-span-2 sm:col-span-1 lg:col-span-2'
+            : HIGH_DENSITY_GRID
+              ? 'sm:col-span-2 lg:col-span-3'
+              : 'lg:col-span-2',
         )}>
           {entity && <>
             {selectedPhotoIndex !== undefined
-              // eslint-disable-next-line max-len
-              ? `${entityVerb ? `${entityVerb} ` : ''}${indexNumber || (selectedPhotoIndex + 1)} of ${count ?? photos.length}`
+              ? <ResponsiveText shortText={paginationLabel}>
+                {entityVerb || 'PHOTO'} {paginationLabel}
+              </ResponsiveText>
               : entityDescription}
             {selectedPhotoIndex === undefined && sharePath &&
               <ShareButton
