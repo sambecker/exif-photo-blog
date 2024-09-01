@@ -91,8 +91,8 @@ export default function PhotoHeader({
           )}
         </span>
         <span className={clsx(
-          'hidden sm:block',
-          'inline-flex gap-2 self-start',
+          'hidden sm:inline-flex',
+          'gap-2 self-start',
           'uppercase text-dim',
           HIGH_DENSITY_GRID
             ? 'lg:col-span-2'
