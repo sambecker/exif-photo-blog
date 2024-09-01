@@ -8,13 +8,11 @@ import {
 import ShareButton from '@/components/ShareButton';
 import AnimateItems from '@/components/AnimateItems';
 import { ReactNode } from 'react';
-import {
-  HIGH_DENSITY_GRID,
-  SHOW_PHOTO_TITLE_FALLBACK_TEXT,
-} from '@/site/config';
+import { HIGH_DENSITY_GRID } from '@/site/config';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import PhotoPrevNext from './PhotoPrevNext';
 import PhotoLink from './PhotoLink';
+import { formatDate } from '@/utility/date';
 
 export default function PhotoHeader({
   tag,
@@ -80,14 +78,14 @@ export default function PhotoHeader({
         <span className={clsx(
           'inline-flex uppercase col-span-2 md:col-span-1',
         )}>
-          {entity ?? (
-            (selectedPhoto?.title || SHOW_PHOTO_TITLE_FALLBACK_TEXT)
-              ? <PhotoLink
-                photo={selectedPhoto}
-                className="uppercase font-bold"
-              />
-              : <>X of X</>
-          )}
+          {entity ?? (selectedPhoto
+            ? <PhotoLink
+              photo={selectedPhoto}
+              className="uppercase font-bold"
+            >
+              {selectedPhoto.title || formatDate(selectedPhoto.takenAt, 'tiny')}
+            </PhotoLink>
+            : undefined)}
         </span>
         <span className={clsx(
           'inline-flex',

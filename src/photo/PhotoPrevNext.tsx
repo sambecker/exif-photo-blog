@@ -114,7 +114,7 @@ export default function PhotoPrevNext({
           prefetch
         >
           <FiChevronLeft
-            className="sm:hidden text-[1.2rem] translate-y-[-1.5px]"
+            className="sm:hidden text-[1.1rem] translate-y-[-1px]"
           />
           <span className="hidden sm:inline-block">PREV</span>
         </PhotoLink>
@@ -133,7 +133,7 @@ export default function PhotoPrevNext({
           prefetch
         >
           <FiChevronRight
-            className="sm:hidden text-[1.2rem] translate-y-[-1.5px]"
+            className="sm:hidden text-[1.1rem] translate-y-[-1px]"
           />
           <span className="hidden sm:inline-block">NEXT</span>
         </PhotoLink>

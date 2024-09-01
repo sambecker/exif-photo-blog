@@ -1,5 +1,6 @@
 import { format, parseISO, parse } from 'date-fns';
 
+const DATE_STRING_FORMAT_TINY     = 'dd MMM yy';
 const DATE_STRING_FORMAT_SHORT    = 'dd MMM yyyy';
 const DATE_STRING_FORMAT_MEDIUM   = 'dd MMM yy h:mma';
 const DATE_STRING_FORMAT          = 'dd MMM yyyy h:mma';
@@ -7,10 +8,12 @@ const DATE_STRING_FORMAT_POSTGRES = 'yyyy-MM-dd HH:mm:ss';
 
 type AmbiguousTimestamp = number | string;
 
-type Length = 'short' | 'medium' | 'long';
+type Length = 'tiny' | 'short' | 'medium' | 'long';
 
 export const formatDate = (date: Date, length: Length = 'long') => {
   switch (length) {
+  case 'tiny':
+    return format(date, DATE_STRING_FORMAT_TINY);
   case 'short':
     return format(date, DATE_STRING_FORMAT_SHORT);
   case 'medium':
