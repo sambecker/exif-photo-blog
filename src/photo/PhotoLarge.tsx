@@ -167,7 +167,11 @@ export default function PhotoLarge({
             </div>
             <div className="space-y-baseline">
               {photo.caption &&
-                <div className="uppercase">
+                <div className={clsx(
+                  'uppercase', 
+                  // Prevent collision with admin button
+                  isUserSignedIn && 'md:pr-7',
+                )}>
                   {photo.caption}
                 </div>}
               {(showCameraContent || showTagsContent) &&
@@ -233,7 +237,7 @@ export default function PhotoLarge({
                 photo={photo}
                 className={clsx(
                   'text-medium',
-                  // Prevent date collision with admin button
+                  // Prevent collision with admin button
                   !hasNonDateContent && isUserSignedIn && 'md:pr-7',
                 )}
               />

@@ -85,7 +85,7 @@ export default function PhotoDetailPage({
   return (
     <div>
       <SiteGrid
-        className="mt-2 mb-6 sm:mb-8"
+        className="mt-1.5 mb-6"
         contentMain={customHeader ?? <PhotoHeader
           selectedPhoto={photo}
           photos={photos}
