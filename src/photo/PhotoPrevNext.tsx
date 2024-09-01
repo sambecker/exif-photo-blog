@@ -13,6 +13,7 @@ import { pathForPhoto } from '@/site/paths';
 import { useAppState } from '@/state/AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import { clsx } from 'clsx/lite';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 const LISTENER_KEYUP = 'keyup';
 
@@ -112,9 +113,8 @@ export default function PhotoPrevNext({
           scroll={false}
           prefetch
         >
-          <span className="group inline-flex gap-1 items-center">
-            PREV
-          </span>
+          <FiChevronLeft className="sm:hidden text-[1.25rem]" />
+          <span className="hidden sm:inline-block">PREV</span>
         </PhotoLink>
         <span className="text-extra-extra-dim">/</span>
         <PhotoLink
@@ -128,9 +128,8 @@ export default function PhotoPrevNext({
           scroll={false}
           prefetch
         >
-          <span className="group inline-flex gap-1 items-center">
-            NEXT
-          </span>
+          <FiChevronRight className="sm:hidden text-[1.25rem]" />
+          <span className="hidden sm:inline-block">NEXT</span>
         </PhotoLink>
       </div>
     </div>

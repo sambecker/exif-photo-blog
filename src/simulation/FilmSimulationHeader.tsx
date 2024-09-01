@@ -24,7 +24,6 @@ export default function FilmSimulationHeader({
     <PhotoHeader
       simulation={simulation}
       entity={<PhotoFilmSimulation {...{ simulation }} />}
-      entityVerb="Photo"
       entityDescription={descriptionForFilmSimulationPhotos(
         photos, undefined, count, dateRange)}
       photos={photos}
