@@ -72,14 +72,13 @@ export default function PhotoHeader({
       items={[<DivDebugBaselineGrid
         key="PhotosHeader"
         className={clsx(
-          'grid gap-0.5 sm:gap-1 items-start grid-cols-2',
+          'grid gap-0.5 sm:gap-1 items-start grid-cols-4',
           HIGH_DENSITY_GRID
-            ? 'sm:grid-cols-4 lg:grid-cols-5'
-            : 'sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-4',
+            ? 'lg:grid-cols-5'
+            : 'md:grid-cols-3 lg:grid-cols-4',
         )}>
         <span className={clsx(
-          'inline-flex uppercase',
-          HIGH_DENSITY_GRID && 'sm:col-span-2',
+          'inline-flex uppercase col-span-2 md:col-span-1',
         )}>
           {entity ?? (
             (selectedPhoto?.title || SHOW_PHOTO_TITLE_FALLBACK_TEXT)
@@ -91,12 +90,12 @@ export default function PhotoHeader({
           )}
         </span>
         <span className={clsx(
-          'hidden sm:inline-flex',
+          'inline-flex',
           'gap-2 self-start',
           'uppercase text-dim',
           HIGH_DENSITY_GRID
             ? 'lg:col-span-2'
-            : 'sm:col-span-2 md:col-span-1 lg:col-span-2',
+            : 'lg:col-span-2',
         )}>
           {entity && <>
             {selectedPhotoIndex !== undefined
@@ -111,7 +110,10 @@ export default function PhotoHeader({
               />}
           </>}
         </span>
-        <div className="flex justify-end">
+        <div className={clsx(
+          selectedPhoto ? 'flex' : 'hidden sm:flex',
+          'justify-end',
+        )}>
           {selectedPhoto
             ? renderPrevNext()
             : renderDateRange()}
