@@ -25,10 +25,7 @@ import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
 import { sortTags } from '@/tag';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import PhotoLink from './PhotoLink';
-import {
-  SHOULD_PREFETCH_ALL_LINKS,
-  SHOW_PHOTO_TITLE_FALLBACK_TEXT,
-} from '@/site/config';
+import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
 import AdminPhotoMenuClient from '@/admin/AdminPhotoMenuClient';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
 import { useRef } from 'react';
@@ -89,10 +86,9 @@ export default function PhotoLarge({
 
   const { arePhotosMatted, isUserSignedIn } = useAppState();
 
-  const hasTitle = showTitle && (
-    Boolean(photo.title) ||
-    SHOW_PHOTO_TITLE_FALLBACK_TEXT
-  );
+  const hasTitle =
+    showTitle &&
+    Boolean(photo.title);
 
   const hasTitleContent =
     hasTitle ||
