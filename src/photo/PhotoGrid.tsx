@@ -1,11 +1,9 @@
 'use client';
 
-import { Photo } from '.';
+import { Photo, PhotoSetAttributes } from '.';
 import PhotoMedium from './PhotoMedium';
 import { clsx } from 'clsx/lite';
 import AnimateItems from '@/components/AnimateItems';
-import { Camera } from '@/camera';
-import { FilmSimulation } from '@/simulation';
 import { GRID_ASPECT_RATIO, HIGH_DENSITY_GRID } from '@/site/config';
 import { useAppState } from '@/state/AppState';
 import SelectTileOverlay from '@/components/SelectTileOverlay';
@@ -31,10 +29,6 @@ export default function PhotoGrid({
 }: {
   photos: Photo[]
   selectedPhoto?: Photo
-  tag?: string
-  camera?: Camera
-  simulation?: FilmSimulation
-  focal?: number
   photoPriority?: boolean
   fast?: boolean
   animate?: boolean
@@ -46,7 +40,7 @@ export default function PhotoGrid({
   canSelect?: boolean
   onLastPhotoVisible?: () => void
   onAnimationComplete?: () => void
-}) {
+} & PhotoSetAttributes) {
   const {
     isUserSignedIn,
     selectedPhotoIds,
