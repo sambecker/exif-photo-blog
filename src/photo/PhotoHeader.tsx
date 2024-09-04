@@ -23,7 +23,7 @@ export default function PhotoHeader({
   photos,
   selectedPhoto,
   entity,
-  entityVerb,
+  entityVerb = 'PHOTO',
   entityDescription,
   sharePath,
   indexNumber,
@@ -49,6 +49,8 @@ export default function PhotoHeader({
   const paginationLabel =
     (indexNumber || (selectedPhotoIndex ?? 0 + 1)) + ' of ' +
     (count ?? photos.length);
+
+  const isPhotoSet = selectedPhotoIndex === undefined;
 
   const renderPrevNext = () =>
     <PhotoPrevNext {...{
@@ -86,20 +88,19 @@ export default function PhotoHeader({
             ? 'col-span-2 sm:col-span-1 lg:col-span-2'
             : 'col-span-2 md:col-span-1',
         )}>
-          {entity ?? (selectedPhoto
-            ? <PhotoLink
+          {entity ?? (selectedPhoto !== undefined &&
+            <PhotoLink
               photo={selectedPhoto}
               className="uppercase font-bold"
             >
               {selectedPhoto.title || formatDate(selectedPhoto.takenAt, 'tiny')}
-            </PhotoLink>
-            : undefined)}
+            </PhotoLink>)}
         </span>
         <span className={clsx(
           'inline-flex',
           'gap-2 self-start',
           'uppercase text-dim',
-          selectedPhotoIndex === undefined
+          isPhotoSet
             ? HIGH_DENSITY_GRID
               ? 'col-span-2 sm:col-span-1 md:col-span-2 lg:col-span-3'
               : 'col-span-2 sm:col-span-1 lg:col-span-2'
@@ -108,17 +109,19 @@ export default function PhotoHeader({
               : 'lg:col-span-2',
         )}>
           {entity && <>
-            {selectedPhotoIndex !== undefined
-              ? <ResponsiveText shortText={paginationLabel}>
-                {entityVerb || 'PHOTO'} {paginationLabel}
-              </ResponsiveText>
-              : entityDescription}
-            {selectedPhotoIndex === undefined && sharePath &&
-              <ShareButton
-                className="translate-y-[1.5px]"
-                path={sharePath}
-                dim
-              />}
+            {isPhotoSet
+              ? <>
+                {entityDescription}
+                {sharePath &&
+                  <ShareButton
+                    className="translate-y-[1.5px]"
+                    path={sharePath}
+                    dim
+                  />}
+              </>
+              : <ResponsiveText shortText={paginationLabel}>
+                {entityVerb} {paginationLabel}
+              </ResponsiveText>}
           </>}
         </span>
         <div className={clsx(
