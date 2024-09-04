@@ -54,7 +54,11 @@ export default function PhotoHeader({
     (indexNumber || (selectedPhotoIndex ?? 0 + 1)) + ' of ' +
     (count ?? photos.length);
 
-  const isPhotoSet = selectedPhotoIndex === undefined;
+  const headerType = selectedPhotoIndex === undefined
+    ? 'photo-set'
+    : entity
+      ? 'photo-detail-with-entity'
+      : 'photo-detail';
 
   const renderPrevNext = () =>
     <PhotoPrevNext {...{
@@ -81,42 +85,55 @@ export default function PhotoHeader({
       items={[<DivDebugBaselineGrid
         key="PhotosHeader"
         className={clsx(
-          'grid gap-0.5 sm:gap-1 items-start grid-cols-4',
+          'grid gap-0.5 sm:gap-1 items-start',
+          'grid-cols-4',
           isGridHighDensity
             ? 'lg:grid-cols-6'
             : 'md:grid-cols-3 lg:grid-cols-4',
         )}>
-        <span className={clsx(
+        {/* Content A: Filter Set or Photo Title */}
+        <div className={clsx(
           'inline-flex uppercase',
-          isGridHighDensity
-            ? 'col-span-2 sm:col-span-1 lg:col-span-2'
-            : 'col-span-2 md:col-span-1',
+          headerType === 'photo-set'
+            ? isGridHighDensity
+              ? 'col-span-2 sm:col-span-1 lg:col-span-2'
+              : 'col-span-2 sm:col-span-1'
+            : headerType === 'photo-detail-with-entity'
+              ? isGridHighDensity
+                ? 'col-span-2 sm:col-span-1 lg:col-span-2'
+                : 'col-span-2 sm:col-span-1'
+              : isGridHighDensity
+                ? 'col-span-3 sm:col-span-3 lg:col-span-5'
+                : 'col-span-3 md:col-span-2 lg:col-span-3',
         )}>
           {entity ?? (selectedPhoto !== undefined &&
             <PhotoLink
               photo={selectedPhoto}
-              className="uppercase font-bold"
+              className="uppercase font-bold text-ellipsis truncate"
             >
               {
                 selectedPhoto.title ||
                 formatDate(selectedPhoto.takenAt, 'tiny')
               }
             </PhotoLink>)}
-        </span>
-        <span className={clsx(
+        </div>
+        {/* Content B: Filter Set Meta or Photo Pagination */}
+        <div className={clsx(
           'inline-flex',
           'gap-2 self-start',
           'uppercase text-dim',
-          isPhotoSet
+          headerType === 'photo-set'
             ? isGridHighDensity
-              ? 'col-span-2 sm:col-span-1 md:col-span-2 lg:col-span-3'
-              : 'col-span-2 sm:col-span-1 lg:col-span-2'
-            : isGridHighDensity
-              ? 'sm:col-span-2 lg:col-span-3'
-              : 'lg:col-span-2',
+              ? 'col-span-2 lg:col-span-3'
+              : 'col-span-2 md:col-span-1 lg:col-span-2'
+            : headerType === 'photo-detail-with-entity'
+              ? isGridHighDensity
+                ? 'sm:col-span-2 lg:col-span-3'
+                : 'sm:col-span-2 md:col-span-1 lg:col-span-2'
+              : 'hidden',
         )}>
           {entity && <>
-            {isPhotoSet
+            {headerType === 'photo-set'
               ? <>
                 {entityDescription}
                 {sharePath &&
@@ -130,9 +147,12 @@ export default function PhotoHeader({
                 {entityVerb} {paginationLabel}
               </ResponsiveText>}
           </>}
-        </span>
+        </div>
+        {/* Content C: Nav */}
         <div className={clsx(
-          selectedPhoto ? 'flex' : 'hidden sm:flex',
+          headerType === 'photo-set'
+            ? 'hidden sm:flex'
+            : 'flex',
           'justify-end',
         )}>
           {selectedPhoto
