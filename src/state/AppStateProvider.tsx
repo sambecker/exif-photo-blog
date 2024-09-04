@@ -6,7 +6,7 @@ import { AnimationConfig } from '@/components/AnimateItems';
 import usePathnames from '@/utility/usePathnames';
 import { getAuthAction } from '@/auth/actions';
 import useSWR from 'swr';
-import { MATTE_PHOTOS } from '@/site/config';
+import { HIGH_DENSITY_GRID, MATTE_PHOTOS } from '@/site/config';
 import { getPhotosHiddenMetaCachedAction } from '@/photo/actions';
 
 export default function AppStateProvider({
@@ -39,6 +39,8 @@ export default function AppStateProvider({
   const [isPerformingSelectEdit, setIsPerformingSelectEdit] =
     useState(false);
   // DEBUG
+  const [isGridHighDensity, setIsGridHighDensity] =
+    useState(HIGH_DENSITY_GRID);
   const [arePhotosMatted, setArePhotosMatted] =
     useState(MATTE_PHOTOS);
   const [shouldDebugImageFallbacks, setShouldDebugImageFallbacks] =
@@ -101,6 +103,8 @@ export default function AppStateProvider({
         isPerformingSelectEdit,
         setIsPerformingSelectEdit,
         // DEBUG
+        isGridHighDensity,
+        setIsGridHighDensity,
         arePhotosMatted,
         setArePhotosMatted,
         shouldDebugImageFallbacks,

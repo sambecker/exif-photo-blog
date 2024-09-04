@@ -86,12 +86,14 @@ export default function CommandKClient({
     hiddenPhotosCount,
     selectedPhotoIds,
     setSelectedPhotoIds,
+    isGridHighDensity,
     arePhotosMatted,
     shouldShowBaselineGrid,
     shouldDebugImageFallbacks,
     setIsCommandKOpen: setIsOpen,
     setShouldRespondToKeyboardCommands,
     setShouldShowBaselineGrid,
+    setIsGridHighDensity,
     setArePhotosMatted,
     setShouldDebugImageFallbacks,
   } = useAppState();
@@ -240,6 +242,10 @@ export default function CommandKClient({
         label: 'Toggle Photo Matting',
         action: () => setArePhotosMatted?.(prev => !prev),
         annotation: arePhotosMatted ? <FaCheck size={12} /> : undefined,
+      }, {
+        label: 'Toggle High Density Grid',
+        action: () => setIsGridHighDensity?.(prev => !prev),
+        annotation: isGridHighDensity ? <FaCheck size={12} /> : undefined,
       }, {
         label: 'Toggle Image Fallbacks',
         action: () => setShouldDebugImageFallbacks?.(prev => !prev),

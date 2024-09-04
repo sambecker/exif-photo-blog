@@ -1,3 +1,5 @@
+'use client';
+
 import { clsx } from 'clsx/lite';
 import {
   Photo,
@@ -8,12 +10,12 @@ import {
 import ShareButton from '@/components/ShareButton';
 import AnimateItems from '@/components/AnimateItems';
 import { ReactNode } from 'react';
-import { HIGH_DENSITY_GRID } from '@/site/config';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import PhotoPrevNext from './PhotoPrevNext';
 import PhotoLink from './PhotoLink';
 import { formatDate } from '@/utility/date';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
+import { useAppState } from '@/state/AppState';
 
 export default function PhotoHeader({
   tag,
@@ -40,6 +42,8 @@ export default function PhotoHeader({
   count?: number
   dateRange?: PhotoDateRange
 } & PhotoSetAttributes) {
+  const { isGridHighDensity } = useAppState();
+
   const { start, end } = dateRangeForPhotos(photos, dateRange);
 
   const selectedPhotoIndex = selectedPhoto
@@ -78,13 +82,13 @@ export default function PhotoHeader({
         key="PhotosHeader"
         className={clsx(
           'grid gap-0.5 sm:gap-1 items-start grid-cols-4',
-          HIGH_DENSITY_GRID
+          isGridHighDensity
             ? 'lg:grid-cols-6'
             : 'md:grid-cols-3 lg:grid-cols-4',
         )}>
         <span className={clsx(
           'inline-flex uppercase',
-          HIGH_DENSITY_GRID
+          isGridHighDensity
             ? 'col-span-2 sm:col-span-1 lg:col-span-2'
             : 'col-span-2 md:col-span-1',
         )}>
@@ -93,7 +97,10 @@ export default function PhotoHeader({
               photo={selectedPhoto}
               className="uppercase font-bold"
             >
-              {selectedPhoto.title || formatDate(selectedPhoto.takenAt, 'tiny')}
+              {
+                selectedPhoto.title ||
+                formatDate(selectedPhoto.takenAt, 'tiny')
+              }
             </PhotoLink>)}
         </span>
         <span className={clsx(
@@ -101,10 +108,10 @@ export default function PhotoHeader({
           'gap-2 self-start',
           'uppercase text-dim',
           isPhotoSet
-            ? HIGH_DENSITY_GRID
+            ? isGridHighDensity
               ? 'col-span-2 sm:col-span-1 md:col-span-2 lg:col-span-3'
               : 'col-span-2 sm:col-span-1 lg:col-span-2'
-            : HIGH_DENSITY_GRID
+            : isGridHighDensity
               ? 'sm:col-span-2 lg:col-span-3'
               : 'lg:col-span-2',
         )}>

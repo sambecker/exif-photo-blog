@@ -27,6 +27,8 @@ export interface AppStateContext {
   isPerformingSelectEdit?: boolean
   setIsPerformingSelectEdit?: Dispatch<SetStateAction<boolean>>
   // DEBUG
+  isGridHighDensity?: boolean
+  setIsGridHighDensity?: Dispatch<SetStateAction<boolean>>
   arePhotosMatted?: boolean
   setArePhotosMatted?: Dispatch<SetStateAction<boolean>>
   shouldDebugImageFallbacks?: boolean
