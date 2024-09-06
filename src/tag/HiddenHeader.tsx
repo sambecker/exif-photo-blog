@@ -1,5 +1,5 @@
 import { Photo, photoQuantityText } from '@/photo';
-import PhotoSetHeader from '@/photo/PhotoSetHeader';
+import PhotoHeader from '@/photo/PhotoHeader';
 import HiddenTag from './HiddenTag';
 
 export default function HiddenHeader({
@@ -14,7 +14,7 @@ export default function HiddenHeader({
   count: number
 }) {
   return (
-    <PhotoSetHeader
+    <PhotoHeader
       key="HiddenHeader"
       entity={<HiddenTag contrast="high" />}
       entityDescription={photoQuantityText(count, false)}

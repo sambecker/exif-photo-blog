@@ -1,8 +1,6 @@
-import { Camera } from '@/camera';
-import { Lens } from '@/lens';
-import { FilmSimulation } from '@/simulation';
 import { PRIORITY_ORDER_ENABLED } from '@/site/config';
 import { parameterize } from '@/utility/string';
+import { PhotoSetAttributes } from '..';
 
 export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 export const PHOTO_DEFAULT_LIMIT = 100;
@@ -12,16 +10,11 @@ export type GetPhotosOptions = {
   limit?: number
   offset?: number
   query?: string
-  tag?: string
-  camera?: Camera
-  lens?: Lens
-  simulation?: FilmSimulation
-  focal?: number
   takenBefore?: Date
   takenAfterInclusive?: Date
   updatedBefore?: Date
   hidden?: 'exclude' | 'include' | 'only'
-};
+} & PhotoSetAttributes;
 
 export const areOptionsSensitive = (options: GetPhotosOptions) =>
   options.hidden === 'include' || options.hidden === 'only';
