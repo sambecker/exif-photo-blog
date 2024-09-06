@@ -42,6 +42,7 @@ export default function PhotoLarge({
   prefetchRelatedLinks = SHOULD_PREFETCH_ALL_LINKS,
   revalidatePhoto,
   showTitle = true,
+  showTitleAsH1,
   showCamera = true,
   showSimulation = true,
   shouldShare = true,
@@ -61,6 +62,7 @@ export default function PhotoLarge({
   prefetchRelatedLinks?: boolean
   revalidatePhoto?: RevalidatePhoto
   showTitle?: boolean
+  showTitleAsH1?: boolean
   showCamera?: boolean
   showSimulation?: boolean
   shouldShare?: boolean
@@ -102,6 +104,13 @@ export default function PhotoLarge({
   const hasNonDateContent =
     hasTitleContent ||
     hasMetaContent;
+
+  const renderPhotoLink = () =>
+    <PhotoLink
+      photo={photo}
+      className="font-bold uppercase flex-grow"
+      prefetch={prefetch}
+    />;
 
   return (
     <SiteGrid
@@ -146,12 +155,9 @@ export default function PhotoLarge({
           {/* Meta */}
           <div className="pr-2 md:pr-0">
             <div className="md:relative flex gap-2 items-start">
-              {hasTitle &&
-                <PhotoLink
-                  photo={photo}
-                  className="font-bold uppercase flex-grow"
-                  prefetch={prefetch}
-                />}
+              {hasTitle && (showTitleAsH1
+                ? <h1>{renderPhotoLink()}</h1>
+                : renderPhotoLink())}
               <div className="absolute right-0 translate-y-[-4px] z-10">
                 <AdminPhotoMenuClient {...{
                   photo,

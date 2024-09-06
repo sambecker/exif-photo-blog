@@ -102,6 +102,7 @@ export default function PhotoDetailPage({
             priority
             prefetchRelatedLinks
             showTitle={Boolean(customHeader)}
+            showTitleAsH1
             showCamera={!camera}
             showSimulation={!simulation}
             shouldShare={shouldShare}

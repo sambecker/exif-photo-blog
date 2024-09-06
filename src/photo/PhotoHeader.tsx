@@ -77,6 +77,18 @@ export default function PhotoHeader({
         : <>{end}<br />– {start}</>}
     </span>;
 
+  const renderContentA = () => entity ?? (
+    selectedPhoto !== undefined &&
+      <PhotoLink
+        photo={selectedPhoto}
+        className="uppercase font-bold text-ellipsis truncate"
+      >
+        {
+          selectedPhoto.title ||
+          formatDate(selectedPhoto.takenAt, 'tiny')
+        }
+      </PhotoLink>);
+
   return (
     <AnimateItems
       type="bottom"
@@ -106,16 +118,9 @@ export default function PhotoHeader({
                 ? 'col-span-3 sm:col-span-3 lg:col-span-5'
                 : 'col-span-3 md:col-span-2 lg:col-span-3',
         )}>
-          {entity ?? (selectedPhoto !== undefined &&
-            <PhotoLink
-              photo={selectedPhoto}
-              className="uppercase font-bold text-ellipsis truncate"
-            >
-              {
-                selectedPhoto.title ||
-                formatDate(selectedPhoto.takenAt, 'tiny')
-              }
-            </PhotoLink>)}
+          {headerType === 'photo-detail-with-entity'
+            ? renderContentA()
+            : <h1>{renderContentA()}</h1>}
         </div>
         {/* Content B: Filter Set Meta or Photo Pagination */}
         <div className={clsx(
