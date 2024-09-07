@@ -6,6 +6,7 @@ import {
   PhotoDateRange,
   PhotoSetAttributes,
   dateRangeForPhotos,
+  titleForPhoto,
 } from '.';
 import ShareButton from '@/components/ShareButton';
 import AnimateItems from '@/components/AnimateItems';
@@ -13,7 +14,6 @@ import { ReactNode } from 'react';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import PhotoPrevNext from './PhotoPrevNext';
 import PhotoLink from './PhotoLink';
-import { formatDate } from '@/utility/date';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 import { useAppState } from '@/state/AppState';
 
@@ -83,10 +83,7 @@ export default function PhotoHeader({
         photo={selectedPhoto}
         className="uppercase font-bold text-ellipsis truncate"
       >
-        {
-          selectedPhoto.title ||
-          formatDate(selectedPhoto.takenAt, 'tiny')
-        }
+        {titleForPhoto(selectedPhoto, true)}
       </PhotoLink>);
 
   return (
