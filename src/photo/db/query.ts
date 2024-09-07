@@ -119,7 +119,10 @@ const safelyQueryPhotos = async <T>(
         throw e;
       }
     } else {
-      console.log(`sql get error: ${e.message} `);
+      if (e.message !== 'The server does not support SSL connections') {
+        // Avoid re-logging errors on initial installation
+        console.log(`sql get error: ${e.message} `);
+      }
       throw e;
     }
   }
