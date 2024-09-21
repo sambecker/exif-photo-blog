@@ -225,7 +225,7 @@ export const CONFIG_CHECKLIST_STATUS = {
     Boolean(process.env.AI_TEXT_AUTO_GENERATED_FIELDS),
   isPriorityOrderEnabled: PRIORITY_ORDER_ENABLED,
   isPublicApiEnabled: PUBLIC_API_ENABLED,
-  isPublicDownloadsEnabled: ALLOW_PUBLIC_DOWNLOADS,
+  arePublicDownloadsEnabled: ALLOW_PUBLIC_DOWNLOADS,
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,
   gridAspectRatio: GRID_ASPECT_RATIO,
   hasGridAspectRatio: Boolean(process.env.NEXT_PUBLIC_GRID_ASPECT_RATIO),
