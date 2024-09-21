@@ -12,6 +12,7 @@ import {
   formatExposureCompensation,
   formatExposureTime,
 } from '@/utility/exif';
+import { parameterize } from '@/utility/string';
 import camelcaseKeys from 'camelcase-keys';
 import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
@@ -310,6 +311,11 @@ export const isNextImageReadyBasedOnPhotos = async (photos: Photo[]) =>
   photos.length > 0 && fetch(getNextImageUrlForRequest(photos[0].url, 640))
     .then(response => response.ok)
     .catch(() => false);
+
+export const downloadFileNameForPhoto = (photo: Photo) =>
+  photo.title
+    ? `${parameterize(photo.title)}.${photo.extension}`
+    : photo.url.split('/').pop() || 'download';
 
 export const doesPhotoNeedBlurCompatibility = (photo: Photo) =>
   isBefore(photo.updatedAt, new Date('2024-05-07'));
