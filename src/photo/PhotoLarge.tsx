@@ -236,8 +236,11 @@ export default function PhotoLarge({
                   />}
               </>}
             <div className={clsx(
-              'flex gap-x-2 gap-y-baseline',
-              'md:flex-col md:justify-normal',
+              'flex gap-x-2.5 gap-y-baseline',
+              ALLOW_PUBLIC_DOWNLOADS
+                ? 'flex-col'
+                : 'md:flex-col',
+              'md:justify-normal',
             )}>
               <PhotoDate
                 photo={photo}
@@ -247,32 +250,34 @@ export default function PhotoLarge({
                   !hasNonDateContent && isUserSignedIn && 'md:pr-7',
                 )}
               />
-              {ALLOW_PUBLIC_DOWNLOADS && 
-                <DownloadButton 
-                  className={clsx(
-                    'md:translate-x-[-2.5px]',
-                    'translate-y-[1.5px] md:translate-y-0',
-                  )}
-                  photo={photo} 
-                />}
-              {shouldShare &&
-                <ShareButton
-                  className={clsx(
-                    'md:translate-x-[-2.5px]',
-                    'translate-y-[1.5px] md:translate-y-0',
-                  )}
-                  path={pathForPhotoShare({
-                    photo,
-                    tag: shouldShareTag ? primaryTag : undefined,
-                    camera: shouldShareCamera ? camera : undefined,
-                    // eslint-disable-next-line max-len
-                    simulation: shouldShareSimulation ? photo.filmSimulation : undefined,
-                    // eslint-disable-next-line max-len
-                    focal: shouldShareFocalLength ? photo.focalLength : undefined,
-                  })}
-                  prefetch={prefetchRelatedLinks}
-                  shouldScroll={shouldScrollOnShare}
-                />}
+              <div className={clsx(
+                'flex gap-1 translate-y-[0.5px]',
+                ALLOW_PUBLIC_DOWNLOADS
+                  ? 'translate-x-[-3px]'
+                  : 'md:translate-x-[-3px]',
+              )}>
+                {shouldShare &&
+                  <ShareButton
+                    path={pathForPhotoShare({
+                      photo,
+                      tag: shouldShareTag ? primaryTag : undefined,
+                      camera: shouldShareCamera ? camera : undefined,
+                      // eslint-disable-next-line max-len
+                      simulation: shouldShareSimulation ? photo.filmSimulation : undefined,
+                      // eslint-disable-next-line max-len
+                      focal: shouldShareFocalLength ? photo.focalLength : undefined,
+                    })}
+                    prefetch={prefetchRelatedLinks}
+                    shouldScroll={shouldScrollOnShare}
+                  />}
+                {ALLOW_PUBLIC_DOWNLOADS && 
+                  <DownloadButton 
+                    className={clsx(
+                      'translate-y-[0.5px] md:translate-y-0',
+                    )}
+                    photo={photo} 
+                  />}
+              </div>
             </div>
           </div>
         </DivDebugBaselineGrid>}
