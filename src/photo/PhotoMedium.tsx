@@ -1,12 +1,15 @@
 'use client';
 
-import { Photo, altTextForPhoto, doesPhotoNeedBlurCompatibility } from '.';
+import {
+  Photo,
+  PhotoSetAttributes,
+  altTextForPhoto,
+  doesPhotoNeedBlurCompatibility,
+} from '.';
 import ImageMedium from '@/components/image/ImageMedium';
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
 import { pathForPhoto } from '@/site/paths';
-import { Camera } from '@/camera';
-import { FilmSimulation } from '@/simulation';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
 import { useRef } from 'react';
 import useOnVisible from '@/utility/useOnVisible';
@@ -24,16 +27,12 @@ export default function PhotoMedium({
   onVisible,
 }: {
   photo: Photo
-  tag?: string
-  camera?: Camera
-  simulation?: FilmSimulation
-  focal?: number
   selected?: boolean
   priority?: boolean
   prefetch?: boolean
   className?: string
   onVisible?: () => void
-}) {
+} & PhotoSetAttributes) {
   const ref = useRef<HTMLAnchorElement>(null);
 
   useOnVisible(ref, onVisible);

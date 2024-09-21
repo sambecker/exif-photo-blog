@@ -1,4 +1,9 @@
-import { Photo, altTextForPhoto, doesPhotoNeedBlurCompatibility } from '.';
+import {
+  Photo,
+  PhotoSetAttributes,
+  altTextForPhoto,
+  doesPhotoNeedBlurCompatibility,
+} from '.';
 import ImageSmall from '@/components/image/ImageSmall';
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
@@ -6,8 +11,6 @@ import { pathForPhoto } from '@/site/paths';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
 import { useRef } from 'react';
 import useOnVisible from '@/utility/useOnVisible';
-import { Camera } from '@/camera';
-import { FilmSimulation } from '@/simulation';
 
 export default function PhotoSmall({
   photo,
@@ -21,15 +24,11 @@ export default function PhotoSmall({
   onVisible,
 }: {
   photo: Photo
-  tag?: string
-  camera?: Camera
-  simulation?: FilmSimulation
-  focal?: number
   selected?: boolean
   className?: string
   prefetch?: boolean
   onVisible?: () => void
-}) {
+} & PhotoSetAttributes) {
   const ref = useRef<HTMLAnchorElement>(null);
 
   useOnVisible(ref, onVisible);

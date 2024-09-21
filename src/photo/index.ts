@@ -1,9 +1,11 @@
+import { Camera } from '@/camera';
 import { formatFocalLength } from '@/focal';
+import { Lens } from '@/lens';
 import { getNextImageUrlForRequest } from '@/services/next-image';
 import { FilmSimulation } from '@/simulation';
 import { HIGH_DENSITY_GRID, SHOW_EXIF_DATA } from '@/site/config';
 import { ABSOLUTE_PATH_FOR_HOME_IMAGE } from '@/site/paths';
-import { formatDateFromPostgresString } from '@/utility/date';
+import { formatDate, formatDateFromPostgresString } from '@/utility/date';
 import {
   formatAperture,
   formatIso,
@@ -99,6 +101,14 @@ export interface Photo extends PhotoDb {
   takenAtNaiveFormatted: string
 }
 
+export interface PhotoSetAttributes {
+  tag?: string
+  camera?: Camera
+  simulation?: FilmSimulation
+  focal?: number
+  lens?: Lens // Unimplemented as a set
+}
+
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
   const photoDb = camelcaseKeys(
     photoDbRaw as unknown as Record<string, unknown>
@@ -188,8 +198,18 @@ const PHOTO_ID_FORWARDING_TABLE: Record<string, string> = JSON.parse(
 export const translatePhotoId = (id: string) =>
   PHOTO_ID_FORWARDING_TABLE[id] || id;
 
-export const titleForPhoto = (photo: Photo) =>
-  photo.title || 'Untitled';
+export const titleForPhoto = (
+  photo: Photo,
+  preferDateOverUntitled?: boolean,
+) => {
+  if (photo.title) {
+    return photo.title;
+  } else if (preferDateOverUntitled && (photo.takenAt || photo.createdAt)) {
+    return formatDate(photo.takenAt || photo.createdAt, 'tiny');
+  } else {
+    return 'Untitled';
+  }
+};
 
 export const altTextForPhoto = (photo: Photo) =>
   photo.semanticDescription || titleForPhoto(photo);

@@ -28,7 +28,6 @@ import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import PhotoLink from './PhotoLink';
 import {
   SHOULD_PREFETCH_ALL_LINKS,
-  SHOW_PHOTO_TITLE_FALLBACK_TEXT,
   ALLOW_PUBLIC_DOWNLOADS,
 } from '@/site/config';
 import AdminPhotoMenuClient from '@/admin/AdminPhotoMenuClient';
@@ -40,11 +39,14 @@ import { useAppState } from '@/state/AppState';
 
 export default function PhotoLarge({
   photo,
+  className,
   primaryTag,
   priority,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
   prefetchRelatedLinks = SHOULD_PREFETCH_ALL_LINKS,
   revalidatePhoto,
+  showTitle = true,
+  showTitleAsH1,
   showCamera = true,
   showSimulation = true,
   shouldShare = true,
@@ -57,11 +59,14 @@ export default function PhotoLarge({
   onVisible,
 }: {
   photo: Photo
+  className?: string
   primaryTag?: string
   priority?: boolean
   prefetch?: boolean
   prefetchRelatedLinks?: boolean
   revalidatePhoto?: RevalidatePhoto
+  showTitle?: boolean
+  showTitleAsH1?: boolean
   showCamera?: boolean
   showSimulation?: boolean
   shouldShare?: boolean
@@ -87,10 +92,13 @@ export default function PhotoLarge({
 
   const { arePhotosMatted, isUserSignedIn } = useAppState();
 
+  const hasTitle =
+    showTitle &&
+    Boolean(photo.title);
+
   const hasTitleContent =
-    photo.title ||
-    SHOW_PHOTO_TITLE_FALLBACK_TEXT ||
-    photo.caption;
+    hasTitle ||
+    Boolean(photo.caption);
 
   const hasMetaContent =
     showCameraContent ||
@@ -101,9 +109,17 @@ export default function PhotoLarge({
     hasTitleContent ||
     hasMetaContent;
 
+  const renderPhotoLink = () =>
+    <PhotoLink
+      photo={photo}
+      className="font-bold uppercase flex-grow"
+      prefetch={prefetch}
+    />;
+
   return (
     <SiteGrid
       containerRef={ref}
+      className={className}
       contentMain={
         <Link
           href={pathForPhoto({ photo })}
@@ -143,12 +159,9 @@ export default function PhotoLarge({
           {/* Meta */}
           <div className="pr-2 md:pr-0">
             <div className="md:relative flex gap-2 items-start">
-              {(photo.title || SHOW_PHOTO_TITLE_FALLBACK_TEXT) &&
-                <PhotoLink
-                  photo={photo}
-                  className="font-bold uppercase flex-grow"
-                  prefetch={prefetch}
-                />}
+              {hasTitle && (showTitleAsH1
+                ? <h1>{renderPhotoLink()}</h1>
+                : renderPhotoLink())}
               <div className="absolute right-0 translate-y-[-4px] z-10">
                 <AdminPhotoMenuClient {...{
                   photo,
@@ -160,7 +173,11 @@ export default function PhotoLarge({
             </div>
             <div className="space-y-baseline">
               {photo.caption &&
-                <div className="uppercase">
+                <div className={clsx(
+                  'uppercase', 
+                  // Prevent collision with admin button
+                  isUserSignedIn && 'md:pr-7',
+                )}>
                   {photo.caption}
                 </div>}
               {(showCameraContent || showTagsContent) &&
@@ -226,7 +243,7 @@ export default function PhotoLarge({
                 photo={photo}
                 className={clsx(
                   'text-medium',
-                  // Prevent date collision with admin button
+                  // Prevent collision with admin button
                   !hasNonDateContent && isUserSignedIn && 'md:pr-7',
                 )}
               />

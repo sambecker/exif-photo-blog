@@ -1,35 +1,38 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Photo, getNextPhoto, getPreviousPhoto } from '@/photo';
+import {
+  Photo,
+  PhotoSetAttributes,
+  getNextPhoto,
+  getPreviousPhoto,
+} from '@/photo';
 import PhotoLink from './PhotoLink';
 import { useRouter } from 'next/navigation';
 import { pathForPhoto } from '@/site/paths';
 import { useAppState } from '@/state/AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
-import { Camera } from '@/camera';
-import { FilmSimulation } from '@/simulation';
+import { clsx } from 'clsx/lite';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 const LISTENER_KEYUP = 'keyup';
 
 const ANIMATION_LEFT: AnimationConfig = { type: 'left', duration: 0.3 };
 const ANIMATION_RIGHT: AnimationConfig = { type: 'right', duration: 0.3 };
 
-export default function PhotoLinks({
+export default function PhotoPrevNext({
   photo,
-  photos,
+  photos = [],
+  className,
   tag,
   camera,
   simulation,
   focal,
 }: {
-  photo: Photo
-  photos: Photo[]
-  tag?: string
-  camera?: Camera
-  simulation?: FilmSimulation
-  focal?: number
-}) {
+  photo?: Photo
+  photos?: Photo[]
+  className?: string
+} & PhotoSetAttributes) {
   const router = useRouter();
 
   const {
@@ -37,8 +40,8 @@ export default function PhotoLinks({
     shouldRespondToKeyboardCommands,
   } = useAppState();
 
-  const previousPhoto = getPreviousPhoto(photo, photos);
-  const nextPhoto = getNextPhoto(photo, photos);
+  const previousPhoto = photo ? getPreviousPhoto(photo, photos) : undefined;
+  const nextPhoto = photo ? getNextPhoto(photo, photos) : undefined;
 
   useEffect(() => {
     if (shouldRespondToKeyboardCommands) {
@@ -94,31 +97,47 @@ export default function PhotoLinks({
   ]);
   
   return (
-    <>
-      <PhotoLink
-        photo={previousPhoto}
-        nextPhotoAnimation={ANIMATION_RIGHT}
-        tag={tag}
-        camera={camera}
-        simulation={simulation}
-        focal={focal}
-        scroll={false}
-        prefetch
-      >
-        PREV
-      </PhotoLink>
-      <PhotoLink
-        photo={nextPhoto}
-        nextPhotoAnimation={ANIMATION_LEFT}
-        tag={tag}
-        camera={camera}
-        simulation={simulation}
-        focal={focal}
-        scroll={false}
-        prefetch
-      >
-        NEXT
-      </PhotoLink>
-    </>
+    <div className={clsx(
+      'flex items-center',
+      className,
+    )}>
+      <div className="flex items-center gap-2 select-none">
+        <PhotoLink
+          photo={previousPhoto}
+          className="select-none h-[1rem]"
+          nextPhotoAnimation={ANIMATION_RIGHT}
+          tag={tag}
+          camera={camera}
+          simulation={simulation}
+          focal={focal}
+          scroll={false}
+          prefetch
+        >
+          <FiChevronLeft
+            className="sm:hidden text-[1.1rem] translate-y-[-1px]"
+          />
+          <span className="hidden sm:inline-block">PREV</span>
+        </PhotoLink>
+        <span className="text-extra-extra-dim">
+          /
+        </span>
+        <PhotoLink
+          photo={nextPhoto}
+          className="select-none h-[1rem]"
+          nextPhotoAnimation={ANIMATION_LEFT}
+          tag={tag}
+          camera={camera}
+          simulation={simulation}
+          focal={focal}
+          scroll={false}
+          prefetch
+        >
+          <FiChevronRight
+            className="sm:hidden text-[1.1rem] translate-y-[-1px]"
+          />
+          <span className="hidden sm:inline-block">NEXT</span>
+        </PhotoLink>
+      </div>
+    </div>
   );
 };
