@@ -253,8 +253,8 @@ export default function PhotoLarge({
               <div className={clsx(
                 'flex gap-1 translate-y-[0.5px]',
                 ALLOW_PUBLIC_DOWNLOADS
-                  ? 'translate-x-[-3px]'
-                  : 'md:translate-x-[-3px]',
+                  ? 'translate-x-[-2.5px]'
+                  : 'md:translate-x-[-2.5px]',
               )}>
                 {shouldShare &&
                   <ShareButton
