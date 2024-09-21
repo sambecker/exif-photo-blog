@@ -5,6 +5,7 @@ import { clsx } from 'clsx/lite';
 import { ReactNode, useState, useTransition } from 'react';
 import LoaderButton from '../primitives/LoaderButton';
 import { usePathname, useRouter } from 'next/navigation';
+import { downloadFileFromBrowser } from '@/utility/url';
 
 export default function MoreMenuItem({
   label,
@@ -53,8 +54,10 @@ export default function MoreMenuItem({
           }
         }
         if (href && href !== pathname) {
-          if (Boolean(hrefDownloadName)) {
-            window.open(href, '_blank');
+          if (hrefDownloadName) {
+            setIsLoading(true);
+            downloadFileFromBrowser(href, hrefDownloadName)
+              .finally(() => setIsLoading(false));
           } else {
             startTransition(() => router.push(href));
           }
