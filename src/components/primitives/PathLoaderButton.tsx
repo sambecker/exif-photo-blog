@@ -10,7 +10,6 @@ export default function PathLoaderButton({
   loaderDelay = 100,
   shouldScroll = true,
   shouldReplace,
-  handleAction,
   children,
   ...props
 }: {
@@ -19,7 +18,6 @@ export default function PathLoaderButton({
   loaderDelay?: number
   shouldScroll?: boolean
   shouldReplace?: boolean
-  handleAction?: () => Promise<void>
 } & ComponentProps<typeof LoaderButton>) {
   const router = useRouter();
 
@@ -48,15 +46,11 @@ export default function PathLoaderButton({
     <LoaderButton
       {...props}
       onClick={() => {
-        startTransition(async () => {
-          if (handleAction) {
-            await handleAction();
+        startTransition(() => {
+          if (shouldReplace) {
+            router.replace(path, { scroll: shouldScroll });
           } else {
-            if (shouldReplace) {
-              router.replace(path, { scroll: shouldScroll });
-            } else {
-              router.push(path, { scroll: shouldScroll });
-            }
+            router.push(path, { scroll: shouldScroll });
           }
         });
       }}

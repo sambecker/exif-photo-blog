@@ -1,7 +1,8 @@
 import { MdOutlineFileDownload } from 'react-icons/md';
-import PathLoaderButton from './primitives/PathLoaderButton';
 import { clsx } from 'clsx/lite';
-import { Photo } from '@/photo';
+import { downloadFileNameForPhoto, Photo } from '@/photo';
+import LoaderButton from './primitives/LoaderButton';
+import { useState } from 'react';
 
 export default function DownloadButton({
   photo,
@@ -12,30 +13,30 @@ export default function DownloadButton({
   dim?: boolean
   className?: string
 }) {
-  const {url, title} = photo;
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <PathLoaderButton
-      path={url}
+    <LoaderButton
+      title="Download Original File"
       className={clsx(
         className,
         dim ? 'text-dim' : 'text-medium',
         '-mx-0.5 translate-x-0.5',
         'sm:mx-0 sm:translate-x-0'
       )}
-      icon={<MdOutlineFileDownload size={16} />}
+      icon={<MdOutlineFileDownload size={18} />}
       spinnerColor='dim'
       styleAs='link'
-      shouldReplace
-      handleAction={async () => {
-        const response = await fetch(url);
-        const blob = await response.blob();
+      isLoading={isLoading}
+      onClick={async () => {
+        setIsLoading(true);
+        const blob = await fetch(photo.url)
+          .then(response => response.blob())
+          .finally(() => setIsLoading(false));
         const downloadUrl = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = downloadUrl;
-        link.download = title
-          ? title.replace(/[^a-z0-9]/gi, '_').toLowerCase()
-          : url.split('/').pop() || 'download';
+        link.download = downloadFileNameForPhoto(photo);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
