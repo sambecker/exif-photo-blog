@@ -52,7 +52,7 @@ export default function SiteChecklistClient({
   showExifInfo,
   defaultTheme,
   isProModeEnabled,
-  isGridHomepageEnabled: isGridFirst,
+  isGridHomepageEnabled,
   isStaticallyOptimized,
   arePagesStaticallyOptimized,
   areOGImagesStaticallyOptimized,
@@ -432,7 +432,7 @@ export default function SiteChecklistClient({
           >
             <ChecklistRow
               title="Grid homepage"
-              status={isGridFirst}
+              status={isGridHomepageEnabled}
               optional
             >
               Set environment variable to {'"1"'} to show grid layout
