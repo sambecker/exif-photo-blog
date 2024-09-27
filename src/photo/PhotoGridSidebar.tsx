@@ -16,7 +16,10 @@ import { useAppState } from '@/state/AppState';
 import { useMemo } from 'react';
 import HiddenTag from '@/tag/HiddenTag';
 import { SITE_ABOUT } from '@/site/config';
-import { htmlHasBrParagraphBreaks, safelyParseFormattedHtml } from '@/utility/html';
+import {
+  htmlHasBrParagraphBreaks,
+  safelyParseFormattedHtml,
+} from '@/utility/html';
 import { clsx } from 'clsx/lite';
 
 export default function PhotoGridSidebar({
