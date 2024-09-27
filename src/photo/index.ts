@@ -5,13 +5,14 @@ import { getNextImageUrlForRequest } from '@/services/next-image';
 import { FilmSimulation } from '@/simulation';
 import { HIGH_DENSITY_GRID, SHOW_EXIF_DATA } from '@/site/config';
 import { ABSOLUTE_PATH_FOR_HOME_IMAGE } from '@/site/paths';
-import { formatDateFromPostgresString } from '@/utility/date';
+import { formatDate, formatDateFromPostgresString } from '@/utility/date';
 import {
   formatAperture,
   formatIso,
   formatExposureCompensation,
   formatExposureTime,
 } from '@/utility/exif';
+import { parameterize } from '@/utility/string';
 import camelcaseKeys from 'camelcase-keys';
 import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
@@ -198,8 +199,18 @@ const PHOTO_ID_FORWARDING_TABLE: Record<string, string> = JSON.parse(
 export const translatePhotoId = (id: string) =>
   PHOTO_ID_FORWARDING_TABLE[id] || id;
 
-export const titleForPhoto = (photo: Photo) =>
-  photo.title || 'Untitled';
+export const titleForPhoto = (
+  photo: Photo,
+  preferDateOverUntitled?: boolean,
+) => {
+  if (photo.title) {
+    return photo.title;
+  } else if (preferDateOverUntitled && (photo.takenAt || photo.createdAt)) {
+    return formatDate(photo.takenAt || photo.createdAt, 'tiny');
+  } else {
+    return 'Untitled';
+  }
+};
 
 export const altTextForPhoto = (photo: Photo) =>
   photo.semanticDescription || titleForPhoto(photo);
@@ -300,6 +311,11 @@ export const isNextImageReadyBasedOnPhotos = async (photos: Photo[]) =>
   photos.length > 0 && fetch(getNextImageUrlForRequest(photos[0].url, 640))
     .then(response => response.ok)
     .catch(() => false);
+
+export const downloadFileNameForPhoto = (photo: Photo) =>
+  photo.title
+    ? `${parameterize(photo.title)}.${photo.extension}`
+    : photo.url.split('/').pop() || 'download';
 
 export const doesPhotoNeedBlurCompatibility = (photo: Photo) =>
   isBefore(photo.updatedAt, new Date('2024-05-07'));

@@ -31,7 +31,7 @@ import { useTheme } from 'next-themes';
 import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
 import { IoInvertModeSharp } from 'react-icons/io5';
 import { useAppState } from '@/state/AppState';
-import { queryPhotosByTitleAction } from '@/photo/actions';
+import { searchPhotosAction } from '@/photo/actions';
 import { RiToolsFill } from 'react-icons/ri';
 import { BiLockAlt, BiSolidUser } from 'react-icons/bi';
 import { HiDocumentText } from 'react-icons/hi';
@@ -151,27 +151,33 @@ export default function CommandKClient({
   useEffect(() => {
     if (queryDebounced.length >= MINIMUM_QUERY_LENGTH && !isPending) {
       setIsLoading(true);
-      queryPhotosByTitleAction(queryDebounced).then(photos => {
-        if (isOpenRef.current) {
-          setQueriedSections(photos.length > 0
-            ? [{
-              heading: 'Photos',
-              accessory: <TbPhoto size={14} />,
-              items: photos.map(photo => ({
-                label: titleForPhoto(photo),
-                keywords: getKeywordsForPhoto(photo),
-                annotation: <PhotoDate {...{ photo }} />,
-                accessory: <PhotoSmall photo={photo} />,
-                path: pathForPhoto({ photo }),
-              })),
-            }]
-            : []);
-        } else {
-          // Ignore stale requests that come in after dialog is closed
+      searchPhotosAction(queryDebounced)
+        .then(photos => {
+          if (isOpenRef.current) {
+            setQueriedSections(photos.length > 0
+              ? [{
+                heading: 'Photos',
+                accessory: <TbPhoto size={14} />,
+                items: photos.map(photo => ({
+                  label: titleForPhoto(photo),
+                  keywords: getKeywordsForPhoto(photo),
+                  annotation: <PhotoDate {...{ photo }} />,
+                  accessory: <PhotoSmall photo={photo} />,
+                  path: pathForPhoto({ photo }),
+                })),
+              }]
+              : []);
+          } else {
+            // Ignore stale requests that come in after dialog is closed
+            setQueriedSections([]);
+          }
+          setIsLoading(false);
+        })
+        .catch(e => {
+          console.error(e);
           setQueriedSections([]);
-        }
-        setIsLoading(false);
-      });
+          setIsLoading(false);
+        });
     }
   }, [queryDebounced, isPending]);
 

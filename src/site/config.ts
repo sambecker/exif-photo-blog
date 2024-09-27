@@ -147,6 +147,8 @@ export const PRIORITY_ORDER_ENABLED =
   process.env.NEXT_PUBLIC_IGNORE_PRIORITY_ORDER !== '1';
 export const PUBLIC_API_ENABLED =
   process.env.NEXT_PUBLIC_PUBLIC_API === '1';
+export const ALLOW_PUBLIC_DOWNLOADS = 
+  process.env.NEXT_PUBLIC_ALLOW_PUBLIC_DOWNLOADS === '1';
 export const SHOW_REPO_LINK =
   process.env.NEXT_PUBLIC_HIDE_REPO_LINK !== '1';
 export const SHOW_SOCIAL =
@@ -223,6 +225,7 @@ export const CONFIG_CHECKLIST_STATUS = {
     Boolean(process.env.AI_TEXT_AUTO_GENERATED_FIELDS),
   isPriorityOrderEnabled: PRIORITY_ORDER_ENABLED,
   isPublicApiEnabled: PUBLIC_API_ENABLED,
+  arePublicDownloadsEnabled: ALLOW_PUBLIC_DOWNLOADS,
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,
   gridAspectRatio: GRID_ASPECT_RATIO,
   hasGridAspectRatio: Boolean(process.env.NEXT_PUBLIC_GRID_ASPECT_RATIO),

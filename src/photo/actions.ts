@@ -35,7 +35,7 @@ import {
 } from '@/site/paths';
 import { blurImageFromUrl, extractImageDataFromBlobPath } from './server';
 import { TAG_FAVS, isTagFavs } from '@/tag';
-import { convertPhotoToPhotoDbInsert } from '.';
+import { convertPhotoToPhotoDbInsert, Photo } from '.';
 import { runAuthenticatedAdminServerAction } from '@/auth';
 import { AI_IMAGE_QUERIES, AiImageQuery } from './ai';
 import { streamOpenAiImageQuery } from '@/services/openai';
@@ -412,6 +412,9 @@ export const getPhotosCachedAction = async (options: GetPhotosOptions) =>
 
 // Public actions
 
-export const queryPhotosByTitleAction = async (query: string) =>
-  (await getPhotos({ query, limit: 10 }))
-    .filter(({ title }) => Boolean(title));
+export const searchPhotosAction = async (query: string) =>
+  getPhotos({ query, limit: 10 })
+    .catch(e => {
+      console.error('Could not query photos', e);
+      return [] as Photo[];
+    });

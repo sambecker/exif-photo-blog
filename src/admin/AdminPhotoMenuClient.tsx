@@ -4,7 +4,11 @@ import { ComponentProps, useMemo } from 'react';
 import { pathForAdminPhotoEdit, pathForPhoto } from '@/site/paths';
 import { deletePhotoAction, toggleFavoritePhotoAction } from '@/photo/actions';
 import { FaRegEdit, FaRegStar, FaStar } from 'react-icons/fa';
-import { Photo, deleteConfirmationTextForPhoto } from '@/photo';
+import {
+  Photo,
+  deleteConfirmationTextForPhoto,
+  downloadFileNameForPhoto,
+} from '@/photo';
 import { isPathFavs, isPhotoFav } from '@/tag';
 import { usePathname } from 'next/navigation';
 import { BiTrash } from 'react-icons/bi';
@@ -64,7 +68,7 @@ export default function AdminPhotoMenuClient({
         className="translate-x-[-1.5px] translate-y-[-0.5px]"
       />,
       href: photo.url,
-      hrefDownloadName: photo.url.split('/').pop(),
+      hrefDownloadName: downloadFileNameForPhoto(photo),
     });
     items.push({
       label: 'Delete',
