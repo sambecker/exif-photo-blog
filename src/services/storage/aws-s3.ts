@@ -4,6 +4,7 @@ import {
   DeleteObjectCommand,
   ListObjectsCommand,
   PutObjectCommand,
+  ObjectCannedACL,
 } from '@aws-sdk/client-s3';
 import { StorageListResponse, generateStorageId } from '.';
 
@@ -13,7 +14,7 @@ const AWS_S3_ACCESS_KEY = process.env.AWS_S3_ACCESS_KEY ?? '';
 const AWS_S3_SECRET_ACCESS_KEY = process.env.AWS_S3_SECRET_ACCESS_KEY ?? '';
 
 export const AWS_S3_BASE_URL = AWS_S3_BUCKET && AWS_S3_REGION
-  ? `https://${AWS_S3_BUCKET}.s3.${AWS_S3_REGION}.amazonaws.com`
+  ? `https://${AWS_S3_BUCKET}.s3.${AWS_S3_REGION}.io.cloud.ovh.net`
   : undefined;
 
 export const awsS3Client = () => new S3Client({
@@ -35,12 +36,13 @@ export const awsS3PutObjectCommandForKey = (Key: string) =>
 export const awsS3Put = async (
   file: Buffer,
   fileName: string,
+  acl: ObjectCannedACL = 'public-read'
 ): Promise<string> =>
   awsS3Client().send(new PutObjectCommand({
     Bucket: AWS_S3_BUCKET,
     Key: fileName,
     Body: file,
-    ACL: 'public-read',
+    ACL: acl,
   }))
     .then(() => urlForKey(fileName));
 
@@ -48,17 +50,19 @@ export const awsS3Copy = async (
   fileNameSource: string,
   fileNameDestination: string,
   addRandomSuffix?: boolean,
+  acl: ObjectCannedACL = 'public-read'
 ) => {
   const name = fileNameSource.split('.')[0];
   const extension = fileNameSource.split('.')[1];
   const Key = addRandomSuffix
     ? `${name}-${generateStorageId()}.${extension}`
     : fileNameDestination;
+
   return awsS3Client().send(new CopyObjectCommand({
     Bucket: AWS_S3_BUCKET,
-    CopySource: fileNameSource,
+    CopySource: AWS_S3_BUCKET+fileNameSource.replace(AWS_S3_BASE_URL!, ""),
     Key,
-    ACL: 'public-read',
+    ACL: acl,
   }))
     .then(() => urlForKey(fileNameDestination));
 };

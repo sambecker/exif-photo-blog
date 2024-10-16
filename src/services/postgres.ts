@@ -61,4 +61,4 @@ const isTemplateStringsArray = (
 };
 
 export const testDatabaseConnection = async () =>
-  query('SELECt COUNT(*) FROM pg_stat_user_tables');
+  query('SELECT COUNT(*) FROM pg_stat_user_tables');
