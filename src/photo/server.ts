@@ -15,6 +15,7 @@ import { GEO_PRIVACY_ENABLED, PRO_MODE_ENABLED } from '@/site/config';
 
 const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
+export const IMAGE_WIDTH_FOR_PUBLIC = 1080;
 
 export const extractImageDataFromBlobPath = async (
   blobPath: string,
@@ -115,10 +116,13 @@ const generateBase64 = async (
     .toBuffer()
     .then(data => `data:image/jpeg;base64,${data.toString('base64')}`);
 
-const resizeImage = async (image: ArrayBuffer) => 
+const resizeImage = async (image: ArrayBuffer, image_width_resize: number = IMAGE_WIDTH_RESIZE) => 
   generateBase64(image, sharp => sharp
-    .resize(IMAGE_WIDTH_RESIZE)
+    .resize(image_width_resize)
   );
+
+export const resizeImageBuffer = async (image: ArrayBuffer, image_width_resize: number = IMAGE_WIDTH_RESIZE) => 
+    await sharp(image).resize(image_width_resize).toBuffer()
 
 const blurImage = async (image: ArrayBuffer) => 
   generateBase64(image, sharp => sharp

@@ -29,7 +29,7 @@ import {
   cloudflareR2Put,
   isUrlFromCloudflareR2,
 } from './cloudflare-r2';
-import { PATH_API_PRESIGNED_URL } from '@/site/paths';
+import { PATH_API_S3_BLOB_UPLOAD } from '@/site/paths';
 
 export const generateStorageId = () => generateNanoid(16);
 
@@ -118,12 +118,12 @@ export const uploadFromClientViaPresignedUrl = async (
   const key = addRandomSuffix
     ? `${fileName}-${generateStorageId()}.${extension}`
     : `${fileName}.${extension}`;
+  
+  const url = await fetch(
+    `${PATH_API_S3_BLOB_UPLOAD}/${key}`, {method: 'PUT', body: file, headers: {'Content-Type': extension}})
+    .then((response) => response.json());
 
-  const url = await fetch(`${PATH_API_PRESIGNED_URL}/${key}`)
-    .then((response) => response.text());
-
-  return fetch(url, { method: 'PUT', body: file })
-    .then(() => `${baseUrlForStorage(CURRENT_STORAGE)}/${key}`);
+  return url["url"];
 };
 
 export const uploadPhotoFromClient = async (
