@@ -43,14 +43,21 @@ export type AiImageQuery =
   'description-semantic';
 
 export const AI_IMAGE_QUERIES: Record<AiImageQuery, string> = {
-  'title': 'Write a compelling title for this image in 3 words or less',
-  'caption': 'Write a pithy caption for this image in 6 words or less and no punctuation',
-  'title-and-caption': 'Write a compelling title and pithy caption of 8 words or less for this image, using the format Title: "title" Caption: "caption"',
-  'tags': 'Describe this image three or less comma-separated keywords with no adjective or adverbs',
-  'description-small': 'Describe this image succinctly without the initial text "This image shows" or "This is a picture of"',
-  'description': 'Describe this image',
-  'description-large': 'Describe this image in detail',
-  'description-semantic': 'List up to 5 things in this image without description as a comma-separated list',
+  'title': 'Create a poetic, evocative title for this image in 3 words or less. Focus on emotion, atmosphere, or metaphor rather than literal description.',
+  
+  'caption': 'Write an artistic, memorable caption for this image in 6 words or less. Capture the mood or story rather than just describing what\'s visible.',
+  
+  'title-and-caption': 'Create a poetic title and memorable caption for this image, using the format Title: "title" Caption: "caption". The title should be 3 words or less and evoke emotion or metaphor. The caption should be 6 words or less and capture the mood or story.',
+  
+  'tags': 'Generate two sets of comma-separated tags for this image: 1) List the main subjects/elements visible in the image 2) Categorize the photo genre (e.g. street photography, landscape, portrait, architecture, nature, abstract, minimalist, documentary, etc.). Format as "subjects: tag1, tag2, tag3 | genres: genre1, genre2"',
+  
+  'description-small': 'Describe this image succinctly, focusing on both the visual elements and the mood/atmosphere it creates',
+  
+  'description': 'Describe this image, including both what is visible and the emotional quality or story it conveys',
+  
+  'description-large': 'Provide a detailed description of this image, including visual elements, composition, mood, and potential symbolic or narrative aspects',
+  
+  'description-semantic': 'List up to 5 key elements or subjects in this image as a comma-separated list, focusing on the most significant visual components',
 };
 
 export const parseTitleAndCaption = (text: string) => {
