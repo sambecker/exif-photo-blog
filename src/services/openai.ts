@@ -59,6 +59,43 @@ const getImageTextArgs = (
       },
     ],
   }],
+
+  // Temperature controls randomness in the output
+  // Range: 0.0 to 2.0
+  // - 0.0: Focused, deterministic, always picks most likely next token
+  // - 0.7: Balanced, creative yet coherent (OpenAI default)
+  // - 1.0: More creative, varied outputs
+  // - 2.0: Maximum randomness, most creative but potentially less coherent
+  temperature: 0.9,
+
+  // Top_p (nucleus sampling) controls diversity of word choices
+  // Range: 0.0 to 1.0
+  // - Lower values (0.1): Conservative, uses only most likely tokens
+  // - Higher values (0.9): More diverse vocabulary, creative word choices
+  // - 1.0: Considers all possible tokens
+  top_p: 0.9,
+
+  // Frequency penalty reduces repetition by lowering the likelihood 
+  // of using tokens that have already appeared in the text
+  // Range: -2.0 to 2.0
+  // - 0.0: No penalty (OpenAI default)
+  // - 0.6: Moderate discouragement of repetition
+  // - 1.0+: Strongly avoids repeating words/phrases
+  frequency_penalty: 0.6,
+
+  // Presence penalty encourages the model to talk about new topics
+  // Range: -2.0 to 2.0
+  // - 0.0: No penalty (OpenAI default)
+  // - 0.6: Moderately encourages new topics
+  // - 1.0+: Strongly favors introducing new concepts
+  // Useful for generating more diverse titles/captions
+  presence_penalty: 0.6,
+
+  // Optional parameters you might consider:
+  // max_tokens: 100,    // Limits response length
+  // n: 1,              // Number of completions to generate
+  // stream: true,      // Enable streaming responses
+  // stop: ["\n", "."], // Stop sequences
 } : undefined;
 
 export const streamOpenAiImageQuery = async (
