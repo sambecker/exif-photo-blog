@@ -32,7 +32,7 @@ export async function GET(
     getIBMPlexMonoMedium(),
     getImageResponseCacheControlHeaders(),
   ]);
-  
+
   if (!photo) { return new Response('Photo not found', { status: 404 }); }
 
   const { width, height } = IMAGE_OG_DIMENSION;

@@ -135,35 +135,48 @@ export default function FieldSetWithStatus({
                   Boolean(error) && 'error',
                 )}
               />
-              : <input
-                ref={inputRef}
-                id={id}
-                name={id}
-                value={value}
-                checked={type === 'checkbox' ? value === 'true' : undefined}
-                placeholder={placeholder}
-                onChange={e => onChange?.(type === 'checkbox'
-                  ? e.target.value === 'true' ? 'false' : 'true'
-                  : e.target.value)}
-                type={type}
-                autoComplete="off"
-                autoCapitalize={!capitalize ? 'off' : undefined}
-                readOnly={readOnly || pending || loading}
-                disabled={type === 'checkbox' && (
-                  readOnly || pending || loading
-                )}
-                className={clsx(
-                  (
-                    type === 'text' ||
-                    type === 'email' ||
-                    type === 'password'
-                  ) && 'w-full',
-                  type === 'checkbox' && (
+              : type === 'file'
+                ? <input
+                  ref={inputRef}
+                  id={id}
+                  name={id}
+                  type="file"
+                  onChange={e => onChange?.(e.target.files?.[0]?.name || '')}
+                  readOnly={readOnly || pending || loading}
+                  className={clsx(
+                    'w-full',
+                    Boolean(error) && 'error',
+                  )}
+                />
+                : <input
+                  ref={inputRef}
+                  id={id}
+                  name={id}
+                  value={value}
+                  checked={type === 'checkbox' ? value === 'true' : undefined}
+                  placeholder={placeholder}
+                  onChange={e => onChange?.(type === 'checkbox'
+                    ? e.target.value === 'true' ? 'false' : 'true'
+                    : e.target.value)}
+                  type={type}
+                  autoComplete="off"
+                  autoCapitalize={!capitalize ? 'off' : undefined}
+                  readOnly={readOnly || pending || loading}
+                  disabled={type === 'checkbox' && (
                     readOnly || pending || loading
-                  ) && 'opacity-50 cursor-not-allowed',
-                  Boolean(error) && 'error',
-                )}
-              />}
+                  )}
+                  className={clsx(
+                    (
+                      type === 'text' ||
+                      type === 'email' ||
+                      type === 'password'
+                    ) && 'w-full',
+                    type === 'checkbox' && (
+                      readOnly || pending || loading
+                    ) && 'opacity-50 cursor-not-allowed',
+                    Boolean(error) && 'error',
+                  )}
+                />}
         {accessory && <div>
           {accessory}
         </div>}

@@ -1,17 +1,17 @@
 import {
   getExtensionFromStorageUrl,
   getIdFromStorageUrl,
-} from '@/services/storage';
-import { convertExifToFormData } from '@/photo/form';
+} from "@/services/storage";
+import {convertExifToFormData} from "@/photo/form";
 import {
   getFujifilmSimulationFromMakerNote,
   isExifForFujifilm,
-} from '@/vendors/fujifilm';
-import { ExifData, ExifParserFactory } from 'ts-exif-parser';
-import { PhotoFormData } from './form';
-import { FilmSimulation } from '@/simulation';
-import sharp, { Sharp } from 'sharp';
-import { GEO_PRIVACY_ENABLED, PRO_MODE_ENABLED } from '@/site/config';
+} from "@/vendors/fujifilm";
+import {ExifData, ExifParserFactory} from "ts-exif-parser";
+import {PhotoFormData} from "./form";
+import {FilmSimulation} from "@/simulation";
+import sharp, {Sharp} from "sharp";
+import {GEO_PRIVACY_ENABLED, PRO_MODE_ENABLED} from "@/site/config";
 
 const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
@@ -20,22 +20,19 @@ export const IMAGE_WIDTH_FOR_PUBLIC = 1080;
 export const extractImageDataFromBlobPath = async (
   blobPath: string,
   options?: {
-    includeInitialPhotoFields?: boolean
-    generateBlurData?: boolean
-    generateResizedImage?: boolean
-  },
+    includeInitialPhotoFields?: boolean;
+    generateBlurData?: boolean;
+    generateResizedImage?: boolean;
+  }
 ): Promise<{
-  blobId?: string
-  photoFormExif?: Partial<PhotoFormData>
-  imageResizedBase64?: string
-  shouldStripGpsData?: boolean
-  fileBytes?: ArrayBuffer
+  blobId?: string;
+  photoFormExif?: Partial<PhotoFormData>;
+  imageResizedBase64?: string;
+  shouldStripGpsData?: boolean;
+  fileBytes?: ArrayBuffer;
 }> => {
-  const {
-    includeInitialPhotoFields,
-    generateBlurData,
-    generateResizedImage,
-  } = options ?? {};
+  const {includeInitialPhotoFields, generateBlurData, generateResizedImage} =
+    options ?? {};
 
   const url = decodeURIComponent(blobPath);
 
@@ -44,7 +41,7 @@ export const extractImageDataFromBlobPath = async (
   const extension = getExtensionFromStorageUrl(url);
 
   const fileBytes = blobPath
-    ? await fetch(url, { cache: 'no-store' }).then(res => res.arrayBuffer())
+    ? await fetch(url, {cache: "no-store"}).then(res => res.arrayBuffer())
     : undefined;
 
   let exifData: ExifData | undefined;
@@ -80,26 +77,26 @@ export const extractImageDataFromBlobPath = async (
       imageResizedBase64 = await resizeImage(fileBytes);
     }
 
-    shouldStripGpsData = GEO_PRIVACY_ENABLED && (
-      Boolean(exifData.tags?.GPSLatitude) ||
-      Boolean(exifData.tags?.GPSLongitude)
-    );
+    shouldStripGpsData =
+      GEO_PRIVACY_ENABLED &&
+      (Boolean(exifData.tags?.GPSLatitude) ||
+        Boolean(exifData.tags?.GPSLongitude));
   }
 
   return {
     blobId,
-    ...exifData && {
+    ...(exifData && {
       photoFormExif: {
-        ...includeInitialPhotoFields && {
-          hidden: 'false',
-          favorite: 'false',
+        ...(includeInitialPhotoFields && {
+          hidden: "false",
+          favorite: "false",
           extension,
           url,
-        },
-        ...generateBlurData && { blurData },
+        }),
+        ...(generateBlurData && {blurData}),
         ...convertExifToFormData(exifData, filmSimulation),
       },
-    },
+    }),
     imageResizedBase64,
     shouldStripGpsData,
     fileBytes,
@@ -108,48 +105,53 @@ export const extractImageDataFromBlobPath = async (
 
 const generateBase64 = async (
   image: ArrayBuffer,
-  middleware: (sharp: Sharp) => Sharp,
-) => 
+  middleware: (sharp: Sharp) => Sharp
+) =>
   middleware(sharp(image))
     .withMetadata()
-    .toFormat('jpeg', { quality: 90 })
+    .toFormat("jpeg", {quality: 90})
     .toBuffer()
-    .then(data => `data:image/jpeg;base64,${data.toString('base64')}`);
+    .then(data => `data:image/jpeg;base64,${data.toString("base64")}`);
 
-const resizeImage = async (image: ArrayBuffer, image_width_resize: number = IMAGE_WIDTH_RESIZE) => 
-  generateBase64(image, sharp => sharp
-    .resize(image_width_resize)
+const resizeImage = async (
+  image: ArrayBuffer,
+  image_width_resize: number = IMAGE_WIDTH_RESIZE
+) => generateBase64(image, sharp => sharp.resize(image_width_resize));
+
+// https://github.com/lovell/sharp/issues/2168
+// https://stackoverflow.com/questions/68429071/in-nodejs-sharp-package-how-to-add-two-image-into-a-single-image
+
+export const addOverlayImageBuffer = async (
+  image: ArrayBuffer,
+  overlayImage: ArrayBuffer
+) =>
+  sharp(image)
+    .composite([{input: Buffer.from(overlayImage), tile: true}])
+    .toBuffer();
+const blurImage = async (image: ArrayBuffer) =>
+  generateBase64(image, sharp =>
+    sharp.resize(IMAGE_WIDTH_BLUR).modulate({saturation: 1.15}).blur(4)
   );
 
-export const resizeImageBuffer = async (image: ArrayBuffer, image_width_resize: number = IMAGE_WIDTH_RESIZE) => 
-    await sharp(image).resize(image_width_resize).toBuffer()
-
-const blurImage = async (image: ArrayBuffer) => 
-  generateBase64(image, sharp => sharp
-    .resize(IMAGE_WIDTH_BLUR)
-    .modulate({ saturation: 1.15 })
-    .blur(4)
-  );
-
-export const resizeImageFromUrl = async (url: string) => 
+export const resizeImageFromUrl = async (url: string) =>
   fetch(decodeURIComponent(url))
     .then(res => res.arrayBuffer())
     .then(buffer => resizeImage(buffer))
     .catch(e => {
       console.log(`Error resizing image from URL (${url})`, e);
-      return '';
+      return "";
     });
 
-export const blurImageFromUrl = async (url: string) => 
+export const blurImageFromUrl = async (url: string) =>
   fetch(decodeURIComponent(url))
     .then(res => res.arrayBuffer())
     .then(buffer => blurImage(buffer))
     .catch(e => {
       console.log(`Error blurring image from URL (${url})`, e);
-      return '';
+      return "";
     });
 
-const GPS_NULL_STRING = '-';
+const GPS_NULL_STRING = "-";
 
 export const removeGpsData = async (image: ArrayBuffer) =>
   sharp(image)
@@ -173,5 +175,5 @@ export const removeGpsData = async (image: ArrayBuffer) =>
         GPSHPositioningError: GPS_NULL_STRING,
       },
     })
-    .toFormat('jpeg', { quality: PRO_MODE_ENABLED ? 95 : 80 })
+    .toFormat("jpeg", {quality: PRO_MODE_ENABLED ? 95 : 80})
     .toBuffer();

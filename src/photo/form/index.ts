@@ -23,13 +23,15 @@ import { GEO_PRIVACY_ENABLED } from '@/site/config';
 import { TAG_FAVS, getValidationMessageForTags } from '@/tag';
 
 type VirtualFields = 'favorite';
+type VirtualFieldsWatermark = 'watermark';
 
-export type PhotoFormData = Record<keyof PhotoDbInsert | VirtualFields, string>
+export type PhotoFormData = Record<keyof PhotoDbInsert | VirtualFields | VirtualFieldsWatermark, string>
 
 export type FieldSetType =
   'text' |
   'email' |
   'password' |
+  'file' |
   'checkbox' |
   'textarea';
 
@@ -119,6 +121,7 @@ const FORM_METADATA = (
   takenAt: { label: 'taken at' },
   takenAtNaive: { label: 'taken at (naive)' },
   priorityOrder: { label: 'priority order' },
+  watermark: { type: 'file', label: 'watermark' },
   favorite: { label: 'favorite', type: 'checkbox', excludeFromInsert: true },
   hidden: { label: 'hidden', type: 'checkbox' },
 });
