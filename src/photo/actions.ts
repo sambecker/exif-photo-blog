@@ -188,13 +188,16 @@ export const updatePhotoAction = async (formData: FormData) =>
 
     let urlToDelete: string | undefined;
     if (photo.hidden && photo.url.includes(photo.id)) {
+      const watermarkBytes = await (
+        formData.get("watermark") as File
+      ).arrayBuffer();
       // Backfill:
       // Anonymize storage url on update if necessary by
       // re-running image upload transfer logic
       const url = await convertUploadToPhoto({
         urlOrigin: photo.url,
         shouldDeleteOrigin: false,
-        watermarkFileBytes: formData.get("watermark"),
+        watermarkFileBytes: watermarkBytes,
       });
       if (url) {
         urlToDelete = photo.url;

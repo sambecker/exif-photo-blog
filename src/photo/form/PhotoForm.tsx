@@ -214,7 +214,7 @@ export default function PhotoForm({
   };
 
   const shouldHideField = (
-    key: keyof PhotoDbInsert | 'favorite',
+    key: keyof PhotoDbInsert | 'favorite' | 'watermark',
     hideIfEmpty?: boolean,
     shouldHide?: (formData: Partial<PhotoFormData>) => boolean,
   ) => {
