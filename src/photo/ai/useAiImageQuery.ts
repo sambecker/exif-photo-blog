@@ -12,6 +12,7 @@ export default function useAiImageQuery(
   const [isLoading, setIsLoading] = useState(false);
 
   const request = useCallback(async () => {
+    console.log('useAiImageQuery', imageBase64?.slice(0, 48),  query);
     if (imageBase64) {
       setIsLoading(true);
       setText('');
