@@ -5,7 +5,7 @@ import PhotoGrid from './PhotoGrid';
 import PhotoGridInfinite from './PhotoGridInfinite';
 import { clsx } from 'clsx/lite';
 import AnimateItems from '@/components/AnimateItems';
-import { ComponentProps, useCallback, useState } from 'react';
+import { JSX, ComponentProps, useCallback, useState } from 'react';
 
 export default function PhotoGridContainer({
   cacheKey,

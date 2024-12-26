@@ -7,6 +7,7 @@ import AnimateItems from '@/components/AnimateItems';
 import { GRID_ASPECT_RATIO } from '@/site/config';
 import { useAppState } from '@/state/AppState';
 import SelectTileOverlay from '@/components/SelectTileOverlay';
+import { JSX } from 'react';
 
 export default function PhotoGrid({
   photos,
