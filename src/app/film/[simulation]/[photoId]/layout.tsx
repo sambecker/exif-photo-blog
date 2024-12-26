@@ -28,12 +28,14 @@ const getPhotosNearIdCachedCached = cache((
   ));
 
 interface PhotoFilmSimulationProps {
-  params: { photoId: string, simulation: FilmSimulation }
+  params: Promise<{ photoId: string, simulation: FilmSimulation }>
 }
 
 export async function generateMetadata({
-  params: { photoId, simulation },
+  params,
 }: PhotoFilmSimulationProps): Promise<Metadata> {
+  const { photoId, simulation } = await params;
+
   const { photo } = await getPhotosNearIdCachedCached(photoId, simulation);
 
   if (!photo) { return {}; }
@@ -62,9 +64,11 @@ export async function generateMetadata({
 }
 
 export default async function PhotoFilmSimulationPage({
-  params: { photoId, simulation },
+  params,
   children,
 }: PhotoFilmSimulationProps & { children: ReactNode }) {
+  const { photoId, simulation } = await params;
+
   const { photo, photos, photosGrid, indexNumber } =
     await getPhotosNearIdCachedCached(photoId, simulation);
 

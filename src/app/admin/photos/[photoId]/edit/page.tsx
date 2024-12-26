@@ -7,10 +7,12 @@ import { blurImageFromUrl, resizeImageFromUrl } from '@/photo/server';
 import { getNextImageUrlForManipulation } from '@/services/next-image';
 
 export default async function PhotoEditPage({
-  params: { photoId },
+  params,
 }: {
-  params: { photoId: string }
+  params: Promise<{ photoId: string }>
 }) {
+  const { photoId } = await params;
+
   const photo = await getPhotoNoStore(photoId, true);
 
   if (!photo) { redirect(PATH_ADMIN); }

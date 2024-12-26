@@ -21,12 +21,14 @@ const getPhotosNearIdCachedCached = cache((photoId: string) =>
   ));
 
 interface PhotoTagProps {
-  params: { photoId: string }
+  params: Promise<{ photoId: string }>
 }
 
 export async function generateMetadata({
-  params: { photoId },
+  params,
 }: PhotoTagProps): Promise<Metadata> {
+  const { photoId } = await params;
+
   const { photo } = await getPhotosNearIdCachedCached(photoId);
 
   if (!photo) { return {}; }
@@ -52,8 +54,10 @@ export async function generateMetadata({
 }
 
 export default async function PhotoTagHiddenPage({
-  params: { photoId },
+  params,
 }: PhotoTagProps) {
+  const { photoId } = await params;
+
   const { photo, photos, photosGrid, indexNumber } =
     await getPhotosNearIdCachedCached(photoId);
 

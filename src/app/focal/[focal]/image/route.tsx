@@ -12,9 +12,11 @@ import { getFocalLengthFromString } from '@/focal';
 
 export async function GET(
   _: Request,
-  context: { params: { focal: string } },
+  context: { params: Promise<{ focal: string }> },
 ) {
-  const focal = getFocalLengthFromString(context.params.focal);
+  const focalString = (await context.params).focal;
+
+  const focal = getFocalLengthFromString(focalString);
 
   const [
     photos,

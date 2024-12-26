@@ -13,12 +13,14 @@ const getPhotosFilmSimulationDataCachedCached =
   }));
 
 interface FilmSimulationProps {
-  params: { simulation: FilmSimulation }
+  params: Promise<{ simulation: FilmSimulation }>
 }
 
 export async function generateMetadata({
-  params: { simulation },
+  params,
 }: FilmSimulationProps): Promise<Metadata> {
+  const { simulation } = await params;
+
   const [
     photos,
     { count, dateRange },
@@ -49,8 +51,10 @@ export async function generateMetadata({
 }
 
 export default async function Share({
-  params: { simulation },
+  params,
 }: FilmSimulationProps) {
+  const { simulation } = await params;
+
   const [
     photos,
     { count, dateRange },
