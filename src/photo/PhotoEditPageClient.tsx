@@ -24,6 +24,10 @@ export default function PhotoEditPageClient({
   imageThumbnailBase64: string
   blurData: string
 }) {
+  console.log({
+    imageThumbnailBase64,
+    blurData,
+  })
   const photoForm = convertPhotoToFormData(photo);
 
   const {

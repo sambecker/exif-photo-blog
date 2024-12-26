@@ -26,6 +26,12 @@ export default async function PhotoEditPage({
     ? await resizeImageFromUrl(getNextImageUrlForManipulation(photo.url))
     : '';
 
+  console.log({
+    photoUrl: photo.url,
+    nextImageUrl: getNextImageUrlForManipulation(photo.url),
+    imageThumbnailBase64,
+  });
+
   const blurData = BLUR_ENABLED
     ? await blurImageFromUrl(
       getNextImageUrlForManipulation(photo.url)
