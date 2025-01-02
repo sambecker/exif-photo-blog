@@ -13,6 +13,7 @@ import {
   formatExposureTime,
 } from '@/utility/exif';
 import { parameterize } from '@/utility/string';
+import { fetchBypass } from '@/utility/vercel';
 import camelcaseKeys from 'camelcase-keys';
 import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
@@ -308,7 +309,9 @@ export const getKeywordsForPhoto = (photo: Photo) =>
     .map(keyword => keyword.toLocaleLowerCase());
 
 export const isNextImageReadyBasedOnPhotos = async (photos: Photo[]) =>
-  photos.length > 0 && fetch(getNextImageUrlForRequest(photos[0].url, 640))
+  photos.length > 0 && fetchBypass(
+    getNextImageUrlForRequest(photos[0].url, 640)
+  )
     .then(response => response.ok)
     .catch(() => false);
 
