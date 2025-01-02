@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 export default function useOnVisible(
-  ref: React.RefObject<HTMLElement>,
+  ref: React.RefObject<HTMLElement | null>,
   onVisible?: () => void
 ) {
   useEffect(() => {
