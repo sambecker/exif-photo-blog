@@ -66,7 +66,8 @@ export default function ImagePhotoGrid({
         >
           <img {...{
             src: getNextImageUrlForRequest(
-              url, nextImageWidth,
+              url,
+              nextImageWidth,
               undefined,
               undefined,
               IS_PREVIEW,
