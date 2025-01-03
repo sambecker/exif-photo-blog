@@ -1,4 +1,8 @@
-import { BASE_URL } from '@/site/config';
+import {
+  BASE_URL,
+  VERCEL_BYPASS_KEY,
+  VERCEL_BYPASS_SECRET,
+} from '@/site/config';
 
 // Explicity defined next.config.js `imageSizes`
 type NextCustomSize = 200;
@@ -14,6 +18,7 @@ export const getNextImageUrlForRequest = (
   size: NextImageSize,
   quality = 75,
   baseUrl = BASE_URL,
+  addBypassSecret = false,
 ) => {
   const url = new URL(`${baseUrl}/_next/image`);
 
@@ -21,10 +26,17 @@ export const getNextImageUrlForRequest = (
   url.searchParams.append('w', size.toString());
   url.searchParams.append('q', quality.toString());
 
+  if (addBypassSecret && VERCEL_BYPASS_SECRET) {
+    url.searchParams.append(VERCEL_BYPASS_KEY, VERCEL_BYPASS_SECRET);
+  }
+
   return url.toString();
 };
 
 // Generate small, low-bandwidth images for quick manipulations such as
 // generating blur data or image thumbnails for AI text generation
-export const getNextImageUrlForManipulation = (imageUrl: string) =>
-  getNextImageUrlForRequest(imageUrl, 640, 90);
+export const getNextImageUrlForManipulation = (
+  imageUrl: string,
+  addBypassSecret = false,
+) =>
+  getNextImageUrlForRequest(imageUrl, 640, 90, undefined, addBypassSecret);

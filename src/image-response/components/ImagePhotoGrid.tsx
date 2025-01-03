@@ -5,6 +5,7 @@ import {
   NextImageSize,
   getNextImageUrlForRequest,
 } from '@/services/next-image';
+import { IS_PREVIEW } from '@/site/config';
 
 export default function ImagePhotoGrid({
   photos,
@@ -64,7 +65,13 @@ export default function ImagePhotoGrid({
           }}
         >
           <img {...{
-            src: getNextImageUrlForRequest(url, nextImageWidth),
+            src: getNextImageUrlForRequest(
+              url,
+              nextImageWidth,
+              undefined,
+              undefined,
+              IS_PREVIEW,
+            ),
             style: {
               width: '100%',
               ...imagePosition === 'center' && {

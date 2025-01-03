@@ -3,7 +3,7 @@ import { formatFocalLength } from '@/focal';
 import { Lens } from '@/lens';
 import { getNextImageUrlForRequest } from '@/services/next-image';
 import { FilmSimulation } from '@/simulation';
-import { HIGH_DENSITY_GRID, SHOW_EXIF_DATA } from '@/site/config';
+import { HIGH_DENSITY_GRID, IS_PREVIEW, SHOW_EXIF_DATA } from '@/site/config';
 import { ABSOLUTE_PATH_FOR_HOME_IMAGE } from '@/site/paths';
 import { formatDate, formatDateFromPostgresString } from '@/utility/date';
 import {
@@ -307,8 +307,16 @@ export const getKeywordsForPhoto = (photo: Photo) =>
     .filter(Boolean)
     .map(keyword => keyword.toLocaleLowerCase());
 
-export const isNextImageReadyBasedOnPhotos = async (photos: Photo[]) =>
-  photos.length > 0 && fetch(getNextImageUrlForRequest(photos[0].url, 640))
+export const isNextImageReadyBasedOnPhotos = async (
+  photos: Photo[],
+): Promise<boolean> =>
+  photos.length > 0 && fetch(getNextImageUrlForRequest(
+    photos[0].url,
+    640,
+    undefined,
+    undefined,
+    IS_PREVIEW,
+  ))
     .then(response => response.ok)
     .catch(() => false);
 

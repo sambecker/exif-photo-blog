@@ -35,6 +35,11 @@ export const IS_PRODUCTION = process.env.NODE_ENV === 'production' && (
   !VERCEL_ENV
 );
 
+export const IS_PREVIEW = VERCEL_ENV === 'preview';
+
+export const VERCEL_BYPASS_KEY = 'x-vercel-protection-bypass';
+export const VERCEL_BYPASS_SECRET = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
+
 // User-facing domain, potential site title
 const SITE_DOMAIN =
   process.env.NEXT_PUBLIC_SITE_DOMAIN ||
