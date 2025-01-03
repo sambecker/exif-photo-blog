@@ -12,7 +12,6 @@ import { PhotoFormData } from './form';
 import { FilmSimulation } from '@/simulation';
 import sharp, { Sharp } from 'sharp';
 import { GEO_PRIVACY_ENABLED, PRO_MODE_ENABLED } from '@/site/config';
-import { fetchBypass } from '@/utility/vercel';
 
 const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
@@ -129,7 +128,7 @@ const blurImage = async (image: ArrayBuffer) =>
   );
 
 export const resizeImageFromUrl = async (url: string) => 
-  fetchBypass(decodeURIComponent(url))
+  fetch(decodeURIComponent(url))
     .then(res => res.arrayBuffer())
     .then(buffer => resizeImage(buffer))
     .catch(e => {
@@ -138,7 +137,7 @@ export const resizeImageFromUrl = async (url: string) =>
     });
 
 export const blurImageFromUrl = async (url: string) => 
-  fetchBypass(decodeURIComponent(url))
+  fetch(decodeURIComponent(url))
     .then(res => res.arrayBuffer())
     .then(buffer => blurImage(buffer))
     .catch(e => {

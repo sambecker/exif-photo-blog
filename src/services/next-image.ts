@@ -35,5 +35,8 @@ export const getNextImageUrlForRequest = (
 
 // Generate small, low-bandwidth images for quick manipulations such as
 // generating blur data or image thumbnails for AI text generation
-export const getNextImageUrlForManipulation = (imageUrl: string) =>
-  getNextImageUrlForRequest(imageUrl, 640, 90);
+export const getNextImageUrlForManipulation = (
+  imageUrl: string,
+  addBypassSecret = false,
+) =>
+  getNextImageUrlForRequest(imageUrl, 640, 90, undefined, addBypassSecret);
