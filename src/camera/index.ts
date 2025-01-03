@@ -9,11 +9,11 @@ export type Camera = {
 };
 
 export interface CameraProps {
-  params: Camera
+  params: Promise<Camera>
 }
 
 export interface PhotoCameraProps {
-  params: Camera & { photoId: string }
+  params: Promise<Camera & { photoId: string }>
 }
 
 export type CameraWithCount = {

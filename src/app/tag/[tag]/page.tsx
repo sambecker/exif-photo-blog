@@ -11,12 +11,14 @@ const getPhotosTagDataCachedCached = cache((tag: string) =>
   getPhotosTagDataCached({ tag, limit: INFINITE_SCROLL_GRID_INITIAL}));
 
 interface TagProps {
-  params: { tag: string }
+  params: Promise<{ tag: string }>
 }
 
 export async function generateMetadata({
-  params: { tag: tagFromParams },
+  params,
 }: TagProps): Promise<Metadata> {
+  const { tag: tagFromParams } = await params;
+
   const tag = decodeURIComponent(tagFromParams);
 
   const [
@@ -51,8 +53,10 @@ export async function generateMetadata({
 }
 
 export default async function TagPage({
-  params: { tag: tagFromParams },
+  params,
 }:TagProps) {
+  const { tag: tagFromParams } = await params;
+
   const tag = decodeURIComponent(tagFromParams);
 
   const [

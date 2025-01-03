@@ -442,7 +442,7 @@ export default function CommandKClient({
                         if (path) {
                           if (path !== pathname) {
                             setKeyPending(key);
-                            startTransition(async () => {
+                            startTransition(() => {
                               shouldCloseAfterPending.current = true;
                               router.push(path, { scroll: true });
                             });

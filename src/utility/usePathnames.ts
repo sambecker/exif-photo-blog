@@ -4,8 +4,8 @@ import { usePathname } from 'next/navigation';
 const usePathnames = () => {
   const pathname = usePathname();
 
-  const currentRef = useRef<string>();
-  const previousRef = useRef<string>();
+  const currentRef = useRef('');
+  const previousRef = useRef('');
 
   useEffect(() => {
     previousRef.current = currentRef.current;

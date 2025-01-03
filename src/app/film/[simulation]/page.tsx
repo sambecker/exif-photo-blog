@@ -9,12 +9,14 @@ const getPhotosFilmSimulationDataCachedCached =
   cache(getPhotosFilmSimulationDataCached);
 
 interface FilmSimulationProps {
-  params: { simulation: FilmSimulation }
+  params: Promise<{ simulation: FilmSimulation }>
 }
 
 export async function generateMetadata({
-  params: { simulation },
+  params,
 }: FilmSimulationProps): Promise<Metadata> {
+  const { simulation } = await params;
+
   const [
     photos,
     { count, dateRange },
@@ -48,8 +50,10 @@ export async function generateMetadata({
 }
 
 export default async function FilmSimulationPage({
-  params: { simulation },
+  params,
 }: FilmSimulationProps) {
+  const { simulation } = await params;
+
   const [
     photos,
     { count, dateRange },

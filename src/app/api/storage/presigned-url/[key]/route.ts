@@ -12,8 +12,10 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 export async function GET(
   _: Request,
-  { params: { key } }: { params: { key: string } },
+  { params }: { params: Promise<{ key: string }> },
 ) {
+  const { key } = await params;
+
   const session = await auth();
   if (session?.user && key) {
     const url = await getSignedUrl(

@@ -33,12 +33,13 @@ if (STATICALLY_OPTIMIZED_PAGES && IS_PRODUCTION) {
 }
 
 interface PhotoProps {
-  params: { photoId: string }
+  params: Promise<{ photoId: string }>
 }
 
 export async function generateMetadata({
-  params: { photoId },
+  params,
 }:PhotoProps): Promise<Metadata> {
+  const { photoId } = await params;
   const { photo } = await getPhotosNearIdCachedCached(photoId);
 
   if (!photo) { return {}; }
@@ -67,9 +68,10 @@ export async function generateMetadata({
 }
 
 export default async function PhotoPage({
-  params: { photoId },
+  params,
   children,
 }: PhotoProps & { children: ReactNode }) {
+  const { photoId } = await params;
   const { photo, photos, photosGrid } =
     await getPhotosNearIdCachedCached(photoId);
 

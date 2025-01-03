@@ -13,7 +13,7 @@ export async function GET(
   _: Request,
   context: CameraProps,
 ) {
-  const camera = getCameraFromParams(context.params);
+  const camera = getCameraFromParams(await context.params);
 
   const [
     photos,

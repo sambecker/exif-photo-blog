@@ -205,7 +205,7 @@ export const updatePhotoAction = async (formData: FormData) =>
     redirect(PATH_ADMIN_PHOTOS);
   });
 
-export const tagMultiplePhotosAction = (
+export const tagMultiplePhotosAction = async (
   tags: string,
   photoIds: string[],
 ) =>

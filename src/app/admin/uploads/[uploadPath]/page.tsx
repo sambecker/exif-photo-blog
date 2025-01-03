@@ -12,10 +12,12 @@ import {
 export const maxDuration = 60;
 
 interface Params {
-  params: { uploadPath: string }
+  params: Promise<{ uploadPath: string }>
 }
 
-export default async function UploadPage({ params: { uploadPath } }: Params) {
+export default async function UploadPage({ params }: Params) {
+  const { uploadPath } = await params;
+
   const {
     blobId,
     photoFormExif,
