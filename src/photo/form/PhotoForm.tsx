@@ -282,7 +282,11 @@ export default function PhotoForm({
           ? createPhotoAction
           : updatePhotoAction
         )(data)
-          .catch(e => setFormActionErrorMessage(e.message))}
+          .catch(e => {
+            if (e.message !== 'NEXT_REDIRECT') {
+              setFormActionErrorMessage(e.message);
+            }
+          })}
         onSubmit={() => {
           setFormActionErrorMessage('');
           (document.activeElement as HTMLElement)?.blur?.();
