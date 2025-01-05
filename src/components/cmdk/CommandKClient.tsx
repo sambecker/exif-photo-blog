@@ -46,6 +46,11 @@ import { FaTag } from 'react-icons/fa';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 import CommandKItem from './CommandKItem';
 import { GRID_HOMEPAGE_ENABLED } from '@/site/config';
+import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
+
+const DIALOG_TITLE = 'Global Command-K Menu';
+const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
 
 const LISTENER_KEYDOWN = 'keydown';
 const MINIMUM_QUERY_LENGTH = 2;
@@ -343,7 +348,6 @@ export default function CommandKClient({
     <Command.Dialog
       open={isOpen}
       onOpenChange={setIsOpen}
-      label="Global Command Menu"
       filter={(value, search, keywords) => {
         const searchFormatted = search.trim().toLocaleLowerCase();
         return (
@@ -360,6 +364,10 @@ export default function CommandKClient({
       >
         <div className="space-y-1.5">
           <div className="relative">
+            <VisuallyHidden.Root>
+              <DialogTitle>{DIALOG_TITLE}</DialogTitle>
+              <DialogDescription>{DIALOG_DESCRIPTION}</DialogDescription>
+            </VisuallyHidden.Root>
             <Command.Input
               onChangeCapture={(e) => setQueryLive(e.currentTarget.value)}
               className={clsx(
