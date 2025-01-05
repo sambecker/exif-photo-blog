@@ -49,6 +49,7 @@ import { createStreamableValue } from 'ai/rsc';
 import { convertUploadToPhoto } from './storage';
 import { UrlAddStatus } from '@/admin/AdminUploadsClient';
 import { convertStringToArray } from '@/utility/string';
+import { after } from 'next/server';
 
 // Private actions
 
@@ -77,11 +78,13 @@ export const addAllUploadsAction = async ({
   tags,
   takenAtLocal,
   takenAtNaiveLocal,
+  shouldRevalidateAllKeysAndPaths = true,
 }: {
   uploadUrls: string[]
   tags?: string
   takenAtLocal: string
   takenAtNaiveLocal: string
+  shouldRevalidateAllKeysAndPaths?: boolean
 }) =>
   runAuthenticatedAdminServerAction(async () => {
     const PROGRESS_TASK_COUNT = AI_TEXT_GENERATION_ENABLED ? 5 : 4;
@@ -169,9 +172,12 @@ export const addAllUploadsAction = async ({
         // eslint-disable-next-line max-len
         stream.error(`${error.message} (${addedUploadUrls.length} of ${uploadUrls.length} photos successfully added)`);
       }
-      revalidateAllKeysAndPaths();
       stream.done();
     })();
+
+    if (shouldRevalidateAllKeysAndPaths) {
+      after(revalidateAllKeysAndPaths)
+    }
 
     return stream.value;
   });
