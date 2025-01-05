@@ -61,7 +61,7 @@ export default function useAiImageQueries(
   const request = useCallback(async (
     fields = ALL_AI_AUTO_GENERATED_FIELDS,
   ) => {
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV !== 'production') {
       console.log('RUNNING AI QUERIES', fields);
     }
     hasRunAllQueriesOnce.current = true;

@@ -9,11 +9,11 @@ export type Lens = {
 };
 
 export interface LensProps {
-  params: Lens
+  params: Promise<Lens>
 }
 
 export interface PhotoLensProps {
-  params: Lens & { photoId: string }
+  params: Promise<Lens & { photoId: string }>
 }
 
 export type LensWithCount = {

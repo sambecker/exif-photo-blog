@@ -9,6 +9,7 @@ import { cleanUpAiTextResponse } from '@/photo/ai';
 
 const RATE_LIMIT_IDENTIFIER = 'openai-image-query';
 const RATE_LIMIT_MAX_QUERIES_PER_HOUR = 100;
+const MODEL = 'gpt-4o';
 
 const openai = AI_TEXT_GENERATION_ENABLED
   ? createOpenAI({ apiKey: process.env.OPENAI_SECRET_KEY })
@@ -45,7 +46,7 @@ const getImageTextArgs = (
   Parameters<typeof streamText>[0] &
   Parameters<typeof generateText>[0]
 ) | undefined => openai ? {
-  model: openai('gpt-4o'),
+  model: openai(MODEL),
   messages: [{
     'role': 'user',
     'content': [
@@ -102,7 +103,7 @@ export const testOpenAiConnection = async () => {
 
   if (openai) {
     return generateText({
-      model: openai('gpt-4o'),
+      model: openai(MODEL),
       messages: [{
         'role': 'user',
         'content': [

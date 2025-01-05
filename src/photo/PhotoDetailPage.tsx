@@ -10,6 +10,7 @@ import { TAG_HIDDEN } from '@/tag';
 import HiddenHeader from '@/tag/HiddenHeader';
 import FocalLengthHeader from '@/focal/FocalLengthHeader';
 import PhotoHeader from './PhotoHeader';
+import { JSX } from 'react';
 
 export default function PhotoDetailPage({
   photo,

@@ -10,9 +10,9 @@ import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 
 export async function GET(
   _: Request,
-  context: { params: { tag: string } },
+  context: { params: Promise<{ tag: string }> },
 ) {
-  const { tag } = context.params;
+  const { tag } = await context.params;
 
   const [
     photos,

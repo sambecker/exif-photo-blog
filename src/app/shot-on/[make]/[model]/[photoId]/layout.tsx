@@ -35,8 +35,10 @@ const getPhotosNearIdCachedCached = cache((
   ));
 
 export async function generateMetadata({
-  params: { photoId, make, model },
+  params,
 }: PhotoCameraProps): Promise<Metadata> {
+  const { photoId, make, model } = await params;
+
   const { photo } = await getPhotosNearIdCachedCached(photoId, make, model);
 
   if (!photo) { return {}; }
@@ -68,9 +70,11 @@ export async function generateMetadata({
 }
 
 export default async function PhotoCameraPage({
-  params: { photoId, make, model },
+  params,
   children,
 }: PhotoCameraProps & { children: ReactNode }) {
+  const { photoId, make, model } = await params;
+
   const { photo, photos, photosGrid, indexNumber } =
     await getPhotosNearIdCachedCached(photoId, make, model);
 

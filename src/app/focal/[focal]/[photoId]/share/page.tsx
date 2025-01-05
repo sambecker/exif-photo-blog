@@ -5,10 +5,12 @@ import { PATH_ROOT } from '@/site/paths';
 import { redirect } from 'next/navigation';
 
 export default async function Share({
-  params: { photoId, focal: focalString },
+  params,
 }: {
-  params: { photoId: string, focal: string }
+  params: Promise<{ photoId: string, focal: string }>
 }) {
+  const { photoId, focal: focalString } = await params;
+
   const focal = getFocalLengthFromString(focalString);
 
   const photo = await getPhotoCached(photoId);

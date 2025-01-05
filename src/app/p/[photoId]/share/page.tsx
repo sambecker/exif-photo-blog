@@ -4,10 +4,12 @@ import { PATH_ROOT } from '@/site/paths';
 import { redirect } from 'next/navigation';
 
 export default async function Share({
-  params: { photoId },
+  params,
 }: {
-  params: { photoId: string }
+  params: Promise<{ photoId: string }>
 }) {
+  const { photoId } = await params;
+
   const photo = await getPhotoCached(photoId);
 
   if (!photo) { return redirect(PATH_ROOT); }

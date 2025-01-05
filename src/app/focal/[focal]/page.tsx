@@ -14,12 +14,14 @@ const getPhotosFocalDataCachedCached = cache((focal: number) =>
   }));
 
 interface FocalLengthProps {
-  params: { focal: string }
+  params: Promise<{ focal: string }>
 }
 
 export async function generateMetadata({
-  params: { focal: focalString },
+  params,
 }: FocalLengthProps): Promise<Metadata> {
+  const { focal: focalString } = await params;
+
   const focal = getFocalLengthFromString(focalString);
 
   const [
@@ -54,8 +56,10 @@ export async function generateMetadata({
 }
 
 export default async function TagPage({
-  params: { focal: focalString },
+  params,
 }:FocalLengthProps) {
+  const { focal: focalString } = await params;
+
   const focal = getFocalLengthFromString(focalString);
 
   const [

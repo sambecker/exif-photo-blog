@@ -5,7 +5,7 @@ import { cwd } from 'process';
 const FONT_FAMILY_IBM_PLEX_MONO = 'IBMPlexMono';
 
 const getFontData = async () => {
-  let data: ArrayBuffer;
+  let data;
   if (typeof fs !== 'undefined') {
     data = fs.readFileSync(path.join(
       cwd(),
