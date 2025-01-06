@@ -94,7 +94,7 @@ const FORM_METADATA = (
     label: 'blur data',
     readOnly: true,
   },
-  url: { label: 'url', readOnly: true },
+  url: { label: 'storage url', readOnly: true },
   extension: { label: 'extension', readOnly: true },
   aspectRatio: { label: 'aspect ratio', readOnly: true },
   make: { label: 'camera make' },
