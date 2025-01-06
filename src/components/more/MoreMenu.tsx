@@ -46,7 +46,7 @@ export default function MoreMenu({
           )}
         >
           {items.map(props =>
-            <MoreMenuItem key={`${props.label}`} {...props} />
+            <MoreMenuItem key={`${props.label}`} {...props} />,
           )}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>

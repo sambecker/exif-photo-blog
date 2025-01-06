@@ -7,7 +7,7 @@ export const getOffsetFromExif = (data: ExifData) =>
   Object.values(data.tags as any)
     .find((value: any) =>
       typeof value === 'string' &&
-      OFFSET_REGEX.test(value)
+      OFFSET_REGEX.test(value),
     ) as string | undefined;
 
 export const getAspectRatioFromExif = (data: ExifData): number => {
@@ -32,7 +32,7 @@ export const getAspectRatioFromExif = (data: ExifData): number => {
 };
 
 export const convertApertureValueToFNumber = (
-  apertureValue?: string
+  apertureValue?: string,
 ): string | undefined => {
   if (apertureValue) {
     const aperture = parseInt(apertureValue);

@@ -80,7 +80,7 @@ const runMigration02 = () =>
 // Wrapper for most queries for JIT table creation/migration running
 const safelyQueryPhotos = async <T>(
   callback: () => Promise<T>,
-  debugMessage: string
+  debugMessage: string,
 ): Promise<T> => {
   let result: T;
 
@@ -369,8 +369,6 @@ export const getPhotos = async (options: GetPhotosOptions = {}) =>
       wheresValues,
       lastValuesIndex,
     } = getWheresFromOptions(options);
-
-    let valuesIndex = lastValuesIndex;
     
     if (wheres) {
       sql.push(wheres);
@@ -382,7 +380,7 @@ export const getPhotos = async (options: GetPhotosOptions = {}) =>
     const {
       limitAndOffset,
       limitAndOffsetValues,
-    } = getLimitAndOffsetFromOptions(options, valuesIndex);
+    } = getLimitAndOffsetFromOptions(options, lastValuesIndex);
 
     // LIMIT + OFFSET
     sql.push(limitAndOffset);
@@ -421,7 +419,7 @@ export const getPhotosNearId = async (
         WHERE twi.row_number >= current.row_number - 1
         LIMIT $${valuesIndex++}
       `,
-      [...wheresValues, photoId, limit]
+      [...wheresValues, photoId, limit],
     )
       .then(({ rows }) => {
         const photo = rows.find(({ id }) => id === photoId);

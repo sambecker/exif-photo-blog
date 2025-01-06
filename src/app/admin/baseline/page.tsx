@@ -184,7 +184,7 @@ export default function ComponentsPage() {
             {DEBUG_LINES.map((_, i) =>
               <div key={i}>
                 Line {(i + 1).toString().padStart(2, '0')}
-              </div>
+              </div>,
             )}
           </div>
         </DivDebugBaselineGrid>

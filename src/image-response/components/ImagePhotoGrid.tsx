@@ -80,7 +80,7 @@ export default function ImagePhotoGrid({
               objectFit: 'cover',
             },
           }} />
-        </div>
+        </div>,
       )}
     </div>
   );

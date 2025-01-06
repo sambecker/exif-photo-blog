@@ -58,7 +58,7 @@ export const cameraFromPhoto = (
 export const formatCameraText = (
   { make: makeRaw, model: modelRaw }: Camera,
   includeMake: 'always' | 'never' | 'if-not-apple' = 'if-not-apple',
-  removeIPhoneOnLongModels?: boolean
+  removeIPhoneOnLongModels?: boolean,
 ) => {
   // Remove 'Corporation' from makes like 'Nikon Corporation'
   const make = makeRaw.replace(/ Corporation/i, '');

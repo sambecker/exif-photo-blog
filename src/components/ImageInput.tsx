@@ -104,7 +104,7 @@ export default function ImageInput({
 
                   // Specify wide gamut to avoid data loss while resizing
                   const ctx = canvas?.getContext(
-                    '2d', { colorSpace: 'display-p3' }
+                    '2d', { colorSpace: 'display-p3' },
                   );
 
                   if ((shouldResize || isPng) && canvas && ctx) {

@@ -112,7 +112,7 @@ export interface PhotoSetAttributes {
 
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
   const photoDb = camelcaseKeys(
-    photoDbRaw as unknown as Record<string, unknown>
+    photoDbRaw as unknown as Record<string, unknown>,
   ) as unknown as PhotoDb;
   return {
     ...photoDb,
@@ -193,7 +193,7 @@ export const generateOgImageMetaForPhotos = (photos: Photo[]): Metadata => {
 };
 
 const PHOTO_ID_FORWARDING_TABLE: Record<string, string> = JSON.parse(
-  process.env.PHOTO_ID_FORWARDING_TABLE || '{}'
+  process.env.PHOTO_ID_FORWARDING_TABLE || '{}',
 );
 
 export const translatePhotoId = (id: string) =>
@@ -251,7 +251,7 @@ export const descriptionForPhotoSet = (
 
 const sortPhotosByDate = (
   photos: Photo[],
-  order: 'ASC' | 'DESC' = 'DESC'
+  order: 'ASC' | 'DESC' = 'DESC',
 ) =>
   [...photos].sort((a, b) => order === 'DESC'
     ? b.takenAt.getTime() - a.takenAt.getTime()

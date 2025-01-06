@@ -117,14 +117,14 @@ const generateBase64 = async (
 
 const resizeImage = async (image: ArrayBuffer) => 
   generateBase64(image, sharp => sharp
-    .resize(IMAGE_WIDTH_RESIZE)
+    .resize(IMAGE_WIDTH_RESIZE),
   );
 
 const blurImage = async (image: ArrayBuffer) => 
   generateBase64(image, sharp => sharp
     .resize(IMAGE_WIDTH_BLUR)
     .modulate({ saturation: 1.15 })
-    .blur(4)
+    .blur(4),
   );
 
 export const resizeImageFromUrl = async (url: string) => 

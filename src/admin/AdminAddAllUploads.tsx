@@ -58,7 +58,7 @@ export default function AdminAddAllUploads({
       for await (const data of readStreamableValue(stream)) {
         setButtonText(addedUploadCount.current === 0
           ? `Adding 1 of ${storageUrls.length}`
-          : `Adding ${addedUploadCount.current + 1} of ${storageUrls.length}`
+          : `Adding ${addedUploadCount.current + 1} of ${storageUrls.length}`,
         );
         setUrlAddStatuses(current => {
           const update = current.map(status =>
@@ -70,7 +70,7 @@ export default function AdminAddAllUploads({
                 statusMessage: data.statusMessage,
                 progress: data.progress,
               }
-              : status
+              : status,
           );
           addedUploadCount.current = update
             .filter(({ status }) => status === 'added')

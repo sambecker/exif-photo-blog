@@ -14,7 +14,7 @@ const getFontData = async () => {
   } else {
     data = await fetch(new URL(
       '/public/fonts/IBMPlexMono-Medium.ttf',
-      import.meta.url
+      import.meta.url,
     )).then(res => res.arrayBuffer());
   }
   return data;

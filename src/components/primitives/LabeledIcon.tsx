@@ -44,7 +44,7 @@ export default function LabeledIcon({
     {children && type !== 'icon-only' &&
       <span className={clsx(
         'uppercase',
-        debug && 'bg-gray-700'
+        debug && 'bg-gray-700',
       )}>
         {children}
       </span>}

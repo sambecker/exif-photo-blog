@@ -70,7 +70,7 @@ export default function FieldSetWithStatus({
             </span>}
           {isModified && !error &&
             <span className={clsx(
-              'text-main font-medium text-[0.9rem] -ml-1.5 translate-y-[-1px]'
+              'text-main font-medium text-[0.9rem] -ml-1.5 translate-y-[-1px]',
             )}>
               *
             </span>}

@@ -176,7 +176,7 @@ export const addAllUploadsAction = async ({
     })();
 
     if (shouldRevalidateAllKeysAndPaths) {
-      after(revalidateAllKeysAndPaths)
+      after(revalidateAllKeysAndPaths);
     }
 
     return stream.value;
@@ -355,7 +355,7 @@ export const syncPhotoAction = async (photoId: string) =>
           semanticDescription: aiSemanticDescription,
         } = await generateAiImageQueries(
           imageResizedBase64,
-          AI_TEXT_AUTO_GENERATED_FIELDS
+          AI_TEXT_AUTO_GENERATED_FIELDS,
         );
 
         const photoFormDbInsert = convertFormDataToPhotoDbInsert({

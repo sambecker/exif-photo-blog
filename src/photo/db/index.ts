@@ -21,7 +21,7 @@ export const areOptionsSensitive = (options: GetPhotosOptions) =>
 
 export const getWheresFromOptions = (
   options: GetPhotosOptions,
-  initialValuesIndex = 1
+  initialValuesIndex = 1,
 ) => {
   const {
     hidden = 'exclude',

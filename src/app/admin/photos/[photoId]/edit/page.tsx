@@ -28,13 +28,13 @@ export default async function PhotoEditPage({
   // Only generate image thumbnails when AI generation is enabled
   const imageThumbnailBase64 = AI_TEXT_GENERATION_ENABLED
     ? await resizeImageFromUrl(
-      getNextImageUrlForManipulation(photo.url, IS_PREVIEW)
+      getNextImageUrlForManipulation(photo.url, IS_PREVIEW),
     )
     : '';
 
   const blurData = BLUR_ENABLED
     ? await blurImageFromUrl(
-      getNextImageUrlForManipulation(photo.url, IS_PREVIEW)
+      getNextImageUrlForManipulation(photo.url, IS_PREVIEW),
     )
     : '';
 

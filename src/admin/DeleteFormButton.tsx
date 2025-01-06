@@ -9,7 +9,7 @@ import { BiTrash } from 'react-icons/bi';
 export default function DeleteFormButton (
   props: ComponentProps<typeof SubmitButtonWithStatus> & {
     clearLocalState?: boolean
-  }
+  },
 ) {
   const {
     onFormSubmit: onFormSubmitProps,

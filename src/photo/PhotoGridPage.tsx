@@ -27,7 +27,7 @@ export default function PhotoGridPage({
   
   useEffect(
     () => () => setSelectedPhotoIds?.(undefined),
-    [setSelectedPhotoIds]
+    [setSelectedPhotoIds],
   );
 
   return (

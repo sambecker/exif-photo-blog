@@ -262,7 +262,7 @@ export default function SiteChecklistClient({
                 )}
                 {' '} 
                 and connect to project
-              </>
+              </>,
               )}
             {hasCloudflareR2Storage
               ? renderSubStatus('checked', 'Cloudflare R2: connected')

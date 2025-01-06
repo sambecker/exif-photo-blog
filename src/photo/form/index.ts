@@ -133,7 +133,7 @@ export const convertFormKeysToLabels = (keys: (keyof PhotoFormData)[]) =>
   keys.map(key => FORM_METADATA()[key].label.toUpperCase());
 
 export const getFormErrors = (
-  formData: Partial<PhotoFormData>
+  formData: Partial<PhotoFormData>,
 ): Partial<Record<keyof PhotoFormData, string>> =>
   Object.keys(formData).reduce((acc, key) => ({
     ...acc,
@@ -147,7 +147,7 @@ export const isFormValid = (formData: Partial<PhotoFormData>) =>
       (!required || Boolean(formData[key])) &&
       (!validate?.(formData[key])) &&
       // eslint-disable-next-line max-len
-      (!validateStringMaxLength || (formData[key]?.length ?? 0) <= validateStringMaxLength)
+      (!validateStringMaxLength || (formData[key]?.length ?? 0) <= validateStringMaxLength),
   );
 
 export const formHasTextContent = ({
@@ -302,12 +302,12 @@ export const getChangedFormFields = (
     .keys(current)
     .filter(key =>
       (original[key as keyof PhotoFormData] ?? '') !==
-      (current[key as keyof PhotoFormData] ?? '')
+      (current[key as keyof PhotoFormData] ?? ''),
     ) as (keyof PhotoFormData)[];
 };
 
 export const generateTakenAtFields = (
-  form?: Partial<PhotoFormData>
+  form?: Partial<PhotoFormData>,
 ): { takenAt: string, takenAtNaive: string } => ({
   takenAt: form?.takenAt || generateLocalPostgresString(),
   takenAtNaive: form?.takenAtNaive || generateLocalNaivePostgresString(),

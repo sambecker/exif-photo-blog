@@ -9,7 +9,7 @@ const safelyGetMediaQuery = () => typeof window !== 'undefined'
 
 const usePrefersReducedMotion = () => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState<boolean>(
-    safelyGetMediaQuery()?.matches ?? false
+    safelyGetMediaQuery()?.matches ?? false,
   );
 
   useEffect(() => {
