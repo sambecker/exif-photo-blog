@@ -8,7 +8,7 @@ import {
   dateRangeForPhotos,
   titleForPhoto,
 } from '.';
-import ShareButton from '@/components/ShareButton';
+import ShareButton from '@/share/ShareButton';
 import AnimateItems from '@/components/AnimateItems';
 import { ReactNode } from 'react';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
@@ -140,8 +140,15 @@ export default function PhotoHeader({
                 {entityDescription}
                 {sharePath &&
                   <ShareButton
+                    photos={photos}
+                    tag={tag}
+                    camera={camera}
+                    simulation={simulation}
+                    focal={focal}
+                    count={count}
+                    dateRange={dateRange}
                     className="translate-y-[1.5px]"
-                    path={sharePath}
+                    prefetch
                     dim
                   />}
               </>

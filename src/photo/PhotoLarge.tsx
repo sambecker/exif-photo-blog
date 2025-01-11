@@ -15,10 +15,9 @@ import Link from 'next/link';
 import {
   pathForFocalLength,
   pathForPhoto,
-  pathForPhotoShare,
 } from '@/site/paths';
 import PhotoTags from '@/tag/PhotoTags';
-import ShareButton from '@/components/ShareButton';
+import ShareButton from '@/share/ShareButton';
 import DownloadButton from '@/components/DownloadButton';
 import PhotoCamera from '../camera/PhotoCamera';
 import { cameraFromPhoto } from '@/camera';
@@ -54,7 +53,6 @@ export default function PhotoLarge({
   shouldShareCamera,
   shouldShareSimulation,
   shouldShareFocalLength,
-  shouldScrollOnShare,
   includeFavoriteInAdminMenu,
   onVisible,
 }: {
@@ -258,17 +256,14 @@ export default function PhotoLarge({
               )}>
                 {shouldShare &&
                   <ShareButton
-                    path={pathForPhotoShare({
-                      photo,
-                      tag: shouldShareTag ? primaryTag : undefined,
-                      camera: shouldShareCamera ? camera : undefined,
-                      // eslint-disable-next-line max-len
-                      simulation: shouldShareSimulation ? photo.filmSimulation : undefined,
-                      // eslint-disable-next-line max-len
-                      focal: shouldShareFocalLength ? photo.focalLength : undefined,
-                    })}
+                    photo={photo}
+                    tag={shouldShareTag ? primaryTag : undefined}
+                    camera={shouldShareCamera ? camera : undefined}
+                    // eslint-disable-next-line max-len
+                    simulation={shouldShareSimulation? photo.filmSimulation : undefined}
+                    // eslint-disable-next-line max-len
+                    focal={shouldShareFocalLength ? photo.focalLength : undefined}
                     prefetch={prefetchRelatedLinks}
-                    shouldScroll={shouldScrollOnShare}
                   />}
                 {ALLOW_PUBLIC_DOWNLOADS && 
                   <DownloadButton 

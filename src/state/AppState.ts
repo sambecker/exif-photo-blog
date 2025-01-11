@@ -3,7 +3,7 @@ import { AnimationConfig } from '@/components/AnimateItems';
 import { ShareModalProps } from '@/share';
 
 export interface AppStateContext {
-  // GLOBAL
+  // CORE
   previousPathname?: string
   hasLoaded?: boolean
   setHasLoaded?: Dispatch<SetStateAction<boolean>>

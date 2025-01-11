@@ -8,6 +8,7 @@ import { getAuthAction } from '@/auth/actions';
 import useSWR from 'swr';
 import { HIGH_DENSITY_GRID, MATTE_PHOTOS } from '@/site/config';
 import { getPhotosHiddenMetaCachedAction } from '@/photo/actions';
+import { ShareModalProps } from '@/share';
 
 export default function AppStateProvider({
   children,
@@ -25,8 +26,11 @@ export default function AppStateProvider({
     useState<AnimationConfig>();
   const [shouldRespondToKeyboardCommands, setShouldRespondToKeyboardCommands] =
     useState(true);
+  // MODAL
   const [isCommandKOpen, setIsCommandKOpen] =
     useState(false);
+  const [shareModalProps, setShareModalProps] =
+    useState<ShareModalProps>();
   // ADMIN
   const [userEmail, setUserEmail] =
     useState<string>();
@@ -89,8 +93,11 @@ export default function AppStateProvider({
         clearNextPhotoAnimation: () => setNextPhotoAnimation?.(undefined),
         shouldRespondToKeyboardCommands,
         setShouldRespondToKeyboardCommands,
+        // MODAL
         isCommandKOpen,
         setIsCommandKOpen,
+        shareModalProps,
+        setShareModalProps,
         // ADMIN
         userEmail,
         setUserEmail,

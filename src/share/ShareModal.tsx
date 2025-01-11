@@ -10,20 +10,21 @@ import { toastSuccess } from '@/toast';
 import { PiXLogo } from 'react-icons/pi';
 import { SHOW_SOCIAL } from '@/site/config';
 import { generateXPostText } from '@/utility/social';
+import { useAppState } from '@/state/AppState';
 
 export default function ShareModal({
   title,
   pathShare,
-  pathClose,
   socialText,
   children,
 }: {
   title?: string
   pathShare: string
-  pathClose: string
   socialText: string
   children: ReactNode
 }) {
+  const { setShareModalProps } = useAppState();
+
   const renderIcon = (
     icon: JSX.Element,
     action: () => void,
@@ -44,7 +45,7 @@ export default function ShareModal({
     </div>;
 
   return (
-    <Modal onClosePath={pathClose}>
+    <Modal onClose={() => setShareModalProps?.(undefined)}>
       <div className="space-y-3 md:space-y-4 w-full">
         {title &&
           <div className={clsx(
