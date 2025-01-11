@@ -27,20 +27,20 @@ export default function PhotoHeader({
   entity,
   entityVerb = 'PHOTO',
   entityDescription,
-  sharePath,
   indexNumber,
   count,
   dateRange,
+  includeShareButton,
 }: {
   photos: Photo[]
   selectedPhoto?: Photo
   entity?: ReactNode
   entityVerb?: string
   entityDescription?: string
-  sharePath?: string
   indexNumber?: number
   count?: number
   dateRange?: PhotoDateRange
+  includeShareButton?: boolean
 } & PhotoSetCategory) {
   const { isGridHighDensity } = useAppState();
 
@@ -138,7 +138,7 @@ export default function PhotoHeader({
             {headerType === 'photo-set'
               ? <>
                 {entityDescription}
-                {sharePath &&
+                {includeShareButton &&
                   <ShareButton
                     photos={photos}
                     tag={tag}
