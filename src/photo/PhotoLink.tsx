@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { Photo, PhotoSetAttributes, titleForPhoto } from '@/photo';
+import { Photo, PhotoSetCategory, titleForPhoto } from '@/photo';
 import Link from 'next/link';
 import { AnimationConfig } from '../components/AnimateItems';
 import { useAppState } from '@/state/AppState';
@@ -26,7 +26,7 @@ export default function PhotoLink({
   nextPhotoAnimation?: AnimationConfig
   className?: string
   children?: ReactNode
-} & PhotoSetAttributes) {
+} & PhotoSetCategory) {
   const { setNextPhotoAnimation } = useAppState();
   
   return (

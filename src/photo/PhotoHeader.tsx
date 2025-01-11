@@ -4,7 +4,7 @@ import { clsx } from 'clsx/lite';
 import {
   Photo,
   PhotoDateRange,
-  PhotoSetAttributes,
+  PhotoSetCategory,
   dateRangeForPhotos,
   titleForPhoto,
 } from '.';
@@ -41,7 +41,7 @@ export default function PhotoHeader({
   indexNumber?: number
   count?: number
   dateRange?: PhotoDateRange
-} & PhotoSetAttributes) {
+} & PhotoSetCategory) {
   const { isGridHighDensity } = useAppState();
 
   const { start, end } = dateRangeForPhotos(photos, dateRange);

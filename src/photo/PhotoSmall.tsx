@@ -1,6 +1,6 @@
 import {
   Photo,
-  PhotoSetAttributes,
+  PhotoSetCategory,
   altTextForPhoto,
   doesPhotoNeedBlurCompatibility,
 } from '.';
@@ -28,7 +28,7 @@ export default function PhotoSmall({
   className?: string
   prefetch?: boolean
   onVisible?: () => void
-} & PhotoSetAttributes) {
+} & PhotoSetCategory) {
   const ref = useRef<HTMLAnchorElement>(null);
 
   useOnVisible(ref, onVisible);

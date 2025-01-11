@@ -1,4 +1,4 @@
-import { Photo, PhotoSetAttributes } from '@/photo';
+import { Photo, PhotoSetCategory } from '@/photo';
 import { BASE_URL, GRID_HOMEPAGE_ENABLED } from './config';
 import { Camera } from '@/camera';
 import { FilmSimulation } from '@/simulation';
@@ -75,7 +75,7 @@ export const PATHS_TO_CACHE = [
   ...PATHS_ADMIN,
 ];
 
-type PhotoPathParams  = { photo: PhotoOrPhotoId } & PhotoSetAttributes;
+type PhotoPathParams  = { photo: PhotoOrPhotoId } & PhotoSetCategory;
 
 // Absolute paths
 export const ABSOLUTE_PATH_FOR_HOME_IMAGE = `${BASE_URL}/home-image`;
@@ -274,7 +274,7 @@ export const isPathProtected = (pathname?: string) =>
 
 export const getPathComponents = (pathname = ''): {
   photoId?: string
-} & PhotoSetAttributes => {
+} & PhotoSetCategory => {
   const photoIdFromPhoto = pathname.match(
     new RegExp(`^${PREFIX_PHOTO}/([^/]+)`))?.[1];
   const photoIdFromTag = pathname.match(

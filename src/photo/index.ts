@@ -102,12 +102,18 @@ export interface Photo extends PhotoDb {
   takenAtNaiveFormatted: string
 }
 
-export interface PhotoSetAttributes {
+export interface PhotoSetCategory {
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
   focal?: number
   lens?: Lens // Unimplemented as a set
+}
+
+export interface PhotoSetAttributes {
+  photos: Photo[]
+  count?: number
+  dateRange?: PhotoDateRange
 }
 
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {

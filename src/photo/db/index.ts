@@ -1,6 +1,6 @@
 import { PRIORITY_ORDER_ENABLED } from '@/site/config';
 import { parameterize } from '@/utility/string';
-import { PhotoSetAttributes } from '..';
+import { PhotoSetCategory } from '..';
 
 export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 export const PHOTO_DEFAULT_LIMIT = 100;
@@ -14,7 +14,7 @@ export type GetPhotosOptions = {
   takenAfterInclusive?: Date
   updatedBefore?: Date
   hidden?: 'exclude' | 'include' | 'only'
-} & PhotoSetAttributes;
+} & PhotoSetCategory;
 
 export const areOptionsSensitive = (options: GetPhotosOptions) =>
   options.hidden === 'include' || options.hidden === 'only';

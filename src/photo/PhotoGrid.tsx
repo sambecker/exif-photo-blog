@@ -1,6 +1,6 @@
 'use client';
 
-import { Photo, PhotoSetAttributes } from '.';
+import { Photo, PhotoSetCategory } from '.';
 import PhotoMedium from './PhotoMedium';
 import { clsx } from 'clsx/lite';
 import AnimateItems from '@/components/AnimateItems';
@@ -41,7 +41,7 @@ export default function PhotoGrid({
   canSelect?: boolean
   onLastPhotoVisible?: () => void
   onAnimationComplete?: () => void
-} & PhotoSetAttributes) {
+} & PhotoSetCategory) {
   const {
     isUserSignedIn,
     selectedPhotoIds,
