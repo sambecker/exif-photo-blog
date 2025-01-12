@@ -4,9 +4,9 @@ import { getCookie, storeCookie } from './cookie';
 // string:    timezone
 // undefined: timezone must be resolved on the client
 // null:      timezone not required
-export type Timezone = string | null | undefined;
+export type Timezone = string | undefined | null;
 
-export const TIMEZONE_COOKIE_NAME = 'client-timezone';
+export const TIMEZONE_COOKIE_NAME = 'timezone-client';
 
 export const storeTimezoneCookie = () =>
   storeCookie(
