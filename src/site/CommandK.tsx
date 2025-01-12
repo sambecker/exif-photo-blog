@@ -22,12 +22,8 @@ import { labelForFilmSimulation } from '@/vendors/fujifilm';
 import { getUniqueFocalLengths } from '@/photo/db/query';
 import { formatFocalLength } from '@/focal';
 import { TbCone } from 'react-icons/tb';
-import { cookies } from 'next/headers';
-import { TIMEZONE_COOKIE_NAME } from '@/utility/timezone';
 
 export default async function CommandK() {
-  const timezone = (await cookies()).get(TIMEZONE_COOKIE_NAME)?.value;
-
   const [
     count,
     tags,
@@ -92,6 +88,5 @@ export default async function CommandK() {
     ]}
     showDebugTools={ADMIN_DEBUG_TOOLS_ENABLED}
     footer={photoQuantityText(count, false)}
-    timezone={timezone}
   />;
 }
