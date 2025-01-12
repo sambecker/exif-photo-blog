@@ -13,14 +13,14 @@ export default function PhotoDate({
 }) {
   const date = useMemo(() => {
     const date = new Date(dateType === 'takenAt'
-      ? photo.takenAt
+      ? photo.takenAtNaive
       : dateType === 'createdAt'
         ? photo.createdAt
         : photo.updatedAt);
     return isNaN(date.getTime()) ? new Date() : date;
   }, [
     dateType,
-    photo.takenAt,
+    photo.takenAtNaive,
     photo.createdAt,
     photo.updatedAt,
   ]);
