@@ -2,7 +2,7 @@
 
 import {
   Photo,
-  PhotoSetAttributes,
+  PhotoSetCategory,
   altTextForPhoto,
   doesPhotoNeedBlurCompatibility,
 } from '.';
@@ -32,7 +32,7 @@ export default function PhotoMedium({
   prefetch?: boolean
   className?: string
   onVisible?: () => void
-} & PhotoSetAttributes) {
+} & PhotoSetCategory) {
   const ref = useRef<HTMLAnchorElement>(null);
 
   useOnVisible(ref, onVisible);

@@ -1,5 +1,5 @@
 import AnimateItems from '@/components/AnimateItems';
-import { Photo, PhotoDateRange, PhotoSetAttributes } from '.';
+import { Photo, PhotoDateRange, PhotoSetCategory } from '.';
 import PhotoLarge from './PhotoLarge';
 import SiteGrid from '@/components/SiteGrid';
 import PhotoGrid from './PhotoGrid';
@@ -34,7 +34,7 @@ export default function PhotoDetailPage({
   dateRange?: PhotoDateRange
   shouldShare?: boolean
   includeFavoriteInAdminMenu?: boolean
-} & PhotoSetAttributes) {
+} & PhotoSetCategory) {
   let customHeader: JSX.Element | undefined;
 
   if (tag) {

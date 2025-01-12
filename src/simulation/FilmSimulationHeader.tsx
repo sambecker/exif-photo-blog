@@ -1,6 +1,5 @@
 import { Photo, PhotoDateRange } from '@/photo';
 import { FilmSimulation, descriptionForFilmSimulationPhotos } from '.';
-import { pathForFilmSimulationShare } from '@/site/paths';
 import PhotoHeader from '@/photo/PhotoHeader';
 import PhotoFilmSimulation from
   '@/simulation/PhotoFilmSimulation';
@@ -28,10 +27,10 @@ export default function FilmSimulationHeader({
         photos, undefined, count, dateRange)}
       photos={photos}
       selectedPhoto={selectedPhoto}
-      sharePath={pathForFilmSimulationShare(simulation)}
       indexNumber={indexNumber}
       count={count}
       dateRange={dateRange}
+      includeShareButton
     />
   );
 }

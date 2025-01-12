@@ -99,7 +99,7 @@ Application behavior can be changed by configuring the following environment var
 #### Site meta
 - `NEXT_PUBLIC_SITE_TITLE` (seen in browser tab)
 - `NEXT_PUBLIC_SITE_DESCRIPTION` (seen in nav, beneath title)
-- `NEXT_PUBLIC_SITE_ABOUT` (seen in grid sidebar—accepted rich formatting tags: `<b>`, `<strong>`, `<i>`, `<em>`, `<u>`, `<br>`)
+- `NEXT_PUBLIC_SITE_ABOUT` (seen in grid sidebar—accepts rich formatting tags: `<b>`, `<strong>`, `<i>`, `<em>`, `<u>`, `<br>`)
 
 #### Site behavior
 - `NEXT_PUBLIC_GRID_HOMEPAGE = 1` shows grid layout on homepage

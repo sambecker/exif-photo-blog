@@ -4,11 +4,11 @@ import { clsx } from 'clsx/lite';
 import {
   Photo,
   PhotoDateRange,
-  PhotoSetAttributes,
+  PhotoSetCategory,
   dateRangeForPhotos,
   titleForPhoto,
 } from '.';
-import ShareButton from '@/components/ShareButton';
+import ShareButton from '@/share/ShareButton';
 import AnimateItems from '@/components/AnimateItems';
 import { ReactNode } from 'react';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
@@ -27,21 +27,21 @@ export default function PhotoHeader({
   entity,
   entityVerb = 'PHOTO',
   entityDescription,
-  sharePath,
   indexNumber,
   count,
   dateRange,
+  includeShareButton,
 }: {
   photos: Photo[]
   selectedPhoto?: Photo
   entity?: ReactNode
   entityVerb?: string
   entityDescription?: string
-  sharePath?: string
   indexNumber?: number
   count?: number
   dateRange?: PhotoDateRange
-} & PhotoSetAttributes) {
+  includeShareButton?: boolean
+} & PhotoSetCategory) {
   const { isGridHighDensity } = useAppState();
 
   const { start, end } = dateRangeForPhotos(photos, dateRange);
@@ -138,10 +138,17 @@ export default function PhotoHeader({
             {headerType === 'photo-set'
               ? <>
                 {entityDescription}
-                {sharePath &&
+                {includeShareButton &&
                   <ShareButton
+                    photos={photos}
+                    tag={tag}
+                    camera={camera}
+                    simulation={simulation}
+                    focal={focal}
+                    count={count}
+                    dateRange={dateRange}
                     className="translate-y-[1.5px]"
-                    path={sharePath}
+                    prefetch
                     dim
                   />}
               </>

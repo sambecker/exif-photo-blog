@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import {
   Photo,
-  PhotoSetAttributes,
+  PhotoSetCategory,
   getNextPhoto,
   getPreviousPhoto,
 } from '@/photo';
@@ -32,7 +32,7 @@ export default function PhotoPrevNext({
   photo?: Photo
   photos?: Photo[]
   className?: string
-} & PhotoSetAttributes) {
+} & PhotoSetCategory) {
   const router = useRouter();
 
   const {

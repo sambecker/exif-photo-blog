@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction, createContext, useContext } from 'react';
 import { AnimationConfig } from '@/components/AnimateItems';
+import { ShareModalProps } from '@/share';
 
 export interface AppStateContext {
   // CORE
@@ -13,9 +14,12 @@ export interface AppStateContext {
   clearNextPhotoAnimation?: () => void
   shouldRespondToKeyboardCommands?: boolean
   setShouldRespondToKeyboardCommands?: Dispatch<SetStateAction<boolean>>
+  // MODAL
   isCommandKOpen?: boolean
   setIsCommandKOpen?: Dispatch<SetStateAction<boolean>>
-  //  ADMIN
+  shareModalProps?: ShareModalProps
+  setShareModalProps?: Dispatch<SetStateAction<ShareModalProps | undefined>>
+  // ADMIN
   userEmail?: string
   setUserEmail?: Dispatch<SetStateAction<string | undefined>>
   isUserSignedIn?: boolean
