@@ -247,6 +247,9 @@ export default function PhotoLarge({
                   // Prevent collision with admin button
                   !hasNonDateContent && isUserSignedIn && 'md:pr-7',
                 )}
+                // Created at is a naive datetime which
+                // does not require a timezone
+                timezone={null}
               />
               <div className={clsx(
                 'flex gap-1 translate-y-[0.5px]',

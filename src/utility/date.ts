@@ -1,25 +1,52 @@
-import { format, parseISO, parse } from 'date-fns';
+import { parseISO, parse, format } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
+import { Timezone } from './timezone';
 
-const DATE_STRING_FORMAT_TINY     = 'dd MMM yy';
-const DATE_STRING_FORMAT_SHORT    = 'dd MMM yyyy';
-const DATE_STRING_FORMAT_MEDIUM   = 'dd MMM yy h:mma';
-const DATE_STRING_FORMAT          = 'dd MMM yyyy h:mma';
-const DATE_STRING_FORMAT_POSTGRES = 'yyyy-MM-dd HH:mm:ss';
+const DATE_STRING_FORMAT_TINY               = 'dd MMM yy';
+const DATE_STRING_FORMAT_TINY_PLACEHOLDER   = '00 000 00';
+
+const DATE_STRING_FORMAT_SHORT              = 'dd MMM yyyy';
+const DATE_STRING_FORMAT_SHORT_PLACEHOLDER  = '00 000 0000';
+
+const DATE_STRING_FORMAT_MEDIUM             = 'dd MMM yy h:mma';
+const DATE_STRING_FORMAT_MEDIUM_PLACEHOLDER = '00 000 00 00:0000';
+
+const DATE_STRING_FORMAT_LONG               = 'dd MMM yyyy h:mma';
+const DATE_STRING_FORMAT_LONG_PLACEHOLDER   = '00 000 0000 00:0000';
+
+const DATE_STRING_FORMAT_POSTGRES           = 'yyyy-MM-dd HH:mm:ss';
 
 type AmbiguousTimestamp = number | string;
 
 type Length = 'tiny' | 'short' | 'medium' | 'long';
 
-export const formatDate = (date: Date, length: Length = 'long') => {
+export const formatDate = (
+  date: Date,
+  length: Length = 'long',
+  timezone?: Timezone,
+  showPlaceholder?: boolean,
+) => {
   switch (length) {
-  case 'tiny':
-    return format(date, DATE_STRING_FORMAT_TINY);
-  case 'short':
-    return format(date, DATE_STRING_FORMAT_SHORT);
-  case 'medium':
-    return format(date, DATE_STRING_FORMAT_MEDIUM);
-  default:
-    return format(date, DATE_STRING_FORMAT);
+  case 'tiny': return showPlaceholder
+    ? DATE_STRING_FORMAT_TINY_PLACEHOLDER
+    : timezone
+      ? formatInTimeZone(date, timezone, DATE_STRING_FORMAT_TINY)
+      : format(date, DATE_STRING_FORMAT_TINY);
+  case 'short': return showPlaceholder
+    ? DATE_STRING_FORMAT_SHORT_PLACEHOLDER
+    : timezone
+      ? formatInTimeZone(date, timezone, DATE_STRING_FORMAT_SHORT)
+      : format(date, DATE_STRING_FORMAT_SHORT);
+  case 'medium': return showPlaceholder
+    ? DATE_STRING_FORMAT_MEDIUM_PLACEHOLDER
+    : timezone
+      ? formatInTimeZone(date, timezone, DATE_STRING_FORMAT_MEDIUM)
+      : format(date, DATE_STRING_FORMAT_MEDIUM);
+  default: return showPlaceholder
+    ? DATE_STRING_FORMAT_LONG_PLACEHOLDER
+    : timezone
+      ? formatInTimeZone(date, timezone, DATE_STRING_FORMAT_LONG)
+      : format(date, DATE_STRING_FORMAT_LONG);
   }
 };
 

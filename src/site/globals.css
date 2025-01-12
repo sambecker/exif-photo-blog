@@ -164,6 +164,10 @@
     @apply
       bg-white dark:bg-black
   }
+  .bg-dim {
+    @apply
+      bg-gray-100 dark:bg-gray-900/75
+  }
   .bg-content {
     @apply
       bg-white border-gray-200

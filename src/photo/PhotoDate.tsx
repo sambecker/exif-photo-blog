@@ -1,15 +1,18 @@
 import ResponsiveDate from '@/components/ResponsiveDate';
 import { Photo } from '.';
 import { useMemo } from 'react';
+import { Timezone } from '@/utility/timezone';
 
 export default function PhotoDate({
   photo,
   className,
   dateType = 'takenAt',
+  timezone,
 }: {
   photo: Photo
   className?: string
   dateType?: 'takenAt' | 'createdAt' | 'updatedAt'
+  timezone: Timezone
 }) {
   const date = useMemo(() => {
     const date = new Date(dateType === 'takenAt'
@@ -41,6 +44,7 @@ export default function PhotoDate({
       date,
       className,
       titleLabel: getTitleLabel(),
+      timezone,
     }} />
   );
 }

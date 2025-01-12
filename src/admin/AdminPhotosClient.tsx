@@ -13,6 +13,7 @@ import { StorageListResponse } from '@/services/storage';
 import { useState } from 'react';
 import { LiaBroomSolid } from 'react-icons/lia';
 import AdminUploadsTable from './AdminUploadsTable';
+import { Timezone } from '@/utility/timezone';
 
 export default function AdminPhotosClient({
   photos,
@@ -22,6 +23,7 @@ export default function AdminPhotosClient({
   blobPhotoUrls,
   infiniteScrollInitial,
   infiniteScrollMultiple,
+  timezone,
 }: {
   photos: Photo[]
   photosCount: number
@@ -30,6 +32,7 @@ export default function AdminPhotosClient({
   blobPhotoUrls: StorageListResponse
   infiniteScrollInitial: number
   infiniteScrollMultiple: number
+  timezone: Timezone
 }) {
   const [isUploading, setIsUploading] = useState(false);
 
@@ -74,12 +77,14 @@ export default function AdminPhotosClient({
             <AdminPhotosTable
               photos={photos}
               hasAiTextGeneration={AI_TEXT_GENERATION_ENABLED}
+              timezone={timezone}
             />
             {photosCount > photos.length &&
               <AdminPhotosTableInfinite
                 initialOffset={infiniteScrollInitial}
                 itemsPerPage={infiniteScrollMultiple}
                 hasAiTextGeneration={AI_TEXT_GENERATION_ENABLED}
+                timezone={timezone}
               />}
           </div>
         </div>}

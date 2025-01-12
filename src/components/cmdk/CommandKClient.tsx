@@ -166,7 +166,7 @@ export default function CommandKClient({
                 items: photos.map(photo => ({
                   label: titleForPhoto(photo),
                   keywords: getKeywordsForPhoto(photo),
-                  annotation: <PhotoDate {...{ photo }} />,
+                  annotation: <PhotoDate {...{ photo, timezone: undefined }} />,
                   accessory: <PhotoSmall photo={photo} />,
                   path: pathForPhoto({ photo }),
                 })),

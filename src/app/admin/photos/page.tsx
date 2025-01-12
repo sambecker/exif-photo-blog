@@ -4,6 +4,8 @@ import { getPhotosMetaCached } from '@/photo/cache';
 import { OUTDATED_THRESHOLD } from '@/photo';
 import AdminPhotosClient from '@/admin/AdminPhotosClient';
 import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
+import { TIMEZONE_COOKIE_NAME } from '@/utility/timezone';
 
 export const maxDuration = 60;
 
@@ -13,6 +15,8 @@ const INFINITE_SCROLL_INITIAL_ADMIN_PHOTOS = 25;
 const INFINITE_SCROLL_MULTIPLE_ADMIN_PHOTOS = 50;
 
 export default async function AdminPhotosPage() {
+  const timezone = (await cookies()).get(TIMEZONE_COOKIE_NAME)?.value;
+
   const [
     photos,
     photosCount,
@@ -51,6 +55,7 @@ export default async function AdminPhotosPage() {
       blobPhotoUrls,
       infiniteScrollInitial: INFINITE_SCROLL_INITIAL_ADMIN_PHOTOS,
       infiniteScrollMultiple: INFINITE_SCROLL_MULTIPLE_ADMIN_PHOTOS,
+      timezone,
     }} />
   );
 }
