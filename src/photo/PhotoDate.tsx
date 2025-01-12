@@ -10,6 +10,7 @@ export default function PhotoDate({
   photo: Photo
   className?: string
   dateType?: 'takenAt' | 'createdAt' | 'updatedAt'
+  timezone?: string | null
 }) {
   const date = useMemo(() => {
     const date = new Date(dateType === 'takenAt'
@@ -41,6 +42,7 @@ export default function PhotoDate({
       date,
       className,
       titleLabel: getTitleLabel(),
+      timezone: null,
     }} />
   );
 }
