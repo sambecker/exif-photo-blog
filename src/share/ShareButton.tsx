@@ -8,6 +8,8 @@ import { getSharePathFromShareModalProps, ShareModalProps } from '.';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
+let prefetchedImage: HTMLImageElement | null = null;
+
 export default function ShareButton({
   dim,
   prefetch,
@@ -26,8 +28,8 @@ export default function ShareButton({
 
   useEffect(() => {
     if (prefetch && absoluteImagePath) {
-      console.log('prefetching', absoluteImagePath);
-      router.prefetch(absoluteImagePath);
+      prefetchedImage = new Image();
+      prefetchedImage.src = absoluteImagePath;
     }
   }, [prefetch, absoluteImagePath, router]);
 
