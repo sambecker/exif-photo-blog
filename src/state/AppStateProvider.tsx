@@ -9,6 +9,7 @@ import useSWR from 'swr';
 import { HIGH_DENSITY_GRID, MATTE_PHOTOS } from '@/site/config';
 import { getPhotosHiddenMetaCachedAction } from '@/photo/actions';
 import { ShareModalProps } from '@/share';
+import { storeTimezoneCookie } from '@/utility/timezone';
 
 export default function AppStateProvider({
   children,
@@ -77,6 +78,7 @@ export default function AppStateProvider({
 
   useEffect(() => {
     setHasLoaded?.(true);
+    storeTimezoneCookie();
   }, []);
 
   return (

@@ -14,6 +14,7 @@ import { useAppState } from '@/state/AppState';
 import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 import PhotoSyncButton from './PhotoSyncButton';
 import DeletePhotoButton from './DeletePhotoButton';
+import { Timezone } from '@/utility/timezone';
 
 export default function AdminPhotosTable({
   photos,
@@ -24,6 +25,7 @@ export default function AdminPhotosTable({
   showUpdatedAt,
   canEdit = true,
   canDelete = true,
+  timezone,
 }: {
   photos: Photo[],
   onLastPhotoVisible?: () => void
@@ -33,6 +35,7 @@ export default function AdminPhotosTable({
   showUpdatedAt?: boolean
   canEdit?: boolean
   canDelete?: boolean
+  timezone?: Timezone
 }) {
   const { invalidateSwr } = useAppState();
 
@@ -90,6 +93,7 @@ export default function AdminPhotosTable({
               <PhotoDate {...{
                 photo,
                 dateType: showUpdatedAt ? 'updatedAt' : 'createdAt',
+                timezone,
               }} />
             </div>
           </div>

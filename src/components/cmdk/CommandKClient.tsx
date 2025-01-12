@@ -48,6 +48,7 @@ import CommandKItem from './CommandKItem';
 import { GRID_HOMEPAGE_ENABLED } from '@/site/config';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
+import { Timezone } from '@/utility/timezone';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -76,11 +77,13 @@ export default function CommandKClient({
   serverSections = [],
   showDebugTools,
   footer,
+  timezone,
 }: {
   tags: Tags
   serverSections?: CommandKSection[]
   showDebugTools?: boolean
   footer?: string
+  timezone: Timezone
 }) {
   const pathname = usePathname();
 
@@ -166,7 +169,7 @@ export default function CommandKClient({
                 items: photos.map(photo => ({
                   label: titleForPhoto(photo),
                   keywords: getKeywordsForPhoto(photo),
-                  annotation: <PhotoDate {...{ photo }} />,
+                  annotation: <PhotoDate {...{ photo, timezone }} />,
                   accessory: <PhotoSmall photo={photo} />,
                   path: pathForPhoto({ photo }),
                 })),
@@ -184,7 +187,7 @@ export default function CommandKClient({
           setIsLoading(false);
         });
     }
-  }, [queryDebounced, isPending]);
+  }, [queryDebounced, isPending, timezone]);
 
   useEffect(() => {
     if (queryLive === '') {

@@ -1,6 +1,7 @@
 'use client';
 
 import { formatDate } from '@/utility/date';
+import { Timezone } from '@/utility/timezone';
 import { clsx } from 'clsx/lite';
 import { useEffect, useState } from 'react';
 
@@ -13,19 +14,20 @@ export default function ResponsiveDate({
   date: Date
   className?: string
   titleLabel?: string
-  timezone?: string | null
+  timezone?: Timezone
 }) {
   const [timezone, setTimezone] = useState(timezoneFromProps);
 
   useEffect(() => {
-    if (timezoneFromProps === null) {
+    if (!timezoneFromProps) {
       setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone);
     }
   }, [timezoneFromProps]);
 
-  const showPlaceholderContent = timezone === null;
+  const showPlaceholderContent = timezone === undefined;
 
-  const titleDateFormatted = formatDate(date).toLocaleUpperCase();
+  const titleDateFormatted = formatDate(date, undefined, timezone)
+    .toLocaleUpperCase();
 
   const title = titleLabel
     ? `${titleLabel}: ${titleDateFormatted}`
@@ -47,20 +49,20 @@ export default function ResponsiveDate({
         className={clsx('xs:hidden', contentClass)}
         aria-hidden
       >
-        {formatDate(date, 'short', showPlaceholderContent)}
+        {formatDate(date, 'short', timezone, showPlaceholderContent)}
       </span>
       {/* Medium */}
       <span
         className={clsx('hidden xs:inline-block sm:hidden', contentClass)}
         aria-hidden
       >
-        {formatDate(date, 'medium', showPlaceholderContent)}
+        {formatDate(date, 'medium', timezone,showPlaceholderContent)}
       </span>
       {/* Large */}
       <span
         className={clsx('hidden sm:inline-block', contentClass)}
       >
-        {formatDate(date, undefined, showPlaceholderContent)}
+        {formatDate(date, undefined, timezone, showPlaceholderContent)}
       </span>
     </span>
   );

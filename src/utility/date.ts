@@ -1,4 +1,6 @@
-import { format, parseISO, parse } from 'date-fns';
+import { parseISO, parse, format } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
+import { Timezone } from './timezone';
 
 const DATE_STRING_FORMAT_TINY               = 'dd MMM yy';
 const DATE_STRING_FORMAT_TINY_PLACEHOLDER   = '00 000 00';
@@ -21,21 +23,30 @@ type Length = 'tiny' | 'short' | 'medium' | 'long';
 export const formatDate = (
   date: Date,
   length: Length = 'long',
+  timezone?: Timezone,
   showPlaceholder?: boolean,
 ) => {
   switch (length) {
   case 'tiny': return showPlaceholder
     ? DATE_STRING_FORMAT_TINY_PLACEHOLDER
-    : format(date, DATE_STRING_FORMAT_TINY);
+    : timezone
+      ? formatInTimeZone(date, timezone, DATE_STRING_FORMAT_TINY)
+      : format(date, DATE_STRING_FORMAT_TINY);
   case 'short': return showPlaceholder
     ? DATE_STRING_FORMAT_SHORT_PLACEHOLDER
-    : format(date, DATE_STRING_FORMAT_SHORT);
+    : timezone
+      ? formatInTimeZone(date, timezone, DATE_STRING_FORMAT_SHORT)
+      : format(date, DATE_STRING_FORMAT_SHORT);
   case 'medium': return showPlaceholder
     ? DATE_STRING_FORMAT_MEDIUM_PLACEHOLDER
-    : format(date, DATE_STRING_FORMAT_MEDIUM);
+    : timezone
+      ? formatInTimeZone(date, timezone, DATE_STRING_FORMAT_MEDIUM)
+      : format(date, DATE_STRING_FORMAT_MEDIUM);
   default: return showPlaceholder
     ? DATE_STRING_FORMAT_LONG_PLACEHOLDER
-    : format(date, DATE_STRING_FORMAT_LONG);
+    : timezone
+      ? formatInTimeZone(date, timezone, DATE_STRING_FORMAT_LONG)
+      : format(date, DATE_STRING_FORMAT_LONG);
   }
 };
 
