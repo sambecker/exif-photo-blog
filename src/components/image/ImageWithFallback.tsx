@@ -6,10 +6,12 @@ import { useAppState } from '@/state/AppState';
 import { clsx}  from 'clsx/lite';
 import Image, { ImageProps } from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import FullscreenButton from '../FullscreenButton';
 
 export default function ImageWithFallback(props: ImageProps & {
   blurCompatibilityLevel?: 'none' | 'low' | 'high'
   imgClassName?: string
+  allowFullscreen?: boolean
 }) {
   const {
     className,
@@ -17,6 +19,7 @@ export default function ImageWithFallback(props: ImageProps & {
     blurDataURL,
     blurCompatibilityLevel = 'low',
     imgClassName = 'object-cover h-full',
+    allowFullscreen,
     ...rest
   } = props;
 
@@ -104,6 +107,7 @@ export default function ImageWithFallback(props: ImageProps & {
         onLoad,
         onError,
       }} />
-    </div>
+      {allowFullscreen && <FullscreenButton imageRef={imgRef} />}
+      </div>
   );
 }
