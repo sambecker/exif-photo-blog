@@ -108,6 +108,6 @@ export default function ImageWithFallback(props: ImageProps & {
         onError,
       }} />
       {allowFullscreen && <FullscreenButton imageRef={imgRef} />}
-      </div>
+    </div>
   );
 }
