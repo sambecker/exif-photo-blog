@@ -54,8 +54,9 @@ export default function SiteChecklistClient({
   isProModeEnabled,
   isGridHomepageEnabled,
   isStaticallyOptimized,
-  arePagesStaticallyOptimized,
-  areOGImagesStaticallyOptimized,
+  arePhotosStaticallyOptimized,
+  arePhotoOGImagesStaticallyOptimized,
+  arePhotoCategoriesStaticallyOptimized,
   arePhotosMatted,
   isBlurEnabled,
   isGeoPrivacyEnabled,
@@ -469,13 +470,19 @@ export default function SiteChecklistClient({
               Set environment variable to {'"1"'} to enable static optimization,
               i.e., rendering pages and images at build time:
               {renderSubStatus(
-                arePagesStaticallyOptimized ? 'checked' : 'optional',
+                arePhotosStaticallyOptimized ? 'checked' : 'optional',
                 renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES']),
                 'translate-y-[3.5px]',
               )}
               {renderSubStatus(
-                areOGImagesStaticallyOptimized ? 'checked' : 'optional',
+                arePhotoOGImagesStaticallyOptimized ? 'checked' : 'optional',
                 renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES']),
+                'translate-y-[3.5px]',
+              )}
+              {renderSubStatus(
+                arePhotoCategoriesStaticallyOptimized ? 'checked' : 'optional',
+                // eslint-disable-next-line max-len
+                renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES']),
                 'translate-y-[3.5px]',
               )}
             </ChecklistRow>

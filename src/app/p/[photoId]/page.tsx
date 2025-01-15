@@ -12,7 +12,7 @@ import {
 } from '@/site/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotosNearIdCached } from '@/photo/cache';
-import { IS_PRODUCTION, STATICALLY_OPTIMIZED_PAGES } from '@/site/config';
+import { IS_PRODUCTION, STATICALLY_OPTIMIZED_PHOTOS } from '@/site/config';
 import { getPhotoIds } from '@/photo/db/query';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { cache } from 'react';
@@ -25,7 +25,7 @@ const getPhotosNearIdCachedCached = cache((photoId: string) =>
 export let generateStaticParams:
   (() => Promise<{ photoId: string }[]>) | undefined = undefined;
 
-if (STATICALLY_OPTIMIZED_PAGES && IS_PRODUCTION) {
+if (STATICALLY_OPTIMIZED_PHOTOS && IS_PRODUCTION) {
   generateStaticParams = async () => {
     const photos = await getPhotoIds({ limit: GENERATE_STATIC_PARAMS_LIMIT });
     return photos.map(photoId => ({ photoId }));
