@@ -4,7 +4,10 @@ import PhotoImageResponse from '@/image-response/PhotoImageResponse';
 import { getIBMPlexMonoMedium } from '@/site/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
-import { IS_PRODUCTION, STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES } from '@/site/config';
+import {
+  IS_PRODUCTION,
+  STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES,
+} from '@/site/config';
 import { getPhotoIds } from '@/photo/db/query';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { isNextImageReadyBasedOnPhotos } from '@/photo';
