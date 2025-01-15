@@ -51,7 +51,7 @@ export default function SiteChecklistClient({
   showFilmSimulations,
   showExifInfo,
   defaultTheme,
-  isProModeEnabled,
+  areOriginalUploadsPreserved,
   isGridHomepageEnabled,
   isStaticallyOptimized,
   arePhotosStaticallyOptimized,
@@ -453,13 +453,13 @@ export default function SiteChecklistClient({
               {renderEnvVars(['NEXT_PUBLIC_DEFAULT_THEME'])}
             </ChecklistRow>
             <ChecklistRow
-              title="Pro mode"
-              status={isProModeEnabled}
+              title="Preserve original uploads"
+              status={areOriginalUploadsPreserved}
               optional
             >
-              Set environment variable to {'"1"'} to enable
-              higher quality image storage:
-              {renderEnvVars(['NEXT_PUBLIC_PRO_MODE'])}
+              Set environment variable to {'"1"'} to prevent
+              image uploads being optimized before storing:
+              {renderEnvVars(['NEXT_PUBLIC_PRESERVE_ORIGINAL_UPLOADS'])}
             </ChecklistRow>
             <ChecklistRow
               title="Static optimization"

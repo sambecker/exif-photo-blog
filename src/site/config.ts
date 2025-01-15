@@ -218,7 +218,7 @@ export const CONFIG_CHECKLIST_STATUS = {
   showExifInfo: SHOW_EXIF_DATA,
   isGridHomepageEnabled: GRID_HOMEPAGE_ENABLED,
   defaultTheme: DEFAULT_THEME,
-  isProModeEnabled: PRESERVE_ORIGINAL_UPLOADS,
+  areOriginalUploadsPreserved: PRESERVE_ORIGINAL_UPLOADS,
   isStaticallyOptimized: (
     STATICALLY_OPTIMIZED_PHOTOS ||
     STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES ||
