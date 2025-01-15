@@ -3,15 +3,18 @@
 /* eslint-disable jsx-a11y/alt-text */
 import { BLUR_ENABLED } from '@/site/config';
 import { useAppState } from '@/state/AppState';
-import { clsx}  from 'clsx/lite';
+import { clsx } from 'clsx/lite';
 import Image, { ImageProps } from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import FullscreenButton from '../FullscreenButton';
+import Viewer from 'viewerjs';
+import 'viewerjs/dist/viewer.css';
 
 export default function ImageWithFallback(props: ImageProps & {
   blurCompatibilityLevel?: 'none' | 'low' | 'high'
   imgClassName?: string
   allowFullscreen?: boolean
+  enableImageActions?: boolean
 }) {
   const {
     className,
@@ -19,7 +22,7 @@ export default function ImageWithFallback(props: ImageProps & {
     blurDataURL,
     blurCompatibilityLevel = 'low',
     imgClassName = 'object-cover h-full',
-    allowFullscreen,
+    enableImageActions = false,
     ...rest
   } = props;
 
@@ -34,7 +37,10 @@ export default function ImageWithFallback(props: ImageProps & {
 
   const [hideFallback, setHideFallback] = useState(false);
 
-  const imgRef = useRef<HTMLImageElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const viewerRef = useRef<Viewer | null>(null);
+  const imgRef = useRef<HTMLImageElement | null>(null);
+  const { isFullscreen } = useAppState();
 
   useEffect(() => {
     const timeout = setTimeout(
@@ -52,6 +58,37 @@ export default function ImageWithFallback(props: ImageProps & {
       return () => clearTimeout(timeout);
     }
   }, [isLoading, didError]);
+
+  useEffect(() => {
+    if (containerRef.current && enableImageActions) {
+      viewerRef.current = new Viewer(containerRef.current, {
+        inline: false,
+        button: true,
+        navbar: false,
+        title: false,
+        toolbar: {
+          zoomIn: 1,
+          zoomOut: 1,
+          oneToOne: 1,
+          reset: 1,
+          prev: 0,
+          play: {
+            show: 0,
+            size: 'large',
+          },
+          next: 0,
+          rotateLeft: 1,
+          rotateRight: 1,
+          flipHorizontal: 1,
+          flipVertical: 1,
+          tooltip: 1,
+        },
+      });
+      return () => {
+        viewerRef.current?.destroy();
+      };
+    }
+  }, [enableImageActions]);
 
   const showFallback =
     !wasCached &&
@@ -73,6 +110,7 @@ export default function ImageWithFallback(props: ImageProps & {
         className,
         'flex relative',
       )}
+      ref={containerRef}
     >
       {(showFallback || shouldDebugImageFallbacks) &&
         <div className={clsx(
@@ -99,15 +137,18 @@ export default function ImageWithFallback(props: ImageProps & {
               'bg-gray-100/50 dark:bg-gray-900/50',
             )} />}
         </div>}
-      <Image {...{
-        ...rest,
-        ref: imgRef,
-        priority,
-        className: imgClassName,
-        onLoad,
-        onError,
-      }} />
-      {allowFullscreen && <FullscreenButton imageRef={imgRef} />}
+      <Image
+        {...rest}
+        ref={imgRef}
+        priority={priority}
+        className={clsx(
+          imgClassName,
+          !isFullscreen && enableImageActions && 'cursor-zoom-in',
+        )}
+        onLoad={onLoad}
+        onError={onError}
+      />
+      {enableImageActions && <FullscreenButton imageRef={imgRef} />}
     </div>
   );
 }

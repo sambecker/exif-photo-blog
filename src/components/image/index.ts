@@ -14,4 +14,5 @@ export interface ImageProps {
   alt: string
   blurDataURL?: string
   priority?: boolean
+  enableImageActions?: boolean
 }
