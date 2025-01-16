@@ -481,11 +481,11 @@ export default function SiteChecklistClient({
               i.e., rendering pages and images at build time:
               {renderSubStatusWithEnvVar(
                 arePhotosStaticallyOptimized ? 'checked' : 'optional',
-                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES',
+                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS',
               )}
               {renderSubStatusWithEnvVar(
                 arePhotoOGImagesStaticallyOptimized ? 'checked' : 'optional',
-                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES',
+                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES',
               )}
               {renderSubStatusWithEnvVar(
                 arePhotoCategoriesStaticallyOptimized ? 'checked' : 'optional',
