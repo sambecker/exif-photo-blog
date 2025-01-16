@@ -104,9 +104,10 @@ Application behavior can be changed by configuring the following environment var
 #### Site behavior
 - `NEXT_PUBLIC_GRID_HOMEPAGE = 1` shows grid layout on homepage
 - `NEXT_PUBLIC_DEFAULT_THEME = light | dark` sets preferred initial theme (defaults to `system` when not configured)
-- `NEXT_PUBLIC_PRO_MODE = 1` enables higher quality image storage (results in increased storage usage)
-- `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES = 1` enables static optimization for pages, i.e., renders pages at build time (results in increased project usage)—⚠️ _Experimental_
-- `NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES = 1` enables static optimization for OG images, i.e., renders images at build time (results in increased project usage)—⚠️ _Experimental_
+- `NEXT_PUBLIC_PRESERVE_ORIGINAL_UPLOADS = 1` do not optimize photo uploads before storing (⚠️ results in increased storage usage)
+- `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS = 1` enables static optimization for photo pages (`p/[photoId]`), i.e., renders pages at build time (⚠️ results in increased project usage)
+- `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES = 1` enables static optimization for OG images, i.e., renders images at build time (⚠️ results in increased project usage)
+- `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES = 1` enables static optimization for photo categories (`tag/[tag]`, `shot-on/[make]/[model]`, etc.), i.e., renders pages at build time (⚠️ results in increased project usage)
 - `NEXT_PUBLIC_MATTE_PHOTOS = 1` constrains the size of each photo, and enables a surrounding border (potentially useful for photos with tall aspect ratios)
 - `NEXT_PUBLIC_BLUR_DISABLED = 1` prevents image blur data being stored and displayed (potentially useful for limiting Postgres usage)
 - `NEXT_PUBLIC_GEO_PRIVACY = 1` disables collection/display of location-based data (⚠️ re-compresses uploaded images in order to remove GPS information)

@@ -11,7 +11,7 @@ import { ExifData, ExifParserFactory } from 'ts-exif-parser';
 import { PhotoFormData } from './form';
 import { FilmSimulation } from '@/simulation';
 import sharp, { Sharp } from 'sharp';
-import { GEO_PRIVACY_ENABLED, PRO_MODE_ENABLED } from '@/site/config';
+import { GEO_PRIVACY_ENABLED, PRESERVE_ORIGINAL_UPLOADS } from '@/site/config';
 
 const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
@@ -169,5 +169,5 @@ export const removeGpsData = async (image: ArrayBuffer) =>
         GPSHPositioningError: GPS_NULL_STRING,
       },
     })
-    .toFormat('jpeg', { quality: PRO_MODE_ENABLED ? 95 : 80 })
+    .toFormat('jpeg', { quality: PRESERVE_ORIGINAL_UPLOADS ? 95 : 80 })
     .toBuffer();

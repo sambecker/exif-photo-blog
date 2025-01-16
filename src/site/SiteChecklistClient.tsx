@@ -51,11 +51,12 @@ export default function SiteChecklistClient({
   showFilmSimulations,
   showExifInfo,
   defaultTheme,
-  isProModeEnabled,
+  areOriginalUploadsPreserved,
   isGridHomepageEnabled,
   isStaticallyOptimized,
-  arePagesStaticallyOptimized,
-  areOGImagesStaticallyOptimized,
+  arePhotosStaticallyOptimized,
+  arePhotoOGImagesStaticallyOptimized,
+  arePhotoCategoriesStaticallyOptimized,
   arePhotosMatted,
   isBlurEnabled,
   isGeoPrivacyEnabled,
@@ -168,6 +169,16 @@ export default function SiteChecklistClient({
         {label}
       </span>
     </div>;
+    
+  const renderSubStatusWithEnvVar = (
+    type: ComponentProps<typeof StatusIcon>['type'],
+    variable: string,
+  ) =>
+    renderSubStatus(
+      type,
+      renderEnvVars([variable]),
+      'translate-y-[5px]',
+    );
 
   const renderError = ({
     connection,
@@ -452,13 +463,13 @@ export default function SiteChecklistClient({
               {renderEnvVars(['NEXT_PUBLIC_DEFAULT_THEME'])}
             </ChecklistRow>
             <ChecklistRow
-              title="Pro mode"
-              status={isProModeEnabled}
+              title="Preserve original uploads"
+              status={areOriginalUploadsPreserved}
               optional
             >
-              Set environment variable to {'"1"'} to enable
-              higher quality image storage:
-              {renderEnvVars(['NEXT_PUBLIC_PRO_MODE'])}
+              Set environment variable to {'"1"'} to prevent
+              image uploads being optimized before storing:
+              {renderEnvVars(['NEXT_PUBLIC_PRESERVE_ORIGINAL_UPLOADS'])}
             </ChecklistRow>
             <ChecklistRow
               title="Static optimization"
@@ -468,15 +479,17 @@ export default function SiteChecklistClient({
             >
               Set environment variable to {'"1"'} to enable static optimization,
               i.e., rendering pages and images at build time:
-              {renderSubStatus(
-                arePagesStaticallyOptimized ? 'checked' : 'optional',
-                renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES']),
-                'translate-y-[3.5px]',
+              {renderSubStatusWithEnvVar(
+                arePhotosStaticallyOptimized ? 'checked' : 'optional',
+                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS',
               )}
-              {renderSubStatus(
-                areOGImagesStaticallyOptimized ? 'checked' : 'optional',
-                renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES']),
-                'translate-y-[3.5px]',
+              {renderSubStatusWithEnvVar(
+                arePhotoOGImagesStaticallyOptimized ? 'checked' : 'optional',
+                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES',
+              )}
+              {renderSubStatusWithEnvVar(
+                arePhotoCategoriesStaticallyOptimized ? 'checked' : 'optional',
+                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES',
               )}
             </ChecklistRow>
             <ChecklistRow
