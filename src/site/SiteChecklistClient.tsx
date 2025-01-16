@@ -169,6 +169,16 @@ export default function SiteChecklistClient({
         {label}
       </span>
     </div>;
+    
+  const renderSubStatusWithEnvVar = (
+    type: ComponentProps<typeof StatusIcon>['type'],
+    variable: string,
+  ) =>
+    renderSubStatus(
+      type,
+      renderEnvVars([variable]),
+      'translate-y-[5px]',
+    );
 
   const renderError = ({
     connection,
@@ -469,21 +479,17 @@ export default function SiteChecklistClient({
             >
               Set environment variable to {'"1"'} to enable static optimization,
               i.e., rendering pages and images at build time:
-              {renderSubStatus(
+              {renderSubStatusWithEnvVar(
                 arePhotosStaticallyOptimized ? 'checked' : 'optional',
-                renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES']),
-                'translate-y-[3.5px]',
+                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES',
               )}
-              {renderSubStatus(
+              {renderSubStatusWithEnvVar(
                 arePhotoOGImagesStaticallyOptimized ? 'checked' : 'optional',
-                renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES']),
-                'translate-y-[3.5px]',
+                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES',
               )}
-              {renderSubStatus(
+              {renderSubStatusWithEnvVar(
                 arePhotoCategoriesStaticallyOptimized ? 'checked' : 'optional',
-                // eslint-disable-next-line max-len
-                renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES']),
-                'translate-y-[3.5px]',
+                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES',
               )}
             </ChecklistRow>
             <ChecklistRow
