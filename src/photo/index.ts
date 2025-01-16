@@ -33,7 +33,7 @@ export const INFINITE_SCROLL_GRID_MULTIPLE = HIGH_DENSITY_GRID
   ? process.env.NODE_ENV === 'development' ? 12 : 48
   : process.env.NODE_ENV === 'development' ? 12 : 48;
 
-// Thumbnails below /p/[photoId]
+// Thumbnails below large photos on pages like /p/[photoId]
 export const RELATED_GRID_PHOTOS_TO_SHOW = 12;
 
 export const DEFAULT_ASPECT_RATIO = 1.5;
