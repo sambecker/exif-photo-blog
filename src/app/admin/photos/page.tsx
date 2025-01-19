@@ -6,6 +6,7 @@ import AdminPhotosClient from '@/admin/AdminPhotosClient';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { TIMEZONE_COOKIE_NAME } from '@/utility/timezone';
+import sleep from '@/utility/sleep';
 
 export const maxDuration = 60;
 
@@ -15,6 +16,8 @@ const INFINITE_SCROLL_INITIAL_ADMIN_PHOTOS = 25;
 const INFINITE_SCROLL_MULTIPLE_ADMIN_PHOTOS = 50;
 
 export default async function AdminPhotosPage() {
+  await sleep(3000);
+
   const timezone = (await cookies()).get(TIMEZONE_COOKIE_NAME)?.value;
 
   const [

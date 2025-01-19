@@ -1,7 +1,8 @@
-import Link from 'next/link';
 import { clsx } from 'clsx/lite';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
-import { JSX } from 'react';
+import { JSX, ReactNode } from 'react';
+import LinkWithStatus from './LinkWithStatus';
+import Spinner from './Spinner';
 
 export default function SwitcherItem({
   icon,
@@ -36,17 +37,23 @@ export default function SwitcherItem({
       : 'hover:text-gray-700 dark:hover:text-gray-400',
   );
 
-  const renderIcon = () => noPadding
-    ? icon
+  const renderContent = (content: ReactNode) => noPadding
+    ? content
     : <div className="w-[28px] h-[24px] flex items-center justify-center">
-      {icon}
+      {content}
     </div>;
 
   return (
     href
-      ? <Link {...{ title, href, className, prefetch }}>
-        {renderIcon()}
-      </Link>
-      : <div {...{ title, onClick, className }}>{renderIcon()}</div>
+      ? <LinkWithStatus {...{
+        title,
+        href,
+        className,
+        prefetch,
+        loader: <Spinner />,
+      }}>
+        {renderContent(icon)}
+      </LinkWithStatus>
+      : <div {...{ title, onClick, className }}>{renderContent(icon)}</div>
   );
 };
