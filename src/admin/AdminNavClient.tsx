@@ -65,7 +65,7 @@ export default function AdminNavClient({
             'border-b border-gray-200 dark:border-gray-800',
           )}>
             <div className={clsx(
-              'flex gap-0.5 -mx-1',
+              'flex gap-0.5 md:gap-1.5 -mx-1',
               'flex-grow overflow-x-auto',
             )}>
               {items.map(({ label, href, count }) =>
@@ -77,7 +77,7 @@ export default function AdminNavClient({
                     'px-1 py-0.5 rounded-md',
                   )}
                   loadingClassName="bg-dim"
-                  contentClassName="flex gap-1"
+                  contentClassName="flex gap-0.5"
                   prefetch={false}
                 >
                   <span>{label}</span>
