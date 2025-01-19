@@ -50,7 +50,7 @@ export default function SwitcherItem({
         href,
         className,
         prefetch,
-        loader: <Spinner />,
+        loadingElement: <Spinner />,
       }}>
         {renderContent(icon)}
       </LinkWithStatus>

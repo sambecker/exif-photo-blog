@@ -14,15 +14,19 @@ import clsx from 'clsx/lite';
 
 // Avoid showing spinner for too short a time
 const FLICKER_THRESHOLD = 400;
-// Clear loading status after 10 seconds of inactivity
-const MAX_LOADING_DURATION = 10_000;
+// Clear loading status after long duration of inactivity
+const MAX_LOADING_DURATION = 15_000;
 
 export type LinkWithStatusProps = ComponentProps<typeof Link> & {
-  loader?: ReactNode
+  loadingElement?: ReactNode
+  loadingClassName?: string
+  contentClassName?: string
 }
 
 export default function LinkWithStatus({
-  loader,
+  loadingElement,
+  loadingClassName,
+  contentClassName,
   href, 
   className,
   onClick,
@@ -71,7 +75,11 @@ export default function LinkWithStatus({
   return <Link
     {...props }
     href={href}
-    className={clsx('relative', className)}
+    className={clsx(
+      'relative transition-colors',
+      className,
+      isLoading && loadingClassName,
+    )}
     onClick={e => {
       const isOpeningNewTab = e.metaKey || e.ctrlKey;
       if (!isVisitingLinkHref && !isOpeningNewTab) {
@@ -92,17 +100,20 @@ export default function LinkWithStatus({
   >
     <span className={clsx(
       'flex transition-opacity',
-      loader
+      contentClassName,
+      loadingElement
         ? isLoading ? 'opacity-0' : 'opacity-100'
-        : isLoading ? 'opacity-50' : 'opacity-100',
+        : loadingClassName
+          ? 'opacity-100'
+          : isLoading ? 'opacity-50' : 'opacity-100',
     )}>
       {children}
     </span>
-    {isLoading && loader && <span className={clsx(
+    {isLoading && loadingElement && <span className={clsx(
       'absolute inset-0',
       'flex items-center justify-center',
     )}>
-      {loader}
+      {loadingElement}
     </span>}
   </Link>;
 }
