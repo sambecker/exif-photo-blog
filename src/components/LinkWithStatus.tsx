@@ -71,10 +71,7 @@ export default function LinkWithStatus({
   return <Link
     {...props }
     href={href}
-    className={clsx(
-      className,
-      'relative',
-    )}
+    className={clsx('relative', className)}
     onClick={e => {
       const isOpeningNewTab = e.metaKey || e.ctrlKey;
       if (!isVisitingLinkHref && !isOpeningNewTab) {
