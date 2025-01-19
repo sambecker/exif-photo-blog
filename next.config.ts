@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
+import type { NextConfig } from 'next';
+import { RemotePattern } from 'next/dist/shared/lib/image-config';
+
 const VERCEL_BLOB_STORE_ID = process.env.BLOB_READ_WRITE_TOKEN?.match(
   /^vercel_blob_rw_([a-z0-9]+)_[a-z0-9]+$/i,
 )?.[1].toLowerCase();
@@ -16,23 +20,27 @@ const HOSTNAME_AWS_S3 =
     ? `${process.env.NEXT_PUBLIC_AWS_S3_BUCKET}.s3.${process.env.NEXT_PUBLIC_AWS_S3_REGION}.amazonaws.com`
     : undefined;
 
-const createRemotePattern = (hostname) => hostname
-  ? {
-    protocol: 'https',
-    hostname,
-    port: '',
-    pathname: '/**',
-  }
-  : [];
+const generateRemotePattern = (hostname: string) =>
+  ({ protocol: 'https', hostname, port: '', pathname: '/**' } as const);
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const generateRemotePatterns = () => {
+  const remotePatterns: RemotePattern[] = [];
+  if (HOSTNAME_VERCEL_BLOB) {
+    remotePatterns.push(generateRemotePattern(HOSTNAME_VERCEL_BLOB));
+  }
+  if (HOSTNAME_CLOUDFLARE_R2) {
+    remotePatterns.push(generateRemotePattern(HOSTNAME_CLOUDFLARE_R2));
+  }
+  if (HOSTNAME_AWS_S3) {
+    remotePatterns.push(generateRemotePattern(HOSTNAME_AWS_S3));
+  }
+  return remotePatterns;
+};
+
+const nextConfig: NextConfig = {
   images: {
     imageSizes: [200],
-    remotePatterns: []
-      .concat(createRemotePattern(HOSTNAME_VERCEL_BLOB))
-      .concat(createRemotePattern(HOSTNAME_CLOUDFLARE_R2))
-      .concat(createRemotePattern(HOSTNAME_AWS_S3)),
+    remotePatterns: generateRemotePatterns(),
     minimumCacheTTL: 31536000,
   },
 };
