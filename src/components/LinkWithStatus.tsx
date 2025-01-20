@@ -17,10 +17,15 @@ const FLICKER_THRESHOLD = 400;
 // Clear loading status after long duration
 const MAX_LOADING_DURATION = 15_000;
 
-export type LinkWithStatusProps = ComponentProps<typeof Link> & {
+export type LinkWithStatusProps = Omit<
+  ComponentProps<typeof Link>, 'children'
+> & {
   loadingElement?: ReactNode
   loadingClassName?: string
   contentClassName?: string
+  children: ReactNode | ((props: {
+    isLoading: boolean
+  }) => ReactNode)
 }
 
 export default function LinkWithStatus({
@@ -43,6 +48,8 @@ export default function LinkWithStatus({
   const startLoadingTimeout = useRef<NodeJS.Timeout | undefined>(undefined);
   const stopLoadingTimeout = useRef<NodeJS.Timeout | undefined>(undefined);
   const maxLoadingTimeout = useRef<NodeJS.Timeout | undefined>(undefined);
+
+  const isControlled = typeof children === 'function';
 
   const clearTimeouts = useCallback(() => {
     [startLoadingTimeout, stopLoadingTimeout, maxLoadingTimeout]
@@ -114,11 +121,13 @@ export default function LinkWithStatus({
       contentClassName,
       loadingElement
         ? isLoading ? 'opacity-0' : 'opacity-100'
-        : loadingClassName
+        : (loadingClassName || isControlled)
           ? 'opacity-100'
           : isLoading ? 'opacity-50' : 'opacity-100',
     )}>
-      {children}
+      {typeof children === 'function'
+        ? children({ isLoading })
+        : children}
     </span>
     {isLoading && loadingElement && <span className={clsx(
       'absolute inset-0',

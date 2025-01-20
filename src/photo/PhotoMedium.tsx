@@ -7,12 +7,12 @@ import {
   doesPhotoNeedBlurCompatibility,
 } from '.';
 import ImageMedium from '@/components/image/ImageMedium';
-import Link from 'next/link';
 import { clsx } from 'clsx/lite';
 import { pathForPhoto } from '@/site/paths';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
 import { useRef } from 'react';
 import useOnVisible from '@/utility/useOnVisible';
+import LinkWithStatus from '@/components/LinkWithStatus';
 
 export default function PhotoMedium({
   photo,
@@ -38,7 +38,7 @@ export default function PhotoMedium({
   useOnVisible(ref, onVisible);
 
   return (
-    <Link
+    <LinkWithStatus
       ref={ref}
       href={pathForPhoto({ photo, tag, camera, simulation, focal })}
       className={clsx(
@@ -58,6 +58,6 @@ export default function PhotoMedium({
         alt={altTextForPhoto(photo)}
         priority={priority}
       />
-    </Link>
+    </LinkWithStatus>
   );
 };
