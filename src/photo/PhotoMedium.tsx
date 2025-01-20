@@ -13,6 +13,7 @@ import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
 import { useRef } from 'react';
 import useOnVisible from '@/utility/useOnVisible';
 import LinkWithStatus from '@/components/LinkWithStatus';
+import Spinner from '@/components/Spinner';
 
 export default function PhotoMedium({
   photo,
@@ -48,16 +49,27 @@ export default function PhotoMedium({
       )}
       prefetch={prefetch}
     >
-      <ImageMedium
-        src={photo.url}
-        aspectRatio={photo.aspectRatio}
-        blurDataURL={photo.blurData}
-        blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
-        className="flex object-cover w-full h-full"
-        imgClassName="object-cover w-full h-full"
-        alt={altTextForPhoto(photo)}
-        priority={priority}
-      />
+      {({ isLoading }) =>
+        <div>
+          {isLoading &&
+            <div className={clsx(
+              'absolute inset-0 flex items-center justify-center',
+              'text-white bg-black/25',
+              'z-10',
+            )}>
+              <Spinner size={20} color="text" />
+            </div>}
+          <ImageMedium
+            src={photo.url}
+            aspectRatio={photo.aspectRatio}
+            blurDataURL={photo.blurData}
+            blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
+            className="flex object-cover w-full h-full "
+            imgClassName="object-cover w-full h-full"
+            alt={altTextForPhoto(photo)}
+            priority={priority}
+          />
+        </div>}
     </LinkWithStatus>
   );
 };
