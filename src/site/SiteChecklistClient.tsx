@@ -55,9 +55,9 @@ export default function SiteChecklistClient({
   arePhotosStaticallyOptimized,
   arePhotoOGImagesStaticallyOptimized,
   arePhotoCategoriesStaticallyOptimized,
+  areOriginalUploadsPreserved,
   isGridHomepageEnabled,
   defaultTheme,
-  areOriginalUploadsPreserved,
   arePhotosMatted,
   isBlurEnabled,
   isGeoPrivacyEnabled,
@@ -447,8 +447,9 @@ export default function SiteChecklistClient({
               status={isStaticallyOptimized}
               optional
             >
-              Set environment variable to {'"1"'} to enable static optimization,
-              i.e., render pages and images at build time:
+              Set environment variable to {'"1"'} to make site more responsive
+              by enabling static optimization
+              (i.e., rendering pages and images at build time):
               {renderSubStatusWithEnvVar(
                 arePhotosStaticallyOptimized ? 'checked' : 'optional',
                 'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS',
@@ -461,6 +462,15 @@ export default function SiteChecklistClient({
                 arePhotoCategoriesStaticallyOptimized ? 'checked' : 'optional',
                 'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES',
               )}
+            </ChecklistRow>
+            <ChecklistRow
+              title="Preserve original uploads"
+              status={areOriginalUploadsPreserved}
+              optional
+            >
+              Set environment variable to {'"1"'} to prevent
+              image uploads being compressed before storing:
+              {renderEnvVars(['NEXT_PUBLIC_PRESERVE_ORIGINAL_UPLOADS'])}
             </ChecklistRow>
           </Checklist>
           <Checklist
@@ -488,15 +498,6 @@ export default function SiteChecklistClient({
               {' '}
               (defaults to {'\'system\''}):
               {renderEnvVars(['NEXT_PUBLIC_DEFAULT_THEME'])}
-            </ChecklistRow>
-            <ChecklistRow
-              title="Preserve original uploads"
-              status={areOriginalUploadsPreserved}
-              optional
-            >
-              Set environment variable to {'"1"'} to prevent
-              image uploads being optimized before storing:
-              {renderEnvVars(['NEXT_PUBLIC_PRESERVE_ORIGINAL_UPLOADS'])}
             </ChecklistRow>
             <ChecklistRow
               title="Photo matting"
