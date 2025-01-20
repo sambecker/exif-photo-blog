@@ -26,6 +26,7 @@ import { testConnectionsAction } from '@/admin/actions';
 import ErrorNote from '@/components/ErrorNote';
 import Spinner from '@/components/Spinner';
 import WarningNote from '@/components/WarningNote';
+import { RiSpeedMiniLine } from 'react-icons/ri';
 
 export default function SiteChecklistClient({
   // Config checklist
@@ -50,13 +51,13 @@ export default function SiteChecklistClient({
   showSocial,
   showFilmSimulations,
   showExifInfo,
-  defaultTheme,
-  areOriginalUploadsPreserved,
-  isGridHomepageEnabled,
   isStaticallyOptimized,
   arePhotosStaticallyOptimized,
   arePhotoOGImagesStaticallyOptimized,
   arePhotoCategoriesStaticallyOptimized,
+  isGridHomepageEnabled,
+  defaultTheme,
+  areOriginalUploadsPreserved,
   arePhotosMatted,
   isBlurEnabled,
   isGeoPrivacyEnabled,
@@ -437,6 +438,32 @@ export default function SiteChecklistClient({
             </ChecklistRow>
           </Checklist>
           <Checklist
+            title="Performance"
+            icon={<RiSpeedMiniLine size={18} />}
+            optional
+          >
+            <ChecklistRow
+              title="Static optimization"
+              status={isStaticallyOptimized}
+              optional
+            >
+              Set environment variable to {'"1"'} to enable static optimization,
+              i.e., render pages and images at build time:
+              {renderSubStatusWithEnvVar(
+                arePhotosStaticallyOptimized ? 'checked' : 'optional',
+                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS',
+              )}
+              {renderSubStatusWithEnvVar(
+                arePhotoOGImagesStaticallyOptimized ? 'checked' : 'optional',
+                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES',
+              )}
+              {renderSubStatusWithEnvVar(
+                arePhotoCategoriesStaticallyOptimized ? 'checked' : 'optional',
+                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES',
+              )}
+            </ChecklistRow>
+          </Checklist>
+          <Checklist
             title="Settings"
             icon={<BiCog size={16} />}
             optional
@@ -470,26 +497,6 @@ export default function SiteChecklistClient({
               Set environment variable to {'"1"'} to prevent
               image uploads being optimized before storing:
               {renderEnvVars(['NEXT_PUBLIC_PRESERVE_ORIGINAL_UPLOADS'])}
-            </ChecklistRow>
-            <ChecklistRow
-              title="Static optimization"
-              status={isStaticallyOptimized}
-              optional
-            >
-              Set environment variable to {'"1"'} to enable static optimization,
-              i.e., render pages and images at build time:
-              {renderSubStatusWithEnvVar(
-                arePhotosStaticallyOptimized ? 'checked' : 'optional',
-                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS',
-              )}
-              {renderSubStatusWithEnvVar(
-                arePhotoOGImagesStaticallyOptimized ? 'checked' : 'optional',
-                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES',
-              )}
-              {renderSubStatusWithEnvVar(
-                arePhotoCategoriesStaticallyOptimized ? 'checked' : 'optional',
-                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES',
-              )}
             </ChecklistRow>
             <ChecklistRow
               title="Photo matting"

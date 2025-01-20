@@ -122,6 +122,19 @@ export const CURRENT_STORAGE: StorageType =
         : 'vercel-blob'
   );
 
+// PERFORMANCE
+
+export const STATICALLY_OPTIMIZED_PHOTOS =
+  process.env.NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS === '1' ||
+  // Legacy environment variable name
+  process.env.NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES === '1';
+export const STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES =
+  process.env.NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES === '1' ||
+  // Legacy environment variable name
+  process.env.NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES === '1';
+export const STATICALLY_OPTIMIZED_PHOTO_CATEGORIES =
+  process.env.NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES === '1';
+
 // SETTINGS
 
 export const GRID_HOMEPAGE_ENABLED =
@@ -136,16 +149,6 @@ export const PRESERVE_ORIGINAL_UPLOADS =
   process.env.NEXT_PUBLIC_PRESERVE_ORIGINAL_UPLOADS === '1' ||
   // Legacy environment variable name
   process.env.NEXT_PUBLIC_PRO_MODE === '1';
-export const STATICALLY_OPTIMIZED_PHOTOS =
-  process.env.NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS === '1' ||
-  // Legacy environment variable name
-  process.env.NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES === '1';
-export const STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES =
-  process.env.NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES === '1' ||
-  // Legacy environment variable name
-  process.env.NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES === '1';
-export const STATICALLY_OPTIMIZED_PHOTO_CATEGORIES =
-  process.env.NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES === '1';
 export const MATTE_PHOTOS =
   process.env.NEXT_PUBLIC_MATTE_PHOTOS === '1';
 export const BLUR_ENABLED =
@@ -216,9 +219,6 @@ export const CONFIG_CHECKLIST_STATUS = {
   showSocial: SHOW_SOCIAL,
   showFilmSimulations: SHOW_FILM_SIMULATIONS,
   showExifInfo: SHOW_EXIF_DATA,
-  isGridHomepageEnabled: GRID_HOMEPAGE_ENABLED,
-  defaultTheme: DEFAULT_THEME,
-  areOriginalUploadsPreserved: PRESERVE_ORIGINAL_UPLOADS,
   isStaticallyOptimized: (
     STATICALLY_OPTIMIZED_PHOTOS ||
     STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES ||
@@ -227,6 +227,9 @@ export const CONFIG_CHECKLIST_STATUS = {
   arePhotosStaticallyOptimized: STATICALLY_OPTIMIZED_PHOTOS,
   arePhotoOGImagesStaticallyOptimized: STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES,
   arePhotoCategoriesStaticallyOptimized: STATICALLY_OPTIMIZED_PHOTO_CATEGORIES,
+  isGridHomepageEnabled: GRID_HOMEPAGE_ENABLED,
+  defaultTheme: DEFAULT_THEME,
+  areOriginalUploadsPreserved: PRESERVE_ORIGINAL_UPLOADS,
   arePhotosMatted: MATTE_PHOTOS,
   isBlurEnabled: BLUR_ENABLED,
   isGeoPrivacyEnabled: GEO_PRIVACY_ENABLED,
