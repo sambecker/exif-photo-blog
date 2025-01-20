@@ -475,10 +475,9 @@ export default function SiteChecklistClient({
               title="Static optimization"
               status={isStaticallyOptimized}
               optional
-              experimental
             >
               Set environment variable to {'"1"'} to enable static optimization,
-              i.e., rendering pages and images at build time:
+              i.e., render pages and images at build time:
               {renderSubStatusWithEnvVar(
                 arePhotosStaticallyOptimized ? 'checked' : 'optional',
                 'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS',
