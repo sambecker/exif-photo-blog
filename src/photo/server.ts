@@ -29,6 +29,7 @@ export const extractImageDataFromBlobPath = async (
   imageResizedBase64?: string
   shouldStripGpsData?: boolean
   fileBytes?: ArrayBuffer
+  error?: string
 }> => {
   const {
     includeInitialPhotoFields,
@@ -42,48 +43,59 @@ export const extractImageDataFromBlobPath = async (
 
   const extension = getExtensionFromStorageUrl(url);
 
-  const fileBytes = blobPath
-    ? await fetch(url, { cache: 'no-store' }).then(res => res.arrayBuffer())
-    : undefined;
-
   let exifData: ExifData | undefined;
   let filmSimulation: FilmSimulation | undefined;
   let blurData: string | undefined;
   let imageResizedBase64: string | undefined;
   let shouldStripGpsData = false;
+  let error: string | undefined;
 
-  if (fileBytes) {
-    const parser = ExifParserFactory.create(Buffer.from(fileBytes));
+  const fileBytes = blobPath
+    ? await fetch(url, { cache: 'no-store' }).then(res => res.arrayBuffer())
+      .catch(e => {
+        error = `Error fetching image from ${url}: "${e.message}"`;
+        return undefined;
+      })
+    : undefined;
 
-    // Data for form
-    parser.enableBinaryFields(false);
-    exifData = parser.parse();
+  try {
+    if (fileBytes) {
+      const parser = ExifParserFactory.create(Buffer.from(fileBytes));
 
-    // Capture film simulation for Fujifilm cameras
-    if (isExifForFujifilm(exifData)) {
-      // Parse exif data again with binary fields
-      // in order to access MakerNote tag
-      parser.enableBinaryFields(true);
-      const exifDataBinary = parser.parse();
-      const makerNote = exifDataBinary.tags?.MakerNote;
-      if (Buffer.isBuffer(makerNote)) {
-        filmSimulation = getFujifilmSimulationFromMakerNote(makerNote);
+      // Data for form
+      parser.enableBinaryFields(false);
+      exifData = parser.parse();
+
+      // Capture film simulation for Fujifilm cameras
+      if (isExifForFujifilm(exifData)) {
+        // Parse exif data again with binary fields
+        // in order to access MakerNote tag
+        parser.enableBinaryFields(true);
+        const exifDataBinary = parser.parse();
+        const makerNote = exifDataBinary.tags?.MakerNote;
+        if (Buffer.isBuffer(makerNote)) {
+          filmSimulation = getFujifilmSimulationFromMakerNote(makerNote);
+        }
       }
-    }
 
-    if (generateBlurData) {
-      blurData = await blurImage(fileBytes);
-    }
+      if (generateBlurData) {
+        blurData = await blurImage(fileBytes);
+      }
 
-    if (generateResizedImage) {
-      imageResizedBase64 = await resizeImage(fileBytes);
-    }
+      if (generateResizedImage) {
+        imageResizedBase64 = await resizeImage(fileBytes);
+      }
 
-    shouldStripGpsData = GEO_PRIVACY_ENABLED && (
-      Boolean(exifData.tags?.GPSLatitude) ||
-      Boolean(exifData.tags?.GPSLongitude)
-    );
+      shouldStripGpsData = GEO_PRIVACY_ENABLED && (
+        Boolean(exifData.tags?.GPSLatitude) ||
+        Boolean(exifData.tags?.GPSLongitude)
+      );
+    }
+  } catch (e) {
+    error = `Error extracting image data from ${url}: "${e}"`;
   }
+
+  if (error) { console.log(error); }
 
   return {
     blobId,
@@ -102,6 +114,7 @@ export const extractImageDataFromBlobPath = async (
     imageResizedBase64,
     shouldStripGpsData,
     fileBytes,
+    error,
   };
 };
 

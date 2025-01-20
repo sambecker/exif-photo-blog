@@ -8,6 +8,7 @@ import {
   AI_TEXT_GENERATION_ENABLED,
   BLUR_ENABLED,
 } from '@/site/config';
+import ErrorNote from '@/components/ErrorNote';
 
 export const maxDuration = 60;
 
@@ -23,16 +24,19 @@ export default async function UploadPage({ params }: Params) {
     photoFormExif,
     imageResizedBase64: imageThumbnailBase64,
     shouldStripGpsData,
+    error,
   } = await extractImageDataFromBlobPath(uploadPath, {
     includeInitialPhotoFields: true,
     generateBlurData: BLUR_ENABLED,
     generateResizedImage: AI_TEXT_GENERATION_ENABLED,
   });
 
-  if (
+  const isDataMissing =
     !photoFormExif ||
-    (AI_TEXT_GENERATION_ENABLED && !imageThumbnailBase64)
-  ) {
+    (AI_TEXT_GENERATION_ENABLED && !imageThumbnailBase64);
+
+  if (isDataMissing && !error) {
+    // Only redirect if there's no error to report
     redirect(PATH_ADMIN);
   }
 
@@ -43,14 +47,18 @@ export default async function UploadPage({ params }: Params) {
   const textFieldsToAutoGenerate = AI_TEXT_AUTO_GENERATED_FIELDS;
 
   return (
-    <UploadPageClient {...{
-      blobId,
-      photoFormExif,
-      uniqueTags,
-      hasAiTextGeneration,
-      textFieldsToAutoGenerate,
-      imageThumbnailBase64,
-      shouldStripGpsData,
-    }} />
+    !isDataMissing
+      ? <UploadPageClient {...{
+        blobId,
+        photoFormExif,
+        uniqueTags,
+        hasAiTextGeneration,
+        textFieldsToAutoGenerate,
+        imageThumbnailBase64,
+        shouldStripGpsData,
+      }} />
+      : <ErrorNote>
+        {error ?? 'Unknown error'}
+      </ErrorNote>
   );
 };
