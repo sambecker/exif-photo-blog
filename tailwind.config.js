@@ -28,12 +28,18 @@ module.exports = {
       animation: {
         'rotate-pulse':
           'rotate-pulse 0.75s linear infinite normal both running',
+        'fade-in':
+          'fade-in 0.5s linear',
         'hover-drift':
           'hover-drift 8s linear infinite',
         'hover-wobble':
           'hover-wobble 6s linear infinite normal both running',
       },
       keyframes: {
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
         'rotate-pulse': {
           '0%': { transform: 'rotate(0deg) scale(1)' },
           '50%': { transform: 'rotate(180deg) scale(0.8)' },

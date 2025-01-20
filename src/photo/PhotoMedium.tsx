@@ -54,7 +54,8 @@ export default function PhotoMedium({
           {isLoading &&
             <div className={clsx(
               'absolute inset-0 flex items-center justify-center',
-              'text-white bg-black/25',
+              'text-white bg-black/25 backdrop-blur-sm',
+              'animate-fade-in',
               'z-10',
             )}>
               <Spinner size={20} color="text" />
