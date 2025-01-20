@@ -14,7 +14,7 @@ import clsx from 'clsx/lite';
 
 // Avoid showing spinner for too short a time
 const FLICKER_THRESHOLD = 400;
-// Clear loading status after long duration of inactivity
+// Clear loading status after long duration
 const MAX_LOADING_DURATION = 15_000;
 
 export type LinkWithStatusProps = ComponentProps<typeof Link> & {
@@ -35,6 +35,7 @@ export default function LinkWithStatus({
 }: LinkWithStatusProps) {
   const path = usePathname();
 
+  const [pathWhenClicked, setPathWhenClicked] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
   
   const isLoadingStartTime = useRef<number | undefined>(undefined);
@@ -43,31 +44,40 @@ export default function LinkWithStatus({
   const stopLoadingTimeout = useRef<NodeJS.Timeout | undefined>(undefined);
   const maxLoadingTimeout = useRef<NodeJS.Timeout | undefined>(undefined);
 
-  const clearTimeouts = useCallback(() =>
+  const clearTimeouts = useCallback(() => {
     [startLoadingTimeout, stopLoadingTimeout, maxLoadingTimeout]
       .forEach(timeout => {
         if (timeout.current) { clearTimeout(timeout.current); }
-      }),
-  []);
+      });
+  }, []);
+
+  const stopLoading = useCallback(() => {
+    setIsLoading(false);
+    setPathWhenClicked(undefined);
+  }, []);
 
   const isVisitingLinkHref = path === href;
 
+  const shouldCancelLoading =
+    (pathWhenClicked && pathWhenClicked !== path) ||
+    isVisitingLinkHref;
+
   useEffect(() => {
-    if (isVisitingLinkHref) {
+    if (shouldCancelLoading) {
       clearTimeouts();
       const loadingDuration = isLoadingStartTime.current
         ? Date.now() - isLoadingStartTime.current
         : 0;
       if (loadingDuration < FLICKER_THRESHOLD) {
         stopLoadingTimeout.current = setTimeout(
-          () => { setIsLoading(false); },
+          stopLoading,
           FLICKER_THRESHOLD - loadingDuration,
         );
       } else {
-        setIsLoading(false);
+        stopLoading();
       }
     }
-  }, [isVisitingLinkHref, clearTimeouts]);
+  }, [shouldCancelLoading, clearTimeouts, stopLoading]);
 
   // Clear timeouts when unmounting
   useEffect(() => () => clearTimeouts(), [clearTimeouts]);
@@ -83,6 +93,7 @@ export default function LinkWithStatus({
     onClick={e => {
       const isOpeningNewTab = e.metaKey || e.ctrlKey;
       if (!isVisitingLinkHref && !isOpeningNewTab) {
+        setPathWhenClicked(path);
         startLoadingTimeout.current = setTimeout(
           () => {
             isLoadingStartTime.current = Date.now();
@@ -91,7 +102,7 @@ export default function LinkWithStatus({
           FLICKER_THRESHOLD,
         );
         maxLoadingTimeout.current = setTimeout(
-          () => { setIsLoading(false); },
+          stopLoading,
           MAX_LOADING_DURATION,
         );
       }
