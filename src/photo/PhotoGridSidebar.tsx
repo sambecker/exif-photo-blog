@@ -44,7 +44,7 @@ export default function PhotoGridSidebar({
   , [tags, hiddenPhotosCount]);
 
   return (
-    <>
+    <div className="space-y-4">
       {SITE_ABOUT && <HeaderList
         items={[<p
           key="about"
@@ -143,6 +143,6 @@ export default function PhotoGridSidebar({
         : <HeaderList
           items={[photoQuantityText(photosCount, false)]}
         />}
-    </>
+    </div>
   );
 }
