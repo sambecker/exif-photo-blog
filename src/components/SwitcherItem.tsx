@@ -1,8 +1,8 @@
 import { clsx } from 'clsx/lite';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
-import { JSX, ReactNode } from 'react';
-import LinkWithStatus from './LinkWithStatus';
+import { JSX } from 'react';
 import Spinner from './Spinner';
+import LinkWithLoader from './LinkWithLoader';
 
 export default function SwitcherItem({
   icon,
@@ -37,23 +37,23 @@ export default function SwitcherItem({
       : 'hover:text-gray-700 dark:hover:text-gray-400',
   );
 
-  const renderContent = (content: ReactNode) => noPadding
-    ? content
+  const renderIcon = () => noPadding
+    ? icon
     : <div className="w-[28px] h-[24px] flex items-center justify-center">
-      {content}
+      {icon}
     </div>;
 
   return (
     href
-      ? <LinkWithStatus {...{
+      ? <LinkWithLoader {...{
         title,
         href,
         className,
         prefetch,
-        loadingElement: <Spinner />,
+        loader: <Spinner />,
       }}>
-        {renderContent(icon)}
-      </LinkWithStatus>
-      : <div {...{ title, onClick, className }}>{renderContent(icon)}</div>
+        {renderIcon()}
+      </LinkWithLoader>
+      : <div {...{ title, onClick, className }}>{renderIcon()}</div>
   );
 };

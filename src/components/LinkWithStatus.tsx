@@ -20,18 +20,14 @@ const MAX_LOADING_DURATION = 15_000;
 export type LinkWithStatusProps = Omit<
   ComponentProps<typeof Link>, 'children'
 > & {
-  loadingElement?: ReactNode
   loadingClassName?: string
-  contentClassName?: string
   children: ReactNode | ((props: {
     isLoading: boolean
   }) => ReactNode)
 }
 
 export default function LinkWithStatus({
-  loadingElement,
   loadingClassName,
-  contentClassName,
   href, 
   className,
   onClick,
@@ -93,7 +89,10 @@ export default function LinkWithStatus({
     {...props }
     href={href}
     className={clsx(
-      'relative transition-colors',
+      'relative flex transition-[colors,opacity]',
+      (loadingClassName || isControlled)
+        ? 'opacity-100'
+        : isLoading ? 'opacity-50' : 'opacity-100',
       className,
       isLoading && loadingClassName,
     )}
@@ -116,24 +115,8 @@ export default function LinkWithStatus({
       onClick?.(e);
     }}
   >
-    <span className={clsx(
-      'flex transition-opacity',
-      contentClassName,
-      loadingElement
-        ? isLoading ? 'opacity-0' : 'opacity-100'
-        : (loadingClassName || isControlled)
-          ? 'opacity-100'
-          : isLoading ? 'opacity-50' : 'opacity-100',
-    )}>
-      {typeof children === 'function'
-        ? children({ isLoading })
-        : children}
-    </span>
-    {isLoading && loadingElement && <span className={clsx(
-      'absolute inset-0',
-      'flex items-center justify-center',
-    )}>
-      {loadingElement}
-    </span>}
+    {typeof children === 'function'
+      ? children({ isLoading })
+      : children}
   </Link>;
 }

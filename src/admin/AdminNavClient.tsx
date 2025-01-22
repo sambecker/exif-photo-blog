@@ -1,5 +1,6 @@
 'use client';
 
+import LinkWithLoader from '@/components/LinkWithLoader';
 import LinkWithStatus from '@/components/LinkWithStatus';
 import Note from '@/components/Note';
 import SiteGrid from '@/components/SiteGrid';
@@ -73,11 +74,11 @@ export default function AdminNavClient({
                   key={label}
                   href={href}
                   className={clsx(
+                    'flex gap-0.5',
                     checkPathPrefix(pathname, href) ? 'font-bold' : 'text-dim',
                     'px-1 py-0.5 rounded-md',
                   )}
                   loadingClassName="bg-dim"
-                  contentClassName="flex gap-0.5"
                   prefetch={false}
                 >
                   <span>{label}</span>
@@ -85,19 +86,19 @@ export default function AdminNavClient({
                     <span>({count})</span>}
                 </LinkWithStatus>)}
             </div>
-            <LinkWithStatus
+            <LinkWithLoader
               href={PATH_ADMIN_CONFIGURATION}
               className={isPathAdminConfiguration(pathname)
                 ? 'font-bold'
                 : 'text-dim'}
-              loadingElement={<Spinner />}
+              loader={<Spinner />}
             >
               <BiCog
                 size={18}
                 className="inline-flex translate-y-0.5"
                 aria-label="App Configuration"
               />
-            </LinkWithStatus>
+            </LinkWithLoader>
           </div>
           {shouldShowBanner &&
             <Note icon={<FaRegClock className="flex-shrink-0" />}>
