@@ -69,18 +69,11 @@ export default function ImageWithFallback(props: ImageProps & {
         toolbar: {
           zoomIn: 1,
           zoomOut: 1,
-          oneToOne: 1,
           reset: 1,
-          prev: 0,
           play: {
             show: 0,
             size: 'large',
           },
-          next: 0,
-          rotateLeft: 1,
-          rotateRight: 1,
-          flipHorizontal: 1,
-          flipVertical: 1,
           tooltip: 1,
         },
       });
@@ -105,50 +98,55 @@ export default function ImageWithFallback(props: ImageProps & {
   };
 
   return (
-    <div
-      className={clsx(
-        className,
-        'flex relative',
-      )}
-      ref={containerRef}
-    >
-      {(showFallback || shouldDebugImageFallbacks) &&
-        <div className={clsx(
-          '@container',
-          'absolute inset-0',
-          'overflow-hidden',
-          'transition-opacity duration-300 ease-in',
-          !(BLUR_ENABLED && blurDataURL) && 'bg-main',
-          (isLoading || shouldDebugImageFallbacks)
-            ? 'opacity-100'
-            : 'opacity-0',
-        )}>
-          {(BLUR_ENABLED && blurDataURL)
-            ? <img {...{
-              ...rest,
-              src: blurDataURL,
-              className: clsx(
-                imgClassName,
-                getBlurClass(),
-              ),
-            }} />
-            :  <div className={clsx(
-              'w-full h-full',
-              'bg-gray-100/50 dark:bg-gray-900/50',
-            )} />}
-        </div>}
-      <Image
-        {...rest}
-        ref={imgRef}
-        priority={priority}
+    <>
+      <style jsx global>
+        {'.viewer-canvas { background-color: black !important; }'}
+      </style>
+      <div
         className={clsx(
-          imgClassName,
-          !isFullscreen && enableImageActions && 'cursor-zoom-in',
+          className,
+          'flex relative',
         )}
-        onLoad={onLoad}
-        onError={onError}
-      />
-      {enableImageActions && <FullscreenButton imageRef={imgRef} />}
-    </div>
+        ref={containerRef}
+      >
+        {(showFallback || shouldDebugImageFallbacks) &&
+          <div className={clsx(
+            '@container',
+            'absolute inset-0',
+            'overflow-hidden',
+            'transition-opacity duration-300 ease-in',
+            !(BLUR_ENABLED && blurDataURL) && 'bg-main',
+            (isLoading || shouldDebugImageFallbacks)
+              ? 'opacity-100'
+              : 'opacity-0',
+          )}>
+            {(BLUR_ENABLED && blurDataURL)
+              ? <img {...{
+                ...rest,
+                src: blurDataURL,
+                className: clsx(
+                  imgClassName,
+                  getBlurClass(),
+                ),
+              }} />
+              :  <div className={clsx(
+                'w-full h-full',
+                'bg-gray-100/50 dark:bg-gray-900/50',
+              )} />}
+          </div>}
+        <Image
+          {...rest}
+          ref={imgRef}
+          priority={priority}
+          className={clsx(
+            imgClassName,
+            !isFullscreen && enableImageActions && 'cursor-zoom-in',
+          )}
+          onLoad={onLoad}
+          onError={onError}
+        />
+        {enableImageActions && <FullscreenButton imageRef={imgRef} />}
+      </div>
+    </>
   );
 }
