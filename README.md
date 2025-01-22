@@ -106,7 +106,7 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS = 1` enables static optimization for photo pages (`p/[photoId]`), i.e., renders pages at build time
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES = 1` enables static optimization for OG images, i.e., renders images at build time
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES = 1` enables static optimization for photo categories (`tag/[tag]`, `shot-on/[make]/[model]`, etc.), i.e., renders pages at build time
-- `NEXT_PUBLIC_PRESERVE_ORIGINAL_UPLOADS = 1` do not compress photo uploads before storing
+- `NEXT_PUBLIC_PRESERVE_ORIGINAL_UPLOADS = 1` prevents photo uploads being compressed before storing
 
 #### Site behavior
 - `NEXT_PUBLIC_GRID_HOMEPAGE = 1` shows grid layout on homepage
