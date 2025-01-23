@@ -212,7 +212,10 @@ export const titleForPhoto = (
   if (photo.title) {
     return photo.title;
   } else if (preferDateOverUntitled && (photo.takenAt || photo.createdAt)) {
-    return formatDate(photo.takenAt || photo.createdAt, 'tiny');
+    return formatDate({
+      date: photo.takenAt || photo.createdAt,
+      length: 'tiny',
+    });
   } else {
     return 'Untitled';
   }

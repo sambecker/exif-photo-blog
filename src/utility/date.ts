@@ -23,38 +23,57 @@ type AmbiguousTimestamp = number | string;
 
 type Length = 'tiny' | 'short' | 'medium' | 'long';
 
-export const formatDate = (
+export const formatDate = ({
+  date,
+  length = 'long',
+  timezone,
+  hideTime,
+  showPlaceholder,
+}: {
   date: Date,
-  length: Length = 'long',
+  length?: Length,
   timezone?: Timezone,
+  hideTime?: boolean,
   showPlaceholder?: boolean,
-) => {
-  switch (length) {
-  case 'tiny': return showPlaceholder
-    ? DATE_STRING_FORMAT_TINY_PLACEHOLDER
-    : timezone
-      ? formatInTimeZone(date, timezone, DATE_STRING_FORMAT_TINY)
-      : format(date, DATE_STRING_FORMAT_TINY);
-  case 'short': return showPlaceholder
-    ? DATE_STRING_FORMAT_SHORT_PLACEHOLDER
-    : timezone
-      ? formatInTimeZone(date, timezone, DATE_STRING_FORMAT_SHORT)
-      : format(date, DATE_STRING_FORMAT_SHORT);
-  case 'medium': return showPlaceholder
-    ? DATE_STRING_FORMAT_MEDIUM_PLACEHOLDER
-    : timezone
-      ? formatInTimeZone(date, timezone, DATE_STRING_FORMAT_MEDIUM)
-      : format(date, DATE_STRING_FORMAT_MEDIUM);
-  default: return showPlaceholder
+}) => {
+  let formatString = !hideTime
+    ? DATE_STRING_FORMAT_LONG
+    : DATE_STRING_FORMAT_SHORT;
+  let placeholderString = !hideTime
     ? DATE_STRING_FORMAT_LONG_PLACEHOLDER
-    : timezone
-      ? formatInTimeZone(date, timezone, DATE_STRING_FORMAT_LONG)
-      : format(date, DATE_STRING_FORMAT_LONG);
+    : DATE_STRING_FORMAT_SHORT_PLACEHOLDER;
+
+  switch (length) {
+  case 'tiny':
+    formatString = DATE_STRING_FORMAT_TINY;
+    placeholderString = DATE_STRING_FORMAT_TINY_PLACEHOLDER;
+    break;
+  case 'short':
+    formatString = DATE_STRING_FORMAT_SHORT;
+    placeholderString = DATE_STRING_FORMAT_SHORT_PLACEHOLDER;
+    break;
+  case 'medium':
+    formatString = !hideTime
+      ? DATE_STRING_FORMAT_MEDIUM
+      : DATE_STRING_FORMAT_TINY;
+    placeholderString = !hideTime
+      ? DATE_STRING_FORMAT_MEDIUM_PLACEHOLDER
+      : DATE_STRING_FORMAT_TINY_PLACEHOLDER;
+    break;
   }
+
+  return showPlaceholder
+    ? placeholderString
+    : timezone
+      ? formatInTimeZone(date, timezone, formatString)
+      : format(date, formatString);
 };
 
 export const formatDateFromPostgresString = (date: string, length?: Length) =>
-  formatDate(parse(date, DATE_STRING_FORMAT_POSTGRES, new Date()), length);
+  formatDate({
+    date: parse(date, DATE_STRING_FORMAT_POSTGRES, new Date()),
+    length,
+  });
 
 export const formatDateForPostgres = (date: Date) =>
   date.toISOString().replace(
