@@ -5,6 +5,8 @@ import {
   convertTimestampWithOffsetToPostgresString,
   generateLocalNaivePostgresString,
   generateLocalPostgresString,
+  validationMessageNaivePostgresDateString,
+  validationMessagePostgresDateString,
 } from '@/utility/date';
 import {
   convertApertureValueToFNumber,
@@ -116,8 +118,14 @@ const FORM_METADATA = (
   locationName: { label: 'location name', hide: true },
   latitude: { label: 'latitude' },
   longitude: { label: 'longitude' },
-  takenAt: { label: 'taken at' },
-  takenAtNaive: { label: 'taken at (naive)' },
+  takenAt: {
+    label: 'taken at',
+    validate: validationMessagePostgresDateString,
+  },
+  takenAtNaive: {
+    label: 'taken at (naive)',
+    validate: validationMessageNaivePostgresDateString,
+  },
   priorityOrder: { label: 'priority order' },
   favorite: { label: 'favorite', type: 'checkbox', excludeFromInsert: true },
   hidden: { label: 'hidden', type: 'checkbox' },

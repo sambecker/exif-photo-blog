@@ -28,6 +28,7 @@ import PhotoLink from './PhotoLink';
 import {
   SHOULD_PREFETCH_ALL_LINKS,
   ALLOW_PUBLIC_DOWNLOADS,
+  SHOW_TAKEN_AT_TIME,
 } from '@/site/config';
 import AdminPhotoMenuClient from '@/admin/AdminPhotoMenuClient';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
@@ -248,8 +249,10 @@ export default function PhotoLarge({
                   !hasNonDateContent && isUserSignedIn && 'md:pr-7',
                 )}
                 // Created at is a naive datetime which
-                // does not require a timezone
+                // does not require a timezone and will not
+                // cause server/client time mismatch
                 timezone={null}
+                hideTime={!SHOW_TAKEN_AT_TIME}
               />
               <div className={clsx(
                 'flex gap-1 translate-y-[0.5px]',

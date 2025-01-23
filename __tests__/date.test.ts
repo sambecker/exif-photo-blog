@@ -1,6 +1,9 @@
+/* eslint-disable max-len */
 import {
   convertTimestampToNaivePostgresString,
   convertTimestampWithOffsetToPostgresString,
+  validatePostgresDateString,
+  validateNaivePostgresDateString,
 } from '../src/utility/date';
 
 describe('Date utility', () => {
@@ -29,19 +32,34 @@ describe('Date utility', () => {
       expect(convertTimestampToNaivePostgresString(timestamp))
         .toBe('2023-12-02 16:38:36');
     });
+    it('Malformed date string', () => {
+      const timestamp = '2024/01a/01 Z';
+      expect(convertTimestampWithOffsetToPostgresString(timestamp))
+        .toBe(convertTimestampWithOffsetToPostgresString(
+          new Date().toISOString(),
+        ));
+    });
+    it('Empty string', () => {
+      const timestamp = '             ';
+      expect(convertTimestampWithOffsetToPostgresString(timestamp))
+        .toBe(convertTimestampWithOffsetToPostgresString(
+          new Date().toISOString(),
+        ));
+    });
   });
-  it('Malformed date string', () => {
-    const timestamp = '2024/01a/01 Z';
-    expect(convertTimestampWithOffsetToPostgresString(timestamp))
-      .toBe(convertTimestampWithOffsetToPostgresString(
-        new Date().toISOString(),
-      ));
-  });
-  it('Empty string', () => {
-    const timestamp = '             ';
-    expect(convertTimestampWithOffsetToPostgresString(timestamp))
-      .toBe(convertTimestampWithOffsetToPostgresString(
-        new Date().toISOString(),
-      ));
+  describe('validates date strings', () => {
+    it('Correct', () => {
+      expect(validatePostgresDateString('2025-01-03T21:00:44.000Z')).toBe(true);
+      expect(validateNaivePostgresDateString('2025-01-03 16:00:44')).toBe(true);
+    });
+    it('Incorrect', () => {
+      expect(validatePostgresDateString('2024-01-01')).toBe(false);
+      expect(validatePostgresDateString('2025-01-03 16:00:44')).toBe(false);
+      expect(validateNaivePostgresDateString('2024-01-01')).toBe(false);
+      expect(validatePostgresDateString('2025-01-03T21:00:44.000')).toBe(false);
+      expect(validateNaivePostgresDateString('2025-01-03T16:00:44')).toBe(false);
+      expect(validatePostgresDateString('2025-01-03T21:00:44.000ZZ')).toBe(false);
+      expect(validateNaivePostgresDateString('2025-01-03 16:00:44Z')).toBe(false);
+    });
   });
 });
