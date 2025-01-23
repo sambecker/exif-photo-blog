@@ -2,19 +2,22 @@ import { parseISO, parse, format } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
 import { Timezone } from './timezone';
 
-const DATE_STRING_FORMAT_TINY               = 'dd MMM yy';
-const DATE_STRING_FORMAT_TINY_PLACEHOLDER   = '00 000 00';
+const DATE_STRING_FORMAT_TINY                   = 'dd MMM yy';
+const DATE_STRING_FORMAT_TINY_PLACEHOLDER       = '00 000 00';
 
-const DATE_STRING_FORMAT_SHORT              = 'dd MMM yyyy';
-const DATE_STRING_FORMAT_SHORT_PLACEHOLDER  = '00 000 0000';
+const DATE_STRING_FORMAT_SHORT                  = 'dd MMM yyyy';
+const DATE_STRING_FORMAT_SHORT_PLACEHOLDER      = '00 000 0000';
 
-const DATE_STRING_FORMAT_MEDIUM             = 'dd MMM yy h:mma';
-const DATE_STRING_FORMAT_MEDIUM_PLACEHOLDER = '00 000 00 00:0000';
+const DATE_STRING_FORMAT_MEDIUM                 = 'dd MMM yy h:mma';
+const DATE_STRING_FORMAT_MEDIUM_PLACEHOLDER     = '00 000 00 00:0000';
 
-const DATE_STRING_FORMAT_LONG               = 'dd MMM yyyy h:mma';
-const DATE_STRING_FORMAT_LONG_PLACEHOLDER   = '00 000 0000 00:0000';
+const DATE_STRING_FORMAT_LONG                   = 'dd MMM yyyy h:mma';
+const DATE_STRING_FORMAT_LONG_PLACEHOLDER       = '00 000 0000 00:0000';
 
-const DATE_STRING_FORMAT_POSTGRES           = 'yyyy-MM-dd HH:mm:ss';
+const DATE_STRING_FORMAT_POSTGRES               = 'yyyy-MM-dd HH:mm:ss';
+
+export const VALIDATION_EXAMPLE_POSTGRES        = '2025-01-03T21:00:44.000Z';
+export const VALIDATION_EXAMPLE_POSTGRES_NAIVE  = '2025-01-03 16:00:44';
 
 type AmbiguousTimestamp = number | string;
 
@@ -103,3 +106,23 @@ export const generateLocalPostgresString = () =>
 
 export const generateLocalNaivePostgresString = () =>
   format(new Date(), DATE_STRING_FORMAT_POSTGRES);
+
+// Form validation to prevent Postgres runtime errors
+
+// POSTGRES: 2025-01-03T21:00:44.000Z
+export const validatePostgresDateString = (date = ''): boolean =>
+  /^(\d{4}-\d{2}-\d{2})T\d{2}:\d{2}:\d{2}(.[\d]+)*Z$/.test(date);
+
+export const validationMessagePostgresDateString = (date = '') =>
+  validatePostgresDateString(date)
+    ? undefined
+    : `Invalid format (${VALIDATION_EXAMPLE_POSTGRES})`;
+
+// NAIVE: 2025-01-03 16:00:44
+export const validateNaivePostgresDateString = (date = ''): boolean =>
+  /^(\d{4}-\d{2}-\d{2}) \d{2}:\d{2}:\d{2}$/.test(date);
+
+export const validationMessageNaivePostgresDateString = (date = '') =>
+  validateNaivePostgresDateString(date)
+    ? undefined
+    : `Invalid format (${VALIDATION_EXAMPLE_POSTGRES_NAIVE})`;

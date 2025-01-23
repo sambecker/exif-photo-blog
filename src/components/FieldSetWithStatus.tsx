@@ -58,7 +58,7 @@ export default function FieldSetWithStatus({
       {!hideLabel && label &&
         <label
           className={clsx(
-            'flex gap-2 items-center select-none',
+            'flex flex-wrap gap-x-2 items-center select-none',
             type === 'checkbox' && 'order-2 pt-[3px]',
           )}
           htmlFor={id}
