@@ -1,3 +1,4 @@
+import { removeUrlProtocol } from '@/utility/url';
 import type { NextConfig } from 'next';
 import { RemotePattern } from 'next/dist/shared/lib/image-config';
 
@@ -20,26 +21,29 @@ const HOSTNAME_AWS_S3 =
     : undefined;
 
 const generateRemotePattern = (hostname: string) =>
-  ({ protocol: 'https', hostname, port: '', pathname: '/**' } as const);
+  ({
+    protocol: 'https',
+    hostname: removeUrlProtocol(hostname)!,
+    port: '',
+    pathname: '/**',
+  } as const);
 
-const generateRemotePatterns = () => {
-  const remotePatterns: RemotePattern[] = [];
-  if (HOSTNAME_VERCEL_BLOB) {
-    remotePatterns.push(generateRemotePattern(HOSTNAME_VERCEL_BLOB));
-  }
-  if (HOSTNAME_CLOUDFLARE_R2) {
-    remotePatterns.push(generateRemotePattern(HOSTNAME_CLOUDFLARE_R2));
-  }
-  if (HOSTNAME_AWS_S3) {
-    remotePatterns.push(generateRemotePattern(HOSTNAME_AWS_S3));
-  }
-  return remotePatterns;
-};
+const remotePatterns: RemotePattern[] = [];
+
+if (HOSTNAME_VERCEL_BLOB) {
+  remotePatterns.push(generateRemotePattern(HOSTNAME_VERCEL_BLOB));
+}
+if (HOSTNAME_CLOUDFLARE_R2) {
+  remotePatterns.push(generateRemotePattern(HOSTNAME_CLOUDFLARE_R2));
+}
+if (HOSTNAME_AWS_S3) {
+  remotePatterns.push(generateRemotePattern(HOSTNAME_AWS_S3));
+}
 
 const nextConfig: NextConfig = {
   images: {
     imageSizes: [200],
-    remotePatterns: generateRemotePatterns(),
+    remotePatterns,
     minimumCacheTTL: 31536000,
   },
 };
