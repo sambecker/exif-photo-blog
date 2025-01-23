@@ -158,7 +158,7 @@ Only one storage adapter—Vercel Blob, Cloudflare R2, or AWS S3—can be used a
    - Store public configuration:
      - `NEXT_PUBLIC_CLOUDFLARE_R2_BUCKET`: bucket name
      - `NEXT_PUBLIC_CLOUDFLARE_R2_ACCOUNT_ID`: account id (found on R2 overview page)
-     - `NEXT_PUBLIC_CLOUDFLARE_R2_PUBLIC_DOMAIN`: either "your-custom-domain.com" or "pub-jf90908...s0d9f8s0s9df.r2.dev" (_do not include "https://" in your domain_)
+     - `NEXT_PUBLIC_CLOUDFLARE_R2_PUBLIC_DOMAIN`: either "your-custom-domain.com" or "pub-jf90908...s0d9f8s0s9df.r2.dev"
 2. Setup private credentials
    - Create API token by selecting "Manage R2 API Tokens," and clicking "Create API Token"
    - Select "Object Read & Write," choose "Apply to specific buckets only," and select the bucket created in Step 1
