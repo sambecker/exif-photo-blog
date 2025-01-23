@@ -6,7 +6,6 @@ import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import {
   useActionState,
   useEffect,
-  useLayoutEffect,
   useRef,
   useState,
 } from 'react';
@@ -28,8 +27,9 @@ export default function SignInForm() {
   const [response, action] = useActionState(signInAction, undefined);
 
   const emailRef = useRef<HTMLInputElement>(null);
-  useLayoutEffect(() => {
-    emailRef.current?.focus();
+  useEffect(() => {
+    const timeout = setTimeout(() => emailRef.current?.focus(), 100);
+    return () => clearTimeout(timeout);
   }, []);
 
   useEffect(() => {
