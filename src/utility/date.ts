@@ -55,10 +55,10 @@ export const formatDate = ({
   case 'medium':
     formatString = !hideTime
       ? DATE_STRING_FORMAT_MEDIUM
-      : DATE_STRING_FORMAT_TINY;
+      : DATE_STRING_FORMAT_SHORT;
     placeholderString = !hideTime
       ? DATE_STRING_FORMAT_MEDIUM_PLACEHOLDER
-      : DATE_STRING_FORMAT_TINY_PLACEHOLDER;
+      : DATE_STRING_FORMAT_SHORT_PLACEHOLDER;
     break;
   }
 
