@@ -14,10 +14,23 @@ export const SITE_TITLE =
   'Photo Blog';
 
 // SOURCE
-export const VERCEL_COMMIT_MESSAGE =
+const VERCEL_GIT_PROVIDER =
+  process.env.NEXT_PUBLIC_VERCEL_GIT_PROVIDER;
+const VERCEL_GIT_REPO_OWNER =
+  process.env.NEXT_PUBLIC_VERCEL_GIT_REPO_OWNER;
+const VERCEL_GIT_REPO_SLUG =
+  process.env.NEXT_PUBLIC_VERCEL_GIT_REPO_SLUG;
+const VERCEL_GIT_COMMIT_MESSAGE =
   process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE;
-export const VERCEL_COMMIT_SHA =
+const VERCEL_GIT_COMMIT_SHA =
   process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA;
+const VERCEL_GIT_COMMIT_SHA_SHORT = VERCEL_GIT_COMMIT_SHA
+  ? VERCEL_GIT_COMMIT_SHA.slice(0, 7)
+  : undefined;
+const VERCEL_GIT_COMMIT_URL = VERCEL_GIT_PROVIDER === 'github'
+  // eslint-disable-next-line max-len
+  ? `https://github.com/${VERCEL_GIT_REPO_OWNER}/${VERCEL_GIT_REPO_SLUG}/commit/${VERCEL_GIT_COMMIT_SHA}`
+  : undefined;
 
 const VERCEL_ENV = process.env.NEXT_PUBLIC_VERCEL_ENV;
 const VERCEL_PRODUCTION_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL;
@@ -270,8 +283,9 @@ export const CONFIG_CHECKLIST_STATUS = {
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,
   // MISC
   baseUrl: BASE_URL,
-  commitSha: VERCEL_COMMIT_SHA ? VERCEL_COMMIT_SHA.slice(0, 7) : undefined,
-  commitMessage: VERCEL_COMMIT_MESSAGE,
+  commitSha: VERCEL_GIT_COMMIT_SHA_SHORT,
+  commitMessage: VERCEL_GIT_COMMIT_MESSAGE,
+  commitUrl: VERCEL_GIT_COMMIT_URL,
 };
 
 export type ConfigChecklistStatus = typeof CONFIG_CHECKLIST_STATUS;

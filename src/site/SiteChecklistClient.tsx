@@ -28,6 +28,7 @@ import ErrorNote from '@/components/ErrorNote';
 import Spinner from '@/components/Spinner';
 import WarningNote from '@/components/WarningNote';
 import { RiSpeedMiniLine } from 'react-icons/ri';
+import Link from 'next/link';
 
 export default function SiteChecklistClient({
   // Storage
@@ -84,6 +85,7 @@ export default function SiteChecklistClient({
   baseUrl,
   commitSha,
   commitMessage,
+  commitUrl,
   // Connection status
   databaseError,
   storageError,
@@ -664,7 +666,15 @@ export default function SiteChecklistClient({
               <span className="font-bold">Commit</span>
               &nbsp;&nbsp;
               {commitSha
-                ? <span title={commitMessage}>{commitSha}</span>
+                ? commitUrl
+                  ? <Link
+                    title={commitMessage}
+                    href={commitUrl}
+                    target="_blank"
+                  >
+                    {commitSha}
+                  </Link>
+                  : <span title={commitMessage}>{commitSha}</span>
                 : 'Not Found'}
             </div>
           </div>}
