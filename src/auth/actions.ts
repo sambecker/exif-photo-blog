@@ -6,6 +6,7 @@ import {
   KEY_CREDENTIALS_SIGN_IN_ERROR,
   KEY_CREDENTIALS_SIGN_IN_ERROR_URL,
   auth,
+  generateAuthSecret,
   signIn,
   signOut,
 } from '@/auth';
@@ -47,3 +48,5 @@ export const getAuthAction = async () => auth();
 
 export const logClientAuthUpdate = async (data: Session | null | undefined) =>
   console.log('Client auth update', data);
+
+export const generateAuthSecretAction = async () => generateAuthSecret();
