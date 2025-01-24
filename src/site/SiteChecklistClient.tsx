@@ -59,6 +59,7 @@ export default function SiteChecklistClient({
   arePhotoOGImagesStaticallyOptimized,
   arePhotoCategoriesStaticallyOptimized,
   areOriginalUploadsPreserved,
+  isBlurEnabled,
   // Display
   showExifInfo,
   showTakenAtTimeHidden,
@@ -70,7 +71,6 @@ export default function SiteChecklistClient({
   hasDefaultTheme,
   defaultTheme,
   arePhotosMatted,
-  isBlurEnabled,
   isGeoPrivacyEnabled,
   gridAspectRatio,
   hasGridAspectRatio,
@@ -319,7 +319,7 @@ export default function SiteChecklistClient({
             isPending={!hasAuthSecret && isTestingConnections}
           >
             Store auth secret in environment variable:
-            {!hasAuthSecret &&
+            {!hasAuthSecret || true &&
               <div className="overflow-x-auto">
                 <Container className="my-1.5 inline-flex" padding="tight">
                   <div className={clsx(
@@ -481,6 +481,15 @@ export default function SiteChecklistClient({
               image uploads being compressed before storing:
               {renderEnvVars(['NEXT_PUBLIC_PRESERVE_ORIGINAL_UPLOADS'])}
             </ChecklistRow>
+            <ChecklistRow
+              title="Image blur"
+              status={isBlurEnabled}
+              optional
+            >
+              Set environment variable to {'"1"'} to prevent
+              image blur data being stored and displayed:
+              {renderEnvVars(['NEXT_PUBLIC_BLUR_DISABLED'])}
+            </ChecklistRow>
           </Checklist>
           <Checklist
             title="Display"
@@ -568,15 +577,6 @@ export default function SiteChecklistClient({
               {' '}
               of each photo, and enable a surrounding border:
               {renderEnvVars(['NEXT_PUBLIC_MATTE_PHOTOS'])}
-            </ChecklistRow>
-            <ChecklistRow
-              title="Image blur"
-              status={isBlurEnabled}
-              optional
-            >
-              Set environment variable to {'"1"'} to prevent
-              image blur data being stored and displayed:
-              {renderEnvVars(['NEXT_PUBLIC_BLUR_DISABLED'])}
             </ChecklistRow>
             <ChecklistRow
               title="Geo privacy"
