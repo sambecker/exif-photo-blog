@@ -13,18 +13,19 @@ export default function FullscreenButton({
   className?: string;
   imageRef: RefObject<HTMLDivElement | null>;
 }) {
-  const { isFullscreen, setIsFullscreen } = useAppState();
+  const { isFullscreen, setIsFullscreen, isCommandKOpen } = useAppState();
 
   // Toggle fullscreen mode
   const toggleFullscreen = useCallback(async () => {
     if (!document.fullscreenElement) {
+      if (isCommandKOpen) return;
       await imageRef.current?.requestFullscreen();
       setIsFullscreen?.(true);
     } else {
       await document.exitFullscreen();
       setIsFullscreen?.(false);
     }
-  }, [imageRef, setIsFullscreen]);
+  }, [imageRef, setIsFullscreen, isCommandKOpen]);
 
   // Toggle fullscreen on 'f' key press
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
