@@ -70,10 +70,6 @@ export default function ImageWithFallback(props: ImageProps & {
           zoomIn: 1,
           zoomOut: 1,
           reset: 1,
-          play: {
-            show: 0,
-            size: 'large',
-          },
           tooltip: 1,
         },
       });
@@ -99,9 +95,19 @@ export default function ImageWithFallback(props: ImageProps & {
 
   return (
     <>
-      <style jsx global>
-        {'.viewer-canvas { background-color: black !important; }'}
-      </style>
+      <style jsx global>{` // Viewerjs customizations
+        .viewer-canvas { background-color: black !important; }
+        .viewer-reset::before {
+          content: '1:1'; 
+          font-size: 13px; 
+          font-weight: 600; 
+          color: #fff; 
+          display: inline-block; 
+          position: relative; 
+          bottom: -9px; 
+          letter-spacing: -2px; 
+          background-image: none; 
+        }`}</style>
       <div
         className={clsx(
           className,
