@@ -11,6 +11,7 @@ import HiddenHeader from '@/tag/HiddenHeader';
 import FocalLengthHeader from '@/focal/FocalLengthHeader';
 import PhotoHeader from './PhotoHeader';
 import { JSX } from 'react';
+import { IMAGE_ACTIONS_ENABLED } from '@/site/config';
 
 export default function PhotoDetailPage({
   photo,
@@ -25,7 +26,6 @@ export default function PhotoDetailPage({
   dateRange,
   shouldShare,
   includeFavoriteInAdminMenu,
-  enableImageActions,
 }: {
   photo: Photo
   photos: Photo[]
@@ -35,7 +35,6 @@ export default function PhotoDetailPage({
   dateRange?: PhotoDateRange
   shouldShare?: boolean
   includeFavoriteInAdminMenu?: boolean
-  enableImageActions?: boolean
 } & PhotoSetCategory) {
   let customHeader: JSX.Element | undefined;
 
@@ -114,7 +113,7 @@ export default function PhotoDetailPage({
             shouldShareSimulation={simulation !== undefined}
             shouldScrollOnShare={false}
             includeFavoriteInAdminMenu={includeFavoriteInAdminMenu}
-            enableImageActions={enableImageActions}
+            enableImageActions={IMAGE_ACTIONS_ENABLED}
           />,
         ]}
       />

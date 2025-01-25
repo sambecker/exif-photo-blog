@@ -168,6 +168,8 @@ export const GRID_ASPECT_RATIO =
     : 1;
 export const OG_TEXT_BOTTOM_ALIGNMENT =
   (process.env.NEXT_PUBLIC_OG_TEXT_ALIGNMENT ?? '').toUpperCase() === 'BOTTOM';
+export const IMAGE_ACTIONS_ENABLED = 
+  process.env.NEXT_PUBLIC_IMAGE_ACTIONS === '1';
 export const ADMIN_DEBUG_TOOLS_ENABLED = process.env.ADMIN_DEBUG_TOOLS === '1';
 
 export const PREFERS_LOW_DENSITY_GRID =
@@ -232,6 +234,7 @@ export const CONFIG_CHECKLIST_STATUS = {
   isPublicApiEnabled: PUBLIC_API_ENABLED,
   arePublicDownloadsEnabled: ALLOW_PUBLIC_DOWNLOADS,
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,
+  isImageActionsEnabled: IMAGE_ACTIONS_ENABLED,
   gridAspectRatio: GRID_ASPECT_RATIO,
   hasGridAspectRatio: Boolean(process.env.NEXT_PUBLIC_GRID_ASPECT_RATIO),
   gridDensity: HIGH_DENSITY_GRID,

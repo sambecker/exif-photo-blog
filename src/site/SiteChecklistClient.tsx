@@ -66,6 +66,7 @@ export default function SiteChecklistClient({
   isPublicApiEnabled,
   arePublicDownloadsEnabled,
   isOgTextBottomAligned,
+  isImageActionsEnabled,
   gridAspectRatio,
   hasGridAspectRatio,
   gridDensity,
@@ -598,6 +599,15 @@ export default function SiteChecklistClient({
               Set environment variable to {'"BOTTOM"'} to
               keep OG image text bottom aligned (default is {'"top"'}):
               {renderEnvVars(['NEXT_PUBLIC_OG_TEXT_ALIGNMENT'])}
+            </ChecklistRow>
+            <ChecklistRow
+              title="Enable image actions"
+              status={isImageActionsEnabled}
+              optional
+            >
+              Set environment variable to {'"1"'} to enable fullscreen and zoom 
+              actions when clicking on an image:
+              {renderEnvVars(['NEXT_PUBLIC_IMAGE_ACTIONS'])}
             </ChecklistRow>
           </Checklist>
         </>}

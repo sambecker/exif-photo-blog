@@ -82,7 +82,6 @@ export default async function PhotoPage({
         photo,
         photos,
         photosGrid,
-        enableImageActions: true,
       }}
     />
   );
