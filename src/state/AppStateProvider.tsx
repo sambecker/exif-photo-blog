@@ -55,10 +55,12 @@ export default function AppStateProvider({
 
   const invalidateSwr = useCallback(() => setSwrTimestamp(Date.now()), []);
 
-  const { data } = useSWR('getAuth', getAuthAction);
+  const { data, error } = useSWR('getAuth', getAuthAction);
   useEffect(() => {
-    setUserEmail(data?.user?.email ?? undefined);
-  }, [data]);
+    if (!error) {
+      setUserEmail(data?.user?.email ?? undefined);
+    }
+  }, [data, error]);
   const isUserSignedIn = Boolean(userEmail);
   useEffect(() => {
     if (isUserSignedIn) {
