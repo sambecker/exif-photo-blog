@@ -10,11 +10,13 @@ export default function ResponsiveDate({
   className,
   titleLabel,
   timezone: timezoneFromProps,
+  hideTime,
 }: {
   date: Date
   className?: string
   titleLabel?: string
   timezone?: Timezone
+  hideTime?: boolean,
 }) {
   const [timezone, setTimezone] = useState(timezoneFromProps);
 
@@ -24,23 +26,30 @@ export default function ResponsiveDate({
     }
   }, [timezoneFromProps]);
 
-  const showPlaceholderContent = timezone === undefined;
+  const showPlaceholder = timezone === undefined;
 
-  const titleDateFormatted = formatDate(date, undefined, timezone)
+  const titleDateFormatted = formatDate({ date, timezone })
     .toLocaleUpperCase();
 
   const title = titleLabel
     ? `${titleLabel}: ${titleDateFormatted}`
     : titleDateFormatted;
 
-  const contentClass = showPlaceholderContent && 'opacity-0 select-none';
+  const contentClass = showPlaceholder && 'opacity-0 select-none';
+
+  const formatDateProps = {
+    date,
+    timezone,
+    showPlaceholder,
+    hideTime,
+  } as const;
 
   return (
     <span
-      title={showPlaceholderContent ? 'LOADING LOCAL TIME' : title}
+      title={showPlaceholder ? 'LOADING LOCAL TIME' : title}
       className={clsx(
         'uppercase rounded-md transition-colors',
-        showPlaceholderContent && 'bg-dim',
+        showPlaceholder && 'bg-dim',
         className,
       )}
     >
@@ -49,20 +58,20 @@ export default function ResponsiveDate({
         className={clsx('xs:hidden', contentClass)}
         aria-hidden
       >
-        {formatDate(date, 'short', timezone, showPlaceholderContent)}
+        {formatDate({ ...formatDateProps, length: 'short' })}
       </span>
       {/* Medium */}
       <span
         className={clsx('hidden xs:inline-block sm:hidden', contentClass)}
         aria-hidden
       >
-        {formatDate(date, 'medium', timezone,showPlaceholderContent)}
+        {formatDate({ ...formatDateProps, length: 'medium' })}
       </span>
       {/* Large */}
       <span
         className={clsx('hidden sm:inline-block', contentClass)}
       >
-        {formatDate(date, undefined, timezone, showPlaceholderContent)}
+        {formatDate(formatDateProps)}
       </span>
     </span>
   );

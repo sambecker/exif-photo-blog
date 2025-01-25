@@ -6,13 +6,14 @@ import {
   CopyObjectCommand,
 } from '@aws-sdk/client-s3';
 import { StorageListResponse, generateStorageId } from '.';
+import { removeUrlProtocol } from '@/utility/url';
 
 const CLOUDFLARE_R2_BUCKET =
   process.env.NEXT_PUBLIC_CLOUDFLARE_R2_BUCKET ?? '';
 const CLOUDFLARE_R2_ACCOUNT_ID =
   process.env.NEXT_PUBLIC_CLOUDFLARE_R2_ACCOUNT_ID ?? '';
 const CLOUDFLARE_R2_PUBLIC_DOMAIN =
-  process.env.NEXT_PUBLIC_CLOUDFLARE_R2_PUBLIC_DOMAIN ?? '';
+  removeUrlProtocol(process.env.NEXT_PUBLIC_CLOUDFLARE_R2_PUBLIC_DOMAIN) ?? '';
 const CLOUDFLARE_R2_ACCESS_KEY =
   process.env.CLOUDFLARE_R2_ACCESS_KEY ?? '';
 const CLOUDFLARE_R2_SECRET_ACCESS_KEY =

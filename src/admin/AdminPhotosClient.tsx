@@ -3,7 +3,10 @@
 import PhotoUpload from '@/photo/PhotoUpload';
 import { clsx } from 'clsx/lite';
 import SiteGrid from '@/components/SiteGrid';
-import { AI_TEXT_GENERATION_ENABLED, PRO_MODE_ENABLED } from '@/site/config';
+import {
+  AI_TEXT_GENERATION_ENABLED,
+  PRESERVE_ORIGINAL_UPLOADS,
+} from '@/site/config';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import AdminPhotosTableInfinite from '@/admin/AdminPhotosTableInfinite';
 import PathLoaderButton from '@/components/primitives/PathLoaderButton';
@@ -43,7 +46,7 @@ export default function AdminPhotosClient({
           <div className="flex">
             <div className="grow min-w-0">
               <PhotoUpload
-                shouldResize={!PRO_MODE_ENABLED}
+                shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
                 isUploading={isUploading}
                 setIsUploading={setIsUploading}
                 onLastUpload={onLastPhotoUpload}

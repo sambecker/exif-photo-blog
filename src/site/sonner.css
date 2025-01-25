@@ -4,6 +4,8 @@
   [data-sonner-toaster] {
     position: fixed;
     --mobile-offset: 12px !important;
+    --mobile-offset-left: var(--mobile-offset) !important;
+    --mobile-offset-right: var(--mobile-offset) !important;
     right: var(--mobile-offset);
     left: var(--mobile-offset);
     width: 100% !important;

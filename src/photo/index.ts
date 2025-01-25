@@ -27,13 +27,13 @@ export const INFINITE_SCROLL_FEED_MULTIPLE =
 
 // INFINITE SCROLL: GRID
 export const INFINITE_SCROLL_GRID_INITIAL = HIGH_DENSITY_GRID
-  ? process.env.NODE_ENV === 'development' ? 12 : 24
-  : process.env.NODE_ENV === 'development' ? 12 : 24;
+  ? process.env.NODE_ENV === 'development' ? 12 : 48
+  : process.env.NODE_ENV === 'development' ? 12 : 48;
 export const INFINITE_SCROLL_GRID_MULTIPLE = HIGH_DENSITY_GRID
   ? process.env.NODE_ENV === 'development' ? 12 : 48
   : process.env.NODE_ENV === 'development' ? 12 : 48;
 
-// Thumbnails below /p/[photoId]
+// Thumbnails below large photos on pages like /p/[photoId]
 export const RELATED_GRID_PHOTOS_TO_SHOW = 12;
 
 export const DEFAULT_ASPECT_RATIO = 1.5;
@@ -212,7 +212,10 @@ export const titleForPhoto = (
   if (photo.title) {
     return photo.title;
   } else if (preferDateOverUntitled && (photo.takenAt || photo.createdAt)) {
-    return formatDate(photo.takenAt || photo.createdAt, 'tiny');
+    return formatDate({
+      date: photo.takenAt || photo.createdAt,
+      length: 'tiny',
+    });
   } else {
     return 'Untitled';
   }

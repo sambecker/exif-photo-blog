@@ -11,6 +11,7 @@ import { PiXLogo } from 'react-icons/pi';
 import { SHOW_SOCIAL } from '@/site/config';
 import { generateXPostText } from '@/utility/social';
 import { useAppState } from '@/state/AppState';
+import useOnPathChange from '@/utility/useOnPathChange';
 
 export default function ShareModal({
   title,
@@ -43,6 +44,8 @@ export default function ShareModal({
     >
       {icon}
     </div>;
+
+  useOnPathChange(() => setShareModalProps?.(undefined));
 
   return (
     <Modal onClose={() => setShareModalProps?.(undefined)}>

@@ -14,6 +14,7 @@ const eslintConfig = [
     rules: {
       '@next/next/no-img-element': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-require-imports': 'off',
       'no-unused-expressions': ['warn'],
       '@typescript-eslint/no-unused-vars': [
         'warn', {

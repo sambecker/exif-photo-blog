@@ -9,6 +9,7 @@ import PhotoGridSidebar from './PhotoGridSidebar';
 import PhotoGridContainer from './PhotoGridContainer';
 import { useEffect } from 'react';
 import { useAppState } from '@/state/AppState';
+import clsx from 'clsx/lite';
 
 export default function PhotoGridPage({
   photos,
@@ -35,14 +36,19 @@ export default function PhotoGridPage({
       cacheKey={`page-${PATH_GRID}`}
       photos={photos}
       count={photosCount}
-      sidebar={<div className="sticky top-4 space-y-4 mt-[-4px]">
-        <PhotoGridSidebar {...{
-          tags,
-          cameras,
-          simulations,
-          photosCount,
-        }} />
-      </div>}
+      sidebar={
+        <div className={clsx(
+          'sticky top-0 -mt-5',
+          'max-h-screen overflow-y-auto py-4',
+          '[scrollbar-width:none]',
+        )}>
+          <PhotoGridSidebar {...{
+            tags,
+            cameras,
+            simulations,
+            photosCount,
+          }} />
+        </div>}
       canSelect
     />
   );
