@@ -4,7 +4,15 @@ import 'viewerjs/dist/viewer.css';
 import { clsx } from 'clsx/lite';
 import FullscreenButton from '../FullscreenButton';
 
-export default function ImageActions({ children, enableImageActions = false, className }: { children: React.ReactNode, enableImageActions?: boolean, className?: string }) {
+export default function ImageActions({
+  children,
+  enableImageActions = false,
+  className,
+}: {
+  children: React.ReactNode;
+  enableImageActions?: boolean;
+  className?: string;
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewerRef = useRef<Viewer | null>(null);
 
@@ -46,9 +54,14 @@ export default function ImageActions({ children, enableImageActions = false, cla
           background-image: none;
         }
       `}</style>
-      <div className={clsx(className, enableImageActions && 'cursor-zoom-in')} ref={containerRef} >
+      <div
+        className={clsx(className, enableImageActions && 'cursor-zoom-in')}
+        ref={containerRef}
+      >
         {children}
-        {enableImageActions && <FullscreenButton imageRef={containerRef}/>}
+        {enableImageActions && (
+          <FullscreenButton imageRef={containerRef} />
+        )}
       </div>
     </>
   );

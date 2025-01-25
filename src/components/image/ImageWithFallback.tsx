@@ -104,6 +104,6 @@ export default function ImageWithFallback(props: ImageProps & {
         onLoad,
         onError,
       }} />
-      </div>
+    </div>
   );
 }

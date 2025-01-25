@@ -55,7 +55,8 @@ export default function FullscreenButton({
       title="Toggle Fullscreen"
       className={clsx(
         className,
-        'text-medium absolute bottom-2 right-2 bg-white p-2 rounded hidden md:block',
+        'text-medium absolute bottom-2 right-2 bg-white p-2 rounded',
+        'hidden md:block',
       )}
       icon={isFullscreen ? <MdFullscreenExit size={18} />
         : <MdFullscreen size={18} />}

@@ -10,7 +10,10 @@ export default function ImageLarge(props: ImageProps) {
     ...rest
   } = props;
   return (
-    <ImageActions enableImageActions={enableImageActions} className="flex relative items-center justify-center h-full">
+    <ImageActions
+      enableImageActions={enableImageActions}
+      className="flex relative items-center justify-center h-full"
+    >
       <ImageWithFallback {...{
         ...rest,
         blurCompatibilityLevel: blurCompatibilityMode ? 'high' : 'none',
