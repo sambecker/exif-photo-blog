@@ -50,7 +50,7 @@ export default function PhotoMedium({
       prefetch={prefetch}
     >
       {({ isLoading }) =>
-        <div>
+        <div className="w-full h-full">
           {isLoading &&
             <div className={clsx(
               'absolute inset-0 flex items-center justify-center',
