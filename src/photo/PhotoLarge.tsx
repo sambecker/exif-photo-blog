@@ -36,6 +36,7 @@ import { useRef } from 'react';
 import useOnVisible from '@/utility/useOnVisible';
 import PhotoDate from './PhotoDate';
 import { useAppState } from '@/state/AppState';
+import ImageActions from '@/components/image/ImageActions';
 
 export default function PhotoLarge({
   photo,
@@ -136,18 +137,22 @@ export default function PhotoLarge({
               ? 'h-[80%]'
               : 'h-[90%]',
           )}>
-            <ImageLarge
-              className={clsx(arePhotosMatted && 'h-full')}
-              imgClassName={clsx(arePhotosMatted &&
-                'object-contain w-full h-full')}
-              alt={altTextForPhoto(photo)}
-              src={photo.url}
-              aspectRatio={photo.aspectRatio}
-              blurDataURL={photo.blurData}
-              blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
-              priority={priority}
+            <ImageActions
               enableImageActions={enableImageActions}
-            />
+              className="flex relative items-center justify-center h-full"
+            >
+              <ImageLarge
+                className={clsx(arePhotosMatted && 'h-full')}
+                imgClassName={clsx(arePhotosMatted &&
+                'object-contain w-full h-full')}
+                alt={altTextForPhoto(photo)}
+                src={photo.url}
+                aspectRatio={photo.aspectRatio}
+                blurDataURL={photo.blurData}
+                blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
+                priority={priority}
+              />
+            </ImageActions>
           </div>
         </Link>}
       contentSide={
