@@ -52,6 +52,7 @@ export default function PhotoLarge({
   showTitleAsH1,
   showCamera = true,
   showSimulation = true,
+  showZoomControls: showZoomControlsProp = true,
   shouldShare = true,
   shouldShareTag,
   shouldShareCamera,
@@ -71,12 +72,12 @@ export default function PhotoLarge({
   showTitleAsH1?: boolean
   showCamera?: boolean
   showSimulation?: boolean
+  showZoomControls?: boolean
   shouldShare?: boolean
   shouldShareTag?: boolean
   shouldShareCamera?: boolean
   shouldShareSimulation?: boolean
   shouldShareFocalLength?: boolean
-  shouldScrollOnShare?: boolean
   includeFavoriteInAdminMenu?: boolean
   onVisible?: () => void
 }) {
@@ -88,6 +89,8 @@ export default function PhotoLarge({
     arePhotosMatted,
     isUserSignedIn,
   } = useAppState();
+
+  const showZoomControls = showZoomControlsProp && areZoomControlsEnabled;
 
   const tags = sortTags(photo.tags, primaryTag);
 
@@ -101,7 +104,7 @@ export default function PhotoLarge({
 
   const { open } = useImageZoomControls(
     refZoomControlsContainer,
-    areZoomControlsEnabled,
+    showZoomControls,
   );
 
   const hasTitle =
@@ -158,7 +161,7 @@ export default function PhotoLarge({
           )}>
             <div
               ref={refZoomControlsContainer}
-              className={clsx(areZoomControlsEnabled && 'cursor-zoom-in')}
+              className={clsx(showZoomControls && 'cursor-zoom-in')}
             >
               <ImageLarge
                 className={clsx(arePhotosMatted && 'h-full')}
@@ -299,7 +302,7 @@ export default function PhotoLarge({
                     focal={shouldShareFocalLength ? photo.focalLength : undefined}
                     prefetch={prefetchRelatedLinks}
                   />}
-                {areZoomControlsEnabled &&
+                {showZoomControls &&
                   <LoaderButton
                     title="Open Image Viewer"
                     icon={<LuZoomIn size={17} />}
