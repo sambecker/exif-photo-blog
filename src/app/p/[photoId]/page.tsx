@@ -77,8 +77,6 @@ export default async function PhotoPage({
   if (!photo) { redirect(PATH_ROOT); }
 
   return (
-    <PhotoDetailPage
-      {...{ photo, photos, photosGrid }}
-    />
+    <PhotoDetailPage {...{ photo, photos, photosGrid }} />
   );
 }
