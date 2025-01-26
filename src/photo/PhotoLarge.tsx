@@ -115,6 +115,16 @@ export default function PhotoLarge({
       prefetch={prefetch}
     />;
 
+  const matteContentWidthForAspectRatio = () => {
+    // Restrict width for landscape photos
+    // (portrait photos are always height restricted)
+    if (photo.aspectRatio > 3 / 2 + 0.1) {
+      return 'w-[90%]';
+    } else if (photo.aspectRatio >= 1) {
+      return 'w-[80%]';
+    }
+  };
+
   return (
     <SiteGrid
       containerRef={ref}
@@ -123,16 +133,15 @@ export default function PhotoLarge({
         <Link
           href={pathForPhoto({ photo })}
           className={clsx(arePhotosMatted &&
-            'flex items-center aspect-[3/2] bg-gray-100',
+            'flex items-center justify-center aspect-[3/2] bg-gray-100',
           )}
           prefetch={prefetch}
         >
           <div className={clsx(
-            arePhotosMatted &&
-              'flex items-center justify-center w-full',
-            arePhotosMatted && photo.aspectRatio >= 1
-              ? 'h-[80%]'
-              : 'h-[90%]',
+            arePhotosMatted && 'flex items-center justify-center',
+            // Always specify height to ensure fallback doesn't collapse
+            arePhotosMatted && 'h-[90%]',
+            arePhotosMatted && matteContentWidthForAspectRatio(),
           )}>
             <ImageLarge
               className={clsx(arePhotosMatted && 'h-full')}
