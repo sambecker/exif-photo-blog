@@ -36,7 +36,7 @@ import { useRef } from 'react';
 import useOnVisible from '@/utility/useOnVisible';
 import PhotoDate from './PhotoDate';
 import { useAppState } from '@/state/AppState';
-import ImageActions from '@/components/image/ImageActions';
+import ImageZoomControls from '@/components/image/ImageZoomControls';
 
 export default function PhotoLarge({
   photo,
@@ -146,7 +146,7 @@ export default function PhotoLarge({
             arePhotosMatted && 'h-[90%]',
             arePhotosMatted && matteContentWidthForAspectRatio(),
           )}>
-            <ImageActions
+            <ImageZoomControls
               enableImageActions={enableImageActions}
               className="flex relative items-center justify-center h-full"
             >
@@ -161,7 +161,7 @@ export default function PhotoLarge({
                 blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
                 priority={priority}
               />
-            </ImageActions>
+            </ImageZoomControls>
           </div>
         </Link>}
       contentSide={

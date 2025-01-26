@@ -4,7 +4,7 @@ import 'viewerjs/dist/viewer.css';
 import { clsx } from 'clsx/lite';
 import FullscreenButton from '../FullscreenButton';
 
-export default function ImageActions({
+export default function ImageZoomControls({
   children,
   enableImageActions = false,
   className,
