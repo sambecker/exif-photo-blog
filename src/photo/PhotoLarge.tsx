@@ -37,7 +37,7 @@ import useOnVisible from '@/utility/useOnVisible';
 import PhotoDate from './PhotoDate';
 import { useAppState } from '@/state/AppState';
 import useImageZoomControls from '@/components/image/useImageZoomControls';
-import { LuZoomIn } from 'react-icons/lu';
+import { LuExpand } from 'react-icons/lu';
 import LoaderButton from '@/components/primitives/LoaderButton';
 
 export default function PhotoLarge({
@@ -301,6 +301,15 @@ export default function PhotoLarge({
                   ? 'translate-x-[-2.5px]'
                   : 'md:translate-x-[-2.5px]',
               )}>
+                {showZoomControls &&
+                  <LoaderButton
+                    title="Open Image Viewer"
+                    icon={<LuExpand size={15} />}
+                    onClick={open}
+                    styleAs="link"
+                    className="text-medium translate-y-[0.25px]"
+                    hideFocusOutline
+                  />}
                 {shouldShare &&
                   <ShareButton
                     title="Share Photo"
@@ -312,14 +321,6 @@ export default function PhotoLarge({
                     // eslint-disable-next-line max-len
                     focal={shouldShareFocalLength ? photo.focalLength : undefined}
                     prefetch={prefetchRelatedLinks}
-                  />}
-                {showZoomControls &&
-                  <LoaderButton
-                    title="Open Image Viewer"
-                    icon={<LuZoomIn size={17} />}
-                    onClick={open}
-                    styleAs="link"
-                    className="text-medium"
                   />}
                 {ALLOW_PUBLIC_DOWNLOADS && 
                   <DownloadButton 

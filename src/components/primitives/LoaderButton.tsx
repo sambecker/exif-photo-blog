@@ -13,6 +13,7 @@ export default function LoaderButton(props: {
   confirmText?: string
   shouldPreventDefault?: boolean
   primary?: boolean
+  hideFocusOutline?: boolean
 } & ButtonHTMLAttributes<HTMLButtonElement>) {
   const {
     children,
@@ -24,6 +25,7 @@ export default function LoaderButton(props: {
     confirmText,
     shouldPreventDefault,
     primary,
+    hideFocusOutline,
     type = 'button',
     onClick,
     disabled,
@@ -53,6 +55,7 @@ export default function LoaderButton(props: {
         styleAs === 'link-without-hover' && 'hover:text-main',
         'inline-flex items-center gap-2 self-start whitespace-nowrap',
         primary && 'primary',
+        hideFocusOutline && 'focus:outline-none',
         className,
       )}
       disabled={isLoading || disabled}

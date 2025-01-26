@@ -46,6 +46,7 @@ export default function ShareButton({
       icon={<TbPhotoShare size={16} />}
       spinnerColor="dim"
       styleAs="link"
+      hideFocusOutline
     />
   );
 }

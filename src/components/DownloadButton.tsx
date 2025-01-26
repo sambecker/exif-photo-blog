@@ -30,6 +30,7 @@ export default function DownloadButton({
         downloadFileFromBrowser(photo.url, downloadFileNameForPhoto(photo))
           .finally(() => setIsLoading(false));
       }}
+      hideFocusOutline
     />
   );
 }
