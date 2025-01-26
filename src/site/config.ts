@@ -165,6 +165,8 @@ export const BLUR_ENABLED =
 
 export const SHOW_EXIF_DATA =
   process.env.NEXT_PUBLIC_HIDE_EXIF_DATA !== '1';
+export const SHOW_ZOOM_CONTROLS =
+  process.env.NEXT_PUBLIC_HIDE_ZOOM_CONTROLS !== '1';
 export const SHOW_TAKEN_AT_TIME =
   process.env.NEXT_PUBLIC_HIDE_TAKEN_AT_TIME !== '1';
 export const SHOW_SOCIAL =
@@ -184,8 +186,6 @@ export const DEFAULT_THEME =
     : process.env.NEXT_PUBLIC_DEFAULT_THEME === 'light'
       ? 'light'
       : 'system';
-export const ZOOM_CONTROLS_ENABLED =
-  process.env.NEXT_PUBLIC_ZOOM_CONTROLS === '1';
 export const MATTE_PHOTOS =
   process.env.NEXT_PUBLIC_MATTE_PHOTOS === '1';
 export const GEO_PRIVACY_ENABLED =
@@ -264,6 +264,7 @@ export const CONFIG_CHECKLIST_STATUS = {
   isBlurEnabled: BLUR_ENABLED,
   // DISPLAY
   showExifInfo: SHOW_EXIF_DATA,
+  showZoomControls: SHOW_ZOOM_CONTROLS,
   showTakenAtTimeHidden: SHOW_TAKEN_AT_TIME,
   showSocial: SHOW_SOCIAL,
   showFilmSimulations: SHOW_FILM_SIMULATIONS,
@@ -272,7 +273,6 @@ export const CONFIG_CHECKLIST_STATUS = {
   isGridHomepageEnabled: GRID_HOMEPAGE_ENABLED,
   hasDefaultTheme: Boolean(process.env.NEXT_PUBLIC_DEFAULT_THEME),
   defaultTheme: DEFAULT_THEME,
-  areZoomControlsEnabled: ZOOM_CONTROLS_ENABLED,
   arePhotosMatted: MATTE_PHOTOS,
   isGeoPrivacyEnabled: GEO_PRIVACY_ENABLED,
   gridAspectRatio: GRID_ASPECT_RATIO,

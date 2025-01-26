@@ -9,7 +9,7 @@ import useSWR from 'swr';
 import {
   HIGH_DENSITY_GRID,
   MATTE_PHOTOS,
-  ZOOM_CONTROLS_ENABLED,
+  SHOW_ZOOM_CONTROLS,
 } from '@/site/config';
 import { getPhotosHiddenMetaCachedAction } from '@/photo/actions';
 import { ShareModalProps } from '@/share';
@@ -50,8 +50,8 @@ export default function AppStateProvider({
   // DEBUG
   const [isGridHighDensity, setIsGridHighDensity] =
     useState(HIGH_DENSITY_GRID);
-  const [areZoomControlsEnabled, setAreZoomControlsEnabled] =
-    useState(ZOOM_CONTROLS_ENABLED);
+  const [areZoomControlsShown, setAreZoomControlsShown] =
+    useState(SHOW_ZOOM_CONTROLS);
   const [arePhotosMatted, setArePhotosMatted] =
     useState(MATTE_PHOTOS);
   const [shouldDebugImageFallbacks, setShouldDebugImageFallbacks] =
@@ -122,8 +122,8 @@ export default function AppStateProvider({
         // DEBUG
         isGridHighDensity,
         setIsGridHighDensity,
-        areZoomControlsEnabled,
-        setAreZoomControlsEnabled,
+        areZoomControlsShown,
+        setAreZoomControlsShown,
         arePhotosMatted,
         setArePhotosMatted,
         shouldDebugImageFallbacks,

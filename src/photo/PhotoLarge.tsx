@@ -85,12 +85,12 @@ export default function PhotoLarge({
   const refZoomControlsContainer = useRef<HTMLDivElement>(null);
 
   const {
-    areZoomControlsEnabled,
+    areZoomControlsShown,
     arePhotosMatted,
     isUserSignedIn,
   } = useAppState();
 
-  const showZoomControls = showZoomControlsProp && areZoomControlsEnabled;
+  const showZoomControls = showZoomControlsProp && areZoomControlsShown;
 
   const tags = sortTags(photo.tags, primaryTag);
 

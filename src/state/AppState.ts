@@ -33,8 +33,8 @@ export interface AppStateContext {
   // DEBUG
   isGridHighDensity?: boolean
   setIsGridHighDensity?: Dispatch<SetStateAction<boolean>>
-  areZoomControlsEnabled?: boolean
-  setAreZoomControlsEnabled?: Dispatch<SetStateAction<boolean>>
+  areZoomControlsShown?: boolean
+  setAreZoomControlsShown?: Dispatch<SetStateAction<boolean>>
   arePhotosMatted?: boolean
   setArePhotosMatted?: Dispatch<SetStateAction<boolean>>
   shouldDebugImageFallbacks?: boolean

@@ -60,6 +60,7 @@ export default function SiteChecklistClient({
   isBlurEnabled,
   // Display
   showExifInfo,
+  showZoomControls,
   showTakenAtTimeHidden,
   showSocial,
   showFilmSimulations,
@@ -68,7 +69,6 @@ export default function SiteChecklistClient({
   isGridHomepageEnabled,
   hasDefaultTheme,
   defaultTheme,
-  areZoomControlsEnabled,
   arePhotosMatted,
   isGeoPrivacyEnabled,
   gridAspectRatio,
@@ -475,6 +475,15 @@ export default function SiteChecklistClient({
               {renderEnvVars(['NEXT_PUBLIC_HIDE_EXIF_DATA'])}
             </ChecklistRow>
             <ChecklistRow
+              title="Zoom controls"
+              status={showZoomControls}
+              optional
+            >
+              Set environment variable to {'"1"'} to hide
+              fullscreen photo zoom controls:
+              {renderEnvVars(['NEXT_PUBLIC_HIDE_ZOOM_CONTROLS'])}
+            </ChecklistRow>
+            <ChecklistRow
               title="Show taken at time"
               status={showTakenAtTimeHidden}
               optional
@@ -537,15 +546,6 @@ export default function SiteChecklistClient({
               {' '}
               (defaults to {'\'system\''}):
               {renderEnvVars(['NEXT_PUBLIC_DEFAULT_THEME'])}
-            </ChecklistRow>
-            <ChecklistRow
-              title="Zoom controls"
-              status={areZoomControlsEnabled}
-              optional
-            >
-              Set environment variable to {'"1"'} to enable
-              fullscreen photo zoom controls:
-              {renderEnvVars(['NEXT_PUBLIC_ZOOM_CONTROLS'])}
             </ChecklistRow>
             <ChecklistRow
               title="Photo matting"
