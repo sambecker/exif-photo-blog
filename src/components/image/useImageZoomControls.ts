@@ -23,9 +23,8 @@ export default function useImageZoomControls(
         title: false,
         toolbar: {
           zoomIn: 1,
-          zoomOut: 1,
-          reset: 1,
-          tooltip: 1,
+          reset: 2,
+          zoomOut: 3,
         },
       });
       return () => {
@@ -46,7 +45,7 @@ export default function useImageZoomControls(
     };
   }, [imageRef, onShown]);
 
-  // On hide, reenable keyboard commands
+  // On hidden, reenable keyboard commands
   const onHide = useCallback(() =>
     setShouldRespondToKeyboardCommands?.(true),
   [setShouldRespondToKeyboardCommands]);
