@@ -113,7 +113,7 @@ export default function PhotoDetailPage({
             shouldShareSimulation={simulation !== undefined}
             shouldScrollOnShare={false}
             includeFavoriteInAdminMenu={includeFavoriteInAdminMenu}
-            enableImageActions={ZOOM_CONTROLS_ENABLED}
+            shouldShowZoomControls={ZOOM_CONTROLS_ENABLED}
           />,
         ]}
       />

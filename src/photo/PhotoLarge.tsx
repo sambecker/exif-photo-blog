@@ -36,7 +36,7 @@ import { useRef } from 'react';
 import useOnVisible from '@/utility/useOnVisible';
 import PhotoDate from './PhotoDate';
 import { useAppState } from '@/state/AppState';
-import ImageZoomControls from '@/components/image/ImageZoomControls';
+import useImageZoomControls from '@/components/image/useImageZoomControls';
 
 export default function PhotoLarge({
   photo,
@@ -55,9 +55,9 @@ export default function PhotoLarge({
   shouldShareCamera,
   shouldShareSimulation,
   shouldShareFocalLength,
+  shouldShowZoomControls,
   includeFavoriteInAdminMenu,
   onVisible,
-  enableImageActions = false,
 }: {
   photo: Photo
   className?: string
@@ -76,11 +76,12 @@ export default function PhotoLarge({
   shouldShareSimulation?: boolean
   shouldShareFocalLength?: boolean
   shouldScrollOnShare?: boolean
+  shouldShowZoomControls?: boolean
   includeFavoriteInAdminMenu?: boolean
   onVisible?: () => void
-  enableImageActions?: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const refZoomControls = useRef<HTMLDivElement>(null);
 
   const tags = sortTags(photo.tags, primaryTag);
 
@@ -91,6 +92,8 @@ export default function PhotoLarge({
   const showExifContent = shouldShowExifDataForPhoto(photo);
 
   useOnVisible(ref, onVisible);
+
+  useImageZoomControls(refZoomControls, shouldShowZoomControls);
 
   const { arePhotosMatted, isUserSignedIn } = useAppState();
 
@@ -146,14 +149,14 @@ export default function PhotoLarge({
             arePhotosMatted && 'h-[90%]',
             arePhotosMatted && matteContentWidthForAspectRatio(),
           )}>
-            <ImageZoomControls
-              enableImageActions={enableImageActions}
-              className="flex relative items-center justify-center h-full"
+            <div
+              ref={refZoomControls}
+              className={clsx(shouldShowZoomControls && 'cursor-zoom-in')}
             >
               <ImageLarge
                 className={clsx(arePhotosMatted && 'h-full')}
                 imgClassName={clsx(arePhotosMatted &&
-                'object-contain w-full h-full')}
+                  'object-contain w-full h-full')}
                 alt={altTextForPhoto(photo)}
                 src={photo.url}
                 aspectRatio={photo.aspectRatio}
@@ -161,7 +164,7 @@ export default function PhotoLarge({
                 blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
                 priority={priority}
               />
-            </ImageZoomControls>
+            </div>
           </div>
         </Link>}
       contentSide={

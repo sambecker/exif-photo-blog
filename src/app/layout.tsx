@@ -23,6 +23,7 @@ import ShareModals from '@/share/ShareModals';
 
 import '../site/globals.css';
 import '../site/sonner.css';
+import '../site/viewerjs.css';
 
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ['latin'],
