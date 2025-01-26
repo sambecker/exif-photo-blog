@@ -1,10 +1,10 @@
 import { useAppState } from '@/state/AppState';
+import useKeydownHandler from '@/utility/useKeydownHandler';
 import { RefObject, useCallback, useEffect, useRef } from 'react';
 import Viewer from 'viewerjs';
 
 const EVENT_SHOWN = 'shown';
 const EVENT_HIDDEN = 'hidden';
-const EVENT_KEYDOWN = 'keydown';
 
 export default function useImageZoomControls(
   imageRef: RefObject<HTMLDivElement | null>,
@@ -13,7 +13,7 @@ export default function useImageZoomControls(
 ) {
   const viewerRef = useRef<Viewer | null>(null);
 
-  const { isCommandKOpen, setShouldRespondToKeyboardCommands } = useAppState();
+  const { setShouldRespondToKeyboardCommands } = useAppState();
 
   useEffect(() => {
     if (imageRef.current && isEnabled) {
@@ -67,21 +67,12 @@ export default function useImageZoomControls(
   }, [imageRef, onHide]);
 
   // On 'F' keydown, toggle fullscreen
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (
-      shouldExpandOnFKeydown &&
-      !isCommandKOpen &&
-      e.key.toUpperCase() === 'F'
-    ) {
+  const handleKeyDown = useCallback(() => {
+    if (shouldExpandOnFKeydown) {
       viewerRef.current?.show();
     }
-  }, [shouldExpandOnFKeydown, isCommandKOpen]);
-  useEffect(() => {
-    document.addEventListener(EVENT_KEYDOWN, handleKeyDown);
-    return () => {
-      document.removeEventListener(EVENT_KEYDOWN, handleKeyDown);
-    };
-  }, [handleKeyDown]);
+  }, [shouldExpandOnFKeydown]);
+  useKeydownHandler(handleKeyDown, ['F']);
 
   return {
     open,
