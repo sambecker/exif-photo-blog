@@ -43,7 +43,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 2rem 0.25rem;
+  padding: 0rem 0.25rem 2rem 0.25rem;
 }
 .viewer-toolbar > ul > li {
   display: flex;

@@ -9,6 +9,7 @@ const EVENT_KEYDOWN = 'keydown';
 export default function useImageZoomControls(
   imageRef: RefObject<HTMLDivElement | null>,
   isEnabled?: boolean,
+  shouldExpandOnFKeydown?: boolean,
 ) {
   const viewerRef = useRef<Viewer | null>(null);
 
@@ -67,10 +68,14 @@ export default function useImageZoomControls(
 
   // On 'F' keydown, toggle fullscreen
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (!isCommandKOpen && e.key.toUpperCase() === 'F') {
+    if (
+      shouldExpandOnFKeydown &&
+      !isCommandKOpen &&
+      e.key.toUpperCase() === 'F'
+    ) {
       viewerRef.current?.show();
     }
-  }, [isCommandKOpen]);
+  }, [shouldExpandOnFKeydown, isCommandKOpen]);
   useEffect(() => {
     document.addEventListener(EVENT_KEYDOWN, handleKeyDown);
     return () => {
