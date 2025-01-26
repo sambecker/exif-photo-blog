@@ -92,6 +92,7 @@ export default function CommandKClient({
     selectedPhotoIds,
     setSelectedPhotoIds,
     isGridHighDensity,
+    areZoomControlsEnabled,
     arePhotosMatted,
     shouldShowBaselineGrid,
     shouldDebugImageFallbacks,
@@ -99,6 +100,7 @@ export default function CommandKClient({
     setShouldRespondToKeyboardCommands,
     setShouldShowBaselineGrid,
     setIsGridHighDensity,
+    setAreZoomControlsEnabled,
     setArePhotosMatted,
     setShouldDebugImageFallbacks,
   } = useAppState();
@@ -250,6 +252,10 @@ export default function CommandKClient({
       heading: 'Debug Tools',
       accessory: <RiToolsFill size={16} className="translate-x-[-1px]" />,
       items: [{
+        label: 'Toggle Zoom Controls',
+        action: () => setAreZoomControlsEnabled?.(prev => !prev),
+        annotation: areZoomControlsEnabled ? <FaCheck size={12} /> : undefined,
+      }, {
         label: 'Toggle Photo Matting',
         action: () => setArePhotosMatted?.(prev => !prev),
         annotation: arePhotosMatted ? <FaCheck size={12} /> : undefined,

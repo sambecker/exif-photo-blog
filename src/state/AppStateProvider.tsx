@@ -6,7 +6,11 @@ import { AnimationConfig } from '@/components/AnimateItems';
 import usePathnames from '@/utility/usePathnames';
 import { getAuthAction } from '@/auth/actions';
 import useSWR from 'swr';
-import { HIGH_DENSITY_GRID, MATTE_PHOTOS } from '@/site/config';
+import {
+  HIGH_DENSITY_GRID,
+  MATTE_PHOTOS,
+  ZOOM_CONTROLS_ENABLED,
+} from '@/site/config';
 import { getPhotosHiddenMetaCachedAction } from '@/photo/actions';
 import { ShareModalProps } from '@/share';
 import { storeTimezoneCookie } from '@/utility/timezone';
@@ -46,6 +50,8 @@ export default function AppStateProvider({
   // DEBUG
   const [isGridHighDensity, setIsGridHighDensity] =
     useState(HIGH_DENSITY_GRID);
+  const [areZoomControlsEnabled, setAreZoomControlsEnabled] =
+    useState(ZOOM_CONTROLS_ENABLED);
   const [arePhotosMatted, setArePhotosMatted] =
     useState(MATTE_PHOTOS);
   const [shouldDebugImageFallbacks, setShouldDebugImageFallbacks] =
@@ -116,6 +122,8 @@ export default function AppStateProvider({
         // DEBUG
         isGridHighDensity,
         setIsGridHighDensity,
+        areZoomControlsEnabled,
+        setAreZoomControlsEnabled,
         arePhotosMatted,
         setArePhotosMatted,
         shouldDebugImageFallbacks,

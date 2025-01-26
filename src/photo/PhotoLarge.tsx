@@ -55,7 +55,6 @@ export default function PhotoLarge({
   shouldShareCamera,
   shouldShareSimulation,
   shouldShareFocalLength,
-  shouldShowZoomControls,
   includeFavoriteInAdminMenu,
   onVisible,
 }: {
@@ -76,12 +75,17 @@ export default function PhotoLarge({
   shouldShareSimulation?: boolean
   shouldShareFocalLength?: boolean
   shouldScrollOnShare?: boolean
-  shouldShowZoomControls?: boolean
   includeFavoriteInAdminMenu?: boolean
   onVisible?: () => void
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const refZoomControls = useRef<HTMLDivElement>(null);
+
+  const {
+    areZoomControlsEnabled,
+    arePhotosMatted,
+    isUserSignedIn,
+  } = useAppState();
 
   const tags = sortTags(photo.tags, primaryTag);
 
@@ -93,9 +97,7 @@ export default function PhotoLarge({
 
   useOnVisible(ref, onVisible);
 
-  useImageZoomControls(refZoomControls, shouldShowZoomControls);
-
-  const { arePhotosMatted, isUserSignedIn } = useAppState();
+  useImageZoomControls(refZoomControls, areZoomControlsEnabled);
 
   const hasTitle =
     showTitle &&
@@ -151,7 +153,7 @@ export default function PhotoLarge({
           )}>
             <div
               ref={refZoomControls}
-              className={clsx(shouldShowZoomControls && 'cursor-zoom-in')}
+              className={clsx(areZoomControlsEnabled && 'cursor-zoom-in')}
             >
               <ImageLarge
                 className={clsx(arePhotosMatted && 'h-full')}
