@@ -289,6 +289,7 @@ export default function PhotoLarge({
               )}>
                 {shouldShare &&
                   <ShareButton
+                    title="Share Photo"
                     photo={photo}
                     tag={shouldShareTag ? primaryTag : undefined}
                     camera={shouldShareCamera ? camera : undefined}
@@ -300,6 +301,7 @@ export default function PhotoLarge({
                   />}
                 {areZoomControlsEnabled &&
                   <LoaderButton
+                    title="Open Image Viewer"
                     icon={<LuZoomIn size={17} />}
                     onClick={open}
                     styleAs="link"
