@@ -78,11 +78,7 @@ export default async function PhotoPage({
 
   return (
     <PhotoDetailPage
-      {...{
-        photo,
-        photos,
-        photosGrid,
-      }}
+      {...{ photo, photos, photosGrid }}
     />
   );
 }
