@@ -37,6 +37,8 @@ import useOnVisible from '@/utility/useOnVisible';
 import PhotoDate from './PhotoDate';
 import { useAppState } from '@/state/AppState';
 import useImageZoomControls from '@/components/image/useImageZoomControls';
+import { LuZoomIn } from 'react-icons/lu';
+import LoaderButton from '@/components/primitives/LoaderButton';
 
 export default function PhotoLarge({
   photo,
@@ -79,7 +81,7 @@ export default function PhotoLarge({
   onVisible?: () => void
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const refZoomControls = useRef<HTMLDivElement>(null);
+  const refZoomControlsContainer = useRef<HTMLDivElement>(null);
 
   const {
     areZoomControlsEnabled,
@@ -97,7 +99,10 @@ export default function PhotoLarge({
 
   useOnVisible(ref, onVisible);
 
-  useImageZoomControls(refZoomControls, areZoomControlsEnabled);
+  const { open } = useImageZoomControls(
+    refZoomControlsContainer,
+    areZoomControlsEnabled,
+  );
 
   const hasTitle =
     showTitle &&
@@ -152,7 +157,7 @@ export default function PhotoLarge({
             arePhotosMatted && matteContentWidthForAspectRatio(),
           )}>
             <div
-              ref={refZoomControls}
+              ref={refZoomControlsContainer}
               className={clsx(areZoomControlsEnabled && 'cursor-zoom-in')}
             >
               <ImageLarge
@@ -292,6 +297,13 @@ export default function PhotoLarge({
                     // eslint-disable-next-line max-len
                     focal={shouldShareFocalLength ? photo.focalLength : undefined}
                     prefetch={prefetchRelatedLinks}
+                  />}
+                {areZoomControlsEnabled &&
+                  <LoaderButton
+                    icon={<LuZoomIn size={17} />}
+                    onClick={open}
+                    styleAs="link"
+                    className="text-medium"
                   />}
                 {ALLOW_PUBLIC_DOWNLOADS && 
                   <DownloadButton 

@@ -33,6 +33,14 @@ export default function useImageZoomControls(
     }
   }, [imageRef, isEnabled]);
 
+  const open = useCallback(() => {
+    viewerRef.current?.show();
+  }, [viewerRef]);
+
+  const close = useCallback(() => {
+    viewerRef.current?.hide();
+  }, [viewerRef]);
+
   // On shown, disable keyboard commands
   const onShown = useCallback(() =>
     setShouldRespondToKeyboardCommands?.(false),
@@ -69,4 +77,9 @@ export default function useImageZoomControls(
       document.removeEventListener(EVENT_KEYDOWN, handleKeyDown);
     };
   }, [handleKeyDown]);
+
+  return {
+    open,
+    close,
+  };
 }
