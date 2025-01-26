@@ -127,6 +127,7 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_GRID_ASPECT_RATIO = 1.5` sets aspect ratio for grid tiles (defaults to `1`—setting to `0` removes the constraint)
 - `NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS = 1` ensures large thumbnails on photo grid views
 - `NEXT_PUBLIC_OG_TEXT_ALIGNMENT = BOTTOM` keeps OG image text bottom aligned (default is top)
+- `NEXT_PUBLIC_IMAGE_ACTIONS = 1` enables fullscreen and zoom actions when clicking on an image
 
 ## Alternate storage providers
 

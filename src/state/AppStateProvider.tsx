@@ -52,6 +52,9 @@ export default function AppStateProvider({
     useState(false);
   const [shouldShowBaselineGrid, setShouldShowBaselineGrid] =
     useState(false);
+  // FULLSCREEN
+  const [isFullscreen, setIsFullscreen] =
+    useState(false);
 
   const invalidateSwr = useCallback(() => setSwrTimestamp(Date.now()), []);
 
@@ -122,6 +125,9 @@ export default function AppStateProvider({
         setShouldDebugImageFallbacks,
         shouldShowBaselineGrid,
         setShouldShowBaselineGrid,
+        // FULLSCREEN
+        isFullscreen,
+        setIsFullscreen,
       }}
     >
       {children}

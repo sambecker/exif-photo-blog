@@ -36,6 +36,7 @@ import { useRef } from 'react';
 import useOnVisible from '@/utility/useOnVisible';
 import PhotoDate from './PhotoDate';
 import { useAppState } from '@/state/AppState';
+import ImageActions from '@/components/image/ImageActions';
 
 export default function PhotoLarge({
   photo,
@@ -56,6 +57,7 @@ export default function PhotoLarge({
   shouldShareFocalLength,
   includeFavoriteInAdminMenu,
   onVisible,
+  enableImageActions = false,
 }: {
   photo: Photo
   className?: string
@@ -76,6 +78,7 @@ export default function PhotoLarge({
   shouldScrollOnShare?: boolean
   includeFavoriteInAdminMenu?: boolean
   onVisible?: () => void
+  enableImageActions?: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -143,17 +146,22 @@ export default function PhotoLarge({
             arePhotosMatted && 'h-[90%]',
             arePhotosMatted && matteContentWidthForAspectRatio(),
           )}>
-            <ImageLarge
-              className={clsx(arePhotosMatted && 'h-full')}
-              imgClassName={clsx(arePhotosMatted &&
+            <ImageActions
+              enableImageActions={enableImageActions}
+              className="flex relative items-center justify-center h-full"
+            >
+              <ImageLarge
+                className={clsx(arePhotosMatted && 'h-full')}
+                imgClassName={clsx(arePhotosMatted &&
                 'object-contain w-full h-full')}
-              alt={altTextForPhoto(photo)}
-              src={photo.url}
-              aspectRatio={photo.aspectRatio}
-              blurDataURL={photo.blurData}
-              blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
-              priority={priority}
-            />
+                alt={altTextForPhoto(photo)}
+                src={photo.url}
+                aspectRatio={photo.aspectRatio}
+                blurDataURL={photo.blurData}
+                blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
+                priority={priority}
+              />
+            </ImageActions>
           </div>
         </Link>}
       contentSide={

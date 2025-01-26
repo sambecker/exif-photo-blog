@@ -205,6 +205,8 @@ export const PRIORITY_ORDER_ENABLED =
   process.env.NEXT_PUBLIC_IGNORE_PRIORITY_ORDER !== '1';
 export const OG_TEXT_BOTTOM_ALIGNMENT =
   (process.env.NEXT_PUBLIC_OG_TEXT_ALIGNMENT ?? '').toUpperCase() === 'BOTTOM';
+export const IMAGE_ACTIONS_ENABLED =
+  process.env.NEXT_PUBLIC_IMAGE_ACTIONS === '1';
 
 // INTERNAL
 
@@ -281,6 +283,7 @@ export const CONFIG_CHECKLIST_STATUS = {
   isPublicApiEnabled: PUBLIC_API_ENABLED,
   isPriorityOrderEnabled: PRIORITY_ORDER_ENABLED,
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,
+  isImageActionsEnabled: IMAGE_ACTIONS_ENABLED,
   // MISC
   baseUrl: BASE_URL,
   commitSha: VERCEL_GIT_COMMIT_SHA_SHORT,
