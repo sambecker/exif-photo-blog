@@ -153,7 +153,7 @@ export default function PhotoLarge({
     )}>
       <div
         ref={refZoomControlsContainer}
-        className={clsx(showZoomControls && 'cursor-zoom-in')}
+        className={clsx('h-full', showZoomControls && 'cursor-zoom-in')}
       >
         <ImageLarge
           className={clsx(arePhotosMatted && 'h-full')}
