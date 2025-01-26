@@ -165,6 +165,8 @@ export const BLUR_ENABLED =
 
 export const SHOW_EXIF_DATA =
   process.env.NEXT_PUBLIC_HIDE_EXIF_DATA !== '1';
+export const SHOW_ZOOM_CONTROLS =
+  process.env.NEXT_PUBLIC_HIDE_ZOOM_CONTROLS !== '1';
 export const SHOW_TAKEN_AT_TIME =
   process.env.NEXT_PUBLIC_HIDE_TAKEN_AT_TIME !== '1';
 export const SHOW_SOCIAL =
@@ -262,6 +264,7 @@ export const CONFIG_CHECKLIST_STATUS = {
   isBlurEnabled: BLUR_ENABLED,
   // DISPLAY
   showExifInfo: SHOW_EXIF_DATA,
+  showZoomControls: SHOW_ZOOM_CONTROLS,
   showTakenAtTimeHidden: SHOW_TAKEN_AT_TIME,
   showSocial: SHOW_SOCIAL,
   showFilmSimulations: SHOW_FILM_SIMULATIONS,

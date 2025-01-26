@@ -40,7 +40,8 @@
     "sonner": "^1.7.2",
     "swr": "^2.3.0",
     "ts-exif-parser": "^0.2.2",
-    "use-debounce": "^10.0.4"
+    "use-debounce": "^10.0.4",
+    "viewerjs": "^1.11.7"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "15.1.6",

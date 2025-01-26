@@ -60,6 +60,7 @@ export default function SiteChecklistClient({
   isBlurEnabled,
   // Display
   showExifInfo,
+  showZoomControls,
   showTakenAtTimeHidden,
   showSocial,
   showFilmSimulations,
@@ -472,6 +473,15 @@ export default function SiteChecklistClient({
             >
               Set environment variable to {'"1"'} to hide EXIF data:
               {renderEnvVars(['NEXT_PUBLIC_HIDE_EXIF_DATA'])}
+            </ChecklistRow>
+            <ChecklistRow
+              title="Zoom controls"
+              status={showZoomControls}
+              optional
+            >
+              Set environment variable to {'"1"'} to hide
+              fullscreen photo zoom controls:
+              {renderEnvVars(['NEXT_PUBLIC_HIDE_ZOOM_CONTROLS'])}
             </ChecklistRow>
             <ChecklistRow
               title="Show taken at time"

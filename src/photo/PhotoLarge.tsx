@@ -36,6 +36,9 @@ import { useRef } from 'react';
 import useOnVisible from '@/utility/useOnVisible';
 import PhotoDate from './PhotoDate';
 import { useAppState } from '@/state/AppState';
+import useImageZoomControls from '@/components/image/useImageZoomControls';
+import { LuZoomIn } from 'react-icons/lu';
+import LoaderButton from '@/components/primitives/LoaderButton';
 
 export default function PhotoLarge({
   photo,
@@ -49,6 +52,8 @@ export default function PhotoLarge({
   showTitleAsH1,
   showCamera = true,
   showSimulation = true,
+  showZoomControls: showZoomControlsProp = true,
+  shouldZoomOnFKeydown = true,
   shouldShare = true,
   shouldShareTag,
   shouldShareCamera,
@@ -68,16 +73,26 @@ export default function PhotoLarge({
   showTitleAsH1?: boolean
   showCamera?: boolean
   showSimulation?: boolean
+  showZoomControls?: boolean
+  shouldZoomOnFKeydown?: boolean
   shouldShare?: boolean
   shouldShareTag?: boolean
   shouldShareCamera?: boolean
   shouldShareSimulation?: boolean
   shouldShareFocalLength?: boolean
-  shouldScrollOnShare?: boolean
   includeFavoriteInAdminMenu?: boolean
   onVisible?: () => void
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const refZoomControlsContainer = useRef<HTMLDivElement>(null);
+
+  const {
+    areZoomControlsShown,
+    arePhotosMatted,
+    isUserSignedIn,
+  } = useAppState();
+
+  const showZoomControls = showZoomControlsProp && areZoomControlsShown;
 
   const tags = sortTags(photo.tags, primaryTag);
 
@@ -89,7 +104,11 @@ export default function PhotoLarge({
 
   useOnVisible(ref, onVisible);
 
-  const { arePhotosMatted, isUserSignedIn } = useAppState();
+  const { open } = useImageZoomControls(
+    refZoomControlsContainer,
+    showZoomControls,
+    shouldZoomOnFKeydown,
+  );
 
   const hasTitle =
     showTitle &&
@@ -125,36 +144,49 @@ export default function PhotoLarge({
     }
   };
 
+  const largePhotoContent =
+    <div className={clsx(
+      arePhotosMatted && 'flex items-center justify-center',
+      // Always specify height to ensure fallback doesn't collapse
+      arePhotosMatted && 'h-[90%]',
+      arePhotosMatted && matteContentWidthForAspectRatio(),
+    )}>
+      <div
+        ref={refZoomControlsContainer}
+        className={clsx('h-full', showZoomControls && 'cursor-zoom-in')}
+      >
+        <ImageLarge
+          className={clsx(arePhotosMatted && 'h-full')}
+          imgClassName={clsx(arePhotosMatted &&
+            'object-contain w-full h-full')}
+          alt={altTextForPhoto(photo)}
+          src={photo.url}
+          aspectRatio={photo.aspectRatio}
+          blurDataURL={photo.blurData}
+          blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
+          priority={priority}
+        />
+      </div>
+    </div>;
+
+  const largePhotoContainerClassName = clsx(arePhotosMatted &&
+    'flex items-center justify-center aspect-[3/2] bg-gray-100',
+  );
+
   return (
     <SiteGrid
       containerRef={ref}
       className={className}
-      contentMain={
-        <Link
+      contentMain={showZoomControls
+        ? <div className={largePhotoContainerClassName}>
+          {largePhotoContent}
+        </div>
+        : <Link
           href={pathForPhoto({ photo })}
-          className={clsx(arePhotosMatted &&
-            'flex items-center justify-center aspect-[3/2] bg-gray-100',
-          )}
+          className={largePhotoContainerClassName}
           prefetch={prefetch}
         >
-          <div className={clsx(
-            arePhotosMatted && 'flex items-center justify-center',
-            // Always specify height to ensure fallback doesn't collapse
-            arePhotosMatted && 'h-[90%]',
-            arePhotosMatted && matteContentWidthForAspectRatio(),
-          )}>
-            <ImageLarge
-              className={clsx(arePhotosMatted && 'h-full')}
-              imgClassName={clsx(arePhotosMatted &&
-                'object-contain w-full h-full')}
-              alt={altTextForPhoto(photo)}
-              src={photo.url}
-              aspectRatio={photo.aspectRatio}
-              blurDataURL={photo.blurData}
-              blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
-              priority={priority}
-            />
-          </div>
+          {largePhotoContent}
         </Link>}
       contentSide={
         <DivDebugBaselineGrid className={clsx(
@@ -271,6 +303,7 @@ export default function PhotoLarge({
               )}>
                 {shouldShare &&
                   <ShareButton
+                    title="Share Photo"
                     photo={photo}
                     tag={shouldShareTag ? primaryTag : undefined}
                     camera={shouldShareCamera ? camera : undefined}
@@ -279,6 +312,14 @@ export default function PhotoLarge({
                     // eslint-disable-next-line max-len
                     focal={shouldShareFocalLength ? photo.focalLength : undefined}
                     prefetch={prefetchRelatedLinks}
+                  />}
+                {showZoomControls &&
+                  <LoaderButton
+                    title="Open Image Viewer"
+                    icon={<LuZoomIn size={17} />}
+                    onClick={open}
+                    styleAs="link"
+                    className="text-medium"
                   />}
                 {ALLOW_PUBLIC_DOWNLOADS && 
                   <DownloadButton 

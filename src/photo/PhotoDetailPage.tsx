@@ -110,7 +110,6 @@ export default function PhotoDetailPage({
             shouldShareTag={tag !== undefined}
             shouldShareCamera={camera !== undefined}
             shouldShareSimulation={simulation !== undefined}
-            shouldScrollOnShare={false}
             includeFavoriteInAdminMenu={includeFavoriteInAdminMenu}
           />,
         ]}

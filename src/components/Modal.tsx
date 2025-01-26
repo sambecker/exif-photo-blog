@@ -9,6 +9,7 @@ import AnimateItems from './AnimateItems';
 import { PATH_ROOT } from '@/site/paths';
 import usePrefersReducedMotion from '@/utility/usePrefersReducedMotion';
 import useMetaThemeColor from '@/site/useMetaThemeColor';
+import useEscapeHandler from '@/photo/useEscapeHandler';
 
 export default function Modal({
   onClosePath,
@@ -54,6 +55,8 @@ export default function Modal({
       }
     },
   });
+
+  useEscapeHandler(onClose, true);
 
   return (
     <motion.div
