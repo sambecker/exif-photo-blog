@@ -39,9 +39,6 @@ export interface AppStateContext {
   setShouldDebugImageFallbacks?: Dispatch<SetStateAction<boolean>>
   shouldShowBaselineGrid?: boolean
   setShouldShowBaselineGrid?: Dispatch<SetStateAction<boolean>>
-  // FULLSCREEN
-  isFullscreen?: boolean
-  setIsFullscreen?: Dispatch<SetStateAction<boolean>>
 }
 
 export const AppStateContext = createContext<AppStateContext>({});
