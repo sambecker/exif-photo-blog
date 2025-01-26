@@ -11,7 +11,7 @@ import HiddenHeader from '@/tag/HiddenHeader';
 import FocalLengthHeader from '@/focal/FocalLengthHeader';
 import PhotoHeader from './PhotoHeader';
 import { JSX } from 'react';
-import { IMAGE_ACTIONS_ENABLED } from '@/site/config';
+import { ZOOM_CONTROLS_ENABLED } from '@/site/config';
 
 export default function PhotoDetailPage({
   photo,
@@ -113,7 +113,7 @@ export default function PhotoDetailPage({
             shouldShareSimulation={simulation !== undefined}
             shouldScrollOnShare={false}
             includeFavoriteInAdminMenu={includeFavoriteInAdminMenu}
-            enableImageActions={IMAGE_ACTIONS_ENABLED}
+            enableImageActions={ZOOM_CONTROLS_ENABLED}
           />,
         ]}
       />

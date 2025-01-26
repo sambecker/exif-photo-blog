@@ -68,6 +68,7 @@ export default function SiteChecklistClient({
   isGridHomepageEnabled,
   hasDefaultTheme,
   defaultTheme,
+  areZoomControlsEnabled,
   arePhotosMatted,
   isGeoPrivacyEnabled,
   gridAspectRatio,
@@ -78,7 +79,6 @@ export default function SiteChecklistClient({
   isPublicApiEnabled,
   isPriorityOrderEnabled,
   isOgTextBottomAligned,
-  isImageActionsEnabled,
   // Misc
   baseUrl,
   commitSha,
@@ -539,6 +539,15 @@ export default function SiteChecklistClient({
               {renderEnvVars(['NEXT_PUBLIC_DEFAULT_THEME'])}
             </ChecklistRow>
             <ChecklistRow
+              title="Zoom controls"
+              status={areZoomControlsEnabled}
+              optional
+            >
+              Set environment variable to {'"1"'} to enable
+              fullscreen photo zoom controls:
+              {renderEnvVars(['NEXT_PUBLIC_ZOOM_CONTROLS'])}
+            </ChecklistRow>
+            <ChecklistRow
               title="Photo matting"
               status={arePhotosMatted}
               optional
@@ -612,15 +621,6 @@ export default function SiteChecklistClient({
               Set environment variable to {'"BOTTOM"'} to
               keep OG image text bottom aligned (default is {'"top"'}):
               {renderEnvVars(['NEXT_PUBLIC_OG_TEXT_ALIGNMENT'])}
-            </ChecklistRow>
-            <ChecklistRow
-              title="Enable image actions"
-              status={isImageActionsEnabled}
-              optional
-            >
-              Set environment variable to {'"1"'} to enable fullscreen and zoom 
-              actions when clicking on an image:
-              {renderEnvVars(['NEXT_PUBLIC_IMAGE_ACTIONS'])}
             </ChecklistRow>
           </Checklist>
         </>}

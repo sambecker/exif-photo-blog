@@ -184,6 +184,8 @@ export const DEFAULT_THEME =
     : process.env.NEXT_PUBLIC_DEFAULT_THEME === 'light'
       ? 'light'
       : 'system';
+export const ZOOM_CONTROLS_ENABLED =
+  process.env.NEXT_PUBLIC_ZOOM_CONTROLS === '1';
 export const MATTE_PHOTOS =
   process.env.NEXT_PUBLIC_MATTE_PHOTOS === '1';
 export const GEO_PRIVACY_ENABLED =
@@ -205,8 +207,6 @@ export const PRIORITY_ORDER_ENABLED =
   process.env.NEXT_PUBLIC_IGNORE_PRIORITY_ORDER !== '1';
 export const OG_TEXT_BOTTOM_ALIGNMENT =
   (process.env.NEXT_PUBLIC_OG_TEXT_ALIGNMENT ?? '').toUpperCase() === 'BOTTOM';
-export const IMAGE_ACTIONS_ENABLED =
-  process.env.NEXT_PUBLIC_IMAGE_ACTIONS === '1';
 
 // INTERNAL
 
@@ -272,6 +272,7 @@ export const CONFIG_CHECKLIST_STATUS = {
   isGridHomepageEnabled: GRID_HOMEPAGE_ENABLED,
   hasDefaultTheme: Boolean(process.env.NEXT_PUBLIC_DEFAULT_THEME),
   defaultTheme: DEFAULT_THEME,
+  areZoomControlsEnabled: ZOOM_CONTROLS_ENABLED,
   arePhotosMatted: MATTE_PHOTOS,
   isGeoPrivacyEnabled: GEO_PRIVACY_ENABLED,
   gridAspectRatio: GRID_ASPECT_RATIO,
@@ -283,7 +284,6 @@ export const CONFIG_CHECKLIST_STATUS = {
   isPublicApiEnabled: PUBLIC_API_ENABLED,
   isPriorityOrderEnabled: PRIORITY_ORDER_ENABLED,
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,
-  isImageActionsEnabled: IMAGE_ACTIONS_ENABLED,
   // MISC
   baseUrl: BASE_URL,
   commitSha: VERCEL_GIT_COMMIT_SHA_SHORT,
