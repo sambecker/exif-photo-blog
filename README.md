@@ -17,7 +17,7 @@ Features
 - Light/dark mode
 - Automatic OG image generation
 - CMD-K menu with photo search
-- Experimental support for AI-generated descriptions
+- AI-generated text descriptions
 - Support for Fujifilm simulations
 
 <img src="/readme/og-image-share.png" alt="OG Image Preview" width=600 />
@@ -58,7 +58,7 @@ Develop locally
 
 Further customization
 -
-### Experimental AI text generation
+### AI text generation
 
 _⚠️ READ BEFORE PROCEEDING_
 
