@@ -276,10 +276,8 @@ export default function PhotoLarge({
                   />}
               </>}
             <div className={clsx(
-              'flex gap-x-2.5 gap-y-baseline',
-              ALLOW_PUBLIC_DOWNLOADS
-                ? 'flex-col'
-                : 'md:flex-col',
+              'flex gap-x-3 gap-y-baseline',
+              'md:flex-col flex-wrap',
               'md:justify-normal',
             )}>
               <PhotoDate
@@ -297,9 +295,7 @@ export default function PhotoLarge({
               />
               <div className={clsx(
                 'flex gap-1 translate-y-[0.5px]',
-                ALLOW_PUBLIC_DOWNLOADS
-                  ? 'translate-x-[-2.5px]'
-                  : 'md:translate-x-[-2.5px]',
+                'translate-x-[-2.5px]',
               )}>
                 {showZoomControls &&
                   <LoaderButton
@@ -324,9 +320,7 @@ export default function PhotoLarge({
                   />}
                 {ALLOW_PUBLIC_DOWNLOADS && 
                   <DownloadButton 
-                    className={clsx(
-                      'translate-y-[0.5px] md:translate-y-0',
-                    )}
+                    className="translate-y-[0.5px] md:translate-y-0"
                     photo={photo} 
                   />}
               </div>

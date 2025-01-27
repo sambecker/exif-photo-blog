@@ -48,7 +48,7 @@ export default function ResponsiveDate({
     <span
       title={showPlaceholder ? 'LOADING LOCAL TIME' : title}
       className={clsx(
-        'uppercase rounded-md transition-colors',
+        'uppercase rounded-md transition-colors whitespace-nowrap',
         showPlaceholder && 'bg-dim',
         className,
       )}
