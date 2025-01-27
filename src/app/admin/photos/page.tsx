@@ -6,6 +6,7 @@ import AdminPhotosClient from '@/admin/AdminPhotosClient';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { TIMEZONE_COOKIE_NAME } from '@/utility/timezone';
+import { AI_TEXT_GENERATION_ENABLED } from '@/site/config';
 
 export const maxDuration = 60;
 
@@ -56,6 +57,7 @@ export default async function AdminPhotosPage() {
       infiniteScrollInitial: INFINITE_SCROLL_INITIAL_ADMIN_PHOTOS,
       infiniteScrollMultiple: INFINITE_SCROLL_MULTIPLE_ADMIN_PHOTOS,
       timezone,
+      hasAiTextGeneration: AI_TEXT_GENERATION_ENABLED,
     }} />
   );
 }

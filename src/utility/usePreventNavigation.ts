@@ -7,7 +7,18 @@ export default function usePreventNavigation(
   includeButtons?: boolean,
 ) {
   useEffect(() => {
-    const callback = (e: MouseEvent) => {
+    // Only run on client side
+    if (typeof window === 'undefined' || !enabled) return;
+
+    // Handle beforeunload event for browser navigation/refresh
+    const beforeUnloadHandler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = confirmation;
+      return confirmation;
+    };
+
+    // Handle client-side navigation
+    const clickHandler = (e: MouseEvent) => {
       const target = e.target as HTMLElement | undefined;
       const parent = target?.parentElement as HTMLElement | undefined;
       const grandParent = parent?.parentElement as HTMLElement | undefined;
@@ -18,13 +29,19 @@ export default function usePreventNavigation(
           targets.some(target => target?.tagName === 'BUTTON')
         )
       ) {
-        if (enabled && !confirm(confirmation)) {
+        if (!window.confirm(confirmation)) {
           e.stopPropagation();
           e.preventDefault();
         }
       }
     };
-    document.addEventListener('click', callback, true);
-    return () => document.removeEventListener('click', callback, true);
+
+    window.addEventListener('beforeunload', beforeUnloadHandler);
+    document.addEventListener('click', clickHandler, true);
+    
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnloadHandler);
+      document.removeEventListener('click', clickHandler, true);
+    };
   }, [enabled, confirmation, includeButtons]);
 }

@@ -7,7 +7,7 @@ import LoaderButton from '@/components/primitives/LoaderButton';
 export default function AiButton({
   aiContent,
   requestFields = ALL_AI_AUTO_GENERATED_FIELDS,
-  shouldConfirm,
+  shouldConfirm: _shouldConfirm, // Ignored since we're skipping confirmation
   className,
 }: {
   aiContent: AiContent
@@ -42,16 +42,7 @@ export default function AiButton({
     <LoaderButton
       icon={<HiSparkles size={16} />}
       className={className}
-      onClick={e => {
-        if (
-          !shouldConfirm ||
-          confirm('Are you sure you want to overwrite existing content?')
-        ) {
-          aiContent.request(requestFields);
-        } else {
-          e.preventDefault();
-        }
-      }}
+      onClick={() => aiContent.request(requestFields)}
       isLoading={isLoading}
     />
   );
