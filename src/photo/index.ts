@@ -13,7 +13,7 @@ import {
   formatExposureTime,
 } from '@/utility/exif';
 import { parameterize } from '@/utility/string';
-import camelcaseKeys from 'camelcase-keys';
+import { camelcaseKeys } from '@/utility/case';
 import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
 

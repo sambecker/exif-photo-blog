@@ -43,60 +43,234 @@ export type AiImageQuery =
   'description-semantic';
 
 export const AI_IMAGE_QUERIES: Record<AiImageQuery, string> = {
-  'title': 'Create two poetic titles (each 2-3 words) that capture the mood, emotion, or essence of this image - one in English and one in Chinese (with only chinese characters). Format exactly as "[English title] | [Chinese title]" without quotes or extra spaces.',
+  'title': 'Create two poetic titles (each 2-3 words) that capture the mood, emotion, or essence of this image - one in English and one in Chinese (with only chinese characters). Draw from poetry, literature, famous quotes, or cultural sayings that resonate with the image\'s theme. The titles should explore various perspectives: temporal, emotional, metaphysical, natural, abstract, or sensory. They don\'t need to be direct translations but should both connect to the image\'s essence.',
   
-  'caption': 'Write two artistic captions (6-12 words each) that capture the soul of this moment - one in English and one in Chinese (with only chinese characters). Format exactly as "[English caption] | [Chinese caption]" without quotes or extra spaces.',
+  'caption': 'Write two artistic captions (6-12 words each) that capture the soul of this moment - one in English and one in Chinese (with only chinese characters). Draw from poetry, literature, famous quotes, or cultural sayings that reflect the image\'s theme. Use different poetic devices and emotional tones while considering cultural perspectives. The captions don\'t need to be direct translations but should both relate to the image\'s essence.',
   
-  'title-and-caption': 'Create a poetic title (2-3 words) and caption (6-12 words) in both English and Chinese that capture this image\'s essence. Format exactly as "Title: [English title] | [Chinese title] Caption: [English caption] | [Chinese caption]" without quotes or extra spaces.',
+  'title-and-caption': 'Create a poetic title (2-3 words) and caption (6-12 words) in both English and Chinese that capture this image\'s essence. Draw from poetry, literature, famous quotes, or cultural sayings that reflect the image\'s theme. Use different poetic devices and emotional tones while considering cultural perspectives. The responses don\'t need to be direct translations but should both relate to the image\'s essence.',
   
-  'tags': 'Analyze this image and provide bilingual tags in this exact format: "[genre], [subject1], [subject2], [color/mood], [action], [中文标签1], [中文标签2], [中文标签3], [中文标签4], [中文标签5]" where genre must be exactly one of: landscape, portraiture, animal, street, cars, event. Provide 4-5 English tags followed by their Chinese equivalents, all lowercase.',
+  'tags': 'Analyze this image and provide bilingual tags. Start with English tags (3-5 tags: primary genre first [must be exactly one of: landscape, portraiture, animal, street, cars, event], followed by subjects, colors, actions, emotions), then Chinese equivalent tags.',
   
-  'description-small': 'Provide a concise bilingual description that captures the soul of this image. Format as "[English description] | [Chinese description]".',
+  'description-small': 'Provide a concise but evocative description that captures the soul and atmosphere of this image in both English and Chinese. Focus on the emotional resonance, mood, and artistic impact while noting key visual elements that contribute to its poetic quality.',
   
-  'description': 'Create a detailed bilingual analysis of this image that weaves together artistic and emotional elements. Format as "[English analysis] | [Chinese analysis]".',
+  'description': 'Create a detailed analysis of this image that weaves together both artistic and emotional elements in English and Chinese. Explore the interplay of light, composition, and moment that creates its unique atmosphere. Describe how technical choices enhance the image\'s emotional impact and poetic narrative.',
   
-  'description-large': 'Provide an in-depth bilingual poetic analysis of this image, covering mood, composition, and technical aspects. Format as "[English analysis] | [Chinese analysis]".',
+  'description-large': 'Provide an in-depth poetic analysis of this image in both English and Chinese. Include: 1) The emotional atmosphere and mood it evokes 2) How light, color, and composition create artistic impact 3) The deeper narrative or metaphorical elements suggested 4) The way technical choices support the emotional story 5) The unique artistic voice or perspective expressed through this image.',
   
-  'description-semantic': 'List 5 highly specific key elements of this image, focusing on unique details. Format as a simple comma-separated list.',
+  'description-semantic': 'List 5 highly specific key elements, focusing on unique details, actions, or features that distinguish this particular image. Include precise descriptions of subjects, notable visual elements, and distinctive characteristics.'
 };
 
-export const parseBilingualResponse = (text: string) => {
-  const [english, chinese] = text.split('|').map(s => s.trim());
-  return { english, chinese };
+interface BilingualResponse {
+  english: string;
+  chinese: string;
+}
+
+interface TitleAndCaptionResponse {
+  title: BilingualResponse;
+  caption: BilingualResponse;
+}
+
+interface TagsResponse {
+  genre: string;
+  english_tags: string[];
+  chinese_tags: string[];
+}
+
+const validateBilingualResponse = (response: BilingualResponse): boolean => {
+  const { english, chinese } = response;
+  
+  console.log('Validating bilingual response:', { english, chinese });
+  
+  // Check for empty or whitespace-only responses
+  if (!english?.trim() || !chinese?.trim()) {
+    console.log('Failed: empty or whitespace-only response');
+    return false;
+  }
+
+  // Check for Chinese characters in Chinese response
+  const chineseRegex = /[\u4e00-\u9fa5]/;
+  if (!chineseRegex.test(chinese)) {
+    console.log('Failed: no Chinese characters in Chinese response');
+    return false;
+  }
+
+  // Check for English characters in English response
+  const englishRegex = /[a-zA-Z]/;
+  if (!englishRegex.test(english)) {
+    console.log('Failed: no English characters in English response');
+    return false;
+  }
+
+  console.log('Bilingual response validation passed');
+  return true;
 };
 
-export const parseTitleAndCaption = (text: string) => {
-  const matches = text.includes('Title')
-    ? text.match(/^Title: (.*?) \| (.*?) Caption: (.*?) \| (.*)$/)
-    : text.match(/^(.*?) \| (.*)$/);
+const validateTitleAndCaption = (response: TitleAndCaptionResponse): boolean => {
+  console.log('Validating title and caption:', response);
+  
+  // Validate title and caption exist
+  if (!response.title || !response.caption) {
+    console.log('Failed: missing title or caption');
+    return false;
+  }
 
-  if (matches?.length === 5) {
-    return {
+  // Validate both parts
+  console.log('Validating title bilingual response');
+  if (!validateBilingualResponse(response.title)) {
+    console.log('Failed: invalid title bilingual response');
+    return false;
+  }
+
+  console.log('Validating caption bilingual response');
+  if (!validateBilingualResponse(response.caption)) {
+    console.log('Failed: invalid caption bilingual response');
+    return false;
+  }
+
+  // Validate title length (2-3 words for English, 2-4 characters for Chinese)
+  const englishTitleWords = response.title.english.trim().split(/\s+/).length;
+  const chineseTitleChars = response.title.chinese.trim().length;
+  console.log('Title length validation:', { englishTitleWords, chineseTitleChars });
+  
+  if (englishTitleWords < 2 || englishTitleWords > 3 || chineseTitleChars < 2 || chineseTitleChars > 4) {
+    console.log('Failed: title length validation');
+    return false;
+  }
+
+  // Validate caption length (4-12 words for English, 4-15 characters for Chinese)
+  const englishCaptionWords = response.caption.english.trim().split(/\s+/).length;
+  const chineseCaptionChars = response.caption.chinese.trim().length;
+  console.log('Caption length validation:', { englishCaptionWords, chineseCaptionChars });
+  
+  if (englishCaptionWords < 4 || englishCaptionWords > 12 || chineseCaptionChars < 4 || chineseCaptionChars > 15) {
+    console.log('Failed: caption length validation');
+    return false;
+  }
+
+  console.log('Title and caption validation passed');
+  return true;
+};
+
+const validateTags = (response: TagsResponse): boolean => {
+  console.log('Validating tags:', response);
+  const validGenres = ['landscape', 'portraiture', 'animal', 'street', 'cars', 'event'];
+  
+  // Validate genre
+  if (!response.genre || !validGenres.includes(response.genre.toLowerCase())) {
+    console.log('Failed: invalid genre');
+    return false;
+  }
+
+  // Validate English tags
+  if (!Array.isArray(response.english_tags) || 
+      response.english_tags.length < 3 || 
+      response.english_tags.length > 5 ||
+      !response.english_tags.every(tag => typeof tag === 'string' && tag.trim().length > 0)) {
+    console.log('Failed: invalid English tags');
+    return false;
+  }
+
+  // Validate Chinese tags
+  if (!Array.isArray(response.chinese_tags) || 
+      response.chinese_tags.length < 3 || 
+      response.chinese_tags.length > 5 ||
+      !response.chinese_tags.every(tag => typeof tag === 'string' && tag.trim().length > 0)) {
+    console.log('Failed: invalid Chinese tags');
+    return false;
+  }
+
+  // Validate Chinese characters in Chinese tags
+  const chineseRegex = /[\u4e00-\u9fa5]/;
+  if (!response.chinese_tags.every(tag => chineseRegex.test(tag))) {
+    console.log('Failed: Chinese tags missing Chinese characters');
+    return false;
+  }
+
+  console.log('Tags validation passed');
+  return true;
+};
+
+export const parseBilingualResponse = (jsonStr: string): BilingualResponse => {
+  try {
+    console.log('Parsing bilingual response, input:', jsonStr);
+    const response = JSON.parse(jsonStr) as BilingualResponse;
+    console.log('Parsed bilingual response:', response);
+    const result = {
+      english: response.english.trim(),
+      chinese: response.chinese.trim()
+    };
+    console.log('Processed bilingual result:', result);
+
+    if (!validateBilingualResponse(result)) {
+      console.log('Validation failed for bilingual response:', result);
+      throw new Error('Invalid bilingual response format');
+    }
+
+    return result;
+  } catch (e) {
+    console.error('Failed to parse bilingual response:', e);
+    console.error('Original input:', jsonStr);
+    return { english: jsonStr, chinese: '' };
+  }
+};
+
+export const parseTitleAndCaption = (jsonStr: string): TitleAndCaptionResponse => {
+  try {
+    console.log('Parsing title and caption, input:', jsonStr);
+    const response = JSON.parse(jsonStr) as TitleAndCaptionResponse;
+    console.log('Parsed title and caption:', response);
+    const result = {
       title: {
-        english: matches[1].trim(),
-        chinese: matches[2].trim()
+        english: response.title.english.trim(),
+        chinese: response.title.chinese.trim()
       },
       caption: {
-        english: matches[3].trim(),
-        chinese: matches[4].trim()
+        english: response.caption.english.trim(),
+        chinese: response.caption.chinese.trim()
       }
     };
-  } else if (matches?.length === 3) {
+    console.log('Processed title and caption result:', result);
+
+    if (!validateTitleAndCaption(result)) {
+      console.log('Validation failed for title and caption:', result);
+      throw new Error('Invalid title and caption format');
+    }
+
+    return result;
+  } catch (e) {
+    console.error('Failed to parse title and caption:', e);
+    console.error('Original input:', jsonStr);
     return {
-      english: matches[1].trim(),
-      chinese: matches[2].trim()
+      title: { english: '', chinese: '' },
+      caption: { english: '', chinese: '' }
     };
   }
-  
-  return { english: text, chinese: '' };
 };
 
-export const parseTags = (text: string): string[] => {
-  return text
-    .toLowerCase()
-    .split(',')
-    .map(tag => tag.trim())
-    .filter(tag => tag.length > 0);
+export const parseTags = (jsonStr: string): string[] => {
+  try {
+    console.log('Parsing tags, input:', jsonStr);
+    const response = JSON.parse(jsonStr) as TagsResponse;
+    console.log('Parsed tags:', response);
+    
+    if (!validateTags(response)) {
+      console.log('Validation failed for tags:', response);
+      throw new Error('Invalid tags format');
+    }
+
+    const result = [
+      response.genre.toLowerCase(),
+      ...response.english_tags.map(tag => tag.toLowerCase().trim()),
+      ...response.chinese_tags.map(tag => tag.trim())
+    ];
+    console.log('Processed tags result:', result);
+
+    return result;
+  } catch (e) {
+    console.error('Failed to parse tags:', e);
+    console.error('Original input:', jsonStr);
+    return [];
+  }
 };
 
 export const cleanUpAiTextResponse = (text: string) =>

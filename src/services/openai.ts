@@ -1,4 +1,4 @@
-import { generateText, streamText, Message, CoreUserMessage } from 'ai';
+import { generateText, streamText, Message, CoreUserMessage, CoreTool } from 'ai';
 import { createStreamableValue } from 'ai/rsc';
 import { createOpenAI } from '@ai-sdk/openai';
 import { createAnthropic } from '@ai-sdk/anthropic';
@@ -14,8 +14,94 @@ const RATE_LIMIT_MAX_QUERIES_PER_HOUR = 1000;
 
 type Provider = 'openai' | 'anthropic';
 const DEFAULT_PROVIDER: Provider = 'openai';
-const OPENAI_MODEL = 'gpt-4o';
-const ANTHROPIC_MODEL = 'claude-3.5-sonnet';
+const OPENAI_MODEL = 'gpt-4-vision-preview';
+const ANTHROPIC_MODEL = 'claude-3-sonnet-20240229';
+
+// Tool definitions for structured responses
+const tools = {
+  respond_bilingual: {
+    description: 'Respond with both English and Chinese text in a structured format',
+    parameters: {
+      type: 'object',
+      properties: {
+        english: {
+          type: 'string',
+          description: 'The English response'
+        },
+        chinese: {
+          type: 'string',
+          description: 'The Chinese response (simplified characters only)'
+        }
+      },
+      required: ['english', 'chinese']
+    }
+  },
+  respond_title_and_caption: {
+    description: 'Respond with title and caption pairs in both English and Chinese',
+    parameters: {
+      type: 'object',
+      properties: {
+        title: {
+          type: 'object',
+          properties: {
+            english: {
+              type: 'string',
+              description: 'The English title (2-3 words)'
+            },
+            chinese: {
+              type: 'string',
+              description: 'The Chinese title (2-4 characters)'
+            }
+          },
+          required: ['english', 'chinese']
+        },
+        caption: {
+          type: 'object',
+          properties: {
+            english: {
+              type: 'string',
+              description: 'The English caption (6-12 words)'
+            },
+            chinese: {
+              type: 'string',
+              description: 'The Chinese caption (6-15 characters)'
+            }
+          },
+          required: ['english', 'chinese']
+        }
+      },
+      required: ['title', 'caption']
+    }
+  },
+  respond_tags: {
+    description: 'Respond with genre classification and bilingual tags',
+    parameters: {
+      type: 'object',
+      properties: {
+        genre: {
+          type: 'string',
+          enum: ['landscape', 'portraiture', 'animal', 'street', 'cars', 'event'],
+          description: 'Primary genre of the image'
+        },
+        english_tags: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'English tags (3-5 tags: subjects, colors, actions, emotions)',
+          minItems: 3,
+          maxItems: 5
+        },
+        chinese_tags: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Chinese equivalent tags',
+          minItems: 3,
+          maxItems: 5
+        }
+      },
+      required: ['genre', 'english_tags', 'chinese_tags']
+    }
+  }
+} satisfies Record<string, CoreTool>;
 
 // Initialize AI providers
 const openai = AI_TEXT_GENERATION_ENABLED
@@ -52,6 +138,23 @@ const checkRateLimitAndBailIfNecessary = async () => {
   }
 };
 
+const getQueryTool = (query: AiImageQuery): [string, CoreTool] => {
+  switch (query) {
+    case 'title':
+    case 'caption':
+    case 'description':
+    case 'description-small':
+    case 'description-large':
+      return ['respond_bilingual', tools.respond_bilingual];
+    case 'title-and-caption':
+      return ['respond_title_and_caption', tools.respond_title_and_caption];
+    case 'tags':
+      return ['respond_tags', tools.respond_tags];
+    default:
+      return ['respond_bilingual', tools.respond_bilingual];
+  }
+};
+
 const getImageTextArgs = (
   imageBase64: string,
   query: AiImageQuery,
@@ -65,9 +168,12 @@ Remember to:
 1. Follow the exact format specified
 2. Be poetic and evocative
 3. Consider both cultural perspectives
-4. Keep responses concise and focused`;
+4. Keep responses concise and focused
+
+Use the provided tool to format your response.`;
 
   const imageData = removeBase64Prefix(imageBase64);
+  const [toolName, tool] = getQueryTool(query);
 
   if (provider === 'openai' && openai) {
     return {
@@ -87,6 +193,8 @@ Remember to:
       } as CoreUserMessage],
       temperature: 0.8,
       maxTokens: 1000,
+      tools: { [toolName]: tool },
+      toolChoice: { type: 'tool', toolName }
     };
   } else if (provider === 'anthropic' && anthropic) {
     return {
@@ -107,6 +215,8 @@ Remember to:
       } as CoreUserMessage],
       temperature: 0.8,
       maxTokens: 1000,
+      tools: { [toolName]: tool },
+      toolChoice: { type: 'tool', toolName }
     };
   }
   
@@ -146,7 +256,10 @@ export const generateOpenAiImageQuery = async (
   const args = getImageTextArgs(imageBase64, query, provider);
 
   if (args) {
-    const { text } = await generateText(args);
+    const { text, toolCalls } = await generateText(args);
+    if (toolCalls?.[0]) {
+      return toolCalls[0].args;
+    }
     return cleanUpAiTextResponse(text);
   }
 };
