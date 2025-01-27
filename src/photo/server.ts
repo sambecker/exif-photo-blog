@@ -142,7 +142,16 @@ const blurImage = async (image: ArrayBuffer) =>
 
 export const resizeImageFromUrl = async (url: string) => 
   fetch(decodeURIComponent(url))
-    .then(res => res.arrayBuffer())
+    .then(async res => {
+      if (!res.ok) {
+        throw new Error(`Failed to fetch image: ${res.status} ${res.statusText}`);
+      }
+      const contentType = res.headers.get('content-type');
+      if (!contentType?.startsWith('image/')) {
+        throw new Error(`Invalid content type: ${contentType}`);
+      }
+      return res.arrayBuffer();
+    })
     .then(buffer => resizeImage(buffer))
     .catch(e => {
       console.log(`Error resizing image from URL (${url})`, e);
@@ -151,7 +160,16 @@ export const resizeImageFromUrl = async (url: string) =>
 
 export const blurImageFromUrl = async (url: string) => 
   fetch(decodeURIComponent(url))
-    .then(res => res.arrayBuffer())
+    .then(async res => {
+      if (!res.ok) {
+        throw new Error(`Failed to fetch image: ${res.status} ${res.statusText}`);
+      }
+      const contentType = res.headers.get('content-type');
+      if (!contentType?.startsWith('image/')) {
+        throw new Error(`Invalid content type: ${contentType}`);
+      }
+      return res.arrayBuffer();
+    })
     .then(buffer => blurImage(buffer))
     .catch(e => {
       console.log(`Error blurring image from URL (${url})`, e);

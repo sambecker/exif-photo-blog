@@ -38,5 +38,10 @@ export const getNextImageUrlForRequest = (
 export const getNextImageUrlForManipulation = (
   imageUrl: string,
   addBypassSecret = false,
-) =>
-  getNextImageUrlForRequest(imageUrl, 640, 90, undefined, addBypassSecret);
+) => {
+  // In development, bypass Next.js image optimization to avoid issues with Sharp
+  if (process.env.NODE_ENV === 'development') {
+    return imageUrl;
+  }
+  return getNextImageUrlForRequest(imageUrl, 640, 90, undefined, addBypassSecret);
+};
