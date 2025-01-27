@@ -26,6 +26,8 @@ import { RiSpeedMiniLine } from 'react-icons/ri';
 import Link from 'next/link';
 import SecretGenerator from './SecretGenerator';
 import CopyButton from '@/components/CopyButton';
+import { PiPaintBrushHousehold } from 'react-icons/pi';
+import { IoMdGrid } from 'react-icons/io';
 
 export default function SiteChecklistClient({
   // Storage
@@ -58,6 +60,10 @@ export default function SiteChecklistClient({
   arePhotoCategoriesStaticallyOptimized,
   areOriginalUploadsPreserved,
   isBlurEnabled,
+  // Visual
+  hasDefaultTheme,
+  defaultTheme,
+  arePhotosMatted,
   // Display
   showExifInfo,
   showZoomControls,
@@ -65,16 +71,14 @@ export default function SiteChecklistClient({
   showSocial,
   showFilmSimulations,
   showRepoLink,
-  // Settings
+  // Grid
   isGridHomepageEnabled,
-  hasDefaultTheme,
-  defaultTheme,
-  arePhotosMatted,
-  isGeoPrivacyEnabled,
   gridAspectRatio,
   hasGridAspectRatio,
   gridDensity,
   hasGridDensityPreference,
+  // Settings
+  isGeoPrivacyEnabled,
   arePublicDownloadsEnabled,
   isPublicApiEnabled,
   isPriorityOrderEnabled,
@@ -366,7 +370,6 @@ export default function SiteChecklistClient({
             title="AI text generation"
             titleShort="AI"
             icon={<HiSparkles />}
-            experimental
             optional
           >
             <ChecklistRow
@@ -462,6 +465,34 @@ export default function SiteChecklistClient({
             </ChecklistRow>
           </Checklist>
           <Checklist
+            title="Visual"
+            icon={<PiPaintBrushHousehold size={19} />}
+            optional
+          >
+            <ChecklistRow
+              title={`Default theme: ${defaultTheme}`}
+              status={hasDefaultTheme}
+              optional
+            >
+              {'Set environment variable to \'light\' or \'dark\''}
+              {' '}
+              to configure initial theme
+              {' '}
+              (defaults to {'\'system\''}):
+              {renderEnvVars(['NEXT_PUBLIC_DEFAULT_THEME'])}
+            </ChecklistRow>
+            <ChecklistRow
+              title="Photo matting"
+              status={arePhotosMatted}
+              optional
+            >
+              Set environment variable to {'"1"'} to constrain the size
+              {' '}
+              of each photo, and enable a surrounding border:
+              {renderEnvVars(['NEXT_PUBLIC_MATTE_PHOTOS'])}
+            </ChecklistRow>
+          </Checklist>
+          <Checklist
             title="Display"
             icon={<BiHide size={18} />}
             optional
@@ -475,7 +506,7 @@ export default function SiteChecklistClient({
               {renderEnvVars(['NEXT_PUBLIC_HIDE_EXIF_DATA'])}
             </ChecklistRow>
             <ChecklistRow
-              title="Zoom controls"
+              title="Show zoom controls"
               status={showZoomControls}
               optional
             >
@@ -499,7 +530,7 @@ export default function SiteChecklistClient({
             >
               Set environment variable to {'"1"'} to hide
               {' '}
-              X button from share modal:
+              X (formerly Twitter) button from share modal:
               {renderEnvVars(['NEXT_PUBLIC_HIDE_SOCIAL'])}
             </ChecklistRow>
             <ChecklistRow
@@ -522,8 +553,8 @@ export default function SiteChecklistClient({
             </ChecklistRow>
           </Checklist>
           <Checklist
-            title="Settings"
-            icon={<BiCog size={16} />}
+            title="Grid"
+            icon={<IoMdGrid size={17} />}
             optional
           >
             <ChecklistRow
@@ -534,37 +565,6 @@ export default function SiteChecklistClient({
               Set environment variable to {'"1"'} to show grid layout
               on homepage:
               {renderEnvVars(['NEXT_PUBLIC_GRID_HOMEPAGE'])}
-            </ChecklistRow>
-            <ChecklistRow
-              title={`Default theme: ${defaultTheme}`}
-              status={hasDefaultTheme}
-              optional
-            >
-              {'Set environment variable to \'light\' or \'dark\''}
-              {' '}
-              to configure initial theme
-              {' '}
-              (defaults to {'\'system\''}):
-              {renderEnvVars(['NEXT_PUBLIC_DEFAULT_THEME'])}
-            </ChecklistRow>
-            <ChecklistRow
-              title="Photo matting"
-              status={arePhotosMatted}
-              optional
-            >
-              Set environment variable to {'"1"'} to constrain the size
-              {' '}
-              of each photo, and enable a surrounding border:
-              {renderEnvVars(['NEXT_PUBLIC_MATTE_PHOTOS'])}
-            </ChecklistRow>
-            <ChecklistRow
-              title="Geo privacy"
-              status={isGeoPrivacyEnabled}
-              optional
-            >
-              Set environment variable to {'"1"'} to disable
-              collection/display of location-based data:
-              {renderEnvVars(['NEXT_PUBLIC_GEO_PRIVACY'])}
             </ChecklistRow>
             <ChecklistRow
               title={`Grid aspect ratio: ${gridAspectRatio}`}
@@ -583,8 +583,23 @@ export default function SiteChecklistClient({
             >
               Set environment variable to {'"1"'} to ensure large thumbnails
               on photo grid views (if not configured, density is based on
-              aspect ratio configuration):
+              aspect ratio):
               {renderEnvVars(['NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS'])}
+            </ChecklistRow>
+          </Checklist>
+          <Checklist
+            title="Settings"
+            icon={<BiCog size={16} />}
+            optional
+          >
+            <ChecklistRow
+              title="Geo privacy"
+              status={isGeoPrivacyEnabled}
+              optional
+            >
+              Set environment variable to {'"1"'} to disable
+              collection/display of location-based data:
+              {renderEnvVars(['NEXT_PUBLIC_GEO_PRIVACY'])}
             </ChecklistRow>
             <ChecklistRow
               title="Public downloads"
