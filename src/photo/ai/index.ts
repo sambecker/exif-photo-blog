@@ -43,29 +43,65 @@ export type AiImageQuery =
   'description-semantic';
 
 export const AI_IMAGE_QUERIES: Record<AiImageQuery, string> = {
-  'title': 'Write a compelling title for this image in 3 words or less',
-  'caption': 'Write a pithy caption for this image in 6 words or less and no punctuation',
-  'title-and-caption': 'Write a compelling title and pithy caption of 8 words or less for this image, using the format Title: "title" Caption: "caption"',
-  'tags': 'Describe this image three or less comma-separated keywords with no adjective or adverbs',
-  'description-small': 'Describe this image succinctly without the initial text "This image shows" or "This is a picture of"',
-  'description': 'Describe this image',
-  'description-large': 'Describe this image in detail',
-  'description-semantic': 'List up to 5 things in this image without description as a comma-separated list',
+  'title': 'Create two poetic titles (each 2-3 words) that capture the mood, emotion, or essence of this image - one in English and one in Chinese (with only chinese characters). Format exactly as "[English title] | [Chinese title]" without quotes or extra spaces.',
+  
+  'caption': 'Write two artistic captions (6-12 words each) that capture the soul of this moment - one in English and one in Chinese (with only chinese characters). Format exactly as "[English caption] | [Chinese caption]" without quotes or extra spaces.',
+  
+  'title-and-caption': 'Create a poetic title (2-3 words) and caption (6-12 words) in both English and Chinese that capture this image\'s essence. Format exactly as "Title: [English title] | [Chinese title] Caption: [English caption] | [Chinese caption]" without quotes or extra spaces.',
+  
+  'tags': 'Analyze this image and provide bilingual tags in this exact format: "[genre], [subject1], [subject2], [color/mood], [action], [中文标签1], [中文标签2], [中文标签3], [中文标签4], [中文标签5]" where genre must be exactly one of: landscape, portraiture, animal, street, cars, event. Provide 4-5 English tags followed by their Chinese equivalents, all lowercase.',
+  
+  'description-small': 'Provide a concise bilingual description that captures the soul of this image. Format as "[English description] | [Chinese description]".',
+  
+  'description': 'Create a detailed bilingual analysis of this image that weaves together artistic and emotional elements. Format as "[English analysis] | [Chinese analysis]".',
+  
+  'description-large': 'Provide an in-depth bilingual poetic analysis of this image, covering mood, composition, and technical aspects. Format as "[English analysis] | [Chinese analysis]".',
+  
+  'description-semantic': 'List 5 highly specific key elements of this image, focusing on unique details. Format as a simple comma-separated list.',
+};
+
+export const parseBilingualResponse = (text: string) => {
+  const [english, chinese] = text.split('|').map(s => s.trim());
+  return { english, chinese };
 };
 
 export const parseTitleAndCaption = (text: string) => {
   const matches = text.includes('Title')
-    ? text.match(/^[`'"]*Title: ["']*(.*?)["']*[ ]*Caption: ["']*(.*?)\.*["']*[`'"]*$/)
-    : text.match(/^(.*?): (.*?)$/);
+    ? text.match(/^Title: (.*?) \| (.*?) Caption: (.*?) \| (.*)$/)
+    : text.match(/^(.*?) \| (.*)$/);
 
-  return {
-    title: matches?.[1] ?? '',
-    caption: matches?.[2] ?? '',
-  };
+  if (matches?.length === 5) {
+    return {
+      title: {
+        english: matches[1].trim(),
+        chinese: matches[2].trim()
+      },
+      caption: {
+        english: matches[3].trim(),
+        chinese: matches[4].trim()
+      }
+    };
+  } else if (matches?.length === 3) {
+    return {
+      english: matches[1].trim(),
+      chinese: matches[2].trim()
+    };
+  }
+  
+  return { english: text, chinese: '' };
+};
+
+export const parseTags = (text: string): string[] => {
+  return text
+    .toLowerCase()
+    .split(',')
+    .map(tag => tag.trim())
+    .filter(tag => tag.length > 0);
 };
 
 export const cleanUpAiTextResponse = (text: string) =>
   text
     .replaceAll('\n', ' ')
     .replaceAll('"', '')
-    .replace(/\.$/, '');
+    .replace(/\.$/, '')
+    .trim();
