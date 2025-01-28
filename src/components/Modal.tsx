@@ -9,7 +9,7 @@ import AnimateItems from './AnimateItems';
 import { PATH_ROOT } from '@/site/paths';
 import usePrefersReducedMotion from '@/utility/usePrefersReducedMotion';
 import useMetaThemeColor from '@/site/useMetaThemeColor';
-import useEscapeHandler from '@/photo/useEscapeHandler';
+import useEscapeHandler from '@/utility/useEscapeHandler';
 
 export default function Modal({
   onClosePath,

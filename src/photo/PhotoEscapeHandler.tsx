@@ -3,7 +3,7 @@
 import { getEscapePath } from '@/site/paths';
 import { useRouter, usePathname } from 'next/navigation';
 import { useCallback } from 'react';
-import useEscapeHandler from './useEscapeHandler';
+import useEscapeHandler from '../utility/useEscapeHandler';
 
 export default function PhotoEscapeHandler() {
   const router = useRouter();
