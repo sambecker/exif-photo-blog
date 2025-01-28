@@ -58,6 +58,7 @@ export default function SiteChecklistClient({
   arePhotosStaticallyOptimized,
   arePhotoOGImagesStaticallyOptimized,
   arePhotoCategoriesStaticallyOptimized,
+  arePhotoCategoryOgImagesStaticallyOptimized,
   areOriginalUploadsPreserved,
   isBlurEnabled,
   // Visual
@@ -443,6 +444,11 @@ export default function SiteChecklistClient({
               {renderSubStatusWithEnvVar(
                 arePhotoCategoriesStaticallyOptimized ? 'checked' : 'optional',
                 'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES',
+              )}
+              {renderSubStatusWithEnvVar(
+                // eslint-disable-next-line max-len
+                arePhotoCategoryOgImagesStaticallyOptimized ? 'checked' : 'optional',
+                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORY_OG_IMAGES',
               )}
             </ChecklistRow>
             <ChecklistRow

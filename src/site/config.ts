@@ -154,6 +154,8 @@ export const STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES =
   process.env.NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES === '1';
 export const STATICALLY_OPTIMIZED_PHOTO_CATEGORIES =
   process.env.NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES === '1';
+export const STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES =
+  process.env.NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORY_OG_IMAGES === '1';
 export const PRESERVE_ORIGINAL_UPLOADS =
   process.env.NEXT_PUBLIC_PRESERVE_ORIGINAL_UPLOADS === '1' ||
   // Legacy environment variable name
@@ -266,6 +268,8 @@ export const CONFIG_CHECKLIST_STATUS = {
   arePhotosStaticallyOptimized: STATICALLY_OPTIMIZED_PHOTOS,
   arePhotoOGImagesStaticallyOptimized: STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES,
   arePhotoCategoriesStaticallyOptimized: STATICALLY_OPTIMIZED_PHOTO_CATEGORIES,
+  // eslint-disable-next-line max-len
+  arePhotoCategoryOgImagesStaticallyOptimized: STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES,
   areOriginalUploadsPreserved: PRESERVE_ORIGINAL_UPLOADS,
   isBlurEnabled: BLUR_ENABLED,
   // Visual
