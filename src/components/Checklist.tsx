@@ -32,9 +32,11 @@ export default function Checklist({
             {title}
           </ResponsiveText>
           {optional &&
-            <Badge type="small">Optional</Badge>}
+            <Badge type="small" className="translate-y-[0.5px]">
+              Optional
+            </Badge>}
           {experimental &&
-            <ExperimentalBadge />}
+            <ExperimentalBadge className="translate-y-[0.5px]" />}
         </span>
       </div>
       <div className={clsx(
