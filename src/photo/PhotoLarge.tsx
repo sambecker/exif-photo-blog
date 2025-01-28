@@ -33,7 +33,7 @@ import {
 import AdminPhotoMenuClient from '@/admin/AdminPhotoMenuClient';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
 import { useRef } from 'react';
-import useOnVisible from '@/utility/useOnVisible';
+import useVisible from '@/utility/useVisible';
 import PhotoDate from './PhotoDate';
 import { useAppState } from '@/state/AppState';
 import useImageZoomControls from '@/components/image/useImageZoomControls';
@@ -102,7 +102,7 @@ export default function PhotoLarge({
   const showTagsContent = tags.length > 0;
   const showExifContent = shouldShowExifDataForPhoto(photo);
 
-  useOnVisible(ref, onVisible);
+  useVisible({ ref, onVisible });
 
   const { open } = useImageZoomControls(
     refZoomControlsContainer,

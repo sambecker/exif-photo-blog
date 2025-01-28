@@ -10,7 +10,7 @@ import { clsx } from 'clsx/lite';
 import { pathForPhoto } from '@/site/paths';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
 import { useRef } from 'react';
-import useOnVisible from '@/utility/useOnVisible';
+import useVisible from '@/utility/useVisible';
 
 export default function PhotoSmall({
   photo,
@@ -31,7 +31,7 @@ export default function PhotoSmall({
 } & PhotoSetCategory) {
   const ref = useRef<HTMLAnchorElement>(null);
 
-  useOnVisible(ref, onVisible);
+  useVisible({ ref, onVisible });
 
   return (
     <Link
