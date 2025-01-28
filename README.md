@@ -113,7 +113,7 @@ Application behavior can be changed by configuring the following environment var
 #### Visual
 
 - `NEXT_PUBLIC_DEFAULT_THEME = light | dark` sets preferred initial theme (defaults to `system` when not configured)
-- `NEXT_PUBLIC_MATTE_PHOTOS = 1` constrains the size of each photo, and enables a surrounding border (potentially useful for photos with tall aspect ratios)
+- `NEXT_PUBLIC_MATTE_PHOTOS = 1` constrains the size of each photo, and display a surrounding border (potentially useful for photos with tall aspect ratios)
 
 #### Display
 - `NEXT_PUBLIC_HIDE_EXIF_DATA = 1` hides EXIF data in photo details and OG images (potentially useful for portfolios, which don't focus on photography)

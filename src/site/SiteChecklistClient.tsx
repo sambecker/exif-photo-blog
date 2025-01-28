@@ -494,7 +494,7 @@ export default function SiteChecklistClient({
             >
               Set environment variable to {'"1"'} to constrain the size
               {' '}
-              of each photo, and enable a surrounding border:
+              of each photo, and display a surrounding border:
               {renderEnvVars(['NEXT_PUBLIC_MATTE_PHOTOS'])}
             </ChecklistRow>
           </Checklist>
