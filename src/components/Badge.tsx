@@ -33,12 +33,12 @@ export default function Badge({
         highContrast
           ? 'text-invert bg-invert'
           : 'text-medium bg-gray-300/30 dark:bg-gray-700/50',
-        interactive && highContrast
+        interactive && (highContrast
           ? 'hover:opacity-70'
-          : 'hover:text-gray-900 dark:hover:text-gray-100',
-        interactive && highContrast
+          : 'hover:text-gray-900 dark:hover:text-gray-100'),
+        interactive && (highContrast
           ? 'active:opacity-90'
-          : 'active:bg-gray-200 dark:active:bg-gray-700/60',
+          : 'active:bg-gray-200 dark:active:bg-gray-700/60'),
       );
     }
   };
