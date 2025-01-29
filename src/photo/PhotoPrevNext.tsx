@@ -101,7 +101,11 @@ export default function PhotoPrevNext({
       'flex items-center',
       className,
     )}>
-      <div className="flex items-center gap-2 select-none">
+      <div className={clsx(
+        'flex gap-2 select-none',
+        // Fixes alignment issue when switching from chevrons to text
+        'items-center sm:items-start',
+      )}>
         <PhotoLink
           photo={previousPhoto}
           className="select-none h-[1rem]"

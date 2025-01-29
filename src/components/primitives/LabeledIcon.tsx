@@ -27,7 +27,7 @@ export default function LabeledIcon({
   debug?: boolean,
 } & Partial<ComponentProps<typeof Link>>) {
   const className = clsx(
-    'inline-flex gap-x-1 md:gap-x-1.5',
+    'inline-flex gap-x-1 md:gap-x-1.5 min-w-0',
     classNameProp,
     debug && 'border border-green-500 m-[-1px]',
   );
@@ -43,8 +43,8 @@ export default function LabeledIcon({
       </Icon>}
     {children && type !== 'icon-only' &&
       <span className={clsx(
-        'uppercase',
-        debug && 'bg-gray-700',
+        'uppercase overflow-hidden',
+        debug && 'bg-gray-300 dark:bg-gray-700',
       )}>
         {children}
       </span>}

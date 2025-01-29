@@ -21,14 +21,14 @@ export default function Badge({
     switch (type) {
     case 'large':
       return clsx(
-        'px-1.5 py-[0.3rem] rounded-md',
+        'px-1.5 h-[26px]',
+        'rounded-md',
         'bg-gray-100/80 dark:bg-gray-900/80',
         'border border-gray-200/60 dark:border-gray-800/75',
       );
     case 'small':
       return clsx(
-        'h-max-baseline',
-        'px-[5px] py-[2.75px]',
+        'px-[5px] h-[17px] md:h-[18px]',
         'text-[0.7rem] font-medium rounded-[0.25rem]',
         highContrast
           ? 'text-invert bg-invert'
@@ -44,12 +44,16 @@ export default function Badge({
   };
   return (
     <span className={clsx(
-      'leading-none',
+      'max-w-full',
+      'inline-flex items-center',
       stylesForType(),
       uppercase && 'uppercase tracking-wider',
       className,
     )}>
-      <span className={clsx(dimContent && 'opacity-50')}>
+      <span className={clsx(
+        'max-w-full truncate',
+        dimContent && 'opacity-50',
+      )}>
         {children}
       </span>
     </span>

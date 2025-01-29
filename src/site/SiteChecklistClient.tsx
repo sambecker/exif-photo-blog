@@ -206,7 +206,7 @@ export default function SiteChecklistClient({
 
   return (
     <div className="max-w-xl w-full">
-      <div className="space-y-6">
+      <div className="space-y-3 -mt-3">
         <Checklist
           title="Storage"
           icon={<BiData size={16} />}

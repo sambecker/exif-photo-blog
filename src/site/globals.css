@@ -190,6 +190,10 @@
     @apply
       gap-[1.1875rem] md:gap-[1.25rem]
   }
+  .h-baseline {
+    @apply
+      h-[1.1875rem] md:h-[1.25rem]
+  }
   .max-h-baseline {
     @apply
       max-h-[1.1875rem] md:max-h-[1.25rem]

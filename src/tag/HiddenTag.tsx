@@ -17,11 +17,11 @@ export default function HiddenTag({
   return (
     <EntityLink
       label={badged
-        ? <span className="inline-flex gap-1">
+        ? <span className="inline-flex items-center gap-1">
           {TAG_HIDDEN}
           <AiOutlineEyeInvisible
             size={13}
-            className="translate-y-[-1.5px]"
+            className="translate-y-[-0.5px]"
           />
         </span>
         : TAG_HIDDEN}
