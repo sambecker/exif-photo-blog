@@ -48,7 +48,7 @@ export default function CommandKItem({
     >
       <div className="flex items-center gap-2 sm:gap-3">
         {accessory}
-        <span className="grow text-ellipsis truncate">
+        <span className="grow truncate">
           {label}
         </span>
         {annotation && !loading &&

@@ -54,7 +54,7 @@ function AdminChildPage({
                     <Badge
                       dimContent={isLoading}
                       className={clsx(
-                        breadcrumbEllipsis && 'text-ellipsis truncate',
+                        breadcrumbEllipsis && 'truncate',
                       )}
                     >
                       {breadcrumb}

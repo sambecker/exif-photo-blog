@@ -222,7 +222,7 @@ export default function ImageInput({
           />
         </label>
         {showUploadStatus && filesLength > 0 &&
-          <div className="max-w-full truncate text-ellipsis">
+          <div className="max-w-full truncate">
             {fileUploadName}
           </div>}
       </div>

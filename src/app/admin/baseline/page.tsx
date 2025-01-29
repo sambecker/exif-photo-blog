@@ -1,5 +1,6 @@
 'use client';
 
+import Badge from '@/components/Badge';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import SiteGrid from '@/components/SiteGrid';
@@ -8,12 +9,12 @@ import LabeledIcon from '@/components/primitives/LabeledIcon';
 import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
 import { useAppState } from '@/state/AppState';
 import { clsx } from 'clsx/lite';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaCamera, FaHandSparkles, FaUserAltSlash } from 'react-icons/fa';
 import { IoMdCamera } from 'react-icons/io';
 import { IoImageSharp } from 'react-icons/io5';
 
-const DEBUG_LINES = new Array(22).fill(null);
+const DEBUG_LINES = new Array(30).fill(null);
 
 export default function ComponentsPage() {
   const {
@@ -22,6 +23,11 @@ export default function ComponentsPage() {
   } = useAppState();
 
   const [debugComponents, setDebugComponents] = useState(false);
+
+  useEffect(() => {
+    setShouldShowBaselineGrid?.(true);
+    return () => setShouldShowBaselineGrid?.(false);
+  }, [setShouldShowBaselineGrid]);
 
   return (
     <SiteGrid
@@ -66,21 +72,6 @@ export default function ComponentsPage() {
             </div>
             <div>
               <LabeledIcon icon={<IoImageSharp />} debug={debugComponents}>
-                Image
-              </LabeledIcon>
-            </div>
-            <div>
-              <LabeledIcon icon={<FaUserAltSlash />} debug={debugComponents}>
-                Image
-              </LabeledIcon>
-            </div>
-            <div>
-              <LabeledIcon icon={<FaUserAltSlash />} debug={debugComponents}>
-                Image
-              </LabeledIcon>
-            </div>
-            <div>
-              <LabeledIcon icon={<FaUserAltSlash />} debug={debugComponents}>
                 Image
               </LabeledIcon>
             </div>
@@ -162,6 +153,7 @@ export default function ComponentsPage() {
                 icon={<PhotoFilmSimulationIcon simulation="astia" />}
                 label="Astia/Soft"
                 type="icon-last"
+                iconWide
                 badged
                 debug={debugComponents}
               />
@@ -176,9 +168,67 @@ export default function ComponentsPage() {
                 Image
               </LabeledIcon>
             </div>
+            <div>
+              <EntityLink
+                icon={<></>}
+                label="Astia/Soft and another long line here"
+                type="icon-last"
+                iconWide
+                badged
+                debug={debugComponents}
+              />
+            </div>
+            <div>
+              <LabeledIcon icon={<FaUserAltSlash />} debug={debugComponents}>
+                Image
+              </LabeledIcon>
+            </div>
+            <div>
+              <EntityLink
+                icon={<PhotoFilmSimulationIcon simulation="astia" />}
+                label="Astia/Soft"
+                type="icon-last"
+                iconWide
+                badged
+                debug={debugComponents}
+              />
+            </div>
+            <div>
+              <LabeledIcon icon={<FaUserAltSlash />} debug={debugComponents}>
+                Image
+              </LabeledIcon>
+            </div>
+            <div className="flex items-center h-baseline">
+              <Badge type="small" uppercase>Optional</Badge>
+            </div>
+            <div className="flex items-center h-baseline">
+              <Badge type="small">Optional</Badge>
+            </div>
+            <div className="flex items-center h-baseline">
+              <Badge type="small" uppercase>Optional</Badge>
+            </div>
+            <div className="flex items-center h-baseline">
+              <Badge type="small">Optional</Badge>
+            </div>
+            <div className="flex items-center h-baseline">
+              <Badge type="small" uppercase>Optional</Badge>
+            </div>
+            <div className="flex items-center h-baseline">
+              <Badge type="small">Optional</Badge>
+            </div>
+            <div>
+              <LabeledIcon icon={<FaUserAltSlash />} debug={debugComponents}>
+                Image
+              </LabeledIcon>
+            </div>
+            <div>
+              <LabeledIcon icon={<FaUserAltSlash />} debug={debugComponents}>
+                Image
+              </LabeledIcon>
+            </div>
           </div>
           <div className={clsx(
-            debugComponents && '[&>*]:bg-gray-800',
+            debugComponents && '[&>*]:bg-gray-300 [&>*]:dark:bg-gray-700',
             '[&>*]:flex',
           )}>
             {DEBUG_LINES.map((_, i) =>
