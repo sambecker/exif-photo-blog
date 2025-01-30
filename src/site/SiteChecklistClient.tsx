@@ -94,6 +94,8 @@ export default function SiteChecklistClient({
   storageError,
   kvError,
   aiError,
+  // Git Meta
+  isForkedFromBaseRepo,
   // Component props
   simplifiedView,
   isTestingConnections,
@@ -101,6 +103,8 @@ export default function SiteChecklistClient({
   Partial<Awaited<ReturnType<typeof testConnectionsAction>>> & {
   simplifiedView?: boolean
   isTestingConnections?: boolean
+} & {
+  isForkedFromBaseRepo?: boolean
 }) {
   const renderLink = (href: string, text: string, external = true) =>
     <>
@@ -665,13 +669,18 @@ export default function SiteChecklistClient({
               &nbsp;&nbsp;
               {commitSha
                 ? commitUrl
-                  ? <Link
-                    title={commitMessage}
-                    href={commitUrl}
-                    target="_blank"
-                  >
-                    {commitSha}
-                  </Link>
+                  ? <>
+                    <Link
+                      title={commitMessage}
+                      href={commitUrl}
+                      target="_blank"
+                    >
+                      {commitSha}
+                    </Link>
+                    &nbsp;
+                    {isForkedFromBaseRepo &&
+                      <span className="text-dim">Forked</span>}
+                  </>
                   : <span title={commitMessage}>{commitSha}</span>
                 : 'Not Found'}
             </div>
