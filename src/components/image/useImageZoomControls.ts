@@ -20,14 +20,16 @@ export default function useImageZoomControls(
   useEffect(() => {
     if (imageRef.current && isEnabled) {
       viewerRef.current = new Viewer(imageRef.current, {
-        inline: false,
-        button: true,
         navbar: false,
         title: false,
         toolbar: {
           zoomIn: 1,
           reset: 2,
           zoomOut: 3,
+        },
+        url: (image: HTMLImageElement) => {
+          image.loading = 'eager';
+          return image.src;
         },
         show: () => {
           setShouldRespondToKeyboardCommands?.(false);
