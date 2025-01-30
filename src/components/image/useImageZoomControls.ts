@@ -1,10 +1,8 @@
+import useMetaThemeColor from '@/site/useMetaThemeColor';
 import { useAppState } from '@/state/AppState';
 import useKeydownHandler from '@/utility/useKeydownHandler';
-import { RefObject, useCallback, useEffect, useRef } from 'react';
+import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import Viewer from 'viewerjs';
-
-const EVENT_SHOWN = 'shown';
-const EVENT_HIDDEN = 'hidden';
 
 export default function useImageZoomControls(
   imageRef: RefObject<HTMLDivElement | null>,
@@ -14,6 +12,10 @@ export default function useImageZoomControls(
   const viewerRef = useRef<Viewer | null>(null);
 
   const { setShouldRespondToKeyboardCommands } = useAppState();
+
+  const [colorLight, setColorLight] = useState<string>();
+
+  useMetaThemeColor({ colorLight });
 
   useEffect(() => {
     if (imageRef.current && isEnabled) {
@@ -27,12 +29,23 @@ export default function useImageZoomControls(
           reset: 2,
           zoomOut: 3,
         },
+        show: () => {
+          setShouldRespondToKeyboardCommands?.(false);
+          setColorLight('#000');
+        },
+        hide: () => {
+          setTimeout(() => setColorLight(undefined), 300);
+        },
+        hidden: () => {
+          setShouldRespondToKeyboardCommands?.(true);
+        },
       });
       return () => {
         viewerRef.current?.destroy();
+        viewerRef.current = null;
       };
     }
-  }, [imageRef, isEnabled]);
+  }, [imageRef, isEnabled, setShouldRespondToKeyboardCommands]);
 
   const open = useCallback(() => {
     viewerRef.current?.show();
@@ -41,30 +54,6 @@ export default function useImageZoomControls(
   const close = useCallback(() => {
     viewerRef.current?.hide();
   }, [viewerRef]);
-
-  // On shown, disable keyboard commands
-  const onShown = useCallback(() =>
-    setShouldRespondToKeyboardCommands?.(false),
-  [setShouldRespondToKeyboardCommands]);
-  useEffect(() => {
-    const imageRefCurrent = imageRef.current;
-    imageRefCurrent?.addEventListener(EVENT_SHOWN, onShown);
-    return () => {
-      imageRefCurrent?.removeEventListener(EVENT_SHOWN, onShown);
-    };
-  }, [imageRef, onShown]);
-
-  // On hidden, reenable keyboard commands
-  const onHide = useCallback(() =>
-    setShouldRespondToKeyboardCommands?.(true),
-  [setShouldRespondToKeyboardCommands]);
-  useEffect(() => {
-    const imageRefCurrent = imageRef.current;
-    imageRefCurrent?.addEventListener(EVENT_HIDDEN, onHide);
-    return () => {
-      imageRefCurrent?.removeEventListener(EVENT_HIDDEN, onHide);
-    };
-  }, [imageRef, onHide]);
 
   // On 'F' keydown, toggle fullscreen
   const handleKeyDown = useCallback(() => {
