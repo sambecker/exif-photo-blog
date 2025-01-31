@@ -94,17 +94,13 @@ export default function SiteChecklistClient({
   storageError,
   kvError,
   aiError,
-  // Git Meta
-  isForkedFromBaseRepo,
   // Component props
   simplifiedView,
-  isTestingConnections,
+  isAnalyzingConfiguration,
 }: ConfigChecklistStatus &
   Partial<Awaited<ReturnType<typeof testConnectionsAction>>> & {
   simplifiedView?: boolean
-  isTestingConnections?: boolean
-} & {
-  isForkedFromBaseRepo?: boolean
+  isAnalyzingConfiguration?: boolean
 }) {
   const renderLink = (href: string, text: string, external = true) =>
     <>
@@ -216,11 +212,11 @@ export default function SiteChecklistClient({
           icon={<BiData size={16} />}
         >
           <ChecklistRow
-            title={hasDatabase && isTestingConnections
+            title={hasDatabase && isAnalyzingConfiguration
               ? 'Testing database connection'
               : 'Setup database'}
             status={hasDatabase}
-            isPending={hasDatabase && isTestingConnections}
+            isPending={hasDatabase && isAnalyzingConfiguration}
           >
             {databaseError && renderError({
               connection: { provider: 'Database', error: databaseError},
@@ -247,7 +243,7 @@ export default function SiteChecklistClient({
           </ChecklistRow>
           <ChecklistRow
             title={
-              hasStorageProvider && isTestingConnections
+              hasStorageProvider && isAnalyzingConfiguration
                 ? 'Testing storage connection'
                 : !hasStorageProvider
                   ? 'Setup storage (one of the following)'
@@ -256,7 +252,7 @@ export default function SiteChecklistClient({
                     ? `Setup storage (new uploads go to: ${labelForStorage(currentStorage)})`
                     : 'Setup storage'}
             status={hasStorageProvider}
-            isPending={hasStorageProvider && isTestingConnections}
+            isPending={hasStorageProvider && isAnalyzingConfiguration}
           >
             {storageError && renderError({
               connection: { provider: 'Storage', error: storageError},
@@ -302,11 +298,11 @@ export default function SiteChecklistClient({
           icon={<BiLockAlt size={16} />}
         >
           <ChecklistRow
-            title={!hasAuthSecret && isTestingConnections
+            title={!hasAuthSecret && isAnalyzingConfiguration
               ? 'Generating secret'
               : 'Setup auth'}
             status={hasAuthSecret}
-            isPending={!hasAuthSecret && isTestingConnections}
+            isPending={!hasAuthSecret && isAnalyzingConfiguration}
           >
             Store auth secret in environment variable:
             {!hasAuthSecret &&
@@ -378,11 +374,11 @@ export default function SiteChecklistClient({
             optional
           >
             <ChecklistRow
-              title={isAiTextGenerationEnabled && isTestingConnections
+              title={isAiTextGenerationEnabled && isAnalyzingConfiguration
                 ? 'Testing OpenAI connection'
                 : 'Add OpenAI secret key'}
               status={isAiTextGenerationEnabled}
-              isPending={isAiTextGenerationEnabled && isTestingConnections}
+              isPending={isAiTextGenerationEnabled && isAnalyzingConfiguration}
               optional
             >
               {aiError && renderError({
@@ -394,11 +390,11 @@ export default function SiteChecklistClient({
               {renderEnvVars(['OPENAI_SECRET_KEY'])}
             </ChecklistRow>
             <ChecklistRow
-              title={hasVercelKv && isTestingConnections
+              title={hasVercelKv && isAnalyzingConfiguration
                 ? 'Testing KV connection'
                 : 'Enable rate limiting'}
               status={hasVercelKv}
-              isPending={hasVercelKv && isTestingConnections}
+              isPending={hasVercelKv && isAnalyzingConfiguration}
               optional
             >
               {kvError && renderError({
@@ -669,18 +665,13 @@ export default function SiteChecklistClient({
               &nbsp;&nbsp;
               {commitSha
                 ? commitUrl
-                  ? <>
-                    <Link
-                      title={commitMessage}
-                      href={commitUrl}
-                      target="_blank"
-                    >
-                      {commitSha}
-                    </Link>
-                    &nbsp;
-                    {isForkedFromBaseRepo &&
-                      <span className="text-dim">Forked</span>}
-                  </>
+                  ? <Link
+                    title={commitMessage}
+                    href={commitUrl}
+                    target="_blank"
+                  >
+                    {commitSha}
+                  </Link>
                   : <span title={commitMessage}>{commitSha}</span>
                 : 'Not Found'}
             </div>

@@ -11,7 +11,7 @@ export default function SiteChecklist({
   return (
     <Suspense fallback={<SiteChecklistClient {...{
       ...CONFIG_CHECKLIST_STATUS,
-      isTestingConnections: true,
+      isAnalyzingConfiguration: true,
       simplifiedView,
     }} /> }>
       <SiteChecklistServer {...{ simplifiedView }} />

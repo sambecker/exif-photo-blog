@@ -27,19 +27,19 @@ export const VERCEL_GIT_COMMIT_SHA =
 export const VERCEL_GIT_COMMIT_SHA_SHORT = VERCEL_GIT_COMMIT_SHA
   ? VERCEL_GIT_COMMIT_SHA.slice(0, 7)
   : undefined;
-export const VERCEL_IS_PROVIDER_GITHUB = VERCEL_GIT_PROVIDER === 'github';
-export const VERCEL_GIT_COMMIT_URL = VERCEL_IS_PROVIDER_GITHUB
+export const IS_VERCEL_GIT_PROVIDER_GITHUB = VERCEL_GIT_PROVIDER === 'github';
+export const VERCEL_GIT_COMMIT_URL = IS_VERCEL_GIT_PROVIDER_GITHUB
   // eslint-disable-next-line max-len
   ? `https://github.com/${VERCEL_GIT_REPO_OWNER}/${VERCEL_GIT_REPO_SLUG}/commit/${VERCEL_GIT_COMMIT_SHA}`
   : undefined;
 
-const VERCEL_ENV = process.env.NEXT_PUBLIC_VERCEL_ENV;
-const VERCEL_PRODUCTION_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL;
-const VERCEL_DEPLOYMENT_URL = process.env.NEXT_PUBLIC_VERCEL_URL;
-const VERCEL_BRANCH_URL = process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL;
-const VERCEL_BRANCH = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF;
+export const VERCEL_ENV = process.env.NEXT_PUBLIC_VERCEL_ENV;
+export const VERCEL_PRODUCTION_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+export const VERCEL_DEPLOYMENT_URL = process.env.NEXT_PUBLIC_VERCEL_URL;
+export const VERCEL_BRANCH_URL = process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL;
+export const VERCEL_BRANCH = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF;
 // Last resort: cannot be used reliably
-const VERCEL_PROJECT_URL = VERCEL_BRANCH_URL && VERCEL_BRANCH
+export const VERCEL_PROJECT_URL = VERCEL_BRANCH_URL && VERCEL_BRANCH
   ? `${VERCEL_BRANCH_URL.split(`-git-${VERCEL_BRANCH}-`)[0]}.vercel.app`
   : undefined;
 
@@ -49,6 +49,7 @@ export const IS_PRODUCTION = process.env.NODE_ENV === 'production' && (
   !VERCEL_ENV
 );
 
+export const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 export const IS_PREVIEW = VERCEL_ENV === 'preview';
 
 export const VERCEL_BYPASS_KEY = 'x-vercel-protection-bypass';

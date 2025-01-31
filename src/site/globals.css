@@ -155,6 +155,9 @@
       text-red-500 dark:text-red-400
   }
   /* Utilities: Border */
+  .border-main {
+    @apply border-gray-200 dark:border-gray-700
+  }
   .border-subtle {
     @apply
       border border-gray-200 dark:border-gray-800
