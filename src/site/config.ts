@@ -162,6 +162,10 @@ export const PRESERVE_ORIGINAL_UPLOADS =
   process.env.NEXT_PUBLIC_PRESERVE_ORIGINAL_UPLOADS === '1' ||
   // Legacy environment variable name
   process.env.NEXT_PUBLIC_PRO_MODE === '1';
+export const IMAGE_QUALITY =
+  process.env.NEXT_PUBLIC_IMAGE_QUALITY
+    ? parseInt(process.env.NEXT_PUBLIC_IMAGE_QUALITY)
+    : 75;
 export const BLUR_ENABLED =
   process.env.NEXT_PUBLIC_BLUR_DISABLED !== '1';
 
@@ -273,6 +277,8 @@ export const CONFIG_CHECKLIST_STATUS = {
   // eslint-disable-next-line max-len
   arePhotoCategoryOgImagesStaticallyOptimized: STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES,
   areOriginalUploadsPreserved: PRESERVE_ORIGINAL_UPLOADS,
+  imageQuality: IMAGE_QUALITY,
+  hasImageQuality: Boolean(process.env.NEXT_PUBLIC_IMAGE_QUALITY),
   isBlurEnabled: BLUR_ENABLED,
   // Visual
   hasDefaultTheme: Boolean(process.env.NEXT_PUBLIC_DEFAULT_THEME),
