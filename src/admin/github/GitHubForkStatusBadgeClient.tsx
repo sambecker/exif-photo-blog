@@ -31,7 +31,7 @@ export default function GitHubForkStatusBadgeClient({
     default: return clsx(
       'text-gray-700 hover:text-gray-700',
       'dark:text-gray-300 dark:hover:text-gray-300',
-      'bg-gray-100/75 dark:bg-gray-900/50',
+      'bg-white dark:bg-transparent',
       'border-main',
     );
     }
@@ -42,7 +42,7 @@ export default function GitHubForkStatusBadgeClient({
     'border transition-colors',
     url ? 'hover:underline' : 'select-none',
     'pl-[4.5px] pr-2 py-[3px]',
-    'rounded-full',
+    'rounded-full shadow-sm',
     classNameForStyle(),
   );
 
