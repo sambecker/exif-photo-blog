@@ -1,3 +1,5 @@
+import { VERCEL_BRANCH } from '@/site/config';
+
 const BASE_OWNER  = 'sambecker';
 const BASE_REPO   = 'exif-photo-blog';
 
@@ -46,7 +48,10 @@ const getIsRepoForkedFromBase = async (params: RepoParams) => {
 };
 
 const getGitHubCommitsBehind = async (params?: RepoParams) => {
-  const response = await fetch(getGitHubApiCompareUrl(params));
+  const response = await fetch(getGitHubApiCompareUrl({
+    ...params,
+    branch: VERCEL_BRANCH,
+  }));
   const data = await response.json();
   return data.behind_by as number;
 };
