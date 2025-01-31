@@ -467,8 +467,10 @@ export default function SiteChecklistClient({
               status={hasImageQuality}
               optional
             >
-              Set environment variable up to {'"1-100"'} to control the quality
-              of large photos:
+              Set environment variable from {'"1-100"'}
+              {' '}
+              to control the quality of large photos
+              ({'"100"'} represents highest quality/largest size):
               {renderEnvVars(['NEXT_PUBLIC_IMAGE_QUALITY'])}
             </ChecklistRow>
             <ChecklistRow
