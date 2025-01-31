@@ -14,7 +14,16 @@ export default async function GitHubForkStatusBadgeServer() {
     label,
     title,
     isBehind,
-  } = await getGitHubMeta({ owner, repo });
+  } = await getGitHubMeta({ owner, repo })
+    .catch(() => {
+      console.log('Error getting GitHub meta', { owner, repo });
+      return {
+        url: undefined,
+        label: undefined,
+        title: undefined,
+        isBehind: false,
+      };
+    });
 
   return (
     <GitHubForkStatusBadgeClient {...{
