@@ -60,6 +60,8 @@ export default function SiteChecklistClient({
   arePhotoCategoriesStaticallyOptimized,
   arePhotoCategoryOgImagesStaticallyOptimized,
   areOriginalUploadsPreserved,
+  imageQuality,
+  hasImageQuality,
   isBlurEnabled,
   // Visual
   hasDefaultTheme,
@@ -459,6 +461,15 @@ export default function SiteChecklistClient({
               Set environment variable to {'"1"'} to prevent
               image uploads being compressed before storing:
               {renderEnvVars(['NEXT_PUBLIC_PRESERVE_ORIGINAL_UPLOADS'])}
+            </ChecklistRow>
+            <ChecklistRow
+              title={`Image quality: ${imageQuality}`}
+              status={hasImageQuality}
+              optional
+            >
+              Set environment variable up to {'"1-100"'} to control the quality
+              of large photos:
+              {renderEnvVars(['NEXT_PUBLIC_IMAGE_QUALITY'])}
             </ChecklistRow>
             <ChecklistRow
               title="Image blur"
