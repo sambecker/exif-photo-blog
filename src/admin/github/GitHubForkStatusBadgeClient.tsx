@@ -38,10 +38,11 @@ export default function GitHubForkStatusBadgeClient({
   };
 
   const className = clsx(
+    'opacity-0 transition-opacity animate-fade-in',
     'inline-flex items-center gap-2',
     'border transition-colors',
     url ? 'hover:underline' : 'select-none',
-    'pl-[4.5px] pr-2 py-[3px]',
+    'pl-[4.5px] pr-2.5 py-[3px]',
     'rounded-full shadow-sm',
     classNameForStyle(),
   );

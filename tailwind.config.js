@@ -29,7 +29,7 @@ module.exports = {
         'rotate-pulse':
           'rotate-pulse 0.75s linear infinite normal both running',
         'fade-in':
-          'fade-in 0.5s linear',
+          'fade-in 0.5s linear both running',
         'hover-drift':
           'hover-drift 8s linear infinite',
         'hover-wobble':

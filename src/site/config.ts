@@ -3,23 +3,26 @@ import type { StorageType } from '@/services/storage';
 import { makeUrlAbsolute, shortenUrl } from '@/utility/url';
 
 // HARD-CODED GLOBAL CONFIGURATION
-
 export const SHOULD_PREFETCH_ALL_LINKS: boolean | undefined = undefined;
 export const SHOULD_DEBUG_SQL = false;
 
 // META / SOURCE / DOMAINS
-
 export const SITE_TITLE =
   process.env.NEXT_PUBLIC_SITE_TITLE ||
   'Photo Blog';
 
 // SOURCE
+export const TEMPLATE_BASE_OWNER  = 'sambecker';
+export const TEMPLATE_BASE_REPO   = 'exif-photo-blog';
+export const TEMPLATE_BASE_BRANCH = 'main';
+
 export const VERCEL_GIT_PROVIDER =
   process.env.NEXT_PUBLIC_VERCEL_GIT_PROVIDER;
 export const VERCEL_GIT_REPO_OWNER =
   process.env.NEXT_PUBLIC_VERCEL_GIT_REPO_OWNER;
 export const VERCEL_GIT_REPO_SLUG =
   process.env.NEXT_PUBLIC_VERCEL_GIT_REPO_SLUG;
+export const VERCEL_GIT_BRANCH = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF;
 export const VERCEL_GIT_COMMIT_MESSAGE =
   process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE;
 export const VERCEL_GIT_COMMIT_SHA =
@@ -37,10 +40,9 @@ export const VERCEL_ENV = process.env.NEXT_PUBLIC_VERCEL_ENV;
 export const VERCEL_PRODUCTION_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL;
 export const VERCEL_DEPLOYMENT_URL = process.env.NEXT_PUBLIC_VERCEL_URL;
 export const VERCEL_BRANCH_URL = process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL;
-export const VERCEL_BRANCH = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF;
 // Last resort: cannot be used reliably
-export const VERCEL_PROJECT_URL = VERCEL_BRANCH_URL && VERCEL_BRANCH
-  ? `${VERCEL_BRANCH_URL.split(`-git-${VERCEL_BRANCH}-`)[0]}.vercel.app`
+export const VERCEL_PROJECT_URL = VERCEL_BRANCH_URL && VERCEL_GIT_BRANCH
+  ? `${VERCEL_BRANCH_URL.split(`-git-${VERCEL_GIT_BRANCH}-`)[0]}.vercel.app`
   : undefined;
 
 export const IS_PRODUCTION = process.env.NODE_ENV === 'production' && (
