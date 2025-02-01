@@ -14,12 +14,13 @@ export default async function GitHubForkStatusBadgeServer() {
   const {
     url,
     isForkedFromBase,
+    isBaseRepo,
     label,
     title,
     isBehind,
   } = await getGitHubMetaWithFallback({ owner, repo, branch });
 
-  return isForkedFromBase
+  return isForkedFromBase || isBaseRepo
     ? <GitHubForkStatusBadgeClient {...{
       url,
       label,
