@@ -4,7 +4,7 @@ import {
   VERCEL_GIT_REPO_OWNER,
   VERCEL_GIT_REPO_SLUG,
 } from '@/site/config';
-import { getGitHubMeta } from '.';
+import { getGitHubMetaWithFallback } from '.';
 
 export default async function GitHubForkStatusBadgeServer() {
   const owner = VERCEL_GIT_REPO_OWNER;
@@ -17,24 +17,14 @@ export default async function GitHubForkStatusBadgeServer() {
     label,
     title,
     isBehind,
-  } = await getGitHubMeta({ owner, repo, branch })
-    .catch(() => {
-      console.error('Error retrieving GitHub meta', { owner, repo, branch });
-      return {
-        url: undefined,
-        isForkedFromBase: false,
-        label: undefined,
-        title: undefined,
-        isBehind: undefined,
-      };
-    });
+  } = await getGitHubMetaWithFallback({ owner, repo, branch });
 
   return isForkedFromBase
     ? <GitHubForkStatusBadgeClient {...{
       url,
       label,
       title,
-      style: isBehind ? 'warning' : 'mono',
+      style: isBehind === undefined || isBehind ? 'warning' : 'mono',
     }} />
     : null;
 }

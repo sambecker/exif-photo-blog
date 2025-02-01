@@ -6,6 +6,14 @@ import {
 
 const DEFAULT_BRANCH = 'main';
 
+const FALLBACK_TEXT = 'Unknown';
+
+// Cache all results for 2 minutes to avoid rate limiting
+// GitHub API requests limited to 60 requests per hour
+const FETCH_CONFIG: RequestInit = {
+  next: { revalidate: 120 },
+};
+
 interface RepoParams {
   owner?: string
   repo?: string
@@ -39,6 +47,9 @@ const getGitHubApiRepoUrl = ({
 const getGitHubApiCommitsUrl = (params?: RepoParams) =>
   `${getGitHubApiRepoUrl(params)}/commits/main`;
 
+const getGitHubApiForksUrl = (params?: RepoParams) =>
+  `${getGitHubApiRepoUrl(params)}/forks`;
+
 const getGitHubApiCompareUrl = ({
   owner,
   repo,
@@ -49,14 +60,14 @@ const getGitHubApiCompareUrl = ({
 
 // Requests
 
-const getLatestBaseRepoCommitSha = async () => {
-  const response = await fetch(getGitHubApiCommitsUrl());
+export const getLatestBaseRepoCommitSha = async () => {
+  const response = await fetch(getGitHubApiCommitsUrl(), FETCH_CONFIG);
   const data = await response.json();
-  return data.sha.slice(0, 7) as string;
+  return data.sha ? data.sha.slice(0, 7) as string : undefined;
 };
 
 const getIsRepoForkedFromBase = async (params: RepoParams) => {
-  const response = await fetch(getGitHubApiRepoUrl(params));
+  const response = await fetch(getGitHubApiRepoUrl(params), FETCH_CONFIG);
   const data = await response.json();
   return (
     Boolean(data.fork) &&
@@ -65,7 +76,7 @@ const getIsRepoForkedFromBase = async (params: RepoParams) => {
 };
 
 const getGitHubCommitsBehind = async (params?: RepoParams) => {
-  const response = await fetch(getGitHubApiCompareUrl(params));
+  const response = await fetch(getGitHubApiCompareUrl(params), FETCH_CONFIG);
   const data = await response.json();
   return data.behind_by as number;
 };
@@ -74,36 +85,69 @@ const isRepoBaseRepo = async ({ owner, repo }: RepoParams) =>
   owner?.toLowerCase() === TEMPLATE_BASE_OWNER &&
   repo?.toLowerCase() === TEMPLATE_BASE_REPO;
 
-export const getGitHubMeta = async (params: RepoParams) => {
+export const getGitHubPublicFork = async (
+  params?: RepoParams,
+): Promise<RepoParams> => {
+  const response = await fetch(getGitHubApiForksUrl(params), FETCH_CONFIG);
+  const fork = (await response.json())[0];
+  return {
+    owner: fork.owner.login,
+    repo: fork.name,
+  };
+};
+
+const getGitHubMeta = async (params: RepoParams) => {
   const [
     url,
     isForkedFromBase,
     isBaseRepo,
-    latestBaseRepoCommitSha,
     behindBy,
   ] = await Promise.all([
     getGitHubRepoUrl(params),
     getIsRepoForkedFromBase(params),
     isRepoBaseRepo(params),
-    getLatestBaseRepoCommitSha(),
     getGitHubCommitsBehind(params),
   ]);
 
-  const isBehind = behindBy > 0;
-  const label = isBehind ? `${behindBy} Behind` : 'Synced';
-  const title = isBehind
-    // eslint-disable-next-line max-len
-    ? `This fork is ${behindBy} commit${behindBy === 1 ? '' : 's'} behind. Consider syncing on GitHub for the latest updates.`
-    : 'This fork is up to date.';
+  const isBehind = behindBy === undefined
+    ? undefined
+    : behindBy > 0;
+
+  const label = isBehind === undefined
+    ? FALLBACK_TEXT
+    : isBehind
+      ? `${behindBy} Behind`
+      : 'Synced';
+
+  const title = isBehind === undefined
+    ? FALLBACK_TEXT
+    : isBehind
+      // eslint-disable-next-line max-len
+      ? `This fork is ${behindBy} commit${behindBy === 1 ? '' : 's'} behind. Consider syncing on GitHub for the latest updates.`
+      : 'This fork is up to date.';
 
   return {
     url,
     isForkedFromBase,
     isBaseRepo,
-    latestBaseRepoCommitSha,
     behindBy,
     isBehind,
     label,
     title,
   };
 };
+
+export const getGitHubMetaWithFallback = (params: RepoParams) =>
+  getGitHubMeta(params)
+    .catch(e => {
+      console.error('Error retrieving GitHub meta', { params, error: e });
+      return {
+        url: undefined,
+        isForkedFromBase: false,
+        isBaseRepo: undefined,
+        behindBy: undefined,
+        isBehind: undefined,
+        label: FALLBACK_TEXT,
+        title: FALLBACK_TEXT,
+      };
+    });
