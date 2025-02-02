@@ -1,10 +1,10 @@
-import { useCallback, useEffect } from 'react';
+import { RefObject, useCallback, useEffect } from 'react';
 
 const MOUSE_DOWN = 'mousedown';
 
 interface Options {
   // HTML reference
-  htmlElements: (HTMLElement | null)[],
+  htmlElements: RefObject<HTMLElement | null>[],
   // Callbacks based on click target
   onClick?: (event?: MouseEvent) => void,
   onClickInside?: (event?: MouseEvent) => void,
@@ -24,7 +24,7 @@ const useClickInsideOutside = ({
     const target = event.target as HTMLElement;
 
     const htmlElementsContainTarget = htmlElements
-      .some(element => element?.contains(target));
+      .some(element => element.current?.contains(target));
 
     // On click
     onClick?.(event);

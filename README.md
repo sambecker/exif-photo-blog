@@ -17,7 +17,7 @@ Features
 - Light/dark mode
 - Automatic OG image generation
 - CMD-K menu with photo search
-- Experimental support for AI-generated descriptions
+- AI-generated text descriptions
 - Support for Fujifilm simulations
 
 <img src="/readme/og-image-share.png" alt="OG Image Preview" width=600 />
@@ -48,6 +48,12 @@ Installation
 3. Add optional title
 4. Click "Create"
 
+Receiving updates
+-
+If you don't plan to change the code, or don't mind making your updates public, you should consider [forking](https://github.com/sambecker/exif-photo-blog/fork) this repo to easily receive future updates.
+
+If you've already setup your project on Vercel, you can point that project to your newly created fork by editing your project's settings on vercel.com/`user`/`project`/settings/git.
+
 Develop locally
 -
 1. Clone code
@@ -58,7 +64,7 @@ Develop locally
 
 Further customization
 -
-### Experimental AI text generation
+### AI text generation
 
 _⚠️ READ BEFORE PROCEEDING_
 
@@ -106,26 +112,34 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS = 1` enables static optimization for photo pages (`p/[photoId]`), i.e., renders pages at build time
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES = 1` enables static optimization for OG images, i.e., renders images at build time
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES = 1` enables static optimization for photo categories (`tag/[tag]`, `shot-on/[make]/[model]`, etc.), i.e., renders pages at build time
+- `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORY_OG_IMAGES = 1` enables static optimization for photo category (`tag/[tag]`, `shot-on/[make]/[model]`, etc.) OG images, i.e., renders images at build time
 - `NEXT_PUBLIC_PRESERVE_ORIGINAL_UPLOADS = 1` prevents photo uploads being compressed before storing
+- `NEXT_PUBLIC_IMAGE_QUALITY = 1-100` controls the quality of large photos
 - `NEXT_PUBLIC_BLUR_DISABLED = 1` prevents image blur data being stored and displayed (potentially useful for limiting Postgres usage)
+
+#### Visual
+
+- `NEXT_PUBLIC_DEFAULT_THEME = light | dark` sets preferred initial theme (defaults to `system` when not configured)
+- `NEXT_PUBLIC_MATTE_PHOTOS = 1` constrains the size of each photo, and display a surrounding border (potentially useful for photos with tall aspect ratios)
 
 #### Display
 - `NEXT_PUBLIC_HIDE_EXIF_DATA = 1` hides EXIF data in photo details and OG images (potentially useful for portfolios, which don't focus on photography)
 - `NEXT_PUBLIC_HIDE_ZOOM_CONTROLS = 1` hides fullscreen photo zoom controls
 - `NEXT_PUBLIC_HIDE_TAKEN_AT_TIME = 1` hides taken at time from photo meta
-- `NEXT_PUBLIC_HIDE_SOCIAL = 1` removes X button from share modal
+- `NEXT_PUBLIC_HIDE_SOCIAL = 1` removes X (formerly Twitter) button from share modal
 - `NEXT_PUBLIC_HIDE_FILM_SIMULATIONS = 1` prevents Fujifilm simulations showing up in `/grid` sidebar and CMD-K search results
 - `NEXT_PUBLIC_HIDE_REPO_LINK = 1` removes footer link to repo
 
-#### Settings
+#### Grid
 - `NEXT_PUBLIC_GRID_HOMEPAGE = 1` shows grid layout on homepage
-- `NEXT_PUBLIC_DEFAULT_THEME = light | dark` sets preferred initial theme (defaults to `system` when not configured)
-- `NEXT_PUBLIC_MATTE_PHOTOS = 1` constrains the size of each photo, and enables a surrounding border (potentially useful for photos with tall aspect ratios)
+- `NEXT_PUBLIC_GRID_ASPECT_RATIO = 1.5` sets aspect ratio for grid tiles (defaults to `1`—setting to `0` removes the constraint)
+- `NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS = 1` ensures large thumbnails on photo grid views (if not configured, density is based on aspect ratio)
+
+#### Settings
 - `NEXT_PUBLIC_GEO_PRIVACY = 1` disables collection/display of location-based data (⚠️ re-compresses uploaded images in order to remove GPS information)
 - `NEXT_PUBLIC_ALLOW_PUBLIC_DOWNLOADS = 1` enables public photo downloads for all visitors (⚠️ may result in increased bandwidth usage)
 - `NEXT_PUBLIC_PUBLIC_API = 1` enables public API available at `/api`
 - `NEXT_PUBLIC_IGNORE_PRIORITY_ORDER = 1` prevents `priority_order` field affecting photo order
-- `NEXT_PUBLIC_GRID_ASPECT_RATIO = 1.5` sets aspect ratio for grid tiles (defaults to `1`—setting to `0` removes the constraint)
 - `NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS = 1` ensures large thumbnails on photo grid views
 - `NEXT_PUBLIC_OG_TEXT_ALIGNMENT = BOTTOM` keeps OG image text bottom aligned (default is top)
 

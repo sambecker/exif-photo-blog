@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { BiError } from 'react-icons/bi';
 import Spinner from '@/components/Spinner';
 import { IMAGE_OG_DIMENSION } from '../image-response';
-import useOnVisible from '@/utility/useOnVisible';
+import useVisible from '@/utility/useVisible';
 
 export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 
@@ -51,7 +51,7 @@ export default function OGTile({
 
   const { width, height, aspectRatio } = IMAGE_OG_DIMENSION;
 
-  useOnVisible(ref, onVisible);
+  useVisible({ ref, onVisible });
 
   return (
     <Link

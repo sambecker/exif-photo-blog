@@ -22,6 +22,7 @@ export default function EntityLink({
   prefetch,
   title,
   hoverEntity,
+  className,
   debug,
 }: {
   icon: ReactNode
@@ -33,6 +34,7 @@ export default function EntityLink({
   title?: string
   hoverEntity?: ReactNode
   debug?: boolean
+  className?: string
 } & EntityLinkExternalProps) {
   const classForContrast = () => {
     switch (contrast) {
@@ -55,7 +57,10 @@ export default function EntityLink({
   </>;
 
   return (
-    <span className="group inline-flex gap-2">
+    <span className={clsx(
+      'group inline-flex gap-2 w-full', 
+      className,
+    )}>
       <LabeledIcon {...{
         icon,
         iconWide,

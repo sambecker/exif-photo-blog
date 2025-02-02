@@ -26,6 +26,8 @@ import { RiSpeedMiniLine } from 'react-icons/ri';
 import Link from 'next/link';
 import SecretGenerator from './SecretGenerator';
 import CopyButton from '@/components/CopyButton';
+import { PiPaintBrushHousehold } from 'react-icons/pi';
+import { IoMdGrid } from 'react-icons/io';
 
 export default function SiteChecklistClient({
   // Storage
@@ -56,8 +58,15 @@ export default function SiteChecklistClient({
   arePhotosStaticallyOptimized,
   arePhotoOGImagesStaticallyOptimized,
   arePhotoCategoriesStaticallyOptimized,
+  arePhotoCategoryOgImagesStaticallyOptimized,
   areOriginalUploadsPreserved,
+  imageQuality,
+  hasImageQuality,
   isBlurEnabled,
+  // Visual
+  hasDefaultTheme,
+  defaultTheme,
+  arePhotosMatted,
   // Display
   showExifInfo,
   showZoomControls,
@@ -65,16 +74,14 @@ export default function SiteChecklistClient({
   showSocial,
   showFilmSimulations,
   showRepoLink,
-  // Settings
+  // Grid
   isGridHomepageEnabled,
-  hasDefaultTheme,
-  defaultTheme,
-  arePhotosMatted,
-  isGeoPrivacyEnabled,
   gridAspectRatio,
   hasGridAspectRatio,
   gridDensity,
   hasGridDensityPreference,
+  // Settings
+  isGeoPrivacyEnabled,
   arePublicDownloadsEnabled,
   isPublicApiEnabled,
   isPriorityOrderEnabled,
@@ -91,11 +98,11 @@ export default function SiteChecklistClient({
   aiError,
   // Component props
   simplifiedView,
-  isTestingConnections,
+  isAnalyzingConfiguration,
 }: ConfigChecklistStatus &
   Partial<Awaited<ReturnType<typeof testConnectionsAction>>> & {
   simplifiedView?: boolean
-  isTestingConnections?: boolean
+  isAnalyzingConfiguration?: boolean
 }) {
   const renderLink = (href: string, text: string, external = true) =>
     <>
@@ -201,17 +208,17 @@ export default function SiteChecklistClient({
 
   return (
     <div className="max-w-xl w-full">
-      <div className="space-y-6">
+      <div className="space-y-3 -mt-3">
         <Checklist
           title="Storage"
           icon={<BiData size={16} />}
         >
           <ChecklistRow
-            title={hasDatabase && isTestingConnections
+            title={hasDatabase && isAnalyzingConfiguration
               ? 'Testing database connection'
               : 'Setup database'}
             status={hasDatabase}
-            isPending={hasDatabase && isTestingConnections}
+            isPending={hasDatabase && isAnalyzingConfiguration}
           >
             {databaseError && renderError({
               connection: { provider: 'Database', error: databaseError},
@@ -238,7 +245,7 @@ export default function SiteChecklistClient({
           </ChecklistRow>
           <ChecklistRow
             title={
-              hasStorageProvider && isTestingConnections
+              hasStorageProvider && isAnalyzingConfiguration
                 ? 'Testing storage connection'
                 : !hasStorageProvider
                   ? 'Setup storage (one of the following)'
@@ -247,7 +254,7 @@ export default function SiteChecklistClient({
                     ? `Setup storage (new uploads go to: ${labelForStorage(currentStorage)})`
                     : 'Setup storage'}
             status={hasStorageProvider}
-            isPending={hasStorageProvider && isTestingConnections}
+            isPending={hasStorageProvider && isAnalyzingConfiguration}
           >
             {storageError && renderError({
               connection: { provider: 'Storage', error: storageError},
@@ -293,11 +300,11 @@ export default function SiteChecklistClient({
           icon={<BiLockAlt size={16} />}
         >
           <ChecklistRow
-            title={!hasAuthSecret && isTestingConnections
+            title={!hasAuthSecret && isAnalyzingConfiguration
               ? 'Generating secret'
               : 'Setup auth'}
             status={hasAuthSecret}
-            isPending={!hasAuthSecret && isTestingConnections}
+            isPending={!hasAuthSecret && isAnalyzingConfiguration}
           >
             Store auth secret in environment variable:
             {!hasAuthSecret &&
@@ -366,15 +373,14 @@ export default function SiteChecklistClient({
             title="AI text generation"
             titleShort="AI"
             icon={<HiSparkles />}
-            experimental
             optional
           >
             <ChecklistRow
-              title={isAiTextGenerationEnabled && isTestingConnections
+              title={isAiTextGenerationEnabled && isAnalyzingConfiguration
                 ? 'Testing OpenAI connection'
                 : 'Add OpenAI secret key'}
               status={isAiTextGenerationEnabled}
-              isPending={isAiTextGenerationEnabled && isTestingConnections}
+              isPending={isAiTextGenerationEnabled && isAnalyzingConfiguration}
               optional
             >
               {aiError && renderError({
@@ -386,11 +392,11 @@ export default function SiteChecklistClient({
               {renderEnvVars(['OPENAI_SECRET_KEY'])}
             </ChecklistRow>
             <ChecklistRow
-              title={hasVercelKv && isTestingConnections
+              title={hasVercelKv && isAnalyzingConfiguration
                 ? 'Testing KV connection'
                 : 'Enable rate limiting'}
               status={hasVercelKv}
-              isPending={hasVercelKv && isTestingConnections}
+              isPending={hasVercelKv && isAnalyzingConfiguration}
               optional
             >
               {kvError && renderError({
@@ -441,6 +447,11 @@ export default function SiteChecklistClient({
                 arePhotoCategoriesStaticallyOptimized ? 'checked' : 'optional',
                 'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES',
               )}
+              {renderSubStatusWithEnvVar(
+                // eslint-disable-next-line max-len
+                arePhotoCategoryOgImagesStaticallyOptimized ? 'checked' : 'optional',
+                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORY_OG_IMAGES',
+              )}
             </ChecklistRow>
             <ChecklistRow
               title="Preserve original uploads"
@@ -452,6 +463,17 @@ export default function SiteChecklistClient({
               {renderEnvVars(['NEXT_PUBLIC_PRESERVE_ORIGINAL_UPLOADS'])}
             </ChecklistRow>
             <ChecklistRow
+              title={`Image quality: ${imageQuality}`}
+              status={hasImageQuality}
+              optional
+            >
+              Set environment variable from {'"1-100"'}
+              {' '}
+              to control the quality of large photos
+              ({'"100"'} represents highest quality/largest size):
+              {renderEnvVars(['NEXT_PUBLIC_IMAGE_QUALITY'])}
+            </ChecklistRow>
+            <ChecklistRow
               title="Image blur"
               status={isBlurEnabled}
               optional
@@ -459,6 +481,34 @@ export default function SiteChecklistClient({
               Set environment variable to {'"1"'} to prevent
               image blur data being stored and displayed:
               {renderEnvVars(['NEXT_PUBLIC_BLUR_DISABLED'])}
+            </ChecklistRow>
+          </Checklist>
+          <Checklist
+            title="Visual"
+            icon={<PiPaintBrushHousehold size={19} />}
+            optional
+          >
+            <ChecklistRow
+              title={`Default theme: ${defaultTheme}`}
+              status={hasDefaultTheme}
+              optional
+            >
+              {'Set environment variable to \'light\' or \'dark\''}
+              {' '}
+              to configure initial theme
+              {' '}
+              (defaults to {'\'system\''}):
+              {renderEnvVars(['NEXT_PUBLIC_DEFAULT_THEME'])}
+            </ChecklistRow>
+            <ChecklistRow
+              title="Photo matting"
+              status={arePhotosMatted}
+              optional
+            >
+              Set environment variable to {'"1"'} to constrain the size
+              {' '}
+              of each photo, and display a surrounding border:
+              {renderEnvVars(['NEXT_PUBLIC_MATTE_PHOTOS'])}
             </ChecklistRow>
           </Checklist>
           <Checklist
@@ -475,7 +525,7 @@ export default function SiteChecklistClient({
               {renderEnvVars(['NEXT_PUBLIC_HIDE_EXIF_DATA'])}
             </ChecklistRow>
             <ChecklistRow
-              title="Zoom controls"
+              title="Show zoom controls"
               status={showZoomControls}
               optional
             >
@@ -499,7 +549,7 @@ export default function SiteChecklistClient({
             >
               Set environment variable to {'"1"'} to hide
               {' '}
-              X button from share modal:
+              X (formerly Twitter) button from share modal:
               {renderEnvVars(['NEXT_PUBLIC_HIDE_SOCIAL'])}
             </ChecklistRow>
             <ChecklistRow
@@ -522,8 +572,8 @@ export default function SiteChecklistClient({
             </ChecklistRow>
           </Checklist>
           <Checklist
-            title="Settings"
-            icon={<BiCog size={16} />}
+            title="Grid"
+            icon={<IoMdGrid size={17} />}
             optional
           >
             <ChecklistRow
@@ -534,37 +584,6 @@ export default function SiteChecklistClient({
               Set environment variable to {'"1"'} to show grid layout
               on homepage:
               {renderEnvVars(['NEXT_PUBLIC_GRID_HOMEPAGE'])}
-            </ChecklistRow>
-            <ChecklistRow
-              title={`Default theme: ${defaultTheme}`}
-              status={hasDefaultTheme}
-              optional
-            >
-              {'Set environment variable to \'light\' or \'dark\''}
-              {' '}
-              to configure initial theme
-              {' '}
-              (defaults to {'\'system\''}):
-              {renderEnvVars(['NEXT_PUBLIC_DEFAULT_THEME'])}
-            </ChecklistRow>
-            <ChecklistRow
-              title="Photo matting"
-              status={arePhotosMatted}
-              optional
-            >
-              Set environment variable to {'"1"'} to constrain the size
-              {' '}
-              of each photo, and enable a surrounding border:
-              {renderEnvVars(['NEXT_PUBLIC_MATTE_PHOTOS'])}
-            </ChecklistRow>
-            <ChecklistRow
-              title="Geo privacy"
-              status={isGeoPrivacyEnabled}
-              optional
-            >
-              Set environment variable to {'"1"'} to disable
-              collection/display of location-based data:
-              {renderEnvVars(['NEXT_PUBLIC_GEO_PRIVACY'])}
             </ChecklistRow>
             <ChecklistRow
               title={`Grid aspect ratio: ${gridAspectRatio}`}
@@ -583,8 +602,23 @@ export default function SiteChecklistClient({
             >
               Set environment variable to {'"1"'} to ensure large thumbnails
               on photo grid views (if not configured, density is based on
-              aspect ratio configuration):
+              aspect ratio):
               {renderEnvVars(['NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS'])}
+            </ChecklistRow>
+          </Checklist>
+          <Checklist
+            title="Settings"
+            icon={<BiCog size={16} />}
+            optional
+          >
+            <ChecklistRow
+              title="Geo privacy"
+              status={isGeoPrivacyEnabled}
+              optional
+            >
+              Set environment variable to {'"1"'} to disable
+              collection/display of location-based data:
+              {renderEnvVars(['NEXT_PUBLIC_GEO_PRIVACY'])}
             </ChecklistRow>
             <ChecklistRow
               title="Public downloads"

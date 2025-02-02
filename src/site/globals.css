@@ -121,6 +121,12 @@
       hover:text-gray-600
       hover:dark:text-gray-400
   }
+  /* Components */
+  .component-surface {
+    @apply
+      bg-content border border-main
+      rounded-lg
+  }
   /* Utilities: Text */
   .text-main {
     @apply
@@ -155,6 +161,9 @@
       text-red-500 dark:text-red-400
   }
   /* Utilities: Border */
+  .border-main {
+    @apply border-gray-200 dark:border-gray-700
+  }
   .border-subtle {
     @apply
       border border-gray-200 dark:border-gray-800
@@ -189,6 +198,10 @@
   .gap-baseline {
     @apply
       gap-[1.1875rem] md:gap-[1.25rem]
+  }
+  .h-baseline {
+    @apply
+      h-[1.1875rem] md:h-[1.25rem]
   }
   .max-h-baseline {
     @apply

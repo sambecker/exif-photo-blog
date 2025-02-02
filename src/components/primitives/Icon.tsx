@@ -22,7 +22,7 @@ export default function Icon({
       'h-[18px] md:h-[20px]',
       wide ? 'w-[28px]' : 'w-[14px]',
       'inline-flex items-center justify-center',
-      debug && 'bg-gray-700',
+      debug && 'bg-gray-300 dark:bg-gray-700',
       className,
     )}>
       {loading

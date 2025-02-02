@@ -29,7 +29,11 @@ module.exports = {
         'rotate-pulse':
           'rotate-pulse 0.75s linear infinite normal both running',
         'fade-in':
-          'fade-in 0.5s linear',
+          'fade-in 0.5s linear both running',
+        'fade-in-from-top':
+          'fade-in-from-top 0.25s ease-in-out',
+        'fade-in-from-bottom':
+          'fade-in-from-bottom 0.25s ease-in-out',
         'hover-drift':
           'hover-drift 8s linear infinite',
         'hover-wobble':
@@ -39,6 +43,26 @@ module.exports = {
         'fade-in': {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
+        },
+        'fade-in-from-top': {
+          '0%': {
+            opacity: '0',
+            transform: 'translateY(-10px)',
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateY(0)',
+          },
+        },
+        'fade-in-from-bottom': {
+          '0%': {
+            opacity: '0',
+            transform: 'translateY(10px)',
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateY(0)',
+          },
         },
         'rotate-pulse': {
           '0%': { transform: 'rotate(0deg) scale(1)' },

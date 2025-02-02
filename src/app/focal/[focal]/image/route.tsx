@@ -8,7 +8,25 @@ import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import FocalLengthImageResponse from
   '@/image-response/FocalLengthImageResponse';
-import { getFocalLengthFromString } from '@/focal';
+import { formatFocalLength, getFocalLengthFromString } from '@/focal';
+import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
+import { getUniqueFocalLengths } from '@/photo/db/query';
+import {
+  STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES,
+  IS_PRODUCTION,
+} from '@/site/config';
+
+export let generateStaticParams:
+  (() => Promise<{ focal: string }[]>) | undefined = undefined;
+
+if (STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES && IS_PRODUCTION) {
+  generateStaticParams = async () => {
+    const focalLengths= await getUniqueFocalLengths();
+    return focalLengths
+      .slice(0, GENERATE_STATIC_PARAMS_LIMIT)
+      .map(({ focal }) => ({ focal: formatFocalLength(focal)! }));
+  };
+}
 
 export async function GET(
   _: Request,

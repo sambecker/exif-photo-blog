@@ -11,7 +11,7 @@ import { clsx } from 'clsx/lite';
 import { pathForPhoto } from '@/site/paths';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
 import { useRef } from 'react';
-import useOnVisible from '@/utility/useOnVisible';
+import useVisible from '@/utility/useVisible';
 import LinkWithStatus from '@/components/LinkWithStatus';
 import Spinner from '@/components/Spinner';
 
@@ -36,7 +36,7 @@ export default function PhotoMedium({
 } & PhotoSetCategory) {
   const ref = useRef<HTMLAnchorElement>(null);
 
-  useOnVisible(ref, onVisible);
+  useVisible({ ref, onVisible });
 
   return (
     <LinkWithStatus

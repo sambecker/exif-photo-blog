@@ -3,6 +3,7 @@ import { clsx } from 'clsx/lite';
 import ExperimentalBadge from './ExperimentalBadge';
 import Badge from './Badge';
 import ResponsiveText from './primitives/ResponsiveText';
+import { parameterize } from '@/utility/string';
 
 export default function Checklist({
   title,
@@ -19,24 +20,32 @@ export default function Checklist({
   experimental?: boolean
   children: ReactNode
 }) {
+  const slug = parameterize(title);
+
   return (
     <div>
-      <div className={clsx(
-        'inline-flex items-center',
-        'text-gray-600 dark:text-gray-300',
-        'pl-[18px] mb-3 text-lg',
-      )}>
+      <a
+        id={slug}
+        href={`#${slug}`}
+        className={clsx(
+          'inline-flex items-center',
+          'text-gray-600 dark:text-gray-300',
+          'pl-[18px] py-3 text-lg',
+        )}
+      >
         <span className="w-7 shrink-0">{icon}</span>
         <span className="inline-flex flex-wrap items-center gap-y-1 gap-x-1.5">
           <ResponsiveText shortText={titleShort}>
             {title}
           </ResponsiveText>
           {optional &&
-            <Badge type="small">Optional</Badge>}
+            <Badge type="small" className="translate-y-[0.5px]">
+              Optional
+            </Badge>}
           {experimental &&
-            <ExperimentalBadge />}
+            <ExperimentalBadge className="translate-y-[0.5px]" />}
         </span>
-      </div>
+      </a>
       <div className={clsx(
         'bg-white dark:bg-black',
         'dark:text-gray-400',

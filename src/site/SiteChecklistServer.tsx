@@ -8,6 +8,7 @@ export default async function SiteChecklistServer({
   simplifiedView?: boolean
 }) {
   const connectionErrors = await testConnectionsAction().catch(() => ({}));
+
   return (
     <SiteChecklistClient {...{
       ...CONFIG_CHECKLIST_STATUS,

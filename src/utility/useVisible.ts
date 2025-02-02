@@ -1,14 +1,21 @@
 import { useEffect } from 'react';
 
-export default function useOnVisible(
+export default function useVisible({
+  ref,
+  onVisible,
+  onHidden,
+}: {
   ref: React.RefObject<HTMLElement | null>,
   onVisible?: () => void,
-) {
+  onHidden?: () => void,
+}) {
   useEffect(() => {
-    if (onVisible && ref.current) {
+    if (ref.current && (onVisible || onHidden)) {
       const observer = new IntersectionObserver(e => {
         if (e[0].isIntersecting) {
-          onVisible();
+          onVisible?.();
+        } else {
+          onHidden?.();
         }
       }, {
         root: null,
@@ -17,5 +24,5 @@ export default function useOnVisible(
       observer.observe(ref.current);
       return () => observer.disconnect();
     }
-  }, [ref, onVisible]);
+  }, [ref, onVisible, onHidden]);
 }

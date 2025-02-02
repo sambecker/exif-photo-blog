@@ -39,8 +39,8 @@ export default function MoreMenu({
             'z-10',
             'min-w-[8rem]',
             'ml-2.5',
-            'p-1 rounded-md border',
-            'bg-content',
+            'component-surface',
+            'p-1',
             'shadow-lg dark:shadow-xl',
             className,
           )}
