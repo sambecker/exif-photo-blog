@@ -19,6 +19,7 @@ import { PATH_ADMIN_PHOTOS, PATH_ADMIN_UPLOADS } from '@/site/paths';
 import { toastSuccess, toastWarning } from '@/toast';
 import { getDimensionsFromSize } from '@/utility/size';
 import ImageWithFallback from '@/components/image/ImageWithFallback';
+import { IMAGE_WIDTH_ADMIN_PREVIEW } from '@/components/image';
 import { Tags, convertTagsForForm } from '@/tag';
 import { AiContent } from '../ai/useAiImageQueries';
 import AiButton from '../ai/AiButton';
@@ -30,8 +31,6 @@ import { getNextImageUrlForManipulation } from '@/services/next-image';
 import { BLUR_ENABLED, IS_PREVIEW } from '@/site/config';
 import { PhotoDbInsert } from '..';
 import ErrorNote from '@/components/ErrorNote';
-
-const THUMBNAIL_SIZE = 300;
 
 export default function PhotoForm({
   type = 'create',
@@ -114,7 +113,7 @@ export default function PhotoForm({
   const {
     width,
     height,
-  } = getDimensionsFromSize(THUMBNAIL_SIZE, formData.aspectRatio);
+  } = getDimensionsFromSize(IMAGE_WIDTH_ADMIN_PREVIEW, formData.aspectRatio);
 
   const url = formData.url ?? '';
 
@@ -248,7 +247,8 @@ export default function PhotoForm({
             blurCompatibilityLevel="none"
             width={width}
             height={height}
-            priority
+            quality={75}
+            sizes={`${IMAGE_WIDTH_ADMIN_PREVIEW}px`}
           />
           <div className={clsx(
             'absolute top-2 left-2 transition-opacity duration-500',
