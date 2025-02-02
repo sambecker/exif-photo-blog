@@ -50,9 +50,7 @@ Installation
 
 Receiving updates
 -
-If you don't plan to change the code, or don't mind making your updates public, you should consider [forking](https://github.com/sambecker/exif-photo-blog/fork) this repo to easily receive future updates.
-
-If you've already setup your project on Vercel, you can point that project to your newly created fork by editing your project's settings on vercel.com/`user`/`project`/settings/git.
+If you don't plan to change the code, or don't mind making your updates public, you should consider [forking](https://github.com/sambecker/exif-photo-blog/fork) this repo to easily receive future updates. If you've already setup your project on Vercel [see detailed instructions](https://github.com/sambecker/exif-photo-blog?tab=readme-ov-file#how-do-i-receive-template-updates) here.
 
 Develop locally
 -
@@ -108,7 +106,7 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_SITE_ABOUT` (seen in grid sidebar—accepts rich formatting tags: `<b>`, `<strong>`, `<i>`, `<em>`, `<u>`, `<br>`)
 
 #### Performance
-> ⚠️ Enabling may result in increased project usage. Additionally, there have been reports ([184](https://github.com/sambecker/exif-photo-blog/issues/184#issuecomment-2629474045) + [185](https://github.com/sambecker/exif-photo-blog/issues/185#issuecomment-2629478570)) that having a CDN, e.g., Cloudflare in front of Vercel may destabilize static optimization.
+> ⚠️ Enabling may result in increased project usage.
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS = 1` enables static optimization for photo pages (`p/[photoId]`), i.e., renders pages at build time
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES = 1` enables static optimization for OG images, i.e., renders images at build time
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES = 1` enables static optimization for photo categories (`tag/[tag]`, `shot-on/[make]/[model]`, etc.), i.e., renders pages at build time
@@ -249,6 +247,9 @@ FAQ
 
 #### Why don't my photo changes show up immediately?
 > This template statically optimizes core views such as `/` and `/grid` to minimize visitor load times. Consequently, when photos are added, edited, or removed, it might take several minutes for those changes to propagate. If it seems like a change is not taking effect, try navigating to `/admin/configuration` and clicking "Clear Cache."
+
+#### I can't seem to deploy with static optimization enabled
+> There have been reports ([184](https://github.com/sambecker/exif-photo-blog/issues/184#issuecomment-2629474045) + [185](https://github.com/sambecker/exif-photo-blog/issues/185#issuecomment-2629478570)) that having large photo files (over 30MB), or a CDN, e.g., Cloudflare in front of Vercel may destabilize static optimization.
 
 #### Why don't my older photos look right?
 > As the template has evolved, EXIF fields (such as lenses) have been added, blur data is generated through a different method, and AI/privacy features have been added. In order to bring older photos up to date, either click the 'sync' button next to a photo or use the outdated photo page (`/admin/outdated`) to make batch updates.
