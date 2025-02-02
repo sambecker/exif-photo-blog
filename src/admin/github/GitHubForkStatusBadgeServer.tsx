@@ -5,7 +5,7 @@ import {
   VERCEL_GIT_REPO_SLUG,
   VERCEL_GIT_COMMIT_SHA,
 } from '@/site/config';
-import { getGitHubMetaWithFallback } from '.';
+import { getGitHubMetaWithFallback, getGitHubRepoUrl } from '.';
 
 export default async function GitHubForkStatusBadgeServer() {
   const owner = VERCEL_GIT_REPO_OWNER;
@@ -31,7 +31,7 @@ export default async function GitHubForkStatusBadgeServer() {
         {isBehind && <>
           {' '}
           <a
-            href="https://github.com/sambecker/exif-photo-blog"
+            href={getGitHubRepoUrl({ owner, repo })}
             target="_blank"
             className="underline hover:no-underline hover:text-main"
           >
