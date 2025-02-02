@@ -44,7 +44,7 @@ export const ACCEPTED_PHOTO_FILE_TYPES = [
   'image/png',
 ];
 
-export const MAX_PHOTO_UPLOAD_SIZE_IN_BYTES = 50_000_000;
+export const MAX_PHOTO_UPLOAD_SIZE_IN_BYTES = 100_000_000;
 
 // Core EXIF data
 export interface PhotoExif {
