@@ -116,11 +116,6 @@ const getGitHubMeta = async (params: RepoParams) => {
   const url = getGitHubRepoUrl(params);
   const isBaseRepo = isRepoBaseRepo(params);
 
-  console.log(getGitHubApiCompareToCommitUrl({
-    ...params,
-    commit: 'e3745e24e8c54e35aee1f54b66d1ee710e7803e0',
-  }));
-
   const [
     isForkedFromBase,
     behindBy,
@@ -145,7 +140,9 @@ const getGitHubMeta = async (params: RepoParams) => {
     ? FALLBACK_TEXT
     : isBehind
       ? `This fork is ${behindBy} commit${behindBy === 1 ? '' : 's'} behind.`
-      : 'This fork is up to date.';
+      : isBaseRepo
+        ? 'This build is up to date.'
+        : 'This fork is up to date.';
 
   return {
     url,

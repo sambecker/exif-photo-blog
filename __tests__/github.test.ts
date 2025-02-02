@@ -11,7 +11,7 @@ describe('GitHub', () => {
     expect(meta.url).toBeDefined();
     expect(meta.isForkedFromBase).toEqual(false);
     expect(meta.label).toBeDefined();
-    expect(meta.title).toBeDefined();
+    expect(meta.description).toBeDefined();
     expect(meta.isBehind).toEqual(false);
     expect(meta.isBaseRepo).toBe(true);
   });
@@ -29,7 +29,7 @@ describe('GitHub', () => {
     expect(meta.url).toBeDefined();
     expect(meta.isForkedFromBase).toEqual(false);
     expect(meta.label).toEqual('Unknown');
-    expect(meta.title).toEqual('Unknown');
+    expect(meta.description).toEqual('Unknown');
     expect(meta.isBehind).toBeUndefined();
   });
   it('handles fetch errors', async () => {
@@ -41,7 +41,7 @@ describe('GitHub', () => {
     expect(meta.url).toBeDefined();
     expect(meta.isForkedFromBase).toEqual(false);
     expect(meta.label).toEqual('Unknown');
-    expect(meta.title).toEqual('Unknown');
+    expect(meta.description).toEqual('Unknown');
     expect(meta.isBehind).toBeUndefined();
   });
 });
