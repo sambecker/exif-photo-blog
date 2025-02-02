@@ -1,18 +1,17 @@
 import Spinner from '@/components/Spinner';
+import Tooltip from '@/components/Tooltip';
 import clsx from 'clsx/lite';
-import Link from 'next/link';
+import { ReactNode } from 'react';
 import { BiLogoGithub } from 'react-icons/bi';
 
 export default function GitHubForkStatusBadgeClient({
-  url,
   label,
   style = 'mono',
-  title,
+  tooltip,
 }: {
-  url?: string
-  label?: string
+  label?: ReactNode
   style?: 'success' | 'warning' | 'mono'
-  title?: string
+  tooltip?: ReactNode
 }) {
   const classNameForStyle = () => {
     switch (style) {
@@ -29,47 +28,32 @@ export default function GitHubForkStatusBadgeClient({
       'border-amber-300/25 dark:border-amber-900',
     );
     default: return clsx(
-      'text-gray-700 hover:text-gray-700',
-      'dark:text-gray-300 dark:hover:text-gray-300',
+      'text-main',
       'bg-white dark:bg-transparent',
       'border-main',
     );
     }
   };
 
-  const className = clsx(
-    'opacity-0 transition-opacity animate-fade-in',
-    'inline-flex items-center gap-2',
-    'border transition-colors',
-    url ? 'hover:underline' : 'select-none',
-    'pl-[4.5px] pr-2.5 py-[3px]',
-    'rounded-full shadow-sm',
-    classNameForStyle(),
+  return (
+    <Tooltip content={tooltip}>
+      <div className={clsx(
+        'opacity-0 transition-opacity animate-fade-in',
+        'inline-flex items-center gap-2',
+        'border transition-colors',
+        'select-none',
+        'pl-[4.5px] pr-2.5 py-[3px]',
+        'rounded-full shadow-sm',
+        classNameForStyle(),
+      )}>
+        {!label
+          ? <Spinner
+            color="text"
+            className="translate-x-[3px]"
+          />
+          : <BiLogoGithub size={17} />}
+        {label ?? 'Checking'}
+      </div>
+    </Tooltip>
   );
-
-  const content = <>
-    {!label
-      ? <Spinner
-        color="text"
-        className="translate-x-[3px]"
-      />
-      : <BiLogoGithub size={17} />}
-    {label ?? 'Checking'}
-  </>;
-
-  return url
-    ? <Link
-      target="_blank"
-      href={url}
-      title={title}
-      className={className}
-    >
-      {content}
-    </Link>
-    : <span
-      title={title}
-      className={className}
-    >
-      {content}
-    </span>;
 }

@@ -18,11 +18,12 @@ interface RepoParams {
   owner?: string
   repo?: string
   branch?: string
+  commit?: string
 };
 
 // Website urls
 
-const getGitHubRepoUrl = ({
+export const getGitHubRepoUrl = ({
   owner = TEMPLATE_BASE_OWNER,
   repo = TEMPLATE_BASE_REPO,
 }: RepoParams = {}) =>
@@ -45,18 +46,21 @@ const getGitHubApiRepoUrl = ({
   `https://api.github.com/repos/${owner}/${repo}`;
 
 const getGitHubApiCommitsUrl = (params?: RepoParams) =>
-  `${getGitHubApiRepoUrl(params)}/commits/main`;
+  `${getGitHubApiRepoUrl(params)}/commits/${params?.branch || DEFAULT_BRANCH}`;
 
 const getGitHubApiForksUrl = (params?: RepoParams) =>
   `${getGitHubApiRepoUrl(params)}/forks`;
 
-const getGitHubApiCompareUrl = ({
+const getGitHubApiCompareToRepoUrl = ({
   owner,
   repo,
-  branch = 'main',
+  branch = DEFAULT_BRANCH,
 }: RepoParams = {}) =>
   // eslint-disable-next-line max-len
   `${getGitHubApiRepoUrl()}/compare/${TEMPLATE_BASE_BRANCH}...${owner}:${repo}:${branch}`;
+
+const getGitHubApiCompareToCommitUrl = ({ commit }: RepoParams = {}) =>
+  `${getGitHubApiRepoUrl()}/compare/${TEMPLATE_BASE_BRANCH}...${commit}`;
 
 // Requests
 
@@ -75,13 +79,25 @@ const getIsRepoForkedFromBase = async (params: RepoParams) => {
   );
 };
 
-const getGitHubCommitsBehind = async (params?: RepoParams) => {
-  const response = await fetch(getGitHubApiCompareUrl(params), FETCH_CONFIG);
+const getGitHubCommitsBehindFromRepo = async (params?: RepoParams) => {
+  const response = await fetch(
+    getGitHubApiCompareToRepoUrl(params),
+    FETCH_CONFIG,
+  );
   const data = await response.json();
   return data.behind_by as number;
 };
 
-const isRepoBaseRepo = async ({ owner, repo }: RepoParams) =>
+const getGitHubCommitsBehindFromCommit = async (params?: RepoParams) => {
+  const response = await fetch(
+    getGitHubApiCompareToCommitUrl(params),
+    FETCH_CONFIG,
+  );
+  const data = await response.json();
+  return data.behind_by as number;
+};
+
+const isRepoBaseRepo = ({ owner, repo }: RepoParams) =>
   owner?.toLowerCase() === TEMPLATE_BASE_OWNER &&
   repo?.toLowerCase() === TEMPLATE_BASE_REPO;
 
@@ -97,16 +113,22 @@ export const getGitHubPublicFork = async (
 };
 
 const getGitHubMeta = async (params: RepoParams) => {
+  const url = getGitHubRepoUrl(params);
+  const isBaseRepo = isRepoBaseRepo(params);
+
+  console.log(getGitHubApiCompareToCommitUrl({
+    ...params,
+    commit: 'e3745e24e8c54e35aee1f54b66d1ee710e7803e0',
+  }));
+
   const [
-    url,
     isForkedFromBase,
-    isBaseRepo,
     behindBy,
   ] = await Promise.all([
-    getGitHubRepoUrl(params),
     getIsRepoForkedFromBase(params),
-    isRepoBaseRepo(params),
-    getGitHubCommitsBehind(params),
+    isBaseRepo && params.commit
+      ? getGitHubCommitsBehindFromCommit(params)
+      : getGitHubCommitsBehindFromRepo(params),
   ]);
 
   const isBehind = behindBy === undefined
@@ -119,11 +141,10 @@ const getGitHubMeta = async (params: RepoParams) => {
       ? `${behindBy} Behind`
       : 'Synced';
 
-  const title = isBehind === undefined
+  const description = isBehind === undefined
     ? FALLBACK_TEXT
     : isBehind
-      // eslint-disable-next-line max-len
-      ? `This fork is ${behindBy} commit${behindBy === 1 ? '' : 's'} behind. Consider syncing on GitHub for the latest updates.`
+      ? `This fork is ${behindBy} commit${behindBy === 1 ? '' : 's'} behind.`
       : 'This fork is up to date.';
 
   return {
@@ -133,7 +154,7 @@ const getGitHubMeta = async (params: RepoParams) => {
     behindBy,
     isBehind,
     label,
-    title,
+    description,
   };
 };
 
@@ -148,6 +169,6 @@ export const getGitHubMetaWithFallback = (params: RepoParams) =>
         behindBy: undefined,
         isBehind: undefined,
         label: FALLBACK_TEXT,
-        title: FALLBACK_TEXT,
+        description: FALLBACK_TEXT,
       };
     });

@@ -121,6 +121,12 @@
       hover:text-gray-600
       hover:dark:text-gray-400
   }
+  /* Components */
+  .component-surface {
+    @apply
+      bg-content border border-main
+      rounded-lg
+  }
   /* Utilities: Text */
   .text-main {
     @apply
