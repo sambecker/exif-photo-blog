@@ -106,7 +106,7 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_SITE_ABOUT` (seen in grid sidebar—accepts rich formatting tags: `<b>`, `<strong>`, `<i>`, `<em>`, `<u>`, `<br>`)
 
 #### Performance
-> ⚠️ Enabling may result in increased project usage. [Troubleshooting hints](https://github.com/sambecker/exif-photo-blog?tab=readme-ov-file#why-do-production-deployments-fail-when-static-optimization-is-enabled) in FAQ.
+> ⚠️ Enabling may result in increased project usage. Static optimization [troubleshooting hints](https://github.com/sambecker/exif-photo-blog?tab=readme-ov-file#why-do-production-deployments-fail-when-static-optimization-is-enabled) in FAQ.
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS = 1` enables static optimization for photo pages (`p/[photoId]`), i.e., renders pages at build time
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES = 1` enables static optimization for OG images, i.e., renders images at build time
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES = 1` enables static optimization for photo categories (`tag/[tag]`, `shot-on/[make]/[model]`, etc.), i.e., renders pages at build time
