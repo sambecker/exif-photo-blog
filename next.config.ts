@@ -42,9 +42,21 @@ if (HOSTNAME_AWS_S3) {
 
 const nextConfig: NextConfig = {
   images: {
-    imageSizes: [200],
-    remotePatterns,
-    minimumCacheTTL: 31536000,
+    // Grid and thumbnail sizes
+    imageSizes: [200, 640],
+    // Full viewing sizes
+    deviceSizes: [1080, 1920, 2560, 3840],
+    formats: ['image/webp'],
+    minimumCacheTTL: 60,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'photos.xiax.xyz',
+        port: '',
+        pathname: '/**',
+      },
+      ...remotePatterns,
+    ],
   },
 };
 
