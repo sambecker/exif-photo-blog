@@ -274,11 +274,11 @@ export const getPhotosMostRecentUpdate = async () =>
 
 export const getUniqueTags = async () =>
   safelyQueryPhotos(() => sql`
-    SELECT DISTINCT unnest(tags) as tag, COUNT(*)
+    SELECT DISTINCT unnest(tags) as tag, COUNT(*) as count
     FROM photos
     WHERE hidden IS NOT TRUE
     GROUP BY tag
-    ORDER BY tag ASC
+    ORDER BY count DESC, tag ASC
   `.then(({ rows }): Tags => rows.map(({ tag, count }) => ({
       tag: tag as string,
       count: parseInt(count, 10),
@@ -287,10 +287,10 @@ export const getUniqueTags = async () =>
 
 export const getUniqueTagsHidden = async () =>
   safelyQueryPhotos(() => sql`
-    SELECT DISTINCT unnest(tags) as tag, COUNT(*)
+    SELECT DISTINCT unnest(tags) as tag, COUNT(*) as count
     FROM photos
     GROUP BY tag
-    ORDER BY tag ASC
+    ORDER BY count DESC, tag ASC
   `.then(({ rows }): Tags => rows.map(({ tag, count }) => ({
       tag: tag as string,
       count: parseInt(count, 10),
