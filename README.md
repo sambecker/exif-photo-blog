@@ -48,6 +48,12 @@ Installation
 3. Add optional title
 4. Click "Create"
 
+Receiving updates
+-
+If you don't plan to change the code, or don't mind making your updates public, you should consider [forking](https://github.com/sambecker/exif-photo-blog/fork) this repo to easily receive future updates.
+
+If you've already setup your project on Vercel, you can point that project to your newly created fork by editing your project's settings on vercel.com/`user`/`project`/settings/git.
+
 Develop locally
 -
 1. Clone code
