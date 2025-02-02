@@ -106,7 +106,7 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_SITE_ABOUT` (seen in grid sidebar—accepts rich formatting tags: `<b>`, `<strong>`, `<i>`, `<em>`, `<u>`, `<br>`)
 
 #### Performance
-> ⚠️ Enabling may result in increased project usage.
+> ⚠️ Enabling may result in increased project usage. [Troubleshooting hints](https://github.com/sambecker/exif-photo-blog?tab=readme-ov-file#why-do-production-deployments-fail-when-static-optimization-is-enabled) in FAQ.
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS = 1` enables static optimization for photo pages (`p/[photoId]`), i.e., renders pages at build time
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES = 1` enables static optimization for OG images, i.e., renders images at build time
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES = 1` enables static optimization for photo categories (`tag/[tag]`, `shot-on/[make]/[model]`, etc.), i.e., renders pages at build time
@@ -248,13 +248,13 @@ FAQ
 #### Why don't my photo changes show up immediately?
 > This template statically optimizes core views such as `/` and `/grid` to minimize visitor load times. Consequently, when photos are added, edited, or removed, it might take several minutes for those changes to propagate. If it seems like a change is not taking effect, try navigating to `/admin/configuration` and clicking "Clear Cache."
 
-#### I can't seem to deploy with static optimization enabled
-> There have been reports ([184](https://github.com/sambecker/exif-photo-blog/issues/184#issuecomment-2629474045) + [185](https://github.com/sambecker/exif-photo-blog/issues/185#issuecomment-2629478570)) that having large photo files (over 30MB), or a CDN, e.g., Cloudflare in front of Vercel may destabilize static optimization.
+#### Why do production deployments fail when static optimization is enabled?
+> There have been reports ([184](https://github.com/sambecker/exif-photo-blog/issues/184#issuecomment-2629474045) + [185](https://github.com/sambecker/exif-photo-blog/issues/185#issuecomment-2629478570)) that having large photos (over 30MB), or a CDN, e.g., Cloudflare in front of Vercel, may destabilize static optimization.
 
 #### Why don't my older photos look right?
 > As the template has evolved, EXIF fields (such as lenses) have been added, blur data is generated through a different method, and AI/privacy features have been added. In order to bring older photos up to date, either click the 'sync' button next to a photo or use the outdated photo page (`/admin/outdated`) to make batch updates.
 
-#### Why don’t my OG images load when I share a link?
+#### Why don't my OG images load when I share a link?
 > Many services such as iMessage, Slack, and X, require near-instant responses when unfurling link-based content. In order to guarantee sufficient responsiveness, consider rendering pages and image assets ahead of time by enabling static optimization by setting `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS = 1` and `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES = 1`. Keep in mind that this will increase platform usage.
 
 #### Why do vertical images take up so much space?
