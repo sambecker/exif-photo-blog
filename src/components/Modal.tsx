@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { ReactNode, RefObject, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { clsx } from 'clsx/lite';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
@@ -32,11 +32,12 @@ export default function Modal({
 
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const [htmlElements, setHtmlElements] = useState<HTMLDivElement[]>([]);
+  const [htmlElements, setHtmlElements] =
+    useState<RefObject<HTMLDivElement | null>[]>([]);
 
   useEffect(() => {
     if (contentRef.current) {
-      setHtmlElements([contentRef.current]);
+      setHtmlElements([contentRef]);
     }
   }, []);
 
