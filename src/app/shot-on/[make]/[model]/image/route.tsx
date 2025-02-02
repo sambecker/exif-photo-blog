@@ -22,7 +22,7 @@ if (STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES && IS_PRODUCTION) {
   generateStaticParams = async () => {
     const cameras = await getUniqueCameras();
     return cameras
-      .slice(0, 50)
+      .slice(0, GENERATE_STATIC_PARAMS_LIMIT)
       .map(({ camera }) => ({ camera }));
   };
 }
