@@ -14,7 +14,7 @@ import {
 import { Cameras, createCameraKey } from '@/camera';
 import { Tags } from '@/tag';
 import { FilmSimulation, FilmSimulations } from '@/simulation';
-import { SHOULD_DEBUG_SQL } from '@/site/config';
+import { ADMIN_DB_OPTIMIZE_ENABLED } from '@/site/config';
 import {
   GetPhotosOptions,
   getLimitAndOffsetFromOptions,
@@ -127,7 +127,7 @@ const safelyQueryPhotos = async <T>(
     }
   }
 
-  if (SHOULD_DEBUG_SQL && debugMessage) {
+  if (ADMIN_DB_OPTIMIZE_ENABLED && debugMessage) {
     const time =
       (((new Date()).getTime() - start.getTime()) / 1000).toFixed(2);
     console.log(`Executing sql query: ${debugMessage} (${time} seconds)`);

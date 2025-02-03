@@ -227,6 +227,7 @@ export const OG_TEXT_BOTTOM_ALIGNMENT =
 // INTERNAL
 
 export const ADMIN_DEBUG_TOOLS_ENABLED = process.env.ADMIN_DEBUG_TOOLS === '1';
+export const ADMIN_DB_OPTIMIZE_ENABLED = process.env.ADMIN_DB_OPTIMIZE === '1';
 
 export const CONFIG_CHECKLIST_STATUS = {
   // Storage

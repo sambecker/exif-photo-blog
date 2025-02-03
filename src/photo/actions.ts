@@ -406,15 +406,31 @@ export const getPhotosHiddenMetaCachedAction = async () =>
 
 // Public/Private actions
 
-export const getPhotosAction = async (options: GetPhotosOptions) =>
-  areOptionsSensitive(options)
-    ? runAuthenticatedAdminServerAction(() => getPhotos(options))
-    : getPhotos(options);
+export const getPhotosAction = async (
+  options: GetPhotosOptions,
+  warmOnly?: boolean,
+) => {
+  if (warmOnly) {
+    return [];
+  } else {
+    return areOptionsSensitive(options)
+      ? runAuthenticatedAdminServerAction(() => getPhotos(options))
+      : getPhotos(options);
+  }
+};
 
-export const getPhotosCachedAction = async (options: GetPhotosOptions) =>
-  areOptionsSensitive(options)
-    ? runAuthenticatedAdminServerAction(() => getPhotosCached(options))
-    : getPhotosCached(options);
+export const getPhotosCachedAction = async (
+  options: GetPhotosOptions,
+  warmOnly?: boolean,
+) => {
+  if (warmOnly) {
+    return [];
+  } else {
+    return areOptionsSensitive(options)
+      ? runAuthenticatedAdminServerAction(() => getPhotosCached(options))
+      : getPhotosCached(options);
+  }
+};
 
 // Public actions
 
