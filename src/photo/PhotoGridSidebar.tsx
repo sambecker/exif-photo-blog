@@ -57,42 +57,6 @@ export default function PhotoGridSidebar({
           }}
         />]}
       />}
-      {tags.length > 0 && <HeaderList
-        title='Tags'
-        icon={<FaTag size={12} className="text-icon" />}
-        items={tagsIncludingHidden.map(({ tag, count }) => {
-          switch (tag) {
-          case TAG_FAVS:
-            return <FavsTag
-              key={TAG_FAVS}
-              countOnHover={count}
-              type="icon-last"
-              prefetch={false}
-              contrast="low"
-              badged
-            />;
-          case TAG_HIDDEN:
-            return <HiddenTag
-              key={TAG_HIDDEN}
-              countOnHover={count}
-              type="icon-last"
-              prefetch={false}
-              contrast="low"
-              badged
-            />;
-          default:
-            return <PhotoTag
-              key={tag}
-              tag={tag}
-              type="text-only"
-              countOnHover={count}
-              prefetch={false}
-              contrast="low"
-              badged
-            />;
-          }
-        })}
-      />}
       {cameras.length > 0 && <HeaderList
         title="Cameras"
         icon={<IoMdCamera
@@ -132,6 +96,42 @@ export default function PhotoGridSidebar({
                 prefetch={false}
               />
             </div>)}
+      />}
+      {tags.length > 0 && <HeaderList
+        title='Tags'
+        icon={<FaTag size={12} className="text-icon" />}
+        items={tagsIncludingHidden.map(({ tag, count }) => {
+          switch (tag) {
+          case TAG_FAVS:
+            return <FavsTag
+              key={TAG_FAVS}
+              countOnHover={count}
+              type="icon-last"
+              prefetch={false}
+              contrast="low"
+              badged
+            />;
+          case TAG_HIDDEN:
+            return <HiddenTag
+              key={TAG_HIDDEN}
+              countOnHover={count}
+              type="icon-last"
+              prefetch={false}
+              contrast="low"
+              badged
+            />;
+          default:
+            return <PhotoTag
+              key={tag}
+              tag={tag}
+              type="text-only"
+              countOnHover={count}
+              prefetch={false}
+              contrast="low"
+              badged
+            />;
+          }
+        })}
       />}
       {photosCount > 0 && start
         ? <HeaderList
