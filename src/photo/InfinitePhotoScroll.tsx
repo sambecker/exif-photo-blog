@@ -129,7 +129,9 @@ export default function InfinitePhotoScroll({
   } as any), [data, mutate]);
 
   useVisible({ ref: buttonContainerRef, onVisible: () => {
-    if (size === 0) { advance(); }
+    if (ADMIN_DB_OPTIMIZE_ENABLED && size === 0) {
+      advance();
+    }
   }});
 
   const renderMoreButton = () =>
