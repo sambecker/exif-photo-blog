@@ -16,6 +16,7 @@ import { clsx } from 'clsx/lite';
 import { useAppState } from '@/state/AppState';
 import { GetPhotosOptions } from './db';
 import useVisible from '@/utility/useVisible';
+import { ADMIN_DB_OPTIMIZE_ENABLED } from '@/site/config';
 
 export type RevalidatePhoto = (
   photoId: string,
@@ -87,7 +88,7 @@ export default function InfinitePhotoScroll({
       keyGenerator,
       fetcher,
       {
-        initialSize: 0,
+        initialSize: ADMIN_DB_OPTIMIZE_ENABLED ? 0 : 2,
         revalidateFirstPage: false,
         revalidateOnFocus: Boolean(isUserSignedIn),
         revalidateOnReconnect: Boolean(isUserSignedIn),
@@ -95,7 +96,9 @@ export default function InfinitePhotoScroll({
     );
 
   useEffect(() => {
-    fetcher(['', 0], true);
+    if (ADMIN_DB_OPTIMIZE_ENABLED) {
+      fetcher(['', 0], true);
+    }
   }, [fetcher]);
 
   const buttonContainerRef = useRef<HTMLDivElement>(null);
