@@ -5,6 +5,13 @@ import { PhotoSetCategory } from '..';
 export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 export const PHOTO_DEFAULT_LIMIT = 100;
 
+// Trim whitespace
+// Make lowercase
+// Replace spaces with dashes
+// Remove periods and commas
+const parameterizeForDb = (text: string) =>
+  `REPLACE(REPLACE(REPLACE(LOWER(TRIM(${text})), '.', ''), ',', ''), ' ', '-')`;
+
 export type GetPhotosOptions = {
   sortBy?: 'createdAt' | 'createdAtAsc' | 'takenAt' | 'priority'
   limit?: number
@@ -71,15 +78,15 @@ export const getWheresFromOptions = (
     wheresValues.push(tag);
   }
   if (camera) {
-    wheres.push(`LOWER(REPLACE(make, ' ', '-'))=$${valuesIndex++}`);
-    wheres.push(`LOWER(REPLACE(model, ' ', '-'))=$${valuesIndex++}`);
+    wheres.push(`${parameterizeForDb('make')}=$${valuesIndex++}`);
     wheresValues.push(parameterize(camera.make, true));
+    wheres.push(`${parameterizeForDb('model')}=$${valuesIndex++}`);
     wheresValues.push(parameterize(camera.model, true));
   }
   if (lens) {
-    wheres.push(`LOWER(REPLACE(lens_make, ' ', '-'))=$${valuesIndex++}`);
-    wheres.push(`LOWER(REPLACE(lens_model, ' ', '-'))=$${valuesIndex++}`);
+    wheres.push(`${parameterizeForDb('lens_make')}=$${valuesIndex++}`);
     wheresValues.push(parameterize(lens.make, true));
+    wheres.push(`${parameterizeForDb('lens_model')}=$${valuesIndex++}`);
     wheresValues.push(parameterize(lens.model, true));
   }
   if (simulation) {
