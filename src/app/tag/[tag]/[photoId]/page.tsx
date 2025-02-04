@@ -28,7 +28,9 @@ interface PhotoTagProps {
 export async function generateMetadata({
   params,
 }: PhotoTagProps): Promise<Metadata> {
-  const { photoId, tag } = await params;
+  const { photoId, tag: tagFromParams } = await params;
+
+  const tag = decodeURIComponent(tagFromParams);
 
   const { photo } = await getPhotosNearIdCachedCached(photoId, tag);
 
@@ -60,7 +62,10 @@ export async function generateMetadata({
 export default async function PhotoTagPage({
   params,
 }: PhotoTagProps) {
-  const { photoId, tag } = await params;
+  const { photoId, tag: tagFromParams } = await params;
+
+  const tag = decodeURIComponent(tagFromParams);
+
   const { photo, photos, photosGrid, indexNumber } =
     await getPhotosNearIdCachedCached(photoId, tag);
 
