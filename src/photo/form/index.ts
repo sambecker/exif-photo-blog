@@ -242,9 +242,16 @@ export const convertFormDataToPhotoDbInsert = (
     ? Object.fromEntries(formData) as PhotoFormData
     : formData;
 
+  // Capture tags before 'favorite' is excluded from insert
+  const tags = convertStringToArray(photoForm.tags) ?? [];
+  if (photoForm.favorite === 'true') {
+    tags.push(TAG_FAVS);
+  }
+
   // Parse FormData:
   // - remove server action ID
   // - remove empty strings
+  // - remove fields excluded from insert
   // - trim strings
   Object.keys(photoForm).forEach(key => {
     const meta = FORM_METADATA()[key as keyof PhotoFormData];
@@ -258,11 +265,6 @@ export const convertFormDataToPhotoDbInsert = (
       (photoForm as any)[key] = (photoForm as any)[key].trim();
     }
   });
-
-  const tags = convertStringToArray(photoForm.tags) ?? [];
-  if (photoForm.favorite === 'true') {
-    tags.push(TAG_FAVS);
-  }
 
   return {
     ...(photoForm as PhotoFormData & { filmSimulation?: FilmSimulation }),
