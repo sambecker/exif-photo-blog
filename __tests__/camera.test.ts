@@ -5,9 +5,10 @@ const APPLE_01  : Camera = { make: 'Apple', model: 'iPhone 11' };
 const APPLE_02  : Camera = { make: 'Apple', model: 'iPhone 15 Pro Max' };
 const FUJIFILM  : Camera = { make: 'Fujifilm', model: 'X-T5' };
 const CANON     : Camera = { make: 'Canon', model: 'Canon EOS 800D' };
-const NIKON     : Camera = {
-  make: 'Nikon Corporation',
-  model: 'Nikon D7000',
+const NIKON     : Camera = { make: 'Nikon Corporation', model: 'Nikon D7000' };
+const RICOH     : Camera = {
+  make: 'RICOH IMAGING COMPANY, LTD.',
+  model: 'RICOH GR III',
 };
 
 describe('Camera', () => {
@@ -19,6 +20,7 @@ describe('Camera', () => {
     expect(formatCameraText(FUJIFILM)).toBe('Fujifilm X-T5');
     expect(formatCameraText(CANON)).toBe('Canon EOS 800D');
     expect(formatCameraText(NIKON)).toBe('Nikon D7000');
+    expect(formatCameraText(RICOH)).toBe('RICOH GR III');
   });
   it('labels models correctly', () => {
     expect(formatCameraText(APPLE, 'never')).toBe('iPhone 11 Pro');

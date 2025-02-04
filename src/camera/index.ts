@@ -56,14 +56,17 @@ export const cameraFromPhoto = (
     : fallback ?? CAMERA_PLACEHOLDER;
 
 export const formatCameraText = (
-  { make: makeRaw, model: modelRaw }: Camera,
+  { make, model: modelRaw }: Camera,
   includeMake: 'always' | 'never' | 'if-not-apple' = 'if-not-apple',
   removeIPhoneOnLongModels?: boolean,
 ) => {
-  // Remove 'Corporation' from makes like 'Nikon Corporation'
-  const make = makeRaw.replace(/ Corporation/i, '');
-  // Remove potential duplicate make from model
-  let model = modelRaw.replace(`${make} `, '');
+  // Capture simple make without modifiers like 'Corporation' or 'Company'
+  const makeSimple = make.match(/^(\S+)/)?.[1];
+  const doesModelStartWithMake = (
+    makeSimple &&
+    modelRaw.toLocaleLowerCase().startsWith(makeSimple.toLocaleLowerCase())
+  );
+  let model = modelRaw;
   if (
     removeIPhoneOnLongModels &&
     model.includes('iPhone') &&
@@ -72,8 +75,9 @@ export const formatCameraText = (
     model = model.replace(/iPhone\s*/i, '');
   }
   return (
-    includeMake === 'never' || 
-    includeMake === 'if-not-apple' && make === 'Apple'
+    includeMake === 'never' ||
+    doesModelStartWithMake ||
+    (includeMake === 'if-not-apple' && make === 'Apple')
   ) ? model
     : `${make} ${model}`;
 };
