@@ -5,7 +5,7 @@ import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
 import { OG_TEXT_BOTTOM_ALIGNMENT } from '@/site/config';
 import { NextImageSize } from '@/services/next-image';
-import { cameraFromPhoto, formatCameraModelTextShort } from '@/camera';
+import { cameraFromPhoto, formatCameraText } from '@/camera';
 
 export default function PhotoImageResponse({
   photo,
@@ -22,7 +22,7 @@ export default function PhotoImageResponse({
 }) {
   const caption = [
     photo.model
-      ? formatCameraModelTextShort(cameraFromPhoto(photo))
+      ? formatCameraText(cameraFromPhoto(photo), 'short')
       : undefined,
     photo.focalLengthFormatted,
     photo.fNumberFormatted,

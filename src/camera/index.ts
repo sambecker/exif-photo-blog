@@ -57,8 +57,11 @@ export const cameraFromPhoto = (
 
 export const formatCameraText = (
   { make, model: modelRaw }: Camera,
-  includeMake: 'always' | 'never' | 'if-not-apple' = 'if-not-apple',
-  removeIPhoneOnLongModels?: boolean,
+  length:
+    'long' |    // Unmodified make and model
+    'medium' |  // Make and model, with modifiers removed
+    'short'     // Model only
+  = 'medium',
 ) => {
   // Capture simple make without modifiers like 'Corporation' or 'Company'
   const makeSimple = make.match(/^(\S+)/)?.[1];
@@ -67,20 +70,23 @@ export const formatCameraText = (
     modelRaw.toLocaleLowerCase().startsWith(makeSimple.toLocaleLowerCase())
   );
   let model = modelRaw;
-  if (
-    removeIPhoneOnLongModels &&
-    model.includes('iPhone') &&
-    model.length > 9
-  ) {
-    model = model.replace(/iPhone\s*/i, '');
+  switch (length) {
+  case 'long':
+    return `${make} ${model}`;
+  case 'medium':
+    return doesModelStartWithMake || make === 'Apple'
+      ? model
+      : `${make} ${model}`;
+  case 'short':
+    model = doesModelStartWithMake
+      ? model.replace(makeSimple, '').trim()
+      : model;
+    if (
+      model.includes('iPhone') &&
+      model.length > 9
+    ) {
+      model = model.replace(/iPhone\s*/i, '');
+    }
+    return model;
   }
-  return (
-    includeMake === 'never' ||
-    doesModelStartWithMake ||
-    (includeMake === 'if-not-apple' && make === 'Apple')
-  ) ? model
-    : `${make} ${model}`;
 };
-
-export const formatCameraModelTextShort = (camera: Camera) =>
-  formatCameraText(camera, 'never', true);

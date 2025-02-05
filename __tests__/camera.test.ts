@@ -14,19 +14,24 @@ const RICOH     : Camera = {
 describe('Camera', () => {
   it('labels full text correctly', () => {
     expect(formatCameraText(APPLE)).toBe('iPhone 11 Pro');
-    expect(formatCameraText(APPLE, 'always')).toBe('Apple iPhone 11 Pro');
-    expect(formatCameraText(APPLE, 'if-not-apple')).toBe('iPhone 11 Pro');
-    expect(formatCameraText(APPLE, 'never')).toBe('iPhone 11 Pro');
+    expect(formatCameraText(APPLE, 'long')).toBe('Apple iPhone 11 Pro');
+    expect(formatCameraText(APPLE, 'medium')).toBe('iPhone 11 Pro');
+    expect(formatCameraText(APPLE, 'short')).toBe('11 Pro');
     expect(formatCameraText(FUJIFILM)).toBe('Fujifilm X-T5');
     expect(formatCameraText(CANON)).toBe('Canon EOS 800D');
+    expect(formatCameraText(NIKON, 'long'))
+      .toBe('Nikon Corporation Nikon D7000');
     expect(formatCameraText(NIKON)).toBe('Nikon D7000');
     expect(formatCameraText(RICOH)).toBe('RICOH GR III');
   });
   it('labels models correctly', () => {
-    expect(formatCameraText(APPLE, 'never')).toBe('iPhone 11 Pro');
-    expect(formatCameraText(APPLE, 'never', true)).toBe('11 Pro');
-    expect(formatCameraText(APPLE_01, 'never', true)).toBe('iPhone 11');
-    expect(formatCameraText(APPLE_02, 'never', true)).toBe('15 Pro Max');
+    expect(formatCameraText(APPLE, 'medium')).toBe('iPhone 11 Pro');
+    expect(formatCameraText(APPLE, 'short')).toBe('11 Pro');
+    expect(formatCameraText(APPLE_01, 'short')).toBe('iPhone 11');
+    expect(formatCameraText(APPLE_02, 'short')).toBe('15 Pro Max');
+    expect(formatCameraText(FUJIFILM, 'short')).toBe('X-T5');
+    expect(formatCameraText(RICOH, 'short')).toBe('GR III');
+    expect(formatCameraText(NIKON, 'short')).toBe('D7000');
   });
 });
 

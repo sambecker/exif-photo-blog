@@ -40,7 +40,6 @@ export default function CameraImageResponse({
         icon: <IoMdCamera
           size={height * .079}
           style={{
-            transform: `translateY(${height * .003}px)`,
             marginRight: height * .015,
           }}
         />,
