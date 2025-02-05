@@ -120,7 +120,7 @@ export default function PhotoHeader({
             // Necessary for title truncation
             : <h1 className={clsx(
               'w-full truncate',
-              headerType !== 'photo-detail' && 'sm:pr-2',
+              headerType !== 'photo-detail' && 'pr-1 sm:pr-2',
             )}>
               {renderContentA()}
             </h1>}

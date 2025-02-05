@@ -22,6 +22,7 @@ export default function EntityLink({
   prefetch,
   title,
   hoverEntity,
+  truncate = true,
   className,
   debug,
 }: {
@@ -33,8 +34,9 @@ export default function EntityLink({
   prefetch?: boolean
   title?: string
   hoverEntity?: ReactNode
-  debug?: boolean
+  truncate?: boolean
   className?: string
+  debug?: boolean
 } & EntityLinkExternalProps) {
   const classForContrast = () => {
     switch (contrast) {
@@ -84,7 +86,11 @@ export default function EntityLink({
           >
             {renderLabel()}
           </Badge>
-          : renderLabel()}
+          : <span className={clsx(
+            truncate && 'inline-flex max-w-full [&>*]:truncate',
+          )}>
+            {renderLabel()}
+          </span>}
       </LabeledIcon>
       {hoverEntity !== undefined &&
         <span className="hidden group-hover:inline">
