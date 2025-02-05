@@ -9,12 +9,14 @@ import useClickInsideOutside from '@/utility/useClickInsideOutside';
 
 export default function TooltipPrimitive({
   content,
-  children,
   className,
+  sideOffset = 10,
+  children,
 }: {
   content?: ReactNode
-  children: ReactNode
   className?: string
+  sideOffset?: number
+  children: ReactNode
 }) {
   const refTrigger = useRef<HTMLButtonElement>(null);
   const refContent = useRef<HTMLDivElement>(null);
@@ -46,7 +48,7 @@ export default function TooltipPrimitive({
         <Tooltip.Portal >
           <Tooltip.Content
             ref={refContent}
-            sideOffset={10}
+            sideOffset={sideOffset}
             className={clsx(
               // Entrance animations
               'data-[side=top]:animate-fade-in-from-bottom',

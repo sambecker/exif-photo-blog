@@ -39,6 +39,7 @@ import { useAppState } from '@/state/AppState';
 import useImageZoomControls from '@/components/image/useImageZoomControls';
 import { LuExpand } from 'react-icons/lu';
 import LoaderButton from '@/components/primitives/LoaderButton';
+import Tooltip from '@/components/Tooltip';
 
 export default function PhotoLarge({
   photo,
@@ -253,15 +254,18 @@ export default function PhotoLarge({
                       >
                         {photo.focalLengthFormatted}
                       </Link>}
-                    {photo.focalLengthIn35MmFormatFormatted &&
+                    {(
+                      photo.focalLengthIn35MmFormatFormatted &&
+                      // eslint-disable-next-line max-len
+                      photo.focalLengthIn35MmFormatFormatted !== photo.focalLengthFormatted
+                    ) &&
                       <>
                         {' '}
-                        <span
-                          title="35mm equivalent"
-                          className="text-extra-dim"
-                        >
-                          {photo.focalLengthIn35MmFormatFormatted}
-                        </span>
+                        <Tooltip content="35mm equivalent" sideOffset={3}>
+                          <span className="text-extra-dim">
+                            {photo.focalLengthIn35MmFormatFormatted}
+                          </span>
+                        </Tooltip>
                       </>}
                   </li>
                   <li>{photo.fNumberFormatted}</li>

@@ -1,18 +1,10 @@
-import { ReactNode } from 'react';
+import { ComponentProps } from 'react';
 import TooltipPrimitive from './primitives/TooltipPrimitive';
 
-export default function Tooltip({
-  children,
-  content,
-  className,
-}: {
-  children: ReactNode
-  content?: ReactNode
-  className?: string
-}) {
+export default function Tooltip(
+  props: ComponentProps<typeof TooltipPrimitive>,
+) {
   return (
-    <TooltipPrimitive {...{ content, className }} >
-      {children}
-    </TooltipPrimitive>
+    <TooltipPrimitive {...props} />
   );
 }
