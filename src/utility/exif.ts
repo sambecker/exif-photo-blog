@@ -67,7 +67,7 @@ export const formatAperture = (aperture?: number) =>
     : undefined;
 
 export const formatIso = (iso?: number) =>
-  iso ? `ISO ${iso.toLocaleString()}` : undefined;
+  iso ? `ISO ${iso}` : undefined;
 
 export const formatExposureTime = (exposureTime = 0) =>
   exposureTime > 0
