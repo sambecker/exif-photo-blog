@@ -38,7 +38,7 @@ export default async function PhotoPageEdit({
     >
       <TagForm {...{ tag, photos }}>
         <PhotoLightbox
-          {...{ count, photos }}
+          {...{ count, photos, tag }}
           maxPhotosToShow={MAX_PHOTO_TO_SHOW}
           moreLink={pathForTag(tag)}
         />
