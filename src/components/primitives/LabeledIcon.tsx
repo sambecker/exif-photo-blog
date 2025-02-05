@@ -1,7 +1,6 @@
-import { ComponentProps, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import Icon from './Icon';
 import { clsx } from 'clsx/lite';
-import Link from 'next/link';
 
 export type LabeledIconType =
   'icon-first' |
@@ -15,8 +14,6 @@ export default function LabeledIcon({
   className: classNameProp,
   children,
   iconWide,
-  href,
-  prefetch,
   debug,
 }: {
   icon?: ReactNode,
@@ -25,36 +22,28 @@ export default function LabeledIcon({
   children: ReactNode,
   iconWide?:boolean,
   debug?: boolean,
-} & Partial<ComponentProps<typeof Link>>) {
-  const className = clsx(
-    'inline-flex gap-x-1 md:gap-x-1.5 min-w-0',
-    classNameProp,
-    debug && 'border border-green-500 m-[-1px]',
+}) {
+  return (
+    <span className={ clsx(
+      'inline-flex gap-x-1 md:gap-x-1.5 min-w-0',
+      classNameProp,
+      debug && 'border border-green-500 m-[-1px]',
+    )}>
+      {icon && type !== 'text-only' &&
+        <Icon {...{
+          className: clsx(type === 'icon-last' && 'order-1'),
+          wide: iconWide,
+          debug,
+        }}>
+          {icon}
+        </Icon>}
+      {children && type !== 'icon-only' &&
+        <span className={clsx(
+          'uppercase overflow-hidden',
+          debug && 'bg-gray-300 dark:bg-gray-700',
+        )}>
+          {children}
+        </span>}
+    </span>
   );
-
-  const renderContent = () => <>
-    {icon && type !== 'text-only' &&
-      <Icon {...{
-        className: clsx(type === 'icon-last' && 'order-1'),
-        wide: iconWide,
-        debug,
-      }}>
-        {icon}
-      </Icon>}
-    {children && type !== 'icon-only' &&
-      <span className={clsx(
-        'uppercase overflow-hidden',
-        debug && 'bg-gray-300 dark:bg-gray-700',
-      )}>
-        {children}
-      </span>}
-  </>;
-  
-  return href
-    ? <Link {...{ href, prefetch, className }}>
-      {renderContent()}
-    </Link>
-    : <div {...{ className }}>
-      {renderContent()}
-    </div>;
 }

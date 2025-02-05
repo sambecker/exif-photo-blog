@@ -9,7 +9,7 @@ import EntityLink, {
 export default function PhotoCamera({
   camera,
   hideAppleIcon,
-  type = 'icon-first',
+  type,
   badged,
   contrast,
   prefetch,
@@ -36,7 +36,7 @@ export default function PhotoCamera({
           size={12}
           className="translate-x-[-1px]"
         />}
-      type={showAppleIcon && isCameraApple ? 'icon-first' : type}
+      type={type}
       badged={badged}
       contrast={contrast}
       prefetch={prefetch}
