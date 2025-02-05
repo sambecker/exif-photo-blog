@@ -18,14 +18,14 @@ export default function GitHubForkStatusBadgeClient({
     case 'success': return clsx(
       'text-green-700 hover:text-green-700',
       'dark:text-green-400 dark:hover:text-green-400',
-      'bg-green-100/75 dark:bg-green-900/25',
-      'border-green-300/25 dark:border-green-900/50',
+      'bg-green-100/40 dark:bg-green-900/25',
+      'border-green-300/40 dark:border-green-900/50',
     );
     case 'warning': return clsx(
-      'text-amber-700 hover:text-amber-700',
+      'text-amber-800/90 hover:text-amber-700',
       'dark:text-amber-400 dark:hover:text-amber-400',
-      'bg-amber-100/75 dark:bg-amber-900/25',
-      'border-amber-300/25 dark:border-amber-900/50',
+      'bg-amber-100/40 dark:bg-amber-900/25',
+      'border-amber-300/40 dark:border-amber-900/50',
     );
     default: return clsx(
       'text-main',
