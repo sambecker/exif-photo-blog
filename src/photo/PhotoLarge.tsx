@@ -265,7 +265,8 @@ export default function PhotoLarge({
                           <span
                             className={clsx(
                               'text-extra-dim',
-                              'hover:underline decoration-dotted',
+                              'decoration-dotted underline-offset-[3px]',
+                              'hover:underline',
                             )}
                           >
                             {photo.focalLengthIn35MmFormatFormatted}

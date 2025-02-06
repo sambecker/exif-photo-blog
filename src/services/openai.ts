@@ -73,7 +73,7 @@ export const streamOpenAiImageQuery = async (
 
   if (args) {
     (async () => {
-      const { textStream } = await streamText(args);
+      const { textStream } = streamText(args);
       for await (const delta of textStream) {
         stream.update(cleanUpAiTextResponse(delta));
       }
