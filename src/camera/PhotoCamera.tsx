@@ -1,7 +1,7 @@
 import { AiFillApple } from 'react-icons/ai';
 import { pathForCamera } from '@/site/paths';
 import { IoMdCamera } from 'react-icons/io';
-import { Camera, formatCameraText } from '.';
+import { Camera, formatCameraText, isCameraApple } from '.';
 import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/primitives/EntityLink';
@@ -19,8 +19,8 @@ export default function PhotoCamera({
   hideAppleIcon?: boolean
   countOnHover?: number
 } & EntityLinkExternalProps) {
-  const isCameraApple = camera.make?.toLowerCase() === 'apple';
-  const showAppleIcon = !hideAppleIcon && isCameraApple;
+  const isApple = isCameraApple(camera);
+  const showAppleIcon = !hideAppleIcon && isApple;
 
   return (
     <EntityLink
@@ -29,12 +29,12 @@ export default function PhotoCamera({
       icon={showAppleIcon
         ? <AiFillApple
           title="Apple"
-          className="translate-x-[-0.5px]"
+          className="translate-x-[-1px] translate-y-[-0.5px]"
           size={15}
         />
         : <IoMdCamera
-          size={12}
-          className="translate-x-[-1px]"
+          size={13}
+          className="translate-x-[-0.5px]"
         />}
       type={type}
       badged={badged}

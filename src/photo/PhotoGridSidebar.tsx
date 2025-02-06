@@ -59,7 +59,10 @@ export default function PhotoGridSidebar({
       />}
       {tags.length > 0 && <HeaderList
         title='Tags'
-        icon={<FaTag size={12} className="text-icon" />}
+        icon={<FaTag
+          size={12}
+          className="text-icon translate-y-[1px]"
+        />}
         items={tagsIncludingHidden.map(({ tag, count }) => {
           switch (tag) {
           case TAG_FAVS:

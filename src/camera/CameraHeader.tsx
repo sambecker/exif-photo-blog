@@ -23,7 +23,7 @@ export default function CameraHeader({
   return (
     <PhotoHeader
       camera={camera}
-      entity={<PhotoCamera {...{ camera }} contrast="high" hideAppleIcon />}
+      entity={<PhotoCamera {...{ camera }} contrast="high" />}
       entityDescription={
         descriptionForCameraPhotos(photos, undefined, count, dateRange)}
       photos={photos}

@@ -55,6 +55,12 @@ export const cameraFromPhoto = (
     ? { make: photo.make, model: photo.model }
     : fallback ?? CAMERA_PLACEHOLDER;
 
+const isCameraMakeApple = (make?: string) =>
+  make?.toLocaleLowerCase() === 'apple';
+
+export const isCameraApple = ({ make }: Camera) =>
+  isCameraMakeApple(make);
+
 export const formatCameraText = (
   { make, model: modelRaw }: Camera,
   length:
@@ -74,7 +80,7 @@ export const formatCameraText = (
   case 'long':
     return `${make} ${model}`;
   case 'medium':
-    return doesModelStartWithMake || make === 'Apple'
+    return doesModelStartWithMake || isCameraMakeApple(make)
       ? model
       : `${make} ${model}`;
   case 'short':
