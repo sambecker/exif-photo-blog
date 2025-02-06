@@ -290,5 +290,11 @@ FAQ
 #### I've added my OpenAI key but can't seem to make it work. Why am I seeing connection errors?
 > You may need to pre-purchase credits before accessing the OpenAI API. See [Issue #110](https://github.com/sambecker/exif-photo-blog/issues/110) for discussion.
 
+#### Will there be support for image storage providers beyond Vercel, AWS, and Cloudflare?
+> At this time, there are no plans to introduce support for new storage providers. While configuring a new, AWS-compatible provider (e.g., Cloudflare R2) should not be too difficult, there's nuance to consider surrounding details like IAM, CORS, and domain configuration, which can differ slightly from platform to platform. If you’d like to contribute an implementation for a new storage provider, please open a PR.
+
+#### Can I work locally without access to an image storage provider?
+> At this time, an external storage provider is necessary in order to develop locally. If you have a strategy to propose which allows files to be locally uploaded and served to `next/image` in away that mirrors an external storage provider for debugging purposes, please open a PR.
+
 #### Can this template run in a docker image?
 > Possibly. See [Issue #116](https://github.com/sambecker/exif-photo-blog/issues/116) for discussion.
