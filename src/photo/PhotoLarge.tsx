@@ -262,7 +262,12 @@ export default function PhotoLarge({
                       <>
                         {' '}
                         <Tooltip content="35mm equivalent" sideOffset={3}>
-                          <span className="text-extra-dim">
+                          <span
+                            className={clsx(
+                              'text-extra-dim',
+                              'hover:underline decoration-dotted',
+                            )}
+                          >
                             {photo.focalLengthIn35MmFormatFormatted}
                           </span>
                         </Tooltip>
