@@ -3,8 +3,10 @@ export const storeCookie = (
   value: string,
   path= '/',
   maxAge = 63158400,
+  sameSite = 'Lax',
 ) => {
-  document.cookie = `${name}=${value};Path=${path};Max-Age=${maxAge}`;
+  document.cookie =
+  `${name}=${value};Path=${path};Max-Age=${maxAge};SameSite=${sameSite}`;
 };
 
 export const getCookie = (name: string) => {
