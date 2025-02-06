@@ -424,7 +424,9 @@ export default function SiteChecklistClient({
             >
               Comma-separated fields to auto-generate when
               uploading photos. Accepted values: title, caption,
-              tags, description, all, or none (default is {'"all"'}):
+              tags, description, all, or none
+              {' '}
+              (default: {'"title, tags, semantic"'}):
               {renderEnvVars(['AI_TEXT_AUTO_GENERATED_FIELDS'])}
             </ChecklistRow>
           </Checklist>

@@ -77,11 +77,11 @@ _⚠️ READ BEFORE PROCEEDING_
 3. Configure auto-generated fields (optional) 
    - Set which text fields auto-generate when uploading a photo by storing a comma-separated list, e.g., `AI_TEXT_AUTO_GENERATED_FIELDS = title, semantic`
    - Accepted values:
-     - `all` (default)
-     - `title`
+     - `all`
+     - `title` (default)
      - `caption`
-     - `tags`
-     - `semantic`
+     - `tags` (default)
+     - `semantic` (default)
      - `none`
 
 ### Web Analytics
