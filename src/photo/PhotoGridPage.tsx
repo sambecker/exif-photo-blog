@@ -17,7 +17,7 @@ export default function PhotoGridPage({
   tags,
   cameras,
   simulations,
-}:{
+}: {
   photos: Photo[]
   photosCount: number
   tags: Tags
@@ -25,11 +25,22 @@ export default function PhotoGridPage({
   simulations: FilmSimulations
 }) {
   const { setSelectedPhotoIds } = useAppState();
-  
+
   useEffect(
     () => () => setSelectedPhotoIds?.(undefined),
     [setSelectedPhotoIds],
   );
+
+  const renderGuard = (side: 'top' | 'bottom') =>
+    <div
+      className={clsx(
+        'absolute left-0 right-0',
+        side === 'top'
+          ? 'top-0 bg-gradient-to-b from-white dark:from-black'
+          : 'bottom-0 bg-gradient-to-t from-white dark:from-black',
+        'h-6 z-10 pointer-events-none',
+      )}
+    />;
 
   return (
     <PhotoGridContainer
@@ -37,18 +48,28 @@ export default function PhotoGridPage({
       photos={photos}
       count={photosCount}
       sidebar={
-        <div className={clsx(
-          'sticky top-0 -mt-5',
-          'max-h-screen overflow-y-auto py-4',
-          '[scrollbar-width:none]',
-        )}>
-          <PhotoGridSidebar {...{
-            tags,
-            cameras,
-            simulations,
-            photosCount,
-          }} />
-        </div>}
+        <div
+          className={clsx(
+            'sticky top-0 -mb-5 -mt-5',
+            'max-h-screen h-full',
+          )}
+        >
+          {renderGuard('top')}
+          <div className={clsx(
+            'max-h-full overflow-y-auto [scrollbar-width:none]',
+            'py-4',
+          )}>
+            <PhotoGridSidebar {...{
+              tags,
+              cameras,
+              simulations,
+              photosCount,
+            }}
+            />
+          </div>
+          {renderGuard('bottom')}
+        </div>
+      }
       canSelect
     />
   );

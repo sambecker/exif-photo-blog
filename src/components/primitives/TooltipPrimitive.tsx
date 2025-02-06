@@ -27,10 +27,7 @@ export default function TooltipPrimitive({
 
   useClickInsideOutside({
     htmlElements: [refTrigger, refContent],
-    onClickOutside: () => {
-      console.log('onClickOutside');
-      setIsOpen(false);
-    },
+    onClickOutside: () => setIsOpen(false),
   });
 
   return (
