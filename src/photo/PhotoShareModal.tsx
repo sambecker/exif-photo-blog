@@ -3,9 +3,9 @@ import { absolutePathForPhoto } from '@/site/paths';
 import { Photo, PhotoSetCategory } from '.';
 import ShareModal from '@/share/ShareModal';
 
-export default function PhotoShareModal(props: {
-  photo: Photo
-} & PhotoSetCategory) {
+export default function PhotoShareModal(
+  props: { photo: Photo } & PhotoSetCategory,
+) {
   return (
     <ShareModal
       pathShare={absolutePathForPhoto(props)}
@@ -14,4 +14,4 @@ export default function PhotoShareModal(props: {
       <PhotoOGTile photo={props.photo} />
     </ShareModal>
   );
-};
+}
