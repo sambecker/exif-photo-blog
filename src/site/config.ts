@@ -4,7 +4,6 @@ import { makeUrlAbsolute, shortenUrl } from '@/utility/url';
 
 // HARD-CODED GLOBAL CONFIGURATION
 export const SHOULD_PREFETCH_ALL_LINKS: boolean | undefined = undefined;
-export const SHOULD_DEBUG_SQL = false;
 
 // META / SOURCE / DOMAINS
 export const SITE_TITLE =
@@ -228,6 +227,7 @@ export const OG_TEXT_BOTTOM_ALIGNMENT =
 
 export const ADMIN_DEBUG_TOOLS_ENABLED = process.env.ADMIN_DEBUG_TOOLS === '1';
 export const ADMIN_DB_OPTIMIZE_ENABLED = process.env.ADMIN_DB_OPTIMIZE === '1';
+export const ADMIN_SQL_DEBUG_ENABLED = process.env.ADMIN_SQL_DEBUG === '1';
 
 export const CONFIG_CHECKLIST_STATUS = {
   // Storage
@@ -307,6 +307,15 @@ export const CONFIG_CHECKLIST_STATUS = {
   isPublicApiEnabled: PUBLIC_API_ENABLED,
   isPriorityOrderEnabled: PRIORITY_ORDER_ENABLED,
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,
+  // Internal
+  areInternalToolsEnabled: (
+    ADMIN_DEBUG_TOOLS_ENABLED ||
+    ADMIN_DB_OPTIMIZE_ENABLED ||
+    ADMIN_SQL_DEBUG_ENABLED
+  ),
+  areAdminDebugToolsEnabled: ADMIN_DEBUG_TOOLS_ENABLED,
+  isAdminDbOptimizeEnabled: ADMIN_DB_OPTIMIZE_ENABLED,
+  isAdminSqlDebugEnabled: ADMIN_SQL_DEBUG_ENABLED,
   // Misc
   baseUrl: BASE_URL,
   commitSha: VERCEL_GIT_COMMIT_SHA_SHORT,
