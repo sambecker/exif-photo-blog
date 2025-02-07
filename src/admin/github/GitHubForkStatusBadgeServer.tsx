@@ -20,7 +20,27 @@ export default async function GitHubForkStatusBadgeServer() {
     isBehind,
     label,
     description,
+    didError,
   } = await getGitHubMetaWithFallback({ owner, repo, branch, commit });
+
+  const repoLink = (text: string) =>
+    <a
+      href={getGitHubRepoUrl({ owner, repo })}
+      target="_blank"
+      className="underline hover:no-underline hover:text-main"
+    >
+      {text}
+    </a>;
+
+  const isBehindContent = <>
+    {' '}
+    {repoLink('Sync on GitHub')} for latest updates.
+  </>;
+
+  const didErrorContent = <>
+    {' '}
+    Could not connect to {repoLink('GitHub')}.
+  </>;
 
   return isForkedFromBase || isBaseRepo
     ? <GitHubForkStatusBadgeClient {...{
@@ -28,20 +48,15 @@ export default async function GitHubForkStatusBadgeServer() {
       label,
       tooltip: <>
         {description}
-        {isBehind && <>
-          {' '}
-          <a
-            href={getGitHubRepoUrl({ owner, repo })}
-            target="_blank"
-            className="underline hover:no-underline hover:text-main"
-          >
-            Sync on GitHub
-          </a>
-          {' '}
-          for latest updates.
-        </>}
+        {didError
+          ? didErrorContent
+          : isBehind
+            ? isBehindContent
+            : null}
       </>,
-      style: isBehind === undefined || isBehind ? 'warning' : 'mono',
+      style: didError || isBehind === undefined || isBehind
+        ? 'warning'
+        : 'mono',
     }} />
     : null;
 }

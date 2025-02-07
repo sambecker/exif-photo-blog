@@ -10,7 +10,7 @@ export default function GitHubForkStatusBadgeClient({
   tooltip,
 }: {
   label?: ReactNode
-  style?: 'success' | 'warning' | 'mono'
+  style?: 'success' | 'warning' | 'error' | 'mono'
   tooltip?: ReactNode
 }) {
   const classNameForStyle = () => {
@@ -22,10 +22,16 @@ export default function GitHubForkStatusBadgeClient({
       'border-green-300/40 dark:border-green-900/50',
     );
     case 'warning': return clsx(
-      'text-amber-800/90 hover:text-amber-700',
+      'text-amber-800/90 hover:text-amber-800/90',
       'dark:text-amber-400 dark:hover:text-amber-400',
       'bg-amber-100/40 dark:bg-amber-900/25',
       'border-amber-300/40 dark:border-amber-900/50',
+    );
+    case 'error': return clsx(
+      'text-red-700/90 hover:text-red-700/90',
+      'dark:text-red-400 dark:hover:text-red-400',
+      'bg-red-100/20 dark:bg-red-900/25',
+      'border-red-300/40 dark:border-red-900/50',
     );
     default: return clsx(
       'text-main',

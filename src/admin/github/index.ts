@@ -5,14 +5,13 @@ import {
 } from '@/site/config';
 
 const DEFAULT_BRANCH = 'main';
-
 const FALLBACK_TEXT = 'Unknown';
+const CACHE_GITHUB_REQUESTS = false;
 
 // Cache all results for 2 minutes to avoid rate limiting
 // GitHub API requests limited to 60 requests per hour
-const FETCH_CONFIG: RequestInit = {
-  next: { revalidate: 120 },
-};
+const FETCH_CONFIG: RequestInit = CACHE_GITHUB_REQUESTS
+  ? { next: { revalidate: 120 } } : {};
 
 interface RepoParams {
   owner?: string
@@ -152,6 +151,7 @@ const getGitHubMeta = async (params: RepoParams) => {
     isBehind,
     label,
     description,
+    didError: false,
   };
 };
 
@@ -166,6 +166,7 @@ export const getGitHubMetaWithFallback = (params: RepoParams) =>
         behindBy: undefined,
         isBehind: undefined,
         label: FALLBACK_TEXT,
-        description: FALLBACK_TEXT,
+        description: 'Could not connect to GitHub.',
+        didError: true,
       };
     });
