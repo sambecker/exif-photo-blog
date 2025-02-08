@@ -43,7 +43,7 @@ export default function ComponentsPage() {
           </div>
           <div className={clsx(
             'flex gap-1',
-            '[&>*]:inline-flex [&>*]:gap-1 [&_input]:-translate-y-0.5',
+            '*:inline-flex *:gap-1 [&_input]:-translate-y-0.5',
           )}>
             <FieldSetWithStatus
               id="grid"
@@ -62,7 +62,7 @@ export default function ComponentsPage() {
           </div>
         </h1>
         <DivDebugBaselineGrid className="flex gap-8">
-          <div className="[&>*]:flex">
+          <div className="*:flex">
             <div>
               <LabeledIcon
                 icon={<FaCamera size={12} />}
@@ -229,8 +229,8 @@ export default function ComponentsPage() {
             </div>
           </div>
           <div className={clsx(
-            debugComponents && '[&>*]:bg-gray-300 [&>*]:dark:bg-gray-700',
-            '[&>*]:flex',
+            debugComponents && '*:bg-gray-300 dark:*:bg-gray-700',
+            '*:flex',
           )}>
             {DEBUG_LINES.map((_, i) =>
               <div key={i}>
@@ -239,8 +239,8 @@ export default function ComponentsPage() {
             )}
           </div>
           <div className={clsx(
-            debugComponents && '[&>*]:bg-gray-300 [&>*]:dark:bg-gray-700',
-            '[&>*]:flex',
+            debugComponents && '*:bg-gray-300 dark:*:bg-gray-700',
+            '*:flex',
           )}>
             {DEBUG_LINES.map((_, i) =>
               <PhotoCamera

@@ -49,7 +49,7 @@ export default function GitHubForkStatusBadgeClient({
         'border transition-colors',
         'select-none',
         'pl-[4.5px] pr-2.5 py-[3px]',
-        'rounded-full shadow-sm',
+        'rounded-full shadow-xs',
         classNameForStyle(),
       )}>
         {!label

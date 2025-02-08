@@ -96,7 +96,7 @@ export default function EntityLink({
                 {renderLabel()}
               </Badge>
               : <span className={clsx(
-                truncate && 'inline-flex max-w-full [&>*]:truncate',
+                truncate && 'inline-flex max-w-full *:truncate',
               )}>
                 {renderLabel()}
               </span>}

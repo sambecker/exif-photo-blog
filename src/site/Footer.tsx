@@ -37,7 +37,7 @@ export default function Footer() {
                 'flex items-center gap-1',
                 'text-dim min-h-10',
               )}>
-              <div className="flex gap-x-3 xs:gap-x-4 flex-grow flex-wrap">
+              <div className="flex gap-x-3 xs:gap-x-4 grow flex-wrap">
                 {isPathAdmin(pathname)
                   ? <>
                     {userEmail === undefined &&

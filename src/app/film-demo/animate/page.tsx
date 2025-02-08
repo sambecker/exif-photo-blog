@@ -39,7 +39,7 @@ export default function FilmPage() {
             </div>
             <div className={clsx(
               'absolute top-0 left-[-2px] right-0 bottom-0',
-              'bg-gradient-to-t',
+              'bg-linear-to-t',
               'from-white to-[rgba(255,255,255,0.5)]',
               'dark:from-black dark:to-[rgba(0,0,0,0.5)]',
             )} />

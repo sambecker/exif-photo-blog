@@ -388,7 +388,7 @@ export default function PhotoForm({
           <div className={clsx(
             'absolute -top-16 -left-2 right-0 bottom-0 -z-10',
             'pointer-events-none',
-            'bg-gradient-to-t',
+            'bg-linear-to-t',
             'from-white/90 from-60%',
             'dark:from-black/90 dark:from-50%',
           )} />

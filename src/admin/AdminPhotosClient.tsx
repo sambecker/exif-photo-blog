@@ -42,7 +42,7 @@ export default function AdminPhotosClient({
   return (
     <SiteGrid
       contentMain={
-        <div className="space-y-4">
+        <div>
           <div className="flex">
             <div className="grow min-w-0">
               <PhotoUpload

@@ -44,10 +44,11 @@ export default function LoaderButton(props: {
         }
       }}
       className={clsx(
+        'font-mono',
         ...(styleAs !== 'button'
           ? [
             'link h-4 active:text-medium',
-            'disabled:!bg-transparent',
+            'disabled:bg-transparent!',
           ]
           : ['h-9']
         ),
@@ -55,7 +56,7 @@ export default function LoaderButton(props: {
         styleAs === 'link-without-hover' && 'hover:text-main',
         'inline-flex items-center gap-2 self-start whitespace-nowrap',
         primary && 'primary',
-        hideFocusOutline && 'focus:outline-none',
+        hideFocusOutline && 'focus:outline-hidden',
         className,
       )}
       disabled={isLoading || disabled}

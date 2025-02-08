@@ -21,9 +21,9 @@ export default function MoreMenu({
         <button
           className={clsx(
             buttonClassName,
-            'p-1 min-h-0 border-none shadow-none hover:outline-none',
+            'p-1 min-h-0 border-none shadow-none hover:outline-hidden',
             'hover:bg-gray-100 active:bg-gray-100',
-            'hover:dark:bg-gray-800/75 active:dark:bg-gray-900',
+            'dark:hover:bg-gray-800/75 dark:active:bg-gray-900',
             'text-dim',
           )}
           aria-label={ariaLabel}

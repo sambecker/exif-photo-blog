@@ -79,7 +79,7 @@ export default function ImageInput({
             ref={inputRef}
             id={INPUT_ID}
             type="file"
-            className="!hidden"
+            className="hidden!"
             accept={ACCEPTED_PHOTO_FILE_TYPES.join(',')}
             disabled={loading}
             multiple

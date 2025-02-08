@@ -16,7 +16,7 @@ export default function MenuSurface({
       className={clsx(
         'component-surface',
         'px-2 py-1.5 max-w-[14rem]',
-        'shadow-sm',
+        'shadow-xs',
         'text-[0.8rem] leading-tight',
         'text-balance text-center',
         className,

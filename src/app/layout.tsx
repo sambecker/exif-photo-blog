@@ -1,7 +1,6 @@
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { clsx } from 'clsx/lite';
-import { IBM_Plex_Mono } from 'next/font/google';
 import {
   BASE_URL,
   DEFAULT_THEME,
@@ -24,12 +23,6 @@ import ShareModals from '@/share/ShareModals';
 import '../site/globals.css';
 import '../site/sonner.css';
 import '../site/viewerjs.css';
-
-const ibmPlexMono = IBM_Plex_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  variable: '--font-ibm-plex-mono',
-});
 
 export const metadata: Metadata = {
   title: SITE_TITLE,
@@ -79,7 +72,7 @@ export default function RootLayout({
       // Suppress hydration errors due to next-themes behavior
       suppressHydrationWarning
     >
-      <body className={ibmPlexMono.variable}>
+      <body>
         <AppStateProvider>
           <SwrConfigClient>
             <ThemeProvider
