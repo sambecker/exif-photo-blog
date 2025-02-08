@@ -93,6 +93,7 @@ const getGitHubCommitsBehindFromCommit = async (params?: RepoParams) => {
     FETCH_CONFIG,
   );
   const data = await response.json();
+  console.log('getGitHubCommitsBehindFromCommit', data);
   return data.behind_by as number;
 };
 
