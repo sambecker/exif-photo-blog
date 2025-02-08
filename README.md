@@ -4,11 +4,11 @@ https://github.com/sambecker/exif-photo-blog/assets/169298/4253ea54-558a-4358-88
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/sambecker-pro/clone?demo-description=Store%20photos%20with%20original%20camera%20data&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F39rys245Px3FVBGRJNYEON%2Fbf68d5c052bda9e9e5bec21878764bc3%2Fimage.png&demo-title=Photo%20Blog&demo-url=https%3A%2F%2Fphotos.sambecker.com&from=templates&project-name=Photo%20Blog&repository-name=exif-photo-blog&repository-url=https%3A%2F%2Fgithub.com%2Fsambecker%2Fexif-photo-blog&skippable-integrations=1&stores=%5B%7B%22type%22%3A%22postgres%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D&teamCreateStatus=hidden)
 
-🎬&nbsp;&nbsp;&nbsp;Demo App
+🎬&nbsp;&nbsp;Demo App
 -
 https://photos.sambecker.com
 
-✨&nbsp;&nbsp;&nbsp; Features
+✨&nbsp;&nbsp; Features
 -
 - Built-in auth
 - Photo upload with EXIF extraction
@@ -22,7 +22,7 @@ https://photos.sambecker.com
 
 <img src="/readme/og-image-share.png" alt="OG Image Preview" width=600 />
 
-🛠️&nbsp;&nbsp;&nbsp; Installation
+🛠️&nbsp;&nbsp; Installation
 -
 ### 1. Deploy to Vercel
 
@@ -50,11 +50,11 @@ https://photos.sambecker.com
 
 If you don't plan to change the code, or don't mind making your updates public, consider forking this repo to easily receive future updates. If you've already setup your project on Vercel see detailed instructions here on reconfiguring your project.
 
-🔄&nbsp;&nbsp;&nbsp; Receiving updates
+🔄&nbsp;&nbsp; Receiving updates
 -
 If you don't plan to change the code, or don't mind making your updates public, consider [forking](https://github.com/sambecker/exif-photo-blog/fork) this repo to easily receive future updates. If you've already set up your project on Vercel see these [migration instructions](https://github.com/sambecker/exif-photo-blog?tab=readme-ov-file#how-do-i-receive-template-updates).
 
-💻&nbsp;&nbsp;&nbsp; Develop locally
+💻&nbsp;&nbsp; Develop locally
 -
 1. Clone code
 2. Run `pnpm i` to install dependencies
@@ -62,7 +62,7 @@ If you don't plan to change the code, or don't mind making your updates public, 
 4. Run `vercel link` to connect the CLI to your project
 5. Run `vercel dev` to start dev server with Vercel-managed environment variables
 
-🎨&nbsp;&nbsp;&nbsp; Further customization
+🎨&nbsp;&nbsp; Further customization
 -
 ### AI text generation
 
@@ -239,7 +239,7 @@ Vercel Postgres can be switched to another Postgres-compatible, pooling provider
 1. Ensure connection string is set to "Transaction Mode" via port `6543`
 2. Disable SSL by setting `DISABLE_POSTGRES_SSL = 1`
 
-📖&nbsp;&nbsp;&nbsp; FAQ
+📖&nbsp;&nbsp; FAQ
 -
 #### How do I receive template updates?
 > For forked repos, click "Code," then "Update branch" from the main repo page. If you originally cloned the code, you can [create a fork](https://github.com/sambecker/exif-photo-blog/fork) from GitHub, then update your Git connection from your Vercel project settings. Once you've done this, you may need to go to your project deployments page, click •••, select "Create deployment," and choose `main`.
