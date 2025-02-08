@@ -20,9 +20,9 @@ import SwrConfigClient from '../state/SwrConfigClient';
 import AdminBatchEditPanel from '@/admin/AdminBatchEditPanel';
 import ShareModals from '@/share/ShareModals';
 
-import '../site/globals.css';
-import '../site/sonner.css';
-import '../site/viewerjs.css';
+import '../../tailwind.css';
+import '../css/sonner.css';
+import '../css/viewerjs.css';
 
 export const metadata: Metadata = {
   title: SITE_TITLE,
