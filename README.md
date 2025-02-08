@@ -54,13 +54,15 @@ If you don't plan to change the code, or don't mind making your updates public, 
 -
 If you don't plan to change the code, or don't mind making your updates public, consider [forking](https://github.com/sambecker/exif-photo-blog/fork) this repo to easily receive future updates. If you've already set up your project on Vercel see these [migration instructions](https://github.com/sambecker/exif-photo-blog?tab=readme-ov-file#how-do-i-receive-template-updates).
 
-💻&nbsp;&nbsp;Develop locally
+💻&nbsp;&nbsp;Local development
 -
 1. Clone code
 2. Run `pnpm i` to install dependencies
 3. If necessary, install [Vercel CLI](https://vercel.com/docs/cli#installing-vercel-cli) and authenticate by running `vercel login`
-4. Run `vercel link` to connect the CLI to your project
+4. Run `vercel link` to connect CLI to your project
 5. Run `vercel dev` to start dev server with Vercel-managed environment variables
+
+See FAQ for [limitations of local development](https://github.com/sambecker/exif-photo-blog?tab=readme-ov-file#can-i-work-locally-without-access-to-an-image-storage-provider)
 
 🎨&nbsp;&nbsp;Further customization
 -
