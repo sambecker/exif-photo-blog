@@ -10,8 +10,8 @@ const CACHE_GITHUB_REQUESTS = false;
 
 // Cache all results for 2 minutes to avoid rate limiting
 // GitHub API requests limited to 60 requests per hour
-const FETCH_CONFIG: RequestInit = CACHE_GITHUB_REQUESTS
-  ? { next: { revalidate: 120 } } : {};
+const FETCH_CONFIG: RequestInit | undefined= CACHE_GITHUB_REQUESTS
+  ? { next: { revalidate: 120 } } : undefined;
 
 interface RepoParams {
   owner?: string
@@ -93,7 +93,6 @@ const getGitHubCommitsBehindFromCommit = async (params?: RepoParams) => {
     FETCH_CONFIG,
   );
   const data = await response.json();
-  console.log('getGitHubCommitsBehindFromCommit', data);
   return data.behind_by as number;
 };
 
