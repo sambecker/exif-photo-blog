@@ -2,6 +2,9 @@
 
 @import 'tailwindcss';
 
+@import './src/css/sonner.css';
+@import './src/css/viewerjs.css';
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {

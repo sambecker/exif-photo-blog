@@ -21,8 +21,6 @@ import AdminBatchEditPanel from '@/admin/AdminBatchEditPanel';
 import ShareModals from '@/share/ShareModals';
 
 import '../../tailwind.css';
-import '../css/sonner.css';
-import '../css/viewerjs.css';
 
 export const metadata: Metadata = {
   title: SITE_TITLE,
