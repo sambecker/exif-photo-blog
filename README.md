@@ -52,7 +52,7 @@ If you don't plan to change the code, or don't mind making your updates public, 
 
 🔄&nbsp;&nbsp;Receiving updates
 -
-If you don't plan to change the code, or don't mind making your updates public, consider [forking](https://github.com/sambecker/exif-photo-blog/fork) this repo to easily receive future updates. If you've already set up your project on Vercel see these [migration instructions](https://github.com/sambecker/exif-photo-blog?tab=readme-ov-file#how-do-i-receive-template-updates).
+If you don't plan to change the code, or don't mind making your updates public, consider [forking](https://github.com/sambecker/exif-photo-blog/fork) this repo to easily receive future updates. If you've already set up your project on Vercel see these [migration instructions](#how-do-i-receive-template-updates).
 
 💻&nbsp;&nbsp;Local development
 -
@@ -62,7 +62,7 @@ If you don't plan to change the code, or don't mind making your updates public, 
 4. Run `vercel link` to connect CLI to your project
 5. Run `vercel dev` to start dev server with Vercel-managed environment variables
 
-See FAQ for [limitations of local development](https://github.com/sambecker/exif-photo-blog?tab=readme-ov-file#can-i-work-locally-without-access-to-an-image-storage-provider)
+See FAQ for [limitations of local development](#can-i-work-locally-without-access-to-an-image-storage-provider)
 
 🎨&nbsp;&nbsp;Further customization
 -
@@ -110,7 +110,7 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_SITE_ABOUT` (seen in grid sidebar—accepts rich formatting tags: `<b>`, `<strong>`, `<i>`, `<em>`, `<u>`, `<br>`)
 
 #### Performance
-> ⚠️ Enabling may result in increased project usage. Static optimization [troubleshooting hints](https://github.com/sambecker/exif-photo-blog?tab=readme-ov-file#why-do-production-deployments-fail-when-static-optimization-is-enabled) in FAQ.
+> ⚠️ Enabling may result in increased project usage. Static optimization [troubleshooting hints](#why-do-production-deployments-fail-when-static-optimization-is-enabled) in FAQ.
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS = 1` enables static optimization for photo pages (`p/[photoId]`), i.e., renders pages at build time
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES = 1` enables static optimization for OG images, i.e., renders images at build time
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES = 1` enables static optimization for photo categories (`tag/[tag]`, `shot-on/[make]/[model]`, etc.), i.e., renders pages at build time
@@ -147,7 +147,7 @@ Application behavior can be changed by configuring the following environment var
 
 ## Alternate storage providers
 
-Only one storage adapter—Vercel Blob, Cloudflare R2, or AWS S3—can be used at a time. Ideally, this is configured before photos are uploaded (see [Issue #34](https://github.com/sambecker/exif-photo-blog/issues/34) for migration considerations). If you have multiple adapters, you can set one as preferred by storing `aws-s3`, `cloudflare-r2`, or `vercel-blob` in `NEXT_PUBLIC_STORAGE_PREFERENCE`. See [FAQ](https://github.com/sambecker/exif-photo-blog?tab=readme-ov-file#will-there-be-support-for-image-storage-providers-beyond-vercel-aws-and-cloudflare) regarding unsupported providers.
+Only one storage adapter—Vercel Blob, Cloudflare R2, or AWS S3—can be used at a time. Ideally, this is configured before photos are uploaded (see [Issue #34](https://github.com/sambecker/exif-photo-blog/issues/34) for migration considerations). If you have multiple adapters, you can set one as preferred by storing `aws-s3`, `cloudflare-r2`, or `vercel-blob` in `NEXT_PUBLIC_STORAGE_PREFERENCE`. See [FAQ](#will-there-be-support-for-image-storage-providers-beyond-vercel-aws-and-cloudflare) regarding unsupported providers.
 
 ### Cloudflare R2
 
