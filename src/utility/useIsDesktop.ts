@@ -5,7 +5,7 @@ export default function useIsDesktop() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const breakpointMd = getComputedStyle(document.documentElement)
+      const breakpointMd = getComputedStyle(document.body)
         .getPropertyValue('--breakpoint-md');
       const mql = window.matchMedia(`(min-width: ${breakpointMd})`);
       setIsDesktop(mql.matches);
