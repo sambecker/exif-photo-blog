@@ -182,9 +182,9 @@
   /* Core */
   body {
     @apply
+      font-mono text-sm md:text-base
       text-main
       bg-main
-      font-mono text-sm md:text-base
   }
   /* Forms */
   label {
