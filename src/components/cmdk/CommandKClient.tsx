@@ -384,6 +384,7 @@ export default function CommandKClient({
                 'focus:border-gray-200 dark:focus:border-gray-800',
                 'placeholder:text-gray-400/80',
                 'dark:placeholder:text-gray-700',
+                'focus:outline-hidden',
                 isPending && 'opacity-20',
               )}
               placeholder="Search photos, views, settings ..."
