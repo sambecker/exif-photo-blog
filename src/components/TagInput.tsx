@@ -226,8 +226,8 @@ export default function TagInput({
         className={clsx(
           className,
           'w-full control px-2! py-2!',
-          'outline-1 outline-blue-600',
-          'group-focus-within:outline group-active:outline',
+          '-outline-offset-2 outline-blue-600',
+          'group-focus-within:outline-2 ',
           'inline-flex flex-wrap items-center gap-2',
           readOnly && 'cursor-not-allowed',
           readOnly && 'bg-gray-100 dark:bg-gray-900 dark:text-gray-400',
@@ -259,7 +259,7 @@ export default function TagInput({
           type="text"
           className={clsx(
             'grow min-w-0! p-0! -my-2 text-xl',
-            'border-none! ring-transparent!',
+            'outline-hidden border-none',
             'placeholder:text-dim placeholder:text-[14px]',
             'placeholder:translate-x-[2px]',
             'placeholder:translate-y-[-1.5px]',

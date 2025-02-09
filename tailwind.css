@@ -207,6 +207,8 @@
     @apply
       text-[1rem] /* Prevent iOS auto-zoom behavior */
       read-only:cursor-default
+      outline-blue-600 ring-blue-600 appearance-none
+      focus:outline-2 -outline-offset-2 focus:ring-0
   }
   input[type=text], input[type=email], input[type=password], select {
     @apply
