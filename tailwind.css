@@ -297,7 +297,9 @@
       hover:text-gray-600
       hover:dark:text-gray-400
   }
-  /* Components */
+}
+
+@layer components {
   .component-surface {
     @apply
       bg-content border border-main
