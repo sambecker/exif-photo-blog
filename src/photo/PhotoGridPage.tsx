@@ -36,8 +36,8 @@ export default function PhotoGridPage({
       className={clsx(
         'absolute left-0 right-0',
         side === 'top'
-          ? 'top-0 bg-gradient-to-b from-white dark:from-black'
-          : 'bottom-0 bg-gradient-to-t from-white dark:from-black',
+          ? 'top-0 bg-linear-to-b from-white dark:from-black'
+          : 'bottom-0 bg-linear-to-t from-white dark:from-black',
         'h-6 z-10 pointer-events-none',
       )}
     />;

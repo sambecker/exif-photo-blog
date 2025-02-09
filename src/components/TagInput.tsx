@@ -225,9 +225,9 @@ export default function TagInput({
         aria-controls={ARIA_ID_TAG_CONTROL}
         className={clsx(
           className,
-          'w-full control !px-2 !py-2',
-          'outline-1 outline-blue-600',
-          'group-focus-within:outline group-active:outline',
+          'w-full control px-2! py-2!',
+          '-outline-offset-2 outline-blue-600',
+          'group-focus-within:outline-2 ',
           'inline-flex flex-wrap items-center gap-2',
           readOnly && 'cursor-not-allowed',
           readOnly && 'bg-gray-100 dark:bg-gray-900 dark:text-gray-400',
@@ -247,7 +247,7 @@ export default function TagInput({
                 'px-1.5 py-0.5',
                 'bg-gray-200/60 dark:bg-gray-800',
                 'active:bg-gray-200 dark:active:bg-gray-900',
-                'rounded-sm',
+                'rounded-xs',
               )}
               onClick={() => removeOption(option)}
             >
@@ -258,8 +258,8 @@ export default function TagInput({
           ref={inputRef}
           type="text"
           className={clsx(
-            'grow !min-w-0 !p-0 -my-2 text-xl',
-            '!border-none !ring-transparent',
+            'grow min-w-0! p-0! -my-2 text-xl',
+            'outline-hidden border-none',
             'placeholder:text-dim placeholder:text-[14px]',
             'placeholder:translate-x-[2px]',
             'placeholder:translate-y-[-1.5px]',
@@ -287,7 +287,7 @@ export default function TagInput({
             role="listbox"
             ref={optionsRef}
             className={clsx(
-              'control absolute top-0 mt-3 w-full z-10 !px-1.5 !py-1.5',
+              'control absolute top-0 mt-3 w-full z-10 px-1.5! py-1.5!',
               'max-h-[8rem] overflow-y-auto',
               'flex flex-col gap-y-1',
               'text-xl shadow-lg dark:shadow-xl',
@@ -310,13 +310,13 @@ export default function TagInput({
                   'text-base',
                   'group flex items-center gap-1',
                   'cursor-pointer select-none',
-                  'px-1.5 py-1 rounded-sm',
+                  'px-1.5 py-1 rounded-xs',
                   'hover:bg-gray-100 dark:hover:bg-gray-800',
                   'active:bg-gray-50 dark:active:bg-gray-900',
                   'focus:bg-gray-100 dark:focus:bg-gray-800',
                   index === 0 && selectedOptionIndex === undefined &&
                     'bg-gray-100 dark:bg-gray-800',
-                  'outline-none',
+                  'outline-hidden',
                 )}
                 onClick={() => {
                   addOptions([value]);

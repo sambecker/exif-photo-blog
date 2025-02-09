@@ -67,7 +67,7 @@ export default function AdminNavClient({
           )}>
             <div className={clsx(
               'flex gap-0.5 md:gap-1.5 -mx-1',
-              'flex-grow overflow-x-auto',
+              'grow overflow-x-auto',
             )}>
               {items.map(({ label, href, count }) =>
                 <LinkWithStatus
@@ -101,7 +101,7 @@ export default function AdminNavClient({
             </LinkWithLoader>
           </div>
           {shouldShowBanner &&
-            <Note icon={<FaRegClock className="flex-shrink-0" />}>
+            <Note icon={<FaRegClock className="shrink-0" />}>
               Photo updates detected—they may take several minutes to show up
               for visitors
             </Note>}

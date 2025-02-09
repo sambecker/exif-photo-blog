@@ -76,7 +76,7 @@ export default function Nav({
                 showAdmin={isUserSignedIn}
               />
               <div className={clsx(
-                'flex-grow text-right min-w-0',
+                'grow text-right min-w-0',
                 'hidden xs:block',
                 'translate-y-[-1px]',
               )}>

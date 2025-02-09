@@ -1,0 +1,310 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap");
+
+@import 'tailwindcss';
+
+@import './src/css/sonner.css';
+@import './src/css/viewerjs.css';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+  --breakpoint-xs: 390px;
+  --breakpoint-3xl: 1640px;
+
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1rem;
+  --text-sm: 0.84375rem;
+  --text-sm--line-height: 1.1875rem;
+  --text-base: 0.875rem;
+  --text-base--line-height: 1.25rem;
+  --text-lg: 1rem;
+  --text-lg--line-height: 1.25rem;
+  --text-xl: 1.125rem;
+  --text-xl--line-height: 1.25rem;
+  --text-2xl: 1.25rem;
+  --text-2xl--line-height: 1.25rem;
+  --text-3xl: 1.5rem;
+  --text-3xl--line-height: 1.5rem;
+
+  --animate-fade-in: fade-in 0.5s linear both running;
+  @keyframes fade-in {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  --animate-fade-in-from-top: fade-in-from-top 0.25s ease-in-out;
+  @keyframes fade-in-from-top {
+    0% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  --animate-fade-in-from-bottom: fade-in-from-bottom 0.25s ease-in-out;
+  @keyframes fade-in-from-bottom {
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  --animate-rotate-pulse: rotate-pulse 0.75s linear infinite normal both running;
+  @keyframes rotate-pulse {
+    0% { transform: rotate(0deg) scale(1) }
+    50% { transform: rotate(180deg) scale(0.8) }
+    100% { transform: rotate(360deg) scale(1) }
+  }
+
+  --animate-hover-drift: hover-drift 8s linear infinite;
+  @keyframes hover-drift {
+    0% { transform: translate(0, 0) }
+    20% { transform: translate(1px, -2px) }
+    40% { transform: translate(1px, 1.5px) }
+    60% { transform: translate(-1px, 2px) }
+    80% { transform: translate(-1.5px, -1.75px) }
+    100% { transform: translate(0, 0) }
+  }
+
+  --animate-hover-wobble: hover-wobble 6s linear infinite normal both running;
+  @keyframes hover-wobble {
+    0% { transform: rotate(0deg) }
+    20% { transform: rotate(3.5deg) }
+    40% { transform: rotate(-2deg) }
+    60% { transform: rotate(2.5deg) }
+    80% { transform: rotate(-2.5deg) }
+    100% { transform: rotate(0deg) }
+  }
+}
+
+/* Text */
+@utility text-main {
+  @apply
+    text-gray-900 dark:text-gray-100
+}
+@utility text-invert {
+  @apply
+    text-white dark:text-black
+}
+@utility text-medium {
+  @apply
+    text-gray-500 dark:text-gray-400
+}
+@utility text-dim {
+  @apply
+    text-gray-400 dark:text-gray-500
+}
+@utility text-extra-dim {
+  @apply
+    text-gray-400/80 dark:text-gray-400/50
+}
+@utility text-extra-extra-dim {
+  @apply
+    text-gray-200 dark:text-gray-800
+}
+@utility text-icon {
+  @apply
+    text-gray-800 dark:text-gray-200
+}
+@utility text-error {
+  @apply
+    text-red-500 dark:text-red-400
+}
+/* Border */
+@utility border-main {
+  @apply border-gray-200 dark:border-gray-700
+}
+@utility border-subtle {
+  @apply
+    border border-gray-200 dark:border-gray-800
+}
+/* Background */
+@utility bg-main {
+  @apply
+    bg-white dark:bg-black
+}
+@utility bg-dim {
+  @apply
+    bg-gray-100 dark:bg-gray-900/75
+}
+@utility bg-content {
+  @apply
+    bg-white border-gray-200
+    dark:bg-black dark:border-gray-800
+}
+@utility bg-invert {
+  @apply
+    bg-gray-900 dark:bg-gray-100
+}
+/* Baseline Grid */
+@utility space-y-baseline {
+  @apply
+    space-y-[1.1875rem] md:space-y-[1.25rem]
+}
+@utility gap-y-baseline {
+  @apply
+    gap-y-[1.1875rem] md:gap-y-[1.25rem]
+}
+@utility gap-baseline {
+  @apply
+    gap-[1.1875rem] md:gap-[1.25rem]
+}
+@utility h-baseline {
+  @apply
+    h-[1.1875rem] md:h-[1.25rem]
+}
+@utility max-h-baseline {
+  @apply
+    max-h-[1.1875rem] md:max-h-[1.25rem]
+}
+@utility -mt-baseline {
+  @apply
+    -mt-[1.1875rem] md:-mt-[1.25rem]
+}
+@utility bg-baseline-grid {
+  @apply
+    bg-[repeating-linear-gradient(to_bottom,#eee,#eee_1px,transparent_1px,transparent_1.1875rem)]
+    md:bg-[repeating-linear-gradient(to_bottom,#eee,#eee_1px,transparent_1px,transparent_1.25rem)]
+    dark:bg-[repeating-linear-gradient(to_bottom,#222,#222_1px,transparent_1px,transparent_1.1875rem)]
+    dark:md:bg-[repeating-linear-gradient(to_bottom,#222,#222_1px,transparent_1px,transparent_1.25rem)]
+}
+
+@layer base {
+  /* Core */
+  body {
+    @apply
+      font-mono text-sm md:text-base
+      text-main
+      bg-main
+  }
+  /* Forms */
+  label {
+    @apply
+      font-sans font-medium block uppercase text-xs
+      text-medium
+      tracking-wider
+  }
+  .control,
+  button, .button,
+  input[type=text], input[type=email], input[type=password], select, textarea {
+    @apply
+      px-2.5 py-2
+      border rounded-md
+      bg-main
+      border-gray-200 dark:border-gray-700
+      font-mono text-base leading-tight
+  }
+  input[type=text], input[type=email], input[type=password], select, textarea {
+    @apply
+      text-[1rem] /* Prevent iOS auto-zoom behavior */
+      read-only:cursor-default
+      outline-blue-600 ring-blue-600 appearance-none
+      focus:outline-2 -outline-offset-2 focus:ring-0
+  }
+  input[type=text], input[type=email], input[type=password], select {
+    @apply
+      min-h-[2.4rem]
+  }
+  input[type=text], input[type=email], input[type=password], textarea {
+    @apply
+      read-only:bg-gray-100
+      dark:read-only:bg-gray-900 dark:read-only:text-gray-400
+  }
+  /* Required for readonly behavior on <select /> */
+  .disabled-select {
+    @apply
+      text-medium
+      bg-gray-100 dark:bg-gray-900
+      pointer-events-none
+  }
+  input[type=file] {
+    @apply
+      block font-mono w-full text-medium
+      file:bg-white dark:file:bg-gray-950
+      file:mr-2 file:my-2 file:px-4 file:py-1.5 file:rounded-md
+      file:border-solid file:border
+      file:border-gray-200 dark:file:border-gray-700
+      file:cursor-pointer
+      file:shadow-xs
+      file:active:bg-gray-100
+      file:disabled:bg-gray-100
+      file:hover:border-gray-300 file:dark:hover:border-gray-600
+      file:hover:disabled:border-gray-200 file:dark:hover:disabled:border-gray-700
+      file:active:disabled:bg-white
+      file:hover:disabled:cursor-not-allowed
+  }
+  input[type=checkbox] {
+    @apply
+      rounded-md
+      dark:bg-transparent
+  }
+  .error {
+    @apply
+      border-red-500 dark:border-red-400
+  }
+  button, .button {
+    @apply
+      cursor-pointer
+      hover:no-underline
+      inline-flex gap-2 items-center
+      px-3
+      text-base
+      shadow-xs
+      active:bg-gray-100 dark:active:bg-gray-900
+      hover:border-gray-300 dark:hover:border-gray-600
+      disabled:cursor-not-allowed
+      disabled:text-dim
+      disabled:bg-gray-100 dark:disabled:bg-gray-900
+      disabled:border-gray-200 disabled:dark:border-gray-700
+  }
+  button.subtle, .button.subtle {
+    @apply
+      disabled:shadow-none
+      disabled:bg-transparent dark:disabled:bg-transparent
+      disabled:border-gray-100 dark:disabled:border-gray-900
+  }
+  button.primary, .button.primary {
+    @apply
+      text-invert
+      bg-gray-900 dark:bg-gray-100
+      disabled:text-dim
+      font-medium
+      disabled:bg-gray-100 dark:disabled:bg-gray-900
+      disabled:border-gray-200 disabled:dark:border-gray-700
+      border-gray-900 dark:border-gray-100
+      active:bg-gray-700 active:border-gray-700
+      active:dark:bg-gray-300 active:dark:border-gray-300
+      shadow-none
+  }
+  button.primary.disabled, .button.primary.disabled {
+    @apply
+      text-medium
+  }
+  button.link {
+    @apply
+      p-0 min-h-0
+      border-none bg-transparent active:bg-transparent shadow-none rounded-none
+  }
+  a, .link {
+    @apply
+      hover:text-gray-600
+      hover:dark:text-gray-400
+  }
+}
+
+@layer components {
+  .component-surface {
+    @apply
+      bg-content border border-main
+      rounded-lg
+  }
+}

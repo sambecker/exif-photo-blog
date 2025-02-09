@@ -16,7 +16,7 @@ export default function Switcher({
       type === 'regular'
         ? 'border-gray-300 dark:border-gray-800'
         : 'border-transparent',
-      type === 'regular' && 'shadow-sm',
+      type === 'regular' && 'shadow-xs',
     )}>
       {children}
     </div>

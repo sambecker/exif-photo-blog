@@ -54,7 +54,7 @@ export default function PhotoMedium({
           {isLoading &&
             <div className={clsx(
               'absolute inset-0 flex items-center justify-center',
-              'text-white bg-black/25 backdrop-blur-sm',
+              'text-white bg-black/25 backdrop-blur-xs',
               'animate-fade-in',
               'z-10',
             )}>

@@ -79,7 +79,7 @@ export default function AdminPhotosTable({
               </span>
               {photo.priorityOrder !== null &&
                 <span className={clsx(
-                  'text-xs leading-none px-1.5 py-1 rounded-sm',
+                  'text-xs leading-none px-1.5 py-1 rounded-xs',
                   'dark:text-gray-300',
                   'bg-gray-100 dark:bg-gray-800',
                 )}>

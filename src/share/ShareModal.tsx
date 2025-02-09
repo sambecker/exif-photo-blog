@@ -64,7 +64,7 @@ export default function ShareModal({
             'text-2xl leading-snug',
           )}>
             <TbPhotoShare size={22} className="hidden xs:block" />
-            <div className="flex-grow">
+            <div className="grow">
               {title}
             </div>
           </div>}

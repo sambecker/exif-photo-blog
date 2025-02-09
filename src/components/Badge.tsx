@@ -53,7 +53,7 @@ export default function Badge({
       <span className={clsx(
         'max-w-full inline-flex',
         // Truncate 1 + 2 levels deep
-        'truncate [&>*]:truncate',
+        'truncate *:truncate',
         dimContent && 'opacity-50',
       )}>
         {children}

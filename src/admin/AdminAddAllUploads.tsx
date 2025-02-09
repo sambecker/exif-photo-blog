@@ -105,7 +105,7 @@ export default function AdminAddAllUploads({
         <div className="w-full space-y-4 py-1">
           <div className="flex">
             <div className={clsx(
-              'flex-grow',
+              'grow',
               tagErrorMessage ? 'text-error' : 'text-main',
             )}>
               {showTags

@@ -35,7 +35,7 @@ function AdminChildPage({
             )}>
               <div className={clsx(
                 'flex items-center gap-x-1.5 sm:gap-x-3 gap-y-1',
-                'flex-grow',
+                'grow',
                 breadcrumbEllipsis ? 'min-w-0' : 'flex-wrap',
               )}>
                 {backPath &&

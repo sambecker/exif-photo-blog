@@ -377,13 +377,14 @@ export default function CommandKClient({
             <Command.Input
               onChangeCapture={(e) => setQueryLive(e.currentTarget.value)}
               className={clsx(
-                'w-full !min-w-0',
+                'w-full min-w-0!',
                 'focus:ring-0',
-                isPlaceholderVisible || isLoading && '!pr-8',
-                '!border-gray-200 dark:!border-gray-800',
-                'focus:border-gray-200 focus:dark:border-gray-800',
+                isPlaceholderVisible || isLoading && 'pr-8!',
+                'border-gray-200! dark:border-gray-800!',
+                'focus:border-gray-200 dark:focus:border-gray-800',
                 'placeholder:text-gray-400/80',
-                'placeholder:dark:text-gray-700',
+                'dark:placeholder:text-gray-700',
+                'focus:outline-hidden',
                 isPending && 'opacity-20',
               )}
               placeholder="Search photos, views, settings ..."

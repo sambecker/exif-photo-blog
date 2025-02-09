@@ -156,11 +156,11 @@ export default function AdminBatchEditPanelClient({
           color="gray"
           className={clsx(
             'min-h-[3.5rem]',
-            'backdrop-blur-lg !border-transparent',
-            '!text-gray-900 dark:!text-gray-100',
-            '!bg-gray-100/90 dark:!bg-gray-900/70',
+            'backdrop-blur-lg border-transparent!',
+            'text-gray-900! dark:text-gray-100!',
+            'bg-gray-100/90! dark:bg-gray-900/70!',
             // Override default <Note /> content spacing
-            '[&>*>*:first-child]:gap-1.5 [&>*>*:first-child]:sm:gap-2.5',
+            '[&>*>*:first-child]:gap-1.5 sm:[&>*>*:first-child]:gap-2.5',
           )}
           padding={isInTagMode ? 'tight-cta-right-left' : 'tight-cta-right'}
           cta={<div className="flex items-center gap-1.5 sm:gap-2.5">

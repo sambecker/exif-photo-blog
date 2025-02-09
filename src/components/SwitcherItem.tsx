@@ -33,7 +33,7 @@ export default function SwitcherItem({
       ? 'text-black dark:text-white'
       : 'text-gray-400 dark:text-gray-600',
     active
-      ? 'hover:text-black hover:dark:text-white'
+      ? 'hover:text-black dark:hover:text-white'
       : 'hover:text-gray-700 dark:hover:text-gray-400',
   );
 
