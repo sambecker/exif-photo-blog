@@ -127,8 +127,7 @@ export default function PhotoHeader({
         </div>
         {/* Content B: Filter Set Meta or Photo Pagination */}
         <div className={clsx(
-          'inline-flex',
-          'gap-2 self-start',
+          'inline-flex gap-2 self-start',
           'uppercase text-dim',
           headerType === 'photo-set'
             ? isGridHighDensity
@@ -138,7 +137,7 @@ export default function PhotoHeader({
               ? isGridHighDensity
                 ? 'sm:col-span-2 lg:col-span-3'
                 : 'sm:col-span-2 md:col-span-1 lg:col-span-2'
-              : 'hidden',
+              : 'hidden!',
         )}>
           {entity && <>
             {headerType === 'photo-set'
