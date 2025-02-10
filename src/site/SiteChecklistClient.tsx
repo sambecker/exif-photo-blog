@@ -8,12 +8,12 @@ import { clsx } from 'clsx/lite';
 import ChecklistRow from '../components/ChecklistRow';
 import { FiExternalLink } from 'react-icons/fi';
 import {
-  BiCog,
   BiData,
   BiHide,
   BiLockAlt,
   BiPencil,
 } from 'react-icons/bi';
+import { HiOutlineCog } from 'react-icons/hi';
 import Checklist from '@/components/Checklist';
 import { ConfigChecklistStatus } from './config';
 import StatusIcon from '@/components/StatusIcon';
@@ -616,7 +616,7 @@ export default function SiteChecklistClient({
           </Checklist>
           <Checklist
             title="Settings"
-            icon={<BiCog size={16} />}
+            icon={<HiOutlineCog size={17} className="translate-y-[0.5px]" />}
             optional
           >
             <ChecklistRow
