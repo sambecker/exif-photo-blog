@@ -4,21 +4,11 @@ import { cwd } from 'process';
 
 const FONT_FAMILY_IBM_PLEX_MONO = 'IBMPlexMono';
 
-const getFontData = async () => {
-  let data;
-  if (typeof fs !== 'undefined') {
-    data = fs.readFileSync(path.join(
-      cwd(),
-      '/public/fonts/IBMPlexMono-Medium.ttf',
-    ));
-  } else {
-    data = await fetch(new URL(
-      '/public/fonts/IBMPlexMono-Medium.ttf',
-      import.meta.url,
-    )).then(res => res.arrayBuffer());
-  }
-  return data;
-};
+const getFontData = async () =>
+  fs.readFileSync(path.join(
+    cwd(),
+    '/public/fonts/IBMPlexMono-Medium.ttf',
+  ));
 
 export const getIBMPlexMonoMedium = () => getFontData()
   .then(data => ({
