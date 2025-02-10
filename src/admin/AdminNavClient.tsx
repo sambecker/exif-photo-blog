@@ -7,10 +7,10 @@ import SiteGrid from '@/components/SiteGrid';
 import Spinner from '@/components/Spinner';
 import {
   PATH_ADMIN_CONFIGURATION,
-  PATH_ADMIN_INFO,
+  PATH_ADMIN_INSIGHTS,
   checkPathPrefix,
   isPathAdminConfiguration,
-  isPathAdminInfo,
+  isPathAdminInsights,
   isPathTopLevelAdmin,
 } from '@/site/paths';
 import { useAppState } from '@/state/AppState';
@@ -91,8 +91,8 @@ export default function AdminNavClient({
             </div>
             <span className="inline-flex relative">
               <LinkWithLoader
-                href={PATH_ADMIN_INFO}
-                className={isPathAdminInfo(pathname)
+                href={PATH_ADMIN_INSIGHTS}
+                className={isPathAdminInsights(pathname)
                   ? 'font-bold'
                   : 'text-dim'}
                 loader={<Spinner />}

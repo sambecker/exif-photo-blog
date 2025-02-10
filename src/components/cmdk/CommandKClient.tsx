@@ -12,6 +12,7 @@ import {
 import {
   PATH_ADMIN_BASELINE,
   PATH_ADMIN_CONFIGURATION,
+  PATH_ADMIN_INSIGHTS,
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_TAGS,
   PATH_ADMIN_UPLOADS,
@@ -320,6 +321,10 @@ export default function CommandKClient({
         label: 'App Config',
         annotation: <BiLockAlt />,
         path: PATH_ADMIN_CONFIGURATION,
+      }, {
+        label: 'App Insights',
+        annotation: <BiLockAlt />,
+        path: PATH_ADMIN_INSIGHTS,
       }, {
         label: selectedPhotoIds === undefined
           ? 'Select Multiple Photos'
