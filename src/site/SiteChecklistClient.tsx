@@ -79,7 +79,7 @@ export default function SiteChecklistClient({
   isGridHomepageEnabled,
   gridAspectRatio,
   hasGridAspectRatio,
-  gridDensity,
+  hasHighGridDensity,
   hasGridDensityPreference,
   // Settings
   isGeoPrivacyEnabled,
@@ -604,7 +604,7 @@ export default function SiteChecklistClient({
               {renderEnvVars(['NEXT_PUBLIC_GRID_ASPECT_RATIO'])}
             </ChecklistRow>
             <ChecklistRow
-              title={`Grid density: ${gridDensity ? 'low' : 'high'}`}
+              title={`Grid density: ${hasHighGridDensity ? 'high' : 'low'}`}
               status={hasGridDensityPreference}
               optional
             >

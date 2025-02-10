@@ -301,7 +301,7 @@ export const CONFIG_CHECKLIST_STATUS = {
   isGridHomepageEnabled: GRID_HOMEPAGE_ENABLED,
   gridAspectRatio: GRID_ASPECT_RATIO,
   hasGridAspectRatio: Boolean(process.env.NEXT_PUBLIC_GRID_ASPECT_RATIO),
-  gridDensity: HIGH_DENSITY_GRID,
+  hasHighGridDensity: HIGH_DENSITY_GRID,
   hasGridDensityPreference:
     Boolean(process.env.NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS),
   // Settings
