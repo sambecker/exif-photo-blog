@@ -36,10 +36,10 @@ import { useRef } from 'react';
 import useVisible from '@/utility/useVisible';
 import PhotoDate from './PhotoDate';
 import { useAppState } from '@/state/AppState';
-import useImageZoomControls from '@/components/image/useImageZoomControls';
 import { LuExpand } from 'react-icons/lu';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import Tooltip from '@/components/Tooltip';
+import ZoomControls, { ZoomControlsRef } from '@/components/image/ZoomControls';
 
 export default function PhotoLarge({
   photo,
@@ -85,7 +85,8 @@ export default function PhotoLarge({
   onVisible?: () => void
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const refZoomControlsContainer = useRef<HTMLDivElement>(null);
+
+  const zoomControlsRef = useRef<ZoomControlsRef>(null);
 
   const {
     areZoomControlsShown,
@@ -104,12 +105,6 @@ export default function PhotoLarge({
   const showExifContent = shouldShowExifDataForPhoto(photo);
 
   useVisible({ ref, onVisible });
-
-  const { open } = useImageZoomControls(
-    refZoomControlsContainer,
-    showZoomControls,
-    shouldZoomOnFKeydown,
-  );
 
   const hasTitle =
     showTitle &&
@@ -152,9 +147,9 @@ export default function PhotoLarge({
       arePhotosMatted && 'h-[90%]',
       arePhotosMatted && matteContentWidthForAspectRatio(),
     )}>
-      <div
-        ref={refZoomControlsContainer}
-        className={clsx('h-full', showZoomControls && 'cursor-zoom-in')}
+      <ZoomControls
+        ref={zoomControlsRef}
+        {...{ isEnabled: showZoomControls, shouldZoomOnFKeydown }}
       >
         <ImageLarge
           className={clsx(arePhotosMatted && 'h-full')}
@@ -167,7 +162,7 @@ export default function PhotoLarge({
           blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
           priority={priority}
         />
-      </div>
+      </ZoomControls>
     </div>;
 
   const largePhotoContainerClassName = clsx(arePhotosMatted &&
@@ -297,9 +292,9 @@ export default function PhotoLarge({
                   // Prevent collision with admin button
                   !hasNonDateContent && isUserSignedIn && 'md:pr-7',
                 )}
-                // Created at is a naive datetime which
+                // 'createdAt' is a naive datetime which
                 // does not require a timezone and will not
-                // cause server/client time mismatch
+                // cause server/client time mismatches
                 timezone={null}
                 hideTime={!SHOW_TAKEN_AT_TIME}
               />
@@ -311,7 +306,7 @@ export default function PhotoLarge({
                   <LoaderButton
                     title="Open Image Viewer"
                     icon={<LuExpand size={15} />}
-                    onClick={open}
+                    onClick={() => zoomControlsRef.current?.open()}
                     styleAs="link"
                     className="text-medium translate-y-[0.25px]"
                     hideFocusOutline
@@ -322,10 +317,12 @@ export default function PhotoLarge({
                     photo={photo}
                     tag={shouldShareTag ? primaryTag : undefined}
                     camera={shouldShareCamera ? camera : undefined}
-                    // eslint-disable-next-line max-len
-                    simulation={shouldShareSimulation? photo.filmSimulation : undefined}
-                    // eslint-disable-next-line max-len
-                    focal={shouldShareFocalLength ? photo.focalLength : undefined}
+                    simulation={shouldShareSimulation
+                      ? photo.filmSimulation
+                      : undefined}
+                    focal={shouldShareFocalLength
+                      ? photo.focalLength
+                      : undefined}
                     prefetch={prefetchRelatedLinks}
                   />}
                 {ALLOW_PUBLIC_DOWNLOADS && 
