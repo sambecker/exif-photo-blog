@@ -7,8 +7,10 @@ import SiteGrid from '@/components/SiteGrid';
 import Spinner from '@/components/Spinner';
 import {
   PATH_ADMIN_CONFIGURATION,
+  PATH_ADMIN_INFO,
   checkPathPrefix,
   isPathAdminConfiguration,
+  isPathAdminInfo,
   isPathTopLevelAdmin,
 } from '@/site/paths';
 import { useAppState } from '@/state/AppState';
@@ -18,6 +20,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { BiCog } from 'react-icons/bi';
 import { FaRegClock } from 'react-icons/fa';
+import { TbInfoSquareRounded } from 'react-icons/tb';
 
 // Updates considered recent if they occurred in past 5 minutes
 const areTimesRecent = (dates: Date[]) => dates
@@ -86,6 +89,25 @@ export default function AdminNavClient({
                     <span>({count})</span>}
                 </LinkWithStatus>)}
             </div>
+            <span className="inline-flex relative">
+              <LinkWithLoader
+                href={PATH_ADMIN_INFO}
+                className={isPathAdminInfo(pathname)
+                  ? 'font-bold'
+                  : 'text-dim'}
+                loader={<Spinner />}
+              >
+                <TbInfoSquareRounded
+                  size={19}
+                  className="inline-flex translate-y-0.5"
+                  aria-label="App Configuration"
+                />
+              </LinkWithLoader>
+              <span className={clsx(
+                'absolute top-[1px] right-[-1px] w-2 h-2 rounded-full',
+                'bg-blue-600',
+              )} />
+            </span>
             <LinkWithLoader
               href={PATH_ADMIN_CONFIGURATION}
               className={isPathAdminConfiguration(pathname)
