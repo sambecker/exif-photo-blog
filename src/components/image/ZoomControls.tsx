@@ -6,7 +6,7 @@ import { RiCollapseDiagonalLine, RiExpandDiagonalLine } from 'react-icons/ri';
 
 export type ZoomControlsRef = {
   open: () => void
-  zoom: (zoomLevel?: number) => void
+  zoomTo: (zoomLevel?: number) => void
 }
 
 export default function ZoomControls({
@@ -22,28 +22,33 @@ export default function ZoomControls({
 }) {
   const refContainer = useRef<HTMLDivElement>(null);
 
-  const { open, zoom, zoomLevel, isShown } = useImageZoomControls(
+  const {
+    open,
+    reset,
+    zoomTo,
+    zoomLevel,
+    viewerContainerRef,
+  } = useImageZoomControls(
     refContainer,
     isEnabled,
     shouldZoomOnFKeydown,
   );
 
   useEffect(() => {
-    if (ref) { ref.current = { open, zoom }; }
-  }, [ref, open, zoom]);
+    if (ref) { ref.current = { open, zoomTo }; }
+  }, [ref, open, zoomTo]);
 
-  const shouldZoomTo2x = zoomLevel < 2;
+  const shouldZoomTo2x = zoomLevel !== 2;
 
   const button = 
     <button
       className={clsx(
-        isShown ? 'inline-flex' : 'hidden',
-        'fixed top-[20px] right-[70px] z-[100000]',
+        'fixed top-[20px] right-[70px]',
         'size-10 items-center justify-center',
         'rounded-full border-none',
         'text-white bg-black/50 hover:bg-black/85',
       )}
-      onClick={() => zoom(shouldZoomTo2x ? 2 : 1)}
+      onClick={() => shouldZoomTo2x ? zoomTo(2) : reset()}
     >
       {shouldZoomTo2x
         ? <RiCollapseDiagonalLine className="shrink-0" size={20} />
@@ -56,9 +61,9 @@ export default function ZoomControls({
       className={clsx('h-full', isEnabled && 'cursor-zoom-in')}
     >
       {children}
-      {typeof window !== 'undefined'
-        ? createPortal(button, document.body)
-        : button}
+      {viewerContainerRef.current
+        ? createPortal(button, viewerContainerRef.current)
+        : null}
     </div>
   );
 }

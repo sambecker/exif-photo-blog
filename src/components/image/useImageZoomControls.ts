@@ -11,10 +11,12 @@ export default function useImageZoomControls(
 ) {
   const viewerRef = useRef<Viewer | null>(null);
 
+  const viewerContainerRef = useRef<HTMLDivElement>(null);
+
   const { setShouldRespondToKeyboardCommands } = useAppState();
 
-  const [isShown, setIsShown] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(1);
+
   const [colorLight, setColorLight] = useState<string>();
 
   useMetaThemeColor({ colorLight });
@@ -27,8 +29,13 @@ export default function useImageZoomControls(
     viewerRef.current?.hide();
   }, [viewerRef]);
 
-  const zoom = useCallback((zoomLevel = 1) => {
+  const zoomTo = useCallback((zoomLevel = 1) => {
     viewerRef.current?.zoomTo(zoomLevel);
+  }, [viewerRef]);
+
+  const reset = useCallback(() => {
+    setZoomLevel(1);
+    viewerRef.current?.reset();
   }, [viewerRef]);
 
   // On 'F' keydown, toggle fullscreen
@@ -41,8 +48,6 @@ export default function useImageZoomControls(
 
   useEffect(() => {
     if (imageRef.current && isEnabled) {
-      const closeButton = document
-        .getElementsByClassName('viewer-close')[0] as HTMLElement;
       viewerRef.current = new Viewer(imageRef.current, {
         navbar: false,
         title: false,
@@ -51,6 +56,10 @@ export default function useImageZoomControls(
           reset: 2,
           zoomOut: 3,
         },
+        ready: ({ target }) => {
+          viewerContainerRef.current =
+            (target as any).viewer.viewer as HTMLDivElement;
+        },
         url: (image: HTMLImageElement) => {
           image.loading = 'eager';
           return image.src;
@@ -58,13 +67,10 @@ export default function useImageZoomControls(
         show: () => {
           setShouldRespondToKeyboardCommands?.(false);
           setColorLight('#000');
-          setIsShown(true);
-          if (closeButton) { closeButton.style.display = 'none'; }
         },
         hide: () => {
           setTimeout(() => {
             setColorLight(undefined);
-            setIsShown(false);
           }, 300);
         },
         hidden: () => {
@@ -72,15 +78,6 @@ export default function useImageZoomControls(
         },
         zoom: ({ detail: { ratio } }) => {
           setZoomLevel(ratio);
-        },
-        view: () => {
-          const container = document
-            .getElementsByClassName('viewer-container')[0];
-          if (container) {
-            const closeButton = document
-              .getElementsByClassName('viewer-close')[0] as HTMLElement;
-            if (closeButton) { closeButton.style.display = 'inline-flex'; }
-          }
         },
       });
 
@@ -92,15 +89,16 @@ export default function useImageZoomControls(
   }, [
     imageRef,
     isEnabled,
-    zoom,
+    zoomTo,
     setShouldRespondToKeyboardCommands,
   ]);
 
   return {
     open,
     close,
-    zoom,
+    reset,
+    zoomTo,
     zoomLevel,
-    isShown,
+    viewerContainerRef,
   };
 }
