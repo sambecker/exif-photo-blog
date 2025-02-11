@@ -6,9 +6,11 @@ import Link from 'next/link';
 export default function LinkWithLoader({
   loader,
   children,
+  debugLoading,
   ...props
 }: ComponentProps<typeof Link> & {
   loader: ReactNode
+  debugLoading?: boolean
 }) {
   return (
     <LinkWithStatus {...props}>
@@ -19,7 +21,7 @@ export default function LinkWithLoader({
         )}>
           {children}
         </span>
-        {isLoading && <span className={clsx(
+        {(isLoading || debugLoading) && <span className={clsx(
           'absolute inset-0',
           'flex items-center justify-center',
         )}>

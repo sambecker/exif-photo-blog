@@ -98,7 +98,7 @@ export default function AdminNavClient({
                   className={isPathAdminInsights(pathname)
                     ? 'font-bold'
                     : 'text-dim'}
-                  loader={<Spinner />}
+                  loader={<Spinner className="translate-y-[-1px]" />}
                 >
                   <span className={clsx(
                     'size-[16px]',
@@ -122,7 +122,7 @@ export default function AdminNavClient({
                 className={isPathAdminConfiguration(pathname)
                   ? 'font-bold'
                   : 'text-dim'}
-                loader={<Spinner />}
+                loader={<Spinner className="translate-y-[-0.75px]" />}
               >
                 <HiOutlineCog
                   size={20}
