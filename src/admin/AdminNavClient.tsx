@@ -19,8 +19,10 @@ import { differenceInMinutes } from 'date-fns';
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { FaRegClock } from 'react-icons/fa';
+import { FaInfo } from 'react-icons/fa';
 import { HiOutlineCog } from 'react-icons/hi';
-import { TbInfoSquareRounded } from 'react-icons/tb';
+
+const DEBUG_INDICATOR_SIZE = true;
 
 // Updates considered recent if they occurred in past 5 minutes
 const areTimesRecent = (dates: Date[]) => dates
@@ -98,16 +100,22 @@ export default function AdminNavClient({
                     : 'text-dim'}
                   loader={<Spinner />}
                 >
-                  <TbInfoSquareRounded
-                    size={19}
-                    className="inline-flex translate-y-0.5"
-                    aria-label="App Configuration"
-                  />
+                  <span className={clsx(
+                    'size-[16px]',
+                    'inline-flex items-center justify-center',
+                    'border-[1.5px] border-current rounded-[6px]',
+                    'translate-y-[3px]',
+                  )}>
+                    <FaInfo
+                      size={8}
+                      aria-label="App Configuration"
+                    />
+                  </span>
                 </LinkWithLoader>
-                <span className={clsx(
-                  'absolute top-[1px] right-[-1px] w-2 h-2 rounded-full',
-                  'bg-blue-600',
-                )} />
+                {DEBUG_INDICATOR_SIZE && <span className={clsx(
+                  'absolute top-[0.5px] right-[-2.5px] size-2 rounded-full',
+                  'bg-blue-500',
+                )} />}
               </span>
               <LinkWithLoader
                 href={PATH_ADMIN_CONFIGURATION}
