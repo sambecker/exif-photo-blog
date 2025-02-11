@@ -49,7 +49,7 @@ export default function AdminUploadsTable({
                   aspectRatio={3.0 / 2.0}
                   className={clsx(
                     'rounded-[3px] overflow-hidden',
-                    'border-subtle',
+                    'border-main',
                   )}
                 />
               </div>
