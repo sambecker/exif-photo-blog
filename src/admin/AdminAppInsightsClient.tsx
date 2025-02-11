@@ -1,7 +1,9 @@
 'use client';
 
+import Note from '@/components/Note';
 import { dateRangeForPhotos, PhotoDateRange } from '@/photo';
 import clsx from 'clsx/lite';
+import { FaCodeFork } from 'react-icons/fa6';
 
 export default function AdminAppInsightsClient({
   photosCount,
@@ -22,16 +24,26 @@ export default function AdminAppInsightsClient({
 
   return (
     <div className={clsx(
-      'flex flex-col items-center justify-center w-full gap-4',
+      'flex flex-col items-center justify-center gap-4',
       'mt-2 mb-6',
     )}>
-      <div className="text-center text-main uppercase font-bold">
-        Library stats
+      <div className="text-center text-main uppercase font-bold tracking-wide">
+        Template Recommendations
+      </div>
+      <Note
+        icon={<FaCodeFork />}
+        className="w-[clamp(300px,80%,1000px)] m-auto"
+      >
+        Consider forking this repository in order to
+        receive new features and fixes
+      </Note>
+      <div className="text-center text-main uppercase font-bold tracking-wide">
+        Library Stats
       </div>
       <div className={clsx(
         'grid grid-cols-2 gap-3 uppercase',
         'border border-main rounded-md p-6 bg-main shadow-xs',
-        'w-[clamp(300px,50%,1000px)]',
+        'w-[clamp(300px,80%,1000px)]',
       )}>
         <div className="tracking-wide">Photos</div>
         <div className="text-right">{photosCount}</div>
