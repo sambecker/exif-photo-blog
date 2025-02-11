@@ -7,11 +7,15 @@ export default function AdminAppInsightsClient({
   photosCount,
   tagsCount,
   camerasCount,
+  filmSimulationsCount,
+  lensesCount,
   dateRange,
 }: {
   photosCount: number
   tagsCount: number
   camerasCount: number
+  filmSimulationsCount: number
+  lensesCount: number
   dateRange?: PhotoDateRange
 }) {
   const { descriptionWithSpaces } = dateRangeForPhotos(undefined, dateRange);
@@ -22,19 +26,23 @@ export default function AdminAppInsightsClient({
       'mt-2 mb-6',
     )}>
       <div className="text-center text-main uppercase font-bold">
-        Photo library
+        Library stats
       </div>
       <div className={clsx(
-        'grid grid-cols-2 gap-2 uppercase',
-        'border border-main rounded-md p-4 bg-main shadow-xs',
-        'w-[80%]',
+        'grid grid-cols-2 gap-3 uppercase',
+        'border border-main rounded-md p-6 bg-main shadow-xs',
+        'w-[clamp(300px,50%,1000px)]',
       )}>
         <div className="tracking-wide">Photos</div>
         <div className="text-right">{photosCount}</div>
-        <div>Tags</div>
+        <div className="tracking-wide">Tags</div>
         <div className="text-right">{tagsCount}</div>
-        <div>Cameras</div>
+        <div className="tracking-wide">Cameras</div>
         <div className="text-right">{camerasCount}</div>
+        <div className="tracking-wide">Films</div>
+        <div className="text-right">{filmSimulationsCount}</div>
+        <div className="tracking-wide">Lenses</div>
+        <div className="text-right">{lensesCount}</div>
         <span className="text-center col-span-2">
           {descriptionWithSpaces}
         </span>
