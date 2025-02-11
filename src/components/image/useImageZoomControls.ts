@@ -21,32 +21,27 @@ export default function useImageZoomControls(
 
   useMetaThemeColor({ colorLight });
 
-  const open = useCallback(() => {
-    viewerRef.current?.show();
-  }, [viewerRef]);
+  const open = useCallback(() =>
+    viewerRef.current?.show(), []);
 
-  const close = useCallback(() => {
-    viewerRef.current?.hide();
-  }, [viewerRef]);
+  const close = useCallback(() =>
+    viewerRef.current?.hide(), []);
 
-  const zoomTo = useCallback((zoomLevel = 1) => {
-    viewerRef.current?.zoomTo(zoomLevel);
-  }, [viewerRef]);
+  const zoomTo = useCallback((zoomLevel = 1) =>
+    viewerRef.current?.zoomTo(zoomLevel), []);
 
   const reset = useCallback(() => {
     setZoomLevel(1);
     viewerRef.current?.reset();
-  }, [viewerRef]);
+  }, []);
 
   // On 'F' keydown, toggle fullscreen
   const handleKeyDown = useCallback(() => {
-    if (shouldExpandOnFKeydown) {
-      viewerRef.current?.show();
-    }
-  }, [shouldExpandOnFKeydown]);
+    if (shouldExpandOnFKeydown) { open(); }
+  }, [shouldExpandOnFKeydown, open]);
   useKeydownHandler(handleKeyDown, ['F']);
 
-  useEffect(() => {
+  const initialize = useCallback(() => {
     if (imageRef.current && isEnabled) {
       viewerRef.current = new Viewer(imageRef.current, {
         navbar: false,
@@ -61,6 +56,7 @@ export default function useImageZoomControls(
             (target as any).viewer.viewer as HTMLDivElement;
         },
         url: (image: HTMLImageElement) => {
+          // Addresses Safari bug where images don't load
           image.loading = 'eager';
           return image.src;
         },
@@ -69,9 +65,8 @@ export default function useImageZoomControls(
           setColorLight('#000');
         },
         hide: () => {
-          setTimeout(() => {
-            setColorLight(undefined);
-          }, 300);
+          // Optimizes Safari status bar animation
+          setTimeout(() => setColorLight(undefined), 300);
         },
         hidden: () => {
           setShouldRespondToKeyboardCommands?.(true);
@@ -80,20 +75,26 @@ export default function useImageZoomControls(
           setZoomLevel(ratio);
         },
       });
-
-      return () => {
-        viewerRef.current?.destroy();
-        viewerRef.current = null;
-      };
     }
   }, [
     imageRef,
     isEnabled,
-    zoomTo,
     setShouldRespondToKeyboardCommands,
   ]);
 
+  const cleanUp = useCallback(() => {
+    viewerRef.current?.destroy();
+    viewerRef.current = null;
+  }, []);
+
+  useEffect(() => {
+    initialize();
+    return cleanUp;
+  }, [initialize, cleanUp]);
+
   return {
+    initialize,
+    cleanUp,
     open,
     close,
     reset,
