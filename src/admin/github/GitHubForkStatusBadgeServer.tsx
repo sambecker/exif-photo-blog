@@ -55,7 +55,7 @@ export default async function GitHubForkStatusBadgeServer() {
             : null}
       </>,
       style: didError || isBehind === undefined || isBehind
-        ? 'warning'
+        ? 'info'
         : 'mono',
     }} />
     : null;

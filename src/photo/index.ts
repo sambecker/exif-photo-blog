@@ -273,6 +273,7 @@ export const dateRangeForPhotos = (
   let start = '';
   let end = '';
   let description = '';
+  let descriptionWithSpaces = '';
 
   if (explicitDateRange || photos.length > 0) {
     const photosSorted = sortPhotosByDate(photos);
@@ -287,9 +288,12 @@ export const dateRangeForPhotos = (
     description = start === end
       ? start
       : `${start}–${end}`;
+    descriptionWithSpaces = start === end
+      ? start
+      : `${start} – ${end}`;
   }
 
-  return { start, end, description };
+  return { start, end, description, descriptionWithSpaces };
 };
 
 const photoHasCameraData = (photo: Photo) =>

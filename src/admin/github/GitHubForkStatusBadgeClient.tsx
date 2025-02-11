@@ -10,11 +10,17 @@ export default function GitHubForkStatusBadgeClient({
   tooltip,
 }: {
   label?: ReactNode
-  style?: 'success' | 'warning' | 'error' | 'mono'
+  style?: 'info' |'success' | 'warning' | 'error' | 'mono'
   tooltip?: ReactNode
 }) {
   const classNameForStyle = () => {
     switch (style) {
+    case 'info': return clsx(
+      'text-blue-600 hover:text-blue-600',
+      'dark:text-blue-400 dark:hover:text-blue-400',
+      'bg-blue-100/40 dark:bg-blue-900/25',
+      'border-blue-300/40 dark:border-blue-900/50',
+    );
     case 'success': return clsx(
       'text-green-700 hover:text-green-700',
       'dark:text-green-400 dark:hover:text-green-400',
