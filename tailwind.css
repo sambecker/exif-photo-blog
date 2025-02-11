@@ -121,11 +121,8 @@
 }
 /* Border */
 @utility border-main {
-  @apply border-gray-200 dark:border-gray-700
-}
-@utility border-subtle {
   @apply
-    border border-gray-200 dark:border-gray-800
+    border border-gray-200 dark:border-gray-700
 }
 /* Background */
 @utility bg-main {
@@ -304,7 +301,7 @@
 @layer components {
   .component-surface {
     @apply
-      bg-content border border-main
+      bg-content border-main
       rounded-lg
   }
 }

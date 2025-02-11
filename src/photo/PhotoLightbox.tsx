@@ -25,7 +25,7 @@ export default function PhotoLightbox({
 
   return (
     <div className={clsx(
-      'border dark:border-gray-800 p-1.5 lg:p-2 rounded-md',
+      'border-main p-1.5 lg:p-2 rounded-md',
       'bg-gray-50 dark:bg-gray-950',
     )}>
       <PhotoGrid
