@@ -54,11 +54,11 @@ export default function AdminAppInsightsClient({
 
   return (
     <div className={clsx(
-      'flex flex-col items-center',
-      'mt-2 mb-6',
+      'flex flex-col items-center w-full',
+      'mt-2 mb-1',
     )}>
       <div className={clsx(
-        'w-[clamp(400px,80%,1000px)]',
+        'w-full sm:w-[80%]',
         'space-y-4 md:space-y-6',
       )}>
         {renderTitle('Code Observability')}
