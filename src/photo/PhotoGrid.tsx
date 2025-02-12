@@ -4,7 +4,7 @@ import { Photo, PhotoSetCategory } from '.';
 import PhotoMedium from './PhotoMedium';
 import { clsx } from 'clsx/lite';
 import AnimateItems from '@/components/AnimateItems';
-import { GRID_ASPECT_RATIO } from '@/site/config';
+import { GRID_ASPECT_RATIO } from '@/app-core/config';
 import { useAppState } from '@/state/AppState';
 import SelectTileOverlay from '@/components/SelectTileOverlay';
 import { JSX } from 'react';

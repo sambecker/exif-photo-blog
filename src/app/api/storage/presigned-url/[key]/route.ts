@@ -7,7 +7,7 @@ import {
   cloudflareR2Client,
   cloudflareR2PutObjectCommandForKey,
 } from '@/services/storage/cloudflare-r2';
-import { CURRENT_STORAGE } from '@/site/config';
+import { CURRENT_STORAGE } from '@/app-core/config';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 export async function GET(

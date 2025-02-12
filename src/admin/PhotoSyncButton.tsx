@@ -1,6 +1,6 @@
 import LoaderButton from '@/components/primitives/LoaderButton';
 import { syncPhotoAction } from '@/photo/actions';
-import IconGrSync from '@/site/IconGrSync';
+import IconGrSync from '@/app-core/IconGrSync';
 import { toastSuccess } from '@/toast';
 import { ComponentProps, useState } from 'react';
 

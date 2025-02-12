@@ -1,6 +1,6 @@
 import { auth } from '@/auth';
 import SignInForm from '@/auth/SignInForm';
-import { PATH_ADMIN } from '@/site/paths';
+import { PATH_ADMIN } from '@/app-core/paths';
 import { clsx } from 'clsx/lite';
 import { redirect } from 'next/navigation';
 

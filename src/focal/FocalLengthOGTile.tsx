@@ -2,7 +2,7 @@ import { Photo, PhotoDateRange } from '@/photo';
 import {
   absolutePathForFocalLengthImage,
   pathForFocalLength,
-} from '@/site/paths';
+} from '@/app-core/paths';
 import OGTile from '@/components/OGTile';
 import { descriptionForFocalLengthPhotos, titleForFocalLength } from '.';
 

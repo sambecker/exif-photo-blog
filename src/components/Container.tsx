@@ -25,13 +25,13 @@ export default function Container({
     switch (color) {
     case 'gray': return [
       'text-medium',
-      'bg-gray-50 border-gray-200',
-      'dark:bg-gray-900/40 dark:border-gray-800',
+      'bg-gray-50 dark:bg-gray-900/40',
+      'border-gray-200 dark:border-gray-800',
     ];
     case 'blue': return [
-      'text-main',
-      'bg-blue-50/50 border-blue-200',
-      'dark:bg-blue-950/30 dark:border-blue-600/50',
+      'text-blue-900 dark:text-blue-300',
+      'bg-blue-50/50 dark:bg-blue-950/30',
+      'border-blue-200 dark:border-blue-600/30',
     ];
     case 'red': return [
       'text-red-600 dark:text-red-500/90',
@@ -41,7 +41,7 @@ export default function Container({
     case 'yellow': return [
       'text-amber-700 dark:text-amber-500/90',
       'bg-amber-50/50 dark:bg-amber-950/30',
-      'border-amber-200/80 dark:border-amber-800/30',
+      'border-amber-600/30 dark:border-amber-800/30',
     ];
     }
   };

@@ -1,6 +1,6 @@
 'use client';
 
-import { PATH_FEED_INFERRED } from '@/site/paths';
+import { PATH_FEED_INFERRED } from '@/app-core/paths';
 import InfinitePhotoScroll from './InfinitePhotoScroll';
 import PhotosLarge from './PhotosLarge';
 

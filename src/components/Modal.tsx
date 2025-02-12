@@ -6,9 +6,9 @@ import { clsx } from 'clsx/lite';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
 import { useRouter } from 'next/navigation';
 import AnimateItems from './AnimateItems';
-import { PATH_ROOT } from '@/site/paths';
+import { PATH_ROOT } from '@/app-core/paths';
 import usePrefersReducedMotion from '@/utility/usePrefersReducedMotion';
-import useMetaThemeColor from '@/site/useMetaThemeColor';
+import useMetaThemeColor from '@/utility/useMetaThemeColor';
 import useEscapeHandler from '@/utility/useEscapeHandler';
 
 export default function Modal({

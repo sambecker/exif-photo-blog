@@ -9,10 +9,10 @@ import {
   PATH_ROOT,
   absolutePathForPhoto,
   absolutePathForPhotoImage,
-} from '@/site/paths';
+} from '@/app-core/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotosNearIdCached } from '@/photo/cache';
-import { IS_PRODUCTION, STATICALLY_OPTIMIZED_PHOTOS } from '@/site/config';
+import { IS_PRODUCTION, STATICALLY_OPTIMIZED_PHOTOS } from '@/app-core/config';
 import { getPhotoIds } from '@/photo/db/query';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { cache } from 'react';

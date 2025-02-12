@@ -6,7 +6,7 @@ import {
   getUniqueTags,
 } from '@/photo/db/query';
 import AdminAppInsightsClient from './AdminAppInsightsClient';
-
+import { APP_CONFIGURATION, IS_DEVELOPMENT } from '@/app-core/config';
 export default async function AdminAppInsights() {
   const [
     { count, dateRange },
@@ -22,14 +22,28 @@ export default async function AdminAppInsights() {
     getUniqueLenses(),
   ]);
 
+  const {
+    isAiTextGenerationEnabled,
+    hasVercelBlobStorage,
+  } = APP_CONFIGURATION;
+
   return (
     <AdminAppInsightsClient
-      photosCount={count}
-      tagsCount={tags.length}
-      camerasCount={cameras.length}
-      filmSimulationsCount={filmSimulations.length}
-      lensesCount={lenses.length}
-      dateRange={dateRange}
+      recommendations={{
+        fork: true,
+        forkBehind: true,
+        ai: isAiTextGenerationEnabled,
+        aiRateLimiting: isAiTextGenerationEnabled && !hasVercelBlobStorage,
+      }}
+      photoStats={{
+        photosCount: count,
+        tagsCount: tags.length,
+        camerasCount: cameras.length,
+        filmSimulationsCount: filmSimulations.length,
+        lensesCount: lenses.length,
+        dateRange,
+      }}
+      debug={IS_DEVELOPMENT}
     />
   );
 }

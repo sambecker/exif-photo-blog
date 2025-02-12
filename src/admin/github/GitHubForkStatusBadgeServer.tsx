@@ -4,7 +4,7 @@ import {
   VERCEL_GIT_REPO_OWNER,
   VERCEL_GIT_REPO_SLUG,
   VERCEL_GIT_COMMIT_SHA,
-} from '@/site/config';
+} from '@/app-core/config';
 import { getGitHubMetaWithFallback, getGitHubRepoUrl } from '.';
 
 export default async function GitHubForkStatusBadgeServer() {

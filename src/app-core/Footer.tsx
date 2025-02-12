@@ -2,9 +2,9 @@
 
 import { clsx } from 'clsx/lite';
 import SiteGrid from '../components/SiteGrid';
-import ThemeSwitcher from '@/site/ThemeSwitcher';
+import ThemeSwitcher from '@/app-core/ThemeSwitcher';
 import Link from 'next/link';
-import { SHOW_REPO_LINK } from '@/site/config';
+import { SHOW_REPO_LINK } from '@/app-core/config';
 import RepoLink from '../components/RepoLink';
 import { usePathname } from 'next/navigation';
 import { PATH_ADMIN_PHOTOS, isPathAdmin, isPathSignIn } from './paths';

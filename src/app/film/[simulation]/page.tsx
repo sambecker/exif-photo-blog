@@ -2,9 +2,9 @@ import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getUniqueFilmSimulations } from '@/photo/db/query';
 import { FilmSimulation, generateMetaForFilmSimulation } from '@/simulation';
 import FilmSimulationOverview from '@/simulation/FilmSimulationOverview';
-import { IS_PRODUCTION } from '@/site/config';
+import { IS_PRODUCTION } from '@/app-core/config';
 import { getPhotosFilmSimulationDataCached } from '@/simulation/data';
-import { STATICALLY_OPTIMIZED_PHOTO_CATEGORIES } from '@/site/config';
+import { STATICALLY_OPTIMIZED_PHOTO_CATEGORIES } from '@/app-core/config';
 import { Metadata } from 'next/types';
 import { cache } from 'react';
 

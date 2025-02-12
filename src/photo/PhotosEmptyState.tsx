@@ -1,9 +1,9 @@
 import AdminCTA from '@/admin/AdminCTA';
 import Container from '@/components/Container';
 import SiteGrid from '@/components/SiteGrid';
-import { IS_SITE_READY } from '@/site/config';
-import { PATH_ADMIN_CONFIGURATION } from '@/site/paths';
-import SiteChecklist from '@/site/SiteChecklist';
+import { IS_SITE_READY } from '@/app-core/config';
+import { PATH_ADMIN_CONFIGURATION } from '@/app-core/paths';
+import AdminAppConfiguration from '@/admin/AdminAppConfiguration';
 import { clsx } from 'clsx/lite';
 import Link from 'next/link';
 import { HiOutlinePhotograph } from 'react-icons/hi';
@@ -27,7 +27,7 @@ export default function PhotosEmptyState() {
             {!IS_SITE_READY ? 'Finish Setup' : 'Setup Complete!'}
           </div>
           {!IS_SITE_READY
-            ? <SiteChecklist simplifiedView />
+            ? <AdminAppConfiguration simplifiedView />
             : <div className="max-w-md text-center space-y-6">
               <div className="space-y-2">
                 <div>

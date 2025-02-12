@@ -1,5 +1,5 @@
 import { getGitHubMetaWithFallback, getGitHubPublicFork } from '@/admin/github';
-import { TEMPLATE_BASE_OWNER, TEMPLATE_BASE_REPO } from '@/site/config';
+import { TEMPLATE_BASE_OWNER, TEMPLATE_BASE_REPO } from '@/app-core/config';
 
 describe('GitHub', () => {
   it('fetches base repo meta', async () => {

@@ -1,5 +1,5 @@
 import { Photo, PhotoDateRange } from '@/photo';
-import { absolutePathForCameraImage, pathForCamera } from '@/site/paths';
+import { absolutePathForCameraImage, pathForCamera } from '@/app-core/paths';
 import OGTile from '@/components/OGTile';
 import { Camera } from '.';
 import { descriptionForCameraPhotos, titleForCamera } from './meta';

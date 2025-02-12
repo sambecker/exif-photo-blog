@@ -1,5 +1,5 @@
 import { AiFillApple } from 'react-icons/ai';
-import { pathForCamera } from '@/site/paths';
+import { pathForCamera } from '@/app-core/paths';
 import { IoMdCamera } from 'react-icons/io';
 import { Camera, formatCameraText, isCameraApple } from '.';
 import EntityLink, {

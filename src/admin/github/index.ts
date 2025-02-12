@@ -2,7 +2,7 @@ import {
   TEMPLATE_BASE_OWNER,
   TEMPLATE_BASE_REPO,
   TEMPLATE_BASE_BRANCH,
-} from '@/site/config';
+} from '@/app-core/config';
 
 const DEFAULT_BRANCH = 'main';
 const FALLBACK_TEXT = 'Unknown';

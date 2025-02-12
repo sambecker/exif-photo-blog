@@ -7,7 +7,7 @@ import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import { cache } from 'react';
 import { getPhotos, getPhotosMeta } from '@/photo/db/query';
-import { GRID_HOMEPAGE_ENABLED } from '@/site/config';
+import { GRID_HOMEPAGE_ENABLED } from '@/app-core/config';
 import { getPhotoSidebarData } from '@/photo/data';
 import PhotoGridPage from '@/photo/PhotoGridPage';
 import PhotoFeedPage from '@/photo/PhotoFeedPage';

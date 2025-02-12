@@ -1,7 +1,7 @@
 'use client';
 
 import MoreMenu from '@/components/more/MoreMenu';
-import { PATH_ADMIN_CONFIGURATION, PATH_GRID_INFERRED } from '@/site/paths';
+import { PATH_ADMIN_CONFIGURATION, PATH_GRID_INFERRED } from '@/app-core/paths';
 import { useAppState } from '@/state/AppState';
 import { BiCog } from 'react-icons/bi';
 import { ImCheckboxUnchecked } from 'react-icons/im';

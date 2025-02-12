@@ -16,7 +16,7 @@ import { clsx } from 'clsx/lite';
 import { useAppState } from '@/state/AppState';
 import { GetPhotosOptions } from './db';
 import useVisible from '@/utility/useVisible';
-import { ADMIN_DB_OPTIMIZE_ENABLED } from '@/site/config';
+import { ADMIN_DB_OPTIMIZE_ENABLED } from '@/app-core/config';
 
 export type RevalidatePhoto = (
   photoId: string,

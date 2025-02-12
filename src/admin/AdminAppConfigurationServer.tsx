@@ -1,8 +1,8 @@
-import SiteChecklistClient from './SiteChecklistClient';
-import { CONFIG_CHECKLIST_STATUS } from '@/site/config';
+import AdminAppConfigurationClient from './AdminAppConfigurationClient';
+import { APP_CONFIGURATION } from '@/app-core/config';
 import { testConnectionsAction } from '@/admin/actions';
 
-export default async function SiteChecklistServer({
+export default async function AdminAppConfigurationServer({
   simplifiedView,
 }: {
   simplifiedView?: boolean
@@ -10,8 +10,8 @@ export default async function SiteChecklistServer({
   const connectionErrors = await testConnectionsAction().catch(() => ({}));
 
   return (
-    <SiteChecklistClient {...{
-      ...CONFIG_CHECKLIST_STATUS,
+    <AdminAppConfigurationClient {...{
+      ...APP_CONFIGURATION,
       ...connectionErrors,
       simplifiedView,
     }} />

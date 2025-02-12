@@ -14,7 +14,7 @@ import {
 import { Cameras, createCameraKey } from '@/camera';
 import { Tags } from '@/tag';
 import { FilmSimulation, FilmSimulations } from '@/simulation';
-import { ADMIN_SQL_DEBUG_ENABLED } from '@/site/config';
+import { ADMIN_SQL_DEBUG_ENABLED } from '@/app-core/config';
 import {
   GetPhotosOptions,
   getLimitAndOffsetFromOptions,

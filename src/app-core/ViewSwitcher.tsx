@@ -1,12 +1,12 @@
 import Switcher from '@/components/Switcher';
 import SwitcherItem from '@/components/SwitcherItem';
-import IconFeed from '@/site/IconFeed';
-import IconGrid from '@/site/IconGrid';
+import IconFeed from '@/app-core/IconFeed';
+import IconGrid from '@/app-core/IconGrid';
 import {
   PATH_ADMIN_PHOTOS,
   PATH_FEED_INFERRED,
   PATH_GRID_INFERRED,
-} from '@/site/paths';
+} from '@/app-core/paths';
 import { BiLockAlt } from 'react-icons/bi';
 import IconSearch from './IconSearch';
 import { useAppState } from '@/state/AppState';

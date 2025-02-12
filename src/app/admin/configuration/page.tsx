@@ -1,14 +1,14 @@
 import ClearCacheButton from '@/admin/ClearCacheButton';
-import SiteChecklist from '@/site/SiteChecklist';
+import AdminAppConfiguration from '@/admin/AdminAppConfiguration';
 import AdminInfoPage from '@/admin/AdminInfoPage';
 
-export default function AdminConfigurationPage() {
+export default function AdminAppConfigurationPage() {
   return (
     <AdminInfoPage
       title="App Configuration"
       accessory={<ClearCacheButton />}
     >
-      <SiteChecklist />
+      <AdminAppConfiguration />
     </AdminInfoPage>
   );
 }

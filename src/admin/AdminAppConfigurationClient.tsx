@@ -14,8 +14,8 @@ import {
   BiPencil,
 } from 'react-icons/bi';
 import { HiOutlineCog } from 'react-icons/hi';
-import Checklist from '@/components/Checklist';
-import { ConfigChecklistStatus } from './config';
+import ChecklistGroup from '@/components/ChecklistGroup';
+import { ConfigChecklistStatus } from '../app-core/config';
 import StatusIcon from '@/components/StatusIcon';
 import { labelForStorage } from '@/services/storage';
 import { HiSparkles } from 'react-icons/hi';
@@ -24,13 +24,13 @@ import ErrorNote from '@/components/ErrorNote';
 import WarningNote from '@/components/WarningNote';
 import { RiSpeedMiniLine } from 'react-icons/ri';
 import Link from 'next/link';
-import SecretGenerator from './SecretGenerator';
+import SecretGenerator from '../app-core/SecretGenerator';
 import CopyButton from '@/components/CopyButton';
 import { PiPaintBrushHousehold } from 'react-icons/pi';
 import { IoMdGrid } from 'react-icons/io';
 import { CgDebug } from 'react-icons/cg';
 
-export default function SiteChecklistClient({
+export default function AdminAppConfigurationClient({
   // Storage
   hasDatabase,
   isPostgresSslEnabled,
@@ -215,7 +215,7 @@ export default function SiteChecklistClient({
   return (
     <div className="max-w-xl w-full">
       <div className="space-y-3 -mt-3">
-        <Checklist
+        <ChecklistGroup
           title="Storage"
           icon={<BiData size={16} />}
         >
@@ -300,8 +300,8 @@ export default function SiteChecklistClient({
                 )}
               </>)}
           </ChecklistRow>
-        </Checklist>
-        <Checklist
+        </ChecklistGroup>
+        <ChecklistGroup
           title="Authentication"
           icon={<BiLockAlt size={16} />}
         >
@@ -331,8 +331,8 @@ export default function SiteChecklistClient({
               'ADMIN_PASSWORD',
             ])}
           </ChecklistRow>
-        </Checklist>
-        <Checklist
+        </ChecklistGroup>
+        <ChecklistGroup
           title="Content"
           icon={<BiPencil size={16} />}
         >
@@ -373,9 +373,9 @@ export default function SiteChecklistClient({
             Store in environment variable (seen in grid sidebar):
             {renderEnvVars(['NEXT_PUBLIC_SITE_ABOUT'])}
           </ChecklistRow>
-        </Checklist>
+        </ChecklistGroup>
         {!simplifiedView && <>
-          <Checklist
+          <ChecklistGroup
             title="AI text generation"
             titleShort="AI"
             icon={<HiSparkles />}
@@ -429,8 +429,8 @@ export default function SiteChecklistClient({
               (default: {'"title, tags, semantic"'}):
               {renderEnvVars(['AI_TEXT_AUTO_GENERATED_FIELDS'])}
             </ChecklistRow>
-          </Checklist>
-          <Checklist
+          </ChecklistGroup>
+          <ChecklistGroup
             title="Performance"
             icon={<RiSpeedMiniLine size={18} />}
             optional
@@ -490,8 +490,8 @@ export default function SiteChecklistClient({
               image blur data being stored and displayed:
               {renderEnvVars(['NEXT_PUBLIC_BLUR_DISABLED'])}
             </ChecklistRow>
-          </Checklist>
-          <Checklist
+          </ChecklistGroup>
+          <ChecklistGroup
             title="Visual"
             icon={<PiPaintBrushHousehold size={19} />}
             optional
@@ -518,8 +518,8 @@ export default function SiteChecklistClient({
               of each photo, and display a surrounding border:
               {renderEnvVars(['NEXT_PUBLIC_MATTE_PHOTOS'])}
             </ChecklistRow>
-          </Checklist>
-          <Checklist
+          </ChecklistGroup>
+          <ChecklistGroup
             title="Display"
             icon={<BiHide size={18} />}
             optional
@@ -578,8 +578,8 @@ export default function SiteChecklistClient({
               Set environment variable to {'"1"'} to hide footer link:
               {renderEnvVars(['NEXT_PUBLIC_HIDE_REPO_LINK'])}
             </ChecklistRow>
-          </Checklist>
-          <Checklist
+          </ChecklistGroup>
+          <ChecklistGroup
             title="Grid"
             icon={<IoMdGrid size={17} />}
             optional
@@ -613,8 +613,8 @@ export default function SiteChecklistClient({
               aspect ratio):
               {renderEnvVars(['NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS'])}
             </ChecklistRow>
-          </Checklist>
-          <Checklist
+          </ChecklistGroup>
+          <ChecklistGroup
             title="Settings"
             icon={<HiOutlineCog size={17} className="translate-y-[0.5px]" />}
             optional
@@ -664,9 +664,9 @@ export default function SiteChecklistClient({
               keep OG image text bottom aligned (default is {'"top"'}):
               {renderEnvVars(['NEXT_PUBLIC_OG_TEXT_ALIGNMENT'])}
             </ChecklistRow>
-          </Checklist>
+          </ChecklistGroup>
           {areInternalToolsEnabled &&
-            <Checklist
+            <ChecklistGroup
               title="Internal"
               icon={<CgDebug size={16} />}
               optional
@@ -698,7 +698,7 @@ export default function SiteChecklistClient({
                 console output for all sql queries:
                 {renderEnvVars(['ADMIN_SQL_DEBUG'])}
               </ChecklistRow>
-            </Checklist>}
+            </ChecklistGroup>}
         </>}
       </div>
       <div className="pl-11 pr-2 sm:pr-11 mt-4 md:mt-7">

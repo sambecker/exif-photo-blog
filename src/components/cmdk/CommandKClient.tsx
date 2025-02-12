@@ -22,7 +22,7 @@ import {
   PATH_SIGN_IN,
   pathForPhoto,
   pathForTag,
-} from '../../site/paths';
+} from '../../app-core/paths';
 import Modal from '../Modal';
 import { clsx } from 'clsx/lite';
 import { useDebounce } from 'use-debounce';
@@ -46,7 +46,7 @@ import { Tags, addHiddenToTags, formatTag } from '@/tag';
 import { FaTag } from 'react-icons/fa';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 import CommandKItem from './CommandKItem';
-import { GRID_HOMEPAGE_ENABLED } from '@/site/config';
+import { GRID_HOMEPAGE_ENABLED } from '@/app-core/config';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 

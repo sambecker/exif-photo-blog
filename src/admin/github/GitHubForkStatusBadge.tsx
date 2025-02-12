@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import GitHubForkStatusBadgeClient from './GitHubForkStatusBadgeClient';
 import GitHubForkStatusBadgeServer from './GitHubForkStatusBadgeServer';
-import { IS_DEVELOPMENT } from '@/site/config';
+import { IS_DEVELOPMENT } from '@/app-core/config';
 
 export default function GitHubForkStatusBadge() {
   return IS_DEVELOPMENT
