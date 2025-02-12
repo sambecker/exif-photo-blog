@@ -6,7 +6,7 @@ import {
   getUniqueTags,
 } from '@/photo/db/query';
 import AdminAppInsightsClient from './AdminAppInsightsClient';
-import { APP_CONFIGURATION, IS_DEVELOPMENT } from '@/app-core/config';
+import { APP_CONFIGURATION } from '@/app-core/config';
 export default async function AdminAppInsights() {
   const [
     { count, dateRange },
@@ -43,7 +43,7 @@ export default async function AdminAppInsights() {
         lensesCount: lenses.length,
         dateRange,
       }}
-      debug={IS_DEVELOPMENT}
+      debug
     />
   );
 }

@@ -64,8 +64,7 @@ export default function AdminAppInsightsClient({
         {renderTitle('Code Observability')}
         {(fork || debug) &&
           <Note icon={<IconGrSync />}>
-            Consider forking this repository in order to
-            receive new features and fixes
+            Consider forking this repository to receive new features and fixes
           </Note>}
         {(forkBehind || debug) &&
           <WarningNote>
