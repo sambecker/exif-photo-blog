@@ -5,7 +5,9 @@ import Note from '@/components/Note';
 import WarningNote from '@/components/WarningNote';
 import { dateRangeForPhotos, PhotoDateRange } from '@/photo';
 import clsx from 'clsx/lite';
+import { ReactNode } from 'react';
 import { HiSparkles } from 'react-icons/hi';
+import { PiWarningBold } from 'react-icons/pi';
 
 type Recommendation =
   'fork' |
@@ -52,15 +54,53 @@ export default function AdminAppInsightsClient({
       {title}
     </div>;
 
+  const renderRow = (icon: ReactNode, children: ReactNode) =>
+    <div className={clsx(
+      'flex items-center gap-4',
+      'px-4 py-2',
+    )}>
+      <div className="flex items-center gap-2 shrink-0">
+        {icon}
+      </div>
+      <div>
+        {children}
+      </div>
+    </div>;
+
   return (
     <div className={clsx(
       'flex flex-col items-center w-full',
       'mt-2 mb-1',
     )}>
       <div className={clsx(
-        'w-full sm:w-[80%]',
+        'w-full sm:w-[80%] lg:w-[60%]',
         'space-y-4 md:space-y-6',
       )}>
+        <div className="component-surface shadow-xs divide-y divide-main">
+          {renderRow(
+            <PiWarningBold
+              size={17}
+              className="translate-x-[0.5px] text-amber-600"
+            />,
+            'This fork is 9 commits behind',
+          )}
+          {renderRow(
+            <PiWarningBold
+              size={17}
+              className="translate-x-[0.5px] text-amber-600"
+            />,
+            'Consider enabling rate limiting to mitigate AI abuse',
+          )}
+          {renderRow(
+            <IconGrSync />,
+            // eslint-disable-next-line max-len
+            'Consider forking this repository to receive new features and fixes',
+          )}
+          {renderRow(
+            <HiSparkles />,
+            'Enable AI text generation in the app configuration',
+          )}
+        </div>
         {renderTitle('Code Observability')}
         {(fork || debug) &&
           <Note icon={<IconGrSync />}>

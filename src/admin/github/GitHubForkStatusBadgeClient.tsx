@@ -59,10 +59,7 @@ export default function GitHubForkStatusBadgeClient({
         classNameForStyle(),
       )}>
         {!label
-          ? <Spinner
-            color="text"
-            className="translate-x-[3px]"
-          />
+          ? <Spinner className="translate-x-[3px] translate-y-[0.5px]" />
           : <BiLogoGithub size={17} />}
         {label ?? 'Checking'}
       </div>

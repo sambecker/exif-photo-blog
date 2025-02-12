@@ -7,6 +7,7 @@ import {
 } from '@/photo/db/query';
 import AdminAppInsightsClient from './AdminAppInsightsClient';
 import { APP_CONFIGURATION } from '@/app-core/config';
+
 export default async function AdminAppInsights() {
   const [
     { count, dateRange },

@@ -124,6 +124,10 @@
   @apply
     border border-gray-200 dark:border-gray-700
 }
+@utility divide-main {
+  @apply
+    divide-gray-200 dark:divide-gray-700
+}
 /* Background */
 @utility bg-main {
   @apply
