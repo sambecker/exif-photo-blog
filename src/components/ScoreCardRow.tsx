@@ -1,29 +1,42 @@
 import { clsx } from 'clsx';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
+import { FaMinus, FaPlus } from 'react-icons/fa6';
 export default function ScoreCardRow({
   icon,
-  children,
-  details,
+  content,
+  additionalContent,
 }: {
   icon: ReactNode
-  children: ReactNode
-  details?: string
+  content: ReactNode
+  additionalContent?: ReactNode
 }) {
+  const [isExpanded, setIsExpanded] = useState(false);
   return (
     <div className={clsx(
-      'flex items-center gap-4',
+      'flex gap-4',
       'px-4 py-2',
     )}>
-      <div className="flex items-center gap-2 shrink-0">
+      <div className="pt-[3px] shrink-0">
         {icon}
       </div>
-      <div>
-        {children}
+      <div className="grow space-y-4">
+        <div className="text-main">
+          {content}
+        </div>
+        {isExpanded &&
+          <div className="text-sm text-medium">
+            {additionalContent}
+          </div>}
       </div>
-      {details &&
-        <span className="text-sm text-gray-500">
-          {details}
-        </span>}
+      {additionalContent && <button
+        type="button"
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="px-[9px] self-start -mr-1"
+      >
+        {isExpanded
+          ? <FaMinus />
+          : <FaPlus />}
+      </button>}
     </div>
   );
 }

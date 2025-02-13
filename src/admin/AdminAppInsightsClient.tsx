@@ -58,7 +58,6 @@ export default function AdminAppInsightsClient({
   return (
     <div className={clsx(
       'flex flex-col items-center w-full',
-      'mt-2 mb-1',
     )}>
       <div className={clsx(
         'w-full sm:w-[80%] lg:w-[60%]',
@@ -72,28 +71,27 @@ export default function AdminAppInsightsClient({
                 className="translate-x-[0.5px] text-amber-600"
               />
             }
-          >
-            This fork is 9 commits behind
-          </ScoreCardRow>
+            content="This fork is 9 commits behind"
+            additionalContent="This fork is 9 commits behind"
+          />
           <ScoreCardRow
-            icon={
-              <PiWarningBold
-                size={17}
-                className="translate-x-[0.5px] text-amber-600"
-              />}
-          >
-            Consider enabling rate limiting to mitigate AI abuse
-          </ScoreCardRow>
+            icon={<PiWarningBold
+              size={17}
+              className="translate-x-[0.5px] text-amber-600"
+            />}
+            content="Consider enabling rate limiting to mitigate AI abuse"
+            // eslint-disable-next-line max-len
+            additionalContent="Consider enabling rate limiting to mitigate AI abuse"
+          />
           <ScoreCardRow
             icon={<IconGrSync />}
-          >
-            Consider forking this repository to receive new features and fixes
-          </ScoreCardRow>
+            // eslint-disable-next-line max-len
+            content="Consider forking this repository to receive new features and fixes"
+          />
           <ScoreCardRow
             icon={<HiSparkles />}
-          >
-            Enable AI text generation in the app configuration
-          </ScoreCardRow>
+            content="Enable AI text generation in the app configuration"
+          />
         </ScoreCard>
         {renderTitle('Code Observability')}
         {(fork || debug) &&
