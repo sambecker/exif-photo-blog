@@ -8,6 +8,7 @@ import WarningNote from '@/components/WarningNote';
 import { dateRangeForPhotos, PhotoDateRange } from '@/photo';
 import clsx from 'clsx/lite';
 import { HiSparkles } from 'react-icons/hi';
+import { MdLightbulbOutline } from 'react-icons/md';
 import { PiWarningBold } from 'react-icons/pi';
 
 type Recommendation =
@@ -72,16 +73,27 @@ export default function AdminAppInsightsClient({
               />
             }
             content="This fork is 9 commits behind"
-            additionalContent="This fork is 9 commits behind"
+            additionalContent={<>
+              Sync your fork to receive new features and fixes
+            </>}
           />
           <ScoreCardRow
             icon={<PiWarningBold
               size={17}
               className="translate-x-[0.5px] text-amber-600"
             />}
-            content="Consider enabling rate limiting to mitigate AI abuse"
+            content="AI enabled without rate limiting"
             // eslint-disable-next-line max-len
-            additionalContent="Consider enabling rate limiting to mitigate AI abuse"
+            additionalContent="Create Vercel KV store and link it to this project in order to enable rate limiting."
+          />
+          <ScoreCardRow
+            icon={<MdLightbulbOutline size={19} />}
+            // eslint-disable-next-line max-len
+            content="You seem to have several portrait photos—consider enabling photo matting to make images appear more consistent"
+            additionalContent={<>
+              Enabled photo matting by setting
+              <code className="text-main">`NEXT_PUBLIC_MATTE_PHOTOS = 1`</code>
+            </>}
           />
           <ScoreCardRow
             icon={<IconGrSync />}
@@ -116,7 +128,7 @@ export default function AdminAppInsightsClient({
           'uppercase',
         )}>
           <div className="tracking-wide">Photos</div>
-          <div className="text-right">{photosCount}</div>
+          <div className="eright">{photosCount}</div>
           <div className="tracking-wide">Tags</div>
           <div className="text-right">{tagsCount}</div>
           <div className="tracking-wide">Cameras</div>
