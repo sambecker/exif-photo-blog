@@ -6,17 +6,21 @@ import type { StorageType } from '@/services/storage';
 import { makeUrlAbsolute, shortenUrl } from '@/utility/url';
 
 // HARD-CODED GLOBAL CONFIGURATION
+
 export const SHOULD_PREFETCH_ALL_LINKS: boolean | undefined = undefined;
 
-// META / SOURCE / DOMAINS
-export const SITE_TITLE =
-  process.env.NEXT_PUBLIC_SITE_TITLE ||
-  'Photo Blog';
+// TEMPLATE META
 
-// SOURCE
-export const TEMPLATE_BASE_OWNER  = 'sambecker';
-export const TEMPLATE_BASE_REPO   = 'exif-photo-blog';
-export const TEMPLATE_BASE_BRANCH = 'main';
+export const TEMPLATE_TITLE = 'Photo Blog';
+export const TEMPLATE_DESCRIPTION = 'Store photos with original camera data';
+
+// SOURCE CODE
+
+export const TEMPLATE_REPO_OWNER  = 'sambecker';
+export const TEMPLATE_REPO_NAME   = 'exif-photo-blog';
+export const TEMPLATE_REPO_BRANCH = 'main';
+// eslint-disable-next-line max-len
+export const TEMPLATE_REPO_URL = `https://github.com/${TEMPLATE_REPO_OWNER}/${TEMPLATE_REPO_NAME}`;
 
 export const VERCEL_GIT_PROVIDER =
   process.env.NEXT_PUBLIC_VERCEL_GIT_PROVIDER;
@@ -59,6 +63,12 @@ export const IS_PREVIEW = VERCEL_ENV === 'preview';
 export const VERCEL_BYPASS_KEY = 'x-vercel-protection-bypass';
 export const VERCEL_BYPASS_SECRET = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
 
+// SITE META
+
+export const SITE_TITLE =
+  process.env.NEXT_PUBLIC_SITE_TITLE ||
+  TEMPLATE_TITLE;
+
 // User-facing domain, potential site title
 const SITE_DOMAIN =
   process.env.NEXT_PUBLIC_SITE_DOMAIN ||
@@ -90,11 +100,14 @@ export const SITE_ABOUT = process.env.NEXT_PUBLIC_SITE_ABOUT;
 export const HAS_DEFINED_SITE_DESCRIPTION =
   Boolean(process.env.NEXT_PUBLIC_SITE_DESCRIPTION);
 
+// STORAGE
+
 // STORAGE: DATABASE
 export const HAS_DATABASE =
   Boolean(process.env.POSTGRES_URL);
 export const POSTGRES_SSL_ENABLED =
   process.env.DISABLE_POSTGRES_SSL === '1' ? false : true;
+
 // STORAGE: VERCEL KV
 export const HAS_VERCEL_KV =
   Boolean(process.env.KV_URL);

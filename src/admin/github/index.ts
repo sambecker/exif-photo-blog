@@ -1,7 +1,7 @@
 import {
-  TEMPLATE_BASE_OWNER,
-  TEMPLATE_BASE_REPO,
-  TEMPLATE_BASE_BRANCH,
+  TEMPLATE_REPO_OWNER,
+  TEMPLATE_REPO_NAME,
+  TEMPLATE_REPO_BRANCH,
 } from '@/app-core/config';
 
 const DEFAULT_BRANCH = 'main';
@@ -23,8 +23,8 @@ interface RepoParams {
 // Website urls
 
 export const getGitHubRepoUrl = ({
-  owner = TEMPLATE_BASE_OWNER,
-  repo = TEMPLATE_BASE_REPO,
+  owner = TEMPLATE_REPO_OWNER,
+  repo = TEMPLATE_REPO_NAME,
 }: RepoParams = {}) =>
   `https://github.com/${owner}/${repo}`;
 
@@ -34,13 +34,13 @@ export const getGitHubCompareUrl = ({
   branch = DEFAULT_BRANCH,
 }: RepoParams = {}) =>
   // eslint-disable-next-line max-len
-  `${getGitHubRepoUrl({ owner, repo })}/compare/${branch}...${TEMPLATE_BASE_OWNER}:${TEMPLATE_BASE_REPO}:${TEMPLATE_BASE_BRANCH}`;
+  `${getGitHubRepoUrl({ owner, repo })}/compare/${branch}...${TEMPLATE_REPO_OWNER}:${TEMPLATE_REPO_NAME}:${TEMPLATE_REPO_BRANCH}`;
 
 // API urls
 
 const getGitHubApiRepoUrl = ({
-  owner = TEMPLATE_BASE_OWNER,
-  repo = TEMPLATE_BASE_REPO,
+  owner = TEMPLATE_REPO_OWNER,
+  repo = TEMPLATE_REPO_NAME,
 }: RepoParams = {}) =>
   `https://api.github.com/repos/${owner}/${repo}`;
 
@@ -56,10 +56,10 @@ const getGitHubApiCompareToRepoUrl = ({
   branch = DEFAULT_BRANCH,
 }: RepoParams = {}) =>
   // eslint-disable-next-line max-len
-  `${getGitHubApiRepoUrl()}/compare/${TEMPLATE_BASE_BRANCH}...${owner}:${repo}:${branch}`;
+  `${getGitHubApiRepoUrl()}/compare/${TEMPLATE_REPO_BRANCH}...${owner}:${repo}:${branch}`;
 
 const getGitHubApiCompareToCommitUrl = ({ commit }: RepoParams = {}) =>
-  `${getGitHubApiRepoUrl()}/compare/${TEMPLATE_BASE_BRANCH}...${commit}`;
+  `${getGitHubApiRepoUrl()}/compare/${TEMPLATE_REPO_BRANCH}...${commit}`;
 
 // Requests
 
@@ -74,7 +74,7 @@ const getIsRepoForkedFromBase = async (params: RepoParams) => {
   const data = await response.json();
   return (
     Boolean(data.fork) &&
-    data.source?.full_name === `${TEMPLATE_BASE_OWNER}/${TEMPLATE_BASE_REPO}`
+    data.source?.full_name === `${TEMPLATE_REPO_OWNER}/${TEMPLATE_REPO_NAME}`
   );
 };
 
@@ -97,8 +97,8 @@ const getGitHubCommitsBehindFromCommit = async (params?: RepoParams) => {
 };
 
 const isRepoBaseRepo = ({ owner, repo }: RepoParams) =>
-  owner?.toLowerCase() === TEMPLATE_BASE_OWNER &&
-  repo?.toLowerCase() === TEMPLATE_BASE_REPO;
+  owner?.toLowerCase() === TEMPLATE_REPO_OWNER &&
+  repo?.toLowerCase() === TEMPLATE_REPO_NAME;
 
 export const getGitHubPublicFork = async (
   params?: RepoParams,
@@ -144,6 +144,7 @@ const getGitHubMeta = async (params: RepoParams) => {
         : 'This fork is up to date.';
 
   return {
+    ...params,
     url,
     isForkedFromBase,
     isBaseRepo,
@@ -160,6 +161,7 @@ export const getGitHubMetaWithFallback = (params: RepoParams) =>
     .catch(e => {
       console.error('Error retrieving GitHub meta', { params, error: e });
       return {
+        ...params,
         url: undefined,
         isForkedFromBase: false,
         isBaseRepo: undefined,

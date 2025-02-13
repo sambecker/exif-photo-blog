@@ -1,6 +1,7 @@
 import { clsx } from 'clsx';
 import { ReactNode, useState } from 'react';
 import { FaMinus, FaPlus } from 'react-icons/fa6';
+
 export default function ScoreCardRow({
   icon,
   content,
@@ -11,16 +12,20 @@ export default function ScoreCardRow({
   additionalContent?: ReactNode
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
+
   return (
     <div className={clsx(
-      'flex gap-4',
-      'px-4 py-2',
+      'flex',
+      'py-2 pr-2',
     )}>
-      <div className="pt-[8px] shrink-0 text-main">
+      <div className={clsx(
+        'flex justify-center pt-[8px] w-11 sm:w-14',
+        'shrink-0 text-icon',
+      )}>
         {icon}
       </div>
       <div className="grow space-y-2 py-1.5 w-full overflow-auto">
-        <div className="text-main">
+        <div className="text-main pr-2">
           {content}
         </div>
         {isExpanded &&
@@ -31,7 +36,7 @@ export default function ScoreCardRow({
       {additionalContent && <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="px-[9px] self-start -mr-1"
+        className="px-[9px] self-start"
       >
         {isExpanded
           ? <FaMinus />

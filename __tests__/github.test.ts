@@ -1,11 +1,11 @@
 import { getGitHubMetaWithFallback, getGitHubPublicFork } from '@/admin/github';
-import { TEMPLATE_BASE_OWNER, TEMPLATE_BASE_REPO } from '@/app-core/config';
+import { TEMPLATE_REPO_OWNER, TEMPLATE_REPO_NAME } from '@/app-core/config';
 
 describe('GitHub', () => {
   it('fetches base repo meta', async () => {
     const meta = await getGitHubMetaWithFallback({
-      owner: TEMPLATE_BASE_OWNER,
-      repo: TEMPLATE_BASE_REPO,
+      owner: TEMPLATE_REPO_OWNER,
+      repo: TEMPLATE_REPO_NAME,
     });
     expect(meta).toBeDefined();
     expect(meta.url).toBeDefined();
