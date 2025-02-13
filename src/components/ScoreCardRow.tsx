@@ -19,7 +19,7 @@ export default function ScoreCardRow({
       <div className="pt-[8px] shrink-0 text-main">
         {icon}
       </div>
-      <div className="grow space-y-2 py-1.5">
+      <div className="grow space-y-2 py-1.5 w-full overflow-auto">
         <div className="text-main">
           {content}
         </div>

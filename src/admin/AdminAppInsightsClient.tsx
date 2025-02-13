@@ -89,7 +89,7 @@ export default function AdminAppInsightsClient({
           <ScoreCardRow
             icon={<MdLightbulbOutline size={19} />}
             // eslint-disable-next-line max-len
-            content="You seem to have several portrait photos—consider enabling photo matting to make images appear more consistent"
+            content="You seem to have several vertical photos—consider enabling matting to make portrait and landscape photos appear more consistent"
             additionalContent={<>
               Enabled photo matting by setting
               <code className="text-main">`NEXT_PUBLIC_MATTE_PHOTOS = 1`</code>
