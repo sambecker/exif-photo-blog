@@ -19,10 +19,8 @@ import { differenceInMinutes } from 'date-fns';
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { FaRegClock } from 'react-icons/fa';
-import { FaInfo } from 'react-icons/fa';
 import { HiOutlineCog } from 'react-icons/hi';
-
-const DEBUG_INDICATOR_SIZE = true;
+import AdminAppInsightsIcon from './AdminAppInsightsIcon';
 
 // Updates considered recent if they occurred in past 5 minutes
 const areTimesRecent = (dates: Date[]) => dates
@@ -92,31 +90,15 @@ export default function AdminNavClient({
                 </LinkWithStatus>)}
             </div>
             <div className="flex gap-3">
-              <span className="inline-flex relative">
-                <LinkWithLoader
-                  href={PATH_ADMIN_INSIGHTS}
-                  className={isPathAdminInsights(pathname)
-                    ? 'font-bold'
-                    : 'text-dim'}
-                  loader={<Spinner className="translate-y-[-1px]" />}
-                >
-                  <span className={clsx(
-                    'size-[16px]',
-                    'inline-flex items-center justify-center',
-                    'border-[1.5px] border-current rounded-[6px]',
-                    'translate-y-[3px]',
-                  )}>
-                    <FaInfo
-                      size={8}
-                      aria-label="App Configuration"
-                    />
-                  </span>
-                </LinkWithLoader>
-                {DEBUG_INDICATOR_SIZE && <span className={clsx(
-                  'absolute top-[0.5px] right-[-2.5px] size-2 rounded-full',
-                  'bg-blue-500',
-                )} />}
-              </span>
+              <LinkWithLoader
+                href={PATH_ADMIN_INSIGHTS}
+                className={isPathAdminInsights(pathname)
+                  ? 'font-bold'
+                  : 'text-dim'}
+                loader={<Spinner className="translate-y-[-1px]" />}
+              >
+                <AdminAppInsightsIcon />
+              </LinkWithLoader>
               <LinkWithLoader
                 href={PATH_ADMIN_CONFIGURATION}
                 className={isPathAdminConfiguration(pathname)
