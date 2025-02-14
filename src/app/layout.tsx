@@ -72,11 +72,8 @@ export default function RootLayout({
     >
       <body>
         <AppStateProvider>
-          <SwrConfigClient>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme={DEFAULT_THEME}
-            >
+          <ThemeProvider attribute="class" defaultTheme={DEFAULT_THEME}>
+            <SwrConfigClient>
               <main className={clsx(
                 'mx-3 mb-3',
                 'lg:mx-6 lg:mb-6',
@@ -96,12 +93,12 @@ export default function RootLayout({
                 <Footer />
               </main>
               <CommandK />
-            </ThemeProvider>
-          </SwrConfigClient>
-          <Analytics debug={false} />
-          <SpeedInsights debug={false}  />
-          <PhotoEscapeHandler />
-          <ToasterWithThemes />
+            </SwrConfigClient>
+            <Analytics debug={false} />
+            <SpeedInsights debug={false}  />
+            <PhotoEscapeHandler />
+            <ToasterWithThemes />
+          </ThemeProvider>
         </AppStateProvider>
       </body>
     </html>

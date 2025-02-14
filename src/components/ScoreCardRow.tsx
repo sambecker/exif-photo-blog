@@ -32,7 +32,7 @@ export default function ScoreCardRow({
           {content}
         </div>
         {isExpanded &&
-          <div className="text-sm text-medium">
+          <div className="text-medium">
             {additionalContent}
           </div>}
       </div>

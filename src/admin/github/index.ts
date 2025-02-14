@@ -22,11 +22,23 @@ interface RepoParams {
 
 // Website urls
 
+export const getGitHubOwnerUrl = ({
+  owner = TEMPLATE_REPO_OWNER,
+}: RepoParams = {}) =>
+  `https://github.com/${owner}`;
+
 export const getGitHubRepoUrl = ({
   owner = TEMPLATE_REPO_OWNER,
   repo = TEMPLATE_REPO_NAME,
 }: RepoParams = {}) =>
-  `https://github.com/${owner}/${repo}`;
+  `${getGitHubOwnerUrl({ owner })}/${repo}`;
+
+export const getGitHubBranchUrl = ({
+  owner = TEMPLATE_REPO_OWNER,
+  repo = TEMPLATE_REPO_NAME,
+  branch = DEFAULT_BRANCH,
+}: RepoParams = {}) =>
+  `${getGitHubRepoUrl({ owner, repo })}/tree/${branch}`;
 
 export const getGitHubCompareUrl = ({
   owner,
@@ -112,7 +124,10 @@ export const getGitHubPublicFork = async (
 };
 
 const getGitHubMeta = async (params: RepoParams) => {
-  const url = getGitHubRepoUrl(params);
+  const urlOwner = getGitHubOwnerUrl(params);
+  const urlRepo = getGitHubRepoUrl(params);
+  const urlBranch = getGitHubBranchUrl(params);
+
   const isBaseRepo = isRepoBaseRepo(params);
 
   const [
@@ -145,7 +160,9 @@ const getGitHubMeta = async (params: RepoParams) => {
 
   return {
     ...params,
-    url,
+    urlOwner,
+    urlRepo,
+    urlBranch,
     isForkedFromBase,
     isBaseRepo,
     behindBy,
@@ -162,7 +179,9 @@ export const getGitHubMetaWithFallback = (params: RepoParams) =>
       console.error('Error retrieving GitHub meta', { params, error: e });
       return {
         ...params,
-        url: undefined,
+        urlOwner: undefined,
+        urlRepo: undefined,
+        urlBranch: undefined,
         isForkedFromBase: false,
         isBaseRepo: undefined,
         behindBy: undefined,

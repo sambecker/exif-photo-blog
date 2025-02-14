@@ -1,7 +1,8 @@
 export type AdminAppInsight =
-  'fork' |
+  'noFork' |
   'forkBehind' |
-  'ai' |
-  'aiRateLimiting' |
+  'noAi' |
+  'noAiRateLimiting' |
   'photoMatting' |
-  'gridFirst';
+  'gridFirst' |
+  'noStaticOptimization';

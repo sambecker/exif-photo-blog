@@ -16,7 +16,7 @@ import {
 import { MdLightbulbOutline } from 'react-icons/md';
 import { PiWarningBold } from 'react-icons/pi';
 import { TbCone } from 'react-icons/tb';
-import { getGitHubMetaWithFallback } from './github';
+import { getGitHubMetaWithFallback } from '../github';
 import { BiGitBranch, BiGitCommit, BiLogoGithub } from 'react-icons/bi';
 import {
   TEMPLATE_REPO_BRANCH,
@@ -24,13 +24,17 @@ import {
   TEMPLATE_REPO_NAME,
   VERCEL_GIT_COMMIT_SHA_SHORT,
 } from '@/app-core/config';
-import { AdminAppInsight } from './insights';
+import { AdminAppInsight } from '.';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
 
 export default function AdminAppInsightsClient({
   codeMeta,
+  recommendations: {
+    noAi,
+    noAiRateLimiting,
+  },
   photoStats: {
     photosCount,
     photosCountHidden,
@@ -68,20 +72,33 @@ export default function AdminAppInsightsClient({
               className="flex flex-wrap gap-x-4 gap-y-1 overflow-auto"
             >
               <div className="flex items-center gap-1 *:whitespace-nowrap">
-                <div>{codeMeta?.owner ?? TEMPLATE_REPO_OWNER}</div>
+                <a
+                  href={codeMeta?.urlOwner}
+                  target="blank"
+                >
+                  {codeMeta?.owner ?? TEMPLATE_REPO_OWNER}
+                </a>
                 <div>/</div>
-                <div>{codeMeta?.repo ?? TEMPLATE_REPO_NAME}</div>
+                <a
+                  href={codeMeta?.urlRepo}
+                  target="blank"
+                >
+                  {codeMeta?.repo ?? TEMPLATE_REPO_NAME}
+                </a>
               </div>
               <div className="flex items-center gap-1 min-w-0">
                 <div><BiGitBranch size={17} /></div>
-                <div className="truncate">
+                <a
+                  className="truncate"
+                  href={codeMeta?.urlBranch}
+                  target="blank"
+                >
                   {codeMeta?.branch ?? TEMPLATE_REPO_BRANCH}
-                </div>
+                </a>
               </div>
             </div>}
           />
           <ScoreCardRow
-            // icon={<BiLogoGithub size={17} />}
             icon={<BiGitCommit size={18} className="translate-y-[0px]" />}
             content={<div className="flex items-center gap-2">
               <div className="text-medium">
@@ -106,7 +123,7 @@ export default function AdminAppInsightsClient({
         </ScoreCard>
       </>}
       <ScoreCard title="Template recommendations">
-        <ScoreCardRow
+        {(noAiRateLimiting || debug) && <ScoreCardRow
           icon={<PiWarningBold
             size={17}
             className="translate-x-[0.5px] text-amber-600"
@@ -114,7 +131,13 @@ export default function AdminAppInsightsClient({
           content="AI enabled without rate limiting"
           // eslint-disable-next-line max-len
           additionalContent="Create Vercel KV store and link it to this project in order to enable rate limiting."
-        />
+        />}
+        {(noAi || debug) && <ScoreCardRow
+          icon={<MdLightbulbOutline size={19} />}
+          content="Enable AI text generation to improve photo descriptions"
+          // eslint-disable-next-line max-len
+          additionalContent="Create Vercel KV store and link it to this project in order to enable rate limiting."
+        />}
         <ScoreCardRow
           icon={<MdLightbulbOutline size={19} />}
           // eslint-disable-next-line max-len
