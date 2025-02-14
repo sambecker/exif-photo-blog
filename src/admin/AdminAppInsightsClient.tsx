@@ -5,7 +5,6 @@ import ScoreCard from '@/components/ScoreCard';
 import ScoreCardRow from '@/components/ScoreCardRow';
 import { dateRangeForPhotos, PhotoDateRange } from '@/photo';
 import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
-import clsx from 'clsx/lite';
 import { FaCamera } from 'react-icons/fa';
 import { FaTag } from 'react-icons/fa';
 import { FaRegCalendar } from 'react-icons/fa6';
@@ -66,147 +65,130 @@ export default function AdminAppInsightsClient({
 
   const { descriptionWithSpaces } = dateRangeForPhotos(undefined, dateRange);
 
-  const renderTitle = (title: string) =>
-    <div className={clsx(
-      'uppercase font-medium tracking-wider text-[0.8rem]',
-      'text-medium',
-    )}>
-      {title}
-    </div>;
-
   return (
-    <div className={clsx(
-      'flex flex-col items-center w-full',
-    )}>
-      <div className={clsx(
-        'w-full sm:w-[80%] lg:w-[60%]',
-        'space-y-4 md:space-y-6',
-      )}>
-        {(codeMeta?.isBaseRepo || codeMeta?.isForkedFromBase || debug) && <>
-          {renderTitle('Build details')}
-          <ScoreCard>
-            <ScoreCardRow
-              icon={<BiLogoGithub size={17} />}
-              content={<div className="flex items-center gap-4">
-                <div className="flex items-center gap-1">
-                  <div>{codeMeta?.owner ?? TEMPLATE_REPO_OWNER}</div>
-                  <div>/</div>
-                  <div>{codeMeta?.repo ?? TEMPLATE_REPO_NAME}</div>
-                </div>
-                <div className="flex items-center gap-1 min-w-0">
-                  <div><BiGitBranch size={17} /></div>
-                  <div className="truncate">
-                    {codeMeta?.branch ?? TEMPLATE_REPO_BRANCH}
-                  </div>
-                </div>
-              </div>}
-            />
-            {(codeMeta?.behindBy || debug) &&
-              <ScoreCardRow
-                icon={<HiOutlineRefresh
-                  size={17}
-                  className="translate-x-[0.5px] text-amber-600"
-                />}
-                // eslint-disable-next-line max-len
-                content={`This fork is ${codeMeta?.behindBy ?? 9} commits behind`}
-                additionalContent={<>
-                  Sync your fork to receive new features and fixes
-                </>}
-              />}
-            <ScoreCardRow
-              // icon={<BiLogoGithub size={17} />}
-              icon={<BiGitCommit size={18} className="translate-y-[0px]" />}
-              content={<div className="flex items-center gap-2">
-                <div className="text-medium">
-                  {VERCEL_GIT_COMMIT_SHA_SHORT ?? DEBUG_COMMIT_SHA}
-                </div>
+    <div className="space-y-6 md:space-y-8">
+      {(codeMeta?.isBaseRepo || codeMeta?.isForkedFromBase || debug) && <>
+        <ScoreCard title="Build details">
+          <ScoreCardRow
+            icon={<BiLogoGithub size={17} />}
+            content={<div
+              className="flex flex-wrap gap-x-4 gap-y-1 overflow-auto"
+            >
+              <div className="flex items-center gap-1 *:whitespace-nowrap">
+                <div>{codeMeta?.owner ?? TEMPLATE_REPO_OWNER}</div>
+                <div>/</div>
+                <div>{codeMeta?.repo ?? TEMPLATE_REPO_NAME}</div>
+              </div>
+              <div className="flex items-center gap-1 min-w-0">
+                <div><BiGitBranch size={17} /></div>
                 <div className="truncate">
-                  {codeMeta?.commit ?? DEBUG_COMMIT_MESSAGE}
+                  {codeMeta?.branch ?? TEMPLATE_REPO_BRANCH}
                 </div>
-              </div>}
-            />
-          </ScoreCard>
-        </>}
-        {renderTitle('Template recommendations')}
-        <ScoreCard>
-          <ScoreCardRow
-            icon={<PiWarningBold
-              size={17}
-              className="translate-x-[0.5px] text-amber-600"
-            />}
-            content="AI enabled without rate limiting"
-            // eslint-disable-next-line max-len
-            additionalContent="Create Vercel KV store and link it to this project in order to enable rate limiting."
+              </div>
+            </div>}
           />
           <ScoreCardRow
-            icon={<MdLightbulbOutline size={19} />}
-            // eslint-disable-next-line max-len
-            content="You seem to have several vertical photos—consider enabling matting to make portrait and landscape photos appear more consistent"
-            additionalContent={<>
-              Enabled photo matting by setting
-              <code className="text-main">`NEXT_PUBLIC_MATTE_PHOTOS = 1`</code>
-            </>}
+            // icon={<BiLogoGithub size={17} />}
+            icon={<BiGitCommit size={18} className="translate-y-[0px]" />}
+            content={<div className="flex items-center gap-2">
+              <div className="text-medium">
+                {VERCEL_GIT_COMMIT_SHA_SHORT ?? DEBUG_COMMIT_SHA}
+              </div>
+              <div className="truncate">
+                {codeMeta?.commit ?? DEBUG_COMMIT_MESSAGE}
+              </div>
+            </div>}
           />
-          <ScoreCardRow
-            icon={<IconGrSync />}
-            // eslint-disable-next-line max-len
-            content="Consider forking this repository to receive new features and fixes"
-          />
-          <ScoreCardRow
-            icon={<HiSparkles />}
-            content="Enable AI text generation in the app configuration"
-          />
-        </ScoreCard>
-        {renderTitle('Library Stats')}
-        <ScoreCard className="uppercase">
-          <ScoreCardRow
-            icon={<HiOutlinePhotograph
-              size={17}
-              className="translate-y-[0.5px]"
-            />}
-            content={<>
-              {photosCount} photos
-              {photosCountHidden > 0 &&
-                ` (${photosCountHidden} hidden)`}
-            </>}
-          />
-          <ScoreCardRow
-            icon={<FaTag
-              size={12}
-              className="translate-y-[3px]"
-            />}
-            content={`${tagsCount} tags`}
-          />
-          <ScoreCardRow
-            icon={<FaCamera
-              size={13}
-              className="translate-y-[2px]"
-            />}
-            content={`${camerasCount} cameras`}
-          />
-          {filmSimulationsCount &&
+          {(codeMeta?.behindBy || debug) &&
             <ScoreCardRow
-              icon={<span className="inline-flex w-3">
-                <PhotoFilmSimulationIcon
-                  className="shrink-0 translate-x-[-1px] translate-y-[-0.5px]"
-                  height={18}
-                />
-              </span>}
-              content={`${filmSimulationsCount} film simulations`}
+              icon={<HiOutlineRefresh
+                size={17}
+                className="translate-x-[0.5px] text-blue-500"
+              />}
+              content={`This fork is ${codeMeta?.behindBy ?? 9} commits behind`}
+              additionalContent={<>
+                Sync your fork to receive new features and fixes
+              </>}
             />}
-          <ScoreCardRow
-            icon={<TbCone className="rotate-[270deg] translate-x-[-2px]" />}
-            content={`${lensesCount} lenses`}
-          />
-          <ScoreCardRow
-            icon={<FaRegCalendar
-              size={13}
-              className="translate-y-[1.5px] translate-x-[-2px]"
-            />}
-            content={descriptionWithSpaces}
-          />
         </ScoreCard>
-      </div>
+      </>}
+      <ScoreCard title="Template recommendations">
+        <ScoreCardRow
+          icon={<PiWarningBold
+            size={17}
+            className="translate-x-[0.5px] text-amber-600"
+          />}
+          content="AI enabled without rate limiting"
+          // eslint-disable-next-line max-len
+          additionalContent="Create Vercel KV store and link it to this project in order to enable rate limiting."
+        />
+        <ScoreCardRow
+          icon={<MdLightbulbOutline size={19} />}
+          // eslint-disable-next-line max-len
+          content="You seem to have several vertical photos—consider enabling matting to make portrait and landscape photos appear more consistent"
+          additionalContent={<>
+            Enabled photo matting by setting
+            <code className="text-main">`NEXT_PUBLIC_MATTE_PHOTOS = 1`</code>
+          </>}
+        />
+        <ScoreCardRow
+          icon={<IconGrSync />}
+          // eslint-disable-next-line max-len
+          content="Consider forking this repository to receive new features and fixes"
+        />
+        <ScoreCardRow
+          icon={<HiSparkles />}
+          content="Enable AI text generation in the app configuration"
+        />
+      </ScoreCard>
+      <ScoreCard title="Library Stats">
+        <ScoreCardRow
+          icon={<HiOutlinePhotograph
+            size={17}
+            className="translate-y-[0.5px]"
+          />}
+          content={<>
+            {photosCount} photos
+            {photosCountHidden > 0 &&
+              ` (${photosCountHidden} hidden)`}
+          </>}
+        />
+        <ScoreCardRow
+          icon={<FaTag
+            size={12}
+            className="translate-y-[3px]"
+          />}
+          content={`${tagsCount} tags`}
+        />
+        <ScoreCardRow
+          icon={<FaCamera
+            size={13}
+            className="translate-y-[2px]"
+          />}
+          content={`${camerasCount} cameras`}
+        />
+        {filmSimulationsCount &&
+          <ScoreCardRow
+            icon={<span className="inline-flex w-3">
+              <PhotoFilmSimulationIcon
+                className="shrink-0 translate-x-[-1px] translate-y-[-0.5px]"
+                height={18}
+              />
+            </span>}
+            content={`${filmSimulationsCount} film simulations`}
+          />}
+        <ScoreCardRow
+          icon={<TbCone className="rotate-[270deg] translate-x-[-2px]" />}
+          content={`${lensesCount} lenses`}
+        />
+        <ScoreCardRow
+          icon={<FaRegCalendar
+            size={13}
+            className="translate-y-[1.5px] translate-x-[-2px]"
+          />}
+          content={descriptionWithSpaces}
+        />
+      </ScoreCard>
     </div>
   );
 }

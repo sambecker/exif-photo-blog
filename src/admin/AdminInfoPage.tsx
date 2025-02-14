@@ -22,7 +22,9 @@ export default function AdminInfoPage({
             {accessory}
           </div>
           <Container spaceChildren={false}>
-            {children}
+            <div className="max-w-xl w-full">
+              {children}
+            </div>
           </Container>
         </div>}
     />

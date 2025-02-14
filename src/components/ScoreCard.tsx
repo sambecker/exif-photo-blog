@@ -2,18 +2,30 @@ import clsx from 'clsx/lite';
 import { ReactNode } from 'react';
 
 export default function ScoreCard({
+  title,
   children,
   className,
 }: {
+  title?: string,
   children: ReactNode,
   className?: string,
 }) {
   return (
-    <div className={clsx(
-      'component-surface shadow-xs divide-y divide-main',
-      className,
-    )}>
-      {children}
+    <div className="space-y-3">
+      {title &&
+        <div className={clsx(
+          'pl-4',
+          'uppercase font-medium tracking-wider text-[0.8rem]',
+          'text-medium',
+        )}>
+          {title}
+        </div>}
+      <div className={clsx(
+        'component-surface shadow-xs divide-y divide-medium',
+        className,
+      )}>
+        {children}
+      </div>
     </div>
   );
 }

@@ -213,7 +213,7 @@ export default function AdminAppConfigurationClient({
     </WarningNote>;
 
   return (
-    <div className="max-w-xl w-full">
+    <>
       <div className="space-y-3 -mt-3">
         <ChecklistGroup
           title="Storage"
@@ -732,6 +732,6 @@ export default function AdminAppConfigurationClient({
             </div>
           </div>}
       </div>
-    </div>
+    </>
   );
 }

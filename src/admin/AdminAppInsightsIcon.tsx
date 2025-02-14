@@ -2,9 +2,9 @@ import clsx from 'clsx/lite';
 import { FaInfo } from 'react-icons/fa';
 
 export default function AdminAppInsightsIcon({
-  notification = true,
+  indicator = 'blue',
 }: {
-  notification?: boolean,
+  indicator?: 'blue' | 'yellow'
 }) {
   return (
     <span className="inline-flex relative">
@@ -19,11 +19,15 @@ export default function AdminAppInsightsIcon({
           aria-label="App Configuration"
         />
       </span>
-      {notification && <span className={clsx(
+      {indicator && <span className={clsx(
         'absolute',
         'top-[0.5px] right-[-2.5px]',
         'size-2 rounded-full',
-        'bg-blue-500',
+        indicator === 'yellow'
+          ? 'bg-amber-500'
+          : indicator === 'blue'
+            ? 'bg-blue-500'
+            : undefined,
       )} />}
     </span>
   );
