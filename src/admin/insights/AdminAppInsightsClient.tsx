@@ -26,6 +26,7 @@ import {
   VERCEL_GIT_COMMIT_MESSAGE,
 } from '@/app-core/config';
 import { AdminAppInsight } from '.';
+import EnvVar from '@/components/EnvVar';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
@@ -145,7 +146,7 @@ export default function AdminAppInsightsClient({
           content="You seem to have several vertical photos—consider enabling matting to make portrait and landscape photos appear more consistent"
           additionalContent={<>
             Enabled photo matting by setting
-            <code className="text-main">`NEXT_PUBLIC_MATTE_PHOTOS = 1`</code>
+            <EnvVar variable="NEXT_PUBLIC_MATTE_PHOTOS" value="1" />
           </>}
         />
         <ScoreCardRow

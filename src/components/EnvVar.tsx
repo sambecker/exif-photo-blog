@@ -3,9 +3,11 @@ import CopyButton from './CopyButton';
 
 export default function EnvVar({
   variable,
+  value,
   includeCopyButton = true,
 }: {
   variable: string,
+  value?: string,
   includeCopyButton?: boolean,
 }) {
   return (
@@ -22,7 +24,7 @@ export default function EnvVar({
           'rounded-[4px]',
           'bg-gray-100 dark:bg-gray-800',
         )}>
-          {variable}
+          {variable}{value && ` = ${value}`}
         </span>
         {includeCopyButton &&
           <CopyButton label={variable} text={variable} subtle />}
