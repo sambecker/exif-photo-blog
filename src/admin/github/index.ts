@@ -179,6 +179,7 @@ export const getGitHubMetaWithFallback = (params: RepoParams) =>
       console.error('Error retrieving GitHub meta', { params, error: e });
       return {
         ...params,
+        commitMessage: undefined,
         urlOwner: undefined,
         urlRepo: undefined,
         urlBranch: undefined,

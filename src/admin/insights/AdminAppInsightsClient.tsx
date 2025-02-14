@@ -23,6 +23,7 @@ import {
   TEMPLATE_REPO_OWNER,
   TEMPLATE_REPO_NAME,
   VERCEL_GIT_COMMIT_SHA_SHORT,
+  VERCEL_GIT_COMMIT_MESSAGE,
 } from '@/app-core/config';
 import { AdminAppInsight } from '.';
 
@@ -105,7 +106,7 @@ export default function AdminAppInsightsClient({
                 {VERCEL_GIT_COMMIT_SHA_SHORT ?? DEBUG_COMMIT_SHA}
               </div>
               <div className="truncate">
-                {codeMeta?.commit ?? DEBUG_COMMIT_MESSAGE}
+                {VERCEL_GIT_COMMIT_MESSAGE ?? DEBUG_COMMIT_MESSAGE}
               </div>
             </div>}
           />
