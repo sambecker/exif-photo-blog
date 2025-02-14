@@ -5,7 +5,7 @@ import {
   VERCEL_GIT_REPO_SLUG,
   VERCEL_GIT_COMMIT_SHA,
 } from '@/app-core/config';
-import { getGitHubMetaWithFallback, getGitHubRepoUrl } from '.';
+import { getGitHubMetaWithFallback, getGitHubUrlRepo } from '.';
 
 export default async function GitHubForkStatusBadgeServer() {
   const owner = VERCEL_GIT_REPO_OWNER;
@@ -24,7 +24,7 @@ export default async function GitHubForkStatusBadgeServer() {
 
   const repoLink = (text: string) =>
     <a
-      href={getGitHubRepoUrl({ owner, repo })}
+      href={getGitHubUrlRepo({ owner, repo })}
       target="_blank"
       className="underline hover:no-underline hover:text-main"
     >

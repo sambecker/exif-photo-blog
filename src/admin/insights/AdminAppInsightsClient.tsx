@@ -134,14 +134,18 @@ export default function AdminAppInsightsClient({
           />
           <ScoreCardRow
             icon={<BiGitCommit size={18} className="translate-y-[0px]" />}
-            content={<div className="flex items-center gap-2">
-              <div className="text-medium">
+            content={<a
+              href={codeMeta?.urlCommit}
+              target="blank"
+              className="flex items-center gap-2"
+            >
+              <span className="text-medium">
                 {VERCEL_GIT_COMMIT_SHA_SHORT ?? DEBUG_COMMIT_SHA}
-              </div>
-              <div className="truncate">
+              </span>
+              <span className="truncate">
                 {VERCEL_GIT_COMMIT_MESSAGE ?? DEBUG_COMMIT_MESSAGE}
-              </div>
-            </div>}
+              </span>
+            </a>}
           />
         </ScoreCard>
       </>}

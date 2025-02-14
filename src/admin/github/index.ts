@@ -22,31 +22,40 @@ interface RepoParams {
 
 // Website urls
 
-export const getGitHubOwnerUrl = ({
+export const getGitHubUrlOwner = ({
   owner = TEMPLATE_REPO_OWNER,
 }: RepoParams = {}) =>
   `https://github.com/${owner}`;
 
-export const getGitHubRepoUrl = ({
+export const getGitHubUrlRepo = ({
   owner = TEMPLATE_REPO_OWNER,
   repo = TEMPLATE_REPO_NAME,
 }: RepoParams = {}) =>
-  `${getGitHubOwnerUrl({ owner })}/${repo}`;
+  `${getGitHubUrlOwner({ owner })}/${repo}`;
 
-export const getGitHubBranchUrl = ({
+export const getGitHubUrlBranch = ({
   owner = TEMPLATE_REPO_OWNER,
   repo = TEMPLATE_REPO_NAME,
   branch = DEFAULT_BRANCH,
 }: RepoParams = {}) =>
-  `${getGitHubRepoUrl({ owner, repo })}/tree/${branch}`;
+  `${getGitHubUrlRepo({ owner, repo })}/tree/${branch}`;
 
-export const getGitHubCompareUrl = ({
+export const getGitHubUrlCommit = ({
+  owner = TEMPLATE_REPO_OWNER,
+  repo = TEMPLATE_REPO_NAME,
+  commit,
+}: RepoParams = {}) =>
+  commit
+    ? `${getGitHubUrlRepo({ owner, repo })}/commit/${commit}`
+    : undefined;
+
+export const getGitHubUrlCompare = ({
   owner,
   repo,
   branch = DEFAULT_BRANCH,
 }: RepoParams = {}) =>
   // eslint-disable-next-line max-len
-  `${getGitHubRepoUrl({ owner, repo })}/compare/${branch}...${TEMPLATE_REPO_OWNER}:${TEMPLATE_REPO_NAME}:${TEMPLATE_REPO_BRANCH}`;
+  `${getGitHubUrlRepo({ owner, repo })}/compare/${branch}...${TEMPLATE_REPO_OWNER}:${TEMPLATE_REPO_NAME}:${TEMPLATE_REPO_BRANCH}`;
 
 // API urls
 
@@ -124,9 +133,10 @@ export const getGitHubPublicFork = async (
 };
 
 const getGitHubMeta = async (params: RepoParams) => {
-  const urlOwner = getGitHubOwnerUrl(params);
-  const urlRepo = getGitHubRepoUrl(params);
-  const urlBranch = getGitHubBranchUrl(params);
+  const urlOwner = getGitHubUrlOwner(params);
+  const urlRepo = getGitHubUrlRepo(params);
+  const urlBranch = getGitHubUrlBranch(params);
+  const urlCommit = getGitHubUrlCommit(params);
 
   const isBaseRepo = isRepoBaseRepo(params);
 
@@ -163,6 +173,7 @@ const getGitHubMeta = async (params: RepoParams) => {
     urlOwner,
     urlRepo,
     urlBranch,
+    urlCommit,
     isForkedFromBase,
     isBaseRepo,
     behindBy,
@@ -183,6 +194,7 @@ export const getGitHubMetaWithFallback = (params: RepoParams) =>
         urlOwner: undefined,
         urlRepo: undefined,
         urlBranch: undefined,
+        urlCommit: undefined,
         isForkedFromBase: false,
         isBaseRepo: undefined,
         behindBy: undefined,
