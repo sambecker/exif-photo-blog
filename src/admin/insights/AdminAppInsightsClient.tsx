@@ -79,7 +79,7 @@ export default function AdminAppInsightsClient({
                 This fork is
                 {' '}
                 <span className={clsx(
-                  'text-blue-600 bg-blue-100/70',
+                  'text-blue-600 bg-blue-100/60',
                   'dark:text-blue-400 dark:bg-blue-900/50',
                   'px-1.5 pt-[1px] pb-0.5 rounded-md',
                 )}>
