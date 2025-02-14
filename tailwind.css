@@ -304,8 +304,7 @@
   }
   a, .link {
     @apply
-      hover:text-gray-600
-      hover:dark:text-gray-400
+      hover:text-medium
   }
 }
 

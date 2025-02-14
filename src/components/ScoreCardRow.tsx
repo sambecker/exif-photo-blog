@@ -1,6 +1,6 @@
-import { clsx } from 'clsx';
+import { clsx } from 'clsx/lite';
 import { ReactNode, useState } from 'react';
-import { FaMinus, FaPlus } from 'react-icons/fa6';
+import { LuChevronsDownUp, LuChevronsUpDown } from 'react-icons/lu';
 
 export default function ScoreCardRow({
   icon,
@@ -39,11 +39,15 @@ export default function ScoreCardRow({
       {additionalContent && <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="px-[9px] self-start"
+        className={clsx(
+          'flex items-center justify-center',
+          'w-9 h-8',
+          '*:shrink-0',
+        )}
       >
         {isExpanded
-          ? <FaMinus />
-          : <FaPlus />}
+          ? <LuChevronsDownUp size={16} />
+          : <LuChevronsUpDown size={16} />}
       </button>}
     </div>
   );

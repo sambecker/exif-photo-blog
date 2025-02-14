@@ -10,7 +10,6 @@ import { FaTag } from 'react-icons/fa';
 import { FaRegCalendar } from 'react-icons/fa6';
 import {
   HiOutlinePhotograph,
-  HiOutlineRefresh,
   HiSparkles,
 } from 'react-icons/hi';
 import { MdLightbulbOutline } from 'react-icons/md';
@@ -27,6 +26,8 @@ import {
 } from '@/app-core/config';
 import { AdminAppInsight } from '.';
 import EnvVar from '@/components/EnvVar';
+import { IoSyncCircle } from 'react-icons/io5';
+import clsx from 'clsx/lite';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
@@ -68,6 +69,37 @@ export default function AdminAppInsightsClient({
     <div className="space-y-6 md:space-y-8">
       {(codeMeta?.isBaseRepo || codeMeta?.isForkedFromBase || debug) && <>
         <ScoreCard title="Build details">
+          {(codeMeta?.behindBy || debug) &&
+            <ScoreCardRow
+              icon={<IoSyncCircle
+                size={18}
+                className="text-blue-500"
+              />}
+              content={<>
+                This fork is
+                {' '}
+                <span className={clsx(
+                  'text-blue-600 bg-blue-100/70',
+                  'dark:text-blue-400 dark:bg-blue-900/50',
+                  'px-1.5 pt-[1px] pb-0.5 rounded-md',
+                )}>
+                  {codeMeta?.behindBy ?? 9} commits
+                </span>
+                {' '}
+                behind
+              </>}
+              additionalContent={<>
+                <a
+                  href={codeMeta?.urlRepo}
+                  target="blank"
+                  className="underline"
+                >
+                  Sync your fork
+                </a>
+                {' '}
+                to receive the latest fixes and features
+              </>}
+            />}
           <ScoreCardRow
             icon={<BiLogoGithub size={17} />}
             content={<div
@@ -111,17 +143,6 @@ export default function AdminAppInsightsClient({
               </div>
             </div>}
           />
-          {(codeMeta?.behindBy || debug) &&
-            <ScoreCardRow
-              icon={<HiOutlineRefresh
-                size={17}
-                className="translate-x-[0.5px] text-blue-500"
-              />}
-              content={`This fork is ${codeMeta?.behindBy ?? 9} commits behind`}
-              additionalContent={<>
-                Sync your fork to receive new features and fixes
-              </>}
-            />}
         </ScoreCard>
       </>}
       <ScoreCard title="Template recommendations">
@@ -132,7 +153,7 @@ export default function AdminAppInsightsClient({
           />}
           content="AI enabled without rate limiting"
           // eslint-disable-next-line max-len
-          additionalContent="Create Vercel KV store and link it to this project in order to enable rate limiting."
+          additionalContent="Create Vercel KV store and link o this project in order to enable rate limiting."
         />}
         {(noAi || debug) && <ScoreCardRow
           icon={<MdLightbulbOutline size={19} />}

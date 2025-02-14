@@ -20,8 +20,8 @@ export default function EnvVar({
       <span className="inline-flex items-center gap-1">
         <span className={clsx(
           'text-[11px] font-medium tracking-wider',
-          'px-1 py-[0.5px]',
-          'rounded-[4px]',
+          'px-1.5 py-[0.5px]',
+          'rounded-md',
           'bg-gray-100 dark:bg-gray-800',
         )}>
           {variable}{value && ` = ${value}`}
