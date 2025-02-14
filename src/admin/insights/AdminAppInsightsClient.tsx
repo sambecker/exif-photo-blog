@@ -133,7 +133,10 @@ export default function AdminAppInsightsClient({
             </div>}
           />
           <ScoreCardRow
-            icon={<BiGitCommit size={18} className="translate-y-[0px]" />}
+            icon={<BiGitCommit
+              size={18}
+              className="translate-y-[-0.5px]"
+            />}
             content={<a
               href={codeMeta?.urlCommit}
               target="blank"
