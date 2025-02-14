@@ -1,4 +1,4 @@
-import AdminAppInsights from '@/admin/AdminAppInsights';
+import AdminAppInsights from '@/admin/insights/AdminAppInsights';
 import AdminInfoPage from '@/admin/AdminInfoPage';
 import GitHubForkStatusBadge from '@/admin/github/GitHubForkStatusBadge';
 import {

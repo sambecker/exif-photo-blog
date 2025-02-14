@@ -14,7 +14,7 @@ import {
   VERCEL_GIT_REPO_OWNER,
   VERCEL_GIT_REPO_SLUG,
 } from '@/app-core/config';
-import { getGitHubMetaWithFallback } from './github';
+import { getGitHubMetaWithFallback } from '../github';
 
 const owner   = VERCEL_GIT_REPO_OWNER;
 const repo    = VERCEL_GIT_REPO_SLUG;

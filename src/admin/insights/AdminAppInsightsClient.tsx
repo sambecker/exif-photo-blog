@@ -24,17 +24,10 @@ import {
   TEMPLATE_REPO_NAME,
   VERCEL_GIT_COMMIT_SHA_SHORT,
 } from '@/app-core/config';
+import { AdminAppInsight } from './insights';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
-
-type Recommendation =
-  'fork' |
-  'forkBehind' |
-  'ai' |
-  'aiRateLimiting' |
-  'photoMatting' |
-  'gridFirst';
 
 export default function AdminAppInsightsClient({
   codeMeta,
@@ -50,7 +43,7 @@ export default function AdminAppInsightsClient({
   debug,
 }: {
   codeMeta?: Awaited<ReturnType<typeof getGitHubMetaWithFallback>>
-  recommendations: Record<Recommendation, boolean>
+  recommendations: Record<AdminAppInsight, boolean>
   photoStats: {
     photosCount: number
     photosCountHidden: number

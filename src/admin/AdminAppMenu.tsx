@@ -10,7 +10,7 @@ import { useAppState } from '@/state/AppState';
 import { BiCog } from 'react-icons/bi';
 import { ImCheckboxUnchecked } from 'react-icons/im';
 import { IoCloseSharp } from 'react-icons/io5';
-import AdminAppInsightsIcon from './AdminAppInsightsIcon';
+import AdminAppInsightsIcon from './insights/AdminAppInsightsIcon';
 
 export default function AdminAppMenu() {
   const {

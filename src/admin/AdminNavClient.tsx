@@ -20,7 +20,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { FaRegClock } from 'react-icons/fa';
 import { HiOutlineCog } from 'react-icons/hi';
-import AdminAppInsightsIcon from './AdminAppInsightsIcon';
+import AdminAppInsightsIcon from './insights/AdminAppInsightsIcon';
 
 // Updates considered recent if they occurred in past 5 minutes
 const areTimesRecent = (dates: Date[]) => dates
