@@ -14,7 +14,6 @@ export default async function GitHubForkStatusBadgeServer() {
   const commit = VERCEL_GIT_COMMIT_SHA;
 
   const {
-    url,
     isForkedFromBase,
     isBaseRepo,
     isBehind,
@@ -44,7 +43,6 @@ export default async function GitHubForkStatusBadgeServer() {
 
   return isForkedFromBase || isBaseRepo
     ? <GitHubForkStatusBadgeClient {...{
-      url,
       label,
       tooltip: <>
         {description}
