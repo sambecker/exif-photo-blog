@@ -20,6 +20,8 @@ import {
 } from '@/app-core/config';
 import { getGitHubMetaWithFallback } from '../github';
 
+const BASIC_PHOTO_INSTALLATION_COUNT = 32;
+
 const owner   = VERCEL_GIT_REPO_OWNER;
 const repo    = VERCEL_GIT_REPO_SLUG;
 const branch  = VERCEL_GIT_BRANCH;
@@ -67,7 +69,10 @@ export default async function AdminAppInsights() {
         noAi: !isAiTextGenerationEnabled,
         noAiRateLimiting: isAiTextGenerationEnabled && !hasVercelBlobStorage,
         photoMatting: photosCountPortrait > 0 && !MATTE_PHOTOS,
-        gridFirst: photosCount > 32 && !GRID_HOMEPAGE_ENABLED,
+        gridFirst: (
+          photosCount >= BASIC_PHOTO_INSTALLATION_COUNT &&
+          !GRID_HOMEPAGE_ENABLED
+        ),
         noStaticOptimization: !HAS_STATIC_OPTIMIZATION,
       }}
       photoStats={{

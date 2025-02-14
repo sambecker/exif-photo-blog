@@ -25,10 +25,10 @@ import WarningNote from '@/components/WarningNote';
 import { RiSpeedMiniLine } from 'react-icons/ri';
 import Link from 'next/link';
 import SecretGenerator from '../app-core/SecretGenerator';
-import CopyButton from '@/components/CopyButton';
 import { PiPaintBrushHousehold } from 'react-icons/pi';
 import { IoMdGrid } from 'react-icons/io';
 import { CgDebug } from 'react-icons/cg';
+import EnvVar from '@/components/EnvVar';
 
 export default function AdminAppConfigurationClient({
   // Storage
@@ -131,33 +131,10 @@ export default function AdminAppConfigurationClient({
         </>}
     </>;
 
-  const renderEnvVar = (
-    variable: string,
-    minimal?: boolean,
-  ) =>
-    <div
-      key={variable}
-      className={clsx(
-        'overflow-x-auto overflow-y-hidden',
-        minimal && 'inline-flex',
-      )}
-    >
-      <span className="inline-flex items-center gap-1">
-        <span className={clsx(
-          'text-[11px] font-medium tracking-wider',
-          'px-0.5 py-[0.5px]',
-          'rounded-[5px]',
-          'bg-gray-100 dark:bg-gray-800',
-        )}>
-          `{variable}`
-        </span>
-        {!minimal && <CopyButton label={variable} text={variable} subtle />}
-      </span>
-    </div>;
-
   const renderEnvVars = (variables: string[]) =>
-    <div className="pt-1 space-y-1">
-      {variables.map(envVar => renderEnvVar(envVar))}
+    <div className="pt-1 flex flex-col gap-1">
+      {variables.map(envVar =>
+        <EnvVar key={envVar} variable={envVar} />)}
     </div>;
 
   const renderSubStatus = (
