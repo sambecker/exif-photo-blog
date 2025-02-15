@@ -86,6 +86,14 @@ export default function AdminAppInsightsClient({
 
   const { descriptionWithSpaces } = dateRangeForPhotos(undefined, dateRange);
 
+  const branchLink = <a
+    className="truncate"
+    href={codeMeta?.urlBranch}
+    target="blank"
+  >
+    {codeMeta?.branch ?? TEMPLATE_REPO_BRANCH}
+  </a>;
+
   return (
     <div className="space-y-6 md:space-y-8">
       {(codeMeta?.isBaseRepo || codeMeta?.isForkedFromBase || debug) && <>
@@ -167,17 +175,16 @@ export default function AdminAppInsightsClient({
                   {codeMeta?.repo ?? TEMPLATE_REPO_NAME}
                 </a>
               </div>
-              <div className="flex items-center gap-1 min-w-0">
-                <div><BiGitBranch size={17} /></div>
-                <a
-                  className="truncate"
-                  href={codeMeta?.urlBranch}
-                  target="blank"
-                >
-                  {codeMeta?.branch ?? TEMPLATE_REPO_BRANCH}
-                </a>
+              <div className="hidden sm:flex items-center gap-1 min-w-0">
+                <BiGitBranch size={17} />
+                {branchLink}
               </div>
             </div>}
+          />
+          <ScoreCardRow
+            className="sm:hidden"
+            icon={<BiGitBranch size={17} />}
+            content={branchLink}
           />
           <ScoreCardRow
             icon={<BiGitCommit
