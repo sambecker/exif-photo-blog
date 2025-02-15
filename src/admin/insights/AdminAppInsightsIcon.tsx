@@ -1,5 +1,5 @@
 import clsx from 'clsx/lite';
-import { FaInfo } from 'react-icons/fa';
+import { LuLightbulb } from 'react-icons/lu';
 
 export default function AdminAppInsightsIcon({
   indicator = 'blue',
@@ -8,20 +8,13 @@ export default function AdminAppInsightsIcon({
 }) {
   return (
     <span className="inline-flex relative">
-      <span className={clsx(
-        'size-[16px]',
-        'inline-flex items-center justify-center',
-        'border-[1.5px] border-current rounded-[6px]',
-        'translate-y-[3px]',
-      )}>
-        <FaInfo
-          size={8}
-          aria-label="App Configuration"
-        />
-      </span>
+      <LuLightbulb
+        size={19}
+        className="translate-y-[3px]"
+      />
       {indicator && <span className={clsx(
         'absolute',
-        'top-[0.5px] right-[-2.5px]',
+        'top-[2px] right-[0.5px]',
         'size-2 rounded-full',
         indicator === 'yellow'
           ? 'bg-amber-500'

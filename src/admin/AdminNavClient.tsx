@@ -19,8 +19,8 @@ import { differenceInMinutes } from 'date-fns';
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { FaRegClock } from 'react-icons/fa';
-import { HiOutlineCog } from 'react-icons/hi';
 import AdminAppInsightsIcon from './insights/AdminAppInsightsIcon';
+import { LuCog } from 'react-icons/lu';
 
 // Updates considered recent if they occurred in past 5 minutes
 const areTimesRecent = (dates: Date[]) => dates
@@ -92,10 +92,12 @@ export default function AdminNavClient({
             <div className="flex gap-3">
               <LinkWithLoader
                 href={PATH_ADMIN_INSIGHTS}
-                className={isPathAdminInsights(pathname)
-                  ? 'font-bold'
-                  : 'text-dim'}
-                loader={<Spinner className="translate-y-[-1px]" />}
+                className={clsx(
+                  'translate-y-[-2px]',
+                  isPathAdminInsights(pathname)
+                    ? 'font-bold'
+                    : 'text-dim')}
+                loader={<Spinner className="translate-y-[1px]" />}
               >
                 <AdminAppInsightsIcon />
               </LinkWithLoader>
@@ -106,7 +108,7 @@ export default function AdminNavClient({
                   : 'text-dim'}
                 loader={<Spinner className="translate-y-[-0.75px]" />}
               >
-                <HiOutlineCog
+                <LuCog
                   size={20}
                   className="inline-flex translate-y-[1px]"
                   aria-label="App Configuration"

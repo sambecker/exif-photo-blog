@@ -7,10 +7,10 @@ import {
   PATH_GRID_INFERRED,
 } from '@/app-core/paths';
 import { useAppState } from '@/state/AppState';
-import { BiCog } from 'react-icons/bi';
 import { ImCheckboxUnchecked } from 'react-icons/im';
 import { IoCloseSharp } from 'react-icons/io5';
 import AdminAppInsightsIcon from './insights/AdminAppInsightsIcon';
+import { LuCog } from 'react-icons/lu';
 
 export default function AdminAppMenu() {
   const {
@@ -24,13 +24,15 @@ export default function AdminAppMenu() {
     <MoreMenu
       items={[{
         label: 'Insights',
-        icon: <span className="scale-90 translate-y-[-3px]">
+        icon: <span className="scale-90 translate-y-[-2px]">
           <AdminAppInsightsIcon />
         </span>,
         href: PATH_ADMIN_INSIGHTS,
       }, {
         label: 'Configuration',
-        icon: <BiCog className="text-[17px]" />,
+        icon: <LuCog
+          className="text-[16px] translate-x-[0.5px]"
+        />,
         href: PATH_ADMIN_CONFIGURATION,
       }, {
         label: isSelecting
@@ -41,7 +43,7 @@ export default function AdminAppMenu() {
             className="text-[18px] translate-y-[-0.5px]"
           />
           : <ImCheckboxUnchecked
-            className="text-[0.75rem]"
+            className="text-[0.75rem] translate-x-[0.5px]"
           />,
         href: PATH_GRID_INFERRED,
         action: () => {
