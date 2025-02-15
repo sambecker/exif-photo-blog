@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { labelForFilmSimulation } from '@/vendors/fujifilm';
+import { labelForFilmSimulation } from '@/platforms/fujifilm';
 import { CSSProperties } from 'react';
 import { FilmSimulation } from '.';
 

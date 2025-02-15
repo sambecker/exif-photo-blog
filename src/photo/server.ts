@@ -6,7 +6,7 @@ import { convertExifToFormData } from '@/photo/form';
 import {
   getFujifilmSimulationFromMakerNote,
   isExifForFujifilm,
-} from '@/vendors/fujifilm';
+} from '@/platforms/fujifilm';
 import { ExifData, ExifParserFactory } from 'ts-exif-parser';
 import { PhotoFormData } from './form';
 import { FilmSimulation } from '@/simulation';

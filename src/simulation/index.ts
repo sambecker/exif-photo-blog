@@ -11,7 +11,7 @@ import {
 import {
   FujifilmSimulation,
   labelForFilmSimulation,
-} from '@/vendors/fujifilm';
+} from '@/platforms/fujifilm';
 
 export type FilmSimulation = FujifilmSimulation;
 

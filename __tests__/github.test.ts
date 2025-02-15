@@ -1,7 +1,7 @@
 import {
   getGitHubMetaWithFallback,
   getGitHubPublicFork,
-} from '@/utility/github';
+} from '@/platforms/github';
 import { TEMPLATE_REPO_OWNER, TEMPLATE_REPO_NAME } from '@/app-core/config';
 
 describe('GitHub', () => {
