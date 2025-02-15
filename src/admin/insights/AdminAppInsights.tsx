@@ -19,7 +19,7 @@ import {
   VERCEL_GIT_REPO_OWNER,
   VERCEL_GIT_REPO_SLUG,
 } from '@/app-core/config';
-import { getGitHubMetaWithFallback } from '../../platforms/github';
+import { getGitHubMeta } from '../../platforms/github';
 import { OUTDATED_THRESHOLD } from '@/photo';
 
 const BASIC_PHOTO_INSTALLATION_COUNT = 32;
@@ -50,7 +50,7 @@ export default async function AdminAppInsights() {
     getUniqueFilmSimulations(),
     getUniqueLenses(),
     IS_VERCEL_GIT_PROVIDER_GITHUB || IS_DEVELOPMENT
-      ? getGitHubMetaWithFallback({
+      ? getGitHubMeta({
         owner,
         repo,
         branch,

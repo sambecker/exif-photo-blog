@@ -11,7 +11,7 @@ import { HiOutlinePhotograph } from 'react-icons/hi';
 import { MdAspectRatio } from 'react-icons/md';
 import { PiWarningBold } from 'react-icons/pi';
 import { TbCone, TbSparkles } from 'react-icons/tb';
-import { getGitHubMetaWithFallback } from '../../platforms/github';
+import { getGitHubMeta } from '../../platforms/github';
 import { BiGitBranch, BiGitCommit, BiLogoGithub } from 'react-icons/bi';
 import {
   TEMPLATE_REPO_BRANCH,
@@ -74,7 +74,7 @@ export default function AdminAppInsightsClient({
   },
   debug,
 }: {
-  codeMeta?: Awaited<ReturnType<typeof getGitHubMetaWithFallback>>
+  codeMeta?: Awaited<ReturnType<typeof getGitHubMeta>>
   insights: AdminAppInsights
   photoStats: PhotoStats
   debug?: boolean

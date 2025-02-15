@@ -5,7 +5,6 @@ import {
 } from '@/app-core/config';
 
 const DEFAULT_BRANCH = 'main';
-const FALLBACK_TEXT = 'Unknown';
 const CACHE_GITHUB_REQUESTS = false;
 
 // Cache all results for 2 minutes to avoid rate limiting
@@ -130,7 +129,7 @@ export const getGitHubPublicFork = async (): Promise<RepoParams> => {
   };
 };
 
-const getGitHubMeta = async (params: RepoParams) => {
+export const getGitHubMeta = async (params: RepoParams) => {
   const urlOwner = getGitHubUrlOwner(params);
   const urlRepo = getGitHubUrlRepo(params);
   const urlBranch = getGitHubUrlBranch(params);
@@ -138,33 +137,29 @@ const getGitHubMeta = async (params: RepoParams) => {
 
   const isBaseRepo = isRepoBaseRepo(params);
 
-  const [
-    isForkedFromBase,
-    behindBy,
-  ] = await Promise.all([
-    getIsRepoForkedFromBase(params),
-    isBaseRepo && params.commit
-      ? getGitHubCommitsBehindFromCommit(params)
-      : getGitHubCommitsBehindFromRepo(params),
-  ]);
+  let isForkedFromBase: boolean | undefined;
+  let isBehind: boolean | undefined;
+  let behindBy: number | undefined;
+  let didError: boolean = false;
 
-  const isBehind = behindBy === undefined
-    ? undefined
-    : behindBy > 0;
+  try {
+    const results = await Promise.all([
+      getIsRepoForkedFromBase(params),
+      isBaseRepo && params.commit
+        ? getGitHubCommitsBehindFromCommit(params)
+        : getGitHubCommitsBehindFromRepo(params),
+    ]);
 
-  const label = isBehind === undefined
-    ? FALLBACK_TEXT
-    : isBehind
-      ? `${behindBy} Behind`
-      : 'Synced';
-
-  const description = isBehind === undefined
-    ? FALLBACK_TEXT
-    : isBehind
-      ? `This fork is ${behindBy} commit${behindBy === 1 ? '' : 's'} behind.`
-      : isBaseRepo
-        ? 'This build is up to date.'
-        : 'This fork is up to date.';
+    isForkedFromBase = results[0];
+    behindBy = results[1];
+  
+    isBehind = behindBy === undefined
+      ? undefined
+      : behindBy > 0;
+  } catch (error) {
+    didError = true;
+    console.error('Error retrieving GitHub meta', { params, error });
+  }
 
   return {
     ...params,
@@ -176,29 +171,6 @@ const getGitHubMeta = async (params: RepoParams) => {
     isBaseRepo,
     behindBy,
     isBehind,
-    label,
-    description,
-    didError: false,
+    didError,
   };
 };
-
-export const getGitHubMetaWithFallback = (params: RepoParams) =>
-  getGitHubMeta(params)
-    .catch(e => {
-      console.error('Error retrieving GitHub meta', { params, error: e });
-      return {
-        ...params,
-        commitMessage: undefined,
-        urlOwner: undefined,
-        urlRepo: undefined,
-        urlBranch: undefined,
-        urlCommit: undefined,
-        isForkedFromBase: false,
-        isBaseRepo: undefined,
-        behindBy: undefined,
-        isBehind: undefined,
-        label: FALLBACK_TEXT,
-        description: 'Could not connect to GitHub.',
-        didError: true,
-      };
-    });
