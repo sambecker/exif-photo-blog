@@ -1,5 +1,5 @@
 import { clsx } from 'clsx/lite';
-import { Photo } from '.';
+import { Photo, PhotoSetCategory } from '.';
 import PhotoGrid from './PhotoGrid';
 import Link from 'next/link';
 
@@ -8,12 +8,13 @@ export default function PhotoLightbox({
   photos,
   maxPhotosToShow = 6,
   moreLink,
+  ...categories
 }: {
   count: number
   photos: Photo[]
   maxPhotosToShow?: number
   moreLink: string
-}) {
+} & PhotoSetCategory) {
   const photoCountToShow = maxPhotosToShow < count
     ? maxPhotosToShow - 1
     : maxPhotosToShow;
@@ -24,10 +25,11 @@ export default function PhotoLightbox({
 
   return (
     <div className={clsx(
-      'border dark:border-gray-800 p-1.5 lg:p-2 rounded-md',
+      'border-main p-1.5 lg:p-2 rounded-md',
       'bg-gray-50 dark:bg-gray-950',
     )}>
       <PhotoGrid
+        {...categories}
         photos={photos.slice(0, photoCountToShow)}
         animate={false}
         additionalTile={showOverageTile

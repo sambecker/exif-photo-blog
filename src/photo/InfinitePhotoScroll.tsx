@@ -4,18 +4,19 @@ import useSwrInfinite from 'swr/infinite';
 import {
   ReactNode,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
 } from 'react';
 import SiteGrid from '@/components/SiteGrid';
 import Spinner from '@/components/Spinner';
 import { getPhotosCachedAction, getPhotosAction } from '@/photo/actions';
-import { Photo } from '.';
+import { Photo, PhotoSetCategory } from '.';
 import { clsx } from 'clsx/lite';
 import { useAppState } from '@/state/AppState';
-import { Camera } from '@/camera';
-import { FilmSimulation } from '@/simulation';
 import { GetPhotosOptions } from './db';
+import useVisible from '@/utility/useVisible';
+import { ADMIN_DB_OPTIMIZE_ENABLED } from '@/site/config';
 
 export type RevalidatePhoto = (
   photoId: string,
@@ -38,9 +39,6 @@ export default function InfinitePhotoScroll({
   initialOffset: number
   itemsPerPage: number
   sortBy?: GetPhotosOptions['sortBy']
-  tag?: string
-  camera?: Camera
-  simulation?: FilmSimulation
   cacheKey: string
   wrapMoreButtonInGrid?: boolean
   useCachedPhotos?: boolean
@@ -50,7 +48,7 @@ export default function InfinitePhotoScroll({
     onLastPhotoVisible: () => void
     revalidatePhoto?: RevalidatePhoto
   }) => ReactNode
-}) {
+} & PhotoSetCategory) {
   const { swrTimestamp, isUserSignedIn } = useAppState();
 
   const key = `${swrTimestamp}-${cacheKey}`;
@@ -61,7 +59,10 @@ export default function InfinitePhotoScroll({
       : [key, size]
     , [key]);
 
-  const fetcher = useCallback(([_key, size]: [string, number]) =>
+  const fetcher = useCallback((
+    [_key, size]: [string, number],
+    warmOnly?: boolean,
+  ) =>
     (useCachedPhotos ? getPhotosCachedAction : getPhotosAction)({
       offset: initialOffset + size * itemsPerPage,
       sortBy,
@@ -70,7 +71,7 @@ export default function InfinitePhotoScroll({
       tag,
       camera,
       simulation,
-    })
+    }, warmOnly)
   , [
     useCachedPhotos,
     sortBy,
@@ -82,17 +83,23 @@ export default function InfinitePhotoScroll({
     simulation,
   ]);
 
-  const { data, isLoading, isValidating, error, mutate, setSize } =
+  const { data, isLoading, isValidating, error, mutate, size, setSize } =
     useSwrInfinite<Photo[]>(
       keyGenerator,
       fetcher,
       {
-        initialSize: 2,
+        initialSize: ADMIN_DB_OPTIMIZE_ENABLED ? 0 : 2,
         revalidateFirstPage: false,
         revalidateOnFocus: Boolean(isUserSignedIn),
         revalidateOnReconnect: Boolean(isUserSignedIn),
       },
     );
+
+  useEffect(() => {
+    if (ADMIN_DB_OPTIMIZE_ENABLED) {
+      fetcher(['', 0], true);
+    }
+  }, [fetcher]);
 
   const buttonContainerRef = useRef<HTMLDivElement>(null);
   
@@ -120,6 +127,12 @@ export default function InfinitePhotoScroll({
       return revalidateRemainingPhotos ? size >= i : size === i;
     },
   } as any), [data, mutate]);
+
+  useVisible({ ref: buttonContainerRef, onVisible: () => {
+    if (ADMIN_DB_OPTIMIZE_ENABLED && size === 0) {
+      advance();
+    }
+  }});
 
   const renderMoreButton = () =>
     <div ref={buttonContainerRef}>

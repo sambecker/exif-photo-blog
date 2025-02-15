@@ -5,6 +5,9 @@ import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getPhotosCameraDataCached } from '@/camera/data';
 import CameraOverview from '@/camera/CameraOverview';
 import { cache } from 'react';
+import { STATICALLY_OPTIMIZED_PHOTO_CATEGORIES } from '@/site/config';
+import { IS_PRODUCTION } from '@/site/config';
+import { getUniqueCameras } from '@/photo/db/query';
 
 const getPhotosCameraDataCachedCached = cache((
   make: string,
@@ -15,9 +18,21 @@ const getPhotosCameraDataCachedCached = cache((
   INFINITE_SCROLL_GRID_INITIAL,
 ));
 
+export let generateStaticParams:
+  (() => Promise<{ make: string, model: string }[]>) | undefined = undefined;
+
+if (STATICALLY_OPTIMIZED_PHOTO_CATEGORIES && IS_PRODUCTION) {
+  generateStaticParams = async () => {
+    const cameras = await getUniqueCameras();
+    return cameras.map(({ camera: { make, model } }) => ({ make, model }));
+  };
+}
+
 export async function generateMetadata({
-  params: { make, model },
+  params,
 }: CameraProps): Promise<Metadata> {
+  const { make, model } = await params;
+
   const [
     photos,
     { count, dateRange },
@@ -49,8 +64,10 @@ export async function generateMetadata({
 }
 
 export default async function CameraPage({
-  params: { make, model },
+  params,
 }: CameraProps) {
+  const { make, model } = await params;
+
   const [
     photos,
     { count, dateRange },

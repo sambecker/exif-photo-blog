@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction, createContext, useContext } from 'react';
 import { AnimationConfig } from '@/components/AnimateItems';
+import { ShareModalProps } from '@/share';
 
 export interface AppStateContext {
   // CORE
@@ -13,16 +14,27 @@ export interface AppStateContext {
   clearNextPhotoAnimation?: () => void
   shouldRespondToKeyboardCommands?: boolean
   setShouldRespondToKeyboardCommands?: Dispatch<SetStateAction<boolean>>
+  // MODAL
   isCommandKOpen?: boolean
   setIsCommandKOpen?: Dispatch<SetStateAction<boolean>>
-  //  ADMIN
+  shareModalProps?: ShareModalProps
+  setShareModalProps?: Dispatch<SetStateAction<ShareModalProps | undefined>>
+  // ADMIN
   userEmail?: string
   setUserEmail?: Dispatch<SetStateAction<string | undefined>>
   isUserSignedIn?: boolean
   adminUpdateTimes?: Date[]
   registerAdminUpdate?: () => void
   hiddenPhotosCount?: number
+  selectedPhotoIds?: string[]
+  setSelectedPhotoIds?: Dispatch<SetStateAction<string[] | undefined>>
+  isPerformingSelectEdit?: boolean
+  setIsPerformingSelectEdit?: Dispatch<SetStateAction<boolean>>
   // DEBUG
+  isGridHighDensity?: boolean
+  setIsGridHighDensity?: Dispatch<SetStateAction<boolean>>
+  areZoomControlsShown?: boolean
+  setAreZoomControlsShown?: Dispatch<SetStateAction<boolean>>
   arePhotosMatted?: boolean
   setArePhotosMatted?: Dispatch<SetStateAction<boolean>>
   shouldDebugImageFallbacks?: boolean

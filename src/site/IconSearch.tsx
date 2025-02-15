@@ -1,5 +1,3 @@
-/* eslint-disable max-len */
-
 const INTRINSIC_WIDTH = 28;
 const INTRINSIC_HEIGHT = 24;
 

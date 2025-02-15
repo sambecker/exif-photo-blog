@@ -79,7 +79,7 @@ export default function ImageInput({
             ref={inputRef}
             id={INPUT_ID}
             type="file"
-            className="!hidden"
+            className="hidden!"
             accept={ACCEPTED_PHOTO_FILE_TYPES.join(',')}
             disabled={loading}
             multiple
@@ -104,7 +104,7 @@ export default function ImageInput({
 
                   // Specify wide gamut to avoid data loss while resizing
                   const ctx = canvas?.getContext(
-                    '2d', { colorSpace: 'display-p3' }
+                    '2d', { colorSpace: 'display-p3' },
                   );
 
                   if ((shouldResize || isPng) && canvas && ctx) {
@@ -222,7 +222,7 @@ export default function ImageInput({
           />
         </label>
         {showUploadStatus && filesLength > 0 &&
-          <div className="max-w-full truncate text-ellipsis">
+          <div className="max-w-full truncate">
             {fileUploadName}
           </div>}
       </div>

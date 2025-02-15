@@ -1,5 +1,15 @@
 import { clsx } from 'clsx/lite';
-import { RefObject } from 'react';
+import { JSX, RefObject } from 'react';
+
+/*
+  MAX WIDTHS
+  Main: 954px +
+  Sidebar: 302px +
+  Gap: 24px =
+  Total: 1280px
+  -
+  Column offset: (302px + 24px) / 2 = 163px
+*/
 
 export default function SiteGrid({
   containerRef,
@@ -9,7 +19,7 @@ export default function SiteGrid({
   sideFirstOnMobile,
   sideHiddenOnMobile,
 }: {
-  containerRef?: RefObject<HTMLDivElement>
+  containerRef?: RefObject<HTMLDivElement | null>
   className?: string
   contentMain: JSX.Element
   contentSide?: JSX.Element
@@ -20,12 +30,14 @@ export default function SiteGrid({
     <div
       ref={containerRef}
       className={clsx(
-        className,
         'grid',
         'grid-cols-1 md:grid-cols-12',
         'gap-x-4 lg:gap-x-6',
         'gap-y-4',
-        'max-w-7xl',
+        'max-w-[1280px]',
+        // Offset sidebar width when centering on large screens
+        '3xl:translate-x-[163px]',
+        className,
       )}
     >
       <div className={clsx(

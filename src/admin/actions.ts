@@ -9,7 +9,7 @@ import { CONFIG_CHECKLIST_STATUS } from '@/site/config';
 
 const scanForError = (
   shouldCheck: boolean,
-  promise: () => Promise<any>
+  promise: () => Promise<any>,
 ): Promise<string> =>
   shouldCheck
     ? promise()

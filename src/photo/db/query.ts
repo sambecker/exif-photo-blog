@@ -14,7 +14,7 @@ import {
 import { Cameras, createCameraKey } from '@/camera';
 import { Tags } from '@/tag';
 import { FilmSimulation, FilmSimulations } from '@/simulation';
-import { SHOULD_DEBUG_SQL } from '@/site/config';
+import { ADMIN_SQL_DEBUG_ENABLED } from '@/site/config';
 import {
   GetPhotosOptions,
   getLimitAndOffsetFromOptions,
@@ -80,7 +80,7 @@ const runMigration02 = () =>
 // Wrapper for most queries for JIT table creation/migration running
 const safelyQueryPhotos = async <T>(
   callback: () => Promise<T>,
-  debugMessage: string
+  debugMessage: string,
 ): Promise<T> => {
   let result: T;
 
@@ -119,12 +119,15 @@ const safelyQueryPhotos = async <T>(
         throw e;
       }
     } else {
-      console.log(`sql get error: ${e.message} `);
+      if (e.message !== 'The server does not support SSL connections') {
+        // Avoid re-logging errors on initial installation
+        console.log(`sql get error: ${e.message} `);
+      }
       throw e;
     }
   }
 
-  if (SHOULD_DEBUG_SQL && debugMessage) {
+  if (ADMIN_SQL_DEBUG_ENABLED && debugMessage) {
     const time =
       (((new Date()).getTime() - start.getTime()) / 1000).toFixed(2);
     console.log(`Executing sql query: ${debugMessage} (${time} seconds)`);
@@ -244,17 +247,19 @@ export const renamePhotoTagGlobally = (tag: string, updatedTag: string) =>
   `, 'renamePhotoTagGlobally');
 
 export const addTagsToPhotos = (tags: string[], photoIds: string[]) =>
-  safelyQueryPhotos(() => sql`
+  safelyQueryPhotos(() => query(`
     UPDATE photos 
     SET tags = (
       SELECT array_agg(DISTINCT elem)
       FROM unnest(
-        array_cat(tags, ARRAY${convertArrayToPostgresString(tags, 'brackets')})
+        array_cat(tags, $1)
       ) AS elem
     )
-    WHERE id IN ${convertArrayToPostgresString(photoIds, 'brackets')}
-    LIMIT ${photoIds.length}
-  `, 'addTagsToPhotos');
+    WHERE id = ANY($2)
+  `, [
+    convertArrayToPostgresString(tags),
+    convertArrayToPostgresString(photoIds),
+  ]), 'addTagsToPhotos');
 
 export const deletePhoto = (id: string) =>
   safelyQueryPhotos(() => sql`
@@ -364,8 +369,6 @@ export const getPhotos = async (options: GetPhotosOptions = {}) =>
       wheresValues,
       lastValuesIndex,
     } = getWheresFromOptions(options);
-
-    let valuesIndex = lastValuesIndex;
     
     if (wheres) {
       sql.push(wheres);
@@ -377,7 +380,7 @@ export const getPhotos = async (options: GetPhotosOptions = {}) =>
     const {
       limitAndOffset,
       limitAndOffsetValues,
-    } = getLimitAndOffsetFromOptions(options, valuesIndex);
+    } = getLimitAndOffsetFromOptions(options, lastValuesIndex);
 
     // LIMIT + OFFSET
     sql.push(limitAndOffset);
@@ -416,7 +419,7 @@ export const getPhotosNearId = async (
         WHERE twi.row_number >= current.row_number - 1
         LIMIT $${valuesIndex++}
       `,
-      [...wheresValues, photoId, limit]
+      [...wheresValues, photoId, limit],
     )
       .then(({ rows }) => {
         const photo = rows.find(({ id }) => id === photoId);

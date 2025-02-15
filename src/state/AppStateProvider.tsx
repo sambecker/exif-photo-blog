@@ -6,8 +6,14 @@ import { AnimationConfig } from '@/components/AnimateItems';
 import usePathnames from '@/utility/usePathnames';
 import { getAuthAction } from '@/auth/actions';
 import useSWR from 'swr';
-import { MATTE_PHOTOS } from '@/site/config';
+import {
+  HIGH_DENSITY_GRID,
+  MATTE_PHOTOS,
+  SHOW_ZOOM_CONTROLS,
+} from '@/site/config';
 import { getPhotosHiddenMetaCachedAction } from '@/photo/actions';
+import { ShareModalProps } from '@/share';
+import { storeTimezoneCookie } from '@/utility/timezone';
 
 export default function AppStateProvider({
   children,
@@ -25,8 +31,11 @@ export default function AppStateProvider({
     useState<AnimationConfig>();
   const [shouldRespondToKeyboardCommands, setShouldRespondToKeyboardCommands] =
     useState(true);
+  // MODAL
   const [isCommandKOpen, setIsCommandKOpen] =
     useState(false);
+  const [shareModalProps, setShareModalProps] =
+    useState<ShareModalProps>();
   // ADMIN
   const [userEmail, setUserEmail] =
     useState<string>();
@@ -34,7 +43,15 @@ export default function AppStateProvider({
     useState<Date[]>([]);
   const [hiddenPhotosCount, setHiddenPhotosCount] =
     useState(0);
+  const [selectedPhotoIds, setSelectedPhotoIds] =
+    useState<string[] | undefined>();
+  const [isPerformingSelectEdit, setIsPerformingSelectEdit] =
+    useState(false);
   // DEBUG
+  const [isGridHighDensity, setIsGridHighDensity] =
+    useState(HIGH_DENSITY_GRID);
+  const [areZoomControlsShown, setAreZoomControlsShown] =
+    useState(SHOW_ZOOM_CONTROLS);
   const [arePhotosMatted, setArePhotosMatted] =
     useState(MATTE_PHOTOS);
   const [shouldDebugImageFallbacks, setShouldDebugImageFallbacks] =
@@ -44,10 +61,12 @@ export default function AppStateProvider({
 
   const invalidateSwr = useCallback(() => setSwrTimestamp(Date.now()), []);
 
-  const { data } = useSWR('getAuth', getAuthAction);
+  const { data, error } = useSWR('getAuth', getAuthAction);
   useEffect(() => {
-    setUserEmail(data?.user?.email ?? undefined);
-  }, [data]);
+    if (!error) {
+      setUserEmail(data?.user?.email ?? undefined);
+    }
+  }, [data, error]);
   const isUserSignedIn = Boolean(userEmail);
   useEffect(() => {
     if (isUserSignedIn) {
@@ -67,6 +86,7 @@ export default function AppStateProvider({
 
   useEffect(() => {
     setHasLoaded?.(true);
+    storeTimezoneCookie();
   }, []);
 
   return (
@@ -83,8 +103,11 @@ export default function AppStateProvider({
         clearNextPhotoAnimation: () => setNextPhotoAnimation?.(undefined),
         shouldRespondToKeyboardCommands,
         setShouldRespondToKeyboardCommands,
+        // MODAL
         isCommandKOpen,
         setIsCommandKOpen,
+        shareModalProps,
+        setShareModalProps,
         // ADMIN
         userEmail,
         setUserEmail,
@@ -92,7 +115,15 @@ export default function AppStateProvider({
         adminUpdateTimes,
         registerAdminUpdate,
         hiddenPhotosCount,
+        selectedPhotoIds,
+        setSelectedPhotoIds,
+        isPerformingSelectEdit,
+        setIsPerformingSelectEdit,
         // DEBUG
+        isGridHighDensity,
+        setIsGridHighDensity,
+        areZoomControlsShown,
+        setAreZoomControlsShown,
         arePhotosMatted,
         setArePhotosMatted,
         shouldDebugImageFallbacks,

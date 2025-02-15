@@ -1,15 +1,18 @@
+import { Camera } from '@/camera';
 import { formatFocalLength } from '@/focal';
+import { Lens } from '@/lens';
 import { getNextImageUrlForRequest } from '@/services/next-image';
 import { FilmSimulation } from '@/simulation';
-import { HIGH_DENSITY_GRID, SHOW_EXIF_DATA } from '@/site/config';
+import { HIGH_DENSITY_GRID, IS_PREVIEW, SHOW_EXIF_DATA } from '@/site/config';
 import { ABSOLUTE_PATH_FOR_HOME_IMAGE } from '@/site/paths';
-import { formatDateFromPostgresString } from '@/utility/date';
+import { formatDate, formatDateFromPostgresString } from '@/utility/date';
 import {
   formatAperture,
   formatIso,
   formatExposureCompensation,
   formatExposureTime,
 } from '@/utility/exif';
+import { parameterize } from '@/utility/string';
 import camelcaseKeys from 'camelcase-keys';
 import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
@@ -24,13 +27,13 @@ export const INFINITE_SCROLL_FEED_MULTIPLE =
 
 // INFINITE SCROLL: GRID
 export const INFINITE_SCROLL_GRID_INITIAL = HIGH_DENSITY_GRID
-  ? process.env.NODE_ENV === 'development' ? 12 : 24
-  : process.env.NODE_ENV === 'development' ? 12 : 24;
+  ? process.env.NODE_ENV === 'development' ? 12 : 48
+  : process.env.NODE_ENV === 'development' ? 12 : 48;
 export const INFINITE_SCROLL_GRID_MULTIPLE = HIGH_DENSITY_GRID
   ? process.env.NODE_ENV === 'development' ? 12 : 48
   : process.env.NODE_ENV === 'development' ? 12 : 48;
 
-// Thumbnails below /p/[photoId]
+// Thumbnails below large photos on pages like /p/[photoId]
 export const RELATED_GRID_PHOTOS_TO_SHOW = 12;
 
 export const DEFAULT_ASPECT_RATIO = 1.5;
@@ -99,9 +102,23 @@ export interface Photo extends PhotoDb {
   takenAtNaiveFormatted: string
 }
 
+export interface PhotoSetCategory {
+  tag?: string
+  camera?: Camera
+  simulation?: FilmSimulation
+  focal?: number
+  lens?: Lens // Unimplemented as a set
+}
+
+export interface PhotoSetAttributes {
+  photos: Photo[]
+  count?: number
+  dateRange?: PhotoDateRange
+}
+
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
   const photoDb = camelcaseKeys(
-    photoDbRaw as unknown as Record<string, unknown>
+    photoDbRaw as unknown as Record<string, unknown>,
   ) as unknown as PhotoDb;
   return {
     ...photoDb,
@@ -182,25 +199,44 @@ export const generateOgImageMetaForPhotos = (photos: Photo[]): Metadata => {
 };
 
 const PHOTO_ID_FORWARDING_TABLE: Record<string, string> = JSON.parse(
-  process.env.PHOTO_ID_FORWARDING_TABLE || '{}'
+  process.env.PHOTO_ID_FORWARDING_TABLE || '{}',
 );
 
 export const translatePhotoId = (id: string) =>
   PHOTO_ID_FORWARDING_TABLE[id] || id;
 
-export const titleForPhoto = (photo: Photo) =>
-  photo.title || 'Untitled';
+export const titleForPhoto = (
+  photo: Photo,
+  preferDateOverUntitled?: boolean,
+) => {
+  if (photo.title) {
+    return photo.title;
+  } else if (preferDateOverUntitled && (photo.takenAt || photo.createdAt)) {
+    return formatDate({
+      date: photo.takenAt || photo.createdAt,
+      length: 'tiny',
+    });
+  } else {
+    return 'Untitled';
+  }
+};
 
 export const altTextForPhoto = (photo: Photo) =>
   photo.semanticDescription || titleForPhoto(photo);
 
-export const photoLabelForCount = (count: number) =>
-  count === 1 ? 'Photo' : 'Photos';
+export const photoLabelForCount = (count: number, capitalize = true) =>
+  capitalize
+    ? count === 1 ? 'Photo' : 'Photos'
+    : count === 1 ? 'photo' : 'photos';
 
-export const photoQuantityText = (count: number, includeParentheses = true) =>
+export const photoQuantityText = (
+  count: number,
+  includeParentheses = true,
+  capitalize?: boolean,
+) =>
   includeParentheses
-    ? `(${count} ${photoLabelForCount(count)})`
-    : `${count} ${photoLabelForCount(count)}`;  
+    ? `(${count} ${photoLabelForCount(count, capitalize)})`
+    : `${count} ${photoLabelForCount(count, capitalize)}`;  
 
 export const deleteConfirmationTextForPhoto = (photo: Photo) =>
   `Are you sure you want to delete "${titleForPhoto(photo)}?"`;
@@ -219,12 +255,12 @@ export const descriptionForPhotoSet = (
     : [
       explicitCount ?? photos.length,
       descriptor,
-      photoLabelForCount(explicitCount ?? photos.length),
+      photoLabelForCount(explicitCount ?? photos.length, false),
     ].join(' ');
 
 const sortPhotosByDate = (
   photos: Photo[],
-  order: 'ASC' | 'DESC' = 'DESC'
+  order: 'ASC' | 'DESC' = 'DESC',
 ) =>
   [...photos].sort((a, b) => order === 'DESC'
     ? b.takenAt.getTime() - a.takenAt.getTime()
@@ -280,10 +316,23 @@ export const getKeywordsForPhoto = (photo: Photo) =>
     .filter(Boolean)
     .map(keyword => keyword.toLocaleLowerCase());
 
-export const isNextImageReadyBasedOnPhotos = async (photos: Photo[]) =>
-  photos.length > 0 && fetch(getNextImageUrlForRequest(photos[0].url, 640))
+export const isNextImageReadyBasedOnPhotos = async (
+  photos: Photo[],
+): Promise<boolean> =>
+  photos.length > 0 && fetch(getNextImageUrlForRequest(
+    photos[0].url,
+    640,
+    undefined,
+    undefined,
+    IS_PREVIEW,
+  ))
     .then(response => response.ok)
     .catch(() => false);
+
+export const downloadFileNameForPhoto = (photo: Photo) =>
+  photo.title
+    ? `${parameterize(photo.title)}.${photo.extension}`
+    : photo.url.split('/').pop() || 'download';
 
 export const doesPhotoNeedBlurCompatibility = (photo: Photo) =>
   isBefore(photo.updatedAt, new Date('2024-05-07'));

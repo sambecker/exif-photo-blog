@@ -1,9 +1,12 @@
-import Link from 'next/link';
 import { clsx } from 'clsx/lite';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
+import { JSX } from 'react';
+import Spinner from './Spinner';
+import LinkWithLoader from './LinkWithLoader';
 
 export default function SwitcherItem({
   icon,
+  title,
   href,
   className: classNameProp,
   onClick,
@@ -12,6 +15,7 @@ export default function SwitcherItem({
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
 }: {
   icon: JSX.Element
+  title?: string
   href?: string
   className?: string
   onClick?: () => void
@@ -29,7 +33,7 @@ export default function SwitcherItem({
       ? 'text-black dark:text-white'
       : 'text-gray-400 dark:text-gray-600',
     active
-      ? 'hover:text-black hover:dark:text-white'
+      ? 'hover:text-black dark:hover:text-white'
       : 'hover:text-gray-700 dark:hover:text-gray-400',
   );
 
@@ -41,9 +45,15 @@ export default function SwitcherItem({
 
   return (
     href
-      ? <Link {...{ href, className, prefetch }}>
+      ? <LinkWithLoader {...{
+        title,
+        href,
+        className,
+        prefetch,
+        loader: <Spinner />,
+      }}>
         {renderIcon()}
-      </Link>
-      : <div {...{ onClick, className }}>{renderIcon()}</div>
+      </LinkWithLoader>
+      : <div {...{ title, onClick, className }}>{renderIcon()}</div>
   );
 };

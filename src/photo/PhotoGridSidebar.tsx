@@ -15,6 +15,12 @@ import FavsTag from '../tag/FavsTag';
 import { useAppState } from '@/state/AppState';
 import { useMemo } from 'react';
 import HiddenTag from '@/tag/HiddenTag';
+import { SITE_ABOUT } from '@/site/config';
+import {
+  htmlHasBrParagraphBreaks,
+  safelyParseFormattedHtml,
+} from '@/utility/html';
+import { clsx } from 'clsx/lite';
 
 export default function PhotoGridSidebar({
   tags,
@@ -38,10 +44,25 @@ export default function PhotoGridSidebar({
   , [tags, hiddenPhotosCount]);
 
   return (
-    <>
+    <div className="space-y-4">
+      {SITE_ABOUT && <HeaderList
+        items={[<p
+          key="about"
+          className={clsx(
+            'max-w-60 normal-case text-main',
+            htmlHasBrParagraphBreaks(SITE_ABOUT) && 'pb-2',
+          )}
+          dangerouslySetInnerHTML={{
+            __html: safelyParseFormattedHtml(SITE_ABOUT),
+          }}
+        />]}
+      />}
       {tags.length > 0 && <HeaderList
         title='Tags'
-        icon={<FaTag size={12} className="text-icon" />}
+        icon={<FaTag
+          size={12}
+          className="text-icon translate-y-[1px]"
+        />}
         items={tagsIncludingHidden.map(({ tag, count }) => {
           switch (tag) {
           case TAG_FAVS:
@@ -125,6 +146,6 @@ export default function PhotoGridSidebar({
         : <HeaderList
           items={[photoQuantityText(photosCount, false)]}
         />}
-    </>
+    </div>
   );
 }

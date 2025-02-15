@@ -5,8 +5,14 @@ import {
   convertTimestampWithOffsetToPostgresString,
   generateLocalNaivePostgresString,
   generateLocalPostgresString,
+  validationMessageNaivePostgresDateString,
+  validationMessagePostgresDateString,
 } from '@/utility/date';
-import { getAspectRatioFromExif, getOffsetFromExif } from '@/utility/exif';
+import {
+  convertApertureValueToFNumber,
+  getAspectRatioFromExif,
+  getOffsetFromExif,
+} from '@/utility/exif';
 import { roundToNumber } from '@/utility/number';
 import { convertStringToArray } from '@/utility/string';
 import { generateNanoid } from '@/utility/nanoid';
@@ -90,7 +96,7 @@ const FORM_METADATA = (
     label: 'blur data',
     readOnly: true,
   },
-  url: { label: 'url', readOnly: true },
+  url: { label: 'storage url', readOnly: true },
   extension: { label: 'extension', readOnly: true },
   aspectRatio: { label: 'aspect ratio', readOnly: true },
   make: { label: 'camera make' },
@@ -112,8 +118,14 @@ const FORM_METADATA = (
   locationName: { label: 'location name', hide: true },
   latitude: { label: 'latitude' },
   longitude: { label: 'longitude' },
-  takenAt: { label: 'taken at' },
-  takenAtNaive: { label: 'taken at (naive)' },
+  takenAt: {
+    label: 'taken at',
+    validate: validationMessagePostgresDateString,
+  },
+  takenAtNaive: {
+    label: 'taken at (naive)',
+    validate: validationMessageNaivePostgresDateString,
+  },
   priorityOrder: { label: 'priority order' },
   favorite: { label: 'favorite', type: 'checkbox', excludeFromInsert: true },
   hidden: { label: 'hidden', type: 'checkbox' },
@@ -129,7 +141,7 @@ export const convertFormKeysToLabels = (keys: (keyof PhotoFormData)[]) =>
   keys.map(key => FORM_METADATA()[key].label.toUpperCase());
 
 export const getFormErrors = (
-  formData: Partial<PhotoFormData>
+  formData: Partial<PhotoFormData>,
 ): Partial<Record<keyof PhotoFormData, string>> =>
   Object.keys(formData).reduce((acc, key) => ({
     ...acc,
@@ -143,7 +155,7 @@ export const isFormValid = (formData: Partial<PhotoFormData>) =>
       (!required || Boolean(formData[key])) &&
       (!validate?.(formData[key])) &&
       // eslint-disable-next-line max-len
-      (!validateStringMaxLength || (formData[key]?.length ?? 0) <= validateStringMaxLength)
+      (!validateStringMaxLength || (formData[key]?.length ?? 0) <= validateStringMaxLength),
   );
 
 export const formHasTextContent = ({
@@ -199,8 +211,11 @@ export const convertExifToFormData = (
   focalLengthIn35MmFormat: data.tags?.FocalLengthIn35mmFormat?.toString(),
   lensMake: data.tags?.LensMake,
   lensModel: data.tags?.LensModel,
-  fNumber: data.tags?.FNumber?.toString(),
-  iso: data.tags?.ISO?.toString(),
+  fNumber: (
+    data.tags?.FNumber?.toString() ||
+    convertApertureValueToFNumber(data.tags?.ApertureValue)
+  ),
+  iso: data.tags?.ISO?.toString() || data.tags?.ISOSpeed?.toString(),
   exposureTime: data.tags?.ExposureTime?.toString(),
   exposureCompensation: data.tags?.ExposureCompensation?.toString(),
   latitude:
@@ -227,14 +242,17 @@ export const convertFormDataToPhotoDbInsert = (
     ? Object.fromEntries(formData) as PhotoFormData
     : formData;
 
+  // Capture tags before 'favorite' is excluded from insert
   const tags = convertStringToArray(photoForm.tags) ?? [];
   if (photoForm.favorite === 'true') {
     tags.push(TAG_FAVS);
   }
-  
+
   // Parse FormData:
   // - remove server action ID
   // - remove empty strings
+  // - remove fields excluded from insert
+  // - trim strings
   Object.keys(photoForm).forEach(key => {
     const meta = FORM_METADATA()[key as keyof PhotoFormData];
     if (
@@ -243,13 +261,15 @@ export const convertFormDataToPhotoDbInsert = (
       meta?.excludeFromInsert
     ) {
       delete (photoForm as any)[key];
+    } else if (typeof (photoForm as any)[key] === 'string') {
+      (photoForm as any)[key] = (photoForm as any)[key].trim();
     }
   });
 
   return {
     ...(photoForm as PhotoFormData & { filmSimulation?: FilmSimulation }),
     ...!photoForm.id && { id: generateNanoid() },
-    // Convert form strings to arrays
+    // Delete array field when empty
     tags: tags.length > 0 ? tags : undefined,
     // Convert form strings to numbers
     aspectRatio: photoForm.aspectRatio
@@ -295,12 +315,12 @@ export const getChangedFormFields = (
     .keys(current)
     .filter(key =>
       (original[key as keyof PhotoFormData] ?? '') !==
-      (current[key as keyof PhotoFormData] ?? '')
+      (current[key as keyof PhotoFormData] ?? ''),
     ) as (keyof PhotoFormData)[];
 };
 
 export const generateTakenAtFields = (
-  form?: Partial<PhotoFormData>
+  form?: Partial<PhotoFormData>,
 ): { takenAt: string, takenAtNaive: string } => ({
   takenAt: form?.takenAt || generateLocalPostgresString(),
   takenAtNaive: form?.takenAtNaive || generateLocalNaivePostgresString(),

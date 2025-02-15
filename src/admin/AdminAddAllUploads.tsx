@@ -5,11 +5,7 @@ import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import Container from '@/components/Container';
 import { addAllUploadsAction } from '@/photo/actions';
 import { PATH_ADMIN_PHOTOS } from '@/site/paths';
-import {
-  Tags,
-  convertTagsForForm,
-  getValidationMessageForTags,
-} from '@/tag';
+import { Tags } from '@/tag';
 import {
   generateLocalNaivePostgresString,
   generateLocalPostgresString,
@@ -22,6 +18,7 @@ import { Dispatch, SetStateAction, useRef, useState } from 'react';
 import { BiCheckCircle, BiImageAdd } from 'react-icons/bi';
 import ProgressButton from '@/components/primitives/ProgressButton';
 import { UrlAddStatus } from './AdminUploadsClient';
+import PhotoTagFieldset from './PhotoTagFieldset';
 
 const UPLOAD_BATCH_SIZE = 4;
 
@@ -38,8 +35,6 @@ export default function AdminAddAllUploads({
   setIsAdding: (isAdding: boolean) => void
   setUrlAddStatuses: Dispatch<SetStateAction<UrlAddStatus[]>>
 }) {
-  const divRef = useRef<HTMLDivElement>(null);
-
   const [buttonText, setButtonText] = useState('Add All Uploads');
   const [showTags, setShowTags] = useState(false);
   const [tags, setTags] = useState('');
@@ -51,18 +46,19 @@ export default function AdminAddAllUploads({
   const router = useRouter();
 
   const addedUploadCount = useRef(0);
-  const addUploadUrls = async (uploadUrls: string[]) => {
+  const addUploadUrls = async (uploadUrls: string[], isFinalBatch: boolean) => {
     try {
       const stream = await addAllUploadsAction({
         uploadUrls,
         tags: showTags ? tags : undefined,
         takenAtLocal: generateLocalPostgresString(),
         takenAtNaiveLocal: generateLocalNaivePostgresString(),
+        shouldRevalidateAllKeysAndPaths: isFinalBatch,
       });
       for await (const data of readStreamableValue(stream)) {
         setButtonText(addedUploadCount.current === 0
           ? `Adding 1 of ${storageUrls.length}`
-          : `Adding ${addedUploadCount.current + 1} of ${storageUrls.length}`
+          : `Adding ${addedUploadCount.current + 1} of ${storageUrls.length}`,
         );
         setUrlAddStatuses(current => {
           const update = current.map(status =>
@@ -74,7 +70,7 @@ export default function AdminAddAllUploads({
                 statusMessage: data.statusMessage,
                 progress: data.progress,
               }
-              : status
+              : status,
           );
           addedUploadCount.current = update
             .filter(({ status }) => status === 'added')
@@ -109,7 +105,7 @@ export default function AdminAddAllUploads({
         <div className="w-full space-y-4 py-1">
           <div className="flex">
             <div className={clsx(
-              'flex-grow',
+              'grow',
               tagErrorMessage ? 'text-error' : 'text-main',
             )}>
               {showTags
@@ -121,36 +117,20 @@ export default function AdminAddAllUploads({
               label="Apply tags"
               type="checkbox"
               value={showTags ? 'true' : 'false'}
-              onChange={value => {
-                setShowTags(value === 'true');
-                if (value === 'true') {
-                  setTimeout(() =>
-                    divRef.current?.querySelectorAll('input')[0]?.focus()
-                  , 100);
-                }
-              }}
+              onChange={value => setShowTags(value === 'true')}
               readOnly={isAdding}
             />
           </div>
-          <div
-            ref={divRef}
-            className={showTags && !actionErrorMessage ? undefined : 'hidden'}
-          >
-            <FieldSetWithStatus
-              id="tags"
-              label="Optional Tags"
-              tagOptions={convertTagsForForm(uniqueTags)}
-              value={tags}
-              onChange={tags => {
-                setTags(tags);
-                setTagErrorMessage(getValidationMessageForTags(tags) ?? '');
-              }}
+          {showTags && !actionErrorMessage &&
+            <PhotoTagFieldset
+              tags={tags}
+              tagOptions={uniqueTags}
+              onChange={setTags}
+              onError={setTagErrorMessage}
               readOnly={isAdding}
-              error={tagErrorMessage}
-              required={false}
+              openOnLoad
               hideLabel
-            />
-          </div>
+            />}
           <div className="space-y-2">
             <ProgressButton
               primary
@@ -173,8 +153,11 @@ export default function AdminAddAllUploads({
                   const uploadsToAdd = storageUrls.slice();
                   try {
                     while (uploadsToAdd.length > 0) {
+                      const nextBatch = uploadsToAdd
+                        .splice(0, UPLOAD_BATCH_SIZE);
                       await addUploadUrls(
-                        uploadsToAdd.splice(0, UPLOAD_BATCH_SIZE),
+                        nextBatch,
+                        uploadsToAdd.length === 0,
                       );
                     }
                     setButtonText('Complete');

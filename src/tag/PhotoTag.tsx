@@ -22,7 +22,7 @@ export default function PhotoTag({
       href={pathForTag(tag)}
       icon={<FaTag
         size={11}
-        className="translate-y-[1px]"
+        className="translate-y-[0.5px]"
       />}
       type={type}
       badged={badged}

@@ -27,7 +27,7 @@ import usePreventNavigation from '@/utility/usePreventNavigation';
 import { useAppState } from '@/state/AppState';
 import UpdateBlurDataButton from '../UpdateBlurDataButton';
 import { getNextImageUrlForManipulation } from '@/services/next-image';
-import { BLUR_ENABLED } from '@/site/config';
+import { BLUR_ENABLED, IS_PREVIEW } from '@/site/config';
 import { PhotoDbInsert } from '..';
 import ErrorNote from '@/components/ErrorNote';
 
@@ -204,7 +204,7 @@ export default function PhotoForm({
       case 'blurData':
         return shouldDebugImageFallbacks && type === 'edit' && formData.url
           ? <UpdateBlurDataButton
-            photoUrl={getNextImageUrlForManipulation(formData.url)}
+            photoUrl={getNextImageUrlForManipulation(formData.url, IS_PREVIEW)}
             onUpdatedBlurData={blurData =>
               setFormData(data => ({ ...data, blurData }))}
           />
@@ -282,7 +282,11 @@ export default function PhotoForm({
           ? createPhotoAction
           : updatePhotoAction
         )(data)
-          .catch(e => setFormActionErrorMessage(e.message))}
+          .catch(e => {
+            if (e.message !== 'NEXT_REDIRECT') {
+              setFormActionErrorMessage(e.message);
+            }
+          })}
         onSubmit={() => {
           setFormActionErrorMessage('');
           (document.activeElement as HTMLElement)?.blur?.();
@@ -384,7 +388,7 @@ export default function PhotoForm({
           <div className={clsx(
             'absolute -top-16 -left-2 right-0 bottom-0 -z-10',
             'pointer-events-none',
-            'bg-gradient-to-t',
+            'bg-linear-to-t',
             'from-white/90 from-60%',
             'dark:from-black/90 dark:from-50%',
           )} />

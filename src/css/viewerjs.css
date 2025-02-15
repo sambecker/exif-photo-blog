@@ -1,0 +1,60 @@
+@import 'viewerjs/dist/viewer.css';
+
+.viewer-canvas {
+  background-color: black;
+}
+.viewer-reset::before {
+  content: '1:1';
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  display: inline-block;
+  position: relative;
+  bottom: -9px;
+  letter-spacing: -2px;
+  background-image: none;
+}
+.viewer-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 20px;
+  right: 20px;
+}
+.viewer-close::before {
+  transform: scale(1.1);
+}
+.viewer-button {
+  width: 40px;
+  height: 40px;
+}
+.viewer-button::before {
+  bottom: auto;
+  left: auto;
+}
+.viewer-button:focus {
+  box-shadow: none;
+}
+.viewer-button:active {
+  opacity: 0.5;
+}
+.viewer-toolbar > ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0rem 0.25rem 2rem 0.25rem;
+}
+.viewer-toolbar > ul > li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+}
+.viewer-toolbar > ul > li:focus {
+  box-shadow: none;
+}
+.viewer-reset::before {
+  left:-1px;
+}

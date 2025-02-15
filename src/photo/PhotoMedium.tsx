@@ -1,15 +1,19 @@
 'use client';
 
-import { Photo, altTextForPhoto, doesPhotoNeedBlurCompatibility } from '.';
+import {
+  Photo,
+  PhotoSetCategory,
+  altTextForPhoto,
+  doesPhotoNeedBlurCompatibility,
+} from '.';
 import ImageMedium from '@/components/image/ImageMedium';
-import Link from 'next/link';
 import { clsx } from 'clsx/lite';
 import { pathForPhoto } from '@/site/paths';
-import { Camera } from '@/camera';
-import { FilmSimulation } from '@/simulation';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/site/config';
 import { useRef } from 'react';
-import useOnVisible from '@/utility/useOnVisible';
+import useVisible from '@/utility/useVisible';
+import LinkWithStatus from '@/components/LinkWithStatus';
+import Spinner from '@/components/Spinner';
 
 export default function PhotoMedium({
   photo,
@@ -24,22 +28,18 @@ export default function PhotoMedium({
   onVisible,
 }: {
   photo: Photo
-  tag?: string
-  camera?: Camera
-  simulation?: FilmSimulation
-  focal?: number
   selected?: boolean
   priority?: boolean
   prefetch?: boolean
   className?: string
   onVisible?: () => void
-}) {
+} & PhotoSetCategory) {
   const ref = useRef<HTMLAnchorElement>(null);
 
-  useOnVisible(ref, onVisible);
+  useVisible({ ref, onVisible });
 
   return (
-    <Link
+    <LinkWithStatus
       ref={ref}
       href={pathForPhoto({ photo, tag, camera, simulation, focal })}
       className={clsx(
@@ -49,16 +49,28 @@ export default function PhotoMedium({
       )}
       prefetch={prefetch}
     >
-      <ImageMedium
-        src={photo.url}
-        aspectRatio={photo.aspectRatio}
-        blurDataURL={photo.blurData}
-        blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
-        className="flex object-cover w-full h-full"
-        imgClassName="object-cover w-full h-full"
-        alt={altTextForPhoto(photo)}
-        priority={priority}
-      />
-    </Link>
+      {({ isLoading }) =>
+        <div className="w-full h-full">
+          {isLoading &&
+            <div className={clsx(
+              'absolute inset-0 flex items-center justify-center',
+              'text-white bg-black/25 backdrop-blur-xs',
+              'animate-fade-in',
+              'z-10',
+            )}>
+              <Spinner size={20} color="text" />
+            </div>}
+          <ImageMedium
+            src={photo.url}
+            aspectRatio={photo.aspectRatio}
+            blurDataURL={photo.blurData}
+            blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
+            className="flex object-cover w-full h-full "
+            imgClassName="object-cover w-full h-full"
+            alt={altTextForPhoto(photo)}
+            priority={priority}
+          />
+        </div>}
+    </LinkWithStatus>
   );
 };

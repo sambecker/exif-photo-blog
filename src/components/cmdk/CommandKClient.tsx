@@ -15,6 +15,9 @@ import {
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_TAGS,
   PATH_ADMIN_UPLOADS,
+  PATH_FEED_INFERRED,
+  PATH_GRID_INFERRED,
+  PATH_ROOT,
   PATH_SIGN_IN,
   pathForPhoto,
   pathForTag,
@@ -23,12 +26,12 @@ import Modal from '../Modal';
 import { clsx } from 'clsx/lite';
 import { useDebounce } from 'use-debounce';
 import Spinner from '../Spinner';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
 import { IoInvertModeSharp } from 'react-icons/io5';
 import { useAppState } from '@/state/AppState';
-import { queryPhotosByTitleAction } from '@/photo/actions';
+import { searchPhotosAction } from '@/photo/actions';
 import { RiToolsFill } from 'react-icons/ri';
 import { BiLockAlt, BiSolidUser } from 'react-icons/bi';
 import { HiDocumentText } from 'react-icons/hi';
@@ -42,6 +45,12 @@ import { Tags, addHiddenToTags, formatTag } from '@/tag';
 import { FaTag } from 'react-icons/fa';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 import CommandKItem from './CommandKItem';
+import { GRID_HOMEPAGE_ENABLED } from '@/site/config';
+import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
+
+const DIALOG_TITLE = 'Global Command-K Menu';
+const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
 
 const LISTENER_KEYDOWN = 'keydown';
 const MINIMUM_QUERY_LENGTH = 2;
@@ -73,17 +82,25 @@ export default function CommandKClient({
   showDebugTools?: boolean
   footer?: string
 }) {
+  const pathname = usePathname();
+
   const {
     isUserSignedIn,
     setUserEmail,
     isCommandKOpen: isOpen,
     hiddenPhotosCount,
+    selectedPhotoIds,
+    setSelectedPhotoIds,
+    isGridHighDensity,
+    areZoomControlsShown,
     arePhotosMatted,
     shouldShowBaselineGrid,
     shouldDebugImageFallbacks,
     setIsCommandKOpen: setIsOpen,
     setShouldRespondToKeyboardCommands,
     setShouldShowBaselineGrid,
+    setIsGridHighDensity,
+    setAreZoomControlsShown,
     setArePhotosMatted,
     setShouldDebugImageFallbacks,
   } = useAppState();
@@ -141,27 +158,33 @@ export default function CommandKClient({
   useEffect(() => {
     if (queryDebounced.length >= MINIMUM_QUERY_LENGTH && !isPending) {
       setIsLoading(true);
-      queryPhotosByTitleAction(queryDebounced).then(photos => {
-        if (isOpenRef.current) {
-          setQueriedSections(photos.length > 0
-            ? [{
-              heading: 'Photos',
-              accessory: <TbPhoto size={14} />,
-              items: photos.map(photo => ({
-                label: titleForPhoto(photo),
-                keywords: getKeywordsForPhoto(photo),
-                annotation: <PhotoDate {...{ photo }} />,
-                accessory: <PhotoSmall photo={photo} />,
-                path: pathForPhoto({ photo }),
-              })),
-            }]
-            : []);
-        } else {
-          // Ignore stale requests that come in after dialog is closed
+      searchPhotosAction(queryDebounced)
+        .then(photos => {
+          if (isOpenRef.current) {
+            setQueriedSections(photos.length > 0
+              ? [{
+                heading: 'Photos',
+                accessory: <TbPhoto size={14} />,
+                items: photos.map(photo => ({
+                  label: titleForPhoto(photo),
+                  keywords: getKeywordsForPhoto(photo),
+                  annotation: <PhotoDate {...{ photo, timezone: undefined }} />,
+                  accessory: <PhotoSmall photo={photo} />,
+                  path: pathForPhoto({ photo }),
+                })),
+              }]
+              : []);
+          } else {
+            // Ignore stale requests that come in after dialog is closed
+            setQueriedSections([]);
+          }
+          setIsLoading(false);
+        })
+        .catch(e => {
+          console.error(e);
           setQueriedSections([]);
-        }
-        setIsLoading(false);
-      });
+          setIsLoading(false);
+        });
     }
   }, [queryDebounced, isPending]);
 
@@ -229,9 +252,17 @@ export default function CommandKClient({
       heading: 'Debug Tools',
       accessory: <RiToolsFill size={16} className="translate-x-[-1px]" />,
       items: [{
+        label: 'Toggle Zoom Controls',
+        action: () => setAreZoomControlsShown?.(prev => !prev),
+        annotation: areZoomControlsShown ? <FaCheck size={12} /> : undefined,
+      }, {
         label: 'Toggle Photo Matting',
         action: () => setArePhotosMatted?.(prev => !prev),
         annotation: arePhotosMatted ? <FaCheck size={12} /> : undefined,
+      }, {
+        label: 'Toggle High Density Grid',
+        action: () => setIsGridHighDensity?.(prev => !prev),
+        annotation: isGridHighDensity ? <FaCheck size={12} /> : undefined,
       }, {
         label: 'Toggle Image Fallbacks',
         action: () => setShouldDebugImageFallbacks?.(prev => !prev),
@@ -246,16 +277,27 @@ export default function CommandKClient({
     });
   }
 
+  const pagesItems: CommandKItem[] = [{
+    label: 'Home',
+    path: PATH_ROOT,
+  }];
+
+  if (GRID_HOMEPAGE_ENABLED) {
+    pagesItems.push({
+      label: 'Feed',
+      path: PATH_FEED_INFERRED,
+    });
+  } else {
+    pagesItems.push({
+      label: 'Grid',
+      path: PATH_GRID_INFERRED,
+    });
+  }
+
   const sectionPages: CommandKSection = {
     heading: 'Pages',
     accessory: <HiDocumentText size={15} className="translate-x-[-1px]" />,
-    items: ([{
-      label: 'Home',
-      path: '/',
-    }, {
-      label: 'Grid',
-      path:'/grid',
-    }]),
+    items: pagesItems,
   };
 
   const adminSection: CommandKSection = {
@@ -278,6 +320,17 @@ export default function CommandKClient({
         label: 'App Config',
         annotation: <BiLockAlt />,
         path: PATH_ADMIN_CONFIGURATION,
+      }, {
+        label: selectedPhotoIds === undefined
+          ? 'Select Multiple Photos'
+          : 'Exit Select Multiple Photos',
+        annotation: <BiLockAlt />,
+        path: selectedPhotoIds === undefined
+          ? PATH_GRID_INFERRED
+          : undefined,
+        action: selectedPhotoIds === undefined
+          ? () => setSelectedPhotoIds?.([])
+          : () => setSelectedPhotoIds?.(undefined),
       }] as CommandKItem[])
         .concat(showDebugTools
           ? [{
@@ -301,7 +354,6 @@ export default function CommandKClient({
     <Command.Dialog
       open={isOpen}
       onOpenChange={setIsOpen}
-      label="Global Command Menu"
       filter={(value, search, keywords) => {
         const searchFormatted = search.trim().toLocaleLowerCase();
         return (
@@ -318,16 +370,21 @@ export default function CommandKClient({
       >
         <div className="space-y-1.5">
           <div className="relative">
+            <VisuallyHidden.Root>
+              <DialogTitle>{DIALOG_TITLE}</DialogTitle>
+              <DialogDescription>{DIALOG_DESCRIPTION}</DialogDescription>
+            </VisuallyHidden.Root>
             <Command.Input
               onChangeCapture={(e) => setQueryLive(e.currentTarget.value)}
               className={clsx(
-                'w-full !min-w-0',
+                'w-full min-w-0!',
                 'focus:ring-0',
-                isPlaceholderVisible || isLoading && '!pr-8',
-                '!border-gray-200 dark:!border-gray-800',
-                'focus:border-gray-200 focus:dark:border-gray-800',
+                isPlaceholderVisible || isLoading && 'pr-8!',
+                'border-gray-200! dark:border-gray-800!',
+                'focus:border-gray-200 dark:focus:border-gray-800',
                 'placeholder:text-gray-400/80',
-                'placeholder:dark:text-gray-700',
+                'dark:placeholder:text-gray-700',
+                'focus:outline-hidden',
                 isPending && 'opacity-20',
               )}
               placeholder="Search photos, views, settings ..."
@@ -392,15 +449,20 @@ export default function CommandKClient({
                       value={key}
                       keywords={keywords}
                       onSelect={() => {
+                        if (action) {
+                          action();
+                          if (!path) { setIsOpen?.(false); }
+                        }
                         if (path) {
-                          setKeyPending(key);
-                          startTransition(async () => {
-                            shouldCloseAfterPending.current = true;
-                            router.push(path, { scroll: true });
-                          });
-                        } else {
-                          setIsOpen?.(false);
-                          action?.();
+                          if (path !== pathname) {
+                            setKeyPending(key);
+                            startTransition(() => {
+                              shouldCloseAfterPending.current = true;
+                              router.push(path, { scroll: true });
+                            });
+                          } else {
+                            setIsOpen?.(false);
+                          }
                         }
                       }}
                       accessory={accessory}

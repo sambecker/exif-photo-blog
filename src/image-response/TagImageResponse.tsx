@@ -40,7 +40,6 @@ export default function TagImageResponse({
           ? <FaStar
             size={height * .066}
             style={{
-              transform: `translateY(${height * .0095}px)`,
               // Fix horizontal distortion in icon size
               width: height * .076,
               marginRight: height * .015,
@@ -49,7 +48,7 @@ export default function TagImageResponse({
           : <FaTag
             size={height * .06}
             style={{
-              transform: `translateY(${height * .016}px)`,
+              transform: `translateY(${height * .006}px)`,
               marginRight: height * .02,
             }}
           />,

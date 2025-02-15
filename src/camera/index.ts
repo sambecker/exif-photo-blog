@@ -9,11 +9,11 @@ export type Camera = {
 };
 
 export interface CameraProps {
-  params: Camera
+  params: Promise<Camera>
 }
 
 export interface PhotoCameraProps {
-  params: Camera & { photoId: string }
+  params: Promise<Camera & { photoId: string }>
 }
 
 export type CameraWithCount = {
@@ -55,28 +55,44 @@ export const cameraFromPhoto = (
     ? { make: photo.make, model: photo.model }
     : fallback ?? CAMERA_PLACEHOLDER;
 
-export const formatCameraText = (
-  { make: makeRaw, model: modelRaw }: Camera,
-  includeMake: 'always' | 'never' | 'if-not-apple' = 'if-not-apple',
-  removeIPhoneOnLongModels?: boolean
-) => {
-  // Remove 'Corporation' from makes like 'Nikon Corporation'
-  const make = makeRaw.replace(/ Corporation/i, '');
-  // Remove potential duplicate make from model
-  let model = modelRaw.replace(`${make} `, '');
-  if (
-    removeIPhoneOnLongModels &&
-    model.includes('iPhone') &&
-    model.length > 9
-  ) {
-    model = model.replace(/iPhone\s*/i, '');
-  }
-  return (
-    includeMake === 'never' || 
-    includeMake === 'if-not-apple' && make === 'Apple'
-  ) ? model
-    : `${make} ${model}`;
-};
+const isCameraMakeApple = (make?: string) =>
+  make?.toLocaleLowerCase() === 'apple';
 
-export const formatCameraModelTextShort = (camera: Camera) =>
-  formatCameraText(camera, 'never', true);
+export const isCameraApple = ({ make }: Camera) =>
+  isCameraMakeApple(make);
+
+export const formatCameraText = (
+  { make, model: modelRaw }: Camera,
+  length:
+    'long' |    // Unmodified make and model
+    'medium' |  // Make and model, with modifiers removed
+    'short'     // Model only
+  = 'medium',
+) => {
+  // Capture simple make without modifiers like 'Corporation' or 'Company'
+  const makeSimple = make.match(/^(\S+)/)?.[1];
+  const doesModelStartWithMake = (
+    makeSimple &&
+    modelRaw.toLocaleLowerCase().startsWith(makeSimple.toLocaleLowerCase())
+  );
+  let model = modelRaw;
+  switch (length) {
+  case 'long':
+    return `${make} ${model}`;
+  case 'medium':
+    return doesModelStartWithMake || isCameraMakeApple(make)
+      ? model
+      : `${make} ${model}`;
+  case 'short':
+    model = doesModelStartWithMake
+      ? model.replace(makeSimple, '').trim()
+      : model;
+    if (
+      model.includes('iPhone') &&
+      model.length > 9
+    ) {
+      model = model.replace(/iPhone\s*/i, '');
+    }
+    return model;
+  }
+};

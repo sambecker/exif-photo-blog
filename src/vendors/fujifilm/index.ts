@@ -233,7 +233,7 @@ export const labelForFilmSimulation = (simulation: FujifilmSimulation) =>
 
 const parseFujifilmMakerNote = (
   bytes: Buffer,
-  valueForTagUInt: (tagId: number, value: number) => void
+  valueForTagUInt: (tagId: number, value: number) => void,
 ) => {
   const tagCount = bytes.readUint16LE(BYTE_INDEX_TAG_COUNT);
   for (let i = 0; i < tagCount; i++) {

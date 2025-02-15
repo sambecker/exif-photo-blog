@@ -1,7 +1,11 @@
+'use client';
+
 import { ReactNode } from 'react';
 import LabeledIcon, { LabeledIconType } from './LabeledIcon';
 import Badge from '../Badge';
 import { clsx } from 'clsx/lite';
+import LinkWithStatus from '../LinkWithStatus';
+import Spinner from '../Spinner';
 
 export interface EntityLinkExternalProps {
   type?: LabeledIconType
@@ -18,10 +22,12 @@ export default function EntityLink({
   type,
   badged,
   contrast = 'medium',
-  href,
+  href = '', // Make link optional for debugging purposes
   prefetch,
   title,
   hoverEntity,
+  truncate = true,
+  className,
   debug,
 }: {
   icon: ReactNode
@@ -32,6 +38,8 @@ export default function EntityLink({
   prefetch?: boolean
   title?: string
   hoverEntity?: ReactNode
+  truncate?: boolean
+  className?: string
   debug?: boolean
 } & EntityLinkExternalProps) {
   const classForContrast = () => {
@@ -55,36 +63,53 @@ export default function EntityLink({
   </>;
 
   return (
-    <span className="group inline-flex gap-2">
-      <LabeledIcon {...{
-        icon,
-        iconWide,
-        href,
-        prefetch,
-        title,
-        type,
-        className: clsx(
-          classForContrast(),
-          href && !badged && 'hover:text-gray-900 dark:hover:text-gray-100',
-        ),
-        debug,
-      }}>
-        {badged
-          ? <Badge
-            type="small"
-            highContrast={contrast === 'high'}
-            className='translate-y-[-0.5px]'
-            uppercase
-            interactive
-          >
-            {renderLabel()}
-          </Badge>
-          : renderLabel()}
-      </LabeledIcon>
-      {hoverEntity !== undefined &&
-        <span className="hidden group-hover:inline">
-          {hoverEntity}
-        </span>}
+    <span className="group inline-flex w-full">
+      <LinkWithStatus
+        href={href}
+        className={clsx(
+          'inline-flex items-center gap-2', 
+          className,
+        )}
+      >
+        {({ isLoading }) => <>
+          <LabeledIcon {...{
+            icon,
+            iconWide,
+            href,
+            prefetch,
+            title,
+            type,
+            className: clsx(
+              classForContrast(),
+              href && !badged && 'hover:text-gray-900 dark:hover:text-gray-100',
+            ),
+            debug,
+          }}>
+            {badged
+              ? <Badge
+                type="small"
+                highContrast={contrast === 'high'}
+                className='translate-y-[-0.5px]'
+                uppercase
+                interactive
+              >
+                {renderLabel()}
+              </Badge>
+              : <span className={clsx(
+                truncate && 'inline-flex max-w-full *:truncate',
+              )}>
+                {renderLabel()}
+              </span>}
+          </LabeledIcon>
+          {!isLoading && hoverEntity !== undefined &&
+            <span className="hidden group-hover:inline text-dim">
+              {hoverEntity}
+            </span>}
+          {isLoading && <Spinner className={clsx(
+            badged && 'translate-y-[0.5px]',
+          )} />}
+        </>}
+      </LinkWithStatus>
     </span>
   );
 }

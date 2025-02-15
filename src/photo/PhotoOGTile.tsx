@@ -1,5 +1,6 @@
 import {
   Photo,
+  PhotoSetCategory,
   descriptionForPhoto,
   titleForPhoto,
 } from '@/photo';
@@ -16,6 +17,7 @@ export default function PhotoOGTile({
   onFail,
   retryTime,
   onVisible,
+  ...categories
 }: {
   photo: Photo
   loadingState?: OGLoadingState
@@ -24,12 +26,12 @@ export default function PhotoOGTile({
   riseOnHover?: boolean
   retryTime?: number
   onVisible?: () => void
-}) {
+} & PhotoSetCategory) {
   return (
     <OGTile {...{
       title: titleForPhoto(photo),
       description: descriptionForPhoto(photo),
-      path: pathForPhoto({ photo }),
+      path: pathForPhoto({ photo, ...categories }),
       pathImageAbsolute: absolutePathForPhotoImage(photo),
       loadingState: loadingStateExternal,
       onLoad,
@@ -37,6 +39,6 @@ export default function PhotoOGTile({
       riseOnHover,
       retryTime,
       onVisible,
-    }}/>
+    }} />
   );
 };

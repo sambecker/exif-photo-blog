@@ -1,31 +1,26 @@
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/react";
-import { clsx } from "clsx/lite";
-import { IBM_Plex_Mono } from "next/font/google";
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
+import { clsx } from 'clsx/lite';
 import {
   BASE_URL,
+  DEFAULT_THEME,
   SITE_DESCRIPTION,
   SITE_DOMAIN_OR_TITLE,
   SITE_TITLE,
-} from "@/site/config";
-import AppStateProvider from "@/state/AppStateProvider";
-import ToasterWithThemes from "@/toast/ToasterWithThemes";
-import PhotoEscapeHandler from "@/photo/PhotoEscapeHandler";
-import { Metadata } from "next/types";
-import { ThemeProvider } from "next-themes";
-import Nav from "@/site/Nav";
-import Footer from "@/site/Footer";
-import CommandK from "@/site/CommandK";
-import SwrConfigClient from "../state/SwrConfigClient";
+} from '@/site/config';
+import AppStateProvider from '@/state/AppStateProvider';
+import ToasterWithThemes from '@/toast/ToasterWithThemes';
+import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
+import { Metadata } from 'next/types';
+import { ThemeProvider } from 'next-themes';
+import Nav from '@/site/Nav';
+import Footer from '@/site/Footer';
+import CommandK from '@/site/CommandK';
+import SwrConfigClient from '../state/SwrConfigClient';
+import AdminBatchEditPanel from '@/admin/AdminBatchEditPanel';
+import ShareModals from '@/share/ShareModals';
 
-import "../site/globals.css";
-import "../site/sonner.css";
-
-const ibmPlexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  variable: "--font-ibm-plex-mono",
-});
+import '../../tailwind.css';
 
 export const metadata: Metadata = {
   title: SITE_TITLE,
@@ -80,15 +75,27 @@ export default function RootLayout({
       // Suppress hydration errors due to next-themes behavior
       suppressHydrationWarning
     >
-      <body className={ibmPlexMono.variable}>
+      <body>
         <AppStateProvider>
           <SwrConfigClient>
-            <ThemeProvider attribute="class">
-              <main className={clsx("mx-3 mb-3", "lg:mx-6 lg:mb-6")}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme={DEFAULT_THEME}
+            >
+              <main className={clsx(
+                'mx-3 mb-3',
+                'lg:mx-6 lg:mb-6',
+                // Center on large screens
+                // 1280px width defined in components/SiteGrid.tsx
+                '3xl:mx-auto 3xl:w-[1280px]',
+              )}>
                 <Nav siteDomainOrTitle={SITE_DOMAIN_OR_TITLE} />
-                <div
-                  className={clsx("min-h-[16rem] sm:min-h-[30rem]", "mb-12")}
-                >
+                <AdminBatchEditPanel />
+                <div className={clsx(
+                  'min-h-[16rem] sm:min-h-[30rem]',
+                  'mb-12',
+                )}>
+                  <ShareModals />
                   {children}
                   <Analytics />
                 </div>

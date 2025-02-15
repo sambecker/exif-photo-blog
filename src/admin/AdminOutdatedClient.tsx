@@ -48,7 +48,7 @@ export default function AdminOutdatedClient({
         onClick={async () => {
           if (window.confirm(
             // eslint-disable-next-line max-len
-            `Are you sure you want to sync the oldest ${updateBatchSize} photos? This action cannot be undone.`
+            `Are you sure you want to sync the oldest ${updateBatchSize} photos? This action cannot be undone.`,
           )) {
             const photosToSync = photos
               .slice(0, updateBatchSize)

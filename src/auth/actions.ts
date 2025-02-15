@@ -6,6 +6,7 @@ import {
   KEY_CREDENTIALS_SIGN_IN_ERROR,
   KEY_CREDENTIALS_SIGN_IN_ERROR_URL,
   auth,
+  generateAuthSecret,
   signIn,
   signOut,
 } from '@/auth';
@@ -43,7 +44,9 @@ export const signInAction = async (
 export const signOutAndRedirectAction = async () =>
   signOut({ redirectTo: PATH_ROOT });
 
-export const getAuthAction = () => auth();
+export const getAuthAction = async () => auth();
 
-export const logClientAuthUpdate = (data: Session | null | undefined) =>
+export const logClientAuthUpdate = async (data: Session | null | undefined) =>
   console.log('Client auth update', data);
+
+export const generateAuthSecretAction = async () => generateAuthSecret();

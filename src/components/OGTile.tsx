@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { BiError } from 'react-icons/bi';
 import Spinner from '@/components/Spinner';
 import { IMAGE_OG_DIMENSION } from '../image-response';
-import useOnVisible from '@/utility/useOnVisible';
+import useVisible from '@/utility/useVisible';
 
 export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 
@@ -51,7 +51,7 @@ export default function OGTile({
 
   const { width, height, aspectRatio } = IMAGE_OG_DIMENSION;
 
-  useOnVisible(ref, onVisible);
+  useVisible({ ref, onVisible });
 
   return (
     <Link
@@ -60,7 +60,7 @@ export default function OGTile({
       className={clsx(
         'group',
         'block w-full rounded-md overflow-hidden',
-        'border shadow-sm',
+        'border shadow-xs',
         'border-gray-200 dark:border-gray-800',
         riseOnHover && 'hover:-translate-y-1.5 transition-transform',
       )}
@@ -78,7 +78,7 @@ export default function OGTile({
           </div>}
         {loadingState === 'failed' &&
           <div className={clsx(
-            'absolute top-0 left-0 right-0 bottom-0 z-[11]',
+            'absolute top-0 left-0 right-0 bottom-0 z-11',
             'flex items-center justify-center',
             'text-red-400',
           )}>
@@ -121,8 +121,8 @@ export default function OGTile({
         'h-full flex flex-col gap-0.5 p-3',
         'font-sans leading-tight',
         'bg-gray-50 dark:bg-gray-900/50',
-        'group-active:bg-gray-50 group-active:dark:bg-gray-900/50',
-        'group-hover:bg-gray-100 group-hover:dark:bg-gray-900/70',
+        'group-active:bg-gray-50 dark:group-active:bg-gray-900/50',
+        'group-hover:bg-gray-100 dark:group-hover:bg-gray-900/70',
         'border-t border-gray-200 dark:border-gray-800',
       )}>
         <div className="text-gray-800 dark:text-white font-medium">

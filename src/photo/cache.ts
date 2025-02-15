@@ -81,7 +81,7 @@ const getPhotosCacheKeys = (options: GetPhotosOptions = {}) => {
   Object.keys(options).forEach(key => {
     const tag = getPhotosCacheKeyForOption(
       options,
-      key as keyof GetPhotosOptions
+      key as keyof GetPhotosOptions,
     );
     if (tag) { tags.push(tag); }
   });
@@ -181,7 +181,7 @@ export const getPhotosMostRecentUpdateCached =
 export const getPhotoCached = (...args: Parameters<typeof getPhoto>) =>
   unstable_cache(
     getPhoto,
-    [KEY_PHOTOS, KEY_PHOTO]
+    [KEY_PHOTOS, KEY_PHOTO],
   )(...args).then(photo => photo ? parseCachedPhotoDates(photo) : undefined);
 
 export const getUniqueTagsCached =
@@ -193,19 +193,19 @@ export const getUniqueTagsCached =
 export const getUniqueTagsHiddenCached =
   unstable_cache(
     getUniqueTagsHidden,
-    [KEY_PHOTOS, KEY_TAGS, KEY_HIDDEN]
+    [KEY_PHOTOS, KEY_TAGS, KEY_HIDDEN],
   );
 
 export const getUniqueCamerasCached =
   unstable_cache(
     getUniqueCameras,
-    [KEY_PHOTOS, KEY_CAMERAS]
+    [KEY_PHOTOS, KEY_CAMERAS],
   );
 
 export const getUniqueLensesCached =
   unstable_cache(
     getUniqueLenses,
-    [KEY_PHOTOS, KEY_LENSES]
+    [KEY_PHOTOS, KEY_LENSES],
   );
 
 export const getUniqueFilmSimulationsCached =

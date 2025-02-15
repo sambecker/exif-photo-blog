@@ -11,7 +11,7 @@ import { ExifData, ExifParserFactory } from 'ts-exif-parser';
 import { PhotoFormData } from './form';
 import { FilmSimulation } from '@/simulation';
 import sharp, { Sharp } from 'sharp';
-import { GEO_PRIVACY_ENABLED, PRO_MODE_ENABLED } from '@/site/config';
+import { GEO_PRIVACY_ENABLED, PRESERVE_ORIGINAL_UPLOADS } from '@/site/config';
 
 const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
@@ -29,6 +29,7 @@ export const extractImageDataFromBlobPath = async (
   imageResizedBase64?: string
   shouldStripGpsData?: boolean
   fileBytes?: ArrayBuffer
+  error?: string
 }> => {
   const {
     includeInitialPhotoFields,
@@ -42,48 +43,59 @@ export const extractImageDataFromBlobPath = async (
 
   const extension = getExtensionFromStorageUrl(url);
 
-  const fileBytes = blobPath
-    ? await fetch(url, { cache: 'no-store' }).then(res => res.arrayBuffer())
-    : undefined;
-
   let exifData: ExifData | undefined;
   let filmSimulation: FilmSimulation | undefined;
   let blurData: string | undefined;
   let imageResizedBase64: string | undefined;
   let shouldStripGpsData = false;
+  let error: string | undefined;
 
-  if (fileBytes) {
-    const parser = ExifParserFactory.create(Buffer.from(fileBytes));
+  const fileBytes = blobPath
+    ? await fetch(url, { cache: 'no-store' }).then(res => res.arrayBuffer())
+      .catch(e => {
+        error = `Error fetching image from ${url}: "${e.message}"`;
+        return undefined;
+      })
+    : undefined;
 
-    // Data for form
-    parser.enableBinaryFields(false);
-    exifData = parser.parse();
+  try {
+    if (fileBytes) {
+      const parser = ExifParserFactory.create(Buffer.from(fileBytes));
 
-    // Capture film simulation for Fujifilm cameras
-    if (isExifForFujifilm(exifData)) {
-      // Parse exif data again with binary fields
-      // in order to access MakerNote tag
-      parser.enableBinaryFields(true);
-      const exifDataBinary = parser.parse();
-      const makerNote = exifDataBinary.tags?.MakerNote;
-      if (Buffer.isBuffer(makerNote)) {
-        filmSimulation = getFujifilmSimulationFromMakerNote(makerNote);
+      // Data for form
+      parser.enableBinaryFields(false);
+      exifData = parser.parse();
+
+      // Capture film simulation for Fujifilm cameras
+      if (isExifForFujifilm(exifData)) {
+        // Parse exif data again with binary fields
+        // in order to access MakerNote tag
+        parser.enableBinaryFields(true);
+        const exifDataBinary = parser.parse();
+        const makerNote = exifDataBinary.tags?.MakerNote;
+        if (Buffer.isBuffer(makerNote)) {
+          filmSimulation = getFujifilmSimulationFromMakerNote(makerNote);
+        }
       }
-    }
 
-    if (generateBlurData) {
-      blurData = await blurImage(fileBytes);
-    }
+      if (generateBlurData) {
+        blurData = await blurImage(fileBytes);
+      }
 
-    if (generateResizedImage) {
-      imageResizedBase64 = await resizeImage(fileBytes);
-    }
+      if (generateResizedImage) {
+        imageResizedBase64 = await resizeImage(fileBytes);
+      }
 
-    shouldStripGpsData = GEO_PRIVACY_ENABLED && (
-      Boolean(exifData.tags?.GPSLatitude) ||
-      Boolean(exifData.tags?.GPSLongitude)
-    );
+      shouldStripGpsData = GEO_PRIVACY_ENABLED && (
+        Boolean(exifData.tags?.GPSLatitude) ||
+        Boolean(exifData.tags?.GPSLongitude)
+      );
+    }
+  } catch (e) {
+    error = `Error extracting image data from ${url}: "${e}"`;
   }
+
+  if (error) { console.log(error); }
 
   return {
     blobId,
@@ -102,6 +114,7 @@ export const extractImageDataFromBlobPath = async (
     imageResizedBase64,
     shouldStripGpsData,
     fileBytes,
+    error,
   };
 };
 
@@ -110,20 +123,21 @@ const generateBase64 = async (
   middleware: (sharp: Sharp) => Sharp,
 ) => 
   middleware(sharp(image))
+    .withMetadata()
     .toFormat('jpeg', { quality: 90 })
     .toBuffer()
     .then(data => `data:image/jpeg;base64,${data.toString('base64')}`);
 
 const resizeImage = async (image: ArrayBuffer) => 
-  generateBase64(image, sharp =>  sharp
-    .resize(IMAGE_WIDTH_RESIZE)
+  generateBase64(image, sharp => sharp
+    .resize(IMAGE_WIDTH_RESIZE),
   );
 
 const blurImage = async (image: ArrayBuffer) => 
-  generateBase64(image, sharp =>  sharp
+  generateBase64(image, sharp => sharp
     .resize(IMAGE_WIDTH_BLUR)
     .modulate({ saturation: 1.15 })
-    .blur(4)
+    .blur(4),
   );
 
 export const resizeImageFromUrl = async (url: string) => 
@@ -168,5 +182,5 @@ export const removeGpsData = async (image: ArrayBuffer) =>
         GPSHPositioningError: GPS_NULL_STRING,
       },
     })
-    .toFormat('jpeg', { quality: PRO_MODE_ENABLED ? 95 : 80 })
+    .toFormat('jpeg', { quality: PRESERVE_ORIGINAL_UPLOADS ? 95 : 80 })
     .toBuffer();

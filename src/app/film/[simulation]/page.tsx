@@ -1,20 +1,35 @@
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
+import { getUniqueFilmSimulations } from '@/photo/db/query';
 import { FilmSimulation, generateMetaForFilmSimulation } from '@/simulation';
 import FilmSimulationOverview from '@/simulation/FilmSimulationOverview';
+import { IS_PRODUCTION } from '@/site/config';
 import { getPhotosFilmSimulationDataCached } from '@/simulation/data';
+import { STATICALLY_OPTIMIZED_PHOTO_CATEGORIES } from '@/site/config';
 import { Metadata } from 'next/types';
 import { cache } from 'react';
 
 const getPhotosFilmSimulationDataCachedCached =
   cache(getPhotosFilmSimulationDataCached);
 
+export let generateStaticParams:
+  (() => Promise<{ simulation: FilmSimulation }[]>) | undefined = undefined;
+
+if (STATICALLY_OPTIMIZED_PHOTO_CATEGORIES && IS_PRODUCTION) {
+  generateStaticParams = async () => {
+    const simulations = await getUniqueFilmSimulations();
+    return simulations.map(({ simulation }) => ({ simulation }));
+  };
+}
+
 interface FilmSimulationProps {
-  params: { simulation: FilmSimulation }
+  params: Promise<{ simulation: FilmSimulation }>
 }
 
 export async function generateMetadata({
-  params: { simulation },
+  params,
 }: FilmSimulationProps): Promise<Metadata> {
+  const { simulation } = await params;
+
   const [
     photos,
     { count, dateRange },
@@ -48,8 +63,10 @@ export async function generateMetadata({
 }
 
 export default async function FilmSimulationPage({
-  params: { simulation },
+  params,
 }: FilmSimulationProps) {
+  const { simulation } = await params;
+
   const [
     photos,
     { count, dateRange },

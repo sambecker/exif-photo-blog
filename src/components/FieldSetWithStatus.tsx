@@ -1,11 +1,12 @@
 'use client';
 
-import { LegacyRef } from 'react';
+import { Ref } from 'react';
 import { useFormStatus } from 'react-dom';
 import Spinner from './Spinner';
 import { clsx } from 'clsx/lite';
 import { FieldSetType, AnnotatedTag } from '@/photo/form';
 import TagInput from './TagInput';
+import { FiChevronDown } from 'react-icons/fi';
 
 export default function FieldSetWithStatus({
   id,
@@ -29,7 +30,7 @@ export default function FieldSetWithStatus({
   hideLabel,
 }: {
   id: string
-  label: string
+  label?: string
   note?: string
   error?: string
   value: string
@@ -37,14 +38,14 @@ export default function FieldSetWithStatus({
   onChange?: (value: string) => void
   selectOptions?: { value: string, label: string }[]
   selectOptionsDefaultLabel?: string
-  tagOptions?: AnnotatedTag []
+  tagOptions?: AnnotatedTag[]
   placeholder?: string
   loading?: boolean
   required?: boolean
   readOnly?: boolean
   capitalize?: boolean
   type?: FieldSetType
-  inputRef?: LegacyRef<HTMLInputElement>
+  inputRef?: Ref<HTMLInputElement>
   accessory?: React.ReactNode
   hideLabel?: boolean
 }) {
@@ -55,10 +56,10 @@ export default function FieldSetWithStatus({
       'space-y-1',
       type === 'checkbox' && 'flex items-center gap-2',
     )}>
-      {!hideLabel &&
+      {!hideLabel && label &&
         <label
           className={clsx(
-            'flex gap-2 items-center select-none',
+            'flex flex-wrap gap-x-2 items-center select-none',
             type === 'checkbox' && 'order-2 pt-[3px]',
           )}
           htmlFor={id}
@@ -70,7 +71,7 @@ export default function FieldSetWithStatus({
             </span>}
           {isModified && !error &&
             <span className={clsx(
-              'text-main font-medium text-[0.9rem] -ml-1.5 translate-y-[-1px]'
+              'text-main font-medium text-[0.9rem] -ml-1.5 translate-y-[-1px]',
             )}>
               *
             </span>}
@@ -89,28 +90,37 @@ export default function FieldSetWithStatus({
         </label>}
       <div className="flex gap-2">
         {selectOptions
-          ? <select
-            id={id}
-            name={id}
-            value={value}
-            onChange={e => onChange?.(e.target.value)}
-            className={clsx(
-              'w-full',
-              clsx(Boolean(error) && 'error'),
-              // Use special class because `select` can't be readonly
-              readOnly || pending && 'disabled-select',
-            )}
-          >
-            {selectOptionsDefaultLabel &&
-              <option value="">{selectOptionsDefaultLabel}</option>}
-            {selectOptions.map(({ value: optionValue, label: optionLabel }) =>
-              <option
-                key={optionValue}
-                value={optionValue}
-              >
-                {optionLabel}
-              </option>)}
-          </select>
+          ? <div className="relative w-full">
+            <select
+              id={id}
+              name={id}
+              value={value}
+              onChange={e => onChange?.(e.target.value)}
+              className={clsx(
+                'w-full',
+                clsx(Boolean(error) && 'error'),
+                // Use special class because `select` can't be readonly
+                readOnly || pending && 'disabled-select',
+              )}
+            >
+              {selectOptionsDefaultLabel &&
+                <option value="">{selectOptionsDefaultLabel}</option>}
+              {selectOptions.map(({ value: optionValue, label: optionLabel }) =>
+                <option
+                  key={optionValue}
+                  value={optionValue}
+                >
+                  {optionLabel}
+                </option>)}
+            </select>
+            <div className={clsx(
+              'absolute top-0 right-3 z-10 pointer-events-none',
+              'flex h-full items-center',
+              'text-extra-dim text-2xl',
+            )}>
+              <FiChevronDown />
+            </div>
+          </div>
           : tagOptions
             ? <TagInput
               id={id}

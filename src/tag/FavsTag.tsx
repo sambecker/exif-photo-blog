@@ -18,11 +18,11 @@ export default function FavsTag({
   return (
     <EntityLink
       label={badged
-        ? <span className="inline-flex gap-1">
+        ? <span className="inline-flex gap-1 items-center">
           {TAG_FAVS}
           <FaStar
             size={10}
-            className="text-amber-500"
+            className="text-amber-500 translate-y-[-0.5px]"
           />
         </span>
         : TAG_FAVS}

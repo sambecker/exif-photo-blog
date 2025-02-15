@@ -4,7 +4,8 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { clsx } from 'clsx/lite';
 import { ReactNode, useState, useTransition } from 'react';
 import LoaderButton from '../primitives/LoaderButton';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { downloadFileFromBrowser } from '@/utility/url';
 
 export default function MoreMenuItem({
   label,
@@ -12,14 +13,18 @@ export default function MoreMenuItem({
   href,
   hrefDownloadName,
   action,
+  shouldPreventDefault = true,
 }: {
   label: ReactNode
   icon?: ReactNode
   href?: string
   hrefDownloadName?: string
   action?: () => Promise<void> | void
+  shouldPreventDefault?: boolean
 }) {
   const router = useRouter();
+
+  const pathname = usePathname();
 
   const [isPending, startTransition] = useTransition();
 
@@ -29,28 +34,32 @@ export default function MoreMenuItem({
     <DropdownMenu.Item
       disabled={isLoading}
       className={clsx(
+        'flex items-center h-8',
         'px-2 py-1.5 rounded-[3px]',
-        'select-none hover:outline-none',
+        'select-none hover:outline-hidden',
         'hover:bg-gray-50 active:bg-gray-100',
-        'hover:dark:bg-gray-900/75 active:dark:bg-gray-900',
+        'dark:hover:bg-gray-900/75 dark:active:bg-gray-900',
         'whitespace-nowrap',
         isLoading
           ? 'cursor-not-allowed opacity-50'
           : 'cursor-pointer',
       )}
-      onClick={e => {
-        e.preventDefault();
-        if (href) {
-          if (Boolean(hrefDownloadName)) {
-            window.open(href, '_blank');
-          } else {
-            startTransition(() => router.push(href));
-          }
-        } else {
-          const result = action?.();
+      onClick={async e => {
+        if (shouldPreventDefault) { e.preventDefault(); }
+        if (action) {
+          const result = action();
           if (result instanceof Promise) {
             setIsLoading(true);
-            result.finally(() => setIsLoading(false));
+            await result.finally(() => setIsLoading(false));
+          }
+        }
+        if (href && href !== pathname) {
+          if (hrefDownloadName) {
+            setIsLoading(true);
+            downloadFileFromBrowser(href, hrefDownloadName)
+              .finally(() => setIsLoading(false));
+          } else {
+            startTransition(() => router.push(href));
           }
         }
       }}

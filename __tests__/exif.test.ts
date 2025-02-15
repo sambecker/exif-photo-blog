@@ -1,6 +1,25 @@
-import { formatExposureCompensation, formatExposureTime } from '@/utility/exif';
+import {
+  convertApertureValueToFNumber,
+  formatExposureCompensation,
+  formatExposureTime,
+} from '@/utility/exif';
 
 describe('EXIF', () => {
+  describe('converts', () => {
+    it('aperture value to f-number', () => {
+      expect(convertApertureValueToFNumber('0')).toBe('1');
+      expect(convertApertureValueToFNumber('1')).toBe('1.4');
+      expect(convertApertureValueToFNumber('2')).toBe('2');
+      expect(convertApertureValueToFNumber('3')).toBe('2.8');
+      expect(convertApertureValueToFNumber('4')).toBe('4');
+      expect(convertApertureValueToFNumber('5')).toBe('5.6');
+      expect(convertApertureValueToFNumber('6')).toBe('8');
+      expect(convertApertureValueToFNumber('7')).toBe('11');
+      expect(convertApertureValueToFNumber('8')).toBe('16');
+      expect(convertApertureValueToFNumber('9')).toBe('22');
+      expect(convertApertureValueToFNumber('10')).toBe('32');
+    });
+  });
   describe('formats', () => {
     it('exposure time', () => {
       expect(formatExposureTime(0)).toBe(undefined);

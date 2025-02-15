@@ -32,13 +32,13 @@ export default function CommandKItem({
         'px-2',
         accessory ? 'py-2' : 'py-1',
         'rounded-md cursor-pointer tracking-wide',
-        'active:!bg-gray-200/75 active:dark:!bg-gray-800/55',
+        'active:bg-gray-200/75! dark:active:bg-gray-800/55!',
         ...loading
           ? [
-            'data-[selected=true]:dark:bg-gray-900/50',
+            'dark:data-[selected=true]:bg-gray-900/50',
             'data-[selected=true]:bg-gray-100/50',
           ] : [
-            'data-[selected=true]:dark:bg-gray-900/75',
+            'dark:data-[selected=true]:bg-gray-900/75',
             'data-[selected=true]:bg-gray-100',
           ],
         disabled && 'opacity-15',
@@ -48,7 +48,7 @@ export default function CommandKItem({
     >
       <div className="flex items-center gap-2 sm:gap-3">
         {accessory}
-        <span className="grow text-ellipsis truncate">
+        <span className="grow truncate">
           {label}
         </span>
         {annotation && !loading &&

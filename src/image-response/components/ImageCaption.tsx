@@ -28,7 +28,7 @@ export default function ImageCaption({
       fontFamily,
       fontSize: height *.08,
       gap: '1rem', // Mimic mono font space metric
-      lineHeight: 1,
+      lineHeight: 1.2,
       left: 0,
       right: 0,
       ...OG_TEXT_BOTTOM_ALIGNMENT
@@ -45,17 +45,26 @@ export default function ImageCaption({
           top: 0,
         },
     }}>
-      {icon}
-      <div
-        style={{
-          display: 'flex',
-          gap: height * .048,
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-        }}
-      >
-        {children}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: height * .034,
+        ...OG_TEXT_BOTTOM_ALIGNMENT
+          ? { marginBottom: -height * .008 }
+          : { marginTop: -height * .008 },
+      }}>
+        {icon}
+        <div
+          style={{
+            display: 'flex',
+            gap: height * .048,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );

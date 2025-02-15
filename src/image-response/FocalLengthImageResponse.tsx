@@ -39,7 +39,7 @@ export default function FocalLengthImageResponse({
         icon: <TbCone
           size={height * .075}
           style={{
-            transform: `translateY(${height * .007}px) rotate(270deg)`,
+            transform: `translateY(${height * .002}px) rotate(270deg)`,
             marginRight: height * .01,
           }}
         />,
