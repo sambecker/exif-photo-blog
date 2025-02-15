@@ -79,6 +79,9 @@ export default function AdminOutdatedClient({
       <div className="space-y-6">
         <Note>
           <div className="space-y-1.5">
+            <div className="font-bold">
+              Outdated photos found
+            </div>
             {photos.length}
             {' '}
             {photos.length === 1 ? 'photo' : 'photos'}
@@ -88,8 +91,7 @@ export default function AdminOutdatedClient({
             {' '}
             may have: missing EXIF fields, inaccurate blur data,
             {' '}
-            undesired privacy settings
-            {hasAiTextGeneration && ', missing AI-generated text'}
+            undesired privacy settings, or missing AI-generated text
           </div>
         </Note>
         <div className="space-y-4">
