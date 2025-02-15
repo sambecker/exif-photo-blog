@@ -11,6 +11,7 @@ import {
   GRID_HOMEPAGE_ENABLED,
   HAS_STATIC_OPTIMIZATION,
   IS_DEVELOPMENT,
+  IS_PRODUCTION,
   IS_VERCEL_GIT_PROVIDER_GITHUB,
   MATTE_PHOTOS,
   VERCEL_GIT_BRANCH,
@@ -89,7 +90,7 @@ export default async function AdminAppInsights() {
         lensesCount: lenses.length,
         dateRange,
       }}
-      debug={IS_DEVELOPMENT}
+      debug={!IS_PRODUCTION}
     />
   );
 }
