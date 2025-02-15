@@ -53,7 +53,7 @@ const readmeAnchor = (anchor: string) =>
 
 const renderLabeledEnvVar = (label: string, envVar: string, value = '1') =>
   <div className="flex flex-col gap-1.5">
-    <span className="text-sm text-main">
+    <span className="text-xs uppercase font-medium tracking-wider">
       {label}
     </span>
     <EnvVar variable={envVar} value={value} />
@@ -213,6 +213,39 @@ export default function AdminAppInsightsClient({
               in order prevent abuse by to enabling rate limiting.
             </>}
           />}
+          {(noStaticOptimization || debug) && <ScoreCardRow
+            icon={<RiSpeedMiniLine
+              size={19}
+              className="translate-x-[1px] translate-y-[-1.5px]"
+            />}
+            content="Speed up page load times"
+            expandContent={<>
+              Dramatically improve load times by enabling static optimization
+              {' '}
+              on:
+              <div className="flex flex-col gap-y-4 mt-3">
+                {renderLabeledEnvVar(
+                  'Photo pages',
+                  'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS',
+                )}
+                {renderLabeledEnvVar(
+                  'Photo OG images',
+                  'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES',
+                )}
+                {renderLabeledEnvVar(
+                  'Category pages (tags, cameras, etc.)',
+                  'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES',
+                )}
+                {renderLabeledEnvVar(
+                  'Category OG images',
+                  'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORY_OG_IMAGES',
+                )}
+                <span>
+                  See {readmeAnchor('performance')} for cost considerations.
+                </span>
+              </div>
+            </>}
+          />}
           {(noAi || debug) && <ScoreCardRow
             icon={<TbSparkles size={17} />}
             content="Improve SEO + accessibility with AI"
@@ -251,39 +284,6 @@ export default function AdminAppInsightsClient({
               <EnvVar variable="NEXT_PUBLIC_GRID_HOMEPAGE_ENABLED" value="1" />
             </>}
           />}
-          {(noStaticOptimization || debug) && <ScoreCardRow
-            icon={<RiSpeedMiniLine
-              size={19}
-              className="translate-x-[1px] translate-y-[-1.5px]"
-            />}
-            content="Static optimization"
-            expandContent={<>
-              Enable static optimization
-              {' '}
-              by setting any of the following:
-              <div className="flex flex-col gap-y-4 mt-3">
-                {renderLabeledEnvVar(
-                  'Pre-render photo pages',
-                  'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS',
-                )}
-                {renderLabeledEnvVar(
-                  'Pre-render OG image for each photo',
-                  'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES',
-                )}
-                {renderLabeledEnvVar(
-                  'Pre-render category pages (tags, cameras, etc.)',
-                  'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES',
-                )}
-                {renderLabeledEnvVar(
-                  'Pre-render OG image for each category page',
-                  'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORY_OG_IMAGES',
-                )}
-                <span>
-                  See {readmeAnchor('performance')} for cost considerations.
-                </span>
-              </div>
-            </>}
-          />}
         </ScoreCard>}
       <ScoreCard title="Library Stats">
         {(outdatedPhotos || debug) && <ScoreCardRow
@@ -292,7 +292,7 @@ export default function AdminAppInsightsClient({
             className="translate-y-[-2px] text-amber-600"
           />}
           // eslint-disable-next-line max-len
-          content={`You have ${photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED} outdated ${(photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED) === 1 ? 'photo' : 'photos'}`}
+          content={`${photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED} outdated ${(photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED) === 1 ? 'photo' : 'photos'}`}
           expandPath={PATH_ADMIN_OUTDATED}
         />}
         <ScoreCardRow

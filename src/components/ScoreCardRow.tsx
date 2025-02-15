@@ -42,11 +42,15 @@ export default function ScoreCardRow({
         {icon}
       </div>
       <div className="grow space-y-2 py-1.5 w-full overflow-auto">
-        <div className="text-main pr-2">
+        <div className={clsx(
+          'text-main pr-2',
+          // Truncate on small screens unless expanded
+          !isExpanded && 'truncate md:truncate-none',
+        )}>
           {content}
         </div>
         {isExpanded &&
-          <div className="text-medium">
+          <div className="text-medium leading-relaxed">
             {expandContent}
           </div>}
       </div>

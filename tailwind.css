@@ -141,6 +141,10 @@
   @apply
     bg-white dark:bg-black
 }
+@utility bg-medium {
+  @apply
+    bg-gray-200 dark:bg-gray-700
+}
 @utility bg-dim {
   @apply
     bg-gray-100 dark:bg-gray-900/75
