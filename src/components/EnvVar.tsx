@@ -19,9 +19,9 @@ export default function EnvVar({
     >
       <span className="inline-flex items-center gap-1">
         <span className={clsx(
+          'px-1.5 rounded-md',
           'text-[11px] font-medium tracking-wider',
-          'px-1.5 py-[0.5px]',
-          'rounded-md',
+          'text-gray-600 dark:text-gray-300',
           'bg-gray-100 dark:bg-gray-800',
           'whitespace-nowrap',
         )}>

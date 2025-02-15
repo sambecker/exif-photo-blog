@@ -1,16 +1,30 @@
 import { clsx } from 'clsx/lite';
 import { ReactNode, useState } from 'react';
-import { LuChevronsDownUp, LuChevronsUpDown } from 'react-icons/lu';
+import {
+  LuChevronRight,
+  LuChevronsDownUp,
+  LuChevronsUpDown,
+} from 'react-icons/lu';
+import LinkWithStatus from './LinkWithStatus';
+import Spinner from './Spinner';
+
+const expandAccessoryClasses = clsx(
+  'flex items-center justify-center',
+  'w-9 h-8',
+  '*:shrink-0',
+);
 
 export default function ScoreCardRow({
   icon,
   content,
   expandContent,
+  expandPath,
   className,
 }: {
   icon: ReactNode
   content: ReactNode
   expandContent?: ReactNode
+  expandPath?: string
   className?: string
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -39,16 +53,21 @@ export default function ScoreCardRow({
       {expandContent && <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className={clsx(
-          'flex items-center justify-center',
-          'w-9 h-8',
-          '*:shrink-0',
-        )}
+        className={expandAccessoryClasses}
       >
         {isExpanded
           ? <LuChevronsDownUp size={16} />
           : <LuChevronsUpDown size={16} />}
       </button>}
+      {expandPath && <LinkWithStatus
+        className={clsx('button', expandAccessoryClasses)}
+        href={expandPath}
+      >
+        {({ isLoading }) => <> {isLoading
+          ? <Spinner />
+          : <LuChevronRight size={16} />}
+        </>}
+      </LinkWithStatus>}
     </div>
   );
 }

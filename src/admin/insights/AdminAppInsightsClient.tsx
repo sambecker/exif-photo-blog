@@ -30,21 +30,28 @@ import { PATH_ADMIN_OUTDATED } from '@/app-core/paths';
 import { LiaBroomSolid } from 'react-icons/lia';
 import { IoMdGrid } from 'react-icons/io';
 import { RiSpeedMiniLine } from 'react-icons/ri';
-import LinkWithStatus from '@/components/LinkWithStatus';
+
+const DEBUG_COMMIT_SHA = '4cd29ed';
+const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
+const DEBUG_BEHIND_BY = 9;
+const DEBUG_PHOTOS_COUNT_OUTDATED = 7;
 
 const readmeAnchor = (anchor: string, text: string) =>
   <a
-    href={`${TEMPLATE_REPO_URL_README}#${anchor}}`}
+    href={`${TEMPLATE_REPO_URL_README}#${anchor}`}
     target="blank"
     className="underline"
   >
     {text}
   </a>;
 
-const DEBUG_COMMIT_SHA = '4cd29ed';
-const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
-const DEBUG_BEHIND_BY = 9;
-const DEBUG_PHOTOS_COUNT_OUTDATED = 7;
+const renderLabeledEnvVar = (label: string, envVar: string, value = '1') =>
+  <div className="flex flex-col gap-1.5">
+    <span className="text-sm text-main">
+      {label}
+    </span>
+    <EnvVar variable={envVar} value={value} />
+  </div>;
 
 export default function AdminAppInsightsClient({
   codeMeta,
@@ -201,7 +208,7 @@ export default function AdminAppInsightsClient({
             />}
             content="AI enabled without rate limiting"
             // eslint-disable-next-line max-len
-            expandContent="Create Vercel KV store and link o this project in order to enable rate limiting."
+            expandContent="Create Vercel KV store and link to this project in order prevent abuse by to enabling rate limiting."
           />}
           {(noAi || debug) && <ScoreCardRow
             icon={<TbSparkles size={17} />}
@@ -235,7 +242,9 @@ export default function AdminAppInsightsClient({
             icon={<IoMdGrid size={18} className="translate-y-[-1px]" />}
             content="Grid homepage"
             expandContent={<>
-              Enable grid homepage by setting environment variable
+              Now that you have a sufficient amount of photos, you can
+              {' '}
+              enable grid homepage by setting environment variable
               {' '}
               <EnvVar variable="NEXT_PUBLIC_GRID_HOMEPAGE_ENABLED" value="1" />
             </>}
@@ -249,24 +258,23 @@ export default function AdminAppInsightsClient({
             expandContent={<>
               {/* eslint-disable-next-line max-len */}
               Enable static optimization by setting any of the following environment variables:
-              <div className="flex flex-col gap-y-1 mt-3">
-                <EnvVar
-                  variable="NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS"
-                  value="1"
-                />
-                <EnvVar
-                  variable="NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES"
-                  value="1"
-                />
-                <EnvVar
-                  variable="NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES"
-                  value="1"
-                />
-                <EnvVar
-                  // eslint-disable-next-line max-len
-                  variable="NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORY_OG_IMAGES"
-                  value="1"
-                />
+              <div className="flex flex-col gap-y-4 mt-3">
+                {renderLabeledEnvVar(
+                  'Pre-render photo pages',
+                  'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS',
+                )}
+                {renderLabeledEnvVar(
+                  'Pre-render OG image for each photo',
+                  'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES',
+                )}
+                {renderLabeledEnvVar(
+                  'Pre-render category pages (tags, cameras, etc.)',
+                  'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES',
+                )}
+                {renderLabeledEnvVar(
+                  'Pre-render OG image for each category page',
+                  'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORY_OG_IMAGES',
+                )}
               </div>
             </>}
           />}
@@ -279,16 +287,7 @@ export default function AdminAppInsightsClient({
           />}
           // eslint-disable-next-line max-len
           content={`You have ${photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED} outdated ${(photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED) === 1 ? 'photo' : 'photos'}`}
-          expandContent={<>
-            <LinkWithStatus
-              href={PATH_ADMIN_OUTDATED}
-              className="underline"
-            >
-              View outdated photos
-            </LinkWithStatus>
-            {' '}
-            to update them in batches.
-          </>}
+          expandPath={PATH_ADMIN_OUTDATED}
         />}
         <ScoreCardRow
           icon={<HiOutlinePhotograph
