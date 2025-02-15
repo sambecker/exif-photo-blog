@@ -14,7 +14,7 @@ export default function ScoreCard({
     <div className="space-y-3">
       {title &&
         <div className={clsx(
-          'pl-4',
+          'pl-[15px]',
           'uppercase font-medium tracking-wider text-[0.8rem]',
           'text-medium',
         )}>
