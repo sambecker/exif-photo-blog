@@ -18,7 +18,7 @@ import {
   VERCEL_GIT_REPO_OWNER,
   VERCEL_GIT_REPO_SLUG,
 } from '@/app-core/config';
-import { getGitHubMetaWithFallback } from '../github';
+import { getGitHubMetaWithFallback } from '../../utility/github';
 import { OUTDATED_THRESHOLD } from '@/photo';
 
 const BASIC_PHOTO_INSTALLATION_COUNT = 32;

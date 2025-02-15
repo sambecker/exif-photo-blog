@@ -121,14 +121,12 @@ const isRepoBaseRepo = ({ owner, repo }: RepoParams) =>
   owner?.toLowerCase() === TEMPLATE_REPO_OWNER &&
   repo?.toLowerCase() === TEMPLATE_REPO_NAME;
 
-export const getGitHubPublicFork = async (
-  params?: RepoParams,
-): Promise<RepoParams> => {
-  const response = await fetch(getGitHubApiForksUrl(params), FETCH_CONFIG);
+export const getGitHubPublicFork = async (): Promise<RepoParams> => {
+  const response = await fetch(getGitHubApiForksUrl(), FETCH_CONFIG);
   const fork = (await response.json())[0];
   return {
-    owner: fork.owner.login,
-    repo: fork.name,
+    owner: fork?.owner.login,
+    repo: fork?.name,
   };
 };
 

@@ -1,4 +1,7 @@
-import { getGitHubMetaWithFallback, getGitHubPublicFork } from '@/admin/github';
+import {
+  getGitHubMetaWithFallback,
+  getGitHubPublicFork,
+} from '@/utility/github';
 import { TEMPLATE_REPO_OWNER, TEMPLATE_REPO_NAME } from '@/app-core/config';
 
 describe('GitHub', () => {
@@ -8,7 +11,7 @@ describe('GitHub', () => {
       repo: TEMPLATE_REPO_NAME,
     });
     expect(meta).toBeDefined();
-    expect(meta.url).toBeDefined();
+    expect(meta.urlRepo).toBeDefined();
     expect(meta.isForkedFromBase).toEqual(false);
     expect(meta.label).toBeDefined();
     expect(meta.description).toBeDefined();
@@ -26,7 +29,7 @@ describe('GitHub', () => {
       repo: 'nonexistent',
     });
     expect(meta).toBeDefined();
-    expect(meta.url).toBeDefined();
+    expect(meta.urlRepo).toBeDefined();
     expect(meta.isForkedFromBase).toEqual(false);
     expect(meta.label).toEqual('Unknown');
     expect(meta.description).toEqual('Unknown');
@@ -38,7 +41,7 @@ describe('GitHub', () => {
       repo: 'bad text for a url.com',
     });
     expect(meta).toBeDefined();
-    expect(meta.url).toBeDefined();
+    expect(meta.urlRepo).toBeDefined();
     expect(meta.isForkedFromBase).toEqual(false);
     expect(meta.label).toEqual('Unknown');
     expect(meta.description).toEqual('Unknown');
