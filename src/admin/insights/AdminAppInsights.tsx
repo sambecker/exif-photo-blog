@@ -19,6 +19,7 @@ import {
   VERCEL_GIT_REPO_SLUG,
 } from '@/app-core/config';
 import { getGitHubMetaWithFallback } from '../github';
+import { OUTDATED_THRESHOLD } from '@/photo';
 
 const BASIC_PHOTO_INSTALLATION_COUNT = 32;
 
@@ -31,6 +32,7 @@ export default async function AdminAppInsights() {
   const [
     { count: photosCount, dateRange },
     { count: photosCountHidden },
+    { count: photosCountOutdated },
     { count: photosCountPortrait },
     tags,
     cameras,
@@ -39,6 +41,7 @@ export default async function AdminAppInsights() {
   ] = await Promise.all([
     getPhotosMeta({ hidden: 'include' }),
     getPhotosMeta({ hidden: 'only' }),
+    getPhotosMeta({ hidden: 'include', updatedBefore: OUTDATED_THRESHOLD }),
     getPhotosMeta({ maximumAspectRatio: 0.9 }),
     getUniqueTags(),
     getUniqueCameras(),
@@ -63,11 +66,12 @@ export default async function AdminAppInsights() {
   return (
     <AdminAppInsightsClient
       codeMeta={codeMeta}
-      recommendations={{
+      insights={{
         noFork: !codeMeta?.isForkedFromBase && !codeMeta?.isBaseRepo,
         forkBehind: Boolean(codeMeta?.isBehind),
         noAi: !isAiTextGenerationEnabled,
         noAiRateLimiting: isAiTextGenerationEnabled && !hasVercelBlobStorage,
+        outdatedPhotos: Boolean(photosCountOutdated),
         photoMatting: photosCountPortrait > 0 && !MATTE_PHOTOS,
         gridFirst: (
           photosCount >= BASIC_PHOTO_INSTALLATION_COUNT &&
@@ -78,6 +82,7 @@ export default async function AdminAppInsights() {
       photoStats={{
         photosCount,
         photosCountHidden,
+        photosCountOutdated,
         tagsCount: tags.length,
         camerasCount: cameras.length,
         filmSimulationsCount: filmSimulations.length,

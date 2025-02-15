@@ -67,6 +67,7 @@ export default function AdminOutdatedClient({
           }
         }}
         isLoading={arePhotoIdsSyncing}
+        disabled={!updateBatchSize}
       >
         {arePhotoIdsSyncing
           ? 'Syncing'

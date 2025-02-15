@@ -1,20 +1,16 @@
 'use client';
 
-import IconGrSync from '@/app-core/IconGrSync';
 import ScoreCard from '@/components/ScoreCard';
 import ScoreCardRow from '@/components/ScoreCardRow';
-import { dateRangeForPhotos, PhotoDateRange } from '@/photo';
+import { dateRangeForPhotos } from '@/photo';
 import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
 import { FaCamera } from 'react-icons/fa';
 import { FaTag } from 'react-icons/fa';
-import { FaRegCalendar } from 'react-icons/fa6';
-import {
-  HiOutlinePhotograph,
-  HiSparkles,
-} from 'react-icons/hi';
-import { MdLightbulbOutline } from 'react-icons/md';
+import { FaCircleInfo, FaRegCalendar } from 'react-icons/fa6';
+import { HiOutlinePhotograph } from 'react-icons/hi';
+import { MdAspectRatio } from 'react-icons/md';
 import { PiWarningBold } from 'react-icons/pi';
-import { TbCone } from 'react-icons/tb';
+import { TbCone, TbSparkles } from 'react-icons/tb';
 import { getGitHubMetaWithFallback } from '../github';
 import { BiGitBranch, BiGitCommit, BiLogoGithub } from 'react-icons/bi';
 import {
@@ -23,24 +19,40 @@ import {
   TEMPLATE_REPO_NAME,
   VERCEL_GIT_COMMIT_SHA_SHORT,
   VERCEL_GIT_COMMIT_MESSAGE,
+  TEMPLATE_REPO_URL_FORK,
+  TEMPLATE_REPO_URL_README,
 } from '@/app-core/config';
-import { AdminAppInsight } from '.';
+import { AdminAppInsights, hasTemplateRecommendations, PhotoStats } from '.';
 import EnvVar from '@/components/EnvVar';
 import { IoSyncCircle } from 'react-icons/io5';
 import clsx from 'clsx/lite';
+import { PATH_ADMIN_OUTDATED } from '@/app-core/paths';
+import { LiaBroomSolid } from 'react-icons/lia';
+import { IoMdGrid } from 'react-icons/io';
+import { RiSpeedMiniLine } from 'react-icons/ri';
+import LinkWithStatus from '@/components/LinkWithStatus';
+
+const readmeAnchor = (anchor: string, text: string) =>
+  <a
+    href={`${TEMPLATE_REPO_URL_README}#${anchor}}`}
+    target="blank"
+    className="underline"
+  >
+    {text}
+  </a>;
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
+const DEBUG_BEHIND_BY = 9;
+const DEBUG_PHOTOS_COUNT_OUTDATED = 7;
 
 export default function AdminAppInsightsClient({
   codeMeta,
-  recommendations: {
-    noAi,
-    noAiRateLimiting,
-  },
+  insights,
   photoStats: {
     photosCount,
     photosCountHidden,
+    photosCountOutdated,
     tagsCount,
     camerasCount,
     filmSimulationsCount,
@@ -50,18 +62,20 @@ export default function AdminAppInsightsClient({
   debug,
 }: {
   codeMeta?: Awaited<ReturnType<typeof getGitHubMetaWithFallback>>
-  recommendations: Record<AdminAppInsight, boolean>
-  photoStats: {
-    photosCount: number
-    photosCountHidden: number
-    tagsCount: number
-    camerasCount: number
-    filmSimulationsCount: number
-    lensesCount: number
-    dateRange?: PhotoDateRange
-  },
+  insights: AdminAppInsights
+  photoStats: PhotoStats
   debug?: boolean
 }) {
+  const {
+    noFork,
+    forkBehind,
+    noAi,
+    noAiRateLimiting,
+    outdatedPhotos,
+    photoMatting,
+    gridFirst,
+    noStaticOptimization,
+  } = insights;
 
   const { descriptionWithSpaces } = dateRangeForPhotos(undefined, dateRange);
 
@@ -69,37 +83,63 @@ export default function AdminAppInsightsClient({
     <div className="space-y-6 md:space-y-8">
       {(codeMeta?.isBaseRepo || codeMeta?.isForkedFromBase || debug) && <>
         <ScoreCard title="Build details">
-          {(codeMeta?.behindBy || debug) &&
+          {(noFork || debug) &&
             <ScoreCardRow
-              icon={<IoSyncCircle
-                size={18}
-                className="text-blue-500"
+              icon={<FaCircleInfo 
+                size={15}
+                className="text-blue-500 translate-y-[1px]"
               />}
-              content={<>
-                This fork is
-                {' '}
-                <span className={clsx(
-                  'text-blue-600 bg-blue-100/60',
-                  'dark:text-blue-400 dark:bg-blue-900/50',
-                  'px-1.5 pt-[1px] pb-0.5 rounded-md',
-                )}>
-                  {codeMeta?.behindBy ?? 9} commits
-                </span>
-                {' '}
-                behind
-              </>}
-              additionalContent={<>
+              content="This template is not forked"
+              expandContent={<>
                 <a
-                  href={codeMeta?.urlRepo}
+                  href={TEMPLATE_REPO_URL_FORK}
                   target="blank"
                   className="underline"
                 >
-                  Sync your fork
+                  Fork
                 </a>
                 {' '}
-                to receive the latest fixes and features
+                original template to receive the latest fixes and features.
+                {' '}
+                {readmeAnchor('receiving-updates', 'Additional instructions')}
+                {' '}
+                in README.
               </>}
             />}
+          {(forkBehind || debug) && <ScoreCardRow
+            icon={<IoSyncCircle
+              size={18}
+              className="text-blue-500"
+            />}
+            content={<>
+              This fork is
+              {' '}
+              <span className={clsx(
+                'text-blue-600 bg-blue-100/60',
+                'dark:text-blue-400 dark:bg-blue-900/50',
+                'px-1.5 pt-[1px] pb-0.5 rounded-md',
+              )}>
+                {codeMeta?.behindBy ?? DEBUG_BEHIND_BY}
+                {' '}
+                {(codeMeta?.behindBy ?? DEBUG_BEHIND_BY) === 1
+                  ? 'commit'
+                  : 'commits'}
+              </span>
+              {' '}
+              behind
+            </>}
+            expandContent={<>
+              <a
+                href={codeMeta?.urlRepo}
+                target="blank"
+                className="underline"
+              >
+                Sync your fork
+              </a>
+              {' '}
+              to receive the latest fixes and features
+            </>}
+          />}
           <ScoreCardRow
             icon={<BiLogoGithub size={17} />}
             content={<div
@@ -152,42 +192,104 @@ export default function AdminAppInsightsClient({
           />
         </ScoreCard>
       </>}
-      <ScoreCard title="Template recommendations">
-        {(noAiRateLimiting || debug) && <ScoreCardRow
-          icon={<PiWarningBold
-            size={17}
-            className="translate-x-[0.5px] text-amber-600"
+      {(hasTemplateRecommendations(insights) || debug) &&
+        <ScoreCard title="Template recommendations">
+          {(noAiRateLimiting || debug) && <ScoreCardRow
+            icon={<PiWarningBold
+              size={17}
+              className="translate-x-[0.5px] text-amber-600"
+            />}
+            content="AI enabled without rate limiting"
+            // eslint-disable-next-line max-len
+            expandContent="Create Vercel KV store and link o this project in order to enable rate limiting."
           />}
-          content="AI enabled without rate limiting"
-          // eslint-disable-next-line max-len
-          additionalContent="Create Vercel KV store and link o this project in order to enable rate limiting."
-        />}
-        {(noAi || debug) && <ScoreCardRow
-          icon={<MdLightbulbOutline size={19} />}
-          content="Enable AI text generation to improve photo descriptions"
-          // eslint-disable-next-line max-len
-          additionalContent="Create Vercel KV store and link it to this project in order to enable rate limiting."
-        />}
-        <ScoreCardRow
-          icon={<MdLightbulbOutline size={19} />}
-          // eslint-disable-next-line max-len
-          content="You seem to have several vertical photos—consider enabling matting to make portrait and landscape photos appear more consistent"
-          additionalContent={<>
-            Enabled photo matting by setting
-            <EnvVar variable="NEXT_PUBLIC_MATTE_PHOTOS" value="1" />
-          </>}
-        />
-        <ScoreCardRow
-          icon={<IconGrSync />}
-          // eslint-disable-next-line max-len
-          content="Consider forking this repository to receive new features and fixes"
-        />
-        <ScoreCardRow
-          icon={<HiSparkles />}
-          content="Enable AI text generation in the app configuration"
-        />
-      </ScoreCard>
+          {(noAi || debug) && <ScoreCardRow
+            icon={<TbSparkles size={17} />}
+            content="Improve SEO + accessibility with AI"
+            expandContent={<>
+              <div>
+                Enable automatic AI text generation
+                {' '}
+                by setting environment variable
+                {' '}
+                <EnvVar variable="OPENAI_SECRET_KEY" />.
+              </div>
+              <div>
+                Further instruction in
+                {' '}
+                {readmeAnchor('ai-text-generation', 'README')}.
+              </div>
+            </>}
+          />}
+          {(photoMatting || debug) && <ScoreCardRow
+            // eslint-disable-next-line max-len
+            icon={<MdAspectRatio size={17} className="rotate-90 translate-x-[-1px]" />}
+            content="Vertical photos may benefit from matting"
+            expandContent={<>
+              {/* eslint-disable-next-line max-len */}
+              Enable photo matting to make portrait and landscape photos appear more consistent
+              <EnvVar variable="NEXT_PUBLIC_MATTE_PHOTOS" value="1" />
+            </>}
+          />}
+          {(gridFirst || debug) && <ScoreCardRow
+            icon={<IoMdGrid size={18} className="translate-y-[-1px]" />}
+            content="Grid homepage"
+            expandContent={<>
+              Enable grid homepage by setting environment variable
+              {' '}
+              <EnvVar variable="NEXT_PUBLIC_GRID_HOMEPAGE_ENABLED" value="1" />
+            </>}
+          />}
+          {(noStaticOptimization || debug) && <ScoreCardRow
+            icon={<RiSpeedMiniLine
+              size={19}
+              className="translate-x-[1px] translate-y-[-1.5px]"
+            />}
+            content="Static optimization"
+            expandContent={<>
+              {/* eslint-disable-next-line max-len */}
+              Enable static optimization by setting any of the following environment variables:
+              <div className="flex flex-col gap-y-1 mt-3">
+                <EnvVar
+                  variable="NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS"
+                  value="1"
+                />
+                <EnvVar
+                  variable="NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES"
+                  value="1"
+                />
+                <EnvVar
+                  variable="NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES"
+                  value="1"
+                />
+                <EnvVar
+                  // eslint-disable-next-line max-len
+                  variable="NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORY_OG_IMAGES"
+                  value="1"
+                />
+              </div>
+            </>}
+          />}
+        </ScoreCard>}
       <ScoreCard title="Library Stats">
+        {(outdatedPhotos || debug) && <ScoreCardRow
+          icon={<LiaBroomSolid
+            size={19}
+            className="translate-y-[-2px] text-amber-600"
+          />}
+          // eslint-disable-next-line max-len
+          content={`You have ${photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED} outdated ${(photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED) === 1 ? 'photo' : 'photos'}`}
+          expandContent={<>
+            <LinkWithStatus
+              href={PATH_ADMIN_OUTDATED}
+              className="underline"
+            >
+              View outdated photos
+            </LinkWithStatus>
+            {' '}
+            to update them in batches.
+          </>}
+        />}
         <ScoreCardRow
           icon={<HiOutlinePhotograph
             size={17}

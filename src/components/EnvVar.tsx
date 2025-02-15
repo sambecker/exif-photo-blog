@@ -23,6 +23,7 @@ export default function EnvVar({
           'px-1.5 py-[0.5px]',
           'rounded-md',
           'bg-gray-100 dark:bg-gray-800',
+          'whitespace-nowrap',
         )}>
           {variable}{value && ` = ${value}`}
         </span>

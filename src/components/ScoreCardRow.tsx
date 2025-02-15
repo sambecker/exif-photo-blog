@@ -5,12 +5,12 @@ import { LuChevronsDownUp, LuChevronsUpDown } from 'react-icons/lu';
 export default function ScoreCardRow({
   icon,
   content,
-  additionalContent,
+  expandContent,
   className,
 }: {
   icon: ReactNode
   content: ReactNode
-  additionalContent?: ReactNode
+  expandContent?: ReactNode
   className?: string
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -33,10 +33,10 @@ export default function ScoreCardRow({
         </div>
         {isExpanded &&
           <div className="text-medium">
-            {additionalContent}
+            {expandContent}
           </div>}
       </div>
-      {additionalContent && <button
+      {expandContent && <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
         className={clsx(
