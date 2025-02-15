@@ -36,14 +36,20 @@ const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
 const DEBUG_BEHIND_BY = 9;
 const DEBUG_PHOTOS_COUNT_OUTDATED = 7;
 
-const readmeAnchor = (anchor: string, text: string) =>
+const renderLink = (text: string, href = '') =>
   <a
-    href={`${TEMPLATE_REPO_URL_README}#${anchor}`}
+    href={href}
     target="blank"
-    className="underline"
+    className="underline underline-offset-4 decoration-gray-300"
   >
     {text}
   </a>;
+
+const readmeAnchor = (anchor: string) =>
+  renderLink(
+    `README/${anchor}`,
+    `${TEMPLATE_REPO_URL_README}#${anchor}`,
+  );
 
 const renderLabeledEnvVar = (label: string, envVar: string, value = '1') =>
   <div className="flex flex-col gap-1.5">
@@ -106,19 +112,13 @@ export default function AdminAppInsightsClient({
               />}
               content="This template is not forked"
               expandContent={<>
-                <a
-                  href={TEMPLATE_REPO_URL_FORK}
-                  target="blank"
-                  className="underline"
-                >
-                  Fork
-                </a>
+                {renderLink('Fork original template', TEMPLATE_REPO_URL_FORK)}
                 {' '}
-                original template to receive the latest fixes and features.
+                to receive the latest fixes and features.
                 {' '}
-                {readmeAnchor('receiving-updates', 'Additional instructions')}
+                Additional instructions in
                 {' '}
-                in README.
+                {readmeAnchor('receiving-updates')}.
               </>}
             />}
           {(forkBehind || debug) && <ScoreCardRow
@@ -144,15 +144,9 @@ export default function AdminAppInsightsClient({
               behind
             </>}
             expandContent={<>
-              <a
-                href={codeMeta?.urlRepo}
-                target="blank"
-                className="underline"
-              >
-                Sync your fork
-              </a>
+              {renderLink('Sync your fork', codeMeta?.urlRepo)}
               {' '}
-              to receive the latest fixes and features
+              to receive the latest fixes and features.
             </>}
           />}
           <ScoreCardRow
@@ -214,34 +208,35 @@ export default function AdminAppInsightsClient({
               className="translate-x-[0.5px] text-amber-600"
             />}
             content="AI enabled without rate limiting"
-            // eslint-disable-next-line max-len
-            expandContent="Create Vercel KV store and link to this project in order prevent abuse by to enabling rate limiting."
+            expandContent={<>
+              Create Vercel KV store and link to this project
+              in order prevent abuse by to enabling rate limiting.
+            </>}
           />}
           {(noAi || debug) && <ScoreCardRow
             icon={<TbSparkles size={17} />}
             content="Improve SEO + accessibility with AI"
             expandContent={<>
-              <div>
-                Enable automatic AI text generation
-                {' '}
-                by setting environment variable
-                {' '}
-                <EnvVar variable="OPENAI_SECRET_KEY" />.
-              </div>
-              <div>
-                Further instruction in
-                {' '}
-                {readmeAnchor('ai-text-generation', 'README')}.
-              </div>
+              Enable automatic AI text generation
+              {' '}
+              by setting <EnvVar variable="OPENAI_SECRET_KEY" />.
+              {' '}
+              Further instruction and cost considerations in
+              {' '}
+              {readmeAnchor('ai-text-generation')}.
             </>}
           />}
           {(photoMatting || debug) && <ScoreCardRow
-            // eslint-disable-next-line max-len
-            icon={<MdAspectRatio size={17} className="rotate-90 translate-x-[-1px]" />}
+            icon={<MdAspectRatio
+              size={17}
+              className="rotate-90 translate-x-[-1px]"
+            />}
             content="Vertical photos may benefit from matting"
             expandContent={<>
-              {/* eslint-disable-next-line max-len */}
-              Enable photo matting to make portrait and landscape photos appear more consistent
+              Enable photo matting to make
+              {' '}
+              portrait and landscape photos appear more consistent
+              {' '}
               <EnvVar variable="NEXT_PUBLIC_MATTE_PHOTOS" value="1" />
             </>}
           />}
@@ -251,7 +246,7 @@ export default function AdminAppInsightsClient({
             expandContent={<>
               Now that you have a sufficient amount of photos, you can
               {' '}
-              enable grid homepage by setting environment variable
+              enable grid homepage by setting
               {' '}
               <EnvVar variable="NEXT_PUBLIC_GRID_HOMEPAGE_ENABLED" value="1" />
             </>}
@@ -263,8 +258,9 @@ export default function AdminAppInsightsClient({
             />}
             content="Static optimization"
             expandContent={<>
-              {/* eslint-disable-next-line max-len */}
-              Enable static optimization by setting any of the following environment variables:
+              Enable static optimization
+              {' '}
+              by setting any of the following:
               <div className="flex flex-col gap-y-4 mt-3">
                 {renderLabeledEnvVar(
                   'Pre-render photo pages',
@@ -282,6 +278,9 @@ export default function AdminAppInsightsClient({
                   'Pre-render OG image for each category page',
                   'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORY_OG_IMAGES',
                 )}
+                <span>
+                  See {readmeAnchor('performance')} for cost considerations.
+                </span>
               </div>
             </>}
           />}
