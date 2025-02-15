@@ -38,6 +38,7 @@ export default async function AdminAppInsights() {
     cameras,
     filmSimulations,
     lenses,
+    codeMeta,
   ] = await Promise.all([
     getPhotosMeta({ hidden: 'include' }),
     getPhotosMeta({ hidden: 'only' }),
@@ -47,21 +48,20 @@ export default async function AdminAppInsights() {
     getUniqueCameras(),
     getUniqueFilmSimulations(),
     getUniqueLenses(),
+    IS_VERCEL_GIT_PROVIDER_GITHUB || IS_DEVELOPMENT
+      ? getGitHubMetaWithFallback({
+        owner,
+        repo,
+        branch,
+        commit,
+      })
+      : undefined,
   ]);
 
   const {
     isAiTextGenerationEnabled,
     hasVercelBlobStorage,
   } = APP_CONFIGURATION;
-
-  const codeMeta = IS_VERCEL_GIT_PROVIDER_GITHUB || IS_DEVELOPMENT
-    ? await getGitHubMetaWithFallback({
-      owner,
-      repo,
-      branch,
-      commit,
-    })
-    : undefined;
 
   return (
     <AdminAppInsightsClient
