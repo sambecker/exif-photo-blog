@@ -2,7 +2,7 @@ import AdminChildPage from '@/components/AdminChildPage';
 import { redirect } from 'next/navigation';
 import { getPhotosCached } from '@/photo/cache';
 import TagForm from '@/tag/TagForm';
-import { PATH_ADMIN, PATH_ADMIN_TAGS, pathForTag } from '@/site/paths';
+import { PATH_ADMIN, PATH_ADMIN_TAGS, pathForTag } from '@/app-core/paths';
 import PhotoLightbox from '@/photo/PhotoLightbox';
 import { getPhotosMeta } from '@/photo/db/query';
 import AdminTagBadge from '@/admin/AdminTagBadge';

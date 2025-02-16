@@ -1,4 +1,4 @@
-import { NextImageSize } from '@/services/next-image';
+import { NextImageSize } from '@/platforms/next-image';
 import { getDimensionsFromSize } from '@/utility/size';
 
 export const MAX_PHOTOS_TO_SHOW_OG = 12;

@@ -1,4 +1,4 @@
-import { PATH_ADMIN } from '@/site/paths';
+import { PATH_ADMIN } from '@/app-core/paths';
 import { extractImageDataFromBlobPath } from '@/photo/server';
 import { redirect } from 'next/navigation';
 import { getUniqueTagsCached } from '@/photo/cache';
@@ -7,7 +7,7 @@ import {
   AI_TEXT_AUTO_GENERATED_FIELDS,
   AI_TEXT_GENERATION_ENABLED,
   BLUR_ENABLED,
-} from '@/site/config';
+} from '@/app-core/config';
 import ErrorNote from '@/components/ErrorNote';
 
 export const maxDuration = 60;

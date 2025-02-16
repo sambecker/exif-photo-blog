@@ -1,6 +1,6 @@
 'use client';
 
-import { PATH_OG } from '@/site/paths';
+import { PATH_OG } from '@/app-core/paths';
 import InfinitePhotoScroll from './InfinitePhotoScroll';
 import StaggeredOgPhotos from './StaggeredOgPhotos';
 

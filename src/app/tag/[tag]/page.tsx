@@ -1,8 +1,8 @@
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getUniqueTags } from '@/photo/db/query';
-import { IS_PRODUCTION } from '@/site/config';
-import { STATICALLY_OPTIMIZED_PHOTO_CATEGORIES } from '@/site/config';
-import { PATH_ROOT } from '@/site/paths';
+import { IS_PRODUCTION } from '@/app-core/config';
+import { STATICALLY_OPTIMIZED_PHOTO_CATEGORIES } from '@/app-core/config';
+import { PATH_ROOT } from '@/app-core/paths';
 import { generateMetaForTag } from '@/tag';
 import TagOverview from '@/tag/TagOverview';
 import { getPhotosTagDataCached } from '@/tag/data';

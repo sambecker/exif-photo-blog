@@ -1,4 +1,4 @@
-import { isPathProtected } from '@/site/paths';
+import { isPathProtected } from '@/app-core/paths';
 import NextAuth, { User } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 

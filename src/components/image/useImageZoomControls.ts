@@ -1,4 +1,4 @@
-import useMetaThemeColor from '@/site/useMetaThemeColor';
+import useMetaThemeColor from '@/utility/useMetaThemeColor';
 import { useAppState } from '@/state/AppState';
 import useKeydownHandler from '@/utility/useKeydownHandler';
 import { RefObject, useCallback, useEffect, useRef, useState } from 'react';

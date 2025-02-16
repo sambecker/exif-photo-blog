@@ -1,4 +1,4 @@
-import { absolutePathForFilmSimulation } from '@/site/paths';
+import { absolutePathForFilmSimulation } from '@/app-core/paths';
 import { PhotoSetAttributes } from '../photo';
 import ShareModal from '@/share/ShareModal';
 import FilmSimulationOGTile from './FilmSimulationOGTile';

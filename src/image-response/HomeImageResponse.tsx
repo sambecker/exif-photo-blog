@@ -1,9 +1,9 @@
-import { SITE_DOMAIN_OR_TITLE } from '@/site/config';
+import { SITE_DOMAIN_OR_TITLE } from '@/app-core/config';
 import { Photo } from '../photo';
 import ImageCaption from './components/ImageCaption';
 import ImageContainer from './components/ImageContainer';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
-import { NextImageSize } from '@/services/next-image';
+import { NextImageSize } from '@/platforms/next-image';
 
 export default function HomeImageResponse({
   photos,

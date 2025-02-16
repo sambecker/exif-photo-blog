@@ -1,4 +1,4 @@
-import { getStorageUploadUrlsNoStore } from '@/services/storage/cache';
+import { getStorageUploadUrlsNoStore } from '@/platforms/storage/cache';
 import SiteGrid from '@/components/SiteGrid';
 import { getUniqueTagsCached } from '@/photo/cache';
 import AdminUploadsClient from '@/admin/AdminUploadsClient';

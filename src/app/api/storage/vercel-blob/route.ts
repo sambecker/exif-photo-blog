@@ -4,7 +4,7 @@ import {
   ACCEPTED_PHOTO_FILE_TYPES,
   MAX_PHOTO_UPLOAD_SIZE_IN_BYTES,
 } from '@/photo';
-import { isUploadPathnameValid } from '@/services/storage';
+import { isUploadPathnameValid } from '@/platforms/storage';
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { NextResponse } from 'next/server';
 

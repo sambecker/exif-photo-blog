@@ -1,11 +1,11 @@
 'use server';
 
 import { runAuthenticatedAdminServerAction } from '@/auth';
-import { testKvConnection } from '@/services/kv';
-import { testOpenAiConnection } from '@/services/openai';
-import { testDatabaseConnection } from '@/services/postgres';
-import { testStorageConnection } from '@/services/storage';
-import { CONFIG_CHECKLIST_STATUS } from '@/site/config';
+import { testKvConnection } from '@/platforms/kv';
+import { testOpenAiConnection } from '@/platforms/openai';
+import { testDatabaseConnection } from '@/platforms/postgres';
+import { testStorageConnection } from '@/platforms/storage';
+import { APP_CONFIGURATION } from '@/app-core/config';
 
 const scanForError = (
   shouldCheck: boolean,
@@ -24,7 +24,7 @@ export const testConnectionsAction = async () =>
       hasStorageProvider,
       hasVercelKv,
       isAiTextGenerationEnabled,
-    } = CONFIG_CHECKLIST_STATUS;
+    } = APP_CONFIGURATION;
 
     const [
       databaseError,

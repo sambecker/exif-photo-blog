@@ -9,7 +9,7 @@ import {
   PATH_ROOT,
   absolutePathForPhoto,
   absolutePathForPhotoImage,
-} from '@/site/paths';
+} from '@/app-core/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { FilmSimulation } from '@/simulation';
 import {

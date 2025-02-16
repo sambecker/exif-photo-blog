@@ -1,14 +1,14 @@
 import { redirect } from 'next/navigation';
 import { getPhotoNoStore, getUniqueTagsCached } from '@/photo/cache';
-import { PATH_ADMIN } from '@/site/paths';
+import { PATH_ADMIN } from '@/app-core/paths';
 import PhotoEditPageClient from '@/photo/PhotoEditPageClient';
 import {
   AI_TEXT_GENERATION_ENABLED,
   BLUR_ENABLED,
   IS_PREVIEW,
-} from '@/site/config';
+} from '@/app-core/config';
 import { blurImageFromUrl, resizeImageFromUrl } from '@/photo/server';
-import { getNextImageUrlForManipulation } from '@/services/next-image';
+import { getNextImageUrlForManipulation } from '@/platforms/next-image';
 
 export default async function PhotoEditPage({
   params,

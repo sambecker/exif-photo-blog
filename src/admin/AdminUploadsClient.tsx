@@ -1,6 +1,6 @@
 'use client';
 
-import { StorageListResponse } from '@/services/storage';
+import { StorageListResponse } from '@/platforms/storage';
 import AdminAddAllUploads from './AdminAddAllUploads';
 import { useMemo, useState } from 'react';
 import { Tags } from '@/tag';

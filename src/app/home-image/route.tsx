@@ -4,7 +4,7 @@ import {
   MAX_PHOTOS_TO_SHOW_OG,
 } from '@/image-response';
 import HomeImageResponse from '@/image-response/HomeImageResponse';
-import { getIBMPlexMonoMedium } from '@/site/font';
+import { getIBMPlexMonoMedium } from '@/app-core/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { isNextImageReadyBasedOnPhotos } from '@/photo';

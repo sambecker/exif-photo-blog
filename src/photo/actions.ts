@@ -18,7 +18,7 @@ import {
   convertPhotoToFormData,
 } from './form';
 import { redirect } from 'next/navigation';
-import { deleteFile } from '@/services/storage';
+import { deleteFile } from '@/platforms/storage';
 import {
   getPhotosCached,
   getPhotosMetaCached,
@@ -33,18 +33,18 @@ import {
   PATH_ADMIN_TAGS,
   PATH_ROOT,
   pathForPhoto,
-} from '@/site/paths';
+} from '@/app-core/paths';
 import { blurImageFromUrl, extractImageDataFromBlobPath } from './server';
 import { TAG_FAVS, isTagFavs } from '@/tag';
 import { convertPhotoToPhotoDbInsert, Photo } from '.';
 import { runAuthenticatedAdminServerAction } from '@/auth';
 import { AiImageQuery, getAiImageQuery } from './ai';
-import { streamOpenAiImageQuery } from '@/services/openai';
+import { streamOpenAiImageQuery } from '@/platforms/openai';
 import {
   AI_TEXT_AUTO_GENERATED_FIELDS,
   AI_TEXT_GENERATION_ENABLED,
   BLUR_ENABLED,
-} from '@/site/config';
+} from '@/app-core/config';
 import { generateAiImageQueries } from './ai/server';
 import { createStreamableValue } from 'ai/rsc';
 import { convertUploadToPhoto } from './storage';

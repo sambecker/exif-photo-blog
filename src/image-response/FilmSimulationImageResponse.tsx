@@ -4,11 +4,11 @@ import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
 import {
   labelForFilmSimulation,
-} from '@/vendors/fujifilm';
+} from '@/platforms/fujifilm';
 import PhotoFilmSimulationIcon from 
   '@/simulation/PhotoFilmSimulationIcon';
 import { FilmSimulation } from '@/simulation';
-import { NextImageSize } from '@/services/next-image';
+import { NextImageSize } from '@/platforms/next-image';
 
 export default function FilmSimulationImageResponse({
   simulation,

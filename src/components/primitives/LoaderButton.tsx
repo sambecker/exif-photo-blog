@@ -63,7 +63,7 @@ export default function LoaderButton(props: {
     >
       {(icon || isLoading) &&
         <span className={clsx(
-          'min-w-[1.25rem] max-h-5 overflow-hidden',
+          'min-w-[1.25rem] max-h-5',
           styleAs === 'button' ? 'translate-y-[-0.5px]' : 'translate-y-[0.5px]',
           'inline-flex justify-center shrink-0',
         )}>

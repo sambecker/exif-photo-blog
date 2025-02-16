@@ -7,7 +7,7 @@ import {
 import {
   absolutePathForFocalLength,
   absolutePathForFocalLengthImage,
-} from '@/site/paths';
+} from '@/app-core/paths';
 
 export type FocalLengths = {
   focal: number

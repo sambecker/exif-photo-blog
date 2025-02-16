@@ -89,7 +89,7 @@ export default function LinkWithStatus({
     {...props }
     href={href}
     className={clsx(
-      'relative flex transition-[colors,opacity]',
+      'relative inline-flex transition-[colors,opacity]',
       (loadingClassName || isControlled)
         ? 'opacity-100'
         : isLoading ? 'opacity-50' : 'opacity-100',

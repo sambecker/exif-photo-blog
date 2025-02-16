@@ -10,11 +10,13 @@ import useClickInsideOutside from '@/utility/useClickInsideOutside';
 export default function TooltipPrimitive({
   content,
   className,
+  classNameTrigger,
   sideOffset = 10,
   children,
 }: {
   content?: ReactNode
   className?: string
+  classNameTrigger?: string
   sideOffset?: number
   children: ReactNode
 }) {
@@ -39,7 +41,7 @@ export default function TooltipPrimitive({
           <button
             ref={refTrigger}
             onClick={!supportsHover ? () => setIsOpen(!isOpen) : undefined}
-            className="link cursor-default"
+            className={clsx('link cursor-default', classNameTrigger)}
           >
             {children}
           </button>

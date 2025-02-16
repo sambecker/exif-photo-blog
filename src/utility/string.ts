@@ -37,6 +37,13 @@ export const parameterize = (
 
 export const formatCount = (count: number) => `× ${count}`;
 
+export const pluralize = (
+  count: number,
+  singular: string,
+  plural?: string,
+) =>
+  `${count} ${count === 1 ? singular : plural ?? `${singular}s`}`;
+
 export const formatCountDescriptive = (
   count: number,
   verb = 'found',
