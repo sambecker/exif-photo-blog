@@ -5,8 +5,8 @@ import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getPhotosCameraDataCached } from '@/camera/data';
 import CameraOverview from '@/camera/CameraOverview';
 import { cache } from 'react';
-import { STATICALLY_OPTIMIZED_PHOTO_CATEGORIES } from '@/site/config';
-import { IS_PRODUCTION } from '@/site/config';
+import { STATICALLY_OPTIMIZED_PHOTO_CATEGORIES } from '@/app-core/config';
+import { IS_PRODUCTION } from '@/app-core/config';
 import { getUniqueCameras } from '@/photo/db/query';
 
 const getPhotosCameraDataCachedCached = cache((

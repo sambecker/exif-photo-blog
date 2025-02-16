@@ -8,7 +8,7 @@ import {
   getUniqueFilmSimulations,
   getUniqueTags,
 } from '@/photo/db/query';
-import { SHOW_FILM_SIMULATIONS } from '@/site/config';
+import { SHOW_FILM_SIMULATIONS } from '@/app-core/config';
 import { sortTagsObject } from '@/tag';
 
 export const getPhotoSidebarData = () => [

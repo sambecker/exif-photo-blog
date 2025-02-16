@@ -5,7 +5,7 @@ import {
   NextImageSize,
   getNextImageUrlForRequest,
 } from '@/services/next-image';
-import { IS_PREVIEW } from '@/site/config';
+import { IS_PREVIEW } from '@/app-core/config';
 
 export default function ImagePhotoGrid({
   photos,

@@ -4,7 +4,7 @@ import { clsx } from 'clsx/lite';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import SiteGrid from '../components/SiteGrid';
-import ViewSwitcher, { SwitcherSelection } from '@/site/ViewSwitcher';
+import ViewSwitcher, { SwitcherSelection } from '@/app-core/ViewSwitcher';
 import {
   PATH_ROOT,
   isPathAdmin,
@@ -12,7 +12,7 @@ import {
   isPathGrid,
   isPathProtected,
   isPathSignIn,
-} from '@/site/paths';
+} from '@/app-core/paths';
 import AnimateItems from '../components/AnimateItems';
 import { useAppState } from '@/state/AppState';
 import {

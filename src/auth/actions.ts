@@ -10,7 +10,7 @@ import {
   signIn,
   signOut,
 } from '@/auth';
-import { PATH_ADMIN_PHOTOS, PATH_ROOT } from '@/site/paths';
+import { PATH_ADMIN_PHOTOS, PATH_ROOT } from '@/app-core/paths';
 import type { Session } from 'next-auth';
 import { redirect } from 'next/navigation';
 

@@ -8,7 +8,7 @@ import {
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_TAGS,
   PATH_ADMIN_UPLOADS,
-} from '@/site/paths';
+} from '@/app-core/paths';
 import AdminNavClient from './AdminNavClient';
 
 export default async function AdminNav() {
@@ -30,6 +30,8 @@ export default async function AdminNav() {
     getUniqueTagsCached().then(tags => tags.length).catch(() => 0),
     getPhotosMostRecentUpdateCached().catch(() => undefined),
   ]);
+
+  const includeInsights = countPhotos > 0;
 
   // Photos
   const items = [{
@@ -53,6 +55,10 @@ export default async function AdminNav() {
   }); }
 
   return (
-    <AdminNavClient {...{ items, mostRecentPhotoUpdateTime }} />
+    <AdminNavClient {...{
+      items,
+      mostRecentPhotoUpdateTime,
+      includeInsights,
+    }} />
   );
 }

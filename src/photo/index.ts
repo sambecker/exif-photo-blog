@@ -3,8 +3,12 @@ import { formatFocalLength } from '@/focal';
 import { Lens } from '@/lens';
 import { getNextImageUrlForRequest } from '@/services/next-image';
 import { FilmSimulation } from '@/simulation';
-import { HIGH_DENSITY_GRID, IS_PREVIEW, SHOW_EXIF_DATA } from '@/site/config';
-import { ABSOLUTE_PATH_FOR_HOME_IMAGE } from '@/site/paths';
+import {
+  HIGH_DENSITY_GRID,
+  IS_PREVIEW,
+  SHOW_EXIF_DATA,
+} from '@/app-core/config';
+import { ABSOLUTE_PATH_FOR_HOME_IMAGE } from '@/app-core/paths';
 import { formatDate, formatDateFromPostgresString } from '@/utility/date';
 import {
   formatAperture,
@@ -273,6 +277,7 @@ export const dateRangeForPhotos = (
   let start = '';
   let end = '';
   let description = '';
+  let descriptionWithSpaces = '';
 
   if (explicitDateRange || photos.length > 0) {
     const photosSorted = sortPhotosByDate(photos);
@@ -287,9 +292,12 @@ export const dateRangeForPhotos = (
     description = start === end
       ? start
       : `${start}–${end}`;
+    descriptionWithSpaces = start === end
+      ? start
+      : `${start} – ${end}`;
   }
 
-  return { start, end, description };
+  return { start, end, description, descriptionWithSpaces };
 };
 
 const photoHasCameraData = (photo: Photo) =>

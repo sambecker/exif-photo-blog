@@ -7,17 +7,19 @@ export default function CopyButton({
   label,
   text,
   subtle,
+  className,
 }: {
   label: string
   text?: string,
   subtle?: boolean
+  className?: string
 }) {
   return (
     <LoaderButton
       icon={<BiCopy size={15} />}
       className={clsx(
-        'translate-y-[2px]',
         subtle && 'text-gray-300 dark:text-gray-700',
+        className,
       )}
       onClick={text
         ? () => {

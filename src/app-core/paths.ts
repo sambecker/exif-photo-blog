@@ -39,6 +39,7 @@ export const PATH_ADMIN_OUTDATED      = `${PATH_ADMIN}/outdated`;
 export const PATH_ADMIN_UPLOADS       = `${PATH_ADMIN}/uploads`;
 export const PATH_ADMIN_TAGS          = `${PATH_ADMIN}/tags`;
 export const PATH_ADMIN_CONFIGURATION = `${PATH_ADMIN}/configuration`;
+export const PATH_ADMIN_INSIGHTS      = `${PATH_ADMIN}/insights`;
 export const PATH_ADMIN_BASELINE      = `${PATH_ADMIN}/baseline`;
 
 // Debug paths
@@ -212,6 +213,9 @@ export const isPathTopLevelAdmin = (pathname?: string) =>
 
 export const isPathAdminConfiguration = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ADMIN_CONFIGURATION);
+
+export const isPathAdminInsights = (pathname?: string) =>
+  checkPathPrefix(pathname, PATH_ADMIN_INSIGHTS);
 
 export const isPathProtected = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ADMIN) ||

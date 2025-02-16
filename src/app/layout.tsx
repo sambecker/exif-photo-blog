@@ -7,15 +7,15 @@ import {
   SITE_DESCRIPTION,
   SITE_DOMAIN_OR_TITLE,
   SITE_TITLE,
-} from '@/site/config';
+} from '@/app-core/config';
 import AppStateProvider from '@/state/AppStateProvider';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
 import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
 import { Metadata } from 'next/types';
 import { ThemeProvider } from 'next-themes';
-import Nav from '@/site/Nav';
-import Footer from '@/site/Footer';
-import CommandK from '@/site/CommandK';
+import Nav from '@/app-core/Nav';
+import Footer from '@/app-core/Footer';
+import CommandK from '@/app-core/CommandK';
 import SwrConfigClient from '../state/SwrConfigClient';
 import AdminBatchEditPanel from '@/admin/AdminBatchEditPanel';
 import ShareModals from '@/share/ShareModals';
@@ -72,11 +72,8 @@ export default function RootLayout({
     >
       <body>
         <AppStateProvider>
-          <SwrConfigClient>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme={DEFAULT_THEME}
-            >
+          <ThemeProvider attribute="class" defaultTheme={DEFAULT_THEME}>
+            <SwrConfigClient>
               <main className={clsx(
                 'mx-3 mb-3',
                 'lg:mx-6 lg:mb-6',
@@ -96,12 +93,12 @@ export default function RootLayout({
                 <Footer />
               </main>
               <CommandK />
-            </ThemeProvider>
-          </SwrConfigClient>
-          <Analytics debug={false} />
-          <SpeedInsights debug={false}  />
-          <PhotoEscapeHandler />
-          <ToasterWithThemes />
+            </SwrConfigClient>
+            <Analytics debug={false} />
+            <SpeedInsights debug={false}  />
+            <PhotoEscapeHandler />
+            <ToasterWithThemes />
+          </ThemeProvider>
         </AppStateProvider>
       </body>
     </html>

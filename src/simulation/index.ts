@@ -7,11 +7,11 @@ import {
 import {
   absolutePathForFilmSimulation,
   absolutePathForFilmSimulationImage,
-} from '@/site/paths';
+} from '@/app-core/paths';
 import {
   FujifilmSimulation,
   labelForFilmSimulation,
-} from '@/vendors/fujifilm';
+} from '@/platforms/fujifilm';
 
 export type FilmSimulation = FujifilmSimulation;
 

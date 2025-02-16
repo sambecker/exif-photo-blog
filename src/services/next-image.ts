@@ -2,7 +2,7 @@ import {
   BASE_URL,
   VERCEL_BYPASS_KEY,
   VERCEL_BYPASS_SECRET,
-} from '@/site/config';
+} from '@/app-core/config';
 
 // Explicity defined next.config.js `imageSizes`
 type NextCustomSize = 200;

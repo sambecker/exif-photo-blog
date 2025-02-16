@@ -4,7 +4,7 @@ import LoaderButton from '@/components/primitives/LoaderButton';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import { getExifDataAction } from '@/photo/actions';
 import { PhotoFormData } from '@/photo/form';
-import IconGrSync from '@/site/IconGrSync';
+import IconGrSync from '@/app-core/IconGrSync';
 import { clsx } from 'clsx/lite';
 import { ComponentProps, useState } from 'react';
 

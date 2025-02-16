@@ -5,7 +5,7 @@ import AdminTable from './AdminTable';
 import { Fragment } from 'react';
 import PhotoSmall from '@/photo/PhotoSmall';
 import { clsx } from 'clsx/lite';
-import { pathForAdminPhotoEdit, pathForPhoto } from '@/site/paths';
+import { pathForAdminPhotoEdit, pathForPhoto } from '@/app-core/paths';
 import Link from 'next/link';
 import { AiOutlineEyeInvisible } from 'react-icons/ai';
 import PhotoDate from '@/photo/PhotoDate';

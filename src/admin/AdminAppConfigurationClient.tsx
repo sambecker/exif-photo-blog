@@ -4,18 +4,16 @@ import {
   ComponentProps,
   ReactNode,
 } from 'react';
-import { clsx } from 'clsx/lite';
 import ChecklistRow from '../components/ChecklistRow';
-import { FiExternalLink } from 'react-icons/fi';
 import {
-  BiCog,
   BiData,
   BiHide,
   BiLockAlt,
   BiPencil,
 } from 'react-icons/bi';
-import Checklist from '@/components/Checklist';
-import { ConfigChecklistStatus } from './config';
+import { HiOutlineCog } from 'react-icons/hi';
+import ChecklistGroup from '@/components/ChecklistGroup';
+import { ConfigChecklistStatus } from '../app-core/config';
 import StatusIcon from '@/components/StatusIcon';
 import { labelForStorage } from '@/services/storage';
 import { HiSparkles } from 'react-icons/hi';
@@ -23,14 +21,14 @@ import { testConnectionsAction } from '@/admin/actions';
 import ErrorNote from '@/components/ErrorNote';
 import WarningNote from '@/components/WarningNote';
 import { RiSpeedMiniLine } from 'react-icons/ri';
-import Link from 'next/link';
-import SecretGenerator from './SecretGenerator';
-import CopyButton from '@/components/CopyButton';
+import SecretGenerator from '../app-core/SecretGenerator';
 import { PiPaintBrushHousehold } from 'react-icons/pi';
 import { IoMdGrid } from 'react-icons/io';
 import { CgDebug } from 'react-icons/cg';
+import EnvVar from '@/components/EnvVar';
+import AdminLink from './AdminLink';
 
-export default function SiteChecklistClient({
+export default function AdminAppConfigurationClient({
   // Storage
   hasDatabase,
   isPostgresSslEnabled,
@@ -79,7 +77,7 @@ export default function SiteChecklistClient({
   isGridHomepageEnabled,
   gridAspectRatio,
   hasGridAspectRatio,
-  gridDensity,
+  hasHighGridDensity,
   hasGridDensityPreference,
   // Settings
   isGeoPrivacyEnabled,
@@ -94,9 +92,6 @@ export default function SiteChecklistClient({
   isAdminSqlDebugEnabled,
   // Misc
   baseUrl,
-  commitSha,
-  commitMessage,
-  commitUrl,
   // Connection status
   databaseError,
   storageError,
@@ -110,54 +105,10 @@ export default function SiteChecklistClient({
   simplifiedView?: boolean
   isAnalyzingConfiguration?: boolean
 }) {
-  const renderLink = (href: string, text: string, external = true) =>
-    <>
-      <a {...{
-        href,
-        ...external && { target: '_blank', rel: 'noopener noreferrer' },
-        className: clsx(
-          'underline hover:no-underline',
-        ),
-      }}>
-        {text}
-      </a>
-      {external &&
-        <>
-          &nbsp;
-          <FiExternalLink
-            size={14}
-            className='inline translate-y-[-1.5px]'
-          />
-        </>}
-    </>;
-
-  const renderEnvVar = (
-    variable: string,
-    minimal?: boolean,
-  ) =>
-    <div
-      key={variable}
-      className={clsx(
-        'overflow-x-auto overflow-y-hidden',
-        minimal && 'inline-flex',
-      )}
-    >
-      <span className="inline-flex items-center gap-1">
-        <span className={clsx(
-          'text-[11px] font-medium tracking-wider',
-          'px-0.5 py-[0.5px]',
-          'rounded-[5px]',
-          'bg-gray-100 dark:bg-gray-800',
-        )}>
-          `{variable}`
-        </span>
-        {!minimal && <CopyButton label={variable} text={variable} subtle />}
-      </span>
-    </div>;
-
   const renderEnvVars = (variables: string[]) =>
-    <div className="pt-1 space-y-1">
-      {variables.map(envVar => renderEnvVar(envVar))}
+    <div className="pt-1 flex flex-col gap-1">
+      {variables.map(envVar =>
+        <EnvVar key={envVar} variable={envVar} />)}
     </div>;
 
   const renderSubStatus = (
@@ -181,7 +132,7 @@ export default function SiteChecklistClient({
     renderSubStatus(
       type,
       renderEnvVars([variable]),
-      'translate-y-[5px]',
+      'translate-y-[3px]',
     );
 
   const renderError = ({
@@ -213,9 +164,9 @@ export default function SiteChecklistClient({
     </WarningNote>;
 
   return (
-    <div className="max-w-xl w-full">
+    <>
       <div className="space-y-3 -mt-3">
-        <Checklist
+        <ChecklistGroup
           title="Storage"
           icon={<BiData size={16} />}
         >
@@ -234,11 +185,13 @@ export default function SiteChecklistClient({
               : renderSubStatus('optional', <>
                 Vercel Postgres:
                 {' '}
-                {renderLink(
+                <AdminLink
                   // eslint-disable-next-line max-len
-                  'https://vercel.com/docs/storage/vercel-postgres/quickstart#create-a-postgres-database',
-                  'create store',
-                )}
+                  href="https://vercel.com/docs/storage/vercel-postgres/quickstart#create-a-postgres-database"
+                  externalIcon
+                >
+                  create store
+                </AdminLink>
                 {' '}
                 and connect to project
               </>)}
@@ -270,11 +223,13 @@ export default function SiteChecklistClient({
               : renderSubStatus('optional', <>
                 {labelForStorage('vercel-blob')}:
                 {' '}
-                {renderLink(
+                <AdminLink
                   // eslint-disable-next-line max-len
-                  'https://vercel.com/docs/storage/vercel-blob/quickstart#create-a-blob-store',
-                  'create store',
-                )}
+                  href="https://vercel.com/docs/storage/vercel-blob/quickstart#create-a-blob-store"
+                  externalIcon
+                >
+                  create store
+                </AdminLink>
                 {' '} 
                 and connect to project
               </>,
@@ -284,24 +239,29 @@ export default function SiteChecklistClient({
               : renderSubStatus('optional', <>
                 {labelForStorage('cloudflare-r2')}:
                 {' '}
-                {renderLink(
-                  'https://github.com/sambecker/exif-photo-blog#cloudflare-r2',
-                  'create/configure bucket',
-                )}
+                <AdminLink
+                  // eslint-disable-next-line max-len
+                  href="https://github.com/sambecker/exif-photo-blog#cloudflare-r2"
+                  externalIcon
+                >
+                  create/configure bucket
+                </AdminLink>
               </>)}
             {hasAwsS3Storage
               ? renderSubStatus('checked', 'AWS S3: connected')
               : renderSubStatus('optional', <>
                 {labelForStorage('aws-s3')}:
                 {' '}
-                {renderLink(
-                  'https://github.com/sambecker/exif-photo-blog#aws-s3',
-                  'create/configure bucket',
-                )}
+                <AdminLink
+                  href="https://github.com/sambecker/exif-photo-blog#aws-s3"
+                  externalIcon
+                >
+                  create/configure bucket
+                </AdminLink>
               </>)}
           </ChecklistRow>
-        </Checklist>
-        <Checklist
+        </ChecklistGroup>
+        <ChecklistGroup
           title="Authentication"
           icon={<BiLockAlt size={16} />}
         >
@@ -331,8 +291,8 @@ export default function SiteChecklistClient({
               'ADMIN_PASSWORD',
             ])}
           </ChecklistRow>
-        </Checklist>
-        <Checklist
+        </ChecklistGroup>
+        <ChecklistGroup
           title="Content"
           icon={<BiPencil size={16} />}
         >
@@ -373,9 +333,9 @@ export default function SiteChecklistClient({
             Store in environment variable (seen in grid sidebar):
             {renderEnvVars(['NEXT_PUBLIC_SITE_ABOUT'])}
           </ChecklistRow>
-        </Checklist>
+        </ChecklistGroup>
         {!simplifiedView && <>
-          <Checklist
+          <ChecklistGroup
             title="AI text generation"
             titleShort="AI"
             icon={<HiSparkles />}
@@ -408,11 +368,13 @@ export default function SiteChecklistClient({
               {kvError && renderError({
                 connection: { provider: 'Vercel KV', error: kvError},
               })}
-              {renderLink(
+              <AdminLink
                 // eslint-disable-next-line max-len
-                'https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database',
-                'Create Vercel KV store',
-              )}
+                href="https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database"
+                externalIcon
+              >
+                Create Vercel KV store
+              </AdminLink>
               {' '}
               and connect to project in order to enable rate limiting
             </ChecklistRow>
@@ -429,8 +391,8 @@ export default function SiteChecklistClient({
               (default: {'"title, tags, semantic"'}):
               {renderEnvVars(['AI_TEXT_AUTO_GENERATED_FIELDS'])}
             </ChecklistRow>
-          </Checklist>
-          <Checklist
+          </ChecklistGroup>
+          <ChecklistGroup
             title="Performance"
             icon={<RiSpeedMiniLine size={18} />}
             optional
@@ -490,8 +452,8 @@ export default function SiteChecklistClient({
               image blur data being stored and displayed:
               {renderEnvVars(['NEXT_PUBLIC_BLUR_DISABLED'])}
             </ChecklistRow>
-          </Checklist>
-          <Checklist
+          </ChecklistGroup>
+          <ChecklistGroup
             title="Visual"
             icon={<PiPaintBrushHousehold size={19} />}
             optional
@@ -518,8 +480,8 @@ export default function SiteChecklistClient({
               of each photo, and display a surrounding border:
               {renderEnvVars(['NEXT_PUBLIC_MATTE_PHOTOS'])}
             </ChecklistRow>
-          </Checklist>
-          <Checklist
+          </ChecklistGroup>
+          <ChecklistGroup
             title="Display"
             icon={<BiHide size={18} />}
             optional
@@ -578,8 +540,8 @@ export default function SiteChecklistClient({
               Set environment variable to {'"1"'} to hide footer link:
               {renderEnvVars(['NEXT_PUBLIC_HIDE_REPO_LINK'])}
             </ChecklistRow>
-          </Checklist>
-          <Checklist
+          </ChecklistGroup>
+          <ChecklistGroup
             title="Grid"
             icon={<IoMdGrid size={17} />}
             optional
@@ -604,7 +566,7 @@ export default function SiteChecklistClient({
               {renderEnvVars(['NEXT_PUBLIC_GRID_ASPECT_RATIO'])}
             </ChecklistRow>
             <ChecklistRow
-              title={`Grid density: ${gridDensity ? 'low' : 'high'}`}
+              title={`Grid density: ${hasHighGridDensity ? 'high' : 'low'}`}
               status={hasGridDensityPreference}
               optional
             >
@@ -613,10 +575,10 @@ export default function SiteChecklistClient({
               aspect ratio):
               {renderEnvVars(['NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS'])}
             </ChecklistRow>
-          </Checklist>
-          <Checklist
+          </ChecklistGroup>
+          <ChecklistGroup
             title="Settings"
-            icon={<BiCog size={16} />}
+            icon={<HiOutlineCog size={17} className="translate-y-[0.5px]" />}
             optional
           >
             <ChecklistRow
@@ -664,9 +626,9 @@ export default function SiteChecklistClient({
               keep OG image text bottom aligned (default is {'"top"'}):
               {renderEnvVars(['NEXT_PUBLIC_OG_TEXT_ALIGNMENT'])}
             </ChecklistRow>
-          </Checklist>
+          </ChecklistGroup>
           {areInternalToolsEnabled &&
-            <Checklist
+            <ChecklistGroup
               title="Internal"
               icon={<CgDebug size={16} />}
               optional
@@ -698,7 +660,7 @@ export default function SiteChecklistClient({
                 console output for all sql queries:
                 {renderEnvVars(['ADMIN_SQL_DEBUG'])}
               </ChecklistRow>
-            </Checklist>}
+            </ChecklistGroup>}
         </>}
       </div>
       <div className="pl-11 pr-2 sm:pr-11 mt-4 md:mt-7">
@@ -715,23 +677,8 @@ export default function SiteChecklistClient({
                 {baseUrl || 'Not Defined'}
               </span>
             </div>
-            <div>
-              <span className="font-bold">Commit</span>
-              &nbsp;&nbsp;
-              {commitSha
-                ? commitUrl
-                  ? <Link
-                    title={commitMessage}
-                    href={commitUrl}
-                    target="_blank"
-                  >
-                    {commitSha}
-                  </Link>
-                  : <span title={commitMessage}>{commitSha}</span>
-                : 'Not Found'}
-            </div>
           </div>}
       </div>
-    </div>
+    </>
   );
 }

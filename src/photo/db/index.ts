@@ -1,4 +1,4 @@
-import { PRIORITY_ORDER_ENABLED } from '@/site/config';
+import { PRIORITY_ORDER_ENABLED } from '@/app-core/config';
 import { parameterize } from '@/utility/string';
 import { PhotoSetCategory } from '..';
 
@@ -17,6 +17,7 @@ export type GetPhotosOptions = {
   limit?: number
   offset?: number
   query?: string
+  maximumAspectRatio?: number
   takenBefore?: Date
   takenAfterInclusive?: Date
   updatedBefore?: Date
@@ -36,6 +37,7 @@ export const getWheresFromOptions = (
     takenAfterInclusive,
     updatedBefore,
     query,
+    maximumAspectRatio,
     tag,
     camera,
     lens,
@@ -72,6 +74,10 @@ export const getWheresFromOptions = (
     // eslint-disable-next-line max-len
     wheres.push(`CONCAT(title, ' ', caption, ' ', semantic_description) ILIKE $${valuesIndex++}`);
     wheresValues.push(`%${query.toLocaleLowerCase()}%`);
+  }
+  if (maximumAspectRatio) {
+    wheres.push(`aspect_ratio <= $${valuesIndex++}`);
+    wheresValues.push(maximumAspectRatio);
   }
   if (tag) {
     wheres.push(`$${valuesIndex++}=ANY(tags)`);

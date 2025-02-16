@@ -5,7 +5,7 @@ import Badge from './Badge';
 import ResponsiveText from './primitives/ResponsiveText';
 import { parameterize } from '@/utility/string';
 
-export default function Checklist({
+export default function ChecklistGroup({
   title,
   titleShort,
   icon,

@@ -1,4 +1,4 @@
-import { IMAGE_QUALITY } from '@/site/config';
+import { IMAGE_QUALITY } from '@/app-core/config';
 import { IMAGE_WIDTH_LARGE, ImageProps } from '.';
 import ImageWithFallback from './ImageWithFallback';
 

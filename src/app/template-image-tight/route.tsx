@@ -5,7 +5,7 @@ import {
 } from '@/image-response';
 import TemplateImageResponse from
   '@/image-response/TemplateImageResponse';
-import { getIBMPlexMonoMedium } from '@/site/font';
+import { getIBMPlexMonoMedium } from '@/app-core/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { isNextImageReadyBasedOnPhotos } from '@/photo';

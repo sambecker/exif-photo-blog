@@ -15,7 +15,7 @@ import { createPhotoAction, updatePhotoAction } from '../actions';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
-import { PATH_ADMIN_PHOTOS, PATH_ADMIN_UPLOADS } from '@/site/paths';
+import { PATH_ADMIN_PHOTOS, PATH_ADMIN_UPLOADS } from '@/app-core/paths';
 import { toastSuccess, toastWarning } from '@/toast';
 import { getDimensionsFromSize } from '@/utility/size';
 import ImageWithFallback from '@/components/image/ImageWithFallback';
@@ -27,7 +27,7 @@ import usePreventNavigation from '@/utility/usePreventNavigation';
 import { useAppState } from '@/state/AppState';
 import UpdateBlurDataButton from '../UpdateBlurDataButton';
 import { getNextImageUrlForManipulation } from '@/services/next-image';
-import { BLUR_ENABLED, IS_PREVIEW } from '@/site/config';
+import { BLUR_ENABLED, IS_PREVIEW } from '@/app-core/config';
 import { PhotoDbInsert } from '..';
 import ErrorNote from '@/components/ErrorNote';
 

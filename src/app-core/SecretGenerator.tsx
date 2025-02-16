@@ -30,9 +30,7 @@ export default function SecretGenerator() {
           'flex flex-nowrap items-center gap-2 leading-none -mx-1',
         )}>
           {secret ? <span>{secret}</span> : <Spinner />}
-          <div
-            className="flex items-center gap-0.5 translate-y-[-2px]"
-          >
+          <div className="flex items-center gap-0.5 translate-y-[-0.5px]">
             <CopyButton label="Secret" text={secret} />
           </div>
         </div>

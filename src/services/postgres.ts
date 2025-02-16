@@ -1,4 +1,4 @@
-import { POSTGRES_SSL_ENABLED } from '@/site/config';
+import { POSTGRES_SSL_ENABLED } from '@/app-core/config';
 import { Pool, QueryResult, QueryResultRow } from 'pg'; 
 
 const pool = new Pool({

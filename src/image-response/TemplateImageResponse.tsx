@@ -1,6 +1,6 @@
 import { Photo } from '../photo';
-import IconFeed from '@/site/IconFeed';
-import IconGrid from '@/site/IconGrid';
+import IconFeed from '@/app-core/IconFeed';
+import IconGrid from '@/app-core/IconGrid';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
 import { NextImageSize } from '@/services/next-image';
 

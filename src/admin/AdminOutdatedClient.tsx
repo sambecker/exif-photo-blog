@@ -3,10 +3,10 @@
 import { OUTDATED_THRESHOLD, Photo } from '@/photo';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import LoaderButton from '@/components/primitives/LoaderButton';
-import IconGrSync from '@/site/IconGrSync';
+import IconGrSync from '@/app-core/IconGrSync';
 import Note from '@/components/Note';
 import AdminChildPage from '@/components/AdminChildPage';
-import { PATH_ADMIN_PHOTOS } from '@/site/paths';
+import { PATH_ADMIN_PHOTOS } from '@/app-core/paths';
 import { useState } from 'react';
 import { syncPhotosAction } from '@/photo/actions';
 import { useRouter } from 'next/navigation';
@@ -67,6 +67,7 @@ export default function AdminOutdatedClient({
           }
         }}
         isLoading={arePhotoIdsSyncing}
+        disabled={!updateBatchSize}
       >
         {arePhotoIdsSyncing
           ? 'Syncing'
@@ -78,6 +79,9 @@ export default function AdminOutdatedClient({
       <div className="space-y-6">
         <Note>
           <div className="space-y-1.5">
+            <div className="font-bold">
+              Outdated photos found
+            </div>
             {photos.length}
             {' '}
             {photos.length === 1 ? 'photo' : 'photos'}
@@ -87,8 +91,7 @@ export default function AdminOutdatedClient({
             {' '}
             may have: missing EXIF fields, inaccurate blur data,
             {' '}
-            undesired privacy settings
-            {hasAiTextGeneration && ', missing AI-generated text'}
+            undesired privacy settings, or missing AI-generated text
           </div>
         </Note>
         <div className="space-y-4">

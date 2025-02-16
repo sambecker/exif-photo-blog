@@ -19,9 +19,9 @@ import { generateNanoid } from '@/utility/nanoid';
 import {
   FILM_SIMULATION_FORM_INPUT_OPTIONS,
   MAKE_FUJIFILM,
-} from '@/vendors/fujifilm';
+} from '@/platforms/fujifilm';
 import { FilmSimulation } from '@/simulation';
-import { GEO_PRIVACY_ENABLED } from '@/site/config';
+import { GEO_PRIVACY_ENABLED } from '@/app-core/config';
 import { TAG_FAVS, getValidationMessageForTags } from '@/tag';
 
 type VirtualFields = 'favorite';

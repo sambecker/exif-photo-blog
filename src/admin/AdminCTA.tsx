@@ -1,7 +1,7 @@
 'use client';
 
 import PhotoUpload from '@/photo/PhotoUpload';
-import { PATH_ADMIN_PHOTOS } from '@/site/paths';
+import { PATH_ADMIN_PHOTOS } from '@/app-core/paths';
 import { useAppState } from '@/state/AppState';
 import Link from 'next/link';
 import { useState } from 'react';

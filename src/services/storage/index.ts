@@ -19,7 +19,7 @@ import {
   HAS_AWS_S3_STORAGE,
   HAS_VERCEL_BLOB_STORAGE,
   HAS_CLOUDFLARE_R2_STORAGE,
-} from '@/site/config';
+} from '@/app-core/config';
 import { generateNanoid } from '@/utility/nanoid';
 import {
   CLOUDFLARE_R2_BASE_URL_PUBLIC,
@@ -29,7 +29,7 @@ import {
   cloudflareR2Put,
   isUrlFromCloudflareR2,
 } from './cloudflare-r2';
-import { PATH_API_PRESIGNED_URL } from '@/site/paths';
+import { PATH_API_PRESIGNED_URL } from '@/app-core/paths';
 
 export const generateStorageId = () => generateNanoid(16);
 

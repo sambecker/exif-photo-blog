@@ -3,7 +3,7 @@ import { createStreamableValue } from 'ai/rsc';
 import { createOpenAI } from '@ai-sdk/openai';
 import { kv } from '@vercel/kv';
 import { Ratelimit } from '@upstash/ratelimit';
-import { AI_TEXT_GENERATION_ENABLED, HAS_VERCEL_KV } from '@/site/config';
+import { AI_TEXT_GENERATION_ENABLED, HAS_VERCEL_KV } from '@/app-core/config';
 import { removeBase64Prefix } from '@/utility/image';
 import { cleanUpAiTextResponse } from '@/photo/ai';
 

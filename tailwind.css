@@ -124,10 +124,26 @@
   @apply
     border border-gray-200 dark:border-gray-700
 }
+@utility divide-main {
+  @apply
+    divide-gray-200 dark:divide-gray-700
+}
+@utility border-medium {
+  @apply
+    border border-gray-200 dark:border-gray-800
+}
+@utility divide-medium {
+  @apply
+    divide-gray-200 dark:divide-gray-800
+}
 /* Background */
 @utility bg-main {
   @apply
     bg-white dark:bg-black
+}
+@utility bg-medium {
+  @apply
+    bg-gray-200 dark:bg-gray-700
 }
 @utility bg-dim {
   @apply
@@ -135,8 +151,7 @@
 }
 @utility bg-content {
   @apply
-    bg-white border-gray-200
-    dark:bg-black dark:border-gray-800
+    bg-main border-medium
 }
 @utility bg-invert {
   @apply
@@ -293,15 +308,13 @@
   }
   a, .link {
     @apply
-      hover:text-gray-600
-      hover:dark:text-gray-400
+      hover:text-medium
   }
 }
 
 @layer components {
   .component-surface {
     @apply
-      bg-content border-main
-      rounded-lg
+      bg-content rounded-lg
   }
 }
