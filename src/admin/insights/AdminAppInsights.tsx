@@ -2,7 +2,7 @@ import {
   getPhotosMeta,
   getUniqueCameras,
   getUniqueFilmSimulations,
-  getUniqueLenses,
+  getUniqueFocalLengths,
   getUniqueTags,
 } from '@/photo/db/query';
 import AdminAppInsightsClient from './AdminAppInsightsClient';
@@ -38,7 +38,7 @@ export default async function AdminAppInsights() {
     tags,
     cameras,
     filmSimulations,
-    lenses,
+    focalLengths,
     codeMeta,
   ] = await Promise.all([
     getPhotosMeta({ hidden: 'include' }),
@@ -48,7 +48,7 @@ export default async function AdminAppInsights() {
     getUniqueTags(),
     getUniqueCameras(),
     getUniqueFilmSimulations(),
-    getUniqueLenses(),
+    getUniqueFocalLengths(),
     IS_VERCEL_GIT_PROVIDER_GITHUB || IS_DEVELOPMENT
       ? getGitHubMeta({
         owner,
@@ -87,7 +87,7 @@ export default async function AdminAppInsights() {
         tagsCount: tags.length,
         camerasCount: cameras.length,
         filmSimulationsCount: filmSimulations.length,
-        lensesCount: lenses.length,
+        focalLengthsCount: focalLengths.length,
         dateRange,
       }}
       debug={!IS_PRODUCTION}

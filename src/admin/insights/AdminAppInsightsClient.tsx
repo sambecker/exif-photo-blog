@@ -62,7 +62,7 @@ export default function AdminAppInsightsClient({
     tagsCount,
     camerasCount,
     filmSimulationsCount,
-    lensesCount,
+    focalLengthsCount,
     dateRange,
   },
   debug,
@@ -334,7 +334,7 @@ export default function AdminAppInsightsClient({
           />}
         <ScoreCardRow
           icon={<TbCone className="rotate-[270deg] translate-x-[-2px]" />}
-          content={pluralize(lensesCount, 'lens', 'lenses')}
+          content={pluralize(focalLengthsCount, 'focal length')}
         />
         {descriptionWithSpaces && <ScoreCardRow
           icon={<FaRegCalendar
