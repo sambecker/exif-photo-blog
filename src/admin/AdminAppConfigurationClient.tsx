@@ -4,9 +4,7 @@ import {
   ComponentProps,
   ReactNode,
 } from 'react';
-import { clsx } from 'clsx/lite';
 import ChecklistRow from '../components/ChecklistRow';
-import { FiExternalLink } from 'react-icons/fi';
 import {
   BiData,
   BiHide,
@@ -29,6 +27,7 @@ import { PiPaintBrushHousehold } from 'react-icons/pi';
 import { IoMdGrid } from 'react-icons/io';
 import { CgDebug } from 'react-icons/cg';
 import EnvVar from '@/components/EnvVar';
+import AdminLink from './AdminLink';
 
 export default function AdminAppConfigurationClient({
   // Storage
@@ -110,27 +109,6 @@ export default function AdminAppConfigurationClient({
   simplifiedView?: boolean
   isAnalyzingConfiguration?: boolean
 }) {
-  const renderLink = (href: string, text: string, external = true) =>
-    <>
-      <a {...{
-        href,
-        ...external && { target: '_blank', rel: 'noopener noreferrer' },
-        className: clsx(
-          'underline hover:no-underline',
-        ),
-      }}>
-        {text}
-      </a>
-      {external &&
-        <>
-          &nbsp;
-          <FiExternalLink
-            size={14}
-            className='inline translate-y-[-1.5px]'
-          />
-        </>}
-    </>;
-
   const renderEnvVars = (variables: string[]) =>
     <div className="pt-1 flex flex-col gap-1">
       {variables.map(envVar =>
@@ -158,7 +136,7 @@ export default function AdminAppConfigurationClient({
     renderSubStatus(
       type,
       renderEnvVars([variable]),
-      'translate-y-[5px]',
+      'translate-y-[3px]',
     );
 
   const renderError = ({
@@ -211,11 +189,13 @@ export default function AdminAppConfigurationClient({
               : renderSubStatus('optional', <>
                 Vercel Postgres:
                 {' '}
-                {renderLink(
+                <AdminLink
                   // eslint-disable-next-line max-len
-                  'https://vercel.com/docs/storage/vercel-postgres/quickstart#create-a-postgres-database',
-                  'create store',
-                )}
+                  href="https://vercel.com/docs/storage/vercel-postgres/quickstart#create-a-postgres-database"
+                  externalIcon
+                >
+                  create store
+                </AdminLink>
                 {' '}
                 and connect to project
               </>)}
@@ -247,11 +227,13 @@ export default function AdminAppConfigurationClient({
               : renderSubStatus('optional', <>
                 {labelForStorage('vercel-blob')}:
                 {' '}
-                {renderLink(
+                <AdminLink
                   // eslint-disable-next-line max-len
-                  'https://vercel.com/docs/storage/vercel-blob/quickstart#create-a-blob-store',
-                  'create store',
-                )}
+                  href="https://vercel.com/docs/storage/vercel-blob/quickstart#create-a-blob-store"
+                  externalIcon
+                >
+                  create store
+                </AdminLink>
                 {' '} 
                 and connect to project
               </>,
@@ -261,20 +243,25 @@ export default function AdminAppConfigurationClient({
               : renderSubStatus('optional', <>
                 {labelForStorage('cloudflare-r2')}:
                 {' '}
-                {renderLink(
-                  'https://github.com/sambecker/exif-photo-blog#cloudflare-r2',
-                  'create/configure bucket',
-                )}
+                <AdminLink
+                  // eslint-disable-next-line max-len
+                  href="https://github.com/sambecker/exif-photo-blog#cloudflare-r2"
+                  externalIcon
+                >
+                  create/configure bucket
+                </AdminLink>
               </>)}
             {hasAwsS3Storage
               ? renderSubStatus('checked', 'AWS S3: connected')
               : renderSubStatus('optional', <>
                 {labelForStorage('aws-s3')}:
                 {' '}
-                {renderLink(
-                  'https://github.com/sambecker/exif-photo-blog#aws-s3',
-                  'create/configure bucket',
-                )}
+                <AdminLink
+                  href="https://github.com/sambecker/exif-photo-blog#aws-s3"
+                  externalIcon
+                >
+                  create/configure bucket
+                </AdminLink>
               </>)}
           </ChecklistRow>
         </ChecklistGroup>
@@ -385,11 +372,13 @@ export default function AdminAppConfigurationClient({
               {kvError && renderError({
                 connection: { provider: 'Vercel KV', error: kvError},
               })}
-              {renderLink(
+              <AdminLink
                 // eslint-disable-next-line max-len
-                'https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database',
-                'Create Vercel KV store',
-              )}
+                href="https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database"
+                externalIcon
+              >
+                Create Vercel KV store
+              </AdminLink>
               {' '}
               and connect to project in order to enable rate limiting
             </ChecklistRow>

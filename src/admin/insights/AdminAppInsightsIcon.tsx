@@ -2,7 +2,7 @@ import clsx from 'clsx/lite';
 import { LuLightbulb } from 'react-icons/lu';
 
 export default function AdminAppInsightsIcon({
-  indicator = 'blue',
+  indicator,
 }: {
   indicator?: 'blue' | 'yellow'
 }) {

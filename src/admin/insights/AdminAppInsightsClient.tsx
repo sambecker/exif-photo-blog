@@ -30,26 +30,17 @@ import { PATH_ADMIN_OUTDATED } from '@/app-core/paths';
 import { LiaBroomSolid } from 'react-icons/lia';
 import { IoMdGrid } from 'react-icons/io';
 import { RiSpeedMiniLine } from 'react-icons/ri';
+import AdminLink from '../AdminLink';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
 const DEBUG_BEHIND_BY = 9;
 const DEBUG_PHOTOS_COUNT_OUTDATED = 7;
 
-const renderLink = (text: string, href = '') =>
-  <a
-    href={href}
-    target="blank"
-    className="underline underline-offset-4 decoration-gray-300"
-  >
-    {text}
-  </a>;
-
 const readmeAnchor = (anchor: string) =>
-  renderLink(
-    `README/${anchor}`,
-    `${TEMPLATE_REPO_URL_README}#${anchor}`,
-  );
+  <AdminLink href={`${TEMPLATE_REPO_URL_README}#${anchor}`}>
+    README/{anchor}
+  </AdminLink>;
 
 const renderLabeledEnvVar = (label: string, envVar: string, value = '1') =>
   <div className="flex flex-col gap-1.5">
@@ -112,7 +103,9 @@ export default function AdminAppInsightsClient({
               />}
               content="This template is not forked"
               expandContent={<>
-                {renderLink('Fork original template', TEMPLATE_REPO_URL_FORK)}
+                <AdminLink href={TEMPLATE_REPO_URL_FORK}>
+                  Fork original template
+                </AdminLink>
                 {' '}
                 to receive the latest fixes and features.
                 {' '}
@@ -144,7 +137,9 @@ export default function AdminAppInsightsClient({
               behind
             </>}
             expandContent={<>
-              {renderLink('Sync your fork', codeMeta?.urlRepo)}
+              <AdminLink href={codeMeta?.urlRepo ?? ''}>
+                Sync your fork
+              </AdminLink>
               {' '}
               to receive the latest fixes and features.
             </>}
@@ -190,7 +185,7 @@ export default function AdminAppInsightsClient({
               target="blank"
               className="flex items-center gap-2"
             >
-              <span className="text-medium">
+              <span className="text-medium hidden sm:inline-block">
                 {VERCEL_GIT_COMMIT_SHA_SHORT ?? DEBUG_COMMIT_SHA}
               </span>
               <span className="truncate">
@@ -270,18 +265,18 @@ export default function AdminAppInsightsClient({
               {' '}
               portrait and landscape photos appear more consistent
               {' '}
-              <EnvVar variable="NEXT_PUBLIC_MATTE_PHOTOS" value="1" />
+              <EnvVar variable="NEXT_PUBLIC_MATTE_PHOTOS" value="1" />.
             </>}
           />}
           {(gridFirst || debug) && <ScoreCardRow
             icon={<IoMdGrid size={18} className="translate-y-[-1px]" />}
             content="Grid homepage"
             expandContent={<>
-              Now that you have a sufficient amount of photos, you can
+              Now that you have enough photos, consider switching your
               {' '}
-              enable grid homepage by setting
+              default view to grid by setting
               {' '}
-              <EnvVar variable="NEXT_PUBLIC_GRID_HOMEPAGE_ENABLED" value="1" />
+              <EnvVar variable="NEXT_PUBLIC_GRID_HOMEPAGE_ENABLED" value="1" />.
             </>}
           />}
         </ScoreCard>}
