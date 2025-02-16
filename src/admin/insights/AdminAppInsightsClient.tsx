@@ -322,7 +322,7 @@ export default function AdminAppInsightsClient({
           />}
           content={`${camerasCount} cameras`}
         />
-        {Boolean(filmSimulationsCount) &&
+        {filmSimulationsCount > 0 &&
           <ScoreCardRow
             icon={<span className="inline-flex w-3">
               <PhotoFilmSimulationIcon
@@ -336,13 +336,13 @@ export default function AdminAppInsightsClient({
           icon={<TbCone className="rotate-[270deg] translate-x-[-2px]" />}
           content={`${lensesCount} lenses`}
         />
-        <ScoreCardRow
+        {descriptionWithSpaces && <ScoreCardRow
           icon={<FaRegCalendar
             size={13}
             className="translate-y-[1.5px] translate-x-[-2px]"
           />}
           content={descriptionWithSpaces}
-        />
+        />}
       </ScoreCard>
     </div>
   );
