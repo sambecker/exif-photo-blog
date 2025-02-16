@@ -92,6 +92,7 @@ export const getLatestBaseRepoCommitSha = async () => {
 const getIsRepoForkedFromBase = async (params: RepoParams) => {
   const response = await fetch(getGitHubApiRepoUrl(params), FETCH_CONFIG);
   const data = await response.json();
+  console.log('getIsRepoForkedFromBase', { data });
   return (
     Boolean(data.fork) &&
     data.source?.full_name === `${TEMPLATE_REPO_OWNER}/${TEMPLATE_REPO_NAME}`
