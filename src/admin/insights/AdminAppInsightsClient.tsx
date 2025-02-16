@@ -322,7 +322,7 @@ export default function AdminAppInsightsClient({
           />}
           content={`${camerasCount} cameras`}
         />
-        {filmSimulationsCount &&
+        {Boolean(filmSimulationsCount) &&
           <ScoreCardRow
             icon={<span className="inline-flex w-3">
               <PhotoFilmSimulationIcon
