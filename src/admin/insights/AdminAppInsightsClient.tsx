@@ -53,6 +53,20 @@ const renderLabeledEnvVar = (label: string, envVar: string, value = '1') =>
     <EnvVar variable={envVar} value={value} />
   </div>;
 
+const renderHighlightText = (
+  text: string,
+  color: 'blue' | 'yellow' = 'blue',
+) =>
+  <span className={clsx(
+    'px-1.5 pt-[1px] pb-0.5 rounded-md',
+    color === 'blue' && 'text-blue-600 bg-blue-100/60',
+    color === 'blue' && 'dark:text-blue-400 dark:bg-blue-900/50',
+    color === 'yellow' && 'text-amber-700 bg-amber-100/50',
+    color === 'yellow' && 'dark:text-amber-400 dark:bg-amber-900/50',
+  )}>
+    {text}
+  </span>;
+
 export default function AdminAppInsightsClient({
   codeMeta,
   insights,
@@ -140,17 +154,10 @@ export default function AdminAppInsightsClient({
                 content={<>
                   This fork is
                   {' '}
-                  <span className={clsx(
-                    'text-blue-600 bg-blue-100/60',
-                    'dark:text-blue-400 dark:bg-blue-900/50',
-                    'px-1.5 pt-[1px] pb-0.5 rounded-md',
-                  )}>
-                    {codeMeta?.behindBy ?? DEBUG_BEHIND_BY}
-                    {' '}
-                    {(codeMeta?.behindBy ?? DEBUG_BEHIND_BY) === 1
-                      ? 'commit'
-                      : 'commits'}
-                  </span>
+                  {renderHighlightText(
+                    pluralize(codeMeta?.behindBy ?? DEBUG_BEHIND_BY, 'commit'),
+                    'blue',
+                  )}
                   {' '}
                   behind
                 </>}
@@ -222,7 +229,10 @@ export default function AdminAppInsightsClient({
                 size={17}
                 className="translate-x-[0.5px] text-amber-600"
               />}
-              content="AI enabled without rate limiting"
+              content={renderHighlightText(
+                'AI enabled without rate limiting',
+                'yellow',
+              )}
               expandContent={<>
                 Create Vercel KV store and link to this project
                 in order prevent abuse by to enabling rate limiting.
@@ -311,8 +321,11 @@ export default function AdminAppInsightsClient({
             size={19}
             className="translate-y-[-2px] text-amber-600"
           />}
-          // eslint-disable-next-line max-len
-          content={pluralize(photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED, 'outdated photo')}
+          content={renderHighlightText(
+            // eslint-disable-next-line max-len
+            pluralize(photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED, 'outdated photo'),
+            'yellow',
+          )}
           expandPath={PATH_ADMIN_OUTDATED}
         />}
         <ScoreCardRow
