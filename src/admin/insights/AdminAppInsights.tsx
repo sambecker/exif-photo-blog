@@ -64,8 +64,6 @@ export default async function AdminAppInsights() {
     hasVercelBlobStorage,
   } = APP_CONFIGURATION;
 
-  console.log('codeMeta', { codeMeta });
-
   return (
     <AdminAppInsightsClient
       codeMeta={codeMeta}
