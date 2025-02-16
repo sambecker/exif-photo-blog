@@ -31,6 +31,7 @@ import { LiaBroomSolid } from 'react-icons/lia';
 import { IoMdGrid } from 'react-icons/io';
 import { RiSpeedMiniLine } from 'react-icons/ri';
 import AdminLink from '../AdminLink';
+import AdminEmptyState from '../AdminEmptyState';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
@@ -93,8 +94,8 @@ export default function AdminAppInsightsClient({
 
   return (
     <div className="space-y-6 md:space-y-8">
-      {(codeMeta?.isBaseRepo || codeMeta?.isForkedFromBase || debug) && <>
-        <ScoreCard title="Build details">
+      {(codeMeta || debug) && <>
+        <ScoreCard title="Source code">
           {(noFork || debug) &&
             <ScoreCardRow
               icon={<FaCircleInfo 
@@ -195,91 +196,97 @@ export default function AdminAppInsightsClient({
           />
         </ScoreCard>
       </>}
-      {(hasTemplateRecommendations(insights) || debug) &&
-        <ScoreCard title="Template recommendations">
-          {(noAiRateLimiting || debug) && <ScoreCardRow
-            icon={<PiWarningBold
-              size={17}
-              className="translate-x-[0.5px] text-amber-600"
+      <ScoreCard title="Template recommendations">
+        {(hasTemplateRecommendations(insights) || debug)
+          ? <>
+            {(noAiRateLimiting || debug) && <ScoreCardRow
+              icon={<PiWarningBold
+                size={17}
+                className="translate-x-[0.5px] text-amber-600"
+              />}
+              content="AI enabled without rate limiting"
+              expandContent={<>
+                Create Vercel KV store and link to this project
+                in order prevent abuse by to enabling rate limiting.
+              </>}
             />}
-            content="AI enabled without rate limiting"
-            expandContent={<>
-              Create Vercel KV store and link to this project
-              in order prevent abuse by to enabling rate limiting.
-            </>}
-          />}
-          {(noStaticOptimization || debug) && <ScoreCardRow
-            icon={<RiSpeedMiniLine
-              size={19}
-              className="translate-x-[1px] translate-y-[-1.5px]"
+            {(noStaticOptimization || debug) && <ScoreCardRow
+              icon={<RiSpeedMiniLine
+                size={19}
+                className="translate-x-[1px] translate-y-[-1.5px]"
+              />}
+              content="Speed up page load times"
+              expandContent={<>
+                Improve load times by enabling static optimization
+                {' '}
+                on:
+                <div className="flex flex-col gap-y-4 mt-3">
+                  {renderLabeledEnvVar(
+                    'Photo pages',
+                    'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS',
+                  )}
+                  {renderLabeledEnvVar(
+                    'Photo OG images',
+                    'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES',
+                  )}
+                  {renderLabeledEnvVar(
+                    'Category pages (tags, cameras, etc.)',
+                    'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES',
+                  )}
+                  {renderLabeledEnvVar(
+                    'Category OG images',
+                    'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORY_OG_IMAGES',
+                  )}
+                  <span>
+                    See {readmeAnchor('performance')} for cost implications.
+                  </span>
+                </div>
+              </>}
             />}
-            content="Speed up page load times"
-            expandContent={<>
-              Improve load times by enabling static optimization
-              {' '}
-              on:
-              <div className="flex flex-col gap-y-4 mt-3">
-                {renderLabeledEnvVar(
-                  'Photo pages',
-                  'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS',
-                )}
-                {renderLabeledEnvVar(
-                  'Photo OG images',
-                  'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES',
-                )}
-                {renderLabeledEnvVar(
-                  'Category pages (tags, cameras, etc.)',
-                  'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES',
-                )}
-                {renderLabeledEnvVar(
-                  'Category OG images',
-                  'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORY_OG_IMAGES',
-                )}
-                <span>
-                  See {readmeAnchor('performance')} for cost implications.
-                </span>
-              </div>
-            </>}
-          />}
-          {(noAi || debug) && <ScoreCardRow
-            icon={<TbSparkles size={17} />}
-            content="Improve SEO + accessibility with AI"
-            expandContent={<>
-              Enable automatic AI text generation
-              {' '}
-              by setting <EnvVar variable="OPENAI_SECRET_KEY" />.
-              {' '}
-              Further instruction and cost considerations in
-              {' '}
-              {readmeAnchor('ai-text-generation')}.
-            </>}
-          />}
-          {(photoMatting || debug) && <ScoreCardRow
-            icon={<MdAspectRatio
-              size={17}
-              className="rotate-90 translate-x-[-1px]"
+            {(noAi || debug) && <ScoreCardRow
+              icon={<TbSparkles size={17} />}
+              content="Improve SEO + accessibility with AI"
+              expandContent={<>
+                Enable automatic AI text generation
+                {' '}
+                by setting <EnvVar variable="OPENAI_SECRET_KEY" />.
+                {' '}
+                Further instruction and cost considerations in
+                {' '}
+                {readmeAnchor('ai-text-generation')}.
+              </>}
             />}
-            content="Vertical photos may benefit from matting"
-            expandContent={<>
-              Enable photo matting to make
-              {' '}
-              portrait and landscape photos appear more consistent
-              {' '}
-              <EnvVar variable="NEXT_PUBLIC_MATTE_PHOTOS" value="1" />.
-            </>}
-          />}
-          {(gridFirst || debug) && <ScoreCardRow
-            icon={<IoMdGrid size={18} className="translate-y-[-1px]" />}
-            content="Grid homepage"
-            expandContent={<>
-              Now that you have enough photos, consider switching your
-              {' '}
-              default view to grid by setting
-              {' '}
-              <EnvVar variable="NEXT_PUBLIC_GRID_HOMEPAGE_ENABLED" value="1" />.
-            </>}
-          />}
-        </ScoreCard>}
+            {(photoMatting || debug) && <ScoreCardRow
+              icon={<MdAspectRatio
+                size={17}
+                className="rotate-90 translate-x-[-1px]"
+              />}
+              content="Vertical photos may benefit from matting"
+              expandContent={<>
+                Enable photo matting to make
+                {' '}
+                portrait and landscape photos appear more consistent
+                {' '}
+                <EnvVar variable="NEXT_PUBLIC_MATTE_PHOTOS" value="1" />.
+              </>}
+            />}
+            {(gridFirst || debug) && <ScoreCardRow
+              icon={<IoMdGrid size={18} className="translate-y-[-1px]" />}
+              content="Grid homepage"
+              expandContent={<>
+                Now that you have enough photos, consider switching your
+                {' '}
+                default view to grid by setting
+                {' '}
+                {/* eslint-disable-next-line max-len */}
+                <EnvVar variable="NEXT_PUBLIC_GRID_HOMEPAGE_ENABLED" value="1" />.
+              </>}
+            />}
+          </>
+          : <AdminEmptyState includeContainer={false}>
+            Nothing to report!
+          </AdminEmptyState>}
+      </ScoreCard>
       <ScoreCard title="Library Stats">
         {(outdatedPhotos || debug) && <ScoreCardRow
           icon={<LiaBroomSolid
