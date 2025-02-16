@@ -215,7 +215,7 @@ export default function AdminAppInsightsClient({
             />}
             content="Speed up page load times"
             expandContent={<>
-              Dramatically improve load times by enabling static optimization
+              Improve load times by enabling static optimization
               {' '}
               on:
               <div className="flex flex-col gap-y-4 mt-3">
@@ -236,7 +236,7 @@ export default function AdminAppInsightsClient({
                   'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORY_OG_IMAGES',
                 )}
                 <span>
-                  See {readmeAnchor('performance')} for cost considerations.
+                  See {readmeAnchor('performance')} for cost implications.
                 </span>
               </div>
             </>}
