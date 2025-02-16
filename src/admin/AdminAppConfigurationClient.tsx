@@ -21,7 +21,6 @@ import { testConnectionsAction } from '@/admin/actions';
 import ErrorNote from '@/components/ErrorNote';
 import WarningNote from '@/components/WarningNote';
 import { RiSpeedMiniLine } from 'react-icons/ri';
-import Link from 'next/link';
 import SecretGenerator from '../app-core/SecretGenerator';
 import { PiPaintBrushHousehold } from 'react-icons/pi';
 import { IoMdGrid } from 'react-icons/io';
@@ -93,9 +92,6 @@ export default function AdminAppConfigurationClient({
   isAdminSqlDebugEnabled,
   // Misc
   baseUrl,
-  commitSha,
-  commitMessage,
-  commitUrl,
   // Connection status
   databaseError,
   storageError,
@@ -680,21 +676,6 @@ export default function AdminAppConfigurationClient({
               <span className="w-full flex overflow-x-auto">
                 {baseUrl || 'Not Defined'}
               </span>
-            </div>
-            <div>
-              <span className="font-bold">Commit</span>
-              &nbsp;&nbsp;
-              {commitSha
-                ? commitUrl
-                  ? <Link
-                    title={commitMessage}
-                    href={commitUrl}
-                    target="_blank"
-                  >
-                    {commitSha}
-                  </Link>
-                  : <span title={commitMessage}>{commitSha}</span>
-                : 'Not Found'}
             </div>
           </div>}
       </div>
