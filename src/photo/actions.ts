@@ -18,7 +18,7 @@ import {
   convertPhotoToFormData,
 } from './form';
 import { redirect } from 'next/navigation';
-import { deleteFile } from '@/services/storage';
+import { deleteFile } from '@/platforms/storage';
 import {
   getPhotosCached,
   getPhotosMetaCached,
@@ -39,7 +39,7 @@ import { TAG_FAVS, isTagFavs } from '@/tag';
 import { convertPhotoToPhotoDbInsert, Photo } from '.';
 import { runAuthenticatedAdminServerAction } from '@/auth';
 import { AiImageQuery, getAiImageQuery } from './ai';
-import { streamOpenAiImageQuery } from '@/services/openai';
+import { streamOpenAiImageQuery } from '@/platforms/openai';
 import {
   AI_TEXT_AUTO_GENERATED_FIELDS,
   AI_TEXT_GENERATION_ENABLED,

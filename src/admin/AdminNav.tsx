@@ -1,4 +1,4 @@
-import { getStorageUploadUrlsNoStore } from '@/services/storage/cache';
+import { getStorageUploadUrlsNoStore } from '@/platforms/storage/cache';
 import {
   getPhotosMetaCached,
   getPhotosMostRecentUpdateCached,

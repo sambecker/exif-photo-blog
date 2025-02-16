@@ -8,7 +8,7 @@ import {
   IS_PREVIEW,
 } from '@/app-core/config';
 import { blurImageFromUrl, resizeImageFromUrl } from '@/photo/server';
-import { getNextImageUrlForManipulation } from '@/services/next-image';
+import { getNextImageUrlForManipulation } from '@/platforms/next-image';
 
 export default async function PhotoEditPage({
   params,

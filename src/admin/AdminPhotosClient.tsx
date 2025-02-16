@@ -12,7 +12,7 @@ import AdminPhotosTableInfinite from '@/admin/AdminPhotosTableInfinite';
 import PathLoaderButton from '@/components/primitives/PathLoaderButton';
 import { PATH_ADMIN_OUTDATED } from '@/app-core/paths';
 import { Photo } from '@/photo';
-import { StorageListResponse } from '@/services/storage';
+import { StorageListResponse } from '@/platforms/storage';
 import { useState } from 'react';
 import { LiaBroomSolid } from 'react-icons/lia';
 import AdminUploadsTable from './AdminUploadsTable';

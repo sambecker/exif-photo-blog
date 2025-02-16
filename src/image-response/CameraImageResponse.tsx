@@ -9,7 +9,7 @@ import {
   isCameraApple,
 } from '@/camera';
 import { IoMdCamera } from 'react-icons/io';
-import { NextImageSize } from '@/services/next-image';
+import { NextImageSize } from '@/platforms/next-image';
 import { AiFillApple } from 'react-icons/ai';
 
 export default function CameraImageResponse({

@@ -15,7 +15,7 @@ import { HiOutlineCog } from 'react-icons/hi';
 import ChecklistGroup from '@/components/ChecklistGroup';
 import { ConfigChecklistStatus } from '../app-core/config';
 import StatusIcon from '@/components/StatusIcon';
-import { labelForStorage } from '@/services/storage';
+import { labelForStorage } from '@/platforms/storage';
 import { HiSparkles } from 'react-icons/hi';
 import { testConnectionsAction } from '@/admin/actions';
 import ErrorNote from '@/components/ErrorNote';

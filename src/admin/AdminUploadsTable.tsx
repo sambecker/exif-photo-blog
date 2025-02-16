@@ -2,7 +2,7 @@
 
 import ImageSmall from '@/components/image/ImageSmall';
 import Spinner from '@/components/Spinner';
-import { getIdFromStorageUrl } from '@/services/storage';
+import { getIdFromStorageUrl } from '@/platforms/storage';
 import { clsx } from 'clsx/lite';
 import { FaRegCircleCheck } from 'react-icons/fa6';
 import { pathForAdminUploadUrl } from '@/app-core/paths';

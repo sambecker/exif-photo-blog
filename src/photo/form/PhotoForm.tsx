@@ -26,7 +26,7 @@ import Spinner from '@/components/Spinner';
 import usePreventNavigation from '@/utility/usePreventNavigation';
 import { useAppState } from '@/state/AppState';
 import UpdateBlurDataButton from '../UpdateBlurDataButton';
-import { getNextImageUrlForManipulation } from '@/services/next-image';
+import { getNextImageUrlForManipulation } from '@/platforms/next-image';
 import { BLUR_ENABLED, IS_PREVIEW } from '@/app-core/config';
 import { PhotoDbInsert } from '..';
 import ErrorNote from '@/components/ErrorNote';

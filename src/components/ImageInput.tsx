@@ -7,7 +7,7 @@ import exifr from 'exifr';
 import { clsx } from 'clsx/lite';
 import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
 import { FiUploadCloud } from 'react-icons/fi';
-import { MAX_IMAGE_SIZE } from '@/services/next-image';
+import { MAX_IMAGE_SIZE } from '@/platforms/next-image';
 import ProgressButton from './primitives/ProgressButton';
 
 const INPUT_ID = 'file';

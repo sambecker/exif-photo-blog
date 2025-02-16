@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { uploadPhotoFromClient } from '@/services/storage';
+import { uploadPhotoFromClient } from '@/platforms/storage';
 import { useRouter } from 'next/navigation';
 import { PATH_ADMIN_UPLOADS, pathForAdminUploadUrl } from '@/app-core/paths';
 import ImageInput from '../components/ImageInput';

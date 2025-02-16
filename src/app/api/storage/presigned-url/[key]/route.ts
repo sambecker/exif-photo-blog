@@ -2,11 +2,11 @@ import { auth } from '@/auth';
 import {
   awsS3Client,
   awsS3PutObjectCommandForKey,
-} from '@/services/storage/aws-s3';
+} from '@/platforms/storage/aws-s3';
 import {
   cloudflareR2Client,
   cloudflareR2PutObjectCommandForKey,
-} from '@/services/storage/cloudflare-r2';
+} from '@/platforms/storage/cloudflare-r2';
 import { CURRENT_STORAGE } from '@/app-core/config';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 

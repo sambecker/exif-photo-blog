@@ -1,7 +1,7 @@
 import { Photo } from '@/photo';
 import { absolutePathForPhoto } from './paths';
 import { formatDateFromPostgresString } from '@/utility/date';
-import { getNextImageUrlForRequest } from '@/services/next-image';
+import { getNextImageUrlForRequest } from '@/platforms/next-image';
 
 export const API_PHOTO_REQUEST_LIMIT = 40;
 

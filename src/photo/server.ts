@@ -1,7 +1,7 @@
 import {
   getExtensionFromStorageUrl,
   getIdFromStorageUrl,
-} from '@/services/storage';
+} from '@/platforms/storage';
 import { convertExifToFormData } from '@/photo/form';
 import {
   getFujifilmSimulationFromMakerNote,

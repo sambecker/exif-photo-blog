@@ -2,7 +2,7 @@ import type { Photo } from '../photo';
 import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
-import type { NextImageSize } from '@/services/next-image';
+import type { NextImageSize } from '@/platforms/next-image';
 import { TbCone } from 'react-icons/tb';
 import { formatFocalLength } from '@/focal';
 

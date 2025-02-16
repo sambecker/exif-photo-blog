@@ -1,4 +1,4 @@
-import { getStoragePhotoUrlsNoStore } from '@/services/storage/cache';
+import { getStoragePhotoUrlsNoStore } from '@/platforms/storage/cache';
 import { getPhotos } from '@/photo/db/query';
 import { getPhotosMetaCached } from '@/photo/cache';
 import { OUTDATED_THRESHOLD } from '@/photo';

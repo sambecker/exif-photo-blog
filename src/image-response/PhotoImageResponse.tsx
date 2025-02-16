@@ -4,7 +4,7 @@ import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
 import { OG_TEXT_BOTTOM_ALIGNMENT } from '@/app-core/config';
-import { NextImageSize } from '@/services/next-image';
+import { NextImageSize } from '@/platforms/next-image';
 import { cameraFromPhoto, formatCameraText } from '@/camera';
 
 export default function PhotoImageResponse({

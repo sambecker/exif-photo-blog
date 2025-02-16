@@ -5,7 +5,7 @@ import {
   getExtensionFromStorageUrl,
   moveFile,
   putFile,
-} from '@/services/storage';
+} from '@/platforms/storage';
 import { removeGpsData } from './server';
 
 export const convertUploadToPhoto = async ({
