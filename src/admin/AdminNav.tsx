@@ -31,6 +31,8 @@ export default async function AdminNav() {
     getPhotosMostRecentUpdateCached().catch(() => undefined),
   ]);
 
+  const includeInsights = countPhotos > 0;
+
   // Photos
   const items = [{
     label: 'Photos',
@@ -53,6 +55,10 @@ export default async function AdminNav() {
   }); }
 
   return (
-    <AdminNavClient {...{ items, mostRecentPhotoUpdateTime }} />
+    <AdminNavClient {...{
+      items,
+      mostRecentPhotoUpdateTime,
+      includeInsights,
+    }} />
   );
 }

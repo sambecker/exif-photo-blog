@@ -29,6 +29,7 @@ const areTimesRecent = (dates: Date[]) => dates
 export default function AdminNavClient({
   items,
   mostRecentPhotoUpdateTime,
+  includeInsights,
 }: {
   items: {
     label: string,
@@ -36,6 +37,7 @@ export default function AdminNavClient({
     count: number,
   }[]
   mostRecentPhotoUpdateTime?: Date
+  includeInsights?: boolean
 }) {
   const pathname = usePathname();
 
@@ -90,17 +92,18 @@ export default function AdminNavClient({
                 </LinkWithStatus>)}
             </div>
             <div className="flex gap-3">
-              <LinkWithLoader
-                href={PATH_ADMIN_INSIGHTS}
-                className={clsx(
-                  'translate-y-[-2px]',
-                  isPathAdminInsights(pathname)
-                    ? 'font-bold'
-                    : 'text-dim')}
-                loader={<Spinner className="translate-y-[1px]" />}
-              >
-                <AdminAppInsightsIcon />
-              </LinkWithLoader>
+              {includeInsights &&
+                <LinkWithLoader
+                  href={PATH_ADMIN_INSIGHTS}
+                  className={clsx(
+                    'translate-y-[-2px]',
+                    isPathAdminInsights(pathname)
+                      ? 'font-bold'
+                      : 'text-dim')}
+                  loader={<Spinner className="translate-y-[1px]" />}
+                >
+                  <AdminAppInsightsIcon />
+                </LinkWithLoader>}
               <LinkWithLoader
                 href={PATH_ADMIN_CONFIGURATION}
                 className={isPathAdminConfiguration(pathname)
