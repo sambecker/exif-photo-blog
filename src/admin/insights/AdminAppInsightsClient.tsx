@@ -32,6 +32,7 @@ import { IoMdGrid } from 'react-icons/io';
 import { RiSpeedMiniLine } from 'react-icons/ri';
 import AdminLink from '../AdminLink';
 import AdminEmptyState from '../AdminEmptyState';
+import { pluralize } from '@/utility/string';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
@@ -294,7 +295,7 @@ export default function AdminAppInsightsClient({
             className="translate-y-[-2px] text-amber-600"
           />}
           // eslint-disable-next-line max-len
-          content={`${photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED} outdated ${(photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED) === 1 ? 'photo' : 'photos'}`}
+          content={pluralize(photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED, 'outdated photo')}
           expandPath={PATH_ADMIN_OUTDATED}
         />}
         <ScoreCardRow
@@ -303,9 +304,8 @@ export default function AdminAppInsightsClient({
             className="translate-y-[0.5px]"
           />}
           content={<>
-            {photosCount} photos
-            {photosCountHidden > 0 &&
-              ` (${photosCountHidden} hidden)`}
+            {pluralize(photosCount, 'photo')}
+            {photosCountHidden > 0 && ` (${photosCountHidden} hidden)`}
           </>}
         />
         <ScoreCardRow
@@ -313,14 +313,14 @@ export default function AdminAppInsightsClient({
             size={12}
             className="translate-y-[3px]"
           />}
-          content={`${tagsCount} tags`}
+          content={pluralize(tagsCount, 'tag')}
         />
         <ScoreCardRow
           icon={<FaCamera
             size={13}
             className="translate-y-[2px]"
           />}
-          content={`${camerasCount} cameras`}
+          content={pluralize(camerasCount, 'camera')}
         />
         {filmSimulationsCount > 0 &&
           <ScoreCardRow
@@ -330,11 +330,11 @@ export default function AdminAppInsightsClient({
                 height={18}
               />
             </span>}
-            content={`${filmSimulationsCount} film simulations`}
+            content={pluralize(filmSimulationsCount, 'film simulation')}
           />}
         <ScoreCardRow
           icon={<TbCone className="rotate-[270deg] translate-x-[-2px]" />}
-          content={`${lensesCount} lenses`}
+          content={pluralize(lensesCount, 'lens', 'lenses')}
         />
         {descriptionWithSpaces && <ScoreCardRow
           icon={<FaRegCalendar
