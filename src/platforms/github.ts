@@ -8,11 +8,6 @@ const DEFAULT_BRANCH = 'main';
 const CACHE_GITHUB_REQUESTS = false;
 const GITHUB_API_ERROR = 'API rate limit exceeded';
 
-// Cache all results for 2 minutes to avoid rate limiting
-// GitHub API requests limited to 60 requests per hour
-const FETCH_CONFIG: RequestInit | undefined = CACHE_GITHUB_REQUESTS
-  ? { next: { revalidate: 120 } } : undefined;
-
 interface RepoParams {
   owner?: string
   repo?: string
@@ -20,9 +15,14 @@ interface RepoParams {
   commit?: string
 };
 
-const fetchGitHub = async (url: string, cacheRequest?: boolean) => {
+const fetchGitHub = async (
+  url: string,
+  cacheRequest = CACHE_GITHUB_REQUESTS,
+) => {
   const data = await fetch(
     url,
+    // Cache all results for 2 minutes to avoid rate limiting
+    // GitHub API requests limited to 60 requests per hour
     cacheRequest ? { next: { revalidate: 120 } } : undefined,
   )
     .then(response => response.json());
@@ -97,8 +97,7 @@ const getGitHubApiCompareToCommitUrl = ({ commit }: RepoParams = {}) =>
 // Requests
 
 export const getLatestBaseRepoCommitSha = async () => {
-  const response = await fetch(getGitHubApiCommitsUrl(), FETCH_CONFIG);
-  const data = await response.json();
+  const data = await fetchGitHub(getGitHubApiCommitsUrl());
   return data.sha ? data.sha.slice(0, 7) as string : undefined;
 };
 
