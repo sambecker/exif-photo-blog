@@ -33,6 +33,7 @@ import { RiSpeedMiniLine } from 'react-icons/ri';
 import AdminLink from '../AdminLink';
 import AdminEmptyState from '../AdminEmptyState';
 import { pluralize } from '@/utility/string';
+import Tooltip from '@/components/Tooltip';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
@@ -97,55 +98,71 @@ export default function AdminAppInsightsClient({
     <div className="space-y-6 md:space-y-8">
       {(codeMeta || debug) && <>
         <ScoreCard title="Source code">
-          {(noFork || debug) &&
-            <ScoreCardRow
-              icon={<FaCircleInfo 
-                size={15}
-                className="text-blue-500 translate-y-[1px]"
+          {codeMeta?.didError
+            ? <ScoreCardRow
+              icon={<IoSyncCircle
+                size={18}
+                className="text-amber-600"
               />}
-              content="This template is not forked"
-              expandContent={<>
-                <AdminLink href={TEMPLATE_REPO_URL_FORK}>
-                  Fork original template
-                </AdminLink>
-                {' '}
-                to receive the latest fixes and features.
-                {' '}
-                Additional instructions in
-                {' '}
-                {readmeAnchor('receiving-updates')}.
+              content={<>
+                Could not analyze source code
+                <Tooltip
+                  content="Could not connect to GitHub API. Try refreshing."
+                  classNameTrigger="translate-y-[4.5px] ml-2 h-3"
+                />
               </>}
-            />}
-          {(forkBehind || debug) && <ScoreCardRow
-            icon={<IoSyncCircle
-              size={18}
-              className="text-blue-500"
-            />}
-            content={<>
-              This fork is
-              {' '}
-              <span className={clsx(
-                'text-blue-600 bg-blue-100/60',
-                'dark:text-blue-400 dark:bg-blue-900/50',
-                'px-1.5 pt-[1px] pb-0.5 rounded-md',
-              )}>
-                {codeMeta?.behindBy ?? DEBUG_BEHIND_BY}
-                {' '}
-                {(codeMeta?.behindBy ?? DEBUG_BEHIND_BY) === 1
-                  ? 'commit'
-                  : 'commits'}
-              </span>
-              {' '}
-              behind
+            />
+            : <>
+              {(noFork || debug) &&
+                <ScoreCardRow
+                  icon={<FaCircleInfo 
+                    size={15}
+                    className="text-blue-500 translate-y-[1px]"
+                  />}
+                  content="This template is not forked"
+                  expandContent={<>
+                    <AdminLink href={TEMPLATE_REPO_URL_FORK}>
+                      Fork original template
+                    </AdminLink>
+                    {' '}
+                    to receive the latest fixes and features.
+                    {' '}
+                    Additional instructions in
+                    {' '}
+                    {readmeAnchor('receiving-updates')}.
+                  </>}
+                />}
+              {(forkBehind || debug) && <ScoreCardRow
+                icon={<IoSyncCircle
+                  size={18}
+                  className="text-blue-500"
+                />}
+                content={<>
+                  This fork is
+                  {' '}
+                  <span className={clsx(
+                    'text-blue-600 bg-blue-100/60',
+                    'dark:text-blue-400 dark:bg-blue-900/50',
+                    'px-1.5 pt-[1px] pb-0.5 rounded-md',
+                  )}>
+                    {codeMeta?.behindBy ?? DEBUG_BEHIND_BY}
+                    {' '}
+                    {(codeMeta?.behindBy ?? DEBUG_BEHIND_BY) === 1
+                      ? 'commit'
+                      : 'commits'}
+                  </span>
+                  {' '}
+                  behind
+                </>}
+                expandContent={<>
+                  <AdminLink href={codeMeta?.urlRepo ?? ''}>
+                    Sync your fork
+                  </AdminLink>
+                  {' '}
+                  to receive the latest fixes and features.
+                </>}
+              />}
             </>}
-            expandContent={<>
-              <AdminLink href={codeMeta?.urlRepo ?? ''}>
-                Sync your fork
-              </AdminLink>
-              {' '}
-              to receive the latest fixes and features.
-            </>}
-          />}
           <ScoreCardRow
             icon={<BiLogoGithub size={17} />}
             content={<div
