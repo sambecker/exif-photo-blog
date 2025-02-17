@@ -30,6 +30,8 @@ export interface AppStateContext {
   setSelectedPhotoIds?: Dispatch<SetStateAction<string[] | undefined>>
   isPerformingSelectEdit?: boolean
   setIsPerformingSelectEdit?: Dispatch<SetStateAction<boolean>>
+  shouldShowInsightsIndicator?: boolean
+  setShouldShowInsightsIndicator?: Dispatch<SetStateAction<boolean>>
   // DEBUG
   isGridHighDensity?: boolean
   setIsGridHighDensity?: Dispatch<SetStateAction<boolean>>

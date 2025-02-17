@@ -14,6 +14,7 @@ import {
 import { getPhotosHiddenMetaCachedAction } from '@/photo/actions';
 import { ShareModalProps } from '@/share';
 import { storeTimezoneCookie } from '@/utility/timezone';
+import { getShouldShowInsightsIndicatorAction } from '@/admin/insights/actions';
 
 export default function AppStateProvider({
   children,
@@ -47,6 +48,8 @@ export default function AppStateProvider({
     useState<string[] | undefined>();
   const [isPerformingSelectEdit, setIsPerformingSelectEdit] =
     useState(false);
+  const [shouldShowInsightsIndicator, setShouldShowInsightsIndicator] =
+    useState(false);
   // DEBUG
   const [isGridHighDensity, setIsGridHighDensity] =
     useState(HIGH_DENSITY_GRID);
@@ -70,10 +73,12 @@ export default function AppStateProvider({
   const isUserSignedIn = Boolean(userEmail);
   useEffect(() => {
     if (isUserSignedIn) {
-      const timeout = setTimeout(() =>
-        getPhotosHiddenMetaCachedAction().then(({ count }) =>
-          setHiddenPhotosCount(count))
-      , 100);
+      const timeout = setTimeout(() =>{
+        getPhotosHiddenMetaCachedAction()
+          .then(({ count }) => setHiddenPhotosCount(count));
+        getShouldShowInsightsIndicatorAction()
+          .then(setShouldShowInsightsIndicator);
+      }, 100);
       return () => clearTimeout(timeout);
     } else {
       setHiddenPhotosCount(0);
@@ -119,6 +124,8 @@ export default function AppStateProvider({
         setSelectedPhotoIds,
         isPerformingSelectEdit,
         setIsPerformingSelectEdit,
+        shouldShowInsightsIndicator,
+        setShouldShowInsightsIndicator,
         // DEBUG
         isGridHighDensity,
         setIsGridHighDensity,

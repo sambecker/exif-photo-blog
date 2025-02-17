@@ -1,4 +1,14 @@
+import {
+  VERCEL_GIT_BRANCH,
+  VERCEL_GIT_COMMIT_SHA,
+  VERCEL_GIT_REPO_OWNER,
+  VERCEL_GIT_REPO_SLUG,
+  IS_VERCEL_GIT_PROVIDER_GITHUB,
+  IS_DEVELOPMENT,
+  APP_CONFIGURATION,
+} from '@/app-core/config';
 import { PhotoDateRange } from '@/photo';
+import { getGitHubMeta } from '@/platforms/github';
 
 export type AdminAppInsight =
   'noFork' |
@@ -34,11 +44,32 @@ export interface PhotoStats {
   dateRange?: PhotoDateRange
 }
 
-export const getInsightIndicator = ({
-  forkBehind,
-  noAiRateLimiting,
-  outdatedPhotos,
-}: AdminAppInsights) =>
-  forkBehind ||
-  noAiRateLimiting ||
-  outdatedPhotos;
+export const getGitHubMetaForCurrentApp = () =>
+  (IS_VERCEL_GIT_PROVIDER_GITHUB || IS_DEVELOPMENT)
+    ? getGitHubMeta({
+      owner: VERCEL_GIT_REPO_OWNER,
+      repo: VERCEL_GIT_REPO_SLUG,
+      branch: VERCEL_GIT_BRANCH,
+      commit: VERCEL_GIT_COMMIT_SHA,
+    })
+    : undefined;
+
+export const getSignificantInsights = ({
+  codeMeta,
+  photosCountOutdated,
+}: {
+  codeMeta: Awaited<ReturnType<typeof getGitHubMetaForCurrentApp>>
+  photosCountOutdated: number
+}) => {
+  const {
+    isAiTextGenerationEnabled,
+    hasRedisStorage,
+  } = APP_CONFIGURATION;
+
+  return {
+    noFork: !codeMeta?.isForkedFromBase && !codeMeta?.isBaseRepo,
+    forkBehind: Boolean(codeMeta?.isBehind),
+    noAiRateLimiting: isAiTextGenerationEnabled && !hasRedisStorage,
+    outdatedPhotos: Boolean(photosCountOutdated),
+  };
+};

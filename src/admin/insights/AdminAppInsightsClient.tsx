@@ -11,7 +11,6 @@ import { HiOutlinePhotograph } from 'react-icons/hi';
 import { MdAspectRatio } from 'react-icons/md';
 import { PiWarningBold } from 'react-icons/pi';
 import { TbCone, TbSparkles } from 'react-icons/tb';
-import { getGitHubMeta } from '../../platforms/github';
 import { BiGitBranch, BiGitCommit, BiLogoGithub } from 'react-icons/bi';
 import {
   TEMPLATE_REPO_BRANCH,
@@ -22,7 +21,12 @@ import {
   TEMPLATE_REPO_URL_FORK,
   TEMPLATE_REPO_URL_README,
 } from '@/app-core/config';
-import { AdminAppInsights, hasTemplateRecommendations, PhotoStats } from '.';
+import {
+  AdminAppInsights,
+  getGitHubMetaForCurrentApp,
+  hasTemplateRecommendations,
+  PhotoStats,
+} from '.';
 import EnvVar from '@/components/EnvVar';
 import { IoSyncCircle } from 'react-icons/io5';
 import clsx from 'clsx/lite';
@@ -82,7 +86,7 @@ export default function AdminAppInsightsClient({
   },
   debug,
 }: {
-  codeMeta?: Awaited<ReturnType<typeof getGitHubMeta>>
+  codeMeta?: Awaited<ReturnType<typeof getGitHubMetaForCurrentApp>>
   insights: AdminAppInsights
   photoStats: PhotoStats
   debug?: boolean
