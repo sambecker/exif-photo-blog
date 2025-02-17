@@ -234,8 +234,9 @@ export default function AdminAppInsightsClient({
                 'yellow',
               )}
               expandContent={<>
-                Create Vercel KV store and link to this project
-                in order prevent abuse by to enabling rate limiting.
+                Create Upstash Redis store from storage tab on
+                Vercel dashboard and link to this project to
+                prevent abuse by enabling rate limiting.
               </>}
             />}
             {(noStaticOptimization || debug) && <ScoreCardRow

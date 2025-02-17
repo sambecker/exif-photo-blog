@@ -111,8 +111,8 @@ export const HAS_DATABASE =
 export const POSTGRES_SSL_ENABLED =
   process.env.DISABLE_POSTGRES_SSL === '1' ? false : true;
 
-// STORAGE: VERCEL KV
-export const HAS_VERCEL_KV =
+// STORAGE: REDIS
+export const HAS_REDIS_STORAGE =
   Boolean(process.env.KV_URL);
 
 // STORAGE: VERCEL BLOB
@@ -261,7 +261,7 @@ export const APP_CONFIGURATION = {
     /\/verceldb\?/.test(process.env.POSTGRES_URL ?? '') ||
     /\.vercel-storage\.com\//.test(process.env.POSTGRES_URL ?? '')
   ),
-  hasVercelKv: HAS_VERCEL_KV,
+  hasRedisStorage: HAS_REDIS_STORAGE,
   hasVercelBlobStorage: HAS_VERCEL_BLOB_STORAGE,
   hasCloudflareR2Storage: HAS_CLOUDFLARE_R2_STORAGE,
   hasAwsS3Storage: HAS_AWS_S3_STORAGE,

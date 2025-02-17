@@ -33,7 +33,7 @@ export default function AdminAppConfigurationClient({
   hasDatabase,
   isPostgresSslEnabled,
   hasVercelPostgres,
-  hasVercelKv,
+  hasRedisStorage,
   hasStorageProvider,
   hasVercelBlobStorage,
   hasCloudflareR2Storage,
@@ -95,7 +95,7 @@ export default function AdminAppConfigurationClient({
   // Connection status
   databaseError,
   storageError,
-  kvError,
+  redisError,
   aiError,
   // Component props
   simplifiedView,
@@ -358,25 +358,19 @@ export default function AdminAppConfigurationClient({
               {renderEnvVars(['OPENAI_SECRET_KEY'])}
             </ChecklistRow>
             <ChecklistRow
-              title={hasVercelKv && isAnalyzingConfiguration
-                ? 'Testing KV connection'
+              title={hasRedisStorage && isAnalyzingConfiguration
+                ? 'Testing Redis connection'
                 : 'Enable rate limiting'}
-              status={hasVercelKv}
-              isPending={hasVercelKv && isAnalyzingConfiguration}
+              status={hasRedisStorage}
+              isPending={hasRedisStorage && isAnalyzingConfiguration}
               optional
             >
-              {kvError && renderError({
-                connection: { provider: 'Vercel KV', error: kvError},
+              {redisError && renderError({
+                connection: { provider: 'Redis', error: redisError},
               })}
-              <AdminLink
-                // eslint-disable-next-line max-len
-                href="https://vercel.com/docs/storage/vercel-kv/quickstart#create-a-kv-database"
-                externalIcon
-              >
-                Create Vercel KV store
-              </AdminLink>
-              {' '}
-              and connect to project in order to enable rate limiting
+              Create Upstash Redis store from storage tab
+              on Vercel dashboard and connect to this project
+              to enable rate limiting
             </ChecklistRow>
             <ChecklistRow
               // eslint-disable-next-line max-len

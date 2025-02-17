@@ -1,7 +1,7 @@
 'use server';
 
 import { runAuthenticatedAdminServerAction } from '@/auth';
-import { testKvConnection } from '@/platforms/kv';
+import { testRedisConnection } from '@/platforms/redis';
 import { testOpenAiConnection } from '@/platforms/openai';
 import { testDatabaseConnection } from '@/platforms/postgres';
 import { testStorageConnection } from '@/platforms/storage';
@@ -22,26 +22,26 @@ export const testConnectionsAction = async () =>
     const {
       hasDatabase,
       hasStorageProvider,
-      hasVercelKv,
+      hasRedisStorage,
       isAiTextGenerationEnabled,
     } = APP_CONFIGURATION;
 
     const [
       databaseError,
       storageError,
-      kvError,
+      redisError,
       aiError,
     ] = await Promise.all([
       scanForError(hasDatabase, testDatabaseConnection),
       scanForError(hasStorageProvider, testStorageConnection),
-      scanForError(hasVercelKv, testKvConnection),
+      scanForError(hasRedisStorage, testRedisConnection),
       scanForError(isAiTextGenerationEnabled, testOpenAiConnection),
     ]);
 
     return {
       databaseError,
       storageError,
-      kvError,
+      redisError,
       aiError,
     };
   });
