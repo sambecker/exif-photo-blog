@@ -16,11 +16,11 @@ import { ThemeProvider } from 'next-themes';
 import Nav from '@/app-core/Nav';
 import Footer from '@/app-core/Footer';
 import CommandK from '@/app-core/CommandK';
-import SwrConfigClient from '../state/SwrConfigClient';
+import SwrConfigClient from '@/state/SwrConfigClient';
 import AdminBatchEditPanel from '@/admin/AdminBatchEditPanel';
 import ShareModals from '@/share/ShareModals';
 
-import '../../tailwind.css';
+import '../tailwind.css';
 
 export const metadata: Metadata = {
   title: SITE_TITLE,
