@@ -4,7 +4,7 @@ import { LuLightbulb } from 'react-icons/lu';
 
 export default function AdminAppInsightsIcon() {
   const {
-    shouldShowInsightsIndicator,
+    insightIndicatorStatus,
   } = useAppState();
   
   return (
@@ -13,11 +13,13 @@ export default function AdminAppInsightsIcon() {
         size={19}
         className="translate-y-[3px]"
       />
-      {shouldShowInsightsIndicator && <span className={clsx(
+      {insightIndicatorStatus && <span className={clsx(
         'absolute',
         'top-[2px] right-[0.5px]',
         'size-2 rounded-full',
-        'bg-blue-500',
+        insightIndicatorStatus === 'blue'
+          ? 'bg-blue-500'
+          : 'bg-amber-500',
       )} />}
     </span>
   );

@@ -30,6 +30,8 @@ const RECOMMENDATIONS: AdminAppInsight[] = [
 
 export type AdminAppInsights = Record<AdminAppInsight, boolean>
 
+export type InsightIndicatorStatus = 'blue' | 'yellow' | undefined;
+
 export const hasTemplateRecommendations = (insights: AdminAppInsights) =>
   RECOMMENDATIONS.some(insight => insights[insight]);
 

@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, createContext, useContext } from 'react';
 import { AnimationConfig } from '@/components/AnimateItems';
 import { ShareModalProps } from '@/share';
+import { InsightIndicatorStatus } from '@/admin/insights';
 
 export interface AppStateContext {
   // CORE
@@ -30,8 +31,8 @@ export interface AppStateContext {
   setSelectedPhotoIds?: Dispatch<SetStateAction<string[] | undefined>>
   isPerformingSelectEdit?: boolean
   setIsPerformingSelectEdit?: Dispatch<SetStateAction<boolean>>
-  shouldShowInsightsIndicator?: boolean
-  setShouldShowInsightsIndicator?: Dispatch<SetStateAction<boolean>>
+  insightIndicatorStatus?: InsightIndicatorStatus
+  setInsightIndicatorStatus?: Dispatch<SetStateAction<InsightIndicatorStatus>>
   // DEBUG
   isGridHighDensity?: boolean
   setIsGridHighDensity?: Dispatch<SetStateAction<boolean>>

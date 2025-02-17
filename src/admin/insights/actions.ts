@@ -1,11 +1,16 @@
 'use server';
 
 import { runAuthenticatedAdminServerAction } from '@/auth';
-import { getGitHubMetaForCurrentApp, getSignificantInsights } from '.';
+import {
+  getGitHubMetaForCurrentApp,
+  getSignificantInsights,
+  InsightIndicatorStatus,
+} from '.';
 import { getPhotosMeta } from '@/photo/db/query';
 import { OUTDATED_THRESHOLD } from '@/photo';
 
-export const getShouldShowInsightsIndicatorAction = async () =>
+// eslint-disable-next-line max-len
+export const getShouldShowInsightsIndicatorAction = async (): Promise<InsightIndicatorStatus> =>
   runAuthenticatedAdminServerAction(async () => {
     const [
       codeMeta,
@@ -15,12 +20,19 @@ export const getShouldShowInsightsIndicatorAction = async () =>
       getPhotosMeta({ hidden: 'include', updatedBefore: OUTDATED_THRESHOLD }),
     ]);
     
-    const significantInsights = getSignificantInsights({
+    const {
+      noFork,
+      forkBehind,
+      noAiRateLimiting,
+      outdatedPhotos,
+    } = getSignificantInsights({
       codeMeta,
       photosCountOutdated,
     });
 
-    return Object
-      .values(significantInsights)
-      .some(Boolean);
+    if (noAiRateLimiting || outdatedPhotos) {
+      return 'yellow';
+    } else if (noFork || forkBehind) {
+      return 'blue';
+    }
   });
