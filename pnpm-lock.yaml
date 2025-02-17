@@ -111,8 +111,14 @@ importers:
         specifier: ^1.11.7
         version: 1.11.7
     devDependencies:
+      '@eslint/eslintrc':
+        specifier: ^3.2.0
+        version: 3.2.0
       '@next/bundle-analyzer':
         specifier: 15.1.7
+        version: 15.1.7
+      '@next/eslint-plugin-next':
+        specifier: ^15.1.7
         version: 15.1.7
       '@tailwindcss/container-queries':
         specifier: ^0.1.1
@@ -162,6 +168,9 @@ importers:
       eslint-config-next:
         specifier: 15.1.7
         version: 15.1.7(eslint@9.20.1(jiti@2.4.2))(typescript@5.7.3)
+      eslint-plugin-react-hooks:
+        specifier: ^5.1.0
+        version: 5.1.0(eslint@9.20.1(jiti@2.4.2))
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@22.13.4)(ts-node@10.9.2(@types/node@22.13.4)(typescript@5.7.3))
