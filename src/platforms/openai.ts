@@ -23,7 +23,7 @@ const ratelimit = HAS_VERCEL_KV
   : undefined;
 
 // Allows 100 requests per hour
-const checkRateLimitAndBailIfNecessary = async () => {
+const checkRateLimitAndThrow = async () => {
   if (ratelimit) {
     let success = false;
     try {
@@ -65,7 +65,7 @@ export const streamOpenAiImageQuery = async (
   imageBase64: string,
   query: string,
 ) => {
-  await checkRateLimitAndBailIfNecessary();
+  await checkRateLimitAndThrow();
 
   const stream = createStreamableValue('');
 
@@ -88,7 +88,7 @@ export const generateOpenAiImageQuery = async (
   imageBase64: string,
   query: string,
 ) => {
-  await checkRateLimitAndBailIfNecessary();
+  await checkRateLimitAndThrow();
 
   const args = getImageTextArgs(imageBase64, query);
 
@@ -99,7 +99,7 @@ export const generateOpenAiImageQuery = async (
 };
 
 export const testOpenAiConnection = async () => {
-  await checkRateLimitAndBailIfNecessary();
+  await checkRateLimitAndThrow();
 
   if (openai) {
     return generateText({
