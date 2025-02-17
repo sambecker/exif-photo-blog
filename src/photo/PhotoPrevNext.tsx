@@ -9,7 +9,7 @@ import {
 } from '@/photo';
 import PhotoLink from './PhotoLink';
 import { useRouter } from 'next/navigation';
-import { pathForPhoto } from '@/app-core/paths';
+import { pathForPhoto } from '@/app/paths';
 import { useAppState } from '@/state/AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import { clsx } from 'clsx/lite';

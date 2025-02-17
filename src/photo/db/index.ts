@@ -1,4 +1,4 @@
-import { PRIORITY_ORDER_ENABLED } from '@/app-core/config';
+import { PRIORITY_ORDER_ENABLED } from '@/app/config';
 import { parameterize } from '@/utility/string';
 import { PhotoSetCategory } from '..';
 

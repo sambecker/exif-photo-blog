@@ -9,7 +9,7 @@ import {
   PATH_ROOT,
   absolutePathForPhoto,
   absolutePathForPhotoImage,
-} from '@/app-core/paths';
+} from '@/app/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotosNearIdCached } from '@/photo/cache';
 import { cache } from 'react';

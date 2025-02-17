@@ -10,7 +10,7 @@ import {
   HIGH_DENSITY_GRID,
   MATTE_PHOTOS,
   SHOW_ZOOM_CONTROLS,
-} from '@/app-core/config';
+} from '@/app/config';
 import { getPhotosHiddenMetaCachedAction } from '@/photo/actions';
 import { ShareModalProps } from '@/share';
 import { storeTimezoneCookie } from '@/utility/timezone';

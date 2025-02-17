@@ -1,7 +1,7 @@
 import { getPhotos } from '@/photo/db/query';
 import { OUTDATED_THRESHOLD } from '@/photo';
 import AdminOutdatedClient from '@/admin/AdminOutdatedClient';
-import { AI_TEXT_GENERATION_ENABLED } from '@/app-core/config';
+import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
 
 export const maxDuration = 60;
 

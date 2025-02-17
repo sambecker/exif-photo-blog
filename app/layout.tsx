@@ -7,15 +7,15 @@ import {
   SITE_DESCRIPTION,
   SITE_DOMAIN_OR_TITLE,
   SITE_TITLE,
-} from '@/app-core/config';
+} from '@/app/config';
 import AppStateProvider from '@/state/AppStateProvider';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
 import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
 import { Metadata } from 'next/types';
 import { ThemeProvider } from 'next-themes';
-import Nav from '@/app-core/Nav';
-import Footer from '@/app-core/Footer';
-import CommandK from '@/app-core/CommandK';
+import Nav from '@/app/Nav';
+import Footer from '@/app/Footer';
+import CommandK from '@/app/CommandK';
 import SwrConfigClient from '@/state/SwrConfigClient';
 import AdminBatchEditPanel from '@/admin/AdminBatchEditPanel';
 import ShareModals from '@/share/ShareModals';

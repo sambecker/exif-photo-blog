@@ -15,7 +15,7 @@ import FavsTag from '../tag/FavsTag';
 import { useAppState } from '@/state/AppState';
 import { useMemo } from 'react';
 import HiddenTag from '@/tag/HiddenTag';
-import { SITE_ABOUT } from '@/app-core/config';
+import { SITE_ABOUT } from '@/app/config';
 import {
   htmlHasBrParagraphBreaks,
   safelyParseFormattedHtml,

@@ -4,7 +4,7 @@ import {
   TEMPLATE_REPO_NAME,
   TEMPLATE_DESCRIPTION,
   TEMPLATE_TITLE,
-} from '@/app-core/config';
+} from '@/app/config';
 import { NextResponse } from 'next/server';
 
 const REQUIRE_ENV_VARS = false;

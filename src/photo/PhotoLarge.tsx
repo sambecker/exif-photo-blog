@@ -15,7 +15,7 @@ import Link from 'next/link';
 import {
   pathForFocalLength,
   pathForPhoto,
-} from '@/app-core/paths';
+} from '@/app/paths';
 import PhotoTags from '@/tag/PhotoTags';
 import ShareButton from '@/share/ShareButton';
 import DownloadButton from '@/components/DownloadButton';
@@ -29,7 +29,7 @@ import {
   SHOULD_PREFETCH_ALL_LINKS,
   ALLOW_PUBLIC_DOWNLOADS,
   SHOW_TAKEN_AT_TIME,
-} from '@/app-core/config';
+} from '@/app/config';
 import AdminPhotoMenuClient from '@/admin/AdminPhotoMenuClient';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
 import { useRef } from 'react';

@@ -21,7 +21,7 @@ import {
   MAKE_FUJIFILM,
 } from '@/platforms/fujifilm';
 import { FilmSimulation } from '@/simulation';
-import { GEO_PRIVACY_ENABLED } from '@/app-core/config';
+import { GEO_PRIVACY_ENABLED } from '@/app/config';
 import { TAG_FAVS, getValidationMessageForTags } from '@/tag';
 
 type VirtualFields = 'favorite';

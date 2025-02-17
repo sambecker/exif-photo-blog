@@ -5,7 +5,7 @@ import { Photo, PhotoSetCategory, titleForPhoto } from '@/photo';
 import Link from 'next/link';
 import { AnimationConfig } from '../components/AnimateItems';
 import { useAppState } from '@/state/AppState';
-import { pathForPhoto } from '@/app-core/paths';
+import { pathForPhoto } from '@/app/paths';
 import { clsx } from 'clsx/lite';
 
 export default function PhotoLink({

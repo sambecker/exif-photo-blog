@@ -1,12 +1,12 @@
 import { redirect } from 'next/navigation';
 import { getPhotoNoStore, getUniqueTagsCached } from '@/photo/cache';
-import { PATH_ADMIN } from '@/app-core/paths';
+import { PATH_ADMIN } from '@/app/paths';
 import PhotoEditPageClient from '@/photo/PhotoEditPageClient';
 import {
   AI_TEXT_GENERATION_ENABLED,
   BLUR_ENABLED,
   IS_PREVIEW,
-} from '@/app-core/config';
+} from '@/app/config';
 import { blurImageFromUrl, resizeImageFromUrl } from '@/photo/server';
 import { getNextImageUrlForManipulation } from '@/platforms/next-image';
 

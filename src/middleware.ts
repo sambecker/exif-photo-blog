@@ -8,7 +8,7 @@ import {
   PATH_OG_SAMPLE,
   PREFIX_PHOTO,
   PREFIX_TAG,
-} from './app-core/paths';
+} from './app/paths';
 
 export default function middleware(req: NextRequest, res:NextResponse) {
   const pathname = req.nextUrl.pathname;

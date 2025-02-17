@@ -4,7 +4,7 @@ import {
   descriptionForPhoto,
   titleForPhoto,
 } from '@/photo';
-import { absolutePathForPhotoImage, pathForPhoto } from '@/app-core/paths';
+import { absolutePathForPhotoImage, pathForPhoto } from '@/app/paths';
 import OGTile from '@/components/OGTile';
 
 export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';

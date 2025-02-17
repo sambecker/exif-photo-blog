@@ -1,4 +1,4 @@
-import { TEMPLATE_REPO_NAME, TEMPLATE_REPO_URL } from '@/app-core/config';
+import { TEMPLATE_REPO_NAME, TEMPLATE_REPO_URL } from '@/app/config';
 import { clsx } from 'clsx/lite';
 import Link from 'next/link';
 import { BiLogoGithub } from 'react-icons/bi';

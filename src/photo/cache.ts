@@ -31,7 +31,7 @@ import {
   PREFIX_FILM_SIMULATION,
   PREFIX_TAG,
   pathForPhoto,
-} from '@/app-core/paths';
+} from '@/app/paths';
 import { createLensKey } from '@/lens';
 
 // Table key

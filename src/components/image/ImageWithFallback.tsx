@@ -1,7 +1,7 @@
 'use client';
 
 /* eslint-disable jsx-a11y/alt-text */
-import { BLUR_ENABLED } from '@/app-core/config';
+import { BLUR_ENABLED } from '@/app/config';
 import { useAppState } from '@/state/AppState';
 import { clsx}  from 'clsx/lite';
 import Image, { ImageProps } from 'next/image';

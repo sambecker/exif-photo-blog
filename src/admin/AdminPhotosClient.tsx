@@ -6,11 +6,11 @@ import SiteGrid from '@/components/SiteGrid';
 import {
   AI_TEXT_GENERATION_ENABLED,
   PRESERVE_ORIGINAL_UPLOADS,
-} from '@/app-core/config';
+} from '@/app/config';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import AdminPhotosTableInfinite from '@/admin/AdminPhotosTableInfinite';
 import PathLoaderButton from '@/components/primitives/PathLoaderButton';
-import { PATH_ADMIN_OUTDATED } from '@/app-core/paths';
+import { PATH_ADMIN_OUTDATED } from '@/app/paths';
 import { Photo } from '@/photo';
 import { StorageListResponse } from '@/platforms/storage';
 import { useState } from 'react';

@@ -7,7 +7,7 @@ import {
 import {
   absolutePathForFilmSimulation,
   absolutePathForFilmSimulationImage,
-} from '@/app-core/paths';
+} from '@/app/paths';
 import {
   FujifilmSimulation,
   labelForFilmSimulation,

@@ -6,7 +6,7 @@ import { Ratelimit } from '@upstash/ratelimit';
 import {
   AI_TEXT_GENERATION_ENABLED,
   HAS_REDIS_STORAGE,
-} from '@/app-core/config';
+} from '@/app/config';
 import { removeBase64Prefix } from '@/utility/image';
 import { cleanUpAiTextResponse } from '@/photo/ai';
 

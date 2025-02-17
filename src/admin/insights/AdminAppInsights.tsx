@@ -12,7 +12,7 @@ import {
   HAS_STATIC_OPTIMIZATION,
   IS_PRODUCTION,
   MATTE_PHOTOS,
-} from '@/app-core/config';
+} from '@/app/config';
 import { OUTDATED_THRESHOLD } from '@/photo';
 import { getGitHubMetaForCurrentApp, getSignificantInsights } from '.';
 

@@ -1,10 +1,10 @@
 import { getPhotosCached } from '@/photo/cache';
-import { API_PHOTO_REQUEST_LIMIT, formatPhotoForApi } from '@/app-core/api';
+import { API_PHOTO_REQUEST_LIMIT, formatPhotoForApi } from '@/app/api';
 import {
   BASE_URL,
   PUBLIC_API_ENABLED,
   SITE_TITLE,
-} from '@/app-core/config';
+} from '@/app/config';
 
 export const dynamic = 'force-dynamic';
 

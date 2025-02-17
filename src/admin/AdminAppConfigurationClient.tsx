@@ -13,7 +13,7 @@ import {
 } from 'react-icons/bi';
 import { HiOutlineCog } from 'react-icons/hi';
 import ChecklistGroup from '@/components/ChecklistGroup';
-import { ConfigChecklistStatus } from '../app-core/config';
+import { ConfigChecklistStatus } from '../app/config';
 import StatusIcon from '@/components/StatusIcon';
 import { labelForStorage } from '@/platforms/storage';
 import { HiSparkles } from 'react-icons/hi';
@@ -21,7 +21,7 @@ import { testConnectionsAction } from '@/admin/actions';
 import ErrorNote from '@/components/ErrorNote';
 import WarningNote from '@/components/WarningNote';
 import { RiSpeedMiniLine } from 'react-icons/ri';
-import SecretGenerator from '../app-core/SecretGenerator';
+import SecretGenerator from '../app/SecretGenerator';
 import { PiPaintBrushHousehold } from 'react-icons/pi';
 import { IoMdGrid } from 'react-icons/io';
 import { CgDebug } from 'react-icons/cg';

@@ -6,7 +6,7 @@ import {
   IS_VERCEL_GIT_PROVIDER_GITHUB,
   IS_DEVELOPMENT,
   APP_CONFIGURATION,
-} from '@/app-core/config';
+} from '@/app/config';
 import { PhotoDateRange } from '@/photo';
 import { getGitHubMeta } from '@/platforms/github';
 

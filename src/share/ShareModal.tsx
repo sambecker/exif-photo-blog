@@ -8,7 +8,7 @@ import { JSX, ReactNode, useEffect } from 'react';
 import { shortenUrl } from '@/utility/url';
 import { toastSuccess } from '@/toast';
 import { PiXLogo } from 'react-icons/pi';
-import { SHOW_SOCIAL } from '@/app-core/config';
+import { SHOW_SOCIAL } from '@/app/config';
 import { generateXPostText } from '@/utility/social';
 import { useAppState } from '@/state/AppState';
 import useOnPathChange from '@/utility/useOnPathChange';

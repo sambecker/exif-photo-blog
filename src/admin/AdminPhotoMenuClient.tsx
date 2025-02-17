@@ -1,7 +1,7 @@
 'use client';
 
 import { ComponentProps, useMemo } from 'react';
-import { pathForAdminPhotoEdit, pathForPhoto } from '@/app-core/paths';
+import { pathForAdminPhotoEdit, pathForPhoto } from '@/app/paths';
 import { deletePhotoAction, toggleFavoritePhotoAction } from '@/photo/actions';
 import { FaRegEdit, FaRegStar, FaStar } from 'react-icons/fa';
 import {

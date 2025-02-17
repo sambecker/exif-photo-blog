@@ -4,7 +4,7 @@ import {
   MAX_PHOTOS_TO_SHOW_PER_TAG,
 } from '@/image-response';
 import TagImageResponse from '@/image-response/TagImageResponse';
-import { getIBMPlexMonoMedium } from '@/app-core/font';
+import { getIBMPlexMonoMedium } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
@@ -12,7 +12,7 @@ import { getUniqueTags } from '@/photo/db/query';
 import {
   STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES,
   IS_PRODUCTION,
-} from '@/app-core/config';
+} from '@/app/config';
 
 export let generateStaticParams:
   (() => Promise<{ tag: string }[]>) | undefined = undefined;

@@ -1,4 +1,4 @@
-import { pathForFocalLength } from '@/app-core/paths';
+import { pathForFocalLength } from '@/app/paths';
 import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/primitives/EntityLink';

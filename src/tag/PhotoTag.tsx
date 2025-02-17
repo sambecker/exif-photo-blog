@@ -1,4 +1,4 @@
-import { pathForTag } from '@/app-core/paths';
+import { pathForTag } from '@/app/paths';
 import { FaTag } from 'react-icons/fa';
 import { formatTag } from '.';
 import EntityLink, {

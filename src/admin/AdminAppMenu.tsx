@@ -5,7 +5,7 @@ import {
   PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_INSIGHTS,
   PATH_GRID_INFERRED,
-} from '@/app-core/paths';
+} from '@/app/paths';
 import { useAppState } from '@/state/AppState';
 import { ImCheckboxUnchecked } from 'react-icons/im';
 import { IoCloseSharp } from 'react-icons/io5';

@@ -1,6 +1,6 @@
 import { FaStar } from 'react-icons/fa';
 import { TAG_FAVS } from '.';
-import { pathForTag } from '@/app-core/paths';
+import { pathForTag } from '@/app/paths';
 import { clsx } from 'clsx/lite';
 import EntityLink, {
   EntityLinkExternalProps,

@@ -2,7 +2,7 @@ import {
   TEMPLATE_REPO_OWNER,
   TEMPLATE_REPO_NAME,
   TEMPLATE_REPO_BRANCH,
-} from '@/app-core/config';
+} from '@/app/config';
 
 const DEFAULT_BRANCH = 'main';
 const CACHE_GITHUB_REQUESTS = false;

@@ -1,7 +1,7 @@
 'use client';
 
 import AdminChildPage from '@/components/AdminChildPage';
-import { PATH_ADMIN_UPLOADS } from '@/app-core/paths';
+import { PATH_ADMIN_UPLOADS } from '@/app/paths';
 import { PhotoFormData, generateTakenAtFields } from './form';
 import PhotoForm from './form/PhotoForm';
 import { Tags } from '@/tag';
