@@ -69,7 +69,6 @@ export const getSignificantInsights = ({
   } = APP_CONFIGURATION;
 
   return {
-    noFork: !codeMeta?.isForkedFromBase && !codeMeta?.isBaseRepo,
     forkBehind: Boolean(codeMeta?.isBehind),
     noAiRateLimiting: isAiTextGenerationEnabled && !hasRedisStorage,
     outdatedPhotos: Boolean(photosCountOutdated),

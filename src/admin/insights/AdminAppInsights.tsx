@@ -44,7 +44,6 @@ export default async function AdminAppInsights() {
   const { isAiTextGenerationEnabled } = APP_CONFIGURATION;
 
   const {
-    noFork,
     forkBehind,
     noAiRateLimiting,
     outdatedPhotos,
@@ -57,7 +56,7 @@ export default async function AdminAppInsights() {
     <AdminAppInsightsClient
       codeMeta={codeMeta}
       insights={{
-        noFork,
+        noFork: !codeMeta?.isForkedFromBase && !codeMeta?.isBaseRepo,
         forkBehind,
         noAi: !isAiTextGenerationEnabled,
         noAiRateLimiting,
