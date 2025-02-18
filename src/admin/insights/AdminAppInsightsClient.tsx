@@ -66,7 +66,7 @@ const renderHighlightText = (
     color === 'blue' && 'text-blue-600 bg-blue-100/60',
     color === 'blue' && 'dark:text-blue-400 dark:bg-blue-900/50',
     color === 'yellow' && 'text-amber-700 bg-amber-100/50',
-    color === 'yellow' && 'dark:text-amber-400 dark:bg-amber-900/50',
+    color === 'yellow' && 'dark:text-amber-400 dark:bg-amber-900/40',
   )}>
     {text}
   </span>;
@@ -231,7 +231,10 @@ export default function AdminAppInsightsClient({
             {(noAiRateLimiting || debug) && <ScoreCardRow
               icon={<PiWarningBold
                 size={17}
-                className="translate-x-[0.5px] text-amber-600"
+                className={clsx(
+                  'translate-x-[0.5px]',
+                  'text-amber-600 dark:text-amber-500',
+                )}
               />}
               content={renderHighlightText(
                 'AI enabled without rate limiting',
@@ -324,7 +327,10 @@ export default function AdminAppInsightsClient({
         {(outdatedPhotos || debug) && <ScoreCardRow
           icon={<LiaBroomSolid
             size={19}
-            className="translate-y-[-2px] text-amber-600"
+            className={clsx(
+              'translate-y-[-2px]',
+              'text-amber-600 dark:text-amber-500',
+            )}
           />}
           content={renderHighlightText(
             // eslint-disable-next-line max-len
