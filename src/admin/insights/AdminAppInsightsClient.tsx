@@ -317,7 +317,8 @@ export default function AdminAppInsightsClient({
                 <EnvVar
                   variable="NEXT_PUBLIC_GRID_HOMEPAGE_ENABLED"
                   value="1"
-                />.
+                  trailingContent="."
+                />
               </>}
             />}
           </>
