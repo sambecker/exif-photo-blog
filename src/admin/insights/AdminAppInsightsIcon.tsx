@@ -10,8 +10,8 @@ export default function AdminAppInsightsIcon() {
   return (
     <span className="inline-flex relative">
       <LuLightbulb
-        size={19}
-        className="translate-y-[3px]"
+        size={18}
+        className="translate-y-[3.5px]"
       />
       {insightIndicatorStatus &&
         <FaCircle
