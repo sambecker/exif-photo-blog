@@ -14,7 +14,7 @@ export default function CommandKItem({
   loading,
   disabled,
 }: {
-  label: string
+  label: ReactNode
   value: string
   keywords?: string[]
   onSelect: () => void

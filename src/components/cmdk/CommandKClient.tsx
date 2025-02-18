@@ -41,7 +41,7 @@ import { TbPhoto } from 'react-icons/tb';
 import { getKeywordsForPhoto, titleForPhoto } from '@/photo';
 import PhotoDate from '@/photo/PhotoDate';
 import PhotoSmall from '@/photo/PhotoSmall';
-import { FaCheck } from 'react-icons/fa6';
+import { FaCheck, FaCircle } from 'react-icons/fa6';
 import { Tags, addHiddenToTags, formatTag } from '@/tag';
 import { FaTag } from 'react-icons/fa';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
@@ -57,7 +57,7 @@ const LISTENER_KEYDOWN = 'keydown';
 const MINIMUM_QUERY_LENGTH = 2;
 
 type CommandKItem = {
-  label: string
+  label: ReactNode
   keywords?: string[]
   accessory?: ReactNode
   annotation?: ReactNode
@@ -97,6 +97,7 @@ export default function CommandKClient({
     arePhotosMatted,
     shouldShowBaselineGrid,
     shouldDebugImageFallbacks,
+    insightIndicatorStatus,
     setIsCommandKOpen: setIsOpen,
     setShouldRespondToKeyboardCommands,
     setShouldShowBaselineGrid,
@@ -322,7 +323,18 @@ export default function CommandKClient({
         annotation: <BiLockAlt />,
         path: PATH_ADMIN_CONFIGURATION,
       }, {
-        label: 'App Insights',
+        label: <span className="flex items-center gap-3">
+          App Insights
+          {insightIndicatorStatus && <FaCircle
+            size={8}
+            className={clsx(
+              insightIndicatorStatus === 'blue'
+                ? 'text-blue-500'
+                : 'text-amber-500',
+            )}
+          />}
+        </span>,
+        keywords: ['app insights'],
         annotation: <BiLockAlt />,
         path: PATH_ADMIN_INSIGHTS,
       }, {
@@ -363,7 +375,7 @@ export default function CommandKClient({
         const searchFormatted = search.trim().toLocaleLowerCase();
         return (
           value.toLocaleLowerCase().includes(searchFormatted) ||
-          keywords?.includes(searchFormatted)
+          keywords?.some(keyword => keyword.includes(searchFormatted))
         ) ? 1 : 0 ;
       }}
       loop

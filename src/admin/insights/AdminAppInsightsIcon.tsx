@@ -1,7 +1,7 @@
 import { useAppState } from '@/state/AppState';
 import clsx from 'clsx/lite';
 import { LuLightbulb } from 'react-icons/lu';
-
+import { FaCircle } from 'react-icons/fa6';
 export default function AdminAppInsightsIcon() {
   const {
     insightIndicatorStatus,
@@ -13,14 +13,17 @@ export default function AdminAppInsightsIcon() {
         size={19}
         className="translate-y-[3px]"
       />
-      {insightIndicatorStatus && <span className={clsx(
-        'absolute',
-        'top-[2px] right-[0.5px]',
-        'size-2 rounded-full',
-        insightIndicatorStatus === 'blue'
-          ? 'bg-blue-500'
-          : 'bg-amber-500',
-      )} />}
+      {insightIndicatorStatus &&
+        <FaCircle
+          size={8}
+          className={clsx(
+            'absolute',
+            'top-[2px] right-[0.5px]',
+            insightIndicatorStatus === 'blue'
+              ? 'text-blue-500'
+              : 'text-amber-500',
+          )}
+        />}
     </span>
   );
 }
