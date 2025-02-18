@@ -1,4 +1,4 @@
-import { auth } from './auth';
+import { auth } from './src/auth';
 import { NextRequest, NextResponse } from 'next/server';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import {
@@ -8,7 +8,7 @@ import {
   PATH_OG_SAMPLE,
   PREFIX_PHOTO,
   PREFIX_TAG,
-} from './app/paths';
+} from './src/app/paths';
 
 export default function middleware(req: NextRequest, res:NextResponse) {
   const pathname = req.nextUrl.pathname;
