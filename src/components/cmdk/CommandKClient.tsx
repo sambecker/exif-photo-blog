@@ -3,6 +3,8 @@
 import { Command } from 'cmdk';
 import {
   ReactNode,
+  SetStateAction,
+  Dispatch,
   useEffect,
   useMemo,
   useRef,
@@ -72,6 +74,16 @@ export type CommandKSection = {
   items: CommandKItem[]
 }
 
+const renderToggle = (
+  label: string,
+  onToggle?: Dispatch<SetStateAction<boolean>>,
+  isEnabled?: boolean,
+): CommandKItem => ({
+  label: `Toggle ${label}`,
+  action: () => onToggle?.(prev => !prev),
+  annotation: isEnabled ? <FaCheck size={12} /> : undefined,
+});
+
 export default function CommandKClient({
   tags,
   serverSections = [],
@@ -92,12 +104,13 @@ export default function CommandKClient({
     hiddenPhotosCount,
     selectedPhotoIds,
     setSelectedPhotoIds,
+    insightIndicatorStatus,
     isGridHighDensity,
     areZoomControlsShown,
     arePhotosMatted,
     shouldShowBaselineGrid,
     shouldDebugImageFallbacks,
-    insightIndicatorStatus,
+    shouldDebugInsights,
     setIsCommandKOpen: setIsOpen,
     setShouldRespondToKeyboardCommands,
     setShouldShowBaselineGrid,
@@ -105,6 +118,7 @@ export default function CommandKClient({
     setAreZoomControlsShown,
     setArePhotosMatted,
     setShouldDebugImageFallbacks,
+    setShouldDebugInsights,
   } = useAppState();
 
   const isOpenRef = useRef(isOpen);
@@ -253,29 +267,38 @@ export default function CommandKClient({
     clientSections.push({
       heading: 'Debug Tools',
       accessory: <RiToolsFill size={16} className="translate-x-[-1px]" />,
-      items: [{
-        label: 'Toggle Zoom Controls',
-        action: () => setAreZoomControlsShown?.(prev => !prev),
-        annotation: areZoomControlsShown ? <FaCheck size={12} /> : undefined,
-      }, {
-        label: 'Toggle Photo Matting',
-        action: () => setArePhotosMatted?.(prev => !prev),
-        annotation: arePhotosMatted ? <FaCheck size={12} /> : undefined,
-      }, {
-        label: 'Toggle High Density Grid',
-        action: () => setIsGridHighDensity?.(prev => !prev),
-        annotation: isGridHighDensity ? <FaCheck size={12} /> : undefined,
-      }, {
-        label: 'Toggle Image Fallbacks',
-        action: () => setShouldDebugImageFallbacks?.(prev => !prev),
-        annotation: shouldDebugImageFallbacks
-          ? <FaCheck size={12} />
-          : undefined,
-      }, {
-        label: 'Toggle Baseline Grid',
-        action: () => setShouldShowBaselineGrid?.(prev => !prev),
-        annotation: shouldShowBaselineGrid ? <FaCheck size={12} /> : undefined,
-      }],
+      items: [
+        renderToggle(
+          'Zoom Controls',
+          setAreZoomControlsShown,
+          areZoomControlsShown,
+        ),
+        renderToggle(
+          'Photo Matting',
+          setArePhotosMatted,
+          arePhotosMatted,
+        ),
+        renderToggle(
+          'High Density Grid',
+          setIsGridHighDensity,
+          isGridHighDensity,
+        ),
+        renderToggle(
+          'Image Fallbacks',
+          setShouldDebugImageFallbacks,
+          shouldDebugImageFallbacks,
+        ),
+        renderToggle(
+          'Baseline Grid',
+          setShouldShowBaselineGrid,
+          shouldShowBaselineGrid,
+        ),
+        renderToggle(
+          'Insights Debugging',
+          setShouldDebugInsights,
+          shouldDebugInsights,
+        ),
+      ],
     });
   }
 

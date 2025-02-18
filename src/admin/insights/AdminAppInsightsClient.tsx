@@ -38,6 +38,7 @@ import AdminLink from '../AdminLink';
 import AdminEmptyState from '../AdminEmptyState';
 import { pluralize } from '@/utility/string';
 import Tooltip from '@/components/Tooltip';
+import { useAppState } from '@/state/AppState';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
@@ -90,13 +91,13 @@ export default function AdminAppInsightsClient({
     focalLengthsCount,
     dateRange,
   },
-  debug,
 }: {
   codeMeta?: Awaited<ReturnType<typeof getGitHubMetaForCurrentApp>>
   insights: AdminAppInsights
   photoStats: PhotoStats
-  debug?: boolean
 }) {
+  const { shouldDebugInsights: debug } = useAppState();
+
   const {
     noFork,
     forkBehind,

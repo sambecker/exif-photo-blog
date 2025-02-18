@@ -44,6 +44,8 @@ export interface AppStateContext {
   setShouldDebugImageFallbacks?: Dispatch<SetStateAction<boolean>>
   shouldShowBaselineGrid?: boolean
   setShouldShowBaselineGrid?: Dispatch<SetStateAction<boolean>>
+  shouldDebugInsights?: boolean
+  setShouldDebugInsights?: Dispatch<SetStateAction<boolean>>
 }
 
 export const AppStateContext = createContext<AppStateContext>({});

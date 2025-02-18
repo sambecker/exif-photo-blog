@@ -10,7 +10,6 @@ import {
   APP_CONFIGURATION,
   GRID_HOMEPAGE_ENABLED,
   HAS_STATIC_OPTIMIZATION,
-  IS_PRODUCTION,
   MATTE_PHOTOS,
 } from '@/app/config';
 import { OUTDATED_THRESHOLD } from '@/photo';
@@ -78,7 +77,6 @@ export default async function AdminAppInsights() {
         focalLengthsCount: focalLengths.length,
         dateRange,
       }}
-      debug={!IS_PRODUCTION}
     />
   );
 }

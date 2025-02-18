@@ -8,6 +8,7 @@ import { getAuthAction } from '@/auth/actions';
 import useSWR from 'swr';
 import {
   HIGH_DENSITY_GRID,
+  IS_PRODUCTION,
   MATTE_PHOTOS,
   SHOW_ZOOM_CONTROLS,
 } from '@/app/config';
@@ -62,6 +63,8 @@ export default function AppStateProvider({
     useState(false);
   const [shouldShowBaselineGrid, setShouldShowBaselineGrid] =
     useState(false);
+  const [shouldDebugInsights, setShouldDebugInsights] =
+    useState(!IS_PRODUCTION);
 
   const invalidateSwr = useCallback(() => setSwrTimestamp(Date.now()), []);
 
@@ -138,6 +141,8 @@ export default function AppStateProvider({
         setShouldDebugImageFallbacks,
         shouldShowBaselineGrid,
         setShouldShowBaselineGrid,
+        shouldDebugInsights,
+        setShouldDebugInsights,
       }}
     >
       {children}
