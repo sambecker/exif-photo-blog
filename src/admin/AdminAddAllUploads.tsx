@@ -4,7 +4,7 @@ import ErrorNote from '@/components/ErrorNote';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import Container from '@/components/Container';
 import { addAllUploadsAction } from '@/photo/actions';
-import { PATH_ADMIN_PHOTOS } from '@/app-core/paths';
+import { PATH_ADMIN_PHOTOS } from '@/app/paths';
 import { Tags } from '@/tag';
 import {
   generateLocalNaivePostgresString,

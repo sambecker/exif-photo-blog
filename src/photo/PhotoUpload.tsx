@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { uploadPhotoFromClient } from '@/platforms/storage';
 import { useRouter } from 'next/navigation';
-import { PATH_ADMIN_UPLOADS, pathForAdminUploadUrl } from '@/app-core/paths';
+import { PATH_ADMIN_UPLOADS, pathForAdminUploadUrl } from '@/app/paths';
 import ImageInput from '../components/ImageInput';
 import { clsx } from 'clsx/lite';
 

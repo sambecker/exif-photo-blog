@@ -7,8 +7,8 @@ import {
 import ImageSmall from '@/components/image/ImageSmall';
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
-import { pathForPhoto } from '@/app-core/paths';
-import { SHOULD_PREFETCH_ALL_LINKS } from '@/app-core/config';
+import { pathForPhoto } from '@/app/paths';
+import { SHOULD_PREFETCH_ALL_LINKS } from '@/app/config';
 import { useRef } from 'react';
 import useVisible from '@/utility/useVisible';
 

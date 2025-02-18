@@ -8,7 +8,7 @@ import { Camera, cameraFromPhoto, formatCameraText } from '.';
 import {
   absolutePathForCamera,
   absolutePathForCameraImage,
-} from '@/app-core/paths';
+} from '@/app/paths';
 
 // Meta functions moved to separate file to avoid
 // dependencies (camelcase-keys) found in photo/index.ts

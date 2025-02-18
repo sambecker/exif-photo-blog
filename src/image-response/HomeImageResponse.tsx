@@ -1,4 +1,4 @@
-import { SITE_DOMAIN_OR_TITLE } from '@/app-core/config';
+import { SITE_DOMAIN_OR_TITLE } from '@/app/config';
 import { Photo } from '../photo';
 import ImageCaption from './components/ImageCaption';
 import ImageContainer from './components/ImageContainer';

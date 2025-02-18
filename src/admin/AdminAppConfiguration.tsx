@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { APP_CONFIGURATION } from '@/app-core/config';
+import { APP_CONFIGURATION } from '@/app/config';
 import AdminAppConfigurationServer from './AdminAppConfigurationServer';
 import AdminAppConfigurationClient from './AdminAppConfigurationClient';
 

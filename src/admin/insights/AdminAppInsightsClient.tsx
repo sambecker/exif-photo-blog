@@ -20,7 +20,7 @@ import {
   VERCEL_GIT_COMMIT_MESSAGE,
   TEMPLATE_REPO_URL_FORK,
   TEMPLATE_REPO_URL_README,
-} from '@/app-core/config';
+} from '@/app/config';
 import {
   AdminAppInsights,
   getGitHubMetaForCurrentApp,
@@ -30,7 +30,7 @@ import {
 import EnvVar from '@/components/EnvVar';
 import { IoSyncCircle } from 'react-icons/io5';
 import clsx from 'clsx/lite';
-import { PATH_ADMIN_OUTDATED } from '@/app-core/paths';
+import { PATH_ADMIN_OUTDATED } from '@/app/paths';
 import { LiaBroomSolid } from 'react-icons/lia';
 import { IoMdGrid } from 'react-icons/io';
 import { RiSpeedMiniLine } from 'react-icons/ri';

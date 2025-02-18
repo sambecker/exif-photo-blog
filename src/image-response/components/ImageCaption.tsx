@@ -1,4 +1,4 @@
-import { OG_TEXT_BOTTOM_ALIGNMENT } from '@/app-core/config';
+import { OG_TEXT_BOTTOM_ALIGNMENT } from '@/app/config';
 import { ReactNode } from 'react';
 
 const GRADIENT_STOPS = 'rgba(0,0,0,0), rgba(0,0,0,0.3), rgba(0,0,0,0.7)';

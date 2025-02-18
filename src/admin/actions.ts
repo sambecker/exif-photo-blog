@@ -5,7 +5,7 @@ import { testRedisConnection } from '@/platforms/redis';
 import { testOpenAiConnection } from '@/platforms/openai';
 import { testDatabaseConnection } from '@/platforms/postgres';
 import { testStorageConnection } from '@/platforms/storage';
-import { APP_CONFIGURATION } from '@/app-core/config';
+import { APP_CONFIGURATION } from '@/app/config';
 
 const scanForError = (
   shouldCheck: boolean,

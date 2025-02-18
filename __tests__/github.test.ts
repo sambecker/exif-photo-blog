@@ -2,7 +2,7 @@ import {
   getGitHubMeta,
   getGitHubPublicFork,
 } from '@/platforms/github';
-import { TEMPLATE_REPO_OWNER, TEMPLATE_REPO_NAME } from '@/app-core/config';
+import { TEMPLATE_REPO_OWNER, TEMPLATE_REPO_NAME } from '@/app/config';
 
 describe('GitHub', () => {
   it('fetches base repo meta', async () => {

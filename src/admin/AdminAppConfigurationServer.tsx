@@ -1,5 +1,5 @@
 import AdminAppConfigurationClient from './AdminAppConfigurationClient';
-import { APP_CONFIGURATION } from '@/app-core/config';
+import { APP_CONFIGURATION } from '@/app/config';
 import { testConnectionsAction } from '@/admin/actions';
 
 export default async function AdminAppConfigurationServer({

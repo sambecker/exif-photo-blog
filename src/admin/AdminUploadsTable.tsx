@@ -5,7 +5,7 @@ import Spinner from '@/components/Spinner';
 import { getIdFromStorageUrl } from '@/platforms/storage';
 import { clsx } from 'clsx/lite';
 import { FaRegCircleCheck } from 'react-icons/fa6';
-import { pathForAdminUploadUrl } from '@/app-core/paths';
+import { pathForAdminUploadUrl } from '@/app/paths';
 import AddButton from './AddButton';
 import { UrlAddStatus } from './AdminUploadsClient';
 import ResponsiveDate from '@/components/ResponsiveDate';

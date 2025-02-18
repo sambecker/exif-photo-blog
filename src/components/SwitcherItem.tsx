@@ -1,5 +1,5 @@
 import { clsx } from 'clsx/lite';
-import { SHOULD_PREFETCH_ALL_LINKS } from '@/app-core/config';
+import { SHOULD_PREFETCH_ALL_LINKS } from '@/app/config';
 import { JSX } from 'react';
 import Spinner from './Spinner';
 import LinkWithLoader from './LinkWithLoader';

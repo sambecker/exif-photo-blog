@@ -12,7 +12,7 @@ import {
   isPathAdminConfiguration,
   isPathAdminInsights,
   isPathTopLevelAdmin,
-} from '@/app-core/paths';
+} from '@/app/paths';
 import { useAppState } from '@/state/AppState';
 import { clsx } from 'clsx/lite';
 import { differenceInMinutes } from 'date-fns';

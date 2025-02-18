@@ -3,10 +3,10 @@
 import { OUTDATED_THRESHOLD, Photo } from '@/photo';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import LoaderButton from '@/components/primitives/LoaderButton';
-import IconGrSync from '@/app-core/IconGrSync';
+import IconGrSync from '@/app/IconGrSync';
 import Note from '@/components/Note';
 import AdminChildPage from '@/components/AdminChildPage';
-import { PATH_ADMIN_PHOTOS } from '@/app-core/paths';
+import { PATH_ADMIN_PHOTOS } from '@/app/paths';
 import { useState } from 'react';
 import { syncPhotosAction } from '@/photo/actions';
 import { useRouter } from 'next/navigation';
