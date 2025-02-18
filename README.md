@@ -302,3 +302,6 @@ Vercel Postgres can be switched to another Postgres-compatible, pooling provider
 
 #### Can this template run in a docker image?
 > Possibly. See [Issue #116](https://github.com/sambecker/exif-photo-blog/issues/116) for discussion.
+
+#### Why am I seeing many merge conflicts when syncing my fork?
+> Previous versions of this template stored "app directory" files in `/src`, and key functionality in `/src/site`. If you've made customizations and are having difficulty merging updates, consider moving your `/src/app` files to `/`, and renaming `src/site` to `/src/app`. Other structural changes include moving `tailwind.css` and `middleware.ts` to `/`. Lastly, it may be helpful to review [PR #195](https://github.com/sambecker/exif-photo-blog/pull/195) for an overview of the most significant changes.
