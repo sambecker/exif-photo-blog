@@ -314,8 +314,10 @@ export default function AdminAppInsightsClient({
                 {' '}
                 default view to grid by setting
                 {' '}
-                {/* eslint-disable-next-line max-len */}
-                <EnvVar variable="NEXT_PUBLIC_GRID_HOMEPAGE_ENABLED" value="1" />.
+                <EnvVar
+                  variable="NEXT_PUBLIC_GRID_HOMEPAGE_ENABLED"
+                  value="1"
+                />.
               </>}
             />}
           </>

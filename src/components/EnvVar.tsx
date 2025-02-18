@@ -5,16 +5,19 @@ export default function EnvVar({
   variable,
   value,
   includeCopyButton = true,
+  className,
 }: {
   variable: string,
   value?: string,
   includeCopyButton?: boolean,
+  className?: string,
 }) {
   return (
     <div
       className={clsx(
         'inline-flex',
         'overflow-x-auto overflow-y-hidden',
+        className,
       )}
     >
       <span className="inline-flex items-center gap-1">

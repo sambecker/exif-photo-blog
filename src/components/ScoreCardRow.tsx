@@ -50,7 +50,10 @@ export default function ScoreCardRow({
           {content}
         </div>
         {isExpanded &&
-          <div className="text-medium leading-relaxed">
+          <div className={clsx(
+            // 'overflow-auto w-full flex flex-col min-w-0',
+            'text-medium leading-relaxed',
+          )}>
             {expandContent}
           </div>}
       </div>
