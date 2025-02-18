@@ -22,7 +22,7 @@ export default function ScoreCardRow({
   className,
 }: {
   icon: ReactNode
-  content: ReactNode
+  content: ReactNode | ((isExpanded?: boolean) => ReactNode)
   expandContent?: ReactNode
   expandPath?: string
   className?: string
@@ -44,10 +44,11 @@ export default function ScoreCardRow({
       <div className="grow space-y-2 py-1.5 w-full overflow-auto">
         <div className={clsx(
           'text-main pr-2',
-          // Truncate on small screens unless expanded
-          !isExpanded && 'truncate md:truncate-none',
+          !isExpanded && 'max-w-full truncate',
         )}>
-          {content}
+          {typeof content === 'function'
+            ? content(isExpanded)
+            : content}
         </div>
         {isExpanded &&
           <div className={clsx(

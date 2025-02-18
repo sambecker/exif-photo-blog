@@ -44,6 +44,8 @@ const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
 const DEBUG_BEHIND_BY = 9;
 const DEBUG_PHOTOS_COUNT_OUTDATED = 7;
 
+const WARNING_TEXT_COLOR = 'text-amber-600 dark:text-amber-500';
+
 const readmeAnchor = (anchor: string) =>
   <AdminLink href={`${TEMPLATE_REPO_URL_README}#${anchor}`}>
     README/{anchor}
@@ -60,9 +62,13 @@ const renderLabeledEnvVar = (label: string, envVar: string, value = '1') =>
 const renderHighlightText = (
   text: string,
   color: 'blue' | 'yellow' = 'blue',
+  truncate = true,
 ) =>
   <span className={clsx(
-    'px-1.5 pt-[1px] pb-0.5 rounded-md',
+    'px-1.5 my-[-2px] rounded-md',
+    truncate
+      ? 'max-w-full truncate inline-block align-middle pt-[1px] pb-[2px]'
+      : 'relative top-[1px] pb-[1px]',
     color === 'blue' && 'text-blue-600 bg-blue-100/60',
     color === 'blue' && 'dark:text-blue-400 dark:bg-blue-900/50',
     color === 'yellow' && 'text-amber-700 bg-amber-100/50',
@@ -120,7 +126,7 @@ export default function AdminAppInsightsClient({
             ? <ScoreCardRow
               icon={<IoSyncCircle
                 size={18}
-                className="text-amber-600"
+                className={WARNING_TEXT_COLOR}
               />}
               content={<>
                 Could not analyze source code
@@ -233,12 +239,13 @@ export default function AdminAppInsightsClient({
                 size={17}
                 className={clsx(
                   'translate-x-[0.5px]',
-                  'text-amber-600 dark:text-amber-500',
+                  WARNING_TEXT_COLOR,
                 )}
               />}
-              content={renderHighlightText(
+              content={isExpanded => renderHighlightText(
                 'AI enabled without rate limiting',
                 'yellow',
+                !isExpanded,
               )}
               expandContent={<>
                 Create Upstash Redis store from storage tab on
@@ -332,7 +339,7 @@ export default function AdminAppInsightsClient({
             size={19}
             className={clsx(
               'translate-y-[-2px]',
-              'text-amber-600 dark:text-amber-500',
+              WARNING_TEXT_COLOR,
             )}
           />}
           content={renderHighlightText(
