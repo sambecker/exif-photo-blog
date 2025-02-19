@@ -11,9 +11,6 @@ const BYTES_PER_TAG = 12;
 const BYTE_OFFSET_TAG_TYPE = 2;
 const BYTE_OFFSET_TAG_VALUE = 8;
 
-export const TAG_ID_SATURATION = 0x1003;
-export const TAG_ID_FILM_MODE  = 0x1401;
-
 export const isExifForFujifilm = (data: ExifData) =>
   data.tags?.Make === MAKE_FUJIFILM;
 

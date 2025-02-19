@@ -15,6 +15,7 @@ import {
   PRESERVE_ORIGINAL_UPLOADS,
 } from '@/app/config';
 import { isExifForFujifilm } from '@/platforms/fujifilm';
+import { getFujifilmRecipeFromMakerNote } from '@/platforms/fujifilm/recipe';
 
 const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
@@ -78,6 +79,9 @@ export const extractImageDataFromBlobPath = async (
         const makerNote = exifDataBinary.tags?.MakerNote;
         if (Buffer.isBuffer(makerNote)) {
           filmSimulation = getFujifilmSimulationFromMakerNote(makerNote);
+          console.log({
+            recipe: getFujifilmRecipeFromMakerNote(makerNote),
+          });
         }
       }
 

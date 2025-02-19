@@ -1,8 +1,7 @@
-import {
-  TAG_ID_FILM_MODE,
-  parseFujifilmMakerNote,
-  TAG_ID_SATURATION,
-} from '.';
+import { parseFujifilmMakerNote } from '.';
+
+const TAG_ID_SATURATION = 0x1003;
+const TAG_ID_FILM_MODE  = 0x1401;
 
 type FujifilmSimulationFromSaturation =
   'monochrome' |
