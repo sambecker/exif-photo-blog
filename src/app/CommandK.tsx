@@ -18,7 +18,7 @@ import { formatCount, formatCountDescriptive } from '@/utility/string';
 import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
 import { IoMdCamera } from 'react-icons/io';
 import { ADMIN_DEBUG_TOOLS_ENABLED, SHOW_FILM_SIMULATIONS } from './config';
-import { labelForFilmSimulation } from '@/platforms/fujifilm';
+import { labelForFilmSimulation } from '@/platforms/fujifilm/simulation';
 import { getUniqueFocalLengths } from '@/photo/db/query';
 import { formatFocalLength } from '@/focal';
 import { TbCone } from 'react-icons/tb';

@@ -1,4 +1,4 @@
-import { labelForFilmSimulation } from '@/platforms/fujifilm';
+import { labelForFilmSimulation } from '@/platforms/fujifilm/simulation';
 import PhotoFilmSimulationIcon from './PhotoFilmSimulationIcon';
 import { pathForFilmSimulation } from '@/app/paths';
 import { FilmSimulation } from '.';

@@ -5,8 +5,7 @@ import {
 import { convertExifToFormData } from '@/photo/form';
 import {
   getFujifilmSimulationFromMakerNote,
-  isExifForFujifilm,
-} from '@/platforms/fujifilm';
+} from '@/platforms/fujifilm/simulation';
 import { ExifData, ExifParserFactory } from 'ts-exif-parser';
 import { PhotoFormData } from './form';
 import { FilmSimulation } from '@/simulation';
@@ -15,6 +14,7 @@ import {
   GEO_PRIVACY_ENABLED,
   PRESERVE_ORIGINAL_UPLOADS,
 } from '@/app/config';
+import { isExifForFujifilm } from '@/platforms/fujifilm';
 
 const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
