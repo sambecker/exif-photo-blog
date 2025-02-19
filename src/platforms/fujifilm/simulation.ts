@@ -225,13 +225,15 @@ export const getFujifilmSimulationFromMakerNote = (
 
   parseFujifilmMakerNote(
     bytes,
-    (tag, value) => {
+    (tag, numbers) => {
       switch (tag) {
       case TAG_ID_SATURATION:
-        filmModeFromSaturation = getFujifilmSimulationFromSaturation(value);
+        filmModeFromSaturation =
+          getFujifilmSimulationFromSaturation(numbers[0]);
         break;
       case TAG_ID_FILM_MODE:
-        filmMode = getFujifilmMode(value);
+        filmMode =
+          getFujifilmMode(numbers[0]);
         break;
       }
     },
