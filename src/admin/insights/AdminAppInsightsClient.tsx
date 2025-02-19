@@ -241,7 +241,7 @@ export default function AdminAppInsightsClient({
                 )}
               />}
               content={isExpanded => renderHighlightText(
-                'AI enabled without rate limiting',
+                'Enable AI rate limiting',
                 'yellow',
                 !isExpanded,
               )}
