@@ -18,11 +18,11 @@ import { convertStringToArray } from '@/utility/string';
 import { generateNanoid } from '@/utility/nanoid';
 import {
   FILM_SIMULATION_FORM_INPUT_OPTIONS,
-  MAKE_FUJIFILM,
-} from '@/platforms/fujifilm';
+} from '@/platforms/fujifilm/simulation';
 import { FilmSimulation } from '@/simulation';
 import { GEO_PRIVACY_ENABLED } from '@/app/config';
 import { TAG_FAVS, getValidationMessageForTags } from '@/tag';
+import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
 
 type VirtualFields = 'favorite';
 
