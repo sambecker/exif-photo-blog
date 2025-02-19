@@ -123,8 +123,8 @@ export default function AdminAppInsightsClient({
     <>
       {(codeMeta || debug) && <>
         <ScoreCard title="Source code">
-          {codeMeta?.didError
-            ? <ScoreCardRow
+          {(codeMeta?.didError || debug) &&
+            <ScoreCardRow
               icon={<IoSyncCircle
                 size={18}
                 className={WARNING_TEXT_COLOR}
@@ -136,51 +136,49 @@ export default function AdminAppInsightsClient({
                   classNameTrigger="translate-y-[4.5px] ml-2 h-3"
                 />
               </>}
-            />
-            : <>
-              {(noFork || debug) &&
-                <ScoreCardRow
-                  icon={<FaCircleInfo 
-                    size={15}
-                    className="text-blue-500 translate-y-[1px]"
-                  />}
-                  content="This template is not forked"
-                  expandContent={<>
-                    <AdminLink href={TEMPLATE_REPO_URL_FORK}>
-                      Fork original template
-                    </AdminLink>
-                    {' '}
-                    to receive the latest fixes and features.
-                    {' '}
-                    Additional instructions in
-                    {' '}
-                    {readmeAnchor('receiving-updates')}.
-                  </>}
-                />}
-              {(forkBehind || debug) && <ScoreCardRow
-                icon={<IoSyncCircle
-                  size={18}
-                  className="text-blue-500"
-                />}
-                content={<>
-                  This fork is
-                  {' '}
-                  {renderHighlightText(
-                    pluralize(codeMeta?.behindBy ?? DEBUG_BEHIND_BY, 'commit'),
-                    'blue',
-                  )}
-                  {' '}
-                  behind
-                </>}
-                expandContent={<>
-                  <AdminLink href={codeMeta?.urlRepo ?? ''}>
-                    Sync your fork
-                  </AdminLink>
-                  {' '}
-                  to receive the latest fixes and features.
-                </>}
+            />}
+          {((!codeMeta?.didError && noFork) || debug) &&
+            <ScoreCardRow
+              icon={<FaCircleInfo 
+                size={15}
+                className="text-blue-500 translate-y-[1px]"
               />}
+              content="This template is not forked"
+              expandContent={<>
+                <AdminLink href={TEMPLATE_REPO_URL_FORK}>
+                  Fork original template
+                </AdminLink>
+                {' '}
+                to receive the latest fixes and features.
+                {' '}
+                Additional instructions in
+                {' '}
+                {readmeAnchor('receiving-updates')}.
+              </>}
+            />}
+          {((!codeMeta?.didError && forkBehind) || debug) && <ScoreCardRow
+            icon={<IoSyncCircle
+              size={18}
+              className="text-blue-500"
+            />}
+            content={<>
+              This fork is
+              {' '}
+              {renderHighlightText(
+                pluralize(codeMeta?.behindBy ?? DEBUG_BEHIND_BY, 'commit'),
+                'blue',
+              )}
+              {' '}
+              behind
             </>}
+            expandContent={<>
+              <AdminLink href={codeMeta?.urlRepo ?? ''}>
+                Sync your fork
+              </AdminLink>
+              {' '}
+              to receive the latest fixes and features.
+            </>}
+          />}
           <ScoreCardRow
             icon={<BiLogoGithub size={17} />}
             content={<div
