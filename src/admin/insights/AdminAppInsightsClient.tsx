@@ -66,14 +66,13 @@ const renderHighlightText = (
   truncate = true,
 ) =>
   <span className={clsx(
-    'px-1.5 my-[-2px] rounded-md',
-    truncate
-      ? 'max-w-full truncate inline-block align-middle pt-[1px] pb-[2px]'
-      : 'relative top-[1px] pb-[1px]',
+    'px-1.5 pb-[1px] rounded-md',
+    truncate && 'max-w-full inline-block',
+    truncate && 'text-ellipsis whitespace-nowrap overflow-x-clip',
     color === 'blue' && 'text-blue-600 bg-blue-100/60',
     color === 'blue' && 'dark:text-blue-400 dark:bg-blue-900/50',
     color === 'yellow' && 'text-amber-700 bg-amber-100/50',
-    color === 'yellow' && 'dark:text-amber-400 dark:bg-amber-900/40',
+    color === 'yellow' && 'dark:text-amber-400 dark:bg-amber-900/35',
   )}>
     {text}
   </span>;

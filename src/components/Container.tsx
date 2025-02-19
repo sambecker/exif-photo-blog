@@ -31,7 +31,7 @@ export default function Container({
     case 'blue': return [
       'text-blue-900 dark:text-blue-300',
       'bg-blue-50/50 dark:bg-blue-950/30',
-      'border-blue-200 dark:border-blue-600/30',
+      'border-blue-200 dark:border-blue-600/20',
     ];
     case 'red': return [
       'text-red-600 dark:text-red-500/90',
