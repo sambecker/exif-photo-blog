@@ -349,9 +349,10 @@ export default function AdminAppConfigurationClient({
             {aiError && renderError({
               connection: { provider: 'OpenAI', error: aiError},
             })}
-            Store your OpenAI secret key in order to add experimental support
-            for AI-generated text descriptions and enable an invisible field
-            called {'"Semantic Description"'} used to support CMD-K search:
+            Store your OpenAI secret key in order to enable AI-generated
+            text descriptions and optionally leverage an invisible field
+            called {'"Semantic Description"'} used to support CMD-K search
+            and improve accessibility:
             {renderEnvVars(['OPENAI_SECRET_KEY'])}
           </ChecklistRow>
           <ChecklistRow
