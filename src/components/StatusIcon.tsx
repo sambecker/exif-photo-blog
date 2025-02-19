@@ -4,13 +4,16 @@ import {
   BiSolidXSquare,
 } from 'react-icons/bi';
 import Spinner from './Spinner';
+import clsx from 'clsx/lite';
 
 export default function StatusIcon({
   type,
   loading,
+  className,
 }: {
   type: 'checked' | 'missing' | 'warning' | 'optional'
   loading?: boolean
+  className?: string
 }) {
   const getIcon = () => {
     switch (type) {
@@ -21,13 +24,13 @@ export default function StatusIcon({
       />;
     case 'missing':
       return <BiSolidXSquare
-        size={14}
-        className="text-red-400 translate-x-[2px] translate-y-[1.5px]"
+        size={14.5}
+        className="text-red-400"
       />;
     case 'warning':
       return <BiSolidXSquare
-        size={14}
-        className="text-amber-500 translate-x-[2px] translate-y-[1.5px]"
+        size={14.5}
+        className="text-amber-500"
       />;
     case 'optional':
       return <BiSolidCheckboxMinus
@@ -38,12 +41,18 @@ export default function StatusIcon({
   };
 
   return (
-    <div className="min-w-[1.2rem] pt-[1px]">
+    <span className={clsx(
+      'size-[16px]',
+      'inline-flex items-center justify-center',
+      className,
+    )}>
       {loading
-        ? <div className="translate-y-0.5">
-          <Spinner size={14} />
-        </div>
-        : getIcon()}
-    </div>
+        ? <span className="translate-y-[1px]">
+          <Spinner size={12} />
+        </span>
+        : <span>
+          {getIcon()}
+        </span>}
+    </span>
   );
 }

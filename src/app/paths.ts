@@ -41,6 +41,7 @@ export const PATH_ADMIN_TAGS          = `${PATH_ADMIN}/tags`;
 export const PATH_ADMIN_CONFIGURATION = `${PATH_ADMIN}/configuration`;
 export const PATH_ADMIN_INSIGHTS      = `${PATH_ADMIN}/insights`;
 export const PATH_ADMIN_BASELINE      = `${PATH_ADMIN}/baseline`;
+export const PATH_ADMIN_COMPONENTS    = `${PATH_ADMIN}/components`;
 
 // Debug paths
 export const PATH_OG_ALL              = `${PATH_OG}/all`;
@@ -60,6 +61,8 @@ export const PATHS_ADMIN = [
   PATH_ADMIN_UPLOADS,
   PATH_ADMIN_TAGS,
   PATH_ADMIN_CONFIGURATION,
+  PATH_ADMIN_BASELINE,
+  PATH_ADMIN_COMPONENTS,
 ];
 
 export const PATHS_TO_CACHE = [

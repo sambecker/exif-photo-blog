@@ -44,7 +44,7 @@ export default function ScoreCardRow({
       <div className="grow space-y-2 py-1.5 w-full overflow-auto">
         <div className={clsx(
           'text-main pr-2',
-          !isExpanded && 'max-w-full truncate',
+          expandContent && !isExpanded && 'max-w-full truncate',
         )}>
           {typeof content === 'function'
             ? content(isExpanded)

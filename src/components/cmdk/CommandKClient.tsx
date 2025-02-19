@@ -13,6 +13,7 @@ import {
 } from 'react';
 import {
   PATH_ADMIN_BASELINE,
+  PATH_ADMIN_COMPONENTS,
   PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_INSIGHTS,
   PATH_ADMIN_PHOTOS,
@@ -376,6 +377,9 @@ export default function CommandKClient({
           ? [{
             label: 'Baseline Overview',
             path: PATH_ADMIN_BASELINE,
+          }, {
+            label: 'Components Overview',
+            path: PATH_ADMIN_COMPONENTS,
           }]
           : [])
         .concat({

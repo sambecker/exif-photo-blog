@@ -1,5 +1,6 @@
 import Container from '@/components/Container';
 import SiteGrid from '@/components/SiteGrid';
+import clsx from 'clsx/lite';
 import { ReactNode } from 'react';
 
 export default function AdminInfoPage({
@@ -22,7 +23,10 @@ export default function AdminInfoPage({
             {accessory}
           </div>
           <Container spaceChildren={false}>
-            <div className="max-w-xl w-full">
+            <div className={clsx(
+              'max-w-xl w-full',
+              'space-y-6 md:space-y-8',
+            )}>
               {children}
             </div>
           </Container>

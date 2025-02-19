@@ -120,7 +120,7 @@ export default function AdminAppInsightsClient({
   </a>;
 
   return (
-    <div className="space-y-6 md:space-y-8">
+    <>
       {(codeMeta || debug) && <>
         <ScoreCard title="Source code">
           {codeMeta?.didError
@@ -396,6 +396,6 @@ export default function AdminAppInsightsClient({
           content={descriptionWithSpaces}
         />}
       </ScoreCard>
-    </div>
+    </>
   );
 }
