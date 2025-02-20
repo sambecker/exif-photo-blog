@@ -40,7 +40,6 @@ import { LuExpand } from 'react-icons/lu';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import Tooltip from '@/components/Tooltip';
 import ZoomControls, { ZoomControlsRef } from '@/components/image/ZoomControls';
-import PhotoRecipe from './PhotoRecipe';
 
 export default function PhotoLarge({
   photo,
@@ -276,15 +275,11 @@ export default function PhotoLarge({
                   <li>{photo.exposureCompensationFormatted ?? '0ev'}</li>
                 </ul>
                 {showSimulation && photo.filmSimulation &&
-                  <Tooltip content={photo.fujifilmRecipe
-                    ? <PhotoRecipe recipe={photo.fujifilmRecipe} />
-                    : undefined
-                  }>
-                    <PhotoFilmSimulation
-                      simulation={photo.filmSimulation}
-                      prefetch={prefetchRelatedLinks}
-                    />
-                  </Tooltip>}
+                  <PhotoFilmSimulation
+                    simulation={photo.filmSimulation}
+                    prefetch={prefetchRelatedLinks}
+                    recipe={photo.fujifilmRecipe}
+                  />}
               </>}
             <div className={clsx(
               'flex gap-x-3 gap-y-baseline',

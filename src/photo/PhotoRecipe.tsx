@@ -18,13 +18,13 @@ export default function PhotoRecipe({ recipe: {
   whiteBalance,
   bwAdjustment,
   bwMagentaGreen,
-} }: { recipe: FujifilmRecipe }) {  
-  return <div className="text-left space-y-4">
-    <div className="font-bold">
-      Fujifilm Recipe
-    </div>
+} }: { recipe: FujifilmRecipe }) {
+  return <div className="">
     <div className={clsx(
-      'grid grid-cols-2 gap-2',
+      'px-3 py-2 max-w-[16rem]',
+      'text-left text-xs',
+      'border-medium rounded-md',
+      'grid grid-cols-2 gap-1',
       '*:odd:text-dim *:even:uppercase',
     )}>
       {dynamicRange !== undefined && <>
