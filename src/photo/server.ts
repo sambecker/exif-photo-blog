@@ -83,7 +83,6 @@ export const extractImageDataFromBlobPath = async (
         if (Buffer.isBuffer(makerNote)) {
           filmSimulation = getFujifilmSimulationFromMakerNote(makerNote);
           recipe = getFujifilmRecipeFromMakerNote(makerNote);
-          console.log(recipe);
         }
       }
 
@@ -117,7 +116,7 @@ export const extractImageDataFromBlobPath = async (
           url,
         },
         ...generateBlurData && { blurData },
-        ...convertExifToFormData(exifData, filmSimulation),
+        ...convertExifToFormData(exifData, filmSimulation, recipe),
       },
     },
     imageResizedBase64,

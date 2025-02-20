@@ -23,6 +23,7 @@ import { FilmSimulation } from '@/simulation';
 import { GEO_PRIVACY_ENABLED } from '@/app/config';
 import { TAG_FAVS, getValidationMessageForTags } from '@/tag';
 import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
+import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 
 type VirtualFields = 'favorite';
 
@@ -105,6 +106,11 @@ const FORM_METADATA = (
     label: 'fujifilm simulation',
     selectOptions: FILM_SIMULATION_FORM_INPUT_OPTIONS,
     selectOptionsDefaultLabel: 'Unknown',
+    shouldHide: ({ make }) => make !== MAKE_FUJIFILM,
+  },
+  fujifilmRecipe: {
+    type: 'textarea',
+    label: 'fujifilm recipe',
     shouldHide: ({ make }) => make !== MAKE_FUJIFILM,
   },
   focalLength: { label: 'focal length' },
@@ -200,6 +206,7 @@ export const convertPhotoToFormData = (
 export const convertExifToFormData = (
   data: ExifData,
   filmSimulation?: FilmSimulation,
+  fujifilmRecipe?: Partial<FujifilmRecipe>,
 ): Omit<
   Record<keyof PhotoExif, string | undefined>,
   'takenAt' | 'takenAtNaive'
@@ -223,6 +230,7 @@ export const convertExifToFormData = (
   longitude:
     !GEO_PRIVACY_ENABLED ? data.tags?.GPSLongitude?.toString() : undefined,
   filmSimulation,
+  fujifilmRecipe: JSON.stringify(fujifilmRecipe),
   ...data.tags?.DateTimeOriginal && {
     takenAt: convertTimestampWithOffsetToPostgresString(
       data.tags.DateTimeOriginal,
@@ -267,7 +275,10 @@ export const convertFormDataToPhotoDbInsert = (
   });
 
   return {
-    ...(photoForm as PhotoFormData & { filmSimulation?: FilmSimulation }),
+    ...(photoForm as PhotoFormData & {
+      filmSimulation?: FilmSimulation
+      fujifilmRecipe?: FujifilmRecipe
+    }),
     ...!photoForm.id && { id: generateNanoid() },
     // Delete array field when empty
     tags: tags.length > 0 ? tags : undefined,

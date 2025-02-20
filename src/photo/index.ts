@@ -20,6 +20,7 @@ import { parameterize } from '@/utility/string';
 import camelcaseKeys from 'camelcase-keys';
 import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
+import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 
 export const OUTDATED_THRESHOLD = new Date('2024-06-16');
 
@@ -66,6 +67,7 @@ export interface PhotoExif {
   latitude?: number
   longitude?: number
   filmSimulation?: FilmSimulation
+  fujifilmRecipe?: string
   takenAt?: string
   takenAtNaive?: string
 }
@@ -88,11 +90,13 @@ export interface PhotoDbInsert extends PhotoExif {
 }
 
 // Raw db response
-export interface PhotoDb extends Omit<PhotoDbInsert, 'takenAt' | 'tags'> {
+export interface PhotoDb extends
+  Omit<PhotoDbInsert, 'takenAt' | 'tags' | 'fujifilmRecipe'> {
   updatedAt: Date
   createdAt: Date
   takenAt: Date
   tags: string[]
+  fujifilmRecipe?: Partial<FujifilmRecipe>
 }
 
 // Parsed db response
@@ -159,6 +163,7 @@ export const convertPhotoToPhotoDbInsert = (
 ): PhotoDbInsert => ({
   ...photo,
   takenAt: photo.takenAt.toISOString(),
+  fujifilmRecipe: JSON.stringify(photo.fujifilmRecipe),
 });
 
 export const photoStatsAsString = (photo: Photo) => [
