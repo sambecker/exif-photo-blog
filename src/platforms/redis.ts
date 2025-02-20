@@ -1,5 +1,6 @@
 import { Redis } from '@upstash/redis';
+import { HAS_REDIS_STORAGE } from '@/app/config';
 
-const redis = Redis.fromEnv();
+const redis = HAS_REDIS_STORAGE ? Redis.fromEnv() : undefined;
 
-export const testRedisConnection = () => redis.get('test');
+export const testRedisConnection = () => redis?.get('test');

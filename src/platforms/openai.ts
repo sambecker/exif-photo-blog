@@ -10,7 +10,7 @@ import {
 import { removeBase64Prefix } from '@/utility/image';
 import { cleanUpAiTextResponse } from '@/photo/ai';
 
-const redis = Redis.fromEnv();
+const redis = HAS_REDIS_STORAGE ? Redis.fromEnv() : undefined;
 
 const RATE_LIMIT_IDENTIFIER = 'openai-image-query';
 const RATE_LIMIT_MAX_QUERIES_PER_HOUR = 100;
@@ -20,7 +20,7 @@ const openai = AI_TEXT_GENERATION_ENABLED
   ? createOpenAI({ apiKey: process.env.OPENAI_SECRET_KEY })
   : undefined;
 
-const ratelimit = HAS_REDIS_STORAGE
+const ratelimit = redis
   ? new Ratelimit({
     redis,
     limiter: Ratelimit.slidingWindow(RATE_LIMIT_MAX_QUERIES_PER_HOUR, '1h'),
