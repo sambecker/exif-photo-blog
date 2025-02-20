@@ -51,7 +51,7 @@ export const extractImageDataFromBlobPath = async (
 
   let exifData: ExifData | undefined;
   let filmSimulation: FilmSimulation | undefined;
-  let recipe: Partial<FujifilmRecipe> | undefined;
+  let recipe: FujifilmRecipe | undefined;
   let blurData: string | undefined;
   let imageResizedBase64: string | undefined;
   let shouldStripGpsData = false;

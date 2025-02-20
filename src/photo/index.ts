@@ -91,16 +91,15 @@ export interface PhotoDbInsert extends PhotoExif {
 
 // Raw db response
 export interface PhotoDb extends
-  Omit<PhotoDbInsert, 'takenAt' | 'tags' | 'fujifilmRecipe'> {
+  Omit<PhotoDbInsert, 'takenAt' | 'tags'> {
   updatedAt: Date
   createdAt: Date
   takenAt: Date
   tags: string[]
-  fujifilmRecipe?: Partial<FujifilmRecipe>
 }
 
 // Parsed db response
-export interface Photo extends PhotoDb {
+export interface Photo extends Omit<PhotoDb, 'fujifilmRecipe'> {
   focalLengthFormatted?: string
   focalLengthIn35MmFormatFormatted?: string
   fNumberFormatted?: string
@@ -108,6 +107,7 @@ export interface Photo extends PhotoDb {
   exposureTimeFormatted?: string
   exposureCompensationFormatted?: string
   takenAtNaiveFormatted: string
+  fujifilmRecipe?: FujifilmRecipe
 }
 
 export interface PhotoSetCategory {
@@ -143,6 +143,9 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
       formatExposureTime(photoDb.exposureTime),
     exposureCompensationFormatted:
       formatExposureCompensation(photoDb.exposureCompensation),
+    fujifilmRecipe: photoDb.fujifilmRecipe
+      ? JSON.parse(photoDb.fujifilmRecipe)
+      : undefined,
     takenAtNaiveFormatted:
       formatDateFromPostgresString(photoDb.takenAtNaive),
   };

@@ -187,6 +187,8 @@ export const convertPhotoToFormData = (
       return value?.toISOString ? value.toISOString() : value;
     case 'hidden':
       return value ? 'true' : 'false';
+    case 'fujifilmRecipe':
+      return JSON.stringify(value);
     default:
       return value !== undefined && value !== null
         ? value.toString()
@@ -206,7 +208,7 @@ export const convertPhotoToFormData = (
 export const convertExifToFormData = (
   data: ExifData,
   filmSimulation?: FilmSimulation,
-  fujifilmRecipe?: Partial<FujifilmRecipe>,
+  fujifilmRecipe?: FujifilmRecipe,
 ): Omit<
   Record<keyof PhotoExif, string | undefined>,
   'takenAt' | 'takenAtNaive'

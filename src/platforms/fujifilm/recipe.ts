@@ -5,7 +5,7 @@ const TAG_ID_HIGHLIGHT = 0x1041;
 const TAG_ID_SHADOW = 0x1040;
 const TAG_ID_SATURATION = 0x1003;
 const TAG_ID_NOISE_REDUCTION = 0x100e;
-const TAG_ID_NOISE_REDUCTION_LEGACY = 0x100b;
+const TAG_ID_NOISE_REDUCTION_BASIC = 0x100b;
 const TAG_ID_SHARPNESS = 0x1001;
 const TAG_ID_CLARITY = 0x100f;
 const TAG_ID_GRAIN_EFFECT_ROUGHNESS = 0x1047;
@@ -19,7 +19,7 @@ const TAG_ID_BW_MAGENTA_GREEN = 0x104b;
 
 type WeakStrong = 'off' | 'weak' | 'strong';
 
-export interface FujifilmRecipe {
+export type FujifilmRecipe = Partial<{
   dynamicRange: number
   highlight: number
   shadow: number
@@ -41,7 +41,7 @@ export interface FujifilmRecipe {
   }
   bwAdjustment: number
   bwMagentaGreen: number
-}
+}>;
 
 const DEFAULT_GRAIN_EFFECT = {
   roughness: 'off',
@@ -75,7 +75,7 @@ export const processNoiseReductionLegacy = (value: number) => {
   switch (value) {
   case 0x40: return 'low';
   case 0x80: return 'normal';
-  default: return 'n/a';
+  default:   return 'n/a';
   }
 };
 
@@ -119,7 +119,7 @@ export const processWeakStrong = (value: number): WeakStrong => {
 
 export const processGrainEffectSize = (
   value: number,
-): FujifilmRecipe['grainEffect']['size'] => {
+): Required<FujifilmRecipe>['grainEffect']['size'] => {
   switch (value) {
   case 16: return 'small';
   case 32: return 'large';
@@ -155,8 +155,8 @@ export const processWhiteBalanceComponent = (value: number) => value / 20;
 
 export const getFujifilmRecipeFromMakerNote = (
   bytes: Buffer,
-): Partial<FujifilmRecipe> => {
-  const recipe: Partial<FujifilmRecipe> = {};
+): FujifilmRecipe => {
+  const recipe: FujifilmRecipe = {};
 
   parseFujifilmMakerNote(
     bytes,
@@ -177,7 +177,7 @@ export const getFujifilmRecipeFromMakerNote = (
       case TAG_ID_NOISE_REDUCTION:
         recipe.highISONoiseReduction = processNoiseReduction(numbers[0]);
         break;
-      case TAG_ID_NOISE_REDUCTION_LEGACY:
+      case TAG_ID_NOISE_REDUCTION_BASIC:
         recipe.noiseReductionLegacy =
           processNoiseReductionLegacy(numbers[0]);
         break;
