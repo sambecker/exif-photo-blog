@@ -23,7 +23,7 @@ export const MIGRATIONS: Migration[] = [{
     ADD COLUMN IF NOT EXISTS lens_model VARCHAR(255)
   `,
 }, {
-  label: '03:  Fujifilm Recipe',
+  label: '03: Fujifilm Recipe',
   fields: ['fujifilm_recipe'],
   run: () => sql`
     ALTER TABLE photos
