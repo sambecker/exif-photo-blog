@@ -1,19 +1,19 @@
 import { parseFujifilmMakerNote } from '.';
 
 const TAG_ID_DEVELOPMENT_DYNAMIC_RANGE = 0x1403;
+const TAG_ID_WHITE_BALANCE = 0x1002;
+const TAG_ID_WHITE_BALANCE_FINE_TUNE = 0x100a;
+const TAG_ID_NOISE_REDUCTION = 0x100e;
+const TAG_ID_NOISE_REDUCTION_BASIC = 0x100b;
 const TAG_ID_HIGHLIGHT = 0x1041;
 const TAG_ID_SHADOW = 0x1040;
 const TAG_ID_SATURATION = 0x1003;
-const TAG_ID_NOISE_REDUCTION = 0x100e;
-const TAG_ID_NOISE_REDUCTION_BASIC = 0x100b;
 const TAG_ID_SHARPNESS = 0x1001;
 const TAG_ID_CLARITY = 0x100f;
-const TAG_ID_GRAIN_EFFECT_ROUGHNESS = 0x1047;
-const TAG_ID_GRAIN_EFFECT_SIZE = 0x104c;
 const TAG_ID_COLOR_CHROME_EFFECT = 0x1048;
 const TAG_ID_COLOR_CHROME_FX_BLUE = 0x104e;
-const TAG_ID_WHITE_BALANCE = 0x1002;
-const TAG_ID_WHITE_BALANCE_FINE_TUNE = 0x100a;
+const TAG_ID_GRAIN_EFFECT_ROUGHNESS = 0x1047;
+const TAG_ID_GRAIN_EFFECT_SIZE = 0x104c;
 const TAG_ID_BW_ADJUSTMENT = 0x1049;
 const TAG_ID_BW_MAGENTA_GREEN = 0x104b;
 
@@ -21,37 +21,37 @@ type WeakStrong = 'off' | 'weak' | 'strong';
 
 export type FujifilmRecipe = Partial<{
   dynamicRange: number
-  highlight: number
-  shadow: number
-  color: number
-  highISONoiseReduction: number
-  noiseReductionLegacy: string
-  sharpness: number
-  clarity: number
-  grainEffect: {
-    roughness: WeakStrong
-    size: 'off' | 'small' | 'large'
-  }
-  colorChromeEffect: WeakStrong
-  colorChromeFXBlue: WeakStrong
   whiteBalance: {
     type: string
     red: number
     blue: number
   }
+  highISONoiseReduction: number
+  noiseReductionBasic: string
+  highlight: number
+  shadow: number
+  color: number
+  sharpness: number
+  clarity: number
+  colorChromeEffect: WeakStrong
+  colorChromeFXBlue: WeakStrong
+  grainEffect: {
+    roughness: WeakStrong
+    size: 'off' | 'small' | 'large'
+  }
   bwAdjustment: number
   bwMagentaGreen: number
 }>;
-
-const DEFAULT_GRAIN_EFFECT = {
-  roughness: 'off',
-  size: 'off',
-} as const;
 
 const DEFAULT_WHITE_BALANCE = {
   type: 'auto',
   red: 0,
   blue: 0,
+} as const;
+
+const DEFAULT_GRAIN_EFFECT = {
+  roughness: 'off',
+  size: 'off',
 } as const;
 
 export const processTone = (value: number) =>
@@ -165,42 +165,6 @@ export const getFujifilmRecipeFromMakerNote = (
       case TAG_ID_DEVELOPMENT_DYNAMIC_RANGE:
         recipe.dynamicRange = numbers[0];
         break;
-      case TAG_ID_HIGHLIGHT:
-        recipe.highlight = processTone(numbers[0]);
-        break;
-      case TAG_ID_SHADOW:
-        recipe.shadow = processTone(numbers[0]);
-        break;
-      case TAG_ID_SATURATION:
-        recipe.color = processSaturation(numbers[0]);
-        break;
-      case TAG_ID_NOISE_REDUCTION:
-        recipe.highISONoiseReduction = processNoiseReduction(numbers[0]);
-        break;
-      case TAG_ID_NOISE_REDUCTION_BASIC:
-        recipe.noiseReductionLegacy =
-          processNoiseReductionLegacy(numbers[0]);
-        break;
-      case TAG_ID_SHARPNESS:
-        recipe.sharpness = processSharpness(numbers[0]);
-        break;
-      case TAG_ID_CLARITY:
-        recipe.clarity = processClarity(numbers[0]);
-        break;
-      case TAG_ID_GRAIN_EFFECT_ROUGHNESS:
-        if (!recipe.grainEffect) { recipe.grainEffect = DEFAULT_GRAIN_EFFECT; }
-        recipe.grainEffect.roughness = processWeakStrong(numbers[0]);
-        break;
-      case TAG_ID_GRAIN_EFFECT_SIZE:
-        if (!recipe.grainEffect) { recipe.grainEffect = DEFAULT_GRAIN_EFFECT; }
-        recipe.grainEffect.size = processGrainEffectSize(numbers[0]);
-        break;
-      case TAG_ID_COLOR_CHROME_EFFECT:
-        recipe.colorChromeEffect = processWeakStrong(numbers[0]);
-        break;
-      case TAG_ID_COLOR_CHROME_FX_BLUE:
-        recipe.colorChromeFXBlue = processWeakStrong(numbers[0]);
-        break;
       case TAG_ID_WHITE_BALANCE:
         if (!recipe.whiteBalance) {
           recipe.whiteBalance = DEFAULT_WHITE_BALANCE;
@@ -213,6 +177,42 @@ export const getFujifilmRecipeFromMakerNote = (
         }
         recipe.whiteBalance.red = processWhiteBalanceComponent(numbers[0]);
         recipe.whiteBalance.blue = processWhiteBalanceComponent(numbers[1]);
+        break;
+      case TAG_ID_NOISE_REDUCTION:
+        recipe.highISONoiseReduction = processNoiseReduction(numbers[0]);
+        break;
+      case TAG_ID_NOISE_REDUCTION_BASIC:
+        recipe.noiseReductionBasic =
+          processNoiseReductionLegacy(numbers[0]);
+        break;
+      case TAG_ID_HIGHLIGHT:
+        recipe.highlight = processTone(numbers[0]);
+        break;
+      case TAG_ID_SHADOW:
+        recipe.shadow = processTone(numbers[0]);
+        break;
+      case TAG_ID_SATURATION:
+        recipe.color = processSaturation(numbers[0]);
+        break;
+      case TAG_ID_SHARPNESS:
+        recipe.sharpness = processSharpness(numbers[0]);
+        break;
+      case TAG_ID_CLARITY:
+        recipe.clarity = processClarity(numbers[0]);
+        break;
+      case TAG_ID_COLOR_CHROME_EFFECT:
+        recipe.colorChromeEffect = processWeakStrong(numbers[0]);
+        break;
+      case TAG_ID_COLOR_CHROME_FX_BLUE:
+        recipe.colorChromeFXBlue = processWeakStrong(numbers[0]);
+        break;
+      case TAG_ID_GRAIN_EFFECT_ROUGHNESS:
+        if (!recipe.grainEffect) { recipe.grainEffect = DEFAULT_GRAIN_EFFECT; }
+        recipe.grainEffect.roughness = processWeakStrong(numbers[0]);
+        break;
+      case TAG_ID_GRAIN_EFFECT_SIZE:
+        if (!recipe.grainEffect) { recipe.grainEffect = DEFAULT_GRAIN_EFFECT; }
+        recipe.grainEffect.size = processGrainEffectSize(numbers[0]);
         break;
       case TAG_ID_BW_ADJUSTMENT:
         recipe.bwAdjustment = numbers[0];

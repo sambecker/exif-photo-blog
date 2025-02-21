@@ -5,18 +5,20 @@ import clsx from 'clsx/lite';
 
 export default async function AdminRecipePage() {
   const photos = await getPhotos({ hidden: 'only' });
-  const { fujifilmRecipe } = photos[0];
+  const { fujifilmRecipe, filmSimulation } = photos[0];
   return (
     <SiteGrid
       contentMain={<div className={clsx(
-        'w-full min-h-[600px]',
+        'w-full min-h-[min(500px,70vh)]',
         'flex items-center justify-center',
       )}>
-        {fujifilmRecipe &&
-          <PhotoRecipe recipe={fujifilmRecipe} />
+        {(fujifilmRecipe && filmSimulation) &&
+          <PhotoRecipe
+            recipe={fujifilmRecipe}
+            simulation={filmSimulation}
+          />
         }
       </div>}
     />
   );
 }
-

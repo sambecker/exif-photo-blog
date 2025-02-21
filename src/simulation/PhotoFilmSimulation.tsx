@@ -9,10 +9,11 @@ import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/primitives/EntityLink';
 import { LuChevronsUpDown } from 'react-icons/lu';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import { useState } from 'react';
 import PhotoRecipe from '@/photo/PhotoRecipe';
 import Tooltip from '@/components/Tooltip';
+
 export default function PhotoFilmSimulation({
   simulation,
   type = 'icon-last',
@@ -21,17 +22,19 @@ export default function PhotoFilmSimulation({
   prefetch,
   countOnHover,
   recipe,
+  className,
 }: {
   simulation: FilmSimulation
   countOnHover?: number
   recipe?: FujifilmRecipe
+  className?: string
 } & EntityLinkExternalProps) {
   const { small, medium, large } = labelForFilmSimulation(simulation);
 
   const [shouldShowRecipe, setShouldShowRecipe] = useState(false);
 
   return (
-    <div className="space-y-baseline">
+    <div className={clsx('space-y-baseline', className)}>
       <div className="flex items-center gap-2 *:w-auto">
         <EntityLink
           label={medium}
@@ -61,7 +64,7 @@ export default function PhotoFilmSimulation({
           </Tooltip>} 
       </div>
       {recipe && shouldShowRecipe &&
-        <PhotoRecipe recipe={recipe} />}
+        <PhotoRecipe {...{ recipe, simulation }} />}
     </div>
   );
 }
