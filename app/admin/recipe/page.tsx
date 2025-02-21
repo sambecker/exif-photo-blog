@@ -1,24 +1,22 @@
 import SiteGrid from '@/components/SiteGrid';
 import { getPhotos } from '@/photo/db/query';
-import PhotoRecipe from '@/photo/PhotoRecipe';
-import clsx from 'clsx/lite';
+import PhotoRecipeOverlay from '@/photo/PhotoRecipeOverlay';
 
 export default async function AdminRecipePage() {
-  const photos = await getPhotos({ hidden: 'only' });
-  const { fujifilmRecipe, filmSimulation } = photos[0];
+  const photos = await getPhotos({ limit: 1});
+  const photosHidden = await getPhotos({ hidden: 'only' });
+  const { fujifilmRecipe, filmSimulation } = photosHidden[0];
   return (
     <SiteGrid
-      contentMain={<div className={clsx(
-        'w-full min-h-[min(500px,70vh)]',
-        'flex items-center justify-center',
-      )}>
-        {(fujifilmRecipe && filmSimulation) &&
-          <PhotoRecipe
-            recipe={fujifilmRecipe}
-            simulation={filmSimulation}
-          />
-        }
-      </div>}
+      contentMain={photos[0] && fujifilmRecipe && filmSimulation
+        ? <PhotoRecipeOverlay
+          backgroundImageUrl={photos[0].url}
+          recipe={fujifilmRecipe}
+          simulation={filmSimulation}
+        />
+        : <div>
+          Can&apos;t find photo/recipe
+        </div>}
     />
   );
 }
