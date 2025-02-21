@@ -4,7 +4,7 @@ import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { FilmSimulation } from '@/simulation';
 import clsx from 'clsx/lite';
 import ImageLarge from '@/components/image/ImageLarge';
-import PhotoRecipeFrost from './PhotoRecipeFrost';
+import PhotoRecipeFrostLight from './PhotoRecipeFrostLight';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import { useState } from 'react';
 import PhotoRecipe from './PhotoRecipe';
@@ -43,7 +43,7 @@ export default function PhotoRecipeOverlay({
           'flex items-center justify-center',
         )}>
           {isFrosted
-            ? <PhotoRecipeFrost
+            ? <PhotoRecipeFrostLight
               recipe={recipe}
               simulation={simulation}
             /> : <PhotoRecipe

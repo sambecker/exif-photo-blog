@@ -5,7 +5,7 @@ import clsx from 'clsx/lite';
 
 const addSign = (value = 0) => value < 0 ? value : `+${value}`;
 
-export default function PhotoRecipe({
+export default function PhotoRecipeFrostDark({
   recipe: {
     dynamicRange,
     whiteBalance,

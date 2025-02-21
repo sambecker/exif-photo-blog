@@ -5,7 +5,22 @@ import clsx from 'clsx/lite';
 
 const addSign = (value = 0) => value < 0 ? value : `+${value}`;
 
-export default function PhotoRecipe({
+const getRandomInt = () => {
+  const randomInt = Math.floor(Math.random() * 4) + 1;
+  return Math.random() >= 0.5 ? randomInt : -randomInt;
+};
+
+const random = {
+  highlight: getRandomInt(),
+  shadow: getRandomInt(),
+  color: getRandomInt(),
+  sharpness: getRandomInt(),
+  clarity: getRandomInt(),
+  colorChromeEffect: getRandomInt(),
+  colorChromeFXBlue: getRandomInt(),
+};
+
+export default function PhotoRecipeFrostLight({
   recipe: {
     dynamicRange,
     whiteBalance,
@@ -41,11 +56,13 @@ export default function PhotoRecipe({
 
   const renderDataSquare = (label: string, value: string | number = '0') => (
     <div className={clsx(
-      'flex flex-col items-center justify-center',
-      'bg-dim border-medium rounded-md p-0.5',
+      'flex flex-col items-center justify-center gap-0.5',
+      'bg-white/25 border border-white/20 rounded-md p-1',
     )}>
       <div>{typeof value === 'number' ? addSign(value) : value}</div>
-      <div className="text-xs tracking-wide text-dim">
+      <div className={clsx(
+        'text-[10px] leading-none tracking-wide font-medium text-black/50',
+      )}>
         {label}
       </div>
     </div>
@@ -53,14 +70,21 @@ export default function PhotoRecipe({
 
   return <div className="flex gap-8">
     <div className={clsx(
-      'w-[20rem] self-start',
+      'w-[17rem] self-start',
       'p-3',
-      'component-surface shadow-xs',
+      'rounded-lg shadow-2xl',
+      'bg-white/60 backdrop-blur-xl border border-white/30',
       'space-y-3',
+      'text-[13px] text-main',
+      'saturate-200',
     )}>
-      <div className="flex items-center gap-1">
-        <PhotoFilmSimulation {...{ simulation, className: 'grow' }} />
-        <div className="bg-dim border-medium rounded-md px-1">
+      <div className="flex items-center gap-2">
+        <PhotoFilmSimulation
+          contrast="high"
+          className="grow"
+          simulation={simulation}
+        />
+        <div className="bg-white/60 rounded-md px-1">
           <span>DR</span>
           <span>{dynamicRange ?? 100}</span>
         </div>
@@ -81,23 +105,23 @@ export default function PhotoRecipe({
           </>}
         </div>
         <div className="flex gap-2 *:w-full">
-          {renderDataSquare('Highlight', highlight)}
-          {renderDataSquare('Shadow', shadow)}
+          {renderDataSquare('Highlight', highlight || random.highlight)}
+          {renderDataSquare('Shadow', shadow || random.shadow)}
         </div>
         <div className="flex gap-2 *:w-full">
           {/* TODO: Confirm color vs saturation label */}
-          {renderDataSquare('Color', color)}
-          {renderDataSquare('Sharp', sharpness)}
-          {renderDataSquare('Clarity', clarity)}
+          {renderDataSquare('Color', color || random.color)}
+          {renderDataSquare('Sharpness', sharpness || random.sharpness)}
+          {renderDataSquare('Clarity', clarity || random.clarity)}
         </div>
         <div className="flex gap-2 *:w-full">
-          {renderDataSquare('Chrome', colorChromeEffect)}
+          {renderDataSquare('Color Chrome', colorChromeEffect)}
           {renderDataSquare('FX Blue', colorChromeFXBlue)}
         </div>
         <div>
           {highISONoiseReduction !== undefined
             ? <>
-              <span>High ISO NR: </span>
+              <span className="inline-flex min-w-[130px]">High ISO NR: </span>
               <span>{addSign(highISONoiseReduction)}</span>
             </>
             : <>
@@ -108,15 +132,15 @@ export default function PhotoRecipe({
         </div>
         {grainEffect &&
           <div>
-            Grain:
-            {' '}
+            <span className="inline-flex min-w-[130px]">Grain:</span>
             {grainEffect.roughness}
             <span className="text-extra-dim">{' / '}</span>
             {grainEffect.size}
           </div>}
         {hasBWAdjustments &&
           <div>
-            BW Adjustment: {addSign(bwAdjustment)}
+            <span className="inline-flex min-w-[130px]">BW Adjustment: </span>
+            {addSign(bwAdjustment)}
             <span className="text-extra-dim">{' / '}</span>
             MG: {addSign(bwMagentaGreen)}
           </div>}
