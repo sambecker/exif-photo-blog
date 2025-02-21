@@ -6,64 +6,75 @@ import type { ExifData } from 'ts-exif-parser';
 
 export const MAKE_FUJIFILM = 'FUJIFILM';
 
-const BYTE_INDEX_TAG_COUNT = 12;
-const BYTE_INDEX_FIRST_TAG = 14;
-const BYTES_PER_TAG = 12;
+// Makernote Offsets
+const BYTE_OFFSET_TAG_COUNT = 12;
+const BYTE_OFFSET_FIRST_TAG = 14;
+
+// Tag Offsets
 const BYTE_OFFSET_TAG_TYPE = 2;
 const BYTE_OFFSET_TAG_SIZE = 4;
 const BYTE_OFFSET_TAG_VALUE = 8;
+
+// Tag Sizes
+const BYTES_PER_TAG = 12;
+const BYTES_PER_TAG_VALUE = 4;
 
 export const isExifForFujifilm = (data: ExifData) =>
   data.tags?.Make === MAKE_FUJIFILM;
 
 export const parseFujifilmMakerNote = (
   bytes: Buffer,
-  valueForTagNumbers: (tagId: number, numbers: number[]) => void,
+  sendTagNumbers: (tagId: number, numbers: number[]) => void,
 ) => {
-  const tagCount = bytes.readUint16LE(BYTE_INDEX_TAG_COUNT);
+  const tagCount = bytes.readUint16LE(BYTE_OFFSET_TAG_COUNT);
+
   for (let i = 0; i < tagCount; i++) {
-    const index = BYTE_INDEX_FIRST_TAG + i * BYTES_PER_TAG;
+    const index = BYTE_OFFSET_FIRST_TAG + i * BYTES_PER_TAG;
+
     if (index + BYTES_PER_TAG < bytes.length) {
       const tagId = bytes.readUInt16LE(index);
       const tagType = bytes.readUInt16LE(index + BYTE_OFFSET_TAG_TYPE);
       const tagValueSize = bytes.readUInt16LE(index + BYTE_OFFSET_TAG_SIZE);
+
+      const sendNumbersForDataType = (
+        calculateNumberForOffset: (offset: number) => number,
+        sizeInBytes: number,
+      ) => {
+        let values: number[] = [];
+        if (tagValueSize * sizeInBytes <= BYTES_PER_TAG_VALUE) {
+          // Retrieve values if they fit in tag block
+          values = Array.from({ length: tagValueSize }, (_, i) =>
+            calculateNumberForOffset(
+              index + BYTE_OFFSET_TAG_VALUE + i * sizeInBytes,
+            ),
+          );
+        } else {
+          // Retrieve outside values if they don't fit in tag block
+          const offset = bytes.readUint16LE(index + BYTE_OFFSET_TAG_VALUE);
+          values = [];
+          for (let i = 0; i < tagValueSize; i++) {
+            values.push(calculateNumberForOffset(offset + i * sizeInBytes));
+          }
+        }
+        sendTagNumbers(tagId, values);
+      };
+
       switch (tagType) {
       // Int8 (UInt8 read as Int8)
       case 1:
-        valueForTagNumbers(
-          tagId,
-          [bytes.readInt8(index + BYTE_OFFSET_TAG_VALUE)],
-        );
+        sendNumbersForDataType(offset => bytes.readInt8(offset), 1);
         break;
       // UInt16
       case 3:
-        valueForTagNumbers(
-          tagId,
-          [bytes.readUInt16LE(index + BYTE_OFFSET_TAG_VALUE)],
-        );
+        sendNumbersForDataType(offset => bytes.readUInt16LE(offset), 2);
         break;
       // UInt32
       case 4:
-        valueForTagNumbers(
-          tagId,
-          [bytes.readUInt32LE(index + BYTE_OFFSET_TAG_VALUE)],
-        );
+        sendNumbersForDataType(offset => bytes.readUInt32LE(offset), 4);
         break;
       // Int32
       case 9:
-        if (tagValueSize === 1) {
-          valueForTagNumbers(
-            tagId,
-            [bytes.readInt32LE(index + BYTE_OFFSET_TAG_VALUE)],
-          );
-        } else {
-          const offset = bytes.readInt32LE(index + BYTE_OFFSET_TAG_VALUE);
-          const values: number[] = [];
-          for (let i = 0; i < tagValueSize; i++) {
-            values.push(bytes.readInt32LE(offset + i * 4));
-          }
-          valueForTagNumbers(tagId, values);
-        }
+        sendNumbersForDataType(offset => bytes.readInt32LE(offset), 4);
         break;
       }
     }
