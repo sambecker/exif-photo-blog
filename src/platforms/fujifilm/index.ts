@@ -60,7 +60,7 @@ export const parseFujifilmMakerNote = (
       };
 
       switch (tagType) {
-      // Int8 (UInt8 read as Int8)
+      // Int8 (UInt8 read as Int8 according to spec)
       case 1:
         sendNumbersForDataType(offset => bytes.readInt8(offset), 1);
         break;

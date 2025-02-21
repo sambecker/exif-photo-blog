@@ -38,7 +38,7 @@
     "react-icons": "^5.5.0",
     "sanitize-html": "^2.14.0",
     "sharp": "^0.33.5",
-    "sonner": "^2.0.0",
+    "sonner": "^2.0.1",
     "swr": "^2.3.2",
     "ts-exif-parser": "^0.2.2",
     "use-debounce": "^10.0.4",

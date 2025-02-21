@@ -101,19 +101,9 @@ export default function PhotoForm({
 
       if (changedKeys.length > 0) {
         const fields = convertFormKeysToLabels(changedKeys);
-        // Delay toasts to avoid render sync issue
-        const timeout = setTimeout(
-          () => toastSuccess(`Updated EXIF fields: ${fields.join(', ')}`, 8000),
-          100,
-        );
-        return () => clearTimeout(timeout);
+        toastSuccess(`Updated EXIF fields: ${fields.join(', ')}`, 8000);
       } else {
-        // Delay toasts to avoid render sync issue
-        const timeout = setTimeout(
-          () => toastWarning('No new EXIF data found'),
-          100,
-        );
-        return () => clearTimeout(timeout);
+        toastWarning('No new EXIF data found');
       }
     }
   }, [updatedExifData]);
