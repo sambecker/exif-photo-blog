@@ -27,6 +27,7 @@ import { IoMdGrid } from 'react-icons/io';
 import { CgDebug } from 'react-icons/cg';
 import EnvVar from '@/components/EnvVar';
 import AdminLink from './AdminLink';
+import ScoreCardContainer from '@/components/ScoreCardContainer';
 
 export default function AdminAppConfigurationClient({
   // Storage
@@ -162,7 +163,7 @@ export default function AdminAppConfigurationClient({
     </WarningNote>;
 
   return (
-    <>
+    <ScoreCardContainer>
       <ChecklistGroup
         title="Storage"
         icon={<BiData size={16} />}
@@ -670,6 +671,6 @@ export default function AdminAppConfigurationClient({
             </div>
           </div>}
       </div>
-    </>
+    </ScoreCardContainer>
   );
 }

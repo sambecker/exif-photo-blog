@@ -39,6 +39,7 @@ import AdminEmptyState from '../AdminEmptyState';
 import { pluralize } from '@/utility/string';
 import Tooltip from '@/components/Tooltip';
 import { useAppState } from '@/state/AppState';
+import ScoreCardContainer from '@/components/ScoreCardContainer';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
@@ -119,7 +120,7 @@ export default function AdminAppInsightsClient({
   </a>;
 
   return (
-    <>
+    <ScoreCardContainer>
       {(codeMeta || debug) && <>
         <ScoreCard title="Source code">
           {(codeMeta?.didError || debug) &&
@@ -393,6 +394,6 @@ export default function AdminAppInsightsClient({
           content={descriptionWithSpaces}
         />}
       </ScoreCard>
-    </>
+    </ScoreCardContainer>
   );
 }
