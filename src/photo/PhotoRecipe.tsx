@@ -2,6 +2,7 @@ import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { FilmSimulation } from '@/simulation';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
 import clsx from 'clsx/lite';
+import { ReactNode } from 'react';
 import { IoCloseCircle } from 'react-icons/io5';
 
 const addSign = (value = 0) => value < 0 ? value : `+${value}`;
@@ -51,27 +52,32 @@ export default function PhotoRecipe({
     .replaceAll('auto', ' ')
     .replaceAll('-', ' ');
 
-  const hasBWAdjustments =
-    Boolean(bwAdjustment) ||
-    Boolean(bwMagentaGreen);
+  const renderRow = (children: ReactNode) =>
+    <div className="flex gap-2 *:w-full *:grow">{children}</div>;
 
-  const renderDataSquare = (label: string, value: string | number = '0') => (
+  const renderDataSquare = (
+    value: ReactNode,
+    label?: string,
+    className?: string,
+  ) => (
     <div className={clsx(
       'flex flex-col items-center justify-center gap-0.5',
-      'bg-white/25 border border-white/20 rounded-md p-1',
+      'bg-white/25 border border-white/20 rounded-md',
+      label && 'p-1',
+      className,
     )}>
       <div>{typeof value === 'number' ? addSign(value) : value}</div>
-      <div className={clsx(
+      {label && <div className={clsx(
         'text-[10px] leading-none tracking-wide font-medium text-black/50',
       )}>
         {label}
-      </div>
+      </div>}
     </div>
   );
 
   return <div className="flex gap-8">
     <div className={clsx(
-      'w-[17rem] self-start',
+      'w-[18rem] self-start',
       'p-3',
       'rounded-lg shadow-2xl',
       'bg-white/60 backdrop-blur-xl border border-white/30',
@@ -91,65 +97,55 @@ export default function PhotoRecipe({
         />
       </div>
       <div className="uppercase space-y-2">
-        <div className="flex gap-2 *:grow">
-          <div className={clsx(
-            'inline-flex justify-center',
-            'bg-white/25 border border-white/20 rounded-md px-1',
-          )}>
-            DR{dynamicRange ?? 100}
-          </div>
-          <div className={clsx(
-            'inline-flex justify-center',
-            'bg-white/25 border border-white/20 rounded-md px-1',
-          )}>
-            {iso}
-          </div>
-          <div className={clsx(
-            'inline-flex justify-center',
-            'bg-white/25 border border-white/20 rounded-md px-1',
-          )}>
-            {exposure}
-          </div>
-        </div>
-        <div className="flex gap-2 *:w-full">
+        {renderRow(<>
+          {renderDataSquare(`DR${dynamicRange ?? 100}`)}
+          {renderDataSquare(iso)}
+          {renderDataSquare(exposure)}
+        </>)}
+        {renderRow(<>
           {renderDataSquare(
-            `R${addSign(whiteBalance?.red)} / B${addSign(whiteBalance?.blue)}`,
             whiteBalanceFormatted,
+            `R${addSign(whiteBalance?.red)} / B${addSign(whiteBalance?.blue)}`,
+            'basis-2/3',
           )}
-        </div>
-        <div className="flex gap-2 *:w-full">
-          {renderDataSquare('Highlight', highlight || random.highlight)}
-          {renderDataSquare('Shadow', shadow || random.shadow)}
-        </div>
-        <div className="flex gap-2 *:w-full">
-          {/* TODO: Confirm color vs saturation label */}
-          {renderDataSquare('Color', color || random.color)}
-          {renderDataSquare('Sharpness', sharpness || random.sharpness)}
-          {renderDataSquare('Clarity', clarity || random.clarity)}
-        </div>
-        <div className="flex gap-2 *:w-full">
-          {renderDataSquare('Color Chrome', colorChromeEffect)}
-          {renderDataSquare('FX Blue', colorChromeFXBlue)}
-        </div>
-        {grainEffect &&
-          <div className="flex gap-2 *:w-full">
-            {renderDataSquare(
-              highISONoiseReduction !== undefined
-                ? 'High ISO NR'
-                : 'Noise Reduction',
-              highISONoiseReduction ?? noiseReductionBasic,
-            )}
-            {renderDataSquare(
-              'Grain',
-              // eslint-disable-next-line max-len
-              `${grainEffect.roughness} / ${grainEffect.size === 'large' ? 'LG' : grainEffect.size === 'small' ? 'SM' : 'OFF'}`,
-            )}
-          </div>}
-        {hasBWAdjustments &&
-          <div className="flex gap-2 *:w-full">
-            {renderDataSquare('BW Adjustment', bwAdjustment)}
-            {renderDataSquare('BW Magenta Green', bwMagentaGreen)}
-          </div>}
+          {renderDataSquare(
+            highISONoiseReduction ?? noiseReductionBasic,
+            'ISO NR',
+            'basis-1/3',
+          )}
+        </>)}
+        {renderRow(<>
+          {renderDataSquare(highlight || random.highlight, 'Highlight')}
+          {renderDataSquare(shadow || random.shadow, 'Shadow')}
+        </>)}
+        {renderRow(<>
+          {renderDataSquare(color || random.color, 'Color')}
+          {renderDataSquare(sharpness || random.sharpness, 'Sharpness')}
+          {renderDataSquare(clarity || random.clarity, 'Clarity')}
+        </>)}
+        {renderRow(<>
+          {renderDataSquare(colorChromeEffect, 'Color Chrome')}
+          {renderDataSquare(colorChromeFXBlue, 'FX Blue')}
+        </>)}
+        {renderRow(<>
+          {renderDataSquare(
+            <>
+              {grainEffect?.roughness === 'strong'
+                ? 'Str'
+                : grainEffect?.roughness === 'weak'
+                  ? 'Wk'
+                  : 'OFF'}
+              {' / '}
+              {grainEffect?.size === 'large'
+                ? 'LG'
+                : grainEffect?.size === 'small'
+                  ? 'SM' : 'OFF'}
+            </>,
+            'Grain',
+          )}
+          {renderDataSquare(bwAdjustment, 'BW')}
+          {renderDataSquare(bwMagentaGreen, 'BW M/G')}
+        </>)}
       </div>
     </div>
   </div>;
