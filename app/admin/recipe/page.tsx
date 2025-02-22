@@ -7,7 +7,17 @@ export default async function AdminRecipePage() {
   const { filmSimulation } = photosHidden[0];
   const { fujifilmRecipe } = photosHidden[0];
   return (
-    <div className="grid grid-cols-3 gap-1 w-full">
+    <div className="grid grid-cols-2 xl:grid-cols-3 w-full">
+      {photos.map(photo =>
+        <PhotoRecipeOverlay
+          key={photo.id}
+          backgroundImageUrl={photo.url}
+          recipe={fujifilmRecipe!}
+          simulation={filmSimulation!}
+          exposure={photo.exposureCompensationFormatted ?? '+0ev'}
+          iso={photo.isoFormatted ?? 'ISO 0'}
+        />,
+      )}
       <PhotoRecipeOverlay
         key="black"
         className="bg-black"
@@ -24,15 +34,5 @@ export default async function AdminRecipePage() {
         exposure="+0ev"
         iso="ISO 0"
       />
-      {photos.map(photo =>
-        <PhotoRecipeOverlay
-          key={photo.id}
-          backgroundImageUrl={photo.url}
-          recipe={fujifilmRecipe!}
-          simulation={filmSimulation!}
-          exposure={photo.exposureCompensationFormatted ?? '+0ev'}
-          iso={photo.isoFormatted ?? 'ISO 0'}
-        />,
-      )}
     </div>);
 }

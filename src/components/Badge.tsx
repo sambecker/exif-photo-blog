@@ -33,7 +33,7 @@ export default function Badge({
         contrast === 'high'
           ? 'text-invert bg-invert'
           : contrast === 'frosted'
-            ? 'text-black bg-white/30 border border-white/20'
+            ? 'text-black bg-neutral-100/30 border border-neutral-200/40'
             : 'text-medium bg-gray-300/30 dark:bg-gray-700/50',
         interactive && (contrast === 'high'
           ? 'hover:opacity-70'

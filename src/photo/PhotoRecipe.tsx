@@ -61,8 +61,9 @@ export default function PhotoRecipe({
     className?: string,
   ) => (
     <div className={clsx(
-      'flex flex-col items-center justify-center gap-0.5',
-      'bg-white/25 border border-white/20 rounded-md',
+      'flex flex-col items-center justify-center gap-0.5 rounded-md',
+      'rounded-md border',
+      'bg-neutral-100/30 border-neutral-200/40',
       label && 'p-1',
       className,
     )}>
@@ -80,7 +81,7 @@ export default function PhotoRecipe({
       'w-[18rem] self-start',
       'p-3',
       'rounded-lg shadow-2xl',
-      'bg-white/60 backdrop-blur-xl border border-white/30',
+      'bg-white/60 backdrop-blur-xl border border-neutral-200/30',
       'space-y-3',
       'text-[13px] text-black',
       'saturate-200',
@@ -135,7 +136,7 @@ export default function PhotoRecipe({
                 : grainEffect?.roughness === 'weak'
                   ? 'Wk'
                   : 'OFF'}
-              {' / '}
+              {'/'}
               {grainEffect?.size === 'large'
                 ? 'LG'
                 : grainEffect?.size === 'small'
@@ -143,7 +144,7 @@ export default function PhotoRecipe({
             </>,
             'Grain',
           )}
-          {renderDataSquare(bwAdjustment, 'BW')}
+          {renderDataSquare(bwAdjustment, 'BW ADJ')}
           {renderDataSquare(bwMagentaGreen, 'BW M/G')}
         </>)}
       </div>
