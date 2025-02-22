@@ -11,8 +11,8 @@ import EntityLink, {
 import { LuChevronsUpDown } from 'react-icons/lu';
 import clsx from 'clsx/lite';
 import { useState } from 'react';
-import PhotoRecipe from '@/photo/PhotoRecipe';
 import Tooltip from '@/components/Tooltip';
+import PhotoRecipe from '@/photo/PhotoRecipe';
 
 export default function PhotoFilmSimulation({
   simulation,

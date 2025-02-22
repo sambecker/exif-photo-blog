@@ -44,8 +44,8 @@ export default function PhotoRecipe({
 }: {
   recipe: FujifilmRecipe
   simulation: FilmSimulation
-  exposure: string
-  iso: string
+  exposure?: string
+  iso?: string
 }) {
   const whiteBalanceFormatted = (whiteBalance?.type ?? 'auto')
     .replaceAll('auto', ' ')
