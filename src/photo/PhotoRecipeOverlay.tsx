@@ -1,35 +1,24 @@
-'use client';
-
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { FilmSimulation } from '@/simulation';
 import clsx from 'clsx/lite';
 import ImageLarge from '@/components/image/ImageLarge';
-import PhotoRecipeFrostLight from './PhotoRecipeFrostLight';
-import FieldSetWithStatus from '@/components/FieldSetWithStatus';
-import { useState } from 'react';
-import PhotoRecipe from './PhotoRecipe';
+import PhotoRecipeFrostLightV2 from './PhotoRecipeFrostLightV2';
+
 export default function PhotoRecipeOverlay({
   backgroundImageUrl,
   recipe,
   simulation,
+  exposure,
+  iso,
 }: {
   backgroundImageUrl: string
   recipe: FujifilmRecipe
   simulation: FilmSimulation
+  exposure: string
+  iso: string
 }) {
-  const [isFrosted, setIsFrosted] = useState(true);
-
   return (
     <div className="space-y-4">
-      <div>
-        <FieldSetWithStatus
-          id="is-frosted"
-          type="checkbox"
-          label="Frosted"
-          value={isFrosted ? 'true' : 'false'}
-          onChange={() => setIsFrosted(!isFrosted)}
-        />
-      </div>
       <div className={clsx(
         'relative w-full aspect-[3/2]',
       )}>
@@ -42,14 +31,12 @@ export default function PhotoRecipeOverlay({
           'absolute inset-0',
           'flex items-center justify-center',
         )}>
-          {isFrosted
-            ? <PhotoRecipeFrostLight
-              recipe={recipe}
-              simulation={simulation}
-            /> : <PhotoRecipe
-              recipe={recipe}
-              simulation={simulation}
-            />}
+          <PhotoRecipeFrostLightV2 {...{
+            recipe,
+            simulation,
+            exposure,
+            iso,
+          }} />
         </div>
       </div>
     </div>

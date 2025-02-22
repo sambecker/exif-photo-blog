@@ -20,6 +20,8 @@ export default async function AdminRecipePage({
           backgroundImageUrl={photo.url}
           recipe={fujifilmRecipe}
           simulation={filmSimulation}
+          exposure={photo.exposureCompensationFormatted ?? '+0ev'}
+          iso={photo.isoFormatted ?? 'ISO 0'}
         />
         : <div>
           Can&apos;t find photo/recipe

@@ -21,7 +21,7 @@ const random = {
   colorChromeFXBlue: getRandomInt(),
 };
 
-export default function PhotoRecipeFrostLight({
+export default function PhotoRecipeFrostLightV2({
   recipe: {
     dynamicRange,
     whiteBalance,
