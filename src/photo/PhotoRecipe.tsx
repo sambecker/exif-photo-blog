@@ -81,7 +81,7 @@ export default function PhotoRecipe({
     )}>
       <div className="flex items-center gap-2">
         <PhotoFilmSimulation
-          contrast="frost"
+          contrast="frosted"
           className="grow"
           simulation={simulation}
         />

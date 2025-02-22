@@ -13,7 +13,7 @@ export default function Badge({
   className?: string
   type?: 'large' | 'small' | 'text-only'
   dimContent?: boolean
-  contrast?: 'low' | 'medium' | 'high' | 'frost'
+  contrast?: 'low' | 'medium' | 'high' | 'frosted'
   uppercase?: boolean
   interactive?: boolean
 }) {
@@ -32,7 +32,7 @@ export default function Badge({
         'text-[0.7rem] font-medium rounded-[0.25rem]',
         contrast === 'high'
           ? 'text-invert bg-invert'
-          : contrast === 'frost'
+          : contrast === 'frosted'
             ? 'text-black bg-white/30'
             : 'text-medium bg-gray-300/30 dark:bg-gray-700/50',
         interactive && (contrast === 'high'
