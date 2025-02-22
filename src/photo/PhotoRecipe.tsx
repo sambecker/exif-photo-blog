@@ -2,8 +2,24 @@ import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { FilmSimulation } from '@/simulation';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
 import clsx from 'clsx/lite';
+import { IoCloseCircle } from 'react-icons/io5';
 
 const addSign = (value = 0) => value < 0 ? value : `+${value}`;
+
+const getRandomInt = () => {
+  const randomInt = Math.floor(Math.random() * 4) + 1;
+  return Math.random() >= 0.5 ? randomInt : -randomInt;
+};
+
+const random = {
+  highlight: getRandomInt(),
+  shadow: getRandomInt(),
+  color: getRandomInt(),
+  sharpness: getRandomInt(),
+  clarity: getRandomInt(),
+  colorChromeEffect: getRandomInt(),
+  colorChromeFXBlue: getRandomInt(),
+};
 
 export default function PhotoRecipe({
   recipe: {
@@ -23,17 +39,17 @@ export default function PhotoRecipe({
     bwMagentaGreen,
   },
   simulation,
+  exposure,
+  iso,
 }: {
   recipe: FujifilmRecipe
   simulation: FilmSimulation
+  exposure: string
+  iso: string
 }) {
   const whiteBalanceFormatted = (whiteBalance?.type ?? 'auto')
     .replaceAll('auto', ' ')
     .replaceAll('-', ' ');
-
-  const hasCustomizedWhiteBalance =
-    Boolean(whiteBalance?.red) ||
-    Boolean(whiteBalance?.blue);
 
   const hasBWAdjustments =
     Boolean(bwAdjustment) ||
@@ -41,11 +57,13 @@ export default function PhotoRecipe({
 
   const renderDataSquare = (label: string, value: string | number = '0') => (
     <div className={clsx(
-      'flex flex-col items-center justify-center',
-      'bg-dim border-medium rounded-md p-0.5',
+      'flex flex-col items-center justify-center gap-0.5',
+      'bg-white/25 border border-white/20 rounded-md p-1',
     )}>
       <div>{typeof value === 'number' ? addSign(value) : value}</div>
-      <div className="text-xs tracking-wide text-dim">
+      <div className={clsx(
+        'text-[10px] leading-none tracking-wide font-medium text-black/50',
+      )}>
         {label}
       </div>
     </div>
@@ -53,72 +71,84 @@ export default function PhotoRecipe({
 
   return <div className="flex gap-8">
     <div className={clsx(
-      'w-[20rem] self-start',
+      'w-[17rem] self-start',
       'p-3',
-      'component-surface shadow-xs',
+      'rounded-lg shadow-2xl',
+      'bg-white/60 backdrop-blur-xl border border-white/30',
       'space-y-3',
+      'text-[13px] text-black',
+      'saturate-200',
     )}>
-      <div className="flex items-center gap-1">
-        <PhotoFilmSimulation {...{ simulation, className: 'grow' }} />
-        <div className="bg-dim border-medium rounded-md px-1">
-          <span>DR</span>
-          <span>{dynamicRange ?? 100}</span>
-        </div>
+      <div className="flex items-center gap-2">
+        <PhotoFilmSimulation
+          contrast="frost"
+          className="grow"
+          simulation={simulation}
+        />
+        <IoCloseCircle
+          size={20}
+          className="text-black/25"
+        />
       </div>
-      <div
-        className="uppercase space-y-2"
-      >
-        <div>
-          {whiteBalanceFormatted.length <= 8 && 'AWB: '}
-          {whiteBalanceFormatted}
-          {hasCustomizedWhiteBalance && <>
-            {' '}
-            <span className="text-extra-dim">{'('}</span>
-            R {addSign(whiteBalance?.red ?? 0)}
-            <span className="text-extra-dim">/</span>
-            B {addSign(whiteBalance?.blue ?? 0)}
-            <span className="text-extra-dim">{')'}</span>
-          </>}
+      <div className="uppercase space-y-2">
+        <div className="flex gap-2 *:grow">
+          <div className={clsx(
+            'inline-flex justify-center',
+            'bg-white/25 border border-white/20 rounded-md px-1',
+          )}>
+            DR{dynamicRange ?? 100}
+          </div>
+          <div className={clsx(
+            'inline-flex justify-center',
+            'bg-white/25 border border-white/20 rounded-md px-1',
+          )}>
+            {iso}
+          </div>
+          <div className={clsx(
+            'inline-flex justify-center',
+            'bg-white/25 border border-white/20 rounded-md px-1',
+          )}>
+            {exposure}
+          </div>
         </div>
         <div className="flex gap-2 *:w-full">
-          {renderDataSquare('Highlight', highlight)}
-          {renderDataSquare('Shadow', shadow)}
+          {renderDataSquare(
+            `R${addSign(whiteBalance?.red)} / B${addSign(whiteBalance?.blue)}`,
+            whiteBalanceFormatted,
+          )}
+        </div>
+        <div className="flex gap-2 *:w-full">
+          {renderDataSquare('Highlight', highlight || random.highlight)}
+          {renderDataSquare('Shadow', shadow || random.shadow)}
         </div>
         <div className="flex gap-2 *:w-full">
           {/* TODO: Confirm color vs saturation label */}
-          {renderDataSquare('Color', color)}
-          {renderDataSquare('Sharp', sharpness)}
-          {renderDataSquare('Clarity', clarity)}
+          {renderDataSquare('Color', color || random.color)}
+          {renderDataSquare('Sharpness', sharpness || random.sharpness)}
+          {renderDataSquare('Clarity', clarity || random.clarity)}
         </div>
         <div className="flex gap-2 *:w-full">
-          {renderDataSquare('Chrome', colorChromeEffect)}
+          {renderDataSquare('Color Chrome', colorChromeEffect)}
           {renderDataSquare('FX Blue', colorChromeFXBlue)}
         </div>
-        <div>
-          {highISONoiseReduction !== undefined
-            ? <>
-              <span>High ISO NR: </span>
-              <span>{addSign(highISONoiseReduction)}</span>
-            </>
-            : <>
-              <span>Noise Reduction: </span>
-              <span>{noiseReductionBasic}</span>
-            </>
-          }
-        </div>
         {grainEffect &&
-          <div>
-            Grain:
-            {' '}
-            {grainEffect.roughness}
-            <span className="text-extra-dim">{' / '}</span>
-            {grainEffect.size}
+          <div className="flex gap-2 *:w-full">
+            {renderDataSquare(
+              highISONoiseReduction !== undefined
+                ? 'High ISO NR'
+                : 'Noise Reduction',
+              highISONoiseReduction ?? noiseReductionBasic,
+            )}
+            {renderDataSquare(
+              'Grain',
+              // eslint-disable-next-line max-len
+              `${grainEffect.roughness} / ${grainEffect.size === 'large' ? 'LG' : grainEffect.size === 'small' ? 'SM' : 'OFF'}`,
+            )}
           </div>}
         {hasBWAdjustments &&
-          <div>
-            BW Adjustment: {addSign(bwAdjustment)}
-            <span className="text-extra-dim">{' / '}</span>
-            MG: {addSign(bwMagentaGreen)}
+          <div className="flex gap-2 *:w-full">
+            {renderDataSquare('BW Adjustment', bwAdjustment)}
+            {renderDataSquare('BW Magenta Green', bwMagentaGreen)}
           </div>}
       </div>
     </div>

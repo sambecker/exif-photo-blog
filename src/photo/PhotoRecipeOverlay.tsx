@@ -2,7 +2,7 @@ import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { FilmSimulation } from '@/simulation';
 import clsx from 'clsx/lite';
 import ImageLarge from '@/components/image/ImageLarge';
-import PhotoRecipeFrostLightV2 from './PhotoRecipeFrostLightV2';
+import PhotoRecipe from './PhotoRecipe';
 
 export default function PhotoRecipeOverlay({
   backgroundImageUrl,
@@ -31,7 +31,7 @@ export default function PhotoRecipeOverlay({
           'absolute inset-0',
           'flex items-center justify-center',
         )}>
-          <PhotoRecipeFrostLightV2 {...{
+          <PhotoRecipe {...{
             recipe,
             simulation,
             exposure,
