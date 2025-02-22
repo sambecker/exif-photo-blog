@@ -1,6 +1,7 @@
-import { FILM_SIMULATION_FORM_INPUT_OPTIONS } from '@/platforms/fujifilm';
-import PhotoFilmSimulation from
-  '@/simulation/PhotoFilmSimulation';
+import {
+  FILM_SIMULATION_FORM_INPUT_OPTIONS,
+} from '@/platforms/fujifilm/simulation';
+import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
 
 export default function FilmPage() {
   return (

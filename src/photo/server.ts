@@ -5,8 +5,7 @@ import {
 import { convertExifToFormData } from '@/photo/form';
 import {
   getFujifilmSimulationFromMakerNote,
-  isExifForFujifilm,
-} from '@/platforms/fujifilm';
+} from '@/platforms/fujifilm/simulation';
 import { ExifData, ExifParserFactory } from 'ts-exif-parser';
 import { PhotoFormData } from './form';
 import { FilmSimulation } from '@/simulation';
@@ -15,7 +14,11 @@ import {
   GEO_PRIVACY_ENABLED,
   PRESERVE_ORIGINAL_UPLOADS,
 } from '@/app/config';
-
+import { isExifForFujifilm } from '@/platforms/fujifilm';
+import {
+  FujifilmRecipe,
+  getFujifilmRecipeFromMakerNote,
+} from '@/platforms/fujifilm/recipe';
 const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
 
@@ -48,6 +51,7 @@ export const extractImageDataFromBlobPath = async (
 
   let exifData: ExifData | undefined;
   let filmSimulation: FilmSimulation | undefined;
+  let recipe: FujifilmRecipe | undefined;
   let blurData: string | undefined;
   let imageResizedBase64: string | undefined;
   let shouldStripGpsData = false;
@@ -78,6 +82,7 @@ export const extractImageDataFromBlobPath = async (
         const makerNote = exifDataBinary.tags?.MakerNote;
         if (Buffer.isBuffer(makerNote)) {
           filmSimulation = getFujifilmSimulationFromMakerNote(makerNote);
+          recipe = getFujifilmRecipeFromMakerNote(makerNote);
         }
       }
 
@@ -111,7 +116,7 @@ export const extractImageDataFromBlobPath = async (
           url,
         },
         ...generateBlurData && { blurData },
-        ...convertExifToFormData(exifData, filmSimulation),
+        ...convertExifToFormData(exifData, filmSimulation, recipe),
       },
     },
     imageResizedBase64,

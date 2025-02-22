@@ -4,7 +4,7 @@ import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
 import {
   labelForFilmSimulation,
-} from '@/platforms/fujifilm';
+} from '@/platforms/fujifilm/simulation';
 import PhotoFilmSimulationIcon from 
   '@/simulation/PhotoFilmSimulationIcon';
 import { FilmSimulation } from '@/simulation';

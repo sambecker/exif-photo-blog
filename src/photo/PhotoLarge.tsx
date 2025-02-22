@@ -278,6 +278,7 @@ export default function PhotoLarge({
                   <PhotoFilmSimulation
                     simulation={photo.filmSimulation}
                     prefetch={prefetchRelatedLinks}
+                    recipe={photo.fujifilmRecipe}
                   />}
               </>}
             <div className={clsx(
