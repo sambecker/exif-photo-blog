@@ -10,34 +10,35 @@ export default function PhotoRecipeOverlay({
   simulation,
   exposure,
   iso,
+  className,
 }: {
-  backgroundImageUrl: string
+  backgroundImageUrl?: string
   recipe: FujifilmRecipe
   simulation: FilmSimulation
   exposure: string
   iso: string
+  className?: string
 }) {
   return (
-    <div className="space-y-4">
+    <div className={clsx(
+      'relative w-full aspect-[3/2]',
+      className,
+    )}>
+      {backgroundImageUrl &&<ImageLarge
+        src={backgroundImageUrl}
+        alt="Image Background"
+        aspectRatio={3 / 2}
+      />}
       <div className={clsx(
-        'relative w-full aspect-[3/2]',
+        'absolute inset-0',
+        'flex items-center justify-center',
       )}>
-        <ImageLarge
-          src={backgroundImageUrl}
-          alt="Image Background"
-          aspectRatio={3 / 2}
-        />
-        <div className={clsx(
-          'absolute inset-0',
-          'flex items-center justify-center',
-        )}>
-          <PhotoRecipe {...{
-            recipe,
-            simulation,
-            exposure,
-            iso,
-          }} />
-        </div>
+        <PhotoRecipe {...{
+          recipe,
+          simulation,
+          exposure,
+          iso,
+        }} />
       </div>
     </div>
   );
