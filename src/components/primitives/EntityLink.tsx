@@ -48,8 +48,8 @@ export default function EntityLink({
       return 'text-dim';
     case 'high':
       return 'text-main';
-    case 'frost':
-      return 'text-invert';
+    case 'frosted':
+      return 'text-black';
     default:
       return 'text-medium';
     }
