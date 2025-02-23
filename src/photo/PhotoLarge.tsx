@@ -32,7 +32,7 @@ import {
 } from '@/app/config';
 import AdminPhotoMenuClient from '@/admin/AdminPhotoMenuClient';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import useVisible from '@/utility/useVisible';
 import PhotoDate from './PhotoDate';
 import { useAppState } from '@/state/AppState';
@@ -41,6 +41,8 @@ import LoaderButton from '@/components/primitives/LoaderButton';
 import Tooltip from '@/components/Tooltip';
 import ZoomControls, { ZoomControlsRef } from '@/components/image/ZoomControls';
 import PhotoRecipe from './PhotoRecipe';
+import { TbChecklist } from 'react-icons/tb';
+import { IoCloseSharp } from 'react-icons/io5';
 
 export default function PhotoLarge({
   photo,
@@ -88,6 +90,8 @@ export default function PhotoLarge({
   const ref = useRef<HTMLDivElement>(null);
 
   const zoomControlsRef = useRef<ZoomControlsRef>(null);
+
+  const [shouldShowRecipe, setShouldShowRecipe] = useState(false);
 
   const {
     areZoomControlsShown,
@@ -165,14 +169,14 @@ export default function PhotoLarge({
           priority={priority}
         />
       </ZoomControls>
-      {photo.fujifilmRecipe && photo.filmSimulation &&
+      {shouldShowRecipe && photo.fujifilmRecipe && photo.filmSimulation &&
         <div className={clsx(
           'absolute inset-0',
           'flex items-center justify-center',
         )}>
           <PhotoRecipe
-            recipe={photo.fujifilmRecipe!}
-            simulation={photo.filmSimulation!}
+            recipe={photo.fujifilmRecipe}
+            simulation={photo.filmSimulation}
             iso={photo.isoFormatted}
             exposure={photo.exposureCompensationFormatted}
           />
@@ -289,11 +293,30 @@ export default function PhotoLarge({
                   <li>{photo.exposureCompensationFormatted ?? '0ev'}</li>
                 </ul>
                 {showSimulation && photo.filmSimulation &&
-                  <PhotoFilmSimulation
-                    simulation={photo.filmSimulation}
-                    prefetch={prefetchRelatedLinks}
-                    recipe={photo.fujifilmRecipe}
-                  />}
+                  <div className="flex items-center gap-2 *:w-auto">
+                    <PhotoFilmSimulation
+                      simulation={photo.filmSimulation}
+                      prefetch={prefetchRelatedLinks}
+                    />
+                    {photo.fujifilmRecipe &&
+                      <Tooltip content="Fujifilm Recipe">
+                        <button
+                          onClick={() => setShouldShowRecipe(!shouldShowRecipe)}
+                          className={clsx(
+                            'text-medium',
+                            'border-medium rounded-md',
+                            'px-[4px] py-[2.5px] my-[-2.5px]',
+                            'hover:bg-dim active:bg-main',
+                          )}>
+                          {shouldShowRecipe
+                            ? <IoCloseSharp size={15} />
+                            : <TbChecklist
+                              className="translate-x-[0.5px]"
+                              size={15}
+                            />}
+                        </button>
+                      </Tooltip>} 
+                  </div>}
               </>}
             <div className={clsx(
               'flex gap-x-3 gap-y-baseline',
