@@ -37,23 +37,22 @@ export const parseFujifilmMakerNote = (
       const tagValueSize = bytes.readUInt16LE(index + BYTE_OFFSET_TAG_SIZE);
 
       const sendNumbersForDataType = (
-        calculateNumberForOffset: (offset: number) => number,
+        parseNumberAtOffset: (offset: number) => number,
         sizeInBytes: number,
       ) => {
         let values: number[] = [];
         if (tagValueSize * sizeInBytes <= BYTES_PER_TAG_VALUE) {
           // Retrieve values if they fit in tag block
           values = Array.from({ length: tagValueSize }, (_, i) =>
-            calculateNumberForOffset(
+            parseNumberAtOffset(
               index + BYTE_OFFSET_TAG_VALUE + i * sizeInBytes,
             ),
           );
         } else {
           // Retrieve outside values if they don't fit in tag block
           const offset = bytes.readUint16LE(index + BYTE_OFFSET_TAG_VALUE);
-          values = [];
           for (let i = 0; i < tagValueSize; i++) {
-            values.push(calculateNumberForOffset(offset + i * sizeInBytes));
+            values.push(parseNumberAtOffset(offset + i * sizeInBytes));
           }
         }
         sendTagNumbers(tagId, values);

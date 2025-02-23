@@ -43,13 +43,13 @@ export type FujifilmRecipe = Partial<{
   bwMagentaGreen: number
 }>;
 
-const DEFAULT_WHITE_BALANCE = {
+export const DEFAULT_WHITE_BALANCE = {
   type: 'auto',
   red: 0,
   blue: 0,
 } as const;
 
-const DEFAULT_GRAIN_EFFECT = {
+export const DEFAULT_GRAIN_EFFECT = {
   roughness: 'off',
   size: 'off',
 } as const;

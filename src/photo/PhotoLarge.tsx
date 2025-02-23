@@ -40,6 +40,7 @@ import { LuExpand } from 'react-icons/lu';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import Tooltip from '@/components/Tooltip';
 import ZoomControls, { ZoomControlsRef } from '@/components/image/ZoomControls';
+import PhotoRecipe from './PhotoRecipe';
 
 export default function PhotoLarge({
   photo,
@@ -142,6 +143,7 @@ export default function PhotoLarge({
 
   const largePhotoContent =
     <div className={clsx(
+      'relative',
       arePhotosMatted && 'flex items-center justify-center',
       // Always specify height to ensure fallback doesn't collapse
       arePhotosMatted && 'h-[90%]',
@@ -163,6 +165,18 @@ export default function PhotoLarge({
           priority={priority}
         />
       </ZoomControls>
+      {photo.fujifilmRecipe && photo.filmSimulation &&
+        <div className={clsx(
+          'absolute inset-0',
+          'flex items-center justify-center',
+        )}>
+          <PhotoRecipe
+            recipe={photo.fujifilmRecipe!}
+            simulation={photo.filmSimulation!}
+            iso={photo.isoFormatted}
+            exposure={photo.exposureCompensationFormatted}
+          />
+        </div>}
     </div>;
 
   const largePhotoContainerClassName = clsx(arePhotosMatted &&

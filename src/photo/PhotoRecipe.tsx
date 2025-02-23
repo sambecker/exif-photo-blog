@@ -1,4 +1,8 @@
-import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
+import {
+  FujifilmRecipe,
+  DEFAULT_GRAIN_EFFECT,
+  DEFAULT_WHITE_BALANCE,
+} from '@/platforms/fujifilm/recipe';
 import { FilmSimulation } from '@/simulation';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
 import clsx from 'clsx/lite';
@@ -25,7 +29,7 @@ const random = {
 export default function PhotoRecipe({
   recipe: {
     dynamicRange,
-    whiteBalance,
+    whiteBalance = DEFAULT_WHITE_BALANCE,
     highISONoiseReduction,
     noiseReductionBasic,
     highlight,
@@ -35,21 +39,21 @@ export default function PhotoRecipe({
     clarity,
     colorChromeEffect,
     colorChromeFXBlue,
-    grainEffect,
+    grainEffect = DEFAULT_GRAIN_EFFECT,
     bwAdjustment,
     bwMagentaGreen,
-  },
+  } = {},
   simulation,
-  exposure,
   iso,
+  exposure,
 }: {
   recipe: FujifilmRecipe
   simulation: FilmSimulation
-  exposure?: string
   iso?: string
+  exposure?: string
 }) {
-  const whiteBalanceFormatted = (whiteBalance?.type ?? 'auto')
-    .replaceAll('auto', ' ')
+  const whiteBalanceTypeFormatted = whiteBalance.type
+    .replace(/auto./i, '')
     .replaceAll('-', ' ');
 
   const renderRow = (children: ReactNode) =>
@@ -61,15 +65,18 @@ export default function PhotoRecipe({
     className?: string,
   ) => (
     <div className={clsx(
-      'flex flex-col items-center justify-center gap-0.5 rounded-md',
+      'flex flex-col items-center justify-center gap-0.5 rounded-md min-w-0',
       'rounded-md border',
       'bg-neutral-100/30 border-neutral-200/40',
       label && 'p-1',
       className,
     )}>
-      <div>{typeof value === 'number' ? addSign(value) : value}</div>
+      <div className="truncate max-w-full">
+        {typeof value === 'number' ? addSign(value) : value}
+      </div>
       {label && <div className={clsx(
         'text-[10px] leading-none tracking-wide font-medium text-black/50',
+        'uppercase',
       )}>
         {label}
       </div>}
@@ -97,20 +104,20 @@ export default function PhotoRecipe({
           className="text-black/25"
         />
       </div>
-      <div className="uppercase space-y-2">
+      <div className="space-y-2">
         {renderRow(<>
           {renderDataSquare(`DR${dynamicRange ?? 100}`)}
           {renderDataSquare(iso)}
-          {renderDataSquare(exposure)}
+          {renderDataSquare(exposure ?? '0ev')}
         </>)}
         {renderRow(<>
           {renderDataSquare(
-            whiteBalanceFormatted,
+            whiteBalanceTypeFormatted.toUpperCase(),
             `R${addSign(whiteBalance?.red)} / B${addSign(whiteBalance?.blue)}`,
             'basis-2/3',
           )}
           {renderDataSquare(
-            highISONoiseReduction ?? noiseReductionBasic,
+            highISONoiseReduction ?? noiseReductionBasic ?? 'OFF',
             'ISO NR',
             'basis-1/3',
           )}
@@ -125,27 +132,35 @@ export default function PhotoRecipe({
           {renderDataSquare(clarity || random.clarity, 'Clarity')}
         </>)}
         {renderRow(<>
-          {renderDataSquare(colorChromeEffect, 'Color Chrome')}
-          {renderDataSquare(colorChromeFXBlue, 'FX Blue')}
+          {renderDataSquare(
+            colorChromeEffect?.toLocaleUpperCase() ?? 'N/A',
+            'Color Chrome',
+          )}
+          {renderDataSquare(
+            colorChromeFXBlue?.toLocaleUpperCase() ?? 'N/A',
+            'FX Blue',
+          )}
         </>)}
         {renderRow(<>
           {renderDataSquare(
-            <>
-              {grainEffect?.roughness === 'strong'
-                ? 'Str'
-                : grainEffect?.roughness === 'weak'
-                  ? 'Wk'
-                  : 'OFF'}
-              {'/'}
-              {grainEffect?.size === 'large'
-                ? 'LG'
-                : grainEffect?.size === 'small'
-                  ? 'SM' : 'OFF'}
-            </>,
+            grainEffect.roughness === 'off'
+              ? 'NONE'
+              : <>
+                {grainEffect.roughness === 'strong'
+                  ? 'STR'
+                  : grainEffect.roughness === 'weak'
+                    ? 'WK'
+                    : 'OFF'}
+                {'/'}
+                {grainEffect.size === 'large'
+                  ? 'LG'
+                  : grainEffect.size === 'small'
+                    ? 'SM' : 'OFF'}
+              </>,
             'Grain',
           )}
-          {renderDataSquare(bwAdjustment, 'BW ADJ')}
-          {renderDataSquare(bwMagentaGreen, 'BW M/G')}
+          {renderDataSquare(bwAdjustment ?? 0, 'BW ADJ')}
+          {renderDataSquare(bwMagentaGreen ?? 0, 'BW M/G')}
         </>)}
       </div>
     </div>
