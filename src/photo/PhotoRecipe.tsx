@@ -1,3 +1,4 @@
+import LoaderButton from '@/components/primitives/LoaderButton';
 import {
   FujifilmRecipe,
   DEFAULT_GRAIN_EFFECT,
@@ -5,26 +6,12 @@ import {
 } from '@/platforms/fujifilm/recipe';
 import { FilmSimulation } from '@/simulation';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
+import useClickInsideOutside from '@/utility/useClickInsideOutside';
 import clsx from 'clsx/lite';
-import { ReactNode } from 'react';
+import { ReactNode, useRef } from 'react';
 import { IoCloseCircle } from 'react-icons/io5';
 
 const addSign = (value = 0) => value < 0 ? value : `+${value}`;
-
-const getRandomInt = () => {
-  const randomInt = Math.floor(Math.random() * 4) + 1;
-  return Math.random() >= 0.5 ? randomInt : -randomInt;
-};
-
-const random = {
-  highlight: getRandomInt(),
-  shadow: getRandomInt(),
-  color: getRandomInt(),
-  sharpness: getRandomInt(),
-  clarity: getRandomInt(),
-  colorChromeEffect: getRandomInt(),
-  colorChromeFXBlue: getRandomInt(),
-};
 
 export default function PhotoRecipe({
   recipe: {
@@ -42,16 +29,25 @@ export default function PhotoRecipe({
     grainEffect = DEFAULT_GRAIN_EFFECT,
     bwAdjustment,
     bwMagentaGreen,
-  } = {},
+  },
   simulation,
   iso,
   exposure,
+  onClose,
 }: {
   recipe: FujifilmRecipe
   simulation: FilmSimulation
   iso?: string
   exposure?: string
+  onClose?: () => void
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useClickInsideOutside({
+    htmlElements: [ref],
+    onClickOutside: onClose,
+  });
+
   const whiteBalanceTypeFormatted = whiteBalance.type
     .replace(/auto./i, '')
     .replaceAll('-', ' ');
@@ -83,25 +79,30 @@ export default function PhotoRecipe({
     </div>
   );
 
-  return <div className="flex gap-8">
-    <div className={clsx(
-      'w-[18rem] self-start',
-      'p-3',
-      'rounded-lg shadow-2xl',
-      'bg-white/60 backdrop-blur-xl border border-neutral-200/30',
-      'space-y-3',
-      'text-[13px] text-black',
-      'saturate-200',
-    )}>
+  return (
+    <div
+      ref={ref}
+      className={clsx(
+        'w-[18rem] p-3 space-y-3',
+        'rounded-lg shadow-2xl',
+        'text-[13px] text-black',
+        'bg-white/60 border border-neutral-200/30',
+        'backdrop-blur-xl saturate-200',
+      )}
+    >
       <div className="flex items-center gap-2">
         <PhotoFilmSimulation
           contrast="frosted"
           className="grow"
           simulation={simulation}
         />
-        <IoCloseCircle
-          size={20}
-          className="text-black/25"
+        <LoaderButton
+          icon={<IoCloseCircle size={20} />}
+          onClick={onClose}
+          className={clsx(
+            'link p-0 m-0 h-4!',
+            'text-black/40 active:text-black/75',
+          )}
         />
       </div>
       <div className="space-y-2">
@@ -123,13 +124,13 @@ export default function PhotoRecipe({
           )}
         </>)}
         {renderRow(<>
-          {renderDataSquare(highlight || random.highlight, 'Highlight')}
-          {renderDataSquare(shadow || random.shadow, 'Shadow')}
+          {renderDataSquare(highlight, 'Highlight')}
+          {renderDataSquare(shadow, 'Shadow')}
         </>)}
         {renderRow(<>
-          {renderDataSquare(color || random.color, 'Color')}
-          {renderDataSquare(sharpness || random.sharpness, 'Sharpness')}
-          {renderDataSquare(clarity || random.clarity, 'Clarity')}
+          {renderDataSquare(color, 'Color')}
+          {renderDataSquare(sharpness, 'Sharpness')}
+          {renderDataSquare(clarity, 'Clarity')}
         </>)}
         {renderRow(<>
           {renderDataSquare(
@@ -164,5 +165,5 @@ export default function PhotoRecipe({
         </>)}
       </div>
     </div>
-  </div>;
+  );
 }

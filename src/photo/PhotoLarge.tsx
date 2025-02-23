@@ -179,6 +179,7 @@ export default function PhotoLarge({
             simulation={photo.filmSimulation}
             iso={photo.isoFormatted}
             exposure={photo.exposureCompensationFormatted}
+            onClose={() => setShouldShowRecipe(false)}
           />
         </div>}
     </div>;
@@ -299,23 +300,21 @@ export default function PhotoLarge({
                       prefetch={prefetchRelatedLinks}
                     />
                     {photo.fujifilmRecipe &&
-                      <Tooltip content="Fujifilm Recipe">
-                        <button
-                          onClick={() => setShouldShowRecipe(!shouldShowRecipe)}
-                          className={clsx(
-                            'text-medium',
-                            'border-medium rounded-md',
-                            'px-[4px] py-[2.5px] my-[-2.5px]',
-                            'hover:bg-dim active:bg-main',
-                          )}>
-                          {shouldShowRecipe
-                            ? <IoCloseSharp size={15} />
-                            : <TbChecklist
-                              className="translate-x-[0.5px]"
-                              size={15}
-                            />}
-                        </button>
-                      </Tooltip>} 
+                      <button
+                        onClick={() => setShouldShowRecipe(!shouldShowRecipe)}
+                        className={clsx(
+                          'text-medium',
+                          'border-medium rounded-md',
+                          'px-[4px] py-[2.5px] my-[-2.5px]',
+                          'hover:bg-dim active:bg-main',
+                        )}>
+                        {shouldShowRecipe
+                          ? <IoCloseSharp size={15} />
+                          : <TbChecklist
+                            className="translate-x-[0.5px]"
+                            size={15}
+                          />}
+                      </button>} 
                   </div>}
               </>}
             <div className={clsx(
