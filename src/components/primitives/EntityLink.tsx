@@ -107,9 +107,14 @@ export default function EntityLink({
             <span className="hidden group-hover:inline text-dim">
               {hoverEntity}
             </span>}
-          {isLoading && <Spinner className={clsx(
-            badged && 'translate-y-[0.5px]',
-          )} />}
+          {isLoading &&
+            <Spinner
+              className={clsx(
+                badged && 'translate-y-[0.5px]',
+                contrast === 'frosted' && 'text-neutral-500',
+              )}
+              color={contrast === 'frosted' ? 'text' : undefined}
+            />}
         </>}
       </LinkWithStatus>
     </span>

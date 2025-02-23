@@ -12,10 +12,12 @@ import useClickInsideOutside from '@/utility/useClickInsideOutside';
 import clsx from 'clsx/lite';
 import { ReactNode, useRef, RefObject } from 'react';
 import { IoCloseCircle } from 'react-icons/io5';
+import { motion } from 'framer-motion';
 
 const addSign = (value = 0) => value < 0 ? value : `+${value}`;
 
 export default function PhotoRecipe({
+  ref: refExternal,
   recipe: {
     dynamicRange,
     whiteBalance = DEFAULT_WHITE_BALANCE,
@@ -38,6 +40,7 @@ export default function PhotoRecipe({
   onClose,
   externalTriggerRef,
 }: {
+  ref?: RefObject<HTMLDivElement | null>
   recipe: FujifilmRecipe
   simulation: FilmSimulation
   iso?: string
@@ -48,7 +51,7 @@ export default function PhotoRecipe({
   const ref = useRef<HTMLDivElement>(null);
 
   useClickInsideOutside({
-    htmlElements: [ref, externalTriggerRef],
+    htmlElements: [ref, refExternal, externalTriggerRef],
     onClickOutside: onClose,
   });
 
@@ -67,11 +70,12 @@ export default function PhotoRecipe({
     <div className={clsx(
       'flex flex-col items-center justify-center gap-0.5 rounded-md min-w-0',
       'rounded-md border',
-      'bg-neutral-100/30 border-neutral-200/40',
+      'border-neutral-200/40',
+      'bg-neutral-100/30 hover:bg-neutral-100/50',
       label && 'p-1',
       className,
     )}>
-      <div className="truncate max-w-full">
+      <div className="truncate max-w-full tracking-wide">
         {typeof value === 'number' ? addSign(value) : value}
       </div>
       {label && <div className={clsx(
@@ -84,14 +88,17 @@ export default function PhotoRecipe({
   );
 
   return (
-    <div
-      ref={ref}
+    <motion.div
+      ref={refExternal ?? ref}
+      initial={{ opacity: 0, translateY: -10 }}
+      animate={{ opacity: 1, translateY: 0 }}
+      exit={{ opacity: 0, translateY: -10 }}
       className={clsx(
         'z-10',
-        'w-[18rem] p-3 space-y-3',
+        'w-[19rem] p-3 space-y-3',
         'rounded-lg shadow-2xl',
-        'text-[13px] text-black',
-        'bg-white/60 border border-neutral-200/30',
+        'text-[13.5px] text-black',
+        'bg-white/65 border border-neutral-200/30',
         'backdrop-blur-xl saturate-200',
       )}
     >
@@ -149,26 +156,17 @@ export default function PhotoRecipe({
         </>)}
         {renderRow(<>
           {renderDataSquare(
-            grainEffect.roughness === 'off'
-              ? 'NONE'
-              : <>
-                {grainEffect.roughness === 'strong'
-                  ? 'STR'
-                  : grainEffect.roughness === 'weak'
-                    ? 'WK'
-                    : 'OFF'}
-                {'/'}
-                {grainEffect.size === 'large'
-                  ? 'LG'
-                  : grainEffect.size === 'small'
-                    ? 'SM' : 'OFF'}
-              </>,
-            'Grain',
+            grainEffect.roughness.toLocaleUpperCase(),
+            grainEffect.size === 'large'
+              ? 'Large Grain'
+              : grainEffect.size === 'small'
+                ? 'Small Grain'
+                : 'Grain',
           )}
           {renderDataSquare(bwAdjustment ?? 0, 'BW ADJ')}
           {renderDataSquare(bwMagentaGreen ?? 0, 'BW M/G')}
         </>)}
       </div>
-    </div>
+    </motion.div>
   );
 }

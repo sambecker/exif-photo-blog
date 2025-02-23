@@ -40,7 +40,7 @@ import ZoomControls, { ZoomControlsRef } from '@/components/image/ZoomControls';
 import PhotoRecipe from './PhotoRecipe';
 import { TbChecklist } from 'react-icons/tb';
 import { IoCloseSharp } from 'react-icons/io5';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import useRecipeState from './useRecipeState';
 
 export default function PhotoLarge({
@@ -98,11 +98,12 @@ export default function PhotoLarge({
 
   const showZoomControls = showZoomControlsProp && areZoomControlsShown;
 
+  const recipeRef = useRef<HTMLDivElement>(null);
   const {
     shouldShowRecipe,
     toggleRecipe,
     recipeButtonRef,
-  } = useRecipeState();
+  } = useRecipeState(recipeRef);
 
   const tags = sortTags(photo.tags, primaryTag);
 
@@ -173,22 +174,21 @@ export default function PhotoLarge({
         />
       </ZoomControls>
       <AnimatePresence>
-        {shouldShowRecipe && photo.fujifilmRecipe && photo.filmSimulation &&
-          <motion.div
-            className={clsx(
-              'absolute inset-0',
-              'flex items-center justify-center',
-            )}
-          >
+        <div className={clsx(
+          'absolute inset-0',
+          'flex items-center justify-center',
+        )}>
+          {shouldShowRecipe && photo.fujifilmRecipe && photo.filmSimulation &&
             <PhotoRecipe
+              ref={recipeRef}
               recipe={photo.fujifilmRecipe}
               simulation={photo.filmSimulation}
               iso={photo.isoFormatted}
               exposure={photo.exposureCompensationFormatted}
               onClose={toggleRecipe}
               externalTriggerRef={recipeButtonRef}
-            />
-          </motion.div>}
+            />}
+        </div>
       </AnimatePresence>
     </div>;
 

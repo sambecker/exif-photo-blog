@@ -6,9 +6,12 @@ import {
 import { usePathname } from 'next/navigation';
 import { SEARCH_PARAM_SHOW } from '@/app/paths';
 import { useSearchParams } from 'next/navigation';
-import { useCallback, useRef, useState } from 'react';
+import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { isElementEntirelyInViewport } from '@/utility/dom';
 
-export default function useRecipeState() {
+export default function useRecipeState(
+  ref?: RefObject<HTMLDivElement | null>,
+) {
   const pathname = usePathname();
   const params = useSearchParams();
 
@@ -53,6 +56,12 @@ export default function useRecipeState() {
       }
     }
   }, [pathComponents, photoId, shouldShowRecipe]);
+
+  useEffect(() => {
+    if (shouldShowRecipe && !isElementEntirelyInViewport(ref?.current)) {
+      ref?.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [ref, shouldShowRecipe]);
 
   return {
     toggleRecipe,
