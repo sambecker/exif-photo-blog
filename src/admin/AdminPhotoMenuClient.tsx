@@ -2,7 +2,11 @@
 
 import { ComponentProps, useMemo } from 'react';
 import { pathForAdminPhotoEdit, pathForPhoto } from '@/app/paths';
-import { deletePhotoAction, toggleFavoritePhotoAction } from '@/photo/actions';
+import {
+  deletePhotoAction,
+  syncPhotoAction,
+  toggleFavoritePhotoAction,
+} from '@/photo/actions';
 import { FaRegEdit, FaRegStar, FaStar } from 'react-icons/fa';
 import {
   Photo,
@@ -17,6 +21,7 @@ import { useAppState } from '@/state/AppState';
 import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 import { MdOutlineFileDownload } from 'react-icons/md';
 import MoreMenuItem from '@/components/more/MoreMenuItem';
+import IconGrSync from '@/app/IconGrSync';
 
 export default function AdminPhotoMenuClient({
   photo,
@@ -65,17 +70,24 @@ export default function AdminPhotoMenuClient({
       label: 'Download',
       icon: <MdOutlineFileDownload
         size={17}
-        className="translate-x-[-1.5px] translate-y-[-0.5px]"
+        className="translate-x-[-1px] translate-y-[-0.5px]"
       />,
       href: photo.url,
       hrefDownloadName: downloadFileNameForPhoto(photo),
     });
     items.push({
+      label: 'Sync',
+      icon: <IconGrSync className="translate-x-[-1px]" />,
+      action: () => syncPhotoAction(photo.id)
+        .then(() => revalidatePhoto?.(photo.id)),
+    });
+    items.push({
       label: 'Delete',
       icon: <BiTrash
         size={15}
-        className="translate-x-[-1.5px]"
+        className="translate-x-[-1px]"
       />,
+      className: 'text-error',
       action: () => {
         if (confirm(deleteConfirmationTextForPhoto(photo))) {
           return deletePhotoAction(

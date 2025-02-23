@@ -15,6 +15,8 @@ import Link from 'next/link';
 import {
   pathForFocalLength,
   pathForPhoto,
+  SEARCH_PARAM_SHOW,
+  SEARCH_PARAM_SHOW_RECIPE,
 } from '@/app/paths';
 import PhotoTags from '@/tag/PhotoTags';
 import ShareButton from '@/share/ShareButton';
@@ -43,6 +45,7 @@ import ZoomControls, { ZoomControlsRef } from '@/components/image/ZoomControls';
 import PhotoRecipe from './PhotoRecipe';
 import { TbChecklist } from 'react-icons/tb';
 import { IoCloseSharp } from 'react-icons/io5';
+import { useSearchParams } from 'next/navigation';
 
 export default function PhotoLarge({
   photo,
@@ -91,7 +94,10 @@ export default function PhotoLarge({
 
   const zoomControlsRef = useRef<ZoomControlsRef>(null);
 
-  const [shouldShowRecipe, setShouldShowRecipe] = useState(false);
+  const params = useSearchParams();
+  const showRecipeInitially =
+    params.get(SEARCH_PARAM_SHOW) === SEARCH_PARAM_SHOW_RECIPE;
+  const [shouldShowRecipe, setShouldShowRecipe] = useState(showRecipeInitially);
   const recipeButtonRef = useRef<HTMLButtonElement>(null);
 
   const {
@@ -333,9 +339,8 @@ export default function PhotoLarge({
                   // Prevent collision with admin button
                   !hasNonDateContent && isUserSignedIn && 'md:pr-7',
                 )}
-                // 'createdAt' is a naive datetime which
-                // does not require a timezone and will not
-                // cause server/client time mismatches
+                // 'createdAt' is a naive datetime which does not require
+                // a timezone and will not cause server/client mismatch
                 timezone={null}
                 hideTime={!SHOW_TAKEN_AT_TIME}
               />
