@@ -92,6 +92,7 @@ export default function PhotoLarge({
   const zoomControlsRef = useRef<ZoomControlsRef>(null);
 
   const [shouldShowRecipe, setShouldShowRecipe] = useState(false);
+  const recipeButtonRef = useRef<HTMLButtonElement>(null);
 
   const {
     areZoomControlsShown,
@@ -180,6 +181,7 @@ export default function PhotoLarge({
             iso={photo.isoFormatted}
             exposure={photo.exposureCompensationFormatted}
             onClose={() => setShouldShowRecipe(false)}
+            externalTriggerRef={recipeButtonRef}
           />
         </div>}
     </div>;
@@ -301,6 +303,8 @@ export default function PhotoLarge({
                     />
                     {photo.fujifilmRecipe &&
                       <button
+                        ref={recipeButtonRef}
+                        title="Fujifilm Recipe"
                         onClick={() => setShouldShowRecipe(!shouldShowRecipe)}
                         className={clsx(
                           'text-medium',

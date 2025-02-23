@@ -112,6 +112,7 @@ const FORM_METADATA = (
     type: 'textarea',
     label: 'fujifilm recipe',
     shouldHide: ({ make }) => make !== MAKE_FUJIFILM,
+    readOnly: true,
   },
   focalLength: { label: 'focal length' },
   focalLengthIn35MmFormat: { label: 'focal length 35mm-equivalent' },

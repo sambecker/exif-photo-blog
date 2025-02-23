@@ -8,7 +8,7 @@ import { FilmSimulation } from '@/simulation';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
 import clsx from 'clsx/lite';
-import { ReactNode, useRef } from 'react';
+import { ReactNode, useRef, RefObject } from 'react';
 import { IoCloseCircle } from 'react-icons/io5';
 
 const addSign = (value = 0) => value < 0 ? value : `+${value}`;
@@ -34,17 +34,19 @@ export default function PhotoRecipe({
   iso,
   exposure,
   onClose,
+  externalTriggerRef,
 }: {
   recipe: FujifilmRecipe
   simulation: FilmSimulation
   iso?: string
   exposure?: string
   onClose?: () => void
+  externalTriggerRef?: RefObject<HTMLElement | null>
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useClickInsideOutside({
-    htmlElements: [ref],
+    htmlElements: [ref, externalTriggerRef],
     onClickOutside: onClose,
   });
 
@@ -83,6 +85,7 @@ export default function PhotoRecipe({
     <div
       ref={ref}
       className={clsx(
+        'z-10',
         'w-[18rem] p-3 space-y-3',
         'rounded-lg shadow-2xl',
         'text-[13px] text-black',
