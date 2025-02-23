@@ -12,12 +12,7 @@ import SiteGrid from '@/components/SiteGrid';
 import ImageLarge from '@/components/image/ImageLarge';
 import { clsx } from 'clsx/lite';
 import Link from 'next/link';
-import {
-  pathForFocalLength,
-  pathForPhoto,
-  SEARCH_PARAM_SHOW,
-  SEARCH_PARAM_SHOW_RECIPE,
-} from '@/app/paths';
+import { pathForFocalLength, pathForPhoto } from '@/app/paths';
 import PhotoTags from '@/tag/PhotoTags';
 import ShareButton from '@/share/ShareButton';
 import DownloadButton from '@/components/DownloadButton';
@@ -34,7 +29,7 @@ import {
 } from '@/app/config';
 import AdminPhotoMenuClient from '@/admin/AdminPhotoMenuClient';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import useVisible from '@/utility/useVisible';
 import PhotoDate from './PhotoDate';
 import { useAppState } from '@/state/AppState';
@@ -45,7 +40,8 @@ import ZoomControls, { ZoomControlsRef } from '@/components/image/ZoomControls';
 import PhotoRecipe from './PhotoRecipe';
 import { TbChecklist } from 'react-icons/tb';
 import { IoCloseSharp } from 'react-icons/io5';
-import { useSearchParams } from 'next/navigation';
+import { AnimatePresence, motion } from 'framer-motion';
+import useRecipeState from './useRecipeState';
 
 export default function PhotoLarge({
   photo,
@@ -94,12 +90,6 @@ export default function PhotoLarge({
 
   const zoomControlsRef = useRef<ZoomControlsRef>(null);
 
-  const params = useSearchParams();
-  const showRecipeInitially =
-    params.get(SEARCH_PARAM_SHOW) === SEARCH_PARAM_SHOW_RECIPE;
-  const [shouldShowRecipe, setShouldShowRecipe] = useState(showRecipeInitially);
-  const recipeButtonRef = useRef<HTMLButtonElement>(null);
-
   const {
     areZoomControlsShown,
     arePhotosMatted,
@@ -107,6 +97,12 @@ export default function PhotoLarge({
   } = useAppState();
 
   const showZoomControls = showZoomControlsProp && areZoomControlsShown;
+
+  const {
+    shouldShowRecipe,
+    toggleRecipe,
+    recipeButtonRef,
+  } = useRecipeState();
 
   const tags = sortTags(photo.tags, primaryTag);
 
@@ -176,20 +172,24 @@ export default function PhotoLarge({
           priority={priority}
         />
       </ZoomControls>
-      {shouldShowRecipe && photo.fujifilmRecipe && photo.filmSimulation &&
-        <div className={clsx(
-          'absolute inset-0',
-          'flex items-center justify-center',
-        )}>
-          <PhotoRecipe
-            recipe={photo.fujifilmRecipe}
-            simulation={photo.filmSimulation}
-            iso={photo.isoFormatted}
-            exposure={photo.exposureCompensationFormatted}
-            onClose={() => setShouldShowRecipe(false)}
-            externalTriggerRef={recipeButtonRef}
-          />
-        </div>}
+      <AnimatePresence>
+        {shouldShowRecipe && photo.fujifilmRecipe && photo.filmSimulation &&
+          <motion.div
+            className={clsx(
+              'absolute inset-0',
+              'flex items-center justify-center',
+            )}
+          >
+            <PhotoRecipe
+              recipe={photo.fujifilmRecipe}
+              simulation={photo.filmSimulation}
+              iso={photo.isoFormatted}
+              exposure={photo.exposureCompensationFormatted}
+              onClose={toggleRecipe}
+              externalTriggerRef={recipeButtonRef}
+            />
+          </motion.div>}
+      </AnimatePresence>
     </div>;
 
   const largePhotoContainerClassName = clsx(arePhotosMatted &&
@@ -311,7 +311,7 @@ export default function PhotoLarge({
                       <button
                         ref={recipeButtonRef}
                         title="Fujifilm Recipe"
-                        onClick={() => setShouldShowRecipe(!shouldShowRecipe)}
+                        onClick={toggleRecipe}
                         className={clsx(
                           'text-medium',
                           'border-medium rounded-md',

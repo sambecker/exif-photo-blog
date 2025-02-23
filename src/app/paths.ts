@@ -110,8 +110,8 @@ export const pathForPhoto = ({
   simulation,
   focal,
   showRecipe,
-}: PhotoPathParams) =>
-  typeof photo !== 'string' && photo.hidden
+}: PhotoPathParams) => {
+  const path = typeof photo !== 'string' && photo.hidden
     ? `${pathForTag(TAG_HIDDEN)}/${getPhotoId(photo)}`
     : tag
       ? `${pathForTag(tag)}/${getPhotoId(photo)}`
@@ -121,9 +121,11 @@ export const pathForPhoto = ({
           ? `${pathForFilmSimulation(simulation)}/${getPhotoId(photo)}`
           : focal
             ? `${pathForFocalLength(focal)}/${getPhotoId(photo)}`
-            : `${PREFIX_PHOTO}/${getPhotoId(photo)}` + (showRecipe
-              ? `?${SEARCH_PARAM_SHOW}=${SEARCH_PARAM_SHOW_RECIPE}`
-              : '');
+            : `${PREFIX_PHOTO}/${getPhotoId(photo)}`;
+  return showRecipe
+    ? `${path}?${SEARCH_PARAM_SHOW}=${SEARCH_PARAM_SHOW_RECIPE}`
+    : path;
+};
 
 export const pathForTag = (tag: string) =>
   `${PREFIX_TAG}/${tag}`;
