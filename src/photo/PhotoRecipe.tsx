@@ -1,3 +1,5 @@
+'use client';
+
 import LoaderButton from '@/components/primitives/LoaderButton';
 import {
   FujifilmRecipe,
