@@ -26,6 +26,7 @@ import {
   SHOULD_PREFETCH_ALL_LINKS,
   ALLOW_PUBLIC_DOWNLOADS,
   SHOW_TAKEN_AT_TIME,
+  SHOW_RECIPES,
 } from '@/app/config';
 import AdminPhotoMenuClient from '@/admin/AdminPhotoMenuClient';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
@@ -308,8 +309,8 @@ export default function PhotoLarge({
                   <li>{photo.exposureCompensationFormatted ?? '0ev'}</li>
                 </ul>
                 {(
-                  (showSimulation && photo.filmSimulation)
-                  || photo.fujifilmRecipe
+                  (showSimulation && photo.filmSimulation) ||
+                  (SHOW_RECIPES && photo.fujifilmRecipe)
                 ) &&
                   <div className="flex items-center gap-2 *:w-auto">
                     {showSimulation && photo.filmSimulation &&
@@ -317,7 +318,7 @@ export default function PhotoLarge({
                         simulation={photo.filmSimulation}
                         prefetch={prefetchRelatedLinks}
                       />}
-                    {photo.fujifilmRecipe &&
+                    {SHOW_RECIPES && photo.fujifilmRecipe &&
                       <button
                         ref={refRecipeTrigger}
                         title="Fujifilm Recipe"
