@@ -1,26 +1,21 @@
 'use client';
 
 import LoaderButton from '@/components/primitives/LoaderButton';
-import {
-  FujifilmRecipe,
-  DEFAULT_GRAIN_EFFECT,
-  DEFAULT_WHITE_BALANCE,
-} from '@/platforms/fujifilm/recipe';
+import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { FilmSimulation } from '@/simulation';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
-import useClickInsideOutside from '@/utility/useClickInsideOutside';
 import clsx from 'clsx/lite';
-import { ReactNode, useRef, RefObject } from 'react';
+import { ReactNode, RefObject } from 'react';
 import { IoCloseCircle } from 'react-icons/io5';
 import { motion } from 'framer-motion';
 
 const addSign = (value = 0) => value < 0 ? value : `+${value}`;
 
 export default function PhotoRecipe({
-  ref: refExternal,
+  ref,
   recipe: {
     dynamicRange,
-    whiteBalance = DEFAULT_WHITE_BALANCE,
+    whiteBalance,
     highISONoiseReduction,
     noiseReductionBasic,
     highlight,
@@ -30,7 +25,7 @@ export default function PhotoRecipe({
     clarity,
     colorChromeEffect,
     colorChromeFXBlue,
-    grainEffect = DEFAULT_GRAIN_EFFECT,
+    grainEffect,
     bwAdjustment,
     bwMagentaGreen,
   },
@@ -38,7 +33,6 @@ export default function PhotoRecipe({
   iso,
   exposure,
   onClose,
-  externalTriggerRef,
 }: {
   ref?: RefObject<HTMLDivElement | null>
   recipe: FujifilmRecipe
@@ -46,15 +40,7 @@ export default function PhotoRecipe({
   iso?: string
   exposure?: string
   onClose?: () => void
-  externalTriggerRef?: RefObject<HTMLElement | null>
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useClickInsideOutside({
-    htmlElements: [ref, refExternal, externalTriggerRef],
-    onClickOutside: onClose,
-  });
-
   const whiteBalanceTypeFormatted = whiteBalance.type
     .replace(/auto./i, '')
     .replaceAll('-', ' ');
@@ -89,7 +75,7 @@ export default function PhotoRecipe({
 
   return (
     <motion.div
-      ref={refExternal ?? ref}
+      ref={ref}
       initial={{ opacity: 0, translateY: -10 }}
       animate={{ opacity: 1, translateY: 0 }}
       exit={{ opacity: 0, translateY: -10 }}
@@ -119,7 +105,7 @@ export default function PhotoRecipe({
       </div>
       <div className="space-y-2">
         {renderRow(<>
-          {renderDataSquare(`DR${dynamicRange ?? 100}`)}
+          {renderDataSquare(`DR${dynamicRange.development}`)}
           {renderDataSquare(iso)}
           {renderDataSquare(exposure ?? '0ev')}
         </>)}

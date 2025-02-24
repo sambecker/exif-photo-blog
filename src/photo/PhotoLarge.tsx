@@ -98,12 +98,16 @@ export default function PhotoLarge({
 
   const showZoomControls = showZoomControlsProp && areZoomControlsShown;
 
-  const recipeRef = useRef<HTMLDivElement>(null);
+  const refRecipe = useRef<HTMLDivElement>(null);
+  const refRecipeTrigger = useRef<HTMLButtonElement>(null);
   const {
     shouldShowRecipe,
     toggleRecipe,
-    recipeButtonRef,
-  } = useRecipeState(recipeRef);
+    hideRecipe,
+  } = useRecipeState({
+    ref: refRecipe,
+    refTrigger: refRecipeTrigger,
+  });
 
   const tags = sortTags(photo.tags, primaryTag);
 
@@ -173,23 +177,22 @@ export default function PhotoLarge({
           priority={priority}
         />
       </ZoomControls>
-      <AnimatePresence>
-        <div className={clsx(
-          'absolute inset-0',
-          'flex items-center justify-center',
-        )}>
+      <div className={clsx(
+        'absolute inset-0',
+        'flex items-center justify-center',
+      )}>
+        <AnimatePresence>
           {shouldShowRecipe && photo.fujifilmRecipe && photo.filmSimulation &&
             <PhotoRecipe
-              ref={recipeRef}
+              ref={refRecipe}
               recipe={photo.fujifilmRecipe}
               simulation={photo.filmSimulation}
               iso={photo.isoFormatted}
               exposure={photo.exposureCompensationFormatted}
-              onClose={toggleRecipe}
-              externalTriggerRef={recipeButtonRef}
+              onClose={hideRecipe}
             />}
-        </div>
-      </AnimatePresence>
+        </AnimatePresence>
+      </div>
     </div>;
 
   const largePhotoContainerClassName = clsx(arePhotosMatted &&
@@ -309,7 +312,7 @@ export default function PhotoLarge({
                     />
                     {photo.fujifilmRecipe &&
                       <button
-                        ref={recipeButtonRef}
+                        ref={refRecipeTrigger}
                         title="Fujifilm Recipe"
                         onClick={toggleRecipe}
                         className={clsx(

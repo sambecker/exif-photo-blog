@@ -6,12 +6,17 @@ import {
 import { usePathname } from 'next/navigation';
 import { SEARCH_PARAM_SHOW } from '@/app/paths';
 import { useSearchParams } from 'next/navigation';
-import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { RefObject, useCallback, useEffect, useState } from 'react';
 import { isElementEntirelyInViewport } from '@/utility/dom';
+import useClickInsideOutside from '@/utility/useClickInsideOutside';
 
-export default function useRecipeState(
-  ref?: RefObject<HTMLDivElement | null>,
-) {
+export default function useRecipeState({
+  ref,
+  refTrigger,
+}: {
+  ref?: RefObject<HTMLElement | null>,
+  refTrigger?: RefObject<HTMLElement | null>,
+}) {
   const pathname = usePathname();
   const params = useSearchParams();
 
@@ -19,28 +24,14 @@ export default function useRecipeState(
     photoId,
     ...pathComponents
   } = getPathComponents(pathname);
+
   const showRecipeInitially =
     params.get(SEARCH_PARAM_SHOW) === SEARCH_PARAM_SHOW_RECIPE;
 
   const [shouldShowRecipe, setShouldShowRecipe] = useState(showRecipeInitially);
 
-  const recipeButtonRef = useRef<HTMLButtonElement>(null);
-
-  const toggleRecipe = useCallback(() => {
-    if (shouldShowRecipe) {
-      setShouldShowRecipe(false);
-      // Only remove query param for photo details
-      if (photoId) {
-        window.history.pushState(
-          null,
-          '',
-          pathForPhoto({
-            photo: photoId,
-            ...pathComponents,
-          }),
-        );
-      }
-    } else {
+  const setVisibility = useCallback((shouldShow: boolean) => {
+    if (shouldShow) {
       setShouldShowRecipe(true);
       // Only add query param for photo details
       if (photoId) {
@@ -54,8 +45,32 @@ export default function useRecipeState(
           }),
         );
       }
+    } else {
+      setShouldShowRecipe(false);
+      // Only remove query param for photo details
+      if (photoId) {
+        window.history.pushState(
+          null,
+          '',
+          pathForPhoto({
+            photo: photoId,
+            ...pathComponents,
+          }),
+        );
+      }
     }
-  }, [pathComponents, photoId, shouldShowRecipe]);
+  }, [pathComponents, photoId]);
+
+  const showRecipe = useCallback(() => setVisibility(true), [setVisibility]);
+  const hideRecipe = useCallback(() => setVisibility(false), [setVisibility]);
+  const toggleRecipe = useCallback(() =>
+    setVisibility(!shouldShowRecipe),
+  [setVisibility, shouldShowRecipe]);
+
+  useClickInsideOutside({
+    htmlElements: [ref, refTrigger],
+    onClickOutside: hideRecipe,
+  });
 
   useEffect(() => {
     if (shouldShowRecipe && !isElementEntirelyInViewport(ref?.current)) {
@@ -64,8 +79,9 @@ export default function useRecipeState(
   }, [ref, shouldShowRecipe]);
 
   return {
-    toggleRecipe,
-    recipeButtonRef,
     shouldShowRecipe,
+    showRecipe,
+    hideRecipe,
+    toggleRecipe,
   };
 }

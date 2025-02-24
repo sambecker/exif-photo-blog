@@ -1,5 +1,7 @@
 import { parseFujifilmMakerNote } from '.';
 
+const TAG_ID_DYNAMIC_RANGE = 0x1400;
+const TAG_ID_DYNAMIC_RANGE_SETTING = 0x1402;
 const TAG_ID_DEVELOPMENT_DYNAMIC_RANGE = 0x1403;
 const TAG_ID_WHITE_BALANCE = 0x1002;
 const TAG_ID_WHITE_BALANCE_FINE_TUNE = 0x100a;
@@ -19,40 +21,64 @@ const TAG_ID_BW_MAGENTA_GREEN = 0x104b;
 
 type WeakStrong = 'off' | 'weak' | 'strong';
 
-export type FujifilmRecipe = Partial<{
-  dynamicRange: number
+export type FujifilmRecipe = {
+  dynamicRange: {
+    range: 'standard' | 'wide'
+    // eslint-disable-next-line max-len
+    setting: 'auto' | 'manual' | 'standard' | 'wide-1' | 'wide-2' | 'film-simulation'
+    development: number
+  }
   whiteBalance: {
     type: string
     red: number
     blue: number
   }
-  highISONoiseReduction: number
-  noiseReductionBasic: string
-  highlight: number
-  shadow: number
-  color: number
-  sharpness: number
-  clarity: number
-  colorChromeEffect: WeakStrong
-  colorChromeFXBlue: WeakStrong
+  highISONoiseReduction?: number
+  noiseReductionBasic?: string
+  highlight?: number
+  shadow?: number
+  color?: number
+  sharpness?: number
+  clarity?: number
+  colorChromeEffect?: WeakStrong
+  colorChromeFXBlue?: WeakStrong
   grainEffect: {
     roughness: WeakStrong
     size: 'off' | 'small' | 'large'
   }
-  bwAdjustment: number
-  bwMagentaGreen: number
-}>;
+  bwAdjustment?: number
+  bwMagentaGreen?: number
+};
 
-export const DEFAULT_WHITE_BALANCE = {
+const DEFAULT_DYNAMIC_RANGE = {
+  range: 'standard',
+  setting: 'auto',
+  development: 100,
+} as const;
+
+const DEFAULT_WHITE_BALANCE = {
   type: 'auto',
   red: 0,
   blue: 0,
 } as const;
 
-export const DEFAULT_GRAIN_EFFECT = {
+const DEFAULT_GRAIN_EFFECT = {
   roughness: 'off',
   size: 'off',
 } as const;
+
+export const processDynamicRangeSettings = (
+  value: number,
+): FujifilmRecipe['dynamicRange']['setting'] => {
+  switch (value) {
+  case 0x001:   return 'manual';
+  case 0x100:   return 'standard';
+  case 0x200:   return 'wide-1';
+  case 0x201:   return 'wide-1';
+  case 0x8000:  return 'film-simulation';
+  default:      return 'auto';
+  }
+};
 
 export const processTone = (value: number) =>
   value === 0 ? 0 : -(value / 16);
@@ -156,25 +182,31 @@ export const processWhiteBalanceComponent = (value: number) => value / 20;
 export const getFujifilmRecipeFromMakerNote = (
   bytes: Buffer,
 ): FujifilmRecipe => {
-  const recipe: FujifilmRecipe = {};
+  const recipe: FujifilmRecipe = {
+    dynamicRange: DEFAULT_DYNAMIC_RANGE,
+    whiteBalance: DEFAULT_WHITE_BALANCE,
+    grainEffect: DEFAULT_GRAIN_EFFECT,
+  };
 
   parseFujifilmMakerNote(
     bytes,
     (tag, numbers) => {
       switch (tag) {
+      case TAG_ID_DYNAMIC_RANGE:
+        recipe.dynamicRange.range = numbers[0] === 3
+          ? 'wide'
+          : 'standard';
+        break;
+      case TAG_ID_DYNAMIC_RANGE_SETTING:
+        recipe.dynamicRange.setting = processDynamicRangeSettings(numbers[0]);
+        break;
       case TAG_ID_DEVELOPMENT_DYNAMIC_RANGE:
-        recipe.dynamicRange = numbers[0];
+        recipe.dynamicRange.development = numbers[0];
         break;
       case TAG_ID_WHITE_BALANCE:
-        if (!recipe.whiteBalance) {
-          recipe.whiteBalance = DEFAULT_WHITE_BALANCE;
-        }
         recipe.whiteBalance.type = processWhiteBalanceType(numbers[0]);
         break;
       case TAG_ID_WHITE_BALANCE_FINE_TUNE:
-        if (!recipe.whiteBalance) {
-          recipe.whiteBalance = DEFAULT_WHITE_BALANCE;
-        }
         recipe.whiteBalance.red = processWhiteBalanceComponent(numbers[0]);
         recipe.whiteBalance.blue = processWhiteBalanceComponent(numbers[1]);
         break;
@@ -182,8 +214,7 @@ export const getFujifilmRecipeFromMakerNote = (
         recipe.highISONoiseReduction = processNoiseReduction(numbers[0]);
         break;
       case TAG_ID_NOISE_REDUCTION_BASIC:
-        recipe.noiseReductionBasic =
-          processNoiseReductionLegacy(numbers[0]);
+        recipe.noiseReductionBasic = processNoiseReductionLegacy(numbers[0]);
         break;
       case TAG_ID_HIGHLIGHT:
         recipe.highlight = processTone(numbers[0]);
@@ -207,11 +238,9 @@ export const getFujifilmRecipeFromMakerNote = (
         recipe.colorChromeFXBlue = processWeakStrong(numbers[0]);
         break;
       case TAG_ID_GRAIN_EFFECT_ROUGHNESS:
-        if (!recipe.grainEffect) { recipe.grainEffect = DEFAULT_GRAIN_EFFECT; }
         recipe.grainEffect.roughness = processWeakStrong(numbers[0]);
         break;
       case TAG_ID_GRAIN_EFFECT_SIZE:
-        if (!recipe.grainEffect) { recipe.grainEffect = DEFAULT_GRAIN_EFFECT; }
         recipe.grainEffect.size = processGrainEffectSize(numbers[0]);
         break;
       case TAG_ID_BW_ADJUSTMENT:
