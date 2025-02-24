@@ -31,7 +31,7 @@ export const extractImageDataFromBlobPath = async (
   },
 ): Promise<{
   blobId?: string
-  photoFormExif?: Partial<PhotoFormData>
+  formDataFromExif?: Partial<PhotoFormData>
   imageResizedBase64?: string
   shouldStripGpsData?: boolean
   fileBytes?: ArrayBuffer
@@ -108,7 +108,7 @@ export const extractImageDataFromBlobPath = async (
   return {
     blobId,
     ...exifData && {
-      photoFormExif: {
+      formDataFromExif: {
         ...includeInitialPhotoFields && {
           hidden: 'false',
           favorite: 'false',

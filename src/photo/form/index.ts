@@ -50,6 +50,7 @@ type FormMeta = {
   readOnly?: boolean
   validate?: (value?: string) => string | undefined
   validateStringMaxLength?: number
+  spellCheck?: boolean
   capitalize?: boolean
   hide?: boolean
   hideIfEmpty?: boolean
@@ -59,6 +60,7 @@ type FormMeta = {
   selectOptions?: { value: string, label: string }[]
   selectOptionsDefaultLabel?: string
   tagOptions?: AnnotatedTag[]
+  shouldNotOverwriteWithNullDataOnSync?: boolean
 };
 
 const STRING_MAX_LENGTH_SHORT = 255;
@@ -107,12 +109,26 @@ const FORM_METADATA = (
     selectOptions: FILM_SIMULATION_FORM_INPUT_OPTIONS,
     selectOptionsDefaultLabel: 'Unknown',
     shouldHide: ({ make }) => make !== MAKE_FUJIFILM,
+    shouldNotOverwriteWithNullDataOnSync: true,
   },
   fujifilmRecipe: {
     type: 'textarea',
     label: 'fujifilm recipe',
+    spellCheck: false,
+    capitalize: false,
+    validate: value => {
+      let validationMessage = undefined;
+      if (value) {
+        try {
+          JSON.parse(value);
+        } catch {
+          validationMessage = 'Invalid JSON';
+        }
+      }
+      return validationMessage;
+    },
     shouldHide: ({ make }) => make !== MAKE_FUJIFILM,
-    readOnly: true,
+    shouldNotOverwriteWithNullDataOnSync: true,
   },
   focalLength: { label: 'focal length' },
   focalLengthIn35MmFormat: { label: 'focal length 35mm-equivalent' },
@@ -137,6 +153,11 @@ const FORM_METADATA = (
   favorite: { label: 'favorite', type: 'checkbox', excludeFromInsert: true },
   hidden: { label: 'hidden', type: 'checkbox' },
 });
+
+export const FIELDS_TO_NOT_OVERWRITE_WITH_NULL_DATA_ON_SYNC =
+  Object.entries(FORM_METADATA())
+    .filter(([_, meta]) => meta.shouldNotOverwriteWithNullDataOnSync)
+    .map(([key]) => key as keyof PhotoFormData);
 
 export const FORM_METADATA_ENTRIES = (
   ...args: Parameters<typeof FORM_METADATA>
@@ -175,9 +196,8 @@ export const formHasTextContent = ({
 
 // CREATE FORM DATA: FROM PHOTO
 
-export const convertPhotoToFormData = (
-  photo: Photo,
-): PhotoFormData => {
+export const convertPhotoToFormData = (photo: Photo): PhotoFormData => {
+  console.log('convertPhotoToFormData', photo);
   const valueForKey = (key: keyof Photo, value: any) => {
     switch (key) {
     case 'tags':

@@ -307,12 +307,16 @@ export default function PhotoLarge({
                   <li>{photo.isoFormatted}</li>
                   <li>{photo.exposureCompensationFormatted ?? '0ev'}</li>
                 </ul>
-                {showSimulation && photo.filmSimulation &&
+                {(
+                  (showSimulation && photo.filmSimulation)
+                  || photo.fujifilmRecipe
+                ) &&
                   <div className="flex items-center gap-2 *:w-auto">
-                    <PhotoFilmSimulation
-                      simulation={photo.filmSimulation}
-                      prefetch={prefetchRelatedLinks}
-                    />
+                    {showSimulation && photo.filmSimulation &&
+                      <PhotoFilmSimulation
+                        simulation={photo.filmSimulation}
+                        prefetch={prefetchRelatedLinks}
+                      />}
                     {photo.fujifilmRecipe &&
                       <button
                         ref={refRecipeTrigger}

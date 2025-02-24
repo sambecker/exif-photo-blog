@@ -21,7 +21,7 @@ export default async function UploadPage({ params }: Params) {
 
   const {
     blobId,
-    photoFormExif,
+    formDataFromExif,
     imageResizedBase64: imageThumbnailBase64,
     shouldStripGpsData,
     error,
@@ -32,7 +32,7 @@ export default async function UploadPage({ params }: Params) {
   });
 
   const isDataMissing =
-    !photoFormExif ||
+    !formDataFromExif ||
     (AI_TEXT_GENERATION_ENABLED && !imageThumbnailBase64);
 
   if (isDataMissing && !error) {
@@ -50,7 +50,7 @@ export default async function UploadPage({ params }: Params) {
     !isDataMissing
       ? <UploadPageClient {...{
         blobId,
-        photoFormExif,
+        formDataFromExif,
         uniqueTags,
         hasAiTextGeneration,
         textFieldsToAutoGenerate,

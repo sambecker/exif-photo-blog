@@ -23,6 +23,7 @@ export default function FieldSetWithStatus({
   loading,
   required,
   readOnly,
+  spellCheck,
   capitalize,
   type = 'text',
   inputRef,
@@ -43,6 +44,7 @@ export default function FieldSetWithStatus({
   loading?: boolean
   required?: boolean
   readOnly?: boolean
+  spellCheck?: boolean
   capitalize?: boolean
   type?: FieldSetType
   inputRef?: Ref<HTMLInputElement>
@@ -140,6 +142,8 @@ export default function FieldSetWithStatus({
                 placeholder={placeholder}
                 onChange={e => onChange?.(e.target.value)}
                 readOnly={readOnly || pending || loading}
+                spellCheck={spellCheck}
+                autoCapitalize={!capitalize ? 'off' : undefined}
                 className={clsx(
                   'w-full h-24 resize-none',
                   Boolean(error) && 'error',
@@ -156,6 +160,7 @@ export default function FieldSetWithStatus({
                   ? e.target.value === 'true' ? 'false' : 'true'
                   : e.target.value)}
                 type={type}
+                spellCheck={spellCheck}
                 autoComplete="off"
                 autoCapitalize={!capitalize ? 'off' : undefined}
                 readOnly={readOnly || pending || loading}
