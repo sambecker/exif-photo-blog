@@ -1,11 +1,11 @@
 import { getStoragePhotoUrlsNoStore } from '@/platforms/storage/cache';
 import { getPhotos } from '@/photo/db/query';
 import { getPhotosMetaCached } from '@/photo/cache';
-import { OUTDATED_THRESHOLD } from '@/photo';
 import AdminPhotosClient from '@/admin/AdminPhotosClient';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { TIMEZONE_COOKIE_NAME } from '@/utility/timezone';
+import { getOutdatedPhotosCount } from '@/photo/db/query';
 
 export const maxDuration = 60;
 
@@ -31,11 +31,7 @@ export default async function AdminPhotosPage() {
     getPhotosMetaCached({ hidden: 'include'})
       .then(({ count }) => count)
       .catch(() => 0),
-    getPhotosMetaCached({
-      hidden: 'include',
-      updatedBefore: OUTDATED_THRESHOLD,
-    })
-      .then(({ count }) => count)
+    getOutdatedPhotosCount()
       .catch(() => 0),
     DEBUG_PHOTO_BLOBS
       ? getStoragePhotoUrlsNoStore()

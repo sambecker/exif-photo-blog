@@ -5,7 +5,7 @@ export default function Badge({
   className,
   type = 'large',
   dimContent,
-  highContrast,
+  contrast = 'low',
   uppercase,
   interactive,
 }: {
@@ -13,7 +13,7 @@ export default function Badge({
   className?: string
   type?: 'large' | 'small' | 'text-only'
   dimContent?: boolean
-  highContrast?: boolean
+  contrast?: 'low' | 'medium' | 'high' | 'frosted'
   uppercase?: boolean
   interactive?: boolean
 }) {
@@ -30,13 +30,15 @@ export default function Badge({
       return clsx(
         'px-[5px] h-[17px] md:h-[18px]',
         'text-[0.7rem] font-medium rounded-[0.25rem]',
-        highContrast
+        contrast === 'high'
           ? 'text-invert bg-invert'
-          : 'text-medium bg-gray-300/30 dark:bg-gray-700/50',
-        interactive && (highContrast
+          : contrast === 'frosted'
+            ? 'text-black bg-neutral-100/30 border border-neutral-200/40'
+            : 'text-medium bg-gray-300/30 dark:bg-gray-700/50',
+        interactive && (contrast === 'high'
           ? 'hover:opacity-70'
           : 'hover:text-gray-900 dark:hover:text-gray-100'),
-        interactive && (highContrast
+        interactive && (contrast === 'high'
           ? 'active:opacity-90'
           : 'active:bg-gray-200 dark:active:bg-gray-700/60'),
       );

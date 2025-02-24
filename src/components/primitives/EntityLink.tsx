@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 import LabeledIcon, { LabeledIconType } from './LabeledIcon';
 import Badge from '../Badge';
 import { clsx } from 'clsx/lite';
@@ -10,7 +10,7 @@ import Spinner from '../Spinner';
 export interface EntityLinkExternalProps {
   type?: LabeledIconType
   badged?: boolean
-  contrast?: 'low' | 'medium' | 'high'
+  contrast?: ComponentProps<typeof Badge>['contrast']
   prefetch?: boolean
 }
 
@@ -48,6 +48,8 @@ export default function EntityLink({
       return 'text-dim';
     case 'high':
       return 'text-main';
+    case 'frosted':
+      return 'text-black';
     default:
       return 'text-medium';
     }
@@ -88,7 +90,7 @@ export default function EntityLink({
             {badged
               ? <Badge
                 type="small"
-                highContrast={contrast === 'high'}
+                contrast={contrast}
                 className='translate-y-[-0.5px]'
                 uppercase
                 interactive
@@ -105,9 +107,14 @@ export default function EntityLink({
             <span className="hidden group-hover:inline text-dim">
               {hoverEntity}
             </span>}
-          {isLoading && <Spinner className={clsx(
-            badged && 'translate-y-[0.5px]',
-          )} />}
+          {isLoading &&
+            <Spinner
+              className={clsx(
+                badged && 'translate-y-[0.5px]',
+                contrast === 'frosted' && 'text-neutral-500',
+              )}
+              color={contrast === 'frosted' ? 'text' : undefined}
+            />}
         </>}
       </LinkWithStatus>
     </span>

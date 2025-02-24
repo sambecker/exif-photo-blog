@@ -12,8 +12,8 @@ import {
   HAS_STATIC_OPTIMIZATION,
   MATTE_PHOTOS,
 } from '@/app/config';
-import { OUTDATED_THRESHOLD } from '@/photo';
 import { getGitHubMetaForCurrentApp, getSignificantInsights } from '.';
+import { getOutdatedPhotosCount } from '@/photo/db/query';
 
 const BASIC_PHOTO_INSTALLATION_COUNT = 32;
 
@@ -21,7 +21,7 @@ export default async function AdminAppInsights() {
   const [
     { count: photosCount, dateRange },
     { count: photosCountHidden },
-    { count: photosCountOutdated },
+    photosCountOutdated,
     { count: photosCountPortrait },
     tags,
     cameras,
@@ -31,7 +31,7 @@ export default async function AdminAppInsights() {
   ] = await Promise.all([
     getPhotosMeta({ hidden: 'include' }),
     getPhotosMeta({ hidden: 'only' }),
-    getPhotosMeta({ hidden: 'include', updatedBefore: OUTDATED_THRESHOLD }),
+    getOutdatedPhotosCount(),
     getPhotosMeta({ maximumAspectRatio: 0.9 }),
     getUniqueTags(),
     getUniqueCameras(),

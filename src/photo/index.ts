@@ -20,8 +20,7 @@ import { parameterize } from '@/utility/string';
 import camelcaseKeys from 'camelcase-keys';
 import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
-
-export const OUTDATED_THRESHOLD = new Date('2024-06-16');
+import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 
 // INFINITE SCROLL: FEED
 export const INFINITE_SCROLL_FEED_INITIAL =
@@ -66,6 +65,7 @@ export interface PhotoExif {
   latitude?: number
   longitude?: number
   filmSimulation?: FilmSimulation
+  fujifilmRecipe?: string
   takenAt?: string
   takenAtNaive?: string
 }
@@ -88,7 +88,8 @@ export interface PhotoDbInsert extends PhotoExif {
 }
 
 // Raw db response
-export interface PhotoDb extends Omit<PhotoDbInsert, 'takenAt' | 'tags'> {
+export interface PhotoDb extends
+  Omit<PhotoDbInsert, 'takenAt' | 'tags'> {
   updatedAt: Date
   createdAt: Date
   takenAt: Date
@@ -96,7 +97,7 @@ export interface PhotoDb extends Omit<PhotoDbInsert, 'takenAt' | 'tags'> {
 }
 
 // Parsed db response
-export interface Photo extends PhotoDb {
+export interface Photo extends Omit<PhotoDb, 'fujifilmRecipe'> {
   focalLengthFormatted?: string
   focalLengthIn35MmFormatFormatted?: string
   fNumberFormatted?: string
@@ -104,6 +105,7 @@ export interface Photo extends PhotoDb {
   exposureTimeFormatted?: string
   exposureCompensationFormatted?: string
   takenAtNaiveFormatted: string
+  fujifilmRecipe?: FujifilmRecipe
 }
 
 export interface PhotoSetCategory {
@@ -139,6 +141,9 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
       formatExposureTime(photoDb.exposureTime),
     exposureCompensationFormatted:
       formatExposureCompensation(photoDb.exposureCompensation),
+    fujifilmRecipe: photoDb.fujifilmRecipe
+      ? JSON.parse(photoDb.fujifilmRecipe)
+      : undefined,
     takenAtNaiveFormatted:
       formatDateFromPostgresString(photoDb.takenAtNaive),
   };
@@ -159,6 +164,7 @@ export const convertPhotoToPhotoDbInsert = (
 ): PhotoDbInsert => ({
   ...photo,
   takenAt: photo.takenAt.toISOString(),
+  fujifilmRecipe: JSON.stringify(photo.fujifilmRecipe),
 });
 
 export const photoStatsAsString = (photo: Photo) => [

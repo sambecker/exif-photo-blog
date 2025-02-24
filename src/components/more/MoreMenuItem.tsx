@@ -12,6 +12,7 @@ export default function MoreMenuItem({
   icon,
   href,
   hrefDownloadName,
+  className,
   action,
   shouldPreventDefault = true,
 }: {
@@ -19,6 +20,7 @@ export default function MoreMenuItem({
   icon?: ReactNode
   href?: string
   hrefDownloadName?: string
+  className?: string
   action?: () => Promise<void> | void
   shouldPreventDefault?: boolean
 }) {
@@ -43,6 +45,7 @@ export default function MoreMenuItem({
         isLoading
           ? 'cursor-not-allowed opacity-50'
           : 'cursor-pointer',
+        className,
       )}
       onClick={async e => {
         if (shouldPreventDefault) { e.preventDefault(); }

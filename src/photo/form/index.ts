@@ -18,11 +18,12 @@ import { convertStringToArray } from '@/utility/string';
 import { generateNanoid } from '@/utility/nanoid';
 import {
   FILM_SIMULATION_FORM_INPUT_OPTIONS,
-  MAKE_FUJIFILM,
-} from '@/platforms/fujifilm';
+} from '@/platforms/fujifilm/simulation';
 import { FilmSimulation } from '@/simulation';
 import { GEO_PRIVACY_ENABLED } from '@/app/config';
 import { TAG_FAVS, getValidationMessageForTags } from '@/tag';
+import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
+import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 
 type VirtualFields = 'favorite';
 
@@ -107,6 +108,12 @@ const FORM_METADATA = (
     selectOptionsDefaultLabel: 'Unknown',
     shouldHide: ({ make }) => make !== MAKE_FUJIFILM,
   },
+  fujifilmRecipe: {
+    type: 'textarea',
+    label: 'fujifilm recipe',
+    shouldHide: ({ make }) => make !== MAKE_FUJIFILM,
+    readOnly: true,
+  },
   focalLength: { label: 'focal length' },
   focalLengthIn35MmFormat: { label: 'focal length 35mm-equivalent' },
   lensMake: { label: 'lens make' },
@@ -181,6 +188,8 @@ export const convertPhotoToFormData = (
       return value?.toISOString ? value.toISOString() : value;
     case 'hidden':
       return value ? 'true' : 'false';
+    case 'fujifilmRecipe':
+      return JSON.stringify(value);
     default:
       return value !== undefined && value !== null
         ? value.toString()
@@ -200,6 +209,7 @@ export const convertPhotoToFormData = (
 export const convertExifToFormData = (
   data: ExifData,
   filmSimulation?: FilmSimulation,
+  fujifilmRecipe?: FujifilmRecipe,
 ): Omit<
   Record<keyof PhotoExif, string | undefined>,
   'takenAt' | 'takenAtNaive'
@@ -223,6 +233,7 @@ export const convertExifToFormData = (
   longitude:
     !GEO_PRIVACY_ENABLED ? data.tags?.GPSLongitude?.toString() : undefined,
   filmSimulation,
+  fujifilmRecipe: JSON.stringify(fujifilmRecipe),
   ...data.tags?.DateTimeOriginal && {
     takenAt: convertTimestampWithOffsetToPostgresString(
       data.tags.DateTimeOriginal,
@@ -267,7 +278,10 @@ export const convertFormDataToPhotoDbInsert = (
   });
 
   return {
-    ...(photoForm as PhotoFormData & { filmSimulation?: FilmSimulation }),
+    ...(photoForm as PhotoFormData & {
+      filmSimulation?: FilmSimulation
+      fujifilmRecipe?: FujifilmRecipe
+    }),
     ...!photoForm.id && { id: generateNanoid() },
     // Delete array field when empty
     tags: tags.length > 0 ? tags : undefined,

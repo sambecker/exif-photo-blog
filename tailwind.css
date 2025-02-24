@@ -86,14 +86,22 @@
   }
 }
 
+/* Text Primitives */
+@utility text-dark {
+  @apply text-gray-900
+}
+@utility text-light {
+  @apply text-gray-100
+}
+
 /* Text */
 @utility text-main {
   @apply
-    text-gray-900 dark:text-gray-100
+    text-dark dark:text-light
 }
 @utility text-invert {
   @apply
-    text-white dark:text-black
+    text-light dark:text-dark
 }
 @utility text-medium {
   @apply

@@ -112,6 +112,7 @@ export default function CommandKClient({
     shouldShowBaselineGrid,
     shouldDebugImageFallbacks,
     shouldDebugInsights,
+    shouldDebugRecipeOverlays,
     setIsCommandKOpen: setIsOpen,
     setShouldRespondToKeyboardCommands,
     setShouldShowBaselineGrid,
@@ -120,6 +121,7 @@ export default function CommandKClient({
     setArePhotosMatted,
     setShouldDebugImageFallbacks,
     setShouldDebugInsights,
+    setShouldDebugRecipeOverlays,
   } = useAppState();
 
   const isOpenRef = useRef(isOpen);
@@ -298,6 +300,11 @@ export default function CommandKClient({
           'Insights Debugging',
           setShouldDebugInsights,
           shouldDebugInsights,
+        ),
+        renderToggle(
+          'Recipe Overlays',
+          setShouldDebugRecipeOverlays,
+          shouldDebugRecipeOverlays,
         ),
       ],
     });

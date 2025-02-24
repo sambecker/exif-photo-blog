@@ -2,9 +2,10 @@
 
 import SiteGrid from '@/components/SiteGrid';
 import { clsx } from 'clsx/lite';
-import { FILM_SIMULATION_FORM_INPUT_OPTIONS } from '@/platforms/fujifilm';
-import PhotoFilmSimulation from
-  '@/simulation/PhotoFilmSimulation';
+import {
+  FILM_SIMULATION_FORM_INPUT_OPTIONS,
+} from '@/platforms/fujifilm/simulation';
+import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
 import { useEffect, useState } from 'react';
 
 export default function FilmPage() {

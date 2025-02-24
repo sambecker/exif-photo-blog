@@ -4,7 +4,7 @@ const MOUSE_DOWN = 'mousedown';
 
 interface Options {
   // HTML reference
-  htmlElements: RefObject<HTMLElement | null>[],
+  htmlElements: (RefObject<HTMLElement | null> | undefined)[],
   // Callbacks based on click target
   onClick?: (event?: MouseEvent) => void,
   onClickInside?: (event?: MouseEvent) => void,
@@ -24,7 +24,7 @@ const useClickInsideOutside = ({
     const target = event.target as HTMLElement;
 
     const htmlElementsContainTarget = htmlElements
-      .some(element => element.current?.contains(target));
+      .some(element => element?.current?.contains(target));
 
     // On click
     onClick?.(event);

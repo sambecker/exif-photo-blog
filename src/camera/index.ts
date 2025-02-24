@@ -24,8 +24,9 @@ export type CameraWithCount = {
 
 export type Cameras = CameraWithCount[];
 
-export const createCameraKey = ({ make, model }: Camera) =>
-  parameterize(`${make}-${model}`, true);
+// Support keys for make-only and model-only camera queries
+export const createCameraKey = ({ make, model }: Partial<Camera>) =>
+  parameterize(`${make ?? 'ANY'}-${model ?? 'ANY'}`, true);
 
 export const getCameraFromParams = ({
   make,

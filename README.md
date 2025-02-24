@@ -130,6 +130,7 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_HIDE_TAKEN_AT_TIME = 1` hides taken at time from photo meta
 - `NEXT_PUBLIC_HIDE_SOCIAL = 1` removes X (formerly Twitter) button from share modal
 - `NEXT_PUBLIC_HIDE_FILM_SIMULATIONS = 1` prevents Fujifilm simulations showing up in `/grid` sidebar and CMD-K search results
+- `NEXT_PUBLIC_HIDE_RECIPES = 1` prevents Fujifilm recipe button showing up in photo meta
 - `NEXT_PUBLIC_HIDE_REPO_LINK = 1` removes footer link to repo
 
 #### Grid
@@ -281,6 +282,9 @@ Vercel Postgres can be switched to another Postgres-compatible, pooling provider
 
 #### Why aren't Fujifilm simulations importing alongside EXIF data?
 > Fujifilm simulation data is stored in vendor-specific Makernote binaries embedded in EXIF data. Under certain circumstances an intermediary may strip out this data. For instance, there is a known issue on iOS where editing an image, e.g., cropping it, causes Makernote data loss. If simulation data appears to be missing, try importing the original file as it was stored by the camera. Additionally, if you can confirm the simulation mode, you can edit the photo and manually select it.
+
+#### My Fujifilm recipes are missing/displaying incorrect data. What should I do?
+> Fujifilm file specifications have evolved over time. Open an issue with the file in question attached in order for it to be investigated.
 
 #### Why do my images appear flipped/rotated incorrectly?
 > For a number of reasons, only EXIF orientations: 1, 3, 6, and 8 are supported. Orientations 2, 4, 5, and 7—which make use of mirroring—are not supported.

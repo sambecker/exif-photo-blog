@@ -23,6 +23,9 @@ import {
 import { getWheresFromOptions } from '.';
 import { FocalLengths } from '@/focal';
 import { Lenses, createLensKey } from '@/lens';
+import { migrationForError } from './migration';
+import { UPDATED_BEFORE_01, UPDATED_BEFORE_02 } from '../outdated';
+import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
 
 const createPhotosTable = () =>
   sql`
@@ -50,6 +53,7 @@ const createPhotosTable = () =>
       latitude DOUBLE PRECISION,
       longitude DOUBLE PRECISION,
       film_simulation VARCHAR(255),
+      fujifilm_recipe JSONB,
       priority_order REAL,
       taken_at TIMESTAMP WITH TIME ZONE NOT NULL,
       taken_at_naive VARCHAR(255) NOT NULL,
@@ -57,24 +61,6 @@ const createPhotosTable = () =>
       updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
       created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     )
-  `;
-
-// Migration 01
-const MIGRATION_FIELDS_01 = ['caption', 'semantic_description'];
-const runMigration01 = () =>
-  sql`
-    ALTER TABLE photos
-    ADD COLUMN IF NOT EXISTS caption TEXT,
-    ADD COLUMN IF NOT EXISTS semantic_description TEXT
-  `;
-
-// Migration 02
-const MIGRATION_FIELDS_02 = ['lens_make', 'lens_model'];
-const runMigration02 = () =>
-  sql`
-    ALTER TABLE photos
-    ADD COLUMN IF NOT EXISTS lens_make VARCHAR(255),
-    ADD COLUMN IF NOT EXISTS lens_model VARCHAR(255)
   `;
 
 // Wrapper for most queries for JIT table creation/migration running
@@ -89,19 +75,10 @@ const safelyQueryPhotos = async <T>(
   try {
     result = await callback();
   } catch (e: any) {
-    if (MIGRATION_FIELDS_01.some(field => new RegExp(
-      `column "${field}" of relation "photos" does not exist`,
-      'i',
-    ).test(e.message))) {
-      console.log('Running migration 01 ...');
-      await runMigration01();
-      result = await callback();
-    } else if (MIGRATION_FIELDS_02.some(field => new RegExp(
-      `column "${field}" of relation "photos" does not exist`,
-      'i',
-    ).test(e.message))) {
-      console.log('Running migration 02 ...');
-      await runMigration02();
+    const migration = migrationForError(e);
+    if (migration) {
+      console.log(`Running Migration ${migration.label} ...`);
+      await migration.run();
       result = await callback();
     } else if (/relation "photos" does not exist/i.test(e.message)) {
       // If the table does not exist, create it
@@ -163,6 +140,7 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       latitude,
       longitude,
       film_simulation,
+      fujifilm_recipe,
       priority_order,
       hidden,
       taken_at,
@@ -192,6 +170,7 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       ${photo.latitude},
       ${photo.longitude},
       ${photo.filmSimulation},
+      ${JSON.stringify(photo.fujifilmRecipe)},
       ${photo.priorityOrder},
       ${photo.hidden},
       ${photo.takenAt},
@@ -224,6 +203,7 @@ export const updatePhoto = (photo: PhotoDbInsert) =>
     latitude=${photo.latitude},
     longitude=${photo.longitude},
     film_simulation=${photo.filmSimulation},
+    fujifilm_recipe=${JSON.stringify(photo.fujifilmRecipe)},
     priority_order=${photo.priorityOrder || null},
     hidden=${photo.hidden},
     taken_at=${photo.takenAt},
@@ -467,3 +447,39 @@ export const getPhoto = async (
       .then(({ rows }) => rows.map(parsePhotoFromDb))
       .then(photos => photos.length > 0 ? photos[0] : undefined);
   }, 'getPhoto');
+
+// Outdated queries
+
+const outdatedWhereClause =
+  // eslint-disable-next-line quotes
+  `WHERE updated_at < $1 OR (updated_at < $2 AND make = $3)`;
+
+const outdatedValues = [
+  UPDATED_BEFORE_01.toISOString(),
+  UPDATED_BEFORE_02.toISOString(),
+  MAKE_FUJIFILM,
+];
+
+export const getOutdatedPhotos = () => safelyQueryPhotos(
+  () => query(`
+    SELECT * FROM photos
+    ${outdatedWhereClause}
+    ORDER BY created_at ASC
+    LIMIT 1000
+  `,
+  outdatedValues,
+  )
+    .then(({ rows }) => rows.map(parsePhotoFromDb)),
+  'getOutdatedPhotos',
+);
+
+export const getOutdatedPhotosCount = () => safelyQueryPhotos(
+  () => query(`
+    SELECT COUNT(*) FROM photos
+    ${outdatedWhereClause}
+  `,
+  outdatedValues,
+  )
+    .then(({ rows }) => parseInt(rows[0].count, 10)),
+  'getOutdatedPhotosCount',
+);
