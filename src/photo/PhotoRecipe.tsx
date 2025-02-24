@@ -84,8 +84,8 @@ export default function PhotoRecipe({
         'w-[19rem] p-3 space-y-3',
         'rounded-lg shadow-2xl',
         'text-[13.5px] text-black',
-        'bg-white/65 border border-neutral-200/30',
-        'backdrop-blur-xl saturate-200',
+        'bg-white/70 border border-neutral-200/30',
+        'backdrop-blur-xl saturate-[300%]',
       )}
     >
       <div className="flex items-center gap-2">
