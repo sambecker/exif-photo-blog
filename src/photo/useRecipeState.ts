@@ -23,7 +23,7 @@ export default function useRecipeState({
     ...pathComponents
   } = getPathComponents(pathname);
 
-  const searchParamShow = document?.location
+  const searchParamShow = typeof document !== 'undefined'
     ? (new URLSearchParams(document.location.search)).get(SEARCH_PARAM_SHOW)
     : undefined;
 
