@@ -321,7 +321,7 @@ export default function AdminAppInsightsClient({
                 default view to grid by setting
                 {' '}
                 <EnvVar
-                  variable="NEXT_PUBLIC_GRID_HOMEPAGE_ENABLED"
+                  variable="NEXT_PUBLIC_GRID_HOMEPAGE"
                   value="1"
                   trailingContent="."
                 />
