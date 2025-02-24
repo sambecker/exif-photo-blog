@@ -1,6 +1,7 @@
 import { PRIORITY_ORDER_ENABLED } from '@/app/config';
 import { parameterize } from '@/utility/string';
 import { PhotoSetCategory } from '..';
+import { Camera } from '@/camera';
 
 export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 export const PHOTO_DEFAULT_LIMIT = 100;
@@ -22,7 +23,9 @@ export type GetPhotosOptions = {
   takenAfterInclusive?: Date
   updatedBefore?: Date
   hidden?: 'exclude' | 'include' | 'only'
-} & PhotoSetCategory;
+} & Omit<PhotoSetCategory, 'camera'> & {
+  camera?: Partial<Camera>
+};
 
 export const areOptionsSensitive = (options: GetPhotosOptions) =>
   options.hidden === 'include' || options.hidden === 'only';
@@ -83,9 +86,11 @@ export const getWheresFromOptions = (
     wheres.push(`$${valuesIndex++}=ANY(tags)`);
     wheresValues.push(tag);
   }
-  if (camera) {
+  if (camera?.make) {
     wheres.push(`${parameterizeForDb('make')}=$${valuesIndex++}`);
     wheresValues.push(parameterize(camera.make, true));
+  }
+  if (camera?.model) {
     wheres.push(`${parameterizeForDb('model')}=$${valuesIndex++}`);
     wheresValues.push(parameterize(camera.model, true));
   }

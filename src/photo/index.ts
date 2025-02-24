@@ -22,8 +22,6 @@ import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 
-export const OUTDATED_THRESHOLD = new Date('2024-06-16');
-
 // INFINITE SCROLL: FEED
 export const INFINITE_SCROLL_FEED_INITIAL =
   process.env.NODE_ENV === 'development' ? 2 : 12;

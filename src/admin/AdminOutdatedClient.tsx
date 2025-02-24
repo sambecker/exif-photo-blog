@@ -1,6 +1,6 @@
 'use client';
 
-import { OUTDATED_THRESHOLD, Photo } from '@/photo';
+import { Photo } from '@/photo';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import IconGrSync from '@/app/IconGrSync';
@@ -80,18 +80,13 @@ export default function AdminOutdatedClient({
         <Note>
           <div className="space-y-1.5">
             <div className="font-bold">
-              Outdated photos found
+              {photos.length} outdated
+              {' '}
+              {photos.length === 1 ? 'photo' : 'photos'} found
             </div>
-            {photos.length}
+            They may have missing EXIF fields, inaccurate blur data,
             {' '}
-            {photos.length === 1 ? 'photo' : 'photos'}
-            {' ('}last updated before
-            {' '}
-            {new Date(OUTDATED_THRESHOLD).toLocaleDateString()}{')'}
-            {' '}
-            may have: missing EXIF fields, inaccurate blur data,
-            {' '}
-            undesired privacy settings, or missing AI-generated text
+            undesired privacy settings, or text that can be AI-generated
           </div>
         </Note>
         <div className="space-y-4">

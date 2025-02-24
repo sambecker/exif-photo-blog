@@ -342,8 +342,10 @@ export default function AdminAppInsightsClient({
             )}
           />}
           content={renderHighlightText(
-            // eslint-disable-next-line max-len
-            pluralize(photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED, 'outdated photo'),
+            pluralize(
+              photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED,
+              'outdated photo',
+            ),
             'yellow',
           )}
           expandPath={PATH_ADMIN_OUTDATED}

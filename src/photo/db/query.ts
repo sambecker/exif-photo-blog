@@ -24,6 +24,8 @@ import { getWheresFromOptions } from '.';
 import { FocalLengths } from '@/focal';
 import { Lenses, createLensKey } from '@/lens';
 import { migrationForError } from './migration';
+import { UPDATED_BEFORE_01, UPDATED_BEFORE_02 } from '../outdated';
+import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
 
 const createPhotosTable = () =>
   sql`
@@ -445,3 +447,39 @@ export const getPhoto = async (
       .then(({ rows }) => rows.map(parsePhotoFromDb))
       .then(photos => photos.length > 0 ? photos[0] : undefined);
   }, 'getPhoto');
+
+// Outdated queries
+
+const outdatedWhereClause =
+  // eslint-disable-next-line quotes
+  `WHERE updated_at < $1 OR (updated_at < $2 AND make = $3)`;
+
+const outdatedValues = [
+  UPDATED_BEFORE_01.toISOString(),
+  UPDATED_BEFORE_02.toISOString(),
+  MAKE_FUJIFILM,
+];
+
+export const getOutdatedPhotos = () => safelyQueryPhotos(
+  () => query(`
+    SELECT * FROM photos
+    ${outdatedWhereClause}
+    ORDER BY created_at ASC
+    LIMIT 1000
+  `,
+  outdatedValues,
+  )
+    .then(({ rows }) => rows.map(parsePhotoFromDb)),
+  'getOutdatedPhotos',
+);
+
+export const getOutdatedPhotosCount = () => safelyQueryPhotos(
+  () => query(`
+    SELECT COUNT(*) FROM photos
+    ${outdatedWhereClause}
+  `,
+  outdatedValues,
+  )
+    .then(({ rows }) => parseInt(rows[0].count, 10)),
+  'getOutdatedPhotosCount',
+);

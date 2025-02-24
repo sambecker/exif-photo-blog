@@ -6,18 +6,17 @@ import {
   getSignificantInsights,
   InsightIndicatorStatus,
 } from '.';
-import { getPhotosMeta } from '@/photo/db/query';
-import { OUTDATED_THRESHOLD } from '@/photo';
+import { getOutdatedPhotosCount } from '@/photo/db/query';
 
 export const getShouldShowInsightsIndicatorAction =
   async (): Promise<InsightIndicatorStatus> =>
     runAuthenticatedAdminServerAction(async () => {
       const [
         codeMeta,
-        { count: photosCountOutdated },
+        photosCountOutdated,
       ] = await Promise.all([
         getGitHubMetaForCurrentApp(),
-        getPhotosMeta({ hidden: 'include', updatedBefore: OUTDATED_THRESHOLD }),
+        getOutdatedPhotosCount(),
       ]);
       
       const {
