@@ -93,6 +93,7 @@ export default function PhotoLarge({
   const {
     areZoomControlsShown,
     arePhotosMatted,
+    shouldDebugRecipeOverlays,
     isUserSignedIn,
   } = useAppState();
 
@@ -182,7 +183,9 @@ export default function PhotoLarge({
         'flex items-center justify-center',
       )}>
         <AnimatePresence>
-          {shouldShowRecipe && photo.fujifilmRecipe && photo.filmSimulation &&
+          {(shouldShowRecipe || shouldDebugRecipeOverlays) &&
+          photo.fujifilmRecipe &&
+          photo.filmSimulation &&
             <PhotoRecipe
               ref={refRecipe}
               recipe={photo.fujifilmRecipe}

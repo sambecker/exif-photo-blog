@@ -65,6 +65,8 @@ export default function AppStateProvider({
     useState(false);
   const [shouldDebugInsights, setShouldDebugInsights] =
     useState(IS_DEVELOPMENT);
+  const [shouldDebugRecipeOverlays, setShouldDebugRecipeOverlays] =
+    useState(false);
 
   const invalidateSwr = useCallback(() => setSwrTimestamp(Date.now()), []);
 
@@ -143,6 +145,8 @@ export default function AppStateProvider({
         setShouldShowBaselineGrid,
         shouldDebugInsights,
         setShouldDebugInsights,
+        shouldDebugRecipeOverlays,
+        setShouldDebugRecipeOverlays,
       }}
     >
       {children}

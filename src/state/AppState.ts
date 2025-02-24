@@ -46,6 +46,8 @@ export interface AppStateContext {
   setShouldShowBaselineGrid?: Dispatch<SetStateAction<boolean>>
   shouldDebugInsights?: boolean
   setShouldDebugInsights?: Dispatch<SetStateAction<boolean>>
+  shouldDebugRecipeOverlays?: boolean
+  setShouldDebugRecipeOverlays?: Dispatch<SetStateAction<boolean>>
 }
 
 export const AppStateContext = createContext<AppStateContext>({});
