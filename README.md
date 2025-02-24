@@ -18,7 +18,7 @@ https://photos.sambecker.com
 - Automatic OG image generation
 - CMD-K menu with photo search
 - AI-generated text descriptions
-- Support for Fujifilm simulations
+- Support for Fujifilm recipes and film simulations
 
 <img src="/readme/og-image-share.png" alt="OG Image Preview" width=600 />
 
