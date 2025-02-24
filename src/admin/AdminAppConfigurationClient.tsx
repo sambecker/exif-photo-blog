@@ -73,6 +73,7 @@ export default function AdminAppConfigurationClient({
   showTakenAtTimeHidden,
   showSocial,
   showFilmSimulations,
+  showRecipes,
   showRepoLink,
   // Grid
   isGridHomepageEnabled,
@@ -524,6 +525,15 @@ export default function AdminAppConfigurationClient({
             simulations showing up in /grid sidebar and
             CMD-K results:
             {renderEnvVars(['NEXT_PUBLIC_HIDE_FILM_SIMULATIONS'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Show Fujifilm recipes"
+            status={showRecipes}
+            optional
+          >
+            Set environment variable to {'"1"'} to prevent
+            Fujifilm recipe button showing up in photo meta:
+            {renderEnvVars(['NEXT_PUBLIC_HIDE_RECIPES'])}
           </ChecklistRow>
           <ChecklistRow
             title="Show repo link"

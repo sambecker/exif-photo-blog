@@ -217,6 +217,8 @@ export const SHOW_SOCIAL =
   process.env.NEXT_PUBLIC_HIDE_SOCIAL !== '1';
 export const SHOW_FILM_SIMULATIONS =
   process.env.NEXT_PUBLIC_HIDE_FILM_SIMULATIONS !== '1';
+export const SHOW_RECIPES =
+  process.env.NEXT_PUBLIC_HIDE_RECIPES !== '1';
 export const SHOW_REPO_LINK =
   process.env.NEXT_PUBLIC_HIDE_REPO_LINK !== '1';
 
@@ -313,6 +315,7 @@ export const APP_CONFIGURATION = {
   showTakenAtTimeHidden: SHOW_TAKEN_AT_TIME,
   showSocial: SHOW_SOCIAL,
   showFilmSimulations: SHOW_FILM_SIMULATIONS,
+  showRecipes: SHOW_RECIPES,
   showRepoLink: SHOW_REPO_LINK,
   // Grid
   isGridHomepageEnabled: GRID_HOMEPAGE_ENABLED,
