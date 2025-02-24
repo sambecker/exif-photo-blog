@@ -362,6 +362,8 @@ export const syncPhotoAction = async (photoId: string) =>
         const photoFormDbInsert = convertFormDataToPhotoDbInsert({
           ...convertPhotoToFormData(photo),
           ...photoFormExif,
+          // Don't overwrite manually configured film simulations
+          ...photo.filmSimulation && { filmSimulation: photo.filmSimulation },
           ...!BLUR_ENABLED && { blurData: undefined },
           ...!photo.title && { title: atTitle },
           ...!photo.caption && { caption: aiCaption },
