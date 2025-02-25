@@ -47,7 +47,10 @@ export default function AdminPhotoMenuClient({
   const items = useMemo(() => {
     const items: ComponentProps<typeof MoreMenuItem>[] = [{
       label: 'Edit',
-      icon: <FaRegEdit size={14} />,
+      icon: <FaRegEdit
+        size={15}
+        className="translate-x-[0.5px] translate-y-[-0.5px]"
+      />,
       href: pathForAdminPhotoEdit(photo.id),
     }];
     if (includeFavorite) {
