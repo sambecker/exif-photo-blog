@@ -17,11 +17,8 @@ export default async function AdminRecipePage({
     <SiteGrid
       contentMain={photo && fujifilmRecipe && filmSimulation
         ? <PhotoRecipeOverlay
-          backgroundImageUrl={photo.url}
+          photos={[photo]}
           recipe={fujifilmRecipe}
-          simulation={filmSimulation}
-          exposure={photo.exposureCompensationFormatted ?? '+0ev'}
-          iso={photo.isoFormatted ?? 'ISO 0'}
         />
         : <div>
           Can&apos;t find photo/recipe
