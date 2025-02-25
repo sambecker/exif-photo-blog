@@ -2,7 +2,7 @@
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { clsx } from 'clsx/lite';
-import { ReactNode, useState, useTransition } from 'react';
+import { ReactNode, useEffect, useState, useTransition } from 'react';
 import LoaderButton from '../primitives/LoaderButton';
 import { usePathname, useRouter } from 'next/navigation';
 import { downloadFileFromBrowser } from '@/utility/url';
@@ -14,6 +14,7 @@ export default function MoreMenuItem({
   hrefDownloadName,
   className,
   action,
+  dismissMenu,
   shouldPreventDefault = true,
 }: {
   label: ReactNode
@@ -22,6 +23,7 @@ export default function MoreMenuItem({
   hrefDownloadName?: string
   className?: string
   action?: () => Promise<void> | void
+  dismissMenu?: () => void
   shouldPreventDefault?: boolean
 }) {
   const router = useRouter();
@@ -30,7 +32,16 @@ export default function MoreMenuItem({
 
   const [isPending, startTransition] = useTransition();
 
+  const [transitionDidStart, setTransitionDidStart] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (transitionDidStart && !isPending) {
+      dismissMenu?.();
+      setTransitionDidStart(false);
+    }
+  }, [isPending, dismissMenu, transitionDidStart]);
 
   return (
     <DropdownMenu.Item
@@ -47,21 +58,28 @@ export default function MoreMenuItem({
           : 'cursor-pointer',
         className,
       )}
-      onClick={async e => {
+      onSelect={async e => {
         if (shouldPreventDefault) { e.preventDefault(); }
         if (action) {
           const result = action();
           if (result instanceof Promise) {
             setIsLoading(true);
-            await result.finally(() => setIsLoading(false));
+            await result.finally(() => {
+              setIsLoading(false);
+              dismissMenu?.();
+            });
           }
         }
         if (href && href !== pathname) {
           if (hrefDownloadName) {
             setIsLoading(true);
             downloadFileFromBrowser(href, hrefDownloadName)
-              .finally(() => setIsLoading(false));
+              .finally(() => {
+                setIsLoading(false);
+                dismissMenu?.();
+              });
           } else {
+            setTransitionDidStart(true);
             startTransition(() => router.push(href));
           }
         }

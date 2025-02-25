@@ -3,25 +3,23 @@ import SwitcherItem from '@/components/SwitcherItem';
 import IconFeed from '@/app/IconFeed';
 import IconGrid from '@/app/IconGrid';
 import {
-  PATH_ADMIN_PHOTOS,
   PATH_FEED_INFERRED,
   PATH_GRID_INFERRED,
 } from '@/app/paths';
-import { BiLockAlt } from 'react-icons/bi';
 import IconSearch from './IconSearch';
 import { useAppState } from '@/state/AppState';
 import { GRID_HOMEPAGE_ENABLED } from './config';
+import AdminAppMenu from '@/admin/AdminAppMenu';
+import { clsx } from 'clsx/lite';
 
 export type SwitcherSelection = 'feed' | 'grid' | 'admin';
 
 export default function ViewSwitcher({
   currentSelection,
-  showAdmin,
 }: {
   currentSelection?: SwitcherSelection
-  showAdmin?: boolean
 }) {
-  const { setIsCommandKOpen } = useAppState();
+  const { setIsCommandKOpen, isUserSignedIn } = useAppState();
 
   const renderItemFeed = () =>
     <SwitcherItem
@@ -44,11 +42,17 @@ export default function ViewSwitcher({
       <Switcher>
         {GRID_HOMEPAGE_ENABLED ? renderItemGrid() : renderItemFeed()}
         {GRID_HOMEPAGE_ENABLED ? renderItemFeed() : renderItemGrid()}
-        {showAdmin &&
-          <SwitcherItem
-            icon={<BiLockAlt size={16} className="translate-y-[-0.5px]" />}
-            href={PATH_ADMIN_PHOTOS}
-            active={currentSelection === 'admin'}
+        {isUserSignedIn &&
+          <AdminAppMenu
+            className="mt-3 ml-[-84px]"
+            buttonClassName={clsx(
+              'w-[40px] h-[28px]',
+              'flex items-center justify-center',
+              'active:bg-transparent',
+              currentSelection === 'admin'
+                ? 'text-black dark:text-white'
+                : 'text-gray-400 dark:text-gray-600',
+            )}
           />}
       </Switcher>
       <Switcher type="borderless">
