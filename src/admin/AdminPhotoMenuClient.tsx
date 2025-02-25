@@ -96,7 +96,7 @@ export default function AdminPhotoMenuClient({
         size={15}
         className="translate-x-[-1px]"
       />,
-      className: 'text-error',
+      className: 'text-error *:hover:text-error',
       action: () => {
         if (confirm(deleteConfirmationTextForPhoto(photo))) {
           return deletePhotoAction(

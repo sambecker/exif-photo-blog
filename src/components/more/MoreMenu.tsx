@@ -31,7 +31,6 @@ export default function MoreMenu({
           <FiMoreHorizontal size={18} />
         </button>
       </DropdownMenu.Trigger>
-
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           align="end"
@@ -42,6 +41,8 @@ export default function MoreMenu({
             'component-surface',
             'p-1',
             'shadow-lg dark:shadow-xl',
+            'data-[side=top]:animate-fade-in-from-bottom',
+            'data-[side=bottom]:animate-fade-in-from-top',
             className,
           )}
         >
