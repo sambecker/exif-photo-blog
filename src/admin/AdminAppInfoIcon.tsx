@@ -27,7 +27,9 @@ export default function AdminAppInfoIcon({
           size={size === 'large' ? 8 : 7}
           className={clsx(
             'absolute',
-            'top-[1.5px] right-[0.5px]',
+            size === 'large'
+              ? 'top-[1.5px] right-[0.5px]'
+              : 'top-[1px] right-[-0.5px]',
             insightIndicatorStatus === 'blue'
               ? 'text-blue-500'
               : 'text-amber-500',

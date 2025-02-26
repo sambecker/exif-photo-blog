@@ -48,10 +48,10 @@ export default function MoreMenuItem({
       disabled={isLoading}
       className={clsx(
         'flex items-center h-8',
-        'px-2 py-1.5 rounded-[3px]',
+        'pl-2 pr-4 py-1.5 rounded-[3px]',
         'select-none hover:outline-hidden',
-        'hover:bg-gray-50 active:bg-gray-100',
-        'dark:hover:bg-gray-900/75 dark:active:bg-gray-900',
+        'hover:bg-gray-100/90 active:bg-gray-200/75',
+        'dark:hover:bg-gray-800/60 dark:active:bg-gray-900/80',
         'whitespace-nowrap',
         isLoading
           ? 'cursor-not-allowed opacity-50'

@@ -39,7 +39,7 @@ export default function AdminInfoPage({
                   href={path}
                   className={clsx(
                     page === titleShort
-                      ? 'underline underline-offset-10 decoration-[1.5px]'
+                      ? 'underline underline-offset-10 decoration-2'
                       : 'text-dim',
                     'px-1 py-0.5 rounded-md',
                   )}

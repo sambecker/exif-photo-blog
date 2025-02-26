@@ -26,22 +26,22 @@ export default function Container({
     case 'gray': return [
       'text-medium',
       'bg-gray-50 dark:bg-gray-900/40',
-      'border-gray-200 dark:border-gray-800',
+      'border-medium',
     ];
     case 'blue': return [
       'text-blue-900 dark:text-blue-300',
-      'bg-blue-50/50 dark:bg-blue-950/30',
-      'border-blue-200 dark:border-blue-500/40',
+      'bg-blue-100/35 dark:bg-blue-950/60',
+      'border-transparent',
     ];
     case 'red': return [
-      'text-red-600 dark:text-red-500/90',
-      'bg-red-50/50 dark:bg-red-950/50',
-      'border-red-100 dark:border-red-950',
+      'text-red-700 dark:text-red-400',
+      'bg-red-100/50 dark:bg-red-950/55',
+      'border-transparent',
     ];
     case 'yellow': return [
-      'text-amber-700 dark:text-amber-500/90',
-      'bg-amber-50/50 dark:bg-amber-950/30',
-      'border-amber-600/30 dark:border-amber-800/30',
+      'text-amber-700 dark:text-amber-500',
+      'bg-amber-100/55 dark:bg-amber-950/55',
+      'border-transparent',
     ];
     }
   };
