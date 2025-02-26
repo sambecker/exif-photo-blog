@@ -2,7 +2,6 @@
 
 import MoreMenu from '@/components/more/MoreMenu';
 import {
-  PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_INSIGHTS,
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_TAGS,
@@ -11,12 +10,11 @@ import {
 import { useAppState } from '@/state/AppState';
 import { ImCheckboxUnchecked } from 'react-icons/im';
 import { IoCloseSharp } from 'react-icons/io5';
-import { LuCog } from 'react-icons/lu';
 import { clsx } from 'clsx/lite';
 import { TbPhoto } from 'react-icons/tb';
 import { FiTag } from 'react-icons/fi';
 import { BiLockAlt } from 'react-icons/bi';
-import AdminAppInsightsIcon from './insights/AdminAppInsightsIcon';
+import AdminAppInfoIcon from './AdminAppInfoIcon';
 
 export default function AdminAppMenu({
   className,
@@ -60,15 +58,12 @@ export default function AdminAppMenu({
         />,
         href: PATH_ADMIN_TAGS,
       }, {
-        label: 'Insights',
-        icon: <AdminAppInsightsIcon className="translate-y-[-4px]" />,
-        href: PATH_ADMIN_INSIGHTS,
-      }, {
-        label: 'Configuration',
-        icon: <LuCog
-          className="text-[17px] translate-x-[0.5px] translate-y-[0.5px]"
+        label: 'App Info',
+        icon: <AdminAppInfoIcon
+          size="small"
+          className="translate-x-[1px] translate-y-[-0.5px]"
         />,
-        href: PATH_ADMIN_CONFIGURATION,
+        href: PATH_ADMIN_INSIGHTS,
       }, {
         label: isSelecting
           ? 'Exit Select'

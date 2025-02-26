@@ -4,8 +4,10 @@ import { FaCircle } from 'react-icons/fa6';
 import { LuCog } from 'react-icons/lu';
 
 export default function AdminAppInfoIcon({
+  size = 'large',
   className,
 }: {
+  size?: 'small' | 'large'
   className?: string
 }) {
   const { insightIndicatorStatus } = useAppState();
@@ -16,16 +18,16 @@ export default function AdminAppInfoIcon({
       className,
     )}>
       <LuCog
-        size={20}
+        size={size === 'large' ? 20 : 18}
         className="inline-flex translate-y-[1px]"
         aria-label="App Info"
       />
       {insightIndicatorStatus &&
         <FaCircle
-          size={8}
+          size={size === 'large' ? 8 : 7}
           className={clsx(
             'absolute',
-            'top-[2px] right-[0.5px]',
+            'top-[1.5px] right-[0.5px]',
             insightIndicatorStatus === 'blue'
               ? 'text-blue-500'
               : 'text-amber-500',
