@@ -6,15 +6,22 @@ import ResponsiveText from '@/components/primitives/ResponsiveText';
 import clsx from 'clsx/lite';
 import ClearCacheButton from '@/admin/ClearCacheButton';
 import { usePathname } from 'next/navigation';
+import { useAppState } from '@/state/AppState';
+import { FaCircle } from 'react-icons/fa6';
 
 const ADMIN_INFO_PAGES = [{
-  titleShort: 'Insights',
+  title: 'Insights',
   path: PATH_ADMIN_INSIGHTS,
 }, {
   title: 'Configuration',
   titleShort: 'Config',
   path: PATH_ADMIN_CONFIGURATION,
 }];
+
+const ADMIN_INFO_PAGE_WITHOUT_INSIGHTS = [{
+  title: 'App Configuration',
+  path: PATH_ADMIN_CONFIGURATION,
+}] as typeof ADMIN_INFO_PAGES;
 
 export default function AdminInfoPage({
   includeInsights,
@@ -23,20 +30,19 @@ export default function AdminInfoPage({
 }) {
   const pathname = usePathname();
 
-  const pages = ADMIN_INFO_PAGES
-    .filter(({ titleShort }) => (
-      titleShort !== 'Insights' ||
-      includeInsights
-    ));
+  const pages = includeInsights
+    ? ADMIN_INFO_PAGES
+    : ADMIN_INFO_PAGE_WITHOUT_INSIGHTS;
 
   const hasMultiplePages = pages.length > 1;
+
+  const { insightIndicatorStatus } = useAppState();
 
   return (
     <div className="flex items-center gap-4 min-h-9">
       <div className={clsx(
         'grow -translate-x-1',
         'flex items-center gap-3',
-        hasMultiplePages && '-translate-y-1',
       )}>
         {pages
           .map(({ title, titleShort, path }) =>
@@ -44,18 +50,30 @@ export default function AdminInfoPage({
               key={path}
               href={path}
               className={clsx(
+                'relative',
                 hasMultiplePages
                   ? pathname === path
-                    ? 'underline underline-offset-10 decoration-2'
+                    ? 'font-medium'
                     : 'text-dim'
                   : undefined,
                 'px-1 py-0.5 rounded-md',
+                'hover:text-main',
               )}
-              loadingClassName="bg-dim"
+              loadingClassName="bg-gray-200/50 dark:bg-gray-700/50"
             >
               <ResponsiveText shortText={titleShort}>
-                {title ?? titleShort}
+                {title}
               </ResponsiveText>
+              {title === 'Insights' && insightIndicatorStatus &&
+                <FaCircle
+                  size={6}
+                  className={clsx(
+                    insightIndicatorStatus === 'blue'
+                      ? 'text-blue-500'
+                      : 'text-amber-500',
+                    'absolute top-[4px] right-[-2px]',
+                  )}
+                />}
             </LinkWithStatus>)}
       </div>
       <ClearCacheButton />

@@ -81,8 +81,9 @@ export default function AdminNavClient({
                     'flex gap-0.5',
                     checkPathPrefix(pathname, href) ? 'font-bold' : 'text-dim',
                     'px-1 py-0.5 rounded-md',
+                    'hover:text-main',
                   )}
-                  loadingClassName="bg-dim"
+                  loadingClassName="bg-gray-200/50 dark:bg-gray-700/50"
                   prefetch={false}
                 >
                   <span>{label}</span>
