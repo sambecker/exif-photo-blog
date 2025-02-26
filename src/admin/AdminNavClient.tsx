@@ -6,6 +6,7 @@ import Note from '@/components/Note';
 import SiteGrid from '@/components/SiteGrid';
 import Spinner from '@/components/Spinner';
 import {
+  PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_INSIGHTS,
   checkPathPrefix,
   isPathAdminInfo,
@@ -18,6 +19,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { FaRegClock } from 'react-icons/fa';
 import AdminAppInfoIcon from './AdminAppInfoIcon';
+import AdminInfoNav from './AdminInfoNav';
 
 // Updates considered recent if they occurred in past 5 minutes
 const areTimesRecent = (dates: Date[]) => dates
@@ -26,9 +28,7 @@ const areTimesRecent = (dates: Date[]) => dates
 export default function AdminNavClient({
   items,
   mostRecentPhotoUpdateTime,
-  // TODO: use this with new <AdminSubNav> component
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  includeInsights,
+  includeInsights = true,
 }: {
   items: {
     label: string,
@@ -91,7 +91,9 @@ export default function AdminNavClient({
                 </LinkWithStatus>)}
             </div>
             <LinkWithLoader
-              href={PATH_ADMIN_INSIGHTS}
+              href={includeInsights
+                ? PATH_ADMIN_INSIGHTS
+                : PATH_ADMIN_CONFIGURATION}
               className={isPathAdminInfo(pathname)
                 ? 'font-bold'
                 : 'text-dim'}
@@ -105,6 +107,8 @@ export default function AdminNavClient({
               Photo updates detected—they may take several minutes to show up
               for visitors
             </Note>}
+          {isPathAdminInfo(pathname) &&
+            <AdminInfoNav {...{ includeInsights }} />}
         </div>
       }
     />
