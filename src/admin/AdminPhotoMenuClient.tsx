@@ -23,7 +23,7 @@ import { MdOutlineFileDownload } from 'react-icons/md';
 import MoreMenuItem from '@/components/more/MoreMenuItem';
 import IconGrSync from '@/app/IconGrSync';
 import { isPhotoOutdated } from '@/photo/outdated';
-import { FaCircle } from 'react-icons/fa6';
+import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 
 export default function AdminPhotoMenuClient({
   photo,
@@ -81,12 +81,13 @@ export default function AdminPhotoMenuClient({
       hrefDownloadName: downloadFileNameForPhoto(photo),
     });
     items.push({
-      label: <span className="inline-flex items-center gap-2">
+      label: 'Sync',
+      labelComplex: <span className="inline-flex items-center gap-2">
         <span>Sync</span>
         {isPhotoOutdated(photo) &&
-          <FaCircle
-            size={8}
-            className="text-amber-500 translate-y-[1.5px]"
+          <InsightsIndicatorDot
+            colorOverride="yellow"
+            className="translate-y-[1.5px]"
           />}
       </span>,
       icon: <IconGrSync className="translate-x-[-1px]" />,

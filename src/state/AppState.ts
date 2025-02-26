@@ -26,7 +26,10 @@ export interface AppStateContext {
   isUserSignedIn?: boolean
   adminUpdateTimes?: Date[]
   registerAdminUpdate?: () => void
-  hiddenPhotosCount?: number
+  photosCount?: number
+  photosCountHidden?: number
+  uploadsCount?: number
+  tagsCount?: number
   selectedPhotoIds?: string[]
   setSelectedPhotoIds?: Dispatch<SetStateAction<string[] | undefined>>
   isPerformingSelectEdit?: boolean

@@ -9,6 +9,8 @@ import { downloadFileFromBrowser } from '@/utility/url';
 
 export default function MoreMenuItem({
   label,
+  labelComplex,
+  annotation,
   icon,
   href,
   hrefDownloadName,
@@ -17,7 +19,9 @@ export default function MoreMenuItem({
   dismissMenu,
   shouldPreventDefault = true,
 }: {
-  label: ReactNode
+  label: string
+  labelComplex?: ReactNode
+  annotation?: string
   icon?: ReactNode
   href?: string
   hrefDownloadName?: string
@@ -48,7 +52,7 @@ export default function MoreMenuItem({
       disabled={isLoading}
       className={clsx(
         'flex items-center h-9',
-        'pl-2 pr-4 py-2 rounded-sm',
+        'pl-2 pr-3 py-2 rounded-sm',
         'select-none hover:outline-hidden',
         'hover:bg-gray-100/90 active:bg-gray-200/75',
         'dark:hover:bg-gray-800/60 dark:active:bg-gray-900/80',
@@ -92,7 +96,11 @@ export default function MoreMenuItem({
         styleAs="link-without-hover"
         className="translate-y-[1px]"
       >
-        {label}
+        {labelComplex ?? label}
+        {annotation &&
+          <span className="text-dim ml-3">
+            {annotation}
+          </span>}
       </LoaderButton>
     </DropdownMenu.Item>
   );

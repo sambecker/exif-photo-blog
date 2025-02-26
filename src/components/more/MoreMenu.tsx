@@ -14,7 +14,7 @@ export default function MoreMenu({
   align = 'end',
   ...props
 }: {
-  items: ComponentProps<typeof MoreMenuItem> []
+  items: ComponentProps<typeof MoreMenuItem>[]
   icon?: ReactNode
   header?: ReactNode
   className?: string

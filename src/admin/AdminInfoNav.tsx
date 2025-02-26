@@ -7,7 +7,7 @@ import clsx from 'clsx/lite';
 import ClearCacheButton from '@/admin/ClearCacheButton';
 import { usePathname } from 'next/navigation';
 import { useAppState } from '@/state/AppState';
-import { FaCircle } from 'react-icons/fa6';
+import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 
 const ADMIN_INFO_PAGES = [{
   title: 'Insights',
@@ -65,14 +65,10 @@ export default function AdminInfoPage({
                 {title}
               </ResponsiveText>
               {title === 'Insights' && insightIndicatorStatus &&
-                <FaCircle
-                  size={6}
-                  className={clsx(
-                    insightIndicatorStatus === 'blue'
-                      ? 'text-blue-500'
-                      : 'text-amber-500',
-                    'absolute top-[4px] right-[-2px]',
-                  )}
+                <InsightsIndicatorDot
+                  size="small"
+                  top={4}
+                  right={-2}
                 />}
             </LinkWithStatus>)}
       </div>
