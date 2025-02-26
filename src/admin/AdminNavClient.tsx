@@ -6,11 +6,9 @@ import Note from '@/components/Note';
 import SiteGrid from '@/components/SiteGrid';
 import Spinner from '@/components/Spinner';
 import {
-  PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_INSIGHTS,
   checkPathPrefix,
-  isPathAdminConfiguration,
-  isPathAdminInsights,
+  isPathAdminInfo,
   isPathTopLevelAdmin,
 } from '@/app/paths';
 import { useAppState } from '@/state/AppState';
@@ -19,8 +17,7 @@ import { differenceInMinutes } from 'date-fns';
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { FaRegClock } from 'react-icons/fa';
-import AdminAppInsightsIcon from './insights/AdminAppInsightsIcon';
-import { LuCog } from 'react-icons/lu';
+import AdminAppInfoIcon from './AdminAppInfoIcon';
 
 // Updates considered recent if they occurred in past 5 minutes
 const areTimesRecent = (dates: Date[]) => dates
@@ -29,6 +26,8 @@ const areTimesRecent = (dates: Date[]) => dates
 export default function AdminNavClient({
   items,
   mostRecentPhotoUpdateTime,
+  // TODO: use this with new <AdminSubNav> component
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   includeInsights,
 }: {
   items: {
@@ -91,33 +90,15 @@ export default function AdminNavClient({
                     <span>({count})</span>}
                 </LinkWithStatus>)}
             </div>
-            <div className="flex gap-3">
-              {includeInsights &&
-                <LinkWithLoader
-                  href={PATH_ADMIN_INSIGHTS}
-                  className={clsx(
-                    'translate-y-[-2px]',
-                    isPathAdminInsights(pathname)
-                      ? 'font-bold'
-                      : 'text-dim')}
-                  loader={<Spinner className="translate-y-[1px]" />}
-                >
-                  <AdminAppInsightsIcon />
-                </LinkWithLoader>}
-              <LinkWithLoader
-                href={PATH_ADMIN_CONFIGURATION}
-                className={isPathAdminConfiguration(pathname)
-                  ? 'font-bold'
-                  : 'text-dim'}
-                loader={<Spinner className="translate-y-[-0.75px]" />}
-              >
-                <LuCog
-                  size={20}
-                  className="inline-flex translate-y-[1px]"
-                  aria-label="App Configuration"
-                />
-              </LinkWithLoader>
-            </div>
+            <LinkWithLoader
+              href={PATH_ADMIN_INSIGHTS}
+              className={isPathAdminInfo(pathname)
+                ? 'font-bold'
+                : 'text-dim'}
+              loader={<Spinner className="translate-y-[-0.75px]" />}
+            >
+              <AdminAppInfoIcon />
+            </LinkWithLoader>
           </div>
           {shouldShowBanner &&
             <Note icon={<FaRegClock className="shrink-0" />}>

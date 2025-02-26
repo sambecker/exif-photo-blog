@@ -24,6 +24,7 @@ export type LinkWithStatusProps = Omit<
   children: ReactNode | ((props: {
     isLoading: boolean
   }) => ReactNode)
+  debugLoading?: boolean
 }
 
 export default function LinkWithStatus({
@@ -32,12 +33,14 @@ export default function LinkWithStatus({
   className,
   onClick,
   children,
+  debugLoading = false,
   ...props
 }: LinkWithStatusProps) {
   const path = usePathname();
 
   const [pathWhenClicked, setPathWhenClicked] = useState<string>();
-  const [isLoading, setIsLoading] = useState(false);
+  const [_isLoading, setIsLoading] = useState(false);
+  const isLoading = _isLoading || debugLoading;
   
   const isLoadingStartTime = useRef<number | undefined>(undefined);
 

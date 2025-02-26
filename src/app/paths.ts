@@ -64,6 +64,7 @@ export const PATHS_ADMIN = [
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_UPLOADS,
   PATH_ADMIN_TAGS,
+  PATH_ADMIN_INSIGHTS,
   PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_BASELINE,
   PATH_ADMIN_COMPONENTS,
@@ -225,11 +226,15 @@ export const isPathAdmin = (pathname?: string) =>
 export const isPathTopLevelAdmin = (pathname?: string) =>
   PATHS_ADMIN.some(path => path === pathname);
 
+export const isPathAdminInsights = (pathname?: string) =>
+  checkPathPrefix(pathname, PATH_ADMIN_INSIGHTS);
+
 export const isPathAdminConfiguration = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ADMIN_CONFIGURATION);
 
-export const isPathAdminInsights = (pathname?: string) =>
-  checkPathPrefix(pathname, PATH_ADMIN_INSIGHTS);
+export const isPathAdminInfo = (pathname?: string) =>
+  isPathAdminInsights(pathname) ||
+  isPathAdminConfiguration(pathname);
 
 export const isPathProtected = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ADMIN) ||
