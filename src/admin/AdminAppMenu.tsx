@@ -15,6 +15,8 @@ import { TbPhoto } from 'react-icons/tb';
 import { FiTag } from 'react-icons/fi';
 import { BiLockAlt } from 'react-icons/bi';
 import AdminAppInfoIcon from './AdminAppInfoIcon';
+import { PiSignOutBold } from 'react-icons/pi';
+import { signOutAndRedirectAction } from '@/auth/actions';
 
 export default function AdminAppMenu({
   className,
@@ -87,6 +89,10 @@ export default function AdminAppMenu({
           }
         },
         shouldPreventDefault: false,
+      }, {
+        label: 'Sign Out',
+        icon: <PiSignOutBold size={15} className="translate-x-[1px]" />,
+        action: signOutAndRedirectAction,
       }]}
       ariaLabel="Admin Menu"
     />

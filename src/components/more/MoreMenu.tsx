@@ -59,7 +59,7 @@ export default function MoreMenu({
           )}
         >
           {header && <div className={clsx(
-            'px-2 py-1.5 text-medium uppercase',
+            'px-2 pt-3 pb-2 text-dim uppercase',
             'text-sm',
           )}>
             {header}
