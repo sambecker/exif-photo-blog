@@ -1,32 +1,32 @@
 'use client';
 
-import { useState } from 'react';
 import { uploadPhotoFromClient } from '@/platforms/storage';
 import { useRouter } from 'next/navigation';
 import { PATH_ADMIN_UPLOADS, pathForAdminUploadUrl } from '@/app/paths';
 import ImageInput from '../components/ImageInput';
 import { clsx } from 'clsx/lite';
+import { useAppState } from '@/state/AppState';
 
 export default function PhotoUpload({
   shouldResize,
   onLastUpload,
-  isUploading,
-  setIsUploading,
   showUploadStatus,
   debug,
 }: {
   shouldResize?: boolean
   onLastUpload?: () => Promise<void>
-  isUploading: boolean
-  setIsUploading: (isUploading: boolean) => void
   showUploadStatus?: boolean
   debug?: boolean
 }) {
-  const [uploadError, setUploadError] = useState<string>();
-  const [debugDownload, setDebugDownload] = useState<{
-    href: string
-    fileName: string
-  }>();
+  const {
+    uploadState: {
+      isUploading,
+      uploadError,
+      debugDownload,
+    },
+    setUploadState,
+    resetUploadState,
+  } = useAppState();
 
   const router = useRouter();
 
@@ -38,11 +38,12 @@ export default function PhotoUpload({
       <div className="flex items-center gap-8">
         <form className="flex items-center min-w-0">
           <ImageInput
-            loading={isUploading}
             shouldResize={shouldResize}
             onStart={() => {
-              setIsUploading(true);
-              setUploadError('');
+              setUploadState?.({
+                isUploading: true,
+                uploadError: '',
+              });
             }}
             onBlobReady={async ({
               blob,
@@ -51,12 +52,14 @@ export default function PhotoUpload({
               isLastBlob,
             }) => {
               if (debug) {
-                setDebugDownload({
-                  href: URL.createObjectURL(blob),
-                  fileName: `debug.${extension}`,
+                setUploadState?.({
+                  isUploading: false,
+                  uploadError: '',
+                  debugDownload: {
+                    href: URL.createObjectURL(blob),
+                    fileName: `debug.${extension}`,
+                  },
                 });
-                setIsUploading(false);
-                setUploadError('');
               } else {
                 return uploadPhotoFromClient(
                   blob,
@@ -65,6 +68,7 @@ export default function PhotoUpload({
                   .then(async url => {
                     if (isLastBlob) {
                       await onLastUpload?.();
+                      resetUploadState?.();
                       if (hasMultipleUploads) {
                         // Redirect to view multiple uploads
                         router.push(PATH_ADMIN_UPLOADS);
@@ -75,8 +79,10 @@ export default function PhotoUpload({
                     }
                   })
                   .catch(error => {
-                    setIsUploading(false);
-                    setUploadError(`Upload Error: ${error.message}`);
+                    setUploadState?.({
+                      isUploading: false,
+                      uploadError: `Upload Error: ${error.message}`,
+                    });
                   });
               }
             }}

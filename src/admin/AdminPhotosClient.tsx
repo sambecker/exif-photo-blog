@@ -13,10 +13,10 @@ import PathLoaderButton from '@/components/primitives/PathLoaderButton';
 import { PATH_ADMIN_OUTDATED } from '@/app/paths';
 import { Photo } from '@/photo';
 import { StorageListResponse } from '@/platforms/storage';
-import { useState } from 'react';
 import { LiaBroomSolid } from 'react-icons/lia';
 import AdminUploadsTable from './AdminUploadsTable';
 import { Timezone } from '@/utility/timezone';
+import { useAppState } from '@/state/AppState';
 
 export default function AdminPhotosClient({
   photos,
@@ -37,7 +37,7 @@ export default function AdminPhotosClient({
   infiniteScrollMultiple: number
   timezone: Timezone
 }) {
-  const [isUploading, setIsUploading] = useState(false);
+  const { uploadState: { isUploading } } = useAppState();
 
   return (
     <SiteGrid
@@ -47,8 +47,6 @@ export default function AdminPhotosClient({
             <div className="grow min-w-0">
               <PhotoUpload
                 shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
-                isUploading={isUploading}
-                setIsUploading={setIsUploading}
                 onLastUpload={onLastPhotoUpload}
               />
             </div>

@@ -20,6 +20,7 @@ import { PiSignOutBold } from 'react-icons/pi';
 import { signOutAction } from '@/auth/actions';
 import { ComponentProps } from 'react';
 import { FaRegFolderOpen } from 'react-icons/fa';
+import { FiUploadCloud } from 'react-icons/fi';
 
 export default function AdminAppMenu({
   className,
@@ -41,6 +42,12 @@ export default function AdminAppMenu({
   const isSelecting = selectedPhotoIds !== undefined;
 
   const items: ComponentProps<typeof MoreMenu>['items'] = [{
+    label: 'Upload Photos …',
+    icon: <FiUploadCloud
+      size={15}
+      className="translate-x-[0.5px] translate-y-[0.5px]"
+    />,
+  }, {
     label: 'Manage Photos',
     ...photosCount !== undefined && {
       annotation: `${photosCount}`,

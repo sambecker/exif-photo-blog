@@ -139,7 +139,7 @@ export default function AdminBatchEditPanelClient({
           </LoaderButton>
         </>}
       <LoaderButton
-        icon={<IoCloseSharp size={20} className="translate-y-[0.5px]" />}
+        icon={<IoCloseSharp size={19} />}
         onClick={() => setSelectedPhotoIds?.(undefined)}
       />
     </>;
@@ -155,7 +155,7 @@ export default function AdminBatchEditPanelClient({
         <Note
           color="gray"
           className={clsx(
-            'min-h-[3.5rem]',
+            'min-h-[3.5rem] pr-2',
             'backdrop-blur-lg border-transparent!',
             'text-gray-900! dark:text-gray-100!',
             'bg-gray-100/90! dark:bg-gray-900/70!',
