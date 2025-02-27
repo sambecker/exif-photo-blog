@@ -10,7 +10,8 @@ import { useAppState } from '@/state/AppState';
 import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 
 const ADMIN_INFO_PAGES = [{
-  title: 'Insights',
+  title: 'App Insights',
+  titleShort: 'Insights',
   path: PATH_ADMIN_INSIGHTS,
 }, {
   title: 'Configuration',

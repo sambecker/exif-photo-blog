@@ -4,14 +4,14 @@ import { ReactNode } from 'react';
 export default function Container({
   children,
   className,
-  color = 'gray',
+  color = 'gray-border',
   padding = 'normal',
   centered = true,
   spaceChildren = true,
 }: {
   children: ReactNode
   className?: string
-  color?: 'gray' | 'blue' | 'red' | 'yellow'
+  color?: 'gray' | 'gray-border' | 'blue' | 'red' | 'yellow'
   padding?:
     'loose' |
     'normal' |
@@ -26,6 +26,11 @@ export default function Container({
     case 'gray': return [
       'text-medium',
       'bg-dim',
+    ];
+    case 'gray-border': return [
+      'text-medium',
+      'bg-gray-50 dark:bg-gray-900/40',
+      'border border-gray-200 dark:border-gray-800',
     ];
     case 'blue': return [
       'text-blue-900 dark:text-blue-300',
