@@ -34,6 +34,7 @@ export default function AdminAppMenu({
     tagsCount,
     selectedPhotoIds,
     setSelectedPhotoIds,
+    refreshAdminData,
     clearAuthStateAndRedirect,
   } = useAppState();
 
@@ -116,6 +117,7 @@ export default function AdminAppMenu({
       header="Admin menu"
       icon={<BiLockAlt size={16} className="translate-y-[-0.5px]" />}
       align="start"
+      onOpen={refreshAdminData}
       className={clsx(
         'border-medium',
         className,

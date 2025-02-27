@@ -96,7 +96,11 @@ export default function AppStateProvider({
   }, [auth, authError]);
   const isUserSignedIn = Boolean(userEmail);
 
-  const { data: adminData, error: adminError } = useSWR(
+  const {
+    data: adminData,
+    error: adminError,
+    mutate: refreshAdminData,
+  } = useSWR(
     isUserSignedIn ? 'getAdminData' : null,
     getAdminDataAction, {
       refreshInterval: 1000 * 60,
@@ -164,6 +168,7 @@ export default function AppStateProvider({
         // ADMIN
         adminUpdateTimes,
         registerAdminUpdate,
+        refreshAdminData,
         photosCount,
         photosCountHidden,
         uploadsCount,

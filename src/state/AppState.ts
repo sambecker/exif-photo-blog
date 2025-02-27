@@ -29,6 +29,7 @@ export interface AppStateContext {
   // ADMIN
   adminUpdateTimes?: Date[]
   registerAdminUpdate?: () => void
+  refreshAdminData?: () => void
   photosCount?: number
   photosCountHidden?: number
   uploadsCount?: number

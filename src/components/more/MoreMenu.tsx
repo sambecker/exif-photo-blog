@@ -1,4 +1,10 @@
-import { ComponentProps, ReactNode, useCallback, useState } from 'react';
+import {
+  ComponentProps,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { clsx } from 'clsx/lite';
 import { FiMoreHorizontal } from 'react-icons/fi';
@@ -12,6 +18,7 @@ export default function MoreMenu({
   buttonClassName,
   ariaLabel,
   align = 'end',
+  onOpen,
   ...props
 }: {
   items: ComponentProps<typeof MoreMenuItem>[]
@@ -20,12 +27,17 @@ export default function MoreMenu({
   className?: string
   buttonClassName?: string
   ariaLabel: string
+  onOpen?: () => void
 } & ComponentProps<typeof DropdownMenu.Content>){
   const [isOpen, setIsOpen] = useState(false);
 
   const dismissMenu = useCallback(() => {
     setIsOpen(false);
   }, [setIsOpen]);
+
+  useEffect(() => {
+    if (isOpen) { onOpen?.(); }
+  }, [isOpen, onOpen]);
 
   return (
     <DropdownMenu.Root open={isOpen} onOpenChange={setIsOpen}>
