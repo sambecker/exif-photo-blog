@@ -19,6 +19,7 @@ import CommandK from '@/app/CommandK';
 import SwrConfigClient from '@/state/SwrConfigClient';
 import AdminBatchEditPanel from '@/admin/AdminBatchEditPanel';
 import ShareModals from '@/share/ShareModals';
+import AdminUploadPanel from '@/admin/AdminUploadPanel';
 
 import '../tailwind.css';
 
@@ -88,6 +89,7 @@ export default function RootLayout({
                   'mb-12',
                   'space-y-5',
                 )}>
+                  <AdminUploadPanel />
                   <AdminBatchEditPanel />
                   {children}
                 </div>
