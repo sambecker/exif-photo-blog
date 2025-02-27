@@ -20,10 +20,13 @@ export interface AppStateContext {
   setIsCommandKOpen?: Dispatch<SetStateAction<boolean>>
   shareModalProps?: ShareModalProps
   setShareModalProps?: Dispatch<SetStateAction<ShareModalProps | undefined>>
-  // ADMIN
+  // AUTH
   userEmail?: string
   setUserEmail?: Dispatch<SetStateAction<string | undefined>>
   isUserSignedIn?: boolean
+  isUserSignedInEager?: boolean
+  clearAuthStateAndRedirect?: () => void
+  // ADMIN
   adminUpdateTimes?: Date[]
   registerAdminUpdate?: () => void
   photosCount?: number

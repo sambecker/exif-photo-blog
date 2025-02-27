@@ -16,6 +16,13 @@ import { ShareModalProps } from '@/share';
 import { storeTimezoneCookie } from '@/utility/timezone';
 import { InsightIndicatorStatus } from '@/admin/insights';
 import { getAdminDataAction } from '@/admin/actions';
+import {
+  storeAuthEmailCookie,
+  clearAuthEmailCookie,
+  hasAuthEmailCookie,
+} from '@/auth/client';
+import { useRouter } from 'next/navigation';
+import { PATH_SIGN_IN } from '@/app/paths';
 
 export default function AppStateProvider({
   children,
@@ -23,6 +30,8 @@ export default function AppStateProvider({
   children: ReactNode
 }) {
   const { previousPathname } = usePathnames();
+
+  const router = useRouter();
 
   // CORE
   const [hasLoaded, setHasLoaded] =
@@ -41,6 +50,9 @@ export default function AppStateProvider({
   // ADMIN
   const [userEmail, setUserEmail] =
     useState<string>();
+  const [isUserSignedInEager, setIsUserSignedInEager] =
+    useState(false);
+  // ADMIN
   const [adminUpdateTimes, setAdminUpdateTimes] =
     useState<Date[]>([]);
   const [photosCount, setPhotosCount] =
@@ -77,6 +89,7 @@ export default function AppStateProvider({
 
   const { data: auth, error: authError } = useSWR('getAuth', getAuthAction);
   useEffect(() => {
+    setIsUserSignedInEager(hasAuthEmailCookie());
     if (!authError) {
       setUserEmail(auth?.user?.email ?? undefined);
     }
@@ -91,7 +104,8 @@ export default function AppStateProvider({
   );
 
   useEffect(() => {
-    if (isUserSignedIn) {
+    if (userEmail) {
+      storeAuthEmailCookie(userEmail);
       if (adminData) {
         const timeout = setTimeout(() => {
           setPhotosCount(adminData.countPhotos);
@@ -105,7 +119,7 @@ export default function AppStateProvider({
     } else {
       setPhotosCountHidden(0);
     }
-  }, [adminData, adminError, isUserSignedIn]);
+  }, [adminData, adminError, userEmail]);
 
   const registerAdminUpdate = useCallback(() =>
     setAdminUpdateTimes(updates => [...updates, new Date()])
@@ -115,6 +129,12 @@ export default function AppStateProvider({
     setHasLoaded?.(true);
     storeTimezoneCookie();
   }, []);
+
+  const clearAuthStateAndRedirect = useCallback((shouldRedirect = true) => {
+    setUserEmail(undefined);
+    clearAuthEmailCookie();
+    if (shouldRedirect) { router.push(PATH_SIGN_IN); }
+  }, [router]);
 
   return (
     <AppStateContext.Provider
@@ -135,10 +155,13 @@ export default function AppStateProvider({
         setIsCommandKOpen,
         shareModalProps,
         setShareModalProps,
-        // ADMIN
+        // AUTH
         userEmail,
         setUserEmail,
         isUserSignedIn,
+        isUserSignedInEager,
+        clearAuthStateAndRedirect,
+        // ADMIN
         adminUpdateTimes,
         registerAdminUpdate,
         photosCount,

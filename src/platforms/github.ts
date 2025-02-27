@@ -133,8 +133,6 @@ export const getGitHubPublicFork = async (): Promise<RepoParams> => {
 };
 
 export const getGitHubMeta = async (params: RepoParams) => {
-  console.log('getGitHubMeta', params);
-
   const urlOwner = getGitHubUrlOwner(params);
   const urlRepo = getGitHubUrlRepo(params);
   const urlBranch = getGitHubUrlBranch(params);

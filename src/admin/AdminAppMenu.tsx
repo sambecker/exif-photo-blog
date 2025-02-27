@@ -17,7 +17,7 @@ import { FiTag } from 'react-icons/fi';
 import { BiLockAlt } from 'react-icons/bi';
 import AdminAppInfoIcon from './AdminAppInfoIcon';
 import { PiSignOutBold } from 'react-icons/pi';
-import { signOutAndRedirectAction } from '@/auth/actions';
+import { signOutAction } from '@/auth/actions';
 import { ComponentProps } from 'react';
 import { FaRegFolderOpen } from 'react-icons/fa';
 
@@ -34,6 +34,7 @@ export default function AdminAppMenu({
     tagsCount,
     selectedPhotoIds,
     setSelectedPhotoIds,
+    clearAuthStateAndRedirect,
   } = useAppState();
 
   const isSelecting = selectedPhotoIds !== undefined;
@@ -107,7 +108,7 @@ export default function AdminAppMenu({
   }, {
     label: 'Sign Out',
     icon: <PiSignOutBold size={15} />,
-    action: signOutAndRedirectAction,
+    action: () => signOutAction().then(clearAuthStateAndRedirect),
   });
 
   return (

@@ -9,7 +9,7 @@ import RepoLink from '../components/RepoLink';
 import { usePathname } from 'next/navigation';
 import { PATH_ADMIN_PHOTOS, isPathAdmin, isPathSignIn } from './paths';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
-import { signOutAndRedirectAction } from '@/auth/actions';
+import { signOutAction } from '@/auth/actions';
 import Spinner from '@/components/Spinner';
 import AnimateItems from '@/components/AnimateItems';
 import { useAppState } from '@/state/AppState';
@@ -17,7 +17,7 @@ import { useAppState } from '@/state/AppState';
 export default function Footer() {
   const pathname = usePathname();
 
-  const { userEmail, setUserEmail } = useAppState();
+  const { userEmail, clearAuthStateAndRedirect } = useAppState();
 
   const showFooter = !isPathSignIn(pathname);
 
@@ -48,8 +48,8 @@ export default function Footer() {
                       )}>
                         {userEmail}
                       </div>
-                      <form action={() => signOutAndRedirectAction()
-                        .then(() => setUserEmail?.(undefined))}>
+                      <form action={() => signOutAction()
+                        .then(clearAuthStateAndRedirect)}>
                         <SubmitButtonWithStatus styleAs="link">
                           Sign out
                         </SubmitButtonWithStatus>

@@ -39,7 +39,7 @@ import { searchPhotosAction } from '@/photo/actions';
 import { RiToolsFill } from 'react-icons/ri';
 import { BiLockAlt, BiSolidUser } from 'react-icons/bi';
 import { HiDocumentText } from 'react-icons/hi';
-import { signOutAndRedirectAction } from '@/auth/actions';
+import { signOutAction } from '@/auth/actions';
 import { TbPhoto } from 'react-icons/tb';
 import { getKeywordsForPhoto, titleForPhoto } from '@/photo';
 import PhotoDate from '@/photo/PhotoDate';
@@ -101,7 +101,7 @@ export default function CommandKClient({
 
   const {
     isUserSignedIn,
-    setUserEmail,
+    clearAuthStateAndRedirect,
     isCommandKOpen: isOpen,
     photosCountHidden,
     uploadsCount,
@@ -400,9 +400,7 @@ export default function CommandKClient({
     }
     adminSection.items.push({
       label: 'Sign Out',
-      action: () => {
-        signOutAndRedirectAction().then(() => setUserEmail?.(undefined));
-      },
+      action: () => signOutAction().then(clearAuthStateAndRedirect),
     });
   } else {
     adminSection.items.push({

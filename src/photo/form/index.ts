@@ -197,7 +197,6 @@ export const formHasTextContent = ({
 // CREATE FORM DATA: FROM PHOTO
 
 export const convertPhotoToFormData = (photo: Photo): PhotoFormData => {
-  console.log('convertPhotoToFormData', photo);
   const valueForKey = (key: keyof Photo, value: any) => {
     switch (key) {
     case 'tags':

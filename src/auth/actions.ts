@@ -41,6 +41,9 @@ export const signInAction = async (
   redirect(formData.get(KEY_CALLBACK_URL) as string || PATH_ADMIN_PHOTOS);
 };
 
+export const signOutAction = async () =>
+  signOut({ redirect: false });
+
 export const signOutAndRedirectAction = async (redirectTo = PATH_SIGN_IN) =>
   signOut({ redirectTo });
 
