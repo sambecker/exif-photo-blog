@@ -23,6 +23,7 @@ import {
 } from '@/auth/client';
 import { useRouter } from 'next/navigation';
 import { PATH_SIGN_IN } from '@/app/paths';
+import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 
 export default function AppStateProvider({
   children,
@@ -42,12 +43,14 @@ export default function AppStateProvider({
     useState<AnimationConfig>();
   const [shouldRespondToKeyboardCommands, setShouldRespondToKeyboardCommands] =
     useState(true);
+  const [uploadState, _setUploadState] =
+    useState(INITIAL_UPLOAD_STATE);
   // MODAL
   const [isCommandKOpen, setIsCommandKOpen] =
     useState(false);
   const [shareModalProps, setShareModalProps] =
     useState<ShareModalProps>();
-  // ADMIN
+  // AUTH
   const [userEmail, setUserEmail] =
     useState<string>();
   const [isUserSignedInEager, setIsUserSignedInEager] =
@@ -84,6 +87,10 @@ export default function AppStateProvider({
     useState(IS_DEVELOPMENT);
   const [shouldDebugRecipeOverlays, setShouldDebugRecipeOverlays] =
     useState(false);
+
+  const setUploadState = useCallback((uploadState: Partial<UploadState>) => {
+    _setUploadState(prev => ({ ...prev, ...uploadState }));
+  }, []);
 
   const invalidateSwr = useCallback(() => setSwrTimestamp(Date.now()), []);
 
@@ -136,6 +143,7 @@ export default function AppStateProvider({
 
   const clearAuthStateAndRedirect = useCallback((shouldRedirect = true) => {
     setUserEmail(undefined);
+    setIsUserSignedInEager(false);
     clearAuthEmailCookie();
     if (shouldRedirect) { router.push(PATH_SIGN_IN); }
   }, [router]);
@@ -154,6 +162,9 @@ export default function AppStateProvider({
         clearNextPhotoAnimation: () => setNextPhotoAnimation?.(undefined),
         shouldRespondToKeyboardCommands,
         setShouldRespondToKeyboardCommands,
+        // UPLOADS
+        uploadState,
+        setUploadState,
         // MODAL
         isCommandKOpen,
         setIsCommandKOpen,

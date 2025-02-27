@@ -1,7 +1,7 @@
 'use client';
 
 import { blobToImage } from '@/utility/blob';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { CopyExif } from '@/lib/CopyExif';
 import exifr from 'exifr';
 import { clsx } from 'clsx/lite';
@@ -9,6 +9,7 @@ import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
 import { FiUploadCloud } from 'react-icons/fi';
 import { MAX_IMAGE_SIZE } from '@/platforms/next-image';
 import ProgressButton from './primitives/ProgressButton';
+import { useAppState } from '@/state/AppState';
 
 const INPUT_ID = 'file';
 
@@ -18,7 +19,6 @@ export default function ImageInput({
   shouldResize,
   maxSize = MAX_IMAGE_SIZE,
   quality = 0.8,
-  loading,
   showUploadStatus = true,
   debug,
 }: {
@@ -32,17 +32,22 @@ export default function ImageInput({
   shouldResize?: boolean
   maxSize?: number
   quality?: number
-  loading?: boolean
   showUploadStatus?: boolean
   debug?: boolean
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const [image, setImage] = useState<HTMLImageElement>();
-  const [filesLength, setFilesLength] = useState(0);
-  const [fileUploadIndex, setFileUploadIndex] = useState(0);
-  const [fileUploadName, setFileUploadName] = useState('');
+  const {
+    uploadState: {
+      isUploading,
+      image,
+      filesLength,
+      fileUploadIndex,
+      fileUploadName,
+    },
+    setUploadState,
+  } = useAppState();
 
   return (
     <div className="space-y-4 min-w-0">
@@ -51,12 +56,12 @@ export default function ImageInput({
           htmlFor={INPUT_ID}
           className={clsx(
             'shrink-0 select-none text-main',
-            loading && 'pointer-events-none cursor-not-allowed',
+            isUploading && 'pointer-events-none cursor-not-allowed',
           )}
         >
           <ProgressButton
             type="button"
-            isLoading={loading}
+            isLoading={isUploading}
             progress={filesLength > 1
               ? (fileUploadIndex + 1) / filesLength * 0.95
               : undefined}
@@ -64,12 +69,12 @@ export default function ImageInput({
               size={18}
               className="translate-x-[-0.5px] translate-y-[0.5px]"
             />}
-            aria-disabled={loading}
+            aria-disabled={isUploading}
             onClick={() => inputRef.current?.click()}
             hideTextOnMobile={false}
             primary
           >
-            {loading
+            {isUploading
               ? filesLength > 1
                 ? `Uploading ${fileUploadIndex + 1} of ${filesLength}`
                 : 'Uploading'
@@ -81,17 +86,19 @@ export default function ImageInput({
             type="file"
             className="hidden!"
             accept={ACCEPTED_PHOTO_FILE_TYPES.join(',')}
-            disabled={loading}
+            disabled={isUploading}
             multiple
             onChange={async e => {
               onStart?.();
               const { files } = e.currentTarget;
               if (files && files.length > 0) {
-                setFilesLength(files.length);
+                setUploadState?.({ filesLength: files.length });
                 for (let i = 0; i < files.length; i++) {
                   const file = files[i];
-                  setFileUploadIndex(i);
-                  setFileUploadName(file.name);
+                  setUploadState?.({
+                    fileUploadIndex: i,
+                    fileUploadName: file.name,
+                  });
                   const callbackArgs = {
                     extension: file.name.split('.').pop()?.toLowerCase(),
                     hasMultipleUploads: files.length > 1,
@@ -111,7 +118,7 @@ export default function ImageInput({
                     // Process images that need resizing
                     const image = await blobToImage(file);
 
-                    setImage(image);
+                    setUploadState?.({ image });
 
                     ctx.save();
                     

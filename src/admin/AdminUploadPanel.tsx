@@ -1,4 +1,5 @@
 import Container from '@/components/Container';
+import LoaderButton from '@/components/primitives/LoaderButton';
 import SiteGrid from '@/components/SiteGrid';
 import Spinner from '@/components/Spinner';
 import clsx from 'clsx';
@@ -8,8 +9,9 @@ export default function AdminUploadPanel() {
   return (
     <SiteGrid contentMain={
       <Container
+        color="gray"
         padding="tight"
-        className="px-4 py-4"
+        className="p-2! pl-4! text-main!"
       >
         <div className="flex w-full">
           <div className={clsx(
@@ -23,9 +25,11 @@ export default function AdminUploadPanel() {
             />
             1 of 4: Uploading DSC-4353.jpg
           </div>
-          <IoCloseSharp
-            size={19}
-            className="translate-y-[0.5px]"
+          <LoaderButton 
+            icon={<IoCloseSharp
+              size={18}
+              className="translate-y-[0.5px]"
+            />}
           />
         </div>
       </Container>}

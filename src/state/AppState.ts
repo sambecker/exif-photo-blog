@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, createContext, useContext } from 'react';
 import { AnimationConfig } from '@/components/AnimateItems';
 import { ShareModalProps } from '@/share';
 import { InsightIndicatorStatus } from '@/admin/insights';
+import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 
 export interface AppStateContext {
   // CORE
@@ -15,6 +16,9 @@ export interface AppStateContext {
   clearNextPhotoAnimation?: () => void
   shouldRespondToKeyboardCommands?: boolean
   setShouldRespondToKeyboardCommands?: Dispatch<SetStateAction<boolean>>
+  // UPLOADS
+  uploadState: UploadState
+  setUploadState?: (uploadState: Partial<UploadState>) => void
   // MODAL
   isCommandKOpen?: boolean
   setIsCommandKOpen?: Dispatch<SetStateAction<boolean>>
@@ -57,6 +61,8 @@ export interface AppStateContext {
   setShouldDebugRecipeOverlays?: Dispatch<SetStateAction<boolean>>
 }
 
-export const AppStateContext = createContext<AppStateContext>({});
+export const AppStateContext = createContext<AppStateContext>({
+  uploadState: INITIAL_UPLOAD_STATE,
+});
 
 export const useAppState = () => useContext(AppStateContext);
