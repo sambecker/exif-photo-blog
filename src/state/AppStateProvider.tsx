@@ -99,7 +99,7 @@ export default function AppStateProvider({
   const { data: adminData, error: adminError } = useSWR(
     isUserSignedIn ? 'getAdminData' : null,
     getAdminDataAction, {
-      refreshInterval: 1000 * 60 * 5,
+      refreshInterval: 1000 * 60,
     },
   );
 

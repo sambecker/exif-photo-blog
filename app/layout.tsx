@@ -82,12 +82,13 @@ export default function RootLayout({
                 '3xl:mx-auto 3xl:w-[1280px]',
               )}>
                 <Nav siteDomainOrTitle={SITE_DOMAIN_OR_TITLE} />
-                <AdminBatchEditPanel />
+                <ShareModals />
                 <div className={clsx(
                   'min-h-[16rem] sm:min-h-[30rem]',
                   'mb-12',
+                  'space-y-5',
                 )}>
-                  <ShareModals />
+                  <AdminBatchEditPanel />
                   {children}
                 </div>
                 <Footer />

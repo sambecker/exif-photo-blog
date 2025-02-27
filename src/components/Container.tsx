@@ -25,23 +25,19 @@ export default function Container({
     switch (color) {
     case 'gray': return [
       'text-medium',
-      'bg-gray-50 dark:bg-gray-900/40',
-      'border-medium',
+      'bg-dim',
     ];
     case 'blue': return [
       'text-blue-900 dark:text-blue-300',
       'bg-blue-100/35 dark:bg-blue-950/60',
-      'border-transparent',
     ];
     case 'red': return [
       'text-red-700 dark:text-red-400',
       'bg-red-100/50 dark:bg-red-950/55',
-      'border-transparent',
     ];
     case 'yellow': return [
       'text-amber-700 dark:text-amber-500',
       'bg-amber-100/55 dark:bg-amber-950/55',
-      'border-transparent',
     ];
     }
   };
@@ -59,7 +55,7 @@ export default function Container({
   return (
     <div className={clsx(
       'flex flex-col items-center justify-center',
-      'rounded-lg border',
+      'rounded-lg',
       ...getColorClasses(),
       getPaddingClasses(),
       className,

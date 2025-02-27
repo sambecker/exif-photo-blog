@@ -150,7 +150,7 @@ export default function AdminBatchEditPanelClient({
     selectedPhotoIds !== undefined
   )
     ? <SiteGrid
-      className="sticky top-0 z-10 mb-5 -mt-2 pt-2"
+      className="sticky top-0 z-10 -mt-2 pt-2"
       contentMain={<div className="flex flex-col gap-2">
         <Note
           color="gray"
