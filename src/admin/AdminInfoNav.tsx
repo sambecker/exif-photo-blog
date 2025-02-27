@@ -65,7 +65,7 @@ export default function AdminInfoPage({
               <ResponsiveText shortText={titleShort}>
                 {title}
               </ResponsiveText>
-              {title === 'Insights' && insightIndicatorStatus &&
+              {title === 'App Insights' && insightIndicatorStatus &&
                 <InsightsIndicatorDot
                   size="small"
                   top={4}
