@@ -39,12 +39,12 @@ import { searchPhotosAction } from '@/photo/actions';
 import { RiToolsFill } from 'react-icons/ri';
 import { BiLockAlt, BiSolidUser } from 'react-icons/bi';
 import { HiDocumentText } from 'react-icons/hi';
-import { signOutAndRedirectAction } from '@/auth/actions';
+import { signOutAction } from '@/auth/actions';
 import { TbPhoto } from 'react-icons/tb';
 import { getKeywordsForPhoto, titleForPhoto } from '@/photo';
 import PhotoDate from '@/photo/PhotoDate';
 import PhotoSmall from '@/photo/PhotoSmall';
-import { FaCheck, FaCircle } from 'react-icons/fa6';
+import { FaCheck } from 'react-icons/fa6';
 import { Tags, addHiddenToTags, formatTag } from '@/tag';
 import { FaTag } from 'react-icons/fa';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
@@ -52,6 +52,7 @@ import CommandKItem from './CommandKItem';
 import { GRID_HOMEPAGE_ENABLED } from '@/app/config';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
+import InsightsIndicatorDot from '@/admin/insights/InsightsIndicatorDot';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -100,9 +101,11 @@ export default function CommandKClient({
 
   const {
     isUserSignedIn,
-    setUserEmail,
+    clearAuthStateAndRedirect,
     isCommandKOpen: isOpen,
-    hiddenPhotosCount,
+    photosCountHidden,
+    uploadsCount,
+    tagsCount,
     selectedPhotoIds,
     setSelectedPhotoIds,
     insightIndicatorStatus,
@@ -228,8 +231,8 @@ export default function CommandKClient({
   }, [isOpen, setShouldRespondToKeyboardCommands]);
 
   const tagsIncludingHidden = useMemo(() =>
-    addHiddenToTags(tags, hiddenPhotosCount)
-  , [tags, hiddenPhotosCount]);
+    addHiddenToTags(tags, photosCountHidden)
+  , [tags, photosCountHidden]);
 
   const SECTION_TAGS: CommandKSection = {
     heading: 'Tags',
@@ -336,70 +339,75 @@ export default function CommandKClient({
   const adminSection: CommandKSection = {
     heading: 'Admin',
     accessory: <BiSolidUser size={15} className="translate-x-[-1px]" />,
-    items: isUserSignedIn
-      ? ([{
-        label: 'Manage Photos',
-        annotation: <BiLockAlt />,
-        path: PATH_ADMIN_PHOTOS,
-      }, {
+    items: [],
+  };
+
+  if (isUserSignedIn) {
+    adminSection.items.push({
+      label: 'Manage Photos',
+      annotation: <BiLockAlt />,
+      path: PATH_ADMIN_PHOTOS,
+    });
+    if (uploadsCount) {
+      adminSection.items.push({
         label: 'Manage Uploads',
         annotation: <BiLockAlt />,
         path: PATH_ADMIN_UPLOADS,
-      }, {
+      });
+    }
+    if (tagsCount) {
+      adminSection.items.push({
         label: 'Manage Tags',
         annotation: <BiLockAlt />,
         path: PATH_ADMIN_TAGS,
-      }, {
-        label: 'App Config',
+      });
+    }
+    adminSection.items.push({
+      label: <span className="flex items-center gap-3">
+        App Insights
+        {insightIndicatorStatus &&
+          <InsightsIndicatorDot />}
+      </span>,
+      keywords: ['app insights'],
+      annotation: <BiLockAlt />,
+      path: PATH_ADMIN_INSIGHTS,
+    }, {
+      label: 'App Config',
+      annotation: <BiLockAlt />,
+      path: PATH_ADMIN_CONFIGURATION,
+    }, {
+      label: selectedPhotoIds === undefined
+        ? 'Select Multiple Photos'
+        : 'Exit Select Multiple Photos',
+      annotation: <BiLockAlt />,
+      path: selectedPhotoIds === undefined
+        ? PATH_GRID_INFERRED
+        : undefined,
+      action: selectedPhotoIds === undefined
+        ? () => setSelectedPhotoIds?.([])
+        : () => setSelectedPhotoIds?.(undefined),
+    });
+    if (showDebugTools) {
+      adminSection.items.push({
+        label: 'Baseline Overview',
         annotation: <BiLockAlt />,
-        path: PATH_ADMIN_CONFIGURATION,
+        path: PATH_ADMIN_BASELINE,
       }, {
-        label: <span className="flex items-center gap-3">
-          App Insights
-          {insightIndicatorStatus && <FaCircle
-            size={8}
-            className={clsx(
-              insightIndicatorStatus === 'blue'
-                ? 'text-blue-500'
-                : 'text-amber-500',
-            )}
-          />}
-        </span>,
-        keywords: ['app insights'],
+        label: 'Components Overview',
         annotation: <BiLockAlt />,
-        path: PATH_ADMIN_INSIGHTS,
-      }, {
-        label: selectedPhotoIds === undefined
-          ? 'Select Multiple Photos'
-          : 'Exit Select Multiple Photos',
-        annotation: <BiLockAlt />,
-        path: selectedPhotoIds === undefined
-          ? PATH_GRID_INFERRED
-          : undefined,
-        action: selectedPhotoIds === undefined
-          ? () => setSelectedPhotoIds?.([])
-          : () => setSelectedPhotoIds?.(undefined),
-      }] as CommandKItem[])
-        .concat(showDebugTools
-          ? [{
-            label: 'Baseline Overview',
-            path: PATH_ADMIN_BASELINE,
-          }, {
-            label: 'Components Overview',
-            path: PATH_ADMIN_COMPONENTS,
-          }]
-          : [])
-        .concat({
-          label: 'Sign Out',
-          action: () => {
-            signOutAndRedirectAction().then(() => setUserEmail?.(undefined));
-          },
-        })
-      : [{
-        label: 'Sign In',
-        path: PATH_SIGN_IN,
-      }],
-  };
+        path: PATH_ADMIN_COMPONENTS,
+      });
+    }
+    adminSection.items.push({
+      label: 'Sign Out',
+      action: () => signOutAction().then(clearAuthStateAndRedirect),
+    });
+  } else {
+    adminSection.items.push({
+      label: 'Sign In',
+      path: PATH_SIGN_IN,
+    });
+  }
 
   return (
     <Command.Dialog

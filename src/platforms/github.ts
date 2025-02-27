@@ -2,7 +2,6 @@ import {
   TEMPLATE_REPO_OWNER,
   TEMPLATE_REPO_NAME,
   TEMPLATE_REPO_BRANCH,
-  IS_DEVELOPMENT,
 } from '@/app/config';
 
 const DEFAULT_BRANCH = 'main';
@@ -17,7 +16,7 @@ interface RepoParams {
 
 const fetchGitHub = async (
   url: string,
-  cacheRequest = IS_DEVELOPMENT,
+  cacheRequest = true,
 ) => {
   const data = await fetch(
     url,
@@ -133,8 +132,6 @@ export const getGitHubPublicFork = async (): Promise<RepoParams> => {
 };
 
 export const getGitHubMeta = async (params: RepoParams) => {
-  console.log('getGitHubMeta', params);
-
   const urlOwner = getGitHubUrlOwner(params);
   const urlRepo = getGitHubUrlRepo(params);
   const urlBranch = getGitHubUrlBranch(params);

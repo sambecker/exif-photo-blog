@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { syncPhotosAction } from '@/photo/actions';
 import { useRouter } from 'next/navigation';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
+import { LiaBroomSolid } from 'react-icons/lia';
 
 const UPDATE_BATCH_SIZE_MAX = 4;
 
@@ -77,16 +78,19 @@ export default function AdminOutdatedClient({
       </LoaderButton>}
     >
       <div className="space-y-6">
-        <Note>
+        <Note
+          color="yellow"
+          icon={<LiaBroomSolid size={18}/>}
+        >
           <div className="space-y-1.5">
             <div className="font-bold">
               {photos.length} outdated
               {' '}
               {photos.length === 1 ? 'photo' : 'photos'} found
             </div>
-            They may have missing EXIF fields, inaccurate blur data,
+            Sync photos to import newer EXIF fields, improve blur data,
             {' '}
-            undesired privacy settings, or text that can be AI-generated
+            and leverage AI-generated text where possible
           </div>
         </Note>
         <div className="space-y-4">

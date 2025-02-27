@@ -11,6 +11,7 @@ export default function SwitcherItem({
   className: classNameProp,
   onClick,
   active,
+  isInteractive = true,
   noPadding,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
 }: {
@@ -20,21 +21,24 @@ export default function SwitcherItem({
   className?: string
   onClick?: () => void
   active?: boolean
+  isInteractive?: boolean
   noPadding?: boolean
   prefetch?: boolean
 }) {
   const className = clsx(
-    classNameProp,
+    'flex items-center justify-center',
+    'w-[42px] h-full',
     'py-0.5 px-1.5',
-    'cursor-pointer',
-    'hover:bg-gray-100/60 active:bg-gray-100',
-    'dark:hover:bg-gray-900/75 dark:active:bg-gray-900',
+    isInteractive && 'cursor-pointer',
+    isInteractive && 'hover:bg-gray-100/60 active:bg-gray-100',
+    isInteractive && 'dark:hover:bg-gray-900/75 dark:active:bg-gray-900',
     active
       ? 'text-black dark:text-white'
       : 'text-gray-400 dark:text-gray-600',
     active
       ? 'hover:text-black dark:hover:text-white'
       : 'hover:text-gray-700 dark:hover:text-gray-400',
+    classNameProp,
   );
 
   const renderIcon = () => noPadding
@@ -54,6 +58,8 @@ export default function SwitcherItem({
       }}>
         {renderIcon()}
       </LinkWithLoader>
-      : <div {...{ title, onClick, className }}>{renderIcon()}</div>
+      : <div {...{ title, onClick, className }}>
+        {renderIcon()}
+      </div>
   );
 };

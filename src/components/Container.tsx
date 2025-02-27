@@ -4,14 +4,14 @@ import { ReactNode } from 'react';
 export default function Container({
   children,
   className,
-  color = 'gray',
+  color = 'gray-border',
   padding = 'normal',
   centered = true,
   spaceChildren = true,
 }: {
   children: ReactNode
   className?: string
-  color?: 'gray' | 'blue' | 'red' | 'yellow'
+  color?: 'gray' | 'gray-border' | 'blue' | 'red' | 'yellow'
   padding?:
     'loose' |
     'normal' |
@@ -25,23 +25,24 @@ export default function Container({
     switch (color) {
     case 'gray': return [
       'text-medium',
+      'bg-dim',
+    ];
+    case 'gray-border': return [
+      'text-medium',
       'bg-gray-50 dark:bg-gray-900/40',
-      'border-gray-200 dark:border-gray-800',
+      'border border-gray-200 dark:border-gray-800',
     ];
     case 'blue': return [
       'text-blue-900 dark:text-blue-300',
-      'bg-blue-50/50 dark:bg-blue-950/30',
-      'border-blue-200 dark:border-blue-500/40',
+      'bg-blue-100/35 dark:bg-blue-950/60',
     ];
     case 'red': return [
-      'text-red-600 dark:text-red-500/90',
-      'bg-red-50/50 dark:bg-red-950/50',
-      'border-red-100 dark:border-red-950',
+      'text-red-700 dark:text-red-400',
+      'bg-red-100/50 dark:bg-red-950/55',
     ];
     case 'yellow': return [
-      'text-amber-700 dark:text-amber-500/90',
-      'bg-amber-50/50 dark:bg-amber-950/30',
-      'border-amber-600/30 dark:border-amber-800/30',
+      'text-amber-700 dark:text-amber-500',
+      'bg-amber-100/55 dark:bg-amber-950/55',
     ];
     }
   };
@@ -59,7 +60,7 @@ export default function Container({
   return (
     <div className={clsx(
       'flex flex-col items-center justify-center',
-      'rounded-lg border',
+      'rounded-lg',
       ...getColorClasses(),
       getPaddingClasses(),
       className,

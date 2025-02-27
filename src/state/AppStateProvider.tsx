@@ -12,11 +12,17 @@ import {
   MATTE_PHOTOS,
   SHOW_ZOOM_CONTROLS,
 } from '@/app/config';
-import { getPhotosHiddenMetaCachedAction } from '@/photo/actions';
 import { ShareModalProps } from '@/share';
 import { storeTimezoneCookie } from '@/utility/timezone';
-import { getShouldShowInsightsIndicatorAction } from '@/admin/insights/actions';
 import { InsightIndicatorStatus } from '@/admin/insights';
+import { getAdminDataAction } from '@/admin/actions';
+import {
+  storeAuthEmailCookie,
+  clearAuthEmailCookie,
+  hasAuthEmailCookie,
+} from '@/auth/client';
+import { useRouter } from 'next/navigation';
+import { PATH_SIGN_IN } from '@/app/paths';
 
 export default function AppStateProvider({
   children,
@@ -24,6 +30,8 @@ export default function AppStateProvider({
   children: ReactNode
 }) {
   const { previousPathname } = usePathnames();
+
+  const router = useRouter();
 
   // CORE
   const [hasLoaded, setHasLoaded] =
@@ -42,10 +50,19 @@ export default function AppStateProvider({
   // ADMIN
   const [userEmail, setUserEmail] =
     useState<string>();
+  const [isUserSignedInEager, setIsUserSignedInEager] =
+    useState(false);
+  // ADMIN
   const [adminUpdateTimes, setAdminUpdateTimes] =
     useState<Date[]>([]);
-  const [hiddenPhotosCount, setHiddenPhotosCount] =
-    useState(0);
+  const [photosCount, setPhotosCount] =
+    useState<number>();
+  const [photosCountHidden, setPhotosCountHidden] =
+    useState<number>();
+  const [uploadsCount, setUploadsCount] =
+    useState<number>();
+  const [tagsCount, setTagsCount] =
+    useState<number>();
   const [selectedPhotoIds, setSelectedPhotoIds] =
     useState<string[] | undefined>();
   const [isPerformingSelectEdit, setIsPerformingSelectEdit] =
@@ -70,26 +87,43 @@ export default function AppStateProvider({
 
   const invalidateSwr = useCallback(() => setSwrTimestamp(Date.now()), []);
 
-  const { data, error } = useSWR('getAuth', getAuthAction);
+  const { data: auth, error: authError } = useSWR('getAuth', getAuthAction);
   useEffect(() => {
-    if (!error) {
-      setUserEmail(data?.user?.email ?? undefined);
+    setIsUserSignedInEager(hasAuthEmailCookie());
+    if (!authError) {
+      setUserEmail(auth?.user?.email ?? undefined);
     }
-  }, [data, error]);
+  }, [auth, authError]);
   const isUserSignedIn = Boolean(userEmail);
+
+  const {
+    data: adminData,
+    error: adminError,
+    mutate: refreshAdminData,
+  } = useSWR(
+    isUserSignedIn ? 'getAdminData' : null,
+    getAdminDataAction, {
+      refreshInterval: 1000 * 60,
+    },
+  );
+
   useEffect(() => {
-    if (isUserSignedIn) {
-      const timeout = setTimeout(() =>{
-        getPhotosHiddenMetaCachedAction()
-          .then(({ count }) => setHiddenPhotosCount(count));
-        getShouldShowInsightsIndicatorAction()
-          .then(setInsightIndicatorStatus);
-      }, 100);
-      return () => clearTimeout(timeout);
+    if (userEmail) {
+      storeAuthEmailCookie(userEmail);
+      if (adminData) {
+        const timeout = setTimeout(() => {
+          setPhotosCount(adminData.countPhotos);
+          setPhotosCountHidden(adminData.countHiddenPhotos);
+          setUploadsCount(adminData.countUploads);
+          setTagsCount(adminData.countTags);
+          setInsightIndicatorStatus(adminData.shouldShowInsightsIndicator);
+        }, 100);
+        return () => clearTimeout(timeout);
+      }
     } else {
-      setHiddenPhotosCount(0);
+      setPhotosCountHidden(0);
     }
-  }, [isUserSignedIn]);
+  }, [adminData, adminError, userEmail]);
 
   const registerAdminUpdate = useCallback(() =>
     setAdminUpdateTimes(updates => [...updates, new Date()])
@@ -99,6 +133,12 @@ export default function AppStateProvider({
     setHasLoaded?.(true);
     storeTimezoneCookie();
   }, []);
+
+  const clearAuthStateAndRedirect = useCallback((shouldRedirect = true) => {
+    setUserEmail(undefined);
+    clearAuthEmailCookie();
+    if (shouldRedirect) { router.push(PATH_SIGN_IN); }
+  }, [router]);
 
   return (
     <AppStateContext.Provider
@@ -119,13 +159,20 @@ export default function AppStateProvider({
         setIsCommandKOpen,
         shareModalProps,
         setShareModalProps,
-        // ADMIN
+        // AUTH
         userEmail,
         setUserEmail,
         isUserSignedIn,
+        isUserSignedInEager,
+        clearAuthStateAndRedirect,
+        // ADMIN
         adminUpdateTimes,
         registerAdminUpdate,
-        hiddenPhotosCount,
+        refreshAdminData,
+        photosCount,
+        photosCountHidden,
+        uploadsCount,
+        tagsCount,
         selectedPhotoIds,
         setSelectedPhotoIds,
         isPerformingSelectEdit,

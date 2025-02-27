@@ -37,11 +37,11 @@ export default function PhotoGridSidebar({
 }) {
   const { start, end } = dateRangeForPhotos(undefined, photosDateRange);
 
-  const { hiddenPhotosCount } = useAppState();
+  const { photosCountHidden } = useAppState();
 
   const tagsIncludingHidden = useMemo(() =>
-    addHiddenToTags(tags, hiddenPhotosCount)
-  , [tags, hiddenPhotosCount]);
+    addHiddenToTags(tags, photosCountHidden)
+  , [tags, photosCountHidden]);
 
   return (
     <div className="space-y-4">

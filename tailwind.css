@@ -301,6 +301,7 @@
       disabled:bg-gray-100 dark:disabled:bg-gray-900
       disabled:border-gray-200 disabled:dark:border-gray-700
       border-gray-900 dark:border-gray-100
+      hover:border-gray-900 dark:hover:border-gray-100
       active:bg-gray-700 active:border-gray-700
       active:dark:bg-gray-300 active:dark:border-gray-300
       shadow-none

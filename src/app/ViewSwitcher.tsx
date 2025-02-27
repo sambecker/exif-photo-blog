@@ -3,27 +3,30 @@ import SwitcherItem from '@/components/SwitcherItem';
 import IconFeed from '@/app/IconFeed';
 import IconGrid from '@/app/IconGrid';
 import {
-  PATH_ADMIN_PHOTOS,
   PATH_FEED_INFERRED,
   PATH_GRID_INFERRED,
 } from '@/app/paths';
-import { BiLockAlt } from 'react-icons/bi';
 import IconSearch from './IconSearch';
 import { useAppState } from '@/state/AppState';
 import { GRID_HOMEPAGE_ENABLED } from './config';
+import AdminAppMenu from '@/admin/AdminAppMenu';
+import { clsx } from 'clsx/lite';
+import Spinner from '@/components/Spinner';
 
 export type SwitcherSelection = 'feed' | 'grid' | 'admin';
 
 export default function ViewSwitcher({
   currentSelection,
-  showAdmin,
 }: {
   currentSelection?: SwitcherSelection
-  showAdmin?: boolean
 }) {
-  const { setIsCommandKOpen } = useAppState();
+  const {
+    isUserSignedIn,
+    isUserSignedInEager,
+    setIsCommandKOpen,
+  } = useAppState();
 
-  const renderItemFeed = () =>
+  const renderItemFeed =
     <SwitcherItem
       icon={<IconFeed />}
       href={PATH_FEED_INFERRED}
@@ -31,7 +34,7 @@ export default function ViewSwitcher({
       noPadding
     />;
 
-  const renderItemGrid = () =>
+  const renderItemGrid =
     <SwitcherItem
       icon={<IconGrid />}
       href={PATH_GRID_INFERRED}
@@ -42,13 +45,29 @@ export default function ViewSwitcher({
   return (
     <div className="flex gap-1 sm:gap-2">
       <Switcher>
-        {GRID_HOMEPAGE_ENABLED ? renderItemGrid() : renderItemFeed()}
-        {GRID_HOMEPAGE_ENABLED ? renderItemFeed() : renderItemGrid()}
-        {showAdmin &&
+        {GRID_HOMEPAGE_ENABLED ? renderItemGrid : renderItemFeed}
+        {GRID_HOMEPAGE_ENABLED ? renderItemFeed : renderItemGrid}
+        {/* Show spinner if admin is suspected to be logged in */}
+        {(isUserSignedInEager && !isUserSignedIn) &&
           <SwitcherItem
-            icon={<BiLockAlt size={16} className="translate-y-[-0.5px]" />}
-            href={PATH_ADMIN_PHOTOS}
-            active={currentSelection === 'admin'}
+            icon={<Spinner />}
+            isInteractive={false}
+            noPadding
+          />}
+        {isUserSignedIn &&
+          <SwitcherItem
+            icon={<AdminAppMenu
+              className="mt-3 ml-[-94px]"
+              buttonClassName={clsx(
+                'bg-transparent dark:bg-transparent',
+                'hover:bg-transparent dark:hover:bg-transparent',
+                'active:bg-transparent dark:active:bg-transparent',
+                currentSelection === 'admin'
+                  ? 'text-black dark:text-white'
+                  : 'text-gray-400 dark:text-gray-600',
+              )}
+            />}
+            noPadding
           />}
       </Switcher>
       <Switcher type="borderless">

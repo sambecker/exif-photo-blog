@@ -105,11 +105,11 @@ export const isPathFavs = (pathname?: string) =>
 
 export const isTagHidden = (tag: string) => tag.toLowerCase() === TAG_HIDDEN;
 
-export const addHiddenToTags = (tags: Tags, hiddenPhotosCount = 0) => {
-  if (hiddenPhotosCount > 0) {
+export const addHiddenToTags = (tags: Tags, photosCountHidden = 0) => {
+  if (photosCountHidden > 0) {
     return tags
       .filter(({ tag }) => tag === TAG_FAVS)
-      .concat({ tag: TAG_HIDDEN, count: hiddenPhotosCount })
+      .concat({ tag: TAG_HIDDEN, count: photosCountHidden })
       .concat(tags.filter(({ tag }) => tag !== TAG_FAVS));
   } else {
     return tags;

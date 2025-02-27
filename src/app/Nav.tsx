@@ -14,13 +14,11 @@ import {
   isPathSignIn,
 } from '@/app/paths';
 import AnimateItems from '../components/AnimateItems';
-import { useAppState } from '@/state/AppState';
 import {
   GRID_HOMEPAGE_ENABLED,
   HAS_DEFINED_SITE_DESCRIPTION,
   SITE_DESCRIPTION,
 } from './config';
-import AdminAppMenu from '@/admin/AdminAppMenu';
 
 const NAV_HEIGHT_CLASS = HAS_DEFINED_SITE_DESCRIPTION
   ? 'min-h-[4rem] sm:min-h-[5rem]'
@@ -32,8 +30,6 @@ export default function Nav({
   siteDomainOrTitle: string;
 }) {
   const pathname = usePathname();
-
-  const { isUserSignedIn } = useAppState();
 
   const showNav = !isPathSignIn(pathname);
 
@@ -73,7 +69,6 @@ export default function Nav({
               )}>
               <ViewSwitcher
                 currentSelection={switcherSelectionForPath()}
-                showAdmin={isUserSignedIn}
               />
               <div className={clsx(
                 'grow text-right min-w-0',
@@ -98,16 +93,6 @@ export default function Nav({
             : []}
         />
       }
-      contentSide={isUserSignedIn && !isPathAdmin(pathname)
-        ? <div
-          className={clsx(
-            'flex items-center translate-x-[-6px] w-full',
-            NAV_HEIGHT_CLASS,
-          )}
-        >
-          <AdminAppMenu />
-        </div>
-        : undefined}
       sideHiddenOnMobile
     />
   );
