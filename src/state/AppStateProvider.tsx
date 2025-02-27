@@ -91,6 +91,9 @@ export default function AppStateProvider({
   const setUploadState = useCallback((uploadState: Partial<UploadState>) => {
     _setUploadState(prev => ({ ...prev, ...uploadState }));
   }, []);
+  const resetUploadState = useCallback(() => {
+    _setUploadState(INITIAL_UPLOAD_STATE);
+  }, []);
 
   const invalidateSwr = useCallback(() => setSwrTimestamp(Date.now()), []);
 
@@ -165,6 +168,7 @@ export default function AppStateProvider({
         // UPLOADS
         uploadState,
         setUploadState,
+        resetUploadState,
         // MODAL
         isCommandKOpen,
         setIsCommandKOpen,

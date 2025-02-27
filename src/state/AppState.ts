@@ -19,6 +19,7 @@ export interface AppStateContext {
   // UPLOADS
   uploadState: UploadState
   setUploadState?: (uploadState: Partial<UploadState>) => void
+  resetUploadState?: () => void
   // MODAL
   isCommandKOpen?: boolean
   setIsCommandKOpen?: Dispatch<SetStateAction<boolean>>

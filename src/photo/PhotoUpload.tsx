@@ -25,6 +25,7 @@ export default function PhotoUpload({
       debugDownload,
     },
     setUploadState,
+    resetUploadState,
   } = useAppState();
 
   const router = useRouter();
@@ -67,6 +68,7 @@ export default function PhotoUpload({
                   .then(async url => {
                     if (isLastBlob) {
                       await onLastUpload?.();
+                      resetUploadState?.();
                       if (hasMultipleUploads) {
                         // Redirect to view multiple uploads
                         router.push(PATH_ADMIN_UPLOADS);

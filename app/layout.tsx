@@ -19,7 +19,7 @@ import CommandK from '@/app/CommandK';
 import SwrConfigClient from '@/state/SwrConfigClient';
 import AdminBatchEditPanel from '@/admin/AdminBatchEditPanel';
 import ShareModals from '@/share/ShareModals';
-import AdminUploadPanel from '@/admin/AdminUploadPanel';
+import AdminUploadPanel from '@/admin/upload/AdminUploadPanel';
 
 import '../tailwind.css';
 
