@@ -1,20 +1,26 @@
 import clsx from 'clsx/lite';
+import { ReactNode } from 'react';
 import CopyButton from './CopyButton';
 
 export default function EnvVar({
   variable,
   value,
   includeCopyButton = true,
+  trailingContent,
+  className,
 }: {
   variable: string,
   value?: string,
   includeCopyButton?: boolean,
+  trailingContent?: ReactNode,
+  className?: string,
 }) {
   return (
     <div
       className={clsx(
-        'inline-flex',
+        'inline-flex max-w-full',
         'overflow-x-auto overflow-y-hidden',
+        className,
       )}
     >
       <span className="inline-flex items-center gap-1">
@@ -34,6 +40,7 @@ export default function EnvVar({
             text={variable}
             subtle
           />}
+        {trailingContent}
       </span>
     </div>
   );

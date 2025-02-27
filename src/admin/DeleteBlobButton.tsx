@@ -3,7 +3,7 @@
 import { deleteUploadAction } from '@/photo/actions';
 import DeleteButton from './DeleteButton';
 import { useRouter } from 'next/navigation';
-import { PATH_ADMIN_PHOTOS } from '@/app-core/paths';
+import { PATH_ADMIN_PHOTOS } from '@/app/paths';
 import { useState } from 'react';
 
 export default function DeleteUploadButton({

@@ -1,11 +1,16 @@
 import { generateText, streamText } from 'ai';
 import { createStreamableValue } from 'ai/rsc';
 import { createOpenAI } from '@ai-sdk/openai';
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
 import { Ratelimit } from '@upstash/ratelimit';
-import { AI_TEXT_GENERATION_ENABLED, HAS_VERCEL_KV } from '@/app-core/config';
+import {
+  AI_TEXT_GENERATION_ENABLED,
+  HAS_REDIS_STORAGE,
+} from '@/app/config';
 import { removeBase64Prefix } from '@/utility/image';
 import { cleanUpAiTextResponse } from '@/photo/ai';
+
+const redis = HAS_REDIS_STORAGE ? Redis.fromEnv() : undefined;
 
 const RATE_LIMIT_IDENTIFIER = 'openai-image-query';
 const RATE_LIMIT_MAX_QUERIES_PER_HOUR = 100;
@@ -15,15 +20,15 @@ const openai = AI_TEXT_GENERATION_ENABLED
   ? createOpenAI({ apiKey: process.env.OPENAI_SECRET_KEY })
   : undefined;
 
-const ratelimit = HAS_VERCEL_KV
+const ratelimit = redis
   ? new Ratelimit({
-    redis: kv,
+    redis,
     limiter: Ratelimit.slidingWindow(RATE_LIMIT_MAX_QUERIES_PER_HOUR, '1h'),
   })
   : undefined;
 
 // Allows 100 requests per hour
-const checkRateLimitAndBailIfNecessary = async () => {
+const checkRateLimitAndThrow = async () => {
   if (ratelimit) {
     let success = false;
     try {
@@ -65,7 +70,7 @@ export const streamOpenAiImageQuery = async (
   imageBase64: string,
   query: string,
 ) => {
-  await checkRateLimitAndBailIfNecessary();
+  await checkRateLimitAndThrow();
 
   const stream = createStreamableValue('');
 
@@ -88,7 +93,7 @@ export const generateOpenAiImageQuery = async (
   imageBase64: string,
   query: string,
 ) => {
-  await checkRateLimitAndBailIfNecessary();
+  await checkRateLimitAndThrow();
 
   const args = getImageTextArgs(imageBase64, query);
 
@@ -99,7 +104,7 @@ export const generateOpenAiImageQuery = async (
 };
 
 export const testOpenAiConnection = async () => {
-  await checkRateLimitAndBailIfNecessary();
+  await checkRateLimitAndThrow();
 
   if (openai) {
     return generateText({

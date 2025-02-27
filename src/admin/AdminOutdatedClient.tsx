@@ -1,16 +1,17 @@
 'use client';
 
-import { OUTDATED_THRESHOLD, Photo } from '@/photo';
+import { Photo } from '@/photo';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import LoaderButton from '@/components/primitives/LoaderButton';
-import IconGrSync from '@/app-core/IconGrSync';
+import IconGrSync from '@/app/IconGrSync';
 import Note from '@/components/Note';
 import AdminChildPage from '@/components/AdminChildPage';
-import { PATH_ADMIN_PHOTOS } from '@/app-core/paths';
+import { PATH_ADMIN_PHOTOS } from '@/app/paths';
 import { useState } from 'react';
 import { syncPhotosAction } from '@/photo/actions';
 import { useRouter } from 'next/navigation';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
+import { LiaBroomSolid } from 'react-icons/lia';
 
 const UPDATE_BATCH_SIZE_MAX = 4;
 
@@ -77,21 +78,19 @@ export default function AdminOutdatedClient({
       </LoaderButton>}
     >
       <div className="space-y-6">
-        <Note>
+        <Note
+          color="yellow"
+          icon={<LiaBroomSolid size={18}/>}
+        >
           <div className="space-y-1.5">
             <div className="font-bold">
-              Outdated photos found
+              {photos.length} outdated
+              {' '}
+              {photos.length === 1 ? 'photo' : 'photos'} found
             </div>
-            {photos.length}
+            Sync photos to import newer EXIF fields, improve blur data,
             {' '}
-            {photos.length === 1 ? 'photo' : 'photos'}
-            {' ('}last updated before
-            {' '}
-            {new Date(OUTDATED_THRESHOLD).toLocaleDateString()}{')'}
-            {' '}
-            may have: missing EXIF fields, inaccurate blur data,
-            {' '}
-            undesired privacy settings, or missing AI-generated text
+            and leverage AI-generated text where possible
           </div>
         </Note>
         <div className="space-y-4">

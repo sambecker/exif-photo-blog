@@ -1,8 +1,12 @@
 'use client';
 
 import { ComponentProps, useMemo } from 'react';
-import { pathForAdminPhotoEdit, pathForPhoto } from '@/app-core/paths';
-import { deletePhotoAction, toggleFavoritePhotoAction } from '@/photo/actions';
+import { pathForAdminPhotoEdit, pathForPhoto } from '@/app/paths';
+import {
+  deletePhotoAction,
+  syncPhotoAction,
+  toggleFavoritePhotoAction,
+} from '@/photo/actions';
 import { FaRegEdit, FaRegStar, FaStar } from 'react-icons/fa';
 import {
   Photo,
@@ -17,6 +21,9 @@ import { useAppState } from '@/state/AppState';
 import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 import { MdOutlineFileDownload } from 'react-icons/md';
 import MoreMenuItem from '@/components/more/MoreMenuItem';
+import IconGrSync from '@/app/IconGrSync';
+import { isPhotoOutdated } from '@/photo/outdated';
+import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 
 export default function AdminPhotoMenuClient({
   photo,
@@ -40,7 +47,10 @@ export default function AdminPhotoMenuClient({
   const items = useMemo(() => {
     const items: ComponentProps<typeof MoreMenuItem>[] = [{
       label: 'Edit',
-      icon: <FaRegEdit size={14} />,
+      icon: <FaRegEdit
+        size={15}
+        className="translate-x-[0.5px] translate-y-[-0.5px]"
+      />,
       href: pathForAdminPhotoEdit(photo.id),
     }];
     if (includeFavorite) {
@@ -65,17 +75,32 @@ export default function AdminPhotoMenuClient({
       label: 'Download',
       icon: <MdOutlineFileDownload
         size={17}
-        className="translate-x-[-1.5px] translate-y-[-0.5px]"
+        className="translate-x-[-1px] translate-y-[-0.5px]"
       />,
       href: photo.url,
       hrefDownloadName: downloadFileNameForPhoto(photo),
     });
     items.push({
+      label: 'Sync',
+      labelComplex: <span className="inline-flex items-center gap-2">
+        <span>Sync</span>
+        {isPhotoOutdated(photo) &&
+          <InsightsIndicatorDot
+            colorOverride="yellow"
+            className="translate-y-[1.5px]"
+          />}
+      </span>,
+      icon: <IconGrSync className="translate-x-[-1px]" />,
+      action: () => syncPhotoAction(photo.id)
+        .then(() => revalidatePhoto?.(photo.id)),
+    });
+    items.push({
       label: 'Delete',
       icon: <BiTrash
         size={15}
-        className="translate-x-[-1.5px]"
+        className="translate-x-[-1px]"
       />,
+      className: 'text-error *:hover:text-error',
       action: () => {
         if (confirm(deleteConfirmationTextForPhoto(photo))) {
           return deletePhotoAction(

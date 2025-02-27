@@ -9,7 +9,7 @@ import { IoCloseSharp } from 'react-icons/io5';
 import { useState } from 'react';
 import { TAG_FAVS, Tags } from '@/tag';
 import { usePathname } from 'next/navigation';
-import { PATH_GRID_INFERRED } from '@/app-core/paths';
+import { PATH_GRID_INFERRED } from '@/app/paths';
 import PhotoTagFieldset from './PhotoTagFieldset';
 import { tagMultiplePhotosAction } from '@/photo/actions';
 import { toastSuccess } from '@/toast';
@@ -150,7 +150,7 @@ export default function AdminBatchEditPanelClient({
     selectedPhotoIds !== undefined
   )
     ? <SiteGrid
-      className="sticky top-0 z-10 mb-5 -mt-2 pt-2"
+      className="sticky top-0 z-10 -mt-2 pt-2"
       contentMain={<div className="flex flex-col gap-2">
         <Note
           color="gray"

@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, createContext, useContext } from 'react';
 import { AnimationConfig } from '@/components/AnimateItems';
 import { ShareModalProps } from '@/share';
+import { InsightIndicatorStatus } from '@/admin/insights';
 
 export interface AppStateContext {
   // CORE
@@ -19,17 +20,26 @@ export interface AppStateContext {
   setIsCommandKOpen?: Dispatch<SetStateAction<boolean>>
   shareModalProps?: ShareModalProps
   setShareModalProps?: Dispatch<SetStateAction<ShareModalProps | undefined>>
-  // ADMIN
+  // AUTH
   userEmail?: string
   setUserEmail?: Dispatch<SetStateAction<string | undefined>>
   isUserSignedIn?: boolean
+  isUserSignedInEager?: boolean
+  clearAuthStateAndRedirect?: () => void
+  // ADMIN
   adminUpdateTimes?: Date[]
   registerAdminUpdate?: () => void
-  hiddenPhotosCount?: number
+  refreshAdminData?: () => void
+  photosCount?: number
+  photosCountHidden?: number
+  uploadsCount?: number
+  tagsCount?: number
   selectedPhotoIds?: string[]
   setSelectedPhotoIds?: Dispatch<SetStateAction<string[] | undefined>>
   isPerformingSelectEdit?: boolean
   setIsPerformingSelectEdit?: Dispatch<SetStateAction<boolean>>
+  insightIndicatorStatus?: InsightIndicatorStatus
+  setInsightIndicatorStatus?: Dispatch<SetStateAction<InsightIndicatorStatus>>
   // DEBUG
   isGridHighDensity?: boolean
   setIsGridHighDensity?: Dispatch<SetStateAction<boolean>>
@@ -41,6 +51,10 @@ export interface AppStateContext {
   setShouldDebugImageFallbacks?: Dispatch<SetStateAction<boolean>>
   shouldShowBaselineGrid?: boolean
   setShouldShowBaselineGrid?: Dispatch<SetStateAction<boolean>>
+  shouldDebugInsights?: boolean
+  setShouldDebugInsights?: Dispatch<SetStateAction<boolean>>
+  shouldDebugRecipeOverlays?: boolean
+  setShouldDebugRecipeOverlays?: Dispatch<SetStateAction<boolean>>
 }
 
 export const AppStateContext = createContext<AppStateContext>({});

@@ -12,10 +12,7 @@ import SiteGrid from '@/components/SiteGrid';
 import ImageLarge from '@/components/image/ImageLarge';
 import { clsx } from 'clsx/lite';
 import Link from 'next/link';
-import {
-  pathForFocalLength,
-  pathForPhoto,
-} from '@/app-core/paths';
+import { pathForFocalLength, pathForPhoto } from '@/app/paths';
 import PhotoTags from '@/tag/PhotoTags';
 import ShareButton from '@/share/ShareButton';
 import DownloadButton from '@/components/DownloadButton';
@@ -29,7 +26,8 @@ import {
   SHOULD_PREFETCH_ALL_LINKS,
   ALLOW_PUBLIC_DOWNLOADS,
   SHOW_TAKEN_AT_TIME,
-} from '@/app-core/config';
+  SHOW_RECIPES,
+} from '@/app/config';
 import AdminPhotoMenuClient from '@/admin/AdminPhotoMenuClient';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
 import { useRef } from 'react';
@@ -40,6 +38,11 @@ import { LuExpand } from 'react-icons/lu';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import Tooltip from '@/components/Tooltip';
 import ZoomControls, { ZoomControlsRef } from '@/components/image/ZoomControls';
+import PhotoRecipe from './PhotoRecipe';
+import { TbChecklist } from 'react-icons/tb';
+import { IoCloseSharp } from 'react-icons/io5';
+import { AnimatePresence } from 'framer-motion';
+import useRecipeState from './useRecipeState';
 
 export default function PhotoLarge({
   photo,
@@ -91,10 +94,22 @@ export default function PhotoLarge({
   const {
     areZoomControlsShown,
     arePhotosMatted,
+    shouldDebugRecipeOverlays,
     isUserSignedIn,
   } = useAppState();
 
   const showZoomControls = showZoomControlsProp && areZoomControlsShown;
+
+  const refRecipe = useRef<HTMLDivElement>(null);
+  const refRecipeTrigger = useRef<HTMLButtonElement>(null);
+  const {
+    shouldShowRecipe,
+    toggleRecipe,
+    hideRecipe,
+  } = useRecipeState({
+    ref: refRecipe,
+    refTrigger: refRecipeTrigger,
+  });
 
   const tags = sortTags(photo.tags, primaryTag);
 
@@ -142,6 +157,7 @@ export default function PhotoLarge({
 
   const largePhotoContent =
     <div className={clsx(
+      'relative',
       arePhotosMatted && 'flex items-center justify-center',
       // Always specify height to ensure fallback doesn't collapse
       arePhotosMatted && 'h-[90%]',
@@ -163,6 +179,24 @@ export default function PhotoLarge({
           priority={priority}
         />
       </ZoomControls>
+      <div className={clsx(
+        'absolute inset-0',
+        'flex items-center justify-center',
+      )}>
+        <AnimatePresence>
+          {(shouldShowRecipe || shouldDebugRecipeOverlays) &&
+          photo.fujifilmRecipe &&
+          photo.filmSimulation &&
+            <PhotoRecipe
+              ref={refRecipe}
+              recipe={photo.fujifilmRecipe}
+              simulation={photo.filmSimulation}
+              iso={photo.isoFormatted}
+              exposure={photo.exposureCompensationFormatted}
+              onClose={hideRecipe}
+            />}
+        </AnimatePresence>
+      </div>
     </div>;
 
   const largePhotoContainerClassName = clsx(arePhotosMatted &&
@@ -274,11 +308,35 @@ export default function PhotoLarge({
                   <li>{photo.isoFormatted}</li>
                   <li>{photo.exposureCompensationFormatted ?? '0ev'}</li>
                 </ul>
-                {showSimulation && photo.filmSimulation &&
-                  <PhotoFilmSimulation
-                    simulation={photo.filmSimulation}
-                    prefetch={prefetchRelatedLinks}
-                  />}
+                {(
+                  (showSimulation && photo.filmSimulation) ||
+                  (SHOW_RECIPES && photo.fujifilmRecipe)
+                ) &&
+                  <div className="flex items-center gap-2 *:w-auto">
+                    {showSimulation && photo.filmSimulation &&
+                      <PhotoFilmSimulation
+                        simulation={photo.filmSimulation}
+                        prefetch={prefetchRelatedLinks}
+                      />}
+                    {SHOW_RECIPES && photo.fujifilmRecipe &&
+                      <button
+                        ref={refRecipeTrigger}
+                        title="Fujifilm Recipe"
+                        onClick={toggleRecipe}
+                        className={clsx(
+                          'text-medium',
+                          'border-medium rounded-md',
+                          'px-[4px] py-[2.5px] my-[-2.5px]',
+                          'hover:bg-dim active:bg-main',
+                        )}>
+                        {shouldShowRecipe
+                          ? <IoCloseSharp size={15} />
+                          : <TbChecklist
+                            className="translate-x-[0.5px]"
+                            size={15}
+                          />}
+                      </button>} 
+                  </div>}
               </>}
             <div className={clsx(
               'flex gap-x-3 gap-y-baseline',
@@ -292,9 +350,8 @@ export default function PhotoLarge({
                   // Prevent collision with admin button
                   !hasNonDateContent && isUserSignedIn && 'md:pr-7',
                 )}
-                // 'createdAt' is a naive datetime which
-                // does not require a timezone and will not
-                // cause server/client time mismatches
+                // 'createdAt' is a naive datetime which does not require
+                // a timezone and will not cause server/client mismatch
                 timezone={null}
                 hideTime={!SHOW_TAKEN_AT_TIME}
               />

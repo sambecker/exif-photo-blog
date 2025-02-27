@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { clsx } from 'clsx/lite';
 import StatusIcon from './StatusIcon';
 import ExperimentalBadge from './ExperimentalBadge';
+import ScoreCardRow from './ScoreCardRow';
 
 export default function ChecklistRow({
   title,
@@ -21,31 +22,28 @@ export default function ChecklistRow({
   children: ReactNode
 }) {
   return (
-    <div className={clsx(
-      'flex gap-2.5',
-      'px-4 pt-2 pb-2.5',
-    )}>
-      <StatusIcon
+    <ScoreCardRow
+      icon={<StatusIcon
         type={status
           ? 'checked'
           : showWarning
             ? 'warning'
             : optional ? 'optional' : 'missing'}
         loading={isPending}
-      />
-      <div className="flex flex-col min-w-0 grow">
+      />}
+      content={<>
         <div className={clsx(
           'flex flex-wrap items-center gap-2 pb-0.5',
-          'font-bold dark:text-gray-300',
+          'font-bold text-main',
         )}>
           {title}
           {experimental &&
             <ExperimentalBadge className="translate-y-[-0.5px]" />}
         </div>
-        <div className="leading-relaxed">
+        <div className="leading-relaxed text-medium">
           {children}
         </div>
-      </div>
-    </div>
+      </>}
+    />
   );
 }

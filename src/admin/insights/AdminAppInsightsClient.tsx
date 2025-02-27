@@ -11,7 +11,6 @@ import { HiOutlinePhotograph } from 'react-icons/hi';
 import { MdAspectRatio } from 'react-icons/md';
 import { PiWarningBold } from 'react-icons/pi';
 import { TbCone, TbSparkles } from 'react-icons/tb';
-import { getGitHubMeta } from '../../platforms/github';
 import { BiGitBranch, BiGitCommit, BiLogoGithub } from 'react-icons/bi';
 import {
   TEMPLATE_REPO_BRANCH,
@@ -21,12 +20,17 @@ import {
   VERCEL_GIT_COMMIT_MESSAGE,
   TEMPLATE_REPO_URL_FORK,
   TEMPLATE_REPO_URL_README,
-} from '@/app-core/config';
-import { AdminAppInsights, hasTemplateRecommendations, PhotoStats } from '.';
+} from '@/app/config';
+import {
+  AdminAppInsights,
+  getGitHubMetaForCurrentApp,
+  hasTemplateRecommendations,
+  PhotoStats,
+} from '.';
 import EnvVar from '@/components/EnvVar';
 import { IoSyncCircle } from 'react-icons/io5';
 import clsx from 'clsx/lite';
-import { PATH_ADMIN_OUTDATED } from '@/app-core/paths';
+import { PATH_ADMIN_OUTDATED } from '@/app/paths';
 import { LiaBroomSolid } from 'react-icons/lia';
 import { IoMdGrid } from 'react-icons/io';
 import { RiSpeedMiniLine } from 'react-icons/ri';
@@ -34,11 +38,15 @@ import AdminLink from '../AdminLink';
 import AdminEmptyState from '../AdminEmptyState';
 import { pluralize } from '@/utility/string';
 import Tooltip from '@/components/Tooltip';
+import { useAppState } from '@/state/AppState';
+import ScoreCardContainer from '@/components/ScoreCardContainer';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
 const DEBUG_BEHIND_BY = 9;
 const DEBUG_PHOTOS_COUNT_OUTDATED = 7;
+
+const WARNING_TEXT_COLOR = 'text-amber-600 dark:text-amber-500';
 
 const readmeAnchor = (anchor: string) =>
   <AdminLink href={`${TEMPLATE_REPO_URL_README}#${anchor}`}>
@@ -56,13 +64,16 @@ const renderLabeledEnvVar = (label: string, envVar: string, value = '1') =>
 const renderHighlightText = (
   text: string,
   color: 'blue' | 'yellow' = 'blue',
+  truncate = true,
 ) =>
   <span className={clsx(
-    'px-1.5 pt-[1px] pb-0.5 rounded-md',
+    'px-1.5 pb-[1px] rounded-md',
+    truncate && 'max-w-full inline-block',
+    truncate && 'text-ellipsis whitespace-nowrap overflow-x-clip',
     color === 'blue' && 'text-blue-600 bg-blue-100/60',
     color === 'blue' && 'dark:text-blue-400 dark:bg-blue-900/50',
     color === 'yellow' && 'text-amber-700 bg-amber-100/50',
-    color === 'yellow' && 'dark:text-amber-400 dark:bg-amber-900/50',
+    color === 'yellow' && 'dark:text-amber-400 dark:bg-amber-900/35',
   )}>
     {text}
   </span>;
@@ -80,13 +91,13 @@ export default function AdminAppInsightsClient({
     focalLengthsCount,
     dateRange,
   },
-  debug,
 }: {
-  codeMeta?: Awaited<ReturnType<typeof getGitHubMeta>>
+  codeMeta?: Awaited<ReturnType<typeof getGitHubMetaForCurrentApp>>
   insights: AdminAppInsights
   photoStats: PhotoStats
-  debug?: boolean
 }) {
+  const { shouldDebugInsights: debug } = useAppState();
+
   const {
     noFork,
     forkBehind,
@@ -109,14 +120,14 @@ export default function AdminAppInsightsClient({
   </a>;
 
   return (
-    <div className="space-y-6 md:space-y-8">
+    <ScoreCardContainer>
       {(codeMeta || debug) && <>
         <ScoreCard title="Source code">
-          {codeMeta?.didError
-            ? <ScoreCardRow
+          {(codeMeta?.didError || debug) &&
+            <ScoreCardRow
               icon={<IoSyncCircle
                 size={18}
-                className="text-amber-600"
+                className={WARNING_TEXT_COLOR}
               />}
               content={<>
                 Could not analyze source code
@@ -125,51 +136,49 @@ export default function AdminAppInsightsClient({
                   classNameTrigger="translate-y-[4.5px] ml-2 h-3"
                 />
               </>}
-            />
-            : <>
-              {(noFork || debug) &&
-                <ScoreCardRow
-                  icon={<FaCircleInfo 
-                    size={15}
-                    className="text-blue-500 translate-y-[1px]"
-                  />}
-                  content="This template is not forked"
-                  expandContent={<>
-                    <AdminLink href={TEMPLATE_REPO_URL_FORK}>
-                      Fork original template
-                    </AdminLink>
-                    {' '}
-                    to receive the latest fixes and features.
-                    {' '}
-                    Additional instructions in
-                    {' '}
-                    {readmeAnchor('receiving-updates')}.
-                  </>}
-                />}
-              {(forkBehind || debug) && <ScoreCardRow
-                icon={<IoSyncCircle
-                  size={18}
-                  className="text-blue-500"
-                />}
-                content={<>
-                  This fork is
-                  {' '}
-                  {renderHighlightText(
-                    pluralize(codeMeta?.behindBy ?? DEBUG_BEHIND_BY, 'commit'),
-                    'blue',
-                  )}
-                  {' '}
-                  behind
-                </>}
-                expandContent={<>
-                  <AdminLink href={codeMeta?.urlRepo ?? ''}>
-                    Sync your fork
-                  </AdminLink>
-                  {' '}
-                  to receive the latest fixes and features.
-                </>}
+            />}
+          {((!codeMeta?.didError && noFork) || debug) &&
+            <ScoreCardRow
+              icon={<FaCircleInfo 
+                size={15}
+                className="text-blue-500 translate-y-[1px]"
               />}
+              content="This template is not forked"
+              expandContent={<>
+                <AdminLink href={TEMPLATE_REPO_URL_FORK}>
+                  Fork original template
+                </AdminLink>
+                {' '}
+                to receive the latest fixes and features.
+                {' '}
+                Additional instructions in
+                {' '}
+                {readmeAnchor('receiving-updates')}.
+              </>}
+            />}
+          {((!codeMeta?.didError && forkBehind) || debug) && <ScoreCardRow
+            icon={<IoSyncCircle
+              size={18}
+              className="text-blue-500"
+            />}
+            content={<>
+              This fork is
+              {' '}
+              {renderHighlightText(
+                pluralize(codeMeta?.behindBy ?? DEBUG_BEHIND_BY, 'commit'),
+                'blue',
+              )}
+              {' '}
+              behind
             </>}
+            expandContent={<>
+              <AdminLink href={codeMeta?.urlRepo ?? ''}>
+                Sync your fork
+              </AdminLink>
+              {' '}
+              to receive the latest fixes and features.
+            </>}
+          />}
           <ScoreCardRow
             icon={<BiLogoGithub size={17} />}
             content={<div
@@ -227,15 +236,20 @@ export default function AdminAppInsightsClient({
             {(noAiRateLimiting || debug) && <ScoreCardRow
               icon={<PiWarningBold
                 size={17}
-                className="translate-x-[0.5px] text-amber-600"
+                className={clsx(
+                  'translate-x-[0.5px]',
+                  WARNING_TEXT_COLOR,
+                )}
               />}
-              content={renderHighlightText(
-                'AI enabled without rate limiting',
+              content={isExpanded => renderHighlightText(
+                'Enable AI rate limiting',
                 'yellow',
+                !isExpanded,
               )}
               expandContent={<>
-                Create Vercel KV store and link to this project
-                in order prevent abuse by to enabling rate limiting.
+                Create Upstash Redis store from storage tab on
+                Vercel dashboard and link to this project to
+                prevent abuse by enabling rate limiting.
               </>}
             />}
             {(noStaticOptimization || debug) && <ScoreCardRow
@@ -306,8 +320,11 @@ export default function AdminAppInsightsClient({
                 {' '}
                 default view to grid by setting
                 {' '}
-                {/* eslint-disable-next-line max-len */}
-                <EnvVar variable="NEXT_PUBLIC_GRID_HOMEPAGE_ENABLED" value="1" />.
+                <EnvVar
+                  variable="NEXT_PUBLIC_GRID_HOMEPAGE"
+                  value="1"
+                  trailingContent="."
+                />
               </>}
             />}
           </>
@@ -319,11 +336,16 @@ export default function AdminAppInsightsClient({
         {(outdatedPhotos || debug) && <ScoreCardRow
           icon={<LiaBroomSolid
             size={19}
-            className="translate-y-[-2px] text-amber-600"
+            className={clsx(
+              'translate-y-[-2px]',
+              WARNING_TEXT_COLOR,
+            )}
           />}
           content={renderHighlightText(
-            // eslint-disable-next-line max-len
-            pluralize(photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED, 'outdated photo'),
+            pluralize(
+              photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED,
+              'outdated photo',
+            ),
             'yellow',
           )}
           expandPath={PATH_ADMIN_OUTDATED}
@@ -374,6 +396,6 @@ export default function AdminAppInsightsClient({
           content={descriptionWithSpaces}
         />}
       </ScoreCard>
-    </div>
+    </ScoreCardContainer>
   );
 }

@@ -3,6 +3,8 @@
 import { Command } from 'cmdk';
 import {
   ReactNode,
+  SetStateAction,
+  Dispatch,
   useEffect,
   useMemo,
   useRef,
@@ -11,6 +13,7 @@ import {
 } from 'react';
 import {
   PATH_ADMIN_BASELINE,
+  PATH_ADMIN_COMPONENTS,
   PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_INSIGHTS,
   PATH_ADMIN_PHOTOS,
@@ -22,7 +25,7 @@ import {
   PATH_SIGN_IN,
   pathForPhoto,
   pathForTag,
-} from '../../app-core/paths';
+} from '../../app/paths';
 import Modal from '../Modal';
 import { clsx } from 'clsx/lite';
 import { useDebounce } from 'use-debounce';
@@ -36,7 +39,7 @@ import { searchPhotosAction } from '@/photo/actions';
 import { RiToolsFill } from 'react-icons/ri';
 import { BiLockAlt, BiSolidUser } from 'react-icons/bi';
 import { HiDocumentText } from 'react-icons/hi';
-import { signOutAndRedirectAction } from '@/auth/actions';
+import { signOutAction } from '@/auth/actions';
 import { TbPhoto } from 'react-icons/tb';
 import { getKeywordsForPhoto, titleForPhoto } from '@/photo';
 import PhotoDate from '@/photo/PhotoDate';
@@ -46,9 +49,10 @@ import { Tags, addHiddenToTags, formatTag } from '@/tag';
 import { FaTag } from 'react-icons/fa';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 import CommandKItem from './CommandKItem';
-import { GRID_HOMEPAGE_ENABLED } from '@/app-core/config';
+import { GRID_HOMEPAGE_ENABLED } from '@/app/config';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
+import InsightsIndicatorDot from '@/admin/insights/InsightsIndicatorDot';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -57,7 +61,7 @@ const LISTENER_KEYDOWN = 'keydown';
 const MINIMUM_QUERY_LENGTH = 2;
 
 type CommandKItem = {
-  label: string
+  label: ReactNode
   keywords?: string[]
   accessory?: ReactNode
   annotation?: ReactNode
@@ -71,6 +75,16 @@ export type CommandKSection = {
   accessory?: ReactNode
   items: CommandKItem[]
 }
+
+const renderToggle = (
+  label: string,
+  onToggle?: Dispatch<SetStateAction<boolean>>,
+  isEnabled?: boolean,
+): CommandKItem => ({
+  label: `Toggle ${label}`,
+  action: () => onToggle?.(prev => !prev),
+  annotation: isEnabled ? <FaCheck size={12} /> : undefined,
+});
 
 export default function CommandKClient({
   tags,
@@ -87,16 +101,21 @@ export default function CommandKClient({
 
   const {
     isUserSignedIn,
-    setUserEmail,
+    clearAuthStateAndRedirect,
     isCommandKOpen: isOpen,
-    hiddenPhotosCount,
+    photosCountHidden,
+    uploadsCount,
+    tagsCount,
     selectedPhotoIds,
     setSelectedPhotoIds,
+    insightIndicatorStatus,
     isGridHighDensity,
     areZoomControlsShown,
     arePhotosMatted,
     shouldShowBaselineGrid,
     shouldDebugImageFallbacks,
+    shouldDebugInsights,
+    shouldDebugRecipeOverlays,
     setIsCommandKOpen: setIsOpen,
     setShouldRespondToKeyboardCommands,
     setShouldShowBaselineGrid,
@@ -104,6 +123,8 @@ export default function CommandKClient({
     setAreZoomControlsShown,
     setArePhotosMatted,
     setShouldDebugImageFallbacks,
+    setShouldDebugInsights,
+    setShouldDebugRecipeOverlays,
   } = useAppState();
 
   const isOpenRef = useRef(isOpen);
@@ -210,8 +231,8 @@ export default function CommandKClient({
   }, [isOpen, setShouldRespondToKeyboardCommands]);
 
   const tagsIncludingHidden = useMemo(() =>
-    addHiddenToTags(tags, hiddenPhotosCount)
-  , [tags, hiddenPhotosCount]);
+    addHiddenToTags(tags, photosCountHidden)
+  , [tags, photosCountHidden]);
 
   const SECTION_TAGS: CommandKSection = {
     heading: 'Tags',
@@ -252,29 +273,43 @@ export default function CommandKClient({
     clientSections.push({
       heading: 'Debug Tools',
       accessory: <RiToolsFill size={16} className="translate-x-[-1px]" />,
-      items: [{
-        label: 'Toggle Zoom Controls',
-        action: () => setAreZoomControlsShown?.(prev => !prev),
-        annotation: areZoomControlsShown ? <FaCheck size={12} /> : undefined,
-      }, {
-        label: 'Toggle Photo Matting',
-        action: () => setArePhotosMatted?.(prev => !prev),
-        annotation: arePhotosMatted ? <FaCheck size={12} /> : undefined,
-      }, {
-        label: 'Toggle High Density Grid',
-        action: () => setIsGridHighDensity?.(prev => !prev),
-        annotation: isGridHighDensity ? <FaCheck size={12} /> : undefined,
-      }, {
-        label: 'Toggle Image Fallbacks',
-        action: () => setShouldDebugImageFallbacks?.(prev => !prev),
-        annotation: shouldDebugImageFallbacks
-          ? <FaCheck size={12} />
-          : undefined,
-      }, {
-        label: 'Toggle Baseline Grid',
-        action: () => setShouldShowBaselineGrid?.(prev => !prev),
-        annotation: shouldShowBaselineGrid ? <FaCheck size={12} /> : undefined,
-      }],
+      items: [
+        renderToggle(
+          'Zoom Controls',
+          setAreZoomControlsShown,
+          areZoomControlsShown,
+        ),
+        renderToggle(
+          'Photo Matting',
+          setArePhotosMatted,
+          arePhotosMatted,
+        ),
+        renderToggle(
+          'High Density Grid',
+          setIsGridHighDensity,
+          isGridHighDensity,
+        ),
+        renderToggle(
+          'Image Fallbacks',
+          setShouldDebugImageFallbacks,
+          shouldDebugImageFallbacks,
+        ),
+        renderToggle(
+          'Baseline Grid',
+          setShouldShowBaselineGrid,
+          shouldShowBaselineGrid,
+        ),
+        renderToggle(
+          'Insights Debugging',
+          setShouldDebugInsights,
+          shouldDebugInsights,
+        ),
+        renderToggle(
+          'Recipe Overlays',
+          setShouldDebugRecipeOverlays,
+          shouldDebugRecipeOverlays,
+        ),
+      ],
     });
   }
 
@@ -304,56 +339,75 @@ export default function CommandKClient({
   const adminSection: CommandKSection = {
     heading: 'Admin',
     accessory: <BiSolidUser size={15} className="translate-x-[-1px]" />,
-    items: isUserSignedIn
-      ? ([{
-        label: 'Manage Photos',
-        annotation: <BiLockAlt />,
-        path: PATH_ADMIN_PHOTOS,
-      }, {
+    items: [],
+  };
+
+  if (isUserSignedIn) {
+    adminSection.items.push({
+      label: 'Manage Photos',
+      annotation: <BiLockAlt />,
+      path: PATH_ADMIN_PHOTOS,
+    });
+    if (uploadsCount) {
+      adminSection.items.push({
         label: 'Manage Uploads',
         annotation: <BiLockAlt />,
         path: PATH_ADMIN_UPLOADS,
-      }, {
+      });
+    }
+    if (tagsCount) {
+      adminSection.items.push({
         label: 'Manage Tags',
         annotation: <BiLockAlt />,
         path: PATH_ADMIN_TAGS,
-      }, {
-        label: 'App Config',
+      });
+    }
+    adminSection.items.push({
+      label: <span className="flex items-center gap-3">
+        App Insights
+        {insightIndicatorStatus &&
+          <InsightsIndicatorDot />}
+      </span>,
+      keywords: ['app insights'],
+      annotation: <BiLockAlt />,
+      path: PATH_ADMIN_INSIGHTS,
+    }, {
+      label: 'App Config',
+      annotation: <BiLockAlt />,
+      path: PATH_ADMIN_CONFIGURATION,
+    }, {
+      label: selectedPhotoIds === undefined
+        ? 'Select Multiple Photos'
+        : 'Exit Select Multiple Photos',
+      annotation: <BiLockAlt />,
+      path: selectedPhotoIds === undefined
+        ? PATH_GRID_INFERRED
+        : undefined,
+      action: selectedPhotoIds === undefined
+        ? () => setSelectedPhotoIds?.([])
+        : () => setSelectedPhotoIds?.(undefined),
+    });
+    if (showDebugTools) {
+      adminSection.items.push({
+        label: 'Baseline Overview',
         annotation: <BiLockAlt />,
-        path: PATH_ADMIN_CONFIGURATION,
+        path: PATH_ADMIN_BASELINE,
       }, {
-        label: 'App Insights',
+        label: 'Components Overview',
         annotation: <BiLockAlt />,
-        path: PATH_ADMIN_INSIGHTS,
-      }, {
-        label: selectedPhotoIds === undefined
-          ? 'Select Multiple Photos'
-          : 'Exit Select Multiple Photos',
-        annotation: <BiLockAlt />,
-        path: selectedPhotoIds === undefined
-          ? PATH_GRID_INFERRED
-          : undefined,
-        action: selectedPhotoIds === undefined
-          ? () => setSelectedPhotoIds?.([])
-          : () => setSelectedPhotoIds?.(undefined),
-      }] as CommandKItem[])
-        .concat(showDebugTools
-          ? [{
-            label: 'Baseline Overview',
-            path: PATH_ADMIN_BASELINE,
-          }]
-          : [])
-        .concat({
-          label: 'Sign Out',
-          action: () => {
-            signOutAndRedirectAction().then(() => setUserEmail?.(undefined));
-          },
-        })
-      : [{
-        label: 'Sign In',
-        path: PATH_SIGN_IN,
-      }],
-  };
+        path: PATH_ADMIN_COMPONENTS,
+      });
+    }
+    adminSection.items.push({
+      label: 'Sign Out',
+      action: () => signOutAction().then(clearAuthStateAndRedirect),
+    });
+  } else {
+    adminSection.items.push({
+      label: 'Sign In',
+      path: PATH_SIGN_IN,
+    });
+  }
 
   return (
     <Command.Dialog
@@ -363,7 +417,7 @@ export default function CommandKClient({
         const searchFormatted = search.trim().toLocaleLowerCase();
         return (
           value.toLocaleLowerCase().includes(searchFormatted) ||
-          keywords?.includes(searchFormatted)
+          keywords?.some(keyword => keyword.includes(searchFormatted))
         ) ? 1 : 0 ;
       }}
       loop

@@ -1,8 +1,8 @@
 import AdminCTA from '@/admin/AdminCTA';
 import Container from '@/components/Container';
 import SiteGrid from '@/components/SiteGrid';
-import { IS_SITE_READY } from '@/app-core/config';
-import { PATH_ADMIN_CONFIGURATION } from '@/app-core/paths';
+import { IS_SITE_READY } from '@/app/config';
+import { PATH_ADMIN_CONFIGURATION } from '@/app/paths';
 import AdminAppConfiguration from '@/admin/AdminAppConfiguration';
 import { clsx } from 'clsx/lite';
 import Link from 'next/link';

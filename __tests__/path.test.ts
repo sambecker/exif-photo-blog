@@ -12,7 +12,7 @@ import {
   isPathProtected,
   isPathTag,
   isPathTagPhoto,
-} from '@/app-core/paths';
+} from '@/app/paths';
 import { TAG_HIDDEN } from '@/tag';
 
 const PHOTO_ID            = 'UsKSGcbt';

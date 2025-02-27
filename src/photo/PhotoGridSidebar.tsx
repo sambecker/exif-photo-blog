@@ -15,7 +15,7 @@ import FavsTag from '../tag/FavsTag';
 import { useAppState } from '@/state/AppState';
 import { useMemo } from 'react';
 import HiddenTag from '@/tag/HiddenTag';
-import { SITE_ABOUT } from '@/app-core/config';
+import { SITE_ABOUT } from '@/app/config';
 import {
   htmlHasBrParagraphBreaks,
   safelyParseFormattedHtml,
@@ -37,11 +37,11 @@ export default function PhotoGridSidebar({
 }) {
   const { start, end } = dateRangeForPhotos(undefined, photosDateRange);
 
-  const { hiddenPhotosCount } = useAppState();
+  const { photosCountHidden } = useAppState();
 
   const tagsIncludingHidden = useMemo(() =>
-    addHiddenToTags(tags, hiddenPhotosCount)
-  , [tags, hiddenPhotosCount]);
+    addHiddenToTags(tags, photosCountHidden)
+  , [tags, photosCountHidden]);
 
   return (
     <div className="space-y-4">

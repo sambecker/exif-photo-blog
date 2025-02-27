@@ -18,11 +18,12 @@ import { convertStringToArray } from '@/utility/string';
 import { generateNanoid } from '@/utility/nanoid';
 import {
   FILM_SIMULATION_FORM_INPUT_OPTIONS,
-  MAKE_FUJIFILM,
-} from '@/platforms/fujifilm';
+} from '@/platforms/fujifilm/simulation';
 import { FilmSimulation } from '@/simulation';
-import { GEO_PRIVACY_ENABLED } from '@/app-core/config';
+import { GEO_PRIVACY_ENABLED } from '@/app/config';
 import { TAG_FAVS, getValidationMessageForTags } from '@/tag';
+import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
+import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 
 type VirtualFields = 'favorite';
 
@@ -49,6 +50,7 @@ type FormMeta = {
   readOnly?: boolean
   validate?: (value?: string) => string | undefined
   validateStringMaxLength?: number
+  spellCheck?: boolean
   capitalize?: boolean
   hide?: boolean
   hideIfEmpty?: boolean
@@ -58,6 +60,7 @@ type FormMeta = {
   selectOptions?: { value: string, label: string }[]
   selectOptionsDefaultLabel?: string
   tagOptions?: AnnotatedTag[]
+  shouldNotOverwriteWithNullDataOnSync?: boolean
 };
 
 const STRING_MAX_LENGTH_SHORT = 255;
@@ -106,6 +109,26 @@ const FORM_METADATA = (
     selectOptions: FILM_SIMULATION_FORM_INPUT_OPTIONS,
     selectOptionsDefaultLabel: 'Unknown',
     shouldHide: ({ make }) => make !== MAKE_FUJIFILM,
+    shouldNotOverwriteWithNullDataOnSync: true,
+  },
+  fujifilmRecipe: {
+    type: 'textarea',
+    label: 'fujifilm recipe',
+    spellCheck: false,
+    capitalize: false,
+    validate: value => {
+      let validationMessage = undefined;
+      if (value) {
+        try {
+          JSON.parse(value);
+        } catch {
+          validationMessage = 'Invalid JSON';
+        }
+      }
+      return validationMessage;
+    },
+    shouldHide: ({ make }) => make !== MAKE_FUJIFILM,
+    shouldNotOverwriteWithNullDataOnSync: true,
   },
   focalLength: { label: 'focal length' },
   focalLengthIn35MmFormat: { label: 'focal length 35mm-equivalent' },
@@ -130,6 +153,11 @@ const FORM_METADATA = (
   favorite: { label: 'favorite', type: 'checkbox', excludeFromInsert: true },
   hidden: { label: 'hidden', type: 'checkbox' },
 });
+
+export const FIELDS_TO_NOT_OVERWRITE_WITH_NULL_DATA_ON_SYNC =
+  Object.entries(FORM_METADATA())
+    .filter(([_, meta]) => meta.shouldNotOverwriteWithNullDataOnSync)
+    .map(([key]) => key as keyof PhotoFormData);
 
 export const FORM_METADATA_ENTRIES = (
   ...args: Parameters<typeof FORM_METADATA>
@@ -168,9 +196,7 @@ export const formHasTextContent = ({
 
 // CREATE FORM DATA: FROM PHOTO
 
-export const convertPhotoToFormData = (
-  photo: Photo,
-): PhotoFormData => {
+export const convertPhotoToFormData = (photo: Photo): PhotoFormData => {
   const valueForKey = (key: keyof Photo, value: any) => {
     switch (key) {
     case 'tags':
@@ -181,6 +207,8 @@ export const convertPhotoToFormData = (
       return value?.toISOString ? value.toISOString() : value;
     case 'hidden':
       return value ? 'true' : 'false';
+    case 'fujifilmRecipe':
+      return JSON.stringify(value);
     default:
       return value !== undefined && value !== null
         ? value.toString()
@@ -200,6 +228,7 @@ export const convertPhotoToFormData = (
 export const convertExifToFormData = (
   data: ExifData,
   filmSimulation?: FilmSimulation,
+  fujifilmRecipe?: FujifilmRecipe,
 ): Omit<
   Record<keyof PhotoExif, string | undefined>,
   'takenAt' | 'takenAtNaive'
@@ -223,6 +252,7 @@ export const convertExifToFormData = (
   longitude:
     !GEO_PRIVACY_ENABLED ? data.tags?.GPSLongitude?.toString() : undefined,
   filmSimulation,
+  fujifilmRecipe: JSON.stringify(fujifilmRecipe),
   ...data.tags?.DateTimeOriginal && {
     takenAt: convertTimestampWithOffsetToPostgresString(
       data.tags.DateTimeOriginal,
@@ -267,7 +297,10 @@ export const convertFormDataToPhotoDbInsert = (
   });
 
   return {
-    ...(photoForm as PhotoFormData & { filmSimulation?: FilmSimulation }),
+    ...(photoForm as PhotoFormData & {
+      filmSimulation?: FilmSimulation
+      fujifilmRecipe?: FujifilmRecipe
+    }),
     ...!photoForm.id && { id: generateNanoid() },
     // Delete array field when empty
     tags: tags.length > 0 ? tags : undefined,

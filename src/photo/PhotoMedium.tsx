@@ -8,8 +8,8 @@ import {
 } from '.';
 import ImageMedium from '@/components/image/ImageMedium';
 import { clsx } from 'clsx/lite';
-import { pathForPhoto } from '@/app-core/paths';
-import { SHOULD_PREFETCH_ALL_LINKS } from '@/app-core/config';
+import { pathForPhoto } from '@/app/paths';
+import { SHOULD_PREFETCH_ALL_LINKS } from '@/app/config';
 import { useRef } from 'react';
 import useVisible from '@/utility/useVisible';
 import LinkWithStatus from '@/components/LinkWithStatus';

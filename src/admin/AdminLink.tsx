@@ -17,22 +17,22 @@ export default function AdminLink({
         {...props}
         href={href}
         target="blank"
-        className={clsx(
+        className={className}
+      >
+        <span className={clsx(
           'underline underline-offset-4',
           'decoration-gray-300 dark:decoration-gray-700',
-          className,
-        )}
-      >
-        {children}
+        )}>
+          {children}
+        </span>
+        {externalIcon && <span className="whitespace-nowrap">
+          &nbsp;
+          <FiExternalLink
+            size={14}
+            className="inline translate-y-[-1.5px]"
+          />
+        </span>}
       </Link>
-      {externalIcon &&
-      <>
-        &nbsp;
-        <FiExternalLink
-          size={14}
-          className="inline translate-y-[-1.5px]"
-        />
-      </>}
     </>
   );
 }

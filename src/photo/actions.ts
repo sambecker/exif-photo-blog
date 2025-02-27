@@ -13,6 +13,7 @@ import {
 } from '@/photo/db/query';
 import { GetPhotosOptions, areOptionsSensitive } from './db';
 import {
+  FIELDS_TO_NOT_OVERWRITE_WITH_NULL_DATA_ON_SYNC,
   PhotoFormData,
   convertFormDataToPhotoDbInsert,
   convertPhotoToFormData,
@@ -21,7 +22,6 @@ import { redirect } from 'next/navigation';
 import { deleteFile } from '@/platforms/storage';
 import {
   getPhotosCached,
-  getPhotosMetaCached,
   revalidateAdminPaths,
   revalidateAllKeysAndPaths,
   revalidatePhoto,
@@ -33,7 +33,7 @@ import {
   PATH_ADMIN_TAGS,
   PATH_ROOT,
   pathForPhoto,
-} from '@/app-core/paths';
+} from '@/app/paths';
 import { blurImageFromUrl, extractImageDataFromBlobPath } from './server';
 import { TAG_FAVS, isTagFavs } from '@/tag';
 import { convertPhotoToPhotoDbInsert, Photo } from '.';
@@ -44,7 +44,7 @@ import {
   AI_TEXT_AUTO_GENERATED_FIELDS,
   AI_TEXT_GENERATION_ENABLED,
   BLUR_ENABLED,
-} from '@/app-core/config';
+} from '@/app/config';
 import { generateAiImageQueries } from './ai/server';
 import { createStreamableValue } from 'ai/rsc';
 import { convertUploadToPhoto } from './storage';
@@ -115,7 +115,7 @@ export const addAllUploadsAction = async ({
           streamUpdate('Parsing EXIF data');
 
           const {
-            photoFormExif,
+            formDataFromExif,
             imageResizedBase64,
             shouldStripGpsData,
             fileBytes,
@@ -125,7 +125,7 @@ export const addAllUploadsAction = async ({
             generateResizedImage: AI_TEXT_GENERATION_ENABLED,
           });
 
-          if (photoFormExif) {
+          if (formDataFromExif) {
             if (AI_TEXT_GENERATION_ENABLED) {
               streamUpdate('Generating AI text');
             }
@@ -141,13 +141,13 @@ export const addAllUploadsAction = async ({
             );
 
             const form: Partial<PhotoFormData> = {
-              ...photoFormExif,
+              ...formDataFromExif,
               title,
               caption,
               tags: tags || aiTags,
               semanticDescription,
-              takenAt: photoFormExif.takenAt || takenAtLocal,
-              takenAtNaive: photoFormExif.takenAtNaive || takenAtNaiveLocal,
+              takenAt: formDataFromExif.takenAt || takenAtLocal,
+              takenAtNaive: formDataFromExif.takenAtNaive || takenAtNaiveLocal,
             };
 
             streamUpdate('Transferring to photo storage');
@@ -302,9 +302,9 @@ export const getExifDataAction = async (
   url: string,
 ): Promise<Partial<PhotoFormData>> =>
   runAuthenticatedAdminServerAction(async () => {
-    const { photoFormExif } = await extractImageDataFromBlobPath(url);
-    if (photoFormExif) {
-      return photoFormExif;
+    const { formDataFromExif } = await extractImageDataFromBlobPath(url);
+    if (formDataFromExif) {
+      return formDataFromExif;
     } else {
       return {};
     }
@@ -322,7 +322,7 @@ export const syncPhotoAction = async (photoId: string) =>
 
     if (photo) {
       const {
-        photoFormExif,
+        formDataFromExif,
         imageResizedBase64,
         shouldStripGpsData,
         fileBytes,
@@ -333,7 +333,7 @@ export const syncPhotoAction = async (photoId: string) =>
       });
 
       let urlToDelete: string | undefined;
-      if (photoFormExif) {
+      if (formDataFromExif) {
         if (photo.url.includes(photo.id) || shouldStripGpsData) {
           // Anonymize storage url on update if necessary by
           // re-running image upload transfer logic
@@ -359,9 +359,18 @@ export const syncPhotoAction = async (photoId: string) =>
           AI_TEXT_AUTO_GENERATED_FIELDS,
         );
 
+        const formDataFromPhoto = convertPhotoToFormData(photo);
+
+        // Don't overwrite manually configured fujifilm meta with null data
+        FIELDS_TO_NOT_OVERWRITE_WITH_NULL_DATA_ON_SYNC.forEach(field => {
+          if (!formDataFromExif[field] && formDataFromPhoto[field]) {
+            delete formDataFromExif[field];
+          }
+        });
+
         const photoFormDbInsert = convertFormDataToPhotoDbInsert({
-          ...convertPhotoToFormData(photo),
-          ...photoFormExif,
+          ...formDataFromPhoto,
+          ...formDataFromExif,
           ...!BLUR_ENABLED && { blurData: undefined },
           ...!photo.title && { title: atTitle },
           ...!photo.caption && { caption: aiCaption },
@@ -405,10 +414,6 @@ export const streamAiImageQueryAction = async (
 
 export const getImageBlurAction = async (url: string) =>
   runAuthenticatedAdminServerAction(() => blurImageFromUrl(url));
-
-export const getPhotosHiddenMetaCachedAction = async () =>
-  runAuthenticatedAdminServerAction(() =>
-    getPhotosMetaCached({ hidden: 'only' }));
 
 // Public/Private actions
 
