@@ -3,6 +3,7 @@ export interface UploadState {
   uploadError: string
   debugDownload?: { href: string, fileName: string }
   image?: HTMLImageElement
+  hideUploadPanel?: boolean
   fileUploadName: string
   fileUploadIndex: number
   filesLength: number
@@ -11,6 +12,7 @@ export interface UploadState {
 export const INITIAL_UPLOAD_STATE: UploadState = {
   isUploading: false,
   uploadError: '',
+  hideUploadPanel: false,
   fileUploadName: '',
   fileUploadIndex: 0,
   filesLength: 0,

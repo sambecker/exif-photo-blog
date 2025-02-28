@@ -45,6 +45,14 @@ export default function PhotoUploadWithStatus({
 
   const router = useRouter();
 
+  useEffect(() => {
+    // Hide upload panel while button is shown
+    if (showButton) {
+      setUploadState?.({ hideUploadPanel: true });
+      return () => { setUploadState?.({ hideUploadPanel: false }); };
+    }
+  }, [setUploadState, showButton]);
+
   const shouldResetUploadStateAfterPending = useRef(false);
   const [isPending, startTransition] = useTransition();
   useEffect(() => {

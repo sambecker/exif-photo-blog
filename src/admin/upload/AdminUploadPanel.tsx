@@ -1,13 +1,11 @@
 'use client';
 
-import { isPathAdminPhotos } from '@/app/paths';
 import Container from '@/components/Container';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import SiteGrid from '@/components/SiteGrid';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
 import { useAppState } from '@/state/AppState';
 import clsx from 'clsx';
-import { usePathname } from 'next/navigation';
 import { IoCloseSharp } from 'react-icons/io5';
 
 export default function AdminUploadPanel({
@@ -17,22 +15,18 @@ export default function AdminUploadPanel({
   shouldResize: boolean
   onLastUpload: () => Promise<void>
 }) {
-  const pathname = usePathname();
-
   const {
     uploadInputRef,
     uploadState: {
       isUploading,
+      hideUploadPanel,
     },
     resetUploadState,
   } = useAppState();
 
   return (
     <SiteGrid
-      className={clsx((
-        !isUploading ||
-        isPathAdminPhotos(pathname)
-      ) && 'hidden')}
+      className={clsx((!isUploading || hideUploadPanel) && 'hidden')}
       contentMain={
         <Container
           color="gray"
