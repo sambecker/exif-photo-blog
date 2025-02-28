@@ -30,15 +30,18 @@ export default function AdminAppMenu({
   className?: string
 }) {
   const {
-    photosCount,
-    uploadsCount,
-    tagsCount,
+    photosCount = 0,
+    photosCountHidden = 0,
+    uploadsCount = 0,
+    tagsCount = 0,
     selectedPhotoIds,
     startUpload,
     setSelectedPhotoIds,
     refreshAdminData,
     clearAuthStateAndRedirect,
   } = useAppState();
+
+  const photosCountTotal = photosCount + photosCountHidden;
 
   const isSelecting = selectedPhotoIds !== undefined;
 
@@ -51,8 +54,8 @@ export default function AdminAppMenu({
     action: startUpload,
   }, {
     label: 'Manage Photos',
-    ...photosCount !== undefined && {
-      annotation: `${photosCount}`,
+    ...photosCountTotal && {
+      annotation: `${photosCountTotal}`,
     },
     icon: <TbPhoto
       size={15}
