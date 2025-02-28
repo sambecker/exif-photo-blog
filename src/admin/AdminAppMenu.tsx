@@ -43,7 +43,7 @@ export default function AdminAppMenu({
   const isSelecting = selectedPhotoIds !== undefined;
 
   const items: ComponentProps<typeof MoreMenu>['items'] = [{
-    label: 'Upload Photos …',
+    label: 'Upload Photos',
     icon: <FiUploadCloud
       size={15}
       className="translate-x-[0.5px] translate-y-[0.5px]"
@@ -95,7 +95,7 @@ export default function AdminAppMenu({
   }, {
     label: isSelecting
       ? 'Exit Select'
-      : 'Edit Multiple …',
+      : 'Edit Multiple',
     icon: isSelecting
       ? <IoCloseSharp
         className="text-[18px] translate-x-[-1px] translate-y-[1px]"
