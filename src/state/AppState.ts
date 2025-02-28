@@ -23,7 +23,7 @@ export interface AppStateContext {
   shouldRespondToKeyboardCommands?: boolean
   setShouldRespondToKeyboardCommands?: Dispatch<SetStateAction<boolean>>
   // UPLOAD
-  startUpload?: () => void
+  startUpload?: (onStart?: () => void) => void
   uploadInputRef?: RefObject<HTMLInputElement | null>
   uploadState: UploadState
   setUploadState?: (uploadState: Partial<UploadState>) => void

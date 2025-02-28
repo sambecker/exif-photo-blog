@@ -90,10 +90,11 @@ export default function AppStateProvider({
   const [shouldDebugRecipeOverlays, setShouldDebugRecipeOverlays] =
     useState(false);
 
-  const startUpload = useCallback(() => {
+  const startUpload = useCallback((onStart?: () => void) => {
     if (uploadInputRef.current) {
       uploadInputRef.current.value = '';
       uploadInputRef.current.click();
+      uploadInputRef.current.oninput = onStart ?? null;
     }
   }, []);
   const setUploadState = useCallback((uploadState: Partial<UploadState>) => {
@@ -124,6 +125,8 @@ export default function AppStateProvider({
       refreshInterval: 1000 * 60,
     },
   );
+
+  console.log('adminData', adminData);
 
   useEffect(() => {
     if (userEmail) {

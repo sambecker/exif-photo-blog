@@ -51,7 +51,13 @@ export default function AdminAppMenu({
       size={15}
       className="translate-x-[0.5px] translate-y-[0.5px]"
     />,
-    action: startUpload,
+    action: () => new Promise(resolve => {
+      if (startUpload) {
+        startUpload(() => resolve());
+      } else {
+        resolve();
+      }
+    }),
   }, {
     label: 'Manage Photos',
     ...photosCountTotal && {
