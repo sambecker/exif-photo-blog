@@ -10,7 +10,7 @@ import {
 } from '@/app/paths';
 import { useAppState } from '@/state/AppState';
 import { ImCheckboxUnchecked } from 'react-icons/im';
-import { IoCloseSharp } from 'react-icons/io5';
+import { IoArrowUp, IoCloseSharp } from 'react-icons/io5';
 import { clsx } from 'clsx/lite';
 import { TbPhoto } from 'react-icons/tb';
 import { FiTag } from 'react-icons/fi';
@@ -132,8 +132,11 @@ export default function AdminAppMenu({
 
   return (
     <MoreMenu
-      header="Admin menu"
-      icon={<BiLockAlt size={16} className="translate-y-[-0.5px]" />}
+      header={<div className="flex items-center select-none">
+        <BiLockAlt size={17} className="inline-block w-5 mr-[9px]" />
+        <span className="grow">Admin menu</span>
+      </div>}
+      icon={<IoArrowUp size={16} />}
       align="start"
       sideOffset={12}
       alignOffset={-85}
@@ -152,7 +155,10 @@ export default function AdminAppMenu({
           ? 'text-black dark:text-white'
           : 'text-gray-400 dark:text-gray-600',
       )}
-      buttonClassNameOpen="bg-dim"
+      buttonClassNameOpen={clsx(
+        'bg-dim',
+        'text-main!',
+      )}
       items={items}
       ariaLabel="Admin Menu"
     />

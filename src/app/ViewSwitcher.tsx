@@ -56,9 +56,7 @@ export default function ViewSwitcher({
         {isUserSignedIn &&
           <SwitcherItem
             className="p-0!"
-            icon={<AdminAppMenu
-              active={currentSelection === 'admin'}
-            />}
+            icon={<AdminAppMenu />}
             noPadding
           />}
       </Switcher>
