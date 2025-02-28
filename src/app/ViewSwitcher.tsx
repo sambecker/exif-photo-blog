@@ -10,7 +10,6 @@ import IconSearch from './IconSearch';
 import { useAppState } from '@/state/AppState';
 import { GRID_HOMEPAGE_ENABLED } from './config';
 import AdminAppMenu from '@/admin/AdminAppMenu';
-import { clsx } from 'clsx/lite';
 import Spinner from '@/components/Spinner';
 
 export type SwitcherSelection = 'feed' | 'grid' | 'admin';
@@ -56,16 +55,9 @@ export default function ViewSwitcher({
           />}
         {isUserSignedIn &&
           <SwitcherItem
+            className="p-0!"
             icon={<AdminAppMenu
-              className="mt-3 ml-[-94px]"
-              buttonClassName={clsx(
-                'bg-transparent dark:bg-transparent',
-                'hover:bg-transparent dark:hover:bg-transparent',
-                'active:bg-transparent dark:active:bg-transparent',
-                currentSelection === 'admin'
-                  ? 'text-black dark:text-white'
-                  : 'text-gray-400 dark:text-gray-600',
-              )}
+              active={currentSelection === 'admin'}
             />}
             noPadding
           />}

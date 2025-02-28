@@ -16,6 +16,7 @@ export default function MoreMenu({
   header,
   className,
   buttonClassName,
+  buttonClassNameOpen,
   ariaLabel,
   align = 'end',
   onOpen,
@@ -26,6 +27,7 @@ export default function MoreMenu({
   header?: ReactNode
   className?: string
   buttonClassName?: string
+  buttonClassNameOpen?: string
   ariaLabel: string
   onOpen?: () => void
 } & ComponentProps<typeof DropdownMenu.Content>){
@@ -49,6 +51,7 @@ export default function MoreMenu({
             'dark:hover:bg-gray-800/75 dark:active:bg-gray-900',
             'text-dim',
             buttonClassName,
+            isOpen && buttonClassNameOpen,
           )}
           aria-label={ariaLabel}
         >

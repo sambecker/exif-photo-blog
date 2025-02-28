@@ -5,7 +5,7 @@ import LoaderButton from '@/components/primitives/LoaderButton';
 import SiteGrid from '@/components/SiteGrid';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
 import { useAppState } from '@/state/AppState';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import { IoCloseSharp } from 'react-icons/io5';
 
 export default function AdminUploadPanel({

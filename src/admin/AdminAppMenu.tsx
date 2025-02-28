@@ -23,11 +23,11 @@ import { FaRegFolderOpen } from 'react-icons/fa';
 import { FiUploadCloud } from 'react-icons/fi';
 
 export default function AdminAppMenu({
+  active,
   className,
-  buttonClassName,
 }: {
+  active?: boolean
   className?: string
-  buttonClassName?: string
 }) {
   const {
     photosCount,
@@ -126,15 +126,24 @@ export default function AdminAppMenu({
       header="Admin menu"
       icon={<BiLockAlt size={16} className="translate-y-[-0.5px]" />}
       align="start"
+      sideOffset={12}
+      alignOffset={-85}
       onOpen={refreshAdminData}
       className={clsx(
         'border-medium',
         className,
       )}
       buttonClassName={clsx(
+        'w-full h-full',
+        'flex items-center justify-center',
+        'hover:bg-transparent dark:hover:bg-transparent',
+        'active:bg-transparent dark:active:bg-transparent',
         'rounded-none focus:outline-none',
-        buttonClassName,
+        active
+          ? 'text-black dark:text-white'
+          : 'text-gray-400 dark:text-gray-600',
       )}
+      buttonClassNameOpen="bg-dim"
       items={items}
       ariaLabel="Admin Menu"
     />
