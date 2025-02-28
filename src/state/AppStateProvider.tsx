@@ -95,6 +95,7 @@ export default function AppStateProvider({
       uploadInputRef.current.value = '';
       uploadInputRef.current.click();
       uploadInputRef.current.oninput = onStart ?? null;
+      uploadInputRef.current.oncancel = onStart ?? null;
     }
   }, []);
   const setUploadState = useCallback((uploadState: Partial<UploadState>) => {
