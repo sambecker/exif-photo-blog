@@ -30,9 +30,9 @@ export default function AppStateProvider({
 }: {
   children: ReactNode
 }) {
-  const { previousPathname } = usePathnames();
-
   const router = useRouter();
+
+  const { previousPathname } = usePathnames();
 
   // CORE
   const [hasLoaded, setHasLoaded] =
@@ -91,7 +91,10 @@ export default function AppStateProvider({
     useState(false);
 
   const startUpload = useCallback(() => {
-    uploadInputRef.current?.click();
+    if (uploadInputRef.current) {
+      uploadInputRef.current.value = '';
+      uploadInputRef.current.click();
+    }
   }, []);
   const setUploadState = useCallback((uploadState: Partial<UploadState>) => {
     _setUploadState(prev => ({ ...prev, ...uploadState }));

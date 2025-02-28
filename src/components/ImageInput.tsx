@@ -11,20 +11,20 @@ import { MAX_IMAGE_SIZE } from '@/platforms/next-image';
 import ProgressButton from './primitives/ProgressButton';
 import { useAppState } from '@/state/AppState';
 
-const INPUT_ID = 'file';
-
 export default function ImageInput({
-  ref,
+  ref: inputRefExternal,
+  id = 'file',
   onStart,
   onBlobReady,
   shouldResize,
   maxSize = MAX_IMAGE_SIZE,
   quality = 0.8,
-  showUploadButton = true,
-  showUploadStatus = true,
+  showButton,
+  disabled: disabledProp,
   debug,
 }: {
   ref?: RefObject<HTMLInputElement | null>
+  id?: string
   onStart?: () => void
   onBlobReady?: (args: {
     blob: Blob,
@@ -35,12 +35,14 @@ export default function ImageInput({
   shouldResize?: boolean
   maxSize?: number
   quality?: number
-  showUploadButton?: boolean
-  showUploadStatus?: boolean
+  showButton?: boolean
+  disabled?: boolean
   debug?: boolean
 }) {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRefInternal = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const inputRef = inputRefExternal ?? inputRefInternal;
 
   const {
     uploadState: {
@@ -48,25 +50,27 @@ export default function ImageInput({
       image,
       filesLength,
       fileUploadIndex,
-      fileUploadName,
     },
     setUploadState,
+    resetUploadState,
   } = useAppState();
+
+  const disabled = disabledProp || isUploading;
 
   return (
     <div className="flex flex-col gap-4 min-w-0">
       <div className="flex items-center gap-2 sm:gap-4">
         <label
-          htmlFor={INPUT_ID}
+          htmlFor={id}
           className={clsx(
             'shrink-0 select-none text-main',
-            isUploading && 'pointer-events-none cursor-not-allowed',
+            disabled && 'pointer-events-none cursor-not-allowed',
           )}
         >
-          {showUploadButton &&
+          {showButton &&
             <ProgressButton
               type="button"
-              isLoading={isUploading}
+              isLoading={disabled}
               progress={filesLength > 1
                 ? (fileUploadIndex + 1) / filesLength * 0.95
                 : undefined}
@@ -74,7 +78,7 @@ export default function ImageInput({
                 size={18}
                 className="translate-x-[-0.5px] translate-y-[0.5px]"
               />}
-              aria-disabled={isUploading}
+              aria-disabled={disabled}
               onClick={() => inputRef.current?.click()}
               hideTextOnMobile={false}
               primary
@@ -86,12 +90,12 @@ export default function ImageInput({
                 : 'Upload Photos'}
             </ProgressButton>}
           <input
-            ref={ref ?? inputRef}
-            id={INPUT_ID}
+            ref={inputRef}
+            id={id}
             type="file"
             className="hidden!"
             accept={ACCEPTED_PHOTO_FILE_TYPES.join(',')}
-            disabled={isUploading}
+            disabled={disabled}
             multiple
             onChange={async e => {
               onStart?.();
@@ -229,14 +233,12 @@ export default function ImageInput({
                     });
                   }
                 }
+              } else {
+                resetUploadState?.();
               }
             }}
           />
         </label>
-        {showUploadStatus && filesLength > 0 &&
-          <div className="max-w-full truncate">
-            {fileUploadName}
-          </div>}
       </div>
       <canvas
         ref={canvasRef}

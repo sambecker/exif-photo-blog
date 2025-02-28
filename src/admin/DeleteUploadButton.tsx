@@ -1,19 +1,25 @@
 'use client';
 
-import { deleteUploadAction } from '@/photo/actions';
+import { deleteUploadsAction } from '@/photo/actions';
 import DeleteButton from './DeleteButton';
 import { useRouter } from 'next/navigation';
 import { PATH_ADMIN_PHOTOS } from '@/app/paths';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 export default function DeleteUploadButton({
-  url,
+  urls,
   shouldRedirectToAdminPhotos,
   onDelete,
+  hideTextOnMobile,
+  children,
+  className,
 }: {
-  url: string
+  urls: string[]
   shouldRedirectToAdminPhotos?: boolean
   onDelete?: () => void
+  hideTextOnMobile?: boolean
+  children?: ReactNode
+  className?: string
 }) {
   const router = useRouter();
 
@@ -21,10 +27,13 @@ export default function DeleteUploadButton({
 
   return (
     <DeleteButton
-      confirmText="Are you sure you want to delete this upload?"
+      className={className}
+      confirmText={urls.length === 1
+        ? 'Are you sure you want to delete this upload?'
+        : `Are you sure you want to delete all ${urls.length} uploads?`}
       onClick={() => {
         setIsDeleting(true);
-        deleteUploadAction(url)
+        deleteUploadsAction(urls)
           .then(() => {
             onDelete?.();
             if (shouldRedirectToAdminPhotos) {
@@ -36,6 +45,9 @@ export default function DeleteUploadButton({
           .catch(() => setIsDeleting(false));
       }}
       isLoading={isDeleting}
-    />
+      hideTextOnMobile={hideTextOnMobile}
+    >
+      {children}
+    </DeleteButton>
   );
 }

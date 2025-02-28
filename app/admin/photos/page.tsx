@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { TIMEZONE_COOKIE_NAME } from '@/utility/timezone';
 import { getOutdatedPhotosCount } from '@/photo/db/query';
+import { PRESERVE_ORIGINAL_UPLOADS } from '@/app/config';
 
 export const maxDuration = 60;
 
@@ -43,7 +44,8 @@ export default async function AdminPhotosPage() {
       photos,
       photosCount,
       photosCountOutdated,
-      onLastPhotoUpload: async () => {
+      shouldResize: !PRESERVE_ORIGINAL_UPLOADS,
+      onLastUpload: async () => {
         'use server';
         // Update upload count in admin nav
         revalidatePath('/admin', 'layout');
