@@ -1,11 +1,9 @@
 'use client';
 
-import PhotoUpload from '@/photo/PhotoUpload';
 import { clsx } from 'clsx/lite';
 import SiteGrid from '@/components/SiteGrid';
 import {
   AI_TEXT_GENERATION_ENABLED,
-  PRESERVE_ORIGINAL_UPLOADS,
 } from '@/app/config';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import AdminPhotosTableInfinite from '@/admin/AdminPhotosTableInfinite';
@@ -13,17 +11,19 @@ import PathLoaderButton from '@/components/primitives/PathLoaderButton';
 import { PATH_ADMIN_OUTDATED } from '@/app/paths';
 import { Photo } from '@/photo';
 import { StorageListResponse } from '@/platforms/storage';
-import { useState } from 'react';
 import { LiaBroomSolid } from 'react-icons/lia';
 import AdminUploadsTable from './AdminUploadsTable';
 import { Timezone } from '@/utility/timezone';
+import { useAppState } from '@/state/AppState';
+import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
 
 export default function AdminPhotosClient({
   photos,
   photosCount,
   photosCountOutdated,
-  onLastPhotoUpload,
   blobPhotoUrls,
+  shouldResize,
+  onLastUpload,
   infiniteScrollInitial,
   infiniteScrollMultiple,
   timezone,
@@ -31,25 +31,25 @@ export default function AdminPhotosClient({
   photos: Photo[]
   photosCount: number
   photosCountOutdated: number
-  onLastPhotoUpload: () => Promise<void>
   blobPhotoUrls: StorageListResponse
+  shouldResize: boolean
+  onLastUpload: () => Promise<void>
   infiniteScrollInitial: number
   infiniteScrollMultiple: number
   timezone: Timezone
 }) {
-  const [isUploading, setIsUploading] = useState(false);
+  const { uploadState: { isUploading } } = useAppState();
 
   return (
     <SiteGrid
       contentMain={
         <div>
-          <div className="flex">
+          <div className="flex gap-4 space-y-4">
             <div className="grow min-w-0">
-              <PhotoUpload
-                shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
-                isUploading={isUploading}
-                setIsUploading={setIsUploading}
-                onLastUpload={onLastPhotoUpload}
+              <PhotoUploadWithStatus
+                inputId="admin-photos"
+                shouldResize={shouldResize}
+                onLastUpload={onLastUpload}
               />
             </div>
             {photosCountOutdated > 0 && <PathLoaderButton

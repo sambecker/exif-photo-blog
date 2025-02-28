@@ -290,9 +290,9 @@ export const renamePhotoTagGloballyAction = async (formData: FormData) =>
     }
   });
 
-export const deleteUploadAction = async (url: string) =>
+export const deleteUploadsAction = async (urls: string[]) =>
   runAuthenticatedAdminServerAction(async () => {
-    await deleteFile(url);
+    await Promise.all(urls.map(url => deleteFile(url)));
     revalidateAdminPaths();
   });
 

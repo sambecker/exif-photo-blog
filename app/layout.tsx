@@ -4,6 +4,7 @@ import { clsx } from 'clsx/lite';
 import {
   BASE_URL,
   DEFAULT_THEME,
+  PRESERVE_ORIGINAL_UPLOADS,
   SITE_DESCRIPTION,
   SITE_DOMAIN_OR_TITLE,
   SITE_TITLE,
@@ -19,6 +20,8 @@ import CommandK from '@/app/CommandK';
 import SwrConfigClient from '@/state/SwrConfigClient';
 import AdminBatchEditPanel from '@/admin/AdminBatchEditPanel';
 import ShareModals from '@/share/ShareModals';
+import AdminUploadPanel from '@/admin/upload/AdminUploadPanel';
+import { revalidatePath } from 'next/cache';
 
 import '../tailwind.css';
 
@@ -88,6 +91,14 @@ export default function RootLayout({
                   'mb-12',
                   'space-y-5',
                 )}>
+                  <AdminUploadPanel
+                    shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
+                    onLastUpload={async () => {
+                      'use server';
+                      // Update upload count in admin nav
+                      revalidatePath('/admin', 'layout');
+                    }}
+                  />
                   <AdminBatchEditPanel />
                   {children}
                 </div>

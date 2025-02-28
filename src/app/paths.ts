@@ -226,6 +226,9 @@ export const isPathAdmin = (pathname?: string) =>
 export const isPathTopLevelAdmin = (pathname?: string) =>
   PATHS_ADMIN.some(path => path === pathname);
 
+export const isPathAdminPhotos = (pathname?: string) =>
+  checkPathPrefix(pathname, PATH_ADMIN_PHOTOS);
+
 export const isPathAdminInsights = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ADMIN_INSIGHTS);
 

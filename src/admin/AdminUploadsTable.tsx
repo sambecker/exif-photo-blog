@@ -9,7 +9,7 @@ import { pathForAdminUploadUrl } from '@/app/paths';
 import AddButton from './AddButton';
 import { UrlAddStatus } from './AdminUploadsClient';
 import ResponsiveDate from '@/components/ResponsiveDate';
-import DeleteBlobButton from './DeleteBlobButton';
+import DeleteBlobButton from './DeleteUploadButton';
 
 export default function AdminUploadsTable({
   isAdding,
@@ -87,7 +87,7 @@ export default function AdminUploadsTable({
                 : <>
                   <AddButton path={pathForAdminUploadUrl(url)} />
                   <DeleteBlobButton
-                    url={url}
+                    urls={[url]}
                     shouldRedirectToAdminPhotos={urlAddStatuses.length <= 1}
                     onDelete={() => setUrlAddStatuses?.(urlAddStatuses.filter(
                       ({ url: urlToRemove }) => urlToRemove !== url,

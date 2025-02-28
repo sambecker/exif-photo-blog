@@ -72,19 +72,25 @@ export default function MoreMenuItem({
               setIsLoading(false);
               dismissMenu?.();
             });
+          } else {
+            dismissMenu?.();
           }
         }
-        if (href && href !== pathname) {
-          if (hrefDownloadName) {
-            setIsLoading(true);
-            downloadFileFromBrowser(href, hrefDownloadName)
-              .finally(() => {
-                setIsLoading(false);
-                dismissMenu?.();
-              });
+        if (href) {
+          if (href !== pathname) {
+            if (hrefDownloadName) {
+              setIsLoading(true);
+              downloadFileFromBrowser(href, hrefDownloadName)
+                .finally(() => {
+                  setIsLoading(false);
+                  dismissMenu?.();
+                });
+            } else {
+              setTransitionDidStart(true);
+              startTransition(() => router.push(href));
+            }
           } else {
-            setTransitionDidStart(true);
-            startTransition(() => router.push(href));
+            dismissMenu?.();
           }
         }
       }}

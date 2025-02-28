@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, ReactNode, useCallback } from 'react';
+import { useState, useEffect, ReactNode, useCallback, useRef } from 'react';
 import { AppStateContext } from './AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import usePathnames from '@/utility/usePathnames';
@@ -23,15 +23,16 @@ import {
 } from '@/auth/client';
 import { useRouter } from 'next/navigation';
 import { PATH_SIGN_IN } from '@/app/paths';
+import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 
 export default function AppStateProvider({
   children,
 }: {
   children: ReactNode
 }) {
-  const { previousPathname } = usePathnames();
-
   const router = useRouter();
+
+  const { previousPathname } = usePathnames();
 
   // CORE
   const [hasLoaded, setHasLoaded] =
@@ -42,12 +43,16 @@ export default function AppStateProvider({
     useState<AnimationConfig>();
   const [shouldRespondToKeyboardCommands, setShouldRespondToKeyboardCommands] =
     useState(true);
+  // UPLOAD
+  const uploadInputRef = useRef<HTMLInputElement>(null);
+  const [uploadState, _setUploadState] =
+    useState(INITIAL_UPLOAD_STATE);
   // MODAL
   const [isCommandKOpen, setIsCommandKOpen] =
     useState(false);
   const [shareModalProps, setShareModalProps] =
     useState<ShareModalProps>();
-  // ADMIN
+  // AUTH
   const [userEmail, setUserEmail] =
     useState<string>();
   const [isUserSignedInEager, setIsUserSignedInEager] =
@@ -84,6 +89,19 @@ export default function AppStateProvider({
     useState(IS_DEVELOPMENT);
   const [shouldDebugRecipeOverlays, setShouldDebugRecipeOverlays] =
     useState(false);
+
+  const startUpload = useCallback(() => {
+    if (uploadInputRef.current) {
+      uploadInputRef.current.value = '';
+      uploadInputRef.current.click();
+    }
+  }, []);
+  const setUploadState = useCallback((uploadState: Partial<UploadState>) => {
+    _setUploadState(prev => ({ ...prev, ...uploadState }));
+  }, []);
+  const resetUploadState = useCallback(() => {
+    _setUploadState(INITIAL_UPLOAD_STATE);
+  }, []);
 
   const invalidateSwr = useCallback(() => setSwrTimestamp(Date.now()), []);
 
@@ -136,6 +154,7 @@ export default function AppStateProvider({
 
   const clearAuthStateAndRedirect = useCallback((shouldRedirect = true) => {
     setUserEmail(undefined);
+    setIsUserSignedInEager(false);
     clearAuthEmailCookie();
     if (shouldRedirect) { router.push(PATH_SIGN_IN); }
   }, [router]);
@@ -154,6 +173,12 @@ export default function AppStateProvider({
         clearNextPhotoAnimation: () => setNextPhotoAnimation?.(undefined),
         shouldRespondToKeyboardCommands,
         setShouldRespondToKeyboardCommands,
+        // UPLOAD
+        uploadInputRef,
+        startUpload,
+        uploadState,
+        setUploadState,
+        resetUploadState,
         // MODAL
         isCommandKOpen,
         setIsCommandKOpen,

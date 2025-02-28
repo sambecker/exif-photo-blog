@@ -1,12 +1,13 @@
 import AdminCTA from '@/admin/AdminCTA';
 import Container from '@/components/Container';
 import SiteGrid from '@/components/SiteGrid';
-import { IS_SITE_READY } from '@/app/config';
+import { IS_SITE_READY, PRESERVE_ORIGINAL_UPLOADS } from '@/app/config';
 import { PATH_ADMIN_CONFIGURATION } from '@/app/paths';
 import AdminAppConfiguration from '@/admin/AdminAppConfiguration';
 import { clsx } from 'clsx/lite';
 import Link from 'next/link';
 import { HiOutlinePhotograph } from 'react-icons/hi';
+import { revalidatePath } from 'next/cache';
 
 export default function PhotosEmptyState() {
   return (
@@ -33,7 +34,14 @@ export default function PhotosEmptyState() {
                 <div>
                   Add your first photo:
                 </div>
-                <AdminCTA />
+                <AdminCTA
+                  shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
+                  onLastUpload={async () => {
+                    'use server';
+                    // Update upload count in admin nav
+                    revalidatePath('/admin', 'layout');
+                  }}
+                />
               </div>
               <div>
                 Change the name of this blog and other configuration
