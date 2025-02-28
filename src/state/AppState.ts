@@ -1,4 +1,10 @@
-import { Dispatch, SetStateAction, createContext, useContext } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  createContext,
+  useContext,
+  RefObject,
+} from 'react';
 import { AnimationConfig } from '@/components/AnimateItems';
 import { ShareModalProps } from '@/share';
 import { InsightIndicatorStatus } from '@/admin/insights';
@@ -16,7 +22,9 @@ export interface AppStateContext {
   clearNextPhotoAnimation?: () => void
   shouldRespondToKeyboardCommands?: boolean
   setShouldRespondToKeyboardCommands?: Dispatch<SetStateAction<boolean>>
-  // UPLOADS
+  // UPLOAD
+  startUpload?: () => void
+  uploadInputRef?: RefObject<HTMLInputElement | null>
   uploadState: UploadState
   setUploadState?: (uploadState: Partial<UploadState>) => void
   resetUploadState?: () => void

@@ -34,6 +34,7 @@ export default function AdminAppMenu({
     uploadsCount,
     tagsCount,
     selectedPhotoIds,
+    startUpload,
     setSelectedPhotoIds,
     refreshAdminData,
     clearAuthStateAndRedirect,
@@ -47,6 +48,7 @@ export default function AdminAppMenu({
       size={15}
       className="translate-x-[0.5px] translate-y-[0.5px]"
     />,
+    action: startUpload,
   }, {
     label: 'Manage Photos',
     ...photosCount !== undefined && {

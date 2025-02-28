@@ -43,7 +43,7 @@ export default function AdminPhotosClient({
     <SiteGrid
       contentMain={
         <div>
-          <div className="flex">
+          <div className="flex space-y-4">
             <div className="grow min-w-0">
               <PhotoUpload
                 shouldResize={!PRESERVE_ORIGINAL_UPLOADS}

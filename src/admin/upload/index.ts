@@ -6,6 +6,7 @@ export interface UploadState {
   filesLength: number
   fileUploadIndex: number
   fileUploadName: string
+  hideUploadPanel: boolean
 }
 
 export const INITIAL_UPLOAD_STATE: UploadState = {
@@ -14,4 +15,5 @@ export const INITIAL_UPLOAD_STATE: UploadState = {
   fileUploadName: '',
   filesLength: 0,
   fileUploadIndex: 0,
+  hideUploadPanel: false,
 };

@@ -1,7 +1,7 @@
 'use client';
 
 import { blobToImage } from '@/utility/blob';
-import { useRef } from 'react';
+import { useRef, RefObject } from 'react';
 import { CopyExif } from '@/lib/CopyExif';
 import exifr from 'exifr';
 import { clsx } from 'clsx/lite';
@@ -14,14 +14,17 @@ import { useAppState } from '@/state/AppState';
 const INPUT_ID = 'file';
 
 export default function ImageInput({
+  ref,
   onStart,
   onBlobReady,
   shouldResize,
   maxSize = MAX_IMAGE_SIZE,
   quality = 0.8,
+  showUploadButton = true,
   showUploadStatus = true,
   debug,
 }: {
+  ref?: RefObject<HTMLInputElement | null>
   onStart?: () => void
   onBlobReady?: (args: {
     blob: Blob,
@@ -32,6 +35,7 @@ export default function ImageInput({
   shouldResize?: boolean
   maxSize?: number
   quality?: number
+  showUploadButton?: boolean
   showUploadStatus?: boolean
   debug?: boolean
 }) {
@@ -50,7 +54,7 @@ export default function ImageInput({
   } = useAppState();
 
   return (
-    <div className="space-y-4 min-w-0">
+    <div className="flex flex-col gap-4 min-w-0">
       <div className="flex items-center gap-2 sm:gap-4">
         <label
           htmlFor={INPUT_ID}
@@ -59,29 +63,30 @@ export default function ImageInput({
             isUploading && 'pointer-events-none cursor-not-allowed',
           )}
         >
-          <ProgressButton
-            type="button"
-            isLoading={isUploading}
-            progress={filesLength > 1
-              ? (fileUploadIndex + 1) / filesLength * 0.95
-              : undefined}
-            icon={<FiUploadCloud
-              size={18}
-              className="translate-x-[-0.5px] translate-y-[0.5px]"
-            />}
-            aria-disabled={isUploading}
-            onClick={() => inputRef.current?.click()}
-            hideTextOnMobile={false}
-            primary
-          >
-            {isUploading
-              ? filesLength > 1
-                ? `Uploading ${fileUploadIndex + 1} of ${filesLength}`
-                : 'Uploading'
-              : 'Upload Photos'}
-          </ProgressButton>
+          {showUploadButton &&
+            <ProgressButton
+              type="button"
+              isLoading={isUploading}
+              progress={filesLength > 1
+                ? (fileUploadIndex + 1) / filesLength * 0.95
+                : undefined}
+              icon={<FiUploadCloud
+                size={18}
+                className="translate-x-[-0.5px] translate-y-[0.5px]"
+              />}
+              aria-disabled={isUploading}
+              onClick={() => inputRef.current?.click()}
+              hideTextOnMobile={false}
+              primary
+            >
+              {isUploading
+                ? filesLength > 1
+                  ? `Uploading ${fileUploadIndex + 1} of ${filesLength}`
+                  : 'Uploading'
+                : 'Upload Photos'}
+            </ProgressButton>}
           <input
-            ref={inputRef}
+            ref={ref ?? inputRef}
             id={INPUT_ID}
             type="file"
             className="hidden!"

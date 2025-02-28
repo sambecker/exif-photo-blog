@@ -72,6 +72,8 @@ export default function MoreMenuItem({
               setIsLoading(false);
               dismissMenu?.();
             });
+          } else {
+            dismissMenu?.();
           }
         }
         if (href) {

@@ -43,6 +43,7 @@ export default function PhotoUpload({
               setUploadState?.({
                 isUploading: true,
                 uploadError: '',
+                hideUploadPanel: true,
               });
             }}
             onBlobReady={async ({

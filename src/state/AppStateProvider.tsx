@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, ReactNode, useCallback } from 'react';
+import { useState, useEffect, ReactNode, useCallback, useRef } from 'react';
 import { AppStateContext } from './AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import usePathnames from '@/utility/usePathnames';
@@ -43,6 +43,8 @@ export default function AppStateProvider({
     useState<AnimationConfig>();
   const [shouldRespondToKeyboardCommands, setShouldRespondToKeyboardCommands] =
     useState(true);
+  // UPLOAD
+  const uploadInputRef = useRef<HTMLInputElement>(null);
   const [uploadState, _setUploadState] =
     useState(INITIAL_UPLOAD_STATE);
   // MODAL
@@ -88,6 +90,9 @@ export default function AppStateProvider({
   const [shouldDebugRecipeOverlays, setShouldDebugRecipeOverlays] =
     useState(false);
 
+  const startUpload = useCallback(() => {
+    uploadInputRef.current?.click();
+  }, []);
   const setUploadState = useCallback((uploadState: Partial<UploadState>) => {
     _setUploadState(prev => ({ ...prev, ...uploadState }));
   }, []);
@@ -165,7 +170,9 @@ export default function AppStateProvider({
         clearNextPhotoAnimation: () => setNextPhotoAnimation?.(undefined),
         shouldRespondToKeyboardCommands,
         setShouldRespondToKeyboardCommands,
-        // UPLOADS
+        // UPLOAD
+        uploadInputRef,
+        startUpload,
         uploadState,
         setUploadState,
         resetUploadState,
