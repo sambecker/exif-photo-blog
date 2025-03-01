@@ -156,10 +156,13 @@ export default function AdminAppMenu({
         active
           ? 'text-black dark:text-white'
           : 'text-gray-400 dark:text-gray-600',
+        // Icon animation setup
+        '*:relative *:transition-transform *:duration-300',
       )}
       buttonClassNameOpen={clsx(
         'bg-dim',
         'text-main!',
+        '*:rotate-180',
       )}
       items={items}
       ariaLabel="Admin Menu"
