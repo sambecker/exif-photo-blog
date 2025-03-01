@@ -108,7 +108,7 @@ export default function CommandKClient({
     tagsCount,
     selectedPhotoIds,
     setSelectedPhotoIds,
-    insightIndicatorStatus,
+    insightsIndicatorStatus,
     isGridHighDensity,
     areZoomControlsShown,
     arePhotosMatted,
@@ -365,7 +365,7 @@ export default function CommandKClient({
     adminSection.items.push({
       label: <span className="flex items-center gap-3">
         App Insights
-        {insightIndicatorStatus &&
+        {insightsIndicatorStatus &&
           <InsightsIndicatorDot />}
       </span>,
       keywords: ['app insights'],

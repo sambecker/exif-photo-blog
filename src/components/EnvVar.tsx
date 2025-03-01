@@ -34,13 +34,18 @@ export default function EnvVar({
           {variable}{value && ` = ${value}`}
         </span>
         {includeCopyButton &&
-          <CopyButton
-            className="translate-y-[0.5px]"
-            label={variable}
-            text={variable}
-            subtle
-          />}
-        {trailingContent}
+          <span className="translate-y-[1px]">
+            <CopyButton
+              className=""
+              label={variable}
+              text={variable}
+              subtle
+            />
+          </span>}
+        {trailingContent &&
+          <span className="-ml-0.5">
+            {trailingContent}
+          </span>}
       </span>
     </div>
   );

@@ -14,7 +14,7 @@ import {
 } from '@/app/config';
 import { ShareModalProps } from '@/share';
 import { storeTimezoneCookie } from '@/utility/timezone';
-import { InsightIndicatorStatus } from '@/admin/insights';
+import { InsightsIndicatorStatus } from '@/admin/insights';
 import { getAdminDataAction } from '@/admin/actions';
 import {
   storeAuthEmailCookie,
@@ -72,8 +72,8 @@ export default function AppStateProvider({
     useState<string[] | undefined>();
   const [isPerformingSelectEdit, setIsPerformingSelectEdit] =
     useState(false);
-  const [insightIndicatorStatus, setInsightIndicatorStatus] =
-    useState<InsightIndicatorStatus>();
+  const [insightsIndicatorStatus, setInsightsIndicatorStatus] =
+    useState<InsightsIndicatorStatus>();
   // DEBUG
   const [isGridHighDensity, setIsGridHighDensity] =
     useState(HIGH_DENSITY_GRID);
@@ -138,7 +138,7 @@ export default function AppStateProvider({
         setPhotosCountHidden(adminData.countHiddenPhotos);
         setUploadsCount(adminData.countUploads);
         setTagsCount(adminData.countTags);
-        setInsightIndicatorStatus(adminData.shouldShowInsightsIndicator);
+        setInsightsIndicatorStatus(adminData.insightsIndicatorStatus);
       }
     } else {
       setPhotosCountHidden(0);
@@ -205,8 +205,8 @@ export default function AppStateProvider({
         setSelectedPhotoIds,
         isPerformingSelectEdit,
         setIsPerformingSelectEdit,
-        insightIndicatorStatus,
-        setInsightIndicatorStatus,
+        insightsIndicatorStatus,
+        setInsightsIndicatorStatus,
         // DEBUG
         isGridHighDensity,
         setIsGridHighDensity,

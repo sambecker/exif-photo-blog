@@ -8,7 +8,7 @@ import { testStorageConnection } from '@/platforms/storage';
 import { APP_CONFIGURATION } from '@/app/config';
 import { getStorageUploadUrlsNoStore } from '@/platforms/storage/cache';
 import { getPhotosMetaCached, getUniqueTagsCached } from '@/photo/cache';
-import { getShouldShowInsightsIndicator } from '@/admin/insights/server';
+import { getInsightsIndicatorStatus } from '@/admin/insights/server';
 
 export const getAdminDataAction = async () =>
   runAuthenticatedAdminServerAction(async () => {
@@ -17,7 +17,7 @@ export const getAdminDataAction = async () =>
       countHiddenPhotos,
       countTags,
       countUploads,
-      shouldShowInsightsIndicator,
+      insightsIndicatorStatus,
     ] = await Promise.all([
       getPhotosMetaCached()
         .then(({ count }) => count)
@@ -34,7 +34,7 @@ export const getAdminDataAction = async () =>
           console.error(`Error getting blob upload urls: ${e}`);
           return 0;
         }),
-      getShouldShowInsightsIndicator(),
+      getInsightsIndicatorStatus(),
     ]);
 
     return {
@@ -42,7 +42,7 @@ export const getAdminDataAction = async () =>
       countHiddenPhotos,
       countTags,
       countUploads,
-      shouldShowInsightsIndicator,
+      insightsIndicatorStatus,
     };
   });
 

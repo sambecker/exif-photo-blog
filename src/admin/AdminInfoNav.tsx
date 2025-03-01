@@ -37,7 +37,7 @@ export default function AdminInfoPage({
 
   const hasMultiplePages = pages.length > 1;
 
-  const { insightIndicatorStatus } = useAppState();
+  const { insightsIndicatorStatus } = useAppState();
 
   return (
     <div className="flex items-center gap-4 min-h-9">
@@ -65,7 +65,7 @@ export default function AdminInfoPage({
               <ResponsiveText shortText={titleShort}>
                 {title}
               </ResponsiveText>
-              {title === 'App Insights' && insightIndicatorStatus &&
+              {title === 'App Insights' && insightsIndicatorStatus &&
                 <InsightsIndicatorDot
                   size="small"
                   top={4}

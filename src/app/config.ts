@@ -221,6 +221,8 @@ export const SHOW_RECIPES =
   process.env.NEXT_PUBLIC_HIDE_RECIPES !== '1';
 export const SHOW_REPO_LINK =
   process.env.NEXT_PUBLIC_HIDE_REPO_LINK !== '1';
+export const SHOW_SIDEBAR_CAMERAS_FIRST =
+  process.env.NEXT_PUBLIC_CAMERAS_FIRST === '1';
 
 // GRID
 
@@ -317,6 +319,7 @@ export const APP_CONFIGURATION = {
   showFilmSimulations: SHOW_FILM_SIMULATIONS,
   showRecipes: SHOW_RECIPES,
   showRepoLink: SHOW_REPO_LINK,
+  showSidebarCamerasFirst: SHOW_SIDEBAR_CAMERAS_FIRST,
   // Grid
   isGridHomepageEnabled: GRID_HOMEPAGE_ENABLED,
   gridAspectRatio: GRID_ASPECT_RATIO,

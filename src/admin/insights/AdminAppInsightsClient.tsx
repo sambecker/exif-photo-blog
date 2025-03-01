@@ -7,6 +7,7 @@ import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
 import { FaCamera } from 'react-icons/fa';
 import { FaTag } from 'react-icons/fa';
 import { FaCircleInfo, FaRegCalendar } from 'react-icons/fa6';
+import { HiMiniArrowsUpDown } from 'react-icons/hi2';
 import { HiOutlinePhotograph } from 'react-icons/hi';
 import { MdAspectRatio } from 'react-icons/md';
 import { PiWarningBold } from 'react-icons/pi';
@@ -107,6 +108,7 @@ export default function AdminAppInsightsClient({
     noConfiguredDomain,
     outdatedPhotos,
     photoMatting,
+    camerasFirst,
     gridFirst,
     noStaticOptimization,
   } = insights;
@@ -271,7 +273,10 @@ export default function AdminAppInsightsClient({
                 Not explicitly setting a domain may cause certain features
                 to behave unexpectedly. Domains are stored in
                 {' '}
-                <EnvVar variable="NEXT_PUBLIC_SITE_DOMAIN" />.
+                <EnvVar
+                  variable="NEXT_PUBLIC_SITE_DOMAIN"
+                  trailingContent="."
+                />
               </>}
             />}
             {(noStaticOptimization || debug) && <ScoreCardRow
@@ -313,7 +318,10 @@ export default function AdminAppInsightsClient({
               expandContent={<>
                 Enable automatic AI text generation
                 {' '}
-                by setting <EnvVar variable="OPENAI_SECRET_KEY" />.
+                by setting <EnvVar
+                  variable="OPENAI_SECRET_KEY"
+                  trailingContent="."
+                />
                 {' '}
                 Further instruction and cost considerations in
                 {' '}
@@ -331,7 +339,28 @@ export default function AdminAppInsightsClient({
                 {' '}
                 portrait and landscape photos appear more consistent
                 {' '}
-                <EnvVar variable="NEXT_PUBLIC_MATTE_PHOTOS" value="1" />.
+                <EnvVar
+                  variable="NEXT_PUBLIC_MATTE_PHOTOS"
+                  value="1"
+                  trailingContent="."
+                />
+              </>}
+            />}
+            {(camerasFirst || debug) && <ScoreCardRow
+              icon={<HiMiniArrowsUpDown
+                size={17}
+                className="translate-x-[-1px]"
+              />}
+              content="Move cameras above tags in sidebar"
+              expandContent={<>
+                Now that you have more than a few tags, consider
+                showing cameras first in the sidebar by setting
+                {' '}
+                <EnvVar
+                  variable="SHOW_SIDEBAR_CAMERAS_FIRST"
+                  value="1"
+                  trailingContent="."
+                />
               </>}
             />}
             {(gridFirst || debug) && <ScoreCardRow

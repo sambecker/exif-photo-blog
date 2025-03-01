@@ -75,6 +75,7 @@ export default function AdminAppConfigurationClient({
   showFilmSimulations,
   showRecipes,
   showRepoLink,
+  showSidebarCamerasFirst,
   // Grid
   isGridHomepageEnabled,
   gridAspectRatio,
@@ -542,6 +543,15 @@ export default function AdminAppConfigurationClient({
           >
             Set environment variable to {'"1"'} to hide footer link:
             {renderEnvVars(['NEXT_PUBLIC_HIDE_REPO_LINK'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Show cameras first"
+            status={showSidebarCamerasFirst}
+            optional
+          >
+            Set environment variable to {'"1"'} to show cameras
+            above tags in grid sidebar:
+            {renderEnvVars(['NEXT_PUBLIC_CAMERAS_FIRST'])}
           </ChecklistRow>
         </ChecklistGroup>
         <ChecklistGroup

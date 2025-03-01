@@ -10,7 +10,7 @@ export default function AdminAppInfoIcon({
   size?: 'small' | 'large'
   className?: string
 }) {
-  const { insightIndicatorStatus } = useAppState();
+  const { insightsIndicatorStatus } = useAppState();
 
   return (
     <span className={clsx(
@@ -22,7 +22,7 @@ export default function AdminAppInfoIcon({
         className="inline-flex translate-y-[1px]"
         aria-label="App Info"
       />
-      {insightIndicatorStatus &&
+      {insightsIndicatorStatus &&
         <InsightsIndicatorDot
           size={size}
           top={size === 'large' ? 1.5 : 1.5}

@@ -7,7 +7,7 @@ import {
 } from 'react';
 import { AnimationConfig } from '@/components/AnimateItems';
 import { ShareModalProps } from '@/share';
-import { InsightIndicatorStatus } from '@/admin/insights';
+import { InsightsIndicatorStatus } from '@/admin/insights';
 import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 
 export interface AppStateContext {
@@ -52,8 +52,8 @@ export interface AppStateContext {
   setSelectedPhotoIds?: Dispatch<SetStateAction<string[] | undefined>>
   isPerformingSelectEdit?: boolean
   setIsPerformingSelectEdit?: Dispatch<SetStateAction<boolean>>
-  insightIndicatorStatus?: InsightIndicatorStatus
-  setInsightIndicatorStatus?: Dispatch<SetStateAction<InsightIndicatorStatus>>
+  insightsIndicatorStatus?: InsightsIndicatorStatus
+  setInsightsIndicatorStatus?: Dispatch<SetStateAction<InsightsIndicatorStatus>>
   // DEBUG
   isGridHighDensity?: boolean
   setIsGridHighDensity?: Dispatch<SetStateAction<boolean>>
