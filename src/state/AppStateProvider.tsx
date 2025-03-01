@@ -90,6 +90,13 @@ export default function AppStateProvider({
   const [shouldDebugRecipeOverlays, setShouldDebugRecipeOverlays] =
     useState(false);
 
+  const photosCountTotal = (
+    photosCount !== undefined &&
+    photosCountHidden !== undefined
+  )
+    ? photosCount + photosCountHidden
+    : undefined;
+
   const startUpload = useCallback((onStart?: () => void) => {
     if (uploadInputRef.current) {
       uploadInputRef.current.value = '';
@@ -200,6 +207,7 @@ export default function AppStateProvider({
         refreshAdminData,
         photosCount,
         photosCountHidden,
+        photosCountTotal,
         uploadsCount,
         tagsCount,
         selectedPhotoIds,

@@ -2,6 +2,7 @@
 
 import MoreMenu from '@/components/more/MoreMenu';
 import {
+  PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_INSIGHTS,
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_TAGS,
@@ -30,8 +31,7 @@ export default function AdminAppMenu({
   className?: string
 }) {
   const {
-    photosCount = 0,
-    photosCountHidden = 0,
+    photosCountTotal = 0,
     uploadsCount = 0,
     tagsCount = 0,
     selectedPhotoIds,
@@ -40,8 +40,6 @@ export default function AdminAppMenu({
     refreshAdminData,
     clearAuthStateAndRedirect,
   } = useAppState();
-
-  const photosCountTotal = photosCount + photosCountHidden;
 
   const isSelecting = selectedPhotoIds !== undefined;
 
@@ -95,12 +93,16 @@ export default function AdminAppMenu({
   }
 
   items.push({
-    label: 'App Info',
+    label: photosCountTotal > 0
+      ? 'App Insights'
+      : 'App Configuration',
     icon: <AdminAppInfoIcon
       size="small"
       className="translate-x-[-0.5px] translate-y-[-0.5px]"
     />,
-    href: PATH_ADMIN_INSIGHTS,
+    href: photosCountTotal > 0
+      ? PATH_ADMIN_INSIGHTS
+      : PATH_ADMIN_CONFIGURATION,
   }, {
     label: isSelecting
       ? 'Exit Select'

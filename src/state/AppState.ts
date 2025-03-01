@@ -45,6 +45,7 @@ export interface AppStateContext {
   refreshAdminData?: () => void
   photosCount?: number
   photosCountHidden?: number
+  photosCountTotal?: number
   uploadsCount?: number
   tagsCount?: number
   selectedPhotoIds?: string[]
