@@ -123,11 +123,7 @@ export default function AppStateProvider({
   }, [auth, authError]);
   const isUserSignedIn = Boolean(userEmail);
 
-  const {
-    data: adminData,
-    error: adminError,
-    mutate: refreshAdminData,
-  } = useSWR(
+  const { data: adminData, mutate: refreshAdminData } = useSWR(
     isUserSignedIn ? 'getAdminData' : null,
     getAdminDataAction, {
       refreshInterval: 1000 * 60,
@@ -138,19 +134,16 @@ export default function AppStateProvider({
     if (userEmail) {
       storeAuthEmailCookie(userEmail);
       if (adminData) {
-        const timeout = setTimeout(() => {
-          setPhotosCount(adminData.countPhotos);
-          setPhotosCountHidden(adminData.countHiddenPhotos);
-          setUploadsCount(adminData.countUploads);
-          setTagsCount(adminData.countTags);
-          setInsightIndicatorStatus(adminData.shouldShowInsightsIndicator);
-        }, 100);
-        return () => clearTimeout(timeout);
+        setPhotosCount(adminData.countPhotos);
+        setPhotosCountHidden(adminData.countHiddenPhotos);
+        setUploadsCount(adminData.countUploads);
+        setTagsCount(adminData.countTags);
+        setInsightIndicatorStatus(adminData.shouldShowInsightsIndicator);
       }
     } else {
       setPhotosCountHidden(0);
     }
-  }, [adminData, adminError, userEmail]);
+  }, [adminData, userEmail]);
 
   const registerAdminUpdate = useCallback(() =>
     setAdminUpdateTimes(updates => [...updates, new Date()])
