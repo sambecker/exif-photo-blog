@@ -25,9 +25,11 @@ import { FiUploadCloud } from 'react-icons/fi';
 
 export default function AdminAppMenu({
   active,
+  animateMenuClose,
   className,
 }: {
   active?: boolean
+  animateMenuClose?: boolean
   className?: string
 }) {
   const {
@@ -144,7 +146,8 @@ export default function AdminAppMenu({
       )}>
         <div className={clsx(
           'flex flex-col items-center justify-center gap-2',
-          'relative transition-transform duration-300',
+          'relative transition-transform',
+          animateMenuClose ? 'duration-300' : 'duration-0',
           'translate-y-[-18px]',
         )}>
           <IoArrowDown size={16} className="shrink-0" />
@@ -170,9 +173,9 @@ export default function AdminAppMenu({
           : 'text-gray-400 dark:text-gray-600',
       )}
       buttonClassNameOpen={clsx(
-        'bg-dim',
-        'text-main!',
+        'bg-dim text-main!',
         '[&>*>*]:translate-y-[6px]',
+        !animateMenuClose && '[&>*>*]:duration-300',
       )}
       items={items}
       ariaLabel="Admin Menu"
