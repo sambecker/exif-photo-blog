@@ -8,6 +8,7 @@ export default function LoaderButton(props: {
   isLoading?: boolean
   icon?: ReactNode
   spinnerColor?: SpinnerColor
+  spinnerClassName?: string
   styleAs?: 'button' | 'link' | 'link-without-hover'
   hideTextOnMobile?: boolean
   confirmText?: string
@@ -20,6 +21,7 @@ export default function LoaderButton(props: {
     isLoading,
     icon,
     spinnerColor,
+    spinnerClassName,
     styleAs = 'button',
     hideTextOnMobile = true,
     confirmText,
@@ -71,7 +73,10 @@ export default function LoaderButton(props: {
             ? <Spinner
               size={14}
               color={spinnerColor}
-              className="translate-y-[0.5px]"
+              className={clsx(
+                'translate-y-[1px]',
+                spinnerClassName,
+              )}
             />
             : icon}
         </span>}

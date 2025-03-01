@@ -10,6 +10,7 @@ export default function PathLoaderButton({
   loaderDelay = 100,
   shouldScroll = true,
   shouldReplace,
+  isLoading,
   children,
   ...props
 }: {
@@ -54,7 +55,7 @@ export default function PathLoaderButton({
           }
         });
       }}
-      isLoading={shouldShowLoader}
+      isLoading={shouldShowLoader || isLoading}
     >
       {children}
     </LoaderButton>

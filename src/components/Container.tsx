@@ -33,8 +33,8 @@ export default function Container({
       'border border-gray-200 dark:border-gray-800',
     ];
     case 'blue': return [
-      'text-blue-900 dark:text-blue-300',
-      'bg-blue-100/35 dark:bg-blue-950/60',
+      'text-blue-800 dark:text-blue-400',
+      'bg-blue-50 dark:bg-blue-950/50',
     ];
     case 'red': return [
       'text-red-700 dark:text-red-400',

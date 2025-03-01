@@ -2,7 +2,7 @@ import { clsx } from 'clsx/lite';
 
 const SIZE_DEFAULT = 12;
 
-export type SpinnerColor = 'text' | 'dim' | 'light-gray';
+export type SpinnerColor = 'text' | 'dim' | 'light-gray' | 'semi-transparent';
 
 export default function Spinner({
   size = SIZE_DEFAULT,
@@ -21,6 +21,8 @@ export default function Spinner({
           'text-gray-300 dark:text-gray-600',
         color === 'dim' &&
           'text-dim',
+        color === 'semi-transparent' &&
+          'text-black/20 dark:text-white/20',
         className,
       )}
       style={{

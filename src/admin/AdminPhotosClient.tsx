@@ -52,17 +52,27 @@ export default function AdminPhotosClient({
                 onLastUpload={onLastUpload}
               />
             </div>
-            {photosCountOutdated > 0 && <PathLoaderButton
-              path={PATH_ADMIN_OUTDATED}
-              icon={<LiaBroomSolid size={18} className="translate-y-[-1px]" />}
-              title={`${photosCountOutdated} Outdated Photos`}
-              className={clsx(
-                isUploading && 'hidden md:inline-flex',
-              )}
-              hideTextOnMobile={false}
-            >
-              {photosCountOutdated}
-            </PathLoaderButton>}
+            {photosCountOutdated > 0 &&
+              <PathLoaderButton
+                path={PATH_ADMIN_OUTDATED}
+                icon={<LiaBroomSolid
+                  size={18}
+                  className="translate-y-[-1px]"
+                />}
+                title={`${photosCountOutdated} Outdated Photos`}
+                className={clsx(
+                  'text-blue-600 dark:text-blue-400',
+                  'border border-blue-200 dark:border-blue-800/60',
+                  'active:bg-blue-50 dark:active:bg-blue-950/50',
+                  'disabled:bg-blue-50 dark:disabled:bg-blue-950/50',
+                  isUploading && 'hidden md:inline-flex',
+                )}
+                spinnerColor="text"
+                spinnerClassName="text-blue-200 dark:text-blue-600/40"
+                hideTextOnMobile={false}
+              >
+                {photosCountOutdated}
+              </PathLoaderButton>}
           </div>
           {blobPhotoUrls.length > 0 &&
             <div className={clsx(

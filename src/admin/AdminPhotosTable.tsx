@@ -99,7 +99,7 @@ export default function AdminPhotosTable({
           </div>
           <div className={clsx(
             'flex flex-nowrap',
-            'gap-2 sm:gap-3 items-center',
+            'gap-2 items-center',
           )}>
             {canEdit &&
               <EditButton path={pathForAdminPhotoEdit(photo)} />}

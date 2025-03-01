@@ -46,7 +46,8 @@ const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
 const DEBUG_BEHIND_BY = 9;
 const DEBUG_PHOTOS_COUNT_OUTDATED = 7;
 
-const WARNING_TEXT_COLOR = 'text-amber-600 dark:text-amber-500';
+const TEXT_COLOR_WARNING  = 'text-amber-600 dark:text-amber-500';
+const TEXT_COLOR_BLUE     = 'text-blue-600 dark:text-blue-500';
 
 const readmeAnchor = (anchor: string) =>
   <AdminLink href={`${TEMPLATE_REPO_URL_README}#${anchor}`}>
@@ -128,7 +129,7 @@ export default function AdminAppInsightsClient({
             <ScoreCardRow
               icon={<IoSyncCircle
                 size={18}
-                className={WARNING_TEXT_COLOR}
+                className={TEXT_COLOR_WARNING}
               />}
               content={<>
                 Could not analyze source code
@@ -239,7 +240,7 @@ export default function AdminAppInsightsClient({
                 size={17}
                 className={clsx(
                   'translate-x-[0.5px]',
-                  WARNING_TEXT_COLOR,
+                  TEXT_COLOR_WARNING,
                 )}
               />}
               content={isExpanded => renderHighlightText(
@@ -258,7 +259,7 @@ export default function AdminAppInsightsClient({
                 size={17}
                 className={clsx(
                   'translate-x-[0.5px]',
-                  WARNING_TEXT_COLOR,
+                  TEXT_COLOR_WARNING,
                 )}
               />}
               content={isExpanded => renderHighlightText(
@@ -359,7 +360,7 @@ export default function AdminAppInsightsClient({
             size={19}
             className={clsx(
               'translate-y-[-2px]',
-              WARNING_TEXT_COLOR,
+              TEXT_COLOR_BLUE,
             )}
           />}
           content={renderHighlightText(
@@ -367,7 +368,7 @@ export default function AdminAppInsightsClient({
               photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED,
               'outdated photo',
             ),
-            'yellow',
+            'blue',
           )}
           expandPath={PATH_ADMIN_OUTDATED}
         />}

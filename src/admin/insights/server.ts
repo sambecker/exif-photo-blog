@@ -14,15 +14,16 @@ export const getShouldShowInsightsIndicator = async () => {
   const {
     forkBehind,
     noAiRateLimiting,
+    noConfiguredDomain,
     outdatedPhotos,
   } = getSignificantInsights({
     codeMeta,
     photosCountOutdated,
   });
 
-  if (noAiRateLimiting || outdatedPhotos) {
+  if (noAiRateLimiting || noConfiguredDomain) {
     return 'yellow';
-  } else if (forkBehind) {
+  } else if (forkBehind || outdatedPhotos) {
     return 'blue';
   }
 };

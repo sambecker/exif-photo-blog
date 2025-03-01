@@ -79,7 +79,7 @@ export default function AdminOutdatedClient({
     >
       <div className="space-y-6">
         <Note
-          color="yellow"
+          color="blue"
           icon={<LiaBroomSolid size={18}/>}
         >
           <div className="space-y-1.5">
