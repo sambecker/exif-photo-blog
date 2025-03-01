@@ -43,7 +43,10 @@ export default function SwitcherItem({
 
   const renderIcon = () => noPadding
     ? icon
-    : <div className="w-[28px] h-[24px] flex items-center justify-center">
+    : <div className={clsx(
+      'w-[28px] h-[24px]',
+      'flex items-center justify-center',
+    )}>
       {icon}
     </div>;
 

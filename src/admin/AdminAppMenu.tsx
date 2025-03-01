@@ -11,7 +11,7 @@ import {
 } from '@/app/paths';
 import { useAppState } from '@/state/AppState';
 import { ImCheckboxUnchecked } from 'react-icons/im';
-import { IoArrowUp, IoCloseSharp } from 'react-icons/io5';
+import { IoArrowDown, IoArrowUp, IoCloseSharp } from 'react-icons/io5';
 import { clsx } from 'clsx/lite';
 import { TbPhoto } from 'react-icons/tb';
 import { FiTag } from 'react-icons/fi';
@@ -138,7 +138,19 @@ export default function AdminAppMenu({
         <BiLockAlt size={17} className="inline-block w-5 mr-2" />
         <span className="grow">Admin menu</span>
       </div>}
-      icon={<IoArrowUp size={16} />}
+      icon={<div className={clsx(
+        'w-[28px] h-[28px]',
+        'overflow-hidden',
+      )}>
+        <div className={clsx(
+          'flex flex-col items-center justify-center gap-2',
+          'relative transition-transform duration-300',
+          'translate-y-[-18px]',
+        )}>
+          <IoArrowDown size={16} className="shrink-0" />
+          <IoArrowUp size={16} className="shrink-0" />
+        </div>
+      </div>}
       align="start"
       sideOffset={12}
       alignOffset={-85}
@@ -156,13 +168,11 @@ export default function AdminAppMenu({
         active
           ? 'text-black dark:text-white'
           : 'text-gray-400 dark:text-gray-600',
-        // Icon animation setup
-        '*:relative *:transition-transform *:duration-300',
       )}
       buttonClassNameOpen={clsx(
         'bg-dim',
         'text-main!',
-        '*:rotate-180',
+        '[&>*>*]:translate-y-[6px]',
       )}
       items={items}
       ariaLabel="Admin Menu"
