@@ -10,6 +10,7 @@ import { RefObject, useTransition } from 'react';
 import { useRef } from 'react';
 import { useEffect } from 'react';
 import Spinner from '@/components/Spinner';
+import ResponsiveText from '@/components/primitives/ResponsiveText';
 
 export default function PhotoUploadWithStatus({
   inputRef,
@@ -67,6 +68,8 @@ export default function PhotoUploadWithStatus({
     };
   }, [isPending, resetUploadState]);
   const isFinishing = isPending && shouldResetUploadStateAfterPending.current;
+
+  const uploadNumberText = `${fileUploadIndex + 1} of ${filesLength}`;
 
   return (
     <div className={clsx(
@@ -148,7 +151,10 @@ export default function PhotoUploadWithStatus({
               </>
               : <>
                 {!showButton &&
-                  `Uploading ${fileUploadIndex + 1} of ${filesLength}: `}
+                  <ResponsiveText shortText={uploadNumberText}>
+                    Uploading {uploadNumberText}
+                  </ResponsiveText>}
+                {': '}
                 {fileUploadName}
               </>
             : !showButton && <>Initializing</>}

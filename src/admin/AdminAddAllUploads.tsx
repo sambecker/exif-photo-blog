@@ -20,7 +20,6 @@ import ProgressButton from '@/components/primitives/ProgressButton';
 import { UrlAddStatus } from './AdminUploadsClient';
 import PhotoTagFieldset from './PhotoTagFieldset';
 import DeleteUploadButton from './DeleteUploadButton';
-import ResponsiveText from '@/components/primitives/ResponsiveText';
 
 const UPLOAD_BATCH_SIZE = 4;
 
@@ -190,9 +189,7 @@ export default function AdminAddAllUploads({
               shouldRedirectToAdminPhotos
               hideTextOnMobile={false}
             >
-              <ResponsiveText shortText="Delete Uploads">
-                Delete All Uploads
-              </ResponsiveText>
+              Delete All Uploads
             </DeleteUploadButton>
           </div>
         </div>
