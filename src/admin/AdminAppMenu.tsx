@@ -131,7 +131,8 @@ export default function AdminAppMenu({
   }, {
     label: 'Sign Out',
     icon: <PiSignOutBold size={15} />,
-    action: () => signOutAction().then(clearAuthStateAndRedirect),
+    action: () => signOutAction()
+      .then(() => clearAuthStateAndRedirect?.(false)),
   });
 
   return (

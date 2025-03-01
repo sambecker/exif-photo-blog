@@ -14,8 +14,7 @@ import {
 } from '@/app/config';
 import { ShareModalProps } from '@/share';
 import { storeTimezoneCookie } from '@/utility/timezone';
-import { InsightsIndicatorStatus } from '@/admin/insights';
-import { getAdminDataAction } from '@/admin/actions';
+import { AdminData, getAdminDataAction } from '@/admin/actions';
 import {
   storeAuthEmailCookie,
   clearAuthEmailCookie,
@@ -60,20 +59,10 @@ export default function AppStateProvider({
   // ADMIN
   const [adminUpdateTimes, setAdminUpdateTimes] =
     useState<Date[]>([]);
-  const [photosCount, setPhotosCount] =
-    useState<number>();
-  const [photosCountHidden, setPhotosCountHidden] =
-    useState<number>();
-  const [uploadsCount, setUploadsCount] =
-    useState<number>();
-  const [tagsCount, setTagsCount] =
-    useState<number>();
   const [selectedPhotoIds, setSelectedPhotoIds] =
     useState<string[] | undefined>();
   const [isPerformingSelectEdit, setIsPerformingSelectEdit] =
     useState(false);
-  const [insightsIndicatorStatus, setInsightsIndicatorStatus] =
-    useState<InsightsIndicatorStatus>();
   // DEBUG
   const [isGridHighDensity, setIsGridHighDensity] =
     useState(HIGH_DENSITY_GRID);
@@ -90,26 +79,9 @@ export default function AppStateProvider({
   const [shouldDebugRecipeOverlays, setShouldDebugRecipeOverlays] =
     useState(false);
 
-  const photosCountTotal = (
-    photosCount !== undefined &&
-    photosCountHidden !== undefined
-  )
-    ? photosCount + photosCountHidden
-    : undefined;
-
-  const startUpload = useCallback((onStart?: () => void) => {
-    if (uploadInputRef.current) {
-      uploadInputRef.current.value = '';
-      uploadInputRef.current.click();
-      uploadInputRef.current.oninput = onStart ?? null;
-      uploadInputRef.current.oncancel = onStart ?? null;
-    }
-  }, []);
-  const setUploadState = useCallback((uploadState: Partial<UploadState>) => {
-    _setUploadState(prev => ({ ...prev, ...uploadState }));
-  }, []);
-  const resetUploadState = useCallback(() => {
-    _setUploadState(INITIAL_UPLOAD_STATE);
+  useEffect(() => {
+    setHasLoaded?.(true);
+    storeTimezoneCookie();
   }, []);
 
   const invalidateSwr = useCallback(() => setSwrTimestamp(Date.now()), []);
@@ -129,30 +101,27 @@ export default function AppStateProvider({
       refreshInterval: 1000 * 60,
     },
   );
+  const updateAdminData = useCallback(
+    (updatedData: Partial<AdminData>) => {
+      if (adminData) {
+        refreshAdminData({
+          ...adminData,
+          ...updatedData,
+        });
+      }
+    }, [adminData, refreshAdminData]);
 
   useEffect(() => {
     if (userEmail) {
       storeAuthEmailCookie(userEmail);
-      if (adminData) {
-        setPhotosCount(adminData.countPhotos);
-        setPhotosCountHidden(adminData.countHiddenPhotos);
-        setUploadsCount(adminData.countUploads);
-        setTagsCount(adminData.countTags);
-        setInsightsIndicatorStatus(adminData.insightsIndicatorStatus);
-      }
-    } else {
-      setPhotosCountHidden(0);
     }
-  }, [adminData, userEmail]);
+  }, [userEmail, refreshAdminData, adminData]);
+
+  console.log({ userEmail, isUserSignedIn, isUserSignedInEager });
 
   const registerAdminUpdate = useCallback(() =>
     setAdminUpdateTimes(updates => [...updates, new Date()])
   , []);
-
-  useEffect(() => {
-    setHasLoaded?.(true);
-    storeTimezoneCookie();
-  }, []);
 
   const clearAuthStateAndRedirect = useCallback((shouldRedirect = true) => {
     setUserEmail(undefined);
@@ -160,6 +129,21 @@ export default function AppStateProvider({
     clearAuthEmailCookie();
     if (shouldRedirect) { router.push(PATH_SIGN_IN); }
   }, [router]);
+
+  const startUpload = useCallback((onStart?: () => void) => {
+    if (uploadInputRef.current) {
+      uploadInputRef.current.value = '';
+      uploadInputRef.current.click();
+      uploadInputRef.current.oninput = onStart ?? null;
+      uploadInputRef.current.oncancel = onStart ?? null;
+    }
+  }, []);
+  const setUploadState = useCallback((uploadState: Partial<UploadState>) => {
+    _setUploadState(prev => ({ ...prev, ...uploadState }));
+  }, []);
+  const resetUploadState = useCallback(() => {
+    _setUploadState(INITIAL_UPLOAD_STATE);
+  }, []);
 
   return (
     <AppStateContext.Provider
@@ -196,17 +180,12 @@ export default function AppStateProvider({
         adminUpdateTimes,
         registerAdminUpdate,
         refreshAdminData,
-        photosCount,
-        photosCountHidden,
-        photosCountTotal,
-        uploadsCount,
-        tagsCount,
+        updateAdminData,
+        ...adminData,
         selectedPhotoIds,
         setSelectedPhotoIds,
         isPerformingSelectEdit,
         setIsPerformingSelectEdit,
-        insightsIndicatorStatus,
-        setInsightsIndicatorStatus,
         // DEBUG
         isGridHighDensity,
         setIsGridHighDensity,

@@ -9,8 +9,9 @@ import { AnimationConfig } from '@/components/AnimateItems';
 import { ShareModalProps } from '@/share';
 import { InsightsIndicatorStatus } from '@/admin/insights';
 import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
+import { AdminData } from '@/admin/actions';
 
-export interface AppStateContext {
+export type AppStateContext = {
   // CORE
   previousPathname?: string
   hasLoaded?: boolean
@@ -38,22 +39,17 @@ export interface AppStateContext {
   setUserEmail?: Dispatch<SetStateAction<string | undefined>>
   isUserSignedIn?: boolean
   isUserSignedInEager?: boolean
-  clearAuthStateAndRedirect?: () => void
+  clearAuthStateAndRedirect?: (shouldRedirect?: boolean) => void
   // ADMIN
   adminUpdateTimes?: Date[]
   registerAdminUpdate?: () => void
   refreshAdminData?: () => void
-  photosCount?: number
-  photosCountHidden?: number
-  photosCountTotal?: number
-  uploadsCount?: number
-  tagsCount?: number
+  updateAdminData?: (updatedData: Partial<AdminData>) => void
   selectedPhotoIds?: string[]
   setSelectedPhotoIds?: Dispatch<SetStateAction<string[] | undefined>>
   isPerformingSelectEdit?: boolean
   setIsPerformingSelectEdit?: Dispatch<SetStateAction<boolean>>
   insightsIndicatorStatus?: InsightsIndicatorStatus
-  setInsightsIndicatorStatus?: Dispatch<SetStateAction<InsightsIndicatorStatus>>
   // DEBUG
   isGridHighDensity?: boolean
   setIsGridHighDensity?: Dispatch<SetStateAction<boolean>>
@@ -69,7 +65,7 @@ export interface AppStateContext {
   setShouldDebugInsights?: Dispatch<SetStateAction<boolean>>
   shouldDebugRecipeOverlays?: boolean
   setShouldDebugRecipeOverlays?: Dispatch<SetStateAction<boolean>>
-}
+} & Partial<AdminData>
 
 export const AppStateContext = createContext<AppStateContext>({
   uploadState: INITIAL_UPLOAD_STATE,

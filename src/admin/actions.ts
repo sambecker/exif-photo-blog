@@ -10,13 +10,15 @@ import { getStorageUploadUrlsNoStore } from '@/platforms/storage/cache';
 import { getPhotosMetaCached, getUniqueTagsCached } from '@/photo/cache';
 import { getInsightsIndicatorStatus } from '@/admin/insights/server';
 
+export type AdminData = Awaited<ReturnType<typeof getAdminDataAction>>;
+
 export const getAdminDataAction = async () =>
   runAuthenticatedAdminServerAction(async () => {
     const [
-      countPhotos,
-      countHiddenPhotos,
-      countTags,
-      countUploads,
+      photosCount,
+      photosCountHidden,
+      tagsCount,
+      uploadsCount,
       insightsIndicatorStatus,
     ] = await Promise.all([
       getPhotosMetaCached()
@@ -37,11 +39,19 @@ export const getAdminDataAction = async () =>
       getInsightsIndicatorStatus(),
     ]);
 
+    const photosCountTotal = (
+      photosCount !== undefined &&
+      photosCountHidden !== undefined
+    )
+      ? photosCount + photosCountHidden
+      : undefined;
+
     return {
-      countPhotos,
-      countHiddenPhotos,
-      countTags,
-      countUploads,
+      photosCount,
+      photosCountHidden,
+      photosCountTotal,
+      tagsCount,
+      uploadsCount,
       insightsIndicatorStatus,
     };
   });
