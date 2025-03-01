@@ -39,7 +39,7 @@ export type AppStateContext = {
   setUserEmail?: Dispatch<SetStateAction<string | undefined>>
   isUserSignedIn?: boolean
   isUserSignedInEager?: boolean
-  clearAuthStateAndRedirect?: (shouldRedirect?: boolean) => void
+  clearAuthStateAndRedirect?: () => void
   // ADMIN
   adminUpdateTimes?: Date[]
   registerAdminUpdate?: () => void

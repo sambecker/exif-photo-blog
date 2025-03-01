@@ -10,7 +10,7 @@ import {
   signIn,
   signOut,
 } from '@/auth';
-import { PATH_ADMIN_PHOTOS, PATH_SIGN_IN } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS } from '@/app/paths';
 import type { Session } from 'next-auth';
 import { redirect } from 'next/navigation';
 
@@ -43,9 +43,6 @@ export const signInAction = async (
 
 export const signOutAction = async () =>
   signOut({ redirect: false });
-
-export const signOutAndRedirectAction = async (redirectTo = PATH_SIGN_IN) =>
-  signOut({ redirectTo });
 
 export const getAuthAction = async () => auth();
 

@@ -20,8 +20,8 @@ import {
   clearAuthEmailCookie,
   hasAuthEmailCookie,
 } from '@/auth/client';
-import { useRouter } from 'next/navigation';
-import { PATH_SIGN_IN } from '@/app/paths';
+import { useRouter, usePathname } from 'next/navigation';
+import { isPathAdmin, PATH_SIGN_IN } from '@/app/paths';
 import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 
 export default function AppStateProvider({
@@ -30,6 +30,8 @@ export default function AppStateProvider({
   children: ReactNode
 }) {
   const router = useRouter();
+
+  const pathname = usePathname();
 
   const { previousPathname } = usePathnames();
 
@@ -117,18 +119,16 @@ export default function AppStateProvider({
     }
   }, [userEmail, refreshAdminData, adminData]);
 
-  console.log({ userEmail, isUserSignedIn, isUserSignedInEager });
-
   const registerAdminUpdate = useCallback(() =>
     setAdminUpdateTimes(updates => [...updates, new Date()])
   , []);
 
-  const clearAuthStateAndRedirect = useCallback((shouldRedirect = true) => {
+  const clearAuthStateAndRedirect = useCallback(() => {
     setUserEmail(undefined);
     setIsUserSignedInEager(false);
     clearAuthEmailCookie();
-    if (shouldRedirect) { router.push(PATH_SIGN_IN); }
-  }, [router]);
+    if (isPathAdmin(pathname)) { router.push(PATH_SIGN_IN); }
+  }, [router, pathname]);
 
   const startUpload = useCallback((onStart?: () => void) => {
     if (uploadInputRef.current) {
