@@ -56,17 +56,22 @@ export default function PhotoUploadWithStatus({
 
   const shouldResetUploadStateAfterPending = useRef(false);
   const [isPending, startTransition] = useTransition();
+  // Only reset upload state after route transition completes
   useEffect(() => {
     if (!isPending && shouldResetUploadStateAfterPending.current) {
       resetUploadState?.();
       shouldResetUploadStateAfterPending.current = false;
     }
+  }, [isPending, resetUploadState]);
+  // Reset upload state when component unmounts
+  // when not reset during route transition
+  useEffect(() => {
     return () => {
       if (shouldResetUploadStateAfterPending.current) {
         resetUploadState?.();
       }
     };
-  }, [isPending, resetUploadState]);
+  }, [resetUploadState]);
   const isFinishing = isPending && shouldResetUploadStateAfterPending.current;
 
   const uploadNumberText = `${fileUploadIndex + 1} of ${filesLength}`;
@@ -147,14 +152,15 @@ export default function PhotoUploadWithStatus({
           {isUploading
             ? isFinishing
               ? <>
-                Finishing
+                Finishing ...
               </>
               : <>
-                {!showButton &&
+                {!showButton && <>
                   <ResponsiveText shortText={uploadNumberText}>
                     Uploading {uploadNumberText}
-                  </ResponsiveText>}
-                {': '}
+                  </ResponsiveText>
+                  {': '}
+                </>}
                 {fileUploadName}
               </>
             : !showButton && <>Initializing</>}

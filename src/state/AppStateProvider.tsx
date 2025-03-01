@@ -134,8 +134,6 @@ export default function AppStateProvider({
     },
   );
 
-  console.log('adminData', adminData);
-
   useEffect(() => {
     if (userEmail) {
       storeAuthEmailCookie(userEmail);
