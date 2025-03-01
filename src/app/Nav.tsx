@@ -76,7 +76,7 @@ export default function Nav({
                 'translate-y-[-1px]',
               )}>
                 <div className={clsx(
-                  'truncate overflow-hidden',
+                  'truncate overflow-hidden select-none',
                   HAS_DEFINED_SITE_DESCRIPTION && 'sm:font-bold',
                 )}>
                   {renderLink(siteDomainOrTitle, PATH_ROOT)}
