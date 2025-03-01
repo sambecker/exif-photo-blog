@@ -45,6 +45,7 @@ export default async function AdminAppInsights() {
   const {
     forkBehind,
     noAiRateLimiting,
+    noConfiguredDomain,
     outdatedPhotos,
   } = getSignificantInsights({
     codeMeta,
@@ -59,6 +60,7 @@ export default async function AdminAppInsights() {
         forkBehind,
         noAi: !isAiTextGenerationEnabled,
         noAiRateLimiting,
+        noConfiguredDomain,
         outdatedPhotos,
         photoMatting: photosCountPortrait > 0 && !MATTE_PHOTOS,
         gridFirst: (

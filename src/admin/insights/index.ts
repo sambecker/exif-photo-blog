@@ -10,19 +10,30 @@ import {
 import { PhotoDateRange } from '@/photo';
 import { getGitHubMeta } from '@/platforms/github';
 
-export type AdminAppInsight =
+type AdminAppInsightCode = 
   'noFork' |
-  'forkBehind' |
+  'forkBehind';
+
+type AdminAppInsightRecommendation =
   'noAi' |
   'noAiRateLimiting' |
-  'outdatedPhotos' |
+  'noConfiguredDomain' |
   'photoMatting' |
   'gridFirst' |
   'noStaticOptimization';
 
-const RECOMMENDATIONS: AdminAppInsight[] = [
+type AdminAppInsightLibrary =
+  'outdatedPhotos';
+
+export type AdminAppInsight =
+  AdminAppInsightCode |
+  AdminAppInsightRecommendation |
+  AdminAppInsightLibrary;
+
+const RECOMMENDATIONS: AdminAppInsightRecommendation[] = [
   'noAi',
   'noAiRateLimiting',
+  'noConfiguredDomain',
   'photoMatting',
   'gridFirst',
   'noStaticOptimization',
@@ -66,11 +77,13 @@ export const getSignificantInsights = ({
   const {
     isAiTextGenerationEnabled,
     hasRedisStorage,
+    hasDomain,
   } = APP_CONFIGURATION;
 
   return {
     forkBehind: Boolean(codeMeta?.isBehind),
     noAiRateLimiting: isAiTextGenerationEnabled && !hasRedisStorage,
+    noConfiguredDomain: !hasDomain,
     outdatedPhotos: Boolean(photosCountOutdated),
   };
 };

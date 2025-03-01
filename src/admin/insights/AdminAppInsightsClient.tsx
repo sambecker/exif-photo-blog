@@ -103,6 +103,7 @@ export default function AdminAppInsightsClient({
     forkBehind,
     noAi,
     noAiRateLimiting,
+    noConfiguredDomain,
     outdatedPhotos,
     photoMatting,
     gridFirst,
@@ -250,6 +251,26 @@ export default function AdminAppInsightsClient({
                 Create Upstash Redis store from storage tab on
                 Vercel dashboard and link to this project to
                 prevent abuse by enabling rate limiting.
+              </>}
+            />}
+            {(noConfiguredDomain || debug) && <ScoreCardRow
+              icon={<PiWarningBold
+                size={17}
+                className={clsx(
+                  'translate-x-[0.5px]',
+                  WARNING_TEXT_COLOR,
+                )}
+              />}
+              content={isExpanded => renderHighlightText(
+                'Configure domain',
+                'yellow',
+                !isExpanded,
+              )}
+              expandContent={<>
+                Not explicitly setting a domain may cause certain features
+                to behave unexpectedly. Domains are stored in
+                {' '}
+                <EnvVar variable="NEXT_PUBLIC_SITE_DOMAIN" />.
               </>}
             />}
             {(noStaticOptimization || debug) && <ScoreCardRow
