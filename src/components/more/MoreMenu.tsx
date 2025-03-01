@@ -77,7 +77,7 @@ export default function MoreMenu({
         >
           {header && <div className={clsx(
             'px-2 pt-3 pb-2 text-dim uppercase',
-            'text-sm',
+            'text-sm tracking-wide',
           )}>
             {header}
           </div>}

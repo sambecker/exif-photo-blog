@@ -135,7 +135,7 @@ export default function AdminAppMenu({
   return (
     <MoreMenu
       header={<div className="flex items-center select-none">
-        <BiLockAlt size={17} className="inline-block w-5 mr-[9px]" />
+        <BiLockAlt size={17} className="inline-block w-5 mr-2" />
         <span className="grow">Admin menu</span>
       </div>}
       icon={<IoArrowUp size={16} />}
