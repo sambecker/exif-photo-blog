@@ -5,6 +5,7 @@ const TAG_ID_DYNAMIC_RANGE_SETTING = 0x1402;
 const TAG_ID_DEVELOPMENT_DYNAMIC_RANGE = 0x1403;
 const TAG_ID_WHITE_BALANCE = 0x1002;
 const TAG_ID_WHITE_BALANCE_FINE_TUNE = 0x100a;
+const TAG_ID_WHITE_BALANCE_COLOR_TEMPERATURE = 0x1005;
 const TAG_ID_NOISE_REDUCTION = 0x100e;
 const TAG_ID_NOISE_REDUCTION_BASIC = 0x100b;
 const TAG_ID_HIGHLIGHT = 0x1041;
@@ -29,7 +30,8 @@ export type FujifilmRecipe = {
     development: number
   }
   whiteBalance: {
-    type: string
+    type: ReturnType<typeof processWhiteBalanceType>
+    colorTemperature?: number
     red: number
     blue: number
   }
@@ -209,6 +211,9 @@ export const getFujifilmRecipeFromMakerNote = (
       case TAG_ID_WHITE_BALANCE_FINE_TUNE:
         recipe.whiteBalance.red = processWhiteBalanceComponent(numbers[0]);
         recipe.whiteBalance.blue = processWhiteBalanceComponent(numbers[1]);
+        break;
+      case TAG_ID_WHITE_BALANCE_COLOR_TEMPERATURE:
+        recipe.whiteBalance.colorTemperature = numbers[0];
         break;
       case TAG_ID_NOISE_REDUCTION:
         recipe.highISONoiseReduction = processNoiseReduction(numbers[0]);

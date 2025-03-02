@@ -41,9 +41,12 @@ export default function PhotoRecipe({
   exposure?: string
   onClose?: () => void
 }) {
-  const whiteBalanceTypeFormatted = whiteBalance.type
-    .replace(/auto./i, '')
-    .replaceAll('-', ' ');
+  const whiteBalanceTypeFormatted =
+    whiteBalance.type === 'kelvin' && whiteBalance.colorTemperature
+      ? `${whiteBalance.colorTemperature}K`
+      : whiteBalance.type
+        .replace(/auto./i, '')
+        .replaceAll('-', ' ');
 
   const renderRow = (children: ReactNode) =>
     <div className="flex gap-2 *:w-full *:grow">{children}</div>;
