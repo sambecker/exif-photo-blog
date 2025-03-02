@@ -86,7 +86,7 @@ export default function AdminPhotoMenuClient({
         <span>Sync</span>
         {isPhotoOutdated(photo) &&
           <InsightsIndicatorDot
-            colorOverride="yellow"
+            colorOverride="blue"
             className="translate-y-[1.5px]"
           />}
       </span>,
