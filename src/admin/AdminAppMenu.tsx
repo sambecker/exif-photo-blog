@@ -22,6 +22,7 @@ import { signOutAction } from '@/auth/actions';
 import { ComponentProps } from 'react';
 import { FaRegFolderOpen } from 'react-icons/fa';
 import { FiUploadCloud } from 'react-icons/fi';
+import useIsKeyBeingPressed from '@/utility/useIsKeyBeingPressed';
 
 export default function AdminAppMenu({
   active,
@@ -44,6 +45,10 @@ export default function AdminAppMenu({
   } = useAppState();
 
   const isSelecting = selectedPhotoIds !== undefined;
+
+  const isAltPressed = useIsKeyBeingPressed('alt');
+
+  const showAppInsightsLink = photosCountTotal > 0 && !isAltPressed;
 
   const items: ComponentProps<typeof MoreMenu>['items'] = [{
     label: 'Upload Photos',
@@ -95,14 +100,14 @@ export default function AdminAppMenu({
   }
 
   items.push({
-    label: photosCountTotal > 0
+    label: showAppInsightsLink
       ? 'App Insights'
       : 'App Configuration',
     icon: <AdminAppInfoIcon
       size="small"
       className="translate-x-[-0.5px] translate-y-[-0.5px]"
     />,
-    href: photosCountTotal > 0
+    href: showAppInsightsLink
       ? PATH_ADMIN_INSIGHTS
       : PATH_ADMIN_CONFIGURATION,
   }, {
