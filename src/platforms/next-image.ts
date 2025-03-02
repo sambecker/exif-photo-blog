@@ -1,5 +1,6 @@
 import {
   BASE_URL,
+  IMAGE_QUALITY,
   VERCEL_BYPASS_KEY,
   VERCEL_BYPASS_SECRET,
 } from '@/app/config';
@@ -16,7 +17,7 @@ export const MAX_IMAGE_SIZE: NextImageSize = 3840;
 export const getNextImageUrlForRequest = (
   imageUrl: string,
   size: NextImageSize,
-  quality = 75,
+  quality = IMAGE_QUALITY,
   baseUrl = BASE_URL,
   addBypassSecret = false,
 ) => {
