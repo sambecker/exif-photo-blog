@@ -12,6 +12,7 @@ export interface EntityLinkExternalProps {
   badged?: boolean
   contrast?: ComponentProps<typeof Badge>['contrast']
   prefetch?: boolean
+  className?: string
 }
 
 export default function EntityLink({
@@ -65,13 +66,13 @@ export default function EntityLink({
   </>;
 
   return (
-    <span className="group inline-flex w-full">
+    <span className={clsx(
+      'group inline-flex max-w-full overflow-hidden',
+      className,
+    )}>
       <LinkWithStatus
         href={href}
-        className={clsx(
-          'inline-flex items-center gap-2', 
-          className,
-        )}
+        className="inline-flex items-center gap-2 max-w-full"
       >
         {({ isLoading }) => <>
           <LabeledIcon {...{

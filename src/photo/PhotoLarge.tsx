@@ -38,11 +38,11 @@ import { LuExpand } from 'react-icons/lu';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import Tooltip from '@/components/Tooltip';
 import ZoomControls, { ZoomControlsRef } from '@/components/image/ZoomControls';
-import PhotoRecipe from './PhotoRecipe';
 import { TbChecklist } from 'react-icons/tb';
 import { IoCloseSharp } from 'react-icons/io5';
 import { AnimatePresence } from 'framer-motion';
-import useRecipeState from './useRecipeState';
+import useRecipeState from '../recipe/useRecipeState';
+import PhotoRecipeGrid from '@/recipe/PhotoRecipeGrid';
 
 export default function PhotoLarge({
   photo,
@@ -187,7 +187,7 @@ export default function PhotoLarge({
           {(shouldShowRecipe || shouldDebugRecipeOverlays) &&
           photo.fujifilmRecipe &&
           photo.filmSimulation &&
-            <PhotoRecipe
+            <PhotoRecipeGrid
               ref={refRecipe}
               recipe={photo.fujifilmRecipe}
               simulation={photo.filmSimulation}

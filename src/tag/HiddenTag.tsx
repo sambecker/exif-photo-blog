@@ -11,6 +11,7 @@ export default function HiddenTag({
   contrast,
   prefetch,
   countOnHover,
+  className,
 }: {
   countOnHover?: number
 } & EntityLinkExternalProps) {
@@ -28,6 +29,7 @@ export default function HiddenTag({
       href={pathForTag(TAG_HIDDEN)}
       icon={!badged && <AiOutlineEyeInvisible size={16} />}
       type={type}
+      className={className}
       hoverEntity={countOnHover}
       badged={badged}
       contrast={contrast}

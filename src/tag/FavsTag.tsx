@@ -12,6 +12,7 @@ export default function FavsTag({
   contrast,
   prefetch,
   countOnHover,
+  className,
 }: {
   countOnHover?: number
 } & EntityLinkExternalProps) {
@@ -36,6 +37,7 @@ export default function FavsTag({
           )}
         />}
       type={type}
+      className={className}
       hoverEntity={countOnHover}
       badged={badged}
       contrast={contrast}

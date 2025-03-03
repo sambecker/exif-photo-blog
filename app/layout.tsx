@@ -22,6 +22,7 @@ import AdminBatchEditPanel from '@/admin/AdminBatchEditPanel';
 import ShareModals from '@/share/ShareModals';
 import AdminUploadPanel from '@/admin/upload/AdminUploadPanel';
 import { revalidatePath } from 'next/cache';
+import RecipeModal from '@/recipe/RecipeModal';
 
 import '../tailwind.css';
 
@@ -86,6 +87,7 @@ export default function RootLayout({
               )}>
                 <Nav siteDomainOrTitle={SITE_DOMAIN_OR_TITLE} />
                 <ShareModals />
+                <RecipeModal />
                 <div className={clsx(
                   'min-h-[16rem] sm:min-h-[30rem]',
                   'mb-12',

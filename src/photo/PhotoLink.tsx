@@ -14,6 +14,7 @@ export default function PhotoLink({
   camera,
   simulation,
   focal,
+  recipe,
   scroll,
   prefetch,
   nextPhotoAnimation,
@@ -32,7 +33,7 @@ export default function PhotoLink({
   return (
     photo
       ? <Link
-        href={pathForPhoto({ photo, tag, camera, simulation, focal })}
+        href={pathForPhoto({ photo, tag, camera, simulation, focal, recipe })}
         prefetch={prefetch}
         onClick={() => {
           if (nextPhotoAnimation) {

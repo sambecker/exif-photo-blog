@@ -16,6 +16,7 @@ export default function Modal({
   onClose,
   className,
   anchor = 'center',
+  container = true,
   children,
   fast,
 }: {
@@ -23,6 +24,7 @@ export default function Modal({
   onClose?: () => void
   className?: string
   anchor?: 'top' | 'center'
+  container?: boolean
   children: ReactNode
   fast?: boolean
 }) {
@@ -80,11 +82,11 @@ export default function Modal({
           ref={contentRef}
           key="modalContent"
           className={clsx(
-            'w-[calc(100vw-1.5rem)] sm:w-[min(540px,90vw)]',
-            'p-3 rounded-lg',
-            'md:p-4 md:rounded-xl',
+            container && 'w-[calc(100vw-1.5rem)] sm:w-[min(540px,90vw)]',
+            container && 'p-3 rounded-lg',
+            container && 'md:p-4 md:rounded-xl',
+            container && 'dark:border dark:border-gray-800',
             'bg-white dark:bg-black',
-            'dark:border dark:border-gray-800',
             className,
           )}
         >

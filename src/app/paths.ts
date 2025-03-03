@@ -24,6 +24,7 @@ export const PREFIX_TAG               = '/tag';
 export const PREFIX_CAMERA            = '/shot-on';
 export const PREFIX_FILM_SIMULATION   = '/film';
 export const PREFIX_FOCAL_LENGTH      = '/focal';
+export const PREFIX_RECIPE            = '/recipe';
 
 // Dynamic paths
 const PATH_PHOTO_DYNAMIC              = `${PREFIX_PHOTO}/[photoId]`;
@@ -32,6 +33,7 @@ const PATH_CAMERA_DYNAMIC             = `${PREFIX_CAMERA}/[make]/[model]`;
 // eslint-disable-next-line max-len
 const PATH_FILM_SIMULATION_DYNAMIC    = `${PREFIX_FILM_SIMULATION}/[simulation]`;
 const PATH_FOCAL_LENGTH_DYNAMIC       = `${PREFIX_FOCAL_LENGTH}/[focal]`;
+const PATH_RECIPE_DYNAMIC             = `${PREFIX_RECIPE}/[recipe]`;
 
 // Search params
 export const SEARCH_PARAM_SHOW        = 'show';
@@ -80,6 +82,7 @@ export const PATHS_TO_CACHE = [
   PATH_CAMERA_DYNAMIC,
   PATH_FILM_SIMULATION_DYNAMIC,
   PATH_FOCAL_LENGTH_DYNAMIC,
+  PATH_RECIPE_DYNAMIC,
   ...PATHS_ADMIN,
 ];
 
@@ -110,6 +113,7 @@ export const pathForPhoto = ({
   camera,
   simulation,
   focal,
+  recipe,
   showRecipe,
 }: PhotoPathParams) => {
   const path = typeof photo !== 'string' && photo.hidden
@@ -122,7 +126,9 @@ export const pathForPhoto = ({
           ? `${pathForFilmSimulation(simulation)}/${getPhotoId(photo)}`
           : focal
             ? `${pathForFocalLength(focal)}/${getPhotoId(photo)}`
-            : `${PREFIX_PHOTO}/${getPhotoId(photo)}`;
+            : recipe
+              ? `${pathForRecipe(recipe)}/${getPhotoId(photo)}`
+              : `${PREFIX_PHOTO}/${getPhotoId(photo)}`;
   return showRecipe
     ? `${path}?${SEARCH_PARAM_SHOW}=${SEARCH_PARAM_SHOW_RECIPE}`
     : path;
@@ -140,6 +146,9 @@ export const pathForFilmSimulation = (simulation: FilmSimulation) =>
 export const pathForFocalLength = (focal: number) =>
   `${PREFIX_FOCAL_LENGTH}/${focal}mm`;
 
+export const pathForRecipe = (recipe: string) =>
+  `${PREFIX_RECIPE}/${recipe}`;
+
 export const absolutePathForPhoto = (params: PhotoPathParams) =>
   `${BASE_URL}${pathForPhoto(params)}`;
 
@@ -151,6 +160,9 @@ export const absolutePathForCamera= (camera: Camera) =>
 
 export const absolutePathForFilmSimulation = (simulation: FilmSimulation) =>
   `${BASE_URL}${pathForFilmSimulation(simulation)}`;
+
+export const absolutePathForRecipe = (recipe: string) =>
+  `${BASE_URL}${pathForRecipe(recipe)}`;
 
 export const absolutePathForFocalLength = (focal: number) =>
   `${BASE_URL}${pathForFocalLength(focal)}`;
@@ -167,6 +179,9 @@ export const absolutePathForCameraImage= (camera: Camera) =>
 export const absolutePathForFilmSimulationImage =
   (simulation: FilmSimulation) =>
     `${absolutePathForFilmSimulation(simulation)}/image`;
+
+export const absolutePathForRecipeImage = (recipe: string) =>
+  `${absolutePathForRecipe(recipe)}/image`;
 
 export const absolutePathForFocalLengthImage =
   (focal: number) =>

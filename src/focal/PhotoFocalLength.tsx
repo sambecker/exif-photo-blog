@@ -12,6 +12,7 @@ export default function PhotoFocalLength({
   contrast,
   prefetch,
   countOnHover,
+  className,
 }: {
   focal: number
   countOnHover?: number
@@ -22,6 +23,7 @@ export default function PhotoFocalLength({
       href={pathForFocalLength(focal)}
       icon={<TbCone className="rotate-[270deg]" />}
       type={type}
+      className={className}
       badged={badged}
       contrast={contrast}
       prefetch={prefetch}

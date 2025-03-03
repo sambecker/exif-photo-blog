@@ -3,6 +3,8 @@ import { isTagFavs } from '.';
 import FavsTag from './FavsTag';
 import { EntityLinkExternalProps } from '@/components/primitives/EntityLink';
 import { Fragment } from 'react';
+import { convertTagToRecipe, isTagRecipe } from '@/recipe';
+import PhotoRecipe from '@/recipe/PhotoRecipe';
 
 export default function PhotoTags({
   tags,
@@ -15,9 +17,14 @@ export default function PhotoTags({
     <div className="flex flex-col">
       {tags.map(tag =>
         <Fragment key={tag}>
-          {isTagFavs(tag)
-            ? <FavsTag {...{ contrast, prefetch }} />
-            : <PhotoTag {...{ tag, contrast, prefetch }} />}
+          {isTagRecipe(tag)
+            ? <PhotoRecipe {...{
+              recipe: convertTagToRecipe(tag),
+              recipeOnClick: () => console.log('clicked'),
+            }} />
+            : isTagFavs(tag)
+              ? <FavsTag {...{ contrast, prefetch }} />
+              : <PhotoTag {...{ tag, contrast, prefetch }} />}
         </Fragment>)}
     </div>
   );

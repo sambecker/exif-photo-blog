@@ -3,8 +3,8 @@
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import clsx from 'clsx/lite';
 import ImageLarge from '@/components/image/ImageLarge';
-import PhotoRecipe from './PhotoRecipe';
-import { Photo } from '.';
+import PhotoRecipeGrid from './PhotoRecipeGrid';
+import { Photo } from '../photo';
 import { useEffect, useState } from 'react';
 export default function PhotoRecipeOverlay({
   photos,
@@ -40,7 +40,7 @@ export default function PhotoRecipeOverlay({
         'absolute inset-0 w-full h-full',
         'flex items-center justify-center',
       )}>
-        <PhotoRecipe {...{
+        <PhotoRecipeGrid {...{
           recipe,
           simulation: photo.filmSimulation ?? 'provia',
           exposure: photo.exposureCompensationFormatted ?? '+0ev',

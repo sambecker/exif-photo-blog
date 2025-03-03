@@ -21,6 +21,8 @@ import {
   safelyParseFormattedHtml,
 } from '@/utility/html';
 import { clsx } from 'clsx/lite';
+import { convertTagToRecipe, isTagRecipe } from '@/recipe';
+import PhotoRecipe from '@/recipe/PhotoRecipe';
 
 export default function PhotoGridSidebar({
   tags,
@@ -51,35 +53,47 @@ export default function PhotoGridSidebar({
         className="text-icon translate-y-[1px]"
       />}
       items={tagsIncludingHidden.map(({ tag, count }) => {
-        switch (tag) {
-        case TAG_FAVS:
-          return <FavsTag
-            key={TAG_FAVS}
-            countOnHover={count}
-            type="icon-last"
-            prefetch={false}
-            contrast="low"
-            badged
-          />;
-        case TAG_HIDDEN:
-          return <HiddenTag
-            key={TAG_HIDDEN}
-            countOnHover={count}
-            type="icon-last"
-            prefetch={false}
-            contrast="low"
-            badged
-          />;
-        default:
-          return <PhotoTag
+        if (isTagRecipe(tag)) {
+          return <PhotoRecipe
             key={tag}
-            tag={tag}
-            type="text-only"
+            recipe={convertTagToRecipe(tag)}
             countOnHover={count}
+            type="icon-last"
             prefetch={false}
             contrast="low"
             badged
           />;
+        } else {
+          switch (tag) {
+          case TAG_FAVS:
+            return <FavsTag
+              key={TAG_FAVS}
+              countOnHover={count}
+              type="icon-last"
+              prefetch={false}
+              contrast="low"
+              badged
+            />;
+          case TAG_HIDDEN:
+            return <HiddenTag
+              key={TAG_HIDDEN}
+              countOnHover={count}
+              type="icon-last"
+              prefetch={false}
+              contrast="low"
+              badged
+            />;
+          default:
+            return <PhotoTag
+              key={tag}
+              tag={tag}
+              type="text-only"
+              countOnHover={count}
+              prefetch={false}
+              contrast="low"
+              badged
+            />;
+          }
         }
       })}
     />

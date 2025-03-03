@@ -1,5 +1,5 @@
 import { getPhoto, getPhotos } from '@/photo/db/query';
-import PhotoRecipeOverlay from '@/photo/PhotoRecipeOverlay';
+import PhotoRecipeOverlay from '@/recipe/PhotoRecipeOverlay';
 
 export default async function AdminRecipePage() {
   const [
