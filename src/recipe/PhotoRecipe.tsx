@@ -21,7 +21,7 @@ export default function PhotoRecipe({
   countOnHover?: number
 } & EntityLinkExternalProps) {
   return (
-    <div className="flex w-full gap-2 h-[20.5px]">
+    <div className="flex w-full gap-2">
       <EntityLink
         title="Recipe"
         label={formatRecipe(recipe)}
@@ -44,7 +44,7 @@ export default function PhotoRecipe({
           onClick={recipeOnClick}
           className={clsx(
             'self-start',
-            'px-1 py-0.5 mt-[1px]',
+            'px-1 py-0.5',
             'text-[10px] text-medium tracking-wider',
           )}
         >
