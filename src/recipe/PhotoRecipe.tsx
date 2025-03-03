@@ -1,4 +1,4 @@
-import { pathForTag } from '@/app/paths';
+import { pathForRecipe } from '@/app/paths';
 import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/primitives/EntityLink';
@@ -25,8 +25,13 @@ export default function PhotoRecipe({
       <EntityLink
         title="Recipe"
         label={formatRecipe(recipe)}
-        href={pathForTag(recipe)}
-        icon={<TbChecklist size={16} />}
+        href={pathForRecipe(recipe)}
+        icon={<TbChecklist
+          size={16}
+          className={clsx(
+            badged && 'translate-x-[-1px] translate-y-[0.5px]',
+          )}
+        />}
         className={className}
         type={type}
         badged={badged}
@@ -34,15 +39,17 @@ export default function PhotoRecipe({
         prefetch={prefetch}
         hoverEntity={countOnHover}
       />
-      <button
-        onClick={recipeOnClick}
-        className={clsx(
-          'px-1! py-0!',
-          'text-[11px] text-medium tracking-wider',
-        )}
-      >
-        OPEN
-      </button>
+      {recipeOnClick &&
+        <button
+          onClick={recipeOnClick}
+          className={clsx(
+            'self-start',
+            'px-1 py-0.5 mt-[1px]',
+            'text-[10px] text-medium tracking-wider',
+          )}
+        >
+          RECIPE
+        </button>}
     </div>
   );
 }

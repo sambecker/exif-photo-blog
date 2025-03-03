@@ -1,13 +1,8 @@
 import { absolutePathForRecipe, absolutePathForRecipeImage } from '@/app/paths';
-import { Photo, photoQuantityText } from '@/photo';
+import { descriptionForPhotoSet, Photo, photoQuantityText } from '@/photo';
 import { PhotoDateRange } from '@/photo';
-import {
-  descriptionForTaggedPhotos,
-  isTagFavs,
-  isTagHidden,
-  Tags,
-} from '../tag';
-import { convertStringToArray, parameterize } from '@/utility/string';
+import { Tags } from '../tag';
+import { parameterize } from '@/utility/string';
 import { capitalizeWords } from '@/utility/string';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { FilmSimulation } from '@/simulation';
@@ -21,8 +16,11 @@ export interface RecipeProps {
   exposure?: string   
 }
 
+export const isTagRecipe = (tag: string) =>
+  (new RegExp(`^${KEY_RECIPE}-?`).test(tag));
+
 export const convertTagsToRecipes = (tags: Tags) =>
-  tags.filter(({ tag }) => tag.startsWith(KEY_RECIPE))
+  tags.filter(({ tag }) => isTagRecipe(tag))
     .map(({ tag }) => convertTagToRecipe(tag));
 
 export const convertRecipeToTag = (recipe: string) =>
@@ -34,15 +32,6 @@ export const convertTagToRecipe = (tag: string) =>
 export const formatRecipe = (recipe?: string) =>
   capitalizeWords(recipe?.replaceAll('-', ' '));
 
-export const getValidationMessageForTags = (tags?: string) => {
-  const reservedTags = (convertStringToArray(tags) ?? [])
-    .filter(tag => isTagFavs(tag) || isTagHidden(tag))
-    .map(tag => tag.toLocaleUpperCase());
-  return reservedTags.length
-    ? `Reserved tags: ${reservedTags.join(', ').toLocaleLowerCase()}`
-    : undefined;
-};
-
 export const titleForRecipe = (
   recipe: string,
   photos:Photo[] = [],
@@ -51,6 +40,20 @@ export const titleForRecipe = (
   `Recipe: ${formatRecipe(recipe)}`,
   photoQuantityText(explicitCount ?? photos.length),
 ].join(' ');
+
+export const descriptionForRecipePhotos = (
+  photos: Photo[] = [],
+  dateBased?: boolean,
+  explicitCount?: number,
+  explicitDateRange?: PhotoDateRange,
+) =>
+  descriptionForPhotoSet(
+    photos,
+    undefined,
+    dateBased,
+    explicitCount,
+    explicitDateRange,
+  );
 
 export const generateMetaForRecipe = (
   recipe: string,
@@ -61,6 +64,6 @@ export const generateMetaForRecipe = (
   url: absolutePathForRecipe(recipe),
   title: titleForRecipe(recipe, photos, explicitCount),
   description:
-    descriptionForTaggedPhotos(photos, true, explicitCount, explicitDateRange),
+    descriptionForRecipePhotos(photos, true, explicitCount, explicitDateRange),
   images: absolutePathForRecipeImage(recipe),
 });

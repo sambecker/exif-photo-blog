@@ -2,7 +2,7 @@
 
 import Modal from '@/components/Modal';
 import { useAppState } from '@/state/AppState';
-import PhotoRecipeOGTile from './PhotoRecipeOGTile';
+import PhotoRecipeGrid from './PhotoRecipeGrid';
 
 export default function ShareModals() {
   const {
@@ -15,7 +15,10 @@ export default function ShareModals() {
       onClose={() => setRecipeModalProps?.(undefined)}
       container={false}
     >
-      <PhotoRecipeOGTile {...recipeModalProps}/>
+      <PhotoRecipeGrid {...{
+        ...recipeModalProps,
+        onClose: () => setRecipeModalProps?.(undefined),
+      }}/>
     </Modal>;
   }
 }
