@@ -10,6 +10,7 @@ import { ShareModalProps } from '@/share';
 import { InsightsIndicatorStatus } from '@/admin/insights';
 import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 import { AdminData } from '@/admin/actions';
+import { RecipeProps } from '@/recipe';
 
 export type AppStateContext = {
   // CORE
@@ -34,6 +35,8 @@ export type AppStateContext = {
   setIsCommandKOpen?: Dispatch<SetStateAction<boolean>>
   shareModalProps?: ShareModalProps
   setShareModalProps?: Dispatch<SetStateAction<ShareModalProps | undefined>>
+  recipeModalProps?: RecipeProps
+  setRecipeModalProps?: Dispatch<SetStateAction<RecipeProps | undefined>>
   // AUTH
   userEmail?: string
   setUserEmail?: Dispatch<SetStateAction<string | undefined>>

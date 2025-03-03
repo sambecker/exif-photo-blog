@@ -16,6 +16,7 @@ export default function PhotoGrid({
   camera,
   simulation,
   focal,
+  recipe,
   photoPriority,
   fast,
   animate = true,
@@ -94,6 +95,7 @@ export default function PhotoGrid({
               camera,
               simulation,
               focal,
+              recipe,
               selected: photo.id === selectedPhoto?.id,
               priority: photoPriority,
               onVisible: index === photos.length - 1

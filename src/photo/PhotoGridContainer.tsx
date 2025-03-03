@@ -15,6 +15,7 @@ export default function PhotoGridContainer({
   camera,
   simulation,
   focal,
+  recipe,
   animateOnFirstLoadOnly,
   header,
   sidebar,
@@ -53,6 +54,7 @@ export default function PhotoGridContainer({
             camera,
             simulation,
             focal,
+            recipe,
             animateOnFirstLoadOnly,
             onAnimationComplete,
             canSelect,
@@ -66,6 +68,7 @@ export default function PhotoGridContainer({
               camera,
               simulation,
               focal,
+              recipe,
               animateOnFirstLoadOnly,
               canSelect,
             }} />}

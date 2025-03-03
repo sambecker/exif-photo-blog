@@ -12,6 +12,7 @@ export default function PhotoTag({
   contrast,
   prefetch,
   countOnHover,
+  className,
 }: {
   tag: string
   countOnHover?: number
@@ -25,6 +26,7 @@ export default function PhotoTag({
         className="translate-y-[0.5px]"
       />}
       type={type}
+      className={className}
       badged={badged}
       contrast={contrast}
       prefetch={prefetch}
