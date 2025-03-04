@@ -77,12 +77,25 @@ const safelyQueryPhotos = async <T>(
   try {
     result = await callback();
   } catch (e: any) {
-    const migration = migrationForError(e);
+    let migration = migrationForError(e);
     console.log('Query error', e);
     if (migration) {
       console.log(`Running Migration ${migration.label} ...`);
       await migration.run();
-      result = await callback();
+      try {
+        result = await callback();
+      } catch (e: any) {
+        // Catch potential second migration,
+        // which otherwise would not be caught
+        migration = migrationForError(e);
+        if (migration) {
+          console.log(`Running Migration ${migration.label} ...`);
+          await migration.run();
+          result = await callback();
+        } else {
+          throw e;
+        }
+      }
     } else if (/relation "photos" does not exist/i.test(e.message)) {
       // If the table does not exist, create it
       console.log('Creating photos table ...');
