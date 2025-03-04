@@ -4,7 +4,7 @@ import { Photo, PhotoDateRange } from '@/photo';
 import PhotoHeader from '@/photo/PhotoHeader';
 import PhotoRecipe from './PhotoRecipe';
 import { useAppState } from '@/state/AppState';
-import { descriptionForRecipePhotos } from '.';
+import { descriptionForRecipePhotos, photoHasRecipe } from '.';
 export default function RecipeHeader({
   recipe,
   photos,
@@ -22,8 +22,9 @@ export default function RecipeHeader({
 }) {
   const { setRecipeModalProps } = useAppState();
 
-  const photo = photos.find(({ filmSimulation, recipeData }) =>
-    recipeData && filmSimulation);
+  const photo = photoHasRecipe(selectedPhoto)
+    ? selectedPhoto
+    : photos.find(photoHasRecipe);
 
   return (
     <PhotoHeader

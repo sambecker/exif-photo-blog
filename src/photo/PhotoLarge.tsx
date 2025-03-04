@@ -106,9 +106,8 @@ export default function PhotoLarge({
   const showZoomControls = showZoomControlsProp && areZoomControlsShown;
 
   const refRecipe = useRef<HTMLDivElement>(null);
-  const refRecipeTitle = useRef<HTMLButtonElement>(null);
   const refRecipeButton = useRef<HTMLButtonElement>(null);
-  const refTriggers = useMemo(() => [refRecipeTitle, refRecipeButton], []);
+  const refTriggers = useMemo(() => [refRecipeButton], []);
   const {
     shouldShowRecipe,
     toggleRecipe,
@@ -271,11 +270,8 @@ export default function PhotoLarge({
                     />}
                   {showRecipeContent &&
                     <PhotoRecipe
-                      refButton={refRecipeTitle}
                       recipe={recipe}
                       contrast="medium"
-                      isOpen={shouldShowRecipe}
-                      recipeOnClick={toggleRecipe}
                       prefetch={prefetchRelatedLinks}
                     />}
                   {showTagsContent &&

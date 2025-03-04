@@ -60,3 +60,6 @@ export const generateMetaForRecipe = (
     descriptionForRecipePhotos(photos, true, explicitCount, explicitDateRange),
   images: absolutePathForRecipeImage(recipe),
 });
+
+export const photoHasRecipe = (photo?: Photo) =>
+  photo?.filmSimulation && photo?.recipeData;
