@@ -26,6 +26,7 @@ import { Lenses, createLensKey } from '@/lens';
 import { migrationForError } from './migration';
 import { UPDATED_BEFORE_01, UPDATED_BEFORE_02 } from '../outdated';
 import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
+import { Recipes } from '@/recipe';
 
 const createPhotosTable = () =>
   sql`
@@ -53,7 +54,8 @@ const createPhotosTable = () =>
       latitude DOUBLE PRECISION,
       longitude DOUBLE PRECISION,
       film_simulation VARCHAR(255),
-      fujifilm_recipe JSONB,
+      recipe_title VARCHAR(255),
+      recipe_data JSONB,
       priority_order REAL,
       taken_at TIMESTAMP WITH TIME ZONE NOT NULL,
       taken_at_naive VARCHAR(255) NOT NULL,
@@ -76,6 +78,7 @@ const safelyQueryPhotos = async <T>(
     result = await callback();
   } catch (e: any) {
     const migration = migrationForError(e);
+    console.log('Query error', e);
     if (migration) {
       console.log(`Running Migration ${migration.label} ...`);
       await migration.run();
@@ -140,7 +143,8 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       latitude,
       longitude,
       film_simulation,
-      fujifilm_recipe,
+      recipe_title,
+      recipe_data,
       priority_order,
       hidden,
       taken_at,
@@ -170,7 +174,8 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       ${photo.latitude},
       ${photo.longitude},
       ${photo.filmSimulation},
-      ${JSON.stringify(photo.fujifilmRecipe)},
+      ${photo.recipeTitle},
+      ${JSON.stringify(photo.recipeData)},
       ${photo.priorityOrder},
       ${photo.hidden},
       ${photo.takenAt},
@@ -203,7 +208,8 @@ export const updatePhoto = (photo: PhotoDbInsert) =>
     latitude=${photo.latitude},
     longitude=${photo.longitude},
     film_simulation=${photo.filmSimulation},
-    fujifilm_recipe=${JSON.stringify(photo.fujifilmRecipe)},
+    recipe_title=${photo.recipeTitle},
+    recipe_data=${JSON.stringify(photo.recipeData)},
     priority_order=${photo.priorityOrder || null},
     hidden=${photo.hidden},
     taken_at=${photo.takenAt},
@@ -324,6 +330,20 @@ export const getUniqueFilmSimulations = async () =>
         count: parseInt(count, 10),
       })))
   , 'getUniqueFilmSimulations');
+
+export const getUniqueRecipes = async () =>
+  safelyQueryPhotos(() => sql`
+    SELECT DISTINCT recipe_title, COUNT(*)
+    FROM photos
+    WHERE hidden IS NOT TRUE AND recipe_title IS NOT NULL
+    GROUP BY recipe_title
+    ORDER BY recipe_title ASC
+  `.then(({ rows }): Recipes => rows
+      .map(({ recipe_title, count }) => ({
+        recipe: recipe_title,
+        count: parseInt(count, 10),
+      })))
+  , 'getUniqueRecipes');
 
 export const getUniqueFocalLengths = async () =>
   safelyQueryPhotos(() => sql`

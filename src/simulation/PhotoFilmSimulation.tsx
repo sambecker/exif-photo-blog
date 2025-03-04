@@ -15,11 +15,11 @@ export default function PhotoFilmSimulation({
   contrast = 'low',
   prefetch,
   countOnHover,
+  className,
 }: {
   simulation: FilmSimulation
   countOnHover?: number
   recipe?: FujifilmRecipe
-  className?: string
 } & EntityLinkExternalProps) {
   const { small, medium, large } = labelForFilmSimulation(simulation);
 
@@ -34,6 +34,7 @@ export default function PhotoFilmSimulation({
       />}
       title={`Film Simulation: ${large}`}
       type={type}
+      className={className}
       badged={badged}
       contrast={contrast}
       prefetch={prefetch}

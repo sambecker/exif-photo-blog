@@ -28,6 +28,7 @@ export default function PhotoPrevNext({
   camera,
   simulation,
   focal,
+  recipe,
 }: {
   photo?: Photo
   photos?: Photo[]
@@ -58,6 +59,7 @@ export default function PhotoPrevNext({
                 camera,
                 simulation,
                 focal,
+                recipe,
               }),
               { scroll: false },
             );
@@ -71,9 +73,10 @@ export default function PhotoPrevNext({
               pathForPhoto({
                 photo: nextPhoto,
                 tag,
-                camera, 
+                camera,
                 simulation,
                 focal,
+                recipe,
               }),
               { scroll: false },
             );
@@ -94,6 +97,7 @@ export default function PhotoPrevNext({
     camera,
     simulation,
     focal,
+    recipe,
   ]);
   
   return (
@@ -114,6 +118,7 @@ export default function PhotoPrevNext({
           camera={camera}
           simulation={simulation}
           focal={focal}
+          recipe={recipe}
           scroll={false}
           prefetch
         >
@@ -133,6 +138,7 @@ export default function PhotoPrevNext({
           camera={camera}
           simulation={simulation}
           focal={focal}
+          recipe={recipe}
           scroll={false}
           prefetch
         >

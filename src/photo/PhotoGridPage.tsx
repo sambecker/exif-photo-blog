@@ -10,6 +10,7 @@ import PhotoGridContainer from './PhotoGridContainer';
 import { useEffect } from 'react';
 import { useAppState } from '@/state/AppState';
 import clsx from 'clsx/lite';
+import { Recipes } from '@/recipe';
 
 export default function PhotoGridPage({
   photos,
@@ -17,12 +18,14 @@ export default function PhotoGridPage({
   tags,
   cameras,
   simulations,
+  recipes,
 }: {
   photos: Photo[]
   photosCount: number
   tags: Tags
   cameras: Cameras
   simulations: FilmSimulations
+  recipes: Recipes
 }) {
   const { setSelectedPhotoIds } = useAppState();
 
@@ -63,6 +66,7 @@ export default function PhotoGridPage({
               tags,
               cameras,
               simulations,
+              recipes,
               photosCount,
             }}
             />

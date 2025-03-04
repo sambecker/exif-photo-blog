@@ -21,6 +21,7 @@ export default function PhotoMedium({
   camera,
   simulation,
   focal,
+  recipe,
   selected,
   priority,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
@@ -41,7 +42,7 @@ export default function PhotoMedium({
   return (
     <LinkWithStatus
       ref={ref}
-      href={pathForPhoto({ photo, tag, camera, simulation, focal })}
+      href={pathForPhoto({ photo, tag, camera, simulation, focal, recipe })}
       className={clsx(
         'active:brightness-75',
         selected && 'brightness-50',
@@ -65,7 +66,7 @@ export default function PhotoMedium({
             aspectRatio={photo.aspectRatio}
             blurDataURL={photo.blurData}
             blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
-            className="flex object-cover w-full h-full "
+            className="flex object-cover w-full h-full"
             imgClassName="object-cover w-full h-full"
             alt={altTextForPhoto(photo)}
             priority={priority}

@@ -1,20 +1,18 @@
 import {
   getPathComponents,
   pathForPhoto,
-  SEARCH_PARAM_SHOW_RECIPE,
 } from '@/app/paths';
 import { usePathname } from 'next/navigation';
-import { SEARCH_PARAM_SHOW } from '@/app/paths';
 import { RefObject, useCallback, useEffect, useState } from 'react';
 import { isElementEntirelyInViewport } from '@/utility/dom';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
 
 export default function useRecipeState({
   ref,
-  refTrigger,
+  refTriggers = [],
 }: {
   ref?: RefObject<HTMLElement | null>,
-  refTrigger?: RefObject<HTMLElement | null>,
+  refTriggers?: RefObject<HTMLElement | null>[],
 }) {
   const pathname = usePathname();
 
@@ -23,13 +21,7 @@ export default function useRecipeState({
     ...pathComponents
   } = getPathComponents(pathname);
 
-  const searchParamShow = typeof document !== 'undefined'
-    ? (new URLSearchParams(document.location.search)).get(SEARCH_PARAM_SHOW)
-    : undefined;
-
-  const showRecipeInitially = searchParamShow === SEARCH_PARAM_SHOW_RECIPE;
-
-  const [shouldShowRecipe, setShouldShowRecipe] = useState(showRecipeInitially);
+  const [shouldShowRecipe, setShouldShowRecipe] = useState(false);
 
   const setVisibility = useCallback((shouldShow: boolean) => {
     if (shouldShow) {
@@ -69,7 +61,7 @@ export default function useRecipeState({
   [setVisibility, shouldShowRecipe]);
 
   useClickInsideOutside({
-    htmlElements: [ref, refTrigger],
+    htmlElements: [ref, ...refTriggers],
     onClickOutside: hideRecipe,
   });
 

@@ -14,6 +14,7 @@ export default function PhotoCamera({
   contrast,
   prefetch,
   countOnHover,
+  className,
 }: {
   camera: Camera
   hideAppleIcon?: boolean
@@ -37,6 +38,7 @@ export default function PhotoCamera({
           className="translate-x-[-0.5px]"
         />}
       type={type}
+      className={className}
       badged={badged}
       contrast={contrast}
       prefetch={prefetch}

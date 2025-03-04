@@ -23,6 +23,7 @@ import {
 import { useRouter, usePathname } from 'next/navigation';
 import { isPathAdmin, PATH_SIGN_IN } from '@/app/paths';
 import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
+import { RecipeProps } from '@/recipe';
 
 export default function AppStateProvider({
   children,
@@ -53,6 +54,8 @@ export default function AppStateProvider({
     useState(false);
   const [shareModalProps, setShareModalProps] =
     useState<ShareModalProps>();
+  const [recipeModalProps, setRecipeModalProps] =
+    useState<RecipeProps>();
   // AUTH
   const [userEmail, setUserEmail] =
     useState<string>();
@@ -170,6 +173,8 @@ export default function AppStateProvider({
         setIsCommandKOpen,
         shareModalProps,
         setShareModalProps,
+        recipeModalProps,
+        setRecipeModalProps,
         // AUTH
         userEmail,
         setUserEmail,

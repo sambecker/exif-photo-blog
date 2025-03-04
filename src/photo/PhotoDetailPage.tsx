@@ -11,6 +11,7 @@ import HiddenHeader from '@/tag/HiddenHeader';
 import FocalLengthHeader from '@/focal/FocalLengthHeader';
 import PhotoHeader from './PhotoHeader';
 import { JSX } from 'react';
+import RecipeHeader from '@/recipe/RecipeHeader';
 
 export default function PhotoDetailPage({
   photo,
@@ -19,6 +20,7 @@ export default function PhotoDetailPage({
   tag,
   camera,
   simulation,
+  recipe,
   focal,
   indexNumber,
   count,
@@ -72,6 +74,14 @@ export default function PhotoDetailPage({
       count={count}
       dateRange={dateRange}
     />;
+  } else if (recipe) {
+    customHeader = <RecipeHeader
+      recipe={recipe}
+      photos={photos}
+      selectedPhoto={photo}
+      indexNumber={indexNumber}
+      count={count}
+    />;
   } else if (focal) {
     customHeader = <FocalLengthHeader
       focal={focal}
@@ -90,6 +100,7 @@ export default function PhotoDetailPage({
         contentMain={customHeader ?? <PhotoHeader
           selectedPhoto={photo}
           photos={photos}
+          recipe={recipe}
         />}
       />
       <AnimateItems
@@ -106,10 +117,12 @@ export default function PhotoDetailPage({
             showTitleAsH1
             showCamera={!camera}
             showSimulation={!simulation}
+            showRecipe={!recipe}
             shouldShare={shouldShare}
             shouldShareTag={tag !== undefined}
             shouldShareCamera={camera !== undefined}
             shouldShareSimulation={simulation !== undefined}
+            shouldShareRecipe={recipe !== undefined}
             includeFavoriteInAdminMenu={includeFavoriteInAdminMenu}
           />,
         ]}

@@ -33,7 +33,7 @@ export default function HeaderList({
           )}
         >
           {icon &&
-            <span className="w-[1rem]">
+            <span className="text-icon w-[1rem]">
               {icon}
             </span>}
           {title}

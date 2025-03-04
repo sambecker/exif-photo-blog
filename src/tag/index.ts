@@ -51,9 +51,9 @@ export const shareTextForTag = (tag: string) =>
 
 export const sortTags = (
   tags: string[],
-  tagToHide?: string,
+  tagToExclude?: string,
 ) => tags
-  .filter(tag => tag !== tagToHide)
+  .filter(tag => tag !== tagToExclude)
   .sort((a, b) => isTagFavs(a) ? -1 : a.localeCompare(b));
 
 export const sortTagsObject = (

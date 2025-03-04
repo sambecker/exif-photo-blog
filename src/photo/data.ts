@@ -6,9 +6,10 @@ import {
 import {
   getUniqueCameras,
   getUniqueFilmSimulations,
+  getUniqueRecipes,
   getUniqueTags,
 } from '@/photo/db/query';
-import { SHOW_FILM_SIMULATIONS } from '@/app/config';
+import { SHOW_FILM_SIMULATIONS, SHOW_RECIPES } from '@/app/config';
 import { sortTagsObject } from '@/tag';
 
 export const getPhotoSidebarData = () => [
@@ -16,6 +17,9 @@ export const getPhotoSidebarData = () => [
   getUniqueCameras().catch(() => []),
   SHOW_FILM_SIMULATIONS
     ? getUniqueFilmSimulations().catch(() => [])
+    : [],
+  SHOW_RECIPES
+    ? getUniqueRecipes().catch(() => [])
     : [],
 ] as const;
 
