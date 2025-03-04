@@ -54,8 +54,9 @@ export const MIGRATIONS: Migration[] = [{
 
 export const migrationForError = (e: any) =>
   MIGRATIONS.find(migration =>
-    migration.fields.some(field =>
-      new RegExp(`column "${field}" of relation "photos" does not exist`, 'i')
-        .test(e.message),
-    ),
+    migration.fields.some(field =>(
+      // eslint-disable-next-line max-len
+      new RegExp(`column "${field}" of relation "photos" does not exist`, 'i').test(e.message) ||
+      new RegExp(`column "${field}" does not exist`, 'i').test(e.message)
+    )),
   );
