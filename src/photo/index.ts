@@ -65,7 +65,7 @@ export interface PhotoExif {
   latitude?: number
   longitude?: number
   filmSimulation?: FilmSimulation
-  fujifilmRecipe?: string
+  recipeData?: string
   takenAt?: string
   takenAtNaive?: string
 }
@@ -80,6 +80,7 @@ export interface PhotoDbInsert extends PhotoExif {
   caption?: string
   semanticDescription?: string
   tags?: string[]
+  recipeTitle?: string
   locationName?: string
   priorityOrder?: number
   hidden?: boolean
@@ -97,7 +98,7 @@ export interface PhotoDb extends
 }
 
 // Parsed db response
-export interface Photo extends Omit<PhotoDb, 'fujifilmRecipe'> {
+export interface Photo extends Omit<PhotoDb, 'recipeData'> {
   focalLengthFormatted?: string
   focalLengthIn35MmFormatFormatted?: string
   fNumberFormatted?: string
@@ -105,7 +106,7 @@ export interface Photo extends Omit<PhotoDb, 'fujifilmRecipe'> {
   exposureTimeFormatted?: string
   exposureCompensationFormatted?: string
   takenAtNaiveFormatted: string
-  fujifilmRecipe?: FujifilmRecipe
+  recipeData?: FujifilmRecipe
 }
 
 export interface PhotoSetCategory {
@@ -142,8 +143,8 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
       formatExposureTime(photoDb.exposureTime),
     exposureCompensationFormatted:
       formatExposureCompensation(photoDb.exposureCompensation),
-    fujifilmRecipe: photoDb.fujifilmRecipe
-      ? JSON.parse(photoDb.fujifilmRecipe)
+    recipeData: photoDb.recipeData
+      ? JSON.parse(photoDb.recipeData)
       : undefined,
     takenAtNaiveFormatted:
       formatDateFromPostgresString(photoDb.takenAtNaive),
@@ -165,7 +166,7 @@ export const convertPhotoToPhotoDbInsert = (
 ): PhotoDbInsert => ({
   ...photo,
   takenAt: photo.takenAt.toISOString(),
-  fujifilmRecipe: JSON.stringify(photo.fujifilmRecipe),
+  recipeData: JSON.stringify(photo.recipeData),
 });
 
 export const photoStatsAsString = (photo: Photo) => [

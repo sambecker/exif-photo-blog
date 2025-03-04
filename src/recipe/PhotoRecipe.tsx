@@ -4,7 +4,8 @@ import EntityLink, {
 } from '@/components/primitives/EntityLink';
 import { TbChecklist } from 'react-icons/tb';
 import { formatRecipe } from '.';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
+import { RefObject } from 'react';
 
 export default function PhotoRecipe({
   recipe,
@@ -14,9 +15,13 @@ export default function PhotoRecipe({
   prefetch,
   countOnHover,
   className,
+  refButton,
+  isOpen,
   recipeOnClick,
 }: {
   recipe: string
+  refButton?: RefObject<HTMLButtonElement | null>
+  isOpen?: boolean
   recipeOnClick?: () => void
   countOnHover?: number
 } & EntityLinkExternalProps) {
@@ -41,6 +46,7 @@ export default function PhotoRecipe({
       />
       {recipeOnClick &&
         <button
+          ref={refButton}
           onClick={recipeOnClick}
           className={clsx(
             'self-start',
@@ -48,7 +54,7 @@ export default function PhotoRecipe({
             'text-[10px] text-medium tracking-wider',
           )}
         >
-          RECIPE
+          {isOpen ? 'CLOSE' : 'RECIPE'}
         </button>}
     </div>
   );

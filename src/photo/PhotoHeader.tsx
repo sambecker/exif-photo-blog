@@ -22,6 +22,7 @@ export default function PhotoHeader({
   camera,
   simulation,
   focal,
+  recipe,
   photos,
   selectedPhoto,
   entity,
@@ -68,6 +69,7 @@ export default function PhotoHeader({
       camera,
       simulation,
       focal,
+      recipe,
     }} />;
 
   const renderDateRange = () =>

@@ -10,7 +10,7 @@ import { RecipeProps } from '.';
 
 const addSign = (value = 0) => value < 0 ? value : `+${value}`;
 
-export default function PhotoRecipeGrid({
+export default function PhotoRecipeOverlay({
   ref,
   recipe: {
     dynamicRange,

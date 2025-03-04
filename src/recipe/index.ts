@@ -1,13 +1,16 @@
 import { absolutePathForRecipe, absolutePathForRecipeImage } from '@/app/paths';
 import { descriptionForPhotoSet, Photo, photoQuantityText } from '@/photo';
 import { PhotoDateRange } from '@/photo';
-import { Tags } from '../tag';
-import { parameterize } from '@/utility/string';
 import { capitalizeWords } from '@/utility/string';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { FilmSimulation } from '@/simulation';
 
-const KEY_RECIPE = 'recipe';
+export type RecipeWithCount = {
+  recipe: string
+  count: number
+}
+
+export type Recipes = RecipeWithCount[]
 
 export interface RecipeProps {
   recipe: FujifilmRecipe
@@ -15,19 +18,6 @@ export interface RecipeProps {
   iso?: string
   exposure?: string   
 }
-
-export const isTagRecipe = (tag: string) =>
-  (new RegExp(`^${KEY_RECIPE}-?`).test(tag));
-
-export const convertTagsToRecipes = (tags: Tags) =>
-  tags.filter(({ tag }) => isTagRecipe(tag))
-    .map(({ tag }) => convertTagToRecipe(tag));
-
-export const convertRecipeToTag = (recipe: string) =>
-  `${KEY_RECIPE}-${parameterize(recipe)}`;
-
-export const convertTagToRecipe = (tag: string) =>
-  tag.replace(new RegExp(`^${KEY_RECIPE}-?`), '');
 
 export const formatRecipe = (recipe?: string) =>
   capitalizeWords(recipe?.replaceAll('-', ' '));

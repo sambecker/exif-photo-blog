@@ -35,10 +35,6 @@ const PATH_FILM_SIMULATION_DYNAMIC    = `${PREFIX_FILM_SIMULATION}/[simulation]`
 const PATH_FOCAL_LENGTH_DYNAMIC       = `${PREFIX_FOCAL_LENGTH}/[focal]`;
 const PATH_RECIPE_DYNAMIC             = `${PREFIX_RECIPE}/[recipe]`;
 
-// Search params
-export const SEARCH_PARAM_SHOW        = 'show';
-export const SEARCH_PARAM_SHOW_RECIPE = 'recipe';
-
 // Admin paths
 export const PATH_ADMIN_PHOTOS        = `${PATH_ADMIN}/photos`;
 export const PATH_ADMIN_OUTDATED      = `${PATH_ADMIN}/outdated`;
@@ -114,9 +110,8 @@ export const pathForPhoto = ({
   simulation,
   focal,
   recipe,
-  showRecipe,
-}: PhotoPathParams) => {
-  const path = typeof photo !== 'string' && photo.hidden
+}: PhotoPathParams) =>
+  typeof photo !== 'string' && photo.hidden
     ? `${pathForTag(TAG_HIDDEN)}/${getPhotoId(photo)}`
     : tag
       ? `${pathForTag(tag)}/${getPhotoId(photo)}`
@@ -129,10 +124,6 @@ export const pathForPhoto = ({
             : recipe
               ? `${pathForRecipe(recipe)}/${getPhotoId(photo)}`
               : `${PREFIX_PHOTO}/${getPhotoId(photo)}`;
-  return showRecipe
-    ? `${path}?${SEARCH_PARAM_SHOW}=${SEARCH_PARAM_SHOW_RECIPE}`
-    : path;
-};
 
 export const pathForTag = (tag: string) =>
   `${PREFIX_TAG}/${tag}`;

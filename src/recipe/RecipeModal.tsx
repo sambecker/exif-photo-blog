@@ -2,7 +2,7 @@
 
 import Modal from '@/components/Modal';
 import { useAppState } from '@/state/AppState';
-import PhotoRecipeGrid from './PhotoRecipeGrid';
+import PhotoRecipeOverlay from './PhotoRecipeGrid';
 
 export default function ShareModals() {
   const {
@@ -12,10 +12,11 @@ export default function ShareModals() {
 
   if (recipeModalProps) {
     return <Modal
+      className="bg-transparent!"
       onClose={() => setRecipeModalProps?.(undefined)}
       container={false}
     >
-      <PhotoRecipeGrid {...{
+      <PhotoRecipeOverlay {...{
         ...recipeModalProps,
         onClose: () => setRecipeModalProps?.(undefined),
       }}/>

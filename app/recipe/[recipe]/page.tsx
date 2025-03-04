@@ -1,27 +1,24 @@
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
-import { getUniqueTags } from '@/photo/db/query';
+import { getUniqueRecipes } from '@/photo/db/query';
 import { IS_PRODUCTION } from '@/app/config';
 import { STATICALLY_OPTIMIZED_PHOTO_CATEGORIES } from '@/app/config';
 import { PATH_ROOT } from '@/app/paths';
-import { getPhotosTagDataCached } from '@/tag/data';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
-import { convertRecipeToTag, generateMetaForRecipe } from '@/recipe';
+import { generateMetaForRecipe } from '@/recipe';
 import RecipeOverview from '@/recipe/RecipeOverview';
+import { getPhotosRecipeDataCached } from '@/recipe/data';
 
-const getPhotosTagDataCachedCached = cache((tag: string) =>
-  getPhotosTagDataCached({ tag, limit: INFINITE_SCROLL_GRID_INITIAL}));
+const getPhotosRecipeDataCachedCached = cache(getPhotosRecipeDataCached);
 
 export let generateStaticParams:
   (() => Promise<{ recipe: string }[]>) | undefined = undefined;
 
 if (STATICALLY_OPTIMIZED_PHOTO_CATEGORIES && IS_PRODUCTION) {
   generateStaticParams = async () => {
-    const tags = await getUniqueTags();
-    return tags
-      .filter(({ tag }) => tag.startsWith('recipe'))
-      .map(({ tag }) => ({ recipe: tag.replace(/^recipe-?/i, '')}));
+    const recipes = await getUniqueRecipes();
+    return recipes.map(({ recipe }) => ({ recipe }));
   };
 }
 
@@ -39,7 +36,10 @@ export async function generateMetadata({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosTagDataCachedCached(convertRecipeToTag(recipe));
+  ] = await getPhotosRecipeDataCachedCached({
+    recipe,
+    limit: INFINITE_SCROLL_GRID_INITIAL,
+  });
 
   if (photos.length === 0) { return {}; }
 
@@ -77,7 +77,10 @@ export default async function RecipePage({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosTagDataCachedCached(convertRecipeToTag(recipe));
+  ] = await getPhotosRecipeDataCachedCached({
+    recipe,
+    limit: INFINITE_SCROLL_GRID_INITIAL,
+  });
 
   if (photos.length === 0) { redirect(PATH_ROOT); }
 

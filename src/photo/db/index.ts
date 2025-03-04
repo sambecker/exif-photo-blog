@@ -45,6 +45,7 @@ export const getWheresFromOptions = (
     camera,
     lens,
     simulation,
+    recipe,
     focal,
   } = options;
 
@@ -103,6 +104,10 @@ export const getWheresFromOptions = (
   if (simulation) {
     wheres.push(`film_simulation=$${valuesIndex++}`);
     wheresValues.push(simulation);
+  }
+  if (recipe) {
+    wheres.push(`recipe_title=$${valuesIndex++}`);
+    wheresValues.push(recipe);
   }
   if (focal) {
     wheres.push(`focal_length=$${valuesIndex++}`);

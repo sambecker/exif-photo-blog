@@ -7,6 +7,8 @@ import { getPhotosFilmSimulationDataCached } from '@/simulation/data';
 import { STATICALLY_OPTIMIZED_PHOTO_CATEGORIES } from '@/app/config';
 import { Metadata } from 'next/types';
 import { cache } from 'react';
+import { PATH_ROOT } from '@/app/paths';
+import { redirect } from 'next/navigation';
 
 const getPhotosFilmSimulationDataCachedCached =
   cache(getPhotosFilmSimulationDataCached);
@@ -37,6 +39,8 @@ export async function generateMetadata({
     simulation,
     limit: INFINITE_SCROLL_GRID_INITIAL,
   });
+
+  if (photos.length === 0) { return {}; }
 
   const {
     url,
@@ -74,6 +78,8 @@ export default async function FilmSimulationPage({
     simulation,
     limit: INFINITE_SCROLL_GRID_INITIAL,
   });
+
+  if (photos.length === 0) { redirect(PATH_ROOT); } 
 
   return (
     <FilmSimulationOverview {...{

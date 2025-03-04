@@ -1,10 +1,10 @@
 'use client';
 
 import { Photo, PhotoDateRange } from '@/photo';
-import { descriptionForTaggedPhotos } from '../tag';
 import PhotoHeader from '@/photo/PhotoHeader';
 import PhotoRecipe from './PhotoRecipe';
 import { useAppState } from '@/state/AppState';
+import { descriptionForRecipePhotos } from '.';
 export default function RecipeHeader({
   recipe,
   photos,
@@ -22,27 +22,27 @@ export default function RecipeHeader({
 }) {
   const { setRecipeModalProps } = useAppState();
 
-  const photo = photos.find(({ filmSimulation, fujifilmRecipe }) =>
-    fujifilmRecipe && filmSimulation);
+  const photo = photos.find(({ filmSimulation, recipeData }) =>
+    recipeData && filmSimulation);
 
   return (
     <PhotoHeader
-      tag={recipe}
+      recipe={recipe}
       entity={<PhotoRecipe
         recipe={recipe}
         contrast="high"
         recipeOnClick={() => (
-          photo?.fujifilmRecipe &&
+          photo?.recipeData &&
           photo?.filmSimulation
         ) ? setRecipeModalProps?.({
             simulation: photo.filmSimulation,
-            recipe: photo.fujifilmRecipe,
+            recipe: photo.recipeData,
             iso: photo.isoFormatted,
             exposure: photo.exposureTimeFormatted,
           })
           : undefined}
       />}
-      entityDescription={descriptionForTaggedPhotos(photos, undefined, count)}
+      entityDescription={descriptionForRecipePhotos(photos, undefined, count)}
       photos={photos}
       selectedPhoto={selectedPhoto}
       indexNumber={indexNumber}

@@ -14,7 +14,7 @@ import {
   getOffsetFromExif,
 } from '@/utility/exif';
 import { roundToNumber } from '@/utility/number';
-import { convertStringToArray } from '@/utility/string';
+import { convertStringToArray, parameterize } from '@/utility/string';
 import { generateNanoid } from '@/utility/nanoid';
 import {
   FILM_SIMULATION_FORM_INPUT_OPTIONS,
@@ -111,9 +111,14 @@ const FORM_METADATA = (
     shouldHide: ({ make }) => make !== MAKE_FUJIFILM,
     shouldNotOverwriteWithNullDataOnSync: true,
   },
-  fujifilmRecipe: {
+  recipeTitle: {
+    label: 'recipe title',
+    spellCheck: false,
+    capitalize: false,
+  },
+  recipeData: {
     type: 'textarea',
-    label: 'fujifilm recipe',
+    label: 'recipe data',
     spellCheck: false,
     capitalize: false,
     validate: value => {
@@ -207,7 +212,7 @@ export const convertPhotoToFormData = (photo: Photo): PhotoFormData => {
       return value?.toISOString ? value.toISOString() : value;
     case 'hidden':
       return value ? 'true' : 'false';
-    case 'fujifilmRecipe':
+    case 'recipeData':
       return JSON.stringify(value);
     default:
       return value !== undefined && value !== null
@@ -228,7 +233,7 @@ export const convertPhotoToFormData = (photo: Photo): PhotoFormData => {
 export const convertExifToFormData = (
   data: ExifData,
   filmSimulation?: FilmSimulation,
-  fujifilmRecipe?: FujifilmRecipe,
+  recipeData?: FujifilmRecipe,
 ): Omit<
   Record<keyof PhotoExif, string | undefined>,
   'takenAt' | 'takenAtNaive'
@@ -252,7 +257,7 @@ export const convertExifToFormData = (
   longitude:
     !GEO_PRIVACY_ENABLED ? data.tags?.GPSLongitude?.toString() : undefined,
   filmSimulation,
-  fujifilmRecipe: JSON.stringify(fujifilmRecipe),
+  recipeData: JSON.stringify(recipeData),
   ...data.tags?.DateTimeOriginal && {
     takenAt: convertTimestampWithOffsetToPostgresString(
       data.tags.DateTimeOriginal,
@@ -299,11 +304,14 @@ export const convertFormDataToPhotoDbInsert = (
   return {
     ...(photoForm as PhotoFormData & {
       filmSimulation?: FilmSimulation
-      fujifilmRecipe?: FujifilmRecipe
+      recipeData?: FujifilmRecipe
     }),
     ...!photoForm.id && { id: generateNanoid() },
     // Delete array field when empty
     tags: tags.length > 0 ? tags : undefined,
+    ...photoForm.recipeTitle && {
+      recipeTitle: parameterize(photoForm.recipeTitle),
+    },
     // Convert form strings to numbers
     aspectRatio: photoForm.aspectRatio
       ? roundToNumber(parseFloat(photoForm.aspectRatio), 6)
