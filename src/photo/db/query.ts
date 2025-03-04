@@ -78,7 +78,6 @@ const safelyQueryPhotos = async <T>(
     result = await callback();
   } catch (e: any) {
     let migration = migrationForError(e);
-    console.log('Query error', e);
     if (migration) {
       console.log(`Running Migration ${migration.label} ...`);
       await migration.run();
