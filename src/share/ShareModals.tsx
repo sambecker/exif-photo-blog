@@ -6,6 +6,7 @@ import CameraShareModal from '@/camera/CameraShareModal';
 import FilmSimulationShareModal from '@/simulation/FilmSimulationShareModal';
 import FocalLengthShareModal from '@/focal/FocalLengthShareModal';
 import { useAppState } from '@/state/AppState';
+import RecipeShareModal from '@/recipe/RecipeShareModal';
 
 export default function ShareModals() {
   const { shareModalProps = {} } = useAppState();
@@ -18,6 +19,7 @@ export default function ShareModals() {
     tag,
     camera,
     simulation,
+    recipe,
     focal,
   } = shareModalProps;
 
@@ -33,6 +35,8 @@ export default function ShareModals() {
       return <FilmSimulationShareModal {...{simulation, ...attributes}} />;
     } else if (focal !== undefined) {
       return <FocalLengthShareModal {...{focal, ...attributes}} />;
+    } else if (recipe) {
+      return <RecipeShareModal {...{recipe, ...attributes}} />;
     }
   }
 }

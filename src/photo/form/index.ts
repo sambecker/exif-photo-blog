@@ -121,6 +121,8 @@ const FORM_METADATA = (
     label: 'recipe data',
     spellCheck: false,
     capitalize: false,
+    shouldHide: ({ make }) => make !== MAKE_FUJIFILM,
+    shouldNotOverwriteWithNullDataOnSync: true,
     validate: value => {
       let validationMessage = undefined;
       if (value) {
@@ -132,8 +134,6 @@ const FORM_METADATA = (
       }
       return validationMessage;
     },
-    shouldHide: ({ make }) => make !== MAKE_FUJIFILM,
-    shouldNotOverwriteWithNullDataOnSync: true,
   },
   focalLength: { label: 'focal length' },
   focalLengthIn35MmFormat: { label: 'focal length 35mm-equivalent' },

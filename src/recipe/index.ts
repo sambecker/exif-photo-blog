@@ -31,6 +31,9 @@ export const titleForRecipe = (
   photoQuantityText(explicitCount ?? photos.length),
 ].join(' ');
 
+export const shareTextForRecipe = (recipe: string) =>
+  `${formatRecipe(recipe)} recipe photos`;
+
 export const descriptionForRecipePhotos = (
   photos: Photo[] = [],
   dateBased?: boolean,

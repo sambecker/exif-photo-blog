@@ -151,6 +151,7 @@ export default function PhotoHeader({
                     tag={tag}
                     camera={camera}
                     simulation={simulation}
+                    recipe={recipe}
                     focal={focal}
                     count={count}
                     dateRange={dateRange}
