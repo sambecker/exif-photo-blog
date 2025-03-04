@@ -63,3 +63,9 @@ export const generateMetaForRecipe = (
 
 export const photoHasRecipe = (photo?: Photo) =>
   photo?.filmSimulation && photo?.recipeData;
+
+export const sortRecipesWithCount = (
+  a: RecipeWithCount,
+  b: RecipeWithCount,
+) =>
+  a.recipe.localeCompare(b.recipe);

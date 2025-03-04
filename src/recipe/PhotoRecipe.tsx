@@ -51,7 +51,8 @@ export default function PhotoRecipe({
           className={clsx(
             'self-start',
             'px-1 py-0.5',
-            'text-[10px] text-medium tracking-wider',
+            'text-[10px] text-main font-medium tracking-wider',
+            'translate-y-[0.5px]',
           )}
         >
           {isOpen ? 'CLOSE' : 'RECIPE'}

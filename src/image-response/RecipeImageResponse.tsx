@@ -39,7 +39,7 @@ export default function RecipeImageResponse({
         icon: <TbChecklist
           size={height * .087}
           style={{
-            transform: `translateY(${height * .006}px)`,
+            transform: `translateY(${height * .003}px)`,
             marginRight: height * .02,
           }}
         />,

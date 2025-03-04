@@ -21,17 +21,22 @@ import {
   safelyParseFormattedHtml,
 } from '@/utility/html';
 import { clsx } from 'clsx/lite';
+import { Recipes, sortRecipesWithCount } from '@/recipe';
+import PhotoRecipe from '@/recipe/PhotoRecipe';
+import { TbChecklist } from 'react-icons/tb';
 
 export default function PhotoGridSidebar({
   tags,
   cameras,
   simulations,
+  recipes,
   photosCount,
   photosDateRange,
 }: {
   tags: Tags
   cameras: Cameras
   simulations: FilmSimulations
+  recipes: Recipes
   photosCount: number
   photosDateRange?: PhotoDateRange
 }) {
@@ -48,7 +53,7 @@ export default function PhotoGridSidebar({
       title='Tags'
       icon={<FaTag
         size={12}
-        className="text-icon translate-y-[1px]"
+        className="translate-y-[1px]"
       />}
       items={tagsIncludingHidden.map(({ tag, count }) => {
         switch (tag) {
@@ -90,7 +95,7 @@ export default function PhotoGridSidebar({
       title="Cameras"
       icon={<IoMdCamera
         size={13}
-        className="text-icon translate-y-[-0.25px]"
+        className="translate-y-[-0.25px]"
       />}
       items={cameras
         .sort(sortCamerasWithCount)
@@ -103,6 +108,28 @@ export default function PhotoGridSidebar({
             prefetch={false}
             contrast="low"
             hideAppleIcon
+            badged
+          />)}
+    />
+    : null;
+
+  const recipesContent = recipes.length > 0
+    ? <HeaderList
+      title="Recipes"
+      icon={<TbChecklist
+        size={16}
+        className="translate-x-[-1px]"
+      />}
+      items={recipes
+        .sort(sortRecipesWithCount)
+        .map(({ recipe, count }) =>
+          <PhotoRecipe
+            key={recipe}
+            recipe={recipe}
+            type="text-only"
+            countOnHover={count}
+            prefetch={false}
+            contrast="low"
             badged
           />)}
     />
@@ -161,6 +188,7 @@ export default function PhotoGridSidebar({
       {SHOW_SIDEBAR_CAMERAS_FIRST
         ? <>{camerasContent}{tagsContent}</>
         : <>{tagsContent}{camerasContent}</>}
+      {recipesContent}
       {filmsContent}
       {photoStatsContent}
     </div>
