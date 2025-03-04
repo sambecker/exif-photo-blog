@@ -115,6 +115,7 @@ const FORM_METADATA = (
     label: 'recipe title',
     spellCheck: false,
     capitalize: false,
+    shouldHide: ({ make }) => make !== MAKE_FUJIFILM,
   },
   recipeData: {
     type: 'textarea',
