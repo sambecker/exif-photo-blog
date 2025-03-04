@@ -113,8 +113,8 @@ export interface PhotoSetCategory {
   tag?: string
   camera?: Camera
   simulation?: FilmSimulation
-  focal?: number
   recipe?: string
+  focal?: number
   lens?: Lens // Unimplemented as a set
 }
 

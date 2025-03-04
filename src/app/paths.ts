@@ -119,10 +119,10 @@ export const pathForPhoto = ({
         ? `${pathForCamera(camera)}/${getPhotoId(photo)}`
         : simulation
           ? `${pathForFilmSimulation(simulation)}/${getPhotoId(photo)}`
-          : focal
-            ? `${pathForFocalLength(focal)}/${getPhotoId(photo)}`
-            : recipe
-              ? `${pathForRecipe(recipe)}/${getPhotoId(photo)}`
+          : recipe
+            ? `${pathForRecipe(recipe)}/${getPhotoId(photo)}`
+            : focal
+              ? `${pathForFocalLength(focal)}/${getPhotoId(photo)}`
               : `${PREFIX_PHOTO}/${getPhotoId(photo)}`;
 
 export const pathForTag = (tag: string) =>

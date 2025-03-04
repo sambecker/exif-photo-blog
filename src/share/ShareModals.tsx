@@ -24,19 +24,26 @@ export default function ShareModals() {
   } = shareModalProps;
 
   if (photo) {
-    return <PhotoShareModal {...{photo, tag, camera, simulation, focal}} />;
+    return <PhotoShareModal {...{
+      photo,
+      tag,
+      camera,
+      simulation,
+      recipe,
+      focal,
+    }} />;
   } else if (photos) {
     const attributes = {photos, count, dateRange};
     if (tag) {
-      return <TagShareModal {...{tag, ...attributes}} />;
+      return <TagShareModal {...{ tag, ...attributes }} />;
     } else if (camera) {
-      return <CameraShareModal {...{camera, ...attributes}} />;
+      return <CameraShareModal {...{ camera, ...attributes }} />;
     } else if (simulation) {
-      return <FilmSimulationShareModal {...{simulation, ...attributes}} />;
-    } else if (focal !== undefined) {
-      return <FocalLengthShareModal {...{focal, ...attributes}} />;
+      return <FilmSimulationShareModal {...{ simulation, ...attributes }} />;
     } else if (recipe) {
-      return <RecipeShareModal {...{recipe, ...attributes}} />;
-    }
+      return <RecipeShareModal {...{ recipe, ...attributes }} />;
+    } else if (focal !== undefined) {
+      return <FocalLengthShareModal {...{ focal, ...attributes }} />;
+    } 
   }
 }

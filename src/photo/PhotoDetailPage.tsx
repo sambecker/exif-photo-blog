@@ -123,6 +123,7 @@ export default function PhotoDetailPage({
             shouldShareCamera={camera !== undefined}
             shouldShareSimulation={simulation !== undefined}
             shouldShareRecipe={recipe !== undefined}
+            shouldShareFocalLength={focal !== undefined}
             includeFavoriteInAdminMenu={includeFavoriteInAdminMenu}
           />,
         ]}
