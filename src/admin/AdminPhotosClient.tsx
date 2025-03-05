@@ -43,8 +43,8 @@ export default function AdminPhotosClient({
   return (
     <SiteGrid
       contentMain={
-        <div>
-          <div className="flex gap-4 space-y-4">
+        <div className="space-y-4">
+          <div className="flex gap-4">
             <div className="grow min-w-0">
               <PhotoUploadWithStatus
                 inputId="admin-photos"
