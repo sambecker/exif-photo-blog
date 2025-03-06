@@ -187,7 +187,7 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       ${photo.longitude},
       ${photo.filmSimulation},
       ${photo.recipeTitle},
-      ${JSON.stringify(photo.recipeData)},
+      ${photo.recipeData},
       ${photo.priorityOrder},
       ${photo.hidden},
       ${photo.takenAt},
@@ -221,7 +221,7 @@ export const updatePhoto = (photo: PhotoDbInsert) =>
     longitude=${photo.longitude},
     film_simulation=${photo.filmSimulation},
     recipe_title=${photo.recipeTitle},
-    recipe_data=${JSON.stringify(photo.recipeData)},
+    recipe_data=${photo.recipeData},
     priority_order=${photo.priorityOrder || null},
     hidden=${photo.hidden},
     taken_at=${photo.takenAt},
@@ -356,6 +356,16 @@ export const getUniqueRecipes = async () =>
         count: parseInt(count, 10),
       })))
   , 'getUniqueRecipes');
+
+export const getRecipeTitleForData = async (data: string | object) =>
+  safelyQueryPhotos(() => query(
+    // eslint-disable-next-line max-len
+    'SELECT recipe_title FROM photos WHERE hidden IS NOT TRUE AND recipe_data = $1 LIMIT 1',
+    // Legacy check on escaped, string-based JSON
+    [typeof data === 'string' ? data : JSON.stringify(data)],
+  )
+    .then(({ rows }) => rows[0]?.recipe_title as string | undefined)
+  , 'getRecipeTitleForData');
 
 export const getUniqueFocalLengths = async () =>
   safelyQueryPhotos(() => sql`

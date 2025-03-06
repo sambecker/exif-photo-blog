@@ -2,7 +2,10 @@ import {
   getExtensionFromStorageUrl,
   getIdFromStorageUrl,
 } from '@/platforms/storage';
-import { convertExifToFormData } from '@/photo/form';
+import {
+  convertExifToFormData,
+  convertFormDataToPhotoDbInsert,
+} from '@/photo/form';
 import {
   getFujifilmSimulationFromMakerNote,
 } from '@/platforms/fujifilm/simulation';
@@ -19,6 +22,7 @@ import {
   FujifilmRecipe,
   getFujifilmRecipeFromMakerNote,
 } from '@/platforms/fujifilm/recipe';
+import { getRecipeTitleForData } from './db/query';
 const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
 
@@ -192,3 +196,18 @@ export const removeGpsData = async (image: ArrayBuffer) =>
     })
     .toFormat('jpeg', { quality: PRESERVE_ORIGINAL_UPLOADS ? 95 : 80 })
     .toBuffer();
+
+export const convertFormDataToPhotoDbInsertAndLookupRecipeTitle =
+  async (...args: Parameters<typeof convertFormDataToPhotoDbInsert>):
+    Promise<ReturnType<typeof convertFormDataToPhotoDbInsert>> => {
+    const photo = convertFormDataToPhotoDbInsert(...args);
+
+    if (photo.recipeData && !photo.recipeTitle) {
+      const recipeTitle = await getRecipeTitleForData(photo.recipeData);
+      if (recipeTitle) {
+        photo.recipeTitle = recipeTitle;
+      }
+    }
+
+    return photo;
+  };

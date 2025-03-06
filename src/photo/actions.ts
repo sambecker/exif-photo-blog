@@ -15,7 +15,6 @@ import { GetPhotosOptions, areOptionsSensitive } from './db';
 import {
   FIELDS_TO_NOT_OVERWRITE_WITH_NULL_DATA_ON_SYNC,
   PhotoFormData,
-  convertFormDataToPhotoDbInsert,
   convertPhotoToFormData,
 } from './form';
 import { redirect } from 'next/navigation';
@@ -34,7 +33,11 @@ import {
   PATH_ROOT,
   pathForPhoto,
 } from '@/app/paths';
-import { blurImageFromUrl, extractImageDataFromBlobPath } from './server';
+import {
+  blurImageFromUrl,
+  convertFormDataToPhotoDbInsertAndLookupRecipeTitle,
+  extractImageDataFromBlobPath,
+} from './server';
 import { TAG_FAVS, isTagFavs } from '@/tag';
 import { convertPhotoToPhotoDbInsert, Photo } from '.';
 import { runAuthenticatedAdminServerAction } from '@/auth';
@@ -59,7 +62,8 @@ export const createPhotoAction = async (formData: FormData) =>
     const shouldStripGpsData = formData.get('shouldStripGpsData') === 'true';
     formData.delete('shouldStripGpsData');
 
-    const photo = convertFormDataToPhotoDbInsert(formData);
+    const photo =
+      await convertFormDataToPhotoDbInsertAndLookupRecipeTitle(formData);
 
     const updatedUrl = await convertUploadToPhoto({
       urlOrigin: photo.url,
@@ -160,7 +164,8 @@ export const addAllUploadsAction = async ({
             if (updatedUrl) {
               const subheadFinal = 'Adding to database';
               streamUpdate(subheadFinal);
-              const photo = convertFormDataToPhotoDbInsert(form);
+              const photo =
+                await convertFormDataToPhotoDbInsertAndLookupRecipeTitle(form);
               photo.url = updatedUrl;
               await insertPhoto(photo);
               addedUploadUrls.push(url);
@@ -185,7 +190,8 @@ export const addAllUploadsAction = async ({
 
 export const updatePhotoAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
-    const photo = convertFormDataToPhotoDbInsert(formData);
+    const photo =
+      await convertFormDataToPhotoDbInsertAndLookupRecipeTitle(formData);
 
     let urlToDelete: string | undefined;
     if (photo.hidden && photo.url.includes(photo.id)) {
@@ -368,16 +374,17 @@ export const syncPhotoAction = async (photoId: string) =>
           }
         });
 
-        const photoFormDbInsert = convertFormDataToPhotoDbInsert({
-          ...formDataFromPhoto,
-          ...formDataFromExif,
-          ...!BLUR_ENABLED && { blurData: undefined },
-          ...!photo.title && { title: atTitle },
-          ...!photo.caption && { caption: aiCaption },
-          ...photo.tags.length === 0 && { tags: aiTags },
-          ...!photo.semanticDescription &&
-            { semanticDescription: aiSemanticDescription },
-        });
+        const photoFormDbInsert =
+          await convertFormDataToPhotoDbInsertAndLookupRecipeTitle({
+            ...formDataFromPhoto,
+            ...formDataFromExif,
+            ...!BLUR_ENABLED && { blurData: undefined },
+            ...!photo.title && { title: atTitle },
+            ...!photo.caption && { caption: aiCaption },
+            ...photo.tags.length === 0 && { tags: aiTags },
+            ...!photo.semanticDescription &&
+              { semanticDescription: aiSemanticDescription },
+          });
 
         await updatePhoto(photoFormDbInsert)
           .then(async () => {
