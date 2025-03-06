@@ -1,11 +1,16 @@
 import { redirect } from 'next/navigation';
-import { getPhotoNoStore, getUniqueTagsCached } from '@/photo/cache';
+import {
+  getPhotoNoStore,
+  getUniqueRecipesCached,
+  getUniqueTagsCached,
+} from '@/photo/cache';
 import { PATH_ADMIN } from '@/app/paths';
 import PhotoEditPageClient from '@/photo/PhotoEditPageClient';
 import {
   AI_TEXT_GENERATION_ENABLED,
   BLUR_ENABLED,
   IS_PREVIEW,
+  SHOW_RECIPES,
 } from '@/app/config';
 import { blurImageFromUrl, resizeImageFromUrl } from '@/photo/server';
 import { getNextImageUrlForManipulation } from '@/platforms/next-image';
@@ -22,6 +27,10 @@ export default async function PhotoEditPage({
   if (!photo) { redirect(PATH_ADMIN); }
 
   const uniqueTags = await getUniqueTagsCached();
+
+  const uniqueRecipes = SHOW_RECIPES
+    ? await getUniqueRecipesCached()
+    : [];
 
   const hasAiTextGeneration = AI_TEXT_GENERATION_ENABLED;
   
@@ -42,6 +51,7 @@ export default async function PhotoEditPage({
     <PhotoEditPageClient {...{
       photo,
       uniqueTags,
+      uniqueRecipes,
       hasAiTextGeneration,
       imageThumbnailBase64,
       blurData,

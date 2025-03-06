@@ -120,8 +120,7 @@ export default function PhotoGridSidebar({
         size={16}
         className="translate-x-[-1px]"
       />}
-      items={recipes
-        .sort(sortRecipesWithCount)
+      items={sortRecipesWithCount(recipes)
         .map(({ recipe, count }) =>
           <PhotoRecipe
             key={recipe}

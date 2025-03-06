@@ -30,6 +30,7 @@ import { getNextImageUrlForManipulation } from '@/platforms/next-image';
 import { BLUR_ENABLED, IS_PREVIEW } from '@/app/config';
 import { PhotoDbInsert } from '..';
 import ErrorNote from '@/components/ErrorNote';
+import { convertRecipesForForm, Recipes } from '@/recipe';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -39,6 +40,7 @@ export default function PhotoForm({
   updatedExifData,
   updatedBlurData,
   uniqueTags,
+  uniqueRecipes,
   aiContent,
   shouldStripGpsData,
   onTitleChange,
@@ -50,6 +52,7 @@ export default function PhotoForm({
   updatedExifData?: Partial<PhotoFormData>
   updatedBlurData?: string
   uniqueTags?: Tags
+  uniqueRecipes?: Recipes
   aiContent?: AiContent
   shouldStripGpsData?: boolean
   onTitleChange?: (updatedTitle: string) => void
@@ -293,6 +296,7 @@ export default function PhotoForm({
         <div className="space-y-6">
           {FORM_METADATA_ENTRIES(
             convertTagsForForm(uniqueTags),
+            convertRecipesForForm(uniqueRecipes),
             aiContent !== undefined,
           )
             .map(([key, {
@@ -302,6 +306,8 @@ export default function PhotoForm({
               selectOptions,
               selectOptionsDefaultLabel,
               tagOptions,
+              tagOptionsLimit,
+              tagOptionsLimitValidationMessage,
               readOnly,
               validate,
               validateStringMaxLength,
@@ -345,6 +351,9 @@ export default function PhotoForm({
                   selectOptions={selectOptions}
                   selectOptionsDefaultLabel={selectOptionsDefaultLabel}
                   tagOptions={tagOptions}
+                  tagOptionsLimit={tagOptionsLimit}
+                  // eslint-disable-next-line max-len
+                  tagOptionsLimitValidationMessage={tagOptionsLimitValidationMessage}
                   required={required}
                   readOnly={readOnly}
                   spellCheck={spellCheck}

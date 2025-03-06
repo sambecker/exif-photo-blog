@@ -60,6 +60,8 @@ type FormMeta = {
   selectOptions?: { value: string, label: string }[]
   selectOptionsDefaultLabel?: string
   tagOptions?: AnnotatedTag[]
+  tagOptionsLimit?: number
+  tagOptionsLimitValidationMessage?: string
   shouldNotOverwriteWithNullDataOnSync?: boolean
 };
 
@@ -68,6 +70,7 @@ const STRING_MAX_LENGTH_LONG  = 1000;
 
 const FORM_METADATA = (
   tagOptions?: AnnotatedTag[],
+  recipeOptions?: AnnotatedTag[],
   aiTextGeneration?: boolean,
 ): Record<keyof PhotoFormData, FormMeta> => ({
   title: {
@@ -113,6 +116,9 @@ const FORM_METADATA = (
   },
   recipeTitle: {
     label: 'recipe title',
+    tagOptions: recipeOptions,
+    tagOptionsLimit: 1,
+    tagOptionsLimitValidationMessage: 'Photos can only have one recipe',
     spellCheck: false,
     capitalize: false,
     shouldHide: ({ make }) => make !== MAKE_FUJIFILM,

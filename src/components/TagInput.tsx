@@ -18,6 +18,8 @@ export default function TagInput({
   className,
   readOnly,
   placeholder,
+  limit,
+  limitValidationMessage,
 }: {
   id?: string
   name: string
@@ -27,6 +29,8 @@ export default function TagInput({
   className?: string
   readOnly?: boolean
   placeholder?: string
+  limit?: number
+  limitValidationMessage?: string
 }) {
   const containerRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -44,14 +48,19 @@ export default function TagInput({
     convertStringToArray(value) ?? []
   , [value]);
 
+  const hasReachedLimit = useMemo(() =>
+    limit !== undefined && selectedOptions.length >= limit
+  , [limit, selectedOptions]);
+
   const inputTextFormatted = parameterize(inputText);
   const isInputTextUnique =
     inputTextFormatted &&
     !optionValues.includes(inputTextFormatted) &&
     !selectedOptions.includes(inputTextFormatted);
 
-  const optionsFiltered = useMemo<AnnotatedTag[]>(() =>
-    (isInputTextUnique
+  const optionsFiltered = useMemo<AnnotatedTag[]>(() => hasReachedLimit
+    ? [{ value: limitValidationMessage ?? `Tag limit reached (${limit})` }]
+    : (isInputTextUnique
       ? [{ value: `${CREATE_LABEL} "${inputTextFormatted}"` }]
       : []
     ).concat(options
@@ -61,7 +70,15 @@ export default function TagInput({
           !inputTextFormatted ||
           value.includes(inputTextFormatted)
         )))
-  , [inputTextFormatted, isInputTextUnique, options, selectedOptions]);
+  , [
+    hasReachedLimit,
+    inputTextFormatted,
+    isInputTextUnique,
+    limit,
+    limitValidationMessage,
+    options,
+    selectedOptions,
+  ]);
 
   const hideMenu = useCallback((shouldBlurInput?: boolean) => {
     setShouldShowMenu(false);
@@ -88,8 +105,14 @@ export default function TagInput({
     }
 
     setSelectedOptionIndex(undefined);
-    inputRef.current?.focus();
-  }, [onChange, selectedOptions]);
+    setInputText('');
+
+    if (limit !== undefined && limit - 1 >= selectedOptions.length) {
+      hideMenu(true);
+    } else {
+      inputRef.current?.focus();
+    }
+  }, [limit, selectedOptions, onChange, hideMenu]);
 
   const removeOption = useCallback((option: string) => {
     onChange?.(selectedOptions.filter(o =>
@@ -103,7 +126,6 @@ export default function TagInput({
     if (inputText) {
       if (inputText.includes(',')) {
         addOptions(inputText.split(','));
-        setInputText('');
       } else {
         setShouldShowMenu(true);
       }
@@ -136,11 +158,15 @@ export default function TagInput({
       case 'Enter':
         // Only trap focus if there are options to select
         // otherwise allow form to submit
-        if (shouldShowMenu && optionsFiltered.length > 0) {
+        if (
+          shouldShowMenu &&
+          optionsFiltered.length > 0
+        ) {
           e.stopImmediatePropagation();
           e.preventDefault();
-          addOptions([optionsFiltered[selectedOptionIndex ?? 0].value]);
-          setInputText('');
+          if (!hasReachedLimit) {
+            addOptions([optionsFiltered[selectedOptionIndex ?? 0].value]);
+          }
         }
         break;
       case 'ArrowDown':
@@ -197,6 +223,8 @@ export default function TagInput({
     optionsFiltered,
     addOptions,
     shouldShowMenu,
+    hasReachedLimit,
+    limit,
   ]);
 
   return (
@@ -205,6 +233,7 @@ export default function TagInput({
       className="flex flex-col w-full group"
       onFocus={() => setShouldShowMenu(true)}
       onBlur={e => {
+        setInputText('');
         if (!e.currentTarget.contains(e.relatedTarget)) {
           hideMenu();
         }
@@ -258,7 +287,7 @@ export default function TagInput({
           ref={inputRef}
           type="text"
           className={clsx(
-            'grow min-w-0! p-0! -my-2 text-xl',
+            'grow min-w-0! p-0! -my-2',
             'outline-hidden border-none',
             'placeholder:text-dim placeholder:text-[14px]',
             'placeholder:translate-x-[2px]',
@@ -307,20 +336,22 @@ export default function TagInput({
                 }
                 tabIndex={0}
                 className={clsx(
-                  'text-base',
                   'group flex items-center gap-1',
-                  'cursor-pointer select-none',
                   'px-1.5 py-1 rounded-xs',
+                  'text-base select-none',
+                  hasReachedLimit ? 'cursor-not-allowed' : 'cursor-pointer',
                   'hover:bg-gray-100 dark:hover:bg-gray-800',
-                  'active:bg-gray-50 dark:active:bg-gray-900',
+                  !hasReachedLimit &&
+                    'active:bg-gray-50 dark:active:bg-gray-900',
                   'focus:bg-gray-100 dark:focus:bg-gray-800',
                   index === 0 && selectedOptionIndex === undefined &&
                     'bg-gray-100 dark:bg-gray-800',
                   'outline-hidden',
                 )}
                 onClick={() => {
-                  addOptions([value]);
-                  setInputText('');
+                  if (!hasReachedLimit) {
+                    addOptions([value]);
+                  }
                 }}
                 onFocus={() => setSelectedOptionIndex(index)}
               >

@@ -19,6 +19,8 @@ export default function FieldSetWithStatus({
   selectOptions,
   selectOptionsDefaultLabel,
   tagOptions,
+  tagOptionsLimit,
+  tagOptionsLimitValidationMessage,
   placeholder,
   loading,
   required,
@@ -40,6 +42,8 @@ export default function FieldSetWithStatus({
   selectOptions?: { value: string, label: string }[]
   selectOptionsDefaultLabel?: string
   tagOptions?: AnnotatedTag[]
+  tagOptionsLimit?: number
+  tagOptionsLimitValidationMessage?: string
   placeholder?: string
   loading?: boolean
   required?: boolean
@@ -133,6 +137,8 @@ export default function FieldSetWithStatus({
               className={clsx(Boolean(error) && 'error')}
               readOnly={readOnly || pending || loading}
               placeholder={placeholder}
+              limit={tagOptionsLimit}
+              limitValidationMessage={tagOptionsLimitValidationMessage}
             />
             : type === 'textarea'
               ? <textarea

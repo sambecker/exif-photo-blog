@@ -1,7 +1,11 @@
 import { absolutePathForRecipe, absolutePathForRecipeImage } from '@/app/paths';
 import { descriptionForPhotoSet, Photo, photoQuantityText } from '@/photo';
 import { PhotoDateRange } from '@/photo';
-import { capitalizeWords } from '@/utility/string';
+import {
+  capitalizeWords,
+  formatCount,
+  formatCountDescriptive,
+} from '@/utility/string';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { FilmSimulation } from '@/simulation';
 
@@ -64,8 +68,13 @@ export const generateMetaForRecipe = (
 export const photoHasRecipe = (photo?: Photo) =>
   photo?.filmSimulation && photo?.recipeData;
 
-export const sortRecipesWithCount = (
-  a: RecipeWithCount,
-  b: RecipeWithCount,
-) =>
-  a.recipe.localeCompare(b.recipe);
+export const sortRecipesWithCount = (recipes: Recipes = []) =>
+  recipes.sort((a, b) => a.recipe.localeCompare(b.recipe));
+
+export const convertRecipesForForm = (recipes: Recipes = []) =>
+  sortRecipesWithCount(recipes)
+    .map(({ recipe, count }) => ({
+      value: recipe,
+      annotation: formatCount(count),
+      annotationAria: formatCountDescriptive(count),
+    }));

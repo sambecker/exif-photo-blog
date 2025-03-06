@@ -16,6 +16,7 @@ import {
   getPhotosMeta,
   getUniqueFocalLengths,
   getUniqueLenses,
+  getUniqueRecipes,
 } from '@/photo/db/query';
 import { GetPhotosOptions } from './db';
 import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
@@ -38,10 +39,11 @@ import { createLensKey } from '@/lens';
 const KEY_PHOTOS            = 'photos';
 const KEY_PHOTO             = 'photo';
 // Field keys
-const KEY_TAGS              = 'tags';
 const KEY_CAMERAS           = 'cameras';
 const KEY_LENSES            = 'lenses';
+const KEY_TAGS              = 'tags';
 const KEY_FILM_SIMULATIONS  = 'film-simulations';
+const KEY_RECIPES           = 'recipes';
 const KEY_FOCAL_LENGTHS     = 'focal-lengths';
 // Type keys
 const KEY_COUNT             = 'count';
@@ -212,6 +214,12 @@ export const getUniqueFilmSimulationsCached =
   unstable_cache(
     getUniqueFilmSimulations,
     [KEY_PHOTOS, KEY_FILM_SIMULATIONS],
+  );
+
+export const getUniqueRecipesCached =
+  unstable_cache(
+    getUniqueRecipes,
+    [KEY_PHOTOS, KEY_RECIPES],
   );
 
 export const getUniqueFocalLengthsCached =
