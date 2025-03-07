@@ -2,6 +2,7 @@
 
 import LoaderButton from '@/components/primitives/LoaderButton';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
+import Tooltip from '@/components/Tooltip';
 import { getExifDataAction } from '@/photo/actions';
 import { PhotoFormData } from '@/photo/form';
 import { clsx } from 'clsx/lite';
@@ -18,23 +19,27 @@ export default function ExifCaptureButton({
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <LoaderButton
-      title="Update photo from original file"
-      isLoading={isLoading}
-      onClick={() => {
-        setIsLoading(true);
-        getExifDataAction(photoUrl)
-          .then(onSync)
-          .finally(() => setIsLoading(false));
-      }}
-      icon={<LuDatabaseBackup
-        size={16}
-        className={clsx(
-          'translate-y-[0.5px] translate-x-[0.5px]',
-          'sm:translate-x-[-0.5px]',
-        )} />}
+    <Tooltip
+      content="Refresh form with EXIF data from original file"
+      supportMobile={false}
     >
-      EXIF
-    </LoaderButton>
+      <LoaderButton
+        isLoading={isLoading}
+        onClick={() => {
+          setIsLoading(true);
+          getExifDataAction(photoUrl)
+            .then(onSync)
+            .finally(() => setIsLoading(false));
+        }}
+        icon={<LuDatabaseBackup
+          size={16}
+          className={clsx(
+            'translate-y-[0.5px] translate-x-[0.5px]',
+            'sm:translate-x-[-0.5px]',
+          )} />}
+      >
+        EXIF
+      </LoaderButton>
+    </Tooltip>
   );
 }

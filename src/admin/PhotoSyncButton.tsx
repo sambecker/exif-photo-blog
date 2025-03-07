@@ -3,6 +3,7 @@ import { syncPhotoAction } from '@/photo/actions';
 import IconGrSync from '@/app/IconGrSync';
 import { toastSuccess } from '@/toast';
 import { ComponentProps, useState } from 'react';
+import Tooltip from '@/components/Tooltip';
 
 export default function PhotoSyncButton({
   photoId,
@@ -33,29 +34,33 @@ export default function PhotoSyncButton({
   confirmText.push('This action cannot be undone.');
 
   return (
-    <LoaderButton
-      title="Update photo from original file"
-      className={className}
-      icon={<IconGrSync
-        className="translate-y-[0.5px] translate-x-[0.5px]"
-      />}
-      onClick={() => {
-        if (!shouldConfirm || window.confirm(confirmText.join(' '))) {
-          setIsSyncing(true);
-          syncPhotoAction(photoId)
-            .then(() => {
-              onSyncComplete?.();
-              if (shouldToast) {
-                toastSuccess(photoTitle
-                  ? `"${photoTitle}" data synced`
-                  : 'Data synced');
-              }
-            })
-            .finally(() => setIsSyncing(false));
-        }
-      }}
-      isLoading={isSyncing || isSyncingExternal}
-      disabled={disabled}
-    />
+    <Tooltip
+      content="Regenerate photo data"
+      supportMobile={false}
+    >
+      <LoaderButton
+        className={className}
+        icon={<IconGrSync
+          className="translate-y-[0.5px] translate-x-[0.5px]"
+        />}
+        onClick={() => {
+          if (!shouldConfirm || window.confirm(confirmText.join(' '))) {
+            setIsSyncing(true);
+            syncPhotoAction(photoId)
+              .then(() => {
+                onSyncComplete?.();
+                if (shouldToast) {
+                  toastSuccess(photoTitle
+                    ? `"${photoTitle}" data synced`
+                    : 'Data synced');
+                }
+              })
+              .finally(() => setIsSyncing(false));
+          }
+        }}
+        isLoading={isSyncing || isSyncingExternal}
+        disabled={disabled}
+      />
+    </Tooltip>
   );
 }

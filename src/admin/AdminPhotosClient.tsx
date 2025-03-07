@@ -2,9 +2,6 @@
 
 import { clsx } from 'clsx/lite';
 import SiteGrid from '@/components/SiteGrid';
-import {
-  AI_TEXT_GENERATION_ENABLED,
-} from '@/app/config';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import AdminPhotosTableInfinite from '@/admin/AdminPhotosTableInfinite';
 import PathLoaderButton from '@/components/primitives/PathLoaderButton';
@@ -23,6 +20,7 @@ export default function AdminPhotosClient({
   photosCountOutdated,
   blobPhotoUrls,
   shouldResize,
+  hasAiTextGeneration,
   onLastUpload,
   infiniteScrollInitial,
   infiniteScrollMultiple,
@@ -33,6 +31,7 @@ export default function AdminPhotosClient({
   photosCountOutdated: number
   blobPhotoUrls: StorageListResponse
   shouldResize: boolean
+  hasAiTextGeneration: boolean
   onLastUpload: () => Promise<void>
   infiniteScrollInitial: number
   infiniteScrollMultiple: number
@@ -89,14 +88,14 @@ export default function AdminPhotosClient({
           <div className="space-y-[6px] sm:space-y-[10px]">
             <AdminPhotosTable
               photos={photos}
-              hasAiTextGeneration={AI_TEXT_GENERATION_ENABLED}
+              hasAiTextGeneration={hasAiTextGeneration}
               timezone={timezone}
             />
             {photosCount > photos.length &&
               <AdminPhotosTableInfinite
                 initialOffset={infiniteScrollInitial}
                 itemsPerPage={infiniteScrollMultiple}
-                hasAiTextGeneration={AI_TEXT_GENERATION_ENABLED}
+                hasAiTextGeneration={hasAiTextGeneration}
                 timezone={timezone}
               />}
           </div>

@@ -10,14 +10,16 @@ import useClickInsideOutside from '@/utility/useClickInsideOutside';
 export default function TooltipPrimitive({
   content,
   className,
-  classNameTrigger,
+  classNameTrigger: classNameTriggerProp,
   sideOffset = 10,
+  supportMobile = true,
   children,
 }: {
   content?: ReactNode
   className?: string
   classNameTrigger?: string
   sideOffset?: number
+  supportMobile?: boolean
   children: ReactNode
 }) {
   const refTrigger = useRef<HTMLButtonElement>(null);
@@ -27,6 +29,8 @@ export default function TooltipPrimitive({
 
   const supportsHover = useSupportsHover();
 
+  const includeButton = supportMobile && !supportsHover;
+
   useClickInsideOutside({
     htmlElements: [refTrigger, refContent],
     onClickOutside: () => {
@@ -34,17 +38,23 @@ export default function TooltipPrimitive({
     },
   });
 
+  const classNameTrigger = clsx('link cursor-default', classNameTriggerProp);
+
   return (
     <Tooltip.Provider delayDuration={100}>
       <Tooltip.Root open={!supportsHover ? isOpen : undefined}>
         <Tooltip.Trigger asChild>
-          <button
-            ref={refTrigger}
-            onClick={!supportsHover ? () => setIsOpen(!isOpen) : undefined}
-            className={clsx('link cursor-default', classNameTrigger)}
-          >
-            {children}
-          </button>
+          {includeButton
+            ? <button
+              ref={refTrigger}
+              onClick={() => setIsOpen(!isOpen)}
+              className={classNameTrigger}
+            >
+              {children}
+            </button>
+            : <span className={classNameTrigger}>
+              {children}
+            </span>}
         </Tooltip.Trigger>
         <Tooltip.Portal >
           <Tooltip.Content
