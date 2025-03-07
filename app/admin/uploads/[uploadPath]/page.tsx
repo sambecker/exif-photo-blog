@@ -1,7 +1,7 @@
 import { PATH_ADMIN } from '@/app/paths';
 import { extractImageDataFromBlobPath } from '@/photo/server';
 import { redirect } from 'next/navigation';
-import { getUniqueTagsCached } from '@/photo/cache';
+import { getUniqueRecipesCached, getUniqueTagsCached } from '@/photo/cache';
 import UploadPageClient from '@/photo/UploadPageClient';
 import {
   AI_TEXT_AUTO_GENERATED_FIELDS,
@@ -9,6 +9,7 @@ import {
   BLUR_ENABLED,
 } from '@/app/config';
 import ErrorNote from '@/components/ErrorNote';
+import { getRecipeTitleForData } from '@/photo/db/query';
 
 export const maxDuration = 60;
 
@@ -40,7 +41,21 @@ export default async function UploadPage({ params }: Params) {
     redirect(PATH_ADMIN);
   }
 
-  const uniqueTags = await getUniqueTagsCached();
+  const [
+    uniqueTags,
+    uniqueRecipes,
+    recipeTitle,
+  ] = await Promise.all([
+    getUniqueTagsCached(),
+    getUniqueRecipesCached(),
+    formDataFromExif?.recipeData
+      ? getRecipeTitleForData(formDataFromExif.recipeData)
+      : undefined,
+  ]);
+
+  if (formDataFromExif && recipeTitle) {
+    formDataFromExif.recipeTitle = recipeTitle;
+  }
 
   const hasAiTextGeneration = AI_TEXT_GENERATION_ENABLED;
 
@@ -52,6 +67,7 @@ export default async function UploadPage({ params }: Params) {
         blobId,
         formDataFromExif,
         uniqueTags,
+        uniqueRecipes,
         hasAiTextGeneration,
         textFieldsToAutoGenerate,
         imageThumbnailBase64,
