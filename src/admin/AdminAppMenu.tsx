@@ -168,6 +168,7 @@ export default function AdminAppMenu({
         className,
       )}
       buttonClassName={clsx(
+        'p-0!',
         'w-full h-full',
         'flex items-center justify-center',
         'hover:bg-transparent dark:hover:bg-transparent',
