@@ -4,11 +4,11 @@ import LoaderButton from '@/components/primitives/LoaderButton';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import { getExifDataAction } from '@/photo/actions';
 import { PhotoFormData } from '@/photo/form';
-import IconGrSync from '@/app/IconGrSync';
 import { clsx } from 'clsx/lite';
 import { ComponentProps, useState } from 'react';
+import { LuDatabaseBackup } from 'react-icons/lu';
 
-export default function ExifSyncButton({
+export default function ExifCaptureButton({
   photoUrl,
   onSync,
 }: {
@@ -27,7 +27,8 @@ export default function ExifSyncButton({
           .then(onSync)
           .finally(() => setIsLoading(false));
       }}
-      icon={<IconGrSync
+      icon={<LuDatabaseBackup
+        size={16}
         className={clsx(
           'translate-y-[0.5px] translate-x-[0.5px]',
           'sm:translate-x-[-0.5px]',
