@@ -233,8 +233,8 @@ export default function TagInput({
       className="flex flex-col w-full group"
       onFocus={() => setShouldShowMenu(true)}
       onBlur={e => {
-        setInputText('');
         if (!e.currentTarget.contains(e.relatedTarget)) {
+          setInputText('');
           hideMenu();
         }
       }}
