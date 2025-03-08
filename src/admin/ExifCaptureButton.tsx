@@ -21,7 +21,7 @@ export default function ExifCaptureButton({
   return (
     <Tooltip
       content="Refresh form with EXIF data from original file"
-      supportMobile={false}
+      desktopOnly
     >
       <LoaderButton
         isLoading={isLoading}

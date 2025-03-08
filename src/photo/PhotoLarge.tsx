@@ -27,6 +27,7 @@ import {
   ALLOW_PUBLIC_DOWNLOADS,
   SHOW_TAKEN_AT_TIME,
   SHOW_RECIPES,
+  SHOW_FILM_SIMULATIONS,
 } from '@/app/config';
 import AdminPhotoMenuClient from '@/admin/AdminPhotoMenuClient';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
@@ -325,33 +326,47 @@ export default function PhotoLarge({
                   <li>{photo.exposureCompensationFormatted ?? '0ev'}</li>
                 </ul>
                 {(
-                  (showSimulation && photo.filmSimulation) ||
-                  (SHOW_RECIPES && showRecipe && photo.recipeData)
+                  (
+                    SHOW_FILM_SIMULATIONS &&
+                    showSimulation &&
+                    photo.filmSimulation
+                  ) ||
+                  (SHOW_RECIPES && photo.recipeData)
                 ) &&
                   <div className="flex items-center gap-2 *:w-auto">
-                    {showSimulation && photo.filmSimulation &&
+                    {(
+                      SHOW_FILM_SIMULATIONS &&
+                      showSimulation &&
+                      photo.filmSimulation
+                    ) &&
                       <PhotoFilmSimulation
                         simulation={photo.filmSimulation}
                         prefetch={prefetchRelatedLinks}
                       />}
                     {SHOW_RECIPES && photo.recipeData &&
-                      <button
-                        ref={refRecipeButton}
-                        title="Fujifilm Recipe"
-                        onClick={toggleRecipe}
-                        className={clsx(
-                          'text-medium',
-                          'border-medium rounded-md',
-                          'px-[4px] py-[2.5px] my-[-2.5px]',
-                          'hover:bg-dim active:bg-main',
-                        )}>
-                        {shouldShowRecipe
-                          ? <IoCloseSharp size={15} />
-                          : <TbChecklist
-                            className="translate-x-[0.5px]"
-                            size={15}
-                          />}
-                      </button>} 
+                      <Tooltip
+                        content="Fujifilm Recipe"
+                        desktopOnly
+                      >
+                        <button
+                          ref={refRecipeButton}
+                          title="Fujifilm Recipe"
+                          onClick={toggleRecipe}
+                          className={clsx(
+                            'text-medium',
+                            'border-medium rounded-md',
+                            'px-[4px] py-[2.5px] my-[-3px]',
+                            'translate-y-[2px]',
+                            'hover:bg-dim active:bg-main',
+                          )}>
+                          {shouldShowRecipe
+                            ? <IoCloseSharp size={15} />
+                            : <TbChecklist
+                              className="translate-x-[0.5px]"
+                              size={15}
+                            />}
+                        </button>
+                      </Tooltip>} 
                   </div>}
               </>}
             <div className={clsx(

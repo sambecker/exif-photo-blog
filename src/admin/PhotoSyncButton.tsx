@@ -36,7 +36,7 @@ export default function PhotoSyncButton({
   return (
     <Tooltip
       content="Regenerate photo data"
-      supportMobile={false}
+      desktopOnly
     >
       <LoaderButton
         className={className}
