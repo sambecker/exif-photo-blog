@@ -506,7 +506,7 @@ export const getOutdatedPhotos = () => safelyQueryPhotos(
   () => query(`
     SELECT * FROM photos
     ${outdatedWhereClause}
-    ORDER BY created_at ASC
+    ORDER BY created_at DESC
     LIMIT 1000
   `,
   outdatedValues,
