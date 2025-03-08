@@ -11,8 +11,8 @@ import { TAG_HIDDEN } from '@/tag';
 import HiddenHeader from '@/tag/HiddenHeader';
 import FocalLengthHeader from '@/focal/FocalLengthHeader';
 import PhotoHeader from './PhotoHeader';
-import { JSX } from 'react';
 import RecipeHeader from '@/recipe/RecipeHeader';
+import { ReactNode } from 'react';
 
 export default function PhotoDetailPage({
   photo,
@@ -38,7 +38,7 @@ export default function PhotoDetailPage({
   shouldShare?: boolean
   includeFavoriteInAdminMenu?: boolean
 } & PhotoSetCategory) {
-  let customHeader: JSX.Element | undefined;
+  let customHeader: ReactNode | undefined;
 
   if (tag) {
     customHeader = tag === TAG_HIDDEN

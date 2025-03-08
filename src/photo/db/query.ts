@@ -69,6 +69,7 @@ const createPhotosTable = () =>
 const safelyQueryPhotos = async <T>(
   callback: () => Promise<T>,
   debugMessage: string,
+  options?: GetPhotosOptions,
 ): Promise<T> => {
   let result: T;
 
@@ -122,7 +123,10 @@ const safelyQueryPhotos = async <T>(
   if (ADMIN_SQL_DEBUG_ENABLED && debugMessage) {
     const time =
       (((new Date()).getTime() - start.getTime()) / 1000).toFixed(2);
-    console.log(`Executing sql query: ${debugMessage} (${time} seconds)`);
+    console.log(
+      `Executing sql query: ${debugMessage} (${time} seconds)`,
+      options ? { options } : undefined,
+    );
   }
 
   return result;
@@ -410,7 +414,11 @@ export const getPhotos = async (options: GetPhotosOptions = {}) =>
 
     return query(sql.join(' '), values)
       .then(({ rows }) => rows.map(parsePhotoFromDb));
-  }, 'getPhotos');
+  },
+  'getPhotos',
+  // Seemingly necessary to pass `options` for expected cache behavior
+  options,
+  );
 
 export const getPhotosNearId = async (
   photoId: string,

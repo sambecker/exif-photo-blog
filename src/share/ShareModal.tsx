@@ -4,7 +4,7 @@ import Modal from '@/components/Modal';
 import { TbPhotoShare } from 'react-icons/tb';
 import { clsx } from 'clsx/lite';
 import { BiCopy } from 'react-icons/bi';
-import { JSX, ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { shortenUrl } from '@/utility/url';
 import { toastSuccess } from '@/toast';
 import { PiXLogo } from 'react-icons/pi';
@@ -35,7 +35,7 @@ export default function ShareModal({
   }, [setShouldRespondToKeyboardCommands]);
 
   const renderIcon = (
-    icon: JSX.Element,
+    icon: ReactNode,
     action: () => void,
     embedded?: boolean,
   ) =>

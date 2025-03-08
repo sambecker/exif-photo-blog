@@ -1,5 +1,4 @@
 import {
-  INFINITE_SCROLL_FEED_INITIAL,
   INFINITE_SCROLL_FEED_MULTIPLE,
   Photo,
 } from '.';
@@ -18,7 +17,7 @@ export default function PhotoFeedPage({
       <PhotosLarge {...{ photos }} />
       {photosCount > photos.length &&
         <PhotosLargeInfinite
-          initialOffset={INFINITE_SCROLL_FEED_INITIAL}
+          initialOffset={photos.length}
           itemsPerPage={INFINITE_SCROLL_FEED_MULTIPLE}
         />}
     </div>

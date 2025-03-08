@@ -5,7 +5,7 @@ import PhotoGrid from './PhotoGrid';
 import PhotoGridInfinite from './PhotoGridInfinite';
 import { clsx } from 'clsx/lite';
 import AnimateItems from '@/components/AnimateItems';
-import { JSX, ComponentProps, useCallback, useState } from 'react';
+import { ComponentProps, useCallback, useState, ReactNode } from 'react';
 
 export default function PhotoGridContainer({
   cacheKey,
@@ -23,8 +23,8 @@ export default function PhotoGridContainer({
 }: {
   cacheKey: string
   count: number
-  header?: JSX.Element
-  sidebar?: JSX.Element
+  header?: ReactNode
+  sidebar?: ReactNode
 } & ComponentProps<typeof PhotoGrid>) {
   const [
     shouldAnimateDynamicItems,
@@ -33,8 +33,6 @@ export default function PhotoGridContainer({
 
   const onAnimationComplete = useCallback(() =>
     setShouldAnimateDynamicItems(true), []);
-
-  const initialOffset = photos.length;
 
   return (
     <SiteGrid
@@ -59,10 +57,10 @@ export default function PhotoGridContainer({
             onAnimationComplete,
             canSelect,
           }} />
-          {count > initialOffset &&
+          {count > photos.length &&
             <PhotoGridInfinite {...{
               cacheKey,
-              initialOffset,
+              initialOffset: photos.length,
               canStart: shouldAnimateDynamicItems,
               tag,
               camera,

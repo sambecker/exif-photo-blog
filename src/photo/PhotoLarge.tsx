@@ -356,7 +356,7 @@ export default function PhotoLarge({
                             'text-medium',
                             'border-medium rounded-md',
                             'px-[4px] py-[2.5px] my-[-3px]',
-                            'translate-y-[2px]',
+                            'translate-y-[1.5px]',
                             'hover:bg-dim active:bg-main',
                           )}>
                           {shouldShowRecipe

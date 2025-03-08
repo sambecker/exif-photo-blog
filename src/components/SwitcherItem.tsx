@@ -1,6 +1,6 @@
 import { clsx } from 'clsx/lite';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/app/config';
-import { JSX } from 'react';
+import { ReactNode } from 'react';
 import Spinner from './Spinner';
 import LinkWithLoader from './LinkWithLoader';
 
@@ -15,7 +15,7 @@ export default function SwitcherItem({
   noPadding,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
 }: {
-  icon: JSX.Element
+  icon: ReactNode
   title?: string
   href?: string
   className?: string

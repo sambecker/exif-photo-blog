@@ -1,5 +1,5 @@
 import { clsx } from 'clsx/lite';
-import { HTMLAttributes, JSX, RefObject } from 'react';
+import { HTMLAttributes, ReactNode, RefObject } from 'react';
 
 /*
   MAX WIDTHS
@@ -22,8 +22,8 @@ export default function SiteGrid({
 }: {
   containerRef?: RefObject<HTMLDivElement | null>
   className?: string
-  contentMain: JSX.Element
-  contentSide?: JSX.Element
+  contentMain: ReactNode
+  contentSide?: ReactNode
   sideFirstOnMobile?: boolean
   sideHiddenOnMobile?: boolean
 } & HTMLAttributes<HTMLDivElement>) {
