@@ -11,7 +11,7 @@ import { HiMiniArrowsUpDown } from 'react-icons/hi2';
 import { HiOutlinePhotograph } from 'react-icons/hi';
 import { MdAspectRatio } from 'react-icons/md';
 import { PiWarningBold } from 'react-icons/pi';
-import { TbCone, TbSparkles } from 'react-icons/tb';
+import { TbChecklist, TbCone, TbSparkles } from 'react-icons/tb';
 import { BiGitBranch, BiGitCommit, BiLogoGithub } from 'react-icons/bi';
 import {
   TEMPLATE_REPO_BRANCH,
@@ -21,6 +21,7 @@ import {
   VERCEL_GIT_COMMIT_MESSAGE,
   TEMPLATE_REPO_URL_FORK,
   TEMPLATE_REPO_URL_README,
+  CATEGORY_VISIBILITY,
 } from '@/app/config';
 import {
   AdminAppInsights,
@@ -89,6 +90,7 @@ export default function AdminAppInsightsClient({
     photosCountOutdated,
     tagsCount,
     camerasCount,
+    recipesCount,
     filmSimulationsCount,
     focalLengthsCount,
     dateRange,
@@ -134,10 +136,10 @@ export default function AdminAppInsightsClient({
                 className={TEXT_COLOR_WARNING}
               />}
               content={<>
-                Could not analyze source code
+                <span>Could not analyze source code</span>
                 <Tooltip
                   content="Could not connect to GitHub API. Try refreshing."
-                  classNameTrigger="translate-y-[4.5px] ml-2 h-3"
+                  classNameTrigger="translate-y-[-1.5px] ml-2 h-3"
                 />
               </>}
             />}
@@ -357,8 +359,8 @@ export default function AdminAppInsightsClient({
                 showing cameras first in the sidebar by setting
                 {' '}
                 <EnvVar
-                  variable="SHOW_SIDEBAR_CAMERAS_FIRST"
-                  value="1"
+                  variable="NEXT_PUBLIC_CATEGORY_VISIBILITY"
+                  value="cameras, tags, recipes, films"
                   trailingContent="."
                 />
               </>}
@@ -411,30 +413,52 @@ export default function AdminAppInsightsClient({
             {photosCountHidden > 0 && ` (${photosCountHidden} hidden)`}
           </>}
         />
-        <ScoreCardRow
-          icon={<FaTag
-            size={12}
-            className="translate-y-[3px]"
-          />}
-          content={pluralize(tagsCount, 'tag')}
-        />
-        <ScoreCardRow
-          icon={<FaCamera
-            size={13}
-            className="translate-y-[2px]"
-          />}
-          content={pluralize(camerasCount, 'camera')}
-        />
-        {filmSimulationsCount > 0 &&
-          <ScoreCardRow
-            icon={<span className="inline-flex w-3">
-              <PhotoFilmSimulationIcon
-                className="shrink-0 translate-x-[-1px] translate-y-[-0.5px]"
-                height={18}
-              />
-            </span>}
-            content={pluralize(filmSimulationsCount, 'film simulation')}
-          />}
+        {CATEGORY_VISIBILITY.map(category => {
+          switch (category) {
+          case 'tags':
+            return <ScoreCardRow
+              key={category}
+              icon={<FaTag
+                size={12}
+                className="translate-y-[3px]"
+              />}
+              content={pluralize(tagsCount, 'tag')}
+            />;
+          case 'cameras':
+            return <ScoreCardRow
+              key={category}
+              icon={<FaCamera
+                size={13}
+                className="translate-y-[2px]"
+              />}
+              content={pluralize(camerasCount, 'camera')}
+            />;
+          case 'recipes':
+            if (recipesCount > 0) {
+              return <ScoreCardRow
+                key={category}
+                icon={<TbChecklist
+                  size={18}
+                  className="translate-y-[-0.5px]"
+                />}
+                content={pluralize(recipesCount, 'recipe')}
+              />;
+            }
+          case 'films':
+            if (filmSimulationsCount > 0) {
+              return <ScoreCardRow
+                key={category}
+                icon={<span className="inline-flex w-3">
+                  <PhotoFilmSimulationIcon
+                    className="shrink-0 translate-x-[-2px] translate-y-[-0.5px]"
+                    height={18}
+                  />
+                </span>}
+                content={pluralize(filmSimulationsCount, 'film simulation')}
+              />;
+            }
+          }
+        })}
         <ScoreCardRow
           icon={<TbCone className="rotate-[270deg] translate-x-[-2px]" />}
           content={pluralize(focalLengthsCount, 'focal length')}

@@ -15,7 +15,7 @@ import FavsTag from '../tag/FavsTag';
 import { useAppState } from '@/state/AppState';
 import { useMemo } from 'react';
 import HiddenTag from '@/tag/HiddenTag';
-import { SHOW_SIDEBAR_CAMERAS_FIRST, SITE_ABOUT } from '@/app/config';
+import { CATEGORY_VISIBILITY, SITE_ABOUT } from '@/app/config';
 import {
   htmlHasBrParagraphBreaks,
   safelyParseFormattedHtml,
@@ -184,11 +184,14 @@ export default function PhotoGridSidebar({
           }}
         />]}
       />}
-      {SHOW_SIDEBAR_CAMERAS_FIRST
-        ? <>{camerasContent}{tagsContent}</>
-        : <>{tagsContent}{camerasContent}</>}
-      {recipesContent}
-      {filmsContent}
+      {CATEGORY_VISIBILITY.map(category => {
+        switch (category) {
+        case 'cameras': return camerasContent;
+        case 'tags': return tagsContent;
+        case 'recipes': return recipesContent;
+        case 'films': return filmsContent;
+        }
+      })}
       {photoStatsContent}
     </div>
   );

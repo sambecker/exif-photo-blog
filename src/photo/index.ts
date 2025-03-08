@@ -1,6 +1,4 @@
-import { Camera } from '@/camera';
 import { formatFocalLength } from '@/focal';
-import { Lens } from '@/lens';
 import { getNextImageUrlForRequest } from '@/platforms/next-image';
 import { FilmSimulation } from '@/simulation';
 import {
@@ -107,21 +105,6 @@ export interface Photo extends Omit<PhotoDb, 'recipeData'> {
   exposureCompensationFormatted?: string
   takenAtNaiveFormatted: string
   recipeData?: FujifilmRecipe
-}
-
-export interface PhotoSetCategory {
-  tag?: string
-  camera?: Camera
-  simulation?: FilmSimulation
-  recipe?: string
-  focal?: number
-  lens?: Lens // Unimplemented as a set
-}
-
-export interface PhotoSetAttributes {
-  photos: Photo[]
-  count?: number
-  dateRange?: PhotoDateRange
 }
 
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {

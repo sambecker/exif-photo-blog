@@ -50,6 +50,7 @@ export interface PhotoStats {
   photosCountOutdated: number
   tagsCount: number
   camerasCount: number
+  recipesCount: number
   filmSimulationsCount: number
   focalLengthsCount: number
   dateRange?: PhotoDateRange

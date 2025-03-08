@@ -4,10 +4,10 @@ import { clsx } from 'clsx/lite';
 import {
   Photo,
   PhotoDateRange,
-  PhotoSetCategory,
   dateRangeForPhotos,
   titleForPhoto,
 } from '.';
+import { PhotoSetCategory } from './set';
 import ShareButton from '@/share/ShareButton';
 import AnimateItems from '@/components/AnimateItems';
 import { ReactNode } from 'react';

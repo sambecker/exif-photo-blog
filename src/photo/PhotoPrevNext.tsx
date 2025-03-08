@@ -3,10 +3,10 @@
 import { useEffect } from 'react';
 import {
   Photo,
-  PhotoSetCategory,
   getNextPhoto,
   getPreviousPhoto,
 } from '@/photo';
+import { PhotoSetCategory } from './set';
 import PhotoLink from './PhotoLink';
 import { useRouter } from 'next/navigation';
 import { pathForPhoto } from '@/app/paths';

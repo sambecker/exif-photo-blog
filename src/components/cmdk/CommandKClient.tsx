@@ -23,6 +23,9 @@ import {
   PATH_GRID_INFERRED,
   PATH_ROOT,
   PATH_SIGN_IN,
+  pathForCamera,
+  pathForFilmSimulation,
+  pathForFocalLength,
   pathForPhoto,
   pathForTag,
 } from '../../app/paths';
@@ -40,19 +43,25 @@ import { RiToolsFill } from 'react-icons/ri';
 import { BiLockAlt, BiSolidUser } from 'react-icons/bi';
 import { HiDocumentText } from 'react-icons/hi';
 import { signOutAction } from '@/auth/actions';
-import { TbPhoto } from 'react-icons/tb';
+import { TbChecklist, TbCone, TbPhoto } from 'react-icons/tb';
 import { getKeywordsForPhoto, titleForPhoto } from '@/photo';
 import PhotoDate from '@/photo/PhotoDate';
 import PhotoSmall from '@/photo/PhotoSmall';
 import { FaCheck } from 'react-icons/fa6';
-import { Tags, addHiddenToTags, formatTag } from '@/tag';
+import { addHiddenToTags, formatTag } from '@/tag';
 import { FaTag } from 'react-icons/fa';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 import CommandKItem from './CommandKItem';
-import { GRID_HOMEPAGE_ENABLED } from '@/app/config';
+import { CATEGORY_VISIBILITY, GRID_HOMEPAGE_ENABLED } from '@/app/config';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import InsightsIndicatorDot from '@/admin/insights/InsightsIndicatorDot';
+import { PhotoSetCategories } from '@/photo/set';
+import { formatCameraText } from '@/camera';
+import { IoMdCamera } from 'react-icons/io';
+import { labelForFilmSimulation } from '@/platforms/fujifilm/simulation';
+import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
+import { formatFocalLength } from '@/focal';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -70,7 +79,7 @@ type CommandKItem = {
   action?: () => void | Promise<void>
 }
 
-export type CommandKSection = {
+type CommandKSection = {
   heading: string
   accessory?: ReactNode
   items: CommandKItem[]
@@ -88,15 +97,16 @@ const renderToggle = (
 
 export default function CommandKClient({
   tags,
-  serverSections = [],
+  cameras,
+  recipes,
+  simulations,
+  focalLengths,
   showDebugTools,
   footer,
 }: {
-  tags: Tags
-  serverSections?: CommandKSection[]
   showDebugTools?: boolean
   footer?: string
-}) {
+} & PhotoSetCategories) {
   const pathname = usePathname();
 
   const {
@@ -234,19 +244,73 @@ export default function CommandKClient({
     addHiddenToTags(tags, photosCountHidden)
   , [tags, photosCountHidden]);
 
-  const SECTION_TAGS: CommandKSection = {
-    heading: 'Tags',
-    accessory: <FaTag
-      size={10}
-      className="translate-x-[1px] translate-y-[0.75px]"
-    />,
-    items: tagsIncludingHidden.map(({ tag, count }) => ({
-      label: formatTag(tag),
-      annotation: formatCount(count),
-      annotationAria: formatCountDescriptive(count),
-      path: pathForTag(tag),
-    })),
-  };
+  const categorySections: CommandKSection[] = useMemo(() =>
+    CATEGORY_VISIBILITY
+      .map(category => {
+        switch (category) {
+        case 'tags': return {
+          heading: 'Tags',
+          accessory: <FaTag
+            size={10}
+            className="translate-x-[1px] translate-y-[0.75px]"
+          />,
+          items: tagsIncludingHidden.map(({ tag, count }) => ({
+            label: formatTag(tag),
+            annotation: formatCount(count),
+            annotationAria: formatCountDescriptive(count),
+            path: pathForTag(tag),
+          })),
+        };
+        case 'cameras': return {
+          heading: 'Cameras',
+          accessory: <IoMdCamera />,
+          items: cameras.map(({ camera, count }) => ({
+            label: formatCameraText(camera),
+            annotation: formatCount(count),
+            annotationAria: formatCountDescriptive(count),
+            path: pathForCamera(camera),
+          })),
+        };
+        case 'recipes': return {
+          heading: 'Recipes',
+          accessory: <TbChecklist
+            size={15}
+            className="translate-x-[-1px]"
+          />,
+          items: recipes.map(({ recipe, count }) => ({
+            label: recipe,
+            annotation: formatCount(count),
+            annotationAria: formatCountDescriptive(count),
+          })),
+        };
+        case 'films': return {
+          heading: 'Film Simulations',
+          accessory: <span className="w-3">
+            <PhotoFilmSimulationIcon className="translate-y-[0.5px]" />
+          </span>,
+          items: simulations.map(({ simulation, count }) => ({
+            label: labelForFilmSimulation(simulation).medium,
+            annotation: formatCount(count),
+            annotationAria: formatCountDescriptive(count),
+            path: pathForFilmSimulation(simulation),
+          })),
+        };
+        case 'focal-lengths': return {
+          heading: 'Focal Lengths',
+          accessory: <TbCone
+            className="rotate-[270deg] text-[14px]"
+          />,
+          items: focalLengths.map(({ focal, count }) => ({
+            label: formatFocalLength(focal)!,
+            annotation: formatCount(count),
+            annotationAria: formatCountDescriptive(count),
+            path: pathForFocalLength(focal),
+          })),
+        };
+        }
+      })
+      .filter(Boolean) as CommandKSection[]
+  , [tagsIncludingHidden, cameras, recipes, simulations, focalLengths]);
 
   const clientSections: CommandKSection[] = [{
     heading: 'Theme',
@@ -465,8 +529,7 @@ export default function CommandKClient({
               {isLoading ? 'Searching ...' : 'No results found'}
             </Command.Empty>
             {queriedSections
-              .concat(SECTION_TAGS)
-              .concat(serverSections)
+              .concat(categorySections)
               .concat(sectionPages)
               .concat(adminSection)
               .concat(clientSections)

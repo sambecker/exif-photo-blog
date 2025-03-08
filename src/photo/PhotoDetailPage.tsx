@@ -1,5 +1,6 @@
 import AnimateItems from '@/components/AnimateItems';
-import { Photo, PhotoDateRange, PhotoSetCategory } from '.';
+import { Photo, PhotoDateRange } from '.';
+import { PhotoSetCategory } from './set';
 import PhotoLarge from './PhotoLarge';
 import SiteGrid from '@/components/SiteGrid';
 import PhotoGrid from './PhotoGrid';

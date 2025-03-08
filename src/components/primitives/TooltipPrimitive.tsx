@@ -38,7 +38,10 @@ export default function TooltipPrimitive({
     },
   });
 
-  const classNameTrigger = clsx('link cursor-default', classNameTriggerProp);
+  const classNameTrigger = clsx(
+    'link cursor-default inline-block',
+    classNameTriggerProp,
+  );
 
   return (
     <Tooltip.Provider delayDuration={100}>

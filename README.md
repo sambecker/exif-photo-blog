@@ -79,7 +79,7 @@ _⚠️ READ BEFORE PROCEEDING_
 2. Add rate limiting (_recommended_)
    - As an additional precaution, create an Upstash Redis store from the storage tab of the Vercel dashboard and link it to your project in order to enable rate limiting—no further configuration necessary
 3. Configure auto-generated fields (optional) 
-   - Set which text fields auto-generate when uploading a photo by storing a comma-separated list, e.g., `AI_TEXT_AUTO_GENERATED_FIELDS = title, semantic`
+   - Set which text fields auto-generate when uploading a photo by storing a comma-separated list, e.g., `AI_TEXT_AUTO_GENERATED_FIELDS = title,semantic`
    - Accepted values:
      - `all`
      - `title` (default)
@@ -129,10 +129,8 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_HIDE_ZOOM_CONTROLS = 1` hides fullscreen photo zoom controls
 - `NEXT_PUBLIC_HIDE_TAKEN_AT_TIME = 1` hides taken at time from photo meta
 - `NEXT_PUBLIC_HIDE_SOCIAL = 1` removes X (formerly Twitter) button from share modal
-- `NEXT_PUBLIC_HIDE_FILM_SIMULATIONS = 1` prevents Fujifilm simulations showing up in `/grid` sidebar and CMD-K search results
-- `NEXT_PUBLIC_HIDE_RECIPES = 1` prevents Fujifilm recipe button showing up in photo meta
 - `NEXT_PUBLIC_HIDE_REPO_LINK = 1` removes footer link to repo
-- `NEXT_PUBLIC_CAMERAS_FIRST = 1` shows cameras above tags in grid sidebar
+- `NEXT_PUBLIC_CATEGORY_VISIBILITY` controls which photos sets appear in the grid sidebar and CMD-K menu, and in what order. Default value is `tags,cameras,recipes,films`. As an example, you could move cameras above tags, and hide film simulations, by updating this value to `cameras,tags,recipes`.
 
 #### Grid
 - `NEXT_PUBLIC_GRID_HOMEPAGE = 1` shows grid layout on homepage
@@ -285,6 +283,9 @@ Vercel Postgres can be switched to another Postgres-compatible, pooling provider
 
 #### My Fujifilm recipes are missing/displaying incorrect data. What should I do?
 > Fujifilm file specifications have evolved over time. Open an issue with the file in question attached in order for it to be investigated.
+
+#### How do I hide Fujifilm content such as a recipes and film simulations?
+> This can be accomplished by setting `NEXT_PUBLIC_CATEGORY_VISIBILITY` (which has a default value of `tags, cameras, recipes, simulations`) to simply `tags, cameras`.
 
 #### Why do my images appear flipped/rotated incorrectly?
 > For a number of reasons, only EXIF orientations: 1, 3, 6, and 8 are supported. Orientations 2, 4, 5, and 7—which make use of mirroring—are not supported.

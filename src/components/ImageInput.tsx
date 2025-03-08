@@ -2,7 +2,7 @@
 
 import { blobToImage } from '@/utility/blob';
 import { useRef, RefObject } from 'react';
-import { CopyExif } from '@/lib/CopyExif';
+import { CopyExif } from '@/utility/exif';
 import exifr from 'exifr';
 import { clsx } from 'clsx/lite';
 import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';

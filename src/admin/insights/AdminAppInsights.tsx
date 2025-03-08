@@ -3,15 +3,16 @@ import {
   getUniqueCameras,
   getUniqueFilmSimulations,
   getUniqueFocalLengths,
+  getUniqueRecipes,
   getUniqueTags,
 } from '@/photo/db/query';
 import AdminAppInsightsClient from './AdminAppInsightsClient';
 import {
   APP_CONFIGURATION,
+  CATEGORY_VISIBILITY,
   GRID_HOMEPAGE_ENABLED,
   HAS_STATIC_OPTIMIZATION,
   MATTE_PHOTOS,
-  SHOW_SIDEBAR_CAMERAS_FIRST,
 } from '@/app/config';
 import { getGitHubMetaForCurrentApp, getSignificantInsights } from '.';
 import { getOutdatedPhotosCount } from '@/photo/db/query';
@@ -27,6 +28,7 @@ export default async function AdminAppInsights() {
     { count: photosCountPortrait },
     tags,
     cameras,
+    recipes,
     filmSimulations,
     focalLengths,
     codeMeta,
@@ -37,6 +39,7 @@ export default async function AdminAppInsights() {
     getPhotosMeta({ maximumAspectRatio: 0.9 }),
     getUniqueTags(),
     getUniqueCameras(),
+    getUniqueRecipes(),
     getUniqueFilmSimulations(),
     getUniqueFocalLengths(),
     getGitHubMetaForCurrentApp(),
@@ -67,7 +70,7 @@ export default async function AdminAppInsights() {
         photoMatting: photosCountPortrait > 0 && !MATTE_PHOTOS,
         camerasFirst: (
           tags.length > TAG_COUNT_THRESHOLD &&
-          !SHOW_SIDEBAR_CAMERAS_FIRST
+          CATEGORY_VISIBILITY[0] !== 'cameras'
         ),
         gridFirst: (
           photosCount >= BASIC_PHOTO_INSTALLATION_COUNT &&
@@ -81,6 +84,7 @@ export default async function AdminAppInsights() {
         photosCountOutdated,
         tagsCount: tags.length,
         camerasCount: cameras.length,
+        recipesCount: recipes.length,
         filmSimulationsCount: filmSimulations.length,
         focalLengthsCount: focalLengths.length,
         dateRange,

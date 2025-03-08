@@ -1,7 +1,8 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { Photo, PhotoSetCategory, titleForPhoto } from '@/photo';
+import { Photo, titleForPhoto } from '@/photo';
+import { PhotoSetCategory } from '@/photo/set';
 import Link from 'next/link';
 import { AnimationConfig } from '../components/AnimateItems';
 import { useAppState } from '@/state/AppState';

@@ -1,6 +1,6 @@
 import { PRIORITY_ORDER_ENABLED } from '@/app/config';
 import { parameterize } from '@/utility/string';
-import { PhotoSetCategory } from '..';
+import { PhotoSetCategory } from '../set';
 import { Camera } from '@/camera';
 
 export const GENERATE_STATIC_PARAMS_LIMIT = 1000;

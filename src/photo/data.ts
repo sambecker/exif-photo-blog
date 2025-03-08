@@ -1,6 +1,7 @@
 import {
   getUniqueCamerasCached,
   getUniqueFilmSimulationsCached,
+  getUniqueRecipesCached,
   getUniqueTagsCached,
 } from '@/photo/cache';
 import {
@@ -27,4 +28,5 @@ export const getPhotoSidebarDataCached = () => [
   getUniqueTagsCached().then(sortTagsObject),
   getUniqueCamerasCached(),
   SHOW_FILM_SIMULATIONS ? getUniqueFilmSimulationsCached() : [],
+  SHOW_RECIPES ? getUniqueRecipesCached() : [],
 ] as const;

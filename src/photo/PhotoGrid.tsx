@@ -1,6 +1,7 @@
 'use client';
 
-import { Photo, PhotoSetCategory } from '.';
+import { Photo } from '.';
+import { PhotoSetCategory } from './set';
 import PhotoMedium from './PhotoMedium';
 import { clsx } from 'clsx/lite';
 import AnimateItems from '@/components/AnimateItems';
