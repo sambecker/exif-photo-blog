@@ -1,14 +1,12 @@
 import { BiImageAdd } from 'react-icons/bi';
 import PathLoaderButton from '@/components/primitives/PathLoaderButton';
-
-export default function AddButton({
-  path,
-}: {
-  path: string,
-}) {
+import { ComponentProps } from 'react';
+export default function AddButton(
+  props: ComponentProps<typeof PathLoaderButton>,
+) {
   return (
     <PathLoaderButton
-      path={path}
+      {...props}
       icon={<BiImageAdd size={18} className="translate-x-[1px]" />}
     >
       Add

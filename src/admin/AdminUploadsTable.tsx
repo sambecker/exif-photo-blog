@@ -15,10 +15,12 @@ export default function AdminUploadsTable({
   isAdding,
   urlAddStatuses,
   setUrlAddStatuses,
+  isDeleting,
 }: {
   isAdding?: boolean
   urlAddStatuses: UrlAddStatus[]
   setUrlAddStatuses?: (urlAddStatuses: UrlAddStatus[]) => void
+  isDeleting?: boolean
 }) {
   const isComplete = urlAddStatuses.every(({ status }) => status === 'added');
 
@@ -85,13 +87,17 @@ export default function AdminUploadsTable({
                       </span>}
                 </>
                 : <>
-                  <AddButton path={pathForAdminUploadUrl(url)} />
+                  <AddButton
+                    path={pathForAdminUploadUrl(url)}
+                    disabled={isDeleting}
+                  />
                   <DeleteBlobButton
                     urls={[url]}
                     shouldRedirectToAdminPhotos={urlAddStatuses.length <= 1}
                     onDelete={() => setUrlAddStatuses?.(urlAddStatuses.filter(
                       ({ url: urlToRemove }) => urlToRemove !== url,
                     ))}
+                    isLoading={isDeleting}
                   />
                 </>}
             </span>

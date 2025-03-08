@@ -4,34 +4,36 @@ import { deleteUploadsAction } from '@/photo/actions';
 import DeleteButton from './DeleteButton';
 import { useRouter } from 'next/navigation';
 import { PATH_ADMIN_PHOTOS } from '@/app/paths';
-import { ReactNode, useState } from 'react';
+import { ComponentProps, useState } from 'react';
+import LoaderButton from '@/components/primitives/LoaderButton';
 
 export default function DeleteUploadButton({
   urls,
   shouldRedirectToAdminPhotos,
+  onDeleteStart,
   onDelete,
   hideTextOnMobile,
   children,
-  className,
+  isLoading,
+  ...props
 }: {
   urls: string[]
   shouldRedirectToAdminPhotos?: boolean
-  onDelete?: () => void
-  hideTextOnMobile?: boolean
-  children?: ReactNode
-  className?: string
-}) {
+  onDeleteStart?: () => void
+  onDelete?: (didFail?: boolean) => void
+} & ComponentProps<typeof LoaderButton>) {
   const router = useRouter();
 
   const [isDeleting, setIsDeleting] = useState(false);
 
   return (
     <DeleteButton
-      className={className}
+      {...props}
       confirmText={urls.length === 1
         ? 'Are you sure you want to delete this upload?'
         : `Are you sure you want to delete all ${urls.length} uploads?`}
       onClick={() => {
+        onDeleteStart?.();
         setIsDeleting(true);
         deleteUploadsAction(urls)
           .then(() => {
@@ -42,9 +44,12 @@ export default function DeleteUploadButton({
               setIsDeleting(false);
             }
           })
-          .catch(() => setIsDeleting(false));
+          .catch(() => {
+            setIsDeleting(false);
+            onDelete?.(true);
+          });
       }}
-      isLoading={isDeleting}
+      isLoading={isLoading ?? isDeleting}
       hideTextOnMobile={hideTextOnMobile}
     >
       {children}

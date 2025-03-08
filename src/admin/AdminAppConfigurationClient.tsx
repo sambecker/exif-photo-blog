@@ -135,7 +135,7 @@ export default function AdminAppConfigurationClient({
     renderSubStatus(
       type,
       renderEnvVars([variable]),
-      'translate-y-[4.5px]',
+      'translate-y-[7px]',
     );
 
   const renderError = ({
@@ -534,30 +534,32 @@ export default function AdminAppConfigurationClient({
             status={hasCategoryVisibility}
             optional
           >
-            {categoryVisibility.map((category, index) =>
-              <Fragment key={category}>
-                {renderSubStatus(
-                  'checked',
-                  <>
-                    {index + 1}
-                    {'.'}
-                    {capitalize(category)}
-                  </>,
-                )}
-              </Fragment>)}
-            {getHiddenDefaultCategories(categoryVisibility)
-              .map((category, index) =>
+            <div className="my-1">
+              {categoryVisibility.map((category, index) =>
                 <Fragment key={category}>
                   {renderSubStatus(
-                    'optional',
-                    <span className="text-dim">
-                      {categoryVisibility.length + index + 1}
+                    'checked',
+                    <>
+                      {index + 1}
                       {'.'}
                       {capitalize(category)}
-                    </span>,
+                    </>,
                   )}
                 </Fragment>)}
-            Configure photo category visibility and order
+              {getHiddenDefaultCategories(categoryVisibility)
+                .map((category, index) =>
+                  <Fragment key={category}>
+                    {renderSubStatus(
+                      'optional',
+                      <span className="text-dim">
+                        {categoryVisibility.length + index + 1}
+                        {'.'}
+                        {capitalize(category)}
+                      </span>,
+                    )}
+                  </Fragment>)}
+            </div>
+            Configure order and visibility of categories
             (seen in grid sidebar and CMD-K results)
             by storing comma-separated values
             (default: {`"${DEFAULT_CATEGORY_KEYS.join(',')}"`}):

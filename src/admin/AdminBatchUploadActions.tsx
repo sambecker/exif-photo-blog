@@ -24,18 +24,22 @@ import { useAppState } from '@/state/AppState';
 
 const UPLOAD_BATCH_SIZE = 4;
 
-export default function AdminAddAllUploads({
+export default function AdminBatchUploadActions({
   storageUrls,
   uniqueTags,
   isAdding,
   setIsAdding,
   setUrlAddStatuses,
+  isDeleting,
+  setIsDeleting,
 }: {
   storageUrls: string[]
   uniqueTags?: Tags
   isAdding: boolean
-  setIsAdding: (isAdding: boolean) => void
+  setIsAdding: Dispatch<SetStateAction<boolean>>
   setUrlAddStatuses: Dispatch<SetStateAction<UrlAddStatus[]>>
+  isDeleting: boolean
+  setIsDeleting: Dispatch<SetStateAction<boolean>>
 }) {
   const { updateAdminData } = useAppState();
 
@@ -141,7 +145,11 @@ export default function AdminAddAllUploads({
               className="w-full justify-center"
               progress={addingProgress}
               isLoading={isAdding}
-              disabled={Boolean(tagErrorMessage) || isAddingComplete}
+              disabled={
+                Boolean(tagErrorMessage) ||
+                isAddingComplete ||
+                isDeleting
+              }
               icon={isAddingComplete
                 ? <BiCheckCircle size={18} className="translate-x-[1px]" />
                 : <BiImageAdd
@@ -187,13 +195,19 @@ export default function AdminAddAllUploads({
             </ProgressButton>
             <DeleteUploadButton
               urls={storageUrls}
-              onDelete={() => {
-                updateAdminData?.({ uploadsCount: 0 });
-                router.push(PATH_ADMIN_PHOTOS);
+              onDeleteStart={() => setIsDeleting(true)}
+              onDelete={didFail => {
+                if (!didFail) {
+                  updateAdminData?.({ uploadsCount: 0 });
+                  router.push(PATH_ADMIN_PHOTOS);
+                } else {
+                  setIsDeleting(false);
+                }
               }}
               className="w-full flex justify-center"
               shouldRedirectToAdminPhotos
               hideTextOnMobile={false}
+              disabled={isAdding}
             >
               Delete All Uploads
             </DeleteUploadButton>

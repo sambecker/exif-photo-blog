@@ -1,7 +1,7 @@
 'use client';
 
 import { StorageListResponse } from '@/platforms/storage';
-import AdminAddAllUploads from './AdminAddAllUploads';
+import AdminBatchUploadActions from './AdminBatchUploadActions';
 import { useMemo, useState } from 'react';
 import { Tags } from '@/tag';
 import AdminUploadsTable from './AdminUploadsTable';
@@ -23,20 +23,28 @@ export default function AdminUploadsClient({
 }) {
   const [isAdding, setIsAdding] = useState(false);
   const [urlAddStatuses, setUrlAddStatuses] = useState<UrlAddStatus[]>(urls);
-
   const storageUrls = useMemo(() => urls.map(({ url }) => url), [urls]);
+
+  const [isDeleting, setIsDeleting] = useState(false);
 
   return (
     <div className="space-y-4">
       {(urls.length > 1 || isAdding) &&
-        <AdminAddAllUploads {...{
+        <AdminBatchUploadActions {...{
           storageUrls,
           uniqueTags,
           isAdding,
           setIsAdding,
           setUrlAddStatuses,
+          isDeleting,
+          setIsDeleting,
         }} />}
-      <AdminUploadsTable {...{ isAdding, urlAddStatuses, setUrlAddStatuses }} />
+      <AdminUploadsTable {...{
+        isAdding,
+        urlAddStatuses,
+        setUrlAddStatuses,
+        isDeleting,
+      }} />
     </div>
   );
 }
