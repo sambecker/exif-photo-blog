@@ -29,7 +29,7 @@ export default function Badge({
     case 'small':
       return clsx(
         'px-[5px] h-[17px] md:h-[18px]',
-        'text-[0.7rem] font-medium rounded-[0.25rem]',
+        'text-[0.7rem] leading-none font-medium rounded-[0.25rem]',
         contrast === 'high'
           ? 'text-invert bg-invert'
           : contrast === 'frosted'
@@ -53,9 +53,7 @@ export default function Badge({
       className,
     )}>
       <span className={clsx(
-        'max-w-full inline-flex',
-        // Truncate 1 + 2 levels deep
-        'truncate *:truncate',
+        'max-w-full inline-block truncate',
         dimContent && 'opacity-50',
       )}>
         {children}

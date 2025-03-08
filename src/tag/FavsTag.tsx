@@ -33,7 +33,7 @@ export default function FavsTag({
           size={12}
           className={clsx(
             'text-amber-500',
-            'translate-x-[-1px] translate-y-[-0.5px]',
+            'translate-x-[-1px]',
           )}
         />}
       type={type}
