@@ -17,7 +17,7 @@ export default function HomeImageResponse({
   fontFamily: string
 }) {
   return (
-    <ImageContainer {...{ width, height }} >
+    <ImageContainer>
       <ImagePhotoGrid
         {...{
           photos,

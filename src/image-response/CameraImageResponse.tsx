@@ -27,11 +27,7 @@ export default function CameraImageResponse({
 }) {
   const camera = cameraFromPhoto(photos[0], cameraProp);
   return (
-    <ImageContainer {...{
-      width,
-      height,
-      ...photos.length === 0 && { background: 'black' },
-    }}>
+    <ImageContainer solidBackground={photos.length === 0}>
       <ImagePhotoGrid
         {...{
           photos,
