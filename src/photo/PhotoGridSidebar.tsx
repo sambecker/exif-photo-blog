@@ -147,17 +147,13 @@ export default function PhotoGridSidebar({
       items={simulations
         .sort(sortFilmSimulationsWithCount)
         .map(({ simulation, count }) =>
-          <div
+          <PhotoFilmSimulation
             key={simulation}
-            className="translate-x-[-2px]"
-          >
-            <PhotoFilmSimulation
-              simulation={simulation}
-              countOnHover={count}
-              type="text-only"
-              prefetch={false}
-            />
-          </div>)}
+            simulation={simulation}
+            countOnHover={count}
+            type="text-only"
+            prefetch={false}
+          />)}
     />
     : null;
 
