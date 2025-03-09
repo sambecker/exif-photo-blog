@@ -6,10 +6,11 @@ import clsx from 'clsx/lite';
 import { ReactNode, RefObject } from 'react';
 import { IoCloseCircle } from 'react-icons/io5';
 import { motion } from 'framer-motion';
-import { addSign, formatWhiteBalance, RecipeProps } from '.';
+import { addSign, formatRecipe, formatWhiteBalance, RecipeProps } from '.';
 
 export default function PhotoRecipeOverlay({
   ref,
+  title,
   recipe,
   simulation,
   iso,
@@ -74,7 +75,7 @@ export default function PhotoRecipeOverlay({
       exit={{ opacity: 0, translateY: -10 }}
       className={clsx(
         'z-10',
-        'w-[19rem] p-3 space-y-3',
+        'w-[20rem] p-3 space-y-2',
         'rounded-lg shadow-2xl',
         'text-[13.5px] text-black',
         'bg-white/70 border border-neutral-200/30',
@@ -82,17 +83,25 @@ export default function PhotoRecipeOverlay({
       )}
     >
       <div className="flex items-center gap-2">
-        <PhotoFilmSimulation
-          contrast="frosted"
-          className="grow"
-          simulation={simulation}
-        />
+        <div className="flex items-center gap-2 grow truncate">
+          <div className={clsx(
+            'truncate text-sm uppercase',
+            'translate-y-[0.5px] tracking-wide grow',
+          )}>
+            {title ? formatRecipe(title) : 'Recipe'}
+          </div>
+          <PhotoFilmSimulation
+            contrast="frosted"
+            simulation={simulation}
+          />
+        </div>
         <LoaderButton
           icon={<IoCloseCircle size={20} />}
           onClick={onClose}
           className={clsx(
             'link p-0 m-0 h-4!',
             'text-black/40 active:text-black/75',
+            'translate-y-[2.5px]',
           )}
         />
       </div>

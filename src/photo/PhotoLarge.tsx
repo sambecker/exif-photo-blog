@@ -203,6 +203,7 @@ export default function PhotoLarge({
           photo.filmSimulation &&
             <PhotoRecipeOverlay
               ref={refRecipe}
+              title={photo.recipeTitle}
               recipe={photo.recipeData}
               simulation={photo.filmSimulation}
               iso={photo.isoFormatted}

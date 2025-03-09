@@ -17,6 +17,7 @@ export type RecipeWithCount = {
 export type Recipes = RecipeWithCount[]
 
 export interface RecipeProps {
+  title?: string
   recipe: FujifilmRecipe
   simulation: FilmSimulation
   iso?: string
