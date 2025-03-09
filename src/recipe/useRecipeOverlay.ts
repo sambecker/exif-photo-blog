@@ -7,7 +7,7 @@ import { RefObject, useCallback, useEffect, useState } from 'react';
 import { isElementEntirelyInViewport } from '@/utility/dom';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
 
-export default function useRecipeState({
+export default function useRecipeOverlay({
   ref,
   refTriggers = [],
 }: {
@@ -21,11 +21,11 @@ export default function useRecipeState({
     ...pathComponents
   } = getPathComponents(pathname);
 
-  const [shouldShowRecipe, setShouldShowRecipe] = useState(false);
+  const [shouldShowRecipeOverlay, setShouldShowRecipeOverlay] = useState(false);
 
   const setVisibility = useCallback((shouldShow: boolean) => {
     if (shouldShow) {
-      setShouldShowRecipe(true);
+      setShouldShowRecipeOverlay(true);
       // Only add query param for photo details
       if (photoId) {
         window.history.pushState(
@@ -39,7 +39,7 @@ export default function useRecipeState({
         );
       }
     } else {
-      setShouldShowRecipe(false);
+      setShouldShowRecipeOverlay(false);
       // Only remove query param for photo details
       if (photoId) {
         window.history.pushState(
@@ -54,27 +54,29 @@ export default function useRecipeState({
     }
   }, [pathComponents, photoId]);
 
-  const showRecipe = useCallback(() => setVisibility(true), [setVisibility]);
-  const hideRecipe = useCallback(() => setVisibility(false), [setVisibility]);
-  const toggleRecipe = useCallback(() =>
-    setVisibility(!shouldShowRecipe),
-  [setVisibility, shouldShowRecipe]);
+  const showRecipeOverlay =
+    useCallback(() => setVisibility(true), [setVisibility]);
+  const hideRecipeOverlay =
+    useCallback(() => setVisibility(false), [setVisibility]);
+  const toggleRecipeOverlay = useCallback(() =>
+    setVisibility(!shouldShowRecipeOverlay),
+  [setVisibility, shouldShowRecipeOverlay]);
 
   useClickInsideOutside({
     htmlElements: [ref, ...refTriggers],
-    onClickOutside: hideRecipe,
+    onClickOutside: hideRecipeOverlay,
   });
 
   useEffect(() => {
-    if (shouldShowRecipe && !isElementEntirelyInViewport(ref?.current)) {
+    if (shouldShowRecipeOverlay && !isElementEntirelyInViewport(ref?.current)) {
       ref?.current?.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [ref, shouldShowRecipe]);
+  }, [ref, shouldShowRecipeOverlay]);
 
   return {
-    shouldShowRecipe,
-    showRecipe,
-    hideRecipe,
-    toggleRecipe,
+    shouldShowRecipeOverlay,
+    showRecipeOverlay,
+    hideRecipeOverlay,
+    toggleRecipeOverlay,
   };
 }

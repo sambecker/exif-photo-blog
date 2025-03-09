@@ -2,7 +2,7 @@
 
 import Modal from '@/components/Modal';
 import { useAppState } from '@/state/AppState';
-import PhotoRecipeOverlay from './PhotoRecipeGrid';
+import PhotoRecipeOverlay from './PhotoRecipeOverlay';
 
 export default function ShareModals() {
   const {

@@ -14,11 +14,13 @@ export default function ImagePhotoGrid({
   height,
   imagePosition = 'center',
   gap = 4,
+  imageStyle,
 }: ({
   photos: Photo[]
   height: number
   imagePosition?: 'center' | 'top'
   gap?: number
+  imageStyle?: React.CSSProperties
 } & (
   { width: NextImageSize, widthArbitrary?: undefined } |
   { width?: undefined, widthArbitrary: number }
@@ -46,13 +48,15 @@ export default function ImagePhotoGrid({
     (rows - 1) * gap / rows;
 
   return (
-    <div style={{
-      display: 'flex',
-      flexWrap: 'wrap',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap,
-    }}>
+    <div
+      style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap,
+      }}
+    >
       {photos.slice(0, count).map(({ id, url }) =>
         <div
           key={id}
@@ -73,6 +77,7 @@ export default function ImagePhotoGrid({
               IS_PREVIEW,
             ),
             style: {
+              ...imageStyle,
               width: '100%',
               ...imagePosition === 'center' && {
                 height: '100%',

@@ -65,8 +65,16 @@ export const generateMetaForRecipe = (
   images: absolutePathForRecipeImage(recipe),
 });
 
-export const photoHasRecipe = (photo?: Photo) =>
+const photoHasRecipe = (photo?: Photo) =>
   photo?.filmSimulation && photo?.recipeData;
+
+export const getPhotoWithRecipeFromPhotos = (
+  photos: Photo[],
+  preferredPhoto?: Photo,
+) =>
+  photoHasRecipe(preferredPhoto)
+    ? preferredPhoto
+    : photos.find(photoHasRecipe);
 
 export const sortRecipesWithCount = (recipes: Recipes = []) =>
   recipes.sort((a, b) => a.recipe.localeCompare(b.recipe));
@@ -78,3 +86,12 @@ export const convertRecipesForForm = (recipes: Recipes = []) =>
       annotation: formatCount(count),
       annotationAria: formatCountDescriptive(count),
     }));
+
+export const addSign = (value = 0) => value < 0 ? value : `+${value}`;
+
+export const formatWhiteBalance = ({ whiteBalance }: FujifilmRecipe) =>
+  whiteBalance.type === 'kelvin' && whiteBalance.colorTemperature
+    ? `${whiteBalance.colorTemperature}K`
+    : whiteBalance.type
+      .replace(/auto./i, '')
+      .replaceAll('-', ' ');

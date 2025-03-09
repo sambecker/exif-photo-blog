@@ -62,7 +62,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function PhotoTagPage({
+export default async function PhotoRecipePage({
   params,
 }: PhotoRecipeProps) {
   const { photoId, recipe: recipeFromParams } = await params;

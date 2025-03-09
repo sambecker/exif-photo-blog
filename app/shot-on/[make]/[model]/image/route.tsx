@@ -2,7 +2,7 @@ import { getPhotosCached } from '@/photo/cache';
 import { Camera, CameraProps, getCameraFromParams } from '@/camera';
 import {
   IMAGE_OG_DIMENSION_SMALL,
-  MAX_PHOTOS_TO_SHOW_PER_TAG,
+  MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
 } from '@/image-response';
 import CameraImageResponse from '@/image-response/CameraImageResponse';
 import { getIBMPlexMonoMedium } from '@/app/font';
@@ -39,7 +39,7 @@ export async function GET(
     headers,
   ] = await Promise.all([
     getPhotosCached({
-      limit: MAX_PHOTOS_TO_SHOW_PER_TAG,
+      limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
       camera: camera,
     }),
     getIBMPlexMonoMedium(),

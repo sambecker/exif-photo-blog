@@ -1,15 +1,23 @@
-'use client';
-
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { FilmSimulation } from '@/simulation';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
 import clsx from 'clsx/lite';
 import { ReactNode, RefObject } from 'react';
-
-const addSign = (value = 0) => value < 0 ? value : `+${value}`;
+import { addSign, formatWhiteBalance } from '.';
 
 export default function PhotoRecipeOGTile({
-  recipe: {
+  recipe,
+  simulation,
+  iso,
+  exposure,
+}: {
+  ref?: RefObject<HTMLDivElement | null>
+  recipe: FujifilmRecipe
+  simulation: FilmSimulation
+  iso?: string
+  exposure?: string
+}) {
+  const {
     dynamicRange,
     whiteBalance,
     highISONoiseReduction,
@@ -24,24 +32,9 @@ export default function PhotoRecipeOGTile({
     grainEffect,
     bwAdjustment,
     bwMagentaGreen,
-  },
-  simulation,
-  iso,
-  exposure,
-}: {
-  ref?: RefObject<HTMLDivElement | null>
-  recipe: FujifilmRecipe
-  simulation: FilmSimulation
-  iso?: string
-  exposure?: string
-  onClose?: () => void
-}) {
-  const whiteBalanceTypeFormatted =
-    whiteBalance.type === 'kelvin' && whiteBalance.colorTemperature
-      ? `${whiteBalance.colorTemperature}K`
-      : whiteBalance.type
-        .replace(/auto./i, '')
-        .replaceAll('-', ' ');
+  } = recipe;
+
+  const whiteBalanceTypeFormatted = formatWhiteBalance(recipe);
 
   const renderRow = (children: ReactNode, className?: string) =>
     <div className={clsx(
@@ -64,7 +57,7 @@ export default function PhotoRecipeOGTile({
       label && 'p-1',
       className,
     )}>
-      <div className="truncate max-w-full tracking-wide text-lg">
+      <div className="flex truncate max-w-full tracking-wide text-lg">
         {typeof value === 'number' ? addSign(value) : value}
       </div>
       {label && <div className={clsx(

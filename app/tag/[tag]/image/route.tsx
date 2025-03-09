@@ -1,7 +1,7 @@
 import { getPhotosCached } from '@/photo/cache';
 import {
   IMAGE_OG_DIMENSION_SMALL,
-  MAX_PHOTOS_TO_SHOW_PER_TAG,
+  MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
 } from '@/image-response';
 import TagImageResponse from '@/image-response/TagImageResponse';
 import { getIBMPlexMonoMedium } from '@/app/font';
@@ -37,7 +37,7 @@ export async function GET(
     { fontFamily, fonts },
     headers,
   ] = await Promise.all([
-    getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_PER_TAG, tag }),
+    getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY, tag }),
     getIBMPlexMonoMedium(),
     getImageResponseCacheControlHeaders(),
   ]);

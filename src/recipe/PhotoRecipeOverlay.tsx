@@ -6,13 +6,20 @@ import clsx from 'clsx/lite';
 import { ReactNode, RefObject } from 'react';
 import { IoCloseCircle } from 'react-icons/io5';
 import { motion } from 'framer-motion';
-import { RecipeProps } from '.';
-
-const addSign = (value = 0) => value < 0 ? value : `+${value}`;
+import { addSign, formatWhiteBalance, RecipeProps } from '.';
 
 export default function PhotoRecipeOverlay({
   ref,
-  recipe: {
+  recipe,
+  simulation,
+  iso,
+  exposure,
+  onClose,
+}: RecipeProps & {
+  ref?: RefObject<HTMLDivElement | null>
+  onClose?: () => void
+}) {
+  const {
     dynamicRange,
     whiteBalance,
     highISONoiseReduction,
@@ -27,21 +34,9 @@ export default function PhotoRecipeOverlay({
     grainEffect,
     bwAdjustment,
     bwMagentaGreen,
-  },
-  simulation,
-  iso,
-  exposure,
-  onClose,
-}: RecipeProps & {
-  ref?: RefObject<HTMLDivElement | null>
-  onClose?: () => void
-}) {
-  const whiteBalanceTypeFormatted =
-    whiteBalance.type === 'kelvin' && whiteBalance.colorTemperature
-      ? `${whiteBalance.colorTemperature}K`
-      : whiteBalance.type
-        .replace(/auto./i, '')
-        .replaceAll('-', ' ');
+  } = recipe;
+
+  const whiteBalanceTypeFormatted = formatWhiteBalance(recipe);
 
   const renderRow = (children: ReactNode) =>
     <div className="flex gap-2 *:w-full *:grow">{children}</div>;

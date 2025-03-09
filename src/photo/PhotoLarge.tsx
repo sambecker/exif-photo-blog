@@ -42,8 +42,8 @@ import ZoomControls, { ZoomControlsRef } from '@/components/image/ZoomControls';
 import { TbChecklist } from 'react-icons/tb';
 import { IoCloseSharp } from 'react-icons/io5';
 import { AnimatePresence } from 'framer-motion';
-import useRecipeState from '../recipe/useRecipeState';
-import PhotoRecipeOverlay from '@/recipe/PhotoRecipeGrid';
+import useRecipeOverlay from '../recipe/useRecipeOverlay';
+import PhotoRecipeOverlay from '@/recipe/PhotoRecipeOverlay';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
 
 export default function PhotoLarge({
@@ -110,10 +110,10 @@ export default function PhotoLarge({
   const refRecipeButton = useRef<HTMLButtonElement>(null);
   const refTriggers = useMemo(() => [refRecipeButton], []);
   const {
-    shouldShowRecipe,
-    toggleRecipe,
-    hideRecipe,
-  } = useRecipeState({
+    shouldShowRecipeOverlay,
+    toggleRecipeOverlay,
+    hideRecipeOverlay,
+  } = useRecipeOverlay({
     ref: refRecipe,
     refTriggers,
   });
@@ -193,9 +193,12 @@ export default function PhotoLarge({
       <div className={clsx(
         'absolute inset-0',
         'flex items-center justify-center',
+        (shouldShowRecipeOverlay || shouldDebugRecipeOverlays)
+          ? 'z-[1]'
+          : 'z-[-1]',
       )}>
         <AnimatePresence>
-          {(shouldShowRecipe || shouldDebugRecipeOverlays) &&
+          {(shouldShowRecipeOverlay || shouldDebugRecipeOverlays) &&
           photo.recipeData &&
           photo.filmSimulation &&
             <PhotoRecipeOverlay
@@ -204,7 +207,7 @@ export default function PhotoLarge({
               simulation={photo.filmSimulation}
               iso={photo.isoFormatted}
               exposure={photo.exposureCompensationFormatted}
-              onClose={hideRecipe}
+              onClose={hideRecipeOverlay}
             />}
         </AnimatePresence>
       </div>
@@ -212,6 +215,17 @@ export default function PhotoLarge({
 
   const largePhotoContainerClassName = clsx(arePhotosMatted &&
     'flex items-center justify-center aspect-3/2 bg-gray-100',
+  );
+
+  const shouldRenderSimulation = (
+    SHOW_FILM_SIMULATIONS &&
+    showSimulation &&
+    photo.filmSimulation
+  );
+
+  const shouldRenderRecipe = (
+    SHOW_RECIPES &&
+    photo.recipeData
   );
 
   return (
@@ -325,25 +339,14 @@ export default function PhotoLarge({
                   <li>{photo.isoFormatted}</li>
                   <li>{photo.exposureCompensationFormatted ?? '0ev'}</li>
                 </ul>
-                {(
-                  (
-                    SHOW_FILM_SIMULATIONS &&
-                    showSimulation &&
-                    photo.filmSimulation
-                  ) ||
-                  (SHOW_RECIPES && photo.recipeData)
-                ) &&
+                {(shouldRenderSimulation || shouldRenderRecipe) &&
                   <div className="flex items-center gap-2 *:w-auto">
-                    {(
-                      SHOW_FILM_SIMULATIONS &&
-                      showSimulation &&
-                      photo.filmSimulation
-                    ) &&
+                    {shouldRenderSimulation && photo.filmSimulation &&
                       <PhotoFilmSimulation
                         simulation={photo.filmSimulation}
                         prefetch={prefetchRelatedLinks}
                       />}
-                    {SHOW_RECIPES && photo.recipeData &&
+                    {shouldRenderRecipe &&
                       <Tooltip
                         content="Fujifilm Recipe"
                         desktopOnly
@@ -351,15 +354,16 @@ export default function PhotoLarge({
                         <button
                           ref={refRecipeButton}
                           title="Fujifilm Recipe"
-                          onClick={toggleRecipe}
+                          onClick={toggleRecipeOverlay}
                           className={clsx(
                             'text-medium',
                             'border-medium rounded-md',
                             'px-[4px] py-[2.5px] my-[-3px]',
-                            'translate-y-[1.5px]',
+                            'translate-y-[2px]',
                             'hover:bg-dim active:bg-main',
+                            !shouldRenderSimulation && 'translate-x-[-2px]',
                           )}>
-                          {shouldShowRecipe
+                          {shouldShowRecipeOverlay
                             ? <IoCloseSharp size={15} />
                             : <TbChecklist
                               className="translate-x-[0.5px]"
