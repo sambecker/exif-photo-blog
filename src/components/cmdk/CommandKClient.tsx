@@ -27,6 +27,7 @@ import {
   pathForFilmSimulation,
   pathForFocalLength,
   pathForPhoto,
+  pathForRecipe,
   pathForTag,
 } from '../../app/paths';
 import Modal from '../Modal';
@@ -281,6 +282,7 @@ export default function CommandKClient({
             label: recipe,
             annotation: formatCount(count),
             annotationAria: formatCountDescriptive(count),
+            path: pathForRecipe(recipe),
           })),
         };
         case 'films': return {
