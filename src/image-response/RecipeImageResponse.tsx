@@ -15,12 +15,14 @@ export default function RecipeImageResponse({
   width,
   height,
   fontFamily,
+  smallText = true,
 }: {
   recipe: string,
   photos: Photo[]
   width: NextImageSize
   height: number
   fontFamily: string
+  smallText?: boolean
 }) {
   const photo = getPhotoWithRecipeFromPhotos(photos);
 
@@ -51,7 +53,7 @@ export default function RecipeImageResponse({
         tw="flex absolute inset-0"
         style={{
           background:
-            'linear-gradient(to right, rgba(0, 0, 0, .5) 40%, transparent 75%)',
+            'linear-gradient(to right, rgba(0, 0, 0, .5) 30%, transparent 60%)',
         }}
       />
       <ImageCaption {...{
@@ -71,12 +73,19 @@ export default function RecipeImageResponse({
       }}>
         {photo?.recipeData &&
           <div
-            tw="opacity-60"
+            // tw="opacity-70"
             style={{
               display: 'flex',
               flexDirection: 'column',
-              paddingTop: height * .03,
-              lineHeight: 1.22,
+              ...smallText ? {
+                paddingTop: height * .03,
+                lineHeight: 1.45,
+                letterSpacing: '0.03em',
+                fontSize: height * .06,
+              } : {
+                paddingTop: height * .02,
+                opacity: 0.7,
+              },              
             }}
           >
             {recipeLines.map(text => (

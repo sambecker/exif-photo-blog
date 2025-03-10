@@ -1,7 +1,7 @@
 import { getPhotoCached } from '@/photo/cache';
 import { IMAGE_OG_DIMENSION } from '@/image-response';
 import PhotoImageResponse from '@/image-response/PhotoImageResponse';
-import { getIBMPlexMonoMedium } from '@/app/font';
+import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import {
@@ -34,7 +34,7 @@ export async function GET(
     headers,
   ] = await Promise.all([
     getPhotoCached(photoId),
-    getIBMPlexMonoMedium(),
+    getIBMPlexMono(),
     getImageResponseCacheControlHeaders(),
   ]);
   
