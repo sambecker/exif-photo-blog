@@ -69,7 +69,7 @@ const createPhotosTable = () =>
 const safelyQueryPhotos = async <T>(
   callback: () => Promise<T>,
   debugMessage: string,
-  options?: GetPhotosOptions,
+  debugInfo?: GetPhotosOptions,
 ): Promise<T> => {
   let result: T;
 
@@ -123,10 +123,12 @@ const safelyQueryPhotos = async <T>(
   if (ADMIN_SQL_DEBUG_ENABLED && debugMessage) {
     const time =
       (((new Date()).getTime() - start.getTime()) / 1000).toFixed(2);
-    console.log(
-      `Executing sql query: ${debugMessage} (${time} seconds)`,
-      options ? { options } : undefined,
-    );
+    const message = `Debug query: ${debugMessage} (${time} seconds)`;
+    if (debugInfo) {
+      console.log(message, { options: debugInfo });
+    } else {
+      console.log(message);
+    }
   }
 
   return result;
