@@ -22,7 +22,11 @@ import {
   FujifilmRecipe,
   getFujifilmRecipeFromMakerNote,
 } from '@/platforms/fujifilm/recipe';
-import { getRecipeTitleForData } from './db/query';
+import {
+  getRecipeTitleForData,
+  updateAllMatchingRecipeTitles,
+} from './db/query';
+import { PhotoDbInsert } from '.';
 const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
 
@@ -211,3 +215,20 @@ export const convertFormDataToPhotoDbInsertAndLookupRecipeTitle =
 
     return photo;
   };
+
+export const propagateRecipeTitleIfNecessary = async (
+  formData: FormData,
+  photo: PhotoDbInsert,
+) => {
+  if (
+    // Only propagate recipe title if set by user before lookup
+    formData.get('recipeTitle') &&
+    photo.recipeTitle &&
+    photo.recipeData
+  ) {
+    await updateAllMatchingRecipeTitles(
+      photo.recipeTitle,
+      photo.recipeData,
+    );
+  }
+};

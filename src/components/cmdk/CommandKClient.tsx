@@ -63,6 +63,7 @@ import { IoMdCamera } from 'react-icons/io';
 import { labelForFilmSimulation } from '@/platforms/fujifilm/simulation';
 import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
 import { formatFocalLength } from '@/focal';
+import { formatRecipe } from '@/recipe';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -279,7 +280,7 @@ export default function CommandKClient({
             className="translate-x-[-1px]"
           />,
           items: recipes.map(({ recipe, count }) => ({
-            label: recipe,
+            label: formatRecipe(recipe),
             annotation: formatCount(count),
             annotationAria: formatCountDescriptive(count),
             path: pathForRecipe(recipe),

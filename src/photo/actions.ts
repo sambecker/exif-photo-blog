@@ -37,6 +37,7 @@ import {
   blurImageFromUrl,
   convertFormDataToPhotoDbInsertAndLookupRecipeTitle,
   extractImageDataFromBlobPath,
+  propagateRecipeTitleIfNecessary,
 } from './server';
 import { TAG_FAVS, isTagFavs } from '@/tag';
 import { convertPhotoToPhotoDbInsert, Photo } from '.';
@@ -73,6 +74,7 @@ export const createPhotoAction = async (formData: FormData) =>
     if (updatedUrl) {
       photo.url = updatedUrl;
       await insertPhoto(photo);
+      await propagateRecipeTitleIfNecessary(formData, photo);
       revalidateAllKeysAndPaths();
       redirect(PATH_ADMIN_PHOTOS);
     }
@@ -210,7 +212,10 @@ export const updatePhotoAction = async (formData: FormData) =>
 
     await updatePhoto(photo)
       .then(async () => {
-        if (urlToDelete) { await deleteFile(urlToDelete); }
+        if (urlToDelete) {
+          await deleteFile(urlToDelete);
+        }
+        await propagateRecipeTitleIfNecessary(formData, photo);
       });
 
     revalidatePhoto(photo.id);

@@ -317,6 +317,55 @@ export const getUniqueCameras = async () =>
     })))
   , 'getUniqueCameras');
 
+export const getUniqueRecipes = async () =>
+  safelyQueryPhotos(() => sql`
+    SELECT DISTINCT recipe_title, COUNT(*)
+    FROM photos
+    WHERE hidden IS NOT TRUE AND recipe_title IS NOT NULL
+    GROUP BY recipe_title
+    ORDER BY recipe_title ASC
+  `.then(({ rows }): Recipes => rows
+      .map(({ recipe_title, count }) => ({
+        recipe: recipe_title,
+        count: parseInt(count, 10),
+      })))
+  , 'getUniqueRecipes');
+
+export const getRecipeTitleForData = async (data: string | object) =>
+  // Includes legacy check on pre-stringified JSON
+  safelyQueryPhotos(() => sql`
+    SELECT recipe_title FROM photos
+    WHERE hidden IS NOT TRUE AND
+    recipe_data = ${typeof data === 'string' ? data : JSON.stringify(data)}
+    LIMIT 1
+  `
+    .then(({ rows }) => rows[0]?.recipe_title as string | undefined)
+  , 'getRecipeTitleForData');
+
+export const updateAllMatchingRecipeTitles = (
+  title: string,
+  data: string,
+) =>
+  safelyQueryPhotos(() => sql`
+    UPDATE photos
+    SET recipe_title = ${title}
+    WHERE recipe_title IS NULL AND recipe_data = ${data}
+  `, 'updateAllMatchingRecipeTitles');
+
+export const getUniqueFilmSimulations = async () =>
+  safelyQueryPhotos(() => sql`
+    SELECT DISTINCT film_simulation, COUNT(*)
+    FROM photos
+    WHERE hidden IS NOT TRUE AND film_simulation IS NOT NULL
+    GROUP BY film_simulation
+    ORDER BY film_simulation ASC
+  `.then(({ rows }): FilmSimulations => rows
+      .map(({ film_simulation, count }) => ({
+        simulation: film_simulation as FilmSimulation,
+        count: parseInt(count, 10),
+      })))
+  , 'getUniqueFilmSimulations');
+
 export const getUniqueLenses = async () =>
   safelyQueryPhotos(() => sql`
     SELECT DISTINCT lens_make||' '||lens_model as lens,
@@ -333,45 +382,7 @@ export const getUniqueLenses = async () =>
         lens: { make, model },
         count: parseInt(count, 10),
       })))
-  , 'getUniqueCameras');
-
-export const getUniqueFilmSimulations = async () =>
-  safelyQueryPhotos(() => sql`
-    SELECT DISTINCT film_simulation, COUNT(*)
-    FROM photos
-    WHERE hidden IS NOT TRUE AND film_simulation IS NOT NULL
-    GROUP BY film_simulation
-    ORDER BY film_simulation ASC
-  `.then(({ rows }): FilmSimulations => rows
-      .map(({ film_simulation, count }) => ({
-        simulation: film_simulation as FilmSimulation,
-        count: parseInt(count, 10),
-      })))
-  , 'getUniqueFilmSimulations');
-
-export const getUniqueRecipes = async () =>
-  safelyQueryPhotos(() => sql`
-    SELECT DISTINCT recipe_title, COUNT(*)
-    FROM photos
-    WHERE hidden IS NOT TRUE AND recipe_title IS NOT NULL
-    GROUP BY recipe_title
-    ORDER BY recipe_title ASC
-  `.then(({ rows }): Recipes => rows
-      .map(({ recipe_title, count }) => ({
-        recipe: recipe_title,
-        count: parseInt(count, 10),
-      })))
-  , 'getUniqueRecipes');
-
-export const getRecipeTitleForData = async (data: string | object) =>
-  safelyQueryPhotos(() => query(
-    // eslint-disable-next-line max-len
-    'SELECT recipe_title FROM photos WHERE hidden IS NOT TRUE AND recipe_data = $1 LIMIT 1',
-    // Legacy check on escaped, string-based JSON
-    [typeof data === 'string' ? data : JSON.stringify(data)],
-  )
-    .then(({ rows }) => rows[0]?.recipe_title as string | undefined)
-  , 'getRecipeTitleForData');
+  , 'getUniqueLenses');
 
 export const getUniqueFocalLengths = async () =>
   safelyQueryPhotos(() => sql`
