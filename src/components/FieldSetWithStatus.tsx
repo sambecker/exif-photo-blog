@@ -134,6 +134,7 @@ export default function FieldSetWithStatus({
               value={value}
               options={tagOptions}
               onChange={onChange}
+              showMenuOnDelete={tagOptionsLimit === 1}
               className={clsx(Boolean(error) && 'error')}
               readOnly={readOnly || pending || loading}
               placeholder={placeholder}

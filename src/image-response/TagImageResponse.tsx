@@ -48,9 +48,8 @@ export default function TagImageResponse({
               marginRight: height * .02,
             }}
           />,
-      }}>
-        {formatTag(tag).toLocaleUpperCase()}
-      </ImageCaption>
+        title: formatTag(tag).toLocaleUpperCase(),
+      }} />
     </ImageContainer>
   );
 }

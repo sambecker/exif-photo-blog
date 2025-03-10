@@ -6,7 +6,13 @@ import clsx from 'clsx/lite';
 import { ReactNode, RefObject } from 'react';
 import { IoCloseCircle } from 'react-icons/io5';
 import { motion } from 'framer-motion';
-import { addSign, formatRecipe, formatWhiteBalance, RecipeProps } from '.';
+import {
+  addSign,
+  formatNoiseReduction,
+  formatRecipe,
+  formatWhiteBalance,
+  RecipeProps,
+} from '.';
 
 export default function PhotoRecipeOverlay({
   ref,
@@ -23,8 +29,6 @@ export default function PhotoRecipeOverlay({
   const {
     dynamicRange,
     whiteBalance,
-    highISONoiseReduction,
-    noiseReductionBasic,
     highlight,
     shadow,
     color,
@@ -118,7 +122,7 @@ export default function PhotoRecipeOverlay({
             'basis-2/3',
           )}
           {renderDataSquare(
-            highISONoiseReduction ?? noiseReductionBasic ?? 'OFF',
+            formatNoiseReduction(recipe),
             'ISO NR',
             'basis-1/3',
           )}

@@ -15,6 +15,7 @@ export default function TagInput({
   value = '',
   options = [],
   onChange,
+  showMenuOnDelete,
   className,
   readOnly,
   placeholder,
@@ -26,6 +27,7 @@ export default function TagInput({
   value?: string
   options?: AnnotatedTag[]
   onChange?: (value: string) => void
+  showMenuOnDelete?: boolean
   className?: string
   readOnly?: boolean
   placeholder?: string
@@ -202,7 +204,9 @@ export default function TagInput({
       case 'Backspace':
         if (inputText === '' && selectedOptions.length > 0) {
           removeOption(selectedOptions[selectedOptions.length - 1]);
-          hideMenu();
+          if (!showMenuOnDelete) {
+            hideMenu();
+          }
         }
         break;
       case 'Escape':
@@ -217,6 +221,7 @@ export default function TagInput({
   }, [
     inputText,
     removeOption,
+    showMenuOnDelete,
     hideMenu,
     selectedOptions,
     selectedOptionIndex,

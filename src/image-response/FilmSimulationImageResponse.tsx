@@ -41,9 +41,8 @@ export default function FilmSimulationImageResponse({
           height={height * .081}
           style={{ transform: `translateY(${height * .001}px)`}}
         />,
-      }}>
-        {labelForFilmSimulation(simulation).medium.toLocaleUpperCase()}
-      </ImageCaption>
+        title: labelForFilmSimulation(simulation).medium.toLocaleUpperCase(),
+      }} />
     </ImageContainer>
   );
 }

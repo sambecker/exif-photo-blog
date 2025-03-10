@@ -53,9 +53,8 @@ export default function CameraImageResponse({
               marginRight: height * .015,
             }}
           />,
-      }}>
-        {formatCameraText(camera).toLocaleUpperCase()}
-      </ImageCaption>
+        title: formatCameraText(camera).toLocaleUpperCase(),
+      }} />
     </ImageContainer>
   );
 }

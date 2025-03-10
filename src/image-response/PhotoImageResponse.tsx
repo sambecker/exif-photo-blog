@@ -47,9 +47,8 @@ export default function PhotoImageResponse({
           ...photo.make === 'Apple' && { icon: <AiFillApple style={{
             marginRight: height * .01,
           }} /> },
-        }}>
-          {caption}
-        </ImageCaption>}
+          title: caption,
+        }} />}
     </ImageContainer>
   );
 };

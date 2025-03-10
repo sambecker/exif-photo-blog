@@ -39,9 +39,8 @@ export default function FocalLengthImageResponse({
             marginRight: height * .01,
           }}
         />,
-      }}>
-        {formatFocalLength(focal)}
-      </ImageCaption>
+        title: formatFocalLength(focal),
+      }} />
     </ImageContainer>
   );
 }
