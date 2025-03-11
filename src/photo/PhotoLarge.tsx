@@ -193,23 +193,24 @@ export default function PhotoLarge({
       <div className={clsx(
         'absolute inset-0',
         'flex items-center justify-center',
-        (shouldShowRecipeOverlay || shouldDebugRecipeOverlays)
-          ? 'z-[1]'
-          : 'z-[-1]',
+        // Allow clicks to pass through to zoom controls
+        // when not showing recipe overlay
+        !(shouldShowRecipeOverlay || shouldDebugRecipeOverlays) &&
+          'pointer-events-none',
       )}>
         <AnimatePresence>
           {(shouldShowRecipeOverlay || shouldDebugRecipeOverlays) &&
-          photo.recipeData &&
-          photo.filmSimulation &&
-            <PhotoRecipeOverlay
-              ref={refRecipe}
-              title={photo.recipeTitle}
-              recipe={photo.recipeData}
-              simulation={photo.filmSimulation}
-              iso={photo.isoFormatted}
-              exposure={photo.exposureCompensationFormatted}
-              onClose={hideRecipeOverlay}
-            />}
+            photo.recipeData &&
+            photo.filmSimulation &&
+              <PhotoRecipeOverlay
+                ref={refRecipe}
+                title={photo.recipeTitle}
+                recipe={photo.recipeData}
+                simulation={photo.filmSimulation}
+                iso={photo.isoFormatted}
+                exposure={photo.exposureCompensationFormatted}
+                onClose={hideRecipeOverlay}
+              />}
         </AnimatePresence>
       </div>
     </div>;

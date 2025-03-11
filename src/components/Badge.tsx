@@ -37,10 +37,14 @@ export default function Badge({
             : 'text-medium bg-gray-300/30 dark:bg-gray-700/50',
         interactive && (contrast === 'high'
           ? 'hover:opacity-70'
-          : 'hover:text-gray-900 dark:hover:text-gray-100'),
+          : contrast === 'frosted'
+            ? 'hover:text-black dark:hover:text-black'
+            : 'hover:text-gray-900 dark:hover:text-gray-100'),
         interactive && (contrast === 'high'
           ? 'active:opacity-90'
-          : 'active:bg-gray-200 dark:active:bg-gray-700/60'),
+          : contrast === 'frosted'
+            ? 'active:bg-neutral-100/50 dark:active:bg-neutral-900/10'
+            : 'active:bg-gray-200 dark:active:bg-gray-700/60'),
       );
     }
   };

@@ -74,9 +74,9 @@ export default function PhotoRecipeOverlay({
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, translateY: -10 }}
-      animate={{ opacity: 1, translateY: 0 }}
-      exit={{ opacity: 0, translateY: -10 }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
       className={clsx(
         'z-10',
         'w-[20rem] p-3 space-y-2',
