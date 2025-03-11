@@ -61,7 +61,7 @@ export default function Nav({
           type={!isPathAdmin(pathname) ? 'bottom' : 'none'}
           distanceOffset={10}
           items={showNav
-            ? [<div
+            ? [<nav
               key="nav"
               className={clsx(
                 'flex items-center w-full',
@@ -89,7 +89,7 @@ export default function Nav({
                     {SITE_DESCRIPTION}
                   </div>}
               </div>
-            </div>]
+            </nav>]
             : []}
         />
       }

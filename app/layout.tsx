@@ -74,38 +74,40 @@ export default function RootLayout({
       // Suppress hydration errors due to next-themes behavior
       suppressHydrationWarning
     >
-      <body>
+      <body className={clsx(
+        // Center on large screens
+        '3xl:flex flex-col items-center',
+      )}>
         <AppStateProvider>
           <ThemeProvider attribute="class" defaultTheme={DEFAULT_THEME}>
             <SwrConfigClient>
-              <main className={clsx(
+              <div className={clsx(
                 'mx-3 mb-3',
                 'lg:mx-6 lg:mb-6',
-                // Center on large screens
-                // 1280px width defined in components/SiteGrid.tsx
-                '3xl:mx-auto 3xl:w-[1280px]',
               )}>
                 <Nav siteDomainOrTitle={SITE_DOMAIN_OR_TITLE} />
-                <ShareModals />
-                <RecipeModal />
-                <div className={clsx(
-                  'min-h-[16rem] sm:min-h-[30rem]',
-                  'mb-12',
-                  'space-y-5',
-                )}>
-                  <AdminUploadPanel
-                    shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
-                    onLastUpload={async () => {
-                      'use server';
-                      // Update upload count in admin nav
-                      revalidatePath('/admin', 'layout');
-                    }}
-                  />
-                  <AdminBatchEditPanel />
-                  {children}
-                </div>
+                <main>
+                  <ShareModals />
+                  <RecipeModal />
+                  <div className={clsx(
+                    'min-h-[16rem] sm:min-h-[30rem]',
+                    'mb-12',
+                    'space-y-5',
+                  )}>
+                    <AdminUploadPanel
+                      shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
+                      onLastUpload={async () => {
+                        'use server';
+                        // Update upload count in admin nav
+                        revalidatePath('/admin', 'layout');
+                      }}
+                    />
+                    <AdminBatchEditPanel />
+                    {children}
+                  </div>
+                </main>
                 <Footer />
-              </main>
+              </div>
               <CommandK />
             </SwrConfigClient>
             <Analytics debug={false} />
