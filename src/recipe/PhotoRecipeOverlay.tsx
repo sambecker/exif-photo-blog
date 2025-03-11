@@ -8,6 +8,7 @@ import { IoCloseCircle } from 'react-icons/io5';
 import { motion } from 'framer-motion';
 import {
   addSign,
+  formatGrain,
   formatNoiseReduction,
   formatRecipe,
   formatWhiteBalance,
@@ -36,28 +37,24 @@ export default function PhotoRecipeOverlay({
     clarity,
     colorChromeEffect,
     colorChromeFXBlue,
-    grainEffect,
     bwAdjustment,
     bwMagentaGreen,
   } = recipe;
 
   const whiteBalanceTypeFormatted = formatWhiteBalance(recipe);
 
-  const renderRow = (children: ReactNode) =>
-    <div className="flex gap-2 *:w-full *:grow">{children}</div>;
-
   const renderDataSquare = (
     value: ReactNode,
     label?: string,
-    className?: string,
+    colSpan = 'col-span-4',
   ) => (
     <div className={clsx(
-      'flex flex-col items-center justify-center gap-0.5 rounded-md min-w-0',
+      'flex flex-col items-center justify-center gap-0.5 min-w-0',
       'rounded-md border',
       'border-neutral-200/40',
       'bg-neutral-100/30 hover:bg-neutral-100/50',
       label && 'p-1',
-      className,
+      colSpan,
     )}>
       <div className="truncate max-w-full tracking-wide">
         {typeof value === 'number' ? addSign(value) : value}
@@ -109,55 +106,48 @@ export default function PhotoRecipeOverlay({
           )}
         />
       </div>
-      <div className="space-y-2">
-        {renderRow(<>
-          {renderDataSquare(`DR${dynamicRange.development}`)}
-          {renderDataSquare(iso)}
-          {renderDataSquare(exposure ?? '0ev')}
-        </>)}
-        {renderRow(<>
-          {renderDataSquare(
-            whiteBalanceTypeFormatted.toUpperCase(),
-            `R${addSign(whiteBalance?.red)} / B${addSign(whiteBalance?.blue)}`,
-            'basis-2/3',
-          )}
-          {renderDataSquare(
-            formatNoiseReduction(recipe),
-            'ISO NR',
-            'basis-1/3',
-          )}
-        </>)}
-        {renderRow(<>
-          {renderDataSquare(highlight, 'Highlight')}
-          {renderDataSquare(shadow, 'Shadow')}
-        </>)}
-        {renderRow(<>
-          {renderDataSquare(color, 'Color')}
-          {renderDataSquare(sharpness, 'Sharpness')}
-          {renderDataSquare(clarity, 'Clarity')}
-        </>)}
-        {renderRow(<>
-          {renderDataSquare(
-            colorChromeEffect?.toLocaleUpperCase() ?? 'N/A',
-            'Color Chrome',
-          )}
-          {renderDataSquare(
-            colorChromeFXBlue?.toLocaleUpperCase() ?? 'N/A',
-            'FX Blue',
-          )}
-        </>)}
-        {renderRow(<>
-          {renderDataSquare(
-            grainEffect.roughness.toLocaleUpperCase(),
-            grainEffect.size === 'large'
-              ? 'Large Grain'
-              : grainEffect.size === 'small'
-                ? 'Small Grain'
-                : 'Grain',
-          )}
-          {renderDataSquare(bwAdjustment ?? 0, 'BW ADJ')}
-          {renderDataSquare(bwMagentaGreen ?? 0, 'BW M/G')}
-        </>)}
+      <div className="grid grid-cols-12 gap-2">
+        {/* ROW */}
+        {renderDataSquare(`DR${dynamicRange.development}`)}
+        {renderDataSquare(iso)}
+        {renderDataSquare(exposure ?? '0ev')}
+        {/* ROW */}
+        {renderDataSquare(
+          whiteBalanceTypeFormatted.toUpperCase(),
+          `R${addSign(whiteBalance?.red)} / B${addSign(whiteBalance?.blue)}`,
+          'col-span-8',
+        )}
+        {renderDataSquare(
+          formatNoiseReduction(recipe),
+          'ISO NR',
+          'col-span-4',
+        )}
+        {/* ROW */}
+        {renderDataSquare(highlight, 'Highlight', 'col-span-6')}
+        {renderDataSquare(shadow, 'Shadow', 'col-span-6')}
+        {/* ROW */}
+        {renderDataSquare(color, 'Color')}
+        {renderDataSquare(sharpness, 'Sharpness')}
+        {renderDataSquare(clarity, 'Clarity')}
+        {/* ROW */}
+        {renderDataSquare(
+          colorChromeEffect?.toLocaleUpperCase() ?? 'N/A',
+          'Color Chrome',
+          'col-span-6',
+        )}
+        {renderDataSquare(
+          colorChromeFXBlue?.toLocaleUpperCase() ?? 'N/A',
+          'FX Blue',
+          'col-span-6',
+        )}
+        {/* ROW */}
+        {renderDataSquare(
+          formatGrain(recipe),
+          'grain',
+          'col-span-6',
+        )}
+        {renderDataSquare(bwAdjustment ?? 0, 'BW ADJ', 'col-span-3')}
+        {renderDataSquare(bwMagentaGreen ?? 0, 'BW M/G', 'col-span-3')}
       </div>
     </motion.div>
   );

@@ -57,7 +57,9 @@ export const descriptionForRecipePhotos = (
 export const generateRecipeText = ({
   recipe,
   simulation,
-}: RecipeProps) => {
+}: RecipeProps,
+abbreviate?: boolean,
+) => {
   const lines = [
     `${labelForFilmSimulation(simulation).small.toLocaleUpperCase()}`,
     // eslint-disable-next-line max-len
@@ -78,7 +80,7 @@ export const generateRecipeText = ({
     lines.push(`FX BLUE ${recipe.colorChromeFXBlue.toLocaleUpperCase()}`);
   }
   if (recipe.grainEffect.roughness !== 'off') {
-    lines.push(`GRAIN ${formatGrain(recipe)}`);
+    lines.push(`GRAIN ${formatGrain(recipe, abbreviate)}`);
   }
   if (recipe.bwAdjustment || recipe.bwMagentaGreen) {
     // eslint-disable-next-line max-len
@@ -139,12 +141,17 @@ export const formatWhiteBalanceColor = ({
     ? `R${addSign(red)}/B${addSign(blue)}`
     : '';
 
-export const formatGrain = ({ grainEffect }: FujifilmRecipe) =>
-  grainEffect.roughness === 'off'
+export const formatGrain = (
+  { grainEffect }: FujifilmRecipe,
+  abbreviate?: boolean,
+) => {
+  const size = abbreviate
+    ? grainEffect.size === 'small' ? 'SM' : 'LG'
+    : grainEffect.size;
+  return grainEffect.roughness === 'off'
     ? 'OFF'
-    : grainEffect.roughness === 'weak'
-      ? `WEAK/${grainEffect.size === 'small' ? 'SM' : 'LG'}`
-      : `STRONG/${grainEffect.size === 'small' ? 'SM' : 'LG'}`;
+    : `${grainEffect.roughness}/${size}`.toLocaleUpperCase();
+};
 
 export const formatNoiseReduction = ({
   highISONoiseReduction,

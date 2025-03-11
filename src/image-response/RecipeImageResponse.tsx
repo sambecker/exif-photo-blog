@@ -32,7 +32,7 @@ export default function RecipeImageResponse({
       recipe: photo.recipeData,
       simulation: photo.filmSimulation!,
       iso: photo.iso!.toString(),
-    })
+    }, true)
     : [];
 
   if (recipeLines && recipeLines.length > MAX_RECIPE_LINES) {

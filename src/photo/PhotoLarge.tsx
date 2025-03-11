@@ -356,7 +356,11 @@ export default function PhotoLarge({
                         <button
                           ref={refRecipeButton}
                           title="Fujifilm Recipe"
-                          onClick={toggleRecipeOverlay}
+                          onClick={() => {
+                            toggleRecipeOverlay();
+                            // Avoid unexpected tooltip trigger
+                            refRecipeButton.current?.blur();
+                          }}
                           className={clsx(
                             'text-medium',
                             'border-medium rounded-md',
