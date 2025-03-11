@@ -60,30 +60,26 @@ export const generateRecipeText = ({
 }: RecipeProps) => {
   const lines = [
     `${labelForFilmSimulation(simulation).small.toLocaleUpperCase()}`,
-    `DR${recipe.dynamicRange.development} NR${formatNoiseReduction(recipe)}`,
     // eslint-disable-next-line max-len
     `${formatWhiteBalance(recipe).toLocaleUpperCase()} ${formatWhiteBalanceColor(recipe)}`,
+    `DR${recipe.dynamicRange.development} NR${formatNoiseReduction(recipe)}`,
   ];
 
   if (recipe.highlight || recipe.shadow) {
-    lines.push(`HI/SH ${addSign(recipe.highlight)}/${addSign(recipe.shadow)}`);
+    // eslint-disable-next-line max-len
+    lines.push(`HIGH${addSign(recipe.highlight)} SHADOW${addSign(recipe.shadow)}`);
   }
-
   // eslint-disable-next-line max-len
-  lines.push(`CO${addSign(recipe.color)} SH${addSign(recipe.sharpness)} CL${addSign(recipe.clarity)}`);
-
+  lines.push(`COL${addSign(recipe.color)} SHARP${addSign(recipe.sharpness)} CLAR${addSign(recipe.clarity)}`);
   if (recipe.colorChromeEffect) {
     lines.push(`CHROME ${recipe.colorChromeEffect.toLocaleUpperCase()}`);
   }
-
   if (recipe.colorChromeFXBlue) {
     lines.push(`FX BLUE ${recipe.colorChromeFXBlue.toLocaleUpperCase()}`);
   }
-
   if (recipe.grainEffect.roughness !== 'off') {
     lines.push(`GRAIN ${formatGrain(recipe)}`);
   }
-
   if (recipe.bwAdjustment || recipe.bwMagentaGreen) {
     // eslint-disable-next-line max-len
     lines.push(`BW ADJ ${addSign(recipe.bwAdjustment)} BW M/G ${addSign(recipe.bwMagentaGreen)}`);

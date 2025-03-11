@@ -78,9 +78,9 @@ export default function RecipeImageResponse({
               display: 'flex',
               flexDirection: 'column',
               ...smallText ? {
-                paddingTop: height * .03,
+                paddingTop: height * .04,
                 lineHeight: 1.45,
-                letterSpacing: '0.03em',
+                letterSpacing: '0.04em',
                 fontSize: height * .06,
               } : {
                 paddingTop: height * .02,
@@ -93,7 +93,7 @@ export default function RecipeImageResponse({
                 <div
                   tw="flex"
                   style={{
-                    width: height * .141,
+                    width: height * .143,
                   }}
                 />
                 <div style={{
