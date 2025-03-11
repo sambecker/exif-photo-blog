@@ -63,17 +63,21 @@ export default function AdminAppMenu({
         resolve();
       }
     }),
-  }, {
-    label: 'Manage Photos',
-    ...photosCountTotal && {
-      annotation: `${photosCountTotal}`,
-    },
-    icon: <TbPhoto
-      size={15}
-      className="translate-x-[-0.5px] translate-y-[0.5px]"
-    />,
-    href: PATH_ADMIN_PHOTOS,
   }];
+
+  if (photosCountTotal) {
+    items.push({
+      label: 'Manage Photos',
+      ...photosCountTotal && {
+        annotation: `${photosCountTotal}`,
+      },
+      icon: <TbPhoto
+        size={15}
+        className="translate-x-[-0.5px] translate-y-[0.5px]"
+      />,
+      href: PATH_ADMIN_PHOTOS,
+    });
+  }
 
   if (uploadsCount) {
     items.push({
@@ -99,6 +103,33 @@ export default function AdminAppMenu({
     });
   }
 
+  if (photosCountTotal) {
+    items.push({
+      label: isSelecting
+        ? 'Exit Select'
+        : 'Edit Multiple',
+      icon: isSelecting
+        ? <IoCloseSharp
+          className="text-[18px] translate-x-[-1px] translate-y-[1px]"
+        />
+        : <ImCheckboxUnchecked
+          className="translate-x-[-0.5px] text-[0.75rem]"
+        />,
+      href: PATH_GRID_INFERRED,
+      action: () => {
+        if (isSelecting) {
+          setSelectedPhotoIds?.(undefined);
+        } else {
+          setSelectedPhotoIds?.([]);
+        }
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
+      },
+      shouldPreventDefault: false,
+    });
+  }
+
   items.push({
     label: showAppInsightsLink
       ? 'App Insights'
@@ -110,29 +141,6 @@ export default function AdminAppMenu({
     href: showAppInsightsLink
       ? PATH_ADMIN_INSIGHTS
       : PATH_ADMIN_CONFIGURATION,
-  }, {
-    label: isSelecting
-      ? 'Exit Select'
-      : 'Edit Multiple',
-    icon: isSelecting
-      ? <IoCloseSharp
-        className="text-[18px] translate-x-[-1px] translate-y-[1px]"
-      />
-      : <ImCheckboxUnchecked
-        className="translate-x-[-0.5px] text-[0.75rem]"
-      />,
-    href: PATH_GRID_INFERRED,
-    action: () => {
-      if (isSelecting) {
-        setSelectedPhotoIds?.(undefined);
-      } else {
-        setSelectedPhotoIds?.([]);
-      }
-      if (document.activeElement instanceof HTMLElement) {
-        document.activeElement.blur();
-      }
-    },
-    shouldPreventDefault: false,
   }, {
     label: 'Sign Out',
     icon: <PiSignOutBold size={15} />,
