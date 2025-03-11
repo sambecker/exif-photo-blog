@@ -214,6 +214,17 @@ export const FILM_SIMULATION_FORM_INPUT_OPTIONS = Object
   ))
   .sort((a, b) => a.label.localeCompare(b.label));
 
+const ALL_POSSIBLE_FILM_SIMULATION_LABELS = Object
+  .values(FILM_SIMULATION_LABELS)
+  .flatMap(({ small, medium, large }) => [
+    small.toLocaleLowerCase(),
+    medium.toLocaleLowerCase(),
+    large.toLocaleLowerCase(),
+  ]);
+
+export const isStringFilmSimulation = (simulation: string) =>
+  ALL_POSSIBLE_FILM_SIMULATION_LABELS.includes(simulation.toLocaleLowerCase());
+
 export const labelForFilmSimulation = (simulation: FujifilmSimulation) =>
   FILM_SIMULATION_LABELS[simulation];
 
