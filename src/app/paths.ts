@@ -100,6 +100,9 @@ export const pathForAdminPhotoEdit = (photo: PhotoOrPhotoId) =>
 export const pathForAdminTagEdit = (tag: string) =>
   `${PATH_ADMIN_TAGS}/${tag}/${EDIT}`;
 
+export const pathForAdminRecipeEdit = (recipe: string) =>
+  `${PATH_ADMIN_RECIPES}/${recipe}/${EDIT}`;
+
 type PhotoOrPhotoId = Photo | string;
 
 const getPhotoId = (photoOrPhotoId: PhotoOrPhotoId) =>

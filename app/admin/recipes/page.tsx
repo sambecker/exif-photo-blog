@@ -1,16 +1,16 @@
-import AdminTagTable from '@/admin/AdminTagTable';
+import AdminRecipeTable from '@/admin/AdminRecipeTable';
 import SiteGrid from '@/components/SiteGrid';
-import { getUniqueTagsHiddenCached } from '@/photo/cache';
+import { getUniqueRecipesCached } from '@/photo/cache';
 
 export default async function AdminTagsPage() {
-  const tags = await getUniqueTagsHiddenCached().catch(() => []);
+  const recipes = await getUniqueRecipesCached().catch(() => []);
 
   return (
     <SiteGrid
       contentMain={
         <div className="space-y-6">
           <div className="space-y-4">
-            <AdminTagTable {...{ tags }} />
+            <AdminRecipeTable {...{ recipes }} />
           </div>
         </div>}
     />
