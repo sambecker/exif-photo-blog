@@ -41,6 +41,7 @@ export const PATH_ADMIN_PHOTOS        = `${PATH_ADMIN}/photos`;
 export const PATH_ADMIN_OUTDATED      = `${PATH_ADMIN}/outdated`;
 export const PATH_ADMIN_UPLOADS       = `${PATH_ADMIN}/uploads`;
 export const PATH_ADMIN_TAGS          = `${PATH_ADMIN}/tags`;
+export const PATH_ADMIN_RECIPES       = `${PATH_ADMIN}/recipes`;
 export const PATH_ADMIN_CONFIGURATION = `${PATH_ADMIN}/configuration`;
 export const PATH_ADMIN_INSIGHTS      = `${PATH_ADMIN}/insights`;
 export const PATH_ADMIN_BASELINE      = `${PATH_ADMIN}/baseline`;
