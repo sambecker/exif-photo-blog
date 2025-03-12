@@ -282,7 +282,7 @@ Vercel Postgres can be switched to another Postgres-compatible, pooling provider
 > Fujifilm simulation data is stored in vendor-specific Makernote binaries embedded in EXIF data. Under certain circumstances an intermediary may strip out this data. For instance, there is a known issue on iOS where editing an image, e.g., cropping it, causes Makernote data loss. If simulation data appears to be missing, try importing the original file as it was stored by the camera. Additionally, if you can confirm the simulation mode, you can edit the photo and manually select it.
 
 #### My Fujifilm recipes are missing/displaying incorrect data. What should I do?
-> Fujifilm file specifications have evolved over time. Open an issue with the file in question attached in order for it to be investigated.
+> If you don't see a recipe, first try syncing your photo from the ••• menu, or from `/admin/photos`. If the data looks incorrect, open an issue with the file in question attached in order for it to be investigated. Fujifilm file specifications have evolved over time and recipe parsing may need to be adjusted based on camera model/vintage.
 
 #### How do I hide Fujifilm content such as a recipes and film simulations?
 > This can be accomplished by setting `NEXT_PUBLIC_CATEGORY_VISIBILITY` (which has a default value of `tags, cameras, recipes, simulations`) to simply `tags, cameras`.
