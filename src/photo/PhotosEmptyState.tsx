@@ -39,7 +39,7 @@ export default function PhotosEmptyState() {
                 }}
               />
               <div>
-                Change the name of this blog and other configuration
+                Change this site&apos;s name and other configuration
                 by editing environment variables referenced in
                 {' '}
                 <Link
