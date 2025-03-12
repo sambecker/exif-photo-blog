@@ -2,21 +2,26 @@ import { BiCopy } from 'react-icons/bi';
 import LoaderButton from './primitives/LoaderButton';
 import clsx from 'clsx/lite';
 import { toastSuccess } from '@/toast';
+import Tooltip from './Tooltip';
 
 export default function CopyButton({
   label,
   text,
   subtle,
+  iconSize = 15,
+  tooltip,
   className,
 }: {
   label: string
   text?: string,
   subtle?: boolean
+  iconSize?: number
+  tooltip?: string
   className?: string
 }) {
-  return (
+  const button = 
     <LoaderButton
-      icon={<BiCopy size={15} />}
+      icon={<BiCopy size={iconSize} />}
       className={clsx(
         subtle && 'text-gray-300 dark:text-gray-700',
         className,
@@ -29,6 +34,13 @@ export default function CopyButton({
         : undefined}
       styleAs="link"
       disabled={!text}
-    />
+    />;
+
+  return (
+    tooltip
+      ? <Tooltip content={tooltip}>
+        {button}
+      </Tooltip>
+      : button
   );
 }

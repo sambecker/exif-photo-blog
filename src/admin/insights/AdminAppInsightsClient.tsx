@@ -140,6 +140,7 @@ export default function AdminAppInsightsClient({
                 <Tooltip
                   content="Could not connect to GitHub API. Try refreshing."
                   classNameTrigger="translate-y-[-1.5px] ml-2 h-3"
+                  supportMobile
                 />
               </>}
             />}

@@ -34,10 +34,7 @@ export default function PhotoSyncButton({
   confirmText.push('This action cannot be undone.');
 
   return (
-    <Tooltip
-      content="Regenerate photo data"
-      desktopOnly
-    >
+    <Tooltip content="Regenerate photo data">
       <LoaderButton
         className={className}
         icon={<IconGrSync

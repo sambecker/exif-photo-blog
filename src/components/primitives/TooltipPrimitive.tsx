@@ -12,14 +12,14 @@ export default function TooltipPrimitive({
   className,
   classNameTrigger: classNameTriggerProp,
   sideOffset = 10,
-  desktopOnly,
+  supportMobile,
   children,
 }: {
   content?: ReactNode
   className?: string
   classNameTrigger?: string
   sideOffset?: number
-  desktopOnly?: boolean
+  supportMobile?: boolean
   children: ReactNode
 }) {
   const refTrigger = useRef<HTMLButtonElement>(null);
@@ -29,7 +29,7 @@ export default function TooltipPrimitive({
 
   const supportsHover = useSupportsHover();
 
-  const includeButton = !desktopOnly && !supportsHover;
+  const includeButton = !supportsHover && supportMobile;
 
   useClickInsideOutside({
     htmlElements: [refTrigger, refContent],
