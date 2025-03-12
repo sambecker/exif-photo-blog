@@ -44,6 +44,7 @@ export type AppStateContext = {
   isUserSignedInEager?: boolean
   clearAuthStateAndRedirect?: () => void
   // ADMIN
+  isCheckingAuth?: boolean
   adminUpdateTimes?: Date[]
   registerAdminUpdate?: () => void
   refreshAdminData?: () => void

@@ -5,12 +5,12 @@ import {
   KEY_CREDENTIALS_CALLBACK_ROUTE_ERROR_URL,
   KEY_CREDENTIALS_SIGN_IN_ERROR,
   KEY_CREDENTIALS_SIGN_IN_ERROR_URL,
+  KEY_CREDENTIALS_SUCCESS,
   auth,
   generateAuthSecret,
   signIn,
   signOut,
 } from '@/auth';
-import { PATH_ADMIN_PHOTOS } from '@/app/paths';
 import type { Session } from 'next-auth';
 import { redirect } from 'next/navigation';
 
@@ -38,7 +38,10 @@ export const signInAction = async (
       throw error;
     }
   }
-  redirect(formData.get(KEY_CALLBACK_URL) as string || PATH_ADMIN_PHOTOS);
+  if (formData.get(KEY_CALLBACK_URL)) {
+    redirect(formData.get(KEY_CALLBACK_URL) as string);
+  }
+  return KEY_CREDENTIALS_SUCCESS;
 };
 
 export const signOutAction = async () =>

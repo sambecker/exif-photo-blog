@@ -91,7 +91,11 @@ export default function AppStateProvider({
 
   const invalidateSwr = useCallback(() => setSwrTimestamp(Date.now()), []);
 
-  const { data: auth, error: authError } = useSWR('getAuth', getAuthAction);
+  const {
+    data: auth,
+    error: authError,
+    isLoading: isCheckingAuth,
+  } = useSWR('getAuth', getAuthAction);
   useEffect(() => {
     setIsUserSignedInEager(hasAuthEmailCookie());
     if (!authError) {
@@ -176,6 +180,7 @@ export default function AppStateProvider({
         recipeModalProps,
         setRecipeModalProps,
         // AUTH
+        isCheckingAuth,
         userEmail,
         setUserEmail,
         isUserSignedIn,
