@@ -7,8 +7,8 @@ import { testDatabaseConnection } from '@/platforms/postgres';
 import { testStorageConnection } from '@/platforms/storage';
 import { APP_CONFIGURATION } from '@/app/config';
 import { getStorageUploadUrlsNoStore } from '@/platforms/storage/cache';
-import { getPhotosMetaCached, getUniqueTagsCached } from '@/photo/cache';
 import { getInsightsIndicatorStatus } from '@/admin/insights/server';
+import { getPhotosMeta, getUniqueTags } from '@/photo/db/query';
 
 export type AdminData = Awaited<ReturnType<typeof getAdminDataAction>>;
 
@@ -21,13 +21,13 @@ export const getAdminDataAction = async () =>
       uploadsCount,
       insightsIndicatorStatus,
     ] = await Promise.all([
-      getPhotosMetaCached()
+      getPhotosMeta()
         .then(({ count }) => count)
         .catch(() => 0),
-      getPhotosMetaCached({ hidden: 'only' })
+      getPhotosMeta({ hidden: 'only' })
         .then(({ count }) => count)
         .catch(() => 0),
-      getUniqueTagsCached()
+      getUniqueTags()
         .then(tags => tags.length)
         .catch(() => 0),
       getStorageUploadUrlsNoStore()
