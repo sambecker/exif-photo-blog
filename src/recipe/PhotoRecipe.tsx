@@ -34,7 +34,9 @@ export default function PhotoRecipe({
         icon={<TbChecklist
           size={16}
           className={clsx(
-            badged && 'translate-x-[-1px] translate-y-[0.5px]',
+            badged
+              ? 'translate-x-[-1px] translate-y-[0.5px]'
+              : 'translate-y-[0.5px]',
           )}
         />}
         className={className}

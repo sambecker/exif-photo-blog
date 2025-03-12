@@ -12,16 +12,20 @@ import {
   formatNoiseReduction,
   formatRecipe,
   formatWhiteBalance,
+  generateRecipeText,
   RecipeProps,
 } from '.';
+import { labelForFilmSimulation } from '@/platforms/fujifilm/simulation';
+import { TbChecklist } from 'react-icons/tb';
+import CopyButton from '@/components/CopyButton';
+import { pathForRecipe } from '@/app/paths';
+import LinkWithStatus from '@/components/LinkWithStatus';
 
 export default function PhotoRecipeOverlay({
   ref,
   title,
   recipe,
   simulation,
-  iso,
-  exposure,
   onClose,
 }: RecipeProps & {
   ref?: RefObject<HTMLDivElement | null>
@@ -68,6 +72,21 @@ export default function PhotoRecipeOverlay({
     </div>
   );
 
+  const renderRecipeTitle =
+    <div className="flex items-center gap-1.5 w-full">
+      <TbChecklist
+        size={17}
+        className="opacity-80 translate-y-[1px]"
+      />
+      <div className={clsx(
+        'text-[15px] uppercase',
+        'translate-y-[0.5px] tracking-wide',
+        'truncate max-w-full',
+      )}>
+        {title ? formatRecipe(title) : 'Recipe'}
+      </div>
+    </div>;
+
   return (
     <motion.div
       ref={ref}
@@ -76,26 +95,38 @@ export default function PhotoRecipeOverlay({
       exit={{ opacity: 0, scale: 0.95 }}
       className={clsx(
         'z-10',
-        'w-[20rem] p-3 space-y-2',
+        'w-[20rem] p-3 space-y-3',
         'rounded-lg shadow-2xl',
         'text-[13.5px] text-black',
         'bg-white/70 border border-neutral-200/30',
         'backdrop-blur-xl saturate-[300%]',
       )}
     >
-      <div className="flex items-center gap-2">
-        <div className="flex items-center gap-2 grow truncate">
-          <div className={clsx(
-            'truncate text-sm uppercase',
-            'translate-y-[0.5px] tracking-wide grow',
-          )}>
-            {title ? formatRecipe(title) : 'Recipe'}
-          </div>
-          <PhotoFilmSimulation
-            contrast="frosted"
-            simulation={simulation}
-          />
+      <div className="flex items-center gap-2 text-black/90">
+        <div className="grow translate-y-[-0.5px]">
+          {title
+            ? <LinkWithStatus
+              href={pathForRecipe(title ?? '')}
+              className={clsx(
+                'hover:text-black/50 active:text-black',
+                'px-1 py-0.5 rounded-md',
+              )}
+              loadingClassName="bg-neutral-100/20"
+            >
+              {renderRecipeTitle}
+            </LinkWithStatus>
+            : renderRecipeTitle}
         </div>
+        <CopyButton
+          label={`${title
+            ? `${formatRecipe(title).toLocaleUpperCase()} recipe`
+            : 'Recipe'}`}
+          text={generateRecipeText({ recipe, simulation }).join('\n')}
+          className={clsx(
+            'translate-y-[1.5px]',
+            'hover:text-black/50 active:text-black/75',
+          )}
+        />
         <LoaderButton
           icon={<IoCloseCircle size={20} />}
           onClick={onClose}
@@ -108,9 +139,26 @@ export default function PhotoRecipeOverlay({
       </div>
       <div className="grid grid-cols-12 gap-2">
         {/* ROW */}
-        {renderDataSquare(`DR${dynamicRange.development}`)}
-        {renderDataSquare(iso)}
-        {renderDataSquare(exposure ?? '0ev')}
+        <div className="col-span-8">
+          {renderDataSquare(
+            <div className="flex items-center gap-1.5">
+              {labelForFilmSimulation(simulation).medium.toLocaleUpperCase()}
+              <PhotoFilmSimulation
+                contrast="frosted"
+                simulation={simulation}
+                type="icon-only"
+                className="opacity-80 translate-y-[-0.5px]"
+              />
+            </div>,
+            undefined,
+            'py-0.5',
+          )}
+        </div>
+        {renderDataSquare(
+          `DR${dynamicRange.development}`,
+          undefined,
+          'col-span-4 py-0.5',
+        )}
         {/* ROW */}
         {renderDataSquare(
           whiteBalanceTypeFormatted.toUpperCase(),
