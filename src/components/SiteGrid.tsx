@@ -51,6 +51,7 @@ export default function SiteGrid({
       {contentSide &&
         <div className={clsx(
           'col-span-1 md:col-span-3',
+          '3xl:max-w-[260px]',
           sideFirstOnMobile && 'order-1 md:order-none',
           sideHiddenOnMobile && 'hidden md:block',
         )}>
