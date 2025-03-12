@@ -10,8 +10,8 @@
 @theme {
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 
-  --breakpoint-xs: 390px;
-  --breakpoint-3xl: 1640px;
+  --breakpoint-xs: 24.5rem;
+  --breakpoint-3xl: 102rem;
 
   --text-xs: 0.75rem;
   --text-xs--line-height: 1rem;
