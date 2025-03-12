@@ -159,4 +159,4 @@ export const formatNoiseReduction = ({
 }: FujifilmRecipe) =>
   highISONoiseReduction
     ? addSign(highISONoiseReduction)
-    : noiseReductionBasic ?? 'OFF';
+    : noiseReductionBasic?.toLocaleUpperCase() ?? 'OFF';
