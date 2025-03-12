@@ -1,31 +1,31 @@
 import AdminChildPage from '@/components/AdminChildPage';
 import { redirect } from 'next/navigation';
 import { getPhotosCached } from '@/photo/cache';
-import TagForm from '@/tag/TagForm';
-import { PATH_ADMIN, PATH_ADMIN_TAGS, pathForTag } from '@/app/paths';
+import { PATH_ADMIN, PATH_ADMIN_TAGS, pathForRecipe } from '@/app/paths';
 import PhotoLightbox from '@/photo/PhotoLightbox';
 import { getPhotosMeta } from '@/photo/db/query';
-import AdminTagBadge from '@/admin/AdminTagBadge';
+import AdminRecipeBadge from '@/admin/AdminRecipeBadge';
+import AdminRecipeForm from '@/admin/AdminRecipeForm';
 
 const MAX_PHOTO_TO_SHOW = 6;
 
 interface Props {
-  params: Promise<{ tag: string }>
+  params: Promise<{ recipe: string }>
 }
 
-export default async function PhotoPageEdit({
+export default async function RecipePageEdit({
   params,
 }: Props) {
-  const { tag: tagFromParams } = await params;
+  const { recipe: recipeFromParams } = await params;
 
-  const tag = decodeURIComponent(tagFromParams);
+  const recipe = decodeURIComponent(recipeFromParams);
   
   const [
     { count },
     photos,
   ] = await Promise.all([
-    getPhotosMeta({ tag }),
-    getPhotosCached({ tag, limit: MAX_PHOTO_TO_SHOW }),
+    getPhotosMeta({ recipe }),
+    getPhotosCached({ recipe, limit: MAX_PHOTO_TO_SHOW }),
   ]);
 
   if (count === 0) { redirect(PATH_ADMIN); }
@@ -34,15 +34,15 @@ export default async function PhotoPageEdit({
     <AdminChildPage
       backPath={PATH_ADMIN_TAGS}
       backLabel="Tags"
-      breadcrumb={<AdminTagBadge {...{ tag, count, hideBadge: true }} />}
+      breadcrumb={<AdminRecipeBadge {...{ recipe, count, hideBadge: true }} />}
     >
-      <TagForm {...{ tag, photos }}>
+      <AdminRecipeForm {...{ recipe, photos }}>
         <PhotoLightbox
-          {...{ count, photos, tag }}
+          {...{ count, photos, recipe }}
           maxPhotosToShow={MAX_PHOTO_TO_SHOW}
-          moreLink={pathForTag(tag)}
+          moreLink={pathForRecipe(recipe)}
         />
-      </TagForm>
+      </AdminRecipeForm>
     </AdminChildPage>
   );
 };
