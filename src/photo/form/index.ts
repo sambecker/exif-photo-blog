@@ -25,9 +25,13 @@ import { TAG_FAVS, getValidationMessageForTags } from '@/tag';
 import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 
-type VirtualFields = 'favorite';
+type VirtualFields =
+  'favorite' |
+  'applyRecipeTitleGlobally';
 
-export type PhotoFormData = Record<keyof PhotoDbInsert | VirtualFields, string>
+export type FormFields = keyof PhotoDbInsert | VirtualFields;
+
+export type PhotoFormData = Record<FormFields, string>
 
 export type FieldSetType =
   'text' |
@@ -42,7 +46,7 @@ export type AnnotatedTag = {
   annotationAria?: string,
 };
 
-type FormMeta = {
+export type FormMeta = {
   label: string
   note?: string
   required?: boolean
@@ -52,9 +56,11 @@ type FormMeta = {
   validateStringMaxLength?: number
   spellCheck?: boolean
   capitalize?: boolean
-  hide?: boolean
   hideIfEmpty?: boolean
-  shouldHide?: (formData: Partial<PhotoFormData>) => boolean
+  shouldHide?: (
+    formData: Partial<PhotoFormData>,
+    changedFormKeys?: (keyof PhotoFormData)[],
+  ) => boolean
   loadingMessage?: string
   type?: FieldSetType
   selectOptions?: { value: string, label: string }[]
@@ -96,7 +102,7 @@ const FORM_METADATA = (
     label: 'semantic description (not visible)',
     capitalize: true,
     validateStringMaxLength: STRING_MAX_LENGTH_LONG,
-    hide: !aiTextGeneration,
+    shouldHide: () => !aiTextGeneration,
   },
   id: { label: 'id', readOnly: true, hideIfEmpty: true },
   blurData: {
@@ -123,6 +129,18 @@ const FORM_METADATA = (
     spellCheck: false,
     capitalize: false,
     shouldHide: ({ make }) => make !== MAKE_FUJIFILM,
+  },
+  applyRecipeTitleGlobally: {
+    label: 'apply recipe title globally',
+    type: 'checkbox',
+    excludeFromInsert: true,
+    shouldHide: ({ make, recipeTitle, recipeData }, changedFormKeys) =>
+      !(
+        make === MAKE_FUJIFILM &&
+        recipeData &&
+        recipeTitle &&
+        changedFormKeys?.includes('recipeTitle')
+      ),
   },
   recipeData: {
     type: 'textarea',
@@ -152,7 +170,7 @@ const FORM_METADATA = (
   iso: { label: 'ISO' },
   exposureTime: { label: 'exposure time' },
   exposureCompensation: { label: 'exposure compensation' },
-  locationName: { label: 'location name', hide: true },
+  locationName: { label: 'location name', shouldHide: () => true },
   latitude: { label: 'latitude' },
   longitude: { label: 'longitude' },
   takenAt: {
@@ -180,8 +198,7 @@ export const FIELDS_TO_NOT_OVERWRITE_WITH_NULL_DATA_ON_SYNC =
 export const FORM_METADATA_ENTRIES = (
   ...args: Parameters<typeof FORM_METADATA>
 ) =>
-  (Object.entries(FORM_METADATA(...args)) as [keyof PhotoFormData, FormMeta][])
-    .filter(([_, meta]) => !meta.hide);
+  (Object.entries(FORM_METADATA(...args)) as [keyof PhotoFormData, FormMeta][]);
 
 export const convertFormKeysToLabels = (keys: (keyof PhotoFormData)[]) =>
   keys.map(key => FORM_METADATA()[key].label.toUpperCase());

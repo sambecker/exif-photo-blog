@@ -12,6 +12,7 @@ import {
   getUniqueTags,
   deletePhotoRecipeGlobally,
   renamePhotoRecipeGlobally,
+  getPhotosNeedingRecipeTitleCount,
 } from '@/photo/db/query';
 import { GetPhotosOptions, areOptionsSensitive } from './db';
 import {
@@ -304,6 +305,13 @@ export const renamePhotoTagGloballyAction = async (formData: FormData) =>
       redirect(PATH_ADMIN_TAGS);
     }
   });
+
+export const getPhotosNeedingRecipeTitleCountAction = async (
+  recipeData: string,
+) =>
+  runAuthenticatedAdminServerAction(async () =>
+    await getPhotosNeedingRecipeTitleCount(recipeData),
+  );
 
 export const deletePhotoRecipeGloballyAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {

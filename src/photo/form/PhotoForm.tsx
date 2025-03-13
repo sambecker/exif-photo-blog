@@ -1,9 +1,11 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { ComponentProps, useEffect, useMemo, useState } from 'react';
 import {
   FIELDS_WITH_JSON,
   FORM_METADATA_ENTRIES,
+  FormFields,
+  FormMeta,
   PhotoFormData,
   convertFormKeysToLabels,
   formHasTextContent,
@@ -29,10 +31,10 @@ import { useAppState } from '@/state/AppState';
 import UpdateBlurDataButton from '../UpdateBlurDataButton';
 import { getNextImageUrlForManipulation } from '@/platforms/next-image';
 import { BLUR_ENABLED, IS_PREVIEW } from '@/app/config';
-import { PhotoDbInsert } from '..';
 import ErrorNote from '@/components/ErrorNote';
 import { convertRecipesForForm, Recipes } from '@/recipe';
 import deepEqual from 'fast-deep-equal/es6/react';
+import ApplyRecipeTitleGloballyCheckbox from './ApplyRecipesGloballyCheckbox';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -223,9 +225,9 @@ export default function PhotoForm({
   };
 
   const shouldHideField = (
-    key: keyof PhotoDbInsert | 'favorite',
+    key: FormFields,
     hideIfEmpty?: boolean,
-    shouldHide?: (formData: Partial<PhotoFormData>) => boolean,
+    shouldHide?: FormMeta['shouldHide'],
   ) => {
     if (
       key === 'blurData' &&
@@ -237,7 +239,7 @@ export default function PhotoForm({
     } else {
       return (
         (hideIfEmpty && !formData[key]) ||
-        shouldHide?.(formData)
+        shouldHide?.(formData, changedFormKeys)
       );
     }
   };
@@ -326,25 +328,27 @@ export default function PhotoForm({
               shouldHide,
               loadingMessage,
               type,
-            }]) =>
-              !shouldHideField(key, hideIfEmpty, shouldHide) &&
-                <FieldSetWithStatus
-                  key={key}
-                  id={key}
-                  label={label + (
+            }]) => {
+              if (!shouldHideField(key, hideIfEmpty, shouldHide)) {
+                const fieldProps: ComponentProps<typeof FieldSetWithStatus> = {
+                  id: key,
+                  label: label + (
                     key === 'blurData' && shouldDebugImageFallbacks
                       ? ` (${(formData[key] ?? '').length} chars.)`
                       : ''
-                  )}
-                  note={note}
-                  error={formErrors[key]}
-                  value={formData[key] ?? ''}
-                  isModified={changedFormKeys.includes(key)}
-                  onChange={value => {
+                  ),
+                  note,
+                  error: formErrors[key],
+                  value: formData[key] ?? '',
+                  isModified: changedFormKeys.includes(key),
+                  onChange: value => {
                     const formUpdated = { ...formData, [key]: value };
                     setFormData(formUpdated);
                     if (validate) {
-                      setFormErrors({ ...formErrors, [key]: validate(value) });
+                      setFormErrors({
+                        ...formErrors, [key]:
+                        validate(value),
+                      });
                     } else if (validateStringMaxLength !== undefined) {
                       setFormErrors({
                         ...formErrors,
@@ -356,26 +360,41 @@ export default function PhotoForm({
                     if (key === 'title') {
                       onTitleChange?.(value.trim());
                     }
-                  }}
-                  selectOptions={selectOptions}
-                  selectOptionsDefaultLabel={selectOptionsDefaultLabel}
-                  tagOptions={tagOptions}
-                  tagOptionsLimit={tagOptionsLimit}
-                  // eslint-disable-next-line max-len
-                  tagOptionsLimitValidationMessage={tagOptionsLimitValidationMessage}
-                  required={required}
-                  readOnly={readOnly}
-                  spellCheck={spellCheck}
-                  capitalize={capitalize}
-                  placeholder={loadingMessage && !formData[key]
+                  },
+                  selectOptions,
+                  selectOptionsDefaultLabel: selectOptionsDefaultLabel,
+                  tagOptions,
+                  tagOptionsLimit,
+                  tagOptionsLimitValidationMessage,
+                  required,
+                  readOnly,
+                  spellCheck,
+                  capitalize,
+                  placeholder: loadingMessage && !formData[key]
                     ? loadingMessage
-                    : undefined}
-                  loading={
+                    : undefined,
+                  loading: (
                     (loadingMessage && !formData[key] ? true : false) ||
-                    isFieldGeneratingAi(key)}
-                  type={type}
-                  accessory={accessoryForField(key)}
-                />)}
+                    isFieldGeneratingAi(key)
+                  ),
+                  type,
+                  accessory: accessoryForField(key),
+                };
+                return key === 'applyRecipeTitleGlobally'
+                  ? <ApplyRecipeTitleGloballyCheckbox
+                    key={key}
+                    recipeTitle={formData.recipeTitle}
+                    recipeData={formData.recipeData}
+                    hasRecipeTitleChanged={
+                      changedFormKeys.includes('recipeTitle')}
+                    {...fieldProps}
+                  />
+                  : <FieldSetWithStatus
+                    key={key}
+                    {...fieldProps}
+                  />;
+              }
+            })}
           <input
             type="hidden"
             name="shouldStripGpsData"

@@ -359,6 +359,14 @@ export const getRecipeTitleForData = async (data: string | object) =>
     .then(({ rows }) => rows[0]?.recipe_title as string | undefined)
   , 'getRecipeTitleForData');
 
+export const getPhotosNeedingRecipeTitleCount = async (data: string) =>
+  safelyQueryPhotos(() => sql`
+    SELECT COUNT(*)
+    FROM photos
+    WHERE recipe_title IS NULL AND recipe_data = ${data}
+  `.then(({ rows }) => parseInt(rows[0].count, 10))
+  , 'getPhotosNeedingRecipeTitleCount');
+
 export const updateAllMatchingRecipeTitles = (
   title: string,
   data: string,
