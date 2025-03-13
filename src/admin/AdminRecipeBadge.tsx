@@ -15,7 +15,7 @@ export default function AdminRecipeBadge({
   const renderBadgeContent = () =>
     <div className={clsx(
       'inline-flex items-center gap-2',
-      'translate-y-[1px]',
+      'translate-y-[1.5px]',
     )}>
       <PhotoRecipe {...{ recipe }} />
       <div className="text-dim uppercase">

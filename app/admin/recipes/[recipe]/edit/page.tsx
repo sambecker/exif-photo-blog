@@ -6,6 +6,8 @@ import PhotoLightbox from '@/photo/PhotoLightbox';
 import { getPhotosMeta } from '@/photo/db/query';
 import AdminRecipeBadge from '@/admin/AdminRecipeBadge';
 import AdminRecipeForm from '@/admin/AdminRecipeForm';
+import { getPhotoWithRecipeFromPhotos } from '@/recipe';
+import AdminShowRecipeButton from '@/admin/AdminShowRecipeButton';
 
 const MAX_PHOTO_TO_SHOW = 6;
 
@@ -28,6 +30,11 @@ export default async function RecipePageEdit({
     getPhotosCached({ recipe, limit: MAX_PHOTO_TO_SHOW }),
   ]);
 
+  const {
+    recipeData,
+    filmSimulation,
+  } = getPhotoWithRecipeFromPhotos(photos) ?? {};
+
   if (count === 0) { redirect(PATH_ADMIN); }
 
   return (
@@ -35,6 +42,13 @@ export default async function RecipePageEdit({
       backPath={PATH_ADMIN_TAGS}
       backLabel="Tags"
       breadcrumb={<AdminRecipeBadge {...{ recipe, count, hideBadge: true }} />}
+      accessory={recipeData && filmSimulation &&
+        <AdminShowRecipeButton
+          title={recipe}
+          recipe={recipeData}
+          simulation={filmSimulation}
+        />
+      }
     >
       <AdminRecipeForm {...{ recipe, photos }}>
         <PhotoLightbox
