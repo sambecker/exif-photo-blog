@@ -10,6 +10,8 @@ import {
   getPhotos,
   addTagsToPhotos,
   getUniqueTags,
+  deletePhotoRecipeGlobally,
+  renamePhotoRecipeGlobally,
 } from '@/photo/db/query';
 import { GetPhotosOptions, areOptionsSensitive } from './db';
 import {
@@ -25,10 +27,12 @@ import {
   revalidateAllKeysAndPaths,
   revalidatePhoto,
   revalidatePhotosKey,
+  revalidateRecipesKey,
   revalidateTagsKey,
 } from '@/photo/cache';
 import {
   PATH_ADMIN_PHOTOS,
+  PATH_ADMIN_RECIPES,
   PATH_ADMIN_TAGS,
   PATH_ROOT,
   pathForPhoto,
@@ -298,6 +302,29 @@ export const renamePhotoTagGloballyAction = async (formData: FormData) =>
       revalidatePhotosKey();
       revalidateTagsKey();
       redirect(PATH_ADMIN_TAGS);
+    }
+  });
+
+export const deletePhotoRecipeGloballyAction = async (formData: FormData) =>
+  runAuthenticatedAdminServerAction(async () => {
+    const recipe = formData.get('recipe') as string;
+
+    await deletePhotoRecipeGlobally(recipe);
+
+    revalidatePhotosKey();
+    revalidateAdminPaths();
+  });
+
+export const renamePhotoRecipeGloballyAction = async (formData: FormData) =>
+  runAuthenticatedAdminServerAction(async () => {
+    const recipe = formData.get('recipe') as string;
+    const updatedRecipe = formData.get('updatedRecipe') as string;
+
+    if (recipe && updatedRecipe && recipe !== updatedRecipe) {
+      await renamePhotoRecipeGlobally(recipe, updatedRecipe);
+      revalidatePhotosKey();
+      revalidateRecipesKey();
+      redirect(PATH_ADMIN_RECIPES);
     }
   });
 

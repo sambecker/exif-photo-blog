@@ -23,8 +23,8 @@ export default function Badge({
       return clsx(
         'px-1.5 h-[26px]',
         'rounded-md',
-        'bg-gray-100/80 dark:bg-gray-900/80',
-        'border border-gray-200/60 dark:border-gray-800/75',
+        'bg-gray-100/40 dark:bg-gray-900/60',
+        'border border-medium',
       );
     case 'small':
       return clsx(

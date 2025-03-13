@@ -25,13 +25,15 @@ export default function RecipeImageResponse({
   fontFamily: string
   smallText?: boolean
 }) {
-  const photo = getPhotoWithRecipeFromPhotos(photos);
+  const {
+    recipeData,
+    filmSimulation,
+  } = getPhotoWithRecipeFromPhotos(photos) ?? {};
 
-  let recipeLines = photo?.recipeData && photo.filmSimulation
+  let recipeLines = recipeData && filmSimulation
     ? generateRecipeText({
-      recipe: photo.recipeData,
-      simulation: photo.filmSimulation!,
-      iso: photo.iso!.toString(),
+      recipe: recipeData,
+      simulation: filmSimulation,
     }, true)
     : [];
 
@@ -72,7 +74,7 @@ export default function RecipeImageResponse({
         />,
         title: formatTag(recipe).toLocaleUpperCase(),
       }}>
-        {photo?.recipeData &&
+        {recipeData &&
           <div
             // tw="opacity-70"
             style={{
@@ -108,10 +110,10 @@ export default function RecipeImageResponse({
                   flexGrow: 1,
                 }}>
                   {text}
-                  {isStringFilmSimulation(text) &&
+                  {isStringFilmSimulation(text) && filmSimulation &&
                     <div tw="flex">
                       <PhotoFilmSimulationIcon
-                        simulation={photo.filmSimulation}
+                        simulation={filmSimulation}
                         height={height * .06}
                         style={{ transform: `translateY(${-height * .001}px)`}}
                       />

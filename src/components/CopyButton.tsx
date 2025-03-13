@@ -3,6 +3,7 @@ import LoaderButton from './primitives/LoaderButton';
 import clsx from 'clsx/lite';
 import { toastSuccess } from '@/toast';
 import Tooltip from './Tooltip';
+import { ComponentProps } from 'react';
 
 export default function CopyButton({
   label,
@@ -10,6 +11,7 @@ export default function CopyButton({
   subtle,
   iconSize = 15,
   tooltip,
+  tooltipColor,
   className,
 }: {
   label: string
@@ -17,6 +19,7 @@ export default function CopyButton({
   subtle?: boolean
   iconSize?: number
   tooltip?: string
+  tooltipColor?: ComponentProps<typeof Tooltip>['color']
   className?: string
 }) {
   const button = 
@@ -38,7 +41,7 @@ export default function CopyButton({
 
   return (
     tooltip
-      ? <Tooltip content={tooltip}>
+      ? <Tooltip content={tooltip} color={tooltipColor}>
         {button}
       </Tooltip>
       : button

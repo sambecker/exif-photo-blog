@@ -9,7 +9,7 @@ import { renamePhotoTagGloballyAction } from '@/photo/actions';
 import { parameterize } from '@/utility/string';
 import { useAppState } from '@/state/AppState';
 
-export default function TagForm({
+export default function AdminTagForm({
   tag,
   children,
 }: {

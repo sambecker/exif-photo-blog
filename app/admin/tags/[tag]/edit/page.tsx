@@ -1,7 +1,7 @@
 import AdminChildPage from '@/components/AdminChildPage';
 import { redirect } from 'next/navigation';
 import { getPhotosCached } from '@/photo/cache';
-import TagForm from '@/tag/TagForm';
+import AdminTagForm from '@/admin/AdminTagForm';
 import { PATH_ADMIN, PATH_ADMIN_TAGS, pathForTag } from '@/app/paths';
 import PhotoLightbox from '@/photo/PhotoLightbox';
 import { getPhotosMeta } from '@/photo/db/query';
@@ -36,13 +36,13 @@ export default async function PhotoPageEdit({
       backLabel="Tags"
       breadcrumb={<AdminTagBadge {...{ tag, count, hideBadge: true }} />}
     >
-      <TagForm {...{ tag, photos }}>
+      <AdminTagForm {...{ tag, photos }}>
         <PhotoLightbox
           {...{ count, photos, tag }}
           maxPhotosToShow={MAX_PHOTO_TO_SHOW}
           moreLink={pathForTag(tag)}
         />
-      </TagForm>
+      </AdminTagForm>
     </AdminChildPage>
   );
 };

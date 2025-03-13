@@ -265,6 +265,23 @@ export const addTagsToPhotos = (tags: string[], photoIds: string[]) =>
     convertArrayToPostgresString(photoIds),
   ]), 'addTagsToPhotos');
 
+export const deletePhotoRecipeGlobally = (recipe: string) =>
+  safelyQueryPhotos(() => sql`
+    UPDATE photos
+    SET recipe_title=NULL
+    WHERE recipe_title=${recipe}
+  `, 'deletePhotoRecipeGlobally');
+
+export const renamePhotoRecipeGlobally = (
+  recipe: string,
+  updatedRecipe: string,
+) =>
+  safelyQueryPhotos(() => sql`
+    UPDATE photos
+    SET recipe_title=${updatedRecipe}
+    WHERE recipe_title=${recipe}
+  `, 'renamePhotoRecipeGlobally');
+
 export const deletePhoto = (id: string) =>
   safelyQueryPhotos(() => sql`
     DELETE FROM photos WHERE id=${id}
