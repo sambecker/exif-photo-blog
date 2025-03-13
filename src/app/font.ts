@@ -11,10 +11,9 @@ const getFontData = async (fontPath: string) =>
   fs.readFileSync(path.join(cwd(), fontPath));
 
 export const getIBMPlexMono = async () => {
-  const [regular, medium] = await Promise.all([
-    getFontData(FONT_IBM_PLEX_MONO_PATH_REGULAR),
-    getFontData(FONT_IBM_PLEX_MONO_PATH_MEDIUM),
-  ]);
+  const regular = await getFontData(FONT_IBM_PLEX_MONO_PATH_REGULAR);
+  const medium = await getFontData(FONT_IBM_PLEX_MONO_PATH_MEDIUM);
+
   return {
     fontFamily: FONT_IBM_PLEX_MONO_FAMILY,
     fonts: [{
