@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { PATH_ADMIN_RECIPES } from '@/app/paths';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import { ReactNode, useMemo, useState } from 'react';
-import { renamePhotoTagGloballyAction } from '@/photo/actions';
+import { renamePhotoRecipeGloballyAction } from '@/photo/actions';
 import { parameterize } from '@/utility/string';
 import { useAppState } from '@/state/AppState';
 
@@ -31,23 +31,23 @@ export default function AdminRecipeForm({
 
   return (
     <form
-      action={renamePhotoTagGloballyAction}
+      action={renamePhotoRecipeGloballyAction}
       className="space-y-8"
     >
       <FieldSetWithStatus
-        id="updatedTagRaw"
-        label="New Tag Name"
+        id="updatedRecipeRaw"
+        label="New Recipe Name"
         value={updatedRecipeRaw}
         onChange={setUpdatedRecipeRaw}
       />
-      {/* Form data: tag to be replaced */}
+      {/* Form data: recipe to be replaced */}
       <input
         name="recipe"
         value={recipe}
         hidden
         readOnly
       />
-      {/* Form data: updated tag */}
+      {/* Form data: updated recipe */}
       <input
         name="updatedRecipe"
         value={updatedRecipe}

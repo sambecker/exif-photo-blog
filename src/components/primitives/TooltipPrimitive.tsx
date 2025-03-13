@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useRef, useState } from 'react';
+import { ReactNode, useRef, useState, ComponentProps } from 'react';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import MenuSurface from './MenuSurface';
 import useSupportsHover from '@/utility/useSupportsHover';
@@ -13,6 +13,7 @@ export default function TooltipPrimitive({
   classNameTrigger: classNameTriggerProp,
   sideOffset = 10,
   supportMobile,
+  color,
   children,
 }: {
   content?: ReactNode
@@ -20,6 +21,7 @@ export default function TooltipPrimitive({
   classNameTrigger?: string
   sideOffset?: number
   supportMobile?: boolean
+  color?: ComponentProps<typeof MenuSurface>['color']
   children: ReactNode
 }) {
   const refTrigger = useRef<HTMLButtonElement>(null);
@@ -59,7 +61,7 @@ export default function TooltipPrimitive({
               {children}
             </span>}
         </Tooltip.Trigger>
-        <Tooltip.Portal >
+        <Tooltip.Portal>
           <Tooltip.Content
             ref={refContent}
             sideOffset={sideOffset}
@@ -68,11 +70,13 @@ export default function TooltipPrimitive({
               'data-[side=top]:animate-fade-in-from-bottom',
               'data-[side=bottom]:animate-fade-in-from-top',
               // Extra collision padding
-              'mx-2', 
+              'mx-2',
+              // Z-index above
+              'z-100',
             )}
           >
             {content &&
-              <MenuSurface className={className}>
+              <MenuSurface {...{ color, className }}>
                 {content}
               </MenuSurface>}
           </Tooltip.Content>

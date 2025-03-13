@@ -1,5 +1,5 @@
 import FormWithConfirm from '@/components/FormWithConfirm';
-import { deletePhotoTagGloballyAction } from '@/photo/actions';
+import { deletePhotoRecipeGloballyAction } from '@/photo/actions';
 import AdminTable from '@/admin/AdminTable';
 import { Fragment } from 'react';
 import DeleteFormButton from '@/admin/DeleteFormButton';
@@ -28,7 +28,7 @@ export default function AdminRecipeTable({
           )}>
             <EditButton path={pathForAdminRecipeEdit(recipe)} />
             <FormWithConfirm
-              action={deletePhotoTagGloballyAction}
+              action={deletePhotoRecipeGloballyAction}
               confirmText={
                 // eslint-disable-next-line max-len
                 `Are you sure you want to remove "${formatRecipe(recipe)}" from ${photoQuantityText(count, false).toLowerCase()}?`}

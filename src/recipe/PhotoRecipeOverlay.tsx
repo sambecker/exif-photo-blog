@@ -124,11 +124,12 @@ export default function PhotoRecipeOverlay({
           text={generateRecipeText({ recipe, simulation }).join('\n')}
           iconSize={17}
           className={clsx(
-            'translate-y-[1.5px]',
+            'translate-y-[-0.5px]',
             'text-black/40 active:text-black/75',
             'hover:text-black/40',
           )}
           tooltip="Copy recipe text"
+          tooltipColor="frosted"
         />
         <LoaderButton
           icon={<IoCloseCircle size={20} />}

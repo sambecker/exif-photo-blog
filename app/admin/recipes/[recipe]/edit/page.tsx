@@ -1,7 +1,7 @@
 import AdminChildPage from '@/components/AdminChildPage';
 import { redirect } from 'next/navigation';
 import { getPhotosCached } from '@/photo/cache';
-import { PATH_ADMIN, PATH_ADMIN_TAGS, pathForRecipe } from '@/app/paths';
+import { PATH_ADMIN, PATH_ADMIN_RECIPES, pathForRecipe } from '@/app/paths';
 import PhotoLightbox from '@/photo/PhotoLightbox';
 import { getPhotosMeta } from '@/photo/db/query';
 import AdminRecipeBadge from '@/admin/AdminRecipeBadge';
@@ -39,8 +39,8 @@ export default async function RecipePageEdit({
 
   return (
     <AdminChildPage
-      backPath={PATH_ADMIN_TAGS}
-      backLabel="Tags"
+      backPath={PATH_ADMIN_RECIPES}
+      backLabel="Recipes"
       breadcrumb={<AdminRecipeBadge {...{ recipe, count, hideBadge: true }} />}
       accessory={recipeData && filmSimulation &&
         <AdminShowRecipeButton

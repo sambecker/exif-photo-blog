@@ -30,6 +30,8 @@ import {
   PATH_ROOT,
   PREFIX_CAMERA,
   PREFIX_FILM_SIMULATION,
+  PREFIX_FOCAL_LENGTH,
+  PREFIX_RECIPE,
   PREFIX_TAG,
   pathForPhoto,
 } from '@/app/paths';
@@ -97,17 +99,25 @@ export const revalidatePhotosKey = () =>
 export const revalidateTagsKey = () =>
   revalidateTag(KEY_TAGS);
 
+export const revalidateRecipesKey = () =>
+  revalidateTag(KEY_RECIPES);
+
 export const revalidateCamerasKey = () =>
   revalidateTag(KEY_CAMERAS);
 
 export const revalidateFilmSimulationsKey = () =>
   revalidateTag(KEY_FILM_SIMULATIONS);
 
+export const revalidateFocalLengthsKey = () =>
+  revalidateTag(KEY_FOCAL_LENGTHS);
+
 export const revalidateAllKeys = () => {
   revalidatePhotosKey();
   revalidateTagsKey();
   revalidateCamerasKey();
   revalidateFilmSimulationsKey();
+  revalidateRecipesKey();
+  revalidateFocalLengthsKey();
 };
 
 export const revalidateAdminPaths = () => {
@@ -125,6 +135,8 @@ export const revalidatePhoto = (photoId: string) => {
   revalidateTagsKey();
   revalidateCamerasKey();
   revalidateFilmSimulationsKey();
+  revalidateRecipesKey();
+  revalidateFocalLengthsKey();
   // Paths
   revalidatePath(pathForPhoto({ photo: photoId }), 'layout');
   revalidatePath(PATH_ROOT, 'layout');
@@ -133,6 +145,8 @@ export const revalidatePhoto = (photoId: string) => {
   revalidatePath(PREFIX_TAG, 'layout');
   revalidatePath(PREFIX_CAMERA, 'layout');
   revalidatePath(PREFIX_FILM_SIMULATION, 'layout');
+  revalidatePath(PREFIX_RECIPE, 'layout');
+  revalidatePath(PREFIX_FOCAL_LENGTH, 'layout');
   revalidatePath(PATH_ADMIN, 'layout');
 };
 

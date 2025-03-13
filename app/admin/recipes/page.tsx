@@ -1,9 +1,9 @@
 import AdminRecipeTable from '@/admin/AdminRecipeTable';
 import SiteGrid from '@/components/SiteGrid';
-import { getUniqueRecipesCached } from '@/photo/cache';
+import { getUniqueRecipes } from '@/photo/db/query';
 
-export default async function AdminTagsPage() {
-  const recipes = await getUniqueRecipesCached().catch(() => []);
+export default async function AdminRecipesPage() {
+  const recipes = await getUniqueRecipes().catch(() => []);
 
   return (
     <SiteGrid
