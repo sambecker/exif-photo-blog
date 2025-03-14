@@ -6,6 +6,7 @@ import PhotoGridInfinite from './PhotoGridInfinite';
 import { clsx } from 'clsx/lite';
 import AnimateItems from '@/components/AnimateItems';
 import { ComponentProps, useCallback, useState, ReactNode } from 'react';
+import { GRID_SPACE_CLASSNAME } from '@/components';
 
 export default function PhotoGridContainer({
   cacheKey,
@@ -45,7 +46,7 @@ export default function PhotoGridContainer({
             items={[header]}
             animateOnFirstLoadOnly
           />}
-        <div className="space-y-0.5 sm:space-y-1">
+        <div className={GRID_SPACE_CLASSNAME}>
           <PhotoGrid {...{
             photos,
             tag,

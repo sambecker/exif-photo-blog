@@ -16,6 +16,7 @@ import PhotoPrevNext from './PhotoPrevNext';
 import PhotoLink from './PhotoLink';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 import { useAppState } from '@/state/AppState';
+import { GRID_GAP_CLASSNAME } from '@/components';
 
 export default function PhotoHeader({
   tag,
@@ -76,7 +77,7 @@ export default function PhotoHeader({
     <span className="text-dim uppercase text-right">
       {start === end
         ? start
-        : <>{end}<br />– {start}</>}
+        : <>{end}<br />&ndash; {start}</>}
     </span>;
 
   const renderContentA = () => entity ?? (
@@ -96,7 +97,9 @@ export default function PhotoHeader({
       items={[<DivDebugBaselineGrid
         key="PhotosHeader"
         className={clsx(
-          'grid gap-0.5 sm:gap-1 items-start',
+          'grid',
+          GRID_GAP_CLASSNAME,
+          'items-start',
           'grid-cols-4',
           isGridHighDensity
             ? 'lg:grid-cols-6'

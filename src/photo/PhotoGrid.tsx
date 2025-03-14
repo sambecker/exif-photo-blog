@@ -9,6 +9,7 @@ import { GRID_ASPECT_RATIO } from '@/app/config';
 import { useAppState } from '@/state/AppState';
 import SelectTileOverlay from '@/components/SelectTileOverlay';
 import { ReactNode } from 'react';
+import { GRID_GAP_CLASSNAME } from '@/components';
 
 export default function PhotoGrid({
   photos,
@@ -54,7 +55,8 @@ export default function PhotoGrid({
   return (
     <AnimateItems
       className={clsx(
-        'grid gap-0.5 sm:gap-1',
+        'grid',
+        GRID_GAP_CLASSNAME,
         small
           ? 'grid-cols-3 xs:grid-cols-6'
           : isGridHighDensity
@@ -75,7 +77,7 @@ export default function PhotoGrid({
         return <div
           key={photo.id}
           className={clsx(
-            GRID_ASPECT_RATIO !== 0 && 'flex relative overflow-hidden',
+            'flex relative overflow-hidden',
             'group',
           )}
           style={{
