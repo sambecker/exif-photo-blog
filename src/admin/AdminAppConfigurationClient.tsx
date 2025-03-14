@@ -71,13 +71,13 @@ export default function AdminAppConfigurationClient({
   defaultTheme,
   arePhotosMatted,
   // Display
+  categoryVisibility,
+  hasCategoryVisibility,
   showExifInfo,
   showZoomControls,
   showTakenAtTimeHidden,
   showSocial,
   showRepoLink,
-  hasCategoryVisibility,
-  categoryVisibility,
   // Grid
   isGridHomepageEnabled,
   gridAspectRatio,
@@ -484,6 +484,44 @@ export default function AdminAppConfigurationClient({
           optional
         >
           <ChecklistRow
+            title={hasCategoryVisibility
+              ? `Category visibility: ${categoryVisibility.join(',')}`
+              : 'Category visibility'}
+            status={hasCategoryVisibility}
+            optional
+          >
+            <div className="my-1">
+              {categoryVisibility.map((category, index) =>
+                <Fragment key={category}>
+                  {renderSubStatus(
+                    'checked',
+                    <>
+                      {index + 1}
+                      {'.'}
+                      {capitalize(category)}
+                    </>,
+                  )}
+                </Fragment>)}
+              {getHiddenDefaultCategories(categoryVisibility)
+                .map((category, index) =>
+                  <Fragment key={category}>
+                    {renderSubStatus(
+                      'optional',
+                      <span className="text-dim">
+                        {categoryVisibility.length + index + 1}
+                        {'.'}
+                        {capitalize(category)}
+                      </span>,
+                    )}
+                  </Fragment>)}
+            </div>
+            Configure order and visibility of categories
+            (seen in grid sidebar and CMD-K results)
+            by storing comma-separated values
+            (default: {`"${DEFAULT_CATEGORY_KEYS.join(',')}"`}):
+            {renderEnvVars(['NEXT_PUBLIC_CATEGORY_VISIBILITY'])}
+          </ChecklistRow>
+          <ChecklistRow
             title="Show EXIF data"
             status={showExifInfo}
             optional
@@ -526,44 +564,6 @@ export default function AdminAppConfigurationClient({
           >
             Set environment variable to {'"1"'} to hide footer link:
             {renderEnvVars(['NEXT_PUBLIC_HIDE_REPO_LINK'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title={hasCategoryVisibility
-              ? `Category visibility: ${categoryVisibility.join(',')}`
-              : 'Category visibility'}
-            status={hasCategoryVisibility}
-            optional
-          >
-            <div className="my-1">
-              {categoryVisibility.map((category, index) =>
-                <Fragment key={category}>
-                  {renderSubStatus(
-                    'checked',
-                    <>
-                      {index + 1}
-                      {'.'}
-                      {capitalize(category)}
-                    </>,
-                  )}
-                </Fragment>)}
-              {getHiddenDefaultCategories(categoryVisibility)
-                .map((category, index) =>
-                  <Fragment key={category}>
-                    {renderSubStatus(
-                      'optional',
-                      <span className="text-dim">
-                        {categoryVisibility.length + index + 1}
-                        {'.'}
-                        {capitalize(category)}
-                      </span>,
-                    )}
-                  </Fragment>)}
-            </div>
-            Configure order and visibility of categories
-            (seen in grid sidebar and CMD-K results)
-            by storing comma-separated values
-            (default: {`"${DEFAULT_CATEGORY_KEYS.join(',')}"`}):
-            {renderEnvVars(['NEXT_PUBLIC_CATEGORY_VISIBILITY'])}
           </ChecklistRow>
         </ChecklistGroup>
         <ChecklistGroup
