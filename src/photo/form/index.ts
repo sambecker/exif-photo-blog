@@ -27,7 +27,8 @@ import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 
 type VirtualFields =
   'favorite' |
-  'applyRecipeTitleGlobally';
+  'applyRecipeTitleGlobally' |
+  'shouldStripGpsData';
 
 export type FormFields = keyof PhotoDbInsert | VirtualFields;
 
@@ -38,7 +39,8 @@ export type FieldSetType =
   'email' |
   'password' |
   'checkbox' |
-  'textarea';
+  'textarea' |
+  'hidden';
 
 export type AnnotatedTag = {
   value: string,
@@ -52,6 +54,7 @@ export type FormMeta = {
   required?: boolean
   excludeFromInsert?: boolean
   readOnly?: boolean
+  hideModificationStatus?: boolean
   validate?: (value?: string) => string | undefined
   validateStringMaxLength?: number
   spellCheck?: boolean
@@ -70,6 +73,7 @@ export type FormMeta = {
   tagOptionsLimitValidationMessage?: string
   shouldNotOverwriteWithNullDataOnSync?: boolean
   isJson?: boolean
+  staticValue?: string
 };
 
 const STRING_MAX_LENGTH_SHORT = 255;
@@ -79,6 +83,7 @@ const FORM_METADATA = (
   tagOptions?: AnnotatedTag[],
   recipeOptions?: AnnotatedTag[],
   aiTextGeneration?: boolean,
+  shouldStripGpsData?: boolean,
 ): Record<keyof PhotoFormData, FormMeta> => ({
   title: {
     label: 'title',
@@ -134,6 +139,7 @@ const FORM_METADATA = (
     label: 'apply recipe title globally',
     type: 'checkbox',
     excludeFromInsert: true,
+    hideModificationStatus: true,
     shouldHide: ({ make, recipeTitle, recipeData }, changedFormKeys) =>
       !(
         make === MAKE_FUJIFILM &&
@@ -184,6 +190,12 @@ const FORM_METADATA = (
   priorityOrder: { label: 'priority order' },
   favorite: { label: 'favorite', type: 'checkbox', excludeFromInsert: true },
   hidden: { label: 'hidden', type: 'checkbox' },
+  shouldStripGpsData: {
+    label: 'strip gps data',
+    type: 'hidden',
+    excludeFromInsert: true,
+    staticValue: shouldStripGpsData ? 'true' : 'false',
+  },
 });
 
 export const FIELDS_WITH_JSON = Object.entries(FORM_METADATA())

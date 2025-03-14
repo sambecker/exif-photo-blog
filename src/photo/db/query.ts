@@ -348,33 +348,47 @@ export const getUniqueRecipes = async () =>
       })))
   , 'getUniqueRecipes');
 
-export const getRecipeTitleForData = async (data: string | object) =>
+export const getRecipeTitleForData = async (
+  data: string | object,
+  simulation: FilmSimulation,
+) =>
   // Includes legacy check on pre-stringified JSON
   safelyQueryPhotos(() => sql`
     SELECT recipe_title FROM photos
-    WHERE hidden IS NOT TRUE AND
-    recipe_data = ${typeof data === 'string' ? data : JSON.stringify(data)}
+    WHERE hidden IS NOT TRUE
+    AND recipe_data=${typeof data === 'string' ? data : JSON.stringify(data)}
+    AND film_simulation=${simulation}
     LIMIT 1
   `
     .then(({ rows }) => rows[0]?.recipe_title as string | undefined)
   , 'getRecipeTitleForData');
 
-export const getPhotosNeedingRecipeTitleCount = async (data: string) =>
+export const getPhotosNeedingRecipeTitleCount = async (
+  data: string,
+  simulation: FilmSimulation,
+  photoIdToExclude?: string,
+) =>
   safelyQueryPhotos(() => sql`
     SELECT COUNT(*)
     FROM photos
-    WHERE recipe_title IS NULL AND recipe_data = ${data}
+    WHERE recipe_title IS NULL
+    AND recipe_data=${data}
+    AND film_simulation=${simulation}
+    AND id <> ${photoIdToExclude}
   `.then(({ rows }) => parseInt(rows[0].count, 10))
   , 'getPhotosNeedingRecipeTitleCount');
 
 export const updateAllMatchingRecipeTitles = (
   title: string,
   data: string,
+  simulation: FilmSimulation,
 ) =>
   safelyQueryPhotos(() => sql`
     UPDATE photos
-    SET recipe_title = ${title}
-    WHERE recipe_title IS NULL AND recipe_data = ${data}
+    SET recipe_title=${title}
+    WHERE recipe_title IS NULL
+    AND recipe_data=${data}
+    AND film_simulation=${simulation}
   `, 'updateAllMatchingRecipeTitles');
 
 export const getUniqueFilmSimulations = async () =>

@@ -1,6 +1,12 @@
 'use client';
 
-import { ComponentProps, useEffect, useMemo, useState } from 'react';
+import {
+  ComponentProps,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {
   FIELDS_WITH_JSON,
   FORM_METADATA_ENTRIES,
@@ -35,6 +41,7 @@ import ErrorNote from '@/components/ErrorNote';
 import { convertRecipesForForm, Recipes } from '@/recipe';
 import deepEqual from 'fast-deep-equal/es6/react';
 import ApplyRecipeTitleGloballyCheckbox from './ApplyRecipesGloballyCheckbox';
+import { FilmSimulation } from '@/simulation';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -243,7 +250,16 @@ export default function PhotoForm({
       );
     }
   };
-    
+
+  const onMatchResults = useCallback((didFindMatchingPhotos: boolean) => {
+    setFormData(data => ({
+      ...data,
+      applyRecipeTitleGlobally: didFindMatchingPhotos
+        ? 'true'
+        : 'false',
+    }));
+  }, []);
+
   return (
     <div className="space-y-8 max-w-[38rem] relative">
       <div className="flex gap-2">
@@ -309,6 +325,7 @@ export default function PhotoForm({
             convertTagsForForm(uniqueTags),
             convertRecipesForForm(uniqueRecipes),
             aiContent !== undefined,
+            shouldStripGpsData,
           )
             .map(([key, {
               label,
@@ -320,6 +337,7 @@ export default function PhotoForm({
               tagOptionsLimit,
               tagOptionsLimitValidationMessage,
               readOnly,
+              hideModificationStatus,
               validate,
               validateStringMaxLength,
               spellCheck,
@@ -328,6 +346,7 @@ export default function PhotoForm({
               shouldHide,
               loadingMessage,
               type,
+              staticValue,
             }]) => {
               if (!shouldHideField(key, hideIfEmpty, shouldHide)) {
                 const fieldProps: ComponentProps<typeof FieldSetWithStatus> = {
@@ -339,8 +358,11 @@ export default function PhotoForm({
                   ),
                   note,
                   error: formErrors[key],
-                  value: formData[key] ?? '',
-                  isModified: changedFormKeys.includes(key),
+                  value: staticValue ?? formData[key] ?? '',
+                  isModified: (
+                    !hideModificationStatus &&
+                    changedFormKeys.includes(key)
+                  ),
                   onChange: value => {
                     const formUpdated = { ...formData, [key]: value };
                     setFormData(formUpdated);
@@ -380,27 +402,28 @@ export default function PhotoForm({
                   type,
                   accessory: accessoryForField(key),
                 };
-                return key === 'applyRecipeTitleGlobally'
-                  ? <ApplyRecipeTitleGloballyCheckbox
+
+                switch (key) {
+                case 'applyRecipeTitleGlobally':
+                  return <ApplyRecipeTitleGloballyCheckbox
                     key={key}
+                    photoId={initialPhotoForm.id}
                     recipeTitle={formData.recipeTitle}
-                    recipeData={formData.recipeData}
                     hasRecipeTitleChanged={
                       changedFormKeys.includes('recipeTitle')}
+                    recipeData={formData.recipeData}
+                    simulation={formData.filmSimulation as FilmSimulation}
+                    onMatchResults={onMatchResults}
                     {...fieldProps}
-                  />
-                  : <FieldSetWithStatus
+                  />;
+                default:
+                  return <FieldSetWithStatus
                     key={key}
                     {...fieldProps}
                   />;
+                }
               }
             })}
-          <input
-            type="hidden"
-            name="shouldStripGpsData"
-            value={shouldStripGpsData ? 'true' : 'false'}
-            readOnly
-          />
         </div>
         {/* Actions */}
         <div className={clsx(

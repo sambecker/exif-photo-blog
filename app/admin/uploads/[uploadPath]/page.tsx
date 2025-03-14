@@ -10,6 +10,7 @@ import {
 } from '@/app/config';
 import ErrorNote from '@/components/ErrorNote';
 import { getRecipeTitleForData } from '@/photo/db/query';
+import { FilmSimulation } from '@/simulation';
 
 export const maxDuration = 60;
 
@@ -48,8 +49,11 @@ export default async function UploadPage({ params }: Params) {
   ] = await Promise.all([
     getUniqueTagsCached(),
     getUniqueRecipesCached(),
-    formDataFromExif?.recipeData
-      ? getRecipeTitleForData(formDataFromExif.recipeData)
+    formDataFromExif?.recipeData && formDataFromExif.filmSimulation
+      ? getRecipeTitleForData(
+        formDataFromExif.recipeData,
+        formDataFromExif.filmSimulation as FilmSimulation,
+      )
       : undefined,
   ]);
 

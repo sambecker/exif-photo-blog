@@ -60,16 +60,17 @@ import { convertUploadToPhoto } from './storage';
 import { UrlAddStatus } from '@/admin/AdminUploadsClient';
 import { convertStringToArray } from '@/utility/string';
 import { after } from 'next/server';
+import { FilmSimulation } from '@/simulation';
 
 // Private actions
 
 export const createPhotoAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
     const shouldStripGpsData = formData.get('shouldStripGpsData') === 'true';
-    formData.delete('shouldStripGpsData');
 
-    const photo =
-      await convertFormDataToPhotoDbInsertAndLookupRecipeTitle(formData);
+    const photo = await convertFormDataToPhotoDbInsertAndLookupRecipeTitle(
+      formData,
+    );
 
     const updatedUrl = await convertUploadToPhoto({
       urlOrigin: photo.url,
@@ -308,9 +309,15 @@ export const renamePhotoTagGloballyAction = async (formData: FormData) =>
 
 export const getPhotosNeedingRecipeTitleCountAction = async (
   recipeData: string,
+  simulation: FilmSimulation,
+  photoIdToExclude?: string,
 ) =>
   runAuthenticatedAdminServerAction(async () =>
-    await getPhotosNeedingRecipeTitleCount(recipeData),
+    await getPhotosNeedingRecipeTitleCount(
+      recipeData,
+      simulation,
+      photoIdToExclude,
+    ),
   );
 
 export const deletePhotoRecipeGloballyAction = async (formData: FormData) =>

@@ -206,8 +206,11 @@ export const convertFormDataToPhotoDbInsertAndLookupRecipeTitle =
     Promise<ReturnType<typeof convertFormDataToPhotoDbInsert>> => {
     const photo = convertFormDataToPhotoDbInsert(...args);
 
-    if (photo.recipeData && !photo.recipeTitle) {
-      const recipeTitle = await getRecipeTitleForData(photo.recipeData);
+    if (photo.recipeData && !photo.recipeTitle && photo.filmSimulation) {
+      const recipeTitle = await getRecipeTitleForData(
+        photo.recipeData,
+        photo.filmSimulation,
+      );
       if (recipeTitle) {
         photo.recipeTitle = recipeTitle;
       }
@@ -221,14 +224,17 @@ export const propagateRecipeTitleIfNecessary = async (
   photo: PhotoDbInsert,
 ) => {
   if (
+    formData.get('applyRecipeTitleGlobally') === 'true' &&
     // Only propagate recipe title if set by user before lookup
     formData.get('recipeTitle') &&
     photo.recipeTitle &&
-    photo.recipeData
+    photo.recipeData &&
+    photo.filmSimulation
   ) {
     await updateAllMatchingRecipeTitles(
       photo.recipeTitle,
       photo.recipeData,
+      photo.filmSimulation,
     );
   }
 };
