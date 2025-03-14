@@ -435,19 +435,19 @@ export default function AdminAppInsightsClient({
               content={pluralize(camerasCount, 'camera')}
             />;
           case 'recipes':
-            if (recipesCount > 0) {
-              return <ScoreCardRow
+            return recipesCount > 0
+              ? <ScoreCardRow
                 key={category}
                 icon={<TbChecklist
                   size={18}
                   className="translate-y-[-0.5px]"
                 />}
                 content={pluralize(recipesCount, 'recipe')}
-              />;
-            }
+              />
+              : null;
           case 'films':
-            if (filmSimulationsCount > 0) {
-              return <ScoreCardRow
+            return filmSimulationsCount > 0
+              ? <ScoreCardRow
                 key={category}
                 icon={<span className="inline-flex w-3">
                   <PhotoFilmSimulationIcon
@@ -456,8 +456,8 @@ export default function AdminAppInsightsClient({
                   />
                 </span>}
                 content={pluralize(filmSimulationsCount, 'film simulation')}
-              />;
-            }
+              />
+              : null;
           }
         })}
         <ScoreCardRow
