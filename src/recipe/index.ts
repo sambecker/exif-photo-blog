@@ -55,6 +55,7 @@ export const descriptionForRecipePhotos = (
   );
 
 export const generateRecipeText = ({
+  title,
   recipe,
   simulation,
 }: RecipeProps,
@@ -64,30 +65,58 @@ abbreviate?: boolean,
     `${labelForFilmSimulation(simulation).small.toLocaleUpperCase()}`,
     // eslint-disable-next-line max-len
     `${formatWhiteBalance(recipe).toLocaleUpperCase()} ${formatWhiteBalanceColor(recipe)}`,
-    `DR${recipe.dynamicRange.development} NR${formatNoiseReduction(recipe)}`,
   ];
 
-  if (recipe.highlight || recipe.shadow) {
+  if (abbreviate) {
     // eslint-disable-next-line max-len
-    lines.push(`HIGH${addSign(recipe.highlight)} SHADOW${addSign(recipe.shadow)}`);
+    lines.push(`DR${recipe.dynamicRange.development} NR${formatNoiseReduction(recipe)}`);
+  } else {
+    lines.push(
+      `DYNAMIC RANGE ${recipe.dynamicRange.development}`,
+      `NOISE REDUCTION ${formatNoiseReduction(recipe)}`,
+    );
   }
-  // eslint-disable-next-line max-len
-  lines.push(`COL${addSign(recipe.color)} SHARP${addSign(recipe.sharpness)} CLAR${addSign(recipe.clarity)}`);
+
+  if (recipe.highlight || recipe.shadow) {
+    lines.push(abbreviate
+      ? `HIGH${addSign(recipe.highlight)} SHAD${addSign(recipe.shadow)}`
+      // eslint-disable-next-line max-len
+      : `HIGHLIGHT ${addSign(recipe.highlight)} SHADOW ${addSign(recipe.shadow)}`,
+    );
+  }
+  lines.push(abbreviate
+    // eslint-disable-next-line max-len
+    ? `COL${addSign(recipe.color)} SHARP${addSign(recipe.sharpness)} CLAR${addSign(recipe.clarity)}`
+    // eslint-disable-next-line max-len
+    : `COLOR ${addSign(recipe.color)} SHARPEN ${addSign(recipe.sharpness)} CLARITY ${addSign(recipe.clarity)}`,
+  );
   if (recipe.colorChromeEffect) {
-    lines.push(`CHROME ${recipe.colorChromeEffect.toLocaleUpperCase()}`);
+    lines.push(abbreviate
+      ? `CHROME ${recipe.colorChromeEffect.toLocaleUpperCase()}`
+      : `COLOR CHROME ${recipe.colorChromeEffect.toLocaleUpperCase()}`,
+    );
   }
   if (recipe.colorChromeFXBlue) {
-    lines.push(`FX BLUE ${recipe.colorChromeFXBlue.toLocaleUpperCase()}`);
+    lines.push(abbreviate
+      ? `FX BLUE ${recipe.colorChromeFXBlue.toLocaleUpperCase()}`
+      : `CHROME FX BLUE ${recipe.colorChromeFXBlue.toLocaleUpperCase()}`,
+    );
   }
   if (recipe.grainEffect.roughness !== 'off') {
     lines.push(`GRAIN ${formatGrain(recipe, abbreviate)}`);
   }
   if (recipe.bwAdjustment || recipe.bwMagentaGreen) {
-    // eslint-disable-next-line max-len
-    lines.push(`BW ADJ ${addSign(recipe.bwAdjustment)} BW M/G ${addSign(recipe.bwMagentaGreen)}`);
+    lines.push(abbreviate
+      // eslint-disable-next-line max-len
+      ? `BW ADJ${addSign(recipe.bwAdjustment)} M/G${addSign(recipe.bwMagentaGreen)}`
+      // eslint-disable-next-line max-len
+      : `BW ADJUSTMENT ${addSign(recipe.bwAdjustment)} MAGENTA/GREEN ${addSign(recipe.bwMagentaGreen)}`,
+    );
   }
 
-  return lines;
+  return title
+    ? [formatRecipe(title).toLocaleUpperCase(),'–', ...lines] 
+    : lines;
 };
 
 export const generateMetaForRecipe = (
