@@ -3,6 +3,8 @@ import { parameterize } from '@/utility/string';
 
 const CAMERA_PLACEHOLDER: Camera = { make: 'Camera', model: 'Model' };
 
+const CAMERA_MAKE_APPLE = 'apple';
+
 export type Camera = {
   make: string
   model: string
@@ -57,7 +59,7 @@ export const cameraFromPhoto = (
     : fallback ?? CAMERA_PLACEHOLDER;
 
 const isCameraMakeApple = (make?: string) =>
-  make?.toLocaleLowerCase() === 'apple';
+  make?.toLocaleLowerCase() === CAMERA_MAKE_APPLE;
 
 export const isCameraApple = ({ make }: Camera) =>
   isCameraMakeApple(make);

@@ -10,10 +10,10 @@ import { Recipes } from '@/recipe';
 const CATEGORY_KEYS = [
   'tags',
   'cameras',
+  'lenses',
   'recipes',
   'films',
   'focal-lengths',
-  'lenses',
 ] as const;
 
 type CategoryKey = (typeof CATEGORY_KEYS)[number];
@@ -23,6 +23,7 @@ type CategoryKeys = CategoryKey[];
 export const DEFAULT_CATEGORY_KEYS: CategoryKeys = [
   'tags',
   'cameras',
+  'lenses',
   'recipes',
   'films',
 ];
