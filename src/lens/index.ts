@@ -3,6 +3,8 @@ import { parameterize } from '@/utility/string';
 
 const LENS_PLACEHOLDER: Lens = { make: 'Lens', model: 'Model' };
 
+const LENS_MAKE_APPLE = 'apple';
+
 export type Lens = {
   make: string
   model: string
@@ -45,3 +47,12 @@ export const lensFromPhoto = (
   photo?.lensMake && photo?.lensModel
     ? { make: photo.lensMake, model: photo.lensModel }
     : fallback ?? LENS_PLACEHOLDER;
+
+const isLensMakeApple = (make?: string) =>
+  make?.toLocaleLowerCase() === LENS_MAKE_APPLE;
+
+export const isLensApple = ({ make }: Lens) =>
+  isLensMakeApple(make);
+
+export const formatLensText = ({ make, model }: Lens, short = true) =>
+  short ? model : `${make} ${model}`;

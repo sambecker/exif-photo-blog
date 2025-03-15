@@ -6,6 +6,7 @@ import {
   doesPhotoNeedBlurCompatibility,
   shouldShowCameraDataForPhoto,
   shouldShowExifDataForPhoto,
+  shouldShowLensDataForPhoto,
   titleForPhoto,
 } from '.';
 import SiteGrid from '@/components/SiteGrid';
@@ -45,6 +46,8 @@ import { AnimatePresence } from 'framer-motion';
 import useRecipeOverlay from '../recipe/useRecipeOverlay';
 import PhotoRecipeOverlay from '@/recipe/PhotoRecipeOverlay';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
+import PhotoLens from '@/lens/PhotoLens';
+import { lensFromPhoto } from '@/lens';
 
 export default function PhotoLarge({
   photo,
@@ -57,6 +60,7 @@ export default function PhotoLarge({
   showTitle = true,
   showTitleAsH1,
   showCamera = true,
+  showLens = true,
   showSimulation = true,
   showRecipe = true,
   showZoomControls: showZoomControlsProp = true,
@@ -80,6 +84,7 @@ export default function PhotoLarge({
   showTitle?: boolean
   showTitleAsH1?: boolean
   showCamera?: boolean
+  showLens?: boolean
   showSimulation?: boolean
   showRecipe?: boolean
   showZoomControls?: boolean
@@ -121,10 +126,11 @@ export default function PhotoLarge({
   const tags = sortTags(photo.tags, primaryTag);
 
   const camera = cameraFromPhoto(photo);
-  
+  const lens = lensFromPhoto(photo);
   const { recipeTitle: recipe } = photo;
 
   const showCameraContent = showCamera && shouldShowCameraDataForPhoto(photo);
+  const showLensContent = showLens && shouldShowLensDataForPhoto(photo);
   const showRecipeContent = showRecipe && recipe;
   const showTagsContent = tags.length > 0;
   const showExifContent = shouldShowExifDataForPhoto(photo);
@@ -284,6 +290,15 @@ export default function PhotoLarge({
                       contrast="medium"
                       prefetch={prefetchRelatedLinks}
                     />}
+                  {showLensContent &&
+                  <>
+                    <br />
+                    <PhotoLens
+                      lens={lens}
+                      contrast="medium"
+                      prefetch={prefetchRelatedLinks}
+                    />
+                  </>}
                   {showRecipeContent &&
                     <PhotoRecipe
                       recipe={recipe}

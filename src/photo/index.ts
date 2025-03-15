@@ -298,6 +298,10 @@ const photoHasCameraData = (photo: Photo) =>
   Boolean(photo.make) &&
   Boolean(photo.model);
 
+const photoHasLensData = (photo: Photo) =>
+  Boolean(photo.lensMake) &&
+  Boolean(photo.lensModel);
+
 const photoHasExifData = (photo: Photo) =>
   Boolean(photo.focalLength) ||
   Boolean(photo.focalLengthIn35MmFormat) ||
@@ -308,6 +312,9 @@ const photoHasExifData = (photo: Photo) =>
 
 export const shouldShowCameraDataForPhoto = (photo: Photo) =>
   SHOW_EXIF_DATA && photoHasCameraData(photo);
+
+export const shouldShowLensDataForPhoto = (photo: Photo) =>
+  SHOW_EXIF_DATA && photoHasLensData(photo);
 
 export const shouldShowExifDataForPhoto = (photo: Photo) =>
   SHOW_EXIF_DATA && photoHasExifData(photo);
