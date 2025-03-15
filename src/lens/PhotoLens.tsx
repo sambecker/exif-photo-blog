@@ -22,7 +22,9 @@ export default function PhotoLens({
     <EntityLink
       label={formatLensText(lens)}
       href={pathForLens(lens)}
-      icon={<TbCone className="rotate-[270deg] translate-x-[-1px]" />}
+      icon={<TbCone
+        className="rotate-[270deg] translate-x-[-0.5px]"
+      />}
       type={type}
       className={className}
       badged={badged}

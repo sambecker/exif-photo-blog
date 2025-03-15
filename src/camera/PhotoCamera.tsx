@@ -35,7 +35,7 @@ export default function PhotoCamera({
         />
         : <TbCamera
           size={15}
-          className="translate-x-[-0.5px] translate-y-[1px]"
+          className="translate-x-[-0.5px]"
         />}
       type={type}
       className={className}

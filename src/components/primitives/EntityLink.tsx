@@ -29,6 +29,7 @@ export default function EntityLink({
   hoverEntity,
   truncate = true,
   className,
+  classNameIcon,
   debug,
 }: {
   icon: ReactNode
@@ -41,6 +42,7 @@ export default function EntityLink({
   hoverEntity?: ReactNode
   truncate?: boolean
   className?: string
+  classNameIcon?: string
   debug?: boolean
 } & EntityLinkExternalProps) {
   const classForContrast = () => {
@@ -85,6 +87,7 @@ export default function EntityLink({
             className: clsx(
               classForContrast(),
               href && !badged && 'hover:text-gray-900 dark:hover:text-gray-100',
+              classNameIcon,
             ),
             debug,
           }}>
