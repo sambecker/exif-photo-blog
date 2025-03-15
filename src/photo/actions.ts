@@ -89,12 +89,16 @@ export const createPhotoAction = async (formData: FormData) =>
 export const addAllUploadsAction = async ({
   uploadUrls,
   tags,
+  favorite,
+  hidden,
   takenAtLocal,
   takenAtNaiveLocal,
   shouldRevalidateAllKeysAndPaths = true,
 }: {
   uploadUrls: string[]
   tags?: string
+  favorite?: string
+  hidden?: string
   takenAtLocal: string
   takenAtNaiveLocal: string
   shouldRevalidateAllKeysAndPaths?: boolean
@@ -106,7 +110,7 @@ export const addAllUploadsAction = async ({
     let currentUploadUrl = '';
     let progress = 0;
 
-    const stream = createStreamableValue<UrlAddStatus>();
+    const stream = createStreamableValue<Omit<UrlAddStatus, 'fileName'>>();
 
     const streamUpdate = (
       statusMessage: string,
@@ -157,6 +161,8 @@ export const addAllUploadsAction = async ({
               title,
               caption,
               tags: tags || aiTags,
+              hidden,
+              favorite,
               semanticDescription,
               takenAt: formDataFromExif.takenAt || takenAtLocal,
               takenAtNaive: formDataFromExif.takenAtNaive || takenAtNaiveLocal,

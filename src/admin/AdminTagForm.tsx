@@ -35,7 +35,6 @@ export default function AdminTagForm({
       className="space-y-8"
     >
       <FieldSetWithStatus
-        id="updatedTagRaw"
         label="New Tag Name"
         value={updatedTagRaw}
         onChange={setUpdatedTagRaw}

@@ -7,9 +7,10 @@ import { clsx } from 'clsx/lite';
 import { FieldSetType, AnnotatedTag } from '@/photo/form';
 import TagInput from './TagInput';
 import { FiChevronDown } from 'react-icons/fi';
+import { parameterize } from '@/utility/string';
 
 export default function FieldSetWithStatus({
-  id,
+  id: _id,
   label,
   note,
   error,
@@ -34,8 +35,8 @@ export default function FieldSetWithStatus({
   hideLabel,
   checkboxAccessory,
 }: {
-  id: string
-  label?: string
+  id?: string
+  label: string
   note?: string
   error?: string
   value: string
@@ -59,6 +60,8 @@ export default function FieldSetWithStatus({
   hideLabel?: boolean
   checkboxAccessory?: React.ReactNode
 }) {
+  const id = _id || parameterize(label);
+
   const { pending } = useFormStatus();
 
   const renderInput =
@@ -66,13 +69,13 @@ export default function FieldSetWithStatus({
       ref={inputRef}
       id={id}
       name={id}
+      type={type}
       value={value}
       checked={type === 'checkbox' ? value === 'true' : undefined}
       placeholder={placeholder}
       onChange={e => onChange?.(type === 'checkbox'
         ? e.target.value === 'true' ? 'false' : 'true'
         : e.target.value)}
-      type={type}
       spellCheck={spellCheck}
       autoComplete="off"
       autoCapitalize={!capitalize ? 'off' : undefined}

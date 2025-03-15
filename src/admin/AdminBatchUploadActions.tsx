@@ -43,11 +43,14 @@ export default function AdminBatchUploadActions({
 }) {
   const { updateAdminData } = useAppState();
 
-  const [buttonText, setButtonText] = useState('Add All Uploads');
-  const [showTags, setShowTags] = useState(false);
+  const [showBulkSettings, setShowBulkSettings] = useState(false);
   const [tags, setTags] = useState('');
-  const [actionErrorMessage, setActionErrorMessage] = useState('');
+  const [favorite, setFavorite] = useState('false');
+  const [hidden, setHidden] = useState('false');
   const [tagErrorMessage, setTagErrorMessage] = useState('');
+
+  const [buttonText, setButtonText] = useState('Add All Uploads');
+  const [actionErrorMessage, setActionErrorMessage] = useState('');
   const [addingProgress, setAddingProgress] = useState<number>();
   const [isAddingComplete, setIsAddingComplete] = useState(false);
 
@@ -58,7 +61,11 @@ export default function AdminBatchUploadActions({
     try {
       const stream = await addAllUploadsAction({
         uploadUrls,
-        tags: showTags ? tags : undefined,
+        ...showBulkSettings && {
+          tags,
+          favorite,
+          hidden,
+        },
         takenAtLocal: generateLocalPostgresString(),
         takenAtNaiveLocal: generateLocalNaivePostgresString(),
         shouldRevalidateAllKeysAndPaths: isFinalBatch,
@@ -116,29 +123,43 @@ export default function AdminBatchUploadActions({
               'grow',
               tagErrorMessage ? 'text-error' : 'text-main',
             )}>
-              {showTags
-                ? tagErrorMessage || 'Add tags to all uploads'
+              {showBulkSettings
+                ? tagErrorMessage || 'Apply to all uploads'
                 : `Found ${storageUrls.length} uploads`}
             </div>
             <FieldSetWithStatus
-              id="show-tags"
-              label="Apply tags"
+              label="Apply Bulk Settings"
               type="checkbox"
-              value={showTags ? 'true' : 'false'}
-              onChange={value => setShowTags(value === 'true')}
+              value={showBulkSettings ? 'true' : 'false'}
+              onChange={value => setShowBulkSettings(value === 'true')}
               readOnly={isAdding}
             />
           </div>
-          {showTags && !actionErrorMessage &&
-            <PhotoTagFieldset
-              tags={tags}
-              tagOptions={uniqueTags}
-              onChange={setTags}
-              onError={setTagErrorMessage}
-              readOnly={isAdding}
-              openOnLoad
-              hideLabel
-            />}
+          {showBulkSettings && !actionErrorMessage &&
+            <div className="space-y-3">
+              <PhotoTagFieldset
+                label="Tags"
+                tags={tags}
+                tagOptions={uniqueTags}
+                onChange={setTags}
+                onError={setTagErrorMessage}
+                readOnly={isAdding}
+              />
+              <FieldSetWithStatus
+                label="Favorite"
+                type="checkbox"
+                value={favorite}
+                onChange={setFavorite}
+                readOnly={isAdding}
+              />
+              <FieldSetWithStatus
+                label="Hidden"
+                type="checkbox"
+                value={hidden}
+                onChange={setHidden}
+                readOnly={isAdding}
+              />
+            </div>}
           <div className="space-y-2">
             <ProgressButton
               primary

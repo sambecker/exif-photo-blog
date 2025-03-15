@@ -35,7 +35,6 @@ export default function AdminRecipeForm({
       className="space-y-8"
     >
       <FieldSetWithStatus
-        id="updatedRecipeRaw"
         label="New Recipe Name"
         value={updatedRecipeRaw}
         onChange={setUpdatedRecipeRaw}

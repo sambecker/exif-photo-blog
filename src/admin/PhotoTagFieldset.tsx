@@ -15,7 +15,6 @@ export default function PhotoTagFieldset(props: {
   'tagOptions'
 >>) {
   const {
-    id,
     tags,
     tagOptions,
     onChange,
@@ -42,7 +41,7 @@ export default function PhotoTagFieldset(props: {
       <FieldSetWithStatus
         {...rest}
         inputRef={ref}
-        id={id ?? 'tags'}
+        label="Tags"
         value={tags}
         tagOptions={convertTagsForForm(tagOptions)}
         onChange={tags => {

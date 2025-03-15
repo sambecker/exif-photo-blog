@@ -46,14 +46,12 @@ export default function ComponentsPage() {
             '*:inline-flex *:gap-1 [&_input]:-translate-y-0.5',
           )}>
             <FieldSetWithStatus
-              id="grid"
               label="Grid"
               type="checkbox"
               value={shouldShowBaselineGrid ? 'true' : 'false'}
               onChange={e => setShouldShowBaselineGrid?.(e === 'true')}
             />
             <FieldSetWithStatus
-              id="components"
               label="Components"
               type="checkbox"
               value={debugComponents ? 'true' : 'false'}

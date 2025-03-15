@@ -5,7 +5,6 @@ import AdminBatchUploadActions from './AdminBatchUploadActions';
 import { useMemo, useState } from 'react';
 import { Tags } from '@/tag';
 import AdminUploadsTable from './AdminUploadsTable';
-import { Recipes } from '@/recipe';
 
 export type UrlAddStatus = StorageListItem & {
   status?: 'waiting' | 'adding' | 'added'
@@ -19,7 +18,6 @@ export default function AdminUploadsClient({
 }: {
   urls: StorageListResponse
   uniqueTags?: Tags
-  uniqueRecipes?: Recipes
 }) {
   const [isAdding, setIsAdding] = useState(false);
   const [urlAddStatuses, setUrlAddStatuses] = useState<UrlAddStatus[]>(urls);
