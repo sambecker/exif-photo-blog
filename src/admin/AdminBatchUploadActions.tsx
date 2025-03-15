@@ -21,6 +21,7 @@ import { UrlAddStatus } from './AdminUploadsClient';
 import PhotoTagFieldset from './PhotoTagFieldset';
 import DeleteUploadButton from './DeleteUploadButton';
 import { useAppState } from '@/state/AppState';
+import { pluralize } from '@/utility/string';
 
 const UPLOAD_BATCH_SIZE = 4;
 
@@ -124,11 +125,14 @@ export default function AdminBatchUploadActions({
               tagErrorMessage ? 'text-error' : 'text-main',
             )}>
               {showBulkSettings
-                ? tagErrorMessage || 'Apply to all uploads'
-                : `Found ${storageUrls.length} uploads`}
+                ? (
+                  tagErrorMessage ||
+                  `Apply to ${pluralize(storageUrls.length, 'upload')}`
+                )
+                : `Found ${pluralize(storageUrls.length, 'upload')}`}
             </div>
             <FieldSetWithStatus
-              label="Apply Bulk Settings"
+              label="Apply to All"
               type="checkbox"
               value={showBulkSettings ? 'true' : 'false'}
               onChange={value => setShowBulkSettings(value === 'true')}
