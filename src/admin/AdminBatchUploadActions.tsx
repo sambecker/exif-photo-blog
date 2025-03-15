@@ -12,7 +12,6 @@ import {
 } from '@/utility/date';
 import sleep from '@/utility/sleep';
 import { readStreamableValue } from 'ai/rsc';
-import { clsx } from 'clsx/lite';
 import { useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
 import { BiCheckCircle, BiImageAdd } from 'react-icons/bi';
@@ -120,15 +119,9 @@ export default function AdminBatchUploadActions({
       <Container padding="tight">
         <div className="w-full space-y-4 py-1">
           <div className="flex">
-            <div className={clsx(
-              'grow',
-              tagErrorMessage ? 'text-error' : 'text-main',
-            )}>
+            <div className="grow text-main">
               {showBulkSettings
-                ? (
-                  tagErrorMessage ||
-                  `Apply to ${pluralize(storageUrls.length, 'upload')}`
-                )
+                ? `Apply to ${pluralize(storageUrls.length, 'upload')}`
                 : `Found ${pluralize(storageUrls.length, 'upload')}`}
             </div>
             <FieldSetWithStatus
@@ -140,7 +133,7 @@ export default function AdminBatchUploadActions({
             />
           </div>
           {showBulkSettings && !actionErrorMessage &&
-            <div className="space-y-3">
+            <div className="space-y-4 mb-6">
               <PhotoTagFieldset
                 label="Tags"
                 tags={tags}
@@ -149,20 +142,22 @@ export default function AdminBatchUploadActions({
                 onError={setTagErrorMessage}
                 readOnly={isAdding}
               />
-              <FieldSetWithStatus
-                label="Favorite"
-                type="checkbox"
-                value={favorite}
-                onChange={setFavorite}
-                readOnly={isAdding}
-              />
-              <FieldSetWithStatus
-                label="Hidden"
-                type="checkbox"
-                value={hidden}
-                onChange={setHidden}
-                readOnly={isAdding}
-              />
+              <div className="flex gap-8">
+                <FieldSetWithStatus
+                  label="Favorite"
+                  type="checkbox"
+                  value={favorite}
+                  onChange={setFavorite}
+                  readOnly={isAdding}
+                />
+                <FieldSetWithStatus
+                  label="Hidden"
+                  type="checkbox"
+                  value={hidden}
+                  onChange={setHidden}
+                  readOnly={isAdding}
+                />
+              </div>
             </div>}
           <div className="space-y-2">
             <ProgressButton

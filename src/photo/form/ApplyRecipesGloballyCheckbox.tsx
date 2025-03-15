@@ -2,7 +2,6 @@ import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import { ComponentProps, useEffect, useState } from 'react';
 import { getPhotosNeedingRecipeTitleCountAction } from '../actions';
 import { FilmSimulation } from '@/simulation';
-import Spinner from '@/components/Spinner';
 
 export default function ApplyRecipeTitleGloballyCheckbox({
   photoId,
@@ -22,7 +21,7 @@ export default function ApplyRecipeTitleGloballyCheckbox({
 }) {
   const [matchingPhotosCount, setMatchingPhotosCount] = useState<number>();
 
-  const isLoading = matchingPhotosCount === undefined;
+  const loading = matchingPhotosCount === undefined;
 
   useEffect(() => {
     if (recipeTitle && hasRecipeTitleChanged && recipeData && simulation) {
@@ -38,21 +37,18 @@ export default function ApplyRecipeTitleGloballyCheckbox({
     onMatchResults((matchingPhotosCount ?? 0) > 0);
   }, [matchingPhotosCount, onMatchResults]);
 
-  const shouldShowFieldSet = isLoading || matchingPhotosCount > 0;
+  const shouldShowFieldSet = loading || matchingPhotosCount > 0;
 
   return (
     shouldShowFieldSet
       ? <FieldSetWithStatus {...{
         ...props,
-        label: isLoading
+        label: loading
           ? 'Scanning photos for matching recipes ...'
           : `Apply title to ${matchingPhotosCount} matching photos`,
         type: 'checkbox',
-        readOnly: isLoading,
-        className: '-mt-4 translate-x-[1px]',
-        checkboxAccessory: isLoading
-          ? <Spinner className="translate-y-[1.5px]" />
-          : null,
+        className: '-mt-4 translate-x-[4px]',
+        loading,
       }} />
       : null
   );

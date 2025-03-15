@@ -1,6 +1,6 @@
 'use client';
 
-import { Ref } from 'react';
+import { Ref, InputHTMLAttributes } from 'react';
 import { useFormStatus } from 'react-dom';
 import Spinner from './Spinner';
 import { clsx } from 'clsx/lite';
@@ -8,6 +8,7 @@ import { FieldSetType, AnnotatedTag } from '@/photo/form';
 import TagInput from './TagInput';
 import { FiChevronDown } from 'react-icons/fi';
 import { parameterize } from '@/utility/string';
+import Checkbox from './Checkbox';
 
 export default function FieldSetWithStatus({
   id: _id,
@@ -33,7 +34,6 @@ export default function FieldSetWithStatus({
   inputRef,
   accessory,
   hideLabel,
-  checkboxAccessory,
 }: {
   id?: string
   label: string
@@ -58,59 +58,58 @@ export default function FieldSetWithStatus({
   inputRef?: Ref<HTMLInputElement>
   accessory?: React.ReactNode
   hideLabel?: boolean
-  checkboxAccessory?: React.ReactNode
 }) {
   const id = _id || parameterize(label);
 
   const { pending } = useFormStatus();
 
-  const renderInput =
-    <input
-      ref={inputRef}
-      id={id}
-      name={id}
-      type={type}
-      value={value}
-      checked={type === 'checkbox' ? value === 'true' : undefined}
-      placeholder={placeholder}
-      onChange={e => onChange?.(type === 'checkbox'
-        ? e.target.value === 'true' ? 'false' : 'true'
-        : e.target.value)}
-      spellCheck={spellCheck}
-      autoComplete="off"
-      autoCapitalize={!capitalize ? 'off' : undefined}
-      readOnly={readOnly || pending || loading}
-      disabled={type === 'checkbox' && (
+  const inputProps: InputHTMLAttributes<HTMLInputElement> = {
+    id,
+    name: id,
+    type,
+    value,
+    checked: type === 'checkbox' ? value === 'true' : undefined,
+    placeholder,
+    onChange: e => onChange?.(type === 'checkbox'
+      ? e.target.value === 'true' ? 'false' : 'true'
+      : e.target.value),
+    spellCheck,
+    autoComplete: 'off',
+    autoCapitalize: !capitalize ? 'off' : undefined,
+    readOnly: readOnly || pending || loading,
+    disabled: type === 'checkbox' && (
+      readOnly || pending || loading
+    ),
+    className: clsx(
+      (
+        type === 'text' ||
+        type === 'email' ||
+        type === 'password'
+      ) && 'w-full',
+      type === 'checkbox' && (
         readOnly || pending || loading
-      )}
-      className={clsx(
-        (
-          type === 'text' ||
-          type === 'email' ||
-          type === 'password'
-        ) && 'w-full',
-        type === 'checkbox' && (
-          readOnly || pending || loading
-        ) && 'opacity-50 cursor-not-allowed',
-        Boolean(error) && 'error',
-      )}
-    />;
+      ) && 'opacity-50 cursor-not-allowed',
+      Boolean(error) && 'error',
+    ),
+  };
 
   return (
-    type === 'hidden' 
-      ? renderInput
+    type === 'hidden'
+      ? <input ref={inputRef} {...inputProps} />
       : <div className={clsx(
+        // For managing checkbox active state
+        'group',
         'space-y-1',
-        type === 'checkbox' && 'flex items-center gap-2',
+        type === 'checkbox' && 'flex items-center gap-3',
         className,
       )}>
-        {!hideLabel && label &&
+        {!hideLabel &&
           <label
-            className={clsx(
-              'flex flex-wrap gap-x-2 items-center select-none',
-              type === 'checkbox' && 'order-2 pt-[4px] ml-1',
-            )}
             htmlFor={id}
+            className={clsx(
+              'inline-flex flex-wrap gap-x-2 items-center select-none',
+              type === 'checkbox' && 'order-2 m-0',
+            )}
           >
             {label}
             {note && !error &&
@@ -132,7 +131,7 @@ export default function FieldSetWithStatus({
               <span className="text-gray-400 dark:text-gray-600">
                 Required
               </span>}
-            {loading &&
+            {loading && type !== 'checkbox' &&
               <span className="translate-y-[1.5px]">
                 <Spinner />
               </span>}
@@ -202,11 +201,18 @@ export default function FieldSetWithStatus({
                     Boolean(error) && 'error',
                   )}
                 />
-                : type === 'checkbox' && checkboxAccessory
-                  ? <span className="w-[13px]">
-                    {checkboxAccessory}
-                  </span>
-                  : renderInput}
+                : type === 'checkbox'
+                  ? <Checkbox
+                    ref={inputRef}
+                    accessory={loading && <Spinner
+                      className="translate-y-[0.5px]"
+                    />}
+                    {...inputProps}
+                  />
+                  : <input
+                    ref={inputRef}
+                    {...inputProps}
+                  />}
           {accessory && <div>
             {accessory}
           </div>}

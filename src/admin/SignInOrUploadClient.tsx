@@ -2,7 +2,7 @@
 
 import { useAppState } from '@/state/AppState';
 import SignInForm from '@/auth/SignInForm';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
 
 export default function SignInOrUploadClient({
