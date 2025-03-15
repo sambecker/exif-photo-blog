@@ -22,7 +22,9 @@ export default function Checkbox({
     <span className={clsx(
       'relative inline-flex items-center justify-center',
       'size-5',
-      'group-has-active:opacity-70',
+      props.readOnly
+        ? 'cursor-not-allowed'
+        : 'group-has-active:opacity-70',
     )}>
       {accessory
         ? accessory
@@ -30,9 +32,14 @@ export default function Checkbox({
           ? <span className={clsx(
             boxStyles,
             'border-transparent',
-            'bg-blue-600',
+            props.readOnly
+              ? 'bg-gray-300 dark:bg-gray-700'
+              : 'bg-blue-600',
           )}>
-            <ImCheckmark className="text-white text-[11px]" />
+            <ImCheckmark className={clsx(
+              'text-white text-[11px]',
+              props.readOnly && 'dark:text-gray-400',
+            )} />
           </span>
           : <span className={clsx(
             boxStyles,
