@@ -2,7 +2,7 @@
 
 import ImageSmall from '@/components/image/ImageSmall';
 import Spinner from '@/components/Spinner';
-import { getIdFromStorageUrl } from '@/platforms/storage';
+import { getExtensionFromStorageUrl } from '@/platforms/storage';
 import { clsx } from 'clsx/lite';
 import { FaRegCircleCheck } from 'react-icons/fa6';
 import { pathForAdminUploadUrl } from '@/app/paths';
@@ -26,7 +26,7 @@ export default function AdminUploadsTable({
 
   return (
     <div className="space-y-4">
-      {urlAddStatuses.map(({ url, status, statusMessage, uploadedAt }) =>
+      {urlAddStatuses.map(({ url, status, statusMessage, uploadedAt, size }) =>
         <div key={url}>
           <div className={clsx(
             'flex items-center gap-2 w-full min-h-8',
@@ -56,8 +56,10 @@ export default function AdminUploadsTable({
                 />
               </div>
               <span className="grow min-w-0">
-                <div className="overflow-hidden text-ellipsis">
-                  {getIdFromStorageUrl(url)}
+                <div className="truncate">
+                  {uploadedAt
+                    ? <ResponsiveDate date={uploadedAt} />
+                    : '—'}
                 </div>
                 <div className="text-dim overflow-hidden text-ellipsis">
                   {isAdding || isComplete
@@ -66,9 +68,10 @@ export default function AdminUploadsTable({
                       : status === 'adding'
                         ? statusMessage ?? 'Adding ...'
                         : 'Waiting'
-                    : uploadedAt
-                      ? <ResponsiveDate date={uploadedAt} />
-                      : '—'}
+                    : size
+                      // eslint-disable-next-line max-len
+                      ? `${size} ${getExtensionFromStorageUrl(url)?.toUpperCase()}`
+                      : getExtensionFromStorageUrl(url)?.toUpperCase()}
                 </div>
               </span>
             </div>

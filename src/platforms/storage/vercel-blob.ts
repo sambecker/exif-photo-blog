@@ -1,7 +1,8 @@
 import { PATH_API_VERCEL_BLOB_UPLOAD } from '@/app/paths';
 import { copy, del, list, put } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
-import { fileNameForStorageUrl } from '.';
+import { fileNameForStorageUrl, StorageListResponse } from '.';
+import { formatBytesToMB } from '@/utility/number';
 
 const VERCEL_BLOB_STORE_ID = process.env.BLOB_READ_WRITE_TOKEN?.match(
   /^vercel_blob_rw_([a-z0-9]+)_[a-z0-9]+$/i,
@@ -56,9 +57,12 @@ export const vercelBlobCopy = (
 
 export const vercelBlobDelete = (fileName: string) => del(fileName);
 
-export const vercelBlobList = (prefix: string) => list({ prefix })
-  .then(({ blobs }) => blobs.map(({ url, uploadedAt }) => ({
+export const vercelBlobList = (
+  prefix: string,
+): Promise<StorageListResponse> => list({ prefix })
+  .then(({ blobs }) => blobs.map(({ url, uploadedAt, size }) => ({
     url,
     fileName: fileNameForStorageUrl(url),
     uploadedAt,
+    size: formatBytesToMB(size),
   })));

@@ -7,7 +7,10 @@ export default function AddButton(
   return (
     <PathLoaderButton
       {...props}
-      icon={<BiImageAdd size={18} className="translate-x-[1px]" />}
+      icon={<BiImageAdd
+        size={18}
+        className="translate-x-[1px] translate-y-[1px]"
+      />}
     >
       Add
     </PathLoaderButton>

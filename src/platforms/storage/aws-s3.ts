@@ -6,6 +6,7 @@ import {
   PutObjectCommand,
 } from '@aws-sdk/client-s3';
 import { StorageListResponse, generateStorageId } from '.';
+import { formatBytesToMB } from '@/utility/number';
 
 const AWS_S3_BUCKET = process.env.NEXT_PUBLIC_AWS_S3_BUCKET ?? '';
 const AWS_S3_REGION = process.env.NEXT_PUBLIC_AWS_S3_REGION ?? '';
@@ -70,10 +71,11 @@ export const awsS3List = async (
     Bucket: AWS_S3_BUCKET,
     Prefix,
   }))
-    .then((data) => data.Contents?.map(({ Key, LastModified }) => ({
+    .then((data) => data.Contents?.map(({ Key, LastModified, Size }) => ({
       url: urlForKey(Key),
       fileName: Key ?? '',
       uploadedAt: LastModified,
+      size: Size ? formatBytesToMB(Size) : undefined,
     })) ?? []);
 
 export const awsS3Delete = async (Key: string) => {

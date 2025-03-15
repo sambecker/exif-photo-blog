@@ -1,14 +1,13 @@
 'use client';
 
-import { StorageListResponse } from '@/platforms/storage';
+import { StorageListItem, StorageListResponse } from '@/platforms/storage';
 import AdminBatchUploadActions from './AdminBatchUploadActions';
 import { useMemo, useState } from 'react';
 import { Tags } from '@/tag';
 import AdminUploadsTable from './AdminUploadsTable';
+import { Recipes } from '@/recipe';
 
-export type UrlAddStatus = {
-  url: string
-  uploadedAt?: Date
+export type UrlAddStatus = StorageListItem & {
   status?: 'waiting' | 'adding' | 'added'
   statusMessage?: string
   progress?: number
@@ -20,6 +19,7 @@ export default function AdminUploadsClient({
 }: {
   urls: StorageListResponse
   uniqueTags?: Tags
+  uniqueRecipes?: Recipes
 }) {
   const [isAdding, setIsAdding] = useState(false);
   const [urlAddStatuses, setUrlAddStatuses] = useState<UrlAddStatus[]>(urls);

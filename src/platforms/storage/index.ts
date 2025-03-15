@@ -33,11 +33,14 @@ import { PATH_API_PRESIGNED_URL } from '@/app/paths';
 
 export const generateStorageId = () => generateNanoid(16);
 
-export type StorageListResponse = {
+export type StorageListItem = {
   url: string
   fileName: string
   uploadedAt?: Date
-}[];
+  size?: string
+};
+
+export type StorageListResponse = StorageListItem[];
 
 export type StorageType =
   'vercel-blob' |
