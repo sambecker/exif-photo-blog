@@ -321,13 +321,11 @@ export const getKeywordsForPhoto = (photo: Photo) =>
 export const isNextImageReadyBasedOnPhotos = async (
   photos: Photo[],
 ): Promise<boolean> =>
-  photos.length > 0 && fetch(getNextImageUrlForRequest(
-    photos[0].url,
-    640,
-    undefined,
-    undefined,
-    IS_PREVIEW,
-  ))
+  photos.length > 0 && fetch(getNextImageUrlForRequest({
+    imageUrl: photos[0].url,
+    size: 640,
+    addBypassSecret: IS_PREVIEW,
+  }))
     .then(response => response.ok)
     .catch(() => false);
 

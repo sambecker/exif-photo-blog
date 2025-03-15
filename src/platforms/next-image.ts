@@ -14,13 +14,19 @@ export type NextImageSize = NextCustomSize | NextImageDeviceSize;
 
 export const MAX_IMAGE_SIZE: NextImageSize = 3840;
 
-export const getNextImageUrlForRequest = (
-  imageUrl: string,
-  size: NextImageSize,
+export const getNextImageUrlForRequest = ({
+  imageUrl,
+  size,
   quality = IMAGE_QUALITY,
   baseUrl = BASE_URL,
-  addBypassSecret = false,
-) => {
+  addBypassSecret,
+}: {
+  imageUrl: string
+  size: NextImageSize
+  quality?: number
+  baseUrl?: string
+  addBypassSecret?: boolean
+}) => {
   const url = new URL(`${baseUrl}/_next/image`);
 
   url.searchParams.append('url', imageUrl);
@@ -38,6 +44,10 @@ export const getNextImageUrlForRequest = (
 // generating blur data or image thumbnails for AI text generation
 export const getNextImageUrlForManipulation = (
   imageUrl: string,
-  addBypassSecret = false,
+  addBypassSecret: boolean,
 ) =>
-  getNextImageUrlForRequest(imageUrl, 640, 90, undefined, addBypassSecret);
+  getNextImageUrlForRequest({
+    imageUrl,
+    size: 640,
+    addBypassSecret,
+  });

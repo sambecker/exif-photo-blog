@@ -36,8 +36,8 @@ export const formatPhotoForApi = (photo: Photo): PublicApiPhoto => ({
   ...photo.tags.length > 0 && { tags: photo.tags },
   takenAtNaive: formatDateFromPostgresString(photo.takenAtNaive),
   src: {
-    small: getNextImageUrlForRequest(photo.url, 200),
-    medium: getNextImageUrlForRequest(photo.url, 640),
-    large: getNextImageUrlForRequest(photo.url, 1200),
+    small: getNextImageUrlForRequest({ imageUrl: photo.url, size: 200 }),
+    medium: getNextImageUrlForRequest({ imageUrl: photo.url, size: 640 }),
+    large: getNextImageUrlForRequest({ imageUrl: photo.url, size: 1200 }),
   },
 });

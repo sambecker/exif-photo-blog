@@ -69,13 +69,11 @@ export default function ImagePhotoGrid({
           }}
         >
           <img {...{
-            src: getNextImageUrlForRequest(
-              url,
-              nextImageWidth,
-              undefined,
-              undefined,
-              IS_PREVIEW,
-            ),
+            src: getNextImageUrlForRequest({
+              imageUrl: url,
+              size: nextImageWidth,
+              addBypassSecret: IS_PREVIEW,
+            }),
             style: {
               ...imageStyle,
               width: '100%',
