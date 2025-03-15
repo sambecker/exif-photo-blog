@@ -6,7 +6,6 @@ import {
   PutObjectCommand,
 } from '@aws-sdk/client-s3';
 import { StorageListResponse, generateStorageId } from '.';
-import { formatBytesToMB } from '@/utility/number';
 
 const AWS_S3_BUCKET = process.env.NEXT_PUBLIC_AWS_S3_BUCKET ?? '';
 const AWS_S3_REGION = process.env.NEXT_PUBLIC_AWS_S3_REGION ?? '';
@@ -75,7 +74,7 @@ export const awsS3List = async (
       url: urlForKey(Key),
       fileName: Key ?? '',
       uploadedAt: LastModified,
-      size: Size ? formatBytesToMB(Size) : undefined,
+      size: Size ? `${Size.toFixed(2)}MB` : undefined,
     })) ?? []);
 
 export const awsS3Delete = async (Key: string) => {
