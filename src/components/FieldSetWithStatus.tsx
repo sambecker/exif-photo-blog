@@ -1,6 +1,6 @@
 'use client';
 
-import { Ref, InputHTMLAttributes } from 'react';
+import { InputHTMLAttributes, useRef, RefObject } from 'react';
 import { useFormStatus } from 'react-dom';
 import Spinner from './Spinner';
 import { clsx } from 'clsx/lite';
@@ -31,7 +31,7 @@ export default function FieldSetWithStatus({
   spellCheck,
   capitalize,
   type = 'text',
-  inputRef,
+  inputRef: inputRefProp,
   accessory,
   hideLabel,
 }: {
@@ -55,10 +55,14 @@ export default function FieldSetWithStatus({
   spellCheck?: boolean
   capitalize?: boolean
   type?: FieldSetType
-  inputRef?: Ref<HTMLInputElement>
+  inputRef?: RefObject<HTMLInputElement | null>
   accessory?: React.ReactNode
   hideLabel?: boolean
 }) {
+  const inputRefInternal = useRef<HTMLInputElement>(null);
+
+  const inputRef = inputRefProp ?? inputRefInternal;
+
   const id = _id || parameterize(label);
 
   const { pending } = useFormStatus();
@@ -68,7 +72,9 @@ export default function FieldSetWithStatus({
     name: id,
     type,
     value,
-    checked: type === 'checkbox' ? value === 'true' : undefined,
+    checked: type === 'checkbox'
+      ? value === 'true' ? true : false
+      : undefined,
     placeholder,
     onChange: e => onChange?.(type === 'checkbox'
       ? e.target.value === 'true' ? 'false' : 'true'
