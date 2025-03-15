@@ -149,22 +149,21 @@ export default function PhotoLarge({
     hasTitleContent ||
     hasMetaContent;
 
-  const renderPhotoLink = () =>
+  const renderPhotoLink =
     <PhotoLink
       photo={photo}
       className="font-bold uppercase grow"
       prefetch={prefetch}
     />;
 
-  const matteContentWidthForAspectRatio = () => {
-    // Restrict width for landscape photos
-    // (portrait photos are always height restricted)
-    if (photo.aspectRatio > 3 / 2 + 0.1) {
-      return 'w-[90%]';
-    } else if (photo.aspectRatio >= 1) {
-      return 'w-[80%]';
-    }
-  };
+  // Restrict width for landscape photos
+  // (portrait photos are always height restricted)
+  const matteContentWidthForAspectRatio =
+    photo.aspectRatio > 3 / 2 + 0.1
+      ? 'w-[90%]'
+      : photo.aspectRatio >= 1
+        ? 'w-[80%]'
+        : undefined;
 
   const largePhotoContent =
     <div className={clsx(
@@ -172,7 +171,7 @@ export default function PhotoLarge({
       arePhotosMatted && 'flex items-center justify-center',
       // Always specify height to ensure fallback doesn't collapse
       arePhotosMatted && 'h-[90%]',
-      arePhotosMatted && matteContentWidthForAspectRatio(),
+      arePhotosMatted && matteContentWidthForAspectRatio,
     )}>
       <ZoomControls
         ref={zoomControlsRef}
@@ -257,8 +256,8 @@ export default function PhotoLarge({
           <div className="pr-2 md:pr-0">
             <div className="md:relative flex gap-2 items-start">
               {hasTitle && (showTitleAsH1
-                ? <h1>{renderPhotoLink()}</h1>
-                : renderPhotoLink())}
+                ? <h1>{renderPhotoLink}</h1>
+                : renderPhotoLink)}
               <div className="absolute right-0 translate-y-[-4px] z-10">
                 <AdminPhotoMenuClient {...{
                   photo,
