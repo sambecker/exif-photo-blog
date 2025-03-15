@@ -1,6 +1,6 @@
 'use client';
 
-import { InputHTMLAttributes, useRef, RefObject } from 'react';
+import { InputHTMLAttributes, useRef, RefObject, ReactNode } from 'react';
 import { useFormStatus } from 'react-dom';
 import Spinner from './Spinner';
 import { clsx } from 'clsx/lite';
@@ -13,6 +13,7 @@ import Checkbox from './Checkbox';
 export default function FieldSetWithStatus({
   id: _id,
   label,
+  icon,
   note,
   error,
   value,
@@ -37,6 +38,7 @@ export default function FieldSetWithStatus({
 }: {
   id?: string
   label: string
+  icon?: ReactNode
   note?: string
   error?: string
   value: string
@@ -117,7 +119,14 @@ export default function FieldSetWithStatus({
               type === 'checkbox' && 'order-2 m-0',
             )}
           >
-            {label}
+            <span className="inline-flex items-center gap-x-1.5">
+              {icon && <span
+                className="inline-flex items-center justify-center w-4"
+              >
+                {icon}
+              </span>}
+              {label}
+            </span>
             {note && !error &&
               <span className="text-gray-400 dark:text-gray-600">
                 ({note})
