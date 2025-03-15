@@ -2,7 +2,10 @@
 
 import ImageSmall from '@/components/image/ImageSmall';
 import Spinner from '@/components/Spinner';
-import { getExtensionFromStorageUrl } from '@/platforms/storage';
+import {
+  getIdFromStorageUrl,
+  getExtensionFromStorageUrl,
+} from '@/platforms/storage';
 import { clsx } from 'clsx/lite';
 import { FaRegCircleCheck } from 'react-icons/fa6';
 import { pathForAdminUploadUrl } from '@/app/paths';
@@ -46,6 +49,7 @@ export default function AdminUploadsTable({
                   'scale-90',
               )}>
                 <ImageSmall
+                  title={getIdFromStorageUrl(url)}
                   src={url}
                   alt={url}
                   aspectRatio={3.0 / 2.0}

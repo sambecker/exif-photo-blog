@@ -180,7 +180,7 @@ export default function PhotoLarge({
       >
         <ImageLarge
           className={clsx(arePhotosMatted && 'h-full')}
-          imgClassName={clsx(arePhotosMatted &&
+          classNameImage={clsx(arePhotosMatted &&
             'object-contain w-full h-full')}
           alt={altTextForPhoto(photo)}
           src={photo.url}

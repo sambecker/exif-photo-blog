@@ -9,14 +9,14 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 export default function ImageWithFallback(props: ImageProps & {
   blurCompatibilityLevel?: 'none' | 'low' | 'high'
-  imgClassName?: string
+  classNameImage?: string
 }) {
   const {
     className,
+    classNameImage = 'object-cover h-full',
     priority,
     blurDataURL,
     blurCompatibilityLevel = 'low',
-    imgClassName = 'object-cover h-full',
     ...rest
   } = props;
 
@@ -67,8 +67,8 @@ export default function ImageWithFallback(props: ImageProps & {
   return (
     <div
       className={clsx(
-        className,
         'flex relative',
+        className,
       )}
     >
       {(showFallback || shouldDebugImageFallbacks) &&
@@ -87,8 +87,8 @@ export default function ImageWithFallback(props: ImageProps & {
               ...rest,
               src: blurDataURL,
               className: clsx(
-                imgClassName,
                 getBlurClass(),
+                classNameImage,
               ),
             }} />
             :  <div className={clsx(
@@ -100,7 +100,7 @@ export default function ImageWithFallback(props: ImageProps & {
         ...rest,
         ref: imgRef,
         priority,
-        className: imgClassName,
+        className: classNameImage,
         onLoad,
         onError,
       }} />
