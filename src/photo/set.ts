@@ -23,7 +23,6 @@ type CategoryKeys = CategoryKey[];
 export const DEFAULT_CATEGORY_KEYS: CategoryKeys = [
   'tags',
   'cameras',
-  'lenses',
   'recipes',
   'films',
 ];

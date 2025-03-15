@@ -23,7 +23,7 @@ export default function PhotoLens({
       label={formatLensText(lens)}
       href={pathForLens(lens)}
       icon={<TbCone
-        className="rotate-[270deg] translate-x-[-0.5px]"
+        className="rotate-[270deg] translate-x-[-1px] translate-y-[-0.5px]"
       />}
       type={type}
       className={className}

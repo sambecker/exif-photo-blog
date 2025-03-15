@@ -7,6 +7,7 @@ import {
   shouldShowCameraDataForPhoto,
   shouldShowExifDataForPhoto,
   shouldShowLensDataForPhoto,
+  shouldShowRecipeDataForPhoto,
   titleForPhoto,
 } from '.';
 import SiteGrid from '@/components/SiteGrid';
@@ -27,8 +28,6 @@ import {
   SHOULD_PREFETCH_ALL_LINKS,
   ALLOW_PUBLIC_DOWNLOADS,
   SHOW_TAKEN_AT_TIME,
-  SHOW_RECIPES,
-  SHOW_FILM_SIMULATIONS,
 } from '@/app/config';
 import AdminPhotoMenuClient from '@/admin/AdminPhotoMenuClient';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
@@ -127,13 +126,15 @@ export default function PhotoLarge({
 
   const camera = cameraFromPhoto(photo);
   const lens = lensFromPhoto(photo);
-  const { recipeTitle: recipe } = photo;
+  const { recipeTitle } = photo;
+
+  const showExifContent = shouldShowExifDataForPhoto(photo);
 
   const showCameraContent = showCamera && shouldShowCameraDataForPhoto(photo);
   const showLensContent = showLens && shouldShowLensDataForPhoto(photo);
-  const showRecipeContent = showRecipe && recipe;
+  const showRecipeContent = showRecipe && shouldShowRecipeDataForPhoto(photo);
+  const showRecipeButton = shouldShowRecipeDataForPhoto(photo);
   const showTagsContent = tags.length > 0;
-  const showExifContent = shouldShowExifDataForPhoto(photo);
 
   useVisible({ ref, onVisible });
 
@@ -147,6 +148,7 @@ export default function PhotoLarge({
 
   const hasMetaContent =
     showCameraContent ||
+    showLensContent ||
     showTagsContent ||
     showRecipeContent ||
     showExifContent;
@@ -224,17 +226,6 @@ export default function PhotoLarge({
     'flex items-center justify-center aspect-3/2 bg-gray-100',
   );
 
-  const shouldRenderSimulation = (
-    SHOW_FILM_SIMULATIONS &&
-    showSimulation &&
-    photo.filmSimulation
-  );
-
-  const shouldRenderRecipe = (
-    SHOW_RECIPES &&
-    photo.recipeData
-  );
-
   return (
     <SiteGrid
       containerRef={ref}
@@ -282,7 +273,12 @@ export default function PhotoLarge({
                 )}>
                   {photo.caption}
                 </div>}
-              {(showCameraContent || showRecipeContent || showTagsContent) &&
+              {(
+                showCameraContent ||
+                showLensContent ||
+                showRecipeContent ||
+                showTagsContent
+              ) &&
                 <div>
                   {showCameraContent &&
                     <PhotoCamera
@@ -291,17 +287,17 @@ export default function PhotoLarge({
                       prefetch={prefetchRelatedLinks}
                     />}
                   {showLensContent &&
-                  <>
-                    <br />
-                    <PhotoLens
-                      lens={lens}
-                      contrast="medium"
-                      prefetch={prefetchRelatedLinks}
-                    />
-                  </>}
-                  {showRecipeContent &&
+                    <>
+                      <br />
+                      <PhotoLens
+                        lens={lens}
+                        contrast="medium"
+                        prefetch={prefetchRelatedLinks}
+                      />
+                    </>}
+                  {showRecipeContent && recipeTitle &&
                     <PhotoRecipe
-                      recipe={recipe}
+                      recipe={recipeTitle}
                       contrast="medium"
                       prefetch={prefetchRelatedLinks}
                     />}
@@ -359,14 +355,14 @@ export default function PhotoLarge({
                   <li>{photo.isoFormatted}</li>
                   <li>{photo.exposureCompensationFormatted ?? '0ev'}</li>
                 </ul>
-                {(shouldRenderSimulation || shouldRenderRecipe) &&
+                {(showSimulation || showRecipeButton) &&
                   <div className="flex items-center gap-2 *:w-auto">
-                    {shouldRenderSimulation && photo.filmSimulation &&
+                    {showSimulation && photo.filmSimulation &&
                       <PhotoFilmSimulation
                         simulation={photo.filmSimulation}
                         prefetch={prefetchRelatedLinks}
                       />}
-                    {shouldRenderRecipe &&
+                    {showRecipeButton &&
                       <Tooltip content="Fujifilm Recipe">
                         <button
                           ref={refRecipeButton}
@@ -382,7 +378,7 @@ export default function PhotoLarge({
                             'px-[4px] py-[2.5px] my-[-3px]',
                             'translate-y-[2px]',
                             'hover:bg-dim active:bg-main',
-                            !shouldRenderSimulation && 'translate-x-[-2px]',
+                            !showSimulation && 'translate-x-[-2px]',
                           )}>
                           {shouldShowRecipeOverlay
                             ? <IoCloseSharp size={15} />
@@ -434,7 +430,7 @@ export default function PhotoLarge({
                       ? photo.filmSimulation
                       : undefined}
                     recipe={shouldShareRecipe
-                      ? recipe
+                      ? recipeTitle
                       : undefined}
                     focal={shouldShareFocalLength
                       ? photo.focalLength

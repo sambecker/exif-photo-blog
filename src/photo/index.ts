@@ -5,6 +5,8 @@ import {
   HIGH_DENSITY_GRID,
   IS_PREVIEW,
   SHOW_EXIF_DATA,
+  SHOW_LENSES,
+  SHOW_RECIPES,
 } from '@/app/config';
 import { ABSOLUTE_PATH_FOR_HOME_IMAGE } from '@/app/paths';
 import { formatDate, formatDateFromPostgresString } from '@/utility/date';
@@ -302,6 +304,9 @@ const photoHasLensData = (photo: Photo) =>
   Boolean(photo.lensMake) &&
   Boolean(photo.lensModel);
 
+const photoHasRecipeData = (photo: Photo) =>
+  Boolean(photo.recipeData);
+
 const photoHasExifData = (photo: Photo) =>
   Boolean(photo.focalLength) ||
   Boolean(photo.focalLengthIn35MmFormat) ||
@@ -311,10 +316,18 @@ const photoHasExifData = (photo: Photo) =>
   Boolean(photo.exposureCompensationFormatted);
 
 export const shouldShowCameraDataForPhoto = (photo: Photo) =>
-  SHOW_EXIF_DATA && photoHasCameraData(photo);
+  SHOW_EXIF_DATA &&
+  photoHasCameraData(photo);
 
 export const shouldShowLensDataForPhoto = (photo: Photo) =>
-  SHOW_EXIF_DATA && photoHasLensData(photo);
+  SHOW_EXIF_DATA &&
+  SHOW_LENSES &&
+  photoHasLensData(photo);
+
+export const shouldShowRecipeDataForPhoto = (photo: Photo) =>
+  SHOW_EXIF_DATA &&
+  SHOW_RECIPES &&
+  photoHasRecipeData(photo);
 
 export const shouldShowExifDataForPhoto = (photo: Photo) =>
   SHOW_EXIF_DATA && photoHasExifData(photo);
