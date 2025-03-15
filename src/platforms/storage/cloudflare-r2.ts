@@ -7,6 +7,7 @@ import {
 } from '@aws-sdk/client-s3';
 import { StorageListResponse, generateStorageId } from '.';
 import { removeUrlProtocol } from '@/utility/url';
+import { formatBytesToMB } from '@/utility/number';
 
 const CLOUDFLARE_R2_BUCKET =
   process.env.NEXT_PUBLIC_CLOUDFLARE_R2_BUCKET ?? '';
@@ -94,7 +95,7 @@ export const cloudflareR2List = async (
       url: urlForKey(Key),
       fileName: Key ?? '',
       uploadedAt: LastModified,
-      size: Size ? `${Size.toFixed(2)}MB` : undefined,
+      size: Size ? formatBytesToMB(Size) : undefined,
     })) ?? []);
 
 export const cloudflareR2Delete = async (Key: string) => {
