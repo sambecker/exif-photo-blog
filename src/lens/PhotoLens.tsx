@@ -3,7 +3,7 @@ import { Lens, formatLensText } from '.';
 import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/primitives/EntityLink';
-import { TbCone } from 'react-icons/tb';
+import { RiCameraLensLine } from 'react-icons/ri';
 
 export default function PhotoLens({
   lens,
@@ -22,8 +22,9 @@ export default function PhotoLens({
     <EntityLink
       label={formatLensText(lens)}
       href={pathForLens(lens)}
-      icon={<TbCone
-        className="rotate-[270deg] translate-x-[-1px] translate-y-[-0.5px]"
+      icon={<RiCameraLensLine
+        size={14}
+        className="translate-x-[-0.5px] translate-y-[-0.5px]"
       />}
       type={type}
       className={className}

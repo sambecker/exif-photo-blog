@@ -89,6 +89,7 @@ export default function EntityLink({
               href && !badged && 'hover:text-gray-900 dark:hover:text-gray-100',
               classNameIcon,
             ),
+            classNameIcon: 'text-dim',
             debug,
           }}>
             {badged
