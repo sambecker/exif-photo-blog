@@ -2,6 +2,7 @@ import { PRIORITY_ORDER_ENABLED } from '@/app/config';
 import { parameterize } from '@/utility/string';
 import { PhotoSetCategory } from '../set';
 import { Camera } from '@/camera';
+import { Lens } from '@/lens';
 
 export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 export const PHOTO_DEFAULT_LIMIT = 100;
@@ -23,8 +24,9 @@ export type GetPhotosOptions = {
   takenAfterInclusive?: Date
   updatedBefore?: Date
   hidden?: 'exclude' | 'include' | 'only'
-} & Omit<PhotoSetCategory, 'camera'> & {
+} & Omit<PhotoSetCategory, 'camera' | 'lens'> & {
   camera?: Partial<Camera>
+  lens?: Partial<Lens>
 };
 
 export const areOptionsSensitive = (options: GetPhotosOptions) =>
@@ -83,10 +85,6 @@ export const getWheresFromOptions = (
     wheres.push(`aspect_ratio <= $${valuesIndex++}`);
     wheresValues.push(maximumAspectRatio);
   }
-  if (tag) {
-    wheres.push(`$${valuesIndex++}=ANY(tags)`);
-    wheresValues.push(tag);
-  }
   if (camera?.make) {
     wheres.push(`${parameterizeForDb('make')}=$${valuesIndex++}`);
     wheresValues.push(parameterize(camera.make, true));
@@ -95,11 +93,17 @@ export const getWheresFromOptions = (
     wheres.push(`${parameterizeForDb('model')}=$${valuesIndex++}`);
     wheresValues.push(parameterize(camera.model, true));
   }
-  if (lens) {
+  if (lens?.make) {
     wheres.push(`${parameterizeForDb('lens_make')}=$${valuesIndex++}`);
     wheresValues.push(parameterize(lens.make, true));
+  }
+  if (lens?.model) {
     wheres.push(`${parameterizeForDb('lens_model')}=$${valuesIndex++}`);
     wheresValues.push(parameterize(lens.model, true));
+  }
+  if (tag) {
+    wheres.push(`$${valuesIndex++}=ANY(tags)`);
+    wheresValues.push(tag);
   }
   if (simulation) {
     wheres.push(`film_simulation=$${valuesIndex++}`);

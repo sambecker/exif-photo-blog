@@ -17,16 +17,12 @@ import Spinner from '@/components/Spinner';
 
 export default function PhotoMedium({
   photo,
-  tag,
-  camera,
-  simulation,
-  focal,
-  recipe,
   selected,
   priority,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
   className,
   onVisible,
+  ...categories
 }: {
   photo: Photo
   selected?: boolean
@@ -42,7 +38,7 @@ export default function PhotoMedium({
   return (
     <LinkWithStatus
       ref={ref}
-      href={pathForPhoto({ photo, tag, camera, simulation, focal, recipe })}
+      href={pathForPhoto({ photo, ...categories })}
       className={clsx(
         'active:brightness-75',
         selected && 'brightness-50',

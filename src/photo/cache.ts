@@ -31,6 +31,7 @@ import {
   PREFIX_CAMERA,
   PREFIX_FILM_SIMULATION,
   PREFIX_FOCAL_LENGTH,
+  PREFIX_LENS,
   PREFIX_RECIPE,
   PREFIX_TAG,
   pathForPhoto,
@@ -105,6 +106,9 @@ export const revalidateRecipesKey = () =>
 export const revalidateCamerasKey = () =>
   revalidateTag(KEY_CAMERAS);
 
+export const revalidateLensesKey = () =>
+  revalidateTag(KEY_LENSES);
+
 export const revalidateFilmSimulationsKey = () =>
   revalidateTag(KEY_FILM_SIMULATIONS);
 
@@ -115,6 +119,7 @@ export const revalidateAllKeys = () => {
   revalidatePhotosKey();
   revalidateTagsKey();
   revalidateCamerasKey();
+  revalidateLensesKey();
   revalidateFilmSimulationsKey();
   revalidateRecipesKey();
   revalidateFocalLengthsKey();
@@ -134,6 +139,7 @@ export const revalidatePhoto = (photoId: string) => {
   revalidateTag(photoId);
   revalidateTagsKey();
   revalidateCamerasKey();
+  revalidateLensesKey();
   revalidateFilmSimulationsKey();
   revalidateRecipesKey();
   revalidateFocalLengthsKey();
@@ -144,6 +150,7 @@ export const revalidatePhoto = (photoId: string) => {
   revalidatePath(PATH_FEED, 'layout');
   revalidatePath(PREFIX_TAG, 'layout');
   revalidatePath(PREFIX_CAMERA, 'layout');
+  revalidatePath(PREFIX_LENS, 'layout');
   revalidatePath(PREFIX_FILM_SIMULATION, 'layout');
   revalidatePath(PREFIX_RECIPE, 'layout');
   revalidatePath(PREFIX_FOCAL_LENGTH, 'layout');

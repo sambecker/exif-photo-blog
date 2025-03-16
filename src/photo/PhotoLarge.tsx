@@ -65,8 +65,9 @@ export default function PhotoLarge({
   showZoomControls: showZoomControlsProp = true,
   shouldZoomOnFKeydown = true,
   shouldShare = true,
-  shouldShareTag,
   shouldShareCamera,
+  shouldShareLens,
+  shouldShareTag,
   shouldShareSimulation,
   shouldShareRecipe,
   shouldShareFocalLength,
@@ -89,8 +90,9 @@ export default function PhotoLarge({
   showZoomControls?: boolean
   shouldZoomOnFKeydown?: boolean
   shouldShare?: boolean
-  shouldShareTag?: boolean
   shouldShareCamera?: boolean
+  shouldShareLens?: boolean
+  shouldShareTag?: boolean
   shouldShareSimulation?: boolean
   shouldShareRecipe?: boolean
   shouldShareFocalLength?: boolean
@@ -280,21 +282,20 @@ export default function PhotoLarge({
                 showTagsContent
               ) &&
                 <div>
-                  {showCameraContent &&
-                    <PhotoCamera
-                      camera={camera}
-                      contrast="medium"
-                      prefetch={prefetchRelatedLinks}
-                    />}
-                  {showLensContent &&
-                    <>
-                      <br />
-                      <PhotoLens
-                        lens={lens}
+                  {(showCameraContent || showLensContent) &&
+                    <div className="flex flex-col">
+                      <PhotoCamera
+                        camera={camera}
                         contrast="medium"
                         prefetch={prefetchRelatedLinks}
                       />
-                    </>}
+                      {showLensContent &&
+                        <PhotoLens
+                          lens={lens}
+                          contrast="medium"
+                          prefetch={prefetchRelatedLinks}
+                        />}
+                    </div>}
                   {showRecipeContent && recipeTitle &&
                     <PhotoRecipe
                       recipe={recipeTitle}
@@ -426,6 +427,7 @@ export default function PhotoLarge({
                     photo={photo}
                     tag={shouldShareTag ? primaryTag : undefined}
                     camera={shouldShareCamera ? camera : undefined}
+                    lens={shouldShareLens ? lens : undefined}
                     simulation={shouldShareSimulation
                       ? photo.filmSimulation
                       : undefined}

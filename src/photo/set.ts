@@ -31,12 +31,12 @@ export const getHiddenDefaultCategories = (keys: CategoryKeys): CategoryKeys =>
   DEFAULT_CATEGORY_KEYS.filter(key => !keys.includes(key));
 
 export interface PhotoSetCategory {
-  tag?: string
   camera?: Camera
+  lens?: Lens
+  tag?: string
   recipe?: string
   simulation?: FilmSimulation
   focal?: number
-  lens?: Lens // Unimplemented as a set
 }
 
 export interface PhotoSetCategories {

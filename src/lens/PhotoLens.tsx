@@ -15,12 +15,11 @@ export default function PhotoLens({
   className,
 }: {
   lens: Lens
-  hideAppleIcon?: boolean
   countOnHover?: number
 } & EntityLinkExternalProps) {
   return (
     <EntityLink
-      label={formatLensText(lens)}
+      label={formatLensText(lens, 'short')}
       href={pathForLens(lens)}
       icon={<RiCameraLensLine
         size={14}

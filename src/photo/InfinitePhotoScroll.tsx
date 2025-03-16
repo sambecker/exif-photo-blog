@@ -31,6 +31,7 @@ export default function InfinitePhotoScroll({
   sortBy,
   tag,
   camera,
+  lens,
   simulation,
   wrapMoreButtonInGrid,
   useCachedPhotos = true,
@@ -69,8 +70,9 @@ export default function InfinitePhotoScroll({
       sortBy,
       limit: itemsPerPage,
       hidden: includeHiddenPhotos ? 'include' : 'exclude',
-      tag,
       camera,
+      lens,
+      tag,
       simulation,
     }, warmOnly)
   , [
@@ -79,8 +81,9 @@ export default function InfinitePhotoScroll({
     initialOffset,
     itemsPerPage,
     includeHiddenPhotos,
-    tag,
     camera,
+    lens,
+    tag,
     simulation,
   ]);
 

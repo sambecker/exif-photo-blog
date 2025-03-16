@@ -334,6 +334,24 @@ export const getUniqueCameras = async () =>
     })))
   , 'getUniqueCameras');
 
+export const getUniqueLenses = async () =>
+  safelyQueryPhotos(() => sql`
+    SELECT DISTINCT lens_make||' '||lens_model as lens,
+    lens_make, lens_model, COUNT(*)
+    FROM photos
+    WHERE hidden IS NOT TRUE
+    AND trim(lens_make) <> ''
+    AND trim(lens_model) <> ''
+    GROUP BY lens_make, lens_model
+    ORDER BY lens ASC
+  `.then(({ rows }): Lenses => rows
+      .map(({ lens_make: make, lens_model: model, count }) => ({
+        lensKey: createLensKey({ make, model }),
+        lens: { make, model },
+        count: parseInt(count, 10),
+      })))
+  , 'getUniqueLenses');
+
 export const getUniqueRecipes = async () =>
   safelyQueryPhotos(() => sql`
     SELECT DISTINCT recipe_title, COUNT(*)
@@ -404,24 +422,6 @@ export const getUniqueFilmSimulations = async () =>
         count: parseInt(count, 10),
       })))
   , 'getUniqueFilmSimulations');
-
-export const getUniqueLenses = async () =>
-  safelyQueryPhotos(() => sql`
-    SELECT DISTINCT lens_make||' '||lens_model as lens,
-    lens_make, lens_model, COUNT(*)
-    FROM photos
-    WHERE hidden IS NOT TRUE
-    AND trim(lens_make) <> ''
-    AND trim(lens_model) <> ''
-    GROUP BY lens_make, lens_model
-    ORDER BY lens ASC
-  `.then(({ rows }): Lenses => rows
-      .map(({ lens_make: make, lens_model: model, count }) => ({
-        lensKey: createLensKey({ make, model }),
-        lens: { make, model },
-        count: parseInt(count, 10),
-      })))
-  , 'getUniqueLenses');
 
 export const getUniqueFocalLengths = async () =>
   safelyQueryPhotos(() => sql`

@@ -163,6 +163,9 @@ export const absolutePathForTag = (tag: string) =>
 export const absolutePathForCamera= (camera: Camera) =>
   `${BASE_URL}${pathForCamera(camera)}`;
 
+export const absolutePathForLens= (lens: Lens) =>
+  `${BASE_URL}${pathForLens(lens)}`;
+
 export const absolutePathForFilmSimulation = (simulation: FilmSimulation) =>
   `${BASE_URL}${pathForFilmSimulation(simulation)}`;
 
@@ -180,6 +183,9 @@ export const absolutePathForTagImage = (tag: string) =>
 
 export const absolutePathForCameraImage= (camera: Camera) =>
   `${absolutePathForCamera(camera)}/image`;
+
+export const absolutePathForLensImage= (lens: Lens) =>
+  `${absolutePathForLens(lens)}/image`;
 
 export const absolutePathForFilmSimulationImage =
   (simulation: FilmSimulation) =>

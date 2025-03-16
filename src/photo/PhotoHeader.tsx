@@ -19,11 +19,6 @@ import { useAppState } from '@/state/AppState';
 import { GRID_GAP_CLASSNAME } from '@/components';
 
 export default function PhotoHeader({
-  tag,
-  camera,
-  simulation,
-  focal,
-  recipe,
   photos,
   selectedPhoto,
   entity,
@@ -33,6 +28,7 @@ export default function PhotoHeader({
   count,
   dateRange,
   includeShareButton,
+  ...categories
 }: {
   photos: Photo[]
   selectedPhoto?: Photo
@@ -62,25 +58,21 @@ export default function PhotoHeader({
       ? 'photo-detail-with-entity'
       : 'photo-detail';
 
-  const renderPrevNext = () =>
+  const renderPrevNext =
     <PhotoPrevNext {...{
       photo: selectedPhoto,
       photos,
-      tag,
-      camera,
-      simulation,
-      focal,
-      recipe,
+      ...categories,
     }} />;
 
-  const renderDateRange = () =>
+  const renderDateRange =
     <span className="text-dim uppercase text-right">
       {start === end
         ? start
         : <>{end}<br />&ndash; {start}</>}
     </span>;
 
-  const renderContentA = () => entity ?? (
+  const renderContentA = entity ?? (
     selectedPhoto !== undefined &&
       <PhotoLink
         photo={selectedPhoto}
@@ -121,13 +113,13 @@ export default function PhotoHeader({
                 : 'col-span-3 md:col-span-2 lg:col-span-3 w-[110%] xl:w-full',
         )}>
           {headerType === 'photo-detail-with-entity'
-            ? renderContentA()
+            ? renderContentA
             // Necessary for title truncation
             : <h1 className={clsx(
               'w-full truncate',
               headerType !== 'photo-detail' && 'pr-1 sm:pr-2',
             )}>
-              {renderContentA()}
+              {renderContentA}
             </h1>}
         </div>
         {/* Content B: Filter Set Meta or Photo Pagination */}
@@ -149,19 +141,15 @@ export default function PhotoHeader({
               ? <>
                 {entityDescription}
                 {includeShareButton &&
-                  <ShareButton
-                    photos={photos}
-                    tag={tag}
-                    camera={camera}
-                    simulation={simulation}
-                    recipe={recipe}
-                    focal={focal}
-                    count={count}
-                    dateRange={dateRange}
-                    className="translate-y-[1.5px]"
-                    prefetch
-                    dim
-                  />}
+                  <ShareButton {...{
+                    photos,
+                    ...categories,
+                    count,
+                    dateRange,
+                    className: 'translate-y-[1.5px]',
+                    prefetch: true,
+                    dim: true,
+                  }} />}
               </>
               : <ResponsiveText shortText={paginationLabel}>
                 {entityVerb} {paginationLabel}
@@ -176,8 +164,8 @@ export default function PhotoHeader({
           'justify-end',
         )}>
           {selectedPhoto
-            ? renderPrevNext()
-            : renderDateRange()}
+            ? renderPrevNext
+            : renderDateRange}
         </div>
       </DivDebugBaselineGrid>,
       ]}

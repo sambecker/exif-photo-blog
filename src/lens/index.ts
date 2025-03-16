@@ -26,8 +26,9 @@ export type LensWithCount = {
 
 export type Lenses = LensWithCount[];
 
-export const createLensKey = ({ make, model }: Lens) =>
-  parameterize(`${make}-${model}`, true);
+// Support keys for make-only and model-only lens queries
+export const createLensKey = ({ make, model }: Partial<Lens>) =>
+  parameterize(`${make ?? 'ANY'}-${model ?? 'ANY'}`, true);
 
 export const getLensFromParams = ({
   make,
@@ -54,5 +55,28 @@ const isLensMakeApple = (make?: string) =>
 export const isLensApple = ({ make }: Lens) =>
   isLensMakeApple(make);
 
-export const formatLensText = ({ make, model }: Lens, short = true) =>
-  short ? model : `${make} ${model}`;
+export const formatLensText = (
+  { make, model: modelRaw }: Lens,
+  length:
+    'long' |    // Unmodified make and model
+    'medium' |  // Make and model, with modifiers removed
+    'short'     // Model only
+  = 'medium',
+) => {
+  // Capture simple make without modifiers like 'Corporation' or 'Company'
+  const makeSimple = make.match(/^(\S+)/)?.[1];
+  const doesModelStartWithMake = (
+    makeSimple &&
+    modelRaw.toLocaleLowerCase().startsWith(makeSimple.toLocaleLowerCase())
+  );
+  const model = modelRaw;
+  switch (length) {
+  case 'long':
+  case 'medium':
+    return `${make} ${model}`;
+  case 'short':
+    return doesModelStartWithMake
+      ? model.replace(makeSimple, '').trim()
+      : model;
+  }
+};
