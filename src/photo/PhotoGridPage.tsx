@@ -11,19 +11,22 @@ import { useEffect } from 'react';
 import { useAppState } from '@/state/AppState';
 import clsx from 'clsx/lite';
 import { Recipes } from '@/recipe';
+import { Lenses } from '@/lens';
 
 export default function PhotoGridPage({
   photos,
   photosCount,
-  tags,
   cameras,
+  lenses,
+  tags,
   simulations,
   recipes,
 }: {
   photos: Photo[]
   photosCount: number
-  tags: Tags
   cameras: Cameras
+  lenses: Lenses
+  tags: Tags
   simulations: FilmSimulations
   recipes: Recipes
 }) {
@@ -65,6 +68,7 @@ export default function PhotoGridPage({
             <PhotoGridSidebar {...{
               tags,
               cameras,
+              lenses,
               simulations,
               recipes,
               photosCount,

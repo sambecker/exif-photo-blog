@@ -2,7 +2,7 @@ import { Photo } from '.';
 import { Camera, Cameras } from '@/camera';
 import { PhotoDateRange } from '.';
 import { FilmSimulation, FilmSimulations } from '@/simulation';
-import { Lens } from '@/lens';
+import { Lens, Lenses } from '@/lens';
 import { Tags } from '@/tag';
 import { FocalLengths } from '@/focal';
 import { Recipes } from '@/recipe';
@@ -43,8 +43,9 @@ export interface PhotoSetCategory {
 }
 
 export interface PhotoSetCategories {
-  tags: Tags
   cameras: Cameras
+  lenses: Lenses
+  tags: Tags
   recipes: Recipes
   simulations: FilmSimulations
   focalLengths: FocalLengths

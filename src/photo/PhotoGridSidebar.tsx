@@ -24,16 +24,21 @@ import IconCamera from '@/components/icons/IconCamera';
 import IconRecipe from '@/components/icons/IconRecipe';
 import IconTag from '@/components/icons/IconTag';
 import IconFilmSimulation from '@/components/icons/IconFilmSimulation';
+import IconLens from '@/components/icons/IconLens';
+import { Lenses, sortLensesWithCount } from '@/lens';
+import PhotoLens from '@/lens/PhotoLens';
 
 export default function PhotoGridSidebar({
-  tags,
   cameras,
+  lenses,
+  tags,
   simulations,
   recipes,
   photosCount,
   photosDateRange,
 }: {
   tags: Tags
+  lenses: Lenses
   cameras: Cameras
   simulations: FilmSimulations
   recipes: Recipes
@@ -47,6 +52,47 @@ export default function PhotoGridSidebar({
   const tagsIncludingHidden = useMemo(() =>
     addHiddenToTags(tags, photosCountHidden)
   , [tags, photosCountHidden]);
+
+  const camerasContent = cameras.length > 0
+    ? <HeaderList
+      key="cameras"
+      title="Cameras"
+      icon={<IconCamera size={15} />}
+      items={cameras
+        .sort(sortCamerasWithCount)
+        .map(({ cameraKey, camera, count }) =>
+          <PhotoCamera
+            key={cameraKey}
+            camera={camera}
+            type="text-only"
+            countOnHover={count}
+            prefetch={false}
+            contrast="low"
+            hideAppleIcon
+            badged
+          />)}
+    />
+    : null;
+
+  const lensesContent = lenses.length > 0
+    ? <HeaderList
+      key="lenses"
+      title="Lenses"
+      icon={<IconLens size={15} />}
+      items={lenses
+        .sort(sortLensesWithCount)
+        .map(({ lensKey, lens, count }) =>
+          <PhotoLens
+            key={lensKey}
+            lens={lens}
+            type="text-only"
+            countOnHover={count}
+            prefetch={false}
+            contrast="low"
+            badged
+          />)}
+    />
+    : null;
 
   const tagsContent = tags.length > 0
     ? <HeaderList
@@ -88,27 +134,6 @@ export default function PhotoGridSidebar({
           />;
         }
       })}
-    />
-    : null;
-
-  const camerasContent = cameras.length > 0
-    ? <HeaderList
-      key="cameras"
-      title="Cameras"
-      icon={<IconCamera size={15} />}
-      items={cameras
-        .sort(sortCamerasWithCount)
-        .map(({ cameraKey, camera, count }) =>
-          <PhotoCamera
-            key={cameraKey}
-            camera={camera}
-            type="text-only"
-            countOnHover={count}
-            prefetch={false}
-            contrast="low"
-            hideAppleIcon
-            badged
-          />)}
     />
     : null;
 
@@ -183,8 +208,9 @@ export default function PhotoGridSidebar({
       />}
       {CATEGORY_VISIBILITY.map(category => {
         switch (category) {
-        case 'cameras': return camerasContent;
         case 'tags': return tagsContent;
+        case 'cameras': return camerasContent;
+        case 'lenses': return lensesContent;
         case 'recipes': return recipesContent;
         case 'films': return filmsContent;
         }

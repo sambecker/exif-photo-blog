@@ -41,6 +41,15 @@ export const getLensFromParams = ({
   model: parameterize(model),
 });
 
+export const sortLensesWithCount = (
+  a: LensWithCount,
+  b: LensWithCount,
+) => {
+  const aText = formatLensText(a.lens);
+  const bText = formatLensText(b.lens);
+  return aText.localeCompare(bText);
+};
+
 export const lensFromPhoto = (
   photo: Photo | undefined,
   fallback?: Lens,
@@ -55,15 +64,24 @@ const isLensMakeApple = (make?: string) =>
 export const isLensApple = ({ make }: Lens) =>
   isLensMakeApple(make);
 
-const formatAppleLensText = (model: string) => {
-  if (model.includes('front')) {
-    return 'Front Camera';
-  } else {
-    if (model.includes('15 Pro')) {
-      if (model.includes('f/2.2')) { return 'Wide Camera'; }
-      if (model.includes('f/1.78')) { return 'Main Camera'; }
-      if (model.includes('f/2.8')) { return 'Telephoto Camera'; }
-    }
+const formatAppleLensText = (
+  model: string,
+  includePhoneName?: boolean,
+) => {
+  if (model.includes('15 Pro')) {
+    const phoneName = '15 Pro';
+    if (model.includes('front')) { return includePhoneName
+      ? `${phoneName}: Front Camera`
+      : 'Front Camera'; }
+    if (model.includes('f/2.2')) { return includePhoneName
+      ? `${phoneName}: Wide Camera`
+      : 'Wide Camera'; }
+    if (model.includes('f/1.78')) { return includePhoneName
+      ? `${phoneName}: Main Camera`
+      : 'Main Camera'; }
+    if (model.includes('f/2.8')) { return includePhoneName
+      ? `${phoneName}: Telephoto Camera`
+      : 'Telephoto Camera'; }
   }
   return model;
 };
@@ -84,13 +102,16 @@ export const formatLensText = (
   );
 
   const model = isLensMakeApple(make)
-    ? formatAppleLensText(modelRaw)
+    ? formatAppleLensText(modelRaw, length === 'medium')
     : modelRaw;
 
   switch (length) {
   case 'long':
-  case 'medium':
     return `${make} ${model}`;
+  case 'medium':
+    return doesModelStartWithMake
+      ? model.replace(makeSimple, '').trim()
+      : model;
   case 'short':
     return doesModelStartWithMake
       ? model.replace(makeSimple, '').trim()

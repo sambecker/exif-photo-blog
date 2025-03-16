@@ -3,6 +3,7 @@ import {
   getPhotosMetaCached,
   getUniqueCamerasCached,
   getUniqueFilmSimulationsCached,
+  getUniqueLensesCached,
   getUniqueRecipesCached,
   getUniqueTagsCached,
 } from '@/photo/cache';
@@ -17,8 +18,9 @@ import { getUniqueFocalLengths } from '@/photo/db/query';
 export default async function CommandK() {
   const [
     count,
-    tags,
     cameras,
+    lenses,
+    tags,
     recipes,
     filmSimulations,
     focalLengths,
@@ -26,8 +28,9 @@ export default async function CommandK() {
     getPhotosMetaCached()
       .then(({ count }) => count)
       .catch(() => 0),
-    getUniqueTagsCached().catch(() => []),
     getUniqueCamerasCached().catch(() => []),
+    getUniqueLensesCached().catch(() => []),
+    getUniqueTagsCached().catch(() => []),
     SHOW_RECIPES
       ? getUniqueRecipesCached().catch(() => [])
       : [],
@@ -38,8 +41,9 @@ export default async function CommandK() {
   ]);
 
   return <CommandKClient
-    tags={tags}
     cameras={cameras}
+    lenses={lenses}
+    tags={tags}
     simulations={filmSimulations}
     recipes={recipes}
     focalLengths={focalLengths}
