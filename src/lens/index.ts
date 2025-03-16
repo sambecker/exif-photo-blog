@@ -56,8 +56,14 @@ export const isLensApple = ({ make }: Lens) =>
   isLensMakeApple(make);
 
 const formatAppleLensText = (model: string) => {
-  if (model.includes('front TrueDepth camera')) {
+  if (model.includes('front')) {
     return 'Front Camera';
+  } else {
+    if (model.includes('15 Pro')) {
+      if (model.includes('f/2.2')) { return 'Wide Camera'; }
+      if (model.includes('f/1.78')) { return 'Main Camera'; }
+      if (model.includes('f/2.8')) { return 'Telephoto Camera'; }
+    }
   }
   return model;
 };

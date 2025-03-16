@@ -9,11 +9,11 @@ export const PHOTO_DEFAULT_LIMIT = 100;
 
 // Trim whitespace
 // Make lowercase
-// Remove commas
-// Replace spaces, slashes with dashes
+// Remove commas, slashes
+// Replace spaces with dashes
 const parameterizeForDb = (field: string) =>
   // eslint-disable-next-line max-len
-  `REPLACE(REPLACE(REPLACE(LOWER(TRIM(${field})), ',', ''), '/', '-'), ' ', '-')`;
+  `REPLACE(REPLACE(REPLACE(LOWER(TRIM(${field})), ',', ''), '/', ''), ' ', '-')`;
 
 export type GetPhotosOptions = {
   sortBy?: 'createdAt' | 'createdAtAsc' | 'takenAt' | 'priority'
