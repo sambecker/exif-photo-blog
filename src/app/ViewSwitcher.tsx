@@ -1,23 +1,26 @@
 import Switcher from '@/components/Switcher';
 import SwitcherItem from '@/components/SwitcherItem';
-import IconFeed from '@/app/IconFeed';
-import IconGrid from '@/app/IconGrid';
+import IconFeed from '@/components/icons/IconFeed';
+import IconGrid from '@/components/icons/IconGrid';
 import {
   PATH_FEED_INFERRED,
   PATH_GRID_INFERRED,
 } from '@/app/paths';
-import IconSearch from './IconSearch';
+import IconSearch from '../components/icons/IconSearch';
 import { useAppState } from '@/state/AppState';
 import { GRID_HOMEPAGE_ENABLED } from './config';
 import AdminAppMenu from '@/admin/AdminAppMenu';
 import Spinner from '@/components/Spinner';
+import clsx from 'clsx/lite';
 
 export type SwitcherSelection = 'feed' | 'grid' | 'admin';
 
 export default function ViewSwitcher({
   currentSelection,
+  className,
 }: {
   currentSelection?: SwitcherSelection
+  className?: string
 }) {
   const {
     isUserSignedIn,
@@ -42,7 +45,10 @@ export default function ViewSwitcher({
     />;
 
   return (
-    <div className="flex gap-1 sm:gap-2">
+    <div className={clsx(
+      'flex gap-1 sm:gap-2',
+      className,
+    )}>
       <Switcher>
         {GRID_HOMEPAGE_ENABLED ? renderItemGrid : renderItemFeed}
         {GRID_HOMEPAGE_ENABLED ? renderItemFeed : renderItemGrid}

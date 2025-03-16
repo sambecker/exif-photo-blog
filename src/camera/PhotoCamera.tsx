@@ -4,7 +4,7 @@ import { Camera, formatCameraText, isCameraApple } from '.';
 import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/primitives/EntityLink';
-import { TbCamera } from 'react-icons/tb';
+import IconCamera from '@/components/icons/IconCamera';
 
 export default function PhotoCamera({
   camera,
@@ -33,7 +33,7 @@ export default function PhotoCamera({
           className="translate-x-[-1px] translate-y-[-0.5px]"
           size={15}
         />
-        : <TbCamera
+        : <IconCamera
           size={15}
           className="translate-x-[-0.5px]"
         />}

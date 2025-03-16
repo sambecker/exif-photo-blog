@@ -42,17 +42,17 @@ import { convertRecipesForForm, Recipes } from '@/recipe';
 import deepEqual from 'fast-deep-equal/es6/react';
 import ApplyRecipeTitleGloballyCheckbox from './ApplyRecipesGloballyCheckbox';
 import { FilmSimulation } from '@/simulation';
-import { FaRegStar } from 'react-icons/fa6';
-import { AiOutlineEyeInvisible } from 'react-icons/ai';
+import IconFavs from '@/components/icons/IconFavs';
+import IconHidden from '@/components/icons/IconHidden';
 
 const THUMBNAIL_SIZE = 300;
 
 const iconForKey = (key: keyof PhotoFormData) => {
   switch (key) {
   case 'favorite':
-    return <FaRegStar size={14} />;
+    return <IconFavs size={14} />;
   case 'hidden':
-    return <AiOutlineEyeInvisible size={16} />;
+    return <IconHidden size={16} />;
   }
 };
 

@@ -3,7 +3,7 @@ import { formatTag } from '.';
 import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/primitives/EntityLink';
-import { FiTag } from 'react-icons/fi';
+import IconTag from '@/components/icons/IconTag';
 
 export default function PhotoTag({
   tag,
@@ -21,7 +21,7 @@ export default function PhotoTag({
     <EntityLink
       label={formatTag(tag)}
       href={pathForTag(tag)}
-      icon={<FiTag size={14} className="translate-x-[0.5px]" />}
+      icon={<IconTag size={14} className="translate-x-[0.5px]" />}
       type={type}
       className={className}
       badged={badged}

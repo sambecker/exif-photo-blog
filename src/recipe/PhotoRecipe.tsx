@@ -2,10 +2,10 @@ import { pathForRecipe } from '@/app/paths';
 import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/primitives/EntityLink';
-import { TbChecklist } from 'react-icons/tb';
 import { formatRecipe } from '.';
 import clsx from 'clsx/lite';
 import { RefObject } from 'react';
+import IconRecipe from '@/components/icons/IconRecipe';
 
 export default function PhotoRecipe({
   recipe,
@@ -31,7 +31,7 @@ export default function PhotoRecipe({
         title="Recipe"
         label={formatRecipe(recipe)}
         href={pathForRecipe(recipe)}
-        icon={<TbChecklist
+        icon={<IconRecipe
           size={16}
           className={clsx(
             badged

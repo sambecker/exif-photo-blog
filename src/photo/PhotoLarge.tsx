@@ -284,11 +284,12 @@ export default function PhotoLarge({
                 <div>
                   {(showCameraContent || showLensContent) &&
                     <div className="flex flex-col">
-                      <PhotoCamera
-                        camera={camera}
-                        contrast="medium"
-                        prefetch={prefetchRelatedLinks}
-                      />
+                      {showCameraContent &&
+                        <PhotoCamera
+                          camera={camera}
+                          contrast="medium"
+                          prefetch={prefetchRelatedLinks}
+                        />}
                       {showLensContent &&
                         <PhotoLens
                           lens={lens}

@@ -21,8 +21,8 @@ import PhotoTagFieldset from './PhotoTagFieldset';
 import DeleteUploadButton from './DeleteUploadButton';
 import { useAppState } from '@/state/AppState';
 import { pluralize } from '@/utility/string';
-import { FaRegStar } from 'react-icons/fa6';
-import { AiOutlineEyeInvisible } from 'react-icons/ai';
+import IconFavs from '@/components/icons/IconFavs';
+import IconHidden from '@/components/icons/IconHidden';
 
 const UPLOAD_BATCH_SIZE = 4;
 
@@ -147,7 +147,7 @@ export default function AdminBatchUploadActions({
               <div className="flex gap-8">
                 <FieldSetWithStatus
                   label="Favorite"
-                  icon={<FaRegStar size={14} />}
+                  icon={<IconFavs size={14} />}
                   type="checkbox"
                   value={favorite}
                   onChange={setFavorite}
@@ -155,7 +155,7 @@ export default function AdminBatchUploadActions({
                 />
                 <FieldSetWithStatus
                   label="Hidden"
-                  icon={<AiOutlineEyeInvisible size={16} />}
+                  icon={<IconHidden size={16} />}
                   type="checkbox"
                   value={hidden}
                   onChange={setHidden}

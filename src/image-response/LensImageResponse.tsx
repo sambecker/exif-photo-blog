@@ -4,7 +4,7 @@ import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
 import { NextImageSize } from '@/platforms/next-image';
 import { formatLensText, Lens, lensFromPhoto } from '@/lens';
-import { RiCameraLensLine } from 'react-icons/ri';
+import IconLens from '@/components/icons/IconLens';
 
 export default function LensImageResponse({
   lens: lensProp,
@@ -33,7 +33,7 @@ export default function LensImageResponse({
         width,
         height,
         fontFamily,
-        icon: <RiCameraLensLine
+        icon: <IconLens
           size={height * .079}
           style={{
             marginRight: height * .015,

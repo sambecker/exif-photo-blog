@@ -3,8 +3,8 @@ import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
 import type { NextImageSize } from '@/platforms/next-image';
-import { TbCone } from 'react-icons/tb';
 import { formatFocalLength } from '@/focal';
+import IconFocalLength from '@/components/icons/IconFocalLength';
 
 export default function FocalLengthImageResponse({
   focal,
@@ -32,13 +32,13 @@ export default function FocalLengthImageResponse({
         width,
         height,
         fontFamily,
-        icon: <TbCone
-          size={height * .075}
-          style={{
-            transform: `translateY(${height * .002}px) rotate(270deg)`,
-            marginRight: height * .01,
-          }}
-        />,
+        icon: <span style={{
+          display: 'flex',
+          transform: `translateY(${height * .002}px)`,
+          marginRight: height * .01,
+        }}>
+          <IconFocalLength size={height * .075} />
+        </span>,
         title: formatFocalLength(focal),
       }} />
     </ImageContainer>

@@ -13,7 +13,7 @@ export default function ImagePhotoGrid({
   widthArbitrary,
   height,
   imagePosition = 'center',
-  gap = 4,
+  gap = 0,
   imageStyle,
 }: ({
   photos: Photo[]

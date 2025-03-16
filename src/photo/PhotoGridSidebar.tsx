@@ -4,12 +4,9 @@ import { Cameras, sortCamerasWithCount } from '@/camera';
 import PhotoCamera from '@/camera/PhotoCamera';
 import HeaderList from '@/components/HeaderList';
 import PhotoTag from '@/tag/PhotoTag';
-import { FaTag } from 'react-icons/fa';
-import { IoMdCamera } from 'react-icons/io';
 import { PhotoDateRange, dateRangeForPhotos, photoQuantityText } from '.';
 import { TAG_FAVS, TAG_HIDDEN, Tags, addHiddenToTags } from '@/tag';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
-import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
 import { FilmSimulations, sortFilmSimulationsWithCount } from '@/simulation';
 import FavsTag from '../tag/FavsTag';
 import { useAppState } from '@/state/AppState';
@@ -23,7 +20,10 @@ import {
 import { clsx } from 'clsx/lite';
 import { Recipes, sortRecipesWithCount } from '@/recipe';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
-import { TbChecklist } from 'react-icons/tb';
+import IconCamera from '@/components/icons/IconCamera';
+import IconRecipe from '@/components/icons/IconRecipe';
+import IconTag from '@/components/icons/IconTag';
+import IconFilmSimulation from '@/components/icons/IconFilmSimulation';
 
 export default function PhotoGridSidebar({
   tags,
@@ -52,8 +52,8 @@ export default function PhotoGridSidebar({
     ? <HeaderList
       key="tags"
       title='Tags'
-      icon={<FaTag
-        size={12}
+      icon={<IconTag
+        size={14}
         className="translate-y-[1px]"
       />}
       items={tagsIncludingHidden.map(({ tag, count }) => {
@@ -95,10 +95,7 @@ export default function PhotoGridSidebar({
     ? <HeaderList
       key="cameras"
       title="Cameras"
-      icon={<IoMdCamera
-        size={13}
-        className="translate-y-[-0.25px]"
-      />}
+      icon={<IconCamera size={15} />}
       items={cameras
         .sort(sortCamerasWithCount)
         .map(({ cameraKey, camera, count }) =>
@@ -119,7 +116,7 @@ export default function PhotoGridSidebar({
     ? <HeaderList
       key="recipes"
       title="Recipes"
-      icon={<TbChecklist
+      icon={<IconRecipe
         size={16}
         className="translate-x-[-1px]"
       />}
@@ -141,9 +138,7 @@ export default function PhotoGridSidebar({
     ? <HeaderList
       key="films"
       title="Films"
-      icon={<PhotoFilmSimulationIcon
-        className="translate-y-[0.5px]"
-      />}
+      icon={<IconFilmSimulation size={15} />}
       items={simulations
         .sort(sortFilmSimulationsWithCount)
         .map(({ simulation, count }) =>
