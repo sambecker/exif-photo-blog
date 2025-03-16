@@ -9,10 +9,11 @@ export const PHOTO_DEFAULT_LIMIT = 100;
 
 // Trim whitespace
 // Make lowercase
-// Replace spaces with dashes
-// Remove periods and commas
-const parameterizeForDb = (text: string) =>
-  `REPLACE(REPLACE(REPLACE(LOWER(TRIM(${text})), '.', ''), ',', ''), ' ', '-')`;
+// Remove commas
+// Replace spaces, slashes with dashes
+const parameterizeForDb = (field: string) =>
+  // eslint-disable-next-line max-len
+  `REPLACE(REPLACE(REPLACE(LOWER(TRIM(${field})), ',', ''), '/', '-'), ' ', '-')`;
 
 export type GetPhotosOptions = {
   sortBy?: 'createdAt' | 'createdAtAsc' | 'takenAt' | 'priority'
@@ -64,6 +65,19 @@ export const getWheresFromOptions = (
     break;
   }
 
+  if (options.lens?.make) {
+    console.log('LENS MODEL QUERY',{
+      db: parameterizeForDb('lens_make'),
+      args: parameterize(options.lens.make),
+    });
+  }
+  if (options.lens?.model) {
+    console.log('LENS MODEL QUERY',{
+      db: parameterizeForDb('lens_model'),
+      args: parameterize(options.lens.model),
+    });
+  }
+
   if (takenBefore) {
     wheres.push(`taken_at < $${valuesIndex++}`);
     wheresValues.push(takenBefore.toISOString());
@@ -87,19 +101,19 @@ export const getWheresFromOptions = (
   }
   if (camera?.make) {
     wheres.push(`${parameterizeForDb('make')}=$${valuesIndex++}`);
-    wheresValues.push(parameterize(camera.make, true));
+    wheresValues.push(parameterize(camera.make));
   }
   if (camera?.model) {
     wheres.push(`${parameterizeForDb('model')}=$${valuesIndex++}`);
-    wheresValues.push(parameterize(camera.model, true));
+    wheresValues.push(parameterize(camera.model));
   }
   if (lens?.make) {
     wheres.push(`${parameterizeForDb('lens_make')}=$${valuesIndex++}`);
-    wheresValues.push(parameterize(lens.make, true));
+    wheresValues.push(parameterize(lens.make));
   }
   if (lens?.model) {
     wheres.push(`${parameterizeForDb('lens_model')}=$${valuesIndex++}`);
-    wheresValues.push(parameterize(lens.model, true));
+    wheresValues.push(parameterize(lens.model));
   }
   if (tag) {
     wheres.push(`$${valuesIndex++}=ANY(tags)`);

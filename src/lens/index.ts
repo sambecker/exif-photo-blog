@@ -28,7 +28,7 @@ export type Lenses = LensWithCount[];
 
 // Support keys for make-only and model-only lens queries
 export const createLensKey = ({ make, model }: Partial<Lens>) =>
-  parameterize(`${make ?? 'ANY'}-${model ?? 'ANY'}`, true);
+  parameterize(`${make ?? 'ANY'}-${model ?? 'ANY'}`);
 
 export const getLensFromParams = ({
   make,
@@ -37,8 +37,8 @@ export const getLensFromParams = ({
   make: string,
   model: string,
 }): Lens => ({
-  make: parameterize(make, true),
-  model: parameterize(model, true),
+  make: parameterize(make),
+  model: parameterize(model),
 });
 
 export const lensFromPhoto = (
@@ -55,13 +55,20 @@ const isLensMakeApple = (make?: string) =>
 export const isLensApple = ({ make }: Lens) =>
   isLensMakeApple(make);
 
+const formatAppleLensText = (model: string) => {
+  if (model.includes('front TrueDepth camera')) {
+    return 'Front Camera';
+  }
+  return model;
+};
+
 export const formatLensText = (
   { make, model: modelRaw }: Lens,
   length:
     'long' |    // Unmodified make and model
     'medium' |  // Make and model, with modifiers removed
     'short'     // Model only
-  = 'medium',
+  = 'short',
 ) => {
   // Capture simple make without modifiers like 'Corporation' or 'Company'
   const makeSimple = make.match(/^(\S+)/)?.[1];
@@ -69,7 +76,11 @@ export const formatLensText = (
     makeSimple &&
     modelRaw.toLocaleLowerCase().startsWith(makeSimple.toLocaleLowerCase())
   );
-  const model = modelRaw;
+
+  const model = isLensMakeApple(make)
+    ? formatAppleLensText(modelRaw)
+    : modelRaw;
+
   switch (length) {
   case 'long':
   case 'medium':

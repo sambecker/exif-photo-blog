@@ -140,13 +140,13 @@ export const pathForTag = (tag: string) =>
   `${PREFIX_TAG}/${tag}`;
 
 export const pathForCamera = ({ make, model }: Camera) =>
-  `${PREFIX_CAMERA}/${parameterize(make, true)}/${parameterize(model, true)}`;
+  `${PREFIX_CAMERA}/${parameterize(make)}/${parameterize(model)}`;
 
 export const pathForFilmSimulation = (simulation: FilmSimulation) =>
   `${PREFIX_FILM_SIMULATION}/${simulation}`;
 
 export const pathForLens = ({ make, model }: Lens) =>
-  `${PREFIX_LENS}/${parameterize(make, true)}/${parameterize(model, true)}`;
+  `${PREFIX_LENS}/${parameterize(make)}/${parameterize(model)}`;
 
 export const pathForFocalLength = (focal: number) =>
   `${PREFIX_FOCAL_LENGTH}/${focal}mm`;
