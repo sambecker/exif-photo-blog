@@ -27,6 +27,9 @@ export const DEFAULT_CATEGORY_KEYS: CategoryKeys = [
   'films',
 ];
 
+export const getHiddenCategories = (keys: CategoryKeys): CategoryKeys =>
+  CATEGORY_KEYS.filter(key => !keys.includes(key));
+
 export const getHiddenDefaultCategories = (keys: CategoryKeys): CategoryKeys =>
   DEFAULT_CATEGORY_KEYS.filter(key => !keys.includes(key));
 

@@ -125,7 +125,15 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_MATTE_PHOTOS = 1` constrains the size of each photo, and displays a surrounding border (potentially useful for photos with tall aspect ratios)
 
 #### Display
-- `NEXT_PUBLIC_CATEGORY_VISIBILITY` controls which photos sets appear in the grid sidebar and CMD-K menu, and in what order. Default value is `tags,cameras,recipes,films`. As an example, you could move cameras above tags, and hide film simulations, by updating this value to `cameras,tags,recipes`.
+- `NEXT_PUBLIC_CATEGORY_VISIBILITY`
+  - Comma-separated value controlling which photos sets appear in grid sidebar and CMD-K menu, and in what order. For example, you could move cameras above tags, and hide film simulations, by updating to `cameras,tags,recipes`.
+  - Accepted values:
+     - `tags` (default)
+     - `cameras` (default)
+     - `lenses` 
+     - `recipes` (default)
+     - `films` (default)
+     - `focal-lengths`
 - `NEXT_PUBLIC_HIDE_EXIF_DATA = 1` hides EXIF data in photo details and OG images (potentially useful for portfolios, which don't focus on photography)
 - `NEXT_PUBLIC_HIDE_ZOOM_CONTROLS = 1` hides fullscreen photo zoom controls
 - `NEXT_PUBLIC_HIDE_TAKEN_AT_TIME = 1` hides taken at time from photo meta

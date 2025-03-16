@@ -35,6 +35,9 @@ export const parameterize = (
     )
     .toLocaleLowerCase();
 
+export const deparameterize = (string: string) =>
+  capitalizeWords(string.replaceAll('-', ' '));
+
 export const formatCount = (count: number) => `× ${count}`;
 
 export const pluralize = (

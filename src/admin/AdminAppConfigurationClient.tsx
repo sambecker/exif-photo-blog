@@ -29,8 +29,8 @@ import { CgDebug } from 'react-icons/cg';
 import EnvVar from '@/components/EnvVar';
 import AdminLink from './AdminLink';
 import ScoreCardContainer from '@/components/ScoreCardContainer';
-import { capitalize } from '@/utility/string';
-import { DEFAULT_CATEGORY_KEYS, getHiddenDefaultCategories } from '@/photo/set';
+import { capitalize, deparameterize } from '@/utility/string';
+import { DEFAULT_CATEGORY_KEYS, getHiddenCategories } from '@/photo/set';
 
 export default function AdminAppConfigurationClient({
   // Storage
@@ -502,15 +502,14 @@ export default function AdminAppConfigurationClient({
                     </>,
                   )}
                 </Fragment>)}
-              {getHiddenDefaultCategories(categoryVisibility)
-                .map((category, index) =>
+              {getHiddenCategories(categoryVisibility)
+                .map(category =>
                   <Fragment key={category}>
                     {renderSubStatus(
                       'optional',
                       <span className="text-dim">
-                        {categoryVisibility.length + index + 1}
-                        {'.'}
-                        {capitalize(category)}
+                        {'* '}
+                        {deparameterize(category)}
                       </span>,
                     )}
                   </Fragment>)}
