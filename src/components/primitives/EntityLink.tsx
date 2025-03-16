@@ -6,6 +6,7 @@ import Badge from '../Badge';
 import { clsx } from 'clsx/lite';
 import LinkWithStatus from '../LinkWithStatus';
 import Spinner from '../Spinner';
+import ResponsiveText from './ResponsiveText';
 
 export interface EntityLinkExternalProps {
   type?: LabeledIconType
@@ -58,14 +59,10 @@ export default function EntityLink({
     }
   };
 
-  const renderLabel = () => <>
-    <span className="xs:hidden">
-      {labelSmall ?? label}
-    </span>
-    <span className="hidden xs:inline-block">
+  const renderLabel =
+    <ResponsiveText shortText={labelSmall}>
       {label}
-    </span>
-  </>;
+    </ResponsiveText>;
 
   return (
     <span className={clsx(
@@ -100,12 +97,12 @@ export default function EntityLink({
                 uppercase
                 interactive
               >
-                {renderLabel()}
+                {renderLabel}
               </Badge>
               : <span className={clsx(
                 truncate && 'inline-flex max-w-full *:truncate',
               )}>
-                {renderLabel()}
+                {renderLabel}
               </span>}
           </LabeledIcon>
           {!isLoading && hoverEntity !== undefined &&
