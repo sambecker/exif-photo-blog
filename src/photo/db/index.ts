@@ -65,19 +65,6 @@ export const getWheresFromOptions = (
     break;
   }
 
-  if (options.lens?.make) {
-    console.log('LENS MODEL QUERY',{
-      db: parameterizeForDb('lens_make'),
-      args: parameterize(options.lens.make),
-    });
-  }
-  if (options.lens?.model) {
-    console.log('LENS MODEL QUERY',{
-      db: parameterizeForDb('lens_model'),
-      args: parameterize(options.lens.model),
-    });
-  }
-
   if (takenBefore) {
     wheres.push(`taken_at < $${valuesIndex++}`);
     wheresValues.push(takenBefore.toISOString());
