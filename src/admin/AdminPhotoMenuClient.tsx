@@ -7,7 +7,6 @@ import {
   syncPhotoAction,
   toggleFavoritePhotoAction,
 } from '@/photo/actions';
-import { FaRegEdit, FaRegStar, FaStar } from 'react-icons/fa';
 import {
   Photo,
   deleteConfirmationTextForPhoto,
@@ -21,9 +20,11 @@ import { useAppState } from '@/state/AppState';
 import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 import { MdOutlineFileDownload } from 'react-icons/md';
 import MoreMenuItem from '@/components/more/MoreMenuItem';
-import IconGrSync from '@/app/IconGrSync';
+import IconGrSync from '@/components/icons/IconGrSync';
 import { isPhotoOutdated } from '@/photo/outdated';
 import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
+import IconFavs from '@/components/icons/IconFavs';
+import IconEdit from '@/components/icons/IconEdit';
 
 export default function AdminPhotoMenuClient({
   photo,
@@ -42,12 +43,10 @@ export default function AdminPhotoMenuClient({
   const shouldRedirectFav = isPathFavs(path) && isFav;
   const shouldRedirectDelete = pathForPhoto({ photo: photo.id }) === path;
 
-  const favIconClass = 'translate-x-[-1px] translate-y-[0.5px]';
-
   const items = useMemo(() => {
     const items: ComponentProps<typeof MoreMenuItem>[] = [{
       label: 'Edit',
-      icon: <FaRegEdit
+      icon: <IconEdit
         size={15}
         className="translate-x-[0.5px] translate-y-[-0.5px]"
       />,
@@ -56,15 +55,11 @@ export default function AdminPhotoMenuClient({
     if (includeFavorite) {
       items.push({
         label: isFav ? 'Unfavorite' : 'Favorite',
-        icon: isFav
-          ? <FaStar
-            size={14}
-            className={`text-amber-500 ${favIconClass}`}
-          />
-          : <FaRegStar
-            size={14}
-            className={favIconClass}
-          />,
+        icon: <IconFavs
+          size={14}
+          className="translate-x-[-1px]"
+          highlight={isFav}
+        />,
         action: () => toggleFavoritePhotoAction(
           photo.id,
           shouldRedirectFav,

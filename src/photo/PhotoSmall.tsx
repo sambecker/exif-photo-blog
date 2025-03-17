@@ -14,14 +14,11 @@ import useVisible from '@/utility/useVisible';
 
 export default function PhotoSmall({
   photo,
-  tag,
-  camera,
-  simulation,
-  focal,
   selected,
   className,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
   onVisible,
+  ...categories
 }: {
   photo: Photo
   selected?: boolean
@@ -36,7 +33,7 @@ export default function PhotoSmall({
   return (
     <Link
       ref={ref}
-      href={pathForPhoto({ photo, tag, camera, simulation, focal })}
+      href={pathForPhoto({ photo, ...categories })}
       className={clsx(
         className,
         'active:brightness-75',

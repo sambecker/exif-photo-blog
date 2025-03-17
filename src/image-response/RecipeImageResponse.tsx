@@ -4,10 +4,10 @@ import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
 import type { NextImageSize } from '@/platforms/next-image';
 import { formatTag } from '@/tag';
-import { TbChecklist } from 'react-icons/tb';
 import { generateRecipeText, getPhotoWithRecipeFromPhotos } from '@/recipe';
 import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
 import { isStringFilmSimulation } from '@/platforms/fujifilm/simulation';
+import IconRecipe from '@/components/icons/IconRecipe';
 const MAX_RECIPE_LINES = 8;
 
 export default function RecipeImageResponse({
@@ -49,7 +49,6 @@ export default function RecipeImageResponse({
           photos,
           width,
           height,
-          gap: 0,
         }}
       />
       <div
@@ -65,10 +64,10 @@ export default function RecipeImageResponse({
         fontFamily,
         legacyBottomAlignment: false,
         gap: '0',
-        icon: <TbChecklist
+        icon: <IconRecipe
           size={height * .087}
           style={{
-            transform: `translateY(${height * .003}px)`,
+            transform: `translateY(${height * .002}px)`,
             marginRight: height * .02,
           }}
         />,

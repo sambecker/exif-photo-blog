@@ -19,8 +19,8 @@ import {
 import { useSearchParams } from 'next/navigation';
 import { useAppState } from '@/state/AppState';
 import { clsx } from 'clsx/lite';
-import { FiLock } from 'react-icons/fi';
 import { PATH_ADMIN_PHOTOS } from '@/app/paths';
+import IconLock from '@/components/icons/IconLock';
 
 export default function SignInForm({
   includeTitle = true,
@@ -71,7 +71,7 @@ export default function SignInForm({
           'flex gap-3 items-center justify-center',
           'self-start text-2xl mb-3.5',
         )}>
-          <FiLock className="text-main translate-y-[0.5px]" />
+          <IconLock className="text-main translate-y-[0.5px]" />
           <span className="text-main">
             Sign in
           </span>

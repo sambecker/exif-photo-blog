@@ -42,19 +42,10 @@ import { convertRecipesForForm, Recipes } from '@/recipe';
 import deepEqual from 'fast-deep-equal/es6/react';
 import ApplyRecipeTitleGloballyCheckbox from './ApplyRecipesGloballyCheckbox';
 import { FilmSimulation } from '@/simulation';
-import { FaRegStar } from 'react-icons/fa6';
-import { AiOutlineEyeInvisible } from 'react-icons/ai';
+import IconFavs from '@/components/icons/IconFavs';
+import IconHidden from '@/components/icons/IconHidden';
 
 const THUMBNAIL_SIZE = 300;
-
-const iconForKey = (key: keyof PhotoFormData) => {
-  switch (key) {
-  case 'favorite':
-    return <FaRegStar size={14} />;
-  case 'hidden':
-    return <AiOutlineEyeInvisible size={16} />;
-  }
-};
 
 export default function PhotoForm({
   type = 'create',
@@ -427,10 +418,24 @@ export default function PhotoForm({
                     onMatchResults={onMatchResults}
                     {...fieldProps}
                   />;
+                case 'favorite':
+                  return <FieldSetWithStatus
+                    key={key}
+                    icon={<IconFavs
+                      size={14}
+                      highlight={formData[key] === 'true'}
+                    />}
+                    {...fieldProps}
+                  />;
+                case 'hidden':
+                  return <FieldSetWithStatus
+                    key={key}
+                    icon={<IconHidden size={16} />}
+                    {...fieldProps}
+                  />;
                 default:
                   return <FieldSetWithStatus
                     key={key}
-                    icon={iconForKey(key)}
                     {...fieldProps}
                   />;
                 }

@@ -3,6 +3,8 @@ import { parameterize } from '@/utility/string';
 
 const CAMERA_PLACEHOLDER: Camera = { make: 'Camera', model: 'Model' };
 
+const CAMERA_MAKE_APPLE = 'apple';
+
 export type Camera = {
   make: string
   model: string
@@ -26,7 +28,7 @@ export type Cameras = CameraWithCount[];
 
 // Support keys for make-only and model-only camera queries
 export const createCameraKey = ({ make, model }: Partial<Camera>) =>
-  parameterize(`${make ?? 'ANY'}-${model ?? 'ANY'}`, true);
+  parameterize(`${make ?? 'ANY'}-${model ?? 'ANY'}`);
 
 export const getCameraFromParams = ({
   make,
@@ -35,8 +37,8 @@ export const getCameraFromParams = ({
   make: string,
   model: string,
 }): Camera => ({
-  make: parameterize(make, true),
-  model: parameterize(model, true),
+  make: parameterize(make),
+  model: parameterize(model),
 });
 
 export const sortCamerasWithCount = (
@@ -57,7 +59,7 @@ export const cameraFromPhoto = (
     : fallback ?? CAMERA_PLACEHOLDER;
 
 const isCameraMakeApple = (make?: string) =>
-  make?.toLocaleLowerCase() === 'apple';
+  make?.toLocaleLowerCase() === CAMERA_MAKE_APPLE;
 
 export const isCameraApple = ({ make }: Camera) =>
   isCameraMakeApple(make);

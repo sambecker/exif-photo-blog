@@ -11,19 +11,20 @@ import {
   PATH_GRID_INFERRED,
 } from '@/app/paths';
 import { useAppState } from '@/state/AppState';
-import { ImCheckboxUnchecked } from 'react-icons/im';
-import { IoArrowDown, IoArrowUp, IoCloseSharp } from 'react-icons/io5';
+import { IoArrowDown, IoArrowUp } from 'react-icons/io5';
 import { clsx } from 'clsx/lite';
-import { TbChecklist, TbPhoto } from 'react-icons/tb';
-import { FiTag } from 'react-icons/fi';
-import { BiLockAlt } from 'react-icons/bi';
 import AdminAppInfoIcon from './AdminAppInfoIcon';
-import { PiSignOutBold } from 'react-icons/pi';
 import { signOutAction } from '@/auth/actions';
 import { ComponentProps } from 'react';
-import { FaRegFolderOpen } from 'react-icons/fa';
-import { FiUploadCloud } from 'react-icons/fi';
 import useIsKeyBeingPressed from '@/utility/useIsKeyBeingPressed';
+import IconSelectMultiple from '@/components/icons/IconSelectMultiple';
+import IconPhoto from '@/components/icons/IconPhoto';
+import IconUpload from '@/components/icons/IconUpload';
+import IconRecipe from '@/components/icons/IconRecipe';
+import IconTag from '@/components/icons/IconTag';
+import IconFolder from '@/components/icons/IconFolder';
+import IconSignOut from '@/components/icons/IconSignOut';
+import IconLock from '@/components/icons/IconLock';
 
 export default function AdminAppMenu({
   active,
@@ -54,7 +55,7 @@ export default function AdminAppMenu({
 
   const items: ComponentProps<typeof MoreMenu>['items'] = [{
     label: 'Upload Photos',
-    icon: <FiUploadCloud
+    icon: <IconUpload
       size={15}
       className="translate-x-[0.5px] translate-y-[0.5px]"
     />,
@@ -73,7 +74,7 @@ export default function AdminAppMenu({
       ...photosCountTotal && {
         annotation: `${photosCountTotal}`,
       },
-      icon: <TbPhoto
+      icon: <IconPhoto
         size={15}
         className="translate-x-[-0.5px] translate-y-[0.5px]"
       />,
@@ -85,7 +86,7 @@ export default function AdminAppMenu({
     items.push({
       label: 'Uploads',
       annotation: `${uploadsCount}`,
-      icon: <FaRegFolderOpen
+      icon: <IconFolder
         size={16}
         className="translate-y-[0.5px]"
       />,
@@ -97,7 +98,7 @@ export default function AdminAppMenu({
     items.push({
       label: 'Manage Tags',
       annotation: `${tagsCount}`,
-      icon: <FiTag
+      icon: <IconTag
         size={15}
         className="translate-y-[0.5px]"
       />,
@@ -109,7 +110,7 @@ export default function AdminAppMenu({
     items.push({
       label: 'Manage Recipes',
       annotation: `${recipesCount}`,
-      icon: <TbChecklist
+      icon: <IconRecipe
         size={17}
         className="translate-x-[-0.5px] translate-y-[0.5px]"
       />,
@@ -122,13 +123,7 @@ export default function AdminAppMenu({
       label: isSelecting
         ? 'Exit Select'
         : 'Edit Multiple',
-      icon: isSelecting
-        ? <IoCloseSharp
-          className="text-[18px] translate-x-[-1px] translate-y-[1px]"
-        />
-        : <ImCheckboxUnchecked
-          className="translate-x-[-0.5px] text-[0.75rem]"
-        />,
+      icon: <IconSelectMultiple {...{ isSelecting }} />,
       href: PATH_GRID_INFERRED,
       action: () => {
         if (isSelecting) {
@@ -157,14 +152,18 @@ export default function AdminAppMenu({
       : PATH_ADMIN_CONFIGURATION,
   }, {
     label: 'Sign Out',
-    icon: <PiSignOutBold size={15} />,
+    icon: <IconSignOut size={15} />,
     action: () => signOutAction().then(clearAuthStateAndRedirect),
   });
 
   return (
     <MoreMenu
       header={<div className="flex items-center select-none">
-        <BiLockAlt size={17} className="inline-block w-5 mr-2" />
+        <IconLock
+          size={15}
+          className="inline-block w-5 mr-2"
+          narrow
+        />
         <span className="grow">Admin menu</span>
       </div>}
       icon={<div className={clsx(

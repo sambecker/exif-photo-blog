@@ -13,6 +13,7 @@ import FocalLengthHeader from '@/focal/FocalLengthHeader';
 import PhotoHeader from './PhotoHeader';
 import RecipeHeader from '@/recipe/RecipeHeader';
 import { ReactNode } from 'react';
+import LensHeader from '@/lens/LensHeader';
 
 export default function PhotoDetailPage({
   photo,
@@ -20,6 +21,7 @@ export default function PhotoDetailPage({
   photosGrid,
   tag,
   camera,
+  lens,
   simulation,
   recipe,
   focal,
@@ -60,6 +62,15 @@ export default function PhotoDetailPage({
   } else if (camera) {
     customHeader = <CameraHeader
       camera={camera}
+      photos={photos}
+      selectedPhoto={photo}
+      indexNumber={indexNumber}
+      count={count}
+      dateRange={dateRange}
+    />;
+  } else if (lens) {
+    customHeader = <LensHeader
+      lens={lens}
       photos={photos}
       selectedPhoto={photo}
       indexNumber={indexNumber}
@@ -117,11 +128,13 @@ export default function PhotoDetailPage({
             showTitle={Boolean(customHeader)}
             showTitleAsH1
             showCamera={!camera}
+            showLens={!lens}
             showSimulation={!simulation}
             showRecipe={!recipe}
             shouldShare={shouldShare}
-            shouldShareTag={tag !== undefined}
             shouldShareCamera={camera !== undefined}
+            shouldShareLens={lens !== undefined}
+            shouldShareTag={tag !== undefined}
             shouldShareSimulation={simulation !== undefined}
             shouldShareRecipe={recipe !== undefined}
             shouldShareFocalLength={focal !== undefined}

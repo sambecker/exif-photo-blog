@@ -26,6 +26,7 @@ import {
   pathForCamera,
   pathForFilmSimulation,
   pathForFocalLength,
+  pathForLens,
   pathForPhoto,
   pathForRecipe,
   pathForTag,
@@ -36,21 +37,19 @@ import { useDebounce } from 'use-debounce';
 import Spinner from '../Spinner';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
+import { BiDesktop, BiLockAlt, BiMoon, BiSun } from 'react-icons/bi';
 import { IoInvertModeSharp } from 'react-icons/io5';
 import { useAppState } from '@/state/AppState';
 import { searchPhotosAction } from '@/photo/actions';
 import { RiToolsFill } from 'react-icons/ri';
-import { BiLockAlt, BiSolidUser } from 'react-icons/bi';
+import { BiSolidUser } from 'react-icons/bi';
 import { HiDocumentText } from 'react-icons/hi';
 import { signOutAction } from '@/auth/actions';
-import { TbChecklist, TbCone, TbPhoto } from 'react-icons/tb';
 import { getKeywordsForPhoto, titleForPhoto } from '@/photo';
 import PhotoDate from '@/photo/PhotoDate';
 import PhotoSmall from '@/photo/PhotoSmall';
 import { FaCheck } from 'react-icons/fa6';
 import { addHiddenToTags, formatTag } from '@/tag';
-import { FaTag } from 'react-icons/fa';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 import CommandKItem from './CommandKItem';
 import { CATEGORY_VISIBILITY, GRID_HOMEPAGE_ENABLED } from '@/app/config';
@@ -59,11 +58,18 @@ import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import InsightsIndicatorDot from '@/admin/insights/InsightsIndicatorDot';
 import { PhotoSetCategories } from '@/photo/set';
 import { formatCameraText } from '@/camera';
-import { IoMdCamera } from 'react-icons/io';
 import { labelForFilmSimulation } from '@/platforms/fujifilm/simulation';
-import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
 import { formatFocalLength } from '@/focal';
 import { formatRecipe } from '@/recipe';
+import IconLens from '../icons/IconLens';
+import { formatLensText } from '@/lens';
+import IconTag from '../icons/IconTag';
+import IconCamera from '../icons/IconCamera';
+import IconPhoto from '../icons/IconPhoto';
+import IconRecipe from '../icons/IconRecipe';
+import IconFocalLength from '../icons/IconFocalLength';
+import IconFilmSimulation from '../icons/IconFilmSimulation';
+import IconLock from '../icons/IconLock';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -98,8 +104,9 @@ const renderToggle = (
 });
 
 export default function CommandKClient({
-  tags,
   cameras,
+  lenses,
+  tags,
   recipes,
   simulations,
   focalLengths,
@@ -198,7 +205,7 @@ export default function CommandKClient({
             setQueriedSections(photos.length > 0
               ? [{
                 heading: 'Photos',
-                accessory: <TbPhoto size={14} />,
+                accessory: <IconPhoto size={14} />,
                 items: photos.map(photo => ({
                   label: titleForPhoto(photo),
                   keywords: getKeywordsForPhoto(photo),
@@ -250,10 +257,30 @@ export default function CommandKClient({
     CATEGORY_VISIBILITY
       .map(category => {
         switch (category) {
+        case 'cameras': return {
+          heading: 'Cameras',
+          accessory: <IconCamera size={14} />,
+          items: cameras.map(({ camera, count }) => ({
+            label: formatCameraText(camera),
+            annotation: formatCount(count),
+            annotationAria: formatCountDescriptive(count),
+            path: pathForCamera(camera),
+          })),
+        };
+        case 'lenses': return {
+          heading: 'Lenses',
+          accessory: <IconLens size={14} className="translate-y-[0.5px]" />,
+          items: lenses.map(({ lens, count }) => ({
+            label: formatLensText(lens, 'medium'),
+            annotation: formatCount(count),
+            annotationAria: formatCountDescriptive(count),
+            path: pathForLens(lens),
+          })),
+        };
         case 'tags': return {
           heading: 'Tags',
-          accessory: <FaTag
-            size={10}
+          accessory: <IconTag
+            size={13}
             className="translate-x-[1px] translate-y-[0.75px]"
           />,
           items: tagsIncludingHidden.map(({ tag, count }) => ({
@@ -263,19 +290,9 @@ export default function CommandKClient({
             path: pathForTag(tag),
           })),
         };
-        case 'cameras': return {
-          heading: 'Cameras',
-          accessory: <IoMdCamera />,
-          items: cameras.map(({ camera, count }) => ({
-            label: formatCameraText(camera),
-            annotation: formatCount(count),
-            annotationAria: formatCountDescriptive(count),
-            path: pathForCamera(camera),
-          })),
-        };
         case 'recipes': return {
           heading: 'Recipes',
-          accessory: <TbChecklist
+          accessory: <IconRecipe
             size={15}
             className="translate-x-[-1px]"
           />,
@@ -288,9 +305,7 @@ export default function CommandKClient({
         };
         case 'films': return {
           heading: 'Film Simulations',
-          accessory: <span className="w-3">
-            <PhotoFilmSimulationIcon className="translate-y-[0.5px]" />
-          </span>,
+          accessory: <IconFilmSimulation size={14} />,
           items: simulations.map(({ simulation, count }) => ({
             label: labelForFilmSimulation(simulation).medium,
             annotation: formatCount(count),
@@ -300,9 +315,7 @@ export default function CommandKClient({
         };
         case 'focal-lengths': return {
           heading: 'Focal Lengths',
-          accessory: <TbCone
-            className="rotate-[270deg] text-[14px]"
-          />,
+          accessory: <IconFocalLength className="text-[14px]" />,
           items: focalLengths.map(({ focal, count }) => ({
             label: formatFocalLength(focal)!,
             annotation: formatCount(count),
@@ -313,7 +326,7 @@ export default function CommandKClient({
         }
       })
       .filter(Boolean) as CommandKSection[]
-  , [tagsIncludingHidden, cameras, recipes, simulations, focalLengths]);
+  , [tagsIncludingHidden, cameras, lenses, recipes, simulations, focalLengths]);
 
   const clientSections: CommandKSection[] = [{
     heading: 'Theme',
@@ -412,20 +425,20 @@ export default function CommandKClient({
   if (isUserSignedIn) {
     adminSection.items.push({
       label: 'Manage Photos',
-      annotation: <BiLockAlt />,
+      annotation: <IconLock narrow />,
       path: PATH_ADMIN_PHOTOS,
     });
     if (uploadsCount) {
       adminSection.items.push({
         label: 'Manage Uploads',
-        annotation: <BiLockAlt />,
+        annotation: <IconLock narrow />,
         path: PATH_ADMIN_UPLOADS,
       });
     }
     if (tagsCount) {
       adminSection.items.push({
         label: 'Manage Tags',
-        annotation: <BiLockAlt />,
+        annotation: <IconLock narrow />,
         path: PATH_ADMIN_TAGS,
       });
     }
@@ -436,17 +449,17 @@ export default function CommandKClient({
           <InsightsIndicatorDot />}
       </span>,
       keywords: ['app insights'],
-      annotation: <BiLockAlt />,
+      annotation: <IconLock narrow />,
       path: PATH_ADMIN_INSIGHTS,
     }, {
       label: 'App Config',
-      annotation: <BiLockAlt />,
+      annotation: <IconLock narrow />,
       path: PATH_ADMIN_CONFIGURATION,
     }, {
       label: selectedPhotoIds === undefined
         ? 'Select Multiple Photos'
         : 'Exit Select Multiple Photos',
-      annotation: <BiLockAlt />,
+      annotation: <IconLock narrow />,
       path: selectedPhotoIds === undefined
         ? PATH_GRID_INFERRED
         : undefined,

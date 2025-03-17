@@ -8,9 +8,9 @@ import {
   formatCameraText,
   isCameraApple,
 } from '@/camera';
-import { IoMdCamera } from 'react-icons/io';
 import { NextImageSize } from '@/platforms/next-image';
 import { AiFillApple } from 'react-icons/ai';
+import IconCamera from '@/components/icons/IconCamera';
 
 export default function CameraImageResponse({
   camera: cameraProp,
@@ -47,10 +47,11 @@ export default function CameraImageResponse({
               transform: `translateY(${-height * .002}px)`,
             }}
           />
-          : <IoMdCamera
-            size={height * .079}
+          : <IconCamera
+            size={height * .09}
             style={{
               marginRight: height * .015,
+              transform: `translateY(${height * .001}px)`,
             }}
           />,
         title: formatCameraText(camera).toLocaleUpperCase(),

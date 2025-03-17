@@ -2,16 +2,18 @@ import { PRIORITY_ORDER_ENABLED } from '@/app/config';
 import { parameterize } from '@/utility/string';
 import { PhotoSetCategory } from '../set';
 import { Camera } from '@/camera';
+import { Lens } from '@/lens';
 
 export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 export const PHOTO_DEFAULT_LIMIT = 100;
 
 // Trim whitespace
 // Make lowercase
+// Remove commas, slashes
 // Replace spaces with dashes
-// Remove periods and commas
-const parameterizeForDb = (text: string) =>
-  `REPLACE(REPLACE(REPLACE(LOWER(TRIM(${text})), '.', ''), ',', ''), ' ', '-')`;
+const parameterizeForDb = (field: string) =>
+  // eslint-disable-next-line max-len
+  `REPLACE(REPLACE(REPLACE(LOWER(TRIM(${field})), ',', ''), '/', ''), ' ', '-')`;
 
 export type GetPhotosOptions = {
   sortBy?: 'createdAt' | 'createdAtAsc' | 'takenAt' | 'priority'
@@ -23,8 +25,9 @@ export type GetPhotosOptions = {
   takenAfterInclusive?: Date
   updatedBefore?: Date
   hidden?: 'exclude' | 'include' | 'only'
-} & Omit<PhotoSetCategory, 'camera'> & {
+} & Omit<PhotoSetCategory, 'camera' | 'lens'> & {
   camera?: Partial<Camera>
+  lens?: Partial<Lens>
 };
 
 export const areOptionsSensitive = (options: GetPhotosOptions) =>
@@ -83,23 +86,25 @@ export const getWheresFromOptions = (
     wheres.push(`aspect_ratio <= $${valuesIndex++}`);
     wheresValues.push(maximumAspectRatio);
   }
-  if (tag) {
-    wheres.push(`$${valuesIndex++}=ANY(tags)`);
-    wheresValues.push(tag);
-  }
   if (camera?.make) {
     wheres.push(`${parameterizeForDb('make')}=$${valuesIndex++}`);
-    wheresValues.push(parameterize(camera.make, true));
+    wheresValues.push(parameterize(camera.make));
   }
   if (camera?.model) {
     wheres.push(`${parameterizeForDb('model')}=$${valuesIndex++}`);
-    wheresValues.push(parameterize(camera.model, true));
+    wheresValues.push(parameterize(camera.model));
   }
-  if (lens) {
+  if (lens?.make) {
     wheres.push(`${parameterizeForDb('lens_make')}=$${valuesIndex++}`);
-    wheresValues.push(parameterize(lens.make, true));
+    wheresValues.push(parameterize(lens.make));
+  }
+  if (lens?.model) {
     wheres.push(`${parameterizeForDb('lens_model')}=$${valuesIndex++}`);
-    wheresValues.push(parameterize(lens.model, true));
+    wheresValues.push(parameterize(lens.model));
+  }
+  if (tag) {
+    wheres.push(`$${valuesIndex++}=ANY(tags)`);
+    wheresValues.push(tag);
   }
   if (simulation) {
     wheres.push(`film_simulation=$${valuesIndex++}`);

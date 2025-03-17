@@ -48,8 +48,9 @@ export interface PhotoStats {
   photosCount: number
   photosCountHidden: number
   photosCountOutdated: number
-  tagsCount: number
   camerasCount: number
+  lensesCount: number
+  tagsCount: number
   recipesCount: number
   filmSimulationsCount: number
   focalLengthsCount: number

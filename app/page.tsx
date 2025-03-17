@@ -31,8 +31,9 @@ export default async function HomePage() {
   const [
     photos,
     photosCount,
-    tags,
     cameras,
+    lenses,
+    tags,
     simulations,
     recipes,
   ] = await Promise.all([
@@ -43,18 +44,24 @@ export default async function HomePage() {
       .catch(() => 0),
     ...(GRID_HOMEPAGE_ENABLED
       ? getPhotoSidebarData()
-      : [[], [], [], []]),
+      : [[], [], [], [], []]),
   ]);
 
   return (
     photos.length > 0
       ? GRID_HOMEPAGE_ENABLED
         ? <PhotoGridPage
-          {...{ photos, photosCount, tags, cameras, simulations, recipes }}
+          {...{
+            photos,
+            photosCount,
+            cameras,
+            lenses,
+            tags,
+            simulations,
+            recipes,
+          }}
         />
-        : <PhotoFeedPage
-          {...{ photos, photosCount }}
-        />
+        : <PhotoFeedPage {...{ photos, photosCount }} />
       : <PhotosEmptyState />
   );
 }

@@ -7,7 +7,6 @@ import PhotoSmall from '@/photo/PhotoSmall';
 import { clsx } from 'clsx/lite';
 import { pathForAdminPhotoEdit, pathForPhoto } from '@/app/paths';
 import Link from 'next/link';
-import { AiOutlineEyeInvisible } from 'react-icons/ai';
 import PhotoDate from '@/photo/PhotoDate';
 import EditButton from './EditButton';
 import { useAppState } from '@/state/AppState';
@@ -15,6 +14,7 @@ import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 import PhotoSyncButton from './PhotoSyncButton';
 import DeletePhotoButton from './DeletePhotoButton';
 import { Timezone } from '@/utility/timezone';
+import IconHidden from '@/components/icons/IconHidden';
 
 export default function AdminPhotosTable({
   photos,
@@ -71,7 +71,7 @@ export default function AdminPhotosTable({
                 {titleForPhoto(photo)}
                 {photo.hidden && <span className="whitespace-nowrap">
                   {' '}
-                  <AiOutlineEyeInvisible
+                  <IconHidden
                     className="inline translate-y-[-0.5px]"
                     size={16}
                   />

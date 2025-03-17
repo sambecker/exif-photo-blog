@@ -15,8 +15,10 @@ import { tagMultiplePhotosAction } from '@/photo/actions';
 import { toastSuccess } from '@/toast';
 import DeletePhotosButton from './DeletePhotosButton';
 import { photoQuantityText } from '@/photo';
-import { FaArrowDown, FaCheck, FaRegStar } from 'react-icons/fa6';
+import { FaArrowDown, FaCheck } from 'react-icons/fa6';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
+import IconFavs from '@/components/icons/IconFavs';
+import IconTag from '@/components/icons/IconTag';
 
 export default function AdminBatchEditPanelClient({
   uniqueTags,
@@ -113,7 +115,7 @@ export default function AdminBatchEditPanelClient({
             onFinish={() => setIsPerformingSelectEdit?.(false)}
           />
           <LoaderButton
-            icon={<FaRegStar />}
+            icon={<IconFavs />}
             disabled={isPerformingSelectEdit}
             confirmText={`Are you sure you want to favorite ${photosText}?`}
             onClick={() => {
@@ -132,10 +134,9 @@ export default function AdminBatchEditPanelClient({
           <LoaderButton
             onClick={() => setTags('')}
             disabled={isPerformingSelectEdit}
+            icon={<IconTag size={15} className="translate-y-[1.5px]" />}
           >
-            <ResponsiveText shortText="Tag">
-              Tag ...
-            </ResponsiveText>
+            Tag ...
           </LoaderButton>
         </>}
       <LoaderButton

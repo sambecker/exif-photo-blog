@@ -22,10 +22,10 @@ export const parameterize = (
 ) =>
   string
     .trim()
-    // Replaces spaces, underscores, and dashes with dashes
+    // Replaces spaces, underscores, slashes,and dashes with dashes
     .replaceAll(/[\s_–—]/gi, '-')
     // Removes punctuation
-    .replaceAll(/['"!@#$%^&*()_+=[\]{};:/?,.<>\\|`~]/gi, '')
+    .replaceAll(/['"!@#$%^&*()_+=[\]{};:/?,<>\\/|`~]/gi, '')
     // Removes all non-alphanumeric characters
     .replaceAll(
       shouldRemoveNonAlphanumeric
@@ -34,6 +34,9 @@ export const parameterize = (
       '',
     )
     .toLocaleLowerCase();
+
+export const deparameterize = (string: string) =>
+  capitalizeWords(string.replaceAll('-', ' '));
 
 export const formatCount = (count: number) => `× ${count}`;
 

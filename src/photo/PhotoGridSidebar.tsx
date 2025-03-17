@@ -4,12 +4,9 @@ import { Cameras, sortCamerasWithCount } from '@/camera';
 import PhotoCamera from '@/camera/PhotoCamera';
 import HeaderList from '@/components/HeaderList';
 import PhotoTag from '@/tag/PhotoTag';
-import { FaTag } from 'react-icons/fa';
-import { IoMdCamera } from 'react-icons/io';
 import { PhotoDateRange, dateRangeForPhotos, photoQuantityText } from '.';
 import { TAG_FAVS, TAG_HIDDEN, Tags, addHiddenToTags } from '@/tag';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
-import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
 import { FilmSimulations, sortFilmSimulationsWithCount } from '@/simulation';
 import FavsTag from '../tag/FavsTag';
 import { useAppState } from '@/state/AppState';
@@ -23,17 +20,25 @@ import {
 import { clsx } from 'clsx/lite';
 import { Recipes, sortRecipesWithCount } from '@/recipe';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
-import { TbChecklist } from 'react-icons/tb';
+import IconCamera from '@/components/icons/IconCamera';
+import IconRecipe from '@/components/icons/IconRecipe';
+import IconTag from '@/components/icons/IconTag';
+import IconFilmSimulation from '@/components/icons/IconFilmSimulation';
+import IconLens from '@/components/icons/IconLens';
+import { Lenses, sortLensesWithCount } from '@/lens';
+import PhotoLens from '@/lens/PhotoLens';
 
 export default function PhotoGridSidebar({
-  tags,
   cameras,
+  lenses,
+  tags,
   simulations,
   recipes,
   photosCount,
   photosDateRange,
 }: {
   tags: Tags
+  lenses: Lenses
   cameras: Cameras
   simulations: FilmSimulations
   recipes: Recipes
@@ -48,12 +53,53 @@ export default function PhotoGridSidebar({
     addHiddenToTags(tags, photosCountHidden)
   , [tags, photosCountHidden]);
 
+  const camerasContent = cameras.length > 0
+    ? <HeaderList
+      key="cameras"
+      title="Cameras"
+      icon={<IconCamera size={15} />}
+      items={cameras
+        .sort(sortCamerasWithCount)
+        .map(({ cameraKey, camera, count }) =>
+          <PhotoCamera
+            key={cameraKey}
+            camera={camera}
+            type="text-only"
+            countOnHover={count}
+            prefetch={false}
+            contrast="low"
+            hideAppleIcon
+            badged
+          />)}
+    />
+    : null;
+
+  const lensesContent = lenses.length > 0
+    ? <HeaderList
+      key="lenses"
+      title="Lenses"
+      icon={<IconLens size={15} />}
+      items={lenses
+        .sort(sortLensesWithCount)
+        .map(({ lensKey, lens, count }) =>
+          <PhotoLens
+            key={lensKey}
+            lens={lens}
+            type="text-only"
+            countOnHover={count}
+            prefetch={false}
+            contrast="low"
+            badged
+          />)}
+    />
+    : null;
+
   const tagsContent = tags.length > 0
     ? <HeaderList
       key="tags"
       title='Tags'
-      icon={<FaTag
-        size={12}
+      icon={<IconTag
+        size={14}
         className="translate-y-[1px]"
       />}
       items={tagsIncludingHidden.map(({ tag, count }) => {
@@ -91,35 +137,11 @@ export default function PhotoGridSidebar({
     />
     : null;
 
-  const camerasContent = cameras.length > 0
-    ? <HeaderList
-      key="cameras"
-      title="Cameras"
-      icon={<IoMdCamera
-        size={13}
-        className="translate-y-[-0.25px]"
-      />}
-      items={cameras
-        .sort(sortCamerasWithCount)
-        .map(({ cameraKey, camera, count }) =>
-          <PhotoCamera
-            key={cameraKey}
-            camera={camera}
-            type="text-only"
-            countOnHover={count}
-            prefetch={false}
-            contrast="low"
-            hideAppleIcon
-            badged
-          />)}
-    />
-    : null;
-
   const recipesContent = recipes.length > 0
     ? <HeaderList
       key="recipes"
       title="Recipes"
-      icon={<TbChecklist
+      icon={<IconRecipe
         size={16}
         className="translate-x-[-1px]"
       />}
@@ -141,9 +163,7 @@ export default function PhotoGridSidebar({
     ? <HeaderList
       key="films"
       title="Films"
-      icon={<PhotoFilmSimulationIcon
-        className="translate-y-[0.5px]"
-      />}
+      icon={<IconFilmSimulation size={15} />}
       items={simulations
         .sort(sortFilmSimulationsWithCount)
         .map(({ simulation, count }) =>
@@ -188,8 +208,9 @@ export default function PhotoGridSidebar({
       />}
       {CATEGORY_VISIBILITY.map(category => {
         switch (category) {
-        case 'cameras': return camerasContent;
         case 'tags': return tagsContent;
+        case 'cameras': return camerasContent;
+        case 'lenses': return lensesContent;
         case 'recipes': return recipesContent;
         case 'films': return filmsContent;
         }

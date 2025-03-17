@@ -30,7 +30,12 @@ export default function PhotoFilmSimulation({
       href={pathForFilmSimulation(simulation)}
       icon={<PhotoFilmSimulationIcon
         simulation={simulation}
-        className={clsx(contrast === 'frosted' && 'text-black')}
+        className={clsx(
+          contrast === 'frosted' && 'text-black',
+          type === 'icon-only'
+            ? 'translate-y-[-2.5px]'
+            : 'translate-y-[-1px]',
+        )}
       />}
       title={`Film Simulation: ${large}`}
       type={type}

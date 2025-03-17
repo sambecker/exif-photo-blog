@@ -34,7 +34,7 @@ export default function Checkbox({
         : props.checked
           ? <span className={clsx(
             boxStyles,
-            'border-transparent',
+            'border-transparent dark:border-gray-700',
             props.readOnly
               ? 'bg-gray-300 dark:bg-gray-700'
               : 'bg-black',
@@ -49,8 +49,8 @@ export default function Checkbox({
           </span>
           : <span className={clsx(
             boxStyles,
-            'border-gray-300 dark:border-gray-700',
             'bg-gray-100 dark:bg-gray-700/25',
+            'border-gray-300 dark:border-gray-700',
           )} />}
       <input
         ref={ref}

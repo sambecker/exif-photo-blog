@@ -24,11 +24,7 @@ export default function PhotoPrevNext({
   photo,
   photos = [],
   className,
-  tag,
-  camera,
-  simulation,
-  focal,
-  recipe,
+  ...categories
 }: {
   photo?: Photo
   photos?: Photo[]
@@ -44,42 +40,30 @@ export default function PhotoPrevNext({
   const previousPhoto = photo ? getPreviousPhoto(photo, photos) : undefined;
   const nextPhoto = photo ? getNextPhoto(photo, photos) : undefined;
 
+  const pathPrevious = previousPhoto
+    ? pathForPhoto({ photo: previousPhoto, ...categories })
+    : undefined;
+
+  const pathNext = nextPhoto
+    ? pathForPhoto({ photo: nextPhoto, ...categories })
+    : undefined;
+
   useEffect(() => {
     if (shouldRespondToKeyboardCommands) {
       const onKeyUp = (e: KeyboardEvent) => {
         switch (e.key.toUpperCase()) {
         case 'ARROWLEFT':
         case 'J':
-          if (previousPhoto) {
+          if (pathPrevious) {
             setNextPhotoAnimation?.(ANIMATION_RIGHT);
-            router.push(
-              pathForPhoto({
-                photo: previousPhoto,
-                tag,
-                camera,
-                simulation,
-                focal,
-                recipe,
-              }),
-              { scroll: false },
-            );
+            router.push(pathPrevious, { scroll: false });
           }
           break;
         case 'ARROWRIGHT':
         case 'L':
-          if (nextPhoto) {
+          if (pathNext) {
             setNextPhotoAnimation?.(ANIMATION_LEFT);
-            router.push(
-              pathForPhoto({
-                photo: nextPhoto,
-                tag,
-                camera,
-                simulation,
-                focal,
-                recipe,
-              }),
-              { scroll: false },
-            );
+            router.push(pathNext, { scroll: false });
           }
           break;
         };
@@ -91,13 +75,8 @@ export default function PhotoPrevNext({
     router,
     shouldRespondToKeyboardCommands,
     setNextPhotoAnimation,
-    previousPhoto,
-    nextPhoto,
-    tag,
-    camera,
-    simulation,
-    focal,
-    recipe,
+    pathPrevious,
+    pathNext,
   ]);
   
   return (
@@ -111,14 +90,10 @@ export default function PhotoPrevNext({
         'items-center sm:items-start',
       )}>
         <PhotoLink
+          {...categories}
           photo={previousPhoto}
           className="select-none h-[1rem]"
           nextPhotoAnimation={ANIMATION_RIGHT}
-          tag={tag}
-          camera={camera}
-          simulation={simulation}
-          focal={focal}
-          recipe={recipe}
           scroll={false}
           prefetch
         >
@@ -131,14 +106,10 @@ export default function PhotoPrevNext({
           /
         </span>
         <PhotoLink
+          {...categories}
           photo={nextPhoto}
           className="select-none h-[1rem]"
           nextPhotoAnimation={ANIMATION_LEFT}
-          tag={tag}
-          camera={camera}
-          simulation={simulation}
-          focal={focal}
-          recipe={recipe}
           scroll={false}
           prefetch
         >

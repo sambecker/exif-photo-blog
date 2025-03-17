@@ -25,8 +25,9 @@ export default async function GridPage() {
   const [
     photos,
     photosCount,
-    tags,
     cameras,
+    lenses,
+    tags,
     simulations,
     recipes,
   ] = await Promise.all([
@@ -41,7 +42,15 @@ export default async function GridPage() {
   return (
     photos.length > 0
       ? <PhotoGridPage
-        {...{ photos, photosCount, tags, cameras, simulations, recipes }}
+        {...{
+          photos,
+          photosCount,
+          cameras,
+          lenses,
+          tags,
+          simulations,
+          recipes,
+        }}
       />
       : <PhotosEmptyState />
   );
