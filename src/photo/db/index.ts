@@ -100,6 +100,8 @@ export const getWheresFromOptions = (
   }
   if (lens?.model) {
     wheres.push(`${parameterizeForDb('lens_model')}=$${valuesIndex++}`);
+    // Ensure unique queries for lenses missing makes
+    if (!lens.make) { wheres.push('lens_make IS NULL'); }
     wheresValues.push(parameterize(lens.model));
   }
   if (tag) {

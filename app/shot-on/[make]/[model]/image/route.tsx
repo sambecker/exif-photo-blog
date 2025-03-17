@@ -1,5 +1,5 @@
 import { getPhotosCached } from '@/photo/cache';
-import { Camera, CameraProps, getCameraFromParams } from '@/camera';
+import { Camera, CameraProps, formatCameraParams } from '@/camera';
 import {
   IMAGE_OG_DIMENSION_SMALL,
   MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
@@ -31,7 +31,7 @@ export async function GET(
   _: Request,
   context: CameraProps,
 ) {
-  const camera = getCameraFromParams(await context.params);
+  const camera = formatCameraParams(await context.params);
 
   const [
     photos,

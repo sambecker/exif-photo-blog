@@ -1,5 +1,5 @@
 import { Metadata } from 'next/types';
-import { CameraProps } from '@/camera';
+import { Camera, CameraProps } from '@/camera';
 import { generateMetaForCamera } from '@/camera/meta';
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getPhotosCameraDataCached } from '@/camera/data';
@@ -19,7 +19,7 @@ const getPhotosCameraDataCachedCached = cache((
 ));
 
 export let generateStaticParams:
-  (() => Promise<{ make: string, model: string }[]>) | undefined = undefined;
+  (() => Promise<Camera[]>) | undefined = undefined;
 
 if (STATICALLY_OPTIMIZED_PHOTO_CATEGORIES && IS_PRODUCTION) {
   generateStaticParams = async () => {

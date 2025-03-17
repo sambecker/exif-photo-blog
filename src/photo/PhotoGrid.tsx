@@ -14,12 +14,6 @@ import { GRID_GAP_CLASSNAME } from '@/components';
 export default function PhotoGrid({
   photos,
   selectedPhoto,
-  tag,
-  camera,
-  lens,
-  simulation,
-  focal,
-  recipe,
   photoPriority,
   fast,
   animate = true,
@@ -31,6 +25,7 @@ export default function PhotoGrid({
   canSelect,
   onLastPhotoVisible,
   onAnimationComplete,
+  ...categories
 }: {
   photos: Photo[]
   selectedPhoto?: Photo
@@ -95,12 +90,7 @@ export default function PhotoGrid({
             )}
             {...{
               photo,
-              tag,
-              camera,
-              lens,
-              simulation,
-              focal,
-              recipe,
+              ...categories,
               selected: photo.id === selectedPhoto?.id,
               priority: photoPriority,
               onVisible: index === photos.length - 1

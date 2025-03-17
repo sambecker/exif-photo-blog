@@ -31,7 +31,7 @@ export async function GET(
   _: Request,
   context: LensProps,
 ) {
-  const lens = getLensFromParams(await context.params);
+  const lens = await getLensFromParams(context.params);
 
   const [
     photos,

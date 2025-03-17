@@ -7,10 +7,10 @@ import { getUniqueLenses } from '@/photo/db/query';
 import { generateMetaForLens } from '@/lens/meta';
 import { getPhotosLensDataCached } from '@/lens/data';
 import LensOverview from '@/lens/LensOverview';
-import { LensProps } from '@/lens';
+import { getLensFromParams, Lens, LensProps } from '@/lens';
 
 const getPhotosLensDataCachedCached = cache((
-  make: string,
+  make: string | undefined,
   model: string,
 ) => getPhotosLensDataCached(
   make,
@@ -19,7 +19,7 @@ const getPhotosLensDataCachedCached = cache((
 ));
 
 export let generateStaticParams:
-  (() => Promise<{ make: string, model: string }[]>) | undefined = undefined;
+  (() => Promise<Lens[]>) | undefined = undefined;
 
 if (STATICALLY_OPTIMIZED_PHOTO_CATEGORIES && IS_PRODUCTION) {
   generateStaticParams = async () => {
@@ -31,7 +31,7 @@ if (STATICALLY_OPTIMIZED_PHOTO_CATEGORIES && IS_PRODUCTION) {
 export async function generateMetadata({
   params,
 }: LensProps): Promise<Metadata> {
-  const { make, model } = await params;
+  const { make, model } = await getLensFromParams(params);
 
   const [
     photos,
@@ -66,7 +66,7 @@ export async function generateMetadata({
 export default async function LensPage({
   params,
 }: LensProps) {
-  const { make, model } = await params;
+  const { make, model } = await getLensFromParams(params);
 
   const [
     photos,

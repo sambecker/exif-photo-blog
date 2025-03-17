@@ -22,17 +22,18 @@ export const PATH_FEED_INFERRED       = GRID_HOMEPAGE_ENABLED ? PATH_FEED : PATH
 
 // Path prefixes
 export const PREFIX_PHOTO             = '/p';
-export const PREFIX_TAG               = '/tag';
 export const PREFIX_CAMERA            = '/shot-on';
 export const PREFIX_LENS              = '/lens';
+export const PREFIX_TAG               = '/tag';
 export const PREFIX_RECIPE            = '/recipe';
 export const PREFIX_FILM_SIMULATION   = '/film';
 export const PREFIX_FOCAL_LENGTH      = '/focal';
 
 // Dynamic paths
 const PATH_PHOTO_DYNAMIC              = `${PREFIX_PHOTO}/[photoId]`;
-const PATH_TAG_DYNAMIC                = `${PREFIX_TAG}/[tag]`;
 const PATH_CAMERA_DYNAMIC             = `${PREFIX_CAMERA}/[make]/[model]`;
+const PATH_LENS_DYNAMIC               = `${PREFIX_LENS}/[make]/[model]`;
+const PATH_TAG_DYNAMIC                = `${PREFIX_TAG}/[tag]`;
 // eslint-disable-next-line max-len
 const PATH_FILM_SIMULATION_DYNAMIC    = `${PREFIX_FILM_SIMULATION}/[simulation]`;
 const PATH_FOCAL_LENGTH_DYNAMIC       = `${PREFIX_FOCAL_LENGTH}/[focal]`;
@@ -61,6 +62,9 @@ export const PATH_API_PRESIGNED_URL = `${PATH_API_STORAGE}/presigned-url`;
 // Modifiers
 const EDIT  = 'edit';
 
+// Special characters
+export const MISSING_FIELD = '-';
+
 export const PATHS_ADMIN = [
   PATH_ADMIN,
   PATH_ADMIN_PHOTOS,
@@ -79,8 +83,9 @@ export const PATHS_TO_CACHE = [
   PATH_FEED,
   PATH_OG,
   PATH_PHOTO_DYNAMIC,
-  PATH_TAG_DYNAMIC,
   PATH_CAMERA_DYNAMIC,
+  PATH_LENS_DYNAMIC,
+  PATH_TAG_DYNAMIC,
   PATH_FILM_SIMULATION_DYNAMIC,
   PATH_FOCAL_LENGTH_DYNAMIC,
   PATH_RECIPE_DYNAMIC,
@@ -119,22 +124,27 @@ export const pathForPhoto = ({
   simulation,
   focal,
   recipe,
-}: PhotoPathParams) =>
-  typeof photo !== 'string' && photo.hidden
-    ? `${pathForTag(TAG_HIDDEN)}/${getPhotoId(photo)}`
-    : tag
-      ? `${pathForTag(tag)}/${getPhotoId(photo)}`
-      : camera
-        ? `${pathForCamera(camera)}/${getPhotoId(photo)}`
-        : lens
-          ? `${pathForLens(lens)}/${getPhotoId(photo)}`
-          : simulation
-            ? `${pathForFilmSimulation(simulation)}/${getPhotoId(photo)}`
-            : recipe
-              ? `${pathForRecipe(recipe)}/${getPhotoId(photo)}`
-              : focal
-                ? `${pathForFocalLength(focal)}/${getPhotoId(photo)}`
-                : `${PREFIX_PHOTO}/${getPhotoId(photo)}`;
+}: PhotoPathParams) => {
+  let prefix = PREFIX_PHOTO;
+
+  if (typeof photo !== 'string' && photo.hidden) {
+    prefix = pathForTag(TAG_HIDDEN);
+  } else if (camera) {
+    prefix = pathForCamera(camera);
+  } else if (lens) {
+    prefix = pathForLens(lens);
+  } else if (tag) {
+    prefix = pathForTag(tag);
+  } else if (simulation) {
+    prefix = pathForFilmSimulation(simulation);
+  } else if (recipe) {
+    prefix = pathForRecipe(recipe);
+  } else if (focal) {
+    prefix = pathForFocalLength(focal);
+  }
+
+  return `${prefix}/${getPhotoId(photo)}`;
+};
 
 export const pathForTag = (tag: string) =>
   `${PREFIX_TAG}/${tag}`;
@@ -146,7 +156,9 @@ export const pathForFilmSimulation = (simulation: FilmSimulation) =>
   `${PREFIX_FILM_SIMULATION}/${simulation}`;
 
 export const pathForLens = ({ make, model }: Lens) =>
-  `${PREFIX_LENS}/${parameterize(make)}/${parameterize(model)}`;
+  make
+    ? `${PREFIX_LENS}/${parameterize(make)}/${parameterize(model)}`
+    : `${PREFIX_LENS}/${MISSING_FIELD}/${parameterize(model)}`;
 
 export const pathForFocalLength = (focal: number) =>
   `${PREFIX_FOCAL_LENGTH}/${focal}mm`;

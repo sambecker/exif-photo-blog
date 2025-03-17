@@ -340,7 +340,6 @@ export const getUniqueLenses = async () =>
     lens_make, lens_model, COUNT(*)
     FROM photos
     WHERE hidden IS NOT TRUE
-    AND trim(lens_make) <> ''
     AND trim(lens_model) <> ''
     GROUP BY lens_make, lens_model
     ORDER BY lens ASC

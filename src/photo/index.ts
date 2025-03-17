@@ -301,7 +301,6 @@ const photoHasCameraData = (photo: Photo) =>
   Boolean(photo.model);
 
 const photoHasLensData = (photo: Photo) =>
-  Boolean(photo.lensMake) &&
   Boolean(photo.lensModel);
 
 const photoHasRecipeData = (photo: Photo) =>

@@ -12,16 +12,11 @@ export default function PhotoGridContainer({
   cacheKey,
   photos,
   count,
-  tag,
-  camera,
-  lens,
-  simulation,
-  focal,
-  recipe,
   animateOnFirstLoadOnly,
   header,
   sidebar,
   canSelect,
+  ...categories
 }: {
   cacheKey: string
   count: number
@@ -50,12 +45,7 @@ export default function PhotoGridContainer({
         <div className={GRID_SPACE_CLASSNAME}>
           <PhotoGrid {...{
             photos,
-            tag,
-            camera,
-            lens,
-            simulation,
-            focal,
-            recipe,
+            ...categories,
             animateOnFirstLoadOnly,
             onAnimationComplete,
             canSelect,
@@ -64,13 +54,8 @@ export default function PhotoGridContainer({
             <PhotoGridInfinite {...{
               cacheKey,
               initialOffset: photos.length,
+              ...categories,
               canStart: shouldAnimateDynamicItems,
-              tag,
-              camera,
-              lens,
-              simulation,
-              focal,
-              recipe,
               animateOnFirstLoadOnly,
               canSelect,
             }} />}

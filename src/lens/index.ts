@@ -1,20 +1,23 @@
 import { Photo } from '@/photo';
 import { parameterize } from '@/utility/string';
 import { formatAppleLensText, isLensMakeApple } from '../platforms/apple';
+import { MISSING_FIELD } from '@/app/paths';
 
 const LENS_PLACEHOLDER: Lens = { make: 'Lens', model: 'Model' };
 
 export type Lens = {
-  make: string
+  make?: string
   model: string
 };
+
+type LensWithPhotoId = Lens & { photoId: string };
 
 export interface LensProps {
   params: Promise<Lens>
 }
 
-export interface PhotoLensProps {
-  params: Promise<Lens & { photoId: string }>
+export interface LensPhotoProps {
+  params: Promise<LensWithPhotoId>
 }
 
 export type LensWithCount = {
@@ -25,18 +28,36 @@ export type LensWithCount = {
 
 export type Lenses = LensWithCount[];
 
+export const getLensFromParams = async (
+  params: Promise<Lens>,
+): Promise<Lens> => {
+  const { make, model } = await params;
+  return make === MISSING_FIELD
+    ? { model }
+    : { make, model };
+};
+
+export const getLensPhotoFromParams = async (
+  params: Promise<LensWithPhotoId>,
+): Promise<LensWithPhotoId> => {
+  const { make, model, photoId } = await params;
+  return make === MISSING_FIELD
+    ? { model, photoId }
+    : { make, model, photoId };
+};
+
 // Support keys for make-only and model-only lens queries
 export const createLensKey = ({ make, model }: Partial<Lens>) =>
   parameterize(`${make ?? 'ANY'}-${model ?? 'ANY'}`);
 
-export const getLensFromParams = ({
+export const formatLensParams = ({
   make,
   model,
 }: {
-  make: string,
+  make?: string,
   model: string,
 }): Lens => ({
-  make: parameterize(make),
+  make: make ? parameterize(make) : undefined,
   model: parameterize(model),
 });
 
@@ -53,7 +74,7 @@ export const lensFromPhoto = (
   photo: Photo | undefined,
   fallback?: Lens,
 ): Lens =>
-  photo?.lensMake && photo?.lensModel
+  photo?.lensModel
     ? { make: photo.lensMake, model: photo.lensModel }
     : fallback ?? LENS_PLACEHOLDER;
 
@@ -66,7 +87,7 @@ export const formatLensText = (
   = 'medium',
 ) => {
   // Capture simple make without modifiers like 'Corporation' or 'Company'
-  const makeSimple = make.match(/^(\S+)/)?.[1];
+  const makeSimple = make?.match(/^(\S+)/)?.[1];
   const doesModelStartWithMake = (
     makeSimple &&
     modelRaw.toLocaleLowerCase().startsWith(makeSimple.toLocaleLowerCase())
@@ -78,7 +99,7 @@ export const formatLensText = (
 
   switch (length) {
   case 'long':
-    return `${make} ${model}`;
+    return make ? `${make} ${model}` : model;
   case 'medium':
     return doesModelStartWithMake
       ? model.replace(makeSimple, '').trim()

@@ -1,15 +1,15 @@
-import { getLensFromParams, lensFromPhoto } from '.';
+import { formatLensParams, lensFromPhoto } from '.';
 import {
   getPhotosCached,
   getPhotosMetaCached,
 } from '@/photo/cache';
 
 export const getPhotosLensDataCached = async (
-  make: string,
+  make: string | undefined,
   model: string,
   limit: number,
 ) => {
-  const lens = getLensFromParams({ make, model });
+  const lens = formatLensParams({ make, model });
   return Promise.all([
     getPhotosCached({ lens, limit }),
     getPhotosMetaCached({ lens }),
