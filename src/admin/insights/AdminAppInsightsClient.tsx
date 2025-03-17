@@ -3,15 +3,11 @@
 import ScoreCard from '@/components/ScoreCard';
 import ScoreCardRow from '@/components/ScoreCardRow';
 import { dateRangeForPhotos } from '@/photo';
-import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
-import { FaCamera } from 'react-icons/fa';
-import { FaTag } from 'react-icons/fa';
 import { FaCircleInfo, FaRegCalendar } from 'react-icons/fa6';
 import { HiMiniArrowsUpDown } from 'react-icons/hi2';
-import { HiOutlinePhotograph } from 'react-icons/hi';
 import { MdAspectRatio } from 'react-icons/md';
 import { PiWarningBold } from 'react-icons/pi';
-import { TbChecklist, TbCone, TbSparkles } from 'react-icons/tb';
+import { TbSparkles } from 'react-icons/tb';
 import { BiGitBranch, BiGitCommit, BiLogoGithub } from 'react-icons/bi';
 import {
   TEMPLATE_REPO_BRANCH,
@@ -42,6 +38,13 @@ import { pluralize } from '@/utility/string';
 import Tooltip from '@/components/Tooltip';
 import { useAppState } from '@/state/AppState';
 import ScoreCardContainer from '@/components/ScoreCardContainer';
+import IconLens from '@/components/icons/IconLens';
+import IconCamera from '@/components/icons/IconCamera';
+import IconRecipe from '@/components/icons/IconRecipe';
+import IconFilmSimulation from '@/components/icons/IconFilmSimulation';
+import IconFocalLength from '@/components/icons/IconFocalLength';
+import IconTag from '@/components/icons/IconTag';
+import IconPhoto from '@/components/icons/IconPhoto';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
@@ -88,8 +91,9 @@ export default function AdminAppInsightsClient({
     photosCount,
     photosCountHidden,
     photosCountOutdated,
-    tagsCount,
     camerasCount,
+    lensesCount,
+    tagsCount,
     recipesCount,
     filmSimulationsCount,
     focalLengthsCount,
@@ -405,8 +409,8 @@ export default function AdminAppInsightsClient({
           expandPath={PATH_ADMIN_OUTDATED}
         />}
         <ScoreCardRow
-          icon={<HiOutlinePhotograph
-            size={17}
+          icon={<IconPhoto
+            size={15}
             className="translate-y-[0.5px]"
           />}
           content={<>
@@ -416,29 +420,38 @@ export default function AdminAppInsightsClient({
         />
         {CATEGORY_VISIBILITY.map(category => {
           switch (category) {
-          case 'tags':
-            return <ScoreCardRow
-              key={category}
-              icon={<FaTag
-                size={12}
-                className="translate-y-[3px]"
-              />}
-              content={pluralize(tagsCount, 'tag')}
-            />;
           case 'cameras':
             return <ScoreCardRow
               key={category}
-              icon={<FaCamera
-                size={13}
-                className="translate-y-[2px]"
+              icon={<IconCamera
+                size={15}
+                className="translate-y-[0.5px]"
               />}
               content={pluralize(camerasCount, 'camera')}
+            />;
+          case 'lenses':
+            return <ScoreCardRow
+              key={category}
+              icon={<IconLens
+                size={15}
+                className="translate-y-[0.5px]"
+              />}
+              content={pluralize(lensesCount, 'lens', 'lenses')}
+            />;
+          case 'tags':
+            return <ScoreCardRow
+              key={category}
+              icon={<IconTag
+                size={15}
+                className="translate-x-[1px] translate-y-[1px]"
+              />}
+              content={pluralize(tagsCount, 'tag')}
             />;
           case 'recipes':
             return recipesCount > 0
               ? <ScoreCardRow
                 key={category}
-                icon={<TbChecklist
+                icon={<IconRecipe
                   size={18}
                   className="translate-y-[-0.5px]"
                 />}
@@ -449,25 +462,22 @@ export default function AdminAppInsightsClient({
             return filmSimulationsCount > 0
               ? <ScoreCardRow
                 key={category}
-                icon={<span className="inline-flex w-3">
-                  <PhotoFilmSimulationIcon
-                    className="shrink-0 translate-x-[-2px] translate-y-[-0.5px]"
-                    height={18}
-                  />
-                </span>}
+                icon={<IconFilmSimulation size={15} />}
                 content={pluralize(filmSimulationsCount, 'film simulation')}
               />
               : null;
+          case 'focal-lengths':
+            return <ScoreCardRow
+              key={category}
+              icon={<IconFocalLength size={14} />}
+              content={pluralize(focalLengthsCount, 'focal length')}
+            />;
           }
         })}
-        <ScoreCardRow
-          icon={<TbCone className="rotate-[270deg] translate-x-[-2px]" />}
-          content={pluralize(focalLengthsCount, 'focal length')}
-        />
         {descriptionWithSpaces && <ScoreCardRow
           icon={<FaRegCalendar
             size={13}
-            className="translate-y-[1.5px] translate-x-[-2px]"
+            className="translate-y-[1.5px]"
           />}
           content={descriptionWithSpaces}
         />}
