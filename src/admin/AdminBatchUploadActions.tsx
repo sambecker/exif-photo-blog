@@ -147,7 +147,7 @@ export default function AdminBatchUploadActions({
               <div className="flex gap-8">
                 <FieldSetWithStatus
                   label="Favorite"
-                  icon={<IconFavs size={14} />}
+                  icon={<IconFavs size={14} highlight={favorite === 'true'} />}
                   type="checkbox"
                   value={favorite}
                   onChange={setFavorite}

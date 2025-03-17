@@ -47,15 +47,6 @@ import IconHidden from '@/components/icons/IconHidden';
 
 const THUMBNAIL_SIZE = 300;
 
-const iconForKey = (key: keyof PhotoFormData) => {
-  switch (key) {
-  case 'favorite':
-    return <IconFavs size={14} />;
-  case 'hidden':
-    return <IconHidden size={16} />;
-  }
-};
-
 export default function PhotoForm({
   type = 'create',
   initialPhotoForm,
@@ -427,10 +418,24 @@ export default function PhotoForm({
                     onMatchResults={onMatchResults}
                     {...fieldProps}
                   />;
+                case 'favorite':
+                  return <FieldSetWithStatus
+                    key={key}
+                    icon={<IconFavs
+                      size={14}
+                      highlight={formData[key] === 'true'}
+                    />}
+                    {...fieldProps}
+                  />;
+                case 'hidden':
+                  return <FieldSetWithStatus
+                    key={key}
+                    icon={<IconHidden size={16} />}
+                    {...fieldProps}
+                  />;
                 default:
                   return <FieldSetWithStatus
                     key={key}
-                    icon={iconForKey(key)}
                     {...fieldProps}
                   />;
                 }
