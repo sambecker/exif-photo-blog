@@ -1,6 +1,6 @@
 import { Photo } from '@/photo';
 import { parameterize } from '@/utility/string';
-import { formatAppleLensText, isLensMakeApple } from './apple';
+import { formatAppleLensText, isLensMakeApple } from '../platforms/apple';
 
 const LENS_PLACEHOLDER: Lens = { make: 'Lens', model: 'Model' };
 

@@ -1,10 +1,11 @@
 import { AiFillApple } from 'react-icons/ai';
 import { pathForCamera } from '@/app/paths';
-import { Camera, formatCameraText, isCameraApple } from '.';
+import { Camera, formatCameraText } from '.';
 import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/primitives/EntityLink';
 import IconCamera from '@/components/icons/IconCamera';
+import { isCameraApple } from '@/platforms/apple';
 
 export default function PhotoCamera({
   camera,

@@ -6,11 +6,11 @@ import {
   Camera,
   cameraFromPhoto,
   formatCameraText,
-  isCameraApple,
 } from '@/camera';
 import { NextImageSize } from '@/platforms/next-image';
 import { AiFillApple } from 'react-icons/ai';
 import IconCamera from '@/components/icons/IconCamera';
+import { isCameraApple } from '@/platforms/apple';
 
 export default function CameraImageResponse({
   camera: cameraProp,

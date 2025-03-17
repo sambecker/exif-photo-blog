@@ -1,10 +1,17 @@
 /* eslint-disable max-len */
-import { Lens } from '.';
+import { Camera } from '@/camera';
+import { Lens } from '../lens';
 
-const LENS_MAKE_APPLE = 'apple';
+const MAKE_APPLE = 'apple';
+
+export const isCameraMakeApple = (make?: string) =>
+  make?.toLocaleLowerCase() === MAKE_APPLE;
+
+export const isCameraApple = ({ make }: Camera) =>
+  isCameraMakeApple(make);
 
 export const isLensMakeApple = (make?: string) =>
-  make?.toLocaleLowerCase() === LENS_MAKE_APPLE;
+  make?.toLocaleLowerCase() === MAKE_APPLE;
 
 export const isLensApple = ({ make }: Lens) =>
   isLensMakeApple(make);
@@ -19,7 +26,7 @@ export const formatAppleLensText = (
     side,
     focalLength,
     aperture,
-  ] = (/iPhone ([0-9a-z]{1,3}(?: (?:Pro|Max))*).*?(back|front).*?([0-9\.]+)mm.*?f\/([0-9\.]+)/gi.exec(model) ?? []);
+  ] = (/iPhone ([0-9a-z]{1,3}(?: (?:Pro|Max|Plus))*).*?(back|front).*?([0-9\.]+)mm.*?f\/([0-9\.]+)/gi.exec(model) ?? []);
 
   const format = (lensName: string, includeFocalLength = true) => {
     let result = '';
@@ -64,6 +71,8 @@ export const formatAppleLensText = (
       case '1.78': return format('Main');
       case '2.8': return format('Telephoto');
       }
+    default:
+      return format('Back', true);
     }
   }
 

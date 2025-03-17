@@ -1,9 +1,8 @@
 import type { Photo } from '@/photo';
+import { isCameraMakeApple } from '@/platforms/apple';
 import { parameterize } from '@/utility/string';
 
 const CAMERA_PLACEHOLDER: Camera = { make: 'Camera', model: 'Model' };
-
-const CAMERA_MAKE_APPLE = 'apple';
 
 export type Camera = {
   make: string
@@ -57,12 +56,6 @@ export const cameraFromPhoto = (
   photo?.make && photo?.model
     ? { make: photo.make, model: photo.model }
     : fallback ?? CAMERA_PLACEHOLDER;
-
-const isCameraMakeApple = (make?: string) =>
-  make?.toLocaleLowerCase() === CAMERA_MAKE_APPLE;
-
-export const isCameraApple = ({ make }: Camera) =>
-  isCameraMakeApple(make);
 
 export const formatCameraText = (
   { make, model: modelRaw }: Camera,
