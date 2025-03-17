@@ -19,7 +19,7 @@ export const titleForLens = (
   photos: Photo[],
   explicitCount?: number,
 ) => [
-  'Shot on',
+  'Lens:',
   formatLensText(lensFromPhoto(photos[0], lens)),
   photoQuantityText(explicitCount ?? photos.length),
 ].join(' ');
@@ -29,7 +29,7 @@ export const shareTextForLens = (
   photos: Photo[],
 ) =>
   [
-    'Photos shot on',
+    'Lens:',
     formatLensText(lensFromPhoto(photos[0], lens)),
   ].join(' ');
 

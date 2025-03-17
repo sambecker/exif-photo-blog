@@ -13,13 +13,15 @@ export default function PhotoLens({
   prefetch,
   countOnHover,
   className,
+  shortText,
 }: {
   lens: Lens
   countOnHover?: number
+  shortText?: boolean
 } & EntityLinkExternalProps) {
   return (
     <EntityLink
-      label={formatLensText(lens, 'short')}
+      label={formatLensText(lens, shortText ? 'short' : 'medium')}
       href={pathForLens(lens)}
       icon={<IconLens
         size={14}

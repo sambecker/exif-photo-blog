@@ -37,12 +37,12 @@ import { useDebounce } from 'use-debounce';
 import Spinner from '../Spinner';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
+import { BiDesktop, BiLockAlt, BiMoon, BiSun } from 'react-icons/bi';
 import { IoInvertModeSharp } from 'react-icons/io5';
 import { useAppState } from '@/state/AppState';
 import { searchPhotosAction } from '@/photo/actions';
 import { RiToolsFill } from 'react-icons/ri';
-import { BiLockAlt, BiSolidUser } from 'react-icons/bi';
+import { BiSolidUser } from 'react-icons/bi';
 import { HiDocumentText } from 'react-icons/hi';
 import { signOutAction } from '@/auth/actions';
 import { getKeywordsForPhoto, titleForPhoto } from '@/photo';
@@ -69,6 +69,7 @@ import IconPhoto from '../icons/IconPhoto';
 import IconRecipe from '../icons/IconRecipe';
 import IconFocalLength from '../icons/IconFocalLength';
 import IconFilmSimulation from '../icons/IconFilmSimulation';
+import IconLock from '../icons/IconLock';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -424,20 +425,20 @@ export default function CommandKClient({
   if (isUserSignedIn) {
     adminSection.items.push({
       label: 'Manage Photos',
-      annotation: <BiLockAlt />,
+      annotation: <IconLock narrow />,
       path: PATH_ADMIN_PHOTOS,
     });
     if (uploadsCount) {
       adminSection.items.push({
         label: 'Manage Uploads',
-        annotation: <BiLockAlt />,
+        annotation: <IconLock narrow />,
         path: PATH_ADMIN_UPLOADS,
       });
     }
     if (tagsCount) {
       adminSection.items.push({
         label: 'Manage Tags',
-        annotation: <BiLockAlt />,
+        annotation: <IconLock narrow />,
         path: PATH_ADMIN_TAGS,
       });
     }
@@ -448,17 +449,17 @@ export default function CommandKClient({
           <InsightsIndicatorDot />}
       </span>,
       keywords: ['app insights'],
-      annotation: <BiLockAlt />,
+      annotation: <IconLock narrow />,
       path: PATH_ADMIN_INSIGHTS,
     }, {
       label: 'App Config',
-      annotation: <BiLockAlt />,
+      annotation: <IconLock narrow />,
       path: PATH_ADMIN_CONFIGURATION,
     }, {
       label: selectedPhotoIds === undefined
         ? 'Select Multiple Photos'
         : 'Exit Select Multiple Photos',
-      annotation: <BiLockAlt />,
+      annotation: <IconLock narrow />,
       path: selectedPhotoIds === undefined
         ? PATH_GRID_INFERRED
         : undefined,

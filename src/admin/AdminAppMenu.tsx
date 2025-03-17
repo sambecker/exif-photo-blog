@@ -161,7 +161,8 @@ export default function AdminAppMenu({
       header={<div className="flex items-center select-none">
         <IconLock
           size={15}
-          className="inline-block w-5 mr-2 translate-x-[1px]"
+          className="inline-block w-5 mr-2"
+          narrow
         />
         <span className="grow">Admin menu</span>
       </div>}

@@ -1,9 +1,8 @@
 import { Photo } from '@/photo';
 import { parameterize } from '@/utility/string';
+import { formatAppleLensText, isLensMakeApple } from './apple';
 
 const LENS_PLACEHOLDER: Lens = { make: 'Lens', model: 'Model' };
-
-const LENS_MAKE_APPLE = 'apple';
 
 export type Lens = {
   make: string
@@ -58,41 +57,13 @@ export const lensFromPhoto = (
     ? { make: photo.lensMake, model: photo.lensModel }
     : fallback ?? LENS_PLACEHOLDER;
 
-const isLensMakeApple = (make?: string) =>
-  make?.toLocaleLowerCase() === LENS_MAKE_APPLE;
-
-export const isLensApple = ({ make }: Lens) =>
-  isLensMakeApple(make);
-
-const formatAppleLensText = (
-  model: string,
-  includePhoneName?: boolean,
-) => {
-  if (model.includes('15 Pro')) {
-    const phoneName = '15 Pro';
-    if (model.includes('front')) { return includePhoneName
-      ? `${phoneName}: Front Camera`
-      : 'Front Camera'; }
-    if (model.includes('f/2.2')) { return includePhoneName
-      ? `${phoneName}: Wide Camera`
-      : 'Wide Camera'; }
-    if (model.includes('f/1.78')) { return includePhoneName
-      ? `${phoneName}: Main Camera`
-      : 'Main Camera'; }
-    if (model.includes('f/2.8')) { return includePhoneName
-      ? `${phoneName}: Telephoto Camera`
-      : 'Telephoto Camera'; }
-  }
-  return model;
-};
-
 export const formatLensText = (
   { make, model: modelRaw }: Lens,
   length:
     'long' |    // Unmodified make and model
     'medium' |  // Make and model, with modifiers removed
     'short'     // Model only
-  = 'short',
+  = 'medium',
 ) => {
   // Capture simple make without modifiers like 'Corporation' or 'Company'
   const makeSimple = make.match(/^(\S+)/)?.[1];

@@ -113,9 +113,9 @@ const getPhotoId = (photoOrPhotoId: PhotoOrPhotoId) =>
 
 export const pathForPhoto = ({
   photo,
-  tag,
   camera,
   lens,
+  tag,
   simulation,
   focal,
   recipe,

@@ -15,6 +15,7 @@ export default function LabeledIcon({
   classNameIcon,
   children,
   iconWide,
+  uppercase = true,
   debug,
 }: {
   icon?: ReactNode,
@@ -23,6 +24,7 @@ export default function LabeledIcon({
   classNameIcon?: string,
   children: ReactNode,
   iconWide?:boolean,
+  uppercase?: boolean,
   debug?: boolean,
 }) {
   return (
@@ -44,7 +46,8 @@ export default function LabeledIcon({
         </Icon>}
       {children && type !== 'icon-only' &&
         <span className={clsx(
-          'uppercase overflow-hidden',
+          'overflow-hidden',
+          uppercase && 'uppercase',
           debug && 'bg-gray-300 dark:bg-gray-700',
         )}>
           {children}

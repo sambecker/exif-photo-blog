@@ -11,16 +11,12 @@ import { clsx } from 'clsx/lite';
 
 export default function PhotoLink({
   photo,
-  tag,
-  camera,
-  simulation,
-  focal,
-  recipe,
   scroll,
   prefetch,
   nextPhotoAnimation,
   className,
   children,
+  ...categories
 }: {
   photo?: Photo
   scroll?: boolean
@@ -34,7 +30,7 @@ export default function PhotoLink({
   return (
     photo
       ? <Link
-        href={pathForPhoto({ photo, tag, camera, simulation, focal, recipe })}
+        href={pathForPhoto({ photo, ...categories })}
         prefetch={prefetch}
         onClick={() => {
           if (nextPhotoAnimation) {

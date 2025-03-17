@@ -31,6 +31,7 @@ export default function EntityLink({
   truncate = true,
   className,
   classNameIcon,
+  uppercase,
   debug,
 }: {
   icon: ReactNode
@@ -44,6 +45,7 @@ export default function EntityLink({
   truncate?: boolean
   className?: string
   classNameIcon?: string
+  uppercase?: boolean
   debug?: boolean
 } & EntityLinkExternalProps) {
   const classForContrast = () => {
@@ -81,6 +83,7 @@ export default function EntityLink({
             prefetch,
             title,
             type,
+            uppercase,
             className: clsx(
               classForContrast(),
               href && !badged && 'hover:text-gray-900 dark:hover:text-gray-100',

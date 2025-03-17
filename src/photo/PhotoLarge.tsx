@@ -295,6 +295,7 @@ export default function PhotoLarge({
                           lens={lens}
                           contrast="medium"
                           prefetch={prefetchRelatedLinks}
+                          shortText
                         />}
                     </div>}
                   {showRecipeContent && recipeTitle &&
