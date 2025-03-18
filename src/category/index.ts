@@ -6,12 +6,6 @@ import { Lens, Lenses } from '@/lens';
 import { Tags } from '@/tag';
 import { FocalLengths } from '@/focal';
 import { Recipes } from '@/recipe';
-import {
-  CATEGORY_VISIBILITY,
-  IS_PRODUCTION,
-  STATICALLY_OPTIMIZED_PHOTO_CATEGORIES,
-  STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES,
-} from '@/app/config';
 
 const CATEGORY_KEYS = [
   'cameras',
@@ -22,9 +16,9 @@ const CATEGORY_KEYS = [
   'focal-lengths',
 ] as const;
 
-type CategoryKey = (typeof CATEGORY_KEYS)[number];
+export type CategoryKey = (typeof CATEGORY_KEYS)[number];
 
-type CategoryKeys = CategoryKey[];
+export type CategoryKeys = CategoryKey[];
 
 export const DEFAULT_CATEGORY_KEYS: CategoryKeys = [
   'tags',
@@ -32,16 +26,6 @@ export const DEFAULT_CATEGORY_KEYS: CategoryKeys = [
   'recipes',
   'films',
 ];
-
-export const shouldGenerateStaticParamsForCategory = (
-  key: CategoryKey,
-  type: 'page' | 'image',
-): boolean =>
-  CATEGORY_VISIBILITY.includes(key) &&
-  IS_PRODUCTION && (
-    (type === 'page' && STATICALLY_OPTIMIZED_PHOTO_CATEGORIES) ||
-    (type === 'image' && STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES)
-  );
 
 export const getHiddenCategories = (keys: CategoryKeys): CategoryKeys =>
   CATEGORY_KEYS.filter(key => !keys.includes(key));

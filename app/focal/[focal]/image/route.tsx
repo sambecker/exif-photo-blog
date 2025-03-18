@@ -11,7 +11,7 @@ import FocalLengthImageResponse from
 import { formatFocalLength, getFocalLengthFromString } from '@/focal';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { getUniqueFocalLengths } from '@/photo/db/query';
-import { shouldGenerateStaticParamsForCategory } from '@/category';
+import { shouldGenerateStaticParamsForCategory } from '@/app/config';
 
 export let generateStaticParams:
   (() => Promise<{ focal: string }[]>) | undefined = undefined;

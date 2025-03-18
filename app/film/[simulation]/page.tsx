@@ -7,8 +7,9 @@ import { Metadata } from 'next/types';
 import { cache } from 'react';
 import { PATH_ROOT } from '@/app/paths';
 import { redirect } from 'next/navigation';
-import { shouldGenerateStaticParamsForCategory } from '@/category';
+import { shouldGenerateStaticParamsForCategory } from '@/app/config';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
+
 const getPhotosFilmSimulationDataCachedCached =
   cache(getPhotosFilmSimulationDataCached);
 
