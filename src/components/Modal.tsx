@@ -18,6 +18,7 @@ export default function Modal({
   anchor = 'center',
   container = true,
   children,
+  noPadding,
   fast,
 }: {
   onClosePath?: string
@@ -26,6 +27,7 @@ export default function Modal({
   anchor?: 'top' | 'center'
   container?: boolean
   children: ReactNode
+  noPadding?: boolean
   fast?: boolean
 }) {
   const router = useRouter();
@@ -83,8 +85,8 @@ export default function Modal({
           key="modalContent"
           className={clsx(
             container && 'w-[calc(100vw-1.5rem)] sm:w-[min(540px,90vw)]',
-            container && 'p-3 rounded-lg',
-            container && 'md:p-4 md:rounded-xl',
+            container && !noPadding && 'p-3 md:p-4',
+            container && 'rounded-lg md:rounded-xl',
             container && 'dark:border dark:border-gray-800',
             'bg-white dark:bg-black',
             className,

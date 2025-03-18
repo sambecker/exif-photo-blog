@@ -55,7 +55,7 @@ export default function AdminBatchEditPanelClient({
     isPerformingSelectEdit ||
     selectedPhotoIds?.length === 0;
 
-  const renderPhotoCTA = () => selectedPhotoIds?.length === 0
+  const renderPhotoCTA = selectedPhotoIds?.length === 0
     ? <>
       <FaArrowDown />
       Select photos below
@@ -64,7 +64,7 @@ export default function AdminBatchEditPanelClient({
       {photosText} selected
     </ResponsiveText>;
 
-  const renderActions = () => isInTagMode
+  const renderActions = isInTagMode
     ? <>
       <LoaderButton
         className="min-h-[2.5rem]"
@@ -166,7 +166,7 @@ export default function AdminBatchEditPanelClient({
           )}
           padding={isInTagMode ? 'tight-cta-right-left' : 'tight-cta-right'}
           cta={<div className="flex items-center gap-1.5 sm:gap-2.5">
-            {renderActions()}
+            {renderActions}
           </div>}
           spaceChildren={false}
           hideIcon
@@ -183,7 +183,7 @@ export default function AdminBatchEditPanelClient({
               hideLabel
             />
             : <div className="text-base flex gap-2 items-center">
-              {renderPhotoCTA()}
+              {renderPhotoCTA}
             </div>}
         </Note>
         {tagErrorMessage &&

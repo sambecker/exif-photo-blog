@@ -79,6 +79,7 @@ const MINIMUM_QUERY_LENGTH = 2;
 
 type CommandKItem = {
   label: ReactNode
+  explicitKey?: string
   keywords?: string[]
   accessory?: ReactNode
   annotation?: ReactNode
@@ -272,6 +273,7 @@ export default function CommandKClient({
           accessory: <IconLens size={14} className="translate-y-[0.5px]" />,
           items: lenses.map(({ lens, count }) => ({
             label: formatLensText(lens, 'medium'),
+            explicitKey: formatLensText(lens, 'long'),
             annotation: formatCount(count),
             annotationAria: formatCountDescriptive(count),
             path: pathForLens(lens),
@@ -505,45 +507,55 @@ export default function CommandKClient({
       <Modal
         anchor='top'
         onClose={() => setIsOpen?.(false)}
+        noPadding
         fast
       >
-        <div className="space-y-1.5">
-          <div className="relative">
-            <VisuallyHidden.Root>
-              <DialogTitle>{DIALOG_TITLE}</DialogTitle>
-              <DialogDescription>{DIALOG_DESCRIPTION}</DialogDescription>
-            </VisuallyHidden.Root>
-            <Command.Input
-              onChangeCapture={(e) => setQueryLive(e.currentTarget.value)}
-              className={clsx(
-                'w-full min-w-0!',
-                'focus:ring-0',
-                isPlaceholderVisible || isLoading && 'pr-8!',
-                'border-gray-200! dark:border-gray-800!',
-                'focus:border-gray-200 dark:focus:border-gray-800',
-                'placeholder:text-gray-400/80',
-                'dark:placeholder:text-gray-700',
-                'focus:outline-hidden',
-                isPending && 'opacity-20',
-              )}
-              placeholder="Search photos, views, settings ..."
-              disabled={isPending}
-            />
-            {isLoading && !isPending &&
-              <span className={clsx(
-                'absolute top-2.5 right-0 w-8',
-                'flex items-center justify-center translate-y-[2px]',
-              )}>
-                <Spinner size={16} />
-              </span>}
-          </div>
-          <Command.List className={clsx(
-            'relative overflow-y-auto',
-            'max-h-48 sm:max-h-72',
+        <VisuallyHidden.Root>
+          <DialogTitle>{DIALOG_TITLE}</DialogTitle>
+          <DialogDescription>{DIALOG_DESCRIPTION}</DialogDescription>
+        </VisuallyHidden.Root>
+        <div className={clsx(
+          'px-3 md:px-4',
+          'pt-3 md:pt-4',
+        )}>
+          <Command.Input
+            onChangeCapture={(e) => setQueryLive(e.currentTarget.value)}
+            className={clsx(
+              'w-full min-w-0!',
+              'focus:ring-0',
+              isPlaceholderVisible || isLoading && 'pr-8!',
+              'border-gray-200! dark:border-gray-800!',
+              'focus:border-gray-200 dark:focus:border-gray-800',
+              'placeholder:text-gray-400/80',
+              'dark:placeholder:text-gray-700',
+              'focus:outline-hidden',
+              isPending && 'opacity-20',
+            )}
+            placeholder="Search photos, views, settings ..."
+            disabled={isPending}
+          />
+        </div>
+        {isLoading && !isPending &&
+          <span className={clsx(
+            'absolute top-2.5 right-0 w-8',
+            'flex items-center justify-center translate-y-[2px]',
           )}>
-            <Command.Empty className="mt-1 pl-3 text-dim">
-              {isLoading ? 'Searching ...' : 'No results found'}
-            </Command.Empty>
+            <Spinner size={16} />
+          </span>}
+        <Command.List className={clsx(
+          'relative overflow-y-auto',
+          'max-h-48 sm:max-h-72',
+          'mx-3 md:mx-4',
+          'pt-3 md:pt-4',
+          'pb-6 md:pb-8',
+        )} style={{
+          // eslint-disable-next-line max-len
+          maskImage: 'linear-gradient(to bottom, transparent, black 20px, black calc(100% - 20px), transparent)',
+        }}>
+          <Command.Empty className="mt-1 pl-3 text-dim">
+            {isLoading ? 'Searching ...' : 'No results found'}
+          </Command.Empty>
+          <div className="space-y-2.5">
             {queriedSections
               .concat(categorySections)
               .concat(sectionPages)
@@ -555,7 +567,7 @@ export default function CommandKClient({
                   key={heading}
                   heading={<div className={clsx(
                     'flex items-center',
-                    'px-2',
+                    'px-2 pb-0.5',
                     isPending && 'opacity-20',
                   )}>
                     {accessory &&
@@ -574,6 +586,7 @@ export default function CommandKClient({
                 >
                   {items.map(({
                     label,
+                    explicitKey,
                     keywords,
                     accessory,
                     annotation,
@@ -581,7 +594,7 @@ export default function CommandKClient({
                     path,
                     action,
                   }) => {
-                    const key = `${heading} ${label}`;
+                    const key = `${heading} ${explicitKey ?? label}`;
                     return <CommandKItem
                       key={key}
                       label={label}
@@ -612,12 +625,12 @@ export default function CommandKClient({
                     />;
                   })}
                 </Command.Group>)}
-            {footer && !queryLive &&
-              <div className="text-center text-dim pt-3 sm:pt-4">
-                {footer}
-              </div>}
-          </Command.List>
-        </div>
+          </div>
+          {footer && !queryLive &&
+            <div className="text-center text-base text-dim pt-3 sm:pt-4">
+              {footer}
+            </div>}
+        </Command.List>
       </Modal>
     </Command.Dialog>
   );
