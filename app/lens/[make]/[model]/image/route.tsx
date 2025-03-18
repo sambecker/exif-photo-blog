@@ -12,18 +12,22 @@ import {
   STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES,
   IS_PRODUCTION,
 } from '@/app/config';
-import { getLensFromParams, Lens, LensProps } from '@/lens';
+import {
+  getLensFromParams,
+  Lens,
+  LensProps,
+  safelyGenerateLensStaticParams,
+} from '@/lens';
 import LensImageResponse from '@/image-response/LensImageResponse';
 
 export let generateStaticParams:
-  (() => Promise<{ lens: Lens }[]>) | undefined = undefined;
+  (() => Promise<Lens[]>) | undefined = undefined;
 
 if (STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES && IS_PRODUCTION) {
   generateStaticParams = async () => {
     const lenses = await getUniqueLenses();
-    return lenses
-      .slice(0, GENERATE_STATIC_PARAMS_LIMIT)
-      .map(({ lens }) => ({ lens }));
+    return safelyGenerateLensStaticParams(lenses)
+      .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
   };
 }
 

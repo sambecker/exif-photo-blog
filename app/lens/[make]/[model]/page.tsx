@@ -7,7 +7,13 @@ import { getUniqueLenses } from '@/photo/db/query';
 import { generateMetaForLens } from '@/lens/meta';
 import { getPhotosLensDataCached } from '@/lens/data';
 import LensOverview from '@/lens/LensOverview';
-import { getLensFromParams, Lens, LensProps } from '@/lens';
+import {
+  getLensFromParams,
+  Lens,
+  LensProps,
+  safelyGenerateLensStaticParams,
+} from '@/lens';
+import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 
 const getPhotosLensDataCachedCached = cache((
   make: string | undefined,
@@ -24,7 +30,8 @@ export let generateStaticParams:
 if (STATICALLY_OPTIMIZED_PHOTO_CATEGORIES && IS_PRODUCTION) {
   generateStaticParams = async () => {
     const lenses = await getUniqueLenses();
-    return lenses.map(({ lens: { make, model } }) => ({ make, model }));
+    return safelyGenerateLensStaticParams(lenses)
+      .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
   };
 }
 
