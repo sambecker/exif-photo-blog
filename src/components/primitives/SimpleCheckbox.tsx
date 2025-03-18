@@ -4,7 +4,7 @@ import { ImCheckboxUnchecked, ImCheckboxChecked } from 'react-icons/im';
 
 const ICON_CLASS_NAME = 'text-[1rem]';
 
-export default function Checkbox(props: {
+export default function SimpleCheckbox(props: {
   children?: ReactNode
 } & InputHTMLAttributes<HTMLInputElement>) {
   const {

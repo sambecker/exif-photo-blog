@@ -51,6 +51,10 @@ export default function AdminBatchEditPanelClient({
     false,
   );
 
+  const isFormDisabled =
+    isPerformingSelectEdit ||
+    selectedPhotoIds?.length === 0;
+
   const renderPhotoCTA = () => selectedPhotoIds?.length === 0
     ? <>
       <FaArrowDown />
@@ -105,40 +109,37 @@ export default function AdminBatchEditPanelClient({
       </LoaderButton>
     </>
     : <>
-      {(selectedPhotoIds?.length ?? 0) > 0 &&
-        <>
-          <DeletePhotosButton
-            photoIds={selectedPhotoIds}
-            disabled={isPerformingSelectEdit}
-            onClick={() => setIsPerformingSelectEdit?.(true)}
-            onDelete={resetForm}
-            onFinish={() => setIsPerformingSelectEdit?.(false)}
-          />
-          <LoaderButton
-            icon={<IconFavs />}
-            disabled={isPerformingSelectEdit}
-            confirmText={`Are you sure you want to favorite ${photosText}?`}
-            onClick={() => {
-              setIsPerformingSelectEdit?.(true);
-              tagMultiplePhotosAction(
-                TAG_FAVS,
-                selectedPhotoIds ?? [],
-              )
-                .then(() => {
-                  toastSuccess(`${photosText} favorited`);
-                  resetForm();
-                })
-                .finally(() => setIsPerformingSelectEdit?.(false));
-            }}
-          />
-          <LoaderButton
-            onClick={() => setTags('')}
-            disabled={isPerformingSelectEdit}
-            icon={<IconTag size={15} className="translate-y-[1.5px]" />}
-          >
-            Tag ...
-          </LoaderButton>
-        </>}
+      <DeletePhotosButton
+        photoIds={selectedPhotoIds}
+        disabled={isFormDisabled}
+        onClick={() => setIsPerformingSelectEdit?.(true)}
+        onDelete={resetForm}
+        onFinish={() => setIsPerformingSelectEdit?.(false)}
+      />
+      <LoaderButton
+        icon={<IconFavs />}
+        disabled={isFormDisabled}
+        confirmText={`Are you sure you want to favorite ${photosText}?`}
+        onClick={() => {
+          setIsPerformingSelectEdit?.(true);
+          tagMultiplePhotosAction(
+            TAG_FAVS,
+            selectedPhotoIds ?? [],
+          )
+            .then(() => {
+              toastSuccess(`${photosText} favorited`);
+              resetForm();
+            })
+            .finally(() => setIsPerformingSelectEdit?.(false));
+        }}
+      />
+      <LoaderButton
+        onClick={() => setTags('')}
+        disabled={isFormDisabled}
+        icon={<IconTag size={15} className="translate-y-[1.5px]" />}
+      >
+        Tag ...
+      </LoaderButton>
       <LoaderButton
         icon={<IoCloseSharp size={19} />}
         onClick={() => setSelectedPhotoIds?.(undefined)}
