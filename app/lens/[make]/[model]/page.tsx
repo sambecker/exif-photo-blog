@@ -12,7 +12,7 @@ import {
   safelyGenerateLensStaticParams,
 } from '@/lens';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
-import { shouldGenerateStaticParamsForCategory } from '@/app/config';
+import { shouldGenerateStaticParamsForCategory } from '@/category/server';
 
 const getPhotosLensDataCachedCached = cache((
   make: string | undefined,

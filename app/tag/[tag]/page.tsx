@@ -7,7 +7,7 @@ import { getPhotosTagDataCached } from '@/tag/data';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
-import { shouldGenerateStaticParamsForCategory } from '@/app/config';
+import { shouldGenerateStaticParamsForCategory } from '@/category/server';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 
 const getPhotosTagDataCachedCached = cache((tag: string) =>

@@ -15,7 +15,7 @@ import {
   safelyGenerateLensStaticParams,
 } from '@/lens';
 import LensImageResponse from '@/image-response/LensImageResponse';
-import { shouldGenerateStaticParamsForCategory } from '@/app/config';
+import { shouldGenerateStaticParamsForCategory } from '@/category/server';
 
 export let generateStaticParams:
   (() => Promise<Lens[]>) | undefined = undefined;

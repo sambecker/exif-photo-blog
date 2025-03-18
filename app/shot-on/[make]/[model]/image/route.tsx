@@ -8,20 +8,23 @@ import CameraImageResponse from '@/image-response/CameraImageResponse';
 import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
-import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { getUniqueCameras } from '@/photo/db/query';
-import { shouldGenerateStaticParamsForCategory } from '@/app/config';
+import {
+  shouldGenerateStaticParamsForCategory,
+  staticallyGenerateCategory,
+} from '@/category/server';
 
 export let generateStaticParams:
-  (() => Promise<{ camera: Camera }[]>) | undefined = undefined;
+  (() => Promise<Camera[]>) | undefined = undefined;
 
 if (shouldGenerateStaticParamsForCategory('cameras', 'image')) {
-  generateStaticParams = async () => {
-    const cameras = await getUniqueCameras();
-    return cameras
-      .map(({ camera }) => ({ camera }))
-      .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
-  };
+  generateStaticParams = () =>
+    staticallyGenerateCategory(
+      'cameras',
+      'image',
+      getUniqueCameras,
+      cameras => cameras.map(({ camera }) => camera),
+    );
 }
 
 export async function GET(

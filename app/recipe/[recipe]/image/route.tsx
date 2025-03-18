@@ -9,7 +9,7 @@ import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { getUniqueRecipes } from '@/photo/db/query';
 import RecipeImageResponse from '@/image-response/RecipeImageResponse';
-import { shouldGenerateStaticParamsForCategory } from '@/app/config';
+import { shouldGenerateStaticParamsForCategory } from '@/category/server';
 
 export let generateStaticParams:
   (() => Promise<{ recipe: string }[]>) | undefined = undefined;
