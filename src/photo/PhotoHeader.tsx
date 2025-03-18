@@ -7,7 +7,7 @@ import {
   dateRangeForPhotos,
   titleForPhoto,
 } from '.';
-import { PhotoSetCategory } from './set';
+import { PhotoSetCategory } from '../category/set';
 import ShareButton from '@/share/ShareButton';
 import AnimateItems from '@/components/AnimateItems';
 import { ReactNode } from 'react';

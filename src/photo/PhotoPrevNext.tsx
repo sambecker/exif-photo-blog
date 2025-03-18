@@ -6,7 +6,7 @@ import {
   getNextPhoto,
   getPreviousPhoto,
 } from '@/photo';
-import { PhotoSetCategory } from './set';
+import { PhotoSetCategory } from '../category/set';
 import PhotoLink from './PhotoLink';
 import { useRouter } from 'next/navigation';
 import { pathForPhoto } from '@/app/paths';

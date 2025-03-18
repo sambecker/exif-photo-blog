@@ -1,6 +1,6 @@
 import { PRIORITY_ORDER_ENABLED } from '@/app/config';
 import { parameterize } from '@/utility/string';
-import { PhotoSetCategory } from '../set';
+import { PhotoSetCategory } from '../../category/set';
 import { Camera } from '@/camera';
 import { Lens } from '@/lens';
 

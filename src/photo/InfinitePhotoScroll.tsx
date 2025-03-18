@@ -12,7 +12,7 @@ import SiteGrid from '@/components/SiteGrid';
 import Spinner from '@/components/Spinner';
 import { getPhotosCachedAction, getPhotosAction } from '@/photo/actions';
 import { Photo } from '.';
-import { PhotoSetCategory } from './set';
+import { PhotoSetCategory } from '../category/set';
 import { clsx } from 'clsx/lite';
 import { useAppState } from '@/state/AppState';
 import { GetPhotosOptions } from './db';

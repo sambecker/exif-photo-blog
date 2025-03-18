@@ -1,5 +1,5 @@
 import { Photo } from '@/photo';
-import { PhotoSetCategory } from '@/photo/set';
+import { PhotoSetCategory } from '@/category/set';
 import { BASE_URL, GRID_HOMEPAGE_ENABLED } from './config';
 import { Camera } from '@/camera';
 import { FilmSimulation } from '@/simulation';

@@ -1,6 +1,6 @@
-import { Photo } from '.';
+import { Photo } from '../photo';
 import { Camera, Cameras } from '@/camera';
-import { PhotoDateRange } from '.';
+import { PhotoDateRange } from '../photo';
 import { FilmSimulation, FilmSimulations } from '@/simulation';
 import { Lens, Lenses } from '@/lens';
 import { Tags } from '@/tag';

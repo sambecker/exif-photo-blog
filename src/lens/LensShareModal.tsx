@@ -1,5 +1,5 @@
 import { absolutePathForLens } from '@/app/paths';
-import { PhotoSetAttributes } from '../photo/set';
+import { PhotoSetAttributes } from '../category/set';
 import ShareModal from '@/share/ShareModal';
 import { Lens } from '.';
 import { shareTextForLens } from './meta';

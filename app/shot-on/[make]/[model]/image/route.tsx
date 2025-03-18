@@ -10,7 +10,7 @@ import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { getUniqueCameras } from '@/photo/db/query';
-import { shouldGenerateStaticParamsForCategory } from '@/photo/set';
+import { shouldGenerateStaticParamsForCategory } from '@/category/set';
 
 export let generateStaticParams:
   (() => Promise<{ camera: Camera }[]>) | undefined = undefined;

@@ -3,7 +3,7 @@ import {
   descriptionForPhoto,
   titleForPhoto,
 } from '@/photo';
-import { PhotoSetCategory } from './set';
+import { PhotoSetCategory } from '../category/set';
 import { absolutePathForPhotoImage, pathForPhoto } from '@/app/paths';
 import OGTile from '@/components/OGTile';
 

@@ -1,5 +1,5 @@
 import { absolutePathForTag } from '@/app/paths';
-import { PhotoSetAttributes } from '../photo/set';
+import { PhotoSetAttributes } from '../category/set';
 import ShareModal from '@/share/ShareModal';
 import TagOGTile from './TagOGTile';
 import { shareTextForTag } from '.';

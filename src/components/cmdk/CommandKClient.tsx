@@ -56,7 +56,7 @@ import { CATEGORY_VISIBILITY, GRID_HOMEPAGE_ENABLED } from '@/app/config';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import InsightsIndicatorDot from '@/admin/insights/InsightsIndicatorDot';
-import { PhotoSetCategories } from '@/photo/set';
+import { PhotoSetCategories } from '@/category/set';
 import { formatCameraText } from '@/camera';
 import { labelForFilmSimulation } from '@/platforms/fujifilm/simulation';
 import { formatFocalLength } from '@/focal';
