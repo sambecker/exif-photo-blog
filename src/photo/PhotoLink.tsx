@@ -2,7 +2,7 @@
 
 import { ReactNode } from 'react';
 import { Photo, titleForPhoto } from '@/photo';
-import { PhotoSetCategory } from '@/category/set';
+import { PhotoSetCategory } from '@/category';
 import Link from 'next/link';
 import { AnimationConfig } from '../components/AnimateItems';
 import { useAppState } from '@/state/AppState';

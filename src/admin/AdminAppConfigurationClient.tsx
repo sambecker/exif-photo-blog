@@ -30,7 +30,7 @@ import EnvVar from '@/components/EnvVar';
 import AdminLink from './AdminLink';
 import ScoreCardContainer from '@/components/ScoreCardContainer';
 import { capitalize, deparameterize } from '@/utility/string';
-import { DEFAULT_CATEGORY_KEYS, getHiddenCategories } from '@/category/set';
+import { DEFAULT_CATEGORY_KEYS, getHiddenCategories } from '@/category';
 
 export default function AdminAppConfigurationClient({
   // Storage

@@ -11,7 +11,7 @@ import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { getUniqueFilmSimulations } from '@/photo/db/query';
-import { shouldGenerateStaticParamsForCategory } from '@/category/set';
+import { shouldGenerateStaticParamsForCategory } from '@/category';
 
 export let generateStaticParams:
   (() => Promise<{ simulation: FilmSimulation }[]>) | undefined = undefined;

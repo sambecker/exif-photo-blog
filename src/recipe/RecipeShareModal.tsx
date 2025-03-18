@@ -1,5 +1,5 @@
 import { absolutePathForRecipe } from '@/app/paths';
-import { PhotoSetAttributes } from '../category/set';
+import { PhotoSetAttributes } from '../category';
 import ShareModal from '@/share/ShareModal';
 import { shareTextForRecipe } from '.';
 import RecipeOGTile from './RecipeOGTile';

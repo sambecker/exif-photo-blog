@@ -1,5 +1,5 @@
 import { absolutePathForFilmSimulation } from '@/app/paths';
-import { PhotoSetAttributes } from '../category/set';
+import { PhotoSetAttributes } from '../category';
 import ShareModal from '@/share/ShareModal';
 import FilmSimulationOGTile from './FilmSimulationOGTile';
 import { FilmSimulation, shareTextForFilmSimulation } from '.';

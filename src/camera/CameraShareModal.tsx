@@ -1,5 +1,5 @@
 import { absolutePathForCamera } from '@/app/paths';
-import { PhotoSetAttributes } from '../category/set';
+import { PhotoSetAttributes } from '../category';
 import ShareModal from '@/share/ShareModal';
 import CameraOGTile from './CameraOGTile';
 import { Camera } from '.';

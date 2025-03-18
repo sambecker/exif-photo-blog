@@ -1,5 +1,5 @@
 import { Photo } from '@/photo';
-import { PhotoSetAttributes, PhotoSetCategory } from '@/category/set';
+import { PhotoSetAttributes, PhotoSetCategory } from '@/category';
 import {
   absolutePathForCameraImage,
   absolutePathForFilmSimulationImage,

@@ -3,7 +3,7 @@ import {
   altTextForPhoto,
   doesPhotoNeedBlurCompatibility,
 } from '.';
-import { PhotoSetCategory } from '../category/set';
+import { PhotoSetCategory } from '../category';
 import ImageSmall from '@/components/image/ImageSmall';
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';

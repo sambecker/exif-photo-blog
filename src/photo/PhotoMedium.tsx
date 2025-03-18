@@ -5,7 +5,7 @@ import {
   altTextForPhoto,
   doesPhotoNeedBlurCompatibility,
 } from '.';
-import { PhotoSetCategory } from '../category/set';
+import { PhotoSetCategory } from '../category';
 import ImageMedium from '@/components/image/ImageMedium';
 import { clsx } from 'clsx/lite';
 import { pathForPhoto } from '@/app/paths';

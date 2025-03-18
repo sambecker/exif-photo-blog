@@ -9,7 +9,7 @@ import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { getUniqueTags } from '@/photo/db/query';
-import { shouldGenerateStaticParamsForCategory } from '@/category/set';
+import { shouldGenerateStaticParamsForCategory } from '@/category';
 
 export let generateStaticParams:
   (() => Promise<{ tag: string }[]>) | undefined = undefined;
