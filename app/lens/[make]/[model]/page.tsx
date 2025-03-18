@@ -1,8 +1,6 @@
 import { Metadata } from 'next/types';
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { cache } from 'react';
-import { STATICALLY_OPTIMIZED_PHOTO_CATEGORIES } from '@/app/config';
-import { IS_PRODUCTION } from '@/app/config';
 import { getUniqueLenses } from '@/photo/db/query';
 import { generateMetaForLens } from '@/lens/meta';
 import { getPhotosLensDataCached } from '@/lens/data';
@@ -14,6 +12,7 @@ import {
   safelyGenerateLensStaticParams,
 } from '@/lens';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
+import { shouldGenerateStaticParamsForCategory } from '@/photo/set';
 
 const getPhotosLensDataCachedCached = cache((
   make: string | undefined,
@@ -27,7 +26,7 @@ const getPhotosLensDataCachedCached = cache((
 export let generateStaticParams:
   (() => Promise<Lens[]>) | undefined = undefined;
 
-if (STATICALLY_OPTIMIZED_PHOTO_CATEGORIES && IS_PRODUCTION) {
+if (shouldGenerateStaticParamsForCategory('lenses', 'page')) {
   generateStaticParams = async () => {
     const lenses = await getUniqueLenses();
     return safelyGenerateLensStaticParams(lenses)

@@ -5,9 +5,9 @@ import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getPhotosCameraDataCached } from '@/camera/data';
 import CameraOverview from '@/camera/CameraOverview';
 import { cache } from 'react';
-import { STATICALLY_OPTIMIZED_PHOTO_CATEGORIES } from '@/app/config';
-import { IS_PRODUCTION } from '@/app/config';
 import { getUniqueCameras } from '@/photo/db/query';
+import { shouldGenerateStaticParamsForCategory } from '@/photo/set';
+import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 
 const getPhotosCameraDataCachedCached = cache((
   make: string,
@@ -21,10 +21,12 @@ const getPhotosCameraDataCachedCached = cache((
 export let generateStaticParams:
   (() => Promise<Camera[]>) | undefined = undefined;
 
-if (STATICALLY_OPTIMIZED_PHOTO_CATEGORIES && IS_PRODUCTION) {
+if (shouldGenerateStaticParamsForCategory('cameras', 'page')) {
   generateStaticParams = async () => {
     const cameras = await getUniqueCameras();
-    return cameras.map(({ camera: { make, model } }) => ({ make, model }));
+    return cameras
+      .map(({ camera: { make, model } }) => ({ make, model }))
+      .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
   };
 }
 

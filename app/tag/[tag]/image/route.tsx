@@ -9,20 +9,17 @@ import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { getUniqueTags } from '@/photo/db/query';
-import {
-  STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES,
-  IS_PRODUCTION,
-} from '@/app/config';
+import { shouldGenerateStaticParamsForCategory } from '@/photo/set';
 
 export let generateStaticParams:
   (() => Promise<{ tag: string }[]>) | undefined = undefined;
 
-if (STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES && IS_PRODUCTION) {
+if (shouldGenerateStaticParamsForCategory('tags', 'image')) {
   generateStaticParams = async () => {
     const tags = await getUniqueTags();
     return tags
-      .slice(0, GENERATE_STATIC_PARAMS_LIMIT)
-      .map(({ tag }) => ({ tag }));
+      .map(({ tag }) => ({ tag }))
+      .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
   };
 }
 

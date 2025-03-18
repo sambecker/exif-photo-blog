@@ -11,20 +11,17 @@ import FocalLengthImageResponse from
 import { formatFocalLength, getFocalLengthFromString } from '@/focal';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { getUniqueFocalLengths } from '@/photo/db/query';
-import {
-  STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES,
-  IS_PRODUCTION,
-} from '@/app/config';
+import { shouldGenerateStaticParamsForCategory } from '@/photo/set';
 
 export let generateStaticParams:
   (() => Promise<{ focal: string }[]>) | undefined = undefined;
 
-if (STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES && IS_PRODUCTION) {
+if (shouldGenerateStaticParamsForCategory('focal-lengths', 'image')) {
   generateStaticParams = async () => {
     const focalLengths= await getUniqueFocalLengths();
     return focalLengths
-      .slice(0, GENERATE_STATIC_PARAMS_LIMIT)
-      .map(({ focal }) => ({ focal: formatFocalLength(focal)! }));
+      .map(({ focal }) => ({ focal: formatFocalLength(focal)! }))
+      .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
   };
 }
 

@@ -1,7 +1,5 @@
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getUniqueTags } from '@/photo/db/query';
-import { IS_PRODUCTION } from '@/app/config';
-import { STATICALLY_OPTIMIZED_PHOTO_CATEGORIES } from '@/app/config';
 import { PATH_ROOT } from '@/app/paths';
 import { generateMetaForTag } from '@/tag';
 import TagOverview from '@/tag/TagOverview';
@@ -9,6 +7,8 @@ import { getPhotosTagDataCached } from '@/tag/data';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
+import { shouldGenerateStaticParamsForCategory } from '@/photo/set';
+import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 
 const getPhotosTagDataCachedCached = cache((tag: string) =>
   getPhotosTagDataCached({ tag, limit: INFINITE_SCROLL_GRID_INITIAL}));
@@ -16,10 +16,12 @@ const getPhotosTagDataCachedCached = cache((tag: string) =>
 export let generateStaticParams:
   (() => Promise<{ tag: string }[]>) | undefined = undefined;
 
-if (STATICALLY_OPTIMIZED_PHOTO_CATEGORIES && IS_PRODUCTION) {
+if (shouldGenerateStaticParamsForCategory('tags', 'page')) {
   generateStaticParams = async () => {
     const tags = await getUniqueTags();
-    return tags.map(({ tag }) => ({ tag }));
+    return tags
+      .map(({ tag }) => ({ tag }))
+      .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
   };
 }
 

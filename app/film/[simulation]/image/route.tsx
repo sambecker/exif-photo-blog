@@ -11,20 +11,17 @@ import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { getUniqueFilmSimulations } from '@/photo/db/query';
-import {
-  STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES,
-  IS_PRODUCTION,
-} from '@/app/config';
+import { shouldGenerateStaticParamsForCategory } from '@/photo/set';
 
 export let generateStaticParams:
   (() => Promise<{ simulation: FilmSimulation }[]>) | undefined = undefined;
 
-if (STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES && IS_PRODUCTION) {
+if (shouldGenerateStaticParamsForCategory('films', 'image')) {
   generateStaticParams = async () => {
     const simulations = await getUniqueFilmSimulations();
     return simulations
-      .slice(0, GENERATE_STATIC_PARAMS_LIMIT)
-      .map(({ simulation }) => ({ simulation }));
+      .map(({ simulation }) => ({ simulation }))
+      .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
   };
 }
 

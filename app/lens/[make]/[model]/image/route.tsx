@@ -9,21 +9,18 @@ import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { getUniqueLenses } from '@/photo/db/query';
 import {
-  STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES,
-  IS_PRODUCTION,
-} from '@/app/config';
-import {
   getLensFromParams,
   Lens,
   LensProps,
   safelyGenerateLensStaticParams,
 } from '@/lens';
 import LensImageResponse from '@/image-response/LensImageResponse';
+import { shouldGenerateStaticParamsForCategory } from '@/photo/set';
 
 export let generateStaticParams:
   (() => Promise<Lens[]>) | undefined = undefined;
 
-if (STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES && IS_PRODUCTION) {
+if (shouldGenerateStaticParamsForCategory('lenses', 'image')) {
   generateStaticParams = async () => {
     const lenses = await getUniqueLenses();
     return safelyGenerateLensStaticParams(lenses)

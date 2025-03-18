@@ -10,20 +10,17 @@ import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { getUniqueCameras } from '@/photo/db/query';
-import {
-  STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES,
-  IS_PRODUCTION,
-} from '@/app/config';
+import { shouldGenerateStaticParamsForCategory } from '@/photo/set';
 
 export let generateStaticParams:
   (() => Promise<{ camera: Camera }[]>) | undefined = undefined;
 
-if (STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES && IS_PRODUCTION) {
+if (shouldGenerateStaticParamsForCategory('cameras', 'image')) {
   generateStaticParams = async () => {
     const cameras = await getUniqueCameras();
     return cameras
-      .slice(0, GENERATE_STATIC_PARAMS_LIMIT)
-      .map(({ camera }) => ({ camera }));
+      .map(({ camera }) => ({ camera }))
+      .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
   };
 }
 

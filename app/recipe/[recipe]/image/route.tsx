@@ -8,21 +8,18 @@ import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { getUniqueRecipes } from '@/photo/db/query';
-import {
-  STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES,
-  IS_PRODUCTION,
-} from '@/app/config';
 import RecipeImageResponse from '@/image-response/RecipeImageResponse';
+import { shouldGenerateStaticParamsForCategory } from '@/photo/set';
 
 export let generateStaticParams:
   (() => Promise<{ recipe: string }[]>) | undefined = undefined;
 
-if (STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES && IS_PRODUCTION) {
+if (shouldGenerateStaticParamsForCategory('recipes', 'image')) {
   generateStaticParams = async () => {
     const recipes = await getUniqueRecipes();
     return recipes
-      .slice(0, GENERATE_STATIC_PARAMS_LIMIT)
-      .map(({ recipe }) => ({ recipe }));
+      .map(({ recipe }) => ({ recipe }))
+      .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
   };
 }
 
