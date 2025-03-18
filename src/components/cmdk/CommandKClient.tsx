@@ -518,36 +518,38 @@ export default function CommandKClient({
           'px-3 md:px-4',
           'pt-3 md:pt-4',
         )}>
-          <Command.Input
-            onChangeCapture={(e) => setQueryLive(e.currentTarget.value)}
-            className={clsx(
-              'w-full min-w-0!',
-              'focus:ring-0',
-              isPlaceholderVisible || isLoading && 'pr-8!',
-              'border-gray-200! dark:border-gray-800!',
-              'focus:border-gray-200 dark:focus:border-gray-800',
-              'placeholder:text-gray-400/80',
-              'dark:placeholder:text-gray-700',
-              'focus:outline-hidden',
-              isPending && 'opacity-20',
-            )}
-            placeholder="Search photos, views, settings ..."
-            disabled={isPending}
-          />
+          <div className="relative">
+            <Command.Input
+              onChangeCapture={(e) => setQueryLive(e.currentTarget.value)}
+              className={clsx(
+                'w-full min-w-0!',
+                'focus:ring-0',
+                isPlaceholderVisible || isLoading && 'pr-10!',
+                'border-gray-200! dark:border-gray-800!',
+                'focus:border-gray-200 dark:focus:border-gray-800',
+                'placeholder:text-gray-400/80',
+                'dark:placeholder:text-gray-700',
+                'focus:outline-hidden',
+                isPending && 'opacity-20',
+              )}
+              placeholder="Search photos, views, settings ..."
+              disabled={isPending}
+            />
+            {isLoading && !isPending &&
+              <span className={clsx(
+                'absolute top-2 right-0 w-10',
+                'flex items-center justify-center translate-y-[2px]',
+              )}>
+                <Spinner size={16} />
+              </span>}
+          </div>
         </div>
-        {isLoading && !isPending &&
-          <span className={clsx(
-            'absolute top-2.5 right-0 w-8',
-            'flex items-center justify-center translate-y-[2px]',
-          )}>
-            <Spinner size={16} />
-          </span>}
         <Command.List className={clsx(
           'relative overflow-y-auto',
           'max-h-48 sm:max-h-72',
           'mx-3 md:mx-4',
           'pt-3 md:pt-4',
-          'pb-6 md:pb-8',
+          'pb-4 md:pb-5',
         )} style={{
           // eslint-disable-next-line max-len
           maskImage: 'linear-gradient(to bottom, transparent, black 20px, black calc(100% - 20px), transparent)',
