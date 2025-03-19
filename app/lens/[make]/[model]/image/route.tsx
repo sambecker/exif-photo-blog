@@ -6,7 +6,6 @@ import {
 import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
-import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { getUniqueLenses } from '@/photo/db/query';
 import {
   getLensFromParams,
@@ -15,17 +14,22 @@ import {
   safelyGenerateLensStaticParams,
 } from '@/lens';
 import LensImageResponse from '@/image-response/LensImageResponse';
-import { shouldGenerateStaticParamsForCategory } from '@/category/server';
+import {
+  shouldGenerateStaticParamsForCategory,
+  staticallyGenerateCategory,
+} from '@/category/server';
 
 export let generateStaticParams:
   (() => Promise<Lens[]>) | undefined = undefined;
 
 if (shouldGenerateStaticParamsForCategory('lenses', 'image')) {
-  generateStaticParams = async () => {
-    const lenses = await getUniqueLenses();
-    return safelyGenerateLensStaticParams(lenses)
-      .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
-  };
+  generateStaticParams = () =>
+    staticallyGenerateCategory(
+      'lenses',
+      'image',
+      getUniqueLenses,
+      safelyGenerateLensStaticParams,
+    );
 }
 
 export async function GET(

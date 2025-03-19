@@ -7,8 +7,10 @@ import { Metadata } from 'next/types';
 import { cache } from 'react';
 import { PATH_ROOT } from '@/app/paths';
 import { redirect } from 'next/navigation';
-import { shouldGenerateStaticParamsForCategory } from '@/category/server';
-import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
+import {
+  shouldGenerateStaticParamsForCategory,
+  staticallyGenerateCategory,
+} from '@/category/server';
 
 const getPhotosFilmSimulationDataCachedCached =
   cache(getPhotosFilmSimulationDataCached);
@@ -17,12 +19,13 @@ export let generateStaticParams:
   (() => Promise<{ simulation: FilmSimulation }[]>) | undefined = undefined;
 
 if (shouldGenerateStaticParamsForCategory('films', 'page')) {
-  generateStaticParams = async () => {
-    const simulations = await getUniqueFilmSimulations();
-    return simulations
-      .map(({ simulation }) => ({ simulation }))
-      .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
-  };
+  generateStaticParams = () =>
+    staticallyGenerateCategory(
+      'films',
+      'page',
+      getUniqueFilmSimulations,
+      simulations => simulations.map(({ simulation }) => ({ simulation })),
+    );
 }
 
 interface FilmSimulationProps {

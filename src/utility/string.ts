@@ -47,6 +47,12 @@ export const pluralize = (
 ) =>
   `${count} ${count === 1 ? singular : plural ?? `${singular}s`}`;
 
+export const depluralize = (string: string) =>
+  // Handle plurals like "lenses"
+  /ses$/i.test(string)
+    ? string.replace(/es$/i, '')
+    : string.replace(/s$/i, '');
+
 export const formatCountDescriptive = (
   count: number,
   verb = 'found',

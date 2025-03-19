@@ -11,8 +11,10 @@ import {
   LensProps,
   safelyGenerateLensStaticParams,
 } from '@/lens';
-import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
-import { shouldGenerateStaticParamsForCategory } from '@/category/server';
+import {
+  shouldGenerateStaticParamsForCategory,
+  staticallyGenerateCategory,
+} from '@/category/server';
 
 const getPhotosLensDataCachedCached = cache((
   make: string | undefined,
@@ -27,11 +29,13 @@ export let generateStaticParams:
   (() => Promise<Lens[]>) | undefined = undefined;
 
 if (shouldGenerateStaticParamsForCategory('lenses', 'page')) {
-  generateStaticParams = async () => {
-    const lenses = await getUniqueLenses();
-    return safelyGenerateLensStaticParams(lenses)
-      .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
-  };
+  generateStaticParams = () =>
+    staticallyGenerateCategory(
+      'lenses',
+      'page',
+      getUniqueLenses,
+      safelyGenerateLensStaticParams,
+    );
 }
 
 export async function generateMetadata({

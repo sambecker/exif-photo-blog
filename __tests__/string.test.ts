@@ -1,4 +1,4 @@
-import { parameterize } from '@/utility/string';
+import { parameterize, depluralize } from '@/utility/string';
 
 describe('String', () => {
   it('parameterizes', () => {
@@ -9,5 +9,12 @@ describe('String', () => {
     expect(parameterize('person\'s tag')).toBe('persons-tag');
     expect(parameterize('"person\'s tag"')).toBe('persons-tag');
     expect(parameterize('宿宿宿宿')).toBe('宿宿宿宿');
+  });
+  it('depluralizes', () => {
+    expect(depluralize('lenses')).toBe('lens');
+    expect(depluralize('cameras')).toBe('camera');
+    expect(depluralize('tags')).toBe('tag');
+    expect(depluralize('recipes')).toBe('recipe');
+    expect(depluralize('films')).toBe('film');
   });
 });

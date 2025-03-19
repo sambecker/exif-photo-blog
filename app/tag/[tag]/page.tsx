@@ -7,8 +7,10 @@ import { getPhotosTagDataCached } from '@/tag/data';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
-import { shouldGenerateStaticParamsForCategory } from '@/category/server';
-import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
+import {
+  shouldGenerateStaticParamsForCategory,
+  staticallyGenerateCategory,
+} from '@/category/server';
 
 const getPhotosTagDataCachedCached = cache((tag: string) =>
   getPhotosTagDataCached({ tag, limit: INFINITE_SCROLL_GRID_INITIAL}));
@@ -17,12 +19,13 @@ export let generateStaticParams:
   (() => Promise<{ tag: string }[]>) | undefined = undefined;
 
 if (shouldGenerateStaticParamsForCategory('tags', 'page')) {
-  generateStaticParams = async () => {
-    const tags = await getUniqueTags();
-    return tags
-      .map(({ tag }) => ({ tag }))
-      .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
-  };
+  generateStaticParams = () =>
+    staticallyGenerateCategory(
+      'tags',
+      'page',
+      getUniqueTags,
+      tags => tags.map(({ tag }) => ({ tag })),
+    );
 }
 
 interface TagProps {

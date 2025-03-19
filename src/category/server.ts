@@ -7,7 +7,7 @@ import {
   STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES,
 } from '@/app/config';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
-import { pluralize } from '@/utility/string';
+import { depluralize, pluralize } from '@/utility/string';
 
 type StaticOutput = 'page' | 'image';
 
@@ -30,9 +30,8 @@ export const staticallyGenerateCategory = async <T, K>(
   const data = (await getData()).slice(0, GENERATE_STATIC_PARAMS_LIMIT);
 
   if (IS_BUILDING) {
-    console.log(
-      `Statically generating ${key} (${pluralize(data.length, type)})`,
-    );
+    const meta = pluralize(data.length, `${depluralize(key)} ${type}`);
+    console.log(`Statically generating ${meta}`);
   }
 
   return formatData(data);

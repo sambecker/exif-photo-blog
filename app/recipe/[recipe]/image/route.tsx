@@ -6,21 +6,24 @@ import {
 import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
-import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { getUniqueRecipes } from '@/photo/db/query';
 import RecipeImageResponse from '@/image-response/RecipeImageResponse';
-import { shouldGenerateStaticParamsForCategory } from '@/category/server';
+import {
+  shouldGenerateStaticParamsForCategory,
+  staticallyGenerateCategory,
+} from '@/category/server';
 
 export let generateStaticParams:
   (() => Promise<{ recipe: string }[]>) | undefined = undefined;
 
 if (shouldGenerateStaticParamsForCategory('recipes', 'image')) {
-  generateStaticParams = async () => {
-    const recipes = await getUniqueRecipes();
-    return recipes
-      .map(({ recipe }) => ({ recipe }))
-      .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
-  };
+  generateStaticParams = () =>
+    staticallyGenerateCategory(
+      'recipes',
+      'image',
+      getUniqueRecipes,
+      recipes => recipes.map(({ recipe }) => ({ recipe })),
+    );
 }
 
 export async function GET(

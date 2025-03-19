@@ -9,20 +9,24 @@ import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import FocalLengthImageResponse from
   '@/image-response/FocalLengthImageResponse';
 import { formatFocalLength, getFocalLengthFromString } from '@/focal';
-import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { getUniqueFocalLengths } from '@/photo/db/query';
-import { shouldGenerateStaticParamsForCategory } from '@/category/server';
+import {
+  shouldGenerateStaticParamsForCategory,
+  staticallyGenerateCategory,
+} from '@/category/server';
 
 export let generateStaticParams:
   (() => Promise<{ focal: string }[]>) | undefined = undefined;
 
 if (shouldGenerateStaticParamsForCategory('focal-lengths', 'image')) {
-  generateStaticParams = async () => {
-    const focalLengths= await getUniqueFocalLengths();
-    return focalLengths
-      .map(({ focal }) => ({ focal: formatFocalLength(focal)! }))
-      .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
-  };
+  generateStaticParams = () =>
+    staticallyGenerateCategory(
+      'focal-lengths',
+      'image',
+      getUniqueFocalLengths,
+      focalLengths => focalLengths
+        .map(({ focal }) => ({ focal: formatFocalLength(focal)! })),
+    );
 }
 
 export async function GET(
