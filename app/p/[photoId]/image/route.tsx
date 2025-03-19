@@ -4,23 +4,12 @@ import PhotoImageResponse from '@/image-response/PhotoImageResponse';
 import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
-import {
-  IS_PRODUCTION,
-  STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES,
-} from '@/app/config';
-import { getPhotoIds } from '@/photo/db/query';
-import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { isNextImageReadyBasedOnPhotos } from '@/photo';
+import { staticallyGeneratePhotosIfConfigured } from '@/category/server';
 
-export let generateStaticParams:
-  (() => Promise<{ photoId: string }[]>) | undefined = undefined;
-
-if (STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES && IS_PRODUCTION) {
-  generateStaticParams = async () => {
-    const photos = await getPhotoIds({ limit: GENERATE_STATIC_PARAMS_LIMIT });
-    return photos.map(photoId => ({ photoId }));
-  };
-}
+export const generateStaticParams = staticallyGeneratePhotosIfConfigured(
+  'image',
+);
 
 export async function GET(
   _: Request,
