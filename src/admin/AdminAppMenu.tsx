@@ -68,6 +68,17 @@ export default function AdminAppMenu({
     }),
   }];
 
+  if (uploadsCount) {
+    items.push({
+      label: 'Uploads',
+      annotation: `${uploadsCount}`,
+      icon: <IconFolder
+        size={16}
+        className="translate-y-[0.5px]"
+      />,
+      href: PATH_ADMIN_UPLOADS,
+    });
+  }
   if (photosCountTotal) {
     items.push({
       label: 'Manage Photos',
@@ -81,19 +92,6 @@ export default function AdminAppMenu({
       href: PATH_ADMIN_PHOTOS,
     });
   }
-
-  if (uploadsCount) {
-    items.push({
-      label: 'Uploads',
-      annotation: `${uploadsCount}`,
-      icon: <IconFolder
-        size={16}
-        className="translate-y-[0.5px]"
-      />,
-      href: PATH_ADMIN_UPLOADS,
-    });
-  }
-
   if (tagsCount) {
     items.push({
       label: 'Manage Tags',
@@ -105,7 +103,6 @@ export default function AdminAppMenu({
       href: PATH_ADMIN_TAGS,
     });
   }
-
   if (recipesCount) {
     items.push({
       label: 'Manage Recipes',
@@ -117,7 +114,6 @@ export default function AdminAppMenu({
       href: PATH_ADMIN_RECIPES,
     });
   }
-
   if (photosCountTotal) {
     items.push({
       label: isSelecting

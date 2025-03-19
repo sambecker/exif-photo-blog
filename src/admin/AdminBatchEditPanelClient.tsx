@@ -58,7 +58,9 @@ export default function AdminBatchEditPanelClient({
   const renderPhotoCTA = selectedPhotoIds?.length === 0
     ? <>
       <FaArrowDown />
-      Select photos below
+      <ResponsiveText shortText="Select below">
+        Select photos below
+      </ResponsiveText>
     </>
     : <ResponsiveText shortText={photosText}>
       {photosText} selected

@@ -17,6 +17,7 @@ import {
   PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_INSIGHTS,
   PATH_ADMIN_PHOTOS,
+  PATH_ADMIN_RECIPES,
   PATH_ADMIN_TAGS,
   PATH_ADMIN_UPLOADS,
   PATH_FEED_INFERRED,
@@ -126,6 +127,7 @@ export default function CommandKClient({
     photosCountHidden,
     uploadsCount,
     tagsCount,
+    recipesCount,
     selectedPhotoIds,
     setSelectedPhotoIds,
     insightsIndicatorStatus,
@@ -425,18 +427,18 @@ export default function CommandKClient({
   };
 
   if (isUserSignedIn) {
+    if (uploadsCount) {
+      adminSection.items.push({
+        label: `Uploads (${uploadsCount})`,
+        annotation: <IconLock narrow />,
+        path: PATH_ADMIN_UPLOADS,
+      });
+    }
     adminSection.items.push({
       label: 'Manage Photos',
       annotation: <IconLock narrow />,
       path: PATH_ADMIN_PHOTOS,
     });
-    if (uploadsCount) {
-      adminSection.items.push({
-        label: 'Manage Uploads',
-        annotation: <IconLock narrow />,
-        path: PATH_ADMIN_UPLOADS,
-      });
-    }
     if (tagsCount) {
       adminSection.items.push({
         label: 'Manage Tags',
@@ -444,7 +446,25 @@ export default function CommandKClient({
         path: PATH_ADMIN_TAGS,
       });
     }
+    if (recipesCount) {
+      adminSection.items.push({
+        label: 'Manage Recipes',
+        annotation: <IconLock narrow />,
+        path: PATH_ADMIN_RECIPES,
+      });
+    }
     adminSection.items.push({
+      label: selectedPhotoIds === undefined
+        ? 'Batch Edit Photos ...'
+        : 'Exit Batch Edit',
+      annotation: <IconLock narrow />,
+      path: selectedPhotoIds === undefined
+        ? PATH_GRID_INFERRED
+        : undefined,
+      action: selectedPhotoIds === undefined
+        ? () => setSelectedPhotoIds?.([])
+        : () => setSelectedPhotoIds?.(undefined),
+    }, {
       label: <span className="flex items-center gap-3">
         App Insights
         {insightsIndicatorStatus &&
@@ -457,17 +477,6 @@ export default function CommandKClient({
       label: 'App Config',
       annotation: <IconLock narrow />,
       path: PATH_ADMIN_CONFIGURATION,
-    }, {
-      label: selectedPhotoIds === undefined
-        ? 'Select Multiple Photos'
-        : 'Exit Select Multiple Photos',
-      annotation: <IconLock narrow />,
-      path: selectedPhotoIds === undefined
-        ? PATH_GRID_INFERRED
-        : undefined,
-      action: selectedPhotoIds === undefined
-        ? () => setSelectedPhotoIds?.([])
-        : () => setSelectedPhotoIds?.(undefined),
     });
     if (showDebugTools) {
       adminSection.items.push({
@@ -537,7 +546,7 @@ export default function CommandKClient({
             />
             {isLoading && !isPending &&
               <span className={clsx(
-                'absolute top-2 right-0 w-10',
+                'absolute top-[9px] right-0 w-10',
                 'flex items-center justify-center translate-y-[2px]',
               )}>
                 <Spinner size={16} />
