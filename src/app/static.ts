@@ -12,8 +12,10 @@ import { depluralize, pluralize } from '@/utility/string';
 
 type StaticOutput = 'page' | 'image';
 
-const logStaticGenerationDetails = (count: number, content: string) =>
-  console.log(`Statically generating ${pluralize(count, content)} ...`);
+const logStaticGenerationDetails = (count: number, content: string) => {
+  const label = pluralize(count, content, undefined, 3);
+  console.log(`Statically generating ${label} ...`);
+};
 
 export const staticallyGeneratePhotosIfConfigured = (type: StaticOutput) =>
   IS_PRODUCTION && (
