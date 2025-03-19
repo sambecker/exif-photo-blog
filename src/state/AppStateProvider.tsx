@@ -135,14 +135,18 @@ export default function AppStateProvider({
     if (isPathAdmin(pathname)) { router.push(PATH_SIGN_IN); }
   }, [router, pathname]);
 
-  const startUpload = useCallback((onStart?: () => void) => {
+  // Returns false when an upload is cancelled
+  const startUpload = useCallback(() => new Promise<boolean>(resolve => {
     if (uploadInputRef.current) {
       uploadInputRef.current.value = '';
       uploadInputRef.current.click();
-      uploadInputRef.current.oninput = onStart ?? null;
-      uploadInputRef.current.oncancel = onStart ?? null;
+      uploadInputRef.current.oninput = () => resolve(true);
+      uploadInputRef.current.oncancel = () => resolve(false);
+    } else {
+      resolve(false);
     }
-  }, []);
+  })
+  , []);
   const setUploadState = useCallback((uploadState: Partial<UploadState>) => {
     _setUploadState(prev => ({ ...prev, ...uploadState }));
   }, []);

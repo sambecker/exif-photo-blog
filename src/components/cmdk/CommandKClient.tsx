@@ -86,7 +86,7 @@ type CommandKItem = {
   annotation?: ReactNode
   annotationAria?: string
   path?: string
-  action?: () => void | Promise<void>
+  action?: () => void | Promise<void | boolean>
 }
 
 type CommandKSection = {
@@ -124,6 +124,7 @@ export default function CommandKClient({
     isUserSignedIn,
     clearAuthStateAndRedirect,
     isCommandKOpen: isOpen,
+    startUpload,
     photosCountHidden,
     uploadsCount,
     tagsCount,
@@ -151,19 +152,21 @@ export default function CommandKClient({
 
   const isOpenRef = useRef(isOpen);
   
+  // Manage action/path waiting state
+  const [keyWaiting, setKeyWaiting] = useState<string>();
   const [isPending, startTransition] = useTransition();
-  const [keyPending, setKeyPending] = useState<string>();
-  const shouldCloseAfterPending = useRef(false);
-
+  const [isWaitingForAction, setIsWaitingForAction] = useState(false);
+  const isWaiting = isPending || isWaitingForAction;
+  const shouldCloseAfterWaiting = useRef(false);
   useEffect(() => {
-    if (!isPending) {
-      setKeyPending(undefined);
-      if (shouldCloseAfterPending.current) {
+    if (!isWaiting) {
+      setKeyWaiting(undefined);
+      if (shouldCloseAfterWaiting.current) {
         setIsOpen?.(false);
-        shouldCloseAfterPending.current = false;
+        shouldCloseAfterWaiting.current = false;
       }
     }
-  }, [isPending, setIsOpen]);
+  }, [isWaiting, setIsOpen]);
 
   // Raw query values
   const [queryLiveRaw, setQueryLive] = useState('');
@@ -427,6 +430,11 @@ export default function CommandKClient({
   };
 
   if (isUserSignedIn) {
+    adminSection.items.push({
+      label: 'Upload Photos',
+      annotation: <IconLock narrow />,
+      action: startUpload,
+    });
     if (uploadsCount) {
       adminSection.items.push({
         label: `Uploads (${uploadsCount})`,
@@ -558,7 +566,6 @@ export default function CommandKClient({
           'max-h-48 sm:max-h-72',
           'mx-3 md:mx-4',
           'pt-3 md:pt-4',
-          'pb-4 md:pb-5',
         )} style={{
           // eslint-disable-next-line max-len
           maskImage: 'linear-gradient(to bottom, transparent, black 20px, black calc(100% - 20px), transparent)',
@@ -613,14 +620,24 @@ export default function CommandKClient({
                       keywords={keywords}
                       onSelect={() => {
                         if (action) {
-                          action();
-                          if (!path) { setIsOpen?.(false); }
+                          const result = action();
+                          if (result instanceof Promise) {
+                            setKeyWaiting(key);
+                            setIsWaitingForAction(true);
+                            result.then(shouldClose => {
+                              shouldCloseAfterWaiting.current =
+                                shouldClose === true;
+                              setIsWaitingForAction(false);
+                            });
+                          } else {
+                            if (!path) { setIsOpen?.(false); }
+                          }
                         }
                         if (path) {
                           if (path !== pathname) {
-                            setKeyPending(key);
+                            setKeyWaiting(key);
+                            shouldCloseAfterWaiting.current = true;
                             startTransition(() => {
-                              shouldCloseAfterPending.current = true;
                               router.push(path, { scroll: true });
                             });
                           } else {
@@ -631,14 +648,17 @@ export default function CommandKClient({
                       accessory={accessory}
                       annotation={annotation}
                       annotationAria={annotationAria}
-                      loading={key === keyPending}
-                      disabled={isPending && key !== keyPending}
+                      loading={key === keyWaiting}
+                      disabled={isPending && key !== keyWaiting}
                     />;
                   })}
                 </Command.Group>)}
           </div>
           {footer && !queryLive &&
-            <div className="text-center text-base text-dim pt-3 sm:pt-4">
+            <div className={clsx(
+              'text-center text-base text-dim pt-3 sm:pt-4',
+              'pb-5 md:pb-6',
+            )}>
               {footer}
             </div>}
         </Command.List>

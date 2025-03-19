@@ -26,7 +26,7 @@ export default function MoreMenuItem({
   href?: string
   hrefDownloadName?: string
   className?: string
-  action?: () => Promise<void> | void
+  action?: () => Promise<void | boolean> | void
   dismissMenu?: () => void
   shouldPreventDefault?: boolean
 }) {
@@ -68,10 +68,18 @@ export default function MoreMenuItem({
           const result = action();
           if (result instanceof Promise) {
             setIsLoading(true);
-            await result.finally(() => {
-              setIsLoading(false);
-              dismissMenu?.();
-            });
+            await result
+              .then(shouldClose => {
+                if (
+                  shouldClose === undefined ||
+                  shouldClose === true
+                ) {
+                  dismissMenu?.();
+                }
+              })
+              .finally(() => {
+                setIsLoading(false);
+              });
           } else {
             dismissMenu?.();
           }
