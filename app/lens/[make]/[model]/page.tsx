@@ -7,13 +7,11 @@ import { getPhotosLensDataCached } from '@/lens/data';
 import LensOverview from '@/lens/LensOverview';
 import {
   getLensFromParams,
-  Lens,
   LensProps,
   safelyGenerateLensStaticParams,
 } from '@/lens';
 import {
-  shouldGenerateStaticParamsForCategory,
-  staticallyGenerateCategory,
+  staticallyGenerateCategoryIfConfigured,
 } from '@/category/server';
 
 const getPhotosLensDataCachedCached = cache((
@@ -25,18 +23,12 @@ const getPhotosLensDataCachedCached = cache((
   INFINITE_SCROLL_GRID_INITIAL,
 ));
 
-export let generateStaticParams:
-  (() => Promise<Lens[]>) | undefined = undefined;
-
-if (shouldGenerateStaticParamsForCategory('lenses', 'page')) {
-  generateStaticParams = () =>
-    staticallyGenerateCategory(
-      'lenses',
-      'page',
-      getUniqueLenses,
-      safelyGenerateLensStaticParams,
-    );
-}
+export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
+  'lenses',
+  'page',
+  getUniqueLenses,
+  safelyGenerateLensStaticParams,
+);
 
 export async function generateMetadata({
   params,

@@ -7,26 +7,17 @@ import { Metadata } from 'next/types';
 import { cache } from 'react';
 import { PATH_ROOT } from '@/app/paths';
 import { redirect } from 'next/navigation';
-import {
-  shouldGenerateStaticParamsForCategory,
-  staticallyGenerateCategory,
-} from '@/category/server';
+import { staticallyGenerateCategoryIfConfigured } from '@/category/server';
 
 const getPhotosFilmSimulationDataCachedCached =
   cache(getPhotosFilmSimulationDataCached);
 
-export let generateStaticParams:
-  (() => Promise<{ simulation: FilmSimulation }[]>) | undefined = undefined;
-
-if (shouldGenerateStaticParamsForCategory('films', 'page')) {
-  generateStaticParams = () =>
-    staticallyGenerateCategory(
-      'films',
-      'page',
-      getUniqueFilmSimulations,
-      simulations => simulations.map(({ simulation }) => ({ simulation })),
-    );
-}
+export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
+  'films',
+  'page',
+  getUniqueFilmSimulations,
+  simulations => simulations.map(({ simulation }) => ({ simulation })),
+);
 
 interface FilmSimulationProps {
   params: Promise<{ simulation: FilmSimulation }>

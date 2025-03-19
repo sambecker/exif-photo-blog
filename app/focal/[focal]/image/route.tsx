@@ -10,24 +10,15 @@ import FocalLengthImageResponse from
   '@/image-response/FocalLengthImageResponse';
 import { formatFocalLength, getFocalLengthFromString } from '@/focal';
 import { getUniqueFocalLengths } from '@/photo/db/query';
-import {
-  shouldGenerateStaticParamsForCategory,
-  staticallyGenerateCategory,
-} from '@/category/server';
+import { staticallyGenerateCategoryIfConfigured } from '@/category/server';
 
-export let generateStaticParams:
-  (() => Promise<{ focal: string }[]>) | undefined = undefined;
-
-if (shouldGenerateStaticParamsForCategory('focal-lengths', 'image')) {
-  generateStaticParams = () =>
-    staticallyGenerateCategory(
-      'focal-lengths',
-      'image',
-      getUniqueFocalLengths,
-      focalLengths => focalLengths
-        .map(({ focal }) => ({ focal: formatFocalLength(focal)! })),
-    );
-}
+export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
+  'focal-lengths',
+  'image',
+  getUniqueFocalLengths,
+  focalLengths => focalLengths
+    .map(({ focal }) => ({ focal: formatFocalLength(focal)! })),
+);
 
 export async function GET(
   _: Request,

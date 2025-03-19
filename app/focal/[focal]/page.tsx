@@ -7,10 +7,7 @@ import { PATH_ROOT } from '@/app/paths';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
-import {
-  shouldGenerateStaticParamsForCategory,
-  staticallyGenerateCategory,
-} from '@/category/server';
+import { staticallyGenerateCategoryIfConfigured } from '@/category/server';
 
 const getPhotosFocalDataCachedCached = cache((focal: number) =>
   getPhotosFocalLengthDataCached({
@@ -18,19 +15,13 @@ const getPhotosFocalDataCachedCached = cache((focal: number) =>
     limit: INFINITE_SCROLL_GRID_INITIAL,
   }));
 
-export let generateStaticParams:
-  (() => Promise<{ focal: string }[]>) | undefined = undefined;
-
-if (shouldGenerateStaticParamsForCategory('focal-lengths', 'page')) {
-  generateStaticParams = () =>
-    staticallyGenerateCategory(
-      'focal-lengths',
-      'page',
-      getUniqueFocalLengths,
-      focalLengths => focalLengths
-        .map(({ focal }) => ({ focal: focal.toString() })),
-    );
-}
+export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
+  'focal-lengths',
+  'page',
+  getUniqueFocalLengths,
+  focalLengths => focalLengths
+    .map(({ focal }) => ({ focal: focal.toString() })),
+);
 
 interface FocalLengthProps {
   params: Promise<{ focal: string }>

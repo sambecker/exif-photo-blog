@@ -10,23 +10,14 @@ import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { getUniqueFilmSimulations } from '@/photo/db/query';
-import {
-  shouldGenerateStaticParamsForCategory,
-  staticallyGenerateCategory,
-} from '@/category/server';
+import { staticallyGenerateCategoryIfConfigured } from '@/category/server';
 
-export let generateStaticParams:
-  (() => Promise<{ simulation: FilmSimulation }[]>) | undefined = undefined;
-
-if (shouldGenerateStaticParamsForCategory('films', 'image')) {
-  generateStaticParams = () =>
-    staticallyGenerateCategory(
-      'films',
-      'image',
-      getUniqueFilmSimulations,
-      simulations => simulations.map(({ simulation }) => ({ simulation })),
-    );
-}
+export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
+  'films',
+  'image',
+  getUniqueFilmSimulations,
+  simulations => simulations.map(({ simulation }) => ({ simulation })),
+);
 
 export async function GET(
   _: Request,

@@ -9,28 +9,18 @@ import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { getUniqueLenses } from '@/photo/db/query';
 import {
   getLensFromParams,
-  Lens,
   LensProps,
   safelyGenerateLensStaticParams,
 } from '@/lens';
 import LensImageResponse from '@/image-response/LensImageResponse';
-import {
-  shouldGenerateStaticParamsForCategory,
-  staticallyGenerateCategory,
-} from '@/category/server';
+import { staticallyGenerateCategoryIfConfigured } from '@/category/server';
 
-export let generateStaticParams:
-  (() => Promise<Lens[]>) | undefined = undefined;
-
-if (shouldGenerateStaticParamsForCategory('lenses', 'image')) {
-  generateStaticParams = () =>
-    staticallyGenerateCategory(
-      'lenses',
-      'image',
-      getUniqueLenses,
-      safelyGenerateLensStaticParams,
-    );
-}
+export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
+  'lenses',
+  'image',
+  getUniqueLenses,
+  safelyGenerateLensStaticParams,
+);
 
 export async function GET(
   _: Request,

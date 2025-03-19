@@ -7,25 +7,16 @@ import { cache } from 'react';
 import { generateMetaForRecipe } from '@/recipe';
 import RecipeOverview from '@/recipe/RecipeOverview';
 import { getPhotosRecipeDataCached } from '@/recipe/data';
-import {
-  shouldGenerateStaticParamsForCategory,
-  staticallyGenerateCategory,
-} from '@/category/server';
+import { staticallyGenerateCategoryIfConfigured } from '@/category/server';
 
 const getPhotosRecipeDataCachedCached = cache(getPhotosRecipeDataCached);
 
-export let generateStaticParams:
-  (() => Promise<{ recipe: string }[]>) | undefined = undefined;
-
-if (shouldGenerateStaticParamsForCategory('recipes', 'page')) {
-  generateStaticParams = () =>
-    staticallyGenerateCategory(
-      'recipes',
-      'page',
-      getUniqueRecipes,
-      recipes => recipes.map(({ recipe }) => ({ recipe })),
-    );
-}
+export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
+  'recipes',
+  'page',
+  getUniqueRecipes,
+  recipes => recipes.map(({ recipe }) => ({ recipe })),
+);
 
 interface RecipeProps {
   params: Promise<{ recipe: string }>

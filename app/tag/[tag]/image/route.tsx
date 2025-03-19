@@ -8,23 +8,14 @@ import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { getUniqueTags } from '@/photo/db/query';
-import {
-  shouldGenerateStaticParamsForCategory,
-  staticallyGenerateCategory,
-} from '@/category/server';
+import { staticallyGenerateCategoryIfConfigured } from '@/category/server';
 
-export let generateStaticParams:
-  (() => Promise<{ tag: string }[]>) | undefined = undefined;
-
-if (shouldGenerateStaticParamsForCategory('tags', 'image')) {
-  generateStaticParams = () =>
-    staticallyGenerateCategory(
-      'tags',
-      'image',
-      getUniqueTags,
-      tags => tags.map(({ tag }) => ({ tag })),
-    );
-}
+export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
+  'tags',
+  'image',
+  getUniqueTags,
+  tags => tags.map(({ tag }) => ({ tag })),
+);
 
 export async function GET(
   _: Request,

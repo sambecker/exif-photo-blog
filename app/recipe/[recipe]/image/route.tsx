@@ -8,23 +8,14 @@ import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { getUniqueRecipes } from '@/photo/db/query';
 import RecipeImageResponse from '@/image-response/RecipeImageResponse';
-import {
-  shouldGenerateStaticParamsForCategory,
-  staticallyGenerateCategory,
-} from '@/category/server';
+import { staticallyGenerateCategoryIfConfigured } from '@/category/server';
 
-export let generateStaticParams:
-  (() => Promise<{ recipe: string }[]>) | undefined = undefined;
-
-if (shouldGenerateStaticParamsForCategory('recipes', 'image')) {
-  generateStaticParams = () =>
-    staticallyGenerateCategory(
-      'recipes',
-      'image',
-      getUniqueRecipes,
-      recipes => recipes.map(({ recipe }) => ({ recipe })),
-    );
-}
+export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
+  'recipes',
+  'image',
+  getUniqueRecipes,
+  recipes => recipes.map(({ recipe }) => ({ recipe })),
+);
 
 export async function GET(
   _: Request,

@@ -11,7 +11,7 @@ import { depluralize, pluralize } from '@/utility/string';
 
 type StaticOutput = 'page' | 'image';
 
-export const shouldGenerateStaticParamsForCategory = (
+const shouldGenerateStaticParamsForCategory = (
   key: CategoryKey,
   type: StaticOutput,
 ): boolean =>
@@ -21,18 +21,21 @@ export const shouldGenerateStaticParamsForCategory = (
     (type === 'image' && STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES)
   );
 
-export const staticallyGenerateCategory = async <T, K>(
+export const staticallyGenerateCategoryIfConfigured = <T, K>(
   key: CategoryKey,
   type: StaticOutput,
   getData: () => Promise<T[]>,
   formatData: (data: T[]) => K[],
-): Promise<K[]> => {
-  const data = (await getData()).slice(0, GENERATE_STATIC_PARAMS_LIMIT);
+): (() => Promise<K[]>) | undefined =>
+    shouldGenerateStaticParamsForCategory(key, type)
+      ? async () => {
+        const data = (await getData()).slice(0, GENERATE_STATIC_PARAMS_LIMIT);
 
-  if (IS_BUILDING) {
-    const meta = pluralize(data.length, `${depluralize(key)} ${type}`);
-    console.log(`Statically generating ${meta}`);
-  }
+        if (IS_BUILDING) {
+          const meta = pluralize(data.length, `${depluralize(key)} ${type}`);
+          console.log(`Statically generating ${meta}`);
+        }
 
-  return formatData(data);
-};
+        return formatData(data);
+      }
+      : undefined;

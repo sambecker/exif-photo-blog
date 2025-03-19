@@ -1,15 +1,12 @@
 import { Metadata } from 'next/types';
-import { Camera, CameraProps } from '@/camera';
+import { CameraProps } from '@/camera';
 import { generateMetaForCamera } from '@/camera/meta';
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getPhotosCameraDataCached } from '@/camera/data';
 import CameraOverview from '@/camera/CameraOverview';
 import { cache } from 'react';
 import { getUniqueCameras } from '@/photo/db/query';
-import {
-  shouldGenerateStaticParamsForCategory,
-  staticallyGenerateCategory,
-} from '@/category/server';
+import { staticallyGenerateCategoryIfConfigured } from '@/category/server';
 
 const getPhotosCameraDataCachedCached = cache((
   make: string,
@@ -20,18 +17,12 @@ const getPhotosCameraDataCachedCached = cache((
   INFINITE_SCROLL_GRID_INITIAL,
 ));
 
-export let generateStaticParams:
-  (() => Promise<Camera[]>) | undefined = undefined;
-
-if (shouldGenerateStaticParamsForCategory('cameras', 'page')) {
-  generateStaticParams = () =>
-    staticallyGenerateCategory(
-      'cameras',
-      'page',
-      getUniqueCameras,
-      cameras => cameras.map(({ camera }) => camera),
-    );
-}
+export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
+  'cameras',
+  'page',
+  getUniqueCameras,
+  cameras => cameras.map(({ camera }) => camera),
+);
 
 export async function generateMetadata({
   params,
