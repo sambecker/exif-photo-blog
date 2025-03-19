@@ -7,7 +7,7 @@ import { PATH_ROOT } from '@/app/paths';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
-import { staticallyGenerateCategoryIfConfigured } from '@/category/server';
+import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 
 const getPhotosFocalDataCachedCached = cache((focal: number) =>
   getPhotosFocalLengthDataCached({

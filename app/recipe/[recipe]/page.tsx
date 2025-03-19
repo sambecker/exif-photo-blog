@@ -7,7 +7,7 @@ import { cache } from 'react';
 import { generateMetaForRecipe } from '@/recipe';
 import RecipeOverview from '@/recipe/RecipeOverview';
 import { getPhotosRecipeDataCached } from '@/recipe/data';
-import { staticallyGenerateCategoryIfConfigured } from '@/category/server';
+import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 
 const getPhotosRecipeDataCachedCached = cache(getPhotosRecipeDataCached);
 

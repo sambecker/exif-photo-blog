@@ -6,7 +6,7 @@ import { getPhotosCameraDataCached } from '@/camera/data';
 import CameraOverview from '@/camera/CameraOverview';
 import { cache } from 'react';
 import { getUniqueCameras } from '@/photo/db/query';
-import { staticallyGenerateCategoryIfConfigured } from '@/category/server';
+import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 
 const getPhotosCameraDataCachedCached = cache((
   make: string,

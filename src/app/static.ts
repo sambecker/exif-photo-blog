@@ -1,4 +1,4 @@
-import { CategoryKey } from '.';
+import { CategoryKey } from '../category';
 import {
   CATEGORY_VISIBILITY,
   IS_BUILDING,

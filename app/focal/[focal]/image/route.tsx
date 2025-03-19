@@ -10,7 +10,7 @@ import FocalLengthImageResponse from
   '@/image-response/FocalLengthImageResponse';
 import { formatFocalLength, getFocalLengthFromString } from '@/focal';
 import { getUniqueFocalLengths } from '@/photo/db/query';
-import { staticallyGenerateCategoryIfConfigured } from '@/category/server';
+import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'focal-lengths',

@@ -13,7 +13,7 @@ import {
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotosNearIdCached } from '@/photo/cache';
 import { cache } from 'react';
-import { staticallyGeneratePhotosIfConfigured } from '@/category/server';
+import { staticallyGeneratePhotosIfConfigured } from '@/app/static';
 
 export const maxDuration = 60;
 

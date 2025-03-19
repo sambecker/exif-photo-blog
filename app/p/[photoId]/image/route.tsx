@@ -5,7 +5,7 @@ import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { isNextImageReadyBasedOnPhotos } from '@/photo';
-import { staticallyGeneratePhotosIfConfigured } from '@/category/server';
+import { staticallyGeneratePhotosIfConfigured } from '@/app/static';
 
 export const generateStaticParams = staticallyGeneratePhotosIfConfigured(
   'image',

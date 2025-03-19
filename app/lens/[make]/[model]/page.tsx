@@ -12,7 +12,7 @@ import {
 } from '@/lens';
 import {
   staticallyGenerateCategoryIfConfigured,
-} from '@/category/server';
+} from '@/app/static';
 
 const getPhotosLensDataCachedCached = cache((
   make: string | undefined,
