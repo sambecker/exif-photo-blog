@@ -2,7 +2,7 @@ import AnimateItems from '@/components/AnimateItems';
 import { Photo, PhotoDateRange } from '.';
 import { PhotoSetCategory } from '../category';
 import PhotoLarge from './PhotoLarge';
-import SiteGrid from '@/components/SiteGrid';
+import AppGrid from '@/components/AppGrid';
 import PhotoGrid from './PhotoGrid';
 import TagHeader from '@/tag/TagHeader';
 import CameraHeader from '@/camera/CameraHeader';
@@ -107,7 +107,7 @@ export default function PhotoDetailPage({
 
   return (
     <div>
-      <SiteGrid
+      <AppGrid
         className="mt-1.5 mb-6"
         contentMain={customHeader ?? <PhotoHeader
           selectedPhoto={photo}
@@ -142,7 +142,7 @@ export default function PhotoDetailPage({
           />,
         ]}
       />
-      <SiteGrid
+      <AppGrid
         sideFirstOnMobile
         contentMain={<PhotoGrid
           photos={photosGrid ?? photos}

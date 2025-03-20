@@ -1,7 +1,7 @@
 'use client';
 
 import { clsx } from 'clsx/lite';
-import SiteGrid from '@/components/SiteGrid';
+import AppGrid from '@/components/AppGrid';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import AdminPhotosTableInfinite from '@/admin/AdminPhotosTableInfinite';
 import PathLoaderButton from '@/components/primitives/PathLoaderButton';
@@ -40,7 +40,7 @@ export default function AdminPhotosClient({
   const { uploadState: { isUploading } } = useAppState();
 
   return (
-    <SiteGrid
+    <AppGrid
       contentMain={
         <div className="space-y-4">
           <div className="flex gap-4">

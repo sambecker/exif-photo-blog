@@ -10,7 +10,7 @@ import {
   shouldShowRecipeDataForPhoto,
   titleForPhoto,
 } from '.';
-import SiteGrid from '@/components/SiteGrid';
+import AppGrid from '@/components/AppGrid';
 import ImageLarge from '@/components/image/ImageLarge';
 import { clsx } from 'clsx/lite';
 import Link from 'next/link';
@@ -229,7 +229,7 @@ export default function PhotoLarge({
   );
 
   return (
-    <SiteGrid
+    <AppGrid
       containerRef={ref}
       className={className}
       contentMain={showZoomControls

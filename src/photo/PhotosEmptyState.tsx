@@ -1,5 +1,5 @@
 import Container from '@/components/Container';
-import SiteGrid from '@/components/SiteGrid';
+import AppGrid from '@/components/AppGrid';
 import { IS_SITE_READY, PRESERVE_ORIGINAL_UPLOADS } from '@/app/config';
 import AdminAppConfiguration from '@/admin/AdminAppConfiguration';
 import { clsx } from 'clsx/lite';
@@ -12,7 +12,7 @@ import AnimateItems from '@/components/AnimateItems';
 
 export default function PhotosEmptyState() {
   return (
-    <SiteGrid
+    <AppGrid
       contentMain={
         <AnimateItems
           items={[

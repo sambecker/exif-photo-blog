@@ -3,7 +3,7 @@
 import LinkWithLoader from '@/components/LinkWithLoader';
 import LinkWithStatus from '@/components/LinkWithStatus';
 import Note from '@/components/Note';
-import SiteGrid from '@/components/SiteGrid';
+import AppGrid from '@/components/AppGrid';
 import Spinner from '@/components/Spinner';
 import {
   PATH_ADMIN_CONFIGURATION,
@@ -62,7 +62,7 @@ export default function AdminNavClient({
   const shouldShowBanner = hasRecentUpdates && isPathTopLevelAdmin(pathname);
 
   return (
-    <SiteGrid
+    <AppGrid
       contentMain={
         <div className="space-y-4">
           <div className={clsx(

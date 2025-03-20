@@ -1,7 +1,7 @@
 'use client';
 
 import { clsx } from 'clsx/lite';
-import SiteGrid from '../components/SiteGrid';
+import AppGrid from '../components/AppGrid';
 import ThemeSwitcher from '@/app/ThemeSwitcher';
 import Link from 'next/link';
 import { SHOW_REPO_LINK } from '@/app/config';
@@ -24,7 +24,7 @@ export default function Footer() {
   const shouldAnimate = !isPathAdmin(pathname);
 
   return (
-    <SiteGrid
+    <AppGrid
       contentMain={
         <AnimateItems
           animateOnFirstLoadOnly

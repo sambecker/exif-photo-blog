@@ -1,5 +1,5 @@
 import { getStorageUploadUrlsNoStore } from '@/platforms/storage/cache';
-import SiteGrid from '@/components/SiteGrid';
+import AppGrid from '@/components/AppGrid';
 import { getUniqueTagsCached } from '@/photo/cache';
 import AdminUploadsClient from '@/admin/AdminUploadsClient';
 import { redirect } from 'next/navigation';
@@ -15,7 +15,7 @@ export default async function AdminUploadsPage() {
     redirect(PATH_ADMIN_PHOTOS);
   } else {
     return (
-      <SiteGrid
+      <AppGrid
         contentMain={
           <AdminUploadsClient {...{
             urls,

@@ -3,7 +3,7 @@
 import { clsx } from 'clsx/lite';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import SiteGrid from '../components/SiteGrid';
+import AppGrid from '../components/AppGrid';
 import ViewSwitcher, { SwitcherSelection } from '@/app/ViewSwitcher';
 import {
   PATH_ROOT,
@@ -54,7 +54,7 @@ export default function Nav({
   };
 
   return (
-    <SiteGrid
+    <AppGrid
       contentMain={
         <AnimateItems
           animateOnFirstLoadOnly

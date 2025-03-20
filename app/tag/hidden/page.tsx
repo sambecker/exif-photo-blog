@@ -1,6 +1,6 @@
 import AnimateItems from '@/components/AnimateItems';
 import Note from '@/components/Note';
-import SiteGrid from '@/components/SiteGrid';
+import AppGrid from '@/components/AppGrid';
 import PhotoGrid from '@/photo/PhotoGrid';
 import { getPhotosNoStore } from '@/photo/cache';
 import { getPhotosMeta } from '@/photo/db/query';
@@ -52,7 +52,7 @@ export default async function HiddenTagPage() {
   ]);
 
   return (
-    <SiteGrid
+    <AppGrid
       contentMain={<div className="space-y-4 mt-4">
         <AnimateItems
           type="bottom"

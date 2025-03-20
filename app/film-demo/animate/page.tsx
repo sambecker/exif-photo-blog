@@ -1,6 +1,6 @@
 'use client';
 
-import SiteGrid from '@/components/SiteGrid';
+import AppGrid from '@/components/AppGrid';
 import { clsx } from 'clsx/lite';
 import {
   FILM_SIMULATION_FORM_INPUT_OPTIONS,
@@ -19,7 +19,7 @@ export default function FilmPage() {
   });
 
   return (
-    <SiteGrid
+    <AppGrid
       contentMain={<div className={clsx(
         'flex items-center justify-center min-h-[30rem]',
       )}>

@@ -1,6 +1,6 @@
 'use client';
 
-import SiteGrid from '@/components/SiteGrid';
+import AppGrid from '@/components/AppGrid';
 import PhotoGrid from './PhotoGrid';
 import PhotoGridInfinite from './PhotoGridInfinite';
 import { clsx } from 'clsx/lite';
@@ -32,7 +32,7 @@ export default function PhotoGridContainer({
     setShouldAnimateDynamicItems(true), []);
 
   return (
-    <SiteGrid
+    <AppGrid
       contentMain={<div className={clsx(
         header && 'space-y-8 mt-1.5',
       )}>

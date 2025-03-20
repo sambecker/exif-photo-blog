@@ -8,7 +8,7 @@ import {
   useMemo,
   useRef,
 } from 'react';
-import SiteGrid from '@/components/SiteGrid';
+import AppGrid from '@/components/AppGrid';
 import Spinner from '@/components/Spinner';
 import { getPhotosCachedAction, getPhotosAction } from '@/photo/actions';
 import { Photo } from '.';
@@ -164,7 +164,7 @@ export default function InfinitePhotoScroll({
         revalidatePhoto,
       })}
       {!isFinished && (wrapMoreButtonInGrid
-        ? <SiteGrid contentMain={renderMoreButton()} />
+        ? <AppGrid contentMain={renderMoreButton()} />
         : renderMoreButton())}
     </div>
   );

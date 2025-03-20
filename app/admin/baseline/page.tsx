@@ -4,7 +4,7 @@ import PhotoCamera from '@/camera/PhotoCamera';
 import Badge from '@/components/Badge';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
-import SiteGrid from '@/components/SiteGrid';
+import AppGrid from '@/components/AppGrid';
 import EntityLink from '@/components/primitives/EntityLink';
 import LabeledIcon from '@/components/primitives/LabeledIcon';
 import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
@@ -31,7 +31,7 @@ export default function ComponentsPage() {
   }, [setShouldShowBaselineGrid]);
 
   return (
-    <SiteGrid
+    <AppGrid
       contentMain={<>
         <h1 className="flex mb-6">
           <div className="grow">
