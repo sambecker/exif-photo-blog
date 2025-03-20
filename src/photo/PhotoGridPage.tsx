@@ -24,17 +24,6 @@ export default function PhotoGridPage({
     [setSelectedPhotoIds],
   );
 
-  const renderGuard = (side: 'top' | 'bottom') =>
-    <div
-      className={clsx(
-        'absolute left-0 right-0',
-        side === 'top'
-          ? 'top-0 bg-linear-to-b from-white dark:from-black'
-          : 'bottom-0 bg-linear-to-t from-white dark:from-black',
-        'h-6 z-10 pointer-events-none',
-      )}
-    />;
-
   return (
     <PhotoGridContainer
       cacheKey={`page-${PATH_GRID_INFERRED}`}
@@ -46,8 +35,11 @@ export default function PhotoGridPage({
             'sticky top-0 -mb-5 -mt-5',
             'max-h-screen h-full',
           )}
+          style={{
+            // eslint-disable-next-line max-len
+            maskImage: 'linear-gradient(to bottom, transparent, black 24px, black calc(100% - 24px), transparent)',
+          }}
         >
-          {renderGuard('top')}
           <div className={clsx(
             'max-h-full overflow-y-auto [scrollbar-width:none]',
             'py-4',
@@ -58,7 +50,6 @@ export default function PhotoGridPage({
             }}
             />
           </div>
-          {renderGuard('bottom')}
         </div>
       }
       canSelect
