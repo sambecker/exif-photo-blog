@@ -1,34 +1,21 @@
 'use client';
 
-import { Tags } from '@/tag';
 import { Photo } from '.';
-import { Cameras } from '@/camera';
-import { FilmSimulations } from '@/simulation';
 import { PATH_GRID_INFERRED } from '@/app/paths';
 import PhotoGridSidebar from './PhotoGridSidebar';
 import PhotoGridContainer from './PhotoGridContainer';
 import { useEffect } from 'react';
 import { useAppState } from '@/state/AppState';
 import clsx from 'clsx/lite';
-import { Recipes } from '@/recipe';
-import { Lenses } from '@/lens';
+import { PhotoSetCategories } from '@/category';
 
 export default function PhotoGridPage({
   photos,
   photosCount,
-  cameras,
-  lenses,
-  tags,
-  simulations,
-  recipes,
-}: {
+  ...categories
+}: PhotoSetCategories & {
   photos: Photo[]
   photosCount: number
-  cameras: Cameras
-  lenses: Lenses
-  tags: Tags
-  simulations: FilmSimulations
-  recipes: Recipes
 }) {
   const { setSelectedPhotoIds } = useAppState();
 
@@ -66,11 +53,7 @@ export default function PhotoGridPage({
             'py-4',
           )}>
             <PhotoGridSidebar {...{
-              tags,
-              cameras,
-              lenses,
-              simulations,
-              recipes,
+              ...categories,
               photosCount,
             }}
             />

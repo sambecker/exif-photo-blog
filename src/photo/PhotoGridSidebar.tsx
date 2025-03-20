@@ -1,13 +1,13 @@
 'use client';
 
-import { Cameras, sortCamerasWithCount } from '@/camera';
+import { sortCamerasWithCount } from '@/camera';
 import PhotoCamera from '@/camera/PhotoCamera';
 import HeaderList from '@/components/HeaderList';
 import PhotoTag from '@/tag/PhotoTag';
 import { PhotoDateRange, dateRangeForPhotos, photoQuantityText } from '.';
-import { TAG_FAVS, TAG_HIDDEN, Tags, addHiddenToTags } from '@/tag';
+import { TAG_FAVS, TAG_HIDDEN, addHiddenToTags } from '@/tag';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
-import { FilmSimulations, sortFilmSimulationsWithCount } from '@/simulation';
+import { sortFilmSimulationsWithCount } from '@/simulation';
 import FavsTag from '../tag/FavsTag';
 import { useAppState } from '@/state/AppState';
 import { useMemo } from 'react';
@@ -18,15 +18,18 @@ import {
   safelyParseFormattedHtml,
 } from '@/utility/html';
 import { clsx } from 'clsx/lite';
-import { Recipes, sortRecipesWithCount } from '@/recipe';
+import { sortRecipesWithCount } from '@/recipe';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
 import IconCamera from '@/components/icons/IconCamera';
 import IconRecipe from '@/components/icons/IconRecipe';
 import IconTag from '@/components/icons/IconTag';
 import IconFilmSimulation from '@/components/icons/IconFilmSimulation';
 import IconLens from '@/components/icons/IconLens';
-import { Lenses, sortLensesWithCount } from '@/lens';
+import { sortLensesWithCount } from '@/lens';
 import PhotoLens from '@/lens/PhotoLens';
+import IconFocalLength from '@/components/icons/IconFocalLength';
+import { PhotoSetCategories } from '@/category';
+import PhotoFocalLength from '@/focal/PhotoFocalLength';
 
 export default function PhotoGridSidebar({
   cameras,
@@ -34,14 +37,10 @@ export default function PhotoGridSidebar({
   tags,
   simulations,
   recipes,
+  focalLengths,
   photosCount,
   photosDateRange,
-}: {
-  tags: Tags
-  lenses: Lenses
-  cameras: Cameras
-  simulations: FilmSimulations
-  recipes: Recipes
+}: PhotoSetCategories & {
   photosCount: number
   photosDateRange?: PhotoDateRange
 }) {
@@ -177,6 +176,22 @@ export default function PhotoGridSidebar({
     />
     : null;
 
+  const focalLengthsContent = focalLengths.length > 0
+    ? <HeaderList
+      key="focal-lengths"
+      title="Focal Lengths"
+      icon={<IconFocalLength size={13} />}
+      items={focalLengths.map(({ focal, count }) =>
+        <PhotoFocalLength
+          key={focal}
+          focal={focal}
+          countOnHover={count}
+          type="text-only"
+          prefetch={false}
+        />)}
+    />
+    : null;
+
   const photoStatsContent = photosCount > 0
     ? start
       ? <HeaderList
@@ -208,11 +223,12 @@ export default function PhotoGridSidebar({
       />}
       {CATEGORY_VISIBILITY.map(category => {
         switch (category) {
-        case 'tags': return tagsContent;
         case 'cameras': return camerasContent;
         case 'lenses': return lensesContent;
+        case 'tags': return tagsContent;
         case 'recipes': return recipesContent;
         case 'films': return filmsContent;
+        case 'focal-lengths': return focalLengthsContent;
         }
       })}
       {photoStatsContent}

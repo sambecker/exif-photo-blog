@@ -36,6 +36,7 @@ export default async function HomePage() {
     tags,
     simulations,
     recipes,
+    focalLengths,
   ] = await Promise.all([
     getPhotosCached()
       .catch(() => []),
@@ -44,7 +45,7 @@ export default async function HomePage() {
       .catch(() => 0),
     ...(GRID_HOMEPAGE_ENABLED
       ? getPhotoSidebarData()
-      : [[], [], [], [], []]),
+      : [[], [], [], [], [], [], []]),
   ]);
 
   return (
@@ -59,6 +60,7 @@ export default async function HomePage() {
             tags,
             simulations,
             recipes,
+            focalLengths,
           }}
         />
         : <PhotoFeedPage {...{ photos, photosCount }} />

@@ -218,6 +218,8 @@ export const SHOW_RECIPES =
   CATEGORY_VISIBILITY.includes('recipes');
 export const SHOW_FILM_SIMULATIONS =
   CATEGORY_VISIBILITY.includes('films');
+export const SHOW_FOCAL_LENGTHS =
+  CATEGORY_VISIBILITY.includes('focal-lengths');
 export const SHOW_EXIF_DATA =
   process.env.NEXT_PUBLIC_HIDE_EXIF_DATA !== '1';
 export const SHOW_ZOOM_CONTROLS =

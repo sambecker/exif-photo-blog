@@ -30,6 +30,7 @@ export default async function GridPage() {
     tags,
     simulations,
     recipes,
+    focalLengths,
   ] = await Promise.all([
     getPhotosCached()
       .catch(() => []),
@@ -50,6 +51,7 @@ export default async function GridPage() {
           tags,
           simulations,
           recipes,
+          focalLengths,
         }}
       />
       : <PhotosEmptyState />
