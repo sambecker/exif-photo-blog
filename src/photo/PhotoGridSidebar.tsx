@@ -213,7 +213,7 @@ export default function PhotoGridSidebar({
         items={[<p
           key="about"
           className={clsx(
-            'max-w-60 normal-case text-main',
+            'max-w-60 normal-case text-dim',
             htmlHasBrParagraphBreaks(SITE_ABOUT) && 'pb-2',
           )}
           dangerouslySetInnerHTML={{
