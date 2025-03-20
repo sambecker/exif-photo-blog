@@ -17,6 +17,7 @@ export default function SignInOrUploadClient({
   return (
     <div className={clsx(
       'flex justify-center items-center flex-col gap-4',
+      'min-h-[4.5rem]',
     )}>
       <div>
         {isCheckingAuth
