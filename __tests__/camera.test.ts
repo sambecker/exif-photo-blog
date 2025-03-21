@@ -74,7 +74,7 @@ describe('Camera', () => {
     expect(formatCameraText(RICOH, 'short')).toBe('GR III');
     expect(formatCameraText(NIKON, 'short')).toBe('D7000');
   });
-  it('formats sony cameras', () => {
+  it('formats Sony cameras', () => {
     Object.entries(SONY_CAMERAS).forEach(([model, expected]) => {
       const camera = { make: MAKE_SONY, model };
       expect(formatCameraText(camera, 'medium'))
