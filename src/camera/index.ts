@@ -1,5 +1,6 @@
 import type { Photo } from '@/photo';
 import { isCameraMakeApple } from '@/platforms/apple';
+import { formatSonyModel, isMakeSony } from '@/platforms/sony';
 import { parameterize } from '@/utility/string';
 
 const CAMERA_PLACEHOLDER: Camera = { make: 'Camera', model: 'Model' };
@@ -58,7 +59,7 @@ export const cameraFromPhoto = (
     : fallback ?? CAMERA_PLACEHOLDER;
 
 export const formatCameraText = (
-  { make, model: modelRaw }: Camera,
+  { make, model: _model }: Camera,
   length:
     'long' |    // Unmodified make and model
     'medium' |  // Make and model, with modifiers removed
@@ -67,11 +68,11 @@ export const formatCameraText = (
 ) => {
   // Capture simple make without modifiers like 'Corporation' or 'Company'
   const makeSimple = make.match(/^(\S+)/)?.[1];
+  let model = isMakeSony(make) ? formatSonyModel(_model) : _model;
   const doesModelStartWithMake = (
     makeSimple &&
-    modelRaw.toLocaleLowerCase().startsWith(makeSimple.toLocaleLowerCase())
+    model.toLocaleLowerCase().startsWith(makeSimple.toLocaleLowerCase())
   );
-  let model = modelRaw;
   switch (length) {
   case 'long':
     return `${make} ${model}`;
