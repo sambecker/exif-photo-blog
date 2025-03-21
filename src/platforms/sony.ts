@@ -11,19 +11,18 @@ export const formatSonyModel = (model: string) => {
     type,
     series,
     letter,
-    _version,
+    version,
     modifier,
   // eslint-disable-next-line max-len
   ] = /^SONY (ILCE|ILME)-([0-9]*)([a-ln-z]*)M*([0-9]*)([a-z]*)/gi.exec(model) ?? [];
-  const version = parseInt(_version ?? '0');
-  const versionRomanNumber = version > 1 && version < 10
-    ? ` ${convertNumberToRomanNumeral(version)}`
-    : undefined;
+  const versionNumber = parseInt(version || '0');
+  const versionRomanNumeral = versionNumber > 1 && versionNumber < 10
+    ? ` ${convertNumberToRomanNumeral(versionNumber)}`
+    : '';
   if (type === 'ILCE' || type === 'ILME') {
     return type === 'ILCE'
-      // eslint-disable-next-line max-len
-      ? `A${series}${letter}${versionRomanNumber || version || ''}${modifier || ''}`
-      : `FX${series}${_version}`;
+      ? `A${series}${letter}${versionRomanNumeral || version}${modifier}`
+      : `FX${series}${version}`;
   }
   return model;
 };
