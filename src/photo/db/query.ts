@@ -527,12 +527,12 @@ export const getPhotosMeta = (options: GetPhotosOptions = {}) =>
       }));
   }, 'getPhotosMeta');
 
-export const getPhotoIds = async ({ limit }: { limit?: number }) =>
+export const getPublicPhotoIds = async ({ limit }: { limit?: number }) =>
   safelyQueryPhotos(() => (limit
-    ? sql`SELECT id FROM photos LIMIT ${limit}`
-    : sql`SELECT id FROM photos`)
+    ? sql`SELECT id FROM photos WHERE hidden IS NOT TRUE LIMIT ${limit}`
+    : sql`SELECT id FROM photos WHERE hidden IS NOT TRUE`)
     .then(({ rows }) => rows.map(({ id }) => id as string))
-  , 'getPhotoIds');
+  , 'getPublicPhotoIds');
 
 export const getPhoto = async (
   id: string,

@@ -7,7 +7,7 @@ import {
   STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES,
 } from '@/app/config';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
-import { getPhotoIds } from '@/photo/db/query';
+import { getPublicPhotoIds } from '@/photo/db/query';
 import { depluralize, pluralize } from '@/utility/string';
 
 type StaticOutput = 'page' | 'image';
@@ -23,7 +23,9 @@ export const staticallyGeneratePhotosIfConfigured = (type: StaticOutput) =>
     (type === 'image' && STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES)
   )
     ? async () => {
-      const photos = await getPhotoIds({ limit: GENERATE_STATIC_PARAMS_LIMIT });
+      const photos = await getPublicPhotoIds({
+        limit: GENERATE_STATIC_PARAMS_LIMIT,
+      });
       if (IS_BUILDING) {
         logStaticGenerationDetails(photos.length, `photo ${type}`);
       }
