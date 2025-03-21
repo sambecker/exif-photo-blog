@@ -13,7 +13,6 @@ export const formatSonyModel = (model: string) => {
     letter,
     version,
     modifier,
-  // eslint-disable-next-line max-len
   ] = /^(ILCE|ILME)-([0-9]*)([a-ln-z]*)M*([0-9]*)([a-z]*)/gi.exec(model) ?? [];
   const versionNumber = parseInt(version || '0');
   const versionRomanNumeral = versionNumber > 1 && versionNumber < 10

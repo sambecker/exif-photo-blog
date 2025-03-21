@@ -12,7 +12,7 @@ const RICOH     : Camera = {
   model: 'RICOH GR III',
 };
 
-export const SONY_CAMERAS = {
+export const SONY_MODELS = {
   'ILCE-1M2': 'A1 II',
   'ILCE-1': 'A1',
   'ILCE-9M3': 'A9 III',
@@ -75,10 +75,10 @@ describe('Camera', () => {
     expect(formatCameraText(NIKON, 'short')).toBe('D7000');
   });
   it('formats Sony cameras', () => {
-    Object.entries(SONY_CAMERAS).forEach(([model, expected]) => {
+    Object.entries(SONY_MODELS).forEach(([model, expected]) => {
       const camera = { make: MAKE_SONY, model };
       expect(formatCameraText(camera, 'medium'))
-        .toBe(expected.toLocaleUpperCase());
+        .toBe(`${MAKE_SONY} ${expected}`.toLocaleUpperCase());
     });
   });
 });
