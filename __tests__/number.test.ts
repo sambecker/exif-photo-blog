@@ -1,6 +1,22 @@
-import { roundToString, roundToNumber } from '@/utility/number';
+import {
+  convertNumberToRomanNumeral,
+  roundToString,
+  roundToNumber,
+} from '@/utility/number';
 
 describe('number', () => {
+  it('converts to roman numerals', () => {
+    expect(convertNumberToRomanNumeral(1)).toBe('I');
+    expect(convertNumberToRomanNumeral(2)).toBe('II');
+    expect(convertNumberToRomanNumeral(3)).toBe('III');
+    expect(convertNumberToRomanNumeral(4)).toBe('IV');
+    expect(convertNumberToRomanNumeral(5)).toBe('V');
+    expect(convertNumberToRomanNumeral(6)).toBe('VI');
+    expect(convertNumberToRomanNumeral(7)).toBe('VII');
+    expect(convertNumberToRomanNumeral(8)).toBe('VIII');
+    expect(convertNumberToRomanNumeral(9)).toBe('IX');
+    expect(convertNumberToRomanNumeral(10)).toBe('X');
+  });
   describe('rounds to a', () => {
     it('string', () => {
       expect(roundToString(1.2345, 1)).toBe('1.2');
