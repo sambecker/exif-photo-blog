@@ -1,5 +1,5 @@
 import { Camera, formatCameraText } from '@/camera';
-import { MAKE_} from '@/platforms/sony';
+import { MAKE_SONY } from '@/platforms/sony';
 
 const APPLE     : Camera = { make: 'Apple', model: 'iPhone 11 Pro' };
 const APPLE_01  : Camera = { make: 'Apple', model: 'iPhone 11' };
