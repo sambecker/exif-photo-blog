@@ -28,7 +28,7 @@ export default function AdminUploadPanel({
   return (
     <AppGrid
       className={clsx(
-        ((!isUploading || uploadError) || hideUploadPanel) && 'hidden',
+        ((!isUploading && !uploadError) || hideUploadPanel) && 'hidden',
       )}
       contentMain={
         <Container

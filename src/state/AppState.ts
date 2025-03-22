@@ -24,12 +24,6 @@ export type AppStateContext = {
   clearNextPhotoAnimation?: () => void
   shouldRespondToKeyboardCommands?: boolean
   setShouldRespondToKeyboardCommands?: Dispatch<SetStateAction<boolean>>
-  // UPLOAD
-  startUpload?: (onStart?: () => void) => void
-  uploadInputRef?: RefObject<HTMLInputElement | null>
-  uploadState: UploadState
-  setUploadState?: (uploadState: Partial<UploadState>) => void
-  resetUploadState?: () => void
   // MODAL
   isCommandKOpen?: boolean
   setIsCommandKOpen?: Dispatch<SetStateAction<boolean>>
@@ -54,6 +48,12 @@ export type AppStateContext = {
   isPerformingSelectEdit?: boolean
   setIsPerformingSelectEdit?: Dispatch<SetStateAction<boolean>>
   insightsIndicatorStatus?: InsightsIndicatorStatus
+  // UPLOAD
+  startUpload?: (onStart?: () => void) => void
+  uploadInputRef?: RefObject<HTMLInputElement | null>
+  uploadState: UploadState
+  setUploadState?: (uploadState: Partial<UploadState>) => void
+  resetUploadState?: () => void
   // DEBUG
   isGridHighDensity?: boolean
   setIsGridHighDensity?: Dispatch<SetStateAction<boolean>>

@@ -45,10 +45,6 @@ export default function AppStateProvider({
     useState<AnimationConfig>();
   const [shouldRespondToKeyboardCommands, setShouldRespondToKeyboardCommands] =
     useState(true);
-  // UPLOAD
-  const uploadInputRef = useRef<HTMLInputElement>(null);
-  const [uploadState, _setUploadState] =
-    useState(INITIAL_UPLOAD_STATE);
   // MODAL
   const [isCommandKOpen, setIsCommandKOpen] =
     useState(false);
@@ -68,6 +64,9 @@ export default function AppStateProvider({
     useState<string[] | undefined>();
   const [isPerformingSelectEdit, setIsPerformingSelectEdit] =
     useState(false);
+  // UPLOAD
+  const uploadInputRef = useRef<HTMLInputElement>(null);
+  const [uploadState, _setUploadState] = useState(INITIAL_UPLOAD_STATE);
   // DEBUG
   const [isGridHighDensity, setIsGridHighDensity] =
     useState(HIGH_DENSITY_GRID);
@@ -135,7 +134,7 @@ export default function AppStateProvider({
     if (isPathAdmin(pathname)) { router.push(PATH_SIGN_IN); }
   }, [router, pathname]);
 
-  // Returns false when an upload is cancelled
+  // Returns false when upload is cancelled
   const startUpload = useCallback(() => new Promise<boolean>(resolve => {
     if (uploadInputRef.current) {
       uploadInputRef.current.value = '';
@@ -168,12 +167,6 @@ export default function AppStateProvider({
         clearNextPhotoAnimation: () => setNextPhotoAnimation?.(undefined),
         shouldRespondToKeyboardCommands,
         setShouldRespondToKeyboardCommands,
-        // UPLOAD
-        uploadInputRef,
-        startUpload,
-        uploadState,
-        setUploadState,
-        resetUploadState,
         // MODAL
         isCommandKOpen,
         setIsCommandKOpen,
@@ -198,6 +191,12 @@ export default function AppStateProvider({
         setSelectedPhotoIds,
         isPerformingSelectEdit,
         setIsPerformingSelectEdit,
+        // UPLOAD
+        uploadInputRef,
+        startUpload,
+        uploadState,
+        setUploadState,
+        resetUploadState,
         // DEBUG
         isGridHighDensity,
         setIsGridHighDensity,

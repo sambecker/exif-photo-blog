@@ -132,7 +132,7 @@ export default function PhotoUploadWithStatus({
                   console.error(error);
                   setUploadState?.({
                     isUploading: false,
-                    uploadError: `Upload Error: ${error.message}`,
+                    uploadError: error.message,
                   });
                 });
             }
@@ -142,8 +142,7 @@ export default function PhotoUploadWithStatus({
         />
       </div>
       {showStatusText && <div className={clsx(
-        'flex items-center gap-4',
-        'truncate',
+        'flex items-center gap-4 overflow-hidden',
       )}>
         {isUploading && !showButton &&
           <Spinner
@@ -151,32 +150,32 @@ export default function PhotoUploadWithStatus({
             color="text"
             size={14}
           />}
-        <span className="truncate">
-          {isUploading
-            ? isFinishing
-              ? <>
-                Finishing ...
-              </>
-              : <>
-                {!showButton && uploadStatusText
-                  ? <>
-                    <ResponsiveText shortText={uploadStatusText}>
-                      Uploading {uploadStatusText}
-                    </ResponsiveText>
-                    {': '}
-                    {fileUploadName}
-                  </>
-                  : <ResponsiveText shortText={fileUploadName}>
-                    Uploading {fileUploadName}
-                  </ResponsiveText>}
-              </>
-            : !showButton && <>Initializing</>}
-        </span>
+        {uploadError
+          ? <span className="text-error">
+            {uploadError}
+          </span>
+          : <span className="truncate">
+            {isUploading
+              ? isFinishing
+                ? <>
+                  Finishing ...
+                </>
+                : <>
+                  {!showButton && uploadStatusText
+                    ? <>
+                      <ResponsiveText shortText={uploadStatusText}>
+                        Uploading {uploadStatusText}
+                      </ResponsiveText>
+                      {': '}
+                      {fileUploadName}
+                    </>
+                    : <ResponsiveText shortText={fileUploadName}>
+                      Uploading {fileUploadName}
+                    </ResponsiveText>}
+                </>
+              : !showButton && <>Initializing</>}
+          </span>}
       </div>}
-      {uploadError &&
-        <div className="text-error">
-          {uploadError}
-        </div>}
       {debug && debugDownload &&
         <a
           className="block"
