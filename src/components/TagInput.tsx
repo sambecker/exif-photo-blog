@@ -239,7 +239,12 @@ export default function TagInput({
       onFocus={() => setShouldShowMenu(true)}
       onBlur={e => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
-          setInputText('');
+          // Capture text on blur if limit not yet reached
+          if (inputText && !hasReachedLimit) {
+            addOptions([inputText]);
+          } else {
+            setInputText('');
+          }
           hideMenu();
         }
       }}
