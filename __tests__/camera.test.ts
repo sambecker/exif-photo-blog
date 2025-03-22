@@ -12,44 +12,44 @@ const RICOH     : Camera = {
   model: 'RICOH GR III',
 };
 
-export const SONY_CAMERAS = {
-  'SONY ILCE-1M2': 'Sony A1 II',
-  'SONY ILCE-1': 'Sony A1',
-  'SONY ILCE-9M3': 'Sony A9 III',
-  'SONY ILCE-9M2': 'Sony A9 II',
-  'SONY ILCE-9': 'Sony A9',
-  'SONY ILCE-7RM5': 'Sony A7R V',
-  'SONY ILCE-7RM4': 'Sony A7R IV',
-  'SONY ILCE-7RM4A': 'Sony A7R IVA',
-  'SONY ILCE-7RM3': 'Sony A7R III',
-  'SONY ILCE-7RM3A': 'Sony A7R IIIA',
-  'SONY ILCE-7RM2': 'Sony A7R II',
-  'SONY ILCE-7R': 'Sony A7R',
-  'SONY ILCE-7SM3': 'Sony A7S III',
-  'SONY ILCE-7SM2': 'Sony A7S II',
-  'SONY ILCE-7S': 'Sony A7S',
-  'SONY ILCE-7M4': 'Sony A7 IV',
-  'SONY ILCE-7M3': 'Sony A7 III',
-  'SONY ILCE-7M2': 'Sony A7 II',
-  'SONY ILCE-7': 'Sony A7',
-  'SONY ILCE-7CR': 'Sony A7CR',
-  'SONY ILCE-7CM2': 'Sony A7C II',
-  'SONY ILCE-7C': 'Sony A7C',
-  'SONY ILCE-6700': 'Sony A6700',
-  'SONY ILCE-6600': 'Sony A6600',
-  'SONY ILCE-6500': 'Sony A6500',
-  'SONY ILCE-6400': 'Sony A6400',
-  'SONY ILCE-6300': 'Sony A6300',
-  'SONY ILCE-6100': 'Sony A6100',
-  'SONY ILCE-6000': 'Sony A6000',
-  'SONY ILCE-5100': 'Sony A5100',
-  'SONY ILCE-5000': 'Sony A5000',
-  'SONY ILCE-3500': 'Sony A3500',
-  'SONY ILCE-3000': 'Sony A3000',
-  'SONY ILME-FX3': 'Sony FX3',
-  'SONY ILME-FX6V': 'Sony FX6',
-  'SONY ILME-FX6VK': 'Sony FX6',
-  'SONY ILCE-QX1': 'Sony AQX1',
+export const SONY_MODELS = {
+  'ILCE-1M2': 'A1 II',
+  'ILCE-1': 'A1',
+  'ILCE-9M3': 'A9 III',
+  'ILCE-9M2': 'A9 II',
+  'ILCE-9': 'A9',
+  'ILCE-7RM5': 'A7R V',
+  'ILCE-7RM4': 'A7R IV',
+  'ILCE-7RM4A': 'A7R IVA',
+  'ILCE-7RM3': 'A7R III',
+  'ILCE-7RM3A': 'A7R IIIA',
+  'ILCE-7RM2': 'A7R II',
+  'ILCE-7R': 'A7R',
+  'ILCE-7SM3': 'A7S III',
+  'ILCE-7SM2': 'A7S II',
+  'ILCE-7S': 'A7S',
+  'ILCE-7M4': 'A7 IV',
+  'ILCE-7M3': 'A7 III',
+  'ILCE-7M2': 'A7 II',
+  'ILCE-7': 'A7',
+  'ILCE-7CR': 'A7CR',
+  'ILCE-7CM2': 'A7C II',
+  'ILCE-7C': 'A7C',
+  'ILCE-6700': 'A6700',
+  'ILCE-6600': 'A6600',
+  'ILCE-6500': 'A6500',
+  'ILCE-6400': 'A6400',
+  'ILCE-6300': 'A6300',
+  'ILCE-6100': 'A6100',
+  'ILCE-6000': 'A6000',
+  'ILCE-5100': 'A5100',
+  'ILCE-5000': 'A5000',
+  'ILCE-3500': 'A3500',
+  'ILCE-3000': 'A3000',
+  'ILME-FX3': 'FX3',
+  'ILME-FX6V': 'FX6',
+  'ILME-FX6VK': 'FX6',
+  'ILCE-QX1': 'AQX1',
 };
 
 describe('Camera', () => {
@@ -75,10 +75,10 @@ describe('Camera', () => {
     expect(formatCameraText(NIKON, 'short')).toBe('D7000');
   });
   it('formats Sony cameras', () => {
-    Object.entries(SONY_CAMERAS).forEach(([model, expected]) => {
+    Object.entries(SONY_MODELS).forEach(([model, expected]) => {
       const camera = { make: MAKE_SONY, model };
       expect(formatCameraText(camera, 'medium'))
-        .toBe(expected.toLocaleUpperCase());
+        .toBe(`${MAKE_SONY} ${expected}`.toLocaleUpperCase());
     });
   });
 });
