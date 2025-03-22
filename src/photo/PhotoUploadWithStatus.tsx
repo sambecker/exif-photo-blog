@@ -74,7 +74,9 @@ export default function PhotoUploadWithStatus({
   }, [resetUploadState]);
   const isFinishing = isPending && shouldResetUploadStateAfterPending.current;
 
-  const uploadNumberText = `${fileUploadIndex + 1} of ${filesLength}`;
+  const uploadStatusText = filesLength > 1
+    ? `${fileUploadIndex + 1} of ${filesLength}`
+    : undefined;
 
   return (
     <div className={clsx(
@@ -127,6 +129,7 @@ export default function PhotoUploadWithStatus({
                   }
                 })
                 .catch(error => {
+                  console.error(error);
                   setUploadState?.({
                     isUploading: false,
                     uploadError: `Upload Error: ${error.message}`,
@@ -155,17 +158,25 @@ export default function PhotoUploadWithStatus({
                 Finishing ...
               </>
               : <>
-                {!showButton && <>
-                  <ResponsiveText shortText={uploadNumberText}>
-                    Uploading {uploadNumberText}
-                  </ResponsiveText>
-                  {': '}
-                </>}
-                {fileUploadName}
+                {!showButton && uploadStatusText
+                  ? <>
+                    <ResponsiveText shortText={uploadStatusText}>
+                      Uploading {uploadStatusText}
+                    </ResponsiveText>
+                    {': '}
+                    {fileUploadName}
+                  </>
+                  : <ResponsiveText shortText={fileUploadName}>
+                    Uploading {fileUploadName}
+                  </ResponsiveText>}
               </>
             : !showButton && <>Initializing</>}
         </span>
       </div>}
+      {uploadError &&
+        <div className="text-error">
+          {uploadError}
+        </div>}
       {debug && debugDownload &&
         <a
           className="block"
@@ -174,10 +185,6 @@ export default function PhotoUploadWithStatus({
         >
           Download
         </a>}
-      {uploadError &&
-        <div className="text-error">
-          {uploadError}
-        </div>}
     </div>
   );
 };

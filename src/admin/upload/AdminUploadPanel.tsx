@@ -20,13 +20,16 @@ export default function AdminUploadPanel({
     uploadState: {
       isUploading,
       hideUploadPanel,
+      uploadError,
     },
     resetUploadState,
   } = useAppState();
 
   return (
     <AppGrid
-      className={clsx((!isUploading || hideUploadPanel) && 'hidden')}
+      className={clsx(
+        ((!isUploading || uploadError) || hideUploadPanel) && 'hidden',
+      )}
       contentMain={
         <Container
           color="gray"
