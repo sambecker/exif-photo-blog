@@ -36,7 +36,7 @@ export default function PhotoCamera({
         />
         : <IconCamera
           size={15}
-          className="translate-x-[-0.5px]"
+          className="translate-x-[-0.5px] translate-y-[-0.5px]"
         />}
       type={type}
       className={className}
