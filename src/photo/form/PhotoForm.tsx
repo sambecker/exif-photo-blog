@@ -108,8 +108,8 @@ export default function PhotoForm({
             let a = currentForm[key];
             let b = value;
             if (FIELDS_WITH_JSON.includes(key)) {
-              a = JSON.parse(a ?? '');
-              b = JSON.parse(b ?? '');
+              a = a ? JSON.parse(a) : undefined;
+              b = b ? JSON.parse(b) : undefined;
             }
             if (!deepEqual(a, b)) {
               changedKeys.push(key as keyof PhotoFormData);
