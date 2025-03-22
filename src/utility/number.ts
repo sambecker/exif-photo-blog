@@ -25,7 +25,9 @@ const formatDecimalToFraction = (_decimal: number) => {
   // Prevent imprecision which causes numbers such as,
   // 0.1 to equal 0.10000000000000009
   const decimal = parseFloat(_decimal.toPrecision(8));
-  if (Math.abs(Math.abs(decimal) - 0.33) < 0.011) {
+  if (Math.abs(Math.abs(decimal) - 0.166) < 0.001) {
+    return '1/6';
+  } else if (Math.abs(Math.abs(decimal) - 0.33) < 0.011) {
     return '1/3';
   } else if (Math.abs(Math.abs(decimal) - 0.66) <= 0.011) {
     return '2/3';
