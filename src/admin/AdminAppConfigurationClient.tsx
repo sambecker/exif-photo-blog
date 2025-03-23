@@ -73,6 +73,7 @@ export default function AdminAppConfigurationClient({
   // Display
   categoryVisibility,
   hasCategoryVisibility,
+  collapseSidebarCategories,
   showExifInfo,
   showZoomControls,
   showTakenAtTimeHidden,
@@ -519,6 +520,15 @@ export default function AdminAppConfigurationClient({
             by storing comma-separated values
             (default: {`"${DEFAULT_CATEGORY_KEYS.join(',')}"`}):
             {renderEnvVars(['NEXT_PUBLIC_CATEGORY_VISIBILITY'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Collapse sidebar categories"
+            status={collapseSidebarCategories}
+            optional
+          >
+            Set environment variable to {'"1"'} to show all sidebar
+            category content
+            {renderEnvVars(['NEXT_PUBLIC_EXHAUSTIVE_SIDEBAR_CATEGORIES'])}
           </ChecklistRow>
           <ChecklistRow
             title="Show EXIF data"
