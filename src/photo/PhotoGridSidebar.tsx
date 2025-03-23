@@ -30,7 +30,7 @@ import {
 } from '@/category';
 import PhotoFocalLength from '@/focal/PhotoFocalLength';
 
-const SIDEBAR_ITEM_MAX_COUNT = 24;
+const SIDEBAR_ITEM_MAX_COUNT = 28;
 
 export default function PhotoGridSidebar({
   photosCount,

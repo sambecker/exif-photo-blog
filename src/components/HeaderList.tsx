@@ -69,11 +69,20 @@ export default function HeaderList({
                 'text-xs font-medium tracking-wider',
                 'border-medium rounded-md',
                 'px-[5px] h-5!',
-                'hover:bg-dim active:bg-main',
+                'hover:bg-dim hover:text-main active:bg-main',
+                'group',
               )}
             >
               {<span className="flex items-center gap-1">
-                <span>{isExpanded ? 'LESS' : 'MORE'}</span>
+                {isExpanded
+                  ? 'LESS'
+                  : <>
+                    MORE
+                    <span className="hidden group-hover:inline text-dim!">
+                      {' '}
+                      {items.length - maxItems}
+                    </span>
+                  </>}
                 {isExpanded
                   ? <IoChevronUpOutline size={12} />
                   : <IoChevronDownOutline size={12} />}
