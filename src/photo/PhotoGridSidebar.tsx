@@ -8,7 +8,7 @@ import { TAG_FAVS, TAG_HIDDEN, addHiddenToTags } from '@/tag';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
 import FavsTag from '../tag/FavsTag';
 import { useAppState } from '@/state/AppState';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import HiddenTag from '@/tag/HiddenTag';
 import { CATEGORY_VISIBILITY, SITE_ABOUT } from '@/app/config';
 import {
@@ -29,8 +29,10 @@ import {
   PhotoSetCategories,
 } from '@/category';
 import PhotoFocalLength from '@/focal/PhotoFocalLength';
+import useElementHeight from '@/utility/useElementHeight';
 
 const APPROXIMATE_ITEM_HEIGHT = 34;
+const ABOUT_HEIGHT_OFFSET = 80;
 
 export default function PhotoGridSidebar({
   photosCount,
@@ -56,9 +58,15 @@ export default function PhotoGridSidebar({
     categories,
   );
 
-  const maxItemsPerCategory = containerHeight
+  const aboutRef = useRef<HTMLParagraphElement>(null);
+  const aboutHeight = useElementHeight(aboutRef);
+  const height = containerHeight
+    ? containerHeight - (aboutHeight ? aboutHeight + ABOUT_HEIGHT_OFFSET : 0)
+    : undefined;
+
+  const maxItemsPerCategory = height
     ? Math.max(
-      Math.floor(containerHeight / categoriesCount / APPROXIMATE_ITEM_HEIGHT),
+      Math.floor(height / categoriesCount / APPROXIMATE_ITEM_HEIGHT),
       // Always show at least 2 items
       2,
     )
@@ -239,6 +247,7 @@ export default function PhotoGridSidebar({
       {SITE_ABOUT && <HeaderList
         items={[<p
           key="about"
+          ref={aboutRef}
           className={clsx(
             'max-w-60 normal-case text-dim',
             htmlHasBrParagraphBreaks(SITE_ABOUT) && 'pb-2',
