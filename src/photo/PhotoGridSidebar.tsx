@@ -30,15 +30,17 @@ import {
 } from '@/category';
 import PhotoFocalLength from '@/focal/PhotoFocalLength';
 
-const SIDEBAR_ITEM_MAX_COUNT = 28;
+const APPROXIMATE_ITEM_HEIGHT = 34;
 
 export default function PhotoGridSidebar({
   photosCount,
   photosDateRange,
+  containerHeight,
   ...categories
 }: PhotoSetCategories & {
   photosCount: number
   photosDateRange?: PhotoDateRange
+  containerHeight?: number
 }) {
   const {
     cameras,
@@ -49,14 +51,18 @@ export default function PhotoGridSidebar({
     focalLengths,
   } = categories;
 
-  const itemsCount = getCategoriesWithItemsCount(
+  const categoriesCount = getCategoriesWithItemsCount(
     CATEGORY_VISIBILITY,
     categories,
   );
 
-  const maxItemsPerCategory = Math.floor(
-    SIDEBAR_ITEM_MAX_COUNT / itemsCount,
-  );
+  const maxItemsPerCategory = containerHeight
+    ? Math.max(
+      Math.floor(containerHeight / categoriesCount / APPROXIMATE_ITEM_HEIGHT),
+      // Always show at least 2 items
+      2,
+    )
+    : undefined;
 
   const { start, end } = dateRangeForPhotos(undefined, photosDateRange);
 
