@@ -56,7 +56,10 @@ export default function PhotoGridSidebar({
     ? <HeaderList
       key="cameras"
       title="Cameras"
-      icon={<IconCamera size={15} />}
+      icon={<IconCamera
+        size={15}
+        className="translate-x-[0.5px]"
+      />}
       items={cameras
         .sort(sortCamerasWithCount)
         .map(({ cameraKey, camera, count }) =>
@@ -99,7 +102,7 @@ export default function PhotoGridSidebar({
       title='Tags'
       icon={<IconTag
         size={14}
-        className="translate-y-[1px]"
+        className="translate-x-[1px] translate-y-[1px]"
       />}
       items={tagsIncludingHidden.map(({ tag, count }) => {
         switch (tag) {

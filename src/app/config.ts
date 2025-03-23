@@ -220,6 +220,8 @@ export const SHOW_FILM_SIMULATIONS =
   CATEGORY_VISIBILITY.includes('films');
 export const SHOW_FOCAL_LENGTHS =
   CATEGORY_VISIBILITY.includes('focal-lengths');
+export const COLLAPSE_SIDEBAR_CATEGORIES =
+  process.env.NEXT_PUBLIC_EXPAND_SIDEBAR_CATEGORIES !== '1';
 export const SHOW_EXIF_DATA =
   process.env.NEXT_PUBLIC_HIDE_EXIF_DATA !== '1';
 export const SHOW_ZOOM_CONTROLS =
