@@ -24,22 +24,40 @@ import IconFilmSimulation from '@/components/icons/IconFilmSimulation';
 import IconLens from '@/components/icons/IconLens';
 import PhotoLens from '@/lens/PhotoLens';
 import IconFocalLength from '@/components/icons/IconFocalLength';
-import { PhotoSetCategories } from '@/category';
+import {
+  getCategoriesWithItemsCount,
+  PhotoSetCategories,
+} from '@/category';
 import PhotoFocalLength from '@/focal/PhotoFocalLength';
 
+const SIDEBAR_ITEM_MAX_COUNT = 24;
+
 export default function PhotoGridSidebar({
-  cameras,
-  lenses,
-  tags,
-  simulations,
-  recipes,
-  focalLengths,
   photosCount,
   photosDateRange,
+  ...categories
 }: PhotoSetCategories & {
   photosCount: number
   photosDateRange?: PhotoDateRange
 }) {
+  const {
+    cameras,
+    lenses,
+    tags,
+    simulations,
+    recipes,
+    focalLengths,
+  } = categories;
+
+  const itemsCount = getCategoriesWithItemsCount(
+    CATEGORY_VISIBILITY,
+    categories,
+  );
+
+  const maxItemsPerCategory = Math.floor(
+    SIDEBAR_ITEM_MAX_COUNT / itemsCount,
+  );
+
   const { start, end } = dateRangeForPhotos(undefined, photosDateRange);
 
   const { photosCountHidden } = useAppState();
@@ -56,6 +74,7 @@ export default function PhotoGridSidebar({
         size={15}
         className="translate-x-[0.5px]"
       />}
+      maxItems={maxItemsPerCategory}
       items={cameras
         .map(({ cameraKey, camera, count }) =>
           <PhotoCamera
@@ -76,6 +95,7 @@ export default function PhotoGridSidebar({
       key="lenses"
       title="Lenses"
       icon={<IconLens size={15} />}
+      maxItems={maxItemsPerCategory}
       items={lenses
         .map(({ lensKey, lens, count }) =>
           <PhotoLens
@@ -98,6 +118,7 @@ export default function PhotoGridSidebar({
         size={14}
         className="translate-x-[1px] translate-y-[1px]"
       />}
+      maxItems={maxItemsPerCategory}
       items={tagsIncludingHidden
         .map(({ tag, count }) => {
           switch (tag) {
@@ -142,6 +163,7 @@ export default function PhotoGridSidebar({
         size={16}
         className="translate-x-[-1px]"
       />}
+      maxItems={maxItemsPerCategory}
       items={recipes
         .map(({ recipe, count }) =>
           <PhotoRecipe
@@ -161,6 +183,7 @@ export default function PhotoGridSidebar({
       key="films"
       title="Films"
       icon={<IconFilmSimulation size={15} />}
+      maxItems={maxItemsPerCategory}
       items={simulations
         .map(({ simulation, count }) =>
           <PhotoFilmSimulation
@@ -178,6 +201,7 @@ export default function PhotoGridSidebar({
       key="focal-lengths"
       title="Focal Lengths"
       icon={<IconFocalLength size={13} />}
+      maxItems={maxItemsPerCategory}
       items={focalLengths.map(({ focal, count }) =>
         <PhotoFocalLength
           key={focal}
