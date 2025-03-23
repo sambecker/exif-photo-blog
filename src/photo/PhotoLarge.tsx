@@ -21,7 +21,7 @@ import DownloadButton from '@/components/DownloadButton';
 import PhotoCamera from '../camera/PhotoCamera';
 import { cameraFromPhoto } from '@/camera';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
-import { sortTags } from '@/tag';
+import { sortTagsArray } from '@/tag';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import PhotoLink from './PhotoLink';
 import {
@@ -124,7 +124,7 @@ export default function PhotoLarge({
     refTriggers,
   });
 
-  const tags = sortTags(photo.tags, primaryTag);
+  const tags = sortTagsArray(photo.tags, primaryTag);
 
   const camera = cameraFromPhoto(photo);
   const lens = lensFromPhoto(photo);

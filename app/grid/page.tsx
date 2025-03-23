@@ -4,7 +4,7 @@ import {
 } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
-import { getPhotoSidebarData } from '@/photo/data';
+import { getDataForCategories } from '@/category/data';
 import { getPhotos, getPhotosMeta } from '@/photo/db/query';
 import { cache } from 'react';
 import PhotoGridPage from '@/photo/PhotoGridPage';
@@ -28,8 +28,8 @@ export default async function GridPage() {
     cameras,
     lenses,
     tags,
-    simulations,
     recipes,
+    simulations,
     focalLengths,
   ] = await Promise.all([
     getPhotosCached()
@@ -37,7 +37,7 @@ export default async function GridPage() {
     getPhotosMeta()
       .then(({ count }) => count)
       .catch(() => 0),
-    ...getPhotoSidebarData(),
+    ...getDataForCategories(),
   ]);
 
   return (

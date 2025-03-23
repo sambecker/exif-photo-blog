@@ -8,7 +8,7 @@ import { Metadata } from 'next/types';
 import { cache } from 'react';
 import { getPhotos, getPhotosMeta } from '@/photo/db/query';
 import { GRID_HOMEPAGE_ENABLED } from '@/app/config';
-import { getPhotoSidebarData } from '@/photo/data';
+import { getDataForCategories } from '@/category/data';
 import PhotoGridPage from '@/photo/PhotoGridPage';
 import PhotoFeedPage from '@/photo/PhotoFeedPage';
 
@@ -34,8 +34,8 @@ export default async function HomePage() {
     cameras,
     lenses,
     tags,
-    simulations,
     recipes,
+    simulations,
     focalLengths,
   ] = await Promise.all([
     getPhotosCached()
@@ -44,7 +44,7 @@ export default async function HomePage() {
       .then(({ count }) => count)
       .catch(() => 0),
     ...(GRID_HOMEPAGE_ENABLED
-      ? getPhotoSidebarData()
+      ? getDataForCategories()
       : [[], [], [], [], [], [], []]),
   ]);
 
@@ -58,8 +58,8 @@ export default async function HomePage() {
             cameras,
             lenses,
             tags,
-            simulations,
             recipes,
+            simulations,
             focalLengths,
           }}
         />

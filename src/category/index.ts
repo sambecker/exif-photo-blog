@@ -71,3 +71,7 @@ export const sortCategoryByCount = (
   a: { count: number },
   b: { count: number },
 ) => b.count - a.count;
+
+export const sortCategoriesByCount = <T extends { count: number }>(
+  categories: T[],
+) => categories.sort(sortCategoryByCount);

@@ -50,25 +50,33 @@ export const titleForTag = (
 export const shareTextForTag = (tag: string) =>
   isTagFavs(tag) ? 'Favorite photos' : `Photos tagged '${formatTag(tag)}'`;
 
-export const sortTags = (
+export const sortTagsArray = (
   tags: string[],
   tagToExclude?: string,
 ) => tags
   .filter(tag => tag !== tagToExclude)
   .sort((a, b) => isTagFavs(a) ? -1 : a.localeCompare(b));
 
-export const sortTagsObject = (
+export const sortTags = (
   tags: Tags,
-  tagToHide?: string,
+  tagToExclude?: string,
 ) => tags
-  .filter(({ tag }) => tag!== tagToHide)
+  .filter(({ tag }) => tag!== tagToExclude)
   .sort(({ tag: a }, { tag: b }) => isTagFavs(a) ? -1 : a.localeCompare(b));
 
+export const sortTagsByCount = (
+  tags: Tags,
+  tagToExclude?: string,
+) => tags
+  .filter(({ tag }) => tag !== tagToExclude)
+  .sort(({ tag: tagA, count: a }, { count: b }) =>
+    isTagFavs(tagA) ? -1 : b - a);
+
 export const sortTagsWithoutFavs = (tags: string[]) =>
-  sortTags(tags, TAG_FAVS);
+  sortTagsArray(tags, TAG_FAVS);
 
 export const sortTagsObjectWithoutFavs = (tags: Tags) =>
-  sortTagsObject(tags, TAG_FAVS);
+  sortTags(tags, TAG_FAVS);
 
 export const descriptionForTaggedPhotos = (
   photos: Photo[] = [],

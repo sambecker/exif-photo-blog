@@ -1,20 +1,8 @@
 import CommandKClient from '@/components/cmdk/CommandKClient';
-import {
-  getPhotosMetaCached,
-  getUniqueCamerasCached,
-  getUniqueFilmSimulationsCached,
-  getUniqueLensesCached,
-  getUniqueRecipesCached,
-  getUniqueTagsCached,
-} from '@/photo/cache';
+import { getPhotosMetaCached } from '@/photo/cache';
 import { photoQuantityText } from '@/photo';
-import {
-  ADMIN_DEBUG_TOOLS_ENABLED,
-  SHOW_FILM_SIMULATIONS,
-  SHOW_RECIPES,
-} from './config';
-import { getUniqueFocalLengths } from '@/photo/db/query';
-import { sortCategoryByCount } from '@/category';
+import { ADMIN_DEBUG_TOOLS_ENABLED } from './config';
+import { getDataForCategories } from '@/category/data';
 
 export default async function CommandK() {
   const [
@@ -29,25 +17,16 @@ export default async function CommandK() {
     getPhotosMetaCached()
       .then(({ count }) => count)
       .catch(() => 0),
-    getUniqueCamerasCached().catch(() => []),
-    getUniqueLensesCached().catch(() => []),
-    getUniqueTagsCached().catch(() => []),
-    SHOW_RECIPES
-      ? getUniqueRecipesCached().catch(() => [])
-      : [],
-    SHOW_FILM_SIMULATIONS
-      ? getUniqueFilmSimulationsCached().catch(() => [])
-      : [],
-    getUniqueFocalLengths().catch(() => []),
+    ...getDataForCategories(),
   ]);
 
   return <CommandKClient
-    cameras={cameras.sort(sortCategoryByCount)}
-    lenses={lenses.sort(sortCategoryByCount)}
-    tags={tags.sort(sortCategoryByCount)}
-    simulations={filmSimulations.sort(sortCategoryByCount)}
-    recipes={recipes.sort(sortCategoryByCount)}
-    focalLengths={focalLengths.sort(sortCategoryByCount)}
+    cameras={cameras}
+    lenses={lenses}
+    tags={tags}
+    simulations={filmSimulations}
+    recipes={recipes}
+    focalLengths={focalLengths}
     showDebugTools={ADMIN_DEBUG_TOOLS_ENABLED}
     footer={photoQuantityText(count, false)}
   />;

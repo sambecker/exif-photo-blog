@@ -24,7 +24,7 @@ import IconFilmSimulation from '@/components/icons/IconFilmSimulation';
 import IconLens from '@/components/icons/IconLens';
 import PhotoLens from '@/lens/PhotoLens';
 import IconFocalLength from '@/components/icons/IconFocalLength';
-import { PhotoSetCategories, sortCategoryByCount } from '@/category';
+import { PhotoSetCategories } from '@/category';
 import PhotoFocalLength from '@/focal/PhotoFocalLength';
 
 export default function PhotoGridSidebar({
@@ -57,7 +57,6 @@ export default function PhotoGridSidebar({
         className="translate-x-[0.5px]"
       />}
       items={cameras
-        .sort(sortCategoryByCount)
         .map(({ cameraKey, camera, count }) =>
           <PhotoCamera
             key={cameraKey}
@@ -78,7 +77,6 @@ export default function PhotoGridSidebar({
       title="Lenses"
       icon={<IconLens size={15} />}
       items={lenses
-        .sort(sortCategoryByCount)
         .map(({ lensKey, lens, count }) =>
           <PhotoLens
             key={lensKey}
@@ -145,7 +143,6 @@ export default function PhotoGridSidebar({
         className="translate-x-[-1px]"
       />}
       items={recipes
-        .sort(sortCategoryByCount)
         .map(({ recipe, count }) =>
           <PhotoRecipe
             key={recipe}
@@ -165,7 +162,6 @@ export default function PhotoGridSidebar({
       title="Films"
       icon={<IconFilmSimulation size={15} />}
       items={simulations
-        .sort(sortCategoryByCount)
         .map(({ simulation, count }) =>
           <PhotoFilmSimulation
             key={simulation}

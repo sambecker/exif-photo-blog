@@ -143,11 +143,11 @@ export const getPhotoWithRecipeFromPhotos = (
     ? preferredPhoto
     : photos.find(photoHasRecipe);
 
-export const sortRecipesWithCount = (recipes: Recipes = []) =>
+export const sortRecipes = (recipes: Recipes = []) =>
   recipes.sort((a, b) => a.recipe.localeCompare(b.recipe));
 
 export const convertRecipesForForm = (recipes: Recipes = []) =>
-  sortRecipesWithCount(recipes)
+  sortRecipes(recipes)
     .map(({ recipe, count }) => ({
       value: recipe,
       annotation: formatCount(count),

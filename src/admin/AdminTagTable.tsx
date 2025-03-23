@@ -4,7 +4,7 @@ import AdminTable from '@/admin/AdminTable';
 import { Fragment } from 'react';
 import DeleteFormButton from '@/admin/DeleteFormButton';
 import { photoQuantityText } from '@/photo';
-import { Tags, formatTag, sortTagsObject } from '@/tag';
+import { Tags, formatTag, sortTags } from '@/tag';
 import EditButton from '@/admin/EditButton';
 import { pathForAdminTagEdit } from '@/app/paths';
 import { clsx } from 'clsx/lite';
@@ -17,7 +17,7 @@ export default function AdminTagTable({
 }) {
   return (
     <AdminTable>
-      {sortTagsObject(tags).map(({ tag, count }) =>
+      {sortTags(tags).map(({ tag, count }) =>
         <Fragment key={tag}>
           <div className="pr-2 col-span-2">
             <AdminTagBadge {...{ tag, count }} />
