@@ -14,6 +14,7 @@ import {
   SHOW_RECIPES,
 } from './config';
 import { getUniqueFocalLengths } from '@/photo/db/query';
+import { sortCategoryByCount } from '@/category';
 
 export default async function CommandK() {
   const [
@@ -41,12 +42,12 @@ export default async function CommandK() {
   ]);
 
   return <CommandKClient
-    cameras={cameras}
-    lenses={lenses}
-    tags={tags}
-    simulations={filmSimulations}
-    recipes={recipes}
-    focalLengths={focalLengths}
+    cameras={cameras.sort(sortCategoryByCount)}
+    lenses={lenses.sort(sortCategoryByCount)}
+    tags={tags.sort(sortCategoryByCount)}
+    simulations={filmSimulations.sort(sortCategoryByCount)}
+    recipes={recipes.sort(sortCategoryByCount)}
+    focalLengths={focalLengths.sort(sortCategoryByCount)}
     showDebugTools={ADMIN_DEBUG_TOOLS_ENABLED}
     footer={photoQuantityText(count, false)}
   />;

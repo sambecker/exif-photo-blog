@@ -15,6 +15,7 @@ import {
   formatCount,
   formatCountDescriptive,
 } from '@/utility/string';
+import { sortCategoryByCount } from '@/category';
 
 // Reserved tags
 export const TAG_FAVS   = 'favs';
@@ -105,16 +106,16 @@ export const isPathFavs = (pathname?: string) =>
 
 export const isTagHidden = (tag: string) => tag.toLowerCase() === TAG_HIDDEN;
 
-export const addHiddenToTags = (tags: Tags, photosCountHidden = 0) => {
-  if (photosCountHidden > 0) {
-    return tags
+export const addHiddenToTags = (tags: Tags, photosCountHidden = 0) =>
+  photosCountHidden > 0
+    ? tags
       .filter(({ tag }) => tag === TAG_FAVS)
       .concat({ tag: TAG_HIDDEN, count: photosCountHidden })
-      .concat(tags.filter(({ tag }) => tag !== TAG_FAVS));
-  } else {
-    return tags;
-  }
-};
+      .concat(tags
+        .filter(({ tag }) => tag !== TAG_FAVS)
+        .sort(sortCategoryByCount),
+      )
+    : tags;
 
 export const convertTagsForForm = (tags: Tags = []) =>
   sortTagsObjectWithoutFavs(tags)

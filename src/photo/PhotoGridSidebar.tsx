@@ -1,13 +1,11 @@
 'use client';
 
-import { sortCamerasWithCount } from '@/camera';
 import PhotoCamera from '@/camera/PhotoCamera';
 import HeaderList from '@/components/HeaderList';
 import PhotoTag from '@/tag/PhotoTag';
 import { PhotoDateRange, dateRangeForPhotos, photoQuantityText } from '.';
 import { TAG_FAVS, TAG_HIDDEN, addHiddenToTags } from '@/tag';
 import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
-import { sortFilmSimulationsWithCount } from '@/simulation';
 import FavsTag from '../tag/FavsTag';
 import { useAppState } from '@/state/AppState';
 import { useMemo } from 'react';
@@ -18,17 +16,15 @@ import {
   safelyParseFormattedHtml,
 } from '@/utility/html';
 import { clsx } from 'clsx/lite';
-import { sortRecipesWithCount } from '@/recipe';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
 import IconCamera from '@/components/icons/IconCamera';
 import IconRecipe from '@/components/icons/IconRecipe';
 import IconTag from '@/components/icons/IconTag';
 import IconFilmSimulation from '@/components/icons/IconFilmSimulation';
 import IconLens from '@/components/icons/IconLens';
-import { sortLensesWithCount } from '@/lens';
 import PhotoLens from '@/lens/PhotoLens';
 import IconFocalLength from '@/components/icons/IconFocalLength';
-import { PhotoSetCategories } from '@/category';
+import { PhotoSetCategories, sortCategoryByCount } from '@/category';
 import PhotoFocalLength from '@/focal/PhotoFocalLength';
 
 export default function PhotoGridSidebar({
@@ -61,7 +57,7 @@ export default function PhotoGridSidebar({
         className="translate-x-[0.5px]"
       />}
       items={cameras
-        .sort(sortCamerasWithCount)
+        .sort(sortCategoryByCount)
         .map(({ cameraKey, camera, count }) =>
           <PhotoCamera
             key={cameraKey}
@@ -82,7 +78,7 @@ export default function PhotoGridSidebar({
       title="Lenses"
       icon={<IconLens size={15} />}
       items={lenses
-        .sort(sortLensesWithCount)
+        .sort(sortCategoryByCount)
         .map(({ lensKey, lens, count }) =>
           <PhotoLens
             key={lensKey}
@@ -104,38 +100,39 @@ export default function PhotoGridSidebar({
         size={14}
         className="translate-x-[1px] translate-y-[1px]"
       />}
-      items={tagsIncludingHidden.map(({ tag, count }) => {
-        switch (tag) {
-        case TAG_FAVS:
-          return <FavsTag
-            key={TAG_FAVS}
-            countOnHover={count}
-            type="icon-last"
-            prefetch={false}
-            contrast="low"
-            badged
-          />;
-        case TAG_HIDDEN:
-          return <HiddenTag
-            key={TAG_HIDDEN}
-            countOnHover={count}
-            type="icon-last"
-            prefetch={false}
-            contrast="low"
-            badged
-          />;
-        default:
-          return <PhotoTag
-            key={tag}
-            tag={tag}
-            type="text-only"
-            countOnHover={count}
-            prefetch={false}
-            contrast="low"
-            badged
-          />;
-        }
-      })}
+      items={tagsIncludingHidden
+        .map(({ tag, count }) => {
+          switch (tag) {
+          case TAG_FAVS:
+            return <FavsTag
+              key={TAG_FAVS}
+              countOnHover={count}
+              type="icon-last"
+              prefetch={false}
+              contrast="low"
+              badged
+            />;
+          case TAG_HIDDEN:
+            return <HiddenTag
+              key={TAG_HIDDEN}
+              countOnHover={count}
+              type="icon-last"
+              prefetch={false}
+              contrast="low"
+              badged
+            />;
+          default:
+            return <PhotoTag
+              key={tag}
+              tag={tag}
+              type="text-only"
+              countOnHover={count}
+              prefetch={false}
+              contrast="low"
+              badged
+            />;
+          }
+        })}
     />
     : null;
 
@@ -147,7 +144,8 @@ export default function PhotoGridSidebar({
         size={16}
         className="translate-x-[-1px]"
       />}
-      items={sortRecipesWithCount(recipes)
+      items={recipes
+        .sort(sortCategoryByCount)
         .map(({ recipe, count }) =>
           <PhotoRecipe
             key={recipe}
@@ -167,7 +165,7 @@ export default function PhotoGridSidebar({
       title="Films"
       icon={<IconFilmSimulation size={15} />}
       items={simulations
-        .sort(sortFilmSimulationsWithCount)
+        .sort(sortCategoryByCount)
         .map(({ simulation, count }) =>
           <PhotoFilmSimulation
             key={simulation}

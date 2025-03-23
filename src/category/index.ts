@@ -66,3 +66,8 @@ export const getOrderedCategoriesFromString = (
       .map(category => category.trim().toLocaleLowerCase() as CategoryKey)
       .filter(category => CATEGORY_KEYS.includes(category))
     : DEFAULT_CATEGORY_KEYS;
+
+export const sortCategoryByCount = (
+  a: { count: number },
+  b: { count: number },
+) => b.count - a.count;
