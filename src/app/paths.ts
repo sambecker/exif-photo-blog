@@ -249,11 +249,19 @@ export const isPathFocalLengthPhoto = (pathname = '') =>
 export const checkPathPrefix = (pathname = '', prefix: string) =>
   pathname.toLowerCase().startsWith(prefix);
 
+export const isPathRoot = (pathname?: string) =>
+  pathname === PATH_ROOT;
+
 export const isPathGrid = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_GRID);
 
 export const isPathFeed = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_FEED);
+
+export const isPathTopLevel = (pathname?: string) =>
+  isPathRoot(pathname)||
+  isPathGrid(pathname) ||
+  isPathFeed(pathname);
 
 export const isPathSignIn = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_SIGN_IN);

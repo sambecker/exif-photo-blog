@@ -10,6 +10,7 @@ import {
   isPathAdmin,
   isPathFeed,
   isPathGrid,
+  isPathTopLevel,
   isPathProtected,
   isPathSignIn,
 } from '@/app/paths';
@@ -19,6 +20,8 @@ import {
   HAS_DEFINED_SITE_DESCRIPTION,
   SITE_DESCRIPTION,
 } from './config';
+import { useRef } from 'react';
+import useStickyNav from './useStickyNav';
 
 const NAV_HEIGHT_CLASS = HAS_DEFINED_SITE_DESCRIPTION
   ? 'min-h-[4rem] sm:min-h-[5rem]'
@@ -29,9 +32,17 @@ export default function Nav({
 }: {
   siteDomainOrTitle: string;
 }) {
-  const pathname = usePathname();
+  const ref = useRef<HTMLElement>(null);
 
+  const pathname = usePathname();
   const showNav = !isPathSignIn(pathname);
+  const isHome = isPathTopLevel(pathname);
+
+  const {
+    isNavSticky,
+    shouldHideStickyNav,
+    shouldAnimateStickyNav,
+  } = useStickyNav(ref, isHome);
 
   const renderLink = (
     text: string,
@@ -55,6 +66,9 @@ export default function Nav({
 
   return (
     <AppGrid
+      className={clsx(
+        isNavSticky && 'sticky top-0 z-10',
+      )}
       contentMain={
         <AnimateItems
           animateOnFirstLoadOnly
@@ -63,8 +77,14 @@ export default function Nav({
           items={showNav
             ? [<nav
               key="nav"
+              ref={ref}
               className={clsx(
                 'flex items-center w-full',
+                'bg-main',
+                shouldAnimateStickyNav && 'transition-transform duration-200',
+                shouldHideStickyNav
+                  ? 'translate-y-[-100%]'
+                  : 'translate-y-0',
                 NAV_HEIGHT_CLASS,
               )}>
               <ViewSwitcher
