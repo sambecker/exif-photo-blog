@@ -2,8 +2,7 @@
 
 import { blobToImage } from '@/utility/blob';
 import { useRef, RefObject } from 'react';
-import { CopyExif } from '@/utility/exif';
-import exifr from 'exifr';
+import { CopyExif, getOrientation } from '@/utility/exif';
 import { clsx } from 'clsx/lite';
 import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
 import { FiUploadCloud } from 'react-icons/fi';
@@ -131,8 +130,7 @@ export default function ImageInput({
 
                     ctx.save();
                     
-                    let orientation = await exifr
-                      .orientation(file)
+                    let orientation = await getOrientation(file)
                       .catch(() => 1) ?? 1;
 
                     // Preserve EXIF data for PNGs
