@@ -526,8 +526,8 @@ export default function AdminAppConfigurationClient({
             status={collapseSidebarCategories}
             optional
           >
-            Set environment variable to {'"1"'} to show all sidebar
-            category content
+            Set environment variable to {'"1"'} to always show
+            expanded category content
             {renderEnvVars(['NEXT_PUBLIC_EXHAUSTIVE_SIDEBAR_CATEGORIES'])}
           </ChecklistRow>
           <ChecklistRow
