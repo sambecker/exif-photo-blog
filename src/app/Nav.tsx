@@ -79,8 +79,9 @@ export default function Nav({
               key="nav"
               ref={ref}
               className={clsx(
-                'flex items-center w-full',
-                'bg-main',
+                // Enlarge nav to ensure it fully masks underlying content
+                'translate-x-[-20px] w-[calc(100%+40px)] px-[20px] bg-main',
+                'flex items-center',
                 shouldAnimateStickyNav && 'transition-transform duration-200',
                 shouldHideStickyNav
                   ? 'translate-y-[-100%]'
