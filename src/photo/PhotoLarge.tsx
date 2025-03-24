@@ -6,6 +6,7 @@ import {
   doesPhotoNeedBlurCompatibility,
   shouldShowCameraDataForPhoto,
   shouldShowExifDataForPhoto,
+  shouldShowFilmSimulationDataForPhoto,
   shouldShowLensDataForPhoto,
   shouldShowRecipeDataForPhoto,
   titleForPhoto,
@@ -134,9 +135,11 @@ export default function PhotoLarge({
 
   const showCameraContent = showCamera && shouldShowCameraDataForPhoto(photo);
   const showLensContent = showLens && shouldShowLensDataForPhoto(photo);
+  const showTagsContent = tags.length > 0;
   const showRecipeContent = showRecipe && shouldShowRecipeDataForPhoto(photo);
   const showRecipeButton = shouldShowRecipeDataForPhoto(photo);
-  const showTagsContent = tags.length > 0;
+  const showSimulationContent = showSimulation &&
+    shouldShowFilmSimulationDataForPhoto(photo);
 
   useVisible({ ref, onVisible });
 
@@ -153,6 +156,7 @@ export default function PhotoLarge({
     showLensContent ||
     showTagsContent ||
     showRecipeContent ||
+    showSimulationContent ||
     showExifContent;
 
   const hasNonDateContent =
@@ -358,9 +362,9 @@ export default function PhotoLarge({
                   <li>{photo.isoFormatted}</li>
                   <li>{photo.exposureCompensationFormatted ?? '0ev'}</li>
                 </ul>
-                {(showSimulation || showRecipeButton) &&
+                {(showRecipeButton || showSimulationContent) &&
                   <div className="flex items-center gap-2 *:w-auto">
-                    {showSimulation && photo.filmSimulation &&
+                    {showSimulationContent && photo.filmSimulation &&
                       <PhotoFilmSimulation
                         simulation={photo.filmSimulation}
                         prefetch={prefetchRelatedLinks}

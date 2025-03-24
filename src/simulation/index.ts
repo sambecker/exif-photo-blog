@@ -79,3 +79,6 @@ export const generateMetaForFilmSimulation = (
   ),
   images: absolutePathForFilmSimulationImage(simulation),
 });
+
+export const photoHasFilmSimulationData = (photo: Photo) =>
+  Boolean(photo.filmSimulation);

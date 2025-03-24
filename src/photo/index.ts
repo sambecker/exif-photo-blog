@@ -1,10 +1,11 @@
 import { formatFocalLength } from '@/focal';
 import { getNextImageUrlForRequest } from '@/platforms/next-image';
-import { FilmSimulation } from '@/simulation';
+import { FilmSimulation, photoHasFilmSimulationData } from '@/simulation';
 import {
   HIGH_DENSITY_GRID,
   IS_PREVIEW,
   SHOW_EXIF_DATA,
+  SHOW_FILM_SIMULATIONS,
   SHOW_LENSES,
   SHOW_RECIPES,
 } from '@/app/config';
@@ -258,7 +259,7 @@ export const descriptionForPhotoSet = (
       photoLabelForCount(explicitCount ?? photos.length, false),
     ].join(' ');
 
-const sortPhotosByDate = (
+const sortPhotosByDateNonDestructively = (
   photos: Photo[],
   order: 'ASC' | 'DESC' = 'DESC',
 ) =>
@@ -276,7 +277,7 @@ export const dateRangeForPhotos = (
   let descriptionWithSpaces = '';
 
   if (explicitDateRange || photos.length > 0) {
-    const photosSorted = sortPhotosByDate(photos);
+    const photosSorted = sortPhotosByDateNonDestructively(photos);
     start = formatDateFromPostgresString(
       explicitDateRange?.start ?? photosSorted[photos.length - 1].takenAtNaive,
       'short',
@@ -327,6 +328,11 @@ export const shouldShowRecipeDataForPhoto = (photo: Photo) =>
   SHOW_EXIF_DATA &&
   SHOW_RECIPES &&
   photoHasRecipeData(photo);
+
+export const shouldShowFilmSimulationDataForPhoto = (photo: Photo) =>
+  SHOW_EXIF_DATA &&
+  SHOW_FILM_SIMULATIONS &&
+  photoHasFilmSimulationData(photo);
 
 export const shouldShowExifDataForPhoto = (photo: Photo) =>
   SHOW_EXIF_DATA && photoHasExifData(photo);
