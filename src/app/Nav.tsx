@@ -67,8 +67,9 @@ export default function Nav({
   return (
     <AppGrid
       className={clsx(
-        isNavSticky && 'sticky top-0 z-10',
+        isNavSticky && 'sticky top-0 z-10 pointer-events-none',
       )}
+      classNameMain='pointer-events-auto'
       contentMain={
         <AnimateItems
           animateOnFirstLoadOnly
