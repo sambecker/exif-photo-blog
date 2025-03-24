@@ -66,3 +66,41 @@ export const getOrderedCategoriesFromString = (
       .map(category => category.trim().toLocaleLowerCase() as CategoryKey)
       .filter(category => CATEGORY_KEYS.includes(category))
     : DEFAULT_CATEGORY_KEYS;
+
+export const sortCategoryByCount = (
+  a: { count: number },
+  b: { count: number },
+) => b.count - a.count;
+
+export const sortCategoriesByCount = <T extends { count: number }>(
+  categories: T[],
+) => categories.sort(sortCategoryByCount);
+
+const convertCategoryKeysToCategoryNames =
+  (categoryKeys: CategoryKeys): (keyof PhotoSetCategories)[] => {
+    return categoryKeys.map(key => {
+      return key === 'films'
+        ? 'simulations'
+        : key === 'focal-lengths'
+          ? 'focalLengths'
+          : key;
+    });
+  };
+
+export const getCategoryItemsCount = (
+  categoryKeys: CategoryKeys,
+  categories: PhotoSetCategories,
+) =>
+  convertCategoryKeysToCategoryNames(categoryKeys).reduce((acc, key) =>
+    acc + (categories[key]?.length ?? 0)
+  , 0);
+
+export const getCategoriesWithItemsCount = (
+  categoryKeys: CategoryKeys,
+  categories: PhotoSetCategories,
+) =>
+  convertCategoryKeysToCategoryNames(categoryKeys).reduce((acc, key) =>
+    (categories[key]?.length ?? 0) > 0
+      ? acc + 1
+      : acc
+  , 0);

@@ -7,7 +7,7 @@ import { photoQuantityText } from '@/photo';
 import EditButton from '@/admin/EditButton';
 import { pathForAdminRecipeEdit } from '@/app/paths';
 import { clsx } from 'clsx/lite';
-import { formatRecipe, Recipes, sortRecipesWithCount } from '@/recipe';
+import { formatRecipe, Recipes, sortRecipes } from '@/recipe';
 import AdminRecipeBadge from './AdminRecipeBadge';
 
 export default function AdminRecipeTable({
@@ -17,7 +17,7 @@ export default function AdminRecipeTable({
 }) {
   return (
     <AdminTable>
-      {sortRecipesWithCount(recipes).map(({ recipe, count }) =>
+      {sortRecipes(recipes).map(({ recipe, count }) =>
         <Fragment key={recipe}>
           <div className="pr-2 col-span-2">
             <AdminRecipeBadge {...{ recipe, count }} />

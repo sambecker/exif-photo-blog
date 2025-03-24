@@ -220,6 +220,8 @@ export const SHOW_FILM_SIMULATIONS =
   CATEGORY_VISIBILITY.includes('films');
 export const SHOW_FOCAL_LENGTHS =
   CATEGORY_VISIBILITY.includes('focal-lengths');
+export const COLLAPSE_SIDEBAR_CATEGORIES =
+  process.env.NEXT_PUBLIC_EXHAUSTIVE_SIDEBAR_CATEGORIES !== '1';
 export const SHOW_EXIF_DATA =
   process.env.NEXT_PUBLIC_HIDE_EXIF_DATA !== '1';
 export const SHOW_ZOOM_CONTROLS =
@@ -324,6 +326,7 @@ export const APP_CONFIGURATION = {
   hasCategoryVisibility:
     Boolean(process.env.NEXT_PUBLIC_CATEGORY_VISIBILITY),
   categoryVisibility: CATEGORY_VISIBILITY,
+  collapseSidebarCategories: COLLAPSE_SIDEBAR_CATEGORIES,
   showExifInfo: SHOW_EXIF_DATA,
   showZoomControls: SHOW_ZOOM_CONTROLS,
   showTakenAtTimeHidden: SHOW_TAKEN_AT_TIME,

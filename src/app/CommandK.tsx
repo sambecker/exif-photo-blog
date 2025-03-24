@@ -1,19 +1,8 @@
 import CommandKClient from '@/components/cmdk/CommandKClient';
-import {
-  getPhotosMetaCached,
-  getUniqueCamerasCached,
-  getUniqueFilmSimulationsCached,
-  getUniqueLensesCached,
-  getUniqueRecipesCached,
-  getUniqueTagsCached,
-} from '@/photo/cache';
+import { getPhotosMetaCached } from '@/photo/cache';
 import { photoQuantityText } from '@/photo';
-import {
-  ADMIN_DEBUG_TOOLS_ENABLED,
-  SHOW_FILM_SIMULATIONS,
-  SHOW_RECIPES,
-} from './config';
-import { getUniqueFocalLengths } from '@/photo/db/query';
+import { ADMIN_DEBUG_TOOLS_ENABLED } from './config';
+import { getDataForCategories } from '@/category/data';
 
 export default async function CommandK() {
   const [
@@ -28,16 +17,7 @@ export default async function CommandK() {
     getPhotosMetaCached()
       .then(({ count }) => count)
       .catch(() => 0),
-    getUniqueCamerasCached().catch(() => []),
-    getUniqueLensesCached().catch(() => []),
-    getUniqueTagsCached().catch(() => []),
-    SHOW_RECIPES
-      ? getUniqueRecipesCached().catch(() => [])
-      : [],
-    SHOW_FILM_SIMULATIONS
-      ? getUniqueFilmSimulationsCached().catch(() => [])
-      : [],
-    getUniqueFocalLengths().catch(() => []),
+    ...getDataForCategories(),
   ]);
 
   return <CommandKClient

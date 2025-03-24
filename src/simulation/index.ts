@@ -22,6 +22,10 @@ export type FilmSimulationWithCount = {
 
 export type FilmSimulations = FilmSimulationWithCount[]
 
+export const sortFilmSimulations = (
+  simulations: FilmSimulations,
+) => simulations.sort(sortFilmSimulationsWithCount);
+
 export const sortFilmSimulationsWithCount = (
   a: FilmSimulationWithCount,
   b: FilmSimulationWithCount,
