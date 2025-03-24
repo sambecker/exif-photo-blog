@@ -81,7 +81,7 @@ export default function Nav({
               className={clsx(
                 'w-full',
                 // Enlarge nav to ensure it fully masks underlying content
-                'sm:w-[calc(100%+40px)] sm:translate-x-[-20px]  sm:px-[20px]',
+                'md:w-[calc(100%+8px)] md:translate-x-[-4px] md:px-[4px]',
                 'flex items-center bg-main',
                 shouldAnimateStickyNav && 'transition-transform duration-200',
                 shouldHideStickyNav
