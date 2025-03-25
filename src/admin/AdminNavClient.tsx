@@ -1,7 +1,6 @@
 'use client';
 
 import LinkWithLoader from '@/components/LinkWithLoader';
-import LinkWithStatus from '@/components/LinkWithStatus';
 import Note from '@/components/Note';
 import AppGrid from '@/components/AppGrid';
 import Spinner from '@/components/Spinner';
@@ -20,6 +19,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { FaRegClock } from 'react-icons/fa';
 import AdminAppInfoIcon from './AdminAppInfoIcon';
 import AdminInfoNav from './AdminInfoNav';
+import LinkWithLoaderBadge from '@/components/LinkWithLoaderBadge';
 
 // Updates considered recent if they occurred in past 5 minutes
 const areTimesRecent = (dates: Date[]) => dates
@@ -74,22 +74,20 @@ export default function AdminNavClient({
               'grow overflow-x-auto',
             )}>
               {items.map(({ label, href, count }) =>
-                <LinkWithStatus
+                <LinkWithLoaderBadge
                   key={label}
                   href={href}
                   className={clsx(
                     'flex gap-0.5',
                     checkPathPrefix(pathname, href) ? 'font-bold' : 'text-dim',
-                    'px-1 py-0.5 rounded-md',
                     'hover:text-main',
                   )}
-                  loadingClassName="bg-gray-200/50 dark:bg-gray-700/50"
                   prefetch={false}
                 >
                   <span>{label}</span>
                   {count > 0 &&
                     <span>({count})</span>}
-                </LinkWithStatus>)}
+                </LinkWithLoaderBadge>)}
             </div>
             <LinkWithLoader
               href={includeInsights
