@@ -5,9 +5,9 @@ import {
   BASE_URL,
   DEFAULT_THEME,
   PRESERVE_ORIGINAL_UPLOADS,
-  SITE_DESCRIPTION,
-  SITE_DOMAIN_OR_TITLE,
-  SITE_TITLE,
+  META_DESCRIPTION,
+  NAV_TITLE_OR_DOMAIN,
+  META_TITLE,
 } from '@/app/config';
 import AppStateProvider from '@/state/AppStateProvider';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
@@ -27,16 +27,16 @@ import RecipeModal from '@/recipe/RecipeModal';
 import '../tailwind.css';
 
 export const metadata: Metadata = {
-  title: SITE_TITLE,
-  description: SITE_DESCRIPTION,
+  title: META_TITLE,
+  description: META_DESCRIPTION,
   ...BASE_URL && { metadataBase: new URL(BASE_URL) },
   openGraph: {
-    title: SITE_TITLE,
-    description: SITE_DESCRIPTION,
+    title: META_TITLE,
+    description: META_DESCRIPTION,
   },
   twitter: {
-    title: SITE_TITLE,
-    description: SITE_DESCRIPTION,
+    title: META_TITLE,
+    description: META_DESCRIPTION,
   },
   icons: [{
     url: '/favicon.ico',
@@ -85,7 +85,7 @@ export default function RootLayout({
                 'mx-3 mb-3',
                 'lg:mx-6 lg:mb-6',
               )}>
-                <Nav siteDomainOrTitle={SITE_DOMAIN_OR_TITLE} />
+                <Nav navTitleOrDomain={NAV_TITLE_OR_DOMAIN} />
                 <main>
                   <ShareModals />
                   <RecipeModal />

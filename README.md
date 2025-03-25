@@ -105,9 +105,10 @@ _⚠️ READ BEFORE PROCEEDING_
 Application behavior can be changed by configuring the following environment variables:
 
 #### Content
-- `NEXT_PUBLIC_SITE_TITLE` (seen in browser tab)
-- `NEXT_PUBLIC_SITE_DESCRIPTION` (seen in nav, beneath title)
-- `NEXT_PUBLIC_SITE_ABOUT` (seen in grid sidebar—accepts rich formatting tags: `<b>`, `<strong>`, `<i>`, `<em>`, `<u>`, `<br>`)
+- `NEXT_PUBLIC_META_TITLE` (seen in browser tab)
+- `NEXT_PUBLIC_META_DESCRIPTION` (seen in nav, beneath title)
+- `NEXT_PUBLIC_NAV_TITLE` (seen in navigation, defaults to domain when not configured)
+- `NEXT_PUBLIC_PAGE_ABOUT` (seen in grid sidebar—accepts rich formatting tags: `<b>`, `<strong>`, `<i>`, `<em>`, `<u>`, `<br>`)
 
 #### Performance
 > ⚠️ Enabling may result in increased project usage. Static optimization [troubleshooting hints](#why-do-production-deployments-fail-when-static-optimization-is-enabled) in FAQ.

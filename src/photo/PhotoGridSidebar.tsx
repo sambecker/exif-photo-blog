@@ -10,7 +10,7 @@ import FavsTag from '../tag/FavsTag';
 import { useAppState } from '@/state/AppState';
 import { useMemo, useRef } from 'react';
 import HiddenTag from '@/tag/HiddenTag';
-import { CATEGORY_VISIBILITY, SITE_ABOUT } from '@/app/config';
+import { CATEGORY_VISIBILITY, PAGE_ABOUT } from '@/app/config';
 import {
   htmlHasBrParagraphBreaks,
   safelyParseFormattedHtml,
@@ -244,16 +244,16 @@ export default function PhotoGridSidebar({
 
   return (
     <div className="space-y-4">
-      {SITE_ABOUT && <HeaderList
+      {PAGE_ABOUT && <HeaderList
         items={[<p
           key="about"
           ref={aboutRef}
           className={clsx(
             'max-w-60 normal-case text-dim',
-            htmlHasBrParagraphBreaks(SITE_ABOUT) && 'pb-2',
+            htmlHasBrParagraphBreaks(PAGE_ABOUT) && 'pb-2',
           )}
           dangerouslySetInnerHTML={{
-            __html: safelyParseFormattedHtml(SITE_ABOUT),
+            __html: safelyParseFormattedHtml(PAGE_ABOUT),
           }}
         />]}
       />}

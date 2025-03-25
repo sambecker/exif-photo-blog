@@ -318,7 +318,7 @@ export default function AdminAppConfigurationClient({
           optional
         >
           Store in environment variable (seen in browser tab):
-          {renderEnvVars(['NEXT_PUBLIC_SITE_TITLE'])}
+          {renderEnvVars(['NEXT_PUBLIC_META_TITLE'])}
         </ChecklistRow>
         <ChecklistRow
           title="Add description"
@@ -326,7 +326,7 @@ export default function AdminAppConfigurationClient({
           optional
         >
           Store in environment variable (seen in nav, under title):
-          {renderEnvVars(['NEXT_PUBLIC_SITE_DESCRIPTION'])}
+          {renderEnvVars(['NEXT_PUBLIC_META_DESCRIPTION'])}
         </ChecklistRow>
         <ChecklistRow
           title="Add about"
@@ -334,7 +334,7 @@ export default function AdminAppConfigurationClient({
           optional
         >
           Store in environment variable (seen in grid sidebar):
-          {renderEnvVars(['NEXT_PUBLIC_SITE_ABOUT'])}
+          {renderEnvVars(['NEXT_PUBLIC_PAGE_ABOUT'])}
         </ChecklistRow>
       </ChecklistGroup>
       {!simplifiedView && <>

@@ -18,7 +18,7 @@ import AnimateItems from '../components/AnimateItems';
 import {
   GRID_HOMEPAGE_ENABLED,
   HAS_DEFINED_SITE_DESCRIPTION,
-  SITE_DESCRIPTION,
+  META_DESCRIPTION,
 } from './config';
 import { useRef } from 'react';
 import useStickyNav from './useStickyNav';
@@ -28,9 +28,9 @@ const NAV_HEIGHT_CLASS = HAS_DEFINED_SITE_DESCRIPTION
   : 'min-h-[4rem]';
 
 export default function Nav({
-  siteDomainOrTitle,
+  navTitleOrDomain,
 }: {
-  siteDomainOrTitle: string;
+  navTitleOrDomain: string;
 }) {
   const ref = useRef<HTMLElement>(null);
 
@@ -102,14 +102,14 @@ export default function Nav({
                   'truncate overflow-hidden select-none',
                   HAS_DEFINED_SITE_DESCRIPTION && 'sm:font-bold',
                 )}>
-                  {renderLink(siteDomainOrTitle, PATH_ROOT)}
+                  {renderLink(navTitleOrDomain, PATH_ROOT)}
                 </div>
                 {HAS_DEFINED_SITE_DESCRIPTION &&
                   <div className={clsx(
                     'hidden sm:block truncate overflow-hidden',
                     'leading-tight',
                   )}>
-                    {SITE_DESCRIPTION}
+                    {META_DESCRIPTION}
                   </div>}
               </div>
             </nav>]
