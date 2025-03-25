@@ -2,7 +2,7 @@ import { clsx } from 'clsx/lite';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/app/config';
 import { ReactNode } from 'react';
 import Spinner from './Spinner';
-import LinkWithLoader from './LinkWithLoader';
+import LinkWithIconLoader from './LinkWithIconLoader';
 
 export default function SwitcherItem({
   icon,
@@ -52,15 +52,14 @@ export default function SwitcherItem({
 
   return (
     href
-      ? <LinkWithLoader {...{
+      ? <LinkWithIconLoader {...{
         title,
         href,
         className,
         prefetch,
+        icon: renderIcon(),
         loader: <Spinner />,
-      }}>
-        {renderIcon()}
-      </LinkWithLoader>
+      }} />
       : <div {...{ title, onClick, className }}>
         {renderIcon()}
       </div>

@@ -256,20 +256,18 @@ export default function PhotoLarge({
           'pb-6',
         )}>
           {/* Meta */}
-          <div className="pr-2 md:pr-0">
-            <div className="md:relative flex gap-2 items-start">
-              {hasTitle && (showTitleAsH1
-                ? <h1>{renderPhotoLink}</h1>
-                : renderPhotoLink)}
-              <div className="absolute right-0 translate-y-[-4px] z-10">
-                <AdminPhotoMenuClient {...{
-                  photo,
-                  revalidatePhoto,
-                  includeFavorite: includeFavoriteInAdminMenu,
-                  ariaLabel: `Admin menu for '${titleForPhoto(photo)}' photo`,
-                }} />
-              </div>
+          <div>
+            <div className="float-right translate-y-[-4px]">
+              <AdminPhotoMenuClient {...{
+                photo,
+                revalidatePhoto,
+                includeFavorite: includeFavoriteInAdminMenu,
+                ariaLabel: `Admin menu for '${titleForPhoto(photo)}' photo`,
+              }} />
             </div>
+            {hasTitle && (showTitleAsH1
+              ? <h1>{renderPhotoLink}</h1>
+              : renderPhotoLink)}
             <div className="space-y-baseline">
               {photo.caption &&
                 <div className={clsx(

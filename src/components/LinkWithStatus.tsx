@@ -89,10 +89,10 @@ export default function LinkWithStatus({
   useEffect(() => () => clearTimeouts(), [clearTimeouts]);
 
   return <Link
-    {...props }
+    {...props}
     href={href}
     className={clsx(
-      'relative inline-flex transition-[colors,opacity]',
+      'transition-[colors,opacity]',
       (loadingClassName || isControlled)
         ? 'opacity-100'
         : isLoading ? 'opacity-50' : 'opacity-100',

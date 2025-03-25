@@ -68,7 +68,7 @@ export default function EntityLink({
 
   return (
     <span className={clsx(
-      'group inline-flex max-w-full overflow-hidden',
+      'group inline-flex max-w-full overflow-hidden select-none',
       className,
     )}>
       <LinkWithStatus

@@ -1,13 +1,13 @@
 'use client';
 
 import { PATH_ADMIN_CONFIGURATION, PATH_ADMIN_INSIGHTS } from '@/app/paths';
-import LinkWithStatus from '@/components/LinkWithStatus';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 import clsx from 'clsx/lite';
 import ClearCacheButton from '@/admin/ClearCacheButton';
 import { usePathname } from 'next/navigation';
 import { useAppState } from '@/state/AppState';
 import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
+import LinkWithLoaderBadge from '@/components/LinkWithLoaderBadge';
 
 const ADMIN_INFO_PAGES = [{
   title: 'App Insights',
@@ -47,7 +47,7 @@ export default function AdminInfoPage({
       )}>
         {pages
           .map(({ title, titleShort, path }) =>
-            <LinkWithStatus
+            <LinkWithLoaderBadge
               key={path}
               href={path}
               className={clsx(
@@ -57,10 +57,8 @@ export default function AdminInfoPage({
                     ? 'font-medium'
                     : 'text-dim'
                   : undefined,
-                'px-1 py-0.5 rounded-md',
                 'hover:text-main',
               )}
-              loadingClassName="bg-gray-200/50 dark:bg-gray-700/50"
             >
               <ResponsiveText shortText={titleShort}>
                 {title}
@@ -71,7 +69,7 @@ export default function AdminInfoPage({
                   top={4}
                   right={-2}
                 />}
-            </LinkWithStatus>)}
+            </LinkWithLoaderBadge>)}
       </div>
       <ClearCacheButton />
     </div>

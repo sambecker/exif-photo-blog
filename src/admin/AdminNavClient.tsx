@@ -1,6 +1,6 @@
 'use client';
 
-import LinkWithLoader from '@/components/LinkWithLoader';
+import LinkWithIconLoader from '@/components/LinkWithIconLoader';
 import Note from '@/components/Note';
 import AppGrid from '@/components/AppGrid';
 import Spinner from '@/components/Spinner';
@@ -21,7 +21,7 @@ import AdminAppInfoIcon from './AdminAppInfoIcon';
 import AdminInfoNav from './AdminInfoNav';
 import LinkWithLoaderBadge from '@/components/LinkWithLoaderBadge';
 
-// Updates considered recent if they occurred in past 5 minutes
+// Updates from past 5 minutes considered recent
 const areTimesRecent = (dates: Date[]) => dates
   .some(date => differenceInMinutes(new Date(), date) < 5);
 
@@ -89,17 +89,16 @@ export default function AdminNavClient({
                     <span>({count})</span>}
                 </LinkWithLoaderBadge>)}
             </div>
-            <LinkWithLoader
+            <LinkWithIconLoader
               href={includeInsights
                 ? PATH_ADMIN_INSIGHTS
                 : PATH_ADMIN_CONFIGURATION}
               className={isPathAdminInfo(pathname)
                 ? 'font-bold'
                 : 'text-dim'}
+              icon={<AdminAppInfoIcon />}
               loader={<Spinner className="translate-y-[-0.75px]" />}
-            >
-              <AdminAppInfoIcon />
-            </LinkWithLoader>
+            />
           </div>
           {shouldShowBanner &&
             <Note icon={<FaRegClock className="shrink-0" />}>

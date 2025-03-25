@@ -1,25 +1,28 @@
 import { ComponentProps, ReactNode } from 'react';
 import LinkWithStatus from './LinkWithStatus';
 import clsx from 'clsx/lite';
-import Link from 'next/link';
 
-export default function LinkWithLoader({
+export default function LinkWithIconLoader({
+  className,
+  icon,
   loader,
-  children,
   debugLoading,
   ...props
-}: ComponentProps<typeof Link> & {
+}: Omit<ComponentProps<typeof LinkWithStatus>, 'children'> & {
+  icon: ReactNode
   loader: ReactNode
-  debugLoading?: boolean
 }) {
   return (
-    <LinkWithStatus {...props}>
+    <LinkWithStatus
+      {...props}
+      className={clsx('relative', className)}
+    >
       {({ isLoading }) => <>
         <span className={clsx(
           'flex transition-opacity',
-          isLoading ? 'opacity-0' : 'opacity-100',
+          isLoading || debugLoading ? 'opacity-0' : 'opacity-100',
         )}>
-          {children}
+          {icon}
         </span>
         {(isLoading || debugLoading) && <span className={clsx(
           'absolute inset-0',

@@ -5,13 +5,18 @@ import LinkWithStatus from './LinkWithStatus';
 export default function LinkWithLoaderBadge({
   className,
   loadingClassName,
+  offsetPadding,
   ...props
-}: ComponentProps<typeof LinkWithStatus>) {
+}: ComponentProps<typeof LinkWithStatus> & {
+  offsetPadding?: boolean
+}) {
   return (
     <LinkWithStatus
       {...props}
       className={clsx(
-        'px-1 py-0.5 rounded-md',
+        offsetPadding && '-mx-1 -my-0.5',
+        'px-1 py-0.5',
+        'rounded-md',
         className,
       )}
       loadingClassName={clsx(

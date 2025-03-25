@@ -85,21 +85,21 @@ export default function PhotoPrevNext({
       className,
     )}>
       <div className={clsx(
+        'h-4',
         'flex gap-2 select-none',
         // Fixes alignment issue when switching from chevrons to text
         'items-center sm:items-start',
+        '*:select-none',
       )}>
         <PhotoLink
           {...categories}
           photo={previousPhoto}
-          className="select-none h-[1rem]"
           nextPhotoAnimation={ANIMATION_RIGHT}
           scroll={false}
+          loaderType="badge"
           prefetch
         >
-          <FiChevronLeft
-            className="sm:hidden text-[1.1rem] translate-y-[-1px]"
-          />
+          <FiChevronLeft className="sm:hidden text-[1.1rem]" />
           <span className="hidden sm:inline-block">PREV</span>
         </PhotoLink>
         <span className="text-extra-extra-dim">
@@ -108,14 +108,12 @@ export default function PhotoPrevNext({
         <PhotoLink
           {...categories}
           photo={nextPhoto}
-          className="select-none h-[1rem]"
           nextPhotoAnimation={ANIMATION_LEFT}
           scroll={false}
+          loaderType="badge"
           prefetch
         >
-          <FiChevronRight
-            className="sm:hidden text-[1.1rem] translate-y-[-1px]"
-          />
+          <FiChevronRight className="sm:hidden text-[1.1rem]" />
           <span className="hidden sm:inline-block">NEXT</span>
         </PhotoLink>
       </div>
