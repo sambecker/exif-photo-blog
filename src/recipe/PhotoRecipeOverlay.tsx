@@ -108,6 +108,7 @@ export default function PhotoRecipeOverlay({
             ? <LinkWithStatus
               href={pathForRecipe(title ?? '')}
               className={clsx(
+                'flex',
                 'hover:text-black/50 active:text-black',
                 'px-1 py-0.5 rounded-md',
               )}
@@ -124,7 +125,7 @@ export default function PhotoRecipeOverlay({
           text={generateRecipeText({ title, recipe, simulation }).join('\n')}
           iconSize={17}
           className={clsx(
-            'translate-y-[-0.5px]',
+            'translate-y-[0.5px]',
             'text-black/40 active:text-black/75',
             'hover:text-black/40',
           )}
