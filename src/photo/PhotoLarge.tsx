@@ -30,7 +30,7 @@ import {
   ALLOW_PUBLIC_DOWNLOADS,
   SHOW_TAKEN_AT_TIME,
 } from '@/app/config';
-import AdminPhotoMenuClient from '@/admin/AdminPhotoMenuClient';
+import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
 import { useMemo, useRef } from 'react';
 import useVisible from '@/utility/useVisible';
@@ -179,7 +179,7 @@ export default function PhotoLarge({
         ? 'w-[80%]'
         : undefined;
 
-  const largePhotoContent =
+  const renderLargePhoto =
     <div className={clsx(
       'relative',
       arePhotosMatted && 'flex items-center justify-center',
@@ -228,6 +228,15 @@ export default function PhotoLarge({
       </div>
     </div>;
 
+  const renderAdminMenu =
+    <AdminPhotoMenu {...{
+      photo,
+      revalidatePhoto,
+      buttonClassName: 'translate-y-[-4px]',
+      includeFavorite: includeFavoriteInAdminMenu,
+      ariaLabel: `Admin menu for '${titleForPhoto(photo)}' photo`,
+    }} />;
+
   const largePhotoContainerClassName = clsx(arePhotosMatted &&
     'flex items-center justify-center aspect-3/2 bg-gray-100',
   );
@@ -238,14 +247,14 @@ export default function PhotoLarge({
       className={className}
       contentMain={showZoomControls
         ? <div className={largePhotoContainerClassName}>
-          {largePhotoContent}
+          {renderLargePhoto}
         </div>
         : <Link
           href={pathForPhoto({ photo })}
           className={largePhotoContainerClassName}
           prefetch={prefetch}
         >
-          {largePhotoContent}
+          {renderLargePhoto}
         </Link>}
       contentSide={
         <DivDebugBaselineGrid className={clsx(
@@ -257,13 +266,8 @@ export default function PhotoLarge({
         )}>
           {/* Meta */}
           <div>
-            <div className="float-right translate-y-[-4px]">
-              <AdminPhotoMenuClient {...{
-                photo,
-                revalidatePhoto,
-                includeFavorite: includeFavoriteInAdminMenu,
-                ariaLabel: `Admin menu for '${titleForPhoto(photo)}' photo`,
-              }} />
+            <div className="float-right hidden md:block">
+              {renderAdminMenu}
             </div>
             {hasTitle && (showTitleAsH1
               ? <h1>{renderPhotoLink}</h1>
@@ -320,6 +324,9 @@ export default function PhotoLarge({
             'space-y-baseline',
             !hasTitleContent && !hasMetaContent && 'md:-mt-baseline',
           )}>
+            <div className="float-right md:hidden">
+              {renderAdminMenu}
+            </div>
             {showExifContent &&
               <>
                 <ul className="text-medium">
