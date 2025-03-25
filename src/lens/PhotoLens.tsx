@@ -25,7 +25,7 @@ export default function PhotoLens({
       href={pathForLens(lens)}
       icon={<IconLens
         size={14}
-        className="translate-x-[-0.5px] translate-y-[-0.5px]"
+        className="translate-x-[-0.5px]"
       />}
       type={type}
       className={className}
