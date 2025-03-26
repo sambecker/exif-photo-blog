@@ -9,6 +9,7 @@ import { useAppState } from '@/state/AppState';
 import clsx from 'clsx/lite';
 import { PhotoSetCategories } from '@/category';
 import useElementHeight from '@/utility/useElementHeight';
+import FadedScroll from '@/components/FadedScroll';
 
 export default function PhotoGridPage({
   photos,
@@ -35,29 +36,23 @@ export default function PhotoGridPage({
       photos={photos}
       count={photosCount}
       sidebar={
-        <div
+        <FadedScroll
           ref={ref}
           className={clsx(
             'sticky top-0 -mb-5 -mt-5',
             'max-h-screen h-full',
           )}
-          style={{
-            // eslint-disable-next-line max-len
-            maskImage: 'linear-gradient(to bottom, transparent, black 24px, black calc(100% - 24px), transparent)',
-          }}
+          classNameContent="py-4"
+          fadeHeight={36}
+          hideScrollbar
         >
-          <div className={clsx(
-            'max-h-full overflow-y-auto [scrollbar-width:none]',
-            'py-4',
-          )}>
-            <PhotoGridSidebar {...{
-              ...categories,
-              photosCount,
-              containerHeight,
-            }}
-            />
-          </div>
-        </div>
+          <PhotoGridSidebar {...{
+            ...categories,
+            photosCount,
+            containerHeight,
+          }}
+          />
+        </FadedScroll>
       }
       canSelect
     />
