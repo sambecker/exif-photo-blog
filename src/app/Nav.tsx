@@ -10,7 +10,6 @@ import {
   isPathAdmin,
   isPathFeed,
   isPathGrid,
-  isPathTopLevel,
   isPathProtected,
   isPathSignIn,
 } from '@/app/paths';
@@ -35,13 +34,12 @@ export default function Nav({
 
   const pathname = usePathname();
   const showNav = !isPathSignIn(pathname);
-  const isHome = isPathTopLevel(pathname);
 
   const {
     isNavSticky,
     shouldHideStickyNav,
     shouldAnimateStickyNav,
-  } = useStickyNav(ref, isHome);
+  } = useStickyNav(ref);
 
   const renderLink = (
     text: string,
