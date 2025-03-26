@@ -13,6 +13,8 @@ import {
   CATEGORY_VISIBILITY,
   GRID_HOMEPAGE_ENABLED,
   HAS_STATIC_OPTIMIZATION,
+  IS_META_TITLE_CONFIGURED,
+  IS_META_DESCRIPTION_CONFIGURED,
   MATTE_PHOTOS,
 } from '@/app/config';
 import { getGitHubMetaForCurrentApp, getSignificantInsights } from '.';
@@ -69,6 +71,9 @@ export default async function AdminAppInsights() {
         noAi: !isAiTextGenerationEnabled,
         noAiRateLimiting,
         noConfiguredDomain,
+        noConfiguredMeta:
+          !IS_META_TITLE_CONFIGURED ||
+          !IS_META_DESCRIPTION_CONFIGURED,
         outdatedPhotos,
         photoMatting: photosCountPortrait > 0 && !MATTE_PHOTOS,
         camerasFirst: (

@@ -45,6 +45,7 @@ import IconFilmSimulation from '@/components/icons/IconFilmSimulation';
 import IconFocalLength from '@/components/icons/IconFocalLength';
 import IconTag from '@/components/icons/IconTag';
 import IconPhoto from '@/components/icons/IconPhoto';
+import { HiOutlineDocumentText } from 'react-icons/hi';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
@@ -59,8 +60,8 @@ const readmeAnchor = (anchor: string) =>
     README/{anchor}
   </AdminLink>;
 
-const renderLabeledEnvVar = (label: string, envVar: string, value = '1') =>
-  <div className="flex flex-col gap-1.5">
+const renderLabeledEnvVar = (label: string, envVar: string, value?: string) =>
+  <div className="flex flex-col gap-0.5">
     <span className="text-xs uppercase font-medium tracking-wider">
       {label}
     </span>
@@ -112,6 +113,7 @@ export default function AdminAppInsightsClient({
     noAi,
     noAiRateLimiting,
     noConfiguredDomain,
+    noConfiguredMeta,
     outdatedPhotos,
     photoMatting,
     camerasFirst,
@@ -277,13 +279,35 @@ export default function AdminAppInsightsClient({
                 !isExpanded,
               )}
               expandContent={<>
-                Not explicitly setting a domain may cause certain features
+                Not setting an explicit domain may cause certain features
                 to behave unexpectedly. Domains are stored in
                 {' '}
                 <EnvVar
                   variable="NEXT_PUBLIC_SITE_DOMAIN"
                   trailingContent="."
                 />
+              </>}
+            />}
+            {(noConfiguredMeta || debug) && <ScoreCardRow
+              icon={<HiOutlineDocumentText
+                size={18}
+                className="translate-x-[1px] translate-y-[-1px]"
+              />}
+              content="Configure meta"
+              expandContent={<>
+                Configure site title (visible in search results and browser tab)
+                and site description (visible in search results):
+                {' '}
+                <div className="flex flex-col gap-y-4 mt-3">
+                  {renderLabeledEnvVar(
+                    'Site title',
+                    'NEXT_PUBLIC_META_TITLE',
+                  )}
+                  {renderLabeledEnvVar(
+                    'Site description',
+                    'NEXT_PUBLIC_META_DESCRIPTION',
+                  )}
+                </div>
               </>}
             />}
             {(noStaticOptimization || debug) && <ScoreCardRow
@@ -300,18 +324,22 @@ export default function AdminAppInsightsClient({
                   {renderLabeledEnvVar(
                     'Photo pages',
                     'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS',
+                    '1',
                   )}
                   {renderLabeledEnvVar(
                     'Photo OG images',
                     'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES',
+                    '1',
                   )}
                   {renderLabeledEnvVar(
                     'Category pages (tags, cameras, etc.)',
                     'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES',
+                    '1',
                   )}
                   {renderLabeledEnvVar(
                     'Category OG images',
                     'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORY_OG_IMAGES',
+                    '1',
                   )}
                   <span>
                     See {readmeAnchor('performance')} for cost implications.

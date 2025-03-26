@@ -17,13 +17,12 @@ import {
 import AnimateItems from '../components/AnimateItems';
 import {
   GRID_HOMEPAGE_ENABLED,
-  HAS_DEFINED_SITE_DESCRIPTION,
-  META_DESCRIPTION,
+  NAV_CAPTION,
 } from './config';
 import { useRef } from 'react';
 import useStickyNav from './useStickyNav';
 
-const NAV_HEIGHT_CLASS = HAS_DEFINED_SITE_DESCRIPTION
+const NAV_HEIGHT_CLASS = NAV_CAPTION
   ? 'min-h-[4rem] sm:min-h-[5rem]'
   : 'min-h-[4rem]';
 
@@ -100,16 +99,16 @@ export default function Nav({
               )}>
                 <div className={clsx(
                   'truncate overflow-hidden select-none',
-                  HAS_DEFINED_SITE_DESCRIPTION && 'sm:font-bold',
+                  NAV_CAPTION && 'sm:font-bold',
                 )}>
                   {renderLink(navTitleOrDomain, PATH_ROOT)}
                 </div>
-                {HAS_DEFINED_SITE_DESCRIPTION &&
+                {NAV_CAPTION &&
                   <div className={clsx(
                     'hidden sm:block truncate overflow-hidden',
                     'leading-tight',
                   )}>
-                    {META_DESCRIPTION}
+                    {NAV_CAPTION}
                   </div>}
               </div>
             </nav>]

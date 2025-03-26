@@ -20,6 +20,7 @@ const _INSIGHTS_TEMPLATE = [
   'noAi',
   'noAiRateLimiting',
   'noConfiguredDomain',
+  'noConfiguredMeta',
   'photoMatting',
   'camerasFirst',
   'gridFirst',
