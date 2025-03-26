@@ -71,6 +71,7 @@ import IconRecipe from '../icons/IconRecipe';
 import IconFocalLength from '../icons/IconFocalLength';
 import IconFilmSimulation from '../icons/IconFilmSimulation';
 import IconLock from '../icons/IconLock';
+import useVisualViewportHeight from '@/utility/useVisualViewport';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -151,6 +152,16 @@ export default function CommandKClient({
   } = useAppState();
 
   const isOpenRef = useRef(isOpen);
+
+  const ref = useRef<HTMLInputElement>(null);
+  const mobileViewportHeight = useVisualViewportHeight();
+  const heightMinimum = '20rem';
+  const maxHeight = useMemo(() => {
+    const positionY = ref.current?.getBoundingClientRect().y;
+    return mobileViewportHeight && positionY
+      ? `min(${mobileViewportHeight - positionY - 32}px, ${heightMinimum})`
+      : heightMinimum;
+  }, [mobileViewportHeight]);
   
   // Manage action/path waiting state
   const [keyWaiting, setKeyWaiting] = useState<string>();
@@ -537,6 +548,7 @@ export default function CommandKClient({
         )}>
           <div className="relative">
             <Command.Input
+              ref={ref}
               onChangeCapture={(e) => setQueryLive(e.currentTarget.value)}
               className={clsx(
                 'w-full min-w-0!',
@@ -563,10 +575,9 @@ export default function CommandKClient({
         </div>
         <Command.List className={clsx(
           'relative overflow-y-auto',
-          'max-h-48 sm:max-h-72',
-          'mx-3 md:mx-4',
-          'pt-3 md:pt-4',
+          'mx-3 pt-3',
         )} style={{
+          maxHeight,
           // eslint-disable-next-line max-len
           maskImage: 'linear-gradient(to bottom, transparent, black 20px, black calc(100% - 20px), transparent)',
         }}>
