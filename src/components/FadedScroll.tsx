@@ -13,11 +13,12 @@ export default function FadedScroll({
   direction = 'vertical',
   fadeHeight = 24,
   hideScrollbar,
+  className,
   classNameContent,
   children,
   ...props
 }: HTMLAttributes<HTMLDivElement> & {
-  ref: RefObject<HTMLDivElement | null>
+  ref?: RefObject<HTMLDivElement | null>
   direction?: 'vertical' | 'horizontal'
   fadeHeight?: number
   classNameContent?: string
@@ -57,6 +58,12 @@ export default function FadedScroll({
   return <div
     {...props}
     ref={containerRef}
+    className={clsx(
+      isVertical
+        ? 'overflow-y-hidden'
+        : 'overflow-x-hidden',
+      className,
+    )}
     style={{ maskImage }}
   >
     <div

@@ -20,6 +20,7 @@ import { FaRegClock } from 'react-icons/fa';
 import AdminAppInfoIcon from './AdminAppInfoIcon';
 import AdminInfoNav from './AdminInfoNav';
 import LinkWithLoaderBadge from '@/components/LinkWithLoaderBadge';
+import FadedScroll from '@/components/FadedScroll';
 
 // Updates from past 5 minutes considered recent
 const areTimesRecent = (dates: Date[]) => dates
@@ -69,10 +70,11 @@ export default function AdminNavClient({
             'flex gap-2 pb-3',
             'border-b border-gray-200 dark:border-gray-800',
           )}>
-            <div className={clsx(
-              'flex gap-0.5 md:gap-1.5 -mx-1',
-              'grow overflow-x-auto',
-            )}>
+            <FadedScroll
+              className="grow -mx-1"
+              classNameContent="flex gap-0.5 md:gap-1.5"
+              direction="horizontal"
+            >
               {items.map(({ label, href, count }) =>
                 <LinkWithLoaderBadge
                   key={label}
@@ -88,7 +90,7 @@ export default function AdminNavClient({
                   {count > 0 &&
                     <span>({count})</span>}
                 </LinkWithLoaderBadge>)}
-            </div>
+            </FadedScroll>
             <LinkWithIconLoader
               href={includeInsights
                 ? PATH_ADMIN_INSIGHTS
