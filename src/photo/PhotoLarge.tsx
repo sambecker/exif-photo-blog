@@ -265,8 +265,8 @@ export default function PhotoLarge({
           'pb-6',
         )}>
           {/* Meta */}
-          <div>
-            <div className="float-right hidden md:block">
+          <div className="pr-3 md:pr-0">
+            <div className="float-end hidden md:block">
               {renderAdminMenu}
             </div>
             {hasTitle && (showTitleAsH1
@@ -274,11 +274,7 @@ export default function PhotoLarge({
               : renderPhotoLink)}
             <div className="space-y-baseline">
               {photo.caption &&
-                <div className={clsx(
-                  'uppercase', 
-                  // Prevent collision with admin button
-                  isUserSignedIn && 'md:pr-7',
-                )}>
+                <div className="uppercase">
                   {photo.caption}
                 </div>}
               {(
@@ -324,7 +320,7 @@ export default function PhotoLarge({
             'space-y-baseline',
             !hasTitleContent && !hasMetaContent && 'md:-mt-baseline',
           )}>
-            <div className="float-right md:hidden">
+            <div className="float-end md:hidden">
               {renderAdminMenu}
             </div>
             {showExifContent &&
