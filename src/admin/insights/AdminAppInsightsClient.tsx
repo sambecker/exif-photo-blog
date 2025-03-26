@@ -481,7 +481,7 @@ export default function AdminAppInsightsClient({
                 key={category}
                 icon={<IconRecipe
                   size={18}
-                  className="translate-y-[-0.5px]"
+                  className="translate-x-[0.5px] translate-y-[-0.5px]"
                 />}
                 content={pluralize(recipesCount, 'recipe')}
               />
