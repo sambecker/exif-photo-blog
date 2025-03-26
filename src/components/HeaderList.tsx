@@ -65,7 +65,7 @@ export default function HeaderList({
               onClick={() => setIsExpanded(!isExpanded)}
               styleAs="link"
               className={clsx(
-                'mt-1',
+                'mt-0.5',
                 'text-xs font-medium tracking-wider',
                 'border-medium rounded-md',
                 'px-[5px] h-5!',
