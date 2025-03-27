@@ -72,6 +72,7 @@ import IconFocalLength from '../icons/IconFocalLength';
 import IconFilmSimulation from '../icons/IconFilmSimulation';
 import IconLock from '../icons/IconLock';
 import useVisualViewportHeight from '@/utility/useVisualViewport';
+import useMaskedScroll from '../useMaskedScroll';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -153,15 +154,21 @@ export default function CommandKClient({
 
   const isOpenRef = useRef(isOpen);
 
-  const ref = useRef<HTMLInputElement>(null);
+  const refInput = useRef<HTMLInputElement>(null);
   const mobileViewportHeight = useVisualViewportHeight();
-  const heightMinimum = '18rem';
+  const heightMaximum = '18rem';
   const maxHeight = useMemo(() => {
-    const positionY = ref.current?.getBoundingClientRect().y;
+    const positionY = refInput.current?.getBoundingClientRect().y;
     return mobileViewportHeight && positionY
-      ? `min(${mobileViewportHeight - positionY - 32}px, ${heightMinimum})`
-      : heightMinimum;
+      ? `min(${mobileViewportHeight - positionY - 32}px, ${heightMaximum})`
+      : heightMaximum;
   }, [mobileViewportHeight]);
+
+  const refScroll = useRef<HTMLDivElement>(null);
+  const { maskImage, updateMask } = useMaskedScroll({
+    ref: refScroll,
+    listenForScrollEvents: false,
+  });
   
   // Manage action/path waiting state
   const [keyWaiting, setKeyWaiting] = useState<string>();
@@ -548,7 +555,7 @@ export default function CommandKClient({
         )}>
           <div className="relative">
             <Command.Input
-              ref={ref}
+              ref={refInput}
               onChangeCapture={(e) => setQueryLive(e.currentTarget.value)}
               className={clsx(
                 'w-full min-w-0!',
@@ -574,108 +581,105 @@ export default function CommandKClient({
           </div>
         </div>
         <Command.List
+          ref={refScroll}
+          onScroll={updateMask}
           className={clsx(
             'overflow-y-auto',
-            'mx-3 pt-3',
-          )} style={{
-            maxHeight,
-            // eslint-disable-next-line max-len
-            maskImage: 'linear-gradient(to bottom, transparent, black 20px, black calc(100% - 20px), transparent)',
-          }}
+            'mx-3 py-2',
+          )}
+          style={{ maxHeight, maskImage }}
         >
-          <div className="pb-1 md:pb-2">
-            <Command.Empty className="mt-1 pl-3 text-dim pb-4">
-              {isLoading ? 'Searching ...' : 'No results found'}
-            </Command.Empty>
-            <div className="space-y-2.5">
-              {queriedSections
-                .concat(categorySections)
-                .concat(sectionPages)
-                .concat(adminSection)
-                .concat(clientSections)
-                .filter(({ items }) => items.length > 0)
-                .map(({ heading, accessory, items }) =>
-                  <Command.Group
-                    key={heading}
-                    heading={<div className={clsx(
-                      'flex items-center',
-                      'px-2 pb-0.5',
-                      isPending && 'opacity-20',
-                    )}>
-                      {accessory &&
-                        <div className="w-5">{accessory}</div>}
-                      {heading}
-                    </div>}
-                    className={clsx(
-                      'uppercase',
-                      'select-none',
-                      '[&>*:first-child]:py-1',
-                      '[&>*:first-child]:font-medium',
-                      '[&>*:first-child]:text-dim',
-                      '[&>*:first-child]:text-xs',
-                      '[&>*:first-child]:tracking-wider',
-                    )}
-                  >
-                    {items.map(({
-                      label,
-                      explicitKey,
-                      keywords,
-                      accessory,
-                      annotation,
-                      annotationAria,
-                      path,
-                      action,
-                    }) => {
-                      const key = `${heading} ${explicitKey ?? label}`;
-                      return <CommandKItem
-                        key={key}
-                        label={label}
-                        value={key}
-                        keywords={keywords}
-                        onSelect={() => {
-                          if (action) {
-                            const result = action();
-                            if (result instanceof Promise) {
-                              setKeyWaiting(key);
-                              setIsWaitingForAction(true);
-                              result.then(shouldClose => {
-                                shouldCloseAfterWaiting.current =
-                                  shouldClose === true;
-                                setIsWaitingForAction(false);
-                              });
-                            } else {
-                              if (!path) { setIsOpen?.(false); }
-                            }
+          <Command.Empty className="mt-1 pl-3 text-dim pb-4">
+            {isLoading ? 'Searching ...' : 'No results found'}
+          </Command.Empty>
+          <div className="space-y-2.5">
+            {queriedSections
+              .concat(categorySections)
+              .concat(sectionPages)
+              .concat(adminSection)
+              .concat(clientSections)
+              .filter(({ items }) => items.length > 0)
+              .map(({ heading, accessory, items }) =>
+                <Command.Group
+                  key={heading}
+                  heading={<div className={clsx(
+                    'flex items-center',
+                    'px-2 pb-0.5',
+                    isPending && 'opacity-20',
+                  )}>
+                    {accessory &&
+                      <div className="w-5">{accessory}</div>}
+                    {heading}
+                  </div>}
+                  className={clsx(
+                    'uppercase',
+                    'select-none',
+                    '[&>*:first-child]:py-1',
+                    '[&>*:first-child]:font-medium',
+                    '[&>*:first-child]:text-dim',
+                    '[&>*:first-child]:text-xs',
+                    '[&>*:first-child]:tracking-wider',
+                  )}
+                >
+                  {items.map(({
+                    label,
+                    explicitKey,
+                    keywords,
+                    accessory,
+                    annotation,
+                    annotationAria,
+                    path,
+                    action,
+                  }) => {
+                    const key = `${heading} ${explicitKey ?? label}`;
+                    return <CommandKItem
+                      key={key}
+                      label={label}
+                      value={key}
+                      keywords={keywords}
+                      onSelect={() => {
+                        if (action) {
+                          const result = action();
+                          if (result instanceof Promise) {
+                            setKeyWaiting(key);
+                            setIsWaitingForAction(true);
+                            result.then(shouldClose => {
+                              shouldCloseAfterWaiting.current =
+                                shouldClose === true;
+                              setIsWaitingForAction(false);
+                            });
+                          } else {
+                            if (!path) { setIsOpen?.(false); }
                           }
-                          if (path) {
-                            if (path !== pathname) {
-                              setKeyWaiting(key);
-                              shouldCloseAfterWaiting.current = true;
-                              startTransition(() => {
-                                router.push(path, { scroll: true });
-                              });
-                            } else {
-                              setIsOpen?.(false);
-                            }
+                        }
+                        if (path) {
+                          if (path !== pathname) {
+                            setKeyWaiting(key);
+                            shouldCloseAfterWaiting.current = true;
+                            startTransition(() => {
+                              router.push(path, { scroll: true });
+                            });
+                          } else {
+                            setIsOpen?.(false);
                           }
-                        }}
-                        accessory={accessory}
-                        annotation={annotation}
-                        annotationAria={annotationAria}
-                        loading={key === keyWaiting}
-                        disabled={isPending && key !== keyWaiting}
-                      />;
-                    })}
-                  </Command.Group>)}
-            </div>
-            {footer && !queryLive &&
-              <div className={clsx(
-                'text-center text-base text-dim pt-2 sm:pt-3',
-                'pb-2.5',
-              )}>
-                {footer}
-              </div>}
+                        }
+                      }}
+                      accessory={accessory}
+                      annotation={annotation}
+                      annotationAria={annotationAria}
+                      loading={key === keyWaiting}
+                      disabled={isPending && key !== keyWaiting}
+                    />;
+                  })}
+                </Command.Group>)}
           </div>
+          {footer && !queryLive &&
+            <div className={clsx(
+              'text-center text-base text-dim pt-2 sm:pt-3',
+              'pb-2.5',
+            )}>
+              {footer}
+            </div>}
         </Command.List>
       </Modal>
     </Command.Dialog>

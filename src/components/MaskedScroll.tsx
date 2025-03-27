@@ -1,9 +1,8 @@
 import clsx from 'clsx/lite';
-import { HTMLAttributes, RefObject } from 'react';
-import useFadedScroll from './useFadedScroll';
+import { HTMLAttributes, useRef } from 'react';
+import useMaskedScroll, { MaskedScrollExternalProps } from './useMaskedScroll';
 
-export default function FadedScroll({
-  ref,
+export default function MaskedScroll({
   direction = 'vertical',
   fadeHeight = 24,
   hideScrollbar,
@@ -12,18 +11,17 @@ export default function FadedScroll({
   style,
   children,
   ...props
-}: HTMLAttributes<HTMLDivElement> & {
-  ref?: RefObject<HTMLDivElement | null>
-  direction?: 'vertical' | 'horizontal'
-  fadeHeight?: number
+}: HTMLAttributes<HTMLDivElement> &
+MaskedScrollExternalProps & {
   classNameContent?: string
   hideScrollbar?: boolean
 }) {
-  const { maskImage } = useFadedScroll(ref, direction, fadeHeight);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const { maskImage } = useMaskedScroll({ ref, direction, fadeHeight });
 
   return <div
     {...props}
-    ref={ref}
     className={clsx(
       direction === 'vertical'
         ? 'overflow-y-hidden'
@@ -33,6 +31,7 @@ export default function FadedScroll({
     style={{ maskImage, ...style }}
   >
     <div
+      ref={ref}
       className={clsx(
         direction === 'vertical'
           ? 'max-h-full overflow-y-auto'

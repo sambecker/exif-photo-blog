@@ -20,7 +20,7 @@ import { FaRegClock } from 'react-icons/fa';
 import AdminAppInfoIcon from './AdminAppInfoIcon';
 import AdminInfoNav from './AdminInfoNav';
 import LinkWithLoaderBadge from '@/components/LinkWithLoaderBadge';
-import FadedScroll from '@/components/FadedScroll';
+import MaskedScroll from '@/components/MaskedScroll';
 
 // Updates from past 5 minutes considered recent
 const areTimesRecent = (dates: Date[]) => dates
@@ -70,7 +70,7 @@ export default function AdminNavClient({
             'flex gap-2 pb-3',
             'border-b border-gray-200 dark:border-gray-800',
           )}>
-            <FadedScroll
+            <MaskedScroll
               className="grow -mx-1"
               classNameContent="flex gap-0.5 md:gap-1.5"
               direction="horizontal"
@@ -90,7 +90,7 @@ export default function AdminNavClient({
                   {count > 0 &&
                     <span>({count})</span>}
                 </LinkWithLoaderBadge>)}
-            </FadedScroll>
+            </MaskedScroll>
             <LinkWithIconLoader
               href={includeInsights
                 ? PATH_ADMIN_INSIGHTS
