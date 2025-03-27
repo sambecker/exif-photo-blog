@@ -299,7 +299,8 @@ export default function AdminAppConfigurationClient({
           status={isMetaTitleConfigured}
           showWarning
         >
-          Store in environment variable (seen in browser tab):
+          Store in environment variable
+          (seen in search results and browser tab):
           {renderEnvVars(['NEXT_PUBLIC_META_TITLE'])}
         </ChecklistRow>
         {!simplifiedView && <>
@@ -308,7 +309,8 @@ export default function AdminAppConfigurationClient({
             status={isMetaDescriptionConfigured}
             optional
           >
-            Store in environment variable (seen in search results):
+            Store in environment variable
+            (seen in search results):
             {renderEnvVars(['NEXT_PUBLIC_META_DESCRIPTION'])}
           </ChecklistRow>
           <ChecklistRow
