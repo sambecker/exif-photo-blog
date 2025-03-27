@@ -155,7 +155,7 @@ export default function CommandKClient({
 
   const ref = useRef<HTMLInputElement>(null);
   const mobileViewportHeight = useVisualViewportHeight();
-  const heightMinimum = '20rem';
+  const heightMinimum = '18rem';
   const maxHeight = useMemo(() => {
     const positionY = ref.current?.getBoundingClientRect().y;
     return mobileViewportHeight && positionY
@@ -573,14 +573,16 @@ export default function CommandKClient({
               </span>}
           </div>
         </div>
-        <Command.List className={clsx(
-          'relative overflow-y-auto',
-          'mx-3 pt-3',
-        )} style={{
-          maxHeight,
-          // eslint-disable-next-line max-len
-          maskImage: 'linear-gradient(to bottom, transparent, black 20px, black calc(100% - 20px), transparent)',
-        }}>
+        <Command.List
+          className={clsx(
+            'overflow-y-auto',
+            'mx-3 pt-3',
+          )} style={{
+            maxHeight,
+            // eslint-disable-next-line max-len
+            maskImage: 'linear-gradient(to bottom, transparent, black 20px, black calc(100% - 20px), transparent)',
+          }}
+        >
           <div className="pb-1 md:pb-2">
             <Command.Empty className="mt-1 pl-3 text-dim pb-4">
               {isLoading ? 'Searching ...' : 'No results found'}
