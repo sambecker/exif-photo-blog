@@ -256,205 +256,212 @@ export default function PhotoLarge({
         >
           {renderLargePhoto}
         </Link>}
+      classNameSide="relative"
       contentSide={
-        <DivDebugBaselineGrid className={clsx(
-          'relative',
-          'sticky top-4 self-start -translate-y-1',
-          'grid grid-cols-2 md:grid-cols-1',
-          'gap-x-0.5 sm:gap-x-1 gap-y-baseline',
-          'pb-6',
-        )}>
-          {/* Meta */}
-          <div className="pr-3 md:pr-0">
-            <div className="float-end hidden md:block">
-              {renderAdminMenu}
-            </div>
-            {hasTitle && (showTitleAsH1
-              ? <h1>{renderPhotoLink}</h1>
-              : renderPhotoLink)}
-            <div className="space-y-baseline">
-              {photo.caption &&
-                <div className="uppercase">
-                  {photo.caption}
-                </div>}
-              {(
-                showCameraContent ||
-                showLensContent ||
-                showRecipeContent ||
-                showTagsContent
-              ) &&
-                <div>
-                  {(showCameraContent || showLensContent) &&
-                    <div className="flex flex-col">
-                      {showCameraContent &&
-                        <PhotoCamera
-                          camera={camera}
+        <div className="absolute inset-0">
+          <DivDebugBaselineGrid className={clsx(
+            'sticky top-4 self-start -translate-y-1',
+            'overflow-y-scroll',
+            'max-h-full',
+          )}>
+            <div className={clsx(
+              'grid grid-cols-2 md:grid-cols-1',
+              'gap-x-0.5 sm:gap-x-1 gap-y-baseline',
+              'pb-6',
+            )}>
+              {/* Meta */}
+              <div className="pr-3 md:pr-0">
+                <div className="float-end hidden md:block">
+                  {renderAdminMenu}
+                </div>
+                {hasTitle && (showTitleAsH1
+                  ? <h1>{renderPhotoLink}</h1>
+                  : renderPhotoLink)}
+                <div className="space-y-baseline">
+                  {photo.caption &&
+                    <div className="uppercase">
+                      {photo.caption}
+                    </div>}
+                  {(
+                    showCameraContent ||
+                    showLensContent ||
+                    showRecipeContent ||
+                    showTagsContent
+                  ) &&
+                    <div>
+                      {(showCameraContent || showLensContent) &&
+                        <div className="flex flex-col">
+                          {showCameraContent &&
+                            <PhotoCamera
+                              camera={camera}
+                              contrast="medium"
+                              prefetch={prefetchRelatedLinks}
+                            />}
+                          {showLensContent &&
+                            <PhotoLens
+                              lens={lens}
+                              contrast="medium"
+                              prefetch={prefetchRelatedLinks}
+                              shortText
+                            />}
+                        </div>}
+                      {showRecipeContent && recipeTitle &&
+                        <PhotoRecipe
+                          recipe={recipeTitle}
                           contrast="medium"
                           prefetch={prefetchRelatedLinks}
                         />}
-                      {showLensContent &&
-                        <PhotoLens
-                          lens={lens}
+                      {showTagsContent &&
+                        <PhotoTags
+                          tags={tags}
                           contrast="medium"
                           prefetch={prefetchRelatedLinks}
-                          shortText
                         />}
                     </div>}
-                  {showRecipeContent && recipeTitle &&
-                    <PhotoRecipe
-                      recipe={recipeTitle}
-                      contrast="medium"
-                      prefetch={prefetchRelatedLinks}
-                    />}
-                  {showTagsContent &&
-                    <PhotoTags
-                      tags={tags}
-                      contrast="medium"
-                      prefetch={prefetchRelatedLinks}
-                    />}
-                </div>}
-            </div>
-          </div>
-          {/* EXIF Data */}
-          <div className={clsx(
-            'space-y-baseline',
-            !hasTitleContent && !hasMetaContent && 'md:-mt-baseline',
-          )}>
-            <div className="float-end md:hidden">
-              {renderAdminMenu}
-            </div>
-            {showExifContent &&
-              <>
-                <ul className="text-medium">
-                  <li>
-                    {photo.focalLength &&
-                      <Link
-                        href={pathForFocalLength(photo.focalLength)}
-                        className="hover:text-main active:text-medium"
-                      >
-                        {photo.focalLengthFormatted}
-                      </Link>}
-                    {(
-                      photo.focalLengthIn35MmFormatFormatted &&
-                      // eslint-disable-next-line max-len
-                      photo.focalLengthIn35MmFormatFormatted !== photo.focalLengthFormatted
-                    ) &&
-                      <>
-                        {' '}
-                        <Tooltip
-                          content="35mm equivalent"
-                          sideOffset={3}
-                          supportMobile
-                        >
-                          <span
-                            className={clsx(
-                              'text-extra-dim',
-                              'decoration-dotted underline-offset-[3px]',
-                              'hover:underline',
-                            )}
+                </div>
+              </div>
+              {/* EXIF Data */}
+              <div className={clsx(
+                'space-y-baseline',
+                !hasTitleContent && !hasMetaContent && 'md:-mt-baseline',
+              )}>
+                <div className="float-end md:hidden">
+                  {renderAdminMenu}
+                </div>
+                {showExifContent &&
+                  <>
+                    <ul className="text-medium">
+                      <li>
+                        {photo.focalLength &&
+                          <Link
+                            href={pathForFocalLength(photo.focalLength)}
+                            className="hover:text-main active:text-medium"
                           >
-                            {photo.focalLengthIn35MmFormatFormatted}
-                          </span>
-                        </Tooltip>
-                      </>}
-                  </li>
-                  <li>{photo.fNumberFormatted}</li>
-                  <li>{photo.exposureTimeFormatted}</li>
-                  <li>{photo.isoFormatted}</li>
-                  <li>{photo.exposureCompensationFormatted ?? '0ev'}</li>
-                </ul>
-                {(showRecipeButton || showSimulationContent) &&
-                  <div className="flex items-center gap-2 *:w-auto">
-                    {showSimulationContent && photo.filmSimulation &&
-                      <PhotoFilmSimulation
-                        simulation={photo.filmSimulation}
+                            {photo.focalLengthFormatted}
+                          </Link>}
+                        {(
+                          photo.focalLengthIn35MmFormatFormatted &&
+                          // eslint-disable-next-line max-len
+                          photo.focalLengthIn35MmFormatFormatted !== photo.focalLengthFormatted
+                        ) &&
+                          <>
+                            {' '}
+                            <Tooltip
+                              content="35mm equivalent"
+                              sideOffset={3}
+                              supportMobile
+                            >
+                              <span
+                                className={clsx(
+                                  'text-extra-dim',
+                                  'decoration-dotted underline-offset-[3px]',
+                                  'hover:underline',
+                                )}
+                              >
+                                {photo.focalLengthIn35MmFormatFormatted}
+                              </span>
+                            </Tooltip>
+                          </>}
+                      </li>
+                      <li>{photo.fNumberFormatted}</li>
+                      <li>{photo.exposureTimeFormatted}</li>
+                      <li>{photo.isoFormatted}</li>
+                      <li>{photo.exposureCompensationFormatted ?? '0ev'}</li>
+                    </ul>
+                    {(showRecipeButton || showSimulationContent) &&
+                      <div className="flex items-center gap-2 *:w-auto">
+                        {showSimulationContent && photo.filmSimulation &&
+                          <PhotoFilmSimulation
+                            simulation={photo.filmSimulation}
+                            prefetch={prefetchRelatedLinks}
+                          />}
+                        {showRecipeButton &&
+                          <Tooltip content="Fujifilm Recipe">
+                            <button
+                              ref={refRecipeButton}
+                              title="Fujifilm Recipe"
+                              onClick={() => {
+                                toggleRecipeOverlay();
+                                // Avoid unexpected tooltip trigger
+                                refRecipeButton.current?.blur();
+                              }}
+                              className={clsx(
+                                'text-medium',
+                                'border-medium rounded-md',
+                                'px-[4px] py-[2.5px] my-[-3px]',
+                                'translate-y-[2px]',
+                                'hover:bg-dim active:bg-main',
+                                !showSimulation && 'translate-x-[-2px]',
+                              )}>
+                              {shouldShowRecipeOverlay
+                                ? <IoCloseSharp size={15} />
+                                : <TbChecklist
+                                  className="translate-x-[0.5px]"
+                                  size={15}
+                                />}
+                            </button>
+                          </Tooltip>} 
+                      </div>}
+                  </>}
+                <div className={clsx(
+                  'flex gap-x-3 gap-y-baseline',
+                  'md:flex-col flex-wrap',
+                  'md:justify-normal',
+                )}>
+                  <PhotoDate
+                    photo={photo}
+                    className={clsx(
+                      'text-medium',
+                      // Prevent collision with admin button
+                      !hasNonDateContent && isUserSignedIn && 'md:pr-7',
+                    )}
+                    // 'createdAt' is a naive datetime which does not require
+                    // a timezone and will not cause server/client mismatch
+                    timezone={null}
+                    hideTime={!SHOW_TAKEN_AT_TIME}
+                  />
+                  <div className={clsx(
+                    'flex gap-1 translate-y-[0.5px]',
+                    'translate-x-[-2.5px]',
+                  )}>
+                    {showZoomControls &&
+                      <LoaderButton
+                        title="Open Image Viewer"
+                        icon={<LuExpand size={15} />}
+                        onClick={() => zoomControlsRef.current?.open()}
+                        styleAs="link"
+                        className="text-medium translate-y-[0.25px]"
+                        hideFocusOutline
+                      />}
+                    {shouldShare &&
+                      <ShareButton
+                        title="Share Photo"
+                        photo={photo}
+                        tag={shouldShareTag ? primaryTag : undefined}
+                        camera={shouldShareCamera ? camera : undefined}
+                        lens={shouldShareLens ? lens : undefined}
+                        simulation={shouldShareSimulation
+                          ? photo.filmSimulation
+                          : undefined}
+                        recipe={shouldShareRecipe
+                          ? recipeTitle
+                          : undefined}
+                        focal={shouldShareFocalLength
+                          ? photo.focalLength
+                          : undefined}
                         prefetch={prefetchRelatedLinks}
                       />}
-                    {showRecipeButton &&
-                      <Tooltip content="Fujifilm Recipe">
-                        <button
-                          ref={refRecipeButton}
-                          title="Fujifilm Recipe"
-                          onClick={() => {
-                            toggleRecipeOverlay();
-                            // Avoid unexpected tooltip trigger
-                            refRecipeButton.current?.blur();
-                          }}
-                          className={clsx(
-                            'text-medium',
-                            'border-medium rounded-md',
-                            'px-[4px] py-[2.5px] my-[-3px]',
-                            'translate-y-[2px]',
-                            'hover:bg-dim active:bg-main',
-                            !showSimulation && 'translate-x-[-2px]',
-                          )}>
-                          {shouldShowRecipeOverlay
-                            ? <IoCloseSharp size={15} />
-                            : <TbChecklist
-                              className="translate-x-[0.5px]"
-                              size={15}
-                            />}
-                        </button>
-                      </Tooltip>} 
-                  </div>}
-              </>}
-            <div className={clsx(
-              'flex gap-x-3 gap-y-baseline',
-              'md:flex-col flex-wrap',
-              'md:justify-normal',
-            )}>
-              <PhotoDate
-                photo={photo}
-                className={clsx(
-                  'text-medium',
-                  // Prevent collision with admin button
-                  !hasNonDateContent && isUserSignedIn && 'md:pr-7',
-                )}
-                // 'createdAt' is a naive datetime which does not require
-                // a timezone and will not cause server/client mismatch
-                timezone={null}
-                hideTime={!SHOW_TAKEN_AT_TIME}
-              />
-              <div className={clsx(
-                'flex gap-1 translate-y-[0.5px]',
-                'translate-x-[-2.5px]',
-              )}>
-                {showZoomControls &&
-                  <LoaderButton
-                    title="Open Image Viewer"
-                    icon={<LuExpand size={15} />}
-                    onClick={() => zoomControlsRef.current?.open()}
-                    styleAs="link"
-                    className="text-medium translate-y-[0.25px]"
-                    hideFocusOutline
-                  />}
-                {shouldShare &&
-                  <ShareButton
-                    title="Share Photo"
-                    photo={photo}
-                    tag={shouldShareTag ? primaryTag : undefined}
-                    camera={shouldShareCamera ? camera : undefined}
-                    lens={shouldShareLens ? lens : undefined}
-                    simulation={shouldShareSimulation
-                      ? photo.filmSimulation
-                      : undefined}
-                    recipe={shouldShareRecipe
-                      ? recipeTitle
-                      : undefined}
-                    focal={shouldShareFocalLength
-                      ? photo.focalLength
-                      : undefined}
-                    prefetch={prefetchRelatedLinks}
-                  />}
-                {ALLOW_PUBLIC_DOWNLOADS && 
-                  <DownloadButton 
-                    className="translate-y-[0.5px] md:translate-y-0"
-                    photo={photo} 
-                  />}
+                    {ALLOW_PUBLIC_DOWNLOADS && 
+                      <DownloadButton 
+                        className="translate-y-[0.5px] md:translate-y-0"
+                        photo={photo} 
+                      />}
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </DivDebugBaselineGrid>}
+          </DivDebugBaselineGrid>
+        </div>}
     />
   );
 };
