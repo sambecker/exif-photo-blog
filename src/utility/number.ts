@@ -28,14 +28,15 @@ const MAX_FRACTION_LENGTH = 4; // Permit 1/64 but not 1/100
 const formatDecimalToFraction = (_decimal: number) => {
   // Prevent imprecision which causes numbers such as,
   // 0.1 to equal 0.10000000000000009
-  const decimal = parseFloat(_decimal.toPrecision(8));
-  if (Math.abs(Math.abs(decimal) - 0.167) <= FRACTION_TOLERANCE) {
+  const decimal = Math.abs(parseFloat(_decimal.toPrecision(8)));
+
+  if (Math.abs(decimal - 0.167) <= FRACTION_TOLERANCE) {
     return '1/6';
-  } else if (Math.abs(Math.abs(decimal) - 0.333) <= FRACTION_TOLERANCE) {
+  } else if (Math.abs(decimal - 0.333) <= FRACTION_TOLERANCE) {
     return '1/3';
-  } else if (Math.abs(Math.abs(decimal) - 0.667) <= FRACTION_TOLERANCE) {
+  } else if (Math.abs(decimal - 0.667) <= FRACTION_TOLERANCE) {
     return '2/3';
-  } else if (Math.abs(Math.abs(decimal) - 0.833) <= FRACTION_TOLERANCE) {
+  } else if (Math.abs(decimal - 0.833) <= FRACTION_TOLERANCE) {
     return '5/6';
   } else {
     const length = decimal.toString().length - 2;
@@ -73,9 +74,7 @@ export const formatNumberToFraction = (number: number) => {
     integer += 1;
   }
 
-  const fraction = decimal !== 0
-    ? formatDecimalToFraction(Math.abs(decimal))
-    : '';
+  const fraction = decimal !== 0 ? formatDecimalToFraction(decimal) : '';
 
   // Ensure fractions aren't too long
   if (!fraction || fraction.length <= MAX_FRACTION_LENGTH) {
