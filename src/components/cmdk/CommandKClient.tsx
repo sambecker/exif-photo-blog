@@ -167,7 +167,7 @@ export default function CommandKClient({
   const refScroll = useRef<HTMLDivElement>(null);
   const { maskImage, updateMask } = useMaskedScroll({
     ref: refScroll,
-    listenForScrollEvents: false,
+    updateMaskOnEvents: false,
   });
   
   // Manage action/path waiting state
@@ -207,7 +207,11 @@ export default function CommandKClient({
 
   useEffect(() => {
     isOpenRef.current = isOpen;
-  }, [isOpen]);
+    if (isOpen) {
+      const timeout = setTimeout(updateMask, 100);
+      return () => clearTimeout(timeout);
+    }
+  }, [isOpen, updateMask]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -556,7 +560,10 @@ export default function CommandKClient({
           <div className="relative">
             <Command.Input
               ref={refInput}
-              onChangeCapture={(e) => setQueryLive(e.currentTarget.value)}
+              onChangeCapture={(e) => {
+                setQueryLive(e.currentTarget.value);
+                updateMask();
+              }}
               className={clsx(
                 'w-full min-w-0!',
                 'focus:ring-0',
@@ -585,14 +592,15 @@ export default function CommandKClient({
           onScroll={updateMask}
           className={clsx(
             'overflow-y-auto',
-            'mx-3 py-2',
+            'mx-3 pt-2 pb-3.5',
+            '[&>*>*>*]:mt-2.5',
           )}
-          style={{ maxHeight, maskImage }}
+          style={{ maskImage, maxHeight }}
         >
-          <Command.Empty className="mt-1 pl-3 text-dim pb-4">
-            {isLoading ? 'Searching ...' : 'No results found'}
-          </Command.Empty>
-          <div className="space-y-2.5">
+          <div className="-mt-2.5">
+            <Command.Empty className="mt-1 pl-3 text-dim pb-1">
+              {isLoading ? 'Searching ...' : 'No results found'}
+            </Command.Empty>
             {queriedSections
               .concat(categorySections)
               .concat(sectionPages)
@@ -604,7 +612,8 @@ export default function CommandKClient({
                   key={heading}
                   heading={<div className={clsx(
                     'flex items-center',
-                    'px-2 pb-0.5',
+                    'px-2 py-1! pb-0.5',
+                    'text-xs font-medium text-dim tracking-wider',
                     isPending && 'opacity-20',
                   )}>
                     {accessory &&
@@ -614,11 +623,6 @@ export default function CommandKClient({
                   className={clsx(
                     'uppercase',
                     'select-none',
-                    '[&>*:first-child]:py-1',
-                    '[&>*:first-child]:font-medium',
-                    '[&>*:first-child]:text-dim',
-                    '[&>*:first-child]:text-xs',
-                    '[&>*:first-child]:tracking-wider',
                   )}
                 >
                   {items.map(({
@@ -672,14 +676,14 @@ export default function CommandKClient({
                     />;
                   })}
                 </Command.Group>)}
+            {footer && !queryLive &&
+              <div className={clsx(
+                'text-center text-base text-dim pt-1',
+                'pb-2',
+              )}>
+                {footer}
+              </div>}
           </div>
-          {footer && !queryLive &&
-            <div className={clsx(
-              'text-center text-base text-dim pt-2 sm:pt-3',
-              'pb-2.5',
-            )}>
-              {footer}
-            </div>}
         </Command.List>
       </Modal>
     </Command.Dialog>

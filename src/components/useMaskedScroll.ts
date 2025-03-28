@@ -10,41 +10,48 @@ export default function useMaskedScroll({
   direction = 'vertical',
   fadeHeight = 24,
   // Disable when calling 'updateMask' explicitly
-  listenForScrollEvents = true,
+  updateMaskOnEvents = true,
 }: MaskedScrollExternalProps & {
   ref: RefObject<HTMLDivElement | null>
-  listenForScrollEvents?: boolean
+  updateMaskOnEvents?: boolean
 }) {
-  const [position, setPosition] = useState<'start' | 'middle' | 'end'>('start');
+  const [position, setPosition] = useState({ start: true, end: true });
 
   const isVertical = direction === 'vertical';
 
   const updateMask = useCallback(() => {
     const ref = containerRef?.current;
     if (ref) {
-      const isStart = isVertical
+      const start = isVertical
         ? ref.scrollTop === 0
         : ref.scrollLeft === 0;
-      const isEnd = isVertical
+      const end = isVertical
         ? ref.scrollHeight - ref.scrollTop === ref.clientHeight
         : ref.scrollWidth - ref.scrollLeft === ref.clientWidth;
-      setPosition(isStart ? 'start' : isEnd ? 'end' : 'middle');
+      setPosition({ start, end });
     }
   }, [containerRef, isVertical]);
 
   useEffect(() => {
     const ref = containerRef?.current;
-    if (ref && listenForScrollEvents) {
-      ref.addEventListener('scroll', updateMask);
-      return () => ref.removeEventListener('scroll', updateMask);
+    if (ref) {
+      updateMask();
+      if (updateMaskOnEvents) {
+        ref.onscroll = updateMask;
+        ref.onresize = updateMask;
+        return () => {
+          ref.onscroll = null;
+          ref.onresize = null;
+        };
+      }
     }
-  }, [containerRef, updateMask, listenForScrollEvents]);
+  }, [containerRef, updateMask, updateMaskOnEvents]);
 
   const maskImage = useMemo(() => {
-    // eslint-disable-next-line max-len
-    let mask = `linear-gradient(to ${isVertical ? 'bottom' : 'right'}, transparent, black `;
-    mask += `${position !== 'start' ? fadeHeight : 0}px, black calc(100% - `;
-    mask += `${position !== 'end' ? fadeHeight : 0}px), transparent)`;
+    let mask = `linear-gradient(to ${isVertical ? 'bottom' : 'right'}, `;
+    mask += 'transparent, black ';
+    mask += `${!position.start ? fadeHeight : 0}px, black calc(100% - `;
+    mask += `${!position.end ? fadeHeight : 0}px), transparent)`;
     return mask;
   }, [fadeHeight, isVertical, position]);
 

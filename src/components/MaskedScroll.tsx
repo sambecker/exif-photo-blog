@@ -4,16 +4,14 @@ import useMaskedScroll, { MaskedScrollExternalProps } from './useMaskedScroll';
 
 export default function MaskedScroll({
   direction = 'vertical',
-  fadeHeight = 24,
+  fadeHeight,
   hideScrollbar,
   className,
-  classNameContent,
   style,
   children,
   ...props
 }: HTMLAttributes<HTMLDivElement> &
 MaskedScrollExternalProps & {
-  classNameContent?: string
   hideScrollbar?: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -22,25 +20,16 @@ MaskedScrollExternalProps & {
 
   return <div
     {...props}
+    ref={ref}
     className={clsx(
       direction === 'vertical'
-        ? 'overflow-y-hidden'
-        : 'overflow-x-hidden',
+        ? 'max-h-full overflow-y-scroll'
+        : 'max-w-full overflow-x-scroll',
+      hideScrollbar && '[scrollbar-width:none]',
       className,
     )}
     style={{ maskImage, ...style }}
   >
-    <div
-      ref={ref}
-      className={clsx(
-        direction === 'vertical'
-          ? 'max-h-full overflow-y-auto'
-          : 'max-w-full overflow-x-auto',
-        hideScrollbar && '[scrollbar-width:none]',
-        classNameContent,
-      )}
-    >
-      {children}
-    </div>
+    {children}
   </div>;
 }

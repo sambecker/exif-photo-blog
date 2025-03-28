@@ -48,6 +48,7 @@ import PhotoRecipeOverlay from '@/recipe/PhotoRecipeOverlay';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
 import PhotoLens from '@/lens/PhotoLens';
 import { lensFromPhoto } from '@/lens';
+import MaskedScroll from '@/components/MaskedScroll';
 
 export default function PhotoLarge({
   photo,
@@ -258,16 +259,17 @@ export default function PhotoLarge({
         </Link>}
       classNameSide="relative"
       contentSide={
-        <div className="absolute inset-0">
-          <DivDebugBaselineGrid className={clsx(
-            'sticky top-4 self-start -translate-y-1',
-            'overflow-y-scroll',
-            'max-h-full',
-          )}>
-            <div className={clsx(
+        <div className="md:absolute inset-0">
+          <MaskedScroll
+            className="sticky top-4 self-start"
+            fadeHeight={36}
+            hideScrollbar
+          >
+            <DivDebugBaselineGrid className={clsx(
+              '-mt-1',
               'grid grid-cols-2 md:grid-cols-1',
               'gap-x-0.5 sm:gap-x-1 gap-y-baseline',
-              'pb-6',
+              'mb-6 md:mb-4',
             )}>
               {/* Meta */}
               <div className="pr-3 md:pr-0">
@@ -459,8 +461,8 @@ export default function PhotoLarge({
                   </div>
                 </div>
               </div>
-            </div>
-          </DivDebugBaselineGrid>
+            </DivDebugBaselineGrid>
+          </MaskedScroll>
         </div>}
     />
   );

@@ -39,9 +39,8 @@ export default function PhotoGridPage({
         <MaskedScroll
           className={clsx(
             'sticky top-0 -mb-5 -mt-5',
-            'max-h-screen h-full',
+            'max-h-screen py-4',
           )}
-          classNameContent="py-4"
           fadeHeight={36}
           hideScrollbar
         >
