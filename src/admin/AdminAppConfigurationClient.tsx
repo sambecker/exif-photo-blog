@@ -71,6 +71,8 @@ export default function AdminAppConfigurationClient({
   hasDefaultTheme,
   defaultTheme,
   arePhotosMatted,
+  matteColor,
+  matteColorDark,
   // Display
   categoryVisibility,
   hasCategoryVisibility,
@@ -114,8 +116,8 @@ export default function AdminAppConfigurationClient({
 }) {
   const renderEnvVars = (variables: string[]) =>
     <div className="pt-1 flex flex-col gap-1">
-      {variables.map(envVar =>
-        <EnvVar key={envVar} variable={envVar} />)}
+      {variables.map(variable =>
+        <EnvVar key={variable} variable={variable} />)}
     </div>;
 
   const renderSubStatus = (
@@ -478,7 +480,23 @@ export default function AdminAppConfigurationClient({
             Set environment variable to {'"1"'} to constrain the size
             {' '}
             of each photo, and display a surrounding border:
-            {renderEnvVars(['NEXT_PUBLIC_MATTE_PHOTOS'])}
+            <div className="pt-1 flex flex-col gap-1">
+              <EnvVar variable="NEXT_PUBLIC_MATTE_PHOTOS" />
+              <EnvVar
+                variable="NEXT_PUBLIC_MATTE_COLOR"
+                accessory={matteColor && <span
+                  className="size-[15px] border-medium rounded-sm ml-1"
+                  style={{ backgroundColor: matteColor }}
+                />}
+              />
+              <EnvVar
+                variable="NEXT_PUBLIC_MATTE_COLOR_DARK"
+                accessory={matteColorDark && <span
+                  className="size-[15px] border-medium rounded-sm ml-1"
+                  style={{ backgroundColor: matteColorDark }}
+                />}
+              />
+            </div>
           </ChecklistRow>
         </ChecklistGroup>
         <ChecklistGroup

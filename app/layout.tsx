@@ -23,6 +23,7 @@ import ShareModals from '@/share/ShareModals';
 import AdminUploadPanel from '@/admin/upload/AdminUploadPanel';
 import { revalidatePath } from 'next/cache';
 import RecipeModal from '@/recipe/RecipeModal';
+import ThemeColors from '@/app/ThemeColors';
 
 import '../tailwind.css';
 
@@ -79,6 +80,7 @@ export default function RootLayout({
         '3xl:flex flex-col items-center',
       )}>
         <AppStateProvider>
+          <ThemeColors />
           <ThemeProvider attribute="class" defaultTheme={DEFAULT_THEME}>
             <SwrConfigClient>
               <div className={clsx(
