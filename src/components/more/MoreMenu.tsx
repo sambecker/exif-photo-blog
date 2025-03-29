@@ -19,6 +19,8 @@ export default function MoreMenu({
   buttonClassNameOpen,
   ariaLabel,
   align = 'end',
+  // Prevent errant clicks from trigger being too close to menu
+  sideOffset = 6,
   onOpen,
   ...props
 }: {
@@ -64,6 +66,7 @@ export default function MoreMenu({
         <DropdownMenu.Content
           {...props}
           align={align}
+          sideOffset={sideOffset}
           className={clsx(
             'z-10',
             'min-w-[8rem]',
