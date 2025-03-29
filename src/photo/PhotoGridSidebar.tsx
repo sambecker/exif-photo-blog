@@ -223,6 +223,7 @@ export default function PhotoGridSidebar({
           countOnHover={count}
           type="text-only"
           prefetch={false}
+          badged
         />)}
     />
     : null;

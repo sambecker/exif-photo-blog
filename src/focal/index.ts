@@ -65,3 +65,6 @@ export const generateMetaForFocalLength = (
   ),
   images: absolutePathForFocalLengthImage(focal),
 });
+
+export const sortFocalLengths = (focalLengths: FocalLengths) =>
+  focalLengths.sort((a, b) => a.focal - b.focal);

@@ -14,6 +14,7 @@ import {
 } from '@/app/config';
 import { sortTagsByCount } from '@/tag';
 import { sortCategoriesByCount } from '@/category';
+import { sortFocalLengths } from '@/focal';
 
 export const getDataForCategories = () => [
   getUniqueCameras()
@@ -39,7 +40,7 @@ export const getDataForCategories = () => [
     : [],
   SHOW_FOCAL_LENGTHS
     ? getUniqueFocalLengths()
-      .then(sortCategoriesByCount)
+      .then(sortFocalLengths)
       .catch(() => [])
     : [],
 ] as const;
