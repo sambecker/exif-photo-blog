@@ -233,7 +233,6 @@ export default function PhotoLarge({
     <AdminPhotoMenu {...{
       photo,
       revalidatePhoto,
-      buttonClassName: 'translate-y-[-4px]',
       includeFavorite: includeFavoriteInAdminMenu,
       ariaLabel: `Admin menu for '${titleForPhoto(photo)}' photo`,
     }} />;
@@ -259,14 +258,13 @@ export default function PhotoLarge({
         </Link>}
       classNameSide="relative"
       contentSide={
-        <div className="md:absolute inset-0">
+        <div className="md:absolute inset-0 -mt-1">
           <MaskedScroll
             className="sticky top-4 self-start"
             fadeHeight={36}
             hideScrollbar
           >
             <DivDebugBaselineGrid className={clsx(
-              '-mt-1',
               'grid grid-cols-2 md:grid-cols-1',
               'gap-x-0.5 sm:gap-x-1 gap-y-baseline',
               'mb-6 md:mb-4',

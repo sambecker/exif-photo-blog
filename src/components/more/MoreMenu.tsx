@@ -46,7 +46,8 @@ export default function MoreMenu({
       <DropdownMenu.Trigger asChild>
         <button
           className={clsx(
-            'p-1 min-h-0 border-none shadow-none',
+            'px-1 py-[3px]',
+            'min-h-0 border-none shadow-none',
             'hover:bg-gray-100 active:bg-gray-200/75',
             'dark:hover:bg-gray-800/75 dark:active:bg-gray-900',
             'text-dim',
