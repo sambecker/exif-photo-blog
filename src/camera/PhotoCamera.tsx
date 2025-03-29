@@ -10,12 +10,8 @@ import { isCameraApple } from '@/platforms/apple';
 export default function PhotoCamera({
   camera,
   hideAppleIcon,
-  type,
-  badged,
-  contrast,
-  prefetch,
   countOnHover,
-  className,
+  ...props
 }: {
   camera: Camera
   hideAppleIcon?: boolean
@@ -26,6 +22,7 @@ export default function PhotoCamera({
 
   return (
     <EntityLink
+      {...props}
       label={formatCameraText(camera)}
       href={pathForCamera(camera)}
       icon={showAppleIcon
@@ -38,11 +35,6 @@ export default function PhotoCamera({
           size={15}
           className="translate-x-[-0.5px] translate-y-[-0.5px]"
         />}
-      type={type}
-      className={className}
-      badged={badged}
-      contrast={contrast}
-      prefetch={prefetch}
       hoverEntity={countOnHover}
     />
   );

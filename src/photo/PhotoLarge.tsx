@@ -51,6 +51,7 @@ import PhotoRecipe from '@/recipe/PhotoRecipe';
 import PhotoLens from '@/lens/PhotoLens';
 import { lensFromPhoto } from '@/lens';
 import MaskedScroll from '@/components/MaskedScroll';
+import useCategoryCountsForPhoto from '@/category/useCategoryCountsForPhoto';
 
 export default function PhotoLarge({
   photo,
@@ -113,6 +114,14 @@ export default function PhotoLarge({
     shouldDebugRecipeOverlays,
     isUserSignedIn,
   } = useAppState();
+
+  const {
+    cameraCount,
+    lensCount,
+    tagCounts,
+    recipeCount,
+    simulationCount,
+  } = useCategoryCountsForPhoto(photo);
 
   const showZoomControls = showZoomControlsProp && areZoomControlsShown;
 
@@ -306,6 +315,7 @@ export default function PhotoLarge({
                               camera={camera}
                               contrast="medium"
                               prefetch={prefetchRelatedLinks}
+                              countOnHover={cameraCount}
                             />}
                           {showLensContent &&
                             <PhotoLens
@@ -313,6 +323,7 @@ export default function PhotoLarge({
                               contrast="medium"
                               prefetch={prefetchRelatedLinks}
                               shortText
+                              countOnHover={lensCount}
                             />}
                         </div>}
                       {showRecipeContent && recipeTitle &&
@@ -320,10 +331,12 @@ export default function PhotoLarge({
                           recipe={recipeTitle}
                           contrast="medium"
                           prefetch={prefetchRelatedLinks}
+                          countOnHover={recipeCount}
                         />}
                       {showTagsContent &&
                         <PhotoTags
                           tags={tags}
+                          tagCounts={tagCounts}
                           contrast="medium"
                           prefetch={prefetchRelatedLinks}
                         />}
@@ -384,6 +397,7 @@ export default function PhotoLarge({
                           <PhotoFilmSimulation
                             simulation={photo.filmSimulation}
                             prefetch={prefetchRelatedLinks}
+                            countOnHover={simulationCount}
                           />}
                         {showRecipeButton &&
                           <Tooltip content="Fujifilm Recipe">

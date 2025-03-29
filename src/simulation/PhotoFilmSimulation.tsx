@@ -13,9 +13,8 @@ export default function PhotoFilmSimulation({
   type = 'icon-last',
   badged = true,
   contrast = 'low',
-  prefetch,
   countOnHover,
-  className,
+  ...props
 }: {
   simulation: FilmSimulation
   countOnHover?: number
@@ -25,6 +24,7 @@ export default function PhotoFilmSimulation({
 
   return (
     <EntityLink
+      {...props}
       label={medium}
       labelSmall={small}
       href={pathForFilmSimulation(simulation)}
@@ -39,10 +39,8 @@ export default function PhotoFilmSimulation({
       />}
       title={`Film Simulation: ${large}`}
       type={type}
-      className={className}
       badged={badged}
       contrast={contrast}
-      prefetch={prefetch}
       hoverEntity={countOnHover}
       iconWide
     />

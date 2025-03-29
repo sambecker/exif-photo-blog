@@ -7,26 +7,18 @@ import IconFocalLength from '@/components/icons/IconFocalLength';
 
 export default function PhotoFocalLength({
   focal,
-  type,
-  badged,
-  contrast,
-  prefetch,
   countOnHover,
-  className,
+  ...props
 }: {
   focal: number
   countOnHover?: number
 } & EntityLinkExternalProps) {
   return (
     <EntityLink
+      {...props}
       label={formatFocalLength(focal)}
       href={pathForFocalLength(focal)}
       icon={<IconFocalLength />}
-      type={type}
-      className={className}
-      badged={badged}
-      contrast={contrast}
-      prefetch={prefetch}
       hoverEntity={countOnHover}
     />
   );

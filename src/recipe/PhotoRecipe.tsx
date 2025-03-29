@@ -9,15 +9,11 @@ import IconRecipe from '@/components/icons/IconRecipe';
 
 export default function PhotoRecipe({
   recipe,
-  type,
-  badged,
-  contrast,
-  prefetch,
   countOnHover,
-  className,
   refButton,
   isOpen,
   recipeOnClick,
+  ...props
 }: {
   recipe: string
   refButton?: RefObject<HTMLButtonElement | null>
@@ -28,22 +24,18 @@ export default function PhotoRecipe({
   return (
     <div className="flex w-full gap-2">
       <EntityLink
+        {...props}
         title="Recipe"
         label={formatRecipe(recipe)}
         href={pathForRecipe(recipe)}
         icon={<IconRecipe
           size={16}
           className={clsx(
-            badged
+            props.badged
               ? 'translate-x-[-1px] translate-y-[0.5px]'
               : 'translate-y-[-0.5px]',
           )}
         />}
-        className={className}
-        type={type}
-        badged={badged}
-        contrast={contrast}
-        prefetch={prefetch}
         hoverEntity={countOnHover}
       />
       {recipeOnClick &&

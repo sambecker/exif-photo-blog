@@ -24,6 +24,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { isPathAdmin, PATH_SIGN_IN } from '@/app/paths';
 import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 import { RecipeProps } from '@/recipe';
+import { getCountsForCategoriesAction } from '@/category/actions';
 
 export default function AppStateProvider({
   children,
@@ -89,6 +90,11 @@ export default function AppStateProvider({
   }, []);
 
   const invalidateSwr = useCallback(() => setSwrTimestamp(Date.now()), []);
+
+  const { data: categoriesWithCounts } = useSWR(
+    'getDataForCategories',
+    getCountsForCategoriesAction,
+  );
 
   const {
     data: auth,
@@ -167,6 +173,7 @@ export default function AppStateProvider({
         clearNextPhotoAnimation: () => setNextPhotoAnimation?.(undefined),
         shouldRespondToKeyboardCommands,
         setShouldRespondToKeyboardCommands,
+        categoriesWithCounts,
         // MODAL
         isCommandKOpen,
         setIsCommandKOpen,

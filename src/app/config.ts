@@ -241,8 +241,12 @@ export const MATTE_COLOR_DARK =
 
 export const CATEGORY_VISIBILITY = getOrderedCategoriesFromString(
   process.env.NEXT_PUBLIC_CATEGORY_VISIBILITY);
+export const SHOW_CAMERAS =
+  CATEGORY_VISIBILITY.includes('cameras');
 export const SHOW_LENSES =
   CATEGORY_VISIBILITY.includes('lenses');
+export const SHOW_TAGS =
+  CATEGORY_VISIBILITY.includes('tags');
 export const SHOW_RECIPES =
   CATEGORY_VISIBILITY.includes('recipes');
 export const SHOW_FILM_SIMULATIONS =

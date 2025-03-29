@@ -7,13 +7,9 @@ import IconLens from '@/components/icons/IconLens';
 
 export default function PhotoLens({
   lens,
-  type,
-  badged,
-  contrast,
-  prefetch,
   countOnHover,
-  className,
   shortText,
+  ...props
 }: {
   lens: Lens
   countOnHover?: number
@@ -21,17 +17,13 @@ export default function PhotoLens({
 } & EntityLinkExternalProps) {
   return (
     <EntityLink
+      {...props}
       label={formatLensText(lens, shortText ? 'short' : 'medium')}
       href={pathForLens(lens)}
       icon={<IconLens
         size={14}
         className="translate-x-[-0.5px]"
       />}
-      type={type}
-      className={className}
-      badged={badged}
-      contrast={contrast}
-      prefetch={prefetch}
       hoverEntity={countOnHover}
     />
   );

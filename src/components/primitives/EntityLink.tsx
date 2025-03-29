@@ -12,6 +12,7 @@ export interface EntityLinkExternalProps {
   type?: LabeledIconType
   badged?: boolean
   contrast?: ComponentProps<typeof Badge>['contrast']
+  uppercase?: boolean
   prefetch?: boolean
   className?: string
 }
