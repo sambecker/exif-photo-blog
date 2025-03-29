@@ -2,6 +2,7 @@ import { Photo } from '@/photo';
 import { parameterize } from '@/utility/string';
 import { formatAppleLensText, isLensMakeApple } from '../platforms/apple';
 import { MISSING_FIELD } from '@/app/paths';
+import { formatGoogleLensText, isLensMakeGoogle } from '../platforms/google';
 
 const LENS_PLACEHOLDER: Lens = { make: 'Lens', model: 'Model' };
 
@@ -103,7 +104,9 @@ export const formatLensText = (
 
   const model = isLensMakeApple(make)
     ? formatAppleLensText(modelRaw, length === 'medium')
-    : modelRaw;
+    : isLensMakeGoogle(make)
+      ? formatGoogleLensText(modelRaw, length === 'medium')
+      : modelRaw;
 
   switch (length) {
   case 'long':
