@@ -29,6 +29,8 @@ import {
   SHOULD_PREFETCH_ALL_LINKS,
   ALLOW_PUBLIC_DOWNLOADS,
   SHOW_TAKEN_AT_TIME,
+  MATTE_COLOR,
+  MATTE_COLOR_DARK,
 } from '@/app/config';
 import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
@@ -237,8 +239,16 @@ export default function PhotoLarge({
       ariaLabel: `Admin menu for '${titleForPhoto(photo)}' photo`,
     }} />;
 
-  const largePhotoContainerClassName = clsx(arePhotosMatted &&
-    'flex items-center justify-center aspect-3/2 bg-gray-100',
+  const largePhotoContainerClassName = clsx(
+    arePhotosMatted && 'flex items-center justify-center aspect-3/2',
+    // Matte theme colors defined in root layout
+    arePhotosMatted && (MATTE_COLOR
+      ? 'bg-(--matte-bg)'
+      : 'bg-gray-100'),
+    arePhotosMatted && (MATTE_COLOR_DARK
+      ? 'dark:bg-(--matte-bg-dark)'
+      // Only specify dark background when MATTE_COLOR is not configured
+      : !MATTE_COLOR && 'dark:bg-gray-700/35'),
   );
 
   return (

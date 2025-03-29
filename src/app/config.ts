@@ -232,6 +232,10 @@ export const DEFAULT_THEME =
       : 'system';
 export const MATTE_PHOTOS =
   process.env.NEXT_PUBLIC_MATTE_PHOTOS === '1';
+export const MATTE_COLOR =
+  process.env.NEXT_PUBLIC_MATTE_COLOR;
+export const MATTE_COLOR_DARK =
+  process.env.NEXT_PUBLIC_MATTE_COLOR_DARK;
 
 // DISPLAY
 
@@ -350,6 +354,8 @@ export const APP_CONFIGURATION = {
   hasDefaultTheme: Boolean(process.env.NEXT_PUBLIC_DEFAULT_THEME),
   defaultTheme: DEFAULT_THEME,
   arePhotosMatted: MATTE_PHOTOS,
+  matteColor: MATTE_COLOR,
+  matteColorDark: MATTE_COLOR_DARK,
   // Display
   hasCategoryVisibility:
     Boolean(process.env.NEXT_PUBLIC_CATEGORY_VISIBILITY),

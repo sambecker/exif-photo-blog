@@ -5,12 +5,14 @@ import CopyButton from './CopyButton';
 export default function EnvVar({
   variable,
   value,
+  accessory,
   includeCopyButton = true,
   trailingContent,
   className,
 }: {
   variable: string,
   value?: string,
+  accessory?: ReactNode,
   includeCopyButton?: boolean,
   trailingContent?: ReactNode,
   className?: string,
@@ -33,6 +35,7 @@ export default function EnvVar({
         )}>
           {variable}{value && ` = ${value}`}
         </span>
+        {accessory}
         {includeCopyButton &&
           <span className="translate-y-[1px]">
             <CopyButton
