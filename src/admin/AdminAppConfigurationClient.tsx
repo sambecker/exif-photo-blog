@@ -485,14 +485,14 @@ export default function AdminAppConfigurationClient({
               <EnvVar
                 variable="NEXT_PUBLIC_MATTE_COLOR"
                 accessory={matteColor && <span
-                  className="size-4 border-medium rounded-sm ml-1"
+                  className="size-[15px] border-medium rounded-sm ml-1"
                   style={{ backgroundColor: matteColor }}
                 />}
               />
               <EnvVar
                 variable="NEXT_PUBLIC_MATTE_COLOR_DARK"
                 accessory={matteColorDark && <span
-                  className="size-4 border-medium rounded-sm ml-1"
+                  className="size-[15px] border-medium rounded-sm ml-1"
                   style={{ backgroundColor: matteColorDark }}
                 />}
               />
