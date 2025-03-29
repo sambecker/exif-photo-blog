@@ -13,8 +13,9 @@ export const isCameraGoogle = ({ make }: Camera) =>
 export const isLensMakeGoogle = (make?: string) =>
   make?.toLocaleLowerCase() === MAKE_GOOGLE;
 
-export const isLensGoogle = ({ make }: Lens) =>
-  isLensMakeGoogle(make);
+export const isLensGoogle = ({ make, model }: Lens) =>
+  isLensMakeGoogle(make) ||
+  /^Pixel [0-9a-z]+/i.test(model);
 
 export const formatGoogleLensText = (
   model: string,

@@ -1,8 +1,8 @@
 import { Photo } from '@/photo';
 import { parameterize } from '@/utility/string';
-import { formatAppleLensText, isLensMakeApple } from '../platforms/apple';
+import { formatAppleLensText, isLensApple } from '../platforms/apple';
 import { MISSING_FIELD } from '@/app/paths';
-import { formatGoogleLensText, isLensMakeGoogle } from '../platforms/google';
+import { formatGoogleLensText, isLensGoogle } from '../platforms/google';
 
 const LENS_PLACEHOLDER: Lens = { make: 'Lens', model: 'Model' };
 
@@ -88,13 +88,15 @@ export const lensFromPhoto = (
     : fallback ?? LENS_PLACEHOLDER;
 
 export const formatLensText = (
-  { make, model: modelRaw }: Lens,
+  lens: Lens,
   length:
     'long' |    // Unmodified make and model
     'medium' |  // Make and model, with modifiers removed
     'short'     // Model only
   = 'medium',
 ) => {
+  const { make, model: modelRaw } = lens;
+
   // Capture simple make without modifiers like 'Corporation' or 'Company'
   const makeSimple = make?.match(/^(\S+)/)?.[1];
   const doesModelStartWithMake = (
@@ -102,9 +104,9 @@ export const formatLensText = (
     modelRaw.toLocaleLowerCase().startsWith(makeSimple.toLocaleLowerCase())
   );
 
-  const model = isLensMakeApple(make)
+  const model = isLensApple(lens)
     ? formatAppleLensText(modelRaw, length === 'medium')
-    : isLensMakeGoogle(make)
+    : isLensGoogle(lens)
       ? formatGoogleLensText(modelRaw, length === 'medium')
       : modelRaw;
 
