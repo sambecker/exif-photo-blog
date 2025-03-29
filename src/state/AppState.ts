@@ -11,7 +11,7 @@ import { InsightsIndicatorStatus } from '@/admin/insights';
 import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 import { AdminData } from '@/admin/actions';
 import { RecipeProps } from '@/recipe';
-import { getCountsForCategoriesAction } from '@/category/actions';
+import { getCountsForCategoriesCachedAction } from '@/category/actions';
 export type AppStateContext = {
   // CORE
   previousPathname?: string
@@ -25,7 +25,7 @@ export type AppStateContext = {
   shouldRespondToKeyboardCommands?: boolean
   setShouldRespondToKeyboardCommands?: Dispatch<SetStateAction<boolean>>
   categoriesWithCounts?:
-    Awaited<ReturnType<typeof getCountsForCategoriesAction>>
+    Awaited<ReturnType<typeof getCountsForCategoriesCachedAction>>
   // MODAL
   isCommandKOpen?: boolean
   setIsCommandKOpen?: Dispatch<SetStateAction<boolean>>

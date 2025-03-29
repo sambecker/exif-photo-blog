@@ -39,7 +39,7 @@ import {
 import { createLensKey } from '@/lens';
 
 // Table key
-const KEY_PHOTOS            = 'photos';
+export const KEY_PHOTOS     = 'photos';
 const KEY_PHOTO             = 'photo';
 // Field keys
 const KEY_CAMERAS           = 'cameras';

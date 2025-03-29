@@ -24,7 +24,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { isPathAdmin, PATH_SIGN_IN } from '@/app/paths';
 import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 import { RecipeProps } from '@/recipe';
-import { getCountsForCategoriesAction } from '@/category/actions';
+import { getCountsForCategoriesCachedAction } from '@/category/actions';
 
 export default function AppStateProvider({
   children,
@@ -93,7 +93,7 @@ export default function AppStateProvider({
 
   const { data: categoriesWithCounts } = useSWR(
     'getDataForCategories',
-    getCountsForCategoriesAction,
+    getCountsForCategoriesCachedAction,
   );
 
   const {
