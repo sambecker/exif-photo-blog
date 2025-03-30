@@ -43,10 +43,10 @@ export const formatAppleLensText = (
     return result;
   };
 
-  if (side.toLocaleUpperCase() === 'FRONT') {
+  if (side?.toLocaleUpperCase() === 'FRONT') {
     return format('front', false);
-  } else if (side.toLocaleUpperCase() === 'BACK') {
-    switch (phoneName.toLocaleUpperCase()) {
+  } else if (side?.toLocaleUpperCase() === 'BACK') {
+    switch (phoneName?.toLocaleUpperCase()) {
     // X + XS
     case 'X':
     case 'XS':
