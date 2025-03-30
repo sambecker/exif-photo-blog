@@ -51,8 +51,8 @@ export const safelyGenerateLensStaticParams = (
   lenses: Lenses,
 ) =>
   lenses.map(({ lens: { make, model } }) => ({
-    make: make ?? MISSING_FIELD,
-    model,
+    make: make ? parameterize(make) : MISSING_FIELD,
+    model: parameterize(model),
   }));
 
 // Support keys for make-only and model-only lens queries

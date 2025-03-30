@@ -1,5 +1,5 @@
 import { Metadata } from 'next/types';
-import { CameraProps } from '@/camera';
+import { CameraProps, formatCameraParams } from '@/camera';
 import { generateMetaForCamera } from '@/camera/meta';
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getPhotosCameraDataCached } from '@/camera/data';
@@ -21,7 +21,7 @@ export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'cameras',
   'page',
   getUniqueCameras,
-  cameras => cameras.map(({ camera }) => camera),
+  cameras => cameras.map(({ camera }) => formatCameraParams(camera)),
 );
 
 export async function generateMetadata({
