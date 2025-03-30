@@ -8,7 +8,7 @@ export default function ApplyRecipeTitleGloballyCheckbox({
   recipeTitle,
   hasRecipeTitleChanged,
   recipeData,
-  simulation,
+  film,
   onMatchResults,
   ...props
 }: ComponentProps<typeof FieldSetWithStatus> & {
@@ -16,7 +16,7 @@ export default function ApplyRecipeTitleGloballyCheckbox({
   recipeTitle?: string
   hasRecipeTitleChanged?: boolean
   recipeData?: string
-  simulation?: FilmSimulation
+  film?: FilmSimulation
   onMatchResults: (didFindMatchingPhotos: boolean) => void
 }) {
   const [matchingPhotosCount, setMatchingPhotosCount] = useState<number>();
@@ -24,14 +24,14 @@ export default function ApplyRecipeTitleGloballyCheckbox({
   const loading = matchingPhotosCount === undefined;
 
   useEffect(() => {
-    if (recipeTitle && hasRecipeTitleChanged && recipeData && simulation) {
+    if (recipeTitle && hasRecipeTitleChanged && recipeData && film) {
       setMatchingPhotosCount(undefined);
-      getPhotosNeedingRecipeTitleCountAction(recipeData, simulation, photoId)
+      getPhotosNeedingRecipeTitleCountAction(recipeData, film, photoId)
         .then(setMatchingPhotosCount);
     } else {
       setMatchingPhotosCount(0);
     }
-  }, [recipeTitle, hasRecipeTitleChanged, recipeData, simulation, photoId]);
+  }, [recipeTitle, hasRecipeTitleChanged, recipeData, film, photoId]);
 
   useEffect(() => {
     onMatchResults((matchingPhotosCount ?? 0) > 0);

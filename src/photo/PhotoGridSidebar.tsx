@@ -48,7 +48,7 @@ export default function PhotoGridSidebar({
     cameras,
     lenses,
     tags,
-    films: simulations,
+    films,
     recipes,
     focalLengths,
   } = categories;
@@ -192,17 +192,17 @@ export default function PhotoGridSidebar({
     />
     : null;
 
-  const filmsContent = simulations.length > 0
+  const filmsContent = films.length > 0
     ? <HeaderList
       key="films"
       title="Films"
       icon={<IconFilm size={15} />}
       maxItems={maxItemsPerCategory}
-      items={simulations
-        .map(({ film: simulation, count }) =>
+      items={films
+        .map(({ film, count }) =>
           <PhotoFilm
-            key={simulation}
-            simulation={simulation}
+            key={film}
+            film={film}
             countOnHover={count}
             type="text-only"
             prefetch={false}

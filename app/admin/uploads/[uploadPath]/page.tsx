@@ -49,10 +49,10 @@ export default async function UploadPage({ params }: Params) {
   ] = await Promise.all([
     getUniqueTagsCached(),
     getUniqueRecipesCached(),
-    formDataFromExif?.recipeData && formDataFromExif.filmSimulation
+    formDataFromExif?.recipeData && formDataFromExif.film
       ? getRecipeTitleForData(
         formDataFromExif.recipeData,
-        formDataFromExif.filmSimulation as FilmSimulation,
+        formDataFromExif.film as FilmSimulation,
       )
       : undefined,
   ]);

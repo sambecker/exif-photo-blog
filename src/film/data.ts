@@ -4,14 +4,14 @@ import {
 } from '@/photo/cache';
 import { FilmSimulation } from '.';
 
-export const getPhotosFilmSimulationDataCached = ({
-  simulation,
+export const getPhotosFilmDataCached = ({
+  film,
   limit,
 }: {
-  simulation: FilmSimulation,
+  film: FilmSimulation,
   limit?: number,
 }) =>
   Promise.all([
-    getPhotosCached({ film: simulation, limit }),
-    getPhotosMetaCached({ film: simulation }),
+    getPhotosCached({ film, limit }),
+    getPhotosMetaCached({ film }),
   ]);

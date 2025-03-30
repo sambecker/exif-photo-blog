@@ -25,7 +25,7 @@ import {
   PATH_ROOT,
   PATH_SIGN_IN,
   pathForCamera,
-  pathForFilmSimulation,
+  pathForFilm,
   pathForFocalLength,
   pathForLens,
   pathForPhoto,
@@ -333,13 +333,13 @@ export default function CommandKClient({
           })),
         };
         case 'films': return {
-          heading: 'Film Simulations',
+          heading: 'Films',
           accessory: <IconFilm size={14} />,
           items: films.map(({ film, count }) => ({
             label: labelForFilm(film).medium,
             annotation: formatCount(count),
             annotationAria: formatCountDescriptive(count),
-            path: pathForFilmSimulation(film),
+            path: pathForFilm(film),
           })),
         };
         case 'focal-lengths': return {

@@ -1,13 +1,13 @@
 import {
   getUniqueCameras,
-  getUniqueFilmSimulations,
+  getUniqueFilms,
   getUniqueFocalLengths,
   getUniqueLenses,
   getUniqueRecipes,
   getUniqueTags,
 } from '@/photo/db/query';
 import {
-  SHOW_FILM_SIMULATIONS,
+  SHOW_FILMS,
   SHOW_FOCAL_LENGTHS,
   SHOW_LENSES,
   SHOW_RECIPES,
@@ -40,8 +40,8 @@ export const getDataForCategories = () => [
       .then(sortCategoriesByCount)
       .catch(() => [])
     : [],
-  SHOW_FILM_SIMULATIONS
-    ? getUniqueFilmSimulations()
+  SHOW_FILMS
+    ? getUniqueFilms()
       .then(sortCategoriesByCount)
       .catch(() => [])
     : [],
@@ -58,7 +58,7 @@ export const getCountsForCategories = async () => {
     lenses,
     tags,
     recipes,
-    filmSimulations,
+    films,
     focalLengths,
   ] = await Promise.all(getDataForCategories());
 
@@ -79,8 +79,8 @@ export const getCountsForCategories = async () => {
       acc[recipe.recipe] = recipe.count;
       return acc;
     }, {} as Record<string, number>),
-    filmSimulations: filmSimulations.reduce((acc, filmSimulation) => {
-      acc[filmSimulation.film] = filmSimulation.count;
+    films: films.reduce((acc, film) => {
+      acc[film.film] = film.count;
       return acc;
     }, {} as Record<string, number>),
     focalLengths: focalLengths.reduce((acc, focalLength) => {

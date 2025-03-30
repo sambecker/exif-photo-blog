@@ -1,17 +1,17 @@
 import { Photo, PhotoDateRange } from '@/photo';
-import { FilmSimulation, descriptionForFilmSimulationPhotos } from '.';
+import { FilmSimulation, descriptionForFilmPhotos } from '.';
 import PhotoHeader from '@/photo/PhotoHeader';
 import PhotoFilm from '@/film/PhotoFilm';
 
 export default function FilmHeader({
-  simulation,
+  film,
   photos,
   selectedPhoto,
   indexNumber,
   count,
   dateRange,
 }: {
-  simulation: FilmSimulation
+  film: FilmSimulation
   photos: Photo[]
   selectedPhoto?: Photo
   indexNumber?: number
@@ -20,9 +20,9 @@ export default function FilmHeader({
 }) {
   return (
     <PhotoHeader
-      film={simulation}
-      entity={<PhotoFilm {...{ simulation }} />}
-      entityDescription={descriptionForFilmSimulationPhotos(
+      film={film}
+      entity={<PhotoFilm {...{ film }} />}
+      entityDescription={descriptionForFilmPhotos(
         photos, undefined, count, dateRange)}
       photos={photos}
       selectedPhoto={selectedPhoto}

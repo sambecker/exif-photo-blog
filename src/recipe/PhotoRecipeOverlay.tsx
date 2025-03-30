@@ -25,7 +25,7 @@ export default function PhotoRecipeOverlay({
   ref,
   title,
   recipe,
-  simulation,
+  film,
   onClose,
 }: RecipeProps & {
   ref?: RefObject<HTMLDivElement | null>
@@ -122,7 +122,7 @@ export default function PhotoRecipeOverlay({
           label={`${title
             ? `${formatRecipe(title).toLocaleUpperCase()} recipe`
             : 'Recipe'}`}
-          text={generateRecipeText({ title, recipe, simulation }).join('\n')}
+          text={generateRecipeText({ title, recipe, film }).join('\n')}
           iconSize={17}
           className={clsx(
             'translate-y-[0.5px]',
@@ -147,10 +147,10 @@ export default function PhotoRecipeOverlay({
         <div className="col-span-8">
           {renderDataSquare(
             <div className="flex items-center gap-1.5">
-              {labelForFilm(simulation).medium.toLocaleUpperCase()}
+              {labelForFilm(film).medium.toLocaleUpperCase()}
               <PhotoFilm
                 contrast="frosted"
-                simulation={simulation}
+                film={film}
                 type="icon-only"
                 className="opacity-80 translate-y-[-0.5px]"
               />

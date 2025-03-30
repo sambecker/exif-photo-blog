@@ -129,7 +129,7 @@ export default function ComponentsPage() {
             </div>
             <div>
               <EntityLink
-                icon={<PhotoFilmIcon simulation="astia" />}
+                icon={<PhotoFilmIcon film="astia" />}
                 label="Astia/Soft"
                 type="icon-last"
                 iconWide
@@ -149,7 +149,7 @@ export default function ComponentsPage() {
             </div>
             <div>
               <EntityLink
-                icon={<PhotoFilmIcon simulation="astia" />}
+                icon={<PhotoFilmIcon film="astia" />}
                 label="Astia/Soft"
                 type="icon-last"
                 iconWide
@@ -184,7 +184,7 @@ export default function ComponentsPage() {
             </div>
             <div>
               <EntityLink
-                icon={<PhotoFilmIcon simulation="astia" />}
+                icon={<PhotoFilmIcon film="astia" />}
                 label="Astia/Soft"
                 type="icon-last"
                 iconWide

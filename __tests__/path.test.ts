@@ -1,11 +1,10 @@
-/* eslint-disable max-len */
 import {
   getEscapePath,
   getPathComponents,
   isPathCamera,
   isPathCameraPhoto,
-  isPathFilmSimulation,
-  isPathFilmSimulationPhoto,
+  isPathFilm,
+  isPathFilmPhoto,
   isPathFocalLength,
   isPathFocalLengthPhoto,
   isPathPhoto,
@@ -20,34 +19,34 @@ const TAG                 = 'tag-name';
 const CAMERA_MAKE         = 'fujifilm';
 const CAMERA_MODEL        = 'x-t1';
 const CAMERA_OBJECT       = { make: CAMERA_MAKE, model: CAMERA_MODEL };
-const FILM_SIMULATION     = 'acros';
+const FILM                = 'acros';
 const FOCAL_LENGTH        = 90;
 const FOCAL_LENGTH_STRING = `${FOCAL_LENGTH}mm`;
 
-const PATH_ROOT                         = '/';
-const PATH_GRID                         = '/grid';
-const PATH_FEED                         = '/feed';
-const PATH_ADMIN                        = '/admin/photos';
-const PATH_OG                           = '/og';
-const PATH_OG_ALL                       = `${PATH_OG}/all`;
-const PATH_OG_SAMPLE                    = `${PATH_OG}/sample`;
+const PATH_ROOT                     = '/';
+const PATH_GRID                     = '/grid';
+const PATH_FEED                     = '/feed';
+const PATH_ADMIN                    = '/admin/photos';
+const PATH_OG                       = '/og';
+const PATH_OG_ALL                   = `${PATH_OG}/all`;
+const PATH_OG_SAMPLE                = `${PATH_OG}/sample`;
 
-const PATH_PHOTO                        = `/p/${PHOTO_ID}`;
+const PATH_PHOTO                    = `/p/${PHOTO_ID}`;
 
-const PATH_TAG                          = `/tag/${TAG}`;
-const PATH_TAG_PHOTO                    = `${PATH_TAG}/${PHOTO_ID}`;
+const PATH_TAG                      = `/tag/${TAG}`;
+const PATH_TAG_PHOTO                = `${PATH_TAG}/${PHOTO_ID}`;
 
-const PATH_TAG_HIDDEN                   = `/tag/${TAG_HIDDEN}`;
-const PATH_TAG_HIDDEN_PHOTO             = `${PATH_TAG_HIDDEN}/${PHOTO_ID}`;
+const PATH_TAG_HIDDEN               = `/tag/${TAG_HIDDEN}`;
+const PATH_TAG_HIDDEN_PHOTO         = `${PATH_TAG_HIDDEN}/${PHOTO_ID}`;
 
-const PATH_CAMERA                       = `/shot-on/${CAMERA_MAKE}/${CAMERA_MODEL}`;
-const PATH_CAMERA_PHOTO                 = `${PATH_CAMERA}/${PHOTO_ID}`;
+const PATH_CAMERA                   = `/shot-on/${CAMERA_MAKE}/${CAMERA_MODEL}`;
+const PATH_CAMERA_PHOTO             = `${PATH_CAMERA}/${PHOTO_ID}`;
 
-const PATH_FILM_SIMULATION              = `/film/${FILM_SIMULATION}`;
-const PATH_FILM_SIMULATION_PHOTO        = `${PATH_FILM_SIMULATION}/${PHOTO_ID}`;
+const PATH_FILM                     = `/film/${FILM}`;
+const PATH_FILM_PHOTO               = `${PATH_FILM}/${PHOTO_ID}`;
 
-const PATH_FOCAL_LENGTH                 = `/focal/${FOCAL_LENGTH_STRING}`;
-const PATH_FOCAL_LENGTH_PHOTO           = `${PATH_FOCAL_LENGTH}/${PHOTO_ID}`;
+const PATH_FOCAL_LENGTH             = `/focal/${FOCAL_LENGTH_STRING}`;
+const PATH_FOCAL_LENGTH_PHOTO       = `${PATH_FOCAL_LENGTH}/${PHOTO_ID}`;
  
 describe('Paths', () => {
   it('can be protected', () => {
@@ -57,7 +56,7 @@ describe('Paths', () => {
     expect(isPathProtected(PATH_TAG)).toBe(false);
     expect(isPathProtected(PATH_TAG_PHOTO)).toBe(false);
     expect(isPathProtected(PATH_CAMERA)).toBe(false);
-    expect(isPathProtected(PATH_FILM_SIMULATION)).toBe(false);
+    expect(isPathProtected(PATH_FILM)).toBe(false);
     // Private
     expect(isPathProtected(PATH_ADMIN)).toBe(true);
     expect(isPathProtected(PATH_OG)).toBe(true);
@@ -73,13 +72,13 @@ describe('Paths', () => {
     expect(isPathTagPhoto(PATH_TAG_PHOTO)).toBe(true);
     expect(isPathCamera(PATH_CAMERA)).toBe(true);
     expect(isPathCameraPhoto(PATH_CAMERA_PHOTO)).toBe(true);
-    expect(isPathFilmSimulation(PATH_FILM_SIMULATION)).toBe(true);
-    expect(isPathFilmSimulationPhoto(PATH_FILM_SIMULATION_PHOTO)).toBe(true);
+    expect(isPathFilm(PATH_FILM)).toBe(true);
+    expect(isPathFilmPhoto(PATH_FILM_PHOTO)).toBe(true);
     expect(isPathFocalLength(PATH_FOCAL_LENGTH)).toBe(true);
     expect(isPathFocalLengthPhoto(PATH_FOCAL_LENGTH_PHOTO)).toBe(true);
     // Negative
-    expect(isPathFocalLength(PATH_FILM_SIMULATION)).toBe(false);
-    expect(isPathFocalLengthPhoto(PATH_FILM_SIMULATION_PHOTO)).toBe(false);
+    expect(isPathFocalLength(PATH_FILM)).toBe(false);
+    expect(isPathFocalLengthPhoto(PATH_FILM_PHOTO)).toBe(false);
   });
   it('can be parsed', () => {
     // Core
@@ -103,13 +102,13 @@ describe('Paths', () => {
       photoId: PHOTO_ID,
       camera: CAMERA_OBJECT,
     });
-    // Film Simulation
-    expect(getPathComponents(PATH_FILM_SIMULATION)).toEqual({
-      simulation: FILM_SIMULATION,
+    // Film
+    expect(getPathComponents(PATH_FILM)).toEqual({
+      film: FILM,
     });
-    expect(getPathComponents(PATH_FILM_SIMULATION_PHOTO)).toEqual({
+    expect(getPathComponents(PATH_FILM_PHOTO)).toEqual({
       photoId: PHOTO_ID,
-      simulation: FILM_SIMULATION,
+      film: FILM,
     });
     // Focal Length
     expect(getPathComponents(PATH_FOCAL_LENGTH)).toEqual({
@@ -134,9 +133,9 @@ describe('Paths', () => {
     // Camera
     expect(getEscapePath(PATH_CAMERA)).toEqual(PATH_ROOT);
     expect(getEscapePath(PATH_CAMERA_PHOTO)).toEqual(PATH_CAMERA);
-    // Film Simulation
-    expect(getEscapePath(PATH_FILM_SIMULATION)).toEqual(PATH_ROOT);
-    expect(getEscapePath(PATH_FILM_SIMULATION_PHOTO)).toEqual(PATH_FILM_SIMULATION);
+    // Film
+    expect(getEscapePath(PATH_FILM)).toEqual(PATH_ROOT);
+    expect(getEscapePath(PATH_FILM_PHOTO)).toEqual(PATH_FILM);
     // Focal Length
     expect(getEscapePath(PATH_FOCAL_LENGTH)).toEqual(PATH_ROOT);
     expect(getEscapePath(PATH_FOCAL_LENGTH_PHOTO)).toEqual(PATH_FOCAL_LENGTH);

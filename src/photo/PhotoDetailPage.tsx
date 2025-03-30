@@ -22,7 +22,7 @@ export default function PhotoDetailPage({
   tag,
   camera,
   lens,
-  film: simulation,
+  film,
   recipe,
   focal,
   indexNumber,
@@ -77,9 +77,9 @@ export default function PhotoDetailPage({
       count={count}
       dateRange={dateRange}
     />;
-  } else if (simulation) {
+  } else if (film) {
     customHeader = <FilmHeader
-      simulation={simulation}
+      film={film}
       photos={photos}
       selectedPhoto={photo}
       indexNumber={indexNumber}
@@ -129,13 +129,13 @@ export default function PhotoDetailPage({
             showTitleAsH1
             showCamera={!camera}
             showLens={!lens}
-            showSimulation={!simulation}
+            showFilm={!film}
             showRecipe={!recipe}
             shouldShare={shouldShare}
             shouldShareCamera={camera !== undefined}
             shouldShareLens={lens !== undefined}
             shouldShareTag={tag !== undefined}
-            shouldShareSimulation={simulation !== undefined}
+            shouldShareFilm={film !== undefined}
             shouldShareRecipe={recipe !== undefined}
             shouldShareFocalLength={focal !== undefined}
             includeFavoriteInAdminMenu={includeFavoriteInAdminMenu}
@@ -149,7 +149,7 @@ export default function PhotoDetailPage({
           selectedPhoto={photo}
           tag={tag}
           camera={camera}
-          film={simulation}
+          film={film}
           focal={focal}
           animateOnFirstLoadOnly
         />}

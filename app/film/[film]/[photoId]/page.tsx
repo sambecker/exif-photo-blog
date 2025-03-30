@@ -20,20 +20,20 @@ import { cache } from 'react';
 
 const getPhotosNearIdCachedCached = cache((
   photoId: string,
-  simulation: FilmSimulation,
+  film: FilmSimulation,
 ) =>
   getPhotosNearIdCached(
     photoId,
-    { film: simulation, limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 },
+    { film, limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 },
   ));
 
-interface PhotoFilmSimulationProps {
+interface PhotoFilmProps {
   params: Promise<{ photoId: string, film: FilmSimulation }>
 }
 
 export async function generateMetadata({
   params,
-}: PhotoFilmSimulationProps): Promise<Metadata> {
+}: PhotoFilmProps): Promise<Metadata> {
   const { photoId, film } = await params;
 
   const { photo } = await getPhotosNearIdCachedCached(photoId, film);
@@ -65,7 +65,7 @@ export async function generateMetadata({
 
 export default async function PhotoFilmPage({
   params,
-}: PhotoFilmSimulationProps) {
+}: PhotoFilmProps) {
   const { photoId, film } = await params;
 
   const { photo, photos, photosGrid, indexNumber } =

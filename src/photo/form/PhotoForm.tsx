@@ -414,7 +414,7 @@ export default function PhotoForm({
                     hasRecipeTitleChanged={
                       changedFormKeys.includes('recipeTitle')}
                     recipeData={formData.recipeData}
-                    simulation={formData.filmSimulation as FilmSimulation}
+                    film={formData.film as FilmSimulation}
                     onMatchResults={onMatchResults}
                     {...fieldProps}
                   />;

@@ -32,11 +32,11 @@ export default function RecipeHeader({
         contrast="high"
         recipeOnClick={() => (
           photo?.recipeData &&
-          photo?.filmSimulation
+          photo?.film
         ) ? setRecipeModalProps?.({
             title: photo.recipeTitle,
             recipe: photo.recipeData,
-            simulation: photo.filmSimulation,
+            film: photo.film,
             iso: photo.isoFormatted,
             exposure: photo.exposureTimeFormatted,
           })

@@ -20,7 +20,7 @@ export default function ShareModals() {
     camera,
     lens,
     tag,
-    film: simulation,
+    film,
     recipe,
     focal,
   } = shareModalProps;
@@ -30,7 +30,7 @@ export default function ShareModals() {
       photo,
       tag,
       camera,
-      film: simulation,
+      film,
       recipe,
       focal,
     }} />;
@@ -42,8 +42,8 @@ export default function ShareModals() {
       return <CameraShareModal {...{ camera, ...attributes }} />;
     } else if (lens) {
       return <LensShareModal {...{ lens, ...attributes }} />;
-    } else if (simulation) {
-      return <FilmShareModal {...{ simulation, ...attributes }} />;
+    } else if (film) {
+      return <FilmShareModal {...{ film, ...attributes }} />;
     } else if (recipe) {
       return <RecipeShareModal {...{ recipe, ...attributes }} />;
     } else if (focal !== undefined) {

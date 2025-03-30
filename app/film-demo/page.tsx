@@ -9,7 +9,7 @@ export default function FilmPage() {
       {FILM_SIMULATION_FORM_INPUT_OPTIONS.map(({ value }) =>
         <div key={value}>
           <PhotoFilm
-            simulation={value}
+            film={value}
             type="icon-first"
           />
         </div>)}

@@ -9,11 +9,11 @@ import { TbChecklist } from 'react-icons/tb';
 export default function AdminShowRecipeButton({
   title,
   recipe,
-  simulation,
+  film,
 }: {
   title: string
   recipe: FujifilmRecipe
-  simulation: FujifilmSimulation
+  film: FujifilmSimulation
 }) {
   const { setRecipeModalProps } = useAppState();
 
@@ -26,7 +26,7 @@ export default function AdminShowRecipeButton({
       onClick={() => setRecipeModalProps?.({
         title,
         recipe,
-        simulation,
+        film,
       })}
     >
         Preview

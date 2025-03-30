@@ -27,13 +27,13 @@ export default function RecipeImageResponse({
 }) {
   const {
     recipeData,
-    filmSimulation,
+    film,
   } = getPhotoWithRecipeFromPhotos(photos) ?? {};
 
-  let recipeLines = recipeData && filmSimulation
+  let recipeLines = recipeData && film
     ? generateRecipeText({
       recipe: recipeData,
-      simulation: filmSimulation,
+      film,
     }, true)
     : [];
 
@@ -109,10 +109,10 @@ export default function RecipeImageResponse({
                   flexGrow: 1,
                 }}>
                   {text}
-                  {isStringFilmSimulation(text) && filmSimulation &&
+                  {isStringFilmSimulation(text) && film &&
                     <div tw="flex">
                       <PhotoFilmIcon
-                        simulation={filmSimulation}
+                        film={film}
                         height={height * .06}
                         style={{ transform: `translateY(${-height * .001}px)`}}
                       />

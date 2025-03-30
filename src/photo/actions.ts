@@ -315,13 +315,13 @@ export const renamePhotoTagGloballyAction = async (formData: FormData) =>
 
 export const getPhotosNeedingRecipeTitleCountAction = async (
   recipeData: string,
-  simulation: FilmSimulation,
+  film: FilmSimulation,
   photoIdToExclude?: string,
 ) =>
   runAuthenticatedAdminServerAction(async () =>
     await getPhotosNeedingRecipeTitleCount(
       recipeData,
-      simulation,
+      film,
       photoIdToExclude,
     ),
   );

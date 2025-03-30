@@ -11,13 +11,13 @@ import { FilmSimulation } from '@/film';
 import { NextImageSize } from '@/platforms/next-image';
 
 export default function FilmImageResponse({
-  simulation,
+  film,
   photos,
   width,
   height,
   fontFamily,
 }: {
-  simulation: FilmSimulation,
+  film: FilmSimulation,
   photos: Photo[]
   width: NextImageSize
   height: number
@@ -37,11 +37,11 @@ export default function FilmImageResponse({
         height,
         fontFamily,
         icon: <PhotoFilmIcon
-          simulation={simulation}
+          film={film}
           height={height * .081}
           style={{ transform: `translateY(${height * .001}px)`}}
         />,
-        title: labelForFilm(simulation).medium.toLocaleUpperCase(),
+        title: labelForFilm(film).medium.toLocaleUpperCase(),
       }} />
     </ImageContainer>
   );

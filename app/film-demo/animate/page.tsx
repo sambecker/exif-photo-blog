@@ -28,7 +28,7 @@ export default function FilmPage() {
             Film Simulation:
           </div>
           <PhotoFilm
-            simulation={FILM_SIMULATION_FORM_INPUT_OPTIONS[index].value}
+            film={FILM_SIMULATION_FORM_INPUT_OPTIONS[index].value}
             type="icon-first"
           />
           <div className="mt-4 text-dim relative">

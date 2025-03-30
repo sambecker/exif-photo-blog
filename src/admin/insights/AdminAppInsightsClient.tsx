@@ -96,7 +96,7 @@ export default function AdminAppInsightsClient({
     lensesCount,
     tagsCount,
     recipesCount,
-    filmSimulationsCount,
+    filmsCount,
     focalLengthsCount,
     dateRange,
   },
@@ -487,11 +487,11 @@ export default function AdminAppInsightsClient({
               />
               : null;
           case 'films':
-            return filmSimulationsCount > 0
+            return filmsCount > 0
               ? <ScoreCardRow
                 key={category}
                 icon={<IconFilm size={15} />}
-                content={pluralize(filmSimulationsCount, 'film simulation')}
+                content={pluralize(filmsCount, 'film')}
               />
               : null;
           case 'focal-lengths':

@@ -9,14 +9,14 @@ import { FilmSimulation } from '@/film';
 import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
-import { getUniqueFilmSimulations } from '@/photo/db/query';
+import { getUniqueFilms } from '@/photo/db/query';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'films',
   'image',
-  getUniqueFilmSimulations,
-  simulations => simulations.map(({ film: simulation }) => ({ simulation })),
+  getUniqueFilms,
+  films => films.map(({ film }) => ({ film })),
 );
 
 export async function GET(
@@ -42,7 +42,7 @@ export async function GET(
 
   return new ImageResponse(
     <FilmImageResponse {...{
-      simulation: film,
+      film,
       photos,
       width,
       height,
