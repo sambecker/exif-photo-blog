@@ -3,7 +3,7 @@ import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
 import {
-  labelForFilmSimulation,
+  labelForFilm,
 } from '@/platforms/fujifilm/simulation';
 import PhotoFilmIcon from 
   '@/film/PhotoFilmIcon';
@@ -41,7 +41,7 @@ export default function FilmImageResponse({
           height={height * .081}
           style={{ transform: `translateY(${height * .001}px)`}}
         />,
-        title: labelForFilmSimulation(simulation).medium.toLocaleUpperCase(),
+        title: labelForFilm(simulation).medium.toLocaleUpperCase(),
       }} />
     </ImageContainer>
   );

@@ -22,7 +22,7 @@ export default function PhotoDetailPage({
   tag,
   camera,
   lens,
-  simulation,
+  film: simulation,
   recipe,
   focal,
   indexNumber,
@@ -149,7 +149,7 @@ export default function PhotoDetailPage({
           selectedPhoto={photo}
           tag={tag}
           camera={camera}
-          simulation={simulation}
+          film={simulation}
           focal={focal}
           animateOnFirstLoadOnly
         />}

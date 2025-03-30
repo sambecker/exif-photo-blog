@@ -16,7 +16,7 @@ export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'films',
   'page',
   getUniqueFilmSimulations,
-  simulations => simulations.map(({ simulation }) => ({ simulation })),
+  films => films.map(({ film }) => ({ film })),
 );
 
 interface FilmSimulationProps {

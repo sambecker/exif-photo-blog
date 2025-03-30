@@ -32,7 +32,7 @@ export default function InfinitePhotoScroll({
   tag,
   camera,
   lens,
-  simulation,
+  film: simulation,
   wrapMoreButtonInGrid,
   useCachedPhotos = true,
   includeHiddenPhotos,
@@ -73,7 +73,7 @@ export default function InfinitePhotoScroll({
       camera,
       lens,
       tag,
-      simulation,
+      film: simulation,
     }, warmOnly)
   , [
     useCachedPhotos,

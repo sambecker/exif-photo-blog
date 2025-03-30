@@ -464,7 +464,7 @@ export default function PhotoLarge({
                         tag={shouldShareTag ? primaryTag : undefined}
                         camera={shouldShareCamera ? camera : undefined}
                         lens={shouldShareLens ? lens : undefined}
-                        simulation={shouldShareSimulation
+                        film={shouldShareSimulation
                           ? photo.filmSimulation
                           : undefined}
                         recipe={shouldShareRecipe

@@ -8,7 +8,7 @@ import {
 } from '@/utility/string';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { FilmSimulation } from '@/film';
-import { labelForFilmSimulation } from '@/platforms/fujifilm/simulation';
+import { labelForFilm } from '@/platforms/fujifilm/simulation';
 
 export type RecipeWithCount = {
   recipe: string
@@ -62,7 +62,7 @@ export const generateRecipeText = ({
 abbreviate?: boolean,
 ) => {
   const lines = [
-    `${labelForFilmSimulation(simulation).small.toLocaleUpperCase()}`,
+    `${labelForFilm(simulation).small.toLocaleUpperCase()}`,
     // eslint-disable-next-line max-len
     `${formatWhiteBalance(recipe).toLocaleUpperCase()} ${formatWhiteBalanceColor(recipe)}`,
   ];

@@ -47,7 +47,7 @@ export const getWheresFromOptions = (
     tag,
     camera,
     lens,
-    simulation,
+    film: simulation,
     recipe,
     focal,
   } = options;

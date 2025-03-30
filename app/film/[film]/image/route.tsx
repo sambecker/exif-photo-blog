@@ -16,7 +16,7 @@ export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'films',
   'image',
   getUniqueFilmSimulations,
-  simulations => simulations.map(({ simulation }) => ({ simulation })),
+  simulations => simulations.map(({ film: simulation }) => ({ simulation })),
 );
 
 export async function GET(
@@ -32,7 +32,7 @@ export async function GET(
   ] = await Promise.all([
     getPhotosCached({
       limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
-      simulation: film,
+      film: film,
     }),
     getIBMPlexMono(),
     getImageResponseCacheControlHeaders(),

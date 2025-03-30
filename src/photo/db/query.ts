@@ -417,7 +417,7 @@ export const getUniqueFilmSimulations = async () =>
     ORDER BY film_simulation ASC
   `.then(({ rows }): FilmSimulations => rows
       .map(({ film_simulation, count }) => ({
-        simulation: film_simulation as FilmSimulation,
+        film: film_simulation as FilmSimulation,
         count: parseInt(count, 10),
       })))
   , 'getUniqueFilmSimulations');

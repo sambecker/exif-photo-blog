@@ -1,7 +1,7 @@
 import { clsx } from 'clsx/lite';
 import { Command } from 'cmdk';
 import { ReactNode } from 'react';
-import Spinner from '../Spinner';
+import Spinner from '../components/Spinner';
 
 export default function CommandKItem({
   label,

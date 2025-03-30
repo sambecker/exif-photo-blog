@@ -49,7 +49,7 @@ export default async function GridPage() {
           cameras,
           lenses,
           tags,
-          simulations,
+          films: simulations,
           recipes,
           focalLengths,
         }}

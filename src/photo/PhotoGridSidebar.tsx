@@ -48,7 +48,7 @@ export default function PhotoGridSidebar({
     cameras,
     lenses,
     tags,
-    simulations,
+    films: simulations,
     recipes,
     focalLengths,
   } = categories;
@@ -199,7 +199,7 @@ export default function PhotoGridSidebar({
       icon={<IconFilm size={15} />}
       maxItems={maxItemsPerCategory}
       items={simulations
-        .map(({ simulation, count }) =>
+        .map(({ film: simulation, count }) =>
           <PhotoFilm
             key={simulation}
             simulation={simulation}

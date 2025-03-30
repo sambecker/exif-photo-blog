@@ -10,44 +10,44 @@ import {
 } from '@/app/paths';
 import {
   FujifilmSimulation,
-  labelForFilmSimulation,
+  labelForFilm,
 } from '@/platforms/fujifilm/simulation';
 
 export type FilmSimulation = FujifilmSimulation;
 
 export type FilmSimulationWithCount = {
-  simulation: FilmSimulation
+  film: FilmSimulation
   count: number
 }
 
 export type FilmSimulations = FilmSimulationWithCount[]
 
-export const sortFilmSimulations = (
-  simulations: FilmSimulations,
-) => simulations.sort(sortFilmSimulationsWithCount);
+export const sortFilms = (
+  films: FilmSimulations,
+) => films.sort(sortFilmsWithCount);
 
-export const sortFilmSimulationsWithCount = (
+export const sortFilmsWithCount = (
   a: FilmSimulationWithCount,
   b: FilmSimulationWithCount,
 ) => {
-  const aLabel = labelForFilmSimulation(a.simulation).large;
-  const bLabel = labelForFilmSimulation(b.simulation).large;
+  const aLabel = labelForFilm(a.film).large;
+  const bLabel = labelForFilm(b.film).large;
   return aLabel.localeCompare(bLabel);
 };
 
 export const titleForFilmSimulation = (
-  simulation: FilmSimulation,
+  film: FilmSimulation,
   photos: Photo[],
   explicitCount?: number,
 ) => [
-  labelForFilmSimulation(simulation).large,
+  labelForFilm(film).large,
   photoQuantityText(explicitCount ?? photos.length),
 ].join(' ');
 
 export const shareTextForFilmSimulation = (
-  simulation: FilmSimulation,
+  film: FilmSimulation,
 ) =>
-  `Photos shot on Fujifilm ${labelForFilmSimulation(simulation).large}`;
+  `Photos shot on Fujifilm ${labelForFilm(film).large}`;
 
 export const descriptionForFilmSimulationPhotos = (
   photos: Photo[],
@@ -64,20 +64,20 @@ export const descriptionForFilmSimulationPhotos = (
   );
 
 export const generateMetaForFilmSimulation = (
-  simulation: FilmSimulation,
+  film: FilmSimulation,
   photos: Photo[],
   explicitCount?: number,
   explicitDateRange?: PhotoDateRange,
 ) => ({
-  url: absolutePathForFilmSimulation(simulation),
-  title: titleForFilmSimulation(simulation, photos, explicitCount),
+  url: absolutePathForFilmSimulation(film),
+  title: titleForFilmSimulation(film, photos, explicitCount),
   description: descriptionForFilmSimulationPhotos(
     photos,
     true,
     explicitCount,
     explicitDateRange,
   ),
-  images: absolutePathForFilmSimulationImage(simulation),
+  images: absolutePathForFilmSimulationImage(film),
 });
 
 export const photoHasFilmSimulationData = (photo: Photo) =>

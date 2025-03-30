@@ -32,7 +32,7 @@ export default async function OGOverviewPage() {
       .catch(() => []),
     getPhotosCached({ limit: 1, camera })
       .catch(() => []),
-    getPhotosCached({ limit: 1, simulation })
+    getPhotosCached({ limit: 1, film: simulation })
       .catch(() => []),
     getPhotosCached({ limit: 1, focal })
       .catch(() => []),

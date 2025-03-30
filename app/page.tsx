@@ -59,7 +59,7 @@ export default async function HomePage() {
             lenses,
             tags,
             recipes,
-            simulations,
+            films: simulations,
             focalLengths,
           }}
         />

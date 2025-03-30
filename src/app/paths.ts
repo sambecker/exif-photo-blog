@@ -121,7 +121,7 @@ export const pathForPhoto = ({
   camera,
   lens,
   tag,
-  simulation,
+  film: simulation,
   focal,
   recipe,
 }: PhotoPathParams) => {
@@ -330,7 +330,7 @@ export const getPathComponents = (pathname = ''): {
     ),
     tag,
     camera,
-    simulation,
+    film: simulation,
     focal,
   };
 };
@@ -340,7 +340,7 @@ export const getEscapePath = (pathname?: string) => {
     photoId,
     tag,
     camera,
-    simulation,
+    film: simulation,
     focal,
   } = getPathComponents(pathname);
 

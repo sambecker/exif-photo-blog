@@ -20,7 +20,7 @@ export default function FilmHeader({
 }) {
   return (
     <PhotoHeader
-      simulation={simulation}
+      film={simulation}
       entity={<PhotoFilm {...{ simulation }} />}
       entityDescription={descriptionForFilmSimulationPhotos(
         photos, undefined, count, dateRange)}

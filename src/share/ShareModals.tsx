@@ -20,7 +20,7 @@ export default function ShareModals() {
     camera,
     lens,
     tag,
-    simulation,
+    film: simulation,
     recipe,
     focal,
   } = shareModalProps;
@@ -30,7 +30,7 @@ export default function ShareModals() {
       photo,
       tag,
       camera,
-      simulation,
+      film: simulation,
       recipe,
       focal,
     }} />;

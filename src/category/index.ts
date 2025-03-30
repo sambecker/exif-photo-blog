@@ -39,7 +39,7 @@ export interface PhotoSetCategory {
   lens?: Lens
   tag?: string
   recipe?: string
-  simulation?: FilmSimulation
+  film?: FilmSimulation
   focal?: number
 }
 
@@ -48,7 +48,7 @@ export interface PhotoSetCategories {
   lenses: Lenses
   tags: Tags
   recipes: Recipes
-  simulations: FilmSimulations
+  films: FilmSimulations
   focalLengths: FocalLengths
 }
 
@@ -80,11 +80,9 @@ export const sortCategoriesByCount = <T extends { count: number }>(
 const convertCategoryKeysToCategoryNames =
   (categoryKeys: CategoryKeys): (keyof PhotoSetCategories)[] => {
     return categoryKeys.map(key => {
-      return key === 'films'
-        ? 'simulations'
-        : key === 'focal-lengths'
-          ? 'focalLengths'
-          : key;
+      return key === 'focal-lengths'
+        ? 'focalLengths'
+        : key;
     });
   };
 

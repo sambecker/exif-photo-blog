@@ -24,7 +24,7 @@ const getPhotosNearIdCachedCached = cache((
 ) =>
   getPhotosNearIdCached(
     photoId,
-    { simulation, limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 },
+    { film: simulation, limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 },
   ));
 
 interface PhotoFilmSimulationProps {
@@ -43,7 +43,7 @@ export async function generateMetadata({
   const title = titleForPhoto(photo);
   const description = descriptionForPhoto(photo);
   const images = absolutePathForPhotoImage(photo);
-  const url = absolutePathForPhoto({ photo, simulation: film });
+  const url = absolutePathForPhoto({ photo, film: film });
 
   return {
     title,
@@ -73,14 +73,14 @@ export default async function PhotoFilmPage({
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const { count, dateRange } = await getPhotosMetaCached({ simulation: film });
+  const { count, dateRange } = await getPhotosMetaCached({ film: film });
 
   return (
     <PhotoDetailPage {...{
       photo,
       photos,
       photosGrid,
-      simulation: film,
+      film: film,
       indexNumber,
       count,
       dateRange,

@@ -1,4 +1,4 @@
-import { labelForFilmSimulation } from '@/platforms/fujifilm/simulation';
+import { labelForFilm } from '@/platforms/fujifilm/simulation';
 import PhotoFilmIcon from './PhotoFilmIcon';
 import { pathForFilmSimulation } from '@/app/paths';
 import { FilmSimulation } from '.';
@@ -20,7 +20,7 @@ export default function PhotoFilm({
   countOnHover?: number
   recipe?: FujifilmRecipe
 } & EntityLinkExternalProps) {
-  const { small, medium, large } = labelForFilmSimulation(simulation);
+  const { small, medium, large } = labelForFilm(simulation);
 
   return (
     <EntityLink

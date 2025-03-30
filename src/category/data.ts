@@ -80,7 +80,7 @@ export const getCountsForCategories = async () => {
       return acc;
     }, {} as Record<string, number>),
     filmSimulations: filmSimulations.reduce((acc, filmSimulation) => {
-      acc[filmSimulation.simulation] = filmSimulation.count;
+      acc[filmSimulation.film] = filmSimulation.count;
       return acc;
     }, {} as Record<string, number>),
     focalLengths: focalLengths.reduce((acc, focalLength) => {

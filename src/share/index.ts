@@ -21,7 +21,7 @@ export const getSharePathFromShareModalProps = ({
   lens,
   tag,
   recipe,
-  simulation,
+  film: simulation,
   focal,
 }: ShareModalProps) => {
   if (photo) {

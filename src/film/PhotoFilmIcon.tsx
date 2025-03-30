@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { labelForFilmSimulation } from '@/platforms/fujifilm/simulation';
+import { labelForFilm } from '@/platforms/fujifilm/simulation';
 import { CSSProperties } from 'react';
 import { FilmSimulation } from '.';
 
@@ -22,7 +22,7 @@ export default function PhotoFilmIcon({
       className={className}
       style={style}
       aria-description={simulation
-        ? labelForFilmSimulation(simulation).large
+        ? labelForFilm(simulation).large
         : 'Film Simulation'}
       width={INTRINSIC_WIDTH * height / INTRINSIC_HEIGHT}
       height={height}

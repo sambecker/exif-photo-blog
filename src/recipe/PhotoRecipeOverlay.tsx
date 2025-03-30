@@ -15,7 +15,7 @@ import {
   generateRecipeText,
   RecipeProps,
 } from '.';
-import { labelForFilmSimulation } from '@/platforms/fujifilm/simulation';
+import { labelForFilm } from '@/platforms/fujifilm/simulation';
 import { TbChecklist } from 'react-icons/tb';
 import CopyButton from '@/components/CopyButton';
 import { pathForRecipe } from '@/app/paths';
@@ -147,7 +147,7 @@ export default function PhotoRecipeOverlay({
         <div className="col-span-8">
           {renderDataSquare(
             <div className="flex items-center gap-1.5">
-              {labelForFilmSimulation(simulation).medium.toLocaleUpperCase()}
+              {labelForFilm(simulation).medium.toLocaleUpperCase()}
               <PhotoFilm
                 contrast="frosted"
                 simulation={simulation}
