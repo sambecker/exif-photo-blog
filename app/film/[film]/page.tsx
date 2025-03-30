@@ -20,19 +20,19 @@ export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
 );
 
 interface FilmSimulationProps {
-  params: Promise<{ simulation: FilmSimulation }>
+  params: Promise<{ film: FilmSimulation }>
 }
 
 export async function generateMetadata({
   params,
 }: FilmSimulationProps): Promise<Metadata> {
-  const { simulation } = await params;
+  const { film } = await params;
 
   const [
     photos,
     { count, dateRange },
   ] = await getPhotosFilmSimulationDataCachedCached({
-    simulation,
+    simulation: film,
     limit: INFINITE_SCROLL_GRID_INITIAL,
   });
 
@@ -43,7 +43,7 @@ export async function generateMetadata({
     title,
     description,
     images,
-  } = generateMetaForFilmSimulation(simulation, photos, count, dateRange);
+  } = generateMetaForFilmSimulation(film, photos, count, dateRange);
 
   return {
     title,
@@ -65,13 +65,13 @@ export async function generateMetadata({
 export default async function FilmPage({
   params,
 }: FilmSimulationProps) {
-  const { simulation } = await params;
+  const { film } = await params;
 
   const [
     photos,
     { count, dateRange },
   ] =  await getPhotosFilmSimulationDataCachedCached({
-    simulation,
+    simulation: film,
     limit: INFINITE_SCROLL_GRID_INITIAL,
   });
 
@@ -79,7 +79,7 @@ export default async function FilmPage({
 
   return (
     <FilmOverview {...{
-      simulation,
+      simulation: film,
       photos,
       count,
       dateRange,

@@ -28,22 +28,22 @@ const getPhotosNearIdCachedCached = cache((
   ));
 
 interface PhotoFilmSimulationProps {
-  params: Promise<{ photoId: string, simulation: FilmSimulation }>
+  params: Promise<{ photoId: string, film: FilmSimulation }>
 }
 
 export async function generateMetadata({
   params,
 }: PhotoFilmSimulationProps): Promise<Metadata> {
-  const { photoId, simulation } = await params;
+  const { photoId, film } = await params;
 
-  const { photo } = await getPhotosNearIdCachedCached(photoId, simulation);
+  const { photo } = await getPhotosNearIdCachedCached(photoId, film);
 
   if (!photo) { return {}; }
 
   const title = titleForPhoto(photo);
   const description = descriptionForPhoto(photo);
   const images = absolutePathForPhotoImage(photo);
-  const url = absolutePathForPhoto({ photo, simulation });
+  const url = absolutePathForPhoto({ photo, simulation: film });
 
   return {
     title,
@@ -66,21 +66,21 @@ export async function generateMetadata({
 export default async function PhotoFilmPage({
   params,
 }: PhotoFilmSimulationProps) {
-  const { photoId, simulation } = await params;
+  const { photoId, film } = await params;
 
   const { photo, photos, photosGrid, indexNumber } =
-    await getPhotosNearIdCachedCached(photoId, simulation);
+    await getPhotosNearIdCachedCached(photoId, film);
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const { count, dateRange } = await getPhotosMetaCached({ simulation });
+  const { count, dateRange } = await getPhotosMetaCached({ simulation: film });
 
   return (
     <PhotoDetailPage {...{
       photo,
       photos,
       photosGrid,
-      simulation,
+      simulation: film,
       indexNumber,
       count,
       dateRange,
