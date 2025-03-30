@@ -16,9 +16,6 @@ import {
 import { roundToNumber } from '@/utility/number';
 import { convertStringToArray, parameterize } from '@/utility/string';
 import { generateNanoid } from '@/utility/nanoid';
-import {
-  FILM_SIMULATION_FORM_INPUT_OPTIONS,
-} from '@/platforms/fujifilm/simulation';
 import { FilmSimulation } from '@/film';
 import { GEO_PRIVACY_ENABLED } from '@/app/config';
 import { TAG_FAVS, getValidationMessageForTags } from '@/tag';
@@ -121,9 +118,7 @@ const FORM_METADATA = (
   model: { label: 'camera model' },
   film: {
     label: 'film',
-    selectOptions: FILM_SIMULATION_FORM_INPUT_OPTIONS,
-    selectOptionsDefaultLabel: 'Unknown',
-    shouldHide: ({ make }) => make !== MAKE_FUJIFILM,
+    note: 'Intended for Fujifilm cameras or film scans',
     shouldNotOverwriteWithNullDataOnSync: true,
   },
   recipeTitle: {

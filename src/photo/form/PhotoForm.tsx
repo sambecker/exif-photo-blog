@@ -44,6 +44,10 @@ import ApplyRecipeTitleGloballyCheckbox from './ApplyRecipesGloballyCheckbox';
 import { FilmSimulation } from '@/film';
 import IconFavs from '@/components/icons/IconFavs';
 import IconHidden from '@/components/icons/IconHidden';
+import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
+import {
+  FILM_SIMULATION_FORM_INPUT_OPTIONS,
+} from '@/platforms/fujifilm/simulation';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -406,6 +410,18 @@ export default function PhotoForm({
                 };
 
                 switch (key) {
+                case 'film':
+                  return formData.make === MAKE_FUJIFILM
+                    ? <FieldSetWithStatus
+                      key={key}
+                      {...fieldProps}
+                      selectOptions={FILM_SIMULATION_FORM_INPUT_OPTIONS}
+                      selectOptionsDefaultLabel="Unknown"
+                    />
+                    : <FieldSetWithStatus
+                      key={key}
+                      {...fieldProps}
+                    />;
                 case 'applyRecipeTitleGlobally':
                   return <ApplyRecipeTitleGloballyCheckbox
                     key={key}
