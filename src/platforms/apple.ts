@@ -26,7 +26,7 @@ export const formatAppleLensText = (
     focalLength,
     aperture,
   // eslint-disable-next-line max-len
-  ] = (/iPhone ([0-9a-z]{1,3}(?: (?:Pro|Max|Plus))*).*?(back|front).*?([0-9\.]+)mm.*?f\/([0-9\.]+)/gi.exec(model) ?? []);
+  ] = (/iPhone ([0-9a-z]{1,3}(?: (?:Pro|Max|Plus|Mini))*).*?(back|front).*?([0-9\.]+)mm.*?f\/([0-9\.]+)/gi.exec(model) ?? []);
 
   const format = (lensName: string, includeFocalLength = true) => {
     let result = '';
@@ -43,14 +43,14 @@ export const formatAppleLensText = (
     return result;
   };
 
-  if (side === 'front') {
+  if (side.toLocaleUpperCase() === 'FRONT') {
     return format('front', false);
-  } else if (side === 'back') {
-    switch (phoneName) {
+  } else if (side.toLocaleUpperCase() === 'BACK') {
+    switch (phoneName.toLocaleUpperCase()) {
     // X + XS
     case 'X':
     case 'XS':
-    case 'XS Max':
+    case 'XS MAX':
       switch (aperture) {
       case '1.8': return format('Main');
       case '2.4': return format('Telephoto');
@@ -65,8 +65,8 @@ export const formatAppleLensText = (
       case '2.4': return format('Wide');
       case '1.8': return format('Main');
       }
-    case '11 Pro':
-    case '11 Pro Max':
+    case '11 PRO':
+    case '11 PRO MAX':
       switch (aperture) {
       case '2.4': return format('Wide');
       case '1.8': return format('Main');
@@ -74,17 +74,18 @@ export const formatAppleLensText = (
       }
     // 12
     case '12':
+    case '12 MINI':
       switch (aperture) {
       case '2.4': return format('Wide');
       case '1.6': return format('Main');
       }
-    case '12 Pro':
+    case '12 PRO':
       switch (aperture) {
       case '2.4': return format('Wide');
       case '1.6': return format('Main');
       case '2.0': return format('Telephoto');
       }
-    case '12 Pro Max':
+    case '12 PRO MAX':
       switch (aperture) {
       case '2.4': return format('Wide');
       case '1.6': return format('Main');
@@ -92,13 +93,14 @@ export const formatAppleLensText = (
       }
     // 13
     case '13':
-    case '13 Plus':
+    case '13 MINI':
+    case '13 PLUS':
       switch (aperture) {
       case '2.4': return format('Wide');
       case '1.6': return format('Main');
       }
-    case '13 Pro':
-    case '13 Pro Max':
+    case '13 PRO':
+    case '13 PRO MAX':
       switch (aperture) {
       case '1.8': return format('Wide');
       case '1.5': return format('Main');
@@ -106,13 +108,13 @@ export const formatAppleLensText = (
       }
     // 14
     case '14':
-    case '14 Plus':
+    case '14 PLUS':
       switch (aperture) {
       case '2.4': return format('Wide');
       case '1.5': return format('Main');
       }
-    case '14 Pro':
-    case '14 Pro Max':
+    case '14 PRO':
+    case '14 PRO MAX':
       switch (aperture) {
       case '2.2': return format('Wide');
       case '1.78': return format('Main');
@@ -120,29 +122,29 @@ export const formatAppleLensText = (
       }
     // 15
     case '15':
-    case '15 Plus':
+    case '15 PLUS':
       switch (aperture) {
       case '2.4': return format('Wide');
       case '1.6': return format('Main');
       }
-    case '15 Pro':
-    case '15 Pro Max':
+    case '15 PRO':
+    case '15 PRO MAX':
       switch (aperture) {
       case '2.2': return format('Wide');
       case '1.78': return format('Main');
       case '2.8': return format('Telephoto');
       }
     // 16 (single lens)
-    case '16e':
+    case '16E':
       return format('Main');
     case '16':
-    case '16 Plus':
+    case '16 PLUS':
       switch (aperture) {
       case '2.2': return format('Wide');
       case '1.6': return format('Main');
       }
-    case '16 Pro':
-    case '16 Pro Max':
+    case '16 PRO':
+    case '16 PRO MAX':
       switch (aperture) {
       case '2.2': return format('Wide');
       case '1.78': return format('Main');
