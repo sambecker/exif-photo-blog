@@ -48,6 +48,7 @@ export type AnnotatedTag = {
 export type FormMeta = {
   label: string
   note?: string
+  noteShort?: string
   required?: boolean
   excludeFromInsert?: boolean
   readOnly?: boolean
@@ -118,7 +119,8 @@ const FORM_METADATA = (
   model: { label: 'camera model' },
   film: {
     label: 'film',
-    note: 'Intended for Fujifilm cameras or film scans',
+    note: 'Intended for Fujifilm simulations and analog scans',
+    noteShort: 'Fujifilm simulations / analog scans',
     shouldNotOverwriteWithNullDataOnSync: true,
   },
   recipeTitle: {

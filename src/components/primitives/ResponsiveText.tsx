@@ -1,20 +1,26 @@
+import clsx from 'clsx/lite';
 import { ReactNode } from 'react';
 
 export default function ResponsiveText({
-  children,
   shortText,
+  className,
+  children,
 }: {
-  children: ReactNode
   shortText?: ReactNode
+  className?: string
+  children: ReactNode
 }) {
   return (
     <>
       {/* Short text */}
-      <span className="inline sm:hidden" aria-hidden>
+      <span
+        className={clsx('inline sm:hidden', className)}
+        aria-hidden
+      >
         {shortText ?? children}
       </span>
       {/* Full text */}
-      <span className="hidden sm:inline">
+      <span className={clsx('hidden sm:inline', className)}>
         {children}
       </span>
     </>

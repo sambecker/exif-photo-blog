@@ -9,12 +9,14 @@ import TagInput from './TagInput';
 import { FiChevronDown } from 'react-icons/fi';
 import { parameterize } from '@/utility/string';
 import Checkbox from './Checkbox';
+import ResponsiveText from './primitives/ResponsiveText';
 
 export default function FieldSetWithStatus({
   id: _id,
   label,
   icon,
   note,
+  noteShort,
   error,
   value,
   isModified,
@@ -40,6 +42,7 @@ export default function FieldSetWithStatus({
   label: string
   icon?: ReactNode
   note?: string
+  noteShort?: string
   error?: string
   value: string
   isModified?: boolean
@@ -128,9 +131,12 @@ export default function FieldSetWithStatus({
               {label}
             </span>
             {note && !error &&
-              <span className="text-gray-400 dark:text-gray-600">
+              <ResponsiveText
+                className="text-gray-400 dark:text-gray-600"
+                shortText={`(${noteShort})`}
+              >
                 ({note})
-              </span>}
+              </ResponsiveText>}
             {isModified && !error &&
               <span className={clsx(
                 'text-main font-medium text-[0.9rem]',

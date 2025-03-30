@@ -336,6 +336,7 @@ export default function PhotoForm({
             .map(([key, {
               label,
               note,
+              noteShort,
               required,
               selectOptions,
               selectOptionsDefaultLabel,
@@ -363,6 +364,7 @@ export default function PhotoForm({
                       : ''
                   ),
                   note,
+                  noteShort,
                   error: formErrors[key],
                   value: staticValue ?? formData[key] ?? '',
                   isModified: (
