@@ -13,7 +13,7 @@ import {
 } from '@/photo';
 import { Cameras, createCameraKey } from '@/camera';
 import { Tags } from '@/tag';
-import { FilmSimulation, FilmSimulations } from '@/simulation';
+import { FilmSimulation, FilmSimulations } from '@/film';
 import { ADMIN_SQL_DEBUG_ENABLED } from '@/app/config';
 import {
   GetPhotosOptions,

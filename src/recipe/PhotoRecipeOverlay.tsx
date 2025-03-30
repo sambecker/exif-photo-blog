@@ -1,7 +1,7 @@
 'use client';
 
 import LoaderButton from '@/components/primitives/LoaderButton';
-import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
+import PhotoFilm from '@/film/PhotoFilm';
 import clsx from 'clsx/lite';
 import { ReactNode, RefObject } from 'react';
 import { IoCloseCircle } from 'react-icons/io5';
@@ -148,7 +148,7 @@ export default function PhotoRecipeOverlay({
           {renderDataSquare(
             <div className="flex items-center gap-1.5">
               {labelForFilmSimulation(simulation).medium.toLocaleUpperCase()}
-              <PhotoFilmSimulation
+              <PhotoFilm
                 contrast="frosted"
                 simulation={simulation}
                 type="icon-only"

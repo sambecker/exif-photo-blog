@@ -1,9 +1,9 @@
 import { Photo, PhotoDateRange } from '@/photo';
-import FilmSimulationHeader from './FilmSimulationHeader';
+import FilmHeader from './FilmHeader';
 import { FilmSimulation } from '.';
 import PhotoGridContainer from '@/photo/PhotoGridContainer';
 
-export default function FilmSimulationOverview({
+export default function FilmOverview({
   simulation,
   photos,
   count,
@@ -22,7 +22,7 @@ export default function FilmSimulationOverview({
       photos,
       count,
       simulation,
-      header: <FilmSimulationHeader {...{
+      header: <FilmHeader {...{
         simulation,
         photos,
         count,

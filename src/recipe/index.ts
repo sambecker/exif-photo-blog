@@ -7,7 +7,7 @@ import {
   formatCountDescriptive,
 } from '@/utility/string';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
-import { FilmSimulation } from '@/simulation';
+import { FilmSimulation } from '@/film';
 import { labelForFilmSimulation } from '@/platforms/fujifilm/simulation';
 
 export type RecipeWithCount = {

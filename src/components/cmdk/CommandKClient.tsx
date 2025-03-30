@@ -69,7 +69,7 @@ import IconCamera from '../icons/IconCamera';
 import IconPhoto from '../icons/IconPhoto';
 import IconRecipe from '../icons/IconRecipe';
 import IconFocalLength from '../icons/IconFocalLength';
-import IconFilmSimulation from '../icons/IconFilmSimulation';
+import IconFilm from '../icons/IconFilm';
 import IconLock from '../icons/IconLock';
 import useVisualViewportHeight from '@/utility/useVisualViewport';
 import useMaskedScroll from '../useMaskedScroll';
@@ -334,7 +334,7 @@ export default function CommandKClient({
         };
         case 'films': return {
           heading: 'Film Simulations',
-          accessory: <IconFilmSimulation size={14} />,
+          accessory: <IconFilm size={14} />,
           items: simulations.map(({ simulation, count }) => ({
             label: labelForFilmSimulation(simulation).medium,
             annotation: formatCount(count),

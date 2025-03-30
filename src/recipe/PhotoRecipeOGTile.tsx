@@ -1,6 +1,6 @@
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
-import { FilmSimulation } from '@/simulation';
-import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
+import { FilmSimulation } from '@/film';
+import PhotoFilm from '@/film/PhotoFilm';
 import clsx from 'clsx/lite';
 import { ReactNode, RefObject } from 'react';
 import { addSign, formatWhiteBalance } from '.';
@@ -87,7 +87,7 @@ export default function PhotoRecipeOGTile({
           )}>
             KODAK PORTRA 500
           </div>
-          <PhotoFilmSimulation
+          <PhotoFilm
             contrast="frosted"
             simulation={simulation}
             className="w-auto! grow-0!"

@@ -1,7 +1,7 @@
 import { Photo } from '../photo';
 import { Camera, Cameras } from '@/camera';
 import { PhotoDateRange } from '../photo';
-import { FilmSimulation, FilmSimulations } from '@/simulation';
+import { FilmSimulation, FilmSimulations } from '@/film';
 import { Lens, Lenses } from '@/lens';
 import { Tags } from '@/tag';
 import { FocalLengths } from '@/focal';

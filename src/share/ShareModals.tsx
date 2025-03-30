@@ -3,7 +3,7 @@
 import PhotoShareModal from '@/photo/PhotoShareModal';
 import TagShareModal from '@/tag/TagShareModal';
 import CameraShareModal from '@/camera/CameraShareModal';
-import FilmSimulationShareModal from '@/simulation/FilmSimulationShareModal';
+import FilmShareModal from '@/film/FilmShareModal';
 import FocalLengthShareModal from '@/focal/FocalLengthShareModal';
 import { useAppState } from '@/state/AppState';
 import RecipeShareModal from '@/recipe/RecipeShareModal';
@@ -43,7 +43,7 @@ export default function ShareModals() {
     } else if (lens) {
       return <LensShareModal {...{ lens, ...attributes }} />;
     } else if (simulation) {
-      return <FilmSimulationShareModal {...{ simulation, ...attributes }} />;
+      return <FilmShareModal {...{ simulation, ...attributes }} />;
     } else if (recipe) {
       return <RecipeShareModal {...{ recipe, ...attributes }} />;
     } else if (focal !== undefined) {

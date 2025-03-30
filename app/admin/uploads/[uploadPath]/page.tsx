@@ -10,7 +10,7 @@ import {
 } from '@/app/config';
 import ErrorNote from '@/components/ErrorNote';
 import { getRecipeTitleForData } from '@/photo/db/query';
-import { FilmSimulation } from '@/simulation';
+import { FilmSimulation } from '@/film';
 
 export const maxDuration = 60;
 

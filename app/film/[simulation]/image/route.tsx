@@ -3,9 +3,9 @@ import {
   IMAGE_OG_DIMENSION_SMALL,
   MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
 } from '@/image-response';
-import FilmSimulationImageResponse from
-  '@/image-response/FilmSimulationImageResponse';
-import { FilmSimulation } from '@/simulation';
+import FilmImageResponse from
+  '@/image-response/FilmImageResponse';
+import { FilmSimulation } from '@/film';
 import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
@@ -38,7 +38,7 @@ export async function GET(
   const { width, height } = IMAGE_OG_DIMENSION_SMALL;
 
   return new ImageResponse(
-    <FilmSimulationImageResponse {...{
+    <FilmImageResponse {...{
       simulation,
       photos,
       width,

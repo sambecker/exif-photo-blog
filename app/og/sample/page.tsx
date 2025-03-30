@@ -2,7 +2,7 @@ import CameraOGTile from '@/camera/CameraOGTile';
 import FocalLengthOGTile from '@/focal/FocalLengthOGTile';
 import PhotoOGTile from '@/photo/PhotoOGTile';
 import { getPhotosCached } from '@/photo/cache';
-import FilmSimulationOGTile from '@/simulation/FilmSimulationOGTile';
+import FilmOGTile from '@/film/FilmOGTile';
 import { TAG_FAVS } from '@/tag';
 import TagOGTile from '@/tag/TagOGTile';
 
@@ -45,7 +45,7 @@ export default async function OGOverviewPage() {
       <TagOGTile tag={tag} photos={photosTag} />
       <TagOGTile tag={TAG_FAVS} photos={photosFavs} />
       <CameraOGTile camera={camera} photos={photosCamera} />
-      <FilmSimulationOGTile simulation={simulation} photos={photosSimulation} />
+      <FilmOGTile simulation={simulation} photos={photosSimulation} />
       <FocalLengthOGTile focal={focal} photos={photosFocal} />
     </div>
   );

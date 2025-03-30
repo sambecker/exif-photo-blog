@@ -5,12 +5,12 @@ import ImageContainer from './components/ImageContainer';
 import {
   labelForFilmSimulation,
 } from '@/platforms/fujifilm/simulation';
-import PhotoFilmSimulationIcon from 
-  '@/simulation/PhotoFilmSimulationIcon';
-import { FilmSimulation } from '@/simulation';
+import PhotoFilmIcon from 
+  '@/film/PhotoFilmIcon';
+import { FilmSimulation } from '@/film';
 import { NextImageSize } from '@/platforms/next-image';
 
-export default function FilmSimulationImageResponse({
+export default function FilmImageResponse({
   simulation,
   photos,
   width,
@@ -36,7 +36,7 @@ export default function FilmSimulationImageResponse({
         width,
         height,
         fontFamily,
-        icon: <PhotoFilmSimulationIcon
+        icon: <PhotoFilmIcon
           simulation={simulation}
           height={height * .081}
           style={{ transform: `translateY(${height * .001}px)`}}

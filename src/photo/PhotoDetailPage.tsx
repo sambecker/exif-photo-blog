@@ -6,7 +6,7 @@ import AppGrid from '@/components/AppGrid';
 import PhotoGrid from './PhotoGrid';
 import TagHeader from '@/tag/TagHeader';
 import CameraHeader from '@/camera/CameraHeader';
-import FilmSimulationHeader from '@/simulation/FilmSimulationHeader';
+import FilmHeader from '@/film/FilmHeader';
 import { TAG_HIDDEN } from '@/tag';
 import HiddenHeader from '@/tag/HiddenHeader';
 import FocalLengthHeader from '@/focal/FocalLengthHeader';
@@ -78,7 +78,7 @@ export default function PhotoDetailPage({
       dateRange={dateRange}
     />;
   } else if (simulation) {
-    customHeader = <FilmSimulationHeader
+    customHeader = <FilmHeader
       simulation={simulation}
       photos={photos}
       selectedPhoto={photo}

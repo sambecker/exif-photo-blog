@@ -11,7 +11,7 @@ import {
   absolutePathForPhotoImage,
 } from '@/app/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { FilmSimulation } from '@/simulation';
+import { FilmSimulation } from '@/film';
 import {
   getPhotosMetaCached,
   getPhotosNearIdCached,
@@ -63,7 +63,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function PhotoFilmSimulationPage({
+export default async function PhotoFilmPage({
   params,
 }: PhotoFilmSimulationProps) {
   const { photoId, simulation } = await params;

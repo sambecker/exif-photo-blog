@@ -2,7 +2,7 @@ import { Photo } from '@/photo';
 import { PhotoSetCategory } from '@/category';
 import { BASE_URL, GRID_HOMEPAGE_ENABLED } from './config';
 import { Camera } from '@/camera';
-import { FilmSimulation } from '@/simulation';
+import { FilmSimulation } from '@/film';
 import { parameterize } from '@/utility/string';
 import { TAG_HIDDEN } from '@/tag';
 import { Lens } from '@/lens';

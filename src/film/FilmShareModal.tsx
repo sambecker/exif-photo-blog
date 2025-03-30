@@ -1,10 +1,10 @@
 import { absolutePathForFilmSimulation } from '@/app/paths';
 import { PhotoSetAttributes } from '../category';
 import ShareModal from '@/share/ShareModal';
-import FilmSimulationOGTile from './FilmSimulationOGTile';
+import FilmOGTile from './FilmOGTile';
 import { FilmSimulation, shareTextForFilmSimulation } from '.';
 
-export default function FilmSimulationShareModal({
+export default function FilmShareModal({
   simulation,
   photos,
   count,
@@ -17,7 +17,7 @@ export default function FilmSimulationShareModal({
       pathShare={absolutePathForFilmSimulation(simulation)}
       socialText={shareTextForFilmSimulation(simulation)}
     >
-      <FilmSimulationOGTile {...{ simulation, photos, count, dateRange }} />
+      <FilmOGTile {...{ simulation, photos, count, dateRange }} />
     </ShareModal>
   );
 };

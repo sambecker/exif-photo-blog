@@ -6,7 +6,7 @@ import { FilmSimulation } from '.';
 const INTRINSIC_WIDTH = 28;
 const INTRINSIC_HEIGHT = 16;
 
-export default function PhotoFilmSimulationIcon({
+export default function PhotoFilmIcon({
   simulation,
   height = INTRINSIC_HEIGHT,
   className,

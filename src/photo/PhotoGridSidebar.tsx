@@ -5,7 +5,7 @@ import HeaderList from '@/components/HeaderList';
 import PhotoTag from '@/tag/PhotoTag';
 import { PhotoDateRange, dateRangeForPhotos, photoQuantityText } from '.';
 import { TAG_FAVS, TAG_HIDDEN, addHiddenToTags } from '@/tag';
-import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
+import PhotoFilm from '@/film/PhotoFilm';
 import FavsTag from '../tag/FavsTag';
 import { useAppState } from '@/state/AppState';
 import { useMemo, useRef } from 'react';
@@ -20,7 +20,7 @@ import PhotoRecipe from '@/recipe/PhotoRecipe';
 import IconCamera from '@/components/icons/IconCamera';
 import IconRecipe from '@/components/icons/IconRecipe';
 import IconTag from '@/components/icons/IconTag';
-import IconFilmSimulation from '@/components/icons/IconFilmSimulation';
+import IconFilm from '@/components/icons/IconFilm';
 import IconLens from '@/components/icons/IconLens';
 import PhotoLens from '@/lens/PhotoLens';
 import IconFocalLength from '@/components/icons/IconFocalLength';
@@ -196,11 +196,11 @@ export default function PhotoGridSidebar({
     ? <HeaderList
       key="films"
       title="Films"
-      icon={<IconFilmSimulation size={15} />}
+      icon={<IconFilm size={15} />}
       maxItems={maxItemsPerCategory}
       items={simulations
         .map(({ simulation, count }) =>
-          <PhotoFilmSimulation
+          <PhotoFilm
             key={simulation}
             simulation={simulation}
             countOnHover={count}

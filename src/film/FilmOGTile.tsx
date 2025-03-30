@@ -12,7 +12,7 @@ import {
 
 export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 
-export default function FilmSimulationOGTile({
+export default function FilmOGTile({
   simulation,
   photos,
   loadingState: loadingStateExternal,

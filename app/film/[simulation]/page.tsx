@@ -1,8 +1,8 @@
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getUniqueFilmSimulations } from '@/photo/db/query';
-import { FilmSimulation, generateMetaForFilmSimulation } from '@/simulation';
-import FilmSimulationOverview from '@/simulation/FilmSimulationOverview';
-import { getPhotosFilmSimulationDataCached } from '@/simulation/data';
+import { FilmSimulation, generateMetaForFilmSimulation } from '@/film';
+import FilmOverview from '@/film/FilmOverview';
+import { getPhotosFilmSimulationDataCached } from '@/film/data';
 import { Metadata } from 'next/types';
 import { cache } from 'react';
 import { PATH_ROOT } from '@/app/paths';
@@ -62,7 +62,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function FilmSimulationPage({
+export default async function FilmPage({
   params,
 }: FilmSimulationProps) {
   const { simulation } = await params;
@@ -78,7 +78,7 @@ export default async function FilmSimulationPage({
   if (photos.length === 0) { redirect(PATH_ROOT); } 
 
   return (
-    <FilmSimulationOverview {...{
+    <FilmOverview {...{
       simulation,
       photos,
       count,

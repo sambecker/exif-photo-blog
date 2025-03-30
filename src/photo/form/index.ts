@@ -19,7 +19,7 @@ import { generateNanoid } from '@/utility/nanoid';
 import {
   FILM_SIMULATION_FORM_INPUT_OPTIONS,
 } from '@/platforms/fujifilm/simulation';
-import { FilmSimulation } from '@/simulation';
+import { FilmSimulation } from '@/film';
 import { GEO_PRIVACY_ENABLED } from '@/app/config';
 import { TAG_FAVS, getValidationMessageForTags } from '@/tag';
 import { MAKE_FUJIFILM } from '@/platforms/fujifilm';

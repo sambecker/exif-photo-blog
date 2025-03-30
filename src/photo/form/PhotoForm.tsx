@@ -41,7 +41,7 @@ import ErrorNote from '@/components/ErrorNote';
 import { convertRecipesForForm, Recipes } from '@/recipe';
 import deepEqual from 'fast-deep-equal/es6/react';
 import ApplyRecipeTitleGloballyCheckbox from './ApplyRecipesGloballyCheckbox';
-import { FilmSimulation } from '@/simulation';
+import { FilmSimulation } from '@/film';
 import IconFavs from '@/components/icons/IconFavs';
 import IconHidden from '@/components/icons/IconHidden';
 

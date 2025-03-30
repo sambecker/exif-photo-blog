@@ -11,7 +11,7 @@ import {
 } from '@/platforms/fujifilm/simulation';
 import { ExifData, ExifParserFactory } from 'ts-exif-parser';
 import { PhotoFormData } from './form';
-import { FilmSimulation } from '@/simulation';
+import { FilmSimulation } from '@/film';
 import sharp, { Sharp } from 'sharp';
 import {
   GEO_PRIVACY_ENABLED,

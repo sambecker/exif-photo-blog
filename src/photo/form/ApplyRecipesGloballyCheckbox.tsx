@@ -1,7 +1,7 @@
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import { ComponentProps, useEffect, useState } from 'react';
 import { getPhotosNeedingRecipeTitleCountAction } from '../actions';
-import { FilmSimulation } from '@/simulation';
+import { FilmSimulation } from '@/film';
 
 export default function ApplyRecipeTitleGloballyCheckbox({
   photoId,

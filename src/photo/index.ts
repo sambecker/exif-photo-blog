@@ -1,6 +1,6 @@
 import { formatFocalLength } from '@/focal';
 import { getNextImageUrlForRequest } from '@/platforms/next-image';
-import { FilmSimulation, photoHasFilmSimulationData } from '@/simulation';
+import { FilmSimulation, photoHasFilmSimulationData } from '@/film';
 import {
   HIGH_DENSITY_GRID,
   IS_PREVIEW,

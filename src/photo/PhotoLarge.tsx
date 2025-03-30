@@ -21,7 +21,7 @@ import ShareButton from '@/share/ShareButton';
 import DownloadButton from '@/components/DownloadButton';
 import PhotoCamera from '../camera/PhotoCamera';
 import { cameraFromPhoto } from '@/camera';
-import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
+import PhotoFilm from '@/film/PhotoFilm';
 import { sortTagsArray } from '@/tag';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import PhotoLink from './PhotoLink';
@@ -394,7 +394,7 @@ export default function PhotoLarge({
                     {(showRecipeButton || showSimulationContent) &&
                       <div className="flex items-center gap-2 *:w-auto">
                         {showSimulationContent && photo.filmSimulation &&
-                          <PhotoFilmSimulation
+                          <PhotoFilm
                             simulation={photo.filmSimulation}
                             prefetch={prefetchRelatedLinks}
                             countOnHover={simulationCount}

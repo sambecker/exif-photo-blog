@@ -60,7 +60,7 @@ import { convertUploadToPhoto } from './storage';
 import { UrlAddStatus } from '@/admin/AdminUploadsClient';
 import { convertStringToArray } from '@/utility/string';
 import { after } from 'next/server';
-import { FilmSimulation } from '@/simulation';
+import { FilmSimulation } from '@/film';
 
 // Private actions
 
