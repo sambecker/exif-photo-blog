@@ -249,7 +249,7 @@ export const SHOW_TAGS =
   CATEGORY_VISIBILITY.includes('tags');
 export const SHOW_RECIPES =
   CATEGORY_VISIBILITY.includes('recipes');
-export const SHOW_FILM_SIMULATIONS =
+export const SHOW_FILMS =
   CATEGORY_VISIBILITY.includes('films');
 export const SHOW_FOCAL_LENGTHS =
   CATEGORY_VISIBILITY.includes('focal-lengths');

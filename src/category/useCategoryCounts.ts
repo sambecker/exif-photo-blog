@@ -4,6 +4,7 @@ import { Camera } from '@/camera';
 import { Lens } from '@/lens';
 import { useAppState } from '@/state/AppState';
 import { useCallback } from 'react';
+import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 
 export default function useCategoryCounts() {
   const { categoriesWithCounts } = useAppState();
@@ -28,9 +29,9 @@ export default function useCategoryCounts() {
     return recipeCounts[recipe];
   }, [categoriesWithCounts]);
 
-  const getFilmSimulationCount = useCallback((simulation: string) => {
-    const filmSimulationCounts = categoriesWithCounts?.filmSimulations ?? {};
-    return filmSimulationCounts[simulation];
+  const getFilmCount = useCallback((film: FujifilmSimulation) => {
+    const filmCounts = categoriesWithCounts?.films ?? {};
+    return filmCounts[film];
   }, [categoriesWithCounts]);
 
   const getFocalLengthCount = useCallback((focalLength: number) => {
@@ -43,7 +44,7 @@ export default function useCategoryCounts() {
     getLensCount,
     getTagCount,
     getRecipeCount,
-    getFilmSimulationCount,
+    getFilmCount,
     getFocalLengthCount,
   };
 }

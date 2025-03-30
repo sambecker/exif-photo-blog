@@ -6,7 +6,7 @@ import {
   doesPhotoNeedBlurCompatibility,
   shouldShowCameraDataForPhoto,
   shouldShowExifDataForPhoto,
-  shouldShowFilmSimulationDataForPhoto,
+  shouldShowFilmDataForPhoto,
   shouldShowLensDataForPhoto,
   shouldShowRecipeDataForPhoto,
   titleForPhoto,
@@ -21,7 +21,7 @@ import ShareButton from '@/share/ShareButton';
 import DownloadButton from '@/components/DownloadButton';
 import PhotoCamera from '../camera/PhotoCamera';
 import { cameraFromPhoto } from '@/camera';
-import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
+import PhotoFilm from '@/film/PhotoFilm';
 import { sortTagsArray } from '@/tag';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import PhotoLink from './PhotoLink';
@@ -65,7 +65,7 @@ export default function PhotoLarge({
   showTitleAsH1,
   showCamera = true,
   showLens = true,
-  showSimulation = true,
+  showFilm = true,
   showRecipe = true,
   showZoomControls: showZoomControlsProp = true,
   shouldZoomOnFKeydown = true,
@@ -73,7 +73,7 @@ export default function PhotoLarge({
   shouldShareCamera,
   shouldShareLens,
   shouldShareTag,
-  shouldShareSimulation,
+  shouldShareFilm,
   shouldShareRecipe,
   shouldShareFocalLength,
   includeFavoriteInAdminMenu,
@@ -90,7 +90,7 @@ export default function PhotoLarge({
   showTitleAsH1?: boolean
   showCamera?: boolean
   showLens?: boolean
-  showSimulation?: boolean
+  showFilm?: boolean
   showRecipe?: boolean
   showZoomControls?: boolean
   shouldZoomOnFKeydown?: boolean
@@ -98,7 +98,7 @@ export default function PhotoLarge({
   shouldShareCamera?: boolean
   shouldShareLens?: boolean
   shouldShareTag?: boolean
-  shouldShareSimulation?: boolean
+  shouldShareFilm?: boolean
   shouldShareRecipe?: boolean
   shouldShareFocalLength?: boolean
   includeFavoriteInAdminMenu?: boolean
@@ -120,7 +120,7 @@ export default function PhotoLarge({
     lensCount,
     tagCounts,
     recipeCount,
-    simulationCount,
+    filmCount,
   } = useCategoryCountsForPhoto(photo);
 
   const showZoomControls = showZoomControlsProp && areZoomControlsShown;
@@ -150,8 +150,7 @@ export default function PhotoLarge({
   const showTagsContent = tags.length > 0;
   const showRecipeContent = showRecipe && shouldShowRecipeDataForPhoto(photo);
   const showRecipeButton = shouldShowRecipeDataForPhoto(photo);
-  const showSimulationContent = showSimulation &&
-    shouldShowFilmSimulationDataForPhoto(photo);
+  const showFilmContent = showFilm && shouldShowFilmDataForPhoto(photo);
 
   useVisible({ ref, onVisible });
 
@@ -168,7 +167,7 @@ export default function PhotoLarge({
     showLensContent ||
     showTagsContent ||
     showRecipeContent ||
-    showSimulationContent ||
+    showFilmContent ||
     showExifContent;
 
   const hasNonDateContent =
@@ -226,12 +225,12 @@ export default function PhotoLarge({
         <AnimatePresence>
           {(shouldShowRecipeOverlay || shouldDebugRecipeOverlays) &&
             photo.recipeData &&
-            photo.filmSimulation &&
+            photo.film &&
               <PhotoRecipeOverlay
                 ref={refRecipe}
                 title={photo.recipeTitle}
                 recipe={photo.recipeData}
-                simulation={photo.filmSimulation}
+                film={photo.film}
                 iso={photo.isoFormatted}
                 exposure={photo.exposureCompensationFormatted}
                 onClose={hideRecipeOverlay}
@@ -391,13 +390,13 @@ export default function PhotoLarge({
                       <li>{photo.isoFormatted}</li>
                       <li>{photo.exposureCompensationFormatted ?? '0ev'}</li>
                     </ul>
-                    {(showRecipeButton || showSimulationContent) &&
+                    {(showRecipeButton || showFilmContent) &&
                       <div className="flex items-center gap-2 *:w-auto">
-                        {showSimulationContent && photo.filmSimulation &&
-                          <PhotoFilmSimulation
-                            simulation={photo.filmSimulation}
+                        {showFilmContent && photo.film &&
+                          <PhotoFilm
+                            film={photo.film}
                             prefetch={prefetchRelatedLinks}
-                            countOnHover={simulationCount}
+                            countOnHover={filmCount}
                           />}
                         {showRecipeButton &&
                           <Tooltip content="Fujifilm Recipe">
@@ -415,7 +414,7 @@ export default function PhotoLarge({
                                 'px-[4px] py-[2.5px] my-[-3px]',
                                 'translate-y-[2px]',
                                 'hover:bg-dim active:bg-main',
-                                !showSimulation && 'translate-x-[-2px]',
+                                !showFilm && 'translate-x-[-2px]',
                               )}>
                               {shouldShowRecipeOverlay
                                 ? <IoCloseSharp size={15} />
@@ -464,8 +463,8 @@ export default function PhotoLarge({
                         tag={shouldShareTag ? primaryTag : undefined}
                         camera={shouldShareCamera ? camera : undefined}
                         lens={shouldShareLens ? lens : undefined}
-                        simulation={shouldShareSimulation
-                          ? photo.filmSimulation
+                        film={shouldShareFilm
+                          ? photo.film
                           : undefined}
                         recipe={shouldShareRecipe
                           ? recipeTitle

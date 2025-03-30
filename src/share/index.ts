@@ -2,7 +2,7 @@ import { Photo } from '@/photo';
 import { PhotoSetAttributes, PhotoSetCategory } from '@/category';
 import {
   absolutePathForCameraImage,
-  absolutePathForFilmSimulationImage,
+  absolutePathForFilmImage,
   absolutePathForFocalLengthImage,
   absolutePathForLensImage,
   absolutePathForPhotoImage,
@@ -21,7 +21,7 @@ export const getSharePathFromShareModalProps = ({
   lens,
   tag,
   recipe,
-  simulation,
+  film,
   focal,
 }: ShareModalProps) => {
   if (photo) {
@@ -34,8 +34,8 @@ export const getSharePathFromShareModalProps = ({
     return absolutePathForTagImage(tag);
   } else if (recipe) {
     return absolutePathForRecipeImage(recipe);
-  } else if (simulation) {
-    return absolutePathForFilmSimulationImage(simulation);
+  } else if (film) {
+    return absolutePathForFilmImage(film);
   } else if (focal) {
     return absolutePathForFocalLengthImage(focal);
   }

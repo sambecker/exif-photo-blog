@@ -222,11 +222,11 @@ const ALL_POSSIBLE_FILM_SIMULATION_LABELS = Object
     large.toLocaleLowerCase(),
   ]);
 
-export const isStringFilmSimulation = (simulation: string) =>
-  ALL_POSSIBLE_FILM_SIMULATION_LABELS.includes(simulation.toLocaleLowerCase());
+export const isStringFilmSimulation = (film: string) =>
+  ALL_POSSIBLE_FILM_SIMULATION_LABELS.includes(film.toLocaleLowerCase());
 
-export const labelForFilmSimulation = (simulation: FujifilmSimulation) =>
-  FILM_SIMULATION_LABELS[simulation];
+export const labelForFilm = (film: FujifilmSimulation) =>
+  FILM_SIMULATION_LABELS[film];
 
 export const getFujifilmSimulationFromMakerNote = (
   bytes: Buffer,

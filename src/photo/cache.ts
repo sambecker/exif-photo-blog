@@ -10,7 +10,7 @@ import {
   getUniqueCameras,
   getUniqueTags,
   getUniqueTagsHidden,
-  getUniqueFilmSimulations,
+  getUniqueFilms,
   getPhotosNearId,
   getPhotosMostRecentUpdate,
   getPhotosMeta,
@@ -29,7 +29,7 @@ import {
   PATH_GRID,
   PATH_ROOT,
   PREFIX_CAMERA,
-  PREFIX_FILM_SIMULATION,
+  PREFIX_FILM,
   PREFIX_FOCAL_LENGTH,
   PREFIX_LENS,
   PREFIX_RECIPE,
@@ -45,7 +45,7 @@ const KEY_PHOTO             = 'photo';
 const KEY_CAMERAS           = 'cameras';
 const KEY_LENSES            = 'lenses';
 const KEY_TAGS              = 'tags';
-const KEY_FILM_SIMULATIONS  = 'film-simulations';
+const KEY_FILMS             = 'films';
 const KEY_RECIPES           = 'recipes';
 const KEY_FOCAL_LENGTHS     = 'focal-lengths';
 // Type keys
@@ -109,8 +109,8 @@ export const revalidateCamerasKey = () =>
 export const revalidateLensesKey = () =>
   revalidateTag(KEY_LENSES);
 
-export const revalidateFilmSimulationsKey = () =>
-  revalidateTag(KEY_FILM_SIMULATIONS);
+export const revalidateFilmsKey = () =>
+  revalidateTag(KEY_FILMS);
 
 export const revalidateFocalLengthsKey = () =>
   revalidateTag(KEY_FOCAL_LENGTHS);
@@ -120,7 +120,7 @@ export const revalidateAllKeys = () => {
   revalidateTagsKey();
   revalidateCamerasKey();
   revalidateLensesKey();
-  revalidateFilmSimulationsKey();
+  revalidateFilmsKey();
   revalidateRecipesKey();
   revalidateFocalLengthsKey();
 };
@@ -140,7 +140,7 @@ export const revalidatePhoto = (photoId: string) => {
   revalidateTagsKey();
   revalidateCamerasKey();
   revalidateLensesKey();
-  revalidateFilmSimulationsKey();
+  revalidateFilmsKey();
   revalidateRecipesKey();
   revalidateFocalLengthsKey();
   // Paths
@@ -151,7 +151,7 @@ export const revalidatePhoto = (photoId: string) => {
   revalidatePath(PREFIX_TAG, 'layout');
   revalidatePath(PREFIX_CAMERA, 'layout');
   revalidatePath(PREFIX_LENS, 'layout');
-  revalidatePath(PREFIX_FILM_SIMULATION, 'layout');
+  revalidatePath(PREFIX_FILM, 'layout');
   revalidatePath(PREFIX_RECIPE, 'layout');
   revalidatePath(PREFIX_FOCAL_LENGTH, 'layout');
   revalidatePath(PATH_ADMIN, 'layout');
@@ -231,10 +231,10 @@ export const getUniqueLensesCached =
     [KEY_PHOTOS, KEY_LENSES],
   );
 
-export const getUniqueFilmSimulationsCached =
+export const getUniqueFilmsCached =
   unstable_cache(
-    getUniqueFilmSimulations,
-    [KEY_PHOTOS, KEY_FILM_SIMULATIONS],
+    getUniqueFilms,
+    [KEY_PHOTOS, KEY_FILMS],
   );
 
 export const getUniqueRecipesCached =

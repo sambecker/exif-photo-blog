@@ -50,6 +50,27 @@ export const MIGRATIONS: Migration[] = [{
     ALTER TABLE photos
     ADD COLUMN IF NOT EXISTS recipe_title VARCHAR(255)
   `,
+}, {
+  label: '05: Universal Film',
+  fields: ['film'],
+  run: () => sql`
+    DO $$
+    BEGIN
+      IF EXISTS(
+        SELECT 1
+        FROM information_schema.columns
+        WHERE table_name='photos'
+        AND column_name='film_simulation'
+      )
+      THEN
+        ALTER TABLE photos
+        RENAME COLUMN film_simulation TO film;
+      ELSE
+        ALTER TABLE photos
+        ADD COLUMN IF NOT EXISTS film VARCHAR(255);
+      END IF;
+    END $$;
+  `,
 }];
 
 export const migrationForError = (e: any) =>

@@ -19,7 +19,7 @@ import { generateNanoid } from '@/utility/nanoid';
 import {
   FILM_SIMULATION_FORM_INPUT_OPTIONS,
 } from '@/platforms/fujifilm/simulation';
-import { FilmSimulation } from '@/simulation';
+import { FilmSimulation } from '@/film';
 import { GEO_PRIVACY_ENABLED } from '@/app/config';
 import { TAG_FAVS, getValidationMessageForTags } from '@/tag';
 import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
@@ -119,8 +119,8 @@ const FORM_METADATA = (
   aspectRatio: { label: 'aspect ratio', readOnly: true },
   make: { label: 'camera make' },
   model: { label: 'camera model' },
-  filmSimulation: {
-    label: 'fujifilm simulation',
+  film: {
+    label: 'film',
     selectOptions: FILM_SIMULATION_FORM_INPUT_OPTIONS,
     selectOptionsDefaultLabel: 'Unknown',
     shouldHide: ({ make }) => make !== MAKE_FUJIFILM,
@@ -274,7 +274,7 @@ export const convertPhotoToFormData = (photo: Photo): PhotoFormData => {
 
 export const convertExifToFormData = (
   data: ExifData,
-  filmSimulation?: FilmSimulation,
+  film?: FilmSimulation,
   recipeData?: FujifilmRecipe,
 ): Omit<
   Record<keyof PhotoExif, string | undefined>,
@@ -298,7 +298,7 @@ export const convertExifToFormData = (
     !GEO_PRIVACY_ENABLED ? data.tags?.GPSLatitude?.toString() : undefined,
   longitude:
     !GEO_PRIVACY_ENABLED ? data.tags?.GPSLongitude?.toString() : undefined,
-  filmSimulation,
+  film,
   recipeData: JSON.stringify(recipeData),
   ...data.tags?.DateTimeOriginal && {
     takenAt: convertTimestampWithOffsetToPostgresString(
@@ -345,7 +345,7 @@ export const convertFormDataToPhotoDbInsert = (
 
   return {
     ...(photoForm as PhotoFormData & {
-      filmSimulation?: FilmSimulation
+      film?: FilmSimulation
       recipeData?: FujifilmRecipe
     }),
     ...!photoForm.id && { id: generateNanoid() },

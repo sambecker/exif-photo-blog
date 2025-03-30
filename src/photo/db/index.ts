@@ -47,7 +47,7 @@ export const getWheresFromOptions = (
     tag,
     camera,
     lens,
-    simulation,
+    film,
     recipe,
     focal,
   } = options;
@@ -108,9 +108,9 @@ export const getWheresFromOptions = (
     wheres.push(`$${valuesIndex++}=ANY(tags)`);
     wheresValues.push(tag);
   }
-  if (simulation) {
-    wheres.push(`film_simulation=$${valuesIndex++}`);
-    wheresValues.push(simulation);
+  if (film) {
+    wheres.push(`film=$${valuesIndex++}`);
+    wheresValues.push(film);
   }
   if (recipe) {
     wheres.push(`recipe_title=$${valuesIndex++}`);

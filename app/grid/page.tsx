@@ -29,7 +29,7 @@ export default async function GridPage() {
     lenses,
     tags,
     recipes,
-    simulations,
+    films,
     focalLengths,
   ] = await Promise.all([
     getPhotosCached()
@@ -49,7 +49,7 @@ export default async function GridPage() {
           cameras,
           lenses,
           tags,
-          simulations,
+          films,
           recipes,
           focalLengths,
         }}

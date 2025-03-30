@@ -5,7 +5,7 @@ import ImageContainer from './components/ImageContainer';
 import type { NextImageSize } from '@/platforms/next-image';
 import { formatTag } from '@/tag';
 import { generateRecipeText, getPhotoWithRecipeFromPhotos } from '@/recipe';
-import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
+import PhotoFilmIcon from '@/film/PhotoFilmIcon';
 import { isStringFilmSimulation } from '@/platforms/fujifilm/simulation';
 import IconRecipe from '@/components/icons/IconRecipe';
 const MAX_RECIPE_LINES = 8;
@@ -27,13 +27,13 @@ export default function RecipeImageResponse({
 }) {
   const {
     recipeData,
-    filmSimulation,
+    film,
   } = getPhotoWithRecipeFromPhotos(photos) ?? {};
 
-  let recipeLines = recipeData && filmSimulation
+  let recipeLines = recipeData && film
     ? generateRecipeText({
       recipe: recipeData,
-      simulation: filmSimulation,
+      film,
     }, true)
     : [];
 
@@ -109,10 +109,10 @@ export default function RecipeImageResponse({
                   flexGrow: 1,
                 }}>
                   {text}
-                  {isStringFilmSimulation(text) && filmSimulation &&
+                  {isStringFilmSimulation(text) && film &&
                     <div tw="flex">
-                      <PhotoFilmSimulationIcon
-                        simulation={filmSimulation}
+                      <PhotoFilmIcon
+                        film={film}
                         height={height * .06}
                         style={{ transform: `translateY(${-height * .001}px)`}}
                       />

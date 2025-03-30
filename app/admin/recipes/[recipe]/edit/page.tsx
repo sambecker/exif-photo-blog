@@ -32,7 +32,7 @@ export default async function RecipePageEdit({
 
   const {
     recipeData,
-    filmSimulation,
+    film,
   } = getPhotoWithRecipeFromPhotos(photos) ?? {};
 
   if (count === 0) { redirect(PATH_ADMIN); }
@@ -42,11 +42,11 @@ export default async function RecipePageEdit({
       backPath={PATH_ADMIN_RECIPES}
       backLabel="Recipes"
       breadcrumb={<AdminRecipeBadge {...{ recipe, count, hideBadge: true }} />}
-      accessory={recipeData && filmSimulation &&
+      accessory={recipeData && film &&
         <AdminShowRecipeButton
           title={recipe}
           recipe={recipeData}
-          simulation={filmSimulation}
+          film={film}
         />
       }
     >

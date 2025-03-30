@@ -35,7 +35,7 @@ export default async function HomePage() {
     lenses,
     tags,
     recipes,
-    simulations,
+    films,
     focalLengths,
   ] = await Promise.all([
     getPhotosCached()
@@ -59,7 +59,7 @@ export default async function HomePage() {
             lenses,
             tags,
             recipes,
-            simulations,
+            films,
             focalLengths,
           }}
         />

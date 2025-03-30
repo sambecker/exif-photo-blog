@@ -29,10 +29,12 @@ export default function InfinitePhotoScroll({
   initialOffset,
   itemsPerPage,
   sortBy,
-  tag,
   camera,
   lens,
-  simulation,
+  tag,
+  recipe,
+  film,
+  focal,
   wrapMoreButtonInGrid,
   useCachedPhotos = true,
   includeHiddenPhotos,
@@ -73,7 +75,9 @@ export default function InfinitePhotoScroll({
       camera,
       lens,
       tag,
-      simulation,
+      recipe,
+      film,
+      focal,
     }, warmOnly)
   , [
     useCachedPhotos,
@@ -84,7 +88,9 @@ export default function InfinitePhotoScroll({
     camera,
     lens,
     tag,
-    simulation,
+    recipe,
+    film,
+    focal,
   ]);
 
   const { data, isLoading, isValidating, error, mutate, size, setSize } =

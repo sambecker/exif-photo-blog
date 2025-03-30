@@ -1,6 +1,6 @@
-import { labelForFilmSimulation } from '@/platforms/fujifilm/simulation';
-import PhotoFilmSimulationIcon from './PhotoFilmSimulationIcon';
-import { pathForFilmSimulation } from '@/app/paths';
+import { labelForFilm } from '@/platforms/fujifilm/simulation';
+import PhotoFilmIcon from './PhotoFilmIcon';
+import { pathForFilm } from '@/app/paths';
 import { FilmSimulation } from '.';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import EntityLink, {
@@ -8,28 +8,28 @@ import EntityLink, {
 } from '@/components/primitives/EntityLink';
 import clsx from 'clsx/lite';
 
-export default function PhotoFilmSimulation({
-  simulation,
+export default function PhotoFilm({
+  film,
   type = 'icon-last',
   badged = true,
   contrast = 'low',
   countOnHover,
   ...props
 }: {
-  simulation: FilmSimulation
+  film: FilmSimulation
   countOnHover?: number
   recipe?: FujifilmRecipe
 } & EntityLinkExternalProps) {
-  const { small, medium, large } = labelForFilmSimulation(simulation);
+  const { small, medium, large } = labelForFilm(film);
 
   return (
     <EntityLink
       {...props}
       label={medium}
       labelSmall={small}
-      href={pathForFilmSimulation(simulation)}
-      icon={<PhotoFilmSimulationIcon
-        simulation={simulation}
+      href={pathForFilm(film)}
+      icon={<PhotoFilmIcon
+        film={film}
         className={clsx(
           contrast === 'frosted' && 'text-black',
           type === 'icon-only'
@@ -37,7 +37,7 @@ export default function PhotoFilmSimulation({
             : 'translate-y-[-1px]',
         )}
       />}
-      title={`Film Simulation: ${large}`}
+      title={`Film: ${large}`}
       type={type}
       badged={badged}
       contrast={contrast}

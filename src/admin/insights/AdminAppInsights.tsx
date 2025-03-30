@@ -1,7 +1,7 @@
 import {
   getPhotosMeta,
   getUniqueCameras,
-  getUniqueFilmSimulations,
+  getUniqueFilms,
   getUniqueFocalLengths,
   getUniqueLenses,
   getUniqueRecipes,
@@ -34,7 +34,7 @@ export default async function AdminAppInsights() {
     lenses,
     tags,
     recipes,
-    filmSimulations,
+    films,
     focalLengths,
   ] = await Promise.all([
     getPhotosMeta({ hidden: 'include' }),
@@ -46,7 +46,7 @@ export default async function AdminAppInsights() {
     getUniqueLenses(),
     getUniqueTags(),
     getUniqueRecipes(),
-    getUniqueFilmSimulations(),
+    getUniqueFilms(),
     getUniqueFocalLengths(),
   ]);
   
@@ -94,7 +94,7 @@ export default async function AdminAppInsights() {
         lensesCount: lenses.length,
         tagsCount: tags.length,
         recipesCount: recipes.length,
-        filmSimulationsCount: filmSimulations.length,
+        filmsCount: films.length,
         focalLengthsCount: focalLengths.length,
         dateRange,
       }}

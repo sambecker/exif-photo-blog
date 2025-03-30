@@ -13,7 +13,7 @@ import {
 } from '@/photo';
 import { Cameras, createCameraKey } from '@/camera';
 import { Tags } from '@/tag';
-import { FilmSimulation, FilmSimulations } from '@/simulation';
+import { FilmSimulation, Films } from '@/film';
 import { ADMIN_SQL_DEBUG_ENABLED } from '@/app/config';
 import {
   GetPhotosOptions,
@@ -53,7 +53,7 @@ const createPhotosTable = () =>
       location_name VARCHAR(255),
       latitude DOUBLE PRECISION,
       longitude DOUBLE PRECISION,
-      film_simulation VARCHAR(255),
+      film VARCHAR(255),
       recipe_title VARCHAR(255),
       recipe_data JSONB,
       priority_order REAL,
@@ -160,7 +160,7 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       location_name,
       latitude,
       longitude,
-      film_simulation,
+      film,
       recipe_title,
       recipe_data,
       priority_order,
@@ -191,7 +191,7 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       ${photo.locationName},
       ${photo.latitude},
       ${photo.longitude},
-      ${photo.filmSimulation},
+      ${photo.film},
       ${photo.recipeTitle},
       ${photo.recipeData},
       ${photo.priorityOrder},
@@ -225,7 +225,7 @@ export const updatePhoto = (photo: PhotoDbInsert) =>
     location_name=${photo.locationName},
     latitude=${photo.latitude},
     longitude=${photo.longitude},
-    film_simulation=${photo.filmSimulation},
+    film=${photo.film},
     recipe_title=${photo.recipeTitle},
     recipe_data=${photo.recipeData},
     priority_order=${photo.priorityOrder || null},
@@ -367,14 +367,14 @@ export const getUniqueRecipes = async () =>
 
 export const getRecipeTitleForData = async (
   data: string | object,
-  simulation: FilmSimulation,
+  film: FilmSimulation,
 ) =>
   // Includes legacy check on pre-stringified JSON
   safelyQueryPhotos(() => sql`
     SELECT recipe_title FROM photos
     WHERE hidden IS NOT TRUE
     AND recipe_data=${typeof data === 'string' ? data : JSON.stringify(data)}
-    AND film_simulation=${simulation}
+    AND film=${film}
     LIMIT 1
   `
     .then(({ rows }) => rows[0]?.recipe_title as string | undefined)
@@ -382,7 +382,7 @@ export const getRecipeTitleForData = async (
 
 export const getPhotosNeedingRecipeTitleCount = async (
   data: string,
-  simulation: FilmSimulation,
+  film: FilmSimulation,
   photoIdToExclude?: string,
 ) =>
   safelyQueryPhotos(() => sql`
@@ -390,7 +390,7 @@ export const getPhotosNeedingRecipeTitleCount = async (
     FROM photos
     WHERE recipe_title IS NULL
     AND recipe_data=${data}
-    AND film_simulation=${simulation}
+    AND film=${film}
     AND id <> ${photoIdToExclude}
   `.then(({ rows }) => parseInt(rows[0].count, 10))
   , 'getPhotosNeedingRecipeTitleCount');
@@ -398,29 +398,29 @@ export const getPhotosNeedingRecipeTitleCount = async (
 export const updateAllMatchingRecipeTitles = (
   title: string,
   data: string,
-  simulation: FilmSimulation,
+  film: FilmSimulation,
 ) =>
   safelyQueryPhotos(() => sql`
     UPDATE photos
     SET recipe_title=${title}
     WHERE recipe_title IS NULL
     AND recipe_data=${data}
-    AND film_simulation=${simulation}
+    AND film=${film}
   `, 'updateAllMatchingRecipeTitles');
 
-export const getUniqueFilmSimulations = async () =>
+export const getUniqueFilms = async () =>
   safelyQueryPhotos(() => sql`
-    SELECT DISTINCT film_simulation, COUNT(*)
+    SELECT DISTINCT film, COUNT(*)
     FROM photos
-    WHERE hidden IS NOT TRUE AND film_simulation IS NOT NULL
-    GROUP BY film_simulation
-    ORDER BY film_simulation ASC
-  `.then(({ rows }): FilmSimulations => rows
-      .map(({ film_simulation, count }) => ({
-        simulation: film_simulation as FilmSimulation,
+    WHERE hidden IS NOT TRUE AND film IS NOT NULL
+    GROUP BY film
+    ORDER BY film ASC
+  `.then(({ rows }): Films => rows
+      .map(({ film, count }) => ({
+        film: film as FilmSimulation,
         count: parseInt(count, 10),
       })))
-  , 'getUniqueFilmSimulations');
+  , 'getUniqueFilms');
 
 export const getUniqueFocalLengths = async () =>
   safelyQueryPhotos(() => sql`

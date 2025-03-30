@@ -1,19 +1,19 @@
 import { Photo, PhotoDateRange } from '@/photo';
 import {
-  absolutePathForFilmSimulationImage,
-  pathForFilmSimulation,
+  absolutePathForFilmImage,
+  pathForFilm,
 } from '@/app/paths';
 import OGTile from '@/components/OGTile';
 import {
   FilmSimulation,
-  descriptionForFilmSimulationPhotos,
-  titleForFilmSimulation,
+  descriptionForFilmPhotos,
+  titleForFilm,
 } from '.';
 
 export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 
-export default function FilmSimulationOGTile({
-  simulation,
+export default function FilmOGTile({
+  film,
   photos,
   loadingState: loadingStateExternal,
   riseOnHover,
@@ -23,7 +23,7 @@ export default function FilmSimulationOGTile({
   count,
   dateRange,
 }: {
-  simulation: FilmSimulation
+  film: FilmSimulation
   photos: Photo[]
   loadingState?: OGLoadingState
   onLoad?: () => void
@@ -35,11 +35,11 @@ export default function FilmSimulationOGTile({
 }) {
   return (
     <OGTile {...{
-      title: titleForFilmSimulation(simulation, photos, count),
+      title: titleForFilm(film, photos, count),
       description:
-        descriptionForFilmSimulationPhotos(photos, true, count, dateRange),
-      path: pathForFilmSimulation(simulation),
-      pathImageAbsolute: absolutePathForFilmSimulationImage(simulation),
+        descriptionForFilmPhotos(photos, true, count, dateRange),
+      path: pathForFilm(film),
+      pathImageAbsolute: absolutePathForFilmImage(film),
       loadingState: loadingStateExternal,
       onLoad,
       onFail,

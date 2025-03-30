@@ -1,7 +1,7 @@
 import { Photo } from '../photo';
 import { Camera, Cameras } from '@/camera';
 import { PhotoDateRange } from '../photo';
-import { FilmSimulation, FilmSimulations } from '@/simulation';
+import { FilmSimulation, Films } from '@/film';
 import { Lens, Lenses } from '@/lens';
 import { Tags } from '@/tag';
 import { FocalLengths } from '@/focal';
@@ -39,7 +39,7 @@ export interface PhotoSetCategory {
   lens?: Lens
   tag?: string
   recipe?: string
-  simulation?: FilmSimulation
+  film?: FilmSimulation
   focal?: number
 }
 
@@ -48,7 +48,7 @@ export interface PhotoSetCategories {
   lenses: Lenses
   tags: Tags
   recipes: Recipes
-  simulations: FilmSimulations
+  films: Films
   focalLengths: FocalLengths
 }
 
@@ -80,11 +80,9 @@ export const sortCategoriesByCount = <T extends { count: number }>(
 const convertCategoryKeysToCategoryNames =
   (categoryKeys: CategoryKeys): (keyof PhotoSetCategories)[] => {
     return categoryKeys.map(key => {
-      return key === 'films'
-        ? 'simulations'
-        : key === 'focal-lengths'
-          ? 'focalLengths'
-          : key;
+      return key === 'focal-lengths'
+        ? 'focalLengths'
+        : key;
     });
   };
 

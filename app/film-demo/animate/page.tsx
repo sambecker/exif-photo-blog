@@ -5,7 +5,7 @@ import { clsx } from 'clsx/lite';
 import {
   FILM_SIMULATION_FORM_INPUT_OPTIONS,
 } from '@/platforms/fujifilm/simulation';
-import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
+import PhotoFilm from '@/film/PhotoFilm';
 import { useEffect, useState } from 'react';
 
 export default function FilmPage() {
@@ -27,8 +27,8 @@ export default function FilmPage() {
           <div className="dark:text-gray-500/50 uppercase">
             Film Simulation:
           </div>
-          <PhotoFilmSimulation
-            simulation={FILM_SIMULATION_FORM_INPUT_OPTIONS[index].value}
+          <PhotoFilm
+            film={FILM_SIMULATION_FORM_INPUT_OPTIONS[index].value}
             type="icon-first"
           />
           <div className="mt-4 text-dim relative">

@@ -53,7 +53,7 @@ export interface PhotoStats {
   lensesCount: number
   tagsCount: number
   recipesCount: number
-  filmSimulationsCount: number
+  filmsCount: number
   focalLengthsCount: number
   dateRange?: PhotoDateRange
 }

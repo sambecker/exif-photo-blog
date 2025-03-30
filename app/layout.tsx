@@ -16,7 +16,7 @@ import { Metadata } from 'next/types';
 import { ThemeProvider } from 'next-themes';
 import Nav from '@/app/Nav';
 import Footer from '@/app/Footer';
-import CommandK from '@/app/CommandK';
+import CommandK from '@/cmdk/CommandK';
 import SwrConfigClient from '@/state/SwrConfigClient';
 import AdminBatchEditPanel from '@/admin/AdminBatchEditPanel';
 import ShareModals from '@/share/ShareModals';

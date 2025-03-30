@@ -1,7 +1,7 @@
 'use client';
 
 import LoaderButton from '@/components/primitives/LoaderButton';
-import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
+import PhotoFilm from '@/film/PhotoFilm';
 import clsx from 'clsx/lite';
 import { ReactNode, RefObject } from 'react';
 import { IoCloseCircle } from 'react-icons/io5';
@@ -15,7 +15,7 @@ import {
   generateRecipeText,
   RecipeProps,
 } from '.';
-import { labelForFilmSimulation } from '@/platforms/fujifilm/simulation';
+import { labelForFilm } from '@/platforms/fujifilm/simulation';
 import { TbChecklist } from 'react-icons/tb';
 import CopyButton from '@/components/CopyButton';
 import { pathForRecipe } from '@/app/paths';
@@ -25,7 +25,7 @@ export default function PhotoRecipeOverlay({
   ref,
   title,
   recipe,
-  simulation,
+  film,
   onClose,
 }: RecipeProps & {
   ref?: RefObject<HTMLDivElement | null>
@@ -122,7 +122,7 @@ export default function PhotoRecipeOverlay({
           label={`${title
             ? `${formatRecipe(title).toLocaleUpperCase()} recipe`
             : 'Recipe'}`}
-          text={generateRecipeText({ title, recipe, simulation }).join('\n')}
+          text={generateRecipeText({ title, recipe, film }).join('\n')}
           iconSize={17}
           className={clsx(
             'translate-y-[0.5px]',
@@ -147,10 +147,10 @@ export default function PhotoRecipeOverlay({
         <div className="col-span-8">
           {renderDataSquare(
             <div className="flex items-center gap-1.5">
-              {labelForFilmSimulation(simulation).medium.toLocaleUpperCase()}
-              <PhotoFilmSimulation
+              {labelForFilm(film).medium.toLocaleUpperCase()}
+              <PhotoFilm
                 contrast="frosted"
-                simulation={simulation}
+                film={film}
                 type="icon-only"
                 className="opacity-80 translate-y-[-0.5px]"
               />

@@ -2,7 +2,7 @@ import { Photo } from '@/photo';
 import { PhotoSetCategory } from '@/category';
 import { BASE_URL, GRID_HOMEPAGE_ENABLED } from './config';
 import { Camera } from '@/camera';
-import { FilmSimulation } from '@/simulation';
+import { FilmSimulation } from '@/film';
 import { parameterize } from '@/utility/string';
 import { TAG_HIDDEN } from '@/tag';
 import { Lens } from '@/lens';
@@ -26,7 +26,7 @@ export const PREFIX_CAMERA            = '/shot-on';
 export const PREFIX_LENS              = '/lens';
 export const PREFIX_TAG               = '/tag';
 export const PREFIX_RECIPE            = '/recipe';
-export const PREFIX_FILM_SIMULATION   = '/film';
+export const PREFIX_FILM              = '/film';
 export const PREFIX_FOCAL_LENGTH      = '/focal';
 
 // Dynamic paths
@@ -34,8 +34,7 @@ const PATH_PHOTO_DYNAMIC              = `${PREFIX_PHOTO}/[photoId]`;
 const PATH_CAMERA_DYNAMIC             = `${PREFIX_CAMERA}/[make]/[model]`;
 const PATH_LENS_DYNAMIC               = `${PREFIX_LENS}/[make]/[model]`;
 const PATH_TAG_DYNAMIC                = `${PREFIX_TAG}/[tag]`;
-// eslint-disable-next-line max-len
-const PATH_FILM_SIMULATION_DYNAMIC    = `${PREFIX_FILM_SIMULATION}/[simulation]`;
+const PATH_FILM_DYNAMIC               = `${PREFIX_FILM}/[film]`;
 const PATH_FOCAL_LENGTH_DYNAMIC       = `${PREFIX_FOCAL_LENGTH}/[focal]`;
 const PATH_RECIPE_DYNAMIC             = `${PREFIX_RECIPE}/[recipe]`;
 
@@ -86,7 +85,7 @@ export const PATHS_TO_CACHE = [
   PATH_CAMERA_DYNAMIC,
   PATH_LENS_DYNAMIC,
   PATH_TAG_DYNAMIC,
-  PATH_FILM_SIMULATION_DYNAMIC,
+  PATH_FILM_DYNAMIC,
   PATH_FOCAL_LENGTH_DYNAMIC,
   PATH_RECIPE_DYNAMIC,
   ...PATHS_ADMIN,
@@ -121,7 +120,7 @@ export const pathForPhoto = ({
   camera,
   lens,
   tag,
-  simulation,
+  film,
   focal,
   recipe,
 }: PhotoPathParams) => {
@@ -135,8 +134,8 @@ export const pathForPhoto = ({
     prefix = pathForLens(lens);
   } else if (tag) {
     prefix = pathForTag(tag);
-  } else if (simulation) {
-    prefix = pathForFilmSimulation(simulation);
+  } else if (film) {
+    prefix = pathForFilm(film);
   } else if (recipe) {
     prefix = pathForRecipe(recipe);
   } else if (focal) {
@@ -152,8 +151,8 @@ export const pathForTag = (tag: string) =>
 export const pathForCamera = ({ make, model }: Camera) =>
   `${PREFIX_CAMERA}/${parameterize(make)}/${parameterize(model)}`;
 
-export const pathForFilmSimulation = (simulation: FilmSimulation) =>
-  `${PREFIX_FILM_SIMULATION}/${simulation}`;
+export const pathForFilm = (film: FilmSimulation) =>
+  `${PREFIX_FILM}/${film}`;
 
 export const pathForLens = ({ make, model }: Lens) =>
   make
@@ -178,8 +177,8 @@ export const absolutePathForCamera= (camera: Camera) =>
 export const absolutePathForLens= (lens: Lens) =>
   `${BASE_URL}${pathForLens(lens)}`;
 
-export const absolutePathForFilmSimulation = (simulation: FilmSimulation) =>
-  `${BASE_URL}${pathForFilmSimulation(simulation)}`;
+export const absolutePathForFilm = (film: FilmSimulation) =>
+  `${BASE_URL}${pathForFilm(film)}`;
 
 export const absolutePathForRecipe = (recipe: string) =>
   `${BASE_URL}${pathForRecipe(recipe)}`;
@@ -199,9 +198,8 @@ export const absolutePathForCameraImage= (camera: Camera) =>
 export const absolutePathForLensImage= (lens: Lens) =>
   `${absolutePathForLens(lens)}/image`;
 
-export const absolutePathForFilmSimulationImage =
-  (simulation: FilmSimulation) =>
-    `${absolutePathForFilmSimulation(simulation)}/image`;
+export const absolutePathForFilmImage = (film: FilmSimulation) =>
+  `${absolutePathForFilm(film)}/image`;
 
 export const absolutePathForRecipeImage = (recipe: string) =>
   `${absolutePathForRecipe(recipe)}/image`;
@@ -230,13 +228,13 @@ export const isPathCamera = (pathname = '') =>
 export const isPathCameraPhoto = (pathname = '') =>
   new RegExp(`^${PREFIX_CAMERA}/[^/]+/[^/]+/[^/]+/?$`).test(pathname);
 
-// film/[simulation]
-export const isPathFilmSimulation = (pathname = '') =>
-  new RegExp(`^${PREFIX_FILM_SIMULATION}/[^/]+/?$`).test(pathname);
+// film/[film]
+export const isPathFilm = (pathname = '') =>
+  new RegExp(`^${PREFIX_FILM}/[^/]+/?$`).test(pathname);
 
-// film/[simulation]/[photoId]
-export const isPathFilmSimulationPhoto = (pathname = '') =>
-  new RegExp(`^${PREFIX_FILM_SIMULATION}/[^/]+/[^/]+/?$`).test(pathname);
+// film/[film]/[photoId]
+export const isPathFilmPhoto = (pathname = '') =>
+  new RegExp(`^${PREFIX_FILM}/[^/]+/[^/]+/?$`).test(pathname);
 
 // focal/[focal]
 export const isPathFocalLength = (pathname = '') =>
@@ -299,8 +297,8 @@ export const getPathComponents = (pathname = ''): {
     new RegExp(`^${PREFIX_TAG}/[^/]+/([^/]+)`))?.[1];
   const photoIdFromCamera = pathname.match(
     new RegExp(`^${PREFIX_CAMERA}/[^/]+/[^/]+/([^/]+)`))?.[1];
-  const photoIdFromFilmSimulation = pathname.match(
-    new RegExp(`^${PREFIX_FILM_SIMULATION}/[^/]+/([^/]+)`))?.[1];
+  const photoIdFromFilm = pathname.match(
+    new RegExp(`^${PREFIX_FILM}/[^/]+/([^/]+)`))?.[1];
   const photoIdFromFocalLength = pathname.match(
     new RegExp(`^${PREFIX_FOCAL_LENGTH}/[0-9]+mm/([^/]+)`))?.[1];
   const tag = pathname.match(
@@ -309,8 +307,8 @@ export const getPathComponents = (pathname = ''): {
     new RegExp(`^${PREFIX_CAMERA}/([^/]+)`))?.[1];
   const cameraModel = pathname.match(
     new RegExp(`^${PREFIX_CAMERA}/[^/]+/([^/]+)`))?.[1];
-  const simulation = pathname.match(
-    new RegExp(`^${PREFIX_FILM_SIMULATION}/([^/]+)`))?.[1] as FilmSimulation;
+  const film = pathname.match(
+    new RegExp(`^${PREFIX_FILM}/([^/]+)`))?.[1] as FilmSimulation;
   const focalString = pathname.match(
     new RegExp(`^${PREFIX_FOCAL_LENGTH}/([0-9]+)mm`))?.[1];
 
@@ -325,12 +323,12 @@ export const getPathComponents = (pathname = ''): {
       photoIdFromPhoto ||
       photoIdFromTag ||
       photoIdFromCamera ||
-      photoIdFromFilmSimulation ||
+      photoIdFromFilm ||
       photoIdFromFocalLength
     ),
     tag,
     camera,
-    simulation,
+    film,
     focal,
   };
 };
@@ -340,7 +338,7 @@ export const getEscapePath = (pathname?: string) => {
     photoId,
     tag,
     camera,
-    simulation,
+    film,
     focal,
   } = getPathComponents(pathname);
 
@@ -348,7 +346,7 @@ export const getEscapePath = (pathname?: string) => {
     (photoId && isPathPhoto(pathname)) ||
     (tag && isPathTag(pathname)) ||
     (camera && isPathCamera(pathname)) ||
-    (simulation && isPathFilmSimulation(pathname)) ||
+    (film && isPathFilm(pathname)) ||
     (focal && isPathFocalLength(pathname))
   ) {
     return PATH_ROOT;
@@ -356,8 +354,8 @@ export const getEscapePath = (pathname?: string) => {
     return pathForTag(tag);
   } else if (camera && isPathCameraPhoto(pathname)) {
     return pathForCamera(camera);
-  } else if (simulation && isPathFilmSimulationPhoto(pathname)) {
-    return pathForFilmSimulation(simulation);
+  } else if (film && isPathFilmPhoto(pathname)) {
+    return pathForFilm(film);
   } else if (focal && isPathFocalLengthPhoto(pathname)) {
     return pathForFocalLength(focal);
   }

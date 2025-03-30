@@ -25,17 +25,17 @@ import {
   PATH_ROOT,
   PATH_SIGN_IN,
   pathForCamera,
-  pathForFilmSimulation,
+  pathForFilm,
   pathForFocalLength,
   pathForLens,
   pathForPhoto,
   pathForRecipe,
   pathForTag,
-} from '../../app/paths';
-import Modal from '../Modal';
+} from '../app/paths';
+import Modal from '../components/Modal';
 import { clsx } from 'clsx/lite';
 import { useDebounce } from 'use-debounce';
-import Spinner from '../Spinner';
+import Spinner from '../components/Spinner';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { BiDesktop, BiLockAlt, BiMoon, BiSun } from 'react-icons/bi';
@@ -59,20 +59,20 @@ import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import InsightsIndicatorDot from '@/admin/insights/InsightsIndicatorDot';
 import { PhotoSetCategories } from '@/category';
 import { formatCameraText } from '@/camera';
-import { labelForFilmSimulation } from '@/platforms/fujifilm/simulation';
+import { labelForFilm } from '@/platforms/fujifilm/simulation';
 import { formatFocalLength } from '@/focal';
 import { formatRecipe } from '@/recipe';
-import IconLens from '../icons/IconLens';
+import IconLens from '../components/icons/IconLens';
 import { formatLensText } from '@/lens';
-import IconTag from '../icons/IconTag';
-import IconCamera from '../icons/IconCamera';
-import IconPhoto from '../icons/IconPhoto';
-import IconRecipe from '../icons/IconRecipe';
-import IconFocalLength from '../icons/IconFocalLength';
-import IconFilmSimulation from '../icons/IconFilmSimulation';
-import IconLock from '../icons/IconLock';
+import IconTag from '../components/icons/IconTag';
+import IconCamera from '../components/icons/IconCamera';
+import IconPhoto from '../components/icons/IconPhoto';
+import IconRecipe from '../components/icons/IconRecipe';
+import IconFocalLength from '../components/icons/IconFocalLength';
+import IconFilm from '../components/icons/IconFilm';
+import IconLock from '../components/icons/IconLock';
 import useVisualViewportHeight from '@/utility/useVisualViewport';
-import useMaskedScroll from '../useMaskedScroll';
+import useMaskedScroll from '../components/useMaskedScroll';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -112,7 +112,7 @@ export default function CommandKClient({
   lenses,
   tags,
   recipes,
-  simulations,
+  films,
   focalLengths,
   showDebugTools,
   footer,
@@ -333,13 +333,13 @@ export default function CommandKClient({
           })),
         };
         case 'films': return {
-          heading: 'Film Simulations',
-          accessory: <IconFilmSimulation size={14} />,
-          items: simulations.map(({ simulation, count }) => ({
-            label: labelForFilmSimulation(simulation).medium,
+          heading: 'Films',
+          accessory: <IconFilm size={14} />,
+          items: films.map(({ film, count }) => ({
+            label: labelForFilm(film).medium,
             annotation: formatCount(count),
             annotationAria: formatCountDescriptive(count),
-            path: pathForFilmSimulation(simulation),
+            path: pathForFilm(film),
           })),
         };
         case 'focal-lengths': return {
@@ -355,7 +355,7 @@ export default function CommandKClient({
         }
       })
       .filter(Boolean) as CommandKSection[]
-  , [tagsIncludingHidden, cameras, lenses, recipes, simulations, focalLengths]);
+  , [tagsIncludingHidden, cameras, lenses, recipes, films, focalLengths]);
 
   const clientSections: CommandKSection[] = [{
     heading: 'Theme',

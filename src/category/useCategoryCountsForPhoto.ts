@@ -10,7 +10,7 @@ export default function useCategoryCountsForPhoto(photo: Photo) {
     getLensCount,
     getTagCount,
     getRecipeCount,
-    getFilmSimulationCount,
+    getFilmCount,
     getFocalLengthCount,
   } = useCategoryCounts();
 
@@ -25,21 +25,20 @@ export default function useCategoryCountsForPhoto(photo: Photo) {
       return acc;
     }, {} as Record<string, number>),
     recipeCount: photo.recipeTitle ? getRecipeCount(photo.recipeTitle) : 0,
-    simulationCount:
-      photo.filmSimulation ? getFilmSimulationCount(photo.filmSimulation) : 0,
+    filmCount: photo.film ? getFilmCount(photo.film) : 0,
     focalCount: photo.focalLength ? getFocalLengthCount(photo.focalLength) : 0,
   }), [
     getCameraCount,
     getLensCount,
     getRecipeCount,
-    getFilmSimulationCount,
+    getFilmCount,
     getFocalLengthCount,
     getTagCount,
     camera,
     lens,
     photo.tags,
     photo.recipeTitle,
-    photo.filmSimulation,
+    photo.film,
     photo.focalLength,
   ]);
 

@@ -1,7 +1,7 @@
-import CommandKClient from '@/components/cmdk/CommandKClient';
+import CommandKClient from './CommandKClient';
 import { getPhotosMetaCached } from '@/photo/cache';
 import { photoQuantityText } from '@/photo';
-import { ADMIN_DEBUG_TOOLS_ENABLED } from './config';
+import { ADMIN_DEBUG_TOOLS_ENABLED } from '../app/config';
 import { getDataForCategories } from '@/category/data';
 
 export default async function CommandK() {
@@ -11,7 +11,7 @@ export default async function CommandK() {
     lenses,
     tags,
     recipes,
-    filmSimulations,
+    films,
     focalLengths,
   ] = await Promise.all([
     getPhotosMetaCached()
@@ -24,7 +24,7 @@ export default async function CommandK() {
     cameras={cameras}
     lenses={lenses}
     tags={tags}
-    simulations={filmSimulations}
+    films={films}
     recipes={recipes}
     focalLengths={focalLengths}
     showDebugTools={ADMIN_DEBUG_TOOLS_ENABLED}

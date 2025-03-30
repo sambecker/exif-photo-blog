@@ -1,38 +1,38 @@
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
-import { getUniqueFilmSimulations } from '@/photo/db/query';
-import { FilmSimulation, generateMetaForFilmSimulation } from '@/simulation';
-import FilmSimulationOverview from '@/simulation/FilmSimulationOverview';
-import { getPhotosFilmSimulationDataCached } from '@/simulation/data';
+import { getUniqueFilms } from '@/photo/db/query';
+import { FilmSimulation, generateMetaForFilm } from '@/film';
+import FilmOverview from '@/film/FilmOverview';
+import { getPhotosFilmDataCached } from '@/film/data';
 import { Metadata } from 'next/types';
 import { cache } from 'react';
 import { PATH_ROOT } from '@/app/paths';
 import { redirect } from 'next/navigation';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 
-const getPhotosFilmSimulationDataCachedCached =
-  cache(getPhotosFilmSimulationDataCached);
+const getPhotosFilmDataCachedCached =
+  cache(getPhotosFilmDataCached);
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'films',
   'page',
-  getUniqueFilmSimulations,
-  simulations => simulations.map(({ simulation }) => ({ simulation })),
+  getUniqueFilms,
+  films => films.map(({ film }) => ({ film })),
 );
 
-interface FilmSimulationProps {
-  params: Promise<{ simulation: FilmSimulation }>
+interface FilmProps {
+  params: Promise<{ film: FilmSimulation }>
 }
 
 export async function generateMetadata({
   params,
-}: FilmSimulationProps): Promise<Metadata> {
-  const { simulation } = await params;
+}: FilmProps): Promise<Metadata> {
+  const { film } = await params;
 
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosFilmSimulationDataCachedCached({
-    simulation,
+  ] = await getPhotosFilmDataCachedCached({
+    film,
     limit: INFINITE_SCROLL_GRID_INITIAL,
   });
 
@@ -43,7 +43,7 @@ export async function generateMetadata({
     title,
     description,
     images,
-  } = generateMetaForFilmSimulation(simulation, photos, count, dateRange);
+  } = generateMetaForFilm(film, photos, count, dateRange);
 
   return {
     title,
@@ -62,24 +62,24 @@ export async function generateMetadata({
   };
 }
 
-export default async function FilmSimulationPage({
+export default async function FilmPage({
   params,
-}: FilmSimulationProps) {
-  const { simulation } = await params;
+}: FilmProps) {
+  const { film } = await params;
 
   const [
     photos,
     { count, dateRange },
-  ] =  await getPhotosFilmSimulationDataCachedCached({
-    simulation,
+  ] =  await getPhotosFilmDataCachedCached({
+    film,
     limit: INFINITE_SCROLL_GRID_INITIAL,
   });
 
   if (photos.length === 0) { redirect(PATH_ROOT); } 
 
   return (
-    <FilmSimulationOverview {...{
-      simulation,
+    <FilmOverview {...{
+      film,
       photos,
       count,
       dateRange,

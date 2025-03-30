@@ -7,8 +7,8 @@ import {
   formatCountDescriptive,
 } from '@/utility/string';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
-import { FilmSimulation } from '@/simulation';
-import { labelForFilmSimulation } from '@/platforms/fujifilm/simulation';
+import { FilmSimulation } from '@/film';
+import { labelForFilm } from '@/platforms/fujifilm/simulation';
 
 export type RecipeWithCount = {
   recipe: string
@@ -20,7 +20,7 @@ export type Recipes = RecipeWithCount[]
 export interface RecipeProps {
   title?: string
   recipe: FujifilmRecipe
-  simulation: FilmSimulation
+  film: FilmSimulation
   iso?: string
   exposure?: string   
 }
@@ -57,12 +57,12 @@ export const descriptionForRecipePhotos = (
 export const generateRecipeText = ({
   title,
   recipe,
-  simulation,
+  film,
 }: RecipeProps,
 abbreviate?: boolean,
 ) => {
   const lines = [
-    `${labelForFilmSimulation(simulation).small.toLocaleUpperCase()}`,
+    `${labelForFilm(film).small.toLocaleUpperCase()}`,
     // eslint-disable-next-line max-len
     `${formatWhiteBalance(recipe).toLocaleUpperCase()} ${formatWhiteBalanceColor(recipe)}`,
   ];
@@ -133,7 +133,7 @@ export const generateMetaForRecipe = (
 });
 
 const photoHasRecipe = (photo?: Photo) =>
-  photo?.filmSimulation && photo?.recipeData;
+  photo?.film && photo?.recipeData;
 
 export const getPhotoWithRecipeFromPhotos = (
   photos: Photo[],

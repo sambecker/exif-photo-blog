@@ -3,21 +3,21 @@ import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
 import {
-  labelForFilmSimulation,
+  labelForFilm,
 } from '@/platforms/fujifilm/simulation';
-import PhotoFilmSimulationIcon from 
-  '@/simulation/PhotoFilmSimulationIcon';
-import { FilmSimulation } from '@/simulation';
+import PhotoFilmIcon from 
+  '@/film/PhotoFilmIcon';
+import { FilmSimulation } from '@/film';
 import { NextImageSize } from '@/platforms/next-image';
 
-export default function FilmSimulationImageResponse({
-  simulation,
+export default function FilmImageResponse({
+  film,
   photos,
   width,
   height,
   fontFamily,
 }: {
-  simulation: FilmSimulation,
+  film: FilmSimulation,
   photos: Photo[]
   width: NextImageSize
   height: number
@@ -36,12 +36,12 @@ export default function FilmSimulationImageResponse({
         width,
         height,
         fontFamily,
-        icon: <PhotoFilmSimulationIcon
-          simulation={simulation}
+        icon: <PhotoFilmIcon
+          film={film}
           height={height * .081}
           style={{ transform: `translateY(${height * .001}px)`}}
         />,
-        title: labelForFilmSimulation(simulation).medium.toLocaleUpperCase(),
+        title: labelForFilm(film).medium.toLocaleUpperCase(),
       }} />
     </ImageContainer>
   );

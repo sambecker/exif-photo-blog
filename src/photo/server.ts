@@ -11,7 +11,7 @@ import {
 } from '@/platforms/fujifilm/simulation';
 import { ExifData, ExifParserFactory } from 'ts-exif-parser';
 import { PhotoFormData } from './form';
-import { FilmSimulation } from '@/simulation';
+import { FilmSimulation } from '@/film';
 import sharp, { Sharp } from 'sharp';
 import {
   GEO_PRIVACY_ENABLED,
@@ -58,7 +58,7 @@ export const extractImageDataFromBlobPath = async (
   const extension = getExtensionFromStorageUrl(url);
 
   let exifData: ExifData | undefined;
-  let filmSimulation: FilmSimulation | undefined;
+  let film: FilmSimulation | undefined;
   let recipe: FujifilmRecipe | undefined;
   let blurData: string | undefined;
   let imageResizedBase64: string | undefined;
@@ -89,7 +89,7 @@ export const extractImageDataFromBlobPath = async (
         const exifDataBinary = parser.parse();
         const makerNote = exifDataBinary.tags?.MakerNote;
         if (Buffer.isBuffer(makerNote)) {
-          filmSimulation = getFujifilmSimulationFromMakerNote(makerNote);
+          film = getFujifilmSimulationFromMakerNote(makerNote);
           recipe = getFujifilmRecipeFromMakerNote(makerNote);
         }
       }
@@ -124,7 +124,7 @@ export const extractImageDataFromBlobPath = async (
           url,
         },
         ...generateBlurData && { blurData },
-        ...convertExifToFormData(exifData, filmSimulation, recipe),
+        ...convertExifToFormData(exifData, film, recipe),
       },
     },
     imageResizedBase64,
@@ -206,10 +206,10 @@ export const convertFormDataToPhotoDbInsertAndLookupRecipeTitle =
     Promise<ReturnType<typeof convertFormDataToPhotoDbInsert>> => {
     const photo = convertFormDataToPhotoDbInsert(...args);
 
-    if (photo.recipeData && !photo.recipeTitle && photo.filmSimulation) {
+    if (photo.recipeData && !photo.recipeTitle && photo.film) {
       const recipeTitle = await getRecipeTitleForData(
         photo.recipeData,
-        photo.filmSimulation,
+        photo.film,
       );
       if (recipeTitle) {
         photo.recipeTitle = recipeTitle;
@@ -229,12 +229,12 @@ export const propagateRecipeTitleIfNecessary = async (
     formData.get('recipeTitle') &&
     photo.recipeTitle &&
     photo.recipeData &&
-    photo.filmSimulation
+    photo.film
   ) {
     await updateAllMatchingRecipeTitles(
       photo.recipeTitle,
       photo.recipeData,
-      photo.filmSimulation,
+      photo.film,
     );
   }
 };

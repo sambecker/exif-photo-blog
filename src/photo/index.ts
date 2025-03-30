@@ -1,11 +1,11 @@
 import { formatFocalLength } from '@/focal';
 import { getNextImageUrlForRequest } from '@/platforms/next-image';
-import { FilmSimulation, photoHasFilmSimulationData } from '@/simulation';
+import { FilmSimulation, photoHasFilmData } from '@/film';
 import {
   HIGH_DENSITY_GRID,
   IS_PREVIEW,
   SHOW_EXIF_DATA,
-  SHOW_FILM_SIMULATIONS,
+  SHOW_FILMS,
   SHOW_LENSES,
   SHOW_RECIPES,
 } from '@/app/config';
@@ -65,7 +65,7 @@ export interface PhotoExif {
   exposureCompensation?: number
   latitude?: number
   longitude?: number
-  filmSimulation?: FilmSimulation
+  film?: FilmSimulation
   recipeData?: string
   takenAt?: string
   takenAtNaive?: string
@@ -329,10 +329,10 @@ export const shouldShowRecipeDataForPhoto = (photo: Photo) =>
   SHOW_RECIPES &&
   photoHasRecipeData(photo);
 
-export const shouldShowFilmSimulationDataForPhoto = (photo: Photo) =>
+export const shouldShowFilmDataForPhoto = (photo: Photo) =>
   SHOW_EXIF_DATA &&
-  SHOW_FILM_SIMULATIONS &&
-  photoHasFilmSimulationData(photo);
+  SHOW_FILMS &&
+  photoHasFilmData(photo);
 
 export const shouldShowExifDataForPhoto = (photo: Photo) =>
   SHOW_EXIF_DATA && photoHasExifData(photo);

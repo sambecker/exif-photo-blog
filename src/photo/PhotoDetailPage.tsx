@@ -6,7 +6,7 @@ import AppGrid from '@/components/AppGrid';
 import PhotoGrid from './PhotoGrid';
 import TagHeader from '@/tag/TagHeader';
 import CameraHeader from '@/camera/CameraHeader';
-import FilmSimulationHeader from '@/simulation/FilmSimulationHeader';
+import FilmHeader from '@/film/FilmHeader';
 import { TAG_HIDDEN } from '@/tag';
 import HiddenHeader from '@/tag/HiddenHeader';
 import FocalLengthHeader from '@/focal/FocalLengthHeader';
@@ -22,7 +22,7 @@ export default function PhotoDetailPage({
   tag,
   camera,
   lens,
-  simulation,
+  film,
   recipe,
   focal,
   indexNumber,
@@ -77,9 +77,9 @@ export default function PhotoDetailPage({
       count={count}
       dateRange={dateRange}
     />;
-  } else if (simulation) {
-    customHeader = <FilmSimulationHeader
-      simulation={simulation}
+  } else if (film) {
+    customHeader = <FilmHeader
+      film={film}
       photos={photos}
       selectedPhoto={photo}
       indexNumber={indexNumber}
@@ -129,13 +129,13 @@ export default function PhotoDetailPage({
             showTitleAsH1
             showCamera={!camera}
             showLens={!lens}
-            showSimulation={!simulation}
+            showFilm={!film}
             showRecipe={!recipe}
             shouldShare={shouldShare}
             shouldShareCamera={camera !== undefined}
             shouldShareLens={lens !== undefined}
             shouldShareTag={tag !== undefined}
-            shouldShareSimulation={simulation !== undefined}
+            shouldShareFilm={film !== undefined}
             shouldShareRecipe={recipe !== undefined}
             shouldShareFocalLength={focal !== undefined}
             includeFavoriteInAdminMenu={includeFavoriteInAdminMenu}
@@ -149,7 +149,7 @@ export default function PhotoDetailPage({
           selectedPhoto={photo}
           tag={tag}
           camera={camera}
-          simulation={simulation}
+          film={film}
           focal={focal}
           animateOnFirstLoadOnly
         />}

@@ -7,7 +7,7 @@ import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import AppGrid from '@/components/AppGrid';
 import EntityLink from '@/components/primitives/EntityLink';
 import LabeledIcon from '@/components/primitives/LabeledIcon';
-import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
+import PhotoFilmIcon from '@/film/PhotoFilmIcon';
 import { useAppState } from '@/state/AppState';
 import { clsx } from 'clsx/lite';
 import { useEffect, useState } from 'react';
@@ -129,7 +129,7 @@ export default function ComponentsPage() {
             </div>
             <div>
               <EntityLink
-                icon={<PhotoFilmSimulationIcon simulation="astia" />}
+                icon={<PhotoFilmIcon film="astia" />}
                 label="Astia/Soft"
                 type="icon-last"
                 iconWide
@@ -149,7 +149,7 @@ export default function ComponentsPage() {
             </div>
             <div>
               <EntityLink
-                icon={<PhotoFilmSimulationIcon simulation="astia" />}
+                icon={<PhotoFilmIcon film="astia" />}
                 label="Astia/Soft"
                 type="icon-last"
                 iconWide
@@ -184,7 +184,7 @@ export default function ComponentsPage() {
             </div>
             <div>
               <EntityLink
-                icon={<PhotoFilmSimulationIcon simulation="astia" />}
+                icon={<PhotoFilmIcon film="astia" />}
                 label="Astia/Soft"
                 type="icon-last"
                 iconWide
