@@ -9,11 +9,13 @@ import {
   absolutePathForFilmImage,
 } from '@/app/paths';
 import {
+  FILM_SIMULATION_FORM_INPUT_OPTIONS,
   FujifilmSimulation,
   labelForFilm,
 } from '@/platforms/fujifilm/simulation';
 import { formatCount } from '@/utility/string';
 import { formatCountDescriptive } from '@/utility/string';
+import { AnnotatedTag } from '@/photo/form';
 
 export type FilmSimulation = FujifilmSimulation;
 
@@ -85,10 +87,30 @@ export const generateMetaForFilm = (
 export const photoHasFilmData = (photo: Photo) =>
   Boolean(photo.film);
 
-export const convertFilmsForForm = (films: Films = []) =>
-  sortFilms(films)
-    .map(({ film, count }) => ({
-      value: film,
-      annotation: formatCount(count),
-      annotationAria: formatCountDescriptive(count),
-    }));
+export const convertFilmsForForm = (
+  _films: Films = [],
+  includeAllFujifilmSimulations?: boolean,
+): AnnotatedTag[] => {
+  const films = includeAllFujifilmSimulations
+    ? FILM_SIMULATION_FORM_INPUT_OPTIONS.map(film => ({
+      value: film.value,
+    } as AnnotatedTag))
+    : [];
+
+  _films.forEach(({ film, count }) => {
+    const index = films.findIndex(f => f.value === film);
+    const annotation = formatCount(count);
+    const annotationAria = formatCountDescriptive(count);
+    if (index !== -1) {
+      films[index] = {
+        ...films[index],
+        annotation,
+        annotationAria,
+      };
+    } else {
+      films.push({ value: film, annotation, annotationAria });
+    }
+  });
+
+  return films.sort((a, b) => a.value.localeCompare(b.value));
+};

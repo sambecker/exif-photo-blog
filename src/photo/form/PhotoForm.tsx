@@ -44,6 +44,7 @@ import ApplyRecipeTitleGloballyCheckbox from './ApplyRecipesGloballyCheckbox';
 import { convertFilmsForForm, Films, FilmSimulation } from '@/film';
 import IconFavs from '@/components/icons/IconFavs';
 import IconHidden from '@/components/icons/IconHidden';
+import { isMakeFujifilm } from '@/platforms/fujifilm';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -328,7 +329,7 @@ export default function PhotoForm({
           {FORM_METADATA_ENTRIES(
             convertTagsForForm(uniqueTags),
             convertRecipesForForm(uniqueRecipes),
-            convertFilmsForForm(uniqueFilms),
+            convertFilmsForForm(uniqueFilms, isMakeFujifilm(formData.make)),
             aiContent !== undefined,
             shouldStripGpsData,
           )
