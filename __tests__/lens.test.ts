@@ -7,6 +7,8 @@ const IPHONE_15_PRO_BACK_MAIN: Lens = { make: 'Apple', model: 'iPhone 15 Pro bac
 const IPHONE_15_PRO_BACK_TELEPHOTO: Lens = { make: 'Apple', model: 'iPhone 15 Pro back triple camera 6.765mm f/2.8' };
 
 const PIXEL_8_PRO_BACK: Lens = { make: 'Google', model: 'Pixel 8 Pro back camera 6.9mm f/1.68' };
+const PIXEL_8_PRO_BACK_NO_MAKE: Lens = { model: 'Pixel 8 Pro back camera 6.9mm f/1.68' };
+const PIXEL_6A_BACK: Lens = { make: 'Google', model: 'Pixel 6a back camera 2.35mm f/2.2' };
 
 describe('Lens', () => {
   describe('correctly formats', () => {
@@ -18,7 +20,10 @@ describe('Lens', () => {
     });
     it('Pixel lenses', () => {
       expect(formatLensText(PIXEL_8_PRO_BACK, 'medium')).toBe('Pixel 8 Pro Back Camera (6.9mm)');
+      expect(formatLensText(PIXEL_8_PRO_BACK_NO_MAKE, 'medium')).toBe('Pixel 8 Pro Back Camera (6.9mm)');
       expect(formatLensText(PIXEL_8_PRO_BACK, 'short')).toBe('Back Camera (6.9mm)');
+      expect(formatLensText(PIXEL_6A_BACK, 'medium')).toBe('Pixel 6a Back Camera (2.35mm)');
+      expect(formatLensText(PIXEL_6A_BACK, 'short')).toBe('Back Camera (2.35mm)');
     });
   });
 });
