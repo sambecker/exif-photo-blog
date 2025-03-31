@@ -34,6 +34,8 @@ export default function TagInput({
   limit?: number
   limitValidationMessage?: string
 }) {
+  const behaveAsDropdown = limit === 1;
+
   const containerRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const optionsRef = useRef<HTMLInputElement>(null);
@@ -51,8 +53,10 @@ export default function TagInput({
   , [value]);
 
   const hasReachedLimit = useMemo(() =>
-    limit !== undefined && selectedOptions.length >= limit
-  , [limit, selectedOptions]);
+    limit !== undefined &&
+    selectedOptions.length >= limit &&
+    !behaveAsDropdown
+  , [limit, behaveAsDropdown, selectedOptions]);
 
   const inputTextFormatted = parameterize(inputText);
   const isInputTextUnique =
@@ -100,21 +104,29 @@ export default function TagInput({
       .filter(option => !selectedOptions.includes(option));
 
     if (optionsToAdd.length > 0) {
-      onChange?.([
-        ...selectedOptions,
-        ...optionsToAdd,
-      ].join(','));
+      if (behaveAsDropdown) {
+        // If behaving as dropdown, replace contents on add
+        onChange?.(optionsToAdd[0]);
+      } else {
+        onChange?.([
+          ...selectedOptions,
+          ...optionsToAdd,
+        ].join(','));
+      }
     }
 
     setSelectedOptionIndex(undefined);
     setInputText('');
 
-    if (limit !== undefined && limit - 1 >= selectedOptions.length) {
+    if (
+      behaveAsDropdown ||
+      (limit !== undefined && limit - 1 >= selectedOptions.length)
+    ) {
       hideMenu(true);
     } else {
       inputRef.current?.focus();
     }
-  }, [limit, selectedOptions, onChange, hideMenu]);
+  }, [limit, behaveAsDropdown, selectedOptions, onChange, hideMenu]);
 
   const removeOption = useCallback((option: string) => {
     onChange?.(selectedOptions.filter(o =>
