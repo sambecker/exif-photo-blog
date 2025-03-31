@@ -22,19 +22,19 @@ export default async function PhotoEditPage({
 }) {
   const { photoId } = await params;
 
-  const photo = await getPhotoNoStore(photoId, true);
-
-  if (!photo) { redirect(PATH_ADMIN); }
-
   const [
+    photo,
     uniqueTags,
     uniqueRecipes,
     uniqueFilms,
   ] = await Promise.all([
+    getPhotoNoStore(photoId, true),
     getUniqueTagsCached(),
     getUniqueRecipesCached(),
     getUniqueFilmsCached(),
   ]);
+
+  if (!photo) { redirect(PATH_ADMIN); }
 
   const hasAiTextGeneration = AI_TEXT_GENERATION_ENABLED;
   
