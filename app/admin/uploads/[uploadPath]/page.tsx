@@ -1,7 +1,11 @@
 import { PATH_ADMIN } from '@/app/paths';
 import { extractImageDataFromBlobPath } from '@/photo/server';
 import { redirect } from 'next/navigation';
-import { getUniqueRecipesCached, getUniqueTagsCached } from '@/photo/cache';
+import {
+  getUniqueFilmsCached,
+  getUniqueRecipesCached,
+  getUniqueTagsCached,
+} from '@/photo/cache';
 import UploadPageClient from '@/photo/UploadPageClient';
 import {
   AI_TEXT_AUTO_GENERATED_FIELDS,
@@ -45,10 +49,12 @@ export default async function UploadPage({ params }: Params) {
   const [
     uniqueTags,
     uniqueRecipes,
+    uniqueFilms,
     recipeTitle,
   ] = await Promise.all([
     getUniqueTagsCached(),
     getUniqueRecipesCached(),
+    getUniqueFilmsCached(),
     formDataFromExif?.recipeData && formDataFromExif.film
       ? getRecipeTitleForData(
         formDataFromExif.recipeData,
@@ -72,6 +78,7 @@ export default async function UploadPage({ params }: Params) {
         formDataFromExif,
         uniqueTags,
         uniqueRecipes,
+        uniqueFilms,
         hasAiTextGeneration,
         textFieldsToAutoGenerate,
         imageThumbnailBase64,

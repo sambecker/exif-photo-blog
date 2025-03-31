@@ -41,13 +41,9 @@ import ErrorNote from '@/components/ErrorNote';
 import { convertRecipesForForm, Recipes } from '@/recipe';
 import deepEqual from 'fast-deep-equal/es6/react';
 import ApplyRecipeTitleGloballyCheckbox from './ApplyRecipesGloballyCheckbox';
-import { FilmSimulation } from '@/film';
+import { convertFilmsForForm, Films, FilmSimulation } from '@/film';
 import IconFavs from '@/components/icons/IconFavs';
 import IconHidden from '@/components/icons/IconHidden';
-import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
-import {
-  FILM_SIMULATION_FORM_INPUT_OPTIONS,
-} from '@/platforms/fujifilm/simulation';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -58,6 +54,7 @@ export default function PhotoForm({
   updatedBlurData,
   uniqueTags,
   uniqueRecipes,
+  uniqueFilms,
   aiContent,
   shouldStripGpsData,
   onTitleChange,
@@ -70,6 +67,7 @@ export default function PhotoForm({
   updatedBlurData?: string
   uniqueTags?: Tags
   uniqueRecipes?: Recipes
+  uniqueFilms?: Films
   aiContent?: AiContent
   shouldStripGpsData?: boolean
   onTitleChange?: (updatedTitle: string) => void
@@ -330,6 +328,7 @@ export default function PhotoForm({
           {FORM_METADATA_ENTRIES(
             convertTagsForForm(uniqueTags),
             convertRecipesForForm(uniqueRecipes),
+            convertFilmsForForm(uniqueFilms),
             aiContent !== undefined,
             shouldStripGpsData,
           )
@@ -412,18 +411,6 @@ export default function PhotoForm({
                 };
 
                 switch (key) {
-                case 'film':
-                  return formData.make === MAKE_FUJIFILM
-                    ? <FieldSetWithStatus
-                      key={key}
-                      {...fieldProps}
-                      selectOptions={FILM_SIMULATION_FORM_INPUT_OPTIONS}
-                      selectOptionsDefaultLabel="Unknown"
-                    />
-                    : <FieldSetWithStatus
-                      key={key}
-                      {...fieldProps}
-                    />;
                 case 'applyRecipeTitleGlobally':
                   return <ApplyRecipeTitleGloballyCheckbox
                     key={key}

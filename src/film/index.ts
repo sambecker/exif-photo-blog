@@ -12,6 +12,8 @@ import {
   FujifilmSimulation,
   labelForFilm,
 } from '@/platforms/fujifilm/simulation';
+import { formatCount } from '@/utility/string';
+import { formatCountDescriptive } from '@/utility/string';
 
 export type FilmSimulation = FujifilmSimulation;
 
@@ -82,3 +84,11 @@ export const generateMetaForFilm = (
 
 export const photoHasFilmData = (photo: Photo) =>
   Boolean(photo.film);
+
+export const convertFilmsForForm = (films: Films = []) =>
+  sortFilms(films)
+    .map(({ film, count }) => ({
+      value: film,
+      annotation: formatCount(count),
+      annotationAria: formatCountDescriptive(count),
+    }));

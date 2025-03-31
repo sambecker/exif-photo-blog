@@ -80,6 +80,7 @@ const STRING_MAX_LENGTH_LONG  = 1000;
 const FORM_METADATA = (
   tagOptions?: AnnotatedTag[],
   recipeOptions?: AnnotatedTag[],
+  filmOptions?: AnnotatedTag[],
   aiTextGeneration?: boolean,
   shouldStripGpsData?: boolean,
 ): Record<keyof PhotoFormData, FormMeta> => ({
@@ -121,6 +122,9 @@ const FORM_METADATA = (
     label: 'film',
     note: 'Intended for Fujifilm simulations and analog scans',
     noteShort: 'Fujifilm simulations / analog scans',
+    tagOptions: filmOptions,
+    tagOptionsLimitValidationMessage: 'Photos can only have one film',
+    tagOptionsLimit: 1,
     shouldNotOverwriteWithNullDataOnSync: true,
   },
   recipeTitle: {
