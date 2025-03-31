@@ -65,7 +65,8 @@ const createPhotosTable = () =>
     )
   `;
 
-// Wrapper for most queries for JIT table creation/migration running
+// Safe wrapper for most queries with JIT table creation/migration
+// Catch up to 3 migrations in older installations
 const safelyQueryPhotos = async <T>(
   callback: () => Promise<T>,
   debugMessage: string,
@@ -78,6 +79,7 @@ const safelyQueryPhotos = async <T>(
   try {
     result = await callback();
   } catch (e: any) {
+    // Catch 1st migration
     let migration = migrationForError(e);
     if (migration) {
       console.log(`Running Migration ${migration.label} ...`);
@@ -85,15 +87,26 @@ const safelyQueryPhotos = async <T>(
       try {
         result = await callback();
       } catch (e: any) {
-        // Catch potential second migration,
-        // which otherwise would not be caught
+        // Catch 2nd migration
         migration = migrationForError(e);
         if (migration) {
           console.log(`Running Migration ${migration.label} ...`);
           await migration.run();
           result = await callback();
         } else {
-          throw e;
+          try {
+            result = await callback();
+          } catch (e: any) {
+            // Catch 3rd migration
+            migration = migrationForError(e);
+            if (migration) {
+              console.log(`Running Migration ${migration.label} ...`);
+              await migration.run();
+              result = await callback();
+            } else {
+              throw e;
+            }
+          }
         }
       }
     } else if (/relation "photos" does not exist/i.test(e.message)) {
