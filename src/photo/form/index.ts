@@ -21,6 +21,7 @@ import { GEO_PRIVACY_ENABLED } from '@/app/config';
 import { TAG_FAVS, getValidationMessageForTags } from '@/tag';
 import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
+import { ReactNode } from 'react';
 
 type VirtualFields =
   'favorite' |
@@ -41,6 +42,8 @@ export type FieldSetType =
 
 export type AnnotatedTag = {
   value: string,
+  label?: string,
+  icon?: ReactNode
   annotation?: string,
   annotationAria?: string,
 };

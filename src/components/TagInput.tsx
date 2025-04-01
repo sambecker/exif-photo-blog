@@ -2,7 +2,6 @@ import { AnnotatedTag } from '@/photo/form';
 import { convertStringToArray, parameterize } from '@/utility/string';
 import { clsx } from 'clsx/lite';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-
 const KEY_KEYDOWN = 'keydown';
 const CREATE_LABEL = 'Create';
 
@@ -244,6 +243,15 @@ export default function TagInput({
     limit,
   ]);
 
+  const formatValue = useCallback((value: string) => {
+    const option = options.find(option => option.value === value);
+    return <>
+      {option?.icon}
+      {option?.label ?? value}
+    </>;
+  },
+  [options]);
+
   return (
     <div
       ref={containerRef}
@@ -284,6 +292,7 @@ export default function TagInput({
           readOnly && 'bg-gray-100 dark:bg-gray-900 dark:text-gray-400',
         )}
       >
+        {/* Selected Options */}
         {selectedOptions
           .filter(Boolean)
           .map(option =>
@@ -302,7 +311,7 @@ export default function TagInput({
               )}
               onClick={() => removeOption(option)}
             >
-              {option}
+              {formatValue(value)}
             </span>)}
         <input
           id={id}
@@ -344,6 +353,7 @@ export default function TagInput({
               'text-xl shadow-lg dark:shadow-xl',
             )}
           >
+            {/* Menu Options */}
             {optionsFiltered.map(({
               value,
               annotation,
@@ -378,7 +388,7 @@ export default function TagInput({
                 onFocus={() => setSelectedOptionIndex(index)}
               >
                 <span className="grow min-w-0 truncate">
-                  {value}
+                  {formatValue(value)}
                 </span>
                 {annotation &&
                   <span

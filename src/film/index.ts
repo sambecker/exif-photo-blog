@@ -92,8 +92,9 @@ export const convertFilmsForForm = (
   includeAllFujifilmSimulations?: boolean,
 ): AnnotatedTag[] => {
   const films = includeAllFujifilmSimulations
-    ? FILM_SIMULATION_FORM_INPUT_OPTIONS.map(film => ({
-      value: film.value,
+    ? FILM_SIMULATION_FORM_INPUT_OPTIONS.map(({ value }) => ({
+      value,
+      label: labelForFilm(value).large,
     } as AnnotatedTag))
     : [];
 
