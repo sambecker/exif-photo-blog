@@ -252,8 +252,8 @@ export default function TagInput({
     limit,
   ]);
 
-  const renderOptionContent = useCallback((value: string) => {
-    const option = options.find(option => option.value === value);
+  const renderTag = useCallback((value: string) => {
+    const option = options.find(o => o.value === value);
     const icon = option?.icon ?? defaultIcon;
     return <>
       <span className="truncate">
@@ -263,8 +263,7 @@ export default function TagInput({
         {icon}
       </span>}
     </>;
-  },
-  [options, defaultIcon]);
+  }, [options, defaultIcon]);
 
   return (
     <div
@@ -326,7 +325,7 @@ export default function TagInput({
               )}
               onClick={() => removeOption(option)}
             >
-              {renderOptionContent(value)}
+              {renderTag(option)}
             </span>)}
         <input
           id={id}
@@ -347,6 +346,9 @@ export default function TagInput({
           readOnly={readOnly}
           placeholder={selectedOptions.length === 0 ? placeholder : undefined}
           onFocus={() => setSelectedOptionIndex(undefined)}
+          onClick={() => {
+            if (!shouldShowMenu) { setShouldShowMenu(true); }
+          }}
           aria-autocomplete="list"
           aria-expanded={shouldShowMenu}
           aria-haspopup="true"
@@ -403,7 +405,7 @@ export default function TagInput({
                 onFocus={() => setSelectedOptionIndex(index)}
               >
                 <span className="grow inline-flex items-center gap-2 min-w-0">
-                  {renderOptionContent(value)}
+                  {renderTag(value)}
                 </span>
                 {annotation &&
                   <span

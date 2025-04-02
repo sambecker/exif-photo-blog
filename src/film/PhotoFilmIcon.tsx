@@ -3,7 +3,7 @@ import { CSSProperties, useMemo } from 'react';
 import { labelForFilm } from '.';
 
 const INTRINSIC_WIDTH = 28;
-const INTRINSIC_WIDTH_FALLBACK = 16;
+const INTRINSIC_WIDTH_FALLBACK = 14;
 const INTRINSIC_HEIGHT = 16;
 
 const FALLBACK_ICON = <g>

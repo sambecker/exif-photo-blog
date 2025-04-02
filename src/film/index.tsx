@@ -104,22 +104,16 @@ export const convertFilmsForForm = (
   _films: Films = [],
   includeAllFujifilmSimulations?: boolean,
 ): AnnotatedTag[] => {
-  const films = includeAllFujifilmSimulations
+  const films: AnnotatedTag[] = includeAllFujifilmSimulations
     ? FUJIFILM_SIMULATION_FORM_INPUT_OPTIONS
-      .map(({ value }) => ({ value } as AnnotatedTag))
+      .map(({ value }) => ({ value }))
     : [];
 
   _films.forEach(({ film, count }) => {
     const index = films.findIndex(f => f.value === film);
-    const fujifilmSimulation = FUJIFILM_SIMULATION_FORM_INPUT_OPTIONS
-      .find(f => f.value === film);
     const meta =  {
       annotation: formatCount(count),
       annotationAria: formatCountDescriptive(count),
-      ...fujifilmSimulation && {
-        label: labelForFilm(film).large,
-        icon: <PhotoFilmIcon film={film} />,
-      },
     };
     if (index === -1) {
       films.push({ value: film, ...meta });
@@ -128,5 +122,11 @@ export const convertFilmsForForm = (
     }
   });
 
-  return films.sort((a, b) => a.value.localeCompare(b.value));
+  return films
+    .map(film => ({
+      ...film,
+      label: labelForFilm(film.value).large,
+      icon: <PhotoFilmIcon film={film.value} />,
+    }))
+    .sort((a, b) => a.value.localeCompare(b.value));
 };
