@@ -288,7 +288,7 @@ Vercel Postgres can be switched to another Postgres-compatible, pooling provider
 > Navigate to `/admin/configuration` and click "Clear Cache." If this doesn't help, [open an issue](https://github.com/sambecker/exif-photo-blog/issues/new).
 
 #### Why can’t I upload HEIC files?
-> This template relies on `sharp` to manipulate images and `next/image` to serve them, neither of which natively support HEIC [[1]](https://github.com/vercel/next.js/discussions/30043) [[2]](https://github.com/lovell/sharp/issues/3981). Fortunately, you can still upload HEIC files directly from native share controls on Apple platforms because they’re automatically converted to JPG upon upload. If you think you have a viable HEIC strategy, feel free to open a PR.
+> This template relies on `sharp` to manipulate images and `next/image` to serve them, neither of which currently support HEIC (https://github.com/vercel/next.js/discussions/30043 + https://github.com/lovell/sharp/issues/3981). Fortunately, you can still upload HEIC files directly from native share controls on Apple platforms and they will automatically be converted to JPG upon upload. If you think you have a viable HEIC strategy, feel free to open a PR.
 
 #### Why are my thumbnails square?
 > Absent configuration, the default grid aspect ratio is `1`. `NEXT_PUBLIC_GRID_ASPECT_RATIO` can be set to any number (for instance, `1.5` for 3:2 images) or ignored by setting to `0`.
