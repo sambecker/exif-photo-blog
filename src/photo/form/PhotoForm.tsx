@@ -45,6 +45,7 @@ import { convertFilmsForForm, Films, FilmSimulation } from '@/film';
 import IconFavs from '@/components/icons/IconFavs';
 import IconHidden from '@/components/icons/IconHidden';
 import { isMakeFujifilm } from '@/platforms/fujifilm';
+import PhotoFilmIcon from '@/film/PhotoFilmIcon';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -412,6 +413,16 @@ export default function PhotoForm({
                 };
 
                 switch (key) {
+                case 'film':
+                  return <FieldSetWithStatus
+                    key={key}
+                    tagOptionsDefaultIcon={<span
+                      className="w-4 overflow-hidden"
+                    >
+                      <PhotoFilmIcon />
+                    </span>}
+                    {...fieldProps}
+                  />;
                 case 'applyRecipeTitleGlobally':
                   return <ApplyRecipeTitleGloballyCheckbox
                     key={key}

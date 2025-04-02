@@ -1,7 +1,14 @@
 import { AnnotatedTag } from '@/photo/form';
 import { convertStringToArray, parameterize } from '@/utility/string';
 import { clsx } from 'clsx/lite';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 const KEY_KEYDOWN = 'keydown';
 const CREATE_LABEL = 'Create';
 
@@ -13,6 +20,7 @@ export default function TagInput({
   name,
   value = '',
   options = [],
+  defaultIcon,
   onChange,
   showMenuOnDelete,
   className,
@@ -25,6 +33,7 @@ export default function TagInput({
   name: string
   value?: string
   options?: AnnotatedTag[]
+  defaultIcon?: ReactNode
   onChange?: (value: string) => void
   showMenuOnDelete?: boolean
   className?: string
@@ -243,14 +252,19 @@ export default function TagInput({
     limit,
   ]);
 
-  const formatValue = useCallback((value: string) => {
+  const renderOptionContent = useCallback((value: string) => {
     const option = options.find(option => option.value === value);
+    const icon = option?.icon ?? defaultIcon;
     return <>
-      {option?.icon}
-      {option?.label ?? value}
+      <span className="truncate">
+        {option?.label ?? value}
+      </span>
+      {icon && <span className="text-medium">
+        {icon}
+      </span>}
     </>;
   },
-  [options]);
+  [options, defaultIcon]);
 
   return (
     <div
@@ -301,6 +315,7 @@ export default function TagInput({
               role="button"
               aria-label={`Remove tag "${option}"`}
               className={clsx(
+                'inline-flex items-center gap-2 min-w-0',
                 'text-main',
                 'cursor-pointer select-none',
                 'whitespace-nowrap',
@@ -311,7 +326,7 @@ export default function TagInput({
               )}
               onClick={() => removeOption(option)}
             >
-              {formatValue(value)}
+              {renderOptionContent(value)}
             </span>)}
         <input
           id={id}
@@ -368,7 +383,7 @@ export default function TagInput({
                 }
                 tabIndex={0}
                 className={clsx(
-                  'group flex items-center gap-1',
+                  'group flex items-center gap-2',
                   'px-1.5 py-1 rounded-xs',
                   'text-base select-none',
                   hasReachedLimit ? 'cursor-not-allowed' : 'cursor-pointer',
@@ -387,8 +402,8 @@ export default function TagInput({
                 }}
                 onFocus={() => setSelectedOptionIndex(index)}
               >
-                <span className="grow min-w-0 truncate">
-                  {formatValue(value)}
+                <span className="grow inline-flex items-center gap-2 min-w-0">
+                  {renderOptionContent(value)}
                 </span>
                 {annotation &&
                   <span

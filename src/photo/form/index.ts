@@ -123,8 +123,8 @@ const FORM_METADATA = (
   model: { label: 'camera model' },
   film: {
     label: 'film',
-    note: 'Intended for Fujifilm simulations and analog scans',
-    noteShort: 'Fujifilm simulations / analog scans',
+    note: 'Intended for Fujifilm cameras and analog scans',
+    noteShort: 'Fujifilm cameras / analog scans',
     tagOptions: filmOptions,
     tagOptionsLimit: 1,
     shouldNotOverwriteWithNullDataOnSync: true,

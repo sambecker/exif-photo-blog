@@ -16,6 +16,7 @@ import {
 import { formatCount } from '@/utility/string';
 import { formatCountDescriptive } from '@/utility/string';
 import { AnnotatedTag } from '@/photo/form';
+import PhotoFilmIcon from './PhotoFilmIcon';
 
 export type FilmSimulation = FujifilmSimulation;
 
@@ -92,24 +93,26 @@ export const convertFilmsForForm = (
   includeAllFujifilmSimulations?: boolean,
 ): AnnotatedTag[] => {
   const films = includeAllFujifilmSimulations
-    ? FILM_SIMULATION_FORM_INPUT_OPTIONS.map(({ value }) => ({
-      value,
-      label: labelForFilm(value).large,
-    } as AnnotatedTag))
+    ? FILM_SIMULATION_FORM_INPUT_OPTIONS
+      .map(({ value }) => ({ value } as AnnotatedTag))
     : [];
 
   _films.forEach(({ film, count }) => {
     const index = films.findIndex(f => f.value === film);
-    const annotation = formatCount(count);
-    const annotationAria = formatCountDescriptive(count);
-    if (index !== -1) {
-      films[index] = {
-        ...films[index],
-        annotation,
-        annotationAria,
-      };
+    const fujifilmSimulation = FILM_SIMULATION_FORM_INPUT_OPTIONS
+      .find(f => f.value === film);
+    const meta =  {
+      annotation: formatCount(count),
+      annotationAria: formatCountDescriptive(count),
+      ...fujifilmSimulation && {
+        label: labelForFilm(film).large,
+        icon: <PhotoFilmIcon film={film} />,
+      },
+    };
+    if (index === -1) {
+      films.push({ value: film, ...meta });
     } else {
-      films.push({ value: film, annotation, annotationAria });
+      films[index] = { ...films[index], ...meta };
     }
   });
 

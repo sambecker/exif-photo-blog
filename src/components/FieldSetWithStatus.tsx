@@ -27,6 +27,7 @@ export default function FieldSetWithStatus({
   tagOptions,
   tagOptionsLimit,
   tagOptionsLimitValidationMessage,
+  tagOptionsDefaultIcon,
   placeholder,
   loading,
   required,
@@ -53,6 +54,7 @@ export default function FieldSetWithStatus({
   tagOptions?: AnnotatedTag[]
   tagOptionsLimit?: number
   tagOptionsLimitValidationMessage?: string
+  tagOptionsDefaultIcon?: ReactNode
   placeholder?: string
   loading?: boolean
   required?: boolean
@@ -199,6 +201,7 @@ export default function FieldSetWithStatus({
                 name={id}
                 value={value}
                 options={tagOptions}
+                defaultIcon={tagOptionsDefaultIcon}
                 onChange={onChange}
                 showMenuOnDelete={tagOptionsLimit === 1}
                 className={clsx(Boolean(error) && 'error')}

@@ -222,7 +222,10 @@ const ALL_POSSIBLE_FILM_SIMULATION_LABELS = Object
     large.toLocaleLowerCase(),
   ]);
 
-export const isStringFilmSimulation = (film: string) =>
+export const isStringFilmSimulation = (film?: string) =>
+  film && Object.keys(FILM_SIMULATION_LABELS).includes(film);
+
+export const isStringFilmSimulationLabel = (film: string) =>
   ALL_POSSIBLE_FILM_SIMULATION_LABELS.includes(film.toLocaleLowerCase());
 
 export const labelForFilm = (film: FujifilmSimulation) =>
