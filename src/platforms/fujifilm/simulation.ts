@@ -223,7 +223,8 @@ const ALL_POSSIBLE_FUJIFILM_SIMULATION_LABELS = Object
   ]);
 
 export const isStringFujifilmSimulation = (film?: string) =>
-  film && Object.keys(FUJIFILM_SIMULATION_LABELS).includes(film);
+  film !== undefined &&
+  Object.keys(FUJIFILM_SIMULATION_LABELS).includes(film);
 
 export const isStringFujifilmSimulationLabel = (film: string) =>
   ALL_POSSIBLE_FUJIFILM_SIMULATION_LABELS.includes(film.toLocaleLowerCase());

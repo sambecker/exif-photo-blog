@@ -6,6 +6,7 @@ import EntityLink, {
 } from '@/components/primitives/EntityLink';
 import clsx from 'clsx/lite';
 import { labelForFilm } from '.';
+import { isStringFujifilmSimulation } from '@/platforms/fujifilm/simulation';
 
 export default function PhotoFilm({
   film,
@@ -41,7 +42,7 @@ export default function PhotoFilm({
       badged={badged}
       contrast={contrast}
       hoverEntity={countOnHover}
-      iconWide
+      iconWide={isStringFujifilmSimulation(film)}
     />
   );
 }
