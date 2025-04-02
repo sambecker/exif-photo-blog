@@ -34,7 +34,7 @@ export default function RecipeImageResponse({
 
   let recipeLines = recipeData && film
     ? generateRecipeText({
-      recipe: recipeData,
+      data: recipeData,
       film,
     }, true)
     : [];

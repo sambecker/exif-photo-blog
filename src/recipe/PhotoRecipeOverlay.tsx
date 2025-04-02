@@ -24,7 +24,7 @@ import { labelForFilm } from '@/film';
 export default function PhotoRecipeOverlay({
   ref,
   title,
-  recipe,
+  data,
   film,
   onClose,
 }: RecipeProps & {
@@ -43,9 +43,9 @@ export default function PhotoRecipeOverlay({
     colorChromeFXBlue,
     bwAdjustment,
     bwMagentaGreen,
-  } = recipe;
+  } = data;
 
-  const whiteBalanceTypeFormatted = formatWhiteBalance(recipe);
+  const whiteBalanceTypeFormatted = formatWhiteBalance(data);
 
   const renderDataSquare = (
     value: ReactNode,
@@ -122,7 +122,7 @@ export default function PhotoRecipeOverlay({
           label={`${title
             ? `${formatRecipe(title).toLocaleUpperCase()} recipe`
             : 'Recipe'}`}
-          text={generateRecipeText({ title, recipe, film }).join('\n')}
+          text={generateRecipeText({ title, data, film }).join('\n')}
           iconSize={17}
           className={clsx(
             'translate-y-[0.5px]',
@@ -171,7 +171,7 @@ export default function PhotoRecipeOverlay({
           'col-span-8',
         )}
         {renderDataSquare(
-          formatNoiseReduction(recipe),
+          formatNoiseReduction(data),
           'ISO NR',
           'col-span-4',
         )}
@@ -195,7 +195,7 @@ export default function PhotoRecipeOverlay({
         )}
         {/* ROW */}
         {renderDataSquare(
-          formatGrain(recipe),
+          formatGrain(data),
           'grain',
           'col-span-6',
         )}

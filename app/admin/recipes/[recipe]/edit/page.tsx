@@ -45,7 +45,7 @@ export default async function RecipePageEdit({
       accessory={recipeData && film &&
         <AdminShowRecipeButton
           title={recipe}
-          recipe={recipeData}
+          data={recipeData}
           film={film}
         />
       }
