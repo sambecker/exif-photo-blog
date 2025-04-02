@@ -124,7 +124,7 @@ export default function CommandKClient({
 
   const {
     isUserSignedIn,
-    clearAuthStateAndRedirect,
+    clearAuthStateAndRedirectIfNecessary,
     isCommandKOpen: isOpen,
     startUpload,
     photosCountHidden,
@@ -521,7 +521,9 @@ export default function CommandKClient({
     }
     adminSection.items.push({
       label: 'Sign Out',
-      action: () => signOutAction().then(clearAuthStateAndRedirect),
+      action: () => signOutAction()
+        .then(clearAuthStateAndRedirectIfNecessary)
+        .then(() => setIsOpen?.(false)),
     });
   } else {
     adminSection.items.push({

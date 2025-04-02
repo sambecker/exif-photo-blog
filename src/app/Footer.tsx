@@ -17,7 +17,7 @@ import { useAppState } from '@/state/AppState';
 export default function Footer() {
   const pathname = usePathname();
 
-  const { userEmail, clearAuthStateAndRedirect } = useAppState();
+  const { userEmail, clearAuthStateAndRedirectIfNecessary } = useAppState();
 
   const showFooter = !isPathSignIn(pathname);
 
@@ -49,7 +49,7 @@ export default function Footer() {
                         {userEmail}
                       </div>
                       <form action={() => signOutAction()
-                        .then(clearAuthStateAndRedirect)}>
+                        .then(clearAuthStateAndRedirectIfNecessary)}>
                         <SubmitButtonWithStatus styleAs="link">
                           Sign out
                         </SubmitButtonWithStatus>

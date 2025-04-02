@@ -21,7 +21,7 @@ import {
   hasAuthEmailCookie,
 } from '@/auth/client';
 import { useRouter, usePathname } from 'next/navigation';
-import { isPathAdmin, PATH_SIGN_IN } from '@/app/paths';
+import { isPathAdmin, PATH_ROOT } from '@/app/paths';
 import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 import { RecipeProps } from '@/recipe';
 import { getCountsForCategoriesCachedAction } from '@/category/actions';
@@ -105,6 +105,8 @@ export default function AppStateProvider({
     setIsUserSignedInEager(hasAuthEmailCookie());
     if (!authError) {
       setUserEmail(auth?.user?.email ?? undefined);
+    } else {
+      setIsUserSignedInEager(false);
     }
   }, [auth, authError]);
   const isUserSignedIn = Boolean(userEmail);
@@ -133,11 +135,11 @@ export default function AppStateProvider({
     setAdminUpdateTimes(updates => [...updates, new Date()])
   , []);
 
-  const clearAuthStateAndRedirect = useCallback(() => {
+  const clearAuthStateAndRedirectIfNecessary = useCallback(() => {
     setUserEmail(undefined);
     setIsUserSignedInEager(false);
     clearAuthEmailCookie();
-    if (isPathAdmin(pathname)) { router.push(PATH_SIGN_IN); }
+    if (isPathAdmin(pathname)) { router.push(PATH_ROOT); }
   }, [router, pathname]);
 
   // Returns false when upload is cancelled
@@ -187,7 +189,7 @@ export default function AppStateProvider({
         setUserEmail,
         isUserSignedIn,
         isUserSignedInEager,
-        clearAuthStateAndRedirect,
+        clearAuthStateAndRedirectIfNecessary,
         // ADMIN
         adminUpdateTimes,
         registerAdminUpdate,

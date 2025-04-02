@@ -44,7 +44,7 @@ export default function AdminAppMenu({
     startUpload,
     setSelectedPhotoIds,
     refreshAdminData,
-    clearAuthStateAndRedirect,
+    clearAuthStateAndRedirectIfNecessary,
   } = useAppState();
 
   const isSelecting = selectedPhotoIds !== undefined;
@@ -148,7 +148,7 @@ export default function AdminAppMenu({
   }, {
     label: 'Sign Out',
     icon: <IconSignOut size={15} />,
-    action: () => signOutAction().then(clearAuthStateAndRedirect),
+    action: () => signOutAction().then(clearAuthStateAndRedirectIfNecessary),
   });
 
   return (
