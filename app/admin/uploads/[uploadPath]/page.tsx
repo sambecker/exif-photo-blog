@@ -14,7 +14,6 @@ import {
 } from '@/app/config';
 import ErrorNote from '@/components/ErrorNote';
 import { getRecipeTitleForData } from '@/photo/db/query';
-import { FilmSimulation } from '@/film';
 
 export const maxDuration = 60;
 
@@ -58,7 +57,7 @@ export default async function UploadPage({ params }: Params) {
     formDataFromExif?.recipeData && formDataFromExif.film
       ? getRecipeTitleForData(
         formDataFromExif.recipeData,
-        formDataFromExif.film as FilmSimulation,
+        formDataFromExif.film,
       )
       : undefined,
   ]);

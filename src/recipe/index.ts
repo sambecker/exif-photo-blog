@@ -7,8 +7,7 @@ import {
   formatCountDescriptive,
 } from '@/utility/string';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
-import { FilmSimulation } from '@/film';
-import { labelForFilm } from '@/platforms/fujifilm/simulation';
+import { labelForFilm } from '@/film';
 
 export type RecipeWithCount = {
   recipe: string
@@ -20,7 +19,7 @@ export type Recipes = RecipeWithCount[]
 export interface RecipeProps {
   title?: string
   recipe: FujifilmRecipe
-  film: FilmSimulation
+  film: string
   iso?: string
   exposure?: string   
 }

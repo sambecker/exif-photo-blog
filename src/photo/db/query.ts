@@ -13,7 +13,7 @@ import {
 } from '@/photo';
 import { Cameras, createCameraKey } from '@/camera';
 import { Tags } from '@/tag';
-import { FilmSimulation, Films } from '@/film';
+import { Films } from '@/film';
 import { ADMIN_SQL_DEBUG_ENABLED } from '@/app/config';
 import {
   GetPhotosOptions,
@@ -380,7 +380,7 @@ export const getUniqueRecipes = async () =>
 
 export const getRecipeTitleForData = async (
   data: string | object,
-  film: FilmSimulation,
+  film: string,
 ) =>
   // Includes legacy check on pre-stringified JSON
   safelyQueryPhotos(() => sql`
@@ -395,7 +395,7 @@ export const getRecipeTitleForData = async (
 
 export const getPhotosNeedingRecipeTitleCount = async (
   data: string,
-  film: FilmSimulation,
+  film: string,
   photoIdToExclude?: string,
 ) =>
   safelyQueryPhotos(() => sql`
@@ -411,7 +411,7 @@ export const getPhotosNeedingRecipeTitleCount = async (
 export const updateAllMatchingRecipeTitles = (
   title: string,
   data: string,
-  film: FilmSimulation,
+  film: string,
 ) =>
   safelyQueryPhotos(() => sql`
     UPDATE photos
@@ -430,7 +430,7 @@ export const getUniqueFilms = async () =>
     ORDER BY film ASC
   `.then(({ rows }): Films => rows
       .map(({ film, count }) => ({
-        film: film as FilmSimulation,
+        film,
         count: parseInt(count, 10),
       })))
   , 'getUniqueFilms');

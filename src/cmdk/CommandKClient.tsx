@@ -59,7 +59,6 @@ import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import InsightsIndicatorDot from '@/admin/insights/InsightsIndicatorDot';
 import { PhotoSetCategories } from '@/category';
 import { formatCameraText } from '@/camera';
-import { labelForFilm } from '@/platforms/fujifilm/simulation';
 import { formatFocalLength } from '@/focal';
 import { formatRecipe } from '@/recipe';
 import IconLens from '../components/icons/IconLens';
@@ -73,6 +72,7 @@ import IconFilm from '../components/icons/IconFilm';
 import IconLock from '../components/icons/IconLock';
 import useVisualViewportHeight from '@/utility/useVisualViewport';
 import useMaskedScroll from '../components/useMaskedScroll';
+import { labelForFilm } from '@/film';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';

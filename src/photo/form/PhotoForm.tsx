@@ -41,7 +41,7 @@ import ErrorNote from '@/components/ErrorNote';
 import { convertRecipesForForm, Recipes } from '@/recipe';
 import deepEqual from 'fast-deep-equal/es6/react';
 import ApplyRecipeTitleGloballyCheckbox from './ApplyRecipesGloballyCheckbox';
-import { convertFilmsForForm, Films, FilmSimulation } from '@/film';
+import { convertFilmsForForm, Films } from '@/film';
 import IconFavs from '@/components/icons/IconFavs';
 import IconHidden from '@/components/icons/IconHidden';
 import { isMakeFujifilm } from '@/platforms/fujifilm';
@@ -431,7 +431,7 @@ export default function PhotoForm({
                     hasRecipeTitleChanged={
                       changedFormKeys.includes('recipeTitle')}
                     recipeData={formData.recipeData}
-                    film={formData.film as FilmSimulation}
+                    film={formData.film}
                     onMatchResults={onMatchResults}
                     {...fieldProps}
                   />;

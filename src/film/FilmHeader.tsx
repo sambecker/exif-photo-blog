@@ -1,5 +1,5 @@
 import { Photo, PhotoDateRange } from '@/photo';
-import { FilmSimulation, descriptionForFilmPhotos } from '.';
+import { descriptionForFilmPhotos } from '.';
 import PhotoHeader from '@/photo/PhotoHeader';
 import PhotoFilm from '@/film/PhotoFilm';
 
@@ -11,7 +11,7 @@ export default function FilmHeader({
   count,
   dateRange,
 }: {
-  film: FilmSimulation
+  film: string
   photos: Photo[]
   selectedPhoto?: Photo
   indexNumber?: number

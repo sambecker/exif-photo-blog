@@ -4,11 +4,7 @@ import {
   pathForFilm,
 } from '@/app/paths';
 import OGTile from '@/components/OGTile';
-import {
-  FilmSimulation,
-  descriptionForFilmPhotos,
-  titleForFilm,
-} from '.';
+import { descriptionForFilmPhotos, titleForFilm } from '.';
 
 export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 
@@ -23,7 +19,7 @@ export default function FilmOGTile({
   count,
   dateRange,
 }: {
-  film: FilmSimulation
+  film: string
   photos: Photo[]
   loadingState?: OGLoadingState
   onLoad?: () => void

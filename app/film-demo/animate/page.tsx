@@ -3,7 +3,7 @@
 import AppGrid from '@/components/AppGrid';
 import { clsx } from 'clsx/lite';
 import {
-  FILM_SIMULATION_FORM_INPUT_OPTIONS,
+  FUJIFILM_SIMULATION_FORM_INPUT_OPTIONS,
 } from '@/platforms/fujifilm/simulation';
 import PhotoFilm from '@/film/PhotoFilm';
 import { useEffect, useState } from 'react';
@@ -13,7 +13,7 @@ export default function FilmPage() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIndex((index + 1) % FILM_SIMULATION_FORM_INPUT_OPTIONS.length);
+      setIndex((index + 1) % FUJIFILM_SIMULATION_FORM_INPUT_OPTIONS.length);
     }, 200);
     return () => clearInterval(interval);
   });
@@ -28,7 +28,7 @@ export default function FilmPage() {
             Film Simulation:
           </div>
           <PhotoFilm
-            film={FILM_SIMULATION_FORM_INPUT_OPTIONS[index].value}
+            film={FUJIFILM_SIMULATION_FORM_INPUT_OPTIONS[index].value}
             type="icon-first"
           />
           <div className="mt-4 text-dim relative">

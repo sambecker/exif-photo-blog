@@ -1,6 +1,5 @@
 import { Photo, PhotoDateRange } from '@/photo';
 import FilmHeader from './FilmHeader';
-import { FilmSimulation } from '.';
 import PhotoGridContainer from '@/photo/PhotoGridContainer';
 
 export default function FilmOverview({
@@ -10,7 +9,7 @@ export default function FilmOverview({
   dateRange,
   animateOnFirstLoadOnly,
 }: {
-  film: FilmSimulation,
+  film: string,
   photos: Photo[],
   count: number,
   dateRange?: PhotoDateRange,

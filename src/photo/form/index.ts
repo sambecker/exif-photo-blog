@@ -16,12 +16,12 @@ import {
 import { roundToNumber } from '@/utility/number';
 import { convertStringToArray, parameterize } from '@/utility/string';
 import { generateNanoid } from '@/utility/nanoid';
-import { FilmSimulation } from '@/film';
 import { GEO_PRIVACY_ENABLED } from '@/app/config';
 import { TAG_FAVS, getValidationMessageForTags } from '@/tag';
 import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { ReactNode } from 'react';
+import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 
 type VirtualFields =
   'favorite' |
@@ -276,7 +276,7 @@ export const convertPhotoToFormData = (photo: Photo): PhotoFormData => {
 
 export const convertExifToFormData = (
   data: ExifData,
-  film?: FilmSimulation,
+  film?: FujifilmSimulation,
   recipeData?: FujifilmRecipe,
 ): Omit<
   Record<keyof PhotoExif, string | undefined>,
@@ -347,7 +347,7 @@ export const convertFormDataToPhotoDbInsert = (
 
   return {
     ...(photoForm as PhotoFormData & {
-      film?: FilmSimulation
+      film?: FujifilmSimulation
       recipeData?: FujifilmRecipe
     }),
     ...!photoForm.id && { id: generateNanoid() },

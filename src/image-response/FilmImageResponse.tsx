@@ -2,13 +2,10 @@ import { Photo } from '../photo';
 import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
-import {
-  labelForFilm,
-} from '@/platforms/fujifilm/simulation';
 import PhotoFilmIcon from 
   '@/film/PhotoFilmIcon';
-import { FilmSimulation } from '@/film';
 import { NextImageSize } from '@/platforms/next-image';
+import { labelForFilm } from '@/film';
 
 export default function FilmImageResponse({
   film,
@@ -17,7 +14,7 @@ export default function FilmImageResponse({
   height,
   fontFamily,
 }: {
-  film: FilmSimulation,
+  film: string,
   photos: Photo[]
   width: NextImageSize
   height: number

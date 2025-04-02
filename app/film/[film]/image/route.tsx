@@ -5,7 +5,6 @@ import {
 } from '@/image-response';
 import FilmImageResponse from
   '@/image-response/FilmImageResponse';
-import { FilmSimulation } from '@/film';
 import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
@@ -21,7 +20,7 @@ export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
 
 export async function GET(
   _: Request,
-  context: { params: Promise<{ film: FilmSimulation }> },
+  context: { params: Promise<{ film: string }> },
 ) {
   const { film } = await context.params;
 

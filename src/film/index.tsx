@@ -9,23 +9,35 @@ import {
   absolutePathForFilmImage,
 } from '@/app/paths';
 import {
-  FILM_SIMULATION_FORM_INPUT_OPTIONS,
-  FujifilmSimulation,
-  labelForFilm,
+  FUJIFILM_SIMULATION_FORM_INPUT_OPTIONS,
+  labelForFujifilmSimulation,
 } from '@/platforms/fujifilm/simulation';
-import { formatCount } from '@/utility/string';
+import { deparameterize, formatCount } from '@/utility/string';
 import { formatCountDescriptive } from '@/utility/string';
 import { AnnotatedTag } from '@/photo/form';
 import PhotoFilmIcon from './PhotoFilmIcon';
 
-export type FilmSimulation = FujifilmSimulation;
-
 export type FilmWithCount = {
-  film: FilmSimulation
+  film: string
   count: number
 }
 
 export type Films = FilmWithCount[]
+
+export const labelForFilm = (film: string) => {
+  // Use Fujifilm simulation text when recognized
+  const simulationLabel = labelForFujifilmSimulation(film as any);
+  if (simulationLabel) {
+    return simulationLabel;
+  } else {
+    const filmFormatted = deparameterize(film);
+    return {
+      small: filmFormatted,
+      medium: filmFormatted,
+      large: filmFormatted,
+    };
+  }
+};
 
 export const sortFilms = (
   films: Films,
@@ -41,7 +53,7 @@ export const sortFilmsWithCount = (
 };
 
 export const titleForFilm = (
-  film: FilmSimulation,
+  film: string,
   photos: Photo[],
   explicitCount?: number,
 ) => [
@@ -50,9 +62,9 @@ export const titleForFilm = (
 ].join(' ');
 
 export const shareTextForFilm = (
-  film: FilmSimulation,
+  film: string,
 ) =>
-  `Photos shot on Fujifilm ${labelForFilm(film).large}`;
+  `Photos shot on ${labelForFilm(film).large}`;
 
 export const descriptionForFilmPhotos = (
   photos: Photo[],
@@ -69,7 +81,7 @@ export const descriptionForFilmPhotos = (
   );
 
 export const generateMetaForFilm = (
-  film: FilmSimulation,
+  film: string,
   photos: Photo[],
   explicitCount?: number,
   explicitDateRange?: PhotoDateRange,
@@ -93,13 +105,13 @@ export const convertFilmsForForm = (
   includeAllFujifilmSimulations?: boolean,
 ): AnnotatedTag[] => {
   const films = includeAllFujifilmSimulations
-    ? FILM_SIMULATION_FORM_INPUT_OPTIONS
+    ? FUJIFILM_SIMULATION_FORM_INPUT_OPTIONS
       .map(({ value }) => ({ value } as AnnotatedTag))
     : [];
 
   _films.forEach(({ film, count }) => {
     const index = films.findIndex(f => f.value === film);
-    const fujifilmSimulation = FILM_SIMULATION_FORM_INPUT_OPTIONS
+    const fujifilmSimulation = FUJIFILM_SIMULATION_FORM_INPUT_OPTIONS
       .find(f => f.value === film);
     const meta =  {
       annotation: formatCount(count),

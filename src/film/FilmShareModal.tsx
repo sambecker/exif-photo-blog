@@ -2,7 +2,7 @@ import { absolutePathForFilm } from '@/app/paths';
 import { PhotoSetAttributes } from '../category';
 import ShareModal from '@/share/ShareModal';
 import FilmOGTile from './FilmOGTile';
-import { FilmSimulation, shareTextForFilm } from '.';
+import { shareTextForFilm } from '.';
 
 export default function FilmShareModal({
   film,
@@ -10,7 +10,7 @@ export default function FilmShareModal({
   count,
   dateRange,
 }: {
-  film: FilmSimulation
+  film: string
 } & PhotoSetAttributes) {
   return (
     <ShareModal

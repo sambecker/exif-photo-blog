@@ -6,7 +6,9 @@ import type { NextImageSize } from '@/platforms/next-image';
 import { formatTag } from '@/tag';
 import { generateRecipeText, getPhotoWithRecipeFromPhotos } from '@/recipe';
 import PhotoFilmIcon from '@/film/PhotoFilmIcon';
-import { isStringFilmSimulationLabel } from '@/platforms/fujifilm/simulation';
+import {
+  isStringFujifilmSimulationLabel,
+} from '@/platforms/fujifilm/simulation';
 import IconRecipe from '@/components/icons/IconRecipe';
 const MAX_RECIPE_LINES = 8;
 
@@ -109,7 +111,7 @@ export default function RecipeImageResponse({
                   flexGrow: 1,
                 }}>
                   {text}
-                  {isStringFilmSimulationLabel(text) && film &&
+                  {isStringFujifilmSimulationLabel(text) && film &&
                     <div tw="flex">
                       <PhotoFilmIcon
                         film={film}

@@ -1,7 +1,6 @@
 /* eslint-disable max-len */
-import { labelForFilm } from '@/platforms/fujifilm/simulation';
 import { CSSProperties, useMemo } from 'react';
-import { FilmSimulation } from '.';
+import { labelForFilm } from '.';
 
 const INTRINSIC_WIDTH = 28;
 const INTRINSIC_WIDTH_FALLBACK = 16;
@@ -17,7 +16,7 @@ export default function PhotoFilmIcon({
   className,
   style,
 }: {
-  film?: FilmSimulation
+  film?: string
   height?: number
   className?: string
   style?: CSSProperties

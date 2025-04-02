@@ -15,11 +15,11 @@ import {
   generateRecipeText,
   RecipeProps,
 } from '.';
-import { labelForFilm } from '@/platforms/fujifilm/simulation';
 import { TbChecklist } from 'react-icons/tb';
 import CopyButton from '@/components/CopyButton';
 import { pathForRecipe } from '@/app/paths';
 import LinkWithStatus from '@/components/LinkWithStatus';
+import { labelForFilm } from '@/film';
 
 export default function PhotoRecipeOverlay({
   ref,

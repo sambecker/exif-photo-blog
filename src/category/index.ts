@@ -1,7 +1,7 @@
 import { Photo } from '../photo';
 import { Camera, Cameras } from '@/camera';
 import { PhotoDateRange } from '../photo';
-import { FilmSimulation, Films } from '@/film';
+import { Films } from '@/film';
 import { Lens, Lenses } from '@/lens';
 import { Tags } from '@/tag';
 import { FocalLengths } from '@/focal';
@@ -39,7 +39,7 @@ export interface PhotoSetCategory {
   lens?: Lens
   tag?: string
   recipe?: string
-  film?: FilmSimulation
+  film?: string
   focal?: number
 }
 

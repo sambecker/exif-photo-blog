@@ -2,7 +2,6 @@ import { Photo } from '@/photo';
 import { PhotoSetCategory } from '@/category';
 import { BASE_URL, GRID_HOMEPAGE_ENABLED } from './config';
 import { Camera } from '@/camera';
-import { FilmSimulation } from '@/film';
 import { parameterize } from '@/utility/string';
 import { TAG_HIDDEN } from '@/tag';
 import { Lens } from '@/lens';
@@ -151,7 +150,7 @@ export const pathForTag = (tag: string) =>
 export const pathForCamera = ({ make, model }: Camera) =>
   `${PREFIX_CAMERA}/${parameterize(make)}/${parameterize(model)}`;
 
-export const pathForFilm = (film: FilmSimulation) =>
+export const pathForFilm = (film: string) =>
   `${PREFIX_FILM}/${film}`;
 
 export const pathForLens = ({ make, model }: Lens) =>
@@ -177,7 +176,7 @@ export const absolutePathForCamera= (camera: Camera) =>
 export const absolutePathForLens= (lens: Lens) =>
   `${BASE_URL}${pathForLens(lens)}`;
 
-export const absolutePathForFilm = (film: FilmSimulation) =>
+export const absolutePathForFilm = (film: string) =>
   `${BASE_URL}${pathForFilm(film)}`;
 
 export const absolutePathForRecipe = (recipe: string) =>
@@ -198,7 +197,7 @@ export const absolutePathForCameraImage= (camera: Camera) =>
 export const absolutePathForLensImage= (lens: Lens) =>
   `${absolutePathForLens(lens)}/image`;
 
-export const absolutePathForFilmImage = (film: FilmSimulation) =>
+export const absolutePathForFilmImage = (film: string) =>
   `${absolutePathForFilm(film)}/image`;
 
 export const absolutePathForRecipeImage = (recipe: string) =>
@@ -308,7 +307,7 @@ export const getPathComponents = (pathname = ''): {
   const cameraModel = pathname.match(
     new RegExp(`^${PREFIX_CAMERA}/[^/]+/([^/]+)`))?.[1];
   const film = pathname.match(
-    new RegExp(`^${PREFIX_FILM}/([^/]+)`))?.[1] as FilmSimulation;
+    new RegExp(`^${PREFIX_FILM}/([^/]+)`))?.[1] as string;
   const focalString = pathname.match(
     new RegExp(`^${PREFIX_FOCAL_LENGTH}/([0-9]+)mm`))?.[1];
 

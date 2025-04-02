@@ -1,12 +1,11 @@
-import { labelForFilm } from '@/platforms/fujifilm/simulation';
 import PhotoFilmIcon from './PhotoFilmIcon';
 import { pathForFilm } from '@/app/paths';
-import { FilmSimulation } from '.';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/primitives/EntityLink';
 import clsx from 'clsx/lite';
+import { labelForFilm } from '.';
 
 export default function PhotoFilm({
   film,
@@ -16,7 +15,7 @@ export default function PhotoFilm({
   countOnHover,
   ...props
 }: {
-  film: FilmSimulation
+  film: string
   countOnHover?: number
   recipe?: FujifilmRecipe
 } & EntityLinkExternalProps) {

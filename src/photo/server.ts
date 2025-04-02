@@ -7,11 +7,11 @@ import {
   convertFormDataToPhotoDbInsert,
 } from '@/photo/form';
 import {
+  FujifilmSimulation,
   getFujifilmSimulationFromMakerNote,
 } from '@/platforms/fujifilm/simulation';
 import { ExifData, ExifParserFactory } from 'ts-exif-parser';
 import { PhotoFormData } from './form';
-import { FilmSimulation } from '@/film';
 import sharp, { Sharp } from 'sharp';
 import {
   GEO_PRIVACY_ENABLED,
@@ -58,7 +58,7 @@ export const extractImageDataFromBlobPath = async (
   const extension = getExtensionFromStorageUrl(url);
 
   let exifData: ExifData | undefined;
-  let film: FilmSimulation | undefined;
+  let film: FujifilmSimulation | undefined;
   let recipe: FujifilmRecipe | undefined;
   let blurData: string | undefined;
   let imageResizedBase64: string | undefined;
