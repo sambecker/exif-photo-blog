@@ -13,7 +13,7 @@ import {
 } from '@/photo';
 import { Cameras, createCameraKey } from '@/camera';
 import { Tags } from '@/tag';
-import { FilmSimulation, Films } from '@/film';
+import { Films } from '@/film';
 import { ADMIN_SQL_DEBUG_ENABLED } from '@/app/config';
 import {
   GetPhotosOptions,
@@ -65,7 +65,8 @@ const createPhotosTable = () =>
     )
   `;
 
-// Wrapper for most queries for JIT table creation/migration running
+// Safe wrapper for most queries with JIT table creation/migration
+// Catch up to 3 migrations in older installations
 const safelyQueryPhotos = async <T>(
   callback: () => Promise<T>,
   debugMessage: string,
@@ -78,6 +79,7 @@ const safelyQueryPhotos = async <T>(
   try {
     result = await callback();
   } catch (e: any) {
+    // Catch 1st migration
     let migration = migrationForError(e);
     if (migration) {
       console.log(`Running Migration ${migration.label} ...`);
@@ -85,15 +87,26 @@ const safelyQueryPhotos = async <T>(
       try {
         result = await callback();
       } catch (e: any) {
-        // Catch potential second migration,
-        // which otherwise would not be caught
+        // Catch 2nd migration
         migration = migrationForError(e);
         if (migration) {
           console.log(`Running Migration ${migration.label} ...`);
           await migration.run();
           result = await callback();
         } else {
-          throw e;
+          try {
+            result = await callback();
+          } catch (e: any) {
+            // Catch 3rd migration
+            migration = migrationForError(e);
+            if (migration) {
+              console.log(`Running Migration ${migration.label} ...`);
+              await migration.run();
+              result = await callback();
+            } else {
+              throw e;
+            }
+          }
         }
       }
     } else if (/relation "photos" does not exist/i.test(e.message)) {
@@ -367,7 +380,7 @@ export const getUniqueRecipes = async () =>
 
 export const getRecipeTitleForData = async (
   data: string | object,
-  film: FilmSimulation,
+  film: string,
 ) =>
   // Includes legacy check on pre-stringified JSON
   safelyQueryPhotos(() => sql`
@@ -382,7 +395,7 @@ export const getRecipeTitleForData = async (
 
 export const getPhotosNeedingRecipeTitleCount = async (
   data: string,
-  film: FilmSimulation,
+  film: string,
   photoIdToExclude?: string,
 ) =>
   safelyQueryPhotos(() => sql`
@@ -398,7 +411,7 @@ export const getPhotosNeedingRecipeTitleCount = async (
 export const updateAllMatchingRecipeTitles = (
   title: string,
   data: string,
-  film: FilmSimulation,
+  film: string,
 ) =>
   safelyQueryPhotos(() => sql`
     UPDATE photos
@@ -417,7 +430,7 @@ export const getUniqueFilms = async () =>
     ORDER BY film ASC
   `.then(({ rows }): Films => rows
       .map(({ film, count }) => ({
-        film: film as FilmSimulation,
+        film,
         count: parseInt(count, 10),
       })))
   , 'getUniqueFilms');

@@ -1,7 +1,6 @@
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import { ComponentProps, useEffect, useState } from 'react';
 import { getPhotosNeedingRecipeTitleCountAction } from '../actions';
-import { FilmSimulation } from '@/film';
 
 export default function ApplyRecipeTitleGloballyCheckbox({
   photoId,
@@ -16,7 +15,7 @@ export default function ApplyRecipeTitleGloballyCheckbox({
   recipeTitle?: string
   hasRecipeTitleChanged?: boolean
   recipeData?: string
-  film?: FilmSimulation
+  film?: string
   onMatchResults: (didFindMatchingPhotos: boolean) => void
 }) {
   const [matchingPhotosCount, setMatchingPhotosCount] = useState<number>();

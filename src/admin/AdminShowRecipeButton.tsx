@@ -1,20 +1,11 @@
 'use client';
 
 import LoaderButton from '@/components/primitives/LoaderButton';
-import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
-import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
+import { RecipeProps } from '@/recipe';
 import { useAppState } from '@/state/AppState';
 import { TbChecklist } from 'react-icons/tb';
 
-export default function AdminShowRecipeButton({
-  title,
-  recipe,
-  film,
-}: {
-  title: string
-  recipe: FujifilmRecipe
-  film: FujifilmSimulation
-}) {
+export default function AdminShowRecipeButton(props: RecipeProps) {
   const { setRecipeModalProps } = useAppState();
 
   return (
@@ -23,11 +14,7 @@ export default function AdminShowRecipeButton({
         size={17}
         className="translate-y-[1px]"
       />}
-      onClick={() => setRecipeModalProps?.({
-        title,
-        recipe,
-        film,
-      })}
+      onClick={() => setRecipeModalProps?.(props)}
     >
         Preview
     </LoaderButton>

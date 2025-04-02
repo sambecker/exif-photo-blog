@@ -229,7 +229,7 @@ export default function PhotoLarge({
               <PhotoRecipeOverlay
                 ref={refRecipe}
                 title={photo.recipeTitle}
-                recipe={photo.recipeData}
+                data={photo.recipeData}
                 film={photo.film}
                 iso={photo.isoFormatted}
                 exposure={photo.exposureCompensationFormatted}

@@ -20,7 +20,10 @@ const BYTES_PER_TAG = 12;
 const BYTES_PER_TAG_VALUE = 4;
 
 export const isExifForFujifilm = (data: ExifData) =>
-  data.tags?.Make === MAKE_FUJIFILM;
+  data.tags?.Make?.toLocaleUpperCase() === MAKE_FUJIFILM;
+
+export const isMakeFujifilm = (make?: string) =>
+  make?.toLocaleUpperCase() === MAKE_FUJIFILM;
 
 export const parseFujifilmMakerNote = (
   bytes: Buffer,

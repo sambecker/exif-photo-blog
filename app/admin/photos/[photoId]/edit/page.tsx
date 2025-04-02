@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import {
   getPhotoNoStore,
+  getUniqueFilmsCached,
   getUniqueRecipesCached,
   getUniqueTagsCached,
 } from '@/photo/cache';
@@ -10,7 +11,6 @@ import {
   AI_TEXT_GENERATION_ENABLED,
   BLUR_ENABLED,
   IS_PREVIEW,
-  SHOW_RECIPES,
 } from '@/app/config';
 import { blurImageFromUrl, resizeImageFromUrl } from '@/photo/server';
 import { getNextImageUrlForManipulation } from '@/platforms/next-image';
@@ -22,15 +22,19 @@ export default async function PhotoEditPage({
 }) {
   const { photoId } = await params;
 
-  const photo = await getPhotoNoStore(photoId, true);
+  const [
+    photo,
+    uniqueTags,
+    uniqueRecipes,
+    uniqueFilms,
+  ] = await Promise.all([
+    getPhotoNoStore(photoId, true),
+    getUniqueTagsCached(),
+    getUniqueRecipesCached(),
+    getUniqueFilmsCached(),
+  ]);
 
   if (!photo) { redirect(PATH_ADMIN); }
-
-  const uniqueTags = await getUniqueTagsCached();
-
-  const uniqueRecipes = SHOW_RECIPES
-    ? await getUniqueRecipesCached()
-    : [];
 
   const hasAiTextGeneration = AI_TEXT_GENERATION_ENABLED;
   
@@ -52,6 +56,7 @@ export default async function PhotoEditPage({
       photo,
       uniqueTags,
       uniqueRecipes,
+      uniqueFilms,
       hasAiTextGeneration,
       imageThumbnailBase64,
       blurData,

@@ -35,7 +35,7 @@ export default function RecipeHeader({
           photo?.film
         ) ? setRecipeModalProps?.({
             title: photo.recipeTitle,
-            recipe: photo.recipeData,
+            data: photo.recipeData,
             film: photo.film,
             iso: photo.isoFormatted,
             exposure: photo.exposureTimeFormatted,

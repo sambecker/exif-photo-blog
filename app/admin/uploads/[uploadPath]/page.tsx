@@ -1,7 +1,11 @@
 import { PATH_ADMIN } from '@/app/paths';
 import { extractImageDataFromBlobPath } from '@/photo/server';
 import { redirect } from 'next/navigation';
-import { getUniqueRecipesCached, getUniqueTagsCached } from '@/photo/cache';
+import {
+  getUniqueFilmsCached,
+  getUniqueRecipesCached,
+  getUniqueTagsCached,
+} from '@/photo/cache';
 import UploadPageClient from '@/photo/UploadPageClient';
 import {
   AI_TEXT_AUTO_GENERATED_FIELDS,
@@ -10,7 +14,6 @@ import {
 } from '@/app/config';
 import ErrorNote from '@/components/ErrorNote';
 import { getRecipeTitleForData } from '@/photo/db/query';
-import { FilmSimulation } from '@/film';
 
 export const maxDuration = 60;
 
@@ -45,14 +48,16 @@ export default async function UploadPage({ params }: Params) {
   const [
     uniqueTags,
     uniqueRecipes,
+    uniqueFilms,
     recipeTitle,
   ] = await Promise.all([
     getUniqueTagsCached(),
     getUniqueRecipesCached(),
+    getUniqueFilmsCached(),
     formDataFromExif?.recipeData && formDataFromExif.film
       ? getRecipeTitleForData(
         formDataFromExif.recipeData,
-        formDataFromExif.film as FilmSimulation,
+        formDataFromExif.film,
       )
       : undefined,
   ]);
@@ -72,6 +77,7 @@ export default async function UploadPage({ params }: Params) {
         formDataFromExif,
         uniqueTags,
         uniqueRecipes,
+        uniqueFilms,
         hasAiTextGeneration,
         textFieldsToAutoGenerate,
         imageThumbnailBase64,

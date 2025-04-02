@@ -80,7 +80,7 @@ interface FujifilmSimulationLabel {
   large: string
 }
 
-const FILM_SIMULATION_LABELS: Record<
+const FUJIFILM_SIMULATION_LABELS: Record<
   FujifilmSimulation,
   FujifilmSimulationLabel
 > = {
@@ -206,27 +206,31 @@ const FILM_SIMULATION_LABELS: Record<
   },
 };
 
-export const FILM_SIMULATION_FORM_INPUT_OPTIONS = Object
-  .entries(FILM_SIMULATION_LABELS)
+export const FUJIFILM_SIMULATION_FORM_INPUT_OPTIONS = Object
+  .entries(FUJIFILM_SIMULATION_LABELS)
   .map(([value, label]) => (
     { value, label: label.large } as
     { value: FujifilmSimulation, label: string }
   ))
   .sort((a, b) => a.label.localeCompare(b.label));
 
-const ALL_POSSIBLE_FILM_SIMULATION_LABELS = Object
-  .values(FILM_SIMULATION_LABELS)
+const ALL_POSSIBLE_FUJIFILM_SIMULATION_LABELS = Object
+  .values(FUJIFILM_SIMULATION_LABELS)
   .flatMap(({ small, medium, large }) => [
     small.toLocaleLowerCase(),
     medium.toLocaleLowerCase(),
     large.toLocaleLowerCase(),
   ]);
 
-export const isStringFilmSimulation = (film: string) =>
-  ALL_POSSIBLE_FILM_SIMULATION_LABELS.includes(film.toLocaleLowerCase());
+export const isStringFujifilmSimulation = (film?: string) =>
+  film !== undefined &&
+  Object.keys(FUJIFILM_SIMULATION_LABELS).includes(film);
 
-export const labelForFilm = (film: FujifilmSimulation) =>
-  FILM_SIMULATION_LABELS[film];
+export const isStringFujifilmSimulationLabel = (film: string) =>
+  ALL_POSSIBLE_FUJIFILM_SIMULATION_LABELS.includes(film.toLocaleLowerCase());
+
+export const labelForFujifilmSimulation = (film: FujifilmSimulation) =>
+  FUJIFILM_SIMULATION_LABELS[film];
 
 export const getFujifilmSimulationFromMakerNote = (
   bytes: Buffer,

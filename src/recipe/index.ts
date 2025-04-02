@@ -7,8 +7,7 @@ import {
   formatCountDescriptive,
 } from '@/utility/string';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
-import { FilmSimulation } from '@/film';
-import { labelForFilm } from '@/platforms/fujifilm/simulation';
+import { labelForFilm } from '@/film';
 
 export type RecipeWithCount = {
   recipe: string
@@ -19,8 +18,8 @@ export type Recipes = RecipeWithCount[]
 
 export interface RecipeProps {
   title?: string
-  recipe: FujifilmRecipe
-  film: FilmSimulation
+  data: FujifilmRecipe
+  film: string
   iso?: string
   exposure?: string   
 }
@@ -56,7 +55,7 @@ export const descriptionForRecipePhotos = (
 
 export const generateRecipeText = ({
   title,
-  recipe,
+  data,
   film,
 }: RecipeProps,
 abbreviate?: boolean,
@@ -64,53 +63,51 @@ abbreviate?: boolean,
   const lines = [
     `${labelForFilm(film).small.toLocaleUpperCase()}`,
     // eslint-disable-next-line max-len
-    `${formatWhiteBalance(recipe).toLocaleUpperCase()} ${formatWhiteBalanceColor(recipe)}`,
+    `${formatWhiteBalance(data).toLocaleUpperCase()} ${formatWhiteBalanceColor(data)}`,
   ];
 
   if (abbreviate) {
     // eslint-disable-next-line max-len
-    lines.push(`DR${recipe.dynamicRange.development} NR${formatNoiseReduction(recipe)}`);
+    lines.push(`DR${data.dynamicRange.development} NR${formatNoiseReduction(data)}`);
   } else {
     lines.push(
-      `DYNAMIC RANGE ${recipe.dynamicRange.development}`,
-      `NOISE REDUCTION ${formatNoiseReduction(recipe)}`,
+      `DYNAMIC RANGE ${data.dynamicRange.development}`,
+      `NOISE REDUCTION ${formatNoiseReduction(data)}`,
     );
   }
 
-  if (recipe.highlight || recipe.shadow) {
+  if (data.highlight || data.shadow) {
     lines.push(abbreviate
-      ? `HIGH${addSign(recipe.highlight)} SHAD${addSign(recipe.shadow)}`
-      // eslint-disable-next-line max-len
-      : `HIGHLIGHT ${addSign(recipe.highlight)} SHADOW ${addSign(recipe.shadow)}`,
+      ? `HIGH${addSign(data.highlight)} SHAD${addSign(data.shadow)}`
+      : `HIGHLIGHT ${addSign(data.highlight)} SHADOW ${addSign(data.shadow)}`,
     );
   }
   lines.push(abbreviate
     // eslint-disable-next-line max-len
-    ? `COL${addSign(recipe.color)} SHARP${addSign(recipe.sharpness)} CLAR${addSign(recipe.clarity)}`
+    ? `COL${addSign(data.color)} SHARP${addSign(data.sharpness)} CLAR${addSign(data.clarity)}`
     // eslint-disable-next-line max-len
-    : `COLOR ${addSign(recipe.color)} SHARPEN ${addSign(recipe.sharpness)} CLARITY ${addSign(recipe.clarity)}`,
+    : `COLOR ${addSign(data.color)} SHARPEN ${addSign(data.sharpness)} CLARITY ${addSign(data.clarity)}`,
   );
-  if (recipe.colorChromeEffect) {
+  if (data.colorChromeEffect) {
     lines.push(abbreviate
-      ? `CHROME ${recipe.colorChromeEffect.toLocaleUpperCase()}`
-      : `COLOR CHROME ${recipe.colorChromeEffect.toLocaleUpperCase()}`,
+      ? `CHROME ${data.colorChromeEffect.toLocaleUpperCase()}`
+      : `COLOR CHROME ${data.colorChromeEffect.toLocaleUpperCase()}`,
     );
   }
-  if (recipe.colorChromeFXBlue) {
+  if (data.colorChromeFXBlue) {
     lines.push(abbreviate
-      ? `FX BLUE ${recipe.colorChromeFXBlue.toLocaleUpperCase()}`
-      : `CHROME FX BLUE ${recipe.colorChromeFXBlue.toLocaleUpperCase()}`,
+      ? `FX BLUE ${data.colorChromeFXBlue.toLocaleUpperCase()}`
+      : `CHROME FX BLUE ${data.colorChromeFXBlue.toLocaleUpperCase()}`,
     );
   }
-  if (recipe.grainEffect.roughness !== 'off') {
-    lines.push(`GRAIN ${formatGrain(recipe, abbreviate)}`);
+  if (data.grainEffect.roughness !== 'off') {
+    lines.push(`GRAIN ${formatGrain(data, abbreviate)}`);
   }
-  if (recipe.bwAdjustment || recipe.bwMagentaGreen) {
+  if (data.bwAdjustment || data.bwMagentaGreen) {
     lines.push(abbreviate
+      ? `BW ADJ${addSign(data.bwAdjustment)} M/G${addSign(data.bwMagentaGreen)}`
       // eslint-disable-next-line max-len
-      ? `BW ADJ${addSign(recipe.bwAdjustment)} M/G${addSign(recipe.bwMagentaGreen)}`
-      // eslint-disable-next-line max-len
-      : `BW ADJUSTMENT ${addSign(recipe.bwAdjustment)} MAGENTA/GREEN ${addSign(recipe.bwMagentaGreen)}`,
+      : `BW ADJUSTMENT ${addSign(data.bwAdjustment)} MAGENTA/GREEN ${addSign(data.bwMagentaGreen)}`,
     );
   }
 

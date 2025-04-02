@@ -11,11 +11,13 @@ import usePhotoFormParent from './form/usePhotoFormParent';
 import ExifCaptureButton from '@/admin/ExifCaptureButton';
 import { useState } from 'react';
 import { Recipes } from '@/recipe';
+import { Films } from '@/film';
 
 export default function PhotoEditPageClient({
   photo,
   uniqueTags,
   uniqueRecipes,
+  uniqueFilms,
   hasAiTextGeneration,
   imageThumbnailBase64,
   blurData,
@@ -23,6 +25,7 @@ export default function PhotoEditPageClient({
   photo: Photo
   uniqueTags: Tags
   uniqueRecipes: Recipes
+  uniqueFilms: Films
   hasAiTextGeneration: boolean
   imageThumbnailBase64: string
   blurData: string
@@ -71,6 +74,7 @@ export default function PhotoEditPageClient({
         updatedBlurData={blurData}
         uniqueTags={uniqueTags}
         uniqueRecipes={uniqueRecipes}
+        uniqueFilms={uniqueFilms}
         aiContent={hasAiTextGeneration ? aiContent : undefined}
         onTitleChange={setUpdatedTitle}
         onTextContentChange={setHasTextContent}

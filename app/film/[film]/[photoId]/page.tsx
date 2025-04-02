@@ -11,7 +11,6 @@ import {
   absolutePathForPhotoImage,
 } from '@/app/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { FilmSimulation } from '@/film';
 import {
   getPhotosMetaCached,
   getPhotosNearIdCached,
@@ -20,7 +19,7 @@ import { cache } from 'react';
 
 const getPhotosNearIdCachedCached = cache((
   photoId: string,
-  film: FilmSimulation,
+  film: string,
 ) =>
   getPhotosNearIdCached(
     photoId,
@@ -28,7 +27,7 @@ const getPhotosNearIdCachedCached = cache((
   ));
 
 interface PhotoFilmProps {
-  params: Promise<{ photoId: string, film: FilmSimulation }>
+  params: Promise<{ photoId: string, film: string }>
 }
 
 export async function generateMetadata({

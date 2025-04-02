@@ -60,7 +60,6 @@ import { convertUploadToPhoto } from './storage';
 import { UrlAddStatus } from '@/admin/AdminUploadsClient';
 import { convertStringToArray } from '@/utility/string';
 import { after } from 'next/server';
-import { FilmSimulation } from '@/film';
 
 // Private actions
 
@@ -315,7 +314,7 @@ export const renamePhotoTagGloballyAction = async (formData: FormData) =>
 
 export const getPhotosNeedingRecipeTitleCountAction = async (
   recipeData: string,
-  film: FilmSimulation,
+  film: string,
   photoIdToExclude?: string,
 ) =>
   runAuthenticatedAdminServerAction(async () =>

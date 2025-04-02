@@ -1,6 +1,6 @@
 import { formatFocalLength } from '@/focal';
 import { getNextImageUrlForRequest } from '@/platforms/next-image';
-import { FilmSimulation, photoHasFilmData } from '@/film';
+import { photoHasFilmData } from '@/film';
 import {
   HIGH_DENSITY_GRID,
   IS_PREVIEW,
@@ -22,6 +22,7 @@ import camelcaseKeys from 'camelcase-keys';
 import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
+import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 
 // INFINITE SCROLL: FEED
 export const INFINITE_SCROLL_FEED_INITIAL =
@@ -65,7 +66,7 @@ export interface PhotoExif {
   exposureCompensation?: number
   latitude?: number
   longitude?: number
-  film?: FilmSimulation
+  film?: FujifilmSimulation
   recipeData?: string
   takenAt?: string
   takenAtNaive?: string
