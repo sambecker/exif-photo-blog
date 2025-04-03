@@ -1,15 +1,16 @@
 import useScrollDirection from '@/utility/useScrollDirection';
-import { RefObject } from 'react';
+import clsx from 'clsx/lite';
+import { RefObject, useMemo } from 'react';
 
 export default function useStickyNav(
   ref: RefObject<HTMLElement | null>,
   isEnabled = true,
 ) {
-  const { scrollDirection, lastScrollY } = useScrollDirection();
+  const { scrollDirection, scrollY } = useScrollDirection();
 
   const navHeight = ref.current?.clientHeight ?? 0;
 
-  const hasScrolledPastNav = lastScrollY > navHeight;
+  const hasScrolledPastNav = scrollY > navHeight;
 
   const isNavSticky = isEnabled && (
     hasScrolledPastNav ||
@@ -21,13 +22,20 @@ export default function useStickyNav(
     scrollDirection === 'down';
 
   const shouldAnimateStickyNav =
-    isNavSticky &&
-    lastScrollY > navHeight * 2 ||
-    scrollDirection === 'up';
+    isNavSticky && (
+      scrollY > navHeight * 2 ||
+      scrollDirection === 'up'
+    );
 
-  return {
-    isNavSticky,
-    shouldHideStickyNav,
-    shouldAnimateStickyNav,
-  };
+  const classNames = useMemo(() => ({
+    classNameStickyContainer: clsx(
+      isNavSticky && 'sticky top-0 z-10 pointer-events-none',
+    ),
+    classNameStickyNav: clsx(
+      shouldHideStickyNav ? 'translate-y-[-100%]' : 'translate-y-0',
+      shouldAnimateStickyNav && 'transition-transform duration-200',
+    ),
+  }), [isNavSticky, shouldAnimateStickyNav, shouldHideStickyNav]);
+
+  return classNames;
 };

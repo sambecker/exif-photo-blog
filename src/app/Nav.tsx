@@ -36,9 +36,8 @@ export default function Nav({
   const showNav = !isPathSignIn(pathname);
 
   const {
-    isNavSticky,
-    shouldHideStickyNav,
-    shouldAnimateStickyNav,
+    classNameStickyContainer,
+    classNameStickyNav,
   } = useStickyNav(ref);
 
   const renderLink = (
@@ -63,9 +62,7 @@ export default function Nav({
 
   return (
     <AppGrid
-      className={clsx(
-        isNavSticky && 'sticky top-0 z-10 pointer-events-none',
-      )}
+      className={classNameStickyContainer}
       classNameMain='pointer-events-auto'
       contentMain={
         <AnimateItems
@@ -77,15 +74,11 @@ export default function Nav({
               key="nav"
               ref={ref}
               className={clsx(
-                'w-full',
+                'w-full flex items-center bg-main',
+                NAV_HEIGHT_CLASS,
                 // Enlarge nav to ensure it fully masks underlying content
                 'md:w-[calc(100%+8px)] md:translate-x-[-4px] md:px-[4px]',
-                'flex items-center bg-main',
-                shouldAnimateStickyNav && 'transition-transform duration-200',
-                shouldHideStickyNav
-                  ? 'translate-y-[-100%]'
-                  : 'translate-y-0',
-                NAV_HEIGHT_CLASS,
+                classNameStickyNav,
               )}>
               <ViewSwitcher
                 currentSelection={switcherSelectionForPath()}
