@@ -46,7 +46,7 @@ export default function AdminUploadsTable({
               'translate-x-[-2px] scale-[1.125] shadow-lg',
             isAdding && !isComplete && status !== 'adding' &&
               'scale-90',
-            'w-[55%] sm:w-auto',
+            'w-[45%] sm:w-auto',
           )}>
             <ImageMedium
               title={getIdFromStorageUrl(url)}
