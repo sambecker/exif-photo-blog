@@ -165,6 +165,10 @@
   @apply
     bg-gray-100 dark:bg-gray-900/75
 }
+@utility bg-extra-dim {
+  @apply
+    bg-gray-50 dark:bg-gray-900/40
+}
 @utility bg-content {
   @apply
     bg-main border-medium

@@ -29,7 +29,7 @@ export default function Container({
     ];
     case 'gray-border': return [
       'text-medium',
-      'bg-gray-50 dark:bg-gray-900/40',
+      'bg-extra-dim',
       'border border-gray-200 dark:border-gray-800',
     ];
     case 'blue': return [
