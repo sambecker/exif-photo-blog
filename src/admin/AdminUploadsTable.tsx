@@ -35,17 +35,13 @@ export default function AdminUploadsTable({
           className={clsx(
             'flex items-center grow',
             'transition-opacity',
-            'rounded-lg overflow-hidden',
+            'rounded-md overflow-hidden',
             'border-main bg-extra-dim',
             isAdding && !isComplete && status !== 'adding' && 'opacity-30',
           )}
         >
           <div className={clsx(
             'shrink-0 transition-transform',
-            isAdding && !isComplete && status === 'adding' &&
-              'translate-x-[-2px] scale-[1.125] shadow-lg',
-            isAdding && !isComplete && status !== 'adding' &&
-              'scale-90',
             'w-[50%] sm:w-auto',
           )}>
             <ImageMedium
@@ -85,14 +81,11 @@ export default function AdminUploadsTable({
                 ? <>
                   {status === 'added'
                     ? <FaRegCircleCheck size={18} />
-                    : status === 'adding'
-                      ? <Spinner
+                    : status === 'adding' &&
+                      <Spinner
                         size={19}
                         className="translate-y-[2px]"
-                      />
-                      : <span className="pr-1.5 text-dim">
-                        —
-                      </span>}
+                      />}
                 </>
                 : <>
                   <AddButton
