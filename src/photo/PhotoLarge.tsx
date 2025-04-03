@@ -308,7 +308,7 @@ export default function PhotoLarge({
                   ) &&
                     <div>
                       {(showCameraContent || showLensContent) &&
-                        <div className="flex flex-col">
+                        <div className="flex flex-col *:self-start">
                           {showCameraContent &&
                             <PhotoCamera
                               camera={camera}
