@@ -46,7 +46,7 @@ export default function AdminUploadsTable({
               'translate-x-[-2px] scale-[1.125] shadow-lg',
             isAdding && !isComplete && status !== 'adding' &&
               'scale-90',
-            'w-[45%] sm:w-auto',
+            'w-[50%] sm:w-auto',
           )}>
             <ImageMedium
               title={getIdFromStorageUrl(url)}
@@ -56,8 +56,10 @@ export default function AdminUploadsTable({
             />
           </div>
           <div className={clsx(
-            'flex flex-col gap-2 w-full self-start',
-            'p-2.5 sm:p-4',
+            'flex flex-col w-full self-start',
+            'gap-2 sm:gap-4',
+            'p-2.5 pl-3',
+            'sm:p-4 sm:pl-6',
           )}>
             <div className="flex flex-col gap-0.5 h-full">
               <div className="truncate font-medium">
@@ -96,6 +98,7 @@ export default function AdminUploadsTable({
                   <AddButton
                     path={pathForAdminUploadUrl(url)}
                     disabled={isDeleting}
+                    hideTextOnMobile={false}
                   />
                   <DeleteBlobButton
                     urls={[url]}
