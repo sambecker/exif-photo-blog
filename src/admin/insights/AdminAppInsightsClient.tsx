@@ -317,9 +317,7 @@ export default function AdminAppInsightsClient({
               />}
               content="Speed up page load times"
               expandContent={<>
-                Improve load times by enabling static optimization
-                {' '}
-                on:
+                Improve load times by enabling static optimization:
                 <div className="flex flex-col gap-y-4 mt-3">
                   {renderLabeledEnvVar(
                     'Photo pages',

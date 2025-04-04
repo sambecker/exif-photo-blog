@@ -1,4 +1,4 @@
-import { parseFujifilmMakerNote } from '.';
+import { parseFujifilmMakerNote } from './server';
 
 const TAG_ID_DYNAMIC_RANGE = 0x1400;
 const TAG_ID_DYNAMIC_RANGE_SETTING = 0x1402;

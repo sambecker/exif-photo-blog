@@ -1,4 +1,4 @@
-import { auth } from '@/auth';
+import { auth } from '@/auth/server';
 import { revalidateAdminPaths, revalidatePhotosKey } from '@/photo/cache';
 import {
   ACCEPTED_PHOTO_FILE_TYPES,

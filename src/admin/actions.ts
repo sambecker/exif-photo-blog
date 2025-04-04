@@ -1,6 +1,6 @@
 'use server';
 
-import { runAuthenticatedAdminServerAction } from '@/auth';
+import { runAuthenticatedAdminServerAction } from '@/auth/server';
 import { testRedisConnection } from '@/platforms/redis';
 import { testOpenAiConnection } from '@/platforms/openai';
 import { testDatabaseConnection } from '@/platforms/postgres';

@@ -14,7 +14,7 @@ import {
 } from 'react-icons/bi';
 import { HiOutlineCog } from 'react-icons/hi';
 import ChecklistGroup from '@/components/ChecklistGroup';
-import { ConfigChecklistStatus } from '../app/config';
+import { AppConfiguration } from '../app/config';
 import StatusIcon from '@/components/StatusIcon';
 import { labelForStorage } from '@/platforms/storage';
 import { HiSparkles } from 'react-icons/hi';
@@ -109,7 +109,7 @@ export default function AdminAppConfigurationClient({
   // Component props
   simplifiedView,
   isAnalyzingConfiguration,
-}: ConfigChecklistStatus &
+}: AppConfiguration &
   Partial<Awaited<ReturnType<typeof testConnectionsAction>>> & {
   simplifiedView?: boolean
   isAnalyzingConfiguration?: boolean

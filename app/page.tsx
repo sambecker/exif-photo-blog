@@ -9,8 +9,8 @@ import { cache } from 'react';
 import { getPhotos, getPhotosMeta } from '@/photo/db/query';
 import { GRID_HOMEPAGE_ENABLED } from '@/app/config';
 import { getDataForCategories } from '@/category/data';
-import PhotoGridPage from '@/photo/PhotoGridPage';
 import PhotoFeedPage from '@/photo/PhotoFeedPage';
+import PhotoGridPage from '@/photo/PhotoGridPage';
 
 export const dynamic = 'force-static';
 export const maxDuration = 60;
