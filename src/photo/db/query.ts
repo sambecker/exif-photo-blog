@@ -69,8 +69,8 @@ const createPhotosTable = () =>
 // Catch up to 3 migrations in older installations
 const safelyQueryPhotos = async <T>(
   callback: () => Promise<T>,
-  debugMessage: string,
-  debugInfo?: GetPhotosOptions,
+  queryLabel: string,
+  queryOptions?: GetPhotosOptions,
 ): Promise<T> => {
   let result: T;
 
@@ -121,24 +121,24 @@ const safelyQueryPhotos = async <T>(
       try {
         result = await callback();
       } catch (e: any) {
-        console.log(`sql get error on retry (after 5000ms): ${e.message} `);
+        console.log(`sql get error on retry (after 5000ms): ${e.message}`);
         throw e;
       }
     } else {
       if (e.message !== 'The server does not support SSL connections') {
         // Avoid re-logging errors on initial installation
-        console.log(`sql get error: ${e.message} `);
+        console.log(`sql get error (${queryLabel}): ${e.message}`);
       }
       throw e;
     }
   }
 
-  if (ADMIN_SQL_DEBUG_ENABLED && debugMessage) {
+  if (ADMIN_SQL_DEBUG_ENABLED && queryLabel) {
     const time =
       (((new Date()).getTime() - start.getTime()) / 1000).toFixed(2);
-    const message = `Debug query: ${debugMessage} (${time} seconds)`;
-    if (debugInfo) {
-      console.log(message, { options: debugInfo });
+    const message = `Debug query: ${queryLabel} (${time} seconds)`;
+    if (queryOptions) {
+      console.log(message, { options: queryOptions });
     } else {
       console.log(message);
     }
