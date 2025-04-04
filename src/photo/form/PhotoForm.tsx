@@ -42,10 +42,10 @@ import { convertRecipesForForm, Recipes } from '@/recipe';
 import deepEqual from 'fast-deep-equal/es6/react';
 import ApplyRecipeTitleGloballyCheckbox from './ApplyRecipesGloballyCheckbox';
 import { convertFilmsForForm, Films } from '@/film';
-import IconFavs from '@/components/icons/IconFavs';
-import IconHidden from '@/components/icons/IconHidden';
 import { isMakeFujifilm } from '@/platforms/fujifilm';
 import PhotoFilmIcon from '@/film/PhotoFilmIcon';
+import FieldsetFavs from './FieldsetFavs';
+import FieldsetHidden from './FieldsetHidden';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -436,18 +436,13 @@ export default function PhotoForm({
                     {...fieldProps}
                   />;
                 case 'favorite':
-                  return <FieldSetWithStatus
+                  return <FieldsetFavs
                     key={key}
-                    icon={<IconFavs
-                      size={14}
-                      highlight={formData[key] === 'true'}
-                    />}
                     {...fieldProps}
                   />;
                 case 'hidden':
-                  return <FieldSetWithStatus
+                  return <FieldsetHidden
                     key={key}
-                    icon={<IconHidden size={16} />}
                     {...fieldProps}
                   />;
                 default:

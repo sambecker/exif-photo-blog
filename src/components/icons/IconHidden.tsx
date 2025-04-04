@@ -1,6 +1,13 @@
 import { IconBaseProps } from 'react-icons';
-import { AiOutlineEyeInvisible } from 'react-icons/ai';
+import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 
-export default function IconHidden(props: IconBaseProps) {
-  return <AiOutlineEyeInvisible {...props} />;
+export default function IconHidden({
+  visible,
+  ...props
+}: IconBaseProps & {
+  visible?: boolean
+}) {
+  return visible
+    ? <AiOutlineEye {...props} />
+    : <AiOutlineEyeInvisible {...props} />;
 }

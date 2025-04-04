@@ -21,8 +21,8 @@ import PhotoTagFieldset from './PhotoTagFieldset';
 import DeleteUploadButton from './DeleteUploadButton';
 import { useAppState } from '@/state/AppState';
 import { pluralize } from '@/utility/string';
-import IconFavs from '@/components/icons/IconFavs';
-import IconHidden from '@/components/icons/IconHidden';
+import FieldsetFavs from '@/photo/form/FieldsetFavs';
+import FieldsetHidden from '@/photo/form/FieldsetHidden';
 
 const UPLOAD_BATCH_SIZE = 4;
 
@@ -145,18 +145,12 @@ export default function AdminBatchUploadActions({
                 readOnly={isAdding}
               />
               <div className="flex gap-8">
-                <FieldSetWithStatus
-                  label="Favorite"
-                  icon={<IconFavs size={14} highlight={favorite === 'true'} />}
-                  type="checkbox"
+                <FieldsetFavs
                   value={favorite}
                   onChange={setFavorite}
                   readOnly={isAdding}
                 />
-                <FieldSetWithStatus
-                  label="Hidden"
-                  icon={<IconHidden size={16} />}
-                  type="checkbox"
+                <FieldsetHidden
                   value={hidden}
                   onChange={setHidden}
                   readOnly={isAdding}
