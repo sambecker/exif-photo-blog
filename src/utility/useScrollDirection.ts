@@ -8,17 +8,24 @@ export default function useScrollDirection() {
 
   useEffect(() => {
     const handleScroll = () => {
+      const scrollY = window.scrollY;
       const pageHeight = (
         document.documentElement.scrollHeight -
         window.innerHeight
       );
-      setScrollInfo(prev => ({
-        scrollDirection: (
-          window.scrollY >= prev.scrollY ||
-          prev.scrollY > pageHeight
-        ) ? 'down' : 'up',
-        scrollY: window.scrollY,
-      }));
+      setScrollInfo(prev => {
+        let scrollDirection = prev.scrollDirection;
+        if (scrollY !== prev.scrollY) {
+          scrollDirection = (
+            scrollY > prev.scrollY ||
+            prev.scrollY > pageHeight
+          ) ? 'down' : 'up';
+        }
+        return {
+          scrollDirection,
+          scrollY,
+        };
+      });
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
