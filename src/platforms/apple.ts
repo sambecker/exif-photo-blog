@@ -12,8 +12,9 @@ export const isCameraApple = ({ make }: Camera) =>
 export const isLensMakeApple = (make?: string) =>
   make?.toLocaleLowerCase() === MAKE_APPLE;
 
-export const isLensApple = ({ make }: Lens) =>
-  isLensMakeApple(make);
+export const isLensApple = ({ make, model }: Lens) =>
+  isLensMakeApple(make) ||
+  /^iPhone [0-9a-z]{1,3}/i.test(model);
 
 export const formatAppleLensText = (
   model: string,
