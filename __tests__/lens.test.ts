@@ -17,6 +17,7 @@ describe('Lens', () => {
   describe('correctly formats', () => {
     it('iPhone lenses', () => {
       expect(formatLensText(IPHONE_15_PRO_FRONT)).toBe('15 Pro front');
+      expect(formatLensText(IPHONE_15_PRO_FRONT, 'long')).toBe('Apple iPhone 15 Pro front TrueDepth camera 2.69mm f/1.9');
       expect(formatLensText(IPHONE_15_PRO_BACK_WIDE)).toBe('15 Pro Wide (6.765mm)');
       expect(formatLensText(IPHONE_15_PRO_BACK_MAIN)).toBe('15 Pro Main (6.765mm)');
       expect(formatLensText(IPHONE_15_PRO_BACK_TELEPHOTO)).toBe('15 Pro Telephoto (6.765mm)');
@@ -25,10 +26,10 @@ describe('Lens', () => {
       expect(formatLensText(IPHONE_12_PRO_MAX_BACK_TELEPHOTO_NO_MAKE)).toBe('12 Pro Max Main (5.1mm)');
     });
     it('Pixel lenses', () => {
-      expect(formatLensText(PIXEL_8_PRO_BACK, 'medium')).toBe('Pixel 8 Pro Back Camera (6.9mm)');
-      expect(formatLensText(PIXEL_8_PRO_BACK_NO_MAKE, 'medium')).toBe('Pixel 8 Pro Back Camera (6.9mm)');
+      expect(formatLensText(PIXEL_8_PRO_BACK, 'medium')).toBe('Pixel 8 Pro Back (6.9mm)');
+      expect(formatLensText(PIXEL_8_PRO_BACK_NO_MAKE, 'medium')).toBe('Pixel 8 Pro Back (6.9mm)');
       expect(formatLensText(PIXEL_8_PRO_BACK, 'short')).toBe('Back Camera (6.9mm)');
-      expect(formatLensText(PIXEL_6A_BACK, 'medium')).toBe('Pixel 6a Back Camera (2.35mm)');
+      expect(formatLensText(PIXEL_6A_BACK, 'medium')).toBe('Pixel 6a Back (2.35mm)');
       expect(formatLensText(PIXEL_6A_BACK, 'short')).toBe('Back Camera (2.35mm)');
     });
   });

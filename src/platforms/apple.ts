@@ -18,7 +18,7 @@ export const isLensApple = ({ make, model }: Lens) =>
 
 export const formatAppleLensText = (
   model: string,
-  includePhoneName?: boolean,
+  includeDeviceName?: boolean,
 ) => {
   const [
     _,
@@ -31,11 +31,11 @@ export const formatAppleLensText = (
 
   const format = (lensName: string, includeFocalLength = true) => {
     let result = '';
-    if (includePhoneName) {
+    if (includeDeviceName) {
       result += `${phoneName} `;
     }
     result += lensName;
-    if (!includePhoneName) {
+    if (!includeDeviceName) {
       result += ' Camera';
     }
     if (includeFocalLength && focalLength) {

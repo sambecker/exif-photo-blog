@@ -105,21 +105,18 @@ export const formatLensText = (
   );
 
   const model = isLensApple(lens)
-    ? formatAppleLensText(modelRaw, length === 'medium')
+    ? formatAppleLensText(modelRaw, length !== 'short')
     : isLensGoogle(lens)
-      ? formatGoogleLensText(modelRaw, length === 'medium')
-      : modelRaw;
+      ? formatGoogleLensText(modelRaw, length !== 'short')
+      : doesModelStartWithMake
+        ? modelRaw.replace(makeSimple, '').trim()
+        : modelRaw;
 
   switch (length) {
   case 'long':
-    return make ? `${make} ${model}` : model;
+    return make ? `${make} ${modelRaw}` : modelRaw;
   case 'medium':
-    return doesModelStartWithMake
-      ? model.replace(makeSimple, '').trim()
-      : model;
   case 'short':
-    return doesModelStartWithMake
-      ? model.replace(makeSimple, '').trim()
-      : model;
+    return model;
   }
 };

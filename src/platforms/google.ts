@@ -19,22 +19,28 @@ export const isLensGoogle = ({ make, model }: Lens) =>
 
 export const formatGoogleLensText = (
   model: string,
-  includePhoneName?: boolean,
+  includeDeviceName?: boolean,
 ) => {
   const [
-    _,
+    _match,
     phoneName,
-    lensVariant,
+    lensVariant, // Expected: 'Back' or 'Front'
+    lensVariantRemainder, // Expected: 'Camera'
     focalLength,
     _aperture,
   // eslint-disable-next-line max-len
-  ] = (/^(Pixel (?:[0-9a-z])+(?: Pro)*) (.+) ([0-9\.]+)mm.*?f\/([0-9\.]+)/gi.exec(model) ?? []);
+  ] = (/^(Pixel (?:[0-9a-z])+(?: Pro)*)(?: (back|front))* (.+) ([0-9\.]+)mm.*?f\/([0-9\.]+)/gi.exec(model) ?? []);
 
   if (phoneName && lensVariant && focalLength) {
-    const lensName = `${capitalizeWords(lensVariant)} (${focalLength}mm)`;
-    return includePhoneName
-      ? `${phoneName} ${lensName}`
-      : lensName;
+    const lensName = capitalizeWords(lensVariant);
+    const focalText = `(${focalLength}mm)`;
+    if (includeDeviceName) {
+      return `${phoneName} ${lensName} ${focalText}`;
+    } else {
+      return lensVariantRemainder
+        ? `${lensName} ${capitalizeWords(lensVariantRemainder)} ${focalText}`
+        : `${lensName} ${focalText}`;
+    }
   }
 
   return model;
