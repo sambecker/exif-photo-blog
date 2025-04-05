@@ -5,7 +5,7 @@ import { BLUR_ENABLED } from '@/app/config';
 import { useAppState } from '@/state/AppState';
 import { clsx}  from 'clsx/lite';
 import Image, { ImageProps } from 'next/image';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export default function ImageWithFallback(props: ImageProps & {
   blurCompatibilityLevel?: 'none' | 'low' | 'high'
@@ -22,7 +22,7 @@ export default function ImageWithFallback(props: ImageProps & {
 
   const { shouldDebugImageFallbacks } = useAppState();
 
-  const [wasCached, setWasCached] = useState(false);
+  const [wasCached, setWasCached] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [didError, setDidError] = useState(false);
 
@@ -30,6 +30,16 @@ export default function ImageWithFallback(props: ImageProps & {
   const onError = useCallback(() => setDidError(true), []);
 
   const [hideFallback, setHideFallback] = useState(false);
+
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    const timeout = setTimeout(
+      () => setWasCached(imgRef.current?.complete ?? false),
+      100,
+    );
+    return () => clearTimeout(timeout);
+  }, []);
 
   useEffect(() => {
     if (!isLoading && !didError) {
@@ -61,34 +71,34 @@ export default function ImageWithFallback(props: ImageProps & {
         className,
       )}
     >
-      {(showFallback || shouldDebugImageFallbacks) &&
-        <div className={clsx(
-          '@container',
-          'absolute inset-0',
-          'overflow-hidden',
+      <div className={clsx(
+        '@container',
+        'absolute inset-0',
+        'overflow-hidden',
+        (showFallback || shouldDebugImageFallbacks) &&
           'transition-opacity duration-300 ease-in',
-          !(BLUR_ENABLED && blurDataURL) && 'bg-main',
-          (isLoading || shouldDebugImageFallbacks)
-            ? 'opacity-100'
-            : 'opacity-0',
-        )}>
-          {(BLUR_ENABLED && blurDataURL)
-            ? <img {...{
-              ...rest,
-              src: blurDataURL,
-              className: clsx(
-                getBlurClass(),
-                classNameImage,
-              ),
-            }} />
-            :  <div className={clsx(
-              'w-full h-full',
-              'bg-gray-100/50 dark:bg-gray-900/50',
-            )} />}
-        </div>}
+        !(BLUR_ENABLED && blurDataURL) && 'bg-main',
+        (isLoading || shouldDebugImageFallbacks)
+          ? 'opacity-100'
+          : 'opacity-0',
+      )}>
+        {(BLUR_ENABLED && blurDataURL)
+          ? <img {...{
+            ...rest,
+            src: blurDataURL,
+            className: clsx(
+              getBlurClass(),
+              classNameImage,
+            ),
+          }} />
+          :  <div className={clsx(
+            'w-full h-full',
+            'bg-gray-100/50 dark:bg-gray-900/50',
+          )} />}
+      </div>
       <Image {...{
         ...rest,
-        ref: (element) => setWasCached(element?.complete ?? false),
+        ref: imgRef,
         priority,
         className: classNameImage,
         onLoad,
