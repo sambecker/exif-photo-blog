@@ -96,6 +96,7 @@ export default function PhotoRecipeOverlay({
       className={clsx(
         'z-10',
         'w-[20rem] p-3 space-y-3',
+        'scroll-mt-8',
         'rounded-lg shadow-2xl',
         'text-[13.5px] text-black',
         'bg-white/70 border border-neutral-200/30',
