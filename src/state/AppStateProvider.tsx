@@ -19,7 +19,7 @@ import {
   storeAuthEmailCookie,
   clearAuthEmailCookie,
   hasAuthEmailCookie,
-} from '@/auth/client';
+} from '@/auth';
 import { useRouter, usePathname } from 'next/navigation';
 import { isPathAdmin, PATH_ROOT } from '@/app/paths';
 import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';

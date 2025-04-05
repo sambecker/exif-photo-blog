@@ -1,4 +1,4 @@
-import { auth } from '@/auth';
+import { auth } from '@/auth/server';
 import {
   awsS3Client,
   awsS3PutObjectCommandForKey,

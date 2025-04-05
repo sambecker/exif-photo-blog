@@ -1,4 +1,4 @@
-import { auth } from '@/auth';
+import { auth } from '@/auth/server';
 import SignInForm from '@/auth/SignInForm';
 import { PATH_ADMIN, PATH_ROOT } from '@/app/paths';
 import { clsx } from 'clsx/lite';

@@ -46,7 +46,7 @@ import {
 } from './server';
 import { TAG_FAVS, isTagFavs } from '@/tag';
 import { convertPhotoToPhotoDbInsert, Photo } from '.';
-import { runAuthenticatedAdminServerAction } from '@/auth';
+import { runAuthenticatedAdminServerAction } from '@/auth/server';
 import { AiImageQuery, getAiImageQuery } from './ai';
 import { streamOpenAiImageQuery } from '@/platforms/openai';
 import {

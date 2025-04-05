@@ -2,10 +2,7 @@ import {
   getExtensionFromStorageUrl,
   getIdFromStorageUrl,
 } from '@/platforms/storage';
-import {
-  convertExifToFormData,
-  convertFormDataToPhotoDbInsert,
-} from '@/photo/form';
+import { convertFormDataToPhotoDbInsert } from '@/photo/form';
 import {
   FujifilmSimulation,
   getFujifilmSimulationFromMakerNote,
@@ -17,7 +14,7 @@ import {
   GEO_PRIVACY_ENABLED,
   PRESERVE_ORIGINAL_UPLOADS,
 } from '@/app/config';
-import { isExifForFujifilm } from '@/platforms/fujifilm';
+import { isExifForFujifilm } from '@/platforms/fujifilm/server';
 import {
   FujifilmRecipe,
   getFujifilmRecipeFromMakerNote,
@@ -27,6 +24,8 @@ import {
   updateAllMatchingRecipeTitles,
 } from './db/query';
 import { PhotoDbInsert } from '.';
+import { convertExifToFormData } from './form/server';
+
 const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
 
@@ -124,7 +123,7 @@ export const extractImageDataFromBlobPath = async (
           url,
         },
         ...generateBlurData && { blurData },
-        ...convertExifToFormData(exifData, film, recipe),
+        ...convertExifToFormData (exifData, film, recipe),
       },
     },
     imageResizedBase64,

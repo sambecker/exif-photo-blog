@@ -399,11 +399,11 @@ export const APP_CONFIGURATION = {
   commitUrl: VERCEL_GIT_COMMIT_URL,
 };
 
-export type ConfigChecklistStatus = typeof APP_CONFIGURATION;
-
 export const IS_SITE_READY =
   APP_CONFIGURATION.hasDatabase &&
   APP_CONFIGURATION.hasStorageProvider &&
   APP_CONFIGURATION.hasAuthSecret &&
   APP_CONFIGURATION.hasAdminUser;
+
+export type AppConfiguration = typeof APP_CONFIGURATION;
   

@@ -12,8 +12,11 @@ import {
   FUJIFILM_SIMULATION_FORM_INPUT_OPTIONS,
   labelForFujifilmSimulation,
 } from '@/platforms/fujifilm/simulation';
-import { deparameterize, formatCount } from '@/utility/string';
-import { formatCountDescriptive } from '@/utility/string';
+import {
+  deparameterize,
+  formatCount,
+  formatCountDescriptive,
+} from '@/utility/string';
 import { AnnotatedTag } from '@/photo/form';
 import PhotoFilmIcon from './PhotoFilmIcon';
 

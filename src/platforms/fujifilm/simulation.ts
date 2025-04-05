@@ -1,4 +1,4 @@
-import { parseFujifilmMakerNote } from '.';
+import { parseFujifilmMakerNote } from './server';
 
 const TAG_ID_SATURATION = 0x1003;
 const TAG_ID_FILM_MODE  = 0x1401;

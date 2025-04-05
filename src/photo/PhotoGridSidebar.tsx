@@ -10,11 +10,7 @@ import FavsTag from '../tag/FavsTag';
 import { useAppState } from '@/state/AppState';
 import { useMemo, useRef } from 'react';
 import HiddenTag from '@/tag/HiddenTag';
-import { CATEGORY_VISIBILITY, PAGE_ABOUT } from '@/app/config';
-import {
-  htmlHasBrParagraphBreaks,
-  safelyParseFormattedHtml,
-} from '@/utility/html';
+import { CATEGORY_VISIBILITY } from '@/app/config';
 import { clsx } from 'clsx/lite';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
 import IconCamera from '@/components/icons/IconCamera';
@@ -38,11 +34,15 @@ export default function PhotoGridSidebar({
   photosCount,
   photosDateRange,
   containerHeight,
+  aboutTextSafelyParsedHtml,
+  aboutTextHasBrParagraphBreaks,
   ...categories
 }: PhotoSetCategories & {
   photosCount: number
   photosDateRange?: PhotoDateRange
   containerHeight?: number
+  aboutTextSafelyParsedHtml?: string
+  aboutTextHasBrParagraphBreaks?: boolean
 }) {
   const {
     cameras,
@@ -245,16 +245,16 @@ export default function PhotoGridSidebar({
 
   return (
     <div className="space-y-4">
-      {PAGE_ABOUT && <HeaderList
+      {aboutTextSafelyParsedHtml && <HeaderList
         items={[<p
           key="about"
           ref={aboutRef}
           className={clsx(
             'max-w-60 normal-case text-dim',
-            htmlHasBrParagraphBreaks(PAGE_ABOUT) && 'pb-2',
+            aboutTextHasBrParagraphBreaks && 'pb-2',
           )}
           dangerouslySetInnerHTML={{
-            __html: safelyParseFormattedHtml(PAGE_ABOUT),
+            __html: aboutTextSafelyParsedHtml,
           }}
         />]}
       />}
