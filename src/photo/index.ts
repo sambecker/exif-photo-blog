@@ -16,7 +16,7 @@ import {
   formatIso,
   formatExposureCompensation,
   formatExposureTime,
-} from '@/utility/exif';
+} from '@/utility/exif-format';
 import { parameterize } from '@/utility/string';
 import camelcaseKeys from 'camelcase-keys';
 import { isBefore } from 'date-fns';
