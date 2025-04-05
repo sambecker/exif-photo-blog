@@ -39,6 +39,7 @@ export default function PhotoLink({
         href: pathForPhoto({ photo, ...categories }),
         onClick: () => {
           if (nextPhotoAnimation) {
+            console.log('setNextPhotoAnimation', nextPhotoAnimation);
             setNextPhotoAnimation?.(nextPhotoAnimation);
           }
         },

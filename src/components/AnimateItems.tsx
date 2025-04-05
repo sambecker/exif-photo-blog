@@ -48,8 +48,11 @@ function AnimateItems({
   const {
     hasLoaded,
     nextPhotoAnimation,
+    getNextPhotoAnimationId,
     clearNextPhotoAnimation,
   } = useAppState();
+
+  const nextPhotoAnimationId = useRef<string>(undefined);
 
   const prefersReducedMotion = usePrefersReducedMotion();
   
@@ -104,9 +107,12 @@ function AnimateItems({
             },
           },
         } : undefined}
+      onAnimationStart={() => {
+        nextPhotoAnimationId.current = getNextPhotoAnimationId?.();
+      }}
       onAnimationComplete={() => {
         if (animateFromAppState) {
-          clearNextPhotoAnimation?.();
+          clearNextPhotoAnimation?.(nextPhotoAnimationId.current);
         }
         onAnimationComplete?.();
       }}

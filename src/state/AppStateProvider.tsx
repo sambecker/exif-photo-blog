@@ -25,6 +25,7 @@ import { isPathAdmin, PATH_ROOT } from '@/app/paths';
 import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 import { RecipeProps } from '@/recipe';
 import { getCountsForCategoriesCachedAction } from '@/category/actions';
+import { nanoid } from 'nanoid';
 
 export default function AppStateProvider({
   children,
@@ -42,8 +43,25 @@ export default function AppStateProvider({
     useState(false);
   const [swrTimestamp, setSwrTimestamp] =
     useState(Date.now());
-  const [nextPhotoAnimation, setNextPhotoAnimation] =
+  const [nextPhotoAnimation, _setNextPhotoAnimation] =
     useState<AnimationConfig>();
+  const setNextPhotoAnimation = useCallback((animation?: AnimationConfig) => {
+    _setNextPhotoAnimation(animation);
+    setNextPhotoAnimationId(undefined);
+  }, []);
+  const [nextPhotoAnimationId, setNextPhotoAnimationId] =
+    useState<string>();
+  const getNextPhotoAnimationId = useCallback(() => {
+    const id = nanoid();
+    setNextPhotoAnimationId(id);
+    return id;
+  }, []);
+  const clearNextPhotoAnimation = useCallback((id?: string) => {
+    if (id === nextPhotoAnimationId) {
+      setNextPhotoAnimation(undefined);
+      setNextPhotoAnimationId(undefined);
+    }
+  }, [nextPhotoAnimationId, setNextPhotoAnimation]);
   const [shouldRespondToKeyboardCommands, setShouldRespondToKeyboardCommands] =
     useState(true);
   // MODAL
@@ -172,7 +190,8 @@ export default function AppStateProvider({
         invalidateSwr,
         nextPhotoAnimation,
         setNextPhotoAnimation,
-        clearNextPhotoAnimation: () => setNextPhotoAnimation?.(undefined),
+        getNextPhotoAnimationId,
+        clearNextPhotoAnimation,
         shouldRespondToKeyboardCommands,
         setShouldRespondToKeyboardCommands,
         categoriesWithCounts,

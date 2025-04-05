@@ -21,8 +21,9 @@ export type AppStateContextType = {
   swrTimestamp?: number
   invalidateSwr?: () => void
   nextPhotoAnimation?: AnimationConfig
-  setNextPhotoAnimation?: Dispatch<SetStateAction<AnimationConfig | undefined>>
-  clearNextPhotoAnimation?: () => void
+  setNextPhotoAnimation?: (animationConfig?: AnimationConfig) => void
+  getNextPhotoAnimationId?: () => string
+  clearNextPhotoAnimation?: (id?: string) => void
   shouldRespondToKeyboardCommands?: boolean
   setShouldRespondToKeyboardCommands?: Dispatch<SetStateAction<boolean>>
   categoriesWithCounts?:
