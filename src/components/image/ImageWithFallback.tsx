@@ -71,6 +71,14 @@ export default function ImageWithFallback(props: ImageProps & {
         className,
       )}
     >
+      <Image {...{
+        ...rest,
+        ref: imgRef,
+        priority,
+        className: classNameImage,
+        onLoad,
+        onError,
+      }} />
       <div className={clsx(
         '@container',
         'absolute inset-0',
@@ -96,14 +104,6 @@ export default function ImageWithFallback(props: ImageProps & {
             'bg-gray-100/50 dark:bg-gray-900/50',
           )} />}
       </div>
-      <Image {...{
-        ...rest,
-        ref: imgRef,
-        priority,
-        className: classNameImage,
-        onLoad,
-        onError,
-      }} />
     </div>
   );
 }
