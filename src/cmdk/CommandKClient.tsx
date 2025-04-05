@@ -547,6 +547,7 @@ export default function CommandKClient({
     >
       <Modal
         anchor='top'
+        className="rounded-lg!"
         onClose={() => setIsOpen?.(false)}
         noPadding
         fast
