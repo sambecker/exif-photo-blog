@@ -129,7 +129,11 @@ export default function AppStateProvider({
   }, [auth, authError]);
   const isUserSignedIn = Boolean(userEmail);
 
-  const { data: adminData, mutate: refreshAdminData } = useSWR(
+  const {
+    data: adminData,
+    mutate: refreshAdminData,
+    isLoading: isLoadingAdminData,
+  } = useSWR(
     isUserSignedIn ? 'getAdminData' : null,
     getAdminDataAction,
   );
@@ -212,9 +216,11 @@ export default function AppStateProvider({
         // ADMIN
         adminUpdateTimes,
         registerAdminUpdate,
+        ...adminData,
+        hasAdminData: Boolean(adminData),
+        isLoadingAdminData,
         refreshAdminData,
         updateAdminData,
-        ...adminData,
         selectedPhotoIds,
         setSelectedPhotoIds,
         isPerformingSelectEdit,

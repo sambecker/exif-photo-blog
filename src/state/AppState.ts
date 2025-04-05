@@ -45,6 +45,8 @@ export type AppStateContextType = {
   isCheckingAuth?: boolean
   adminUpdateTimes?: Date[]
   registerAdminUpdate?: () => void
+  hasAdminData?: boolean
+  isLoadingAdminData?: boolean
   refreshAdminData?: () => void
   updateAdminData?: (updatedData: Partial<AdminData>) => void
   selectedPhotoIds?: string[]

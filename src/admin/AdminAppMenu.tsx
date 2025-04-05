@@ -25,6 +25,7 @@ import IconFolder from '@/components/icons/IconFolder';
 import IconSignOut from '@/components/icons/IconSignOut';
 import IconLock from '@/components/icons/IconLock';
 import { IoMdCheckboxOutline } from 'react-icons/io';
+import Spinner from '@/components/Spinner';
 
 export default function AdminAppMenu({
   active,
@@ -40,6 +41,8 @@ export default function AdminAppMenu({
     uploadsCount = 0,
     tagsCount = 0,
     recipesCount = 0,
+    hasAdminData,
+    isLoadingAdminData,
     selectedPhotoIds,
     startUpload,
     setSelectedPhotoIds,
@@ -154,11 +157,18 @@ export default function AdminAppMenu({
   return (
     <MoreMenu
       header={<div className="flex items-center select-none">
-        <IconLock
-          size={15}
-          className="inline-block w-5 mr-2"
-          narrow
-        />
+        <span className="inline-flex items-center justify-center w-5 mr-2">
+          {!hasAdminData && isLoadingAdminData
+            ? <Spinner
+              className="translate-x-[1px] translate-y-[1px]"
+              size={13}
+            />
+            :<IconLock
+              size={16}
+              className="translate-x-[1px] translate-y-[0.5px]"
+              narrow
+            />}
+        </span>
         <span className="grow">Admin menu</span>
       </div>}
       icon={<div className={clsx(

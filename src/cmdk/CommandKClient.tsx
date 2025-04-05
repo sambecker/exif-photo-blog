@@ -127,6 +127,7 @@ export default function CommandKClient({
     clearAuthStateAndRedirectIfNecessary,
     isCommandKOpen: isOpen,
     startUpload,
+    photosCountTotal,
     photosCountHidden,
     uploadsCount,
     tagsCount,
@@ -465,20 +466,20 @@ export default function CommandKClient({
       });
     }
     adminSection.items.push({
-      label: 'Manage Photos',
+      label: `Manage Photos (${photosCountTotal})`,
       annotation: <IconLock narrow />,
       path: PATH_ADMIN_PHOTOS,
     });
     if (tagsCount) {
       adminSection.items.push({
-        label: 'Manage Tags',
+        label: `Manage Tags (${tagsCount})`,
         annotation: <IconLock narrow />,
         path: PATH_ADMIN_TAGS,
       });
     }
     if (recipesCount) {
       adminSection.items.push({
-        label: 'Manage Recipes',
+        label: `Manage Recipes (${recipesCount})`,
         annotation: <IconLock narrow />,
         path: PATH_ADMIN_RECIPES,
       });
