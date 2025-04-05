@@ -25,7 +25,11 @@ export const staticallyGeneratePhotosIfConfigured = (type: StaticOutput) =>
     ? async () => {
       const photos = await getPublicPhotoIds({
         limit: GENERATE_STATIC_PARAMS_LIMIT,
-      });
+      })
+        .catch(e => {
+          console.error(`Error fetching static photo data: ${e}`);
+          return [];
+        });
       if (IS_BUILDING) {
         logStaticGenerationDetails(photos.length, `photo ${type}`);
       }
@@ -45,7 +49,12 @@ export const staticallyGenerateCategoryIfConfigured = <T, K>(
       (type === 'image' && STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES)
     )
       ? async () => {
-        const data = (await getData()).slice(0, GENERATE_STATIC_PARAMS_LIMIT);
+        const data = (await getData()
+          .catch(e => {
+            console.error(`Error fetching static ${key} data: ${e}`);
+            return [];
+          }))
+          .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
         if (IS_BUILDING) {
           logStaticGenerationDetails(
             data.length,
