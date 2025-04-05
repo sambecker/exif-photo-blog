@@ -5,7 +5,7 @@ import { BLUR_ENABLED } from '@/app/config';
 import { useAppState } from '@/state/AppState';
 import { clsx}  from 'clsx/lite';
 import Image, { ImageProps } from 'next/image';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function ImageWithFallback(props: ImageProps & {
   blurCompatibilityLevel?: 'none' | 'low' | 'high'
@@ -22,7 +22,7 @@ export default function ImageWithFallback(props: ImageProps & {
 
   const { shouldDebugImageFallbacks } = useAppState();
 
-  const [wasCached, setWasCached] = useState(true);
+  const [wasCached, setWasCached] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [didError, setDidError] = useState(false);
 
@@ -30,16 +30,6 @@ export default function ImageWithFallback(props: ImageProps & {
   const onError = useCallback(() => setDidError(true), []);
 
   const [hideFallback, setHideFallback] = useState(false);
-
-  const imgRef = useRef<HTMLImageElement>(null);
-
-  useEffect(() => {
-    const timeout = setTimeout(
-      () => setWasCached(imgRef.current?.complete ?? false),
-      100,
-    );
-    return () => clearTimeout(timeout);
-  }, []);
 
   useEffect(() => {
     if (!isLoading && !didError) {
@@ -98,7 +88,7 @@ export default function ImageWithFallback(props: ImageProps & {
         </div>}
       <Image {...{
         ...rest,
-        ref: imgRef,
+        ref: (element) => setWasCached(element?.complete ?? false),
         priority,
         className: classNameImage,
         onLoad,
