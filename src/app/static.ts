@@ -14,7 +14,7 @@ type StaticOutput = 'page' | 'image';
 
 const logStaticGenerationDetails = (count: number, content: string) => {
   const label = pluralize(count, content, undefined, 3);
-  console.log(`Statically generating ${label} ...`);
+  console.log(`>  Statically generating ${label} ...`);
 };
 
 export const staticallyGeneratePhotosIfConfigured = (type: StaticOutput) =>

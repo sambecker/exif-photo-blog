@@ -65,8 +65,8 @@ const createPhotosTable = () =>
     )
   `;
 
-// Safe wrapper for most queries with JIT table creation/migration
-// Catch up to 3 migrations in older installations
+// Safe wrapper intended for most queries with JIT migration/table creation
+// Catches up to 3 migrations in older installations
 const safelyQueryPhotos = async <T>(
   callback: () => Promise<T>,
   queryLabel: string,
@@ -115,19 +115,25 @@ const safelyQueryPhotos = async <T>(
       await createPhotosTable();
       result = await callback();
     } else if (/endpoint is in transition/i.test(e.message)) {
-      console.log('sql get error: endpoint is in transition (setting timeout)');
+      console.log(
+        'SQL query error: endpoint is in transition (setting timeout)',
+      );
       // Wait 5 seconds and try again
       await new Promise(resolve => setTimeout(resolve, 5000));
       try {
         result = await callback();
       } catch (e: any) {
-        console.log(`sql get error on retry (after 5000ms): ${e.message}`);
+        console.log(
+          `SQL query error on retry (after 5000ms): ${e.message}`,
+        );
         throw e;
       }
     } else {
+      // Avoid re-logging errors on initial installation
       if (e.message !== 'The server does not support SSL connections') {
-        // Avoid re-logging errors on initial installation
-        console.log(`sql get error (${queryLabel}): ${e.message}`);
+        console.log(`SQL query error (${queryLabel}): ${e.message}`, {
+          error: e,
+        });
       }
       throw e;
     }
