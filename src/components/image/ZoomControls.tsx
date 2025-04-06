@@ -12,27 +12,27 @@ export type ZoomControlsRef = {
 export default function ZoomControls({
   ref,
   children,
-  isEnabled,
-  shouldZoomOnFKeydown,
+  ...props
 }: {
   ref?: RefObject<ZoomControlsRef | null>
   children: ReactNode
+  selectImageElement?:
+    (container: HTMLElement | null) => HTMLImageElement | null
   isEnabled?: boolean
   shouldZoomOnFKeydown?: boolean
 }) {
-  const refContainer = useRef<HTMLDivElement>(null);
+  const refImageContainer = useRef<HTMLDivElement>(null);
 
   const {
     open,
     reset,
     zoomTo,
     zoomLevel,
-    viewerContainerRef,
-  } = useImageZoomControls(
-    refContainer,
-    isEnabled,
-    shouldZoomOnFKeydown,
-  );
+    refViewerContainer,
+  } = useImageZoomControls({
+    refImageContainer,
+    ...props,
+  });
 
   useEffect(() => {
     if (ref) { ref.current = { open, zoomTo }; }
@@ -57,12 +57,12 @@ export default function ZoomControls({
 
   return (
     <div
-      ref={refContainer}
-      className={clsx('h-full', isEnabled && 'cursor-zoom-in')}
+      ref={refImageContainer}
+      className={clsx('h-full', props.isEnabled && 'cursor-zoom-in')}
     >
       {children}
-      {viewerContainerRef.current
-        ? createPortal(button, viewerContainerRef.current)
+      {refViewerContainer.current
+        ? createPortal(button, refViewerContainer.current)
         : null}
     </div>
   );

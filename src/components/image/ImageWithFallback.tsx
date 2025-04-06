@@ -7,19 +7,17 @@ import { clsx}  from 'clsx/lite';
 import Image, { ImageProps } from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-export default function ImageWithFallback(props: ImageProps & {
+export default function ImageWithFallback({
+  className,
+  classNameImage = 'object-cover h-full',
+  priority,
+  blurDataURL,
+  blurCompatibilityLevel = 'low',
+  ...props
+}: ImageProps & {
   blurCompatibilityLevel?: 'none' | 'low' | 'high'
   classNameImage?: string
 }) {
-  const {
-    className,
-    classNameImage = 'object-cover h-full',
-    priority,
-    blurDataURL,
-    blurCompatibilityLevel = 'low',
-    ...rest
-  } = props;
-
   const { shouldDebugImageFallbacks } = useAppState();
 
   const [wasCached, setWasCached] = useState(true);
@@ -72,7 +70,7 @@ export default function ImageWithFallback(props: ImageProps & {
       )}
     >
       <Image {...{
-        ...rest,
+        ...props,
         ref: imgRef,
         priority,
         className: classNameImage,
@@ -81,7 +79,7 @@ export default function ImageWithFallback(props: ImageProps & {
       }} />
       <div className={clsx(
         '@container',
-        'absolute inset-0',
+        'absolute inset-0 pointer-events-none',
         'overflow-hidden',
         (showFallback || shouldDebugImageFallbacks) &&
           'transition-opacity duration-300 ease-in',
@@ -92,7 +90,7 @@ export default function ImageWithFallback(props: ImageProps & {
       )}>
         {(BLUR_ENABLED && blurDataURL)
           ? <img {...{
-            ...rest,
+            ...props,
             src: blurDataURL,
             className: clsx(
               getBlurClass(),

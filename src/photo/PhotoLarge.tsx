@@ -34,7 +34,7 @@ import {
 } from '@/app/config';
 import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
-import { useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import useVisible from '@/utility/useVisible';
 import PhotoDate from './PhotoDate';
 import { useAppState } from '@/state/AppState';
@@ -67,7 +67,7 @@ export default function PhotoLarge({
   showLens = true,
   showFilm = true,
   showRecipe = true,
-  showZoomControls: showZoomControlsProp = true,
+  showZoomControls: _showZoomControls = true,
   shouldZoomOnFKeydown = true,
   shouldShare = true,
   shouldShareCamera,
@@ -123,7 +123,13 @@ export default function PhotoLarge({
     filmCount,
   } = useCategoryCountsForPhoto(photo);
 
-  const showZoomControls = showZoomControlsProp && areZoomControlsShown;
+  const showZoomControls = _showZoomControls && areZoomControlsShown;
+  const selectZoomImageElement = useCallback(
+    (container: HTMLElement | null) => Array
+      .from(container?.getElementsByTagName('img') ?? [])
+      // Ignore fallback blur images
+      .filter((img) => !img.src.startsWith('data:image'))[0]
+    , []);
 
   const refRecipe = useRef<HTMLDivElement>(null);
   const refRecipeButton = useRef<HTMLButtonElement>(null);
@@ -200,6 +206,7 @@ export default function PhotoLarge({
     )}>
       <ZoomControls
         ref={zoomControlsRef}
+        selectImageElement={selectZoomImageElement}
         {...{ isEnabled: showZoomControls, shouldZoomOnFKeydown }}
       >
         <ImageLarge
