@@ -11,9 +11,8 @@ import {
   absolutePathForPhotoImage,
 } from '@/app/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotosNearIdCached } from '@/photo/cache';
+import { getPhotosMetaCached, getPhotosNearIdCached } from '@/photo/cache';
 import { cache } from 'react';
-import { getPhotosMeta } from '@/photo/db/query';
 
 const getPhotosNearIdCachedCached = cache((
   photoId: string,
@@ -74,7 +73,7 @@ export default async function PhotoRecipePage({
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const { count, dateRange } = await getPhotosMeta({ recipe });
+  const { count, dateRange } = await getPhotosMetaCached({ recipe });
 
   return (
     <PhotoDetailPage {...{

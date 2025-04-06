@@ -5,8 +5,9 @@ import {
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import { cache } from 'react';
-import { getPhotos, getPhotosMeta } from '@/photo/db/query';
+import { getPhotos } from '@/photo/db/query';
 import PhotoFeedPage from '@/photo/PhotoFeedPage';
+import { getPhotosMetaCached } from '@/photo/cache';
 
 export const dynamic = 'force-static';
 export const maxDuration = 60;
@@ -28,7 +29,7 @@ export default async function FeedPage() {
   ] = await Promise.all([
     getPhotosCached()
       .catch(() => []),
-    getPhotosMeta()
+    getPhotosMetaCached()
       .then(({ count }) => count)
       .catch(() => 0),
   ]);
