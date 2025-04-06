@@ -188,12 +188,10 @@ export const getPhotosNearIdCached = (
   };
 });
 
-export const getPhotosMetaCached = (
-  ...args: Parameters<typeof getPhotosMeta>
-) => unstable_cache(
+export const getPhotosMetaCached = unstable_cache(
   getPhotosMeta,
-  [KEY_PHOTOS, KEY_COUNT, KEY_DATE_RANGE, ...getPhotosCacheKeys(...args)],
-)(...args);
+  [KEY_PHOTOS, KEY_COUNT, KEY_DATE_RANGE],
+);
 
 export const getPhotosMostRecentUpdateCached =
   unstable_cache(
