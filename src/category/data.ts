@@ -19,48 +19,68 @@ import { sortTagsByCount } from '@/tag';
 import { sortCategoriesByCount } from '@/category';
 import { sortFocalLengths } from '@/focal';
 
-export const getDataForCategories = () => [
+type CategoryData = Awaited<ReturnType<typeof getDataForCategories>>;
+
+export const NULL_CATEGORY_DATA: CategoryData = {
+  cameras: [],
+  lenses: [],
+  tags: [],
+  recipes: [],
+  films: [],
+  focalLengths: [],
+};
+
+export const getDataForCategories = () => Promise.all([
   SHOW_CAMERAS
     ? getUniqueCameras()
       .then(sortCategoriesByCount)
       .catch(() => [])
-    : [],
+    : undefined,
   SHOW_LENSES
     ? getUniqueLenses()
       .then(sortCategoriesByCount)
       .catch(() => [])
-    : [],
+    : undefined,
   SHOW_TAGS
     ? getUniqueTags()
       .then(sortTagsByCount)
       .catch(() => [])
-    : [],
+    : undefined,
   SHOW_RECIPES
     ? getUniqueRecipes()
       .then(sortCategoriesByCount)
       .catch(() => [])
-    : [],
+    : undefined,
   SHOW_FILMS
     ? getUniqueFilms()
       .then(sortCategoriesByCount)
       .catch(() => [])
-    : [],
+    : undefined,
   SHOW_FOCAL_LENGTHS
     ? getUniqueFocalLengths()
       .then(sortFocalLengths)
       .catch(() => [])
-    : [],
-] as const;
+    : undefined,
+]).then(([
+  cameras = [],
+  lenses = [],
+  tags = [],
+  recipes = [],
+  films = [],
+  focalLengths = [],
+]) => ({
+  cameras, lenses, tags, recipes, films, focalLengths,
+}));
 
 export const getCountsForCategories = async () => {
-  const [
+  const {
     cameras,
     lenses,
     tags,
     recipes,
     films,
     focalLengths,
-  ] = await Promise.all(getDataForCategories());
+  } = await getDataForCategories();
 
   return {
     cameras: cameras.reduce((acc, camera) => {
