@@ -27,8 +27,9 @@ export default function PhotoRecipeOverlayButton({
         }}
         className={clsx(
           'text-medium',
-          'border-medium rounded-md shadow-none',
-          'px-[3px] py-[3px] my-[-3px]',
+          'rounded-md shadow-none',
+          'border-[1.5px] border-medium',
+          'p-0 size-5 inline-flex items-center justify-center',
           'hover:bg-extra-dim active:bg-dim',
           className,
         )}>
