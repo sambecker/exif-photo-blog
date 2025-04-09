@@ -101,7 +101,6 @@
 @utility text-light {
   @apply text-gray-100
 }
-
 /* Text */
 @utility text-main {
   @apply

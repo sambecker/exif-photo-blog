@@ -20,7 +20,7 @@ export default function RecipeHeader({
   count?: number
   dateRange?: PhotoDateRange
 }) {
-  const { setRecipeModalProps } = useAppState();
+  const { recipeModalProps, setRecipeModalProps } = useAppState();
 
   const photo = getPhotoWithRecipeFromPhotos(photos, selectedPhoto);
 
@@ -30,7 +30,8 @@ export default function RecipeHeader({
       entity={<PhotoRecipe
         recipe={recipe}
         contrast="high"
-        recipeOnClick={() => (
+        shouldShowRecipeOverlay={Boolean(recipeModalProps)}
+        toggleRecipeOverlay={() => (
           photo?.recipeData &&
           photo?.film
         ) ? setRecipeModalProps?.({

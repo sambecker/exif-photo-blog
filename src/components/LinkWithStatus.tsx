@@ -17,30 +17,28 @@ const FLICKER_THRESHOLD = 400;
 // Clear loading status after long duration
 const MAX_LOADING_DURATION = 15_000;
 
-export type LinkWithStatusProps = Omit<
-  ComponentProps<typeof Link>, 'children'
-> & {
-  loadingClassName?: string
-  children: ReactNode | ((props: {
-    isLoading: boolean
-  }) => ReactNode)
-  debugLoading?: boolean
-}
-
 export default function LinkWithStatus({
   loadingClassName,
   href, 
   className,
   onClick,
   children,
-  debugLoading = false,
+  isLoading: isLoadingProp = false,
+  setIsLoading: setIsLoadingProp,
   ...props
-}: LinkWithStatusProps) {
+}: Omit<ComponentProps<typeof Link>, 'children'> & {
+  children: ReactNode | ((props: { isLoading: boolean }) => ReactNode)
+  loadingClassName?: string
+  // For hoisting state to a parent component, e.g., <EntityLink />
+  isLoading?: boolean
+  setIsLoading?: (isLoading: boolean) => void
+}) {
   const path = usePathname();
 
   const [pathWhenClicked, setPathWhenClicked] = useState<string>();
-  const [_isLoading, setIsLoading] = useState(false);
-  const isLoading = _isLoading || debugLoading;
+  const [_isLoading, _setIsLoading] = useState(false);
+  const isLoading = isLoadingProp || _isLoading;
+  const setIsLoading = setIsLoadingProp || _setIsLoading;
   
   const isLoadingStartTime = useRef<number | undefined>(undefined);
 
@@ -60,7 +58,7 @@ export default function LinkWithStatus({
   const stopLoading = useCallback(() => {
     setIsLoading(false);
     setPathWhenClicked(undefined);
-  }, []);
+  }, [setIsLoading]);
 
   const isVisitingLinkHref = path === href;
 
