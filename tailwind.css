@@ -134,7 +134,7 @@
   @apply
     text-red-500 dark:text-red-400
 }
-/* Border */
+/* Rules */
 @utility border-main {
   @apply
     border border-gray-200 dark:border-gray-700

@@ -29,7 +29,8 @@ export default function PhotoRecipeOverlayButton({
           'text-medium',
           'rounded-md shadow-none',
           'border-[1.5px] border-medium',
-          'p-0 size-5 inline-flex items-center justify-center',
+          'p-0 inline-flex items-center justify-center',
+          'size-[17px] md:size-5',
           'hover:bg-extra-dim active:bg-dim',
           className,
         )}>

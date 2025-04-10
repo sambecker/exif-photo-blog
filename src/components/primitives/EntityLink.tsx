@@ -79,12 +79,16 @@ export default function EntityLink({
       className={clsx(
         'inline-flex items-center gap-2',
         'max-w-full overflow-hidden select-none',
+        '[&:has(.action:hover)_a>*>*>*]:underline',
         className,
       )}
     >
       <LinkWithStatus
         href={href}
-        className="peer inline-flex items-center gap-2 max-w-full truncate"
+        className={clsx(
+          'peer',
+          'inline-flex items-center gap-2 max-w-full truncate',
+        )}
         isLoading={isLoading}
         setIsLoading={setIsLoading}
       >
@@ -99,9 +103,8 @@ export default function EntityLink({
           className: clsx(
             classForContrast(),
             href && !badged && 'hover:text-gray-900 dark:hover:text-gray-100',
-            classNameIcon,
           ),
-          classNameIcon: 'text-dim',
+          classNameIcon: clsx('text-dim', classNameIcon),
           debug,
         }}>
           {badged
@@ -116,12 +119,17 @@ export default function EntityLink({
             </Badge>
             : <span className={clsx(
               truncate && 'inline-flex max-w-full *:truncate',
+              'decoration-dotted underline-offset-[4px] underline-main',
+              'decoration-gray-300 dark:decoration-gray-600',
             )}>
               {renderLabel}
             </span>}
         </LabeledIcon>
       </LinkWithStatus>
-      {accessory}
+      {accessory &&
+        <span className="action">
+          {accessory}
+        </span>}
       {!isLoading && hoverEntity !== undefined &&
         <span className="hidden peer-hover:inline text-dim">
           {hoverEntity}

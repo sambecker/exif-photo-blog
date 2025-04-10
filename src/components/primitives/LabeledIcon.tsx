@@ -28,10 +28,10 @@ export default function LabeledIcon({
   debug?: boolean,
 }) {
   return (
-    <span className={ clsx(
+    <span className={clsx(
       'inline-flex gap-x-1.5 md:gap-x-2 min-w-0',
-      className,
       debug && 'border border-green-500 m-[-1px]',
+      className,
     )}>
       {icon && type !== 'text-only' &&
         <Icon {...{
