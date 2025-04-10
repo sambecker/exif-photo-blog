@@ -35,7 +35,7 @@ export default function PhotoRecipe({
             : 'translate-y-[-0.5px]',
         )}
       />}
-      accessory={toggleRecipeOverlay &&
+      action={toggleRecipeOverlay &&
         <PhotoRecipeOverlayButton {...{
           toggleRecipeOverlay,
           shouldShowRecipeOverlay,

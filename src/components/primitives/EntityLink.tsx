@@ -30,7 +30,7 @@ export default function EntityLink({
   href = '', // Make link optional for debugging purposes
   prefetch,
   title,
-  accessory,
+  action,
   hoverEntity,
   truncate = true,
   className,
@@ -45,7 +45,7 @@ export default function EntityLink({
   href?: string
   prefetch?: boolean
   title?: string
-  accessory?: ReactNode
+  action?: ReactNode
   hoverEntity?: ReactNode
   truncate?: boolean
   className?: string
@@ -79,6 +79,7 @@ export default function EntityLink({
       className={clsx(
         'inline-flex items-center gap-2',
         'max-w-full overflow-hidden select-none',
+        // Underline link text when action is hovered
         '[&:has(.action:hover)_a>*>*>*]:underline',
         className,
       )}
@@ -126,9 +127,9 @@ export default function EntityLink({
             </span>}
         </LabeledIcon>
       </LinkWithStatus>
-      {accessory &&
+      {action &&
         <span className="action">
-          {accessory}
+          {action}
         </span>}
       {!isLoading && hoverEntity !== undefined &&
         <span className="hidden peer-hover:inline text-dim">
