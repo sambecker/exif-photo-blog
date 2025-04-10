@@ -1,7 +1,7 @@
 import { absolutePathForLens } from '@/app/paths';
 import { PhotoSetAttributes } from '../category';
 import ShareModal from '@/share/ShareModal';
-import { Lens } from '.';
+import { formatLensText, Lens } from '.';
 import { shareTextForLens } from './meta';
 import LensOGTile from './LensOGTile';
 
@@ -16,6 +16,7 @@ export default function LensShareModal({
   return (
     <ShareModal
       pathShare={absolutePathForLens(lens)}
+      navigatorTitle={formatLensText(lens)}
       socialText={shareTextForLens(lens, photos)}
     >
       <LensOGTile {...{ lens, photos, count, dateRange }} />

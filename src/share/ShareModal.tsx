@@ -12,16 +12,19 @@ import { SHOW_SOCIAL } from '@/app/config';
 import { generateXPostText } from '@/utility/social';
 import { useAppState } from '@/state/AppState';
 import useOnPathChange from '@/utility/useOnPathChange';
+import { IoArrowUp } from 'react-icons/io5';
 
 export default function ShareModal({
   title,
   pathShare,
   socialText,
+  navigatorTitle,
   children,
 }: {
   title?: string
   pathShare: string
   socialText: string
+  navigatorTitle: string
   children: ReactNode
 }) {
   const {
@@ -41,7 +44,7 @@ export default function ShareModal({
   ) =>
     <div
       className={clsx(
-        'py-3 px-3.5',
+        'py-3 px-3',
         embedded ? 'border-l' : 'border rounded-md',
         'border-gray-200 bg-gray-50 active:bg-gray-100',
         // eslint-disable-next-line max-len
@@ -76,7 +79,7 @@ export default function ShareModal({
             'flex items-center justify-stretch',
             'border border-gray-200 dark:border-gray-800',
           )}>
-            <div className="truncate p-2 w-full">
+            <div className="truncate p-2 w-full [direction:rtl] text-left">
               {shortenUrl(pathShare)}
             </div>
             {renderIcon(
@@ -88,6 +91,15 @@ export default function ShareModal({
               true,
             )}
           </div>
+          {typeof navigator !== 'undefined' && navigator.share &&
+            renderIcon(
+              <IoArrowUp size={18} />,
+              () => navigator.share({
+                title: navigatorTitle,
+                url: pathShare,
+              })
+                .catch(() => console.log('Share canceled')),
+            )}
           {SHOW_SOCIAL &&
             renderIcon(
               <PiXLogo size={18} />,

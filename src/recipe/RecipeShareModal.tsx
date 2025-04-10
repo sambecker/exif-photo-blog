@@ -1,7 +1,7 @@
 import { absolutePathForRecipe } from '@/app/paths';
 import { PhotoSetAttributes } from '../category';
 import ShareModal from '@/share/ShareModal';
-import { shareTextForRecipe } from '.';
+import { formatRecipe, shareTextForRecipe } from '.';
 import RecipeOGTile from './RecipeOGTile';
 
 export default function RecipeShareModal({
@@ -15,6 +15,7 @@ export default function RecipeShareModal({
   return (
     <ShareModal
       pathShare={absolutePathForRecipe(recipe)}
+      navigatorTitle={formatRecipe(recipe)}
       socialText={shareTextForRecipe(recipe)}
     >
       <RecipeOGTile {...{ recipe, photos, count, dateRange }} />

@@ -2,7 +2,7 @@ import { absolutePathForFilm } from '@/app/paths';
 import { PhotoSetAttributes } from '../category';
 import ShareModal from '@/share/ShareModal';
 import FilmOGTile from './FilmOGTile';
-import { shareTextForFilm } from '.';
+import { labelForFilm, shareTextForFilm } from '.';
 
 export default function FilmShareModal({
   film,
@@ -15,6 +15,7 @@ export default function FilmShareModal({
   return (
     <ShareModal
       pathShare={absolutePathForFilm(film)}
+      navigatorTitle={labelForFilm(film).large}
       socialText={shareTextForFilm(film)}
     >
       <FilmOGTile {...{ film, photos, count, dateRange }} />
