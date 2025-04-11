@@ -9,14 +9,14 @@ export default function useRecipeOverlay({
   ref?: RefObject<HTMLElement | null>,
   refTriggers?: RefObject<HTMLElement | null>[],
 }) {
-  const [shouldShowRecipeOverlay, setShouldShowRecipeOverlay] = useState(false);
+  const [isShowingRecipeOverlay, setIsShowingRecipeOverlay] = useState(false);
 
   const showRecipeOverlay =
-    useCallback(() => setShouldShowRecipeOverlay(true), []);
+    useCallback(() => setIsShowingRecipeOverlay(true), []);
   const hideRecipeOverlay =
-    useCallback(() => setShouldShowRecipeOverlay(false), []);
+    useCallback(() => setIsShowingRecipeOverlay(false), []);
   const toggleRecipeOverlay = useCallback(() =>
-    setShouldShowRecipeOverlay(current => !current),
+    setIsShowingRecipeOverlay(current => !current),
   []);
 
   useClickInsideOutside({
@@ -25,13 +25,13 @@ export default function useRecipeOverlay({
   });
 
   useEffect(() => {
-    if (shouldShowRecipeOverlay && !isElementEntirelyInViewport(ref?.current)) {
+    if (isShowingRecipeOverlay && !isElementEntirelyInViewport(ref?.current)) {
       ref?.current?.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [ref, shouldShowRecipeOverlay]);
+  }, [ref, isShowingRecipeOverlay]);
 
   return {
-    shouldShowRecipeOverlay,
+    isShowingRecipeOverlay,
     showRecipeOverlay,
     hideRecipeOverlay,
     toggleRecipeOverlay,

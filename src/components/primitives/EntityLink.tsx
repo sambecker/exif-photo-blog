@@ -80,7 +80,7 @@ export default function EntityLink({
         'inline-flex items-center gap-2',
         'max-w-full overflow-hidden select-none',
         // Underline link text when action is hovered
-        '[&:has(.action:hover)_a>*>*>*]:underline',
+        '[&:has(.action:hover)_.text-content]:underline',
         className,
       )}
     >
@@ -112,15 +112,16 @@ export default function EntityLink({
             ? <Badge
               type="small"
               contrast={contrast}
-              className='translate-y-[-0.5px]'
+              className="translate-y-[-0.5px]"
               uppercase
               interactive
             >
               {renderLabel}
             </Badge>
             : <span className={clsx(
+              'text-content',
               truncate && 'inline-flex max-w-full *:truncate',
-              'decoration-dotted underline-offset-[4px] underline-main',
+              'decoration-dotted underline-offset-[4px]',
               'decoration-gray-300 dark:decoration-gray-600',
             )}>
               {renderLabel}

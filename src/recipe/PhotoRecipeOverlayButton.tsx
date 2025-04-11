@@ -8,11 +8,11 @@ import { useRef } from 'react';
 export default function PhotoRecipeOverlayButton({
   className,
   toggleRecipeOverlay,
-  shouldShowRecipeOverlay,
+  isShowingRecipeOverlay,
 }: {
   className?: string
   toggleRecipeOverlay: () => void
-  shouldShowRecipeOverlay?: boolean
+  isShowingRecipeOverlay?: boolean
 }) {
   const ref = useRef<HTMLButtonElement>(null);
 
@@ -37,7 +37,7 @@ export default function PhotoRecipeOverlayButton({
         <FaPlus
           className={clsx(
             'transition-transform',
-            shouldShowRecipeOverlay && 'rotate-45',
+            isShowingRecipeOverlay && 'rotate-45',
           )}
           size={10}
         />

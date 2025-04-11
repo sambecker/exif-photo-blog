@@ -105,6 +105,7 @@ export default function PhotoLarge({
   const ref = useRef<HTMLDivElement>(null);
   const refZoomControls = useRef<ZoomControlsRef>(null);
   const refPhotoRecipe = useRef<HTMLDivElement>(null);
+  const refPhotoFilm = useRef<HTMLDivElement>(null);
 
   const {
     areZoomControlsShown,
@@ -130,9 +131,12 @@ export default function PhotoLarge({
     , []);
 
   const refRecipe = useRef<HTMLDivElement>(null);
-  const refTriggers = useMemo(() => [refPhotoRecipe], []);
+  const refTriggers = useMemo(() => [
+    refPhotoRecipe,
+    refPhotoFilm,
+  ], []);
   const {
-    shouldShowRecipeOverlay,
+    isShowingRecipeOverlay,
     toggleRecipeOverlay,
     hideRecipeOverlay,
   } = useRecipeOverlay({
@@ -222,11 +226,11 @@ export default function PhotoLarge({
         'flex items-center justify-center',
         // Allow clicks to pass through to zoom controls
         // when not showing recipe overlay
-        !(shouldShowRecipeOverlay || shouldDebugRecipeOverlays) &&
+        !(isShowingRecipeOverlay || shouldDebugRecipeOverlays) &&
           'pointer-events-none',
       )}>
         <AnimatePresence>
-          {(shouldShowRecipeOverlay || shouldDebugRecipeOverlays) &&
+          {(isShowingRecipeOverlay || shouldDebugRecipeOverlays) &&
             photo.recipeData &&
             photo.film &&
               <PhotoRecipeOverlay
@@ -336,7 +340,7 @@ export default function PhotoLarge({
                           prefetch={prefetchRelatedLinks}
                           countOnHover={recipeCount}
                           toggleRecipeOverlay={toggleRecipeOverlay}
-                          shouldShowRecipeOverlay={shouldShowRecipeOverlay}
+                          isShowingRecipeOverlay={isShowingRecipeOverlay}
                         />}
                       {showTagsContent &&
                         <PhotoTags
@@ -398,9 +402,14 @@ export default function PhotoLarge({
                     </ul>
                     {showFilmContent && photo.film &&
                       <PhotoFilm
+                        ref={refPhotoFilm}
                         film={photo.film}
                         prefetch={prefetchRelatedLinks}
                         countOnHover={filmCount}
+                        {...photo.recipeData && !photo.recipeTitle && {
+                          toggleRecipeOverlay,
+                          isShowingRecipeOverlay,
+                        }}
                       />}
                   </>}
                 <div className={clsx(
