@@ -5,6 +5,7 @@ import PhotoHeader from '@/photo/PhotoHeader';
 import PhotoRecipe from './PhotoRecipe';
 import { useAppState } from '@/state/AppState';
 import { descriptionForRecipePhotos, getPhotoWithRecipeFromPhotos } from '.';
+
 export default function RecipeHeader({
   recipe,
   photos,
@@ -30,7 +31,7 @@ export default function RecipeHeader({
       entity={<PhotoRecipe
         recipe={recipe}
         contrast="high"
-        shouldShowRecipeOverlay={Boolean(recipeModalProps)}
+        isShowingRecipeOverlay={Boolean(recipeModalProps)}
         toggleRecipeOverlay={() => (
           photo?.recipeData &&
           photo?.film
