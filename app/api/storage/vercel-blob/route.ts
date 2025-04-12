@@ -22,6 +22,7 @@ export async function POST(request: Request): Promise<NextResponse> {
             return {
               maximumSizeInBytes: MAX_PHOTO_UPLOAD_SIZE_IN_BYTES,
               allowedContentTypes: ACCEPTED_PHOTO_FILE_TYPES,
+              addRandomSuffix: true,
             };
           } else {
             throw new Error('Invalid upload');
