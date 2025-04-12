@@ -36,7 +36,7 @@ export default function LinkWithStatus({
       isLoading && loadingClassName,
     )}
   >
-    <LinkWithStatusChild {...{ isLoading, setIsLoading }}>
+    <LinkWithStatusChild {...{ setIsLoading }}>
       {typeof children === 'function'
         ? children({ isLoading })
         : children}

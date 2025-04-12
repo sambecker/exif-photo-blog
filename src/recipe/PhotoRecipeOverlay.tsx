@@ -17,9 +17,8 @@ import {
 } from '.';
 import { TbChecklist } from 'react-icons/tb';
 import CopyButton from '@/components/CopyButton';
-import { pathForRecipe } from '@/app/paths';
-import LinkWithStatus from '@/components/LinkWithStatus';
 import { labelForFilm } from '@/film';
+import PhotoRecipe from './PhotoRecipe';
 
 export default function PhotoRecipeOverlay({
   ref,
@@ -103,20 +102,23 @@ export default function PhotoRecipeOverlay({
         'backdrop-blur-xl saturate-[300%]',
       )}
     >
-      <div className="flex items-center gap-2 text-black/90">
-        <div className="grow translate-y-[-0.5px]">
+      <div className={clsx(
+        'flex items-center gap-2 h-6',
+        'pl-1.5 pr-0.5',
+      )}>
+        <div className={clsx(
+          'grow translate-y-[-0.5px]',
+          'hover:opacity-50 active:opacity-75',
+        )}>
           {title
-            ? <LinkWithStatus
-              href={pathForRecipe(title ?? '')}
+            ? <PhotoRecipe
+              recipe={title}
               className={clsx(
-                'flex',
-                'hover:text-black/50 active:text-black',
-                'px-1 py-0.5 rounded-md',
+                'text-[15px]',
+                '[&>*>*>*]:text-black',
+                'tracking-wide',
               )}
-              loadingClassName="bg-neutral-100/20"
-            >
-              {renderRecipeTitle}
-            </LinkWithStatus>
+            />
             : renderRecipeTitle}
         </div>
         <CopyButton
@@ -126,22 +128,23 @@ export default function PhotoRecipeOverlay({
           text={generateRecipeText({ title, data, film }).join('\n')}
           iconSize={17}
           className={clsx(
-            'translate-y-[0.5px]',
+            'translate-y-[1.5px]',
             'text-black/40 active:text-black/75',
             'hover:text-black/40',
           )}
           tooltip="Copy recipe text"
           tooltipColor="frosted"
         />
-        <LoaderButton
-          icon={<IoCloseCircle size={20} />}
-          onClick={onClose}
-          className={clsx(
-            'link p-0 m-0 h-4!',
-            'text-black/40 active:text-black/75',
-            'translate-y-[2.5px]',
-          )}
-        />
+        <span>
+          <LoaderButton
+            icon={<IoCloseCircle size={20} />}
+            onClick={onClose}
+            className={clsx(
+              'link p-0 m-0',
+              'text-black/40 active:text-black/75',
+            )}
+          />
+        </span>
       </div>
       <div className="grid grid-cols-12 gap-2">
         {/* ROW */}
