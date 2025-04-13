@@ -5,10 +5,10 @@ import { useTheme } from 'next-themes';
 import { Toaster } from 'sonner';
 
 export default function ToasterWithThemes() {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   return (
     <Toaster
-      theme={theme as 'system' | 'light' | 'dark'}
+      theme={resolvedTheme as 'light' | 'dark' | undefined}
       toastOptions={{
         classNames: {
           toast: clsx(
