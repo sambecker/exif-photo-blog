@@ -329,6 +329,7 @@
   a, .link {
     @apply
       hover:text-medium
+      active:text-dim
   }
 }
 
