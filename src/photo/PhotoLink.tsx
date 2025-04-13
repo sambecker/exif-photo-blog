@@ -9,7 +9,7 @@ import { pathForPhoto } from '@/app/paths';
 import { clsx } from 'clsx/lite';
 import LinkWithStatus from '@/components/LinkWithStatus';
 import Spinner from '@/components/Spinner';
-import LinkWithLoaderBadge from '@/components/LinkWithLoaderBadge';
+import LinkWithLoaderBackground from '@/components/LinkWithLoaderBackground';
 
 export default function PhotoLink({
   photo,
@@ -63,12 +63,12 @@ export default function PhotoLink({
             </>}
           </>}
         </LinkWithStatus>
-        : <LinkWithLoaderBadge
+        : <LinkWithLoaderBackground
           {...linkProps}
           offsetPadding
         >
           {children}
-        </LinkWithLoaderBadge>
+        </LinkWithLoaderBackground>
       : <span className={clsx(
         'text-gray-300 dark:text-gray-700 cursor-default',
         className,

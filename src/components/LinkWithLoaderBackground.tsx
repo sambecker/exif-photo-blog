@@ -2,7 +2,7 @@ import clsx from 'clsx/lite';
 import { ComponentProps } from 'react';
 import LinkWithStatus from './LinkWithStatus';
 
-export default function LinkWithLoaderBadge({
+export default function LinkWithLoaderBackground({
   className,
   loadingClassName,
   offsetPadding,

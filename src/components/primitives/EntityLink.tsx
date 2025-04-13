@@ -89,6 +89,9 @@ export default function EntityLink({
         className={clsx(
           'peer',
           'inline-flex items-center gap-2 max-w-full truncate',
+          classForContrast(),
+          href && !badged && 'hover:text-gray-900 dark:hover:text-gray-100',
+          href && !badged && 'active:text-medium!',
         )}
         isLoading={isLoading}
         setIsLoading={setIsLoading}
@@ -101,10 +104,6 @@ export default function EntityLink({
           title,
           type,
           uppercase,
-          className: clsx(
-            classForContrast(),
-            href && !badged && 'hover:text-gray-900 dark:hover:text-gray-100',
-          ),
           classNameIcon: clsx('text-dim', classNameIcon),
           debug,
         }}>

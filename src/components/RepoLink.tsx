@@ -15,7 +15,7 @@ export default function RepoLink() {
         className={clsx(
           'flex items-center gap-0.5',
           'text-main hover:text-main',
-          'hover:underline',
+          'hover:text-medium active:text-dim',
         )}
       >
         <BiLogoGithub

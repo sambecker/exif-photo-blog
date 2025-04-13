@@ -19,7 +19,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { FaRegClock } from 'react-icons/fa';
 import AdminAppInfoIcon from './AdminAppInfoIcon';
 import AdminInfoNav from './AdminInfoNav';
-import LinkWithLoaderBadge from '@/components/LinkWithLoaderBadge';
+import LinkWithLoaderBackground from '@/components/LinkWithLoaderBackground';
 import MaskedScroll from '@/components/MaskedScroll';
 
 // Updates from past 5 minutes considered recent
@@ -75,28 +75,31 @@ export default function AdminNavClient({
               direction="horizontal"
             >
               {items.map(({ label, href, count }) =>
-                <LinkWithLoaderBadge
+                <LinkWithLoaderBackground
                   key={label}
                   href={href}
                   className={clsx(
                     'flex gap-0.5',
                     checkPathPrefix(pathname, href) ? 'font-bold' : 'text-dim',
-                    'hover:text-main',
+                    'hover:text-main active:text-medium',
                   )}
                   prefetch={false}
                 >
                   <span>{label}</span>
                   {count > 0 &&
                     <span>({count})</span>}
-                </LinkWithLoaderBadge>)}
+                </LinkWithLoaderBackground>)}
             </MaskedScroll>
             <LinkWithIconLoader
               href={includeInsights
                 ? PATH_ADMIN_INSIGHTS
                 : PATH_ADMIN_CONFIGURATION}
-              className={isPathAdminInfo(pathname)
-                ? 'font-bold'
-                : 'text-dim'}
+              className={clsx(
+                isPathAdminInfo(pathname)
+                  ? 'font-bold'
+                  : 'text-dim',
+                'hover:text-main active:text-dim',
+              )}
               icon={<AdminAppInfoIcon />}
               loader={<Spinner className="translate-y-[-0.75px]" />}
             />
