@@ -108,7 +108,7 @@ export default function PhotoRecipeOverlay({
       )}>
         <div className={clsx(
           'grow translate-y-[-0.5px]',
-          'hover:opacity-50 active:opacity-75',
+          title && 'hover:opacity-50 active:opacity-75',
         )}>
           {title
             ? <PhotoRecipe
