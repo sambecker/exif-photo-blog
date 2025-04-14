@@ -102,11 +102,11 @@ export default function PhotoHeader({
           'inline-flex uppercase',
           headerType === 'photo-set'
             ? isGridHighDensity
-              ? 'col-span-2 sm:col-span-1 lg:col-span-2'
+              ? 'col-span-2 lg:col-span-3'
               : 'col-span-2 md:col-span-1 lg:col-span-2'
             : headerType === 'photo-detail-with-entity'
               ? isGridHighDensity
-                ? 'col-span-2 sm:col-span-1 lg:col-span-2'
+                ? 'col-span-2 lg:col-span-3'
                 : 'col-span-2 md:col-span-1 lg:col-span-2'
               : isGridHighDensity
                 ? 'col-span-3 sm:col-span-3 lg:col-span-5 w-[110%] xl:w-full'
@@ -128,11 +128,11 @@ export default function PhotoHeader({
           'uppercase text-dim',
           headerType === 'photo-set'
             ? isGridHighDensity
-              ? 'col-span-2 lg:col-span-3'
+              ? 'col-span-2 sm:col-span-1 lg:col-span-2'
               : 'col-span-2 sm:col-span-1'
             : headerType === 'photo-detail-with-entity'
               ? isGridHighDensity
-                ? 'col-span-1 sm:col-span-2 lg:col-span-3'
+                ? 'col-span-1 lg:col-span-2'
                 : 'col-span-1'
               : 'hidden!',
         )}>
