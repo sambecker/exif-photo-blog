@@ -132,13 +132,28 @@ export const generateMetaForRecipe = (
 const photoHasRecipe = (photo?: Photo) =>
   photo?.film && photo?.recipeData;
 
-export const getPhotoWithRecipeFromPhotos = (
+const getPhotoWithRecipeFromPhotos = (
   photos: Photo[],
   preferredPhoto?: Photo,
 ) =>
   photoHasRecipe(preferredPhoto)
     ? preferredPhoto
     : photos.find(photoHasRecipe);
+
+export const getRecipePropsFromPhotos = (
+  ...args: Parameters<typeof getPhotoWithRecipeFromPhotos>
+): RecipeProps | undefined => {
+  const photo = getPhotoWithRecipeFromPhotos(...args);
+  return photo?.recipeData && photo?.film
+    ? {
+      title: photo.recipeTitle,
+      data: photo.recipeData,
+      film: photo.film,
+      iso: photo.isoFormatted,
+      exposure: photo.exposureTimeFormatted,
+    }
+    : undefined;
+};
 
 export const sortRecipes = (recipes: Recipes = []) =>
   recipes.sort((a, b) => a.recipe.localeCompare(b.recipe));

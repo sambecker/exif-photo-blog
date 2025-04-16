@@ -1,6 +1,5 @@
 import PhotoFilmIcon from './PhotoFilmIcon';
 import { pathForFilm } from '@/app/paths';
-import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/primitives/EntityLink';
@@ -22,7 +21,6 @@ export default function PhotoFilm({
 }: {
   film: string
   countOnHover?: number
-  recipe?: FujifilmRecipe
 } & Partial<ComponentProps<typeof PhotoRecipeOverlayButton>>
   & EntityLinkExternalProps) {
   const { small, medium, large } = labelForFilm(film);

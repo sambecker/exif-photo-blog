@@ -1,7 +1,11 @@
+'use client';
+
 import { Photo, PhotoDateRange } from '@/photo';
 import { descriptionForFilmPhotos } from '.';
 import PhotoHeader from '@/photo/PhotoHeader';
 import PhotoFilm from '@/film/PhotoFilm';
+import { getRecipePropsFromPhotos } from '@/recipe';
+import { useAppState } from '@/state/AppState';
 
 export default function FilmHeader({
   film,
@@ -18,10 +22,23 @@ export default function FilmHeader({
   count?: number
   dateRange?: PhotoDateRange
 }) {
+  const { recipeModalProps, setRecipeModalProps } = useAppState();
+
+  // Only show recipe button when viewing individual photos
+  const recipeProps = selectedPhoto
+    ? getRecipePropsFromPhotos(photos, selectedPhoto)
+    : undefined;
+
   return (
     <PhotoHeader
       film={film}
-      entity={<PhotoFilm {...{ film }} />}
+      entity={<PhotoFilm
+        film={film}
+        isShowingRecipeOverlay={Boolean(recipeModalProps)}
+        toggleRecipeOverlay={recipeProps
+          ? () => setRecipeModalProps?.(recipeProps)
+          : undefined}
+      />}
       entityDescription={descriptionForFilmPhotos(
         photos, undefined, count, dateRange)}
       photos={photos}

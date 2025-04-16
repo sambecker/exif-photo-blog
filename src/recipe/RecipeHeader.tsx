@@ -4,7 +4,7 @@ import { Photo, PhotoDateRange } from '@/photo';
 import PhotoHeader from '@/photo/PhotoHeader';
 import PhotoRecipe from './PhotoRecipe';
 import { useAppState } from '@/state/AppState';
-import { descriptionForRecipePhotos, getPhotoWithRecipeFromPhotos } from '.';
+import { descriptionForRecipePhotos, getRecipePropsFromPhotos } from '.';
 
 export default function RecipeHeader({
   recipe,
@@ -23,7 +23,7 @@ export default function RecipeHeader({
 }) {
   const { recipeModalProps, setRecipeModalProps } = useAppState();
 
-  const photo = getPhotoWithRecipeFromPhotos(photos, selectedPhoto);
+  const recipeProps = getRecipePropsFromPhotos(photos, selectedPhoto);
 
   return (
     <PhotoHeader
@@ -32,16 +32,8 @@ export default function RecipeHeader({
         recipe={recipe}
         contrast="high"
         isShowingRecipeOverlay={Boolean(recipeModalProps)}
-        toggleRecipeOverlay={() => (
-          photo?.recipeData &&
-          photo?.film
-        ) ? setRecipeModalProps?.({
-            title: photo.recipeTitle,
-            data: photo.recipeData,
-            film: photo.film,
-            iso: photo.isoFormatted,
-            exposure: photo.exposureTimeFormatted,
-          })
+        toggleRecipeOverlay={recipeProps
+          ? () => setRecipeModalProps?.(recipeProps)
           : undefined}
       />}
       entityDescription={descriptionForRecipePhotos(photos, undefined, count)}
