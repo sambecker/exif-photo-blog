@@ -60,54 +60,68 @@ export const generateRecipeText = ({
 }: RecipeProps,
 abbreviate?: boolean,
 ) => {
-  const lines = [
-    `${labelForFilm(film).small.toLocaleUpperCase()}`,
-    // eslint-disable-next-line max-len
-    `${formatWhiteBalance(data).toLocaleUpperCase()} ${formatWhiteBalanceColor(data)}`,
-  ];
+  const lines = [`${labelForFilm(film).small.toLocaleUpperCase()}`];
 
-  if (abbreviate) {
-    // eslint-disable-next-line max-len
-    lines.push(`DR${data.dynamicRange.development} NR${formatNoiseReduction(data)}`);
-  } else {
-    lines.push(
-      `DYNAMIC RANGE ${data.dynamicRange.development}`,
-      `NOISE REDUCTION ${formatNoiseReduction(data)}`,
-    );
-  }
+  const whiteBalance = formatWhiteBalance(data).toLocaleUpperCase();
+  const whiteBalanceColor = formatWhiteBalanceColor(data);
+
+  lines.push(abbreviate
+    ? `${whiteBalance} ${whiteBalanceColor}`
+    : `${whiteBalance}: ${whiteBalanceColor}`,
+  );
+
+  lines.push(...abbreviate
+    ? [`DR${data.dynamicRange.development} NR${formatNoiseReduction(data)}`]
+    : [
+      `DYNAMIC RANGE: ${data.dynamicRange.development}`,
+      `NOISE REDUCTION: ${formatNoiseReduction(data)}`,
+    ],
+  );
 
   if (data.highlight || data.shadow) {
-    lines.push(abbreviate
-      ? `HIGH${addSign(data.highlight)} SHAD${addSign(data.shadow)}`
-      : `HIGHLIGHT ${addSign(data.highlight)} SHADOW ${addSign(data.shadow)}`,
+    lines.push(...abbreviate
+      ? [`HIGH${addSign(data.highlight)} SHAD${addSign(data.shadow)}`]
+      : [
+        `HIGHLIGHT: ${addSign(data.highlight)}`,
+        `SHADOW: ${addSign(data.shadow)}`,
+      ],
     );
   }
-  lines.push(abbreviate
+  lines.push(...abbreviate
     // eslint-disable-next-line max-len
-    ? `COL${addSign(data.color)} SHARP${addSign(data.sharpness)} CLAR${addSign(data.clarity)}`
-    // eslint-disable-next-line max-len
-    : `COLOR ${addSign(data.color)} SHARPEN ${addSign(data.sharpness)} CLARITY ${addSign(data.clarity)}`,
+    ? [`COL${addSign(data.color)} SHARP${addSign(data.sharpness)} CLAR${addSign(data.clarity)}`]
+    : [
+      `COLOR: ${addSign(data.color)}`,
+      `SHARPEN: ${addSign(data.sharpness)}`,
+      `CLARITY: ${addSign(data.clarity)}`,
+    ],
   );
   if (data.colorChromeEffect) {
     lines.push(abbreviate
       ? `CHROME ${data.colorChromeEffect.toLocaleUpperCase()}`
-      : `COLOR CHROME ${data.colorChromeEffect.toLocaleUpperCase()}`,
+      : `COLOR CHROME: ${data.colorChromeEffect.toLocaleUpperCase()}`,
     );
   }
   if (data.colorChromeFXBlue) {
     lines.push(abbreviate
       ? `FX BLUE ${data.colorChromeFXBlue.toLocaleUpperCase()}`
-      : `CHROME FX BLUE ${data.colorChromeFXBlue.toLocaleUpperCase()}`,
+      : `CHROME FX BLUE: ${data.colorChromeFXBlue.toLocaleUpperCase()}`,
     );
   }
   if (data.grainEffect.roughness !== 'off') {
-    lines.push(`GRAIN ${formatGrain(data, abbreviate)}`);
+    lines.push(abbreviate
+      ? `GRAIN ${formatGrain(data, abbreviate)}`
+      : `GRAIN: ${formatGrain(data, abbreviate)}`,
+    );
   }
   if (data.bwAdjustment || data.bwMagentaGreen) {
-    lines.push(abbreviate
-      ? `BW ADJ${addSign(data.bwAdjustment)} M/G${addSign(data.bwMagentaGreen)}`
+    lines.push(...abbreviate
       // eslint-disable-next-line max-len
-      : `BW ADJUSTMENT ${addSign(data.bwAdjustment)} MAGENTA/GREEN ${addSign(data.bwMagentaGreen)}`,
+      ? [`BW ADJ${addSign(data.bwAdjustment)} M/G${addSign(data.bwMagentaGreen)}`]
+      : [
+        `BW ADJUSTMENT: ${addSign(data.bwAdjustment)}`,
+        `MAGENTA/GREEN: ${addSign(data.bwMagentaGreen)}`,
+      ],
     );
   }
 
