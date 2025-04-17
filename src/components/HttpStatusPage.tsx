@@ -8,7 +8,7 @@ export default function HttpStatusPage({
   status,
   children,
 }: {
-  status: number
+  status: ReactNode
   children?: ReactNode
 }) {
   return (

@@ -10,7 +10,7 @@ export default function NotFound() {
   return (
     <HttpStatusPage status={404}>
       <span className={clsx(
-        'underline underline-offset-2 decoration-dotted',
+        'underline underline-offset-4 decoration-dotted',
         'cursor-not-allowed',
       )}>
         {pathname}
