@@ -12,13 +12,13 @@ export default function ShareModals() {
 
   if (recipeModalProps) {
     return <Modal
-      className="bg-transparent!"
       onClose={() => setRecipeModalProps?.(undefined)}
       container={false}
     >
       <PhotoRecipeOverlay {...{
         ...recipeModalProps,
         onClose: () => setRecipeModalProps?.(undefined),
+        isOnPhoto: false,
       }}/>
     </Modal>;
   }

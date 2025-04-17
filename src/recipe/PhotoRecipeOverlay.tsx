@@ -26,9 +26,11 @@ export default function PhotoRecipeOverlay({
   data,
   film,
   onClose,
+  isOnPhoto = true,
 }: RecipeProps & {
   ref?: RefObject<HTMLDivElement | null>
   onClose?: () => void
+  isOnPhoto?: boolean
 }) {
   const {
     dynamicRange,
@@ -96,7 +98,11 @@ export default function PhotoRecipeOverlay({
         'z-10',
         'w-[20rem] p-3 space-y-3',
         'scroll-mt-8',
-        'rounded-lg shadow-2xl',
+        'rounded-lg',
+        isOnPhoto
+          ? 'shadow-2xl'
+          // Soften shadow to mimic <Modal />
+          : 'shadow-2xl/20 dark:shadow-2xl/100',
         'text-[13.5px] text-black',
         'bg-white/70 border border-neutral-200/30',
         'backdrop-blur-xl saturate-[300%]',
