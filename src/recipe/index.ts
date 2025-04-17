@@ -60,7 +60,11 @@ export const generateRecipeText = ({
 }: RecipeProps,
 abbreviate?: boolean,
 ) => {
-  const lines = [`${labelForFilm(film).small.toLocaleUpperCase()}`];
+  const lines: string[] = [];
+
+  lines.push(abbreviate
+    ? `${labelForFilm(film).small.toLocaleUpperCase()}`
+    : `FILM: ${labelForFilm(film).medium.toLocaleUpperCase()}`);
 
   const whiteBalance = formatWhiteBalance(data).toLocaleUpperCase();
   const whiteBalanceColor = formatWhiteBalanceColor(data);
@@ -180,7 +184,7 @@ export const convertRecipesForForm = (recipes: Recipes = []) =>
       annotationAria: formatCountDescriptive(count),
     }));
 
-export const addSign = (value = 0) => value < 0 ? value : `+${value}`;
+export const addSign = (value = 0) => value < 0 ? `${value}` : `+${value}`;
 
 export const formatWhiteBalance = ({ whiteBalance }: FujifilmRecipe) =>
   whiteBalance.type === 'kelvin' && whiteBalance.colorTemperature
@@ -189,12 +193,10 @@ export const formatWhiteBalance = ({ whiteBalance }: FujifilmRecipe) =>
       .replace(/auto./i, '')
       .replaceAll('-', ' ');
 
-export const formatWhiteBalanceColor = ({
-  whiteBalance: { red, blue },
-}: FujifilmRecipe) =>
-  (red || blue)
-    ? `R${addSign(red)}/B${addSign(blue)}`
-    : '';
+export const formatWhiteBalanceColor = (
+  { whiteBalance: { red, blue } }: FujifilmRecipe,
+) =>
+  `R${addSign(red)}/B${addSign(blue)}`;
 
 export const formatGrain = (
   { grainEffect }: FujifilmRecipe,
