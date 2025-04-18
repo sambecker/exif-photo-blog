@@ -41,8 +41,8 @@ export default function AdminUploadsTable({
           )}
         >
           <div className={clsx(
-            'shrink-0 transition-transform',
-            'w-[50%] sm:w-auto',
+            'w-[50%] sm:w-auto shrink-0 bg-dim',
+            'transition-transform',
           )}>
             <ImageMedium
               title={getIdFromStorageUrl(url)}
