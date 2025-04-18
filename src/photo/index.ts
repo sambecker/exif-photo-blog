@@ -209,7 +209,7 @@ export const translatePhotoId = (id: string) =>
 
 export const titleForPhoto = (
   photo: Photo,
-  preferDateOverUntitled?: boolean,
+  preferDateOverUntitled = true,
 ) => {
   if (photo.title) {
     return photo.title;
@@ -217,7 +217,7 @@ export const titleForPhoto = (
     return formatDate({
       date: photo.takenAt || photo.createdAt,
       length: 'tiny',
-    });
+    }).toLocaleUpperCase();
   } else {
     return 'Untitled';
   }
