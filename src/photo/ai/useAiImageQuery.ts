@@ -38,7 +38,7 @@ export default function useAiImageQuery(
   }, []);
 
   // Withhold streaming text if it's a null response
-  const isTextError = text.toLocaleLowerCase().startsWith('sorry');
+  const isTextError = /^(I'*m )*sorry/i.test(text);
 
   return [
     request,
