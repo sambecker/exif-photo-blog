@@ -19,12 +19,14 @@ export default function ShareModal({
   pathShare,
   socialText,
   navigatorTitle,
+  navigatorText,
   children,
 }: {
   title?: string
   pathShare: string
   socialText: string
   navigatorTitle: string
+  navigatorText?: string
   children: ReactNode
 }) {
   const {
@@ -96,6 +98,7 @@ export default function ShareModal({
               <IoArrowUp size={18} />,
               () => navigator.share({
                 title: navigatorTitle,
+                text: navigatorText,
                 url: pathShare,
               })
                 .catch(() => console.log('Share canceled')),

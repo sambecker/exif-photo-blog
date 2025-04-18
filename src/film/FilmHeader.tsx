@@ -25,7 +25,8 @@ export default function FilmHeader({
   const { recipeModalProps, setRecipeModalProps } = useAppState();
 
   // Only show recipe button when viewing individual photos
-  const recipeProps = selectedPhoto
+  // that don't have named recipes
+  const recipeProps = selectedPhoto && !selectedPhoto?.recipeTitle
     ? getRecipePropsFromPhotos(photos, selectedPhoto)
     : undefined;
 

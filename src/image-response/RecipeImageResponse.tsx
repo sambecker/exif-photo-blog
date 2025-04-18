@@ -4,7 +4,7 @@ import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
 import type { NextImageSize } from '@/platforms/next-image';
 import { formatTag } from '@/tag';
-import { generateRecipeText, getRecipePropsFromPhotos } from '@/recipe';
+import { generateRecipeLines, getRecipePropsFromPhotos } from '@/recipe';
 import PhotoFilmIcon from '@/film/PhotoFilmIcon';
 import {
   isStringFujifilmSimulationLabel,
@@ -30,7 +30,7 @@ export default function RecipeImageResponse({
   const { data, film } = getRecipePropsFromPhotos(photos) ?? {};
 
   let recipeLines = data && film
-    ? generateRecipeText({ data, film }, true)
+    ? generateRecipeLines({ data, film }, true)
     : [];
 
   if (recipeLines && recipeLines.length > MAX_RECIPE_LINES) {

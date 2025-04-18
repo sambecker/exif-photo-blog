@@ -133,10 +133,10 @@ export const pathForPhoto = ({
     prefix = pathForLens(lens);
   } else if (tag) {
     prefix = pathForTag(tag);
-  } else if (film) {
-    prefix = pathForFilm(film);
   } else if (recipe) {
     prefix = pathForRecipe(recipe);
+  } else if (film) {
+    prefix = pathForFilm(film);
   } else if (focal) {
     prefix = pathForFocalLength(focal);
   }

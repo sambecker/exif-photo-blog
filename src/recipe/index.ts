@@ -53,12 +53,9 @@ export const descriptionForRecipePhotos = (
     explicitDateRange,
   );
 
-export const generateRecipeText = ({
-  title,
-  data,
-  film,
-}: RecipeProps,
-abbreviate?: boolean,
+export const generateRecipeLines = (
+  { title, data, film }: RecipeProps,
+  abbreviate?: boolean,
 ) => {
   const lines: string[] = [];
 
@@ -133,6 +130,10 @@ abbreviate?: boolean,
     ? [formatRecipe(title).toLocaleUpperCase(),'–', ...lines] 
     : lines;
 };
+
+export const generateRecipeText = (
+  ...args: Parameters<typeof generateRecipeLines>
+) => generateRecipeLines(...args).join('\n');
 
 export const generateMetaForRecipe = (
   recipe: string,

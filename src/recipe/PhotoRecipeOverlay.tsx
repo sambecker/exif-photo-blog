@@ -131,7 +131,7 @@ export default function PhotoRecipeOverlay({
           label={`${title
             ? `${formatRecipe(title).toLocaleUpperCase()} recipe`
             : 'Recipe'}`}
-          text={generateRecipeText({ title, data, film }).join('\n')}
+          text={generateRecipeText({ title, data, film })}
           iconSize={17}
           className={clsx(
             'translate-y-[1.5px]',
