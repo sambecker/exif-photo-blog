@@ -24,7 +24,7 @@ import { getWheresFromOptions } from '.';
 import { FocalLengths } from '@/focal';
 import { Lenses, createLensKey } from '@/lens';
 import { migrationForError } from './migration';
-import { UPDATED_BEFORE_01, UPDATED_BEFORE_02 } from '../outdated';
+import { UPDATED_BEFORE_01, UPDATED_BEFORE_02 } from '../sync';
 import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
 import { Recipes } from '@/recipe';
 
