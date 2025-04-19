@@ -78,7 +78,7 @@ export default function AdminPhotoMenu({
       label: 'Sync',
       labelComplex: <span className="inline-flex items-center gap-2">
         <span>Sync</span>
-        {photo.needsSync &&
+        {(photo.syncStatus.isOutdated || photo.syncStatus.isMissingAiText) &&
           <InsightsIndicatorDot
             colorOverride="blue"
             className="translate-y-[1.5px]"

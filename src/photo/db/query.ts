@@ -579,44 +579,22 @@ export const getPhoto = async (
 
 // Sync queries
 
-const outdatedWhereClause =
-  `WHERE updated_at < $1 OR (updated_at < $2 AND make = $3)`;
+const outdatedWhereClauses = [
+  `updated_at < $1`,
+  `(updated_at < $2 AND make = $3)`,
+];
 
-const outdatedValues = [
+const outdatedWhereValues = [
   UPDATED_BEFORE_01.toISOString(),
   UPDATED_BEFORE_02.toISOString(),
   MAKE_FUJIFILM,
 ];
 
-export const getOutdatedPhotos = () => safelyQueryPhotos(
-  () => query(`
-    SELECT * FROM photos
-    ${outdatedWhereClause}
-    ORDER BY created_at DESC
-    LIMIT ${SYNC_QUERY_LIMIT}
-  `,
-  outdatedValues,
-  )
-    .then(({ rows }) => rows.map(parsePhotoFromDb)),
-  'getOutdatedPhotos',
-);
-
-export const getOutdatedPhotosCount = () => safelyQueryPhotos(
-  () => query(`
-    SELECT COUNT(*) FROM photos
-    ${outdatedWhereClause}
-  `,
-  outdatedValues,
-  )
-    .then(({ rows }) => parseInt(rows[0].count, 10)),
-  'getOutdatedPhotosCount',
-);
-
-const photosThatNeedAiTextWhereClause = (
+const needsAiTextWhereClauses = (
   AI_TEXT_GENERATION_ENABLED && 
   AI_TEXT_AUTO_GENERATED_FIELDS.length
 )
-  ? 'WHERE ' + AI_TEXT_AUTO_GENERATED_FIELDS
+  ? AI_TEXT_AUTO_GENERATED_FIELDS
     .map(field => {
       switch (field) {
       case 'title': return `(title <> '') IS NOT TRUE`;
@@ -624,29 +602,32 @@ const photosThatNeedAiTextWhereClause = (
       case 'tags': return `array_length(tags, 1) = 0`;
       case 'semantic': return `(semantic_description <> '') IS NOT TRUE`;
       }
-    }).join(' OR ')
-  : undefined;
+    })
+  : [];
 
-export const getPhotosThatNeedAiText = () => safelyQueryPhotos(
-  async () => photosThatNeedAiTextWhereClause
-    ? query(`
-      SELECT * FROM photos
-      ${photosThatNeedAiTextWhereClause}
-      ORDER BY created_at DESC
-      LIMIT ${SYNC_QUERY_LIMIT}
-    `)
-      .then(({ rows }) => rows.map(parsePhotoFromDb))
-    : [] as Photo[],
-  'getPhotosThatNeedAiText',
+const needsSyncWhereStatement =
+  `WHERE ${outdatedWhereClauses.concat(needsAiTextWhereClauses).join(' OR ')}`;
+
+export const getPhotosInNeedOfSync = () => safelyQueryPhotos(
+  () => query(`
+    SELECT * FROM photos
+    ${needsSyncWhereStatement}
+    ORDER BY created_at DESC
+    LIMIT ${SYNC_QUERY_LIMIT}
+  `,
+  outdatedWhereValues,
+  )
+    .then(({ rows }) => rows.map(parsePhotoFromDb)),
+  'getPhotosInNeedOfSync',
 );
 
-export const getPhotosThatNeedAiTextCount = () => safelyQueryPhotos(
-  async () => photosThatNeedAiTextWhereClause
-    ? query(`
-      SELECT COUNT(*) FROM photos
-      ${photosThatNeedAiTextWhereClause}
-    `)
-      .then(({ rows }) => parseInt(rows[0].count, 10))
-    : 0,
-  'getPhotosThatNeedAiTextCount',
+export const getPhotosInNeedOfSyncCount = () => safelyQueryPhotos(
+  () => query(`
+    SELECT COUNT(*) FROM photos
+    ${needsSyncWhereStatement}
+  `,
+  outdatedWhereValues,
+  )
+    .then(({ rows }) => parseInt(rows[0].count, 10)),
+  'getPhotosInNeedOfSyncCount',
 );

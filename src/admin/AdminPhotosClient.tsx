@@ -13,6 +13,7 @@ import AdminUploadsTable from './AdminUploadsTable';
 import { Timezone } from '@/utility/timezone';
 import { useAppState } from '@/state/AppState';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
+import { pluralize } from '@/utility/string';
 
 export default function AdminPhotosClient({
   photos,
@@ -58,9 +59,10 @@ export default function AdminPhotosClient({
                   size={18}
                   className="translate-y-[-1px]"
                 />}
-                // TODO: Add tooltip
-                // TODO: Use LinkWithStatus
-                title={`${photosCountOutdated} Outdated Photos`}
+                tooltip={(
+                  pluralize(photosCountOutdated, 'photo') +
+                  ' needs sync'
+                )}
                 className={clsx(
                   'text-blue-600 dark:text-blue-400',
                   'border border-blue-200 dark:border-blue-800/60',

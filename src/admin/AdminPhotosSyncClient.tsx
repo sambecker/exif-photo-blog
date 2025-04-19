@@ -67,9 +67,7 @@ export default function AdminPhotosSyncClient({
       >
         {arePhotoIdsSyncing
           ? 'Syncing'
-          : <ResponsiveText shortText={`Sync Next ${updateBatchSize}`}>
-            Sync Next {updateBatchSize} Photos
-          </ResponsiveText>}
+          : 'Sync All'}
       </LoaderButton>}
     >
       <div className="space-y-6">

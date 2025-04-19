@@ -23,7 +23,7 @@ import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
-import { doesPhotoNeedSync } from './sync';
+import { PhotoSyncStatus, generatePhotoSyncStatus } from './sync';
 
 // INFINITE SCROLL: FEED
 export const INFINITE_SCROLL_FEED_INITIAL =
@@ -97,7 +97,7 @@ export interface PhotoDb extends
   updatedAt: Date
   createdAt: Date
   takenAt: Date
-  tags: string[]
+  tags?: string[]
 }
 
 // Parsed db response
@@ -109,15 +109,16 @@ export interface Photo extends Omit<PhotoDb, 'recipeData'> {
   exposureTimeFormatted?: string
   exposureCompensationFormatted?: string
   takenAtNaiveFormatted: string
+  tags: string[]
   recipeData?: FujifilmRecipe
-  needsSync?: boolean
+  syncStatus: PhotoSyncStatus
 }
 
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
   const photoDb = camelcaseKeys(
     photoDbRaw as unknown as Record<string, unknown>,
   ) as unknown as PhotoDb;
-  const photo: Photo ={
+  return {
     ...photoDb,
     tags: photoDb.tags ?? [],
     focalLengthFormatted:
@@ -140,9 +141,8 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
         ? JSON.parse(photoDb.recipeData)
         : photoDb.recipeData
       : undefined,
-  };
-  photo.needsSync = doesPhotoNeedSync(photo);
-  return photo;
+    syncStatus: generatePhotoSyncStatus(photoDb),
+  } as Photo;
 };
 
 export const parseCachedPhotoDates = (photo: Photo) => ({
