@@ -15,7 +15,7 @@ import { LiaBroomSolid } from 'react-icons/lia';
 
 const UPDATE_BATCH_SIZE_MAX = 4;
 
-export default function AdminOutdatedClient({
+export default function AdminPhotosSyncClient({
   photos,
   hasAiTextGeneration,
 }: {
@@ -34,14 +34,9 @@ export default function AdminOutdatedClient({
     <AdminChildPage
       backLabel="Photos"
       backPath={PATH_ADMIN_PHOTOS}
-      breadcrumb={<>
-        <span className="hidden sm:inline-block">
-          Outdated ({photos.length})
-        </span>
-        <span className="sm:hidden">
-          Outdated
-        </span>
-      </>}
+      breadcrumb={<ResponsiveText shortText="Needs Sync">
+        Needs Sync ({photos.length})
+      </ResponsiveText>}
       accessory={<LoaderButton
         primary
         icon={<IconGrSync className="translate-y-[1px]" />}
@@ -72,9 +67,7 @@ export default function AdminOutdatedClient({
       >
         {arePhotoIdsSyncing
           ? 'Syncing'
-          : <ResponsiveText shortText={`Sync Next ${updateBatchSize}`}>
-            Sync Next {updateBatchSize} Photos
-          </ResponsiveText>}
+          : 'Sync All'}
       </LoaderButton>}
     >
       <div className="space-y-6">
@@ -84,13 +77,15 @@ export default function AdminOutdatedClient({
         >
           <div className="space-y-1.5">
             <div className="font-bold">
-              {photos.length} outdated
+              {photos.length}
               {' '}
-              {photos.length === 1 ? 'photo' : 'photos'} found
+              {photos.length === 1 ? 'photo' : 'photos'}
+              {' '}
+              could benefit from being synced
             </div>
             Sync photos to import newer EXIF fields, improve blur data,
             {' '}
-            and leverage AI-generated text where possible
+            and generate AI text when configured
           </div>
         </Note>
         <div className="space-y-4">
@@ -100,7 +95,7 @@ export default function AdminOutdatedClient({
             hasAiTextGeneration={hasAiTextGeneration}
             canEdit={false}
             canDelete={false}
-            showUpdatedAt
+            dateType="updatedAt"
           />
         </div>
       </div>

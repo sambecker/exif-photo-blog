@@ -28,7 +28,7 @@ import {
 import EnvVar from '@/components/EnvVar';
 import { IoSyncCircle } from 'react-icons/io5';
 import clsx from 'clsx/lite';
-import { PATH_ADMIN_OUTDATED } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS_SYNC } from '@/app/paths';
 import { LiaBroomSolid } from 'react-icons/lia';
 import { IoMdGrid } from 'react-icons/io';
 import { RiSpeedMiniLine } from 'react-icons/ri';
@@ -50,7 +50,7 @@ import { HiOutlineDocumentText } from 'react-icons/hi';
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
 const DEBUG_BEHIND_BY = 9;
-const DEBUG_PHOTOS_COUNT_OUTDATED = 7;
+const DEBUG_PHOTOS_NEED_SYNC_COUNT = 7;
 
 const TEXT_COLOR_WARNING  = 'text-amber-600 dark:text-amber-500';
 const TEXT_COLOR_BLUE     = 'text-blue-600 dark:text-blue-500';
@@ -91,7 +91,7 @@ export default function AdminAppInsightsClient({
   photoStats: {
     photosCount,
     photosCountHidden,
-    photosCountOutdated,
+    photosCountNeedSync,
     camerasCount,
     lensesCount,
     tagsCount,
@@ -114,7 +114,7 @@ export default function AdminAppInsightsClient({
     noAiRateLimiting,
     noConfiguredDomain,
     noConfiguredMeta,
-    outdatedPhotos,
+    photosNeedSync,
     photoMatting,
     camerasFirst,
     gridFirst,
@@ -417,7 +417,7 @@ export default function AdminAppInsightsClient({
           </AdminEmptyState>}
       </ScoreCard>
       <ScoreCard title="Library Stats">
-        {(outdatedPhotos || debug) && <ScoreCardRow
+        {(photosNeedSync || debug) && <ScoreCardRow
           icon={<LiaBroomSolid
             size={19}
             className={clsx(
@@ -427,12 +427,12 @@ export default function AdminAppInsightsClient({
           />}
           content={renderHighlightText(
             pluralize(
-              photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED,
-              'outdated photo',
-            ),
+              photosCountNeedSync || DEBUG_PHOTOS_NEED_SYNC_COUNT,
+              'photo',
+            ) + ' need to be synced',
             'blue',
           )}
-          expandPath={PATH_ADMIN_OUTDATED}
+          expandPath={PATH_ADMIN_PHOTOS_SYNC}
         />}
         <ScoreCardRow
           icon={<IconPhoto

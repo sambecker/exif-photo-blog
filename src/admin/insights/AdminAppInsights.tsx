@@ -9,13 +9,13 @@ import {
 } from '@/photo/db/query';
 import AdminAppInsightsClient from './AdminAppInsightsClient';
 import { getAllInsights, getGitHubMetaForCurrentApp } from '.';
-import { getOutdatedPhotosCount } from '@/photo/db/query';
+import { getPhotosInNeedOfSyncCount } from '@/photo/db/query';
 
 export default async function AdminAppInsights() {
   const [
     { count: photosCount, dateRange },
     { count: photosCountHidden },
-    photosCountOutdated,
+    photosCountNeedSync,
     { count: photosCountPortrait },
     codeMeta,
     cameras,
@@ -27,7 +27,7 @@ export default async function AdminAppInsights() {
   ] = await Promise.all([
     getPhotosMeta({ hidden: 'include' }),
     getPhotosMeta({ hidden: 'only' }),
-    getOutdatedPhotosCount(),
+    getPhotosInNeedOfSyncCount(),
     getPhotosMeta({ maximumAspectRatio: 0.9 }),
     getGitHubMetaForCurrentApp(),
     getUniqueCameras(),
@@ -44,14 +44,14 @@ export default async function AdminAppInsights() {
       insights={getAllInsights({
         codeMeta,
         photosCount,
-        photosCountOutdated,
+        photosCountNeedSync,
         photosCountPortrait,
         tagsCount: tags.length,
       })}
       photoStats={{
         photosCount,
         photosCountHidden,
-        photosCountOutdated,
+        photosCountNeedSync,
         camerasCount: cameras.length,
         lensesCount: lenses.length,
         tagsCount: tags.length,

@@ -39,7 +39,7 @@ const PATH_RECIPE_DYNAMIC             = `${PREFIX_RECIPE}/[recipe]`;
 
 // Admin paths
 export const PATH_ADMIN_PHOTOS        = `${PATH_ADMIN}/photos`;
-export const PATH_ADMIN_OUTDATED      = `${PATH_ADMIN}/outdated`;
+export const PATH_ADMIN_PHOTOS_SYNC   = `${PATH_ADMIN_PHOTOS}/sync`;
 export const PATH_ADMIN_UPLOADS       = `${PATH_ADMIN}/uploads`;
 export const PATH_ADMIN_TAGS          = `${PATH_ADMIN}/tags`;
 export const PATH_ADMIN_RECIPES       = `${PATH_ADMIN}/recipes`;

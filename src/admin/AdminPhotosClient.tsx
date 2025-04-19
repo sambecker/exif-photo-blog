@@ -5,14 +5,15 @@ import AppGrid from '@/components/AppGrid';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import AdminPhotosTableInfinite from '@/admin/AdminPhotosTableInfinite';
 import PathLoaderButton from '@/components/primitives/PathLoaderButton';
-import { PATH_ADMIN_OUTDATED } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS_SYNC } from '@/app/paths';
 import { Photo } from '@/photo';
 import { StorageListResponse } from '@/platforms/storage';
-import { LiaBroomSolid } from 'react-icons/lia';
 import AdminUploadsTable from './AdminUploadsTable';
 import { Timezone } from '@/utility/timezone';
 import { useAppState } from '@/state/AppState';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
+import { pluralize } from '@/utility/string';
+import IconBroom from '@/components/icons/IconBroom';
 
 export default function AdminPhotosClient({
   photos,
@@ -53,12 +54,15 @@ export default function AdminPhotosClient({
             </div>
             {photosCountOutdated > 0 &&
               <PathLoaderButton
-                path={PATH_ADMIN_OUTDATED}
-                icon={<LiaBroomSolid
+                path={PATH_ADMIN_PHOTOS_SYNC}
+                icon={<IconBroom
                   size={18}
                   className="translate-y-[-1px]"
                 />}
-                title={`${photosCountOutdated} Outdated Photos`}
+                tooltip={(
+                  pluralize(photosCountOutdated, 'photo') +
+                  ' needs sync'
+                )}
                 className={clsx(
                   'text-blue-600 dark:text-blue-400',
                   'border border-blue-200 dark:border-blue-800/60',

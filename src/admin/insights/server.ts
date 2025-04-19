@@ -1,4 +1,4 @@
-import { getOutdatedPhotosCount } from '@/photo/db/query';
+import { getPhotosInNeedOfSyncCount } from '@/photo/db/query';
 import {
   getSignificantInsights,
   indicatorStatusForSignificantInsights,
@@ -8,15 +8,15 @@ import { getGitHubMetaForCurrentApp } from '.';
 export const getInsightsIndicatorStatus = async () => {
   const [
     codeMeta,
-    photosCountOutdated,
+    photosCountNeedSync,
   ] = await Promise.all([
     getGitHubMetaForCurrentApp(),
-    getOutdatedPhotosCount(),
+    getPhotosInNeedOfSyncCount(),
   ]);
   
   const significantInsights = getSignificantInsights({
     codeMeta,
-    photosCountOutdated,
+    photosCountNeedSync,
   });
 
   return indicatorStatusForSignificantInsights(significantInsights);
