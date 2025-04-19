@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 import {
   sql,
   query,
@@ -14,7 +15,11 @@ import {
 import { Cameras, createCameraKey } from '@/camera';
 import { Tags } from '@/tag';
 import { Films } from '@/film';
-import { ADMIN_SQL_DEBUG_ENABLED } from '@/app/config';
+import {
+  ADMIN_SQL_DEBUG_ENABLED,
+  AI_TEXT_AUTO_GENERATED_FIELDS,
+  AI_TEXT_GENERATION_ENABLED,
+} from '@/app/config';
 import {
   GetPhotosOptions,
   getLimitAndOffsetFromOptions,
@@ -24,7 +29,11 @@ import { getWheresFromOptions } from '.';
 import { FocalLengths } from '@/focal';
 import { Lenses, createLensKey } from '@/lens';
 import { migrationForError } from './migration';
-import { UPDATED_BEFORE_01, UPDATED_BEFORE_02 } from '../sync';
+import {
+  SYNC_QUERY_LIMIT,
+  UPDATED_BEFORE_01,
+  UPDATED_BEFORE_02,
+} from '../sync';
 import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
 import { Recipes } from '@/recipe';
 
@@ -568,10 +577,9 @@ export const getPhoto = async (
       .then(photos => photos.length > 0 ? photos[0] : undefined);
   }, 'getPhoto');
 
-// Outdated queries
+// Sync queries
 
 const outdatedWhereClause =
-  // eslint-disable-next-line quotes
   `WHERE updated_at < $1 OR (updated_at < $2 AND make = $3)`;
 
 const outdatedValues = [
@@ -585,7 +593,7 @@ export const getOutdatedPhotos = () => safelyQueryPhotos(
     SELECT * FROM photos
     ${outdatedWhereClause}
     ORDER BY created_at DESC
-    LIMIT 1000
+    LIMIT ${SYNC_QUERY_LIMIT}
   `,
   outdatedValues,
   )
@@ -602,4 +610,43 @@ export const getOutdatedPhotosCount = () => safelyQueryPhotos(
   )
     .then(({ rows }) => parseInt(rows[0].count, 10)),
   'getOutdatedPhotosCount',
+);
+
+const photosThatNeedAiTextWhereClause = (
+  AI_TEXT_GENERATION_ENABLED && 
+  AI_TEXT_AUTO_GENERATED_FIELDS.length
+)
+  ? 'WHERE ' + AI_TEXT_AUTO_GENERATED_FIELDS
+    .map(field => {
+      switch (field) {
+      case 'title': return `(title <> '') IS NOT TRUE`;
+      case 'caption': return `(caption <> '') IS NOT TRUE`;
+      case 'tags': return `array_length(tags, 1) = 0`;
+      case 'semantic': return `(semantic_description <> '') IS NOT TRUE`;
+      }
+    }).join(' OR ')
+  : undefined;
+
+export const getPhotosThatNeedAiText = () => safelyQueryPhotos(
+  async () => photosThatNeedAiTextWhereClause
+    ? query(`
+      SELECT * FROM photos
+      ${photosThatNeedAiTextWhereClause}
+      ORDER BY created_at DESC
+      LIMIT ${SYNC_QUERY_LIMIT}
+    `)
+      .then(({ rows }) => rows.map(parsePhotoFromDb))
+    : [] as Photo[],
+  'getPhotosThatNeedAiText',
+);
+
+export const getPhotosThatNeedAiTextCount = () => safelyQueryPhotos(
+  async () => photosThatNeedAiTextWhereClause
+    ? query(`
+      SELECT COUNT(*) FROM photos
+      ${photosThatNeedAiTextWhereClause}
+    `)
+      .then(({ rows }) => parseInt(rows[0].count, 10))
+    : 0,
+  'getPhotosThatNeedAiTextCount',
 );
