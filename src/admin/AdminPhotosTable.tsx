@@ -98,13 +98,15 @@ export default function AdminPhotosTable({
                   dateType,
                   timezone,
                 }} />
-                {photoHasSyncStatusText(photo) && <Tooltip
-                  content={photoSyncStatusText(photo)}
-                  classNameTrigger={clsx(
-                    'translate-y-1 ml-1.5',
-                    'text-blue-600 dark:text-blue-400',
-                  )}
-                />}
+                {photoHasSyncStatusText(photo) &&
+                  <Tooltip
+                    content={photoSyncStatusText(photo)}
+                    classNameTrigger={clsx(
+                      'translate-y-1 ml-1.5',
+                      'text-blue-600 dark:text-blue-400',
+                    )}
+                    supportMobile
+                  />}
               </>}
             </div>
           </div>
