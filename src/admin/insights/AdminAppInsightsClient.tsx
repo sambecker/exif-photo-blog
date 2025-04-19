@@ -28,7 +28,7 @@ import {
 import EnvVar from '@/components/EnvVar';
 import { IoSyncCircle } from 'react-icons/io5';
 import clsx from 'clsx/lite';
-import { PATH_ADMIN_OUTDATED } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS_SYNC } from '@/app/paths';
 import { LiaBroomSolid } from 'react-icons/lia';
 import { IoMdGrid } from 'react-icons/io';
 import { RiSpeedMiniLine } from 'react-icons/ri';
@@ -428,11 +428,11 @@ export default function AdminAppInsightsClient({
           content={renderHighlightText(
             pluralize(
               photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED,
-              'outdated photo',
-            ),
+              'photo',
+            ) + ' need to be synced',
             'blue',
           )}
-          expandPath={PATH_ADMIN_OUTDATED}
+          expandPath={PATH_ADMIN_PHOTOS_SYNC}
         />}
         <ScoreCardRow
           icon={<IconPhoto

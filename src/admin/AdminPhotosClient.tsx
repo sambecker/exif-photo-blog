@@ -5,7 +5,7 @@ import AppGrid from '@/components/AppGrid';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import AdminPhotosTableInfinite from '@/admin/AdminPhotosTableInfinite';
 import PathLoaderButton from '@/components/primitives/PathLoaderButton';
-import { PATH_ADMIN_OUTDATED } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS_SYNC } from '@/app/paths';
 import { Photo } from '@/photo';
 import { StorageListResponse } from '@/platforms/storage';
 import { LiaBroomSolid } from 'react-icons/lia';
@@ -53,11 +53,13 @@ export default function AdminPhotosClient({
             </div>
             {photosCountOutdated > 0 &&
               <PathLoaderButton
-                path={PATH_ADMIN_OUTDATED}
+                path={PATH_ADMIN_PHOTOS_SYNC}
                 icon={<LiaBroomSolid
                   size={18}
                   className="translate-y-[-1px]"
                 />}
+                // TODO: Add tooltip
+                // TODO: Use LinkWithStatus
                 title={`${photosCountOutdated} Outdated Photos`}
                 className={clsx(
                   'text-blue-600 dark:text-blue-400',
