@@ -15,6 +15,8 @@ import PhotoSyncButton from './PhotoSyncButton';
 import DeletePhotoButton from './DeletePhotoButton';
 import { Timezone } from '@/utility/timezone';
 import IconHidden from '@/components/icons/IconHidden';
+import Tooltip from '@/components/Tooltip';
+import { photoHasSyncStatusText, photoSyncStatusText } from '@/photo/sync';
 
 export default function AdminPhotosTable({
   photos,
@@ -22,7 +24,7 @@ export default function AdminPhotosTable({
   revalidatePhoto,
   photoIdsSyncing = [],
   hasAiTextGeneration,
-  showUpdatedAt,
+  dateType = 'createdAt',
   canEdit = true,
   canDelete = true,
   timezone,
@@ -32,7 +34,7 @@ export default function AdminPhotosTable({
   revalidatePhoto?: RevalidatePhoto
   photoIdsSyncing?: string[]
   hasAiTextGeneration: boolean
-  showUpdatedAt?: boolean
+  dateType?: 'createdAt' | 'updatedAt'
   canEdit?: boolean
   canDelete?: boolean
   timezone?: Timezone
@@ -90,11 +92,20 @@ export default function AdminPhotosTable({
               'lg:w-[50%] uppercase',
               'text-dim',
             )}>
-              <PhotoDate {...{
-                photo,
-                dateType: showUpdatedAt ? 'updatedAt' : 'createdAt',
-                timezone,
-              }} />
+              {<>
+                <PhotoDate {...{
+                  photo,
+                  dateType,
+                  timezone,
+                }} />
+                {photoHasSyncStatusText(photo) && <Tooltip
+                  content={photoSyncStatusText(photo)}
+                  classNameTrigger={clsx(
+                    'translate-y-1 ml-1.5',
+                    'text-blue-600 dark:text-blue-400',
+                  )}
+                />}
+              </>}
             </div>
           </div>
           <div className={clsx(

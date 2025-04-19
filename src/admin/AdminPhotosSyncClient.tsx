@@ -34,8 +34,8 @@ export default function AdminPhotosSyncClient({
     <AdminChildPage
       backLabel="Photos"
       backPath={PATH_ADMIN_PHOTOS}
-      breadcrumb={<ResponsiveText shortText="Need Sync">
-        Need Sync ({photos.length})
+      breadcrumb={<ResponsiveText shortText="Needs Sync">
+        Needs Sync ({photos.length})
       </ResponsiveText>}
       accessory={<LoaderButton
         primary
@@ -85,7 +85,7 @@ export default function AdminPhotosSyncClient({
             </div>
             Sync photos to import newer EXIF fields, improve blur data,
             {' '}
-            and leverage AI-generated text where possible
+            and generate AI text when configured
           </div>
         </Note>
         <div className="space-y-4">
@@ -95,7 +95,7 @@ export default function AdminPhotosSyncClient({
             hasAiTextGeneration={hasAiTextGeneration}
             canEdit={false}
             canDelete={false}
-            showUpdatedAt
+            dateType="updatedAt"
           />
         </div>
       </div>

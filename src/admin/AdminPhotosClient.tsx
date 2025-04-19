@@ -8,12 +8,12 @@ import PathLoaderButton from '@/components/primitives/PathLoaderButton';
 import { PATH_ADMIN_PHOTOS_SYNC } from '@/app/paths';
 import { Photo } from '@/photo';
 import { StorageListResponse } from '@/platforms/storage';
-import { LiaBroomSolid } from 'react-icons/lia';
 import AdminUploadsTable from './AdminUploadsTable';
 import { Timezone } from '@/utility/timezone';
 import { useAppState } from '@/state/AppState';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
 import { pluralize } from '@/utility/string';
+import IconBroom from '@/components/icons/IconBroom';
 
 export default function AdminPhotosClient({
   photos,
@@ -55,7 +55,7 @@ export default function AdminPhotosClient({
             {photosCountOutdated > 0 &&
               <PathLoaderButton
                 path={PATH_ADMIN_PHOTOS_SYNC}
-                icon={<LiaBroomSolid
+                icon={<IconBroom
                   size={18}
                   className="translate-y-[-1px]"
                 />}

@@ -1,5 +1,5 @@
 import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
-import { PhotoDb } from '.';
+import { Photo, PhotoDb } from '.';
 import { AI_TEXT_AUTO_GENERATED_FIELDS } from '@/app/config';
 
 export interface PhotoSyncStatus {
@@ -34,3 +34,17 @@ export const generatePhotoSyncStatus = (photo: PhotoDb): PhotoSyncStatus => ({
   isOutdated: isPhotoOutdated(photo),
   isMissingAiText: doesPhotoNeedAiText(photo),
 });
+
+export const photoHasSyncStatusText = (photo: Photo) =>
+  photo.syncStatus.isOutdated || photo.syncStatus.isMissingAiText;
+
+export const photoSyncStatusText = (photo: Photo) => {
+  const { isOutdated, isMissingAiText } = photo.syncStatus;
+  const text: string[] = [];
+  if (isOutdated) {
+    text.push('Outdated');
+  } else if (isMissingAiText) {
+    text.push('Missing AI Text');
+  }
+  return text.join(' and ');
+};
