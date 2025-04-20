@@ -2,10 +2,16 @@
 
 import Spinner, { SpinnerColor } from '@/components/Spinner';
 import { clsx } from 'clsx/lite';
-import { ButtonHTMLAttributes, ComponentProps, ReactNode } from 'react';
+import {
+  ButtonHTMLAttributes,
+  ComponentProps,
+  ReactNode,
+  RefObject,
+} from 'react';
 import Tooltip from '../Tooltip';
 
 export default function LoaderButton({
+  ref,
   children,
   isLoading,
   icon,
@@ -25,6 +31,7 @@ export default function LoaderButton({
   tooltipColor,
   ...rest
 }: {
+  ref?: RefObject<HTMLButtonElement | null>
   isLoading?: boolean
   icon?: ReactNode
   spinnerColor?: SpinnerColor
@@ -41,6 +48,7 @@ export default function LoaderButton({
   const button =
     <button
       {...rest}
+      ref={ref}
       type={type}
       onClick={e => {
         if (shouldPreventDefault) { e.preventDefault(); }

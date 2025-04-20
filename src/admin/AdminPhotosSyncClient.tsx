@@ -6,14 +6,15 @@ import IconGrSync from '@/components/icons/IconGrSync';
 import Note from '@/components/Note';
 import AdminChildPage from '@/components/AdminChildPage';
 import { PATH_ADMIN_PHOTOS } from '@/app/paths';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { syncPhotosAction } from '@/photo/actions';
 import { useRouter } from 'next/navigation';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 import { LiaBroomSolid } from 'react-icons/lia';
 import ProgressButton from '@/components/primitives/ProgressButton';
+import ErrorNote from '@/components/ErrorNote';
 
-const UPDATE_BATCH_SIZE_MAX = 4;
+const SYNC_BATCH_SIZE_MAX = 3;
 
 export default function AdminPhotosSyncClient({
   photos,
@@ -22,9 +23,14 @@ export default function AdminPhotosSyncClient({
   photos: Photo[]
   hasAiTextGeneration: boolean
 }) {
-  const updateBatchSize = Math.min(UPDATE_BATCH_SIZE_MAX, photos.length);
+  // Use refs for non-reactive while loop state
+  const photoIdsToSync = useRef(photos.map(photo => photo.id));
+  const errorRef = useRef<Error>(undefined);
 
+  // Use state for updating progress button and error UI
   const [photoIdsSyncing, setPhotoIdsSyncing] = useState<string[]>([]);
+  const [error, setError] = useState<Error>();
+  const [progress, setProgress] = useState(0);
 
   const arePhotoIdsSyncing = photoIdsSyncing.length > 0;
 
@@ -41,36 +47,64 @@ export default function AdminPhotosSyncClient({
         primary
         icon={<IconGrSync className="translate-y-[1px]" />}
         hideTextOnMobile={false}
+        progress={progress}
         onClick={async () => {
-          if (window.confirm(
-            // eslint-disable-next-line max-len
-            `Are you sure you want to sync the oldest ${updateBatchSize} photos? This action cannot be undone.`,
-          )) {
-            const photosToSync = photos
-              .slice(0, updateBatchSize)
-              .map(photo => photo.id);
-            const isFinalBatch = photosToSync.length >= photos.length;
-            setPhotoIdsSyncing(photosToSync);
-            syncPhotosAction(photosToSync)
-              .finally(() => {
-                if (isFinalBatch) {
-                  router.push(PATH_ADMIN_PHOTOS);
-                } else {
-                  setPhotoIdsSyncing([]);
+          if (window.confirm([
+            'Are you sure you want to sync',
+            photos.length === 1
+              ? '1 outdated photo?'
+              : `all ${photos.length} outdated photos?`,
+            'Browser must remain open while syncing.',
+            'This action cannot be undone.',
+          ].join(' '))) {
+            errorRef.current = undefined;
+            setError(undefined);
+            while (photoIdsToSync.current.length > 0) {
+              const photoIds = photoIdsToSync.current
+                .slice(0, SYNC_BATCH_SIZE_MAX);
+              setPhotoIdsSyncing(photoIds);
+              await syncPhotosAction(photoIds)
+                .then(() => {
+                  photoIdsToSync.current = photoIdsToSync.current.filter(
+                    id => !photoIds.includes(id),
+                  );
+                  setProgress(
+                    (photos.length - photoIdsToSync.current.length) /
+                    photos.length,
+                  );
                   router.refresh();
-                }
-              });
+                })
+                .catch(e => {
+                  errorRef.current = e;
+                  setError(e);
+                });
+              if (errorRef.current) { break; }
+            }
+            if (!errorRef.current) {
+              router.push(PATH_ADMIN_PHOTOS);
+            } else {
+              setProgress(0);
+              setPhotoIdsSyncing([]);
+              router.refresh();
+            }
           }
         }}
         isLoading={arePhotoIdsSyncing}
-        disabled={!updateBatchSize}
+        disabled={photoIdsSyncing.length > 0}
       >
         {arePhotoIdsSyncing
-          ? 'Syncing'
+          ? 'Syncing ...'
           : 'Sync All'}
       </ProgressButton>}
     >
       <div className="space-y-6">
+        {error && <ErrorNote>
+          <span className="font-bold">
+            Issue syncing:
+          </span>
+          {' '}
+          {error.message}
+        </ErrorNote>}
         <Note
           color="blue"
           icon={<LiaBroomSolid size={18}/>}
@@ -81,11 +115,11 @@ export default function AdminPhotosSyncClient({
               {' '}
               {photos.length === 1 ? 'photo' : 'photos'}
               {' '}
-              could benefit from being synced
+              found
             </div>
-            Sync photos to import newer EXIF fields, improve blur data,
+            Sync to capture newer EXIF fields, improve blur data,
             {' '}
-            and generate AI text when configured
+            and use AI to generate missing text (if configured)
           </div>
         </Note>
         <div className="space-y-4">
@@ -96,6 +130,7 @@ export default function AdminPhotosSyncClient({
             canEdit={false}
             canDelete={false}
             dateType="updatedAt"
+            shouldScrollIntoViewOnExternalSync
           />
         </div>
       </div>

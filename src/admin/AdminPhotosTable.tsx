@@ -28,6 +28,7 @@ export default function AdminPhotosTable({
   canEdit = true,
   canDelete = true,
   timezone,
+  shouldScrollIntoViewOnExternalSync,
 }: {
   photos: Photo[],
   onLastPhotoVisible?: () => void
@@ -38,6 +39,7 @@ export default function AdminPhotosTable({
   canEdit?: boolean
   canDelete?: boolean
   timezone?: Timezone
+  shouldScrollIntoViewOnExternalSync?: boolean
 }) {
   const { invalidateSwr } = useAppState();
 
@@ -70,7 +72,7 @@ export default function AdminPhotosTable({
               <span className={clsx(
                 photo.hidden && 'text-dim',
               )}>
-                {titleForPhoto(photo)}
+                {titleForPhoto(photo, false)}
                 {photo.hidden && <span className="whitespace-nowrap">
                   {' '}
                   <IconHidden
@@ -122,6 +124,8 @@ export default function AdminPhotosTable({
               className={opacityForPhotoId(photo.id)}
               shouldConfirm
               shouldToast
+              shouldScrollIntoViewOnExternalSync={
+                shouldScrollIntoViewOnExternalSync}
             />
             {canDelete &&
               <DeletePhotoButton
