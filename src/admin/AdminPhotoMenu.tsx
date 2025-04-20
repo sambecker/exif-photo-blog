@@ -24,6 +24,7 @@ import IconGrSync from '@/components/icons/IconGrSync';
 import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 import IconFavs from '@/components/icons/IconFavs';
 import IconEdit from '@/components/icons/IconEdit';
+import { photoNeedsToBeSynced } from '@/photo/sync';
 
 export default function AdminPhotoMenu({
   photo,
@@ -78,7 +79,7 @@ export default function AdminPhotoMenu({
       label: 'Sync',
       labelComplex: <span className="inline-flex items-center gap-2">
         <span>Sync</span>
-        {(photo.syncStatus.isOutdated || photo.syncStatus.isMissingAiText) &&
+        {photoNeedsToBeSynced(photo) &&
           <InsightsIndicatorDot
             colorOverride="blue"
             className="translate-y-[1.5px]"

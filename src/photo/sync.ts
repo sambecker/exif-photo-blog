@@ -44,7 +44,7 @@ export const generatePhotoSyncStatus = (photo: PhotoDb): PhotoSyncStatus => ({
   missingAiTextFields: getMissingAiTextFields(photo),
 });
 
-export const photoHasSyncStatusText = (photo: Photo) =>
+export const photoNeedsToBeSynced = (photo: Photo) =>
   photo.syncStatus.isOutdated ||
   photo.syncStatus.missingAiTextFields.length > 0;
 
