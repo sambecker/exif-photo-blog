@@ -425,13 +425,17 @@ export default function AdminAppInsightsClient({
               TEXT_COLOR_BLUE,
             )}
           />}
-          content={renderHighlightText(
-            pluralize(
-              photosCountNeedSync || DEBUG_PHOTOS_NEED_SYNC_COUNT,
-              'photo',
-            ) + ' need to be synced',
-            'blue',
-          )}
+          content={<>
+            {renderHighlightText(
+              pluralize(
+                photosCountNeedSync || DEBUG_PHOTOS_NEED_SYNC_COUNT,
+                'photo',
+              ),
+              'blue',
+            )}
+            {' '}
+            to sync
+          </>}
           expandPath={PATH_ADMIN_PHOTOS_SYNC}
         />}
         <ScoreCardRow
