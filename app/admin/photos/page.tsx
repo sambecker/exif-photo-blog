@@ -23,7 +23,7 @@ export default async function AdminPhotosPage() {
   const [
     photos,
     photosCount,
-    photosCountOutdated,
+    photosCountNeedsSync,
     blobPhotoUrls,
   ] = await Promise.all([
     getPhotos({
@@ -45,7 +45,7 @@ export default async function AdminPhotosPage() {
     <AdminPhotosClient {...{
       photos,
       photosCount,
-      photosCountOutdated,
+      photosCountNeedsSync,
       shouldResize: !PRESERVE_ORIGINAL_UPLOADS,
       hasAiTextGeneration: AI_TEXT_GENERATION_ENABLED,
       onLastUpload: async () => {

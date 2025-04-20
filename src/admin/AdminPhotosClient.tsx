@@ -18,7 +18,7 @@ import IconBroom from '@/components/icons/IconBroom';
 export default function AdminPhotosClient({
   photos,
   photosCount,
-  photosCountOutdated,
+  photosCountNeedsSync,
   blobPhotoUrls,
   shouldResize,
   hasAiTextGeneration,
@@ -29,7 +29,7 @@ export default function AdminPhotosClient({
 }: {
   photos: Photo[]
   photosCount: number
-  photosCountOutdated: number
+  photosCountNeedsSync: number
   blobPhotoUrls: StorageListResponse
   shouldResize: boolean
   hasAiTextGeneration: boolean
@@ -52,7 +52,7 @@ export default function AdminPhotosClient({
                 onLastUpload={onLastUpload}
               />
             </div>
-            {photosCountOutdated > 0 &&
+            {photosCountNeedsSync > 0 &&
               <PathLoaderButton
                 path={PATH_ADMIN_PHOTOS_SYNC}
                 icon={<IconBroom
@@ -60,7 +60,7 @@ export default function AdminPhotosClient({
                   className="translate-y-[-1px]"
                 />}
                 tooltip={(
-                  pluralize(photosCountOutdated, 'photo') +
+                  pluralize(photosCountNeedsSync, 'photo') +
                   ' needs sync'
                 )}
                 className={clsx(
@@ -74,7 +74,7 @@ export default function AdminPhotosClient({
                 spinnerClassName="text-blue-200 dark:text-blue-600/40"
                 hideTextOnMobile={false}
               >
-                {photosCountOutdated}
+                {photosCountNeedsSync}
               </PathLoaderButton>}
           </div>
           {blobPhotoUrls.length > 0 &&

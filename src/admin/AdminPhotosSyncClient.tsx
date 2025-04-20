@@ -13,6 +13,7 @@ import ResponsiveText from '@/components/primitives/ResponsiveText';
 import { LiaBroomSolid } from 'react-icons/lia';
 import ProgressButton from '@/components/primitives/ProgressButton';
 import ErrorNote from '@/components/ErrorNote';
+import { pluralize } from '@/utility/string';
 
 const SYNC_BATCH_SIZE_MAX = 3;
 
@@ -48,12 +49,13 @@ export default function AdminPhotosSyncClient({
         icon={<IconGrSync className="translate-y-[1px]" />}
         hideTextOnMobile={false}
         progress={progress}
+        tooltip={`Sync data for all ${pluralize(photos.length, 'photo')}`}
         onClick={async () => {
           if (window.confirm([
             'Are you sure you want to sync',
             photos.length === 1
-              ? '1 outdated photo?'
-              : `all ${photos.length} outdated photos?`,
+              ? '1 photo?'
+              : `all ${photos.length} photos?`,
             'Browser must remain open while syncing.',
             'This action cannot be undone.',
           ].join(' '))) {
