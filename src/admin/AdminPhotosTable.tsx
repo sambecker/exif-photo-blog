@@ -16,7 +16,7 @@ import DeletePhotoButton from './DeletePhotoButton';
 import { Timezone } from '@/utility/timezone';
 import IconHidden from '@/components/icons/IconHidden';
 import Tooltip from '@/components/Tooltip';
-import { photoNeedsToBeSynced, photoSyncStatusText } from '@/photo/sync';
+import { photoNeedsToBeSynced, getPhotoSyncStatusText } from '@/photo/sync';
 
 export default function AdminPhotosTable({
   photos,
@@ -98,7 +98,7 @@ export default function AdminPhotosTable({
                 <PhotoDate {...{ photo, dateType, timezone }} />
                 {photoNeedsToBeSynced(photo) &&
                   <Tooltip
-                    content={photoSyncStatusText(photo)}
+                    content={getPhotoSyncStatusText(photo)}
                     classNameTrigger={clsx(
                       'translate-y-1 ml-1.5',
                       'text-blue-600 dark:text-blue-400',

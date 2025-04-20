@@ -53,7 +53,7 @@ export const photoNeedsToBeSynced = (photo: Photo) =>
   photo.syncStatus.isOutdated ||
   photo.syncStatus.missingAiTextFields.length > 0;
 
-export const photoSyncStatusText = (photo: Photo) => {
+export const getPhotoSyncStatusText = (photo: Photo) => {
   const { isOutdated, missingAiTextFields } = photo.syncStatus;
   const text: string[] = [];
   if (isOutdated) {
@@ -65,4 +65,23 @@ export const photoSyncStatusText = (photo: Photo) => {
     text.push(`Missing AI Text (${missingFieldsText})`);
   }
   return text.join(' and ');
+};
+
+export const getPhotosSyncStatusText = (photos: Photo[]) => {
+  const statusText = [] as string[];
+
+  const photosCountOutdated = photos.filter(
+    photo => photo.syncStatus.isOutdated,
+  ).length;
+  const photosCountMissingAiText = photos.filter(
+    photo => photo.syncStatus.missingAiTextFields.length > 0,
+  ).length;
+  
+  if (photosCountOutdated > 0) {
+    statusText.push(`${photosCountOutdated} outdated`);
+  }
+  if (photosCountMissingAiText > 0) {
+    statusText.push(`${photosCountMissingAiText} missing AI text`);
+  }
+  return statusText.join(', ');
 };

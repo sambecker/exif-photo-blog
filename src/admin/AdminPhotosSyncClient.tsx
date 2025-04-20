@@ -6,7 +6,7 @@ import IconGrSync from '@/components/icons/IconGrSync';
 import Note from '@/components/Note';
 import AdminChildPage from '@/components/AdminChildPage';
 import { PATH_ADMIN_PHOTOS } from '@/app/paths';
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { syncPhotosAction } from '@/photo/actions';
 import { useRouter } from 'next/navigation';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
@@ -14,6 +14,7 @@ import { LiaBroomSolid } from 'react-icons/lia';
 import ProgressButton from '@/components/primitives/ProgressButton';
 import ErrorNote from '@/components/ErrorNote';
 import { pluralize } from '@/utility/string';
+import { getPhotosSyncStatusText } from '@/photo/sync';
 
 const SYNC_BATCH_SIZE_MAX = 3;
 
@@ -36,6 +37,8 @@ export default function AdminPhotosSyncClient({
   const arePhotoIdsSyncing = photoIdsSyncing.length > 0;
 
   const router = useRouter();
+
+  const statusText = useMemo(() => getPhotosSyncStatusText(photos), [photos]);
 
   return (
     <AdminChildPage
@@ -113,15 +116,11 @@ export default function AdminPhotosSyncClient({
         >
           <div className="space-y-1.5">
             <div className="font-bold">
-              {photos.length}
-              {' '}
-              {photos.length === 1 ? 'photo' : 'photos'}
-              {' '}
-              found
+              Photos found: {statusText}
             </div>
             Sync to capture newer EXIF fields, improve blur data,
             {' '}
-            and use AI to generate missing text (if configured)
+            and use AI to generate missing text (if configured).
           </div>
         </Note>
         <div className="space-y-4">
