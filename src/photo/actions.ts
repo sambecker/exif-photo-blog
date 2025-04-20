@@ -414,7 +414,7 @@ export const syncPhotoAction = async (photoId: string) =>
           semanticDescription: aiSemanticDescription,
         } = await generateAiImageQueries(
           imageResizedBase64,
-          AI_TEXT_AUTO_GENERATED_FIELDS,
+          photo.syncStatus.missingAiTextFields,
         );
 
         const formDataFromPhoto = convertPhotoToFormData(photo);

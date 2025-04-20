@@ -2,7 +2,6 @@
 
 import { Photo } from '@/photo';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
-import LoaderButton from '@/components/primitives/LoaderButton';
 import IconGrSync from '@/components/icons/IconGrSync';
 import Note from '@/components/Note';
 import AdminChildPage from '@/components/AdminChildPage';
@@ -12,6 +11,7 @@ import { syncPhotosAction } from '@/photo/actions';
 import { useRouter } from 'next/navigation';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 import { LiaBroomSolid } from 'react-icons/lia';
+import ProgressButton from '@/components/primitives/ProgressButton';
 
 const UPDATE_BATCH_SIZE_MAX = 4;
 
@@ -37,7 +37,7 @@ export default function AdminPhotosSyncClient({
       breadcrumb={<ResponsiveText shortText="Needs Sync">
         Needs Sync ({photos.length})
       </ResponsiveText>}
-      accessory={<LoaderButton
+      accessory={<ProgressButton
         primary
         icon={<IconGrSync className="translate-y-[1px]" />}
         hideTextOnMobile={false}
@@ -68,7 +68,7 @@ export default function AdminPhotosSyncClient({
         {arePhotoIdsSyncing
           ? 'Syncing'
           : 'Sync All'}
-      </LoaderButton>}
+      </ProgressButton>}
     >
       <div className="space-y-6">
         <Note

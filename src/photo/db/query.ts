@@ -599,7 +599,7 @@ const needsAiTextWhereClauses = (
       switch (field) {
       case 'title': return `(title <> '') IS NOT TRUE`;
       case 'caption': return `(caption <> '') IS NOT TRUE`;
-      case 'tags': return `array_length(tags, 1) = 0`;
+      case 'tags': return `(tags IS NULL OR array_length(tags, 1) = 0)`;
       case 'semantic': return `(semantic_description <> '') IS NOT TRUE`;
       }
     })

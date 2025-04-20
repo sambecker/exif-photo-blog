@@ -97,7 +97,7 @@ export interface PhotoDb extends
   updatedAt: Date
   createdAt: Date
   takenAt: Date
-  tags?: string[]
+  tags: string[] | null
 }
 
 // Parsed db response

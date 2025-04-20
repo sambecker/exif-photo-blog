@@ -93,11 +93,7 @@ export default function AdminPhotosTable({
               'text-dim',
             )}>
               {<>
-                <PhotoDate {...{
-                  photo,
-                  dateType,
-                  timezone,
-                }} />
+                <PhotoDate {...{ photo, dateType, timezone }} />
                 {photoHasSyncStatusText(photo) &&
                   <Tooltip
                     content={photoSyncStatusText(photo)}
