@@ -590,20 +590,18 @@ const outdatedWhereValues = [
   MAKE_FUJIFILM,
 ];
 
-const needsAiTextWhereClauses = (
-  AI_TEXT_GENERATION_ENABLED && 
-  AI_TEXT_AUTO_GENERATED_FIELDS.length
-)
-  ? AI_TEXT_AUTO_GENERATED_FIELDS
-    .map(field => {
-      switch (field) {
-      case 'title': return `(title <> '') IS NOT TRUE`;
-      case 'caption': return `(caption <> '') IS NOT TRUE`;
-      case 'tags': return `(tags IS NULL OR array_length(tags, 1) = 0)`;
-      case 'semantic': return `(semantic_description <> '') IS NOT TRUE`;
-      }
-    })
-  : [];
+const needsAiTextWhereClauses =
+  AI_TEXT_GENERATION_ENABLED
+    ? AI_TEXT_AUTO_GENERATED_FIELDS
+      .map(field => {
+        switch (field) {
+        case 'title': return `(title <> '') IS NOT TRUE`;
+        case 'caption': return `(caption <> '') IS NOT TRUE`;
+        case 'tags': return `(tags IS NULL OR array_length(tags, 1) = 0)`;
+        case 'semantic': return `(semantic_description <> '') IS NOT TRUE`;
+        }
+      })
+    : [];
 
 const needsSyncWhereStatement =
   `WHERE ${outdatedWhereClauses.concat(needsAiTextWhereClauses).join(' OR ')}`;
