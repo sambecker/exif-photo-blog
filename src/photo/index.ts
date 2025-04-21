@@ -23,6 +23,7 @@ import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
+import { PhotoSyncStatus, generatePhotoSyncStatus } from './sync';
 
 // INFINITE SCROLL: FEED
 export const INFINITE_SCROLL_FEED_INITIAL =
@@ -96,7 +97,7 @@ export interface PhotoDb extends
   updatedAt: Date
   createdAt: Date
   takenAt: Date
-  tags: string[]
+  tags: string[] | null
 }
 
 // Parsed db response
@@ -108,7 +109,9 @@ export interface Photo extends Omit<PhotoDb, 'recipeData'> {
   exposureTimeFormatted?: string
   exposureCompensationFormatted?: string
   takenAtNaiveFormatted: string
+  tags: string[]
   recipeData?: FujifilmRecipe
+  syncStatus: PhotoSyncStatus
 }
 
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
@@ -130,15 +133,16 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
       formatExposureTime(photoDb.exposureTime),
     exposureCompensationFormatted:
       formatExposureCompensation(photoDb.exposureCompensation),
+    takenAtNaiveFormatted:
+      formatDateFromPostgresString(photoDb.takenAtNaive),
     recipeData: photoDb.recipeData
       // Legacy check on escaped, string-based JSON
       ? typeof photoDb.recipeData === 'string'
         ? JSON.parse(photoDb.recipeData)
         : photoDb.recipeData
       : undefined,
-    takenAtNaiveFormatted:
-      formatDateFromPostgresString(photoDb.takenAtNaive),
-  };
+    syncStatus: generatePhotoSyncStatus(photoDb),
+  } as Photo;
 };
 
 export const parseCachedPhotoDates = (photo: Photo) => ({

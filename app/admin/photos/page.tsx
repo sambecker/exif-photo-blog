@@ -1,11 +1,10 @@
 import { getStoragePhotoUrlsNoStore } from '@/platforms/storage/cache';
-import { getPhotos } from '@/photo/db/query';
+import { getPhotos, getPhotosInNeedOfSyncCount } from '@/photo/db/query';
 import { getPhotosMetaCached } from '@/photo/cache';
 import AdminPhotosClient from '@/admin/AdminPhotosClient';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { TIMEZONE_COOKIE_NAME } from '@/utility/timezone';
-import { getOutdatedPhotosCount } from '@/photo/db/query';
 import {
   AI_TEXT_GENERATION_ENABLED,
   PRESERVE_ORIGINAL_UPLOADS,
@@ -24,7 +23,7 @@ export default async function AdminPhotosPage() {
   const [
     photos,
     photosCount,
-    photosCountOutdated,
+    photosCountNeedsSync,
     blobPhotoUrls,
   ] = await Promise.all([
     getPhotos({
@@ -35,7 +34,7 @@ export default async function AdminPhotosPage() {
     getPhotosMetaCached({ hidden: 'include'})
       .then(({ count }) => count)
       .catch(() => 0),
-    getOutdatedPhotosCount()
+    getPhotosInNeedOfSyncCount()
       .catch(() => 0),
     DEBUG_PHOTO_BLOBS
       ? getStoragePhotoUrlsNoStore()
@@ -46,7 +45,7 @@ export default async function AdminPhotosPage() {
     <AdminPhotosClient {...{
       photos,
       photosCount,
-      photosCountOutdated,
+      photosCountNeedsSync,
       shouldResize: !PRESERVE_ORIGINAL_UPLOADS,
       hasAiTextGeneration: AI_TEXT_GENERATION_ENABLED,
       onLastUpload: async () => {

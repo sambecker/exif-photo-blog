@@ -374,7 +374,7 @@ export const getExifDataAction = async (
 // - strip GPS data if necessary
 // - update blur data (or destroy if blur is disabled)
 // - generate AI text data, if enabled, and auto-generated fields are empty
-export const syncPhotoAction = async (photoId: string) =>
+export const syncPhotoAction = async (photoId: string, isBatch?: boolean) =>
   runAuthenticatedAdminServerAction(async () => {
     const photo = await getPhoto(photoId ?? '', true);
 
@@ -414,7 +414,8 @@ export const syncPhotoAction = async (photoId: string) =>
           semanticDescription: aiSemanticDescription,
         } = await generateAiImageQueries(
           imageResizedBase64,
-          AI_TEXT_AUTO_GENERATED_FIELDS,
+          photo.syncStatus.missingAiTextFields,
+          isBatch,
         );
 
         const formDataFromPhoto = convertPhotoToFormData(photo);
@@ -451,7 +452,7 @@ export const syncPhotoAction = async (photoId: string) =>
 export const syncPhotosAction = async (photoIds: string[]) =>
   runAuthenticatedAdminServerAction(async () => {
     for (const photoId of photoIds) {
-      await syncPhotoAction(photoId);
+      await syncPhotoAction(photoId, true);
     }
     revalidateAllKeysAndPaths();
   });

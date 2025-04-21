@@ -1,6 +1,6 @@
-import { RefObject, useCallback, useEffect, useState } from 'react';
-import { isElementEntirelyInViewport } from '@/utility/dom';
+import { RefObject, useCallback, useMemo, useState } from 'react';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
+import useScrollIntoView from '@/utility/useScrollIntoView';
 
 export default function useRecipeOverlay({
   ref,
@@ -19,16 +19,18 @@ export default function useRecipeOverlay({
     setIsShowingRecipeOverlay(current => !current),
   []);
 
+  const htmlElements = useMemo(() =>
+    [ref, ...refTriggers], [ref, refTriggers]);
+
   useClickInsideOutside({
-    htmlElements: [ref, ...refTriggers],
+    htmlElements,
     onClickOutside: hideRecipeOverlay,
   });
 
-  useEffect(() => {
-    if (isShowingRecipeOverlay && !isElementEntirelyInViewport(ref?.current)) {
-      ref?.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [ref, isShowingRecipeOverlay]);
+  useScrollIntoView({
+    ref,
+    shouldScrollIntoView: isShowingRecipeOverlay,
+  });
 
   return {
     isShowingRecipeOverlay,

@@ -2,9 +2,36 @@
 
 import Spinner, { SpinnerColor } from '@/components/Spinner';
 import { clsx } from 'clsx/lite';
-import { ButtonHTMLAttributes, ReactNode } from 'react';
+import {
+  ButtonHTMLAttributes,
+  ComponentProps,
+  ReactNode,
+  RefObject,
+} from 'react';
+import Tooltip from '../Tooltip';
 
-export default function LoaderButton(props: {
+export default function LoaderButton({
+  ref,
+  children,
+  isLoading,
+  icon,
+  spinnerColor,
+  spinnerClassName,
+  styleAs = 'button',
+  hideTextOnMobile = true,
+  confirmText,
+  shouldPreventDefault,
+  primary,
+  hideFocusOutline,
+  type = 'button',
+  onClick,
+  disabled,
+  className,
+  tooltip,
+  tooltipColor,
+  ...rest
+}: {
+  ref?: RefObject<HTMLButtonElement | null>
   isLoading?: boolean
   icon?: ReactNode
   spinnerColor?: SpinnerColor
@@ -15,29 +42,13 @@ export default function LoaderButton(props: {
   shouldPreventDefault?: boolean
   primary?: boolean
   hideFocusOutline?: boolean
+  tooltip?: string
+  tooltipColor?: ComponentProps<typeof Tooltip>['color']
 } & ButtonHTMLAttributes<HTMLButtonElement>) {
-  const {
-    children,
-    isLoading,
-    icon,
-    spinnerColor,
-    spinnerClassName,
-    styleAs = 'button',
-    hideTextOnMobile = true,
-    confirmText,
-    shouldPreventDefault,
-    primary,
-    hideFocusOutline,
-    type = 'button',
-    onClick,
-    disabled,
-    className,
-    ...rest
-  } = props;
-
-  return (
+  const button =
     <button
       {...rest}
+      ref={ref}
       type={type}
       onClick={e => {
         if (shouldPreventDefault) { e.preventDefault(); }
@@ -86,6 +97,13 @@ export default function LoaderButton(props: {
       )}>
         {children}
       </span>}
-    </button>
+    </button>;
+
+  return (
+    tooltip
+      ? <Tooltip content={tooltip} color={tooltipColor}>
+        {button}
+      </Tooltip>
+      : button
   );
 }

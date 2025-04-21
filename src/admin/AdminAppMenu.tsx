@@ -5,6 +5,7 @@ import {
   PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_INSIGHTS,
   PATH_ADMIN_PHOTOS,
+  PATH_ADMIN_PHOTOS_UPDATES,
   PATH_ADMIN_RECIPES,
   PATH_ADMIN_TAGS,
   PATH_ADMIN_UPLOADS,
@@ -26,6 +27,8 @@ import IconSignOut from '@/components/icons/IconSignOut';
 import IconLock from '@/components/icons/IconLock';
 import { IoMdCheckboxOutline } from 'react-icons/io';
 import Spinner from '@/components/Spinner';
+import IconBroom from '@/components/icons/IconBroom';
+import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 
 export default function AdminAppMenu({
   active,
@@ -38,6 +41,7 @@ export default function AdminAppMenu({
 }) {
   const {
     photosCountTotal = 0,
+    photosCountNeedSync = 0,
     uploadsCount = 0,
     tagsCount = 0,
     recipesCount = 0,
@@ -71,9 +75,28 @@ export default function AdminAppMenu({
       annotation: `${uploadsCount}`,
       icon: <IconFolder
         size={16}
-        className="translate-y-[0.5px]"
+        className="translate-x-[1px] translate-y-[0.5px]"
       />,
       href: PATH_ADMIN_UPLOADS,
+    });
+  }
+  if (photosCountNeedSync) {
+    items.push({
+      label: 'Updates',
+      annotation: <>
+        <span className="mr-3">
+          {photosCountNeedSync}
+        </span>
+        <InsightsIndicatorDot
+          className="inline-block translate-y-[-0.5px]"
+          size="small"
+        />
+      </>,
+      icon: <IconBroom
+        size={17}
+        className="translate-y-[0.5px]"
+      />,
+      href: PATH_ADMIN_PHOTOS_UPDATES,
     });
   }
   if (photosCountTotal) {
@@ -121,7 +144,10 @@ export default function AdminAppMenu({
           size={18}
           className="translate-x-[-1px] translate-y-[0.5px]"
         />
-        : <IoMdCheckboxOutline size={17} className="translate-x-[-0.5px]" />,
+        : <IoMdCheckboxOutline
+          size={16}
+          className="translate-x-[-0.5px]"
+        />,
       href: PATH_GRID_INFERRED,
       action: () => {
         if (isSelecting) {

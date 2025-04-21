@@ -1,6 +1,4 @@
-import { useState } from 'react';
-
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function useVisualViewportHeight() {
   const [viewportHeight, setViewportHeight] = useState<number>();

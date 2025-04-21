@@ -5,19 +5,21 @@ import AppGrid from '@/components/AppGrid';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import AdminPhotosTableInfinite from '@/admin/AdminPhotosTableInfinite';
 import PathLoaderButton from '@/components/primitives/PathLoaderButton';
-import { PATH_ADMIN_OUTDATED } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS_UPDATES } from '@/app/paths';
 import { Photo } from '@/photo';
 import { StorageListResponse } from '@/platforms/storage';
-import { LiaBroomSolid } from 'react-icons/lia';
 import AdminUploadsTable from './AdminUploadsTable';
 import { Timezone } from '@/utility/timezone';
 import { useAppState } from '@/state/AppState';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
+import { pluralize } from '@/utility/string';
+import IconBroom from '@/components/icons/IconBroom';
+import ResponsiveText from '@/components/primitives/ResponsiveText';
 
 export default function AdminPhotosClient({
   photos,
   photosCount,
-  photosCountOutdated,
+  photosCountNeedsSync,
   blobPhotoUrls,
   shouldResize,
   hasAiTextGeneration,
@@ -28,7 +30,7 @@ export default function AdminPhotosClient({
 }: {
   photos: Photo[]
   photosCount: number
-  photosCountOutdated: number
+  photosCountNeedsSync: number
   blobPhotoUrls: StorageListResponse
   shouldResize: boolean
   hasAiTextGeneration: boolean
@@ -51,14 +53,17 @@ export default function AdminPhotosClient({
                 onLastUpload={onLastUpload}
               />
             </div>
-            {photosCountOutdated > 0 &&
+            {photosCountNeedsSync > 0 &&
               <PathLoaderButton
-                path={PATH_ADMIN_OUTDATED}
-                icon={<LiaBroomSolid
+                path={PATH_ADMIN_PHOTOS_UPDATES}
+                icon={<IconBroom
                   size={18}
-                  className="translate-y-[-1px]"
+                  className="translate-x-[-1px]"
                 />}
-                title={`${photosCountOutdated} Outdated Photos`}
+                tooltip={(
+                  pluralize(photosCountNeedsSync, 'photo') +
+                  ' missing data or AI-generated text'
+                )}
                 className={clsx(
                   'text-blue-600 dark:text-blue-400',
                   'border border-blue-200 dark:border-blue-800/60',
@@ -70,7 +75,9 @@ export default function AdminPhotosClient({
                 spinnerClassName="text-blue-200 dark:text-blue-600/40"
                 hideTextOnMobile={false}
               >
-                {photosCountOutdated}
+                <ResponsiveText shortText={photosCountNeedsSync}>
+                  {pluralize(photosCountNeedsSync, 'Update')}
+                </ResponsiveText>
               </PathLoaderButton>}
           </div>
           {blobPhotoUrls.length > 0 &&

@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 import {
   sql,
   query,
@@ -14,7 +15,11 @@ import {
 import { Cameras, createCameraKey } from '@/camera';
 import { Tags } from '@/tag';
 import { Films } from '@/film';
-import { ADMIN_SQL_DEBUG_ENABLED } from '@/app/config';
+import {
+  ADMIN_SQL_DEBUG_ENABLED,
+  AI_TEXT_AUTO_GENERATED_FIELDS,
+  AI_TEXT_GENERATION_ENABLED,
+} from '@/app/config';
 import {
   GetPhotosOptions,
   getLimitAndOffsetFromOptions,
@@ -24,7 +29,11 @@ import { getWheresFromOptions } from '.';
 import { FocalLengths } from '@/focal';
 import { Lenses, createLensKey } from '@/lens';
 import { migrationForError } from './migration';
-import { UPDATED_BEFORE_01, UPDATED_BEFORE_02 } from '../outdated';
+import {
+  SYNC_QUERY_LIMIT,
+  UPDATED_BEFORE_01,
+  UPDATED_BEFORE_02,
+} from '../sync';
 import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
 import { Recipes } from '@/recipe';
 
@@ -568,38 +577,55 @@ export const getPhoto = async (
       .then(photos => photos.length > 0 ? photos[0] : undefined);
   }, 'getPhoto');
 
-// Outdated queries
+// Sync queries
 
-const outdatedWhereClause =
-  // eslint-disable-next-line quotes
-  `WHERE updated_at < $1 OR (updated_at < $2 AND make = $3)`;
+const outdatedWhereClauses = [
+  `updated_at < $1`,
+  `(updated_at < $2 AND make = $3)`,
+];
 
-const outdatedValues = [
+const outdatedWhereValues = [
   UPDATED_BEFORE_01.toISOString(),
   UPDATED_BEFORE_02.toISOString(),
   MAKE_FUJIFILM,
 ];
 
-export const getOutdatedPhotos = () => safelyQueryPhotos(
+const needsAiTextWhereClauses =
+  AI_TEXT_GENERATION_ENABLED
+    ? AI_TEXT_AUTO_GENERATED_FIELDS
+      .map(field => {
+        switch (field) {
+        case 'title': return `(title <> '') IS NOT TRUE`;
+        case 'caption': return `(caption <> '') IS NOT TRUE`;
+        case 'tags': return `(tags IS NULL OR array_length(tags, 1) = 0)`;
+        case 'semantic': return `(semantic_description <> '') IS NOT TRUE`;
+        }
+      })
+    : [];
+
+const needsSyncWhereStatement =
+  `WHERE ${outdatedWhereClauses.concat(needsAiTextWhereClauses).join(' OR ')}`;
+
+export const getPhotosInNeedOfSync = () => safelyQueryPhotos(
   () => query(`
     SELECT * FROM photos
-    ${outdatedWhereClause}
+    ${needsSyncWhereStatement}
     ORDER BY created_at DESC
-    LIMIT 1000
+    LIMIT ${SYNC_QUERY_LIMIT}
   `,
-  outdatedValues,
+  outdatedWhereValues,
   )
     .then(({ rows }) => rows.map(parsePhotoFromDb)),
-  'getOutdatedPhotos',
+  'getPhotosInNeedOfSync',
 );
 
-export const getOutdatedPhotosCount = () => safelyQueryPhotos(
+export const getPhotosInNeedOfSyncCount = () => safelyQueryPhotos(
   () => query(`
     SELECT COUNT(*) FROM photos
-    ${outdatedWhereClause}
+    ${needsSyncWhereStatement}
   `,
-  outdatedValues,
+  outdatedWhereValues,
   )
     .then(({ rows }) => parseInt(rows[0].count, 10)),
-  'getOutdatedPhotosCount',
+  'getPhotosInNeedOfSyncCount',
 );

@@ -7,13 +7,17 @@ import { Lens } from '@/lens';
 export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 export const PHOTO_DEFAULT_LIMIT = 100;
 
-// Trim whitespace
-// Make lowercase
-// Remove commas, slashes
-// Replace spaces with dashes
+const DB_PARAMETERIZE_REPLACEMENTS = [
+  [',', ''],
+  ['/', ''],
+  ['+', '-'],
+  [' ', '-'],
+];
+
 const parameterizeForDb = (field: string) =>
-  // eslint-disable-next-line max-len
-  `REPLACE(REPLACE(REPLACE(LOWER(TRIM(${field})), ',', ''), '/', ''), ' ', '-')`;
+  DB_PARAMETERIZE_REPLACEMENTS.reduce((acc, [from, to]) =>
+    `REPLACE(${acc}, '${from}', '${to}')`
+  , `LOWER(TRIM(${field}))`);
 
 export type GetPhotosOptions = {
   sortBy?: 'createdAt' | 'createdAtAsc' | 'takenAt' | 'priority'

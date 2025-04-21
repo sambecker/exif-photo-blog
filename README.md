@@ -267,7 +267,7 @@ Vercel Postgres can be switched to another Postgres-compatible, pooling provider
 > There have been reports ([Issue 184](https://github.com/sambecker/exif-photo-blog/issues/184#issuecomment-2629474045) + [185](https://github.com/sambecker/exif-photo-blog/issues/185#issuecomment-2629478570)) that having large photos (over 30MB), or a CDN, e.g., Cloudflare in front of Vercel, may destabilize static optimization.
 
 #### Why don't my older photos look right?
-> As the template has evolved, EXIF fields (such as lenses) have been added, blur data is generated through a different method, and AI/privacy features have been added. In order to bring older photos up to date, either click the 'sync' button next to a photo or use the outdated photo page (`/admin/outdated`) to make batch updates.
+> As the template has evolved, EXIF fields (such as lenses) have been added, blur data is generated through a different method, and AI/privacy features have been added. In order to bring older photos up to date, either click the 'sync' button next to a photo or go to photo updates (`/admin/photos/updates`) to sync all photos that need updates.
 
 #### Why don't my OG images load when I share a link?
 > Many services such as iMessage, Slack, and X, require near-instant responses when unfurling link-based content. In order to guarantee sufficient responsiveness, consider rendering pages and image assets ahead of time by enabling static optimization by setting `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS = 1` and `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES = 1`. Keep in mind that this will increase platform usage.
@@ -313,6 +313,9 @@ Vercel Postgres can be switched to another Postgres-compatible, pooling provider
 
 #### I've added my OpenAI key but can't seem to make it work. Why am I seeing connection errors?
 > You may need to pre-purchase credits before accessing the OpenAI API. See [Issue #110](https://github.com/sambecker/exif-photo-blog/issues/110) for discussion.
+
+#### How do I generate AI text for preexisting photos?
+> Once AI text generation is configured, photos missing text will show up in photo updates (`/admin/photos/updates`).
 
 #### Will there be support for image storage providers beyond Vercel, AWS, and Cloudflare?
 > At this time, there are no plans to introduce support for new storage providers. While configuring a new, AWS-compatible provider (e.g., Cloudflare R2) should not be too difficult, there's nuance to consider surrounding details like IAM, CORS, and domain configuration, which can differ slightly from platform to platform. If you’d like to contribute an implementation for a new storage provider, please open a PR.

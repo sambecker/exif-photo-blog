@@ -21,10 +21,10 @@ import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 import { MdOutlineFileDownload } from 'react-icons/md';
 import MoreMenuItem from '@/components/more/MoreMenuItem';
 import IconGrSync from '@/components/icons/IconGrSync';
-import { isPhotoOutdated } from '@/photo/outdated';
 import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 import IconFavs from '@/components/icons/IconFavs';
 import IconEdit from '@/components/icons/IconEdit';
+import { photoNeedsToBeSynced } from '@/photo/sync';
 
 export default function AdminPhotoMenu({
   photo,
@@ -79,10 +79,11 @@ export default function AdminPhotoMenu({
       label: 'Sync',
       labelComplex: <span className="inline-flex items-center gap-2">
         <span>Sync</span>
-        {isPhotoOutdated(photo) &&
+        {photoNeedsToBeSynced(photo) &&
           <InsightsIndicatorDot
             colorOverride="blue"
-            className="translate-y-[1.5px]"
+            className="ml-1 translate-y-[1.5px]"
+            size="small"
           />}
       </span>,
       icon: <IconGrSync className="translate-x-[-1px]" />,
