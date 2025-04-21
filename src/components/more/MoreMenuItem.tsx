@@ -21,7 +21,7 @@ export default function MoreMenuItem({
 }: {
   label: string
   labelComplex?: ReactNode
-  annotation?: string
+  annotation?: ReactNode
   icon?: ReactNode
   href?: string
   hrefDownloadName?: string

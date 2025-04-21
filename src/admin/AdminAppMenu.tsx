@@ -28,6 +28,7 @@ import IconLock from '@/components/icons/IconLock';
 import { IoMdCheckboxOutline } from 'react-icons/io';
 import Spinner from '@/components/Spinner';
 import IconBroom from '@/components/icons/IconBroom';
+import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 
 export default function AdminAppMenu({
   active,
@@ -82,7 +83,15 @@ export default function AdminAppMenu({
   if (photosCountNeedSync) {
     items.push({
       label: 'Updates',
-      annotation: `${photosCountNeedSync}`,
+      annotation: <>
+        <span className="mr-3">
+          {photosCountNeedSync}
+        </span>
+        <InsightsIndicatorDot
+          className="inline-block translate-y-[-0.5px]"
+          size="small"
+        />
+      </>,
       icon: <IconBroom
         size={17}
         className="translate-y-[0.5px]"

@@ -82,7 +82,8 @@ export default function AdminPhotoMenu({
         {photoNeedsToBeSynced(photo) &&
           <InsightsIndicatorDot
             colorOverride="blue"
-            className="translate-y-[1.5px]"
+            className="ml-1 translate-y-[1.5px]"
+            size="small"
           />}
       </span>,
       icon: <IconGrSync className="translate-x-[-1px]" />,
