@@ -99,9 +99,17 @@ export const getSignificantInsights = ({
   };
 };
 
-export const indicatorStatusForSignificantInsights = (
-  insights: Awaited<ReturnType<typeof getSignificantInsights>>,
-) => {
+export const indicatorStatusForSignificantInsights = ({
+  codeMeta,
+  photosCountNeedSync,
+}: Parameters<typeof getSignificantInsights>[0] & {
+  photosCountNeedSync: number
+}) => {
+  const insights = getSignificantInsights({
+    codeMeta,
+    photosCountNeedSync,
+  });
+
   const {
     forkBehind,
     noAiRateLimiting,

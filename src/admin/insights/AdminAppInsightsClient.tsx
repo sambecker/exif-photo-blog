@@ -46,6 +46,7 @@ import IconFocalLength from '@/components/icons/IconFocalLength';
 import IconTag from '@/components/icons/IconTag';
 import IconPhoto from '@/components/icons/IconPhoto';
 import { HiOutlineDocumentText } from 'react-icons/hi';
+import { ReactNode } from 'react';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
@@ -131,6 +132,13 @@ export default function AdminAppInsightsClient({
     {codeMeta?.branch ?? TEMPLATE_REPO_BRANCH}
   </a>;
 
+  const renderTooltipContent = (content: ReactNode) =>
+    <Tooltip
+      content={content}
+      classNameTrigger="translate-y-[-1.5px] ml-2 h-3"
+      supportMobile
+    />;
+
   return (
     <ScoreCardContainer>
       {(codeMeta || debug) && <>
@@ -143,11 +151,9 @@ export default function AdminAppInsightsClient({
               />}
               content={<>
                 <span>Could not analyze source code</span>
-                <Tooltip
-                  content="Could not connect to GitHub API. Try refreshing."
-                  classNameTrigger="translate-y-[-1.5px] ml-2 h-3"
-                  supportMobile
-                />
+                {renderTooltipContent(
+                  'Could not connect to GitHub API. Try refreshing.',
+                )}
               </>}
             />}
           {((!codeMeta?.didError && noFork) || debug) &&
@@ -435,6 +441,9 @@ export default function AdminAppInsightsClient({
             )}
             {' '}
             to sync
+            {renderTooltipContent(<>
+              Missing data or AI&#8209;generated text
+            </>)}
           </>}
           expandPath={PATH_ADMIN_PHOTOS_SYNC}
         />}

@@ -151,7 +151,7 @@ export default function AppStateProvider({
     if (userEmail) {
       storeAuthEmailCookie(userEmail);
     }
-  }, [userEmail, adminData]);
+  }, [userEmail]);
 
   const registerAdminUpdate = useCallback(() =>
     setAdminUpdateTimes(updates => [...updates, new Date()])

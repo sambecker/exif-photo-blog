@@ -7,12 +7,16 @@ import { testDatabaseConnection } from '@/platforms/postgres';
 import { testStorageConnection } from '@/platforms/storage';
 import { APP_CONFIGURATION } from '@/app/config';
 import { getStorageUploadUrlsNoStore } from '@/platforms/storage/cache';
-import { getInsightsIndicatorStatus } from '@/admin/insights/server';
 import {
   getPhotosMeta,
   getUniqueTags,
   getUniqueRecipes,
+  getPhotosInNeedOfSyncCount,
 } from '@/photo/db/query';
+import {
+  getGitHubMetaForCurrentApp,
+  indicatorStatusForSignificantInsights,
+} from './insights';
 
 export type AdminData = Awaited<ReturnType<typeof getAdminDataAction>>;
 
@@ -21,10 +25,11 @@ export const getAdminDataAction = async () =>
     const [
       photosCount,
       photosCountHidden,
+      photosCountNeedSync,
+      codeMeta,
       uploadsCount,
       tagsCount,
       recipesCount,
-      insightsIndicatorStatus,
     ] = await Promise.all([
       getPhotosMeta()
         .then(({ count }) => count)
@@ -32,6 +37,8 @@ export const getAdminDataAction = async () =>
       getPhotosMeta({ hidden: 'only' })
         .then(({ count }) => count)
         .catch(() => 0),
+      getPhotosInNeedOfSyncCount(),
+      getGitHubMetaForCurrentApp(),
       getStorageUploadUrlsNoStore()
         .then(urls => urls.length)
         .catch(e => {
@@ -44,8 +51,12 @@ export const getAdminDataAction = async () =>
       getUniqueRecipes()
         .then(recipes => recipes.length)
         .catch(() => 0),
-      getInsightsIndicatorStatus(),
     ]);
+
+    const insightsIndicatorStatus = indicatorStatusForSignificantInsights({
+      codeMeta,
+      photosCountNeedSync,
+    });
 
     const photosCountTotal = (
       photosCount !== undefined &&
@@ -57,12 +68,13 @@ export const getAdminDataAction = async () =>
     return {
       photosCount,
       photosCountHidden,
+      photosCountNeedSync,
       photosCountTotal,
       uploadsCount,
       tagsCount,
       recipesCount,
       insightsIndicatorStatus,
-    };
+    } as const;
   });
 
 const scanForError = (

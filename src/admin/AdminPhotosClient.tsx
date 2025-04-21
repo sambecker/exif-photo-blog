@@ -61,7 +61,7 @@ export default function AdminPhotosClient({
                 />}
                 tooltip={(
                   pluralize(photosCountNeedsSync, 'photo') +
-                  ' needs sync'
+                  ' missing data or AI-generated text'
                 )}
                 className={clsx(
                   'text-blue-600 dark:text-blue-400',
