@@ -5,7 +5,7 @@ import {
   PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_INSIGHTS,
   PATH_ADMIN_PHOTOS,
-  PATH_ADMIN_PHOTOS_SYNC,
+  PATH_ADMIN_PHOTOS_UPDATES,
   PATH_ADMIN_RECIPES,
   PATH_ADMIN_TAGS,
   PATH_ADMIN_UPLOADS,
@@ -79,6 +79,17 @@ export default function AdminAppMenu({
       href: PATH_ADMIN_UPLOADS,
     });
   }
+  if (photosCountNeedSync) {
+    items.push({
+      label: 'Updates',
+      annotation: `${photosCountNeedSync}`,
+      icon: <IconBroom
+        size={17}
+        className="translate-y-[0.5px]"
+      />,
+      href: PATH_ADMIN_PHOTOS_UPDATES,
+    });
+  }
   if (photosCountTotal) {
     items.push({
       label: 'Manage Photos',
@@ -140,17 +151,6 @@ export default function AdminAppMenu({
         }
       },
       shouldPreventDefault: false,
-    });
-  }
-  if (photosCountNeedSync) {
-    items.push({
-      label: 'To Sync',
-      annotation: `${photosCountNeedSync}`,
-      icon: <IconBroom
-        size={17}
-        className="translate-y-[0.5px]"
-      />,
-      href: PATH_ADMIN_PHOTOS_SYNC,
     });
   }
 

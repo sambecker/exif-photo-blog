@@ -5,7 +5,7 @@ import AppGrid from '@/components/AppGrid';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import AdminPhotosTableInfinite from '@/admin/AdminPhotosTableInfinite';
 import PathLoaderButton from '@/components/primitives/PathLoaderButton';
-import { PATH_ADMIN_PHOTOS_SYNC } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS_UPDATES } from '@/app/paths';
 import { Photo } from '@/photo';
 import { StorageListResponse } from '@/platforms/storage';
 import AdminUploadsTable from './AdminUploadsTable';
@@ -14,6 +14,7 @@ import { useAppState } from '@/state/AppState';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
 import { pluralize } from '@/utility/string';
 import IconBroom from '@/components/icons/IconBroom';
+import ResponsiveText from '@/components/primitives/ResponsiveText';
 
 export default function AdminPhotosClient({
   photos,
@@ -54,10 +55,10 @@ export default function AdminPhotosClient({
             </div>
             {photosCountNeedsSync > 0 &&
               <PathLoaderButton
-                path={PATH_ADMIN_PHOTOS_SYNC}
+                path={PATH_ADMIN_PHOTOS_UPDATES}
                 icon={<IconBroom
                   size={18}
-                  className="translate-y-[-1px]"
+                  className="translate-x-[-1px]"
                 />}
                 tooltip={(
                   pluralize(photosCountNeedsSync, 'photo') +
@@ -74,7 +75,9 @@ export default function AdminPhotosClient({
                 spinnerClassName="text-blue-200 dark:text-blue-600/40"
                 hideTextOnMobile={false}
               >
-                {photosCountNeedsSync}
+                <ResponsiveText shortText={photosCountNeedsSync}>
+                  {pluralize(photosCountNeedsSync, 'Update')}
+                </ResponsiveText>
               </PathLoaderButton>}
           </div>
           {blobPhotoUrls.length > 0 &&

@@ -4,7 +4,7 @@ import { getPhotosInNeedOfSync } from '@/photo/db/query';
 
 export const maxDuration = 60;
 
-export default async function AdminSyncPage() {
+export default async function AdminUpdatesPage() {
   const photos = await getPhotosInNeedOfSync()
     .catch(() => []);
 

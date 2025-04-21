@@ -38,15 +38,15 @@ const PATH_FOCAL_LENGTH_DYNAMIC       = `${PREFIX_FOCAL_LENGTH}/[focal]`;
 const PATH_RECIPE_DYNAMIC             = `${PREFIX_RECIPE}/[recipe]`;
 
 // Admin paths
-export const PATH_ADMIN_PHOTOS        = `${PATH_ADMIN}/photos`;
-export const PATH_ADMIN_PHOTOS_SYNC   = `${PATH_ADMIN_PHOTOS}/sync`;
-export const PATH_ADMIN_UPLOADS       = `${PATH_ADMIN}/uploads`;
-export const PATH_ADMIN_TAGS          = `${PATH_ADMIN}/tags`;
-export const PATH_ADMIN_RECIPES       = `${PATH_ADMIN}/recipes`;
-export const PATH_ADMIN_CONFIGURATION = `${PATH_ADMIN}/configuration`;
-export const PATH_ADMIN_INSIGHTS      = `${PATH_ADMIN}/insights`;
-export const PATH_ADMIN_BASELINE      = `${PATH_ADMIN}/baseline`;
-export const PATH_ADMIN_COMPONENTS    = `${PATH_ADMIN}/components`;
+export const PATH_ADMIN_PHOTOS          = `${PATH_ADMIN}/photos`;
+export const PATH_ADMIN_PHOTOS_UPDATES  = `${PATH_ADMIN_PHOTOS}/updates`;
+export const PATH_ADMIN_UPLOADS         = `${PATH_ADMIN}/uploads`;
+export const PATH_ADMIN_TAGS            = `${PATH_ADMIN}/tags`;
+export const PATH_ADMIN_RECIPES         = `${PATH_ADMIN}/recipes`;
+export const PATH_ADMIN_CONFIGURATION   = `${PATH_ADMIN}/configuration`;
+export const PATH_ADMIN_INSIGHTS        = `${PATH_ADMIN}/insights`;
+export const PATH_ADMIN_BASELINE        = `${PATH_ADMIN}/baseline`;
+export const PATH_ADMIN_COMPONENTS      = `${PATH_ADMIN}/components`;
 
 // Debug paths
 export const PATH_OG_ALL              = `${PATH_OG}/all`;
@@ -66,6 +66,7 @@ export const MISSING_FIELD = '-';
 export const PATHS_ADMIN = [
   PATH_ADMIN,
   PATH_ADMIN_PHOTOS,
+  PATH_ADMIN_PHOTOS_UPDATES,
   PATH_ADMIN_UPLOADS,
   PATH_ADMIN_TAGS,
   PATH_ADMIN_RECIPES,

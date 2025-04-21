@@ -28,7 +28,7 @@ import {
 import EnvVar from '@/components/EnvVar';
 import { IoSyncCircle } from 'react-icons/io5';
 import clsx from 'clsx/lite';
-import { PATH_ADMIN_PHOTOS_SYNC } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS_UPDATES } from '@/app/paths';
 import { LiaBroomSolid } from 'react-icons/lia';
 import { IoMdGrid } from 'react-icons/io';
 import { RiSpeedMiniLine } from 'react-icons/ri';
@@ -440,12 +440,12 @@ export default function AdminAppInsightsClient({
               'blue',
             )}
             {' '}
-            to sync
+            with updates
             {renderTooltipContent(<>
               Missing data or AI&#8209;generated text
             </>)}
           </>}
-          expandPath={PATH_ADMIN_PHOTOS_SYNC}
+          expandPath={PATH_ADMIN_PHOTOS_UPDATES}
         />}
         <ScoreCardRow
           icon={<IconPhoto

@@ -44,8 +44,8 @@ export default function AdminPhotosSyncClient({
     <AdminChildPage
       backLabel="Photos"
       backPath={PATH_ADMIN_PHOTOS}
-      breadcrumb={<ResponsiveText shortText="Needs Sync">
-        Needs Sync ({photos.length})
+      breadcrumb={<ResponsiveText shortText="Updates">
+        Updates ({photos.length})
       </ResponsiveText>}
       accessory={<ProgressButton
         primary
@@ -116,7 +116,7 @@ export default function AdminPhotosSyncClient({
         >
           <div className="space-y-1.5">
             <div className="font-bold">
-              Photos found: {statusText}
+              Photo updates: {statusText}
             </div>
             Sync to capture new EXIF fields, improve blur data,
             {' '}
