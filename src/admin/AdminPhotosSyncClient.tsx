@@ -118,9 +118,9 @@ export default function AdminPhotosSyncClient({
             <div className="font-bold">
               Photos found: {statusText}
             </div>
-            Sync to capture newer EXIF fields, improve blur data,
+            Sync to capture new EXIF fields, improve blur data,
             {' '}
-            and use AI to generate missing text (if configured).
+            use AI to generate missing text (if configured)
           </div>
         </Note>
         <div className="space-y-4">

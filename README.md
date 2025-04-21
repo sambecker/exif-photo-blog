@@ -314,6 +314,9 @@ Vercel Postgres can be switched to another Postgres-compatible, pooling provider
 #### I've added my OpenAI key but can't seem to make it work. Why am I seeing connection errors?
 > You may need to pre-purchase credits before accessing the OpenAI API. See [Issue #110](https://github.com/sambecker/exif-photo-blog/issues/110) for discussion.
 
+#### How do I generate AI text for preexisting photos?
+> Once AI text generation is configured, photos missing text will show up on the photo sync page (`/admin/photos/sync`).
+
 #### Will there be support for image storage providers beyond Vercel, AWS, and Cloudflare?
 > At this time, there are no plans to introduce support for new storage providers. While configuring a new, AWS-compatible provider (e.g., Cloudflare R2) should not be too difficult, there's nuance to consider surrounding details like IAM, CORS, and domain configuration, which can differ slightly from platform to platform. If you’d like to contribute an implementation for a new storage provider, please open a PR.
 
