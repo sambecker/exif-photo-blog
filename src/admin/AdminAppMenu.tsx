@@ -29,6 +29,7 @@ import { IoMdCheckboxOutline } from 'react-icons/io';
 import Spinner from '@/components/Spinner';
 import IconBroom from '@/components/icons/IconBroom';
 import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
+import MoreMenuItem from '@/components/more/MoreMenuItem';
 
 export default function AdminAppMenu({
   active,
@@ -60,17 +61,21 @@ export default function AdminAppMenu({
 
   const showAppInsightsLink = photosCountTotal > 0 && !isAltPressed;
 
-  const items: ComponentProps<typeof MoreMenu>['items'] = [{
+  const sectionUpload: ComponentProps<typeof MoreMenuItem>[] = [];
+  const sectionMain: ComponentProps<typeof MoreMenuItem>[] = [];
+  const sectionSignOut: ComponentProps<typeof MoreMenuItem>[] = [];
+
+  sectionUpload.push({
     label: 'Upload Photos',
     icon: <IconUpload
       size={15}
       className="translate-x-[0.5px] translate-y-[0.5px]"
     />,
     action: startUpload,
-  }];
+  });
 
   if (uploadsCount) {
-    items.push({
+    sectionMain.push({
       label: 'Uploads',
       annotation: `${uploadsCount}`,
       icon: <IconFolder
@@ -81,7 +86,7 @@ export default function AdminAppMenu({
     });
   }
   if (photosCountNeedSync) {
-    items.push({
+    sectionMain.push({
       label: 'Updates',
       annotation: <>
         <span className="mr-3">
@@ -100,7 +105,7 @@ export default function AdminAppMenu({
     });
   }
   if (photosCountTotal) {
-    items.push({
+    sectionMain.push({
       label: 'Manage Photos',
       ...photosCountTotal && {
         annotation: `${photosCountTotal}`,
@@ -113,7 +118,7 @@ export default function AdminAppMenu({
     });
   }
   if (tagsCount) {
-    items.push({
+    sectionMain.push({
       label: 'Manage Tags',
       annotation: `${tagsCount}`,
       icon: <IconTag
@@ -124,7 +129,7 @@ export default function AdminAppMenu({
     });
   }
   if (recipesCount) {
-    items.push({
+    sectionMain.push({
       label: 'Manage Recipes',
       annotation: `${recipesCount}`,
       icon: <IconRecipe
@@ -135,7 +140,7 @@ export default function AdminAppMenu({
     });
   }
   if (photosCountTotal) {
-    items.push({
+    sectionMain.push({
       label: isSelecting
         ? 'Exit Batch Edit'
         : 'Batch Edit ...',
@@ -163,7 +168,7 @@ export default function AdminAppMenu({
     });
   }
 
-  items.push({
+  sectionMain.push({
     label: showAppInsightsLink
       ? 'App Insights'
       : 'App Configuration',
@@ -174,7 +179,9 @@ export default function AdminAppMenu({
     href: showAppInsightsLink
       ? PATH_ADMIN_INSIGHTS
       : PATH_ADMIN_CONFIGURATION,
-  }, {
+  });
+
+  sectionSignOut.push({
     label: 'Sign Out',
     icon: <IconSignOut size={15} />,
     action: () => signOutAction().then(clearAuthStateAndRedirectIfNecessary),
@@ -235,7 +242,11 @@ export default function AdminAppMenu({
         '[&>*>*]:translate-y-[6px]',
         !animateMenuClose && '[&>*>*]:duration-300',
       )}
-      items={items}
+      sections={[
+        sectionUpload,
+        sectionMain,
+        sectionSignOut,
+      ]}
       ariaLabel="Admin Menu"
     />
   );

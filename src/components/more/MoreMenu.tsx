@@ -11,7 +11,7 @@ import { FiMoreHorizontal } from 'react-icons/fi';
 import MoreMenuItem from './MoreMenuItem';
 
 export default function MoreMenu({
-  items,
+  sections,
   icon,
   header,
   className,
@@ -24,7 +24,7 @@ export default function MoreMenu({
   onOpen,
   ...props
 }: {
-  items: ComponentProps<typeof MoreMenuItem>[]
+  sections: ComponentProps<typeof MoreMenuItem>[][]
   icon?: ReactNode
   header?: ReactNode
   className?: string
@@ -71,7 +71,7 @@ export default function MoreMenu({
             'z-10',
             'min-w-[8rem]',
             'component-surface',
-            'p-1',
+            'py-1',
             'shadow-lg',
             'data-[side=top]:dark:shadow-[0_0px_40px_rgba(0,0,0,0.6)]',
             'data-[side=bottom]:dark:shadow-[0_10px_40px_rgba(0,0,0,0.6)]',
@@ -86,13 +86,26 @@ export default function MoreMenu({
           )}>
             {header}
           </div>}
-          {items.map(props =>
-            <MoreMenuItem
-              key={`${props.label}`}
-              {...props}
-              dismissMenu={dismissMenu}
-            />,
-          )}
+          <div className="divide-y divide-medium">
+            {sections.map((section, index) =>
+              <div
+                key={index}
+                className={clsx(
+                  '[&:not(:first-child)]:pt-1',
+                  '[&:not(:last-child)]:pb-1',
+                )}
+              >
+                {section.map(props =>
+                  <div key={props.label} className="px-1">
+                    <MoreMenuItem
+                      dismissMenu={dismissMenu}
+                      {...props}
+                    />
+                  </div>,
+                )}
+              </div>,
+            )}
+          </div>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

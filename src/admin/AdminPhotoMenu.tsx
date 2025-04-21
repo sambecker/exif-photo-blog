@@ -31,7 +31,7 @@ export default function AdminPhotoMenu({
   revalidatePhoto,
   includeFavorite = true,
   ...props
-}: Omit<ComponentProps<typeof MoreMenu>, 'items'> & {
+}: Omit<ComponentProps<typeof MoreMenu>, 'sections'> & {
   photo: Photo
   revalidatePhoto?: RevalidatePhoto
   includeFavorite?: boolean
@@ -43,8 +43,8 @@ export default function AdminPhotoMenu({
   const shouldRedirectFav = isPathFavs(path) && isFav;
   const shouldRedirectDelete = pathForPhoto({ photo: photo.id }) === path;
 
-  const items = useMemo(() => {
-    const items: ComponentProps<typeof MoreMenuItem>[] = [{
+  const sections = useMemo(() => {
+    const sectionMain: ComponentProps<typeof MoreMenuItem>[] = [{
       label: 'Edit',
       icon: <IconEdit
         size={15}
@@ -53,7 +53,7 @@ export default function AdminPhotoMenu({
       href: pathForAdminPhotoEdit(photo.id),
     }];
     if (includeFavorite) {
-      items.push({
+      sectionMain.push({
         label: isFav ? 'Unfavorite' : 'Favorite',
         icon: <IconFavs
           size={14}
@@ -66,7 +66,7 @@ export default function AdminPhotoMenu({
         ).then(() => revalidatePhoto?.(photo.id)),
       });
     }
-    items.push({
+    sectionMain.push({
       label: 'Download',
       icon: <MdOutlineFileDownload
         size={17}
@@ -75,7 +75,7 @@ export default function AdminPhotoMenu({
       href: photo.url,
       hrefDownloadName: downloadFileNameForPhoto(photo),
     });
-    items.push({
+    sectionMain.push({
       label: 'Sync',
       labelComplex: <span className="inline-flex items-center gap-2">
         <span>Sync</span>
@@ -90,7 +90,7 @@ export default function AdminPhotoMenu({
       action: () => syncPhotoAction(photo.id)
         .then(() => revalidatePhoto?.(photo.id)),
     });
-    items.push({
+    const sectionDelete = [{
       label: 'Delete',
       icon: <BiTrash
         size={15}
@@ -109,8 +109,8 @@ export default function AdminPhotoMenu({
           });
         }
       },
-    });
-    return items;
+    }];
+    return [sectionMain, sectionDelete];
   }, [
     photo,
     includeFavorite,
@@ -124,7 +124,7 @@ export default function AdminPhotoMenu({
   return (
     isUserSignedIn
       ? <MoreMenu {...{
-        items,
+        sections,
         ...props,
       }}/>
       : null

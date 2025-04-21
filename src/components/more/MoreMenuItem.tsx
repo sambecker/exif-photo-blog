@@ -110,7 +110,9 @@ export default function MoreMenuItem({
         styleAs="link-without-hover"
         className="translate-y-[1px]"
       >
-        {labelComplex ?? label}
+        <span>
+          {labelComplex ?? label}
+        </span>
         {annotation &&
           <span className="text-dim ml-3">
             {annotation}
