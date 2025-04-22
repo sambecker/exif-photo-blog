@@ -92,7 +92,7 @@ export const BASE_URL_SHARE =
   makeUrlAbsolute(SITE_DOMAIN_SHARE)?.toLocaleLowerCase();
 
 export const getBaseUrl = (share?: boolean) =>
-  share ? BASE_URL_SHARE : BASE_URL;
+  (share && BASE_URL_SHARE) ? BASE_URL_SHARE : BASE_URL;
 
 const SITE_DOMAIN_SHORT = shortenUrl(SITE_DOMAIN);
 
