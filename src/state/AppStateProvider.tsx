@@ -121,10 +121,13 @@ export default function AppStateProvider({
   } = useSWR('getAuth', getAuthAction);
   useEffect(() => {
     setIsUserSignedInEager(hasAuthEmailCookie());
-    if (!authError) {
-      setUserEmail(auth?.user?.email ?? undefined);
-    } else {
+  }, []);
+  useEffect(() => {
+    if (authError) {
       setIsUserSignedInEager(false);
+      setUserEmail(undefined);
+    } else {
+      setUserEmail(auth?.user?.email ?? undefined);
     }
   }, [auth, authError]);
   const isUserSignedIn = Boolean(userEmail);
