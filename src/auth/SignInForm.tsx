@@ -49,12 +49,15 @@ export default function SignInForm({
     if (response === KEY_CREDENTIALS_SUCCESS) {
       setUserEmail?.(email);
     }
+  }, [setUserEmail, response, email]);
+
+  useEffect(() => {
     return () => {
       // Capture user email before unmounting
       getAuthAction().then(auth =>
         setUserEmail?.(auth?.user?.email ?? undefined));
     };
-  }, [setUserEmail, response, email]);
+  }, [setUserEmail]);
 
   const isFormValid =
     email.length > 0 &&
