@@ -71,6 +71,8 @@ export const VERCEL_BYPASS_SECRET = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
 
 // User-facing domain, potential site title
 const SITE_DOMAIN =
+  process.env.NEXT_PUBLIC_DOMAIN ||
+  // Legacy environment variable
   process.env.NEXT_PUBLIC_SITE_DOMAIN ||
   VERCEL_PRODUCTION_URL ||
   VERCEL_PROJECT_URL ||
@@ -327,7 +329,11 @@ export const APP_CONFIGURATION = {
     Boolean(process.env.ADMIN_PASSWORD)
   ),
   // Domain
-  hasDomain: Boolean(process.env.NEXT_PUBLIC_SITE_DOMAIN),
+  hasDomain: Boolean(
+    process.env.NEXT_PUBLIC_DOMAIN ||
+    // Legacy environment variable
+    process.env.NEXT_PUBLIC_SITE_DOMAIN,
+  ),
   // Content
   hasNavTitle: Boolean(NAV_TITLE),
   hasNavCaption: Boolean(NAV_CAPTION),

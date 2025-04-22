@@ -295,7 +295,7 @@ export default function AdminAppConfigurationClient({
         >
           Store in environment variable
           (used in explicit share urls, seen in nav if no title is defined):
-          {renderEnvVars(['NEXT_PUBLIC_SITE_DOMAIN'])}
+          {renderEnvVars(['NEXT_PUBLIC_DOMAIN'])}
         </ChecklistRow>
         <ChecklistRow
           title="Meta title"

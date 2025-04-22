@@ -289,7 +289,7 @@ export default function AdminAppInsightsClient({
                 to behave unexpectedly. Domains are stored in
                 {' '}
                 <EnvVar
-                  variable="NEXT_PUBLIC_SITE_DOMAIN"
+                  variable="NEXT_PUBLIC_DOMAIN"
                   trailingContent="."
                 />
               </>}
