@@ -135,7 +135,7 @@ export default function AdminAppInsightsClient({
   const renderTooltipContent = (content: ReactNode) =>
     <Tooltip
       content={content}
-      classNameTrigger="translate-y-[-1.5px] ml-2 h-3"
+      classNameTrigger="translate-y-[4.5px] ml-1.5"
       supportMobile
     />;
 
