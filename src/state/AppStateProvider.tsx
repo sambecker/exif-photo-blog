@@ -19,6 +19,7 @@ import {
   storeAuthEmailCookie,
   clearAuthEmailCookie,
   hasAuthEmailCookie,
+  isCredentialsSignInError,
 } from '@/auth';
 import { useRouter, usePathname } from 'next/navigation';
 import { isPathAdmin, PATH_ROOT } from '@/app/paths';
@@ -126,6 +127,9 @@ export default function AppStateProvider({
     if (authError) {
       setIsUserSignedInEager(false);
       setUserEmail(undefined);
+      if (isCredentialsSignInError(authError)) {
+        clearAuthEmailCookie();
+      }
     } else {
       setUserEmail(auth?.user?.email ?? undefined);
     }
