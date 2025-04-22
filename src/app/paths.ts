@@ -1,6 +1,6 @@
 import { Photo } from '@/photo';
 import { PhotoSetCategory } from '@/category';
-import { BASE_URL, GRID_HOMEPAGE_ENABLED } from './config';
+import { getBaseUrl, GRID_HOMEPAGE_ENABLED } from './config';
 import { Camera } from '@/camera';
 import { parameterize } from '@/utility/string';
 import { TAG_HIDDEN } from '@/tag';
@@ -167,28 +167,32 @@ export const pathForRecipe = (recipe: string) =>
   `${PREFIX_RECIPE}/${recipe}`;
 
 // Absolute paths
-export const ABSOLUTE_PATH_FOR_HOME_IMAGE = `${BASE_URL}/home-image`;
+export const ABSOLUTE_PATH_FOR_HOME_IMAGE =
+  `${getBaseUrl()}/home-image`;
 
-export const absolutePathForPhoto = (params: PhotoPathParams) =>
-  `${BASE_URL}${pathForPhoto(params)}`;
+export const absolutePathForPhoto = (
+  params: PhotoPathParams,
+  share?: boolean,
+) =>
+  `${getBaseUrl(share)}${pathForPhoto(params)}`;
 
-export const absolutePathForTag = (tag: string) =>
-  `${BASE_URL}${pathForTag(tag)}`;
+export const absolutePathForTag = (tag: string, share?: boolean) =>
+  `${getBaseUrl(share)}${pathForTag(tag)}`;
 
-export const absolutePathForCamera= (camera: Camera) =>
-  `${BASE_URL}${pathForCamera(camera)}`;
+export const absolutePathForCamera= (camera: Camera, share?: boolean) =>
+  `${getBaseUrl(share)}${pathForCamera(camera)}`;
 
-export const absolutePathForLens= (lens: Lens) =>
-  `${BASE_URL}${pathForLens(lens)}`;
+export const absolutePathForLens= (lens: Lens, share?: boolean) =>
+  `${getBaseUrl(share)}${pathForLens(lens)}`;
 
-export const absolutePathForFilm = (film: string) =>
-  `${BASE_URL}${pathForFilm(film)}`;
+export const absolutePathForFilm = (film: string, share?: boolean) =>
+  `${getBaseUrl(share)}${pathForFilm(film)}`;
 
-export const absolutePathForRecipe = (recipe: string) =>
-  `${BASE_URL}${pathForRecipe(recipe)}`;
+export const absolutePathForRecipe = (recipe: string, share?: boolean) =>
+  `${getBaseUrl(share)}${pathForRecipe(recipe)}`;
 
-export const absolutePathForFocalLength = (focal: number) =>
-  `${BASE_URL}${pathForFocalLength(focal)}`;
+export const absolutePathForFocalLength = (focal: number, share?: boolean) =>
+  `${getBaseUrl(share)}${pathForFocalLength(focal)}`;
 
 export const absolutePathForPhotoImage = (photo: PhotoOrPhotoId) =>
   `${absolutePathForPhoto({ photo })}/image`;

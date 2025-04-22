@@ -110,6 +110,7 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_NAV_TITLE` (defaults to domain when not configured)
 - `NEXT_PUBLIC_NAV_CAPTION` (seen in navigation, beneath title)
 - `NEXT_PUBLIC_PAGE_ABOUT` (seen in grid sidebar—accepts rich formatting tags: `<b>`, `<strong>`, `<i>`, `<em>`, `<u>`, `<br>`)
+- `NEXT_PUBLIC_DOMAIN_SHARE` (seen in share modals where a shorter url may be desirable)
 
 #### Performance
 > ⚠️ Enabling may result in increased project usage. Static optimization [troubleshooting hints](#why-do-production-deployments-fail-when-static-optimization-is-enabled) in FAQ.

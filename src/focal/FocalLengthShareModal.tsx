@@ -14,7 +14,7 @@ export default function FocalLengthShareModal({
 } & PhotoSetAttributes) {
   return (
     <ShareModal
-      pathShare={absolutePathForFocalLength(focal)}
+      pathShare={absolutePathForFocalLength(focal, true)}
       navigatorTitle={formatFocalLengthSafe(focal)}
       socialText={shareTextFocalLength(focal)}
     >

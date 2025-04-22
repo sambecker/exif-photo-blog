@@ -14,7 +14,7 @@ export default function RecipeShareModal({
 } & PhotoSetAttributes) {
   return (
     <ShareModal
-      pathShare={absolutePathForRecipe(recipe)}
+      pathShare={absolutePathForRecipe(recipe, true)}
       navigatorTitle={formatRecipe(recipe)}
       socialText={shareTextForRecipe(recipe)}
     >

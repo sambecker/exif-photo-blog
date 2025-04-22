@@ -14,7 +14,7 @@ export default function TagShareModal({
 } & PhotoSetAttributes) {
   return (
     <ShareModal
-      pathShare={absolutePathForTag(tag)}
+      pathShare={absolutePathForTag(tag, true)}
       navigatorTitle={formatTag(tag)}
       socialText={shareTextForTag(tag)}
     >

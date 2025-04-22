@@ -9,7 +9,7 @@ export default function PhotoShareModal(
 ) {
   return (
     <ShareModal
-      pathShare={absolutePathForPhoto(props)}
+      pathShare={absolutePathForPhoto(props, true)}
       navigatorTitle={titleForPhoto(props.photo)}
       socialText="Check out this photo"
     >

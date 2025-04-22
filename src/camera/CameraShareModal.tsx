@@ -15,7 +15,7 @@ export default function CameraShareModal({
 } & PhotoSetAttributes) {
   return (
     <ShareModal
-      pathShare={absolutePathForCamera(camera)}
+      pathShare={absolutePathForCamera(camera, true)}
       navigatorTitle={formatCameraText(camera)}
       socialText={shareTextForCamera(camera, photos)}
     >

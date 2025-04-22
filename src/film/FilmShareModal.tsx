@@ -14,7 +14,7 @@ export default function FilmShareModal({
 } & PhotoSetAttributes) {
   return (
     <ShareModal
-      pathShare={absolutePathForFilm(film)}
+      pathShare={absolutePathForFilm(film, true)}
       navigatorTitle={labelForFilm(film).large}
       socialText={shareTextForFilm(film)}
     >

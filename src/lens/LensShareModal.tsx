@@ -15,7 +15,7 @@ export default function LensShareModal({
 } & PhotoSetAttributes) {
   return (
     <ShareModal
-      pathShare={absolutePathForLens(lens)}
+      pathShare={absolutePathForLens(lens, true)}
       navigatorTitle={formatLensText(lens)}
       socialText={shareTextForLens(lens, photos)}
     >
