@@ -22,22 +22,22 @@ export default function ThemeSwitcher () {
   return (
     <Switcher>
       <SwitcherItem
-        title="System"
         icon={<BiDesktop size={16} />}
         onClick={() => setTheme('system')}
         active={theme === 'system'}
+        tooltip={{ content: 'System' }}
       />
       <SwitcherItem
-        title="Light"
         icon={<BiSun size={18} />}
         onClick={() => setTheme('light')}
         active={theme === 'light'}
+        tooltip={{ content: 'Light Mode' }}
       />
       <SwitcherItem
-        title="Dark"
         icon={<BiMoon size={16} />}
         onClick={() => setTheme('dark')}
         active={theme === 'dark'}
+        tooltip={{ content: 'Dark Mode' }}
       />
     </Switcher>
   );

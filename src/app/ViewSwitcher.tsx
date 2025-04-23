@@ -30,17 +30,25 @@ export default function ViewSwitcher({
 
   const renderItemFeed =
     <SwitcherItem
-      icon={<IconFeed />}
+      icon={<IconFeed includeTitle={false} />}
       href={PATH_FEED_INFERRED}
       active={currentSelection === 'feed'}
+      tooltip={{
+        content: 'Feed',
+        keyCommand: 'F',
+      }}
       noPadding
     />;
 
   const renderItemGrid =
     <SwitcherItem
-      icon={<IconGrid />}
+      icon={<IconGrid includeTitle={false} />}
       href={PATH_GRID_INFERRED}
       active={currentSelection === 'grid'}
+      tooltip={{
+        content: 'Grid',
+        keyCommand: 'G',
+      }}
       noPadding
     />;
 
@@ -58,18 +66,25 @@ export default function ViewSwitcher({
             icon={<Spinner />}
             isInteractive={false}
             noPadding
+            tooltip={{ content: 'Admin Menu' }}
           />}
         {isUserSignedIn &&
           <SwitcherItem
-            className="p-0!"
             icon={<AdminAppMenu />}
             noPadding
+            tooltip={{ content: 'Admin Menu' }}
           />}
       </Switcher>
       <Switcher type="borderless">
         <SwitcherItem
-          icon={<IconSearch />}
+          title="Search"
+          icon={<IconSearch includeTitle={false} />}
           onClick={() => setIsCommandKOpen?.(true)}
+          tooltip={{
+            content: 'Search',
+            keyCommand: 'K',
+            keyCommandModifier: '⌘',
+          }}
         />
       </Switcher>
     </div>

@@ -220,7 +220,7 @@ export default function AdminAppMenu({
       </div>}
       align="start"
       sideOffset={12}
-      alignOffset={-85}
+      alignOffset={-93}
       onOpen={refreshAdminData}
       className={clsx(
         'border-medium',

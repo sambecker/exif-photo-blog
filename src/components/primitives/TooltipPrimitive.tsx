@@ -6,22 +6,30 @@ import MenuSurface from './MenuSurface';
 import useSupportsHover from '@/utility/useSupportsHover';
 import clsx from 'clsx/lite';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
-
+import KeyCommand from './KeyCommand';
 export default function TooltipPrimitive({
-  content,
+  content: contentProp,
   className,
   classNameTrigger: classNameTriggerProp,
   sideOffset = 10,
+  delayDuration = 100,
+  skipDelayDuration = 300,
   supportMobile,
   color,
+  keyCommand,
+  keyCommandModifier,
   children,
 }: {
   content?: ReactNode
   className?: string
   classNameTrigger?: string
   sideOffset?: number
+  delayDuration?: number
+  skipDelayDuration?: number
   supportMobile?: boolean
   color?: ComponentProps<typeof MenuSurface>['color']
+  keyCommand?: string
+  keyCommandModifier?: ComponentProps<typeof KeyCommand>['modifier']
   children: ReactNode
 }) {
   const refTrigger = useRef<HTMLButtonElement>(null);
@@ -45,8 +53,18 @@ export default function TooltipPrimitive({
     classNameTriggerProp,
   );
 
+  const content = keyCommand
+    ? <div className="-mr-0.5">
+      {contentProp}
+      {' '}
+      <KeyCommand {...{ modifier: keyCommandModifier }}>
+        {keyCommand}
+      </KeyCommand>
+    </div>
+    : contentProp;
+
   return (
-    <Tooltip.Provider delayDuration={100}>
+    <Tooltip.Provider {...{ delayDuration, skipDelayDuration }}>
       <Tooltip.Root open={includeButton ? isOpen : undefined}>
         <Tooltip.Trigger asChild>
           {includeButton

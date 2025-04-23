@@ -1,8 +1,9 @@
 import { clsx } from 'clsx/lite';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/app/config';
-import { ReactNode } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 import Spinner from './Spinner';
 import LinkWithIconLoader from './LinkWithIconLoader';
+import Tooltip from './Tooltip';
 
 export default function SwitcherItem({
   icon,
@@ -14,6 +15,7 @@ export default function SwitcherItem({
   isInteractive = true,
   noPadding,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
+  tooltip,
 }: {
   icon: ReactNode
   title?: string
@@ -24,6 +26,7 @@ export default function SwitcherItem({
   isInteractive?: boolean
   noPadding?: boolean
   prefetch?: boolean
+  tooltip?: ComponentProps<typeof Tooltip>
 }) {
   const className = clsx(
     'flex items-center justify-center',
@@ -50,18 +53,24 @@ export default function SwitcherItem({
       {icon}
     </div>;
 
+  const content = href
+    ? <LinkWithIconLoader {...{
+      href,
+      title,
+      className,
+      prefetch,
+      icon: renderIcon(),
+      loader: <Spinner />,
+    }} />
+    : <div {...{ title, onClick, className }}>
+      {renderIcon()}
+    </div>;
+
   return (
-    href
-      ? <LinkWithIconLoader {...{
-        title,
-        href,
-        className,
-        prefetch,
-        icon: renderIcon(),
-        loader: <Spinner />,
-      }} />
-      : <div {...{ title, onClick, className }}>
-        {renderIcon()}
-      </div>
+    tooltip
+      ? <Tooltip {...tooltip}>
+        {content}
+      </Tooltip>
+      : content
   );
 };
