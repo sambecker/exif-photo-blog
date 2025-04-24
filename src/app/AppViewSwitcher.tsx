@@ -33,7 +33,7 @@ export default function AppViewSwitcher({
 
   const renderItemFeed =
     <SwitcherItem
-      icon={<IconFeed includeTitle={false} />}
+      icon={<IconFeed includeTitle={false} className="translate-x-[-0.5px]" />}
       href={PATH_FEED_INFERRED}
       active={currentSelection === 'feed'}
       tooltip={!isAdminMenuOpen
@@ -47,7 +47,7 @@ export default function AppViewSwitcher({
 
   const renderItemGrid =
     <SwitcherItem
-      icon={<IconGrid includeTitle={false} />}
+      icon={<IconGrid includeTitle={false} className="translate-x-[-0.5px]" />}
       href={PATH_GRID_INFERRED}
       active={currentSelection === 'grid'}
       tooltip={!isAdminMenuOpen
@@ -91,7 +91,6 @@ export default function AppViewSwitcher({
       </Switcher>
       <Switcher type="borderless">
         <SwitcherItem
-          title="Search"
           icon={<IconSearch includeTitle={false} />}
           onClick={() => setIsCommandKOpen?.(true)}
           tooltip={!isAdminMenuOpen

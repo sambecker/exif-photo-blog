@@ -5,6 +5,8 @@ import Spinner from './Spinner';
 import LinkWithIconLoader from './LinkWithIconLoader';
 import Tooltip from './Tooltip';
 
+const WIDTH_CLASS = 'w-[42px]';
+
 export default function SwitcherItem({
   icon,
   title,
@@ -30,7 +32,7 @@ export default function SwitcherItem({
 }) {
   const className = clsx(
     'flex items-center justify-center',
-    'w-[42px] h-[28px]',
+    `${WIDTH_CLASS} h-[28px]`,
     isInteractive && 'cursor-pointer',
     isInteractive && 'hover:bg-gray-100/60 active:bg-gray-100',
     isInteractive && 'dark:hover:bg-gray-900/75 dark:active:bg-gray-900',
@@ -69,6 +71,7 @@ export default function SwitcherItem({
     tooltip
       ? <Tooltip
         {...tooltip}
+        classNameTrigger={WIDTH_CLASS}
         delayDuration={500}
       >
         {content}
