@@ -48,7 +48,7 @@ export default function AdminPhotoMenu({
       label: 'Edit',
       icon: <IconEdit
         size={15}
-        className="translate-x-[0.5px] translate-y-[-0.5px]"
+        className="translate-x-[0.5px]"
       />,
       href: pathForAdminPhotoEdit(photo.id),
     }];
@@ -57,7 +57,7 @@ export default function AdminPhotoMenu({
         label: isFav ? 'Unfavorite' : 'Favorite',
         icon: <IconFavs
           size={14}
-          className="translate-x-[-1px]"
+          className="translate-x-[-1px] translate-y-[0.5px]"
           highlight={isFav}
         />,
         action: () => toggleFavoritePhotoAction(
@@ -70,7 +70,7 @@ export default function AdminPhotoMenu({
       label: 'Download',
       icon: <MdOutlineFileDownload
         size={17}
-        className="translate-x-[-1px] translate-y-[-0.5px]"
+        className="translate-x-[-1px]"
       />,
       href: photo.url,
       hrefDownloadName: downloadFileNameForPhoto(photo),
@@ -86,7 +86,9 @@ export default function AdminPhotoMenu({
             size="small"
           />}
       </span>,
-      icon: <IconGrSync className="translate-x-[-1px]" />,
+      icon: <IconGrSync
+        className="translate-x-[-1px] translate-y-[0.5px]"
+      />,
       action: () => syncPhotoAction(photo.id)
         .then(() => revalidatePhoto?.(photo.id)),
     });

@@ -12,6 +12,7 @@ import { GRID_HOMEPAGE_ENABLED } from './config';
 import AdminAppMenu from '@/admin/AdminAppMenu';
 import Spinner from '@/components/Spinner';
 import clsx from 'clsx/lite';
+import { useState } from 'react';
 
 export type SwitcherSelection = 'feed' | 'grid' | 'admin';
 
@@ -27,6 +28,8 @@ export default function ViewSwitcher({
     isUserSignedInEager,
     setIsCommandKOpen,
   } = useAppState();
+
+  const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
 
   const renderItemFeed =
     <SwitcherItem
@@ -70,9 +73,12 @@ export default function ViewSwitcher({
           />}
         {isUserSignedIn &&
           <SwitcherItem
-            icon={<AdminAppMenu />}
-            noPadding
+            icon={<AdminAppMenu
+              isOpen={isAdminMenuOpen}
+              setIsOpen={setIsAdminMenuOpen}
+            />}
             tooltip={{ content: 'Admin Menu' }}
+            noPadding
           />}
       </Switcher>
       <Switcher type="borderless">

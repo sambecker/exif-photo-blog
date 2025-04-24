@@ -51,7 +51,7 @@ export default function MoreMenuItem({
     <DropdownMenu.Item
       disabled={isLoading}
       className={clsx(
-        'flex items-center h-9',
+        'flex items-center h-8.5',
         'pl-2 pr-3 py-2 rounded-sm',
         'select-none hover:outline-hidden',
         'hover:bg-gray-100/90 active:bg-gray-200/75',
@@ -108,7 +108,8 @@ export default function MoreMenuItem({
         isLoading={isLoading || isPending}
         hideTextOnMobile={false}
         styleAs="link-without-hover"
-        className="translate-y-[1px]"
+        className="translate-y-[0.5px] text-sm"
+        classNameIcon="translate-y-[-0.5px]!"
       >
         <span>
           {labelComplex ?? label}

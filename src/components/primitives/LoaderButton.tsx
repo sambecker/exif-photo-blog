@@ -13,6 +13,7 @@ import Tooltip from '../Tooltip';
 export default function LoaderButton({
   ref,
   children,
+  classNameIcon,
   isLoading,
   icon,
   spinnerColor,
@@ -32,6 +33,7 @@ export default function LoaderButton({
   ...rest
 }: {
   ref?: RefObject<HTMLButtonElement | null>
+  classNameIcon?: string
   isLoading?: boolean
   icon?: ReactNode
   spinnerColor?: SpinnerColor
@@ -79,6 +81,7 @@ export default function LoaderButton({
           'min-w-[1.25rem] max-h-5',
           styleAs === 'button' ? 'translate-y-[-0.5px]' : 'translate-y-[0.5px]',
           'inline-flex justify-center shrink-0',
+          classNameIcon,
         )}>
           {isLoading
             ? <Spinner
