@@ -16,7 +16,7 @@ import { useState } from 'react';
 
 export type SwitcherSelection = 'feed' | 'grid' | 'admin';
 
-export default function ViewSwitcher({
+export default function AppViewSwitcher({
   currentSelection,
   className,
 }: {
