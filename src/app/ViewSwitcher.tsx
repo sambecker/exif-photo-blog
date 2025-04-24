@@ -36,10 +36,12 @@ export default function ViewSwitcher({
       icon={<IconFeed includeTitle={false} />}
       href={PATH_FEED_INFERRED}
       active={currentSelection === 'feed'}
-      tooltip={{
-        content: 'Feed',
-        keyCommand: 'F',
-      }}
+      tooltip={!isAdminMenuOpen
+        ? {
+          content: 'Feed',
+          keyCommand: 'F',
+        }
+        : undefined}
       noPadding
     />;
 
@@ -48,10 +50,12 @@ export default function ViewSwitcher({
       icon={<IconGrid includeTitle={false} />}
       href={PATH_GRID_INFERRED}
       active={currentSelection === 'grid'}
-      tooltip={{
-        content: 'Grid',
-        keyCommand: 'G',
-      }}
+      tooltip={!isAdminMenuOpen
+        ? {
+          content: 'Grid',
+          keyCommand: 'G',
+        }
+        : undefined}
       noPadding
     />;
 
@@ -69,7 +73,9 @@ export default function ViewSwitcher({
             icon={<Spinner />}
             isInteractive={false}
             noPadding
-            tooltip={{ content: 'Admin Menu' }}
+            tooltip={!isAdminMenuOpen
+              ? { content: 'Admin Menu' }
+              : undefined}
           />}
         {isUserSignedIn &&
           <SwitcherItem
@@ -77,7 +83,9 @@ export default function ViewSwitcher({
               isOpen={isAdminMenuOpen}
               setIsOpen={setIsAdminMenuOpen}
             />}
-            tooltip={{ content: 'Admin Menu' }}
+            tooltip={!isAdminMenuOpen
+              ? { content: 'Admin Menu' }
+              : undefined}
             noPadding
           />}
       </Switcher>
@@ -86,11 +94,13 @@ export default function ViewSwitcher({
           title="Search"
           icon={<IconSearch includeTitle={false} />}
           onClick={() => setIsCommandKOpen?.(true)}
-          tooltip={{
-            content: 'Search',
-            keyCommand: 'K',
-            keyCommandModifier: '⌘',
-          }}
+          tooltip={!isAdminMenuOpen
+            ? {
+              content: 'Search',
+              keyCommand: 'K',
+              keyCommandModifier: '⌘',
+            }
+            : undefined}
         />
       </Switcher>
     </div>
