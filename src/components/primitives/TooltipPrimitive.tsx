@@ -54,7 +54,7 @@ export default function TooltipPrimitive({
   );
 
   const content = keyCommand
-    ? <div className="-mr-0.5">
+    ? <div className="-mr-0.5 whitespace-nowrap">
       {contentProp}
       {' '}
       <KeyCommand {...{ modifier: keyCommandModifier }}>
