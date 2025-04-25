@@ -72,7 +72,7 @@ export default function SwitcherItem({
       ? <Tooltip
         {...tooltip}
         classNameTrigger={WIDTH_CLASS}
-        delayDuration={500}
+        delayDuration={300}
       >
         {content}
       </Tooltip>

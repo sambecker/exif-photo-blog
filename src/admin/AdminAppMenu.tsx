@@ -97,7 +97,7 @@ export default function AdminAppMenu({
           {photosCountNeedSync}
         </span>
         <InsightsIndicatorDot
-          className="inline-block translate-y-[1px]"
+          className="inline-block translate-y-[-1px]"
           size="small"
         />
       </>,
@@ -201,7 +201,7 @@ export default function AdminAppMenu({
               className="translate-x-[1px] translate-y-[1px]"
               size={13}
             />
-            :<IconLock
+            : <IconLock
               size={16}
               className="translate-x-[1px] translate-y-[0.5px]"
               narrow

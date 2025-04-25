@@ -19,7 +19,11 @@ export default function KeyCommand({
       {keys.map((key) => (
         <span
           key={key}
-          className="text-gray-600 bg-gray-200/75 px-1 rounded-sm"
+          className={clsx(
+            'px-1 rounded-sm shadow-xs',
+            'text-gray-600 bg-gray-200/90',
+            'dark:text-gray-300 dark:bg-gray-600/55',
+          )}
         >
           {key}
         </span>

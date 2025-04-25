@@ -49,7 +49,7 @@ export default function TooltipPrimitive({
   });
 
   const classNameTrigger = clsx(
-    'cursor-default inline-block',
+    'cursor-default inline-flex',
     classNameTriggerProp,
   );
 
