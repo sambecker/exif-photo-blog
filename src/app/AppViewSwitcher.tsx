@@ -47,7 +47,7 @@ export default function AppViewSwitcher({
 
   const renderItemFeed =
     <SwitcherItem
-      icon={<IconFeed includeTitle={false} className="translate-x-[-0.5px]" />}
+      icon={<IconFeed includeTitle={false} />}
       href={PATH_FEED_INFERRED}
       active={currentSelection === 'feed'}
       tooltip={{
@@ -59,7 +59,7 @@ export default function AppViewSwitcher({
 
   const renderItemGrid =
     <SwitcherItem
-      icon={<IconGrid includeTitle={false} className="translate-x-[-0.5px]" />}
+      icon={<IconGrid includeTitle={false} />}
       href={PATH_GRID_INFERRED}
       active={currentSelection === 'grid'}
       tooltip={{
