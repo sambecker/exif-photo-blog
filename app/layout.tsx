@@ -24,6 +24,7 @@ import AdminUploadPanel from '@/admin/upload/AdminUploadPanel';
 import { revalidatePath } from 'next/cache';
 import RecipeModal from '@/recipe/RecipeModal';
 import ThemeColors from '@/app/ThemeColors';
+import AppKeyListener from '@/app/AppKeyListener';
 
 import '../tailwind.css';
 
@@ -114,6 +115,7 @@ export default function RootLayout({
             </SwrConfigClient>
             <Analytics debug={false} />
             <SpeedInsights debug={false}  />
+            <AppKeyListener />
             <PhotoEscapeHandler />
             <ToasterWithThemes />
           </ThemeProvider>

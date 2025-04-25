@@ -1,12 +1,12 @@
 import useKeydownHandler from '@/utility/useKeydownHandler';
 
 export default function useEscapeHandler(
-  onEscape?: () => void,
+  onKeyDown?: (e: KeyboardEvent) => void,
   ignoreShouldRespondToKeyboardCommands?: boolean,
 ) {
-  useKeydownHandler(
-    onEscape,
-    ['ESCAPE'],
+  useKeydownHandler({
+    onKeyDown,
+    keys: ['ESCAPE'],
     ignoreShouldRespondToKeyboardCommands,
-  );
+  });
 }

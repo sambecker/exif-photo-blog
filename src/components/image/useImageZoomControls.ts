@@ -47,10 +47,10 @@ export default function useImageZoomControls({
   }, []);
 
   // On 'F' keydown, toggle fullscreen
-  const handleKeyDown = useCallback(() => {
+  const onKeyDown = useCallback(() => {
     if (shouldZoomOnFKeydown) { open(); }
   }, [shouldZoomOnFKeydown, open]);
-  useKeydownHandler(handleKeyDown, ['F']);
+  useKeydownHandler({ onKeyDown, keys: ['F'] });
 
   useEffect(() => {
     if (isEnabled) {
