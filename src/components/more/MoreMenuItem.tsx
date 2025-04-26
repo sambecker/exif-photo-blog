@@ -57,6 +57,9 @@ export default function MoreMenuItem({
     if (transitionDidStart && !isPending) {
       dismissMenu?.();
       setTransitionDidStart(false);
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
     }
   }, [isPending, dismissMenu, transitionDidStart]);
 
