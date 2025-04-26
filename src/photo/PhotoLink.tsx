@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, ComponentProps } from 'react';
+import { ReactNode, ComponentProps, RefObject } from 'react';
 import { Photo, titleForPhoto } from '@/photo';
 import { PhotoSetCategory } from '@/category';
 import { AnimationConfig } from '../components/AnimateItems';
@@ -12,6 +12,7 @@ import Spinner from '@/components/Spinner';
 import LinkWithLoaderBackground from '@/components/LinkWithLoaderBackground';
 
 export default function PhotoLink({
+  ref,
   photo,
   scroll,
   prefetch,
@@ -21,6 +22,7 @@ export default function PhotoLink({
   loaderType = 'spinner',
   ...categories
 }: {
+  ref?: RefObject<HTMLAnchorElement | null>
   photo?: Photo
   scroll?: boolean
   prefetch?: boolean
@@ -35,6 +37,7 @@ export default function PhotoLink({
     Omit<ComponentProps<typeof LinkWithStatus>, 'children'> |
     undefined = photo
       ? {
+        ref,
         className,
         href: pathForPhoto({ photo, ...categories }),
         onClick: () => {

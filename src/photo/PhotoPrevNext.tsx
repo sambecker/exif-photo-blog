@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import {
   Photo,
   getNextPhoto,
@@ -8,12 +8,15 @@ import {
 } from '@/photo';
 import { PhotoSetCategory } from '../category';
 import PhotoLink from './PhotoLink';
-import { useRouter } from 'next/navigation';
-import { pathForPhoto } from '@/app/paths';
+import { pathForAdminPhotoEdit, pathForPhoto } from '@/app/paths';
 import { useAppState } from '@/state/AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import { clsx } from 'clsx/lite';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import useNavigateOrRunActionWithToast
+  from '@/components/useNavigateOrRunActionWithToast';
+import { toggleFavoritePhotoAction } from './actions';
+import { isPhotoFav } from '@/tag';
 
 const LISTENER_KEYUP = 'keyup';
 
@@ -30,12 +33,41 @@ export default function PhotoPrevNext({
   photos?: Photo[]
   className?: string
 } & PhotoSetCategory) {
-  const router = useRouter();
-
   const {
     setNextPhotoAnimation,
     shouldRespondToKeyboardCommands,
+    isUserSignedIn,
   } = useAppState();
+
+  const photoTitle = photo
+    ? photo.title
+      ? `'${photo.title}'`
+      : 'photo'
+    : undefined;
+
+  const toggleFavorite = useCallback(() => {
+    if (photo?.id) {
+      return toggleFavoritePhotoAction(photo.id);
+    }
+  }, [photo?.id]);
+
+  const navigateToPhotoEdit = useNavigateOrRunActionWithToast({
+    pathOrAction: photo ? pathForAdminPhotoEdit(photo) : undefined,
+    toastMessage: `Editing ${photoTitle} ...`,
+  });
+
+  const favoritePhoto = useNavigateOrRunActionWithToast({
+    pathOrAction: toggleFavorite,
+    toastMessage: `Favoriting ${photoTitle} ...`,
+  });
+
+  const unfavoritePhoto = useNavigateOrRunActionWithToast({
+    pathOrAction: toggleFavorite,
+    toastMessage: `Unfavoriting ${photoTitle} ...`,
+  });
+
+  const refPrevious = useRef<HTMLAnchorElement | null>(null);
+  const refNext = useRef<HTMLAnchorElement | null>(null);
 
   const previousPhoto = photo ? getPreviousPhoto(photo, photos) : undefined;
   const nextPhoto = photo ? getNextPhoto(photo, photos) : undefined;
@@ -56,14 +88,27 @@ export default function PhotoPrevNext({
         case 'J':
           if (pathPrevious) {
             setNextPhotoAnimation?.(ANIMATION_RIGHT);
-            router.push(pathPrevious, { scroll: false });
+            refPrevious.current?.click();
           }
           break;
         case 'ARROWRIGHT':
         case 'L':
           if (pathNext) {
             setNextPhotoAnimation?.(ANIMATION_LEFT);
-            router.push(pathNext, { scroll: false });
+            refNext.current?.click();
+          }
+          break;
+        case 'E':
+          if (isUserSignedIn) { navigateToPhotoEdit(); }
+          break;
+        case 'P':
+          if (isUserSignedIn && photo && !isPhotoFav(photo)) {
+            favoritePhoto();
+          }
+          break;
+        case 'X':
+          if (isUserSignedIn && photo && isPhotoFav(photo)) {
+            unfavoritePhoto();
           }
           break;
         };
@@ -72,11 +117,16 @@ export default function PhotoPrevNext({
       return () => window.removeEventListener(LISTENER_KEYUP, onKeyUp);
     }
   }, [
-    router,
     shouldRespondToKeyboardCommands,
     setNextPhotoAnimation,
     pathPrevious,
     pathNext,
+    isUserSignedIn,
+    photoTitle,
+    navigateToPhotoEdit,
+    photo,
+    favoritePhoto,
+    unfavoritePhoto,
   ]);
   
   return (
@@ -93,6 +143,7 @@ export default function PhotoPrevNext({
       )}>
         <PhotoLink
           {...categories}
+          ref={refPrevious}
           photo={previousPhoto}
           nextPhotoAnimation={ANIMATION_RIGHT}
           scroll={false}
@@ -107,6 +158,7 @@ export default function PhotoPrevNext({
         </span>
         <PhotoLink
           {...categories}
+          ref={refNext}
           photo={nextPhoto}
           nextPhotoAnimation={ANIMATION_LEFT}
           scroll={false}
