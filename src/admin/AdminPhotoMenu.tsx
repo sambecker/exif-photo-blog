@@ -92,13 +92,14 @@ export default function AdminPhotoMenu({
       action: () => syncPhotoAction(photo.id)
         .then(() => revalidatePhoto?.(photo.id)),
     });
-    const sectionDelete = [{
+    const sectionDelete: ComponentProps<typeof MoreMenuItem>[] = [{
       label: 'Delete',
       icon: <BiTrash
         size={15}
         className="translate-x-[-1px]"
       />,
       className: 'text-error *:hover:text-error',
+      color: 'red',
       action: () => {
         if (confirm(deleteConfirmationTextForPhoto(photo))) {
           return deletePhotoAction(

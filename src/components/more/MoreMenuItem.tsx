@@ -12,6 +12,7 @@ export default function MoreMenuItem({
   labelComplex,
   annotation,
   icon,
+  color = 'grey',
   href,
   hrefDownloadName,
   className,
@@ -23,6 +24,7 @@ export default function MoreMenuItem({
   labelComplex?: ReactNode
   annotation?: ReactNode
   icon?: ReactNode
+  color?: 'grey' | 'red'
   href?: string
   hrefDownloadName?: string
   className?: string
@@ -47,6 +49,19 @@ export default function MoreMenuItem({
     }
   }, [isPending, dismissMenu, transitionDidStart]);
 
+  const getColorClasses = () => {
+    switch (color) {
+    case 'grey': return clsx(
+      'hover:bg-gray-100/90 active:bg-gray-200/75',
+      'dark:hover:bg-gray-800/60 dark:active:bg-gray-900/80',
+    );
+    case 'red': return clsx(
+      'hover:bg-red-100/50 active:bg-red-100/75',
+      'dark:hover:bg-red-950/55 dark:active:bg-red-950/80',
+    );
+    }
+  };
+
   return (
     <DropdownMenu.Item
       disabled={isLoading}
@@ -54,8 +69,7 @@ export default function MoreMenuItem({
         'flex items-center h-8.5',
         'pl-2 pr-3 py-2 rounded-sm',
         'select-none hover:outline-hidden',
-        'hover:bg-gray-100/90 active:bg-gray-200/75',
-        'dark:hover:bg-gray-800/60 dark:active:bg-gray-900/80',
+        getColorClasses(),
         'whitespace-nowrap',
         isLoading
           ? 'cursor-not-allowed opacity-50'
