@@ -3,7 +3,7 @@ import { Pool, QueryResult, QueryResultRow } from 'pg';
 
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
-  ...POSTGRES_SSL_ENABLED && { ssl: true },
+  ...POSTGRES_SSL_ENABLED && { ssl: false },
 });
 
 export type Primitive = string | number | boolean | undefined | null;
