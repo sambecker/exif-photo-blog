@@ -104,6 +104,7 @@ export default function PhotoPrevNextActions({
 
   const onKeyDown = useCallback((e: KeyboardEvent) => {
     switch (e.key.toUpperCase()) {
+    // Public commands
     case KEY_COMMANDS.prev[0]:
     case KEY_COMMANDS.prev[1]:
       if (pathPrevious) {
@@ -118,6 +119,7 @@ export default function PhotoPrevNextActions({
         refNext.current?.click();
       }
       break;
+    // Admin commands
     case KEY_COMMANDS.edit:
       if (isUserSignedIn) {
         navigateToPhotoEdit();
