@@ -30,11 +30,13 @@ export default function AdminPhotoMenu({
   photo,
   revalidatePhoto,
   includeFavorite = true,
+  showKeyCommands,
   ...props
 }: Omit<ComponentProps<typeof MoreMenu>, 'sections'> & {
   photo: Photo
   revalidatePhoto?: RevalidatePhoto
   includeFavorite?: boolean
+  showKeyCommands?: boolean
 }) {
   const { isUserSignedIn, registerAdminUpdate } = useAppState();
 
@@ -51,6 +53,7 @@ export default function AdminPhotoMenu({
         className="translate-x-[0.5px]"
       />,
       href: pathForAdminPhotoEdit(photo.id),
+      ...showKeyCommands && { keyCommand: 'E' },
     }];
     if (includeFavorite) {
       sectionMain.push({
@@ -64,6 +67,7 @@ export default function AdminPhotoMenu({
           photo.id,
           shouldRedirectFav,
         ).then(() => revalidatePhoto?.(photo.id)),
+        ...showKeyCommands && { keyCommand: isFav ? 'X' : 'P' },
       });
     }
     sectionMain.push({
@@ -74,6 +78,7 @@ export default function AdminPhotoMenu({
       />,
       href: photo.url,
       hrefDownloadName: downloadFileNameForPhoto(photo),
+      ...showKeyCommands && { keyCommand: 'D' },
     });
     sectionMain.push({
       label: 'Sync',
@@ -116,6 +121,7 @@ export default function AdminPhotoMenu({
     return [sectionMain, sectionDelete];
   }, [
     photo,
+    showKeyCommands,
     includeFavorite,
     isFav,
     shouldRedirectFav,

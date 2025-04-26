@@ -252,6 +252,7 @@ export default function PhotoLarge({
       revalidatePhoto,
       includeFavorite: includeFavoriteInAdminMenu,
       ariaLabel: `Admin menu for '${titleForPhoto(photo)}' photo`,
+      showKeyCommands: true,
     }} />;
 
   const largePhotoContainerClassName = clsx(

@@ -2,10 +2,17 @@
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { clsx } from 'clsx/lite';
-import { ReactNode, useEffect, useState, useTransition } from 'react';
+import {
+  ComponentProps,
+  ReactNode,
+  useEffect,
+  useState,
+  useTransition,
+} from 'react';
 import LoaderButton from '../primitives/LoaderButton';
 import { usePathname, useRouter } from 'next/navigation';
 import { downloadFileFromBrowser } from '@/utility/url';
+import KeyCommand from '../primitives/KeyCommand';
 
 export default function MoreMenuItem({
   label,
@@ -19,6 +26,8 @@ export default function MoreMenuItem({
   action,
   dismissMenu,
   shouldPreventDefault = true,
+  keyCommand,
+  keyCommandModifier,
 }: {
   label: string
   labelComplex?: ReactNode
@@ -31,6 +40,8 @@ export default function MoreMenuItem({
   action?: () => Promise<void | boolean> | void
   dismissMenu?: () => void
   shouldPreventDefault?: boolean
+  keyCommand?: string
+  keyCommandModifier?: ComponentProps<typeof KeyCommand>['modifier']
 }) {
   const router = useRouter();
 
@@ -66,8 +77,8 @@ export default function MoreMenuItem({
     <DropdownMenu.Item
       disabled={isLoading}
       className={clsx(
-        'flex items-center h-8.5',
-        'pl-2 pr-3 py-2 rounded-sm',
+        'flex items-center h-8.5 gap-4',
+        'px-2 py-2 rounded-sm',
         'select-none hover:outline-hidden',
         getColorClasses(),
         'whitespace-nowrap',
@@ -122,7 +133,7 @@ export default function MoreMenuItem({
         isLoading={isLoading || isPending}
         hideTextOnMobile={false}
         styleAs="link-without-hover"
-        className="translate-y-[0.5px] text-sm"
+        className="translate-y-[0.5px] text-sm grow"
         classNameIcon="translate-y-[-0.5px]!"
       >
         <span>
@@ -133,6 +144,10 @@ export default function MoreMenuItem({
             {annotation}
           </span>}
       </LoaderButton>
+      {keyCommand &&
+        <KeyCommand modifier={keyCommandModifier}>
+          {keyCommand}
+        </KeyCommand>}
     </DropdownMenu.Item>
   );
 }

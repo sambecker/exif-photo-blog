@@ -9,6 +9,7 @@ import useClickInsideOutside from '@/utility/useClickInsideOutside';
 import KeyCommand from './KeyCommand';
 export default function TooltipPrimitive({
   content: contentProp,
+  children,
   className,
   classNameTrigger: classNameTriggerProp,
   sideOffset = 10,
@@ -18,9 +19,9 @@ export default function TooltipPrimitive({
   color,
   keyCommand,
   keyCommandModifier,
-  children,
 }: {
   content?: ReactNode
+  children: ReactNode
   className?: string
   classNameTrigger?: string
   sideOffset?: number
@@ -30,7 +31,6 @@ export default function TooltipPrimitive({
   color?: ComponentProps<typeof MenuSurface>['color']
   keyCommand?: string
   keyCommandModifier?: ComponentProps<typeof KeyCommand>['modifier']
-  children: ReactNode
 }) {
   const refTrigger = useRef<HTMLButtonElement>(null);
   const refContent = useRef<HTMLDivElement>(null);

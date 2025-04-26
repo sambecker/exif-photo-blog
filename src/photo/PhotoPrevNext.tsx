@@ -1,8 +1,9 @@
 'use client';
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import {
   Photo,
+  downloadFileNameForPhoto,
   getNextPhoto,
   getPreviousPhoto,
 } from '@/photo';
@@ -18,8 +19,9 @@ import useNavigateOrRunActionWithToast
 import { toggleFavoritePhotoAction } from './actions';
 import { isPhotoFav } from '@/tag';
 import Tooltip from '@/components/Tooltip';
-
-const LISTENER_KEYUP = 'keyup';
+import { ALLOW_PUBLIC_DOWNLOADS } from '@/app/config';
+import { downloadFileFromBrowser } from '@/utility/url';
+import useKeydownHandler from '@/utility/useKeydownHandler';
 
 const ANIMATION_LEFT: AnimationConfig = { type: 'left', duration: 0.3 };
 const ANIMATION_RIGHT: AnimationConfig = { type: 'right', duration: 0.3 };
@@ -34,16 +36,16 @@ export default function PhotoPrevNext({
   photos?: Photo[]
   className?: string
 } & PhotoSetCategory) {
-  const {
-    setNextPhotoAnimation,
-    shouldRespondToKeyboardCommands,
-    isUserSignedIn,
-  } = useAppState();
+  const { setNextPhotoAnimation, isUserSignedIn } = useAppState();
 
   const photoTitle = photo
     ? photo.title
       ? `'${photo.title}'`
       : 'photo'
+    : undefined;
+  const downloadUrl = photo?.url;
+  const downloadFileName = photo
+    ? downloadFileNameForPhoto(photo)
     : undefined;
 
   const toggleFavorite = useCallback(() => {
@@ -81,55 +83,61 @@ export default function PhotoPrevNext({
     ? pathForPhoto({ photo: nextPhoto, ...categories })
     : undefined;
 
-  useEffect(() => {
-    if (shouldRespondToKeyboardCommands) {
-      const onKeyUp = (e: KeyboardEvent) => {
-        switch (e.key.toUpperCase()) {
-        case 'ARROWLEFT':
-        case 'J':
-          if (pathPrevious) {
-            setNextPhotoAnimation?.(ANIMATION_RIGHT);
-            refPrevious.current?.click();
-          }
-          break;
-        case 'ARROWRIGHT':
-        case 'L':
-          if (pathNext) {
-            setNextPhotoAnimation?.(ANIMATION_LEFT);
-            refNext.current?.click();
-          }
-          break;
-        case 'E':
-          if (isUserSignedIn) { navigateToPhotoEdit(); }
-          break;
-        case 'P':
-          if (isUserSignedIn && photo && !isPhotoFav(photo)) {
-            favoritePhoto();
-          }
-          break;
-        case 'X':
-          if (isUserSignedIn && photo && isPhotoFav(photo)) {
-            unfavoritePhoto();
-          }
-          break;
-        };
-      };
-      window.addEventListener(LISTENER_KEYUP, onKeyUp);
-      return () => window.removeEventListener(LISTENER_KEYUP, onKeyUp);
-    }
+  const onKeyDown = useCallback((e: KeyboardEvent) => {
+    switch (e.key.toUpperCase()) {
+    case 'ARROWLEFT':
+    case 'J':
+      if (pathPrevious) {
+        setNextPhotoAnimation?.(ANIMATION_RIGHT);
+        refPrevious.current?.click();
+      }
+      break;
+    case 'ARROWRIGHT':
+    case 'L':
+      if (pathNext) {
+        setNextPhotoAnimation?.(ANIMATION_LEFT);
+        refNext.current?.click();
+      }
+      break;
+    case 'E':
+      if (isUserSignedIn) {
+        navigateToPhotoEdit();
+      }
+      break;
+    case 'P':
+      if (isUserSignedIn && photo && !isPhotoFav(photo)) {
+        favoritePhoto();
+      }
+      break;
+    case 'X':
+      if (isUserSignedIn && photo && isPhotoFav(photo)) {
+        unfavoritePhoto();
+      }
+      break;
+    case 'D':
+      if (
+        (isUserSignedIn || ALLOW_PUBLIC_DOWNLOADS) &&
+        downloadUrl &&
+        downloadFileName
+      ) {
+        downloadFileFromBrowser(downloadUrl, downloadFileName);
+      }
+      break;
+    };
   }, [
-    shouldRespondToKeyboardCommands,
     setNextPhotoAnimation,
     pathPrevious,
     pathNext,
     isUserSignedIn,
-    photoTitle,
     navigateToPhotoEdit,
     photo,
     favoritePhoto,
     unfavoritePhoto,
+    downloadUrl,
+    downloadFileName,
   ]);
-  
+  useKeydownHandler({ onKeyDown });
+
   return (
     <div className={clsx(
       'flex items-center',
