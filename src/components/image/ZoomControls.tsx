@@ -19,7 +19,6 @@ export default function ZoomControls({
   selectImageElement?:
     (container: HTMLElement | null) => HTMLImageElement | null
   isEnabled?: boolean
-  shouldZoomOnFKeydown?: boolean
 }) {
   const refImageContainer = useRef<HTMLDivElement>(null);
 
