@@ -1,12 +1,13 @@
 import { toastWaiting } from '@/toast';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useTransition } from 'react';
+import { FiCheckSquare } from 'react-icons/fi';
 import { toast } from 'sonner';
 
 export default function useNavigateOrRunActionWithToast({
   pathOrAction,
   toastMessage = 'Loading...',
-  dismissDelay = 500,
+  dismissDelay = 1500,
 }: {
   pathOrAction?: string | (() => Promise<any> | undefined)
   toastMessage?: string
@@ -17,15 +18,20 @@ export default function useNavigateOrRunActionWithToast({
   const toastId = useRef<string | number>(undefined);
   
   const [isPending, startTransition] = useTransition();
+
+  const dismissToast = useCallback(() => {
+    if (toastId.current) {
+      toast(toastMessage, {
+        id: toastId.current,
+        icon: <FiCheckSquare size={16} />,
+      });
+      return setTimeout(() => {
+        toast.dismiss(toastId.current);
+      }, dismissDelay);
+    }
+  }, [dismissDelay, toastMessage]);
   
   useEffect(() => {
-    const dismissToast = () => {
-      if (toastId.current) {
-        return setTimeout(() => {
-          toast.dismiss(toastId.current);
-        }, dismissDelay);
-      }
-    };
     if (!isPending) {
       const timeout = dismissToast();
       return () => clearTimeout(timeout);
@@ -33,7 +39,7 @@ export default function useNavigateOrRunActionWithToast({
     return () => {
       dismissToast();
     };
-  }, [isPending, dismissDelay]);
+  }, [isPending, dismissDelay, dismissToast]);
 
   const navigateOrRunAction = useCallback(() => {
     if (typeof pathOrAction === 'string') {
@@ -44,15 +50,13 @@ export default function useNavigateOrRunActionWithToast({
     } else if (typeof pathOrAction === 'function') {
       const result = pathOrAction();
       if (result instanceof Promise) {
-        const toastId = toastWaiting(toastMessage);
+        toastId.current = toastWaiting(toastMessage);
         result.finally(() => {
-          setTimeout(() => {
-            toast.dismiss(toastId);
-          }, 1000);
+          dismissToast();
         });
       }
     }
-  }, [pathOrAction, router, toastMessage]);
+  }, [dismissToast, pathOrAction, router, toastMessage]);
 
   return navigateOrRunAction;
 }

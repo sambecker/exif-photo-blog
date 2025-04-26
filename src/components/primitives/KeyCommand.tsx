@@ -34,7 +34,9 @@ export default function KeyCommand({
           {key === '⌘'
             ? <PiCommandBold />
             : key === '⌫'
-              ? <HiMiniBackspace className="text-[13px]" />
+              ? <HiMiniBackspace
+                className="text-[13px] opacity-80"
+              />
               : key}
         </span>
       ))}
