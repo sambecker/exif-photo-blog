@@ -1,6 +1,6 @@
 import { clsx } from 'clsx/lite';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/app/config';
-import { ComponentProps, ReactNode } from 'react';
+import { ComponentProps, ReactNode, RefObject } from 'react';
 import Spinner from './Spinner';
 import LinkWithIconLoader from './LinkWithIconLoader';
 import Tooltip from './Tooltip';
@@ -11,6 +11,7 @@ export default function SwitcherItem({
   icon,
   title,
   href,
+  hrefRef,
   className: classNameProp,
   onClick,
   active,
@@ -22,6 +23,7 @@ export default function SwitcherItem({
   icon: ReactNode
   title?: string
   href?: string
+  hrefRef?: RefObject<HTMLAnchorElement | null>
   className?: string
   onClick?: () => void
   active?: boolean
@@ -57,6 +59,7 @@ export default function SwitcherItem({
   const content = href
     ? <LinkWithIconLoader {...{
       href,
+      ref: hrefRef,
       title,
       className,
       prefetch,
@@ -72,7 +75,7 @@ export default function SwitcherItem({
       ? <Tooltip
         {...tooltip}
         classNameTrigger={WIDTH_CLASS}
-        delayDuration={300}
+        delayDuration={500}
       >
         {content}
       </Tooltip>

@@ -75,6 +75,7 @@ export default function MoreMenu({
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           {...props}
+          onCloseAutoFocus={e => e.preventDefault()}
           align={align}
           sideOffset={sideOffset}
           className={clsx(

@@ -12,7 +12,9 @@ import { GRID_HOMEPAGE_ENABLED } from './config';
 import AdminAppMenu from '@/admin/AdminAppMenu';
 import Spinner from '@/components/Spinner';
 import clsx from 'clsx/lite';
-import { useState, useRef, useEffect } from 'react';
+import { useCallback, useRef, useState } from 'react';
+import useKeydownHandler from '@/utility/useKeydownHandler';
+import { usePathname } from 'next/navigation';
 
 export type SwitcherSelection = 'feed' | 'grid' | 'admin';
 
@@ -23,32 +25,39 @@ export default function AppViewSwitcher({
   currentSelection?: SwitcherSelection
   className?: string
 }) {
+  const pathname = usePathname();
+
   const {
     isUserSignedIn,
     isUserSignedInEager,
     setIsCommandKOpen,
   } = useAppState();
 
-  const hasAdminMenuOpenedOnce = useRef(false);
-  const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
+  const refHrefFeed = useRef<HTMLAnchorElement>(null);
+  const refHrefGrid = useRef<HTMLAnchorElement>(null);
 
-  useEffect(() => {
-    if (isAdminMenuOpen) {
-      hasAdminMenuOpenedOnce.current = true;
-    } else if (hasAdminMenuOpenedOnce.current) {
-      // Blur admin menu button to avoid tooltip on dismiss
-      setTimeout(() => {
-        if (document.activeElement instanceof HTMLElement) {
-          document.activeElement.blur();
-        }
-      }, 50);
+  const onKeyDown = useCallback((e: KeyboardEvent) => {
+    switch (e.key.toLocaleUpperCase()) {
+    case 'F':
+      if (pathname !== PATH_FEED_INFERRED) { refHrefFeed.current?.click(); }
+      break;
+    case 'G':
+      if (pathname !== PATH_GRID_INFERRED) { refHrefGrid.current?.click(); }
+      break;
+    case 'A':
+      if (isUserSignedIn) { setIsAdminMenuOpen(true); }
+      break;
     }
-  }, [isAdminMenuOpen]);
+  }, [pathname, isUserSignedIn]);
+  useKeydownHandler({ onKeyDown });
+
+  const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
 
   const renderItemFeed =
     <SwitcherItem
       icon={<IconFeed includeTitle={false} />}
       href={PATH_FEED_INFERRED}
+      hrefRef={refHrefFeed}
       active={currentSelection === 'feed'}
       tooltip={{
         content: 'Feed',
@@ -61,6 +70,7 @@ export default function AppViewSwitcher({
     <SwitcherItem
       icon={<IconGrid includeTitle={false} />}
       href={PATH_GRID_INFERRED}
+      hrefRef={refHrefGrid}
       active={currentSelection === 'grid'}
       tooltip={{
         content: 'Grid',
@@ -93,7 +103,10 @@ export default function AppViewSwitcher({
               isOpen={isAdminMenuOpen}
               setIsOpen={setIsAdminMenuOpen}
             />}
-            tooltip={{ content: !isAdminMenuOpen ? 'Admin Menu' : undefined }}
+            tooltip={{
+              content: !isAdminMenuOpen ? 'Admin Menu' : undefined,
+              keyCommand: !isAdminMenuOpen ? 'A' : undefined,
+            }}
             noPadding
           />}
       </Switcher>

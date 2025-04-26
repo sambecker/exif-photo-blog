@@ -61,7 +61,10 @@ export default function Modal({
     },
   });
 
-  useEscapeHandler(onClose, true);
+  useEscapeHandler({
+    onKeyDown: onClose,
+    ignoreShouldRespondToKeyboardCommands: true,
+  });
 
   return (
     <motion.div
