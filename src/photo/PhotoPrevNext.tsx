@@ -17,6 +17,7 @@ import useNavigateOrRunActionWithToast
   from '@/components/useNavigateOrRunActionWithToast';
 import { toggleFavoritePhotoAction } from './actions';
 import { isPhotoFav } from '@/tag';
+import Tooltip from '@/components/Tooltip';
 
 const LISTENER_KEYUP = 'keyup';
 
@@ -141,33 +142,43 @@ export default function PhotoPrevNext({
         'items-center sm:items-start',
         '*:select-none',
       )}>
-        <PhotoLink
-          {...categories}
-          ref={refPrevious}
-          photo={previousPhoto}
-          nextPhotoAnimation={ANIMATION_RIGHT}
-          scroll={false}
-          loaderType="badge"
-          prefetch
+        <Tooltip
+          content={previousPhoto ? 'Previous' : undefined}
+          keyCommand="J"
         >
-          <FiChevronLeft className="sm:hidden text-[1.1rem]" />
-          <span className="hidden sm:inline-block">PREV</span>
-        </PhotoLink>
+          <PhotoLink
+            {...categories}
+            ref={refPrevious}
+            photo={previousPhoto}
+            nextPhotoAnimation={ANIMATION_RIGHT}
+            scroll={false}
+            loaderType="badge"
+            prefetch
+          >
+            <FiChevronLeft className="sm:hidden text-[1.1rem]" />
+            <span className="hidden sm:inline-block">PREV</span>
+          </PhotoLink>
+        </Tooltip>
         <span className="text-extra-extra-dim">
           /
         </span>
-        <PhotoLink
-          {...categories}
-          ref={refNext}
-          photo={nextPhoto}
-          nextPhotoAnimation={ANIMATION_LEFT}
-          scroll={false}
-          loaderType="badge"
-          prefetch
+        <Tooltip
+          content={nextPhoto ? 'Next' : undefined}
+          keyCommand="L"
         >
-          <FiChevronRight className="sm:hidden text-[1.1rem]" />
-          <span className="hidden sm:inline-block">NEXT</span>
-        </PhotoLink>
+          <PhotoLink
+            {...categories}
+            ref={refNext}
+            photo={nextPhoto}
+            nextPhotoAnimation={ANIMATION_LEFT}
+            scroll={false}
+            loaderType="badge"
+            prefetch
+          >
+            <FiChevronRight className="sm:hidden text-[1.1rem]" />
+            <span className="hidden sm:inline-block">NEXT</span>
+          </PhotoLink>
+        </Tooltip>
       </div>
     </div>
   );
