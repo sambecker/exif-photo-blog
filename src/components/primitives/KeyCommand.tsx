@@ -1,5 +1,7 @@
 import clsx from 'clsx/lite';
 import { useMemo } from 'react';
+import { HiMiniBackspace } from 'react-icons/hi2';
+import { PiCommandBold } from 'react-icons/pi';
 
 export default function KeyCommand({
   children,
@@ -10,9 +12,12 @@ export default function KeyCommand({
   modifier?: '⌘' | '⌥' | '⇧' | '⌃' | '⏎'
   className?: string
 }) {
-  const keys = useMemo(() =>
-    modifier ? [modifier, ...children] : [...children],
-  [modifier, children]);
+  const keys = useMemo(() => {
+    const childrenFormatted = children === 'BACKSPACE'
+      ? '⌫'
+      : children;
+    return modifier ? [modifier, ...childrenFormatted] : [...childrenFormatted];
+  }, [modifier, children]);
 
   return (
     <span className={clsx('inline-flex items-center gap-0.5', className)}>
@@ -20,12 +25,17 @@ export default function KeyCommand({
         <span
           key={key}
           className={clsx(
-            'px-1 rounded-sm shadow-xs',
-            'text-gray-600 bg-gray-200/90',
-            'dark:text-gray-300 dark:bg-gray-600/55',
+            'inline-flex items-center justify-center',
+            'px-1 h-4 rounded-sm text-xs font-medium',
+            'text-gray-500/90 bg-gray-200/70',
+            'dark:text-gray-300/90 dark:bg-gray-600/50',
           )}
         >
-          {key}
+          {key === '⌘'
+            ? <PiCommandBold />
+            : key === '⌫'
+              ? <HiMiniBackspace className="text-[13px]" />
+              : key}
         </span>
       ))}
     </span>

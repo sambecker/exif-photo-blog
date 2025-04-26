@@ -16,17 +16,22 @@ import { clsx } from 'clsx/lite';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import useNavigateOrRunActionWithToast
   from '@/components/useNavigateOrRunActionWithToast';
-import { toggleFavoritePhotoAction } from './actions';
+import {
+  deletePhotoAction,
+  syncPhotoAction,
+  toggleFavoritePhotoAction,
+} from './actions';
 import { isPhotoFav } from '@/tag';
 import Tooltip from '@/components/Tooltip';
 import { ALLOW_PUBLIC_DOWNLOADS } from '@/app/config';
 import { downloadFileFromBrowser } from '@/utility/url';
 import useKeydownHandler from '@/utility/useKeydownHandler';
+import { KEY_COMMANDS } from './key-commands';
 
 const ANIMATION_LEFT: AnimationConfig = { type: 'left', duration: 0.3 };
 const ANIMATION_RIGHT: AnimationConfig = { type: 'right', duration: 0.3 };
 
-export default function PhotoPrevNext({
+export default function PhotoPrevNextActions({
   photo,
   photos = [],
   className,
@@ -49,9 +54,7 @@ export default function PhotoPrevNext({
     : undefined;
 
   const toggleFavorite = useCallback(() => {
-    if (photo?.id) {
-      return toggleFavoritePhotoAction(photo.id);
-    }
+    if (photo?.id) { return toggleFavoritePhotoAction(photo.id); }
   }, [photo?.id]);
 
   const navigateToPhotoEdit = useNavigateOrRunActionWithToast({
@@ -67,6 +70,22 @@ export default function PhotoPrevNext({
   const unfavoritePhoto = useNavigateOrRunActionWithToast({
     pathOrAction: toggleFavorite,
     toastMessage: `Unfavoriting ${photoTitle} ...`,
+  });
+
+  const syncPhoto = useNavigateOrRunActionWithToast({
+    pathOrAction: useCallback(() => {
+      if (photo?.id) { return syncPhotoAction(photo.id); }
+    }, [photo?.id]),
+    toastMessage: `Syncing ${photoTitle} ...`,
+  });
+
+  const deletePhoto = useNavigateOrRunActionWithToast({
+    pathOrAction: useCallback(() => {
+      if (photo?.id && photo.url) {
+        return deletePhotoAction(photo.id, photo.url, true);
+      }
+    }, [photo?.id, photo?.url]),
+    toastMessage: `Deleting ${photoTitle} ...`,
   });
 
   const refPrevious = useRef<HTMLAnchorElement | null>(null);
@@ -85,42 +104,52 @@ export default function PhotoPrevNext({
 
   const onKeyDown = useCallback((e: KeyboardEvent) => {
     switch (e.key.toUpperCase()) {
-    case 'ARROWLEFT':
-    case 'J':
+    case KEY_COMMANDS.prev[0]:
+    case KEY_COMMANDS.prev[1]:
       if (pathPrevious) {
         setNextPhotoAnimation?.(ANIMATION_RIGHT);
         refPrevious.current?.click();
       }
       break;
-    case 'ARROWRIGHT':
-    case 'L':
+    case KEY_COMMANDS.next[0]:
+    case KEY_COMMANDS.next[1]:
       if (pathNext) {
         setNextPhotoAnimation?.(ANIMATION_LEFT);
         refNext.current?.click();
       }
       break;
-    case 'E':
+    case KEY_COMMANDS.edit:
       if (isUserSignedIn) {
         navigateToPhotoEdit();
       }
       break;
-    case 'P':
+    case KEY_COMMANDS.favorite:
       if (isUserSignedIn && photo && !isPhotoFav(photo)) {
         favoritePhoto();
       }
       break;
-    case 'X':
+    case KEY_COMMANDS.unfavorite:
       if (isUserSignedIn && photo && isPhotoFav(photo)) {
         unfavoritePhoto();
       }
       break;
-    case 'D':
+    case KEY_COMMANDS.download:
       if (
         (isUserSignedIn || ALLOW_PUBLIC_DOWNLOADS) &&
         downloadUrl &&
         downloadFileName
       ) {
         downloadFileFromBrowser(downloadUrl, downloadFileName);
+      }
+      break;
+    case KEY_COMMANDS.sync:
+      if (isUserSignedIn) {
+        syncPhoto();
+      }
+      break;
+    case KEY_COMMANDS.delete[1]:
+      if (e.metaKey && isUserSignedIn) {
+        deletePhoto();
       }
       break;
     };
@@ -135,6 +164,8 @@ export default function PhotoPrevNext({
     unfavoritePhoto,
     downloadUrl,
     downloadFileName,
+    syncPhoto,
+    deletePhoto,
   ]);
   useKeydownHandler({ onKeyDown });
 
@@ -152,7 +183,7 @@ export default function PhotoPrevNext({
       )}>
         <Tooltip
           content={previousPhoto ? 'Previous' : undefined}
-          keyCommand="J"
+          keyCommand={previousPhoto ? KEY_COMMANDS.prev[0] : undefined}
         >
           <PhotoLink
             {...categories}
@@ -172,7 +203,7 @@ export default function PhotoPrevNext({
         </span>
         <Tooltip
           content={nextPhoto ? 'Next' : undefined}
-          keyCommand="L"
+          keyCommand={nextPhoto ? KEY_COMMANDS.next[0] : undefined}
         >
           <PhotoLink
             {...categories}

@@ -15,6 +15,7 @@ import clsx from 'clsx/lite';
 import { useCallback, useRef, useState } from 'react';
 import useKeydownHandler from '@/utility/useKeydownHandler';
 import { usePathname } from 'next/navigation';
+import { KEY_COMMANDS } from '@/photo/key-commands';
 
 export type SwitcherSelection = 'feed' | 'grid' | 'admin';
 
@@ -38,13 +39,13 @@ export default function AppViewSwitcher({
 
   const onKeyDown = useCallback((e: KeyboardEvent) => {
     switch (e.key.toLocaleUpperCase()) {
-    case 'F':
+    case KEY_COMMANDS.feed:
       if (pathname !== PATH_FEED_INFERRED) { refHrefFeed.current?.click(); }
       break;
-    case 'G':
+    case KEY_COMMANDS.grid:
       if (pathname !== PATH_GRID_INFERRED) { refHrefGrid.current?.click(); }
       break;
-    case 'A':
+    case KEY_COMMANDS.admin:
       if (isUserSignedIn) { setIsAdminMenuOpen(true); }
       break;
     }
@@ -61,7 +62,7 @@ export default function AppViewSwitcher({
       active={currentSelection === 'feed'}
       tooltip={{
         content: 'Feed',
-        keyCommand: 'F',
+        keyCommand: KEY_COMMANDS.feed,
       }}
       noPadding
     />;
@@ -74,7 +75,7 @@ export default function AppViewSwitcher({
       active={currentSelection === 'grid'}
       tooltip={{
         content: 'Grid',
-        keyCommand: 'G',
+        keyCommand: KEY_COMMANDS.grid,
       }}
       noPadding
     />;
@@ -105,7 +106,7 @@ export default function AppViewSwitcher({
             />}
             tooltip={{
               content: !isAdminMenuOpen ? 'Admin Menu' : undefined,
-              keyCommand: !isAdminMenuOpen ? 'A' : undefined,
+              keyCommand: !isAdminMenuOpen ? KEY_COMMANDS.admin : undefined,
             }}
             noPadding
           />}
@@ -116,8 +117,8 @@ export default function AppViewSwitcher({
           onClick={() => setIsCommandKOpen?.(true)}
           tooltip={{
             content: 'Search',
-            keyCommand: 'K',
-            keyCommandModifier: '⌘',
+            keyCommandModifier: KEY_COMMANDS.search[0],
+            keyCommand: KEY_COMMANDS.search[1],
           }}
         />
       </Switcher>

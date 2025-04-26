@@ -12,7 +12,7 @@ import ShareButton from '@/share/ShareButton';
 import AnimateItems from '@/components/AnimateItems';
 import { ReactNode } from 'react';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
-import PhotoPrevNext from './PhotoPrevNext';
+import PhotoPrevNextActions from './PhotoPrevNextActions';
 import PhotoLink from './PhotoLink';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 import { useAppState } from '@/state/AppState';
@@ -59,7 +59,7 @@ export default function PhotoHeader({
       : 'photo-detail';
 
   const renderPrevNext =
-    <PhotoPrevNext {...{
+    <PhotoPrevNextActions {...{
       photo: selectedPhoto,
       photos,
       ...categories,

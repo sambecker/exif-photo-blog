@@ -25,6 +25,7 @@ import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 import IconFavs from '@/components/icons/IconFavs';
 import IconEdit from '@/components/icons/IconEdit';
 import { photoNeedsToBeSynced } from '@/photo/sync';
+import { KEY_COMMANDS } from '@/photo/key-commands';
 
 export default function AdminPhotoMenu({
   photo,
@@ -53,7 +54,7 @@ export default function AdminPhotoMenu({
         className="translate-x-[0.5px]"
       />,
       href: pathForAdminPhotoEdit(photo.id),
-      ...showKeyCommands && { keyCommand: 'E' },
+      ...showKeyCommands && { keyCommand: KEY_COMMANDS.edit },
     }];
     if (includeFavorite) {
       sectionMain.push({
@@ -67,7 +68,11 @@ export default function AdminPhotoMenu({
           photo.id,
           shouldRedirectFav,
         ).then(() => revalidatePhoto?.(photo.id)),
-        ...showKeyCommands && { keyCommand: isFav ? 'X' : 'P' },
+        ...showKeyCommands && {
+          keyCommand: isFav
+            ? KEY_COMMANDS.unfavorite
+            : KEY_COMMANDS.favorite,
+        },
       });
     }
     sectionMain.push({
@@ -78,7 +83,7 @@ export default function AdminPhotoMenu({
       />,
       href: photo.url,
       hrefDownloadName: downloadFileNameForPhoto(photo),
-      ...showKeyCommands && { keyCommand: 'D' },
+      ...showKeyCommands && { keyCommand: KEY_COMMANDS.download },
     });
     sectionMain.push({
       label: 'Sync',
@@ -96,6 +101,7 @@ export default function AdminPhotoMenu({
       />,
       action: () => syncPhotoAction(photo.id)
         .then(() => revalidatePhoto?.(photo.id)),
+      ...showKeyCommands && { keyCommand: KEY_COMMANDS.sync },
     });
     const sectionDelete: ComponentProps<typeof MoreMenuItem>[] = [{
       label: 'Delete',
@@ -116,6 +122,10 @@ export default function AdminPhotoMenu({
             registerAdminUpdate?.();
           });
         }
+      },
+      ...showKeyCommands && {
+        keyCommandModifier: KEY_COMMANDS.delete[0],
+        keyCommand: KEY_COMMANDS.delete[1],
       },
     }];
     return [sectionMain, sectionDelete];

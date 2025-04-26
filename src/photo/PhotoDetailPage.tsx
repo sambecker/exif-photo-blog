@@ -139,6 +139,7 @@ export default function PhotoDetailPage({
             shouldShareRecipe={recipe !== undefined}
             shouldShareFocalLength={focal !== undefined}
             includeFavoriteInAdminMenu={includeFavoriteInAdminMenu}
+            showAdminKeyCommands
           />,
         ]}
       />
