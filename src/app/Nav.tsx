@@ -88,16 +88,13 @@ export default function Nav({
                 'hidden xs:block',
                 'translate-y-[-1px]',
               )}>
-                <div className={clsx(
-                  'truncate overflow-hidden select-none',
-                  NAV_CAPTION && 'sm:font-bold',
-                )}>
+                <div className="truncate overflow-hidden select-none">
                   {renderLink(navTitleOrDomain, PATH_ROOT)}
                 </div>
                 {NAV_CAPTION &&
                   <div className={clsx(
                     'hidden sm:block truncate overflow-hidden',
-                    'leading-tight',
+                    'leading-tight text-dim',
                   )}>
                     {NAV_CAPTION}
                   </div>}
