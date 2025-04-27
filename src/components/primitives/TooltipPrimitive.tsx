@@ -63,6 +63,14 @@ export default function TooltipPrimitive({
     </div>
     : contentProp;
 
+  // Blur after clicking to prevent keyboard focus being stuck
+  // when tooltip is combined with a button
+  const blurActiveElement = () => {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+  };
+
   return (
     <Tooltip.Provider {...{ delayDuration, skipDelayDuration }}>
       <Tooltip.Root open={includeButton ? isOpen : undefined}>
@@ -70,12 +78,18 @@ export default function TooltipPrimitive({
           {includeButton
             ? <button
               ref={refTrigger}
-              onClick={() => setIsOpen(!isOpen)}
+              onClick={() => {
+                setIsOpen(!isOpen);
+                blurActiveElement();
+              }}
               className={clsx('link', classNameTrigger)}
             >
               {children}
             </button>
-            : <span className={classNameTrigger}>
+            : <span
+              className={classNameTrigger}
+              onClick={blurActiveElement}
+            >
               {children}
             </span>}
         </Tooltip.Trigger>
