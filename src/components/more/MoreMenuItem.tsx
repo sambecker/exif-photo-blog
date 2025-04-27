@@ -148,7 +148,10 @@ export default function MoreMenuItem({
           </span>}
       </LoaderButton>
       {keyCommand &&
-        <KeyCommand modifier={keyCommandModifier}>
+        <KeyCommand
+          modifier={keyCommandModifier}
+          className="hidden! sm:inline-flex!"
+        >
           {keyCommand}
         </KeyCommand>}
     </DropdownMenu.Item>
