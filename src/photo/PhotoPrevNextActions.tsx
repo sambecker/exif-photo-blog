@@ -103,58 +103,63 @@ export default function PhotoPrevNextActions({
     : undefined;
 
   const onKeyDown = useCallback((e: KeyboardEvent) => {
-    switch (e.key.toUpperCase()) {
-    // Public commands
-    case KEY_COMMANDS.prev[0]:
-    case KEY_COMMANDS.prev[1]:
-      if (pathPrevious) {
-        setNextPhotoAnimation?.(ANIMATION_RIGHT);
-        refPrevious.current?.click();
+    if (e.metaKey) {
+      switch (e.key.toUpperCase()) {
+      case KEY_COMMANDS.delete[1]:
+        if (isUserSignedIn) {
+          deletePhoto();
+        }
+        break;
       }
-      break;
-    case KEY_COMMANDS.next[0]:
-    case KEY_COMMANDS.next[1]:
-      if (pathNext) {
-        setNextPhotoAnimation?.(ANIMATION_LEFT);
-        refNext.current?.click();
-      }
-      break;
-    // Admin commands
-    case KEY_COMMANDS.edit:
-      if (isUserSignedIn) {
-        navigateToPhotoEdit();
-      }
-      break;
-    case KEY_COMMANDS.favorite:
-      if (isUserSignedIn && photo && !isPhotoFav(photo)) {
-        favoritePhoto();
-      }
-      break;
-    case KEY_COMMANDS.unfavorite:
-      if (isUserSignedIn && photo && isPhotoFav(photo)) {
-        unfavoritePhoto();
-      }
-      break;
-    case KEY_COMMANDS.download:
-      if (
-        (isUserSignedIn || ALLOW_PUBLIC_DOWNLOADS) &&
-        downloadUrl &&
-        downloadFileName
-      ) {
-        downloadFileFromBrowser(downloadUrl, downloadFileName);
-      }
-      break;
-    case KEY_COMMANDS.sync:
-      if (isUserSignedIn) {
-        syncPhoto();
-      }
-      break;
-    case KEY_COMMANDS.delete[1]:
-      if (e.metaKey && isUserSignedIn) {
-        deletePhoto();
-      }
-      break;
-    };
+    } else {
+      switch (e.key.toUpperCase()) {
+      // Public commands
+      case KEY_COMMANDS.prev[0]:
+      case KEY_COMMANDS.prev[1]:
+        if (pathPrevious) {
+          setNextPhotoAnimation?.(ANIMATION_RIGHT);
+          refPrevious.current?.click();
+        }
+        break;
+      case KEY_COMMANDS.next[0]:
+      case KEY_COMMANDS.next[1]:
+        if (pathNext) {
+          setNextPhotoAnimation?.(ANIMATION_LEFT);
+          refNext.current?.click();
+        }
+        break;
+      // Admin commands
+      case KEY_COMMANDS.edit:
+        if (isUserSignedIn) {
+          navigateToPhotoEdit();
+        }
+        break;
+      case KEY_COMMANDS.favorite:
+        if (isUserSignedIn && photo && !isPhotoFav(photo)) {
+          favoritePhoto();
+        }
+        break;
+      case KEY_COMMANDS.unfavorite:
+        if (isUserSignedIn && photo && isPhotoFav(photo)) {
+          unfavoritePhoto();
+        }
+        break;
+      case KEY_COMMANDS.download:
+        if (
+          (isUserSignedIn || ALLOW_PUBLIC_DOWNLOADS) &&
+          downloadUrl &&
+          downloadFileName
+        ) {
+          downloadFileFromBrowser(downloadUrl, downloadFileName);
+        }
+        break;
+      case KEY_COMMANDS.sync:
+        if (isUserSignedIn) {
+          syncPhoto();
+        }
+        break;
+      };
+    }
   }, [
     setNextPhotoAnimation,
     pathPrevious,

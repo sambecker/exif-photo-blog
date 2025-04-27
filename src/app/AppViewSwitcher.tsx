@@ -38,16 +38,18 @@ export default function AppViewSwitcher({
   const refHrefGrid = useRef<HTMLAnchorElement>(null);
 
   const onKeyDown = useCallback((e: KeyboardEvent) => {
-    switch (e.key.toLocaleUpperCase()) {
-    case KEY_COMMANDS.feed:
-      if (pathname !== PATH_FEED_INFERRED) { refHrefFeed.current?.click(); }
-      break;
-    case KEY_COMMANDS.grid:
-      if (pathname !== PATH_GRID_INFERRED) { refHrefGrid.current?.click(); }
-      break;
-    case KEY_COMMANDS.admin:
-      if (isUserSignedIn) { setIsAdminMenuOpen(true); }
-      break;
+    if (!e.metaKey) {
+      switch (e.key.toLocaleUpperCase()) {
+      case KEY_COMMANDS.feed:
+        if (pathname !== PATH_FEED_INFERRED) { refHrefFeed.current?.click(); }
+        break;
+      case KEY_COMMANDS.grid:
+        if (pathname !== PATH_GRID_INFERRED) { refHrefGrid.current?.click(); }
+        break;
+      case KEY_COMMANDS.admin:
+        if (isUserSignedIn) { setIsAdminMenuOpen(true); }
+        break;
+      }
     }
   }, [pathname, isUserSignedIn]);
   useKeydownHandler({ onKeyDown });
