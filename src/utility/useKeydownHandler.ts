@@ -15,7 +15,15 @@ export default function useKeydownHandler({
   const { shouldRespondToKeyboardCommands } = useAppState();
 
   const onKeyDown = useCallback((e: KeyboardEvent) => {
-    if (!keys || keys.some(key => key.toUpperCase() === e.key?.toUpperCase())) {
+    const isKeyValid = (
+      !keys ||
+      keys.some(key => key.toUpperCase() === e.key?.toUpperCase())
+    );
+    const isTextEntry = (
+      document.activeElement?.tagName === 'INPUT' ||
+      document.activeElement?.tagName === 'TEXTAREA'
+    );
+    if (isKeyValid && !isTextEntry) {
       onKeyDownArg?.(e);
     }
   }, [onKeyDownArg, keys]);
