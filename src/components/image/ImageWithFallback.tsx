@@ -24,7 +24,17 @@ export default function ImageWithFallback({
   const [isLoading, setIsLoading] = useState(true);
   const [didError, setDidError] = useState(false);
 
-  const onLoad = useCallback(() => setIsLoading(false), []);
+  const onLoad = useCallback(() => {
+    // Prevent blank flash by waiting for image to load
+    if (
+      imgRef.current?.complete &&
+      (imgRef.current?.naturalWidth ?? 0) > 0
+    ) {
+      setIsLoading(false);
+    } else {
+      setTimeout(() => setIsLoading(false), 100);
+    }
+  }, []);
   const onError = useCallback(() => setDidError(true), []);
 
   const [hideFallback, setHideFallback] = useState(false);
