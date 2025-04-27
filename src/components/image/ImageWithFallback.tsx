@@ -38,7 +38,7 @@ export default function ImageWithFallback({
         Boolean(imgRef.current?.complete) &&
         (imgRef.current?.naturalWidth ?? 0) > 0,
       ),
-      100,
+      50,
     );
     return () => clearTimeout(timeout);
   }, []);
