@@ -264,6 +264,8 @@ export const SHOW_FOCAL_LENGTHS =
   CATEGORY_VISIBILITY.includes('focal-lengths');
 export const COLLAPSE_SIDEBAR_CATEGORIES =
   process.env.NEXT_PUBLIC_EXHAUSTIVE_SIDEBAR_CATEGORIES !== '1';
+export const SHOW_KEYBOARD_SHORTCUT_TOOLTIPS =
+  process.env.NEXT_PUBLIC_HIDE_KEYBOARD_SHORTCUT_TOOLTIPS !== '1';
 export const SHOW_EXIF_DATA =
   process.env.NEXT_PUBLIC_HIDE_EXIF_DATA !== '1';
 export const SHOW_ZOOM_CONTROLS =
@@ -361,8 +363,8 @@ export const APP_CONFIGURATION = {
   arePhotosStaticallyOptimized: STATICALLY_OPTIMIZED_PHOTOS,
   arePhotoOGImagesStaticallyOptimized: STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES,
   arePhotoCategoriesStaticallyOptimized: STATICALLY_OPTIMIZED_PHOTO_CATEGORIES,
-  // eslint-disable-next-line max-len
-  arePhotoCategoryOgImagesStaticallyOptimized: STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES,
+  arePhotoCategoryOgImagesStaticallyOptimized:
+    STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES,
   areOriginalUploadsPreserved: PRESERVE_ORIGINAL_UPLOADS,
   hasImageQuality: Boolean(process.env.NEXT_PUBLIC_IMAGE_QUALITY),
   imageQuality: IMAGE_QUALITY,
@@ -378,6 +380,7 @@ export const APP_CONFIGURATION = {
     Boolean(process.env.NEXT_PUBLIC_CATEGORY_VISIBILITY),
   categoryVisibility: CATEGORY_VISIBILITY,
   collapseSidebarCategories: COLLAPSE_SIDEBAR_CATEGORIES,
+  showKeyboardShortcutTooltips: SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
   showExifInfo: SHOW_EXIF_DATA,
   showZoomControls: SHOW_ZOOM_CONTROLS,
   showTakenAtTimeHidden: SHOW_TAKEN_AT_TIME,

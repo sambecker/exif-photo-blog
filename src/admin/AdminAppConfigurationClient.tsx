@@ -78,6 +78,7 @@ export default function AdminAppConfigurationClient({
   categoryVisibility,
   hasCategoryVisibility,
   collapseSidebarCategories,
+  showKeyboardShortcutTooltips,
   showExifInfo,
   showZoomControls,
   showTakenAtTimeHidden,
@@ -559,6 +560,15 @@ export default function AdminAppConfigurationClient({
             Set environment variable to {'"1"'} to always show
             expanded category content
             {renderEnvVars(['NEXT_PUBLIC_EXHAUSTIVE_SIDEBAR_CATEGORIES'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Show keyboard shortcut tooltips"
+            status={showKeyboardShortcutTooltips}
+            optional
+          >
+            Set environment variable to {'"1"'} to hide keyboard shortcut
+            tooltips in areas like the main nav, and previous/next photo links:
+            {renderEnvVars(['NEXT_PUBLIC_HIDE_KEYBOARD_SHORTCUT_TOOLTIPS'])}
           </ChecklistRow>
           <ChecklistRow
             title="Show EXIF data"
