@@ -143,7 +143,6 @@ export default function CommandKClient({
     shouldDebugInsights,
     shouldDebugRecipeOverlays,
     setIsCommandKOpen: setIsOpen,
-    setShouldRespondToKeyboardCommands,
     setShouldShowBaselineGrid,
     setIsGridHighDensity,
     setAreZoomControlsShown,
@@ -268,15 +267,12 @@ export default function CommandKClient({
   }, [queryLive]);
 
   useEffect(() => {
-    if (isOpen) {
-      setShouldRespondToKeyboardCommands?.(false);
-    } else if (!isOpen) {
+    if (!isOpen) {
       setQueryLive('');
       setQueriedSections([]);
       setIsLoading(false);
-      setTimeout(() => setShouldRespondToKeyboardCommands?.(true), 500);
     }
-  }, [isOpen, setShouldRespondToKeyboardCommands]);
+  }, [isOpen]);
 
   const tagsIncludingHidden = useMemo(() =>
     addHiddenToTags(tags, photosCountHidden)
