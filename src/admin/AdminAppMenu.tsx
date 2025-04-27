@@ -28,6 +28,7 @@ import { IoMdCheckboxOutline } from 'react-icons/io';
 import IconBroom from '@/components/icons/IconBroom';
 import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 import MoreMenuItem from '@/components/more/MoreMenuItem';
+import Spinner from '@/components/Spinner';
 
 export default function AdminAppMenu({
   active,
@@ -49,6 +50,7 @@ export default function AdminAppMenu({
     tagsCount = 0,
     recipesCount = 0,
     selectedPhotoIds,
+    isLoadingAdminData,
     startUpload,
     setSelectedPhotoIds,
     refreshAdminData,
@@ -71,6 +73,8 @@ export default function AdminAppMenu({
       size={15}
       className="translate-x-[0.5px] translate-y-[0.5px]"
     />,
+    annotation: isLoadingAdminData &&
+      <Spinner className="translate-y-[1.5px]" />,
     action: startUpload,
   });
 
