@@ -1,6 +1,5 @@
 import useMetaThemeColor from '@/utility/useMetaThemeColor';
 import { useAppState } from '@/state/AppState';
-import useKeydownHandler from '@/utility/useKeydownHandler';
 import {
   ComponentProps,
   RefObject,
@@ -16,7 +15,6 @@ export default function useImageZoomControls({
   refImageContainer,
   selectImageElement,
   isEnabled,
-  shouldZoomOnFKeydown,
 } : {
   refImageContainer: RefObject<HTMLElement | null>
 } & Omit<ComponentProps<typeof ZoomControls>, 'ref' | 'children'>) {
@@ -45,12 +43,6 @@ export default function useImageZoomControls({
     setZoomLevel(1);
     viewerRef.current?.reset();
   }, []);
-
-  // On 'F' keydown, toggle fullscreen
-  const handleKeyDown = useCallback(() => {
-    if (shouldZoomOnFKeydown) { open(); }
-  }, [shouldZoomOnFKeydown, open]);
-  useKeydownHandler(handleKeyDown, ['F']);
 
   useEffect(() => {
     if (isEnabled) {

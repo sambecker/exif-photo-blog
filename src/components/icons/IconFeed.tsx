@@ -6,9 +6,11 @@ const INTRINSIC_HEIGHT = 24;
 export default function IconFeed({
   width = INTRINSIC_WIDTH,
   includeTitle = true,
+  className,
 }: {
   width?: number
   includeTitle?: boolean
+  className?: string
 }) {
   return (
     <svg
@@ -18,6 +20,7 @@ export default function IconFeed({
       fill="none"
       stroke="currentColor"
       xmlns="http://www.w3.org/2000/svg"
+      className={className}
     >
       {includeTitle && <title>Full Frame</title>}
       <rect x="5.625" y="6.625" width="16.75" height="10.75" rx="1" strokeWidth="1.25"/>

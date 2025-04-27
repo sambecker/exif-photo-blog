@@ -4,7 +4,7 @@ import { clsx } from 'clsx/lite';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import AppGrid from '../components/AppGrid';
-import ViewSwitcher, { SwitcherSelection } from '@/app/ViewSwitcher';
+import AppViewSwitcher, { SwitcherSelection } from '@/app/AppViewSwitcher';
 import {
   PATH_ROOT,
   isPathAdmin,
@@ -80,7 +80,7 @@ export default function Nav({
                 'md:w-[calc(100%+8px)] md:translate-x-[-4px] md:px-[4px]',
                 classNameStickyNav,
               )}>
-              <ViewSwitcher
+              <AppViewSwitcher
                 currentSelection={switcherSelectionForPath()}
               />
               <div className={clsx(

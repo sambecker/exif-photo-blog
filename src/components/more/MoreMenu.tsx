@@ -15,12 +15,14 @@ export default function MoreMenu({
   icon,
   header,
   className,
-  buttonClassName,
-  buttonClassNameOpen,
+  classNameButton,
+  classNameButtonOpen,
   ariaLabel,
   align = 'end',
   // Prevent errant clicks from trigger being too close to menu
   sideOffset = 6,
+  isOpen: isOpenProp,
+  setIsOpen: setIsOpenProp,
   onOpen,
   ...props
 }: {
@@ -28,12 +30,17 @@ export default function MoreMenu({
   icon?: ReactNode
   header?: ReactNode
   className?: string
-  buttonClassName?: string
-  buttonClassNameOpen?: string
+  classNameButton?: string
+  classNameButtonOpen?: string
   ariaLabel: string
+  isOpen?: boolean
+  setIsOpen?: (isOpen: boolean) => void
   onOpen?: () => void
 } & ComponentProps<typeof DropdownMenu.Content>){
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenInternal, setIsOpenInternal] = useState(isOpenProp ?? false);
+
+  const isOpen = isOpenProp ?? isOpenInternal;
+  const setIsOpen = setIsOpenProp ?? setIsOpenInternal;
 
   const dismissMenu = useCallback(() => {
     setIsOpen(false);
@@ -44,7 +51,10 @@ export default function MoreMenu({
   }, [isOpen, onOpen]);
 
   return (
-    <DropdownMenu.Root open={isOpen} onOpenChange={setIsOpen}>
+    <DropdownMenu.Root
+      open={isOpen}
+      onOpenChange={setIsOpen}
+    >
       <DropdownMenu.Trigger asChild>
         <button
           className={clsx(
@@ -54,8 +64,8 @@ export default function MoreMenu({
             'dark:hover:bg-gray-800/75 dark:active:bg-gray-900',
             'text-dim',
             'outline-none',
-            buttonClassName,
-            isOpen && buttonClassNameOpen,
+            classNameButton,
+            isOpen && classNameButtonOpen,
           )}
           aria-label={ariaLabel}
         >
@@ -65,6 +75,7 @@ export default function MoreMenu({
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           {...props}
+          onCloseAutoFocus={e => e.preventDefault()}
           align={align}
           sideOffset={sideOffset}
           className={clsx(

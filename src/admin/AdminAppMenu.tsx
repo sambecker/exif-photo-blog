@@ -24,9 +24,7 @@ import IconRecipe from '@/components/icons/IconRecipe';
 import IconTag from '@/components/icons/IconTag';
 import IconFolder from '@/components/icons/IconFolder';
 import IconSignOut from '@/components/icons/IconSignOut';
-import IconLock from '@/components/icons/IconLock';
 import { IoMdCheckboxOutline } from 'react-icons/io';
-import Spinner from '@/components/Spinner';
 import IconBroom from '@/components/icons/IconBroom';
 import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 import MoreMenuItem from '@/components/more/MoreMenuItem';
@@ -34,10 +32,14 @@ import MoreMenuItem from '@/components/more/MoreMenuItem';
 export default function AdminAppMenu({
   active,
   animateMenuClose,
+  isOpen,
+  setIsOpen,
   className,
 }: {
   active?: boolean
   animateMenuClose?: boolean
+  isOpen?: boolean
+  setIsOpen?: (isOpen: boolean) => void
   className?: string
 }) {
   const {
@@ -46,8 +48,6 @@ export default function AdminAppMenu({
     uploadsCount = 0,
     tagsCount = 0,
     recipesCount = 0,
-    hasAdminData,
-    isLoadingAdminData,
     selectedPhotoIds,
     startUpload,
     setSelectedPhotoIds,
@@ -80,7 +80,7 @@ export default function AdminAppMenu({
       annotation: `${uploadsCount}`,
       icon: <IconFolder
         size={16}
-        className="translate-x-[1px] translate-y-[0.5px]"
+        className="translate-x-[1px] translate-y-[1px]"
       />,
       href: PATH_ADMIN_UPLOADS,
     });
@@ -93,13 +93,13 @@ export default function AdminAppMenu({
           {photosCountNeedSync}
         </span>
         <InsightsIndicatorDot
-          className="inline-block translate-y-[-0.5px]"
+          className="inline-block translate-y-[-1px]"
           size="small"
         />
       </>,
       icon: <IconBroom
-        size={17}
-        className="translate-y-[0.5px]"
+        size={18}
+        className="translate-y-[-0.5px]"
       />,
       href: PATH_ADMIN_PHOTOS_UPDATES,
     });
@@ -112,7 +112,7 @@ export default function AdminAppMenu({
       },
       icon: <IconPhoto
         size={15}
-        className="translate-x-[-0.5px] translate-y-[0.5px]"
+        className="translate-x-[-0.5px] translate-y-[1px]"
       />,
       href: PATH_ADMIN_PHOTOS,
     });
@@ -123,7 +123,7 @@ export default function AdminAppMenu({
       annotation: `${tagsCount}`,
       icon: <IconTag
         size={15}
-        className="translate-y-[0.5px]"
+        className="translate-y-[1.5px]"
       />,
       href: PATH_ADMIN_TAGS,
     });
@@ -134,7 +134,7 @@ export default function AdminAppMenu({
       annotation: `${recipesCount}`,
       icon: <IconRecipe
         size={17}
-        className="translate-x-[-0.5px] translate-y-[0.5px]"
+        className="translate-x-[-0.5px] translate-y-[1px]"
       />,
       href: PATH_ADMIN_RECIPES,
     });
@@ -147,7 +147,7 @@ export default function AdminAppMenu({
       icon: isSelecting
         ? <IoCloseSharp
           size={18}
-          className="translate-x-[-1px] translate-y-[0.5px]"
+          className="translate-x-[-1px] translate-y-[1px]"
         />
         : <IoMdCheckboxOutline
           size={16}
@@ -174,7 +174,7 @@ export default function AdminAppMenu({
       : 'App Configuration',
     icon: <AdminAppInfoIcon
       size="small"
-      className="translate-x-[-0.5px] translate-y-[-0.5px]"
+      className="translate-x-[-0.5px] translate-y-[0.5px]"
     />,
     href: showAppInsightsLink
       ? PATH_ADMIN_INSIGHTS
@@ -189,21 +189,7 @@ export default function AdminAppMenu({
 
   return (
     <MoreMenu
-      header={<div className="flex items-center select-none">
-        <span className="inline-flex items-center justify-center w-5 mr-2">
-          {!hasAdminData && isLoadingAdminData
-            ? <Spinner
-              className="translate-x-[1px] translate-y-[1px]"
-              size={13}
-            />
-            :<IconLock
-              size={16}
-              className="translate-x-[1px] translate-y-[0.5px]"
-              narrow
-            />}
-        </span>
-        <span className="grow">Admin menu</span>
-      </div>}
+      {...{ isOpen, setIsOpen }}
       icon={<div className={clsx(
         'w-[28px] h-[28px]',
         'overflow-hidden',
@@ -226,7 +212,7 @@ export default function AdminAppMenu({
         'border-medium',
         className,
       )}
-      buttonClassName={clsx(
+      classNameButton={clsx(
         'p-0!',
         'w-full h-full',
         'flex items-center justify-center',
@@ -237,7 +223,7 @@ export default function AdminAppMenu({
           ? 'text-black dark:text-white'
           : 'text-gray-400 dark:text-gray-600',
       )}
-      buttonClassNameOpen={clsx(
+      classNameButtonOpen={clsx(
         'bg-dim text-main!',
         '[&>*>*]:translate-y-[6px]',
         !animateMenuClose && '[&>*>*]:duration-300',

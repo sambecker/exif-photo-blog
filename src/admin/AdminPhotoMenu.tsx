@@ -25,16 +25,19 @@ import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 import IconFavs from '@/components/icons/IconFavs';
 import IconEdit from '@/components/icons/IconEdit';
 import { photoNeedsToBeSynced } from '@/photo/sync';
+import { KEY_COMMANDS } from '@/photo/key-commands';
 
 export default function AdminPhotoMenu({
   photo,
   revalidatePhoto,
   includeFavorite = true,
+  showKeyCommands,
   ...props
 }: Omit<ComponentProps<typeof MoreMenu>, 'sections'> & {
   photo: Photo
   revalidatePhoto?: RevalidatePhoto
   includeFavorite?: boolean
+  showKeyCommands?: boolean
 }) {
   const { isUserSignedIn, registerAdminUpdate } = useAppState();
 
@@ -48,32 +51,39 @@ export default function AdminPhotoMenu({
       label: 'Edit',
       icon: <IconEdit
         size={15}
-        className="translate-x-[0.5px] translate-y-[-0.5px]"
+        className="translate-x-[0.5px]"
       />,
       href: pathForAdminPhotoEdit(photo.id),
+      ...showKeyCommands && { keyCommand: KEY_COMMANDS.edit },
     }];
     if (includeFavorite) {
       sectionMain.push({
         label: isFav ? 'Unfavorite' : 'Favorite',
         icon: <IconFavs
           size={14}
-          className="translate-x-[-1px]"
+          className="translate-x-[-1px] translate-y-[0.5px]"
           highlight={isFav}
         />,
         action: () => toggleFavoritePhotoAction(
           photo.id,
           shouldRedirectFav,
         ).then(() => revalidatePhoto?.(photo.id)),
+        ...showKeyCommands && {
+          keyCommand: isFav
+            ? KEY_COMMANDS.unfavorite
+            : KEY_COMMANDS.favorite,
+        },
       });
     }
     sectionMain.push({
       label: 'Download',
       icon: <MdOutlineFileDownload
         size={17}
-        className="translate-x-[-1px] translate-y-[-0.5px]"
+        className="translate-x-[-1px]"
       />,
       href: photo.url,
       hrefDownloadName: downloadFileNameForPhoto(photo),
+      ...showKeyCommands && { keyCommand: KEY_COMMANDS.download },
     });
     sectionMain.push({
       label: 'Sync',
@@ -86,17 +96,21 @@ export default function AdminPhotoMenu({
             size="small"
           />}
       </span>,
-      icon: <IconGrSync className="translate-x-[-1px]" />,
+      icon: <IconGrSync
+        className="translate-x-[-1px] translate-y-[0.5px]"
+      />,
       action: () => syncPhotoAction(photo.id)
         .then(() => revalidatePhoto?.(photo.id)),
+      ...showKeyCommands && { keyCommand: KEY_COMMANDS.sync },
     });
-    const sectionDelete = [{
+    const sectionDelete: ComponentProps<typeof MoreMenuItem>[] = [{
       label: 'Delete',
       icon: <BiTrash
         size={15}
         className="translate-x-[-1px]"
       />,
       className: 'text-error *:hover:text-error',
+      color: 'red',
       action: () => {
         if (confirm(deleteConfirmationTextForPhoto(photo))) {
           return deletePhotoAction(
@@ -109,10 +123,15 @@ export default function AdminPhotoMenu({
           });
         }
       },
+      ...showKeyCommands && {
+        keyCommandModifier: KEY_COMMANDS.delete[0],
+        keyCommand: KEY_COMMANDS.delete[1],
+      },
     }];
     return [sectionMain, sectionDelete];
   }, [
     photo,
+    showKeyCommands,
     includeFavorite,
     isFav,
     shouldRedirectFav,

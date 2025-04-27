@@ -76,6 +76,7 @@ export default function PhotoLarge({
   shouldShareFocalLength,
   includeFavoriteInAdminMenu,
   onVisible,
+  showAdminKeyCommands,
 }: {
   photo: Photo
   className?: string
@@ -101,6 +102,7 @@ export default function PhotoLarge({
   shouldShareFocalLength?: boolean
   includeFavoriteInAdminMenu?: boolean
   onVisible?: () => void
+  showAdminKeyCommands?: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const refZoomControls = useRef<ZoomControlsRef>(null);
@@ -252,6 +254,7 @@ export default function PhotoLarge({
       revalidatePhoto,
       includeFavorite: includeFavoriteInAdminMenu,
       ariaLabel: `Admin menu for '${titleForPhoto(photo)}' photo`,
+      showKeyCommands: showAdminKeyCommands,
     }} />;
 
   const largePhotoContainerClassName = clsx(
