@@ -27,6 +27,7 @@ import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 import { RecipeProps } from '@/recipe';
 import { getCountsForCategoriesCachedAction } from '@/category/actions';
 import { nanoid } from 'nanoid';
+import { toastSuccess } from '@/toast';
 
 export default function AppStateProvider({
   children,
@@ -169,7 +170,11 @@ export default function AppStateProvider({
     setUserEmail(undefined);
     setUserEmailEager(undefined);
     clearAuthEmailCookie();
-    if (isPathProtected(pathname)) { router.push(PATH_ROOT); }
+    if (isPathProtected(pathname)) {
+      router.push(PATH_ROOT);
+    } else {
+      toastSuccess('Signed out');
+    }
   }, [router, pathname]);
 
   // Returns false when upload is cancelled
