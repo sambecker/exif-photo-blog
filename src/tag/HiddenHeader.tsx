@@ -1,6 +1,7 @@
 import { Photo, photoQuantityText } from '@/photo';
 import PhotoHeader from '@/photo/PhotoHeader';
 import HiddenTag from './HiddenTag';
+import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
 
 export default function HiddenHeader({
   photos,
@@ -22,6 +23,7 @@ export default function HiddenHeader({
       selectedPhoto={selectedPhoto}
       indexNumber={indexNumber}
       count={count}
+      hasAiTextGeneration={AI_TEXT_GENERATION_ENABLED}
     />
   );
 }

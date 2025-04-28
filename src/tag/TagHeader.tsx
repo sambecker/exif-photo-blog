@@ -3,6 +3,7 @@ import PhotoTag from './PhotoTag';
 import { descriptionForTaggedPhotos, isTagFavs } from '.';
 import PhotoHeader from '@/photo/PhotoHeader';
 import FavsTag from './FavsTag';
+import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
 
 export default function TagHeader({
   tag,
@@ -32,6 +33,7 @@ export default function TagHeader({
       indexNumber={indexNumber}
       count={count}
       dateRange={dateRange}
+      hasAiTextGeneration={AI_TEXT_GENERATION_ENABLED}
       includeShareButton
     />
   );

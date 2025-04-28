@@ -3,6 +3,7 @@ import PhotoHeader from '@/photo/PhotoHeader';
 import { Lens, lensFromPhoto } from '.';
 import PhotoLens from './PhotoLens';
 import { descriptionForLensPhotos } from './meta';
+import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
 
 export default function LensHeader({
   lens: lensProp,
@@ -31,6 +32,7 @@ export default function LensHeader({
       indexNumber={indexNumber}
       count={count}
       dateRange={dateRange}
+      hasAiTextGeneration={AI_TEXT_GENERATION_ENABLED}
       includeShareButton
     />
   );

@@ -5,6 +5,7 @@ import PhotoHeader from '@/photo/PhotoHeader';
 import PhotoRecipe from './PhotoRecipe';
 import { useAppState } from '@/state/AppState';
 import { descriptionForRecipePhotos, getRecipePropsFromPhotos } from '.';
+import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
 
 export default function RecipeHeader({
   recipe,
@@ -42,6 +43,7 @@ export default function RecipeHeader({
       indexNumber={indexNumber}
       count={count}
       dateRange={dateRange}
+      hasAiTextGeneration={AI_TEXT_GENERATION_ENABLED}
       includeShareButton
     />
   );

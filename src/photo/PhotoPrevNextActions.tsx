@@ -30,6 +30,7 @@ import {
 import { downloadFileFromBrowser } from '@/utility/url';
 import useKeydownHandler from '@/utility/useKeydownHandler';
 import { KEY_COMMANDS } from './key-commands';
+import { syncPhotoConfirmText } from '@/admin/confirm';
 
 const ANIMATION_LEFT: AnimationConfig = { type: 'left', duration: 0.3 };
 const ANIMATION_RIGHT: AnimationConfig = { type: 'right', duration: 0.3 };
@@ -38,11 +39,13 @@ export default function PhotoPrevNextActions({
   photo,
   photos = [],
   className,
+  hasAiTextGeneration,
   ...categories
 }: {
   photo?: Photo
   photos?: Photo[]
   className?: string
+  hasAiTextGeneration: boolean
 } & PhotoSetCategory) {
   const { setNextPhotoAnimation, isUserSignedIn } = useAppState();
 
@@ -157,7 +160,11 @@ export default function PhotoPrevNextActions({
         }
         break;
       case KEY_COMMANDS.sync:
-        if (isUserSignedIn) {
+        if (
+          isUserSignedIn &&
+          photo &&
+          window.confirm(syncPhotoConfirmText(photo, hasAiTextGeneration))
+        ) {
           syncPhoto();
         }
         break;
@@ -176,6 +183,7 @@ export default function PhotoPrevNextActions({
     downloadFileName,
     syncPhoto,
     deletePhoto,
+    hasAiTextGeneration,
   ]);
   useKeydownHandler({ onKeyDown });
 

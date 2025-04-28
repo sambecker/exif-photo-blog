@@ -115,8 +115,7 @@ export default function AdminPhotosTable({
             {canEdit &&
               <EditButton path={pathForAdminPhotoEdit(photo)} />}
             <PhotoSyncButton
-              photoId={photo.id}
-              photoTitle={titleForPhoto(photo)}
+              photo={photo}
               onSyncComplete={invalidateSwr}
               isSyncingExternal={photoIdsSyncing.includes(photo.id)}
               hasAiTextGeneration={hasAiTextGeneration}
