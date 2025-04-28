@@ -10,14 +10,19 @@ import { usePathname } from 'next/navigation';
 import { PATH_ADMIN_PHOTOS, isPathAdmin, isPathSignIn } from './paths';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import { signOutAction } from '@/auth/actions';
-import Spinner from '@/components/Spinner';
 import AnimateItems from '@/components/AnimateItems';
 import { useAppState } from '@/state/AppState';
+import Spinner from '@/components/Spinner';
 
 export default function Footer() {
   const pathname = usePathname();
 
-  const { userEmail, clearAuthStateAndRedirectIfNecessary } = useAppState();
+  const {
+    userEmail,
+    userEmailEager,
+    isCheckingAuth,
+    clearAuthStateAndRedirectIfNecessary,
+  } = useAppState();
 
   const showFooter = !isPathSignIn(pathname);
 
@@ -38,31 +43,25 @@ export default function Footer() {
                 'text-dim min-h-10',
               )}>
               <div className="flex gap-x-3 xs:gap-x-4 grow flex-wrap">
-                {isPathAdmin(pathname)
+                {userEmail || userEmailEager
                   ? <>
-                    {userEmail === undefined &&
-                      <Spinner size={14} className="translate-y-[2px]" />}
-                    {userEmail && <>
-                      <div className={clsx(
-                        'truncate max-w-full',
-                      )}>
-                        {userEmail}
-                      </div>
-                      <form action={() => signOutAction()
-                        .then(clearAuthStateAndRedirectIfNecessary)}>
-                        <SubmitButtonWithStatus styleAs="link">
-                          Sign out
-                        </SubmitButtonWithStatus>
-                      </form>
-                    </>}
+                    <div className="truncate max-w-full">
+                      {userEmail || userEmailEager}
+                    </div>
+                    <form action={() => signOutAction()
+                      .then(clearAuthStateAndRedirectIfNecessary)}>
+                      <SubmitButtonWithStatus styleAs="link">
+                        Sign out
+                      </SubmitButtonWithStatus>
+                    </form>
                   </>
-                  : <>
-                    <Link href={PATH_ADMIN_PHOTOS}>
-                      Admin
-                    </Link>
-                    {SHOW_REPO_LINK &&
-                      <RepoLink />}
-                  </>}
+                  : isCheckingAuth
+                    ? <Spinner size={16} className="translate-y-[2px]" />
+                    : SHOW_REPO_LINK
+                      ? <RepoLink />
+                      : <Link href={PATH_ADMIN_PHOTOS}>
+                        Admin
+                      </Link>}
               </div>
               <div className="flex items-center h-10">
                 <ThemeSwitcher />

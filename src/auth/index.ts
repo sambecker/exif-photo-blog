@@ -13,11 +13,14 @@ const KEY_AUTH_EMAIL = 'authjs.email';
 export const storeAuthEmailCookie = (email: string) =>
   storeCookie(KEY_AUTH_EMAIL, email);
 
-export const clearAuthEmailCookie = () =>
-  deleteCookie(KEY_AUTH_EMAIL);
+export const getAuthEmailCookie = () =>
+  getCookie(KEY_AUTH_EMAIL);
 
 export const hasAuthEmailCookie = () =>
   Boolean(getCookie(KEY_AUTH_EMAIL));
+
+export const clearAuthEmailCookie = () =>
+  deleteCookie(KEY_AUTH_EMAIL);
 
 export const isCredentialsSignInError = (error: any) =>
   (error.message || `${error}`).includes(KEY_CREDENTIALS_SIGN_IN_ERROR);

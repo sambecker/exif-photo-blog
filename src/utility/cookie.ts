@@ -1,11 +1,14 @@
+const DEFAULT_PATH = '/';
+
 export const storeCookie = (
   name: string,
   value: string,
-  path= '/',
+  path = DEFAULT_PATH,
   maxAge = 63158400,
   sameSite = 'Lax',
 ) => {
   if (typeof document !== 'undefined') {
+    console.log('storeCookie', name, value);
     document.cookie =
       `${name}=${value};Path=${path};Max-Age=${maxAge};SameSite=${sameSite}`;
   }
@@ -22,8 +25,8 @@ export const getCookie = (name: string) => {
   }
 };
 
-export const deleteCookie = (name: string) => {
+export const deleteCookie = (name: string, path = DEFAULT_PATH) => {
   if (typeof document !== 'undefined') {
-    document.cookie = `${name}=;Max-Age=0`;
+    document.cookie = `${name}=;Path=${path};Max-Age=0`;
   }
 };
