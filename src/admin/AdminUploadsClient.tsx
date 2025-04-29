@@ -42,6 +42,7 @@ export default function AdminUploadsClient({
         urlAddStatuses,
         setUrlAddStatuses,
         isDeleting,
+        setIsDeleting,
       }} />
     </div>
   );
