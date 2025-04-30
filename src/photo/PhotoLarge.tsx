@@ -438,7 +438,7 @@ export default function PhotoLarge({
                   )}>
                     {showZoomControls &&
                       <LoaderButton
-                        title="Open Image Viewer"
+                        tooltip="Zoom In"
                         icon={<LuExpand size={15} />}
                         onClick={() => refZoomControls.current?.open()}
                         styleAs="link"
@@ -447,7 +447,7 @@ export default function PhotoLarge({
                       />}
                     {shouldShare &&
                       <ShareButton
-                        title="Share Photo"
+                        tooltip="Share Photo"
                         photo={photo}
                         tag={shouldShareTag ? primaryTag : undefined}
                         camera={shouldShareCamera ? camera : undefined}

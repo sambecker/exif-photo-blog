@@ -16,7 +16,7 @@ export default function DownloadButton({
 
   return (
     <LoaderButton
-      title="Download Original File"
+      tooltip="Download Original File"
       className={clsx(
         className,
         'text-medium',
