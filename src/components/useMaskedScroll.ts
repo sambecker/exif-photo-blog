@@ -6,27 +6,26 @@ import {
   useMemo,
 } from 'react';
 
-const CSS_VAR_START = '--mask-start';
-const CSS_VAR_END   = '--mask-end';
-
-export interface MaskedScrollExternalProps {
-  direction?: 'vertical' | 'horizontal'
-  fadeSize?: number
-  animationDuration?: number
-  scrollToEndOnMount?: boolean
-}
+const CSS_VAR_MASK_COLOR_START = '--mask-color-start';
+const CSS_VAR_MASK_COLOR_END   = '--mask-color-end';
 
 export default function useMaskedScroll({
   ref: containerRef,
   direction = 'vertical',
   fadeSize = 24,
   animationDuration = 0.3,
+  hideScrollbar,
   // Disable when calling 'updateMask' explicitly
   updateMaskOnEvents = true,
   scrollToEndOnMount,
-}: MaskedScrollExternalProps & {
+}: {
   ref: RefObject<HTMLDivElement | null>
   updateMaskOnEvents?: boolean
+  direction?: 'vertical' | 'horizontal'
+  fadeSize?: number
+  animationDuration?: number
+  hideScrollbar?: boolean
+  scrollToEndOnMount?: boolean
 }) {
   const isVertical = direction === 'vertical';
 
@@ -39,12 +38,12 @@ export default function useMaskedScroll({
       const end = isVertical
         ? (ref.scrollHeight - ref.scrollTop) - ref.clientHeight < 1
         : (ref.scrollWidth - ref.scrollLeft) - ref.clientWidth < 1;
-      ref.style.setProperty(CSS_VAR_START, !start
-        ? 'rgba(0, 0, 0, 0)'
-        : 'rgba(0, 0, 0, 1)');
-      ref.style.setProperty(CSS_VAR_END, !end
-        ? 'rgba(0, 0, 0, 0)'
-        : 'rgba(0, 0, 0, 1)');
+      ref.style.setProperty(CSS_VAR_MASK_COLOR_START, start
+        ? 'rgba(0, 0, 0, 1)'
+        : 'rgba(0, 0, 0, 0)');
+      ref.style.setProperty(CSS_VAR_MASK_COLOR_END, end
+        ? 'rgba(0, 0, 0, 1)'
+        : 'rgba(0, 0, 0, 0)');
     }
   }, [containerRef, isVertical]);
 
@@ -76,13 +75,13 @@ export default function useMaskedScroll({
   useEffect(() => {
     try {
       window.CSS.registerProperty({
-        name: CSS_VAR_START,
+        name: CSS_VAR_MASK_COLOR_START,
         syntax: '<color>',
         initialValue: 'rgba(0, 0, 0, 0)',
         inherits: false,
       });
       window.CSS.registerProperty({
-        name: CSS_VAR_END,
+        name: CSS_VAR_MASK_COLOR_END,
         syntax: '<color>',
         initialValue: 'rgba(0, 0, 0, 0)',
         inherits: false,
@@ -90,23 +89,24 @@ export default function useMaskedScroll({
     } catch {}
   }, []);
 
-  const maskStyle: CSSProperties = useMemo(() => {
+  const styleMask: CSSProperties = useMemo(() => {
     // eslint-disable-next-line max-len
-    const gradientStart = `linear-gradient(to ${isVertical ? 'bottom' : 'right'}, var(${CSS_VAR_START}), black ${fadeSize}px)`;
+    const gradientStart = `linear-gradient(to ${isVertical ? 'bottom' : 'right'}, var(${CSS_VAR_MASK_COLOR_START}), black ${fadeSize}px)`;
     // eslint-disable-next-line max-len
-    const gradientEnd = `linear-gradient(to ${isVertical ? 'top' : 'left'}, var(${CSS_VAR_END}), black ${fadeSize}px)`;
+    const gradientEnd = `linear-gradient(to ${isVertical ? 'top' : 'left'}, var(${CSS_VAR_MASK_COLOR_END}), black ${fadeSize}px)`;
     const maskImage = [gradientStart, gradientEnd].join(', ');
     const transition = [
-      `${CSS_VAR_START} ${animationDuration}s ease-in-out`,
-      `${CSS_VAR_END} ${animationDuration}s ease-in-out`,
+      `${CSS_VAR_MASK_COLOR_START} ${animationDuration}s ease-in-out`,
+      `${CSS_VAR_MASK_COLOR_END} ${animationDuration}s ease-in-out`,
     ].join(', ');
     return {
       maskImage,
       maskComposite: 'intersect',
       maskRepeat: 'no-repeat',
       transition,
+      ...hideScrollbar && { scrollbarWidth: 'none' },
     };
-  }, [isVertical, fadeSize, animationDuration]);
+  }, [isVertical, fadeSize, animationDuration, hideScrollbar]);
 
-  return { maskStyle, updateMask };
+  return { styleMask, updateMask };
 }

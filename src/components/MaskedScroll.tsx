@@ -1,26 +1,29 @@
 import clsx from 'clsx/lite';
 import { HTMLAttributes, useRef } from 'react';
-import useMaskedScroll, { MaskedScrollExternalProps } from './useMaskedScroll';
+import useMaskedScroll from './useMaskedScroll';
 
 export default function MaskedScroll({
   direction = 'vertical',
   fadeSize,
-  scrollToEndOnMount,
+  animationDuration,
   hideScrollbar,
+  updateMaskOnEvents,
+  scrollToEndOnMount,
   className,
   style,
   children,
   ...props
 }: HTMLAttributes<HTMLDivElement> &
-MaskedScrollExternalProps & {
-  hideScrollbar?: boolean
-}) {
+Parameters<typeof useMaskedScroll>[0]) {
   const ref = useRef<HTMLDivElement>(null);
 
-  const { maskStyle } = useMaskedScroll({
+  const { styleMask } = useMaskedScroll({
     ref,
     direction,
     fadeSize,
+    animationDuration,
+    hideScrollbar,
+    updateMaskOnEvents,
     scrollToEndOnMount,
   });
 
@@ -31,10 +34,9 @@ MaskedScrollExternalProps & {
       direction === 'vertical'
         ? 'max-h-full overflow-y-scroll'
         : 'max-w-full overflow-x-scroll',
-      hideScrollbar && '[scrollbar-width:none]',
       className,
     )}
-    style={{ ...maskStyle, ...style }}
+    style={{ ...styleMask, ...style }}
   >
     {children}
   </div>;
