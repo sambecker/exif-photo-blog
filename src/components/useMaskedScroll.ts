@@ -3,6 +3,7 @@ import { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
 export interface MaskedScrollExternalProps {
   direction?: 'vertical' | 'horizontal'
   fadeSize?: number
+  scrollToEndOnMount?: boolean
 }
 
 export default function useMaskedScroll({
@@ -11,6 +12,7 @@ export default function useMaskedScroll({
   fadeSize = 24,
   // Disable when calling 'updateMask' explicitly
   updateMaskOnEvents = true,
+  scrollToEndOnMount,
 }: MaskedScrollExternalProps & {
   ref: RefObject<HTMLDivElement | null>
   updateMaskOnEvents?: boolean
@@ -49,11 +51,13 @@ export default function useMaskedScroll({
 
   useEffect(() => {
     const ref = containerRef?.current;
-    const rect = ref?.getClientRects()[0];
-    if (ref && rect) {
-      ref.scrollTo({ left: rect.right });
+    const contentRect = ref?.children[0].getBoundingClientRect();
+    if (scrollToEndOnMount && ref && contentRect) {
+      ref.scrollTo(isVertical
+        ? { top: contentRect.height }
+        : { left: contentRect.width });
     }
-  }, [containerRef]);
+  }, [containerRef, scrollToEndOnMount, isVertical]);
 
   const maskImage = useMemo(() => {
     let mask = `linear-gradient(to ${isVertical ? 'bottom' : 'right'}, `;

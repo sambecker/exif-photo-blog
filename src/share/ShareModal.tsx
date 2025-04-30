@@ -85,7 +85,8 @@ export default function ShareModal({
             <MaskedScroll
               className="flex grow"
               direction="horizontal"
-              fadeSize={100}
+              fadeSize={50}
+              scrollToEndOnMount
               hideScrollbar
             >
               <div className="whitespace-nowrap px-2">
