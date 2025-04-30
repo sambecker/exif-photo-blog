@@ -2,13 +2,13 @@ import { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
 
 export interface MaskedScrollExternalProps {
   direction?: 'vertical' | 'horizontal'
-  fadeHeight?: number
+  fadeSize?: number
 }
 
 export default function useMaskedScroll({
   ref: containerRef,
   direction = 'vertical',
-  fadeHeight = 24,
+  fadeSize = 24,
   // Disable when calling 'updateMask' explicitly
   updateMaskOnEvents = true,
 }: MaskedScrollExternalProps & {
@@ -26,8 +26,8 @@ export default function useMaskedScroll({
         ? ref.scrollTop === 0
         : ref.scrollLeft === 0;
       const end = isVertical
-        ? ref.scrollHeight - ref.scrollTop === ref.clientHeight
-        : ref.scrollWidth - ref.scrollLeft === ref.clientWidth;
+        ? Math.abs((ref.scrollHeight - ref.scrollTop) - ref.clientHeight) < 1
+        : Math.abs((ref.scrollWidth - ref.scrollLeft) - ref.clientWidth) < 1;
       setPosition({ start, end });
     }
   }, [containerRef, isVertical]);
@@ -47,13 +47,21 @@ export default function useMaskedScroll({
     }
   }, [containerRef, updateMask, updateMaskOnEvents]);
 
+  useEffect(() => {
+    const ref = containerRef?.current;
+    const rect = ref?.getClientRects()[0];
+    if (ref && rect) {
+      ref.scrollTo({ left: rect.right });
+    }
+  }, [containerRef]);
+
   const maskImage = useMemo(() => {
     let mask = `linear-gradient(to ${isVertical ? 'bottom' : 'right'}, `;
     mask += 'transparent, black ';
-    mask += `${!position.start ? fadeHeight : 0}px, black calc(100% - `;
-    mask += `${!position.end ? fadeHeight : 0}px), transparent)`;
+    mask += `${!position.start ? fadeSize : 0}px, black calc(100% - `;
+    mask += `${!position.end ? fadeSize : 0}px), transparent)`;
     return mask;
-  }, [fadeHeight, isVertical, position]);
+  }, [fadeSize, isVertical, position]);
 
   return { maskImage, updateMask };
 }

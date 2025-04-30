@@ -8,7 +8,6 @@ export const storeCookie = (
   sameSite = 'Lax',
 ) => {
   if (typeof document !== 'undefined') {
-    console.log('storeCookie', name, value);
     document.cookie =
       `${name}=${value};Path=${path};Max-Age=${maxAge};SameSite=${sameSite}`;
   }

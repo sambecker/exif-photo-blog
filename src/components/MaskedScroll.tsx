@@ -4,7 +4,7 @@ import useMaskedScroll, { MaskedScrollExternalProps } from './useMaskedScroll';
 
 export default function MaskedScroll({
   direction = 'vertical',
-  fadeHeight,
+  fadeSize,
   hideScrollbar,
   className,
   style,
@@ -16,7 +16,7 @@ MaskedScrollExternalProps & {
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
-  const { maskImage } = useMaskedScroll({ ref, direction, fadeHeight });
+  const { maskImage } = useMaskedScroll({ ref, direction, fadeSize });
 
   return <div
     {...props}

@@ -13,6 +13,7 @@ import { generateXPostText } from '@/utility/social';
 import { useAppState } from '@/state/AppState';
 import useOnPathChange from '@/utility/useOnPathChange';
 import { IoArrowUp } from 'react-icons/io5';
+import MaskedScroll from '@/components/MaskedScroll';
 
 export default function ShareModal({
   title,
@@ -81,9 +82,16 @@ export default function ShareModal({
             'flex items-center justify-stretch',
             'border border-gray-200 dark:border-gray-800',
           )}>
-            <div className="truncate p-2 w-full [direction:rtl] text-left">
-              {shortenUrl(pathShare)}
-            </div>
+            <MaskedScroll
+              className="flex grow"
+              direction="horizontal"
+              fadeSize={100}
+              hideScrollbar
+            >
+              <div className="whitespace-nowrap px-2">
+                {shortenUrl(pathShare)}
+              </div>
+            </MaskedScroll>
             {renderIcon(
               <BiCopy size={18} />,
               () => {
