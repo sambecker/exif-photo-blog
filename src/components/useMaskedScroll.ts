@@ -39,10 +39,14 @@ export default function useMaskedScroll({
       const end = isVertical
         ? (ref.scrollHeight - ref.scrollTop) - ref.clientHeight < 1
         : (ref.scrollWidth - ref.scrollLeft) - ref.clientWidth < 1;
-      ref.style.setProperty(CSS_VAR_START, `${!start ? fadeSize : 0}px`);
-      ref.style.setProperty(CSS_VAR_END, `${!end ? fadeSize : 0}px`);
+      ref.style.setProperty(CSS_VAR_START, !start
+        ? 'rgba(0, 0, 0, 0)'
+        : 'rgba(0, 0, 0, 1)');
+      ref.style.setProperty(CSS_VAR_END, !end
+        ? 'rgba(0, 0, 0, 0)'
+        : 'rgba(0, 0, 0, 1)');
     }
-  }, [containerRef, fadeSize, isVertical]);
+  }, [containerRef, isVertical]);
 
   useEffect(() => {
     const ref = containerRef?.current;
@@ -73,14 +77,14 @@ export default function useMaskedScroll({
     try {
       window.CSS.registerProperty({
         name: CSS_VAR_START,
-        syntax: '<length>',
-        initialValue: '0px',
+        syntax: '<color>',
+        initialValue: 'rgba(0, 0, 0, 0)',
         inherits: false,
       });
       window.CSS.registerProperty({
         name: CSS_VAR_END,
-        syntax: '<length>',
-        initialValue: '0px',
+        syntax: '<color>',
+        initialValue: 'rgba(0, 0, 0, 0)',
         inherits: false,
       });
     } catch {}
@@ -88,9 +92,9 @@ export default function useMaskedScroll({
 
   const maskStyle: CSSProperties = useMemo(() => {
     // eslint-disable-next-line max-len
-    const gradientStart = `linear-gradient(to ${isVertical ? 'bottom' : 'right'}, transparent, black var(${CSS_VAR_START}))`;
+    const gradientStart = `linear-gradient(to ${isVertical ? 'bottom' : 'right'}, var(${CSS_VAR_START}), black ${fadeSize}px)`;
     // eslint-disable-next-line max-len
-    const gradientEnd = `linear-gradient(to ${isVertical ? 'top' : 'left'}, transparent, black var(${CSS_VAR_END}))`;
+    const gradientEnd = `linear-gradient(to ${isVertical ? 'top' : 'left'}, var(${CSS_VAR_END}), black ${fadeSize}px)`;
     const maskImage = [gradientStart, gradientEnd].join(', ');
     const transition = [
       `${CSS_VAR_START} ${animationDuration}s ease-in-out`,
@@ -102,7 +106,7 @@ export default function useMaskedScroll({
       maskRepeat: 'no-repeat',
       transition,
     };
-  }, [isVertical, animationDuration]);
+  }, [isVertical, fadeSize, animationDuration]);
 
   return { maskStyle, updateMask };
 }

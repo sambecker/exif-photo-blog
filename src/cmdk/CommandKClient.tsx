@@ -167,6 +167,7 @@ export default function CommandKClient({
   const { maskStyle, updateMask } = useMaskedScroll({
     ref: refScroll,
     updateMaskOnEvents: false,
+    fadeSize: 50,
   });
   
   // Manage action/path waiting state

@@ -40,7 +40,7 @@ export default function PhotoGridPageClient({
             'sticky top-0 -mb-5 -mt-5',
             'max-h-screen py-4',
           )}
-          fadeSize={36}
+          fadeSize={100}
           hideScrollbar
         >
           <PhotoGridSidebar {...{
