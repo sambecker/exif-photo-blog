@@ -89,7 +89,7 @@ export default function ShareModal({
               scrollToEndOnMount
               hideScrollbar
             >
-              <div className="whitespace-nowrap px-2">
+              <div className="whitespace-nowrap px-2 sm:px-3">
                 {shortenUrl(pathShare)}
               </div>
             </MaskedScroll>
