@@ -17,7 +17,7 @@ MaskedScrollExternalProps & {
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
-  const { maskImage } = useMaskedScroll({
+  const { maskStyle } = useMaskedScroll({
     ref,
     direction,
     fadeSize,
@@ -34,7 +34,7 @@ MaskedScrollExternalProps & {
       hideScrollbar && '[scrollbar-width:none]',
       className,
     )}
-    style={{ maskImage, ...style }}
+    style={{ ...maskStyle, ...style }}
   >
     {children}
   </div>;

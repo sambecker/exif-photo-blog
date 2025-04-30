@@ -164,7 +164,7 @@ export default function CommandKClient({
   }, [mobileViewportHeight]);
 
   const refScroll = useRef<HTMLDivElement>(null);
-  const { maskImage, updateMask } = useMaskedScroll({
+  const { maskStyle, updateMask } = useMaskedScroll({
     ref: refScroll,
     updateMaskOnEvents: false,
   });
@@ -591,7 +591,7 @@ export default function CommandKClient({
             'mx-3 pt-2 pb-3.5',
             '[&>*>*>*]:mt-2.5',
           )}
-          style={{ maskImage, maxHeight }}
+          style={{ ...maskStyle, maxHeight }}
         >
           <div className="-mt-2.5">
             <Command.Empty className="mt-1 pl-3 text-dim pb-1">
