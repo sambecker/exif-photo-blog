@@ -14,7 +14,7 @@ export default function useMaskedScroll({
   direction = 'vertical',
   fadeSize = 24,
   animationDuration = 0.3,
-  hideScrollbar,
+  hideScrollbar = true,
   // Disable when calling 'updateMask' explicitly
   updateMaskOnEvents = true,
   scrollToEndOnMount,

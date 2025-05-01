@@ -26,7 +26,6 @@ export default function EnvVar({
         'overflow-y-hidden',
         className,
       )}
-      hideScrollbar
     >
       <span className="inline-flex items-center gap-1">
         <span className={clsx(

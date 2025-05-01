@@ -287,11 +287,7 @@ export default function PhotoLarge({
       classNameSide="relative"
       contentSide={
         <div className="md:absolute inset-0 -mt-1">
-          <MaskedScroll
-            className="sticky top-4 self-start"
-            fadeSize={36}
-            hideScrollbar
-          >
+          <MaskedScroll className="sticky top-4 self-start">
             <DivDebugBaselineGrid className={clsx(
               'grid grid-cols-2 md:grid-cols-1',
               'gap-x-0.5 sm:gap-x-1 gap-y-baseline',

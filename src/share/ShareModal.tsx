@@ -87,7 +87,6 @@ export default function ShareModal({
               direction="horizontal"
               fadeSize={50}
               scrollToEndOnMount
-              hideScrollbar
             >
               <div className="whitespace-nowrap px-2 sm:px-3">
                 {shortenUrl(pathShare)}
