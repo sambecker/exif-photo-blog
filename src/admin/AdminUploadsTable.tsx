@@ -38,7 +38,7 @@ export default function AdminUploadsTable({
             'flex items-center grow',
             'transition-opacity',
             'rounded-md overflow-hidden',
-            'border-main bg-extra-dim',
+            'border-medium bg-extra-dim',
             isAdding && !isComplete && status !== 'adding' && 'opacity-30',
           )}
         >

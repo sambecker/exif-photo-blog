@@ -30,7 +30,7 @@ export default function Container({
     case 'gray-border': return [
       'text-medium',
       'bg-extra-dim',
-      'border border-gray-200 dark:border-gray-800',
+      'border-medium',
     ];
     case 'blue': return [
       'text-blue-800 dark:text-blue-400',
