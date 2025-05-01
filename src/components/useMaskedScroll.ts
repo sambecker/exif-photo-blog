@@ -108,5 +108,10 @@ export default function useMaskedScroll({
     };
   }, [isVertical, fadeSize, animationDuration, hideScrollbar]);
 
-  return { styleMask, updateMask };
+  const classNameMask = useMemo(() => isVertical
+    ? 'max-h-full overflow-y-scroll'
+    : 'max-w-full overflow-x-scroll'
+  , [isVertical]);
+
+  return { styleMask, classNameMask, updateMask };
 }

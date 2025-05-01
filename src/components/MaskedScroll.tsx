@@ -3,7 +3,7 @@ import { HTMLAttributes, useRef } from 'react';
 import useMaskedScroll from './useMaskedScroll';
 
 export default function MaskedScroll({
-  direction = 'vertical',
+  direction,
   fadeSize,
   animationDuration,
   hideScrollbar,
@@ -17,7 +17,7 @@ export default function MaskedScroll({
 Omit<Parameters<typeof useMaskedScroll>[0], 'ref'>) {
   const ref = useRef<HTMLDivElement>(null);
 
-  const { styleMask } = useMaskedScroll({
+  const { styleMask, classNameMask } = useMaskedScroll({
     ref,
     direction,
     fadeSize,
@@ -31,9 +31,7 @@ Omit<Parameters<typeof useMaskedScroll>[0], 'ref'>) {
     {...props}
     ref={ref}
     className={clsx(
-      direction === 'vertical'
-        ? 'max-h-full overflow-y-scroll'
-        : 'max-w-full overflow-x-scroll',
+      classNameMask,
       className,
     )}
     style={{ ...styleMask, ...style }}

@@ -1,6 +1,7 @@
 import clsx from 'clsx/lite';
 import { ReactNode } from 'react';
 import CopyButton from './CopyButton';
+import MaskedScroll from './MaskedScroll';
 
 export default function EnvVar({
   variable,
@@ -18,12 +19,14 @@ export default function EnvVar({
   className?: string,
 }) {
   return (
-    <div
+    <MaskedScroll
+      direction="horizontal"
       className={clsx(
         'inline-flex max-w-full',
-        'overflow-x-auto overflow-y-hidden',
+        'overflow-y-hidden',
         className,
       )}
+      hideScrollbar
     >
       <span className="inline-flex items-center gap-1">
         <span className={clsx(
@@ -50,6 +53,6 @@ export default function EnvVar({
             {trailingContent}
           </span>}
       </span>
-    </div>
+    </MaskedScroll>
   );
 }
