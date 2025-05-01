@@ -77,13 +77,13 @@ export default function useMaskedScroll({
       window.CSS.registerProperty({
         name: CSS_VAR_MASK_COLOR_START,
         syntax: '<color>',
-        initialValue: 'rgba(0, 0, 0, 0)',
+        initialValue: 'rgba(0, 0, 0, 1)',
         inherits: false,
       });
       window.CSS.registerProperty({
         name: CSS_VAR_MASK_COLOR_END,
         syntax: '<color>',
-        initialValue: 'rgba(0, 0, 0, 0)',
+        initialValue: 'rgba(0, 0, 0, 1)',
         inherits: false,
       });
     } catch {}

@@ -167,7 +167,6 @@ export default function CommandKClient({
   const { styleMask, updateMask } = useMaskedScroll({
     ref: refScroll,
     updateMaskOnEvents: false,
-    fadeSize: 50,
   });
   
   // Manage action/path waiting state
@@ -587,15 +586,11 @@ export default function CommandKClient({
         <Command.List
           ref={refScroll}
           onScroll={updateMask}
-          className={clsx(
-            'overflow-y-auto',
-            'mx-3 pt-2 pb-3.5',
-            '[&>*>*>*]:mt-2.5',
-          )}
+          className="overflow-y-auto"
           style={{ ...styleMask, maxHeight }}
         >
-          <div className="-mt-2.5">
-            <Command.Empty className="mt-1 pl-3 text-dim pb-1">
+          <div className="px-3 pt-2 pb-3.5">
+            <Command.Empty className="mt-1 pl-3 text-dim text-base pb-0.5">
               {isLoading ? 'Searching ...' : 'No results found'}
             </Command.Empty>
             {queriedSections
