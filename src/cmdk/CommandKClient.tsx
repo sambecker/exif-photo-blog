@@ -49,7 +49,7 @@ import { getKeywordsForPhoto, titleForPhoto } from '@/photo';
 import PhotoDate from '@/photo/PhotoDate';
 import PhotoSmall from '@/photo/PhotoSmall';
 import { FaCheck } from 'react-icons/fa6';
-import { addHiddenToTags, formatTag } from '@/tag';
+import { addHiddenToTags, formatTag, isTagFavs, isTagHidden } from '@/tag';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 import CommandKItem from './CommandKItem';
 import { CATEGORY_VISIBILITY, GRID_HOMEPAGE_ENABLED } from '@/app/config';
@@ -72,6 +72,8 @@ import IconLock from '../components/icons/IconLock';
 import useVisualViewportHeight from '@/utility/useVisualViewport';
 import useMaskedScroll from '../components/useMaskedScroll';
 import { labelForFilm } from '@/film';
+import IconFavs from '@/components/icons/IconFavs';
+import IconHidden from '@/components/icons/IconHidden';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -309,7 +311,21 @@ export default function CommandKClient({
             className="translate-x-[1px] translate-y-[0.75px]"
           />,
           items: tagsIncludingHidden.map(({ tag, count }) => ({
-            label: formatTag(tag),
+            explicitKey: formatTag(tag),
+            label: <span className="flex items-center gap-[7px]">
+              {formatTag(tag)}
+              {isTagFavs(tag) &&
+                <IconFavs
+                  size={13}
+                  className="translate-y-[-0.5px]"
+                  highlight
+                />}
+              {isTagHidden(tag) &&
+                <IconHidden
+                  size={15}
+                  className="translate-y-[-0.5px]"
+                />}
+            </span>,
             annotation: formatCount(count),
             annotationAria: formatCountDescriptive(count),
             path: pathForTag(tag),
