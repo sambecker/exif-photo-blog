@@ -445,9 +445,15 @@ export default function PhotoLarge({
                       <ShareButton
                         tooltip="Share Photo"
                         photo={photo}
-                        tag={shouldShareTag ? primaryTag : undefined}
-                        camera={shouldShareCamera ? camera : undefined}
-                        lens={shouldShareLens ? lens : undefined}
+                        tag={shouldShareTag
+                          ? primaryTag
+                          : undefined}
+                        camera={shouldShareCamera
+                          ? camera
+                          : undefined}
+                        lens={shouldShareLens
+                          ? lens
+                          : undefined}
                         film={shouldShareFilm
                           ? photo.film
                           : undefined}

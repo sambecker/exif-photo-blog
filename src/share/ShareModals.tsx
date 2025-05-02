@@ -28,10 +28,11 @@ export default function ShareModals() {
   if (photo) {
     return <PhotoShareModal {...{
       photo,
-      tag,
       camera,
-      film,
+      lens,
+      tag,
       recipe,
+      film,
       focal,
     }} />;
   } else if (photos) {
