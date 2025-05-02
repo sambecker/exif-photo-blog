@@ -105,13 +105,11 @@ export default function useMaskedScroll({
       maskRepeat: 'no-repeat',
       transition,
       ...hideScrollbar && { scrollbarWidth: 'none' },
+      ...isVertical
+        ? { maxHeight: '100%', overflowY: 'scroll' }
+        : { maxWidth: '100%', overflowX: 'scroll' },
     };
   }, [isVertical, fadeSize, animationDuration, hideScrollbar]);
 
-  const classNameMask = useMemo(() => isVertical
-    ? 'max-h-full overflow-y-scroll'
-    : 'max-w-full overflow-x-scroll'
-  , [isVertical]);
-
-  return { styleMask, classNameMask, updateMask };
+  return { styleMask, updateMask };
 }
