@@ -10,7 +10,9 @@ export default function Tooltip({
 }) {
   return (
     <TooltipPrimitive {...rest}>
-      {children ?? <IoInformationCircleOutline size={18} />}
+      {children ?? <span className="h-3.5">
+        <IoInformationCircleOutline size={18} />
+      </span>}
     </TooltipPrimitive>
   );
 }
