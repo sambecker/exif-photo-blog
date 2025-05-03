@@ -134,7 +134,7 @@ export default function PhotoRecipeOverlay({
           text={generateRecipeText({ title, data, film })}
           iconSize={17}
           className={clsx(
-            'translate-y-[1.5px]',
+            'translate-y-[-1.5px]',
             'text-black/40 active:text-black/75',
             'hover:text-black/40',
           )}
