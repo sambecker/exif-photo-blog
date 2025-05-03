@@ -46,8 +46,8 @@ export default function AdminPhotoMenu({
   const shouldRedirectFav = isPathFavs(path) && isFav;
   const shouldRedirectDelete = pathForPhoto({ photo: photo.id }) === path;
 
-  const sections = useMemo(() => {
-    const sectionMain: ComponentProps<typeof MoreMenuItem>[] = [{
+  const sectionMain = useMemo(() => {
+    const items: ComponentProps<typeof MoreMenuItem>[] = [{
       label: 'Edit',
       icon: <IconEdit
         size={15}
@@ -57,7 +57,7 @@ export default function AdminPhotoMenu({
       ...showKeyCommands && { keyCommand: KEY_COMMANDS.edit },
     }];
     if (includeFavorite) {
-      sectionMain.push({
+      items.push({
         label: isFav ? 'Unfavorite' : 'Favorite',
         icon: <IconFavs
           size={14}
@@ -75,7 +75,7 @@ export default function AdminPhotoMenu({
         },
       });
     }
-    sectionMain.push({
+    items.push({
       label: 'Download',
       icon: <MdOutlineFileDownload
         size={17}
@@ -85,7 +85,7 @@ export default function AdminPhotoMenu({
       hrefDownloadName: downloadFileNameForPhoto(photo),
       ...showKeyCommands && { keyCommand: KEY_COMMANDS.download },
     });
-    sectionMain.push({
+    items.push({
       label: 'Sync',
       labelComplex: <span className="inline-flex items-center gap-2">
         <span>Sync</span>
@@ -103,32 +103,8 @@ export default function AdminPhotoMenu({
         .then(() => revalidatePhoto?.(photo.id)),
       ...showKeyCommands && { keyCommand: KEY_COMMANDS.sync },
     });
-    const sectionDelete: ComponentProps<typeof MoreMenuItem>[] = [{
-      label: 'Delete',
-      icon: <BiTrash
-        size={15}
-        className="translate-x-[-1px]"
-      />,
-      className: 'text-error *:hover:text-error',
-      color: 'red',
-      action: () => {
-        if (confirm(deleteConfirmationTextForPhoto(photo))) {
-          return deletePhotoAction(
-            photo.id,
-            photo.url,
-            shouldRedirectDelete,
-          ).then(() => {
-            revalidatePhoto?.(photo.id, true);
-            registerAdminUpdate?.();
-          });
-        }
-      },
-      ...showKeyCommands && {
-        keyCommandModifier: KEY_COMMANDS.delete[0],
-        keyCommand: KEY_COMMANDS.delete[1],
-      },
-    }];
-    return [sectionMain, sectionDelete];
+
+    return items;
   }, [
     photo,
     showKeyCommands,
@@ -136,15 +112,49 @@ export default function AdminPhotoMenu({
     isFav,
     shouldRedirectFav,
     revalidatePhoto,
+  ]);
+
+  const sectionDelete: ComponentProps<typeof MoreMenuItem>[] = useMemo(() => [{
+    label: 'Delete',
+    icon: <BiTrash
+      size={15}
+      className="translate-x-[-1px]"
+    />,
+    className: 'text-error *:hover:text-error',
+    color: 'red',
+    action: () => {
+      if (confirm(deleteConfirmationTextForPhoto(photo))) {
+        return deletePhotoAction(
+          photo.id,
+          photo.url,
+          shouldRedirectDelete,
+        ).then(() => {
+          revalidatePhoto?.(photo.id, true);
+          registerAdminUpdate?.();
+        });
+      }
+    },
+    ...showKeyCommands && {
+      keyCommandModifier: KEY_COMMANDS.delete[0],
+      keyCommand: KEY_COMMANDS.delete[1],
+    },
+  }], [
+    photo,
+    showKeyCommands,
+    revalidatePhoto,
     shouldRedirectDelete,
     registerAdminUpdate,
   ]);
 
+  const sections = useMemo(() =>
+    [sectionMain, sectionDelete]
+  , [sectionMain, sectionDelete]);
+
   return (
     isUserSignedIn
       ? <MoreMenu {...{
-        sections,
         ...props,
+        sections,
       }}/>
       : null
   );

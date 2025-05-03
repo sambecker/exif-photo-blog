@@ -16,7 +16,7 @@ import { IoArrowDown, IoArrowUp, IoCloseSharp } from 'react-icons/io5';
 import { clsx } from 'clsx/lite';
 import AdminAppInfoIcon from './AdminAppInfoIcon';
 import { signOutAction } from '@/auth/actions';
-import { ComponentProps } from 'react';
+import { ComponentProps, useMemo } from 'react';
 import useIsKeyBeingPressed from '@/utility/useIsKeyBeingPressed';
 import IconPhoto from '@/components/icons/IconPhoto';
 import IconUpload from '@/components/icons/IconUpload';
@@ -63,133 +63,149 @@ export default function AdminAppMenu({
 
   const showAppInsightsLink = photosCountTotal > 0 && !isAltPressed;
 
-  const sectionUpload: ComponentProps<typeof MoreMenuItem>[] = [];
-  const sectionMain: ComponentProps<typeof MoreMenuItem>[] = [];
-  const sectionSignOut: ComponentProps<typeof MoreMenuItem>[] = [];
-
-  sectionUpload.push({
-    label: 'Upload Photos',
-    icon: <IconUpload
-      size={15}
-      className="translate-x-[0.5px] translate-y-[0.5px]"
-    />,
-    annotation: isLoadingAdminData &&
-      <Spinner className="translate-y-[1.5px]" />,
-    action: startUpload,
-  });
-
-  if (uploadsCount) {
-    sectionMain.push({
-      label: 'Uploads',
-      annotation: `${uploadsCount}`,
-      icon: <IconFolder
-        size={16}
-        className="translate-x-[1px] translate-y-[1px]"
-      />,
-      href: PATH_ADMIN_UPLOADS,
-    });
-  }
-  if (photosCountNeedSync) {
-    sectionMain.push({
-      label: 'Updates',
-      annotation: <>
-        <span className="mr-3">
-          {photosCountNeedSync}
-        </span>
-        <InsightsIndicatorDot
-          className="inline-block translate-y-[-1px]"
-          size="small"
-        />
-      </>,
-      icon: <IconBroom
-        size={18}
-        className="translate-y-[-0.5px]"
-      />,
-      href: PATH_ADMIN_PHOTOS_UPDATES,
-    });
-  }
-  if (photosCountTotal) {
-    sectionMain.push({
-      label: 'Manage Photos',
-      ...photosCountTotal && {
-        annotation: `${photosCountTotal}`,
-      },
-      icon: <IconPhoto
+  const sectionUpload: ComponentProps<typeof MoreMenuItem>[] =
+    useMemo(() => ([{
+      label: 'Upload Photos',
+      icon: <IconUpload
         size={15}
-        className="translate-x-[-0.5px] translate-y-[1px]"
+        className="translate-x-[0.5px] translate-y-[0.5px]"
       />,
-      href: PATH_ADMIN_PHOTOS,
-    });
-  }
-  if (tagsCount) {
-    sectionMain.push({
-      label: 'Manage Tags',
-      annotation: `${tagsCount}`,
-      icon: <IconTag
-        size={15}
-        className="translate-y-[1.5px]"
-      />,
-      href: PATH_ADMIN_TAGS,
-    });
-  }
-  if (recipesCount) {
-    sectionMain.push({
-      label: 'Manage Recipes',
-      annotation: `${recipesCount}`,
-      icon: <IconRecipe
-        size={17}
-        className="translate-x-[-0.5px] translate-y-[1px]"
-      />,
-      href: PATH_ADMIN_RECIPES,
-    });
-  }
-  if (photosCountTotal) {
-    sectionMain.push({
-      label: isSelecting
-        ? 'Exit Batch Edit'
-        : 'Batch Edit ...',
-      icon: isSelecting
-        ? <IoCloseSharp
-          size={18}
-          className="translate-x-[-1px] translate-y-[1px]"
-        />
-        : <IoMdCheckboxOutline
+      annotation: isLoadingAdminData &&
+        <Spinner className="translate-y-[1.5px]" />,
+      action: startUpload,
+    }]), [isLoadingAdminData, startUpload]);
+
+  const sectionMain: ComponentProps<typeof MoreMenuItem>[] = useMemo(() => {
+    const items: ComponentProps<typeof MoreMenuItem>[] = [];
+
+    if (uploadsCount) {
+      items.push({
+        label: 'Uploads',
+        annotation: `${uploadsCount}`,
+        icon: <IconFolder
           size={16}
-          className="translate-x-[-0.5px]"
+          className="translate-x-[1px] translate-y-[1px]"
         />,
-      href: PATH_GRID_INFERRED,
-      action: () => {
-        if (isSelecting) {
-          setSelectedPhotoIds?.(undefined);
-        } else {
-          setSelectedPhotoIds?.([]);
-        }
-        if (document.activeElement instanceof HTMLElement) {
-          document.activeElement.blur();
-        }
-      },
-      shouldPreventDefault: false,
+        href: PATH_ADMIN_UPLOADS,
+      });
+    }
+    if (photosCountNeedSync) {
+      items.push({
+        label: 'Updates',
+        annotation: <>
+          <span className="mr-3">
+            {photosCountNeedSync}
+          </span>
+          <InsightsIndicatorDot
+            className="inline-block translate-y-[-1px]"
+            size="small"
+          />
+        </>,
+        icon: <IconBroom
+          size={18}
+          className="translate-y-[-0.5px]"
+        />,
+        href: PATH_ADMIN_PHOTOS_UPDATES,
+      });
+    }
+    if (photosCountTotal) {
+      items.push({
+        label: 'Manage Photos',
+        ...photosCountTotal && {
+          annotation: `${photosCountTotal}`,
+        },
+        icon: <IconPhoto
+          size={15}
+          className="translate-x-[-0.5px] translate-y-[1px]"
+        />,
+        href: PATH_ADMIN_PHOTOS,
+      });
+    }
+    if (tagsCount) {
+      items.push({
+        label: 'Manage Tags',
+        annotation: `${tagsCount}`,
+        icon: <IconTag
+          size={15}
+          className="translate-y-[1.5px]"
+        />,
+        href: PATH_ADMIN_TAGS,
+      });
+    }
+    if (recipesCount) {
+      items.push({
+        label: 'Manage Recipes',
+        annotation: `${recipesCount}`,
+        icon: <IconRecipe
+          size={17}
+          className="translate-x-[-0.5px] translate-y-[1px]"
+        />,
+        href: PATH_ADMIN_RECIPES,
+      });
+    }
+    if (photosCountTotal) {
+      items.push({
+        label: isSelecting
+          ? 'Exit Batch Edit'
+          : 'Batch Edit ...',
+        icon: isSelecting
+          ? <IoCloseSharp
+            size={18}
+            className="translate-x-[-1px] translate-y-[1px]"
+          />
+          : <IoMdCheckboxOutline
+            size={16}
+            className="translate-x-[-0.5px]"
+          />,
+        href: PATH_GRID_INFERRED,
+        action: () => {
+          if (isSelecting) {
+            setSelectedPhotoIds?.(undefined);
+          } else {
+            setSelectedPhotoIds?.([]);
+          }
+          if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+          }
+        },
+        shouldPreventDefault: false,
+      });
+    }
+    items.push({
+      label: showAppInsightsLink
+        ? 'App Insights'
+        : 'App Configuration',
+      icon: <AdminAppInfoIcon
+        size="small"
+        className="translate-x-[-0.5px] translate-y-[0.5px]"
+      />,
+      href: showAppInsightsLink
+        ? PATH_ADMIN_INSIGHTS
+        : PATH_ADMIN_CONFIGURATION,
     });
-  }
 
-  sectionMain.push({
-    label: showAppInsightsLink
-      ? 'App Insights'
-      : 'App Configuration',
-    icon: <AdminAppInfoIcon
-      size="small"
-      className="translate-x-[-0.5px] translate-y-[0.5px]"
-    />,
-    href: showAppInsightsLink
-      ? PATH_ADMIN_INSIGHTS
-      : PATH_ADMIN_CONFIGURATION,
-  });
+    return items;
+  }, [
+    isSelecting,
+    photosCountNeedSync,
+    photosCountTotal,
+    recipesCount,
+    setSelectedPhotoIds,
+    showAppInsightsLink,
+    tagsCount,
+    uploadsCount,
+  ]);
 
-  sectionSignOut.push({
-    label: 'Sign Out',
-    icon: <IconSignOut size={15} />,
-    action: () => signOutAction().then(clearAuthStateAndRedirectIfNecessary),
-  });
+  const sectionSignOut: ComponentProps<typeof MoreMenuItem>[] =
+    useMemo(() => ([{
+      label: 'Sign Out',
+      icon: <IconSignOut size={15} />,
+      action: () => signOutAction().then(clearAuthStateAndRedirectIfNecessary),
+    }]), [clearAuthStateAndRedirectIfNecessary]);
+
+  const sections = useMemo(() =>
+    [sectionUpload, sectionMain, sectionSignOut]
+  , [sectionUpload, sectionMain, sectionSignOut]);
 
   return (
     <MoreMenu
@@ -232,11 +248,7 @@ export default function AdminAppMenu({
         '[&>*>*]:translate-y-[6px]',
         !animateMenuClose && '[&>*>*]:duration-300',
       )}
-      sections={[
-        sectionUpload,
-        sectionMain,
-        sectionSignOut,
-      ]}
+      sections={sections}
       ariaLabel="Admin Menu"
     />
   );
