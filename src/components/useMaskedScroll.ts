@@ -14,6 +14,7 @@ export default function useMaskedScroll({
   direction = 'vertical',
   fadeSize = 24,
   animationDuration = 0.3,
+  setMaxSize = true,
   hideScrollbar = true,
   // Disable when calling 'updateMask' explicitly
   updateMaskOnEvents = true,
@@ -24,6 +25,7 @@ export default function useMaskedScroll({
   direction?: 'vertical' | 'horizontal'
   fadeSize?: number
   animationDuration?: number
+  setMaxSize?: boolean
   hideScrollbar?: boolean
   scrollToEndOnMount?: boolean
 }) {
@@ -106,10 +108,15 @@ export default function useMaskedScroll({
       transition,
       ...hideScrollbar && { scrollbarWidth: 'none' },
       ...isVertical
-        ? { maxHeight: '100%', overflowY: 'scroll' }
-        : { maxWidth: '100%', overflowX: 'scroll' },
+        ? {
+          ...setMaxSize && { maxHeight: '100%' },
+          overflowY: 'scroll',
+        } : {
+          ...setMaxSize && { maxWidth: '100%' },
+          overflowX: 'scroll',
+        },
     };
-  }, [isVertical, fadeSize, animationDuration, hideScrollbar]);
+  }, [isVertical, fadeSize, animationDuration, hideScrollbar, setMaxSize]);
 
   return { styleMask, updateMask };
 }

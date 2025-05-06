@@ -41,6 +41,7 @@ export default function PhotoGridPageClient({
             'max-h-screen py-4',
           )}
           fadeSize={100}
+          setMaxSize={false}
         >
           <PhotoGridSidebar {...{
             ...categories,
