@@ -254,6 +254,16 @@ Vercel Postgres can be switched to another Postgres-compatible, pooling provider
 1. Ensure connection string is set to "Transaction Mode" via port `6543`
 2. Disable SSL by setting `DISABLE_POSTGRES_SSL = 1`
 
+💬 &nbsp;&nbsp;I18N
+-
+
+Partial internationalization (non-admin, user-facing text) provided for a handful of languages. If you'd like to add support for a new language, [open a PR](https://github.com/sambecker/exif-photo-blog/compare) using [`ES_EN`](https://github.com/sambecker/exif-photo-blog) for reference.
+
+### Supported Languages
+- `ES_ES`
+- `PT_BR`
+- `PT_PT`
+
 📖&nbsp;&nbsp;FAQ
 -
 #### How do I receive template updates?
