@@ -57,7 +57,7 @@ const TEXT: I18NDeepPartial = {
   },
   theme: {
     theme: 'Tema',
-    system: 'Usar Sistema',
+    system: 'Sistema',
     light: 'Modo Claro',
     dark: 'Modo Escuro',
   },
@@ -93,7 +93,18 @@ const TEXT: I18NDeepPartial = {
     deleteConfirm: (photoTitle: string) =>
       `Tem certeza que deseja excluir "${photoTitle}"?`,
   },
+  onboarding: {
+    setupComplete: 'Configuração Concluída!',
+    setupIncomplete: 'Finalizar Configuração',
+    setupSignIn: 'Entre para enviar fotos',
+    setupFirstPhoto: 'Adicione sua primeira foto',
+    // eslint-disable-next-line max-len
+    setupConfig: 'Altere o nome do site e outras configurações editando as variáveis de ambiente referenciadas em',
+  },
   misc: {
+    loading: 'Carregando ...',
+    finishing: 'Finalizando ...',
+    uploading: 'Enviando',
     repo: 'Feito com',
     copyPhrase: (label: string) => `${label} copiado`,
   },

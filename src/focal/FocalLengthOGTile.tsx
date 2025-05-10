@@ -3,10 +3,8 @@ import {
   absolutePathForFocalLengthImage,
   pathForFocalLength,
 } from '@/app/paths';
-import OGTile from '@/components/OGTile';
+import OGTile, { OGLoadingState } from '@/components/OGTile';
 import { descriptionForFocalLengthPhotos, titleForFocalLength } from '.';
-
-export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 
 export default function FocalLengthOGTile({
   focal,

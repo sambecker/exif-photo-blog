@@ -56,7 +56,7 @@ const TEXT = {
   },
   theme: {
     theme: 'Theme',
-    system: 'Use System',
+    system: 'System',
     light: 'Light Mode',
     dark: 'Dark Mode',
   }, 
@@ -92,7 +92,18 @@ const TEXT = {
     deleteConfirm: (photoTitle: string) =>
       `Are you sure you want to delete "${photoTitle}?"`,
   },
+  onboarding: {
+    setupComplete: 'Setup Complete!',
+    setupIncomplete: 'Finish Setup',
+    setupSignIn: 'Sign in to upload photos',
+    setupFirstPhoto: 'Add your first photo',
+    // eslint-disable-next-line max-len
+    setupConfig: 'Change the site name and other configuration by editing environment variables referenced in',
+  },
   misc: {
+    loading: 'Loading ...',
+    finishing: 'Finishing ...',
+    uploading: 'Uploading',
     repo: 'Made with',
     copyPhrase: (label: string) => `${label} copied`,
   },

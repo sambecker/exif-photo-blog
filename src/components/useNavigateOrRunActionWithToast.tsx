@@ -1,3 +1,4 @@
+import { APP_TEXT } from '@/app/config';
 import { toastWaiting } from '@/toast';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useTransition } from 'react';
@@ -6,7 +7,7 @@ import { toast } from 'sonner';
 
 export default function useNavigateOrRunActionWithToast({
   pathOrAction,
-  toastMessage = 'Loading...',
+  toastMessage = APP_TEXT.misc.loading,
   dismissDelay = 1500,
 }: {
   pathOrAction?: string | (() => Promise<any> | undefined)

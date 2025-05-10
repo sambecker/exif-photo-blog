@@ -20,7 +20,7 @@ export const titleForCamera = (
   photos: Photo[],
   explicitCount?: number,
 ) => [
-  APP_TEXT.category.cameraShare(
+  APP_TEXT.category.cameraTitle(
     formatCameraText(cameraFromPhoto(photos[0], camera)),
   ),
   photoQuantityText(explicitCount ?? photos.length),

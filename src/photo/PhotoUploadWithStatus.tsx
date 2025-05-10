@@ -11,6 +11,7 @@ import { useRef } from 'react';
 import { useEffect } from 'react';
 import Spinner from '@/components/Spinner';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
+import { APP_TEXT } from '@/app/config';
 
 export default function PhotoUploadWithStatus({
   inputRef,
@@ -72,10 +73,11 @@ export default function PhotoUploadWithStatus({
       }
     };
   }, [resetUploadState]);
+
   const isFinishing = isPending && shouldResetUploadStateAfterPending.current;
 
   const uploadStatusText = filesLength > 1
-    ? `${fileUploadIndex + 1} of ${filesLength}`
+    ? APP_TEXT.utility.paginate(fileUploadIndex + 1, filesLength)
     : undefined;
 
   return (
@@ -158,19 +160,19 @@ export default function PhotoUploadWithStatus({
             {isUploading
               ? isFinishing
                 ? <>
-                  Finishing ...
+                  {APP_TEXT.misc.finishing}
                 </>
                 : <>
                   {!showButton && uploadStatusText
                     ? <>
                       <ResponsiveText shortText={uploadStatusText}>
-                        Uploading {uploadStatusText}
+                        {APP_TEXT.misc.uploading} {uploadStatusText}
                       </ResponsiveText>
                       {': '}
                       {fileUploadName}
                     </>
                     : <ResponsiveText shortText={fileUploadName}>
-                      Uploading {fileUploadName}
+                      {APP_TEXT.misc.uploading} {fileUploadName}
                     </ResponsiveText>}
                 </>
               : !showButton && <>Initializing</>}

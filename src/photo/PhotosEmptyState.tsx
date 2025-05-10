@@ -1,6 +1,10 @@
 import Container from '@/components/Container';
 import AppGrid from '@/components/AppGrid';
-import { IS_SITE_READY, PRESERVE_ORIGINAL_UPLOADS } from '@/app/config';
+import {
+  APP_TEXT,
+  IS_SITE_READY,
+  PRESERVE_ORIGINAL_UPLOADS,
+} from '@/app/config';
 import AdminAppConfiguration from '@/admin/AdminAppConfiguration';
 import { clsx } from 'clsx/lite';
 import { HiOutlinePhotograph } from 'react-icons/hi';
@@ -29,7 +33,9 @@ export default function PhotosEmptyState() {
                 'font-bold text-2xl',
                 'text-gray-700 dark:text-gray-200',
               )}>
-                {!IS_SITE_READY ? 'Finish Setup' : 'Setup Complete!'}
+                {!IS_SITE_READY
+                  ? APP_TEXT.onboarding.setupIncomplete
+                  : APP_TEXT.onboarding.setupComplete}
               </div>
               {!IS_SITE_READY
                 ? <AdminAppConfiguration simplifiedView />
@@ -43,8 +49,7 @@ export default function PhotosEmptyState() {
                     }}
                   />
                   <div>
-                    Change this site&apos;s name and other configuration
-                    by editing environment variables referenced in
+                    {APP_TEXT.onboarding.setupConfig}
                     {' '}
                     <Link
                       href={PATH_ADMIN_CONFIGURATION}
