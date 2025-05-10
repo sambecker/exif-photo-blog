@@ -17,12 +17,13 @@ import PhotoLink from './PhotoLink';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 import { useAppState } from '@/state/AppState';
 import { GRID_GAP_CLASSNAME } from '@/components';
+import { APP_TEXT } from '@/app/config';
 
 export default function PhotoHeader({
   photos,
   selectedPhoto,
   entity,
-  entityVerb = 'PHOTO',
+  entityVerb = APP_TEXT.core.photo.toLocaleUpperCase(),
   entityDescription,
   indexNumber,
   count,

@@ -1,4 +1,4 @@
-const language = {
+const TEXT = {
   core: {
     photo: 'Photo',
     photoPlural: 'Photos',
@@ -14,7 +14,17 @@ const language = {
     next: 'Next',
     nextShort: 'Next',
   },
-  categories: {
+  footer: {
+    admin: 'Admin',
+    repo: 'Made with',
+    system: 'System',
+    light: 'Light Mode',
+    dark: 'Dark Mode',
+  }, 
+  cmdk: {
+    placeholder: 'Search photos, views, settings ...',
+  },
+  category: {
     camera: 'Camera',
     cameraPlural: 'Cameras',
     lens: 'Lens',
@@ -28,25 +38,21 @@ const language = {
     focalLength: 'Focal Length',
     focalLengthPlural: 'Focal Lengths',
   },
-  footer: {
-    repo: 'Made with',
-    system: 'System',
-    light: 'Light',
-    dark: 'Dark',
-  }, 
   auth: {
     signIn: 'Sign in',
     signOut: 'Sign out',
     email: 'Admin Email',
     password: 'Admin Password',
+    invalidEmailPassword: 'Invalid email/password',
   },
-  tooltips: {
+  tooltip: {
     '35mm': '35mm Equivalent',
-    imageViewer: 'Open Image Viewer',
+    zoom: 'Zoom In',
     sharePhoto: 'Share Photo',
     recipeInfo: 'Recipe Info',
     recipeCopy: 'Copy Recipe Text',
+    download: 'Download Original File',
   },
 };
 
-export default language;
+export default TEXT;

@@ -257,12 +257,13 @@ Vercel Postgres can be switched to another Postgres-compatible, pooling provider
 💬 &nbsp;&nbsp;I18N
 -
 
-Partial internationalization (non-admin, user-facing text) provided for a handful of languages. If you'd like to add support for a new language, [open a PR](https://github.com/sambecker/exif-photo-blog/compare) using [`ES_EN`](https://github.com/sambecker/exif-photo-blog) for reference.
+Partial internationalization (non-admin, user-facing text) provided for a handful of languages. If you'd like to add support for a new language, open a PR [using `US_EN`](https://github.com/sambecker/exif-photo-blog/main/src/i18n/languages/us-en.ts) for reference.
 
 ### Supported Languages
-- `ES_ES`
-- `PT_BR`
-- `PT_PT`
+- `US_EN`
+- `ES_ES` (coming soon)
+- `PT_BR` (coming soon)
+- `PT_PT` (coming soon)
 
 📖&nbsp;&nbsp;FAQ
 -

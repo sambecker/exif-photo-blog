@@ -52,7 +52,11 @@ import { FaCheck } from 'react-icons/fa6';
 import { addHiddenToTags, formatTag, isTagFavs, isTagHidden } from '@/tag';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 import CommandKItem from './CommandKItem';
-import { CATEGORY_VISIBILITY, GRID_HOMEPAGE_ENABLED } from '@/app/config';
+import {
+  APP_TEXT,
+  CATEGORY_VISIBILITY,
+  GRID_HOMEPAGE_ENABLED,
+} from '@/app/config';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import InsightsIndicatorDot from '@/admin/insights/InsightsIndicatorDot';
@@ -285,7 +289,7 @@ export default function CommandKClient({
       .map(category => {
         switch (category) {
         case 'cameras': return {
-          heading: 'Cameras',
+          heading: APP_TEXT.category.cameraPlural,
           accessory: <IconCamera size={14} />,
           items: cameras.map(({ camera, count }) => ({
             label: formatCameraText(camera),
@@ -295,7 +299,7 @@ export default function CommandKClient({
           })),
         };
         case 'lenses': return {
-          heading: 'Lenses',
+          heading: APP_TEXT.category.lensPlural,
           accessory: <IconLens size={14} className="translate-y-[0.5px]" />,
           items: lenses.map(({ lens, count }) => ({
             label: formatLensText(lens, 'medium'),
@@ -306,7 +310,7 @@ export default function CommandKClient({
           })),
         };
         case 'tags': return {
-          heading: 'Tags',
+          heading: APP_TEXT.category.tagPlural,
           accessory: <IconTag
             size={13}
             className="translate-x-[1px] translate-y-[0.75px]"
@@ -333,7 +337,7 @@ export default function CommandKClient({
           })),
         };
         case 'recipes': return {
-          heading: 'Recipes',
+          heading: APP_TEXT.category.recipePlural,
           accessory: <IconRecipe
             size={15}
             className="translate-x-[-1px]"
@@ -346,7 +350,7 @@ export default function CommandKClient({
           })),
         };
         case 'films': return {
-          heading: 'Films',
+          heading: APP_TEXT.category.filmPlural,
           accessory: <IconFilm size={14} />,
           items: films.map(({ film, count }) => ({
             label: labelForFilm(film).medium,
@@ -356,7 +360,7 @@ export default function CommandKClient({
           })),
         };
         case 'focal-lengths': return {
-          heading: 'Focal Lengths',
+          heading: APP_TEXT.category.focalLengthPlural,
           accessory: <IconFocalLength className="text-[14px]" />,
           items: focalLengths.map(({ focal, count }) => ({
             label: formatFocalLength(focal)!,
@@ -588,7 +592,7 @@ export default function CommandKClient({
                 'focus:outline-hidden',
                 isPending && 'opacity-20',
               )}
-              placeholder="Search photos, views, settings ..."
+              placeholder={APP_TEXT.cmdk.placeholder}
               disabled={isPending}
             />
             {isLoading && !isPending &&

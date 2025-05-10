@@ -25,6 +25,7 @@ import { isPhotoFav } from '@/tag';
 import Tooltip from '@/components/Tooltip';
 import {
   ALLOW_PUBLIC_DOWNLOADS,
+  APP_TEXT,
   SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
 } from '@/app/config';
 import { downloadFileFromBrowser } from '@/utility/url';
@@ -200,7 +201,7 @@ export default function PhotoPrevNextActions({
         '*:select-none',
       )}>
         <Tooltip {...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-          content: 'Previous',
+          content: APP_TEXT.nav.prev,
           keyCommand: KEY_COMMANDS.prev[0],
         }}>
           <PhotoLink
@@ -213,14 +214,16 @@ export default function PhotoPrevNextActions({
             prefetch
           >
             <FiChevronLeft className="sm:hidden text-[1.1rem]" />
-            <span className="hidden sm:inline-block">PREV</span>
+            <span className="hidden sm:inline-block uppercase">
+              {APP_TEXT.nav.prevShort}
+            </span>
           </PhotoLink>
         </Tooltip>
         <span className="text-extra-extra-dim">
           /
         </span>
         <Tooltip {...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-          content: 'Next',
+          content: APP_TEXT.nav.next,
           keyCommand: KEY_COMMANDS.next[0],
         }}>
           <PhotoLink
@@ -233,7 +236,9 @@ export default function PhotoPrevNextActions({
             prefetch
           >
             <FiChevronRight className="sm:hidden text-[1.1rem]" />
-            <span className="hidden sm:inline-block">NEXT</span>
+            <span className="hidden sm:inline-block uppercase">
+              {APP_TEXT.nav.nextShort}
+            </span>
           </PhotoLink>
         </Tooltip>
       </div>

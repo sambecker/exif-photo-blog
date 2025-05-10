@@ -5,7 +5,7 @@ import {
 import { getOrderedCategoriesFromString } from '@/category';
 import type { StorageType } from '@/platforms/storage';
 import { makeUrlAbsolute, shortenUrl } from '@/utility/url';
-import { getContentForLanguage } from '@/i18n';
+import { getTextForLanguage } from '@/i18n';
 
 // HARD-CODED GLOBAL CONFIGURATION
 
@@ -99,7 +99,7 @@ const SITE_DOMAIN_SHORT = shortenUrl(SITE_DOMAIN);
 
 // SITE META
 
-export const APP_TEXT = await getContentForLanguage(
+export const APP_TEXT = await getTextForLanguage(
   process.env.NEXT_PUBLIC_LANGUAGE,
 );
 
