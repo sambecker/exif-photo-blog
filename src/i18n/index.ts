@@ -11,12 +11,12 @@ export const LANGUAGES: Record<string, I18NDeepPartial | undefined> = {
   'pt-br': PT_BR,
 };
 
-export const getTextForLanguage = async (
+export const getTextForLanguage = (
   language = '',
-): Promise<I18N> => {
+): I18N => {
   const text = US_EN;
 
-  Object.entries(await LANGUAGES[language.toLocaleLowerCase()] ?? {})
+  Object.entries(LANGUAGES[language.toLocaleLowerCase()] ?? {})
     .forEach(([key, value]) => {
       text[key as keyof I18N] = {
         ...text[key as keyof I18N],
