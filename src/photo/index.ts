@@ -2,6 +2,7 @@ import { formatFocalLength } from '@/focal';
 import { getNextImageUrlForRequest } from '@/platforms/next-image';
 import { photoHasFilmData } from '@/film';
 import {
+  APP_TEXT,
   HIGH_DENSITY_GRID,
   IS_PREVIEW,
   SHOW_EXIF_DATA,
@@ -17,7 +18,7 @@ import {
   formatExposureCompensation,
   formatExposureTime,
 } from '@/utility/exif-format';
-import { parameterize } from '@/utility/string';
+import { capitalize, parameterize } from '@/utility/string';
 import camelcaseKeys from 'camelcase-keys';
 import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
@@ -231,10 +232,14 @@ export const titleForPhoto = (
 export const altTextForPhoto = (photo: Photo) =>
   photo.semanticDescription || titleForPhoto(photo);
 
-export const photoLabelForCount = (count: number, capitalize = true) =>
-  capitalize
-    ? count === 1 ? 'Photo' : 'Photos'
-    : count === 1 ? 'photo' : 'photos';
+export const photoLabelForCount = (count: number, _capitalize = true) => {
+  const label = count === 1
+    ? APP_TEXT.photo.photo
+    : APP_TEXT.photo.photoPlural;
+  return _capitalize
+    ? capitalize(label)
+    : label;
+};
 
 export const photoQuantityText = (
   count: number,

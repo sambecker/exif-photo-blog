@@ -2,6 +2,7 @@ import ResponsiveDate from '@/components/ResponsiveDate';
 import { Photo } from '.';
 import { useMemo } from 'react';
 import { Timezone } from '@/utility/timezone';
+import { APP_TEXT } from '@/app/config';
 
 export default function PhotoDate({
   photo,
@@ -33,11 +34,11 @@ export default function PhotoDate({
   const getTitleLabel = () => {
     switch (dateType) {
     case 'takenAt':
-      return 'TAKEN';
+      return APP_TEXT.photo.taken;
     case 'createdAt':
-      return 'CREATED';
+      return APP_TEXT.photo.created;
     case 'updatedAt':
-      return 'UPDATED';
+      return APP_TEXT.photo.updated;
     }
   };
 
@@ -45,7 +46,7 @@ export default function PhotoDate({
     <ResponsiveDate {...{
       date,
       className,
-      titleLabel: getTitleLabel(),
+      titleLabel: getTitleLabel().toLocaleUpperCase(),
       timezone,
       hideTime,
     }} />

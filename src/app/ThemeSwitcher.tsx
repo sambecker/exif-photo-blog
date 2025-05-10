@@ -26,19 +26,19 @@ export default function ThemeSwitcher () {
         icon={<BiDesktop size={16} />}
         onClick={() => setTheme('system')}
         active={theme === 'system'}
-        tooltip={{ content: APP_TEXT.footer.system }}
+        tooltip={{ content: APP_TEXT.theme.system }}
       />
       <SwitcherItem
         icon={<BiSun size={18} />}
         onClick={() => setTheme('light')}
         active={theme === 'light'}
-        tooltip={{ content: APP_TEXT.footer.light }}
+        tooltip={{ content: APP_TEXT.theme.light }}
       />
       <SwitcherItem
         icon={<BiMoon size={16} />}
         onClick={() => setTheme('dark')}
         active={theme === 'dark'}
-        tooltip={{ content: APP_TEXT.footer.dark }}
+        tooltip={{ content: APP_TEXT.theme.dark }}
       />
     </Switcher>
   );

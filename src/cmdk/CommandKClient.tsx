@@ -375,21 +375,21 @@ export default function CommandKClient({
   , [tagsIncludingHidden, cameras, lenses, recipes, films, focalLengths]);
 
   const clientSections: CommandKSection[] = [{
-    heading: 'Theme',
+    heading: APP_TEXT.theme.theme,
     accessory: <IoInvertModeSharp
       size={14}
       className="translate-y-[0.5px] translate-x-[-1px]"
     />,
     items: [{
-      label: 'Use System',
+      label: APP_TEXT.theme.system,
       annotation: <BiDesktop />,
       action: () => setTheme('system'),
     }, {
-      label: 'Light Mode',
+      label: APP_TEXT.theme.light,
       annotation: <BiSun size={16} className="translate-x-[1.25px]" />,
       action: () => setTheme('light'),
     }, {
-      label: 'Dark Mode',
+      label: APP_TEXT.theme.dark,
       annotation: <BiMoon className="translate-x-[1px]" />,
       action: () => setTheme('dark'),
     }],
@@ -440,12 +440,16 @@ export default function CommandKClient({
   }
 
   const pageFeed: CommandKItem = {
-    label: GRID_HOMEPAGE_ENABLED ? 'Feed' : 'Feed (Home)',
+    label: GRID_HOMEPAGE_ENABLED
+      ? APP_TEXT.nav.feed
+      : `${APP_TEXT.nav.feed} (${APP_TEXT.nav.home})`,
     path: PATH_FEED_INFERRED,
   };
 
   const pageGrid: CommandKItem = {
-    label: GRID_HOMEPAGE_ENABLED ? 'Grid (Home)' : 'Grid',
+    label: GRID_HOMEPAGE_ENABLED
+      ? `${APP_TEXT.nav.grid} (${APP_TEXT.nav.home})`
+      : APP_TEXT.nav.grid,
     path: PATH_GRID_INFERRED,
   };
 
@@ -467,40 +471,40 @@ export default function CommandKClient({
 
   if (isUserSignedIn) {
     adminSection.items.push({
-      label: 'Upload Photos',
+      label: APP_TEXT.admin.uploadPhotos,
       annotation: <IconLock narrow />,
       action: startUpload,
     });
     if (uploadsCount) {
       adminSection.items.push({
-        label: `Uploads (${uploadsCount})`,
+        label: `${APP_TEXT.admin.uploadPlural} (${uploadsCount})`,
         annotation: <IconLock narrow />,
         path: PATH_ADMIN_UPLOADS,
       });
     }
     adminSection.items.push({
-      label: `Manage Photos (${photosCountTotal})`,
+      label: `${APP_TEXT.admin.managePhotos} (${photosCountTotal})`,
       annotation: <IconLock narrow />,
       path: PATH_ADMIN_PHOTOS,
     });
     if (tagsCount) {
       adminSection.items.push({
-        label: `Manage Tags (${tagsCount})`,
+        label: `${APP_TEXT.admin.manageTags} (${tagsCount})`,
         annotation: <IconLock narrow />,
         path: PATH_ADMIN_TAGS,
       });
     }
     if (recipesCount) {
       adminSection.items.push({
-        label: `Manage Recipes (${recipesCount})`,
+        label: `${APP_TEXT.admin.manageRecipes} (${recipesCount})`,
         annotation: <IconLock narrow />,
         path: PATH_ADMIN_RECIPES,
       });
     }
     adminSection.items.push({
       label: selectedPhotoIds === undefined
-        ? 'Batch Edit Photos ...'
-        : 'Exit Batch Edit',
+        ? APP_TEXT.admin.batchEdit
+        : APP_TEXT.admin.batchExitEdit,
       annotation: <IconLock narrow />,
       path: selectedPhotoIds === undefined
         ? PATH_GRID_INFERRED
@@ -510,7 +514,7 @@ export default function CommandKClient({
         : () => setSelectedPhotoIds?.(undefined),
     }, {
       label: <span className="flex items-center gap-3">
-        App Insights
+        {APP_TEXT.admin.appInsights}
         {insightsIndicatorStatus &&
           <InsightsIndicatorDot />}
       </span>,
@@ -518,7 +522,7 @@ export default function CommandKClient({
       annotation: <IconLock narrow />,
       path: PATH_ADMIN_INSIGHTS,
     }, {
-      label: 'App Config',
+      label: APP_TEXT.admin.appConfig,
       annotation: <IconLock narrow />,
       path: PATH_ADMIN_CONFIGURATION,
     });
@@ -534,14 +538,14 @@ export default function CommandKClient({
       });
     }
     adminSection.items.push({
-      label: 'Sign Out',
+      label: APP_TEXT.auth.signOut,
       action: () => signOutAction()
         .then(clearAuthStateAndRedirectIfNecessary)
         .then(() => setIsOpen?.(false)),
     });
   } else {
     adminSection.items.push({
-      label: 'Sign In',
+      label: APP_TEXT.auth.signIn,
       path: PATH_SIGN_IN,
     });
   }

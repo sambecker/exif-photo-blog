@@ -1,7 +1,25 @@
 const TEXT = {
-  core: {
+  photo: {
     photo: 'Photo',
     photoPlural: 'Photos',
+    taken: 'Taken',
+    created: 'Created',
+    updated: 'Updated',
+  },
+  category: {
+    camera: 'Camera',
+    cameraPlural: 'Cameras',
+    lens: 'Lens',
+    lensPlural: 'Lenses',
+    tag: 'Tag',
+    tagPlural: 'Tags',
+    tagged: 'Tagged Photos',
+    recipe: 'Recipe',
+    recipePlural: 'Recipes',
+    film: 'Film',
+    filmPlural: 'Films',
+    focalLength: 'Focal Length',
+    focalLengthPlural: 'Focal Lengths',
   },
   nav: {
     home: 'Home',
@@ -14,36 +32,8 @@ const TEXT = {
     next: 'Next',
     nextShort: 'Next',
   },
-  footer: {
-    admin: 'Admin',
-    repo: 'Made with',
-    system: 'System',
-    light: 'Light Mode',
-    dark: 'Dark Mode',
-  }, 
   cmdk: {
     placeholder: 'Search photos, views, settings ...',
-  },
-  category: {
-    camera: 'Camera',
-    cameraPlural: 'Cameras',
-    lens: 'Lens',
-    lensPlural: 'Lenses',
-    tag: 'Tag',
-    tagPlural: 'Tags',
-    recipe: 'Recipe',
-    recipePlural: 'Recipes',
-    film: 'Film',
-    filmPlural: 'Films',
-    focalLength: 'Focal Length',
-    focalLengthPlural: 'Focal Lengths',
-  },
-  auth: {
-    signIn: 'Sign in',
-    signOut: 'Sign out',
-    email: 'Admin Email',
-    password: 'Admin Password',
-    invalidEmailPassword: 'Invalid email/password',
   },
   tooltip: {
     '35mm': '35mm Equivalent',
@@ -53,6 +43,45 @@ const TEXT = {
     recipeCopy: 'Copy Recipe Text',
     download: 'Download Original File',
   },
+  theme: {
+    theme: 'Theme',
+    system: 'Use System',
+    light: 'Light Mode',
+    dark: 'Dark Mode',
+  }, 
+  auth: {
+    signIn: 'Sign In',
+    signOut: 'Sign Out',
+    email: 'Admin Email',
+    password: 'Admin Password',
+    invalidEmailPassword: 'Invalid email/password',
+  },
+  admin: {
+    uploadPhotos: 'Upload Photos',
+    upload: 'Upload',
+    uploadPlural: 'Uploads',
+    updates: 'Updates',
+    managePhotos: 'Manage Photos',
+    manageCameras: 'Manage Cameras',
+    manageLenses: 'Manage Lenses',
+    manageTags: 'Manage Tags',
+    manageRecipes: 'Manage Recipes',
+    batchEdit: 'Batch Edit Photos ...',
+    batchEditShort: 'Batch Edit ...',
+    batchExitEdit: 'Exit Batch Edit',
+    appInsights: 'App Insights',
+    appConfig: 'App Configuration',
+  },
+  misc: {
+    repo: 'Made with',
+  },
+  paginate: (
+    index: number,
+    count: number,
+    verb?: string,
+  ) => verb
+    ? `${verb} ${index} of ${count}`
+    : `${index} of ${count}`,
 };
 
 export default TEXT;

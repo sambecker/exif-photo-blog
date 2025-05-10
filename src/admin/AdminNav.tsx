@@ -12,6 +12,7 @@ import {
   PATH_ADMIN_UPLOADS,
 } from '@/app/paths';
 import AdminNavClient from './AdminNavClient';
+import { APP_TEXT } from '@/app/config';
 
 export default async function AdminNav() {
   const [
@@ -41,28 +42,28 @@ export default async function AdminNav() {
 
   // Photos
   const items = [{
-    label: 'Photos',
+    label: APP_TEXT.photo.photoPlural,
     href: PATH_ADMIN_PHOTOS,
     count: countPhotos,
   }];
 
   // Uploads
   if (countUploads > 0) { items.push({
-    label: 'Uploads',
+    label: APP_TEXT.admin.uploadPlural,
     href: PATH_ADMIN_UPLOADS,
     count: countUploads,
   }); }
 
   // Tags
   if (countTags > 0) { items.push({
-    label: 'Tags',
+    label: APP_TEXT.category.tagPlural,
     href: PATH_ADMIN_TAGS,
     count: countTags,
   }); }
 
   // Recipes
   if (countRecipes > 0) { items.push({
-    label: 'Recipes',
+    label: APP_TEXT.category.recipePlural,
     href: PATH_ADMIN_RECIPES,
     count: countRecipes,
   }); }

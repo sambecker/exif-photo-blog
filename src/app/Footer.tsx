@@ -60,7 +60,7 @@ export default function Footer() {
                     : SHOW_REPO_LINK
                       ? <RepoLink />
                       : <Link href={PATH_ADMIN_PHOTOS}>
-                        {APP_TEXT.footer.admin}
+                        {APP_TEXT.nav.admin}
                       </Link>}
               </div>
               <div className="flex items-center h-10">

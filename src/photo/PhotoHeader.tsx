@@ -23,7 +23,7 @@ export default function PhotoHeader({
   photos,
   selectedPhoto,
   entity,
-  entityVerb = APP_TEXT.core.photo.toLocaleUpperCase(),
+  entityVerb = APP_TEXT.photo.photo.toLocaleUpperCase(),
   entityDescription,
   indexNumber,
   count,
@@ -51,9 +51,8 @@ export default function PhotoHeader({
     ? photos.findIndex(photo => photo.id === selectedPhoto.id)
     : undefined;
 
-  const paginationLabel =
-    (indexNumber || (selectedPhotoIndex ?? 0 + 1)) + ' of ' +
-    (count ?? photos.length);
+  const paginationIndex = indexNumber || (selectedPhotoIndex ?? 0 + 1);
+  const paginationCount = count ?? photos.length;
 
   const headerType = selectedPhotoIndex === undefined
     ? 'photo-set'
@@ -155,8 +154,13 @@ export default function PhotoHeader({
                     dim: true,
                   }} />}
               </>
-              : <ResponsiveText shortText={paginationLabel}>
-                {entityVerb} {paginationLabel}
+              : <ResponsiveText
+                shortText={APP_TEXT.paginate(paginationIndex, paginationCount)}
+              >
+                {APP_TEXT.paginate(
+                  paginationIndex,
+                  paginationCount,
+                  entityVerb)}
               </ResponsiveText>}
           </>}
         </div>
