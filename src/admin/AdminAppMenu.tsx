@@ -92,7 +92,7 @@ export default function AdminAppMenu({
     }
     if (photosCountNeedSync) {
       items.push({
-        label: APP_TEXT.admin.updates,
+        label: APP_TEXT.admin.updatePlural,
         annotation: <>
           <span className="mr-3">
             {photosCountNeedSync}

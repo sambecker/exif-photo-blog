@@ -100,7 +100,7 @@ export default function AdminPhotosTable({
                   <Tooltip
                     content={getPhotoSyncStatusText(photo)}
                     classNameTrigger={clsx(
-                      'translate-y-1 ml-1.5',
+                      'ml-1.5',
                       'text-blue-600 dark:text-blue-400',
                     )}
                     supportMobile
