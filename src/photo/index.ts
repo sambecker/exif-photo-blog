@@ -172,7 +172,7 @@ export const photoStatsAsString = (photo: Photo) => [
 ].join(' ');
 
 export const descriptionForPhoto = (photo: Photo) =>
-  photo.takenAtNaiveFormatted?.toUpperCase();
+  formatDate({ date: photo.takenAt }).toLocaleUpperCase();
 
 export const getPreviousPhoto = (photo: Photo, photos: Photo[]) => {
   const index = photos.findIndex(p => p.id === photo.id);
@@ -251,7 +251,7 @@ export const photoQuantityText = (
     : `${count} ${photoLabelForCount(count, capitalize)}`;  
 
 export const deleteConfirmationTextForPhoto = (photo: Photo) =>
-  `Are you sure you want to delete "${titleForPhoto(photo)}?"`;
+  APP_TEXT.admin.deleteConfirm(titleForPhoto(photo));
 
 export type PhotoDateRange = { start: string, end: string };
 
@@ -265,9 +265,10 @@ export const descriptionForPhotoSet = (
   dateBased
     ? dateRangeForPhotos(photos, explicitDateRange).description.toUpperCase()
     : [
-      explicitCount ?? photos.length,
-      descriptor,
-      photoLabelForCount(explicitCount ?? photos.length, false),
+      explicitCount ?? photos.length, (
+        descriptor ||
+        photoLabelForCount(explicitCount ?? photos.length, false)
+      ),
     ].join(' ');
 
 const sortPhotosByDateNonDestructively = (

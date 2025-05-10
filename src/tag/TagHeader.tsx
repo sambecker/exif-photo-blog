@@ -26,7 +26,7 @@ export default function TagHeader({
       entity={isTagFavs(tag) 
         ? <FavsTag contrast="high" />
         : <PhotoTag tag={tag} contrast="high" />}
-      entityVerb={APP_TEXT.category.tagged}
+      entityVerb={APP_TEXT.category.taggedPhotos}
       entityDescription={descriptionForTaggedPhotos(photos, undefined, count)}
       photos={photos}
       selectedPhoto={selectedPhoto}

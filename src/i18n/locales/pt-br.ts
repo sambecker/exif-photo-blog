@@ -1,4 +1,5 @@
 import { I18NDeepPartial } from '..';
+import { ptBR } from 'date-fns/locale';
 
 const TEXT: I18NDeepPartial = {
   photo: {
@@ -7,21 +8,30 @@ const TEXT: I18NDeepPartial = {
     taken: 'Capturado',
     created: 'Criado',
     updated: 'Atualizado',
+    copied: 'Link para foto copiado',
   },
   category: {
     camera: 'Câmera',
     cameraPlural: 'Câmeras',
+    cameraTitle: (camera: string) => `Tirado com ${camera}`,
+    cameraShare: (camera: string) => `Fotos tiradas com ${camera}`,
     lens: 'Lente',
     lensPlural: 'Lentes',
     tag: 'Tag',
     tagPlural: 'Tags',
-    tagged: 'Marcado',
+    taggedPhotos: 'Fotos Marcadas',
+    taggedPhrase: (tag: string) => `Fotos marcadas com '${tag}'`,
+    taggedFavs: 'Fotos Favoritas',
     recipe: 'Receita',
     recipePlural: 'Receitas',
+    recipeShare: (recipe: string) => `Fotos da receita ${recipe}`,
     film: 'Filme',
     filmPlural: 'Filmes',
+    filmShare: (film: string) => `Fotos tiradas com ${film}`,
     focalLength: 'Distância Focal',
     focalLengthPlural: 'Distâncias Focais',
+    focalLengthTitle: (focal: string) => `Distância Focal ${focal}`,
+    focalLengthShare: (focal: string) => `Fotos tiradas em ${focal}`,
   },
   nav: {
     home: 'Início',
@@ -62,6 +72,7 @@ const TEXT: I18NDeepPartial = {
     uploadPhotos: 'Enviar Fotos',
     upload: 'Enviar',
     uploadPlural: 'Envios',
+    uploading: 'Enviando',
     updates: 'Atualizações',
     managePhotos: 'Gerenciar Fotos',
     manageCameras: 'Gerenciar Câmeras',
@@ -73,10 +84,29 @@ const TEXT: I18NDeepPartial = {
     batchExitEdit: 'Sair da Edição em Lote',
     appInsights: 'Insights do App',
     appConfig: 'Configuração do App',
+    edit: 'Editar',
+    favorite: 'Favoritar',
+    unfavorite: 'Remover dos Favoritos',
+    download: 'Baixar',
+    sync: 'Sincronizar',
+    delete: 'Excluir',
+    deleteConfirm: (photoTitle: string) =>
+      `Tem certeza que deseja excluir "${photoTitle}"?`,
   },
   misc: {
     repo: 'Feito com',
+    copyPhrase: (label: string) => `${label} copiado`,
   },
+  utility: {
+    paginate: (
+      index: number,
+      count: number,
+      action?: string,
+    ) => action
+      ? `${action} ${index} de ${count}`
+      : `${index} de ${count}`,
+  },
+  dateLocale: ptBR,
 };
 
 export default TEXT;

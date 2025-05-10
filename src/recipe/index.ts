@@ -8,6 +8,7 @@ import {
 } from '@/utility/string';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { labelForFilm } from '@/film';
+import { APP_TEXT } from '@/app/config';
 
 export type RecipeWithCount = {
   recipe: string
@@ -32,12 +33,12 @@ export const titleForRecipe = (
   photos:Photo[] = [],
   explicitCount?: number,
 ) => [
-  `Recipe: ${formatRecipe(recipe)}`,
+  `${APP_TEXT.category.recipe}: ${formatRecipe(recipe)}`,
   photoQuantityText(explicitCount ?? photos.length),
 ].join(' ');
 
 export const shareTextForRecipe = (recipe: string) =>
-  `${formatRecipe(recipe)} recipe photos`;
+  APP_TEXT.category.recipeShare(formatRecipe(recipe));
 
 export const descriptionForRecipePhotos = (
   photos: Photo[] = [],

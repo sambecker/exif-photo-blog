@@ -8,7 +8,7 @@ import { ReactNode, useEffect } from 'react';
 import { shortenUrl } from '@/utility/url';
 import { toastSuccess } from '@/toast';
 import { PiXLogo } from 'react-icons/pi';
-import { SHOW_SOCIAL } from '@/app/config';
+import { APP_TEXT, SHOW_SOCIAL } from '@/app/config';
 import { generateXPostText } from '@/utility/social';
 import { useAppState } from '@/state/AppState';
 import useOnPathChange from '@/utility/useOnPathChange';
@@ -96,7 +96,7 @@ export default function ShareModal({
               <BiCopy size={18} />,
               () => {
                 navigator.clipboard.writeText(pathShare);
-                toastSuccess('Link to photo copied');
+                toastSuccess(APP_TEXT.photo.copied);
               },
               true,
             )}

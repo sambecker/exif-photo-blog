@@ -16,6 +16,7 @@ import {
   formatCountDescriptive,
 } from '@/utility/string';
 import { sortCategoryByCount } from '@/category';
+import { APP_TEXT } from '@/app/config';
 
 // Reserved tags
 export const TAG_FAVS   = 'favs';
@@ -48,7 +49,9 @@ export const titleForTag = (
 ].join(' ');
 
 export const shareTextForTag = (tag: string) =>
-  isTagFavs(tag) ? 'Favorite photos' : `Photos tagged '${formatTag(tag)}'`;
+  isTagFavs(tag)
+    ? APP_TEXT.category.taggedFavs
+    : APP_TEXT.category.taggedPhrase(formatTag(tag));
 
 export const sortTagsArray = (
   tags: string[],
@@ -95,7 +98,7 @@ export const descriptionForTaggedPhotos = (
 ) =>
   descriptionForPhotoSet(
     photos,
-    'tagged',
+    APP_TEXT.category.taggedPhotos,
     dateBased,
     explicitCount,
     explicitDateRange,
@@ -139,5 +142,6 @@ export const convertTagsForForm = (tags: Tags = []) =>
     .map(({ tag, count }) => ({
       value: tag,
       annotation: formatCount(count),
-      annotationAria: formatCountDescriptive(count, 'tagged'),
+      annotationAria:
+        formatCountDescriptive(count, APP_TEXT.category.taggedPhotos),
     }));

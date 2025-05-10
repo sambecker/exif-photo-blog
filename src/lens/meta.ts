@@ -9,6 +9,7 @@ import {
   absolutePathForLens,
   absolutePathForLensImage,
 } from '@/app/paths';
+import { APP_TEXT } from '@/app/config';
 
 // Meta functions moved to separate file to avoid
 // dependencies (camelcase-keys) found in photo/index.ts
@@ -19,7 +20,7 @@ export const titleForLens = (
   photos: Photo[],
   explicitCount?: number,
 ) => [
-  'Lens:',
+  `${APP_TEXT.category.lens}:`,
   formatLensText(lensFromPhoto(photos[0], lens)),
   photoQuantityText(explicitCount ?? photos.length),
 ].join(' ');
@@ -29,7 +30,7 @@ export const shareTextForLens = (
   photos: Photo[],
 ) =>
   [
-    'Lens:',
+    `${APP_TEXT.category.lens}:`,
     formatLensText(lensFromPhoto(photos[0], lens)),
   ].join(' ');
 

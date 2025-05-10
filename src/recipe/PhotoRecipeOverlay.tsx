@@ -19,6 +19,7 @@ import { TbChecklist } from 'react-icons/tb';
 import CopyButton from '@/components/CopyButton';
 import { labelForFilm } from '@/film';
 import PhotoRecipe from './PhotoRecipe';
+import { APP_TEXT } from '@/app/config';
 
 export default function PhotoRecipeOverlay({
   ref,
@@ -138,7 +139,7 @@ export default function PhotoRecipeOverlay({
             'text-black/40 active:text-black/75',
             'hover:text-black/40',
           )}
-          tooltip="Copy recipe text"
+          tooltip={APP_TEXT.tooltip.recipeCopy}
           tooltipColor="frosted"
         />
         <span>

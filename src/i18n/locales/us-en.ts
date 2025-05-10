@@ -1,3 +1,5 @@
+import { enUS } from 'date-fns/locale';
+
 const TEXT = {
   photo: {
     photo: 'Photo',
@@ -5,21 +7,30 @@ const TEXT = {
     taken: 'Taken',
     created: 'Created',
     updated: 'Updated',
+    copied: 'Link to photo copied',
   },
   category: {
     camera: 'Camera',
     cameraPlural: 'Cameras',
+    cameraTitle: (camera: string) => `Shot on ${camera}`,
+    cameraShare: (camera: string) => `Photos shot on ${camera}`,
     lens: 'Lens',
     lensPlural: 'Lenses',
     tag: 'Tag',
     tagPlural: 'Tags',
-    tagged: 'Tagged Photos',
+    taggedPhotos: 'Tagged Photos',
+    taggedPhrase: (tag: string) => `Photos tagged '${tag}'`,
+    taggedFavs: 'Favorite Photos',
     recipe: 'Recipe',
     recipePlural: 'Recipes',
+    recipeShare: (recipe: string) => `${recipe} recipe photos`,
     film: 'Film',
     filmPlural: 'Films',
+    filmShare: (film: string) => `Photos shot on ${film}`,
     focalLength: 'Focal Length',
     focalLengthPlural: 'Focal Lengths',
+    focalLengthTitle: (focal: string) => `Focal Length ${focal}`,
+    focalLengthShare: (focal: string) => `Photos shot at ${focal}`,
   },
   nav: {
     home: 'Home',
@@ -60,6 +71,7 @@ const TEXT = {
     uploadPhotos: 'Upload Photos',
     upload: 'Upload',
     uploadPlural: 'Uploads',
+    uploading: 'Uploading',
     updates: 'Updates',
     managePhotos: 'Manage Photos',
     manageCameras: 'Manage Cameras',
@@ -71,17 +83,29 @@ const TEXT = {
     batchExitEdit: 'Exit Batch Edit',
     appInsights: 'App Insights',
     appConfig: 'App Configuration',
+    edit: 'Edit',
+    favorite: 'Favorite',
+    unfavorite: 'Unfavorite',
+    download: 'Download',
+    sync: 'Sync',
+    delete: 'Delete',
+    deleteConfirm: (photoTitle: string) =>
+      `Are you sure you want to delete "${photoTitle}?"`,
   },
   misc: {
     repo: 'Made with',
+    copyPhrase: (label: string) => `${label} copied`,
   },
-  paginate: (
-    index: number,
-    count: number,
-    verb?: string,
-  ) => verb
-    ? `${verb} ${index} of ${count}`
-    : `${index} of ${count}`,
+  utility: {
+    paginate: (
+      index: number,
+      count: number,
+      action?: string,
+    ) => action
+      ? `${action} ${index} of ${count}`
+      : `${index} of ${count}`,
+  },
+  dateLocale: enUS,
 };
 
 export default TEXT;

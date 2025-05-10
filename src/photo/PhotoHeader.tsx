@@ -155,9 +155,13 @@ export default function PhotoHeader({
                   }} />}
               </>
               : <ResponsiveText
-                shortText={APP_TEXT.paginate(paginationIndex, paginationCount)}
+                shortText={APP_TEXT.utility.paginate(
+                  paginationIndex,
+                  paginationCount,
+                  entityVerb,
+                )}
               >
-                {APP_TEXT.paginate(
+                {APP_TEXT.utility.paginate(
                   paginationIndex,
                   paginationCount,
                   entityVerb)}
