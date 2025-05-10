@@ -47,6 +47,8 @@ export default function AdminAppConfigurationClient({
   hasAuthSecret,
   hasAdminUser,
   // Content
+  locale,
+  hasLocale,
   hasDomain,
   hasNavTitle,
   hasNavCaption,
@@ -289,6 +291,22 @@ export default function AdminAppConfigurationClient({
         title="Content"
         icon={<BiPencil size={16} />}
       >
+        <ChecklistRow
+          title={`Configure language: ${locale.toLocaleUpperCase()}`}
+          status={hasLocale}
+        >
+          Store in environment variable
+          (check README for
+          {' '}
+          <AdminLink
+            // eslint-disable-next-line max-len
+            href="https://github.com/sambecker/exif-photo-blog?tab=readme-ov-file#supported-locales"
+          >
+            supported locales
+          </AdminLink>
+          ):
+          {renderEnvVars(['NEXT_PUBLIC_LOCALE'])}
+        </ChecklistRow>
         <ChecklistRow
           title="Configure domain"
           status={hasDomain}

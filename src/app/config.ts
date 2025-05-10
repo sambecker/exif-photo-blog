@@ -5,7 +5,7 @@ import {
 import { getOrderedCategoriesFromString } from '@/category';
 import type { StorageType } from '@/platforms/storage';
 import { makeUrlAbsolute, shortenUrl } from '@/utility/url';
-import { getTextForLanguage } from '@/i18n';
+import { getTextForLocale } from '@/i18n';
 
 // HARD-CODED GLOBAL CONFIGURATION
 
@@ -99,8 +99,8 @@ const SITE_DOMAIN_SHORT = shortenUrl(SITE_DOMAIN);
 
 // SITE META
 
-export const APP_TEXT = getTextForLanguage(
-  process.env.NEXT_PUBLIC_LANGUAGE,
+export const APP_TEXT = getTextForLocale(
+  process.env.NEXT_PUBLIC_LOCALE,
 );
 
 export const NAV_TITLE =
@@ -343,6 +343,8 @@ export const APP_CONFIGURATION = {
     Boolean(process.env.ADMIN_PASSWORD)
   ),
   // Domain
+  locale: process.env.NEXT_PUBLIC_LOCALE ?? 'US-EN',
+  hasLocale: Boolean(process.env.NEXT_PUBLIC_LOCALE),
   hasDomain: Boolean(
     process.env.NEXT_PUBLIC_DOMAIN ||
     // Legacy environment variable
