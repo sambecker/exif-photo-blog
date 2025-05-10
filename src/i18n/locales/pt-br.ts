@@ -1,0 +1,82 @@
+import { I18NDeepPartial } from '..';
+
+const TEXT: I18NDeepPartial = {
+  photo: {
+    photo: 'Foto',
+    photoPlural: 'Fotos',
+    taken: 'Capturado',
+    created: 'Criado',
+    updated: 'Atualizado',
+  },
+  category: {
+    camera: 'Câmera',
+    cameraPlural: 'Câmeras',
+    lens: 'Lente',
+    lensPlural: 'Lentes',
+    tag: 'Tag',
+    tagPlural: 'Tags',
+    tagged: 'Marcado',
+    recipe: 'Receita',
+    recipePlural: 'Receitas',
+    film: 'Filme',
+    filmPlural: 'Filmes',
+    focalLength: 'Distância Focal',
+    focalLengthPlural: 'Distâncias Focais',
+  },
+  nav: {
+    home: 'Início',
+    feed: 'Feed',
+    grid: 'Grade',
+    admin: 'Menu de Admin',
+    search: 'Pesquisar',
+    prev: 'Anterior',
+    prevShort: 'Ant',
+    next: 'Próximo',
+    nextShort: 'Prox',
+  },
+  cmdk: {
+    placeholder: 'Pesquisar fotos, visualizações, configurações ...',
+  },
+  tooltip: {
+    '35mm': 'Equivalente 35mm',
+    zoom: 'Aumentar Zoom',
+    sharePhoto: 'Compartilhar Foto',
+    recipeInfo: 'Informações da Receita',
+    recipeCopy: 'Copiar Texto da Receita',
+    download: 'Baixar Arquivo Original',
+  },
+  theme: {
+    theme: 'Tema',
+    system: 'Usar Sistema',
+    light: 'Modo Claro',
+    dark: 'Modo Escuro',
+  },
+  auth: {
+    signIn: 'Entrar',
+    signOut: 'Sair',
+    email: 'Email do Admin',
+    password: 'Senha do Admin',
+    invalidEmailPassword: 'Email/senha inválidos',
+  },
+  admin: {
+    uploadPhotos: 'Enviar Fotos',
+    upload: 'Enviar',
+    uploadPlural: 'Envios',
+    updates: 'Atualizações',
+    managePhotos: 'Gerenciar Fotos',
+    manageCameras: 'Gerenciar Câmeras',
+    manageLenses: 'Gerenciar Lentes',
+    manageTags: 'Gerenciar Tags',
+    manageRecipes: 'Gerenciar Receitas',
+    batchEdit: 'Editar Fotos em Lote ...',
+    batchEditShort: 'Editar em Lote ...',
+    batchExitEdit: 'Sair da Edição em Lote',
+    appInsights: 'Insights do App',
+    appConfig: 'Configuração do App',
+  },
+  misc: {
+    repo: 'Feito com',
+  },
+};
+
+export default TEXT;

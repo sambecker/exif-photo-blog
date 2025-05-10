@@ -4,6 +4,7 @@ import clsx from 'clsx/lite';
 import { FaPlus } from 'react-icons/fa6';
 import Tooltip from '@/components/Tooltip';
 import { useRef } from 'react';
+import { APP_TEXT } from '@/app/config';
 
 export default function PhotoRecipeOverlayButton({
   className,
@@ -17,7 +18,7 @@ export default function PhotoRecipeOverlayButton({
   const ref = useRef<HTMLButtonElement>(null);
 
   return (
-    <Tooltip content="Recipe Info">
+    <Tooltip content={APP_TEXT.tooltip.recipeInfo}>
       <button
         ref={ref}
         onClick={() => {

@@ -29,6 +29,7 @@ import IconBroom from '@/components/icons/IconBroom';
 import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 import MoreMenuItem from '@/components/more/MoreMenuItem';
 import Spinner from '@/components/Spinner';
+import { APP_TEXT } from '@/app/config';
 
 export default function AdminAppMenu({
   active,
@@ -65,7 +66,7 @@ export default function AdminAppMenu({
 
   const sectionUpload: ComponentProps<typeof MoreMenuItem>[] =
     useMemo(() => ([{
-      label: 'Upload Photos',
+      label: APP_TEXT.admin.uploadPhotos,
       icon: <IconUpload
         size={15}
         className="translate-x-[0.5px] translate-y-[0.5px]"
@@ -80,7 +81,7 @@ export default function AdminAppMenu({
 
     if (uploadsCount) {
       items.push({
-        label: 'Uploads',
+        label: APP_TEXT.admin.uploadPlural,
         annotation: `${uploadsCount}`,
         icon: <IconFolder
           size={16}
@@ -91,7 +92,7 @@ export default function AdminAppMenu({
     }
     if (photosCountNeedSync) {
       items.push({
-        label: 'Updates',
+        label: APP_TEXT.admin.updates,
         annotation: <>
           <span className="mr-3">
             {photosCountNeedSync}
@@ -110,7 +111,7 @@ export default function AdminAppMenu({
     }
     if (photosCountTotal) {
       items.push({
-        label: 'Manage Photos',
+        label: APP_TEXT.admin.managePhotos,
         ...photosCountTotal && {
           annotation: `${photosCountTotal}`,
         },
@@ -123,7 +124,7 @@ export default function AdminAppMenu({
     }
     if (tagsCount) {
       items.push({
-        label: 'Manage Tags',
+        label: APP_TEXT.admin.manageTags,
         annotation: `${tagsCount}`,
         icon: <IconTag
           size={15}
@@ -134,7 +135,7 @@ export default function AdminAppMenu({
     }
     if (recipesCount) {
       items.push({
-        label: 'Manage Recipes',
+        label: APP_TEXT.admin.manageRecipes,
         annotation: `${recipesCount}`,
         icon: <IconRecipe
           size={17}
@@ -146,8 +147,8 @@ export default function AdminAppMenu({
     if (photosCountTotal) {
       items.push({
         label: isSelecting
-          ? 'Exit Batch Edit'
-          : 'Batch Edit ...',
+          ? APP_TEXT.admin.batchExitEdit
+          : APP_TEXT.admin.batchEditShort,
         icon: isSelecting
           ? <IoCloseSharp
             size={18}
@@ -173,8 +174,8 @@ export default function AdminAppMenu({
     }
     items.push({
       label: showAppInsightsLink
-        ? 'App Insights'
-        : 'App Configuration',
+        ? APP_TEXT.admin.appInsights
+        : APP_TEXT.admin.appConfig,
       icon: <AdminAppInfoIcon
         size="small"
         className="translate-x-[-0.5px] translate-y-[0.5px]"
@@ -198,7 +199,7 @@ export default function AdminAppMenu({
 
   const sectionSignOut: ComponentProps<typeof MoreMenuItem>[] =
     useMemo(() => ([{
-      label: 'Sign Out',
+      label: APP_TEXT.auth.signOut,
       icon: <IconSignOut size={15} />,
       action: () => signOutAction().then(clearAuthStateAndRedirectIfNecessary),
     }]), [clearAuthStateAndRedirectIfNecessary]);
