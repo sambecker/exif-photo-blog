@@ -294,6 +294,7 @@ export default function AdminAppConfigurationClient({
         <ChecklistRow
           title={`Configure language: ${locale.toLocaleUpperCase()}`}
           status={hasLocale}
+          optional
         >
           Store in environment variable
           (check README for
