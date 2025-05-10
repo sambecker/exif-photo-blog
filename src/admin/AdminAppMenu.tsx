@@ -99,6 +99,7 @@ export default function AdminAppMenu({
           </span>
           <InsightsIndicatorDot
             className="inline-block translate-y-[-1px]"
+            colorOverride="blue"
             size="small"
           />
         </>,
