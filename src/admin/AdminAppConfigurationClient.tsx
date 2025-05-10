@@ -301,9 +301,9 @@ export default function AdminAppConfigurationClient({
           {' '}
           <AdminLink
             // eslint-disable-next-line max-len
-            href="https://github.com/sambecker/exif-photo-blog?tab=readme-ov-file#supported-locales"
+            href="https://github.com/sambecker/exif-photo-blog?tab=readme-ov-file#supported-languages"
           >
-            supported locales
+            supported languages
           </AdminLink>
           ):
           {renderEnvVars(['NEXT_PUBLIC_LOCALE'])}
