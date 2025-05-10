@@ -99,7 +99,7 @@ const SITE_DOMAIN_SHORT = shortenUrl(SITE_DOMAIN);
 
 // SITE META
 
-export const APP_TEXT = await getTextForLanguage(
+export const APP_TEXT = getTextForLanguage(
   process.env.NEXT_PUBLIC_LANGUAGE,
 );
 
