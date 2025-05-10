@@ -1,0 +1,123 @@
+import { I18NDeepPartial } from '..';
+import { ptBR } from 'date-fns/locale';
+
+const TEXT: I18NDeepPartial = {
+  photo: {
+    photo: 'Foto',
+    photoPlural: 'Fotos',
+    taken: 'Capturado',
+    created: 'Criado',
+    updated: 'Atualizado',
+    copied: 'Link para foto copiado',
+  },
+  category: {
+    camera: 'Câmera',
+    cameraPlural: 'Câmeras',
+    cameraTitle: (camera: string) => `Tirado com ${camera}`,
+    cameraShare: (camera: string) => `Fotos tiradas com ${camera}`,
+    lens: 'Lente',
+    lensPlural: 'Lentes',
+    tag: 'Tag',
+    tagPlural: 'Tags',
+    taggedPhotos: 'Fotos Marcadas',
+    taggedPhrase: (tag: string) => `Fotos marcadas com '${tag}'`,
+    taggedFavs: 'Fotos Favoritas',
+    recipe: 'Receita',
+    recipePlural: 'Receitas',
+    recipeShare: (recipe: string) => `Fotos da receita ${recipe}`,
+    film: 'Filme',
+    filmPlural: 'Filmes',
+    filmShare: (film: string) => `Fotos tiradas com ${film}`,
+    focalLength: 'Distância Focal',
+    focalLengthPlural: 'Distâncias Focais',
+    focalLengthTitle: (focal: string) => `Distância Focal ${focal}`,
+    focalLengthShare: (focal: string) => `Fotos tiradas em ${focal}`,
+  },
+  nav: {
+    home: 'Início',
+    feed: 'Feed',
+    grid: 'Grade',
+    admin: 'Menu de Admin',
+    search: 'Pesquisar',
+    prev: 'Anterior',
+    prevShort: 'Ant',
+    next: 'Próximo',
+    nextShort: 'Prox',
+  },
+  cmdk: {
+    placeholder: 'Pesquisar fotos, visualizações, configurações ...',
+  },
+  tooltip: {
+    '35mm': 'Equivalente 35mm',
+    zoom: 'Aumentar Zoom',
+    sharePhoto: 'Compartilhar Foto',
+    recipeInfo: 'Informações da Receita',
+    recipeCopy: 'Copiar Texto da Receita',
+    download: 'Baixar Arquivo Original',
+  },
+  theme: {
+    theme: 'Tema',
+    system: 'Sistema',
+    light: 'Modo Claro',
+    dark: 'Modo Escuro',
+  },
+  auth: {
+    signIn: 'Entrar',
+    signOut: 'Sair',
+    email: 'Email do Admin',
+    password: 'Senha do Admin',
+    invalidEmailPassword: 'Email/senha inválidos',
+  },
+  admin: {
+    uploadPhotos: 'Enviar Fotos',
+    upload: 'Enviar',
+    uploadPlural: 'Envios',
+    uploading: 'Enviando',
+    updates: 'Atualizações',
+    managePhotos: 'Gerenciar Fotos',
+    manageCameras: 'Gerenciar Câmeras',
+    manageLenses: 'Gerenciar Lentes',
+    manageTags: 'Gerenciar Tags',
+    manageRecipes: 'Gerenciar Receitas',
+    batchEdit: 'Editar Fotos em Lote ...',
+    batchEditShort: 'Editar em Lote ...',
+    batchExitEdit: 'Sair da Edição em Lote',
+    appInsights: 'Insights do App',
+    appConfig: 'Configuração do App',
+    edit: 'Editar',
+    favorite: 'Favoritar',
+    unfavorite: 'Remover dos Favoritos',
+    download: 'Baixar',
+    sync: 'Sincronizar',
+    delete: 'Excluir',
+    deleteConfirm: (photoTitle: string) =>
+      `Tem certeza que deseja excluir "${photoTitle}"?`,
+  },
+  onboarding: {
+    setupComplete: 'Configuração Concluída!',
+    setupIncomplete: 'Finalizar Configuração',
+    setupSignIn: 'Entre para enviar fotos',
+    setupFirstPhoto: 'Adicione sua primeira foto',
+    // eslint-disable-next-line max-len
+    setupConfig: 'Altere o nome do site e outras configurações editando as variáveis de ambiente referenciadas em',
+  },
+  misc: {
+    loading: 'Carregando ...',
+    finishing: 'Finalizando ...',
+    uploading: 'Enviando',
+    repo: 'Feito com',
+    copyPhrase: (label: string) => `${label} copiado`,
+  },
+  utility: {
+    paginate: (
+      index: number,
+      count: number,
+      action?: string,
+    ) => action
+      ? `${action} ${index} de ${count}`
+      : `${index} de ${count}`,
+  },
+  dateLocale: ptBR,
+};
+
+export default TEXT;

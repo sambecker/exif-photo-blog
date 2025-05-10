@@ -10,7 +10,7 @@ import FavsTag from '../tag/FavsTag';
 import { useAppState } from '@/state/AppState';
 import { useMemo, useRef } from 'react';
 import HiddenTag from '@/tag/HiddenTag';
-import { CATEGORY_VISIBILITY } from '@/app/config';
+import { APP_TEXT, CATEGORY_VISIBILITY } from '@/app/config';
 import { clsx } from 'clsx/lite';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
 import IconCamera from '@/components/icons/IconCamera';
@@ -83,7 +83,7 @@ export default function PhotoGridSidebar({
   const camerasContent = cameras.length > 0
     ? <HeaderList
       key="cameras"
-      title="Cameras"
+      title={APP_TEXT.category.cameraPlural}
       icon={<IconCamera
         size={15}
         className="translate-x-[0.5px]"
@@ -107,7 +107,7 @@ export default function PhotoGridSidebar({
   const lensesContent = lenses.length > 0
     ? <HeaderList
       key="lenses"
-      title="Lenses"
+      title={APP_TEXT.category.lensPlural}
       icon={<IconLens size={15} />}
       maxItems={maxItemsPerCategory}
       items={lenses
@@ -127,7 +127,7 @@ export default function PhotoGridSidebar({
   const tagsContent = tags.length > 0
     ? <HeaderList
       key="tags"
-      title='Tags'
+      title={APP_TEXT.category.tagPlural}
       icon={<IconTag
         size={14}
         className="translate-x-[1px] translate-y-[1px]"
@@ -172,7 +172,7 @@ export default function PhotoGridSidebar({
   const recipesContent = recipes.length > 0
     ? <HeaderList
       key="recipes"
-      title="Recipes"
+      title={APP_TEXT.category.recipePlural}
       icon={<IconRecipe
         size={16}
         className="translate-x-[-1px]"
@@ -195,7 +195,7 @@ export default function PhotoGridSidebar({
   const filmsContent = films.length > 0
     ? <HeaderList
       key="films"
-      title="Films"
+      title={APP_TEXT.category.filmPlural}
       icon={<IconFilm size={15} />}
       maxItems={maxItemsPerCategory}
       items={films
@@ -213,7 +213,7 @@ export default function PhotoGridSidebar({
   const focalLengthsContent = focalLengths.length > 0
     ? <HeaderList
       key="focal-lengths"
-      title="Focal Lengths"
+      title={APP_TEXT.category.focalLengthPlural}
       icon={<IconFocalLength size={13} />}
       maxItems={maxItemsPerCategory}
       items={focalLengths.map(({ focal, count }) =>

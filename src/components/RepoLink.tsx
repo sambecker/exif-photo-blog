@@ -1,4 +1,4 @@
-import { TEMPLATE_REPO_NAME, TEMPLATE_REPO_URL } from '@/app/config';
+import { APP_TEXT, TEMPLATE_REPO_NAME, TEMPLATE_REPO_URL } from '@/app/config';
 import { clsx } from 'clsx/lite';
 import Link from 'next/link';
 import { BiLogoGithub } from 'react-icons/bi';
@@ -7,7 +7,7 @@ export default function RepoLink() {
   return (
     <span className="inline-flex items-center gap-2 whitespace-nowrap">
       <span className="hidden sm:inline-block">
-        Made with
+        {APP_TEXT.misc.repo}
       </span>
       <Link
         href={TEMPLATE_REPO_URL}

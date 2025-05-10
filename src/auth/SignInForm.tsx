@@ -21,6 +21,7 @@ import { useAppState } from '@/state/AppState';
 import { clsx } from 'clsx/lite';
 import { PATH_ADMIN_PHOTOS } from '@/app/paths';
 import IconLock from '@/components/icons/IconLock';
+import { APP_TEXT } from '@/app/config';
 
 export default function SignInForm({
   includeTitle = true,
@@ -79,27 +80,27 @@ export default function SignInForm({
         )}>
           <IconLock className="text-main translate-y-[0.5px]" />
           <span className="text-main">
-            Sign in
+            {APP_TEXT.auth.signIn}
           </span>
         </h1>}
       <form action={action} className="w-full">
         <div className="space-y-5 w-full -translate-y-0.5">
           {response === KEY_CREDENTIALS_SIGN_IN_ERROR &&
             <ErrorNote>
-              Invalid email/password
+              {APP_TEXT.auth.invalidEmailPassword}
             </ErrorNote>}
           <div className="space-y-4 w-full">
             <FieldSetWithStatus
               id="email"
               inputRef={emailRef}
-              label="Admin Email"
+              label={APP_TEXT.auth.email}
               type="email"
               value={email}
               onChange={setEmail}
             />
             <FieldSetWithStatus
               id="password"
-              label="Admin Password"
+              label={APP_TEXT.auth.password}
               type="password"
               value={password}
               onChange={setPassword}
@@ -112,7 +113,7 @@ export default function SignInForm({
               />}
           </div>
           <SubmitButtonWithStatus disabled={!isFormValid}>
-            Sign in
+            {APP_TEXT.auth.signIn}
           </SubmitButtonWithStatus>
         </div>
       </form>

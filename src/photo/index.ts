@@ -2,6 +2,7 @@ import { formatFocalLength } from '@/focal';
 import { getNextImageUrlForRequest } from '@/platforms/next-image';
 import { photoHasFilmData } from '@/film';
 import {
+  APP_TEXT,
   HIGH_DENSITY_GRID,
   IS_PREVIEW,
   SHOW_EXIF_DATA,
@@ -17,7 +18,7 @@ import {
   formatExposureCompensation,
   formatExposureTime,
 } from '@/utility/exif-format';
-import { parameterize } from '@/utility/string';
+import { capitalize, parameterize } from '@/utility/string';
 import camelcaseKeys from 'camelcase-keys';
 import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
@@ -171,7 +172,7 @@ export const photoStatsAsString = (photo: Photo) => [
 ].join(' ');
 
 export const descriptionForPhoto = (photo: Photo) =>
-  photo.takenAtNaiveFormatted?.toUpperCase();
+  formatDate({ date: photo.takenAt }).toLocaleUpperCase();
 
 export const getPreviousPhoto = (photo: Photo, photos: Photo[]) => {
   const index = photos.findIndex(p => p.id === photo.id);
@@ -231,10 +232,14 @@ export const titleForPhoto = (
 export const altTextForPhoto = (photo: Photo) =>
   photo.semanticDescription || titleForPhoto(photo);
 
-export const photoLabelForCount = (count: number, capitalize = true) =>
-  capitalize
-    ? count === 1 ? 'Photo' : 'Photos'
-    : count === 1 ? 'photo' : 'photos';
+export const photoLabelForCount = (count: number, _capitalize = true) => {
+  const label = count === 1
+    ? APP_TEXT.photo.photo
+    : APP_TEXT.photo.photoPlural;
+  return _capitalize
+    ? capitalize(label)
+    : label;
+};
 
 export const photoQuantityText = (
   count: number,
@@ -246,7 +251,7 @@ export const photoQuantityText = (
     : `${count} ${photoLabelForCount(count, capitalize)}`;  
 
 export const deleteConfirmationTextForPhoto = (photo: Photo) =>
-  `Are you sure you want to delete "${titleForPhoto(photo)}?"`;
+  APP_TEXT.admin.deleteConfirm(titleForPhoto(photo));
 
 export type PhotoDateRange = { start: string, end: string };
 
@@ -260,9 +265,10 @@ export const descriptionForPhotoSet = (
   dateBased
     ? dateRangeForPhotos(photos, explicitDateRange).description.toUpperCase()
     : [
-      explicitCount ?? photos.length,
-      descriptor,
-      photoLabelForCount(explicitCount ?? photos.length, false),
+      explicitCount ?? photos.length, (
+        descriptor ||
+        photoLabelForCount(explicitCount ?? photos.length, false)
+      ),
     ].join(' ');
 
 const sortPhotosByDateNonDestructively = (

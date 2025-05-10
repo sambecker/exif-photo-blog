@@ -31,6 +31,7 @@ import {
   SHOW_TAKEN_AT_TIME,
   MATTE_COLOR,
   MATTE_COLOR_DARK,
+  APP_TEXT,
 } from '@/app/config';
 import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
@@ -378,7 +379,7 @@ export default function PhotoLarge({
                           <>
                             {' '}
                             <Tooltip
-                              content="35mm equivalent"
+                              content={APP_TEXT.tooltip['35mm']}
                               sideOffset={3}
                               supportMobile
                             >
@@ -434,7 +435,7 @@ export default function PhotoLarge({
                   )}>
                     {showZoomControls &&
                       <LoaderButton
-                        tooltip="Zoom In"
+                        tooltip={APP_TEXT.tooltip.zoom}
                         icon={<LuExpand size={15} />}
                         onClick={() => refZoomControls.current?.open()}
                         styleAs="link"
@@ -443,7 +444,7 @@ export default function PhotoLarge({
                       />}
                     {shouldShare &&
                       <ShareButton
-                        tooltip="Share Photo"
+                        tooltip={APP_TEXT.tooltip.sharePhoto}
                         photo={photo}
                         tag={shouldShareTag
                           ? primaryTag

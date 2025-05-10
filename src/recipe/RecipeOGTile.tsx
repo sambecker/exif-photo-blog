@@ -1,9 +1,7 @@
 import { Photo, PhotoDateRange } from '@/photo';
 import { absolutePathForRecipeImage, pathForRecipe } from '@/app/paths';
-import OGTile from '@/components/OGTile';
+import OGTile, { OGLoadingState } from '@/components/OGTile';
 import { descriptionForRecipePhotos, titleForRecipe } from '.';
-
-export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 
 export default function RecipeOGTile({
   recipe,

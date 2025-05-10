@@ -4,6 +4,7 @@ import { useAppState } from '@/state/AppState';
 import SignInForm from '@/auth/SignInForm';
 import clsx from 'clsx/lite';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
+import { APP_TEXT } from '@/app/config';
 
 export default function SignInOrUploadClient({
   shouldResize,
@@ -21,10 +22,10 @@ export default function SignInOrUploadClient({
     )}>
       <div>
         {isCheckingAuth
-          ? 'Loading ...'
+          ? APP_TEXT.misc.loading
           : isUserSignedIn
-            ? 'Add your first photo'
-            : 'Sign in to upload photos'}
+            ? APP_TEXT.onboarding.setupFirstPhoto
+            : APP_TEXT.onboarding.setupSignIn}
       </div>
       {!isCheckingAuth && isUserSignedIn === false &&
         <div className="flex justify-center my-2 sm:my-4">

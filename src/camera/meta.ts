@@ -9,6 +9,7 @@ import {
   absolutePathForCamera,
   absolutePathForCameraImage,
 } from '@/app/paths';
+import { APP_TEXT } from '@/app/config';
 
 // Meta functions moved to separate file to avoid
 // dependencies (camelcase-keys) found in photo/index.ts
@@ -19,8 +20,9 @@ export const titleForCamera = (
   photos: Photo[],
   explicitCount?: number,
 ) => [
-  'Shot on',
-  formatCameraText(cameraFromPhoto(photos[0], camera)),
+  APP_TEXT.category.cameraTitle(
+    formatCameraText(cameraFromPhoto(photos[0], camera)),
+  ),
   photoQuantityText(explicitCount ?? photos.length),
 ].join(' ');
 
@@ -28,10 +30,9 @@ export const shareTextForCamera = (
   camera: Camera,
   photos: Photo[],
 ) =>
-  [
-    'Photos shot on',
+  APP_TEXT.category.cameraShare(
     formatCameraText(cameraFromPhoto(photos[0], camera)),
-  ].join(' ');
+  );
 
 export const descriptionForCameraPhotos = (
   photos: Photo[],

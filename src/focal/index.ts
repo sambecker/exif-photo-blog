@@ -8,6 +8,7 @@ import {
   absolutePathForFocalLength,
   absolutePathForFocalLengthImage,
 } from '@/app/paths';
+import { APP_TEXT } from '@/app/config';
 
 export type FocalLengths = {
   focal: number
@@ -31,12 +32,12 @@ export const titleForFocalLength = (
   photos: Photo[],
   explicitCount?: number,
 ) => [
-  `${formatFocalLength(focal)} Focal Length`,
+  APP_TEXT.category.focalLengthTitle(formatFocalLengthSafe(focal)),
   photoQuantityText(explicitCount ?? photos.length),
 ].join(' ');
 
 export const shareTextFocalLength = (focal: number) =>
-  `Photos shot at ${formatFocalLength(focal)}`;
+  APP_TEXT.category.focalLengthShare(formatFocalLengthSafe(focal));
 
 export const descriptionForFocalLengthPhotos = (
   photos: Photo[],

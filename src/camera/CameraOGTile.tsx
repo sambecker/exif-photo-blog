@@ -1,10 +1,8 @@
 import { Photo, PhotoDateRange } from '@/photo';
 import { absolutePathForCameraImage, pathForCamera } from '@/app/paths';
-import OGTile from '@/components/OGTile';
+import OGTile, { OGLoadingState } from '@/components/OGTile';
 import { Camera } from '.';
 import { descriptionForCameraPhotos, titleForCamera } from './meta';
-
-export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 
 export default function CameraOGTile({
   camera,

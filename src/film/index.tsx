@@ -19,6 +19,7 @@ import {
 } from '@/utility/string';
 import { AnnotatedTag } from '@/photo/form';
 import PhotoFilmIcon from './PhotoFilmIcon';
+import { APP_TEXT } from '@/app/config';
 
 export type FilmWithCount = {
   film: string
@@ -67,7 +68,7 @@ export const titleForFilm = (
 export const shareTextForFilm = (
   film: string,
 ) =>
-  `Photos shot on ${labelForFilm(film).large}`;
+  APP_TEXT.category.filmShare(labelForFilm(film).large);
 
 export const descriptionForFilmPhotos = (
   photos: Photo[],

@@ -3,7 +3,7 @@ import PhotoTag from './PhotoTag';
 import { descriptionForTaggedPhotos, isTagFavs } from '.';
 import PhotoHeader from '@/photo/PhotoHeader';
 import FavsTag from './FavsTag';
-import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
+import { AI_TEXT_GENERATION_ENABLED, APP_TEXT } from '@/app/config';
 
 export default function TagHeader({
   tag,
@@ -26,7 +26,7 @@ export default function TagHeader({
       entity={isTagFavs(tag) 
         ? <FavsTag contrast="high" />
         : <PhotoTag tag={tag} contrast="high" />}
-      entityVerb="Tagged"
+      entityVerb={APP_TEXT.category.taggedPhotos}
       entityDescription={descriptionForTaggedPhotos(photos, undefined, count)}
       photos={photos}
       selectedPhoto={selectedPhoto}

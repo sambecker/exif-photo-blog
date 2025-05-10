@@ -5,6 +5,7 @@ import { clsx } from 'clsx/lite';
 import { redirect } from 'next/navigation';
 import LinkWithStatus from '@/components/LinkWithStatus';
 import { IoArrowBack } from 'react-icons/io5';
+import { APP_TEXT } from '@/app/config';
 
 export default async function SignInPage() {
   const session = await auth();
@@ -27,7 +28,7 @@ export default async function SignInPage() {
         )}
       >
         <IoArrowBack className="translate-y-[1px]" />
-        Home
+        {APP_TEXT.nav.home}
       </LinkWithStatus>
     </div>
   );

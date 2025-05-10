@@ -4,7 +4,7 @@ import { clsx } from 'clsx/lite';
 import AppGrid from '../components/AppGrid';
 import ThemeSwitcher from '@/app/ThemeSwitcher';
 import Link from 'next/link';
-import { SHOW_REPO_LINK } from '@/app/config';
+import { APP_TEXT, SHOW_REPO_LINK } from '@/app/config';
 import RepoLink from '../components/RepoLink';
 import { usePathname } from 'next/navigation';
 import { PATH_ADMIN_PHOTOS, isPathAdmin, isPathSignIn } from './paths';
@@ -51,7 +51,7 @@ export default function Footer() {
                     <form action={() => signOutAction()
                       .then(clearAuthStateAndRedirectIfNecessary)}>
                       <SubmitButtonWithStatus styleAs="link">
-                        Sign out
+                        {APP_TEXT.auth.signOut}
                       </SubmitButtonWithStatus>
                     </form>
                   </>
@@ -60,7 +60,7 @@ export default function Footer() {
                     : SHOW_REPO_LINK
                       ? <RepoLink />
                       : <Link href={PATH_ADMIN_PHOTOS}>
-                        Admin
+                        {APP_TEXT.nav.admin}
                       </Link>}
               </div>
               <div className="flex items-center h-10">

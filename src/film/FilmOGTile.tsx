@@ -3,10 +3,8 @@ import {
   absolutePathForFilmImage,
   pathForFilm,
 } from '@/app/paths';
-import OGTile from '@/components/OGTile';
+import OGTile, { OGLoadingState } from '@/components/OGTile';
 import { descriptionForFilmPhotos, titleForFilm } from '.';
-
-export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 
 export default function FilmOGTile({
   film,

@@ -1,10 +1,8 @@
 import { Photo, PhotoDateRange } from '@/photo';
 import { absolutePathForLensImage, pathForLens } from '@/app/paths';
-import OGTile from '@/components/OGTile';
+import OGTile, { OGLoadingState } from '@/components/OGTile';
 import { Lens } from '.';
 import { titleForLens, descriptionForLensPhotos } from './meta';
-
-export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 
 export default function LensOGTile({
   lens,
