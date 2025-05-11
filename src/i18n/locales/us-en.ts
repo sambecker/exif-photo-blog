@@ -1,6 +1,5 @@
-import { enUS } from 'date-fns/locale';
-
 const TEXT = {
+  locale: 'en-us',
   photo: {
     photo: 'Photo',
     photoPlural: 'Photos',
@@ -12,25 +11,25 @@ const TEXT = {
   category: {
     camera: 'Camera',
     cameraPlural: 'Cameras',
-    cameraTitle: (camera: string) => `Shot on ${camera}`,
-    cameraShare: (camera: string) => `Photos shot on ${camera}`,
+    cameraTitle: 'Shot on {{camera}}',
+    cameraShare: 'Photos shot on {{camera}}',
     lens: 'Lens',
     lensPlural: 'Lenses',
     tag: 'Tag',
     tagPlural: 'Tags',
     taggedPhotos: 'Tagged Photos',
-    taggedPhrase: (tag: string) => `Photos tagged '${tag}'`,
+    taggedPhrase: 'Photos tagged {{tag}}',
     taggedFavs: 'Favorite Photos',
     recipe: 'Recipe',
     recipePlural: 'Recipes',
-    recipeShare: (recipe: string) => `${recipe} recipe photos`,
+    recipeShare: '{{recipe}} recipe photos',
     film: 'Film',
     filmPlural: 'Films',
-    filmShare: (film: string) => `Photos shot on ${film}`,
+    filmShare: 'Photos shot on {{film}}',
     focalLength: 'Focal Length',
     focalLengthPlural: 'Focal Lengths',
-    focalLengthTitle: (focal: string) => `Focal Length ${focal}`,
-    focalLengthShare: (focal: string) => `Photos shot at ${focal}`,
+    focalLengthTitle: 'Focal Length {{focal}}',
+    focalLengthShare: 'Photos shot at {{focal}}',
   },
   nav: {
     home: 'Home',
@@ -92,8 +91,7 @@ const TEXT = {
     download: 'Download',
     sync: 'Sync',
     delete: 'Delete',
-    deleteConfirm: (photoTitle: string) =>
-      `Are you sure you want to delete "${photoTitle}?"`,
+    deleteConfirm: 'Are you sure you want to delete "{{photoTitle}}?"',
   },
   onboarding: {
     setupComplete: 'Setup Complete!',
@@ -108,18 +106,12 @@ const TEXT = {
     finishing: 'Finishing ...',
     uploading: 'Uploading',
     repo: 'Made with',
-    copyPhrase: (label: string) => `${label} copied`,
+    copyPhrase: '{{label}} copied',
   },
   utility: {
-    paginate: (
-      index: number,
-      count: number,
-      action?: string,
-    ) => action
-      ? `${action} ${index} of ${count}`
-      : `${index} of ${count}`,
+    paginate: '{{index}} of {{count}}',
+    paginateAction: '{{action}} {{index}} of {{count}}',
   },
-  dateLocale: enUS,
 };
 
 export default TEXT;

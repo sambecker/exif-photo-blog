@@ -21,11 +21,11 @@ export const TEMPLATE_DESCRIPTION = 'Store photos with original camera data';
 export const TEMPLATE_REPO_OWNER  = 'sambecker';
 export const TEMPLATE_REPO_NAME   = 'exif-photo-blog';
 export const TEMPLATE_REPO_BRANCH = 'main';
-// eslint-disable-next-line max-len
-export const TEMPLATE_REPO_URL = `https://github.com/${TEMPLATE_REPO_OWNER}/${TEMPLATE_REPO_NAME}`;
+export const TEMPLATE_REPO_URL =
+  `https://github.com/${TEMPLATE_REPO_OWNER}/${TEMPLATE_REPO_NAME}`;
 export const TEMPLATE_REPO_URL_FORK = `${TEMPLATE_REPO_URL}/fork`;
-// eslint-disable-next-line max-len
-export const TEMPLATE_REPO_URL_README = `${TEMPLATE_REPO_URL}?tab=readme-ov-file`;
+export const TEMPLATE_REPO_URL_README =
+  `${TEMPLATE_REPO_URL}?tab=readme-ov-file`;
 
 export const VERCEL_GIT_PROVIDER =
   process.env.NEXT_PUBLIC_VERCEL_GIT_PROVIDER;

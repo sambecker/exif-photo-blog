@@ -631,7 +631,7 @@ export default function CommandKClient({
                   key={heading}
                   heading={<div className={clsx(
                     'flex items-center',
-                    'px-2 pt-1 pb-1.5',
+                    'px-2 py-1',
                     'text-xs font-medium text-dim tracking-wider',
                     isPending && 'opacity-20',
                   )}>

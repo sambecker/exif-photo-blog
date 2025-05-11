@@ -1,7 +1,7 @@
 import { I18NDeepPartial } from '..';
-import { pt } from 'date-fns/locale';
 
 const TEXT: I18NDeepPartial = {
+  locale: 'pt-pt',
   photo: {
     photo: 'Fotografia',
     photoPlural: 'Fotografias',
@@ -13,25 +13,25 @@ const TEXT: I18NDeepPartial = {
   category: {
     camera: 'Máquina Fotográfica',
     cameraPlural: 'Máquinas Fotográficas',
-    cameraTitle: (camera: string) => `Tirado com ${camera}`,
-    cameraShare: (camera: string) => `Fotografias tiradas com ${camera}`,
+    cameraTitle: 'Tirado com {{camera}}',
+    cameraShare: 'Fotografias tiradas com {{camera}}',
     lens: 'Objetiva',
     lensPlural: 'Objetivas',
     tag: 'Etiqueta',
     tagPlural: 'Etiquetas',
     taggedPhotos: 'Fotografias etiquetadas',
-    taggedPhrase: (tag: string) => `Fotos etiquetadas com '${tag}'`,
+    taggedPhrase: 'Fotos etiquetadas com {{tag}}',
     taggedFavs: 'Fotografias favoritas',
     recipe: 'Receita',
     recipePlural: 'Receitas',
-    recipeShare: (recipe: string) => `Fotografias da receita ${recipe}`,
+    recipeShare: 'Fotografias da receita {{recipe}}',
     film: 'Filme fotográfico',
     filmPlural: 'Filmes fotográficos',
-    filmShare: (film: string) => `Fotografias tiradas com ${film}`,
+    filmShare: 'Fotografias tiradas com {{film}}',
     focalLength: 'Distância focal',
     focalLengthPlural: 'Distâncias focais',
-    focalLengthTitle: (focal: string) => `Distância focal ${focal}`,
-    focalLengthShare: (focal: string) => `Fotos tiradas em ${focal}`,
+    focalLengthTitle: 'Distância focal {{focal}}',
+    focalLengthShare: 'Fotos tiradas em {{focal}}',
   },
   nav: {
     home: 'Início',
@@ -93,8 +93,7 @@ const TEXT: I18NDeepPartial = {
     download: 'Descarregar',
     sync: 'Sincronizar',
     delete: 'Excluir',
-    deleteConfirm: (photoTitle: string) =>
-      `Tens certeza de que deseja excluir "${photoTitle}"?`,
+    deleteConfirm: 'Tens certeza de que deseja excluir "{{photoTitle}}"?',
   },
   onboarding: {
     setupComplete: 'Configuração concluída!',
@@ -109,18 +108,12 @@ const TEXT: I18NDeepPartial = {
     finishing: 'A finalizar ...',
     uploading: 'A enviar',
     repo: 'Feito com',
-    copyPhrase: (label: string) => `${label} copiado`,
+    copyPhrase: '{{label}} copiado',
   },
   utility: {
-    paginate: (
-      index: number,
-      count: number,
-      action?: string,
-    ) => action
-      ? `${action} ${index} de ${count}`
-      : `${index} de ${count}`,
+    paginate: '{{index}} de {{count}}',
+    paginateAction: '{{action}} {{index}} de {{count}}',
   },
-  dateLocale: pt,
 };
 
 export default TEXT;

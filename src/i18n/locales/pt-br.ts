@@ -1,7 +1,7 @@
 import { I18NDeepPartial } from '..';
-import { ptBR } from 'date-fns/locale';
 
 const TEXT: I18NDeepPartial = {
+  locale: 'pt-br',
   photo: {
     photo: 'Foto',
     photoPlural: 'Fotos',
@@ -13,25 +13,25 @@ const TEXT: I18NDeepPartial = {
   category: {
     camera: 'Câmera',
     cameraPlural: 'Câmeras',
-    cameraTitle: (camera: string) => `Tirado com ${camera}`,
-    cameraShare: (camera: string) => `Fotos tiradas com ${camera}`,
+    cameraTitle: 'Tirado com {{camera}}',
+    cameraShare: 'Fotos tiradas com {{camera}}',
     lens: 'Lente',
     lensPlural: 'Lentes',
     tag: 'Tag',
     tagPlural: 'Tags',
     taggedPhotos: 'Fotos marcadas',
-    taggedPhrase: (tag: string) => `Fotos marcadas com '${tag}'`,
+    taggedPhrase: 'Fotos marcadas com {{tag}}',
     taggedFavs: 'Fotos favoritas',
     recipe: 'Receita',
     recipePlural: 'Receitas',
-    recipeShare: (recipe: string) => `Fotos da receita ${recipe}`,
+    recipeShare: 'Fotos da receita {{recipe}}',
     film: 'Filme',
     filmPlural: 'Filmes',
-    filmShare: (film: string) => `Fotos tiradas com ${film}`,
+    filmShare: 'Fotos tiradas com {{film}}',
     focalLength: 'Distância focal',
     focalLengthPlural: 'Distâncias focais',
-    focalLengthTitle: (focal: string) => `Distância focal ${focal}`,
-    focalLengthShare: (focal: string) => `Fotos tiradas em ${focal}`,
+    focalLengthTitle: 'Distância focal {{focal}}',
+    focalLengthShare: 'Fotos tiradas em {{focal}}',
   },
   nav: {
     home: 'Início',
@@ -93,8 +93,7 @@ const TEXT: I18NDeepPartial = {
     download: 'Baixar',
     sync: 'Sincronizar',
     delete: 'Excluir',
-    deleteConfirm: (photoTitle: string) =>
-      `Tem certeza de que deseja excluir "${photoTitle}"?`,
+    deleteConfirm: 'Tem certeza de que deseja excluir "{{photoTitle}}"?',
   },
   onboarding: {
     setupComplete: 'Configuração concluída!',
@@ -109,18 +108,12 @@ const TEXT: I18NDeepPartial = {
     finishing: 'Finalizando ...',
     uploading: 'Enviando',
     repo: 'Feito com',
-    copyPhrase: (label: string) => `${label} copiado`,
+    copyPhrase: '{{label}} copiado',
   },
   utility: {
-    paginate: (
-      index: number,
-      count: number,
-      action?: string,
-    ) => action
-      ? `${action} ${index} de ${count}`
-      : `${index} de ${count}`,
+    paginate: '{{index}} de {{count}}',
+    paginateAction: '{{action}} {{index}} de {{count}}',
   },
-  dateLocale: ptBR,
 };
 
 export default TEXT;

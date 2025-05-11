@@ -85,7 +85,7 @@ export default function ImageInput({
             >
               {isUploading
                 ? filesLength > 1
-                  ? APP_TEXT.utility.paginate(
+                  ? APP_TEXT.utility.paginateAction(
                     fileUploadIndex + 1,
                     filesLength,
                     APP_TEXT.admin.uploading,
