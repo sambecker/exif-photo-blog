@@ -262,8 +262,10 @@ Partial internationalization (non-admin, user-facing text) provided for a handfu
 ### Supported Languages
 - `US_EN`
 - `ES_ES` (coming soon)
-- `PT_BR` (coming soon)
-- `PT_PT` (coming soon)
+- `PT_BR`
+- `PT_PT`
+
+Thank you ❤️ translators: [@sconetto](https://github.com/sconetto)
 
 📖&nbsp;&nbsp;FAQ
 -

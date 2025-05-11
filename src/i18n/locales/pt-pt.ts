@@ -117,8 +117,8 @@ const TEXT: I18NDeepPartial = {
       count: number,
       action?: string,
     ) => action
-        ? `${action} ${index} de ${count}`
-        : `${index} de ${count}`,
+      ? `${action} ${index} de ${count}`
+      : `${index} de ${count}`,
   },
   dateLocale: pt,
 };
