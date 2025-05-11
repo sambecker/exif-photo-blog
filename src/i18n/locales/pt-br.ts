@@ -46,6 +46,8 @@ const TEXT: I18NDeepPartial = {
   },
   cmdk: {
     placeholder: 'Pesquisar fotos, visualizações, configurações ...',
+    searching: 'Pesquisando ...',
+    noResults: 'Nenhum resultado encontrado',
   },
   tooltip: {
     '35mm': 'Equivalente 35mm',

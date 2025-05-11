@@ -614,9 +614,11 @@ export default function CommandKClient({
           className="overflow-y-auto"
           style={{ ...styleMask, maxHeight }}
         >
-          <div className="px-3 pt-2 pb-3.5">
+          <div className="px-3 pt-2 pb-3.5 space-y-2">
             <Command.Empty className="mt-1 pl-3 text-dim text-base pb-0.5">
-              {isLoading ? 'Searching ...' : 'No results found'}
+              {isLoading
+                ? APP_TEXT.cmdk.searching
+                : APP_TEXT.cmdk.noResults}
             </Command.Empty>
             {queriedSections
               .concat(categorySections)
@@ -629,7 +631,7 @@ export default function CommandKClient({
                   key={heading}
                   heading={<div className={clsx(
                     'flex items-center',
-                    'px-2 py-1! pb-0.5',
+                    'px-2 pt-1 pb-1.5',
                     'text-xs font-medium text-dim tracking-wider',
                     isPending && 'opacity-20',
                   )}>

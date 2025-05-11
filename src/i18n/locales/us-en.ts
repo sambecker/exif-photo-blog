@@ -45,6 +45,8 @@ const TEXT = {
   },
   cmdk: {
     placeholder: 'Search photos, views, settings ...',
+    searching: 'Searching ...',
+    noResults: 'No results found',
   },
   tooltip: {
     '35mm': '35mm Equivalent',
