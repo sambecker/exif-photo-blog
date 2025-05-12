@@ -624,7 +624,7 @@ export default function CommandKClient({
           className="overflow-y-auto"
           style={{ ...styleMask, maxHeight }}
         >
-          <div className="px-3 pt-2 pb-3.5 space-y-2">
+          <div className="flex flex-col pt-2 pb-3 px-3 gap-2">
             <Command.Empty className="mt-1 pl-3 text-dim text-base pb-0.5">
               {isLoading
                 ? appText.cmdk.searching
