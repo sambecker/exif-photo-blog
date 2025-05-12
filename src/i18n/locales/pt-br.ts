@@ -1,7 +1,6 @@
 import { I18NDeepPartial } from '..';
 
 const TEXT: I18NDeepPartial = {
-  locale: 'pt-br',
   photo: {
     photo: 'Foto',
     photoPlural: 'Fotos',

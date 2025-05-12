@@ -1,45 +1,45 @@
 import { I18N } from '..';
 
-export type I18NState = ReturnType<typeof generateI18NState>;
+export type AppTextState = ReturnType<typeof generateAppTextState>;
 
-export const generateI18NState = (i18nText: I18N) => {
+export const generateAppTextState = (i18n: I18N) => {
   return {
-    ...i18nText,
+    ...i18n,
     category: {
-      ...i18nText.category,
+      ...i18n.category,
       cameraTitle: (camera: string) =>
-        i18nText.category.cameraTitle.replace('{{camera}}', camera),
+        i18n.category.cameraTitle.replace('{{camera}}', camera),
       cameraShare: (camera: string) =>
-        i18nText.category.cameraShare.replace('{{camera}}', camera),
+        i18n.category.cameraShare.replace('{{camera}}', camera),
       taggedPhrase: (tag: string) =>
-        i18nText.category.taggedPhrase.replace('{{tag}}', tag),
+        i18n.category.taggedPhrase.replace('{{tag}}', tag),
       recipeShare: (recipe: string) =>
-        i18nText.category.recipeShare.replace('{{recipe}}', recipe),
+        i18n.category.recipeShare.replace('{{recipe}}', recipe),
       filmShare: (film: string) =>
-        i18nText.category.filmShare.replace('{{film}}', film),
+        i18n.category.filmShare.replace('{{film}}', film),
       focalLengthTitle: (focal: string) =>
-        i18nText.category.focalLengthTitle.replace('{{focal}}', focal),
+        i18n.category.focalLengthTitle.replace('{{focal}}', focal),
       focalLengthShare: (focal: string) =>
-        i18nText.category.focalLengthShare.replace('{{focal}}', focal),
+        i18n.category.focalLengthShare.replace('{{focal}}', focal),
     },
     admin: {
-      ...i18nText.admin,
+      ...i18n.admin,
       deleteConfirm: (photoTitle: string) =>
-        i18nText.admin.deleteConfirm.replace('{{photoTitle}}', photoTitle),
+        i18n.admin.deleteConfirm.replace('{{photoTitle}}', photoTitle),
     },
     misc: {
-      ...i18nText.misc,
+      ...i18n.misc,
       copyPhrase: (label: string) =>
-        i18nText.misc.copyPhrase.replace('{{label}}', label),
+        i18n.misc.copyPhrase.replace('{{label}}', label),
     },
     utility: {
-      ...i18nText.utility,
+      ...i18n.utility,
       paginate: (index: number, count: number) =>
-        i18nText.utility.paginate
+        i18n.utility.paginate
           .replace('{{index}}', index.toString())
           .replace('{{count}}', count.toString()),
       paginateAction: (index: number, count: number, action: string) =>
-        i18nText.utility.paginateAction
+        i18n.utility.paginateAction
           .replace('{{index}}', index.toString())
           .replace('{{count}}', count.toString())
           .replace('{{action}}', action),

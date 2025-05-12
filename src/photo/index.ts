@@ -24,7 +24,7 @@ import type { Metadata } from 'next';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import { PhotoSyncStatus, generatePhotoSyncStatus } from './sync';
-import { I18NState } from '@/i18n/state';
+import { AppTextState } from '@/i18n/state';
 
 // INFINITE SCROLL: FEED
 export const INFINITE_SCROLL_FEED_INITIAL =
@@ -234,7 +234,7 @@ export const altTextForPhoto = (photo: Photo) =>
 
 export const photoLabelForCount = (
   count: number,
-  appText: I18NState,
+  appText: AppTextState,
   _capitalize = true,
 ) => {
   const label = count === 1
@@ -247,7 +247,7 @@ export const photoLabelForCount = (
 
 export const photoQuantityText = (
   count: number,
-  appText: I18NState,
+  appText: AppTextState,
   includeParentheses = true,
   capitalize?: boolean,
 ) =>
@@ -257,7 +257,7 @@ export const photoQuantityText = (
 
 export const deleteConfirmationTextForPhoto = (
   photo: Photo,
-  appText: I18NState,
+  appText: AppTextState,
 ) =>
   appText.admin.deleteConfirm(titleForPhoto(photo));
 
@@ -265,7 +265,7 @@ export type PhotoDateRange = { start: string, end: string };
 
 export const descriptionForPhotoSet = (
   photos:Photo[] = [],
-  appText: I18NState,
+  appText: AppTextState,
   descriptor?: string,
   dateBased?: boolean,
   explicitCount?: number,

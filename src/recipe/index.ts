@@ -8,7 +8,7 @@ import {
 } from '@/utility/string';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { labelForFilm } from '@/film';
-import { I18NState } from '@/i18n/state';
+import { AppTextState } from '@/i18n/state';
 
 export type RecipeWithCount = {
   recipe: string
@@ -31,7 +31,7 @@ export const formatRecipe = (recipe?: string) =>
 export const titleForRecipe = (
   recipe: string,
   photos:Photo[] = [],
-  appText: I18NState,
+  appText: AppTextState,
   explicitCount?: number,
 ) => [
   `${appText.category.recipe}: ${formatRecipe(recipe)}`,
@@ -40,13 +40,13 @@ export const titleForRecipe = (
 
 export const shareTextForRecipe = (
   recipe: string,
-  appText: I18NState,
+  appText: AppTextState,
 ) =>
   appText.category.recipeShare(formatRecipe(recipe));
 
 export const descriptionForRecipePhotos = (
   photos: Photo[] = [],
-  appText: I18NState,
+  appText: AppTextState,
   dateBased?: boolean,
   explicitCount?: number,
   explicitDateRange?: PhotoDateRange,
@@ -145,7 +145,7 @@ export const generateRecipeText = (
 export const generateMetaForRecipe = (
   recipe: string,
   photos: Photo[],
-  appText: I18NState,
+  appText: AppTextState,
   explicitCount?: number,
   explicitDateRange?: PhotoDateRange,
 ) => ({

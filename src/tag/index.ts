@@ -16,7 +16,7 @@ import {
   formatCountDescriptive,
 } from '@/utility/string';
 import { sortCategoryByCount } from '@/category';
-import { I18NState } from '@/i18n/state';
+import { AppTextState } from '@/i18n/state';
 
 // Reserved tags
 export const TAG_FAVS   = 'favs';
@@ -42,7 +42,7 @@ export const getValidationMessageForTags = (tags?: string) => {
 export const titleForTag = (
   tag: string,
   photos:Photo[] = [],
-  appText: I18NState,
+  appText: AppTextState,
   explicitCount?: number,
 ) => [
   formatTag(tag),
@@ -51,7 +51,7 @@ export const titleForTag = (
 
 export const shareTextForTag = (
   tag: string,
-  appText: I18NState,
+  appText: AppTextState,
 ) =>
   isTagFavs(tag)
     ? appText.category.taggedFavs
@@ -96,7 +96,7 @@ export const sortTagsObjectWithoutFavs = (tags: Tags) =>
 
 export const descriptionForTaggedPhotos = (
   photos: Photo[] = [],
-  appText: I18NState,
+  appText: AppTextState,
   dateBased?: boolean,
   explicitCount?: number,
   explicitDateRange?: PhotoDateRange,
@@ -113,7 +113,7 @@ export const descriptionForTaggedPhotos = (
 export const generateMetaForTag = (
   tag: string,
   photos: Photo[],
-  appText: I18NState,
+  appText: AppTextState,
   explicitCount?: number,
   explicitDateRange?: PhotoDateRange,
 ) => ({
@@ -151,7 +151,7 @@ export const addHiddenToTags = (tags: Tags, photosCountHidden = 0) =>
 
 export const convertTagsForForm = (
   tags: Tags = [],
-  appText: I18NState,
+  appText: AppTextState,
 ) =>
   sortTagsObjectWithoutFavs(tags)
     .map(({ tag, count }) => ({

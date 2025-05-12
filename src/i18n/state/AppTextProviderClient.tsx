@@ -3,7 +3,7 @@
 import { ReactNode } from 'react';
 import { AppTextContext } from './client';
 import { I18N } from '..';
-import { generateI18NState } from '.';
+import { generateAppTextState } from '.';
 
 export default function AppTextProviderClient({
   children,
@@ -13,7 +13,7 @@ export default function AppTextProviderClient({
   value: I18N
 }) {
   return (
-    <AppTextContext.Provider value={generateI18NState(value)}>
+    <AppTextContext.Provider value={generateAppTextState(value)}>
       {children}
     </AppTextContext.Provider>
   );

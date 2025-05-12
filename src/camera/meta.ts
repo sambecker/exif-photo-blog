@@ -9,7 +9,7 @@ import {
   absolutePathForCamera,
   absolutePathForCameraImage,
 } from '@/app/paths';
-import { I18NState } from '@/i18n/state';
+import { AppTextState } from '@/i18n/state';
 
 // Meta functions moved to separate file to avoid
 // dependencies (camelcase-keys) found in photo/index.ts
@@ -18,7 +18,7 @@ import { I18NState } from '@/i18n/state';
 export const titleForCamera = (
   camera: Camera,
   photos: Photo[],
-  appText: I18NState,
+  appText: AppTextState,
   explicitCount?: number,
 ) => [
   appText.category.cameraTitle(
@@ -30,7 +30,7 @@ export const titleForCamera = (
 export const shareTextForCamera = (
   camera: Camera,
   photos: Photo[],
-  appText: I18NState,
+  appText: AppTextState,
 ) =>
   appText.category.cameraShare(
     formatCameraText(cameraFromPhoto(photos[0], camera)),
@@ -38,7 +38,7 @@ export const shareTextForCamera = (
 
 export const descriptionForCameraPhotos = (
   photos: Photo[],
-  appText: I18NState,
+  appText: AppTextState,
   dateBased?: boolean,
   explicitCount?: number,
   explicitDateRange?: PhotoDateRange,
@@ -55,7 +55,7 @@ export const descriptionForCameraPhotos = (
 export const generateMetaForCamera = (
   camera: Camera,
   photos: Photo[],
-  appText: I18NState,
+  appText: AppTextState,
   explicitCount?: number,
   explicitDateRange?: PhotoDateRange,
 ) => ({

@@ -10,8 +10,8 @@ export const LOCALE_TEXT: Record<
   string,
   () => Promise<I18NDeepPartial | undefined>
 > = {
-  'pt-br': () => import('./locales/pt-br').then((m) => m.default),
-  'pt-pt': () => import('./locales/pt-pt').then((m) => m.default),
+  'pt-br': () => import('./locales/pt-br').then(m => m.default),
+  'pt-pt': () => import('./locales/pt-pt').then(m => m.default),
 };
 
 export const getTextForLocale = async (

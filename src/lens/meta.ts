@@ -9,7 +9,7 @@ import {
   absolutePathForLens,
   absolutePathForLensImage,
 } from '@/app/paths';
-import { I18NState } from '@/i18n/state';
+import { AppTextState } from '@/i18n/state';
 
 // Meta functions moved to separate file to avoid
 // dependencies (camelcase-keys) found in photo/index.ts
@@ -18,7 +18,7 @@ import { I18NState } from '@/i18n/state';
 export const titleForLens = (
   lens: Lens,
   photos: Photo[],
-  appText: I18NState,
+  appText: AppTextState,
   explicitCount?: number,
 ) => [
   `${appText.category.lens}:`,
@@ -29,7 +29,7 @@ export const titleForLens = (
 export const shareTextForLens = (
   lens: Lens,
   photos: Photo[],
-  appText: I18NState,
+  appText: AppTextState,
 ) =>
   [
     `${appText.category.lens}:`,
@@ -38,7 +38,7 @@ export const shareTextForLens = (
 
 export const descriptionForLensPhotos = (
   photos: Photo[],
-  appText: I18NState,
+  appText: AppTextState,
   dateBased?: boolean,
   explicitCount?: number,
   explicitDateRange?: PhotoDateRange,
@@ -55,7 +55,7 @@ export const descriptionForLensPhotos = (
 export const generateMetaForLens = (
   lens: Lens,
   photos: Photo[],
-  appText: I18NState,
+  appText: AppTextState,
   explicitCount?: number,
   explicitDateRange?: PhotoDateRange,
 ) => ({

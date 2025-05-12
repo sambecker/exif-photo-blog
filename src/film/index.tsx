@@ -19,7 +19,7 @@ import {
 } from '@/utility/string';
 import { AnnotatedTag } from '@/photo/form';
 import PhotoFilmIcon from './PhotoFilmIcon';
-import { I18NState } from '@/i18n/state';
+import { AppTextState } from '@/i18n/state';
 
 export type FilmWithCount = {
   film: string
@@ -59,7 +59,7 @@ export const sortFilmsWithCount = (
 export const titleForFilm = (
   film: string,
   photos: Photo[],
-  appText: I18NState,
+  appText: AppTextState,
   explicitCount?: number,
 ) => [
   labelForFilm(film).large,
@@ -68,13 +68,13 @@ export const titleForFilm = (
 
 export const shareTextForFilm = (
   film: string,
-  appText: I18NState,
+  appText: AppTextState,
 ) =>
   appText.category.filmShare(labelForFilm(film).large);
 
 export const descriptionForFilmPhotos = (
   photos: Photo[],
-  appText: I18NState,
+  appText: AppTextState,
   dateBased?: boolean,
   explicitCount?: number,
   explicitDateRange?: PhotoDateRange,
@@ -91,7 +91,7 @@ export const descriptionForFilmPhotos = (
 export const generateMetaForFilm = (
   film: string,
   photos: Photo[],
-  appText: I18NState,
+  appText: AppTextState,
   explicitCount?: number,
   explicitDateRange?: PhotoDateRange,
 ) => ({

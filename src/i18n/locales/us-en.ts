@@ -1,5 +1,4 @@
 const TEXT = {
-  locale: 'en-us',
   photo: {
     photo: 'Photo',
     photoPlural: 'Photos',
