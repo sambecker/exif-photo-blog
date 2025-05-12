@@ -5,9 +5,9 @@ import {
 } from '@/app/paths';
 import OGTile, { OGLoadingState } from '@/components/OGTile';
 import { descriptionForFilmPhotos, titleForFilm } from '.';
-import { getAppText } from '@/i18n/state/server';
+import { useAppText } from '@/i18n/state/client';
 
-export default async function FilmOGTile({
+export default function FilmOGTile({
   film,
   photos,
   loadingState: loadingStateExternal,
@@ -28,7 +28,7 @@ export default async function FilmOGTile({
   count?: number
   dateRange?: PhotoDateRange
 }) {
-  const appText = await getAppText();
+  const appText = useAppText();
   return (
     <OGTile {...{
       title: titleForFilm(film, photos, appText, count),

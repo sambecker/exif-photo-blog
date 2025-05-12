@@ -3,9 +3,9 @@ import { PhotoSetAttributes } from '../category';
 import ShareModal from '@/share/ShareModal';
 import TagOGTile from './TagOGTile';
 import { formatTag, shareTextForTag } from '.';
-import { getAppText } from '@/i18n/state/server';
+import { useAppText } from '@/i18n/state/client';
 
-export default async function TagShareModal({
+export default function TagShareModal({
   tag,
   photos,
   count,
@@ -13,7 +13,7 @@ export default async function TagShareModal({
 }: {
   tag: string
 } & PhotoSetAttributes) {
-  const appText = await getAppText();
+  const appText = useAppText();
   return (
     <ShareModal
       pathShare={absolutePathForTag(tag, true)}

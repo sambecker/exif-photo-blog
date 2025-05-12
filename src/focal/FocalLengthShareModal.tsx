@@ -3,9 +3,9 @@ import { PhotoSetAttributes } from '../category';
 import ShareModal from '@/share/ShareModal';
 import FocalLengthOGTile from './FocalLengthOGTile';
 import { formatFocalLengthSafe, shareTextFocalLength } from '.';
-import { getAppText } from '@/i18n/state/server';
+import { useAppText } from '@/i18n/state/client';
 
-export default async function FocalLengthShareModal({
+export default function FocalLengthShareModal({
   focal,
   photos,
   count,
@@ -13,7 +13,7 @@ export default async function FocalLengthShareModal({
 }: {
   focal: number
 } & PhotoSetAttributes) {
-  const appText = await getAppText();
+  const appText = useAppText();
   return (
     <ShareModal
       pathShare={absolutePathForFocalLength(focal, true)}

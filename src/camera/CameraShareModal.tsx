@@ -4,9 +4,9 @@ import ShareModal from '@/share/ShareModal';
 import CameraOGTile from './CameraOGTile';
 import { Camera, formatCameraText } from '.';
 import { shareTextForCamera } from './meta';
-import { getAppText } from '@/i18n/state/server';
+import { useAppText } from '@/i18n/state/client';
 
-export default async function CameraShareModal({
+export default function CameraShareModal({
   camera,
   photos,
   count,
@@ -14,7 +14,7 @@ export default async function CameraShareModal({
 }: {
   camera: Camera
 } & PhotoSetAttributes) {
-  const appText = await getAppText();
+  const appText = useAppText();
   return (
     <ShareModal
       pathShare={absolutePathForCamera(camera, true)}

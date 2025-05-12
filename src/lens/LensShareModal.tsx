@@ -4,9 +4,9 @@ import ShareModal from '@/share/ShareModal';
 import { formatLensText, Lens } from '.';
 import { shareTextForLens } from './meta';
 import LensOGTile from './LensOGTile';
-import { getAppText } from '@/i18n/state/server';
+import { useAppText } from '@/i18n/state/client';
 
-export default async function LensShareModal({
+export default function LensShareModal({
   lens,
   photos,
   count,
@@ -14,7 +14,7 @@ export default async function LensShareModal({
 }: {
   lens: Lens
 } & PhotoSetAttributes) {
-  const appText = await getAppText();
+  const appText = useAppText();
   return (
     <ShareModal
       pathShare={absolutePathForLens(lens, true)}

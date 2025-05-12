@@ -2,9 +2,9 @@ import { Photo, PhotoDateRange } from '@/photo';
 import { absolutePathForRecipeImage, pathForRecipe } from '@/app/paths';
 import OGTile, { OGLoadingState } from '@/components/OGTile';
 import { descriptionForRecipePhotos, titleForRecipe } from '.';
-import { getAppText } from '@/i18n/state/server';
+import { useAppText } from '@/i18n/state/client';
 
-export default async function RecipeOGTile({
+export default function RecipeOGTile({
   recipe,
   photos,
   loadingState: loadingStateExternal,
@@ -25,7 +25,7 @@ export default async function RecipeOGTile({
   count?: number
   dateRange?: PhotoDateRange
 }) {
-  const appText = await getAppText();
+  const appText = useAppText();
   return (
     <OGTile {...{
       title: titleForRecipe(recipe, photos, appText, count),

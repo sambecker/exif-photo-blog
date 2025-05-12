@@ -3,9 +3,9 @@ import { PhotoSetAttributes } from '../category';
 import ShareModal from '@/share/ShareModal';
 import FilmOGTile from './FilmOGTile';
 import { labelForFilm, shareTextForFilm } from '.';
-import { getAppText } from '@/i18n/state/server';
+import { useAppText } from '@/i18n/state/client';
 
-export default async function FilmShareModal({
+export default function FilmShareModal({
   film,
   photos,
   count,
@@ -13,7 +13,7 @@ export default async function FilmShareModal({
 }: {
   film: string
 } & PhotoSetAttributes) {
-  const appText = await getAppText();
+  const appText = useAppText();
   return (
     <ShareModal
       pathShare={absolutePathForFilm(film, true)}

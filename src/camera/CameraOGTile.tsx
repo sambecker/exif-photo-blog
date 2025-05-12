@@ -3,9 +3,9 @@ import { absolutePathForCameraImage, pathForCamera } from '@/app/paths';
 import OGTile, { OGLoadingState } from '@/components/OGTile';
 import { Camera } from '.';
 import { descriptionForCameraPhotos, titleForCamera } from './meta';
-import { getAppText } from '@/i18n/state/server';
+import { useAppText } from '@/i18n/state/client';
 
-export default async function CameraOGTile({
+export default function CameraOGTile({
   camera,
   photos,
   loadingState: loadingStateExternal,
@@ -26,7 +26,7 @@ export default async function CameraOGTile({
   count?: number
   dateRange?: PhotoDateRange
 }) {
-  const appText = await getAppText();
+  const appText = useAppText();
   return (
     <OGTile {...{
       title: titleForCamera(camera, photos, appText, count),

@@ -8,9 +8,9 @@ import {
   generateRecipeText,
 } from '.';
 import RecipeOGTile from './RecipeOGTile';
-import { getAppText } from '@/i18n/state/server';
+import { useAppText } from '@/i18n/state/client';
 
-export default async function RecipeShareModal({
+export default function RecipeShareModal({
   recipe,
   photos,
   count,
@@ -24,7 +24,7 @@ export default async function RecipeShareModal({
     ? generateRecipeText({ data, film })
     : undefined;
 
-  const appText = await getAppText();
+  const appText = useAppText();
 
   return (
     <ShareModal
