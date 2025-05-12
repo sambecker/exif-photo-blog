@@ -1,3 +1,5 @@
+'use client';
+
 import { Photo, PhotoDateRange } from '@/photo';
 import { absolutePathForTagImage, pathForTag } from '@/app/paths';
 import OGTile, { OGLoadingState } from '@/components/OGTile';

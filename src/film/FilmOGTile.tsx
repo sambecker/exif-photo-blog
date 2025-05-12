@@ -1,3 +1,5 @@
+'use client';
+
 import { Photo, PhotoDateRange } from '@/photo';
 import {
   absolutePathForFilmImage,
