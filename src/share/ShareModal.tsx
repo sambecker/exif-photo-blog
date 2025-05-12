@@ -8,12 +8,13 @@ import { ReactNode, useEffect } from 'react';
 import { shortenUrl } from '@/utility/url';
 import { toastSuccess } from '@/toast';
 import { PiXLogo } from 'react-icons/pi';
-import { APP_TEXT, SHOW_SOCIAL } from '@/app/config';
+import { SHOW_SOCIAL } from '@/app/config';
 import { generateXPostText } from '@/utility/social';
 import { useAppState } from '@/state/AppState';
 import useOnPathChange from '@/utility/useOnPathChange';
 import { IoArrowUp } from 'react-icons/io5';
 import MaskedScroll from '@/components/MaskedScroll';
+import { useAppText } from '@/i18n/state/client';
 
 export default function ShareModal({
   title,
@@ -34,6 +35,8 @@ export default function ShareModal({
     setShareModalProps,
     setShouldRespondToKeyboardCommands,
   } = useAppState();
+
+  const appText = useAppText();
 
   useEffect(() => {
     setShouldRespondToKeyboardCommands?.(false);
@@ -96,7 +99,7 @@ export default function ShareModal({
               <BiCopy size={18} />,
               () => {
                 navigator.clipboard.writeText(pathShare);
-                toastSuccess(APP_TEXT.photo.copied);
+                toastSuccess(appText.photo.copied);
               },
               true,
             )}

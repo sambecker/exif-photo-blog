@@ -2,8 +2,9 @@ import { photoLabelForCount } from '@/photo';
 import { clsx } from 'clsx/lite';
 import Badge from '@/components/Badge';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
+import { getAppText } from '@/i18n/state/server';
 
-export default function AdminRecipeBadge({
+export default async function AdminRecipeBadge({
   recipe,
   count,
   hideBadge,
@@ -12,6 +13,8 @@ export default function AdminRecipeBadge({
   count: number,
   hideBadge?: boolean,
 }) {
+  const appText = await getAppText();
+
   const renderBadgeContent = () =>
     <div className={clsx(
       'inline-flex items-center gap-2',
@@ -21,7 +24,7 @@ export default function AdminRecipeBadge({
         <span>{count}</span>
         <span className="hidden xs:inline-block">
           &nbsp;
-          {photoLabelForCount(count)}
+          {photoLabelForCount(count, appText)}
         </span>
       </div>
     </div>;

@@ -24,6 +24,7 @@ import AdminUploadPanel from '@/admin/upload/AdminUploadPanel';
 import { revalidatePath } from 'next/cache';
 import RecipeModal from '@/recipe/RecipeModal';
 import ThemeColors from '@/app/ThemeColors';
+import AppTextProvider from '@/i18n/state/AppTextProvider';
 
 import '../tailwind.css';
 
@@ -80,43 +81,45 @@ export default function RootLayout({
         '3xl:flex flex-col items-center',
       )}>
         <AppStateProvider>
-          <ThemeColors />
-          <ThemeProvider attribute="class" defaultTheme={DEFAULT_THEME}>
-            <SwrConfigClient>
-              <div className={clsx(
-                'mx-3 mb-3',
-                'lg:mx-6 lg:mb-6',
-              )}>
-                <Nav navTitleOrDomain={NAV_TITLE_OR_DOMAIN} />
-                <main>
-                  <ShareModals />
-                  <RecipeModal />
-                  <div className={clsx(
-                    'min-h-[16rem] sm:min-h-[30rem]',
-                    'mb-12',
-                    'space-y-5',
-                  )}>
-                    <AdminUploadPanel
-                      shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
-                      onLastUpload={async () => {
-                        'use server';
-                        // Update upload count in admin nav
-                        revalidatePath('/admin', 'layout');
-                      }}
-                    />
-                    <AdminBatchEditPanel />
-                    {children}
-                  </div>
-                </main>
-                <Footer />
-              </div>
-              <CommandK />
-            </SwrConfigClient>
-            <Analytics debug={false} />
-            <SpeedInsights debug={false}  />
-            <PhotoEscapeHandler />
-            <ToasterWithThemes />
-          </ThemeProvider>
+          <AppTextProvider>
+            <ThemeColors />
+            <ThemeProvider attribute="class" defaultTheme={DEFAULT_THEME}>
+              <SwrConfigClient>
+                <div className={clsx(
+                  'mx-3 mb-3',
+                  'lg:mx-6 lg:mb-6',
+                )}>
+                  <Nav navTitleOrDomain={NAV_TITLE_OR_DOMAIN} />
+                  <main>
+                    <ShareModals />
+                    <RecipeModal />
+                    <div className={clsx(
+                      'min-h-[16rem] sm:min-h-[30rem]',
+                      'mb-12',
+                      'space-y-5',
+                    )}>
+                      <AdminUploadPanel
+                        shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
+                        onLastUpload={async () => {
+                          'use server';
+                          // Update upload count in admin nav
+                          revalidatePath('/admin', 'layout');
+                        }}
+                      />
+                      <AdminBatchEditPanel />
+                      {children}
+                    </div>
+                  </main>
+                  <Footer />
+                </div>
+                <CommandK />
+              </SwrConfigClient>
+              <Analytics debug={false} />
+              <SpeedInsights debug={false}  />
+              <PhotoEscapeHandler />
+              <ToasterWithThemes />
+            </ThemeProvider>
+          </AppTextProvider>
         </AppStateProvider>
       </body>
     </html>

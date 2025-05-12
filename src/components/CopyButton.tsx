@@ -3,7 +3,7 @@ import LoaderButton from './primitives/LoaderButton';
 import clsx from 'clsx/lite';
 import { toastSuccess } from '@/toast';
 import { ComponentProps } from 'react';
-import { APP_TEXT } from '@/app/config';
+import { useAppText } from '@/i18n/state/client';
 
 export default function CopyButton({
   label,
@@ -19,6 +19,7 @@ export default function CopyButton({
   iconSize?: number
   className?: string
 } & ComponentProps<typeof LoaderButton>) {
+  const appText = useAppText();
   return (
     <LoaderButton
       {...props}
@@ -30,7 +31,7 @@ export default function CopyButton({
       onClick={text
         ? () => {
           navigator.clipboard.writeText(text);
-          toastSuccess(APP_TEXT.misc.copyPhrase(label));
+          toastSuccess(appText.misc.copyPhrase(label));
         }
         : undefined}
       styleAs="link"

@@ -8,6 +8,7 @@ import { generateMetaForRecipe } from '@/recipe';
 import RecipeOverview from '@/recipe/RecipeOverview';
 import { getPhotosRecipeDataCached } from '@/recipe/data';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
+import { getAppText } from '@/i18n/state/server';
 
 const getPhotosRecipeDataCachedCached = cache(getPhotosRecipeDataCached);
 
@@ -39,12 +40,14 @@ export async function generateMetadata({
 
   if (photos.length === 0) { return {}; }
 
+  const appText = await getAppText();
+
   const {
     url,
     title,
     description,
     images,
-  } = generateMetaForRecipe(recipe, photos, count, dateRange);
+  } = generateMetaForRecipe(recipe, photos, appText, count, dateRange);
 
   return {
     title,

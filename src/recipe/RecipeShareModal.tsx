@@ -8,8 +8,9 @@ import {
   generateRecipeText,
 } from '.';
 import RecipeOGTile from './RecipeOGTile';
+import { getAppText } from '@/i18n/state/server';
 
-export default function RecipeShareModal({
+export default async function RecipeShareModal({
   recipe,
   photos,
   count,
@@ -23,10 +24,12 @@ export default function RecipeShareModal({
     ? generateRecipeText({ data, film })
     : undefined;
 
+  const appText = await getAppText();
+
   return (
     <ShareModal
       pathShare={absolutePathForRecipe(recipe, true)}
-      socialText={shareTextForRecipe(recipe)}
+      socialText={shareTextForRecipe(recipe, appText)}
       navigatorTitle={formatRecipe(recipe)}
       navigatorText={recipeText}
     >

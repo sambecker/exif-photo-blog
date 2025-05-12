@@ -2,7 +2,6 @@ import { formatFocalLength } from '@/focal';
 import { getNextImageUrlForRequest } from '@/platforms/next-image';
 import { photoHasFilmData } from '@/film';
 import {
-  APP_TEXT,
   HIGH_DENSITY_GRID,
   IS_PREVIEW,
   SHOW_EXIF_DATA,
@@ -25,6 +24,7 @@ import type { Metadata } from 'next';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import { PhotoSyncStatus, generatePhotoSyncStatus } from './sync';
+import { I18NState } from '@/i18n/state';
 
 // INFINITE SCROLL: FEED
 export const INFINITE_SCROLL_FEED_INITIAL =
@@ -232,10 +232,14 @@ export const titleForPhoto = (
 export const altTextForPhoto = (photo: Photo) =>
   photo.semanticDescription || titleForPhoto(photo);
 
-export const photoLabelForCount = (count: number, _capitalize = true) => {
+export const photoLabelForCount = (
+  count: number,
+  appText: I18NState,
+  _capitalize = true,
+) => {
   const label = count === 1
-    ? APP_TEXT.photo.photo
-    : APP_TEXT.photo.photoPlural;
+    ? appText.photo.photo
+    : appText.photo.photoPlural;
   return _capitalize
     ? capitalize(label)
     : label;
@@ -243,31 +247,38 @@ export const photoLabelForCount = (count: number, _capitalize = true) => {
 
 export const photoQuantityText = (
   count: number,
+  appText: I18NState,
   includeParentheses = true,
   capitalize?: boolean,
 ) =>
   includeParentheses
-    ? `(${count} ${photoLabelForCount(count, capitalize)})`
-    : `${count} ${photoLabelForCount(count, capitalize)}`;  
+    ? `(${count} ${photoLabelForCount(count, appText, capitalize)})`
+    : `${count} ${photoLabelForCount(count, appText, capitalize)}`;  
 
-export const deleteConfirmationTextForPhoto = (photo: Photo) =>
-  APP_TEXT.admin.deleteConfirm(titleForPhoto(photo));
+export const deleteConfirmationTextForPhoto = (
+  photo: Photo,
+  appText: I18NState,
+) =>
+  appText.admin.deleteConfirm(titleForPhoto(photo));
 
 export type PhotoDateRange = { start: string, end: string };
 
 export const descriptionForPhotoSet = (
   photos:Photo[] = [],
+  appText: I18NState,
   descriptor?: string,
   dateBased?: boolean,
   explicitCount?: number,
   explicitDateRange?: PhotoDateRange,
 ) =>
   dateBased
-    ? dateRangeForPhotos(photos, explicitDateRange).description.toUpperCase()
+    ? dateRangeForPhotos(photos, explicitDateRange)
+      .description
+      .toLocaleUpperCase()
     : [
       explicitCount ?? photos.length, (
         descriptor ||
-        photoLabelForCount(explicitCount ?? photos.length, false)
+        photoLabelForCount(explicitCount ?? photos.length, appText, false)
       ),
     ].join(' ');
 

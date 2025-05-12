@@ -9,7 +9,7 @@ import { FiUploadCloud } from 'react-icons/fi';
 import { MAX_IMAGE_SIZE } from '@/platforms/next-image';
 import ProgressButton from './primitives/ProgressButton';
 import { useAppState } from '@/state/AppState';
-import { APP_TEXT } from '@/app/config';
+import { useAppText } from '@/i18n/state/client';
 
 export default function ImageInput({
   ref: inputRefExternal,
@@ -54,6 +54,8 @@ export default function ImageInput({
     setUploadState,
     resetUploadState,
   } = useAppState();
+  
+  const appText = useAppText();
 
   const disabled = disabledProp || isUploading;
 
@@ -85,13 +87,13 @@ export default function ImageInput({
             >
               {isUploading
                 ? filesLength > 1
-                  ? APP_TEXT.utility.paginateAction(
+                  ? appText.utility.paginateAction(
                     fileUploadIndex + 1,
                     filesLength,
-                    APP_TEXT.admin.uploading,
+                    appText.admin.uploading,
                   )
-                  : APP_TEXT.admin.uploading
-                : APP_TEXT.admin.uploadPhotos}
+                  : appText.admin.uploading
+                : appText.admin.uploadPhotos}
             </ProgressButton>}
           <input
             ref={inputRef}

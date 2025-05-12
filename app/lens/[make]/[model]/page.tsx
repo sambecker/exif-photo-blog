@@ -13,6 +13,7 @@ import {
 import {
   staticallyGenerateCategoryIfConfigured,
 } from '@/app/static';
+import { getAppText } from '@/i18n/state/server';
 
 const getPhotosLensDataCachedCached = cache((
   make: string | undefined,
@@ -41,12 +42,14 @@ export async function generateMetadata({
     lens,
   ] = await getPhotosLensDataCachedCached(make, model);
 
+  const appText = await getAppText();
+
   const {
     url,
     title,
     description,
     images,
-  } = generateMetaForLens(lens, photos, count, dateRange);
+  } = generateMetaForLens(lens, photos, appText, count, dateRange);
 
   return {
     title,

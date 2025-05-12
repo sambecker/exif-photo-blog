@@ -5,7 +5,6 @@ import {
 import { getOrderedCategoriesFromString } from '@/category';
 import type { StorageType } from '@/platforms/storage';
 import { makeUrlAbsolute, shortenUrl } from '@/utility/url';
-import { getTextForLocale } from '@/i18n';
 
 // HARD-CODED GLOBAL CONFIGURATION
 
@@ -99,9 +98,7 @@ const SITE_DOMAIN_SHORT = shortenUrl(SITE_DOMAIN);
 
 // SITE META
 
-export const APP_TEXT = getTextForLocale(
-  process.env.NEXT_PUBLIC_LOCALE,
-);
+export const APP_LOCALE = process.env.NEXT_PUBLIC_LOCALE || 'US-EN';
 
 export const NAV_TITLE =
   process.env.NEXT_PUBLIC_NAV_TITLE;
@@ -342,15 +339,14 @@ export const APP_CONFIGURATION = {
     Boolean(process.env.ADMIN_EMAIL) &&
     Boolean(process.env.ADMIN_PASSWORD)
   ),
-  // Domain
-  locale: process.env.NEXT_PUBLIC_LOCALE ?? 'US-EN',
+  // Content
+  locale: APP_LOCALE,
   hasLocale: Boolean(process.env.NEXT_PUBLIC_LOCALE),
   hasDomain: Boolean(
     process.env.NEXT_PUBLIC_DOMAIN ||
     // Legacy environment variable
     process.env.NEXT_PUBLIC_SITE_DOMAIN,
   ),
-  // Content
   hasNavTitle: Boolean(NAV_TITLE),
   hasNavCaption: Boolean(NAV_CAPTION),
   isMetaTitleConfigured: IS_META_TITLE_CONFIGURED,

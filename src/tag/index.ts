@@ -16,7 +16,7 @@ import {
   formatCountDescriptive,
 } from '@/utility/string';
 import { sortCategoryByCount } from '@/category';
-import { APP_TEXT } from '@/app/config';
+import { I18NState } from '@/i18n/state';
 
 // Reserved tags
 export const TAG_FAVS   = 'favs';
@@ -42,16 +42,20 @@ export const getValidationMessageForTags = (tags?: string) => {
 export const titleForTag = (
   tag: string,
   photos:Photo[] = [],
+  appText: I18NState,
   explicitCount?: number,
 ) => [
   formatTag(tag),
-  photoQuantityText(explicitCount ?? photos.length),
+  photoQuantityText(explicitCount ?? photos.length, appText),
 ].join(' ');
 
-export const shareTextForTag = (tag: string) =>
+export const shareTextForTag = (
+  tag: string,
+  appText: I18NState,
+) =>
   isTagFavs(tag)
-    ? APP_TEXT.category.taggedFavs
-    : APP_TEXT.category.taggedPhrase(formatTag(tag));
+    ? appText.category.taggedFavs
+    : appText.category.taggedPhrase(formatTag(tag));
 
 export const sortTagsArray = (
   tags: string[],
@@ -92,13 +96,15 @@ export const sortTagsObjectWithoutFavs = (tags: Tags) =>
 
 export const descriptionForTaggedPhotos = (
   photos: Photo[] = [],
+  appText: I18NState,
   dateBased?: boolean,
   explicitCount?: number,
   explicitDateRange?: PhotoDateRange,
 ) =>
   descriptionForPhotoSet(
     photos,
-    APP_TEXT.category.taggedPhotos,
+    appText,
+    appText.category.taggedPhotos,
     dateBased,
     explicitCount,
     explicitDateRange,
@@ -107,13 +113,19 @@ export const descriptionForTaggedPhotos = (
 export const generateMetaForTag = (
   tag: string,
   photos: Photo[],
+  appText: I18NState,
   explicitCount?: number,
   explicitDateRange?: PhotoDateRange,
 ) => ({
   url: absolutePathForTag(tag),
-  title: titleForTag(tag, photos, explicitCount),
-  description:
-    descriptionForTaggedPhotos(photos, true, explicitCount, explicitDateRange),
+  title: titleForTag(tag, photos, appText, explicitCount),
+  description: descriptionForTaggedPhotos(
+    photos,
+    appText,
+    true,
+    explicitCount,
+    explicitDateRange,
+  ),
   images: absolutePathForTagImage(tag),
 });
 
@@ -137,11 +149,14 @@ export const addHiddenToTags = (tags: Tags, photosCountHidden = 0) =>
       )
     : tags;
 
-export const convertTagsForForm = (tags: Tags = []) =>
+export const convertTagsForForm = (
+  tags: Tags = [],
+  appText: I18NState,
+) =>
   sortTagsObjectWithoutFavs(tags)
     .map(({ tag, count }) => ({
       value: tag,
       annotation: formatCount(count),
       annotationAria:
-        formatCountDescriptive(count, APP_TEXT.category.taggedPhotos),
+        formatCountDescriptive(count, appText.category.taggedPhotos),
     }));

@@ -25,13 +25,13 @@ import { isPhotoFav } from '@/tag';
 import Tooltip from '@/components/Tooltip';
 import {
   ALLOW_PUBLIC_DOWNLOADS,
-  APP_TEXT,
   SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
 } from '@/app/config';
 import { downloadFileFromBrowser } from '@/utility/url';
 import useKeydownHandler from '@/utility/useKeydownHandler';
 import { KEY_COMMANDS } from './key-commands';
 import { syncPhotoConfirmText } from '@/admin/confirm';
+import { useAppText } from '@/i18n/state/client';
 
 const ANIMATION_LEFT: AnimationConfig = { type: 'left', duration: 0.3 };
 const ANIMATION_RIGHT: AnimationConfig = { type: 'right', duration: 0.3 };
@@ -49,6 +49,8 @@ export default function PhotoPrevNextActions({
   hasAiTextGeneration: boolean
 } & PhotoSetCategory) {
   const { setNextPhotoAnimation, isUserSignedIn } = useAppState();
+
+  const appText = useAppText();
 
   const photoTitle = photo
     ? photo.title
@@ -201,7 +203,7 @@ export default function PhotoPrevNextActions({
         '*:select-none',
       )}>
         <Tooltip {...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-          content: APP_TEXT.nav.prev,
+          content: appText.nav.prev,
           keyCommand: KEY_COMMANDS.prev[0],
         }}>
           <PhotoLink
@@ -215,7 +217,7 @@ export default function PhotoPrevNextActions({
           >
             <FiChevronLeft className="sm:hidden text-[1.1rem]" />
             <span className="hidden sm:inline-block uppercase">
-              {APP_TEXT.nav.prevShort}
+              {appText.nav.prevShort}
             </span>
           </PhotoLink>
         </Tooltip>
@@ -223,7 +225,7 @@ export default function PhotoPrevNextActions({
           /
         </span>
         <Tooltip {...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-          content: APP_TEXT.nav.next,
+          content: appText.nav.next,
           keyCommand: KEY_COMMANDS.next[0],
         }}>
           <PhotoLink
@@ -237,7 +239,7 @@ export default function PhotoPrevNextActions({
           >
             <FiChevronRight className="sm:hidden text-[1.1rem]" />
             <span className="hidden sm:inline-block uppercase">
-              {APP_TEXT.nav.nextShort}
+              {appText.nav.nextShort}
             </span>
           </PhotoLink>
         </Tooltip>

@@ -3,8 +3,9 @@ import { absolutePathForLensImage, pathForLens } from '@/app/paths';
 import OGTile, { OGLoadingState } from '@/components/OGTile';
 import { Lens } from '.';
 import { titleForLens, descriptionForLensPhotos } from './meta';
+import { getAppText } from '@/i18n/state/server';
 
-export default function LensOGTile({
+export default async function LensOGTile({
   lens,
   photos,
   loadingState: loadingStateExternal,
@@ -25,10 +26,17 @@ export default function LensOGTile({
   count?: number
   dateRange?: PhotoDateRange
 }) {
+  const appText = await getAppText();
   return (
     <OGTile {...{
-      title: titleForLens(lens, photos, count),
-      description: descriptionForLensPhotos(photos, true, count, dateRange),
+      title: titleForLens(lens, photos, appText, count),
+      description: descriptionForLensPhotos(
+        photos,
+        appText,
+        true,
+        count,
+        dateRange,
+      ),
       path: pathForLens(lens),
       pathImageAbsolute: absolutePathForLensImage(lens),
       loadingState: loadingStateExternal,

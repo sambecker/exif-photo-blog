@@ -1,6 +1,7 @@
 'use client';
 
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
+import { useAppText } from '@/i18n/state/client';
 import { convertTagsForForm, getValidationMessageForTags, Tags } from '@/tag';
 import { ComponentProps, useEffect, useRef, useState } from 'react';
 
@@ -25,6 +26,8 @@ export default function PhotoTagFieldset(props: {
 
   const ref = useRef<HTMLInputElement>(null);
 
+  const appText = useAppText();
+
   const [errorMessageLocal, setErrorMessageLocal] = useState('');
 
   useEffect(() => {
@@ -43,7 +46,7 @@ export default function PhotoTagFieldset(props: {
         inputRef={ref}
         label="Tags"
         value={tags}
-        tagOptions={convertTagsForForm(tagOptions)}
+        tagOptions={convertTagsForForm(tagOptions, appText)}
         onChange={tags => {
           onChange(tags);
           const validationMessage = getValidationMessageForTags(tags) ?? '';

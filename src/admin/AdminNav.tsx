@@ -12,7 +12,7 @@ import {
   PATH_ADMIN_UPLOADS,
 } from '@/app/paths';
 import AdminNavClient from './AdminNavClient';
-import { APP_TEXT } from '@/app/config';
+import { getAppText } from '@/i18n/state/server';
 
 export default async function AdminNav() {
   const [
@@ -38,32 +38,34 @@ export default async function AdminNav() {
     getPhotosMostRecentUpdateCached().catch(() => undefined),
   ]);
 
+  const appText = await getAppText();
+
   const includeInsights = countPhotos > 0;
 
   // Photos
   const items = [{
-    label: APP_TEXT.photo.photoPlural,
+    label: appText.photo.photoPlural,
     href: PATH_ADMIN_PHOTOS,
     count: countPhotos,
   }];
 
   // Uploads
   if (countUploads > 0) { items.push({
-    label: APP_TEXT.admin.uploadPlural,
+    label: appText.admin.uploadPlural,
     href: PATH_ADMIN_UPLOADS,
     count: countUploads,
   }); }
 
   // Tags
   if (countTags > 0) { items.push({
-    label: APP_TEXT.category.tagPlural,
+    label: appText.category.tagPlural,
     href: PATH_ADMIN_TAGS,
     count: countTags,
   }); }
 
   // Recipes
   if (countRecipes > 0) { items.push({
-    label: APP_TEXT.category.recipePlural,
+    label: appText.category.recipePlural,
     href: PATH_ADMIN_RECIPES,
     count: countRecipes,
   }); }

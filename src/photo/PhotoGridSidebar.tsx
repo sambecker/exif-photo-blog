@@ -10,7 +10,7 @@ import FavsTag from '../tag/FavsTag';
 import { useAppState } from '@/state/AppState';
 import { useMemo, useRef } from 'react';
 import HiddenTag from '@/tag/HiddenTag';
-import { APP_TEXT, CATEGORY_VISIBILITY } from '@/app/config';
+import { CATEGORY_VISIBILITY } from '@/app/config';
 import { clsx } from 'clsx/lite';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
 import IconCamera from '@/components/icons/IconCamera';
@@ -26,6 +26,7 @@ import {
 } from '@/category';
 import PhotoFocalLength from '@/focal/PhotoFocalLength';
 import useElementHeight from '@/utility/useElementHeight';
+import { useAppText } from '@/i18n/state/client';
 
 const APPROXIMATE_ITEM_HEIGHT = 34;
 const ABOUT_HEIGHT_OFFSET = 80;
@@ -58,6 +59,8 @@ export default function PhotoGridSidebar({
     categories,
   );
 
+  const appText = useAppText();
+
   const aboutRef = useRef<HTMLParagraphElement>(null);
   const aboutHeight = useElementHeight(aboutRef);
   const height = containerHeight
@@ -72,7 +75,10 @@ export default function PhotoGridSidebar({
     )
     : undefined;
 
-  const { start, end } = dateRangeForPhotos(undefined, photosDateRange);
+  const { start, end } = dateRangeForPhotos(
+    undefined,
+    photosDateRange,
+  );
 
   const { photosCountHidden } = useAppState();
 
@@ -83,7 +89,7 @@ export default function PhotoGridSidebar({
   const camerasContent = cameras.length > 0
     ? <HeaderList
       key="cameras"
-      title={APP_TEXT.category.cameraPlural}
+      title={appText.category.cameraPlural}
       icon={<IconCamera
         size={15}
         className="translate-x-[0.5px]"
@@ -107,7 +113,7 @@ export default function PhotoGridSidebar({
   const lensesContent = lenses.length > 0
     ? <HeaderList
       key="lenses"
-      title={APP_TEXT.category.lensPlural}
+      title={appText.category.lensPlural}
       icon={<IconLens size={15} />}
       maxItems={maxItemsPerCategory}
       items={lenses
@@ -127,7 +133,7 @@ export default function PhotoGridSidebar({
   const tagsContent = tags.length > 0
     ? <HeaderList
       key="tags"
-      title={APP_TEXT.category.tagPlural}
+      title={appText.category.tagPlural}
       icon={<IconTag
         size={14}
         className="translate-x-[1px] translate-y-[1px]"
@@ -172,7 +178,7 @@ export default function PhotoGridSidebar({
   const recipesContent = recipes.length > 0
     ? <HeaderList
       key="recipes"
-      title={APP_TEXT.category.recipePlural}
+      title={appText.category.recipePlural}
       icon={<IconRecipe
         size={16}
         className="translate-x-[-1px]"
@@ -195,7 +201,7 @@ export default function PhotoGridSidebar({
   const filmsContent = films.length > 0
     ? <HeaderList
       key="films"
-      title={APP_TEXT.category.filmPlural}
+      title={appText.category.filmPlural}
       icon={<IconFilm size={15} />}
       maxItems={maxItemsPerCategory}
       items={films
@@ -213,7 +219,7 @@ export default function PhotoGridSidebar({
   const focalLengthsContent = focalLengths.length > 0
     ? <HeaderList
       key="focal-lengths"
-      title={APP_TEXT.category.focalLengthPlural}
+      title={appText.category.focalLengthPlural}
       icon={<IconFocalLength size={13} />}
       maxItems={maxItemsPerCategory}
       items={focalLengths.map(({ focal, count }) =>
@@ -232,14 +238,14 @@ export default function PhotoGridSidebar({
     ? start
       ? <HeaderList
         key="photo-stats"
-        title={photoQuantityText(photosCount, false)}
+        title={photoQuantityText(photosCount, appText, false)}
         items={start === end
           ? [start]
           : [`${end} –`, start]}
       />
       : <HeaderList
         key="photo-stats"
-        items={[photoQuantityText(photosCount, false)]}
+        items={[photoQuantityText(photosCount, appText, false)]}
       />
     : null;
 

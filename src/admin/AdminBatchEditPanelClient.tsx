@@ -19,6 +19,7 @@ import { FaArrowDown, FaCheck } from 'react-icons/fa6';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 import IconFavs from '@/components/icons/IconFavs';
 import IconTag from '@/components/icons/IconTag';
+import { useAppText } from '@/i18n/state/client';
 
 export default function AdminBatchEditPanelClient({
   uniqueTags,
@@ -37,6 +38,8 @@ export default function AdminBatchEditPanelClient({
     setIsPerformingSelectEdit,
   } = useAppState();
 
+  const appText = useAppText();
+
   const [tags, setTags] = useState<string>();
   const [tagErrorMessage, setTagErrorMessage] = useState('');
   const isInTagMode = tags !== undefined;
@@ -49,6 +52,7 @@ export default function AdminBatchEditPanelClient({
 
   const photosText = photoQuantityText(
     selectedPhotoIds?.length ?? 0,
+    appText,
     false,
     false,
   );

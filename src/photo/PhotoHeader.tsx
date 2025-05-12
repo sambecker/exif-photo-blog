@@ -17,13 +17,13 @@ import PhotoLink from './PhotoLink';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 import { useAppState } from '@/state/AppState';
 import { GRID_GAP_CLASSNAME } from '@/components';
-import { APP_TEXT } from '@/app/config';
+import { useAppText } from '@/i18n/state/client';
 
 export default function PhotoHeader({
   photos,
   selectedPhoto,
   entity,
-  entityVerb = APP_TEXT.photo.photo.toLocaleUpperCase(),
+  entityVerb: _entityVerb,
   entityDescription,
   indexNumber,
   count,
@@ -44,6 +44,10 @@ export default function PhotoHeader({
   includeShareButton?: boolean
 } & PhotoSetCategory) {
   const { isGridHighDensity } = useAppState();
+
+  const appText = useAppText();
+
+  const entityVerb = _entityVerb ?? appText.photo.photo.toLocaleUpperCase();
 
   const { start, end } = dateRangeForPhotos(photos, dateRange);
 
@@ -155,13 +159,13 @@ export default function PhotoHeader({
                   }} />}
               </>
               : <ResponsiveText
-                shortText={APP_TEXT.utility.paginateAction(
+                shortText={appText.utility.paginateAction(
                   paginationIndex,
                   paginationCount,
                   entityVerb,
                 )}
               >
-                {APP_TEXT.utility.paginateAction(
+                {appText.utility.paginateAction(
                   paginationIndex,
                   paginationCount,
                   entityVerb)}

@@ -7,6 +7,7 @@ import { useAppState } from '@/state/AppState';
 import { toastSuccess, toastWarning } from '@/toast';
 import { ComponentProps, useState } from 'react';
 import DeleteButton from './DeleteButton';
+import { useAppText } from '@/i18n/state/client';
 
 export default function DeletePhotosButton({
   photoIds = [],
@@ -27,7 +28,9 @@ export default function DeletePhotosButton({
 } & ComponentProps<typeof LoaderButton>) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const photosText = photoQuantityText(photoIds.length, false, false);
+  const appText = useAppText();
+
+  const photosText = photoQuantityText(photoIds.length, appText, false, false);
 
   const { invalidateSwr, registerAdminUpdate } = useAppState();
 

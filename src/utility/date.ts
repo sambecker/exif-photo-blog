@@ -1,7 +1,7 @@
 import { parseISO, parse, format } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
 import { Timezone } from './timezone';
-import { APP_TEXT } from '@/app/config';
+import { DATE_FN_LOCALE } from '@/i18n/date';
 
 const DATE_STRING_FORMAT_TINY                   = 'dd MMM yy';
 const DATE_STRING_FORMAT_TINY_PLACEHOLDER       = '00 000 00';
@@ -67,12 +67,15 @@ export const formatDate = ({
     ? placeholderString
     : timezone
       ? formatInTimeZone(
-        date, timezone, formatString, { locale: APP_TEXT.dateLocale },
+        date, timezone, formatString, { locale: DATE_FN_LOCALE },
       )
-      : format(date, formatString, { locale: APP_TEXT.dateLocale });
+      : format(date, formatString, { locale: DATE_FN_LOCALE });
 };
 
-export const formatDateFromPostgresString = (date: string, length?: Length) =>
+export const formatDateFromPostgresString = (
+  date: string,
+  length?: Length,
+) =>
   formatDate({
     date: parse(date, DATE_STRING_FORMAT_POSTGRES, new Date()),
     length,

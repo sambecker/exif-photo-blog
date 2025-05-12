@@ -21,7 +21,7 @@ import { useAppState } from '@/state/AppState';
 import { clsx } from 'clsx/lite';
 import { PATH_ADMIN_PHOTOS } from '@/app/paths';
 import IconLock from '@/components/icons/IconLock';
-import { APP_TEXT } from '@/app/config';
+import { useAppText } from '@/i18n/state/client';
 
 export default function SignInForm({
   includeTitle = true,
@@ -35,6 +35,8 @@ export default function SignInForm({
   const params = useSearchParams();
 
   const { setUserEmail } = useAppState();
+
+  const appText = useAppText();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -80,27 +82,27 @@ export default function SignInForm({
         )}>
           <IconLock className="text-main translate-y-[0.5px]" />
           <span className="text-main">
-            {APP_TEXT.auth.signIn}
+            {appText.auth.signIn}
           </span>
         </h1>}
       <form action={action} className="w-full">
         <div className="space-y-5 w-full -translate-y-0.5">
           {response === KEY_CREDENTIALS_SIGN_IN_ERROR &&
             <ErrorNote>
-              {APP_TEXT.auth.invalidEmailPassword}
+              {appText.auth.invalidEmailPassword}
             </ErrorNote>}
           <div className="space-y-4 w-full">
             <FieldSetWithStatus
               id="email"
               inputRef={emailRef}
-              label={APP_TEXT.auth.email}
+              label={appText.auth.email}
               type="email"
               value={email}
               onChange={setEmail}
             />
             <FieldSetWithStatus
               id="password"
-              label={APP_TEXT.auth.password}
+              label={appText.auth.password}
               type="password"
               value={password}
               onChange={setPassword}
@@ -113,7 +115,7 @@ export default function SignInForm({
               />}
           </div>
           <SubmitButtonWithStatus disabled={!isFormValid}>
-            {APP_TEXT.auth.signIn}
+            {appText.auth.signIn}
           </SubmitButtonWithStatus>
         </div>
       </form>

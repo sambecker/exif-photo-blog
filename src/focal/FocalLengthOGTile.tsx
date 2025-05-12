@@ -5,8 +5,9 @@ import {
 } from '@/app/paths';
 import OGTile, { OGLoadingState } from '@/components/OGTile';
 import { descriptionForFocalLengthPhotos, titleForFocalLength } from '.';
+import { getAppText } from '@/i18n/state/server';
 
-export default function FocalLengthOGTile({
+export default async function FocalLengthOGTile({
   focal,
   photos,
   loadingState: loadingStateExternal,
@@ -27,11 +28,13 @@ export default function FocalLengthOGTile({
   count?: number
   dateRange?: PhotoDateRange
 }) {
+  const appText = await getAppText();
   return (
     <OGTile {...{
-      title: titleForFocalLength(focal, photos, count),
+      title: titleForFocalLength(focal, photos, appText, count),
       description: descriptionForFocalLengthPhotos(
         photos,
+        appText,
         true,
         count,
         dateRange,

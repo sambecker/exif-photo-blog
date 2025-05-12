@@ -4,7 +4,7 @@ import { useAppState } from '@/state/AppState';
 import SignInForm from '@/auth/SignInForm';
 import clsx from 'clsx/lite';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
-import { APP_TEXT } from '@/app/config';
+import { useAppText } from '@/i18n/state/client';
 
 export default function SignInOrUploadClient({
   shouldResize,
@@ -15,6 +15,8 @@ export default function SignInOrUploadClient({
 }) {
   const { isUserSignedIn, isCheckingAuth } = useAppState();
 
+  const appText = useAppText();
+
   return (
     <div className={clsx(
       'flex justify-center items-center flex-col gap-4',
@@ -22,10 +24,10 @@ export default function SignInOrUploadClient({
     )}>
       <div>
         {isCheckingAuth
-          ? APP_TEXT.misc.loading
+          ? appText.misc.loading
           : isUserSignedIn
-            ? APP_TEXT.onboarding.setupFirstPhoto
-            : APP_TEXT.onboarding.setupSignIn}
+            ? appText.onboarding.setupFirstPhoto
+            : appText.onboarding.setupSignIn}
       </div>
       {!isCheckingAuth && isUserSignedIn === false &&
         <div className="flex justify-center my-2 sm:my-4">

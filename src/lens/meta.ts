@@ -9,7 +9,7 @@ import {
   absolutePathForLens,
   absolutePathForLensImage,
 } from '@/app/paths';
-import { APP_TEXT } from '@/app/config';
+import { I18NState } from '@/i18n/state';
 
 // Meta functions moved to separate file to avoid
 // dependencies (camelcase-keys) found in photo/index.ts
@@ -18,30 +18,34 @@ import { APP_TEXT } from '@/app/config';
 export const titleForLens = (
   lens: Lens,
   photos: Photo[],
+  appText: I18NState,
   explicitCount?: number,
 ) => [
-  `${APP_TEXT.category.lens}:`,
+  `${appText.category.lens}:`,
   formatLensText(lensFromPhoto(photos[0], lens)),
-  photoQuantityText(explicitCount ?? photos.length),
+  photoQuantityText(explicitCount ?? photos.length, appText),
 ].join(' ');
 
 export const shareTextForLens = (
   lens: Lens,
   photos: Photo[],
+  appText: I18NState,
 ) =>
   [
-    `${APP_TEXT.category.lens}:`,
+    `${appText.category.lens}:`,
     formatLensText(lensFromPhoto(photos[0], lens)),
   ].join(' ');
 
 export const descriptionForLensPhotos = (
   photos: Photo[],
+  appText: I18NState,
   dateBased?: boolean,
   explicitCount?: number,
   explicitDateRange?: PhotoDateRange,
 ) =>
   descriptionForPhotoSet(
     photos,
+    appText,
     undefined,
     dateBased,
     explicitCount,
@@ -51,12 +55,19 @@ export const descriptionForLensPhotos = (
 export const generateMetaForLens = (
   lens: Lens,
   photos: Photo[],
+  appText: I18NState,
   explicitCount?: number,
   explicitDateRange?: PhotoDateRange,
 ) => ({
   url: absolutePathForLens(lens),
-  title: titleForLens(lens, photos, explicitCount),
+  title: titleForLens(lens, photos, appText, explicitCount),
   description:
-    descriptionForLensPhotos(photos, true, explicitCount, explicitDateRange),
+    descriptionForLensPhotos(
+      photos,
+      appText,
+      true,
+      explicitCount,
+      explicitDateRange,
+    ),
   images: absolutePathForLensImage(lens),
 });

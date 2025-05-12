@@ -2,8 +2,9 @@ import { Photo, PhotoDateRange } from '@/photo';
 import { absolutePathForTagImage, pathForTag } from '@/app/paths';
 import OGTile, { OGLoadingState } from '@/components/OGTile';
 import { descriptionForTaggedPhotos, titleForTag } from '.';
+import { getAppText } from '@/i18n/state/server';
 
-export default function TagOGTile({
+export default async function TagOGTile({
   tag,
   photos,
   loadingState: loadingStateExternal,
@@ -24,10 +25,17 @@ export default function TagOGTile({
   count?: number
   dateRange?: PhotoDateRange
 }) {
+  const appText = await getAppText();
   return (
     <OGTile {...{
-      title: titleForTag(tag, photos, count),
-      description: descriptionForTaggedPhotos(photos, true, count, dateRange),
+      title: titleForTag(tag, photos, appText, count),
+      description: descriptionForTaggedPhotos(
+        photos,
+        appText,
+        true,
+        count,
+        dateRange,
+      ),
       path: pathForTag(tag),
       pathImageAbsolute: absolutePathForTagImage(tag),
       loadingState: loadingStateExternal,

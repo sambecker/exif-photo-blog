@@ -15,7 +15,7 @@ import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
 import { pluralize } from '@/utility/string';
 import IconBroom from '@/components/icons/IconBroom';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
-import { APP_TEXT } from '@/app/config';
+import { useAppText } from '@/i18n/state/client';
 
 export default function AdminPhotosClient({
   photos,
@@ -42,6 +42,8 @@ export default function AdminPhotosClient({
 }) {
   const { uploadState: { isUploading } } = useAppState();
 
+  const appText = useAppText();
+
   return (
     <AppGrid
       contentMain={
@@ -64,8 +66,8 @@ export default function AdminPhotosClient({
                 tooltip={(
                   pluralize(
                     photosCountNeedsSync,
-                    APP_TEXT.photo.photo,
-                    APP_TEXT.photo.photoPlural,
+                    appText.photo.photo,
+                    appText.photo.photoPlural,
                   ) +
                   ' missing data or AI-generated text'
                 )}
@@ -83,8 +85,8 @@ export default function AdminPhotosClient({
                 <ResponsiveText shortText={photosCountNeedsSync}>
                   {pluralize(
                     photosCountNeedsSync,
-                    APP_TEXT.admin.update,
-                    APP_TEXT.admin.updatePlural,
+                    appText.admin.update,
+                    appText.admin.updatePlural,
                   )}
                 </ResponsiveText>
               </PathLoaderButton>}

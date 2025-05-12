@@ -46,6 +46,7 @@ import { isMakeFujifilm } from '@/platforms/fujifilm';
 import PhotoFilmIcon from '@/film/PhotoFilmIcon';
 import FieldsetFavs from './FieldsetFavs';
 import FieldsetHidden from './FieldsetHidden';
+import { useAppText } from '@/i18n/state/client';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -83,6 +84,8 @@ export default function PhotoForm({
   const [formActionErrorMessage, setFormActionErrorMessage] = useState('');
 
   const { invalidateSwr, shouldDebugImageFallbacks } = useAppState();
+
+  const appText = useAppText();
 
   const changedFormKeys = useMemo(() =>
     getChangedFormFields(initialPhotoForm, formData),
@@ -328,7 +331,7 @@ export default function PhotoForm({
         {/* Fields */}
         <div className="space-y-6">
           {FORM_METADATA_ENTRIES(
-            convertTagsForForm(uniqueTags),
+            convertTagsForForm(uniqueTags, appText),
             convertRecipesForForm(uniqueRecipes),
             convertFilmsForForm(uniqueFilms, isMakeFujifilm(formData.make)),
             aiContent !== undefined,

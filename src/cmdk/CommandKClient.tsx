@@ -53,7 +53,6 @@ import { addHiddenToTags, formatTag, isTagFavs, isTagHidden } from '@/tag';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
 import CommandKItem from './CommandKItem';
 import {
-  APP_TEXT,
   CATEGORY_VISIBILITY,
   GRID_HOMEPAGE_ENABLED,
 } from '@/app/config';
@@ -78,6 +77,7 @@ import useMaskedScroll from '../components/useMaskedScroll';
 import { labelForFilm } from '@/film';
 import IconFavs from '@/components/icons/IconFavs';
 import IconHidden from '@/components/icons/IconHidden';
+import { useAppText } from '@/i18n/state/client';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -156,6 +156,8 @@ export default function CommandKClient({
     setShouldDebugInsights,
     setShouldDebugRecipeOverlays,
   } = useAppState();
+
+  const appText = useAppText();
 
   const isOpenRef = useRef(isOpen);
 
@@ -261,7 +263,7 @@ export default function CommandKClient({
           setIsLoading(false);
         });
     }
-  }, [queryDebounced, isPending]);
+  }, [queryDebounced, isPending, appText]);
 
   useEffect(() => {
     if (queryLive === '') {
@@ -289,7 +291,7 @@ export default function CommandKClient({
       .map(category => {
         switch (category) {
         case 'cameras': return {
-          heading: APP_TEXT.category.cameraPlural,
+          heading: appText.category.cameraPlural,
           accessory: <IconCamera size={14} />,
           items: cameras.map(({ camera, count }) => ({
             label: formatCameraText(camera),
@@ -299,7 +301,7 @@ export default function CommandKClient({
           })),
         };
         case 'lenses': return {
-          heading: APP_TEXT.category.lensPlural,
+          heading: appText.category.lensPlural,
           accessory: <IconLens size={14} className="translate-y-[0.5px]" />,
           items: lenses.map(({ lens, count }) => ({
             label: formatLensText(lens, 'medium'),
@@ -310,7 +312,7 @@ export default function CommandKClient({
           })),
         };
         case 'tags': return {
-          heading: APP_TEXT.category.tagPlural,
+          heading: appText.category.tagPlural,
           accessory: <IconTag
             size={13}
             className="translate-x-[1px] translate-y-[0.75px]"
@@ -337,7 +339,7 @@ export default function CommandKClient({
           })),
         };
         case 'recipes': return {
-          heading: APP_TEXT.category.recipePlural,
+          heading: appText.category.recipePlural,
           accessory: <IconRecipe
             size={15}
             className="translate-x-[-1px]"
@@ -350,7 +352,7 @@ export default function CommandKClient({
           })),
         };
         case 'films': return {
-          heading: APP_TEXT.category.filmPlural,
+          heading: appText.category.filmPlural,
           accessory: <IconFilm size={14} />,
           items: films.map(({ film, count }) => ({
             label: labelForFilm(film).medium,
@@ -360,7 +362,7 @@ export default function CommandKClient({
           })),
         };
         case 'focal-lengths': return {
-          heading: APP_TEXT.category.focalLengthPlural,
+          heading: appText.category.focalLengthPlural,
           accessory: <IconFocalLength className="text-[14px]" />,
           items: focalLengths.map(({ focal, count }) => ({
             label: formatFocalLength(focal)!,
@@ -372,24 +374,32 @@ export default function CommandKClient({
         }
       })
       .filter(Boolean) as CommandKSection[]
-  , [tagsIncludingHidden, cameras, lenses, recipes, films, focalLengths]);
+  , [
+    appText,
+    tagsIncludingHidden,
+    cameras,
+    lenses,
+    recipes,
+    films,
+    focalLengths,
+  ]);
 
   const clientSections: CommandKSection[] = [{
-    heading: APP_TEXT.theme.theme,
+    heading: appText.theme.theme,
     accessory: <IoInvertModeSharp
       size={14}
       className="translate-y-[0.5px] translate-x-[-1px]"
     />,
     items: [{
-      label: APP_TEXT.theme.system,
+      label: appText.theme.system,
       annotation: <BiDesktop />,
       action: () => setTheme('system'),
     }, {
-      label: APP_TEXT.theme.light,
+      label: appText.theme.light,
       annotation: <BiSun size={16} className="translate-x-[1.25px]" />,
       action: () => setTheme('light'),
     }, {
-      label: APP_TEXT.theme.dark,
+      label: appText.theme.dark,
       annotation: <BiMoon className="translate-x-[1px]" />,
       action: () => setTheme('dark'),
     }],
@@ -441,15 +451,15 @@ export default function CommandKClient({
 
   const pageFeed: CommandKItem = {
     label: GRID_HOMEPAGE_ENABLED
-      ? APP_TEXT.nav.feed
-      : `${APP_TEXT.nav.feed} (${APP_TEXT.nav.home})`,
+      ? appText.nav.feed
+      : `${appText.nav.feed} (${appText.nav.home})`,
     path: PATH_FEED_INFERRED,
   };
 
   const pageGrid: CommandKItem = {
     label: GRID_HOMEPAGE_ENABLED
-      ? `${APP_TEXT.nav.grid} (${APP_TEXT.nav.home})`
-      : APP_TEXT.nav.grid,
+      ? `${appText.nav.grid} (${appText.nav.home})`
+      : appText.nav.grid,
     path: PATH_GRID_INFERRED,
   };
 
@@ -471,40 +481,40 @@ export default function CommandKClient({
 
   if (isUserSignedIn) {
     adminSection.items.push({
-      label: APP_TEXT.admin.uploadPhotos,
+      label: appText.admin.uploadPhotos,
       annotation: <IconLock narrow />,
       action: startUpload,
     });
     if (uploadsCount) {
       adminSection.items.push({
-        label: `${APP_TEXT.admin.uploadPlural} (${uploadsCount})`,
+        label: `${appText.admin.uploadPlural} (${uploadsCount})`,
         annotation: <IconLock narrow />,
         path: PATH_ADMIN_UPLOADS,
       });
     }
     adminSection.items.push({
-      label: `${APP_TEXT.admin.managePhotos} (${photosCountTotal})`,
+      label: `${appText.admin.managePhotos} (${photosCountTotal})`,
       annotation: <IconLock narrow />,
       path: PATH_ADMIN_PHOTOS,
     });
     if (tagsCount) {
       adminSection.items.push({
-        label: `${APP_TEXT.admin.manageTags} (${tagsCount})`,
+        label: `${appText.admin.manageTags} (${tagsCount})`,
         annotation: <IconLock narrow />,
         path: PATH_ADMIN_TAGS,
       });
     }
     if (recipesCount) {
       adminSection.items.push({
-        label: `${APP_TEXT.admin.manageRecipes} (${recipesCount})`,
+        label: `${appText.admin.manageRecipes} (${recipesCount})`,
         annotation: <IconLock narrow />,
         path: PATH_ADMIN_RECIPES,
       });
     }
     adminSection.items.push({
       label: selectedPhotoIds === undefined
-        ? APP_TEXT.admin.batchEdit
-        : APP_TEXT.admin.batchExitEdit,
+        ? appText.admin.batchEdit
+        : appText.admin.batchExitEdit,
       annotation: <IconLock narrow />,
       path: selectedPhotoIds === undefined
         ? PATH_GRID_INFERRED
@@ -514,7 +524,7 @@ export default function CommandKClient({
         : () => setSelectedPhotoIds?.(undefined),
     }, {
       label: <span className="flex items-center gap-3">
-        {APP_TEXT.admin.appInsights}
+        {appText.admin.appInsights}
         {insightsIndicatorStatus &&
           <InsightsIndicatorDot />}
       </span>,
@@ -522,7 +532,7 @@ export default function CommandKClient({
       annotation: <IconLock narrow />,
       path: PATH_ADMIN_INSIGHTS,
     }, {
-      label: APP_TEXT.admin.appConfig,
+      label: appText.admin.appConfig,
       annotation: <IconLock narrow />,
       path: PATH_ADMIN_CONFIGURATION,
     });
@@ -538,14 +548,14 @@ export default function CommandKClient({
       });
     }
     adminSection.items.push({
-      label: APP_TEXT.auth.signOut,
+      label: appText.auth.signOut,
       action: () => signOutAction()
         .then(clearAuthStateAndRedirectIfNecessary)
         .then(() => setIsOpen?.(false)),
     });
   } else {
     adminSection.items.push({
-      label: APP_TEXT.auth.signIn,
+      label: appText.auth.signIn,
       path: PATH_SIGN_IN,
     });
   }
@@ -596,7 +606,7 @@ export default function CommandKClient({
                 'focus:outline-hidden',
                 isPending && 'opacity-20',
               )}
-              placeholder={APP_TEXT.cmdk.placeholder}
+              placeholder={appText.cmdk.placeholder}
               disabled={isPending}
             />
             {isLoading && !isPending &&
@@ -617,8 +627,8 @@ export default function CommandKClient({
           <div className="px-3 pt-2 pb-3.5 space-y-2">
             <Command.Empty className="mt-1 pl-3 text-dim text-base pb-0.5">
               {isLoading
-                ? APP_TEXT.cmdk.searching
-                : APP_TEXT.cmdk.noResults}
+                ? appText.cmdk.searching
+                : appText.cmdk.noResults}
             </Command.Empty>
             {queriedSections
               .concat(categorySections)

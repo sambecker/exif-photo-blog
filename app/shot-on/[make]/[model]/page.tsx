@@ -7,6 +7,7 @@ import CameraOverview from '@/camera/CameraOverview';
 import { cache } from 'react';
 import { getUniqueCameras } from '@/photo/db/query';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
+import { getAppText } from '@/i18n/state/server';
 
 const getPhotosCameraDataCachedCached = cache((
   make: string,
@@ -35,12 +36,14 @@ export async function generateMetadata({
     camera,
   ] = await getPhotosCameraDataCachedCached(make, model);
 
+  const appText = await getAppText();
+
   const {
     url,
     title,
     description,
     images,
-  } = generateMetaForCamera(camera, photos, count, dateRange);
+  } = generateMetaForCamera(camera, photos, appText, count, dateRange);
 
   return {
     title,

@@ -1,7 +1,6 @@
 import Container from '@/components/Container';
 import AppGrid from '@/components/AppGrid';
 import {
-  APP_TEXT,
   IS_SITE_READY,
   PRESERVE_ORIGINAL_UPLOADS,
 } from '@/app/config';
@@ -13,8 +12,11 @@ import SignInOrUploadClient from '@/admin/SignInOrUploadClient';
 import Link from 'next/link';
 import { PATH_ADMIN_CONFIGURATION } from '@/app/paths';
 import AnimateItems from '@/components/AnimateItems';
+import { getAppText } from '@/i18n/state/server';
 
-export default function PhotosEmptyState() {
+export default async function PhotosEmptyState() {
+  const appText = await getAppText();
+
   return (
     <AppGrid
       contentMain={
@@ -34,8 +36,8 @@ export default function PhotosEmptyState() {
                 'text-gray-700 dark:text-gray-200',
               )}>
                 {!IS_SITE_READY
-                  ? APP_TEXT.onboarding.setupIncomplete
-                  : APP_TEXT.onboarding.setupComplete}
+                  ? appText.onboarding.setupIncomplete
+                  : appText.onboarding.setupComplete}
               </div>
               {!IS_SITE_READY
                 ? <AdminAppConfiguration simplifiedView />
@@ -49,7 +51,7 @@ export default function PhotosEmptyState() {
                     }}
                   />
                   <div>
-                    {APP_TEXT.onboarding.setupConfig}
+                    {appText.onboarding.setupConfig}
                     {' '}
                     <Link
                       href={PATH_ADMIN_CONFIGURATION}

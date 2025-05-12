@@ -8,7 +8,7 @@ import {
   absolutePathForFocalLength,
   absolutePathForFocalLengthImage,
 } from '@/app/paths';
-import { APP_TEXT } from '@/app/config';
+import { I18NState } from '@/i18n/state';
 
 export type FocalLengths = {
   focal: number
@@ -30,23 +30,29 @@ export const formatFocalLengthSafe = (focal = 0) =>
 export const titleForFocalLength = (
   focal: number,
   photos: Photo[],
+  appText: I18NState,
   explicitCount?: number,
 ) => [
-  APP_TEXT.category.focalLengthTitle(formatFocalLengthSafe(focal)),
-  photoQuantityText(explicitCount ?? photos.length),
+  appText.category.focalLengthTitle(formatFocalLengthSafe(focal)),
+  photoQuantityText(explicitCount ?? photos.length, appText),
 ].join(' ');
 
-export const shareTextFocalLength = (focal: number) =>
-  APP_TEXT.category.focalLengthShare(formatFocalLengthSafe(focal));
+export const shareTextFocalLength = (
+  focal: number,
+  appText: I18NState,
+) =>
+  appText.category.focalLengthShare(formatFocalLengthSafe(focal));
 
 export const descriptionForFocalLengthPhotos = (
   photos: Photo[],
+  appText: I18NState,
   dateBased?: boolean,
   explicitCount?: number,
   explicitDateRange?: PhotoDateRange,
 ) =>
   descriptionForPhotoSet(
     photos,
+    appText,
     undefined,
     dateBased,
     explicitCount,
@@ -56,13 +62,15 @@ export const descriptionForFocalLengthPhotos = (
 export const generateMetaForFocalLength = (
   focal: number,
   photos: Photo[],
+  appText: I18NState,
   explicitCount?: number,
   explicitDateRange?: PhotoDateRange,
 ) => ({
   url: absolutePathForFocalLength(focal),
-  title: titleForFocalLength(focal, photos, explicitCount),
+  title: titleForFocalLength(focal, photos, appText, explicitCount),
   description: descriptionForFocalLengthPhotos(
     photos,
+    appText,
     true,
     explicitCount,
     explicitDateRange,

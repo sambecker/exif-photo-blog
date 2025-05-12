@@ -8,6 +8,7 @@ import { TAG_HIDDEN, descriptionForTaggedPhotos, titleForTag } from '@/tag';
 import HiddenHeader from '@/tag/HiddenHeader';
 import { Metadata } from 'next';
 import { cache } from 'react';
+import { getAppText } from '@/i18n/state/server';
 
 const getPhotosHiddenMetaCached = cache(() =>
   getPhotosMetaCached({ hidden: 'only' }));
@@ -17,9 +18,13 @@ export async function generateMetadata(): Promise<Metadata> {
 
   if (count === 0) { return {}; }
 
-  const title = titleForTag(TAG_HIDDEN, undefined, count);
+  const appText = await getAppText();
+  
+  const title = titleForTag(TAG_HIDDEN, undefined, appText, count);
+
   const description = descriptionForTaggedPhotos(
     undefined,
+    appText,
     undefined,
     count,
     dateRange,
