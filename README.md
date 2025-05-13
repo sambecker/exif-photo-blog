@@ -264,6 +264,7 @@ Partial internationalization (non-admin, user-facing text) provided for a handfu
 - `ES_ES` (coming soon)
 - `PT_BR`
 - `PT_PT`
+- `ID_ID`
 
 Thank you ❤️ translators: [@sconetto](https://github.com/sconetto)
 
