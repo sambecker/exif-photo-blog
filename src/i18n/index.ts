@@ -12,6 +12,7 @@ export const LOCALE_TEXT: Record<
 > = {
   'pt-br': () => import('./locales/pt-br').then(m => m.default),
   'pt-pt': () => import('./locales/pt-pt').then(m => m.default),
+  'id-id': () => import('./locales/id-id').then(m => m.default),
 };
 
 export const getTextForLocale = async (
