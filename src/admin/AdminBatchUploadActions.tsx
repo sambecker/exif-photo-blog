@@ -24,7 +24,7 @@ import { pluralize } from '@/utility/string';
 import FieldsetFavs from '@/photo/form/FieldsetFavs';
 import FieldsetHidden from '@/photo/form/FieldsetHidden';
 
-const UPLOAD_BATCH_SIZE = 4;
+const UPLOAD_BATCH_SIZE = 2;
 
 export default function AdminBatchUploadActions({
   storageUrls,
