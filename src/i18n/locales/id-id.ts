@@ -99,8 +99,7 @@ const TEXT: I18NDeepPartial = {
     setupIncomplete: 'Selesaikan Penyiapan',
     setupSignIn: 'Masuk untuk mengunggah foto',
     setupFirstPhoto: 'Tambahkan foto pertama Anda',
-    setupConfig:
-      'Ubah nama situs dan konfigurasi lainnya dengan mengedit variabel lingkungan yang dirujuk di',
+    setupConfig: 'Ubah nama situs dan pengaturan lewat file environment',
   },
   misc: {
     loading: 'Memuat ...',
