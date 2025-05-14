@@ -1,8 +1,9 @@
-import { enUS, ptBR, pt } from 'date-fns/locale';
+import { enUS, id, ptBR, pt } from 'date-fns/locale';
 import { APP_LOCALE } from '@/app/config';
 
 const getDateFnLocale = (locale: string) => {
   switch (locale) {
+  case 'id-id': return id;
   case 'pt-pt': return pt;
   case 'pt-br': return ptBR;
   default: return enUS;
