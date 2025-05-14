@@ -1,7 +1,7 @@
 import { parseISO, parse, format } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
 import { Timezone } from './timezone';
-import { DATE_FN_LOCALE } from '@/i18n/date';
+import { DATE_FN_LOCALE } from '@/i18n';
 
 const DATE_STRING_FORMAT_TINY                   = 'dd MMM yy';
 const DATE_STRING_FORMAT_TINY_PLACEHOLDER       = '00 000 00';
