@@ -266,7 +266,7 @@ Partial internationalization (non-admin, user-facing text) provided for a handfu
 - `PT_PT`
 - `ID_ID`
 
-Thank you ❤️ translators: [@sconetto](https://github.com/sconetto)
+Thank you ❤️ translators: [@sconetto](https://github.com/sconetto), [@brandnholl](https://github.com/brandnholl)
 
 📖&nbsp;&nbsp;FAQ
 -
