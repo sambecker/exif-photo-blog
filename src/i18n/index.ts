@@ -10,10 +10,11 @@ export type I18NDeepPartial = {
 
 /**
  * Translation steps for contributors:
- * 1. Create new file in the `src/i18n/locales` modeled on `us-en.ts`.
+ * 1. Create new file in `src/i18n/locales` modeled on `us-en.ts`.
  * 2. Add import to `localeTextImports`
  * 3. Add date-fn locale to `getDateFnLocale`
- * 4. Add translation credit to `README.md` if desired
+ * 4. Test locally
+ * 5. Add translation/credit to `README.md` Supported Languages
  */
 
 const localeTextImports: Record<
