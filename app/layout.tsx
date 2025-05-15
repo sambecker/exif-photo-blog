@@ -63,6 +63,13 @@ export const metadata: Metadata = {
     type: 'image/png',
     sizes: '180x180',
   }],
+  alternates: {
+    types: {
+      'application/rss+xml': [
+        { url: 'rss.xml', title: 'RSS Feed' },
+      ],
+    },
+  },
 };
 
 export default function RootLayout({
