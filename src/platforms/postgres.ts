@@ -1,8 +1,9 @@
-import { POSTGRES_SSL_ENABLED, POSTGRES_URL } from '@/app/config';
+import { POSTGRES_SSL_ENABLED } from '@/app/config';
+import { removeParamsFromUrl } from '@/utility/url';
 import { Pool, QueryResult, QueryResultRow } from 'pg';
 
 const pool = new Pool({
-  connectionString: POSTGRES_URL,
+  connectionString: removeParamsFromUrl(process.env.POSTGRES_URL, ['sslmode']),
   ...POSTGRES_SSL_ENABLED && { ssl: true },
 });
 
