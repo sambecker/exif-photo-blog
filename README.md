@@ -88,6 +88,10 @@ _⚠️ READ BEFORE PROCEEDING_
      - `semantic` (default)
      - `none`
 
+#### Alternate AI providers (experimental)
+
+Set `OPENAI_BASE_URL` in order to use an alternate OpenAI-compatible provider
+
 ### Web Analytics
 
 1. Open project on Vercel

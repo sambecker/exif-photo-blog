@@ -6,6 +6,7 @@ import { Ratelimit } from '@upstash/ratelimit';
 import {
   AI_TEXT_GENERATION_ENABLED,
   HAS_REDIS_STORAGE,
+  OPENAI_BASE_URL,
 } from '@/app/config';
 import { removeBase64Prefix } from '@/utility/image';
 import { cleanUpAiTextResponse } from '@/photo/ai';
@@ -16,7 +17,10 @@ const RATE_LIMIT_IDENTIFIER = 'openai-image-query';
 const MODEL = 'gpt-4o';
 
 const openai = AI_TEXT_GENERATION_ENABLED
-  ? createOpenAI({ apiKey: process.env.OPENAI_SECRET_KEY })
+  ? createOpenAI({
+    apiKey: process.env.OPENAI_SECRET_KEY,
+    ...OPENAI_BASE_URL && { baseURL: OPENAI_BASE_URL },
+  })
   : undefined;
 
 const ratelimit = redis
