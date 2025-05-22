@@ -18,7 +18,6 @@ import { AdminData, getAdminDataAction } from '@/admin/actions';
 import {
   storeAuthEmailCookie,
   clearAuthEmailCookie,
-  isCredentialsSignInError,
   getAuthEmailCookie,
 } from '@/auth';
 import { useRouter, usePathname } from 'next/navigation';
@@ -125,12 +124,10 @@ export default function AppStateProvider({
     setUserEmailEager(getAuthEmailCookie());
   }, []);
   useEffect(() => {
-    if (authError) {
+    if (auth === null || authError) {
       setUserEmail(undefined);
       setUserEmailEager(undefined);
-      if (isCredentialsSignInError(authError)) {
-        clearAuthEmailCookie();
-      }
+      clearAuthEmailCookie();
     } else {
       setUserEmail(auth?.user?.email ?? undefined);
     }
