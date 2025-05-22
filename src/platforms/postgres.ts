@@ -1,7 +1,7 @@
 import { POSTGRES_SSL_ENABLED } from '@/app/config';
 import { Pool, QueryResult, QueryResultRow } from 'pg';
 
-export const formatPostgresUrl = (urlString = '') => {
+const formatPostgresUrl = (urlString = '') => {
   const urlObj = new URL(urlString);
   urlObj.searchParams.delete('sslmode');
   return urlObj.toString();
