@@ -4,7 +4,11 @@ import {
 } from '@/photo/ai';
 import { getOrderedCategoriesFromString } from '@/category';
 import type { StorageType } from '@/platforms/storage';
-import { makeUrlAbsolute, shortenUrl } from '@/utility/url';
+import {
+  makeUrlAbsolute,
+  removeParamsFromUrl,
+  shortenUrl,
+} from '@/utility/url';
 
 // HARD-CODED GLOBAL CONFIGURATION
 
@@ -143,6 +147,10 @@ export const PAGE_ABOUT =
 // STORAGE
 
 // STORAGE: DATABASE
+export const POSTGRES_URL = removeParamsFromUrl(
+  process.env.POSTGRES_URL,
+  ['sslmode'],
+);
 export const HAS_DATABASE =
   Boolean(process.env.POSTGRES_URL);
 export const POSTGRES_SSL_ENABLED =
