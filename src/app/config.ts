@@ -4,7 +4,10 @@ import {
 } from '@/photo/ai';
 import { getOrderedCategoriesFromString } from '@/category';
 import type { StorageType } from '@/platforms/storage';
-import { makeUrlAbsolute, shortenUrl } from '@/utility/url';
+import {
+  makeUrlAbsolute,
+  shortenUrl,
+} from '@/utility/url';
 
 // HARD-CODED GLOBAL CONFIGURATION
 
