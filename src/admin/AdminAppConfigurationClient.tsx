@@ -74,6 +74,7 @@ export default function AdminAppConfigurationClient({
   hasDefaultTheme,
   defaultTheme,
   arePhotosMatted,
+  arePhotoMatteColorsConfigured,
   matteColor,
   matteColorDark,
   // Display
@@ -521,6 +522,16 @@ export default function AdminAppConfigurationClient({
             of each photo, and display a surrounding border:
             <div className="pt-1 flex flex-col gap-1">
               <EnvVar variable="NEXT_PUBLIC_MATTE_PHOTOS" />
+            </div>
+          </ChecklistRow>
+          <ChecklistRow
+            title="Custom photo matting colors"
+            status={arePhotoMatteColorsConfigured}
+            optional
+          >
+            Set environment variable hex values (e.g., #cccccc)
+            to override matte colors:
+            <div className="pt-1 flex flex-col gap-1">
               <EnvVar
                 variable="NEXT_PUBLIC_MATTE_COLOR"
                 accessory={matteColor && <span
