@@ -269,6 +269,7 @@ Partial internationalization (for non-admin, user-facing text) provided for a ha
 - `PT_BR`
 - `PT_PT`
 - `ID_ID`
+- `ZH_CN`
 
 To add support for a new language, open a PR following instructions in [/src/i18n/index.ts](https://github.com/sambecker/exif-photo-blog/blob/main/src/i18n/index.ts), using [`US_EN`](https://github.com/sambecker/exif-photo-blog/blob/main/src/i18n/locales/us-en.ts) as reference.
 

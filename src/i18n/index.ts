@@ -1,5 +1,5 @@
 import US_EN from './locales/us-en';
-import { enUS, id, ptBR, pt } from 'date-fns/locale';
+import { enUS, id, ptBR, pt, zhCN } from 'date-fns/locale';
 import { APP_LOCALE } from '@/app/config';
 
 export type I18N = typeof US_EN;
@@ -24,6 +24,7 @@ const localeTextImports: Record<
   'pt-br': () => import('./locales/pt-br').then(m => m.default),
   'pt-pt': () => import('./locales/pt-pt').then(m => m.default),
   'id-id': () => import('./locales/id-id').then(m => m.default),
+  'zh-cn': () => import('./locales/zh-cn').then(m => m.default),
 };
 
 const getDateFnLocale = (locale: string) => {
@@ -31,6 +32,7 @@ const getDateFnLocale = (locale: string) => {
   case 'id-id': return id;
   case 'pt-pt': return pt;
   case 'pt-br': return ptBR;
+  case 'zh-cn': return zhCN;
   default: return enUS;
   }
 };
