@@ -97,7 +97,6 @@ const TEXT = {
     setupIncomplete: '完成设置',
     setupSignIn: '登录以上传照片',
     setupFirstPhoto: '添加您的第一张照片',
-    // eslint-disable-next-line max-len
     setupConfig: '通过编辑环境变量来更改站点名称和其他配置',
   },
   misc: {
