@@ -62,14 +62,14 @@ export default function ResponsiveDate({
       </span>
       {/* Medium */}
       <span
-        className={clsx('hidden xs:inline-block sm:hidden', contentClass)}
+        className={clsx('hidden xs:inline sm:hidden', contentClass)}
         aria-hidden
       >
         {formatDate({ ...formatDateProps, length: 'medium' })}
       </span>
       {/* Large */}
       <span
-        className={clsx('hidden sm:inline-block', contentClass)}
+        className={clsx('hidden sm:inline', contentClass)}
       >
         {formatDate(formatDateProps)}
       </span>

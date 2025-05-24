@@ -60,7 +60,7 @@ export default function AdminPhotosTable({
             className={opacityForPhotoId(photo.id)}
           />
           <div className={clsx(
-            'flex flex-col lg:flex-row',
+            'flex flex-col lg:flex-row min-w-0',
             opacityForPhotoId(photo.id),
           )}>
             <Link
@@ -70,16 +70,19 @@ export default function AdminPhotosTable({
               prefetch={false}
             >
               <span className={clsx(
+                'flex w-full gap-1.5',
                 photo.hidden && 'text-dim',
               )}>
-                {titleForPhoto(photo, false)}
-                {photo.hidden && <span className="whitespace-nowrap">
-                  {' '}
-                  <IconHidden
-                    className="inline translate-y-[-0.5px]"
-                    size={16}
-                  />
-                </span>}
+                <span className="truncate">
+                  {titleForPhoto(photo, false)}
+                </span>
+                {photo.hidden &&
+                  <span>
+                    <IconHidden
+                      className="inline translate-y-[-0.5px]"
+                      size={16}
+                    />
+                  </span>}
               </span>
               {photo.priorityOrder !== null &&
                 <span className={clsx(
@@ -91,21 +94,22 @@ export default function AdminPhotosTable({
                 </span>}
             </Link>
             <div className={clsx(
+              'flex min-w-0 gap-1.5 w-full',
               'lg:w-[50%] uppercase',
               'text-dim',
             )}>
-              {<>
-                <PhotoDate {...{ photo, dateType, timezone }} />
-                {photoNeedsToBeSynced(photo) &&
+              <PhotoDate
+                {...{ photo, dateType, timezone }}
+                className="truncate"
+              />
+              {photoNeedsToBeSynced(photo) &&
+                <span>
                   <Tooltip
                     content={getPhotoSyncStatusText(photo)}
-                    classNameTrigger={clsx(
-                      'ml-1.5',
-                      'text-blue-600 dark:text-blue-400',
-                    )}
+                    classNameTrigger="text-blue-600 dark:text-blue-400"
                     supportMobile
-                  />}
-              </>}
+                  />
+                </span>}
             </div>
           </div>
           <div className={clsx(
