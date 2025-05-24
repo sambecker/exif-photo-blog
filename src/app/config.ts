@@ -381,6 +381,9 @@ export const APP_CONFIGURATION = {
   hasDefaultTheme: Boolean(process.env.NEXT_PUBLIC_DEFAULT_THEME),
   defaultTheme: DEFAULT_THEME,
   arePhotosMatted: MATTE_PHOTOS,
+  arePhotoMatteColorsConfigured:
+    Boolean(MATTE_COLOR) ||
+    Boolean(MATTE_COLOR_DARK),
   matteColor: MATTE_COLOR,
   matteColorDark: MATTE_COLOR_DARK,
   // Display
