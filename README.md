@@ -271,7 +271,7 @@ Partial internationalization (for non-admin, user-facing text) provided for a ha
 - `id-id`
 - `zh-cn`
 
-To add support for a new language, open a PR following instructions in [/src/i18n/index.ts](https://github.com/sambecker/exif-photo-blog/blob/main/src/i18n/index.ts), using [`US_EN`](https://github.com/sambecker/exif-photo-blog/blob/main/src/i18n/locales/us-en.ts) as reference.
+To add support for a new language, open a PR following instructions in [/src/i18n/index.ts](https://github.com/sambecker/exif-photo-blog/blob/main/src/i18n/index.ts), using [us-en.ts](https://github.com/sambecker/exif-photo-blog/blob/main/src/i18n/locales/us-en.ts) as reference.
 
 Thank you ❤️ translators: [@sconetto](https://github.com/sconetto) (`pt-br`, `pt-pt`), [@brandnholl](https://github.com/brandnholl) (`id-id`), [@TongEc](https://github.com/TongEc) (`zh-cn`)
 
