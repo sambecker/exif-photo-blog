@@ -264,12 +264,12 @@ Vercel Postgres can be switched to another Postgres-compatible, pooling provider
 Partial internationalization (for non-admin, user-facing text) provided for a handful of languages. Configure locale by setting environment variable `NEXT_PUBLIC_LOCALE`.
 
 ### Supported Languages
-- `US_EN`
-- `ES_ES` (coming soon)
-- `PT_BR`
-- `PT_PT`
-- `ID_ID`
-- `ZH_CN`
+- `us-en`
+- `es-es` (coming soon)
+- `pt-br`
+- `pt-pt`
+- `id-id`
+- `zh-cn`
 
 To add support for a new language, open a PR following instructions in [/src/i18n/index.ts](https://github.com/sambecker/exif-photo-blog/blob/main/src/i18n/index.ts), using [`US_EN`](https://github.com/sambecker/exif-photo-blog/blob/main/src/i18n/locales/us-en.ts) as reference.
 

@@ -8,6 +8,7 @@ import {
   META_DESCRIPTION,
   NAV_TITLE_OR_DOMAIN,
   META_TITLE,
+  HTML_LANG,
 } from '@/app/config';
 import AppStateProvider from '@/state/AppStateProvider';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
@@ -72,7 +73,7 @@ export default function RootLayout({
 }) {
   return (
     <html
-      lang="en"
+      lang={HTML_LANG}
       // Suppress hydration errors due to next-themes behavior
       suppressHydrationWarning
     >

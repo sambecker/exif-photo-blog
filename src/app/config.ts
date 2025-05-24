@@ -101,7 +101,11 @@ const SITE_DOMAIN_SHORT = shortenUrl(SITE_DOMAIN);
 
 // SITE META
 
-export const APP_LOCALE = process.env.NEXT_PUBLIC_LOCALE || 'US-EN';
+export const APP_LOCALE = (process.env.NEXT_PUBLIC_LOCALE || 'us-en')
+  // Accepts both `us-en` and `US_EN`
+  .toLocaleLowerCase()
+  .replace('_', '-');
+export const HTML_LANG = (APP_LOCALE.split('-')[1] || 'en');
 
 export const NAV_TITLE =
   process.env.NEXT_PUBLIC_NAV_TITLE;

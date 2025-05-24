@@ -294,7 +294,7 @@ export default function AdminAppConfigurationClient({
         icon={<BiPencil size={16} />}
       >
         <ChecklistRow
-          title={`Configure language: ${locale.toLocaleUpperCase()}`}
+          title={`Configure language: ${locale}`}
           status={hasLocale}
           optional
         >
