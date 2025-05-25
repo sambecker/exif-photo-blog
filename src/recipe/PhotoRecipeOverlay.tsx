@@ -101,7 +101,7 @@ export default function PhotoRecipeOverlay({
         'z-10',
         'w-[20rem] p-3 space-y-3',
         'scroll-mt-8',
-        'rounded-lg',
+        'rounded-[10px]',
         isOnPhoto
           ? 'shadow-2xl'
           // Soften shadow to mimic <Modal />

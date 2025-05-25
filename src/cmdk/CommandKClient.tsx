@@ -85,6 +85,8 @@ const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
 const LISTENER_KEYDOWN = 'keydown';
 const MINIMUM_QUERY_LENGTH = 2;
 
+const MAX_HEIGHT = '20rem';
+
 type CommandKItem = {
   label: ReactNode
   explicitKey?: string
@@ -163,12 +165,11 @@ export default function CommandKClient({
 
   const refInput = useRef<HTMLInputElement>(null);
   const mobileViewportHeight = useVisualViewportHeight();
-  const heightMaximum = '18rem';
   const maxHeight = useMemo(() => {
     const positionY = refInput.current?.getBoundingClientRect().y;
     return mobileViewportHeight && positionY
-      ? `min(${mobileViewportHeight - positionY - 32}px, ${heightMaximum})`
-      : heightMaximum;
+      ? `min(${mobileViewportHeight - positionY - 32}px, ${MAX_HEIGHT})`
+      : MAX_HEIGHT;
   }, [mobileViewportHeight]);
 
   const refScroll = useRef<HTMLDivElement>(null);
@@ -585,8 +586,8 @@ export default function CommandKClient({
           <DialogDescription>{DIALOG_DESCRIPTION}</DialogDescription>
         </VisuallyHidden.Root>
         <div className={clsx(
-          'px-3 md:px-4',
-          'pt-3 md:pt-4',
+          'px-3 md:px-3.5',
+          'pt-3 md:pt-3.5',
         )}>
           <div className="relative">
             <Command.Input
@@ -599,7 +600,7 @@ export default function CommandKClient({
                 'w-full min-w-0!',
                 'focus:ring-0',
                 isPlaceholderVisible || isLoading && 'pr-10!',
-                'border-gray-200! dark:border-gray-800!',
+                'border-medium',
                 'focus:border-gray-200 dark:focus:border-gray-800',
                 'placeholder:text-gray-400/80',
                 'dark:placeholder:text-gray-700',

@@ -50,7 +50,7 @@ export default function ShareModal({
   ) =>
     <div
       className={clsx(
-        'py-3 px-3',
+        'py-2.5 px-3',
         embedded ? 'border-l' : 'border rounded-md',
         'border-gray-200 bg-gray-50 active:bg-gray-100',
         // eslint-disable-next-line max-len

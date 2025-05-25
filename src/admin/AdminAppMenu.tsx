@@ -234,7 +234,7 @@ export default function AdminAppMenu({
       alignOffset={-85}
       onOpen={refreshAdminData}
       className={clsx(
-        'border-medium',
+        'outline-medium',
         className,
       )}
       classNameButton={clsx(

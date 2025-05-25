@@ -83,7 +83,7 @@ export default function MoreMenu({
             'min-w-[8rem]',
             'component-surface',
             'py-1',
-            'shadow-lg',
+            'shadow-lg shadow-gray-900/10 dark:shadow-900',
             'data-[side=top]:dark:shadow-[0_0px_40px_rgba(0,0,0,0.6)]',
             'data-[side=bottom]:dark:shadow-[0_10px_40px_rgba(0,0,0,0.6)]',
             'data-[side=top]:animate-fade-in-from-bottom',

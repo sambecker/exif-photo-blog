@@ -141,15 +141,19 @@
 }
 @utility divide-main {
   @apply
-    divide-gray-200 dark:divide-gray-700
+    divide-gray-400/25 dark:divide-gray-700
 }
 @utility border-medium {
   @apply
-    border border-gray-200 dark:border-gray-800
+    border border-gray-400/25 dark:border-gray-800
+}
+@utility outline-medium {
+  @apply
+    outline outline-gray-400/25 dark:outline-gray-800
 }
 @utility divide-medium {
   @apply
-    divide-gray-200 dark:divide-gray-800
+    divide-gray-400/25 dark:divide-gray-800
 }
 /* Background */
 @utility bg-main {
@@ -170,7 +174,8 @@
 }
 @utility bg-content {
   @apply
-    bg-main border-medium
+    /* '!' necessary for radix controls */
+    bg-main outline-medium!
 }
 @utility bg-invert {
   @apply

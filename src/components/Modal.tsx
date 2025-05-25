@@ -93,9 +93,11 @@ export default function Modal({
           className={clsx(
             container && 'w-[calc(100vw-1.5rem)] sm:w-[min(540px,90vw)]',
             container && !noPadding && 'p-3 md:p-4',
-            container && 'rounded-lg md:rounded-xl border-medium',
+            container && 'rounded-lg md:rounded-xl',
+            container && 'outline-medium',
             container && 'bg-white dark:bg-black',
-            container && 'shadow-2xl/20 dark:shadow-2xl/100',
+            container && 'shadow-gray-900 shadow-2xl/15',
+            container && 'dark:shadow-black dark:shadow-2xl/100',
             className,
           )}
         >
