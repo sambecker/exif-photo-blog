@@ -16,7 +16,7 @@ export default function ToasterWithThemes() {
             'font-mono text-sm',
             'bg-white dark:bg-black',
             'text-gray-900 dark:text-gray-100',
-            'border-medium!',
+            'outline-medium! outline-offset-[-1px]',
           ),
         },
       }}
