@@ -9,7 +9,6 @@ import {
   getPhotos,
   getUniqueCameras,
   getUniqueTags,
-  getUniqueTagsHidden,
   getUniqueFilms,
   getPhotosNearId,
   getPhotosMostRecentUpdate,
@@ -50,7 +49,6 @@ const KEY_RECIPES           = 'recipes';
 const KEY_FOCAL_LENGTHS     = 'focal-lengths';
 // Type keys
 const KEY_COUNT             = 'count';
-const KEY_HIDDEN            = 'hidden';
 const KEY_DATE_RANGE        = 'date-range';
 
 const getPhotosCacheKeyForOption = (
@@ -209,12 +207,6 @@ export const getUniqueTagsCached =
   unstable_cache(
     getUniqueTags,
     [KEY_PHOTOS, KEY_TAGS],
-  );
-
-export const getUniqueTagsHiddenCached =
-  unstable_cache(
-    getUniqueTagsHidden,
-    [KEY_PHOTOS, KEY_TAGS, KEY_HIDDEN],
   );
 
 export const getUniqueCamerasCached =

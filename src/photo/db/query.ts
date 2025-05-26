@@ -337,22 +337,6 @@ export const getUniqueTags = async () =>
     })))
   , 'getUniqueTags');
 
-export const getUniqueTagsHidden = async () =>
-  safelyQueryPhotos(() => sql`
-    SELECT DISTINCT unnest(tags) as tag,
-      COUNT(*),
-      MAX(updated_at) as last_modified
-    FROM photos
-    WHERE hidden IS NOT TRUE
-    GROUP BY tag
-    ORDER BY tag ASC
-  `.then(({ rows }): Tags => rows.map(({ tag, count, last_modified }) => ({
-      tag: tag as string,
-      count: parseInt(count, 10),
-      lastModified: last_modified as Date,
-    })))
-  , 'getUniqueTagsHidden');
-
 export const getUniqueCameras = async () =>
   safelyQueryPhotos(() => sql`
     SELECT DISTINCT make||' '||model as camera, make, model,
