@@ -2,7 +2,8 @@ import type { MetadataRoute } from 'next';
 import { getUniqueTags } from '@/photo/db/query';
 import { absolutePathForTag } from '@/app/paths';
 
-export const revalidate = 60 * 60 * 24;
+// Cache for 24 hours
+export const revalidate = 86_400;
  
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const tags = await getUniqueTags();
