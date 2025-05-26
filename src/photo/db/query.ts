@@ -570,6 +570,13 @@ export const getPublicPhotoIds = async ({ limit }: { limit?: number }) =>
     .then(({ rows }) => rows.map(({ id }) => id as string))
   , 'getPublicPhotoIds');
 
+export const getPhotoIdsAndUpdatedAt = async () =>
+  safelyQueryPhotos(() =>
+    sql`SELECT id, updated_at FROM photos WHERE hidden IS NOT TRUE`
+      .then(({ rows }) => rows.map(({ id, updated_at }) =>
+        ({ id: id as string, updatedAt: updated_at as Date })))
+  , 'getPhotoIdsAndUpdatedAt');
+
 export const getPhoto = async (
   id: string,
   includeHidden?: boolean,

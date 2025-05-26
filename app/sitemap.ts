@@ -5,38 +5,44 @@ import {
   absolutePathForFilm,
   absolutePathForFocalLength,
   absolutePathForLens,
+  absolutePathForPhoto,
   absolutePathForRecipe,
   absolutePathForTag,
 } from '@/app/paths';
 import { isTagFavs } from '@/tag';
 import { BASE_URL, GRID_HOMEPAGE_ENABLED } from '@/app/config';
+import { getPhotoIdsAndUpdatedAt } from '@/photo/db/query';
 
 // Cache for 24 hours
 export const revalidate = 86_400;
  
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const {
-    cameras,
-    lenses,
-    tags,
-    recipes,
-    films,
-    focalLengths,
-  } = await getDataForCategoriesCached();
+  const [
+    {
+      cameras,
+      lenses,
+      tags,
+      recipes,
+      films,
+      focalLengths,
+    },
+    photos,
+  ] = await Promise.all([
+    getDataForCategoriesCached(),
+    getPhotoIdsAndUpdatedAt(),
+  ]);
 
-  // TODO: import all non-hidden photo urls + updated_ats
+  // TODO: consider renaming lastModified to updatedAt
 
   return [
     // Homepage
     {
       url: BASE_URL!,
-      changeFrequency: 'monthly',
       priority: 1,
     },
     // Grid or Feed
     {
       url: GRID_HOMEPAGE_ENABLED ? `${BASE_URL}/feed` : `${BASE_URL}/grid`,
-      changeFrequency: 'monthly',
       priority: 0.9,
     },
     // Cameras
@@ -74,6 +80,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: absolutePathForFocalLength(focal),
       lastModified,
       priority: 0.8,
+    })),
+    // Photos
+    ...photos.map(({ id, updatedAt }) => ({
+      url: absolutePathForPhoto({ photo: id }),
+      lastModified: updatedAt,
+      priority: 0.7,
     })),
   ];
 }
