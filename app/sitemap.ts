@@ -46,7 +46,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...films.map(({ lastModified }) => lastModified),
     ...focalLengths.map(({ lastModified }) => lastModified),
     ...photos.map(({ updatedAt }) => updatedAt),
-  ].sort((a, b) => b.getTime() - a.getTime())[0];
+  ]
+    .filter(Boolean)
+    .sort((a, b) => b.getTime() - a.getTime())[0];
 
   return [
     // Homepage
