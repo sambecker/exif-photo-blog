@@ -15,6 +15,12 @@ import { getPhotoIdsAndUpdatedAt } from '@/photo/db/query';
 
 // Cache for 24 hours
 export const revalidate = 86_400;
+
+const PRIORITY_HOME = 1;
+const PRIORITY_HOME_VIEW = 0.9;
+const PRIORITY_CATEGORY_SPECIAL = 0.8;
+const PRIORITY_CATEGORY = 0.7;
+const PRIORITY_PHOTO = 0.5;
  
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [
@@ -32,60 +38,72 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getPhotoIdsAndUpdatedAt(),
   ]);
 
-  // TODO: consider renaming lastModified to updatedAt
+  const lastModifiedSite = [
+    ...cameras.map(({ lastModified }) => lastModified),
+    ...lenses.map(({ lastModified }) => lastModified),
+    ...tags.map(({ lastModified }) => lastModified),
+    ...recipes.map(({ lastModified }) => lastModified),
+    ...films.map(({ lastModified }) => lastModified),
+    ...focalLengths.map(({ lastModified }) => lastModified),
+    ...photos.map(({ updatedAt }) => updatedAt),
+  ].sort((a, b) => b.getTime() - a.getTime())[0];
 
   return [
     // Homepage
     {
       url: BASE_URL!,
-      priority: 1,
+      priority: PRIORITY_HOME,
+      lastModified: lastModifiedSite,
     },
     // Grid or Feed
     {
       url: GRID_HOMEPAGE_ENABLED ? `${BASE_URL}/feed` : `${BASE_URL}/grid`,
-      priority: 0.9,
+      priority: PRIORITY_HOME_VIEW,
+      lastModified: lastModifiedSite,
     },
     // Cameras
     ...cameras.map(({ camera, lastModified }) => ({
       url: absolutePathForCamera(camera),
+      priority: PRIORITY_CATEGORY,
       lastModified,
-      priority: 0.8,
     })),
     // Lenses
     ...lenses.map(({ lens, lastModified }) => ({
       url: absolutePathForLens(lens),
+      priority: PRIORITY_CATEGORY,
       lastModified,
-      priority: 0.8,
     })),
     // Tags
     ...tags.map(({ tag, lastModified }) => ({
       url: absolutePathForTag(tag),
+      priority: isTagFavs(tag)
+        ? PRIORITY_CATEGORY_SPECIAL
+        : PRIORITY_CATEGORY,
       lastModified,
-      priority: isTagFavs(tag) ? 0.9 : 0.8,
     })),
     // Recipes
     ...recipes.map(({ recipe, lastModified }) => ({
       url: absolutePathForRecipe(recipe),
+      priority: PRIORITY_CATEGORY,
       lastModified,
-      priority: 0.8,
     })),
     // Films
     ...films.map(({ film, lastModified }) => ({
       url: absolutePathForFilm(film),
+      priority: PRIORITY_CATEGORY,
       lastModified,
-      priority: 0.8,
     })),
     // Focal Lengths
     ...focalLengths.map(({ focal, lastModified }) => ({
       url: absolutePathForFocalLength(focal),
+      priority: PRIORITY_CATEGORY,
       lastModified,
-      priority: 0.8,
     })),
     // Photos
     ...photos.map(({ id, updatedAt }) => ({
       url: absolutePathForPhoto({ photo: id }),
+      priority: PRIORITY_PHOTO,
       lastModified: updatedAt,
-      priority: 0.7,
     })),
   ];
 }
