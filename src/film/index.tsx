@@ -20,13 +20,11 @@ import {
 import { AnnotatedTag } from '@/photo/form';
 import PhotoFilmIcon from './PhotoFilmIcon';
 import { AppTextState } from '@/i18n/state';
+import { CategoryQueryMeta } from '@/category';
 
-export type FilmWithCount = {
-  film: string
-  count: number
-}
+export type FilmWithMeta = { film: string } & CategoryQueryMeta
 
-export type Films = FilmWithCount[]
+export type Films = FilmWithMeta[]
 
 export const labelForFilm = (film: string) => {
   // Use Fujifilm simulation text when recognized
@@ -48,8 +46,8 @@ export const sortFilms = (
 ) => films.sort(sortFilmsWithCount);
 
 export const sortFilmsWithCount = (
-  a: FilmWithCount,
-  b: FilmWithCount,
+  a: FilmWithMeta,
+  b: FilmWithMeta,
 ) => {
   const aLabel = labelForFilm(a.film).large;
   const bLabel = labelForFilm(b.film).large;

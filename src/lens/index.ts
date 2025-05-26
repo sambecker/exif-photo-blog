@@ -3,6 +3,7 @@ import { parameterize } from '@/utility/string';
 import { formatAppleLensText, isLensApple } from '../platforms/apple';
 import { MISSING_FIELD } from '@/app/paths';
 import { formatGoogleLensText, isLensGoogle } from '../platforms/google';
+import { CategoryQueryMeta } from '@/category';
 
 const LENS_PLACEHOLDER: Lens = { make: 'Lens', model: 'Model' };
 
@@ -21,13 +22,12 @@ export interface LensPhotoProps {
   params: Promise<LensWithPhotoId>
 }
 
-export type LensWithCount = {
+export type LensWithMeta = {
   lensKey: string
   lens: Lens
-  count: number
-}
+} & CategoryQueryMeta;
 
-export type Lenses = LensWithCount[];
+export type Lenses = LensWithMeta[];
 
 export const getLensFromParams = async (
   params: Promise<Lens>,
@@ -71,8 +71,8 @@ export const formatLensParams = ({
 });
 
 export const sortLensesWithCount = (
-  a: LensWithCount,
-  b: LensWithCount,
+  a: LensWithMeta,
+  b: LensWithMeta,
 ) => {
   const aText = formatLensText(a.lens);
   const bText = formatLensText(b.lens);

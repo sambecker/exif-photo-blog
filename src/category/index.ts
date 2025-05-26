@@ -28,6 +28,11 @@ export const DEFAULT_CATEGORY_KEYS: CategoryKeys = [
   'films',
 ];
 
+export interface CategoryQueryMeta {
+  count: number
+  lastModified: Date
+}
+
 export const getHiddenCategories = (keys: CategoryKeys): CategoryKeys =>
   CATEGORY_KEYS.filter(key => !keys.includes(key));
 

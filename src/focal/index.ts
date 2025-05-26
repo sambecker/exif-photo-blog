@@ -9,11 +9,11 @@ import {
   absolutePathForFocalLengthImage,
 } from '@/app/paths';
 import { AppTextState } from '@/i18n/state';
+import { CategoryQueryMeta } from '@/category';
 
-export type FocalLengths = {
-  focal: number
-  count: number
-}[]
+type FocalLengthWithMeta = { focal: number } & CategoryQueryMeta;
+
+export type FocalLengths = FocalLengthWithMeta[];
 
 export const getFocalLengthFromString = (focalString?: string) => {
   const focal = focalString?.match(/^([0-9]+)mm/)?.[1];
