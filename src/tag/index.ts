@@ -15,17 +15,16 @@ import {
   formatCount,
   formatCountDescriptive,
 } from '@/utility/string';
-import { sortCategoryByCount } from '@/category';
+import { CategoryQueryMeta, sortCategoryByCount } from '@/category';
 import { AppTextState } from '@/i18n/state';
 
 // Reserved tags
 export const TAG_FAVS   = 'favs';
 export const TAG_HIDDEN = 'hidden';
 
-export type Tags = {
-  tag: string
-  count: number
-}[]
+type TagWithMeta = { tag: string } & CategoryQueryMeta;
+
+export type Tags = TagWithMeta[]
 
 export const formatTag = (tag?: string) =>
   capitalizeWords(tag?.replaceAll('-', ' '));
@@ -138,11 +137,19 @@ export const isPathFavs = (pathname?: string) =>
 
 export const isTagHidden = (tag: string) => tag.toLowerCase() === TAG_HIDDEN;
 
-export const addHiddenToTags = (tags: Tags, photosCountHidden = 0) =>
-  photosCountHidden > 0
+export const addHiddenToTags = (
+  tags: Tags,
+  countHidden = 0,
+  lastModifiedHidden = new Date(),
+) =>
+  countHidden > 0
     ? tags
       .filter(({ tag }) => tag === TAG_FAVS)
-      .concat({ tag: TAG_HIDDEN, count: photosCountHidden })
+      .concat({
+        tag: TAG_HIDDEN,
+        count: countHidden,
+        lastModified: lastModifiedHidden,
+      })
       .concat(tags
         .filter(({ tag }) => tag !== TAG_FAVS)
         .sort(sortCategoryByCount),

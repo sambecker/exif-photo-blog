@@ -9,13 +9,11 @@ import {
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { labelForFilm } from '@/film';
 import { AppTextState } from '@/i18n/state';
+import { CategoryQueryMeta } from '@/category';
 
-export type RecipeWithCount = {
-  recipe: string
-  count: number
-}
+export type RecipeWithMeta = { recipe: string } & CategoryQueryMeta
 
-export type Recipes = RecipeWithCount[]
+export type Recipes = RecipeWithMeta[]
 
 export interface RecipeProps {
   title?: string

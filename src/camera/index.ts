@@ -1,3 +1,4 @@
+import { CategoryQueryMeta } from '@/category';
 import type { Photo } from '@/photo';
 import { isCameraMakeApple } from '@/platforms/apple';
 import { formatSonyModel, isMakeSony } from '@/platforms/sony';
@@ -18,13 +19,12 @@ export interface PhotoCameraProps {
   params: Promise<Camera & { photoId: string }>
 }
 
-export type CameraWithCount = {
+export type CameraWithMeta = {
   cameraKey: string
   camera: Camera
-  count: number
-}
+} & CategoryQueryMeta;
 
-export type Cameras = CameraWithCount[];
+export type Cameras = CameraWithMeta[];
 
 // Support keys for make-only and model-only camera queries
 export const createCameraKey = ({ make, model }: Partial<Camera>) =>
@@ -42,8 +42,8 @@ export const formatCameraParams = ({
 });
 
 export const sortCamerasWithCount = (
-  a: CameraWithCount,
-  b: CameraWithCount,
+  a: CameraWithMeta,
+  b: CameraWithMeta,
 ) => {
   const aText = formatCameraText(a.camera);
   const bText = formatCameraText(b.camera);
