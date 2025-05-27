@@ -87,6 +87,8 @@ const TEXT = {
     edit: '编辑',
     favorite: '收藏',
     unfavorite: '取消收藏',
+    hide: '隐藏',
+    unhide: '取消隐藏',
     download: '下载',
     sync: '同步',
     delete: '删除',

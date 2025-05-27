@@ -89,6 +89,8 @@ const TEXT: I18NDeepPartial = {
     edit: 'Editar',
     favorite: 'Favoritar',
     unfavorite: 'Remover dos favoritos',
+    hide: 'Ocultar',
+    unhide: 'Mostrar',
     download: 'Baixar',
     sync: 'Sincronizar',
     delete: 'Excluir',
