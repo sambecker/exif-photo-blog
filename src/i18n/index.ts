@@ -1,8 +1,8 @@
-import US_EN from './locales/us-en';
+import EN_US from './locales/en-us';
 import { enUS, id, ptBR, pt, zhCN } from 'date-fns/locale';
 import { APP_LOCALE } from '@/app/config';
 
-export type I18N = typeof US_EN;
+export type I18N = typeof EN_US;
 
 export type I18NDeepPartial = {
   [key in keyof I18N]?: Partial<I18N[key]>;
@@ -10,7 +10,7 @@ export type I18NDeepPartial = {
 
 /**
  * Translation steps for contributors:
- * 1. Create new file in `src/i18n/locales` modeled on `us-en.ts`.
+ * 1. Create new file in `src/i18n/locales` modeled on `en-us.ts`.
  * 2. Add import to `localeTextImports`
  * 3. Add date-fn locale to `getDateFnLocale`
  * 4. Test locally
@@ -38,7 +38,7 @@ const getDateFnLocale = (locale: string) => {
 };
 
 export const getTextForLocale = async (locale: string): Promise<I18N> => {
-  const text = US_EN;
+  const text = EN_US;
 
   Object.entries(await localeTextImports[locale.toLocaleLowerCase()]?.() ?? {})
     .forEach(([key, value]) => {
