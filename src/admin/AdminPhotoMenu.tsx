@@ -1,18 +1,24 @@
 'use client';
 
 import { ComponentProps, useMemo } from 'react';
-import { pathForAdminPhotoEdit, pathForPhoto } from '@/app/paths';
+import {
+  getPathComponents,
+  PATH_ROOT,
+  pathForAdminPhotoEdit,
+  pathForTag,
+} from '@/app/paths';
 import {
   deletePhotoAction,
   syncPhotoAction,
   toggleFavoritePhotoAction,
+  toggleHidePhotoAction,
 } from '@/photo/actions';
 import {
   Photo,
   deleteConfirmationTextForPhoto,
   downloadFileNameForPhoto,
 } from '@/photo';
-import { isPathFavs, isPhotoFav } from '@/tag';
+import { isPathFavs, isPhotoFav, TAG_HIDDEN } from '@/tag';
 import { usePathname } from 'next/navigation';
 import { BiTrash } from 'react-icons/bi';
 import MoreMenu from '@/components/more/MoreMenu';
@@ -27,6 +33,7 @@ import IconEdit from '@/components/icons/IconEdit';
 import { photoNeedsToBeSynced } from '@/photo/sync';
 import { KEY_COMMANDS } from '@/photo/key-commands';
 import { useAppText } from '@/i18n/state/client';
+import IconHidden from '@/components/icons/IconHidden';
 
 export default function AdminPhotoMenu({
   photo,
@@ -44,10 +51,18 @@ export default function AdminPhotoMenu({
 
   const appText = useAppText();
 
-  const isFav = isPhotoFav(photo);
   const path = usePathname();
+  const pathComponents = getPathComponents(path);
+  const isOnPhotoDetail = pathComponents.photoId === photo.id;
+  const isFav = isPhotoFav(photo);
   const shouldRedirectFav = isPathFavs(path) && isFav;
-  const shouldRedirectDelete = pathForPhoto({ photo: photo.id }) === path;
+  const shouldRedirectDelete = isOnPhotoDetail;
+  const redirectPathOnHideToggle = isOnPhotoDetail
+    ? photo.hidden
+      ? pathForTag(TAG_HIDDEN)
+      : PATH_ROOT
+    : undefined;
+
 
   const sectionMain = useMemo(() => {
     const items: ComponentProps<typeof MoreMenuItem>[] = [{
@@ -78,6 +93,22 @@ export default function AdminPhotoMenu({
         },
       });
     }
+    items.push({
+      label: photo.hidden ? appText.admin.unhide : appText.admin.hide,
+      icon: <IconHidden
+        size={16}
+        className="translate-x-[-1px] translate-y-[1px]"
+        visible={photo.hidden}
+      />,
+      action: () => toggleHidePhotoAction(
+        photo.id,
+        redirectPathOnHideToggle,
+      )
+        .then(() => revalidatePhoto?.(photo.id)),
+      ...showKeyCommands && {
+        keyCommand: KEY_COMMANDS.toggleHide,
+      },
+    });
     items.push({
       label: appText.admin.download,
       icon: <MdOutlineFileDownload
@@ -115,6 +146,7 @@ export default function AdminPhotoMenu({
     includeFavorite,
     isFav,
     shouldRedirectFav,
+    redirectPathOnHideToggle,
     revalidatePhoto,
   ]);
 

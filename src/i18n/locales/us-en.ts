@@ -87,6 +87,8 @@ const TEXT = {
     edit: 'Edit',
     favorite: 'Favorite',
     unfavorite: 'Unfavorite',
+    hide: 'Hide',
+    unhide: 'Unhide',
     download: 'Download',
     sync: 'Sync',
     delete: 'Delete',

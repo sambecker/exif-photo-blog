@@ -265,6 +265,20 @@ export const toggleFavoritePhotoAction = async (
     }
   });
 
+export const toggleHidePhotoAction = async (
+  photoId: string,
+  redirectPath?: string,
+) =>
+  runAuthenticatedAdminServerAction(async () => {
+    const photo = await getPhoto(photoId, true);
+    if (photo) {
+      photo.hidden = !photo.hidden;
+      await updatePhoto(convertPhotoToPhotoDbInsert(photo));
+      revalidateAllKeysAndPaths();
+    }
+    if (redirectPath) { redirect(redirectPath); }
+  });
+
 export const deletePhotosAction = async (photoIds: string[]) =>
   runAuthenticatedAdminServerAction(async () => {
     for (const photoId of photoIds) {
