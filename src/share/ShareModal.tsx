@@ -66,7 +66,7 @@ export default function ShareModal({
 
   return (
     <Modal onClose={() => setShareModalProps?.(undefined)}>
-      <div className="space-y-3 md:space-y-4 w-full">
+      <div className="space-y-2 w-full">
         {title &&
           <div className={clsx(
             'flex items-center gap-x-3',
@@ -83,7 +83,7 @@ export default function ShareModal({
             'rounded-md',
             'w-full overflow-hidden',
             'flex items-center justify-stretch',
-            'border border-gray-200 dark:border-gray-800',
+            'border-medium',
           )}>
             <MaskedScroll
               className="flex grow"

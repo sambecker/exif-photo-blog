@@ -60,8 +60,7 @@ export default function OGTile({
       className={clsx(
         'group',
         'block w-full rounded-md overflow-hidden',
-        'border shadow-xs',
-        'border-gray-200 dark:border-gray-800',
+        'border-medium shadow-xs',
         riseOnHover && 'hover:-translate-y-1.5 transition-transform',
       )}
     >
