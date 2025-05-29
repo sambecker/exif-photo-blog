@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { ScoreCard } from '@/components';
 import LoaderButton from '@/components/primitives/LoaderButton';
+import WarmCacheButton from '@/admin/WarmCacheButton';
 
 interface PerformanceData {
   performance: {

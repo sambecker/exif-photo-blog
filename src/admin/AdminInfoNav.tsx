@@ -17,11 +17,18 @@ const ADMIN_INFO_PAGES = [{
   title: 'Configuration',
   titleShort: 'Config',
   path: PATH_ADMIN_CONFIGURATION,
+}, {
+  title: 'Performance',
+  titleShort: 'Perf',
+  path: '/admin/performance',
 }];
 
 const ADMIN_INFO_PAGE_WITHOUT_INSIGHTS = [{
   title: 'App Configuration',
   path: PATH_ADMIN_CONFIGURATION,
+}, {
+  title: 'Performance',
+  path: '/admin/performance',
 }] as typeof ADMIN_INFO_PAGES;
 
 export default function AdminInfoPage({

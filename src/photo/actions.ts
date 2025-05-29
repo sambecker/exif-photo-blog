@@ -229,7 +229,7 @@ export const updatePhotoAction = async (formData: FormData) =>
         await propagateRecipeTitleIfNecessary(formData, photo);
       });
 
-    revalidatePhoto(photo.id);
+    await revalidatePhoto(photo.id);
 
     redirect(PATH_ADMIN_PHOTOS);
   });

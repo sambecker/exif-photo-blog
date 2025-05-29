@@ -1,6 +1,7 @@
 'use server';
 
 import { runAuthenticatedAdminServerAction } from '@/auth/server';
+import { warmUpPhotoCache } from '@/photo/cache-redis';
 import { testRedisConnection } from '@/platforms/redis';
 import { testOpenAiConnection } from '@/platforms/openai';
 import { testDatabaseConnection } from '@/platforms/postgres';
@@ -86,6 +87,11 @@ const scanForError = (
       .then(() => '')
       .catch(error => error.message)
     : Promise.resolve('');
+
+export const warmUpPhotoCacheAction = async () =>
+  runAuthenticatedAdminServerAction(async () => {
+    await warmUpPhotoCache();
+  });
 
 export const testConnectionsAction = async () =>
   runAuthenticatedAdminServerAction(async () => {

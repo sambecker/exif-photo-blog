@@ -4,6 +4,19 @@ import {
   unstable_cache,
   unstable_noStore,
 } from 'next/cache';
+import { HAS_REDIS_STORAGE } from '@/app/config';
+import {
+  getPhotoWithRedisCache,
+  getPhotosWithRedisCache,
+  getPhotosMetaWithRedisCache,
+  getUniqueTagsWithRedisCache,
+  getUniqueCamerasWithRedisCache,
+  getUniqueLensesWithRedisCache,
+  getUniqueFilmsWithRedisCache,
+  getUniqueRecipesWithRedisCache,
+  getUniqueFocalLengthsWithRedisCache,
+  invalidatePhotoAndRelatedCaches,
+} from './cache-redis';
 import {
   getPhoto,
   getPhotos,
@@ -132,7 +145,12 @@ export const revalidateAllKeysAndPaths = () => {
   PATHS_TO_CACHE.forEach(path => revalidatePath(path, 'layout'));
 };
 
-export const revalidatePhoto = (photoId: string) => {
+export const revalidatePhoto = async (photoId: string) => {
+  // Invalidate Redis cache if available
+  if (HAS_REDIS_STORAGE) {
+    await invalidatePhotoAndRelatedCaches(photoId);
+  }
+  
   // Tags
   revalidateTag(photoId);
   revalidateTagsKey();
@@ -159,10 +177,12 @@ export const revalidatePhoto = (photoId: string) => {
 
 export const getPhotosCached = (
   ...args: Parameters<typeof getPhotos>
-) => unstable_cache(
-  getPhotos,
-  [KEY_PHOTOS, ...getPhotosCacheKeys(...args)],
-)(...args).then(parseCachedPhotosDates);
+) => HAS_REDIS_STORAGE
+  ? getPhotosWithRedisCache(...args).then(parseCachedPhotosDates)
+  : unstable_cache(
+    getPhotos,
+    [KEY_PHOTOS, ...getPhotosCacheKeys(...args)],
+  )(...args).then(parseCachedPhotosDates);
 
 export const getPhotosNearIdCached = (
   ...args: Parameters<typeof getPhotosNearId>
@@ -186,10 +206,12 @@ export const getPhotosNearIdCached = (
   };
 });
 
-export const getPhotosMetaCached = unstable_cache(
-  getPhotosMeta,
-  [KEY_PHOTOS, KEY_COUNT, KEY_DATE_RANGE],
-);
+export const getPhotosMetaCached = HAS_REDIS_STORAGE
+  ? getPhotosMetaWithRedisCache
+  : unstable_cache(
+    getPhotosMeta,
+    [KEY_PHOTOS, KEY_COUNT, KEY_DATE_RANGE],
+  );
 
 export const getPhotosMostRecentUpdateCached =
   unstable_cache(
@@ -198,43 +220,51 @@ export const getPhotosMostRecentUpdateCached =
   );
 
 export const getPhotoCached = (...args: Parameters<typeof getPhoto>) =>
-  unstable_cache(
-    getPhoto,
-    [KEY_PHOTOS, KEY_PHOTO],
-  )(...args).then(photo => photo ? parseCachedPhotoDates(photo) : undefined);
+  HAS_REDIS_STORAGE
+    ? getPhotoWithRedisCache(...args).then(photo => photo ? parseCachedPhotoDates(photo) : undefined)
+    : unstable_cache(
+      getPhoto,
+      [KEY_PHOTOS, KEY_PHOTO],
+    )(...args).then(photo => photo ? parseCachedPhotoDates(photo) : undefined);
 
-export const getUniqueTagsCached =
-  unstable_cache(
+export const getUniqueTagsCached = HAS_REDIS_STORAGE
+  ? getUniqueTagsWithRedisCache
+  : unstable_cache(
     getUniqueTags,
     [KEY_PHOTOS, KEY_TAGS],
   );
 
-export const getUniqueCamerasCached =
-  unstable_cache(
+export const getUniqueCamerasCached = HAS_REDIS_STORAGE
+  ? getUniqueCamerasWithRedisCache
+  : unstable_cache(
     getUniqueCameras,
     [KEY_PHOTOS, KEY_CAMERAS],
   );
 
-export const getUniqueLensesCached =
-  unstable_cache(
+export const getUniqueLensesCached = HAS_REDIS_STORAGE
+  ? getUniqueLensesWithRedisCache
+  : unstable_cache(
     getUniqueLenses,
     [KEY_PHOTOS, KEY_LENSES],
   );
 
-export const getUniqueFilmsCached =
-  unstable_cache(
+export const getUniqueFilmsCached = HAS_REDIS_STORAGE
+  ? getUniqueFilmsWithRedisCache
+  : unstable_cache(
     getUniqueFilms,
     [KEY_PHOTOS, KEY_FILMS],
   );
 
-export const getUniqueRecipesCached =
-  unstable_cache(
+export const getUniqueRecipesCached = HAS_REDIS_STORAGE
+  ? getUniqueRecipesWithRedisCache
+  : unstable_cache(
     getUniqueRecipes,
     [KEY_PHOTOS, KEY_RECIPES],
   );
 
-export const getUniqueFocalLengthsCached =
-  unstable_cache(
+export const getUniqueFocalLengthsCached = HAS_REDIS_STORAGE
+  ? getUniqueFocalLengthsWithRedisCache
+  : unstable_cache(
     getUniqueFocalLengths,
     [KEY_PHOTOS, KEY_FOCAL_LENGTHS],
   );
