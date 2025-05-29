@@ -6,12 +6,13 @@ import {
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import { cache } from 'react';
-import { getPhotos, getPhotosMeta } from '@/photo/db/query';
+import { getPhotos } from '@/photo/db/query';
 import { GRID_HOMEPAGE_ENABLED } from '@/app/config';
-import { getPhotoSidebarData } from '@/photo/data';
-import PhotoGridPage from '@/photo/PhotoGridPage';
+import { NULL_CATEGORY_DATA } from '@/category/data';
 import PhotoFeedPage from '@/photo/PhotoFeedPage';
-
+import PhotoGridPage from '@/photo/PhotoGridPage';
+import { getDataForCategoriesCached } from '@/category/cache';
+import { getPhotosMetaCached } from '@/photo/cache';
 export const dynamic = 'force-static';
 export const maxDuration = 60;
 
@@ -31,29 +32,29 @@ export default async function HomePage() {
   const [
     photos,
     photosCount,
-    tags,
-    cameras,
-    simulations,
+    categories,
   ] = await Promise.all([
     getPhotosCached()
       .catch(() => []),
-    getPhotosMeta()
+    getPhotosMetaCached()
       .then(({ count }) => count)
       .catch(() => 0),
-    ...(GRID_HOMEPAGE_ENABLED
-      ? getPhotoSidebarData()
-      : [[], [], []]),
+    GRID_HOMEPAGE_ENABLED
+      ? getDataForCategoriesCached()
+      : NULL_CATEGORY_DATA,
   ]);
 
   return (
     photos.length > 0
       ? GRID_HOMEPAGE_ENABLED
         ? <PhotoGridPage
-          {...{ photos, photosCount, tags, cameras, simulations }}
+          {...{
+            photos,
+            photosCount,
+            ...categories,
+          }}
         />
-        : <PhotoFeedPage
-          {...{ photos, photosCount }}
-        />
+        : <PhotoFeedPage {...{ photos, photosCount }} />
       : <PhotosEmptyState />
   );
 }

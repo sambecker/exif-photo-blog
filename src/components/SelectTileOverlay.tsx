@@ -1,7 +1,7 @@
 'use client';
 
 import { clsx } from 'clsx/lite';
-import Checkbox from './primitives/Checkbox';
+import SimpleCheckbox from './primitives/SimpleCheckbox';
 import { useAppState } from '@/state/AppState';
 import Spinner from './Spinner';
 
@@ -45,7 +45,7 @@ export default function SelectTileOverlay({
               className="m-[1px]"
             />
             : null
-          : <Checkbox
+          : <SimpleCheckbox
             className={clsx(
               'text-white',
               // Required to prevent Safari jitter

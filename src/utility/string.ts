@@ -22,11 +22,11 @@ export const parameterize = (
 ) =>
   string
     .trim()
-    // Replaces spaces, underscores, and dashes with dashes
-    .replaceAll(/[\s_–—]/gi, '-')
-    // Removes punctuation
-    .replaceAll(/['"!@#$%^&*()_+=[\]{};:/?,.<>\\|`~]/gi, '')
-    // Removes all non-alphanumeric characters
+    // Replace spaces, underscores, slashes, pluses, dashes with dashes
+    .replaceAll(/[\s_–—+]/gi, '-')
+    // Remove punctuation
+    .replaceAll(/['"!@#$%^&*()=[\]{};:/?,<>\\/|`~]/gi, '')
+    // Removes non-alphanumeric characters, if configured
     .replaceAll(
       shouldRemoveNonAlphanumeric
         ? /([^a-z0-9-])/gi
@@ -35,14 +35,29 @@ export const parameterize = (
     )
     .toLocaleLowerCase();
 
+export const deparameterize = (string: string) =>
+  capitalizeWords(string.replaceAll('-', ' '));
+
 export const formatCount = (count: number) => `× ${count}`;
 
 export const pluralize = (
   count: number,
   singular: string,
   plural?: string,
-) =>
-  `${count} ${count === 1 ? singular : plural ?? `${singular}s`}`;
+  padPlaces = 0,
+) =>{
+  const numberFormatted = padPlaces
+    ? String(count).padStart(padPlaces, '0')
+    : count;
+  const label = count === 1 ? singular : plural ?? `${singular}s`;
+  return `${numberFormatted} ${label}`;
+};
+
+export const depluralize = (string: string) =>
+  // Handle plurals like "lenses"
+  /ses$/i.test(string)
+    ? string.replace(/es$/i, '')
+    : string.replace(/s$/i, '');
 
 export const formatCountDescriptive = (
   count: number,

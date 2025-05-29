@@ -7,31 +7,39 @@ export default function ImageCaption({
   height,
   fontFamily,
   icon,
+  title,
+  gap = '1rem', // Mimic mono font space metric
   children,
+  legacyBottomAlignment = OG_TEXT_BOTTOM_ALIGNMENT,
 }: {
   width: number
   height: number
   fontFamily: string
   icon?: ReactNode
-  children: ReactNode
+  title?: string
+  gap?: string
+  children?: ReactNode
+  legacyBottomAlignment?: boolean
 }) {
   const paddingEdge = height * .07;
   const paddingContent = height * .6;
   return (
     <div style={{
       display: 'flex',
+      flexDirection: 'column',
       position: 'absolute',
       paddingLeft: height * .0875,
       paddingRight: height * .0875,
       color: 'white',
       backgroundBlendMode: 'multiply',
       fontFamily,
+      fontWeight: 500,
       fontSize: height *.08,
-      gap: '1rem', // Mimic mono font space metric
+      gap, 
       lineHeight: 1.2,
       left: 0,
       right: 0,
-      ...OG_TEXT_BOTTOM_ALIGNMENT
+      ...legacyBottomAlignment
         ? {
           paddingTop: paddingContent,
           paddingBottom: paddingEdge,
@@ -49,7 +57,7 @@ export default function ImageCaption({
         display: 'flex',
         alignItems: 'center',
         gap: height * .034,
-        ...OG_TEXT_BOTTOM_ALIGNMENT
+        ...legacyBottomAlignment
           ? { marginBottom: -height * .008 }
           : { marginTop: -height * .008 },
       }}>
@@ -63,9 +71,10 @@ export default function ImageCaption({
             whiteSpace: 'nowrap',
           }}
         >
-          {children}
+          {title}
         </div>
       </div>
+      {children}
     </div>
   );
 }

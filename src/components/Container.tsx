@@ -1,5 +1,5 @@
 import { clsx } from 'clsx/lite';
-import { ReactNode } from 'react';
+import { HTMLAttributes, ReactNode, RefObject } from 'react';
 
 export default function Container({
   children,
@@ -8,7 +8,9 @@ export default function Container({
   padding = 'normal',
   centered = true,
   spaceChildren = true,
+  ...props
 }: {
+  ref?: RefObject<HTMLDivElement | null>
   children: ReactNode
   className?: string
   color?: 'gray' | 'gray-border' | 'blue' | 'red' | 'yellow'
@@ -20,7 +22,7 @@ export default function Container({
     'tight-cta-right-left'
   centered?: boolean
   spaceChildren?: boolean
-} ) {
+} & HTMLAttributes<HTMLDivElement>) {
   const getColorClasses = () => {
     switch (color) {
     case 'gray': return [
@@ -29,12 +31,12 @@ export default function Container({
     ];
     case 'gray-border': return [
       'text-medium',
-      'bg-gray-50 dark:bg-gray-900/40',
-      'border border-gray-200 dark:border-gray-800',
+      'bg-extra-dim',
+      'border-medium',
     ];
     case 'blue': return [
-      'text-blue-900 dark:text-blue-300',
-      'bg-blue-100/35 dark:bg-blue-950/60',
+      'text-blue-800 dark:text-blue-400',
+      'bg-blue-50 dark:bg-blue-950/50',
     ];
     case 'red': return [
       'text-red-700 dark:text-red-400',
@@ -58,13 +60,16 @@ export default function Container({
   };
 
   return (
-    <div className={clsx(
-      'flex flex-col items-center justify-center',
-      'rounded-lg',
-      ...getColorClasses(),
-      getPaddingClasses(),
-      className,
-    )}>
+    <div
+      {...props}
+      className={clsx(
+        'flex flex-col items-center justify-center',
+        'rounded-lg',
+        ...getColorClasses(),
+        getPaddingClasses(),
+        className,
+      )}
+    >
       <div className={clsx(
         'flex flex-col justify-center w-full',
         centered && 'items-center',

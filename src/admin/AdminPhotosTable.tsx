@@ -7,7 +7,6 @@ import PhotoSmall from '@/photo/PhotoSmall';
 import { clsx } from 'clsx/lite';
 import { pathForAdminPhotoEdit, pathForPhoto } from '@/app/paths';
 import Link from 'next/link';
-import { AiOutlineEyeInvisible } from 'react-icons/ai';
 import PhotoDate from '@/photo/PhotoDate';
 import EditButton from './EditButton';
 import { useAppState } from '@/state/AppState';
@@ -15,6 +14,9 @@ import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 import PhotoSyncButton from './PhotoSyncButton';
 import DeletePhotoButton from './DeletePhotoButton';
 import { Timezone } from '@/utility/timezone';
+import IconHidden from '@/components/icons/IconHidden';
+import Tooltip from '@/components/Tooltip';
+import { photoNeedsToBeSynced, getPhotoSyncStatusText } from '@/photo/sync';
 
 export default function AdminPhotosTable({
   photos,
@@ -22,20 +24,22 @@ export default function AdminPhotosTable({
   revalidatePhoto,
   photoIdsSyncing = [],
   hasAiTextGeneration,
-  showUpdatedAt,
+  dateType = 'createdAt',
   canEdit = true,
   canDelete = true,
   timezone,
+  shouldScrollIntoViewOnExternalSync,
 }: {
   photos: Photo[],
   onLastPhotoVisible?: () => void
   revalidatePhoto?: RevalidatePhoto
   photoIdsSyncing?: string[]
   hasAiTextGeneration: boolean
-  showUpdatedAt?: boolean
+  dateType?: 'createdAt' | 'updatedAt'
   canEdit?: boolean
   canDelete?: boolean
   timezone?: Timezone
+  shouldScrollIntoViewOnExternalSync?: boolean
 }) {
   const { invalidateSwr } = useAppState();
 
@@ -56,7 +60,7 @@ export default function AdminPhotosTable({
             className={opacityForPhotoId(photo.id)}
           />
           <div className={clsx(
-            'flex flex-col lg:flex-row',
+            'flex flex-col lg:flex-row min-w-0',
             opacityForPhotoId(photo.id),
           )}>
             <Link
@@ -66,16 +70,19 @@ export default function AdminPhotosTable({
               prefetch={false}
             >
               <span className={clsx(
+                'flex w-full gap-1.5',
                 photo.hidden && 'text-dim',
               )}>
-                {titleForPhoto(photo)}
-                {photo.hidden && <span className="whitespace-nowrap">
-                  {' '}
-                  <AiOutlineEyeInvisible
-                    className="inline translate-y-[-0.5px]"
-                    size={16}
-                  />
-                </span>}
+                <span className="truncate">
+                  {titleForPhoto(photo, false)}
+                </span>
+                {photo.hidden &&
+                  <span>
+                    <IconHidden
+                      className="inline translate-y-[-0.5px]"
+                      size={16}
+                    />
+                  </span>}
               </span>
               {photo.priorityOrder !== null &&
                 <span className={clsx(
@@ -87,25 +94,32 @@ export default function AdminPhotosTable({
                 </span>}
             </Link>
             <div className={clsx(
+              'flex min-w-0 gap-1.5 w-full',
               'lg:w-[50%] uppercase',
               'text-dim',
             )}>
-              <PhotoDate {...{
-                photo,
-                dateType: showUpdatedAt ? 'updatedAt' : 'createdAt',
-                timezone,
-              }} />
+              <PhotoDate
+                {...{ photo, dateType, timezone }}
+                className="truncate"
+              />
+              {photoNeedsToBeSynced(photo) &&
+                <span>
+                  <Tooltip
+                    content={getPhotoSyncStatusText(photo)}
+                    classNameTrigger="text-blue-600 dark:text-blue-400"
+                    supportMobile
+                  />
+                </span>}
             </div>
           </div>
           <div className={clsx(
             'flex flex-nowrap',
-            'gap-2 sm:gap-3 items-center',
+            'gap-2 items-center',
           )}>
             {canEdit &&
               <EditButton path={pathForAdminPhotoEdit(photo)} />}
             <PhotoSyncButton
-              photoId={photo.id}
-              photoTitle={titleForPhoto(photo)}
+              photo={photo}
               onSyncComplete={invalidateSwr}
               isSyncingExternal={photoIdsSyncing.includes(photo.id)}
               hasAiTextGeneration={hasAiTextGeneration}
@@ -113,6 +127,8 @@ export default function AdminPhotosTable({
               className={opacityForPhotoId(photo.id)}
               shouldConfirm
               shouldToast
+              shouldScrollIntoViewOnExternalSync={
+                shouldScrollIntoViewOnExternalSync}
             />
             {canDelete &&
               <DeletePhotoButton

@@ -18,7 +18,7 @@ import {
 import {
   PhotoCameraProps,
   cameraFromPhoto,
-  getCameraFromParams,
+  formatCameraParams,
 } from '@/camera';
 import { cache } from 'react';
 
@@ -29,7 +29,7 @@ const getPhotosNearIdCachedCached = cache((
 ) =>
   getPhotosNearIdCached(
     photoId, {
-      camera: getCameraFromParams({ make, model }),
+      camera: formatCameraParams({ make, model }),
       limit: RELATED_GRID_PHOTOS_TO_SHOW + 2,
     },
   ));

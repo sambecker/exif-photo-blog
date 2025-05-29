@@ -3,8 +3,10 @@ import PhotoHeader from '@/photo/PhotoHeader';
 import { Camera, cameraFromPhoto } from '.';
 import PhotoCamera from './PhotoCamera';
 import { descriptionForCameraPhotos } from './meta';
+import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
+import { getAppText } from '@/i18n/state/server';
 
-export default function CameraHeader({
+export default async function CameraHeader({
   camera: cameraProp,
   photos,
   selectedPhoto,
@@ -20,17 +22,25 @@ export default function CameraHeader({
   dateRange?: PhotoDateRange
 }) {
   const camera = cameraFromPhoto(photos[0], cameraProp);
+  const appText = await getAppText();
   return (
     <PhotoHeader
       camera={camera}
       entity={<PhotoCamera {...{ camera }} contrast="high" />}
       entityDescription={
-        descriptionForCameraPhotos(photos, undefined, count, dateRange)}
+        descriptionForCameraPhotos(
+          photos,
+          appText,
+          undefined,
+          count,
+          dateRange,
+        )}
       photos={photos}
       selectedPhoto={selectedPhoto}
       indexNumber={indexNumber}
       count={count}
       dateRange={dateRange}
+      hasAiTextGeneration={AI_TEXT_GENERATION_ENABLED}
       includeShareButton
     />
   );

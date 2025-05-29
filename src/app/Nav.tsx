@@ -3,8 +3,8 @@
 import { clsx } from 'clsx/lite';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import SiteGrid from '../components/SiteGrid';
-import ViewSwitcher, { SwitcherSelection } from '@/app/ViewSwitcher';
+import AppGrid from '../components/AppGrid';
+import AppViewSwitcher, { SwitcherSelection } from '@/app/AppViewSwitcher';
 import {
   PATH_ROOT,
   isPathAdmin,
@@ -16,22 +16,29 @@ import {
 import AnimateItems from '../components/AnimateItems';
 import {
   GRID_HOMEPAGE_ENABLED,
-  HAS_DEFINED_SITE_DESCRIPTION,
-  SITE_DESCRIPTION,
+  NAV_CAPTION,
 } from './config';
+import { useRef } from 'react';
+import useStickyNav from './useStickyNav';
 
-const NAV_HEIGHT_CLASS = HAS_DEFINED_SITE_DESCRIPTION
+const NAV_HEIGHT_CLASS = NAV_CAPTION
   ? 'min-h-[4rem] sm:min-h-[5rem]'
   : 'min-h-[4rem]';
 
 export default function Nav({
-  siteDomainOrTitle,
+  navTitleOrDomain,
 }: {
-  siteDomainOrTitle: string;
+  navTitleOrDomain: string;
 }) {
-  const pathname = usePathname();
+  const ref = useRef<HTMLElement>(null);
 
+  const pathname = usePathname();
   const showNav = !isPathSignIn(pathname);
+
+  const {
+    classNameStickyContainer,
+    classNameStickyNav,
+  } = useStickyNav(ref);
 
   const renderLink = (
     text: string,
@@ -54,20 +61,26 @@ export default function Nav({
   };
 
   return (
-    <SiteGrid
+    <AppGrid
+      className={classNameStickyContainer}
+      classNameMain='pointer-events-auto'
       contentMain={
         <AnimateItems
           animateOnFirstLoadOnly
           type={!isPathAdmin(pathname) ? 'bottom' : 'none'}
           distanceOffset={10}
           items={showNav
-            ? [<div
+            ? [<nav
               key="nav"
+              ref={ref}
               className={clsx(
-                'flex items-center w-full',
+                'w-full flex items-center bg-main',
                 NAV_HEIGHT_CLASS,
+                // Enlarge nav to ensure it fully masks underlying content
+                'md:w-[calc(100%+8px)] md:translate-x-[-4px] md:px-[4px]',
+                classNameStickyNav,
               )}>
-              <ViewSwitcher
+              <AppViewSwitcher
                 currentSelection={switcherSelectionForPath()}
               />
               <div className={clsx(
@@ -75,21 +88,18 @@ export default function Nav({
                 'hidden xs:block',
                 'translate-y-[-1px]',
               )}>
-                <div className={clsx(
-                  'truncate overflow-hidden',
-                  HAS_DEFINED_SITE_DESCRIPTION && 'sm:font-bold',
-                )}>
-                  {renderLink(siteDomainOrTitle, PATH_ROOT)}
+                <div className="truncate overflow-hidden select-none">
+                  {renderLink(navTitleOrDomain, PATH_ROOT)}
                 </div>
-                {HAS_DEFINED_SITE_DESCRIPTION &&
+                {NAV_CAPTION &&
                   <div className={clsx(
                     'hidden sm:block truncate overflow-hidden',
-                    'leading-tight',
+                    'leading-tight text-dim',
                   )}>
-                    {SITE_DESCRIPTION}
+                    {NAV_CAPTION}
                   </div>}
               </div>
-            </div>]
+            </nav>]
             : []}
         />
       }

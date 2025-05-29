@@ -3,14 +3,11 @@
 import ScoreCard from '@/components/ScoreCard';
 import ScoreCardRow from '@/components/ScoreCardRow';
 import { dateRangeForPhotos } from '@/photo';
-import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
-import { FaCamera } from 'react-icons/fa';
-import { FaTag } from 'react-icons/fa';
 import { FaCircleInfo, FaRegCalendar } from 'react-icons/fa6';
-import { HiOutlinePhotograph } from 'react-icons/hi';
+import { HiMiniArrowsUpDown } from 'react-icons/hi2';
 import { MdAspectRatio } from 'react-icons/md';
 import { PiWarningBold } from 'react-icons/pi';
-import { TbCone, TbSparkles } from 'react-icons/tb';
+import { TbSparkles } from 'react-icons/tb';
 import { BiGitBranch, BiGitCommit, BiLogoGithub } from 'react-icons/bi';
 import {
   TEMPLATE_REPO_BRANCH,
@@ -20,6 +17,7 @@ import {
   VERCEL_GIT_COMMIT_MESSAGE,
   TEMPLATE_REPO_URL_FORK,
   TEMPLATE_REPO_URL_README,
+  CATEGORY_VISIBILITY,
 } from '@/app/config';
 import {
   AdminAppInsights,
@@ -30,7 +28,7 @@ import {
 import EnvVar from '@/components/EnvVar';
 import { IoSyncCircle } from 'react-icons/io5';
 import clsx from 'clsx/lite';
-import { PATH_ADMIN_OUTDATED } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS_UPDATES } from '@/app/paths';
 import { LiaBroomSolid } from 'react-icons/lia';
 import { IoMdGrid } from 'react-icons/io';
 import { RiSpeedMiniLine } from 'react-icons/ri';
@@ -40,21 +38,31 @@ import { pluralize } from '@/utility/string';
 import Tooltip from '@/components/Tooltip';
 import { useAppState } from '@/state/AppState';
 import ScoreCardContainer from '@/components/ScoreCardContainer';
+import IconLens from '@/components/icons/IconLens';
+import IconCamera from '@/components/icons/IconCamera';
+import IconRecipe from '@/components/icons/IconRecipe';
+import IconFilm from '@/components/icons/IconFilm';
+import IconFocalLength from '@/components/icons/IconFocalLength';
+import IconTag from '@/components/icons/IconTag';
+import IconPhoto from '@/components/icons/IconPhoto';
+import { HiOutlineDocumentText } from 'react-icons/hi';
+import { ReactNode } from 'react';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
 const DEBUG_BEHIND_BY = 9;
-const DEBUG_PHOTOS_COUNT_OUTDATED = 7;
+const DEBUG_PHOTOS_NEED_SYNC_COUNT = 7;
 
-const WARNING_TEXT_COLOR = 'text-amber-600 dark:text-amber-500';
+const TEXT_COLOR_WARNING  = 'text-amber-600 dark:text-amber-500';
+const TEXT_COLOR_BLUE     = 'text-blue-600 dark:text-blue-500';
 
 const readmeAnchor = (anchor: string) =>
   <AdminLink href={`${TEMPLATE_REPO_URL_README}#${anchor}`}>
     README/{anchor}
   </AdminLink>;
 
-const renderLabeledEnvVar = (label: string, envVar: string, value = '1') =>
-  <div className="flex flex-col gap-1.5">
+const renderLabeledEnvVar = (label: string, envVar: string, value?: string) =>
+  <div className="flex flex-col gap-0.5">
     <span className="text-xs uppercase font-medium tracking-wider">
       {label}
     </span>
@@ -84,10 +92,12 @@ export default function AdminAppInsightsClient({
   photoStats: {
     photosCount,
     photosCountHidden,
-    photosCountOutdated,
-    tagsCount,
+    photosCountNeedSync,
     camerasCount,
-    filmSimulationsCount,
+    lensesCount,
+    tagsCount,
+    recipesCount,
+    filmsCount,
     focalLengthsCount,
     dateRange,
   },
@@ -103,8 +113,11 @@ export default function AdminAppInsightsClient({
     forkBehind,
     noAi,
     noAiRateLimiting,
-    outdatedPhotos,
+    noConfiguredDomain,
+    noConfiguredMeta,
+    photosNeedSync,
     photoMatting,
+    camerasFirst,
     gridFirst,
     noStaticOptimization,
   } = insights;
@@ -119,6 +132,13 @@ export default function AdminAppInsightsClient({
     {codeMeta?.branch ?? TEMPLATE_REPO_BRANCH}
   </a>;
 
+  const renderTooltipContent = (content: ReactNode) =>
+    <Tooltip
+      content={content}
+      classNameTrigger="ml-1.5"
+      supportMobile
+    />;
+
   return (
     <ScoreCardContainer>
       {(codeMeta || debug) && <>
@@ -127,14 +147,13 @@ export default function AdminAppInsightsClient({
             <ScoreCardRow
               icon={<IoSyncCircle
                 size={18}
-                className={WARNING_TEXT_COLOR}
+                className={TEXT_COLOR_WARNING}
               />}
               content={<>
-                Could not analyze source code
-                <Tooltip
-                  content="Could not connect to GitHub API. Try refreshing."
-                  classNameTrigger="translate-y-[4.5px] ml-2 h-3"
-                />
+                <span>Could not analyze source code</span>
+                {renderTooltipContent(
+                  'Could not connect to GitHub API. Try refreshing.',
+                )}
               </>}
             />}
           {((!codeMeta?.didError && noFork) || debug) &&
@@ -238,7 +257,7 @@ export default function AdminAppInsightsClient({
                 size={17}
                 className={clsx(
                   'translate-x-[0.5px]',
-                  WARNING_TEXT_COLOR,
+                  TEXT_COLOR_WARNING,
                 )}
               />}
               content={isExpanded => renderHighlightText(
@@ -252,6 +271,51 @@ export default function AdminAppInsightsClient({
                 prevent abuse by enabling rate limiting.
               </>}
             />}
+            {(noConfiguredDomain || debug) && <ScoreCardRow
+              icon={<PiWarningBold
+                size={17}
+                className={clsx(
+                  'translate-x-[0.5px]',
+                  TEXT_COLOR_WARNING,
+                )}
+              />}
+              content={isExpanded => renderHighlightText(
+                'Configure domain',
+                'yellow',
+                !isExpanded,
+              )}
+              expandContent={<>
+                Not setting an explicit domain may cause certain features
+                to behave unexpectedly. Domains are stored in
+                {' '}
+                <EnvVar
+                  variable="NEXT_PUBLIC_DOMAIN"
+                  trailingContent="."
+                />
+              </>}
+            />}
+            {(noConfiguredMeta || debug) && <ScoreCardRow
+              icon={<HiOutlineDocumentText
+                size={18}
+                className="translate-x-[1px] translate-y-[-1px]"
+              />}
+              content="Configure meta"
+              expandContent={<>
+                Configure site title (visible in search results and browser tab)
+                and site description (visible in search results):
+                {' '}
+                <div className="flex flex-col gap-y-4 mt-3">
+                  {renderLabeledEnvVar(
+                    'Site title',
+                    'NEXT_PUBLIC_META_TITLE',
+                  )}
+                  {renderLabeledEnvVar(
+                    'Site description',
+                    'NEXT_PUBLIC_META_DESCRIPTION',
+                  )}
+                </div>
+              </>}
+            />}
             {(noStaticOptimization || debug) && <ScoreCardRow
               icon={<RiSpeedMiniLine
                 size={19}
@@ -259,25 +323,27 @@ export default function AdminAppInsightsClient({
               />}
               content="Speed up page load times"
               expandContent={<>
-                Improve load times by enabling static optimization
-                {' '}
-                on:
+                Improve load times by enabling static optimization:
                 <div className="flex flex-col gap-y-4 mt-3">
                   {renderLabeledEnvVar(
                     'Photo pages',
                     'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS',
+                    '1',
                   )}
                   {renderLabeledEnvVar(
                     'Photo OG images',
                     'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES',
+                    '1',
                   )}
                   {renderLabeledEnvVar(
                     'Category pages (tags, cameras, etc.)',
                     'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES',
+                    '1',
                   )}
                   {renderLabeledEnvVar(
                     'Category OG images',
                     'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORY_OG_IMAGES',
+                    '1',
                   )}
                   <span>
                     See {readmeAnchor('performance')} for cost implications.
@@ -291,7 +357,10 @@ export default function AdminAppInsightsClient({
               expandContent={<>
                 Enable automatic AI text generation
                 {' '}
-                by setting <EnvVar variable="OPENAI_SECRET_KEY" />.
+                by setting <EnvVar
+                  variable="OPENAI_SECRET_KEY"
+                  trailingContent="."
+                />
                 {' '}
                 Further instruction and cost considerations in
                 {' '}
@@ -309,7 +378,28 @@ export default function AdminAppInsightsClient({
                 {' '}
                 portrait and landscape photos appear more consistent
                 {' '}
-                <EnvVar variable="NEXT_PUBLIC_MATTE_PHOTOS" value="1" />.
+                <EnvVar
+                  variable="NEXT_PUBLIC_MATTE_PHOTOS"
+                  value="1"
+                  trailingContent="."
+                />
+              </>}
+            />}
+            {(camerasFirst || debug) && <ScoreCardRow
+              icon={<HiMiniArrowsUpDown
+                size={17}
+                className="translate-x-[-1px]"
+              />}
+              content="Move cameras above tags in sidebar"
+              expandContent={<>
+                Now that you have more than a few tags, consider
+                showing cameras first in the sidebar by setting
+                {' '}
+                <EnvVar
+                  variable="NEXT_PUBLIC_CATEGORY_VISIBILITY"
+                  value="cameras, tags, recipes, films"
+                  trailingContent="."
+                />
               </>}
             />}
             {(gridFirst || debug) && <ScoreCardRow
@@ -333,26 +423,33 @@ export default function AdminAppInsightsClient({
           </AdminEmptyState>}
       </ScoreCard>
       <ScoreCard title="Library Stats">
-        {(outdatedPhotos || debug) && <ScoreCardRow
+        {(photosNeedSync || debug) && <ScoreCardRow
           icon={<LiaBroomSolid
             size={19}
             className={clsx(
               'translate-y-[-2px]',
-              WARNING_TEXT_COLOR,
+              TEXT_COLOR_BLUE,
             )}
           />}
-          content={renderHighlightText(
-            pluralize(
-              photosCountOutdated || DEBUG_PHOTOS_COUNT_OUTDATED,
-              'outdated photo',
-            ),
-            'yellow',
-          )}
-          expandPath={PATH_ADMIN_OUTDATED}
+          content={<>
+            {renderHighlightText(
+              pluralize(
+                photosCountNeedSync || DEBUG_PHOTOS_NEED_SYNC_COUNT,
+                'photo',
+              ),
+              'blue',
+            )}
+            {' '}
+            with updates
+            {renderTooltipContent(<>
+              Missing data or AI&#8209;generated text
+            </>)}
+          </>}
+          expandPath={PATH_ADMIN_PHOTOS_UPDATES}
         />}
         <ScoreCardRow
-          icon={<HiOutlinePhotograph
-            size={17}
+          icon={<IconPhoto
+            size={15}
             className="translate-y-[0.5px]"
           />}
           content={<>
@@ -360,38 +457,66 @@ export default function AdminAppInsightsClient({
             {photosCountHidden > 0 && ` (${photosCountHidden} hidden)`}
           </>}
         />
-        <ScoreCardRow
-          icon={<FaTag
-            size={12}
-            className="translate-y-[3px]"
-          />}
-          content={pluralize(tagsCount, 'tag')}
-        />
-        <ScoreCardRow
-          icon={<FaCamera
-            size={13}
-            className="translate-y-[2px]"
-          />}
-          content={pluralize(camerasCount, 'camera')}
-        />
-        {filmSimulationsCount > 0 &&
-          <ScoreCardRow
-            icon={<span className="inline-flex w-3">
-              <PhotoFilmSimulationIcon
-                className="shrink-0 translate-x-[-1px] translate-y-[-0.5px]"
-                height={18}
+        {CATEGORY_VISIBILITY.map(category => {
+          switch (category) {
+          case 'cameras':
+            return <ScoreCardRow
+              key={category}
+              icon={<IconCamera
+                size={15}
+                className="translate-y-[0.5px]"
+              />}
+              content={pluralize(camerasCount, 'camera')}
+            />;
+          case 'lenses':
+            return <ScoreCardRow
+              key={category}
+              icon={<IconLens
+                size={15}
+                className="translate-y-[0.5px]"
+              />}
+              content={pluralize(lensesCount, 'lens', 'lenses')}
+            />;
+          case 'tags':
+            return <ScoreCardRow
+              key={category}
+              icon={<IconTag
+                size={15}
+                className="translate-x-[1px] translate-y-[1px]"
+              />}
+              content={pluralize(tagsCount, 'tag')}
+            />;
+          case 'recipes':
+            return recipesCount > 0
+              ? <ScoreCardRow
+                key={category}
+                icon={<IconRecipe
+                  size={18}
+                  className="translate-x-[0.5px] translate-y-[-0.5px]"
+                />}
+                content={pluralize(recipesCount, 'recipe')}
               />
-            </span>}
-            content={pluralize(filmSimulationsCount, 'film simulation')}
-          />}
-        <ScoreCardRow
-          icon={<TbCone className="rotate-[270deg] translate-x-[-2px]" />}
-          content={pluralize(focalLengthsCount, 'focal length')}
-        />
+              : null;
+          case 'films':
+            return filmsCount > 0
+              ? <ScoreCardRow
+                key={category}
+                icon={<IconFilm size={15} />}
+                content={pluralize(filmsCount, 'film')}
+              />
+              : null;
+          case 'focal-lengths':
+            return <ScoreCardRow
+              key={category}
+              icon={<IconFocalLength size={14} />}
+              content={pluralize(focalLengthsCount, 'focal length')}
+            />;
+          }
+        })}
         {descriptionWithSpaces && <ScoreCardRow
           icon={<FaRegCalendar
             size={13}
-            className="translate-y-[1.5px] translate-x-[-2px]"
+            className="translate-y-[1.5px]"
           />}
           content={descriptionWithSpaces}
         />}

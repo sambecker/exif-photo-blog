@@ -1,10 +1,11 @@
-import { auth } from '@/auth';
+import { auth } from '@/auth/server';
 import SignInForm from '@/auth/SignInForm';
 import { PATH_ADMIN, PATH_ROOT } from '@/app/paths';
 import { clsx } from 'clsx/lite';
 import { redirect } from 'next/navigation';
 import LinkWithStatus from '@/components/LinkWithStatus';
 import { IoArrowBack } from 'react-icons/io5';
+import { getAppText } from '@/i18n/state/server';
 
 export default async function SignInPage() {
   const session = await auth();
@@ -12,6 +13,8 @@ export default async function SignInPage() {
   if (session?.user) {
     redirect(PATH_ADMIN);
   }
+
+  const appText = await getAppText();
   
   return (
     <div className={clsx(
@@ -27,7 +30,7 @@ export default async function SignInPage() {
         )}
       >
         <IoArrowBack className="translate-y-[1px]" />
-        Home
+        {appText.nav.home}
       </LinkWithStatus>
     </div>
   );

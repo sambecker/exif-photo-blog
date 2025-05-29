@@ -1,18 +1,20 @@
 'use server';
 
 import {
+  auth,
+  signIn,
+  signOut,
+} from '@/auth/server';
+import type { Session } from 'next-auth';
+import { redirect } from 'next/navigation';
+import {
+  generateAuthSecret,
   KEY_CALLBACK_URL,
   KEY_CREDENTIALS_CALLBACK_ROUTE_ERROR_URL,
   KEY_CREDENTIALS_SIGN_IN_ERROR,
   KEY_CREDENTIALS_SIGN_IN_ERROR_URL,
-  auth,
-  generateAuthSecret,
-  signIn,
-  signOut,
-} from '@/auth';
-import { PATH_ADMIN_PHOTOS, PATH_SIGN_IN } from '@/app/paths';
-import type { Session } from 'next-auth';
-import { redirect } from 'next/navigation';
+  KEY_CREDENTIALS_SUCCESS,
+} from '.';
 
 export const signInAction = async (
   _prevState: string | undefined,
@@ -38,14 +40,14 @@ export const signInAction = async (
       throw error;
     }
   }
-  redirect(formData.get(KEY_CALLBACK_URL) as string || PATH_ADMIN_PHOTOS);
+  if (formData.get(KEY_CALLBACK_URL)) {
+    redirect(formData.get(KEY_CALLBACK_URL) as string);
+  }
+  return KEY_CREDENTIALS_SUCCESS;
 };
 
 export const signOutAction = async () =>
   signOut({ redirect: false });
-
-export const signOutAndRedirectAction = async (redirectTo = PATH_SIGN_IN) =>
-  signOut({ redirectTo });
 
 export const getAuthAction = async () => auth();
 

@@ -1,5 +1,10 @@
 import { redirect } from 'next/navigation';
-import { getPhotoNoStore, getUniqueTagsCached } from '@/photo/cache';
+import {
+  getPhotoNoStore,
+  getUniqueFilmsCached,
+  getUniqueRecipesCached,
+  getUniqueTagsCached,
+} from '@/photo/cache';
 import { PATH_ADMIN } from '@/app/paths';
 import PhotoEditPageClient from '@/photo/PhotoEditPageClient';
 import {
@@ -17,11 +22,19 @@ export default async function PhotoEditPage({
 }) {
   const { photoId } = await params;
 
-  const photo = await getPhotoNoStore(photoId, true);
+  const [
+    photo,
+    uniqueTags,
+    uniqueRecipes,
+    uniqueFilms,
+  ] = await Promise.all([
+    getPhotoNoStore(photoId, true),
+    getUniqueTagsCached(),
+    getUniqueRecipesCached(),
+    getUniqueFilmsCached(),
+  ]);
 
   if (!photo) { redirect(PATH_ADMIN); }
-
-  const uniqueTags = await getUniqueTagsCached();
 
   const hasAiTextGeneration = AI_TEXT_GENERATION_ENABLED;
   
@@ -42,6 +55,8 @@ export default async function PhotoEditPage({
     <PhotoEditPageClient {...{
       photo,
       uniqueTags,
+      uniqueRecipes,
+      uniqueFilms,
       hasAiTextGeneration,
       imageThumbnailBase64,
       blurData,

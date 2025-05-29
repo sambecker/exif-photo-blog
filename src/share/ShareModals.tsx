@@ -3,9 +3,11 @@
 import PhotoShareModal from '@/photo/PhotoShareModal';
 import TagShareModal from '@/tag/TagShareModal';
 import CameraShareModal from '@/camera/CameraShareModal';
-import FilmSimulationShareModal from '@/simulation/FilmSimulationShareModal';
+import FilmShareModal from '@/film/FilmShareModal';
 import FocalLengthShareModal from '@/focal/FocalLengthShareModal';
 import { useAppState } from '@/state/AppState';
+import RecipeShareModal from '@/recipe/RecipeShareModal';
+import LensShareModal from '@/lens/LensShareModal';
 
 export default function ShareModals() {
   const { shareModalProps = {} } = useAppState();
@@ -15,24 +17,38 @@ export default function ShareModals() {
     photos,
     count,
     dateRange,
-    tag,
     camera,
-    simulation,
+    lens,
+    tag,
+    film,
+    recipe,
     focal,
   } = shareModalProps;
 
   if (photo) {
-    return <PhotoShareModal {...{photo, tag, camera, simulation, focal}} />;
+    return <PhotoShareModal {...{
+      photo,
+      camera,
+      lens,
+      tag,
+      recipe,
+      film,
+      focal,
+    }} />;
   } else if (photos) {
     const attributes = {photos, count, dateRange};
     if (tag) {
-      return <TagShareModal {...{tag, ...attributes}} />;
+      return <TagShareModal {...{ tag, ...attributes }} />;
     } else if (camera) {
-      return <CameraShareModal {...{camera, ...attributes}} />;
-    } else if (simulation) {
-      return <FilmSimulationShareModal {...{simulation, ...attributes}} />;
+      return <CameraShareModal {...{ camera, ...attributes }} />;
+    } else if (lens) {
+      return <LensShareModal {...{ lens, ...attributes }} />;
+    } else if (film) {
+      return <FilmShareModal {...{ film, ...attributes }} />;
+    } else if (recipe) {
+      return <RecipeShareModal {...{ recipe, ...attributes }} />;
     } else if (focal !== undefined) {
-      return <FocalLengthShareModal {...{focal, ...attributes}} />;
-    }
+      return <FocalLengthShareModal {...{ focal, ...attributes }} />;
+    } 
   }
 }

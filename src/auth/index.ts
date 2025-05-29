@@ -1,61 +1,29 @@
-import { isPathProtected } from '@/app/paths';
-import NextAuth, { User } from 'next-auth';
-import Credentials from 'next-auth/providers/credentials';
+import { deleteCookie, getCookie, storeCookie } from '@/utility/cookie';
 
 export const KEY_CREDENTIALS_SIGN_IN_ERROR = 'CredentialsSignin';
 export const KEY_CREDENTIALS_SIGN_IN_ERROR_URL =
   'https://errors.authjs.dev#credentialssignin';
 export const KEY_CREDENTIALS_CALLBACK_ROUTE_ERROR_URL =
   'https://errors.authjs.dev#callbackrouteerror';
+export const KEY_CREDENTIALS_SUCCESS = 'success';
 export const KEY_CALLBACK_URL = 'callbackUrl';
 
-export const {
-  handlers: { GET, POST },
-  signIn,
-  signOut,
-  auth,
-} = NextAuth({
-  providers: [
-    Credentials({
-      async authorize({ email, password }) {
-        if (
-          process.env.ADMIN_EMAIL && process.env.ADMIN_EMAIL === email &&
-          process.env.ADMIN_PASSWORD && process.env.ADMIN_PASSWORD === password
-        ) {
-          const user: User = { email, name: 'Admin User' };
-          return user;
-        } else {
-          return null;
-        }
-      },
-    }),
-  ],
-  callbacks: {
-    authorized({ auth, request }) {
-      const { pathname } = request.nextUrl;
+const KEY_AUTH_EMAIL = 'authjs.email';
 
-      const isUrlProtected = isPathProtected(pathname);
-      const isUserLoggedIn = !!auth?.user;
-      const isRequestAuthorized = !isUrlProtected || isUserLoggedIn;
+export const storeAuthEmailCookie = (email: string) =>
+  storeCookie(KEY_AUTH_EMAIL, email);
 
-      return isRequestAuthorized;
-    },
-  },
-  pages: {
-    signIn: '/sign-in',
-  },
-});
+export const getAuthEmailCookie = () =>
+  getCookie(KEY_AUTH_EMAIL);
 
-export const runAuthenticatedAdminServerAction = async <T>(
-  callback: () => T,
-): Promise<T> => {
-  const session = await auth();
-  if (session?.user) {
-    return callback();
-  } else {
-    throw new Error('Unauthorized server action request');
-  }
-};
+export const hasAuthEmailCookie = () =>
+  Boolean(getCookie(KEY_AUTH_EMAIL));
+
+export const clearAuthEmailCookie = () =>
+  deleteCookie(KEY_AUTH_EMAIL);
+
+export const isCredentialsSignInError = (error?: any) =>
+  (error?.message || `${error}`).includes(KEY_CREDENTIALS_SIGN_IN_ERROR);
 
 export const generateAuthSecret = () => fetch(
   'https://generate-secret.vercel.app/32',

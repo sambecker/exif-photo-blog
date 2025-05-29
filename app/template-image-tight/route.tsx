@@ -5,7 +5,7 @@ import {
 } from '@/image-response';
 import TemplateImageResponse from
   '@/image-response/TemplateImageResponse';
-import { getIBMPlexMonoMedium } from '@/app/font';
+import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { isNextImageReadyBasedOnPhotos } from '@/photo';
@@ -20,7 +20,7 @@ export async function GET() {
       sortBy: 'priority',
       limit: MAX_PHOTOS_TO_SHOW_TEMPLATE_TIGHT,
     }).catch(() => []),
-    getIBMPlexMonoMedium(),
+    getIBMPlexMono(),
     getImageResponseCacheControlHeaders(),
   ]);
 

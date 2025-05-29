@@ -1,11 +1,11 @@
 'use client';
 
-import SiteGrid from '@/components/SiteGrid';
+import AppGrid from '@/components/AppGrid';
 import { clsx } from 'clsx/lite';
 import {
-  FILM_SIMULATION_FORM_INPUT_OPTIONS,
+  FUJIFILM_SIMULATION_FORM_INPUT_OPTIONS,
 } from '@/platforms/fujifilm/simulation';
-import PhotoFilmSimulation from '@/simulation/PhotoFilmSimulation';
+import PhotoFilm from '@/film/PhotoFilm';
 import { useEffect, useState } from 'react';
 
 export default function FilmPage() {
@@ -13,13 +13,13 @@ export default function FilmPage() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIndex((index + 1) % FILM_SIMULATION_FORM_INPUT_OPTIONS.length);
+      setIndex((index + 1) % FUJIFILM_SIMULATION_FORM_INPUT_OPTIONS.length);
     }, 200);
     return () => clearInterval(interval);
   });
 
   return (
-    <SiteGrid
+    <AppGrid
       contentMain={<div className={clsx(
         'flex items-center justify-center min-h-[30rem]',
       )}>
@@ -27,8 +27,8 @@ export default function FilmPage() {
           <div className="dark:text-gray-500/50 uppercase">
             Film Simulation:
           </div>
-          <PhotoFilmSimulation
-            simulation={FILM_SIMULATION_FORM_INPUT_OPTIONS[index].value}
+          <PhotoFilm
+            film={FUJIFILM_SIMULATION_FORM_INPUT_OPTIONS[index].value}
             type="icon-first"
           />
           <div className="mt-4 text-dim relative">

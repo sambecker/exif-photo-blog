@@ -1,9 +1,10 @@
+'use client';
+
 import { Photo, PhotoDateRange } from '@/photo';
 import { absolutePathForTagImage, pathForTag } from '@/app/paths';
-import OGTile from '@/components/OGTile';
+import OGTile, { OGLoadingState } from '@/components/OGTile';
 import { descriptionForTaggedPhotos, titleForTag } from '.';
-
-export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
+import { useAppText } from '@/i18n/state/client';
 
 export default function TagOGTile({
   tag,
@@ -26,10 +27,17 @@ export default function TagOGTile({
   count?: number
   dateRange?: PhotoDateRange
 }) {
+  const appText = useAppText();
   return (
     <OGTile {...{
-      title: titleForTag(tag, photos, count),
-      description: descriptionForTaggedPhotos(photos, true, count, dateRange),
+      title: titleForTag(tag, photos, appText, count),
+      description: descriptionForTaggedPhotos(
+        photos,
+        appText,
+        true,
+        count,
+        dateRange,
+      ),
       path: pathForTag(tag),
       pathImageAbsolute: absolutePathForTagImage(tag),
       loadingState: loadingStateExternal,

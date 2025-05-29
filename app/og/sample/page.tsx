@@ -2,14 +2,14 @@ import CameraOGTile from '@/camera/CameraOGTile';
 import FocalLengthOGTile from '@/focal/FocalLengthOGTile';
 import PhotoOGTile from '@/photo/PhotoOGTile';
 import { getPhotosCached } from '@/photo/cache';
-import FilmSimulationOGTile from '@/simulation/FilmSimulationOGTile';
+import FilmOGTile from '@/film/FilmOGTile';
 import { TAG_FAVS } from '@/tag';
 import TagOGTile from '@/tag/TagOGTile';
 
 const tag = 'cicadas';
 const camera = { make: 'Fujifilm', model: 'X-T5' };
 const cameraIcon = { make: 'Apple', model: 'iPhone 13 Pro' };
-const simulation = 'acros';
+const film = 'acros';
 const focal = 90;
 
 export default async function OGOverviewPage() {
@@ -19,7 +19,7 @@ export default async function OGOverviewPage() {
     photosTag,
     photosFavs,
     photosCamera,
-    photosSimulation,
+    photosFilm,
     photosFocal,
   ] = await Promise.all([
     getPhotosCached({ limit: 1 }).then(photos => photos[0])
@@ -32,7 +32,7 @@ export default async function OGOverviewPage() {
       .catch(() => []),
     getPhotosCached({ limit: 1, camera })
       .catch(() => []),
-    getPhotosCached({ limit: 1, simulation })
+    getPhotosCached({ limit: 1, film })
       .catch(() => []),
     getPhotosCached({ limit: 1, focal })
       .catch(() => []),
@@ -45,7 +45,7 @@ export default async function OGOverviewPage() {
       <TagOGTile tag={tag} photos={photosTag} />
       <TagOGTile tag={TAG_FAVS} photos={photosFavs} />
       <CameraOGTile camera={camera} photos={photosCamera} />
-      <FilmSimulationOGTile simulation={simulation} photos={photosSimulation} />
+      <FilmOGTile film={film} photos={photosFilm} />
       <FocalLengthOGTile focal={focal} photos={photosFocal} />
     </div>
   );

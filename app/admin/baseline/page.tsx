@@ -4,10 +4,10 @@ import PhotoCamera from '@/camera/PhotoCamera';
 import Badge from '@/components/Badge';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
-import SiteGrid from '@/components/SiteGrid';
+import AppGrid from '@/components/AppGrid';
 import EntityLink from '@/components/primitives/EntityLink';
 import LabeledIcon from '@/components/primitives/LabeledIcon';
-import PhotoFilmSimulationIcon from '@/simulation/PhotoFilmSimulationIcon';
+import PhotoFilmIcon from '@/film/PhotoFilmIcon';
 import { useAppState } from '@/state/AppState';
 import { clsx } from 'clsx/lite';
 import { useEffect, useState } from 'react';
@@ -31,7 +31,7 @@ export default function ComponentsPage() {
   }, [setShouldShowBaselineGrid]);
 
   return (
-    <SiteGrid
+    <AppGrid
       contentMain={<>
         <h1 className="flex mb-6">
           <div className="grow">
@@ -46,14 +46,12 @@ export default function ComponentsPage() {
             '*:inline-flex *:gap-1 [&_input]:-translate-y-0.5',
           )}>
             <FieldSetWithStatus
-              id="grid"
               label="Grid"
               type="checkbox"
               value={shouldShowBaselineGrid ? 'true' : 'false'}
               onChange={e => setShouldShowBaselineGrid?.(e === 'true')}
             />
             <FieldSetWithStatus
-              id="components"
               label="Components"
               type="checkbox"
               value={debugComponents ? 'true' : 'false'}
@@ -131,7 +129,7 @@ export default function ComponentsPage() {
             </div>
             <div>
               <EntityLink
-                icon={<PhotoFilmSimulationIcon simulation="astia" />}
+                icon={<PhotoFilmIcon film="astia" />}
                 label="Astia/Soft"
                 type="icon-last"
                 iconWide
@@ -151,7 +149,7 @@ export default function ComponentsPage() {
             </div>
             <div>
               <EntityLink
-                icon={<PhotoFilmSimulationIcon simulation="astia" />}
+                icon={<PhotoFilmIcon film="astia" />}
                 label="Astia/Soft"
                 type="icon-last"
                 iconWide
@@ -186,7 +184,7 @@ export default function ComponentsPage() {
             </div>
             <div>
               <EntityLink
-                icon={<PhotoFilmSimulationIcon simulation="astia" />}
+                icon={<PhotoFilmIcon film="astia" />}
                 label="Astia/Soft"
                 type="icon-last"
                 iconWide

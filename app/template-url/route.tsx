@@ -26,7 +26,7 @@ export function GET() {
     url.searchParams.set('env-description', 'Configure your photo blog meta');
     url.searchParams.set('env-link', 'BLANK');
     url.searchParams.set('env', [
-      'NEXT_PUBLIC_SITE_TITLE',
+      'NEXT_PUBLIC_META_TITLE',
     ].join(','));
   }
   url.searchParams.set('teamCreateStatus', 'hidden');

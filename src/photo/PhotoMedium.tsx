@@ -2,10 +2,10 @@
 
 import {
   Photo,
-  PhotoSetCategory,
   altTextForPhoto,
   doesPhotoNeedBlurCompatibility,
 } from '.';
+import { PhotoSetCategory } from '../category';
 import ImageMedium from '@/components/image/ImageMedium';
 import { clsx } from 'clsx/lite';
 import { pathForPhoto } from '@/app/paths';
@@ -17,15 +17,12 @@ import Spinner from '@/components/Spinner';
 
 export default function PhotoMedium({
   photo,
-  tag,
-  camera,
-  simulation,
-  focal,
   selected,
   priority,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
   className,
   onVisible,
+  ...categories
 }: {
   photo: Photo
   selected?: boolean
@@ -41,7 +38,7 @@ export default function PhotoMedium({
   return (
     <LinkWithStatus
       ref={ref}
-      href={pathForPhoto({ photo, tag, camera, simulation, focal })}
+      href={pathForPhoto({ photo, ...categories })}
       className={clsx(
         'active:brightness-75',
         selected && 'brightness-50',
@@ -65,8 +62,8 @@ export default function PhotoMedium({
             aspectRatio={photo.aspectRatio}
             blurDataURL={photo.blurData}
             blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
-            className="flex object-cover w-full h-full "
-            imgClassName="object-cover w-full h-full"
+            className="flex object-cover w-full h-full"
+            classNameImage="object-cover w-full h-full"
             alt={altTextForPhoto(photo)}
             priority={priority}
           />

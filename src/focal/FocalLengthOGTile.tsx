@@ -1,12 +1,13 @@
+'use client';
+
 import { Photo, PhotoDateRange } from '@/photo';
 import {
   absolutePathForFocalLengthImage,
   pathForFocalLength,
 } from '@/app/paths';
-import OGTile from '@/components/OGTile';
+import OGTile, { OGLoadingState } from '@/components/OGTile';
 import { descriptionForFocalLengthPhotos, titleForFocalLength } from '.';
-
-export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
+import { useAppText } from '@/i18n/state/client';
 
 export default function FocalLengthOGTile({
   focal,
@@ -29,11 +30,13 @@ export default function FocalLengthOGTile({
   count?: number
   dateRange?: PhotoDateRange
 }) {
+  const appText = useAppText();
   return (
     <OGTile {...{
-      title: titleForFocalLength(focal, photos, count),
+      title: titleForFocalLength(focal, photos, appText, count),
       description: descriptionForFocalLengthPhotos(
         photos,
+        appText,
         true,
         count,
         dateRange,

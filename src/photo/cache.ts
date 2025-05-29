@@ -9,13 +9,13 @@ import {
   getPhotos,
   getUniqueCameras,
   getUniqueTags,
-  getUniqueTagsHidden,
-  getUniqueFilmSimulations,
+  getUniqueFilms,
   getPhotosNearId,
   getPhotosMostRecentUpdate,
   getPhotosMeta,
   getUniqueFocalLengths,
   getUniqueLenses,
+  getUniqueRecipes,
 } from '@/photo/db/query';
 import { GetPhotosOptions } from './db';
 import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
@@ -28,24 +28,27 @@ import {
   PATH_GRID,
   PATH_ROOT,
   PREFIX_CAMERA,
-  PREFIX_FILM_SIMULATION,
+  PREFIX_FILM,
+  PREFIX_FOCAL_LENGTH,
+  PREFIX_LENS,
+  PREFIX_RECIPE,
   PREFIX_TAG,
   pathForPhoto,
 } from '@/app/paths';
 import { createLensKey } from '@/lens';
 
 // Table key
-const KEY_PHOTOS            = 'photos';
+export const KEY_PHOTOS     = 'photos';
 const KEY_PHOTO             = 'photo';
 // Field keys
-const KEY_TAGS              = 'tags';
 const KEY_CAMERAS           = 'cameras';
 const KEY_LENSES            = 'lenses';
-const KEY_FILM_SIMULATIONS  = 'film-simulations';
+const KEY_TAGS              = 'tags';
+const KEY_FILMS             = 'films';
+const KEY_RECIPES           = 'recipes';
 const KEY_FOCAL_LENGTHS     = 'focal-lengths';
 // Type keys
 const KEY_COUNT             = 'count';
-const KEY_HIDDEN            = 'hidden';
 const KEY_DATE_RANGE        = 'date-range';
 
 const getPhotosCacheKeyForOption = (
@@ -95,17 +98,29 @@ export const revalidatePhotosKey = () =>
 export const revalidateTagsKey = () =>
   revalidateTag(KEY_TAGS);
 
+export const revalidateRecipesKey = () =>
+  revalidateTag(KEY_RECIPES);
+
 export const revalidateCamerasKey = () =>
   revalidateTag(KEY_CAMERAS);
 
-export const revalidateFilmSimulationsKey = () =>
-  revalidateTag(KEY_FILM_SIMULATIONS);
+export const revalidateLensesKey = () =>
+  revalidateTag(KEY_LENSES);
+
+export const revalidateFilmsKey = () =>
+  revalidateTag(KEY_FILMS);
+
+export const revalidateFocalLengthsKey = () =>
+  revalidateTag(KEY_FOCAL_LENGTHS);
 
 export const revalidateAllKeys = () => {
   revalidatePhotosKey();
   revalidateTagsKey();
   revalidateCamerasKey();
-  revalidateFilmSimulationsKey();
+  revalidateLensesKey();
+  revalidateFilmsKey();
+  revalidateRecipesKey();
+  revalidateFocalLengthsKey();
 };
 
 export const revalidateAdminPaths = () => {
@@ -122,7 +137,10 @@ export const revalidatePhoto = (photoId: string) => {
   revalidateTag(photoId);
   revalidateTagsKey();
   revalidateCamerasKey();
-  revalidateFilmSimulationsKey();
+  revalidateLensesKey();
+  revalidateFilmsKey();
+  revalidateRecipesKey();
+  revalidateFocalLengthsKey();
   // Paths
   revalidatePath(pathForPhoto({ photo: photoId }), 'layout');
   revalidatePath(PATH_ROOT, 'layout');
@@ -130,7 +148,10 @@ export const revalidatePhoto = (photoId: string) => {
   revalidatePath(PATH_FEED, 'layout');
   revalidatePath(PREFIX_TAG, 'layout');
   revalidatePath(PREFIX_CAMERA, 'layout');
-  revalidatePath(PREFIX_FILM_SIMULATION, 'layout');
+  revalidatePath(PREFIX_LENS, 'layout');
+  revalidatePath(PREFIX_FILM, 'layout');
+  revalidatePath(PREFIX_RECIPE, 'layout');
+  revalidatePath(PREFIX_FOCAL_LENGTH, 'layout');
   revalidatePath(PATH_ADMIN, 'layout');
 };
 
@@ -165,12 +186,10 @@ export const getPhotosNearIdCached = (
   };
 });
 
-export const getPhotosMetaCached = (
-  ...args: Parameters<typeof getPhotosMeta>
-) => unstable_cache(
+export const getPhotosMetaCached = unstable_cache(
   getPhotosMeta,
-  [KEY_PHOTOS, KEY_COUNT, KEY_DATE_RANGE, ...getPhotosCacheKeys(...args)],
-)(...args);
+  [KEY_PHOTOS, KEY_COUNT, KEY_DATE_RANGE],
+);
 
 export const getPhotosMostRecentUpdateCached =
   unstable_cache(
@@ -190,12 +209,6 @@ export const getUniqueTagsCached =
     [KEY_PHOTOS, KEY_TAGS],
   );
 
-export const getUniqueTagsHiddenCached =
-  unstable_cache(
-    getUniqueTagsHidden,
-    [KEY_PHOTOS, KEY_TAGS, KEY_HIDDEN],
-  );
-
 export const getUniqueCamerasCached =
   unstable_cache(
     getUniqueCameras,
@@ -208,10 +221,16 @@ export const getUniqueLensesCached =
     [KEY_PHOTOS, KEY_LENSES],
   );
 
-export const getUniqueFilmSimulationsCached =
+export const getUniqueFilmsCached =
   unstable_cache(
-    getUniqueFilmSimulations,
-    [KEY_PHOTOS, KEY_FILM_SIMULATIONS],
+    getUniqueFilms,
+    [KEY_PHOTOS, KEY_FILMS],
+  );
+
+export const getUniqueRecipesCached =
+  unstable_cache(
+    getUniqueRecipes,
+    [KEY_PHOTOS, KEY_RECIPES],
   );
 
 export const getUniqueFocalLengthsCached =

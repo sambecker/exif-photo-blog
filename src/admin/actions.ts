@@ -1,49 +1,80 @@
 'use server';
 
-import { runAuthenticatedAdminServerAction } from '@/auth';
+import { runAuthenticatedAdminServerAction } from '@/auth/server';
 import { testRedisConnection } from '@/platforms/redis';
 import { testOpenAiConnection } from '@/platforms/openai';
 import { testDatabaseConnection } from '@/platforms/postgres';
 import { testStorageConnection } from '@/platforms/storage';
 import { APP_CONFIGURATION } from '@/app/config';
 import { getStorageUploadUrlsNoStore } from '@/platforms/storage/cache';
-import { getPhotosMetaCached, getUniqueTagsCached } from '@/photo/cache';
-import { getShouldShowInsightsIndicator } from '@/admin/insights/server';
+import {
+  getPhotosMeta,
+  getUniqueTags,
+  getUniqueRecipes,
+  getPhotosInNeedOfSyncCount,
+} from '@/photo/db/query';
+import {
+  getGitHubMetaForCurrentApp,
+  indicatorStatusForSignificantInsights,
+} from './insights';
+
+export type AdminData = Awaited<ReturnType<typeof getAdminDataAction>>;
 
 export const getAdminDataAction = async () =>
   runAuthenticatedAdminServerAction(async () => {
     const [
-      countPhotos,
-      countHiddenPhotos,
-      countTags,
-      countUploads,
-      shouldShowInsightsIndicator,
+      photosCount,
+      photosCountHidden,
+      photosCountNeedSync,
+      codeMeta,
+      uploadsCount,
+      tagsCount,
+      recipesCount,
     ] = await Promise.all([
-      getPhotosMetaCached()
+      getPhotosMeta()
         .then(({ count }) => count)
         .catch(() => 0),
-      getPhotosMetaCached({ hidden: 'only' })
+      getPhotosMeta({ hidden: 'only' })
         .then(({ count }) => count)
         .catch(() => 0),
-      getUniqueTagsCached()
-        .then(tags => tags.length)
-        .catch(() => 0),
+      getPhotosInNeedOfSyncCount(),
+      getGitHubMetaForCurrentApp(),
       getStorageUploadUrlsNoStore()
         .then(urls => urls.length)
         .catch(e => {
           console.error(`Error getting blob upload urls: ${e}`);
           return 0;
         }),
-      getShouldShowInsightsIndicator(),
+      getUniqueTags()
+        .then(tags => tags.length)
+        .catch(() => 0),
+      getUniqueRecipes()
+        .then(recipes => recipes.length)
+        .catch(() => 0),
     ]);
 
+    const insightsIndicatorStatus = indicatorStatusForSignificantInsights({
+      codeMeta,
+      photosCountNeedSync,
+    });
+
+    const photosCountTotal = (
+      photosCount !== undefined &&
+      photosCountHidden !== undefined
+    )
+      ? photosCount + photosCountHidden
+      : undefined;
+
     return {
-      countPhotos,
-      countHiddenPhotos,
-      countTags,
-      countUploads,
-      shouldShowInsightsIndicator,
-    };
+      photosCount,
+      photosCountHidden,
+      photosCountNeedSync,
+      photosCountTotal,
+      uploadsCount,
+      tagsCount,
+      recipesCount,
+      insightsIndicatorStatus,
+    } as const;
   });
 
 const scanForError = (

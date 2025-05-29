@@ -23,18 +23,61 @@ export const MIGRATIONS: Migration[] = [{
     ADD COLUMN IF NOT EXISTS lens_model VARCHAR(255)
   `,
 }, {
-  label: '03: Fujifilm Recipe',
-  fields: ['fujifilm_recipe'],
+  label: '03: Fujifilm Recipe: Data',
+  fields: ['recipe_data'],
+  run: () => sql`
+    DO $$
+    BEGIN
+      IF EXISTS(
+        SELECT 1
+        FROM information_schema.columns
+        WHERE table_name='photos'
+        AND column_name='fujifilm_recipe'
+      )
+      THEN
+        ALTER TABLE photos
+        RENAME COLUMN fujifilm_recipe TO recipe_data;
+      ELSE
+        ALTER TABLE photos
+        ADD COLUMN IF NOT EXISTS recipe_data JSONB;
+      END IF;
+    END $$;
+  `,
+}, {
+  label: '04: Fujifilm Recipe: Title',
+  fields: ['recipe_title'],
   run: () => sql`
     ALTER TABLE photos
-    ADD COLUMN IF NOT EXISTS fujifilm_recipe JSONB
+    ADD COLUMN IF NOT EXISTS recipe_title VARCHAR(255)
+  `,
+}, {
+  label: '05: Universal Film',
+  fields: ['film'],
+  run: () => sql`
+    DO $$
+    BEGIN
+      IF EXISTS(
+        SELECT 1
+        FROM information_schema.columns
+        WHERE table_name='photos'
+        AND column_name='film_simulation'
+      )
+      THEN
+        ALTER TABLE photos
+        RENAME COLUMN film_simulation TO film;
+      ELSE
+        ALTER TABLE photos
+        ADD COLUMN IF NOT EXISTS film VARCHAR(255);
+      END IF;
+    END $$;
   `,
 }];
 
 export const migrationForError = (e: any) =>
   MIGRATIONS.find(migration =>
-    migration.fields.some(field =>
-      new RegExp(`column "${field}" of relation "photos" does not exist`, 'i')
-        .test(e.message),
-    ),
+    migration.fields.some(field =>(
+      // eslint-disable-next-line max-len
+      new RegExp(`column "${field}" of relation "photos" does not exist`, 'i').test(e.message) ||
+      new RegExp(`column "${field}" does not exist`, 'i').test(e.message)
+    )),
   );

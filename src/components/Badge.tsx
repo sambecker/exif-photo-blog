@@ -23,8 +23,8 @@ export default function Badge({
       return clsx(
         'px-1.5 h-[26px]',
         'rounded-md',
-        'bg-gray-100/80 dark:bg-gray-900/80',
-        'border border-gray-200/60 dark:border-gray-800/75',
+        'bg-gray-100/40 dark:bg-gray-900/60',
+        'border border-medium',
       );
     case 'small':
       return clsx(
@@ -37,10 +37,14 @@ export default function Badge({
             : 'text-medium bg-gray-300/30 dark:bg-gray-700/50',
         interactive && (contrast === 'high'
           ? 'hover:opacity-70'
-          : 'hover:text-gray-900 dark:hover:text-gray-100'),
+          : contrast === 'frosted'
+            ? 'hover:text-black dark:hover:text-black'
+            : 'hover:text-gray-900 dark:hover:text-gray-100'),
         interactive && (contrast === 'high'
           ? 'active:opacity-90'
-          : 'active:bg-gray-200 dark:active:bg-gray-700/60'),
+          : contrast === 'frosted'
+            ? 'active:bg-neutral-100/50 dark:active:bg-neutral-900/10'
+            : 'active:bg-gray-200 dark:active:bg-gray-700/60'),
       );
     }
   };
@@ -53,9 +57,7 @@ export default function Badge({
       className,
     )}>
       <span className={clsx(
-        'max-w-full inline-flex',
-        // Truncate 1 + 2 levels deep
-        'truncate *:truncate',
+        'max-w-full truncate',
         dimContent && 'opacity-50',
       )}>
         {children}

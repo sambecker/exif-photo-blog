@@ -8,7 +8,7 @@ const FONT_IBM_PLEX_MONO_PATH = '/public/fonts/IBMPlexMono-Medium.ttf';
 const getFontData = async () =>
   fs.readFileSync(path.join(cwd(), FONT_IBM_PLEX_MONO_PATH));
 
-export const getIBMPlexMonoMedium = () => getFontData()
+export const getIBMPlexMono = () => getFontData()
   .then(data => ({
     fontFamily: FONT_IBM_PLEX_MONO_FAMILY,
     fonts: [{

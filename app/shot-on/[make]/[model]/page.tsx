@@ -1,13 +1,13 @@
 import { Metadata } from 'next/types';
-import { CameraProps } from '@/camera';
+import { CameraProps, formatCameraParams } from '@/camera';
 import { generateMetaForCamera } from '@/camera/meta';
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getPhotosCameraDataCached } from '@/camera/data';
 import CameraOverview from '@/camera/CameraOverview';
 import { cache } from 'react';
-import { STATICALLY_OPTIMIZED_PHOTO_CATEGORIES } from '@/app/config';
-import { IS_PRODUCTION } from '@/app/config';
 import { getUniqueCameras } from '@/photo/db/query';
+import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
+import { getAppText } from '@/i18n/state/server';
 
 const getPhotosCameraDataCachedCached = cache((
   make: string,
@@ -18,15 +18,12 @@ const getPhotosCameraDataCachedCached = cache((
   INFINITE_SCROLL_GRID_INITIAL,
 ));
 
-export let generateStaticParams:
-  (() => Promise<{ make: string, model: string }[]>) | undefined = undefined;
-
-if (STATICALLY_OPTIMIZED_PHOTO_CATEGORIES && IS_PRODUCTION) {
-  generateStaticParams = async () => {
-    const cameras = await getUniqueCameras();
-    return cameras.map(({ camera: { make, model } }) => ({ make, model }));
-  };
-}
+export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
+  'cameras',
+  'page',
+  getUniqueCameras,
+  cameras => cameras.map(({ camera }) => formatCameraParams(camera)),
+);
 
 export async function generateMetadata({
   params,
@@ -39,12 +36,14 @@ export async function generateMetadata({
     camera,
   ] = await getPhotosCameraDataCachedCached(make, model);
 
+  const appText = await getAppText();
+
   const {
     url,
     title,
     description,
     images,
-  } = generateMetaForCamera(camera, photos, count, dateRange);
+  } = generateMetaForCamera(camera, photos, appText, count, dateRange);
 
   return {
     title,

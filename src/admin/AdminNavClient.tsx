@@ -1,9 +1,8 @@
 'use client';
 
-import LinkWithLoader from '@/components/LinkWithLoader';
-import LinkWithStatus from '@/components/LinkWithStatus';
+import LinkWithIconLoader from '@/components/LinkWithIconLoader';
 import Note from '@/components/Note';
-import SiteGrid from '@/components/SiteGrid';
+import AppGrid from '@/components/AppGrid';
 import Spinner from '@/components/Spinner';
 import {
   PATH_ADMIN_CONFIGURATION,
@@ -20,8 +19,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { FaRegClock } from 'react-icons/fa';
 import AdminAppInfoIcon from './AdminAppInfoIcon';
 import AdminInfoNav from './AdminInfoNav';
+import LinkWithLoaderBackground from '@/components/LinkWithLoaderBackground';
+import MaskedScroll from '@/components/MaskedScroll';
 
-// Updates considered recent if they occurred in past 5 minutes
+// Updates from past 5 minutes considered recent
 const areTimesRecent = (dates: Date[]) => dates
   .some(date => differenceInMinutes(new Date(), date) < 5);
 
@@ -62,46 +63,46 @@ export default function AdminNavClient({
   const shouldShowBanner = hasRecentUpdates && isPathTopLevelAdmin(pathname);
 
   return (
-    <SiteGrid
+    <AppGrid
       contentMain={
         <div className="space-y-4">
           <div className={clsx(
             'flex gap-2 pb-3',
             'border-b border-gray-200 dark:border-gray-800',
           )}>
-            <div className={clsx(
-              'flex gap-0.5 md:gap-1.5 -mx-1',
-              'grow overflow-x-auto',
-            )}>
+            <MaskedScroll
+              className="grow -mx-1 flex gap-0.5 md:gap-1.5"
+              direction="horizontal"
+            >
               {items.map(({ label, href, count }) =>
-                <LinkWithStatus
+                <LinkWithLoaderBackground
                   key={label}
                   href={href}
                   className={clsx(
                     'flex gap-0.5',
                     checkPathPrefix(pathname, href) ? 'font-bold' : 'text-dim',
-                    'px-1 py-0.5 rounded-md',
-                    'hover:text-main',
+                    'hover:text-main active:text-medium',
                   )}
-                  loadingClassName="bg-gray-200/50 dark:bg-gray-700/50"
                   prefetch={false}
                 >
                   <span>{label}</span>
                   {count > 0 &&
                     <span>({count})</span>}
-                </LinkWithStatus>)}
-            </div>
-            <LinkWithLoader
+                </LinkWithLoaderBackground>)}
+            </MaskedScroll>
+            <LinkWithIconLoader
               href={includeInsights
                 ? PATH_ADMIN_INSIGHTS
                 : PATH_ADMIN_CONFIGURATION}
-              className={isPathAdminInfo(pathname)
-                ? 'font-bold'
-                : 'text-dim'}
+              className={clsx(
+                isPathAdminInfo(pathname)
+                  ? 'font-bold'
+                  : 'text-dim',
+                'hover:text-main active:text-dim',
+              )}
+              icon={<AdminAppInfoIcon />}
               loader={<Spinner className="translate-y-[-0.75px]" />}
-            >
-              <AdminAppInfoIcon />
-            </LinkWithLoader>
+            />
           </div>
           {shouldShowBanner &&
             <Note icon={<FaRegClock className="shrink-0" />}>

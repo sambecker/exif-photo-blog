@@ -11,16 +11,16 @@ import { useRouter } from 'next/navigation';
 let prefetchedImage: HTMLImageElement | null = null;
 
 export default function ShareButton({
-  title,
   dim,
   prefetch,
   className,
+  tooltip,
   ...rest
 }: {
-  title?: string
   dim?: boolean
   prefetch?: boolean
   className?: string
+  tooltip?: string
 } & ShareModalProps) {
   const { setShareModalProps } = useAppState();
 
@@ -37,7 +37,7 @@ export default function ShareButton({
 
   return (
     <LoaderButton
-      title={title}
+      tooltip={tooltip}
       onClick={() => setShareModalProps?.({ ...rest })}
       className={clsx(
         className,

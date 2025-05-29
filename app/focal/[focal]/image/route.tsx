@@ -1,32 +1,24 @@
 import { getPhotosCached } from '@/photo/cache';
 import {
   IMAGE_OG_DIMENSION_SMALL,
-  MAX_PHOTOS_TO_SHOW_PER_TAG,
+  MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
 } from '@/image-response';
-import { getIBMPlexMonoMedium } from '@/app/font';
+import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import FocalLengthImageResponse from
   '@/image-response/FocalLengthImageResponse';
 import { formatFocalLength, getFocalLengthFromString } from '@/focal';
-import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { getUniqueFocalLengths } from '@/photo/db/query';
-import {
-  STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES,
-  IS_PRODUCTION,
-} from '@/app/config';
+import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 
-export let generateStaticParams:
-  (() => Promise<{ focal: string }[]>) | undefined = undefined;
-
-if (STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES && IS_PRODUCTION) {
-  generateStaticParams = async () => {
-    const focalLengths= await getUniqueFocalLengths();
-    return focalLengths
-      .slice(0, GENERATE_STATIC_PARAMS_LIMIT)
-      .map(({ focal }) => ({ focal: formatFocalLength(focal)! }));
-  };
-}
+export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
+  'focal-lengths',
+  'image',
+  getUniqueFocalLengths,
+  focalLengths => focalLengths
+    .map(({ focal }) => ({ focal: formatFocalLength(focal)! })),
+);
 
 export async function GET(
   _: Request,
@@ -41,8 +33,8 @@ export async function GET(
     { fontFamily, fonts },
     headers,
   ] = await Promise.all([
-    getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_PER_TAG, focal }),
-    getIBMPlexMonoMedium(),
+    getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY, focal }),
+    getIBMPlexMono(),
     getImageResponseCacheControlHeaders(),
   ]);
 

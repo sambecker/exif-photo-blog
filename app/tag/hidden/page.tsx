@@ -1,26 +1,30 @@
 import AnimateItems from '@/components/AnimateItems';
 import Note from '@/components/Note';
-import SiteGrid from '@/components/SiteGrid';
+import AppGrid from '@/components/AppGrid';
 import PhotoGrid from '@/photo/PhotoGrid';
-import { getPhotosNoStore } from '@/photo/cache';
-import { getPhotosMeta } from '@/photo/db/query';
+import { getPhotosMetaCached, getPhotosNoStore } from '@/photo/cache';
 import { absolutePathForTag } from '@/app/paths';
 import { TAG_HIDDEN, descriptionForTaggedPhotos, titleForTag } from '@/tag';
 import HiddenHeader from '@/tag/HiddenHeader';
 import { Metadata } from 'next';
 import { cache } from 'react';
+import { getAppText } from '@/i18n/state/server';
 
 const getPhotosHiddenMetaCached = cache(() =>
-  getPhotosMeta({ hidden: 'only' }));
+  getPhotosMetaCached({ hidden: 'only' }));
 
 export async function generateMetadata(): Promise<Metadata> {
   const { count, dateRange } = await getPhotosHiddenMetaCached();
 
   if (count === 0) { return {}; }
 
-  const title = titleForTag(TAG_HIDDEN, undefined, count);
+  const appText = await getAppText();
+  
+  const title = titleForTag(TAG_HIDDEN, undefined, appText, count);
+
   const description = descriptionForTaggedPhotos(
     undefined,
+    appText,
     undefined,
     count,
     dateRange,
@@ -52,7 +56,7 @@ export default async function HiddenTagPage() {
   ]);
 
   return (
-    <SiteGrid
+    <AppGrid
       contentMain={<div className="space-y-4 mt-4">
         <AnimateItems
           type="bottom"

@@ -1,7 +1,7 @@
-import { IMAGE_WIDTH_MEDIUM, ImageProps } from '.';
+import { IMAGE_WIDTH_MEDIUM, CustomImageProps } from '.';
 import ImageWithFallback from './ImageWithFallback';
 
-export default function ImageMedium(props: ImageProps) {
+export default function ImageMedium(props: CustomImageProps) {
   const {
     aspectRatio,
     blurCompatibilityMode,

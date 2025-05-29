@@ -1,5 +1,6 @@
 import { clsx } from 'clsx/lite';
-import { Photo, PhotoSetCategory } from '.';
+import { Photo } from '.';
+import { PhotoSetCategory } from '../category';
 import PhotoGrid from './PhotoGrid';
 import Link from 'next/link';
 

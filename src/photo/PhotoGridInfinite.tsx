@@ -9,12 +9,9 @@ export default function PhotoGridInfinite({
   cacheKey,
   initialOffset,
   canStart,
-  tag,
-  camera,
-  simulation,
-  focal,
   animateOnFirstLoadOnly,
   canSelect,
+  ...categories
 }: {
   cacheKey: string
   initialOffset: number
@@ -24,18 +21,13 @@ export default function PhotoGridInfinite({
       cacheKey={cacheKey}
       initialOffset={initialOffset}
       itemsPerPage={INFINITE_SCROLL_GRID_MULTIPLE}
-      tag={tag}
-      camera={camera}
-      simulation={simulation}
+      {...categories}
     >
       {({ photos, onLastPhotoVisible }) =>
         <PhotoGrid {...{
           photos,
+          ...categories,
           canStart,
-          tag,
-          camera,
-          simulation,
-          focal,
           onLastPhotoVisible,
           animateOnFirstLoadOnly,
           canSelect,

@@ -1,7 +1,7 @@
-import { IMAGE_WIDTH_SMALL, ImageProps } from '.';
+import { IMAGE_WIDTH_SMALL, CustomImageProps } from '.';
 import ImageWithFallback from './ImageWithFallback';
 
-export default function ImageSmall(props: ImageProps) {
+export default function ImageSmall(props: CustomImageProps) {
   const {
     aspectRatio,
     blurCompatibilityMode,

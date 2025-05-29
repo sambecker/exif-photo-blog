@@ -8,10 +8,11 @@ import {
   useMemo,
   useRef,
 } from 'react';
-import SiteGrid from '@/components/SiteGrid';
+import AppGrid from '@/components/AppGrid';
 import Spinner from '@/components/Spinner';
 import { getPhotosCachedAction, getPhotosAction } from '@/photo/actions';
-import { Photo, PhotoSetCategory } from '.';
+import { Photo } from '.';
+import { PhotoSetCategory } from '../category';
 import { clsx } from 'clsx/lite';
 import { useAppState } from '@/state/AppState';
 import { GetPhotosOptions } from './db';
@@ -28,9 +29,12 @@ export default function InfinitePhotoScroll({
   initialOffset,
   itemsPerPage,
   sortBy,
-  tag,
   camera,
-  simulation,
+  lens,
+  tag,
+  recipe,
+  film,
+  focal,
   wrapMoreButtonInGrid,
   useCachedPhotos = true,
   includeHiddenPhotos,
@@ -68,9 +72,12 @@ export default function InfinitePhotoScroll({
       sortBy,
       limit: itemsPerPage,
       hidden: includeHiddenPhotos ? 'include' : 'exclude',
-      tag,
       camera,
-      simulation,
+      lens,
+      tag,
+      recipe,
+      film,
+      focal,
     }, warmOnly)
   , [
     useCachedPhotos,
@@ -78,9 +85,12 @@ export default function InfinitePhotoScroll({
     initialOffset,
     itemsPerPage,
     includeHiddenPhotos,
-    tag,
     camera,
-    simulation,
+    lens,
+    tag,
+    recipe,
+    film,
+    focal,
   ]);
 
   const { data, isLoading, isValidating, error, mutate, size, setSize } =
@@ -160,7 +170,7 @@ export default function InfinitePhotoScroll({
         revalidatePhoto,
       })}
       {!isFinished && (wrapMoreButtonInGrid
-        ? <SiteGrid contentMain={renderMoreButton()} />
+        ? <AppGrid contentMain={renderMoreButton()} />
         : renderMoreButton())}
     </div>
   );

@@ -12,25 +12,17 @@ import {
 } from '@/app/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotosNearIdCached } from '@/photo/cache';
-import { IS_PRODUCTION, STATICALLY_OPTIMIZED_PHOTOS } from '@/app/config';
-import { getPhotoIds } from '@/photo/db/query';
-import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
 import { cache } from 'react';
+import { staticallyGeneratePhotosIfConfigured } from '@/app/static';
 
 export const maxDuration = 60;
 
 const getPhotosNearIdCachedCached = cache((photoId: string) =>
   getPhotosNearIdCached(photoId, { limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 }));
 
-export let generateStaticParams:
-  (() => Promise<{ photoId: string }[]>) | undefined = undefined;
-
-if (STATICALLY_OPTIMIZED_PHOTOS && IS_PRODUCTION) {
-  generateStaticParams = async () => {
-    const photos = await getPhotoIds({ limit: GENERATE_STATIC_PARAMS_LIMIT });
-    return photos.map(photoId => ({ photoId }));
-  };
-}
+export const generateStaticParams = staticallyGeneratePhotosIfConfigured(
+  'page',
+);
 
 interface PhotoProps {
   params: Promise<{ photoId: string }>

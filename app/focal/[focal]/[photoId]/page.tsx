@@ -11,9 +11,8 @@ import {
   absolutePathForPhotoImage,
 } from '@/app/paths';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotosNearIdCached } from '@/photo/cache';
+import { getPhotosNearIdCached, getPhotosMetaCached } from '@/photo/cache';
 import { cache } from 'react';
-import { getPhotosMeta } from '@/photo/db/query';
 import { getFocalLengthFromString } from '@/focal';
 
 const getPhotosNearIdCachedCached = cache((photoId: string, focal: number) =>
@@ -72,7 +71,7 @@ export default async function PhotoFocalLengthPage({
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const { count, dateRange } = await getPhotosMeta({ focal });
+  const { count, dateRange } = await getPhotosMetaCached({ focal });
 
   return (
     <PhotoDetailPage {...{

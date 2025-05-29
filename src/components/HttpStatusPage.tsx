@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import SiteGrid from './SiteGrid';
+import AppGrid from './AppGrid';
 import { clsx } from 'clsx/lite';
 import { PATH_ROOT } from '@/app/paths';
 import Link from 'next/link';
@@ -8,11 +8,11 @@ export default function HttpStatusPage({
   status,
   children,
 }: {
-  status: number
+  status: ReactNode
   children?: ReactNode
 }) {
   return (
-    <SiteGrid contentMain={
+    <AppGrid contentMain={
       <div className={clsx(
         'min-h-72 sm:min-h-96',
         'flex flex-col items-center justify-center gap-3',

@@ -1,10 +1,11 @@
+'use client';
+
 import { Photo, PhotoDateRange } from '@/photo';
 import { absolutePathForCameraImage, pathForCamera } from '@/app/paths';
-import OGTile from '@/components/OGTile';
+import OGTile, { OGLoadingState } from '@/components/OGTile';
 import { Camera } from '.';
 import { descriptionForCameraPhotos, titleForCamera } from './meta';
-
-export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
+import { useAppText } from '@/i18n/state/client';
 
 export default function CameraOGTile({
   camera,
@@ -27,10 +28,17 @@ export default function CameraOGTile({
   count?: number
   dateRange?: PhotoDateRange
 }) {
+  const appText = useAppText();
   return (
     <OGTile {...{
-      title: titleForCamera(camera, photos, count),
-      description: descriptionForCameraPhotos(photos, true, count, dateRange),
+      title: titleForCamera(camera, photos, appText, count),
+      description: descriptionForCameraPhotos(
+        photos,
+        appText,
+        true,
+        count,
+        dateRange,
+      ),
       path: pathForCamera(camera),
       pathImageAbsolute: absolutePathForCameraImage(camera),
       loadingState: loadingStateExternal,

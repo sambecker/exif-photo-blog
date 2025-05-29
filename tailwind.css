@@ -7,11 +7,19 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@custom-variant hover {
+  @media (pointer: fine) {
+    &:hover {
+      @slot;
+    }
+  }
+}
+
 @theme {
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 
-  --breakpoint-xs: 390px;
-  --breakpoint-3xl: 1640px;
+  --breakpoint-xs: 24.5rem;
+  --breakpoint-3xl: 102rem;
 
   --text-xs: 0.75rem;
   --text-xs--line-height: 1rem;
@@ -93,7 +101,6 @@
 @utility text-light {
   @apply text-gray-100
 }
-
 /* Text */
 @utility text-main {
   @apply
@@ -127,22 +134,26 @@
   @apply
     text-red-500 dark:text-red-400
 }
-/* Border */
+/* Rules */
 @utility border-main {
   @apply
     border border-gray-200 dark:border-gray-700
 }
 @utility divide-main {
   @apply
-    divide-gray-200 dark:divide-gray-700
+    divide-gray-400/25 dark:divide-gray-700
 }
 @utility border-medium {
   @apply
-    border border-gray-200 dark:border-gray-800
+    border border-gray-400/25 dark:border-gray-800
+}
+@utility outline-medium {
+  @apply
+    outline outline-gray-400/25 dark:outline-gray-800
 }
 @utility divide-medium {
   @apply
-    divide-gray-200 dark:divide-gray-800
+    divide-gray-400/25 dark:divide-gray-800
 }
 /* Background */
 @utility bg-main {
@@ -157,9 +168,14 @@
   @apply
     bg-gray-100 dark:bg-gray-900/75
 }
+@utility bg-extra-dim {
+  @apply
+    bg-gray-50 dark:bg-gray-900/40
+}
 @utility bg-content {
   @apply
-    bg-main border-medium
+    /* '!' necessary for radix controls */
+    bg-main outline-medium!
 }
 @utility bg-invert {
   @apply
@@ -318,12 +334,25 @@
   a, .link {
     @apply
       hover:text-medium
+      active:text-dim
   }
 }
 
 @layer components {
   .component-surface {
     @apply
-      bg-content rounded-lg
+      text-main bg-content rounded-lg
+  }
+  .component-surface-light {
+    @apply
+      text-dark bg-white rounded-lg
+  }
+  .component-surface-dark {
+    @apply
+      text-light bg-black rounded-lg
+  }
+  .component-surface-frosted {
+    @apply
+      text-black bg-neutral-200/95 rounded-lg
   }
 }

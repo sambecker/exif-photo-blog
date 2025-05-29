@@ -19,7 +19,7 @@ export default function InsightsIndicatorDot({
   bottom?: number
   left?: number
 }) {
-  const { insightIndicatorStatus } = useAppState();
+  const { insightsIndicatorStatus } = useAppState();
 
   const getSize = () => {
     switch (size) {
@@ -39,7 +39,7 @@ export default function InsightsIndicatorDot({
           bottom !== undefined ||
           left !== undefined
         ) && 'absolute',
-        (colorOverride ?? insightIndicatorStatus) === 'blue'
+        (colorOverride ?? insightsIndicatorStatus) === 'blue'
           ? 'text-blue-500'
           : 'text-amber-500',
         className,

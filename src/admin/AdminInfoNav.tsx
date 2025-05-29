@@ -1,13 +1,13 @@
 'use client';
 
 import { PATH_ADMIN_CONFIGURATION, PATH_ADMIN_INSIGHTS } from '@/app/paths';
-import LinkWithStatus from '@/components/LinkWithStatus';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 import clsx from 'clsx/lite';
 import ClearCacheButton from '@/admin/ClearCacheButton';
 import { usePathname } from 'next/navigation';
 import { useAppState } from '@/state/AppState';
 import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
+import LinkWithLoaderBackground from '@/components/LinkWithLoaderBackground';
 
 const ADMIN_INFO_PAGES = [{
   title: 'App Insights',
@@ -37,17 +37,17 @@ export default function AdminInfoPage({
 
   const hasMultiplePages = pages.length > 1;
 
-  const { insightIndicatorStatus } = useAppState();
+  const { insightsIndicatorStatus } = useAppState();
 
   return (
     <div className="flex items-center gap-4 min-h-9">
       <div className={clsx(
         'grow -translate-x-1',
-        'flex items-center gap-3',
+        'flex items-center gap-1.5 md:gap-3',
       )}>
         {pages
           .map(({ title, titleShort, path }) =>
-            <LinkWithStatus
+            <LinkWithLoaderBackground
               key={path}
               href={path}
               className={clsx(
@@ -57,21 +57,19 @@ export default function AdminInfoPage({
                     ? 'font-medium'
                     : 'text-dim'
                   : undefined,
-                'px-1 py-0.5 rounded-md',
-                'hover:text-main',
+                'hover:text-main active:text-dim',
               )}
-              loadingClassName="bg-gray-200/50 dark:bg-gray-700/50"
             >
               <ResponsiveText shortText={titleShort}>
                 {title}
               </ResponsiveText>
-              {title === 'App Insights' && insightIndicatorStatus &&
+              {title === 'App Insights' && insightsIndicatorStatus &&
                 <InsightsIndicatorDot
                   size="small"
                   top={4}
                   right={-2}
                 />}
-            </LinkWithStatus>)}
+            </LinkWithLoaderBackground>)}
       </div>
       <ClearCacheButton />
     </div>

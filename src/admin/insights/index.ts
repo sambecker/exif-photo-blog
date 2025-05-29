@@ -6,42 +6,64 @@ import {
   IS_VERCEL_GIT_PROVIDER_GITHUB,
   IS_DEVELOPMENT,
   APP_CONFIGURATION,
+  MATTE_PHOTOS,
+  IS_META_DESCRIPTION_CONFIGURED,
+  IS_META_TITLE_CONFIGURED,
+  CATEGORY_VISIBILITY,
+  HAS_STATIC_OPTIMIZATION,
+  GRID_HOMEPAGE_ENABLED,
+  AI_TEXT_GENERATION_ENABLED,
 } from '@/app/config';
 import { PhotoDateRange } from '@/photo';
 import { getGitHubMeta } from '@/platforms/github';
 
-export type AdminAppInsight =
-  'noFork' |
-  'forkBehind' |
-  'noAi' |
-  'noAiRateLimiting' |
-  'outdatedPhotos' |
-  'photoMatting' |
-  'gridFirst' |
-  'noStaticOptimization';
+const BASIC_PHOTO_INSTALLATION_COUNT = 32;
+const TAG_COUNT_THRESHOLD = 12;
 
-const RECOMMENDATIONS: AdminAppInsight[] = [
+const AdminAppInsightCode = [
+  'noFork',
+  'forkBehind',
+] as const;
+type AdminAppInsightCode = typeof AdminAppInsightCode[number];
+
+const _INSIGHTS_TEMPLATE = [
   'noAi',
   'noAiRateLimiting',
+  'noConfiguredDomain',
+  'noConfiguredMeta',
   'photoMatting',
+  'camerasFirst',
   'gridFirst',
   'noStaticOptimization',
-];
+] as const;
+type AdminAppInsightRecommendation = typeof _INSIGHTS_TEMPLATE[number];
+
+const _INSIGHTS_LIBRARY = [
+  'photosNeedSync',
+] as const;
+type AdminAppInsightLibrary = typeof _INSIGHTS_LIBRARY[number];
+
+export type AdminAppInsight =
+  AdminAppInsightCode |
+  AdminAppInsightRecommendation |
+  AdminAppInsightLibrary;
 
 export type AdminAppInsights = Record<AdminAppInsight, boolean>
 
-export type InsightIndicatorStatus = 'blue' | 'yellow' | undefined;
+export type InsightsIndicatorStatus = 'blue' | 'yellow' | undefined;
 
 export const hasTemplateRecommendations = (insights: AdminAppInsights) =>
-  RECOMMENDATIONS.some(insight => insights[insight]);
+  _INSIGHTS_TEMPLATE.some(insight => insights[insight]);
 
 export interface PhotoStats {
   photosCount: number
   photosCountHidden: number
-  photosCountOutdated: number
-  tagsCount: number
+  photosCountNeedSync: number
   camerasCount: number
-  filmSimulationsCount: number
+  lensesCount: number
+  tagsCount: number
+  recipesCount: number
+  filmsCount: number
   focalLengthsCount: number
   dateRange?: PhotoDateRange
 }
@@ -58,19 +80,75 @@ export const getGitHubMetaForCurrentApp = () =>
 
 export const getSignificantInsights = ({
   codeMeta,
-  photosCountOutdated,
+  photosCountNeedSync,
 }: {
   codeMeta: Awaited<ReturnType<typeof getGitHubMetaForCurrentApp>>
-  photosCountOutdated: number
+  photosCountNeedSync: number
 }) => {
   const {
     isAiTextGenerationEnabled,
     hasRedisStorage,
+    hasDomain,
   } = APP_CONFIGURATION;
 
   return {
     forkBehind: Boolean(codeMeta?.isBehind),
     noAiRateLimiting: isAiTextGenerationEnabled && !hasRedisStorage,
-    outdatedPhotos: Boolean(photosCountOutdated),
+    noConfiguredDomain: !hasDomain,
+    photosNeedSync: Boolean(photosCountNeedSync),
   };
 };
+
+export const indicatorStatusForSignificantInsights = ({
+  codeMeta,
+  photosCountNeedSync,
+}: Parameters<typeof getSignificantInsights>[0] & {
+  photosCountNeedSync: number
+}) => {
+  const insights = getSignificantInsights({
+    codeMeta,
+    photosCountNeedSync,
+  });
+
+  const {
+    forkBehind,
+    noAiRateLimiting,
+    noConfiguredDomain,
+    photosNeedSync,
+  } = insights;
+
+  if (noAiRateLimiting || noConfiguredDomain) {
+    return 'yellow';
+  } else if (forkBehind || photosNeedSync) {
+    return 'blue';
+  }
+};
+
+export const getAllInsights = ({
+  codeMeta,
+  photosCountNeedSync,
+  photosCount,
+  photosCountPortrait,
+  tagsCount,
+}: Parameters<typeof getSignificantInsights>[0] & {
+  photosCount: number
+  photosCountPortrait: number
+  tagsCount: number
+}) => ({
+  ...getSignificantInsights({ codeMeta, photosCountNeedSync }),
+  noFork: !codeMeta?.isForkedFromBase && !codeMeta?.isBaseRepo,
+  noAi: !AI_TEXT_GENERATION_ENABLED,
+  noConfiguredMeta:
+    !IS_META_TITLE_CONFIGURED ||
+    !IS_META_DESCRIPTION_CONFIGURED,
+  photoMatting: photosCountPortrait > 0 && !MATTE_PHOTOS,
+  camerasFirst: (
+    tagsCount > TAG_COUNT_THRESHOLD &&
+    CATEGORY_VISIBILITY[0] !== 'cameras'
+  ),
+  gridFirst: (
+    photosCount >= BASIC_PHOTO_INSTALLATION_COUNT &&
+    !GRID_HOMEPAGE_ENABLED
+  ),
+  noStaticOptimization: !HAS_STATIC_OPTIMIZATION,
+});

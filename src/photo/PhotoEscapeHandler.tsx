@@ -12,11 +12,11 @@ export default function PhotoEscapeHandler() {
 
   const escapePath = getEscapePath(pathname);
 
-  const escapeHandler = useCallback(() => {
+  const onKeyDown = useCallback(() => {
     if (escapePath) { router.push(escapePath, { scroll: false }); }
   }, [escapePath, router]);
 
-  useEscapeHandler(escapeHandler);
+  useEscapeHandler({ onKeyDown });
 
   return null;
 }

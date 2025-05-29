@@ -1,5 +1,5 @@
 import Container from '@/components/Container';
-import SiteGrid from '@/components/SiteGrid';
+import AppGrid from '@/components/AppGrid';
 import { ReactNode } from 'react';
 
 export default function AdminInfoPage({
@@ -8,7 +8,7 @@ export default function AdminInfoPage({
   children: ReactNode
 }) {
   return (
-    <SiteGrid
+    <AppGrid
       contentMain={
         <Container spaceChildren={false}>
           {children}

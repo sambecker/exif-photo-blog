@@ -32,7 +32,7 @@ export default function PhotoImageResponse({
     .trim();
 
   return (
-    <ImageContainer {...{ width, height }}>
+    <ImageContainer>
       <ImagePhotoGrid {...{
         photos: isNextImageReady ? [photo] : [],
         width,
@@ -47,9 +47,8 @@ export default function PhotoImageResponse({
           ...photo.make === 'Apple' && { icon: <AiFillApple style={{
             marginRight: height * .01,
           }} /> },
-        }}>
-          {caption}
-        </ImageCaption>}
+          title: caption,
+        }} />}
     </ImageContainer>
   );
 };

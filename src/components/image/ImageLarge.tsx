@@ -1,8 +1,8 @@
 import { IMAGE_QUALITY } from '@/app/config';
-import { IMAGE_WIDTH_LARGE, ImageProps } from '.';
+import { IMAGE_WIDTH_LARGE, CustomImageProps } from '.';
 import ImageWithFallback from './ImageWithFallback';
 
-export default function ImageLarge(props: ImageProps) {
+export default function ImageLarge(props: CustomImageProps) {
   const {
     aspectRatio,
     blurCompatibilityMode,

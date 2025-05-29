@@ -4,6 +4,7 @@ import { downloadFileNameForPhoto, Photo } from '@/photo';
 import LoaderButton from './primitives/LoaderButton';
 import { useState } from 'react';
 import { downloadFileFromBrowser } from '@/utility/url';
+import { useAppText } from '@/i18n/state/client';
 
 export default function DownloadButton({
   photo,
@@ -14,9 +15,11 @@ export default function DownloadButton({
 }) {
   const [isLoading, setIsLoading] = useState(false);
 
+  const appText = useAppText();
+
   return (
     <LoaderButton
-      title="Download Original File"
+      tooltip={appText.tooltip.download}
       className={clsx(
         className,
         'text-medium',

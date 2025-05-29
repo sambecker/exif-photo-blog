@@ -1,16 +1,20 @@
 import AnimateItems from '@/components/AnimateItems';
-import { Photo, PhotoDateRange, PhotoSetCategory } from '.';
+import { Photo, PhotoDateRange } from '.';
+import { PhotoSetCategory } from '../category';
 import PhotoLarge from './PhotoLarge';
-import SiteGrid from '@/components/SiteGrid';
+import AppGrid from '@/components/AppGrid';
 import PhotoGrid from './PhotoGrid';
 import TagHeader from '@/tag/TagHeader';
 import CameraHeader from '@/camera/CameraHeader';
-import FilmSimulationHeader from '@/simulation/FilmSimulationHeader';
+import FilmHeader from '@/film/FilmHeader';
 import { TAG_HIDDEN } from '@/tag';
 import HiddenHeader from '@/tag/HiddenHeader';
 import FocalLengthHeader from '@/focal/FocalLengthHeader';
 import PhotoHeader from './PhotoHeader';
-import { JSX } from 'react';
+import RecipeHeader from '@/recipe/RecipeHeader';
+import { ReactNode } from 'react';
+import LensHeader from '@/lens/LensHeader';
+import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
 
 export default function PhotoDetailPage({
   photo,
@@ -18,7 +22,9 @@ export default function PhotoDetailPage({
   photosGrid,
   tag,
   camera,
-  simulation,
+  lens,
+  film,
+  recipe,
   focal,
   indexNumber,
   count,
@@ -35,7 +41,7 @@ export default function PhotoDetailPage({
   shouldShare?: boolean
   includeFavoriteInAdminMenu?: boolean
 } & PhotoSetCategory) {
-  let customHeader: JSX.Element | undefined;
+  let customHeader: ReactNode | undefined;
 
   if (tag) {
     customHeader = tag === TAG_HIDDEN
@@ -63,14 +69,31 @@ export default function PhotoDetailPage({
       count={count}
       dateRange={dateRange}
     />;
-  } else if (simulation) {
-    customHeader = <FilmSimulationHeader
-      simulation={simulation}
+  } else if (lens) {
+    customHeader = <LensHeader
+      lens={lens}
       photos={photos}
       selectedPhoto={photo}
       indexNumber={indexNumber}
       count={count}
       dateRange={dateRange}
+    />;
+  } else if (film) {
+    customHeader = <FilmHeader
+      film={film}
+      photos={photos}
+      selectedPhoto={photo}
+      indexNumber={indexNumber}
+      count={count}
+      dateRange={dateRange}
+    />;
+  } else if (recipe) {
+    customHeader = <RecipeHeader
+      recipe={recipe}
+      photos={photos}
+      selectedPhoto={photo}
+      indexNumber={indexNumber}
+      count={count}
     />;
   } else if (focal) {
     customHeader = <FocalLengthHeader
@@ -85,11 +108,13 @@ export default function PhotoDetailPage({
 
   return (
     <div>
-      <SiteGrid
+      <AppGrid
         className="mt-1.5 mb-6"
         contentMain={customHeader ?? <PhotoHeader
           selectedPhoto={photo}
           photos={photos}
+          recipe={recipe}
+          hasAiTextGeneration={AI_TEXT_GENERATION_ENABLED}
         />}
       />
       <AnimateItems
@@ -105,23 +130,29 @@ export default function PhotoDetailPage({
             showTitle={Boolean(customHeader)}
             showTitleAsH1
             showCamera={!camera}
-            showSimulation={!simulation}
+            showLens={!lens}
+            showFilm={!film}
+            showRecipe={!recipe}
             shouldShare={shouldShare}
-            shouldShareTag={tag !== undefined}
             shouldShareCamera={camera !== undefined}
-            shouldShareSimulation={simulation !== undefined}
+            shouldShareLens={lens !== undefined}
+            shouldShareTag={tag !== undefined}
+            shouldShareFilm={film !== undefined}
+            shouldShareRecipe={recipe !== undefined}
+            shouldShareFocalLength={focal !== undefined}
             includeFavoriteInAdminMenu={includeFavoriteInAdminMenu}
+            showAdminKeyCommands
           />,
         ]}
       />
-      <SiteGrid
+      <AppGrid
         sideFirstOnMobile
         contentMain={<PhotoGrid
           photos={photosGrid ?? photos}
           selectedPhoto={photo}
           tag={tag}
           camera={camera}
-          simulation={simulation}
+          film={film}
           focal={focal}
           animateOnFirstLoadOnly
         />}

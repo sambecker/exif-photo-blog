@@ -1,9 +1,12 @@
-import { Photo, PhotoSetAttributes, PhotoSetCategory } from '@/photo';
+import { Photo } from '@/photo';
+import { PhotoSetAttributes, PhotoSetCategory } from '@/category';
 import {
   absolutePathForCameraImage,
-  absolutePathForFilmSimulationImage,
+  absolutePathForFilmImage,
   absolutePathForFocalLengthImage,
+  absolutePathForLensImage,
   absolutePathForPhotoImage,
+  absolutePathForRecipeImage,
   absolutePathForTagImage,
 } from '@/app/paths';
 
@@ -14,24 +17,26 @@ export type ShareModalProps = Omit<PhotoSetAttributes, 'photos'> & {
 
 export const getSharePathFromShareModalProps = ({
   photo,
-  tag,
   camera,
-  simulation,
+  lens,
+  tag,
+  recipe,
+  film,
   focal,
 }: ShareModalProps) => {
   if (photo) {
     return absolutePathForPhotoImage(photo);
-  }
-  if (tag) {
-    return absolutePathForTagImage(tag);
-  }
-  if (camera) {
+  } else if (camera) {
     return absolutePathForCameraImage(camera);
-  }
-  if (simulation) {
-    return absolutePathForFilmSimulationImage(simulation);
-  }
-  if (focal) {
+  } else if (lens) {
+    return absolutePathForLensImage(lens);
+  } else if (tag) {
+    return absolutePathForTagImage(tag);
+  } else if (recipe) {
+    return absolutePathForRecipeImage(recipe);
+  } else if (film) {
+    return absolutePathForFilmImage(film);
+  } else if (focal) {
     return absolutePathForFocalLengthImage(focal);
   }
 };
