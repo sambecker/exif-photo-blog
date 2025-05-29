@@ -4,6 +4,7 @@ import {
   query,
   convertArrayToPostgresString,
 } from '@/platforms/postgres';
+import { timedQuery, performanceMonitor } from '@/utility/performance';
 import {
   PhotoDb,
   PhotoDbInsert,
@@ -84,6 +85,7 @@ const safelyQueryPhotos = async <T>(
   let result: T;
 
   const start = new Date();
+  const perfStart = performance.now();
 
   try {
     result = await callback();
@@ -147,6 +149,10 @@ const safelyQueryPhotos = async <T>(
       throw e;
     }
   }
+
+  // Record performance metrics
+  const duration = performance.now() - perfStart;
+  performanceMonitor.recordQuery(duration);
 
   if (ADMIN_SQL_DEBUG_ENABLED && queryLabel) {
     const time =
