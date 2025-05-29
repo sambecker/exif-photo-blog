@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { ScoreCard } from '@/components';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import WarmCacheButton from '@/admin/WarmCacheButton';
+import CreateIndexesButton from '@/admin/CreateIndexesButton';
+import { HAS_REDIS_STORAGE } from '@/app/config';
 
 interface PerformanceData {
   performance: {
@@ -71,13 +73,17 @@ export default function PerformanceMonitor() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-semibold">Current Session Metrics</h2>
-        <LoaderButton
-          onClick={fetchMetrics}
-          isLoading={loading}
-          hideTextOnMobile={false}
-        >
-          Refresh
-        </LoaderButton>
+        <div className="flex gap-2">
+          <CreateIndexesButton />
+          {HAS_REDIS_STORAGE && <WarmCacheButton />}
+          <LoaderButton
+            onClick={fetchMetrics}
+            isLoading={loading}
+            hideTextOnMobile={false}
+          >
+            Refresh
+          </LoaderButton>
+        </div>
       </div>
 
       {data && (

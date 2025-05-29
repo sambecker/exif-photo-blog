@@ -478,9 +478,75 @@ export const getUniqueFocalLengths = async () =>
       })))
   , 'getUniqueFocalLengths');
 
+// Column sets for different contexts
+const COLUMNS_GRID = [
+  'id',
+  'url',
+  'extension',
+  'aspect_ratio',
+  'blur_data',
+  'title',
+  'hidden',
+  'taken_at',
+  'taken_at_naive',
+  'updated_at',
+  'created_at',
+].join(', ');
+
+const COLUMNS_ADMIN = [
+  'id',
+  'url',
+  'extension',
+  'aspect_ratio',
+  'blur_data',
+  'title',
+  'caption',
+  'semantic_description',
+  'tags',
+  'make',
+  'model',
+  'film',
+  'recipe_data',
+  'priority_order',
+  'hidden',
+  'taken_at',
+  'taken_at_naive',
+  'updated_at',
+  'created_at',
+].join(', ');
+
+const COLUMNS_DETAIL = '*'; // Full photo details need all columns
+
+const COLUMNS_META = [
+  'id',
+  'hidden',
+  'taken_at_naive',
+  'updated_at',
+].join(', ');
+
+export type PhotoQueryContext = 'grid' | 'admin' | 'detail' | 'meta' | 'full';
+
+const getColumnsForContext = (context: PhotoQueryContext = 'full'): string => {
+  switch (context) {
+  case 'grid':
+    return COLUMNS_GRID;
+  case 'admin':
+    return COLUMNS_ADMIN;
+  case 'detail':
+    return COLUMNS_DETAIL;
+  case 'meta':
+    return COLUMNS_META;
+  case 'full':
+  default:
+    return '*';
+  }
+};
+
 export const getPhotos = async (options: GetPhotosOptions = {}) =>
   safelyQueryPhotos(async () => {
-    const sql = ['SELECT * FROM photos'];
+    const context = options.context || 'full';
+    const columns = getColumnsForContext(context);
+    const sql = [`SELECT ${columns} FROM photos`];
     const values = [] as (string | number)[];
 
     const {
@@ -519,6 +585,8 @@ export const getPhotosNearId = async (
 ) =>
   safelyQueryPhotos(async () => {
     const { limit } = options;
+    const context = options.context || 'full';
+    const columns = getColumnsForContext(context);
 
     const {
       wheres,
@@ -531,7 +599,7 @@ export const getPhotosNearId = async (
     return query(
       `
         WITH twi AS (
-          SELECT *, row_number()
+          SELECT ${columns}, row_number()
           OVER (${getOrderByFromOptions(options)}) as row_number
           FROM photos
           ${wheres}
@@ -627,9 +695,31 @@ const needsAiTextWhereClauses =
 const needsSyncWhereStatement =
   `WHERE ${outdatedWhereClauses.concat(needsAiTextWhereClauses).join(' OR ')}`;
 
+// Columns needed for sync operations - includes AI text fields and sync-related fields
+const COLUMNS_SYNC = [
+  'id',
+  'url',
+  'extension',
+  'aspect_ratio',
+  'blur_data',
+  'title',
+  'caption',
+  'semantic_description',
+  'tags',
+  'make',
+  'model',
+  'film',
+  'recipe_data',
+  'recipe_title',
+  'taken_at',
+  'taken_at_naive',
+  'updated_at',
+  'created_at',
+].join(', ');
+
 export const getPhotosInNeedOfSync = () => safelyQueryPhotos(
   () => query(`
-    SELECT * FROM photos
+    SELECT ${COLUMNS_SYNC} FROM photos
     ${needsSyncWhereStatement}
     ORDER BY created_at DESC
     LIMIT ${SYNC_QUERY_LIMIT}

@@ -29,6 +29,7 @@ export type GetPhotosOptions = {
   takenAfterInclusive?: Date
   updatedBefore?: Date
   hidden?: 'exclude' | 'include' | 'only'
+  context?: 'grid' | 'admin' | 'detail' | 'meta' | 'full'
 } & Omit<PhotoSetCategory, 'camera' | 'lens'> & {
   camera?: Partial<Camera>
   lens?: Partial<Lens>

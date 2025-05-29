@@ -5,6 +5,14 @@ import { Pool, QueryResult, QueryResultRow } from 'pg';
 const pool = new Pool({
   connectionString: removeParamsFromUrl(process.env.POSTGRES_URL, ['sslmode']),
   ...POSTGRES_SSL_ENABLED && { ssl: true },
+  // Connection pooling configuration for better performance
+  max: 20, // Maximum number of clients in the pool
+  min: 2, // Minimum number of clients in the pool
+  idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
+  connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection cannot be established
+  acquireTimeoutMillis: 60000, // Maximum time to wait for a connection
+  // Query timeout (optional - uncomment if needed)
+  // statement_timeout: 30000, // 30 second query timeout
 });
 
 export type Primitive = string | number | boolean | undefined | null;

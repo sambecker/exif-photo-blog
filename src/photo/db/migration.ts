@@ -1,9 +1,11 @@
 import { sql } from '@/platforms/postgres';
+import { addPerformanceIndexes } from './migration-add-indexes';
 
 interface Migration {
   label: string
-  fields: string[]
-  run: () => ReturnType<typeof sql>
+  fields?: string[]
+  errorPhraseMatch?: RegExp
+  run: () => ReturnType<typeof sql> | Promise<void>
 }
 
 export const MIGRATIONS: Migration[] = [{
@@ -71,13 +73,27 @@ export const MIGRATIONS: Migration[] = [{
       END IF;
     END $$;
   `,
+}, {
+  label: '06: Performance Indexes',
+  errorPhraseMatch: /index .* does not exist/i,
+  run: async () => {
+    await addPerformanceIndexes.run();
+  },
 }];
 
 export const migrationForError = (e: any) =>
-  MIGRATIONS.find(migration =>
-    migration.fields.some(field =>(
-      // eslint-disable-next-line max-len
-      new RegExp(`column "${field}" of relation "photos" does not exist`, 'i').test(e.message) ||
-      new RegExp(`column "${field}" does not exist`, 'i').test(e.message)
-    )),
-  );
+  MIGRATIONS.find(migration => {
+    // Check field-based migrations
+    if (migration.fields) {
+      return migration.fields.some(field =>(
+        // eslint-disable-next-line max-len
+        new RegExp(`column "${field}" of relation "photos" does not exist`, 'i').test(e.message) ||
+        new RegExp(`column "${field}" does not exist`, 'i').test(e.message)
+      ));
+    }
+    // Check error phrase match for other migrations
+    if (migration.errorPhraseMatch) {
+      return migration.errorPhraseMatch.test(e.message);
+    }
+    return false;
+  });

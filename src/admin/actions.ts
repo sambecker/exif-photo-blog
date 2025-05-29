@@ -2,6 +2,7 @@
 
 import { runAuthenticatedAdminServerAction } from '@/auth/server';
 import { warmUpPhotoCache } from '@/photo/cache-redis';
+import { createPerformanceIndexes } from '@/photo/db/migration-add-indexes';
 import { testRedisConnection } from '@/platforms/redis';
 import { testOpenAiConnection } from '@/platforms/openai';
 import { testDatabaseConnection } from '@/platforms/postgres';
@@ -91,6 +92,11 @@ const scanForError = (
 export const warmUpPhotoCacheAction = async () =>
   runAuthenticatedAdminServerAction(async () => {
     await warmUpPhotoCache();
+  });
+
+export const createPerformanceIndexesAction = async () =>
+  runAuthenticatedAdminServerAction(async () => {
+    await createPerformanceIndexes();
   });
 
 export const testConnectionsAction = async () =>
