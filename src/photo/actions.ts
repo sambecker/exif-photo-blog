@@ -498,9 +498,14 @@ export const getPhotosAction = async (
   if (warmOnly) {
     return [];
   } else {
-    return areOptionsSensitive(options)
-      ? runAuthenticatedAdminServerAction(() => getPhotos(options))
-      : getPhotos(options);
+    // Auto-detect context if not specified
+    const context = options.context || (
+      options.sortBy?.includes('createdAt') ? 'admin' : 'grid'
+    );
+    const optionsWithContext = { ...options, context };
+    return areOptionsSensitive(optionsWithContext)
+      ? runAuthenticatedAdminServerAction(() => getPhotos(optionsWithContext))
+      : getPhotos(optionsWithContext);
   }
 };
 
@@ -511,9 +516,14 @@ export const getPhotosCachedAction = async (
   if (warmOnly) {
     return [];
   } else {
-    return areOptionsSensitive(options)
-      ? runAuthenticatedAdminServerAction(() => getPhotosCached(options))
-      : getPhotosCached(options);
+    // Auto-detect context if not specified
+    const context = options.context || (
+      options.sortBy?.includes('createdAt') ? 'admin' : 'grid'
+    );
+    const optionsWithContext = { ...options, context };
+    return areOptionsSensitive(optionsWithContext)
+      ? runAuthenticatedAdminServerAction(() => getPhotosCached(optionsWithContext))
+      : getPhotosCached(optionsWithContext);
   }
 };
 

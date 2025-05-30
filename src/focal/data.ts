@@ -11,7 +11,7 @@ export const getPhotosFocalLengthDataCached = ({
   limit?: number,
 }) =>
   Promise.all([
-    getPhotosCached({ focal, limit }),
+    getPhotosCached({ focal, limit, context: 'grid' }),
     getPhotosMetaCached({ focal }),
   ]);
 

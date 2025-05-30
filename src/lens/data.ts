@@ -11,7 +11,7 @@ export const getPhotosLensDataCached = async (
 ) => {
   const lens = formatLensParams({ make, model });
   return Promise.all([
-    getPhotosCached({ lens, limit }),
+    getPhotosCached({ lens, limit, context: 'grid' }),
     getPhotosMetaCached({ lens }),
   ])
     .then(([photos, meta]) => [

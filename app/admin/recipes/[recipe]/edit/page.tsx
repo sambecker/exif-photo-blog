@@ -26,7 +26,7 @@ export default async function RecipePageEdit({
     photos,
   ] = await Promise.all([
     getPhotosMetaCached({ recipe }),
-    getPhotosCached({ recipe, limit: MAX_PHOTO_TO_SHOW }),
+    getPhotosCached({ recipe, limit: MAX_PHOTO_TO_SHOW, context: 'admin' }),
   ]);
 
   const { data, film } = getRecipePropsFromPhotos(photos) ?? {};

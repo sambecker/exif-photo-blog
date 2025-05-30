@@ -11,6 +11,6 @@ export const getPhotosRecipeDataCached = ({
   limit?: number,
 }) =>
   Promise.all([
-    getPhotosCached({ recipe, limit }),
+    getPhotosCached({ recipe, limit, context: 'grid' }),
     getPhotosMetaCached({ recipe }),
   ]);

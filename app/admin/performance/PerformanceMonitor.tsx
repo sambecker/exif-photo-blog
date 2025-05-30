@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ScoreCard } from '@/components';
+import ScoreCard from '@/components/ScoreCard';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import WarmCacheButton from '@/admin/WarmCacheButton';
 import CreateIndexesButton from '@/admin/CreateIndexesButton';

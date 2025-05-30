@@ -11,7 +11,7 @@ export const getPhotosCameraDataCached = async (
 ) => {
   const camera = formatCameraParams({ make, model });
   return Promise.all([
-    getPhotosCached({ camera, limit }),
+    getPhotosCached({ camera, limit, context: 'grid' }),
     getPhotosMetaCached({ camera }),
   ])
     .then(([photos, meta]) => [

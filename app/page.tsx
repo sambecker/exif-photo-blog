@@ -20,6 +20,7 @@ const getPhotosCached = cache(() => getPhotos({
   limit: GRID_HOMEPAGE_ENABLED
     ? INFINITE_SCROLL_GRID_INITIAL
     : INFINITE_SCROLL_FEED_INITIAL,
+  context: 'grid',
 }));
 
 export async function generateMetadata(): Promise<Metadata> {

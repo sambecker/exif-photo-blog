@@ -10,7 +10,10 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   if (PUBLIC_API_ENABLED) {
-    const photos = await getPhotosCached({ limit: API_PHOTO_REQUEST_LIMIT });
+    const photos = await getPhotosCached({ 
+      limit: API_PHOTO_REQUEST_LIMIT,
+      context: 'grid' 
+    });
     return Response.json({
       meta: {
         title: META_TITLE,

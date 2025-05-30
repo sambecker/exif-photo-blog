@@ -14,6 +14,7 @@ export const maxDuration = 60;
 
 const getPhotosCached = cache(() => getPhotos({
   limit: INFINITE_SCROLL_FEED_INITIAL,
+  context: 'detail',
 }));
 
 export async function generateMetadata(): Promise<Metadata> {

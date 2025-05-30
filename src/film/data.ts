@@ -11,6 +11,6 @@ export const getPhotosFilmDataCached = ({
   limit?: number,
 }) =>
   Promise.all([
-    getPhotosCached({ film, limit }),
+    getPhotosCached({ film, limit, context: 'grid' }),
     getPhotosMetaCached({ film }),
   ]);

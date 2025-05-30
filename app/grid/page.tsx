@@ -14,6 +14,7 @@ export const dynamic = 'force-static';
 
 const getPhotosCached = cache(() => getPhotos({
   limit: INFINITE_SCROLL_GRID_INITIAL,
+  context: 'grid',
 }));
 
 export async function generateMetadata(): Promise<Metadata> {

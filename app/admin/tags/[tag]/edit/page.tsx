@@ -24,7 +24,7 @@ export default async function PhotoPageEdit({
     photos,
   ] = await Promise.all([
     getPhotosMetaCached({ tag }),
-    getPhotosCached({ tag, limit: MAX_PHOTO_TO_SHOW }),
+    getPhotosCached({ tag, limit: MAX_PHOTO_TO_SHOW, context: 'grid' }),
   ]);
 
   if (count === 0) { redirect(PATH_ADMIN); }

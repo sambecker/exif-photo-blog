@@ -186,25 +186,36 @@ export const getPhotosCached = (
 
 export const getPhotosNearIdCached = (
   ...args: Parameters<typeof getPhotosNearId>
-) => unstable_cache(
-  getPhotosNearId,
-  [KEY_PHOTOS, ...getPhotosCacheKeys(args[1])],
-)(...args).then(({ photos, indexNumber }) => {
-  const [photoId, { limit }] = args;
-  const photo = photos.find(({ id }) => id === photoId);
-  const isPhotoFirst = photos.findIndex(p => p.id === photoId) === 0;
-  return {
-    photo: photo ? parseCachedPhotoDates(photo) : undefined,
-    photos: parseCachedPhotosDates(photos),
-    ...limit && {
-      photosGrid: photos.slice(
-        isPhotoFirst ? 1 : 2,
-        isPhotoFirst ? limit - 1 : limit,
-      ),
-    },
-    indexNumber,
+) => {
+  // Add context to options based on usage pattern
+  const [photoId, options] = args;
+  const optionsWithContext = {
+    ...options,
+    // For photo detail pages, we need full data for the main photo
+    // but only grid data for the related photos
+    context: 'detail' as const,
   };
-});
+  
+  return unstable_cache(
+    getPhotosNearId,
+    [KEY_PHOTOS, ...getPhotosCacheKeys(optionsWithContext)],
+  )(photoId, optionsWithContext).then(({ photos, indexNumber }) => {
+    const { limit } = options;
+    const photo = photos.find(({ id }) => id === photoId);
+    const isPhotoFirst = photos.findIndex(p => p.id === photoId) === 0;
+    return {
+      photo: photo ? parseCachedPhotoDates(photo) : undefined,
+      photos: parseCachedPhotosDates(photos),
+      ...limit && {
+        photosGrid: photos.slice(
+          isPhotoFirst ? 1 : 2,
+          isPhotoFirst ? limit - 1 : limit,
+        ),
+      },
+      indexNumber,
+    };
+  });
+};
 
 export const getPhotosMetaCached = HAS_REDIS_STORAGE
   ? getPhotosMetaWithRedisCache
@@ -273,6 +284,11 @@ export const getUniqueFocalLengthsCached = HAS_REDIS_STORAGE
 
 export const getPhotosNoStore = (...args: Parameters<typeof getPhotos>) => {
   unstable_noStore();
+  // If no context is specified and this is for hidden photos, use admin context
+  const [options] = args;
+  if (options?.hidden && !options?.context) {
+    return getPhotos({ ...options, context: 'admin' });
+  }
   return getPhotos(...args);
 };
 

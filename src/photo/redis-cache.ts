@@ -14,7 +14,7 @@ const PHOTOS_COUNT_PREFIX = `photos:count:${CACHE_VERSION}:`;
 const UNIQUE_VALUES_PREFIX = `unique:${CACHE_VERSION}:`;
 
 // Generate cache key for photo lists based on options
-const generatePhotosListKey = (options: Record<string, any>): string => {
+export const generatePhotosListKey = (options: Record<string, any>): string => {
   // Sort options to ensure consistent keys
   const sortedOptions = Object.keys(options)
     .sort()
@@ -30,7 +30,10 @@ const generatePhotosListKey = (options: Record<string, any>): string => {
 
 // Cache operations with performance tracking
 export const getCachedPhoto = async (photoId: string): Promise<Photo | null> => {
-  if (!redis || !HAS_REDIS_STORAGE) return null;
+  if (!redis || !HAS_REDIS_STORAGE) {
+    console.log('[Redis Cache] Not available - redis:', !!redis, 'HAS_REDIS_STORAGE:', HAS_REDIS_STORAGE);
+    return null;
+  }
   
   try {
     const start = performance.now();
@@ -58,10 +61,10 @@ export const setCachedPhoto = async (photo: Photo): Promise<void> => {
   
   try {
     const start = performance.now();
-    await redis.setex(
+    await redis.set(
       `${PHOTO_PREFIX}${photo.id}`,
-      CACHE_TTL,
-      JSON.stringify(photo)
+      JSON.stringify(photo),
+      { ex: CACHE_TTL }
     );
     const duration = performance.now() - start;
     console.log(`[Redis Cache] Photo ${photo.id} cached (${duration.toFixed(2)}ms)`);
@@ -104,10 +107,10 @@ export const setCachedPhotosList = async (
   
   try {
     const start = performance.now();
-    await redis.setex(
+    await redis.set(
       cacheKey,
-      CACHE_TTL,
-      JSON.stringify(photos)
+      JSON.stringify(photos),
+      { ex: CACHE_TTL }
     );
     const duration = performance.now() - start;
     console.log(`[Redis Cache] Photos list cached (${duration.toFixed(2)}ms)`);
@@ -144,7 +147,7 @@ export const setCachedCount = async (
   if (!redis || !HAS_REDIS_STORAGE) return;
   
   try {
-    await redis.setex(cacheKey, CACHE_TTL, count.toString());
+    await redis.set(cacheKey, count.toString(), { ex: CACHE_TTL });
   } catch (error) {
     console.error('[Redis Cache] Error setting count:', error);
   }
@@ -178,10 +181,10 @@ export const setCachedUniqueValues = async <T>(
   if (!redis || !HAS_REDIS_STORAGE) return;
   
   try {
-    await redis.setex(
+    await redis.set(
       `${UNIQUE_VALUES_PREFIX}${type}`,
-      CACHE_TTL,
-      JSON.stringify(values)
+      JSON.stringify(values),
+      { ex: CACHE_TTL }
     );
   } catch (error) {
     console.error(`[Redis Cache] Error setting unique ${type}:`, error);
@@ -203,7 +206,7 @@ export const invalidatePhotoCache = async (photoId: string): Promise<void> => {
     const pattern = `${PHOTOS_LIST_PREFIX}*`;
     const keys = await redis.keys(pattern);
     if (keys.length > 0) {
-      await redis.del(...keys);
+      await Promise.all(keys.map(key => redis.del(key)));
       console.log(`[Redis Cache] Invalidated ${keys.length} list caches`);
     }
     
@@ -211,7 +214,7 @@ export const invalidatePhotoCache = async (photoId: string): Promise<void> => {
     const countPattern = `${PHOTOS_COUNT_PREFIX}*`;
     const countKeys = await redis.keys(countPattern);
     if (countKeys.length > 0) {
-      await redis.del(...countKeys);
+      await Promise.all(countKeys.map(key => redis.del(key)));
     }
   } catch (error) {
     console.error('[Redis Cache] Error invalidating photo cache:', error);
@@ -227,7 +230,7 @@ export const invalidateCacheByType = async (type: string): Promise<void> => {
     const pattern = `*:${CACHE_VERSION}:${type}:*`;
     const keys = await redis.keys(pattern);
     if (keys.length > 0) {
-      await redis.del(...keys);
+      await Promise.all(keys.map(key => redis.del(key)));
       console.log(`[Redis Cache] Invalidated ${keys.length} ${type} caches`);
     }
   } catch (error) {
@@ -244,7 +247,7 @@ export const clearAllRedisCache = async (): Promise<void> => {
     const pattern = `*:${CACHE_VERSION}:*`;
     const keys = await redis.keys(pattern);
     if (keys.length > 0) {
-      await redis.del(...keys);
+      await Promise.all(keys.map(key => redis.del(key)));
       console.log(`[Redis Cache] Cleared ${keys.length} cache entries`);
     }
   } catch (error) {
