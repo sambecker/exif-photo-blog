@@ -1,8 +1,8 @@
+import { convertApertureValueToFNumber } from '@/utility/exif';
 import {
-  convertApertureValueToFNumber,
-  formatExposureCompensation,
   formatExposureTime,
-} from '@/utility/exif';
+  formatExposureCompensation,
+} from '@/utility/exif-format';
 
 describe('EXIF', () => {
   describe('converts', () => {
