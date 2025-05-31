@@ -91,7 +91,7 @@ export default function AppViewSwitcher({
   return (
     <div
       className={clsx(
-        'flex gap-1 sm:gap-2',
+        'flex gap-1.5 sm:gap-2',
         className,
       )}
     >
