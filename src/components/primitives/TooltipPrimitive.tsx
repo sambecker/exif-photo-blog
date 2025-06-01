@@ -7,6 +7,7 @@ import useSupportsHover from '@/utility/useSupportsHover';
 import clsx from 'clsx/lite';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
 import KeyCommand from './KeyCommand';
+
 export default function TooltipPrimitive({
   content: contentProp,
   children,
@@ -39,7 +40,7 @@ export default function TooltipPrimitive({
 
   const supportsHover = useSupportsHover();
 
-  const includeButton = !supportsHover && supportMobile;
+  const includeButton = supportMobile && supportsHover === false;
 
   useClickInsideOutside({
     htmlElements: [refTrigger, refContent],
