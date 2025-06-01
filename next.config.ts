@@ -52,13 +52,14 @@ const nextConfig: NextConfig = {
   },
   turbopack: {
     resolveAlias: {
+      // ✅ works locally
       '@/i18n/date-fns-locale-alias': `@/${LOCALE_ALIAS}`,
     },
   },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      // eslint-disable-next-line max-len
+      // ❌ doesn't seem to do anything in prod
       '@/i18n/date-fns-locale-alias': path.resolve(__dirname, `src/${LOCALE_ALIAS}`),
     };
     return config;
