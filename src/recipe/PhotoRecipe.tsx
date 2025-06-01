@@ -30,9 +30,7 @@ export default function PhotoRecipe({
       icon={<IconRecipe
         size={16}
         className={clsx(
-          props.badged
-            ? 'translate-x-[-1px] translate-y-[0.5px]'
-            : 'translate-y-[-0.5px]',
+          props.badged && 'translate-x-[-1px] translate-y-[0.5px]',
         )}
       />}
       action={toggleRecipeOverlay &&

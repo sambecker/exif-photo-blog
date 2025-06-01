@@ -167,11 +167,11 @@ html {
 }
 @utility bg-medium {
   @apply
-    bg-gray-200 dark:bg-gray-700
+    bg-gray-200 dark:bg-gray-700/65
 }
 @utility bg-dim {
   @apply
-    bg-gray-100 dark:bg-gray-900/75
+    bg-gray-100 dark:bg-gray-800/70
 }
 @utility bg-extra-dim {
   @apply

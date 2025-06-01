@@ -29,9 +29,9 @@ export default function PhotoRecipeOverlayButton({
           ref.current?.blur();
         }}
         className={clsx(
-          'text-medium',
-          'rounded-md shadow-none',
-          'border-[1.5px] border-medium',
+          'text-medium hover:text-main',
+          'bg-dim hover:bg-medium active:bg-dim',
+          'rounded-md border-transparent shadow-none',
           'p-0 inline-flex items-center justify-center',
           'size-[17px] sm:size-5',
           'hover:bg-extra-dim active:bg-dim',
