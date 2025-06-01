@@ -78,6 +78,7 @@ import { labelForFilm } from '@/film';
 import IconFavs from '@/components/icons/IconFavs';
 import IconHidden from '@/components/icons/IconHidden';
 import { useAppText } from '@/i18n/state/client';
+import LoaderButton from '@/components/primitives/LoaderButton';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -199,7 +200,6 @@ export default function CommandKClient({
   const [queryLiveRaw, setQueryLive] = useState('');
   const [queryDebouncedRaw] =
     useDebounce(queryLiveRaw, 500, { trailing: true });
-  const isPlaceholderVisible = queryLiveRaw === '';
 
   // Parameterized query values
   const queryLive = useMemo(() =>
@@ -586,38 +586,47 @@ export default function CommandKClient({
           <DialogDescription>{DIALOG_DESCRIPTION}</DialogDescription>
         </VisuallyHidden.Root>
         <div className={clsx(
-          'px-3 md:px-3.5',
-          'pt-3 md:pt-3.5',
+          'flex items-center justify-center gap-2',
+          'py-1 px-4.5',
+          'rounded-none bg-transparent',
+          'border-b border-b-gray-400/25 dark:border-b-gray-800',
         )}>
-          <div className="relative">
-            <Command.Input
-              ref={refInput}
-              onChangeCapture={(e) => {
-                setQueryLive(e.currentTarget.value);
-                updateMask();
-              }}
-              className={clsx(
-                'w-full min-w-0!',
-                'focus:ring-0',
-                isPlaceholderVisible || isLoading && 'pr-10!',
-                'border-medium',
-                'focus:border-gray-200 dark:focus:border-gray-800',
-                'placeholder:text-gray-400/80',
-                'dark:placeholder:text-gray-700',
-                'focus:outline-hidden',
-                isPending && 'opacity-20',
-              )}
-              placeholder={appText.cmdk.placeholder}
-              disabled={isPending}
-            />
-            {isLoading && !isPending &&
-              <span className={clsx(
-                'absolute top-[9px] right-0 w-10',
-                'flex items-center justify-center translate-y-[2px]',
-              )}>
-                <Spinner size={16} />
-              </span>}
-          </div>
+          <Command.Input
+            ref={refInput}
+            onChangeCapture={(e) => {
+              setQueryLive(e.currentTarget.value);
+              updateMask();
+            }}
+            className={clsx(
+              'grow p-0',
+              'focus:ring-0',
+              'border-transparent focus:border-transparent',
+              'bg-transparent rounded-none',
+              'placeholder:text-gray-400/80',
+              'dark:placeholder:text-gray-700',
+              'focus:outline-hidden',
+              isPending && 'opacity-20',
+            )}
+            placeholder={appText.cmdk.placeholder}
+            disabled={isPending}
+          />
+          {isLoading && !isPending
+            ? <span className="mr-1 translate-y-[2px]">
+              <Spinner size={16} />
+            </span>
+            : <span className="max-sm:hidden">
+              <LoaderButton
+                className={clsx(
+                  'h-auto! px-1.5 py-1 -mr-1.5',
+                  'border-medium shadow-none',
+                  'text-[12px]',
+                  'text-gray-400/90 dark:text-gray-700',
+                )}
+                onClick={() => setIsOpen?.(false)}
+              >
+                ESC
+              </LoaderButton>
+            </span>}
         </div>
         <Command.List
           ref={refScroll}
@@ -690,9 +699,7 @@ export default function CommandKClient({
                           if (path !== pathname) {
                             setKeyWaiting(key);
                             shouldCloseAfterWaiting.current = true;
-                            startTransition(() => {
-                              router.push(path, { scroll: true });
-                            });
+                            startTransition(() => router.push(path));
                           } else {
                             setIsOpen?.(false);
                           }

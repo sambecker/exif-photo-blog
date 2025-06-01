@@ -15,6 +15,11 @@
   }
 }
 
+html {
+  /* Necessary for nextjs scroll restoration */
+  min-height: 100%;
+}
+
 @theme {
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 
