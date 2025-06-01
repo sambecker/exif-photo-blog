@@ -40,11 +40,26 @@ if (HOSTNAME_AWS_S3) {
   remotePatterns.push(generateRemotePattern(HOSTNAME_AWS_S3));
 }
 
+const LOCALE_ALIAS =
+  `@/i18n/locales/${process.env.NEXT_PUBLIC_LOCALE ?? 'en-us'}`;
+
 const nextConfig: NextConfig = {
   images: {
     imageSizes: [200],
     remotePatterns,
     minimumCacheTTL: 31536000,
+  },
+  turbopack: {
+    resolveAlias: {
+      '@/i18n/date-fns-locale-alias': LOCALE_ALIAS,
+    },
+  },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@/i18n/date-fns-locale-alias': LOCALE_ALIAS,
+    };
+    return config;
   },
 };
 

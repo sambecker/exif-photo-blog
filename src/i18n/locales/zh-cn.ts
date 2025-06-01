@@ -1,4 +1,7 @@
-const TEXT = {
+import { I18NDeepPartial } from '..';
+export { zhCN as default } from 'date-fns/locale/zh-CN';
+
+export const TEXT: I18NDeepPartial = {
   photo: {
     photo: '照片',
     photoPlural: '照片',
@@ -113,5 +116,3 @@ const TEXT = {
     paginateAction: '{{action}} 第 {{index}} 页，共 {{count}} 页',
   },
 };
-
-export default TEXT;
