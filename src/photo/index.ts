@@ -171,7 +171,12 @@ export const photoStatsAsString = (photo: Photo) => [
   photo.isoFormatted,
 ].join(' ');
 
-export const descriptionForPhoto = (photo: Photo) =>
+export const descriptionForPhoto = (
+  photo: Photo,
+  includeSemanticDescription?: boolean,
+) =>
+  photo.caption ||
+  (includeSemanticDescription && photo.semanticDescription) ||
   formatDate({ date: photo.takenAt }).toLocaleUpperCase();
 
 export const getPreviousPhoto = (photo: Photo, photos: Photo[]) => {

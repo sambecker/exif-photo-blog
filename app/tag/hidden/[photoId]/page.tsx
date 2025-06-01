@@ -35,11 +35,12 @@ export async function generateMetadata({
 
   const title = titleForPhoto(photo);
   const description = descriptionForPhoto(photo);
+  const descriptionHtml = descriptionForPhoto(photo, true);
   const url = absolutePathForPhoto({ photo, tag: TAG_HIDDEN });
 
   return {
     title,
-    description,
+    description: descriptionHtml,
     openGraph: {
       title,
       description,
