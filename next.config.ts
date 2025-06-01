@@ -1,6 +1,7 @@
 import { removeUrlProtocol } from '@/utility/url';
 import type { NextConfig } from 'next';
 import { RemotePattern } from 'next/dist/shared/lib/image-config';
+import path from 'path';
 
 const VERCEL_BLOB_STORE_ID = process.env.BLOB_READ_WRITE_TOKEN?.match(
   /^vercel_blob_rw_([a-z0-9]+)_[a-z0-9]+$/i,
@@ -57,7 +58,7 @@ const nextConfig: NextConfig = {
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@/i18n/date-fns-locale-alias': LOCALE_ALIAS,
+      '@/i18n/date-fns-locale-alias': path.resolve(__dirname, LOCALE_ALIAS),
     };
     return config;
   },
