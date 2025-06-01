@@ -1,4 +1,5 @@
 import EN_US from './locales/en-us';
+import { setDefaultOptions } from 'date-fns';
 import { enUS, id, ptBR, pt, zhCN } from 'date-fns/locale';
 import { APP_LOCALE } from '@/app/config';
 
@@ -52,4 +53,5 @@ export const getTextForLocale = async (locale: string): Promise<I18N> => {
   return text;
 };
 
-export const DATE_FN_LOCALE = getDateFnLocale(APP_LOCALE);
+export const setDefaultDateFnLocale = () =>
+  setDefaultOptions({ locale: getDateFnLocale(APP_LOCALE) });
