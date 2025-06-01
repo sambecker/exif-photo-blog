@@ -58,8 +58,10 @@ const nextConfig: NextConfig = {
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@/i18n/date-fns-locale-alias': path.resolve(__dirname, LOCALE_ALIAS),
+      // eslint-disable-next-line max-len
+      '@/i18n/date-fns-locale-alias': path.resolve(__dirname, `src/i18n/locales/${process.env.NEXT_PUBLIC_LOCALE ?? 'en-us'}.ts`),
     };
+    console.log(config.resolve.alias);
     return config;
   },
 };
