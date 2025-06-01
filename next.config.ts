@@ -1,6 +1,7 @@
 import { removeUrlProtocol } from '@/utility/url';
 import type { NextConfig } from 'next';
 import { RemotePattern } from 'next/dist/shared/lib/image-config';
+import path from 'path';
 
 const VERCEL_BLOB_STORE_ID = process.env.BLOB_READ_WRITE_TOKEN?.match(
   /^vercel_blob_rw_([a-z0-9]+)_[a-z0-9]+$/i,
@@ -41,7 +42,7 @@ if (HOSTNAME_AWS_S3) {
 }
 
 const LOCALE_ALIAS =
-  `@/i18n/locales/${process.env.NEXT_PUBLIC_LOCALE ?? 'en-us'}`;
+  `i18n/locales/${process.env.NEXT_PUBLIC_LOCALE || 'en-us'}`;
 
 const nextConfig: NextConfig = {
   images: {
@@ -51,13 +52,14 @@ const nextConfig: NextConfig = {
   },
   turbopack: {
     resolveAlias: {
-      '@/i18n/date-fns-locale-alias': LOCALE_ALIAS,
+      '@/i18n/date-fns-locale-alias': `@/${LOCALE_ALIAS}`,
     },
   },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@/i18n/date-fns-locale-alias': LOCALE_ALIAS,
+      // eslint-disable-next-line max-len
+      '@/i18n/date-fns-locale-alias': path.resolve(__dirname, `src/${LOCALE_ALIAS}`),
     };
     return config;
   },
