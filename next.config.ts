@@ -59,7 +59,7 @@ const nextConfig: NextConfig = {
     config.resolve.alias = {
       ...config.resolve.alias,
       // eslint-disable-next-line max-len
-      '@/i18n/date-fns-locale-alias': path.resolve(__dirname, `src/i18n/locales/${process.env.NEXT_PUBLIC_LOCALE ?? 'en-us'}.ts`),
+      '@/i18n/date-fns-locale-alias': path.resolve(__dirname, `src/i18n/locales/${process.env.NEXT_PUBLIC_LOCALE ?? 'en-us'}`),
     };
     console.log(config.resolve.alias);
     return config;
