@@ -1,5 +1,6 @@
 import { TEXT as EN_US } from './locales/en-us';
 import { setDefaultOptions } from 'date-fns';
+// @ts-expect-error - This is a dynamic import
 import locale from 'src/i18n/date-fns-locale-alias';
 
 export type I18N = typeof EN_US;
