@@ -57,10 +57,13 @@ const nextConfig: NextConfig = {
     },
   },
   webpack: (config) => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      // ❌ doesn't seem to do anything in prod
-      '@/i18n/date-fns-locale-alias': path.resolve(__dirname, `src/${LOCALE_ALIAS}`),
+    config.resolve = {
+      ...config.resolve,
+      alias: {
+        ...config.resolve.alias,
+        '@/i18n/date-fns-locale-alias':
+          path.resolve(__dirname, `src/${LOCALE_ALIAS}`),
+      },
     };
     return config;
   },
