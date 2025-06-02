@@ -57,6 +57,7 @@ const nextConfig: NextConfig = {
     },
   },
   webpack: (config) => {
+    config.cache = false;
     config.resolve.alias = {
       ...config.resolve.alias,
       [LOCALE_PLACEHOLDER_IMPORT]:
