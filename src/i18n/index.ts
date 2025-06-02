@@ -10,8 +10,8 @@ export type I18NDeepPartial = {
 
 /**
  * TRANSLATION STEPS FOR CONTRIBUTORS:
- * 1. Create new file in `src/i18n/locales` modeled on `en-us.ts`
- *    and make sure to export a default date-fns locale.
+ * 1. Create new file in `src/i18n/locales` modeled on `en-us.ts`—
+ *    MAKE SURE to export a default date-fns locale
  * 3. Add import to `LOCALE_TEXT_IMPORTS`
  * 4. Test locally
  * 4. Add translation/credit to `README.md` Supported Languages
