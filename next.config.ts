@@ -42,7 +42,7 @@ if (HOSTNAME_AWS_S3) {
 }
 
 const LOCALE_DYNAMIC = process.env.NEXT_PUBLIC_LOCALE || 'en-us';
-const LOCALE_PLACEHOLDER_IMPORT = 'src/i18n/date-fns-locale-alias';
+const LOCALE_PLACEHOLDER_IMPORT = './date-fns-locale-alias';
 const LOCALE_ALIAS = `i18n/locales/${LOCALE_DYNAMIC}`;
 
 const nextConfig: NextConfig = {
