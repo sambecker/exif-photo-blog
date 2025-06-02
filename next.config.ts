@@ -1,7 +1,6 @@
 import { removeUrlProtocol } from '@/utility/url';
 import type { NextConfig } from 'next';
 import { RemotePattern } from 'next/dist/shared/lib/image-config';
-import fs from 'fs';
 
 const VERCEL_BLOB_STORE_ID = process.env.BLOB_READ_WRITE_TOKEN?.match(
   /^vercel_blob_rw_([a-z0-9]+)_[a-z0-9]+$/i,
@@ -41,9 +40,6 @@ if (HOSTNAME_AWS_S3) {
   remotePatterns.push(generateRemotePattern(HOSTNAME_AWS_S3));
 }
 
-const LOCALE_ALIAS =
-  `i18n/locales/${process.env.NEXT_PUBLIC_LOCALE || 'en-us'}`;
-
 const nextConfig: NextConfig = {
   images: {
     imageSizes: [200],
@@ -52,20 +48,9 @@ const nextConfig: NextConfig = {
   },
   turbopack: {
     resolveAlias: {
-      // ✅ works locally
-      '@/i18n/date-fns-locale-alias': `@/${LOCALE_ALIAS}`,
+      '@/i18n/date-fns-locale-alias':
+        `@/i18n/locales/${process.env.NEXT_PUBLIC_LOCALE || 'en-us'}`,
     },
-  },
-  webpack: (config) => {
-    config.resolve = {
-      ...config.resolve,
-      alias: {
-        ...config.resolve.alias,
-        '@/i18n/date-fns-locale-alias':
-          fs.readFileSync(require.resolve(`src/${LOCALE_ALIAS}.ts`)),
-      },
-    };
-    return config;
   },
 };
 
