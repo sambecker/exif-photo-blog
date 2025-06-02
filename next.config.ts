@@ -41,9 +41,9 @@ if (HOSTNAME_AWS_S3) {
   remotePatterns.push(generateRemotePattern(HOSTNAME_AWS_S3));
 }
 
-const LOCALE_DYNAMIC = process.env.NEXT_PUBLIC_LOCALE || 'en-us';
-const LOCALE_PLACEHOLDER_IMPORT = './date-fns-locale-alias';
-const LOCALE_ALIAS = `i18n/locales/${LOCALE_DYNAMIC}`;
+const LOCALE = process.env.NEXT_PUBLIC_LOCALE || 'en-us';
+const LOCALE_ALIAS = './date-fns-locale-alias';
+const LOCALE_DYNAMIC = `i18n/locales/${LOCALE}`;
 
 const nextConfig: NextConfig = {
   images: {
@@ -53,14 +53,13 @@ const nextConfig: NextConfig = {
   },
   turbopack: {
     resolveAlias: {
-      [LOCALE_PLACEHOLDER_IMPORT]: `@/${LOCALE_ALIAS}`,
+      [LOCALE_ALIAS]: `@/${LOCALE_DYNAMIC}`,
     },
   },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      [LOCALE_PLACEHOLDER_IMPORT]:
-        path.resolve(__dirname, `src/${LOCALE_ALIAS}`),
+      [LOCALE_ALIAS]: path.resolve(__dirname, `src/${LOCALE_DYNAMIC}`),
     };
     return config;
   },
