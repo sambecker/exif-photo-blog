@@ -1,7 +1,7 @@
 import { removeUrlProtocol } from '@/utility/url';
 import type { NextConfig } from 'next';
 import { RemotePattern } from 'next/dist/shared/lib/image-config';
-import path from 'path';
+import fs from 'fs';
 
 const VERCEL_BLOB_STORE_ID = process.env.BLOB_READ_WRITE_TOKEN?.match(
   /^vercel_blob_rw_([a-z0-9]+)_[a-z0-9]+$/i,
@@ -62,7 +62,7 @@ const nextConfig: NextConfig = {
       alias: {
         ...config.resolve.alias,
         '@/i18n/date-fns-locale-alias':
-          path.resolve(__dirname, `src/${LOCALE_ALIAS}`),
+          fs.readFileSync(require.resolve(`src/${LOCALE_ALIAS}.ts`)),
       },
     };
     return config;
