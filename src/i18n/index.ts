@@ -1,5 +1,6 @@
 import { TEXT as EN_US } from './locales/en-us';
 import { setDefaultOptions } from 'date-fns';
+// Dynamically resolves in next.config.ts
 import locale from './date-fns-locale-alias';
 
 export type I18N = typeof EN_US;
