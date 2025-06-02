@@ -1,4 +1,6 @@
-const TEXT = {
+export { enUS as default } from 'date-fns/locale/en-US';
+
+export const TEXT = {
   photo: {
     photo: 'Photo',
     photoPlural: 'Photos',
@@ -114,5 +116,3 @@ const TEXT = {
     paginateAction: '{{action}} {{index}} of {{count}}',
   },
 };
-
-export default TEXT;

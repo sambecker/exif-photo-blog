@@ -1,6 +1,7 @@
 import { I18NDeepPartial } from '..';
+export { ptBR as default } from 'date-fns/locale/pt-BR';
 
-const TEXT: I18NDeepPartial = {
+export const TEXT: I18NDeepPartial = {
   photo: {
     photo: 'Foto',
     photoPlural: 'Fotos',
@@ -116,5 +117,3 @@ const TEXT: I18NDeepPartial = {
     paginateAction: '{{action}} {{index}} de {{count}}',
   },
 };
-
-export default TEXT;

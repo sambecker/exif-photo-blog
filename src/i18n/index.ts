@@ -1,7 +1,7 @@
-import EN_US from './locales/en-us';
+import { TEXT as EN_US } from './locales/en-us';
 import { setDefaultOptions } from 'date-fns';
-import { enUS, id, ptBR, pt, zhCN } from 'date-fns/locale';
-import { APP_LOCALE } from '@/app/config';
+// Dynamically resolves in next.config.ts
+import locale from './date-fns-locale-alias';
 
 export type I18N = typeof EN_US;
 
@@ -10,38 +10,29 @@ export type I18NDeepPartial = {
 }
 
 /**
- * Translation steps for contributors:
- * 1. Create new file in `src/i18n/locales` modeled on `en-us.ts`.
- * 2. Add import to `localeTextImports`
- * 3. Add date-fn locale to `getDateFnLocale`
+ * TRANSLATION STEPS FOR CONTRIBUTORS:
+ * 1. Create new file in `src/i18n/locales` modeled on `en-us.ts`—
+ *    MAKE SURE to export a default date-fns locale
+ * 3. Add import to `LOCALE_TEXT_IMPORTS`
  * 4. Test locally
- * 5. Add translation/credit to `README.md` Supported Languages
+ * 4. Add translation/credit to `README.md` Supported Languages
  */
 
-const localeTextImports: Record<
+const LOCALE_TEXT_IMPORTS: Record<
   string,
   () => Promise<I18NDeepPartial | undefined>
 > = {
-  'pt-br': () => import('./locales/pt-br').then(m => m.default),
-  'pt-pt': () => import('./locales/pt-pt').then(m => m.default),
-  'id-id': () => import('./locales/id-id').then(m => m.default),
-  'zh-cn': () => import('./locales/zh-cn').then(m => m.default),
-};
-
-const getDateFnLocale = (locale: string) => {
-  switch (locale) {
-  case 'id-id': return id;
-  case 'pt-pt': return pt;
-  case 'pt-br': return ptBR;
-  case 'zh-cn': return zhCN;
-  default: return enUS;
-  }
+  'pt-br': () => import('./locales/pt-br').then(m => m.TEXT),
+  'pt-pt': () => import('./locales/pt-pt').then(m => m.TEXT),
+  'id-id': () => import('./locales/id-id').then(m => m.TEXT),
+  'zh-cn': () => import('./locales/zh-cn').then(m => m.TEXT),
 };
 
 export const getTextForLocale = async (locale: string): Promise<I18N> => {
   const text = EN_US;
-
-  Object.entries(await localeTextImports[locale.toLocaleLowerCase()]?.() ?? {})
+  Object.entries(
+    await LOCALE_TEXT_IMPORTS[locale.toLocaleLowerCase()]?.() ?? {},
+  )
     .forEach(([key, value]) => {
       // Fall back to English for missing keys
       text[key as keyof I18N] = {
@@ -53,5 +44,4 @@ export const getTextForLocale = async (locale: string): Promise<I18N> => {
   return text;
 };
 
-export const setDefaultDateFnLocale = () =>
-  setDefaultOptions({ locale: getDateFnLocale(APP_LOCALE) });
+export const setDefaultDateFnLocale = () => setDefaultOptions({ locale });
