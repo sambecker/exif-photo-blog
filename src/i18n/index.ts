@@ -1,6 +1,6 @@
 import { TEXT as EN_US } from './locales/en-us';
 import { setDefaultOptions } from 'date-fns';
-import locale from '@/i18n/date-fns-locale-alias';
+import locale from 'src/i18n/date-fns-locale-alias';
 
 export type I18N = typeof EN_US;
 
