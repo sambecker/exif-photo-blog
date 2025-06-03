@@ -51,6 +51,7 @@ import { lensFromPhoto } from '@/lens';
 import MaskedScroll from '@/components/MaskedScroll';
 import useCategoryCountsForPhoto from '@/category/useCategoryCountsForPhoto';
 import { useAppText } from '@/i18n/state/client';
+import ColorPalette from '@/palette/ColorPalette';
 
 export default function PhotoLarge({
   photo,
@@ -301,6 +302,10 @@ export default function PhotoLarge({
                 <div className="float-end hidden md:block">
                   {renderAdminMenu}
                 </div>
+                <ColorPalette
+                  photo={photo}
+                  className="mb-2"
+                />
                 {hasTitle && (showTitleAsH1
                   ? <h1>{renderPhotoLink}</h1>
                   : renderPhotoLink)}
