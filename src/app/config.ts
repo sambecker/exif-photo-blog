@@ -350,15 +350,21 @@ export const APP_CONFIGURATION = {
   // Content
   locale: APP_LOCALE,
   hasLocale: Boolean(process.env.NEXT_PUBLIC_LOCALE),
+  domain: SITE_DOMAIN_SHORT,
   hasDomain: Boolean(
     process.env.NEXT_PUBLIC_DOMAIN ||
     // Legacy environment variable
     process.env.NEXT_PUBLIC_SITE_DOMAIN,
   ),
-  hasNavTitle: Boolean(NAV_TITLE),
-  hasNavCaption: Boolean(NAV_CAPTION),
+  metaTitle: META_TITLE,
   isMetaTitleConfigured: IS_META_TITLE_CONFIGURED,
+  metaDescription: META_DESCRIPTION,
   isMetaDescriptionConfigured: IS_META_DESCRIPTION_CONFIGURED,
+  navTitle: NAV_TITLE,
+  hasNavTitle: Boolean(NAV_TITLE),
+  navCaption: NAV_CAPTION,
+  hasNavCaption: Boolean(NAV_CAPTION),
+  pageAbout: PAGE_ABOUT,
   hasPageAbout: Boolean(process.env.NEXT_PUBLIC_SITE_ABOUT),
   // AI
   hasOpenaiBaseUrl: Boolean(OPENAI_BASE_URL),
