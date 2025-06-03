@@ -362,8 +362,8 @@ export default function AdminAppConfigurationClient({
             status={hasNavTitle}
             optional
           >
-            {hasNavTitle && renderContent(navTitle)}
-            Store in environment variable (replaces domain in nav):
+            {renderContent(navTitle)}
+            Store in environment variable (replaces domain in top-right nav):
             {renderEnvVars(['NEXT_PUBLIC_NAV_TITLE'])}
           </ChecklistRow>
           <ChecklistRow
@@ -372,7 +372,7 @@ export default function AdminAppConfigurationClient({
             optional
           >
             {hasNavCaption && renderContent(navCaption)}
-            Store in environment variable (seen in nav, under title):
+            Store in environment variable (seen in top-right nav, under title):
             {renderEnvVars(['NEXT_PUBLIC_NAV_CAPTION'])}
           </ChecklistRow>
           <ChecklistRow

@@ -107,7 +107,7 @@ export const APP_LOCALE = (process.env.NEXT_PUBLIC_LOCALE || 'en-us')
   .replace('_', '-');
 export const HTML_LANG = (APP_LOCALE.split('-')[1] || 'en');
 
-export const NAV_TITLE =
+export const CUSTOM_NAV_TITLE =
   process.env.NEXT_PUBLIC_NAV_TITLE;
 
 export const NAV_CAPTION =
@@ -119,14 +119,14 @@ export const META_TITLE =
   process.env.NEXT_PUBLIC_META_TITLE ||
   // Legacy environment variable
   process.env.NEXT_PUBLIC_SITE_TITLE ||
-  NAV_TITLE ||
+  CUSTOM_NAV_TITLE ||
   TEMPLATE_TITLE;
 
 export const IS_META_TITLE_CONFIGURED =
   Boolean(process.env.NEXT_PUBLIC_META_TITLE) ||
   // Legacy environment variable
   Boolean(process.env.NEXT_PUBLIC_SITE_TITLE) ||
-  Boolean(NAV_TITLE);
+  Boolean(CUSTOM_NAV_TITLE);
 
 export const IS_META_DESCRIPTION_CONFIGURED =
   Boolean(process.env.NEXT_PUBLIC_META_DESCRIPTION) ||
@@ -135,10 +135,10 @@ export const IS_META_DESCRIPTION_CONFIGURED =
 export const META_DESCRIPTION =
   process.env.NEXT_PUBLIC_META_DESCRIPTION ||
   NAV_CAPTION ||
-  SITE_DOMAIN;
+  SITE_DOMAIN_SHORT;
 
-export const NAV_TITLE_OR_DOMAIN =
-  NAV_TITLE ||
+export const NAV_TITLE =
+  CUSTOM_NAV_TITLE ||
   SITE_DOMAIN_SHORT ||
   META_TITLE;
 
@@ -361,7 +361,7 @@ export const APP_CONFIGURATION = {
   metaDescription: META_DESCRIPTION,
   isMetaDescriptionConfigured: IS_META_DESCRIPTION_CONFIGURED,
   navTitle: NAV_TITLE,
-  hasNavTitle: Boolean(NAV_TITLE),
+  hasNavTitle: Boolean(CUSTOM_NAV_TITLE),
   navCaption: NAV_CAPTION,
   hasNavCaption: Boolean(NAV_CAPTION),
   pageAbout: PAGE_ABOUT,

@@ -1,4 +1,4 @@
-import { NAV_TITLE_OR_DOMAIN } from '@/app/config';
+import { NAV_TITLE } from '@/app/config';
 import { Photo } from '../photo';
 import ImageCaption from './components/ImageCaption';
 import ImageContainer from './components/ImageContainer';
@@ -29,7 +29,7 @@ export default function HomeImageResponse({
         width,
         height,
         fontFamily,
-        title: NAV_TITLE_OR_DOMAIN,
+        title: NAV_TITLE,
       }} />
     </ImageContainer>
   );

@@ -6,9 +6,10 @@ import {
   DEFAULT_THEME,
   PRESERVE_ORIGINAL_UPLOADS,
   META_DESCRIPTION,
-  NAV_TITLE_OR_DOMAIN,
+  NAV_TITLE,
   META_TITLE,
   HTML_LANG,
+  NAV_CAPTION,
 } from '@/app/config';
 import AppStateProvider from '@/state/AppStateProvider';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
@@ -90,7 +91,10 @@ export default function RootLayout({
                   'mx-3 mb-3',
                   'lg:mx-6 lg:mb-6',
                 )}>
-                  <Nav navTitleOrDomain={NAV_TITLE_OR_DOMAIN} />
+                  <Nav
+                    navTitle={NAV_TITLE}
+                    navCaption={NAV_CAPTION}
+                  />
                   <main>
                     <ShareModals />
                     <RecipeModal />
