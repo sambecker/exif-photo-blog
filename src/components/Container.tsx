@@ -66,9 +66,6 @@ export default function Container({
         'flex flex-col items-center justify-center',
         'rounded-lg',
         ...getColorClasses(),
-        // Full-bleed on mobile
-        'max-sm:border-l-0 max-sm:border-r-0 max-sm:rounded-none',
-        'max-sm:-mx-3 max-sm:px-3.5',
         getPaddingClasses(),
         className,
       )}
