@@ -96,7 +96,7 @@ export default function AdminPhotoMenu({
     items.push({
       label: photo.hidden ? appText.admin.unhide : appText.admin.hide,
       icon: <IconHidden
-        size={16}
+        size={17}
         className="translate-x-[-1px] translate-y-[1px]"
         visible={photo.hidden}
       />,
