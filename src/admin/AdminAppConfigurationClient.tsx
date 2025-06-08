@@ -104,6 +104,7 @@ export default function AdminAppConfigurationClient({
   isGeoPrivacyEnabled,
   arePublicDownloadsEnabled,
   isPublicApiEnabled,
+  isPublicFeedEnabled,
   isPriorityOrderEnabled,
   isOgTextBottomAligned,
   // Internal
@@ -732,6 +733,16 @@ export default function AdminAppConfigurationClient({
             Set environment variable to {'"1"'} to enable
             public photo downloads for all visitors:
             {renderEnvVars(['NEXT_PUBLIC_ALLOW_PUBLIC_DOWNLOADS'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Public Feed"
+            status={isPublicFeedEnabled}
+            optional
+          >
+            Set environment variable to {'"1"'} to enable
+            a public feed available at <code>/feed.json</code>
+            and <code>/rss.xml</code>:
+            {renderEnvVars(['NEXT_PUBLIC_PUBLIC_FEED'])}
           </ChecklistRow>
           <ChecklistRow
             title="Public API"
