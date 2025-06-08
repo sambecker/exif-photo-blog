@@ -19,12 +19,14 @@ const DATE_STRING_FORMAT_LONG_PLACEHOLDER       = '00 000 0000 00:0000';
 
 const DATE_STRING_FORMAT_POSTGRES               = 'yyyy-MM-dd HH:mm:ss';
 
+const DATE_STRING_FORMAT_RSS                   = 'EEE, dd MMM yyyy HH:mm:ss xx';
+
 export const VALIDATION_EXAMPLE_POSTGRES        = '2025-01-03T21:00:44.000Z';
 export const VALIDATION_EXAMPLE_POSTGRES_NAIVE  = '2025-01-03 16:00:44';
 
 type AmbiguousTimestamp = number | string;
 
-type Length = 'tiny' | 'short' | 'medium' | 'long';
+type Length = 'tiny' | 'short' | 'medium' | 'long' | 'rss';
 
 export const formatDate = ({
   date,
@@ -47,6 +49,9 @@ export const formatDate = ({
     : DATE_STRING_FORMAT_SHORT_PLACEHOLDER;
 
   switch (length) {
+  case 'rss':
+    formatString = DATE_STRING_FORMAT_RSS;
+    break;
   case 'tiny':
     formatString = DATE_STRING_FORMAT_TINY;
     placeholderString = DATE_STRING_FORMAT_TINY_PLACEHOLDER;
