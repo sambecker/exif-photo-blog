@@ -83,7 +83,7 @@ export default function Modal({
       animate={{ backgroundColor: resolvedTheme === 'dark'
         ? 'rgba(0, 0, 0, 0.80)'
         : 'rgba(255, 255, 255, 0.90)' }}
-      transition={{ duration: 0.3, easing: 'easeOut' }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
     >
       <AnimateItems
         duration={fast ? 0.1 : 0.3}
