@@ -117,9 +117,9 @@ export const feedPhotoToXml = (photo: PublicFeedPhotoRss): string => {
       medium="image"
       width="${photo.media.content.width}"
       height="${photo.media.content.height}">
-      <media:thumbnail url="${photo.media.thumb.url.replace(/&/g, '&amp;')}"
-        width="${photo.media.thumb.width}"
-        height="${photo.media.thumb.height}" />
+    <media:thumbnail url="${photo.media.thumb.url.replace(/&/g, '&amp;')}"
+      width="${photo.media.thumb.width}"
+      height="${photo.media.thumb.height}" />
     </media:content>
   </item>`;
 };

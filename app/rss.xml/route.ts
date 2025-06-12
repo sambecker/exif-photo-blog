@@ -6,7 +6,7 @@ import {
   META_TITLE,
   PUBLIC_FEED_ENABLED,
 } from '@/app/config';
-import { feedPhotoToXml, formatPhotoForFeed } from '@/app/feed';
+import { feedPhotoToXml, formatPhotoForFeedRss } from '@/app/feed';
 
 export const dynamic = 'force-static';
 
@@ -16,7 +16,7 @@ export async function GET() {
       limit: INFINITE_SCROLL_FEED_INITIAL,
       sortBy: 'createdAt',
     });
-    const items = photos.map(formatPhotoForFeed).map(feedPhotoToXml);
+    const items = photos.map(formatPhotoForFeedRss).map(feedPhotoToXml);
 
     return new Response(
       `<?xml version="1.0" encoding="UTF-8"?>
