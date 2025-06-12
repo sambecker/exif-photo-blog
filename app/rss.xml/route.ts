@@ -4,14 +4,15 @@ import {
   BASE_URL,
   META_DESCRIPTION,
   META_TITLE,
-  PUBLIC_FEED_ENABLED,
+  SITE_FEEDS_ENABLED,
 } from '@/app/config';
 import { feedPhotoToXml, formatPhotoForFeedRss } from '@/app/feed';
+import { ABSOLUTE_PATH_FOR_FEED_JSON } from '@/app/paths';
 
 export const dynamic = 'force-static';
 
 export async function GET() {
-  if (PUBLIC_FEED_ENABLED) {
+  if (SITE_FEEDS_ENABLED) {
     const photos = await getPhotosCached({
       limit: INFINITE_SCROLL_FEED_INITIAL,
       sortBy: 'createdAt',
@@ -26,13 +27,11 @@ export async function GET() {
 
     <channel>
       <title>${META_TITLE}</title>
-      <atom:link href="${BASE_URL}/rss.xml"
+      <atom:link href="${ABSOLUTE_PATH_FOR_FEED_JSON}"
         rel="self" type="application/rss+xml" />
       <link>${BASE_URL}</link>
       <description>${META_DESCRIPTION}</description>
-
-      ${items.join('\n\n    ')}
-
+      ${items.join('\n')}
     </channel>
 
   </rss>`,

@@ -6,7 +6,7 @@ import {
 } from '@/platforms/next-image';
 import { formatDate, formatDateFromPostgresString } from '@/utility/date';
 
-export const API_PHOTO_REQUEST_LIMIT = 40;
+export const FEED_PHOTO_REQUEST_LIMIT = 40;
 
 export const FEED_PHOTO_WIDTH_SMALL = 200;
 export const FEED_PHOTO_WIDTH_MEDIUM = 640;

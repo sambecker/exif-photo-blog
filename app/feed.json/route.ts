@@ -1,18 +1,17 @@
 import { getPhotosCached } from '@/photo/cache';
-import { INFINITE_SCROLL_FEED_INITIAL } from '@/photo';
 import {
   BASE_URL,
-  PUBLIC_FEED_ENABLED,
+  SITE_FEEDS_ENABLED,
   META_TITLE,
 } from '@/app/config';
-import { formatPhotoForFeedJson } from '@/app/feed';
+import { FEED_PHOTO_REQUEST_LIMIT, formatPhotoForFeedJson } from '@/app/feed';
 
 export const dynamic = 'force-static';
 
 export async function GET() {
-  if (PUBLIC_FEED_ENABLED) {
+  if (SITE_FEEDS_ENABLED) {
     const photos = await getPhotosCached({
-      limit: INFINITE_SCROLL_FEED_INITIAL,
+      limit: FEED_PHOTO_REQUEST_LIMIT,
       sortBy: 'createdAt',
     });
     return Response.json({
