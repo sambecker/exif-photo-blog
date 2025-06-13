@@ -9,7 +9,7 @@ import {
 } from '.';
 import { formatDateFromPostgresString } from '@/utility/date';
 import { Photo } from '@/photo';
-import { BASE_URL } from '@/app/config';
+import { BASE_URL, META_DESCRIPTION } from '@/app/config';
 import { META_TITLE } from '@/app/config';
 
 interface FeedPhotoJson {
@@ -41,6 +41,7 @@ export const formatFeedJson = (photos: Photo[]) => ({
   meta: {
     title: META_TITLE,
     url: BASE_URL,
+    ...META_DESCRIPTION && { description: META_DESCRIPTION },
   },
   photos: photos.map(formatPhotoForFeedJson),
 });
