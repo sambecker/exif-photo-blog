@@ -12,22 +12,6 @@ export const FEED_PHOTO_WIDTH_SMALL = 200;
 export const FEED_PHOTO_WIDTH_MEDIUM = 640;
 export const FEED_PHOTO_WIDTH_LARGE = 1200;
 
-export interface PublicFeedJson {
-  meta: {
-    title: string
-    url: string
-  }
-  photos: PublicFeedPhotoJson[]
-}
-
-export interface PublicFeedRss {
-  meta: {
-    title: string
-    url: string
-  }
-  photos: PublicFeedPhotoRss[]
-}
-
 interface PublicFeedMedia {
   url: string
   width: number
@@ -42,10 +26,7 @@ interface PublicFeedPhotoJson {
   model?: string
   tags?: string[]
   takenAtNaive: string
-  src: Record<
-    'small' | 'medium' | 'large',
-    PublicFeedMedia
-  >
+  src: Record<'small' | 'medium' | 'large', PublicFeedMedia>
 }
 
 interface PublicFeedPhotoRss {
@@ -54,10 +35,15 @@ interface PublicFeedPhotoRss {
   description?: string
   link: string
   publicationDate: Date
-  media: Record<
-    'content' | 'thumb',
-    PublicFeedMedia
-  >
+  media: Record<'content' | 'thumb', PublicFeedMedia>
+}
+
+export interface PublicFeedJson {
+  meta: {
+    title: string
+    url: string
+  }
+  photos: PublicFeedPhotoJson[]
 }
 
 const generateFeedMedia = (
@@ -89,7 +75,7 @@ export const formatPhotoForFeedJson = (photo: Photo): PublicFeedPhotoJson => ({
   },
 });
 
-export const formatPhotoForFeedRss = (photo: Photo): PublicFeedPhotoRss => ({
+const formatPhotoForFeedRss = (photo: Photo): PublicFeedPhotoRss => ({
   ...getCoreFeedFields(photo),
   link: absolutePathForPhoto({ photo }),
   publicationDate: photo.createdAt,
@@ -99,7 +85,7 @@ export const formatPhotoForFeedRss = (photo: Photo): PublicFeedPhotoRss => ({
   },
 });
 
-export const feedPhotoToXml = (photo: PublicFeedPhotoRss): string => {
+const feedPhotoToXml = (photo: PublicFeedPhotoRss): string => {
   const formattedDate = formatDate({
     date: photo.publicationDate,
     length: 'rss',
@@ -112,14 +98,20 @@ export const feedPhotoToXml = (photo: PublicFeedPhotoRss): string => {
     <description>
       <![CDATA[${photo.description}]]>
     </description>
-    <media:content url="${photo.media.content.url.replace(/&/g, '&amp;')}"
+    <media:content url="<![CDATA[${photo.media.content.url}]]>"
       type="image/jpeg"
       medium="image"
       width="${photo.media.content.width}"
-      height="${photo.media.content.height}">
-    <media:thumbnail url="${photo.media.thumb.url.replace(/&/g, '&amp;')}"
-      width="${photo.media.thumb.width}"
-      height="${photo.media.thumb.height}" />
+      height="${photo.media.content.height}"
+    >
+      <media:thumbnail
+        url="<![CDATA[${photo.media.thumb.url}]]>"
+        width="${photo.media.thumb.width}"
+        height="${photo.media.thumb.height}"
+      />
     </media:content>
   </item>`;
 };
+
+export const createRssItems = (photos: Photo[]) =>
+  photos.map(formatPhotoForFeedRss).map(feedPhotoToXml);
