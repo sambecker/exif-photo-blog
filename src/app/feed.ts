@@ -5,6 +5,7 @@ import {
   NextImageSize,
 } from '@/platforms/next-image';
 import { formatDate, formatDateFromPostgresString } from '@/utility/date';
+import { formatStringForXml } from '@/utility/string';
 
 export const FEED_PHOTO_REQUEST_LIMIT = 40;
 
@@ -12,44 +13,44 @@ export const FEED_PHOTO_WIDTH_SMALL = 200;
 export const FEED_PHOTO_WIDTH_MEDIUM = 640;
 export const FEED_PHOTO_WIDTH_LARGE = 1200;
 
-interface PublicFeedMedia {
+interface FeedMedia {
   url: string
   width: number
   height: number
 }
 
-interface PublicFeedPhotoJson {
+interface FeedPhotoJson {
   id: string
-  title?: string
+  title: string
   url: string
   make?: string
   model?: string
   tags?: string[]
   takenAtNaive: string
-  src: Record<'small' | 'medium' | 'large', PublicFeedMedia>
+  src: Record<'small' | 'medium' | 'large', FeedMedia>
 }
 
-interface PublicFeedPhotoRss {
+interface FeedPhotoRss {
   id: string
-  title?: string
+  title: string
   description?: string
   link: string
-  publicationDate: Date
-  media: Record<'content' | 'thumb', PublicFeedMedia>
+  pubDate: Date
+  media: Record<'content' | 'thumb', FeedMedia>
 }
 
-export interface PublicFeedJson {
+export interface FeedJson {
   meta: {
     title: string
     url: string
   }
-  photos: PublicFeedPhotoJson[]
+  photos: FeedPhotoJson[]
 }
 
 const generateFeedMedia = (
   photo: Photo,
   size: NextImageSize,
-): PublicFeedMedia => ({
+): FeedMedia => ({
   url: getNextImageUrlForRequest({ imageUrl: photo.url, size }),
   width: size,
   height: Math.round(size / photo.aspectRatio),
@@ -58,10 +59,10 @@ const generateFeedMedia = (
 const getCoreFeedFields = (photo: Photo) => ({
   id: photo.id,
   title: titleForPhoto(photo),
-  description: descriptionForPhoto(photo),
+  description: descriptionForPhoto(photo, true),
 });
 
-export const formatPhotoForFeedJson = (photo: Photo): PublicFeedPhotoJson => ({
+export const formatPhotoForFeedJson = (photo: Photo): FeedPhotoJson => ({
   ...getCoreFeedFields(photo),
   url: absolutePathForPhoto({ photo }),
   ...photo.make && { make: photo.make },
@@ -75,37 +76,35 @@ export const formatPhotoForFeedJson = (photo: Photo): PublicFeedPhotoJson => ({
   },
 });
 
-const formatPhotoForFeedRss = (photo: Photo): PublicFeedPhotoRss => ({
+const formatPhotoForFeedRss = (photo: Photo): FeedPhotoRss => ({
   ...getCoreFeedFields(photo),
   link: absolutePathForPhoto({ photo }),
-  publicationDate: photo.createdAt,
+  pubDate: photo.createdAt,
   media: {
     content: generateFeedMedia(photo, FEED_PHOTO_WIDTH_LARGE),
     thumb: generateFeedMedia(photo, FEED_PHOTO_WIDTH_MEDIUM),
   },
 });
 
-const feedPhotoToXml = (photo: PublicFeedPhotoRss): string => {
-  const formattedDate = formatDate({
-    date: photo.publicationDate,
-    length: 'rss',
-  });
+const feedPhotoToXml = (photo: FeedPhotoRss): string => {
+  const formattedDate = formatDate({ date: photo.pubDate, length: 'rss' });
   return `<item>
     <title>${photo.title}</title>
     <link>${photo.link}</link>
     <pubDate>${formattedDate}</pubDate>
     <guid isPermaLink="true">${photo.link}</guid>
-    <description>
-      <![CDATA[${photo.description}]]>
-    </description>
-    <media:content url="<![CDATA[${photo.media.content.url}]]>"
+    ${photo.description
+    ? `<description><![CDATA[${photo.description}]]></description>`
+    : ''}
+    <media:content
+      url="${formatStringForXml(photo.media.content.url)}"
       type="image/jpeg"
       medium="image"
       width="${photo.media.content.width}"
       height="${photo.media.content.height}"
     >
       <media:thumbnail
-        url="<![CDATA[${photo.media.thumb.url}]]>"
+        url="${formatStringForXml(photo.media.thumb.url)}"
         width="${photo.media.thumb.width}"
         height="${photo.media.thumb.height}"
       />

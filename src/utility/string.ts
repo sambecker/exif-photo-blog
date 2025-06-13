@@ -35,6 +35,14 @@ export const parameterize = (
     )
     .toLocaleLowerCase();
 
+export const formatStringForXml = (string: string) =>
+  string
+    .replace(/&/g, '&amp;')
+    .replace(/'/g, '&apos;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
 export const deparameterize = (string: string) =>
   capitalizeWords(string.replaceAll('-', ' '));
 

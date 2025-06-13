@@ -6,7 +6,8 @@ import {
 } from '@/app/config';
 import { FEED_PHOTO_REQUEST_LIMIT, formatPhotoForFeedJson } from '@/app/feed';
 
-export const dynamic = 'force-static';
+// Cache for 24 hours
+export const revalidate = 86_400;
 
 export async function GET() {
   if (SITE_FEEDS_ENABLED) {
