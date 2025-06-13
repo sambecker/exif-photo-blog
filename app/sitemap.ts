@@ -34,8 +34,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     photos,
   ] = await Promise.all([
-    getDataForCategoriesCached(),
-    getPhotoIdsAndUpdatedAt(),
+    getDataForCategoriesCached().catch(() => ({
+      cameras: [],
+      lenses: [],
+      tags: [],
+      recipes: [],
+      films: [],
+      focalLengths: [],
+    })),
+    getPhotoIdsAndUpdatedAt().catch(() => []),
   ]);
 
   const lastModifiedSite = [

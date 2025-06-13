@@ -11,7 +11,7 @@ export async function GET() {
     const photos = await getPhotosCached({
       limit: FEED_PHOTO_REQUEST_LIMIT,
       sortBy: 'createdAt',
-    });
+    }).catch(() => []);
     return Response.json(formatFeedJson(photos));
   } else {
     return new Response('Feeds disabled', { status: 404 });

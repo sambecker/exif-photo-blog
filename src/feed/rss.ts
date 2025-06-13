@@ -57,7 +57,7 @@ const feedPhotoToXml = (photo: FeedPhotoRss): string => {
   </item>`;
 };
 
-export const formatFeedRss = (photos: Photo[]) =>
+export const formatFeedRssXml = (photos: Photo[]) =>
   `<?xml version="1.0" encoding="UTF-8"?>
    <rss version="2.0"
      xmlns:content="http://purl.org/rss/1.0/modules/content/"
