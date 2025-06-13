@@ -5,7 +5,8 @@ import {
   META_TITLE,
   SITE_FEEDS_ENABLED,
 } from '@/app/config';
-import { createRssItems, FEED_PHOTO_REQUEST_LIMIT } from '@/app/feed';
+import { FEED_PHOTO_REQUEST_LIMIT } from '@/feed';
+import { createRssItems } from '@/feed/rss';
 import { ABSOLUTE_PATH_FOR_RSS_XML } from '@/app/paths';
 
 // Cache for 24 hours

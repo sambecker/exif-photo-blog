@@ -4,7 +4,8 @@ import {
   SITE_FEEDS_ENABLED,
   META_TITLE,
 } from '@/app/config';
-import { FEED_PHOTO_REQUEST_LIMIT, formatPhotoForFeedJson } from '@/app/feed';
+import { FEED_PHOTO_REQUEST_LIMIT } from '@/feed';
+import { formatPhotoForFeedJson } from '@/feed/json';
 
 // Cache for 24 hours
 export const revalidate = 86_400;
