@@ -18,6 +18,6 @@ export async function GET() {
       { headers: { 'Content-Type': 'text/xml' } },
     );
   } else {
-    return new Response('Feed disabled', { status: 404 });
+    return new Response('Feeds disabled', { status: 404 });
   }
 }

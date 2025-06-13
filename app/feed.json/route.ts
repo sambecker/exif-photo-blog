@@ -14,6 +14,6 @@ export async function GET() {
     });
     return Response.json(formatFeedJson(photos));
   } else {
-    return new Response('Feed disabled', { status: 404 });
+    return new Response('Feeds disabled', { status: 404 });
   }
 }
