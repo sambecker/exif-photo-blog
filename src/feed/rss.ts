@@ -6,9 +6,10 @@ import {
   generateFeedMedia,
   getCoreFeedFields,
 } from '.';
-import { absolutePathForPhoto } from '@/app/paths';
+import { ABSOLUTE_PATH_FOR_RSS_XML, absolutePathForPhoto } from '@/app/paths';
 import { formatDate } from '@/utility/date';
 import { formatStringForXml } from '@/utility/string';
+import { BASE_URL, META_DESCRIPTION, META_TITLE } from '@/app/config';
 
 interface FeedPhotoRss {
   id: string
@@ -30,11 +31,12 @@ const formatPhotoForFeedRss = (photo: Photo): FeedPhotoRss => ({
 });
 
 const feedPhotoToXml = (photo: FeedPhotoRss): string => {
-  const formattedDate = formatDate({ date: photo.pubDate, length: 'rss' });
   return `<item>
     <title>${photo.title}</title>
     <link>${photo.link}</link>
-    <pubDate>${formattedDate}</pubDate>
+    <pubDate>
+      ${formatDate({ date: photo.pubDate, length: 'rss' })}
+    </pubDate>
     <guid isPermaLink="true">${photo.link}</guid>
     ${photo.description
     ? `<description><![CDATA[${photo.description}]]></description>`
@@ -55,5 +57,22 @@ const feedPhotoToXml = (photo: FeedPhotoRss): string => {
   </item>`;
 };
 
-export const createRssItems = (photos: Photo[]) =>
-  photos.map(formatPhotoForFeedRss).map(feedPhotoToXml);
+export const formatFeedRss = (photos: Photo[]) =>
+  `<?xml version="1.0" encoding="UTF-8"?>
+   <rss version="2.0"
+     xmlns:content="http://purl.org/rss/1.0/modules/content/"
+     xmlns:atom="http://www.w3.org/2005/Atom"
+     xmlns:media="http://search.yahoo.com/mrss/"
+   >
+    <channel>
+      <title>${META_TITLE}</title>
+      <atom:link
+        href="${ABSOLUTE_PATH_FOR_RSS_XML}"
+        rel="self"
+        type="application/rss+xml"
+      />
+      <link>${BASE_URL}</link>
+      <description>${META_DESCRIPTION}</description>
+      ${photos.map(formatPhotoForFeedRss).map(feedPhotoToXml).join('\n')}
+    </channel>
+  </rss>`;

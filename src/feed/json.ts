@@ -9,6 +9,8 @@ import {
 } from '.';
 import { formatDateFromPostgresString } from '@/utility/date';
 import { Photo } from '@/photo';
+import { BASE_URL } from '@/app/config';
+import { META_TITLE } from '@/app/config';
 
 interface FeedPhotoJson {
   id: string
@@ -21,7 +23,7 @@ interface FeedPhotoJson {
   src: Record<'small' | 'medium' | 'large', FeedMedia>
 }
 
-export const formatPhotoForFeedJson = (photo: Photo): FeedPhotoJson => ({
+const formatPhotoForFeedJson = (photo: Photo): FeedPhotoJson => ({
   ...getCoreFeedFields(photo),
   url: absolutePathForPhoto({ photo }),
   ...photo.make && { make: photo.make },
@@ -33,4 +35,12 @@ export const formatPhotoForFeedJson = (photo: Photo): FeedPhotoJson => ({
     medium: generateFeedMedia(photo, FEED_PHOTO_WIDTH_MEDIUM),
     large: generateFeedMedia(photo, FEED_PHOTO_WIDTH_LARGE),
   },
+});
+
+export const formatFeedJson = (photos: Photo[]) => ({
+  meta: {
+    title: META_TITLE,
+    url: BASE_URL,
+  },
+  photos: photos.map(formatPhotoForFeedJson),
 });

@@ -1,11 +1,7 @@
 import { getPhotosCached } from '@/photo/cache';
-import {
-  BASE_URL,
-  SITE_FEEDS_ENABLED,
-  META_TITLE,
-} from '@/app/config';
+import { SITE_FEEDS_ENABLED } from '@/app/config';
 import { FEED_PHOTO_REQUEST_LIMIT } from '@/feed';
-import { formatPhotoForFeedJson } from '@/feed/json';
+import { formatFeedJson } from '@/feed/json';
 
 // Cache for 24 hours
 export const revalidate = 86_400;
@@ -16,13 +12,7 @@ export async function GET() {
       limit: FEED_PHOTO_REQUEST_LIMIT,
       sortBy: 'createdAt',
     });
-    return Response.json({
-      meta: {
-        title: META_TITLE,
-        url: BASE_URL,
-      },
-      photos: photos.map(formatPhotoForFeedJson),
-    });
+    return Response.json(formatFeedJson(photos));
   } else {
     return new Response('Feed disabled', { status: 404 });
   }
