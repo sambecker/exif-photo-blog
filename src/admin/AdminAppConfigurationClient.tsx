@@ -31,6 +31,8 @@ import ScoreCardContainer from '@/components/ScoreCardContainer';
 import { DEFAULT_CATEGORY_KEYS, getHiddenCategories } from '@/category';
 import { AI_AUTO_GENERATED_FIELDS_ALL } from '@/photo/ai';
 import clsx from 'clsx/lite';
+import Link from 'next/link';
+import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/paths';
 
 export default function AdminAppConfigurationClient({
   // Storage
@@ -103,7 +105,7 @@ export default function AdminAppConfigurationClient({
   // Settings
   isGeoPrivacyEnabled,
   arePublicDownloadsEnabled,
-  isPublicApiEnabled,
+  areSiteFeedsEnabled,
   isPriorityOrderEnabled,
   isOgTextBottomAligned,
   // Internal
@@ -176,6 +178,15 @@ export default function AdminAppConfigurationClient({
       </>}
       {message}
     </ErrorNote>;
+
+  const renderLink = (href: string, children?: ReactNode) =>
+    <Link
+      href={href}
+      className="underline underline-offset-3 hover:no-underline"
+      target="_blank"
+    >
+      {children || href}
+    </Link>;
 
   return (
     <ScoreCardContainer>
@@ -734,13 +745,14 @@ export default function AdminAppConfigurationClient({
             {renderEnvVars(['NEXT_PUBLIC_ALLOW_PUBLIC_DOWNLOADS'])}
           </ChecklistRow>
           <ChecklistRow
-            title="Public API"
-            status={isPublicApiEnabled}
+            title="Site feeds (JSON/RSS)"
+            status={areSiteFeedsEnabled}
             optional
           >
-            Set environment variable to {'"1"'} to enable
-            a public API available at <code>/api</code>:
-            {renderEnvVars(['NEXT_PUBLIC_PUBLIC_API'])}
+            Set environment variable to {'"1"'} to enable feeds at
+            {' '}
+            {renderLink(PATH_FEED_JSON)} and {renderLink(PATH_RSS_XML)}:
+            {renderEnvVars(['NEXT_PUBLIC_SITE_FEEDS'])}
           </ChecklistRow>
           <ChecklistRow
             title="Priority order"

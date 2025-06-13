@@ -10,6 +10,7 @@ import {
   META_TITLE,
   HTML_LANG,
   NAV_CAPTION,
+  SITE_FEEDS_ENABLED,
 } from '@/app/config';
 import AppStateProvider from '@/state/AppStateProvider';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
@@ -65,6 +66,13 @@ export const metadata: Metadata = {
     type: 'image/png',
     sizes: '180x180',
   }],
+  ...SITE_FEEDS_ENABLED && {
+    alternates: {
+      types: {
+        'application/rss+xml': '/rss.xml',
+      },
+    },
+  },
 };
 
 export default function RootLayout({

@@ -307,8 +307,8 @@ export const GEO_PRIVACY_ENABLED =
   process.env.NEXT_PUBLIC_GEO_PRIVACY === '1';
 export const ALLOW_PUBLIC_DOWNLOADS = 
   process.env.NEXT_PUBLIC_ALLOW_PUBLIC_DOWNLOADS === '1';
-export const PUBLIC_API_ENABLED =
-  process.env.NEXT_PUBLIC_PUBLIC_API === '1';
+export const SITE_FEEDS_ENABLED =
+  process.env.NEXT_PUBLIC_SITE_FEEDS === '1';
 export const PRIORITY_ORDER_ENABLED =
   process.env.NEXT_PUBLIC_IGNORE_PRIORITY_ORDER !== '1';
 export const OG_TEXT_BOTTOM_ALIGNMENT =
@@ -417,7 +417,7 @@ export const APP_CONFIGURATION = {
   // Settings
   isGeoPrivacyEnabled: GEO_PRIVACY_ENABLED,
   arePublicDownloadsEnabled: ALLOW_PUBLIC_DOWNLOADS,
-  isPublicApiEnabled: PUBLIC_API_ENABLED,
+  areSiteFeedsEnabled: SITE_FEEDS_ENABLED,
   isPriorityOrderEnabled: PRIORITY_ORDER_ENABLED,
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,
   // Internal

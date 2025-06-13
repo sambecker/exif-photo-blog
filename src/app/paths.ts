@@ -15,6 +15,10 @@ export const PATH_API                   = '/api';
 export const PATH_SIGN_IN               = '/sign-in';
 export const PATH_OG                    = '/og';
 
+// Feeds
+export const PATH_FEED_JSON             = '/feed.json';
+export const PATH_RSS_XML               = '/rss.xml';
+
 export const PATH_GRID_INFERRED = GRID_HOMEPAGE_ENABLED
   ? PATH_ROOT
   : PATH_GRID;
@@ -167,6 +171,12 @@ export const pathForRecipe = (recipe: string) =>
   `${PREFIX_RECIPE}/${recipe}`;
 
 // Absolute paths
+export const ABSOLUTE_PATH_FOR_FEED_JSON =
+  `${getBaseUrl()}${PATH_FEED_JSON}`;
+
+export const ABSOLUTE_PATH_FOR_RSS_XML =
+  `${getBaseUrl()}${PATH_RSS_XML}`;
+
 export const ABSOLUTE_PATH_FOR_HOME_IMAGE =
   `${getBaseUrl()}/home-image`;
 
