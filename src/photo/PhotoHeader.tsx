@@ -159,10 +159,9 @@ export default function PhotoHeader({
                   }} />}
               </>
               : <ResponsiveText
-                shortText={appText.utility.paginateAction(
+                shortText={appText.utility.paginate(
                   paginationIndex,
                   paginationCount,
-                  entityVerb,
                 )}
               >
                 {appText.utility.paginateAction(
@@ -178,6 +177,8 @@ export default function PhotoHeader({
             ? 'hidden sm:flex'
             : 'flex',
           'justify-end',
+          // Make full height for prev/next symbols
+          'max-sm:h-full',
         )}>
           {selectedPhoto
             ? renderPrevNext

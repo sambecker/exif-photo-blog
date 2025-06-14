@@ -87,7 +87,6 @@ export default function Nav({
               />
               <div className={clsx(
                 'grow text-right min-w-0',
-                'hidden xs:block',
                 'translate-y-[-1px]',
               )}>
                 <div className="truncate overflow-hidden select-none">
