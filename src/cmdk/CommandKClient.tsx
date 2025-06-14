@@ -635,7 +635,7 @@ export default function CommandKClient({
           style={{ ...styleMask, maxHeight }}
         >
           <div className="flex flex-col pt-2 pb-3 px-3 gap-2">
-            <Command.Empty className="mt-1 pl-3 text-dim text-base pb-0.5">
+            <Command.Empty className="mt-1 px-2 text-dim text-[0.9rem] pb-0.5">
               {isLoading
                 ? appText.cmdk.searching
                 : appText.cmdk.noResults}

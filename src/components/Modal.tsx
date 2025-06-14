@@ -92,7 +92,8 @@ export default function Modal({
           key="modalContent"
           className={clsx(
             ...container ? [
-              'w-[calc(100vw-1.5rem)] sm:w-[min(540px,90vw)]',
+              // "-2px" accounts for transparent outline
+              'w-[calc(100vw-1.5rem-2px)] sm:w-[min(540px,90vw)]',
               !noPadding && 'p-2',
               'rounded-xl outline-medium',
               'bg-white dark:bg-black',
