@@ -13,11 +13,13 @@ import { pathForAdminUploadUrl } from '@/app/paths';
 import DeleteBlobButton from './DeleteUploadButton';
 import { useEffect, useRef } from 'react';
 import { isElementEntirelyInViewport } from '@/utility/dom';
+import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 
 export default function AdminUploadsTableRow({
   url,
   status,
   statusMessage,
+  draftTitle = '',
   uploadedAt,
   size,
   isAdding,
@@ -35,6 +37,8 @@ export default function AdminUploadsTableRow({
   setUrlAddStatuses?: (urlAddStatuses: UrlAddStatus[]) => void
 }) {
   const ref = useRef<HTMLDivElement>(null);
+
+  const extension = getExtensionFromStorageUrl(url)?.toUpperCase();
 
   useEffect(() => {
     if (
@@ -73,25 +77,45 @@ export default function AdminUploadsTableRow({
       <div className={clsx(
         'flex flex-col w-full self-start',
         'gap-2 sm:gap-4',
-        'p-2.5 pl-3',
-        'sm:p-4 sm:pl-6',
+        'p-3 sm:p-4',
       )}>
-        <div className="flex flex-col gap-0.5 h-full">
-          <div className="truncate font-medium">
-            {uploadedAt
-              ? <ResponsiveDate date={uploadedAt} />
-              : '—'}
-          </div>
-          <div className="text-dim overflow-hidden text-ellipsis">
-            {isAdding || isComplete
-              ? status === 'added'
-                ? 'Added'
-                : status === 'adding'
-                  ? statusMessage ?? 'Adding ...'
-                  : 'Waiting'
-              : size
-                ? `${size} ${getExtensionFromStorageUrl(url)?.toUpperCase()}`
-                : getExtensionFromStorageUrl(url)?.toUpperCase()}
+        <div className="flex flex-col gap-1.5 h-full">
+          <FieldSetWithStatus
+            label="Title"
+            value={draftTitle}
+            onChange={titleUpdated => {
+              setUrlAddStatuses?.(urlAddStatuses.map(status => ({
+                ...status,
+                draftTitle: status.url === url
+                  ? titleUpdated
+                  : status.draftTitle,
+              })));
+            }}
+            placeholder="Optional title"
+            tabIndex={urlAddStatuses
+              .findIndex(status => status.url === url) + 1}
+            hideLabel
+          />
+          <div className={clsx(
+            'flex gap-y-1 gap-x-3 max-lg:flex-col',
+            'ml-0.5',
+          )}>
+            <div>
+              {isAdding || isComplete
+                ? status === 'added'
+                  ? 'Added'
+                  : status === 'adding'
+                    ? statusMessage ?? 'Adding ...'
+                    : 'Waiting'
+                : uploadedAt
+                  ? <ResponsiveDate date={uploadedAt} length="medium" />
+                  : '—'}
+            </div>
+            <div className="text-dim">
+              {size
+                ? `${size} ${extension}`
+                : extension}
+            </div>
           </div>
         </div>
         <span className="flex items-center gap-2">

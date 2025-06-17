@@ -38,6 +38,7 @@ export default function FieldSetWithStatus({
   inputRef: inputRefProp,
   accessory,
   hideLabel,
+  tabIndex,
 }: {
   id?: string
   label: string
@@ -65,6 +66,7 @@ export default function FieldSetWithStatus({
   inputRef?: RefObject<HTMLInputElement | null>
   accessory?: React.ReactNode
   hideLabel?: boolean
+  tabIndex?: number
 }) {
   const inputRefInternal = useRef<HTMLInputElement>(null);
 
@@ -104,6 +106,7 @@ export default function FieldSetWithStatus({
       ) && 'opacity-50 cursor-not-allowed',
       Boolean(error) && 'error',
     ),
+    tabIndex,
   };
 
   return (

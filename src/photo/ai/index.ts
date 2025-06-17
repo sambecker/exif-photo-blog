@@ -53,10 +53,13 @@ export type AiImageQuery =
 export const getAiImageQuery = (
   query: AiImageQuery,
   existingTags: Tags = [],
+  existingTitle?: string,
 ): string => {
-  switch (query) {
+  switch (query) {  
   case 'title': return 'Write a compelling title for this image in 3 words or less';
-  case 'caption': return 'Write a pithy caption for this image in 6 words or less and no punctuation';
+  case 'caption': return existingTitle
+    ? `Write a pithy caption for this image in 6 words or less and no punctuation that complements the existing title: "${existingTitle}"`
+    : 'Write a pithy caption for this image in 6 words or less and no punctuation';
   case 'title-and-caption': return 'Write a compelling title and pithy caption of 8 words or less for this image, using the format Title: "title" Caption: "caption"';
   case 'tags':
     const tagQuery = 'Describe this image in 1-2 comma-separated unique keywords, with no adjective or adverbs. Avoid using general terms like "nature," "travel," "architecture," or "sky." Use terms that are highly specific to the image and not redundant.';

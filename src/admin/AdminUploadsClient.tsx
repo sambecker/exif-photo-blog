@@ -9,6 +9,7 @@ import AdminUploadsTable from './AdminUploadsTable';
 export type UrlAddStatus = StorageListItem & {
   status?: 'waiting' | 'adding' | 'added'
   statusMessage?: string
+  draftTitle?: string
   progress?: number
 };
 
@@ -21,7 +22,11 @@ export default function AdminUploadsClient({
 }) {
   const [isAdding, setIsAdding] = useState(false);
   const [urlAddStatuses, setUrlAddStatuses] = useState<UrlAddStatus[]>(urls);
-  const storageUrls = useMemo(() => urls.map(({ url }) => url), [urls]);
+
+  const uploadUrls = useMemo(() => urlAddStatuses
+    .map(({ url }) => url), [urlAddStatuses]);
+  const uploadTitles = useMemo(() => urlAddStatuses
+    .map(({ draftTitle }) => draftTitle ?? ''), [urlAddStatuses]);
 
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -29,7 +34,8 @@ export default function AdminUploadsClient({
     <div className="space-y-4">
       {(urls.length > 1 || isAdding) &&
         <AdminBatchUploadActions {...{
-          storageUrls,
+          uploadUrls,
+          uploadTitles,
           uniqueTags,
           isAdding,
           setIsAdding,
