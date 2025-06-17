@@ -159,6 +159,7 @@ export const addUploadsAction = async ({
                 ? AI_TEXT_AUTO_GENERATED_FIELDS
                   .filter(field => field !== 'title')
                 : AI_TEXT_AUTO_GENERATED_FIELDS,
+              title,
             );
 
             const form: Partial<PhotoFormData> = {
@@ -435,6 +436,7 @@ export const syncPhotoAction = async (photoId: string, isBatch?: boolean) =>
         } = await generateAiImageQueries(
           imageResizedBase64,
           photo.syncStatus.missingAiTextFields,
+          undefined,
           isBatch,
         );
 
@@ -483,12 +485,13 @@ export const clearCacheAction = async () =>
 export const streamAiImageQueryAction = async (
   imageBase64: string,
   query: AiImageQuery,
+  existingTitle?: string,
 ) =>
   runAuthenticatedAdminServerAction(async () => {
     const existingTags = await getUniqueTags();
     return streamOpenAiImageQuery(
       imageBase64,
-      getAiImageQuery(query, existingTags),
+      getAiImageQuery(query, existingTags, existingTitle),
     );
   });
 

@@ -6,6 +6,7 @@ import { AiImageQuery } from '.';
 export default function useAiImageQuery(
   imageBase64: string | undefined,
   query: AiImageQuery,
+  existingTitle?: string,
 ) {
   const [text, setText] = useState('');
   const [error, setError] = useState<any>();
@@ -19,6 +20,7 @@ export default function useAiImageQuery(
         const textStream = await streamAiImageQueryAction(
           imageBase64,
           query,
+          existingTitle,
         );
         for await (const text of readStreamableValue(textStream)) {
           setText(current => `${current}${text ?? ''}`);
@@ -29,7 +31,7 @@ export default function useAiImageQuery(
         setIsLoading(false);
       }
     }
-  }, [imageBase64, query]);
+  }, [imageBase64, query, existingTitle]);
 
   const reset = useCallback(() => {
     setText('');
