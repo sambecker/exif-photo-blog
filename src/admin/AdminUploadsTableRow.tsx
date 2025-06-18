@@ -75,13 +75,35 @@ export default function AdminUploadsTableRow({
         />
       </div>
       <div className={clsx(
-        'flex flex-col w-full self-start',
-        'gap-2 sm:gap-4',
-        'p-3 sm:p-4',
+        'flex flex-col w-full self-start min-w-0',
+        'gap-2 sm:gap-3',
+        'p-2 sm:p-3',
       )}>
-        <div className="flex flex-col gap-1.5 h-full">
+        <div className="flex flex-col gap-3">
+          <div className={clsx(
+            'flex gap-2 sm:gap-3',
+            'ml-0.5',
+          )}>
+            {isAdding || isComplete
+              ? status === 'added'
+                ? 'Added'
+                : status === 'adding'
+                  ? statusMessage ?? 'Adding ...'
+                  : 'Waiting'
+              : <>
+                {uploadedAt
+                  ? <ResponsiveDate date={uploadedAt} length="medium" />
+                  : '—'}
+                <div className="max-sm:hidden text-dim truncate">
+                  {size
+                    ? `${size} ${extension}`
+                    : extension}
+                </div>
+              </>}
+          </div>
           <FieldSetWithStatus
             label="Title"
+            className="[&_input]:min-h-9 [&_input]:px-2 [&_input]:py-0"
             value={draftTitle}
             onChange={titleUpdated => {
               setUrlAddStatuses?.(urlAddStatuses.map(status => ({
@@ -91,32 +113,11 @@ export default function AdminUploadsTableRow({
                   : status.draftTitle,
               })));
             }}
-            placeholder="Optional title"
+            placeholder="Title (optional)"
             tabIndex={urlAddStatuses
               .findIndex(status => status.url === url) + 1}
             hideLabel
           />
-          <div className={clsx(
-            'flex gap-y-1 gap-x-3 max-lg:flex-col',
-            'ml-0.5',
-          )}>
-            <div>
-              {isAdding || isComplete
-                ? status === 'added'
-                  ? 'Added'
-                  : status === 'adding'
-                    ? statusMessage ?? 'Adding ...'
-                    : 'Waiting'
-                : uploadedAt
-                  ? <ResponsiveDate date={uploadedAt} length="medium" />
-                  : '—'}
-            </div>
-            <div className="text-dim">
-              {size
-                ? `${size} ${extension}`
-                : extension}
-            </div>
-          </div>
         </div>
         <span className="flex items-center gap-2">
           {isAdding || isComplete
