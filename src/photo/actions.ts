@@ -106,7 +106,7 @@ const addUpload = async ({
   hidden?: string
   takenAtLocal: string
   takenAtNaiveLocal: string
-  onStreamUpdate: (
+  onStreamUpdate?: (
     statusMessage: string,
     status?: UrlAddStatus['status'],
   ) => void
@@ -125,7 +125,7 @@ const addUpload = async ({
 
   if (formDataFromExif) {
     if (AI_TEXT_GENERATION_ENABLED) {
-      onStreamUpdate('Generating AI text');
+      onStreamUpdate?.('Generating AI text');
     }
 
     const {
@@ -154,7 +154,7 @@ const addUpload = async ({
       takenAtNaive: formDataFromExif.takenAtNaive || takenAtNaiveLocal,
     };
 
-    onStreamUpdate('Transferring to photo storage');
+    onStreamUpdate?.('Transferring to photo storage');
 
     const updatedUrl = await convertUploadToPhoto({
       urlOrigin: url,
@@ -163,17 +163,22 @@ const addUpload = async ({
     });
     if (updatedUrl) {
       const subheadFinal = 'Adding to database';
-      onStreamUpdate(subheadFinal);
+      onStreamUpdate?.(subheadFinal);
       const photo =
         await convertFormDataToPhotoDbInsertAndLookupRecipeTitle(form);
       photo.url = updatedUrl;
       await insertPhoto(photo);
       onFinish?.(url);
       // Re-submit with updated url
-      onStreamUpdate(subheadFinal, 'added');
+      onStreamUpdate?.(subheadFinal, 'added');
     }
   }
 };
+
+export const addUploadAction = async (args: Parameters<typeof addUpload>[0]) =>
+  runAuthenticatedAdminServerAction(async () => {
+    await addUpload(args);
+  });
 
 export const addUploadsAction = async ({
   uploadUrls,
@@ -184,7 +189,10 @@ export const addUploadsAction = async ({
   hidden,
   takenAtLocal,
   takenAtNaiveLocal,
-}: Parameters<typeof addUpload>[0] & {
+}: Omit<
+  Parameters<typeof addUpload>[0],
+  'url' | 'onStreamUpdate' | 'onFinish'
+> & {
   uploadUrls: string[]
   uploadTitles: string[]
   shouldRevalidateAllKeysAndPaths?: boolean
