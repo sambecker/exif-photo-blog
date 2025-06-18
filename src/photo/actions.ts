@@ -85,23 +85,108 @@ export const createPhotoAction = async (formData: FormData) =>
     }
   });
 
-export const addUploadsAction = async ({
-  uploadUrls,
-  uploadTitles,
+// Helper function for:
+// - addUploadAction
+// - addUploadsAction
+const addUpload = async ({
+  url,
+  title,
   tags,
   favorite,
   hidden,
   takenAtLocal,
   takenAtNaiveLocal,
-  shouldRevalidateAllKeysAndPaths = true,
-}: {
-  uploadUrls: string[]
-  uploadTitles: string[]
+  onStreamUpdate,
+  onFinish,
+}:{
+  url: string
+  title?: string
   tags?: string
   favorite?: string
   hidden?: string
   takenAtLocal: string
   takenAtNaiveLocal: string
+  onStreamUpdate: (
+    statusMessage: string,
+    status?: UrlAddStatus['status'],
+  ) => void
+  onFinish?: (url: string) => void
+}) => {
+  const {
+    formDataFromExif,
+    imageResizedBase64,
+    shouldStripGpsData,
+    fileBytes,
+  } = await extractImageDataFromBlobPath(url, {
+    includeInitialPhotoFields: true,
+    generateBlurData: BLUR_ENABLED,
+    generateResizedImage: AI_TEXT_GENERATION_ENABLED,
+  });
+
+  if (formDataFromExif) {
+    if (AI_TEXT_GENERATION_ENABLED) {
+      onStreamUpdate('Generating AI text');
+    }
+
+    const {
+      title: aiTitle,
+      caption,
+      tags: aiTags,
+      semanticDescription,
+    } = await generateAiImageQueries(
+      imageResizedBase64,
+      Boolean(title)
+        ? AI_TEXT_AUTO_GENERATED_FIELDS
+          .filter(field => field !== 'title')
+        : AI_TEXT_AUTO_GENERATED_FIELDS,
+      title,
+    );
+
+    const form: Partial<PhotoFormData> = {
+      ...formDataFromExif,
+      title: title || aiTitle,
+      caption,
+      tags: tags || aiTags,
+      hidden,
+      favorite,
+      semanticDescription,
+      takenAt: formDataFromExif.takenAt || takenAtLocal,
+      takenAtNaive: formDataFromExif.takenAtNaive || takenAtNaiveLocal,
+    };
+
+    onStreamUpdate('Transferring to photo storage');
+
+    const updatedUrl = await convertUploadToPhoto({
+      urlOrigin: url,
+      fileBytes,
+      shouldStripGpsData,
+    });
+    if (updatedUrl) {
+      const subheadFinal = 'Adding to database';
+      onStreamUpdate(subheadFinal);
+      const photo =
+        await convertFormDataToPhotoDbInsertAndLookupRecipeTitle(form);
+      photo.url = updatedUrl;
+      await insertPhoto(photo);
+      onFinish?.(url);
+      // Re-submit with updated url
+      onStreamUpdate(subheadFinal, 'added');
+    }
+  }
+};
+
+export const addUploadsAction = async ({
+  uploadUrls,
+  uploadTitles,
+  shouldRevalidateAllKeysAndPaths = true,
+  tags,
+  favorite,
+  hidden,
+  takenAtLocal,
+  takenAtNaiveLocal,
+}: Parameters<typeof addUpload>[0] & {
+  uploadUrls: string[]
+  uploadTitles: string[]
   shouldRevalidateAllKeysAndPaths?: boolean
 }) =>
   runAuthenticatedAdminServerAction(async () => {
@@ -128,71 +213,23 @@ export const addUploadsAction = async ({
       try {
         for (const [index, url] of uploadUrls.entries()) {
           currentUploadUrl = url;
-          const title = uploadTitles[index];
           progress = 0;
+          const title = uploadTitles[index];
           streamUpdate('Parsing EXIF data');
 
-          const {
-            formDataFromExif,
-            imageResizedBase64,
-            shouldStripGpsData,
-            fileBytes,
-          } = await extractImageDataFromBlobPath(url, {
-            includeInitialPhotoFields: true,
-            generateBlurData: BLUR_ENABLED,
-            generateResizedImage: AI_TEXT_GENERATION_ENABLED,
-          });
-
-          if (formDataFromExif) {
-            if (AI_TEXT_GENERATION_ENABLED) {
-              streamUpdate('Generating AI text');
-            }
-
-            const {
-              title: aiTitle,
-              caption,
-              tags: aiTags,
-              semanticDescription,
-            } = await generateAiImageQueries(
-              imageResizedBase64,
-              Boolean(title)
-                ? AI_TEXT_AUTO_GENERATED_FIELDS
-                  .filter(field => field !== 'title')
-                : AI_TEXT_AUTO_GENERATED_FIELDS,
-              title,
-            );
-
-            const form: Partial<PhotoFormData> = {
-              ...formDataFromExif,
-              title: title || aiTitle,
-              caption,
-              tags: tags || aiTags,
-              hidden,
-              favorite,
-              semanticDescription,
-              takenAt: formDataFromExif.takenAt || takenAtLocal,
-              takenAtNaive: formDataFromExif.takenAtNaive || takenAtNaiveLocal,
-            };
-
-            streamUpdate('Transferring to photo storage');
-
-            const updatedUrl = await convertUploadToPhoto({
-              urlOrigin: url,
-              fileBytes,
-              shouldStripGpsData,
-            });
-            if (updatedUrl) {
-              const subheadFinal = 'Adding to database';
-              streamUpdate(subheadFinal);
-              const photo =
-                await convertFormDataToPhotoDbInsertAndLookupRecipeTitle(form);
-              photo.url = updatedUrl;
-              await insertPhoto(photo);
+          await addUpload({
+            url,
+            title,
+            tags,
+            favorite,
+            hidden,
+            takenAtLocal,
+            takenAtNaiveLocal,
+            onStreamUpdate: streamUpdate,
+            onFinish: () => {
               addedUploadUrls.push(url);
-              // Re-submit with updated url
-              streamUpdate(subheadFinal, 'added');
-            }
-          }
+            },
+          });
         };
       } catch (error: any) {
         // eslint-disable-next-line max-len

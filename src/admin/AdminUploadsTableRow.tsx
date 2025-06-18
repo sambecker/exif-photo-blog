@@ -8,13 +8,14 @@ import clsx from 'clsx/lite';
 import ResponsiveDate from '@/components/ResponsiveDate';
 import Spinner from '@/components/Spinner';
 import { FaRegCircleCheck } from 'react-icons/fa6';
-import AddButton from './AddButton';
 import { pathForAdminUploadUrl } from '@/app/paths';
 import DeleteBlobButton from './DeleteUploadButton';
 import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import { isElementEntirelyInViewport } from '@/utility/dom';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import EditButton from './EditButton';
+import LoaderButton from '@/components/primitives/LoaderButton';
+import { BiImageAdd } from 'react-icons/bi';
 
 export default function AdminUploadsTableRow({
   url,
@@ -54,6 +55,8 @@ export default function AdminUploadsTableRow({
       });
     }
   }, [status]);
+
+  const isRowLoading = isAdding || isDeleting || isComplete || Boolean(status);
 
   return (
     <div
@@ -97,7 +100,7 @@ export default function AdminUploadsTableRow({
               }}
               placeholder="Title (optional)"
               tabIndex={tabIndex}
-              readOnly={isAdding || isDeleting || isComplete || Boolean(status)}
+              readOnly={isRowLoading}
               hideLabel
             />
             <div className="flex items-center gap-2">
@@ -112,14 +115,20 @@ export default function AdminUploadsTableRow({
                       />}
                 </>
                 : <>
-                  <AddButton
-                    path={pathForAdminUploadUrl(url)}
-                    disabled={isDeleting}
+                  <LoaderButton
+                    icon={<BiImageAdd
+                      size={18}
+                      className="translate-x-[1px] translate-y-[1px]"
+                    />}
+                    disabled={isRowLoading}
                     tooltip="Add directly"
                     hideText="never"
-                  />
+                  >
+                    Add
+                  </LoaderButton>
                   <EditButton
                     path={pathForAdminUploadUrl(url)}
+                    disabled={isRowLoading}
                     tooltip="Review photo details"
                     hideText="always"
                   />
@@ -133,7 +142,7 @@ export default function AdminUploadsTableRow({
                       setUrlAddStatuses?.(statuses => statuses
                         .filter(({ url: urlToRemove }) => urlToRemove !== url));
                     }}
-                    isLoading={isDeleting}
+                    disabled={isRowLoading}
                     tooltip="Delete upload"
                   />
                 </>}
