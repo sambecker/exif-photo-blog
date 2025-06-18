@@ -66,7 +66,8 @@ export const PATH_API_VERCEL_BLOB_UPLOAD = `${PATH_API_STORAGE}/vercel-blob`;
 export const PATH_API_PRESIGNED_URL = `${PATH_API_STORAGE}/presigned-url`;
 
 // Modifiers
-const EDIT  = 'edit';
+const EDIT = 'edit';
+export const PARAM_UPLOAD_TITLE = 'title';
 
 // Special characters
 export const MISSING_FIELD = '-';
@@ -103,8 +104,9 @@ type PhotoPathParams  = { photo: PhotoOrPhotoId } & PhotoSetCategory & {
   showRecipe?: boolean
 };
 
-export const pathForAdminUploadUrl = (url: string) =>
-  `${PATH_ADMIN_UPLOADS}/${encodeURIComponent(url)}`;
+export const pathForAdminUploadUrl = (url: string, title?: string) =>
+  // eslint-disable-next-line max-len
+  `${PATH_ADMIN_UPLOADS}/${encodeURIComponent(url)}${title ? `?${PARAM_UPLOAD_TITLE}=${encodeURIComponent(title)}` : ''}`;
 
 export const pathForAdminPhotoEdit = (photo: PhotoOrPhotoId) =>
   `${PATH_ADMIN_PHOTOS}/${getPhotoId(photo)}/${EDIT}`;

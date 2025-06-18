@@ -26,7 +26,7 @@ export default function AdminUploadsTable({
           {...{
             ...status,
             tabIndex: index + 1,
-            shouldRedirectToAdminPhotosOnDelete: urlAddStatuses.length <= 1,
+            shouldRedirectAfterAction: urlAddStatuses.length <= 1,
             isAdding,
             isDeleting,
             isComplete,

@@ -1,4 +1,4 @@
-import { PATH_ADMIN } from '@/app/paths';
+import { PARAM_UPLOAD_TITLE, PATH_ADMIN } from '@/app/paths';
 import { extractImageDataFromBlobPath } from '@/photo/server';
 import { redirect } from 'next/navigation';
 import {
@@ -19,10 +19,12 @@ export const maxDuration = 60;
 
 interface Params {
   params: Promise<{ uploadPath: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }
 
-export default async function UploadPage({ params }: Params) {
-  const { uploadPath } = await params;
+export default async function UploadPage({ params, searchParams }: Params) {
+  const uploadPath = (await params).uploadPath;
+  const title = (await searchParams)[PARAM_UPLOAD_TITLE];
 
   const {
     blobId,
@@ -62,13 +64,19 @@ export default async function UploadPage({ params }: Params) {
       : undefined,
   ]);
 
-  if (formDataFromExif && recipeTitle) {
-    formDataFromExif.recipeTitle = recipeTitle;
-  }
-
   const hasAiTextGeneration = AI_TEXT_GENERATION_ENABLED;
+  let textFieldsToAutoGenerate = AI_TEXT_AUTO_GENERATED_FIELDS;
 
-  const textFieldsToAutoGenerate = AI_TEXT_AUTO_GENERATED_FIELDS;
+  if (formDataFromExif) {
+    if (recipeTitle) {
+      formDataFromExif.recipeTitle = recipeTitle;
+    }
+    if (typeof title === 'string') {
+      formDataFromExif.title = title;
+      textFieldsToAutoGenerate = textFieldsToAutoGenerate
+        .filter(field => field !== 'title');
+    }
+  }
 
   return (
     !isDataMissing

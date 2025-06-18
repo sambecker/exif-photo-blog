@@ -9,13 +9,12 @@ import ResponsiveDate from '@/components/ResponsiveDate';
 import Spinner from '@/components/Spinner';
 import { FaRegCircleCheck } from 'react-icons/fa6';
 import { pathForAdminUploadUrl } from '@/app/paths';
-import DeleteBlobButton from './DeleteUploadButton';
+import DeleteUploadButton from './DeleteUploadButton';
 import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import { isElementEntirelyInViewport } from '@/utility/dom';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import EditButton from './EditButton';
-import LoaderButton from '@/components/primitives/LoaderButton';
-import { BiImageAdd } from 'react-icons/bi';
+import AddUploadButton from './AddUploadButton';
 
 export default function AdminUploadsTableRow({
   url,
@@ -25,7 +24,7 @@ export default function AdminUploadsTableRow({
   uploadedAt,
   size,
   tabIndex,
-  shouldRedirectToAdminPhotosOnDelete,
+  shouldRedirectAfterAction,
   isAdding,
   isDeleting,
   isComplete,
@@ -33,7 +32,7 @@ export default function AdminUploadsTableRow({
   setUrlAddStatuses,
 }: UrlAddStatus & {
   tabIndex: number
-  shouldRedirectToAdminPhotosOnDelete: boolean
+  shouldRedirectAfterAction: boolean
   isAdding?: boolean
   isDeleting?: boolean
   isComplete?: boolean
@@ -57,6 +56,18 @@ export default function AdminUploadsTableRow({
   }, [status]);
 
   const isRowLoading = isAdding || isDeleting || isComplete || Boolean(status);
+
+  const updateStatus = (updatedStatus: Partial<UrlAddStatus>) => {
+    setUrlAddStatuses?.(statuses => statuses.map(status => status.url === url
+      ? {
+        ...status,
+        ...updatedStatus,
+      }
+      : status));
+  };
+
+  const removeRow = () => setUrlAddStatuses?.(statuses => statuses
+    .filter(({ url: urlToRemove }) => urlToRemove !== url));
 
   return (
     <div
@@ -90,14 +101,8 @@ export default function AdminUploadsTableRow({
             <FieldSetWithStatus
               label="Title"
               value={draftTitle}
-              onChange={titleUpdated => {
-                setUrlAddStatuses?.(statuses => statuses.map(status => ({
-                  ...status,
-                  draftTitle: status.url === url
-                    ? titleUpdated
-                    : status.draftTitle,
-                })));
-              }}
+              onChange={titleUpdated =>
+                updateStatus({ draftTitle: titleUpdated })}
               placeholder="Title (optional)"
               tabIndex={tabIndex}
               readOnly={isRowLoading}
@@ -115,32 +120,29 @@ export default function AdminUploadsTableRow({
                       />}
                 </>
                 : <>
-                  <LoaderButton
-                    icon={<BiImageAdd
-                      size={18}
-                      className="translate-x-[1px] translate-y-[1px]"
-                    />}
+                  <AddUploadButton
+                    url={url}
+                    onAddStart={() => updateStatus({
+                      status: 'adding',
+                      statusMessage: 'Adding ...',
+                    })}
+                    onAddFinish={removeRow}
+                    shouldRedirectToAdminPhotos={shouldRedirectAfterAction}
                     disabled={isRowLoading}
-                    tooltip="Add directly"
-                    hideText="never"
-                  >
-                    Add
-                  </LoaderButton>
+                  />
                   <EditButton
-                    path={pathForAdminUploadUrl(url)}
+                    path={pathForAdminUploadUrl(url, draftTitle)}
                     disabled={isRowLoading}
                     tooltip="Review photo details"
                     hideText="always"
                   />
-                  <DeleteBlobButton
+                  <DeleteUploadButton
                     urls={[url]}
-                    shouldRedirectToAdminPhotos={
-                      shouldRedirectToAdminPhotosOnDelete}
+                    shouldRedirectToAdminPhotos={shouldRedirectAfterAction}
                     onDeleteStart={() => setIsDeleting?.(true)}
                     onDelete={() => {
                       setIsDeleting?.(false);
-                      setUrlAddStatuses?.(statuses => statuses
-                        .filter(({ url: urlToRemove }) => urlToRemove !== url));
+                      removeRow();
                     }}
                     disabled={isRowLoading}
                     tooltip="Delete upload"
