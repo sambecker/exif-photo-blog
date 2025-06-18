@@ -149,6 +149,7 @@ export default function AdminBatchUploadActions({
                 onChange={setTags}
                 onError={setTagErrorMessage}
                 readOnly={isAdding}
+                className="relative z-10"
               />
               <div className="flex gap-8">
                 <FieldsetFavs

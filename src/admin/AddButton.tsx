@@ -2,9 +2,10 @@ import { BiImageAdd } from 'react-icons/bi';
 import PathLoaderButton from '@/components/primitives/PathLoaderButton';
 import { ComponentProps } from 'react';
 
-export default function AddButton(
-  props: ComponentProps<typeof PathLoaderButton>,
-) {
+export default function AddButton({
+  children,
+  ...props
+}: ComponentProps<typeof PathLoaderButton>) {
   return (
     <PathLoaderButton
       {...props}
@@ -13,7 +14,7 @@ export default function AddButton(
         className="translate-x-[1px] translate-y-[1px]"
       />}
     >
-      Add
+      {children || 'Add'}
     </PathLoaderButton>
   );
 }

@@ -1,17 +1,19 @@
 import IconEdit from '@/components/icons/IconEdit';
 import PathLoaderButton from '@/components/primitives/PathLoaderButton';
+import { ComponentProps } from 'react';
 
 export default function EditButton ({
-  path,
+  children,
+  ...props
 }: {
-  path: string,
-}) {
+  hideText?: boolean
+} & ComponentProps<typeof PathLoaderButton>) {
   return (
     <PathLoaderButton
-      path={path}
+      {...props}
       icon={<IconEdit size={15} className="translate-y-[0.5px]" />}
     >
-      Edit
+      {children || 'Edit'}
     </PathLoaderButton>
   );
 }

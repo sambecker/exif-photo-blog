@@ -69,7 +69,7 @@ export default function LoaderButton({
         ),
         styleAs === 'link' && 'hover:text-dim',
         styleAs === 'link-without-hover' && 'hover:text-main',
-        'inline-flex items-center gap-2 self-start whitespace-nowrap',
+        'inline-flex items-center gap-1.5 self-start whitespace-nowrap',
         primary && 'primary',
         hideFocusOutline && 'focus:outline-hidden',
         className,
@@ -88,7 +88,7 @@ export default function LoaderButton({
               size={14}
               color={spinnerColor}
               className={clsx(
-                'translate-y-[1px]',
+                'translate-y-[0.5px]',
                 spinnerClassName,
               )}
             />
@@ -96,7 +96,7 @@ export default function LoaderButton({
         </span>}
       {children && <span className={clsx(
         styleAs !== 'button' && isLoading && 'text-dim',
-        hideTextOnMobile && icon !== undefined && 'hidden sm:inline-block',
+        hideTextOnMobile && icon !== undefined && 'max-sm:hidden',
       )}>
         {children}
       </span>}

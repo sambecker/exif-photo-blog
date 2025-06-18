@@ -12,7 +12,6 @@ export default function DeleteUploadButton({
   shouldRedirectToAdminPhotos,
   onDeleteStart,
   onDelete,
-  hideTextOnMobile,
   children,
   isLoading,
   ...props
@@ -50,7 +49,6 @@ export default function DeleteUploadButton({
           });
       }}
       isLoading={isLoading ?? isDeleting}
-      hideTextOnMobile={hideTextOnMobile}
     >
       {children}
     </DeleteButton>
