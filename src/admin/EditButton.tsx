@@ -5,9 +5,7 @@ import { ComponentProps } from 'react';
 export default function EditButton ({
   children,
   ...props
-}: {
-  hideText?: boolean
-} & ComponentProps<typeof PathLoaderButton>) {
+}: ComponentProps<typeof PathLoaderButton>) {
   return (
     <PathLoaderButton
       {...props}

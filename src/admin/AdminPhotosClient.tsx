@@ -80,7 +80,7 @@ export default function AdminPhotosClient({
                 )}
                 spinnerColor="text"
                 spinnerClassName="text-blue-200 dark:text-blue-600/40"
-                hideTextOnMobile={false}
+                hideText="never"
               >
                 <ResponsiveText shortText={photosCountNeedsSync}>
                   {pluralize(

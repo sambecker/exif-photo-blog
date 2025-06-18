@@ -19,7 +19,7 @@ export default function LoaderButton({
   spinnerColor,
   spinnerClassName,
   styleAs = 'button',
-  hideTextOnMobile = true,
+  hideText = 'on-mobile',
   confirmText,
   shouldPreventDefault,
   primary,
@@ -39,7 +39,7 @@ export default function LoaderButton({
   spinnerColor?: SpinnerColor
   spinnerClassName?: string
   styleAs?: 'button' | 'link' | 'link-without-hover'
-  hideTextOnMobile?: boolean
+  hideText?: 'always' | 'on-mobile' | 'never'
   confirmText?: string
   shouldPreventDefault?: boolean
   primary?: boolean
@@ -96,7 +96,8 @@ export default function LoaderButton({
         </span>}
       {children && <span className={clsx(
         styleAs !== 'button' && isLoading && 'text-dim',
-        hideTextOnMobile && icon !== undefined && 'max-sm:hidden',
+        hideText === 'on-mobile' && icon !== undefined && 'max-sm:hidden',
+        hideText === 'always' && 'hidden',
       )}>
         {children}
       </span>}

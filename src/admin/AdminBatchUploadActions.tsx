@@ -218,7 +218,7 @@ export default function AdminBatchUploadActions({
                   }
                 }
               }}
-              hideTextOnMobile={false}
+              hideText="never"
             >
               {buttonText}
             </ProgressButton>
@@ -235,7 +235,7 @@ export default function AdminBatchUploadActions({
               }}
               className="w-full flex justify-center"
               shouldRedirectToAdminPhotos
-              hideTextOnMobile={false}
+              hideText="never"
               disabled={isAdding}
             >
               Delete All Uploads

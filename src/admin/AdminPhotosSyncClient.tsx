@@ -49,7 +49,7 @@ export default function AdminPhotosSyncClient({
       accessory={<ProgressButton
         primary
         icon={<IconGrSync className="translate-y-[1px]" />}
-        hideTextOnMobile={false}
+        hideText="never"
         progress={progress}
         tooltip={photos.length === 1
           ? 'Sync data for 1 photo'

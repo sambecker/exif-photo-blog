@@ -115,13 +115,13 @@ export default function AdminUploadsTableRow({
                   <AddButton
                     path={pathForAdminUploadUrl(url)}
                     disabled={isDeleting}
-                    hideTextOnMobile={false}
                     tooltip="Add directly"
+                    hideText="never"
                   />
                   <EditButton
                     path={pathForAdminUploadUrl(url)}
                     tooltip="Review photo details"
-                    hideText
+                    hideText="always"
                   />
                   <DeleteBlobButton
                     urls={[url]}

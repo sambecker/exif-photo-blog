@@ -134,7 +134,7 @@ export default function MoreMenuItem({
       <LoaderButton
         icon={icon}
         isLoading={isLoading || isPending}
-        hideTextOnMobile={false}
+        hideText="never"
         styleAs="link-without-hover"
         className="translate-y-[0.5px] text-sm grow"
         classNameIcon="translate-y-[-0.5px]!"

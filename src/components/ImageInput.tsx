@@ -82,7 +82,7 @@ export default function ImageInput({
               />}
               aria-disabled={disabled}
               onClick={() => inputRef.current?.click()}
-              hideTextOnMobile={false}
+              hideText="never"
               primary
             >
               {isUploading
