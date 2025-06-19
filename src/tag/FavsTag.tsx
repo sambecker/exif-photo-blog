@@ -1,3 +1,5 @@
+'use client';
+
 import { TAG_FAVS } from '.';
 import { pathForTag, pathForTagImage } from '@/app/paths';
 import EntityLink, {
