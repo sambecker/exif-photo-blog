@@ -84,6 +84,7 @@ export default function Nav({
               )}>
               <AppViewSwitcher
                 currentSelection={switcherSelectionForPath()}
+                className="translate-x-[-1px]"
               />
               <div className={clsx(
                 'grow text-right min-w-0',
