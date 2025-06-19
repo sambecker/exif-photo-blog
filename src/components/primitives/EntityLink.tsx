@@ -31,7 +31,8 @@ export default function EntityLink({
   badged,
   contrast = 'medium',
   path = '', // Make link optional for debugging purposes
-  pathTooltipImage,
+  tooltipImagePath,
+  tooltipCaption,
   prefetch,
   title,
   action,
@@ -48,7 +49,8 @@ export default function EntityLink({
   labelComplex?: ReactNode
   iconWide?: boolean
   path?: string
-  pathTooltipImage?: string
+  tooltipImagePath?: string
+  tooltipCaption?: ReactNode
   prefetch?: boolean
   title?: string
   action?: ReactNode
@@ -73,6 +75,11 @@ export default function EntityLink({
       return 'text-medium';
     }
   };
+
+  const showHoverEntity =
+    !isLoading &&
+    hoverEntity !== undefined &&
+    !SHOW_CATEGORY_IMAGE_HOVERS;
 
   const renderLabel =
     <ResponsiveText shortText={labelSmall}>
@@ -136,7 +143,7 @@ export default function EntityLink({
         <span className="action">
           {action}
         </span>}
-      {!isLoading && hoverEntity !== undefined &&
+      {showHoverEntity &&
         <span className="hidden peer-hover:inline text-dim">
           {hoverEntity}
         </span>}
@@ -150,8 +157,13 @@ export default function EntityLink({
         />}
     </span>;
 
-  return pathTooltipImage && SHOW_CATEGORY_IMAGE_HOVERS ?
-    <OGTooltip title={label} path={pathTooltipImage}>
+  return tooltipImagePath && SHOW_CATEGORY_IMAGE_HOVERS
+    ? <OGTooltip
+      title={label}
+      path={tooltipImagePath}
+      caption={tooltipCaption}
+    >
       {renderContent}
-    </OGTooltip> : renderContent;
+    </OGTooltip>
+    : renderContent;
 }
