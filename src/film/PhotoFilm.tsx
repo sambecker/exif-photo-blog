@@ -1,3 +1,5 @@
+'use client';
+
 import PhotoFilmIcon from './PhotoFilmIcon';
 import { pathForFilm, pathForFilmImage } from '@/app/paths';
 import EntityLink, {

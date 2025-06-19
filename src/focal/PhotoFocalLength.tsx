@@ -1,3 +1,5 @@
+'use client';
+
 import { pathForFocalLength, pathForFocalLengthImage } from '@/app/paths';
 import EntityLink, {
   EntityLinkExternalProps,

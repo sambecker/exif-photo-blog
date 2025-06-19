@@ -1,3 +1,5 @@
+'use client';
+
 import { pathForTag, pathForTagImage } from '@/app/paths';
 import { formatTag } from '.';
 import EntityLink, {

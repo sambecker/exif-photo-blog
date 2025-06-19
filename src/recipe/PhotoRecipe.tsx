@@ -1,3 +1,5 @@
+'use client';
+
 import { pathForRecipe, pathForRecipeImage } from '@/app/paths';
 import EntityLink, {
   EntityLinkExternalProps,

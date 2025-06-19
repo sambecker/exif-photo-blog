@@ -1,3 +1,5 @@
+'use client';
+
 import { pathForLens, pathForLensImage } from '@/app/paths';
 import { Lens, formatLensText } from '.';
 import EntityLink, {

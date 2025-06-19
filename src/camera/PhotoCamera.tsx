@@ -1,3 +1,5 @@
+'use client';
+
 import { AiFillApple } from 'react-icons/ai';
 import { pathForCamera, pathForCameraImage } from '@/app/paths';
 import { Camera, formatCameraText } from '.';
