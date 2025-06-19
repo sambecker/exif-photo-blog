@@ -2,7 +2,7 @@
 
 import { Photo, PhotoDateRange } from '@/photo';
 import { absolutePathForCameraImage, pathForCamera } from '@/app/paths';
-import OGTile, { OGLoadingState } from '@/components/OGTile';
+import OGTile, { OGLoadingState } from '@/components/og/OGTile';
 import { Camera } from '.';
 import { descriptionForCameraPhotos, titleForCamera } from './meta';
 import { useAppText } from '@/i18n/state/client';

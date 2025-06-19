@@ -1,6 +1,6 @@
 import { Photo, PhotoDateRange } from '@/photo';
 import { absolutePathForRecipeImage, pathForRecipe } from '@/app/paths';
-import OGTile, { OGLoadingState } from '@/components/OGTile';
+import OGTile, { OGLoadingState } from '@/components/og/OGTile';
 import { descriptionForRecipePhotos, titleForRecipe } from '.';
 import { useAppText } from '@/i18n/state/client';
 

@@ -5,7 +5,7 @@ import {
   absolutePathForFocalLengthImage,
   pathForFocalLength,
 } from '@/app/paths';
-import OGTile, { OGLoadingState } from '@/components/OGTile';
+import OGTile, { OGLoadingState } from '@/components/og/OGTile';
 import { descriptionForFocalLengthPhotos, titleForFocalLength } from '.';
 import { useAppText } from '@/i18n/state/client';
 

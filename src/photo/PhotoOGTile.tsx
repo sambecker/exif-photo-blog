@@ -7,7 +7,7 @@ import {
 } from '@/photo';
 import { PhotoSetCategory } from '../category';
 import { absolutePathForPhotoImage, pathForPhoto } from '@/app/paths';
-import OGTile, { OGLoadingState } from '@/components/OGTile';
+import OGTile, { OGLoadingState } from '@/components/og/OGTile';
 
 export default function PhotoOGTile({
   photo,

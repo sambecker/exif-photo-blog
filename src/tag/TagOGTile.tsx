@@ -2,7 +2,7 @@
 
 import { Photo, PhotoDateRange } from '@/photo';
 import { absolutePathForTagImage, pathForTag } from '@/app/paths';
-import OGTile, { OGLoadingState } from '@/components/OGTile';
+import OGTile, { OGLoadingState } from '@/components/og/OGTile';
 import { descriptionForTaggedPhotos, titleForTag } from '.';
 import { useAppText } from '@/i18n/state/client';
 

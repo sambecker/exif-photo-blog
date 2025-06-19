@@ -5,7 +5,7 @@ import {
   absolutePathForFilmImage,
   pathForFilm,
 } from '@/app/paths';
-import OGTile, { OGLoadingState } from '@/components/OGTile';
+import OGTile, { OGLoadingState } from '@/components/og/OGTile';
 import { descriptionForFilmPhotos, titleForFilm } from '.';
 import { useAppText } from '@/i18n/state/client';
 

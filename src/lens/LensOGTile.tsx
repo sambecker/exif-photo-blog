@@ -1,6 +1,6 @@
 import { Photo, PhotoDateRange } from '@/photo';
 import { absolutePathForLensImage, pathForLens } from '@/app/paths';
-import OGTile, { OGLoadingState } from '@/components/OGTile';
+import OGTile, { OGLoadingState } from '@/components/og/OGTile';
 import { Lens } from '.';
 import { titleForLens, descriptionForLensPhotos } from './meta';
 import { useAppText } from '@/i18n/state/client';
