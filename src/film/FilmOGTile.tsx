@@ -2,10 +2,10 @@
 
 import { Photo, PhotoDateRange } from '@/photo';
 import {
-  absolutePathForFilmImage,
   pathForFilm,
+  pathForFilmImage,
 } from '@/app/paths';
-import OGTile, { OGLoadingState } from '@/components/OGTile';
+import OGTile, { OGLoadingState } from '@/components/og/OGTile';
 import { descriptionForFilmPhotos, titleForFilm } from '.';
 import { useAppText } from '@/i18n/state/client';
 
@@ -37,7 +37,7 @@ export default function FilmOGTile({
       description:
         descriptionForFilmPhotos(photos, appText, true, count, dateRange),
       path: pathForFilm(film),
-      pathImageAbsolute: absolutePathForFilmImage(film),
+      pathImage: pathForFilmImage(film),
       loadingState: loadingStateExternal,
       onLoad,
       onFail,

@@ -20,11 +20,7 @@ export const getFocalLengthFromString = (focalString?: string) => {
   return focal ? parseInt(focal, 10) : 0;
 };
 
-export const formatFocalLength = (focal?: number) => focal
-  ? formatFocalLengthSafe(focal)
-  : undefined;
-
-export const formatFocalLengthSafe = (focal = 0) =>
+export const formatFocalLength = (focal = 0) =>
   `${focal}mm`;
 
 export const titleForFocalLength = (
@@ -33,7 +29,7 @@ export const titleForFocalLength = (
   appText: AppTextState,
   explicitCount?: number,
 ) => [
-  appText.category.focalLengthTitle(formatFocalLengthSafe(focal)),
+  appText.category.focalLengthTitle(formatFocalLength(focal)),
   photoQuantityText(explicitCount ?? photos.length, appText),
 ].join(' ');
 
@@ -41,7 +37,7 @@ export const shareTextFocalLength = (
   focal: number,
   appText: AppTextState,
 ) =>
-  appText.category.focalLengthShare(formatFocalLengthSafe(focal));
+  appText.category.focalLengthShare(formatFocalLength(focal));
 
 export const descriptionForFocalLengthPhotos = (
   photos: Photo[],

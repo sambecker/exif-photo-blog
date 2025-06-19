@@ -1,4 +1,6 @@
-import { pathForRecipe } from '@/app/paths';
+'use client';
+
+import { pathForRecipe, pathForRecipeImage } from '@/app/paths';
 import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/primitives/EntityLink';
@@ -7,6 +9,8 @@ import clsx from 'clsx/lite';
 import { ComponentProps } from 'react';
 import IconRecipe from '@/components/icons/IconRecipe';
 import PhotoRecipeOverlayButton from './PhotoRecipeOverlayButton';
+import { useAppText } from '@/i18n/state/client';
+import { photoQuantityText } from '@/photo';
 
 export default function PhotoRecipe({
   ref,
@@ -20,13 +24,18 @@ export default function PhotoRecipe({
   countOnHover?: number
 } & Partial<ComponentProps<typeof PhotoRecipeOverlayButton>>
   & EntityLinkExternalProps) {
+  const appText = useAppText();
+
   return (
     <EntityLink
       {...props}
       ref={ref}
       title="Recipe"
       label={formatRecipe(recipe)}
-      href={pathForRecipe(recipe)}
+      path={pathForRecipe(recipe)}
+      tooltipImagePath={pathForRecipeImage(recipe)}
+      tooltipCaption={countOnHover &&
+        photoQuantityText(countOnHover, appText, false)}
       icon={<IconRecipe
         size={16}
         className={clsx(

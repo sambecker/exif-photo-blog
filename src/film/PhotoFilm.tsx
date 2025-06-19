@@ -1,5 +1,7 @@
+'use client';
+
 import PhotoFilmIcon from './PhotoFilmIcon';
-import { pathForFilm } from '@/app/paths';
+import { pathForFilm, pathForFilmImage } from '@/app/paths';
 import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/primitives/EntityLink';
@@ -8,6 +10,8 @@ import { labelForFilm } from '.';
 import { isStringFujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import PhotoRecipeOverlayButton from '@/recipe/PhotoRecipeOverlayButton';
 import { ComponentProps } from 'react';
+import { useAppText } from '@/i18n/state/client';
+import { photoQuantityText } from '@/photo';
 
 export default function PhotoFilm({
   film,
@@ -23,6 +27,7 @@ export default function PhotoFilm({
   countOnHover?: number
 } & Partial<ComponentProps<typeof PhotoRecipeOverlayButton>>
   & EntityLinkExternalProps) {
+  const appText = useAppText();
   const { small, medium, large } = labelForFilm(film);
 
   return (
@@ -30,7 +35,10 @@ export default function PhotoFilm({
       {...props}
       label={medium}
       labelSmall={small}
-      href={pathForFilm(film)}
+      path={pathForFilm(film)}
+      tooltipImagePath={pathForFilmImage(film)}
+      tooltipCaption={countOnHover &&
+        photoQuantityText(countOnHover, appText, false)}
       icon={<PhotoFilmIcon
         film={film}
         className={clsx(

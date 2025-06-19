@@ -1,8 +1,8 @@
 'use client';
 
 import { Photo, PhotoDateRange } from '@/photo';
-import { absolutePathForTagImage, pathForTag } from '@/app/paths';
-import OGTile, { OGLoadingState } from '@/components/OGTile';
+import { pathForTag, pathForTagImage } from '@/app/paths';
+import OGTile, { OGLoadingState } from '@/components/og/OGTile';
 import { descriptionForTaggedPhotos, titleForTag } from '.';
 import { useAppText } from '@/i18n/state/client';
 
@@ -39,7 +39,7 @@ export default function TagOGTile({
         dateRange,
       ),
       path: pathForTag(tag),
-      pathImageAbsolute: absolutePathForTagImage(tag),
+      pathImage: pathForTagImage(tag),
       loadingState: loadingStateExternal,
       onLoad,
       onFail,

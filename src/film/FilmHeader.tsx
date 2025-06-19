@@ -43,6 +43,7 @@ export default function FilmHeader({
         toggleRecipeOverlay={recipeProps
           ? () => setRecipeModalProps?.(recipeProps)
           : undefined}
+        showTooltip={false}
       />}
       entityDescription={descriptionForFilmPhotos(
         photos,

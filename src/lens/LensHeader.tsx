@@ -26,7 +26,11 @@ export default async function LensHeader({
   return (
     <PhotoHeader
       lens={lens}
-      entity={<PhotoLens {...{ lens }} contrast="high" />}
+      entity={<PhotoLens
+        {...{ lens }}
+        contrast="high"
+        showTooltip={false}
+      />}
       entityDescription={
         descriptionForLensPhotos(
           photos,

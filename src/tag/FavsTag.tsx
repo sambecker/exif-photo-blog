@@ -1,9 +1,11 @@
 import { TAG_FAVS } from '.';
-import { pathForTag } from '@/app/paths';
+import { pathForTag, pathForTagImage } from '@/app/paths';
 import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/primitives/EntityLink';
 import IconFavs from '@/components/icons/IconFavs';
+import { useAppText } from '@/i18n/state/client';
+import { photoQuantityText } from '@/photo';
 
 export default function FavsTag({
   type,
@@ -15,19 +17,24 @@ export default function FavsTag({
 }: {
   countOnHover?: number
 } & EntityLinkExternalProps) {
+  const appText = useAppText();
+
   return (
     <EntityLink
-      label={badged
-        ? <span className="inline-flex gap-1 items-center">
+      label={TAG_FAVS}
+      labelComplex={badged &&
+        <span className="inline-flex gap-1 items-center">
           {TAG_FAVS}
           <IconFavs
             size={10}
             className="translate-y-[-0.5px]"
             highlight
           />
-        </span>
-        : TAG_FAVS}
-      href={pathForTag(TAG_FAVS)}
+        </span>}
+      path={pathForTag(TAG_FAVS)}
+      tooltipImagePath={pathForTagImage(TAG_FAVS)}
+      tooltipCaption={countOnHover &&
+        photoQuantityText(countOnHover, appText, false)}
       icon={!badged &&
         <IconFavs
           size={13}

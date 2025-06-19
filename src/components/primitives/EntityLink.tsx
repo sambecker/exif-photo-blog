@@ -7,12 +7,15 @@ import { clsx } from 'clsx/lite';
 import LinkWithStatus from '../LinkWithStatus';
 import Spinner from '../Spinner';
 import ResponsiveText from './ResponsiveText';
+import OGTooltip from '../og/OGTooltip';
+import { SHOW_CATEGORY_IMAGE_HOVERS } from '@/app/config';
 
 export interface EntityLinkExternalProps {
   ref?: RefObject<HTMLSpanElement | null>
   type?: LabeledIconType
   badged?: boolean
   contrast?: ComponentProps<typeof Badge>['contrast']
+  showTooltip?: boolean
   uppercase?: boolean
   prefetch?: boolean
   className?: string
@@ -23,11 +26,15 @@ export default function EntityLink({
   icon,
   label,
   labelSmall,
+  labelComplex,
   iconWide,
   type,
   badged,
   contrast = 'medium',
-  href = '', // Make link optional for debugging purposes
+  showTooltip = SHOW_CATEGORY_IMAGE_HOVERS,
+  path = '', // Make link optional for debugging purposes
+  tooltipImagePath,
+  tooltipCaption,
   prefetch,
   title,
   action,
@@ -39,10 +46,13 @@ export default function EntityLink({
   debug,
 }: {
   icon: ReactNode
-  label: ReactNode
+  label: string
   labelSmall?: ReactNode
+  labelComplex?: ReactNode
   iconWide?: boolean
-  href?: string
+  path?: string
+  tooltipImagePath?: string
+  tooltipCaption?: ReactNode
   prefetch?: boolean
   title?: string
   action?: ReactNode
@@ -68,10 +78,59 @@ export default function EntityLink({
     }
   };
 
+  const showHoverEntity =
+    !isLoading &&
+    hoverEntity !== undefined &&
+    !showTooltip;
+
   const renderLabel =
     <ResponsiveText shortText={labelSmall}>
-      {label}
+      {labelComplex || label}
     </ResponsiveText>;
+
+  const renderLink =
+    <LinkWithStatus
+      href={path}
+      className={clsx(
+        'peer',
+        'inline-flex items-center gap-2 max-w-full truncate',
+        classForContrast(),
+        path && !badged && 'hover:text-gray-900 dark:hover:text-gray-100',
+        path && !badged && 'active:text-medium!',
+      )}
+      isLoading={isLoading}
+      setIsLoading={setIsLoading}
+    >
+      <LabeledIcon {...{
+        icon,
+        iconWide,
+        prefetch,
+        title,
+        type,
+        uppercase,
+        classNameIcon: clsx('text-dim', classNameIcon),
+        debug,
+      }}>
+        {badged
+          ? <Badge
+            type="small"
+            contrast={contrast}
+            className="translate-y-[-0.5px]"
+            uppercase
+            interactive
+          >
+            {renderLabel}
+          </Badge>
+          : <span className={clsx(
+            'text-content',
+            truncate && 'inline-flex max-w-full *:truncate',
+            'decoration-dotted underline-offset-[4px]',
+            'decoration-gray-300 dark:decoration-gray-600',
+          )}>
+            {renderLabel}
+          </span>}
+      </LabeledIcon>
+    </LinkWithStatus>;
 
   return (
     <span
@@ -84,54 +143,20 @@ export default function EntityLink({
         className,
       )}
     >
-      <LinkWithStatus
-        href={href}
-        className={clsx(
-          'peer',
-          'inline-flex items-center gap-2 max-w-full truncate',
-          classForContrast(),
-          href && !badged && 'hover:text-gray-900 dark:hover:text-gray-100',
-          href && !badged && 'active:text-medium!',
-        )}
-        isLoading={isLoading}
-        setIsLoading={setIsLoading}
-      >
-        <LabeledIcon {...{
-          icon,
-          iconWide,
-          href,
-          prefetch,
-          title,
-          type,
-          uppercase,
-          classNameIcon: clsx('text-dim', classNameIcon),
-          debug,
-        }}>
-          {badged
-            ? <Badge
-              type="small"
-              contrast={contrast}
-              className="translate-y-[-0.5px]"
-              uppercase
-              interactive
-            >
-              {renderLabel}
-            </Badge>
-            : <span className={clsx(
-              'text-content',
-              truncate && 'inline-flex max-w-full *:truncate',
-              'decoration-dotted underline-offset-[4px]',
-              'decoration-gray-300 dark:decoration-gray-600',
-            )}>
-              {renderLabel}
-            </span>}
-        </LabeledIcon>
-      </LinkWithStatus>
+      {showTooltip && tooltipImagePath
+        ? <OGTooltip
+          title={label}
+          path={tooltipImagePath}
+          caption={tooltipCaption}
+        >
+          {renderLink}
+        </OGTooltip>
+        : renderLink}
       {action &&
         <span className="action">
           {action}
         </span>}
-      {!isLoading && hoverEntity !== undefined &&
+      {showHoverEntity &&
         <span className="hidden peer-hover:inline text-dim">
           {hoverEntity}
         </span>}

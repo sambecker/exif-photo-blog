@@ -26,8 +26,15 @@ export default async function TagHeader({
     <PhotoHeader
       tag={tag}
       entity={isTagFavs(tag) 
-        ? <FavsTag contrast="high" />
-        : <PhotoTag tag={tag} contrast="high" />}
+        ? <FavsTag
+          contrast="high"
+          showTooltip={false}
+        />
+        : <PhotoTag
+          tag={tag}
+          contrast="high"
+          showTooltip={false}
+        />}
       entityVerb={appText.category.taggedPhotos}
       entityDescription={descriptionForTaggedPhotos(
         photos,

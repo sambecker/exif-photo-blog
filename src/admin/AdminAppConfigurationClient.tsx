@@ -92,6 +92,7 @@ export default function AdminAppConfigurationClient({
   collapseSidebarCategories,
   showKeyboardShortcutTooltips,
   showExifInfo,
+  showCategoryImageHover,
   showZoomControls,
   showTakenAtTimeHidden,
   showSocial,
@@ -646,6 +647,25 @@ export default function AdminAppConfigurationClient({
           >
             Set environment variable to {'"1"'} to hide EXIF data:
             {renderEnvVars(['NEXT_PUBLIC_HIDE_EXIF_DATA'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Show category image hovers"
+            status={showCategoryImageHover}
+            optional
+          >
+            <div className="flex flex-col gap-2">
+              <div>
+                Set environment variable to {'"1"'} to show images when hovering
+                over category links like cameras and lenses:
+                {renderEnvVars(['NEXT_PUBLIC_CATEGORY_IMAGE_HOVERS'])}
+              </div>
+              <div>
+                Static optimization strongly recommended
+                for responsive hover interactions:
+                {/* eslint-disable-next-line max-len */}
+                {renderEnvVars(['NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORY_OG_IMAGES'])}
+              </div>
+            </div>
           </ChecklistRow>
           <ChecklistRow
             title="Show zoom controls"
