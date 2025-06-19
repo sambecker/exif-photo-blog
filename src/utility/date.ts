@@ -5,25 +5,25 @@ import { setDefaultDateFnLocale } from '@/i18n';
 
 setDefaultDateFnLocale();
 
-const DATE_FORMAT_TINY                   = 'dd MMM yy';
-const DATE_FORMAT_TINY_PLACEHOLDER       = '00 000 00';
+const DATE_FORMAT_TINY = 'dd MMM yy';
+const DATE_FORMAT_TINY_PLACEHOLDER = '00 000 00';
 
-const DATE_FORMAT_SHORT                  = 'dd MMM yyyy';
-const DATE_FORMAT_SHORT_PLACEHOLDER      = '00 000 0000';
+const DATE_FORMAT_SHORT = 'dd MMM yyyy';
+const DATE_FORMAT_SHORT_PLACEHOLDER = '00 000 0000';
 
-const DATE_FORMAT_MEDIUM                 = 'dd MMM yy h:mma';
-const DATE_FORMAT_MEDIUM_PLACEHOLDER     = '00 000 00 00:0000';
+const DATE_FORMAT_MEDIUM = 'dd MMM yy h:mma';
+const DATE_FORMAT_MEDIUM_PLACEHOLDER = '00 000 00 00:0000';
 
-const DATE_FORMAT_LONG                   = 'dd MMM yyyy h:mma';
-const DATE_FORMAT_LONG_PLACEHOLDER       = '00 000 0000 00:0000';
+const DATE_FORMAT_LONG = 'dd MMM yyyy h:mma';
+const DATE_FORMAT_LONG_PLACEHOLDER = '00 000 0000 00:0000';
 
-const DATE_FORMAT_RSS                    = 'EEE, dd LLL yyyy HH:mm:ss xx';
-const DATE_FORMAT_RSS_PLACEHOLDER        = '000, 00 000 0000 00:00:00 00';
+const DATE_FORMAT_RSS = 'EEE, dd LLL yyyy HH:mm:ss xx';
+const DATE_FORMAT_RSS_PLACEHOLDER = '000, 00 000 0000 00:00:00 00';
 
-const DATE_FORMAT_POSTGRES               = 'yyyy-MM-dd HH:mm:ss';
+const DATE_FORMAT_POSTGRES = 'yyyy-MM-dd HH:mm:ss';
 
-export const VALIDATION_EXAMPLE_POSTGRES        = '2025-01-03T21:00:44.000Z';
-export const VALIDATION_EXAMPLE_POSTGRES_NAIVE  = '2025-01-03 16:00:44';
+export const VALIDATION_EXAMPLE_POSTGRES = '2025-01-03T21:00:44.000Z';
+export const VALIDATION_EXAMPLE_POSTGRES_NAIVE = '2025-01-03 16:00:44';
 
 type AmbiguousTimestamp = number | string;
 
@@ -72,11 +72,25 @@ export const formatDate = ({
     break;
   }
 
+  let realDate = date;
+  if (!(date instanceof Date)) {
+    if (typeof date === 'string') {
+      const normalized = (date as string).includes('T') ? 
+        date : (date as string).replace(' ', 'T');
+      realDate = new Date(normalized);
+    } else {
+      return showPlaceholder ? placeholderString : '';
+    }
+  }
+  if (isNaN((realDate as Date).getTime())) {
+    return showPlaceholder ? placeholderString : '';
+  }
+
   return showPlaceholder
     ? placeholderString
     : timezone
-      ? formatInTimeZone(date, timezone, formatString)
-      : format(date, formatString);
+      ? formatInTimeZone(realDate, timezone, formatString)
+      : format(realDate, formatString);
 };
 
 export const formatDateFromPostgresString = (

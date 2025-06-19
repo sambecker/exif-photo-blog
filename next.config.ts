@@ -1,4 +1,3 @@
-import { removeUrlProtocol } from '@/utility/url';
 import type { NextConfig } from 'next';
 import { RemotePattern } from 'next/dist/shared/lib/image-config';
 import path from 'path';
@@ -16,18 +15,22 @@ const HOSTNAME_CLOUDFLARE_R2 =
 
 const HOSTNAME_AWS_S3 =
   process.env.NEXT_PUBLIC_AWS_S3_BUCKET &&
-  process.env.NEXT_PUBLIC_AWS_S3_REGION
+    process.env.NEXT_PUBLIC_AWS_S3_REGION
     // eslint-disable-next-line max-len
     ? `${process.env.NEXT_PUBLIC_AWS_S3_BUCKET}.s3.${process.env.NEXT_PUBLIC_AWS_S3_REGION}.amazonaws.com`
     : undefined;
 
-const generateRemotePattern = (hostname: string) =>
-  ({
-    protocol: 'https',
-    hostname: removeUrlProtocol(hostname)!,
-    port: '',
+const HOSTNAME_IMMICH = process.env.IMMICH_PROXY_URL;
+
+const generateRemotePattern = (hostname: string) => {
+  const parsedUrl = new URL(hostname);
+  return {
+    protocol: parsedUrl.protocol.replace(':', '') as 'http' | 'https',
+    hostname: parsedUrl.hostname,
+    port: parsedUrl.port || undefined,
     pathname: '/**',
-  } as const);
+  } as const;
+};
 
 const remotePatterns: RemotePattern[] = [];
 
@@ -40,6 +43,10 @@ if (HOSTNAME_CLOUDFLARE_R2) {
 if (HOSTNAME_AWS_S3) {
   remotePatterns.push(generateRemotePattern(HOSTNAME_AWS_S3));
 }
+if (HOSTNAME_IMMICH) {
+  remotePatterns.push(generateRemotePattern(HOSTNAME_IMMICH));
+}
+
 
 const LOCALE = process.env.NEXT_PUBLIC_LOCALE || 'en-us';
 const LOCALE_ALIAS = './date-fns-locale-alias';
