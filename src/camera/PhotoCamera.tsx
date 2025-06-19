@@ -1,5 +1,5 @@
 import { AiFillApple } from 'react-icons/ai';
-import { pathForCamera } from '@/app/paths';
+import { pathForCamera, pathForCameraImage } from '@/app/paths';
 import { Camera, formatCameraText } from '.';
 import EntityLink, {
   EntityLinkExternalProps,
@@ -24,7 +24,8 @@ export default function PhotoCamera({
     <EntityLink
       {...props}
       label={formatCameraText(camera)}
-      href={pathForCamera(camera)}
+      path={pathForCamera(camera)}
+      pathTooltipImage={pathForCameraImage(camera)}
       icon={showAppleIcon
         ? <AiFillApple
           title="Apple"

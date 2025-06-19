@@ -17,7 +17,7 @@ export default function PhotoFocalLength({
     <EntityLink
       {...props}
       label={formatFocalLength(focal)}
-      href={pathForFocalLength(focal)}
+      path={pathForFocalLength(focal)}
       icon={<IconFocalLength className="translate-y-[-1px]" />}
       hoverEntity={countOnHover}
     />

@@ -17,17 +17,17 @@ export default function FavsTag({
 } & EntityLinkExternalProps) {
   return (
     <EntityLink
-      label={badged
-        ? <span className="inline-flex gap-1 items-center">
+      label={TAG_FAVS}
+      labelComplex={badged &&
+        <span className="inline-flex gap-1 items-center">
           {TAG_FAVS}
           <IconFavs
             size={10}
             className="translate-y-[-0.5px]"
             highlight
           />
-        </span>
-        : TAG_FAVS}
-      href={pathForTag(TAG_FAVS)}
+        </span>}
+      path={pathForTag(TAG_FAVS)}
       icon={!badged &&
         <IconFavs
           size={13}

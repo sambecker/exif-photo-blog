@@ -366,7 +366,7 @@ export default function CommandKClient({
           heading: appText.category.focalLengthPlural,
           accessory: <IconFocalLength className="text-[14px]" />,
           items: focalLengths.map(({ focal, count }) => ({
-            label: formatFocalLength(focal)!,
+            label: formatFocalLength(focal),
             annotation: formatCount(count),
             annotationAria: formatCountDescriptive(count),
             path: pathForFocalLength(focal),

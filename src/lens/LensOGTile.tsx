@@ -1,5 +1,5 @@
 import { Photo, PhotoDateRange } from '@/photo';
-import { absolutePathForLensImage, pathForLens } from '@/app/paths';
+import { pathForLens, pathForLensImage } from '@/app/paths';
 import OGTile, { OGLoadingState } from '@/components/og/OGTile';
 import { Lens } from '.';
 import { titleForLens, descriptionForLensPhotos } from './meta';
@@ -38,7 +38,7 @@ export default function LensOGTile({
         dateRange,
       ),
       path: pathForLens(lens),
-      pathImageAbsolute: absolutePathForLensImage(lens),
+      pathImage: pathForLensImage(lens),
       loadingState: loadingStateExternal,
       onLoad,
       onFail,

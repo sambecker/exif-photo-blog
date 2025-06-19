@@ -20,6 +20,7 @@ export default function TooltipPrimitive({
   color,
   keyCommand,
   keyCommandModifier,
+  debug,
 }: {
   content?: ReactNode
   children: ReactNode
@@ -32,6 +33,7 @@ export default function TooltipPrimitive({
   color?: ComponentProps<typeof MenuSurface>['color']
   keyCommand?: string
   keyCommandModifier?: ComponentProps<typeof KeyCommand>['modifier']
+  debug?: boolean
 }) {
   const refTrigger = useRef<HTMLButtonElement>(null);
   const refContent = useRef<HTMLDivElement>(null);
@@ -74,7 +76,7 @@ export default function TooltipPrimitive({
 
   return (
     <Tooltip.Provider {...{ delayDuration, skipDelayDuration }}>
-      <Tooltip.Root open={includeButton ? isOpen : undefined}>
+      <Tooltip.Root open={(includeButton ? isOpen : undefined) || debug}>
         <Tooltip.Trigger asChild>
           {includeButton
             ? <button

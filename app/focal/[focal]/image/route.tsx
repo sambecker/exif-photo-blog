@@ -17,7 +17,7 @@ export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'image',
   getUniqueFocalLengths,
   focalLengths => focalLengths
-    .map(({ focal }) => ({ focal: formatFocalLength(focal)! })),
+    .map(({ focal }) => ({ focal: formatFocalLength(focal) })),
 );
 
 export async function GET(

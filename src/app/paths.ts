@@ -67,6 +67,7 @@ export const PATH_API_PRESIGNED_URL = `${PATH_API_STORAGE}/presigned-url`;
 
 // Modifiers
 const EDIT = 'edit';
+const IMAGE = 'image';
 export const PARAM_UPLOAD_TITLE = 'title';
 
 // Special characters
@@ -152,25 +153,50 @@ export const pathForPhoto = ({
   return `${prefix}/${getPhotoId(photo)}`;
 };
 
-export const pathForTag = (tag: string) =>
-  `${PREFIX_TAG}/${tag}`;
-
 export const pathForCamera = ({ make, model }: Camera) =>
   `${PREFIX_CAMERA}/${parameterize(make)}/${parameterize(model)}`;
-
-export const pathForFilm = (film: string) =>
-  `${PREFIX_FILM}/${film}`;
 
 export const pathForLens = ({ make, model }: Lens) =>
   make
     ? `${PREFIX_LENS}/${parameterize(make)}/${parameterize(model)}`
     : `${PREFIX_LENS}/${MISSING_FIELD}/${parameterize(model)}`;
 
-export const pathForFocalLength = (focal: number) =>
-  `${PREFIX_FOCAL_LENGTH}/${focal}mm`;
+export const pathForTag = (tag: string) =>
+  `${PREFIX_TAG}/${tag}`;
 
 export const pathForRecipe = (recipe: string) =>
   `${PREFIX_RECIPE}/${recipe}`;
+
+export const pathForFilm = (film: string) =>
+  `${PREFIX_FILM}/${film}`;
+
+export const pathForFocalLength = (focal: number) =>
+  `${PREFIX_FOCAL_LENGTH}/${focal}mm`;
+
+// Image paths
+const pathForImage = (path: string) =>
+  `${path}/${IMAGE}`;
+
+export const pathForPhotoImage = (photo: PhotoOrPhotoId) =>
+  pathForImage(pathForPhoto({ photo }));
+
+export const pathForCameraImage = (camera: Camera) =>
+  pathForImage(pathForCamera(camera));
+
+export const pathForLensImage = (lens: Lens) =>
+  pathForImage(pathForLens(lens));
+
+export const pathForTagImage = (tag: string) =>
+  pathForImage(pathForTag(tag));
+
+export const pathForRecipeImage = (recipe: string) =>
+  pathForImage(pathForRecipe(recipe));
+
+export const pathForFilmImage = (film: string) =>
+  pathForImage(pathForFilm(film));
+
+export const pathForFocalLengthImage = (focal: number) =>
+  pathForImage(pathForFocalLength(focal));
 
 // Absolute paths
 export const ABSOLUTE_PATH_FOR_FEED_JSON =
@@ -188,57 +214,48 @@ export const absolutePathForPhoto = (
 ) =>
   `${getBaseUrl(share)}${pathForPhoto(params)}`;
 
-export const absolutePathForTag = (tag: string, share?: boolean) =>
-  `${getBaseUrl(share)}${pathForTag(tag)}`;
-
 export const absolutePathForCamera= (camera: Camera, share?: boolean) =>
   `${getBaseUrl(share)}${pathForCamera(camera)}`;
 
 export const absolutePathForLens= (lens: Lens, share?: boolean) =>
   `${getBaseUrl(share)}${pathForLens(lens)}`;
 
-export const absolutePathForFilm = (film: string, share?: boolean) =>
-  `${getBaseUrl(share)}${pathForFilm(film)}`;
+export const absolutePathForTag = (tag: string, share?: boolean) =>
+  `${getBaseUrl(share)}${pathForTag(tag)}`;
 
 export const absolutePathForRecipe = (recipe: string, share?: boolean) =>
   `${getBaseUrl(share)}${pathForRecipe(recipe)}`;
+
+export const absolutePathForFilm = (film: string, share?: boolean) =>
+  `${getBaseUrl(share)}${pathForFilm(film)}`;
 
 export const absolutePathForFocalLength = (focal: number, share?: boolean) =>
   `${getBaseUrl(share)}${pathForFocalLength(focal)}`;
 
 export const absolutePathForPhotoImage = (photo: PhotoOrPhotoId) =>
-  `${absolutePathForPhoto({ photo })}/image`;
-
-export const absolutePathForTagImage = (tag: string) =>
-  `${absolutePathForTag(tag)}/image`;
+  `${getBaseUrl()}${pathForPhotoImage(photo)}`;
 
 export const absolutePathForCameraImage= (camera: Camera) =>
-  `${absolutePathForCamera(camera)}/image`;
+  `${getBaseUrl()}${pathForCameraImage(camera)}`;
 
 export const absolutePathForLensImage= (lens: Lens) =>
-  `${absolutePathForLens(lens)}/image`;
+  `${getBaseUrl()}${pathForLensImage(lens)}`;
 
-export const absolutePathForFilmImage = (film: string) =>
-  `${absolutePathForFilm(film)}/image`;
+export const absolutePathForTagImage = (tag: string) =>
+  `${getBaseUrl()}${pathForTagImage(tag)}`;
 
 export const absolutePathForRecipeImage = (recipe: string) =>
-  `${absolutePathForRecipe(recipe)}/image`;
+  `${getBaseUrl()}${pathForRecipeImage(recipe)}`;
 
-export const absolutePathForFocalLengthImage =
-  (focal: number) =>
-    `${absolutePathForFocalLength(focal)}/image`;
+export const absolutePathForFilmImage = (film: string) =>
+  `${getBaseUrl()}${pathForFilmImage(film)}`;
+
+export const absolutePathForFocalLengthImage = (focal: number) =>
+  `${getBaseUrl()}${pathForFocalLengthImage(focal)}`;
 
 // p/[photoId]
 export const isPathPhoto = (pathname = '') =>
   new RegExp(`^${PREFIX_PHOTO}/[^/]+/?$`).test(pathname);
-
-// tag/[tag]
-export const isPathTag = (pathname = '') =>
-  new RegExp(`^${PREFIX_TAG}/[^/]+/?$`).test(pathname);;
-
-// tag/[tag]/[photoId]
-export const isPathTagPhoto = (pathname = '') =>
-  new RegExp(`^${PREFIX_TAG}/[^/]+/[^/]+/?$`).test(pathname);
 
 // shot-on/[make]/[model]
 export const isPathCamera = (pathname = '') =>
@@ -247,6 +264,22 @@ export const isPathCamera = (pathname = '') =>
 // shot-on/[make]/[model]/[photoId]
 export const isPathCameraPhoto = (pathname = '') =>
   new RegExp(`^${PREFIX_CAMERA}/[^/]+/[^/]+/[^/]+/?$`).test(pathname);
+
+// tag/[tag]
+export const isPathTag = (pathname = '') =>
+  new RegExp(`^${PREFIX_TAG}/[^/]+/?$`).test(pathname);
+
+// tag/[tag]/[photoId]
+export const isPathTagPhoto = (pathname = '') =>
+  new RegExp(`^${PREFIX_TAG}/[^/]+/[^/]+/?$`).test(pathname);
+
+// recipe/[recipe]
+export const isPathRecipe = (pathname = '') =>
+  new RegExp(`^${PREFIX_RECIPE}/[^/]+/?$`).test(pathname);
+
+// recipe/[recipe]/[photoId]
+export const isPathRecipePhoto = (pathname = '') =>
+  new RegExp(`^${PREFIX_RECIPE}/[^/]+/[^/]+/?$`).test(pathname);
 
 // film/[film]
 export const isPathFilm = (pathname = '') =>
@@ -313,20 +346,20 @@ export const getPathComponents = (pathname = ''): {
 } & PhotoSetCategory => {
   const photoIdFromPhoto = pathname.match(
     new RegExp(`^${PREFIX_PHOTO}/([^/]+)`))?.[1];
-  const photoIdFromTag = pathname.match(
-    new RegExp(`^${PREFIX_TAG}/[^/]+/([^/]+)`))?.[1];
   const photoIdFromCamera = pathname.match(
     new RegExp(`^${PREFIX_CAMERA}/[^/]+/[^/]+/([^/]+)`))?.[1];
+  const cameraMake = pathname.match(
+    new RegExp(`^${PREFIX_CAMERA}/([^/]+)`))?.[1];
+  const cameraModel = pathname.match(
+    new RegExp(`^${PREFIX_CAMERA}/[^/]+/([^/]+)`))?.[1];
+  const photoIdFromTag = pathname.match(
+    new RegExp(`^${PREFIX_TAG}/[^/]+/([^/]+)`))?.[1];
   const photoIdFromFilm = pathname.match(
     new RegExp(`^${PREFIX_FILM}/[^/]+/([^/]+)`))?.[1];
   const photoIdFromFocalLength = pathname.match(
     new RegExp(`^${PREFIX_FOCAL_LENGTH}/[0-9]+mm/([^/]+)`))?.[1];
   const tag = pathname.match(
     new RegExp(`^${PREFIX_TAG}/([^/]+)`))?.[1];
-  const cameraMake = pathname.match(
-    new RegExp(`^${PREFIX_CAMERA}/([^/]+)`))?.[1];
-  const cameraModel = pathname.match(
-    new RegExp(`^${PREFIX_CAMERA}/[^/]+/([^/]+)`))?.[1];
   const film = pathname.match(
     new RegExp(`^${PREFIX_FILM}/([^/]+)`))?.[1] as string;
   const focalString = pathname.match(

@@ -1,7 +1,7 @@
 'use client';
 
 import { Photo, PhotoDateRange } from '@/photo';
-import { absolutePathForCameraImage, pathForCamera } from '@/app/paths';
+import { pathForCamera, pathForCameraImage } from '@/app/paths';
 import OGTile, { OGLoadingState } from '@/components/og/OGTile';
 import { Camera } from '.';
 import { descriptionForCameraPhotos, titleForCamera } from './meta';
@@ -40,7 +40,7 @@ export default function CameraOGTile({
         dateRange,
       ),
       path: pathForCamera(camera),
-      pathImageAbsolute: absolutePathForCameraImage(camera),
+      pathImage: pathForCameraImage(camera),
       loadingState: loadingStateExternal,
       onLoad,
       onFail,

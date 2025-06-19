@@ -10,18 +10,20 @@ export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 
 export default function OGLoaderImage({
   title,
-  pathImageAbsolute,
+  path,
   loadingState: loadingStateExternal,
   onLoad,
   onFail,
   retryTime,
+  className,
 }: {
   title: string
-  pathImageAbsolute: string
+  path: string
   loadingState?: OGLoadingState
   onLoad?: () => void
   onFail?: () => void
-  retryTime?: number
+  retryTime?: number  
+  className?: string
 }) {
 
   const [loadingStateInternal, setLoadingStateInternal] =
@@ -42,7 +44,10 @@ export default function OGLoaderImage({
 
   return (
     <div
-      className="relative"
+      className={clsx(
+        'relative',
+        className,
+      )}
       style={{ aspectRatio }}
     >
       {loadingState === 'loading' &&
@@ -69,7 +74,7 @@ export default function OGLoaderImage({
             loadingState === 'loading' && 'opacity-0',
             'transition-opacity',
           )}
-          src={pathImageAbsolute}
+          src={path}
           width={width}
           height={height}
           onLoad={() => {

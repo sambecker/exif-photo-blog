@@ -30,7 +30,7 @@ export default function PhotoFilm({
       {...props}
       label={medium}
       labelSmall={small}
-      href={pathForFilm(film)}
+      path={pathForFilm(film)}
       icon={<PhotoFilmIcon
         film={film}
         className={clsx(

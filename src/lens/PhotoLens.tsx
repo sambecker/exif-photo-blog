@@ -19,7 +19,7 @@ export default function PhotoLens({
     <EntityLink
       {...props}
       label={formatLensText(lens, shortText ? 'short' : 'medium')}
-      href={pathForLens(lens)}
+      path={pathForLens(lens)}
       icon={<IconLens
         size={14}
         className="translate-x-[-0.5px]"

@@ -7,6 +7,7 @@ import { clsx } from 'clsx/lite';
 import LinkWithStatus from '../LinkWithStatus';
 import Spinner from '../Spinner';
 import ResponsiveText from './ResponsiveText';
+import OGTooltip from '../og/OGTooltip';
 
 export interface EntityLinkExternalProps {
   ref?: RefObject<HTMLSpanElement | null>
@@ -23,11 +24,13 @@ export default function EntityLink({
   icon,
   label,
   labelSmall,
+  labelComplex,
   iconWide,
   type,
   badged,
   contrast = 'medium',
-  href = '', // Make link optional for debugging purposes
+  path = '', // Make link optional for debugging purposes
+  pathTooltipImage,
   prefetch,
   title,
   action,
@@ -39,10 +42,12 @@ export default function EntityLink({
   debug,
 }: {
   icon: ReactNode
-  label: ReactNode
+  label: string
   labelSmall?: ReactNode
+  labelComplex?: ReactNode
   iconWide?: boolean
-  href?: string
+  path?: string
+  pathTooltipImage?: string
   prefetch?: boolean
   title?: string
   action?: ReactNode
@@ -70,10 +75,10 @@ export default function EntityLink({
 
   const renderLabel =
     <ResponsiveText shortText={labelSmall}>
-      {label}
+      {labelComplex || label}
     </ResponsiveText>;
 
-  return (
+  const renderContent =
     <span
       ref={ref}
       className={clsx(
@@ -85,13 +90,13 @@ export default function EntityLink({
       )}
     >
       <LinkWithStatus
-        href={href}
+        href={path}
         className={clsx(
           'peer',
           'inline-flex items-center gap-2 max-w-full truncate',
           classForContrast(),
-          href && !badged && 'hover:text-gray-900 dark:hover:text-gray-100',
-          href && !badged && 'active:text-medium!',
+          path && !badged && 'hover:text-gray-900 dark:hover:text-gray-100',
+          path && !badged && 'active:text-medium!',
         )}
         isLoading={isLoading}
         setIsLoading={setIsLoading}
@@ -99,7 +104,6 @@ export default function EntityLink({
         <LabeledIcon {...{
           icon,
           iconWide,
-          href,
           prefetch,
           title,
           type,
@@ -143,6 +147,10 @@ export default function EntityLink({
           )}
           color={contrast === 'frosted' ? 'text' : undefined}
         />}
-    </span>
-  );
+    </span>;
+
+  return pathTooltipImage ?
+    <OGTooltip title={label} path={pathTooltipImage}>
+      {renderContent}
+    </OGTooltip> : renderContent;
 }

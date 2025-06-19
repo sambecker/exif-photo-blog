@@ -17,7 +17,7 @@ export default function PhotoTag({
     <EntityLink
       {...props}
       label={formatTag(tag)}
-      href={pathForTag(tag)}
+      path={pathForTag(tag)}
       icon={<IconTag size={14} className="translate-x-[0.5px]" />}
       hoverEntity={countOnHover}
     />

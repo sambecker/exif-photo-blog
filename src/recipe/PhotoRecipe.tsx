@@ -26,7 +26,7 @@ export default function PhotoRecipe({
       ref={ref}
       title="Recipe"
       label={formatRecipe(recipe)}
-      href={pathForRecipe(recipe)}
+      path={pathForRecipe(recipe)}
       icon={<IconRecipe
         size={16}
         className={clsx(

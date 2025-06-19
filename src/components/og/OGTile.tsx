@@ -9,14 +9,15 @@ import OGLoaderImage from './OGLoaderImage';
 export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 
 export default function OGTile({
-  description,
   path,
+  pathImage,
+  description,
   riseOnHover,
   onVisible,
   ...props
 }: {
   description: string
-  path: string
+  pathImage: string
   riseOnHover?: boolean
   onVisible?: () => void
 } & ComponentProps<typeof OGLoaderImage>) {
@@ -35,7 +36,7 @@ export default function OGTile({
         riseOnHover && 'hover:-translate-y-1.5 transition-transform',
       )}
     >
-      <OGLoaderImage {...props} />
+      <OGLoaderImage {...{ ...props, path: pathImage }} />
       <div className={clsx(
         'h-full flex flex-col gap-0.5 p-3',
         'font-sans leading-tight',

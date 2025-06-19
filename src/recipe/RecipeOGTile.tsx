@@ -1,5 +1,5 @@
 import { Photo, PhotoDateRange } from '@/photo';
-import { absolutePathForRecipeImage, pathForRecipe } from '@/app/paths';
+import { pathForRecipe, pathForRecipeImage } from '@/app/paths';
 import OGTile, { OGLoadingState } from '@/components/og/OGTile';
 import { descriptionForRecipePhotos, titleForRecipe } from '.';
 import { useAppText } from '@/i18n/state/client';
@@ -37,7 +37,7 @@ export default function RecipeOGTile({
         dateRange,
       ),
       path: pathForRecipe(recipe),
-      pathImageAbsolute: absolutePathForRecipeImage(recipe),
+      pathImage: pathForRecipeImage(recipe),
       loadingState: loadingStateExternal,
       onLoad,
       onFail,
