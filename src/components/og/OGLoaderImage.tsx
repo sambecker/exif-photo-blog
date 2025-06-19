@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { clsx } from 'clsx/lite';
-import { BiError } from 'react-icons/bi';
 import Spinner from '@/components/Spinner';
 import { IMAGE_OG_DIMENSION } from '@/image-response';
+import { TbPhotoQuestion } from 'react-icons/tb';
 
 export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 
@@ -61,9 +61,9 @@ export default function OGLoaderImage({
         <div className={clsx(
           'absolute top-0 left-0 right-0 bottom-0 z-11',
           'flex items-center justify-center',
-          'text-red-400',
+          'text-dim',
         )}>
-          <BiError size={32} />
+          <TbPhotoQuestion size={28} />
         </div>}
       {(loadingState === 'loading' || loadingState === 'loaded') &&
         <img

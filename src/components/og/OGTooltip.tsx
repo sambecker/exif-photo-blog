@@ -4,8 +4,6 @@ import OGLoaderImage from './OGLoaderImage';
 import { IMAGE_OG_DIMENSION } from '@/image-response';
 import clsx from 'clsx/lite';
 
-const OG_TOOLTIP_WIDTH = 300;
-
 export default function OGTooltip({
   children,
   ...props
@@ -14,11 +12,7 @@ export default function OGTooltip({
   return (
     <TooltipPrimitive
       className="max-w-none"
-      delayDuration={800}
-      content={<div style={{
-        width: OG_TOOLTIP_WIDTH,
-        aspectRatio,
-      }}>
+      content={<div style={{ width: 300, aspectRatio }}>
         <OGLoaderImage
           {...props}
           className={clsx(

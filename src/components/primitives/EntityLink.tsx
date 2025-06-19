@@ -8,6 +8,7 @@ import LinkWithStatus from '../LinkWithStatus';
 import Spinner from '../Spinner';
 import ResponsiveText from './ResponsiveText';
 import OGTooltip from '../og/OGTooltip';
+import { SHOW_CATEGORY_IMAGE_HOVERS } from '@/app/config';
 
 export interface EntityLinkExternalProps {
   ref?: RefObject<HTMLSpanElement | null>
@@ -149,7 +150,7 @@ export default function EntityLink({
         />}
     </span>;
 
-  return pathTooltipImage ?
+  return pathTooltipImage && SHOW_CATEGORY_IMAGE_HOVERS ?
     <OGTooltip title={label} path={pathTooltipImage}>
       {renderContent}
     </OGTooltip> : renderContent;
