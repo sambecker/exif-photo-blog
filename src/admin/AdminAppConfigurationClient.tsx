@@ -113,8 +113,6 @@ export default function AdminAppConfigurationClient({
   areAdminDebugToolsEnabled,
   isAdminDbOptimizeEnabled,
   isAdminSqlDebugEnabled,
-  // Misc
-  baseUrl,
   // Connection status
   databaseError,
   storageError,
@@ -813,16 +811,6 @@ export default function AdminAppConfigurationClient({
           Changes to environment variables require a redeploy
           or reboot of local dev server
         </div>
-        {!simplifiedView &&
-          <div className="text-dim before:content-['—']">
-            <div className="flex whitespace-nowrap">
-              <span className="font-bold">Domain</span>
-              &nbsp;&nbsp;
-              <span className="w-full flex overflow-x-auto">
-                {baseUrl || 'Not Defined'}
-              </span>
-            </div>
-          </div>}
       </div>
     </ScoreCardContainer>
   );
