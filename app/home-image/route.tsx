@@ -9,7 +9,7 @@ import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { isNextImageReadyBasedOnPhotos } from '@/photo';
 
-export const dynamic = 'force-static';
+export const dynamic = 'auto';
 
 export async function GET() {
   const [
@@ -34,7 +34,7 @@ export async function GET() {
       width,
       height,
       fontFamily,
-    }}/>,
+    }} />,
     { width, height, headers, fonts },
   );
 }

@@ -38,18 +38,18 @@ import {
 import { createLensKey } from '@/lens';
 
 // Table key
-export const KEY_PHOTOS     = 'photos';
-const KEY_PHOTO             = 'photo';
+export const KEY_PHOTOS = 'photos';
+const KEY_PHOTO = 'photo';
 // Field keys
-const KEY_CAMERAS           = 'cameras';
-const KEY_LENSES            = 'lenses';
-const KEY_TAGS              = 'tags';
-const KEY_FILMS             = 'films';
-const KEY_RECIPES           = 'recipes';
-const KEY_FOCAL_LENGTHS     = 'focal-lengths';
+const KEY_CAMERAS = 'cameras';
+const KEY_LENSES = 'lenses';
+const KEY_TAGS = 'tags';
+const KEY_FILMS = 'films';
+const KEY_RECIPES = 'recipes';
+const KEY_FOCAL_LENGTHS = 'focal-lengths';
 // Type keys
-const KEY_COUNT             = 'count';
-const KEY_DATE_RANGE        = 'date-range';
+const KEY_COUNT = 'count';
+const KEY_DATE_RANGE = 'date-range';
 
 const getPhotosCacheKeyForOption = (
   options: GetPhotosOptions,
@@ -66,7 +66,7 @@ const getPhotosCacheKeyForOption = (
     return value ? `${option}-${createLensKey(value)}` : null;
   }
   case 'takenBefore':
-  case 'takenAfterInclusive': 
+  case 'takenAfterInclusive':
   case 'updatedBefore': {
     const value = options[option];
     return value ? `${option}-${value.toISOString()}` : null;

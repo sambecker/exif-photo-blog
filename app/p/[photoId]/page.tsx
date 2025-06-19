@@ -30,7 +30,7 @@ interface PhotoProps {
 
 export async function generateMetadata({
   params,
-}:PhotoProps): Promise<Metadata> {
+}: PhotoProps): Promise<Metadata> {
   const { photoId } = await params;
   const { photo } = await getPhotosNearIdCachedCached(photoId);
 

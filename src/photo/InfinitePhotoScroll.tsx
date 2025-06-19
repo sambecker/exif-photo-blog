@@ -112,7 +112,7 @@ export default function InfinitePhotoScroll({
   }, [fetcher]);
 
   const buttonContainerRef = useRef<HTMLDivElement>(null);
-  
+
   const isLoadingOrValidating = isLoading || isValidating;
 
   const isFinished = useMemo(() =>
@@ -131,18 +131,20 @@ export default function InfinitePhotoScroll({
     photoId: string,
     revalidateRemainingPhotos?: boolean,
   ) => mutate(data, {
-    revalidate: (_data: Photo[], [_, size]:[string, number]) => {
+    revalidate: (_data: Photo[], [_, size]: [string, number]) => {
       const i = (data ?? []).findIndex(photos =>
         photos.some(photo => photo.id === photoId));
       return revalidateRemainingPhotos ? size >= i : size === i;
     },
   } as any), [data, mutate]);
 
-  useVisible({ ref: buttonContainerRef, onVisible: () => {
-    if (ADMIN_DB_OPTIMIZE_ENABLED && size === 0) {
-      advance();
-    }
-  }});
+  useVisible({
+    ref: buttonContainerRef, onVisible: () => {
+      if (ADMIN_DB_OPTIMIZE_ENABLED && size === 0) {
+        advance();
+      }
+    },
+  });
 
   const renderMoreButton = () =>
     <div ref={buttonContainerRef}>
@@ -165,7 +167,7 @@ export default function InfinitePhotoScroll({
   return (
     <div className="space-y-4">
       {children({
-        photos, 
+        photos,
         onLastPhotoVisible: advance,
         revalidatePhoto,
       })}
