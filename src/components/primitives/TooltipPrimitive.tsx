@@ -20,6 +20,7 @@ export default function TooltipPrimitive({
   color,
   keyCommand,
   keyCommandModifier,
+  disableHoverableContent,
   debug,
 }: {
   content?: ReactNode
@@ -33,6 +34,7 @@ export default function TooltipPrimitive({
   color?: ComponentProps<typeof MenuSurface>['color']
   keyCommand?: string
   keyCommandModifier?: ComponentProps<typeof KeyCommand>['modifier']
+  disableHoverableContent?: boolean
   debug?: boolean
 }) {
   const refTrigger = useRef<HTMLButtonElement>(null);
@@ -76,7 +78,10 @@ export default function TooltipPrimitive({
 
   return (
     <Tooltip.Provider {...{ delayDuration, skipDelayDuration }}>
-      <Tooltip.Root open={(includeButton ? isOpen : undefined) || debug}>
+      <Tooltip.Root
+        open={(includeButton ? isOpen : undefined) || debug}
+        disableHoverableContent={disableHoverableContent}
+      >
         <Tooltip.Trigger asChild>
           {includeButton
             ? <button

@@ -240,7 +240,6 @@ export const IMAGE_QUALITY =
 export const BLUR_ENABLED =
   process.env.NEXT_PUBLIC_BLUR_DISABLED !== '1';
 
-
 // VISUAL
 
 export const DEFAULT_THEME =

@@ -17,6 +17,7 @@ export default function OGTooltip({
     <TooltipPrimitive
       className="max-w-none p-1!"
       classNameTrigger="max-w-full"
+      disableHoverableContent
       content={<div
         className="relative"
         style={{ width: 300, aspectRatio }}

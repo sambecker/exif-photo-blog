@@ -21,12 +21,17 @@ export default async function CameraHeader({
   count?: number
   dateRange?: PhotoDateRange
 }) {
-  const camera = cameraFromPhoto(photos[0], cameraProp);
   const appText = await getAppText();
+  const camera = cameraFromPhoto(photos[0], cameraProp);
+
   return (
     <PhotoHeader
       camera={camera}
-      entity={<PhotoCamera {...{ camera }} contrast="high" />}
+      entity={<PhotoCamera
+        {...{ camera }}
+        contrast="high"
+        showTooltip={false}
+      />}
       entityDescription={
         descriptionForCameraPhotos(
           photos,

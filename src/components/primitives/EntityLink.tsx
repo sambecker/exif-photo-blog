@@ -15,6 +15,7 @@ export interface EntityLinkExternalProps {
   type?: LabeledIconType
   badged?: boolean
   contrast?: ComponentProps<typeof Badge>['contrast']
+  showTooltip?: boolean
   uppercase?: boolean
   prefetch?: boolean
   className?: string
@@ -30,6 +31,7 @@ export default function EntityLink({
   type,
   badged,
   contrast = 'medium',
+  showTooltip = SHOW_CATEGORY_IMAGE_HOVERS,
   path = '', // Make link optional for debugging purposes
   tooltipImagePath,
   tooltipCaption,
@@ -79,7 +81,7 @@ export default function EntityLink({
   const showHoverEntity =
     !isLoading &&
     hoverEntity !== undefined &&
-    !SHOW_CATEGORY_IMAGE_HOVERS;
+    !showTooltip;
 
   const renderLabel =
     <ResponsiveText shortText={labelSmall}>
@@ -157,7 +159,7 @@ export default function EntityLink({
         />}
     </span>;
 
-  return tooltipImagePath && SHOW_CATEGORY_IMAGE_HOVERS
+  return tooltipImagePath && showTooltip
     ? <OGTooltip
       title={label}
       path={tooltipImagePath}
