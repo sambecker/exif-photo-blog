@@ -1,4 +1,4 @@
-export { enUS as default } from 'date-fns/locale/en-US';
+export { bn as default } from 'date-fns/locale/bn';
 
 export const TEXT = {
   photo: {
