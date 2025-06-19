@@ -81,7 +81,8 @@ export default function AdminUploadsTableRow({
       )}
     >
       <div className={clsx(
-        'w-[50%] sm:w-auto shrink-0 bg-dim',
+        'self-stretch',
+        'w-[40%] sm:w-auto shrink-0',
         'transition-transform',
       )}>
         <ImageMedium
@@ -89,6 +90,12 @@ export default function AdminUploadsTableRow({
           src={url}
           alt={url}
           aspectRatio={3.0 / 2.0}
+          className={clsx(
+            'bg-dim',
+            'max-sm:m-2 max-sm:mr-0',
+            'max-sm:outline-medium max-sm:shadow-sm',
+            'max-sm:rounded-sm overflow-hidden',
+          )}
         />
       </div>
       <div className={clsx(
@@ -96,7 +103,7 @@ export default function AdminUploadsTableRow({
         'gap-2 sm:gap-3',
         'p-2 sm:p-3',
       )}>
-        <div className="flex flex-col gap-8 w-full">
+        <div className="flex flex-col gap-6 w-full">
           <div className="flex flex-col grow gap-2">
             <FieldSetWithStatus
               label="Title"
