@@ -96,8 +96,8 @@ export default function AdminUploadsTableRow({
         'gap-2 sm:gap-3',
         'p-2 sm:p-3',
       )}>
-        <div className="flex flex-col gap-3 w-full">
-          <div className="flex flex-col grow gap-3">
+        <div className="flex flex-col gap-8 w-full">
+          <div className="flex flex-col grow gap-2">
             <FieldSetWithStatus
               label="Title"
               value={draftTitle}
@@ -133,7 +133,7 @@ export default function AdminUploadsTableRow({
                   <EditButton
                     path={pathForAdminUploadUrl(url, draftTitle)}
                     disabled={isRowLoading}
-                    tooltip="Review photo details"
+                    tooltip="Review EXIF details before adding"
                     hideText="always"
                   />
                   <DeleteUploadButton

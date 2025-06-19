@@ -2,7 +2,7 @@
 
 import { StorageListItem, StorageListResponse } from '@/platforms/storage';
 import AdminBatchUploadActions from './AdminBatchUploadActions';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Tags } from '@/tag';
 import AdminUploadsTable from './AdminUploadsTable';
 
@@ -20,14 +20,19 @@ export default function AdminUploadsClient({
   urls: StorageListResponse
   uniqueTags?: Tags
 }) {
-  const [isAdding, setIsAdding] = useState(false);
   const [urlAddStatuses, setUrlAddStatuses] = useState<UrlAddStatus[]>(urls);
+
+  useEffect(() => {
+    // Overwrite local state when server state changes
+    setUrlAddStatuses(urls);
+  }, [urls]);
 
   const uploadUrls = useMemo(() => urlAddStatuses
     .map(({ url }) => url), [urlAddStatuses]);
   const uploadTitles = useMemo(() => urlAddStatuses
     .map(({ draftTitle }) => draftTitle ?? ''), [urlAddStatuses]);
 
+  const [isAdding, setIsAdding] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   return (

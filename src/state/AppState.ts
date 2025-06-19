@@ -58,7 +58,7 @@ export type AppStateContextType = {
   setIsPerformingSelectEdit?: Dispatch<SetStateAction<boolean>>
   insightsIndicatorStatus?: InsightsIndicatorStatus
   // UPLOAD
-  startUpload?: (onStart?: () => void) => void
+  startUpload?: () => Promise<boolean>
   uploadInputRef?: RefObject<HTMLInputElement | null>
   uploadState: UploadState
   setUploadState?: (uploadState: Partial<UploadState>) => void

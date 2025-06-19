@@ -119,7 +119,13 @@ export default function RootLayout({
                           revalidatePath('/admin', 'layout');
                         }}
                       />
-                      <AdminBatchEditPanel />
+                      <AdminBatchEditPanel
+                        onBatchActionComplete={async () => {
+                          'use server';
+                          // Update upload count in admin nav
+                          revalidatePath('/admin', 'layout');
+                        }}
+                      />
                       {children}
                     </div>
                   </main>

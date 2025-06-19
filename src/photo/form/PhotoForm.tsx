@@ -47,6 +47,7 @@ import PhotoFilmIcon from '@/film/PhotoFilmIcon';
 import FieldsetFavs from './FieldsetFavs';
 import FieldsetHidden from './FieldsetHidden';
 import { useAppText } from '@/i18n/state/client';
+import IconAddUpload from '@/components/icons/IconAddUpload';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -469,12 +470,13 @@ export default function PhotoForm({
             Cancel
           </Link>
           <SubmitButtonWithStatus
+            icon={type === 'create' && <IconAddUpload />}
             disabled={!canFormBeSubmitted}
             onFormStatusChange={onFormStatusChange}
             onFormSubmit={invalidateSwr}
             primary
           >
-            {type === 'create' ? 'Create' : 'Update'}
+            {type === 'create' ? 'Add' : 'Update'}
           </SubmitButtonWithStatus>
           <div className={clsx(
             'absolute -top-16 -left-2 right-0 bottom-0 -z-10',

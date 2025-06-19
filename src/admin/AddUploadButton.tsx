@@ -6,8 +6,8 @@ import {
 } from '@/utility/date';
 import { pathForAdminUploadUrl } from '@/app/paths';
 import { useRouter } from 'next/navigation';
-import { BiImageAdd } from 'react-icons/bi';
 import { ComponentProps, useState } from 'react';
+import IconAddUpload from '@/components/icons/IconAddUpload';
 
 export default function AddUploadButton({
   url,
@@ -30,10 +30,7 @@ export default function AddUploadButton({
   return (
     <LoaderButton
       {...props}
-      icon={<BiImageAdd
-        size={18}
-        className="translate-x-[1px] translate-y-[1px]"
-      />}
+      icon={<IconAddUpload />}
       onClick={() => {
         onAddStart?.();
         setIsAddingLocal(true);

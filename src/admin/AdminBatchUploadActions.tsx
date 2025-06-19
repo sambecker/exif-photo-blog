@@ -14,7 +14,7 @@ import sleep from '@/utility/sleep';
 import { readStreamableValue } from 'ai/rsc';
 import { useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
-import { BiCheckCircle, BiImageAdd } from 'react-icons/bi';
+import { BiCheckCircle } from 'react-icons/bi';
 import ProgressButton from '@/components/primitives/ProgressButton';
 import { UrlAddStatus } from './AdminUploadsClient';
 import PhotoTagFieldset from './PhotoTagFieldset';
@@ -23,6 +23,7 @@ import { useAppState } from '@/state/AppState';
 import { pluralize } from '@/utility/string';
 import FieldsetFavs from '@/photo/form/FieldsetFavs';
 import FieldsetHidden from '@/photo/form/FieldsetHidden';
+import IconAddUpload from '@/components/icons/IconAddUpload';
 
 const UPLOAD_BATCH_SIZE = 2;
 
@@ -35,6 +36,7 @@ export default function AdminBatchUploadActions({
   setUrlAddStatuses,
   isDeleting,
   setIsDeleting,
+  onBatchActionComplete,
 }: {
   uploadUrls: string[]
   uploadTitles: string[]
@@ -44,6 +46,7 @@ export default function AdminBatchUploadActions({
   setUrlAddStatuses: Dispatch<SetStateAction<UrlAddStatus[]>>
   isDeleting: boolean
   setIsDeleting: Dispatch<SetStateAction<boolean>>
+  onBatchActionComplete?: () => Promise<void>
 }) {
   const { updateAdminData } = useAppState();
 
@@ -177,10 +180,7 @@ export default function AdminBatchUploadActions({
               }
               icon={isAddingComplete
                 ? <BiCheckCircle size={18} className="translate-x-[1px]" />
-                : <BiImageAdd
-                  size={18}
-                  className="translate-x-[1px] translate-y-[2px]"
-                />
+                : <IconAddUpload />
               }
               onClick={async () => {
                 // eslint-disable-next-line max-len
@@ -208,6 +208,7 @@ export default function AdminBatchUploadActions({
                     setAddingProgress(1);
                     setIsAdding(false);
                     setIsAddingComplete(true);
+                    await onBatchActionComplete?.();
                     await sleep(1000).then(() =>
                       router.push(PATH_ADMIN_PHOTOS));
                   } catch (e: any) {
@@ -225,9 +226,10 @@ export default function AdminBatchUploadActions({
             <DeleteUploadButton
               urls={uploadUrls}
               onDeleteStart={() => setIsDeleting(true)}
-              onDelete={didFail => {
+              onDelete={async didFail => {
                 if (!didFail) {
                   updateAdminData?.({ uploadsCount: 0 });
+                  await onBatchActionComplete?.();
                   router.push(PATH_ADMIN_PHOTOS);
                 } else {
                   setIsDeleting(false);

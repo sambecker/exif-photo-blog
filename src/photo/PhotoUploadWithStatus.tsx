@@ -1,7 +1,7 @@
 'use client';
 
 import { uploadPhotoFromClient } from '@/platforms/storage';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { PATH_ADMIN_UPLOADS, pathForAdminUploadUrl } from '@/app/paths';
 import ImageInput from '../components/ImageInput';
 import { clsx } from 'clsx/lite';
@@ -48,6 +48,8 @@ export default function PhotoUploadWithStatus({
   const appText = useAppText();
 
   const router = useRouter();
+
+  const pathname = usePathname();
 
   useEffect(() => {
     // Hide upload panel while button is shown
@@ -127,9 +129,14 @@ export default function PhotoUploadWithStatus({
                   if (isLastBlob) {
                     await onLastUpload?.();
                     shouldResetUploadStateAfterPending.current = true;
-                    startTransition(() => hasMultipleUploads
-                      ? router.push(PATH_ADMIN_UPLOADS)
-                      : router.push(pathForAdminUploadUrl(url)));
+                    if (pathname === PATH_ADMIN_UPLOADS) {
+                      setUploadState?.({ isUploading: false });
+                      router.refresh();
+                    } else {
+                      startTransition(() => hasMultipleUploads
+                        ? router.push(PATH_ADMIN_UPLOADS)
+                        : router.push(pathForAdminUploadUrl(url)));
+                    }
                   }
                 })
                 .catch(error => {
