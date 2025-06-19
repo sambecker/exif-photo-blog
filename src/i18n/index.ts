@@ -26,6 +26,7 @@ const LOCALE_TEXT_IMPORTS: Record<
   'pt-pt': () => import('./locales/pt-pt').then(m => m.TEXT),
   'id-id': () => import('./locales/id-id').then(m => m.TEXT),
   'zh-cn': () => import('./locales/zh-cn').then(m => m.TEXT),
+  'bd-bn': () => import('./locales/bd-bn').then(m => m.TEXT),
 };
 
 export const getTextForLocale = async (locale: string): Promise<I18N> => {
