@@ -197,9 +197,7 @@ export default function PhotoLarge({
   const matteContentWidthForAspectRatio =
     photo.aspectRatio > 3 / 2 + 0.1
       ? 'w-[90%]'
-      : photo.aspectRatio >= 1
-        ? 'w-[80%]'
-        : undefined;
+      : undefined;
 
   const renderLargePhoto =
     <div className={clsx(
