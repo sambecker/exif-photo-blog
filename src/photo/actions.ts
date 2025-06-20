@@ -75,7 +75,7 @@ export const createPhotoAction = async (formData: FormData) =>
       urlOrigin: photo.url,
       shouldStripGpsData,
     });
-    
+
     if (updatedUrl) {
       photo.url = updatedUrl;
       await insertPhoto(photo);
@@ -503,7 +503,7 @@ export const syncPhotoAction = async (photoId: string, isBatch?: boolean) =>
             ...!photo.caption && { caption: aiCaption },
             ...photo.tags.length === 0 && { tags: aiTags },
             ...!photo.semanticDescription &&
-              { semanticDescription: aiSemanticDescription },
+            { semanticDescription: aiSemanticDescription },
           });
 
         await updatePhoto(photoFormDbInsert)

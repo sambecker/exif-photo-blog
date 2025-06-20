@@ -7,7 +7,7 @@ export const getPhotos = (options: GetPhotosOptions) =>
   dataSource.getPhotos(options);
 export const getPhoto = (id: string, includeHidden?: boolean) =>
   dataSource.getPhoto(id, includeHidden);
-export const getPhotosMeta = (options?: GetPhotosOptions) =>
+export const getPhotosMeta = (options: GetPhotosOptions) =>
   dataSource.getPhotosMeta(options);
 export const getUniqueCameras = () =>
   dataSource.getUniqueCameras();

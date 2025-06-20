@@ -16,7 +16,10 @@ const BLUR_DATA_URL =
   'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
 export const convertImmichAssetToPhoto = (
-  asset: ImmichAsset, size: string = 'thumbnail'): Photo => {
+  asset: ImmichAsset,
+  size: string = 'thumbnail',
+  sharedKey: string
+): Photo => {
   const exif = asset.exifInfo;
   const baseUrl = getBaseUrl();
   return {
@@ -45,7 +48,7 @@ export const convertImmichAssetToPhoto = (
     takenAt: new Date(exif?.dateTimeOriginal || asset.fileCreatedAt),
     // export interface PhotoDbInsert extends PhotoExif
     id: asset.id,
-    url: `${baseUrl}/api/immich/assets/${asset.id}/thumbnail?size=${size}`,
+    url: `${baseUrl}/api/immich/assets/${asset.id}/thumbnail?size=${size}&key=${sharedKey}`,
     extension: asset.originalPath.split('.').pop()?.toLowerCase() || 'jpg',
     //blurData: `/api/immich/assets/${asset.id}/blur`,
     blurData: BLUR_DATA_URL,

@@ -34,9 +34,11 @@ export async function GET(
     immichUrl.searchParams.append('size', size);
   }
 
-  if (IMMICH_SHARE_KEY) {
-    immichUrl.searchParams.append('key', IMMICH_SHARE_KEY);
-  }
+  // if (IMMICH_SHARE_KEY) {
+  //   immichUrl.searchParams.append('key', IMMICH_SHARE_KEY);
+  // }
+  const sharedKey = searchParams.get('key') || IMMICH_SHARE_KEY || '';
+  immichUrl.searchParams.append('key', sharedKey);
 
   try {
 

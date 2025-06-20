@@ -44,6 +44,7 @@ export default async function HomePage() {
       : NULL_CATEGORY_DATA,
   ]);
 
+  console.log('------------HomePage photos count:', photos.length);
   return (
     photos.length > 0
       ? GRID_HOMEPAGE_ENABLED

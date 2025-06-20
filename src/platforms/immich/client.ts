@@ -81,24 +81,13 @@ export interface ImmichAsset {
   tags?: string[];
 }
 
-
-export interface ImmichSearchOptions {
-  page?: number;
-  size?: number;
-  order?: 'asc' | 'desc';
-  withArchived?: boolean;
-  withPartners?: boolean;
-  isArchived?: boolean;
-  isFavorite?: boolean;
-  type?: 'IMAGE' | 'VIDEO';
-  takenAfter?: string;
-  takenBefore?: string;
-  make?: string;
-  model?: string;
-  city?: string;
-  state?: string;
-  country?: string;
-  lensModel?: string;
+export interface ImmichSharedLinkInfo {
+  album: ImmichAlbumInfo;
+  assets: ImmichAsset[];
+  createdAt?: string;
+  expiresAt?: string | null;
+  id?: string;
+  key?: string;
 }
 
 export class ImmichApiClient {
@@ -154,6 +143,23 @@ export class ImmichApiClient {
     return this.request<ImmichAlbumInfo>(`/albums/${id}${queryParam}`);
   }
 
+  async getSharedLinkInfo(
+    sharedKey: string): Promise<ImmichSharedLinkInfo> {
+    if (!sharedKey || sharedKey.trim() === '') {
+      throw new Error('Shared key is required');
+    }
+
+    try {
+      return await this.request<ImmichSharedLinkInfo>(
+        `/shared-links/me?key=${sharedKey}`);
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('404')) {
+        throw new Error(`Shared link with key ${sharedKey} not found`);
+      }
+      throw error;
+    }
+  }
+
   async getAssetInfo(id: string, _hidden?: boolean): Promise<ImmichAsset> {
     if (!id || id.trim() === '') {
       throw new Error('Asset ID is required');
@@ -205,3 +211,8 @@ export const getImmichClient = (): ImmichApiClient => {
   }
   return immichClient;
 };
+
+export async function getSharedLinkInfo(
+  shareKey: string): Promise<ImmichSharedLinkInfo> {
+  return getImmichClient().getSharedLinkInfo(shareKey);
+}

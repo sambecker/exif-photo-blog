@@ -83,10 +83,10 @@ class PlatformDataSource implements PhotoDataSource {
 export function createPhotoDataSource(): PhotoDataSource {
   if (USE_IMMICH_BACKEND &&
     IMMICH_BASE_URL &&
-    IMMICH_API_KEY &&
-    IMMICH_ALBUM_ID) {
+    IMMICH_API_KEY) {
     const api = getImmichClient();
-    return new ImmichDataSource(api, IMMICH_ALBUM_ID);
+    // 传递默认的 IMMICH_ALBUM_ID 作为 fallback，但实际使用时会通过 getAlbumId() 动态获取
+    return new ImmichDataSource(api, IMMICH_ALBUM_ID || '');
   } else {
     return new PlatformDataSource();
   }
