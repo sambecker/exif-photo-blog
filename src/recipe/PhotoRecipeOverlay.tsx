@@ -124,7 +124,7 @@ export default function PhotoRecipeOverlay({
               recipe={title}
               className={clsx(
                 'text-[15px]',
-                '[&>*>*>*]:text-black',
+                '[&>*>*>*>*]:text-black',
                 'tracking-wide',
               )}
             />

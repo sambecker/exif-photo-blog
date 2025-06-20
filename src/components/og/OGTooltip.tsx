@@ -26,7 +26,7 @@ export default function OGTooltip({
           {...props}
           className={clsx(
             'overflow-hidden rounded-[0.25rem]',
-            'outline-medium bg-dim',
+            'outline-medium bg-extra-dim',
           )}
         />
         {caption && <div className={clsx(
