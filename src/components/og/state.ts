@@ -1,8 +1,14 @@
 import { createContext, ReactNode, use } from 'react';
 
+export type Tooltip = {
+  content: ReactNode
+  width: number
+  height: number
+}
+
 export type OGTooltipState = {
-  showTooltip?: (element: HTMLElement | null, tooltip: ReactNode) => void
-  dismissTooltip?: (element: HTMLElement | null) => void
+  showTooltip?: (trigger: HTMLElement | null, tooltip: Tooltip) => void
+  dismissTooltip?: (trigger: HTMLElement | null) => void
 }
 
 export const OGTooltipContext = createContext<OGTooltipState>({});

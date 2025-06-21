@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { OGTooltipContext } from './state';
+import { OGTooltipContext, Tooltip } from './state';
 import { AnimatePresence, motion } from 'framer-motion';
 import MenuSurface from '../primitives/MenuSurface';
 
@@ -17,24 +17,23 @@ export default function OGTooltipProvider({
 }: {
   children: ReactNode
 }) {
-  const [currentTooltip, setCurrentTooltip] =
-    useState<ReactNode | undefined>(undefined);
+  const [currentTooltip, setCurrentTooltip] = useState<Tooltip>();
   const [tooltipStyle, setTooltipStyle] = useState<CSSProperties>();
 
-  const currentTriggerElementRef = useRef<HTMLElement>(null);
+  const currentTriggerRef = useRef<HTMLElement>(null);
 
   const timeoutRef = useRef<NodeJS.Timeout>(undefined);
 
   const showTooltip = useCallback((
-    element: HTMLElement | null,
-    tooltip: ReactNode,
+    trigger: HTMLElement | null,
+    tooltip: Tooltip,
   ) => {
-    if (element) {
+    if (trigger) {
       setCurrentTooltip(tooltip);
-      currentTriggerElementRef.current = element;
-      const rect = element.getBoundingClientRect();
+      currentTriggerRef.current = trigger;
+      const rect = trigger.getBoundingClientRect();
       setTooltipStyle({
-        top: rect.top + 20,
+        top: rect.top - tooltip.height - 12,
         left: rect.left,
       });
       if (timeoutRef.current) {
@@ -45,14 +44,12 @@ export default function OGTooltipProvider({
   }, []);
 
   const dismissTooltip = useCallback((
-    element: HTMLElement | null,
+    trigger: HTMLElement | null,
   ) => {
-    console.log('setting clear timeout 01');
-    if (element === currentTriggerElementRef.current) {
-      console.log('setting clear timeout 02');
+    if (trigger === currentTriggerRef.current) {
       timeoutRef.current = setTimeout(() => {
         setCurrentTooltip(undefined);
-        currentTriggerElementRef.current = null;
+        currentTriggerRef.current = null;
       }, 200);
     }
   }, []);
@@ -61,7 +58,7 @@ export default function OGTooltipProvider({
     const onScroll = () => {
       if (currentTooltip) {
         setCurrentTooltip(undefined);
-        currentTriggerElementRef.current = null;
+        currentTriggerRef.current = null;
       }
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -92,7 +89,7 @@ export default function OGTooltipProvider({
               style={tooltipStyle}
             >
               <MenuSurface className="max-w-none p-1!">
-                {currentTooltip}
+                {currentTooltip.content}
               </MenuSurface>
             </motion.div>}
         </AnimatePresence>

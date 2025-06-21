@@ -3,6 +3,11 @@ import OGLoaderImage from './OGLoaderImage';
 import { IMAGE_OG_DIMENSION } from '@/image-response';
 import clsx from 'clsx/lite';
 import { useOGTooltipState } from './state';
+import useSupportsHover from '@/utility/useSupportsHover';
+
+const { aspectRatio } = IMAGE_OG_DIMENSION;
+const width = 300;
+const height = width / aspectRatio;
 
 export default function OGTooltip({
   children,
@@ -16,18 +21,14 @@ export default function OGTooltip({
 
   const { showTooltip, dismissTooltip } = useOGTooltipState();
 
-  // const supportsHover = useSupportsHover();
-  
-  const { aspectRatio } = IMAGE_OG_DIMENSION;
-  const width = 300;
-  const height = width / aspectRatio;
+  const supportsHover = useSupportsHover();
 
   useEffect(() => {
-    const element = ref.current;
-    return () => dismissTooltip?.(element);
+    const trigger = ref.current;
+    return () => dismissTooltip?.(trigger);
   }, [dismissTooltip]);
 
-  const tile =
+  const content =
     <div
       className="relative"
       style={{ width, height }}
@@ -54,8 +55,10 @@ export default function OGTooltip({
     <div
       className="max-w-full"
       ref={ref}
-      onMouseEnter={() => showTooltip?.(ref.current, tile)}
-      onMouseLeave={() => dismissTooltip?.(ref.current)}
+      onMouseEnter={() => supportsHover &&
+        showTooltip?.(ref.current, { content, width, height })}
+      onMouseLeave={() => supportsHover &&
+        dismissTooltip?.(ref.current)}
     >
       {children}
     </div>
