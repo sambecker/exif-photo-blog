@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Photo } from '@/photo';
 import PhotoOGTile from './PhotoOGTile';
-import { OGLoadingState } from '@/components/og/OGTile';
+import { OGLoadingState } from '@/components/og/OGLoaderImage';
 
 const DEFAULT_MAX_CONCURRENCY = 3;
 

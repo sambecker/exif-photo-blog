@@ -28,6 +28,7 @@ import { revalidatePath } from 'next/cache';
 import RecipeModal from '@/recipe/RecipeModal';
 import ThemeColors from '@/app/ThemeColors';
 import AppTextProvider from '@/i18n/state/AppTextProvider';
+import OGTooltipProvider from '@/components/og/OGTooltipProvider';
 
 import '../tailwind.css';
 
@@ -95,43 +96,45 @@ export default function RootLayout({
             <ThemeColors />
             <ThemeProvider attribute="class" defaultTheme={DEFAULT_THEME}>
               <SwrConfigClient>
-                <div className={clsx(
-                  'mx-3 mb-3',
-                  'lg:mx-6 lg:mb-6',
-                )}>
-                  <Nav
-                    navTitle={NAV_TITLE}
-                    navCaption={NAV_CAPTION}
-                  />
-                  <main>
-                    <ShareModals />
-                    <RecipeModal />
-                    <div className={clsx(
-                      'min-h-[16rem] sm:min-h-[30rem]',
-                      'mb-12',
-                      'space-y-5',
-                    )}>
-                      <AdminUploadPanel
-                        shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
-                        onLastUpload={async () => {
-                          'use server';
-                          // Update upload count in admin nav
-                          revalidatePath('/admin', 'layout');
-                        }}
-                      />
-                      <AdminBatchEditPanel
-                        onBatchActionComplete={async () => {
-                          'use server';
-                          // Update upload count in admin nav
-                          revalidatePath('/admin', 'layout');
-                        }}
-                      />
-                      {children}
-                    </div>
-                  </main>
-                  <Footer />
-                </div>
-                <CommandK />
+                <OGTooltipProvider>
+                  <div className={clsx(
+                    'mx-3 mb-3',
+                    'lg:mx-6 lg:mb-6',
+                  )}>
+                    <Nav
+                      navTitle={NAV_TITLE}
+                      navCaption={NAV_CAPTION}
+                    />
+                    <main>
+                      <ShareModals />
+                      <RecipeModal />
+                      <div className={clsx(
+                        'min-h-[16rem] sm:min-h-[30rem]',
+                        'mb-12',
+                        'space-y-5',
+                      )}>
+                        <AdminUploadPanel
+                          shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
+                          onLastUpload={async () => {
+                            'use server';
+                            // Update upload count in admin nav
+                            revalidatePath('/admin', 'layout');
+                          }}
+                        />
+                        <AdminBatchEditPanel
+                          onBatchActionComplete={async () => {
+                            'use server';
+                            // Update upload count in admin nav
+                            revalidatePath('/admin', 'layout');
+                          }}
+                        />
+                        {children}
+                      </div>
+                    </main>
+                    <Footer />
+                  </div>
+                  <CommandK />
+                </OGTooltipProvider>
               </SwrConfigClient>
               <Analytics debug={false} />
               <SpeedInsights debug={false}  />

@@ -11,7 +11,6 @@ export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
 export default function OGLoaderImage({
   title,
   path,
-  loadingState: loadingStateExternal,
   onLoad,
   onFail,
   retryTime,
@@ -25,25 +24,19 @@ export default function OGLoaderImage({
   retryTime?: number  
   className?: string
 }) {
-
-  const [loadingStateInternal, setLoadingStateInternal] =
-    useState(loadingStateExternal ?? 'unloaded');
-
-  const loadingState = loadingStateExternal ?? loadingStateInternal;
+  const [loadingState, setLoadingState] = useState('unloaded');
 
   useEffect(() => {
-    if (
-      !loadingStateExternal &&
-      loadingStateInternal === 'unloaded'
-    ) {
-      setLoadingStateInternal('loading');
+    if (loadingState === 'unloaded') {
+      setLoadingState('loading');
     }
-  }, [loadingStateExternal, loadingStateInternal]);
+  }, [loadingState]);
 
   const { width, height, aspectRatio } = IMAGE_OG_DIMENSION;
 
   return (
     <div
+      key={path}
       className={clsx(
         'relative',
         className,
@@ -81,18 +74,18 @@ export default function OGLoaderImage({
             if (onLoad) {
               onLoad();
             } else {
-              setLoadingStateInternal('loaded');
+              setLoadingState('loaded');
             }
           }}
           onError={() => {
             if (onFail) {
               onFail();
             } else {
-              setLoadingStateInternal('failed');
+              setLoadingState('failed');
             }
             if (retryTime !== undefined) {
               setTimeout(() => {
-                setLoadingStateInternal('loading');
+                setLoadingState('loading');
               }, retryTime);
             }
           }}
