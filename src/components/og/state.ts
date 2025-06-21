@@ -1,8 +1,8 @@
-import { createContext, ReactNode, MouseEvent, use } from 'react';
+import { createContext, ReactNode, use } from 'react';
 
 export type OGTooltipState = {
-  onMouseEnter?: (e: MouseEvent<HTMLElement>, tooltip: ReactNode) => void
-  onMouseLeave?: (e: MouseEvent<HTMLElement>) => void
+  showTooltip?: (element: HTMLElement | null, tooltip: ReactNode) => void
+  dismissTooltip?: (element: HTMLElement | null) => void
 }
 
 export const OGTooltipContext = createContext<OGTooltipState>({});

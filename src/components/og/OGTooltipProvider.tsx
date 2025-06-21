@@ -2,7 +2,6 @@
 
 import {
   CSSProperties,
-  MouseEvent,
   ReactNode,
   useCallback,
   useEffect,
@@ -18,48 +17,51 @@ export default function OGTooltipProvider({
 }: {
   children: ReactNode
 }) {
-  const [tooltip, setTooltip] =
+  const [currentTooltip, setCurrentTooltip] =
     useState<ReactNode | undefined>(undefined);
-  const [triggerElement, setTriggerElement] =
-    useState<HTMLElement | undefined>(undefined);
   const [tooltipStyle, setTooltipStyle] = useState<CSSProperties>();
+
+  const currentTriggerElementRef = useRef<HTMLElement>(null);
 
   const timeoutRef = useRef<NodeJS.Timeout>(undefined);
 
-  const onMouseEnter = useCallback((
-    { currentTarget }: MouseEvent<HTMLElement>,
+  const showTooltip = useCallback((
+    element: HTMLElement | null,
     tooltip: ReactNode,
   ) => {
-    setTooltip(tooltip);
-    setTriggerElement(currentTarget);
-    const rect = currentTarget.getBoundingClientRect();
-    console.log(rect);
-    setTooltipStyle({
-      top: rect.top + 20,
-      left: rect.left,
-    });
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = undefined;
+    if (element) {
+      setCurrentTooltip(tooltip);
+      currentTriggerElementRef.current = element;
+      const rect = element.getBoundingClientRect();
+      setTooltipStyle({
+        top: rect.top + 20,
+        left: rect.left,
+      });
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = undefined;
+      }
     }
   }, []);
 
-  const onMouseLeave = useCallback((
-    { currentTarget }: MouseEvent<HTMLElement>,
+  const dismissTooltip = useCallback((
+    element: HTMLElement | null,
   ) => {
-    if (currentTarget === triggerElement) {
+    console.log('setting clear timeout 01');
+    if (element === currentTriggerElementRef.current) {
+      console.log('setting clear timeout 02');
       timeoutRef.current = setTimeout(() => {
-        setTooltip(undefined);
-        setTriggerElement(undefined);
+        setCurrentTooltip(undefined);
+        currentTriggerElementRef.current = null;
       }, 200);
     }
-  }, [triggerElement]);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
-      if (tooltip) {
-        setTooltip(undefined);
-        setTriggerElement(undefined);
+      if (currentTooltip) {
+        setCurrentTooltip(undefined);
+        currentTriggerElementRef.current = null;
       }
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -68,18 +70,18 @@ export default function OGTooltipProvider({
     };
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
-  }, [tooltip]);
+  }, [currentTooltip]);
 
   return (
     <OGTooltipContext.Provider
       value={{
-        onMouseEnter,
-        onMouseLeave,
+        showTooltip,
+        dismissTooltip,
       }}
     >
       <div className="relative inset-0 z-50 pointer-events-none">
         <AnimatePresence>
-          {tooltip &&
+          {currentTooltip &&
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -90,7 +92,7 @@ export default function OGTooltipProvider({
               style={tooltipStyle}
             >
               <MenuSurface className="max-w-none p-1!">
-                {tooltip}
+                {currentTooltip}
               </MenuSurface>
             </motion.div>}
         </AnimatePresence>

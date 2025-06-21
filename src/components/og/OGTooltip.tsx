@@ -1,4 +1,4 @@
-import { ComponentProps, ReactNode } from 'react';
+import { ComponentProps, ReactNode, useRef, useEffect } from 'react';
 import OGLoaderImage from './OGLoaderImage';
 import { IMAGE_OG_DIMENSION } from '@/image-response';
 import clsx from 'clsx/lite';
@@ -12,11 +12,20 @@ export default function OGTooltip({
   children :ReactNode
   caption?: ReactNode
 } & ComponentProps<typeof OGLoaderImage>) {
-  const { onMouseEnter, onMouseLeave } = useOGTooltipState();
+  const ref = useRef<HTMLDivElement>(null);
+
+  const { showTooltip, dismissTooltip } = useOGTooltipState();
+
+  // const supportsHover = useSupportsHover();
   
   const { aspectRatio } = IMAGE_OG_DIMENSION;
   const width = 300;
   const height = width / aspectRatio;
+
+  useEffect(() => {
+    const element = ref.current;
+    return () => dismissTooltip?.(element);
+  }, [dismissTooltip]);
 
   const tile =
     <div
@@ -44,8 +53,9 @@ export default function OGTooltip({
   return (
     <div
       className="max-w-full"
-      onMouseEnter={e => onMouseEnter?.(e, tile)}
-      onMouseLeave={onMouseLeave}
+      ref={ref}
+      onMouseEnter={() => showTooltip?.(ref.current, tile)}
+      onMouseLeave={() => dismissTooltip?.(ref.current)}
     >
       {children}
     </div>
