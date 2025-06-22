@@ -12,7 +12,8 @@ import { OGTooltipContext, Tooltip } from './state';
 import { AnimatePresence, motion } from 'framer-motion';
 import MenuSurface from '../primitives/MenuSurface';
 
-const DISMISS_DELAY = 200;
+const DELAY_INITIAL_HOVER = 200;
+const DELAY_DISMISS = 200;
 
 const VIEWPORT_SAFE_AREA = 12;
 const TOOLTIP_MARGIN = 12;
@@ -27,66 +28,85 @@ export default function OGTooltipProvider({
 
   const currentTriggerRef = useRef<HTMLElement>(null);
 
-  const timeoutRef = useRef<NodeJS.Timeout>(undefined);
+  const timeoutInitialHoverRef = useRef<NodeJS.Timeout>(undefined);
+  const timeoutDismissRef = useRef<NodeJS.Timeout>(undefined);
+
+  const clearTimeouts = useCallback(() => {
+    clearTimeout(timeoutInitialHoverRef.current);
+    timeoutInitialHoverRef.current = undefined;
+    clearTimeout(timeoutDismissRef.current);
+    timeoutDismissRef.current = undefined;
+  }, []);
+
+  const clearState = useCallback((delay = 0) => {
+    clearTimeouts();
+    if (delay) {
+      timeoutDismissRef.current = setTimeout(() => {
+        setCurrentTooltip(undefined);
+        currentTriggerRef.current = null;
+      }, delay);
+    } else {
+      setCurrentTooltip(undefined);
+      currentTriggerRef.current = null;
+    }
+  }, [clearTimeouts]);
 
   const showTooltip = useCallback((
     _trigger: HTMLElement | null,
     tooltip: Tooltip,
   ) => {
-    if (!_trigger) { return; }
-    setCurrentTooltip(tooltip);
-    currentTriggerRef.current = _trigger;
-    const trigger = _trigger.getBoundingClientRect();
-    const top =
-      trigger.top - (tooltip.height + TOOLTIP_MARGIN) < VIEWPORT_SAFE_AREA
-        // Tooltip below trigger
-        ? trigger.bottom + TOOLTIP_MARGIN + tooltip.offsetBelow
-        // Tooltip above trigger
-        : trigger.top - (tooltip.height + TOOLTIP_MARGIN) + tooltip.offsetAbove;
-    const horizontalOffset =
-      window.innerWidth - (trigger.left + tooltip.width) < VIEWPORT_SAFE_AREA
-        ? { right: VIEWPORT_SAFE_AREA }
-        : { left: trigger.left };
-    setTooltipStyle({ top, ...horizontalOffset });
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = undefined;
+    if (_trigger) {
+      currentTriggerRef.current = _trigger;
+      const displayTooltip = () => {
+        // Update current trigger ref on display
+        currentTriggerRef.current = _trigger;
+        setCurrentTooltip(tooltip);
+        const trigger = _trigger.getBoundingClientRect();
+        const top =
+          trigger.top - (tooltip.height + TOOLTIP_MARGIN) < VIEWPORT_SAFE_AREA
+            // Position below trigger
+            ? trigger.bottom + TOOLTIP_MARGIN + tooltip.offsetBelow
+            // Position above trigger
+            : trigger.top - (tooltip.height + TOOLTIP_MARGIN)
+              + tooltip.offsetAbove;
+        const horizontalOffset =
+          // eslint-disable-next-line max-len
+          window.innerWidth - (trigger.left + tooltip.width) < VIEWPORT_SAFE_AREA
+            ? { right: VIEWPORT_SAFE_AREA }
+            : { left: trigger.left };
+        setTooltipStyle({ top, ...horizontalOffset });
+        clearTimeouts();
+      };
+      if (currentTooltip) {
+        // Don't apply delay if tooltip's already visible
+        displayTooltip();
+      } else {
+        timeoutInitialHoverRef.current =
+          setTimeout(displayTooltip, DELAY_INITIAL_HOVER);
+      }
     }
-  }, []);
+  }, [currentTooltip, clearTimeouts]);
 
-  const dismissTooltip = useCallback((
-    trigger: HTMLElement | null,
-  ) => {
+  const dismissTooltip = useCallback((trigger: HTMLElement | null) => {
     if (trigger === currentTriggerRef.current) {
-      timeoutRef.current = setTimeout(() => {
-        setCurrentTooltip(undefined);
-        currentTriggerRef.current = null;
-      }, DISMISS_DELAY);
+      clearState(DELAY_DISMISS);
     }
-  }, []);
+  }, [clearState]);
 
   useEffect(() => {
-    const onScroll = () => {
-      if (currentTooltip) {
-        setCurrentTooltip(undefined);
-        currentTriggerRef.current = null;
-      }
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = undefined;
-      }
+    const onWindowChange = () => clearState(0);
+    window.addEventListener('mouseup', onWindowChange);
+    window.addEventListener('mousewheel', onWindowChange);
+    window.addEventListener('resize', onWindowChange);
+    return () => {
+      window.removeEventListener('mouseup', onWindowChange);
+      window.removeEventListener('mousewheel', onWindowChange);
+      window.removeEventListener('resize', onWindowChange);
     };
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [currentTooltip]);
+  }, [clearState]);
 
   return (
-    <OGTooltipContext.Provider
-      value={{
-        showTooltip,
-        dismissTooltip,
-      }}
-    >
+    <OGTooltipContext.Provider value={{ showTooltip, dismissTooltip }}>
       <div className="relative inset-0 z-50 pointer-events-none">
         <AnimatePresence>
           {currentTooltip &&
