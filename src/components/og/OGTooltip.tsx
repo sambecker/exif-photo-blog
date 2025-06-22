@@ -6,8 +6,11 @@ import { useOGTooltipState } from './state';
 import useSupportsHover from '@/utility/useSupportsHover';
 
 const { aspectRatio } = IMAGE_OG_DIMENSION;
+
 const width = 300;
 const height = width / aspectRatio;
+const offsetAbove = -1;
+const offsetBelow = -6;
 
 export default function OGTooltip({
   children,
@@ -56,7 +59,10 @@ export default function OGTooltip({
       className="max-w-full"
       ref={ref}
       onMouseEnter={() => supportsHover &&
-        showTooltip?.(ref.current, { content, width, height })}
+        showTooltip?.(
+          ref.current,
+          { content, width, height, offsetAbove, offsetBelow },
+        )}
       onMouseLeave={() => supportsHover &&
         dismissTooltip?.(ref.current)}
     >

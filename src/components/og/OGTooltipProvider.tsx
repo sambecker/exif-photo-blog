@@ -12,6 +12,11 @@ import { OGTooltipContext, Tooltip } from './state';
 import { AnimatePresence, motion } from 'framer-motion';
 import MenuSurface from '../primitives/MenuSurface';
 
+const DISMISS_DELAY = 200;
+
+const VIEWPORT_SAFE_AREA = 12;
+const TOOLTIP_MARGIN = 12;
+
 export default function OGTooltipProvider({
   children,
 }: {
@@ -25,21 +30,27 @@ export default function OGTooltipProvider({
   const timeoutRef = useRef<NodeJS.Timeout>(undefined);
 
   const showTooltip = useCallback((
-    trigger: HTMLElement | null,
+    _trigger: HTMLElement | null,
     tooltip: Tooltip,
   ) => {
-    if (trigger) {
-      setCurrentTooltip(tooltip);
-      currentTriggerRef.current = trigger;
-      const rect = trigger.getBoundingClientRect();
-      setTooltipStyle({
-        top: rect.top - tooltip.height - 12,
-        left: rect.left,
-      });
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = undefined;
-      }
+    if (!_trigger) { return; }
+    setCurrentTooltip(tooltip);
+    currentTriggerRef.current = _trigger;
+    const trigger = _trigger.getBoundingClientRect();
+    const top =
+      trigger.top - (tooltip.height + TOOLTIP_MARGIN) < VIEWPORT_SAFE_AREA
+        // Tooltip below trigger
+        ? trigger.bottom + TOOLTIP_MARGIN + tooltip.offsetBelow
+        // Tooltip above trigger
+        : trigger.top - (tooltip.height + TOOLTIP_MARGIN) + tooltip.offsetAbove;
+    const horizontalOffset =
+      window.innerWidth - (trigger.left + tooltip.width) < VIEWPORT_SAFE_AREA
+        ? { right: VIEWPORT_SAFE_AREA }
+        : { left: trigger.left };
+    setTooltipStyle({ top, ...horizontalOffset });
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = undefined;
     }
   }, []);
 
@@ -50,7 +61,7 @@ export default function OGTooltipProvider({
       timeoutRef.current = setTimeout(() => {
         setCurrentTooltip(undefined);
         currentTriggerRef.current = null;
-      }, 200);
+      }, DISMISS_DELAY);
     }
   }, []);
 

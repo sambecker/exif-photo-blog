@@ -4,6 +4,8 @@ export type Tooltip = {
   content: ReactNode
   width: number
   height: number
+  offsetAbove: number
+  offsetBelow: number
 }
 
 export type OGTooltipState = {
