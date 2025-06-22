@@ -11,8 +11,6 @@ import OGTile, { OGTilePropsCore } from '@/components/og/OGTile';
 
 export default function PhotoOGTile({
   photo,
-  onLoad,
-  onFail,
   riseOnHover,
   retryTime,
   onVisible,
@@ -26,8 +24,6 @@ export default function PhotoOGTile({
       description: descriptionForPhoto(photo),
       path: pathForPhoto({ photo, ...categories }),
       pathImage: pathForPhotoImage(photo),
-      onLoad,
-      onFail,
       riseOnHover,
       retryTime,
       onVisible,
