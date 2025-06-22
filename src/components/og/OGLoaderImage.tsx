@@ -1,49 +1,41 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { clsx } from 'clsx/lite';
 import Spinner from '@/components/Spinner';
 import { IMAGE_OG_DIMENSION } from '@/image-response';
 import { TbPhotoQuestion } from 'react-icons/tb';
 
-export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
+type LoadingState = 'loading' | 'loaded' | 'failed';
 
 export default function OGLoaderImage({
   title,
   path,
-  loadingState: loadingStateExternal,
-  onLoad,
-  onFail,
   retryTime,
   className,
+  enabled = true,
 }: {
   title: string
   path: string
-  loadingState?: OGLoadingState
-  onLoad?: () => void
-  onFail?: () => void
   retryTime?: number  
   className?: string
+  enabled?: boolean
 }) {
+  const ref = useRef<HTMLImageElement>(null);
 
-  const [loadingStateInternal, setLoadingStateInternal] =
-    useState(loadingStateExternal ?? 'unloaded');
-
-  const loadingState = loadingStateExternal ?? loadingStateInternal;
-
-  useEffect(() => {
-    if (
-      !loadingStateExternal &&
-      loadingStateInternal === 'unloaded'
-    ) {
-      setLoadingStateInternal('loading');
-    }
-  }, [loadingStateExternal, loadingStateInternal]);
+  const [loadingState, setLoadingState] = useState<LoadingState>('loading');
 
   const { width, height, aspectRatio } = IMAGE_OG_DIMENSION;
 
+  useEffect(() => {
+    if (!ref.current?.complete) {
+      setLoadingState('loading');
+    }
+  }, [path]);
+
   return (
     <div
+      key={path}
       className={clsx(
         'relative',
         className,
@@ -67,6 +59,7 @@ export default function OGLoaderImage({
         </div>}
       {(loadingState === 'loading' || loadingState === 'loaded') &&
         <img
+          ref={ref}
           alt={title}
           className={clsx(
             'absolute top-0 left-0 right-0 bottom-0 z-0',
@@ -74,25 +67,18 @@ export default function OGLoaderImage({
             loadingState === 'loading' && 'opacity-0',
             'transition-opacity',
           )}
-          src={path}
+          src={enabled ? path : ''}
           width={width}
           height={height}
-          onLoad={() => {
-            if (onLoad) {
-              onLoad();
-            } else {
-              setLoadingStateInternal('loaded');
-            }
-          }}
-          onError={() => {
-            if (onFail) {
-              onFail();
-            } else {
-              setLoadingStateInternal('failed');
-            }
+          onLoadStart={() => setLoadingState('loading')}
+          onLoad={() => setLoadingState('loaded')}
+          onError={e => {
+            setLoadingState('failed');
             if (retryTime !== undefined) {
+              setLoadingState('loading');
               setTimeout(() => {
-                setLoadingStateInternal('loading');
+                e.currentTarget.src = '';
+                e.currentTarget.src = path;
               }, retryTime);
             }
           }}

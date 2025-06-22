@@ -6,7 +6,10 @@ import Link from 'next/link';
 import useVisible from '@/utility/useVisible';
 import OGLoaderImage from './OGLoaderImage';
 
-export type OGLoadingState = 'unloaded' | 'loading' | 'loaded' | 'failed';
+export type OGTilePropsCore = Omit<
+  ComponentProps<typeof OGTile>,
+  'title' | 'description' | 'path' | 'pathImage'
+>;
 
 export default function OGTile({
   path,

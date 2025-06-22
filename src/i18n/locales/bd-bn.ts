@@ -101,6 +101,7 @@ export const TEXT = {
     setupIncomplete: 'সেটআপ সম্পূর্ণ করুন',
     setupSignIn: 'ছবি আপলোড করতে সাইন ইন করুন',
     setupFirstPhoto: 'আপনার প্রথম ছবি যোগ করুন',
+    // eslint-disable-next-line max-len
     setupConfig: 'পরিবেশ ভেরিয়েবল সম্পাদনা করে সাইটের নাম এবং অন্যান্য কনফিগারেশন পরিবর্তন করুন',
   },
   misc: {
