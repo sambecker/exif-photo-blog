@@ -123,11 +123,11 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
     ...photoDb,
     tags: photoDb.tags ?? [],
     focalLengthFormatted:
-      photoDb.focalLength !== undefined
+      photoDb.focalLength
         ? formatFocalLength(photoDb.focalLength)
         : undefined,
     focalLengthIn35MmFormatFormatted:
-      photoDb.focalLengthIn35MmFormat !== undefined
+      photoDb.focalLengthIn35MmFormat
         ? formatFocalLength(photoDb.focalLengthIn35MmFormat)
         : undefined,
     fNumberFormatted:
