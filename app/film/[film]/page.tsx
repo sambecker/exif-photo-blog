@@ -67,7 +67,8 @@ export async function generateMetadata({
 export default async function FilmPage({
   params,
 }: FilmProps) {
-  const { film } = await params;
+  let { film } = await params;
+  film = decodeURIComponent(film);
 
   const [
     photos,
