@@ -33,8 +33,8 @@ interface PhotoFilmProps {
 export async function generateMetadata({
   params,
 }: PhotoFilmProps): Promise<Metadata> {
-  const { photoId, film } = await params;
-
+  const { photoId, film: filmParam } = await params;
+  const film = decodeURIComponent(filmParam);
   const { photo } = await getPhotosNearIdCachedCached(photoId, film);
 
   if (!photo) { return {}; }

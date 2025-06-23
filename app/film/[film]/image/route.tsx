@@ -22,7 +22,8 @@ export async function GET(
   _: Request,
   context: { params: Promise<{ film: string }> },
 ) {
-  const { film } = await context.params;
+  const { film: filmParam } = await context.params;
+  const film = decodeURIComponent(filmParam);
 
   const [
     photos,
