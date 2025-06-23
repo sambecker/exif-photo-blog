@@ -38,7 +38,8 @@ export default function FilmImageResponse({
           height={height * .081}
           style={{ transform: `translateY(${height * .001}px)`}}
         />,
-        title: labelForFilm(film).medium.toLocaleUpperCase(),
+        title: labelForFilm(decodeURIComponent(film))
+          .medium.toLocaleUpperCase(),
       }} />
     </ImageContainer>
   );
