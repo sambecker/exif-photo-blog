@@ -13,7 +13,7 @@ import type { ExifData } from 'ts-exif-parser';
 
 export const convertExifToFormData = (
   data: ExifData,
-  film?: FujifilmSimulation,
+  film?: FujifilmSimulation | string,
   recipeData?: FujifilmRecipe,
 ): Omit<
   Record<keyof PhotoExif, string | undefined>,
