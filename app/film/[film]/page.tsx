@@ -82,7 +82,7 @@ export default async function FilmPage({
 
   return (
     <FilmOverview {...{
-      film,
+      film: encodeURIComponent(film),
       photos,
       count,
       dateRange,

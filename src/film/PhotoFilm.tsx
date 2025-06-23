@@ -35,7 +35,7 @@ export default function PhotoFilm({
       {...props}
       label={medium}
       labelSmall={small}
-      path={pathForFilm(film)}
+      path={pathForFilm(encodeURIComponent(film))}
       tooltipImagePath={pathForFilmImage(film)}
       tooltipCaption={countOnHover &&
         photoQuantityText(countOnHover, appText, false)}
