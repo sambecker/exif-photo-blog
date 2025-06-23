@@ -36,7 +36,7 @@ export async function generateMetadata({
   const { photoId, film: filmParam } = await params;
   const film = decodeURIComponent(filmParam);
   const { photo } = await getPhotosNearIdCachedCached(photoId, film);
-
+  
   if (!photo) { return {}; }
 
   const title = titleForPhoto(photo);
@@ -66,7 +66,8 @@ export async function generateMetadata({
 export default async function PhotoFilmPage({
   params,
 }: PhotoFilmProps) {
-  const { photoId, film } = await params;
+  const { photoId, film: filmParam } = await params;
+  const film = decodeURIComponent(filmParam);
 
   const { photo, photos, photosGrid, indexNumber } =
     await getPhotosNearIdCachedCached(photoId, film);
