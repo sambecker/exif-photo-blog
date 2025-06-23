@@ -1,4 +1,7 @@
-import { getCountsForCategories, getDataForCategories } from "@/category/data";
+import {
+  getCountsForCategories,
+  getDataForCategories,
+} from '@/category/data';
 
 export const getDataForCategoriesCachedAction = async () => {
   return getDataForCategories();

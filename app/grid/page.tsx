@@ -10,7 +10,7 @@ import PhotoGridPage from '@/photo/PhotoGridPage';
 import { getDataForCategoriesCached } from '@/category/cache';
 import { getPhotosMetaCached } from '@/photo/cache';
 
-export const dynamic = 'force-static';
+export const dynamic = 'force-dynamic';
 
 const getPhotosCached = cache(() => getPhotos({
   limit: INFINITE_SCROLL_GRID_INITIAL,

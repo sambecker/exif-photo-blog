@@ -79,19 +79,19 @@ export default function InfinitePhotoScroll({
       film,
       focal,
     }, warmOnly)
-    , [
-      useCachedPhotos,
-      sortBy,
-      initialOffset,
-      itemsPerPage,
-      includeHiddenPhotos,
-      camera,
-      lens,
-      tag,
-      recipe,
-      film,
-      focal,
-    ]);
+  , [
+    useCachedPhotos,
+    sortBy,
+    initialOffset,
+    itemsPerPage,
+    includeHiddenPhotos,
+    camera,
+    lens,
+    tag,
+    recipe,
+    film,
+    focal,
+  ]);
 
   const { data, isLoading, isValidating, error, mutate, size, setSize } =
     useSwrInfinite<Photo[]>(
@@ -117,7 +117,7 @@ export default function InfinitePhotoScroll({
 
   const isFinished = useMemo(() =>
     data && data[data.length - 1]?.length < itemsPerPage
-    , [data, itemsPerPage]);
+  , [data, itemsPerPage]);
 
   const advance = useCallback(() => {
     if (!isFinished && !isLoadingOrValidating) {

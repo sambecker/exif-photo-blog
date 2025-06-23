@@ -9,7 +9,7 @@ import {
 } from '@/utility/exif-format';
 import { formatDateFromPostgresString } from '@/utility/date';
 import { generatePhotoSyncStatus } from '@/photo/sync';
-import { getBaseUrl, GRID_ASPECT_RATIO } from '@/app/config';
+import { GRID_ASPECT_RATIO } from '@/app/config';
 
 const BLUR_DATA_URL =
   'data:image/gif;base64,' +
@@ -18,10 +18,10 @@ const BLUR_DATA_URL =
 export const convertImmichAssetToPhoto = (
   asset: ImmichAsset,
   size: string = 'thumbnail',
-  sharedKey: string
+  sharedKey: string,
 ): Photo => {
   const exif = asset.exifInfo;
-  const baseUrl = getBaseUrl();
+
   return {
     // export interface Photo extends Omit<PhotoDb, 'recipeData'> 
     focalLengthFormatted: formatFocalLength(exif?.focalLength),
@@ -48,7 +48,8 @@ export const convertImmichAssetToPhoto = (
     takenAt: new Date(exif?.dateTimeOriginal || asset.fileCreatedAt),
     // export interface PhotoDbInsert extends PhotoExif
     id: asset.id,
-    url: `${baseUrl}/api/immich/assets/${asset.id}/thumbnail?size=${size}&key=${sharedKey}`,
+    url: `/api/immich/assets/${asset.id}/` +
+      `thumbnail?size=${size}&key=${sharedKey}`,
     extension: asset.originalPath.split('.').pop()?.toLowerCase() || 'jpg',
     //blurData: `/api/immich/assets/${asset.id}/blur`,
     blurData: BLUR_DATA_URL,

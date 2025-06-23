@@ -1,4 +1,7 @@
-import { IMMICH_BASE_URL, IMMICH_API_KEY } from '@/app/config';
+import {
+  IMMICH_BASE_URL,
+  IMMICH_API_KEY,
+} from '@/app/config';
 
 export interface ImmichAlbumInfo {
   albumName: string;
@@ -88,6 +91,8 @@ export interface ImmichSharedLinkInfo {
   expiresAt?: string | null;
   id?: string;
   key?: string;
+  allowDownload?: boolean;
+  allowUpload?: boolean;
 }
 
 export class ImmichApiClient {
@@ -119,21 +124,12 @@ export class ImmichApiClient {
     return response.json();
   }
 
-  async getAssetThumbnail(
-    id: string,
-    size: 'thumbnail' | 'preview' = 'preview'): Promise<string> {
-    return `${this.baseUrl}/api/assets/${id}/thumbnail?size=${size}`;
-  }
-
-  async getAssetOriginal(id: string): Promise<string> {
-    return `${this.baseUrl}/api/assets/${id}/original`;
-  }
 
   // -------------- request immich api ---------------
   async getAlbumInfo(
     id: string,
     withoutAssets: boolean = false): Promise<ImmichAlbumInfo> {
-    if (!id || id.trim() === '') {
+    if (!id || id.trim() === '' || id === null) {
       throw new Error('Album ID is required');
     }
 

@@ -9,7 +9,7 @@ import { getPhotos } from '@/photo/db/query';
 import PhotoFeedPage from '@/photo/PhotoFeedPage';
 import { getPhotosMetaCached } from '@/photo/cache';
 
-export const dynamic = 'force-static';
+export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
 const getPhotosCached = cache(() => getPhotos({

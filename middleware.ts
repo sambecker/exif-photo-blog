@@ -1,65 +1,83 @@
-import { auth } from './src/auth/server';
+// middleware.ts
 import { NextRequest, NextResponse } from 'next/server';
-import type { NextApiRequest, NextApiResponse } from 'next';
 import {
-  IMMICH_SHARE_ALBUM_ID_COOKIE,
-  IMMICH_SHARE_KEY_COOKIE,
-  PATH_ADMIN,
-  PATH_ADMIN_PHOTOS,
-  PATH_OG,
-  PATH_OG_SAMPLE,
-  PREFIX_PHOTO,
-  PREFIX_TAG,
-} from './src/app/paths';
+  IMMICH_SHARE_ALBUM_ID_COOKIE, IMMICH_SHARE_ALBUM_ID_HEADER,
+  IMMICH_SHARE_KEY_COOKIE, IMMICH_SHARE_KEY_HEADER
+} from '@/app/paths';
+import { validateShareKey } from '@/platforms/immich/auth/validation';
 
-export default function middleware(req: NextRequest, res: NextResponse) {
-  const pathname = req.nextUrl.pathname;
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
 
-  // 获取 share_key 和 album_id (cookie 会自动传递，不需要额外处理)
-  const shareKey = req.cookies.get(IMMICH_SHARE_KEY_COOKIE)?.value;
-  const albumId = req.cookies.get(IMMICH_SHARE_ALBUM_ID_COOKIE)?.value;
+  // Get the correct host from headers (handles proxy scenarios)
+  const host = request.headers.get('x-forwarded-host') ||
+    request.headers.get('host') ||
+    request.nextUrl.host;
+  const protocol = request.headers.get('x-forwarded-proto') ||
+    (host?.includes('localhost') ? 'http' : 'https');
+  const baseUrl = `${protocol}://${host}`;
 
-  console.log('Middleware shareKey:', shareKey, 'albumId:', albumId);
+  const shareKeyMatch = pathname.match(/^\/share\/([^\/]+)$/);
+  if (shareKeyMatch) {
+    const shareKey = shareKeyMatch[1];
 
-  let response: NextResponse;
-  // 处理路径重写逻辑
-  if (pathname === PATH_ADMIN) {
-    response = NextResponse.redirect(new URL(PATH_ADMIN_PHOTOS, req.url));
-  } else if (pathname === PATH_OG) {
-    response = NextResponse.redirect(new URL(PATH_OG_SAMPLE, req.url));
-  } else if (/^\/photos\/(.)+$/.test(pathname)) {
-    const matches = pathname.match(/^\/photos\/(.+)$/);
-    response = NextResponse.rewrite(new URL(
-      `${PREFIX_PHOTO}/${matches?.[1]}`,
-      req.url,
-    ));
-  } else if (/^\/t\/(.)+$/.test(pathname)) {
-    const matches = pathname.match(/^\/t\/(.+)$/);
-    response = NextResponse.rewrite(new URL(
-      `${PREFIX_TAG}/${matches?.[1]}`,
-      req.url,
-    ));
-  } else {
-    response = NextResponse.next();
+    const shareContext = await validateShareKey(shareKey);
+    if (!shareContext) {
+      return NextResponse.redirect(new URL('/unauthorized', baseUrl));
+    }
+
+    if (shareContext.expiresAt && new Date() > shareContext.expiresAt) {
+      return NextResponse.redirect(new URL('/unauthorized?reason=expired', baseUrl));
+    }
+
+    let response = NextResponse.redirect(new URL('/', baseUrl));
+    response.cookies.set(IMMICH_SHARE_KEY_COOKIE, shareKey, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: shareContext.expiresAt
+        ? Math.floor((shareContext.expiresAt.getTime() - Date.now()) / 1000)
+        : 240 * 60 * 60
+    });
+    response.cookies.set(IMMICH_SHARE_ALBUM_ID_COOKIE, shareContext.albumId, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: shareContext.expiresAt
+        ? Math.floor((shareContext.expiresAt.getTime() - Date.now()) / 1000)
+        : 240 * 60 * 60
+    });
+
+    // set headers for first request
+    response.headers.set(IMMICH_SHARE_KEY_HEADER, shareKey);
+    response.headers.set(IMMICH_SHARE_ALBUM_ID_HEADER, shareContext.albumId);
+
+    return response;
   }
 
-  // Cookie 会自动传递给后续请求，不需要额外设置 header
-  return response;
+  // get share key and album ID from Params first then cookies
+  const shareKey = request.cookies.get(IMMICH_SHARE_KEY_COOKIE)?.value;
+  const albumId = request.cookies.get(IMMICH_SHARE_ALBUM_ID_COOKIE)?.value;
+
+  if (shareKey && albumId) {
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set(IMMICH_SHARE_KEY_HEADER, shareKey);
+    requestHeaders.set(IMMICH_SHARE_ALBUM_ID_HEADER, albumId);
+
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders
+      }
+    });
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
-  // Excludes:
-  // - /api + /api/auth*
-  // - /_next/static*
-  // - /_next/image*
-  // - /favicon.ico + /favicons/*
-  // - /grid
-  // - /feed
-  // - /home-image
-  // - /template-image
-  // - /template-image-tight
-  // - /template-url
-  // Include root path (/) and all other paths
-  // eslint-disable-next-line max-len
-  matcher: ['/((?!_next/static|_next/image|favicon.ico$|favicons/|grid$|feed$|home-image$|template-image$|template-image-tight$|template-url$).*)', '/'],
+  matcher: [
+    '/((?!api/auth|_next/static|_next/image|favicon.ico).*)',
+  ],
 };

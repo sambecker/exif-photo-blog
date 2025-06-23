@@ -13,7 +13,7 @@ import PhotoFeedPage from '@/photo/PhotoFeedPage';
 import PhotoGridPage from '@/photo/PhotoGridPage';
 import { getDataForCategoriesCached } from '@/category/cache';
 import { getPhotosMetaCached } from '@/photo/cache';
-export const dynamic = 'force-static';
+export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
 const getPhotosCached = cache(() => getPhotos({
@@ -44,7 +44,6 @@ export default async function HomePage() {
       : NULL_CATEGORY_DATA,
   ]);
 
-  console.log('------------HomePage photos count:', photos.length);
   return (
     photos.length > 0
       ? GRID_HOMEPAGE_ENABLED

@@ -40,6 +40,9 @@ export const PREFIX_FOCAL_LENGTH = '/focal';
 export const IMMICH_SHARE_KEY_COOKIE = 'immich-share-key';
 export const IMMICH_SHARE_ALBUM_ID_COOKIE = 'immich-share-album-id';
 
+export const IMMICH_SHARE_KEY_HEADER = 'x-immich-share-key';
+export const IMMICH_SHARE_ALBUM_ID_HEADER = 'x-immich-share-album-id';
+
 // Dynamic paths
 const PATH_PHOTO_DYNAMIC = `${PREFIX_PHOTO}/[photoId]`;
 const PATH_CAMERA_DYNAMIC = `${PREFIX_CAMERA}/[make]/[model]`;
@@ -340,12 +343,10 @@ export const isPathAdminInfo = (pathname?: string) =>
   isPathAdminInsights(pathname) ||
   isPathAdminConfiguration(pathname);
 
-export const isPathProtected = (pathname?: string) => {
-  return false;
-}
-// checkPathPrefix(pathname, PATH_ADMIN) ||
-// checkPathPrefix(pathname, pathForTag(TAG_HIDDEN)) ||
-// checkPathPrefix(pathname, PATH_OG);
+export const isPathProtected = (pathname?: string) =>
+  checkPathPrefix(pathname, PATH_ADMIN) ||
+  checkPathPrefix(pathname, pathForTag(TAG_HIDDEN)) ||
+  checkPathPrefix(pathname, PATH_OG);
 
 export const getPathComponents = (pathname = ''): {
   photoId?: string

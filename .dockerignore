@@ -1,0 +1,26 @@
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Git
+.git
+.gitignore
+
+# Node
+node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Next.js build output
+.next
+out
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+
+# Other
+README.md

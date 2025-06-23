@@ -57,25 +57,25 @@ const getPhotosCacheKeyForOption = (
   option: keyof GetPhotosOptions,
 ): string | null => {
   switch (option) {
-    // Complex keys
-    case 'camera': {
-      const value = options[option];
-      return value ? `${option}-${createCameraKey(value)}` : null;
-    }
-    case 'lens': {
-      const value = options[option];
-      return value ? `${option}-${createLensKey(value)}` : null;
-    }
-    case 'takenBefore':
-    case 'takenAfterInclusive':
-    case 'updatedBefore': {
-      const value = options[option];
-      return value ? `${option}-${value.toISOString()}` : null;
-    }
-    // Primitive keys
-    default:
-      const value = options[option];
-      return value !== undefined ? `${option}-${value}` : null;
+  // Complex keys
+  case 'camera': {
+    const value = options[option];
+    return value ? `${option}-${createCameraKey(value)}` : null;
+  }
+  case 'lens': {
+    const value = options[option];
+    return value ? `${option}-${createLensKey(value)}` : null;
+  }
+  case 'takenBefore':
+  case 'takenAfterInclusive':
+  case 'updatedBefore': {
+    const value = options[option];
+    return value ? `${option}-${value.toISOString()}` : null;
+  }
+  // Primitive keys
+  default:
+    const value = options[option];
+    return value !== undefined ? `${option}-${value}` : null;
   }
 };
 
@@ -167,7 +167,6 @@ export const getPhotosCached = (...args: Parameters<typeof getPhotos>) => {
     );
 
   return fetchPhotos(...args).then(photos => {
-    console.log('Number of photos:', photos.length);
     return parseCachedPhotosDates(photos);
   });
 };
@@ -217,9 +216,9 @@ export const getPhotoCached = (...args: Parameters<typeof getPhoto>) => {
     ? getPhoto
     : unstable_cache(getPhoto, [KEY_PHOTOS, KEY_PHOTO]);
   return fetchPhoto(...args).then(result =>
-    result ? parseCachedPhotoDates(result) : undefined
+    result ? parseCachedPhotoDates(result) : undefined,
   );
-}
+};
 
 export const getUniqueTagsCached = USE_IMMICH_BACKEND ?
   getUniqueTags : unstable_cache(
