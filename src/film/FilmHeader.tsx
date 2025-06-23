@@ -38,7 +38,7 @@ export default function FilmHeader({
     <PhotoHeader
       film={film}
       entity={<PhotoFilm
-        film={film}
+        film={decodeURIComponent(film)}
         isShowingRecipeOverlay={Boolean(recipeModalProps)}
         toggleRecipeOverlay={recipeProps
           ? () => setRecipeModalProps?.(recipeProps)

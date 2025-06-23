@@ -42,7 +42,7 @@ export async function GET(
 
   return new ImageResponse(
     <FilmImageResponse {...{
-      film: encodeURIComponent(film),
+      film,
       photos,
       width,
       height,
