@@ -25,9 +25,7 @@ export default function ImageWithFallback({
     areAdminDebugToolsEnabled,
   } = useAppState();
 
-  const hasLoadedRef = useRef(false);
-  const wasCachedRef = useRef(true);
-
+  const [wasCached, setWasCached] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [didError, setDidError] = useState(false);
 
@@ -40,25 +38,22 @@ export default function ImageWithFallback({
   const refFallback = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!hasLoadedRef.current) {
-      wasCachedRef.current = (
-        Boolean(refImage.current?.complete) &&
-        (refImage.current?.naturalWidth ?? 0) > 0
-      );
-      hasLoadedRef.current = true;
-    }
+    setWasCached(
+      Boolean(refImage.current?.complete) &&
+      (refImage.current?.naturalWidth ?? 0) > 0,
+    );
   }, []);
 
   const shouldDebugFallbackTiming = areAdminDebugToolsEnabled && debug;
 
   const showFallback =
-    !wasCachedRef.current &&
+    !wasCached &&
     !hideFallback;
 
   if (shouldDebugFallbackTiming) {
     console.log({
       isLoading,
-      wasCached: wasCachedRef.current,
+      wasCached,
       hideFallback,
       showFallback,
     });
@@ -156,7 +151,7 @@ export default function ImageWithFallback({
           (showFallback || shouldDebugImageFallbacks) &&
             'transition-opacity duration-300 ease-in',
           !(BLUR_ENABLED && blurDataURL) && 'bg-main',
-          ((isLoading && !wasCachedRef.current) || shouldDebugImageFallbacks)
+          (isLoading || shouldDebugImageFallbacks)
             ? 'opacity-100'
             : 'opacity-0',
         )}
