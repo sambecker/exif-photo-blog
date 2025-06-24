@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
   IMMICH_BASE_URL,
-  IMMICH_API_KEY,
   IMMICH_SHARE_KEY,
 } from '@/app/config';
 
@@ -18,7 +17,7 @@ export async function GET(
   if (!assetId) {
     return new NextResponse('Asset ID is required', { status: 400 });
   }
-  if (!IMMICH_BASE_URL || !IMMICH_API_KEY) {
+  if (!IMMICH_BASE_URL) {
     return new NextResponse('Immich server configuration is missing', {
       status: 500,
     });
@@ -34,9 +33,6 @@ export async function GET(
     immichUrl.searchParams.append('size', size);
   }
 
-  // if (IMMICH_SHARE_KEY) {
-  //   immichUrl.searchParams.append('key', IMMICH_SHARE_KEY);
-  // }
   const sharedKey = searchParams.get('key') || IMMICH_SHARE_KEY || '';
   immichUrl.searchParams.append('key', sharedKey);
 
@@ -44,7 +40,6 @@ export async function GET(
 
     const immichResponse = await fetch(immichUrl.toString(), {
       headers: {
-        // 'x-api-key': IMMICH_API_KEY,
       },
       next: {
         revalidate: 10,

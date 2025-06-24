@@ -20,8 +20,6 @@ const HOSTNAME_AWS_S3 =
     ? `${process.env.NEXT_PUBLIC_AWS_S3_BUCKET}.s3.${process.env.NEXT_PUBLIC_AWS_S3_REGION}.amazonaws.com`
     : undefined;
 
-const HOSTNAME_IMMICH = process.env.IMMICH_PROXY_URL;
-
 const generateRemotePattern = (hostname: string) => {
   const parsedUrl = new URL(hostname);
   return {
@@ -43,10 +41,6 @@ if (HOSTNAME_CLOUDFLARE_R2) {
 if (HOSTNAME_AWS_S3) {
   remotePatterns.push(generateRemotePattern(HOSTNAME_AWS_S3));
 }
-if (HOSTNAME_IMMICH) {
-  remotePatterns.push(generateRemotePattern(HOSTNAME_IMMICH));
-}
-
 
 const LOCALE = process.env.NEXT_PUBLIC_LOCALE || 'en-us';
 const LOCALE_ALIAS = './date-fns-locale-alias';
@@ -58,6 +52,8 @@ const nextConfig: NextConfig = {
     remotePatterns,
     minimumCacheTTL: 31536000,
   },
+  // Enable standalone output for smaller Docker images
+  output: 'standalone',
   turbopack: {
     resolveAlias: {
       [LOCALE_ALIAS]: `@/${LOCALE_DYNAMIC}`,

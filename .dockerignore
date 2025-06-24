@@ -1,26 +1,90 @@
-Dockerfile
-docker-compose.yml
+# Docker files
+Dockerfile*
+docker-compose*
 .dockerignore
 
 # Git
-.git
+.git/
 .gitignore
 
-# Node
-node_modules
-npm-debug.log
-yarn-error.log
-pnpm-debug.log
+# Dependencies
+node_modules/
+.pnpm-store/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
 # Next.js build output
-.next
-out
+.next/
+out/
 
-# Environment variables
+# Environment variables (keep .env.example)
 .env
 .env.local
 .env.development
 .env.test
+.env.production
 
-# Other
+# Testing
+__tests__/
+jest.config.*
+jest.setup.*
+coverage/
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
+
+# Documentation
 README.md
+readme/
+docs/
+CHANGELOG.md
+LICENSE
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ESLint
+.eslintrc*
+eslint.config.*
+
+# TypeScript
+*.tsbuildinfo
+
+# Temporary files
+*.tmp
+*.temp
+
+# Build analysis
+.analyze/
+
+# Vercel
+.vercel/
+
+# Logs
+logs/
+*.log
+
+# Cache directories
+.cache/
+.nyc_output/
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
