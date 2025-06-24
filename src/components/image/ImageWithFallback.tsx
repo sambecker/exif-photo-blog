@@ -10,6 +10,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 export default function ImageWithFallback({
   className,
   classNameImage = 'object-cover h-full',
+  debug,
   priority,
   blurDataURL,
   blurCompatibilityLevel = 'low',
@@ -17,8 +18,12 @@ export default function ImageWithFallback({
 }: ImageProps & {
   blurCompatibilityLevel?: 'none' | 'low' | 'high'
   classNameImage?: string
+  debug?: boolean
 }) {
-  const { shouldDebugImageFallbacks } = useAppState();
+  const {
+    shouldDebugImageFallbacks,
+    areAdminDebugToolsEnabled,
+  } = useAppState();
 
   const [wasCached, setWasCached] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
@@ -39,10 +44,28 @@ export default function ImageWithFallback({
     );
   }, []);
 
+  const shouldDebugFallback = areAdminDebugToolsEnabled && debug;
+
+  const debugFallbackStyles = useCallback(() => {
+    const stylesMap = refFallback.current?.computedStyleMap();
+    const styles = stylesMap
+      ? Array.from(stylesMap.entries()).reduce((acc, [key, value]) => {
+        acc[key] = value.toString();
+        return acc;
+      }, {} as Record<string, string>) : {};
+    const opacity = (stylesMap?.get('opacity') as CSSUnitValue)?.value;
+    return {
+      styles,
+      opacity,
+      classList: refFallback.current?.classList,
+    };
+  }, []);
+
+  const outerTimeout = useRef<NodeJS.Timeout>(undefined);
+  const innerTimeout = useRef<NodeJS.Timeout>(undefined);
   useEffect(() => {
     if (!isLoading && !didError) {
-      let innerTimeout: NodeJS.Timeout;
-      const timeout = setTimeout(() => {
+      outerTimeout.current = setTimeout(() => {
         if (refFallback.current) {
           const fallbackOpacity = (refFallback
             .current
@@ -54,22 +77,32 @@ export default function ImageWithFallback({
           if (fallbackOpacity === 0) {
             // Image has loaded and fallback is already hidden
             setHideFallback(true);
+            if (shouldDebugFallback) {
+              console.log('Hide fallback: 01', debugFallbackStyles());
+            }
           } else {
             // Image has loaded but fallback is still visible
             // Delay hiding fallback to avoid abrupt transition
-            innerTimeout = setTimeout(() =>{
-              console.log('Delayed hide fallback');
+            innerTimeout.current = setTimeout(() =>{
               setHideFallback(true);
+              if (shouldDebugFallback) {
+                console.log('Hide fallback: 02', debugFallbackStyles());
+              }
             }, 1000);
           }
         }
       }, 1000);
       return () => {
-        clearTimeout(timeout);
-        clearTimeout(innerTimeout);
+        clearTimeout(outerTimeout.current);
+        clearTimeout(innerTimeout.current);
       };
     }
-  }, [isLoading, didError]);
+  }, [
+    isLoading,
+    didError,
+    shouldDebugFallback,
+    debugFallbackStyles,
+  ]);
 
   const showFallback =
     !wasCached &&

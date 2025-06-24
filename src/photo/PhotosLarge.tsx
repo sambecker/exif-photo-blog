@@ -35,6 +35,7 @@ export default function PhotosLarge({
           onVisible={index === photos.length - 1
             ? onLastPhotoVisible
             : undefined}
+          debugImageFallback={index === 0}
         />)}
       itemKeys={photos.map(photo => photo.id)}
     />

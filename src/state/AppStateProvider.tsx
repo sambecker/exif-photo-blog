@@ -30,8 +30,10 @@ import { toastSuccess } from '@/toast';
 
 export default function AppStateProvider({
   children,
+  areAdminDebugToolsEnabled,
 }: {
   children: ReactNode
+  areAdminDebugToolsEnabled?: boolean
 }) {
   const router = useRouter();
 
@@ -243,6 +245,7 @@ export default function AppStateProvider({
         setUploadState,
         resetUploadState,
         // DEBUG
+        areAdminDebugToolsEnabled,
         isGridHighDensity,
         setIsGridHighDensity,
         areZoomControlsShown,

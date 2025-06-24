@@ -64,6 +64,7 @@ export type AppStateContextType = {
   setUploadState?: (uploadState: Partial<UploadState>) => void
   resetUploadState?: () => void
   // DEBUG
+  areAdminDebugToolsEnabled?: boolean
   isGridHighDensity?: boolean
   setIsGridHighDensity?: Dispatch<SetStateAction<boolean>>
   areZoomControlsShown?: boolean

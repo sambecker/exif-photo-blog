@@ -122,10 +122,8 @@ export default function CommandKClient({
   recipes,
   films,
   focalLengths,
-  showDebugTools,
   footer,
 }: {
-  showDebugTools?: boolean
   footer?: string
 } & PhotoSetCategories) {
   const pathname = usePathname();
@@ -146,6 +144,7 @@ export default function CommandKClient({
     isGridHighDensity,
     areZoomControlsShown,
     arePhotosMatted,
+    areAdminDebugToolsEnabled,
     shouldShowBaselineGrid,
     shouldDebugImageFallbacks,
     shouldDebugInsights,
@@ -406,7 +405,7 @@ export default function CommandKClient({
     }],
   }];
 
-  if (isUserSignedIn && showDebugTools) {
+  if (isUserSignedIn && areAdminDebugToolsEnabled) {
     clientSections.push({
       heading: 'Debug Tools',
       accessory: <RiToolsFill size={16} className="translate-x-[-1px]" />,
@@ -537,7 +536,7 @@ export default function CommandKClient({
       annotation: <IconLock narrow />,
       path: PATH_ADMIN_CONFIGURATION,
     });
-    if (showDebugTools) {
+    if (areAdminDebugToolsEnabled) {
       adminSection.items.push({
         label: 'Baseline Overview',
         annotation: <BiLockAlt />,
