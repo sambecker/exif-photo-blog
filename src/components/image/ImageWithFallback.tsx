@@ -44,7 +44,20 @@ export default function ImageWithFallback({
     );
   }, []);
 
-  const shouldDebugFallback = areAdminDebugToolsEnabled && debug;
+  const shouldDebugFallbackTiming = areAdminDebugToolsEnabled && debug;
+
+  const showFallback =
+    !wasCached &&
+    !hideFallback;
+
+  if (shouldDebugFallbackTiming) {
+    console.log({
+      isLoading,
+      wasCached,
+      hideFallback,
+      showFallback,
+    });
+  }
 
   const debugFallbackStyles = useCallback(() => {
     const stylesMap = refFallback.current?.computedStyleMap();
@@ -77,7 +90,7 @@ export default function ImageWithFallback({
           if (fallbackOpacity === 0) {
             // Image has loaded and fallback is already hidden
             setHideFallback(true);
-            if (shouldDebugFallback) {
+            if (shouldDebugFallbackTiming) {
               console.log('Hide fallback: 01', debugFallbackStyles());
             }
           } else {
@@ -85,7 +98,7 @@ export default function ImageWithFallback({
             // Delay hiding fallback to avoid abrupt transition
             innerTimeout.current = setTimeout(() =>{
               setHideFallback(true);
-              if (shouldDebugFallback) {
+              if (shouldDebugFallbackTiming) {
                 console.log('Hide fallback: 02', debugFallbackStyles());
               }
             }, 1000);
@@ -100,13 +113,9 @@ export default function ImageWithFallback({
   }, [
     isLoading,
     didError,
-    shouldDebugFallback,
+    shouldDebugFallbackTiming,
     debugFallbackStyles,
   ]);
-
-  const showFallback =
-    !wasCached &&
-    !hideFallback;
 
   const getBlurClass = () => {
     switch (blurCompatibilityLevel) {
