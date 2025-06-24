@@ -8,19 +8,19 @@ import { validateShareKey } from '@/platforms/immich/auth/validation';
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
-  // Get the correct host from headers (handles proxy scenarios)
   const host = request.headers.get('x-forwarded-host') ||
     request.headers.get('host') ||
     request.nextUrl.host;
   const protocol = request.headers.get('x-forwarded-proto') ||
     (host?.includes('localhost') ? 'http' : 'https');
   const baseUrl = `${protocol}://${host}`;
+  if (process.env.USE_IMMICH_BACKEND === 'true' && pathname.startsWith('/admin')) {
+    return NextResponse.redirect(new URL('/unauthorized', baseUrl));
+  }
 
   const shareKeyMatch = pathname.match(/^\/share\/([^\/]+)$/);
   if (shareKeyMatch) {
     const shareKey = shareKeyMatch[1];
-
     const shareContext = await validateShareKey(shareKey);
     if (!shareContext) {
       return NextResponse.redirect(new URL('/unauthorized', baseUrl));
@@ -57,23 +57,17 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // get share key and album ID from Params first then cookies
   const shareKey = request.cookies.get(IMMICH_SHARE_KEY_COOKIE)?.value;
   const albumId = request.cookies.get(IMMICH_SHARE_ALBUM_ID_COOKIE)?.value;
 
-  if (shareKey && albumId) {
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set(IMMICH_SHARE_KEY_HEADER, shareKey);
-    requestHeaders.set(IMMICH_SHARE_ALBUM_ID_HEADER, albumId);
-
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders
-      }
-    });
-  }
-
-  return NextResponse.next();
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set(IMMICH_SHARE_ALBUM_ID_HEADER, albumId || '');
+  requestHeaders.set(IMMICH_SHARE_KEY_HEADER, shareKey || '');
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders
+    }
+  });
 }
 
 export const config = {

@@ -104,6 +104,9 @@ importers:
       swr:
         specifier: ^2.3.3
         version: 2.3.3(react@19.1.0)
+      thumbhash:
+        specifier: ^0.1.1
+        version: 0.1.1
       ts-exif-parser:
         specifier: ^0.2.2
         version: 0.2.2
@@ -4229,6 +4232,9 @@ packages:
   throttleit@2.1.0:
     resolution: {integrity: sha512-nt6AMGKW1p/70DF/hGBdJB57B8Tspmbp5gfJ8ilhLnt7kkr2ye7hzD6NVG8GGErk2HWF34igrL2CXmNIkzKqKw==}
     engines: {node: '>=18'}
+
+  thumbhash@0.1.1:
+    resolution: {integrity: sha512-kH5pKeIIBPQXAOni2AiY/Cu/NKdkFREdpH+TLdM0g6WA7RriCv0kPLgP731ady67MhTAqrVG/4mnEeibVuCJcg==}
 
   tinyglobby@0.2.14:
     resolution: {integrity: sha512-tX5e7OM1HnYr2+a2C/4V0htOcSQcoSTH9KgJnVvNm5zm/cyEWKJ7j7YutsH9CxMdtOkkLFy2AHrMci9IM8IPZQ==}
@@ -9431,6 +9437,8 @@ snapshots:
       minimatch: 3.1.2
 
   throttleit@2.1.0: {}
+
+  thumbhash@0.1.1: {}
 
   tinyglobby@0.2.14:
     dependencies:

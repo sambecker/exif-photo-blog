@@ -41,6 +41,7 @@
     "sharp": "^0.34.2",
     "sonner": "^2.0.5",
     "swr": "^2.3.3",
+    "thumbhash": "^0.1.1",
     "ts-exif-parser": "^0.2.2",
     "use-debounce": "^10.0.5",
     "viewerjs": "^1.11.7"

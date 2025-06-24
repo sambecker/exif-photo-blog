@@ -10,10 +10,10 @@ import {
 import { formatDateFromPostgresString } from '@/utility/date';
 import { generatePhotoSyncStatus } from '@/photo/sync';
 import { GRID_ASPECT_RATIO } from '@/app/config';
+import { thumbHashToDataURL } from 'thumbhash';
 
-const BLUR_DATA_URL =
-  'data:image/gif;base64,' +
-  'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+export const decodeBase64 = (data: string) =>
+  Uint8Array.from(atob(data), (c) => c.charCodeAt(0));
 
 export const convertImmichAssetToPhoto = (
   asset: ImmichAsset,
@@ -21,7 +21,6 @@ export const convertImmichAssetToPhoto = (
   sharedKey: string,
 ): Photo => {
   const exif = asset.exifInfo;
-
   return {
     // export interface Photo extends Omit<PhotoDb, 'recipeData'> 
     focalLengthFormatted: formatFocalLength(exif?.focalLength),
@@ -52,7 +51,7 @@ export const convertImmichAssetToPhoto = (
       `thumbnail?size=${size}&key=${sharedKey}`,
     extension: asset.originalPath.split('.').pop()?.toLowerCase() || 'jpg',
     //blurData: `/api/immich/assets/${asset.id}/blur`,
-    blurData: BLUR_DATA_URL,
+    blurData: thumbHashToDataURL(decodeBase64(asset.thumbhash)),
     title: asset.originalFileName?.replace(/\.[^/.]+$/, '') || '',
     caption: exif?.description || '',
     semanticDescription: exif?.description || '',

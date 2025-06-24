@@ -35,94 +35,42 @@ export class ImmichDataSource implements PhotoDataSource {
   async getPhotos(options: GetPhotosOptions): Promise<Photo[]
   > {
     const albumId = await getAlbumId();
-    const finalAlbumId = albumId || this.albumId;
-    if (!finalAlbumId) {
-      throw new Error(
-        'No album ID available for fetching photos');
-    }
     const albumSharedKey = await getSharedKey();
-    if (!albumSharedKey) {
-
-      throw new Error(
-        'No shared key available for fetching photos');
-    }
-
     const photos = await getPhotosCached(
-      options, finalAlbumId, albumSharedKey)();
+      options, albumId, albumSharedKey)();
     return photos;
-
   }
 
 
   async getUniqueTags(): Promise<Tags> {
-
     const albumId = await getAlbumId();
-
     const albumSharedKey = await getSharedKey();
-
-
-    const finalAlbumId = albumId || this.albumId;
-    if (!finalAlbumId) {
-      throw new Error(
-        'No album ID available for fetching unique tags');
-    }
-
     const tags = await getUniqueTagsCached(
-      { hidden: 'exclude' }, finalAlbumId, albumSharedKey)();
+      { hidden: 'exclude' }, albumId, albumSharedKey)();
     return tags;
   }
-
   async getUniqueCameras(): Promise<Cameras> {
     const albumId = await getAlbumId();
-
     const albumSharedKey = await getSharedKey();
-
-
-    const finalAlbumId = albumId || this.albumId;
-    if (!finalAlbumId) {
-
-      throw new Error(
-        'No album ID available for fetching unique cameras');
-    }
-
     const cameras = await getUniqueCamerasCached(
-      { hidden: 'exclude' }, finalAlbumId, albumSharedKey,
+      { hidden: 'exclude' }, albumId, albumSharedKey,
     )();
-
     return cameras;
   }
 
   async getUniqueLenses(): Promise<Lenses> {
-
     const albumId = await getAlbumId();
-
     const albumSharedKey = await getSharedKey();
-
-
-    const finalAlbumId = albumId || this.albumId;
-    if (!finalAlbumId) {
-      throw new Error(
-        'No album ID available for fetching unique lenses');
-    }
-
     const lenses = await getUniqueLensesCached(
-      { hidden: 'exclude' }, finalAlbumId, albumSharedKey)();
+      { hidden: 'exclude' }, albumId, albumSharedKey)();
     return lenses;
   }
 
   async getUniqueFocalLengths(): Promise<FocalLengths> {
     const albumId = await getAlbumId();
     const albumSharedKey = await getSharedKey();
-
-    const finalAlbumId = albumId || this.albumId;
-    if (!finalAlbumId) {
-
-      throw new Error(
-        'No album ID available for fetching unique focal lengths');
-    }
-
     const focalLengths = await getUniqueFocalLengthsCached(
-      { hidden: 'exclude' }, finalAlbumId, albumSharedKey)();
+      { hidden: 'exclude' }, albumId, albumSharedKey)();
     return focalLengths;
   }
 
@@ -130,18 +78,10 @@ export class ImmichDataSource implements PhotoDataSource {
     photoId: string,
     options: GetPhotosOptions,
   ): Promise<{ photos: Photo[]; indexNumber?: number }> {
-
     const albumId = await getAlbumId();
     const albumSharedKey = await getSharedKey();
-
-    const finalAlbumId = albumId || this.albumId;
-    if (!finalAlbumId) {
-      console.error('No album ID available for fetching photos near ID');
-      throw new Error('No album ID available for fetching photos near ID');
-    }
-
     const result = await getPhotosNearIdCached(
-      photoId, options, finalAlbumId, albumSharedKey)();
+      photoId, options, albumId, albumSharedKey)();
     return result;
   }
 
@@ -151,57 +91,28 @@ export class ImmichDataSource implements PhotoDataSource {
   }> {
     const albumId = await getAlbumId();
     const albumSharedKey = await getSharedKey();
-
-    const finalAlbumId = albumId || this.albumId;
-    if (!finalAlbumId) {
-      console.error('No album ID available for fetching photos meta');
-      throw new Error('No album ID available for fetching photos meta');
-    }
-
     const meta = await getPhotosMetaCached(
-      options, finalAlbumId, albumSharedKey)();
-
+      options, albumId, albumSharedKey)();
     return meta;
   }
 
   async getPublicPhotoIds({ limit }:
     { limit?: number } = {}): Promise<string[]> {
-
     const albumId = await getAlbumId();
     const albumSharedKey = await getSharedKey();
-
-    const finalAlbumId = albumId || this.albumId;
-    if (!finalAlbumId) {
-      console.error('No album ID available for fetching public photo IDs');
-      throw new Error('No album ID available for fetching public photo IDs');
-    }
-
-    const photos = await getPhotosCached({}, finalAlbumId, albumSharedKey)();
-
+    const photos = await getPhotosCached({}, albumId, albumSharedKey)();
     let photoIds = photos.map((photo: Photo) => photo.id);
-
     if (limit && limit > 0) {
       photoIds = photoIds.slice(0, limit);
     }
-
     return photoIds;
   }
 
   async getPhotoIdsAndUpdatedAt():
     Promise<Array<{ id: string; updatedAt: Date }>> {
-
     const albumId = await getAlbumId();
-
     const albumSharedKey = await getSharedKey();
-
-    const finalAlbumId = albumId || this.albumId;
-    if (!finalAlbumId) {
-      throw new Error(
-        'No album ID available for fetching photo IDs and updated at');
-    }
-
-    const photos = await getPhotosCached({}, finalAlbumId, albumSharedKey)();
-
+    const photos = await getPhotosCached({}, albumId, albumSharedKey)();
     const result = photos.map((photo: Photo) => ({
       id: photo.id,
       updatedAt: photo.updatedAt,
@@ -218,14 +129,11 @@ export class ImmichDataSource implements PhotoDataSource {
     if (!asset) {
       return undefined;
     }
-
     const sharedKey = await getSharedKey();
     const photo = convertImmichAssetToPhoto(asset, 'preview', sharedKey);
-
     if (!includeHidden && photo.hidden) {
       return undefined;
     }
-
     return photo;
   }
 

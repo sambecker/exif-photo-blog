@@ -8,7 +8,8 @@ import { GetPhotosOptions, PHOTO_DEFAULT_LIMIT } from '@/photo/db';
 // import { getPhotosCacheKeys } from '@/photo/cache';
 import { parameterize } from '@/utility/string';
 import { convertImmichAssetToPhoto } from './mapper';
-import { getImmichClient } from './client';
+import { getImmichClient, ImmichAsset } from './client';
+import { IMMICH_ALBUM_ID, IMMICH_SHARE_KEY } from '@/app/config';
 
 export const KEY_IMMICH = 'immich';
 
@@ -253,23 +254,33 @@ export const getPhotosCached = (
   albumId: string,
   sharedKey: string) => unstable_cache(
   async (): Promise<Photo[]> => {
-    // const { convertImmichAssetToPhoto } = require('./mapper');
-    // const { parameterize } = require('@/utility/string');
-    if (!albumId || albumId.trim() === '') {
-      throw new Error('Album ID is required for fetching photos');
+    let assets: ImmichAsset[] = [];
+    let source = 'album';
+    if (albumId != '') {
+      const immichAlbumInfo = await getImmichClient().
+        getAlbumInfo(albumId, false);
+      if (!immichAlbumInfo) {
+        return [];
+      }
+      if (!immichAlbumInfo.assets) {
+        return [];
+      }
+      assets = immichAlbumInfo.assets;
+      source = 'shared-album';
+    } else {
+      const sharelinkInfo = await getImmichClient().
+        getSharedLinkInfo(sharedKey);
+      assets = sharelinkInfo?.assets || [];
+      source = 'shared-non-album';
+      if (assets.length == 0) {
+        assets = (await getImmichClient().
+          getAlbumInfo(IMMICH_ALBUM_ID || '', false))?.assets || [];
+        source = 'default-album';
+      }
+
     }
 
-    const immichAlbumInfo = await getImmichClient().
-      getAlbumInfo(albumId, false);
-    if (!immichAlbumInfo) {
-      return [];
-    }
-
-    if (!immichAlbumInfo.assets) {
-      return [];
-    }
-
-    let assets = immichAlbumInfo.assets.filter((asset: any) => {
+    assets = assets.filter((asset: ImmichAsset) => {
       if (!options) {
         return true;
       }
@@ -307,8 +318,12 @@ export const getPhotosCached = (
     if (options?.limit || options?.offset) {
       assets = applyLocalPagination(assets, options);
     }
-    const photos = assets.map((asset: any) =>
-      convertImmichAssetToPhoto(asset, 'preview', sharedKey));
+
+    const photos = assets.map((asset: ImmichAsset) =>
+      convertImmichAssetToPhoto(
+        asset, 'preview',
+        source !== 'default-album' ?
+          (sharedKey || '') : (IMMICH_SHARE_KEY || '')));
     return photos;
   },
   ['immich-photos',

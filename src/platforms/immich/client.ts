@@ -85,8 +85,8 @@ export interface ImmichAsset {
 }
 
 export interface ImmichSharedLinkInfo {
-  album: ImmichAlbumInfo;
-  assets: ImmichAsset[];
+  album?: ImmichAlbumInfo;
+  assets?: ImmichAsset[];
   createdAt?: string;
   expiresAt?: string | null;
   id?: string;
@@ -149,10 +149,11 @@ export class ImmichApiClient {
       return await this.request<ImmichSharedLinkInfo>(
         `/shared-links/me?key=${sharedKey}`);
     } catch (error) {
-      if (error instanceof Error && error.message.includes('404')) {
-        throw new Error(`Shared link with key ${sharedKey} not found`);
-      }
-      throw error;
+      console.error(`Error fetching shared link with key ${sharedKey}:`, error);
+      return {
+        album: undefined,
+        assets: [],
+      };
     }
   }
 

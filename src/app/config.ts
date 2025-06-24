@@ -453,4 +453,3 @@ export const IS_SITE_READY =
   APP_CONFIGURATION.hasAdminUser;
 
 export type AppConfiguration = typeof APP_CONFIGURATION;
-  
