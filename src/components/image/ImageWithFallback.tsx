@@ -29,21 +29,45 @@ export default function ImageWithFallback({
 
   const [hideFallback, setHideFallback] = useState(false);
 
-  const imgRef = useRef<HTMLImageElement>(null);
+  const refImage = useRef<HTMLImageElement>(null);
+  const refFallback = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setWasCached(
-      Boolean(imgRef.current?.complete) &&
-      (imgRef.current?.naturalWidth ?? 0) > 0,
+      Boolean(refImage.current?.complete) &&
+      (refImage.current?.naturalWidth ?? 0) > 0,
     );
   }, []);
 
   useEffect(() => {
     if (!isLoading && !didError) {
+      let innerTimeout: NodeJS.Timeout;
       const timeout = setTimeout(() => {
-        setHideFallback(true);
+        if (refFallback.current) {
+          const fallbackOpacity = (refFallback
+            .current
+            .computedStyleMap()
+            .get('opacity') as CSSUnitValue
+          )?.value;
+          // Address race condition where cached image is initially loaded
+          // and fallback is still being shown at full opacity
+          if (fallbackOpacity === 0) {
+            // Image has loaded and fallback is already hidden
+            setHideFallback(true);
+          } else {
+            // Image has loaded but fallback is still visible
+            // Delay hiding fallback to avoid abrupt transition
+            innerTimeout = setTimeout(() =>{
+              console.log('Delayed hide fallback');
+              setHideFallback(true);
+            }, 1000);
+          }
+        }
       }, 1000);
-      return () => clearTimeout(timeout);
+      return () => {
+        clearTimeout(timeout);
+        clearTimeout(innerTimeout);
+      };
     }
   }, [isLoading, didError]);
 
@@ -70,23 +94,26 @@ export default function ImageWithFallback({
     >
       <Image {...{
         ...props,
-        ref: imgRef,
+        ref: refImage,
         priority,
         className: classNameImage,
         onLoad,
         onError,
       }} />
-      <div className={clsx(
-        '@container',
-        'absolute inset-0 pointer-events-none',
-        'overflow-hidden',
-        (showFallback || shouldDebugImageFallbacks) &&
-          'transition-opacity duration-300 ease-in',
-        !(BLUR_ENABLED && blurDataURL) && 'bg-main',
-        (isLoading || shouldDebugImageFallbacks)
-          ? 'opacity-100'
-          : 'opacity-0',
-      )}>
+      <div
+        ref={refFallback}
+        className={clsx(
+          '@container',
+          'absolute inset-0 pointer-events-none',
+          'overflow-hidden',
+          (showFallback || shouldDebugImageFallbacks) &&
+            'transition-opacity duration-300 ease-in',
+          !(BLUR_ENABLED && blurDataURL) && 'bg-main',
+          (isLoading || shouldDebugImageFallbacks)
+            ? 'opacity-100'
+            : 'opacity-0',
+        )}
+      >
         {(BLUR_ENABLED && blurDataURL)
           ? <img {...{
             ...props,
