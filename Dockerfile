@@ -38,7 +38,12 @@ RUN rm -rf __tests__ readme .git* docker-compose* Dockerfile* && \
 ENV NODE_ENV=production
 # PUBLIC_DOMAIN is used in the stage of building the application
 ENV NEXT_PUBLIC_DOMAIN=https://photos.alicepatience.com
-ENV NEXT_PUBLIC_DOMAIN_SHARE=https://photos.alicepatience.com
+ENV NEXT_PUBLIC_GRID_ASPECT_RATIO=1.5
+ENV NEXT_PUBLIC_ALLOW_PUBLIC_DOWNLOADS=1
+# not sure
+ENV NEXT_PUBLIC_HIDE_REPO_LINK=1
+ENV NEXT_PUBLIC_SITE_FEEDS=1
+# dynamic environment variables
 ENV VERCEL_ENV=production
 ENV NEXT_PUBLIC_VERCEL_ENV=production
 ENV VERCEL_PRODUCTION_URL=localhost:3000

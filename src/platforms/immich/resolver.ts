@@ -4,7 +4,7 @@ import {
   IMMICH_SHARE_ALBUM_ID_HEADER,
   IMMICH_SHARE_KEY_HEADER,
 } from '@/app/paths';
-import { IMMICH_SHARE_KEY } from '@/app/config';
+import { IMMICH_DEFAULT_SHARE_KEY } from '@/app/config';
 
 export const getAlbumId = cache(async (): Promise<string> => {
   const albumId = (await headers()).get(IMMICH_SHARE_ALBUM_ID_HEADER);
@@ -13,5 +13,5 @@ export const getAlbumId = cache(async (): Promise<string> => {
 
 export const getSharedKey = cache(async (): Promise<string> => {
   const shareKey = (await headers()).get(IMMICH_SHARE_KEY_HEADER);
-  return shareKey || IMMICH_SHARE_KEY || '';
+  return shareKey || IMMICH_DEFAULT_SHARE_KEY || '';
 });

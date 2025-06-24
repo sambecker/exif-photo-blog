@@ -2,7 +2,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
   IMMICH_SHARE_ALBUM_ID_COOKIE, IMMICH_SHARE_ALBUM_ID_HEADER,
-  IMMICH_SHARE_KEY_COOKIE, IMMICH_SHARE_KEY_HEADER
+  IMMICH_SHARE_KEY_COOKIE, IMMICH_SHARE_KEY_HEADER,
+  PATH_ADMIN,
 } from '@/app/paths';
 import { validateShareKey } from '@/platforms/immich/auth/validation';
 
@@ -14,8 +15,11 @@ export async function middleware(request: NextRequest) {
   const protocol = request.headers.get('x-forwarded-proto') ||
     (host?.includes('localhost') ? 'http' : 'https');
   const baseUrl = `${protocol}://${host}`;
-  if (process.env.USE_IMMICH_BACKEND === 'true' && pathname.startsWith('/admin')) {
-    return NextResponse.redirect(new URL('/unauthorized', baseUrl));
+  if (process.env.USE_IMMICH_BACKEND === 'true' && pathname.startsWith(PATH_ADMIN)) {
+    let response = NextResponse.redirect(new URL('/', baseUrl));
+    response.cookies.delete(IMMICH_SHARE_KEY_COOKIE);
+    response.cookies.delete(IMMICH_SHARE_ALBUM_ID_COOKIE);
+    return response;
   }
 
   const shareKeyMatch = pathname.match(/^\/share\/([^\/]+)$/);

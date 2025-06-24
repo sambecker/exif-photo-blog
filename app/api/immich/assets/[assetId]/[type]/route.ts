@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
   IMMICH_BASE_URL,
-  IMMICH_SHARE_KEY,
+  IMMICH_DEFAULT_SHARE_KEY,
 } from '@/app/config';
 
 export async function GET(
@@ -33,7 +33,7 @@ export async function GET(
     immichUrl.searchParams.append('size', size);
   }
 
-  const sharedKey = searchParams.get('key') || IMMICH_SHARE_KEY || '';
+  const sharedKey = searchParams.get('key') || IMMICH_DEFAULT_SHARE_KEY || '';
   immichUrl.searchParams.append('key', sharedKey);
 
   try {

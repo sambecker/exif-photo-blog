@@ -9,7 +9,10 @@ import { GetPhotosOptions, PHOTO_DEFAULT_LIMIT } from '@/photo/db';
 import { parameterize } from '@/utility/string';
 import { convertImmichAssetToPhoto } from './mapper';
 import { getImmichClient, ImmichAsset } from './client';
-import { IMMICH_ALBUM_ID, IMMICH_SHARE_KEY } from '@/app/config';
+import {
+  IMMICH_DEFAULT_ALBUM_ID,
+  IMMICH_DEFAULT_SHARE_KEY,
+} from '@/app/config';
 
 export const KEY_IMMICH = 'immich';
 
@@ -274,10 +277,9 @@ export const getPhotosCached = (
       source = 'shared-non-album';
       if (assets.length == 0) {
         assets = (await getImmichClient().
-          getAlbumInfo(IMMICH_ALBUM_ID || '', false))?.assets || [];
+          getAlbumInfo(IMMICH_DEFAULT_ALBUM_ID || '', false))?.assets || [];
         source = 'default-album';
       }
-
     }
 
     assets = assets.filter((asset: ImmichAsset) => {
@@ -323,7 +325,7 @@ export const getPhotosCached = (
       convertImmichAssetToPhoto(
         asset, 'preview',
         source !== 'default-album' ?
-          (sharedKey || '') : (IMMICH_SHARE_KEY || '')));
+          (sharedKey || '') : (IMMICH_DEFAULT_SHARE_KEY || '')));
     return photos;
   },
   ['immich-photos',
