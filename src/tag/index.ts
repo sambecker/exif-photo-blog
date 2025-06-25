@@ -168,9 +168,16 @@ export const convertTagsForForm = (
         formatCountDescriptive(count, appText.category.taggedPhotos),
     }));
 
-export const limitTagsByCount = (tags: Tags, minimumCount: number) =>
+export const limitTagsByCount = (
+  tags: Tags,
+  minimumCount: number,
+  queryToInclude?: string,
+) =>
   tags.filter(({ tag, count }) => (
     count >= minimumCount ||
     isTagFavs(tag) ||
-    isTagHidden(tag)
+    isTagHidden(tag) ||
+    (queryToInclude && tag
+      .toLocaleLowerCase()
+      .includes(queryToInclude.toLocaleLowerCase()))
   ));
