@@ -79,13 +79,6 @@ export default function AdminAppConfigurationClient({
   hasImageQuality,
   imageQuality,
   isBlurEnabled,
-  // Visual
-  hasDefaultTheme,
-  defaultTheme,
-  arePhotosMatted,
-  arePhotoMatteColorsConfigured,
-  matteColor,
-  matteColorDark,
   // Display
   categoryVisibility,
   hasCategoryVisibility,
@@ -103,6 +96,13 @@ export default function AdminAppConfigurationClient({
   hasGridAspectRatio,
   hasHighGridDensity,
   hasGridDensityPreference,
+  // Design
+  hasDefaultTheme,
+  defaultTheme,
+  arePhotosMatted,
+  arePhotoMatteColorsConfigured,
+  matteColor,
+  matteColorDark,
   // Settings
   isGeoPrivacyEnabled,
   arePublicDownloadsEnabled,
@@ -529,60 +529,6 @@ export default function AdminAppConfigurationClient({
           </ChecklistRow>
         </ChecklistGroup>
         <ChecklistGroup
-          title="Visual"
-          icon={<PiPaintBrushHousehold size={19} />}
-          optional
-        >
-          <ChecklistRow
-            title={`Default theme: ${defaultTheme}`}
-            status={hasDefaultTheme}
-            optional
-          >
-            {'Set environment variable to \'light\' or \'dark\''}
-            {' '}
-            to configure initial theme
-            {' '}
-            (defaults to {'\'system\''}):
-            {renderEnvVars(['NEXT_PUBLIC_DEFAULT_THEME'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title="Photo matting"
-            status={arePhotosMatted}
-            optional
-          >
-            Set environment variable to {'"1"'} to constrain the size
-            {' '}
-            of each photo, and display a surrounding border:
-            <div className="pt-1 flex flex-col gap-1">
-              <EnvVar variable="NEXT_PUBLIC_MATTE_PHOTOS" />
-            </div>
-          </ChecklistRow>
-          <ChecklistRow
-            title="Custom photo matting colors"
-            status={arePhotoMatteColorsConfigured}
-            optional
-          >
-            Set environment variable hex values (e.g., #cccccc)
-            to override matte colors:
-            <div className="pt-1 flex flex-col gap-1">
-              <EnvVar
-                variable="NEXT_PUBLIC_MATTE_COLOR"
-                accessory={matteColor && <span
-                  className="size-[15px] border-medium rounded-sm ml-1"
-                  style={{ backgroundColor: matteColor }}
-                />}
-              />
-              <EnvVar
-                variable="NEXT_PUBLIC_MATTE_COLOR_DARK"
-                accessory={matteColorDark && <span
-                  className="size-[15px] border-medium rounded-sm ml-1"
-                  style={{ backgroundColor: matteColorDark }}
-                />}
-              />
-            </div>
-          </ChecklistRow>
-        </ChecklistGroup>
-        <ChecklistGroup
           title="Display"
           icon={<BiHide size={18} />}
           optional
@@ -737,6 +683,60 @@ export default function AdminAppConfigurationClient({
             on photo grid views (if not configured, density is based on
             aspect ratio):
             {renderEnvVars(['NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS'])}
+          </ChecklistRow>
+        </ChecklistGroup>
+        <ChecklistGroup
+          title="Design"
+          icon={<PiPaintBrushHousehold size={19} />}
+          optional
+        >
+          <ChecklistRow
+            title={`Default theme: ${defaultTheme}`}
+            status={hasDefaultTheme}
+            optional
+          >
+            {'Set environment variable to \'light\' or \'dark\''}
+            {' '}
+            to configure initial theme
+            {' '}
+            (defaults to {'\'system\''}):
+            {renderEnvVars(['NEXT_PUBLIC_DEFAULT_THEME'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Photo matting"
+            status={arePhotosMatted}
+            optional
+          >
+            Set environment variable to {'"1"'} to constrain the size
+            {' '}
+            of each photo, and display a surrounding border:
+            <div className="pt-1 flex flex-col gap-1">
+              <EnvVar variable="NEXT_PUBLIC_MATTE_PHOTOS" />
+            </div>
+          </ChecklistRow>
+          <ChecklistRow
+            title="Custom photo matting colors"
+            status={arePhotoMatteColorsConfigured}
+            optional
+          >
+            Set environment variable hex values (e.g., #cccccc)
+            to override matte colors:
+            <div className="pt-1 flex flex-col gap-1">
+              <EnvVar
+                variable="NEXT_PUBLIC_MATTE_COLOR"
+                accessory={matteColor && <span
+                  className="size-[15px] border-medium rounded-sm ml-1"
+                  style={{ backgroundColor: matteColor }}
+                />}
+              />
+              <EnvVar
+                variable="NEXT_PUBLIC_MATTE_COLOR_DARK"
+                accessory={matteColorDark && <span
+                  className="size-[15px] border-medium rounded-sm ml-1"
+                  style={{ backgroundColor: matteColorDark }}
+                />}
+              />
+            </div>
           </ChecklistRow>
         </ChecklistGroup>
         <ChecklistGroup

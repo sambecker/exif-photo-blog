@@ -240,21 +240,6 @@ export const IMAGE_QUALITY =
 export const BLUR_ENABLED =
   process.env.NEXT_PUBLIC_BLUR_DISABLED !== '1';
 
-// VISUAL
-
-export const DEFAULT_THEME =
-  process.env.NEXT_PUBLIC_DEFAULT_THEME === 'dark'
-    ? 'dark'
-    : process.env.NEXT_PUBLIC_DEFAULT_THEME === 'light'
-      ? 'light'
-      : 'system';
-export const MATTE_PHOTOS =
-  process.env.NEXT_PUBLIC_MATTE_PHOTOS === '1';
-export const MATTE_COLOR =
-  process.env.NEXT_PUBLIC_MATTE_COLOR;
-export const MATTE_COLOR_DARK =
-  process.env.NEXT_PUBLIC_MATTE_COLOR_DARK;
-
 // DISPLAY
 
 export const CATEGORY_VISIBILITY = getOrderedCategoriesFromString(
@@ -301,6 +286,21 @@ export const PREFERS_LOW_DENSITY_GRID =
 export const HIGH_DENSITY_GRID =
   GRID_ASPECT_RATIO <= 1 &&
   !PREFERS_LOW_DENSITY_GRID;
+
+// DESIGN
+
+export const DEFAULT_THEME =
+process.env.NEXT_PUBLIC_DEFAULT_THEME === 'dark'
+  ? 'dark'
+  : process.env.NEXT_PUBLIC_DEFAULT_THEME === 'light'
+    ? 'light'
+    : 'system';
+export const MATTE_PHOTOS =
+process.env.NEXT_PUBLIC_MATTE_PHOTOS === '1';
+export const MATTE_COLOR =
+process.env.NEXT_PUBLIC_MATTE_COLOR;
+export const MATTE_COLOR_DARK =
+process.env.NEXT_PUBLIC_MATTE_COLOR_DARK;
 
 // SETTINGS
 
@@ -388,15 +388,6 @@ export const APP_CONFIGURATION = {
   hasImageQuality: Boolean(process.env.NEXT_PUBLIC_IMAGE_QUALITY),
   imageQuality: IMAGE_QUALITY,
   isBlurEnabled: BLUR_ENABLED,
-  // Visual
-  hasDefaultTheme: Boolean(process.env.NEXT_PUBLIC_DEFAULT_THEME),
-  defaultTheme: DEFAULT_THEME,
-  arePhotosMatted: MATTE_PHOTOS,
-  arePhotoMatteColorsConfigured:
-    Boolean(MATTE_COLOR) ||
-    Boolean(MATTE_COLOR_DARK),
-  matteColor: MATTE_COLOR,
-  matteColorDark: MATTE_COLOR_DARK,
   // Display
   hasCategoryVisibility:
     Boolean(process.env.NEXT_PUBLIC_CATEGORY_VISIBILITY),
@@ -416,6 +407,15 @@ export const APP_CONFIGURATION = {
   hasHighGridDensity: HIGH_DENSITY_GRID,
   hasGridDensityPreference:
     Boolean(process.env.NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS),
+  // Design
+  hasDefaultTheme: Boolean(process.env.NEXT_PUBLIC_DEFAULT_THEME),
+  defaultTheme: DEFAULT_THEME,
+  arePhotosMatted: MATTE_PHOTOS,
+  arePhotoMatteColorsConfigured:
+    Boolean(MATTE_COLOR) ||
+    Boolean(MATTE_COLOR_DARK),
+  matteColor: MATTE_COLOR,
+  matteColorDark: MATTE_COLOR_DARK,
   // Settings
   isGeoPrivacyEnabled: GEO_PRIVACY_ENABLED,
   arePublicDownloadsEnabled: ALLOW_PUBLIC_DOWNLOADS,
