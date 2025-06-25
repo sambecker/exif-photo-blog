@@ -33,7 +33,7 @@ import { AI_AUTO_GENERATED_FIELDS_ALL } from '@/photo/ai';
 import clsx from 'clsx/lite';
 import Link from 'next/link';
 import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/paths';
-import { FaListUl } from 'react-icons/fa6';
+import { FaRegFolderClosed } from 'react-icons/fa6';
 
 export default function AdminAppConfigurationClient({
   // Storage
@@ -533,7 +533,7 @@ export default function AdminAppConfigurationClient({
         </ChecklistGroup>
         <ChecklistGroup
           title="Categories"
-          icon={<FaListUl size={14} />}
+          icon={<FaRegFolderClosed size={15} />}
           optional
         >
           <ChecklistRow
@@ -572,7 +572,7 @@ export default function AdminAppConfigurationClient({
             {renderEnvVars(['NEXT_PUBLIC_CATEGORY_VISIBILITY'])}
           </ChecklistRow>
           <ChecklistRow
-            title="Collapsable sidebar"
+            title="Collapsible sidebar"
             status={collapseSidebarCategories}
             optional
           >

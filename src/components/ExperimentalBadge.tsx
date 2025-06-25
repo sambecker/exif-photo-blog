@@ -12,7 +12,7 @@ export default function ExperimentalBadge({
       className={clsx(
         'text-pink-500 dark:text-white',
         'bg-pink-100 dark:bg-pink-600',
-        'pt-0.5',
+        'uppercase',
         className,
       )}>
       Experimental

@@ -34,16 +34,16 @@ export default function ChecklistGroup({
       )}
     >
       <span className="w-8 sm:w-9 shrink-0">{icon}</span>
-      <span className="inline-flex flex-wrap items-center gap-y-1 gap-x-1.5">
+      <span className="inline-flex flex-wrap items-center gap-y-1 gap-x-2.5">
         <ResponsiveText shortText={titleShort}>
           {title}
         </ResponsiveText>
         {optional &&
-          <Badge type="small" className="translate-y-[0.5px]">
+          <Badge type="small">
             Optional
           </Badge>}
         {experimental &&
-          <ExperimentalBadge className="translate-y-[0.5px]" />}
+          <ExperimentalBadge />}
       </span>
     </a>}>
       {children}
