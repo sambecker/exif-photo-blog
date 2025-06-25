@@ -13,8 +13,6 @@ const FALLBACK_FADE_CUTOFF = 200;
 export default function ImageWithFallback({
   className,
   classNameImage = 'object-cover h-full',
-  debug,
-  priority,
   blurDataURL,
   blurCompatibilityLevel = 'low',
   ...props
@@ -23,31 +21,14 @@ export default function ImageWithFallback({
   classNameImage?: string
   debug?: boolean
 }) {
-  const {
-    shouldDebugImageFallbacks,
-    areAdminDebugToolsEnabled,
-  } = useAppState();
+  const { shouldDebugImageFallbacks } = useAppState();
 
   const [isLoading, setIsLoading] = useState(true);
   const [didError, setDidError] = useState(false);
+  const [fadeFallbackTransition, setFadeFallbackTransition] = useState(false);
 
   const onLoad = useCallback(() => setIsLoading(false), []);
   const onError = useCallback(() => setDidError(true), []);
-
-  const [fadeFallbackTransition, setFadeFallbackTransition] = useState(false);
-  const [hideFallback, setHideFallback] = useState(false);
-
-  const refImage = useRef<HTMLImageElement>(null);
-  const refFallback = useRef<HTMLDivElement>(null);  
-
-  const wasCachedRef = useRef(true);
-  useEffect(() => {
-    wasCachedRef.current =
-      Boolean(refImage.current?.complete) &&
-      (refImage.current?.naturalWidth ?? 0) > 0;
-  }, []);
-
-  const shouldDebugFallbackTiming = areAdminDebugToolsEnabled && debug;
 
   const isLoadingRef = useRef(isLoading);
   useEffect(() => {
@@ -63,89 +44,6 @@ export default function ImageWithFallback({
     }, FALLBACK_FADE_CUTOFF);
     return () => clearTimeout(timeout);
   }, []);
-
-  const timeStartRef = useRef(performance.now());
-  useEffect(() => {
-    if (!isLoading && shouldDebugFallbackTiming) {
-      console.log(
-        'Time to finish loading',
-        Math.round(performance.now() - timeStartRef.current),
-      );
-    }
-  }, [isLoading, shouldDebugFallbackTiming]);
-
-  const showFallback =
-    !wasCachedRef.current &&
-    !hideFallback;
-
-  if (shouldDebugFallbackTiming) {
-    console.log({
-      isLoading,
-      wasCached: wasCachedRef.current,
-      hideFallback,
-      showFallback,
-      forceFallbackFade: fadeFallbackTransition,
-    });
-    console.log(refFallback.current?.classList.toString());
-  }
-
-  const debugFallbackStyles = useCallback(() => {
-    const stylesMap = refFallback.current?.computedStyleMap();
-    const styles = stylesMap
-      ? Array.from(stylesMap.entries()).reduce((acc, [key, value]) => {
-        acc[key] = value.toString();
-        return acc;
-      }, {} as Record<string, string>) : {};
-    const opacity = (stylesMap?.get('opacity') as CSSUnitValue)?.value;
-    return {
-      styles,
-      opacity,
-      classList: refFallback.current?.classList,
-    };
-  }, []);
-
-  const outerTimeout = useRef<NodeJS.Timeout>(undefined);
-  const innerTimeout = useRef<NodeJS.Timeout>(undefined);
-  useEffect(() => {
-    if (!isLoading && !didError) {
-      outerTimeout.current = setTimeout(() => {
-        if (refFallback.current) {
-          const fallbackOpacity = (refFallback
-            .current
-            .computedStyleMap()
-            .get('opacity') as CSSUnitValue
-          )?.value;
-          // Address race condition where cached image is initially loaded
-          // and fallback is still being shown at full opacity
-          if (fallbackOpacity === 0) {
-            // Image has loaded and fallback is already hidden
-            setHideFallback(true);
-            if (shouldDebugFallbackTiming) {
-              console.log('Hide fallback: 01', debugFallbackStyles());
-            }
-          } else {
-            // Image has loaded but fallback is still visible
-            // Delay hiding fallback to avoid abrupt transition
-            innerTimeout.current = setTimeout(() =>{
-              setHideFallback(true);
-              if (shouldDebugFallbackTiming) {
-                console.log('Hide fallback: 02', debugFallbackStyles());
-              }
-            }, 1500);
-          }
-        }
-      }, 1500);
-      return () => {
-        clearTimeout(outerTimeout.current);
-        clearTimeout(innerTimeout.current);
-      };
-    }
-  }, [
-    isLoading,
-    didError,
-    shouldDebugFallbackTiming,
-    debugFallbackStyles,
-  ]);
 
   const getBlurClass = () => {
     switch (blurCompatibilityLevel) {
@@ -166,22 +64,19 @@ export default function ImageWithFallback({
     >
       <Image {...{
         ...props,
-        ref: refImage,
-        priority,
         className: classNameImage,
         onLoad,
         onError,
       }} />
       <div
-        ref={refFallback}
         className={clsx(
           '@container',
           'absolute inset-0 pointer-events-none',
           'overflow-hidden',
-          (showFallback || fadeFallbackTransition) &&
+          fadeFallbackTransition &&
             'transition-opacity duration-300 ease-in',
           !(BLUR_ENABLED && blurDataURL) && 'bg-main',
-          (isLoading || shouldDebugImageFallbacks)
+          (isLoading || didError || shouldDebugImageFallbacks)
             ? 'opacity-100'
             : 'opacity-0',
         )}
