@@ -167,3 +167,10 @@ export const convertTagsForForm = (
       annotationAria:
         formatCountDescriptive(count, appText.category.taggedPhotos),
     }));
+
+export const limitTagsByCount = (tags: Tags, minimumCount: number) =>
+  tags.filter(({ tag, count }) => (
+    count >= minimumCount ||
+    isTagFavs(tag) ||
+    isTagHidden(tag)
+  ));

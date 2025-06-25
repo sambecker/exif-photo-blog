@@ -240,7 +240,7 @@ export const IMAGE_QUALITY =
 export const BLUR_ENABLED =
   process.env.NEXT_PUBLIC_BLUR_DISABLED !== '1';
 
-// DISPLAY
+// CATEGORIES
 
 export const CATEGORY_VISIBILITY = getOrderedCategoriesFromString(
   process.env.NEXT_PUBLIC_CATEGORY_VISIBILITY);
@@ -258,6 +258,11 @@ export const SHOW_FOCAL_LENGTHS =
   CATEGORY_VISIBILITY.includes('focal-lengths');
 export const COLLAPSE_SIDEBAR_CATEGORIES =
   process.env.NEXT_PUBLIC_EXHAUSTIVE_SIDEBAR_CATEGORIES !== '1';
+export const HIDE_TAGS_WITH_ONE_PHOTO =
+  process.env.NEXT_PUBLIC_HIDE_TAGS_WITH_ONE_PHOTO === '1';
+
+// DISPLAY
+
 export const SHOW_KEYBOARD_SHORTCUT_TOOLTIPS =
   process.env.NEXT_PUBLIC_HIDE_KEYBOARD_SHORTCUT_TOOLTIPS !== '1';
 export const SHOW_EXIF_DATA =
@@ -388,11 +393,13 @@ export const APP_CONFIGURATION = {
   hasImageQuality: Boolean(process.env.NEXT_PUBLIC_IMAGE_QUALITY),
   imageQuality: IMAGE_QUALITY,
   isBlurEnabled: BLUR_ENABLED,
-  // Display
+  // Categories
   hasCategoryVisibility:
     Boolean(process.env.NEXT_PUBLIC_CATEGORY_VISIBILITY),
   categoryVisibility: CATEGORY_VISIBILITY,
   collapseSidebarCategories: COLLAPSE_SIDEBAR_CATEGORIES,
+  hideTagsWithOnePhoto: HIDE_TAGS_WITH_ONE_PHOTO,
+  // Display
   showKeyboardShortcutTooltips: SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
   showExifInfo: SHOW_EXIF_DATA,
   showCategoryImageHover: SHOW_CATEGORY_IMAGE_HOVERS,

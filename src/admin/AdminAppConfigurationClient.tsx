@@ -80,10 +80,12 @@ export default function AdminAppConfigurationClient({
   hasImageQuality,
   imageQuality,
   isBlurEnabled,
-  // Display
+  // Categories
   categoryVisibility,
   hasCategoryVisibility,
   collapseSidebarCategories,
+  hideTagsWithOnePhoto,
+  // Display
   showKeyboardShortcutTooltips,
   showExifInfo,
   showCategoryImageHover,
@@ -401,7 +403,7 @@ export default function AdminAppConfigurationClient({
         <ChecklistGroup
           title="AI text generation"
           titleShort="AI"
-          icon={<HiSparkles />}
+          icon={<HiSparkles size={14} />}
           optional
         >
           <ChecklistRow
@@ -470,7 +472,7 @@ export default function AdminAppConfigurationClient({
         </ChecklistGroup>
         <ChecklistGroup
           title="Performance"
-          icon={<RiSpeedMiniLine size={18} />}
+          icon={<RiSpeedMiniLine size={19} />}
           optional
         >
           <ChecklistRow
@@ -577,6 +579,15 @@ export default function AdminAppConfigurationClient({
             Set environment variable to {'"1"'} to always show
             expanded category content
             {renderEnvVars(['NEXT_PUBLIC_EXHAUSTIVE_SIDEBAR_CATEGORIES'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Hide tags with only 1 photo"
+            status={hideTagsWithOnePhoto}
+            optional
+          >
+            Set environment variable to {'"1"'} to only show tags
+            with 2 or more photos
+            {renderEnvVars(['NEXT_PUBLIC_HIDE_TAGS_WITH_ONE_PHOTO'])}
           </ChecklistRow>
         </ChecklistGroup>
         <ChecklistGroup
