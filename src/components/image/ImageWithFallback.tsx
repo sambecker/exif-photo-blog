@@ -25,7 +25,6 @@ export default function ImageWithFallback({
     areAdminDebugToolsEnabled,
   } = useAppState();
 
-  const [wasCached, setWasCached] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [didError, setDidError] = useState(false);
 
@@ -35,27 +34,54 @@ export default function ImageWithFallback({
   const [hideFallback, setHideFallback] = useState(false);
 
   const refImage = useRef<HTMLImageElement>(null);
-  const refFallback = useRef<HTMLDivElement>(null);
+  const refFallback = useRef<HTMLDivElement>(null);  
 
+  const wasCachedRef = useRef(true);
   useEffect(() => {
-    setWasCached(
+    wasCachedRef.current =
       Boolean(refImage.current?.complete) &&
-      (refImage.current?.naturalWidth ?? 0) > 0,
-    );
+      (refImage.current?.naturalWidth ?? 0) > 0;
   }, []);
 
   const shouldDebugFallbackTiming = areAdminDebugToolsEnabled && debug;
 
+  const isLoadingRef = useRef(isLoading);
+  useEffect(() => {
+    isLoadingRef.current = isLoading;
+  }, [isLoading]);
+
+  const forceTransition = useRef(false);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      // If image is still loading, force CSS animation
+      if (isLoadingRef.current) {
+        forceTransition.current = true;
+      }
+    }, 200);
+    return () => clearTimeout(timeout);
+  }, [shouldDebugFallbackTiming]);
+
+  const timeStartRef = useRef(performance.now());
+  useEffect(() => {
+    if (!isLoading && shouldDebugFallbackTiming) {
+      console.log(
+        'Time to finish loading',
+        Math.round(performance.now() - timeStartRef.current),
+      );
+    }
+  }, [isLoading, shouldDebugFallbackTiming]);
+
   const showFallback =
-    !wasCached &&
+    !wasCachedRef.current &&
     !hideFallback;
 
   if (shouldDebugFallbackTiming) {
     console.log({
       isLoading,
-      wasCached,
+      wasCached: wasCachedRef.current,
       hideFallback,
       showFallback,
+      forceTransition: forceTransition.current,
     });
   }
 
