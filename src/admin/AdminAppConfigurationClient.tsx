@@ -33,6 +33,7 @@ import { AI_AUTO_GENERATED_FIELDS_ALL } from '@/photo/ai';
 import clsx from 'clsx/lite';
 import Link from 'next/link';
 import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/paths';
+import { FaListUl } from 'react-icons/fa6';
 
 export default function AdminAppConfigurationClient({
   // Storage
@@ -529,12 +530,12 @@ export default function AdminAppConfigurationClient({
           </ChecklistRow>
         </ChecklistGroup>
         <ChecklistGroup
-          title="Display"
-          icon={<BiHide size={18} />}
+          title="Categories"
+          icon={<FaListUl size={14} />}
           optional
         >
           <ChecklistRow
-            title="Category visibility"
+            title="Visibility and ordering"
             status={hasCategoryVisibility}
             optional
           >
@@ -569,7 +570,7 @@ export default function AdminAppConfigurationClient({
             {renderEnvVars(['NEXT_PUBLIC_CATEGORY_VISIBILITY'])}
           </ChecklistRow>
           <ChecklistRow
-            title="Collapse sidebar categories"
+            title="Collapsable sidebar"
             status={collapseSidebarCategories}
             optional
           >
@@ -577,6 +578,12 @@ export default function AdminAppConfigurationClient({
             expanded category content
             {renderEnvVars(['NEXT_PUBLIC_EXHAUSTIVE_SIDEBAR_CATEGORIES'])}
           </ChecklistRow>
+        </ChecklistGroup>
+        <ChecklistGroup
+          title="Display"
+          icon={<BiHide size={18} />}
+          optional
+        >
           <ChecklistRow
             title="Show keyboard shortcut tooltips"
             status={showKeyboardShortcutTooltips}
