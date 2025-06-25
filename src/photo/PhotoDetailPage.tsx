@@ -142,7 +142,6 @@ export default function PhotoDetailPage({
             shouldShareFocalLength={focal !== undefined}
             includeFavoriteInAdminMenu={includeFavoriteInAdminMenu}
             showAdminKeyCommands
-            debugImageFallback
           />,
         ]}
       />

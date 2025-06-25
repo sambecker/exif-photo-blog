@@ -9,14 +9,12 @@ export default function PhotosLarge({
   prefetchFirstPhotoLinks,
   onLastPhotoVisible,
   revalidatePhoto,
-  debugImageFallback = true,
 }: {
   photos: Photo[]
   animate?: boolean
   prefetchFirstPhotoLinks?: boolean
   onLastPhotoVisible?: () => void
   revalidatePhoto?: RevalidatePhoto
-  debugImageFallback?: boolean
 }) {
   return (
     <AnimateItems
@@ -37,7 +35,6 @@ export default function PhotosLarge({
           onVisible={index === photos.length - 1
             ? onLastPhotoVisible
             : undefined}
-          debugImageFallback={debugImageFallback && index === 0}
         />)}
       itemKeys={photos.map(photo => photo.id)}
     />

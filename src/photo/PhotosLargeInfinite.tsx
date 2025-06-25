@@ -23,7 +23,6 @@ export default function PhotosLargeInfinite({
           photos={photos}
           onLastPhotoVisible={onLastPhotoVisible}
           revalidatePhoto={revalidatePhoto}
-          debugImageFallback={false}
         />}
     </InfinitePhotoScroll>
   );

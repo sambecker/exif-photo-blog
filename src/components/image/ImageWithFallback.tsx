@@ -7,9 +7,6 @@ import { clsx}  from 'clsx/lite';
 import Image, { ImageProps } from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-// If image is still loading after 200ms, force CSS animation
-const FALLBACK_FADE_CUTOFF = 200;
-
 export default function ImageWithFallback({
   className,
   classNameImage = 'object-cover h-full',
@@ -19,7 +16,6 @@ export default function ImageWithFallback({
 }: ImageProps & {
   blurCompatibilityLevel?: 'none' | 'low' | 'high'
   classNameImage?: string
-  debug?: boolean
 }) {
   const { shouldDebugImageFallbacks } = useAppState();
 
@@ -31,17 +27,14 @@ export default function ImageWithFallback({
   const onError = useCallback(() => setDidError(true), []);
 
   const isLoadingRef = useRef(isLoading);
-  useEffect(() => {
-    isLoadingRef.current = isLoading;
-  }, [isLoading]);
-
+  useEffect(() => { isLoadingRef.current = isLoading; }, [isLoading]);
   useEffect(() => {
     const timeout = setTimeout(() => {
-      // If image is still loading, force CSS animation
+      // If image is still loading after 200ms, force CSS animation
       if (isLoadingRef.current) {
         setFadeFallbackTransition(true);
       }
-    }, FALLBACK_FADE_CUTOFF);
+    }, 200);
     return () => clearTimeout(timeout);
   }, []);
 
