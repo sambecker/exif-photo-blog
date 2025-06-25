@@ -84,7 +84,8 @@ export default function ImageWithFallback({
       wasCached: wasCachedRef.current,
       hideFallback,
       showFallback,
-      forceTransition: forceFallbackFade,
+      forceFallbackFade,
+      classes: refFallback.current?.classList,
     });
   }
 
@@ -130,10 +131,10 @@ export default function ImageWithFallback({
               if (shouldDebugFallbackTiming) {
                 console.log('Hide fallback: 02', debugFallbackStyles());
               }
-            }, 1000);
+            }, 1500);
           }
         }
-      }, 1000);
+      }, 1500);
       return () => {
         clearTimeout(outerTimeout.current);
         clearTimeout(innerTimeout.current);
