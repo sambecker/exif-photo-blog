@@ -34,7 +34,7 @@ export default function ImageWithFallback({
   const onLoad = useCallback(() => setIsLoading(false), []);
   const onError = useCallback(() => setDidError(true), []);
 
-  const [forceFallbackFade, setForceFallbackFade] = useState(false);
+  const [fadeFallbackTransition, setFadeFallbackTransition] = useState(false);
   const [hideFallback, setHideFallback] = useState(false);
 
   const refImage = useRef<HTMLImageElement>(null);
@@ -58,7 +58,7 @@ export default function ImageWithFallback({
     const timeout = setTimeout(() => {
       // If image is still loading, force CSS animation
       if (isLoadingRef.current) {
-        setForceFallbackFade(true);
+        setFadeFallbackTransition(true);
       }
     }, FALLBACK_FADE_CUTOFF);
     return () => clearTimeout(timeout);
@@ -84,9 +84,9 @@ export default function ImageWithFallback({
       wasCached: wasCachedRef.current,
       hideFallback,
       showFallback,
-      forceFallbackFade,
-      classes: refFallback.current?.classList,
+      forceFallbackFade: fadeFallbackTransition,
     });
+    console.log(refFallback.current?.classList.toString());
   }
 
   const debugFallbackStyles = useCallback(() => {
@@ -178,7 +178,7 @@ export default function ImageWithFallback({
           '@container',
           'absolute inset-0 pointer-events-none',
           'overflow-hidden',
-          ((showFallback && !forceFallbackFade) || shouldDebugImageFallbacks) &&
+          (showFallback || fadeFallbackTransition) &&
             'transition-opacity duration-300 ease-in',
           !(BLUR_ENABLED && blurDataURL) && 'bg-main',
           (isLoading || shouldDebugImageFallbacks)
