@@ -7,6 +7,9 @@ import { clsx}  from 'clsx/lite';
 import Image, { ImageProps } from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+// If image is still loading after 200ms, force CSS animation
+const FALLBACK_FADE_CUTOFF = 200;
+
 export default function ImageWithFallback({
   className,
   classNameImage = 'object-cover h-full',
@@ -31,6 +34,7 @@ export default function ImageWithFallback({
   const onLoad = useCallback(() => setIsLoading(false), []);
   const onError = useCallback(() => setDidError(true), []);
 
+  const [forceFallbackFade, setForceFallbackFade] = useState(false);
   const [hideFallback, setHideFallback] = useState(false);
 
   const refImage = useRef<HTMLImageElement>(null);
@@ -50,16 +54,15 @@ export default function ImageWithFallback({
     isLoadingRef.current = isLoading;
   }, [isLoading]);
 
-  const forceTransition = useRef(false);
   useEffect(() => {
     const timeout = setTimeout(() => {
       // If image is still loading, force CSS animation
       if (isLoadingRef.current) {
-        forceTransition.current = true;
+        setForceFallbackFade(true);
       }
-    }, 200);
+    }, FALLBACK_FADE_CUTOFF);
     return () => clearTimeout(timeout);
-  }, [shouldDebugFallbackTiming]);
+  }, []);
 
   const timeStartRef = useRef(performance.now());
   useEffect(() => {
@@ -81,7 +84,7 @@ export default function ImageWithFallback({
       wasCached: wasCachedRef.current,
       hideFallback,
       showFallback,
-      forceTransition: forceTransition.current,
+      forceTransition: forceFallbackFade,
     });
   }
 
@@ -174,7 +177,7 @@ export default function ImageWithFallback({
           '@container',
           'absolute inset-0 pointer-events-none',
           'overflow-hidden',
-          (showFallback || shouldDebugImageFallbacks) &&
+          ((showFallback && !forceFallbackFade) || shouldDebugImageFallbacks) &&
             'transition-opacity duration-300 ease-in',
           !(BLUR_ENABLED && blurDataURL) && 'bg-main',
           (isLoading || shouldDebugImageFallbacks)
