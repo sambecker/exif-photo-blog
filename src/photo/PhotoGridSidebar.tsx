@@ -27,6 +27,8 @@ import {
 import PhotoFocalLength from '@/focal/PhotoFocalLength';
 import useElementHeight from '@/utility/useElementHeight';
 import { useAppText } from '@/i18n/state/client';
+import { LuCalendarDays } from 'react-icons/lu';
+import Badge from '@/components/Badge';
 
 const APPROXIMATE_ITEM_HEIGHT = 34;
 const ABOUT_HEIGHT_OFFSET = 80;
@@ -54,6 +56,8 @@ export default function PhotoGridSidebar({
   , [_categories]);
 
   const {
+    recents,
+    years,
     cameras,
     lenses,
     tags,
@@ -93,6 +97,29 @@ export default function PhotoGridSidebar({
   const tagsIncludingHidden = useMemo(() =>
     addHiddenToTags(tags, photosCountHidden)
   , [tags, photosCountHidden]);
+
+  const recentsContent = recents.length > 0
+    ? <div key="recents">
+      Recents: {recents[0].count}
+    </div>
+    : null;
+
+  const yearsContent = years.length > 0
+    ? <HeaderList
+      key="years"
+      title="Years"
+      icon={<LuCalendarDays
+        size={14}
+        className="translate-x-[0.5px]"
+      />}
+      maxItems={maxItemsPerCategory}
+      items={years
+        .map(({ year, count }) =>
+          <Badge key={year} type="small">
+            {year} ({count})
+          </Badge>)}
+    />
+    : null;
 
   const camerasContent = cameras.length > 0
     ? <HeaderList
@@ -274,6 +301,8 @@ export default function PhotoGridSidebar({
       />}
       {CATEGORY_VISIBILITY.map(category => {
         switch (category) {
+        case 'recents': return recentsContent;
+        case 'years': return yearsContent;
         case 'cameras': return camerasContent;
         case 'lenses': return lensesContent;
         case 'tags': return tagsContent;
