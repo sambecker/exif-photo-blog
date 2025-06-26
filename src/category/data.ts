@@ -41,7 +41,7 @@ export const getDataForCategories = () => Promise.all([
     ? getPhotosMeta({ recent: true })
       .then(({ count, dateRange }) => [{
         count,
-        lastModified: dateRange?.end,
+        lastModified: new Date(dateRange?.end ?? ''),
       }])
       .catch(() => [])
     : undefined,
