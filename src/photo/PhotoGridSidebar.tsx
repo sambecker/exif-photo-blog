@@ -103,17 +103,18 @@ export default function PhotoGridSidebar({
   const yearsContent = years.length > 0
     ? <HeaderList
       key="years"
-      title="Years"
+      title="Date"
       icon={<LuCalendarDays
         size={14}
         className="translate-x-[0.5px]"
       />}
-      maxItems={2}
-      items={years
-        .map(({ year, count }) =>
-          <Badge key={year} type="small">
-            {year} ({count})
-          </Badge>)}
+      items={[<div key="years" className="inline-grid grid-cols-3 gap-1">
+        {years
+          .map(({ year }) =>
+            <Badge key={year} type="small">
+              {year}
+            </Badge>)}
+      </div>]}
     />
     : null;
 
