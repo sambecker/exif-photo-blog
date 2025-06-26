@@ -103,7 +103,7 @@ export default function PhotoGridSidebar({
   const yearsContent = years.length > 0
     ? <HeaderList
       key="years"
-      title="Date"
+      title="Years"
       icon={<LuCalendarDays
         size={14}
         className="translate-x-[0.5px]"
