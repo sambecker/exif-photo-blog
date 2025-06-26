@@ -92,9 +92,12 @@ export default function PhotoGridSidebar({
   , [tags, photosCountHidden]);
 
   const recentsContent = recents.length > 0
-    ? <div key="recents">
-      Recents: {recents[0].count}
-    </div>
+    ? <HeaderList
+      key="recents"
+      items={[<Badge key="recents" type="small">
+        Last Upload
+      </Badge>]}
+    />
     : null;
 
   const yearsContent = years.length > 0
@@ -105,7 +108,7 @@ export default function PhotoGridSidebar({
         size={14}
         className="translate-x-[0.5px]"
       />}
-      maxItems={maxItemsPerCategory}
+      maxItems={2}
       items={years
         .map(({ year, count }) =>
           <Badge key={year} type="small">
