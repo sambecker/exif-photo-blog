@@ -3,7 +3,7 @@
 import PhotoCamera from '@/camera/PhotoCamera';
 import HeaderList from '@/components/HeaderList';
 import PhotoTag from '@/tag/PhotoTag';
-import { PhotoDateRange, dateRangeForPhotos, photoQuantityText } from '.';
+import { photoQuantityText } from '.';
 import { TAG_FAVS, TAG_HIDDEN, addHiddenToTags, limitTagsByCount } from '@/tag';
 import PhotoFilm from '@/film/PhotoFilm';
 import FavsTag from '../tag/FavsTag';
@@ -35,14 +35,12 @@ const ABOUT_HEIGHT_OFFSET = 80;
 
 export default function PhotoGridSidebar({
   photosCount,
-  photosDateRange,
   containerHeight,
   aboutTextSafelyParsedHtml,
   aboutTextHasBrParagraphBreaks,
   ..._categories
 }: PhotoSetCategories & {
   photosCount: number
-  photosDateRange?: PhotoDateRange
   containerHeight?: number
   aboutTextSafelyParsedHtml?: string
   aboutTextHasBrParagraphBreaks?: boolean
@@ -86,11 +84,6 @@ export default function PhotoGridSidebar({
       2,
     )
     : undefined;
-
-  const { start, end } = dateRangeForPhotos(
-    undefined,
-    photosDateRange,
-  );
 
   const { photosCountHidden } = useAppState();
 
@@ -270,18 +263,10 @@ export default function PhotoGridSidebar({
     : null;
 
   const photoStatsContent = photosCount > 0
-    ? start
-      ? <HeaderList
-        key="photo-stats"
-        title={photoQuantityText(photosCount, appText, false)}
-        items={start === end
-          ? [start]
-          : [`${end} –`, start]}
-      />
-      : <HeaderList
-        key="photo-stats"
-        items={[photoQuantityText(photosCount, appText, false)]}
-      />
+    ? <HeaderList
+      key="photo-stats"
+      items={[photoQuantityText(photosCount, appText, false)]}
+    />
     : null;
 
   return (
