@@ -10,14 +10,14 @@ import { Recents } from '@/recents';
 import { Years } from '@/years';
 
 const CATEGORY_KEYS = [
-  'recents',
-  'years',
   'cameras',
   'lenses',
   'tags',
   'recipes',
   'films',
   'focal-lengths',
+  'years',
+  'recents',
 ] as const;
 
 export type CategoryKey = (typeof CATEGORY_KEYS)[number];
@@ -45,25 +45,25 @@ export const getHiddenDefaultCategories = (keys: CategoryKeys): CategoryKeys =>
   DEFAULT_CATEGORY_KEYS.filter(key => !keys.includes(key));
 
 export interface PhotoSetCategory {
-  recent?: boolean
-  year?: string
   camera?: Camera
   lens?: Lens
   tag?: string
   recipe?: string
   film?: string
   focal?: number
+  year?: string
+  recent?: boolean
 }
 
 export interface PhotoSetCategories {
-  recents: Recents
-  years: Years
   cameras: Cameras
   lenses: Lenses
   tags: Tags
   recipes: Recipes
   films: Films
   focalLengths: FocalLengths
+  years: Years
+  recents: Recents
 }
 
 export interface PhotoSetAttributes {

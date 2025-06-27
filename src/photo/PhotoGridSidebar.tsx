@@ -27,8 +27,9 @@ import {
 import PhotoFocalLength from '@/focal/PhotoFocalLength';
 import useElementHeight from '@/utility/useElementHeight';
 import { useAppText } from '@/i18n/state/client';
-import { LuCalendarDays } from 'react-icons/lu';
+import IconYear from '@/components/icons/IconYear';
 import Badge from '@/components/Badge';
+import PhotoYear from '@/years/PhotoYear';
 
 const APPROXIMATE_ITEM_HEIGHT = 34;
 const ABOUT_HEIGHT_OFFSET = 80;
@@ -104,16 +105,21 @@ export default function PhotoGridSidebar({
     ? <HeaderList
       key="years"
       title="Years"
-      icon={<LuCalendarDays
+      icon={<IconYear
         size={14}
         className="translate-x-[0.5px]"
       />}
       items={[<div key="years" className="inline-grid grid-cols-3 gap-1">
-        {years
-          .map(({ year }) =>
-            <Badge key={year} type="small">
-              {year}
-            </Badge>)}
+        {years.map(({ year, count }) =>
+          <PhotoYear
+            key={year}
+            year={year}
+            countOnHover={count}
+            type="text-only"
+            prefetch={false}
+            contrast="low"
+            badged
+          />)}
       </div>]}
     />
     : null;

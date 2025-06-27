@@ -21,6 +21,10 @@ export const generateAppTextState = (i18n: I18N) => {
         i18n.category.focalLengthTitle.replace('{{focal}}', focal),
       focalLengthShare: (focal: string) =>
         i18n.category.focalLengthShare.replace('{{focal}}', focal),
+      yearTitle: (year: string) =>
+        i18n.category.yearTitle.replace('{{year}}', year),
+      yearShare: (year: string) =>
+        i18n.category.yearShare.replace('{{year}}', year),
     },
     admin: {
       ...i18n.admin,

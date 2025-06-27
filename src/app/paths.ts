@@ -35,6 +35,7 @@ export const PREFIX_TAG                 = '/tag';
 export const PREFIX_RECIPE              = '/recipe';
 export const PREFIX_FILM                = '/film';
 export const PREFIX_FOCAL_LENGTH        = '/focal';
+export const PREFIX_YEAR                = '/year';
 
 // Dynamic paths
 const PATH_PHOTO_DYNAMIC                = `${PREFIX_PHOTO}/[photoId]`;
@@ -44,6 +45,7 @@ const PATH_TAG_DYNAMIC                  = `${PREFIX_TAG}/[tag]`;
 const PATH_FILM_DYNAMIC                 = `${PREFIX_FILM}/[film]`;
 const PATH_FOCAL_LENGTH_DYNAMIC         = `${PREFIX_FOCAL_LENGTH}/[focal]`;
 const PATH_RECIPE_DYNAMIC               = `${PREFIX_RECIPE}/[recipe]`;
+const PATH_YEAR_DYNAMIC                 = `${PREFIX_YEAR}/[year]`;
 
 // Admin paths
 export const PATH_ADMIN_PHOTOS          = `${PATH_ADMIN}/photos`;
@@ -98,6 +100,7 @@ export const PATHS_TO_CACHE = [
   PATH_FILM_DYNAMIC,
   PATH_FOCAL_LENGTH_DYNAMIC,
   PATH_RECIPE_DYNAMIC,
+  PATH_YEAR_DYNAMIC,
   ...PATHS_ADMIN,
 ];
 
@@ -131,6 +134,7 @@ export const pathForPhoto = ({
   film,
   focal,
   recipe,
+  year,
 }: PhotoPathParams) => {
   let prefix = PREFIX_PHOTO;
 
@@ -148,6 +152,8 @@ export const pathForPhoto = ({
     prefix = pathForFilm(film);
   } else if (focal) {
     prefix = pathForFocalLength(focal);
+  } else if (year) {
+    prefix = pathForYear(year);
   }
 
   return `${prefix}/${getPhotoId(photo)}`;
@@ -173,6 +179,9 @@ export const pathForFilm = (film: string) =>
 export const pathForFocalLength = (focal: number) =>
   `${PREFIX_FOCAL_LENGTH}/${focal}mm`;
 
+export const pathForYear = (year: string) =>
+  `${PREFIX_YEAR}/${year}`;
+
 // Image paths
 const pathForImage = (path: string) =>
   `${path}/${IMAGE}`;
@@ -197,6 +206,9 @@ export const pathForFilmImage = (film: string) =>
 
 export const pathForFocalLengthImage = (focal: number) =>
   pathForImage(pathForFocalLength(focal));
+
+export const pathForYearImage = (year: string) =>
+  pathForImage(pathForYear(year));
 
 // Absolute paths
 export const ABSOLUTE_PATH_FOR_FEED_JSON =
@@ -232,6 +244,9 @@ export const absolutePathForFilm = (film: string, share?: boolean) =>
 export const absolutePathForFocalLength = (focal: number, share?: boolean) =>
   `${getBaseUrl(share)}${pathForFocalLength(focal)}`;
 
+export const absolutePathForYear = (year: string, share?: boolean) =>
+  `${getBaseUrl(share)}${pathForYear(year)}`;
+
 export const absolutePathForPhotoImage = (photo: PhotoOrPhotoId) =>
   `${getBaseUrl()}${pathForPhotoImage(photo)}`;
 
@@ -252,6 +267,9 @@ export const absolutePathForFilmImage = (film: string) =>
 
 export const absolutePathForFocalLengthImage = (focal: number) =>
   `${getBaseUrl()}${pathForFocalLengthImage(focal)}`;
+
+export const absolutePathForYearImage = (year: string) =>
+  `${getBaseUrl()}${pathForYearImage(year)}`;
 
 // p/[photoId]
 export const isPathPhoto = (pathname = '') =>
@@ -296,6 +314,14 @@ export const isPathFocalLength = (pathname = '') =>
 // focal/[focal]/[photoId]
 export const isPathFocalLengthPhoto = (pathname = '') =>
   new RegExp(`^${PREFIX_FOCAL_LENGTH}/[^/]+/[^/]+/?$`).test(pathname);
+
+// year/[year]
+export const isPathYear = (pathname = '') =>
+  new RegExp(`^${PREFIX_YEAR}/[^/]+/?$`).test(pathname);
+
+// year/[year]/[photoId]
+export const isPathYearPhoto = (pathname = '') =>
+  new RegExp(`^${PREFIX_YEAR}/[^/]+/[^/]+/?$`).test(pathname);
 
 export const checkPathPrefix = (pathname = '', prefix: string) =>
   pathname.toLowerCase().startsWith(prefix);
@@ -358,12 +384,16 @@ export const getPathComponents = (pathname = ''): {
     new RegExp(`^${PREFIX_FILM}/[^/]+/([^/]+)`))?.[1];
   const photoIdFromFocalLength = pathname.match(
     new RegExp(`^${PREFIX_FOCAL_LENGTH}/[0-9]+mm/([^/]+)`))?.[1];
+  const photoIdFromYear = pathname.match(
+    new RegExp(`^${PREFIX_YEAR}/[^/]+/([^/]+)`))?.[1];
   const tag = pathname.match(
     new RegExp(`^${PREFIX_TAG}/([^/]+)`))?.[1];
   const film = pathname.match(
     new RegExp(`^${PREFIX_FILM}/([^/]+)`))?.[1] as string;
   const focalString = pathname.match(
     new RegExp(`^${PREFIX_FOCAL_LENGTH}/([0-9]+)mm`))?.[1];
+  const year = pathname.match(
+    new RegExp(`^${PREFIX_YEAR}/([^/]+)`))?.[1];
 
   const camera = cameraMake && cameraModel
     ? { make: cameraMake, model: cameraModel }
@@ -377,12 +407,14 @@ export const getPathComponents = (pathname = ''): {
       photoIdFromTag ||
       photoIdFromCamera ||
       photoIdFromFilm ||
-      photoIdFromFocalLength
+      photoIdFromFocalLength ||
+      photoIdFromYear
     ),
     tag,
     camera,
     film,
     focal,
+    year,
   };
 };
 
@@ -393,6 +425,7 @@ export const getEscapePath = (pathname?: string) => {
     camera,
     film,
     focal,
+    year,
   } = getPathComponents(pathname);
 
   if (
@@ -400,7 +433,8 @@ export const getEscapePath = (pathname?: string) => {
     (tag && isPathTag(pathname)) ||
     (camera && isPathCamera(pathname)) ||
     (film && isPathFilm(pathname)) ||
-    (focal && isPathFocalLength(pathname))
+    (focal && isPathFocalLength(pathname)) ||
+    (year && isPathYear(pathname))
   ) {
     return PATH_ROOT;
   } else if (tag && isPathTagPhoto(pathname)) {
@@ -411,5 +445,7 @@ export const getEscapePath = (pathname?: string) => {
     return pathForFilm(film);
   } else if (focal && isPathFocalLengthPhoto(pathname)) {
     return pathForFocalLength(focal);
+  } else if (year && isPathYearPhoto(pathname)) {
+    return pathForYear(year);
   }
 };

@@ -59,6 +59,7 @@ export default function PhotoLarge({
   priority,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
   prefetchRelatedLinks = SHOULD_PREFETCH_ALL_LINKS,
+  year,
   revalidatePhoto,
   showTitle = true,
   showTitleAsH1,
@@ -85,6 +86,7 @@ export default function PhotoLarge({
   priority?: boolean
   prefetch?: boolean
   prefetchRelatedLinks?: boolean
+  year?: string
   revalidatePhoto?: RevalidatePhoto
   showTitle?: boolean
   showTitleAsH1?: boolean
@@ -466,6 +468,7 @@ export default function PhotoLarge({
                         focal={shouldShareFocalLength
                           ? photo.focalLength
                           : undefined}
+                        year={year}
                         prefetch={prefetchRelatedLinks}
                       />}
                     {ALLOW_PUBLIC_DOWNLOADS && 

@@ -15,6 +15,7 @@ import RecipeHeader from '@/recipe/RecipeHeader';
 import { ReactNode } from 'react';
 import LensHeader from '@/lens/LensHeader';
 import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
+import YearHeader from '@/years/YearHeader';
 
 export default function PhotoDetailPage({
   photo,
@@ -26,6 +27,7 @@ export default function PhotoDetailPage({
   film,
   recipe,
   focal,
+  year,
   indexNumber,
   count,
   dateRange,
@@ -104,6 +106,15 @@ export default function PhotoDetailPage({
       count={count}
       dateRange={dateRange}
     />;
+  } else if (year) {
+    customHeader = <YearHeader
+      year={year}
+      photos={photos}
+      selectedPhoto={photo}
+      indexNumber={indexNumber}
+      count={count}
+      dateRange={dateRange}
+    />;
   }
 
   return (
@@ -127,6 +138,7 @@ export default function PhotoDetailPage({
             primaryTag={tag}
             priority
             prefetchRelatedLinks
+            year={year}
             showTitle={Boolean(customHeader)}
             showTitleAsH1
             showCamera={!camera}
@@ -154,6 +166,7 @@ export default function PhotoDetailPage({
           camera={camera}
           film={film}
           focal={focal}
+          year={year}
           animateOnFirstLoadOnly
         />}
       />

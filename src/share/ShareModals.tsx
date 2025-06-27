@@ -8,6 +8,7 @@ import FocalLengthShareModal from '@/focal/FocalLengthShareModal';
 import { useAppState } from '@/state/AppState';
 import RecipeShareModal from '@/recipe/RecipeShareModal';
 import LensShareModal from '@/lens/LensShareModal';
+import YearShareModal from '@/years/YearShareModal';
 
 export default function ShareModals() {
   const { shareModalProps = {} } = useAppState();
@@ -23,6 +24,7 @@ export default function ShareModals() {
     film,
     recipe,
     focal,
+    year,
   } = shareModalProps;
 
   if (photo) {
@@ -34,6 +36,7 @@ export default function ShareModals() {
       recipe,
       film,
       focal,
+      year,
     }} />;
   } else if (photos) {
     const attributes = {photos, count, dateRange};
@@ -49,6 +52,8 @@ export default function ShareModals() {
       return <RecipeShareModal {...{ recipe, ...attributes }} />;
     } else if (focal !== undefined) {
       return <FocalLengthShareModal {...{ focal, ...attributes }} />;
-    } 
+    } else if (year) {
+      return <YearShareModal {...{ year, ...attributes }} />;
+    }
   }
 }

@@ -31,6 +31,10 @@ export const TEXT = {
     focalLengthPlural: 'Focal Lengths',
     focalLengthTitle: 'Focal Length {{focal}}',
     focalLengthShare: 'Photos shot at {{focal}}',
+    year: 'Year',
+    yearPlural: 'Years',
+    yearShare: '{{year}} photos',
+    yearTitle: 'Photos taken in {{year}}',
   },
   nav: {
     home: 'Home',
