@@ -31,6 +31,10 @@ export const TEXT = {
     focalLengthPlural: 'ফোকাল দৈর্ঘ্যগুলো',
     focalLengthTitle: '{{focal}} ফোকাল দৈর্ঘ্য',
     focalLengthShare: '{{focal}} এ তোলা ছবিগুলো',
+    year: 'বছর',
+    yearPlural: 'বছরসমূহ',
+    yearShare: '{{year}} ছবি',
+    yearTitle: '{{year}} সালে তোলা ছবি',
   },
   nav: {
     home: 'হোম',

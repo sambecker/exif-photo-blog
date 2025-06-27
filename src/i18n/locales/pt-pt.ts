@@ -32,6 +32,10 @@ export const TEXT: I18NDeepPartial = {
     focalLengthPlural: 'Distâncias focais',
     focalLengthTitle: 'Distância focal {{focal}}',
     focalLengthShare: 'Fotos tiradas em {{focal}}',
+    year: 'Ano',
+    yearPlural: 'Anos',
+    yearShare: 'Fotografias de {{year}}',
+    yearTitle: 'Fotografias tiradas em {{year}}',
   },
   nav: {
     home: 'Início',

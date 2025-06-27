@@ -32,6 +32,10 @@ export const TEXT: I18NDeepPartial = {
     focalLengthPlural: 'Panjang Fokus',
     focalLengthTitle: 'Panjang Fokus {{focal}}',
     focalLengthShare: 'Foto diambil pada {{focal}}',
+    year: 'Tahun',
+    yearPlural: 'Tahun',
+    yearShare: 'Foto {{year}}',
+    yearTitle: 'Foto diambil pada tahun {{year}}',
   },
   nav: {
     home: 'Beranda',
