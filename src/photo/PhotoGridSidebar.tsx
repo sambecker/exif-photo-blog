@@ -30,6 +30,7 @@ import { useAppText } from '@/i18n/state/client';
 import IconYear from '@/components/icons/IconYear';
 import Badge from '@/components/Badge';
 import PhotoYear from '@/years/PhotoYear';
+import { chunkArray } from '@/utility/array';
 
 const APPROXIMATE_ITEM_HEIGHT = 34;
 const ABOUT_HEIGHT_OFFSET = 80;
@@ -64,6 +65,8 @@ export default function PhotoGridSidebar({
     recipes,
     focalLengths,
   } = categories;
+
+  const yearRows = useMemo(() => chunkArray(years, 3), [years]);
 
   const categoriesCount = getCategoriesWithItemsCount(
     CATEGORY_VISIBILITY,
@@ -109,18 +112,20 @@ export default function PhotoGridSidebar({
         size={14}
         className="translate-x-[0.5px]"
       />}
-      items={[<div key="years" className="inline-grid grid-cols-3 gap-1">
-        {years.map(({ year, count }) =>
-          <PhotoYear
-            key={year}
-            year={year}
-            countOnHover={count}
-            type="text-only"
-            prefetch={false}
-            contrast="low"
-            badged
-          />)}
-      </div>]}
+      maxItems={maxItemsPerCategory}
+      items={yearRows.map((row, index) =>
+        <div key={index} className="flex gap-1">
+          {row.map(({ year, count }) =>
+            <PhotoYear
+              key={year}
+              year={year}
+              countOnHover={count}
+              type="text-only"
+              prefetch={false}
+              contrast="low"
+              badged
+            />)}
+        </div>)}
     />
     : null;
 

@@ -322,21 +322,6 @@ export const getPhotosMostRecentUpdate = async () =>
   `.then(({ rows }) => rows[0] ? rows[0].updated_at as Date : undefined)
   , 'getPhotosMostRecentUpdate');
 
-export const getUniqueYears = async () =>
-  safelyQueryPhotos(() => sql`
-    SELECT
-      DISTINCT EXTRACT(YEAR FROM taken_at) AS year,
-      COUNT(*),
-      MAX(updated_at) as last_modified
-    FROM photos
-    GROUP BY year
-    ORDER BY year DESC
-  `.then(({ rows }): Years => rows.map(({ year, count, last_modified }) => ({
-      year,
-      count: parseInt(count, 10),
-      lastModified: last_modified as Date,
-    }))), 'getUniqueYears');
-
 export const getUniqueCameras = async () =>
   safelyQueryPhotos(() => sql`
     SELECT DISTINCT make||' '||model as camera, make, model,
@@ -410,6 +395,22 @@ export const getUniqueRecipes = async () =>
         lastModified: last_modified as Date,
       })))
   , 'getUniqueRecipes');
+
+export const getUniqueYears = async () =>
+  safelyQueryPhotos(() => sql`
+    SELECT
+      DISTINCT EXTRACT(YEAR FROM taken_at) AS year,
+      COUNT(*),
+      MAX(updated_at) as last_modified
+    FROM photos
+    WHERE hidden IS NOT TRUE
+    GROUP BY year
+    ORDER BY year DESC
+  `.then(({ rows }): Years => rows.map(({ year, count, last_modified }) => ({
+      year,
+      count: parseInt(count, 10),
+      lastModified: last_modified as Date,
+    }))), 'getUniqueYears');
 
 export const getRecipeTitleForData = async (
   data: string | object,
