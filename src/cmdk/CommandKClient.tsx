@@ -30,6 +30,7 @@ import {
   pathForPhoto,
   pathForRecipe,
   pathForTag,
+  pathForYear,
 } from '../app/paths';
 import Modal from '../components/Modal';
 import { clsx } from 'clsx/lite';
@@ -79,6 +80,7 @@ import IconRecipe from '../components/icons/IconRecipe';
 import IconFocalLength from '../components/icons/IconFocalLength';
 import IconFilm from '../components/icons/IconFilm';
 import IconLock from '../components/icons/IconLock';
+import IconYear from '../components/icons/IconYear';
 import useVisualViewportHeight from '@/utility/useVisualViewport';
 import useMaskedScroll from '../components/useMaskedScroll';
 import { labelForFilm } from '@/film';
@@ -129,6 +131,7 @@ export default function CommandKClient({
   recipes,
   films,
   focalLengths,
+  years,
   footer,
 }: {
   footer?: string
@@ -383,6 +386,16 @@ export default function CommandKClient({
             path: pathForFocalLength(focal),
           })),
         };
+        case 'years': return {
+          heading: appText.category.yearPlural,
+          accessory: <IconYear size={14} />,
+          items: years.map(({ year, count }) => ({
+            label: year,
+            annotation: formatCount(count),
+            annotationAria: formatCountDescriptive(count),
+            path: pathForYear(year),
+          })),
+        };
         }
       })
       .filter(Boolean) as CommandKSection[]
@@ -394,6 +407,7 @@ export default function CommandKClient({
     recipes,
     films,
     focalLengths,
+    years,
   ]);
 
   const clientSections: CommandKSection[] = [{
