@@ -34,8 +34,12 @@ export const TEXT: I18NDeepPartial = {
     focalLengthShare: '焦距 {{focal}} 拍摄的照片',
     year: '年份',
     yearPlural: '年份',
-    yearShare: '{{year}} 年照片',
+    yearShare: '{{year}} 照片',
     yearTitle: '{{year}} 年拍摄的照片',
+    recent: '最近',
+    recentPlural: '最近',
+    recentTitle: '最近的照片',
+    recentShare: '最近的照片',
   },
   nav: {
     home: '首页',

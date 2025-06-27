@@ -24,6 +24,7 @@ export interface EntityLinkExternalProps {
 export default function EntityLink({
   ref,
   icon,
+  iconBadge,
   label,
   labelSmall,
   labelComplex,
@@ -46,6 +47,7 @@ export default function EntityLink({
   debug,
 }: {
   icon: ReactNode
+  iconBadge?: ReactNode
   label: string
   labelSmall?: ReactNode
   labelComplex?: ReactNode
@@ -115,10 +117,14 @@ export default function EntityLink({
           ? <Badge
             type="small"
             contrast={contrast}
-            className="translate-y-[-0.5px]"
+            className={clsx(
+              'translate-y-[-0.5px]',
+              iconBadge && '*:flex *:items-center *:gap-1',
+            )}
             uppercase
             interactive
           >
+            {iconBadge}
             {renderLabel}
           </Badge>
           : <span className={clsx(

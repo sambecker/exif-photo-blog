@@ -16,18 +16,20 @@ import { ReactNode } from 'react';
 import LensHeader from '@/lens/LensHeader';
 import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
 import YearHeader from '@/years/YearHeader';
+import RecentsHeader from '@/recents/RecentsHeader';
 
 export default function PhotoDetailPage({
   photo,
   photos,
   photosGrid,
+  recent,
+  year,
   tag,
   camera,
   lens,
   film,
   recipe,
   focal,
-  year,
   indexNumber,
   count,
   dateRange,
@@ -62,6 +64,23 @@ export default function PhotoDetailPage({
         count={count}
         dateRange={dateRange}
       />;
+  } else if (year) {
+    customHeader = <YearHeader
+      year={year}
+      photos={photos}
+      selectedPhoto={photo}
+      indexNumber={indexNumber}
+      count={count}
+      dateRange={dateRange}
+    />;
+  } else if (recent) {
+    customHeader = <RecentsHeader
+      photos={photos}
+      selectedPhoto={photo}
+      indexNumber={indexNumber}
+      count={count}
+      dateRange={dateRange}
+    />;
   } else if (camera) {
     customHeader = <CameraHeader
       camera={camera}
@@ -100,15 +119,6 @@ export default function PhotoDetailPage({
   } else if (focal) {
     customHeader = <FocalLengthHeader
       focal={focal}
-      photos={photos}
-      selectedPhoto={photo}
-      indexNumber={indexNumber}
-      count={count}
-      dateRange={dateRange}
-    />;
-  } else if (year) {
-    customHeader = <YearHeader
-      year={year}
       photos={photos}
       selectedPhoto={photo}
       indexNumber={indexNumber}

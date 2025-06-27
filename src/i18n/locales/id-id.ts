@@ -36,6 +36,10 @@ export const TEXT: I18NDeepPartial = {
     yearPlural: 'Tahun',
     yearShare: 'Foto {{year}}',
     yearTitle: 'Foto diambil pada tahun {{year}}',
+    recent: 'Terbaru',
+    recentPlural: 'Terbaru',
+    recentTitle: 'Foto Terbaru',
+    recentShare: 'Foto terbaru',
   },
   nav: {
     home: 'Beranda',

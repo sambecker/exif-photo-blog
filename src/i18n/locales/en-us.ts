@@ -35,6 +35,10 @@ export const TEXT = {
     yearPlural: 'Years',
     yearShare: '{{year}} photos',
     yearTitle: 'Photos taken in {{year}}',
+    recent: 'Recent',
+    recentPlural: 'Recents',
+    recentTitle: 'Recent Photos',
+    recentShare: 'Recent photos',
   },
   nav: {
     home: 'Home',

@@ -3,18 +3,16 @@
 import { descriptionForPhotoSet, Photo, PhotoDateRange } from '@/photo';
 import PhotoHeader from '@/photo/PhotoHeader';
 import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
-import PhotoYear from './PhotoYear';
 import { useAppText } from '@/i18n/state/client';
+import PhotoRecents from './PhotoRecents';
 
-export default function YearHeader({
-  year,
+export default function RecentsHeader({
   photos,
   selectedPhoto,
   indexNumber,
   count,
   dateRange,
 }: {
-  year: string
   photos: Photo[]
   selectedPhoto?: Photo
   indexNumber?: number
@@ -25,12 +23,8 @@ export default function YearHeader({
 
   return (
     <PhotoHeader
-      year={year}
-      entity={<PhotoYear
-        year={year}
-        contrast="high"
-        showTooltip={false}
-      />}
+      recent={true}
+      entity={<PhotoRecents showTooltip={false} />}
       entityDescription={descriptionForPhotoSet(
         photos,
         appText,
@@ -47,4 +41,4 @@ export default function YearHeader({
       includeShareButton
     />
   );
-} 
+}

@@ -28,9 +28,9 @@ import PhotoFocalLength from '@/focal/PhotoFocalLength';
 import useElementHeight from '@/utility/useElementHeight';
 import { useAppText } from '@/i18n/state/client';
 import IconYear from '@/components/icons/IconYear';
-import Badge from '@/components/Badge';
 import PhotoYear from '@/years/PhotoYear';
 import { chunkArray } from '@/utility/array';
+import PhotoRecents from '@/recents/PhotoRecents';
 
 const APPROXIMATE_ITEM_HEIGHT = 34;
 const ABOUT_HEIGHT_OFFSET = 80;
@@ -98,9 +98,14 @@ export default function PhotoGridSidebar({
   const recentsContent = recents.length > 0
     ? <HeaderList
       key="recents"
-      items={[<Badge key="recents" type="small">
-        Last Upload
-      </Badge>]}
+      items={[<PhotoRecents
+        key="recents"
+        countOnHover={recents[0]?.count}
+        type="text-only"
+        prefetch={false}
+        contrast="low"
+        badged
+      />]}
     />
     : null;
 

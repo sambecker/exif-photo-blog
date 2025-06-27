@@ -35,6 +35,10 @@ export const TEXT = {
     yearPlural: 'বছরসমূহ',
     yearShare: '{{year}} ছবি',
     yearTitle: '{{year}} সালে তোলা ছবি',
+    recent: 'সাম্প্রতিক',
+    recentPlural: 'সাম্প্রতিক',
+    recentTitle: 'সাম্প্রতিক ছবি',
+    recentShare: 'সাম্প্রতিক ছবি',
   },
   nav: {
     home: 'হোম',

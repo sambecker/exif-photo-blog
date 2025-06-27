@@ -25,6 +25,10 @@ export const generateAppTextState = (i18n: I18N) => {
         i18n.category.yearTitle.replace('{{year}}', year),
       yearShare: (year: string) =>
         i18n.category.yearShare.replace('{{year}}', year),
+      recentTitle: () =>
+        i18n.category.recentTitle,
+      recentShare: () =>
+        i18n.category.recentShare,
     },
     admin: {
       ...i18n.admin,
