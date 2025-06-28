@@ -5,7 +5,7 @@ import ImageContainer from './components/ImageContainer';
 import { NextImageSize } from '@/platforms/next-image';
 import IconRecents from '@/components/icons/IconRecents';
 
-export default async function RecentsImageResponse({
+export default function RecentsImageResponse({
   title,
   photos,
   width,
@@ -32,9 +32,9 @@ export default async function RecentsImageResponse({
         height,
         fontFamily,
         icon: <IconRecents
-          size={height * .09}
+          size={height * .08}
           style={{
-            transform: `translateY(${height * .006}px)`,
+            transform: `translateY(${height * .003}px)`,
             marginRight: height * .01,
           }}
         />,
