@@ -14,7 +14,7 @@ export default function RecentsShareModal({
     <ShareModal
       pathShare={absolutePathForRecents(true)}
       navigatorTitle={appText.category.recentTitle}
-      socialText={appText.category.recentShare}
+      socialText={appText.category.recentTitle}
     >
       <RecentsOGTile {...{ photos, count, dateRange }} />
     </ShareModal>

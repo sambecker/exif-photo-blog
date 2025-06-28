@@ -1,7 +1,7 @@
-import { I18NDeepPartial } from '..';
+import { I18N } from '..';
 export { pt as default } from 'date-fns/locale/pt';
 
-export const TEXT: I18NDeepPartial = {
+export const TEXT: I18N = {
   photo: {
     photo: 'Fotografia',
     photoPlural: 'Fotografias',
@@ -39,7 +39,6 @@ export const TEXT: I18NDeepPartial = {
     recent: 'Recente',
     recentPlural: 'Recentes',
     recentTitle: 'Fotos Recentes',
-    recentShare: 'Fotos recentes',
   },
   nav: {
     home: 'Início',

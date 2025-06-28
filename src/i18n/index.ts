@@ -5,10 +5,6 @@ import locale from './date-fns-locale-alias';
 
 export type I18N = typeof EN_US;
 
-export type I18NDeepPartial = {
-  [key in keyof I18N]?: Partial<I18N[key]>;
-}
-
 /**
  * TRANSLATION STEPS FOR CONTRIBUTORS:
  * 1. Create new file in `src/i18n/locales` modeled on `en-us.ts`—
@@ -20,7 +16,7 @@ export type I18NDeepPartial = {
 
 const LOCALE_TEXT_IMPORTS: Record<
   string,
-  () => Promise<I18NDeepPartial | undefined>
+  () => Promise<I18N | undefined>
 > = {
   'pt-br': () => import('./locales/pt-br').then(m => m.TEXT),
   'pt-pt': () => import('./locales/pt-pt').then(m => m.TEXT),

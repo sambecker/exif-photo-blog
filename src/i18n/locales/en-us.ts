@@ -38,7 +38,6 @@ export const TEXT = {
     recent: 'Recent',
     recentPlural: 'Recents',
     recentTitle: 'Recent Photos',
-    recentShare: 'Recent photos',
   },
   nav: {
     home: 'Home',
