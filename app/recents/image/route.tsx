@@ -10,6 +10,8 @@ import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { getAppText } from '@/i18n/state/server';
 
+export const dynamic = 'force-static';
+
 export async function GET() {
   const [
     photos,
