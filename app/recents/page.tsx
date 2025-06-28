@@ -8,8 +8,6 @@ import { PATH_ROOT } from '@/app/paths';
 import { redirect } from 'next/navigation';
 import { getAppText } from '@/i18n/state/server';
 
-export const dynamic = 'force-static';
-
 const getPhotosRecentsDataCachedCached = cache(() =>
   getPhotosRecentsDataCached({ limit: INFINITE_SCROLL_GRID_INITIAL }));
 
