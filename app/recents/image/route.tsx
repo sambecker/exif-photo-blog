@@ -8,6 +8,7 @@ import RecentsImageResponse from
 import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
+import { getAppText } from '@/i18n/state/server';
 
 export async function GET() {
   const [
@@ -23,10 +24,15 @@ export async function GET() {
     getImageResponseCacheControlHeaders(),
   ]);
 
+  const appText = await getAppText();
+
+  const title = appText.category.recentPlural.toLocaleUpperCase();
+
   const { width, height } = IMAGE_OG_DIMENSION_SMALL;
 
   return new ImageResponse(
     <RecentsImageResponse {...{
+      title,
       photos,
       width,
       height,

@@ -11,7 +11,7 @@ export const generateMetaForRecents = (
   count?: number,
   _dateRange?: PhotoDateRange,
 ) => {
-  const title = appText.category.recentTitle();
+  const title = appText.category.recentTitle;
   const description = descriptionForPhotoSet(
     photos,
     appText,

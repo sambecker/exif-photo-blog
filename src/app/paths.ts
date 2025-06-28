@@ -131,19 +131,23 @@ const getPhotoId = (photoOrPhotoId: PhotoOrPhotoId) =>
 
 export const pathForPhoto = ({
   photo,
+  recent,
+  year,
   camera,
   lens,
   tag,
   film,
   focal,
   recipe,
-  year,
-  recent,
 }: PhotoPathParams) => {
   let prefix = PREFIX_PHOTO;
 
   if (typeof photo !== 'string' && photo.hidden) {
     prefix = pathForTag(TAG_HIDDEN);
+  } else if (recent) {
+    prefix = PREFIX_RECENTS;
+  } else if (year) {
+    prefix = pathForYear(year);
   } else if (camera) {
     prefix = pathForCamera(camera);
   } else if (lens) {
@@ -156,10 +160,6 @@ export const pathForPhoto = ({
     prefix = pathForFilm(film);
   } else if (focal) {
     prefix = pathForFocalLength(focal);
-  } else if (year) {
-    prefix = pathForYear(year);
-  } else if (recent) {
-    prefix = pathForRecents();
   }
 
   return `${prefix}/${getPhotoId(photo)}`;
@@ -187,9 +187,6 @@ export const pathForFocalLength = (focal: number) =>
 
 export const pathForYear = (year: string) =>
   `${PREFIX_YEAR}/${year}`;
-
-export const pathForRecents = () =>
-  `${PREFIX_RECENTS}`;
 
 // Image paths
 const pathForImage = (path: string) =>
@@ -220,7 +217,7 @@ export const pathForYearImage = (year: string) =>
   pathForImage(pathForYear(year));
 
 export const pathForRecentsImage = () =>
-  pathForImage(pathForRecents());
+  pathForImage(PREFIX_RECENTS);
 
 // Absolute paths
 export const ABSOLUTE_PATH_FOR_FEED_JSON =
@@ -260,7 +257,7 @@ export const absolutePathForYear = (year: string, share?: boolean) =>
   `${getBaseUrl(share)}${pathForYear(year)}`;
 
 export const absolutePathForRecents = (share?: boolean) =>
-  `${getBaseUrl(share)}${pathForRecents()}`;
+  `${getBaseUrl(share)}${PREFIX_RECENTS}`;
 
 export const absolutePathForPhotoImage = (photo: PhotoOrPhotoId) =>
   `${getBaseUrl()}${pathForPhotoImage(photo)}`;
@@ -293,6 +290,22 @@ export const absolutePathForRecentsImage = (share?: boolean) =>
 export const isPathPhoto = (pathname = '') =>
   new RegExp(`^${PREFIX_PHOTO}/[^/]+/?$`).test(pathname);
 
+// recents
+export const isPathRecents = (pathname = '') =>
+  new RegExp(`^${PREFIX_RECENTS}/?$`).test(pathname);
+
+// recents/[photoId]
+export const isPathRecentsPhoto = (pathname = '') =>
+  new RegExp(`^${PREFIX_RECENTS}/[^/]+/?$`).test(pathname);
+
+// year/[year]
+export const isPathYear = (pathname = '') =>
+  new RegExp(`^${PREFIX_YEAR}/[^/]+/?$`).test(pathname);
+
+// year/[year]/[photoId]
+export const isPathYearPhoto = (pathname = '') =>
+  new RegExp(`^${PREFIX_YEAR}/[^/]+/[^/]+/?$`).test(pathname);
+
 // shot-on/[make]/[model]
 export const isPathCamera = (pathname = '') =>
   new RegExp(`^${PREFIX_CAMERA}/[^/]+/[^/]+/?$`).test(pathname);
@@ -300,6 +313,14 @@ export const isPathCamera = (pathname = '') =>
 // shot-on/[make]/[model]/[photoId]
 export const isPathCameraPhoto = (pathname = '') =>
   new RegExp(`^${PREFIX_CAMERA}/[^/]+/[^/]+/[^/]+/?$`).test(pathname);
+
+// lens/[make]/[model]
+export const isPathLens = (pathname = '') =>
+  new RegExp(`^${PREFIX_LENS}/[^/]+/[^/]+/?$`).test(pathname);
+
+// lens/[make]/[model]/[photoId]
+export const isPathLensPhoto = (pathname = '') =>
+  new RegExp(`^${PREFIX_LENS}/[^/]+/[^/]+/[^/]+/?$`).test(pathname);
 
 // tag/[tag]
 export const isPathTag = (pathname = '') =>
@@ -332,20 +353,6 @@ export const isPathFocalLength = (pathname = '') =>
 // focal/[focal]/[photoId]
 export const isPathFocalLengthPhoto = (pathname = '') =>
   new RegExp(`^${PREFIX_FOCAL_LENGTH}/[^/]+/[^/]+/?$`).test(pathname);
-
-// year/[year]
-export const isPathYear = (pathname = '') =>
-  new RegExp(`^${PREFIX_YEAR}/[^/]+/?$`).test(pathname);
-
-// year/[year]/[photoId]
-export const isPathYearPhoto = (pathname = '') =>
-  new RegExp(`^${PREFIX_YEAR}/[^/]+/[^/]+/?$`).test(pathname);
-
-export const isPathRecents = (pathname = '') =>
-  new RegExp(`^${PREFIX_RECENTS}/?$`).test(pathname);
-
-export const isPathRecentsPhoto = (pathname = '') =>
-  new RegExp(`^${PREFIX_RECENTS}/[^/]+/?$`).test(pathname);
 
 export const checkPathPrefix = (pathname = '', prefix: string) =>
   pathname.toLowerCase().startsWith(prefix);
@@ -450,35 +457,43 @@ export const getPathComponents = (pathname = ''): {
 export const getEscapePath = (pathname?: string) => {
   const {
     photoId,
-    tag,
+    recent,
+    year,
     camera,
+    lens,
+    tag,
+    recipe,
     film,
     focal,
-    year,
-    recent,
   } = getPathComponents(pathname);
 
   if (
     (photoId && isPathPhoto(pathname)) ||
-    (tag && isPathTag(pathname)) ||
+    (recent && isPathRecents(pathname)) ||
+    (year && isPathYear(pathname)) ||
     (camera && isPathCamera(pathname)) ||
+    (lens && isPathLens(pathname)) ||
+    (tag && isPathTag(pathname)) ||
     (film && isPathFilm(pathname)) ||
     (focal && isPathFocalLength(pathname)) ||
-    (year && isPathYear(pathname)) ||
-    (recent && isPathRecents(pathname))
+    (recipe && isPathRecipe(pathname))
   ) {
     return PATH_ROOT;
-  } else if (tag && isPathTagPhoto(pathname)) {
-    return pathForTag(tag);
+  } else if (recent && isPathRecentsPhoto(pathname)) {
+    return PREFIX_RECENTS;
+  } else if (year && isPathYearPhoto(pathname)) {
+    return pathForYear(year);
   } else if (camera && isPathCameraPhoto(pathname)) {
     return pathForCamera(camera);
+  } else if (lens && isPathLensPhoto(pathname)) {
+    return pathForLens(lens);
+  } else if (tag && isPathTagPhoto(pathname)) {
+    return pathForTag(tag);
+  } else if (recipe && isPathRecipePhoto(pathname)) {
+    return pathForRecipe(recipe);
   } else if (film && isPathFilmPhoto(pathname)) {
     return pathForFilm(film);
   } else if (focal && isPathFocalLengthPhoto(pathname)) {
     return pathForFocalLength(focal);
-  } else if (year && isPathYearPhoto(pathname)) {
-    return pathForYear(year);
-  } else if (recent && isPathRecentsPhoto(pathname)) {
-    return pathForRecents();
   }
 };

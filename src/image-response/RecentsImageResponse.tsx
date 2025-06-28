@@ -3,14 +3,16 @@ import ImageCaption from './components/ImageCaption';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
 import ImageContainer from './components/ImageContainer';
 import { NextImageSize } from '@/platforms/next-image';
-import { HiLightningBolt } from 'react-icons/hi';
+import IconRecents from '@/components/icons/IconRecents';
 
-export default function RecentsImageResponse({
+export default async function RecentsImageResponse({
+  title,
   photos,
   width,
   height,
   fontFamily,
 }: {
+  title: string
   photos: Photo[]
   width: NextImageSize
   height: number
@@ -29,14 +31,14 @@ export default function RecentsImageResponse({
         width,
         height,
         fontFamily,
-        icon: <HiLightningBolt
-          size={height * .0725}
+        icon: <IconRecents
+          size={height * .09}
           style={{
-            transform: `translateY(${height * .001}px)`,
+            transform: `translateY(${height * .006}px)`,
             marginRight: height * .01,
           }}
         />,
-        title: 'Recents',
+        title,
       }} />
     </ImageContainer>
   );
