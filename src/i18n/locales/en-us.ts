@@ -38,6 +38,7 @@ export const TEXT = {
     recent: 'Recent',
     recentPlural: 'Recents',
     recentTitle: 'Recent Photos',
+    recentSubhead: 'Uploaded {{distance}} ago',
   },
   nav: {
     home: 'Home',

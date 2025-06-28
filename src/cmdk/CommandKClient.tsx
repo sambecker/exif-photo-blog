@@ -31,6 +31,7 @@ import {
   pathForRecipe,
   pathForTag,
   pathForYear,
+  PREFIX_RECENTS,
 } from '../app/paths';
 import Modal from '../components/Modal';
 import { clsx } from 'clsx/lite';
@@ -43,8 +44,6 @@ import { IoInvertModeSharp } from 'react-icons/io5';
 import { useAppState } from '@/state/AppState';
 import { searchPhotosAction } from '@/photo/actions';
 import { RiToolsFill } from 'react-icons/ri';
-import { BiSolidUser } from 'react-icons/bi';
-import { HiDocumentText } from 'react-icons/hi';
 import { signOutAction } from '@/auth/actions';
 import { getKeywordsForPhoto, titleForPhoto } from '@/photo';
 import PhotoDate from '@/photo/PhotoDate';
@@ -88,6 +87,10 @@ import IconFavs from '@/components/icons/IconFavs';
 import IconHidden from '@/components/icons/IconHidden';
 import { useAppText } from '@/i18n/state/client';
 import LoaderButton from '@/components/primitives/LoaderButton';
+import IconRecents from '@/components/icons/IconRecents';
+import { CgFileDocument } from 'react-icons/cg';
+import { FaRegUserCircle } from 'react-icons/fa';
+import { formatDistanceToNow } from 'date-fns';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -125,13 +128,14 @@ const renderToggle = (
 });
 
 export default function CommandKClient({
+  recents,
+  years: _years,
   cameras,
   lenses,
   tags: _tags,
   recipes,
   films,
   focalLengths,
-  years,
   footer,
 }: {
   footer?: string
@@ -292,6 +296,19 @@ export default function CommandKClient({
     }
   }, [isOpen]);
 
+  const recent = recents[0];
+  const recentsStatus = useMemo(() => {
+    const { count, lastModified } = recent;
+    const subhead = appText.category.recentSubhead(
+      formatDistanceToNow(lastModified),
+    );
+    return count ? { count, subhead } : undefined;
+  }, [recent, appText]);
+
+  const years = useMemo(() =>
+    _years.filter(({ year }) => queryLive && year.includes(queryLive))
+  , [_years, queryLive]);
+
   const tags = useMemo(() => {
     const tagsIncludingHidden = photosCountHidden > 0
       ? addHiddenToTags(_tags, photosCountHidden)
@@ -305,6 +322,26 @@ export default function CommandKClient({
     CATEGORY_VISIBILITY
       .map(category => {
         switch (category) {
+        case 'recents': return {
+          heading: appText.category.recentPlural,
+          accessory: <IconRecents size={15} />,
+          items: recentsStatus ? [{
+            label: recentsStatus.subhead,
+            annotation: formatCount(recentsStatus.count),
+            annotationAria: formatCountDescriptive(recentsStatus.count),
+            path: PREFIX_RECENTS,
+          }] : [],
+        };
+        case 'years': return {
+          heading: appText.category.yearPlural,
+          accessory: <IconYear size={14} />,
+          items: years.map(({ year, count }) => ({
+            label: year,
+            annotation: formatCount(count),
+            annotationAria: formatCountDescriptive(count),
+            path: pathForYear(year),
+          })),
+        };
         case 'cameras': return {
           heading: appText.category.cameraPlural,
           accessory: <IconCamera size={14} />,
@@ -386,28 +423,19 @@ export default function CommandKClient({
             path: pathForFocalLength(focal),
           })),
         };
-        case 'years': return {
-          heading: appText.category.yearPlural,
-          accessory: <IconYear size={14} />,
-          items: years.map(({ year, count }) => ({
-            label: year,
-            annotation: formatCount(count),
-            annotationAria: formatCountDescriptive(count),
-            path: pathForYear(year),
-          })),
-        };
         }
       })
       .filter(Boolean) as CommandKSection[]
   , [
     appText,
-    tags,
+    recentsStatus,
+    years,
     cameras,
     lenses,
+    tags,
     recipes,
     films,
     focalLengths,
-    years,
   ]);
 
   const clientSections: CommandKSection[] = [{
@@ -495,13 +523,16 @@ export default function CommandKClient({
 
   const sectionPages: CommandKSection = {
     heading: 'Pages',
-    accessory: <HiDocumentText size={15} className="translate-x-[-1px]" />,
+    accessory: <CgFileDocument size={14} className="translate-x-[-0.5px]" />,
     items: pageItems,
   };
 
   const adminSection: CommandKSection = {
     heading: 'Admin',
-    accessory: <BiSolidUser size={15} className="translate-x-[-1px]" />,
+    accessory: <FaRegUserCircle
+      size={13}
+      className="translate-x-[-0.5px] translate-y-[0.5px]"
+    />,
     items: [],
   };
 

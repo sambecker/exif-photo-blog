@@ -1,6 +1,8 @@
+import { I18N } from '..';
+
 export { bn as default } from 'date-fns/locale/bn';
 
-export const TEXT = {
+export const TEXT: I18N = {
   photo: {
     photo: 'ছবি',
     photoPlural: 'ছবিগুলো',
@@ -38,7 +40,7 @@ export const TEXT = {
     recent: 'সাম্প্রতিক',
     recentPlural: 'সাম্প্রতিক',
     recentTitle: 'সাম্প্রতিক ছবি',
-    recentShare: 'সাম্প্রতিক ছবি',
+    recentSubhead: '{{distance}} আগে আপলোড হয়েছে',
   },
   nav: {
     home: 'হোম',

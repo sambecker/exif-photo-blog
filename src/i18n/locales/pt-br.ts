@@ -39,6 +39,7 @@ export const TEXT: I18N = {
     recent: 'Recente',
     recentPlural: 'Recentes',
     recentTitle: 'Fotos Recentes',
+    recentSubhead: 'Enviado há {{distance}}',
   },
   nav: {
     home: 'Início',
