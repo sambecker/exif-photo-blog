@@ -37,6 +37,7 @@ export default function PhotoGridPageClient({
       count={photosCount}
       sidebar={
         <MaskedScroll
+          ref={ref}
           className={clsx(
             'sticky top-0',
             // Optical adjustment for headerless recents
@@ -45,6 +46,7 @@ export default function PhotoGridPageClient({
           )}
           fadeSize={100}
           setMaxSize={false}
+          updateMaskAfterDelay={500}
         >
           <PhotoGridSidebar {...{
             ...categories,

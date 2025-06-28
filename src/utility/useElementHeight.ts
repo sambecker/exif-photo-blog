@@ -3,16 +3,16 @@ import { useState } from 'react';
 import { RefObject, useEffect } from 'react';
 
 export default function useElementHeight(
-  element: RefObject<HTMLElement | null>,
+  ref: RefObject<HTMLElement | null>,
 ) {
-  const [height, setHeight] = useState(element.current?.clientHeight);
+  const [height, setHeight] = useState(ref.current?.clientHeight);
 
   useEffect(() => {
-    const handleResize = () => setHeight(element.current?.clientHeight);
+    const handleResize = () => setHeight(ref.current?.clientHeight);
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [element]);
+  }, [ref]);
 
   return height;
 }

@@ -18,6 +18,7 @@ export default function useMaskedScroll({
   hideScrollbar = true,
   // Disable when calling 'updateMask' explicitly
   updateMaskOnEvents = true,
+  updateMaskAfterDelay = 0,
   scrollToEndOnMount,
 }: {
   ref: RefObject<HTMLDivElement | null>
@@ -27,6 +28,7 @@ export default function useMaskedScroll({
   animationDuration?: number
   setMaxSize?: boolean
   hideScrollbar?: boolean
+  updateMaskAfterDelay?: number
   scrollToEndOnMount?: boolean
 }) {
   const isVertical = direction === 'vertical';
@@ -50,19 +52,25 @@ export default function useMaskedScroll({
   }, [containerRef, isVertical]);
 
   useEffect(() => {
+    // Conditionally track events
     const ref = containerRef?.current;
-    if (ref) {
-      updateMask();
-      if (updateMaskOnEvents) {
-        ref.onscroll = updateMask;
-        ref.onresize = updateMask;
-        return () => {
-          ref.onscroll = null;
-          ref.onresize = null;
-        };
-      }
+    if (ref && updateMaskOnEvents) {
+      ref.onscroll = updateMask;
+      ref.onresize = updateMask;
+      return () => {
+        ref.onscroll = null;
+        ref.onresize = null;
+      };
     }
-  }, [containerRef, updateMask, updateMaskOnEvents]);
+    if (updateMaskAfterDelay) {
+      // Update after delay
+      const timeout = setTimeout(updateMask, updateMaskAfterDelay);
+      return () => clearTimeout(timeout);
+    } else {
+      // Update on mount
+      updateMask();
+    }
+  }, [containerRef, updateMask, updateMaskOnEvents, updateMaskAfterDelay]);
 
   useEffect(() => {
     const ref = containerRef?.current;

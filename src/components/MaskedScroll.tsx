@@ -9,6 +9,7 @@ export default function MaskedScroll({
   setMaxSize,
   hideScrollbar,
   updateMaskOnEvents,
+  updateMaskAfterDelay,
   scrollToEndOnMount,
   style,
   children,
@@ -27,6 +28,7 @@ Omit<Parameters<typeof useMaskedScroll>[0], 'ref'> &
     setMaxSize,
     hideScrollbar,
     updateMaskOnEvents,
+    updateMaskAfterDelay,
     scrollToEndOnMount,
   });
 
