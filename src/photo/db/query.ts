@@ -23,8 +23,8 @@ import {
 import {
   GetPhotosOptions,
   getLimitAndOffsetFromOptions,
-  getOrderByFromOptions,
 } from '.';
+import { getOrderByFromOptions } from './sort';
 import { getWheresFromOptions } from '.';
 import { FocalLengths } from '@/focal';
 import { Lenses, createLensKey } from '@/lens';

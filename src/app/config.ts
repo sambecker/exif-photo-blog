@@ -8,6 +8,7 @@ import {
   makeUrlAbsolute,
   shortenUrl,
 } from '@/utility/url';
+import { getSortByFromString } from '@/photo/db/sort';
 
 // HARD-CODED GLOBAL CONFIGURATION
 
@@ -269,6 +270,8 @@ export const HIDE_TAGS_WITH_ONE_PHOTO =
 
 // DISPLAY
 
+export const DEFAULT_SORT_BY =
+  getSortByFromString(process.env.NEXT_PUBLIC_DEFAULT_SORT_BY);
 export const SHOW_KEYBOARD_SHORTCUT_TOOLTIPS =
   process.env.NEXT_PUBLIC_HIDE_KEYBOARD_SHORTCUT_TOOLTIPS !== '1';
 export const SHOW_EXIF_DATA =
@@ -321,8 +324,6 @@ export const ALLOW_PUBLIC_DOWNLOADS =
   process.env.NEXT_PUBLIC_ALLOW_PUBLIC_DOWNLOADS === '1';
 export const SITE_FEEDS_ENABLED =
   process.env.NEXT_PUBLIC_SITE_FEEDS === '1';
-export const PRIORITY_ORDER_ENABLED =
-  process.env.NEXT_PUBLIC_IGNORE_PRIORITY_ORDER !== '1';
 export const OG_TEXT_BOTTOM_ALIGNMENT =
   (process.env.NEXT_PUBLIC_OG_TEXT_ALIGNMENT ?? '').toUpperCase() === 'BOTTOM';
 
@@ -406,6 +407,8 @@ export const APP_CONFIGURATION = {
   collapseSidebarCategories: COLLAPSE_SIDEBAR_CATEGORIES,
   hideTagsWithOnePhoto: HIDE_TAGS_WITH_ONE_PHOTO,
   // Display
+  hasDefaultSortBy: Boolean(process.env.NEXT_PUBLIC_DEFAULT_SORT_BY),
+  defaultSortBy: process.env.NEXT_PUBLIC_DEFAULT_SORT_BY ?? 'taken-at',
   showKeyboardShortcutTooltips: SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
   showExifInfo: SHOW_EXIF_DATA,
   showCategoryImageHover: SHOW_CATEGORY_IMAGE_HOVERS,
@@ -433,7 +436,6 @@ export const APP_CONFIGURATION = {
   isGeoPrivacyEnabled: GEO_PRIVACY_ENABLED,
   arePublicDownloadsEnabled: ALLOW_PUBLIC_DOWNLOADS,
   areSiteFeedsEnabled: SITE_FEEDS_ENABLED,
-  isPriorityOrderEnabled: PRIORITY_ORDER_ENABLED,
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,
   // Internal
   areInternalToolsEnabled: (

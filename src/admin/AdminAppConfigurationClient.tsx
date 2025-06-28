@@ -86,6 +86,8 @@ export default function AdminAppConfigurationClient({
   collapseSidebarCategories,
   hideTagsWithOnePhoto,
   // Display
+  hasDefaultSortBy,
+  defaultSortBy,
   showKeyboardShortcutTooltips,
   showExifInfo,
   showCategoryImageHover,
@@ -110,7 +112,6 @@ export default function AdminAppConfigurationClient({
   isGeoPrivacyEnabled,
   arePublicDownloadsEnabled,
   areSiteFeedsEnabled,
-  isPriorityOrderEnabled,
   isOgTextBottomAligned,
   // Internal
   areInternalToolsEnabled,
@@ -596,6 +597,16 @@ export default function AdminAppConfigurationClient({
           optional
         >
           <ChecklistRow
+            title={`Default photo sort: ${defaultSortBy}`}
+            status={hasDefaultSortBy}
+            optional
+          >
+            Set environment variable to any of the following:
+            taken-at (default), taken-at-asc, created-at,
+            created-at-asc, priority
+            {renderEnvVars(['NEXT_PUBLIC_DEFAULT_SORT_BY'])}
+          </ChecklistRow>
+          <ChecklistRow
             title="Show keyboard shortcut tooltips"
             status={showKeyboardShortcutTooltips}
             optional
@@ -789,15 +800,6 @@ export default function AdminAppConfigurationClient({
             {' '}
             {renderLink(PATH_FEED_JSON)} and {renderLink(PATH_RSS_XML)}:
             {renderEnvVars(['NEXT_PUBLIC_SITE_FEEDS'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title="Priority order"
-            status={isPriorityOrderEnabled}
-            optional
-          >
-            Set environment variable to {'"1"'} to prevent
-            priority order photo field affecting photo order:
-            {renderEnvVars(['NEXT_PUBLIC_IGNORE_PRIORITY_ORDER'])}
           </ChecklistRow>
           <ChecklistRow
             title="Legacy OG text alignment"
