@@ -87,7 +87,7 @@ export default function AdminAppConfigurationClient({
   hideTagsWithOnePhoto,
   // Display
   hasDefaultSortBy,
-  defaultSortBy,
+  defaultSortByDescription,
   showKeyboardShortcutTooltips,
   showExifInfo,
   showCategoryImageHover,
@@ -597,7 +597,7 @@ export default function AdminAppConfigurationClient({
           optional
         >
           <ChecklistRow
-            title={`Default photo sort: ${defaultSortBy}`}
+            title={`Default photo sort: ${defaultSortByDescription}`}
             status={hasDefaultSortBy}
             optional
           >

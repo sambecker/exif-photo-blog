@@ -19,6 +19,16 @@ export const getSortByFromString = (sortBy = ''): SortBy => {
   }
 };
 
+export const getSortDescription = (sortBy: SortBy) => {
+  switch (sortBy) {
+  case 'createdAt': return 'created at (newest first)';
+  case 'createdAtAsc': return 'created at (oldest first)';
+  case 'takenAt': return 'taken at (newest first)';
+  case 'takenAtAsc': return 'taken at (oldest first)';
+  case 'priority': return 'Priority-based';
+  }
+};
+
 export const getOrderByFromOptions = (options: GetPhotosOptions) => {
   const { sortBy = DEFAULT_SORT_BY } = options;
 
