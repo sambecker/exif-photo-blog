@@ -9,6 +9,7 @@ import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { getAppText } from '@/i18n/state/server';
+import { SHOW_RECENTS } from '@/app/config';
 
 export const dynamic = 'force-static';
 
@@ -18,10 +19,12 @@ export async function GET() {
     { fontFamily, fonts },
     headers,
   ] = await Promise.all([
-    getPhotosCached({
-      limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
-      recent: true,
-    }),
+    SHOW_RECENTS
+      ? getPhotosCached({
+        limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
+        recent: true,
+      })
+      : [],
     getIBMPlexMono(),
     getImageResponseCacheControlHeaders(),
   ]);
@@ -42,4 +45,4 @@ export async function GET() {
     }}/>,
     { width, height, fonts, headers },
   );
-} 
+}
