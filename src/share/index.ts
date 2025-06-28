@@ -8,6 +8,7 @@ import {
   absolutePathForPhotoImage,
   absolutePathForRecipeImage,
   absolutePathForTagImage,
+  absolutePathForYearImage,
 } from '@/app/paths';
 
 export type ShareModalProps = Omit<PhotoSetAttributes, 'photos'> & {
@@ -23,6 +24,7 @@ export const getSharePathFromShareModalProps = ({
   recipe,
   film,
   focal,
+  year,
 }: ShareModalProps) => {
   if (photo) {
     return absolutePathForPhotoImage(photo);
@@ -38,5 +40,7 @@ export const getSharePathFromShareModalProps = ({
     return absolutePathForFilmImage(film);
   } else if (focal) {
     return absolutePathForFocalLengthImage(focal);
+  } else if (year) {
+    return absolutePathForYearImage(year);
   }
 };

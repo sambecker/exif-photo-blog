@@ -244,6 +244,12 @@ export const BLUR_ENABLED =
 
 export const CATEGORY_VISIBILITY = getOrderedCategoriesFromString(
   process.env.NEXT_PUBLIC_CATEGORY_VISIBILITY);
+export const SHOW_RECENTS =
+  CATEGORY_VISIBILITY.includes('recents');
+export const IS_RECENTS_FIRST =
+  CATEGORY_VISIBILITY[0] === 'recents';
+export const SHOW_YEARS =
+  CATEGORY_VISIBILITY.includes('years');
 export const SHOW_CAMERAS =
   CATEGORY_VISIBILITY.includes('cameras');
 export const SHOW_LENSES =

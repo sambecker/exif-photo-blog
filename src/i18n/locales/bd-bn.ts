@@ -1,6 +1,8 @@
+import { I18N } from '..';
+
 export { bn as default } from 'date-fns/locale/bn';
 
-export const TEXT = {
+export const TEXT: I18N = {
   photo: {
     photo: 'ছবি',
     photoPlural: 'ছবিগুলো',
@@ -31,6 +33,14 @@ export const TEXT = {
     focalLengthPlural: 'ফোকাল দৈর্ঘ্যগুলো',
     focalLengthTitle: '{{focal}} ফোকাল দৈর্ঘ্য',
     focalLengthShare: '{{focal}} এ তোলা ছবিগুলো',
+    year: 'বছর',
+    yearPlural: 'বছরসমূহ',
+    yearShare: '{{year}} ছবি',
+    yearTitle: '{{year}} সালে তোলা ছবি',
+    recent: 'সাম্প্রতিক',
+    recentPlural: 'সাম্প্রতিক',
+    recentTitle: 'সাম্প্রতিক ছবি',
+    recentSubhead: '{{distance}} আগে আপলোড হয়েছে',
   },
   nav: {
     home: 'হোম',

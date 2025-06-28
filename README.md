@@ -132,6 +132,8 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_CATEGORY_VISIBILITY`
   - Comma-separated value controlling which photo sets appear in grid sidebar and CMD-K menu, and in what order. For example, you could move cameras above tags, and hide film simulations, by updating to `cameras,tags,lenses,recipes`.
   - Accepted values:
+     - `recents`
+     - `years`
      - `tags` (default)
      - `cameras` (default)
      - `lenses` (default)

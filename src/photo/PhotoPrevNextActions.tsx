@@ -56,7 +56,7 @@ export default function PhotoPrevNextActions({
   const photoTitle = photo
     ? photo.title
       ? `'${photo.title}'`
-      : 'photo'
+      : appText.photo.photo.toLocaleLowerCase()
     : undefined;
   const downloadUrl = photo?.url;
   const downloadFileName = photo

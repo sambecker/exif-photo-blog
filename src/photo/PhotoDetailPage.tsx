@@ -15,11 +15,15 @@ import RecipeHeader from '@/recipe/RecipeHeader';
 import { ReactNode } from 'react';
 import LensHeader from '@/lens/LensHeader';
 import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
+import YearHeader from '@/years/YearHeader';
+import RecentsHeader from '@/recents/RecentsHeader';
 
 export default function PhotoDetailPage({
   photo,
   photos,
   photosGrid,
+  recent,
+  year,
   tag,
   camera,
   lens,
@@ -60,6 +64,23 @@ export default function PhotoDetailPage({
         count={count}
         dateRange={dateRange}
       />;
+  } else if (year) {
+    customHeader = <YearHeader
+      year={year}
+      photos={photos}
+      selectedPhoto={photo}
+      indexNumber={indexNumber}
+      count={count}
+      dateRange={dateRange}
+    />;
+  } else if (recent) {
+    customHeader = <RecentsHeader
+      photos={photos}
+      selectedPhoto={photo}
+      indexNumber={indexNumber}
+      count={count}
+      dateRange={dateRange}
+    />;
   } else if (camera) {
     customHeader = <CameraHeader
       camera={camera}
@@ -127,6 +148,8 @@ export default function PhotoDetailPage({
             primaryTag={tag}
             priority
             prefetchRelatedLinks
+            recent={recent}
+            year={year}
             showTitle={Boolean(customHeader)}
             showTitleAsH1
             showCamera={!camera}
@@ -134,6 +157,8 @@ export default function PhotoDetailPage({
             showFilm={!film}
             showRecipe={!recipe}
             shouldShare={shouldShare}
+            shouldShareRecents={recent !== undefined}
+            shouldShareYear={year !== undefined}
             shouldShareCamera={camera !== undefined}
             shouldShareLens={lens !== undefined}
             shouldShareTag={tag !== undefined}
@@ -154,6 +179,7 @@ export default function PhotoDetailPage({
           camera={camera}
           film={film}
           focal={focal}
+          year={year}
           animateOnFirstLoadOnly
         />}
       />

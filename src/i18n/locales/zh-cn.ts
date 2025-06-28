@@ -1,7 +1,7 @@
-import { I18NDeepPartial } from '..';
+import { I18N } from '..';
 export { zhCN as default } from 'date-fns/locale/zh-CN';
 
-export const TEXT: I18NDeepPartial = {
+export const TEXT: I18N = {
   photo: {
     photo: '照片',
     photoPlural: '照片',
@@ -32,6 +32,14 @@ export const TEXT: I18NDeepPartial = {
     focalLengthPlural: '焦距',
     focalLengthTitle: '焦距 {{focal}}',
     focalLengthShare: '焦距 {{focal}} 拍摄的照片',
+    year: '年份',
+    yearPlural: '年份',
+    yearShare: '{{year}} 照片',
+    yearTitle: '{{year}} 年拍摄的照片',
+    recent: '最近',
+    recentPlural: '最近',
+    recentTitle: '最近的照片',
+    recentSubhead: '{{distance}} 前上传',
   },
   nav: {
     home: '首页',

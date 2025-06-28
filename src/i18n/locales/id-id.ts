@@ -1,7 +1,7 @@
-import { I18NDeepPartial } from '..';
+import { I18N } from '..';
 export { id as default } from 'date-fns/locale/id';
 
-export const TEXT: I18NDeepPartial = {
+export const TEXT: I18N = {
   photo: {
     photo: 'Foto',
     photoPlural: 'Foto',
@@ -32,6 +32,14 @@ export const TEXT: I18NDeepPartial = {
     focalLengthPlural: 'Panjang Fokus',
     focalLengthTitle: 'Panjang Fokus {{focal}}',
     focalLengthShare: 'Foto diambil pada {{focal}}',
+    year: 'Tahun',
+    yearPlural: 'Tahun',
+    yearShare: 'Foto {{year}}',
+    yearTitle: 'Foto diambil pada tahun {{year}}',
+    recent: 'Terbaru',
+    recentPlural: 'Terbaru',
+    recentTitle: 'Foto Terbaru',
+    recentSubhead: 'Diunggah {{distance}} yang lalu',
   },
   nav: {
     home: 'Beranda',

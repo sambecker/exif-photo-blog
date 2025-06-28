@@ -3,7 +3,7 @@
 import PhotoCamera from '@/camera/PhotoCamera';
 import HeaderList from '@/components/HeaderList';
 import PhotoTag from '@/tag/PhotoTag';
-import { PhotoDateRange, dateRangeForPhotos, photoQuantityText } from '.';
+import { photoQuantityText } from '.';
 import { TAG_FAVS, TAG_HIDDEN, addHiddenToTags, limitTagsByCount } from '@/tag';
 import PhotoFilm from '@/film/PhotoFilm';
 import FavsTag from '../tag/FavsTag';
@@ -27,20 +27,22 @@ import {
 import PhotoFocalLength from '@/focal/PhotoFocalLength';
 import useElementHeight from '@/utility/useElementHeight';
 import { useAppText } from '@/i18n/state/client';
+import IconYear from '@/components/icons/IconYear';
+import PhotoYear from '@/years/PhotoYear';
+import { chunkArray } from '@/utility/array';
+import PhotoRecents from '@/recents/PhotoRecents';
 
-const APPROXIMATE_ITEM_HEIGHT = 34;
+const APPROXIMATE_ITEM_HEIGHT = 36;
 const ABOUT_HEIGHT_OFFSET = 80;
 
 export default function PhotoGridSidebar({
   photosCount,
-  photosDateRange,
   containerHeight,
   aboutTextSafelyParsedHtml,
   aboutTextHasBrParagraphBreaks,
   ..._categories
 }: PhotoSetCategories & {
   photosCount: number
-  photosDateRange?: PhotoDateRange
   containerHeight?: number
   aboutTextSafelyParsedHtml?: string
   aboutTextHasBrParagraphBreaks?: boolean
@@ -54,6 +56,8 @@ export default function PhotoGridSidebar({
   , [_categories]);
 
   const {
+    recents,
+    years,
     cameras,
     lenses,
     tags,
@@ -61,6 +65,8 @@ export default function PhotoGridSidebar({
     recipes,
     focalLengths,
   } = categories;
+
+  const yearRows = useMemo(() => chunkArray(years, 3), [years]);
 
   const categoriesCount = getCategoriesWithItemsCount(
     CATEGORY_VISIBILITY,
@@ -83,16 +89,51 @@ export default function PhotoGridSidebar({
     )
     : undefined;
 
-  const { start, end } = dateRangeForPhotos(
-    undefined,
-    photosDateRange,
-  );
-
   const { photosCountHidden } = useAppState();
 
   const tagsIncludingHidden = useMemo(() =>
     addHiddenToTags(tags, photosCountHidden)
   , [tags, photosCountHidden]);
+
+  const recentsContent = recents.length > 0
+    ? <HeaderList
+      key="recents"
+      items={[<PhotoRecents
+        key="recents"
+        countOnHover={recents[0]?.count}
+        type="text-only"
+        prefetch={false}
+        contrast="low"
+        badged
+      />]}
+    />
+    : null;
+
+  const yearsContent = years.length > 0
+    ? <HeaderList
+      key="years"
+      title="Years"
+      icon={<IconYear
+        size={14}
+        className="translate-x-[0.5px]"
+      />}
+      maxItems={maxItemsPerCategory}
+      items={yearRows.map((row, index) =>
+        <div key={index} className="flex gap-1">
+          {row.map(({ year, count }) =>
+            <PhotoYear
+              key={year}
+              year={year}
+              countOnHover={count}
+              type="text-only"
+              prefetch={false}
+              contrast="low"
+              suppressSpinner
+              badged
+            />)}
+        </div>)}
+    />
+    : null;
 
   const camerasContent = cameras.length > 0
     ? <HeaderList
@@ -243,18 +284,10 @@ export default function PhotoGridSidebar({
     : null;
 
   const photoStatsContent = photosCount > 0
-    ? start
-      ? <HeaderList
-        key="photo-stats"
-        title={photoQuantityText(photosCount, appText, false)}
-        items={start === end
-          ? [start]
-          : [`${end} –`, start]}
-      />
-      : <HeaderList
-        key="photo-stats"
-        items={[photoQuantityText(photosCount, appText, false)]}
-      />
+    ? <HeaderList
+      key="photo-stats"
+      items={[photoQuantityText(photosCount, appText, false)]}
+    />
     : null;
 
   return (
@@ -274,6 +307,8 @@ export default function PhotoGridSidebar({
       />}
       {CATEGORY_VISIBILITY.map(category => {
         switch (category) {
+        case 'recents': return recentsContent;
+        case 'years': return yearsContent;
         case 'cameras': return camerasContent;
         case 'lenses': return lensesContent;
         case 'tags': return tagsContent;

@@ -7,6 +7,10 @@ export const generateAppTextState = (i18n: I18N) => {
     ...i18n,
     category: {
       ...i18n.category,
+      yearTitle: (year: string) =>
+        i18n.category.yearTitle.replace('{{year}}', year),
+      yearShare: (year: string) =>
+        i18n.category.yearShare.replace('{{year}}', year),
       cameraTitle: (camera: string) =>
         i18n.category.cameraTitle.replace('{{camera}}', camera),
       cameraShare: (camera: string) =>
@@ -21,6 +25,8 @@ export const generateAppTextState = (i18n: I18N) => {
         i18n.category.focalLengthTitle.replace('{{focal}}', focal),
       focalLengthShare: (focal: string) =>
         i18n.category.focalLengthShare.replace('{{focal}}', focal),
+      recentSubhead: (distance: string) =>
+        i18n.category.recentSubhead.replace('{{distance}}', distance),
     },
     admin: {
       ...i18n.admin,

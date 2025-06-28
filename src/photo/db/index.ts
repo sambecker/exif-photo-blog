@@ -48,6 +48,8 @@ export const getWheresFromOptions = (
     updatedBefore,
     query,
     maximumAspectRatio,
+    recent,
+    year,
     tag,
     camera,
     lens,
@@ -89,6 +91,14 @@ export const getWheresFromOptions = (
   if (maximumAspectRatio) {
     wheres.push(`aspect_ratio <= $${valuesIndex++}`);
     wheresValues.push(maximumAspectRatio);
+  }
+  if (recent) {
+    // eslint-disable-next-line max-len
+    wheres.push('created_at >= (SELECT MAX(created_at) - INTERVAL \'14 days\' FROM photos)');
+  }
+  if (year) {
+    wheres.push(`EXTRACT(YEAR FROM taken_at) = $${valuesIndex++}`);
+    wheresValues.push(year);
   }
   if (camera?.make) {
     wheres.push(`${parameterizeForDb('make')}=$${valuesIndex++}`);

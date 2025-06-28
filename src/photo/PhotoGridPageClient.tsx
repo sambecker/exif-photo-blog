@@ -9,6 +9,7 @@ import { useAppState } from '@/state/AppState';
 import clsx from 'clsx/lite';
 import useElementHeight from '@/utility/useElementHeight';
 import MaskedScroll from '@/components/MaskedScroll';
+import { IS_RECENTS_FIRST } from '@/app/config';
 
 export default function PhotoGridPageClient({
   photos,
@@ -36,12 +37,16 @@ export default function PhotoGridPageClient({
       count={photosCount}
       sidebar={
         <MaskedScroll
+          ref={ref}
           className={clsx(
-            'sticky top-0 -mb-5 -mt-5',
+            'sticky top-0',
+            // Optical adjustment for headerless recents
+            IS_RECENTS_FIRST ? '-mb-4.5 -mt-4.5' : '-mb-5 -mt-5',
             'max-h-screen py-4',
           )}
           fadeSize={100}
           setMaxSize={false}
+          updateMaskAfterDelay={500}
         >
           <PhotoGridSidebar {...{
             ...categories,

@@ -1,10 +1,12 @@
 import {
+  getPhotosMeta,
   getUniqueCameras,
   getUniqueFilms,
   getUniqueFocalLengths,
   getUniqueLenses,
   getUniqueRecipes,
   getUniqueTags,
+  getUniqueYears,
 } from '@/photo/db/query';
 import {
   SHOW_FILMS,
@@ -13,6 +15,8 @@ import {
   SHOW_RECIPES,
   SHOW_CAMERAS,
   SHOW_TAGS,
+  SHOW_YEARS,
+  SHOW_RECENTS,
 } from '@/app/config';
 import { createLensKey } from '@/lens';
 import { sortTagsByCount } from '@/tag';
@@ -22,6 +26,8 @@ import { sortFocalLengths } from '@/focal';
 type CategoryData = Awaited<ReturnType<typeof getDataForCategories>>;
 
 export const NULL_CATEGORY_DATA: CategoryData = {
+  recents: [],
+  years: [],
   cameras: [],
   lenses: [],
   tags: [],
@@ -31,6 +37,18 @@ export const NULL_CATEGORY_DATA: CategoryData = {
 };
 
 export const getDataForCategories = () => Promise.all([
+  SHOW_RECENTS
+    ? getPhotosMeta({ recent: true })
+      .then(({ count, dateRange }) => [{
+        count,
+        lastModified: new Date(dateRange?.end ?? ''),
+      }])
+      .catch(() => [])
+    : undefined,
+  SHOW_YEARS
+    ? getUniqueYears()
+      .catch(() => [])
+    : undefined,
   SHOW_CAMERAS
     ? getUniqueCameras()
       .then(sortCategoriesByCount)
@@ -62,6 +80,8 @@ export const getDataForCategories = () => Promise.all([
       .catch(() => [])
     : undefined,
 ]).then(([
+  recents = [],
+  years = [],
   cameras = [],
   lenses = [],
   tags = [],
@@ -69,11 +89,20 @@ export const getDataForCategories = () => Promise.all([
   films = [],
   focalLengths = [],
 ]) => ({
-  cameras, lenses, tags, recipes, films, focalLengths,
+  recents,
+  years,
+  cameras,
+  lenses,
+  tags,
+  recipes,
+  films,
+  focalLengths,
 }));
 
 export const getCountsForCategories = async () => {
   const {
+    recents,
+    years,
     cameras,
     lenses,
     tags,
@@ -83,6 +112,13 @@ export const getCountsForCategories = async () => {
   } = await getDataForCategories();
 
   return {
+    recents: recents[0]?.count
+      ? { count: recents[0].count }
+      : {} as Record<string, number>,
+    years: years.reduce((acc, year) => {
+      acc[year.year] = year.count;
+      return acc;
+    }, {} as Record<string, number>),
     cameras: cameras.reduce((acc, camera) => {
       acc[camera.cameraKey] = camera.count;
       return acc;
