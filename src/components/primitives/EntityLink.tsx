@@ -99,7 +99,8 @@ export default function EntityLink({
         'peer',
         'inline-flex items-center gap-2 max-w-full truncate',
         classForContrast(),
-        path && !badged && 'hover:text-gray-900 dark:hover:text-gray-100',
+        path && !badged && contrast !== 'frosted' &&
+          'hover:text-gray-900 dark:hover:text-gray-100',
         path && !badged && 'active:text-medium!',
       )}
       isLoading={isLoading}
@@ -156,6 +157,7 @@ export default function EntityLink({
           title={label}
           path={tooltipImagePath}
           caption={tooltipCaption}
+          color={contrast === 'frosted' ? 'frosted' : undefined}
         >
           {renderLink}
         </OGTooltip>

@@ -1,4 +1,5 @@
-import { createContext, ReactNode, use } from 'react';
+import { ComponentProps, createContext, ReactNode, use } from 'react';
+import MenuSurface from '../primitives/MenuSurface';
 
 export type Tooltip = {
   content: ReactNode
@@ -6,6 +7,7 @@ export type Tooltip = {
   height: number
   offsetAbove: number
   offsetBelow: number
+  color?: ComponentProps<typeof MenuSurface>['color']
 }
 
 export type OGTooltipState = {

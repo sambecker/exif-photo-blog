@@ -2,7 +2,7 @@ import { ComponentProps, ReactNode, useRef, useEffect } from 'react';
 import OGLoaderImage from './OGLoaderImage';
 import { IMAGE_OG_DIMENSION } from '@/image-response';
 import clsx from 'clsx/lite';
-import { useOGTooltipState } from './state';
+import { Tooltip, useOGTooltipState } from './state';
 import useSupportsHover from '@/utility/useSupportsHover';
 
 const { aspectRatio } = IMAGE_OG_DIMENSION;
@@ -15,10 +15,12 @@ const offsetBelow = -6;
 export default function OGTooltip({
   children,
   caption,
+  color,
   ...props
 }: {
   children :ReactNode
   caption?: ReactNode
+  color?: Tooltip['color']
 } & ComponentProps<typeof OGLoaderImage>) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -40,7 +42,9 @@ export default function OGTooltip({
         {...props}
         className={clsx(
           'overflow-hidden rounded-[0.25rem]',
-          'outline-medium bg-extra-dim',
+          color === 'frosted'
+            ? 'outline outline-gray-400/25'
+            : 'outline-medium bg-extra-dim',
         )}
       />
       {caption && <div className={clsx(
@@ -61,7 +65,7 @@ export default function OGTooltip({
       onMouseEnter={() => supportsHover &&
         showTooltip?.(
           ref.current,
-          { content, width, height, offsetAbove, offsetBelow },
+          { content, width, height, offsetAbove, offsetBelow, color },
         )}
       onMouseLeave={() => supportsHover &&
         dismissTooltip?.(ref.current)}

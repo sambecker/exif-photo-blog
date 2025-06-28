@@ -107,7 +107,7 @@ export default function OGTooltipProvider({
 
   return (
     <OGTooltipContext.Provider value={{ showTooltip, dismissTooltip }}>
-      <div className="relative inset-0 z-50 pointer-events-none">
+      <div className="relative inset-0 z-100 pointer-events-none">
         <AnimatePresence>
           {currentTooltip &&
             <motion.div
@@ -119,7 +119,10 @@ export default function OGTooltipProvider({
               className="fixed"
               style={tooltipStyle}
             >
-              <MenuSurface className="max-w-none p-1!">
+              <MenuSurface
+                className="max-w-none p-1!"
+                color={currentTooltip.color}
+              >
                 {currentTooltip.content}
               </MenuSurface>
             </motion.div>}
