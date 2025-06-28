@@ -43,7 +43,7 @@ export default function PhotoHeader({
   hasAiTextGeneration: boolean
   includeShareButton?: boolean
 } & PhotoSetCategory) {
-  const { isGridHighDensity } = useAppState();
+  const { isGridHighDensity, isSortingOldestFirst } = useAppState();
 
   const appText = useAppText();
 
@@ -76,7 +76,9 @@ export default function PhotoHeader({
     <span className="text-dim uppercase text-right">
       {start === end
         ? start
-        : <>{end}<br />&ndash; {start}</>}
+        : isSortingOldestFirst
+          ? <>{start}<br />&ndash; {end}</>
+          : <>{end}<br />&ndash; {start}</>}
     </span>;
 
   const renderContentA = entity ?? (

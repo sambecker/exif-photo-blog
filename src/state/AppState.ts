@@ -14,6 +14,7 @@ import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 import { AdminData } from '@/admin/actions';
 import { RecipeProps } from '@/recipe';
 import { getCountsForCategoriesCachedAction } from '@/category/actions';
+import { SortBy } from '@/photo/db/sort';
 
 export type AppStateContextType = {
   // CORE
@@ -22,6 +23,9 @@ export type AppStateContextType = {
   setHasLoaded?: Dispatch<SetStateAction<boolean>>
   swrTimestamp?: number
   invalidateSwr?: () => void
+  sortBy?: SortBy
+  setSortBy?: Dispatch<SetStateAction<SortBy>>
+  isSortingOldestFirst?: boolean
   nextPhotoAnimation?: AnimationConfig
   setNextPhotoAnimation?: (animationConfig?: AnimationConfig) => void
   getNextPhotoAnimationId?: () => string

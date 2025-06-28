@@ -1,12 +1,20 @@
 'use client';
 
-import { useState, useEffect, ReactNode, useCallback, useRef } from 'react';
+import {
+  useState,
+  useEffect,
+  ReactNode,
+  useCallback,
+  useRef,
+  useMemo,
+} from 'react';
 import { AppStateContext } from './AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import usePathnames from '@/utility/usePathnames';
 import { getAuthAction } from '@/auth/actions';
 import useSWR from 'swr';
 import {
+  DEFAULT_SORT_BY,
   HIGH_DENSITY_GRID,
   IS_DEVELOPMENT,
   MATTE_PHOTOS,
@@ -27,6 +35,7 @@ import { RecipeProps } from '@/recipe';
 import { getCountsForCategoriesCachedAction } from '@/category/actions';
 import { nanoid } from 'nanoid';
 import { toastSuccess } from '@/toast';
+import { isSortOldestFirst } from '@/photo/db/sort';
 
 export default function AppStateProvider({
   children,
@@ -48,6 +57,10 @@ export default function AppStateProvider({
     useState(Date.now());
   const [nextPhotoAnimation, _setNextPhotoAnimation] =
     useState<AnimationConfig>();
+  const [sortBy, setSortBy] =
+    useState(DEFAULT_SORT_BY);
+  const isSortingOldestFirst =
+    useMemo(() => isSortOldestFirst(sortBy), [sortBy]);
   const setNextPhotoAnimation = useCallback((animation?: AnimationConfig) => {
     _setNextPhotoAnimation(animation);
     setNextPhotoAnimationId(undefined);
@@ -204,6 +217,9 @@ export default function AppStateProvider({
         setHasLoaded,
         swrTimestamp,
         invalidateSwr,
+        sortBy,
+        setSortBy,
+        isSortingOldestFirst,
         nextPhotoAnimation,
         setNextPhotoAnimation,
         getNextPhotoAnimationId,

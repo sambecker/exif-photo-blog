@@ -45,3 +45,6 @@ export const getOrderByFromOptions = (options: GetPhotosOptions) => {
     return 'ORDER BY priority_order ASC, taken_at DESC';
   }
 };
+
+export const isSortOldestFirst = (sortBy: SortBy) =>
+  sortBy === 'takenAtAsc' || sortBy === 'createdAtAsc';
