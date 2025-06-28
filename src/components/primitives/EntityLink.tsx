@@ -18,6 +18,7 @@ export interface EntityLinkExternalProps {
   showTooltip?: boolean
   uppercase?: boolean
   prefetch?: boolean
+  suppressSpinner?: boolean
   className?: string
 }
 
@@ -44,6 +45,7 @@ export default function EntityLink({
   className,
   classNameIcon,
   uppercase,
+  suppressSpinner,
   debug,
 }: {
   icon: ReactNode
@@ -166,7 +168,7 @@ export default function EntityLink({
         <span className="hidden peer-hover:inline text-dim">
           {hoverEntity}
         </span>}
-      {isLoading &&
+      {isLoading && !suppressSpinner &&
         <Spinner
           className={clsx(
             badged && 'translate-y-[0.5px]',

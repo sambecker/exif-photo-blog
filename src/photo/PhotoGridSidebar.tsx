@@ -128,6 +128,7 @@ export default function PhotoGridSidebar({
               type="text-only"
               prefetch={false}
               contrast="low"
+              suppressSpinner
               badged
             />)}
         </div>)}
