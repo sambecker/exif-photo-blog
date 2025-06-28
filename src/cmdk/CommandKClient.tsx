@@ -298,6 +298,7 @@ export default function CommandKClient({
 
   const recent = recents[0];
   const recentsStatus = useMemo(() => {
+    if (!recent) { return undefined; }
     const { count, lastModified } = recent;
     const subhead = appText.category.recentSubhead(
       formatDistanceToNow(lastModified),
