@@ -128,7 +128,7 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_IMAGE_QUALITY = 1-100` controls the quality of large photos
 - `NEXT_PUBLIC_BLUR_DISABLED = 1` prevents image blur data being stored and displayed (potentially useful for limiting Postgres usage)
 
-#### Categories
+#### Photo sets
 - `NEXT_PUBLIC_CATEGORY_VISIBILITY`
   - Comma-separated value controlling which photo sets appear in grid sidebar and CMD-K menu, and in what order. For example, you could move cameras above tags, and hide film simulations, by updating to `cameras,tags,lenses,recipes`.
   - Accepted values:
@@ -143,8 +143,18 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_EXHAUSTIVE_SIDEBAR_CATEGORIES = 1` always shows expanded sidebar content
 - `NEXT_PUBLIC_HIDE_TAGS_WITH_ONE_PHOTO = 1` to only show tags with 2 or more photos
 
+#### Homepage Sorting
+- `NEXT_PUBLIC_DEFAULT_SORT`
+  - Sets default sort on grid/feed homepages
+  - Accepted values:
+    - taken-at (default)
+    - taken-at-oldest-first
+    - uploaded-at
+    - uploaded-at-oldest-first
+- `NEXT_PUBLIC_PRIORITY_BASED_SORTING = 1` takes priority field into account when sorting photos (⚠️ enabling may have performance consequences)
+- `NEXT_PUBLIC_SHOW_SORT_CONTROL = 1` shows sort control in desktop nav on grid/feed homepages
+
 #### Display
-- `NEXT_PUBLIC_NEXT_PUBLIC_DEFAULT_SORT_BY` sets default photo sort order—accepted values: taken-at (default), taken-at-oldest-first, uploaded-at, uploaded-at-oldest-first, priority
 - `NEXT_PUBLIC_HIDE_KEYBOARD_SHORTCUT_TOOLTIPS = 1` hides keyboard shortcut hints in areas like the main nav, and previous/next photo links
 - `NEXT_PUBLIC_HIDE_EXIF_DATA = 1` hides EXIF data in photo details and OG images (potentially useful for portfolios, which don't focus on photography)
 - `NEXT_PUBLIC_CATEGORY_IMAGE_HOVERS = 1` shows images when hovering over category links like cameras and lenses (⚠️ setting `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORY_OG_IMAGES = 1` strongly recommended for responsive hover interactions)

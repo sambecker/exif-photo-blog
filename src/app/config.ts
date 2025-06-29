@@ -271,7 +271,7 @@ export const HIDE_TAGS_WITH_ONE_PHOTO =
 // SORT
 
 export const USER_DEFAULT_SORT_BY =
-  getSortByFromString(process.env.NEXT_PUBLIC_DEFAULT_SORT_BY);
+  getSortByFromString(process.env.NEXT_PUBLIC_DEFAULT_SORT);
 export const USER_DEFAULT_SORT_WITH_PRIORITY =
   process.env.NEXT_PUBLIC_PRIORITY_BASED_SORTING === '1';
 export const USER_DEFAULT_SORT_OPTIONS = {
@@ -418,7 +418,7 @@ export const APP_CONFIGURATION = {
   collapseSidebarCategories: COLLAPSE_SIDEBAR_CATEGORIES,
   hideTagsWithOnePhoto: HIDE_TAGS_WITH_ONE_PHOTO,
   // Sort
-  hasDefaultSortBy: Boolean(process.env.NEXT_PUBLIC_DEFAULT_SORT_BY),
+  hasDefaultSortBy: Boolean(process.env.NEXT_PUBLIC_DEFAULT_SORT),
   defaultSortBy: USER_DEFAULT_SORT_BY,
   isSortWithPriority: USER_DEFAULT_SORT_WITH_PRIORITY,
   showSortControl: SHOW_SORT_CONTROL,
