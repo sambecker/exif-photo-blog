@@ -12,12 +12,11 @@ import {
   BiLockAlt,
   BiPencil,
 } from 'react-icons/bi';
-import { HiOutlineCog } from 'react-icons/hi';
+import { HiOutlineCog, HiSparkles } from 'react-icons/hi';
 import ChecklistGroup from '@/components/ChecklistGroup';
 import { AppConfiguration } from '../app/config';
 import StatusIcon from '@/components/StatusIcon';
 import { labelForStorage } from '@/platforms/storage';
-import { HiSparkles } from 'react-icons/hi';
 import { testConnectionsAction } from '@/admin/actions';
 import ErrorNote from '@/components/ErrorNote';
 import { RiSpeedMiniLine } from 'react-icons/ri';

@@ -24,8 +24,8 @@ import {
   GetPhotosOptions,
   getOrderByFromOptions,
   getLimitAndOffsetFromOptions,
+  getWheresFromOptions,
 } from '.';
-import { getWheresFromOptions } from '.';
 import { FocalLengths } from '@/focal';
 import { Lenses, createLensKey } from '@/lens';
 import { migrationForError } from './migration';

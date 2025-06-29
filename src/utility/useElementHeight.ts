@@ -1,6 +1,4 @@
-import { useState } from 'react';
-
-import { RefObject, useEffect } from 'react';
+import { useState, RefObject, useEffect } from 'react';
 
 export default function useElementHeight(
   ref: RefObject<HTMLElement | null>,
