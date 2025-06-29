@@ -10,14 +10,17 @@ import clsx from 'clsx/lite';
 import useElementHeight from '@/utility/useElementHeight';
 import MaskedScroll from '@/components/MaskedScroll';
 import { IS_RECENTS_FIRST } from '@/app/config';
+import { SortBy } from './db/sort';
 
 export default function PhotoGridPageClient({
   photos,
   photosCount,
+  sortBy,
   ...categories
 }: ComponentProps<typeof PhotoGridSidebar> & {
   photos: Photo[]
   photosCount: number
+  sortBy?: SortBy
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -35,6 +38,7 @@ export default function PhotoGridPageClient({
       cacheKey={`page-${PATH_GRID_INFERRED}`}
       photos={photos}
       count={photosCount}
+      sortBy={sortBy}
       sidebar={
         <MaskedScroll
           ref={ref}

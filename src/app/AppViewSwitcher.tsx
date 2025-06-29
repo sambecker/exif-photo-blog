@@ -3,6 +3,7 @@ import SwitcherItem from '@/components/SwitcherItem';
 import IconFeed from '@/components/icons/IconFeed';
 import IconGrid from '@/components/icons/IconGrid';
 import {
+  doesPathOfferSort,
   PATH_FEED_INFERRED,
   PATH_GRID_INFERRED,
 } from '@/app/paths';
@@ -11,6 +12,7 @@ import { useAppState } from '@/state/AppState';
 import {
   GRID_HOMEPAGE_ENABLED,
   SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
+  SHOW_SORT_CONTROL,
 } from './config';
 import AdminAppMenu from '@/admin/AdminAppMenu';
 import Spinner from '@/components/Spinner';
@@ -20,6 +22,8 @@ import useKeydownHandler from '@/utility/useKeydownHandler';
 import { usePathname } from 'next/navigation';
 import { KEY_COMMANDS } from '@/photo/key-commands';
 import { useAppText } from '@/i18n/state/client';
+import IconSort from '@/components/icons/IconSort';
+import { getSortPathsFromPath } from '@/photo/db/sort-path';
 
 export type SwitcherSelection = 'feed' | 'grid' | 'admin';
 
@@ -39,6 +43,14 @@ export default function AppViewSwitcher({
     isUserSignedInEager,
     setIsCommandKOpen,
   } = useAppState();
+
+  const showSortControl = SHOW_SORT_CONTROL && doesPathOfferSort(pathname);
+  const {
+    pathGrid,
+    pathFeed,
+    pathSort,
+    isPathAscending,
+  } = getSortPathsFromPath(pathname);
 
   const refHrefFeed = useRef<HTMLAnchorElement>(null);
   const refHrefGrid = useRef<HTMLAnchorElement>(null);
@@ -65,7 +77,7 @@ export default function AppViewSwitcher({
   const renderItemFeed =
     <SwitcherItem
       icon={<IconFeed includeTitle={false} />}
-      href={PATH_FEED_INFERRED}
+      href={pathFeed}
       hrefRef={refHrefFeed}
       active={currentSelection === 'feed'}
       tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
@@ -78,7 +90,7 @@ export default function AppViewSwitcher({
   const renderItemGrid =
     <SwitcherItem
       icon={<IconGrid includeTitle={false} />}
-      href={PATH_GRID_INFERRED}
+      href={pathGrid}
       hrefRef={refHrefGrid}
       active={currentSelection === 'grid'}
       tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
@@ -126,6 +138,21 @@ export default function AppViewSwitcher({
             noPadding
           />}
       </Switcher>
+      {showSortControl &&
+        <Switcher className="max-sm:hidden">
+          <SwitcherItem
+            href={pathSort}
+            icon={<IconSort
+              sort={isPathAscending ? 'asc' : 'desc'}
+              className="translate-x-[0.5px] translate-y-[1px]"
+            />}
+            tooltip={{
+              content: isPathAscending
+                ? 'View newest first'
+                : 'View oldest first',
+            }}
+          />
+        </Switcher>}
       <Switcher type="borderless">
         <SwitcherItem
           icon={<IconSearch includeTitle={false} />}

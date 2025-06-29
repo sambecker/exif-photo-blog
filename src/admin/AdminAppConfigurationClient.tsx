@@ -602,8 +602,8 @@ export default function AdminAppConfigurationClient({
             optional
           >
             Set environment variable to any of the following:
-            taken-at (default), taken-at-asc, created-at,
-            created-at-asc, priority
+            taken-at (default), taken-at-oldest-first, uploaded-at,
+            uploaded-at-oldest-first, priority
             {renderEnvVars(['NEXT_PUBLIC_DEFAULT_SORT_BY'])}
           </ChecklistRow>
           <ChecklistRow

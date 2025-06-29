@@ -1,4 +1,3 @@
-import { DEFAULT_SORT_BY } from '@/app/config';
 import { GetPhotosOptions } from '.';
 
 export type SortBy =
@@ -8,12 +7,21 @@ export type SortBy =
   'takenAtAsc' |
   'priority';
 
+export type SortParams = Promise<{
+  sortType: string
+  sortOrder: string
+}>
+
+export interface SortProps {
+  params: SortParams
+}
+
 export const getSortByFromString = (sortBy = ''): SortBy => {
   switch (sortBy) {
-  case 'created-at': return 'createdAt';
-  case 'created-at-asc': return 'createdAtAsc';
   case 'taken-at': return 'takenAt';
-  case 'taken-at-asc': return 'takenAtAsc';
+  case 'taken-at-oldest-first': return 'takenAtAsc';
+  case 'uploaded-at': return 'createdAt';
+  case 'uploaded-at-oldest-first': return 'createdAtAsc';
   case 'priority': return 'priority';
   default:return 'takenAt';
   }
@@ -21,16 +29,16 @@ export const getSortByFromString = (sortBy = ''): SortBy => {
 
 export const getSortDescription = (sortBy: SortBy) => {
   switch (sortBy) {
-  case 'createdAt': return 'created at (newest first)';
-  case 'createdAtAsc': return 'created at (oldest first)';
   case 'takenAt': return 'taken at (newest first)';
   case 'takenAtAsc': return 'taken at (oldest first)';
-  case 'priority': return 'Priority-based';
+  case 'createdAt': return 'uploaded at (newest first)';
+  case 'createdAtAsc': return 'uploaded at (oldest first)';
+  case 'priority': return 'priority-based';
   }
 };
 
 export const getOrderByFromOptions = (options: GetPhotosOptions) => {
-  const { sortBy = DEFAULT_SORT_BY } = options;
+  const { sortBy = 'takenAt' } = options;
 
   switch (sortBy) {
   case 'createdAt':
@@ -46,5 +54,5 @@ export const getOrderByFromOptions = (options: GetPhotosOptions) => {
   }
 };
 
-export const isSortOldestFirst = (sortBy: SortBy) =>
+export const isSortAscending = (sortBy: SortBy) =>
   sortBy === 'takenAtAsc' || sortBy === 'createdAtAsc';

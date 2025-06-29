@@ -13,6 +13,7 @@ import PhotoFeedPage from '@/photo/PhotoFeedPage';
 import PhotoGridPage from '@/photo/PhotoGridPage';
 import { getDataForCategoriesCached } from '@/category/cache';
 import { getPhotosMetaCached } from '@/photo/cache';
+
 export const dynamic = 'force-static';
 export const maxDuration = 60;
 

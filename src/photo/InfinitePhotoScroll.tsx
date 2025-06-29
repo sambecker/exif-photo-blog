@@ -15,9 +15,9 @@ import { Photo } from '.';
 import { PhotoSetCategory } from '../category';
 import { clsx } from 'clsx/lite';
 import { useAppState } from '@/state/AppState';
-import { GetPhotosOptions } from './db';
 import useVisible from '@/utility/useVisible';
 import { ADMIN_DB_OPTIMIZE_ENABLED } from '@/app/config';
+import { SortBy } from './db/sort';
 
 export type RevalidatePhoto = (
   photoId: string,
@@ -42,7 +42,7 @@ export default function InfinitePhotoScroll({
 }: {
   initialOffset: number
   itemsPerPage: number
-  sortBy?: GetPhotosOptions['sortBy']
+  sortBy?: SortBy
   cacheKey: string
   wrapMoreButtonInGrid?: boolean
   useCachedPhotos?: boolean

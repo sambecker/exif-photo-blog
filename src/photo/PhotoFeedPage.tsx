@@ -4,19 +4,23 @@ import {
 } from '.';
 import PhotosLarge from './PhotosLarge';
 import PhotosLargeInfinite from './PhotosLargeInfinite';
+import { SortBy } from './db/sort';
 
 export default function PhotoFeedPage({
   photos,
   photosCount,
+  sortBy,
 }:{
   photos: Photo[]
   photosCount: number
+  sortBy?: SortBy
 }) {
   return (
     <div className="space-y-1">
       <PhotosLarge {...{ photos }} />
       {photosCount > photos.length &&
         <PhotosLargeInfinite
+          sortBy={sortBy}
           initialOffset={photos.length}
           itemsPerPage={INFINITE_SCROLL_FEED_MULTIPLE}
         />}

@@ -9,27 +9,33 @@ import { cache } from 'react';
 import PhotoGridPage from '@/photo/PhotoGridPage';
 import { getDataForCategoriesCached } from '@/category/cache';
 import { getPhotosMetaCached } from '@/photo/cache';
+import { SortBy, SortProps } from '@/photo/db/sort';
+import { getSortByFromParams } from '@/photo/db/sort-path';
 
-export const dynamic = 'force-static';
 export const maxDuration = 60;
 
-const getPhotosCached = cache(() => getPhotos({
+const getPhotosCached = cache((sortBy: SortBy) => getPhotos({
+  sortBy,
   limit: INFINITE_SCROLL_GRID_INITIAL,
 }));
 
-export async function generateMetadata(): Promise<Metadata> {
-  const photos = await getPhotosCached()
+export async function generateMetadata({
+  params,
+}: SortProps): Promise<Metadata> {
+  const sortBy = await getSortByFromParams(params);
+  const photos = await getPhotosCached(sortBy)
     .catch(() => []);
   return generateOgImageMetaForPhotos(photos);
 }
 
-export default async function GridPage() {
+export default async function GridPage({ params }: SortProps) {
+  const sortBy = await getSortByFromParams(params);
   const [
     photos,
     photosCount,
     categories,
   ] = await Promise.all([
-    getPhotosCached()
+    getPhotosCached(sortBy)
       .catch(() => []),
     getPhotosMetaCached()
       .then(({ count }) => count)
@@ -43,6 +49,7 @@ export default async function GridPage() {
         {...{
           photos,
           photosCount,
+          sortBy,
           ...categories,
         }}
       />

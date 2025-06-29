@@ -8,7 +8,10 @@ import {
   makeUrlAbsolute,
   shortenUrl,
 } from '@/utility/url';
-import { getSortByFromString, getSortDescription } from '@/photo/db/sort';
+import {
+  getSortByFromString,
+  getSortDescription,
+} from '@/photo/db/sort';
 
 // HARD-CODED GLOBAL CONFIGURATION
 
@@ -272,8 +275,8 @@ export const HIDE_TAGS_WITH_ONE_PHOTO =
 
 export const DEFAULT_SORT_BY =
   getSortByFromString(process.env.NEXT_PUBLIC_DEFAULT_SORT_BY);
-export const DEFAULT_SORT_BY_DESCRIPTION =
-  getSortDescription(DEFAULT_SORT_BY);
+export const SHOW_SORT_CONTROL =
+  process.env.NEXT_PUBLIC_SHOW_SORT_CONTROL === '1';
 export const SHOW_KEYBOARD_SHORTCUT_TOOLTIPS =
   process.env.NEXT_PUBLIC_HIDE_KEYBOARD_SHORTCUT_TOOLTIPS !== '1';
 export const SHOW_EXIF_DATA =
@@ -410,7 +413,8 @@ export const APP_CONFIGURATION = {
   hideTagsWithOnePhoto: HIDE_TAGS_WITH_ONE_PHOTO,
   // Display
   hasDefaultSortBy: Boolean(process.env.NEXT_PUBLIC_DEFAULT_SORT_BY),
-  defaultSortByDescription: DEFAULT_SORT_BY_DESCRIPTION,
+  defaultSortByDescription: getSortDescription(DEFAULT_SORT_BY),
+  showSortControl: SHOW_SORT_CONTROL,
   showKeyboardShortcutTooltips: SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
   showExifInfo: SHOW_EXIF_DATA,
   showCategoryImageHover: SHOW_CATEGORY_IMAGE_HOVERS,
