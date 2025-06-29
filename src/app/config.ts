@@ -8,10 +8,7 @@ import {
   makeUrlAbsolute,
   shortenUrl,
 } from '@/utility/url';
-import {
-  getSortByFromString,
-  getSortDescription,
-} from '@/photo/db/sort';
+import { getSortByFromString } from '@/photo/db/sort';
 
 // HARD-CODED GLOBAL CONFIGURATION
 
@@ -271,12 +268,21 @@ export const COLLAPSE_SIDEBAR_CATEGORIES =
 export const HIDE_TAGS_WITH_ONE_PHOTO =
   process.env.NEXT_PUBLIC_HIDE_TAGS_WITH_ONE_PHOTO === '1';
 
-// DISPLAY
+// SORT
 
-export const DEFAULT_SORT_BY =
+export const USER_DEFAULT_SORT_BY =
   getSortByFromString(process.env.NEXT_PUBLIC_DEFAULT_SORT_BY);
+export const USER_DEFAULT_SORT_WITH_PRIORITY =
+  process.env.NEXT_PUBLIC_PRIORITY_BASED_SORTING === '1';
+export const USER_DEFAULT_SORT_OPTIONS = {
+  sortBy: USER_DEFAULT_SORT_BY,
+  sortWithPriority: USER_DEFAULT_SORT_WITH_PRIORITY,
+};
 export const SHOW_SORT_CONTROL =
   process.env.NEXT_PUBLIC_SHOW_SORT_CONTROL === '1';
+
+// DISPLAY
+
 export const SHOW_KEYBOARD_SHORTCUT_TOOLTIPS =
   process.env.NEXT_PUBLIC_HIDE_KEYBOARD_SHORTCUT_TOOLTIPS !== '1';
 export const SHOW_EXIF_DATA =
@@ -411,10 +417,12 @@ export const APP_CONFIGURATION = {
   categoryVisibility: CATEGORY_VISIBILITY,
   collapseSidebarCategories: COLLAPSE_SIDEBAR_CATEGORIES,
   hideTagsWithOnePhoto: HIDE_TAGS_WITH_ONE_PHOTO,
-  // Display
+  // Sort
   hasDefaultSortBy: Boolean(process.env.NEXT_PUBLIC_DEFAULT_SORT_BY),
-  defaultSortByDescription: getSortDescription(DEFAULT_SORT_BY),
+  defaultSortBy: USER_DEFAULT_SORT_BY,
+  isSortWithPriority: USER_DEFAULT_SORT_WITH_PRIORITY,
   showSortControl: SHOW_SORT_CONTROL,
+  // Display
   showKeyboardShortcutTooltips: SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
   showExifInfo: SHOW_EXIF_DATA,
   showCategoryImageHover: SHOW_CATEGORY_IMAGE_HOVERS,

@@ -14,6 +14,7 @@ export default function PhotoGridContainer({
   photos,
   count,
   sortBy,
+  sortWithPriority,
   animateOnFirstLoadOnly,
   header,
   sidebar,
@@ -23,6 +24,7 @@ export default function PhotoGridContainer({
   cacheKey: string
   count: number
   sortBy?: SortBy
+  sortWithPriority?: boolean
   header?: ReactNode
   sidebar?: ReactNode
 } & ComponentProps<typeof PhotoGrid>) {
@@ -58,6 +60,7 @@ export default function PhotoGridContainer({
               cacheKey,
               initialOffset: photos.length,
               sortBy,
+              sortWithPriority,
               ...categories,
               canStart: shouldAnimateDynamicItems,
               animateOnFirstLoadOnly,

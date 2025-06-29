@@ -29,6 +29,7 @@ export default function InfinitePhotoScroll({
   initialOffset,
   itemsPerPage,
   sortBy,
+  sortWithPriority,
   camera,
   lens,
   tag,
@@ -43,6 +44,7 @@ export default function InfinitePhotoScroll({
   initialOffset: number
   itemsPerPage: number
   sortBy?: SortBy
+  sortWithPriority?: boolean
   cacheKey: string
   wrapMoreButtonInGrid?: boolean
   useCachedPhotos?: boolean
@@ -69,7 +71,8 @@ export default function InfinitePhotoScroll({
   ) =>
     (useCachedPhotos ? getPhotosCachedAction : getPhotosAction)({
       offset: initialOffset + size * itemsPerPage,
-      sortBy,
+      sortBy, 
+      sortWithPriority,
       limit: itemsPerPage,
       hidden: includeHiddenPhotos ? 'include' : 'exclude',
       camera,
@@ -82,6 +85,7 @@ export default function InfinitePhotoScroll({
   , [
     useCachedPhotos,
     sortBy,
+    sortWithPriority,
     initialOffset,
     itemsPerPage,
     includeHiddenPhotos,

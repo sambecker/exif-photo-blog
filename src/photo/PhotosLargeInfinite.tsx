@@ -12,7 +12,8 @@ export default function PhotosLargeInfinite({
 }: {
   initialOffset: number
   itemsPerPage: number
-  sortBy?: SortBy
+  sortBy: SortBy
+  sortWithPriority: boolean
 }) {
   return (
     <InfinitePhotoScroll

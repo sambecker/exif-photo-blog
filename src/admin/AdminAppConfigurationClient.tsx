@@ -34,6 +34,8 @@ import clsx from 'clsx/lite';
 import Link from 'next/link';
 import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/paths';
 import { FaRegFolderClosed } from 'react-icons/fa6';
+import IconSort from '@/components/icons/IconSort';
+import { APP_DEFAULT_SORT_BY, SORT_BY_OPTIONS } from '@/photo/db/sort';
 
 export default function AdminAppConfigurationClient({
   // Storage
@@ -85,9 +87,12 @@ export default function AdminAppConfigurationClient({
   hasCategoryVisibility,
   collapseSidebarCategories,
   hideTagsWithOnePhoto,
-  // Display
+  // Sort
   hasDefaultSortBy,
-  defaultSortByDescription,
+  defaultSortBy,
+  isSortWithPriority,
+  showSortControl,
+  // Display
   showKeyboardShortcutTooltips,
   showExifInfo,
   showCategoryImageHover,
@@ -533,7 +538,7 @@ export default function AdminAppConfigurationClient({
           </ChecklistRow>
         </ChecklistGroup>
         <ChecklistGroup
-          title="Categories"
+          title="Photo Sets"
           icon={<FaRegFolderClosed size={15} />}
           optional
         >
@@ -592,20 +597,52 @@ export default function AdminAppConfigurationClient({
           </ChecklistRow>
         </ChecklistGroup>
         <ChecklistGroup
+          title="Photo Sorting"
+          icon={<IconSort size={18} className="translate-y-[1px]" />}
+          optional
+        >
+          <ChecklistRow
+            title="Default feed sort"
+            status={hasDefaultSortBy}
+            optional
+          >
+            {SORT_BY_OPTIONS.map(({sortBy, string }) =>
+              <Fragment key={ sortBy }>
+                {renderSubStatus(
+                  sortBy === defaultSortBy ? 'checked' : 'optional',
+                  `${string}${sortBy === APP_DEFAULT_SORT_BY
+                    ? ' (default)'
+                    : ''}`,
+                )}
+              </Fragment>)}
+            Message
+            {renderEnvVars(['NEXT_PUBLIC_DEFAULT_SORT_BY'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Priority feed sorting"
+            status={isSortWithPriority}
+            optional
+          >
+            Set environment variable to {'"1"'} to take a photo{'\''}s
+            priority field into account when sorting (enabling may have
+            performance considerations):
+            {renderEnvVars(['NEXT_PUBLIC_PRIORITY_BASED_SORTING'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Show sort control"
+            status={showSortControl}
+            optional
+          >
+            Set environment variable to {'"1"'} to
+            show sort control in the main nav:
+            {renderEnvVars(['NEXT_PUBLIC_SHOW_SORT_CONTROL'])}
+          </ChecklistRow>
+        </ChecklistGroup>
+        <ChecklistGroup
           title="Display"
           icon={<BiHide size={18} />}
           optional
         >
-          <ChecklistRow
-            title={`Default photo sort: ${defaultSortByDescription}`}
-            status={hasDefaultSortBy}
-            optional
-          >
-            Set environment variable to any of the following:
-            taken-at (default), taken-at-oldest-first, uploaded-at,
-            uploaded-at-oldest-first, priority
-            {renderEnvVars(['NEXT_PUBLIC_DEFAULT_SORT_BY'])}
-          </ChecklistRow>
           <ChecklistRow
             title="Show keyboard shortcut tooltips"
             status={showKeyboardShortcutTooltips}

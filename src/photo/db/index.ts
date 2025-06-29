@@ -2,7 +2,7 @@ import { parameterize } from '@/utility/string';
 import { PhotoSetCategory } from '../../category';
 import { Camera } from '@/camera';
 import { Lens } from '@/lens';
-import { SortBy } from './sort';
+import { APP_DEFAULT_SORT_BY, SortBy } from './sort';
 
 export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 export const PHOTO_DEFAULT_LIMIT = 100;
@@ -21,6 +21,7 @@ const parameterizeForDb = (field: string) =>
 
 export type GetPhotosOptions = {
   sortBy?: SortBy
+  sortWithPriority?: boolean
   limit?: number
   offset?: number
   query?: string
@@ -142,6 +143,32 @@ export const getWheresFromOptions = (
     wheresValues,
     lastValuesIndex: valuesIndex,
   };
+};
+
+export const getOrderByFromOptions = (options: GetPhotosOptions) => {
+  const {
+    sortBy = APP_DEFAULT_SORT_BY,
+    sortWithPriority,
+  } = options;
+
+  switch (sortBy) {
+  case 'takenAt':
+    return sortWithPriority
+      ? 'ORDER BY priority_order ASC, taken_at DESC'
+      : 'ORDER BY taken_at DESC';
+  case 'takenAtAsc':
+    return sortWithPriority
+      ? 'ORDER BY priority_order ASC, taken_at ASC'
+      : 'ORDER BY taken_at ASC';
+  case 'createdAt':
+    return sortWithPriority
+      ? 'ORDER BY priority_order ASC, created_at DESC'
+      : 'ORDER BY created_at DESC';
+  case 'createdAtAsc':
+    return sortWithPriority
+      ? 'ORDER BY priority_order ASC, created_at ASC'
+      : 'ORDER BY created_at ASC';
+  }
 };
 
 export const getLimitAndOffsetFromOptions = (

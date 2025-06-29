@@ -4,7 +4,6 @@
 import {
   PARAM_SORT_ORDER_NEWEST,
   PARAM_SORT_ORDER_OLDEST,
-  PARAM_SORT_TYPE_PRIORITY,
   PARAM_SORT_TYPE_TAKEN_AT,
   PARAM_SORT_TYPE_UPLOADED_AT,
   PATH_FEED,
@@ -13,7 +12,11 @@ import {
   PATH_GRID_INFERRED,
 } from '@/app/paths';
 import { SortBy, SortParams } from './sort';
-import { DEFAULT_SORT_BY, GRID_HOMEPAGE_ENABLED } from '@/app/config';
+import {
+  USER_DEFAULT_SORT_BY,
+  GRID_HOMEPAGE_ENABLED,
+  USER_DEFAULT_SORT_WITH_PRIORITY,
+} from '@/app/config';
 
 export const getSortByComponents = (sortBy: SortBy): {
   sortType: string
@@ -36,40 +39,48 @@ export const getSortByComponents = (sortBy: SortBy): {
     sortType: PARAM_SORT_TYPE_UPLOADED_AT,
     sortOrder: PARAM_SORT_ORDER_OLDEST,
   };
-  case 'priority': return {
-    sortType: PARAM_SORT_TYPE_PRIORITY,
-    sortOrder: PARAM_SORT_ORDER_NEWEST,
-  };
   }
 };
 
 const {
   sortType: DEFAULT_SORT_TYPE,
   sortOrder: DEFAULT_SORT_ORDER,
-} = getSortByComponents(DEFAULT_SORT_BY);
+} = getSortByComponents(USER_DEFAULT_SORT_BY);
 
-const _getSortByFromParams = (
+const _getSortOptionsFromParams = (
   sortType = DEFAULT_SORT_TYPE,
   sortOrder = DEFAULT_SORT_ORDER,
-): SortBy => {
+): {
+  sortBy: SortBy
+  sortWithPriority: boolean
+} => {
+  let sortBy: SortBy = 'takenAt';
   const isAscending = sortOrder === PARAM_SORT_ORDER_OLDEST;
   switch (sortType) {
-  case PARAM_SORT_TYPE_TAKEN_AT: return isAscending
-    ? 'takenAtAsc'
-    : 'takenAt';
-  case PARAM_SORT_TYPE_UPLOADED_AT: return isAscending
-    ? 'createdAtAsc'
-    : 'createdAt';
-  case PARAM_SORT_TYPE_PRIORITY: return 'priority';
-  default: return 'takenAt';
+  case PARAM_SORT_TYPE_TAKEN_AT: {
+    sortBy = isAscending
+      ? 'takenAtAsc'
+      : 'takenAt';
+    break;
   }
+  case PARAM_SORT_TYPE_UPLOADED_AT: {
+    sortBy = isAscending
+      ? 'createdAtAsc'
+      : 'createdAt';
+    break;
+  }
+  }
+  return {
+    sortBy,
+    sortWithPriority: USER_DEFAULT_SORT_WITH_PRIORITY,
+  };
 };
 
-export const getSortByFromParams = async (
+export const getSortOptionsFromParams = async (
   params: SortParams,
-): Promise<SortBy> => {
+): Promise<ReturnType<typeof _getSortOptionsFromParams>> => {
   const { sortType, sortOrder } = await params;
-  return _getSortByFromParams(sortType, sortOrder);
+  return _getSortOptionsFromParams(sortType, sortOrder);
 };
 
 export const getPathSortComponents = (pathname: string) => {
@@ -89,22 +100,19 @@ const getReversedSortOrder = (sortOrder: string): string =>
     ? PARAM_SORT_ORDER_NEWEST
     : PARAM_SORT_ORDER_OLDEST;
 
-export const getSortPathsFromPath = (pathname: string): {
-  pathGrid: string
-  pathFeed: string
-  pathSort: string
-  isPathAscending: boolean
-} => {
+export const getSortConfigFromPath = (pathname: string) => {
   const { gridOrFeed, sortType, sortOrder } = getPathSortComponents(pathname);
-  const sortBy = _getSortByFromParams(sortType, sortOrder);
-  const isSortedByDefault = sortBy === DEFAULT_SORT_BY;
+  const { sortBy } = _getSortOptionsFromParams(sortType, sortOrder);
+  const isSortedByDefault = sortBy === USER_DEFAULT_SORT_BY;
   const reversedSortOrder = getReversedSortOrder(sortOrder);
-  const isPathAscending = sortOrder === PARAM_SORT_ORDER_OLDEST;
-  const doesReverseSortMatchDefault = _getSortByFromParams(
+  const isAscending = sortOrder === PARAM_SORT_ORDER_OLDEST;
+  const doesReverseSortMatchDefault = _getSortOptionsFromParams(
     sortType,
     reversedSortOrder,
-  ) === DEFAULT_SORT_BY;
+  ).sortBy === USER_DEFAULT_SORT_BY;
   return {
+    sortBy,
+    isAscending,
     pathGrid: isSortedByDefault
       ? PATH_GRID_INFERRED
       : `${PATH_GRID}/${sortType}/${sortOrder}`,
@@ -116,6 +124,5 @@ export const getSortPathsFromPath = (pathname: string): {
         ? PATH_GRID_INFERRED
         : PATH_FEED_INFERRED
       : `/${gridOrFeed}/${sortType}/${reversedSortOrder}`,
-    isPathAscending,
   };
 };

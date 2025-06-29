@@ -17,7 +17,7 @@ export async function GET() {
     headers,
   ] = await Promise.all([
     getPhotosCached({
-      sortBy: 'priority',
+      sortWithPriority: true,
       limit: MAX_PHOTOS_TO_SHOW_TEMPLATE,
     }).catch(() => []),
     getIBMPlexMono(),

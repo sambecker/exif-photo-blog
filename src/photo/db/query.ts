@@ -22,9 +22,9 @@ import {
 } from '@/app/config';
 import {
   GetPhotosOptions,
+  getOrderByFromOptions,
   getLimitAndOffsetFromOptions,
 } from '.';
-import { getOrderByFromOptions } from './sort';
 import { getWheresFromOptions } from '.';
 import { FocalLengths } from '@/focal';
 import { Lenses, createLensKey } from '@/lens';

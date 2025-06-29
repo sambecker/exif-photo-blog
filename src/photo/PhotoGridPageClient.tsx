@@ -16,11 +16,13 @@ export default function PhotoGridPageClient({
   photos,
   photosCount,
   sortBy,
+  sortWithPriority,
   ...categories
 }: ComponentProps<typeof PhotoGridSidebar> & {
   photos: Photo[]
   photosCount: number
-  sortBy?: SortBy
+  sortBy: SortBy
+  sortWithPriority: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -39,6 +41,7 @@ export default function PhotoGridPageClient({
       photos={photos}
       count={photosCount}
       sortBy={sortBy}
+      sortWithPriority={sortWithPriority}
       sidebar={
         <MaskedScroll
           ref={ref}

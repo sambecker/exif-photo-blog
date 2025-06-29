@@ -10,10 +10,12 @@ export default function PhotoFeedPage({
   photos,
   photosCount,
   sortBy,
+  sortWithPriority,
 }:{
   photos: Photo[]
   photosCount: number
-  sortBy?: SortBy
+  sortBy: SortBy
+  sortWithPriority: boolean
 }) {
   return (
     <div className="space-y-1">
@@ -21,6 +23,7 @@ export default function PhotoFeedPage({
       {photosCount > photos.length &&
         <PhotosLargeInfinite
           sortBy={sortBy}
+          sortWithPriority={sortWithPriority}
           initialOffset={photos.length}
           itemsPerPage={INFINITE_SCROLL_FEED_MULTIPLE}
         />}
