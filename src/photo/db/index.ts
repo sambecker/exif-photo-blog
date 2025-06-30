@@ -94,6 +94,10 @@ export const getWheresFromOptions = (
     wheresValues.push(maximumAspectRatio);
   }
   if (recent) {
+    // Newest upload must be within past 2 weeks
+    // eslint-disable-next-line max-len
+    wheres.push('(SELECT MAX(created_at) FROM photos) >= (now() - INTERVAL \'14 days\')');
+    // Selects must be within 2 weeks of newest upload
     // eslint-disable-next-line max-len
     wheres.push('created_at >= (SELECT MAX(created_at) - INTERVAL \'14 days\' FROM photos)');
   }
