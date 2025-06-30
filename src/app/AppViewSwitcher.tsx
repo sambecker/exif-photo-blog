@@ -33,9 +33,11 @@ const GAP_CLASS = 'mr-1.5 sm:mr-2';
 export default function AppViewSwitcher({
   currentSelection,
   className,
+  animateSearch = true,
 }: {
   currentSelection?: SwitcherSelection
   className?: string
+  animateSearch?: boolean
 }) {
   const pathname = usePathname();
   
@@ -170,7 +172,7 @@ export default function AppViewSwitcher({
             />
           </Switcher>
         </motion.div>}
-      <motion.div layout>
+      <motion.div layout={animateSearch}>
         <Switcher type="borderless">
           <SwitcherItem
             icon={<IconSearch includeTitle={false} />}

@@ -40,6 +40,7 @@ export default function Nav({
   const {
     classNameStickyContainer,
     classNameStickyNav,
+    isNavVisible,
   } = useStickyNav(ref);
 
   const renderLink = (
@@ -85,6 +86,7 @@ export default function Nav({
               <AppViewSwitcher
                 currentSelection={switcherSelectionForPath()}
                 className="translate-x-[-1px]"
+                animateSearch={isNavVisible}
               />
               <div className={clsx(
                 'grow text-right min-w-0',
