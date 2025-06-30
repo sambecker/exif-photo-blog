@@ -147,10 +147,10 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_DEFAULT_SORT`
   - Sets default sort on grid/feed homepages
   - Accepted values:
-    - taken-at (default)
-    - taken-at-oldest-first
-    - uploaded-at
-    - uploaded-at-oldest-first
+    - `taken-at` (default)
+    - `taken-at-oldest-first`
+    - `uploaded-at`
+    - `uploaded-at-oldest-first`
 - `NEXT_PUBLIC_PRIORITY_BASED_SORTING = 1` takes priority field into account when sorting photos (⚠️ enabling may have performance consequences)
 - `NEXT_PUBLIC_SHOW_SORT_CONTROL = 1` shows sort control in desktop nav on grid/feed homepages
 
