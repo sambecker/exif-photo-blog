@@ -12,12 +12,11 @@ import {
   BiLockAlt,
   BiPencil,
 } from 'react-icons/bi';
-import { HiOutlineCog } from 'react-icons/hi';
+import { HiOutlineCog, HiSparkles } from 'react-icons/hi';
 import ChecklistGroup from '@/components/ChecklistGroup';
 import { AppConfiguration } from '../app/config';
 import StatusIcon from '@/components/StatusIcon';
 import { labelForStorage } from '@/platforms/storage';
-import { HiSparkles } from 'react-icons/hi';
 import { testConnectionsAction } from '@/admin/actions';
 import ErrorNote from '@/components/ErrorNote';
 import { RiSpeedMiniLine } from 'react-icons/ri';
@@ -34,6 +33,8 @@ import clsx from 'clsx/lite';
 import Link from 'next/link';
 import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/paths';
 import { FaRegFolderClosed } from 'react-icons/fa6';
+import IconSort from '@/components/icons/IconSort';
+import { APP_DEFAULT_SORT_BY, SORT_BY_OPTIONS } from '@/photo/db/sort';
 
 export default function AdminAppConfigurationClient({
   // Storage
@@ -85,6 +86,11 @@ export default function AdminAppConfigurationClient({
   hasCategoryVisibility,
   collapseSidebarCategories,
   hideTagsWithOnePhoto,
+  // Sort
+  hasDefaultSortBy,
+  defaultSortBy,
+  isSortWithPriority,
+  showSortControl,
   // Display
   showKeyboardShortcutTooltips,
   showExifInfo,
@@ -110,7 +116,6 @@ export default function AdminAppConfigurationClient({
   isGeoPrivacyEnabled,
   arePublicDownloadsEnabled,
   areSiteFeedsEnabled,
-  isPriorityOrderEnabled,
   isOgTextBottomAligned,
   // Internal
   areInternalToolsEnabled,
@@ -140,7 +145,7 @@ export default function AdminAppConfigurationClient({
     : null;
 
   const renderEnvVars = (variables: string[]) =>
-    <div className="pt-1 flex flex-col gap-1">
+    <div className="pt-1 flex flex-col gap-0.5">
       {variables.map(variable =>
         <EnvVar key={variable} variable={variable} />)}
     </div>;
@@ -244,47 +249,49 @@ export default function AdminAppConfigurationClient({
           {storageError && renderError({
             connection: { provider: 'Storage', error: storageError},
           })}
-          {hasVercelBlobStorage
-            ? renderSubStatus('checked', 'Vercel Blob: connected')
-            : renderSubStatus('optional', <>
-              {labelForStorage('vercel-blob')}:
-              {' '}
-              <AdminLink
-                // eslint-disable-next-line max-len
-                href="https://vercel.com/docs/storage/vercel-blob/quickstart#create-a-blob-store"
-                externalIcon
-              >
-                create store
-              </AdminLink>
-              {' '} 
-              and connect to project
-            </>,
-            )}
-          {hasCloudflareR2Storage
-            ? renderSubStatus('checked', 'Cloudflare R2: connected')
-            : renderSubStatus('optional', <>
-              {labelForStorage('cloudflare-r2')}:
-              {' '}
-              <AdminLink
-                // eslint-disable-next-line max-len
-                href="https://github.com/sambecker/exif-photo-blog#cloudflare-r2"
-                externalIcon
-              >
-                create/configure bucket
-              </AdminLink>
-            </>)}
-          {hasAwsS3Storage
-            ? renderSubStatus('checked', 'AWS S3: connected')
-            : renderSubStatus('optional', <>
-              {labelForStorage('aws-s3')}:
-              {' '}
-              <AdminLink
-                href="https://github.com/sambecker/exif-photo-blog#aws-s3"
-                externalIcon
-              >
-                create/configure bucket
-              </AdminLink>
-            </>)}
+          <div>
+            {hasVercelBlobStorage
+              ? renderSubStatus('checked', 'Vercel Blob: connected')
+              : renderSubStatus('optional', <>
+                {labelForStorage('vercel-blob')}:
+                {' '}
+                <AdminLink
+                  // eslint-disable-next-line max-len
+                  href="https://vercel.com/docs/storage/vercel-blob/quickstart#create-a-blob-store"
+                  externalIcon
+                >
+                  create store
+                </AdminLink>
+                {' '} 
+                and connect to project
+              </>,
+              )}
+            {hasCloudflareR2Storage
+              ? renderSubStatus('checked', 'Cloudflare R2: connected')
+              : renderSubStatus('optional', <>
+                {labelForStorage('cloudflare-r2')}:
+                {' '}
+                <AdminLink
+                  // eslint-disable-next-line max-len
+                  href="https://github.com/sambecker/exif-photo-blog#cloudflare-r2"
+                  externalIcon
+                >
+                  create/configure bucket
+                </AdminLink>
+              </>)}
+            {hasAwsS3Storage
+              ? renderSubStatus('checked', 'AWS S3: connected')
+              : renderSubStatus('optional', <>
+                {labelForStorage('aws-s3')}:
+                {' '}
+                <AdminLink
+                  href="https://github.com/sambecker/exif-photo-blog#aws-s3"
+                  externalIcon
+                >
+                  create/configure bucket
+                </AdminLink>
+              </>)}
+          </div>
         </ChecklistRow>
       </ChecklistGroup>
       <ChecklistGroup
@@ -428,16 +435,18 @@ export default function AdminAppConfigurationClient({
             status={hasAiTextAutoGeneratedFields}
             optional
           >
-            {hasAiTextAutoGeneratedFields &&
-              AI_AUTO_GENERATED_FIELDS_ALL.map(field =>
-                <Fragment key={field}>
-                  {renderSubStatus(
-                    aiTextAutoGeneratedFields.includes(field)
-                      ? 'checked'
-                      : 'optional',
-                    field,
-                  )}
-                </Fragment>)}
+            <div>
+              {hasAiTextAutoGeneratedFields &&
+                AI_AUTO_GENERATED_FIELDS_ALL.map(field =>
+                  <Fragment key={field}>
+                    {renderSubStatus(
+                      aiTextAutoGeneratedFields.includes(field)
+                        ? 'checked'
+                        : 'optional',
+                      field,
+                    )}
+                  </Fragment>)}
+            </div>
             Comma-separated fields to auto-generate when
             uploading photos. Accepted values: title, caption,
             tags, description, all, or none
@@ -483,23 +492,25 @@ export default function AdminAppConfigurationClient({
             Set environment variable to {'"1"'} to make site more responsive
             by enabling static optimization
             (i.e., rendering pages and images at build time):
-            {renderSubStatusWithEnvVar(
-              arePhotosStaticallyOptimized ? 'checked' : 'optional',
-              'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS',
-            )}
-            {renderSubStatusWithEnvVar(
-              arePhotoOGImagesStaticallyOptimized ? 'checked' : 'optional',
-              'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES',
-            )}
-            {renderSubStatusWithEnvVar(
-              arePhotoCategoriesStaticallyOptimized ? 'checked' : 'optional',
-              'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES',
-            )}
-            {renderSubStatusWithEnvVar(
-              // eslint-disable-next-line max-len
-              arePhotoCategoryOgImagesStaticallyOptimized ? 'checked' : 'optional',
-              'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORY_OG_IMAGES',
-            )}
+            <div>
+              {renderSubStatusWithEnvVar(
+                arePhotosStaticallyOptimized ? 'checked' : 'optional',
+                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS',
+              )}
+              {renderSubStatusWithEnvVar(
+                arePhotoOGImagesStaticallyOptimized ? 'checked' : 'optional',
+                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES',
+              )}
+              {renderSubStatusWithEnvVar(
+                arePhotoCategoriesStaticallyOptimized ? 'checked' : 'optional',
+                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORIES',
+              )}
+              {renderSubStatusWithEnvVar(
+                // eslint-disable-next-line max-len
+                arePhotoCategoryOgImagesStaticallyOptimized ? 'checked' : 'optional',
+                'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_CATEGORY_OG_IMAGES',
+              )}
+            </div>
           </ChecklistRow>
           <ChecklistRow
             title="Preserve original uploads"
@@ -541,7 +552,7 @@ export default function AdminAppConfigurationClient({
             status={hasCategoryVisibility}
             optional
           >
-            <div className="my-1">
+            <div>
               {categoryVisibility.map((category, index) =>
                 <Fragment key={category}>
                   {renderSubStatus(
@@ -588,6 +599,50 @@ export default function AdminAppConfigurationClient({
             Set environment variable to {'"1"'} to only show tags
             with 2 or more photos
             {renderEnvVars(['NEXT_PUBLIC_HIDE_TAGS_WITH_ONE_PHOTO'])}
+          </ChecklistRow>
+        </ChecklistGroup>
+        <ChecklistGroup
+          title="Sorting"
+          icon={<IconSort size={18} className="translate-y-[1px]" />}
+          optional
+        >
+          <ChecklistRow
+            title="Default sort"
+            status={hasDefaultSortBy}
+            optional
+          >
+            <div>
+              {SORT_BY_OPTIONS.map(({sortBy, string }) =>
+                <Fragment key={ sortBy }>
+                  {renderSubStatus(
+                    sortBy === defaultSortBy ? 'checked' : 'optional',
+                    `${string}${sortBy === APP_DEFAULT_SORT_BY
+                      ? ' (default)'
+                      : ''}`,
+                  )}
+                </Fragment>)}
+            </div>
+            Change default sort on grid/feed homepages
+            {renderEnvVars(['NEXT_PUBLIC_DEFAULT_SORT'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Priority-based sorting"
+            status={isSortWithPriority}
+            optional
+          >
+            Set environment variable to {'"1"'} to take priority field
+            into account when sorting photos (enabling may have
+            performance consequences):
+            {renderEnvVars(['NEXT_PUBLIC_PRIORITY_BASED_SORTING'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Show sort control"
+            status={showSortControl}
+            optional
+          >
+            Set environment variable to {'"1"'} to
+            show sort control in desktop nav on grid/feed homepages:
+            {renderEnvVars(['NEXT_PUBLIC_SHOW_SORT_CONTROL'])}
           </ChecklistRow>
         </ChecklistGroup>
         <ChecklistGroup
@@ -789,15 +844,6 @@ export default function AdminAppConfigurationClient({
             {' '}
             {renderLink(PATH_FEED_JSON)} and {renderLink(PATH_RSS_XML)}:
             {renderEnvVars(['NEXT_PUBLIC_SITE_FEEDS'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title="Priority order"
-            status={isPriorityOrderEnabled}
-            optional
-          >
-            Set environment variable to {'"1"'} to prevent
-            priority order photo field affecting photo order:
-            {renderEnvVars(['NEXT_PUBLIC_IGNORE_PRIORITY_ORDER'])}
           </ChecklistRow>
           <ChecklistRow
             title="Legacy OG text alignment"

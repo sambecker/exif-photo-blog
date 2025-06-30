@@ -1,6 +1,12 @@
 'use client';
 
-import { useState, useEffect, ReactNode, useCallback, useRef } from 'react';
+import {
+  useState,
+  useEffect,
+  ReactNode,
+  useCallback,
+  useRef,
+} from 'react';
 import { AppStateContext } from './AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import usePathnames from '@/utility/usePathnames';

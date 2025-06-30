@@ -6,10 +6,10 @@ import {
   getUniqueLenses,
   getUniqueRecipes,
   getUniqueTags,
+  getPhotosInNeedOfSyncCount,
 } from '@/photo/db/query';
 import AdminAppInsightsClient from './AdminAppInsightsClient';
 import { getAllInsights, getGitHubMetaForCurrentApp } from '.';
-import { getPhotosInNeedOfSyncCount } from '@/photo/db/query';
 
 export default async function AdminAppInsights() {
   const [

@@ -40,7 +40,7 @@ export default function ChecklistRow({
           {experimental &&
             <ExperimentalBadge className="translate-y-[0.5px]" />}
         </div>
-        <div className="leading-relaxed text-medium">
+        <div className="leading-relaxed text-medium space-y-1.5">
           {children}
         </div>
       </>}

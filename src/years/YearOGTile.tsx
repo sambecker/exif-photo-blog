@@ -1,9 +1,8 @@
 'use client';
 
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRange, descriptionForPhotoSet } from '@/photo';
 import { pathForYear, pathForYearImage } from '@/app/paths';
 import OGTile, { OGTilePropsCore } from '@/components/og/OGTile';
-import { descriptionForPhotoSet } from '@/photo';
 import { useAppText } from '@/i18n/state/client';
 
 export default function YearOGTile({

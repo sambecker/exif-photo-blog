@@ -6,7 +6,7 @@ import { parameterize } from '@/utility/string';
 import { TAG_HIDDEN } from '@/tag';
 import { Lens } from '@/lens';
 
-// Core paths
+// Core
 export const PATH_ROOT                  = '/';
 export const PATH_GRID                  = '/grid';
 export const PATH_FEED                  = '/feed';
@@ -15,17 +15,28 @@ export const PATH_API                   = '/api';
 export const PATH_SIGN_IN               = '/sign-in';
 export const PATH_OG                    = '/og';
 
-// Feeds
-export const PATH_FEED_JSON             = '/feed.json';
-export const PATH_RSS_XML               = '/rss.xml';
-
+// Core: inferred
 export const PATH_GRID_INFERRED = GRID_HOMEPAGE_ENABLED
   ? PATH_ROOT
   : PATH_GRID;
-
 export const PATH_FEED_INFERRED = GRID_HOMEPAGE_ENABLED
   ? PATH_FEED
   : PATH_ROOT;
+
+// Sort
+export const PARAM_SORT_TYPE_TAKEN_AT = 'taken-at';
+export const PARAM_SORT_TYPE_UPLOADED_AT = 'uploaded-at';
+export const PARAM_SORT_ORDER_NEWEST = 'newest-first';
+export const PARAM_SORT_ORDER_OLDEST = 'oldest-first';
+export const doesPathOfferSort = (pathname: string) =>
+  pathname === PATH_ROOT ||
+  pathname.startsWith(PATH_GRID) ||
+  pathname.startsWith(PATH_FEED);
+
+// Feeds
+export const PATH_SITEMAP               = '/sitemap.xml';
+export const PATH_RSS_XML               = '/rss.xml';
+export const PATH_FEED_JSON             = '/feed.json';
 
 // Path prefixes
 export const PREFIX_PHOTO               = '/p';

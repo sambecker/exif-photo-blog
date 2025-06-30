@@ -4,10 +4,13 @@ import { INFINITE_SCROLL_GRID_MULTIPLE } from '.';
 import InfinitePhotoScroll from './InfinitePhotoScroll';
 import PhotoGrid from './PhotoGrid';
 import { ComponentProps } from 'react';
+import { SortBy } from './db/sort';
 
 export default function PhotoGridInfinite({
   cacheKey,
   initialOffset,
+  sortBy,
+  sortWithPriority,
   canStart,
   animateOnFirstLoadOnly,
   canSelect,
@@ -15,12 +18,16 @@ export default function PhotoGridInfinite({
 }: {
   cacheKey: string
   initialOffset: number
+  sortBy?: SortBy
+  sortWithPriority?: boolean
 } & Omit<ComponentProps<typeof PhotoGrid>, 'photos'>) {
   return (
     <InfinitePhotoScroll
       cacheKey={cacheKey}
       initialOffset={initialOffset}
       itemsPerPage={INFINITE_SCROLL_GRID_MULTIPLE}
+      sortBy={sortBy}
+      sortWithPriority={sortWithPriority}
       {...categories}
     >
       {({ photos, onLastPhotoVisible }) =>

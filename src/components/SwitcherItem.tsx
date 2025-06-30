@@ -61,6 +61,7 @@ export default function SwitcherItem({
       href,
       ref: hrefRef,
       title,
+      onClick,
       className,
       prefetch,
       icon: renderIcon(),

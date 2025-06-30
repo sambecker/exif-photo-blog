@@ -1,6 +1,10 @@
 import { absolutePathForRecipe, absolutePathForRecipeImage } from '@/app/paths';
-import { descriptionForPhotoSet, Photo, photoQuantityText } from '@/photo';
-import { PhotoDateRange } from '@/photo';
+import {
+  descriptionForPhotoSet,
+  Photo,
+  photoQuantityText,
+  PhotoDateRange,
+} from '@/photo';
 import {
   capitalizeWords,
   formatCount,

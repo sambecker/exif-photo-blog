@@ -22,10 +22,10 @@ import {
 } from '@/app/config';
 import {
   GetPhotosOptions,
-  getLimitAndOffsetFromOptions,
   getOrderByFromOptions,
+  getLimitAndOffsetFromOptions,
+  getWheresFromOptions,
 } from '.';
-import { getWheresFromOptions } from '.';
 import { FocalLengths } from '@/focal';
 import { Lenses, createLensKey } from '@/lens';
 import { migrationForError } from './migration';
@@ -120,7 +120,7 @@ const safelyQueryPhotos = async <T>(
         }
       }
     } else if (/relation "photos" does not exist/i.test(e.message)) {
-      // If the table does not exist, create it
+      // If table doesn't exist, create it
       console.log('Creating photos table ...');
       await createPhotosTable();
       result = await callback();

@@ -8,10 +8,10 @@ import { cache } from 'react';
 import { getPhotos } from '@/photo/db/query';
 import PhotoFeedPage from '@/photo/PhotoFeedPage';
 import { getPhotosMetaCached } from '@/photo/cache';
-import { USER_DEFAULT_SORT_OPTIONS } from '@/app/config';
+import { SortProps } from '@/photo/db/sort';
+import { getSortOptionsFromParams } from '@/photo/db/sort-path';
 import { GetPhotosOptions } from '@/photo/db';
 
-export const dynamic = 'force-static';
 export const maxDuration = 60;
 
 const getPhotosCached = cache((options: GetPhotosOptions) => getPhotos({
@@ -19,20 +19,24 @@ const getPhotosCached = cache((options: GetPhotosOptions) => getPhotos({
   limit: INFINITE_SCROLL_FEED_INITIAL,
 }));
 
-export async function generateMetadata(): Promise<Metadata> {
-  const photos = await getPhotosCached(USER_DEFAULT_SORT_OPTIONS)
+export async function generateMetadata({
+  params,
+}: SortProps): Promise<Metadata> {
+  const options = await getSortOptionsFromParams(params);
+  const photos = await getPhotosCached(options)
     .catch(() => []);
   return generateOgImageMetaForPhotos(photos);
 }
 
-export default async function FeedPage() {
+export default async function FeedPageSort({ params }: SortProps) {
+  const options = await getSortOptionsFromParams(params);
   const [
     photos,
     photosCount,
   ] = await Promise.all([
-    getPhotosCached(USER_DEFAULT_SORT_OPTIONS)
+    getPhotosCached(options)
       .catch(() => []),
-    getPhotosMetaCached(USER_DEFAULT_SORT_OPTIONS)
+    getPhotosMetaCached(options)
       .then(({ count }) => count)
       .catch(() => 0),
   ]);
@@ -42,7 +46,7 @@ export default async function FeedPage() {
       ? <PhotoFeedPage {...{
         photos,
         photosCount,
-        ...USER_DEFAULT_SORT_OPTIONS,
+        ...options,
       }} />
       : <PhotosEmptyState />
   );

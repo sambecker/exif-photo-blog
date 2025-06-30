@@ -9,10 +9,10 @@ import { cache } from 'react';
 import PhotoGridPage from '@/photo/PhotoGridPage';
 import { getDataForCategoriesCached } from '@/category/cache';
 import { getPhotosMetaCached } from '@/photo/cache';
-import { USER_DEFAULT_SORT_OPTIONS } from '@/app/config';
+import { SortProps } from '@/photo/db/sort';
+import { getSortOptionsFromParams } from '@/photo/db/sort-path';
 import { GetPhotosOptions } from '@/photo/db';
 
-export const dynamic = 'force-static';
 export const maxDuration = 60;
 
 const getPhotosCached = cache((options: GetPhotosOptions) => getPhotos({
@@ -20,21 +20,25 @@ const getPhotosCached = cache((options: GetPhotosOptions) => getPhotos({
   limit: INFINITE_SCROLL_GRID_INITIAL,
 }));
 
-export async function generateMetadata(): Promise<Metadata> {
-  const photos = await getPhotosCached(USER_DEFAULT_SORT_OPTIONS)
+export async function generateMetadata({
+  params,
+}: SortProps): Promise<Metadata> {
+  const options = await getSortOptionsFromParams(params);
+  const photos = await getPhotosCached(options)
     .catch(() => []);
   return generateOgImageMetaForPhotos(photos);
 }
 
-export default async function GridPage() {
+export default async function GridPage({ params }: SortProps) {
+  const options = await getSortOptionsFromParams(params);
   const [
     photos,
     photosCount,
     categories,
   ] = await Promise.all([
-    getPhotosCached(USER_DEFAULT_SORT_OPTIONS)
+    getPhotosCached(options)
       .catch(() => []),
-    getPhotosMetaCached(USER_DEFAULT_SORT_OPTIONS)
+    getPhotosMetaCached(options)
       .then(({ count }) => count)
       .catch(() => 0),
     getDataForCategoriesCached(),
@@ -46,7 +50,7 @@ export default async function GridPage() {
         {...{
           photos,
           photosCount,
-          ...USER_DEFAULT_SORT_OPTIONS,
+          ...options,
           ...categories,
         }}
       />
