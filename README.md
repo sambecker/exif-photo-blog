@@ -128,7 +128,7 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_IMAGE_QUALITY = 1-100` controls the quality of large photos
 - `NEXT_PUBLIC_BLUR_DISABLED = 1` prevents image blur data being stored and displayed (potentially useful for limiting Postgres usage)
 
-#### Photo sets
+#### Categories
 - `NEXT_PUBLIC_CATEGORY_VISIBILITY`
   - Comma-separated value controlling which photo sets appear in grid sidebar and CMD-K menu, and in what order. For example, you could move cameras above tags, and hide film simulations, by updating to `cameras,tags,lenses,recipes`.
   - Accepted values:
@@ -143,7 +143,7 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_EXHAUSTIVE_SIDEBAR_CATEGORIES = 1` always shows expanded sidebar content
 - `NEXT_PUBLIC_HIDE_TAGS_WITH_ONE_PHOTO = 1` to only show tags with 2 or more photos
 
-#### Homepage Sorting
+#### Sorting
 - `NEXT_PUBLIC_DEFAULT_SORT`
   - Sets default sort on grid/feed homepages
   - Accepted values:

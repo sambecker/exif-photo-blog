@@ -602,7 +602,7 @@ export default function AdminAppConfigurationClient({
           </ChecklistRow>
         </ChecklistGroup>
         <ChecklistGroup
-          title="Homepage Sorting"
+          title="Sorting"
           icon={<IconSort size={18} className="translate-y-[1px]" />}
           optional
         >

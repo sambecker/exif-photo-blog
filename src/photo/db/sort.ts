@@ -2,7 +2,6 @@ export const SORT_BY_OPTIONS = [{
   sortBy: 'takenAt',
   string: 'taken-at',
   label: 'Taken At (Newest First)',
-  isDefault: true,
 }, {
   sortBy: 'takenAtAsc',
   string: 'taken-at-oldest-first',
