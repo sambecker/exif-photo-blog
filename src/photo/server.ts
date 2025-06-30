@@ -25,6 +25,7 @@ import {
 } from './db/query';
 import { PhotoDbInsert } from '.';
 import { convertExifToFormData } from './form/server';
+import { getNikonPictureControlName, isExifForNikon } from '@/platforms/nikon/server';
 
 const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
@@ -57,7 +58,7 @@ export const extractImageDataFromBlobPath = async (
   const extension = getExtensionFromStorageUrl(url);
 
   let exifData: ExifData | undefined;
-  let film: FujifilmSimulation | undefined;
+  let film: FujifilmSimulation | string | undefined;
   let recipe: FujifilmRecipe | undefined;
   let blurData: string | undefined;
   let imageResizedBase64: string | undefined;
@@ -90,6 +91,18 @@ export const extractImageDataFromBlobPath = async (
         if (Buffer.isBuffer(makerNote)) {
           film = getFujifilmSimulationFromMakerNote(makerNote);
           recipe = getFujifilmRecipeFromMakerNote(makerNote);
+        }
+      }
+
+      // Capture film simulation for Nikon cameras
+      if (isExifForNikon(exifData)) {
+        // Parse exif data again with binary fields
+        // in order to access MakerNote tag
+        parser.enableBinaryFields(true);
+        const exifDataBinary = parser.parse();
+        const makerNote = exifDataBinary.tags?.MakerNote;
+        if (Buffer.isBuffer(makerNote)) {
+          film = getNikonPictureControlName(makerNote);
         }
       }
 
