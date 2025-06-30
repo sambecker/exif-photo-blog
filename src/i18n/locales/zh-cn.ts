@@ -52,6 +52,10 @@ export const TEXT: I18N = {
     next: '下一页',
     nextShort: '下一页',
   },
+  sort: {
+    newest: '查看最新',
+    oldest: '查看最旧',
+  },
   cmdk: {
     placeholder: '搜索照片、视图、设置...',
     searching: '搜索中...',

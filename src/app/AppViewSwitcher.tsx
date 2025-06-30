@@ -166,8 +166,8 @@ export default function AppViewSwitcher({
               />}
               tooltip={{
                 content: isAscending
-                  ? 'View newest first'
-                  : 'View oldest first',
+                  ? appText.sort.newest
+                  : appText.sort.oldest,
               }}
             />
           </Switcher>

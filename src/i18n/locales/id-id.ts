@@ -52,6 +52,10 @@ export const TEXT: I18N = {
     next: 'Berikutnya',
     nextShort: 'Brkt',
   },
+  sort: {
+    newest: 'Lihat terbaru',
+    oldest: 'Lihat terlama',
+  },
   cmdk: {
     placeholder: 'Cari foto, tampilan, pengaturan ...',
     searching: 'Mencari ...',

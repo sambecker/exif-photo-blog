@@ -52,6 +52,10 @@ export const TEXT: I18N = {
     next: 'Próximo',
     nextShort: 'Próx',
   },
+  sort: {
+    newest: 'Ver mais recentes',
+    oldest: 'Ver mais antigas',
+  },
   cmdk: {
     placeholder: 'Pesquisar fotografias, visualizações, configurações ...',
     searching: 'A pesquisar ...',

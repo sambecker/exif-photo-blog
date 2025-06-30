@@ -51,6 +51,10 @@ export const TEXT = {
     next: 'Next',
     nextShort: 'Next',
   },
+  sort: {
+    newest: 'View newest',
+    oldest: 'View oldest',
+  },
   cmdk: {
     placeholder: 'Search photos, views, settings ...',
     searching: 'Searching ...',

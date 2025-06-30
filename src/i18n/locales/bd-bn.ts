@@ -53,6 +53,10 @@ export const TEXT: I18N = {
     next: 'পরবর্তী',
     nextShort: 'পরবর্তী',
   },
+  sort: {
+    newest: 'নতুনতম দেখুন',
+    oldest: 'পুরাতনতম দেখুন',
+  },
   cmdk: {
     placeholder: 'ছবি, ভিউ, সেটিংস অনুসন্ধান করুন ...',
     searching: 'অনুসন্ধান হচ্ছে ...',
