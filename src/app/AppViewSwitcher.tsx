@@ -24,8 +24,11 @@ import { KEY_COMMANDS } from '@/photo/key-commands';
 import { useAppText } from '@/i18n/state/client';
 import IconSort from '@/components/icons/IconSort';
 import { getSortConfigFromPath } from '@/photo/db/sort-path';
+import { motion } from 'framer-motion';
 
 export type SwitcherSelection = 'feed' | 'grid' | 'admin';
+
+const GAP_CLASS = 'mr-1.5 sm:mr-2';
 
 export default function AppViewSwitcher({
   currentSelection,
@@ -112,13 +115,8 @@ export default function AppViewSwitcher({
     />;
 
   return (
-    <div
-      className={clsx(
-        'flex gap-1.5 sm:gap-2',
-        className,
-      )}
-    >
-      <Switcher>
+    <div className={clsx('flex', className)}>
+      <Switcher className={GAP_CLASS}>
         {GRID_HOMEPAGE_ENABLED ? renderItemGrid : renderItemFeed}
         {GRID_HOMEPAGE_ENABLED ? renderItemFeed : renderItemGrid}
         {/* Show spinner if admin is suspected to be logged in */}
@@ -150,31 +148,41 @@ export default function AppViewSwitcher({
           />}
       </Switcher>
       {showSortControl &&
-        <Switcher className="max-sm:hidden">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.5 }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          className={GAP_CLASS}
+        >
+          <Switcher className="max-sm:hidden">
+            <SwitcherItem
+              href={pathSort}
+              icon={<IconSort
+                sort={isAscending ? 'asc' : 'desc'}
+                className="translate-x-[0.5px] translate-y-[1px]"
+              />}
+              tooltip={{
+                content: isAscending
+                  ? 'View newest first'
+                  : 'View oldest first',
+              }}
+            />
+          </Switcher>
+        </motion.div>}
+      <motion.div layout>
+        <Switcher type="borderless">
           <SwitcherItem
-            href={pathSort}
-            icon={<IconSort
-              sort={isAscending ? 'asc' : 'desc'}
-              className="translate-x-[0.5px] translate-y-[1px]"
-            />}
-            tooltip={{
-              content: isAscending
-                ? 'View newest first'
-                : 'View oldest first',
-            }}
+            icon={<IconSearch includeTitle={false} />}
+            onClick={() => setIsCommandKOpen?.(true)}
+            tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+              content: appText.nav.search,
+              keyCommandModifier: KEY_COMMANDS.search[0],
+              keyCommand: KEY_COMMANDS.search[1],
+            }}}
           />
-        </Switcher>}
-      <Switcher type="borderless">
-        <SwitcherItem
-          icon={<IconSearch includeTitle={false} />}
-          onClick={() => setIsCommandKOpen?.(true)}
-          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-            content: appText.nav.search,
-            keyCommandModifier: KEY_COMMANDS.search[0],
-            keyCommand: KEY_COMMANDS.search[1],
-          }}}
-        />
-      </Switcher>
+        </Switcher>
+      </motion.div>
     </div>
   );
 }
