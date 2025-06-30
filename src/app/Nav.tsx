@@ -20,6 +20,7 @@ import {
 } from './config';
 import { useRef } from 'react';
 import useStickyNav from './useStickyNav';
+import { useAppState } from '@/state/AppState';
 
 const NAV_HEIGHT_CLASS = NAV_CAPTION
   ? 'min-h-[4rem] sm:min-h-[5rem]'
@@ -36,6 +37,10 @@ export default function Nav({
 
   const pathname = usePathname();
   const showNav = !isPathSignIn(pathname);
+
+  const {
+    hasLoadedWithAnimations,
+  } = useAppState();
 
   const {
     classNameStickyContainer,
@@ -86,7 +91,7 @@ export default function Nav({
               <AppViewSwitcher
                 currentSelection={switcherSelectionForPath()}
                 className="translate-x-[-1px]"
-                animateSearch={isNavVisible}
+                animate={hasLoadedWithAnimations && isNavVisible}
               />
               <div className={clsx(
                 'grow text-right min-w-0',

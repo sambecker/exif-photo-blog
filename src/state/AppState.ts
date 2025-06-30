@@ -19,7 +19,7 @@ export type AppStateContextType = {
   // CORE
   previousPathname?: string
   hasLoaded?: boolean
-  setHasLoaded?: Dispatch<SetStateAction<boolean>>
+  hasLoadedWithAnimations?: boolean
   swrTimestamp?: number
   invalidateSwr?: () => void
   nextPhotoAnimation?: AnimationConfig

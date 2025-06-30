@@ -33,11 +33,11 @@ const GAP_CLASS = 'mr-1.5 sm:mr-2';
 export default function AppViewSwitcher({
   currentSelection,
   className,
-  animateSearch = true,
+  animate = true,
 }: {
   currentSelection?: SwitcherSelection
   className?: string
-  animateSearch?: boolean
+  animate?: boolean
 }) {
   const pathname = usePathname();
   
@@ -151,10 +151,10 @@ export default function AppViewSwitcher({
       </Switcher>
       {showSortControl &&
         <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
+          initial={animate ? { opacity: 0, scale: 0.5 } : false}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.5 }}
-          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          transition={{ duration: 0.2, ease: 'easeInOut' }}
           className={GAP_CLASS}
         >
           <Switcher className="max-sm:hidden">
@@ -172,7 +172,12 @@ export default function AppViewSwitcher({
             />
           </Switcher>
         </motion.div>}
-      <motion.div layout={animateSearch}>
+      <motion.div
+        // Conditional key necessary to halt/resume layout animations
+        key={animate ? 'search' : 'search-no-animate'}
+        layout={animate}
+        transition={{ duration: 0.2, ease: 'easeInOut' }}
+      >
         <Switcher type="borderless">
           <SwitcherItem
             icon={<IconSearch includeTitle={false} />}

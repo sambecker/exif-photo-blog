@@ -50,6 +50,8 @@ export default function AppStateProvider({
   // CORE
   const [hasLoaded, setHasLoaded] =
     useState(false);
+  const [hasLoadedWithAnimations, setHasLoadedWithAnimations] =
+    useState(false);
   const [swrTimestamp, setSwrTimestamp] =
     useState(Date.now());
   const [nextPhotoAnimation, _setNextPhotoAnimation] =
@@ -112,8 +114,13 @@ export default function AppStateProvider({
     useState(false);
 
   useEffect(() => {
-    setHasLoaded?.(true);
+    setHasLoaded(true);
     storeTimezoneCookie();
+    setUserEmailEager(getAuthEmailCookie());
+    const timeout = setTimeout(() => {
+      setHasLoadedWithAnimations(true);
+    }, 1000);
+    return () => clearTimeout(timeout);
   }, []);
 
   const invalidateSwr = useCallback(() => setSwrTimestamp(Date.now()), []);
@@ -128,9 +135,6 @@ export default function AppStateProvider({
     error: authError,
     isLoading: isCheckingAuth,
   } = useSWR('getAuth', getAuthAction);
-  useEffect(() => {
-    setUserEmailEager(getAuthEmailCookie());
-  }, []);
   useEffect(() => {
     if (auth === null || authError) {
       setUserEmail(undefined);
@@ -207,7 +211,7 @@ export default function AppStateProvider({
         // CORE
         previousPathname,
         hasLoaded,
-        setHasLoaded,
+        hasLoadedWithAnimations,
         swrTimestamp,
         invalidateSwr,
         nextPhotoAnimation,
