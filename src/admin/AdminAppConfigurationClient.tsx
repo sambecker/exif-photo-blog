@@ -607,7 +607,7 @@ export default function AdminAppConfigurationClient({
           optional
         >
           <ChecklistRow
-            title="Default sort"
+            title="Order"
             status={hasDefaultSortBy}
             optional
           >
@@ -626,7 +626,7 @@ export default function AdminAppConfigurationClient({
             {renderEnvVars(['NEXT_PUBLIC_DEFAULT_SORT'])}
           </ChecklistRow>
           <ChecklistRow
-            title="Priority-based sorting"
+            title="Priority-based"
             status={isSortWithPriority}
             optional
           >
@@ -636,7 +636,7 @@ export default function AdminAppConfigurationClient({
             {renderEnvVars(['NEXT_PUBLIC_PRIORITY_BASED_SORTING'])}
           </ChecklistRow>
           <ChecklistRow
-            title="Show sort control"
+            title="Show nav button"
             status={showSortControl}
             optional
           >
