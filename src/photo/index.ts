@@ -2,7 +2,6 @@ import { formatFocalLength } from '@/focal';
 import { getNextImageUrlForRequest } from '@/platforms/next-image';
 import { photoHasFilmData } from '@/film';
 import {
-  HIGH_DENSITY_GRID,
   IS_PREVIEW,
   SHOW_EXIF_DATA,
   SHOW_FILMS,
@@ -33,12 +32,10 @@ export const INFINITE_SCROLL_FEED_MULTIPLE =
   process.env.NODE_ENV === 'development' ? 2 : 24;
 
 // INFINITE SCROLL: GRID
-export const INFINITE_SCROLL_GRID_INITIAL = HIGH_DENSITY_GRID
-  ? process.env.NODE_ENV === 'development' ? 12 : 48
-  : process.env.NODE_ENV === 'development' ? 12 : 48;
-export const INFINITE_SCROLL_GRID_MULTIPLE = HIGH_DENSITY_GRID
-  ? process.env.NODE_ENV === 'development' ? 12 : 48
-  : process.env.NODE_ENV === 'development' ? 12 : 48;
+export const INFINITE_SCROLL_GRID_INITIAL =
+  process.env.NODE_ENV === 'development' ? 12 : 48;
+export const INFINITE_SCROLL_GRID_MULTIPLE =
+  process.env.NODE_ENV === 'development' ? 12 : 48;
 
 // Thumbnails below large photos on pages like /p/[photoId]
 export const RELATED_GRID_PHOTOS_TO_SHOW = 12;

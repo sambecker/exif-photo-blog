@@ -15,7 +15,6 @@ export default function PhotoGrid({
   photos,
   selectedPhoto,
   photoPriority,
-  fast,
   animate = true,
   canStart,
   animateOnFirstLoadOnly,
@@ -30,7 +29,6 @@ export default function PhotoGrid({
   photos: Photo[]
   selectedPhoto?: Photo
   photoPriority?: boolean
-  fast?: boolean
   animate?: boolean
   canStart?: boolean
   animateOnFirstLoadOnly?: boolean
@@ -62,8 +60,8 @@ export default function PhotoGrid({
       )}
       type={animate === false ? 'none' : undefined}
       canStart={canStart}
-      duration={fast ? 0.3 : undefined}
-      staggerDelay={0.075}
+      duration={0.8}
+      staggerDelay={0.04}
       distanceOffset={40}
       animateOnFirstLoadOnly={animateOnFirstLoadOnly}
       staggerOnFirstLoadOnly={staggerOnFirstLoadOnly}
