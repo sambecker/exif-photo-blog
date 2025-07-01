@@ -60,7 +60,7 @@ export default function PhotoGrid({
       )}
       type={animate === false ? 'none' : undefined}
       canStart={canStart}
-      duration={0.8}
+      duration={0.7}
       staggerDelay={0.04}
       distanceOffset={40}
       animateOnFirstLoadOnly={animateOnFirstLoadOnly}

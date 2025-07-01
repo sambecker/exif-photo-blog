@@ -33,9 +33,9 @@ export const INFINITE_SCROLL_FEED_MULTIPLE =
 
 // INFINITE SCROLL: GRID
 export const INFINITE_SCROLL_GRID_INITIAL =
-  process.env.NODE_ENV === 'development' ? 12 : 48;
+  process.env.NODE_ENV === 'development' ? 12 : 60;
 export const INFINITE_SCROLL_GRID_MULTIPLE =
-  process.env.NODE_ENV === 'development' ? 12 : 48;
+  process.env.NODE_ENV === 'development' ? 12 : 60;
 
 // Thumbnails below large photos on pages like /p/[photoId]
 export const RELATED_GRID_PHOTOS_TO_SHOW = 12;
