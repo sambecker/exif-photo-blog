@@ -30,7 +30,6 @@ import { useRouter, usePathname } from 'next/navigation';
 import { isPathProtected, PATH_ROOT } from '@/app/paths';
 import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 import { RecipeProps } from '@/recipe';
-import { getCountsForCategoriesCachedAction } from '@/category/actions';
 import { nanoid } from 'nanoid';
 import { toastSuccess } from '@/toast';
 
@@ -125,11 +124,6 @@ export default function AppStateProvider({
 
   const invalidateSwr = useCallback(() => setSwrTimestamp(Date.now()), []);
 
-  const { data: categoriesWithCounts } = useSWR(
-    'getDataForCategories',
-    getCountsForCategoriesCachedAction,
-  );
-
   const {
     data: auth,
     error: authError,
@@ -220,7 +214,6 @@ export default function AppStateProvider({
         clearNextPhotoAnimation,
         shouldRespondToKeyboardCommands,
         setShouldRespondToKeyboardCommands,
-        categoriesWithCounts,
         // MODAL
         isCommandKOpen,
         setIsCommandKOpen,

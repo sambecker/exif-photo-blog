@@ -2,13 +2,20 @@ import { ReactNode, useRef, useEffect } from 'react';
 import { SharedHoverData, useSharedHoverState } from '../shared-hover/state';
 import useSupportsHover from '@/utility/useSupportsHover';
 
+import { getDimensionsFromSize } from '@/utility/size';
+
+const {
+  width: DEFAULT_WIDTH,
+  height: DEFAULT_HEIGHT,
+} = getDimensionsFromSize(300, 16 / 9);
+
 export default function SharedHover({
   hoverKey: key,
   children,
   content,
   classNameContent,
-  width,
-  height,
+  width = DEFAULT_WIDTH,
+  height = DEFAULT_HEIGHT,
   offsetAbove = -1,
   offsetBelow = -6,
   color,
@@ -17,8 +24,8 @@ export default function SharedHover({
   children :ReactNode
   content: ReactNode
   classNameContent?: string
-  width: number
-  height: number
+  width?: number
+  height?: number
   offsetAbove?: number
   offsetBelow?: number
   color?: SharedHoverData['color']

@@ -5,7 +5,7 @@ import { pathForCamera, pathForCameraImage } from '@/app/paths';
 import { Camera, formatCameraText } from '.';
 import EntityLink, {
   EntityLinkExternalProps,
-} from '@/components/primitives/EntityLink';
+} from '@/components/entity/EntityLink';
 import IconCamera from '@/components/icons/IconCamera';
 import { isCameraApple } from '@/platforms/apple';
 import { useAppText } from '@/i18n/state/client';

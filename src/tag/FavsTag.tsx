@@ -4,7 +4,7 @@ import { TAG_FAVS } from '.';
 import { pathForTag, pathForTagImage } from '@/app/paths';
 import EntityLink, {
   EntityLinkExternalProps,
-} from '@/components/primitives/EntityLink';
+} from '@/components/entity/EntityLink';
 import IconFavs from '@/components/icons/IconFavs';
 import { useAppText } from '@/i18n/state/client';
 import { photoQuantityText } from '@/photo';

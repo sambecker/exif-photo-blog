@@ -94,6 +94,10 @@ export default function SharedHoverProvider({
     }
   }, [clearState]);
 
+  const isHoverBeingShown = useCallback((key: string) =>
+    Boolean(currentHover?.key && currentHover.key === key)
+  , [currentHover]);
+
   useEffect(() => {
     const onWindowChange = () => clearState(0);
     WINDOW_CHANGE_EVENTS.forEach(event => {
@@ -109,9 +113,9 @@ export default function SharedHoverProvider({
   return (
     <SharedHoverContext.Provider
       value={{
-        currentHoverKey: currentHover?.key,
         showHover,
         dismissHover,
+        isHoverBeingShown,
       }}
     >
       <div className="relative inset-0 z-100 pointer-events-none">

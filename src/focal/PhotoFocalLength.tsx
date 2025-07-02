@@ -3,7 +3,7 @@
 import { pathForFocalLength, pathForFocalLengthImage } from '@/app/paths';
 import EntityLink, {
   EntityLinkExternalProps,
-} from '@/components/primitives/EntityLink';
+} from '@/components/entity/EntityLink';
 import { formatFocalLength } from '.';
 import IconFocalLength from '@/components/icons/IconFocalLength';
 import { useAppText } from '@/i18n/state/client';

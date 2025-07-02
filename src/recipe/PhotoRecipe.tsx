@@ -3,7 +3,7 @@
 import { pathForRecipe, pathForRecipeImage } from '@/app/paths';
 import EntityLink, {
   EntityLinkExternalProps,
-} from '@/components/primitives/EntityLink';
+} from '@/components/entity/EntityLink';
 import { formatRecipe } from '.';
 import clsx from 'clsx/lite';
 import { ComponentProps } from 'react';

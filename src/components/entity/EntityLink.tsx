@@ -1,12 +1,12 @@
 'use client';
 
 import { ComponentProps, ReactNode, RefObject, useState } from 'react';
-import LabeledIcon, { LabeledIconType } from './LabeledIcon';
+import LabeledIcon, { LabeledIconType } from '../primitives/LabeledIcon';
 import Badge from '../Badge';
 import { clsx } from 'clsx/lite';
 import LinkWithStatus from '../LinkWithStatus';
 import Spinner from '../Spinner';
-import ResponsiveText from './ResponsiveText';
+import ResponsiveText from '../primitives/ResponsiveText';
 import OGHover from '../og/OGHover';
 import { SHOW_CATEGORY_IMAGE_HOVERS } from '@/app/config';
 

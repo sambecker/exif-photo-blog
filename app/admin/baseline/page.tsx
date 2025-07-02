@@ -5,7 +5,7 @@ import Badge from '@/components/Badge';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import AppGrid from '@/components/AppGrid';
-import EntityLink from '@/components/primitives/EntityLink';
+import EntityLink from '@/components/entity/EntityLink';
 import LabeledIcon from '@/components/primitives/LabeledIcon';
 import PhotoFilmIcon from '@/film/PhotoFilmIcon';
 import { useAppState } from '@/state/AppState';

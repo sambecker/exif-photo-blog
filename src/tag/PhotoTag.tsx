@@ -4,7 +4,7 @@ import { pathForTag, pathForTagImage } from '@/app/paths';
 import { formatTag } from '.';
 import EntityLink, {
   EntityLinkExternalProps,
-} from '@/components/primitives/EntityLink';
+} from '@/components/entity/EntityLink';
 import IconTag from '@/components/icons/IconTag';
 import { useAppText } from '@/i18n/state/client';
 import { photoQuantityText } from '@/photo';

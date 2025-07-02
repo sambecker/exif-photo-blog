@@ -4,7 +4,7 @@ import { pathForLens, pathForLensImage } from '@/app/paths';
 import { Lens, formatLensText } from '.';
 import EntityLink, {
   EntityLinkExternalProps,
-} from '@/components/primitives/EntityLink';
+} from '@/components/entity/EntityLink';
 import IconLens from '@/components/icons/IconLens';
 import { useAppText } from '@/i18n/state/client';
 import { photoQuantityText } from '@/photo';

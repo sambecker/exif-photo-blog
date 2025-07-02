@@ -1,6 +1,6 @@
 import { PREFIX_RECENTS, pathForRecentsImage } from '@/app/paths';
 import EntityLink, { EntityLinkExternalProps } from
-  '@/components/primitives/EntityLink';
+  '@/components/entity/EntityLink';
 import { useAppText } from '@/i18n/state/client';
 import { photoQuantityText } from '@/photo';
 import IconRecents from '@/components/icons/IconRecents';

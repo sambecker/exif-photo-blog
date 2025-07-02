@@ -3,7 +3,7 @@ import { pathForTag } from '@/app/paths';
 import IconHidden from '@/components/icons/IconHidden';
 import EntityLink, {
   EntityLinkExternalProps,
-} from '@/components/primitives/EntityLink';
+} from '@/components/entity/EntityLink';
 
 export default function HiddenTag({
   type,

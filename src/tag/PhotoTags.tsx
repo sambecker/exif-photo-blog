@@ -1,7 +1,7 @@
 import PhotoTag from '@/tag/PhotoTag';
 import { isTagFavs } from '.';
 import FavsTag from './FavsTag';
-import { EntityLinkExternalProps } from '@/components/primitives/EntityLink';
+import { EntityLinkExternalProps } from '@/components/entity/EntityLink';
 import { Fragment } from 'react';
 
 export default function PhotoTags({

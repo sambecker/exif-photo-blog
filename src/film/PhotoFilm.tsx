@@ -4,7 +4,7 @@ import PhotoFilmIcon from './PhotoFilmIcon';
 import { pathForFilm, pathForFilmImage } from '@/app/paths';
 import EntityLink, {
   EntityLinkExternalProps,
-} from '@/components/primitives/EntityLink';
+} from '@/components/entity/EntityLink';
 import clsx from 'clsx/lite';
 import { labelForFilm } from '.';
 import { isStringFujifilmSimulation } from '@/platforms/fujifilm/simulation';

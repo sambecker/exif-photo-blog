@@ -13,9 +13,9 @@ export type SharedHoverData = {
 }
 
 export type SharedHoverState = {
-  currentHoverKey?: string
   showHover?: (trigger: HTMLElement | null, hover: SharedHoverData) => void
   dismissHover?: (trigger: HTMLElement | null) => void
+  isHoverBeingShown?: (key: string) => boolean
 }
 
 export const SharedHoverContext = createContext<SharedHoverState>({});

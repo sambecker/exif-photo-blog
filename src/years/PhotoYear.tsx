@@ -1,6 +1,6 @@
 import { pathForYear, pathForYearImage } from '@/app/paths';
 import EntityLink, { EntityLinkExternalProps } from
-  '@/components/primitives/EntityLink';
+  '@/components/entity/EntityLink';
 import IconYear from '@/components/icons/IconYear';
 import { useAppText } from '@/i18n/state/client';
 import { photoQuantityText } from '@/photo';
