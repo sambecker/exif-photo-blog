@@ -149,7 +149,7 @@ export default function PhotoFilmIcon({
     <svg
       className={className}
       style={style}
-      aria-description={film
+      aria-description={film && simulationIcon
         ? labelForFilm(film).large
         : 'Film'}
       width={width * height / INTRINSIC_HEIGHT}

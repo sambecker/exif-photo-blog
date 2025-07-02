@@ -25,7 +25,7 @@ export default function FilmOGTile({
   return (
     <OGTile {...{
       ...props,
-      title: titleForFilm(film, photos, appText, count),
+      title: titleForFilm(decodeURIComponent(film), photos, appText, count),
       description:
         descriptionForFilmPhotos(photos, appText, true, count, dateRange),
       path: pathForFilm(film),
