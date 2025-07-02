@@ -8,23 +8,25 @@ import {
   useRef,
   useState,
 } from 'react';
-import { OGTooltipContext, Tooltip } from './state';
+import { SharedHoverContext, SharedHoverData } from './state';
 import { AnimatePresence, motion } from 'framer-motion';
 import MenuSurface from '../primitives/MenuSurface';
+
+const WINDOW_CHANGE_EVENTS = ['mouseup', 'mousewheel', 'resize'];
 
 const DELAY_INITIAL_HOVER = 200;
 const DELAY_DISMISS = 200;
 
 const VIEWPORT_SAFE_AREA = 12;
-const TOOLTIP_MARGIN = 12;
+const HOVER_MARGIN = 12;
 
-export default function OGTooltipProvider({
+export default function SharedHoverProvider({
   children,
 }: {
   children: ReactNode
 }) {
-  const [currentTooltip, setCurrentTooltip] = useState<Tooltip>();
-  const [tooltipStyle, setTooltipStyle] = useState<CSSProperties>();
+  const [currentHover, setCurrentHover] = useState<SharedHoverData>();
+  const [hoverStyle, setHoverStyle] = useState<CSSProperties>();
 
   const currentTriggerRef = useRef<HTMLElement>(null);
 
@@ -42,52 +44,51 @@ export default function OGTooltipProvider({
     clearTimeouts();
     if (delay) {
       timeoutDismissRef.current = setTimeout(() => {
-        setCurrentTooltip(undefined);
+        setCurrentHover(undefined);
         currentTriggerRef.current = null;
       }, delay);
     } else {
-      setCurrentTooltip(undefined);
+      setCurrentHover(undefined);
       currentTriggerRef.current = null;
     }
   }, [clearTimeouts]);
 
-  const showTooltip = useCallback((
+  const showHover = useCallback((
     _trigger: HTMLElement | null,
-    tooltip: Tooltip,
+    hover: SharedHoverData,
   ) => {
     if (_trigger) {
       currentTriggerRef.current = _trigger;
-      const displayTooltip = () => {
+      const displayHover = () => {
         // Update current trigger ref on display
         currentTriggerRef.current = _trigger;
-        setCurrentTooltip(tooltip);
+        setCurrentHover(hover);
         const trigger = _trigger.getBoundingClientRect();
         const top =
-          trigger.top - (tooltip.height + TOOLTIP_MARGIN) < VIEWPORT_SAFE_AREA
+          trigger.top - (hover.height + HOVER_MARGIN) < VIEWPORT_SAFE_AREA
             // Position below trigger
-            ? trigger.bottom + TOOLTIP_MARGIN + tooltip.offsetBelow
+            ? trigger.bottom + HOVER_MARGIN + hover.offsetBelow
             // Position above trigger
-            : trigger.top - (tooltip.height + TOOLTIP_MARGIN)
-              + tooltip.offsetAbove;
+            : trigger.top - (hover.height + HOVER_MARGIN)
+              + hover.offsetAbove;
         const horizontalOffset =
-          // eslint-disable-next-line max-len
-          window.innerWidth - (trigger.left + tooltip.width) < VIEWPORT_SAFE_AREA
+          window.innerWidth - (trigger.left + hover.width) < VIEWPORT_SAFE_AREA
             ? { right: VIEWPORT_SAFE_AREA }
             : { left: trigger.left };
-        setTooltipStyle({ top, ...horizontalOffset });
+        setHoverStyle({ top, ...horizontalOffset });
         clearTimeouts();
       };
-      if (currentTooltip) {
-        // Don't apply delay if tooltip's already visible
-        displayTooltip();
+      if (currentHover) {
+        // Don't apply delay if hover is already visible
+        displayHover();
       } else {
         timeoutInitialHoverRef.current =
-          setTimeout(displayTooltip, DELAY_INITIAL_HOVER);
+          setTimeout(displayHover, DELAY_INITIAL_HOVER);
       }
     }
-  }, [currentTooltip, clearTimeouts]);
+  }, [currentHover, clearTimeouts]);
 
-  const dismissTooltip = useCallback((trigger: HTMLElement | null) => {
+  const dismissHover = useCallback((trigger: HTMLElement | null) => {
     if (trigger === currentTriggerRef.current) {
       clearState(DELAY_DISMISS);
     }
@@ -95,40 +96,54 @@ export default function OGTooltipProvider({
 
   useEffect(() => {
     const onWindowChange = () => clearState(0);
-    window.addEventListener('mouseup', onWindowChange);
-    window.addEventListener('mousewheel', onWindowChange);
-    window.addEventListener('resize', onWindowChange);
+    WINDOW_CHANGE_EVENTS.forEach(event => {
+      window.addEventListener(event, onWindowChange);
+    });
     return () => {
-      window.removeEventListener('mouseup', onWindowChange);
-      window.removeEventListener('mousewheel', onWindowChange);
-      window.removeEventListener('resize', onWindowChange);
+      WINDOW_CHANGE_EVENTS.forEach(event => {
+        window.removeEventListener(event, onWindowChange);
+      });
     };
   }, [clearState]);
 
   return (
-    <OGTooltipContext.Provider value={{ showTooltip, dismissTooltip }}>
+    <SharedHoverContext.Provider
+      value={{
+        currentHoverKey: currentHover?.key,
+        showHover,
+        dismissHover,
+      }}
+    >
       <div className="relative inset-0 z-100 pointer-events-none">
         <AnimatePresence>
-          {currentTooltip &&
+          {currentHover &&
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.2 }}
-              layoutId="tooltip"
+              layoutId="hover"
               className="fixed"
-              style={tooltipStyle}
+              style={hoverStyle}
             >
               <MenuSurface
                 className="max-w-none p-1!"
-                color={currentTooltip.color}
+                color={currentHover.color}
               >
-                {currentTooltip.content}
+                <div
+                  className={currentHover.className}
+                  style={{
+                    width: currentHover.width,
+                    height: currentHover.height,
+                  }}
+                >
+                  {currentHover.content}
+                </div>
               </MenuSurface>
             </motion.div>}
         </AnimatePresence>
       </div>
       {children}
-    </OGTooltipContext.Provider>
+    </SharedHoverContext.Provider>
   );
 }

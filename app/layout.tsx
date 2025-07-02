@@ -29,7 +29,7 @@ import { revalidatePath } from 'next/cache';
 import RecipeModal from '@/recipe/RecipeModal';
 import ThemeColors from '@/app/ThemeColors';
 import AppTextProvider from '@/i18n/state/AppTextProvider';
-import OGTooltipProvider from '@/components/og/OGTooltipProvider';
+import SharedHoverProvider from '@/components/shared-hover/SharedHoverProvider';
 
 import '../tailwind.css';
 
@@ -97,7 +97,7 @@ export default function RootLayout({
             <ThemeColors />
             <ThemeProvider attribute="class" defaultTheme={DEFAULT_THEME}>
               <SwrConfigClient>
-                <OGTooltipProvider>
+                <SharedHoverProvider>
                   <div className={clsx(
                     'mx-3 mb-3',
                     'lg:mx-6 lg:mb-6',
@@ -135,7 +135,7 @@ export default function RootLayout({
                     <Footer />
                   </div>
                   <CommandK />
-                </OGTooltipProvider>
+                </SharedHoverProvider>
               </SwrConfigClient>
               <Analytics debug={false} />
               <SpeedInsights debug={false}  />

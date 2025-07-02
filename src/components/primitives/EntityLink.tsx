@@ -7,7 +7,7 @@ import { clsx } from 'clsx/lite';
 import LinkWithStatus from '../LinkWithStatus';
 import Spinner from '../Spinner';
 import ResponsiveText from './ResponsiveText';
-import OGTooltip from '../og/OGTooltip';
+import OGHover from '../og/OGHover';
 import { SHOW_CATEGORY_IMAGE_HOVERS } from '@/app/config';
 
 export interface EntityLinkExternalProps {
@@ -153,14 +153,14 @@ export default function EntityLink({
       )}
     >
       {showTooltip && tooltipImagePath
-        ? <OGTooltip
+        ? <OGHover
           title={label}
           path={tooltipImagePath}
           caption={tooltipCaption}
           color={contrast === 'frosted' ? 'frosted' : undefined}
         >
           {renderLink}
-        </OGTooltip>
+        </OGHover>
         : renderLink}
       {action &&
         <span className="action">
