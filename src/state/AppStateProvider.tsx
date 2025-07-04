@@ -32,6 +32,7 @@ import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 import { RecipeProps } from '@/recipe';
 import { nanoid } from 'nanoid';
 import { toastSuccess } from '@/toast';
+import { getCountsForCategoriesCachedAction } from '@/category/actions';
 
 export default function AppStateProvider({
   children,
@@ -125,6 +126,11 @@ export default function AppStateProvider({
     mutate(() => true)
   , [mutate]);
 
+  const { data: categoriesWithCounts } = useSWR(
+    'getDataForCategories',
+    getCountsForCategoriesCachedAction,
+  );
+
   const {
     data: auth,
     error: authError,
@@ -214,6 +220,7 @@ export default function AppStateProvider({
         clearNextPhotoAnimation,
         shouldRespondToKeyboardCommands,
         setShouldRespondToKeyboardCommands,
+        categoriesWithCounts,
         // MODAL
         isCommandKOpen,
         setIsCommandKOpen,

@@ -1,11 +1,11 @@
 import { createCameraKey, Camera } from '@/camera';
 import { createLensKey, Lens } from '@/lens';
-import { useCategoryState } from './state';
 import { useCallback } from 'react';
 import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
+import { useAppState } from '@/state/AppState';
 
 export default function useCategoryCounts() {
-  const { categoriesWithCounts } = useCategoryState();
+  const { categoriesWithCounts } = useAppState();
 
   const getCameraCount = useCallback((camera: Camera) => {
     const cameraCounts = categoriesWithCounts?.cameras ?? {};
