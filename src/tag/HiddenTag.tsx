@@ -10,16 +10,12 @@ export default function HiddenTag(props: EntityLinkExternalProps) {
     <EntityLink
       {...props}
       label={TAG_HIDDEN}
-      labelComplex={props.badged &&
-        <span className="inline-flex items-center gap-1">
-          {TAG_HIDDEN}
-          <IconHidden
-            size={13}
-            className="translate-y-[-0.5px]"
-          />
-        </span>}
       path={pathForTag(TAG_HIDDEN)}
-      icon={!props.badged && <IconHidden size={16} />}
+      icon={<IconHidden size={16} />}
+      iconBadgeEnd={<IconHidden
+        size={13}
+        className="translate-y-[-0.5px]"
+      />}
     />
   );
 }

@@ -14,7 +14,7 @@ export default function PhotoRecents(props: EntityLinkExternalProps) {
       path={PREFIX_RECENTS}
       hoverPhotoQueryOptions={{ recent: true }}
       icon={<IconRecents size={16} />}
-      iconBadge={<IconRecents size={10} solid />}
+      iconBadgeStart={<IconRecents size={10} solid />}
     />
   );
 }

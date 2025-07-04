@@ -30,10 +30,10 @@ export interface EntityLinkExternalProps {
 export default function EntityLink({
   ref,
   icon,
-  iconBadge,
+  iconBadgeStart,
+  iconBadgeEnd,
   label,
   labelSmall,
-  labelComplex,
   iconWide,
   type,
   badged,
@@ -53,10 +53,10 @@ export default function EntityLink({
   debug,
 }: {
   icon: ReactNode
-  iconBadge?: ReactNode
+  iconBadgeStart?: ReactNode
+  iconBadgeEnd?: ReactNode
   label: string
   labelSmall?: ReactNode
-  labelComplex?: ReactNode
   iconWide?: boolean
   path?: string
   prefetch?: boolean
@@ -69,6 +69,8 @@ export default function EntityLink({
   debug?: boolean
 } & EntityLinkExternalProps) {
   const [isLoading, setIsLoading] = useState(false);
+
+  const hasBadgeIcon = Boolean(iconBadgeStart || iconBadgeEnd);
 
   const classForContrast = () => {
     switch (contrast) {
@@ -90,7 +92,7 @@ export default function EntityLink({
 
   const renderLabel =
     <ResponsiveText shortText={labelSmall}>
-      {labelComplex || label}
+      {label}
     </ResponsiveText>;
 
   const renderLink = (useForHover?: boolean) =>
@@ -108,8 +110,8 @@ export default function EntityLink({
       setIsLoading={setIsLoading}
     >
       <LabeledIcon {...{
-        icon,
-        iconWide,
+        icon: (hasBadgeIcon && !useForHover) ? undefined : icon,
+        iconWide: (hasBadgeIcon && !useForHover) ? undefined : iconWide,
         prefetch,
         title,
         type: useForHover ? 'icon-first' : type,
@@ -127,13 +129,14 @@ export default function EntityLink({
             contrast={contrast}
             className={clsx(
               'translate-y-[-0.5px]',
-              iconBadge && '*:flex *:items-center *:gap-1',
+              hasBadgeIcon && '*:flex *:items-center *:gap-1',
             )}
             uppercase
             interactive
           >
-            {iconBadge}
+            {iconBadgeStart}
             {renderLabel}
+            {iconBadgeEnd}
           </Badge>
           : <span className={clsx(
             'text-content',
