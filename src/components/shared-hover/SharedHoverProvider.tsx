@@ -8,9 +8,10 @@ import {
   useRef,
   useState,
 } from 'react';
-import { SharedHoverContext, SharedHoverData } from './state';
+import { SharedHoverContext, SharedHoverProps } from './state';
 import { AnimatePresence, motion } from 'framer-motion';
 import MenuSurface from '../primitives/MenuSurface';
+import clsx from 'clsx/lite';
 
 const WINDOW_CHANGE_EVENTS = ['mouseup', 'mousewheel', 'resize'];
 
@@ -25,7 +26,8 @@ export default function SharedHoverProvider({
 }: {
   children: ReactNode
 }) {
-  const [currentHover, setCurrentHover] = useState<SharedHoverData>();
+  const [hoverProps, setHoverProps] = useState<SharedHoverProps>();
+  const [hoverContent, setHoverContent] = useState<ReactNode>();
   const [hoverStyle, setHoverStyle] = useState<CSSProperties>();
 
   const currentTriggerRef = useRef<HTMLElement>(null);
@@ -44,25 +46,25 @@ export default function SharedHoverProvider({
     clearTimeouts();
     if (delay) {
       timeoutDismissRef.current = setTimeout(() => {
-        setCurrentHover(undefined);
+        setHoverProps(undefined);
         currentTriggerRef.current = null;
       }, delay);
     } else {
-      setCurrentHover(undefined);
+      setHoverProps(undefined);
       currentTriggerRef.current = null;
     }
   }, [clearTimeouts]);
 
   const showHover = useCallback((
     _trigger: HTMLElement | null,
-    hover: SharedHoverData,
+    hover: SharedHoverProps,
   ) => {
     if (_trigger) {
       currentTriggerRef.current = _trigger;
       const displayHover = () => {
         // Update current trigger ref on display
         currentTriggerRef.current = _trigger;
-        setCurrentHover(hover);
+        setHoverProps(hover);
         const trigger = _trigger.getBoundingClientRect();
         const top =
           trigger.top - (hover.height + HOVER_MARGIN) < VIEWPORT_SAFE_AREA
@@ -78,7 +80,7 @@ export default function SharedHoverProvider({
         setHoverStyle({ top, ...horizontalOffset });
         clearTimeouts();
       };
-      if (currentHover) {
+      if (hoverProps) {
         // Don't apply delay if hover is already visible
         displayHover();
       } else {
@@ -86,7 +88,7 @@ export default function SharedHoverProvider({
           setTimeout(displayHover, DELAY_INITIAL_HOVER);
       }
     }
-  }, [currentHover, clearTimeouts]);
+  }, [hoverProps, clearTimeouts]);
 
   const dismissHover = useCallback((trigger: HTMLElement | null) => {
     if (trigger === currentTriggerRef.current) {
@@ -95,8 +97,8 @@ export default function SharedHoverProvider({
   }, [clearState]);
 
   const isHoverBeingShown = useCallback((key: string) =>
-    Boolean(currentHover?.key && currentHover.key === key)
-  , [currentHover]);
+    Boolean(hoverProps?.key && hoverProps.key === key)
+  , [hoverProps]);
 
   useEffect(() => {
     const onWindowChange = () => clearState(0);
@@ -115,12 +117,13 @@ export default function SharedHoverProvider({
       value={{
         showHover,
         dismissHover,
+        renderHover: setHoverContent,
         isHoverBeingShown,
       }}
     >
       <div className="relative inset-0 z-100 pointer-events-none">
         <AnimatePresence>
-          {currentHover &&
+          {hoverProps &&
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -132,16 +135,28 @@ export default function SharedHoverProvider({
             >
               <MenuSurface
                 className="max-w-none p-1!"
-                color={currentHover.color}
+                color={hoverProps.color}
               >
                 <div
-                  className={currentHover.className}
+                  className={clsx(
+                    'relative rounded-[0.25rem] overflow-clip',
+                    hoverProps.color !== 'frosted' && 'bg-extra-dim',
+                  )}
                   style={{
-                    width: currentHover.width,
-                    height: currentHover.height,
+                    width: hoverProps.width,
+                    height: hoverProps.height,
                   }}
                 >
-                  {currentHover.content}
+                  {/* Content */}
+                  {hoverContent}
+                  {/* Border */}
+                  <div className={clsx(
+                    'absolute inset-0',
+                    'rounded-[0.25rem]',
+                    hoverProps.color === 'frosted'
+                      ? 'border border-gray-400/25'
+                      : 'border-medium',
+                  )} />
                 </div>
               </MenuSurface>
             </motion.div>}

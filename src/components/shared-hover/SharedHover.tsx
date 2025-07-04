@@ -1,21 +1,13 @@
 import { ReactNode, useRef, useEffect } from 'react';
-import { SharedHoverData, useSharedHoverState } from '../shared-hover/state';
+import { SharedHoverProps, useSharedHoverState } from '../shared-hover/state';
 import useSupportsHover from '@/utility/useSupportsHover';
-
-import { getDimensionsFromSize } from '@/utility/size';
-
-const {
-  width: DEFAULT_WIDTH,
-  height: DEFAULT_HEIGHT,
-} = getDimensionsFromSize(300, 16 / 9);
 
 export default function SharedHover({
   hoverKey: key,
   children,
   content,
-  classNameContent,
-  width = DEFAULT_WIDTH,
-  height = DEFAULT_HEIGHT,
+  width,
+  height,
   offsetAbove = -1,
   offsetBelow = -6,
   color,
@@ -23,16 +15,22 @@ export default function SharedHover({
   hoverKey: string
   children :ReactNode
   content: ReactNode
-  classNameContent?: string
-  width?: number
-  height?: number
+  width: number
+  height: number
   offsetAbove?: number
   offsetBelow?: number
-  color?: SharedHoverData['color']
+  color?: SharedHoverProps['color']
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
-  const { showHover, dismissHover } = useSharedHoverState();
+  const {
+    showHover,
+    dismissHover,
+    renderHover,
+    isHoverBeingShown,
+  } = useSharedHoverState();
+
+  const isHovering = isHoverBeingShown?.(key);
 
   const supportsHover = useSupportsHover();
 
@@ -41,24 +39,25 @@ export default function SharedHover({
     return () => dismissHover?.(trigger);
   }, [dismissHover]);
 
+  useEffect(() => {
+    if (isHovering) {
+      renderHover?.(content);
+    }
+  }, [isHovering, renderHover, content]);
+
   return (
     <div
       className="max-w-full"
       ref={ref}
       onMouseEnter={() => supportsHover &&
-        showHover?.(
-          ref.current,
-          {
-            key,
-            content,
-            className: classNameContent,
-            width,
-            height,
-            offsetAbove,
-            offsetBelow,
-            color,
-          },
-        )}
+        showHover?.(ref.current, {
+          key,
+          width,
+          height,
+          offsetAbove,
+          offsetBelow,
+          color,
+        })}
       onMouseLeave={() => supportsHover &&
         dismissHover?.(ref.current)}
     >

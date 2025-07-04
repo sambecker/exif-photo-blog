@@ -10,11 +10,8 @@ export default function HiddenTag({
   badged,
   contrast,
   prefetch,
-  countOnHover,
   className,
-}: {
-  countOnHover?: number
-} & EntityLinkExternalProps) {
+}: EntityLinkExternalProps) {
   return (
     <EntityLink
       label={TAG_HIDDEN}
@@ -30,7 +27,6 @@ export default function HiddenTag({
       icon={!badged && <IconHidden size={16} />}
       type={type}
       className={className}
-      hoverEntity={countOnHover}
       badged={badged}
       contrast={contrast}
       prefetch={prefetch}

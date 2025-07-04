@@ -19,7 +19,6 @@ export type AppStateContextType = {
   previousPathname?: string
   hasLoaded?: boolean
   hasLoadedWithAnimations?: boolean
-  swrTimestamp?: number
   invalidateSwr?: () => void
   nextPhotoAnimation?: AnimationConfig
   setNextPhotoAnimation?: (animationConfig?: AnimationConfig) => void

@@ -11,7 +11,7 @@ import { AppStateContext } from './AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import usePathnames from '@/utility/usePathnames';
 import { getAuthAction } from '@/auth/actions';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import {
   HIGH_DENSITY_GRID,
   IS_DEVELOPMENT,
@@ -51,8 +51,6 @@ export default function AppStateProvider({
     useState(false);
   const [hasLoadedWithAnimations, setHasLoadedWithAnimations] =
     useState(false);
-  const [swrTimestamp, setSwrTimestamp] =
-    useState(Date.now());
   const [nextPhotoAnimation, _setNextPhotoAnimation] =
     useState<AnimationConfig>();
   const setNextPhotoAnimation = useCallback((animation?: AnimationConfig) => {
@@ -122,7 +120,10 @@ export default function AppStateProvider({
     return () => clearTimeout(timeout);
   }, []);
 
-  const invalidateSwr = useCallback(() => setSwrTimestamp(Date.now()), []);
+  const { mutate } = useSWRConfig();
+  const invalidateSwr = useCallback(() =>
+    mutate(() => true)
+  , [mutate]);
 
   const {
     data: auth,
@@ -206,7 +207,6 @@ export default function AppStateProvider({
         previousPathname,
         hasLoaded,
         hasLoadedWithAnimations,
-        swrTimestamp,
         invalidateSwr,
         nextPhotoAnimation,
         setNextPhotoAnimation,

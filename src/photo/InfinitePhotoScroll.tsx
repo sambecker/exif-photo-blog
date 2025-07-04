@@ -55,15 +55,13 @@ export default function InfinitePhotoScroll({
     revalidatePhoto?: RevalidatePhoto
   }) => ReactNode
 } & PhotoSetCategory) {
-  const { swrTimestamp, isUserSignedIn } = useAppState();
-
-  const key = `${swrTimestamp}-${cacheKey}`;
+  const { isUserSignedIn } = useAppState();
 
   const keyGenerator = useCallback(
     (size: number, prev: Photo[]) => prev && prev.length === 0
       ? null
-      : [key, size]
-    , [key]);
+      : [cacheKey, size]
+    , [cacheKey]);
 
   const fetcher = useCallback((
     [_key, size]: [string, number],

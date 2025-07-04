@@ -30,7 +30,7 @@ export default async function CameraHeader({
       entity={<PhotoCamera
         {...{ camera }}
         contrast="high"
-        showTooltip={false}
+        showHover={false}
       />}
       entityDescription={
         descriptionForCameraPhotos(

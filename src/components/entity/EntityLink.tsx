@@ -7,19 +7,23 @@ import { clsx } from 'clsx/lite';
 import LinkWithStatus from '../LinkWithStatus';
 import Spinner from '../Spinner';
 import ResponsiveText from '../primitives/ResponsiveText';
-import OGHover from '../og/OGHover';
 import { SHOW_CATEGORY_IMAGE_HOVERS } from '@/app/config';
+import EntityHover from './EntityHover';
+import { getPhotosCachedAction } from '@/photo/actions';
+import { GetPhotosOptions } from '@/photo/db';
 
 export interface EntityLinkExternalProps {
   ref?: RefObject<HTMLSpanElement | null>
   type?: LabeledIconType
   badged?: boolean
   contrast?: ComponentProps<typeof Badge>['contrast']
-  showTooltip?: boolean
   uppercase?: boolean
   prefetch?: boolean
   suppressSpinner?: boolean
   className?: string
+  countOnHover?: number
+  showHover?: boolean
+  hoverGetPhotoOptions?: GetPhotosOptions
 }
 
 export default function EntityLink({
@@ -33,14 +37,13 @@ export default function EntityLink({
   type,
   badged,
   contrast = 'medium',
-  showTooltip = SHOW_CATEGORY_IMAGE_HOVERS,
   path = '', // Make link optional for debugging purposes
-  tooltipImagePath,
-  tooltipCaption,
+  showHover = SHOW_CATEGORY_IMAGE_HOVERS,
+  countOnHover,
+  hoverGetPhotoOptions,
   prefetch,
   title,
   action,
-  hoverEntity,
   truncate = true,
   className,
   classNameIcon,
@@ -55,12 +58,9 @@ export default function EntityLink({
   labelComplex?: ReactNode
   iconWide?: boolean
   path?: string
-  tooltipImagePath?: string
-  tooltipCaption?: ReactNode
   prefetch?: boolean
   title?: string
   action?: ReactNode
-  hoverEntity?: ReactNode
   truncate?: boolean
   className?: string
   classNameIcon?: string
@@ -84,8 +84,8 @@ export default function EntityLink({
 
   const showHoverEntity =
     !isLoading &&
-    hoverEntity !== undefined &&
-    !showTooltip;
+    countOnHover &&
+    !showHover;
 
   const renderLabel =
     <ResponsiveText shortText={labelSmall}>
@@ -152,15 +152,18 @@ export default function EntityLink({
         className,
       )}
     >
-      {showTooltip && tooltipImagePath
-        ? <OGHover
+      {showHover && countOnHover && hoverGetPhotoOptions
+        ? <EntityHover
+          hoverKey={path}
+          icon={icon}
           title={label}
-          path={tooltipImagePath}
-          caption={tooltipCaption}
+          photosCount={countOnHover}
+          getPhotos={() =>
+            getPhotosCachedAction({ ...hoverGetPhotoOptions, limit: 6 })}
           color={contrast === 'frosted' ? 'frosted' : undefined}
         >
           {renderLink}
-        </OGHover>
+        </EntityHover>
         : renderLink}
       {action &&
         <span className="action">
@@ -168,7 +171,7 @@ export default function EntityLink({
         </span>}
       {showHoverEntity &&
         <span className="hidden peer-hover:inline text-dim">
-          {hoverEntity}
+          {countOnHover}
         </span>}
       {isLoading && !suppressSpinner &&
         <Spinner
