@@ -20,7 +20,7 @@ import {
 } from './config';
 import { useRef } from 'react';
 import useStickyNav from './useStickyNav';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 
 const NAV_HEIGHT_CLASS = NAV_CAPTION
   ? 'min-h-[4rem] sm:min-h-[5rem]'

@@ -33,7 +33,7 @@ import { AiContent } from '../ai/useAiImageQueries';
 import AiButton from '../ai/AiButton';
 import Spinner from '@/components/Spinner';
 import usePreventNavigation from '@/utility/usePreventNavigation';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import UpdateBlurDataButton from '../UpdateBlurDataButton';
 import { getNextImageUrlForManipulation } from '@/platforms/next-image';
 import { BLUR_ENABLED, IS_PREVIEW } from '@/app/config';
@@ -327,6 +327,7 @@ export default function PhotoForm({
         onSubmit={() => {
           setFormActionErrorMessage('');
           (document.activeElement as HTMLElement)?.blur?.();
+          invalidateSwr?.();
         }}
       >
         {/* Fields */}
@@ -473,7 +474,6 @@ export default function PhotoForm({
             icon={type === 'create' && <IconAddUpload />}
             disabled={!canFormBeSubmitted}
             onFormStatusChange={onFormStatusChange}
-            onFormSubmit={invalidateSwr}
             primary
           >
             {type === 'create' ? 'Add' : 'Update'}

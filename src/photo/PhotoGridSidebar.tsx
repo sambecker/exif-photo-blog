@@ -7,10 +7,14 @@ import { photoQuantityText } from '.';
 import { TAG_FAVS, TAG_HIDDEN, addHiddenToTags, limitTagsByCount } from '@/tag';
 import PhotoFilm from '@/film/PhotoFilm';
 import FavsTag from '../tag/FavsTag';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { useMemo, useRef } from 'react';
 import HiddenTag from '@/tag/HiddenTag';
-import { CATEGORY_VISIBILITY, HIDE_TAGS_WITH_ONE_PHOTO } from '@/app/config';
+import {
+  CATEGORY_VISIBILITY,
+  HIDE_TAGS_WITH_ONE_PHOTO,
+  SHOW_CATEGORY_IMAGE_HOVERS,
+} from '@/app/config';
 import { clsx } from 'clsx/lite';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
 import IconCamera from '@/components/icons/IconCamera';
@@ -124,7 +128,7 @@ export default function PhotoGridSidebar({
             <PhotoYear
               key={year}
               year={year}
-              countOnHover={count}
+              countOnHover={SHOW_CATEGORY_IMAGE_HOVERS ? count : undefined}
               type="text-only"
               prefetch={false}
               contrast="low"

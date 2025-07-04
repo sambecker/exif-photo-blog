@@ -19,7 +19,7 @@ const parameterizeForDb = (field: string) =>
     `REPLACE(${acc}, '${from}', '${to}')`
   , `LOWER(TRIM(${field}))`);
 
-export type GetPhotosOptions = {
+export type PhotoQueryOptions = {
   sortBy?: SortBy
   sortWithPriority?: boolean
   limit?: number
@@ -35,11 +35,11 @@ export type GetPhotosOptions = {
   lens?: Partial<Lens>
 };
 
-export const areOptionsSensitive = (options: GetPhotosOptions) =>
+export const areOptionsSensitive = (options: PhotoQueryOptions) =>
   options.hidden === 'include' || options.hidden === 'only';
 
 export const getWheresFromOptions = (
-  options: GetPhotosOptions,
+  options: PhotoQueryOptions,
   initialValuesIndex = 1,
 ) => {
   const {
@@ -149,7 +149,7 @@ export const getWheresFromOptions = (
   };
 };
 
-export const getOrderByFromOptions = (options: GetPhotosOptions) => {
+export const getOrderByFromOptions = (options: PhotoQueryOptions) => {
   const {
     sortBy = APP_DEFAULT_SORT_BY,
     sortWithPriority,
@@ -176,7 +176,7 @@ export const getOrderByFromOptions = (options: GetPhotosOptions) => {
 };
 
 export const getLimitAndOffsetFromOptions = (
-  options: GetPhotosOptions,
+  options: PhotoQueryOptions,
   initialValuesIndex = 1,
 ) => {
   const {

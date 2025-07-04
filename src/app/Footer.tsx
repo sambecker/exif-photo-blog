@@ -11,7 +11,7 @@ import { PATH_ADMIN_PHOTOS, isPathAdmin, isPathSignIn } from './paths';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import { signOutAction } from '@/auth/actions';
 import AnimateItems from '@/components/AnimateItems';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import Spinner from '@/components/Spinner';
 import { useAppText } from '@/i18n/state/client';
 

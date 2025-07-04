@@ -2,7 +2,7 @@
 
 /* eslint-disable jsx-a11y/alt-text */
 import { BLUR_ENABLED } from '@/app/config';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { clsx}  from 'clsx/lite';
 import Image, { ImageProps } from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -10,6 +10,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 export default function ImageWithFallback({
   className,
   classNameImage = 'object-cover h-full',
+  forceFallbackFade = false,
   blurDataURL,
   blurCompatibilityLevel = 'low',
   priority,
@@ -17,12 +18,14 @@ export default function ImageWithFallback({
 }: ImageProps & {
   blurCompatibilityLevel?: 'none' | 'low' | 'high'
   classNameImage?: string
+  forceFallbackFade?: boolean
 }) {
   const { shouldDebugImageFallbacks } = useAppState();
 
   const [isLoading, setIsLoading] = useState(true);
   const [didError, setDidError] = useState(false);
-  const [fadeFallbackTransition, setFadeFallbackTransition] = useState(false);
+  const [fadeFallbackTransition, setFadeFallbackTransition] =
+    useState(forceFallbackFade);
 
   const onLoad = useCallback(() => setIsLoading(false), []);
   const onError = useCallback(() => setDidError(true), []);

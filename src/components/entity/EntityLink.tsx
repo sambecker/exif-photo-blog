@@ -1,46 +1,50 @@
 'use client';
 
 import { ComponentProps, ReactNode, RefObject, useState } from 'react';
-import LabeledIcon, { LabeledIconType } from './LabeledIcon';
+import LabeledIcon, { LabeledIconType } from '../primitives/LabeledIcon';
 import Badge from '../Badge';
 import { clsx } from 'clsx/lite';
 import LinkWithStatus from '../LinkWithStatus';
 import Spinner from '../Spinner';
-import ResponsiveText from './ResponsiveText';
-import OGTooltip from '../og/OGTooltip';
+import ResponsiveText from '../primitives/ResponsiveText';
 import { SHOW_CATEGORY_IMAGE_HOVERS } from '@/app/config';
+import EntityHover from './EntityHover';
+import { getPhotosCachedAction } from '@/photo/actions';
+import { PhotoQueryOptions } from '@/photo/db';
+import { MAX_PHOTOS_TO_SHOW_PER_CATEGORY } from '@/image-response';
 
 export interface EntityLinkExternalProps {
   ref?: RefObject<HTMLSpanElement | null>
   type?: LabeledIconType
   badged?: boolean
   contrast?: ComponentProps<typeof Badge>['contrast']
-  showTooltip?: boolean
   uppercase?: boolean
   prefetch?: boolean
   suppressSpinner?: boolean
   className?: string
+  countOnHover?: number
+  showHover?: boolean
+  hoverPhotoQueryOptions?: PhotoQueryOptions
 }
 
 export default function EntityLink({
   ref,
   icon,
-  iconBadge,
+  iconBadgeStart,
+  iconBadgeEnd,
   label,
   labelSmall,
-  labelComplex,
   iconWide,
   type,
   badged,
   contrast = 'medium',
-  showTooltip = SHOW_CATEGORY_IMAGE_HOVERS,
   path = '', // Make link optional for debugging purposes
-  tooltipImagePath,
-  tooltipCaption,
+  showHover = SHOW_CATEGORY_IMAGE_HOVERS,
+  countOnHover,
+  hoverPhotoQueryOptions,
   prefetch,
   title,
   action,
-  hoverEntity,
   truncate = true,
   className,
   classNameIcon,
@@ -49,18 +53,15 @@ export default function EntityLink({
   debug,
 }: {
   icon: ReactNode
-  iconBadge?: ReactNode
+  iconBadgeStart?: ReactNode
+  iconBadgeEnd?: ReactNode
   label: string
   labelSmall?: ReactNode
-  labelComplex?: ReactNode
   iconWide?: boolean
   path?: string
-  tooltipImagePath?: string
-  tooltipCaption?: ReactNode
   prefetch?: boolean
   title?: string
   action?: ReactNode
-  hoverEntity?: ReactNode
   truncate?: boolean
   className?: string
   classNameIcon?: string
@@ -68,6 +69,8 @@ export default function EntityLink({
   debug?: boolean
 } & EntityLinkExternalProps) {
   const [isLoading, setIsLoading] = useState(false);
+
+  const hasBadgeIcon = Boolean(iconBadgeStart || iconBadgeEnd);
 
   const classForContrast = () => {
     switch (contrast) {
@@ -84,15 +87,15 @@ export default function EntityLink({
 
   const showHoverEntity =
     !isLoading &&
-    hoverEntity !== undefined &&
-    !showTooltip;
+    countOnHover &&
+    !showHover;
 
   const renderLabel =
     <ResponsiveText shortText={labelSmall}>
-      {labelComplex || label}
+      {label}
     </ResponsiveText>;
 
-  const renderLink =
+  const renderLink = (useForHover?: boolean) =>
     <LinkWithStatus
       href={path}
       className={clsx(
@@ -107,28 +110,33 @@ export default function EntityLink({
       setIsLoading={setIsLoading}
     >
       <LabeledIcon {...{
-        icon,
-        iconWide,
+        icon: (hasBadgeIcon && !useForHover) ? undefined : icon,
+        iconWide: (hasBadgeIcon && !useForHover) ? undefined : iconWide,
         prefetch,
         title,
-        type,
+        type: useForHover ? 'icon-first' : type,
         uppercase,
-        classNameIcon: clsx('text-dim', classNameIcon),
+        className: useForHover ? 'text-white' : undefined,
+        classNameIcon: clsx(
+          !useForHover && 'text-dim',
+          classNameIcon,
+        ),
         debug,
       }}>
-        {badged
+        {badged && !useForHover
           ? <Badge
             type="small"
             contrast={contrast}
             className={clsx(
               'translate-y-[-0.5px]',
-              iconBadge && '*:flex *:items-center *:gap-1',
+              hasBadgeIcon && '*:flex *:items-center *:gap-1',
             )}
             uppercase
             interactive
           >
-            {iconBadge}
+            {iconBadgeStart}
             {renderLabel}
+            {iconBadgeEnd}
           </Badge>
           : <span className={clsx(
             'text-content',
@@ -152,23 +160,28 @@ export default function EntityLink({
         className,
       )}
     >
-      {showTooltip && tooltipImagePath
-        ? <OGTooltip
-          title={label}
-          path={tooltipImagePath}
-          caption={tooltipCaption}
+      {showHover && countOnHover && hoverPhotoQueryOptions
+        ? <EntityHover
+          hoverKey={path}
+          header={renderLink(true)}
+          photosCount={countOnHover}
+          getPhotos={() =>
+            getPhotosCachedAction({
+              ...hoverPhotoQueryOptions,
+              limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
+            })}
           color={contrast === 'frosted' ? 'frosted' : undefined}
         >
-          {renderLink}
-        </OGTooltip>
-        : renderLink}
+          {renderLink()}
+        </EntityHover>
+        : renderLink()}
       {action &&
         <span className="action">
           {action}
         </span>}
       {showHoverEntity &&
         <span className="hidden peer-hover:inline text-dim">
-          {hoverEntity}
+          {countOnHover}
         </span>}
       {isLoading && !suppressSpinner &&
         <Spinner

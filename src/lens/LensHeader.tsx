@@ -30,7 +30,7 @@ export default async function LensHeader({
       entity={<PhotoLens
         {...{ lens }}
         contrast="high"
-        showTooltip={false}
+        showHover={false}
       />}
       entityDescription={
         descriptionForLensPhotos(

@@ -1,7 +1,7 @@
 'use client';
 
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { clsx } from 'clsx/lite';
 import { ComponentProps, useCallback } from 'react';
 import { BiTrash } from 'react-icons/bi';

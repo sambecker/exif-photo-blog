@@ -14,10 +14,15 @@ import { getPhotosCachedAction, getPhotosAction } from '@/photo/actions';
 import { Photo } from '.';
 import { PhotoSetCategory } from '../category';
 import { clsx } from 'clsx/lite';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import useVisible from '@/utility/useVisible';
 import { ADMIN_DB_OPTIMIZE_ENABLED } from '@/app/config';
 import { SortBy } from './db/sort';
+import { SWR_KEY_INFINITE_PHOTO_SCROLL } from '@/swr';
+
+const SIZE_KEY_SEPARATOR = '__';
+const getSizeFromKey = (key: string) =>
+  parseInt(key.split(SIZE_KEY_SEPARATOR)[1]);
 
 export type RevalidatePhoto = (
   photoId: string,
@@ -55,22 +60,20 @@ export default function InfinitePhotoScroll({
     revalidatePhoto?: RevalidatePhoto
   }) => ReactNode
 } & PhotoSetCategory) {
-  const { swrTimestamp, isUserSignedIn } = useAppState();
-
-  const key = `${swrTimestamp}-${cacheKey}`;
+  const { isUserSignedIn } = useAppState();
 
   const keyGenerator = useCallback(
     (size: number, prev: Photo[]) => prev && prev.length === 0
       ? null
-      : [key, size]
-    , [key]);
+      : `${SWR_KEY_INFINITE_PHOTO_SCROLL}-${cacheKey}__${size}`
+    , [cacheKey]);
 
   const fetcher = useCallback((
-    [_key, size]: [string, number],
+    keyWithSize: string,
     warmOnly?: boolean,
   ) =>
     (useCachedPhotos ? getPhotosCachedAction : getPhotosAction)({
-      offset: initialOffset + size * itemsPerPage,
+      offset: initialOffset + getSizeFromKey(keyWithSize) * itemsPerPage,
       sortBy, 
       sortWithPriority,
       limit: itemsPerPage,
@@ -111,7 +114,7 @@ export default function InfinitePhotoScroll({
 
   useEffect(() => {
     if (ADMIN_DB_OPTIMIZE_ENABLED) {
-      fetcher(['', 0], true);
+      fetcher(`${SIZE_KEY_SEPARATOR}0`, true);
     }
   }, [fetcher]);
 

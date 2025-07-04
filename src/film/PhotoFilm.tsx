@@ -1,33 +1,28 @@
 'use client';
 
 import PhotoFilmIcon from './PhotoFilmIcon';
-import { pathForFilm, pathForFilmImage } from '@/app/paths';
+import { pathForFilm } from '@/app/paths';
 import EntityLink, {
   EntityLinkExternalProps,
-} from '@/components/primitives/EntityLink';
+} from '@/components/entity/EntityLink';
 import clsx from 'clsx/lite';
 import { labelForFilm } from '.';
 import { isStringFujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import PhotoRecipeOverlayButton from '@/recipe/PhotoRecipeOverlayButton';
 import { ComponentProps } from 'react';
-import { useAppText } from '@/i18n/state/client';
-import { photoQuantityText } from '@/photo';
 
 export default function PhotoFilm({
   film,
   type = 'icon-last',
   badged = true,
   contrast = 'low',
-  countOnHover,
   toggleRecipeOverlay,
   isShowingRecipeOverlay,
   ...props
 }: {
   film: string
-  countOnHover?: number
 } & Partial<ComponentProps<typeof PhotoRecipeOverlayButton>>
   & EntityLinkExternalProps) {
-  const appText = useAppText();
   const { small, medium, large } = labelForFilm(film);
 
   return (
@@ -36,9 +31,7 @@ export default function PhotoFilm({
       label={medium}
       labelSmall={small}
       path={pathForFilm(film)}
-      tooltipImagePath={pathForFilmImage(film)}
-      tooltipCaption={countOnHover &&
-        photoQuantityText(countOnHover, appText, false)}
+      hoverPhotoQueryOptions={{ film }}
       icon={<PhotoFilmIcon
         film={film}
         className={clsx(
@@ -57,7 +50,6 @@ export default function PhotoFilm({
           toggleRecipeOverlay,
           isShowingRecipeOverlay,
         }} />}
-      hoverEntity={countOnHover}
       iconWide={isStringFujifilmSimulation(film)}
     />
   );

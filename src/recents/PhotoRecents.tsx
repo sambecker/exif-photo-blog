@@ -1,16 +1,10 @@
-import { PREFIX_RECENTS, pathForRecentsImage } from '@/app/paths';
+import { PREFIX_RECENTS } from '@/app/paths';
 import EntityLink, { EntityLinkExternalProps } from
-  '@/components/primitives/EntityLink';
+  '@/components/entity/EntityLink';
 import { useAppText } from '@/i18n/state/client';
-import { photoQuantityText } from '@/photo';
 import IconRecents from '@/components/icons/IconRecents';
 
-export default function PhotoRecents({
-  countOnHover,
-  ...props
-}: {
-  countOnHover?: number
-} & EntityLinkExternalProps) {
+export default function PhotoRecents(props: EntityLinkExternalProps) {
   const appText = useAppText();
 
   return (
@@ -18,12 +12,9 @@ export default function PhotoRecents({
       {...props}
       label={appText.category.recentPlural}
       path={PREFIX_RECENTS}
-      tooltipImagePath={pathForRecentsImage()}
-      tooltipCaption={countOnHover &&
-        photoQuantityText(countOnHover, appText, false)}
+      hoverPhotoQueryOptions={{ recent: true }}
       icon={<IconRecents size={16} />}
-      iconBadge={<IconRecents size={10} solid />}
-      hoverEntity={countOnHover}
+      iconBadgeStart={<IconRecents size={10} solid />}
     />
   );
-} 
+}

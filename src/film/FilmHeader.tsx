@@ -5,7 +5,7 @@ import { descriptionForFilmPhotos } from '.';
 import PhotoHeader from '@/photo/PhotoHeader';
 import PhotoFilm from '@/film/PhotoFilm';
 import { getRecipePropsFromPhotos } from '@/recipe';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
 import { useAppText } from '@/i18n/state/client';
 
@@ -43,7 +43,7 @@ export default function FilmHeader({
         toggleRecipeOverlay={recipeProps
           ? () => setRecipeModalProps?.(recipeProps)
           : undefined}
-        showTooltip={false}
+        showHover={false}
       />}
       entityDescription={descriptionForFilmPhotos(
         photos,

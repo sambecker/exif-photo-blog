@@ -1,6 +1,6 @@
 'use client';
 
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import SignInForm from '@/auth/SignInForm';
 import clsx from 'clsx/lite';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';

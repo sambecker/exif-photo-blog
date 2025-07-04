@@ -17,7 +17,7 @@ import {
   KEY_CREDENTIALS_SUCCESS,
 } from '.';
 import { useSearchParams } from 'next/navigation';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { clsx } from 'clsx/lite';
 import { PATH_ADMIN_PHOTOS } from '@/app/paths';
 import IconLock from '@/components/icons/IconLock';

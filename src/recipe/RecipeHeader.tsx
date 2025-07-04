@@ -3,7 +3,7 @@
 import { Photo, PhotoDateRange } from '@/photo';
 import PhotoHeader from '@/photo/PhotoHeader';
 import PhotoRecipe from './PhotoRecipe';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { descriptionForRecipePhotos, getRecipePropsFromPhotos } from '.';
 import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
 import { useAppText } from '@/i18n/state/client';
@@ -35,7 +35,7 @@ export default function RecipeHeader({
       entity={<PhotoRecipe
         recipe={recipe}
         contrast="high"
-        showTooltip={false}
+        showHover={false}
         isShowingRecipeOverlay={Boolean(recipeModalProps)}
         toggleRecipeOverlay={recipeProps
           ? () => setRecipeModalProps?.(recipeProps)

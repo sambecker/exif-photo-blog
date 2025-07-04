@@ -27,7 +27,7 @@ export default async function FocalLengthHeader({
       entity={<PhotoFocalLength
         focal={focal}
         contrast="high"
-        showTooltip={false}
+        showHover={false}
       />}
       entityDescription={descriptionForFocalLengthPhotos(
         photos,

@@ -37,7 +37,7 @@ import { RevalidatePhoto } from './InfinitePhotoScroll';
 import { useCallback, useMemo, useRef } from 'react';
 import useVisible from '@/utility/useVisible';
 import PhotoDate from './PhotoDate';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { LuExpand } from 'react-icons/lu';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import Tooltip from '@/components/Tooltip';
@@ -80,6 +80,7 @@ export default function PhotoLarge({
   shouldShareRecipe,
   shouldShareFocalLength,
   includeFavoriteInAdminMenu,
+  forceFallbackFade,
   onVisible,
   showAdminKeyCommands,
 }: {
@@ -110,6 +111,7 @@ export default function PhotoLarge({
   shouldShareRecipe?: boolean
   shouldShareFocalLength?: boolean
   includeFavoriteInAdminMenu?: boolean
+  forceFallbackFade?: boolean
   onVisible?: () => void
   showAdminKeyCommands?: boolean
 }) {
@@ -232,6 +234,7 @@ export default function PhotoLarge({
           blurDataURL={photo.blurData}
           blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
           priority={priority}
+          forceFallbackFade={forceFallbackFade}
         />
       </ZoomControls>
       <div className={clsx(

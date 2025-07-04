@@ -6,7 +6,7 @@ import PhotoMedium from './PhotoMedium';
 import { clsx } from 'clsx/lite';
 import AnimateItems from '@/components/AnimateItems';
 import { GRID_ASPECT_RATIO } from '@/app/config';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import SelectTileOverlay from '@/components/SelectTileOverlay';
 import { ReactNode } from 'react';
 import { GRID_GAP_CLASSNAME } from '@/components';
@@ -14,7 +14,7 @@ import { GRID_GAP_CLASSNAME } from '@/components';
 export default function PhotoGrid({
   photos,
   selectedPhoto,
-  photoPriority,
+  prioritizeInitialPhotos,
   animate = true,
   canStart,
   animateOnFirstLoadOnly,
@@ -28,7 +28,7 @@ export default function PhotoGrid({
 }: {
   photos: Photo[]
   selectedPhoto?: Photo
-  photoPriority?: boolean
+  prioritizeInitialPhotos?: boolean
   animate?: boolean
   canStart?: boolean
   animateOnFirstLoadOnly?: boolean
@@ -90,7 +90,7 @@ export default function PhotoGrid({
               photo,
               ...categories,
               selected: photo.id === selectedPhoto?.id,
-              priority: photoPriority,
+              priority: prioritizeInitialPhotos ? index < 6 : undefined,
               onVisible: index === photos.length - 1
                 ? onLastPhotoVisible
                 : undefined,

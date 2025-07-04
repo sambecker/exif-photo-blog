@@ -4,7 +4,7 @@ import Container from '@/components/Container';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import AppGrid from '@/components/AppGrid';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import clsx from 'clsx/lite';
 import { IoCloseSharp } from 'react-icons/io5';
 

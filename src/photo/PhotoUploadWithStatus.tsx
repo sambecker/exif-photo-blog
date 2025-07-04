@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { PATH_ADMIN_UPLOADS, pathForAdminUploadUrl } from '@/app/paths';
 import ImageInput from '../components/ImageInput';
 import { clsx } from 'clsx/lite';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { RefObject, useTransition, useRef, useEffect } from 'react';
 import Spinner from '@/components/Spinner';
 import ResponsiveText from '@/components/primitives/ResponsiveText';

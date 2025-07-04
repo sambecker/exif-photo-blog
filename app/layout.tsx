@@ -13,7 +13,7 @@ import {
   SITE_FEEDS_ENABLED,
   ADMIN_DEBUG_TOOLS_ENABLED,
 } from '@/app/config';
-import AppStateProvider from '@/state/AppStateProvider';
+import AppStateProvider from '@/app/AppStateProvider';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
 import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
 import { Metadata } from 'next/types';
@@ -21,7 +21,7 @@ import { ThemeProvider } from 'next-themes';
 import Nav from '@/app/Nav';
 import Footer from '@/app/Footer';
 import CommandK from '@/cmdk/CommandK';
-import SwrConfigClient from '@/state/SwrConfigClient';
+import SwrConfigClient from '@/swr/SwrConfigClient';
 import AdminBatchEditPanel from '@/admin/AdminBatchEditPanel';
 import ShareModals from '@/share/ShareModals';
 import AdminUploadPanel from '@/admin/upload/AdminUploadPanel';
@@ -29,7 +29,7 @@ import { revalidatePath } from 'next/cache';
 import RecipeModal from '@/recipe/RecipeModal';
 import ThemeColors from '@/app/ThemeColors';
 import AppTextProvider from '@/i18n/state/AppTextProvider';
-import OGTooltipProvider from '@/components/og/OGTooltipProvider';
+import SharedHoverProvider from '@/components/shared-hover/SharedHoverProvider';
 
 import '../tailwind.css';
 
@@ -97,7 +97,7 @@ export default function RootLayout({
             <ThemeColors />
             <ThemeProvider attribute="class" defaultTheme={DEFAULT_THEME}>
               <SwrConfigClient>
-                <OGTooltipProvider>
+                <SharedHoverProvider>
                   <div className={clsx(
                     'mx-3 mb-3',
                     'lg:mx-6 lg:mb-6',
@@ -135,7 +135,7 @@ export default function RootLayout({
                     <Footer />
                   </div>
                   <CommandK />
-                </OGTooltipProvider>
+                </SharedHoverProvider>
               </SwrConfigClient>
               <Analytics debug={false} />
               <SpeedInsights debug={false}  />

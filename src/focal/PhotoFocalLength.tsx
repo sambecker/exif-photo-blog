@@ -1,34 +1,25 @@
 'use client';
 
-import { pathForFocalLength, pathForFocalLengthImage } from '@/app/paths';
+import { pathForFocalLength } from '@/app/paths';
 import EntityLink, {
   EntityLinkExternalProps,
-} from '@/components/primitives/EntityLink';
+} from '@/components/entity/EntityLink';
 import { formatFocalLength } from '.';
 import IconFocalLength from '@/components/icons/IconFocalLength';
-import { useAppText } from '@/i18n/state/client';
-import { photoQuantityText } from '@/photo';
 
 export default function PhotoFocalLength({
   focal,
-  countOnHover,
   ...props
 }: {
   focal: number
-  countOnHover?: number
 } & EntityLinkExternalProps) {
-  const appText = useAppText();
-
   return (
     <EntityLink
       {...props}
       label={formatFocalLength(focal)}
       path={pathForFocalLength(focal)}
-      tooltipImagePath={pathForFocalLengthImage(focal)}
-      tooltipCaption={countOnHover &&
-        photoQuantityText(countOnHover, appText, false)}
+      hoverPhotoQueryOptions={{ focal }}
       icon={<IconFocalLength className="translate-y-[-1px]" />}
-      hoverEntity={countOnHover}
     />
   );
 }

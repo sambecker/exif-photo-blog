@@ -9,7 +9,7 @@ import { pathForAdminPhotoEdit, pathForPhoto } from '@/app/paths';
 import Link from 'next/link';
 import PhotoDate from '@/photo/PhotoDate';
 import EditButton from './EditButton';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 import PhotoSyncButton from './PhotoSyncButton';
 import DeletePhotoButton from './DeletePhotoButton';

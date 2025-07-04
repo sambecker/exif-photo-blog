@@ -19,7 +19,7 @@ import ProgressButton from '@/components/primitives/ProgressButton';
 import { UrlAddStatus } from './AdminUploadsClient';
 import PhotoTagFieldset from './PhotoTagFieldset';
 import DeleteUploadButton from './DeleteUploadButton';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { pluralize } from '@/utility/string';
 import FieldsetFavs from '@/photo/form/FieldsetFavs';
 import FieldsetHidden from '@/photo/form/FieldsetHidden';

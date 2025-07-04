@@ -10,12 +10,12 @@ import PhotoGridPage from '@/photo/PhotoGridPage';
 import { getDataForCategoriesCached } from '@/category/cache';
 import { getPhotosMetaCached } from '@/photo/cache';
 import { USER_DEFAULT_SORT_OPTIONS } from '@/app/config';
-import { GetPhotosOptions } from '@/photo/db';
+import { PhotoQueryOptions } from '@/photo/db';
 
 export const dynamic = 'force-static';
 export const maxDuration = 60;
 
-const getPhotosCached = cache((options: GetPhotosOptions) => getPhotos({
+const getPhotosCached = cache((options: PhotoQueryOptions) => getPhotos({
   ...options,
   limit: INFINITE_SCROLL_GRID_INITIAL,
 }));

@@ -4,7 +4,7 @@ import { ReactNode, ComponentProps, RefObject } from 'react';
 import { Photo, titleForPhoto } from '@/photo';
 import { PhotoSetCategory } from '@/category';
 import { AnimationConfig } from '../components/AnimateItems';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { pathForPhoto } from '@/app/paths';
 import { clsx } from 'clsx/lite';
 import LinkWithStatus from '@/components/LinkWithStatus';

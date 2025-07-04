@@ -3,7 +3,7 @@
 import Note from '@/components/Note';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import AppGrid from '@/components/AppGrid';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { clsx } from 'clsx/lite';
 import { IoCloseSharp } from 'react-icons/io5';
 import { useEffect, useRef, useState } from 'react';

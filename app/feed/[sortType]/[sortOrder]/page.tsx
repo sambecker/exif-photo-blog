@@ -10,11 +10,11 @@ import PhotoFeedPage from '@/photo/PhotoFeedPage';
 import { getPhotosMetaCached } from '@/photo/cache';
 import { SortProps } from '@/photo/db/sort';
 import { getSortOptionsFromParams } from '@/photo/db/sort-path';
-import { GetPhotosOptions } from '@/photo/db';
+import { PhotoQueryOptions } from '@/photo/db';
 
 export const maxDuration = 60;
 
-const getPhotosCached = cache((options: GetPhotosOptions) => getPhotos({
+const getPhotosCached = cache((options: PhotoQueryOptions) => getPhotos({
   ...options,
   limit: INFINITE_SCROLL_FEED_INITIAL,
 }));

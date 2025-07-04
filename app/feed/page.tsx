@@ -9,12 +9,12 @@ import { getPhotos } from '@/photo/db/query';
 import PhotoFeedPage from '@/photo/PhotoFeedPage';
 import { getPhotosMetaCached } from '@/photo/cache';
 import { USER_DEFAULT_SORT_OPTIONS } from '@/app/config';
-import { GetPhotosOptions } from '@/photo/db';
+import { PhotoQueryOptions } from '@/photo/db';
 
 export const dynamic = 'force-static';
 export const maxDuration = 60;
 
-const getPhotosCached = cache((options: GetPhotosOptions) => getPhotos({
+const getPhotosCached = cache((options: PhotoQueryOptions) => getPhotos({
   ...options,
   limit: INFINITE_SCROLL_FEED_INITIAL,
 }));

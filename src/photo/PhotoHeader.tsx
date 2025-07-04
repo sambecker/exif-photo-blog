@@ -15,7 +15,7 @@ import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import PhotoPrevNextActions from './PhotoPrevNextActions';
 import PhotoLink from './PhotoLink';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { GRID_GAP_CLASSNAME } from '@/components';
 import { useAppText } from '@/i18n/state/client';
 

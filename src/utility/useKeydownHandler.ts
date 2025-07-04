@@ -1,4 +1,4 @@
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { useCallback, useEffect } from 'react';
 
 const LISTENER_KEYDOWN = 'keydown';

@@ -8,7 +8,7 @@ import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
 import { FiUploadCloud } from 'react-icons/fi';
 import { MAX_IMAGE_SIZE } from '@/platforms/next-image';
 import ProgressButton from './primitives/ProgressButton';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { useAppText } from '@/i18n/state/client';
 
 export default function ImageInput({
