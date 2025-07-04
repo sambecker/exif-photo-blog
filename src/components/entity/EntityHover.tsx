@@ -84,23 +84,21 @@ export default function EntityHover({
         'absolute inset-0 grid',
         gridClass,
         'transition-opacity duration-300',
-        photos?.length ?? 0 > 0 ? 'opacity-0' : 'opacity-100',
+        photos ? 'opacity-0' : 'opacity-100',
         'bg-gray-100 dark:bg-gray-800',
       )}>
         {Array.from({ length: photosToShow }).map((_, index) =>
           <div
             key={index}
-            className={clsx(
-              'bg-linear-to-br',
-              'from-gray-200 to-gray-100',
-              'dark:from-black/55 dark:to-black/35',
-            )}
+            className="border-main border-[0.5px]"
           />)}
       </div>
       {/* Text guard */}
       <div className={clsx(
-        'absolute inset-0',
-        'bg-gradient-to-b from-black/70 to-transparent',
+        'absolute inset-0 transition-colors duration-300',
+        'bg-gradient-to-b',
+        photos ? 'from-black/70' : 'from-black/30',
+        'to-transparent',
       )} />
       {/* Text */}
       <div className={clsx(
