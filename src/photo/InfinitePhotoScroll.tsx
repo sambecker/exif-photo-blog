@@ -18,6 +18,11 @@ import { useAppState } from '@/state/AppState';
 import useVisible from '@/utility/useVisible';
 import { ADMIN_DB_OPTIMIZE_ENABLED } from '@/app/config';
 import { SortBy } from './db/sort';
+import { SWR_KEY_INFINITE_PHOTO_SCROLL } from '@/state';
+
+const SIZE_KEY_SEPARATOR = '__';
+const getSizeFromKey = (key: string) =>
+  parseInt(key.split(SIZE_KEY_SEPARATOR)[1]);
 
 export type RevalidatePhoto = (
   photoId: string,
@@ -60,15 +65,15 @@ export default function InfinitePhotoScroll({
   const keyGenerator = useCallback(
     (size: number, prev: Photo[]) => prev && prev.length === 0
       ? null
-      : [cacheKey, size]
+      : `${SWR_KEY_INFINITE_PHOTO_SCROLL}-${cacheKey}__${size}`
     , [cacheKey]);
 
   const fetcher = useCallback((
-    [_key, size]: [string, number],
+    keyWithSize: string,
     warmOnly?: boolean,
   ) =>
     (useCachedPhotos ? getPhotosCachedAction : getPhotosAction)({
-      offset: initialOffset + size * itemsPerPage,
+      offset: initialOffset + getSizeFromKey(keyWithSize) * itemsPerPage,
       sortBy, 
       sortWithPriority,
       limit: itemsPerPage,
@@ -109,7 +114,7 @@ export default function InfinitePhotoScroll({
 
   useEffect(() => {
     if (ADMIN_DB_OPTIMIZE_ENABLED) {
-      fetcher(['', 0], true);
+      fetcher(`${SIZE_KEY_SEPARATOR}0`, true);
     }
   }, [fetcher]);
 

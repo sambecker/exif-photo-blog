@@ -8,6 +8,7 @@ import PhotoMedium from '@/photo/PhotoMedium';
 import Spinner from '../Spinner';
 import clsx from 'clsx';
 import { useAppText } from '@/i18n/state/client';
+import { SWR_KEY_INFINITE_PHOTO_SCROLL } from '@/state';
 
 const { width, height } = getDimensionsFromSize(300, 16 / 9);
 
@@ -35,11 +36,13 @@ export default function EntityHover({
   const {
     data: photos,
     isLoading,
-  } = useSWR(isHovering ? hoverKey : null, getPhotos, {
-    revalidateIfStale: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
+  } = useSWR(
+    isHovering ? `${SWR_KEY_INFINITE_PHOTO_SCROLL}-${hoverKey}` : null,
+    getPhotos, {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    });
 
   const photosToShow = useMemo(() => {
     if (photosCount >= 6) {

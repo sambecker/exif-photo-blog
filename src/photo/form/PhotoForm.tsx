@@ -327,6 +327,7 @@ export default function PhotoForm({
         onSubmit={() => {
           setFormActionErrorMessage('');
           (document.activeElement as HTMLElement)?.blur?.();
+          invalidateSwr?.();
         }}
       >
         {/* Fields */}
@@ -473,7 +474,6 @@ export default function PhotoForm({
             icon={type === 'create' && <IconAddUpload />}
             disabled={!canFormBeSubmitted}
             onFormStatusChange={onFormStatusChange}
-            onFormSubmit={invalidateSwr}
             primary
           >
             {type === 'create' ? 'Add' : 'Update'}

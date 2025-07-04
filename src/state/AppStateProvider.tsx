@@ -33,6 +33,13 @@ import { RecipeProps } from '@/recipe';
 import { nanoid } from 'nanoid';
 import { toastSuccess } from '@/toast';
 import { getCountsForCategoriesCachedAction } from '@/category/actions';
+import {
+  canKeyBePurged,
+  canKeyBePurgedAndRevalidated,
+  SWR_KEY_GET_ADMIN_DATA,
+  SWR_KEY_GET_AUTH,
+  SWR_KEY_GET_COUNTS_FOR_CATEGORIES,
+} from '.';
 
 export default function AppStateProvider({
   children,
@@ -122,12 +129,13 @@ export default function AppStateProvider({
   }, []);
 
   const { mutate } = useSWRConfig();
-  const invalidateSwr = useCallback(() =>
-    mutate(() => true)
-  , [mutate]);
+  const invalidateSwr = useCallback(() => {
+    mutate(canKeyBePurged, undefined, { revalidate: false });
+    mutate(canKeyBePurgedAndRevalidated, undefined, { revalidate: true });
+  }, [mutate]);
 
   const { data: categoriesWithCounts } = useSWR(
-    'getDataForCategories',
+    SWR_KEY_GET_COUNTS_FOR_CATEGORIES,
     getCountsForCategoriesCachedAction,
   );
 
@@ -135,7 +143,7 @@ export default function AppStateProvider({
     data: auth,
     error: authError,
     isLoading: isCheckingAuth,
-  } = useSWR('getAuth', getAuthAction);
+  } = useSWR(SWR_KEY_GET_AUTH, getAuthAction);
   useEffect(() => {
     if (auth === null || authError) {
       setUserEmail(undefined);
@@ -153,7 +161,7 @@ export default function AppStateProvider({
     mutate: refreshAdminData,
     isLoading: isLoadingAdminData,
   } = useSWR(
-    isUserSignedIn ? 'getAdminData' : null,
+    isUserSignedIn ? SWR_KEY_GET_ADMIN_DATA : null,
     getAdminDataAction,
   );
   const updateAdminData = useCallback(
