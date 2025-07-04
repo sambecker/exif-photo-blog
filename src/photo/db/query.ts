@@ -21,7 +21,7 @@ import {
   AI_TEXT_GENERATION_ENABLED,
 } from '@/app/config';
 import {
-  GetPhotosOptions,
+  PhotoQueryOptions,
   getOrderByFromOptions,
   getLimitAndOffsetFromOptions,
   getWheresFromOptions,
@@ -80,7 +80,7 @@ const createPhotosTable = () =>
 const safelyQueryPhotos = async <T>(
   callback: () => Promise<T>,
   queryLabel: string,
-  queryOptions?: GetPhotosOptions,
+  queryOptions?: PhotoQueryOptions,
 ): Promise<T> => {
   let result: T;
 
@@ -489,7 +489,7 @@ export const getUniqueFocalLengths = async () =>
       })))
   , 'getUniqueFocalLengths');
 
-export const getPhotos = async (options: GetPhotosOptions = {}) =>
+export const getPhotos = async (options: PhotoQueryOptions = {}) =>
   safelyQueryPhotos(async () => {
     const sql = ['SELECT * FROM photos'];
     const values = [] as (string | number)[];
@@ -526,7 +526,7 @@ export const getPhotos = async (options: GetPhotosOptions = {}) =>
 
 export const getPhotosNearId = async (
   photoId: string,
-  options: GetPhotosOptions,
+  options: PhotoQueryOptions,
 ) =>
   safelyQueryPhotos(async () => {
     const { limit } = options;
@@ -565,7 +565,7 @@ export const getPhotosNearId = async (
       });
   }, `getPhotosNearId: ${photoId}`);    
 
-export const getPhotosMeta = (options: GetPhotosOptions = {}) =>
+export const getPhotosMeta = (options: PhotoQueryOptions = {}) =>
   safelyQueryPhotos(async () => {
     // eslint-disable-next-line max-len
     let sql = 'SELECT COUNT(*), MIN(taken_at_naive) as start, MAX(taken_at_naive) as end FROM photos';

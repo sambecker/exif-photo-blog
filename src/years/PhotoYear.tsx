@@ -14,7 +14,7 @@ export default function PhotoYear({
       {...props}
       label={year}
       path={pathForYear(year)}
-      hoverGetPhotoOptions={{ year }}
+      hoverPhotoQueryOptions={{ year }}
       icon={<IconYear
         size={14}
         className="translate-x-[0.5px] translate-y-[-0.5px]"

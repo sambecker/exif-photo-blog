@@ -22,7 +22,7 @@ export default function FavsTag(props: EntityLinkExternalProps) {
           />
         </span>}
       path={pathForTag(TAG_FAVS)}
-      hoverGetPhotoOptions={{ tag: TAG_FAVS }}
+      hoverPhotoQueryOptions={{ tag: TAG_FAVS }}
       icon={!props.badged &&
         <IconFavs
           size={13}

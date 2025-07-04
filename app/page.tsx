@@ -13,12 +13,12 @@ import PhotoFeedPage from '@/photo/PhotoFeedPage';
 import PhotoGridPage from '@/photo/PhotoGridPage';
 import { getDataForCategoriesCached } from '@/category/cache';
 import { getPhotosMetaCached } from '@/photo/cache';
-import { GetPhotosOptions } from '@/photo/db';
+import { PhotoQueryOptions } from '@/photo/db';
 
 export const dynamic = 'force-static';
 export const maxDuration = 60;
 
-const getPhotosCached = cache((options: GetPhotosOptions) => getPhotos({
+const getPhotosCached = cache((options: PhotoQueryOptions) => getPhotos({
   ...options,
   limit: GRID_HOMEPAGE_ENABLED
     ? INFINITE_SCROLL_GRID_INITIAL

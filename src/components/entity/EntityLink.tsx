@@ -10,7 +10,8 @@ import ResponsiveText from '../primitives/ResponsiveText';
 import { SHOW_CATEGORY_IMAGE_HOVERS } from '@/app/config';
 import EntityHover from './EntityHover';
 import { getPhotosCachedAction } from '@/photo/actions';
-import { GetPhotosOptions } from '@/photo/db';
+import { PhotoQueryOptions } from '@/photo/db';
+import { MAX_PHOTOS_TO_SHOW_PER_CATEGORY } from '@/image-response';
 
 export interface EntityLinkExternalProps {
   ref?: RefObject<HTMLSpanElement | null>
@@ -23,7 +24,7 @@ export interface EntityLinkExternalProps {
   className?: string
   countOnHover?: number
   showHover?: boolean
-  hoverGetPhotoOptions?: GetPhotosOptions
+  hoverPhotoQueryOptions?: PhotoQueryOptions
 }
 
 export default function EntityLink({
@@ -40,7 +41,7 @@ export default function EntityLink({
   path = '', // Make link optional for debugging purposes
   showHover = SHOW_CATEGORY_IMAGE_HOVERS,
   countOnHover,
-  hoverGetPhotoOptions,
+  hoverPhotoQueryOptions,
   prefetch,
   title,
   action,
@@ -152,14 +153,17 @@ export default function EntityLink({
         className,
       )}
     >
-      {showHover && countOnHover && hoverGetPhotoOptions
+      {showHover && countOnHover && hoverPhotoQueryOptions
         ? <EntityHover
           hoverKey={path}
           icon={icon}
           title={label}
           photosCount={countOnHover}
           getPhotos={() =>
-            getPhotosCachedAction({ ...hoverGetPhotoOptions, limit: 6 })}
+            getPhotosCachedAction({
+              ...hoverPhotoQueryOptions,
+              limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
+            })}
           color={contrast === 'frosted' ? 'frosted' : undefined}
         >
           {renderLink}

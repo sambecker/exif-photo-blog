@@ -18,7 +18,7 @@ export default function PhotoTag({
       {...props}
       label={formatTag(tag)}
       path={pathForTag(tag)}
-      hoverGetPhotoOptions={{ tag }}
+      hoverPhotoQueryOptions={{ tag }}
       icon={<IconTag size={14} className="translate-x-[0.5px]" />}
     />
   );

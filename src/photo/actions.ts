@@ -14,7 +14,7 @@ import {
   renamePhotoRecipeGlobally,
   getPhotosNeedingRecipeTitleCount,
 } from '@/photo/db/query';
-import { GetPhotosOptions, areOptionsSensitive } from './db';
+import { PhotoQueryOptions, areOptionsSensitive } from './db';
 import {
   FIELDS_TO_NOT_OVERWRITE_WITH_NULL_DATA_ON_SYNC,
   PhotoFormData,
@@ -546,7 +546,7 @@ export const getImageBlurAction = async (url: string) =>
 // Public/Private actions
 
 export const getPhotosAction = async (
-  options: GetPhotosOptions,
+  options: PhotoQueryOptions,
   warmOnly?: boolean,
 ) => {
   if (warmOnly) {
@@ -559,7 +559,7 @@ export const getPhotosAction = async (
 };
 
 export const getPhotosCachedAction = async (
-  options: GetPhotosOptions,
+  options: PhotoQueryOptions,
   warmOnly?: boolean,
 ) => {
   if (warmOnly) {

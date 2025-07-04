@@ -27,7 +27,7 @@ export default function PhotoRecipe({
       title="Recipe"
       label={formatRecipe(recipe)}
       path={pathForRecipe(recipe)}
-      hoverGetPhotoOptions={{ recipe }}
+      hoverPhotoQueryOptions={{ recipe }}
       icon={<IconRecipe
         size={16}
         className={clsx(

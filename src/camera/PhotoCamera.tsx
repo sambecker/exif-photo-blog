@@ -25,7 +25,7 @@ export default function PhotoCamera({
       {...props}
       label={formatCameraText(camera)}
       path={pathForCamera(camera)}
-      hoverGetPhotoOptions={{ camera }}
+      hoverPhotoQueryOptions={{ camera }}
       icon={showAppleIcon
         ? <AiFillApple
           title="Apple"
