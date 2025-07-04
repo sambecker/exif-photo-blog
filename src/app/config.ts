@@ -263,6 +263,8 @@ export const SHOW_FILMS =
   CATEGORY_VISIBILITY.includes('films');
 export const SHOW_FOCAL_LENGTHS =
   CATEGORY_VISIBILITY.includes('focal-lengths');
+export const SHOW_CATEGORY_IMAGE_HOVERS =
+  process.env.NEXT_PUBLIC_HIDE_CATEGORY_IMAGE_HOVERS !== '1';
 export const COLLAPSE_SIDEBAR_CATEGORIES =
   process.env.NEXT_PUBLIC_EXHAUSTIVE_SIDEBAR_CATEGORIES !== '1';
 export const HIDE_TAGS_WITH_ONE_PHOTO =
@@ -287,8 +289,6 @@ export const SHOW_KEYBOARD_SHORTCUT_TOOLTIPS =
   process.env.NEXT_PUBLIC_HIDE_KEYBOARD_SHORTCUT_TOOLTIPS !== '1';
 export const SHOW_EXIF_DATA =
   process.env.NEXT_PUBLIC_HIDE_EXIF_DATA !== '1';
-export const SHOW_CATEGORY_IMAGE_HOVERS =
-  process.env.NEXT_PUBLIC_CATEGORY_IMAGE_HOVERS === '1';
 export const SHOW_ZOOM_CONTROLS =
   process.env.NEXT_PUBLIC_HIDE_ZOOM_CONTROLS !== '1';
 export const SHOW_TAKEN_AT_TIME =
@@ -415,6 +415,7 @@ export const APP_CONFIGURATION = {
   hasCategoryVisibility:
     Boolean(process.env.NEXT_PUBLIC_CATEGORY_VISIBILITY),
   categoryVisibility: CATEGORY_VISIBILITY,
+  showCategoryImageHover: SHOW_CATEGORY_IMAGE_HOVERS,
   collapseSidebarCategories: COLLAPSE_SIDEBAR_CATEGORIES,
   hideTagsWithOnePhoto: HIDE_TAGS_WITH_ONE_PHOTO,
   // Sort
@@ -425,7 +426,6 @@ export const APP_CONFIGURATION = {
   // Display
   showKeyboardShortcutTooltips: SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
   showExifInfo: SHOW_EXIF_DATA,
-  showCategoryImageHover: SHOW_CATEGORY_IMAGE_HOVERS,
   showZoomControls: SHOW_ZOOM_CONTROLS,
   showTakenAtTimeHidden: SHOW_TAKEN_AT_TIME,
   showSocial: SHOW_SOCIAL,
