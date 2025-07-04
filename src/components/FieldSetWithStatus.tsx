@@ -127,7 +127,7 @@ export default function FieldSetWithStatus({
             htmlFor={id}
             className={clsx(
               'inline-flex flex-wrap gap-x-2 items-center select-none',
-              type === 'checkbox' && 'order-2 m-0',
+              type === 'checkbox' && 'order-2 m-0 translate-y-[0.25px]',
             )}
           >
             <span className="inline-flex items-center gap-x-[5px]">
