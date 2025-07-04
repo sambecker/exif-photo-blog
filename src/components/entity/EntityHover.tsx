@@ -8,7 +8,7 @@ import PhotoMedium from '@/photo/PhotoMedium';
 import Spinner from '../Spinner';
 import clsx from 'clsx';
 import { useAppText } from '@/i18n/state/client';
-import { SWR_KEY_INFINITE_PHOTO_SCROLL } from '@/swr';
+import { SWR_KEY_SHARED_HOVER } from '@/swr';
 
 const { width, height } = getDimensionsFromSize(300, 16 / 9);
 
@@ -37,7 +37,7 @@ export default function EntityHover({
     data: photos,
     isLoading,
   } = useSWR(
-    isHovering ? `${SWR_KEY_INFINITE_PHOTO_SCROLL}-${hoverKey}` : null,
+    isHovering ? `${SWR_KEY_SHARED_HOVER}-${hoverKey}` : null,
     getPhotos, {
       revalidateIfStale: false,
       revalidateOnFocus: false,
