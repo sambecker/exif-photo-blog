@@ -5,17 +5,12 @@ import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/entity/EntityLink';
 
-export default function HiddenTag({
-  type,
-  badged,
-  contrast,
-  prefetch,
-  className,
-}: EntityLinkExternalProps) {
+export default function HiddenTag(props: EntityLinkExternalProps) {
   return (
     <EntityLink
+      {...props}
       label={TAG_HIDDEN}
-      labelComplex={badged &&
+      labelComplex={props.badged &&
         <span className="inline-flex items-center gap-1">
           {TAG_HIDDEN}
           <IconHidden
@@ -24,12 +19,7 @@ export default function HiddenTag({
           />
         </span>}
       path={pathForTag(TAG_HIDDEN)}
-      icon={!badged && <IconHidden size={16} />}
-      type={type}
-      className={className}
-      badged={badged}
-      contrast={contrast}
-      prefetch={prefetch}
+      icon={!props.badged && <IconHidden size={16} />}
     />
   );
 }
