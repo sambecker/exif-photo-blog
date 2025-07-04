@@ -63,7 +63,7 @@ export default function AppViewSwitcher({
   useEffect(() => {
     if (hasLoadedRef.current) {
       // After initial load, invalidate cache every time sort changes
-      invalidateSwr?.();
+      invalidateSwr?.('INFINITE_PHOTO_SCROLL');
     }
     hasLoadedRef.current = true;
   }, [invalidateSwr, sortBy]);

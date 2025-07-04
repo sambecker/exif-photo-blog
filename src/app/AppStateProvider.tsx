@@ -36,9 +36,8 @@ import { getCountsForCategoriesCachedAction } from '@/category/actions';
 import {
   canKeyBePurged,
   canKeyBePurgedAndRevalidated,
-  SWR_KEY_GET_ADMIN_DATA,
-  SWR_KEY_GET_AUTH,
-  SWR_KEY_GET_COUNTS_FOR_CATEGORIES,
+  SWR_KEYS,
+  SWRKey,
 } from '@/swr';
 
 export default function AppStateProvider({
@@ -129,13 +128,19 @@ export default function AppStateProvider({
   }, []);
 
   const { mutate } = useSWRConfig();
-  const invalidateSwr = useCallback(() => {
-    mutate(canKeyBePurged, undefined, { revalidate: false });
-    mutate(canKeyBePurgedAndRevalidated, undefined, { revalidate: true });
+  const invalidateSwr = useCallback((key?: SWRKey, revalidate?: boolean) => {
+    if (key) {
+      // Mutate specific key
+      mutate((k: string) => k?.startsWith(key), undefined, { revalidate });
+    } else {
+      // Mutate all keys that can be purged
+      mutate(canKeyBePurged, undefined, { revalidate: false });
+      mutate(canKeyBePurgedAndRevalidated, undefined, { revalidate: true });
+    }
   }, [mutate]);
 
   const { data: categoriesWithCounts } = useSWR(
-    SWR_KEY_GET_COUNTS_FOR_CATEGORIES,
+    SWR_KEYS.GET_COUNTS_FOR_CATEGORIES,
     getCountsForCategoriesCachedAction,
   );
 
@@ -143,7 +148,7 @@ export default function AppStateProvider({
     data: auth,
     error: authError,
     isLoading: isCheckingAuth,
-  } = useSWR(SWR_KEY_GET_AUTH, getAuthAction);
+  } = useSWR(SWR_KEYS.GET_AUTH, getAuthAction);
   useEffect(() => {
     if (auth === null || authError) {
       setUserEmail(undefined);
@@ -161,7 +166,7 @@ export default function AppStateProvider({
     mutate: refreshAdminData,
     isLoading: isLoadingAdminData,
   } = useSWR(
-    isUserSignedIn ? SWR_KEY_GET_ADMIN_DATA : null,
+    isUserSignedIn ? SWR_KEYS.GET_ADMIN_DATA : null,
     getAdminDataAction,
   );
   const updateAdminData = useCallback(

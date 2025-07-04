@@ -18,7 +18,7 @@ import { useAppState } from '@/app/AppState';
 import useVisible from '@/utility/useVisible';
 import { ADMIN_DB_OPTIMIZE_ENABLED } from '@/app/config';
 import { SortBy } from './db/sort';
-import { SWR_KEY_INFINITE_PHOTO_SCROLL } from '@/swr';
+import { SWR_KEYS } from '@/swr';
 
 const SIZE_KEY_SEPARATOR = '__';
 const getSizeFromKey = (key: string) =>
@@ -65,7 +65,8 @@ export default function InfinitePhotoScroll({
   const keyGenerator = useCallback(
     (size: number, prev: Photo[]) => prev && prev.length === 0
       ? null
-      : `${SWR_KEY_INFINITE_PHOTO_SCROLL}-${cacheKey}__${size}`
+      // eslint-disable-next-line max-len
+      : `${SWR_KEYS.INFINITE_PHOTO_SCROLL}-${cacheKey}${SIZE_KEY_SEPARATOR}${size}`
     , [cacheKey]);
 
   const fetcher = useCallback((
