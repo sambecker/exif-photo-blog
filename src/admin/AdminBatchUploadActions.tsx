@@ -167,7 +167,7 @@ export default function AdminBatchUploadActions({
                 />
               </div>
             </div>}
-          <div className="space-y-2">
+          <div className="flex flex-col sm:flex-row-reverse gap-2">
             <ProgressButton
               primary
               className="w-full justify-center"

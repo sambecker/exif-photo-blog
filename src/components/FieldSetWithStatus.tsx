@@ -10,6 +10,7 @@ import { FiChevronDown } from 'react-icons/fi';
 import { parameterize } from '@/utility/string';
 import Checkbox from './Checkbox';
 import ResponsiveText from './primitives/ResponsiveText';
+import Tooltip from './Tooltip';
 
 export default function FieldSetWithStatus({
   id: _id,
@@ -17,6 +18,7 @@ export default function FieldSetWithStatus({
   icon,
   note,
   noteShort,
+  tooltip,
   error,
   value,
   isModified,
@@ -45,6 +47,7 @@ export default function FieldSetWithStatus({
   icon?: ReactNode
   note?: string
   noteShort?: string
+  tooltip?: string
   error?: string
   value: string
   isModified?: boolean
@@ -127,13 +130,17 @@ export default function FieldSetWithStatus({
               type === 'checkbox' && 'order-2 m-0',
             )}
           >
-            <span className="inline-flex items-center gap-x-1.5">
-              {icon && <span
-                className="inline-flex items-center justify-center w-4"
-              >
-                {icon}
-              </span>}
+            <span className="inline-flex items-center gap-x-[5px]">
+              {icon &&
+                <span className="inline-flex items-center justify-center w-4">
+                  {icon}
+                </span>}
               {label}
+              {tooltip &&
+                <Tooltip
+                  content={tooltip}
+                  classNameTrigger="translate-y-[-1.5px]"
+                />}
             </span>
             {note && !error &&
               <ResponsiveText

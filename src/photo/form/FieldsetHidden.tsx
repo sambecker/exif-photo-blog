@@ -11,7 +11,12 @@ export default function FieldsetHidden(props: Omit<
       {...props}
       label="Hidden"
       type="checkbox"
-      icon={<IconHidden size={17} visible={props.value !== 'true'} />}
+      icon={<IconHidden
+        size={17}
+        className="translate-y-[0.5px]"
+        visible={props.value !== 'true'}
+      />}
+      tooltip="Visible only to admins"
     />
   );
 }
