@@ -93,7 +93,7 @@ export default function EntityLink({
       {labelComplex || label}
     </ResponsiveText>;
 
-  const renderLink =
+  const renderLink = (useForHover?: boolean) =>
     <LinkWithStatus
       href={path}
       className={clsx(
@@ -112,12 +112,16 @@ export default function EntityLink({
         iconWide,
         prefetch,
         title,
-        type,
+        type: useForHover ? 'icon-first' : type,
         uppercase,
-        classNameIcon: clsx('text-dim', classNameIcon),
+        className: useForHover ? 'text-white' : undefined,
+        classNameIcon: clsx(
+          !useForHover && 'text-dim',
+          classNameIcon,
+        ),
         debug,
       }}>
-        {badged
+        {badged && !useForHover
           ? <Badge
             type="small"
             contrast={contrast}
@@ -156,8 +160,7 @@ export default function EntityLink({
       {showHover && countOnHover && hoverPhotoQueryOptions
         ? <EntityHover
           hoverKey={path}
-          icon={icon}
-          title={label}
+          header={renderLink(true)}
           photosCount={countOnHover}
           getPhotos={() =>
             getPhotosCachedAction({
@@ -166,9 +169,9 @@ export default function EntityLink({
             })}
           color={contrast === 'frosted' ? 'frosted' : undefined}
         >
-          {renderLink}
+          {renderLink()}
         </EntityHover>
-        : renderLink}
+        : renderLink()}
       {action &&
         <span className="action">
           {action}

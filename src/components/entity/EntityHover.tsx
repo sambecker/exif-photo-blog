@@ -13,16 +13,14 @@ const { width, height } = getDimensionsFromSize(300, 16 / 9);
 
 export default function EntityHover({
   hoverKey,
-  icon,
-  title,
+  header,
   getPhotos,
   photosCount,
   children,
   color,
 }: {
   hoverKey: string
-  icon?: ReactNode
-  title: string
+  header: ReactNode
   getPhotos: () => Promise<Photo[]>
   photosCount: number
   color?: ComponentProps<typeof SharedHover>['color']
@@ -82,42 +80,45 @@ export default function EntityHover({
       <div className={clsx(
         'absolute inset-0 grid',
         gridClass,
-        'bg-gray-100',
         'transition-opacity duration-300',
         photos?.length ?? 0 > 0 ? 'opacity-0' : 'opacity-100',
+        'bg-gray-100 dark:bg-gray-800',
       )}>
         {Array.from({ length: photosToShow }).map((_, index) =>
           <div
             key={index}
             className={clsx(
-              'bg-linear-to-br from-gray-200 to-gray-100',
+              'bg-linear-to-br',
+              'from-gray-200 to-gray-100',
+              'dark:from-black/55 dark:to-black/35',
             )}
           />)}
       </div>
       {/* Text guard */}
       <div className={clsx(
         'absolute inset-0',
-        'bg-gradient-to-b from-black/50 to-transparent',
+        'bg-gradient-to-b from-black/70 to-transparent',
       )} />
       {/* Text */}
       <div className={clsx(
-        'absolute inset-0',
-        'px-3 py-2.5',
+        'absolute inset-0 p-2.5',
       )}>
         <div className="flex flex-col gap-1 h-full">
+          {/* Header */}
           <div className="grow">
             <span className={clsx(
-              'flex items-center gap-1.5 grow',
-              'text-base text-white',
+              'flex text-base',
+              'grow',
+              'translate-x-[4px]',
             )}>
-              {icon}
-              <span className="uppercase">{title}</span>
+              {header}
             </span>
           </div>
+          {/* Caption */}
           <div className={clsx(
             'self-start',
             'flex items-center gap-2',
-            'px-1.5 py-0.5 rounded-md',
+            'px-1.5 py-0.5 rounded-sm',
             'text-white/90 bg-black/40 backdrop-blur-lg',
             'outline-medium shadow-sm',
             'uppercase text-[0.7rem]',
@@ -132,12 +133,11 @@ export default function EntityHover({
   , [
     gridClass,
     photosToShow,
-    icon,
-    title,
-    isLoading,
+    photos,
+    header,
     photosCount,
     appText,
-    photos,
+    isLoading,
   ]);
 
   return <SharedHover {...{
