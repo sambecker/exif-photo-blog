@@ -14,11 +14,11 @@ import { getPhotosCachedAction, getPhotosAction } from '@/photo/actions';
 import { Photo } from '.';
 import { PhotoSetCategory } from '../category';
 import { clsx } from 'clsx/lite';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import useVisible from '@/utility/useVisible';
 import { ADMIN_DB_OPTIMIZE_ENABLED } from '@/app/config';
 import { SortBy } from './db/sort';
-import { SWR_KEY_INFINITE_PHOTO_SCROLL } from '@/state';
+import { SWR_KEY_INFINITE_PHOTO_SCROLL } from '@/swr';
 
 const SIZE_KEY_SEPARATOR = '__';
 const getSizeFromKey = (key: string) =>

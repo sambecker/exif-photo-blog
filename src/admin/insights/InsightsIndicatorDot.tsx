@@ -1,4 +1,4 @@
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import clsx from 'clsx/lite';
 import { FaCircle } from 'react-icons/fa6';
 

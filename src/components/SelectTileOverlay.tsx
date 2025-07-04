@@ -2,7 +2,7 @@
 
 import { clsx } from 'clsx/lite';
 import SimpleCheckbox from './primitives/SimpleCheckbox';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import Spinner from './Spinner';
 
 export default function SelectTileOverlay({

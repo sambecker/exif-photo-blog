@@ -7,7 +7,7 @@ import {
   useCallback,
   useRef,
 } from 'react';
-import { AppStateContext } from './AppState';
+import { AppStateContext } from '../app/AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import usePathnames from '@/utility/usePathnames';
 import { getAuthAction } from '@/auth/actions';
@@ -39,7 +39,7 @@ import {
   SWR_KEY_GET_ADMIN_DATA,
   SWR_KEY_GET_AUTH,
   SWR_KEY_GET_COUNTS_FOR_CATEGORIES,
-} from '.';
+} from '@/swr';
 
 export default function AppStateProvider({
   children,

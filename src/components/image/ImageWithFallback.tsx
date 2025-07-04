@@ -2,7 +2,7 @@
 
 /* eslint-disable jsx-a11y/alt-text */
 import { BLUR_ENABLED } from '@/app/config';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { clsx}  from 'clsx/lite';
 import Image, { ImageProps } from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';

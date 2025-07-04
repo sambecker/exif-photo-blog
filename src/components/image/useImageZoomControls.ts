@@ -1,5 +1,5 @@
 import useMetaThemeColor from '@/utility/useMetaThemeColor';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import {
   ComponentProps,
   RefObject,

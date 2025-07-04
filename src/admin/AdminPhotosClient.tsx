@@ -10,7 +10,7 @@ import { Photo } from '@/photo';
 import { StorageListResponse } from '@/platforms/storage';
 import AdminUploadsTable from './AdminUploadsTable';
 import { Timezone } from '@/utility/timezone';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
 import { pluralize } from '@/utility/string';
 import IconBroom from '@/components/icons/IconBroom';

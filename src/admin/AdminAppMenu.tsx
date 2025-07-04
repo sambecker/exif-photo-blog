@@ -11,7 +11,7 @@ import {
   PATH_ADMIN_UPLOADS,
   PATH_GRID_INFERRED,
 } from '@/app/paths';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { IoArrowDown, IoArrowUp, IoCloseSharp } from 'react-icons/io5';
 import { clsx } from 'clsx/lite';
 import AdminAppInfoIcon from './AdminAppInfoIcon';

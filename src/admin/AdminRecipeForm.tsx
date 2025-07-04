@@ -7,7 +7,7 @@ import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import { ReactNode, useMemo, useState } from 'react';
 import { renamePhotoRecipeGloballyAction } from '@/photo/actions';
 import { parameterize } from '@/utility/string';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 
 export default function AdminRecipeForm({
   recipe,

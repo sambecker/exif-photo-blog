@@ -8,7 +8,7 @@ import AppGrid from '@/components/AppGrid';
 import EntityLink from '@/components/entity/EntityLink';
 import LabeledIcon from '@/components/primitives/LabeledIcon';
 import PhotoFilmIcon from '@/film/PhotoFilmIcon';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { clsx } from 'clsx/lite';
 import { useEffect, useState } from 'react';
 import { FaCamera, FaHandSparkles, FaUserAltSlash } from 'react-icons/fa';

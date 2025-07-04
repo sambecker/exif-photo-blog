@@ -36,7 +36,7 @@ import AdminLink from '../AdminLink';
 import AdminEmptyState from '../AdminEmptyState';
 import { pluralize } from '@/utility/string';
 import Tooltip from '@/components/Tooltip';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import ScoreCardContainer from '@/components/ScoreCardContainer';
 import IconLens from '@/components/icons/IconLens';
 import IconCamera from '@/components/icons/IconCamera';

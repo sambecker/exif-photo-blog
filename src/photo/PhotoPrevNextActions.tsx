@@ -10,7 +10,7 @@ import {
 import { PhotoSetCategory } from '../category';
 import PhotoLink from './PhotoLink';
 import { pathForAdminPhotoEdit, pathForPhoto } from '@/app/paths';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import { clsx } from 'clsx/lite';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';

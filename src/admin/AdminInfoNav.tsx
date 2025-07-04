@@ -5,7 +5,7 @@ import ResponsiveText from '@/components/primitives/ResponsiveText';
 import clsx from 'clsx/lite';
 import ClearCacheButton from '@/admin/ClearCacheButton';
 import { usePathname } from 'next/navigation';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 import LinkWithLoaderBackground from '@/components/LinkWithLoaderBackground';
 

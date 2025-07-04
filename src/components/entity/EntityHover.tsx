@@ -8,7 +8,7 @@ import PhotoMedium from '@/photo/PhotoMedium';
 import Spinner from '../Spinner';
 import clsx from 'clsx';
 import { useAppText } from '@/i18n/state/client';
-import { SWR_KEY_INFINITE_PHOTO_SCROLL } from '@/state';
+import { SWR_KEY_INFINITE_PHOTO_SCROLL } from '@/swr';
 
 const { width, height } = getDimensionsFromSize(300, 16 / 9);
 

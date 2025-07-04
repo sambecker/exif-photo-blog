@@ -2,7 +2,7 @@
 
 import { ReactNode, useRef } from 'react';
 import { Variant, motion } from 'framer-motion';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import usePrefersReducedMotion from '@/utility/usePrefersReducedMotion';
 
 const IGNORE_CAN_START = true;

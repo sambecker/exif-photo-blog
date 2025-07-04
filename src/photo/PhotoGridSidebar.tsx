@@ -7,7 +7,7 @@ import { photoQuantityText } from '.';
 import { TAG_FAVS, TAG_HIDDEN, addHiddenToTags, limitTagsByCount } from '@/tag';
 import PhotoFilm from '@/film/PhotoFilm';
 import FavsTag from '../tag/FavsTag';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { useMemo, useRef } from 'react';
 import HiddenTag from '@/tag/HiddenTag';
 import { CATEGORY_VISIBILITY, HIDE_TAGS_WITH_ONE_PHOTO } from '@/app/config';

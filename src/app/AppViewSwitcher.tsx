@@ -8,7 +8,7 @@ import {
   PATH_GRID_INFERRED,
 } from '@/app/paths';
 import IconSearch from '../components/icons/IconSearch';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import {
   GRID_HOMEPAGE_ENABLED,
   SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,

@@ -1,6 +1,6 @@
 'use client';
 
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { clsx } from 'clsx/lite';
 import { HTMLAttributes } from 'react';
 
