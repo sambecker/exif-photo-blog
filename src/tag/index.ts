@@ -20,7 +20,7 @@ import { AppTextState } from '@/i18n/state';
 
 // Reserved tags
 export const TAG_FAVS   = 'favs';
-export const TAG_HIDDEN = 'hidden';
+export const TAG_PRIVATE = 'private';
 
 type TagWithMeta = { tag: string } & CategoryQueryMeta;
 
@@ -135,7 +135,7 @@ export const isPhotoFav = ({ tags }: Photo) => tags.some(isTagFavs);
 export const isPathFavs = (pathname?: string) =>
   getPathComponents(pathname).tag === TAG_FAVS;
 
-export const isTagHidden = (tag: string) => tag.toLowerCase() === TAG_HIDDEN;
+export const isTagHidden = (tag: string) => tag.toLowerCase() === TAG_PRIVATE;
 
 export const addHiddenToTags = (
   tags: Tags,
@@ -146,7 +146,7 @@ export const addHiddenToTags = (
     ? tags
       .filter(({ tag }) => tag === TAG_FAVS)
       .concat({
-        tag: TAG_HIDDEN,
+        tag: TAG_PRIVATE,
         count: countHidden,
         lastModified: lastModifiedHidden,
       })

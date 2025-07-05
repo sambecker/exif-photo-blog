@@ -18,7 +18,7 @@ import {
   deleteConfirmationTextForPhoto,
   downloadFileNameForPhoto,
 } from '@/photo';
-import { isPathFavs, isPhotoFav, TAG_HIDDEN } from '@/tag';
+import { isPathFavs, isPhotoFav, TAG_PRIVATE } from '@/tag';
 import { usePathname } from 'next/navigation';
 import { BiTrash } from 'react-icons/bi';
 import MoreMenu from '@/components/more/MoreMenu';
@@ -59,7 +59,7 @@ export default function AdminPhotoMenu({
   const shouldRedirectDelete = isOnPhotoDetail;
   const redirectPathOnHideToggle = isOnPhotoDetail
     ? photo.hidden
-      ? pathForTag(TAG_HIDDEN)
+      ? pathForTag(TAG_PRIVATE)
       : PATH_ROOT
     : undefined;
 

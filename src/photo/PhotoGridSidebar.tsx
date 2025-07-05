@@ -4,12 +4,17 @@ import PhotoCamera from '@/camera/PhotoCamera';
 import HeaderList from '@/components/HeaderList';
 import PhotoTag from '@/tag/PhotoTag';
 import { photoQuantityText } from '.';
-import { TAG_FAVS, TAG_HIDDEN, addHiddenToTags, limitTagsByCount } from '@/tag';
+import {
+  TAG_FAVS,
+  TAG_PRIVATE,
+  addHiddenToTags,
+  limitTagsByCount,
+} from '@/tag';
 import PhotoFilm from '@/film/PhotoFilm';
-import FavsTag from '../tag/FavsTag';
+import PhotoFavs from '../tag/PhotoFavs';
 import { useAppState } from '@/app/AppState';
 import { useMemo, useRef } from 'react';
-import HiddenTag from '@/tag/HiddenTag';
+import PhotoPrivate from '@/tag/PhotoPrivate';
 import {
   CATEGORY_VISIBILITY,
   HIDE_TAGS_WITH_ONE_PHOTO,
@@ -196,7 +201,7 @@ export default function PhotoGridSidebar({
         .map(({ tag, count }) => {
           switch (tag) {
           case TAG_FAVS:
-            return <FavsTag
+            return <PhotoFavs
               key={TAG_FAVS}
               countOnHover={count}
               type="icon-last"
@@ -204,9 +209,9 @@ export default function PhotoGridSidebar({
               contrast="low"
               badged
             />;
-          case TAG_HIDDEN:
-            return <HiddenTag
-              key={TAG_HIDDEN}
+          case TAG_PRIVATE:
+            return <PhotoPrivate
+              key={TAG_PRIVATE}
               countOnHover={count}
               type="icon-last"
               prefetch={false}

@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
-import IconHidden from '@/components/icons/IconHidden';
+import IconLock from '@/components/icons/IconLock';
 
 export default function FieldsetHidden(props: Omit<
   ComponentProps<typeof FieldSetWithStatus>,
@@ -9,14 +9,14 @@ export default function FieldsetHidden(props: Omit<
   return (
     <FieldSetWithStatus
       {...props}
-      label="Hidden"
+      label="Private"
       type="checkbox"
-      icon={<IconHidden
-        size={17}
-        className="translate-y-[0.5px]"
-        visible={props.value !== 'true'}
+      icon={<IconLock
+        size={15}
+        open={props.value !== 'true'}
+        narrow
       />}
-      tooltip="Visible only to admins"
+      tooltip="Visible only to admins (uploads only secure via obscurity)"
     />
   );
 }

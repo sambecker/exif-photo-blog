@@ -8,7 +8,7 @@ import {
   SHOW_LENSES,
   SHOW_RECIPES,
 } from '@/app/config';
-import { ABSOLUTE_PATH_FOR_HOME_IMAGE } from '@/app/paths';
+import { ABSOLUTE_PATH_HOME_IMAGE } from '@/app/paths';
 import { formatDate, formatDateFromPostgresString } from '@/utility/date';
 import {
   formatAperture,
@@ -25,10 +25,10 @@ import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import { PhotoSyncStatus, generatePhotoSyncStatus } from './sync';
 import { AppTextState } from '@/i18n/state';
 
-// INFINITE SCROLL: FEED
-export const INFINITE_SCROLL_FEED_INITIAL =
+// INFINITE SCROLL: FULL
+export const INFINITE_SCROLL_FULL_INITIAL =
   process.env.NODE_ENV === 'development' ? 2 : 12;
-export const INFINITE_SCROLL_FEED_MULTIPLE =
+export const INFINITE_SCROLL_FULL_MULTIPLE =
   process.env.NODE_ENV === 'development' ? 2 : 24;
 
 // INFINITE SCROLL: GRID
@@ -84,6 +84,7 @@ export interface PhotoDbInsert extends PhotoExif {
   recipeTitle?: string
   locationName?: string
   priorityOrder?: number
+  excludeFromFeeds?: boolean
   hidden?: boolean
   takenAt: string
   takenAtNaive: string
@@ -198,11 +199,11 @@ export const generateOgImageMetaForPhotos = (photos: Photo[]): Metadata => {
   if (photos.length > 0) {
     return {
       openGraph: {
-        images: ABSOLUTE_PATH_FOR_HOME_IMAGE,
+        images: ABSOLUTE_PATH_HOME_IMAGE,
       },
       twitter: {
         card: 'summary_large_image',
-        images: ABSOLUTE_PATH_FOR_HOME_IMAGE,
+        images: ABSOLUTE_PATH_HOME_IMAGE,
       },
     };
   } else {

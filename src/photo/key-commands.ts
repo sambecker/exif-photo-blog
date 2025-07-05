@@ -1,5 +1,5 @@
 export const KEY_COMMANDS = {
-  feed: 'F',
+  full: 'F',
   grid: 'G',
   admin: 'A',
   prev: ['J', 'ARROWLEFT'],

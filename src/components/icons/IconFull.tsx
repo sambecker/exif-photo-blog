@@ -3,7 +3,7 @@
 const INTRINSIC_WIDTH = 28;
 const INTRINSIC_HEIGHT = 24;
 
-export default function IconFeed({
+export default function IconFull({
   width = INTRINSIC_WIDTH,
   includeTitle = true,
   className,

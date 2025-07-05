@@ -43,7 +43,7 @@ export const TEXT: I18N = {
   },
   nav: {
     home: '首页',
-    feed: '动态',
+    full: '完整',
     grid: '网格',
     admin: '管理',
     search: '搜索',

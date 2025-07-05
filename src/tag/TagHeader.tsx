@@ -2,7 +2,7 @@ import { Photo, PhotoDateRange } from '@/photo';
 import PhotoTag from './PhotoTag';
 import { descriptionForTaggedPhotos, isTagFavs } from '.';
 import PhotoHeader from '@/photo/PhotoHeader';
-import FavsTag from './FavsTag';
+import PhotoFavs from './PhotoFavs';
 import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
 import { getAppText } from '@/i18n/state/server';
 
@@ -26,7 +26,7 @@ export default async function TagHeader({
     <PhotoHeader
       tag={tag}
       entity={isTagFavs(tag) 
-        ? <FavsTag
+        ? <PhotoFavs
           contrast="high"
           showHover={false}
         />

@@ -44,7 +44,7 @@ export const TEXT: I18N = {
   },
   nav: {
     home: 'হোম',
-    feed: 'ফিড',
+    full: 'সম্পূর্ণ',
     grid: 'গ্রিড',
     admin: 'অ্যাডমিন',
     search: 'সার্চ',

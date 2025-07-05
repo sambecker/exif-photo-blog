@@ -20,7 +20,7 @@ import {
   PATH_ADMIN_RECIPES,
   PATH_ADMIN_TAGS,
   PATH_ADMIN_UPLOADS,
-  PATH_FEED_INFERRED,
+  PATH_FULL_INFERRED,
   PATH_GRID_INFERRED,
   PATH_SIGN_IN,
   pathForCamera,
@@ -504,11 +504,11 @@ export default function CommandKClient({
     });
   }
 
-  const pageFeed: CommandKItem = {
+  const pageFull: CommandKItem = {
     label: GRID_HOMEPAGE_ENABLED
-      ? appText.nav.feed
-      : `${appText.nav.feed} (${appText.nav.home})`,
-    path: PATH_FEED_INFERRED,
+      ? appText.nav.full
+      : `${appText.nav.full} (${appText.nav.home})`,
+    path: PATH_FULL_INFERRED,
   };
 
   const pageGrid: CommandKItem = {
@@ -519,8 +519,8 @@ export default function CommandKClient({
   };
 
   const pageItems: CommandKItem[] = GRID_HOMEPAGE_ENABLED
-    ? [pageGrid, pageFeed]
-    : [pageFeed, pageGrid];
+    ? [pageGrid, pageFull]
+    : [pageFull, pageGrid];
 
   const sectionPages: CommandKSection = {
     heading: 'Pages',

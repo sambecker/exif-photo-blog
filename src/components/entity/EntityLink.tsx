@@ -110,8 +110,10 @@ export default function EntityLink({
       setIsLoading={setIsLoading}
     >
       <LabeledIcon {...{
-        icon: (hasBadgeIcon && !useForHover) ? undefined : icon,
-        iconWide: (hasBadgeIcon && !useForHover) ? undefined : iconWide,
+        icon:
+          (badged && hasBadgeIcon && !useForHover) ? undefined : icon,
+        iconWide:
+          (badged && hasBadgeIcon && !useForHover) ? undefined : iconWide,
         prefetch,
         title,
         type: useForHover ? 'icon-first' : type,

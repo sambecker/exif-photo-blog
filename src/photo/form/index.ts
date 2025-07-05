@@ -182,6 +182,7 @@ const FORM_METADATA = (
   },
   priorityOrder: { label: 'priority order' },
   favorite: { label: 'favorite', type: 'checkbox', excludeFromInsert: true },
+  excludeFromFeeds: { label: 'exclude from feeds', type: 'checkbox' },
   hidden: { label: 'hidden', type: 'checkbox' },
   shouldStripGpsData: {
     label: 'strip gps data',
@@ -338,6 +339,7 @@ export const convertFormDataToPhotoDbInsert = (
     priorityOrder: photoForm.priorityOrder
       ? parseFloat(photoForm.priorityOrder)
       : undefined,
+    excludeFromFeeds: photoForm.excludeFromFeeds === 'true',
     hidden: photoForm.hidden === 'true',
     ...generateTakenAtFields(photoForm),
   };
