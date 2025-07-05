@@ -35,6 +35,7 @@ export default function InfinitePhotoScroll({
   itemsPerPage,
   sortBy,
   sortWithPriority,
+  excludeFromFeeds,
   camera,
   lens,
   tag,
@@ -50,6 +51,7 @@ export default function InfinitePhotoScroll({
   itemsPerPage: number
   sortBy?: SortBy
   sortWithPriority?: boolean
+  excludeFromFeeds?: boolean
   cacheKey: string
   wrapMoreButtonInGrid?: boolean
   useCachedPhotos?: boolean
@@ -77,6 +79,7 @@ export default function InfinitePhotoScroll({
       offset: initialOffset + getSizeFromKey(keyWithSize) * itemsPerPage,
       sortBy, 
       sortWithPriority,
+      excludeFromFeeds,
       limit: itemsPerPage,
       hidden: includeHiddenPhotos ? 'include' : 'exclude',
       camera,
@@ -90,6 +93,7 @@ export default function InfinitePhotoScroll({
     useCachedPhotos,
     sortBy,
     sortWithPriority,
+    excludeFromFeeds,
     initialOffset,
     itemsPerPage,
     includeHiddenPhotos,

@@ -29,6 +29,7 @@ export type PhotoQueryOptions = {
   takenBefore?: Date
   takenAfterInclusive?: Date
   updatedBefore?: Date
+  excludeFromFeeds?: boolean
   hidden?: 'exclude' | 'include' | 'only'
 } & Omit<PhotoSetCategory, 'camera' | 'lens'> & {
   camera?: Partial<Camera>
@@ -44,6 +45,7 @@ export const getWheresFromOptions = (
 ) => {
   const {
     hidden = 'exclude',
+    excludeFromFeeds,
     takenBefore,
     takenAfterInclusive,
     updatedBefore,
@@ -72,6 +74,9 @@ export const getWheresFromOptions = (
     break;
   }
 
+  if (excludeFromFeeds) {
+    wheres.push('exclude_from_feeds IS NOT TRUE');
+  }
   if (takenBefore) {
     wheres.push(`taken_at < $${valuesIndex++}`);
     wheresValues.push(takenBefore.toISOString());

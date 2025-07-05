@@ -75,7 +75,7 @@ export default function AdminUploadsTableRow({
       className={clsx(
         'flex items-center grow',
         'transition-opacity',
-        'rounded-md overflow-hidden',
+        'rounded-lg overflow-hidden',
         'border-medium bg-extra-dim',
         isAdding && !isComplete && status !== 'adding' && 'opacity-30',
       )}

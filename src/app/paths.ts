@@ -3,13 +3,13 @@ import { PhotoSetCategory } from '@/category';
 import { getBaseUrl, GRID_HOMEPAGE_ENABLED } from './config';
 import { Camera } from '@/camera';
 import { parameterize } from '@/utility/string';
-import { TAG_HIDDEN } from '@/tag';
+import { TAG_PRIVATE } from '@/tag';
 import { Lens } from '@/lens';
 
 // Core
 export const PATH_ROOT                  = '/';
 export const PATH_GRID                  = '/grid';
-export const PATH_FEED                  = '/feed';
+export const PATH_FULL                  = '/full';
 export const PATH_ADMIN                 = '/admin';
 export const PATH_API                   = '/api';
 export const PATH_SIGN_IN               = '/sign-in';
@@ -19,8 +19,8 @@ export const PATH_OG                    = '/og';
 export const PATH_GRID_INFERRED = GRID_HOMEPAGE_ENABLED
   ? PATH_ROOT
   : PATH_GRID;
-export const PATH_FEED_INFERRED = GRID_HOMEPAGE_ENABLED
-  ? PATH_FEED
+export const PATH_FULL_INFERRED = GRID_HOMEPAGE_ENABLED
+  ? PATH_FULL
   : PATH_ROOT;
 
 // Sort
@@ -31,7 +31,7 @@ export const PARAM_SORT_ORDER_OLDEST = 'oldest-first';
 export const doesPathOfferSort = (pathname: string) =>
   pathname === PATH_ROOT ||
   pathname.startsWith(PATH_GRID) ||
-  pathname.startsWith(PATH_FEED);
+  pathname.startsWith(PATH_FULL);
 
 // Feeds
 export const PATH_SITEMAP               = '/sitemap.xml';
@@ -104,7 +104,7 @@ export const PATHS_ADMIN = [
 export const PATHS_TO_CACHE = [
   PATH_ROOT,
   PATH_GRID,
-  PATH_FEED,
+  PATH_FULL,
   PATH_OG,
   PATH_PHOTO_DYNAMIC,
   PATH_CAMERA_DYNAMIC,
@@ -154,7 +154,7 @@ export const pathForPhoto = ({
   let prefix = PREFIX_PHOTO;
 
   if (typeof photo !== 'string' && photo.hidden) {
-    prefix = pathForTag(TAG_HIDDEN);
+    prefix = pathForTag(TAG_PRIVATE);
   } else if (recent) {
     prefix = PREFIX_RECENTS;
   } else if (year) {
@@ -231,13 +231,19 @@ export const pathForRecentsImage = () =>
   pathForImage(PREFIX_RECENTS);
 
 // Absolute paths
-export const ABSOLUTE_PATH_FOR_FEED_JSON =
+export const ABSOLUTE_PATH_GRID =
+  `${getBaseUrl()}${PATH_GRID}`;
+
+export const ABSOLUTE_PATH_FULL =
+  `${getBaseUrl()}${PATH_FULL}`;
+
+export const ABSOLUTE_PATH_FEED_JSON =
   `${getBaseUrl()}${PATH_FEED_JSON}`;
 
-export const ABSOLUTE_PATH_FOR_RSS_XML =
+export const ABSOLUTE_PATH_RSS_XML =
   `${getBaseUrl()}${PATH_RSS_XML}`;
 
-export const ABSOLUTE_PATH_FOR_HOME_IMAGE =
+export const ABSOLUTE_PATH_HOME_IMAGE =
   `${getBaseUrl()}/home-image`;
 
 export const absolutePathForPhoto = (
@@ -374,13 +380,13 @@ export const isPathRoot = (pathname?: string) =>
 export const isPathGrid = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_GRID);
 
-export const isPathFeed = (pathname?: string) =>
-  checkPathPrefix(pathname, PATH_FEED);
+export const isPathFull = (pathname?: string) =>
+  checkPathPrefix(pathname, PATH_FULL);
 
 export const isPathTopLevel = (pathname?: string) =>
   isPathRoot(pathname)||
   isPathGrid(pathname) ||
-  isPathFeed(pathname);
+  isPathFull(pathname);
 
 export const isPathSignIn = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_SIGN_IN);
@@ -406,7 +412,7 @@ export const isPathAdminInfo = (pathname?: string) =>
 
 export const isPathProtected = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ADMIN) ||
-  checkPathPrefix(pathname, pathForTag(TAG_HIDDEN)) ||
+  checkPathPrefix(pathname, pathForTag(TAG_PRIVATE)) ||
   checkPathPrefix(pathname, PATH_OG);
 
 export const getPathComponents = (pathname = ''): {

@@ -25,7 +25,7 @@ import {
   PATHS_ADMIN,
   PATHS_TO_CACHE,
   PATH_ADMIN,
-  PATH_FEED,
+  PATH_FULL,
   PATH_GRID,
   PATH_ROOT,
   PREFIX_CAMERA,
@@ -153,7 +153,7 @@ export const revalidatePhoto = (photoId: string) => {
   revalidatePath(pathForPhoto({ photo: photoId }), 'layout');
   revalidatePath(PATH_ROOT, 'layout');
   revalidatePath(PATH_GRID, 'layout');
-  revalidatePath(PATH_FEED, 'layout');
+  revalidatePath(PATH_FULL, 'layout');
   revalidatePath(PREFIX_TAG, 'layout');
   revalidatePath(PREFIX_CAMERA, 'layout');
   revalidatePath(PREFIX_LENS, 'layout');
@@ -184,13 +184,18 @@ export const getPhotosNearIdCached = (
   const isPhotoFirst = photos.findIndex(p => p.id === photoId) === 0;
   return {
     photo: photo ? parseCachedPhotoDates(photo) : undefined,
-    photos: parseCachedPhotosDates(photos),
-    ...limit && {
-      photosGrid: photos.slice(
-        isPhotoFirst ? 1 : 2,
-        isPhotoFirst ? limit - 1 : limit,
-      ),
-    },
+    // Don't show photo in context if it's excluded from feeds
+    ...photo?.excludeFromFeeds
+      ? { photos: [] }
+      : {
+        photos: parseCachedPhotosDates(photos),
+        ...limit && {
+          photosGrid: photos.slice(
+            isPhotoFirst ? 1 : 2,
+            isPhotoFirst ? limit - 1 : limit,
+          ),
+        },
+      },
     indexNumber,
   };
 });

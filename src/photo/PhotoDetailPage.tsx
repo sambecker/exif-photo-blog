@@ -7,7 +7,7 @@ import PhotoGrid from './PhotoGrid';
 import TagHeader from '@/tag/TagHeader';
 import CameraHeader from '@/camera/CameraHeader';
 import FilmHeader from '@/film/FilmHeader';
-import { TAG_HIDDEN } from '@/tag';
+import { TAG_PRIVATE } from '@/tag';
 import HiddenHeader from '@/tag/HiddenHeader';
 import FocalLengthHeader from '@/focal/FocalLengthHeader';
 import PhotoHeader from './PhotoHeader';
@@ -48,7 +48,7 @@ export default function PhotoDetailPage({
   let customHeader: ReactNode | undefined;
 
   if (tag) {
-    customHeader = tag === TAG_HIDDEN
+    customHeader = tag === TAG_PRIVATE
       ? <HiddenHeader
         photos={photos}
         selectedPhoto={photo}

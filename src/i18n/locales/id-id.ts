@@ -43,7 +43,7 @@ export const TEXT: I18N = {
   },
   nav: {
     home: 'Beranda',
-    feed: 'Umpan',
+    full: 'Lengkap',
     grid: 'Grid',
     admin: 'Admin',
     search: 'Cari',

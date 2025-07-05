@@ -1,32 +1,25 @@
-import {
-  INFINITE_SCROLL_FEED_INITIAL,
-  INFINITE_SCROLL_GRID_INITIAL,
-  generateOgImageMetaForPhotos,
-} from '@/photo';
+import { generateOgImageMetaForPhotos } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import { cache } from 'react';
 import { getPhotos } from '@/photo/db/query';
 import { GRID_HOMEPAGE_ENABLED, USER_DEFAULT_SORT_OPTIONS } from '@/app/config';
 import { NULL_CATEGORY_DATA } from '@/category/data';
-import PhotoFeedPage from '@/photo/PhotoFeedPage';
+import PhotoFullPage from '@/photo/PhotoFullPage';
 import PhotoGridPage from '@/photo/PhotoGridPage';
 import { getDataForCategoriesCached } from '@/category/cache';
 import { getPhotosMetaCached } from '@/photo/cache';
-import { PhotoQueryOptions } from '@/photo/db';
+import { FEED_META_QUERY_OPTIONS, getFeedQueryOptions } from '@/feed';
 
 export const dynamic = 'force-static';
 export const maxDuration = 60;
 
-const getPhotosCached = cache((options: PhotoQueryOptions) => getPhotos({
-  ...options,
-  limit: GRID_HOMEPAGE_ENABLED
-    ? INFINITE_SCROLL_GRID_INITIAL
-    : INFINITE_SCROLL_FEED_INITIAL,
-}));
+const getPhotosCached = cache(() => getPhotos(getFeedQueryOptions({
+  isGrid: GRID_HOMEPAGE_ENABLED,
+})));
 
 export async function generateMetadata(): Promise<Metadata> {
-  const photos = await getPhotosCached(USER_DEFAULT_SORT_OPTIONS)
+  const photos = await getPhotosCached()
     .catch(() => []);
   return generateOgImageMetaForPhotos(photos);
 }
@@ -37,9 +30,9 @@ export default async function HomePage() {
     photosCount,
     categories,
   ] = await Promise.all([
-    getPhotosCached(USER_DEFAULT_SORT_OPTIONS)
+    getPhotosCached()
       .catch(() => []),
-    getPhotosMetaCached(USER_DEFAULT_SORT_OPTIONS)
+    getPhotosMetaCached(FEED_META_QUERY_OPTIONS)
       .then(({ count }) => count)
       .catch(() => 0),
     GRID_HOMEPAGE_ENABLED
@@ -58,7 +51,7 @@ export default async function HomePage() {
             ...categories,
           }}
         />
-        : <PhotoFeedPage {...{
+        : <PhotoFullPage {...{
           photos,
           photosCount,
           ...USER_DEFAULT_SORT_OPTIONS,

@@ -6,7 +6,7 @@ import {
   FeedMedia,
   generateFeedMedia,
   getCoreFeedFields,
-} from '.';
+} from './programmatic';
 import { formatDateFromPostgresString } from '@/utility/date';
 import { Photo } from '@/photo';
 import { BASE_URL, META_DESCRIPTION, META_TITLE } from '@/app/config';

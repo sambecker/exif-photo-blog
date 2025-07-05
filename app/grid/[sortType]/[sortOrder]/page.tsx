@@ -1,7 +1,4 @@
-import {
-  INFINITE_SCROLL_GRID_INITIAL,
-  generateOgImageMetaForPhotos,
-} from '@/photo';
+import { generateOgImageMetaForPhotos } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import { getPhotos } from '@/photo/db/query';
@@ -11,34 +8,36 @@ import { getDataForCategoriesCached } from '@/category/cache';
 import { getPhotosMetaCached } from '@/photo/cache';
 import { SortProps } from '@/photo/db/sort';
 import { getSortOptionsFromParams } from '@/photo/db/sort-path';
+import { FEED_META_QUERY_OPTIONS, getFeedQueryOptions } from '@/feed';
 import { PhotoQueryOptions } from '@/photo/db';
 
 export const maxDuration = 60;
 
-const getPhotosCached = cache((options: PhotoQueryOptions) => getPhotos({
-  ...options,
-  limit: INFINITE_SCROLL_GRID_INITIAL,
-}));
+const getPhotosCached = cache((options: PhotoQueryOptions) =>
+  getPhotos(getFeedQueryOptions({
+    isGrid: true,
+    ...options,
+  })));
 
 export async function generateMetadata({
   params,
 }: SortProps): Promise<Metadata> {
-  const options = await getSortOptionsFromParams(params);
-  const photos = await getPhotosCached(options)
+  const sortOptions = await getSortOptionsFromParams(params);
+  const photos = await getPhotosCached(sortOptions)
     .catch(() => []);
   return generateOgImageMetaForPhotos(photos);
 }
 
 export default async function GridPage({ params }: SortProps) {
-  const options = await getSortOptionsFromParams(params);
+  const sortOptions = await getSortOptionsFromParams(params);
   const [
     photos,
     photosCount,
     categories,
   ] = await Promise.all([
-    getPhotosCached(options)
+    getPhotosCached(sortOptions)
       .catch(() => []),
-    getPhotosMetaCached(options)
+    getPhotosMetaCached(FEED_META_QUERY_OPTIONS)
       .then(({ count }) => count)
       .catch(() => 0),
     getDataForCategoriesCached(),
@@ -50,7 +49,7 @@ export default async function GridPage({ params }: SortProps) {
         {...{
           photos,
           photosCount,
-          ...options,
+          ...sortOptions,
           ...categories,
         }}
       />

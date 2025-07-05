@@ -48,6 +48,7 @@ import FieldsetFavs from './FieldsetFavs';
 import FieldsetHidden from './FieldsetHidden';
 import { useAppText } from '@/i18n/state/client';
 import IconAddUpload from '@/components/icons/IconAddUpload';
+import FieldsetExclude from './FieldsetExclude';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -184,6 +185,16 @@ export default function PhotoForm({
     onTextContentChange?.(formHasTextContent(formData));
   }, [onTextContentChange, formData]);
 
+  useEffect(() => {
+    if (formData.hidden === 'true') {
+      setFormData(data => ({
+        ...data,
+        excludeFromFeeds: 'false',
+        favorite: 'false',
+      }));
+    }
+  }, [formData.hidden]);
+
   const isFieldGeneratingAi = (key: keyof PhotoFormData) => {
     switch (key) {
     case 'title':
@@ -241,7 +252,7 @@ export default function PhotoForm({
     }
   };
 
-  const shouldHideField = (
+  const isFieldHidden = (
     key: FormFields,
     hideIfEmpty?: boolean,
     shouldHide?: FormMeta['shouldHide'],
@@ -259,6 +270,13 @@ export default function PhotoForm({
         shouldHide?.(formData, changedFormKeys)
       );
     }
+  };
+
+  const isFieldReadOnly = (key: FormFields) => {
+    return formData.hidden === 'true' && (
+      key === 'excludeFromFeeds' ||
+      key === 'favorite'
+    );
   };
 
   const onMatchResults = useCallback((didFindMatchingPhotos: boolean) => {
@@ -361,7 +379,7 @@ export default function PhotoForm({
               type,
               staticValue,
             }]) => {
-              if (!shouldHideField(key, hideIfEmpty, shouldHide)) {
+              if (!isFieldHidden(key, hideIfEmpty, shouldHide)) {
                 const fieldProps: ComponentProps<typeof FieldSetWithStatus> = {
                   id: key,
                   label: label + (
@@ -403,7 +421,7 @@ export default function PhotoForm({
                   tagOptionsLimit,
                   tagOptionsLimitValidationMessage,
                   required,
-                  readOnly,
+                  readOnly: readOnly || isFieldReadOnly(key),
                   spellCheck,
                   capitalize,
                   placeholder: loadingMessage && !formData[key]
@@ -445,6 +463,11 @@ export default function PhotoForm({
                     key={key}
                     {...fieldProps}
                   />;
+                case 'excludeFromFeeds':
+                  return <FieldsetExclude
+                    key={key}
+                    {...fieldProps}
+                  />;
                 case 'hidden':
                   return <FieldsetHidden
                     key={key}
@@ -462,7 +485,7 @@ export default function PhotoForm({
         {/* Actions */}
         <div className={clsx(
           'flex gap-3 sticky bottom-0',
-          'pb-4 md:pb-8 mt-12',
+          'pb-4 md:pb-8 mt-16',
         )}>
           <Link
             className="button"

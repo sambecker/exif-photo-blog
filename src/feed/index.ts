@@ -1,32 +1,43 @@
-import { descriptionForPhoto, Photo, titleForPhoto } from '@/photo';
+import { USER_DEFAULT_SORT_OPTIONS } from '@/app/config';
+import { PhotoQueryOptions } from '../photo/db';
 import {
-  getNextImageUrlForRequest,
-  NextImageSize,
-} from '@/platforms/next-image';
+  INFINITE_SCROLL_FULL_INITIAL,
+  INFINITE_SCROLL_GRID_INITIAL,
+} from '../photo';
+import { SortBy } from '../photo/db/sort';
+import { FEED_PHOTO_REQUEST_LIMIT } from './programmatic';
 
-export const FEED_PHOTO_REQUEST_LIMIT = 40;
+const FEED_BASE_QUERY_OPTIONS: PhotoQueryOptions = {
+  excludeFromFeeds: true,
+};
 
-export const FEED_PHOTO_WIDTH_SMALL = 200;
-export const FEED_PHOTO_WIDTH_MEDIUM = 640;
-export const FEED_PHOTO_WIDTH_LARGE = 1200;
+// PAGE FEED QUERY OPTIONS
 
-export interface FeedMedia {
-  url: string
-  width: number
-  height: number
-}
-
-export const generateFeedMedia = (
-  photo: Photo,
-  size: NextImageSize,
-): FeedMedia => ({
-  url: getNextImageUrlForRequest({ imageUrl: photo.url, size }),
-  width: size,
-  height: Math.round(size / photo.aspectRatio),
+export const getFeedQueryOptions = ({
+  isGrid,
+  sortBy = USER_DEFAULT_SORT_OPTIONS.sortBy,
+  sortWithPriority = USER_DEFAULT_SORT_OPTIONS.sortWithPriority,
+}: {
+  isGrid: boolean,
+  sortBy?: SortBy,
+  sortWithPriority?: boolean,
+}): PhotoQueryOptions => ({
+  ...FEED_BASE_QUERY_OPTIONS,
+  sortBy,
+  sortWithPriority,
+  limit: isGrid
+    ? INFINITE_SCROLL_GRID_INITIAL
+    : INFINITE_SCROLL_FULL_INITIAL,
 });
 
-export const getCoreFeedFields = (photo: Photo) => ({
-  id: photo.id,
-  title: titleForPhoto(photo),
-  description: descriptionForPhoto(photo, true),
-});
+export const FEED_META_QUERY_OPTIONS: PhotoQueryOptions = {
+  ...FEED_BASE_QUERY_OPTIONS,
+};
+
+// PROGRAMMATIC FEED QUERY OPTIONS
+
+export const PROGRAMMATIC_QUERY_OPTIONS: PhotoQueryOptions = {
+  ...FEED_BASE_QUERY_OPTIONS,
+  sortBy: 'createdAt',
+  limit: FEED_PHOTO_REQUEST_LIMIT,
+};

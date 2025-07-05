@@ -42,6 +42,7 @@ export default function PhotoGridPageClient({
       count={photosCount}
       sortBy={sortBy}
       sortWithPriority={sortWithPriority}
+      excludeFromFeeds
       prioritizeInitialPhotos
       sidebar={
         <MaskedScroll

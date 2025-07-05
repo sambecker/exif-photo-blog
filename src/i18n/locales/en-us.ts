@@ -42,7 +42,7 @@ export const TEXT = {
   },
   nav: {
     home: 'Home',
-    feed: 'Feed',
+    full: 'Full',
     grid: 'Grid',
     admin: 'Admin',
     search: 'Search',

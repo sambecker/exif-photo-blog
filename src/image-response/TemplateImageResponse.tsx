@@ -1,5 +1,5 @@
 import { Photo } from '../photo';
-import IconFeed from '@/components/icons/IconFeed';
+import IconFull from '@/components/icons/IconFull';
 import IconGrid from '@/components/icons/IconGrid';
 import ImagePhotoGrid from './components/ImagePhotoGrid';
 import { NextImageSize } from '@/platforms/next-image';
@@ -66,7 +66,7 @@ export default function TemplateImageResponse({
                 color: '#333',
                 borderRight: '2px solid #333',
               }}>
-                <IconFeed includeTitle={false} width={80} />
+                <IconFull includeTitle={false} width={80} />
               </div>
               <div style={{
                 display: 'flex',
