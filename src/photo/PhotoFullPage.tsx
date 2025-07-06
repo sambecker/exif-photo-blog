@@ -22,10 +22,11 @@ export default function PhotoFullPage({
       <PhotosLarge {...{ photos }} />
       {photosCount > photos.length &&
         <PhotosLargeInfinite
-          sortBy={sortBy}
-          sortWithPriority={sortWithPriority}
           initialOffset={photos.length}
           itemsPerPage={INFINITE_SCROLL_FULL_MULTIPLE}
+          sortBy={sortBy}
+          sortWithPriority={sortWithPriority}
+          excludeFromFeeds
         />}
     </div>
   );

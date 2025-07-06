@@ -9,11 +9,13 @@ export default function PhotosLargeInfinite({
   initialOffset,
   itemsPerPage,
   sortBy,
+  excludeFromFeeds,
 }: {
   initialOffset: number
   itemsPerPage: number
   sortBy: SortBy
   sortWithPriority: boolean
+  excludeFromFeeds?: boolean
 }) {
   return (
     <InfinitePhotoScroll
@@ -21,6 +23,7 @@ export default function PhotosLargeInfinite({
       initialOffset={initialOffset}
       itemsPerPage={itemsPerPage}
       sortBy={sortBy}
+      excludeFromFeeds={excludeFromFeeds}
       wrapMoreButtonInGrid
     >
       {({ photos, onLastPhotoVisible, revalidatePhoto }) =>

@@ -113,6 +113,7 @@ export default function AdminUploadsTableRow({
               placeholder="Title (optional)"
               tabIndex={tabIndex}
               readOnly={isRowLoading}
+              capitalize
               hideLabel
             />
             <div className="flex items-center gap-2">
@@ -129,6 +130,7 @@ export default function AdminUploadsTableRow({
                 : <>
                   <AddUploadButton
                     url={url}
+                    title={draftTitle}
                     onAddStart={() => updateStatus({
                       status: 'adding',
                       statusMessage: 'Adding ...',
