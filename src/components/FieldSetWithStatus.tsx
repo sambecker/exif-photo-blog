@@ -10,6 +10,7 @@ import { FiChevronDown } from 'react-icons/fi';
 import { parameterize } from '@/utility/string';
 import Checkbox from './Checkbox';
 import ResponsiveText from './primitives/ResponsiveText';
+import Tooltip from './Tooltip';
 
 export default function FieldSetWithStatus({
   id: _id,
@@ -17,6 +18,7 @@ export default function FieldSetWithStatus({
   icon,
   note,
   noteShort,
+  tooltip,
   error,
   value,
   isModified,
@@ -45,6 +47,7 @@ export default function FieldSetWithStatus({
   icon?: ReactNode
   note?: string
   noteShort?: string
+  tooltip?: string
   error?: string
   value: string
   isModified?: boolean
@@ -116,7 +119,7 @@ export default function FieldSetWithStatus({
         // For managing checkbox active state
         'group',
         'space-y-1',
-        type === 'checkbox' && 'flex items-center gap-3',
+        type === 'checkbox' && 'flex items-center gap-2',
         className,
       )}>
         {!hideLabel &&
@@ -124,16 +127,27 @@ export default function FieldSetWithStatus({
             htmlFor={id}
             className={clsx(
               'inline-flex flex-wrap gap-x-2 items-center select-none',
-              type === 'checkbox' && 'order-2 m-0',
+              type === 'checkbox' && 'order-2 m-0 translate-y-[0.25px]',
+              type === 'checkbox' && readOnly &&
+                'opacity-50 cursor-not-allowed',
             )}
           >
-            <span className="inline-flex items-center gap-x-1.5">
-              {icon && <span
-                className="inline-flex items-center justify-center w-4"
-              >
-                {icon}
-              </span>}
-              {label}
+            <span className="inline-flex items-center gap-x-[5px]">
+              {icon &&
+                <span className={clsx(
+                  'inline-flex items-center justify-center w-4 shrink-0',
+                )}>
+                  {icon}
+                </span>}
+              <span className="truncate">
+                {label}
+              </span>
+              {tooltip &&
+                <Tooltip
+                  content={tooltip}
+                  classNameTrigger="translate-y-[-1.5px] text-dim"
+                  supportMobile
+                />}
             </span>
             {note && !error &&
               <ResponsiveText

@@ -635,7 +635,7 @@ export default function AdminAppConfigurationClient({
                   )}
                 </Fragment>)}
             </div>
-            Change default sort on grid/feed homepages
+            Change default sort on grid/full homepages
             {renderEnvVars(['NEXT_PUBLIC_DEFAULT_SORT'])}
           </ChecklistRow>
           <ChecklistRow
@@ -654,7 +654,7 @@ export default function AdminAppConfigurationClient({
             optional
           >
             Set environment variable to {'"1"'} to
-            show sort control in desktop nav on grid/feed homepages:
+            show sort control in desktop nav on grid/full homepages:
             {renderEnvVars(['NEXT_PUBLIC_SHOW_SORT_CONTROL'])}
           </ChecklistRow>
         </ChecklistGroup>

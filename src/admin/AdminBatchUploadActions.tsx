@@ -13,7 +13,7 @@ import {
 import sleep from '@/utility/sleep';
 import { readStreamableValue } from 'ai/rsc';
 import { useRouter } from 'next/navigation';
-import { Dispatch, SetStateAction, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { BiCheckCircle } from 'react-icons/bi';
 import ProgressButton from '@/components/primitives/ProgressButton';
 import { UrlAddStatus } from './AdminUploadsClient';
@@ -22,8 +22,9 @@ import DeleteUploadButton from './DeleteUploadButton';
 import { useAppState } from '@/app/AppState';
 import { pluralize } from '@/utility/string';
 import FieldsetFavs from '@/photo/form/FieldsetFavs';
-import FieldsetHidden from '@/photo/form/FieldsetHidden';
+import FieldsetPrivate from '@/photo/form/FieldsetPrivate';
 import IconAddUpload from '@/components/icons/IconAddUpload';
+import FieldsetExclude from '@/photo/form/FieldsetExclude';
 
 const UPLOAD_BATCH_SIZE = 2;
 
@@ -53,6 +54,7 @@ export default function AdminBatchUploadActions({
   const [showBulkSettings, setShowBulkSettings] = useState(false);
   const [tags, setTags] = useState('');
   const [favorite, setFavorite] = useState('false');
+  const [excludeFromFeeds, setExcludeFromFeeds] = useState('false');
   const [hidden, setHidden] = useState('false');
   const [tagErrorMessage, setTagErrorMessage] = useState('');
 
@@ -76,6 +78,7 @@ export default function AdminBatchUploadActions({
         ...showBulkSettings && {
           tags,
           favorite,
+          excludeFromFeeds,
           hidden,
         },
         takenAtLocal: generateLocalPostgresString(),
@@ -123,12 +126,19 @@ export default function AdminBatchUploadActions({
     }
   };
 
+  useEffect(() => {
+    if (hidden === 'true') {
+      setFavorite('false');
+      setExcludeFromFeeds('false');
+    }
+  }, [hidden]);
+
   return (
     <>
       {actionErrorMessage &&
         <ErrorNote>{actionErrorMessage}</ErrorNote>}
-      <Container padding="tight">
-        <div className="w-full space-y-4 py-1">
+      <Container padding="tight" className="p-2! sm:p-3!">
+        <div className="w-full space-y-4">
           <div className="flex">
             <div className="grow text-main">
               {showBulkSettings
@@ -154,20 +164,25 @@ export default function AdminBatchUploadActions({
                 readOnly={isAdding}
                 className="relative z-10"
               />
-              <div className="flex gap-8">
+              <div className="flex max-sm:flex-col gap-x-8 gap-y-4">
                 <FieldsetFavs
                   value={favorite}
                   onChange={setFavorite}
-                  readOnly={isAdding}
+                  readOnly={isAdding || hidden === 'true'}
                 />
-                <FieldsetHidden
+                <FieldsetExclude
+                  value={excludeFromFeeds}
+                  onChange={setExcludeFromFeeds}
+                  readOnly={isAdding || hidden === 'true'}
+                />
+                <FieldsetPrivate
                   value={hidden}
                   onChange={setHidden}
                   readOnly={isAdding}
                 />
               </div>
             </div>}
-          <div className="space-y-2">
+          <div className="flex flex-col sm:flex-row-reverse gap-2">
             <ProgressButton
               primary
               className="w-full justify-center"

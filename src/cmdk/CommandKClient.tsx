@@ -20,7 +20,7 @@ import {
   PATH_ADMIN_RECIPES,
   PATH_ADMIN_TAGS,
   PATH_ADMIN_UPLOADS,
-  PATH_FEED_INFERRED,
+  PATH_FULL_INFERRED,
   PATH_GRID_INFERRED,
   PATH_SIGN_IN,
   pathForCamera,
@@ -50,10 +50,10 @@ import PhotoDate from '@/photo/PhotoDate';
 import PhotoSmall from '@/photo/PhotoSmall';
 import { FaCheck } from 'react-icons/fa6';
 import {
-  addHiddenToTags,
+  addPrivateToTags,
   formatTag,
   isTagFavs,
-  isTagHidden,
+  isTagPrivate,
   limitTagsByCount,
 } from '@/tag';
 import { formatCount, formatCountDescriptive } from '@/utility/string';
@@ -84,7 +84,6 @@ import useVisualViewportHeight from '@/utility/useVisualViewport';
 import useMaskedScroll from '../components/useMaskedScroll';
 import { labelForFilm } from '@/film';
 import IconFavs from '@/components/icons/IconFavs';
-import IconHidden from '@/components/icons/IconHidden';
 import { useAppText } from '@/i18n/state/client';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import IconRecents from '@/components/icons/IconRecents';
@@ -311,12 +310,12 @@ export default function CommandKClient({
   , [_years, queryLive]);
 
   const tags = useMemo(() => {
-    const tagsIncludingHidden = photosCountHidden > 0
-      ? addHiddenToTags(_tags, photosCountHidden)
+    const tagsIncludingPrivate = photosCountHidden > 0
+      ? addPrivateToTags(_tags, photosCountHidden)
       : _tags;
     return HIDE_TAGS_WITH_ONE_PHOTO
-      ? limitTagsByCount(tagsIncludingHidden, 2, queryLive)
-      : tagsIncludingHidden;
+      ? limitTagsByCount(tagsIncludingPrivate, 2, queryLive)
+      : tagsIncludingPrivate;
   }, [_tags, photosCountHidden, queryLive]);
 
   const categorySections: CommandKSection[] = useMemo(() =>
@@ -380,10 +379,10 @@ export default function CommandKClient({
                   className="translate-y-[-0.5px]"
                   highlight
                 />}
-              {isTagHidden(tag) &&
-                <IconHidden
-                  size={15}
-                  className="translate-y-[-0.5px]"
+              {isTagPrivate(tag) &&
+                <IconLock
+                  size={12}
+                  className="text-dim translate-y-[-0.5px]"
                 />}
             </span>,
             annotation: formatCount(count),
@@ -504,11 +503,11 @@ export default function CommandKClient({
     });
   }
 
-  const pageFeed: CommandKItem = {
+  const pageFull: CommandKItem = {
     label: GRID_HOMEPAGE_ENABLED
-      ? appText.nav.feed
-      : `${appText.nav.feed} (${appText.nav.home})`,
-    path: PATH_FEED_INFERRED,
+      ? appText.nav.full
+      : `${appText.nav.full} (${appText.nav.home})`,
+    path: PATH_FULL_INFERRED,
   };
 
   const pageGrid: CommandKItem = {
@@ -519,8 +518,8 @@ export default function CommandKClient({
   };
 
   const pageItems: CommandKItem[] = GRID_HOMEPAGE_ENABLED
-    ? [pageGrid, pageFeed]
-    : [pageFeed, pageGrid];
+    ? [pageGrid, pageFull]
+    : [pageFull, pageGrid];
 
   const sectionPages: CommandKSection = {
     heading: 'Pages',

@@ -9,7 +9,7 @@ import {
   getPhotosNearIdCached,
 } from '@/photo/cache';
 import { PATH_ROOT, absolutePathForPhoto } from '@/app/paths';
-import { TAG_HIDDEN } from '@/tag';
+import { TAG_PRIVATE } from '@/tag';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
@@ -36,7 +36,7 @@ export async function generateMetadata({
   const title = titleForPhoto(photo);
   const description = descriptionForPhoto(photo);
   const descriptionHtml = descriptionForPhoto(photo, true);
-  const url = absolutePathForPhoto({ photo, tag: TAG_HIDDEN });
+  const url = absolutePathForPhoto({ photo, tag: TAG_PRIVATE });
 
   return {
     title,
@@ -54,7 +54,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function PhotoTagHiddenPage({
+export default async function PhotoTagPrivatePage({
   params,
 }: PhotoTagProps) {
   const { photoId } = await params;
@@ -74,7 +74,7 @@ export default async function PhotoTagHiddenPage({
       indexNumber,
       count,
       dateRange,
-      tag: TAG_HIDDEN,
+      tag: TAG_PRIVATE,
       shouldShare: false,
       includeFavoriteInAdminMenu: false,
     }} />

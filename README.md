@@ -146,14 +146,14 @@ Application behavior can be changed by configuring the following environment var
 
 #### Sorting
 - `NEXT_PUBLIC_DEFAULT_SORT`
-  - Sets default sort on grid/feed homepages
+  - Sets default sort on grid/full homepages
   - Accepted values:
     - `taken-at` (default)
     - `taken-at-oldest-first`
     - `uploaded-at`
     - `uploaded-at-oldest-first`
 - `NEXT_PUBLIC_PRIORITY_BASED_SORTING = 1` takes priority field into account when sorting photos (⚠️ enabling may have performance consequences)
-- `NEXT_PUBLIC_SHOW_SORT_CONTROL = 1` shows sort control in desktop nav on grid/feed homepages
+- `NEXT_PUBLIC_SHOW_SORT_CONTROL = 1` shows sort control in desktop nav on grid/full homepages
 
 #### Display
 - `NEXT_PUBLIC_HIDE_KEYBOARD_SHORTCUT_TOOLTIPS = 1` hides keyboard shortcut hints in areas like the main nav, and previous/next photo links
@@ -317,8 +317,8 @@ Thank you ❤️ translators: [@sconetto](https://github.com/sconetto) (`pt-br`,
 #### Why are my grid thumbnails so small?
 > Thumbnail grid density (seen on `/grid`, tag overviews, and other photo sets) is dependent on aspect ratio configuration (ratios of 1 or less have more photos per row). This can be overridden by setting `NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS = 1`.
 
-#### How secure are photos marked “hidden?”
-> While all hidden paths (`/tag/hidden/*`) require authentication, raw links to individual photo assets remain publicly accessible. Randomly generated urls from storage providers are only secure via obscurity. Use with caution.
+#### How secure are photos marked “private?”
+> While all private paths (`/tag/private/*`) require authentication, raw links to individual photo assets remain publicly accessible. Randomly generated urls from storage providers are only secure via obscurity. Use with caution.
 
 #### My images/content have fallen out of sync with my database and/or my production site no longer matches local development. What do I do?
 > Navigate to `/admin/configuration` and click "Clear Cache."

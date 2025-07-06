@@ -11,6 +11,7 @@ export default function PhotoGridInfinite({
   initialOffset,
   sortBy,
   sortWithPriority,
+  excludeFromFeeds,
   canStart,
   animateOnFirstLoadOnly,
   canSelect,
@@ -20,6 +21,7 @@ export default function PhotoGridInfinite({
   initialOffset: number
   sortBy?: SortBy
   sortWithPriority?: boolean
+  excludeFromFeeds?: boolean
 } & Omit<ComponentProps<typeof PhotoGrid>, 'photos'>) {
   return (
     <InfinitePhotoScroll
@@ -28,6 +30,7 @@ export default function PhotoGridInfinite({
       itemsPerPage={INFINITE_SCROLL_GRID_MULTIPLE}
       sortBy={sortBy}
       sortWithPriority={sortWithPriority}
+      excludeFromFeeds={excludeFromFeeds}
       {...categories}
     >
       {({ photos, onLastPhotoVisible }) =>

@@ -94,6 +94,7 @@ const addUpload = async ({
   tags,
   favorite,
   hidden,
+  excludeFromFeeds,
   takenAtLocal,
   takenAtNaiveLocal,
   onStreamUpdate,
@@ -104,6 +105,7 @@ const addUpload = async ({
   tags?: string
   favorite?: string
   hidden?: string
+  excludeFromFeeds?: string
   takenAtLocal: string
   takenAtNaiveLocal: string
   onStreamUpdate?: (
@@ -147,6 +149,7 @@ const addUpload = async ({
       title: title || aiTitle,
       caption,
       tags: tags || aiTags,
+      excludeFromFeeds,
       hidden,
       favorite,
       semanticDescription,
@@ -187,6 +190,7 @@ export const addUploadsAction = async ({
   tags,
   favorite,
   hidden,
+  excludeFromFeeds,
   takenAtLocal,
   takenAtNaiveLocal,
 }: Omit<
@@ -231,6 +235,7 @@ export const addUploadsAction = async ({
             tags,
             favorite,
             hidden,
+            excludeFromFeeds,
             takenAtLocal,
             takenAtNaiveLocal,
             onStreamUpdate: streamUpdate,
@@ -317,7 +322,7 @@ export const toggleFavoritePhotoAction = async (
     }
   });
 
-export const toggleHidePhotoAction = async (
+export const togglePrivatePhotoAction = async (
   photoId: string,
   redirectPath?: string,
 ) =>

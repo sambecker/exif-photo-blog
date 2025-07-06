@@ -69,7 +69,8 @@ const createPhotosTable = () =>
       priority_order REAL,
       taken_at TIMESTAMP WITH TIME ZONE NOT NULL,
       taken_at_naive VARCHAR(255) NOT NULL,
-      hidden BOOLEAN,
+      exclude_from_feeds BOOLEAN DEFAULT FALSE,
+      hidden BOOLEAN DEFAULT FALSE,
       updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
       created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     )
@@ -193,6 +194,7 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       recipe_title,
       recipe_data,
       priority_order,
+      exclude_from_feeds,
       hidden,
       taken_at,
       taken_at_naive
@@ -224,6 +226,7 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       ${photo.recipeTitle},
       ${photo.recipeData},
       ${photo.priorityOrder},
+      ${photo.excludeFromFeeds},
       ${photo.hidden},
       ${photo.takenAt},
       ${photo.takenAtNaive}
@@ -258,6 +261,7 @@ export const updatePhoto = (photo: PhotoDbInsert) =>
     recipe_title=${photo.recipeTitle},
     recipe_data=${photo.recipeData},
     priority_order=${photo.priorityOrder || null},
+    exclude_from_feeds=${photo.excludeFromFeeds},
     hidden=${photo.hidden},
     taken_at=${photo.takenAt},
     taken_at_naive=${photo.takenAtNaive},
@@ -527,6 +531,7 @@ export const getPhotos = async (options: PhotoQueryOptions = {}) =>
 export const getPhotosNearId = async (
   photoId: string,
   options: PhotoQueryOptions,
+  excludeFromFeeds?: boolean,
 ) =>
   safelyQueryPhotos(async () => {
     const { limit } = options;
@@ -561,6 +566,7 @@ export const getPhotosNearId = async (
         return {
           photos: rows.map(parsePhotoFromDb),
           indexNumber,
+          excludeFromFeeds,
         };
       });
   }, `getPhotosNearId: ${photoId}`);    

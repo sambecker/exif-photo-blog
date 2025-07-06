@@ -6,8 +6,8 @@ import {
   PARAM_SORT_ORDER_OLDEST,
   PARAM_SORT_TYPE_TAKEN_AT,
   PARAM_SORT_TYPE_UPLOADED_AT,
-  PATH_FEED,
-  PATH_FEED_INFERRED,
+  PATH_FULL,
+  PATH_FULL_INFERRED,
   PATH_GRID,
   PATH_GRID_INFERRED,
 } from '@/app/paths';
@@ -84,11 +84,11 @@ export const getSortOptionsFromParams = async (
 };
 
 export const getPathSortComponents = (pathname: string) => {
-  const [_, gridOrFeed, sortType, sortOrder] = pathname.split('/');
+  const [_, gridOrFull, sortType, sortOrder] = pathname.split('/');
   return {
-    gridOrFeed: gridOrFeed || (GRID_HOMEPAGE_ENABLED
+    gridOrFull: gridOrFull || (GRID_HOMEPAGE_ENABLED
       ? 'grid'
-      : 'feed'
+      : 'full'
     ),
     sortType: sortType || DEFAULT_SORT_TYPE,
     sortOrder: sortOrder || DEFAULT_SORT_ORDER,
@@ -101,7 +101,7 @@ const getReversedSortOrder = (sortOrder: string): string =>
     : PARAM_SORT_ORDER_OLDEST;
 
 export const getSortConfigFromPath = (pathname: string) => {
-  const { gridOrFeed, sortType, sortOrder } = getPathSortComponents(pathname);
+  const { gridOrFull, sortType, sortOrder } = getPathSortComponents(pathname);
   const { sortBy } = _getSortOptionsFromParams(sortType, sortOrder);
   const isSortedByDefault = sortBy === USER_DEFAULT_SORT_BY;
   const reversedSortOrder = getReversedSortOrder(sortOrder);
@@ -116,13 +116,13 @@ export const getSortConfigFromPath = (pathname: string) => {
     pathGrid: isSortedByDefault
       ? PATH_GRID_INFERRED
       : `${PATH_GRID}/${sortType}/${sortOrder}`,
-    pathFeed: isSortedByDefault
-      ? PATH_FEED_INFERRED
-      : `${PATH_FEED}/${sortType}/${sortOrder}`,
+    pathFull: isSortedByDefault
+      ? PATH_FULL_INFERRED
+      : `${PATH_FULL}/${sortType}/${sortOrder}`,
     pathSort: doesReverseSortMatchDefault
-      ? gridOrFeed === 'grid'
+      ? gridOrFull === 'grid'
         ? PATH_GRID_INFERRED
-        : PATH_FEED_INFERRED
-      : `/${gridOrFeed}/${sortType}/${reversedSortOrder}`,
+        : PATH_FULL_INFERRED
+      : `/${gridOrFull}/${sortType}/${reversedSortOrder}`,
   };
 };

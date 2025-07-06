@@ -1,10 +1,10 @@
 import { Photo, photoQuantityText } from '@/photo';
 import PhotoHeader from '@/photo/PhotoHeader';
-import HiddenTag from './HiddenTag';
+import PhotoPrivate from './PhotoPrivate';
 import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
 import { getAppText } from '@/i18n/state/server';
 
-export default async function HiddenHeader({
+export default async function PrivateHeader({
   photos,
   selectedPhoto,
   indexNumber,
@@ -19,7 +19,7 @@ export default async function HiddenHeader({
   return (
     <PhotoHeader
       key="HiddenHeader"
-      entity={<HiddenTag contrast="high" />}
+      entity={<PhotoPrivate contrast="high" />}
       entityDescription={photoQuantityText(count, appText, false, false)}
       photos={photos}
       selectedPhoto={selectedPhoto}

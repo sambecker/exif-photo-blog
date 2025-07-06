@@ -1,6 +1,6 @@
 import PhotoTag from '@/tag/PhotoTag';
 import { isTagFavs } from '.';
-import FavsTag from './FavsTag';
+import PhotoFavs from './PhotoFavs';
 import { EntityLinkExternalProps } from '@/components/entity/EntityLink';
 import { Fragment } from 'react';
 
@@ -18,7 +18,7 @@ export default function PhotoTags({
       {tags.map(tag =>
         <Fragment key={tag}>
           {isTagFavs(tag)
-            ? <FavsTag {...{
+            ? <PhotoFavs {...{
               contrast,
               prefetch,
               countOnHover: tagCounts[tag],

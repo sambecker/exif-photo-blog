@@ -1,12 +1,12 @@
 import {
-  INFINITE_SCROLL_FEED_MULTIPLE,
+  INFINITE_SCROLL_FULL_MULTIPLE,
   Photo,
 } from '.';
 import PhotosLarge from './PhotosLarge';
 import PhotosLargeInfinite from './PhotosLargeInfinite';
 import { SortBy } from './db/sort';
 
-export default function PhotoFeedPage({
+export default function PhotoFullPage({
   photos,
   photosCount,
   sortBy,
@@ -25,7 +25,7 @@ export default function PhotoFeedPage({
           sortBy={sortBy}
           sortWithPriority={sortWithPriority}
           initialOffset={photos.length}
-          itemsPerPage={INFINITE_SCROLL_FEED_MULTIPLE}
+          itemsPerPage={INFINITE_SCROLL_FULL_MULTIPLE}
         />}
     </div>
   );

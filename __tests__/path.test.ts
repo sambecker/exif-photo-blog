@@ -12,7 +12,7 @@ import {
   isPathTag,
   isPathTagPhoto,
 } from '@/app/paths';
-import { TAG_HIDDEN } from '@/tag';
+import { TAG_PRIVATE } from '@/tag';
 
 const PHOTO_ID            = 'UsKSGcbt';
 const TAG                 = 'tag-name';
@@ -25,7 +25,7 @@ const FOCAL_LENGTH_STRING = `${FOCAL_LENGTH}mm`;
 
 const PATH_ROOT                     = '/';
 const PATH_GRID                     = '/grid';
-const PATH_FEED                     = '/feed';
+const PATH_FULL                     = '/full';
 const PATH_ADMIN                    = '/admin/photos';
 const PATH_OG                       = '/og';
 const PATH_OG_ALL                   = `${PATH_OG}/all`;
@@ -36,8 +36,8 @@ const PATH_PHOTO                    = `/p/${PHOTO_ID}`;
 const PATH_TAG                      = `/tag/${TAG}`;
 const PATH_TAG_PHOTO                = `${PATH_TAG}/${PHOTO_ID}`;
 
-const PATH_TAG_HIDDEN               = `/tag/${TAG_HIDDEN}`;
-const PATH_TAG_HIDDEN_PHOTO         = `${PATH_TAG_HIDDEN}/${PHOTO_ID}`;
+const PATH_TAG_PRIVATE               = `/tag/${TAG_PRIVATE}`;
+const PATH_TAG_PRIVATE_PHOTO         = `${PATH_TAG_PRIVATE}/${PHOTO_ID}`;
 
 const PATH_CAMERA                   = `/shot-on/${CAMERA_MAKE}/${CAMERA_MODEL}`;
 const PATH_CAMERA_PHOTO             = `${PATH_CAMERA}/${PHOTO_ID}`;
@@ -62,8 +62,8 @@ describe('Paths', () => {
     expect(isPathProtected(PATH_OG)).toBe(true);
     expect(isPathProtected(PATH_OG_ALL)).toBe(true);
     expect(isPathProtected(PATH_OG_SAMPLE)).toBe(true);
-    expect(isPathProtected(PATH_TAG_HIDDEN)).toBe(true);
-    expect(isPathProtected(PATH_TAG_HIDDEN_PHOTO)).toBe(true);
+    expect(isPathProtected(PATH_TAG_PRIVATE)).toBe(true);
+    expect(isPathProtected(PATH_TAG_PRIVATE_PHOTO)).toBe(true);
   });
   it('can be classified', () => {
     // Positive
@@ -123,7 +123,7 @@ describe('Paths', () => {
     // Root
     expect(getEscapePath(PATH_ROOT)).toEqual(undefined);
     expect(getEscapePath(PATH_GRID)).toEqual(undefined);
-    expect(getEscapePath(PATH_FEED)).toEqual(undefined);
+    expect(getEscapePath(PATH_FULL)).toEqual(undefined);
     expect(getEscapePath(PATH_ADMIN)).toEqual(undefined);
     // Photo
     expect(getEscapePath(PATH_PHOTO)).toEqual(PATH_ROOT);

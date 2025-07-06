@@ -1,5 +1,5 @@
 export const KEY_COMMANDS = {
-  feed: 'F',
+  full: 'F',
   grid: 'G',
   admin: 'A',
   prev: ['J', 'ARROWLEFT'],
@@ -7,7 +7,7 @@ export const KEY_COMMANDS = {
   edit: 'E',
   favorite: 'P',
   unfavorite: 'X',
-  toggleHide: 'H',
+  togglePrivate: 'M',
   download: 'D',
   sync: 'S',
   search: ['⌘', 'K'],

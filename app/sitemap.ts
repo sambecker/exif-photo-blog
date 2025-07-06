@@ -1,6 +1,8 @@
 import type { MetadataRoute } from 'next';
 import { getDataForCategoriesCached } from '@/category/cache';
 import {
+  ABSOLUTE_PATH_FULL,
+  ABSOLUTE_PATH_GRID,
   absolutePathForCamera,
   absolutePathForFilm,
   absolutePathForFocalLength,
@@ -72,9 +74,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: PRIORITY_HOME,
       lastModified: lastModifiedSite,
     },
-    // Grid or Feed
+    // Grid or full
     {
-      url: GRID_HOMEPAGE_ENABLED ? `${BASE_URL}/feed` : `${BASE_URL}/grid`,
+      url: GRID_HOMEPAGE_ENABLED ? ABSOLUTE_PATH_FULL : ABSOLUTE_PATH_GRID,
       priority: PRIORITY_HOME_VIEW,
       lastModified: lastModifiedSite,
     },

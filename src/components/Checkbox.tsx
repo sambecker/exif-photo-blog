@@ -2,10 +2,13 @@ import clsx from 'clsx/lite';
 import { InputHTMLAttributes, ReactNode, RefObject } from 'react';
 import { ImCheckmark } from 'react-icons/im';
 
+const SIZE = 'size-4.5';
+
 const boxStyles = clsx(
   'relative',
   'inline-flex items-center justify-center',
-  'size-5 rounded-md border',
+  'rounded-md border',
+  SIZE,
 );
 
 export default function Checkbox({
@@ -22,7 +25,7 @@ export default function Checkbox({
     <span
       className={clsx(
         'relative inline-flex items-center justify-center',
-        'size-5',
+        SIZE,
         props.readOnly
           ? 'cursor-not-allowed'
           : 'group-has-active:opacity-70',
@@ -40,7 +43,7 @@ export default function Checkbox({
               : 'bg-black',
           )}>
             <ImCheckmark
-              size={12}
+              size={11}
               className={clsx(
                 'text-white',
                 props.readOnly && 'dark:text-gray-400',

@@ -11,14 +11,14 @@ import {
   deletePhotoAction,
   syncPhotoAction,
   toggleFavoritePhotoAction,
-  toggleHidePhotoAction,
+  togglePrivatePhotoAction,
 } from '@/photo/actions';
 import {
   Photo,
   deleteConfirmationTextForPhoto,
   downloadFileNameForPhoto,
 } from '@/photo';
-import { isPathFavs, isPhotoFav, TAG_HIDDEN } from '@/tag';
+import { isPathFavs, isPhotoFav, TAG_PRIVATE } from '@/tag';
 import { usePathname } from 'next/navigation';
 import { BiTrash } from 'react-icons/bi';
 import MoreMenu from '@/components/more/MoreMenu';
@@ -33,7 +33,7 @@ import IconEdit from '@/components/icons/IconEdit';
 import { photoNeedsToBeSynced } from '@/photo/sync';
 import { KEY_COMMANDS } from '@/photo/key-commands';
 import { useAppText } from '@/i18n/state/client';
-import IconHidden from '@/components/icons/IconHidden';
+import IconLock from '@/components/icons/IconLock';
 
 export default function AdminPhotoMenu({
   photo,
@@ -57,9 +57,9 @@ export default function AdminPhotoMenu({
   const isFav = isPhotoFav(photo);
   const shouldRedirectFav = isPathFavs(path) && isFav;
   const shouldRedirectDelete = isOnPhotoDetail;
-  const redirectPathOnHideToggle = isOnPhotoDetail
+  const redirectPathOnPrivateToggle = isOnPhotoDetail
     ? photo.hidden
-      ? pathForTag(TAG_HIDDEN)
+      ? pathForTag(TAG_PRIVATE)
       : PATH_ROOT
     : undefined;
 
@@ -68,8 +68,8 @@ export default function AdminPhotoMenu({
     const items: ComponentProps<typeof MoreMenuItem>[] = [{
       label: appText.admin.edit,
       icon: <IconEdit
-        size={15}
-        className="translate-x-[0.5px]"
+        size={14}
+        className="translate-x-[0.5px] translate-y-[0.5px]"
       />,
       href: pathForAdminPhotoEdit(photo.id),
       ...showKeyCommands && { keyCommand: KEY_COMMANDS.edit },
@@ -94,19 +94,20 @@ export default function AdminPhotoMenu({
       });
     }
     items.push({
-      label: photo.hidden ? appText.admin.unhide : appText.admin.hide,
-      icon: <IconHidden
-        size={17}
-        className="translate-x-[-1px] translate-y-[1px]"
-        visible={photo.hidden}
+      label: photo.hidden ? appText.admin.public : appText.admin.private,
+      icon: <IconLock
+        size={16}
+        className="translate-x-[-1.5px] translate-y-[0.5px]"
+        open={!photo.hidden}
+        narrow
       />,
-      action: () => toggleHidePhotoAction(
+      action: () => togglePrivatePhotoAction(
         photo.id,
-        redirectPathOnHideToggle,
+        redirectPathOnPrivateToggle,
       )
         .then(() => revalidatePhoto?.(photo.id)),
       ...showKeyCommands && {
-        keyCommand: KEY_COMMANDS.toggleHide,
+        keyCommand: KEY_COMMANDS.togglePrivate,
       },
     });
     items.push({
@@ -146,7 +147,7 @@ export default function AdminPhotoMenu({
     includeFavorite,
     isFav,
     shouldRedirectFav,
-    redirectPathOnHideToggle,
+    redirectPathOnPrivateToggle,
     revalidatePhoto,
   ]);
 

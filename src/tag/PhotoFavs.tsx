@@ -7,7 +7,7 @@ import EntityLink, {
 } from '@/components/entity/EntityLink';
 import IconFavs from '@/components/icons/IconFavs';
 
-export default function FavsTag(props: EntityLinkExternalProps) {
+export default function PhotoFavs(props: EntityLinkExternalProps) {
   return (
     <EntityLink
       {...props}
