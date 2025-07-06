@@ -138,12 +138,14 @@ export default function AdminUploadsTableRow({
                     onAddFinish={removeRow}
                     shouldRedirectToAdminPhotos={shouldRedirectAfterAction}
                     disabled={isRowLoading}
+                    tooltipSide="bottom"
                   />
                   <EditButton
                     path={pathForAdminUploadUrl(url, draftTitle)}
                     disabled={isRowLoading}
                     tooltip="Review EXIF details before adding"
                     hideText="always"
+                    tooltipSide="bottom"
                   />
                   <DeleteUploadButton
                     urls={[url]}
@@ -155,6 +157,7 @@ export default function AdminUploadsTableRow({
                     }}
                     disabled={isRowLoading}
                     tooltip="Delete upload"
+                    tooltipSide="bottom"
                   />
                 </>}
             </div>

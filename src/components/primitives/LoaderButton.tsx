@@ -30,6 +30,7 @@ export default function LoaderButton({
   className,
   tooltip,
   tooltipColor,
+  tooltipSide,
   ...rest
 }: {
   ref?: RefObject<HTMLButtonElement | null>
@@ -46,6 +47,7 @@ export default function LoaderButton({
   hideFocusOutline?: boolean
   tooltip?: string
   tooltipColor?: ComponentProps<typeof Tooltip>['color']
+  tooltipSide?: ComponentProps<typeof Tooltip>['side']
 } & ButtonHTMLAttributes<HTMLButtonElement>) {
   const button =
     <button
@@ -105,7 +107,11 @@ export default function LoaderButton({
 
   return (
     tooltip
-      ? <Tooltip content={tooltip} color={tooltipColor}>
+      ? <Tooltip
+        content={tooltip}
+        color={tooltipColor}
+        side={tooltipSide}
+      >
         {button}
       </Tooltip>
       : button
