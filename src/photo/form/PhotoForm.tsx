@@ -497,6 +497,7 @@ export default function PhotoForm({
             icon={type === 'create' && <IconAddUpload />}
             disabled={!canFormBeSubmitted}
             onFormStatusChange={onFormStatusChange}
+            hideText="never"
             primary
           >
             {type === 'create' ? 'Add' : 'Update'}
