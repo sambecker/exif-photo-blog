@@ -99,6 +99,7 @@ const addUpload = async ({
   takenAtNaiveLocal,
   onStreamUpdate,
   onFinish,
+  shouldRevalidateAllKeysAndPaths,
 }:{
   url: string
   title?: string
@@ -113,6 +114,7 @@ const addUpload = async ({
     status?: UrlAddStatus['status'],
   ) => void
   onFinish?: (url: string) => void
+  shouldRevalidateAllKeysAndPaths?: boolean
 }) => {
   const {
     formDataFromExif,
@@ -171,6 +173,9 @@ const addUpload = async ({
         await convertFormDataToPhotoDbInsertAndLookupRecipeTitle(form);
       photo.url = updatedUrl;
       await insertPhoto(photo);
+      if (shouldRevalidateAllKeysAndPaths) {
+        after(revalidateAllKeysAndPaths);
+      }
       onFinish?.(url);
       // Re-submit with updated url
       onStreamUpdate?.(subheadFinal, 'added');
