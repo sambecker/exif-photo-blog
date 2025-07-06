@@ -16,7 +16,7 @@ export default function FieldsetExclude(props: Omit<
         className="translate-y-[0.5px]"
         visible={props.value !== 'true'}
       />}
-      tooltip="Hide from feeds (visible only from sets)"
+      tooltip="Do not show on homepage views or RSS"
     />
   );
 }

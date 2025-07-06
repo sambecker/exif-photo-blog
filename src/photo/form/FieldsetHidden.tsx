@@ -16,7 +16,7 @@ export default function FieldsetHidden(props: Omit<
         open={props.value !== 'true'}
         narrow
       />}
-      tooltip="Visible only to admins (uploads only secure via obscurity)"
+      tooltip="Visible only to authenticated admin"
     />
   );
 }

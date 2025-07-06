@@ -78,6 +78,7 @@ export default function AdminBatchUploadActions({
         ...showBulkSettings && {
           tags,
           favorite,
+          excludeFromFeeds,
           hidden,
         },
         takenAtLocal: generateLocalPostgresString(),
