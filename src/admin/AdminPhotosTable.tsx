@@ -17,6 +17,7 @@ import { Timezone } from '@/utility/timezone';
 import IconHidden from '@/components/icons/IconHidden';
 import Tooltip from '@/components/Tooltip';
 import { photoNeedsToBeSynced, getPhotoSyncStatusText } from '@/photo/sync';
+import IconLock from '@/components/icons/IconLock';
 
 export default function AdminPhotosTable({
   photos,
@@ -76,11 +77,18 @@ export default function AdminPhotosTable({
                 <span className="truncate">
                   {titleForPhoto(photo, false)}
                 </span>
-                {photo.hidden &&
+                {photo.excludeFromFeeds && !photo.hidden &&
                   <span>
                     <IconHidden
-                      className="inline translate-y-[-0.5px]"
+                      className="inline translate-y-[-1px]"
                       size={16}
+                    />
+                  </span>}
+                {photo.hidden &&
+                  <span>
+                    <IconLock
+                      size={13}
+                      className="inline translate-y-[-1.5px]"
                     />
                   </span>}
               </span>

@@ -68,8 +68,8 @@ export default function AdminPhotoMenu({
     const items: ComponentProps<typeof MoreMenuItem>[] = [{
       label: appText.admin.edit,
       icon: <IconEdit
-        size={15}
-        className="translate-x-[0.5px]"
+        size={14}
+        className="translate-x-[0.5px] translate-y-[0.5px]"
       />,
       href: pathForAdminPhotoEdit(photo.id),
       ...showKeyCommands && { keyCommand: KEY_COMMANDS.edit },
