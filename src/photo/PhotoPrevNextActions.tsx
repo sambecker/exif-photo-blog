@@ -20,7 +20,7 @@ import {
   deletePhotoAction,
   syncPhotoAction,
   toggleFavoritePhotoAction,
-  toggleHidePhotoAction,
+  togglePrivatePhotoAction,
 } from './actions';
 import { isPhotoFav } from '@/tag';
 import Tooltip from '@/components/Tooltip';
@@ -68,7 +68,7 @@ export default function PhotoPrevNextActions({
   }, [photo?.id]);
 
   const toggleHidden = useCallback(() => {
-    if (photo?.id) { return toggleHidePhotoAction(photo.id); }
+    if (photo?.id) { return togglePrivatePhotoAction(photo.id); }
   }, [photo?.id]);
 
   const navigateToPhotoEdit = useNavigateOrRunActionWithToast({
@@ -168,7 +168,7 @@ export default function PhotoPrevNextActions({
           unfavoritePhoto();
         }
         break;
-      case KEY_COMMANDS.toggleHide:
+      case KEY_COMMANDS.togglePrivate:
         if (isUserSignedIn && photo) {
           if (photo.hidden) {
             unhidePhoto();

@@ -22,7 +22,7 @@ import DeleteUploadButton from './DeleteUploadButton';
 import { useAppState } from '@/app/AppState';
 import { pluralize } from '@/utility/string';
 import FieldsetFavs from '@/photo/form/FieldsetFavs';
-import FieldsetHidden from '@/photo/form/FieldsetHidden';
+import FieldsetPrivate from '@/photo/form/FieldsetPrivate';
 import IconAddUpload from '@/components/icons/IconAddUpload';
 import FieldsetExclude from '@/photo/form/FieldsetExclude';
 
@@ -175,7 +175,7 @@ export default function AdminBatchUploadActions({
                   onChange={setExcludeFromFeeds}
                   readOnly={isAdding || hidden === 'true'}
                 />
-                <FieldsetHidden
+                <FieldsetPrivate
                   value={hidden}
                   onChange={setHidden}
                   readOnly={isAdding}

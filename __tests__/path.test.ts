@@ -36,8 +36,8 @@ const PATH_PHOTO                    = `/p/${PHOTO_ID}`;
 const PATH_TAG                      = `/tag/${TAG}`;
 const PATH_TAG_PHOTO                = `${PATH_TAG}/${PHOTO_ID}`;
 
-const PATH_TAG_HIDDEN               = `/tag/${TAG_PRIVATE}`;
-const PATH_TAG_HIDDEN_PHOTO         = `${PATH_TAG_HIDDEN}/${PHOTO_ID}`;
+const PATH_TAG_PRIVATE               = `/tag/${TAG_PRIVATE}`;
+const PATH_TAG_PRIVATE_PHOTO         = `${PATH_TAG_PRIVATE}/${PHOTO_ID}`;
 
 const PATH_CAMERA                   = `/shot-on/${CAMERA_MAKE}/${CAMERA_MODEL}`;
 const PATH_CAMERA_PHOTO             = `${PATH_CAMERA}/${PHOTO_ID}`;
@@ -62,8 +62,8 @@ describe('Paths', () => {
     expect(isPathProtected(PATH_OG)).toBe(true);
     expect(isPathProtected(PATH_OG_ALL)).toBe(true);
     expect(isPathProtected(PATH_OG_SAMPLE)).toBe(true);
-    expect(isPathProtected(PATH_TAG_HIDDEN)).toBe(true);
-    expect(isPathProtected(PATH_TAG_HIDDEN_PHOTO)).toBe(true);
+    expect(isPathProtected(PATH_TAG_PRIVATE)).toBe(true);
+    expect(isPathProtected(PATH_TAG_PRIVATE_PHOTO)).toBe(true);
   });
   it('can be classified', () => {
     // Positive

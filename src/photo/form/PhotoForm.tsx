@@ -45,7 +45,7 @@ import { convertFilmsForForm, Films } from '@/film';
 import { isMakeFujifilm } from '@/platforms/fujifilm';
 import PhotoFilmIcon from '@/film/PhotoFilmIcon';
 import FieldsetFavs from './FieldsetFavs';
-import FieldsetHidden from './FieldsetHidden';
+import FieldsetPrivate from './FieldsetPrivate';
 import { useAppText } from '@/i18n/state/client';
 import IconAddUpload from '@/components/icons/IconAddUpload';
 import FieldsetExclude from './FieldsetExclude';
@@ -469,7 +469,7 @@ export default function PhotoForm({
                     {...fieldProps}
                   />;
                 case 'hidden':
-                  return <FieldsetHidden
+                  return <FieldsetPrivate
                     key={key}
                     {...fieldProps}
                   />;

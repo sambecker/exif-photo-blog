@@ -8,7 +8,7 @@ import TagHeader from '@/tag/TagHeader';
 import CameraHeader from '@/camera/CameraHeader';
 import FilmHeader from '@/film/FilmHeader';
 import { TAG_PRIVATE } from '@/tag';
-import HiddenHeader from '@/tag/HiddenHeader';
+import PrivateHeader from '@/tag/PrivateHeader';
 import FocalLengthHeader from '@/focal/FocalLengthHeader';
 import PhotoHeader from './PhotoHeader';
 import RecipeHeader from '@/recipe/RecipeHeader';
@@ -49,7 +49,7 @@ export default function PhotoDetailPage({
 
   if (tag) {
     customHeader = tag === TAG_PRIVATE
-      ? <HiddenHeader
+      ? <PrivateHeader
         photos={photos}
         selectedPhoto={photo}
         indexNumber={indexNumber}

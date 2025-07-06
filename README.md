@@ -317,8 +317,8 @@ Thank you ❤️ translators: [@sconetto](https://github.com/sconetto) (`pt-br`,
 #### Why are my grid thumbnails so small?
 > Thumbnail grid density (seen on `/grid`, tag overviews, and other photo sets) is dependent on aspect ratio configuration (ratios of 1 or less have more photos per row). This can be overridden by setting `NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS = 1`.
 
-#### How secure are photos marked “hidden?”
-> While all hidden paths (`/tag/hidden/*`) require authentication, raw links to individual photo assets remain publicly accessible. Randomly generated urls from storage providers are only secure via obscurity. Use with caution.
+#### How secure are photos marked “private?”
+> While all private paths (`/tag/private/*`) require authentication, raw links to individual photo assets remain publicly accessible. Randomly generated urls from storage providers are only secure via obscurity. Use with caution.
 
 #### My images/content have fallen out of sync with my database and/or my production site no longer matches local development. What do I do?
 > Navigate to `/admin/configuration` and click "Clear Cache."

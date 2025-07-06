@@ -7,7 +7,7 @@ import { photoQuantityText } from '.';
 import {
   TAG_FAVS,
   TAG_PRIVATE,
-  addHiddenToTags,
+  addPrivateToTags,
   limitTagsByCount,
 } from '@/tag';
 import PhotoFilm from '@/film/PhotoFilm';
@@ -101,7 +101,7 @@ export default function PhotoGridSidebar({
   const { photosCountHidden } = useAppState();
 
   const tagsIncludingHidden = useMemo(() =>
-    addHiddenToTags(tags, photosCountHidden)
+    addPrivateToTags(tags, photosCountHidden)
   , [tags, photosCountHidden]);
 
   const recentsContent = recents.length > 0

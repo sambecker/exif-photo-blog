@@ -322,7 +322,7 @@ export const toggleFavoritePhotoAction = async (
     }
   });
 
-export const toggleHidePhotoAction = async (
+export const togglePrivatePhotoAction = async (
   photoId: string,
   redirectPath?: string,
 ) =>

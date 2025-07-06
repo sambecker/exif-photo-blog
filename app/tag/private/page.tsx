@@ -5,7 +5,7 @@ import PhotoGrid from '@/photo/PhotoGrid';
 import { getPhotosMetaCached, getPhotosNoStore } from '@/photo/cache';
 import { absolutePathForTag } from '@/app/paths';
 import { TAG_PRIVATE, descriptionForTaggedPhotos, titleForTag } from '@/tag';
-import HiddenHeader from '@/tag/HiddenHeader';
+import PrivateHeader from '@/tag/PrivateHeader';
 import { Metadata } from 'next';
 import { cache } from 'react';
 import { getAppText } from '@/i18n/state/server';
@@ -46,7 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function HiddenTagPage() {
+export default async function PrivateTagPage() {
   const [
     photos,
     { count, dateRange },
@@ -60,8 +60,8 @@ export default async function HiddenTagPage() {
       contentMain={<div className="space-y-4 mt-4">
         <AnimateItems
           type="bottom"
-          items={[<HiddenHeader
-            key="HiddenHeader"
+          items={[<PrivateHeader
+            key="PrivateHeader"
             {...{ photos, count, dateRange }}
           />]}
           animateOnFirstLoadOnly

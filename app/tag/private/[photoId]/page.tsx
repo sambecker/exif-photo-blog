@@ -54,7 +54,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function PhotoTagHiddenPage({
+export default async function PhotoTagPrivatePage({
   params,
 }: PhotoTagProps) {
   const { photoId } = await params;
