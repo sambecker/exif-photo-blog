@@ -531,6 +531,7 @@ export const getPhotos = async (options: PhotoQueryOptions = {}) =>
 export const getPhotosNearId = async (
   photoId: string,
   options: PhotoQueryOptions,
+  excludeFromFeeds?: boolean,
 ) =>
   safelyQueryPhotos(async () => {
     const { limit } = options;
@@ -565,6 +566,7 @@ export const getPhotosNearId = async (
         return {
           photos: rows.map(parsePhotoFromDb),
           indexNumber,
+          excludeFromFeeds,
         };
       });
   }, `getPhotosNearId: ${photoId}`);    

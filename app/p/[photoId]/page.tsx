@@ -18,7 +18,13 @@ import { staticallyGeneratePhotosIfConfigured } from '@/app/static';
 export const maxDuration = 60;
 
 const getPhotosNearIdCachedCached = cache((photoId: string) =>
-  getPhotosNearIdCached(photoId, { limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 }));
+  getPhotosNearIdCached(
+    photoId, {
+      limit: RELATED_GRID_PHOTOS_TO_SHOW + 2,
+    },
+    // Don't show photo in context when excluded from feeds
+    true,
+  ));
 
 export const generateStaticParams = staticallyGeneratePhotosIfConfigured(
   'page',
