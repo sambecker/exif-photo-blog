@@ -85,12 +85,12 @@ export default function EntityHover({
         gridClass,
         'transition-opacity duration-300',
         photos ? 'opacity-0' : 'opacity-100',
-        'bg-gray-100 dark:bg-gray-800',
+        'bg-gray-100 dark:bg-gray-900',
       )}>
         {Array.from({ length: photosToShow }).map((_, index) =>
           <div
             key={index}
-            className="border-main border-[0.5px]"
+            className="border-[0.5px] border-main"
           />)}
       </div>
       {/* Text guard */}
