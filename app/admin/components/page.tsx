@@ -4,6 +4,7 @@ import PhotoTagFieldset from '@/admin/PhotoTagFieldset';
 import AppGrid from '@/components/AppGrid';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import SelectInput from '@/components/SelectInput';
+import SelectMenu from '@/components/SelectMenu';
 import StatusIcon from '@/components/StatusIcon';
 import clsx from 'clsx/lite';
 import { useState } from 'react';
@@ -84,6 +85,28 @@ export default function ComponentsPage() {
               note: 'Note 5',
             }]}
           />
+        </div>
+        <div className="z-9 mt-12">
+          <SelectMenu
+            name="select-menu"
+            value={value}
+            onChange={setValue}
+            options={[{
+              value: 'tag-1',
+              accessoryStart: <StatusIcon type="checked" />,
+              label: 'Tag 1',
+              accessoryEnd: '× 2',
+              note: 'Exclude photo from core feeds',
+            }, {
+              value: 'tag-2',
+              accessoryStart: <StatusIcon type="checked" />,
+              label: 'Tag 2',
+              accessoryEnd: '× 2',
+              note: 'Exclude photo from core feeds',
+            }]}
+          >
+            {value}
+          </SelectMenu>
         </div>
       </div>}
     />

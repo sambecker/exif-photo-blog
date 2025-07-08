@@ -1,104 +1,43 @@
-import { AnnotatedTag } from '@/photo/form';
-import { convertStringToArray, parameterize } from '@/utility/string';
-import { clsx } from 'clsx/lite';
-import {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import clsx from 'clsx/lite';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import MaskedScroll from './MaskedScroll';
+import useClickInsideOutside from '@/utility/useClickInsideOutside';
 
 const KEY_KEYDOWN = 'keydown';
-const CREATE_LABEL = 'Create';
 
-const ariaIdControl = (name: string) => `${name}-select-menu-control`;
-const ariaIdOptions = (name: string) => `${name}-select-menu-options`;
+interface SelectMenuOption {
+  value: string
+  label: ReactNode
+  accessoryStart?: ReactNode
+  accessoryEnd?: ReactNode
+  note?: ReactNode
+}
 
 export default function SelectMenu({
   name,
-  value = '',
-  options = [],
-  defaultIcon,
+  value,
   onChange,
-  showMenuOnDelete,
-  className,
-  readOnly,
-  limit,
+  options,
+  children,
 }: {
+  id?: string
   name: string
-  value?: string
-  options?: AnnotatedTag[]
-  defaultIcon?: ReactNode
-  onChange?: (value: string) => void
-  showMenuOnDelete?: boolean
-  className?: string
-  readOnly?: boolean
-  placeholder?: string
-  limit?: number
-  limitValidationMessage?: string
+  value: string
+  onChange: (value: string) => void
+  options: SelectMenuOption[]
+  children: ReactNode
 }) {
-  const containerRef = useRef<HTMLInputElement>(null);
-  const optionsRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
-  const [shouldShowMenu, setShouldShowMenu] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState<number>();
 
-  const selectedOptions = useMemo(() =>
-    convertStringToArray(value) ?? []
-  , [value]);
-
-  const hideMenu = useCallback(() => {
-    setShouldShowMenu(false);
-    setSelectedOptionIndex(undefined);
-  }, []);
-
-  const addOptions = useCallback((options: (string | undefined)[]) => {
-    const optionsToAdd = (options
-      .filter(Boolean) as string[])
-      .map(option => option.startsWith(CREATE_LABEL)
-        ? option.match(new RegExp(`^${CREATE_LABEL} "(.+)"$`))?.[1] ?? option
-        : option)
-      .map(option => parameterize(option))
-      .filter(option => !selectedOptions.includes(option));
-
-    if (optionsToAdd.length > 0) {
-      onChange?.([
-        ...selectedOptions,
-        ...optionsToAdd,
-      ].join(','));
-    }
-
-    setSelectedOptionIndex(undefined);
-
-    if (
-      (limit !== undefined && limit - 1 >= selectedOptions.length)
-    ) {
-      hideMenu();
-    }
-  }, [limit, selectedOptions, onChange, hideMenu]);
-
-  const removeOption = useCallback((option: string) => {
-    onChange?.(selectedOptions.filter(o =>
-      o !== parameterize(option)).join(','));
-    setSelectedOptionIndex(undefined);
-  }, [onChange, selectedOptions]);
-
-  // Focus option in the DOM when selected index changes
-  useEffect(() => {
-    if (selectedOptionIndex !== undefined) {
-      const options = optionsRef.current?.querySelectorAll(':scope > div');
-      const option = options?.[selectedOptionIndex] as HTMLElement | undefined;
-      option?.focus();
-    }
-  }, [selectedOptionIndex]);
-
+  useClickInsideOutside({
+    htmlElements: [ref],
+    onClickOutside: () => setIsOpen(false),
+  });
   // Setup keyboard listener
   useEffect(() => {
-    const ref = containerRef.current;
-
     const listener = (e: KeyboardEvent) => {
       // Keys which always trap focus
       switch (e.key) {
@@ -109,16 +48,8 @@ export default function SelectMenu({
         e.preventDefault();
       }
       switch (e.key) {
-      case 'Enter':
-        // Only trap focus if there are options to select
-        // otherwise allow form to submit
-        if (shouldShowMenu) {
-          e.stopImmediatePropagation();
-          e.preventDefault();
-        }
-        break;
       case 'ArrowDown':
-        if (shouldShowMenu) {
+        if (isOpen) {
           setSelectedOptionIndex(i => {
             if (i === undefined) {
               return options.length > 1 ? 1 : 0;
@@ -129,16 +60,18 @@ export default function SelectMenu({
             }
           });
         } else {
-          setShouldShowMenu(true);
+          setIsOpen(true);
         }
         break;
       case 'ArrowUp':
         setSelectedOptionIndex(i => {
           if (
+            document.activeElement === ref.current &&
             options.length > 0
           ) {
             return options.length - 1;
           } else if (i === undefined || i === 0) {
+            ref.current?.focus();
             return undefined;
           } else {
             return i - 1;
@@ -146,155 +79,94 @@ export default function SelectMenu({
         });
         break;
       case 'Escape':
-        hideMenu();
+        setIsOpen(false);
         break;
       }
     };
 
-    ref?.addEventListener(KEY_KEYDOWN, listener);
+    const refRef = ref.current;
 
-    return () => ref?.removeEventListener(KEY_KEYDOWN, listener);
+    refRef?.addEventListener(KEY_KEYDOWN, listener);
+
+    return () => refRef?.removeEventListener(KEY_KEYDOWN, listener);
   }, [
-    removeOption,
-    showMenuOnDelete,
-    hideMenu,
-    selectedOptions,
+    isOpen,
+    options,
     selectedOptionIndex,
-    addOptions,
-    shouldShowMenu,
-    limit,
-    options.length,
   ]);
 
-  const renderTag = useCallback((value: string) => {
-    const option = options.find(o => o.value === value);
-    const icon = option?.icon ?? defaultIcon;
-    return <>
-      <span className="truncate">
-        {option?.label ?? value}
-      </span>
-      {icon && <span className="text-medium">
-        {icon}
-      </span>}
-    </>;
-  }, [options, defaultIcon]);
-
-  return (
+  return <div ref={ref}>
+    {/* <input type="hidden" name={name} value={value} /> */}
     <div
-      ref={containerRef}
-      className="flex flex-col w-full group"
-      onFocus={() => setShouldShowMenu(true)}
+      tabIndex={0}
+      className={clsx(
+        'cursor-pointer control',
+        'focus:outline-2 -outline-offset-2 focus:outline-blue-600',
+        'text-lg leading-[1.4]',
+        'select-none',
+      )}
+      onFocus={() => setIsOpen(true)}
     >
-      <div
-        id={ariaIdControl(name)}
-        role="region"
-        aria-live="polite"
-        className="sr-only mb-3 text-dim"
-      >
-        {selectedOptions.length === 0
-          ? 'No tags selected'
-          : selectedOptions.join(', ') +
-            ` tag${selectedOptions.length !== 1 ? 's' : ''} selected`}
-      </div>
-      <div
-        aria-controls={ariaIdControl(name)}
-        className={clsx(
-          className,
-          'w-full control px-2! py-2!',
-          '-outline-offset-2 outline-blue-600',
-          'group-focus-within:outline-2 ',
-          'inline-flex flex-wrap items-center gap-2',
-          readOnly && 'cursor-not-allowed',
-          readOnly && 'bg-gray-100 dark:bg-gray-900 dark:text-gray-400',
-        )}
-      >
-        {/* Selected Options */}
-        {selectedOptions
-          .filter(Boolean)
-          .map(option =>
-            <span
-              key={option}
-              role="button"
-              aria-label={`Remove tag "${option}"`}
-              className={clsx(
-                'inline-flex items-center gap-2 min-w-0',
-                'text-main',
-                'cursor-pointer select-none',
-                'whitespace-nowrap',
-                'px-1.5 py-0.5',
-                'bg-gray-200/60 dark:bg-gray-800',
-                'active:bg-gray-200 dark:active:bg-gray-900',
-                'rounded-xs',
-              )}
-              onClick={() => removeOption(option)}
-            >
-              {renderTag(option)}
-            </span>)}
-      </div>
-      <div className="relative">
-        {shouldShowMenu && options.length > 0 &&
-          <div
-            className={clsx(
-              'component-surface',
-              'absolute top-3 w-full px-1.5 py-1.5',
-              'max-h-[8rem] overflow-y-auto flex flex-col',
-              'shadow-lg dark:shadow-xl',
-            )}
-          >
-            <MaskedScroll
-              id={ariaIdOptions(name)}
-              role="listbox"
-              className="flex flex-col gap-y-1 text-xl"
-              ref={optionsRef}
-              fadeSize={16}
-            >
-              {/* Menu Options */}
-              {options.map(({
-                value,
-                annotation,
-                annotationAria,
-              }, index) =>
-                <div
-                  key={value}
-                  role="option"
-                  aria-selected={
-                    index === selectedOptionIndex ||
-                    (index === 0 && selectedOptionIndex === undefined)
-                  }
-                  tabIndex={0}
-                  className={clsx(
-                    'group flex items-center gap-2',
-                    'px-1.5 py-1 rounded-sm',
-                    'text-base select-none',
-                    'cursor-pointer',
-                    'hover:bg-gray-100 dark:hover:bg-gray-800',
-                    'active:bg-gray-50 dark:active:bg-gray-900',
-                    'focus:bg-gray-100 dark:focus:bg-gray-800',
-                    index === 0 && selectedOptionIndex === undefined &&
-                      'bg-gray-100 dark:bg-gray-800',
-                    'outline-hidden',
-                  )}
-                  onClick={() => {
-                    addOptions([value]);
-                  }}
-                  onFocus={() => setSelectedOptionIndex(index)}
-                >
-                  <span className="grow inline-flex items-center gap-2 min-w-0">
-                    {renderTag(value)}
-                  </span>
-                  {annotation &&
-                    <span
-                      className="whitespace-nowrap text-dim text-sm"
-                      aria-label={annotationAria}
-                    >
-                      <span aria-hidden={Boolean(annotationAria)}>
-                        {annotation}
-                      </span>
-                    </span>}
-                </div>)}
-            </MaskedScroll>
-          </div>}
-      </div>
+      {children}
+      <input type="hidden" name={name} value={value} />
     </div>
-  );
+    <div className="relative">
+      {isOpen &&
+        <div
+          className={clsx(
+            'absolute top-3 left-0 w-full',
+            'component-surface',
+            'px-1.5 py-1.5',
+            'max-h-[8rem] overflow-y-auto flex flex-col',
+            'shadow-lg dark:shadow-xl',
+            'animate-fade-in-from-top',
+            '*:select-none',
+          )}
+        >
+          <MaskedScroll fadeSize={16}>
+            {options.map((option, index) => (
+              <div
+                key={option.value}
+                onClick={() => {
+                  onChange(option.value);
+                  setIsOpen(false);
+                }}
+                onMouseEnter={() => setSelectedOptionIndex(index)}
+                onMouseLeave={() => setSelectedOptionIndex(undefined)}
+                className={clsx(
+                  'group flex flex-col',
+                  'px-1.5 py-1 rounded-sm',
+                  'text-base select-none',
+                  'cursor-pointer',
+                  (index === selectedOptionIndex ||
+                    (selectedOptionIndex === undefined && index === 0)) &&
+                    'bg-gray-100 dark:bg-gray-800',
+                  'active:bg-gray-200/80 dark:active:bg-gray-800/80',
+                  'focus:bg-gray-100 dark:focus:bg-gray-800',
+                  'outline-hidden',
+                )}
+              >
+                <div className="flex items-center gap-2.5">
+                  {option.accessoryStart &&
+                    <div className="shrink-0">
+                      {option.accessoryStart}
+                    </div>}
+                  <span className="grow">
+                    {option.label}
+                    {option.note &&
+                      <div className="text-sm text-dim">
+                        {option.note}
+                      </div>}
+                  </span>
+                  {option.accessoryEnd &&
+                    <div className="shrink-0 text-dim">
+                      {option.accessoryEnd}
+                    </div>}
+                </div>
+              </div>
+            ))}
+          </MaskedScroll>
+        </div>}
+    </div>
+  </div>;
 }

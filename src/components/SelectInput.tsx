@@ -65,10 +65,8 @@ export default function SelectInput({
             )}
           >
             <MaskedScroll
-              // id={ARIA_ID_TAG_OPTIONS}
               role="listbox"
               className="flex flex-col text-lg"
-              // ref={optionsRef}
               fadeSize={16}
             >
               {options.map(({ value, label }) => (
