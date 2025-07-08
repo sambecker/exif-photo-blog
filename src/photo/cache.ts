@@ -179,23 +179,18 @@ export const getPhotosNearIdCached = (
   getPhotosNearId,
   [KEY_PHOTOS, ...getPhotosCacheKeys(args[1])],
 )(...args).then(({ photos, indexNumber }) => {
-  const [photoId, { limit }, excludeFromFeeds] = args;
+  const [photoId, { limit }] = args;
   const photo = photos.find(({ id }) => id === photoId);
   const isPhotoFirst = photos.findIndex(p => p.id === photoId) === 0;
   return {
     photo: photo ? parseCachedPhotoDates(photo) : undefined,
-    // Don't show photo in context when excluded from feeds
-    ...excludeFromFeeds && photo?.excludeFromFeeds
-      ? { photos: [] }
-      : {
-        photos: parseCachedPhotosDates(photos),
-        ...limit && {
-          photosGrid: photos.slice(
-            isPhotoFirst ? 1 : 2,
-            isPhotoFirst ? limit - 1 : limit,
-          ),
-        },
-      },
+    photos: parseCachedPhotosDates(photos),
+    ...limit && {
+      photosGrid: photos.slice(
+        isPhotoFirst ? 1 : 2,
+        isPhotoFirst ? limit - 1 : limit,
+      ),
+    },
     indexNumber,
   };
 });
