@@ -6,7 +6,7 @@ import useSWR from 'swr';
 import { getDimensionsFromSize } from '@/utility/size';
 import PhotoMedium from '@/photo/PhotoMedium';
 import Spinner from '../Spinner';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import { useAppText } from '@/i18n/state/client';
 import { SWR_KEYS } from '@/swr';
 

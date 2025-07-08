@@ -6,11 +6,11 @@ import Spinner from './Spinner';
 import { clsx } from 'clsx/lite';
 import { FieldSetType, AnnotatedTag } from '@/photo/form';
 import TagInput from './TagInput';
-import { FiChevronDown } from 'react-icons/fi';
 import { parameterize } from '@/utility/string';
 import Checkbox from './Checkbox';
 import ResponsiveText from './primitives/ResponsiveText';
 import Tooltip from './Tooltip';
+import IconSelectChevron from './icons/IconSelectChevron';
 
 export default function FieldSetWithStatus({
   id: _id,
@@ -186,7 +186,7 @@ export default function FieldSetWithStatus({
                 onChange={e => onChange?.(e.target.value)}
                 className={clsx(
                   'w-full',
-                  clsx(Boolean(error) && 'error'),
+                  Boolean(error) && 'error',
                   // Use special class because `select` can't be readonly
                   readOnly || pending && 'disabled-select',
                 )}
@@ -207,9 +207,8 @@ export default function FieldSetWithStatus({
               <div className={clsx(
                 'absolute top-0 right-3 z-10 pointer-events-none',
                 'flex h-full items-center',
-                'text-extra-dim text-2xl',
               )}>
-                <FiChevronDown />
+                <IconSelectChevron />
               </div>
             </div>
             : tagOptions

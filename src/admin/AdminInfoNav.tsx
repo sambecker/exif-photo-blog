@@ -24,7 +24,7 @@ const ADMIN_INFO_PAGE_WITHOUT_INSIGHTS = [{
   path: PATH_ADMIN_CONFIGURATION,
 }] as typeof ADMIN_INFO_PAGES;
 
-export default function AdminInfoPage({
+export default function AdminInfoNav({
   includeInsights,
 }: {
   includeInsights: boolean
