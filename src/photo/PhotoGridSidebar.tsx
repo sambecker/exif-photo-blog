@@ -162,7 +162,6 @@ export default function PhotoGridSidebar({
             countOnHover={count}
             prefetch={false}
             contrast="low"
-            hideAppleIcon
             badged
           />)}
     />
