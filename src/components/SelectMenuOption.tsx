@@ -1,5 +1,5 @@
 import clsx from 'clsx/lite';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 import IconCheck from './icons/IconCheck';
 
 export interface SelectMenuOptionType {
@@ -11,38 +11,42 @@ export interface SelectMenuOptionType {
 }
 
 export default function SelectMenuOption({
-  value,
   label,
   accessoryStart,
   accessoryEnd,
   note,
-  isHighlighted,
   isSelected,
+  isHighlighted,
+  shouldHighlightOnHover,
   onClick,
-  onMouseEnter,
-  onMouseLeave,
 }: {
-  isHighlighted?: boolean
   isSelected?: boolean
+  isHighlighted?: boolean
+  shouldHighlightOnHover?: boolean
   onClick?: () => void
-  onMouseEnter?: () => void
-  onMouseLeave?: () => void
 } & SelectMenuOptionType) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isHighlighted) {
+      ref.current?.scrollIntoView({ block: 'nearest' });
+    }
+  }, [isHighlighted]);
+
   return (
     <div
-      key={value}
+      ref={ref}
       onClick={onClick}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
+      role="option"
+      aria-selected={isSelected}
       className={clsx(
-        'group flex flex-col truncate',
+        'flex flex-col',
         'px-1.5 py-1 rounded-sm',
         'text-base select-none',
         'cursor-pointer',
-        isHighlighted && 'bg-gray-100 dark:bg-gray-800',
-        onClick && 'active:bg-gray-200/80 dark:active:bg-gray-800/80',
-        'focus:bg-gray-100 dark:focus:bg-gray-800',
-        'outline-hidden',
+        isHighlighted && 'bg-dim',
+        shouldHighlightOnHover && 'hover:bg-dim',
+        onClick && 'active:bg-medium',
       )}
     >
       <div className="flex items-center gap-2.5">
@@ -61,7 +65,7 @@ export default function SelectMenuOption({
           <div className="shrink-0 text-dim">
             {isSelected 
               ? <IconCheck size={13} className="text-main" />
-              : accessoryEnd }
+              : accessoryEnd}
           </div>}
       </div>
     </div>

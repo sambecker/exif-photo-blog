@@ -5,7 +5,8 @@ import useClickInsideOutside from '@/utility/useClickInsideOutside';
 import IconSelectChevron from './icons/IconSelectChevron';
 import SelectMenuOption, { SelectMenuOptionType } from './SelectMenuOption';
 
-const KEY_KEYDOWN = 'keydown';
+const LISTENER_KEY_MOUSE_MOVE = 'mousemove';
+const LISTENER_KEY_KEYDOWN = 'keydown';
 
 export default function SelectMenu({
   name,
@@ -21,10 +22,15 @@ export default function SelectMenu({
   options: SelectMenuOptionType[]
   children?: ReactNode
 }) {
+  const ARIA_ID_SELECT_OPTIONS = `select-options-${name}`;
+
   const ref = useRef<HTMLDivElement>(null);
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState<number>();
+  const [shouldHighlightOnHover, setShouldHighlightOnHover] = useState(true);
+
+  const selectedOption = options.find(o => o.value === value);
 
   useClickInsideOutside({
     htmlElements: [ref],
@@ -39,6 +45,7 @@ export default function SelectMenu({
       case 'ArrowDown':
       case 'ArrowUp':
       case 'Escape':
+        setShouldHighlightOnHover(false);
         e.stopImmediatePropagation();
         e.preventDefault();
       }
@@ -60,17 +67,13 @@ export default function SelectMenu({
         }
         break;
       case 'ArrowUp':
-        setSelectedOptionIndex(i => {
-          if (
-            document.activeElement === ref.current &&
-            options.length > 0
-          ) {
-            return options.length - 1;
-          } else if (i === undefined || i === 0) {
-            ref.current?.focus();
-            return undefined;
-          } else {
-            return i - 1;
+        setSelectedOptionIndex((i = 0) => {
+          if (options.length > 1) {
+            if (i === 0) {
+              return options.length - 1;
+            } else {
+              return i - 1;
+            }
           }
         });
         break;
@@ -89,10 +92,8 @@ export default function SelectMenu({
     };
 
     const refRef = ref.current;
-
-    refRef?.addEventListener(KEY_KEYDOWN, listener);
-
-    return () => refRef?.removeEventListener(KEY_KEYDOWN, listener);
+    refRef?.addEventListener(LISTENER_KEY_KEYDOWN, listener);
+    return () => refRef?.removeEventListener(LISTENER_KEY_KEYDOWN, listener);
   }, [
     isOpen,
     options,
@@ -100,76 +101,96 @@ export default function SelectMenu({
     onChange,
   ]);
 
-  const selectedOption = options.find(o => o.value === value);
+  useEffect(() => {
+    const onMouseMove = () => {
+      setShouldHighlightOnHover(true);
+    };
+    const refRef = ref.current;
+    refRef?.addEventListener(LISTENER_KEY_MOUSE_MOVE, onMouseMove);
+    return () =>
+      refRef?.removeEventListener(LISTENER_KEY_MOUSE_MOVE, onMouseMove);
+  }, []);
 
-  return <div ref={ref}>
-    <div
-      tabIndex={0}
-      className={clsx(
-        'cursor-pointer control pl-1.5',
-        'focus:outline-2 -outline-offset-2 focus:outline-blue-600',
-        'text-lg leading-[1.4]',
-        'select-none',
-      )}
-      onFocus={() => setIsOpen(true)}
-      onBlur={() => {
-        if (document.activeElement === ref.current) {
-          setIsOpen(false);
-        }
-      }}
-    >
-      {children ?? <div className="flex items-center">
-        <div className="grow min-w-0">
-          <SelectMenuOption
-            value={value}
-            label={selectedOption?.label}
-            accessoryStart={selectedOption?.accessoryStart}
+  return (
+    <div ref={ref}>
+      <div
+        tabIndex={0}
+        className={clsx(
+          'cursor-pointer control pl-1.5 py-2',
+          'flex items-center w-full h-10',
+          'focus:outline-2 -outline-offset-2 focus:outline-blue-600',
+          'text-lg leading-[1.4]',
+          'select-none',
+        )}
+        onMouseDown={() => setIsOpen(o => !o)}
+        onFocus={() => setIsOpen(true)}
+        onBlur={e => {
+          if (e.relatedTarget && !ref.current?.contains(e.relatedTarget)) {
+            setIsOpen(false);
+          }
+        }}
+        aria-autocomplete="list"
+        aria-expanded={isOpen}
+        aria-haspopup="true"
+        aria-controls={isOpen ? ARIA_ID_SELECT_OPTIONS : undefined}
+        role="combobox"
+      >
+        {children ?? <div className="flex items-center w-full">
+          <div className="grow min-w-0">
+            <SelectMenuOption
+              value={value}
+              label={selectedOption?.label}
+              accessoryStart={selectedOption?.accessoryStart}
+            />
+          </div>
+          <IconSelectChevron
+            className={clsx(
+              'shrink-0',
+              isOpen && 'rotate-180 transition-transform duration-200',
+            )}
           />
-        </div>
-        <IconSelectChevron
-          className={clsx(
-            'shrink-0',
-            isOpen && 'rotate-180 transition-transform duration-200',
-          )}
-        />
-      </div>}
-      <input type="hidden" name={name} value={value} />
-    </div>
-    <div className="relative">
-      {isOpen &&
-        <div
-          className={clsx(
-            'absolute top-3 left-0 w-full',
-            'component-surface',
-            'px-1.5 py-1.5',
-            'max-h-[12rem] overflow-y-auto flex flex-col',
-            'shadow-lg dark:shadow-xl',
-            'animate-fade-in-from-top',
-            '*:select-none',
-          )}
-        >
-          <MaskedScroll fadeSize={16}>
-            {options.map((option, index) =>
-              <SelectMenuOption
-                key={option.value}
-                value={option.value}
-                label={option.label}
-                accessoryStart={option.accessoryStart}
-                accessoryEnd={option.accessoryEnd}
-                note={option.note}
-                isHighlighted={
-                  index === selectedOptionIndex ||
-                  (selectedOptionIndex === undefined && index === 0)}
-                isSelected={option.value === value}
-                onClick={() => {
-                  onChange(option.value);
-                  setIsOpen(false);
-                }}
-                onMouseEnter={() => setSelectedOptionIndex(index)}
-                onMouseLeave={() => setSelectedOptionIndex(undefined)}
-              />)}
-          </MaskedScroll>
         </div>}
+        <input type="hidden" name={name} value={value} />
+      </div>
+      <div className="relative">
+        {isOpen &&
+          <div
+            className={clsx(
+              'component-surface',
+              'absolute top-3 w-full px-1.5 py-1.5',
+              'max-h-[12rem] overflow-y-auto flex flex-col',
+              'shadow-lg dark:shadow-xl',
+              'animate-fade-in-from-top',
+              '*:select-none',
+            )}
+          >
+            <MaskedScroll
+              id={ARIA_ID_SELECT_OPTIONS}
+              role="listbox"
+              className="flex flex-col gap-1"
+              fadeSize={16}
+            >
+              {options.map((option, index) =>
+                <SelectMenuOption
+                  key={option.value}
+                  value={option.value}
+                  label={option.label}
+                  accessoryStart={option.accessoryStart}
+                  accessoryEnd={option.accessoryEnd}
+                  note={option.note}
+                  isSelected={option.value === value}
+                  isHighlighted={
+                    index === selectedOptionIndex ||
+                    (selectedOptionIndex === undefined && index === 0)}
+                  shouldHighlightOnHover={shouldHighlightOnHover}
+                  onClick={() => {
+                    onChange(option.value);
+                    setIsOpen(false);
+                  }}
+                />)}
+            </MaskedScroll>
+          </div>}
+      </div>
     </div>
-  </div>;
+  );
 }

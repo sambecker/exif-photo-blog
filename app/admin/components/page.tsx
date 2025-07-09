@@ -78,6 +78,30 @@ export default function ComponentsPage() {
               label: 'Private',
               accessoryEnd: '× 2',
               note: 'Exclude photo from core feeds',
+            }, {
+              value: 'private1',
+              accessoryStart: <IconLock size={14} />,
+              label: 'Private',
+              accessoryEnd: '× 2',
+              note: 'Exclude photo from core feeds',
+            }, {
+              value: 'private4',
+              accessoryStart: <IconLock size={14} />,
+              label: 'Private',
+              accessoryEnd: '× 2',
+              note: 'Exclude photo from core feeds',
+            }, {
+              value: 'private2',
+              accessoryStart: <IconLock size={14} />,
+              label: 'Private',
+              accessoryEnd: '× 2',
+              note: 'Exclude photo from core feeds',
+            }, {
+              value: 'private3',
+              accessoryStart: <IconLock size={14} />,
+              label: 'Private',
+              accessoryEnd: '× 2',
+              note: 'Exclude photo from core feeds',
             }]}
           />
         </div>
