@@ -3,17 +3,9 @@ import { ReactNode, useEffect, useRef, useState } from 'react';
 import MaskedScroll from './MaskedScroll';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
 import IconSelectChevron from './icons/IconSelectChevron';
-import IconCheck from './icons/IconCheck';
+import SelectMenuOption, { SelectMenuOptionType } from './SelectMenuOption';
 
 const KEY_KEYDOWN = 'keydown';
-
-interface SelectMenuOption {
-  value: string
-  label: ReactNode
-  accessoryStart?: ReactNode
-  accessoryEnd?: ReactNode
-  note?: ReactNode
-}
 
 export default function SelectMenu({
   name,
@@ -26,7 +18,7 @@ export default function SelectMenu({
   name: string
   value: string
   onChange: (value: string) => void
-  options: SelectMenuOption[]
+  options: SelectMenuOptionType[]
   children?: ReactNode
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -38,6 +30,7 @@ export default function SelectMenu({
     htmlElements: [ref],
     onClickOutside: () => setIsOpen(false),
   });
+
   // Setup keyboard listener
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
@@ -113,7 +106,7 @@ export default function SelectMenu({
     <div
       tabIndex={0}
       className={clsx(
-        'cursor-pointer control',
+        'cursor-pointer control pl-1.5',
         'focus:outline-2 -outline-offset-2 focus:outline-blue-600',
         'text-lg leading-[1.4]',
         'select-none',
@@ -125,12 +118,13 @@ export default function SelectMenu({
         }
       }}
     >
-      {children ?? <div className="flex items-center gap-2.5">
-        <div className="grow flex items-center gap-2.5">
-          {selectedOption?.accessoryStart && <span className="text-medium">
-            {selectedOption.accessoryStart}
-          </span>}
-          {selectedOption?.label ?? value}
+      {children ?? <div className="flex items-center">
+        <div className="grow min-w-0">
+          <SelectMenuOption
+            value={value}
+            label={selectedOption?.label}
+            accessoryStart={selectedOption?.accessoryStart}
+          />
         </div>
         <IconSelectChevron
           className={clsx(
@@ -148,60 +142,32 @@ export default function SelectMenu({
             'absolute top-3 left-0 w-full',
             'component-surface',
             'px-1.5 py-1.5',
-            'max-h-[8rem] overflow-y-auto flex flex-col',
+            'max-h-[12rem] overflow-y-auto flex flex-col',
             'shadow-lg dark:shadow-xl',
             'animate-fade-in-from-top',
             '*:select-none',
           )}
         >
           <MaskedScroll fadeSize={16}>
-            {options.map((option, index) => {
-              const isActive =
-                index === selectedOptionIndex ||
-                (selectedOptionIndex === undefined && index === 0);
-              const isSelected = option.value === value;
-              return (
-                <div
-                  key={option.value}
-                  onClick={() => {
-                    onChange(option.value);
-                    setIsOpen(false);
-                  }}
-                  onMouseEnter={() => setSelectedOptionIndex(index)}
-                  onMouseLeave={() => setSelectedOptionIndex(undefined)}
-                  className={clsx(
-                    'group flex flex-col',
-                    'px-1.5 py-1 rounded-sm',
-                    'text-base select-none',
-                    'cursor-pointer',
-                    isActive && 'bg-gray-100 dark:bg-gray-800',
-                    'active:bg-gray-200/80 dark:active:bg-gray-800/80',
-                    'focus:bg-gray-100 dark:focus:bg-gray-800',
-                    'outline-hidden',
-                  )}
-                >
-                  <div className="flex items-center gap-2.5">
-                    {option.accessoryStart &&
-                      <div className="shrink-0">
-                        {option.accessoryStart}
-                      </div>}
-                    <span className="grow">
-                      {option.label}
-                      {option.note &&
-                        <div className="text-sm text-dim">
-                          {option.note}
-                        </div>}
-                    </span>
-                    {(option.accessoryEnd || isSelected) &&
-                      <div className="shrink-0 text-dim">
-                        {isSelected 
-                          ? <IconCheck size={13} className="text-main" />
-                          : option.accessoryEnd }
-                      </div>}
-                  </div>
-                </div>
-              );
-            })}
+            {options.map((option, index) =>
+              <SelectMenuOption
+                key={option.value}
+                value={option.value}
+                label={option.label}
+                accessoryStart={option.accessoryStart}
+                accessoryEnd={option.accessoryEnd}
+                note={option.note}
+                isHighlighted={
+                  index === selectedOptionIndex ||
+                  (selectedOptionIndex === undefined && index === 0)}
+                isSelected={option.value === value}
+                onClick={() => {
+                  onChange(option.value);
+                  setIsOpen(false);
+                }}
+                onMouseEnter={() => setSelectedOptionIndex(index)}
+                onMouseLeave={() => setSelectedOptionIndex(undefined)}
+              />)}
           </MaskedScroll>
         </div>}
     </div>

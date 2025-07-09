@@ -11,7 +11,7 @@ import clsx from 'clsx/lite';
 import { useState } from 'react';
 
 export default function ComponentsPage() {
-  const [value, setValue] = useState('tag-1');
+  const [value, setValue] = useState('visible');
   return (
     <AppGrid
       contentMain={<div className="flex flex-col gap-4">
@@ -62,14 +62,14 @@ export default function ComponentsPage() {
             onChange={setValue}
             options={[{
               value: 'visible',
-              accessoryStart: <IconHidden size={14} visible />,
-              label: 'Visible',
+              accessoryStart: <IconHidden size={15} visible />,
+              label: 'Always visible',
               accessoryEnd: '× 2',
               note: 'Exclude photo from core feeds',
             }, {
               value: 'hidden',
-              accessoryStart: <IconHidden size={14} />,
-              label: 'Hidden',
+              accessoryStart: <IconHidden size={15} />,
+              label: 'Hide from feeds',
               accessoryEnd: '× 2',
               note: 'Exclude photo from core feeds',
             }, {
