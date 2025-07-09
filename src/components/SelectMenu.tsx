@@ -2,6 +2,8 @@ import clsx from 'clsx/lite';
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import MaskedScroll from './MaskedScroll';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
+import IconSelectChevron from './icons/IconSelectChevron';
+import IconCheck from './icons/IconCheck';
 
 const KEY_KEYDOWN = 'keydown';
 
@@ -25,7 +27,7 @@ export default function SelectMenu({
   value: string
   onChange: (value: string) => void
   options: SelectMenuOption[]
-  children: ReactNode
+  children?: ReactNode
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -47,6 +49,7 @@ export default function SelectMenu({
         e.stopImmediatePropagation();
         e.preventDefault();
       }
+      // Navigate options
       switch (e.key) {
       case 'ArrowDown':
         if (isOpen) {
@@ -78,6 +81,14 @@ export default function SelectMenu({
           }
         });
         break;
+      case 'Enter':
+        if (isOpen) {
+          if (selectedOptionIndex !== undefined) {
+            onChange(options[selectedOptionIndex].value);
+          }
+          setIsOpen(false);
+        }
+        break;
       case 'Escape':
         setIsOpen(false);
         break;
@@ -93,10 +104,12 @@ export default function SelectMenu({
     isOpen,
     options,
     selectedOptionIndex,
+    onChange,
   ]);
 
+  const selectedOption = options.find(o => o.value === value);
+
   return <div ref={ref}>
-    {/* <input type="hidden" name={name} value={value} /> */}
     <div
       tabIndex={0}
       className={clsx(
@@ -106,8 +119,26 @@ export default function SelectMenu({
         'select-none',
       )}
       onFocus={() => setIsOpen(true)}
+      onBlur={() => {
+        if (document.activeElement === ref.current) {
+          setIsOpen(false);
+        }
+      }}
     >
-      {children}
+      {children ?? <div className="flex items-center gap-2.5">
+        <div className="grow flex items-center gap-2.5">
+          {selectedOption?.accessoryStart && <span className="text-medium">
+            {selectedOption.accessoryStart}
+          </span>}
+          {selectedOption?.label ?? value}
+        </div>
+        <IconSelectChevron
+          className={clsx(
+            'shrink-0',
+            isOpen && 'rotate-180 transition-transform duration-200',
+          )}
+        />
+      </div>}
       <input type="hidden" name={name} value={value} />
     </div>
     <div className="relative">
@@ -124,47 +155,53 @@ export default function SelectMenu({
           )}
         >
           <MaskedScroll fadeSize={16}>
-            {options.map((option, index) => (
-              <div
-                key={option.value}
-                onClick={() => {
-                  onChange(option.value);
-                  setIsOpen(false);
-                }}
-                onMouseEnter={() => setSelectedOptionIndex(index)}
-                onMouseLeave={() => setSelectedOptionIndex(undefined)}
-                className={clsx(
-                  'group flex flex-col',
-                  'px-1.5 py-1 rounded-sm',
-                  'text-base select-none',
-                  'cursor-pointer',
-                  (index === selectedOptionIndex ||
-                    (selectedOptionIndex === undefined && index === 0)) &&
-                    'bg-gray-100 dark:bg-gray-800',
-                  'active:bg-gray-200/80 dark:active:bg-gray-800/80',
-                  'focus:bg-gray-100 dark:focus:bg-gray-800',
-                  'outline-hidden',
-                )}
-              >
-                <div className="flex items-center gap-2.5">
-                  {option.accessoryStart &&
-                    <div className="shrink-0">
-                      {option.accessoryStart}
-                    </div>}
-                  <span className="grow">
-                    {option.label}
-                    {option.note &&
-                      <div className="text-sm text-dim">
-                        {option.note}
+            {options.map((option, index) => {
+              const isActive =
+                index === selectedOptionIndex ||
+                (selectedOptionIndex === undefined && index === 0);
+              const isSelected = option.value === value;
+              return (
+                <div
+                  key={option.value}
+                  onClick={() => {
+                    onChange(option.value);
+                    setIsOpen(false);
+                  }}
+                  onMouseEnter={() => setSelectedOptionIndex(index)}
+                  onMouseLeave={() => setSelectedOptionIndex(undefined)}
+                  className={clsx(
+                    'group flex flex-col',
+                    'px-1.5 py-1 rounded-sm',
+                    'text-base select-none',
+                    'cursor-pointer',
+                    isActive && 'bg-gray-100 dark:bg-gray-800',
+                    'active:bg-gray-200/80 dark:active:bg-gray-800/80',
+                    'focus:bg-gray-100 dark:focus:bg-gray-800',
+                    'outline-hidden',
+                  )}
+                >
+                  <div className="flex items-center gap-2.5">
+                    {option.accessoryStart &&
+                      <div className="shrink-0">
+                        {option.accessoryStart}
                       </div>}
-                  </span>
-                  {option.accessoryEnd &&
-                    <div className="shrink-0 text-dim">
-                      {option.accessoryEnd}
-                    </div>}
+                    <span className="grow">
+                      {option.label}
+                      {option.note &&
+                        <div className="text-sm text-dim">
+                          {option.note}
+                        </div>}
+                    </span>
+                    {(option.accessoryEnd || isSelected) &&
+                      <div className="shrink-0 text-dim">
+                        {isSelected 
+                          ? <IconCheck size={13} className="text-main" />
+                          : option.accessoryEnd }
+                      </div>}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </MaskedScroll>
         </div>}
     </div>

@@ -3,7 +3,8 @@
 import PhotoTagFieldset from '@/admin/PhotoTagFieldset';
 import AppGrid from '@/components/AppGrid';
 import FieldSetWithStatus from '@/components/FieldSetWithStatus';
-import SelectInput from '@/components/SelectInput';
+import IconHidden from '@/components/icons/IconHidden';
+import IconLock from '@/components/icons/IconLock';
 import SelectMenu from '@/components/SelectMenu';
 import StatusIcon from '@/components/StatusIcon';
 import clsx from 'clsx/lite';
@@ -54,59 +55,31 @@ export default function ComponentsPage() {
             onChange={() => {}}
           />
         </div>
-        <div className="z-10">
-          <SelectInput
-            value={value}
-            onChange={e => setValue(e.target.value)}
-            options={[{
-              value: 'tag-1',
-              label: 'Tag 1',
-              icon: '🌟',
-              note: 'Note 1',
-            }, {
-              value: 'tag-2',
-              label: 'Tag 2',
-              icon: '🌟',
-              note: 'Note 2',
-            }, {
-              value: 'tag-3',
-              label: 'Tag 3',
-              icon: '🌟',
-              note: 'Note 3',
-            }, {
-              value: 'tag-4',
-              label: 'Tag 4',
-              icon: '🌟',
-              note: 'Note 4',
-            }, {
-              value: 'tag-5',
-              label: 'Tag 5',
-              icon: '🌟',
-              note: 'Note 5',
-            }]}
-          />
-        </div>
         <div className="z-9 mt-12">
           <SelectMenu
             name="select-menu"
             value={value}
             onChange={setValue}
             options={[{
-              value: 'tag-1',
-              accessoryStart: <StatusIcon type="checked" />,
-              label: 'Tag 1',
+              value: 'visible',
+              accessoryStart: <IconHidden size={14} visible />,
+              label: 'Visible',
               accessoryEnd: '× 2',
               note: 'Exclude photo from core feeds',
             }, {
-              value: 'tag-2',
-              accessoryStart: <StatusIcon type="checked" />,
-              label: 'Tag 2',
+              value: 'hidden',
+              accessoryStart: <IconHidden size={14} />,
+              label: 'Hidden',
+              accessoryEnd: '× 2',
+              note: 'Exclude photo from core feeds',
+            }, {
+              value: 'private',
+              accessoryStart: <IconLock size={14} />,
+              label: 'Private',
               accessoryEnd: '× 2',
               note: 'Exclude photo from core feeds',
             }]}
-          >
-            {value}
-          </SelectMenu>
+          />
         </div>
       </div>}
     />
