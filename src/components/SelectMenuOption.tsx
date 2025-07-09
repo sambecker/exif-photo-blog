@@ -42,7 +42,7 @@ export default function SelectMenuOption({
       className={clsx(
         'flex flex-col',
         'px-1.5 py-1 rounded-sm',
-        'text-base select-none',
+        'text-lg select-none',
         'cursor-pointer',
         isHighlighted && 'bg-dim',
         shouldHighlightOnHover && 'hover:bg-dim',
@@ -51,7 +51,7 @@ export default function SelectMenuOption({
     >
       <div className="flex items-center gap-2.5">
         {accessoryStart &&
-          <div className="shrink-0">
+          <div className="shrink-0 text-medium w-5 pl-0.5">
             {accessoryStart}
           </div>}
         <div className="grow min-w-0">

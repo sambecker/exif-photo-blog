@@ -45,10 +45,15 @@ import { convertFilmsForForm, Films } from '@/film';
 import { isMakeFujifilm } from '@/platforms/fujifilm';
 import PhotoFilmIcon from '@/film/PhotoFilmIcon';
 import FieldsetFavs from './FieldsetFavs';
-import FieldsetPrivate from './FieldsetPrivate';
 import { useAppText } from '@/i18n/state/client';
 import IconAddUpload from '@/components/icons/IconAddUpload';
-import FieldsetExclude from './FieldsetExclude';
+import {
+  VisibilityValue,
+  didVisibilityChange,
+  getVisibilityValue,
+  updateFormDataWithVisibility,
+  VISIBILITY_OPTIONS,
+} from './visibility';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -272,13 +277,6 @@ export default function PhotoForm({
     }
   };
 
-  const isFieldReadOnly = (key: FormFields) => {
-    return formData.hidden === 'true' && (
-      key === 'excludeFromFeeds' ||
-      key === 'favorite'
-    );
-  };
-
   const onMatchResults = useCallback((didFindMatchingPhotos: boolean) => {
     setFormData(data => ({
       ...data,
@@ -421,7 +419,7 @@ export default function PhotoForm({
                   tagOptionsLimit,
                   tagOptionsLimitValidationMessage,
                   required,
-                  readOnly: readOnly || isFieldReadOnly(key),
+                  readOnly,
                   spellCheck,
                   capitalize,
                   placeholder: loadingMessage && !formData[key]
@@ -438,16 +436,17 @@ export default function PhotoForm({
                 switch (key) {
                 case 'film':
                   return <FieldSetWithStatus
+                    {...fieldProps}
                     key={key}
                     tagOptionsDefaultIcon={<span
                       className="w-4 overflow-hidden"
                     >
                       <PhotoFilmIcon />
                     </span>}
-                    {...fieldProps}
                   />;
                 case 'applyRecipeTitleGlobally':
                   return <ApplyRecipeTitleGloballyCheckbox
+                    {...fieldProps}
                     key={key}
                     photoId={initialPhotoForm.id}
                     recipeTitle={formData.recipeTitle}
@@ -456,20 +455,27 @@ export default function PhotoForm({
                     recipeData={formData.recipeData}
                     film={formData.film}
                     onMatchResults={onMatchResults}
+                  />;
+                case 'visibility':
+                  return <FieldSetWithStatus
                     {...fieldProps}
+                    key={key}
+                    id={key}
+                    label={fieldProps.label}
+                    value={getVisibilityValue(formData)}
+                    onChange={value => setFormData(data =>
+                      updateFormDataWithVisibility(
+                        data,
+                        value as VisibilityValue,
+                      ))}
+                    selectOptions={VISIBILITY_OPTIONS}
+                    isModified={didVisibilityChange(
+                      initialPhotoForm,
+                      formData,
+                    )}
                   />;
                 case 'favorite':
                   return <FieldsetFavs
-                    key={key}
-                    {...fieldProps}
-                  />;
-                case 'excludeFromFeeds':
-                  return <FieldsetExclude
-                    key={key}
-                    {...fieldProps}
-                  />;
-                case 'hidden':
-                  return <FieldsetPrivate
                     key={key}
                     {...fieldProps}
                   />;

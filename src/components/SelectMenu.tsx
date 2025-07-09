@@ -11,15 +11,23 @@ const LISTENER_KEY_KEYDOWN = 'keydown';
 export default function SelectMenu({
   name,
   value,
+  className,
   onChange,
   options,
+  defaultOptionLabel,
+  error,
+  readOnly,
   children,
 }: {
   id?: string
   name: string
   value: string
-  onChange: (value: string) => void
+  className?: string
+  onChange?: (value: string) => void
   options: SelectMenuOptionType[]
+  defaultOptionLabel?: string
+  error?: string
+  readOnly?: boolean
   children?: ReactNode
 }) {
   const ARIA_ID_SELECT_OPTIONS = `select-options-${name}`;
@@ -36,6 +44,12 @@ export default function SelectMenu({
     htmlElements: [ref],
     onClickOutside: () => setIsOpen(false),
   });
+
+  useEffect(() => {
+    if (readOnly) {
+      setIsOpen(false);
+    }
+  }, [readOnly]);
 
   // Setup keyboard listener
   useEffect(() => {
@@ -64,23 +78,29 @@ export default function SelectMenu({
           });
         } else {
           setIsOpen(true);
+          setSelectedOptionIndex(0);
         }
         break;
       case 'ArrowUp':
-        setSelectedOptionIndex((i = 0) => {
-          if (options.length > 1) {
-            if (i === 0) {
-              return options.length - 1;
-            } else {
-              return i - 1;
+        if (isOpen) {
+          setSelectedOptionIndex((i = 0) => {
+            if (options.length > 1) {
+              if (i === 0) {
+                return options.length - 1;
+              } else {
+                return i - 1;
+              }
             }
-          }
-        });
+          });
+        } else {
+          setIsOpen(true);
+          setSelectedOptionIndex(Math.max(0, options.length - 1));
+        }
         break;
       case 'Enter':
         if (isOpen) {
           if (selectedOptionIndex !== undefined) {
-            onChange(options[selectedOptionIndex].value);
+            onChange?.(options[selectedOptionIndex].value);
           }
           setIsOpen(false);
         }
@@ -112,15 +132,16 @@ export default function SelectMenu({
   }, []);
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className={className}>
       <div
         tabIndex={0}
         className={clsx(
           'cursor-pointer control pl-1.5 py-2',
-          'flex items-center w-full h-10',
+          'flex items-center w-full h-9.5',
           'focus:outline-2 -outline-offset-2 focus:outline-blue-600',
-          'text-lg leading-[1.4]',
           'select-none',
+          Boolean(error) && 'error',
+          readOnly && 'disabled-select',
         )}
         onMouseDown={() => setIsOpen(o => !o)}
         onFocus={() => setIsOpen(true)}
@@ -156,7 +177,7 @@ export default function SelectMenu({
         {isOpen &&
           <div
             className={clsx(
-              'component-surface',
+              'component-surface z-1',
               'absolute top-3 w-full px-1.5 py-1.5',
               'max-h-[12rem] overflow-y-auto flex flex-col',
               'shadow-lg dark:shadow-xl',
@@ -170,6 +191,8 @@ export default function SelectMenu({
               className="flex flex-col gap-1"
               fadeSize={16}
             >
+              {defaultOptionLabel &&
+                <SelectMenuOption value="" label={defaultOptionLabel} />}
               {options.map((option, index) =>
                 <SelectMenuOption
                   key={option.value}
@@ -184,7 +207,7 @@ export default function SelectMenu({
                     (selectedOptionIndex === undefined && index === 0)}
                   shouldHighlightOnHover={shouldHighlightOnHover}
                   onClick={() => {
-                    onChange(option.value);
+                    onChange?.(option.value);
                     setIsOpen(false);
                   }}
                 />)}
