@@ -12,7 +12,7 @@ import { pathForAdminUploadUrl } from '@/app/paths';
 import DeleteUploadButton from './DeleteUploadButton';
 import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import { isElementEntirelyInViewport } from '@/utility/dom';
-import FieldSetWithStatus from '@/components/FieldsetWithStatus';
+import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import EditButton from './EditButton';
 import AddUploadButton from './AddUploadButton';
 

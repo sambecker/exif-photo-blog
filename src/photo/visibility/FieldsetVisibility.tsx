@@ -1,4 +1,4 @@
-import FieldSetWithStatus from '@/components/FieldsetWithStatus';
+import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import { ComponentProps, Dispatch, SetStateAction } from 'react';
 import {
   getVisibilityValue,

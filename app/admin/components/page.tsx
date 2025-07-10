@@ -2,7 +2,7 @@
 
 import PhotoTagFieldset from '@/admin/PhotoTagFieldset';
 import AppGrid from '@/components/AppGrid';
-import FieldSetWithStatus from '@/components/FieldsetWithStatus';
+import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import IconHidden from '@/components/icons/IconHidden';
 import IconLock from '@/components/icons/IconLock';
 import SelectMenu from '@/components/SelectMenu';

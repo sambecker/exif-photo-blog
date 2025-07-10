@@ -1,7 +1,7 @@
 'use client';
 
 import ErrorNote from '@/components/ErrorNote';
-import FieldSetWithStatus from '@/components/FieldsetWithStatus';
+import FieldSetWithStatus from '@/components/FieldSetWithStatus';
 import Container from '@/components/Container';
 import { addUploadsAction } from '@/photo/actions';
 import { PATH_ADMIN_PHOTOS } from '@/app/paths';
