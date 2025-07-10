@@ -289,7 +289,7 @@ html {
   }
   .error {
     @apply
-      border-red-500 dark:border-red-400
+      outline-2 outline-red-500! dark:outline-red-400!
   }
   button, .button {
     @apply

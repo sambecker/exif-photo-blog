@@ -23,7 +23,10 @@ export default function ThemeSwitcher () {
   }
 
   return (
-    <Switcher>
+    <Switcher
+      // Apply offset due to outline strategy
+      className="translate-x-[-1px]"
+    >
       <SwitcherItem
         icon={<BiDesktop size={16} />}
         onClick={() => setTheme('system')}

@@ -14,10 +14,9 @@ import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 import PhotoSyncButton from './PhotoSyncButton';
 import DeletePhotoButton from './DeletePhotoButton';
 import { Timezone } from '@/utility/timezone';
-import IconHidden from '@/components/icons/IconHidden';
 import Tooltip from '@/components/Tooltip';
 import { photoNeedsToBeSynced, getPhotoSyncStatusText } from '@/photo/sync';
-import IconLock from '@/components/icons/IconLock';
+import PhotoVisibilityIcon from '@/photo/visibility/PhotoVisibilityIcon';
 
 export default function AdminPhotosTable({
   photos,
@@ -77,20 +76,9 @@ export default function AdminPhotosTable({
                 <span className="truncate">
                   {titleForPhoto(photo, false)}
                 </span>
-                {photo.excludeFromFeeds && !photo.hidden &&
-                  <span>
-                    <IconHidden
-                      className="inline translate-y-[-1px]"
-                      size={16}
-                    />
-                  </span>}
-                {photo.hidden &&
-                  <span>
-                    <IconLock
-                      size={13}
-                      className="inline translate-y-[-1.5px]"
-                    />
-                  </span>}
+                <span className="inline-flex items-center">
+                  <PhotoVisibilityIcon photo={photo} />
+                </span>
               </span>
               {photo.priorityOrder !== null &&
                 <span className={clsx(

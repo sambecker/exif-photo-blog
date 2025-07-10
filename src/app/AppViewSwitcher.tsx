@@ -118,7 +118,13 @@ export default function AppViewSwitcher({
 
   return (
     <div className={clsx('flex', className)}>
-      <Switcher className={GAP_CLASS}>
+      <Switcher
+        className={clsx(
+          GAP_CLASS,
+          // Apply offset due to outline strategy
+          'translate-x-[1px]',
+        )}
+      >
         {GRID_HOMEPAGE_ENABLED ? renderItemGrid : renderItemFull}
         {GRID_HOMEPAGE_ENABLED ? renderItemFull : renderItemGrid}
         {/* Show spinner if admin is suspected to be logged in */}

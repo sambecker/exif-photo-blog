@@ -13,8 +13,6 @@ export default function Switcher({
   return (
     <div className={clsx(
       'flex divide-x overflow-hidden',
-      // Apply offset due to outline strategy
-      'translate-x-[1px]',
       'rounded-[5px]',
       'divide-medium',
       type === 'regular' &&

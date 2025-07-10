@@ -6,13 +6,14 @@ import Spinner from './Spinner';
 import { clsx } from 'clsx/lite';
 import { FieldSetType, AnnotatedTag } from '@/photo/form';
 import TagInput from './TagInput';
-import { FiChevronDown } from 'react-icons/fi';
 import { parameterize } from '@/utility/string';
 import Checkbox from './Checkbox';
 import ResponsiveText from './primitives/ResponsiveText';
 import Tooltip from './Tooltip';
+import { SelectMenuOptionType } from './SelectMenuOption';
+import SelectMenu from './SelectMenu';
 
-export default function FieldSetWithStatus({
+export default function FieldsetWithStatus({
   id: _id,
   label,
   icon,
@@ -53,7 +54,7 @@ export default function FieldSetWithStatus({
   isModified?: boolean
   onChange?: (value: string) => void
   className?: string
-  selectOptions?: { value: string, label: string }[]
+  selectOptions?: SelectMenuOptionType[]
   selectOptionsDefaultLabel?: string
   tagOptions?: AnnotatedTag[]
   tagOptionsLimit?: number
@@ -178,40 +179,18 @@ export default function FieldSetWithStatus({
           </label>}
         <div className="flex gap-2">
           {selectOptions
-            ? <div className="relative w-full">
-              <select
-                id={id}
-                name={id}
-                value={value}
-                onChange={e => onChange?.(e.target.value)}
-                className={clsx(
-                  'w-full',
-                  clsx(Boolean(error) && 'error'),
-                  // Use special class because `select` can't be readonly
-                  readOnly || pending && 'disabled-select',
-                )}
-              >
-                {selectOptionsDefaultLabel &&
-                  <option value="">{selectOptionsDefaultLabel}</option>}
-                {selectOptions.map(({
-                  value: optionValue,
-                  label: optionLabel,
-                }) =>
-                  <option
-                    key={optionValue}
-                    value={optionValue}
-                  >
-                    {optionLabel}
-                  </option>)}
-              </select>
-              <div className={clsx(
-                'absolute top-0 right-3 z-10 pointer-events-none',
-                'flex h-full items-center',
-                'text-extra-dim text-2xl',
-              )}>
-                <FiChevronDown />
-              </div>
-            </div>
+            ? <SelectMenu
+              id={id}
+              name={id}
+              tabIndex={tabIndex}
+              className="w-full"
+              value={value}
+              onChange={onChange}
+              options={selectOptions}
+              defaultOptionLabel={selectOptionsDefaultLabel}
+              error={error}
+              readOnly={readOnly || pending || loading}
+            />
             : tagOptions
               ? <TagInput
                 id={id}

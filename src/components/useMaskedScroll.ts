@@ -51,8 +51,8 @@ export default function useMaskedScroll({
     }
   }, [containerRef, isVertical]);
 
+  // Conditionally track events
   useEffect(() => {
-    // Conditionally track events
     const ref = containerRef?.current;
     if (ref && updateMaskOnEvents) {
       ref.onscroll = updateMask;
@@ -62,15 +62,20 @@ export default function useMaskedScroll({
         ref.onresize = null;
       };
     }
+  }, [containerRef, updateMask, updateMaskOnEvents]);
+
+  // Update on mount
+  useEffect(() => {
+    updateMask();
+  }, [updateMask]);
+
+  // Update after delay
+  useEffect(() => {
     if (updateMaskAfterDelay) {
-      // Update after delay
       const timeout = setTimeout(updateMask, updateMaskAfterDelay);
       return () => clearTimeout(timeout);
-    } else {
-      // Update on mount
-      updateMask();
     }
-  }, [containerRef, updateMask, updateMaskOnEvents, updateMaskAfterDelay]);
+  }, [containerRef, updateMask, updateMaskAfterDelay]);
 
   useEffect(() => {
     const ref = containerRef?.current;

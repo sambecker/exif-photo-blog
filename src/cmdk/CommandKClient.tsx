@@ -48,7 +48,6 @@ import { signOutAction } from '@/auth/actions';
 import { getKeywordsForPhoto, titleForPhoto } from '@/photo';
 import PhotoDate from '@/photo/PhotoDate';
 import PhotoSmall from '@/photo/PhotoSmall';
-import { FaCheck } from 'react-icons/fa6';
 import {
   addPrivateToTags,
   formatTag,
@@ -90,6 +89,7 @@ import IconRecents from '@/components/icons/IconRecents';
 import { CgFileDocument } from 'react-icons/cg';
 import { FaRegUserCircle } from 'react-icons/fa';
 import { formatDistanceToNow } from 'date-fns';
+import IconCheck from '@/components/icons/IconCheck';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -123,7 +123,7 @@ const renderToggle = (
 ): CommandKItem => ({
   label: `Toggle ${label}`,
   action: () => onToggle?.(prev => !prev),
-  annotation: isEnabled ? <FaCheck size={12} /> : undefined,
+  annotation: isEnabled ? <IconCheck size={12} /> : undefined,
 });
 
 export default function CommandKClient({

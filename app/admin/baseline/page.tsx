@@ -3,7 +3,7 @@
 import PhotoCamera from '@/camera/PhotoCamera';
 import Badge from '@/components/Badge';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
-import FieldSetWithStatus from '@/components/FieldSetWithStatus';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import AppGrid from '@/components/AppGrid';
 import EntityLink from '@/components/entity/EntityLink';
 import LabeledIcon from '@/components/primitives/LabeledIcon';
@@ -45,13 +45,13 @@ export default function ComponentsPage() {
             'flex gap-1',
             '*:inline-flex *:gap-1 [&_input]:-translate-y-0.5',
           )}>
-            <FieldSetWithStatus
+            <FieldsetWithStatus
               label="Grid"
               type="checkbox"
               value={shouldShowBaselineGrid ? 'true' : 'false'}
               onChange={e => setShouldShowBaselineGrid?.(e === 'true')}
             />
-            <FieldSetWithStatus
+            <FieldsetWithStatus
               label="Components"
               type="checkbox"
               value={debugComponents ? 'true' : 'false'}

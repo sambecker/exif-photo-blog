@@ -13,8 +13,10 @@ import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { ReactNode } from 'react';
 import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
+import { SelectMenuOptionType } from '@/components/SelectMenuOption';
 
 type VirtualFields =
+  'visibility' |
   'favorite' |
   'applyRecipeTitleGlobally' |
   'shouldStripGpsData';
@@ -58,7 +60,7 @@ export type FormMeta = {
   ) => boolean
   loadingMessage?: string
   type?: FieldSetType
-  selectOptions?: { value: string, label: string }[]
+  selectOptions?: SelectMenuOptionType[]
   selectOptionsDefaultLabel?: string
   tagOptions?: AnnotatedTag[]
   tagOptionsLimit?: number
@@ -181,9 +183,14 @@ const FORM_METADATA = (
     validate: validationMessageNaivePostgresDateString,
   },
   priorityOrder: { label: 'priority order' },
+  excludeFromFeeds: { label: 'exclude from feeds', type: 'hidden' },
+  hidden: { label: 'hidden', type: 'hidden' },
+  visibility: {
+    type: 'text',
+    label: 'visibility',
+    excludeFromInsert: true,
+  },
   favorite: { label: 'favorite', type: 'checkbox', excludeFromInsert: true },
-  excludeFromFeeds: { label: 'exclude from feeds', type: 'checkbox' },
-  hidden: { label: 'hidden', type: 'checkbox' },
   shouldStripGpsData: {
     label: 'strip gps data',
     type: 'hidden',

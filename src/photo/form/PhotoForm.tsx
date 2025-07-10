@@ -19,7 +19,7 @@ import {
   getFormErrors,
   isFormValid,
 } from '.';
-import FieldSetWithStatus from '@/components/FieldSetWithStatus';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import { createPhotoAction, updatePhotoAction } from '../actions';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
@@ -45,10 +45,10 @@ import { convertFilmsForForm, Films } from '@/film';
 import { isMakeFujifilm } from '@/platforms/fujifilm';
 import PhotoFilmIcon from '@/film/PhotoFilmIcon';
 import FieldsetFavs from './FieldsetFavs';
-import FieldsetPrivate from './FieldsetPrivate';
 import { useAppText } from '@/i18n/state/client';
 import IconAddUpload from '@/components/icons/IconAddUpload';
-import FieldsetExclude from './FieldsetExclude';
+import { didVisibilityChange } from '../visibility';
+import FieldsetVisibility from '../visibility/FieldsetVisibility';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -185,16 +185,6 @@ export default function PhotoForm({
     onTextContentChange?.(formHasTextContent(formData));
   }, [onTextContentChange, formData]);
 
-  useEffect(() => {
-    if (formData.hidden === 'true') {
-      setFormData(data => ({
-        ...data,
-        excludeFromFeeds: 'false',
-        favorite: 'false',
-      }));
-    }
-  }, [formData.hidden]);
-
   const isFieldGeneratingAi = (key: keyof PhotoFormData) => {
     switch (key) {
     case 'title':
@@ -215,6 +205,7 @@ export default function PhotoForm({
       switch (key) {
       case 'title':
         return <AiButton
+          tabIndex={-1}
           aiContent={aiContent}
           requestFields={['title']}
           shouldConfirm={Boolean(formData.title)}
@@ -222,6 +213,7 @@ export default function PhotoForm({
         />;
       case 'caption':
         return <AiButton
+          tabIndex={-1}
           aiContent={aiContent}
           requestFields={['caption']}
           shouldConfirm={Boolean(formData.caption)}
@@ -229,6 +221,7 @@ export default function PhotoForm({
         />;
       case 'tags':
         return <AiButton
+          tabIndex={-1}
           aiContent={aiContent}
           requestFields={['tags']}
           shouldConfirm={Boolean(formData.tags)}
@@ -236,6 +229,7 @@ export default function PhotoForm({
         />;
       case 'semanticDescription':
         return <AiButton
+          tabIndex={-1}
           aiContent={aiContent}
           requestFields={['semantic']}
           shouldConfirm={Boolean(formData.semanticDescription)}
@@ -270,13 +264,6 @@ export default function PhotoForm({
         shouldHide?.(formData, changedFormKeys)
       );
     }
-  };
-
-  const isFieldReadOnly = (key: FormFields) => {
-    return formData.hidden === 'true' && (
-      key === 'excludeFromFeeds' ||
-      key === 'favorite'
-    );
   };
 
   const onMatchResults = useCallback((didFindMatchingPhotos: boolean) => {
@@ -380,7 +367,7 @@ export default function PhotoForm({
               staticValue,
             }]) => {
               if (!isFieldHidden(key, hideIfEmpty, shouldHide)) {
-                const fieldProps: ComponentProps<typeof FieldSetWithStatus> = {
+                const fieldProps: ComponentProps<typeof FieldsetWithStatus> = {
                   id: key,
                   label: label + (
                     key === 'blurData' && shouldDebugImageFallbacks
@@ -421,7 +408,7 @@ export default function PhotoForm({
                   tagOptionsLimit,
                   tagOptionsLimitValidationMessage,
                   required,
-                  readOnly: readOnly || isFieldReadOnly(key),
+                  readOnly,
                   spellCheck,
                   capitalize,
                   placeholder: loadingMessage && !formData[key]
@@ -437,18 +424,19 @@ export default function PhotoForm({
 
                 switch (key) {
                 case 'film':
-                  return <FieldSetWithStatus
+                  return <FieldsetWithStatus
                     key={key}
+                    {...fieldProps}
                     tagOptionsDefaultIcon={<span
                       className="w-4 overflow-hidden"
                     >
                       <PhotoFilmIcon />
                     </span>}
-                    {...fieldProps}
                   />;
                 case 'applyRecipeTitleGlobally':
                   return <ApplyRecipeTitleGloballyCheckbox
                     key={key}
+                    {...fieldProps}
                     photoId={initialPhotoForm.id}
                     recipeTitle={formData.recipeTitle}
                     hasRecipeTitleChanged={
@@ -456,25 +444,25 @@ export default function PhotoForm({
                     recipeData={formData.recipeData}
                     film={formData.film}
                     onMatchResults={onMatchResults}
+                  />;
+                case 'visibility':
+                  return <FieldsetVisibility
+                    key={key}
                     {...fieldProps}
+                    formData={formData}
+                    setFormData={setFormData}
+                    isModified={didVisibilityChange(
+                      initialPhotoForm,
+                      formData,
+                    )}
                   />;
                 case 'favorite':
                   return <FieldsetFavs
                     key={key}
                     {...fieldProps}
                   />;
-                case 'excludeFromFeeds':
-                  return <FieldsetExclude
-                    key={key}
-                    {...fieldProps}
-                  />;
-                case 'hidden':
-                  return <FieldsetPrivate
-                    key={key}
-                    {...fieldProps}
-                  />;
                 default:
-                  return <FieldSetWithStatus
+                  return <FieldsetWithStatus
                     key={key}
                     {...fieldProps}
                   />;
