@@ -9,12 +9,14 @@ const LISTENER_KEY_MOUSE_MOVE = 'mousemove';
 const LISTENER_KEY_KEYDOWN = 'keydown';
 
 export default function SelectMenu({
+  id,
   name,
   value,
   className,
   onChange,
   options,
   defaultOptionLabel,
+  tabIndex,
   error,
   readOnly,
   children,
@@ -26,6 +28,7 @@ export default function SelectMenu({
   onChange?: (value: string) => void
   options: SelectMenuOptionType[]
   defaultOptionLabel?: string
+  tabIndex?: number
   error?: string
   readOnly?: boolean
   children?: ReactNode
@@ -134,7 +137,7 @@ export default function SelectMenu({
   return (
     <div ref={ref} className={className}>
       <div
-        tabIndex={0}
+        tabIndex={tabIndex}
         className={clsx(
           'cursor-pointer control pl-1.5 py-2',
           'flex items-center w-full h-9.5',
@@ -171,7 +174,7 @@ export default function SelectMenu({
             )}
           />
         </div>}
-        <input type="hidden" name={name} value={value} />
+        <input id={id} type="hidden" name={name} value={value} />
       </div>
       <div className="relative">
         {isOpen &&

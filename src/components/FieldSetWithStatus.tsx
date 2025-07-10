@@ -182,6 +182,7 @@ export default function FieldSetWithStatus({
             ? <SelectMenu
               id={id}
               name={id}
+              tabIndex={tabIndex}
               className="w-full"
               value={value}
               onChange={onChange}
