@@ -19,7 +19,7 @@ import {
   getFormErrors,
   isFormValid,
 } from '.';
-import FieldSetWithStatus from '@/components/FieldSetWithStatus';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import { createPhotoAction, updatePhotoAction } from '../actions';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
@@ -47,13 +47,8 @@ import PhotoFilmIcon from '@/film/PhotoFilmIcon';
 import FieldsetFavs from './FieldsetFavs';
 import { useAppText } from '@/i18n/state/client';
 import IconAddUpload from '@/components/icons/IconAddUpload';
-import {
-  VisibilityValue,
-  didVisibilityChange,
-  getVisibilityValue,
-  updateFormDataWithVisibility,
-  VISIBILITY_OPTIONS,
-} from './visibility';
+import { didVisibilityChange } from '../visibility';
+import FieldsetVisibility from '../visibility/FieldsetVisibility';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -190,16 +185,6 @@ export default function PhotoForm({
     onTextContentChange?.(formHasTextContent(formData));
   }, [onTextContentChange, formData]);
 
-  useEffect(() => {
-    if (formData.hidden === 'true') {
-      setFormData(data => ({
-        ...data,
-        excludeFromFeeds: 'false',
-        favorite: 'false',
-      }));
-    }
-  }, [formData.hidden]);
-
   const isFieldGeneratingAi = (key: keyof PhotoFormData) => {
     switch (key) {
     case 'title':
@@ -220,6 +205,7 @@ export default function PhotoForm({
       switch (key) {
       case 'title':
         return <AiButton
+          tabIndex={-1}
           aiContent={aiContent}
           requestFields={['title']}
           shouldConfirm={Boolean(formData.title)}
@@ -227,6 +213,7 @@ export default function PhotoForm({
         />;
       case 'caption':
         return <AiButton
+          tabIndex={-1}
           aiContent={aiContent}
           requestFields={['caption']}
           shouldConfirm={Boolean(formData.caption)}
@@ -234,6 +221,7 @@ export default function PhotoForm({
         />;
       case 'tags':
         return <AiButton
+          tabIndex={-1}
           aiContent={aiContent}
           requestFields={['tags']}
           shouldConfirm={Boolean(formData.tags)}
@@ -241,6 +229,7 @@ export default function PhotoForm({
         />;
       case 'semanticDescription':
         return <AiButton
+          tabIndex={-1}
           aiContent={aiContent}
           requestFields={['semantic']}
           shouldConfirm={Boolean(formData.semanticDescription)}
@@ -378,7 +367,7 @@ export default function PhotoForm({
               staticValue,
             }]) => {
               if (!isFieldHidden(key, hideIfEmpty, shouldHide)) {
-                const fieldProps: ComponentProps<typeof FieldSetWithStatus> = {
+                const fieldProps: ComponentProps<typeof FieldsetWithStatus> = {
                   id: key,
                   label: label + (
                     key === 'blurData' && shouldDebugImageFallbacks
@@ -435,9 +424,9 @@ export default function PhotoForm({
 
                 switch (key) {
                 case 'film':
-                  return <FieldSetWithStatus
-                    {...fieldProps}
+                  return <FieldsetWithStatus
                     key={key}
+                    {...fieldProps}
                     tagOptionsDefaultIcon={<span
                       className="w-4 overflow-hidden"
                     >
@@ -446,8 +435,8 @@ export default function PhotoForm({
                   />;
                 case 'applyRecipeTitleGlobally':
                   return <ApplyRecipeTitleGloballyCheckbox
-                    {...fieldProps}
                     key={key}
+                    {...fieldProps}
                     photoId={initialPhotoForm.id}
                     recipeTitle={formData.recipeTitle}
                     hasRecipeTitleChanged={
@@ -457,18 +446,11 @@ export default function PhotoForm({
                     onMatchResults={onMatchResults}
                   />;
                 case 'visibility':
-                  return <FieldSetWithStatus
-                    {...fieldProps}
+                  return <FieldsetVisibility
                     key={key}
-                    id={key}
-                    label={fieldProps.label}
-                    value={getVisibilityValue(formData)}
-                    onChange={value => setFormData(data =>
-                      updateFormDataWithVisibility(
-                        data,
-                        value as VisibilityValue,
-                      ))}
-                    selectOptions={VISIBILITY_OPTIONS}
+                    {...fieldProps}
+                    formData={formData}
+                    setFormData={setFormData}
                     isModified={didVisibilityChange(
                       initialPhotoForm,
                       formData,
@@ -480,7 +462,7 @@ export default function PhotoForm({
                     {...fieldProps}
                   />;
                 default:
-                  return <FieldSetWithStatus
+                  return <FieldsetWithStatus
                     key={key}
                     {...fieldProps}
                   />;

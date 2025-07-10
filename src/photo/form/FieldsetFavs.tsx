@@ -1,13 +1,13 @@
 import { ComponentProps } from 'react';
-import FieldSetWithStatus from '@/components/FieldSetWithStatus';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import IconFavs from '@/components/icons/IconFavs';
 
 export default function FieldsetFavs(props: Omit<
-  ComponentProps<typeof FieldSetWithStatus>,
+  ComponentProps<typeof FieldsetWithStatus>,
   'label' | 'icon' | 'type'
 >) {
   return (
-    <FieldSetWithStatus
+    <FieldsetWithStatus
       {...props}
       label="Favorite"
       type="checkbox"

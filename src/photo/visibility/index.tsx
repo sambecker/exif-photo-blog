@@ -1,28 +1,33 @@
 import IconHidden from '@/components/icons/IconHidden';
-import { PhotoFormData } from '.';
+import { PhotoFormData } from '../form';
 import IconLock from '@/components/icons/IconLock';
 import { SelectMenuOptionType } from '@/components/SelectMenuOption';
 
-export type VisibilityValue = 'basic' | 'exclude' | 'private';
+export type VisibilityValue = 'default' | 'exclude' | 'private';
+
+export const EXCLUDE_DESCRIPTION =
+  'Excluded from homepage views, rss.xml, etc.';
+export const PRIVATE_DESCRIPTION =
+  'Visible only to admins';
 
 export const VISIBILITY_OPTIONS: SelectMenuOptionType[] = [
   {
-    value: 'basic',
+    value: 'default',
     accessoryStart: <IconHidden size={17} visible />,
-    label: 'Basic',
+    label: 'Default',
     note: 'Viewable everywhere',
   },
   {
     value: 'exclude',
     accessoryStart: <IconHidden size={17} />,
     label: 'Hide from feeds',
-    note: 'Exclude from home page views, rss.xml, etc.',
+    note: EXCLUDE_DESCRIPTION,
   },
   {
     value: 'private',
     accessoryStart: <IconLock size={14} />,
     label: 'Private',
-    note: 'Visible only to admins',
+    note: PRIVATE_DESCRIPTION,
   },
 ];
 
@@ -33,7 +38,7 @@ export const getVisibilityValue = (
     ? 'private'
     : formData.excludeFromFeeds === 'true'
       ? 'exclude'
-      : 'basic';
+      : 'default';
 
 export const updateFormDataWithVisibility = (
   formData: Partial<PhotoFormData>,

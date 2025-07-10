@@ -1,6 +1,6 @@
 'use client';
 
-import FieldSetWithStatus from '@/components/FieldSetWithStatus';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import Container from '@/components/Container';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import {
@@ -92,7 +92,7 @@ export default function SignInForm({
               {appText.auth.invalidEmailPassword}
             </ErrorNote>}
           <div className="space-y-4 w-full">
-            <FieldSetWithStatus
+            <FieldsetWithStatus
               id="email"
               inputRef={emailRef}
               label={appText.auth.email}
@@ -100,7 +100,7 @@ export default function SignInForm({
               value={email}
               onChange={setEmail}
             />
-            <FieldSetWithStatus
+            <FieldsetWithStatus
               id="password"
               label={appText.auth.password}
               type="password"

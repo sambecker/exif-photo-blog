@@ -2,7 +2,7 @@
 
 import PhotoTagFieldset from '@/admin/PhotoTagFieldset';
 import AppGrid from '@/components/AppGrid';
-import FieldSetWithStatus from '@/components/FieldSetWithStatus';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import IconHidden from '@/components/icons/IconHidden';
 import IconLock from '@/components/icons/IconLock';
 import SelectMenu from '@/components/SelectMenu';
@@ -42,7 +42,7 @@ export default function ComponentsPage() {
           />
         </div>
         <div className="z-11">
-          <FieldSetWithStatus
+          <FieldsetWithStatus
             label="Select"
             value="tag-1"
             selectOptions={[{
