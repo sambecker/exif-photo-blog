@@ -1,4 +1,4 @@
-import FieldsetWithStatus from '@/components/form/FieldsetWithStatus';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import { ComponentProps, useEffect, useState } from 'react';
 import { getPhotosNeedingRecipeTitleCountAction } from '../actions';
 

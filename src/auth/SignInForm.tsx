@@ -1,6 +1,6 @@
 'use client';
 
-import FieldsetWithStatus from '@/components/form/FieldsetWithStatus';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import Container from '@/components/Container';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import {

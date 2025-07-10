@@ -2,16 +2,16 @@
 
 import { InputHTMLAttributes, useRef, RefObject, ReactNode } from 'react';
 import { useFormStatus } from 'react-dom';
-import Spinner from '../Spinner';
+import Spinner from './Spinner';
 import { clsx } from 'clsx/lite';
 import { FieldSetType, AnnotatedTag } from '@/photo/form';
-import TagInput from '../TagInput';
+import TagInput from './TagInput';
 import { parameterize } from '@/utility/string';
-import Checkbox from '../Checkbox';
-import ResponsiveText from '../primitives/ResponsiveText';
-import Tooltip from '../Tooltip';
-import { SelectMenuOptionType } from '../SelectMenuOption';
-import SelectMenu from '../SelectMenu';
+import Checkbox from './Checkbox';
+import ResponsiveText from './primitives/ResponsiveText';
+import Tooltip from './Tooltip';
+import { SelectMenuOptionType } from './SelectMenuOption';
+import SelectMenu from './SelectMenu';
 
 export default function FieldsetWithStatus({
   id: _id,

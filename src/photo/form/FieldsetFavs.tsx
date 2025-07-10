@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import FieldsetWithStatus from '@/components/form/FieldsetWithStatus';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import IconFavs from '@/components/icons/IconFavs';
 
 export default function FieldsetFavs(props: Omit<

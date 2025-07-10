@@ -3,7 +3,7 @@
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
 import { PATH_ADMIN_RECIPES } from '@/app/paths';
-import FieldsetWithStatus from '@/components/form/FieldsetWithStatus';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import { ReactNode, useMemo, useState } from 'react';
 import { renamePhotoRecipeGloballyAction } from '@/photo/actions';
 import { parameterize } from '@/utility/string';

@@ -1,4 +1,4 @@
-import FieldsetWithStatus from '@/components/form/FieldsetWithStatus';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import { ComponentProps, Dispatch, SetStateAction } from 'react';
 import {
   getVisibilityValue,

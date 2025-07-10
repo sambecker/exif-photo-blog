@@ -1,6 +1,6 @@
 'use client';
 
-import FieldsetWithStatus from '@/components/form/FieldsetWithStatus';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import { useAppText } from '@/i18n/state/client';
 import { convertTagsForForm, getValidationMessageForTags, Tags } from '@/tag';
 import { ComponentProps, useEffect, useRef, useState } from 'react';
