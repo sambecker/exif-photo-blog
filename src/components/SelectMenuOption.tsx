@@ -2,15 +2,15 @@ import clsx from 'clsx/lite';
 import { ReactNode, useEffect, useRef } from 'react';
 import IconCheck from './icons/IconCheck';
 
-export interface SelectMenuOptionType {
-  value: string
+export type SelectMenuOptionType<T = string> = {
+  value: T
   label: ReactNode
   accessoryStart?: ReactNode
   accessoryEnd?: ReactNode
   note?: ReactNode
 }
 
-export default function SelectMenuOption({
+export default function SelectMenuOption<T = string>({
   label,
   accessoryStart,
   accessoryEnd,
@@ -24,7 +24,7 @@ export default function SelectMenuOption({
   isHighlighted?: boolean
   shouldHighlightOnHover?: boolean
   onClick?: () => void
-} & SelectMenuOptionType) {
+} & SelectMenuOptionType<T>) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

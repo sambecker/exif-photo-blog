@@ -10,7 +10,7 @@ export const EXCLUDE_DESCRIPTION =
 export const PRIVATE_DESCRIPTION =
   'Visible only to admins';
 
-export const VISIBILITY_OPTIONS: SelectMenuOptionType[] = [
+export const VISIBILITY_OPTIONS: SelectMenuOptionType<VisibilityValue>[] = [
   {
     value: 'default',
     accessoryStart: <IconHidden size={17} visible />,
