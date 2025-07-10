@@ -19,7 +19,7 @@ import {
   getFormErrors,
   isFormValid,
 } from '.';
-import FieldsetWithStatus from '@/components/FieldsetWithStatus';
+import FieldSetWithStatus from '@/components/FieldsetWithStatus';
 import { createPhotoAction, updatePhotoAction } from '../actions';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
@@ -367,7 +367,7 @@ export default function PhotoForm({
               staticValue,
             }]) => {
               if (!isFieldHidden(key, hideIfEmpty, shouldHide)) {
-                const fieldProps: ComponentProps<typeof FieldsetWithStatus> = {
+                const fieldProps: ComponentProps<typeof FieldSetWithStatus> = {
                   id: key,
                   label: label + (
                     key === 'blurData' && shouldDebugImageFallbacks
@@ -424,7 +424,7 @@ export default function PhotoForm({
 
                 switch (key) {
                 case 'film':
-                  return <FieldsetWithStatus
+                  return <FieldSetWithStatus
                     key={key}
                     {...fieldProps}
                     tagOptionsDefaultIcon={<span
@@ -462,7 +462,7 @@ export default function PhotoForm({
                     {...fieldProps}
                   />;
                 default:
-                  return <FieldsetWithStatus
+                  return <FieldSetWithStatus
                     key={key}
                     {...fieldProps}
                   />;

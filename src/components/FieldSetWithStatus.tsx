@@ -13,7 +13,7 @@ import Tooltip from './Tooltip';
 import { SelectMenuOptionType } from './SelectMenuOption';
 import SelectMenu from './SelectMenu';
 
-export default function FieldsetWithStatus({
+export default function FieldSetWithStatus({
   id: _id,
   label,
   icon,

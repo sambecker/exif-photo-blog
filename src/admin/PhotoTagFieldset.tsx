@@ -1,6 +1,6 @@
 'use client';
 
-import FieldsetWithStatus from '@/components/FieldsetWithStatus';
+import FieldSetWithStatus from '@/components/FieldsetWithStatus';
 import { useAppText } from '@/i18n/state/client';
 import { convertTagsForForm, getValidationMessageForTags, Tags } from '@/tag';
 import { ComponentProps, useEffect, useRef, useState } from 'react';
@@ -12,7 +12,7 @@ export default function PhotoTagFieldset(props: {
   onError?: (error: string) => void
   openOnLoad?: boolean
 } & Partial<Omit<
-  ComponentProps<typeof FieldsetWithStatus>,
+  ComponentProps<typeof FieldSetWithStatus>,
   'tagOptions'
 >>) {
   const {
@@ -41,7 +41,7 @@ export default function PhotoTagFieldset(props: {
   
   return (
     <div ref={ref}>
-      <FieldsetWithStatus
+      <FieldSetWithStatus
         {...rest}
         inputRef={ref}
         label="Tags"

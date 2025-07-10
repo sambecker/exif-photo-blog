@@ -3,7 +3,7 @@
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
 import { PATH_ADMIN_RECIPES } from '@/app/paths';
-import FieldsetWithStatus from '@/components/FieldsetWithStatus';
+import FieldSetWithStatus from '@/components/FieldsetWithStatus';
 import { ReactNode, useMemo, useState } from 'react';
 import { renamePhotoRecipeGloballyAction } from '@/photo/actions';
 import { parameterize } from '@/utility/string';
@@ -34,7 +34,7 @@ export default function AdminRecipeForm({
       action={renamePhotoRecipeGloballyAction}
       className="space-y-8"
     >
-      <FieldsetWithStatus
+      <FieldSetWithStatus
         label="New Recipe Name"
         value={updatedRecipeRaw}
         onChange={setUpdatedRecipeRaw}

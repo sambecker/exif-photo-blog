@@ -12,7 +12,7 @@ import { pathForAdminUploadUrl } from '@/app/paths';
 import DeleteUploadButton from './DeleteUploadButton';
 import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import { isElementEntirelyInViewport } from '@/utility/dom';
-import FieldsetWithStatus from '@/components/FieldsetWithStatus';
+import FieldSetWithStatus from '@/components/FieldsetWithStatus';
 import EditButton from './EditButton';
 import AddUploadButton from './AddUploadButton';
 
@@ -105,7 +105,7 @@ export default function AdminUploadsTableRow({
       )}>
         <div className="flex flex-col gap-6 w-full">
           <div className="flex flex-col grow gap-2">
-            <FieldsetWithStatus
+            <FieldSetWithStatus
               label="Title"
               value={draftTitle}
               onChange={titleUpdated =>

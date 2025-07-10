@@ -1,4 +1,4 @@
-import FieldsetWithStatus from '@/components/FieldsetWithStatus';
+import FieldSetWithStatus from '@/components/FieldsetWithStatus';
 import { ComponentProps, useEffect, useState } from 'react';
 import { getPhotosNeedingRecipeTitleCountAction } from '../actions';
 
@@ -10,7 +10,7 @@ export default function ApplyRecipeTitleGloballyCheckbox({
   film,
   onMatchResults,
   ...props
-}: ComponentProps<typeof FieldsetWithStatus> & {
+}: ComponentProps<typeof FieldSetWithStatus> & {
   photoId?: string
   recipeTitle?: string
   hasRecipeTitleChanged?: boolean
@@ -40,7 +40,7 @@ export default function ApplyRecipeTitleGloballyCheckbox({
 
   return (
     shouldShowFieldSet
-      ? <FieldsetWithStatus {...{
+      ? <FieldSetWithStatus {...{
         ...props,
         label: loading
           ? 'Scanning photos for matching recipes ...'
