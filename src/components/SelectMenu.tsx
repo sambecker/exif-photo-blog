@@ -162,6 +162,7 @@ export default function SelectMenu({
         {children ?? <div className="flex items-center w-full">
           <div className="grow min-w-0">
             <SelectMenuOption
+              className="text-lg"
               value={value}
               label={selectedOption?.label}
               accessoryStart={selectedOption?.accessoryStart}

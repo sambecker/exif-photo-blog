@@ -15,11 +15,13 @@ export default function SelectMenuOption<T = string>({
   accessoryStart,
   accessoryEnd,
   note,
+  className,
   isSelected,
   isHighlighted,
   shouldHighlightOnHover,
   onClick,
 }: {
+  className?: string
   isSelected?: boolean
   isHighlighted?: boolean
   shouldHighlightOnHover?: boolean
@@ -42,11 +44,12 @@ export default function SelectMenuOption<T = string>({
       className={clsx(
         'flex flex-col',
         'px-1.5 py-1 rounded-sm',
-        'text-lg select-none',
+        'select-none',
         'cursor-pointer',
         isHighlighted && 'bg-dim',
         shouldHighlightOnHover && 'hover:bg-dim',
         onClick && 'active:bg-medium',
+        className,
       )}
     >
       <div className="flex items-center gap-2.5">
