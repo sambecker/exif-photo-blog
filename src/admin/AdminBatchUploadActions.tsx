@@ -1,7 +1,7 @@
 'use client';
 
 import ErrorNote from '@/components/ErrorNote';
-import FieldSetWithStatus from '@/components/FieldSetWithStatus';
+import FieldsetWithStatus from '@/components/form/FieldsetWithStatus';
 import Container from '@/components/Container';
 import { addUploadsAction } from '@/photo/actions';
 import { PATH_ADMIN_PHOTOS } from '@/app/paths';
@@ -136,7 +136,7 @@ export default function AdminBatchUploadActions({
                 ? `Apply to ${pluralize(uploadUrls.length, 'upload')}`
                 : `Found ${pluralize(uploadUrls.length, 'upload')}`}
             </div>
-            <FieldSetWithStatus
+            <FieldsetWithStatus
               label="Apply to All"
               type="checkbox"
               value={showBulkSettings ? 'true' : 'false'}

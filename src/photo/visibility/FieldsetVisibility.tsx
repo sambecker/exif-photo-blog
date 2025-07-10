@@ -1,4 +1,4 @@
-import FieldSetWithStatus from '@/components/FieldSetWithStatus';
+import FieldsetWithStatus from '@/components/form/FieldsetWithStatus';
 import { ComponentProps, Dispatch, SetStateAction } from 'react';
 import {
   getVisibilityValue,
@@ -16,9 +16,9 @@ export default function FieldsetVisibility({
   label?: string
   formData: Partial<PhotoFormData>
   setFormData: Dispatch<SetStateAction<Partial<PhotoFormData>>>
-} & Omit<ComponentProps<typeof FieldSetWithStatus>, 'label' | 'value'>) {
+} & Omit<ComponentProps<typeof FieldsetWithStatus>, 'label' | 'value'>) {
   return (
-    <FieldSetWithStatus
+    <FieldsetWithStatus
       label="Visibility"
       {...props}
       selectOptions={VISIBILITY_OPTIONS}
