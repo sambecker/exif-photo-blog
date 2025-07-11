@@ -55,7 +55,6 @@ export default function PhotoGridPageClient({
           )}
           fadeSize={100}
           setMaxSize={false}
-          updateMaskAfterDelay={500}
         >
           <PhotoGridSidebar {...{
             ...categories,

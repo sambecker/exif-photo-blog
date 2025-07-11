@@ -161,7 +161,7 @@ export default function AdminBatchUploadActions({
                 readOnly={isAdding}
               />
               <FieldsetFavs
-                className="my-6"
+                className="pt-2.5 pb-2"
                 value={formData.favorite ?? 'false'}
                 onChange={favorite =>
                   setFormData(data => ({ ...data, favorite }))}

@@ -140,7 +140,7 @@ export default function SelectMenu({
         tabIndex={tabIndex}
         className={clsx(
           'cursor-pointer control pl-1.5 py-2',
-          'flex items-center w-full h-9.5',
+          'flex items-center w-full h-10',
           'focus:outline-2 -outline-offset-2 focus:outline-blue-600',
           'select-none',
           Boolean(error) && 'error',

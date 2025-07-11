@@ -1,3 +1,4 @@
+import useElementHeight from '@/utility/useElementHeight';
 import {
   CSSProperties,
   RefObject,
@@ -5,6 +6,7 @@ import {
   useEffect,
   useMemo,
 } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
 
 const CSS_VAR_MASK_COLOR_START = '--mask-color-start';
 const CSS_VAR_MASK_COLOR_END   = '--mask-color-end';
@@ -18,7 +20,6 @@ export default function useMaskedScroll({
   hideScrollbar = true,
   // Disable when calling 'updateMask' explicitly
   updateMaskOnEvents = true,
-  updateMaskAfterDelay = 0,
   scrollToEndOnMount,
 }: {
   ref: RefObject<HTMLDivElement | null>
@@ -28,12 +29,13 @@ export default function useMaskedScroll({
   animationDuration?: number
   setMaxSize?: boolean
   hideScrollbar?: boolean
-  updateMaskAfterDelay?: number
   scrollToEndOnMount?: boolean
 }) {
   const isVertical = direction === 'vertical';
 
-  const updateMask = useCallback(() => {
+  const containerHeight = useElementHeight(containerRef);
+
+  const _updateMask = useCallback(() => {
     const ref = containerRef?.current;
     if (ref) {
       const start = isVertical
@@ -51,7 +53,9 @@ export default function useMaskedScroll({
     }
   }, [containerRef, isVertical]);
 
-  // Conditionally track events
+  const updateMask = useDebouncedCallback(_updateMask, 50, { leading: true });
+
+  // Update on scroll/resize
   useEffect(() => {
     const ref = containerRef?.current;
     if (ref && updateMaskOnEvents) {
@@ -64,18 +68,19 @@ export default function useMaskedScroll({
     }
   }, [containerRef, updateMask, updateMaskOnEvents]);
 
-  // Update on mount
+  // Update on container height change
   useEffect(() => {
-    updateMask();
-  }, [updateMask]);
-
-  // Update after delay
-  useEffect(() => {
-    if (updateMaskAfterDelay) {
-      const timeout = setTimeout(updateMask, updateMaskAfterDelay);
-      return () => clearTimeout(timeout);
+    if (updateMaskOnEvents) {
+      updateMask();
     }
-  }, [containerRef, updateMask, updateMaskAfterDelay]);
+  }, [containerHeight, updateMaskOnEvents, updateMask]);
+
+  // Update on mount when not responding to events
+  useEffect(() => {
+    if (!updateMaskOnEvents) {
+      updateMask();
+    }
+  }, [updateMask, updateMaskOnEvents]);
 
   useEffect(() => {
     const ref = containerRef?.current;
