@@ -4,7 +4,6 @@ import ScoreCard from '@/components/ScoreCard';
 import ScoreCardRow from '@/components/ScoreCardRow';
 import { dateRangeForPhotos } from '@/photo';
 import { FaCircleInfo, FaRegCalendar } from 'react-icons/fa6';
-import { HiMiniArrowsUpDown } from 'react-icons/hi2';
 import { MdAspectRatio } from 'react-icons/md';
 import { PiWarningBold } from 'react-icons/pi';
 import { TbSparkles } from 'react-icons/tb';
@@ -117,7 +116,6 @@ export default function AdminAppInsightsClient({
     noConfiguredMeta,
     photosNeedSync,
     photoMatting,
-    camerasFirst,
     gridFirst,
     noStaticOptimization,
   } = insights;
@@ -381,23 +379,6 @@ export default function AdminAppInsightsClient({
                 <EnvVar
                   variable="NEXT_PUBLIC_MATTE_PHOTOS"
                   value="1"
-                  trailingContent="."
-                />
-              </>}
-            />}
-            {(camerasFirst || debug) && <ScoreCardRow
-              icon={<HiMiniArrowsUpDown
-                size={17}
-                className="translate-x-[-1px]"
-              />}
-              content="Move cameras above tags in sidebar"
-              expandContent={<>
-                Now that you have more than a few tags, consider
-                showing cameras first in the sidebar by setting
-                {' '}
-                <EnvVar
-                  variable="NEXT_PUBLIC_CATEGORY_VISIBILITY"
-                  value="cameras, tags, recipes, films"
                   trailingContent="."
                 />
               </>}

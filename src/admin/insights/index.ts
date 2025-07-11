@@ -9,7 +9,6 @@ import {
   MATTE_PHOTOS,
   IS_META_DESCRIPTION_CONFIGURED,
   IS_META_TITLE_CONFIGURED,
-  CATEGORY_VISIBILITY,
   HAS_STATIC_OPTIMIZATION,
   GRID_HOMEPAGE_ENABLED,
   AI_TEXT_GENERATION_ENABLED,
@@ -18,7 +17,6 @@ import { PhotoDateRange } from '@/photo';
 import { getGitHubMeta } from '@/platforms/github';
 
 const BASIC_PHOTO_INSTALLATION_COUNT = 32;
-const TAG_COUNT_THRESHOLD = 12;
 
 const AdminAppInsightCode = [
   'noFork',
@@ -32,7 +30,6 @@ const _INSIGHTS_TEMPLATE = [
   'noConfiguredDomain',
   'noConfiguredMeta',
   'photoMatting',
-  'camerasFirst',
   'gridFirst',
   'noStaticOptimization',
 ] as const;
@@ -129,11 +126,9 @@ export const getAllInsights = ({
   photosCountNeedSync,
   photosCount,
   photosCountPortrait,
-  tagsCount,
 }: Parameters<typeof getSignificantInsights>[0] & {
   photosCount: number
   photosCountPortrait: number
-  tagsCount: number
 }) => ({
   ...getSignificantInsights({ codeMeta, photosCountNeedSync }),
   noFork: !codeMeta?.isForkedFromBase && !codeMeta?.isBaseRepo,
@@ -142,10 +137,6 @@ export const getAllInsights = ({
     !IS_META_TITLE_CONFIGURED ||
     !IS_META_DESCRIPTION_CONFIGURED,
   photoMatting: photosCountPortrait > 0 && !MATTE_PHOTOS,
-  camerasFirst: (
-    tagsCount > TAG_COUNT_THRESHOLD &&
-    CATEGORY_VISIBILITY[0] !== 'cameras'
-  ),
   gridFirst: (
     photosCount >= BASIC_PHOTO_INSTALLATION_COUNT &&
     !GRID_HOMEPAGE_ENABLED

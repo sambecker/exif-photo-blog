@@ -46,7 +46,6 @@ export default async function AdminAppInsights() {
         photosCount,
         photosCountNeedSync,
         photosCountPortrait,
-        tagsCount: tags.length,
       })}
       photoStats={{
         photosCount,
