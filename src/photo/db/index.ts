@@ -11,6 +11,7 @@ const DB_PARAMETERIZE_REPLACEMENTS = [
   [',', ''],
   ['/', ''],
   ['+', '-'],
+  ['|', '-'],
   [' ', '-'],
 ];
 
