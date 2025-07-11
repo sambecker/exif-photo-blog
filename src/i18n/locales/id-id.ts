@@ -19,6 +19,7 @@ export const TEXT: I18N = {
     lensPlural: 'Lensa',
     tag: 'Tag',
     tagPlural: 'Tag',
+    tagged: 'Ditandai',
     taggedPhotos: 'Foto yang Ditandai',
     taggedPhrase: 'Foto dengan tag {{tag}}',
     taggedFavs: 'Foto Favorit',

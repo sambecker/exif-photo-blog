@@ -18,6 +18,7 @@ export const TEXT = {
     lensPlural: 'Lenses',
     tag: 'Tag',
     tagPlural: 'Tags',
+    tagged: 'Tagged',
     taggedPhotos: 'Tagged Photos',
     taggedPhrase: 'Photos tagged {{tag}}',
     taggedFavs: 'Favorite Photos',

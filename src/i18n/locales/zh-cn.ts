@@ -19,6 +19,7 @@ export const TEXT: I18N = {
     lensPlural: '镜头',
     tag: '标签',
     tagPlural: '标签',
+    tagged: '已标记',
     taggedPhotos: '已标记照片',
     taggedPhrase: '标记为 {{tag}} 的照片',
     taggedFavs: '收藏照片',

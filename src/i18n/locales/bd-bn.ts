@@ -20,6 +20,7 @@ export const TEXT: I18N = {
     lensPlural: 'লেন্সগুলো',
     tag: 'ট্যাগ',
     tagPlural: 'ট্যাগসমূহ',
+    tagged: 'ট্যাগকৃত',
     taggedPhotos: 'ট্যাগকৃত ছবি',
     taggedPhrase: '{{tag}} ট্যাগ দেওয়া ছবি',
     taggedFavs: 'পছন্দের ছবি',

@@ -19,6 +19,7 @@ export const TEXT: I18N = {
     lensPlural: 'Objetivas',
     tag: 'Etiqueta',
     tagPlural: 'Etiquetas',
+    tagged: 'Etiquetado',
     taggedPhotos: 'Fotografias etiquetadas',
     taggedPhrase: 'Fotos etiquetadas com {{tag}}',
     taggedFavs: 'Fotografias favoritas',
