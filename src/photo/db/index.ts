@@ -103,9 +103,9 @@ export const getWheresFromOptions = (
     // Newest upload must be within past 2 weeks
     // eslint-disable-next-line max-len
     wheres.push('(SELECT MAX(created_at) FROM photos) >= (now() - INTERVAL \'14 days\')');
-    // Selects must be within 2 weeks of newest upload
+    // Selects must be within 1 week of newest upload
     // eslint-disable-next-line max-len
-    wheres.push('created_at >= (SELECT MAX(created_at) - INTERVAL \'14 days\' FROM photos)');
+    wheres.push('created_at >= (SELECT MAX(created_at) - INTERVAL \'7 days\' FROM photos)');
   }
   if (year) {
     wheres.push(`EXTRACT(YEAR FROM taken_at) = $${valuesIndex++}`);
