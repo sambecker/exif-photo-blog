@@ -159,6 +159,7 @@ export default function InfinitePhotoScroll({
   const renderMoreButton = () =>
     <div ref={buttonContainerRef}>
       <button
+        type="button"
         onClick={() => error ? mutate() : advance()}
         disabled={isLoading || isValidating}
         className={clsx(

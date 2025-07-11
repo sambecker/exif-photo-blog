@@ -94,6 +94,7 @@ export default function TooltipPrimitive({
           {includeButton
             ? <button
               ref={refTrigger}
+              type="button"
               onClick={() => {
                 setIsOpen(!isOpen);
                 blurActiveElement();
