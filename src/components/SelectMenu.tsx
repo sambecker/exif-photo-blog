@@ -16,7 +16,7 @@ export default function SelectMenu({
   onChange,
   options,
   defaultOptionLabel,
-  tabIndex,
+  tabIndex = 0,
   error,
   readOnly,
   children,

@@ -4,10 +4,11 @@ import { ImCheckmark } from 'react-icons/im';
 
 const SIZE = 'size-4.5';
 
-const boxStyles = clsx(
+const BOX_STYLES = clsx(
   'relative',
   'inline-flex items-center justify-center',
-  'rounded-md border',
+  'rounded-md border ring-blue-600',
+  'group-focus-within:ring group-focus-within:border-blue-600',
   SIZE,
 );
 
@@ -24,6 +25,7 @@ export default function Checkbox({
   return (
     <span
       className={clsx(
+        'group',
         'relative inline-flex items-center justify-center',
         SIZE,
         props.readOnly
@@ -36,7 +38,7 @@ export default function Checkbox({
         ? accessory
         : props.checked
           ? <span className={clsx(
-            boxStyles,
+            BOX_STYLES,
             'border-transparent dark:border-gray-700',
             props.readOnly
               ? 'bg-gray-300 dark:bg-gray-700'
@@ -51,7 +53,7 @@ export default function Checkbox({
             />
           </span>
           : <span className={clsx(
-            boxStyles,
+            BOX_STYLES,
             'bg-gray-100 dark:bg-gray-700/25',
             'border-gray-300 dark:border-gray-700',
           )} />}
