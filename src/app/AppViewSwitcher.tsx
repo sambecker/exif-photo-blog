@@ -161,9 +161,8 @@ export default function AppViewSwitcher({
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.5 }}
           transition={{ duration: 0.2, ease: 'easeInOut' }}
-          className={GAP_CLASS}
         >
-          <Switcher className="max-sm:hidden">
+          <Switcher className={clsx('max-sm:hidden', GAP_CLASS)}>
             <SwitcherItem
               href={pathSort}
               icon={<IconSort
