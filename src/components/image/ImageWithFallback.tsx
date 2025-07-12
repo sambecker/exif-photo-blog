@@ -34,11 +34,11 @@ export default function ImageWithFallback({
   useEffect(() => { isLoadingRef.current = isLoading; }, [isLoading]);
   useEffect(() => {
     const timeout = setTimeout(() => {
-      // If image is still loading after 200ms, force CSS animation
+      // If image is still loading after 150ms, force CSS animation
       if (isLoadingRef.current) {
         setFadeFallbackTransition(true);
       }
-    }, 200);
+    }, 150);
     return () => clearTimeout(timeout);
   }, []);
 
