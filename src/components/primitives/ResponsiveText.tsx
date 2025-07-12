@@ -20,7 +20,6 @@ export default function ResponsiveText({
     const textLength = typeof children === 'string'
       ? children.length
       : 0;
-    console.log(textLength);
     return textLength >= CHARACTER_CUTOFF_LG
       ? { short: 'lg:hidden', long: 'max-lg:hidden' }
       : textLength >= CHARACTER_CUTOFF_MD

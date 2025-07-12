@@ -39,10 +39,11 @@ export const NULL_CATEGORY_DATA: CategoryData = {
 export const getDataForCategories = () => Promise.all([
   SHOW_RECENTS
     ? getPhotosMeta({ recent: true })
-      .then(({ count, dateRange }) => [{
-        count,
-        lastModified: new Date(dateRange?.end ?? ''),
-      }])
+      .then(({ count, dateRange }) => count && dateRange
+        ? [{
+          count,
+          lastModified: new Date(dateRange?.end ?? ''),
+        }] : undefined)
       .catch(() => [])
     : undefined,
   SHOW_YEARS
