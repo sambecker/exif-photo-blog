@@ -24,6 +24,7 @@ export type CategoryKey = (typeof CATEGORY_KEYS)[number];
 export type CategoryKeys = CategoryKey[];
 
 export const DEFAULT_CATEGORY_KEYS: CategoryKeys = [
+  'recents',
   'tags',
   'cameras',
   'lenses',
