@@ -31,6 +31,7 @@ export default async function LensHeader({
         {...{ lens }}
         contrast="high"
         showHover={false}
+        longText
       />}
       entityDescription={
         descriptionForLensPhotos(

@@ -341,7 +341,6 @@ export default function PhotoLarge({
                               lens={lens}
                               contrast="medium"
                               prefetch={prefetchRelatedLinks}
-                              shortText
                               countOnHover={lensCount}
                             />}
                         </div>}

@@ -114,7 +114,7 @@ export const formatLensText = (
 
   switch (length) {
   case 'long':
-    return make ? `${make} ${modelRaw}` : modelRaw;
+    return make ? `${make} ${model}` : modelRaw;
   case 'medium':
   case 'short':
     return model;

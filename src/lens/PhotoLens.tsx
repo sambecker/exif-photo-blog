@@ -9,16 +9,17 @@ import IconLens from '@/components/icons/IconLens';
 
 export default function PhotoLens({
   lens,
-  shortText,
+  longText,
   ...props
 }: {
   lens: Lens
-  shortText?: boolean
+  longText?: boolean
 } & EntityLinkExternalProps) {
   return (
     <EntityLink
       {...props}
-      label={formatLensText(lens, shortText ? 'short' : 'medium')}
+      label={formatLensText(lens, longText ? 'long' : 'short')}
+      labelSmall={formatLensText(lens, 'short')}
       path={pathForLens(lens)}
       hoverPhotoQueryOptions={{ lens }}
       icon={<IconLens
