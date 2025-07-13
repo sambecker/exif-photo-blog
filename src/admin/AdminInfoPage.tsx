@@ -1,14 +1,14 @@
 import Container from '@/components/Container';
 import AppGrid from '@/components/AppGrid';
-import { ReactNode } from 'react';
+import { ComponentProps } from 'react';
 
 export default function AdminInfoPage({
   children,
-}: {
-  children: ReactNode
-}) {
+  ...props
+}: Omit<ComponentProps<typeof AppGrid>, 'contentMain'>) {
   return (
     <AppGrid
+      {...props}
       contentMain={
         <Container spaceChildren={false}>
           {children}

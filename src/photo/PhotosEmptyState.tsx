@@ -4,7 +4,7 @@ import {
   IS_SITE_READY,
   PRESERVE_ORIGINAL_UPLOADS,
 } from '@/app/config';
-import AdminAppConfiguration from '@/admin/AdminAppConfiguration';
+import AdminAppConfiguration from '@/admin/config/AdminAppConfiguration';
 import { clsx } from 'clsx/lite';
 import { HiOutlinePhotograph } from 'react-icons/hi';
 import { revalidatePath } from 'next/cache';

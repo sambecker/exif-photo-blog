@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { APP_CONFIGURATION } from '@/app/config';
-import AdminAppConfigurationServer from './AdminAppConfigurationServer';
 import AdminAppConfigurationClient from './AdminAppConfigurationClient';
+import AdminAppConfigurationServer from './AdminAppConfigurationServer';
 
 export default function AdminAppConfiguration({
   simplifiedView,

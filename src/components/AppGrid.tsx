@@ -19,7 +19,7 @@ export default function AppGrid({
   contentMain,
   contentSide,
   sideFirstOnMobile,
-  sideHiddenOnMobile,
+  sideHiddenOnMobile = true,
   ...props
 }: {
   containerRef?: RefObject<HTMLDivElement | null>
@@ -58,7 +58,7 @@ export default function AppGrid({
           'col-span-1 md:col-span-3',
           '3xl:max-w-[260px]',
           sideFirstOnMobile && 'order-1 md:order-none',
-          sideHiddenOnMobile && 'hidden md:block',
+          sideHiddenOnMobile && 'max-md:hidden',
           classNameSide,
         )}>
           {contentSide}

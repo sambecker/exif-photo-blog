@@ -72,7 +72,6 @@ export default function PhotoGridContainer({
         </div>
       </div>}
       contentSide={sidebar}
-      sideHiddenOnMobile
     />
   );
 }

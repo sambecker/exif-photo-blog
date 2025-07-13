@@ -171,7 +171,6 @@ export default function PhotoDetailPage({
         ]}
       />
       <AppGrid
-        sideFirstOnMobile
         contentMain={<PhotoGrid
           photos={photosGrid ?? photos}
           selectedPhoto={photo}

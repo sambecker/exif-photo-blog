@@ -46,7 +46,7 @@ export default function Nav({
     classNameStickyContainer,
     classNameStickyNav,
     isNavVisible,
-  } = useStickyNav(ref);
+  } = useStickyNav(ref, !isPathAdmin(pathname));
 
   const renderLink = (
     text: string,
@@ -112,7 +112,6 @@ export default function Nav({
             : []}
         />
       }
-      sideHiddenOnMobile
     />
   );
 };
