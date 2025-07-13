@@ -10,11 +10,11 @@ export default function PhotoVisibilityIcon({
   photo: Photo
 }) {
   return photo.hidden
-    ? <Tooltip content={PRIVATE_DESCRIPTION}>
+    ? <Tooltip content={PRIVATE_DESCRIPTION} supportMobile>
       <IconLock size={13} />
     </Tooltip>
     : photo.excludeFromFeeds
-      ? <Tooltip content={EXCLUDE_DESCRIPTION}>
+      ? <Tooltip content={EXCLUDE_DESCRIPTION} supportMobile>
         <IconHidden size={16} className="translate-y-[0.5px]" />
       </Tooltip>
       : null;
