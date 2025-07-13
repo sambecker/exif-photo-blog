@@ -26,11 +26,15 @@ export default async function GridPage() {
   const [
     photos,
     photosCount,
+    photosCountWithExcludes,
     categories,
   ] = await Promise.all([
     getPhotosCached()
       .catch(() => []),
     getPhotosMetaCached(FEED_META_QUERY_OPTIONS)
+      .then(({ count }) => count)
+      .catch(() => 0),
+    getPhotosMetaCached()
       .then(({ count }) => count)
       .catch(() => 0),
     getDataForCategoriesCached(),
@@ -42,6 +46,7 @@ export default async function GridPage() {
         {...{
           photos,
           photosCount,
+          photosCountWithExcludes,
           ...USER_DEFAULT_SORT_OPTIONS,
           ...categories,
         }}

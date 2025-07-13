@@ -28,11 +28,15 @@ export default async function HomePage() {
   const [
     photos,
     photosCount,
+    photosCountWithExcludes,
     categories,
   ] = await Promise.all([
     getPhotosCached()
       .catch(() => []),
     getPhotosMetaCached(FEED_META_QUERY_OPTIONS)
+      .then(({ count }) => count)
+      .catch(() => 0),
+    getPhotosMetaCached()
       .then(({ count }) => count)
       .catch(() => 0),
     GRID_HOMEPAGE_ENABLED
@@ -47,6 +51,7 @@ export default async function HomePage() {
           {...{
             photos,
             photosCount,
+            photosCountWithExcludes,
             ...USER_DEFAULT_SORT_OPTIONS,
             ...categories,
           }}

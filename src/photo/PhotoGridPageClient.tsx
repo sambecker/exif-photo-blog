@@ -15,12 +15,14 @@ import { SortBy } from './db/sort';
 export default function PhotoGridPageClient({
   photos,
   photosCount,
+  photosCountWithExcludes,
   sortBy,
   sortWithPriority,
   ...categories
 }: ComponentProps<typeof PhotoGridSidebar> & {
   photos: Photo[]
   photosCount: number
+  photosCountWithExcludes: number
   sortBy: SortBy
   sortWithPriority: boolean
 }) {
@@ -58,7 +60,7 @@ export default function PhotoGridPageClient({
         >
           <PhotoGridSidebar {...{
             ...categories,
-            photosCount,
+            photosCount: photosCountWithExcludes,
             containerHeight,
           }} />
         </MaskedScroll>
