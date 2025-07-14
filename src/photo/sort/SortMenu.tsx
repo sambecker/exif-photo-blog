@@ -15,6 +15,7 @@ export default function SortMenu({
         className="shrink-0 translate-x-[0.5px] translate-y-[1px]"
       />}
       sections={[]}
+      side="left"
       ariaLabel="Sort Menu"
     />
   );

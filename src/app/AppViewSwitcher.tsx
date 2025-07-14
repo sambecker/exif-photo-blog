@@ -12,7 +12,7 @@ import { useAppState } from '@/app/AppState';
 import {
   GRID_HOMEPAGE_ENABLED,
   SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
-  SHOW_SORT_CONTROL,
+  NAV_SORT_CONTROL,
 } from './config';
 import AdminAppMenu from '@/admin/AdminAppMenu';
 import Spinner from '@/components/Spinner';
@@ -29,7 +29,8 @@ import SortMenu from '@/photo/sort/SortMenu';
 
 export type SwitcherSelection = 'full' | 'grid' | 'admin';
 
-const GAP_CLASS = 'mr-1.5 sm:mr-2';
+const GAP_CLASS_RIGHT = 'mr-1.5 sm:mr-2';
+const GAP_CLASS_LEFT  = 'ml-0.5 sm:ml-1';
 
 export default function AppViewSwitcher({
   currentSelection,
@@ -51,7 +52,10 @@ export default function AppViewSwitcher({
     invalidateSwr,
   } = useAppState();
 
-  const showSortControl = SHOW_SORT_CONTROL && doesPathOfferSort(pathname);
+  const showSortControl =
+    NAV_SORT_CONTROL !== 'none' &&
+    doesPathOfferSort(pathname);
+
   const {
     sortBy,
     isAscending,
@@ -122,7 +126,7 @@ export default function AppViewSwitcher({
     <div className={clsx('flex', className)}>
       <Switcher
         className={clsx(
-          GAP_CLASS,
+          GAP_CLASS_RIGHT,
           // Apply offset due to outline strategy
           'translate-x-[1px]',
         )}
@@ -146,7 +150,10 @@ export default function AppViewSwitcher({
           <SwitcherItem
             icon={<AdminAppMenu
               isOpen={isAdminMenuOpen}
-              setIsOpen={setIsAdminMenuOpen}
+              setIsOpen={isOpen => {
+                setIsAdminMenuOpen(isOpen);
+                if (isOpen) { setIsSortMenuOpen(false); }
+              }}
             />}
             tooltip={{
               ...!isAdminMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
@@ -164,15 +171,22 @@ export default function AppViewSwitcher({
           exit={{ opacity: 0, scale: 0.5 }}
           transition={{ duration: 0.2, ease: 'easeInOut' }}
         >
-          <Switcher className={clsx('max-sm:hidden', GAP_CLASS)}>
-            {true
+          <Switcher
+            className={clsx('max-sm:hidden', GAP_CLASS_LEFT)}
+            type="borderless"
+          >
+            {NAV_SORT_CONTROL === 'menu'
               ? <SwitcherItem
                 icon={<SortMenu
                   isOpen={isSortMenuOpen}
-                  setIsOpen={setIsSortMenuOpen}
+                  setIsOpen={isOpen => {
+                    setIsSortMenuOpen(isOpen);
+                    if (isOpen) { setIsAdminMenuOpen(false); }
+                  }}
                 />}
                 tooltip={{ content: 'Sort' }}
                 noPadding
+                width="narrow"
               />
               :
               <SwitcherItem
@@ -186,6 +200,7 @@ export default function AppViewSwitcher({
                     ? appText.sort.newest
                     : appText.sort.oldest,
                 }}
+                width="narrow"
               />}
           </Switcher>
         </motion.div>}
@@ -204,6 +219,7 @@ export default function AppViewSwitcher({
               keyCommandModifier: KEY_COMMANDS.search[0],
               keyCommand: KEY_COMMANDS.search[1],
             }}}
+            width="narrow"
           />
         </Switcher>
       </motion.div>

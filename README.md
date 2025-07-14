@@ -153,7 +153,13 @@ Application behavior can be changed by configuring the following environment var
     - `uploaded-at`
     - `uploaded-at-oldest-first`
 - `NEXT_PUBLIC_PRIORITY_BASED_SORTING = 1` takes priority field into account when sorting photos (⚠️ enabling may have performance consequences)
-- `NEXT_PUBLIC_SHOW_SORT_CONTROL = 1` shows sort control in desktop nav on grid/full homepages
+- `NEXT_PUBLIC_NAV_SORT_CONTROL`
+  - Controls sort UI on grid/full homepages
+  - Accepted values:
+    - `none`
+    - `toggle` (default)
+    - `menu`
+
 
 #### Display
 - `NEXT_PUBLIC_HIDE_KEYBOARD_SHORTCUT_TOOLTIPS = 1` hides keyboard shortcut hints in areas like the main nav, and previous/next photo links
