@@ -1,5 +1,5 @@
-import Switcher from '@/components/Switcher';
-import SwitcherItem from '@/components/SwitcherItem';
+import Switcher from '@/components/switcher/Switcher';
+import SwitcherItem from '@/components/switcher/SwitcherItem';
 import IconFull from '@/components/icons/IconFull';
 import IconGrid from '@/components/icons/IconGrid';
 import {
@@ -25,6 +25,7 @@ import { useAppText } from '@/i18n/state/client';
 import IconSort from '@/components/icons/IconSort';
 import { getSortConfigFromPath } from '@/photo/db/sort-path';
 import { motion } from 'framer-motion';
+import SortMenu from '@/photo/sort/SortMenu';
 
 export type SwitcherSelection = 'full' | 'grid' | 'admin';
 
@@ -88,6 +89,7 @@ export default function AppViewSwitcher({
   }, [pathname, isUserSignedIn]);
   useKeydownHandler({ onKeyDown });
 
+  const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
 
   const renderItemFull =
@@ -163,18 +165,28 @@ export default function AppViewSwitcher({
           transition={{ duration: 0.2, ease: 'easeInOut' }}
         >
           <Switcher className={clsx('max-sm:hidden', GAP_CLASS)}>
-            <SwitcherItem
-              href={pathSort}
-              icon={<IconSort
-                sort={isAscending ? 'asc' : 'desc'}
-                className="translate-x-[0.5px] translate-y-[1px]"
+            {true
+              ? <SwitcherItem
+                icon={<SortMenu
+                  isOpen={isSortMenuOpen}
+                  setIsOpen={setIsSortMenuOpen}
+                />}
+                tooltip={{ content: 'Sort' }}
+                noPadding
+              />
+              :
+              <SwitcherItem
+                href={pathSort}
+                icon={<IconSort
+                  sort={isAscending ? 'asc' : 'desc'}
+                  className="translate-x-[0.5px] translate-y-[1px]"
+                />}
+                tooltip={{
+                  content: isAscending
+                    ? appText.sort.newest
+                    : appText.sort.oldest,
+                }}
               />}
-              tooltip={{
-                content: isAscending
-                  ? appText.sort.newest
-                  : appText.sort.oldest,
-              }}
-            />
           </Switcher>
         </motion.div>}
       <motion.div

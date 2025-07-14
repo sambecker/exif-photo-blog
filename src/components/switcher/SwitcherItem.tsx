@@ -1,9 +1,9 @@
 import { clsx } from 'clsx/lite';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/app/config';
 import { ComponentProps, ReactNode, RefObject } from 'react';
-import Spinner from './Spinner';
-import LinkWithIconLoader from './LinkWithIconLoader';
-import Tooltip from './Tooltip';
+import Spinner from '../Spinner';
+import LinkWithIconLoader from '../LinkWithIconLoader';
+import Tooltip from '../Tooltip';
 
 const WIDTH_CLASS = 'w-[42px]';
 

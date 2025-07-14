@@ -1,6 +1,5 @@
 'use client';
 
-import MoreMenu from '@/components/more/MoreMenu';
 import {
   PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_INSIGHTS,
@@ -30,19 +29,14 @@ import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 import MoreMenuItem from '@/components/more/MoreMenuItem';
 import Spinner from '@/components/Spinner';
 import { useAppText } from '@/i18n/state/client';
+import SwitcherItemMenu from '@/components/switcher/SwitcherItemMenu';
 
 export default function AdminAppMenu({
-  active,
-  animateMenuClose,
   isOpen,
   setIsOpen,
-  className,
 }: {
-  active?: boolean
-  animateMenuClose?: boolean
   isOpen?: boolean
   setIsOpen?: (isOpen: boolean) => void
-  className?: string
 }) {
   const {
     photosCountTotal = 0,
@@ -213,16 +207,11 @@ export default function AdminAppMenu({
   , [sectionUpload, sectionMain, sectionSignOut]);
 
   return (
-    <MoreMenu
+    <SwitcherItemMenu
       {...{ isOpen, setIsOpen }}
-      icon={<div className={clsx(
-        'w-[28px] h-[28px]',
-        'overflow-hidden',
-      )}>
+      icon={<div className="w-[28px] h-[28px] overflow-hidden">
         <div className={clsx(
-          'flex flex-col items-center justify-center gap-2',
-          'relative transition-transform',
-          animateMenuClose ? 'duration-300' : 'duration-0',
+          'relative flex flex-col items-center justify-center gap-2',
           'translate-y-[-18px]',
         )}>
           <IoArrowDown size={16} className="shrink-0" />
@@ -233,28 +222,12 @@ export default function AdminAppMenu({
       sideOffset={12}
       alignOffset={-84}
       onOpen={refreshAdminData}
-      className={clsx(
-        'outline-medium',
-        className,
-      )}
-      classNameButton={clsx(
-        'p-0!',
-        'w-full h-full',
-        'flex items-center justify-center',
-        'hover:bg-transparent dark:hover:bg-transparent',
-        'active:bg-transparent dark:active:bg-transparent',
-        'rounded-none focus:outline-none',
-        active
-          ? 'text-black dark:text-white'
-          : 'text-gray-400 dark:text-gray-600',
-      )}
-      classNameButtonOpen={clsx(
-        'bg-dim text-main!',
-        '[&>*>*]:translate-y-[6px]',
-        !animateMenuClose && '[&>*>*]:duration-300',
-      )}
       sections={sections}
       ariaLabel="Admin Menu"
+      classNameButtonOpen={clsx(
+        '[&>*>*]:translate-y-[6px]',
+        '[&>*>*]:duration-300',
+      )}
     />
   );
 }
