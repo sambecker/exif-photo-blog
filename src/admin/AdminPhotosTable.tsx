@@ -60,13 +60,13 @@ export default function AdminPhotosTable({
             className={opacityForPhotoId(photo.id)}
           />
           <div className={clsx(
-            'flex flex-col lg:flex-row min-w-0',
+            'flex flex-col lg:flex-row min-w-0 gap-x-3',
             opacityForPhotoId(photo.id),
           )}>
             <Link
               key={photo.id}
               href={pathForPhoto({ photo })}
-              className="lg:w-[50%] flex items-center gap-2"
+              className="lg:min-w-[50%] flex items-center gap-2"
               prefetch={false}
             >
               <span className={clsx(
