@@ -75,8 +75,8 @@ importers:
         specifier: 15.3.5
         version: 15.3.5(@babel/core@7.27.4)(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       next-auth:
-        specifier: 5.0.0-beta.28
-        version: 5.0.0-beta.28(next@15.3.5(@babel/core@7.27.4)(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
+        specifier: 5.0.0-beta.29
+        version: 5.0.0-beta.29(next@15.3.5(@babel/core@7.27.4)(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -238,8 +238,8 @@ packages:
   '@asamuzakjp/css-color@3.2.0':
     resolution: {integrity: sha512-K1A6z8tS3XsmCMM86xoWdn7Fkdn9m6RSVtocUrJYIwZnFVkng/PvkEoWtOWmP+Scc6saYWHWZYbndEEXxl24jw==}
 
-  '@auth/core@0.39.1':
-    resolution: {integrity: sha512-McD8slui0oOA1pjR5sPjLPl5Zm//nLP/8T3kr8hxIsvNLvsiudYvPHhDFPjh1KcZ2nFxCkZmP6bRxaaPd/AnLA==}
+  '@auth/core@0.40.0':
+    resolution: {integrity: sha512-n53uJE0RH5SqZ7N1xZoMKekbHfQgjd0sAEyUbE+IYJnmuQkbvuZnXItCU7d+i7Fj8VGOgqvNO7Mw4YfBTlZeQw==}
     peerDependencies:
       '@simplewebauthn/browser': ^9.0.1
       '@simplewebauthn/server': ^9.0.2
@@ -3615,8 +3615,8 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  next-auth@5.0.0-beta.28:
-    resolution: {integrity: sha512-2RDR1h3DJb4nizcd5UBBwC2gtyP7j/jTvVLvEtDaFSKUWNfou3Gek2uTNHSga/Q4I/GF+OJobA4mFbRaWJgIDQ==}
+  next-auth@5.0.0-beta.29:
+    resolution: {integrity: sha512-Ukpnuk3NMc/LiOl32njZPySk7pABEzbjhMUFd5/n10I0ZNC7NCuVv8IY2JgbDek2t/PUOifQEoUiOOTLy4os5A==}
     peerDependencies:
       '@simplewebauthn/browser': ^9.0.1
       '@simplewebauthn/server': ^9.0.2
@@ -4651,7 +4651,7 @@ snapshots:
       '@csstools/css-tokenizer': 3.0.4
       lru-cache: 10.4.3
 
-  '@auth/core@0.39.1':
+  '@auth/core@0.40.0':
     dependencies:
       '@panva/hkdf': 1.2.1
       jose: 6.0.10
@@ -8825,9 +8825,9 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  next-auth@5.0.0-beta.28(next@15.3.5(@babel/core@7.27.4)(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0):
+  next-auth@5.0.0-beta.29(next@15.3.5(@babel/core@7.27.4)(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0):
     dependencies:
-      '@auth/core': 0.39.1
+      '@auth/core': 0.40.0
       next: 15.3.5(@babel/core@7.27.4)(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react: 19.1.0
 
