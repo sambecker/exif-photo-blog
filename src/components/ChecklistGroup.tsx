@@ -44,6 +44,7 @@ export default function ChecklistGroup({
         'text-gray-600 dark:text-gray-300',
         'pt-2',
         'sm:pl-1.5',
+        'outline-none',
       )}
     >
       <span className="w-8 sm:w-9 shrink-0 translate-y-[-1px]">{icon}</span>

@@ -27,7 +27,7 @@ export default function AdminAppConfigurationSidebar({
               'block',
               parameterize(title) === hash
                 ? 'text-main hover:text-main font-medium'
-                : 'text-dim',
+                : 'text-dim hover:text-main',
             )}
           >
             {title}

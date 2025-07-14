@@ -18,7 +18,7 @@ const ADMIN_CONFIG_SECTIONS = [
   {
     title: 'Storage',
     required: true,
-    icon: <BiData size={16} className="translate-y-[0.5px]" />,
+    icon: <BiData size={16} className="translate-y-[1px]" />,
   }, {
     title: 'Authentication',
     required: true,
@@ -35,7 +35,7 @@ const ADMIN_CONFIG_SECTIONS = [
   }, {
     title: 'Performance',
     required: false,
-    icon: <RiSpeedMiniLine size={19} />,
+    icon: <RiSpeedMiniLine size={19} className="translate-y-[1px]" />,
   }, {
     title: 'Categories',
     required: false,
@@ -43,15 +43,15 @@ const ADMIN_CONFIG_SECTIONS = [
   }, {
     title: 'Sorting',
     required: false,
-    icon: <IconSort size={18} className="translate-y-[1px]" />,
+    icon: <IconSort size={18} className="translate-y-[2px]" />,
   }, {
     title: 'Display',
     required: false,
-    icon: <BiHide size={18} />,
+    icon: <BiHide size={18} className="translate-y-[1px]" />,
   }, {
     title: 'Grid',
     required: false,
-    icon: <IoMdGrid size={17} />,
+    icon: <IoMdGrid size={17} className="translate-y-[1px]" />,
   }, {
     title: 'Design',
     required: false,
@@ -63,7 +63,7 @@ const ADMIN_CONFIG_SECTIONS = [
   }, {
     title: 'Internal',
     required: false,
-    icon: <CgDebug size={18} />,
+    icon: <CgDebug size={18} className="translate-y-[1px]" />,
   },
 ] as const satisfies AdminConfigSection[];
 
