@@ -23,7 +23,7 @@ import { usePathname } from 'next/navigation';
 import { KEY_COMMANDS } from '@/photo/key-commands';
 import { useAppText } from '@/i18n/state/client';
 import IconSort from '@/components/icons/IconSort';
-import { getSortConfigFromPath } from '@/photo/db/sort-path';
+import { getSortConfigFromPath } from '@/photo/sort/path';
 import { motion } from 'framer-motion';
 import SortMenu from '@/photo/sort/SortMenu';
 

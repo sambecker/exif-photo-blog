@@ -8,7 +8,7 @@ import {
   makeUrlAbsolute,
   shortenUrl,
 } from '@/utility/url';
-import { getSortByFromString } from '@/photo/db/sort';
+import { getSortByFromString } from '@/photo/sort';
 
 // HARD-CODED GLOBAL CONFIGURATION
 

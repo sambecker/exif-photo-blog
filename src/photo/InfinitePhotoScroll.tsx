@@ -17,7 +17,7 @@ import { clsx } from 'clsx/lite';
 import { useAppState } from '@/app/AppState';
 import useVisible from '@/utility/useVisible';
 import { ADMIN_DB_OPTIMIZE_ENABLED } from '@/app/config';
-import { SortBy } from './db/sort';
+import { SortBy } from './sort';
 import { SWR_KEYS } from '@/swr';
 
 const SIZE_KEY_SEPARATOR = '__';

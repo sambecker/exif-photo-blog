@@ -4,7 +4,7 @@ import {
 } from '.';
 import PhotosLarge from './PhotosLarge';
 import PhotosLargeInfinite from './PhotosLargeInfinite';
-import { SortBy } from './db/sort';
+import { SortBy } from './sort';
 
 export default function PhotoFullPage({
   photos,

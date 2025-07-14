@@ -5,8 +5,8 @@ import { cache } from 'react';
 import { getPhotos } from '@/photo/db/query';
 import PhotoFullPage from '@/photo/PhotoFullPage';
 import { getPhotosMetaCached } from '@/photo/cache';
-import { SortProps } from '@/photo/db/sort';
-import { getSortOptionsFromParams } from '@/photo/db/sort-path';
+import { SortProps } from '@/photo/sort';
+import { getSortOptionsFromParams } from '@/photo/sort/path';
 import { PhotoQueryOptions } from '@/photo/db';
 import { FEED_META_QUERY_OPTIONS, getFeedQueryOptions } from '@/feed';
 

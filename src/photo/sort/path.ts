@@ -11,7 +11,7 @@ import {
   PATH_GRID,
   PATH_GRID_INFERRED,
 } from '@/app/paths';
-import { SortBy, SortParams } from './sort';
+import { SortBy, SortParams } from '.';
 import {
   USER_DEFAULT_SORT_BY,
   GRID_HOMEPAGE_ENABLED,

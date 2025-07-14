@@ -24,7 +24,7 @@ import { AI_AUTO_GENERATED_FIELDS_ALL } from '@/photo/ai';
 import clsx from 'clsx/lite';
 import Link from 'next/link';
 import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/paths';
-import { APP_DEFAULT_SORT_BY, SORT_BY_OPTIONS } from '@/photo/db/sort';
+import { APP_DEFAULT_SORT_BY, SORT_BY_OPTIONS } from '@/photo/sort';
 import {
   AdminConfigSection,
   ConfigSectionKey,
