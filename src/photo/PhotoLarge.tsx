@@ -299,6 +299,7 @@ export default function PhotoLarge({
           {renderLargePhoto}
         </Link>}
       classNameSide="relative"
+      sideHiddenOnMobile={false}
       contentSide={
         <div className="md:absolute inset-0 -mt-1">
           <MaskedScroll className="sticky top-4 self-start">
