@@ -106,6 +106,8 @@ export const getSortConfigFromPath = (pathname: string) => {
   const isSortedByDefault = sortBy === USER_DEFAULT_SORT_BY;
   const reversedSortOrder = getReversedSortOrder(sortOrder);
   const isAscending = sortOrder === PARAM_SORT_ORDER_OLDEST;
+  const isTakenAt = sortType === PARAM_SORT_TYPE_TAKEN_AT;
+  const isUploadedAt = sortType === PARAM_SORT_TYPE_UPLOADED_AT;
   const doesReverseSortMatchDefault = _getSortOptionsFromParams(
     sortType,
     reversedSortOrder,
@@ -113,13 +115,15 @@ export const getSortConfigFromPath = (pathname: string) => {
   return {
     sortBy,
     isAscending,
+    isTakenAt,
+    isUploadedAt,
     pathGrid: isSortedByDefault
       ? PATH_GRID_INFERRED
       : `${PATH_GRID}/${sortType}/${sortOrder}`,
     pathFull: isSortedByDefault
       ? PATH_FULL_INFERRED
       : `${PATH_FULL}/${sortType}/${sortOrder}`,
-    pathSort: doesReverseSortMatchDefault
+    pathSortToggle: doesReverseSortMatchDefault
       ? gridOrFull === 'grid'
         ? PATH_GRID_INFERRED
         : PATH_FULL_INFERRED

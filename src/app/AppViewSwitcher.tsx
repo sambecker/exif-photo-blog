@@ -26,6 +26,7 @@ import IconSort from '@/components/icons/IconSort';
 import { getSortConfigFromPath } from '@/photo/sort/path';
 import { motion } from 'framer-motion';
 import SortMenu from '@/photo/sort/SortMenu';
+import { SWR_KEYS } from '@/swr';
 
 export type SwitcherSelection = 'full' | 'grid' | 'admin';
 
@@ -61,14 +62,14 @@ export default function AppViewSwitcher({
     isAscending,
     pathGrid,
     pathFull,
-    pathSort,
+    pathSortToggle,
   } = getSortConfigFromPath(pathname);
 
   const hasLoadedRef = useRef(false);
   useEffect(() => {
     if (hasLoadedRef.current) {
       // After initial load, invalidate cache every time sort changes
-      invalidateSwr?.('INFINITE_PHOTO_SCROLL');
+      invalidateSwr?.(SWR_KEYS.INFINITE_PHOTO_SCROLL);
     }
     hasLoadedRef.current = true;
   }, [invalidateSwr, sortBy]);
@@ -184,13 +185,17 @@ export default function AppViewSwitcher({
                     if (isOpen) { setIsAdminMenuOpen(false); }
                   }}
                 />}
-                tooltip={{ content: 'Sort' }}
+                tooltip={{
+                  ...!isSortMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+                    content: 'Sort',
+                  },
+                }}
                 noPadding
                 width="narrow"
               />
               :
               <SwitcherItem
-                href={pathSort}
+                href={pathSortToggle}
                 icon={<IconSort
                   sort={isAscending ? 'asc' : 'desc'}
                   className="translate-x-[0.5px] translate-y-[1px]"

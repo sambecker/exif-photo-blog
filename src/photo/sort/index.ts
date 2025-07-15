@@ -31,6 +31,18 @@ export const SORT_BY_OPTIONS = [{
   label: 'Uploaded At (Oldest First)',
 }] as const;
 
+export const SORT_MENU = [[
+  {
+    label: 'Newest',
+    value: 'takenAt',
+  },
+  {
+    label: 'Oldest',
+    value: 'takenAtAsc',
+  },
+], [
+]]
+
 export type SortBy = (typeof SORT_BY_OPTIONS)[number]['sortBy'];
 
 export const APP_DEFAULT_SORT_BY: SortBy = 'takenAt';

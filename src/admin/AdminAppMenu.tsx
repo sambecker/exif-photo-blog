@@ -30,6 +30,7 @@ import MoreMenuItem from '@/components/more/MoreMenuItem';
 import Spinner from '@/components/Spinner';
 import { useAppText } from '@/i18n/state/client';
 import SwitcherItemMenu from '@/components/switcher/SwitcherItemMenu';
+import { MoreMenuSection } from '@/components/more/MoreMenu';
 
 export default function AdminAppMenu({
   isOpen,
@@ -60,19 +61,18 @@ export default function AdminAppMenu({
 
   const showAppInsightsLink = photosCountTotal > 0 && !isAltPressed;
 
-  const sectionUpload: ComponentProps<typeof MoreMenuItem>[] =
-    useMemo(() => ([{
-      label: appText.admin.uploadPhotos,
-      icon: <IconUpload
-        size={15}
-        className="translate-x-[0.5px] translate-y-[0.5px]"
-      />,
-      annotation: isLoadingAdminData &&
-        <Spinner className="translate-y-[1.5px]" />,
-      action: startUpload,
-    }]), [appText, isLoadingAdminData, startUpload]);
+  const sectionUpload: MoreMenuSection = useMemo(() => ({ items: [{
+    label: appText.admin.uploadPhotos,
+    icon: <IconUpload
+      size={15}
+      className="translate-x-[0.5px] translate-y-[0.5px]"
+    />,
+    annotation: isLoadingAdminData &&
+      <Spinner className="translate-y-[1.5px]" />,
+    action: startUpload,
+  }]}), [appText, isLoadingAdminData, startUpload]);
 
-  const sectionMain: ComponentProps<typeof MoreMenuItem>[] = useMemo(() => {
+  const sectionMain: MoreMenuSection = useMemo(() => {
     const items: ComponentProps<typeof MoreMenuItem>[] = [];
 
     if (uploadsCount) {
@@ -182,7 +182,7 @@ export default function AdminAppMenu({
         : PATH_ADMIN_CONFIGURATION,
     });
 
-    return items;
+    return { items };
   }, [
     appText,
     isSelecting,
@@ -195,12 +195,13 @@ export default function AdminAppMenu({
     uploadsCount,
   ]);
 
-  const sectionSignOut: ComponentProps<typeof MoreMenuItem>[] =
-    useMemo(() => ([{
+  const sectionSignOut: MoreMenuSection = useMemo(() => ({
+    items: [{
       label: appText.auth.signOut,
       icon: <IconSignOut size={15} />,
       action: () => signOutAction().then(clearAuthStateAndRedirectIfNecessary),
-    }]), [appText.auth.signOut, clearAuthStateAndRedirectIfNecessary]);
+    }],
+  }), [appText.auth.signOut, clearAuthStateAndRedirectIfNecessary]);
 
   const sections = useMemo(() =>
     [sectionUpload, sectionMain, sectionSignOut]
