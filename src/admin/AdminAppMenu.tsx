@@ -9,7 +9,7 @@ import {
   PATH_ADMIN_TAGS,
   PATH_ADMIN_UPLOADS,
   PATH_GRID_INFERRED,
-} from '@/app/paths';
+} from '@/app/path';
 import { useAppState } from '@/app/AppState';
 import { IoArrowDown, IoArrowUp, IoCloseSharp } from 'react-icons/io5';
 import { clsx } from 'clsx/lite';

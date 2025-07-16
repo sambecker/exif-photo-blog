@@ -3,7 +3,7 @@
 import { deleteUploadsAction } from '@/photo/actions';
 import DeleteButton from './DeleteButton';
 import { useRouter } from 'next/navigation';
-import { PATH_ADMIN_PHOTOS } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS } from '@/app/path';
 import { ComponentProps, useState } from 'react';
 import LoaderButton from '@/components/primitives/LoaderButton';
 

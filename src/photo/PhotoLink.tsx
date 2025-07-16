@@ -5,7 +5,7 @@ import { Photo, titleForPhoto } from '@/photo';
 import { PhotoSetCategory } from '@/category';
 import { AnimationConfig } from '../components/AnimateItems';
 import { useAppState } from '@/app/AppState';
-import { pathForPhoto } from '@/app/paths';
+import { pathForPhoto } from '@/app/path';
 import { clsx } from 'clsx/lite';
 import LinkWithStatus from '@/components/LinkWithStatus';
 import Spinner from '@/components/Spinner';

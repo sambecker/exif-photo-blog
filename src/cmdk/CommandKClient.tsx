@@ -32,7 +32,7 @@ import {
   pathForTag,
   pathForYear,
   PREFIX_RECENTS,
-} from '../app/paths';
+} from '../app/path';
 import Modal from '../components/Modal';
 import { clsx } from 'clsx/lite';
 import { useDebounce } from 'use-debounce';

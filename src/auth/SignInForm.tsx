@@ -19,7 +19,7 @@ import {
 import { useSearchParams } from 'next/navigation';
 import { useAppState } from '@/app/AppState';
 import { clsx } from 'clsx/lite';
-import { PATH_ADMIN_PHOTOS } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS } from '@/app/path';
 import IconLock from '@/components/icons/IconLock';
 import { useAppText } from '@/i18n/state/client';
 

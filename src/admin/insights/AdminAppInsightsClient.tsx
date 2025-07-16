@@ -27,7 +27,7 @@ import {
 import EnvVar from '@/components/EnvVar';
 import { IoSyncCircle } from 'react-icons/io5';
 import clsx from 'clsx/lite';
-import { PATH_ADMIN_PHOTOS_UPDATES } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS_UPDATES } from '@/app/path';
 import { LiaBroomSolid } from 'react-icons/lia';
 import { IoMdGrid } from 'react-icons/io';
 import { RiSpeedMiniLine } from 'react-icons/ri';

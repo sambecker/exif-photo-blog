@@ -12,7 +12,7 @@ import {
   isPathGrid,
   isPathProtected,
   isPathSignIn,
-} from '@/app/paths';
+} from '@/app/path';
 import AnimateItems from '../components/AnimateItems';
 import {
   GRID_HOMEPAGE_ENABLED,

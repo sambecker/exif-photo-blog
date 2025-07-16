@@ -15,7 +15,7 @@ import AppGrid from '@/components/AppGrid';
 import ImageLarge from '@/components/image/ImageLarge';
 import { clsx } from 'clsx/lite';
 import Link from 'next/link';
-import { pathForFocalLength, pathForPhoto } from '@/app/paths';
+import { pathForFocalLength, pathForPhoto } from '@/app/path';
 import PhotoTags from '@/tag/PhotoTags';
 import ShareButton from '@/share/ShareButton';
 import DownloadButton from '@/components/DownloadButton';

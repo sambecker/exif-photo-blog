@@ -6,7 +6,7 @@ import {
   titleForPhoto,
 } from '@/photo';
 import { PhotoSetCategory } from '../category';
-import { pathForPhoto, pathForPhotoImage } from '@/app/paths';
+import { pathForPhoto, pathForPhotoImage } from '@/app/path';
 import OGTile, { OGTilePropsCore } from '@/components/og/OGTile';
 
 export default function PhotoOGTile({

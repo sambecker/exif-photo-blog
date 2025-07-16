@@ -1,4 +1,4 @@
-import { PARAM_UPLOAD_TITLE, PATH_ADMIN } from '@/app/paths';
+import { PARAM_UPLOAD_TITLE, PATH_ADMIN } from '@/app/path';
 import { extractImageDataFromBlobPath } from '@/photo/server';
 import { redirect } from 'next/navigation';
 import {

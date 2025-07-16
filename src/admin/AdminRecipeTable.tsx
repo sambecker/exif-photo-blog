@@ -5,7 +5,7 @@ import { Fragment } from 'react';
 import DeleteFormButton from '@/admin/DeleteFormButton';
 import { photoQuantityText } from '@/photo';
 import EditButton from '@/admin/EditButton';
-import { pathForAdminRecipeEdit } from '@/app/paths';
+import { pathForAdminRecipeEdit } from '@/app/path';
 import { clsx } from 'clsx/lite';
 import { formatRecipe, Recipes, sortRecipes } from '@/recipe';
 import AdminRecipeBadge from './AdminRecipeBadge';

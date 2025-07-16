@@ -10,7 +10,7 @@ import { HiOutlinePhotograph } from 'react-icons/hi';
 import { revalidatePath } from 'next/cache';
 import SignInOrUploadClient from '@/admin/SignInOrUploadClient';
 import Link from 'next/link';
-import { PATH_ADMIN_CONFIGURATION } from '@/app/paths';
+import { PATH_ADMIN_CONFIGURATION } from '@/app/path';
 import AnimateItems from '@/components/AnimateItems';
 import { getAppText } from '@/i18n/state/server';
 

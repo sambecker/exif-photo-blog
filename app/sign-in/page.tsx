@@ -1,6 +1,6 @@
 import { auth } from '@/auth/server';
 import SignInForm from '@/auth/SignInForm';
-import { PATH_ADMIN, PATH_ROOT } from '@/app/paths';
+import { PATH_ADMIN, PATH_ROOT } from '@/app/path';
 import { clsx } from 'clsx/lite';
 import { redirect } from 'next/navigation';
 import LinkWithStatus from '@/components/LinkWithStatus';

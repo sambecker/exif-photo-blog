@@ -1,4 +1,4 @@
-import { absolutePathForFilm } from '@/app/paths';
+import { absolutePathForFilm } from '@/app/path';
 import { PhotoSetAttributes } from '../category';
 import ShareModal from '@/share/ShareModal';
 import FilmOGTile from './FilmOGTile';

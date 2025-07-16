@@ -9,7 +9,7 @@ import {
   absolutePathForRecipeImage,
   absolutePathForTagImage,
   absolutePathForYearImage,
-} from '@/app/paths';
+} from '@/app/path';
 
 export type ShareModalProps = Omit<PhotoSetAttributes, 'photos'> & {
   photo?: Photo

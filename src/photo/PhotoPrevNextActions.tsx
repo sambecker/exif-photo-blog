@@ -9,7 +9,7 @@ import {
 } from '@/photo';
 import { PhotoSetCategory } from '../category';
 import PhotoLink from './PhotoLink';
-import { pathForAdminPhotoEdit, pathForPhoto } from '@/app/paths';
+import { pathForAdminPhotoEdit, pathForPhoto } from '@/app/path';
 import { useAppState } from '@/app/AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import { clsx } from 'clsx/lite';

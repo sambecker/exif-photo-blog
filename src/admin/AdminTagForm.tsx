@@ -2,7 +2,7 @@
 
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
-import { PATH_ADMIN_TAGS } from '@/app/paths';
+import { PATH_ADMIN_TAGS } from '@/app/path';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import { ReactNode, useMemo, useState } from 'react';
 import { renamePhotoTagGloballyAction } from '@/photo/actions';

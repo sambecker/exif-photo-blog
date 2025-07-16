@@ -30,7 +30,7 @@ import RecipeModal from '@/recipe/RecipeModal';
 import ThemeColors from '@/app/ThemeColors';
 import AppTextProvider from '@/i18n/state/AppTextProvider';
 import SharedHoverProvider from '@/components/shared-hover/SharedHoverProvider';
-import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/paths';
+import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/path';
 
 import '../tailwind.css';
 

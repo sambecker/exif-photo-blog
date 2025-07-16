@@ -1,7 +1,7 @@
 'use client';
 
 import { Photo } from '.';
-import { PATH_GRID_INFERRED } from '@/app/paths';
+import { PATH_GRID_INFERRED } from '@/app/path';
 import PhotoGridSidebar from './PhotoGridSidebar';
 import PhotoGridContainer from './PhotoGridContainer';
 import { ComponentProps, useEffect, useRef } from 'react';

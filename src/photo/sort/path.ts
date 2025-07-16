@@ -8,7 +8,7 @@ import {
   PARAM_SORT_TYPE_UPLOADED_AT,
   PATH_FULL_INFERRED,
   PATH_GRID_INFERRED,
-} from '@/app/paths';
+} from '@/app/path';
 import { SortBy, SortParams } from '.';
 import {
   USER_DEFAULT_SORT_BY,

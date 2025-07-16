@@ -23,7 +23,7 @@ import { DEFAULT_CATEGORY_KEYS, getHiddenCategories } from '@/category';
 import { AI_AUTO_GENERATED_FIELDS_ALL } from '@/photo/ai';
 import clsx from 'clsx/lite';
 import Link from 'next/link';
-import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/paths';
+import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/path';
 import { APP_DEFAULT_SORT_BY, SORT_BY_OPTIONS } from '@/photo/sort';
 import {
   AdminConfigSection,

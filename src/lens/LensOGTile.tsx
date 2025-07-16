@@ -1,5 +1,5 @@
 import { Photo, PhotoDateRange } from '@/photo';
-import { pathForLens, pathForLensImage } from '@/app/paths';
+import { pathForLens, pathForLensImage } from '@/app/path';
 import OGTile, { OGTilePropsCore } from '@/components/og/OGTile';
 import { Lens } from '.';
 import { titleForLens, descriptionForLensPhotos } from './meta';

@@ -1,6 +1,6 @@
 'use client';
 
-import { PATH_ADMIN_CONFIGURATION, PATH_ADMIN_INSIGHTS } from '@/app/paths';
+import { PATH_ADMIN_CONFIGURATION, PATH_ADMIN_INSIGHTS } from '@/app/path';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 import clsx from 'clsx/lite';
 import ClearCacheButton from '@/admin/ClearCacheButton';

@@ -1,4 +1,4 @@
-import { absolutePathForPhoto } from '@/app/paths';
+import { absolutePathForPhoto } from '@/app/path';
 import {
   FEED_PHOTO_WIDTH_LARGE,
   FEED_PHOTO_WIDTH_MEDIUM,

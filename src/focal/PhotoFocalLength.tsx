@@ -1,6 +1,6 @@
 'use client';
 
-import { pathForFocalLength } from '@/app/paths';
+import { pathForFocalLength } from '@/app/path';
 import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/entity/EntityLink';

@@ -1,6 +1,6 @@
 'use client';
 
-import { pathForTag } from '@/app/paths';
+import { pathForTag } from '@/app/path';
 import { formatTag } from '.';
 import EntityLink, {
   EntityLinkExternalProps,

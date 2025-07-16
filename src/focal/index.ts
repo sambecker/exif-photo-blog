@@ -7,7 +7,7 @@ import {
 import {
   absolutePathForFocalLength,
   absolutePathForFocalLengthImage,
-} from '@/app/paths';
+} from '@/app/path';
 import { AppTextState } from '@/i18n/state';
 import { CategoryQueryMeta } from '@/category';
 

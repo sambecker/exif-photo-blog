@@ -8,7 +8,7 @@ import {
   SHOW_LENSES,
   SHOW_RECIPES,
 } from '@/app/config';
-import { ABSOLUTE_PATH_HOME_IMAGE } from '@/app/paths';
+import { ABSOLUTE_PATH_HOME_IMAGE } from '@/app/path';
 import { formatDate, formatDateFromPostgresString } from '@/utility/date';
 import {
   formatAperture,

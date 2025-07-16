@@ -6,7 +6,7 @@ import {
   doesPathOfferSort,
   PATH_FULL_INFERRED,
   PATH_GRID_INFERRED,
-} from '@/app/paths';
+} from '@/app/path';
 import IconSearch from '../components/icons/IconSearch';
 import { useAppState } from '@/app/AppState';
 import {

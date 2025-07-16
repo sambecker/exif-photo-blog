@@ -5,7 +5,7 @@ import AdminTable from './AdminTable';
 import { Fragment } from 'react';
 import PhotoSmall from '@/photo/PhotoSmall';
 import { clsx } from 'clsx/lite';
-import { pathForAdminPhotoEdit, pathForPhoto } from '@/app/paths';
+import { pathForAdminPhotoEdit, pathForPhoto } from '@/app/path';
 import Link from 'next/link';
 import PhotoDate from '@/photo/PhotoDate';
 import EditButton from './EditButton';

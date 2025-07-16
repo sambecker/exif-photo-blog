@@ -1,6 +1,6 @@
 'use client';
 
-import { pathForLens } from '@/app/paths';
+import { pathForLens } from '@/app/path';
 import { Lens, formatLensText } from '.';
 import EntityLink, {
   EntityLinkExternalProps,

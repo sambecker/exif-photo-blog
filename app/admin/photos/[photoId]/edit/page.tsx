@@ -5,7 +5,7 @@ import {
   getUniqueRecipesCached,
   getUniqueTagsCached,
 } from '@/photo/cache';
-import { PATH_ADMIN } from '@/app/paths';
+import { PATH_ADMIN } from '@/app/path';
 import PhotoEditPageClient from '@/photo/PhotoEditPageClient';
 import {
   AI_TEXT_GENERATION_ENABLED,

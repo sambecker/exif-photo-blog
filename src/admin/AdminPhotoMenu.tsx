@@ -6,7 +6,7 @@ import {
   PATH_ROOT,
   pathForAdminPhotoEdit,
   pathForTag,
-} from '@/app/paths';
+} from '@/app/path';
 import {
   deletePhotoAction,
   syncPhotoAction,
