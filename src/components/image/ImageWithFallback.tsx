@@ -20,6 +20,8 @@ export default function ImageWithFallback({
   classNameImage?: string
   forceFallbackFade?: boolean
 }) {
+  const ref = useRef<HTMLImageElement>(null);
+
   const { shouldDebugImageFallbacks } = useAppState();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -30,15 +32,16 @@ export default function ImageWithFallback({
   const onLoad = useCallback(() => setIsLoading(false), []);
   const onError = useCallback(() => setDidError(true), []);
 
-  const isLoadingRef = useRef(isLoading);
-  useEffect(() => { isLoadingRef.current = isLoading; }, [isLoading]);
   useEffect(() => {
     const timeout = setTimeout(() => {
-      // If image is still loading after 100ms, force CSS animation
-      if (isLoadingRef.current) {
+      // If image is still loading after 50ms, force CSS animation
+      if (
+        !ref.current?.complete ||
+        (ref.current?.naturalWidth ?? 0) === 0
+      ) {
         setFadeFallbackTransition(true);
       }
-    }, 100);
+    }, 50);
     return () => clearTimeout(timeout);
   }, []);
 
@@ -59,7 +62,7 @@ export default function ImageWithFallback({
         className,
       )}
     >
-      <Image {...{
+      <Image ref={ref} {...{
         ...props,
         priority,
         className: classNameImage,
