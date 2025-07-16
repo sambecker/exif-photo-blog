@@ -33,16 +33,12 @@ export default function ImageWithFallback({
   const onError = useCallback(() => setDidError(true), []);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      // If image is still loading after 50ms, force CSS animation
-      if (
-        !ref.current?.complete ||
-        (ref.current?.naturalWidth ?? 0) === 0
-      ) {
-        setFadeFallbackTransition(true);
-      }
-    }, 50);
-    return () => clearTimeout(timeout);
+    if (
+      !ref.current?.complete ||
+      (ref.current?.naturalWidth ?? 0) === 0
+    ) {
+      setFadeFallbackTransition(true);
+    }
   }, []);
 
   const getBlurClass = () => {
