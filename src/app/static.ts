@@ -15,8 +15,10 @@ import { depluralize, pluralize } from '@/utility/string';
 type StaticOutput = 'page' | 'image';
 
 const logStaticGenerationDetails = (count: number, content: string) => {
-  const label = pluralize(count, content, undefined, 3);
-  console.log(`>  Statically generating ${label} ...`);
+  if (count > 0) {
+    const label = pluralize(count, content, undefined, 3);
+    console.log(`>  Statically generating ${label} ...`);
+  }
 };
 
 export const staticallyGeneratePhotosIfConfigured = (type: StaticOutput) =>
@@ -25,7 +27,7 @@ export const staticallyGeneratePhotosIfConfigured = (type: StaticOutput) =>
     (type === 'image' && STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES)
   )
     ? async () => {
-      const photos = await getPublicPhotoIds({
+      const photoIds = await getPublicPhotoIds({
         limit: GENERATE_STATIC_PARAMS_LIMIT,
       })
         .catch(e => {
@@ -33,9 +35,9 @@ export const staticallyGeneratePhotosIfConfigured = (type: StaticOutput) =>
           return [];
         });
       if (IS_BUILDING) {
-        logStaticGenerationDetails(photos.length, `photo ${type}`);
+        logStaticGenerationDetails(photoIds.length, `photo ${type}`);
       }
-      return photos.map(photoId => ({ photoId }));
+      return photoIds.map(photoId => ({ photoId }));
     }
     : undefined;
 
