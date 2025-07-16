@@ -197,10 +197,14 @@ export default function AppViewSwitcher({
                     content: 'Sort',
                   },
                 }}
-                noPadding
                 width="narrow"
+                noPadding
               />
               : <SwitcherItem
+                className={clsx(
+                  '*:w-full *:h-full *:flex *:items-center *:justify-center',
+                  !isSortedByDefault && '*:bg-medium *:text-main!',
+                )}
                 href={pathSortToggle}
                 icon={<IconSort
                   sort={isAscending ? 'asc' : 'desc'}
@@ -212,6 +216,7 @@ export default function AppViewSwitcher({
                     : appText.sort.oldest,
                 }}
                 width="narrow"
+                noPadding
               />}
           </Switcher>
         </motion.div>}
