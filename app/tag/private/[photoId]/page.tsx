@@ -8,7 +8,7 @@ import {
   getPhotosMetaCached,
   getPhotosNearIdCached,
 } from '@/photo/cache';
-import { PATH_ROOT, absolutePathForPhoto } from '@/app/paths';
+import { PATH_ROOT, absolutePathForPhoto } from '@/app/path';
 import { TAG_PRIVATE } from '@/tag';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';

@@ -3,7 +3,7 @@ import AppGrid from '@/components/AppGrid';
 import { getUniqueTagsCached } from '@/photo/cache';
 import AdminUploadsClient from '@/admin/AdminUploadsClient';
 import { redirect } from 'next/navigation';
-import { PATH_ADMIN_PHOTOS } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS } from '@/app/path';
 
 export const maxDuration = 60;
 

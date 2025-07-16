@@ -4,7 +4,7 @@ import RecentsOverview from '@/recents/RecentsOverview';
 import { getPhotosRecentsDataCached } from '@/recents/data';
 import { Metadata } from 'next/types';
 import { cache } from 'react';
-import { PATH_ROOT } from '@/app/paths';
+import { PATH_ROOT } from '@/app/path';
 import { redirect } from 'next/navigation';
 import { getAppText } from '@/i18n/state/server';
 

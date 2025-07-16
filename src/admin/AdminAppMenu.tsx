@@ -1,6 +1,5 @@
 'use client';
 
-import MoreMenu from '@/components/more/MoreMenu';
 import {
   PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_INSIGHTS,
@@ -10,7 +9,7 @@ import {
   PATH_ADMIN_TAGS,
   PATH_ADMIN_UPLOADS,
   PATH_GRID_INFERRED,
-} from '@/app/paths';
+} from '@/app/path';
 import { useAppState } from '@/app/AppState';
 import { IoArrowDown, IoArrowUp, IoCloseSharp } from 'react-icons/io5';
 import { clsx } from 'clsx/lite';
@@ -30,19 +29,15 @@ import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 import MoreMenuItem from '@/components/more/MoreMenuItem';
 import Spinner from '@/components/Spinner';
 import { useAppText } from '@/i18n/state/client';
+import SwitcherItemMenu from '@/components/switcher/SwitcherItemMenu';
+import { MoreMenuSection } from '@/components/more/MoreMenu';
 
 export default function AdminAppMenu({
-  active,
-  animateMenuClose,
   isOpen,
   setIsOpen,
-  className,
 }: {
-  active?: boolean
-  animateMenuClose?: boolean
   isOpen?: boolean
   setIsOpen?: (isOpen: boolean) => void
-  className?: string
 }) {
   const {
     photosCountTotal = 0,
@@ -66,19 +61,18 @@ export default function AdminAppMenu({
 
   const showAppInsightsLink = photosCountTotal > 0 && !isAltPressed;
 
-  const sectionUpload: ComponentProps<typeof MoreMenuItem>[] =
-    useMemo(() => ([{
-      label: appText.admin.uploadPhotos,
-      icon: <IconUpload
-        size={15}
-        className="translate-x-[0.5px] translate-y-[0.5px]"
-      />,
-      annotation: isLoadingAdminData &&
-        <Spinner className="translate-y-[1.5px]" />,
-      action: startUpload,
-    }]), [appText, isLoadingAdminData, startUpload]);
+  const sectionUpload: MoreMenuSection = useMemo(() => ({ items: [{
+    label: appText.admin.uploadPhotos,
+    icon: <IconUpload
+      size={15}
+      className="translate-x-[0.5px] translate-y-[0.5px]"
+    />,
+    annotation: isLoadingAdminData &&
+      <Spinner className="translate-y-[1.5px]" />,
+    action: startUpload,
+  }]}), [appText, isLoadingAdminData, startUpload]);
 
-  const sectionMain: ComponentProps<typeof MoreMenuItem>[] = useMemo(() => {
+  const sectionMain: MoreMenuSection = useMemo(() => {
     const items: ComponentProps<typeof MoreMenuItem>[] = [];
 
     if (uploadsCount) {
@@ -188,7 +182,7 @@ export default function AdminAppMenu({
         : PATH_ADMIN_CONFIGURATION,
     });
 
-    return items;
+    return { items };
   }, [
     appText,
     isSelecting,
@@ -201,28 +195,24 @@ export default function AdminAppMenu({
     uploadsCount,
   ]);
 
-  const sectionSignOut: ComponentProps<typeof MoreMenuItem>[] =
-    useMemo(() => ([{
+  const sectionSignOut: MoreMenuSection = useMemo(() => ({
+    items: [{
       label: appText.auth.signOut,
       icon: <IconSignOut size={15} />,
       action: () => signOutAction().then(clearAuthStateAndRedirectIfNecessary),
-    }]), [appText.auth.signOut, clearAuthStateAndRedirectIfNecessary]);
+    }],
+  }), [appText.auth.signOut, clearAuthStateAndRedirectIfNecessary]);
 
   const sections = useMemo(() =>
     [sectionUpload, sectionMain, sectionSignOut]
   , [sectionUpload, sectionMain, sectionSignOut]);
 
   return (
-    <MoreMenu
+    <SwitcherItemMenu
       {...{ isOpen, setIsOpen }}
-      icon={<div className={clsx(
-        'w-[28px] h-[28px]',
-        'overflow-hidden',
-      )}>
+      icon={<div className="w-[28px] h-[28px] overflow-hidden">
         <div className={clsx(
-          'flex flex-col items-center justify-center gap-2',
-          'relative transition-transform',
-          animateMenuClose ? 'duration-300' : 'duration-0',
+          'relative flex flex-col items-center justify-center gap-2',
           'translate-y-[-18px]',
         )}>
           <IoArrowDown size={16} className="shrink-0" />
@@ -233,28 +223,12 @@ export default function AdminAppMenu({
       sideOffset={12}
       alignOffset={-84}
       onOpen={refreshAdminData}
-      className={clsx(
-        'outline-medium',
-        className,
-      )}
-      classNameButton={clsx(
-        'p-0!',
-        'w-full h-full',
-        'flex items-center justify-center',
-        'hover:bg-transparent dark:hover:bg-transparent',
-        'active:bg-transparent dark:active:bg-transparent',
-        'rounded-none focus:outline-none',
-        active
-          ? 'text-black dark:text-white'
-          : 'text-gray-400 dark:text-gray-600',
-      )}
-      classNameButtonOpen={clsx(
-        'bg-dim text-main!',
-        '[&>*>*]:translate-y-[6px]',
-        !animateMenuClose && '[&>*>*]:duration-300',
-      )}
       sections={sections}
       ariaLabel="Admin Menu"
+      classNameButtonOpen={clsx(
+        '[&>*>*]:translate-y-[6px]',
+        '[&>*>*]:duration-300',
+      )}
     />
   );
 }

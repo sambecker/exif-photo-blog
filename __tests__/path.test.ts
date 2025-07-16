@@ -11,7 +11,7 @@ import {
   isPathProtected,
   isPathTag,
   isPathTagPhoto,
-} from '@/app/paths';
+} from '@/app/path';
 import { TAG_PRIVATE } from '@/tag';
 
 const PHOTO_ID            = 'UsKSGcbt';

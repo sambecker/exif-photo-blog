@@ -36,7 +36,7 @@ import {
   PREFIX_TAG,
   pathForPhoto,
   PREFIX_YEAR,
-} from '@/app/paths';
+} from '@/app/path';
 import { createLensKey } from '@/lens';
 
 // Table key

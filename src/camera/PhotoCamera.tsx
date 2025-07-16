@@ -1,7 +1,7 @@
 'use client';
 
 import { AiFillApple } from 'react-icons/ai';
-import { pathForCamera } from '@/app/paths';
+import { pathForCamera } from '@/app/path';
 import { Camera, formatCameraText } from '.';
 import EntityLink, {
   EntityLinkExternalProps,

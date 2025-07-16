@@ -1,3 +1,18 @@
+export type NavSortControl = 'none' | 'toggle' | 'menu';
+
+export const NAV_SORT_CONTROL_DEFAULT: NavSortControl = 'toggle';
+
+export const getNavSortControlFromString = (
+  navSortControl = '',
+): NavSortControl => {
+  switch (navSortControl.toLocaleLowerCase()) {
+  case 'none': return 'none';
+  case 'toggle': return 'toggle';
+  case 'menu': return 'menu';
+  default: return NAV_SORT_CONTROL_DEFAULT;
+  }
+};
+
 export const SORT_BY_OPTIONS = [{
   sortBy: 'takenAt',
   string: 'taken-at',

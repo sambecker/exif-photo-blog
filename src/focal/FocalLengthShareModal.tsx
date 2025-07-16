@@ -1,4 +1,4 @@
-import { absolutePathForFocalLength } from '@/app/paths';
+import { absolutePathForFocalLength } from '@/app/path';
 import { PhotoSetAttributes } from '../category';
 import ShareModal from '@/share/ShareModal';
 import FocalLengthOGTile from './FocalLengthOGTile';

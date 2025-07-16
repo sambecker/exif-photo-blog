@@ -4,7 +4,7 @@ import { INFINITE_SCROLL_GRID_MULTIPLE } from '.';
 import InfinitePhotoScroll from './InfinitePhotoScroll';
 import PhotoGrid from './PhotoGrid';
 import { ComponentProps } from 'react';
-import { SortBy } from './db/sort';
+import { SortBy } from './sort';
 
 export default function PhotoGridInfinite({
   cacheKey,

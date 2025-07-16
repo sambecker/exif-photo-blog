@@ -6,7 +6,7 @@ import {
   generateFeedMedia,
   getCoreFeedFields,
 } from './programmatic';
-import { ABSOLUTE_PATH_RSS_XML, absolutePathForPhoto } from '@/app/paths';
+import { ABSOLUTE_PATH_RSS_XML, absolutePathForPhoto } from '@/app/path';
 import { formatDate } from '@/utility/date';
 import { formatStringForXml } from '@/utility/string';
 import { BASE_URL, META_DESCRIPTION, META_TITLE } from '@/app/config';

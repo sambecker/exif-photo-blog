@@ -5,7 +5,7 @@ import FilmOverview from '@/film/FilmOverview';
 import { getPhotosFilmDataCached } from '@/film/data';
 import { Metadata } from 'next/types';
 import { cache } from 'react';
-import { PATH_ROOT } from '@/app/paths';
+import { PATH_ROOT } from '@/app/path';
 import { redirect } from 'next/navigation';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';

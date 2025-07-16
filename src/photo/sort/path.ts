@@ -1,4 +1,4 @@
-// 'sort-path.ts' separate from 'sort.ts'
+// 'sort/path.ts' separate from 'sort/index.ts'
 // to avoid circular dependencies
 
 import {
@@ -6,12 +6,10 @@ import {
   PARAM_SORT_ORDER_OLDEST,
   PARAM_SORT_TYPE_TAKEN_AT,
   PARAM_SORT_TYPE_UPLOADED_AT,
-  PATH_FULL,
   PATH_FULL_INFERRED,
-  PATH_GRID,
   PATH_GRID_INFERRED,
-} from '@/app/paths';
-import { SortBy, SortParams } from './sort';
+} from '@/app/path';
+import { SortBy, SortParams } from '.';
 import {
   USER_DEFAULT_SORT_BY,
   GRID_HOMEPAGE_ENABLED,
@@ -83,8 +81,9 @@ export const getSortOptionsFromParams = async (
   return _getSortOptionsFromParams(sortType, sortOrder);
 };
 
-export const getPathSortComponents = (pathname: string) => {
+const getPathSortComponents = (pathname: string) => {
   const [_, gridOrFull, sortType, sortOrder] = pathname.split('/');
+  const { sortBy } = _getSortOptionsFromParams(sortType, sortOrder);
   return {
     gridOrFull: gridOrFull || (GRID_HOMEPAGE_ENABLED
       ? 'grid'
@@ -92,37 +91,80 @@ export const getPathSortComponents = (pathname: string) => {
     ),
     sortType: sortType || DEFAULT_SORT_TYPE,
     sortOrder: sortOrder || DEFAULT_SORT_ORDER,
+    sortBy,
   };
 };
 
-const getReversedSortOrder = (sortOrder: string): string =>
-  sortOrder === PARAM_SORT_ORDER_OLDEST
+export const getSortConfigFromPath = (pathname: string) => {
+  const {
+    gridOrFull: _gridOrFull,
+    sortType,
+    sortOrder,
+    sortBy,
+  } = getPathSortComponents(pathname);
+
+  const isSortedByDefault = sortBy === USER_DEFAULT_SORT_BY;
+  const sortOrderReversed = sortOrder === PARAM_SORT_ORDER_OLDEST
     ? PARAM_SORT_ORDER_NEWEST
     : PARAM_SORT_ORDER_OLDEST;
-
-export const getSortConfigFromPath = (pathname: string) => {
-  const { gridOrFull, sortType, sortOrder } = getPathSortComponents(pathname);
-  const { sortBy } = _getSortOptionsFromParams(sortType, sortOrder);
-  const isSortedByDefault = sortBy === USER_DEFAULT_SORT_BY;
-  const reversedSortOrder = getReversedSortOrder(sortOrder);
   const isAscending = sortOrder === PARAM_SORT_ORDER_OLDEST;
-  const doesReverseSortMatchDefault = _getSortOptionsFromParams(
+  const isTakenAt = sortType === PARAM_SORT_TYPE_TAKEN_AT;
+  const isUploadedAt = sortType === PARAM_SORT_TYPE_UPLOADED_AT;
+
+  const getPath = ({
+    gridOrFull = _gridOrFull,
     sortType,
-    reversedSortOrder,
-  ).sortBy === USER_DEFAULT_SORT_BY;
+    sortOrder,
+  }: {
+    gridOrFull?: string
+    sortType: string
+    sortOrder: string
+  }) => {
+    const { sortBy } = _getSortOptionsFromParams(sortType, sortOrder);
+    if (sortBy === USER_DEFAULT_SORT_BY) {
+      return gridOrFull === 'grid'
+        ? PATH_GRID_INFERRED
+        : PATH_FULL_INFERRED;
+    } else {
+      return `/${gridOrFull}/${sortType}/${sortOrder}`;
+    }
+  };
+
+  // Core paths
+  // (reset custom sort when clicking grid/full a second time)
+  const pathGrid = _gridOrFull === 'grid' && sortBy !== USER_DEFAULT_SORT_BY
+    ? PATH_GRID_INFERRED
+    : getPath({ gridOrFull: 'grid', sortType, sortOrder });
+  const pathFull = _gridOrFull === 'full' && sortBy !== USER_DEFAULT_SORT_BY
+    ? PATH_FULL_INFERRED
+    : getPath({ gridOrFull: 'full', sortType, sortOrder });
+
+  // Sort toggle path
+  const pathSortToggle =
+    getPath({ sortType, sortOrder: sortOrderReversed });
+
+  // Sort menu paths
+  const pathNewest =
+    getPath({ sortType, sortOrder: PARAM_SORT_ORDER_NEWEST });
+  const pathOldest =
+    getPath({ sortType, sortOrder: PARAM_SORT_ORDER_OLDEST });
+  const pathTakenAt =
+    getPath({ sortType: PARAM_SORT_TYPE_TAKEN_AT, sortOrder });
+  const pathUploadedAt =
+    getPath({ sortType: PARAM_SORT_TYPE_UPLOADED_AT, sortOrder });
+
   return {
     sortBy,
+    isSortedByDefault,
     isAscending,
-    pathGrid: isSortedByDefault
-      ? PATH_GRID_INFERRED
-      : `${PATH_GRID}/${sortType}/${sortOrder}`,
-    pathFull: isSortedByDefault
-      ? PATH_FULL_INFERRED
-      : `${PATH_FULL}/${sortType}/${sortOrder}`,
-    pathSort: doesReverseSortMatchDefault
-      ? gridOrFull === 'grid'
-        ? PATH_GRID_INFERRED
-        : PATH_FULL_INFERRED
-      : `/${gridOrFull}/${sortType}/${reversedSortOrder}`,
+    isTakenAt,
+    isUploadedAt,
+    pathGrid,
+    pathFull,
+    pathNewest,
+    pathOldest,
+    pathTakenAt,
+    pathUploadedAt,
+    pathSortToggle,
   };
 };

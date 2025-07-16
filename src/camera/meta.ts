@@ -8,7 +8,7 @@ import { Camera, cameraFromPhoto, formatCameraText } from '.';
 import {
   absolutePathForCamera,
   absolutePathForCameraImage,
-} from '@/app/paths';
+} from '@/app/path';
 import { AppTextState } from '@/i18n/state';
 
 // Meta functions moved to separate file to avoid

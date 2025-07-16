@@ -12,7 +12,7 @@ import {
   absolutePathForRecipe,
   absolutePathForTag,
   absolutePathForYear,
-} from '@/app/paths';
+} from '@/app/path';
 import { isTagFavs } from '@/tag';
 import { BASE_URL, GRID_HOMEPAGE_ENABLED } from '@/app/config';
 import { getPhotoIdsAndUpdatedAt } from '@/photo/db/query';

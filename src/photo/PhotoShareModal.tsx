@@ -1,5 +1,5 @@
 import PhotoOGTile from '@/photo/PhotoOGTile';
-import { absolutePathForPhoto } from '@/app/paths';
+import { absolutePathForPhoto } from '@/app/path';
 import { Photo, titleForPhoto } from '.';
 import { PhotoSetCategory } from '../category';
 import ShareModal from '@/share/ShareModal';

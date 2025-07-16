@@ -1,5 +1,5 @@
 import { TAG_PRIVATE } from '.';
-import { pathForTag } from '@/app/paths';
+import { pathForTag } from '@/app/path';
 import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/entity/EntityLink';

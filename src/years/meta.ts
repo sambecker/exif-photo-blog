@@ -1,6 +1,6 @@
 import { descriptionForPhotoSet, Photo, PhotoDateRange } from '@/photo';
 import { AppTextState } from '@/i18n/state';
-import { absolutePathForYear, absolutePathForYearImage } from '@/app/paths';
+import { absolutePathForYear, absolutePathForYearImage } from '@/app/path';
 
 export const generateMetaForYear = (
   year: string,

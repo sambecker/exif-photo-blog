@@ -1,4 +1,4 @@
-import { PREFIX_RECENTS } from '@/app/paths';
+import { PREFIX_RECENTS } from '@/app/path';
 import EntityLink, { EntityLinkExternalProps } from
   '@/components/entity/EntityLink';
 import { useAppText } from '@/i18n/state/client';

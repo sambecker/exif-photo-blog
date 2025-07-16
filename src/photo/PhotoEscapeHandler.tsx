@@ -1,6 +1,6 @@
 'use client';
 
-import { getEscapePath } from '@/app/paths';
+import { getEscapePath } from '@/app/path';
 import { useRouter, usePathname } from 'next/navigation';
 import { useCallback } from 'react';
 import useEscapeHandler from '../utility/useEscapeHandler';

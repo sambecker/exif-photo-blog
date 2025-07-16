@@ -10,7 +10,7 @@ import {
   checkPathPrefix,
   isPathAdminInfo,
   isPathTopLevelAdmin,
-} from '@/app/paths';
+} from '@/app/path';
 import { useAppState } from '@/app/AppState';
 import { clsx } from 'clsx/lite';
 import { differenceInMinutes } from 'date-fns';

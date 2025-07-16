@@ -1,11 +1,12 @@
 import { clsx } from 'clsx/lite';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/app/config';
 import { ComponentProps, ReactNode, RefObject } from 'react';
-import Spinner from './Spinner';
-import LinkWithIconLoader from './LinkWithIconLoader';
-import Tooltip from './Tooltip';
+import Spinner from '../Spinner';
+import LinkWithIconLoader from '../LinkWithIconLoader';
+import Tooltip from '../Tooltip';
 
-const WIDTH_CLASS = 'w-[42px]';
+const WIDTH_CLASS       = 'w-[42px]';
+const WIDTH_CLASS_NARROW = 'w-[36px]';
 
 export default function SwitcherItem({
   icon,
@@ -19,6 +20,7 @@ export default function SwitcherItem({
   noPadding,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
   tooltip,
+  width = 'normal',
 }: {
   icon: ReactNode
   title?: string
@@ -31,10 +33,12 @@ export default function SwitcherItem({
   noPadding?: boolean
   prefetch?: boolean
   tooltip?: ComponentProps<typeof Tooltip>
+  width?: 'narrow' | 'normal'
 }) {
+  const widthClass = width === 'narrow' ? WIDTH_CLASS_NARROW : WIDTH_CLASS;
   const className = clsx(
     'flex items-center justify-center',
-    `${WIDTH_CLASS} h-[28px]`,
+    `${widthClass} h-[28px]`,
     isInteractive && 'cursor-pointer',
     isInteractive && 'hover:bg-gray-100/60 active:bg-gray-100',
     isInteractive && 'dark:hover:bg-gray-900/75 dark:active:bg-gray-900',
@@ -75,7 +79,7 @@ export default function SwitcherItem({
     tooltip
       ? <Tooltip
         {...tooltip}
-        classNameTrigger={WIDTH_CLASS}
+        classNameTrigger={widthClass}
         delayDuration={500}
       >
         {content}

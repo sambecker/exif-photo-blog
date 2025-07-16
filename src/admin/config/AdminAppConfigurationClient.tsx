@@ -23,8 +23,8 @@ import { DEFAULT_CATEGORY_KEYS, getHiddenCategories } from '@/category';
 import { AI_AUTO_GENERATED_FIELDS_ALL } from '@/photo/ai';
 import clsx from 'clsx/lite';
 import Link from 'next/link';
-import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/paths';
-import { APP_DEFAULT_SORT_BY, SORT_BY_OPTIONS } from '@/photo/db/sort';
+import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/path';
+import { APP_DEFAULT_SORT_BY, SORT_BY_OPTIONS } from '@/photo/sort';
 import {
   AdminConfigSection,
   ConfigSectionKey,
@@ -86,7 +86,8 @@ export default function AdminAppConfigurationClient({
   hasDefaultSortBy,
   defaultSortBy,
   isSortWithPriority,
-  showSortControl,
+  hasNavSortControl,
+  navSortControl,
   // Display
   showKeyboardShortcutTooltips,
   showExifInfo,
@@ -605,7 +606,7 @@ export default function AdminAppConfigurationClient({
     case 'Sorting':
       return <>
         <ChecklistRow
-          title="Order"
+          title="Default order"
           status={hasDefaultSortBy}
           optional
         >
@@ -634,13 +635,13 @@ export default function AdminAppConfigurationClient({
           {renderEnvVars(['NEXT_PUBLIC_PRIORITY_BASED_SORTING'])}
         </ChecklistRow>
         <ChecklistRow
-          title="Show nav button"
-          status={showSortControl}
+          title={`Nav sort control: ${navSortControl}`}
+          status={hasNavSortControl}
           optional
         >
-          Set environment variable to {'"1"'} to
-          show sort control in desktop nav on grid/full homepages:
-          {renderEnvVars(['NEXT_PUBLIC_SHOW_SORT_CONTROL'])}
+          Set environment variable to {'"none"'}, {'"toggle"'} (default),
+          or {'"menu"'}, to control sort UI on grid/full homepages:
+          {renderEnvVars(['NEXT_PUBLIC_NAV_SORT_CONTROL'])}
         </ChecklistRow>
       </>;
     case 'Display':

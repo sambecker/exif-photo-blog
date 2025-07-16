@@ -2,7 +2,7 @@
 
 import { uploadPhotoFromClient } from '@/platforms/storage';
 import { usePathname, useRouter } from 'next/navigation';
-import { PATH_ADMIN_UPLOADS, pathForAdminUploadUrl } from '@/app/paths';
+import { PATH_ADMIN_UPLOADS, pathForAdminUploadUrl } from '@/app/path';
 import ImageInput from '../components/ImageInput';
 import { clsx } from 'clsx/lite';
 import { useAppState } from '@/app/AppState';

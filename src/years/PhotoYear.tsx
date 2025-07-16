@@ -1,4 +1,4 @@
-import { pathForYear } from '@/app/paths';
+import { pathForYear } from '@/app/path';
 import EntityLink, { EntityLinkExternalProps } from
   '@/components/entity/EntityLink';
 import IconYear from '@/components/icons/IconYear';

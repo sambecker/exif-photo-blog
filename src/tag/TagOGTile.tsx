@@ -1,7 +1,7 @@
 'use client';
 
 import { Photo, PhotoDateRange } from '@/photo';
-import { pathForTag, pathForTagImage } from '@/app/paths';
+import { pathForTag, pathForTagImage } from '@/app/path';
 import OGTile, { OGTilePropsCore } from '@/components/og/OGTile';
 import { descriptionForTaggedPhotos, titleForTag } from '.';
 import { useAppText } from '@/i18n/state/client';

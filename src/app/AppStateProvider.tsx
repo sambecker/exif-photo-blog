@@ -27,7 +27,7 @@ import {
   getAuthEmailCookie,
 } from '@/auth';
 import { useRouter, usePathname } from 'next/navigation';
-import { isPathProtected, PATH_ROOT } from '@/app/paths';
+import { isPathProtected, PATH_ROOT } from '@/app/path';
 import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 import { RecipeProps } from '@/recipe';
 import { nanoid } from 'nanoid';

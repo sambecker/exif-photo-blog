@@ -8,7 +8,7 @@ import {
   makeUrlAbsolute,
   shortenUrl,
 } from '@/utility/url';
-import { getSortByFromString } from '@/photo/db/sort';
+import { getNavSortControlFromString, getSortByFromString } from '@/photo/sort';
 
 // HARD-CODED GLOBAL CONFIGURATION
 
@@ -280,8 +280,8 @@ export const USER_DEFAULT_SORT_OPTIONS = {
   sortBy: USER_DEFAULT_SORT_BY,
   sortWithPriority: USER_DEFAULT_SORT_WITH_PRIORITY,
 };
-export const SHOW_SORT_CONTROL =
-  process.env.NEXT_PUBLIC_SHOW_SORT_CONTROL === '1';
+export const NAV_SORT_CONTROL =
+  getNavSortControlFromString(process.env.NEXT_PUBLIC_NAV_SORT_CONTROL);
 
 // DISPLAY
 
@@ -422,7 +422,8 @@ export const APP_CONFIGURATION = {
   hasDefaultSortBy: Boolean(process.env.NEXT_PUBLIC_DEFAULT_SORT),
   defaultSortBy: USER_DEFAULT_SORT_BY,
   isSortWithPriority: USER_DEFAULT_SORT_WITH_PRIORITY,
-  showSortControl: SHOW_SORT_CONTROL,
+  hasNavSortControl: Boolean(process.env.NEXT_PUBLIC_NAV_SORT_CONTROL),
+  navSortControl: NAV_SORT_CONTROL,
   // Display
   showKeyboardShortcutTooltips: SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
   showExifInfo: SHOW_EXIF_DATA,

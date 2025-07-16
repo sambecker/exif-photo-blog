@@ -3,7 +3,7 @@ import Note from '@/components/Note';
 import AppGrid from '@/components/AppGrid';
 import PhotoGrid from '@/photo/PhotoGrid';
 import { getPhotosMetaCached, getPhotosNoStore } from '@/photo/cache';
-import { absolutePathForTag } from '@/app/paths';
+import { absolutePathForTag } from '@/app/path';
 import { TAG_PRIVATE, descriptionForTaggedPhotos, titleForTag } from '@/tag';
 import PrivateHeader from '@/tag/PrivateHeader';
 import { Metadata } from 'next';

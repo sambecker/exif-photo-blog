@@ -1,4 +1,4 @@
-import { absolutePathForRecents } from '@/app/paths';
+import { absolutePathForRecents } from '@/app/path';
 import { PhotoSetAttributes } from '../category';
 import ShareModal from '@/share/ShareModal';
 import RecentsOGTile from './RecentsOGTile';

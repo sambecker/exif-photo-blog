@@ -6,7 +6,7 @@ import DeleteFormButton from '@/admin/DeleteFormButton';
 import { photoQuantityText } from '@/photo';
 import { Tags, formatTag, sortTags } from '@/tag';
 import EditButton from '@/admin/EditButton';
-import { pathForAdminTagEdit } from '@/app/paths';
+import { pathForAdminTagEdit } from '@/app/path';
 import { clsx } from 'clsx/lite';
 import AdminTagBadge from './AdminTagBadge';
 import { getAppText } from '@/i18n/state/server';

@@ -5,7 +5,7 @@ import AppGrid from '@/components/AppGrid';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import AdminPhotosTableInfinite from '@/admin/AdminPhotosTableInfinite';
 import PathLoaderButton from '@/components/primitives/PathLoaderButton';
-import { PATH_ADMIN_PHOTOS_UPDATES } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS_UPDATES } from '@/app/path';
 import { Photo } from '@/photo';
 import { StorageListResponse } from '@/platforms/storage';
 import AdminUploadsTable from './AdminUploadsTable';

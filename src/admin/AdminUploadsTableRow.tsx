@@ -8,7 +8,7 @@ import clsx from 'clsx/lite';
 import ResponsiveDate from '@/components/ResponsiveDate';
 import Spinner from '@/components/Spinner';
 import { FaRegCircleCheck } from 'react-icons/fa6';
-import { pathForAdminUploadUrl } from '@/app/paths';
+import { pathForAdminUploadUrl } from '@/app/path';
 import DeleteUploadButton from './DeleteUploadButton';
 import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import { isElementEntirelyInViewport } from '@/utility/dom';

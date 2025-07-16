@@ -4,7 +4,7 @@ import {
   INFINITE_SCROLL_FULL_INITIAL,
   INFINITE_SCROLL_GRID_INITIAL,
 } from '../photo';
-import { SortBy } from '../photo/db/sort';
+import { SortBy } from '../photo/sort';
 import { FEED_PHOTO_REQUEST_LIMIT } from './programmatic';
 
 const FEED_BASE_QUERY_OPTIONS: PhotoQueryOptions = {

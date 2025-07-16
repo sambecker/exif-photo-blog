@@ -7,7 +7,7 @@ import { clsx } from 'clsx/lite';
 import AnimateItems from '@/components/AnimateItems';
 import { ComponentProps, useCallback, useState, ReactNode } from 'react';
 import { GRID_SPACE_CLASSNAME } from '@/components';
-import { SortBy } from './db/sort';
+import { SortBy } from './sort';
 
 export default function PhotoGridContainer({
   cacheKey,

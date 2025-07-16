@@ -1,4 +1,4 @@
-import { absolutePathForRecipe, absolutePathForRecipeImage } from '@/app/paths';
+import { absolutePathForRecipe, absolutePathForRecipeImage } from '@/app/path';
 import {
   descriptionForPhotoSet,
   Photo,

@@ -1,4 +1,4 @@
-import { absolutePathForYear } from '@/app/paths';
+import { absolutePathForYear } from '@/app/path';
 import { PhotoSetAttributes } from '../category';
 import ShareModal from '@/share/ShareModal';
 import YearOGTile from './YearOGTile';

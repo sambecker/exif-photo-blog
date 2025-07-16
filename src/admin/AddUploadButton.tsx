@@ -4,7 +4,7 @@ import {
   generateLocalNaivePostgresString,
   generateLocalPostgresString,
 } from '@/utility/date';
-import { pathForAdminUploadUrl } from '@/app/paths';
+import { pathForAdminUploadUrl } from '@/app/path';
 import { useRouter } from 'next/navigation';
 import { ComponentProps, useState } from 'react';
 import IconAddUpload from '@/components/icons/IconAddUpload';

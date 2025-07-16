@@ -1,4 +1,4 @@
-import { PATH_API_VERCEL_BLOB_UPLOAD } from '@/app/paths';
+import { PATH_API_VERCEL_BLOB_UPLOAD } from '@/app/path';
 import { copy, del, list, put } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
 import { fileNameForStorageUrl, StorageListResponse } from '.';

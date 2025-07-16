@@ -37,7 +37,7 @@ import {
   PATH_ADMIN_TAGS,
   PATH_ROOT,
   pathForPhoto,
-} from '@/app/paths';
+} from '@/app/path';
 import {
   blurImageFromUrl,
   convertFormDataToPhotoDbInsertAndLookupRecipeTitle,

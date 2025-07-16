@@ -3,7 +3,7 @@ import { AppTextState } from '@/i18n/state';
 import {
   absolutePathForRecents,
   absolutePathForRecentsImage,
-} from '@/app/paths';
+} from '@/app/path';
 
 export const generateMetaForRecents = (
   photos: Photo[],

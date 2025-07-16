@@ -1,9 +1,9 @@
 'use client';
 
-import { PATH_FULL_INFERRED } from '@/app/paths';
+import { PATH_FULL_INFERRED } from '@/app/path';
 import InfinitePhotoScroll from './InfinitePhotoScroll';
 import PhotosLarge from './PhotosLarge';
-import { SortBy } from './db/sort';
+import { SortBy } from './sort';
 
 export default function PhotosLargeInfinite({
   initialOffset,

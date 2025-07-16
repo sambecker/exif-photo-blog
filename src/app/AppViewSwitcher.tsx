@@ -1,34 +1,37 @@
-import Switcher from '@/components/Switcher';
-import SwitcherItem from '@/components/SwitcherItem';
+import Switcher from '@/components/switcher/Switcher';
+import SwitcherItem from '@/components/switcher/SwitcherItem';
 import IconFull from '@/components/icons/IconFull';
 import IconGrid from '@/components/icons/IconGrid';
 import {
   doesPathOfferSort,
   PATH_FULL_INFERRED,
   PATH_GRID_INFERRED,
-} from '@/app/paths';
+} from '@/app/path';
 import IconSearch from '../components/icons/IconSearch';
 import { useAppState } from '@/app/AppState';
 import {
   GRID_HOMEPAGE_ENABLED,
   SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
-  SHOW_SORT_CONTROL,
+  NAV_SORT_CONTROL,
 } from './config';
 import AdminAppMenu from '@/admin/AdminAppMenu';
 import Spinner from '@/components/Spinner';
 import clsx from 'clsx/lite';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useKeydownHandler from '@/utility/useKeydownHandler';
 import { usePathname } from 'next/navigation';
 import { KEY_COMMANDS } from '@/photo/key-commands';
 import { useAppText } from '@/i18n/state/client';
 import IconSort from '@/components/icons/IconSort';
-import { getSortConfigFromPath } from '@/photo/db/sort-path';
+import { getSortConfigFromPath } from '@/photo/sort/path';
 import { motion } from 'framer-motion';
+import SortMenu from '@/photo/sort/SortMenu';
+import { SWR_KEYS } from '@/swr';
 
 export type SwitcherSelection = 'full' | 'grid' | 'admin';
 
-const GAP_CLASS = 'mr-1.5 sm:mr-2';
+const GAP_CLASS_RIGHT = 'mr-1.5 sm:mr-2';
+const GAP_CLASS_LEFT  = 'ml-0.5 sm:ml-1';
 
 export default function AppViewSwitcher({
   currentSelection,
@@ -50,20 +53,26 @@ export default function AppViewSwitcher({
     invalidateSwr,
   } = useAppState();
 
-  const showSortControl = SHOW_SORT_CONTROL && doesPathOfferSort(pathname);
+  const sortConfig = useMemo(() => getSortConfigFromPath(pathname), [pathname]);
+
   const {
     sortBy,
+    isSortedByDefault,
     isAscending,
     pathGrid,
     pathFull,
-    pathSort,
-  } = getSortConfigFromPath(pathname);
+    pathSortToggle,
+  } = sortConfig;
+
+  const showSortControl =
+    NAV_SORT_CONTROL !== 'none' &&
+    doesPathOfferSort(pathname);
 
   const hasLoadedRef = useRef(false);
   useEffect(() => {
     if (hasLoadedRef.current) {
       // After initial load, invalidate cache every time sort changes
-      invalidateSwr?.('INFINITE_PHOTO_SCROLL');
+      invalidateSwr?.(SWR_KEYS.INFINITE_PHOTO_SCROLL);
     }
     hasLoadedRef.current = true;
   }, [invalidateSwr, sortBy]);
@@ -88,6 +97,7 @@ export default function AppViewSwitcher({
   }, [pathname, isUserSignedIn]);
   useKeydownHandler({ onKeyDown });
 
+  const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
 
   const renderItemFull =
@@ -120,7 +130,7 @@ export default function AppViewSwitcher({
     <div className={clsx('flex', className)}>
       <Switcher
         className={clsx(
-          GAP_CLASS,
+          GAP_CLASS_RIGHT,
           // Apply offset due to outline strategy
           'translate-x-[1px]',
         )}
@@ -144,7 +154,10 @@ export default function AppViewSwitcher({
           <SwitcherItem
             icon={<AdminAppMenu
               isOpen={isAdminMenuOpen}
-              setIsOpen={setIsAdminMenuOpen}
+              setIsOpen={isOpen => {
+                setIsAdminMenuOpen(isOpen);
+                if (isOpen) { setIsSortMenuOpen(false); }
+              }}
             />}
             tooltip={{
               ...!isAdminMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
@@ -162,19 +175,49 @@ export default function AppViewSwitcher({
           exit={{ opacity: 0, scale: 0.5 }}
           transition={{ duration: 0.2, ease: 'easeInOut' }}
         >
-          <Switcher className={clsx('max-sm:hidden', GAP_CLASS)}>
-            <SwitcherItem
-              href={pathSort}
-              icon={<IconSort
-                sort={isAscending ? 'asc' : 'desc'}
-                className="translate-x-[0.5px] translate-y-[1px]"
+          <Switcher
+            className={clsx('max-sm:hidden', GAP_CLASS_LEFT)}
+            type="borderless"
+          >
+            {NAV_SORT_CONTROL === 'menu'
+              ? <SwitcherItem
+                className={clsx(
+                  !isSortedByDefault && '*:bg-medium *:text-main!',
+                )}
+                icon={<SortMenu
+                  {...sortConfig}
+                  isOpen={isSortMenuOpen}
+                  setIsOpen={isOpen => {
+                    setIsSortMenuOpen(isOpen);
+                    if (isOpen) { setIsAdminMenuOpen(false); }
+                  }}
+                />}
+                tooltip={{
+                  ...!isSortMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+                    content: 'Sort',
+                  },
+                }}
+                width="narrow"
+                noPadding
+              />
+              : <SwitcherItem
+                className={clsx(
+                  '*:w-full *:h-full *:flex *:items-center *:justify-center',
+                  !isSortedByDefault && '*:bg-medium *:text-main!',
+                )}
+                href={pathSortToggle}
+                icon={<IconSort
+                  sort={isAscending ? 'asc' : 'desc'}
+                  className="translate-x-[0.5px] translate-y-[1px]"
+                />}
+                tooltip={{
+                  content: isAscending
+                    ? appText.sort.newest
+                    : appText.sort.oldest,
+                }}
+                width="narrow"
+                noPadding
               />}
-              tooltip={{
-                content: isAscending
-                  ? appText.sort.newest
-                  : appText.sort.oldest,
-              }}
-            />
           </Switcher>
         </motion.div>}
       <motion.div
@@ -192,6 +235,7 @@ export default function AppViewSwitcher({
               keyCommandModifier: KEY_COMMANDS.search[0],
               keyCommand: KEY_COMMANDS.search[1],
             }}}
+            width="narrow"
           />
         </Switcher>
       </motion.div>

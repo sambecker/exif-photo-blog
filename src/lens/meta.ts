@@ -8,7 +8,7 @@ import { Lens, lensFromPhoto, formatLensText } from '.';
 import {
   absolutePathForLens,
   absolutePathForLensImage,
-} from '@/app/paths';
+} from '@/app/path';
 import { AppTextState } from '@/i18n/state';
 
 // Meta functions moved to separate file to avoid

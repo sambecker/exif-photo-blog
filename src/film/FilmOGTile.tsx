@@ -4,7 +4,7 @@ import { Photo, PhotoDateRange } from '@/photo';
 import {
   pathForFilm,
   pathForFilmImage,
-} from '@/app/paths';
+} from '@/app/path';
 import OGTile, { OGTilePropsCore } from '@/components/og/OGTile';
 import { descriptionForFilmPhotos, titleForFilm } from '.';
 import { useAppText } from '@/i18n/state/client';

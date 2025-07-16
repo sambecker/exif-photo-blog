@@ -1,7 +1,7 @@
 'use client';
 
 import { Photo, PhotoDateRange } from '@/photo';
-import { pathForCamera, pathForCameraImage } from '@/app/paths';
+import { pathForCamera, pathForCameraImage } from '@/app/path';
 import OGTile, { OGTilePropsCore } from '@/components/og/OGTile';
 import { Camera } from '.';
 import { descriptionForCameraPhotos, titleForCamera } from './meta';

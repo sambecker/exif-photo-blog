@@ -1,7 +1,7 @@
 'use client';
 
 import PhotoFilmIcon from './PhotoFilmIcon';
-import { pathForFilm } from '@/app/paths';
+import { pathForFilm } from '@/app/path';
 import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/entity/EntityLink';
