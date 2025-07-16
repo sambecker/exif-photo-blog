@@ -81,7 +81,7 @@ export const getSortOptionsFromParams = async (
   return _getSortOptionsFromParams(sortType, sortOrder);
 };
 
-export const getPathSortComponents = (pathname: string) => {
+const getPathSortComponents = (pathname: string) => {
   const [_, gridOrFull, sortType, sortOrder] = pathname.split('/');
   const { sortBy } = _getSortOptionsFromParams(sortType, sortOrder);
   return {
@@ -95,11 +95,6 @@ export const getPathSortComponents = (pathname: string) => {
   };
 };
 
-const getReversedSortOrder = (sortOrder: string): string =>
-  sortOrder === PARAM_SORT_ORDER_OLDEST
-    ? PARAM_SORT_ORDER_NEWEST
-    : PARAM_SORT_ORDER_OLDEST;
-
 export const getSortConfigFromPath = (pathname: string) => {
   const {
     gridOrFull: _gridOrFull,
@@ -108,7 +103,10 @@ export const getSortConfigFromPath = (pathname: string) => {
     sortBy,
   } = getPathSortComponents(pathname);
 
-  const reversedSortOrder = getReversedSortOrder(sortOrder);
+  const isSortedByDefault = sortBy === USER_DEFAULT_SORT_BY;
+  const sortOrderReversed = sortOrder === PARAM_SORT_ORDER_OLDEST
+    ? PARAM_SORT_ORDER_NEWEST
+    : PARAM_SORT_ORDER_OLDEST;
   const isAscending = sortOrder === PARAM_SORT_ORDER_OLDEST;
   const isTakenAt = sortType === PARAM_SORT_TYPE_TAKEN_AT;
   const isUploadedAt = sortType === PARAM_SORT_TYPE_UPLOADED_AT;
@@ -143,7 +141,7 @@ export const getSortConfigFromPath = (pathname: string) => {
 
   // Sort toggle path
   const pathSortToggle =
-    getPath({ sortType, sortOrder: reversedSortOrder });
+    getPath({ sortType, sortOrder: sortOrderReversed });
 
   // Sort menu paths
   const pathNewest =
@@ -157,6 +155,7 @@ export const getSortConfigFromPath = (pathname: string) => {
 
   return {
     sortBy,
+    isSortedByDefault,
     isAscending,
     isTakenAt,
     isUploadedAt,

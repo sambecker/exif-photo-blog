@@ -53,17 +53,20 @@ export default function AppViewSwitcher({
     invalidateSwr,
   } = useAppState();
 
-  const showSortControl =
-    NAV_SORT_CONTROL !== 'none' &&
-    doesPathOfferSort(pathname);
+  const sortConfig = useMemo(() => getSortConfigFromPath(pathname), [pathname]);
 
   const {
     sortBy,
+    isSortedByDefault,
     isAscending,
     pathGrid,
     pathFull,
     pathSortToggle,
-  } = useMemo(() => getSortConfigFromPath(pathname), [pathname]);
+  } = sortConfig;
+
+  const showSortControl =
+    NAV_SORT_CONTROL !== 'none' &&
+    doesPathOfferSort(pathname);
 
   const hasLoadedRef = useRef(false);
   useEffect(() => {
@@ -178,7 +181,11 @@ export default function AppViewSwitcher({
           >
             {NAV_SORT_CONTROL === 'menu'
               ? <SwitcherItem
+                className={clsx(
+                  !isSortedByDefault && '*:bg-medium *:text-main!',
+                )}
                 icon={<SortMenu
+                  {...sortConfig}
                   isOpen={isSortMenuOpen}
                   setIsOpen={isOpen => {
                     setIsSortMenuOpen(isOpen);

@@ -1,7 +1,5 @@
 import IconSort from '@/components/icons/IconSort';
 import SwitcherItemMenu from '@/components/switcher/SwitcherItemMenu';
-import { usePathname } from 'next/navigation';
-import { useMemo } from 'react';
 import { getSortConfigFromPath } from './path';
 import IconCheck from '@/components/icons/IconCheck';
 import { clsx } from 'clsx/lite';
@@ -9,21 +7,17 @@ import { clsx } from 'clsx/lite';
 export default function SortMenu({
   isOpen,
   setIsOpen,
+  isAscending,
+  isTakenAt,
+  isUploadedAt,
+  pathNewest,
+  pathOldest,
+  pathTakenAt,
+  pathUploadedAt,
 }: {
   isOpen?: boolean
   setIsOpen?: (isOpen: boolean) => void
-}) {
-  const pathname = usePathname();
-  const {
-    isAscending,
-    isTakenAt,
-    isUploadedAt,
-    pathNewest,
-    pathOldest,
-    pathTakenAt,
-    pathUploadedAt,
-  } = useMemo(() => getSortConfigFromPath(pathname), [pathname]);
-
+} & ReturnType<typeof getSortConfigFromPath>) {
   const renderIcon = (isChecked: boolean) => isChecked
     ? <IconCheck size={13} className="translate-x-[-2px]" />
     : <span />;
