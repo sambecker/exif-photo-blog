@@ -83,6 +83,7 @@ export const getSortOptionsFromParams = async (
 
 export const getPathSortComponents = (pathname: string) => {
   const [_, gridOrFull, sortType, sortOrder] = pathname.split('/');
+  const { sortBy } = _getSortOptionsFromParams(sortType, sortOrder);
   return {
     gridOrFull: gridOrFull || (GRID_HOMEPAGE_ENABLED
       ? 'grid'
@@ -90,6 +91,7 @@ export const getPathSortComponents = (pathname: string) => {
     ),
     sortType: sortType || DEFAULT_SORT_TYPE,
     sortOrder: sortOrder || DEFAULT_SORT_ORDER,
+    sortBy,
   };
 };
 
@@ -103,9 +105,8 @@ export const getSortConfigFromPath = (pathname: string) => {
     gridOrFull: _gridOrFull,
     sortType,
     sortOrder,
+    sortBy,
   } = getPathSortComponents(pathname);
-
-  const { sortBy } = _getSortOptionsFromParams(sortType, sortOrder);
 
   const reversedSortOrder = getReversedSortOrder(sortOrder);
   const isAscending = sortOrder === PARAM_SORT_ORDER_OLDEST;
@@ -132,8 +133,13 @@ export const getSortConfigFromPath = (pathname: string) => {
   };
 
   // Core paths
-  const pathGrid = getPath({ gridOrFull: 'grid', sortType, sortOrder });
-  const pathFull = getPath({ gridOrFull: 'full', sortType, sortOrder });
+  // (reset custom sort when clicking grid/full a second time)
+  const pathGrid = _gridOrFull === 'grid' && sortBy !== USER_DEFAULT_SORT_BY
+    ? PATH_GRID_INFERRED
+    : getPath({ gridOrFull: 'grid', sortType, sortOrder });
+  const pathFull = _gridOrFull === 'full' && sortBy !== USER_DEFAULT_SORT_BY
+    ? PATH_FULL_INFERRED
+    : getPath({ gridOrFull: 'full', sortType, sortOrder });
 
   // Sort toggle path
   const pathSortToggle =
