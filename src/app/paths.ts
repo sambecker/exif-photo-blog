@@ -24,10 +24,10 @@ export const PATH_FULL_INFERRED = GRID_HOMEPAGE_ENABLED
   : PATH_ROOT;
 
 // Sort
-export const PARAM_SORT_TYPE_TAKEN_AT = 'taken-at';
-export const PARAM_SORT_TYPE_UPLOADED_AT = 'uploaded-at';
-export const PARAM_SORT_ORDER_NEWEST = 'newest-first';
-export const PARAM_SORT_ORDER_OLDEST = 'oldest-first';
+export const PARAM_SORT_TYPE_TAKEN_AT     = 'taken-at';
+export const PARAM_SORT_TYPE_UPLOADED_AT  = 'uploaded-at';
+export const PARAM_SORT_ORDER_NEWEST      = 'newest-first';
+export const PARAM_SORT_ORDER_OLDEST      = 'oldest-first';
 export const doesPathOfferSort = (pathname: string) =>
   pathname === PATH_ROOT ||
   pathname.startsWith(PATH_GRID) ||

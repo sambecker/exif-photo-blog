@@ -1,4 +1,4 @@
-// 'sort-path.ts' separate from 'sort.ts'
+// 'sort/path.ts' separate from 'sort/index.ts'
 // to avoid circular dependencies
 
 import {
@@ -6,9 +6,7 @@ import {
   PARAM_SORT_ORDER_OLDEST,
   PARAM_SORT_TYPE_TAKEN_AT,
   PARAM_SORT_TYPE_UPLOADED_AT,
-  PATH_FULL,
   PATH_FULL_INFERRED,
-  PATH_GRID,
   PATH_GRID_INFERRED,
 } from '@/app/paths';
 import { SortBy, SortParams } from '.';
@@ -101,32 +99,67 @@ const getReversedSortOrder = (sortOrder: string): string =>
     : PARAM_SORT_ORDER_OLDEST;
 
 export const getSortConfigFromPath = (pathname: string) => {
-  const { gridOrFull, sortType, sortOrder } = getPathSortComponents(pathname);
+  const {
+    gridOrFull: _gridOrFull,
+    sortType,
+    sortOrder,
+  } = getPathSortComponents(pathname);
+
   const { sortBy } = _getSortOptionsFromParams(sortType, sortOrder);
-  const isSortedByDefault = sortBy === USER_DEFAULT_SORT_BY;
+
   const reversedSortOrder = getReversedSortOrder(sortOrder);
   const isAscending = sortOrder === PARAM_SORT_ORDER_OLDEST;
   const isTakenAt = sortType === PARAM_SORT_TYPE_TAKEN_AT;
   const isUploadedAt = sortType === PARAM_SORT_TYPE_UPLOADED_AT;
-  const doesReverseSortMatchDefault = _getSortOptionsFromParams(
+
+  const getPath = ({
+    gridOrFull = _gridOrFull,
     sortType,
-    reversedSortOrder,
-  ).sortBy === USER_DEFAULT_SORT_BY;
+    sortOrder,
+  }: {
+    gridOrFull?: string
+    sortType: string
+    sortOrder: string
+  }) => {
+    const { sortBy } = _getSortOptionsFromParams(sortType, sortOrder);
+    if (sortBy === USER_DEFAULT_SORT_BY) {
+      return gridOrFull === 'grid'
+        ? PATH_GRID_INFERRED
+        : PATH_FULL_INFERRED;
+    } else {
+      return `/${gridOrFull}/${sortType}/${sortOrder}`;
+    }
+  };
+
+  // Core paths
+  const pathGrid = getPath({ gridOrFull: 'grid', sortType, sortOrder });
+  const pathFull = getPath({ gridOrFull: 'full', sortType, sortOrder });
+
+  // Sort toggle path
+  const pathSortToggle =
+    getPath({ sortType, sortOrder: reversedSortOrder });
+
+  // Sort menu paths
+  const pathNewest =
+    getPath({ sortType, sortOrder: PARAM_SORT_ORDER_NEWEST });
+  const pathOldest =
+    getPath({ sortType, sortOrder: PARAM_SORT_ORDER_OLDEST });
+  const pathTakenAt =
+    getPath({ sortType: PARAM_SORT_TYPE_TAKEN_AT, sortOrder });
+  const pathUploadedAt =
+    getPath({ sortType: PARAM_SORT_TYPE_UPLOADED_AT, sortOrder });
+
   return {
     sortBy,
     isAscending,
     isTakenAt,
     isUploadedAt,
-    pathGrid: isSortedByDefault
-      ? PATH_GRID_INFERRED
-      : `${PATH_GRID}/${sortType}/${sortOrder}`,
-    pathFull: isSortedByDefault
-      ? PATH_FULL_INFERRED
-      : `${PATH_FULL}/${sortType}/${sortOrder}`,
-    pathSortToggle: doesReverseSortMatchDefault
-      ? gridOrFull === 'grid'
-        ? PATH_GRID_INFERRED
-        : PATH_FULL_INFERRED
-      : `/${gridOrFull}/${sortType}/${reversedSortOrder}`,
+    pathGrid,
+    pathFull,
+    pathNewest,
+    pathOldest,
+    pathTakenAt,
+    pathUploadedAt,
+    pathSortToggle,
   };
 };

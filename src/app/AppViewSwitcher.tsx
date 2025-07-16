@@ -17,7 +17,7 @@ import {
 import AdminAppMenu from '@/admin/AdminAppMenu';
 import Spinner from '@/components/Spinner';
 import clsx from 'clsx/lite';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useKeydownHandler from '@/utility/useKeydownHandler';
 import { usePathname } from 'next/navigation';
 import { KEY_COMMANDS } from '@/photo/key-commands';
@@ -63,7 +63,7 @@ export default function AppViewSwitcher({
     pathGrid,
     pathFull,
     pathSortToggle,
-  } = getSortConfigFromPath(pathname);
+  } = useMemo(() => getSortConfigFromPath(pathname), [pathname]);
 
   const hasLoadedRef = useRef(false);
   useEffect(() => {
@@ -193,8 +193,7 @@ export default function AppViewSwitcher({
                 noPadding
                 width="narrow"
               />
-              :
-              <SwitcherItem
+              : <SwitcherItem
                 href={pathSortToggle}
                 icon={<IconSort
                   sort={isAscending ? 'asc' : 'desc'}

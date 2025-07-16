@@ -14,8 +14,15 @@ export default function SortMenu({
   setIsOpen?: (isOpen: boolean) => void
 }) {
   const pathname = usePathname();
-  const sortConfig =  useMemo(() =>
-    getSortConfigFromPath(pathname), [pathname]);
+  const {
+    isAscending,
+    isTakenAt,
+    isUploadedAt,
+    pathNewest,
+    pathOldest,
+    pathTakenAt,
+    pathUploadedAt,
+  } = useMemo(() => getSortConfigFromPath(pathname), [pathname]);
 
   const renderIcon = (isChecked: boolean) => isChecked
     ? <IconCheck size={13} className="translate-x-[-2px]" />
@@ -32,24 +39,28 @@ export default function SortMenu({
     <SwitcherItemMenu
       {...{ isOpen, setIsOpen }}
       icon={<IconSort
-        sort={sortConfig.isAscending ? 'asc' : 'desc'}
+        sort={isAscending ? 'asc' : 'desc'}
         className="shrink-0 translate-x-[0.5px] translate-y-[1px]"
       />}
       sections={[{
         items: [{
-          ...renderLabel('Newest', !sortConfig.isAscending),
-          icon: renderIcon(!sortConfig.isAscending),
+          ...renderLabel('Newest', !isAscending),
+          icon: renderIcon(!isAscending),
+          href: pathNewest,
         }, {
-          ...renderLabel('Oldest', sortConfig.isAscending),
-          icon: renderIcon(sortConfig.isAscending),
+          ...renderLabel('Oldest', isAscending),
+          icon: renderIcon(isAscending),
+          href: pathOldest,
         }],
       }, {
         items: [{
-          ...renderLabel('Taken at', sortConfig.isTakenAt),
-          icon: renderIcon(sortConfig.isTakenAt),
+          ...renderLabel('Taken at', isTakenAt),
+          icon: renderIcon(isTakenAt),
+          href: pathTakenAt,
         }, {
-          ...renderLabel('Uploaded', sortConfig.isUploadedAt),
-          icon: renderIcon(sortConfig.isUploadedAt),
+          ...renderLabel('Uploaded', isUploadedAt),
+          icon: renderIcon(isUploadedAt),
+          href: pathUploadedAt,
         }],
       }]}
       align="start"
