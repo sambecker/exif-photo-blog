@@ -63,32 +63,47 @@ export default function AdminPhotosTable({
             'flex flex-col lg:flex-row min-w-0 gap-x-3',
             opacityForPhotoId(photo.id),
           )}>
-            <Link
+            <span
               key={photo.id}
-              href={pathForPhoto({ photo })}
-              className="lg:min-w-[50%] flex items-center gap-2"
-              prefetch={false}
+              className="lg:min-w-[50%] flex items-center gap-1.5"
             >
               <span className={clsx(
-                'flex w-full gap-1.5',
+                'truncate',
                 photo.hidden && 'text-dim',
               )}>
-                <span className="truncate">
+                <Link
+                  href={pathForPhoto({ photo })}
+                  prefetch={false}
+                >
                   {titleForPhoto(photo, false)}
-                </span>
-                <span className="inline-flex items-center">
-                  <PhotoVisibilityIcon photo={photo} />
-                </span>
+                </Link>
               </span>
+              <span className={clsx(
+                'inline-flex items-center',
+                photo.hidden && 'text-dim',
+              )}>
+                <PhotoVisibilityIcon photo={photo} />
+              </span>
+              {photoNeedsToBeSynced(photo) &&
+                <span>
+                  <Tooltip
+                    content={getPhotoSyncStatusText(photo)}
+                    classNameTrigger={clsx(
+                      'text-blue-600 dark:text-blue-400',
+                      'translate-y-[0.5px]',
+                    )}
+                    supportMobile
+                  />
+                </span>}
               {photo.priorityOrder !== null &&
                 <span className={clsx(
-                  'text-xs leading-none px-1.5 py-1 rounded-xs',
-                  'dark:text-gray-300',
-                  'bg-gray-100 dark:bg-gray-800',
+                  'px-[5px] py-[3px] sm:ml-[3px]',
+                  'text-xs leading-none',
+                  'bg-medium text-main rounded-sm',
                 )}>
                   {photo.priorityOrder}
                 </span>}
-            </Link>
+            </span>
             <div className={clsx(
               'flex min-w-0 gap-1.5 w-full',
               'lg:w-[50%] uppercase',
@@ -98,14 +113,6 @@ export default function AdminPhotosTable({
                 {...{ photo, dateType, timezone }}
                 className="truncate"
               />
-              {photoNeedsToBeSynced(photo) &&
-                <span>
-                  <Tooltip
-                    content={getPhotoSyncStatusText(photo)}
-                    classNameTrigger="text-blue-600 dark:text-blue-400"
-                    supportMobile
-                  />
-                </span>}
             </div>
           </div>
           <div className={clsx(
