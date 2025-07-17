@@ -21,7 +21,6 @@ export default function PhotoMedium({
   priority,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
   className,
-  forceFallbackFade,
   onVisible,
   ...categories
 }: {
@@ -30,7 +29,6 @@ export default function PhotoMedium({
   priority?: boolean
   prefetch?: boolean
   className?: string
-  forceFallbackFade?: boolean
   onVisible?: () => void
 } & PhotoSetCategory) {
   const ref = useRef<HTMLAnchorElement>(null);
@@ -68,7 +66,6 @@ export default function PhotoMedium({
             classNameImage="object-cover w-full h-full"
             alt={altTextForPhoto(photo)}
             priority={priority}
-            forceFallbackFade={forceFallbackFade}
           />
         </div>}
     </LinkWithStatus>

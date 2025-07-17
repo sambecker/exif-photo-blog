@@ -80,7 +80,6 @@ export default function PhotoLarge({
   shouldShareRecipe,
   shouldShareFocalLength,
   includeFavoriteInAdminMenu,
-  forceFallbackFade,
   onVisible,
   showAdminKeyCommands,
 }: {
@@ -111,7 +110,6 @@ export default function PhotoLarge({
   shouldShareRecipe?: boolean
   shouldShareFocalLength?: boolean
   includeFavoriteInAdminMenu?: boolean
-  forceFallbackFade?: boolean
   onVisible?: () => void
   showAdminKeyCommands?: boolean
 }) {
@@ -234,7 +232,6 @@ export default function PhotoLarge({
           blurDataURL={photo.blurData}
           blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
           priority={priority}
-          forceFallbackFade={forceFallbackFade}
         />
       </ZoomControls>
       <div className={clsx(

@@ -17,7 +17,6 @@ export default function PhotoSmall({
   selected,
   className,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
-  forceFallbackFade,
   onVisible,
   ...categories
 }: {
@@ -25,7 +24,6 @@ export default function PhotoSmall({
   selected?: boolean
   className?: string
   prefetch?: boolean
-  forceFallbackFade?: boolean
   onVisible?: () => void
 } & PhotoSetCategory) {
   const ref = useRef<HTMLAnchorElement>(null);
@@ -52,7 +50,6 @@ export default function PhotoSmall({
         blurDataURL={photo.blurData}
         blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
         alt={altTextForPhoto(photo)}
-        forceFallbackFade={forceFallbackFade}
       />
     </Link>
   );

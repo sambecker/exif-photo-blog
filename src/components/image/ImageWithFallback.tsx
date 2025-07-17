@@ -10,7 +10,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 export default function ImageWithFallback({
   className,
   classNameImage = 'object-cover h-full',
-  forceFallbackFade = false,
   blurDataURL,
   blurCompatibilityLevel = 'low',
   priority,
@@ -18,16 +17,15 @@ export default function ImageWithFallback({
 }: ImageProps & {
   blurCompatibilityLevel?: 'none' | 'low' | 'high'
   classNameImage?: string
-  forceFallbackFade?: boolean
 }) {
   const ref = useRef<HTMLImageElement>(null);
 
-  const { shouldDebugImageFallbacks } = useAppState();
+  const { hasLoadedWithAnimations, shouldDebugImageFallbacks } = useAppState();
 
   const [isLoading, setIsLoading] = useState(true);
   const [didError, setDidError] = useState(false);
   const [fadeFallbackTransition, setFadeFallbackTransition] =
-    useState(forceFallbackFade);
+    useState(!hasLoadedWithAnimations);
 
   const onLoad = useCallback(() => setIsLoading(false), []);
   const onError = useCallback(() => setDidError(true), []);
