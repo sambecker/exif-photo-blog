@@ -4,13 +4,13 @@ import { Photo } from '.';
 import { PATH_GRID_INFERRED } from '@/app/path';
 import PhotoGridSidebar from './PhotoGridSidebar';
 import PhotoGridContainer from './PhotoGridContainer';
-import { ComponentProps, useEffect, useRef } from 'react';
+import { ComponentProps, useEffect, useMemo, useRef } from 'react';
 import { useAppState } from '@/app/AppState';
 import clsx from 'clsx/lite';
-import useElementHeight from '@/utility/useElementHeight';
 import MaskedScroll from '@/components/MaskedScroll';
 import { IS_RECENTS_FIRST } from '@/app/config';
 import { SortBy } from './sort';
+import useViewportHeight from '@/utility/useViewportHeight';
 
 export default function PhotoGridPageClient({
   photos,
@@ -35,7 +35,10 @@ export default function PhotoGridPageClient({
     [setSelectedPhotoIds],
   );
 
-  const containerHeight = useElementHeight(ref);
+  const viewPortHeight = useViewportHeight();
+  const containerHeight = useMemo(() =>
+    viewPortHeight - (ref.current?.getBoundingClientRect().y ?? 0),
+  [viewPortHeight]);
 
   return (
     <PhotoGridContainer

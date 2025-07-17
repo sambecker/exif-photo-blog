@@ -79,7 +79,7 @@ import IconFocalLength from '../components/icons/IconFocalLength';
 import IconFilm from '../components/icons/IconFilm';
 import IconLock from '../components/icons/IconLock';
 import IconYear from '../components/icons/IconYear';
-import useVisualViewportHeight from '@/utility/useVisualViewport';
+import useViewportHeight from '@/utility/useViewportHeight';
 import useMaskedScroll from '../components/useMaskedScroll';
 import { labelForFilm } from '@/film';
 import IconFavs from '@/components/icons/IconFavs';
@@ -177,7 +177,7 @@ export default function CommandKClient({
   const isOpenRef = useRef(isOpen);
 
   const refInput = useRef<HTMLInputElement>(null);
-  const mobileViewportHeight = useVisualViewportHeight();
+  const mobileViewportHeight = useViewportHeight();
   const maxHeight = useMemo(() => {
     const positionY = refInput.current?.getBoundingClientRect().y;
     return mobileViewportHeight && positionY
