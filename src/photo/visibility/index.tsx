@@ -2,6 +2,7 @@ import IconHidden from '@/components/icons/IconHidden';
 import { PhotoFormData } from '../form';
 import IconLock from '@/components/icons/IconLock';
 import { SelectMenuOptionType } from '@/components/SelectMenuOption';
+import { Photo } from '..';
 
 export type VisibilityValue = 'default' | 'exclude' | 'private';
 
@@ -58,3 +59,6 @@ export const didVisibilityChange = (
   original: Partial<PhotoFormData>,
   current: Partial<PhotoFormData>,
 ) => getVisibilityValue(original) !== getVisibilityValue(current);
+
+export const doesPhotoHaveDefaultVisibility = (photo: Photo) =>
+  !photo.hidden && !photo.excludeFromFeeds;

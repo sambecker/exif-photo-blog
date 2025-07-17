@@ -17,6 +17,7 @@ import { Timezone } from '@/utility/timezone';
 import Tooltip from '@/components/Tooltip';
 import { photoNeedsToBeSynced, getPhotoSyncStatusText } from '@/photo/sync';
 import PhotoVisibilityIcon from '@/photo/visibility/PhotoVisibilityIcon';
+import { doesPhotoHaveDefaultVisibility } from '@/photo/visibility';
 
 export default function AdminPhotosTable({
   photos,
@@ -78,12 +79,13 @@ export default function AdminPhotosTable({
                   {titleForPhoto(photo, false)}
                 </Link>
               </span>
-              <span className={clsx(
-                'inline-flex items-center',
-                photo.hidden && 'text-dim',
-              )}>
-                <PhotoVisibilityIcon photo={photo} />
-              </span>
+              {!doesPhotoHaveDefaultVisibility(photo) &&
+                <span className={clsx(
+                  'inline-flex items-center',
+                  photo.hidden && 'text-dim',
+                )}>
+                  <PhotoVisibilityIcon photo={photo} />
+                </span>}
               {photoNeedsToBeSynced(photo) &&
                 <span>
                   <Tooltip
