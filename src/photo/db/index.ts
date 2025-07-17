@@ -7,18 +7,17 @@ import { APP_DEFAULT_SORT_BY, SortBy } from '../sort';
 export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 export const PHOTO_DEFAULT_LIMIT = 100;
 
-const DB_PARAMETERIZE_REPLACEMENTS = [
-  [',', ''],
-  ['/', ''],
-  ['+', '-'],
-  ['|', '-'],
-  [' ', '-'],
-];
+const CHARACTERS_TO_REMOVE = [',', '/'];
+const CHARACTERS_TO_REPLACE = ['+', '&', '|', ' '];
 
 const parameterizeForDb = (field: string) =>
-  DB_PARAMETERIZE_REPLACEMENTS.reduce((acc, [from, to]) =>
-    `REPLACE(${acc}, '${from}', '${to}')`
-  , `LOWER(TRIM(${field}))`);
+  `REGEXP_REPLACE(
+    REGEXP_REPLACE(
+      LOWER(TRIM(${field})),
+      '[${CHARACTERS_TO_REMOVE.join('')}]', '', 'g'
+    ),
+    '[${CHARACTERS_TO_REPLACE.join('')}]', '-', 'g'
+  )`;
 
 export type PhotoQueryOptions = {
   sortBy?: SortBy
