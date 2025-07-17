@@ -7,6 +7,7 @@ import { APP_DEFAULT_SORT_BY, SortBy } from '../sort';
 export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 export const PHOTO_DEFAULT_LIMIT = 100;
 
+// These must mirror utility/string.ts parameterization
 const CHARACTERS_TO_REMOVE = [',', '/'];
 const CHARACTERS_TO_REPLACE = ['+', '&', '|', ' '];
 

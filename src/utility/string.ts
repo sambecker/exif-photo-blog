@@ -27,6 +27,7 @@ export const parameterize = (
     // Remove punctuation
     .replaceAll(/['"!@#$%^*()=[\]{};:/?,<>\\/`~]/gi, '')
     // Removes non-alphanumeric characters, if configured
+    // (breaks i18m)
     .replaceAll(
       shouldRemoveNonAlphanumeric
         ? /([^a-z0-9-])/gi
