@@ -40,7 +40,7 @@ import Spinner from '../components/Spinner';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { BiDesktop, BiLockAlt, BiMoon, BiSun } from 'react-icons/bi';
-import { IoInvertModeSharp } from 'react-icons/io5';
+import { IoClose, IoInvertModeSharp } from 'react-icons/io5';
 import { useAppState } from '@/app/AppState';
 import { searchPhotosAction } from '@/photo/actions';
 import { RiToolsFill } from 'react-icons/ri';
@@ -86,10 +86,12 @@ import IconFavs from '@/components/icons/IconFavs';
 import { useAppText } from '@/i18n/state/client';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import IconRecents from '@/components/icons/IconRecents';
-import { CgFileDocument } from 'react-icons/cg';
+import { CgClose, CgFileDocument } from 'react-icons/cg';
 import { FaRegUserCircle } from 'react-icons/fa';
 import { formatDistanceToNow } from 'date-fns';
 import IconCheck from '@/components/icons/IconCheck';
+import { getSortStateFromPath } from '@/photo/sort/path';
+import IconSort from '@/components/icons/IconSort';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -116,6 +118,11 @@ type CommandKSection = {
   items: CommandKItem[]
 }
 
+const renderCheck = (isChecked?: boolean) =>
+  isChecked
+    ? <IconCheck size={12} className="translate-y-[-0.5px]" />
+    : undefined;
+
 const renderToggle = (
   label: string,
   onToggle?: Dispatch<SetStateAction<boolean>>,
@@ -123,7 +130,7 @@ const renderToggle = (
 ): CommandKItem => ({
   label: `Toggle ${label}`,
   action: () => onToggle?.(prev => !prev),
-  annotation: isEnabled ? <IconCheck size={12} /> : undefined,
+  annotation: renderCheck(isEnabled),
 });
 
 export default function CommandKClient({
@@ -172,6 +179,19 @@ export default function CommandKClient({
     setShouldDebugRecipeOverlays,
   } = useAppState();
 
+  const {
+    doesPathOfferSort,
+    isSortedByDefault,
+    pathNewest,
+    pathOldest,
+    pathTakenAt,
+    pathUploadedAt,
+    pathClearSort,
+    isAscending,
+    isTakenAt,
+    isUploadedAt,
+  } = useMemo(() => getSortStateFromPath(pathname), [pathname]);
+
   const appText = useAppText();
 
   const isOpenRef = useRef(isOpen);
@@ -209,7 +229,7 @@ export default function CommandKClient({
   }, [isWaiting, setIsOpen]);
 
   // Raw query values
-  const [queryLiveRaw, setQueryLive] = useState('');
+  const [queryLiveRaw, setQueryLiveRaw] = useState('');
   const [queryDebouncedRaw] =
     useDebounce(queryLiveRaw, 500, { trailing: true });
 
@@ -289,7 +309,7 @@ export default function CommandKClient({
 
   useEffect(() => {
     if (!isOpen) {
-      setQueryLive('');
+      setQueryLiveRaw('');
       setQueriedSections([]);
       setIsLoading(false);
     }
@@ -305,6 +325,7 @@ export default function CommandKClient({
     return count ? { count, subhead } : undefined;
   }, [recent, appText]);
 
+  // Years only accessible by search
   const years = useMemo(() =>
     _years.filter(({ year }) => queryLive && year.includes(queryLive))
   , [_years, queryLive]);
@@ -503,6 +524,40 @@ export default function CommandKClient({
     });
   }
 
+  const sortItems = [{
+    label: appText.sort.newestFirst,
+    path: pathNewest,
+    annotation: renderCheck(!isAscending),
+  }, {
+    label: appText.sort.oldestFirst,
+    path: pathOldest,
+    annotation: renderCheck(isAscending),
+  }, {
+    label: appText.sort.byTakenAt,
+    path: pathTakenAt,
+    annotation: renderCheck(isTakenAt),
+  }, {
+    label: appText.sort.byUploadedAt,
+    path: pathUploadedAt,
+    annotation: renderCheck(isUploadedAt),
+  }];
+
+  if (!isSortedByDefault) {
+    sortItems.push({
+      label: appText.sort.clearSort,
+      path: pathClearSort,
+      annotation: <CgClose />,
+    });
+  }
+
+  const sortSection: CommandKSection = {
+    heading: appText.sort.sort,
+    accessory: <IconSort size={14} className="translate-x-[0.5px]" />,
+    items: doesPathOfferSort
+      ? sortItems
+      : [],
+  };
+
   const pageFull: CommandKItem = {
     label: GRID_HOMEPAGE_ENABLED
       ? appText.nav.full
@@ -522,13 +577,13 @@ export default function CommandKClient({
     : [pageFull, pageGrid];
 
   const sectionPages: CommandKSection = {
-    heading: 'Pages',
+    heading: appText.cmdk.pages,
     accessory: <CgFileDocument size={14} className="translate-x-[-0.5px]" />,
     items: pageItems,
   };
 
   const adminSection: CommandKSection = {
-    heading: 'Admin',
+    heading: appText.nav.admin,
     accessory: <FaRegUserCircle
       size={13}
       className="translate-x-[-0.5px] translate-y-[0.5px]"
@@ -649,8 +704,9 @@ export default function CommandKClient({
         )}>
           <Command.Input
             ref={refInput}
-            onChangeCapture={(e) => {
-              setQueryLive(e.currentTarget.value);
+            value={queryLiveRaw}
+            onValueChange={value => {
+              setQueryLiveRaw(value);
               updateMask();
             }}
             className={clsx(
@@ -667,20 +723,30 @@ export default function CommandKClient({
             disabled={isPending}
           />
           {isLoading && !isPending
-            ? <span className="mr-1 translate-y-[2px]">
-              <Spinner size={16} />
+            ? <span className="translate-y-[2px]">
+              <Spinner size={16} className="-mr-1" />
             </span>
             : <span className="max-sm:hidden">
               <LoaderButton
                 className={clsx(
-                  'h-auto! px-1.5 py-1 -mr-1.5',
+                  'h-auto! py-1 -mr-2',
                   'border-medium shadow-none',
+                  queryLiveRaw ? 'px-1' : 'px-1.5',
                   'text-[12px]',
                   'text-gray-400/90 dark:text-gray-700',
                 )}
-                onClick={() => setIsOpen?.(false)}
+                onClick={() => {
+                  if (queryLiveRaw) {
+                    setQueryLiveRaw('');
+                    updateMask();
+                  } else {
+                    setIsOpen?.(false);
+                  }
+                }}
               >
-                ESC
+                {queryLiveRaw
+                  ? <IoClose size={17} className="text-dim" />
+                  : 'ESC'}
               </LoaderButton>
             </span>}
         </div>
@@ -698,6 +764,7 @@ export default function CommandKClient({
             </Command.Empty>
             {queriedSections
               .concat(categorySections)
+              .concat(sortSection)
               .concat(sectionPages)
               .concat(adminSection)
               .concat(clientSections)

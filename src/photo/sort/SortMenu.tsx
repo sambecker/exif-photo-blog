@@ -1,8 +1,9 @@
 import IconSort from '@/components/icons/IconSort';
 import SwitcherItemMenu from '@/components/switcher/SwitcherItemMenu';
-import { getSortConfigFromPath } from './path';
+import { getSortStateFromPath } from './path';
 import IconCheck from '@/components/icons/IconCheck';
 import { clsx } from 'clsx/lite';
+import { useAppText } from '@/i18n/state/client';
 
 export default function SortMenu({
   isOpen,
@@ -17,7 +18,9 @@ export default function SortMenu({
 }: {
   isOpen?: boolean
   setIsOpen?: (isOpen: boolean) => void
-} & ReturnType<typeof getSortConfigFromPath>) {
+} & ReturnType<typeof getSortStateFromPath>) {
+  const appText = useAppText();
+
   const renderIcon = (isChecked: boolean) => isChecked
     ? <IconCheck size={13} className="translate-x-[-2px]" />
     : <span />;
@@ -38,21 +41,21 @@ export default function SortMenu({
       />}
       sections={[{
         items: [{
-          ...renderLabel('Newest', !isAscending),
+          ...renderLabel(appText.sort.newest, !isAscending),
           icon: renderIcon(!isAscending),
           href: pathNewest,
         }, {
-          ...renderLabel('Oldest', isAscending),
+          ...renderLabel(appText.sort.oldest, isAscending),
           icon: renderIcon(isAscending),
           href: pathOldest,
         }],
       }, {
         items: [{
-          ...renderLabel('Taken at', isTakenAt),
+          ...renderLabel(appText.sort.takenAt, isTakenAt),
           icon: renderIcon(isTakenAt),
           href: pathTakenAt,
         }, {
-          ...renderLabel('Uploaded', isUploadedAt),
+          ...renderLabel(appText.sort.uploadedAtShort, isUploadedAt),
           icon: renderIcon(isUploadedAt),
           href: pathUploadedAt,
         }],

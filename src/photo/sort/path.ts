@@ -2,6 +2,7 @@
 // to avoid circular dependencies
 
 import {
+  doesPathOfferSort as _doesPathOfferSort,
   PARAM_SORT_ORDER_NEWEST,
   PARAM_SORT_ORDER_OLDEST,
   PARAM_SORT_TYPE_TAKEN_AT,
@@ -16,7 +17,7 @@ import {
   USER_DEFAULT_SORT_WITH_PRIORITY,
 } from '@/app/config';
 
-export const getSortByComponents = (sortBy: SortBy): {
+const getSortByComponents = (sortBy: SortBy): {
   sortType: string
   sortOrder: string
 } => {
@@ -40,7 +41,7 @@ export const getSortByComponents = (sortBy: SortBy): {
   }
 };
 
-const {
+export const {
   sortType: DEFAULT_SORT_TYPE,
   sortOrder: DEFAULT_SORT_ORDER,
 } = getSortByComponents(USER_DEFAULT_SORT_BY);
@@ -95,7 +96,9 @@ const getPathSortComponents = (pathname: string) => {
   };
 };
 
-export const getSortConfigFromPath = (pathname: string) => {
+export const getSortStateFromPath = (pathname: string) => {
+  const doesPathOfferSort = _doesPathOfferSort(pathname);
+
   const {
     gridOrFull: _gridOrFull,
     sortType,
@@ -153,8 +156,14 @@ export const getSortConfigFromPath = (pathname: string) => {
   const pathUploadedAt =
     getPath({ sortType: PARAM_SORT_TYPE_UPLOADED_AT, sortOrder });
 
+  // Sort clear
+  const pathClearSort = _gridOrFull === 'grid'
+    ? PATH_GRID_INFERRED
+    : PATH_FULL_INFERRED;
+
   return {
     sortBy,
+    doesPathOfferSort,
     isSortedByDefault,
     isAscending,
     isTakenAt,
@@ -165,6 +174,7 @@ export const getSortConfigFromPath = (pathname: string) => {
     pathOldest,
     pathTakenAt,
     pathUploadedAt,
+    pathClearSort,
     pathSortToggle,
   };
 };

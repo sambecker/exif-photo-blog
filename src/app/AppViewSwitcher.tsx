@@ -3,7 +3,6 @@ import SwitcherItem from '@/components/switcher/SwitcherItem';
 import IconFull from '@/components/icons/IconFull';
 import IconGrid from '@/components/icons/IconGrid';
 import {
-  doesPathOfferSort,
   PATH_FULL_INFERRED,
   PATH_GRID_INFERRED,
 } from '@/app/path';
@@ -23,7 +22,7 @@ import { usePathname } from 'next/navigation';
 import { KEY_COMMANDS } from '@/photo/key-commands';
 import { useAppText } from '@/i18n/state/client';
 import IconSort from '@/components/icons/IconSort';
-import { getSortConfigFromPath } from '@/photo/sort/path';
+import { getSortStateFromPath } from '@/photo/sort/path';
 import { motion } from 'framer-motion';
 import SortMenu from '@/photo/sort/SortMenu';
 import { SWR_KEYS } from '@/swr';
@@ -53,10 +52,11 @@ export default function AppViewSwitcher({
     invalidateSwr,
   } = useAppState();
 
-  const sortConfig = useMemo(() => getSortConfigFromPath(pathname), [pathname]);
+  const sortConfig = useMemo(() => getSortStateFromPath(pathname), [pathname]);
 
   const {
     sortBy,
+    doesPathOfferSort,
     isSortedByDefault,
     isAscending,
     pathGrid,
@@ -66,7 +66,7 @@ export default function AppViewSwitcher({
 
   const showSortControl =
     NAV_SORT_CONTROL !== 'none' &&
-    doesPathOfferSort(pathname);
+    doesPathOfferSort;
 
   const hasLoadedRef = useRef(false);
   useEffect(() => {
@@ -194,7 +194,7 @@ export default function AppViewSwitcher({
                 />}
                 tooltip={{
                   ...!isSortMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-                    content: 'Sort',
+                    content: appText.sort.sort,
                   },
                 }}
                 width="narrow"
@@ -210,11 +210,11 @@ export default function AppViewSwitcher({
                   sort={isAscending ? 'asc' : 'desc'}
                   className="translate-x-[0.5px] translate-y-[1px]"
                 />}
-                tooltip={{
+                tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
                   content: isAscending
-                    ? appText.sort.newest
-                    : appText.sort.oldest,
-                }}
+                    ? appText.sort.viewNewest
+                    : appText.sort.viewOldest,
+                }}}
                 width="narrow"
                 noPadding
               />}
