@@ -23,7 +23,7 @@ export async function GET() {
       ? getPhotosCached({
         limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
         recent: true,
-      })
+      }).catch(() => [])
       : [],
     getIBMPlexMono(),
     getImageResponseCacheControlHeaders(),

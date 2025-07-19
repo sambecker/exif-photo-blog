@@ -1,4 +1,4 @@
-import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
+import { INFINITE_SCROLL_GRID_INITIAL, Photo } from '@/photo';
 import { generateMetaForRecents } from '@/recents/meta';
 import RecentsOverview from '@/recents/RecentsOverview';
 import { getPhotosRecentsDataCached } from '@/recents/data';
@@ -9,7 +9,9 @@ import { redirect } from 'next/navigation';
 import { getAppText } from '@/i18n/state/server';
 
 const getPhotosRecentsDataCachedCached = cache(() =>
-  getPhotosRecentsDataCached({ limit: INFINITE_SCROLL_GRID_INITIAL }));
+  getPhotosRecentsDataCached({ limit: INFINITE_SCROLL_GRID_INITIAL })
+    .catch(() => [[] as Photo[], { count: 0, dateRange: undefined}] as const),
+);
 
 export async function generateMetadata(): Promise<Metadata> {
   const [
