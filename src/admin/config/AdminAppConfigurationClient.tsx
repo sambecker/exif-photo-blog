@@ -866,7 +866,7 @@ export default function AdminAppConfigurationClient({
             titleShort={(section as AdminConfigSection).titleShort}
             icon={section.icon}
             optional={!section.required}
-            updateHashOnVisible={hasScrolled}
+            updateHashOnVisible={hasScrolled && !simplifiedView}
           >
             {renderGroupContent(section.title)}
           </ChecklistGroup>

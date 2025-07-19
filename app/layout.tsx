@@ -6,10 +6,8 @@ import {
   DEFAULT_THEME,
   PRESERVE_ORIGINAL_UPLOADS,
   META_DESCRIPTION,
-  NAV_TITLE,
   META_TITLE,
   HTML_LANG,
-  NAV_CAPTION,
   SITE_FEEDS_ENABLED,
   ADMIN_DEBUG_TOOLS_ENABLED,
 } from '@/app/config';
@@ -104,10 +102,7 @@ export default function RootLayout({
                     'mx-3 mb-3',
                     'lg:mx-6 lg:mb-6',
                   )}>
-                    <Nav
-                      navTitle={NAV_TITLE}
-                      navCaption={NAV_CAPTION}
-                    />
+                    <Nav />
                     <main>
                       <ShareModals />
                       <RecipeModal />
