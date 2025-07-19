@@ -1,6 +1,6 @@
 'use client';
 
-import { ComponentProps, ReactNode, useState } from 'react';
+import { ComponentProps, ReactNode, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import LinkWithStatusChild from './primitives/LinkWithStatusChild';
 import clsx from 'clsx/lite';
@@ -11,6 +11,8 @@ export default function LinkWithStatus({
   loadingClassName,
   isLoading: isLoadingProp = false,
   setIsLoading: setIsLoadingProp,
+  onLoad,
+  flickerThreshold,
   ...props
 }: Omit<ComponentProps<typeof Link>, 'children'> & {
   children: ReactNode | ((props: { isLoading: boolean }) => ReactNode)
@@ -18,12 +20,24 @@ export default function LinkWithStatus({
   // For hoisting state to a parent component, e.g., <EntityLink />
   isLoading?: boolean
   setIsLoading?: (isLoading: boolean) => void
+  onLoad?: () => void
+  flickerThreshold?: number
 }) {
   const [_isLoading, _setIsLoading] = useState(false);
   const isLoading = isLoadingProp || _isLoading;
   const setIsLoading = setIsLoadingProp || _setIsLoading;
 
   const isControlled = typeof children === 'function';
+
+  const hasStartedRef = useRef(false);
+  useEffect(() => {
+    if (isLoading) {
+      hasStartedRef.current = true;
+    } else if (hasStartedRef.current) {
+      onLoad?.();
+      hasStartedRef.current = false;
+    }
+  }, [isLoading, onLoad]);
 
   return <Link
     {...props}
@@ -36,7 +50,7 @@ export default function LinkWithStatus({
       isLoading && loadingClassName,
     )}
   >
-    <LinkWithStatusChild {...{ setIsLoading }}>
+    <LinkWithStatusChild {...{ setIsLoading, flickerThreshold }}>
       {typeof children === 'function'
         ? children({ isLoading })
         : children}

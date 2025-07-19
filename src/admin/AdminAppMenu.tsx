@@ -81,7 +81,7 @@ export default function AdminAppMenu({
         annotation: `${uploadsCount}`,
         icon: <IconFolder
           size={16}
-          className="translate-x-[1px] translate-y-[1px]"
+          className="translate-x-[1px] translate-y-[0.5px]"
         />,
         href: PATH_ADMIN_UPLOADS,
       });
@@ -114,7 +114,7 @@ export default function AdminAppMenu({
         },
         icon: <IconPhoto
           size={15}
-          className="translate-x-[-0.5px] translate-y-[1px]"
+          className="translate-x-[-0.5px] translate-y-[0.5px]"
         />,
         href: PATH_ADMIN_PHOTOS,
       });
@@ -136,7 +136,7 @@ export default function AdminAppMenu({
         annotation: `${recipesCount}`,
         icon: <IconRecipe
           size={17}
-          className="translate-x-[-0.5px] translate-y-[1px]"
+          className="translate-x-[-0.5px]"
         />,
         href: PATH_ADMIN_RECIPES,
       });
@@ -175,7 +175,7 @@ export default function AdminAppMenu({
         : appText.admin.appConfig,
       icon: <AdminAppInfoIcon
         size="small"
-        className="translate-x-[-0.5px] translate-y-[0.5px]"
+        className="translate-x-[-0.5px]"
       />,
       href: showAppInsightsLink
         ? PATH_ADMIN_INSIGHTS
