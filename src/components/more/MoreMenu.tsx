@@ -9,6 +9,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { clsx } from 'clsx/lite';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import MoreMenuItem from './MoreMenuItem';
+import { clearGlobalFocus } from '@/utility/dom';
 
 export type MoreMenuSection = {
   label?: string
@@ -49,6 +50,7 @@ export default function MoreMenu({
 
   const dismissMenu = useCallback(() => {
     setIsOpen(false);
+    clearGlobalFocus();
   }, [setIsOpen]);
 
   useEffect(() => {

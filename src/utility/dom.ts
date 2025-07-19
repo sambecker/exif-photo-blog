@@ -18,3 +18,9 @@ export const isElementEntirelyInViewport = (
     return false;
   }
 };
+
+export const clearGlobalFocus = () => {
+  if (document.activeElement instanceof HTMLElement) {
+    document.activeElement.blur();
+  }
+};

@@ -7,6 +7,7 @@ import useSupportsHover from '@/utility/useSupportsHover';
 import clsx from 'clsx/lite';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
 import KeyCommand from './KeyCommand';
+import { clearGlobalFocus } from '@/utility/dom';
 
 export default function TooltipPrimitive({
   content: contentProp,
@@ -76,14 +77,6 @@ export default function TooltipPrimitive({
     </div>
     : contentProp;
 
-  // Blur after clicking to prevent keyboard focus being stuck
-  // when tooltip is combined with a button
-  const blurActiveElement = () => {
-    if (document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur();
-    }
-  };
-
   return (
     <Tooltip.Provider {...{ delayDuration, skipDelayDuration }}>
       <Tooltip.Root
@@ -97,7 +90,9 @@ export default function TooltipPrimitive({
               type="button"
               onClick={() => {
                 setIsOpen(!isOpen);
-                blurActiveElement();
+                // Blur after clicking to prevent keyboard focus being stuck
+                // when tooltip is combined with a button
+                clearGlobalFocus();
               }}
               className={clsx('link', classNameTrigger)}
             >
@@ -105,7 +100,7 @@ export default function TooltipPrimitive({
             </button>
             : <span
               className={classNameTrigger}
-              onClick={blurActiveElement}
+              onClick={clearGlobalFocus}
             >
               {children}
             </span>}

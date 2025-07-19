@@ -162,9 +162,6 @@ export default function AdminAppMenu({
           } else {
             setSelectedPhotoIds?.([]);
           }
-          if (document.activeElement instanceof HTMLElement) {
-            document.activeElement.blur();
-          }
         },
         shouldPreventDefault: false,
       });
