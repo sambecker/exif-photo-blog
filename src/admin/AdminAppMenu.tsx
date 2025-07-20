@@ -15,7 +15,7 @@ import { IoArrowDown, IoArrowUp, IoCloseSharp } from 'react-icons/io5';
 import { clsx } from 'clsx/lite';
 import AdminAppInfoIcon from './AdminAppInfoIcon';
 import { signOutAction } from '@/auth/actions';
-import { ComponentProps, useMemo } from 'react';
+import { ComponentProps, useEffect, useMemo } from 'react';
 import useIsKeyBeingPressed from '@/utility/useIsKeyBeingPressed';
 import IconPhoto from '@/components/icons/IconPhoto';
 import IconUpload from '@/components/icons/IconUpload';
@@ -55,6 +55,15 @@ export default function AdminAppMenu({
     refreshAdminData,
     clearAuthStateAndRedirectIfNecessary,
   } = useAppState();
+
+  useEffect(() => {
+    if (
+      pathname !== PATH_GRID_INFERRED &&
+      selectedPhotoIds !== undefined
+    ) {
+      setSelectedPhotoIds?.(undefined);
+    }
+  }, [pathname, selectedPhotoIds, setSelectedPhotoIds]);
 
   const appText = useAppText();
 
@@ -162,13 +171,11 @@ export default function AdminAppMenu({
           href: PATH_GRID_INFERRED,
         },
         action: () => {
-          setTimeout(() => {
-            if (isSelecting) {
-              setSelectedPhotoIds?.(undefined);
-            } else {
-              setSelectedPhotoIds?.([]);
-            }
-          }, 200);
+          if (isSelecting) {
+            setSelectedPhotoIds?.(undefined);
+          } else {
+            setSelectedPhotoIds?.([]);
+          }
         },
       });
     }
