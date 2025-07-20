@@ -168,8 +168,7 @@ export default function AdminAppMenu({
             } else {
               setSelectedPhotoIds?.([]);
             }
-            // Only add timeout when navigating
-          }, pathname !== PATH_GRID_INFERRED ? 200 : 0);
+          }, 200);
         },
       });
     }
