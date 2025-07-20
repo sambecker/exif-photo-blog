@@ -60,7 +60,7 @@ export default function AdminAppMenu({
     if (pathname !== PATH_GRID_INFERRED) {
       setSelectedPhotoIds?.(undefined);
     }
-  }, [pathname, selectedPhotoIds, setSelectedPhotoIds]);
+  }, [pathname, setSelectedPhotoIds]);
 
   const appText = useAppText();
 
