@@ -35,16 +35,16 @@ export default function LinkWithStatus({
     if (isLoading) {
       console.log('link: 02', {isLoading, ref: didStartLoading.current});
       didStartLoading.current = true;
-      return () => {
-        // Call onload when component unmounts while loading
-        console.log('link: 03', {isLoading, ref: didStartLoading.current});
-        if (isLoading) { onLoad?.(); }
-      };
     } else if (didStartLoading.current) {
       console.log('link: 04', {isLoading, ref: didStartLoading.current});
       onLoad?.();
       didStartLoading.current = false;
     }
+    return () => {
+      // Call onload when component unmounts while loading
+      console.log('link: 03', {isLoading, ref: didStartLoading.current});
+      if (isLoading) { onLoad?.(); }
+    };
   }, [isLoading, onLoad]);
 
   return <Link
