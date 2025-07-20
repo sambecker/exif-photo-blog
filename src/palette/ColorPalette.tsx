@@ -4,9 +4,8 @@ import { prominent } from 'color.js';
 import { FastAverageColor } from 'fast-average-color';
 import { extractColors } from 'extract-colors';
 import { Photo } from '@/photo';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getNextImageUrlForManipulation } from '@/platforms/next-image';
-import { useEffect } from 'react';
 import clsx from 'clsx/lite';
 
 export default function ColorPalette({
