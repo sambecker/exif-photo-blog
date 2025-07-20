@@ -1,10 +1,10 @@
 'use client';
 
 import ErrorNote from '@/components/ErrorNote';
-import FieldSetWithStatus from '@/components/FieldSetWithStatus';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import Container from '@/components/Container';
-import { addAllUploadsAction } from '@/photo/actions';
-import { PATH_ADMIN_PHOTOS } from '@/app/paths';
+import { addUploadsAction } from '@/photo/actions';
+import { PATH_ADMIN_PHOTOS } from '@/app/path';
 import { Tags } from '@/tag';
 import {
   generateLocalNaivePostgresString,
@@ -14,42 +14,46 @@ import sleep from '@/utility/sleep';
 import { readStreamableValue } from 'ai/rsc';
 import { useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
-import { BiCheckCircle, BiImageAdd } from 'react-icons/bi';
+import { BiCheckCircle } from 'react-icons/bi';
 import ProgressButton from '@/components/primitives/ProgressButton';
 import { UrlAddStatus } from './AdminUploadsClient';
 import PhotoTagFieldset from './PhotoTagFieldset';
 import DeleteUploadButton from './DeleteUploadButton';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { pluralize } from '@/utility/string';
 import FieldsetFavs from '@/photo/form/FieldsetFavs';
-import FieldsetHidden from '@/photo/form/FieldsetHidden';
+import IconAddUpload from '@/components/icons/IconAddUpload';
+import { PhotoFormData } from '@/photo/form';
+import FieldsetVisibility from '@/photo/visibility/FieldsetVisibility';
 
 const UPLOAD_BATCH_SIZE = 2;
 
 export default function AdminBatchUploadActions({
-  storageUrls,
+  uploadUrls,
+  uploadTitles,
   uniqueTags,
   isAdding,
   setIsAdding,
   setUrlAddStatuses,
   isDeleting,
   setIsDeleting,
+  onBatchActionComplete,
 }: {
-  storageUrls: string[]
+  uploadUrls: string[]
+  uploadTitles: string[]
   uniqueTags?: Tags
   isAdding: boolean
   setIsAdding: Dispatch<SetStateAction<boolean>>
   setUrlAddStatuses: Dispatch<SetStateAction<UrlAddStatus[]>>
   isDeleting: boolean
   setIsDeleting: Dispatch<SetStateAction<boolean>>
+  onBatchActionComplete?: () => Promise<void>
 }) {
   const { updateAdminData } = useAppState();
 
   const [showBulkSettings, setShowBulkSettings] = useState(false);
-  const [tags, setTags] = useState('');
-  const [favorite, setFavorite] = useState('false');
-  const [hidden, setHidden] = useState('false');
   const [tagErrorMessage, setTagErrorMessage] = useState('');
+  const [formData, setFormData] = useState<Partial<PhotoFormData>>({});
 
   const [buttonText, setButtonText] = useState('Add All Uploads');
   const [actionErrorMessage, setActionErrorMessage] = useState('');
@@ -59,13 +63,20 @@ export default function AdminBatchUploadActions({
   const router = useRouter();
 
   const addedUploadCount = useRef(0);
-  const addUploadUrls = async (uploadUrls: string[], isFinalBatch: boolean) => {
+  const addUploadUrls = async (
+    urls: string[],
+    titles: string[],
+    isFinalBatch: boolean,
+  ) => {
+    const { tags, favorite, excludeFromFeeds, hidden } = formData;
     try {
-      const stream = await addAllUploadsAction({
-        uploadUrls,
+      const stream = await addUploadsAction({
+        uploadUrls: urls,
+        uploadTitles: titles,
         ...showBulkSettings && {
           tags,
           favorite,
+          excludeFromFeeds,
           hidden,
         },
         takenAtLocal: generateLocalPostgresString(),
@@ -73,9 +84,8 @@ export default function AdminBatchUploadActions({
         shouldRevalidateAllKeysAndPaths: isFinalBatch,
       });
       for await (const data of readStreamableValue(stream)) {
-        setButtonText(addedUploadCount.current === 0
-          ? `Adding 1 of ${storageUrls.length}`
-          : `Adding ${addedUploadCount.current + 1} of ${storageUrls.length}`,
+        setButtonText(
+          `Adding ${addedUploadCount.current + 1} of ${uploadUrls.length}`,
         );
         setUrlAddStatuses(current => {
           const update = current.map(status =>
@@ -100,7 +110,7 @@ export default function AdminBatchUploadActions({
               ((addedUploadCount.current || 1) - 1) +
               (data?.progress ?? 0)
             ) /
-            storageUrls.length
+            uploadUrls.length
           ) * 0.95;
           // Prevent out-of-order updates causing progress to go backwards
           return Math.max(current, updatedProgress);
@@ -118,15 +128,15 @@ export default function AdminBatchUploadActions({
     <>
       {actionErrorMessage &&
         <ErrorNote>{actionErrorMessage}</ErrorNote>}
-      <Container padding="tight">
-        <div className="w-full space-y-4 py-1">
+      <Container padding="tight" className="p-2! sm:p-3!">
+        <div className="w-full space-y-4">
           <div className="flex">
             <div className="grow text-main">
               {showBulkSettings
-                ? `Apply to ${pluralize(storageUrls.length, 'upload')}`
-                : `Found ${pluralize(storageUrls.length, 'upload')}`}
+                ? `Apply to ${pluralize(uploadUrls.length, 'upload')}`
+                : `Found ${pluralize(uploadUrls.length, 'upload')}`}
             </div>
-            <FieldSetWithStatus
+            <FieldsetWithStatus
               label="Apply to All"
               type="checkbox"
               value={showBulkSettings ? 'true' : 'false'}
@@ -138,26 +148,27 @@ export default function AdminBatchUploadActions({
             <div className="space-y-4 mb-6">
               <PhotoTagFieldset
                 label="Tags"
-                tags={tags}
+                tags={formData.tags ?? ''}
                 tagOptions={uniqueTags}
-                onChange={setTags}
+                onChange={tags => setFormData(data => ({ ...data, tags }))}
                 onError={setTagErrorMessage}
                 readOnly={isAdding}
+                className="relative z-10"
               />
-              <div className="flex gap-8">
-                <FieldsetFavs
-                  value={favorite}
-                  onChange={setFavorite}
-                  readOnly={isAdding}
-                />
-                <FieldsetHidden
-                  value={hidden}
-                  onChange={setHidden}
-                  readOnly={isAdding}
-                />
-              </div>
+              <FieldsetVisibility
+                formData={formData}
+                setFormData={setFormData}
+                readOnly={isAdding}
+              />
+              <FieldsetFavs
+                className="pt-2.5 pb-2"
+                value={formData.favorite ?? 'false'}
+                onChange={favorite =>
+                  setFormData(data => ({ ...data, favorite }))}
+                readOnly={isAdding}
+              />
             </div>}
-          <div className="space-y-2">
+          <div className="flex flex-col sm:flex-row-reverse gap-2">
             <ProgressButton
               primary
               className="w-full justify-center"
@@ -170,26 +181,27 @@ export default function AdminBatchUploadActions({
               }
               icon={isAddingComplete
                 ? <BiCheckCircle size={18} className="translate-x-[1px]" />
-                : <BiImageAdd
-                  size={18}
-                  className="translate-x-[1px] translate-y-[2px]"
-                />
+                : <IconAddUpload />
               }
               onClick={async () => {
                 // eslint-disable-next-line max-len
-                if (confirm(`Are you sure you want to add all ${storageUrls.length} uploads?`)) {
+                if (confirm(`Are you sure you want to add all ${uploadUrls.length} uploads?`)) {
                   setIsAdding(true);
                   setUrlAddStatuses(current => current.map((url, index) => ({
                     ...url,
                     status: index === 0 ? 'adding' : 'waiting',
                   })));
-                  const uploadsToAdd = storageUrls.slice();
+                  const uploadsToAdd = uploadUrls.slice();
+                  const titlesToAdd = uploadTitles.slice();
                   try {
                     while (uploadsToAdd.length > 0) {
                       const nextBatch = uploadsToAdd
                         .splice(0, UPLOAD_BATCH_SIZE);
+                      const nextTitles = titlesToAdd
+                        .splice(0, UPLOAD_BATCH_SIZE);
                       await addUploadUrls(
                         nextBatch,
+                        nextTitles,
                         uploadsToAdd.length === 0,
                       );
                     }
@@ -197,6 +209,7 @@ export default function AdminBatchUploadActions({
                     setAddingProgress(1);
                     setIsAdding(false);
                     setIsAddingComplete(true);
+                    await onBatchActionComplete?.();
                     await sleep(1000).then(() =>
                       router.push(PATH_ADMIN_PHOTOS));
                   } catch (e: any) {
@@ -207,16 +220,17 @@ export default function AdminBatchUploadActions({
                   }
                 }
               }}
-              hideTextOnMobile={false}
+              hideText="never"
             >
               {buttonText}
             </ProgressButton>
             <DeleteUploadButton
-              urls={storageUrls}
+              urls={uploadUrls}
               onDeleteStart={() => setIsDeleting(true)}
-              onDelete={didFail => {
+              onDelete={async didFail => {
                 if (!didFail) {
                   updateAdminData?.({ uploadsCount: 0 });
+                  await onBatchActionComplete?.();
                   router.push(PATH_ADMIN_PHOTOS);
                 } else {
                   setIsDeleting(false);
@@ -224,7 +238,7 @@ export default function AdminBatchUploadActions({
               }}
               className="w-full flex justify-center"
               shouldRedirectToAdminPhotos
-              hideTextOnMobile={false}
+              hideText="never"
               disabled={isAdding}
             >
               Delete All Uploads

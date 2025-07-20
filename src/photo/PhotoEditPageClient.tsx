@@ -2,7 +2,7 @@
 
 import AdminChildPage from '@/components/AdminChildPage';
 import { Photo } from '.';
-import { PATH_ADMIN_PHOTOS } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS } from '@/app/path';
 import { PhotoFormData, convertPhotoToFormData } from './form';
 import PhotoForm from './form/PhotoForm';
 import { Tags } from '@/tag';

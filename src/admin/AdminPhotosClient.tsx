@@ -5,12 +5,12 @@ import AppGrid from '@/components/AppGrid';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import AdminPhotosTableInfinite from '@/admin/AdminPhotosTableInfinite';
 import PathLoaderButton from '@/components/primitives/PathLoaderButton';
-import { PATH_ADMIN_PHOTOS_UPDATES } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS_UPDATES } from '@/app/path';
 import { Photo } from '@/photo';
 import { StorageListResponse } from '@/platforms/storage';
 import AdminUploadsTable from './AdminUploadsTable';
 import { Timezone } from '@/utility/timezone';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
 import { pluralize } from '@/utility/string';
 import IconBroom from '@/components/icons/IconBroom';
@@ -80,7 +80,7 @@ export default function AdminPhotosClient({
                 )}
                 spinnerColor="text"
                 spinnerClassName="text-blue-200 dark:text-blue-600/40"
-                hideTextOnMobile={false}
+                hideText="never"
               >
                 <ResponsiveText shortText={photosCountNeedsSync}>
                   {pluralize(

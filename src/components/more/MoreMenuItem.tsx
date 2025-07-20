@@ -5,14 +5,12 @@ import { clsx } from 'clsx/lite';
 import {
   ComponentProps,
   ReactNode,
-  useEffect,
   useState,
-  useTransition,
 } from 'react';
 import LoaderButton from '../primitives/LoaderButton';
-import { usePathname, useRouter } from 'next/navigation';
 import { downloadFileFromBrowser } from '@/utility/url';
 import KeyCommand from '../primitives/KeyCommand';
+import LoaderLink from '../LoaderLink';
 
 export default function MoreMenuItem({
   label,
@@ -43,25 +41,7 @@ export default function MoreMenuItem({
   keyCommand?: string
   keyCommandModifier?: ComponentProps<typeof KeyCommand>['modifier']
 }) {
-  const router = useRouter();
-
-  const pathname = usePathname();
-
-  const [isPending, startTransition] = useTransition();
-
-  const [transitionDidStart, setTransitionDidStart] = useState(false);
-
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (transitionDidStart && !isPending) {
-      dismissMenu?.();
-      setTransitionDidStart(false);
-      if (document.activeElement instanceof HTMLElement) {
-        document.activeElement.blur();
-      }
-    }
-  }, [isPending, dismissMenu, transitionDidStart]);
 
   const getColorClasses = () => {
     switch (color) {
@@ -75,6 +55,16 @@ export default function MoreMenuItem({
     );
     }
   };
+
+  const buttonContent = <>
+    <span>
+      {labelComplex ?? label}
+    </span>
+    {annotation &&
+      <span className="text-dim ml-3">
+        {annotation}
+      </span>}
+  </>;
 
   return (
     <DropdownMenu.Item
@@ -92,7 +82,7 @@ export default function MoreMenuItem({
       )}
       onSelect={async e => {
         if (shouldPreventDefault) { e.preventDefault(); }
-        if (action) {
+        if (action && !href) {
           const result = action();
           if (result instanceof Promise) {
             setIsLoading(true);
@@ -112,41 +102,42 @@ export default function MoreMenuItem({
             dismissMenu?.();
           }
         }
-        if (href) {
-          if (href !== pathname) {
-            if (hrefDownloadName) {
-              setIsLoading(true);
-              downloadFileFromBrowser(href, hrefDownloadName)
-                .finally(() => {
-                  setIsLoading(false);
-                  dismissMenu?.();
-                });
-            } else {
-              setTransitionDidStart(true);
-              startTransition(() => router.push(href));
-            }
-          } else {
-            dismissMenu?.();
-          }
+        if (href && hrefDownloadName) {
+          setIsLoading(true);
+          downloadFileFromBrowser(href, hrefDownloadName)
+            .finally(() => {
+              setIsLoading(false);
+              dismissMenu?.();
+            });
         }
       }}
     >
-      <LoaderButton
-        icon={icon}
-        isLoading={isLoading || isPending}
-        hideTextOnMobile={false}
-        styleAs="link-without-hover"
-        className="translate-y-[0.5px] text-sm grow"
-        classNameIcon="translate-y-[-0.5px]!"
-      >
-        <span>
-          {labelComplex ?? label}
-        </span>
-        {annotation &&
-          <span className="text-dim ml-3">
-            {annotation}
-          </span>}
-      </LoaderButton>
+      {href && !hrefDownloadName
+        ? <LoaderLink
+          icon={icon}
+          href={href}
+          className={clsx(
+            'inline-flex items-center grow',
+            'text-sm text-main hover:text-main',
+          )}
+          onLoad={() => {
+            action?.();
+            dismissMenu?.();
+          }}
+          flickerThreshold={0}
+        >
+          {buttonContent}
+        </LoaderLink>
+        : <LoaderButton
+          icon={icon}
+          isLoading={isLoading}
+          hideText="never"
+          styleAs="link-without-hover"
+          className="translate-y-[0.5px] text-sm grow"
+          classNameIcon="translate-y-[-0.5px]!"
+        >
+          {buttonContent}
+        </LoaderButton>}
       {keyCommand &&
         <KeyCommand
           modifier={keyCommandModifier}

@@ -9,6 +9,12 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { clsx } from 'clsx/lite';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import MoreMenuItem from './MoreMenuItem';
+import { clearGlobalFocus } from '@/utility/dom';
+
+export type MoreMenuSection = {
+  label?: string
+  items: ComponentProps<typeof MoreMenuItem>[]
+}
 
 export default function MoreMenu({
   sections,
@@ -26,7 +32,7 @@ export default function MoreMenu({
   onOpen,
   ...props
 }: {
-  sections: ComponentProps<typeof MoreMenuItem>[][]
+  sections: MoreMenuSection[]
   icon?: ReactNode
   header?: ReactNode
   className?: string
@@ -44,6 +50,7 @@ export default function MoreMenu({
 
   const dismissMenu = useCallback(() => {
     setIsOpen(false);
+    clearGlobalFocus();
   }, [setIsOpen]);
 
   useEffect(() => {
@@ -57,6 +64,7 @@ export default function MoreMenu({
     >
       <DropdownMenu.Trigger asChild>
         <button
+          type="button"
           className={clsx(
             'px-1 py-[3px]',
             'min-h-0 border-none shadow-none',
@@ -83,7 +91,7 @@ export default function MoreMenu({
             'min-w-[8rem]',
             'component-surface',
             'py-1',
-            'shadow-lg shadow-gray-900/10 dark:shadow-900',
+            'not-dark:shadow-lg not-dark:shadow-gray-900/10',
             'data-[side=top]:dark:shadow-[0_0px_40px_rgba(0,0,0,0.6)]',
             'data-[side=bottom]:dark:shadow-[0_10px_40px_rgba(0,0,0,0.6)]',
             'data-[side=top]:animate-fade-in-from-bottom',
@@ -98,7 +106,7 @@ export default function MoreMenu({
             {header}
           </div>}
           <div className="divide-y divide-medium">
-            {sections.map((section, index) =>
+            {sections.map(({ label, items }, index) =>
               <div
                 key={index}
                 className={clsx(
@@ -106,11 +114,17 @@ export default function MoreMenu({
                   '[&:not(:last-child)]:pb-1',
                 )}
               >
-                {section.map(props =>
-                  <div key={props.label} className="px-1">
+                {label && <div className={clsx(
+                  'px-3.5 pt-1.5 pb-0.5 select-none',
+                  'text-extra-dim uppercase text-xs font-medium tracking-wide',
+                )}>
+                  {label}
+                </div>}
+                {items.map(item =>
+                  <div key={item.label} className="px-1">
                     <MoreMenuItem
+                      {...item}
                       dismissMenu={dismissMenu}
-                      {...props}
                     />
                   </div>,
                 )}

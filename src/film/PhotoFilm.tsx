@@ -1,8 +1,10 @@
+'use client';
+
 import PhotoFilmIcon from './PhotoFilmIcon';
-import { pathForFilm } from '@/app/paths';
+import { pathForFilm } from '@/app/path';
 import EntityLink, {
   EntityLinkExternalProps,
-} from '@/components/primitives/EntityLink';
+} from '@/components/entity/EntityLink';
 import clsx from 'clsx/lite';
 import { labelForFilm } from '.';
 import { isStringFujifilmSimulation } from '@/platforms/fujifilm/simulation';
@@ -14,13 +16,11 @@ export default function PhotoFilm({
   type = 'icon-last',
   badged = true,
   contrast = 'low',
-  countOnHover,
   toggleRecipeOverlay,
   isShowingRecipeOverlay,
   ...props
 }: {
   film: string
-  countOnHover?: number
 } & Partial<ComponentProps<typeof PhotoRecipeOverlayButton>>
   & EntityLinkExternalProps) {
   const { small, medium, large } = labelForFilm(film);
@@ -30,7 +30,8 @@ export default function PhotoFilm({
       {...props}
       label={medium}
       labelSmall={small}
-      href={pathForFilm(film)}
+      path={pathForFilm(film)}
+      hoverPhotoQueryOptions={{ film }}
       icon={<PhotoFilmIcon
         film={film}
         className={clsx(
@@ -49,7 +50,6 @@ export default function PhotoFilm({
           toggleRecipeOverlay,
           isShowingRecipeOverlay,
         }} />}
-      hoverEntity={countOnHover}
       iconWide={isStringFujifilmSimulation(film)}
     />
   );

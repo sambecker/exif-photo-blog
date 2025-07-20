@@ -9,7 +9,7 @@ import { COLLAPSE_SIDEBAR_CATEGORIES } from '@/app/config';
 
 export default function HeaderList({
   title,
-  className,
+  className = 'space-y-1',
   icon,
   items,
   maxItems = 5,
@@ -29,10 +29,7 @@ export default function HeaderList({
 
   return (
     <AnimateItems
-      className={clsx(
-        'space-y-1',
-        className,
-      )}
+      className={className}
       scaleOffset={0.95}
       duration={0.5}
       staggerDelay={0.05}

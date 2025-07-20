@@ -38,9 +38,9 @@ export default function ChecklistRow({
         )}>
           {title}
           {experimental &&
-            <ExperimentalBadge className="translate-y-[-0.5px]" />}
+            <ExperimentalBadge className="translate-y-[0.5px]" />}
         </div>
-        <div className="leading-relaxed text-medium">
+        <div className="leading-relaxed text-medium space-y-1.5">
           {children}
         </div>
       </>}

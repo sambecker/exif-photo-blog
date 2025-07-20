@@ -8,33 +8,40 @@ import clsx from 'clsx/lite';
 import ResponsiveDate from '@/components/ResponsiveDate';
 import Spinner from '@/components/Spinner';
 import { FaRegCircleCheck } from 'react-icons/fa6';
-import AddButton from './AddButton';
-import { pathForAdminUploadUrl } from '@/app/paths';
-import DeleteBlobButton from './DeleteUploadButton';
-import { useEffect, useRef } from 'react';
+import { pathForAdminUploadUrl } from '@/app/path';
+import DeleteUploadButton from './DeleteUploadButton';
+import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import { isElementEntirelyInViewport } from '@/utility/dom';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
+import EditButton from './EditButton';
+import AddUploadButton from './AddUploadButton';
 
 export default function AdminUploadsTableRow({
   url,
   status,
   statusMessage,
+  draftTitle = '',
   uploadedAt,
   size,
+  tabIndex,
+  shouldRedirectAfterAction,
   isAdding,
   isDeleting,
   isComplete,
   setIsDeleting,
-  urlAddStatuses,
   setUrlAddStatuses,
 }: UrlAddStatus & {
+  tabIndex: number
+  shouldRedirectAfterAction: boolean
   isAdding?: boolean
   isDeleting?: boolean
   isComplete?: boolean
-  setIsDeleting?: (isDeleting: boolean) => void
-  urlAddStatuses: UrlAddStatus[]
-  setUrlAddStatuses?: (urlAddStatuses: UrlAddStatus[]) => void
+  setIsDeleting?: Dispatch<SetStateAction<boolean>>
+  setUrlAddStatuses?: Dispatch<SetStateAction<UrlAddStatus[]>>
 }) {
   const ref = useRef<HTMLDivElement>(null);
+
+  const extension = getExtensionFromStorageUrl(url)?.toUpperCase();
 
   useEffect(() => {
     if (
@@ -48,19 +55,34 @@ export default function AdminUploadsTableRow({
     }
   }, [status]);
 
+  const isRowLoading = isAdding || isDeleting || isComplete || Boolean(status);
+
+  const updateStatus = (updatedStatus: Partial<UrlAddStatus>) => {
+    setUrlAddStatuses?.(statuses => statuses.map(status => status.url === url
+      ? {
+        ...status,
+        ...updatedStatus,
+      }
+      : status));
+  };
+
+  const removeRow = () => setUrlAddStatuses?.(statuses => statuses
+    .filter(({ url: urlToRemove }) => urlToRemove !== url));
+
   return (
     <div
       ref={ref}
       className={clsx(
         'flex items-center grow',
         'transition-opacity',
-        'rounded-md overflow-hidden',
+        'rounded-lg overflow-hidden',
         'border-medium bg-extra-dim',
         isAdding && !isComplete && status !== 'adding' && 'opacity-30',
       )}
     >
       <div className={clsx(
-        'w-[50%] sm:w-auto shrink-0 bg-dim',
+        'self-stretch',
+        'w-[40%] sm:w-auto shrink-0',
         'transition-transform',
       )}>
         <ImageMedium
@@ -68,63 +90,103 @@ export default function AdminUploadsTableRow({
           src={url}
           alt={url}
           aspectRatio={3.0 / 2.0}
+          className={clsx(
+            'bg-dim',
+            'max-sm:m-2 max-sm:mr-0',
+            'max-sm:outline-medium max-sm:shadow-sm',
+            'max-sm:rounded-sm overflow-hidden',
+          )}
         />
       </div>
       <div className={clsx(
-        'flex flex-col w-full self-start',
-        'gap-2 sm:gap-4',
-        'p-2.5 pl-3',
-        'sm:p-4 sm:pl-6',
+        'flex self-stretch w-full min-w-0',
+        'gap-2 sm:gap-3',
+        'p-2 sm:p-3',
       )}>
-        <div className="flex flex-col gap-0.5 h-full">
-          <div className="truncate font-medium">
-            {uploadedAt
-              ? <ResponsiveDate date={uploadedAt} />
-              : '—'}
+        <div className="flex flex-col gap-6 w-full">
+          <div className="flex flex-col grow gap-2">
+            <FieldsetWithStatus
+              label="Title"
+              value={draftTitle}
+              onChange={titleUpdated =>
+                updateStatus({ draftTitle: titleUpdated })}
+              placeholder="Title (optional)"
+              tabIndex={tabIndex}
+              readOnly={isRowLoading}
+              capitalize
+              hideLabel
+            />
+            <div className="flex items-center gap-2">
+              {isAdding || isComplete
+                ? <>
+                  {status === 'added'
+                    ? <FaRegCircleCheck size={18} />
+                    : status === 'adding' &&
+                      <Spinner
+                        size={19}
+                        className="translate-y-[2px]"
+                      />}
+                </>
+                : <>
+                  <AddUploadButton
+                    url={url}
+                    title={draftTitle}
+                    onAddStart={() => updateStatus({
+                      status: 'adding',
+                      statusMessage: 'Adding ...',
+                    })}
+                    onAddFinish={removeRow}
+                    shouldRedirectToAdminPhotos={shouldRedirectAfterAction}
+                    disabled={isRowLoading}
+                    tooltipSide="bottom"
+                  />
+                  <EditButton
+                    path={pathForAdminUploadUrl(url, draftTitle)}
+                    disabled={isRowLoading}
+                    tooltip="Review EXIF details before adding"
+                    hideText="always"
+                    tooltipSide="bottom"
+                  />
+                  <DeleteUploadButton
+                    urls={[url]}
+                    shouldRedirectToAdminPhotos={shouldRedirectAfterAction}
+                    onDeleteStart={() => setIsDeleting?.(true)}
+                    onDelete={() => {
+                      setIsDeleting?.(false);
+                      removeRow();
+                    }}
+                    disabled={isRowLoading}
+                    tooltip="Delete upload"
+                    tooltipSide="bottom"
+                  />
+                </>}
+            </div>
           </div>
-          <div className="text-dim overflow-hidden text-ellipsis">
+          <div className={clsx(
+            'flex gap-2 sm:gap-3',
+            'ml-0.5',
+          )}>
             {isAdding || isComplete
               ? status === 'added'
                 ? 'Added'
                 : status === 'adding'
                   ? statusMessage ?? 'Adding ...'
                   : 'Waiting'
-              : size
-                ? `${size} ${getExtensionFromStorageUrl(url)?.toUpperCase()}`
-                : getExtensionFromStorageUrl(url)?.toUpperCase()}
+              : <>
+                {uploadedAt
+                  ? <ResponsiveDate
+                    date={uploadedAt}
+                    titleLabel="UPLOADED AT"
+                  />
+                  : '—'}
+                <div className="max-sm:hidden text-dim truncate">
+                  {size
+                    ? `${size} ${extension}`
+                    : extension}
+                </div>
+              </>}
           </div>
         </div>
-        <span className="flex items-center gap-2">
-          {isAdding || isComplete
-            ? <>
-              {status === 'added'
-                ? <FaRegCircleCheck size={18} />
-                : status === 'adding' &&
-                  <Spinner
-                    size={19}
-                    className="translate-y-[2px]"
-                  />}
-            </>
-            : <>
-              <AddButton
-                path={pathForAdminUploadUrl(url)}
-                disabled={isDeleting}
-                hideTextOnMobile={false}
-              />
-              <DeleteBlobButton
-                urls={[url]}
-                shouldRedirectToAdminPhotos={urlAddStatuses.length <= 1}
-                onDeleteStart={() => setIsDeleting?.(true)}
-                onDelete={() => {
-                  setIsDeleting?.(false);
-                  setUrlAddStatuses?.(urlAddStatuses
-                    .filter(({ url: urlToRemove }) =>
-                      urlToRemove !== url));
-                }}
-                isLoading={isDeleting}
-              />
-            </>}
-        </span>
       </div>
     </div>
   );

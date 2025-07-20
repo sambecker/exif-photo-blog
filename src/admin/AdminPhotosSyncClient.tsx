@@ -5,7 +5,7 @@ import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import IconGrSync from '@/components/icons/IconGrSync';
 import Note from '@/components/Note';
 import AdminChildPage from '@/components/AdminChildPage';
-import { PATH_ADMIN_PHOTOS } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS } from '@/app/path';
 import { useMemo, useRef, useState } from 'react';
 import { syncPhotosAction } from '@/photo/actions';
 import { useRouter } from 'next/navigation';
@@ -49,7 +49,7 @@ export default function AdminPhotosSyncClient({
       accessory={<ProgressButton
         primary
         icon={<IconGrSync className="translate-y-[1px]" />}
-        hideTextOnMobile={false}
+        hideText="never"
         progress={progress}
         tooltip={photos.length === 1
           ? 'Sync data for 1 photo'

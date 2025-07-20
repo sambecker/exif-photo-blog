@@ -10,7 +10,7 @@ import {
   PATH_ADMIN_RECIPES,
   PATH_ADMIN_TAGS,
   PATH_ADMIN_UPLOADS,
-} from '@/app/paths';
+} from '@/app/path';
 import AdminNavClient from './AdminNavClient';
 import { getAppText } from '@/i18n/state/server';
 

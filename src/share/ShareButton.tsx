@@ -3,7 +3,7 @@
 import { TbPhotoShare } from 'react-icons/tb';
 import { clsx } from 'clsx/lite';
 import LoaderButton from '@/components/primitives/LoaderButton';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { getSharePathFromShareModalProps, ShareModalProps } from '.';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';

@@ -19,12 +19,12 @@ import {
   getFormErrors,
   isFormValid,
 } from '.';
-import FieldSetWithStatus from '@/components/FieldSetWithStatus';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import { createPhotoAction, updatePhotoAction } from '../actions';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
-import { PATH_ADMIN_PHOTOS, PATH_ADMIN_UPLOADS } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS, PATH_ADMIN_UPLOADS } from '@/app/path';
 import { toastSuccess, toastWarning } from '@/toast';
 import { getDimensionsFromSize } from '@/utility/size';
 import ImageWithFallback from '@/components/image/ImageWithFallback';
@@ -33,7 +33,7 @@ import { AiContent } from '../ai/useAiImageQueries';
 import AiButton from '../ai/AiButton';
 import Spinner from '@/components/Spinner';
 import usePreventNavigation from '@/utility/usePreventNavigation';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import UpdateBlurDataButton from '../UpdateBlurDataButton';
 import { getNextImageUrlForManipulation } from '@/platforms/next-image';
 import { BLUR_ENABLED, IS_PREVIEW } from '@/app/config';
@@ -45,8 +45,10 @@ import { convertFilmsForForm, Films } from '@/film';
 import { isMakeFujifilm } from '@/platforms/fujifilm';
 import PhotoFilmIcon from '@/film/PhotoFilmIcon';
 import FieldsetFavs from './FieldsetFavs';
-import FieldsetHidden from './FieldsetHidden';
 import { useAppText } from '@/i18n/state/client';
+import IconAddUpload from '@/components/icons/IconAddUpload';
+import { didVisibilityChange } from '../visibility';
+import FieldsetVisibility from '../visibility/FieldsetVisibility';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -203,6 +205,7 @@ export default function PhotoForm({
       switch (key) {
       case 'title':
         return <AiButton
+          tabIndex={-1}
           aiContent={aiContent}
           requestFields={['title']}
           shouldConfirm={Boolean(formData.title)}
@@ -210,6 +213,7 @@ export default function PhotoForm({
         />;
       case 'caption':
         return <AiButton
+          tabIndex={-1}
           aiContent={aiContent}
           requestFields={['caption']}
           shouldConfirm={Boolean(formData.caption)}
@@ -217,6 +221,7 @@ export default function PhotoForm({
         />;
       case 'tags':
         return <AiButton
+          tabIndex={-1}
           aiContent={aiContent}
           requestFields={['tags']}
           shouldConfirm={Boolean(formData.tags)}
@@ -224,6 +229,7 @@ export default function PhotoForm({
         />;
       case 'semanticDescription':
         return <AiButton
+          tabIndex={-1}
           aiContent={aiContent}
           requestFields={['semantic']}
           shouldConfirm={Boolean(formData.semanticDescription)}
@@ -240,7 +246,7 @@ export default function PhotoForm({
     }
   };
 
-  const shouldHideField = (
+  const isFieldHidden = (
     key: FormFields,
     hideIfEmpty?: boolean,
     shouldHide?: FormMeta['shouldHide'],
@@ -326,6 +332,7 @@ export default function PhotoForm({
         onSubmit={() => {
           setFormActionErrorMessage('');
           (document.activeElement as HTMLElement)?.blur?.();
+          invalidateSwr?.();
         }}
       >
         {/* Fields */}
@@ -359,8 +366,8 @@ export default function PhotoForm({
               type,
               staticValue,
             }]) => {
-              if (!shouldHideField(key, hideIfEmpty, shouldHide)) {
-                const fieldProps: ComponentProps<typeof FieldSetWithStatus> = {
+              if (!isFieldHidden(key, hideIfEmpty, shouldHide)) {
+                const fieldProps: ComponentProps<typeof FieldsetWithStatus> = {
                   id: key,
                   label: label + (
                     key === 'blurData' && shouldDebugImageFallbacks
@@ -417,18 +424,19 @@ export default function PhotoForm({
 
                 switch (key) {
                 case 'film':
-                  return <FieldSetWithStatus
+                  return <FieldsetWithStatus
                     key={key}
+                    {...fieldProps}
                     tagOptionsDefaultIcon={<span
                       className="w-4 overflow-hidden"
                     >
                       <PhotoFilmIcon />
                     </span>}
-                    {...fieldProps}
                   />;
                 case 'applyRecipeTitleGlobally':
                   return <ApplyRecipeTitleGloballyCheckbox
                     key={key}
+                    {...fieldProps}
                     photoId={initialPhotoForm.id}
                     recipeTitle={formData.recipeTitle}
                     hasRecipeTitleChanged={
@@ -436,20 +444,25 @@ export default function PhotoForm({
                     recipeData={formData.recipeData}
                     film={formData.film}
                     onMatchResults={onMatchResults}
+                  />;
+                case 'visibility':
+                  return <FieldsetVisibility
+                    key={key}
                     {...fieldProps}
+                    formData={formData}
+                    setFormData={setFormData}
+                    isModified={didVisibilityChange(
+                      initialPhotoForm,
+                      formData,
+                    )}
                   />;
                 case 'favorite':
                   return <FieldsetFavs
                     key={key}
                     {...fieldProps}
                   />;
-                case 'hidden':
-                  return <FieldsetHidden
-                    key={key}
-                    {...fieldProps}
-                  />;
                 default:
-                  return <FieldSetWithStatus
+                  return <FieldsetWithStatus
                     key={key}
                     {...fieldProps}
                   />;
@@ -460,7 +473,7 @@ export default function PhotoForm({
         {/* Actions */}
         <div className={clsx(
           'flex gap-3 sticky bottom-0',
-          'pb-4 md:pb-8 mt-12',
+          'pb-4 md:pb-8 mt-16',
         )}>
           <Link
             className="button"
@@ -469,12 +482,13 @@ export default function PhotoForm({
             Cancel
           </Link>
           <SubmitButtonWithStatus
+            icon={type === 'create' && <IconAddUpload />}
             disabled={!canFormBeSubmitted}
             onFormStatusChange={onFormStatusChange}
-            onFormSubmit={invalidateSwr}
+            hideText="never"
             primary
           >
-            {type === 'create' ? 'Create' : 'Update'}
+            {type === 'create' ? 'Add' : 'Update'}
           </SubmitButtonWithStatus>
           <div className={clsx(
             'absolute -top-16 -left-2 right-0 bottom-0 -z-10',

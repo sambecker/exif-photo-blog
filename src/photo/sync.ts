@@ -64,7 +64,7 @@ export const getPhotoSyncStatusText = (photo: Photo) => {
       .join(', ');
     text.push(`Missing AI Text (${missingFieldsText})`);
   }
-  return text.join(' and ');
+  return text.join(' and ') + '—sync to update';
 };
 
 export const getPhotosSyncStatusText = (photos: Photo[]) => {

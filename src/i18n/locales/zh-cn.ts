@@ -1,7 +1,7 @@
-import { I18NDeepPartial } from '..';
+import { I18N } from '..';
 export { zhCN as default } from 'date-fns/locale/zh-CN';
 
-export const TEXT: I18NDeepPartial = {
+export const TEXT: I18N = {
   photo: {
     photo: '照片',
     photoPlural: '照片',
@@ -19,6 +19,7 @@ export const TEXT: I18NDeepPartial = {
     lensPlural: '镜头',
     tag: '标签',
     tagPlural: '标签',
+    tagged: '已标记',
     taggedPhotos: '已标记照片',
     taggedPhrase: '标记为 {{tag}} 的照片',
     taggedFavs: '收藏照片',
@@ -32,10 +33,18 @@ export const TEXT: I18NDeepPartial = {
     focalLengthPlural: '焦距',
     focalLengthTitle: '焦距 {{focal}}',
     focalLengthShare: '焦距 {{focal}} 拍摄的照片',
+    year: '年份',
+    yearPlural: '年份',
+    yearShare: '{{year}} 照片',
+    yearTitle: '{{year}} 年拍摄的照片',
+    recent: '最近',
+    recentPlural: '最近',
+    recentTitle: '最近的照片',
+    recentSubhead: '{{distance}} 前上传',
   },
   nav: {
     home: '首页',
-    feed: '动态',
+    full: '完整',
     grid: '网格',
     admin: '管理',
     search: '搜索',
@@ -44,10 +53,26 @@ export const TEXT: I18NDeepPartial = {
     next: '下一页',
     nextShort: '下一页',
   },
+  sort: {
+    sort: '排序',
+    newest: '最新',
+    oldest: '最旧',
+    newestFirst: '最新优先',
+    oldestFirst: '最旧优先',
+    viewNewest: '查看最新',
+    viewOldest: '查看最旧',
+    takenAt: '拍摄时间',
+    byTakenAt: '按拍摄时间',
+    uploadedAt: '上传时间',
+    byUploadedAt: '按上传时间',
+    uploadedAtShort: '上传',
+    clearSort: '清除排序',
+  },
   cmdk: {
     placeholder: '搜索照片、视图、设置...',
     searching: '搜索中...',
     noResults: '未找到结果',
+    pages: '页面',
   },
   tooltip: {
     '35mm': '35mm 等效焦距',
@@ -90,8 +115,8 @@ export const TEXT: I18NDeepPartial = {
     edit: '编辑',
     favorite: '收藏',
     unfavorite: '取消收藏',
-    hide: '隐藏',
-    unhide: '取消隐藏',
+    private: '设为私密',
+    public: '设为公开',
     download: '下载',
     sync: '同步',
     delete: '删除',

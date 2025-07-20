@@ -1,7 +1,7 @@
 import { Photo } from '@/photo';
 import { parameterize } from '@/utility/string';
 import { formatAppleLensText, isLensApple } from '../platforms/apple';
-import { MISSING_FIELD } from '@/app/paths';
+import { MISSING_FIELD } from '@/app/path';
 import { formatGoogleLensText, isLensGoogle } from '../platforms/google';
 import { CategoryQueryMeta } from '@/category';
 
@@ -114,7 +114,7 @@ export const formatLensText = (
 
   switch (length) {
   case 'long':
-    return make ? `${make} ${modelRaw}` : modelRaw;
+    return make ? `${make} ${model}` : modelRaw;
   case 'medium':
   case 'short':
     return model;

@@ -29,7 +29,7 @@ import {
   cloudflareR2Put,
   isUrlFromCloudflareR2,
 } from './cloudflare-r2';
-import { PATH_API_PRESIGNED_URL } from '@/app/paths';
+import { PATH_API_PRESIGNED_URL } from '@/app/path';
 
 export const generateStorageId = () => generateNanoid(16);
 

@@ -7,7 +7,7 @@ import {
 import {
   absolutePathForFilm,
   absolutePathForFilmImage,
-} from '@/app/paths';
+} from '@/app/path';
 import {
   FUJIFILM_SIMULATION_FORM_INPUT_OPTIONS,
   labelForFujifilmSimulation,

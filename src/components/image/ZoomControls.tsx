@@ -41,6 +41,7 @@ export default function ZoomControls({
 
   const button = 
     <button
+      type="button"
       className={clsx(
         'fixed top-[20px] right-[70px]',
         'size-10 items-center justify-center',

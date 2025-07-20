@@ -6,11 +6,12 @@ import {
   DEFAULT_THEME,
   PRESERVE_ORIGINAL_UPLOADS,
   META_DESCRIPTION,
-  NAV_TITLE_OR_DOMAIN,
   META_TITLE,
   HTML_LANG,
+  SITE_FEEDS_ENABLED,
+  ADMIN_DEBUG_TOOLS_ENABLED,
 } from '@/app/config';
-import AppStateProvider from '@/state/AppStateProvider';
+import AppStateProvider from '@/app/AppStateProvider';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
 import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
 import { Metadata } from 'next/types';
@@ -18,7 +19,7 @@ import { ThemeProvider } from 'next-themes';
 import Nav from '@/app/Nav';
 import Footer from '@/app/Footer';
 import CommandK from '@/cmdk/CommandK';
-import SwrConfigClient from '@/state/SwrConfigClient';
+import SwrConfigClient from '@/swr/SwrConfigClient';
 import AdminBatchEditPanel from '@/admin/AdminBatchEditPanel';
 import ShareModals from '@/share/ShareModals';
 import AdminUploadPanel from '@/admin/upload/AdminUploadPanel';
@@ -26,6 +27,8 @@ import { revalidatePath } from 'next/cache';
 import RecipeModal from '@/recipe/RecipeModal';
 import ThemeColors from '@/app/ThemeColors';
 import AppTextProvider from '@/i18n/state/AppTextProvider';
+import SharedHoverProvider from '@/components/shared-hover/SharedHoverProvider';
+import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/path';
 
 import '../tailwind.css';
 
@@ -64,6 +67,14 @@ export const metadata: Metadata = {
     type: 'image/png',
     sizes: '180x180',
   }],
+  ...SITE_FEEDS_ENABLED && {
+    alternates: {
+      types: {
+        'application/rss+xml': PATH_RSS_XML,
+        'application/json': PATH_FEED_JSON,
+      },
+    },
+  },
 };
 
 export default function RootLayout({
@@ -81,39 +92,47 @@ export default function RootLayout({
         // Center on large screens
         '3xl:flex flex-col items-center',
       )}>
-        <AppStateProvider>
+        <AppStateProvider areAdminDebugToolsEnabled={ADMIN_DEBUG_TOOLS_ENABLED}>
           <AppTextProvider>
             <ThemeColors />
             <ThemeProvider attribute="class" defaultTheme={DEFAULT_THEME}>
               <SwrConfigClient>
-                <div className={clsx(
-                  'mx-3 mb-3',
-                  'lg:mx-6 lg:mb-6',
-                )}>
-                  <Nav navTitleOrDomain={NAV_TITLE_OR_DOMAIN} />
-                  <main>
-                    <ShareModals />
-                    <RecipeModal />
-                    <div className={clsx(
-                      'min-h-[16rem] sm:min-h-[30rem]',
-                      'mb-12',
-                      'space-y-5',
-                    )}>
-                      <AdminUploadPanel
-                        shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
-                        onLastUpload={async () => {
-                          'use server';
-                          // Update upload count in admin nav
-                          revalidatePath('/admin', 'layout');
-                        }}
-                      />
-                      <AdminBatchEditPanel />
-                      {children}
-                    </div>
-                  </main>
-                  <Footer />
-                </div>
-                <CommandK />
+                <SharedHoverProvider>
+                  <div className={clsx(
+                    'mx-3 mb-3',
+                    'lg:mx-6 lg:mb-6',
+                  )}>
+                    <Nav />
+                    <main>
+                      <ShareModals />
+                      <RecipeModal />
+                      <div className={clsx(
+                        'min-h-[16rem] sm:min-h-[30rem]',
+                        'mb-12',
+                        'space-y-5',
+                      )}>
+                        <AdminUploadPanel
+                          shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
+                          onLastUpload={async () => {
+                            'use server';
+                            // Update upload count in admin nav
+                            revalidatePath('/admin', 'layout');
+                          }}
+                        />
+                        <AdminBatchEditPanel
+                          onBatchActionComplete={async () => {
+                            'use server';
+                            // Update upload count in admin nav
+                            revalidatePath('/admin', 'layout');
+                          }}
+                        />
+                        {children}
+                      </div>
+                    </main>
+                    <Footer />
+                  </div>
+                  <CommandK />
+                </SharedHoverProvider>
               </SwrConfigClient>
               <Analytics debug={false} />
               <SpeedInsights debug={false}  />

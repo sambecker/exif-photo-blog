@@ -1,4 +1,4 @@
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import clsx from 'clsx/lite';
 import { LuCog } from 'react-icons/lu';
 import InsightsIndicatorDot from './insights/InsightsIndicatorDot';

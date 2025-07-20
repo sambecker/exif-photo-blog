@@ -16,15 +16,16 @@ import {
   getUniqueFocalLengths,
   getUniqueLenses,
   getUniqueRecipes,
+  getUniqueYears,
 } from '@/photo/db/query';
-import { GetPhotosOptions } from './db';
+import { PhotoQueryOptions } from './db';
 import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
 import { createCameraKey } from '@/camera';
 import {
   PATHS_ADMIN,
   PATHS_TO_CACHE,
   PATH_ADMIN,
-  PATH_FEED,
+  PATH_FULL,
   PATH_GRID,
   PATH_ROOT,
   PREFIX_CAMERA,
@@ -34,7 +35,8 @@ import {
   PREFIX_RECIPE,
   PREFIX_TAG,
   pathForPhoto,
-} from '@/app/paths';
+  PREFIX_YEAR,
+} from '@/app/path';
 import { createLensKey } from '@/lens';
 
 // Table key
@@ -47,13 +49,14 @@ const KEY_TAGS              = 'tags';
 const KEY_FILMS             = 'films';
 const KEY_RECIPES           = 'recipes';
 const KEY_FOCAL_LENGTHS     = 'focal-lengths';
+const KEY_YEARS             = 'years';
 // Type keys
 const KEY_COUNT             = 'count';
 const KEY_DATE_RANGE        = 'date-range';
 
-const getPhotosCacheKeyForOption = (
-  options: GetPhotosOptions,
-  option: keyof GetPhotosOptions,
+const getCacheKeyForPhotoQueryOptions = (
+  options: PhotoQueryOptions,
+  option: keyof PhotoQueryOptions,
 ): string | null => {
   switch (option) {
   // Complex keys
@@ -78,13 +81,13 @@ const getPhotosCacheKeyForOption = (
   }
 };
 
-const getPhotosCacheKeys = (options: GetPhotosOptions = {}) => {
+const getPhotosCacheKeys = (options: PhotoQueryOptions = {}) => {
   const tags: string[] = [];
 
   Object.keys(options).forEach(key => {
-    const tag = getPhotosCacheKeyForOption(
+    const tag = getCacheKeyForPhotoQueryOptions(
       options,
-      key as keyof GetPhotosOptions,
+      key as keyof PhotoQueryOptions,
     );
     if (tag) { tags.push(tag); }
   });
@@ -113,6 +116,9 @@ export const revalidateFilmsKey = () =>
 export const revalidateFocalLengthsKey = () =>
   revalidateTag(KEY_FOCAL_LENGTHS);
 
+export const revalidateYearsKey = () =>
+  revalidateTag(KEY_YEARS);
+
 export const revalidateAllKeys = () => {
   revalidatePhotosKey();
   revalidateTagsKey();
@@ -121,6 +127,7 @@ export const revalidateAllKeys = () => {
   revalidateFilmsKey();
   revalidateRecipesKey();
   revalidateFocalLengthsKey();
+  revalidateYearsKey();
 };
 
 export const revalidateAdminPaths = () => {
@@ -141,17 +148,19 @@ export const revalidatePhoto = (photoId: string) => {
   revalidateFilmsKey();
   revalidateRecipesKey();
   revalidateFocalLengthsKey();
+  revalidateYearsKey();
   // Paths
   revalidatePath(pathForPhoto({ photo: photoId }), 'layout');
   revalidatePath(PATH_ROOT, 'layout');
   revalidatePath(PATH_GRID, 'layout');
-  revalidatePath(PATH_FEED, 'layout');
+  revalidatePath(PATH_FULL, 'layout');
   revalidatePath(PREFIX_TAG, 'layout');
   revalidatePath(PREFIX_CAMERA, 'layout');
   revalidatePath(PREFIX_LENS, 'layout');
   revalidatePath(PREFIX_FILM, 'layout');
   revalidatePath(PREFIX_RECIPE, 'layout');
   revalidatePath(PREFIX_FOCAL_LENGTH, 'layout');
+  revalidatePath(PREFIX_YEAR, 'layout');
   revalidatePath(PATH_ADMIN, 'layout');
 };
 
@@ -237,6 +246,12 @@ export const getUniqueFocalLengthsCached =
   unstable_cache(
     getUniqueFocalLengths,
     [KEY_PHOTOS, KEY_FOCAL_LENGTHS],
+  );
+
+export const getUniqueYearsCached =
+  unstable_cache(
+    getUniqueYears,
+    [KEY_PHOTOS, KEY_YEARS],
   );
 
 // No store

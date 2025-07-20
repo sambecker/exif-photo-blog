@@ -2,7 +2,7 @@
 
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import { clearCacheAction } from '@/photo/actions';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { BiTrash } from 'react-icons/bi';
 
 export default function ClearCacheButton() {
@@ -12,6 +12,7 @@ export default function ClearCacheButton() {
     <form action={clearCacheAction}>
       <SubmitButtonWithStatus
         icon={<BiTrash size={16} />}
+        hideText="never"
         onFormSubmit={invalidateSwr}
       >
         Clear Cache

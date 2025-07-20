@@ -3,13 +3,13 @@
 import Note from '@/components/Note';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import AppGrid from '@/components/AppGrid';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { clsx } from 'clsx/lite';
 import { IoCloseSharp } from 'react-icons/io5';
 import { useEffect, useRef, useState } from 'react';
 import { TAG_FAVS, Tags } from '@/tag';
 import { usePathname } from 'next/navigation';
-import { PATH_GRID_INFERRED } from '@/app/paths';
+import { PATH_GRID_INFERRED } from '@/app/path';
 import PhotoTagFieldset from './PhotoTagFieldset';
 import { tagMultiplePhotosAction } from '@/photo/actions';
 import { toastSuccess } from '@/toast';

@@ -21,11 +21,11 @@ import {
   AI_TEXT_GENERATION_ENABLED,
 } from '@/app/config';
 import {
-  GetPhotosOptions,
-  getLimitAndOffsetFromOptions,
+  PhotoQueryOptions,
   getOrderByFromOptions,
+  getLimitAndOffsetFromOptions,
+  getWheresFromOptions,
 } from '.';
-import { getWheresFromOptions } from '.';
 import { FocalLengths } from '@/focal';
 import { Lenses, createLensKey } from '@/lens';
 import { migrationForError } from './migration';
@@ -36,6 +36,7 @@ import {
 } from '../sync';
 import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
 import { Recipes } from '@/recipe';
+import { Years } from '@/years';
 
 const createPhotosTable = () =>
   sql`
@@ -68,7 +69,8 @@ const createPhotosTable = () =>
       priority_order REAL,
       taken_at TIMESTAMP WITH TIME ZONE NOT NULL,
       taken_at_naive VARCHAR(255) NOT NULL,
-      hidden BOOLEAN,
+      exclude_from_feeds BOOLEAN DEFAULT FALSE,
+      hidden BOOLEAN DEFAULT FALSE,
       updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
       created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     )
@@ -79,7 +81,7 @@ const createPhotosTable = () =>
 const safelyQueryPhotos = async <T>(
   callback: () => Promise<T>,
   queryLabel: string,
-  queryOptions?: GetPhotosOptions,
+  queryOptions?: PhotoQueryOptions,
 ): Promise<T> => {
   let result: T;
 
@@ -119,7 +121,7 @@ const safelyQueryPhotos = async <T>(
         }
       }
     } else if (/relation "photos" does not exist/i.test(e.message)) {
-      // If the table does not exist, create it
+      // If table doesn't exist, create it
       console.log('Creating photos table ...');
       await createPhotosTable();
       result = await callback();
@@ -192,6 +194,7 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       recipe_title,
       recipe_data,
       priority_order,
+      exclude_from_feeds,
       hidden,
       taken_at,
       taken_at_naive
@@ -223,6 +226,7 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       ${photo.recipeTitle},
       ${photo.recipeData},
       ${photo.priorityOrder},
+      ${photo.excludeFromFeeds},
       ${photo.hidden},
       ${photo.takenAt},
       ${photo.takenAtNaive}
@@ -257,6 +261,7 @@ export const updatePhoto = (photo: PhotoDbInsert) =>
     recipe_title=${photo.recipeTitle},
     recipe_data=${photo.recipeData},
     priority_order=${photo.priorityOrder || null},
+    exclude_from_feeds=${photo.excludeFromFeeds},
     hidden=${photo.hidden},
     taken_at=${photo.takenAt},
     taken_at_naive=${photo.takenAtNaive},
@@ -321,22 +326,6 @@ export const getPhotosMostRecentUpdate = async () =>
   `.then(({ rows }) => rows[0] ? rows[0].updated_at as Date : undefined)
   , 'getPhotosMostRecentUpdate');
 
-export const getUniqueTags = async () =>
-  safelyQueryPhotos(() => sql`
-    SELECT DISTINCT unnest(tags) as tag,
-      COUNT(*),
-      MAX(updated_at) as last_modified
-    FROM photos
-    WHERE hidden IS NOT TRUE
-    GROUP BY tag
-    ORDER BY tag ASC
-  `.then(({ rows }): Tags => rows.map(({ tag, count, last_modified }) => ({
-      tag: tag as string,
-      count: parseInt(count, 10),
-      lastModified: last_modified as Date,
-    })))
-  , 'getUniqueTags');
-
 export const getUniqueCameras = async () =>
   safelyQueryPhotos(() => sql`
     SELECT DISTINCT make||' '||model as camera, make, model,
@@ -378,6 +367,22 @@ export const getUniqueLenses = async () =>
       })))
   , 'getUniqueLenses');
 
+export const getUniqueTags = async () =>
+  safelyQueryPhotos(() => sql`
+    SELECT DISTINCT unnest(tags) as tag,
+      COUNT(*),
+      MAX(updated_at) as last_modified
+    FROM photos
+    WHERE hidden IS NOT TRUE
+    GROUP BY tag
+    ORDER BY tag ASC
+  `.then(({ rows }): Tags => rows.map(({ tag, count, last_modified }) => ({
+      tag,
+      count: parseInt(count, 10),
+      lastModified: last_modified as Date,
+    })))
+  , 'getUniqueTags');
+
 export const getUniqueRecipes = async () =>
   safelyQueryPhotos(() => sql`
     SELECT DISTINCT recipe_title,
@@ -394,6 +399,22 @@ export const getUniqueRecipes = async () =>
         lastModified: last_modified as Date,
       })))
   , 'getUniqueRecipes');
+
+export const getUniqueYears = async () =>
+  safelyQueryPhotos(() => sql`
+    SELECT
+      DISTINCT EXTRACT(YEAR FROM taken_at) AS year,
+      COUNT(*),
+      MAX(updated_at) as last_modified
+    FROM photos
+    WHERE hidden IS NOT TRUE
+    GROUP BY year
+    ORDER BY year DESC
+  `.then(({ rows }): Years => rows.map(({ year, count, last_modified }) => ({
+      year,
+      count: parseInt(count, 10),
+      lastModified: last_modified as Date,
+    }))), 'getUniqueYears');
 
 export const getRecipeTitleForData = async (
   data: string | object,
@@ -472,7 +493,7 @@ export const getUniqueFocalLengths = async () =>
       })))
   , 'getUniqueFocalLengths');
 
-export const getPhotos = async (options: GetPhotosOptions = {}) =>
+export const getPhotos = async (options: PhotoQueryOptions = {}) =>
   safelyQueryPhotos(async () => {
     const sql = ['SELECT * FROM photos'];
     const values = [] as (string | number)[];
@@ -509,7 +530,7 @@ export const getPhotos = async (options: GetPhotosOptions = {}) =>
 
 export const getPhotosNearId = async (
   photoId: string,
-  options: GetPhotosOptions,
+  options: PhotoQueryOptions,
 ) =>
   safelyQueryPhotos(async () => {
     const { limit } = options;
@@ -548,7 +569,7 @@ export const getPhotosNearId = async (
       });
   }, `getPhotosNearId: ${photoId}`);    
 
-export const getPhotosMeta = (options: GetPhotosOptions = {}) =>
+export const getPhotosMeta = (options: PhotoQueryOptions = {}) =>
   safelyQueryPhotos(async () => {
     // eslint-disable-next-line max-len
     let sql = 'SELECT COUNT(*), MIN(taken_at_naive) as start, MAX(taken_at_naive) as end FROM photos';
@@ -558,7 +579,10 @@ export const getPhotosMeta = (options: GetPhotosOptions = {}) =>
       .then(({ rows }) => ({
         count: parseInt(rows[0].count, 10),
         ...rows[0]?.start && rows[0]?.end
-          ? { dateRange: rows[0] as PhotoDateRange }
+          ? { dateRange: {
+            start: rows[0].start as string,
+            end: rows[0].end as string,
+          } as PhotoDateRange }
           : undefined,
       }));
   }, 'getPhotosMeta');

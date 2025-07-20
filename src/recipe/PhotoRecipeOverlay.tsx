@@ -122,9 +122,10 @@ export default function PhotoRecipeOverlay({
           {title
             ? <PhotoRecipe
               recipe={title}
+              contrast="frosted"
               className={clsx(
                 'text-[15px]',
-                '[&>*>*>*]:text-black',
+                '[&>*>*>*>*]:text-black',
                 'tracking-wide',
               )}
             />
@@ -161,8 +162,8 @@ export default function PhotoRecipeOverlay({
           {renderDataSquare(
             <div className="flex items-center gap-1.5">
               <PhotoFilm
-                contrast="frosted"
                 film={film}
+                contrast="frosted"
                 className={clsx(
                   'translate-y-[-0.5px]',
                   '*:text-black! *:active:text-black!',

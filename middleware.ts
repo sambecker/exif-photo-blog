@@ -8,7 +8,7 @@ import {
   PATH_OG_SAMPLE,
   PREFIX_PHOTO,
   PREFIX_TAG,
-} from './src/app/paths';
+} from './src/app/path';
 
 export default function middleware(req: NextRequest, res:NextResponse) {
   const pathname = req.nextUrl.pathname;
@@ -46,12 +46,12 @@ export const config = {
   // - /_next/image*
   // - /favicon.ico + /favicons/*
   // - /grid
-  // - /feed
+  // - /full
   // - / (root)
   // - /home-image
   // - /template-image
   // - /template-image-tight
   // - /template-url
   // eslint-disable-next-line max-len
-  matcher: ['/((?!api$|api/auth|_next/static|_next/image|favicon.ico$|favicons/|grid$|feed$|home-image$|template-image$|template-image-tight$|template-url$|$).*)'],
+  matcher: ['/((?!api$|api/auth|_next/static|_next/image|favicon.ico$|favicons/|grid$|full$|home-image$|template-image$|template-image-tight$|template-url$|$).*)'],
 };

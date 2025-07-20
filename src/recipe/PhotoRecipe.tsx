@@ -1,7 +1,9 @@
-import { pathForRecipe } from '@/app/paths';
+'use client';
+
+import { pathForRecipe } from '@/app/path';
 import EntityLink, {
   EntityLinkExternalProps,
-} from '@/components/primitives/EntityLink';
+} from '@/components/entity/EntityLink';
 import { formatRecipe } from '.';
 import clsx from 'clsx/lite';
 import { ComponentProps } from 'react';
@@ -11,13 +13,11 @@ import PhotoRecipeOverlayButton from './PhotoRecipeOverlayButton';
 export default function PhotoRecipe({
   ref,
   recipe,
-  countOnHover,
   toggleRecipeOverlay,
   isShowingRecipeOverlay,
   ...props
 }: {
   recipe: string
-  countOnHover?: number
 } & Partial<ComponentProps<typeof PhotoRecipeOverlayButton>>
   & EntityLinkExternalProps) {
   return (
@@ -26,11 +26,12 @@ export default function PhotoRecipe({
       ref={ref}
       title="Recipe"
       label={formatRecipe(recipe)}
-      href={pathForRecipe(recipe)}
+      path={pathForRecipe(recipe)}
+      hoverPhotoQueryOptions={{ recipe }}
       icon={<IconRecipe
         size={16}
         className={clsx(
-          props.badged && 'translate-x-[-1px] translate-y-[0.5px]',
+          props.badged && 'translate-x-[-1px] translate-y-[-1px]',
         )}
       />}
       action={toggleRecipeOverlay &&
@@ -38,7 +39,6 @@ export default function PhotoRecipe({
           toggleRecipeOverlay,
           isShowingRecipeOverlay,
         }} />}
-      hoverEntity={countOnHover}
     />
   );
 }

@@ -42,33 +42,32 @@ html {
   --text-3xl--line-height: 1.5rem;
 
   --animate-fade-in: fade-in 0.5s linear both running;
+  --animate-fade-in-fast: fade-in 0.2s linear both running;
   @keyframes fade-in {
     0% { opacity: 0; }
     100% { opacity: 1; }
   }
 
-  --animate-fade-in-from-top: fade-in-from-top 0.25s ease-in-out;
+  --animate-fade-in-from-top: fade-in-from-top 0.2s ease-out;
+  --animate-fade-in-from-top-large: fade-in-from-top-large 0.2s ease-out;
   @keyframes fade-in-from-top {
-    0% {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in-from-top-large {
+    0% { opacity: 0; transform: translateY(-20px); }
+    100% { opacity: 1; transform: translateY(0); }
   }
 
-  --animate-fade-in-from-bottom: fade-in-from-bottom 0.25s ease-in-out;
+  --animate-fade-in-from-bottom: fade-in-from-bottom 0.2s ease-out;
+  --animate-fade-in-from-bottom-large: fade-in-from-bottom-large 0.2s ease-out;
   @keyframes fade-in-from-bottom {
-    0% {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in-from-bottom-large {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
   }
 
   --animate-rotate-pulse: rotate-pulse 0.75s linear infinite normal both running;
@@ -290,7 +289,7 @@ html {
   }
   .error {
     @apply
-      border-red-500 dark:border-red-400
+      outline-2 outline-red-500! dark:outline-red-400!
   }
   button, .button {
     @apply

@@ -10,8 +10,8 @@ import {
   checkPathPrefix,
   isPathAdminInfo,
   isPathTopLevelAdmin,
-} from '@/app/paths';
-import { useAppState } from '@/state/AppState';
+} from '@/app/path';
+import { useAppState } from '@/app/AppState';
 import { clsx } from 'clsx/lite';
 import { differenceInMinutes } from 'date-fns';
 import { usePathname } from 'next/navigation';

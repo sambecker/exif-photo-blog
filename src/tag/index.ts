@@ -8,7 +8,7 @@ import {
   absolutePathForTag,
   absolutePathForTagImage,
   getPathComponents,
-} from '@/app/paths';
+} from '@/app/path';
 import {
   capitalizeWords,
   convertStringToArray,
@@ -20,7 +20,7 @@ import { AppTextState } from '@/i18n/state';
 
 // Reserved tags
 export const TAG_FAVS   = 'favs';
-export const TAG_HIDDEN = 'hidden';
+export const TAG_PRIVATE = 'private';
 
 type TagWithMeta = { tag: string } & CategoryQueryMeta;
 
@@ -31,7 +31,7 @@ export const formatTag = (tag?: string) =>
 
 export const getValidationMessageForTags = (tags?: string) => {
   const reservedTags = (convertStringToArray(tags) ?? [])
-    .filter(tag => isTagFavs(tag) || isTagHidden(tag))
+    .filter(tag => isTagFavs(tag) || isTagPrivate(tag))
     .map(tag => tag.toLocaleUpperCase());
   return reservedTags.length
     ? `Reserved tags: ${reservedTags.join(', ').toLocaleLowerCase()}`
@@ -135,20 +135,20 @@ export const isPhotoFav = ({ tags }: Photo) => tags.some(isTagFavs);
 export const isPathFavs = (pathname?: string) =>
   getPathComponents(pathname).tag === TAG_FAVS;
 
-export const isTagHidden = (tag: string) => tag.toLowerCase() === TAG_HIDDEN;
+export const isTagPrivate = (tag: string) => tag.toLowerCase() === TAG_PRIVATE;
 
-export const addHiddenToTags = (
+export const addPrivateToTags = (
   tags: Tags,
-  countHidden = 0,
-  lastModifiedHidden = new Date(),
+  countPrivate = 0,
+  lastModifiedPrivate = new Date(),
 ) =>
-  countHidden > 0
+  countPrivate > 0
     ? tags
       .filter(({ tag }) => tag === TAG_FAVS)
       .concat({
-        tag: TAG_HIDDEN,
-        count: countHidden,
-        lastModified: lastModifiedHidden,
+        tag: TAG_PRIVATE,
+        count: countPrivate,
+        lastModified: lastModifiedPrivate,
       })
       .concat(tags
         .filter(({ tag }) => tag !== TAG_FAVS)
@@ -167,3 +167,17 @@ export const convertTagsForForm = (
       annotationAria:
         formatCountDescriptive(count, appText.category.taggedPhotos),
     }));
+
+export const limitTagsByCount = (
+  tags: Tags,
+  minimumCount: number,
+  queryToInclude?: string,
+) =>
+  tags.filter(({ tag, count }) => (
+    count >= minimumCount ||
+    isTagFavs(tag) ||
+    isTagPrivate(tag) ||
+    (queryToInclude && tag
+      .toLocaleLowerCase()
+      .includes(queryToInclude.toLocaleLowerCase()))
+  ));

@@ -15,7 +15,7 @@ import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import PhotoPrevNextActions from './PhotoPrevNextActions';
 import PhotoLink from './PhotoLink';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { GRID_GAP_CLASSNAME } from '@/components';
 import { useAppText } from '@/i18n/state/client';
 
@@ -159,10 +159,9 @@ export default function PhotoHeader({
                   }} />}
               </>
               : <ResponsiveText
-                shortText={appText.utility.paginateAction(
+                shortText={appText.utility.paginate(
                   paginationIndex,
                   paginationCount,
-                  entityVerb,
                 )}
               >
                 {appText.utility.paginateAction(
@@ -178,6 +177,8 @@ export default function PhotoHeader({
             ? 'hidden sm:flex'
             : 'flex',
           'justify-end',
+          // Make full height for prev/next symbols
+          'max-sm:h-full',
         )}>
           {selectedPhoto
             ? renderPrevNext

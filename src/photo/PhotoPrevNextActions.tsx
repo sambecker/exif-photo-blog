@@ -9,8 +9,8 @@ import {
 } from '@/photo';
 import { PhotoSetCategory } from '../category';
 import PhotoLink from './PhotoLink';
-import { pathForAdminPhotoEdit, pathForPhoto } from '@/app/paths';
-import { useAppState } from '@/state/AppState';
+import { pathForAdminPhotoEdit, pathForPhoto } from '@/app/path';
+import { useAppState } from '@/app/AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import { clsx } from 'clsx/lite';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
@@ -20,7 +20,7 @@ import {
   deletePhotoAction,
   syncPhotoAction,
   toggleFavoritePhotoAction,
-  toggleHidePhotoAction,
+  togglePrivatePhotoAction,
 } from './actions';
 import { isPhotoFav } from '@/tag';
 import Tooltip from '@/components/Tooltip';
@@ -56,7 +56,7 @@ export default function PhotoPrevNextActions({
   const photoTitle = photo
     ? photo.title
       ? `'${photo.title}'`
-      : 'photo'
+      : appText.photo.photo.toLocaleLowerCase()
     : undefined;
   const downloadUrl = photo?.url;
   const downloadFileName = photo
@@ -68,7 +68,7 @@ export default function PhotoPrevNextActions({
   }, [photo?.id]);
 
   const toggleHidden = useCallback(() => {
-    if (photo?.id) { return toggleHidePhotoAction(photo.id); }
+    if (photo?.id) { return togglePrivatePhotoAction(photo.id); }
   }, [photo?.id]);
 
   const navigateToPhotoEdit = useNavigateOrRunActionWithToast({
@@ -168,7 +168,7 @@ export default function PhotoPrevNextActions({
           unfavoritePhoto();
         }
         break;
-      case KEY_COMMANDS.toggleHide:
+      case KEY_COMMANDS.togglePrivate:
         if (isUserSignedIn && photo) {
           if (photo.hidden) {
             unhidePhoto();

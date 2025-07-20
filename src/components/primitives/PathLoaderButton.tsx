@@ -11,6 +11,7 @@ export default function PathLoaderButton({
   shouldScroll = true,
   shouldReplace,
   isLoading,
+  onClick,
   children,
   ...props
 }: {
@@ -46,7 +47,8 @@ export default function PathLoaderButton({
   return (
     <LoaderButton
       {...props}
-      onClick={() => {
+      onClick={e => {
+        onClick?.(e);
         startTransition(() => {
           if (shouldReplace) {
             router.replace(path, { scroll: shouldScroll });

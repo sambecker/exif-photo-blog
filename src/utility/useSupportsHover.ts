@@ -6,6 +6,7 @@ export default function useSupportsHover() {
   useEffect(() => {
     const mql = window.matchMedia('(hover: hover)');
 
+    setSupportsHover(mql.matches);
     const listener = (e: MediaQueryListEvent) => {
       setSupportsHover(e.matches);
     };

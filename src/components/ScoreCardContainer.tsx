@@ -8,7 +8,7 @@ export default function ScoreCardContainer({
 }) {
   return <div className={clsx(
     'max-w-xl w-full',
-    'space-y-6 md:space-y-8',
+    'space-y-4 md:space-y-6',
   )}>
     {children}
   </div>;

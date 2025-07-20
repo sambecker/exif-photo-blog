@@ -37,5 +37,8 @@ export default function useStickyNav(
     ),
   }), [isNavSticky, shouldAnimateStickyNav, shouldHideStickyNav]);
 
-  return classNames;
+  return {
+    ...classNames,
+    isNavVisible: !shouldHideStickyNav,
+  };
 };

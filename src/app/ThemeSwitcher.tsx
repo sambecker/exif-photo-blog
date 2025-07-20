@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
-import Switcher from '@/components/Switcher';
-import SwitcherItem from '@/components/SwitcherItem';
+import Switcher from '@/components/switcher/Switcher';
+import SwitcherItem from '@/components/switcher/SwitcherItem';
 import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
 import { useAppText } from '@/i18n/state/client';
 
@@ -23,7 +23,10 @@ export default function ThemeSwitcher () {
   }
 
   return (
-    <Switcher>
+    <Switcher
+      // Apply offset due to outline strategy
+      className="translate-x-[-1px]"
+    >
       <SwitcherItem
         icon={<BiDesktop size={16} />}
         onClick={() => setTheme('system')}

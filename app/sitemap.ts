@@ -1,14 +1,18 @@
 import type { MetadataRoute } from 'next';
 import { getDataForCategoriesCached } from '@/category/cache';
 import {
+  ABSOLUTE_PATH_FULL,
+  ABSOLUTE_PATH_GRID,
   absolutePathForCamera,
   absolutePathForFilm,
   absolutePathForFocalLength,
   absolutePathForLens,
   absolutePathForPhoto,
+  absolutePathForRecents,
   absolutePathForRecipe,
   absolutePathForTag,
-} from '@/app/paths';
+  absolutePathForYear,
+} from '@/app/path';
 import { isTagFavs } from '@/tag';
 import { BASE_URL, GRID_HOMEPAGE_ENABLED } from '@/app/config';
 import { getPhotoIdsAndUpdatedAt } from '@/photo/db/query';
@@ -16,15 +20,17 @@ import { getPhotoIdsAndUpdatedAt } from '@/photo/db/query';
 // Cache for 24 hours
 export const revalidate = 86_400;
 
-const PRIORITY_HOME = 1;
-const PRIORITY_HOME_VIEW = 0.9;
+const PRIORITY_HOME             = 1;
+const PRIORITY_HOME_VIEW        = 0.9;
 const PRIORITY_CATEGORY_SPECIAL = 0.8;
-const PRIORITY_CATEGORY = 0.7;
-const PRIORITY_PHOTO = 0.5;
+const PRIORITY_CATEGORY         = 0.7;
+const PRIORITY_PHOTO            = 0.5;
  
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [
     {
+      recents,
+      years,
       cameras,
       lenses,
       tags,
@@ -34,11 +40,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     photos,
   ] = await Promise.all([
-    getDataForCategoriesCached(),
-    getPhotoIdsAndUpdatedAt(),
+    getDataForCategoriesCached().catch(() => ({
+      recents: [],
+      years: [],
+      cameras: [],
+      lenses: [],
+      tags: [],
+      recipes: [],
+      films: [],
+      focalLengths: [],
+    })),
+    getPhotoIdsAndUpdatedAt().catch(() => []),
   ]);
 
   const lastModifiedSite = [
+    ...recents.map(({ lastModified }) => lastModified),
+    ...years.map(({ lastModified }) => lastModified),
     ...cameras.map(({ lastModified }) => lastModified),
     ...lenses.map(({ lastModified }) => lastModified),
     ...tags.map(({ lastModified }) => lastModified),
@@ -57,12 +74,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: PRIORITY_HOME,
       lastModified: lastModifiedSite,
     },
-    // Grid or Feed
+    // Grid or full
     {
-      url: GRID_HOMEPAGE_ENABLED ? `${BASE_URL}/feed` : `${BASE_URL}/grid`,
+      url: GRID_HOMEPAGE_ENABLED ? ABSOLUTE_PATH_FULL : ABSOLUTE_PATH_GRID,
       priority: PRIORITY_HOME_VIEW,
       lastModified: lastModifiedSite,
     },
+    // Recents
+    ...recents.map(({ lastModified }) => ({
+      url: absolutePathForRecents(),
+      priority: PRIORITY_CATEGORY,
+      lastModified,
+    })),
+    // Years
+    ...years.map(({ year, lastModified }) => ({
+      url: absolutePathForYear(year),
+      priority: PRIORITY_CATEGORY,
+      lastModified,
+    })),
     // Cameras
     ...cameras.map(({ camera, lastModified }) => ({
       url: absolutePathForCamera(camera),

@@ -1,4 +1,4 @@
-import { absolutePathForRecipe } from '@/app/paths';
+import { absolutePathForRecipe } from '@/app/path';
 import { PhotoSetAttributes } from '../category';
 import ShareModal from '@/share/ShareModal';
 import {

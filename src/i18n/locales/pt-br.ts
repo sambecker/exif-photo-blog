@@ -1,7 +1,7 @@
-import { I18NDeepPartial } from '..';
+import { I18N } from '..';
 export { ptBR as default } from 'date-fns/locale/pt-BR';
 
-export const TEXT: I18NDeepPartial = {
+export const TEXT: I18N = {
   photo: {
     photo: 'Foto',
     photoPlural: 'Fotos',
@@ -19,6 +19,7 @@ export const TEXT: I18NDeepPartial = {
     lensPlural: 'Lentes',
     tag: 'Tag',
     tagPlural: 'Tags',
+    tagged: 'Marcado',
     taggedPhotos: 'Fotos marcadas',
     taggedPhrase: 'Fotos marcadas com {{tag}}',
     taggedFavs: 'Fotos favoritas',
@@ -32,10 +33,18 @@ export const TEXT: I18NDeepPartial = {
     focalLengthPlural: 'Distâncias focais',
     focalLengthTitle: 'Distância focal {{focal}}',
     focalLengthShare: 'Fotos tiradas em {{focal}}',
+    year: 'Ano',
+    yearPlural: 'Anos',
+    yearShare: 'Fotos de {{year}}',
+    yearTitle: 'Fotos tiradas em {{year}}',
+    recent: 'Recente',
+    recentPlural: 'Recentes',
+    recentTitle: 'Fotos Recentes',
+    recentSubhead: 'Enviado há {{distance}}',
   },
   nav: {
     home: 'Início',
-    feed: 'Feed',
+    full: 'Completo',
     grid: 'Grade',
     admin: 'Menu de administrador',
     search: 'Pesquisar',
@@ -44,10 +53,26 @@ export const TEXT: I18NDeepPartial = {
     next: 'Próximo',
     nextShort: 'Próx',
   },
+  sort: {
+    sort: 'Ordenar',
+    newest: 'Mais recentes',
+    oldest: 'Mais antigas',
+    newestFirst: 'Mais recentes primeiro',
+    oldestFirst: 'Mais antigas primeiro',
+    viewNewest: 'Ver mais recentes',
+    viewOldest: 'Ver mais antigas',
+    takenAt: 'Tirado em',
+    byTakenAt: 'Por data de captura',
+    uploadedAt: 'Enviado em',
+    byUploadedAt: 'Por data de envio',
+    uploadedAtShort: 'Enviado',
+    clearSort: 'Limpar ordenação',
+  },
   cmdk: {
     placeholder: 'Pesquisar fotos, visualizações, configurações ...',
     searching: 'Pesquisando ...',
     noResults: 'Nenhum resultado encontrado',
+    pages: 'Páginas',
   },
   tooltip: {
     '35mm': 'Equivalente em 35mm',
@@ -90,8 +115,8 @@ export const TEXT: I18NDeepPartial = {
     edit: 'Editar',
     favorite: 'Favoritar',
     unfavorite: 'Remover dos favoritos',
-    hide: 'Ocultar',
-    unhide: 'Mostrar',
+    private: 'Tornar Privado',
+    public: 'Tornar Público',
     download: 'Baixar',
     sync: 'Sincronizar',
     delete: 'Excluir',

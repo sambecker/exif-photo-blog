@@ -7,11 +7,15 @@ import { clsx } from 'clsx/lite';
 import AnimateItems from '@/components/AnimateItems';
 import { ComponentProps, useCallback, useState, ReactNode } from 'react';
 import { GRID_SPACE_CLASSNAME } from '@/components';
+import { SortBy } from './sort';
 
 export default function PhotoGridContainer({
   cacheKey,
   photos,
   count,
+  sortBy,
+  sortWithPriority,
+  excludeFromFeeds,
   animateOnFirstLoadOnly,
   header,
   sidebar,
@@ -20,6 +24,9 @@ export default function PhotoGridContainer({
 }: {
   cacheKey: string
   count: number
+  sortBy?: SortBy
+  sortWithPriority?: boolean
+  excludeFromFeeds?: boolean
   header?: ReactNode
   sidebar?: ReactNode
 } & ComponentProps<typeof PhotoGrid>) {
@@ -54,6 +61,9 @@ export default function PhotoGridContainer({
             <PhotoGridInfinite {...{
               cacheKey,
               initialOffset: photos.length,
+              sortBy,
+              sortWithPriority,
+              excludeFromFeeds,
               ...categories,
               canStart: shouldAnimateDynamicItems,
               animateOnFirstLoadOnly,
@@ -62,7 +72,6 @@ export default function PhotoGridContainer({
         </div>
       </div>}
       contentSide={sidebar}
-      sideHiddenOnMobile
     />
   );
 }

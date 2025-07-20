@@ -16,10 +16,10 @@ export default function MenuSurface({
     <div
       ref={ref}
       className={clsx(
-        color === undefined && 'component-surface shadow-xs dark:shadow-md',
-        color === 'light' && 'component-surface-light shadow-xs',
+        color === undefined && 'component-surface shadow-sm dark:shadow-md',
+        color === 'light' && 'component-surface-light shadow-sm',
         color === 'dark' && 'component-surface-dark shadow-md',
-        color === 'frosted' && 'component-surface-frosted shadow-xs',
+        color === 'frosted' && 'component-surface-frosted shadow-sm',
         'px-2 py-1.5 max-w-[14rem]',
         'text-[0.8rem] leading-tight',
         'text-balance text-center',

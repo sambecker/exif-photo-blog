@@ -5,26 +5,29 @@ import { setDefaultDateFnLocale } from '@/i18n';
 
 setDefaultDateFnLocale();
 
-const DATE_STRING_FORMAT_TINY                   = 'dd MMM yy';
-const DATE_STRING_FORMAT_TINY_PLACEHOLDER       = '00 000 00';
+const DATE_FORMAT_TINY                   = 'dd MMM yy';
+const DATE_FORMAT_TINY_PLACEHOLDER       = '00 000 00';
 
-const DATE_STRING_FORMAT_SHORT                  = 'dd MMM yyyy';
-const DATE_STRING_FORMAT_SHORT_PLACEHOLDER      = '00 000 0000';
+const DATE_FORMAT_SHORT                  = 'dd MMM yyyy';
+const DATE_FORMAT_SHORT_PLACEHOLDER      = '00 000 0000';
 
-const DATE_STRING_FORMAT_MEDIUM                 = 'dd MMM yy h:mma';
-const DATE_STRING_FORMAT_MEDIUM_PLACEHOLDER     = '00 000 00 00:0000';
+const DATE_FORMAT_MEDIUM                 = 'dd MMM yy h:mma';
+const DATE_FORMAT_MEDIUM_PLACEHOLDER     = '00 000 00 00:0000';
 
-const DATE_STRING_FORMAT_LONG                   = 'dd MMM yyyy h:mma';
-const DATE_STRING_FORMAT_LONG_PLACEHOLDER       = '00 000 0000 00:0000';
+const DATE_FORMAT_LONG                   = 'dd MMM yyyy h:mma';
+const DATE_FORMAT_LONG_PLACEHOLDER       = '00 000 0000 00:0000';
 
-const DATE_STRING_FORMAT_POSTGRES               = 'yyyy-MM-dd HH:mm:ss';
+const DATE_FORMAT_RSS                    = 'EEE, dd LLL yyyy HH:mm:ss xx';
+const DATE_FORMAT_RSS_PLACEHOLDER        = '000, 00 000 0000 00:00:00 00';
+
+const DATE_FORMAT_POSTGRES               = 'yyyy-MM-dd HH:mm:ss';
 
 export const VALIDATION_EXAMPLE_POSTGRES        = '2025-01-03T21:00:44.000Z';
 export const VALIDATION_EXAMPLE_POSTGRES_NAIVE  = '2025-01-03 16:00:44';
 
 type AmbiguousTimestamp = number | string;
 
-type Length = 'tiny' | 'short' | 'medium' | 'long';
+type Length = 'tiny' | 'short' | 'medium' | 'long' | 'rss';
 
 export const formatDate = ({
   date,
@@ -40,28 +43,32 @@ export const formatDate = ({
   showPlaceholder?: boolean,
 }) => {
   let formatString = !hideTime
-    ? DATE_STRING_FORMAT_LONG
-    : DATE_STRING_FORMAT_SHORT;
+    ? DATE_FORMAT_LONG
+    : DATE_FORMAT_SHORT;
   let placeholderString = !hideTime
-    ? DATE_STRING_FORMAT_LONG_PLACEHOLDER
-    : DATE_STRING_FORMAT_SHORT_PLACEHOLDER;
+    ? DATE_FORMAT_LONG_PLACEHOLDER
+    : DATE_FORMAT_SHORT_PLACEHOLDER;
 
   switch (length) {
+  case 'rss':
+    formatString = DATE_FORMAT_RSS;
+    placeholderString = DATE_FORMAT_RSS_PLACEHOLDER;
+    break;
   case 'tiny':
-    formatString = DATE_STRING_FORMAT_TINY;
-    placeholderString = DATE_STRING_FORMAT_TINY_PLACEHOLDER;
+    formatString = DATE_FORMAT_TINY;
+    placeholderString = DATE_FORMAT_TINY_PLACEHOLDER;
     break;
   case 'short':
-    formatString = DATE_STRING_FORMAT_SHORT;
-    placeholderString = DATE_STRING_FORMAT_SHORT_PLACEHOLDER;
+    formatString = DATE_FORMAT_SHORT;
+    placeholderString = DATE_FORMAT_SHORT_PLACEHOLDER;
     break;
   case 'medium':
     formatString = !hideTime
-      ? DATE_STRING_FORMAT_MEDIUM
-      : DATE_STRING_FORMAT_SHORT;
+      ? DATE_FORMAT_MEDIUM
+      : DATE_FORMAT_SHORT;
     placeholderString = !hideTime
-      ? DATE_STRING_FORMAT_MEDIUM_PLACEHOLDER
-      : DATE_STRING_FORMAT_SHORT_PLACEHOLDER;
+      ? DATE_FORMAT_MEDIUM_PLACEHOLDER
+      : DATE_FORMAT_SHORT_PLACEHOLDER;
     break;
   }
 
@@ -77,7 +84,7 @@ export const formatDateFromPostgresString = (
   length?: Length,
 ) =>
   formatDate({
-    date: parse(date, DATE_STRING_FORMAT_POSTGRES, new Date()),
+    date: parse(date, DATE_FORMAT_POSTGRES, new Date()),
     length,
   });
 
@@ -130,7 +137,7 @@ export const generateLocalPostgresString = () =>
   formatDateForPostgres(new Date());
 
 export const generateLocalNaivePostgresString = () =>
-  format(new Date(), DATE_STRING_FORMAT_POSTGRES);
+  format(new Date(), DATE_FORMAT_POSTGRES);
 
 // Form validation to prevent Postgres runtime errors
 

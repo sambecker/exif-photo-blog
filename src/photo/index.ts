@@ -2,14 +2,13 @@ import { formatFocalLength } from '@/focal';
 import { getNextImageUrlForRequest } from '@/platforms/next-image';
 import { photoHasFilmData } from '@/film';
 import {
-  HIGH_DENSITY_GRID,
   IS_PREVIEW,
   SHOW_EXIF_DATA,
   SHOW_FILMS,
   SHOW_LENSES,
   SHOW_RECIPES,
 } from '@/app/config';
-import { ABSOLUTE_PATH_FOR_HOME_IMAGE } from '@/app/paths';
+import { ABSOLUTE_PATH_HOME_IMAGE } from '@/app/path';
 import { formatDate, formatDateFromPostgresString } from '@/utility/date';
 import {
   formatAperture,
@@ -26,19 +25,17 @@ import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import { PhotoSyncStatus, generatePhotoSyncStatus } from './sync';
 import { AppTextState } from '@/i18n/state';
 
-// INFINITE SCROLL: FEED
-export const INFINITE_SCROLL_FEED_INITIAL =
+// INFINITE SCROLL: FULL
+export const INFINITE_SCROLL_FULL_INITIAL =
   process.env.NODE_ENV === 'development' ? 2 : 12;
-export const INFINITE_SCROLL_FEED_MULTIPLE =
+export const INFINITE_SCROLL_FULL_MULTIPLE =
   process.env.NODE_ENV === 'development' ? 2 : 24;
 
 // INFINITE SCROLL: GRID
-export const INFINITE_SCROLL_GRID_INITIAL = HIGH_DENSITY_GRID
-  ? process.env.NODE_ENV === 'development' ? 12 : 48
-  : process.env.NODE_ENV === 'development' ? 12 : 48;
-export const INFINITE_SCROLL_GRID_MULTIPLE = HIGH_DENSITY_GRID
-  ? process.env.NODE_ENV === 'development' ? 12 : 48
-  : process.env.NODE_ENV === 'development' ? 12 : 48;
+export const INFINITE_SCROLL_GRID_INITIAL =
+  process.env.NODE_ENV === 'development' ? 12 : 60;
+export const INFINITE_SCROLL_GRID_MULTIPLE =
+  process.env.NODE_ENV === 'development' ? 12 : 60;
 
 // Thumbnails below large photos on pages like /p/[photoId]
 export const RELATED_GRID_PHOTOS_TO_SHOW = 12;
@@ -87,6 +84,7 @@ export interface PhotoDbInsert extends PhotoExif {
   recipeTitle?: string
   locationName?: string
   priorityOrder?: number
+  excludeFromFeeds?: boolean
   hidden?: boolean
   takenAt: string
   takenAtNaive: string
@@ -123,9 +121,13 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
     ...photoDb,
     tags: photoDb.tags ?? [],
     focalLengthFormatted:
-      formatFocalLength(photoDb.focalLength),
+      photoDb.focalLength
+        ? formatFocalLength(photoDb.focalLength)
+        : undefined,
     focalLengthIn35MmFormatFormatted:
-      formatFocalLength(photoDb.focalLengthIn35MmFormat),
+      photoDb.focalLengthIn35MmFormat
+        ? formatFocalLength(photoDb.focalLengthIn35MmFormat)
+        : undefined,
     fNumberFormatted:
       formatAperture(photoDb.fNumber),
     isoFormatted:
@@ -197,11 +199,11 @@ export const generateOgImageMetaForPhotos = (photos: Photo[]): Metadata => {
   if (photos.length > 0) {
     return {
       openGraph: {
-        images: ABSOLUTE_PATH_FOR_HOME_IMAGE,
+        images: ABSOLUTE_PATH_HOME_IMAGE,
       },
       twitter: {
         card: 'summary_large_image',
-        images: ABSOLUTE_PATH_FOR_HOME_IMAGE,
+        images: ABSOLUTE_PATH_HOME_IMAGE,
       },
     };
   } else {

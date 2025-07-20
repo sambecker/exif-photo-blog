@@ -6,7 +6,7 @@ import { clsx } from 'clsx/lite';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
 import { useRouter } from 'next/navigation';
 import AnimateItems from './AnimateItems';
-import { PATH_ROOT } from '@/app/paths';
+import { PATH_ROOT } from '@/app/path';
 import usePrefersReducedMotion from '@/utility/usePrefersReducedMotion';
 import useEscapeHandler from '@/utility/useEscapeHandler';
 import { useTheme } from 'next-themes';
@@ -83,7 +83,7 @@ export default function Modal({
       animate={{ backgroundColor: resolvedTheme === 'dark'
         ? 'rgba(0, 0, 0, 0.80)'
         : 'rgba(255, 255, 255, 0.90)' }}
-      transition={{ duration: 0.3, easing: 'easeOut' }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
     >
       <AnimateItems
         duration={fast ? 0.1 : 0.3}
@@ -92,7 +92,8 @@ export default function Modal({
           key="modalContent"
           className={clsx(
             ...container ? [
-              'w-[calc(100vw-1.5rem)] sm:w-[min(540px,90vw)]',
+              // "-2px" accounts for transparent outline
+              'w-[calc(100vw-1.5rem-2px)] sm:w-[min(540px,90vw)]',
               !noPadding && 'p-2',
               'rounded-xl outline-medium',
               'bg-white dark:bg-black',

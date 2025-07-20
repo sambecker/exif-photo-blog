@@ -4,7 +4,6 @@ import ScoreCard from '@/components/ScoreCard';
 import ScoreCardRow from '@/components/ScoreCardRow';
 import { dateRangeForPhotos } from '@/photo';
 import { FaCircleInfo, FaRegCalendar } from 'react-icons/fa6';
-import { HiMiniArrowsUpDown } from 'react-icons/hi2';
 import { MdAspectRatio } from 'react-icons/md';
 import { PiWarningBold } from 'react-icons/pi';
 import { TbSparkles } from 'react-icons/tb';
@@ -28,7 +27,7 @@ import {
 import EnvVar from '@/components/EnvVar';
 import { IoSyncCircle } from 'react-icons/io5';
 import clsx from 'clsx/lite';
-import { PATH_ADMIN_PHOTOS_UPDATES } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS_UPDATES } from '@/app/path';
 import { LiaBroomSolid } from 'react-icons/lia';
 import { IoMdGrid } from 'react-icons/io';
 import { RiSpeedMiniLine } from 'react-icons/ri';
@@ -36,7 +35,7 @@ import AdminLink from '../AdminLink';
 import AdminEmptyState from '../AdminEmptyState';
 import { pluralize } from '@/utility/string';
 import Tooltip from '@/components/Tooltip';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import ScoreCardContainer from '@/components/ScoreCardContainer';
 import IconLens from '@/components/icons/IconLens';
 import IconCamera from '@/components/icons/IconCamera';
@@ -117,7 +116,6 @@ export default function AdminAppInsightsClient({
     noConfiguredMeta,
     photosNeedSync,
     photoMatting,
-    camerasFirst,
     gridFirst,
     noStaticOptimization,
   } = insights;
@@ -381,23 +379,6 @@ export default function AdminAppInsightsClient({
                 <EnvVar
                   variable="NEXT_PUBLIC_MATTE_PHOTOS"
                   value="1"
-                  trailingContent="."
-                />
-              </>}
-            />}
-            {(camerasFirst || debug) && <ScoreCardRow
-              icon={<HiMiniArrowsUpDown
-                size={17}
-                className="translate-x-[-1px]"
-              />}
-              content="Move cameras above tags in sidebar"
-              expandContent={<>
-                Now that you have more than a few tags, consider
-                showing cameras first in the sidebar by setting
-                {' '}
-                <EnvVar
-                  variable="NEXT_PUBLIC_CATEGORY_VISIBILITY"
-                  value="cameras, tags, recipes, films"
                   trailingContent="."
                 />
               </>}
