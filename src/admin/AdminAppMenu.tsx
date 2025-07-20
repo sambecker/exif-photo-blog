@@ -11,7 +11,7 @@ import {
   PATH_GRID_INFERRED,
 } from '@/app/path';
 import { useAppState } from '@/app/AppState';
-import { IoArrowDown, IoArrowUp, IoCloseSharp } from 'react-icons/io5';
+import { IoArrowDown, IoArrowUp } from 'react-icons/io5';
 import { clsx } from 'clsx/lite';
 import AdminAppInfoIcon from './AdminAppInfoIcon';
 import { signOutAction } from '@/auth/actions';
@@ -32,6 +32,7 @@ import { useAppText } from '@/i18n/state/client';
 import SwitcherItemMenu from '@/components/switcher/SwitcherItemMenu';
 import { MoreMenuSection } from '@/components/more/MoreMenu';
 import { usePathname } from 'next/navigation';
+import { FiXSquare } from 'react-icons/fi';
 
 export default function AdminAppMenu({
   isOpen,
@@ -156,13 +157,13 @@ export default function AdminAppMenu({
           ? appText.admin.batchExitEdit
           : appText.admin.batchEditShort,
         icon: isSelecting
-          ? <IoCloseSharp
-            size={18}
-            className="translate-x-[-1px] translate-y-[1px]"
+          ? <FiXSquare
+            size={15}
+            className="translate-x-[-0.75px] translate-y-[0.5px]"
           />
           : <IoMdCheckboxOutline
             size={16}
-            className="translate-x-[-0.5px]"
+            className="translate-x-[-0.5px] translate-y-[0.5px]"
           />,
         ...pathname !== PATH_GRID_INFERRED && {
           href: PATH_GRID_INFERRED,
