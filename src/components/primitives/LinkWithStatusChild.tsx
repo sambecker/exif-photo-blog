@@ -40,11 +40,14 @@ export default function LinkWithStatusChild({
         isLoadingStartTime.current = undefined;
       }, Math.max(0, flickerThreshold - loadingDuration));
     }
+  }, [pending, setIsLoading, flickerThreshold]);
+
+  useEffect(() => {
     return () => {
       clearTimeout(startLoadingTimeout.current);
       clearTimeout(stopLoadingTimeout.current);
     };
-  }, [pending, setIsLoading, flickerThreshold]);
+  }, []);
 
   useEffect(() => {
     if (!pending && startLoadingTimeout.current) {
