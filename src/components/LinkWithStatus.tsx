@@ -29,13 +29,17 @@ export default function LinkWithStatus({
 
   const isControlled = typeof children === 'function';
 
-  const hasStartedRef = useRef(false);
+  const didStartLoading = useRef(false);
   useEffect(() => {
     if (isLoading) {
-      hasStartedRef.current = true;
-    } else if (hasStartedRef.current) {
+      didStartLoading.current = true;
+      return () => {
+        // Call onload when component unmounts while loading
+        if (isLoading) { onLoad?.(); }
+      };
+    } else if (didStartLoading.current) {
       onLoad?.();
-      hasStartedRef.current = false;
+      didStartLoading.current = false;
     }
   }, [isLoading, onLoad]);
 

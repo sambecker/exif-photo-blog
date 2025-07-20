@@ -31,6 +31,7 @@ import Spinner from '@/components/Spinner';
 import { useAppText } from '@/i18n/state/client';
 import SwitcherItemMenu from '@/components/switcher/SwitcherItemMenu';
 import { MoreMenuSection } from '@/components/more/MoreMenu';
+import { usePathname } from 'next/navigation';
 
 export default function AdminAppMenu({
   isOpen,
@@ -39,6 +40,8 @@ export default function AdminAppMenu({
   isOpen?: boolean
   setIsOpen?: (isOpen: boolean) => void
 }) {
+  const pathname = usePathname();
+
   const {
     photosCountTotal = 0,
     photosCountNeedSync = 0,
@@ -155,15 +158,19 @@ export default function AdminAppMenu({
             size={16}
             className="translate-x-[-0.5px]"
           />,
-        href: PATH_GRID_INFERRED,
-        action: () => {
-          if (isSelecting) {
-            setSelectedPhotoIds?.(undefined);
-          } else {
-            setSelectedPhotoIds?.([]);
-          }
+        ...pathname !== PATH_GRID_INFERRED && {
+          href: PATH_GRID_INFERRED,
         },
-        shouldPreventDefault: false,
+        action: () => {
+          setTimeout(() => {
+            if (isSelecting) {
+              setSelectedPhotoIds?.(undefined);
+            } else {
+              setSelectedPhotoIds?.([]);
+            }
+            // Only add timeout when navigating
+          }, pathname !== PATH_GRID_INFERRED ? 200 : 0);
+        },
       });
     }
     items.push({
@@ -181,6 +188,7 @@ export default function AdminAppMenu({
 
     return { items };
   }, [
+    pathname,
     appText,
     isSelecting,
     photosCountNeedSync,

@@ -82,7 +82,7 @@ export default function MoreMenuItem({
       )}
       onSelect={async e => {
         if (shouldPreventDefault) { e.preventDefault(); }
-        if (action) {
+        if (action && !href) {
           const result = action();
           if (result instanceof Promise) {
             setIsLoading(true);
@@ -120,7 +120,10 @@ export default function MoreMenuItem({
             'inline-flex items-center grow',
             'text-sm text-main hover:text-main',
           )}
-          onLoad={dismissMenu}
+          onLoad={() => {
+            action?.();
+            dismissMenu?.();
+          }}
           flickerThreshold={0}
         >
           {buttonContent}
