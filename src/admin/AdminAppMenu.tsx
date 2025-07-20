@@ -57,10 +57,7 @@ export default function AdminAppMenu({
   } = useAppState();
 
   useEffect(() => {
-    if (
-      pathname !== PATH_GRID_INFERRED &&
-      selectedPhotoIds !== undefined
-    ) {
+    if (pathname !== PATH_GRID_INFERRED) {
       setSelectedPhotoIds?.(undefined);
     }
   }, [pathname, selectedPhotoIds, setSelectedPhotoIds]);
