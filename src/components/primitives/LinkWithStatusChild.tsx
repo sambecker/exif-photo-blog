@@ -8,10 +8,12 @@ const DEFAULT_FLICKER_THRESHOLD = 400;
 export default function LinkWithStatusChild({
   children,
   setIsLoading,
+  onLoad,
   flickerThreshold = DEFAULT_FLICKER_THRESHOLD,
 }: {
   children: ReactNode
   setIsLoading: (isLoading: boolean) => void
+  onLoad?: () => void
   flickerThreshold?: number
 }) {
   const { pending } = useLinkStatus();
@@ -38,12 +40,22 @@ export default function LinkWithStatusChild({
         isLoadingStartTime.current = undefined;
       }, Math.max(0, flickerThreshold - loadingDuration));
     }
+    return () => {
+      clearTimeout(startLoadingTimeout.current);
+      clearTimeout(stopLoadingTimeout.current);
+    };
   }, [pending, setIsLoading, flickerThreshold]);
 
-  useEffect(() => () => {
-    clearTimeout(startLoadingTimeout.current);
-    clearTimeout(stopLoadingTimeout.current);
-  }, []);
+  useEffect(() => {
+    if (!pending && startLoadingTimeout.current) {
+      onLoad?.();
+    }
+    return () => {
+      if (pending && startLoadingTimeout.current) {
+        onLoad?.();
+      }
+    };
+  }, [pending, onLoad]);
 
   return <>{children}</>;
 }
