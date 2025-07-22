@@ -83,6 +83,7 @@ export interface PhotoDbInsert extends PhotoExif {
   tags?: string[]
   recipeTitle?: string
   locationName?: string
+  hue?: number
   priorityOrder?: number
   excludeFromFeeds?: boolean
   hidden?: boolean

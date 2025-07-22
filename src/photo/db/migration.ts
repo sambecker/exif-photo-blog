@@ -78,6 +78,13 @@ export const MIGRATIONS: Migration[] = [{
     ALTER TABLE photos
     ADD COLUMN IF NOT EXISTS exclude_from_feeds BOOLEAN DEFAULT FALSE
   `,
+}, {
+  label: '07: Hue',
+  fields: ['hue'],
+  run: () => sql`
+    ALTER TABLE photos
+    ADD COLUMN IF NOT EXISTS hue SMALLINT
+  `,
 }];
 
 export const migrationForError = (e: any) =>

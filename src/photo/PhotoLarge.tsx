@@ -83,6 +83,7 @@ export default function PhotoLarge({
   includeFavoriteInAdminMenu,
   onVisible,
   showAdminKeyCommands,
+  showColorPalette,
 }: {
   photo: Photo
   className?: string
@@ -113,6 +114,7 @@ export default function PhotoLarge({
   includeFavoriteInAdminMenu?: boolean
   onVisible?: () => void
   showAdminKeyCommands?: boolean
+  showColorPalette?: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const refZoomControls = useRef<ZoomControlsRef>(null);
@@ -311,11 +313,11 @@ export default function PhotoLarge({
                 <div className="float-end hidden md:block">
                   {renderAdminMenu}
                 </div>
-                <ColorPalette
+                {showColorPalette && <ColorPalette
                   photo={photo}
                   className="mb-2"
                   debug
-                />
+                />}
                 {hasTitle && (showTitleAsH1
                   ? <h1>{renderPhotoLink}</h1>
                   : renderPhotoLink)}

@@ -182,6 +182,7 @@ const FORM_METADATA = (
     label: 'taken at (naive)',
     validate: validationMessageNaivePostgresDateString,
   },
+  hue: { label: 'hue', note: 'Used for chromatic sorting', readOnly: true },
   priorityOrder: { label: 'priority order' },
   excludeFromFeeds: { label: 'exclude from feeds', type: 'hidden' },
   hidden: { label: 'hidden', type: 'hidden' },
@@ -342,6 +343,9 @@ export const convertFormDataToPhotoDbInsert = (
       : undefined,
     exposureCompensation: photoForm.exposureCompensation
       ? parseFloat(photoForm.exposureCompensation)
+      : undefined,
+    hue: photoForm.hue
+      ? parseInt(photoForm.hue)
       : undefined,
     priorityOrder: photoForm.priorityOrder
       ? parseFloat(photoForm.priorityOrder)

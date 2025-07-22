@@ -60,6 +60,7 @@ import { convertUploadToPhoto } from './storage';
 import { UrlAddStatus } from '@/admin/AdminUploadsClient';
 import { convertStringToArray } from '@/utility/string';
 import { after } from 'next/server';
+import { getHueFromImage } from '@/utility/color-server';
 
 // Private actions
 
@@ -400,6 +401,21 @@ export const getPhotosNeedingRecipeTitleCountAction = async (
       photoIdToExclude,
     ),
   );
+
+export const storeHueForPhotoAction = async (photoId: string) =>
+  runAuthenticatedAdminServerAction(async () => {
+    console.log('HERE 01');
+    const photo = await getPhoto(photoId);
+    if (photo) {
+      console.log('HERE 02');
+      const hue = await getHueFromImage(photo.url);
+      console.log('HERE 03', { hue });
+      photo.hue = hue;
+      await updatePhoto(convertPhotoToPhotoDbInsert(photo));
+      console.log('HERE 04');
+      revalidatePhoto(photo.id);
+    }
+  });
 
 export const deletePhotoRecipeGloballyAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
