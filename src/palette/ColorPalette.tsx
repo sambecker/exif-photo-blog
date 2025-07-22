@@ -7,6 +7,7 @@ import { Photo } from '@/photo';
 import { useState, useEffect } from 'react';
 import { getNextImageUrlForManipulation } from '@/platforms/next-image';
 import clsx from 'clsx/lite';
+import { getColorsFromImage } from '@/utility/color';
 
 export default function ColorPalette({
   photo: { url },
@@ -20,9 +21,11 @@ export default function ColorPalette({
   const [colors, setColors] = useState<string[]>([]);
   const [colorsFAC, setColorsFAC] = useState<string[]>([]);
   const [colorsExtract, setColorsExtract] = useState<string[]>([]);
+  const [colorsToStore, setColorsToStore] =
+    useState<Awaited<ReturnType<typeof getColorsFromImage>>>();
 
   useEffect(() => {
-    const getDominantColor = async () => {
+    const loadColors = async () => {
       const colors = await prominent(
         getNextImageUrlForManipulation(url, false),
         { format: 'hex', amount: 8, group: 100 },
@@ -37,8 +40,10 @@ export default function ColorPalette({
         getNextImageUrlForManipulation(url, false),
       );
       setColorsExtract(colorsExtract.map((color) => color.hex));
+      const colorsToStore = await getColorsFromImage(url);
+      setColorsToStore(colorsToStore);
     };
-    getDominantColor();
+    loadColors();
   }, [url]);
   
   return <div {...{ className }}>
@@ -48,7 +53,7 @@ export default function ColorPalette({
         'flex items-center justify-center size-7 rounded-lg',
         'border border-black/20',
       )}
-      style={{ backgroundColor: colorsExtract[2] + '99' }}
+      style={{ backgroundColor: colorsExtract[2] }}
     >
       <div
         className={clsx(
@@ -61,34 +66,61 @@ export default function ColorPalette({
     {debug && <>
       {colors.length > 0 &&
         <div className="flex gap-1 mb-4">
-          {colors.map((color, index) => (
+          {colors.map((backgroundColor, index) => (
             <div
               key={index}
               className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: color }}
+              style={{ backgroundColor }}
             />
           ))}
         </div>}
       {colorsFAC.length > 0 &&
         <div className="flex gap-1 mb-4">
-          {colorsFAC.map((color, index) => (
+          {colorsFAC.map((backgroundColor, index) => (
             <div
               key={index}
               className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: color }}
+              style={{ backgroundColor }}
             />
           ))}
         </div>}
       {colorsExtract.length > 0 &&
         <div className="flex gap-1 mb-4">
-          {colorsExtract.map((color, index) => (
+          {colorsExtract.map((backgroundColor, index) => (
             <div
               key={index}
               className="w-4 h-4 rounded-full"
-              style={{ backgroundColor: color }}
+              style={{ backgroundColor }}
             />
           ))}
         </div>}
     </>}
+    <div>To store</div>
+    <div>
+      <div
+        className="w-4 h-4 rounded-full"
+        style={{ backgroundColor: colorsToStore?.average }}
+      />
+      <div
+        className="w-4 h-4 rounded-full"
+        style={{ backgroundColor: colorsFAC[0] }}
+      />
+      <div
+        className="w-4 h-4 rounded-full"
+        style={{ backgroundColor: colorsToStore?.background }}
+      />
+      <div
+        className="w-4 h-4 rounded-full"
+        style={{ backgroundColor: colorsExtract[2] }}
+      />
+      <div
+        className="w-4 h-4 rounded-full"
+        style={{ backgroundColor: colorsToStore?.accent }}
+      />
+      <div
+        className="w-4 h-4 rounded-full"
+        style={{ backgroundColor: colorsExtract[0] }}
+      />
+    </div>
   </div>;
 }

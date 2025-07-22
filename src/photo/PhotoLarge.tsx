@@ -314,6 +314,7 @@ export default function PhotoLarge({
                 <ColorPalette
                   photo={photo}
                   className="mb-2"
+                  debug
                 />
                 {hasTitle && (showTitleAsH1
                   ? <h1>{renderPhotoLink}</h1>
