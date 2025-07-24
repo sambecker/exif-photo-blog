@@ -24,6 +24,7 @@ import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import { PhotoSyncStatus, generatePhotoSyncStatus } from './sync';
 import { AppTextState } from '@/i18n/state';
+import { PhotoColors } from './color';
 
 // INFINITE SCROLL: FULL
 export const INFINITE_SCROLL_FULL_INITIAL =
@@ -83,6 +84,7 @@ export interface PhotoDbInsert extends PhotoExif {
   tags?: string[]
   recipeTitle?: string
   locationName?: string
+  colors?: PhotoColors
   hue?: number
   priorityOrder?: number
   excludeFromFeeds?: boolean

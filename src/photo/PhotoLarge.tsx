@@ -51,7 +51,7 @@ import { lensFromPhoto } from '@/lens';
 import MaskedScroll from '@/components/MaskedScroll';
 import useCategoryCountsForPhoto from '@/category/useCategoryCountsForPhoto';
 import { useAppText } from '@/i18n/state/client';
-import ColorPalette from '@/palette/ColorPalette';
+import ColorPalette from '@/photo/color/ColorPalette';
 
 export default function PhotoLarge({
   photo,

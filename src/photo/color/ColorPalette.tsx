@@ -7,7 +7,7 @@ import { Photo } from '@/photo';
 import { useState, useEffect } from 'react';
 import { getNextImageUrlForManipulation } from '@/platforms/next-image';
 import clsx from 'clsx/lite';
-import { getColorsFromImage } from '@/utility/color';
+import { getColorsFromImage } from '@/photo/color/color';
 
 export default function ColorPalette({
   photo: { url },
