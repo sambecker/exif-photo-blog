@@ -79,11 +79,12 @@ export const MIGRATIONS: Migration[] = [{
     ADD COLUMN IF NOT EXISTS exclude_from_feeds BOOLEAN DEFAULT FALSE
   `,
 }, {
-  label: '07: Hue',
-  fields: ['hue'],
+  label: '07: Color Data',
+  fields: ['color_data', 'color_hue'],
   run: () => sql`
     ALTER TABLE photos
-    ADD COLUMN IF NOT EXISTS hue SMALLINT
+    ADD COLUMN IF NOT EXISTS color_data JSONB,
+    ADD COLUMN IF NOT EXISTS color_hue SMALLINT
   `,
 }];
 

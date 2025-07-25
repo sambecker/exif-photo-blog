@@ -1,11 +1,11 @@
-interface OkLch {
+interface Oklch {
   l: number
   c: number
   h: number
 }
 
-export interface PhotoColors {
-  average: OkLch
-  background: OkLch
-  accent: OkLch
+export interface PhotoColorData {
+  average: Oklch
+  background: Oklch
+  accent: Oklch
 }

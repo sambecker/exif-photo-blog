@@ -9,7 +9,7 @@ import {
 } from '@/app/path';
 import {
   deletePhotoAction,
-  storeHueForPhotoAction,
+  storeColorDataForPhotoAction,
   syncPhotoAction,
   toggleFavoritePhotoAction,
   togglePrivatePhotoAction,
@@ -146,7 +146,7 @@ export default function AdminPhotoMenu({
         size={16}
         className="translate-x-[-1.5px]"
       />,
-      action: () => storeHueForPhotoAction(photo.id)
+      action: () => storeColorDataForPhotoAction(photo.id)
         .then(() => revalidatePhoto?.(photo.id)),
     });
 

@@ -280,8 +280,11 @@ export const USER_DEFAULT_SORT_OPTIONS = {
   sortBy: USER_DEFAULT_SORT_BY,
   sortWithPriority: USER_DEFAULT_SORT_WITH_PRIORITY,
 };
-export const NAV_SORT_CONTROL =
-  getNavSortControlFromString(process.env.NEXT_PUBLIC_NAV_SORT_CONTROL);
+export const CHROMATIC_SORT_ENABLED =
+  process.env.NEXT_PUBLIC_NAV_SORT_CHROMATIC === '1';
+export const NAV_SORT_CONTROL = CHROMATIC_SORT_ENABLED
+  ? 'menu'
+  : getNavSortControlFromString(process.env.NEXT_PUBLIC_NAV_SORT_CONTROL);
 
 // DISPLAY
 
@@ -424,6 +427,7 @@ export const APP_CONFIGURATION = {
   isSortWithPriority: USER_DEFAULT_SORT_WITH_PRIORITY,
   hasNavSortControl: Boolean(process.env.NEXT_PUBLIC_NAV_SORT_CONTROL),
   navSortControl: NAV_SORT_CONTROL,
+  isChromaticSortEnabled: CHROMATIC_SORT_ENABLED,
   // Display
   showKeyboardShortcutTooltips: SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
   showExifInfo: SHOW_EXIF_DATA,

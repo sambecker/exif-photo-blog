@@ -19,6 +19,7 @@ import {
   ADMIN_SQL_DEBUG_ENABLED,
   AI_TEXT_AUTO_GENERATED_FIELDS,
   AI_TEXT_GENERATION_ENABLED,
+  CHROMATIC_SORT_ENABLED,
 } from '@/app/config';
 import {
   PhotoQueryOptions,
@@ -227,7 +228,8 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       ${photo.film},
       ${photo.recipeTitle},
       ${photo.recipeData},
-      ${photo.hue},
+      ${photo.colorData},
+      ${photo.colorHue},
       ${photo.priorityOrder},
       ${photo.excludeFromFeeds},
       ${photo.hidden},
@@ -263,7 +265,8 @@ export const updatePhoto = (photo: PhotoDbInsert) =>
     film=${photo.film},
     recipe_title=${photo.recipeTitle},
     recipe_data=${photo.recipeData},
-    hue=${photo.hue},
+    color_data=${photo.colorData},
+    color_hue=${photo.colorHue},
     priority_order=${photo.priorityOrder || null},
     exclude_from_feeds=${photo.excludeFromFeeds},
     hidden=${photo.hidden},
@@ -646,8 +649,16 @@ const needsAiTextWhereClauses =
       })
     : [];
 
+const needsColorDataWhereClauses = CHROMATIC_SORT_ENABLED
+  ? [`(color_data IS NULL OR color_hue IS NULL)`]
+  : [];
+
 const needsSyncWhereStatement =
-  `WHERE ${outdatedWhereClauses.concat(needsAiTextWhereClauses).join(' OR ')}`;
+  `WHERE ${[
+    ...outdatedWhereClauses,
+    ...needsAiTextWhereClauses,
+    ...needsColorDataWhereClauses,
+  ].join(' OR ')}`;
 
 export const getPhotosInNeedOfSync = () => safelyQueryPhotos(
   () => query(`

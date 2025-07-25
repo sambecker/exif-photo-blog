@@ -88,6 +88,7 @@ export default function AdminAppConfigurationClient({
   isSortWithPriority,
   hasNavSortControl,
   navSortControl,
+  isChromaticSortEnabled,
   // Display
   showKeyboardShortcutTooltips,
   showExifInfo,
@@ -642,6 +643,15 @@ export default function AdminAppConfigurationClient({
           Set environment variable to {'"none"'}, {'"toggle"'} (default),
           or {'"menu"'}, to control sort UI on grid/full homepages:
           {renderEnvVars(['NEXT_PUBLIC_NAV_SORT_CONTROL'])}
+        </ChecklistRow>
+        <ChecklistRow
+          title="Chromatic sort"
+          status={isChromaticSortEnabled}
+          optional
+        >
+          Set environment variable to {'"1"'} to enable chromatic sorting
+          (forces menu nav sort control, flags photos missing color data):
+          {renderEnvVars(['NEXT_PUBLIC_NAV_SORT_CHROMATIC'])}
         </ChecklistRow>
       </>;
     case 'Display':

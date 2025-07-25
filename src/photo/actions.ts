@@ -402,12 +402,11 @@ export const getPhotosNeedingRecipeTitleCountAction = async (
     ),
   );
 
-export const storeHueForPhotoAction = async (photoId: string) =>
+export const storeColorDataForPhotoAction = async (photoId: string) =>
   runAuthenticatedAdminServerAction(async () => {
     const photo = await getPhoto(photoId);
     if (photo) {
-      const hue = await getHueFromImage(photo.url);
-      photo.hue = hue;
+      photo.colorHue = await getHueFromImage(photo.url);
       await updatePhoto(convertPhotoToPhotoDbInsert(photo));
       revalidatePhoto(photo.id);
     }
@@ -502,7 +501,7 @@ export const syncPhotoAction = async (photoId: string, isBatch?: boolean) =>
           semanticDescription: aiSemanticDescription,
         } = await generateAiImageQueries(
           imageResizedBase64,
-          photo.syncStatus.missingAiTextFields,
+          photo.syncStatus.isMissingAiTextFields,
           undefined,
           isBatch,
         );
