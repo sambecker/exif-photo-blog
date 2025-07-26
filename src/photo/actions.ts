@@ -60,6 +60,7 @@ import { convertUploadToPhoto } from './storage';
 import { UrlAddStatus } from '@/admin/AdminUploadsClient';
 import { convertStringToArray } from '@/utility/string';
 import { after } from 'next/server';
+import { getColorsFromImageUrl } from '@/photo/color/server';
 
 // Private actions
 
@@ -401,6 +402,22 @@ export const getPhotosNeedingRecipeTitleCountAction = async (
     ),
   );
 
+export const storeColorDataForPhotoAction = async (photoId: string) =>
+  runAuthenticatedAdminServerAction(async () => {
+    const photo = await getPhoto(photoId, true);
+    if (photo) {
+      const colorData = await getColorsFromImageUrl(photo.url);
+      photo.colorData = colorData;
+      // Use fast-average-color for color-based sorting
+      // (store all values as integers for faster sorting)
+      photo.colorLightness = Math.round(colorData.average.l * 100);
+      photo.colorChroma = Math.round(colorData.average.c * 100);
+      photo.colorHue = Math.round(colorData.average.h);
+      await updatePhoto(convertPhotoToPhotoDbInsert(photo));
+      revalidatePhoto(photo.id);
+    }
+  });
+
 export const deletePhotoRecipeGloballyAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
     const recipe = formData.get('recipe') as string;
@@ -490,7 +507,7 @@ export const syncPhotoAction = async (photoId: string, isBatch?: boolean) =>
           semanticDescription: aiSemanticDescription,
         } = await generateAiImageQueries(
           imageResizedBase64,
-          photo.syncStatus.missingAiTextFields,
+          photo.syncStatus.isMissingAiTextFields,
           undefined,
           isBatch,
         );
@@ -526,10 +543,15 @@ export const syncPhotoAction = async (photoId: string, isBatch?: boolean) =>
     }
   });
 
-export const syncPhotosAction = async (photoIds: string[]) =>
+export const syncPhotosAction = async (photosToSync: {
+  photoId: string,
+  onlySyncColorData?: boolean,
+}[]) =>
   runAuthenticatedAdminServerAction(async () => {
-    for (const photoId of photoIds) {
-      await syncPhotoAction(photoId, true);
+    for (const { photoId, onlySyncColorData } of photosToSync) {
+      await (onlySyncColorData
+        ? storeColorDataForPhotoAction(photoId)
+        : syncPhotoAction(photoId, true));
     }
     revalidateAllKeysAndPaths();
   });

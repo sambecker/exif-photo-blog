@@ -19,6 +19,7 @@ import {
   ADMIN_SQL_DEBUG_ENABLED,
   AI_TEXT_AUTO_GENERATED_FIELDS,
   AI_TEXT_GENERATION_ENABLED,
+  COLOR_SORT_ENABLED,
 } from '@/app/config';
 import {
   PhotoQueryOptions,
@@ -66,6 +67,10 @@ const createPhotosTable = () =>
       film VARCHAR(255),
       recipe_title VARCHAR(255),
       recipe_data JSONB,
+      color_data JSONB,
+      color_lightness SMALLINT,
+      color_chroma SMALLINT,
+      color_hue SMALLINT,
       priority_order REAL,
       taken_at TIMESTAMP WITH TIME ZONE NOT NULL,
       taken_at_naive VARCHAR(255) NOT NULL,
@@ -193,6 +198,10 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       film,
       recipe_title,
       recipe_data,
+      color_data,
+      color_lightness,
+      color_chroma,
+      color_hue,
       priority_order,
       exclude_from_feeds,
       hidden,
@@ -225,6 +234,10 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       ${photo.film},
       ${photo.recipeTitle},
       ${photo.recipeData},
+      ${photo.colorData},
+      ${photo.colorLightness},
+      ${photo.colorChroma},
+      ${photo.colorHue},
       ${photo.priorityOrder},
       ${photo.excludeFromFeeds},
       ${photo.hidden},
@@ -260,6 +273,10 @@ export const updatePhoto = (photo: PhotoDbInsert) =>
     film=${photo.film},
     recipe_title=${photo.recipeTitle},
     recipe_data=${photo.recipeData},
+    color_data=${photo.colorData},
+    color_lightness=${photo.colorLightness},
+    color_chroma=${photo.colorChroma},
+    color_hue=${photo.colorHue},
     priority_order=${photo.priorityOrder || null},
     exclude_from_feeds=${photo.excludeFromFeeds},
     hidden=${photo.hidden},
@@ -642,8 +659,21 @@ const needsAiTextWhereClauses =
       })
     : [];
 
+const needsColorDataWhereClauses = COLOR_SORT_ENABLED
+  ? [`(
+    color_data IS NULL OR
+    color_lightness IS NULL OR
+    color_chroma IS NULL OR
+    color_hue IS NULL
+  )`]
+  : [];
+
 const needsSyncWhereStatement =
-  `WHERE ${outdatedWhereClauses.concat(needsAiTextWhereClauses).join(' OR ')}`;
+  `WHERE ${[
+    ...outdatedWhereClauses,
+    ...needsAiTextWhereClauses,
+    ...needsColorDataWhereClauses,
+  ].join(' OR ')}`;
 
 export const getPhotosInNeedOfSync = () => safelyQueryPhotos(
   () => query(`

@@ -29,6 +29,30 @@ export const SORT_BY_OPTIONS = [{
   sortBy: 'createdAtAsc',
   string: 'uploaded-at-oldest-first',
   label: 'Uploaded At (Oldest First)',
+}, {
+  sortBy: 'lightness',
+  string: 'lightness',
+  label: 'Lightness (Newest First)',
+}, {
+  sortBy: 'lightnessAsc',
+  string: 'lightness-oldest-first',
+  label: 'Lightness (Oldest First)',
+}, {
+  sortBy: 'chroma',
+  string: 'chroma',
+  label: 'Chroma (Newest First)',
+}, {
+  sortBy: 'chromaAsc',
+  string: 'chroma-oldest-first',
+  label: 'Chroma (Oldest First)',
+}, {
+  sortBy: 'hue',
+  string: 'hue',
+  label: 'Hue (Newest First)',
+}, {
+  sortBy: 'hueAsc',
+  string: 'hue-oldest-first',
+  label: 'Hue (Oldest First)',
 }] as const;
 
 export type SortBy = (typeof SORT_BY_OPTIONS)[number]['sortBy'];
@@ -50,9 +74,19 @@ export const getSortByFromString = (sortBy = ''): SortBy => {
   case 'taken-at-oldest-first': return 'takenAtAsc';
   case 'uploaded-at': return 'createdAt';
   case 'uploaded-at-oldest-first': return 'createdAtAsc';
+  case 'lightness': return 'lightness';
+  case 'lightness-oldest-first': return 'lightnessAsc';
+  case 'chroma': return 'chroma';
+  case 'chroma-oldest-first': return 'chromaAsc';
+  case 'hue': return 'hue';
+  case 'hue-oldest-first': return 'hueAsc';
   default:return 'takenAt';
   }
 };
 
 export const isSortAscending = (sortBy: SortBy) =>
-  sortBy === 'takenAtAsc' || sortBy === 'createdAtAsc';
+  sortBy === 'takenAtAsc' ||
+  sortBy === 'createdAtAsc' ||
+  sortBy === 'lightnessAsc' ||
+  sortBy === 'chromaAsc' ||
+  sortBy === 'hueAsc';

@@ -1,4 +1,4 @@
-import AdminPhotosSyncClient from '@/admin/AdminPhotosSyncClient';
+import AdminPhotosUpdateClient from '@/admin/AdminPhotosUpdateClient';
 import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
 import { getPhotosInNeedOfSync } from '@/photo/db/query';
 
@@ -9,7 +9,7 @@ export default async function AdminUpdatesPage() {
     .catch(() => []);
 
   return (
-    <AdminPhotosSyncClient {...{
+    <AdminPhotosUpdateClient {...{
       photos,
       hasAiTextGeneration: AI_TEXT_GENERATION_ENABLED,
     }} />

@@ -123,7 +123,7 @@ export const extractImageDataFromBlobPath = async (
           url,
         },
         ...generateBlurData && { blurData },
-        ...convertExifToFormData (exifData, film, recipe),
+        ...convertExifToFormData(exifData, film, recipe),
       },
     },
     imageResizedBase64,

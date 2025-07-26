@@ -1,5 +1,5 @@
 import LoaderButton from '@/components/primitives/LoaderButton';
-import { syncPhotoAction } from '@/photo/actions';
+import { storeColorDataForPhotoAction, syncPhotoAction } from '@/photo/actions';
 import IconGrSync from '@/components/icons/IconGrSync';
 import { toastSuccess } from '@/toast';
 import { ComponentProps, useRef, useState } from 'react';
@@ -12,6 +12,7 @@ import { syncPhotoConfirmText } from './confirm';
 export default function PhotoSyncButton({
   photo,
   onSyncComplete,
+  onlySyncColorData,
   className,
   isSyncingExternal,
   hasAiTextGeneration,
@@ -22,6 +23,7 @@ export default function PhotoSyncButton({
 }: {
   photo: Photo
   onSyncComplete?: () => void
+  onlySyncColorData?: boolean
   isSyncingExternal?: boolean
   hasAiTextGeneration: boolean
   shouldConfirm?: boolean
@@ -40,7 +42,9 @@ export default function PhotoSyncButton({
   });
 
   return (
-    <Tooltip content="Regenerate photo data">
+    <Tooltip content={onlySyncColorData
+      ? 'Update color data'
+      : 'Regenerate photo data'}>
       <LoaderButton
         ref={ref}
         className={clsx('scroll-mt-8', className)}
@@ -50,10 +54,16 @@ export default function PhotoSyncButton({
         onClick={() => {
           if (
             !shouldConfirm ||
-            window.confirm(syncPhotoConfirmText(photo, hasAiTextGeneration))
+            window.confirm(syncPhotoConfirmText(
+              photo,
+              hasAiTextGeneration,
+              onlySyncColorData,
+            ))
           ) {
             setIsSyncing(true);
-            syncPhotoAction(photo.id)
+            (onlySyncColorData
+              ? storeColorDataForPhotoAction
+              : syncPhotoAction)(photo.id)
               .then(() => {
                 onSyncComplete?.();
                 if (shouldToast) {
