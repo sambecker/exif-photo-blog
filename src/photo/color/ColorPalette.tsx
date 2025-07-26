@@ -6,8 +6,7 @@ import { Photo } from '@/photo';
 import { useState, useEffect } from 'react';
 import { getNextImageUrlForManipulation } from '@/platforms/next-image';
 import { FinalColor } from 'extract-colors/lib/types/Color';
-import { convertHexToOklch } from './client';
-import { convertOklchToCss } from '.';
+import { convertOklchToCss, convertHexToOklch } from '.';
 
 export default function ColorPalette({
   photo: { url },

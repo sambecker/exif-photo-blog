@@ -1,10 +1,9 @@
 import { getNextImageUrlForManipulation } from '@/platforms/next-image';
 import { IS_PREVIEW } from '@/app/config';
 import { FastAverageColor } from 'fast-average-color';
-import { convertHexToOklch } from './client';
+import { PhotoColorData, convertHexToOklch } from '.';
 import sharp from 'sharp';
 import { extractColors } from 'extract-colors';
-import { PhotoColorData } from '.';
 
 // Convert image url to byte array
 const getImageDataFromUrl = async (_url: string) => {
