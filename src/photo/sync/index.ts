@@ -66,6 +66,11 @@ export const photoNeedsToBeSynced = (photo: Photo) =>
   photo.syncStatus.isMissingAiTextFields.length > 0 ||
   photo.syncStatus.isMissingColorData;
 
+export const isPhotoOnlyMissingColorData = (photo?: Photo) =>
+  photo?.syncStatus.isMissingColorData &&
+  !photo?.syncStatus.isOutdated &&
+  (photo?.syncStatus.isMissingAiTextFields.length ?? 0) === 0;
+
 export const getPhotoSyncStatusText = (photo: Photo) => {
   const {
     isOutdated,
@@ -95,9 +100,7 @@ export const getPhotoSyncStatusText = (photo: Photo) => {
   }
 };
 
-export const getPhotosSyncStatusText = (photos: Photo[]) => {
-  const statusText = [] as string[];
-
+export const getPhotosSyncStatusCounts = (photos: Photo[]) => {
   const photosCountOutdated = photos.filter(
     photo => photo.syncStatus.isOutdated,
   ).length;
@@ -107,7 +110,23 @@ export const getPhotosSyncStatusText = (photos: Photo[]) => {
   const photosCountMissingColorData = photos.filter(
     photo => photo.syncStatus.isMissingColorData,
   ).length;
-  
+
+  return {
+    photosCountOutdated,
+    photosCountMissingAiText,
+    photosCountMissingColorData,
+  };
+};
+
+export const getPhotosSyncStatusText = (photos: Photo[]) => {
+  const statusText = [] as string[];
+
+  const {
+    photosCountOutdated,
+    photosCountMissingAiText,
+    photosCountMissingColorData,
+  } = getPhotosSyncStatusCounts(photos);
+
   if (photosCountOutdated > 0) {
     statusText.push(`${photosCountOutdated} outdated`);
   }

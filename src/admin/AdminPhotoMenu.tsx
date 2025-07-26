@@ -9,7 +9,6 @@ import {
 } from '@/app/path';
 import {
   deletePhotoAction,
-  storeColorDataForPhotoAction,
   syncPhotoAction,
   toggleFavoritePhotoAction,
   togglePrivatePhotoAction,
@@ -35,7 +34,6 @@ import { photoNeedsToBeSynced } from '@/photo/sync';
 import { KEY_COMMANDS } from '@/photo/key-commands';
 import { useAppText } from '@/i18n/state/client';
 import IconLock from '@/components/icons/IconLock';
-import { IoMdColorFilter } from 'react-icons/io';
 
 export default function AdminPhotoMenu({
   photo,
@@ -139,15 +137,6 @@ export default function AdminPhotoMenu({
       action: () => syncPhotoAction(photo.id)
         .then(() => revalidatePhoto?.(photo.id)),
       ...showKeyCommands && { keyCommand: KEY_COMMANDS.sync },
-    });
-    items.push({
-      label: 'Store Colors',
-      icon: <IoMdColorFilter
-        size={16}
-        className="translate-x-[-1.5px]"
-      />,
-      action: () => storeColorDataForPhotoAction(photo.id)
-        .then(() => revalidatePhoto?.(photo.id)),
     });
 
     return { items };

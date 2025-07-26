@@ -7,6 +7,7 @@ import Spinner from '@/components/Spinner';
 import {
   PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_INSIGHTS,
+  PATH_ADMIN_PHOTOS_UPDATES,
   checkPathPrefix,
   isPathAdminInfo,
   isPathTopLevelAdmin,
@@ -60,7 +61,10 @@ export default function AdminNavClient({
     return () => clearInterval(interval);
   }, [updateTimes]);
 
-  const shouldShowBanner = hasRecentUpdates && isPathTopLevelAdmin(pathname);
+  const shouldShowBanner =
+    hasRecentUpdates &&
+    isPathTopLevelAdmin(pathname) &&
+    pathname !== PATH_ADMIN_PHOTOS_UPDATES;
 
   return (
     <AppGrid

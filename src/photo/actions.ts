@@ -402,21 +402,20 @@ export const getPhotosNeedingRecipeTitleCountAction = async (
     ),
   );
 
-export const storeColorDataForPhotoAction = async (photoId: string) =>
-  runAuthenticatedAdminServerAction(async () => {
-    const photo = await getPhoto(photoId);
-    if (photo) {
-      const colorData = await getColorsFromImageUrl(photo.url);
-      photo.colorData = colorData;
-      // Use fast-average-color for hue sorting
-      photo.colorLightness = Math.round(colorData.average.l * 100);
-      photo.colorChroma = Math.round(colorData.average.c * 100);
-      photo.colorHue = Math.round(colorData.average.h);
-      console.log(photo.colorLightness, photo.colorChroma, photo.colorHue);
-      await updatePhoto(convertPhotoToPhotoDbInsert(photo));
-      revalidatePhoto(photo.id);
-    }
-  });
+const storeColorDataForPhoto = async (photoId: string) => {
+  const photo = await getPhoto(photoId, true);
+  if (photo) {
+    const colorData = await getColorsFromImageUrl(photo.url);
+    photo.colorData = colorData;
+    // Use fast-average-color for color-based sorting
+    // (store all values as integers for faster sorting)
+    photo.colorLightness = Math.round(colorData.average.l * 100);
+    photo.colorChroma = Math.round(colorData.average.c * 100);
+    photo.colorHue = Math.round(colorData.average.h);
+    await updatePhoto(convertPhotoToPhotoDbInsert(photo));
+    revalidatePhoto(photo.id);
+  }
+};
 
 export const deletePhotoRecipeGloballyAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
@@ -543,10 +542,15 @@ export const syncPhotoAction = async (photoId: string, isBatch?: boolean) =>
     }
   });
 
-export const syncPhotosAction = async (photoIds: string[]) =>
+export const syncPhotosAction = async (photosToSync: {
+  photoId: string,
+  onlySyncColorData?: boolean,
+}[]) =>
   runAuthenticatedAdminServerAction(async () => {
-    for (const photoId of photoIds) {
-      await syncPhotoAction(photoId, true);
+    for (const { photoId, onlySyncColorData } of photosToSync) {
+      await (onlySyncColorData
+        ? storeColorDataForPhoto(photoId)
+        : syncPhotoAction(photoId, true));
     }
     revalidateAllKeysAndPaths();
   });
