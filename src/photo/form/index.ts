@@ -14,7 +14,7 @@ import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { ReactNode } from 'react';
 import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import { SelectMenuOptionType } from '@/components/SelectMenuOption';
-import { CHROMATIC_SORT_ENABLED } from '@/app/config';
+import { COLOR_SORT_ENABLED } from '@/app/config';
 
 type VirtualFields =
   'visibility' |
@@ -187,28 +187,28 @@ const FORM_METADATA = (
     type: 'textarea',
     label: 'color data',
     isJson: true,
-    shouldHide: () => !CHROMATIC_SORT_ENABLED,
+    shouldHide: () => !COLOR_SORT_ENABLED,
     readOnly: true,
   },
   colorLightness: {
     label: 'lightness',
     note: 'Used for color-based sorting',
     noteShort: 'Color-based sorting',
-    shouldHide: () => !CHROMATIC_SORT_ENABLED,
+    shouldHide: () => !COLOR_SORT_ENABLED,
     readOnly: true,
   },
   colorChroma: {
     label: 'chroma',
     note: 'Used for color-based sorting',
     noteShort: 'Color-based sorting',
-    shouldHide: () => !CHROMATIC_SORT_ENABLED,
+    shouldHide: () => !COLOR_SORT_ENABLED,
     readOnly: true,
   },
   colorHue: {
     label: 'hue',
     note: 'Used for color-based sorting',
     noteShort: 'Color-based sorting',
-    shouldHide: () => !CHROMATIC_SORT_ENABLED,
+    shouldHide: () => !COLOR_SORT_ENABLED,
     readOnly: true,
   },
   priorityOrder: { label: 'priority order' },

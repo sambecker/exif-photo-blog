@@ -4,7 +4,7 @@ import { getSortStateFromPath } from './path';
 import IconCheck from '@/components/icons/IconCheck';
 import { clsx } from 'clsx/lite';
 import { useAppText } from '@/i18n/state/client';
-import { CHROMATIC_SORT_ENABLED } from '@/app/config';
+import { COLOR_SORT_ENABLED } from '@/app/config';
 
 export default function SortMenu({
   isOpen,
@@ -55,7 +55,7 @@ export default function SortMenu({
     href: pathUploadedAt,
   }];
 
-  if (CHROMATIC_SORT_ENABLED) {
+  if (COLOR_SORT_ENABLED) {
     itemsSortType.push({
       ...renderLabel(appText.sort.chromatic, isChromatic),
       icon: renderIcon(isChromatic),

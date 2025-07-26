@@ -19,7 +19,7 @@ import {
   ADMIN_SQL_DEBUG_ENABLED,
   AI_TEXT_AUTO_GENERATED_FIELDS,
   AI_TEXT_GENERATION_ENABLED,
-  CHROMATIC_SORT_ENABLED,
+  COLOR_SORT_ENABLED,
 } from '@/app/config';
 import {
   PhotoQueryOptions,
@@ -659,7 +659,7 @@ const needsAiTextWhereClauses =
       })
     : [];
 
-const needsColorDataWhereClauses = CHROMATIC_SORT_ENABLED
+const needsColorDataWhereClauses = COLOR_SORT_ENABLED
   ? [`(
     color_data IS NULL OR
     color_lightness IS NULL OR

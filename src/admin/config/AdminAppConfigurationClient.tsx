@@ -88,7 +88,7 @@ export default function AdminAppConfigurationClient({
   isSortWithPriority,
   hasNavSortControl,
   navSortControl,
-  isChromaticSortEnabled,
+  isColorSortEnabled,
   // Display
   showKeyboardShortcutTooltips,
   showExifInfo,
@@ -645,14 +645,14 @@ export default function AdminAppConfigurationClient({
           {renderEnvVars(['NEXT_PUBLIC_NAV_SORT_CONTROL'])}
         </ChecklistRow>
         <ChecklistRow
-          title="Chromatic sort"
-          status={isChromaticSortEnabled}
+          title="Color sort"
+          status={isColorSortEnabled}
           optional
         >
-          Set environment variable to {'"1"'} to enable chromatic sorting
+          Set environment variable to {'"1"'} to enable color-based sorting
           (forces nav sort control to {'"menu,"'},
           flags photos missing color data in admin dashboard):
-          {renderEnvVars(['NEXT_PUBLIC_COLOR_SORT'])}
+          {renderEnvVars(['NEXT_PUBLIC_SORT_BY_COLOR'])}
         </ChecklistRow>
       </>;
     case 'Display':
