@@ -14,7 +14,7 @@ import { useRef } from 'react';
 import useVisible from '@/utility/useVisible';
 import LinkWithStatus from '@/components/LinkWithStatus';
 import Spinner from '@/components/Spinner';
-import { convertOklchToCss } from './color';
+import ColorDot from './color/ColorDot';
 
 export default function PhotoMedium({
   photo,
@@ -60,18 +60,20 @@ export default function PhotoMedium({
             )}>
               <Spinner size={20} color="text" />
             </div>}
-          {debugColor && photo.colorData?.average &&
-            <div
-              className={clsx(
-                'absolute top-2 right-2',
-                'size-4 rounded-full',
-                'outline outline-white/25',
-                'z-10',
-              )}
-              style={{
-                backgroundColor: convertOklchToCss(photo.colorData.average),
-              }}
-            />}
+          {debugColor && photo.colorData &&
+            <div className={clsx(
+              'absolute top-2 right-2 z-10',
+              'flex flex-col gap-1',
+            )}>
+              <div className="flex justify-end">
+                <ColorDot color={photo.colorData.average} />
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {photo.colorData.colors.map((color, index) =>
+                  <ColorDot key={index} {...{ color }} />,
+                )}
+              </div>
+            </div>}
           <ImageMedium
             src={photo.url}
             aspectRatio={photo.aspectRatio}
