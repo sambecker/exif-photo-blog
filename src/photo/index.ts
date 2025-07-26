@@ -148,6 +148,9 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
         ? JSON.parse(photoDb.recipeData)
         : photoDb.recipeData
       : undefined,
+    colorData: photoDb.colorData
+      ? photoDb.colorData
+      : undefined,
     syncStatus: generatePhotoSyncStatus(photoDb),
   } as Photo;
 };

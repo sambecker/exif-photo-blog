@@ -186,13 +186,15 @@ const FORM_METADATA = (
   colorData: {
     type: 'textarea',
     label: 'color data',
-    readOnly: true,
     isJson: true,
     shouldHide: () => !CHROMATIC_SORT_ENABLED,
+    readOnly: true,
   },
   colorHue: {
     label: 'hue',
     note: 'Used for chromatic sorting',
+    noteShort: 'Chromatic sorting',
+    shouldHide: () => !CHROMATIC_SORT_ENABLED,
     readOnly: true,
   },
   priorityOrder: { label: 'priority order' },
