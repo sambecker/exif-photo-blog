@@ -14,6 +14,7 @@ import { useRef } from 'react';
 import useVisible from '@/utility/useVisible';
 import LinkWithStatus from '@/components/LinkWithStatus';
 import Spinner from '@/components/Spinner';
+import { convertOklchToCss } from './color';
 
 export default function PhotoMedium({
   photo,
@@ -22,6 +23,7 @@ export default function PhotoMedium({
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
   className,
   onVisible,
+  debugColor = true,
   ...categories
 }: {
   photo: Photo
@@ -30,6 +32,7 @@ export default function PhotoMedium({
   prefetch?: boolean
   className?: string
   onVisible?: () => void
+  debugColor?: boolean
 } & PhotoSetCategory) {
   const ref = useRef<HTMLAnchorElement>(null);
 
@@ -57,6 +60,18 @@ export default function PhotoMedium({
             )}>
               <Spinner size={20} color="text" />
             </div>}
+          {debugColor && photo.colorData?.average &&
+            <div
+              className={clsx(
+                'absolute top-2 right-2',
+                'size-4 rounded-full',
+                'outline outline-white/25',
+                'z-10',
+              )}
+              style={{
+                backgroundColor: convertOklchToCss(photo.colorData.average),
+              }}
+            />}
           <ImageMedium
             src={photo.url}
             aspectRatio={photo.aspectRatio}
