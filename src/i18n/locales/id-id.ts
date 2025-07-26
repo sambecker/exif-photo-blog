@@ -66,6 +66,8 @@ export const TEXT: I18N = {
     uploadedAt: 'Diunggah pada',
     byUploadedAt: 'Berdasarkan waktu unggahan',
     uploadedAtShort: 'Diunggah',
+    chromatic: 'Kromatik',
+    byChromatic: 'Berdasarkan warna',
     clearSort: 'Hapus pengurutan',
   },
   cmdk: {

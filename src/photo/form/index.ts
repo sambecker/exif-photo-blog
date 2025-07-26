@@ -190,10 +190,24 @@ const FORM_METADATA = (
     shouldHide: () => !CHROMATIC_SORT_ENABLED,
     readOnly: true,
   },
+  colorLightness: {
+    label: 'lightness',
+    note: 'Used for color-based sorting',
+    noteShort: 'Color-based sorting',
+    shouldHide: () => !CHROMATIC_SORT_ENABLED,
+    readOnly: true,
+  },
+  colorChroma: {
+    label: 'chroma',
+    note: 'Used for color-based sorting',
+    noteShort: 'Color-based sorting',
+    shouldHide: () => !CHROMATIC_SORT_ENABLED,
+    readOnly: true,
+  },
   colorHue: {
     label: 'hue',
-    note: 'Used for chromatic sorting',
-    noteShort: 'Chromatic sorting',
+    note: 'Used for color-based sorting',
+    noteShort: 'Color-based sorting',
     shouldHide: () => !CHROMATIC_SORT_ENABLED,
     readOnly: true,
   },
@@ -359,6 +373,12 @@ export const convertFormDataToPhotoDbInsert = (
       : undefined,
     exposureCompensation: photoForm.exposureCompensation
       ? parseFloat(photoForm.exposureCompensation)
+      : undefined,
+    colorLightness: photoForm.colorLightness
+      ? parseInt(photoForm.colorLightness)
+      : undefined,
+    colorChroma: photoForm.colorChroma
+      ? parseInt(photoForm.colorChroma)
       : undefined,
     colorHue: photoForm.colorHue
       ? parseInt(photoForm.colorHue)

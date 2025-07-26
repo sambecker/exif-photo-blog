@@ -29,6 +29,14 @@ export const SORT_BY_OPTIONS = [{
   sortBy: 'createdAtAsc',
   string: 'uploaded-at-oldest-first',
   label: 'Uploaded At (Oldest First)',
+}, {
+  sortBy: 'chromatic',
+  string: 'chromatic',
+  label: 'Chromatic (Newest First)',
+}, {
+  sortBy: 'chromaticAsc',
+  string: 'chromatic-oldest-first',
+  label: 'Chromatic (Oldest First)',
 }] as const;
 
 export type SortBy = (typeof SORT_BY_OPTIONS)[number]['sortBy'];
@@ -50,9 +58,13 @@ export const getSortByFromString = (sortBy = ''): SortBy => {
   case 'taken-at-oldest-first': return 'takenAtAsc';
   case 'uploaded-at': return 'createdAt';
   case 'uploaded-at-oldest-first': return 'createdAtAsc';
+  case 'chromatic': return 'chromatic';
+  case 'chromatic-oldest-first': return 'chromaticAsc';
   default:return 'takenAt';
   }
 };
 
 export const isSortAscending = (sortBy: SortBy) =>
-  sortBy === 'takenAtAsc' || sortBy === 'createdAtAsc';
+  sortBy === 'takenAtAsc' ||
+  sortBy === 'createdAtAsc' ||
+  sortBy === 'chromaticAsc';

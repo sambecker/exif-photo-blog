@@ -85,6 +85,8 @@ export interface PhotoDbInsert extends PhotoExif {
   recipeTitle?: string
   locationName?: string
   colorData?: string
+  colorLightness?: number
+  colorChroma?: number
   colorHue?: number
   priorityOrder?: number
   excludeFromFeeds?: boolean

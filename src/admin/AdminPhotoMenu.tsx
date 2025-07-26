@@ -141,7 +141,7 @@ export default function AdminPhotoMenu({
       ...showKeyCommands && { keyCommand: KEY_COMMANDS.sync },
     });
     items.push({
-      label: 'Store Hue',
+      label: 'Store Colors',
       icon: <IoMdColorFilter
         size={16}
         className="translate-x-[-1.5px]"

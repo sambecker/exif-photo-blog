@@ -5,6 +5,7 @@ import {
   doesPathOfferSort as _doesPathOfferSort,
   PARAM_SORT_ORDER_NEWEST,
   PARAM_SORT_ORDER_OLDEST,
+  PARAM_SORT_TYPE_CHROMATIC,
   PARAM_SORT_TYPE_TAKEN_AT,
   PARAM_SORT_TYPE_UPLOADED_AT,
   PATH_FULL_INFERRED,
@@ -38,6 +39,14 @@ const getSortByComponents = (sortBy: SortBy): {
     sortType: PARAM_SORT_TYPE_UPLOADED_AT,
     sortOrder: PARAM_SORT_ORDER_OLDEST,
   };
+  case 'chromatic': return {
+    sortType: PARAM_SORT_TYPE_CHROMATIC,
+    sortOrder: PARAM_SORT_ORDER_NEWEST,
+  };
+  case 'chromaticAsc': return {
+    sortType: PARAM_SORT_TYPE_CHROMATIC,
+    sortOrder: PARAM_SORT_ORDER_OLDEST,
+  };
   }
 };
 
@@ -66,6 +75,12 @@ const _getSortOptionsFromParams = (
     sortBy = isAscending
       ? 'createdAtAsc'
       : 'createdAt';
+    break;
+  }
+  case PARAM_SORT_TYPE_CHROMATIC: {
+    sortBy = isAscending
+      ? 'chromaticAsc'
+      : 'chromatic';
     break;
   }
   }
@@ -113,6 +128,7 @@ export const getSortStateFromPath = (pathname: string) => {
   const isAscending = sortOrder === PARAM_SORT_ORDER_OLDEST;
   const isTakenAt = sortType === PARAM_SORT_TYPE_TAKEN_AT;
   const isUploadedAt = sortType === PARAM_SORT_TYPE_UPLOADED_AT;
+  const isChromatic = sortType === PARAM_SORT_TYPE_CHROMATIC;
 
   const getPath = ({
     gridOrFull = _gridOrFull,
@@ -155,6 +171,8 @@ export const getSortStateFromPath = (pathname: string) => {
     getPath({ sortType: PARAM_SORT_TYPE_TAKEN_AT, sortOrder });
   const pathUploadedAt =
     getPath({ sortType: PARAM_SORT_TYPE_UPLOADED_AT, sortOrder });
+  const pathChromatic =
+    getPath({ sortType: PARAM_SORT_TYPE_CHROMATIC, sortOrder });
 
   // Sort clear
   const pathClearSort = _gridOrFull === 'grid'
@@ -168,12 +186,14 @@ export const getSortStateFromPath = (pathname: string) => {
     isAscending,
     isTakenAt,
     isUploadedAt,
+    isChromatic,
     pathGrid,
     pathFull,
     pathNewest,
     pathOldest,
     pathTakenAt,
     pathUploadedAt,
+    pathChromatic,
     pathClearSort,
     pathSortToggle,
   };

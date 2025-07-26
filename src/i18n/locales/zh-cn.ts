@@ -66,6 +66,8 @@ export const TEXT: I18N = {
     uploadedAt: '上传时间',
     byUploadedAt: '按上传时间',
     uploadedAtShort: '上传',
+    chromatic: '色度',
+    byChromatic: '按颜色',
     clearSort: '清除排序',
   },
   cmdk: {

@@ -281,7 +281,7 @@ export const USER_DEFAULT_SORT_OPTIONS = {
   sortWithPriority: USER_DEFAULT_SORT_WITH_PRIORITY,
 };
 export const CHROMATIC_SORT_ENABLED =
-  process.env.NEXT_PUBLIC_NAV_SORT_CHROMATIC === '1';
+  process.env.NEXT_PUBLIC_COLOR_SORT === '1';
 export const NAV_SORT_CONTROL = CHROMATIC_SORT_ENABLED
   ? 'menu'
   : getNavSortControlFromString(process.env.NEXT_PUBLIC_NAV_SORT_CONTROL);

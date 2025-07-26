@@ -66,6 +66,8 @@ export const TEXT: I18N = {
     uploadedAt: 'Enviado em',
     byUploadedAt: 'Por data de envio',
     uploadedAtShort: 'Enviado',
+    chromatic: 'Cromático',
+    byChromatic: 'Por cor',
     clearSort: 'Limpar ordenação',
   },
   cmdk: {

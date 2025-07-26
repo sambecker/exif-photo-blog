@@ -67,6 +67,8 @@ export const TEXT: I18N = {
     uploadedAt: 'আপলোড হয়েছে',
     byUploadedAt: 'আপলোডের সময় অনুযায়ী',
     uploadedAtShort: 'আপলোড',
+    chromatic: 'ক্রোমাটিক',
+    byChromatic: 'রঙ অনুযায়ী',
     clearSort: 'সাজানো মুছুন',
   },
   cmdk: {

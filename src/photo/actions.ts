@@ -409,7 +409,10 @@ export const storeColorDataForPhotoAction = async (photoId: string) =>
       const colorData = await getColorsFromImageUrl(photo.url);
       photo.colorData = colorData;
       // Use fast-average-color for hue sorting
+      photo.colorLightness = Math.round(colorData.average.l * 100);
+      photo.colorChroma = Math.round(colorData.average.c * 100);
       photo.colorHue = Math.round(colorData.average.h);
+      console.log(photo.colorLightness, photo.colorChroma, photo.colorHue);
       await updatePhoto(convertPhotoToPhotoDbInsert(photo));
       revalidatePhoto(photo.id);
     }

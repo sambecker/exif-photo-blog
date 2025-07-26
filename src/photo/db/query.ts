@@ -68,6 +68,8 @@ const createPhotosTable = () =>
       recipe_title VARCHAR(255),
       recipe_data JSONB,
       color_data JSONB,
+      color_lightness SMALLINT,
+      color_chroma SMALLINT,
       color_hue SMALLINT,
       priority_order REAL,
       taken_at TIMESTAMP WITH TIME ZONE NOT NULL,
@@ -197,6 +199,8 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       recipe_title,
       recipe_data,
       color_data,
+      color_lightness,
+      color_chroma,
       color_hue,
       priority_order,
       exclude_from_feeds,
@@ -231,6 +235,8 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       ${photo.recipeTitle},
       ${photo.recipeData},
       ${photo.colorData},
+      ${photo.colorLightness},
+      ${photo.colorChroma},
       ${photo.colorHue},
       ${photo.priorityOrder},
       ${photo.excludeFromFeeds},
@@ -268,6 +274,8 @@ export const updatePhoto = (photo: PhotoDbInsert) =>
     recipe_title=${photo.recipeTitle},
     recipe_data=${photo.recipeData},
     color_data=${photo.colorData},
+    color_lightness=${photo.colorLightness},
+    color_chroma=${photo.colorChroma},
     color_hue=${photo.colorHue},
     priority_order=${photo.priorityOrder || null},
     exclude_from_feeds=${photo.excludeFromFeeds},
@@ -652,7 +660,12 @@ const needsAiTextWhereClauses =
     : [];
 
 const needsColorDataWhereClauses = CHROMATIC_SORT_ENABLED
-  ? [`(color_data IS NULL OR color_hue IS NULL)`]
+  ? [`(
+    color_data IS NULL OR
+    color_lightness IS NULL OR
+    color_chroma IS NULL OR
+    color_hue IS NULL
+  )`]
   : [];
 
 const needsSyncWhereStatement =
