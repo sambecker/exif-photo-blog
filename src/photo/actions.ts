@@ -402,20 +402,21 @@ export const getPhotosNeedingRecipeTitleCountAction = async (
     ),
   );
 
-const storeColorDataForPhoto = async (photoId: string) => {
-  const photo = await getPhoto(photoId, true);
-  if (photo) {
-    const colorData = await getColorsFromImageUrl(photo.url);
-    photo.colorData = colorData;
-    // Use fast-average-color for color-based sorting
-    // (store all values as integers for faster sorting)
-    photo.colorLightness = Math.round(colorData.average.l * 100);
-    photo.colorChroma = Math.round(colorData.average.c * 100);
-    photo.colorHue = Math.round(colorData.average.h);
-    await updatePhoto(convertPhotoToPhotoDbInsert(photo));
-    revalidatePhoto(photo.id);
-  }
-};
+export const storeColorDataForPhotoAction = async (photoId: string) =>
+  runAuthenticatedAdminServerAction(async () => {
+    const photo = await getPhoto(photoId, true);
+    if (photo) {
+      const colorData = await getColorsFromImageUrl(photo.url);
+      photo.colorData = colorData;
+      // Use fast-average-color for color-based sorting
+      // (store all values as integers for faster sorting)
+      photo.colorLightness = Math.round(colorData.average.l * 100);
+      photo.colorChroma = Math.round(colorData.average.c * 100);
+      photo.colorHue = Math.round(colorData.average.h);
+      await updatePhoto(convertPhotoToPhotoDbInsert(photo));
+      revalidatePhoto(photo.id);
+    }
+  });
 
 export const deletePhotoRecipeGloballyAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
@@ -549,7 +550,7 @@ export const syncPhotosAction = async (photosToSync: {
   runAuthenticatedAdminServerAction(async () => {
     for (const { photoId, onlySyncColorData } of photosToSync) {
       await (onlySyncColorData
-        ? storeColorDataForPhoto(photoId)
+        ? storeColorDataForPhotoAction(photoId)
         : syncPhotoAction(photoId, true));
     }
     revalidateAllKeysAndPaths();

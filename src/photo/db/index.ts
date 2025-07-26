@@ -178,13 +178,27 @@ export const getOrderByFromOptions = (options: PhotoQueryOptions) => {
     return sortWithPriority
       ? 'ORDER BY priority_order ASC, created_at ASC'
       : 'ORDER BY created_at ASC';
-  case 'chromatic':
-    console.log('chromatic');
+  case 'lightness':
+    return sortWithPriority
+      ? 'ORDER BY priority_order ASC, color_lightness DESC'
+      : 'ORDER BY color_lightness DESC';
+  case 'lightnessAsc':
+    return sortWithPriority
+      ? 'ORDER BY priority_order ASC, color_lightness ASC'
+      : 'ORDER BY color_lightness ASC';
+  case 'chroma':
+    return sortWithPriority
+      ? 'ORDER BY priority_order ASC, color_chroma DESC'
+      : 'ORDER BY color_chroma DESC';
+  case 'chromaAsc':
+    return sortWithPriority
+      ? 'ORDER BY priority_order ASC, color_chroma ASC'
+      : 'ORDER BY color_chroma ASC';
+  case 'hue':
     return sortWithPriority
       ? 'ORDER BY priority_order ASC, color_hue DESC'
       : 'ORDER BY color_hue DESC';
-  case 'chromaticAsc':
-    console.log('chromatic asc');
+  case 'hueAsc':
     return sortWithPriority
       ? 'ORDER BY priority_order ASC, color_hue ASC'
       : 'ORDER BY color_hue ASC';

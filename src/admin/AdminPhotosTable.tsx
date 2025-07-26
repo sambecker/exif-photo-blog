@@ -14,7 +14,10 @@ import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 import PhotoSyncButton from './PhotoSyncButton';
 import DeletePhotoButton from './DeletePhotoButton';
 import { Timezone } from '@/utility/timezone';
-import { photoNeedsToBeSynced } from '@/photo/sync';
+import {
+  isPhotoOnlyMissingColorData,
+  photoNeedsToBeSynced,
+} from '@/photo/sync';
 import PhotoVisibilityIcon from '@/photo/visibility/PhotoVisibilityIcon';
 import { doesPhotoHaveDefaultVisibility } from '@/photo/visibility';
 import SyncTooltip from '@/photo/sync/SyncTooltip';
@@ -30,6 +33,7 @@ export default function AdminPhotosTable({
   canDelete = true,
   timezone,
   shouldScrollIntoViewOnExternalSync,
+  preferColorSyncing,
 }: {
   photos: Photo[],
   onLastPhotoVisible?: () => void
@@ -41,6 +45,7 @@ export default function AdminPhotosTable({
   canDelete?: boolean
   timezone?: Timezone
   shouldScrollIntoViewOnExternalSync?: boolean
+  preferColorSyncing?: boolean
 }) {
   const { invalidateSwr } = useAppState();
 
@@ -127,6 +132,8 @@ export default function AdminPhotosTable({
               shouldToast
               shouldScrollIntoViewOnExternalSync={
                 shouldScrollIntoViewOnExternalSync}
+              onlySyncColorData={preferColorSyncing &&
+                isPhotoOnlyMissingColorData(photo)}
             />
             {canDelete &&
               <DeletePhotoButton

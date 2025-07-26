@@ -6,7 +6,7 @@ import IconGrSync from '@/components/icons/IconGrSync';
 import Note from '@/components/Note';
 import AdminChildPage from '@/components/AdminChildPage';
 import { PATH_ADMIN_PHOTOS } from '@/app/path';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { syncPhotosAction } from '@/photo/actions';
 import { useRouter } from 'next/navigation';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
@@ -20,7 +20,7 @@ import {
 
 const SYNC_BATCH_SIZE_MAX = 3;
 
-export default function AdminPhotosSyncClient({
+export default function AdminPhotosUpdateClient({
   photos,
   hasAiTextGeneration,
 }: {
@@ -41,6 +41,12 @@ export default function AdminPhotosSyncClient({
   const router = useRouter();
 
   const statusText = useMemo(() => getPhotosSyncStatusText(photos), [photos]);
+
+  useEffect(() => {
+    if (photos.length === 0 && !error && !errorRef.current) {
+      router.push(PATH_ADMIN_PHOTOS);
+    }
+  }, [photos.length, router, error]);
 
   return (
     <AdminChildPage
@@ -94,13 +100,9 @@ export default function AdminPhotosSyncClient({
                 });
               if (errorRef.current) { break; }
             }
-            if (!errorRef.current) {
-              router.push(PATH_ADMIN_PHOTOS);
-            } else {
-              setProgress(0);
-              setPhotoIdsSyncing([]);
-              router.refresh();
-            }
+            setProgress(0);
+            setPhotoIdsSyncing([]);
+            router.refresh();
           }
         }}
         isLoading={arePhotoIdsSyncing}
@@ -141,6 +143,7 @@ export default function AdminPhotosSyncClient({
             canDelete={false}
             dateType="updatedAt"
             shouldScrollIntoViewOnExternalSync
+            preferColorSyncing
           />
         </div>
       </div>
