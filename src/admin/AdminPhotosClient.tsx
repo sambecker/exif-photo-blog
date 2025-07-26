@@ -67,7 +67,7 @@ export default function AdminPhotosClient({
                   pluralize(
                     photosCountNeedsSync,
                     appText.photo.photo,
-                    appText.photo.photoPlural,
+                    appText.photo.photoPlural.toLocaleLowerCase(),
                   ) +
                   ' missing data or AI-generated text'
                 )}

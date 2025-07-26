@@ -56,9 +56,6 @@ importers:
       cmdk:
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      color.js:
-        specifier: ^1.2.0
-        version: 1.2.0
       culori:
         specifier: ^4.0.2
         version: 4.0.2
@@ -2307,9 +2304,6 @@ packages:
 
   color-string@1.9.1:
     resolution: {integrity: sha512-shrVawQFojnZv6xM40anx4CkoDP+fZsw/ZerEMsW/pyzsRbElpsL/DBVW7q3ExxwusdNXI3lXpuhEZkzs8p5Eg==}
-
-  color.js@1.2.0:
-    resolution: {integrity: sha512-0ajlNgWWOR7EK9N6l2h0YKsZPzMCLQG5bheCoTGpGfhkR8tB5eQNItdua1oFHDTeq9JKgSzQJqo+Gp3V/xW+Lw==}
 
   color@4.2.3:
     resolution: {integrity: sha512-1rXeuUUiGGrykh+CeBdu5Ie7OJwinCgQY0bc7GCRxy5xVHy+moaqkpL/jqQq0MtQOeYcrqEz4abc5f0KtU7W4A==}
@@ -7111,8 +7105,6 @@ snapshots:
     dependencies:
       color-name: 1.1.4
       simple-swizzle: 0.2.2
-
-  color.js@1.2.0: {}
 
   color@4.2.3:
     dependencies:

@@ -650,7 +650,8 @@ export default function AdminAppConfigurationClient({
           optional
         >
           Set environment variable to {'"1"'} to enable chromatic sorting
-          (forces menu nav sort control, flags photos missing color data):
+          (forces nav sort control to {'"menu,"'},
+          flags photos missing color data in admin dashboard):
           {renderEnvVars(['NEXT_PUBLIC_NAV_SORT_CHROMATIC'])}
         </ChecklistRow>
       </>;

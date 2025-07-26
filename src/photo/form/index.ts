@@ -14,6 +14,7 @@ import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { ReactNode } from 'react';
 import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import { SelectMenuOptionType } from '@/components/SelectMenuOption';
+import { CHROMATIC_SORT_ENABLED } from '@/app/config';
 
 type VirtualFields =
   'visibility' |
@@ -182,7 +183,13 @@ const FORM_METADATA = (
     label: 'taken at (naive)',
     validate: validationMessageNaivePostgresDateString,
   },
-  colorData: { label: 'color data', readOnly: true, isJson: true },
+  colorData: {
+    type: 'textarea',
+    label: 'color data',
+    readOnly: true,
+    isJson: true,
+    shouldHide: () => !CHROMATIC_SORT_ENABLED,
+  },
   colorHue: {
     label: 'hue',
     note: 'Used for chromatic sorting',
@@ -262,6 +269,8 @@ export const convertPhotoToFormData = (photo: Photo): PhotoFormData => {
     case 'hidden':
       return value ? 'true' : 'false';
     case 'recipeData':
+      return JSON.stringify(value);
+    case 'colorData':
       return JSON.stringify(value);
     default:
       return value !== undefined && value !== null

@@ -51,7 +51,6 @@ import { lensFromPhoto } from '@/lens';
 import MaskedScroll from '@/components/MaskedScroll';
 import useCategoryCountsForPhoto from '@/category/useCategoryCountsForPhoto';
 import { useAppText } from '@/i18n/state/client';
-import ColorPalette from '@/photo/color/ColorPalette';
 
 export default function PhotoLarge({
   photo,
@@ -83,7 +82,6 @@ export default function PhotoLarge({
   includeFavoriteInAdminMenu,
   onVisible,
   showAdminKeyCommands,
-  showColorPalette,
 }: {
   photo: Photo
   className?: string
@@ -114,7 +112,6 @@ export default function PhotoLarge({
   includeFavoriteInAdminMenu?: boolean
   onVisible?: () => void
   showAdminKeyCommands?: boolean
-  showColorPalette?: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const refZoomControls = useRef<ZoomControlsRef>(null);
@@ -313,11 +310,6 @@ export default function PhotoLarge({
                 <div className="float-end hidden md:block">
                   {renderAdminMenu}
                 </div>
-                {showColorPalette && <ColorPalette
-                  photo={photo}
-                  className="mb-2"
-                  debug
-                />}
                 {hasTitle && (showTitleAsH1
                   ? <h1>{renderPhotoLink}</h1>
                   : renderPhotoLink)}

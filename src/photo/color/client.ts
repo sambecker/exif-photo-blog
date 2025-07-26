@@ -3,6 +3,7 @@ import { FastAverageColor } from 'fast-average-color';
 import { extractColors } from 'extract-colors';
 import { parseHex, convertRgbToOklab, Rgb } from 'culori';
 import { IS_PREVIEW } from '@/app/config';
+import { Oklch } from '.';
 
 const RGB_DEFAULT: Rgb = { mode: 'rgb', r: 0, g: 0, b: 0 };
 
@@ -30,7 +31,7 @@ export const getHueFromImage = async (urlString: string) => {
   return Math.round(oklch.h);
 };
 
-export const convertHexToOklch = (hex: string) => {
+export const convertHexToOklch = (hex: string): Oklch => {
   const rgb: Rgb = parseHex(hex) ?? RGB_DEFAULT;
   const { a, b, l } = convertRgbToOklab(rgb);
   const c = Math.sqrt(a * a + b * b);

@@ -1,4 +1,4 @@
-interface Oklch {
+export interface Oklch {
   l: number
   c: number
   h: number
@@ -6,6 +6,8 @@ interface Oklch {
 
 export interface PhotoColorData {
   average: Oklch
-  background: Oklch
-  accent: Oklch
+  colors: Oklch[]
 }
+
+export const convertOklchToCss = (oklch: Oklch) =>
+  `oklch(${oklch.l} ${oklch.c} ${oklch.h})`;
