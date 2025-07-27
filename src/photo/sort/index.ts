@@ -16,43 +16,43 @@ export const getNavSortControlFromString = (
 export const SORT_BY_OPTIONS = [{
   sortBy: 'takenAt',
   string: 'taken-at',
-  label: 'Taken At (Newest First)',
+  canBeDefault: true,
 }, {
   sortBy: 'takenAtAsc',
   string: 'taken-at-oldest-first',
-  label: 'Taken At (Oldest First)',
+  canBeDefault: true,
 }, {
   sortBy: 'createdAt',
   string: 'uploaded-at',
-  label: 'Uploaded At (Newest First)',
+  canBeDefault: true,
 }, {
   sortBy: 'createdAtAsc',
   string: 'uploaded-at-oldest-first',
-  label: 'Uploaded At (Oldest First)',
+  canBeDefault: true,
 }, {
   sortBy: 'lightness',
   string: 'lightness',
-  label: 'Lightness (Newest First)',
+  canBeDefault: false,
 }, {
   sortBy: 'lightnessAsc',
   string: 'lightness-oldest-first',
-  label: 'Lightness (Oldest First)',
+  canBeDefault: false,
 }, {
   sortBy: 'chroma',
   string: 'chroma',
-  label: 'Chroma (Newest First)',
+  canBeDefault: false,
 }, {
   sortBy: 'chromaAsc',
   string: 'chroma-oldest-first',
-  label: 'Chroma (Oldest First)',
+  canBeDefault: false,
 }, {
   sortBy: 'hue',
   string: 'hue',
-  label: 'Hue (Newest First)',
+  canBeDefault: false,
 }, {
   sortBy: 'hueAsc',
   string: 'hue-oldest-first',
-  label: 'Hue (Oldest First)',
+  canBeDefault: false,
 }] as const;
 
 export type SortBy = (typeof SORT_BY_OPTIONS)[number]['sortBy'];

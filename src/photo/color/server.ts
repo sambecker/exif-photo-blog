@@ -1,9 +1,25 @@
+import { convertRgbToOklab, parseHex } from 'culori';
 import { getNextImageUrlForManipulation } from '@/platforms/next-image';
 import { IS_PREVIEW } from '@/app/config';
 import { FastAverageColor } from 'fast-average-color';
-import { PhotoColorData, convertHexToOklch } from '.';
+import { Oklch, PhotoColorData } from '.';
 import sharp from 'sharp';
 import { extractColors } from 'extract-colors';
+
+const NULL_RGB = { r: 0, g: 0, b: 0 };
+
+export const convertHexToOklch = (hex: string): Oklch => {
+  const rgb = parseHex(hex) ?? NULL_RGB;
+  const { a, b, l } = convertRgbToOklab(rgb);
+  const c = Math.sqrt(a * a + b * b);
+  const _h = Math.atan2(b, a) * (180 / Math.PI);
+  const h = _h < 0 ? _h + 360 : _h;
+  return {
+    l: +(l.toFixed(3)),
+    c: +(c.toFixed(3)),
+    h: +(h.toFixed(3)),
+  };
+};
 
 // Convert image url to byte array
 const getImageDataFromUrl = async (_url: string) => {

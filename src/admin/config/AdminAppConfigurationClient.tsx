@@ -612,15 +612,17 @@ export default function AdminAppConfigurationClient({
           optional
         >
           <div>
-            {SORT_BY_OPTIONS.map(({sortBy, string }) =>
-              <Fragment key={ sortBy }>
-                {renderSubStatus(
-                  sortBy === defaultSortBy ? 'checked' : 'optional',
-                  `${string}${sortBy === APP_DEFAULT_SORT_BY
-                    ? ' (default)'
-                    : ''}`,
-                )}
-              </Fragment>)}
+            {SORT_BY_OPTIONS
+              .filter(({ canBeDefault }) => canBeDefault)
+              .map(({sortBy, string }) =>
+                <Fragment key={ sortBy }>
+                  {renderSubStatus(
+                    sortBy === defaultSortBy ? 'checked' : 'optional',
+                    `${string}${sortBy === APP_DEFAULT_SORT_BY
+                      ? ' (default)'
+                      : ''}`,
+                  )}
+                </Fragment>)}
           </div>
           Change default sort on grid/full homepages
           {renderEnvVars(['NEXT_PUBLIC_DEFAULT_SORT'])}
