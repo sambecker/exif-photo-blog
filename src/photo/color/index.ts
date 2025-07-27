@@ -30,4 +30,4 @@ export const convertHexToOklch = (hex: string): Oklch => {
 };
 
 export const logOklch = (oklch: Oklch) =>
-  `L: ${oklch.l.toFixed(2)} C: ${oklch.c.toFixed(2)} H: ${oklch.h.toFixed(2)})`;
+  `L:${oklch.l.toFixed(2)} C:${oklch.c.toFixed(2)} H:${oklch.h.toFixed(2)}`;
