@@ -49,10 +49,10 @@ const getMissingAiTextFields = ({
 
 export const isPhotoMissingColorData = (photo: PhotoDb) =>
   COLOR_SORT_ENABLED && (
-    !photo.colorData ||
-    !photo.colorLightness ||
-    !photo.colorChroma ||
-    !photo.colorHue
+    photo.colorData === undefined ||
+    photo.colorLightness === undefined ||
+    photo.colorChroma === undefined ||
+    photo.colorHue === undefined
   );
 
 export const generatePhotoSyncStatus = (photo: PhotoDb): PhotoSyncStatus => ({
