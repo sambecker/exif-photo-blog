@@ -66,6 +66,12 @@ export const TEXT: I18N = {
     uploadedAt: 'Yüklenme Zamanı',
     byUploadedAt: 'Yüklenme zamanına göre',
     uploadedAtShort: 'Yüklenme',
+    lightness: 'Parlaklık',
+    byLightness: 'Parlaklığa göre',
+    chroma: 'Doygunluk',
+    byChroma: 'Doygunluğa göre',
+    hue: 'Renk',
+    byHue: 'Renge göre',
     clearSort: 'Sıralamayı temizle',
   },
   cmdk: {
