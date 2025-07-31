@@ -1,5 +1,4 @@
 import { I18N } from '..';
-
 export { bn as default } from 'date-fns/locale/bn';
 
 export const TEXT: I18N = {
