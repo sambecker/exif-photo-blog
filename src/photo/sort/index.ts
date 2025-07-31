@@ -80,7 +80,7 @@ export const getSortByFromString = (sortBy = ''): SortBy => {
   case 'chroma-oldest-first': return 'chromaAsc';
   case 'hue': return 'hue';
   case 'hue-oldest-first': return 'hueAsc';
-  default:return 'takenAt';
+  default: return 'takenAt';
   }
 };
 

@@ -15,8 +15,8 @@ export default function SortMenu({
   isLightness,
   isChroma,
   isHue,
-  pathNewest,
-  pathOldest,
+  pathDescending,
+  pathAscending,
   pathTakenAt,
   pathUploadedAt,
   pathLightness,
@@ -42,11 +42,11 @@ export default function SortMenu({
   const itemsSortOrder = [{
     ...renderLabel(appText.sort.newest, !isAscending),
     icon: renderIcon(!isAscending),
-    href: pathNewest,
+    href: pathDescending,
   }, {
     ...renderLabel(appText.sort.oldest, isAscending),
     icon: renderIcon(isAscending),
-    href: pathOldest,
+    href: pathAscending,
   }];
 
   const itemsSortType = [{

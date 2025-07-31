@@ -29,8 +29,8 @@ export const PARAM_SORT_TYPE_UPLOADED_AT  = 'uploaded-at';
 export const PARAM_SORT_TYPE_LIGHTNESS    = 'lightness';
 export const PARAM_SORT_TYPE_CHROMA       = 'chroma';
 export const PARAM_SORT_TYPE_HUE          = 'hue';
-export const PARAM_SORT_ORDER_NEWEST      = 'newest-first';
-export const PARAM_SORT_ORDER_OLDEST      = 'oldest-first';
+export const PARAM_SORT_ORDER_DESCENDING  = 'descending';
+export const PARAM_SORT_ORDER_ASCENDING   = 'ascending';
 export const doesPathOfferSort = (pathname: string) =>
   pathname === PATH_ROOT ||
   pathname.startsWith(PATH_GRID) ||
