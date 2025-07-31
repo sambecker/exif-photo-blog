@@ -1,6 +1,7 @@
+import { I18N } from '..';
 export { tr as default } from 'date-fns/locale/tr';
 
-export const TEXT = {
+export const TEXT: I18N = {
   photo: {
     photo: 'Fotoğraf',
     photoPlural: 'Fotoğraflar',
@@ -119,6 +120,7 @@ export const TEXT = {
     download: 'İndir',
     sync: 'Senkronize Et',
     delete: 'Sil',
+    // eslint-disable-next-line max-len
     deleteConfirm: '"{{photoTitle}}" adlı fotoğrafı silmek istediğinize emin misiniz?',
   },
   onboarding: {
@@ -126,6 +128,7 @@ export const TEXT = {
     setupIncomplete: 'Kurulumu Tamamla',
     setupSignIn: 'Fotoğraf yüklemek için giriş yap',
     setupFirstPhoto: 'İlk fotoğrafını ekle',
+    // eslint-disable-next-line max-len
     setupConfig: 'Site adını ve diğer ayarları değiştirmek için şu ortam değişkenlerini düzenleyin:',
   },
   misc: {
