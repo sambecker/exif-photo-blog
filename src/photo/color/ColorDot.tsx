@@ -9,15 +9,27 @@ const renderColor = (letter: string, value: number) => (
   </div>
 );
 
-export default function ColorDot({ color }: { color: Oklch }) {
+export default function ColorDot({
+  color,
+  title,
+  className,
+}: {
+  color: Oklch
+  title?: string
+  className?: string
+}) {
   return (
     <Tooltip content={<>
+      {title && <div className="text-dim mb-1">{title}</div>}
       {renderColor('L', color.l * 100)}
       {renderColor('C', color.c * 100)}
       {renderColor('H', color.h)}
     </>}>
       <div
-        className={clsx('size-4 rounded-full outline outline-white/25')}
+        className={clsx(
+          'size-4 rounded-full outline outline-white/25',
+          className,
+        )}
         style={{ backgroundColor: convertOklchToCss(color) }}
       />
     </Tooltip>

@@ -106,6 +106,7 @@ export default function AdminUploadsTableRow({
         <div className="flex flex-col gap-6 w-full">
           <div className="flex flex-col grow gap-2">
             <FieldsetWithStatus
+              id={`title-${url}`}
               label="Title"
               value={draftTitle}
               onChange={titleUpdated =>

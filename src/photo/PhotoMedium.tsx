@@ -14,7 +14,7 @@ import { useRef } from 'react';
 import useVisible from '@/utility/useVisible';
 import LinkWithStatus from '@/components/LinkWithStatus';
 import Spinner from '@/components/Spinner';
-import ColorDot from './color/ColorDot';
+import PhotoColors from './color/PhotoColors';
 
 export default function PhotoMedium({
   photo,
@@ -61,18 +61,11 @@ export default function PhotoMedium({
               <Spinner size={20} color="text" />
             </div>}
           {debugColor && photo.colorData &&
-            <div className={clsx(
-              'absolute top-2 right-2 z-10',
-              'flex flex-col gap-1',
-            )}>
-              <div className="flex justify-end">
-                <ColorDot color={photo.colorData.average} />
-              </div>
-              <div className="flex flex-wrap gap-1">
-                {photo.colorData.colors.map((color, index) =>
-                  <ColorDot key={index} {...{ color }} />,
-                )}
-              </div>
+            <div className="absolute top-2 right-2 z-10">
+              <PhotoColors
+                className="justify-end"
+                colorData={photo.colorData}
+              />
             </div>}
           <ImageMedium
             src={photo.url}
