@@ -31,10 +31,10 @@ import { FocalLengths } from '@/focal';
 import { Lenses, createLensKey } from '@/lens';
 import { migrationForError } from './migration';
 import {
-  SYNC_QUERY_LIMIT,
+  UPDATE_QUERY_LIMIT,
   UPDATED_BEFORE_01,
   UPDATED_BEFORE_02,
-} from '../sync';
+} from '../update';
 import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
 import { Recipes } from '@/recipe';
 import { Years } from '@/years';
@@ -675,17 +675,17 @@ const needsSyncWhereStatement =
     ...needsColorDataWhereClauses,
   ].join(' OR ')}`;
 
-export const getPhotosInNeedOfSync = () => safelyQueryPhotos(
+export const getPhotosInNeedOfUpdate = () => safelyQueryPhotos(
   () => query(`
     SELECT * FROM photos
     ${needsSyncWhereStatement}
     ORDER BY created_at DESC
-    LIMIT ${SYNC_QUERY_LIMIT}
+    LIMIT ${UPDATE_QUERY_LIMIT}
   `,
   outdatedWhereValues,
   )
     .then(({ rows }) => rows.map(parsePhotoFromDb)),
-  'getPhotosInNeedOfSync',
+  'getPhotosInNeedOfUpdate',
 );
 
 export const getPhotosInNeedOfSyncCount = () => safelyQueryPhotos(

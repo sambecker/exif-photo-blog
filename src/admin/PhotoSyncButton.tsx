@@ -8,11 +8,13 @@ import clsx from 'clsx/lite';
 import useScrollIntoView from '@/utility/useScrollIntoView';
 import { Photo } from '@/photo';
 import { syncPhotoConfirmText } from './confirm';
+import { isPhotoOnlyMissingColorData } from '@/photo/update';
+import IconBroom from '@/components/icons/IconBroom';
 
 export default function PhotoSyncButton({
   photo,
   onSyncComplete,
-  onlySyncColorData,
+  updateMode,
   className,
   isSyncingExternal,
   hasAiTextGeneration,
@@ -23,7 +25,7 @@ export default function PhotoSyncButton({
 }: {
   photo: Photo
   onSyncComplete?: () => void
-  onlySyncColorData?: boolean
+  updateMode?: boolean
   isSyncingExternal?: boolean
   hasAiTextGeneration: boolean
   shouldConfirm?: boolean
@@ -41,6 +43,9 @@ export default function PhotoSyncButton({
       shouldScrollIntoViewOnExternalSync,
   });
 
+  const onlySyncColorData = updateMode &&
+    isPhotoOnlyMissingColorData(photo);
+
   return (
     <Tooltip content={onlySyncColorData
       ? 'Update color data'
@@ -48,9 +53,11 @@ export default function PhotoSyncButton({
       <LoaderButton
         ref={ref}
         className={clsx('scroll-mt-8', className)}
-        icon={<IconGrSync
-          className="translate-y-[0.5px] translate-x-[0.5px]"
-        />}
+        icon={updateMode
+          ? <IconBroom size={18} />
+          : <IconGrSync
+            className="translate-y-[0.5px] translate-x-[0.5px]"
+          />}
         onClick={() => {
           if (
             !shouldConfirm ||

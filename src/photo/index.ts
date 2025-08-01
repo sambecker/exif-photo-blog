@@ -22,7 +22,7 @@ import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
-import { PhotoSyncStatus, generatePhotoSyncStatus } from './sync';
+import { PhotoUpdateStatus, generatePhotoUpdateStatus } from './update';
 import { AppTextState } from '@/i18n/state';
 import { PhotoColorData } from './color';
 
@@ -116,7 +116,7 @@ export interface Photo extends Omit<PhotoDb, 'recipeData' | 'colorData'> {
   tags: string[]
   recipeData?: FujifilmRecipe
   colorData?: PhotoColorData
-  syncStatus: PhotoSyncStatus
+  updateStatus: PhotoUpdateStatus
 }
 
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
@@ -153,7 +153,7 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
     colorData: photoDb.colorData
       ? photoDb.colorData
       : undefined,
-    syncStatus: generatePhotoSyncStatus(photoDb),
+    updateStatus: generatePhotoUpdateStatus(photoDb),
   } as Photo;
 };
 

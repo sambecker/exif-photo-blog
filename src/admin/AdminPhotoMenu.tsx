@@ -30,7 +30,7 @@ import IconGrSync from '@/components/icons/IconGrSync';
 import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 import IconFavs from '@/components/icons/IconFavs';
 import IconEdit from '@/components/icons/IconEdit';
-import { photoNeedsToBeSynced } from '@/photo/sync';
+import { photoNeedsToBeUpdated } from '@/photo/update';
 import { KEY_COMMANDS } from '@/photo/key-commands';
 import { useAppText } from '@/i18n/state/client';
 import IconLock from '@/components/icons/IconLock';
@@ -124,7 +124,7 @@ export default function AdminPhotoMenu({
       label: appText.admin.sync,
       labelComplex: <span className="inline-flex items-center gap-2">
         <span>{appText.admin.sync}</span>
-        {photoNeedsToBeSynced(photo) &&
+        {photoNeedsToBeUpdated(photo) &&
           <InsightsIndicatorDot
             colorOverride="blue"
             className="ml-1 translate-y-[1.5px]"

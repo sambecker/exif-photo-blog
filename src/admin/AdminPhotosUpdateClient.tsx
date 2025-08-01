@@ -2,7 +2,6 @@
 
 import { Photo } from '@/photo';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
-import IconGrSync from '@/components/icons/IconGrSync';
 import Note from '@/components/Note';
 import AdminChildPage from '@/components/AdminChildPage';
 import { PATH_ADMIN_PHOTOS } from '@/app/path';
@@ -14,9 +13,10 @@ import { LiaBroomSolid } from 'react-icons/lia';
 import ProgressButton from '@/components/primitives/ProgressButton';
 import ErrorNote from '@/components/ErrorNote';
 import {
-  getPhotosSyncStatusText,
+  getPhotosUpdateStatusText,
   isPhotoOnlyMissingColorData,
-} from '@/photo/sync';
+} from '@/photo/update';
+import IconBroom from '@/components/icons/IconBroom';
 
 const SYNC_BATCH_SIZE_MAX = 3;
 
@@ -40,7 +40,7 @@ export default function AdminPhotosUpdateClient({
 
   const router = useRouter();
 
-  const statusText = useMemo(() => getPhotosSyncStatusText(photos), [photos]);
+  const statusText = useMemo(() => getPhotosUpdateStatusText(photos), [photos]);
 
   useEffect(() => {
     if (photos.length === 0 && !error && !errorRef.current) {
@@ -57,12 +57,12 @@ export default function AdminPhotosUpdateClient({
       </ResponsiveText>}
       accessory={<ProgressButton
         primary
-        icon={<IconGrSync className="translate-y-[1px]" />}
+        icon={<IconBroom size={18} />}
         hideText="never"
         progress={progress}
         tooltip={photos.length === 1
-          ? 'Sync data for 1 photo'
-          : `Sync data for all ${photos.length} photos`}
+          ? 'Update 1 photo'
+          : `Update all ${photos.length} photos`}
         onClick={async () => {
           if (window.confirm([
             'Are you sure you want to sync',
@@ -109,8 +109,8 @@ export default function AdminPhotosUpdateClient({
         disabled={photoIdsSyncing.length > 0}
       >
         {arePhotoIdsSyncing
-          ? 'Syncing ...'
-          : 'Sync All'}
+          ? 'Updating ...'
+          : 'Update All'}
       </ProgressButton>}
     >
       <div className="space-y-6">
@@ -143,7 +143,7 @@ export default function AdminPhotosUpdateClient({
             canDelete={false}
             dateType="updatedAt"
             shouldScrollIntoViewOnExternalSync
-            preferColorSyncing
+            updateMode
           />
         </div>
       </div>

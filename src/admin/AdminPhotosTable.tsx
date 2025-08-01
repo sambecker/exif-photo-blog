@@ -14,13 +14,10 @@ import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 import PhotoSyncButton from './PhotoSyncButton';
 import DeletePhotoButton from './DeletePhotoButton';
 import { Timezone } from '@/utility/timezone';
-import {
-  isPhotoOnlyMissingColorData,
-  photoNeedsToBeSynced,
-} from '@/photo/sync';
+import { photoNeedsToBeUpdated } from '@/photo/update';
 import PhotoVisibilityIcon from '@/photo/visibility/PhotoVisibilityIcon';
 import { doesPhotoHaveDefaultVisibility } from '@/photo/visibility';
-import SyncTooltip from '@/photo/sync/SyncTooltip';
+import UpdateTooltip from '@/photo/update/UpdateTooltip';
 
 export default function AdminPhotosTable({
   photos,
@@ -33,7 +30,7 @@ export default function AdminPhotosTable({
   canDelete = true,
   timezone,
   shouldScrollIntoViewOnExternalSync,
-  preferColorSyncing,
+  updateMode,
 }: {
   photos: Photo[],
   onLastPhotoVisible?: () => void
@@ -45,7 +42,8 @@ export default function AdminPhotosTable({
   canDelete?: boolean
   timezone?: Timezone
   shouldScrollIntoViewOnExternalSync?: boolean
-  preferColorSyncing?: boolean
+  // Only sync color data where possible
+  updateMode?: boolean
 }) {
   const { invalidateSwr } = useAppState();
 
@@ -91,9 +89,9 @@ export default function AdminPhotosTable({
                 )}>
                   <PhotoVisibilityIcon photo={photo} />
                 </span>}
-              {photoNeedsToBeSynced(photo) &&
+              {photoNeedsToBeUpdated(photo) &&
                 <span>
-                  <SyncTooltip photo={photo} />
+                  <UpdateTooltip photo={photo} />
                 </span>}
               {photo.priorityOrder !== null &&
                 <span className={clsx(
@@ -132,8 +130,7 @@ export default function AdminPhotosTable({
               shouldToast
               shouldScrollIntoViewOnExternalSync={
                 shouldScrollIntoViewOnExternalSync}
-              onlySyncColorData={preferColorSyncing &&
-                isPhotoOnlyMissingColorData(photo)}
+              updateMode={updateMode}
             />
             {canDelete &&
               <DeletePhotoButton
