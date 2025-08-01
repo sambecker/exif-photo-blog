@@ -5,6 +5,7 @@ import { FastAverageColor } from 'fast-average-color';
 import { Oklch, PhotoColorData } from '.';
 import sharp from 'sharp';
 import { extractColors } from 'extract-colors';
+import { Photo } from '..';
 
 const NULL_RGB = { r: 0, g: 0, b: 0 };
 
@@ -50,7 +51,7 @@ const getExtractedColorsFromImageUrl = async (url: string) => {
   return extractColors(data);
 };
 
-export const getColorsFromImageUrl = async (
+const getColorsFromImageUrl = async (
   url: string,
 ): Promise<PhotoColorData> => {
   const average = await getAverageColorFromImageUrl(url);
@@ -59,4 +60,42 @@ export const getColorsFromImageUrl = async (
     average,
     colors: colors.map(({ hex }) => convertHexToOklch(hex)),
   };
+};
+
+export const getColorFieldsForImageUrl = async (
+  url: string,
+): Promise<Partial<Photo>> => {
+  const colorData = await getColorsFromImageUrl(url);
+  return {
+    colorData,
+    // Use fast-average-color for color-based sorting
+    // (store all values as integers for faster sorting)
+    colorLightness: Math.round(colorData.average.l * 100),
+    colorChroma: Math.round(colorData.average.c * 100),
+    colorHue: Math.round(colorData.average.h),
+  };
+};
+
+export const getColorFieldsForPhotoUrlFormData = async (
+  ...args: Parameters<typeof getColorFieldsForImageUrl>
+) => {
+  const {
+    colorData,
+    colorLightness,
+    colorChroma,
+    colorHue,
+  } = await getColorFieldsForImageUrl(...args);
+  if (
+    colorData &&
+    colorLightness !== undefined &&
+    colorChroma !== undefined &&
+    colorHue !== undefined
+  ) {
+    return {
+      colorData: JSON.stringify(colorData),
+      colorLightness: colorLightness.toString(),
+      colorChroma: colorChroma.toString(),
+      colorHue: colorHue.toString(),
+    };
+  }
 };

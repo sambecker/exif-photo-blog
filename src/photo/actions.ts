@@ -60,7 +60,7 @@ import { convertUploadToPhoto } from './storage';
 import { UrlAddStatus } from '@/admin/AdminUploadsClient';
 import { convertStringToArray } from '@/utility/string';
 import { after } from 'next/server';
-import { getColorsFromImageUrl } from '@/photo/color/server';
+import { getColorFieldsForImageUrl } from '@/photo/color/server';
 
 // Private actions
 
@@ -406,14 +406,11 @@ export const storeColorDataForPhotoAction = async (photoId: string) =>
   runAuthenticatedAdminServerAction(async () => {
     const photo = await getPhoto(photoId, true);
     if (photo) {
-      const colorData = await getColorsFromImageUrl(photo.url);
-      photo.colorData = colorData;
-      // Use fast-average-color for color-based sorting
-      // (store all values as integers for faster sorting)
-      photo.colorLightness = Math.round(colorData.average.l * 100);
-      photo.colorChroma = Math.round(colorData.average.c * 100);
-      photo.colorHue = Math.round(colorData.average.h);
-      await updatePhoto(convertPhotoToPhotoDbInsert(photo));
+      const colorData = await getColorFieldsForImageUrl(photo.url);
+      await updatePhoto(convertPhotoToPhotoDbInsert({
+        ...photo,
+        ...colorData,
+      }));
       revalidatePhoto(photo.id);
     }
   });

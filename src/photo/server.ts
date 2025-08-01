@@ -25,17 +25,18 @@ import {
 } from './db/query';
 import { PhotoDbInsert } from '.';
 import { convertExifToFormData } from './form/server';
+import { getColorFieldsForPhotoUrlFormData } from './color/server';
 
 const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
 
 export const extractImageDataFromBlobPath = async (
   blobPath: string,
-  options?: {
+  options: {
     includeInitialPhotoFields?: boolean
     generateBlurData?: boolean
     generateResizedImage?: boolean
-  },
+  } = {},
 ): Promise<{
   blobId?: string
   formDataFromExif?: Partial<PhotoFormData>
@@ -48,7 +49,7 @@ export const extractImageDataFromBlobPath = async (
     includeInitialPhotoFields,
     generateBlurData,
     generateResizedImage,
-  } = options ?? {};
+  } = options;
 
   const url = decodeURIComponent(blobPath);
 
@@ -112,6 +113,8 @@ export const extractImageDataFromBlobPath = async (
 
   if (error) { console.log(error); }
 
+  const colorFields = await getColorFieldsForPhotoUrlFormData(url);
+
   return {
     blobId,
     ...exifData && {
@@ -124,6 +127,7 @@ export const extractImageDataFromBlobPath = async (
         },
         ...generateBlurData && { blurData },
         ...convertExifToFormData(exifData, film, recipe),
+        ...colorFields,
       },
     },
     imageResizedBase64,
@@ -210,6 +214,7 @@ export const convertFormDataToPhotoDbInsertAndLookupRecipeTitle =
         photo.recipeData,
         photo.film,
       );
+      // Only replace recipe title when a new one is found
       if (recipeTitle) {
         photo.recipeTitle = recipeTitle;
       }
