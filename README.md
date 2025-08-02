@@ -159,6 +159,7 @@ Application behavior can be changed by configuring the following environment var
     - `none`
     - `toggle` (default)
     - `menu`
+- `NEXT_PUBLIC_SORT_BY_COLOR = 1` enables color-based sorting (forces nav sort control to "menu," flags photos missing color data in admin dashboard)
 
 
 #### Display

@@ -2,22 +2,25 @@
 
 import { Photo } from '@/photo';
 import AdminPhotosTable from '@/admin/AdminPhotosTable';
-import IconGrSync from '@/components/icons/IconGrSync';
 import Note from '@/components/Note';
 import AdminChildPage from '@/components/AdminChildPage';
 import { PATH_ADMIN_PHOTOS } from '@/app/path';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { syncPhotosAction } from '@/photo/actions';
 import { useRouter } from 'next/navigation';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 import { LiaBroomSolid } from 'react-icons/lia';
 import ProgressButton from '@/components/primitives/ProgressButton';
 import ErrorNote from '@/components/ErrorNote';
-import { getPhotosSyncStatusText } from '@/photo/sync';
+import {
+  getPhotosUpdateStatusText,
+  isPhotoOnlyMissingColorData,
+} from '@/photo/update';
+import IconBroom from '@/components/icons/IconBroom';
 
 const SYNC_BATCH_SIZE_MAX = 3;
 
-export default function AdminPhotosSyncClient({
+export default function AdminPhotosUpdateClient({
   photos,
   hasAiTextGeneration,
 }: {
@@ -37,7 +40,13 @@ export default function AdminPhotosSyncClient({
 
   const router = useRouter();
 
-  const statusText = useMemo(() => getPhotosSyncStatusText(photos), [photos]);
+  const statusText = useMemo(() => getPhotosUpdateStatusText(photos), [photos]);
+
+  useEffect(() => {
+    if (photos.length === 0 && !error && !errorRef.current) {
+      router.push(PATH_ADMIN_PHOTOS);
+    }
+  }, [photos.length, router, error]);
 
   return (
     <AdminChildPage
@@ -48,12 +57,12 @@ export default function AdminPhotosSyncClient({
       </ResponsiveText>}
       accessory={<ProgressButton
         primary
-        icon={<IconGrSync className="translate-y-[1px]" />}
+        icon={<IconBroom size={18} />}
         hideText="never"
         progress={progress}
         tooltip={photos.length === 1
-          ? 'Sync data for 1 photo'
-          : `Sync data for all ${photos.length} photos`}
+          ? 'Update 1 photo'
+          : `Update all ${photos.length} photos`}
         onClick={async () => {
           if (window.confirm([
             'Are you sure you want to sync',
@@ -69,7 +78,12 @@ export default function AdminPhotosSyncClient({
               const photoIds = photoIdsToSync.current
                 .slice(0, SYNC_BATCH_SIZE_MAX);
               setPhotoIdsSyncing(photoIds);
-              await syncPhotosAction(photoIds)
+              await syncPhotosAction(photoIds.map(id => ({
+                photoId: id,
+                onlySyncColorData: isPhotoOnlyMissingColorData(
+                  photos.find(photo => photo.id === id),
+                ),
+              })))
                 .then(() => {
                   photoIdsToSync.current = photoIdsToSync.current.filter(
                     id => !photoIds.includes(id),
@@ -86,21 +100,17 @@ export default function AdminPhotosSyncClient({
                 });
               if (errorRef.current) { break; }
             }
-            if (!errorRef.current) {
-              router.push(PATH_ADMIN_PHOTOS);
-            } else {
-              setProgress(0);
-              setPhotoIdsSyncing([]);
-              router.refresh();
-            }
+            setProgress(0);
+            setPhotoIdsSyncing([]);
+            router.refresh();
           }
         }}
         isLoading={arePhotoIdsSyncing}
         disabled={photoIdsSyncing.length > 0}
       >
         {arePhotoIdsSyncing
-          ? 'Syncing ...'
-          : 'Sync All'}
+          ? 'Updating ...'
+          : 'Update All'}
       </ProgressButton>}
     >
       <div className="space-y-6">
@@ -133,6 +143,7 @@ export default function AdminPhotosSyncClient({
             canDelete={false}
             dateType="updatedAt"
             shouldScrollIntoViewOnExternalSync
+            updateMode
           />
         </div>
       </div>

@@ -19,6 +19,7 @@ export default function FieldsetWithStatus({
   icon,
   note,
   noteShort,
+  noteComplex,
   tooltip,
   error,
   value,
@@ -48,6 +49,7 @@ export default function FieldsetWithStatus({
   icon?: ReactNode
   note?: string
   noteShort?: string
+  noteComplex?: ReactNode
   tooltip?: string
   error?: string
   value: string
@@ -157,6 +159,7 @@ export default function FieldsetWithStatus({
               >
                 ({note})
               </ResponsiveText>}
+            {noteComplex}
             {isModified && !error &&
               <span className={clsx(
                 'text-main font-medium text-[0.9rem]',

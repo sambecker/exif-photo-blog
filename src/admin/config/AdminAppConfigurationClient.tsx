@@ -88,6 +88,7 @@ export default function AdminAppConfigurationClient({
   isSortWithPriority,
   hasNavSortControl,
   navSortControl,
+  isColorSortEnabled,
   // Display
   showKeyboardShortcutTooltips,
   showExifInfo,
@@ -611,15 +612,17 @@ export default function AdminAppConfigurationClient({
           optional
         >
           <div>
-            {SORT_BY_OPTIONS.map(({sortBy, string }) =>
-              <Fragment key={ sortBy }>
-                {renderSubStatus(
-                  sortBy === defaultSortBy ? 'checked' : 'optional',
-                  `${string}${sortBy === APP_DEFAULT_SORT_BY
-                    ? ' (default)'
-                    : ''}`,
-                )}
-              </Fragment>)}
+            {SORT_BY_OPTIONS
+              .filter(({ canBeDefault }) => canBeDefault)
+              .map(({sortBy, string }) =>
+                <Fragment key={ sortBy }>
+                  {renderSubStatus(
+                    sortBy === defaultSortBy ? 'checked' : 'optional',
+                    `${string}${sortBy === APP_DEFAULT_SORT_BY
+                      ? ' (default)'
+                      : ''}`,
+                  )}
+                </Fragment>)}
           </div>
           Change default sort on grid/full homepages
           {renderEnvVars(['NEXT_PUBLIC_DEFAULT_SORT'])}
@@ -642,6 +645,16 @@ export default function AdminAppConfigurationClient({
           Set environment variable to {'"none"'}, {'"toggle"'} (default),
           or {'"menu"'}, to control sort UI on grid/full homepages:
           {renderEnvVars(['NEXT_PUBLIC_NAV_SORT_CONTROL'])}
+        </ChecklistRow>
+        <ChecklistRow
+          title="Color sort"
+          status={isColorSortEnabled}
+          optional
+        >
+          Set environment variable to {'"1"'} to enable color-based sorting
+          (forces nav sort control to {'"menu,"'},
+          flags photos missing color data in admin dashboard):
+          {renderEnvVars(['NEXT_PUBLIC_SORT_BY_COLOR'])}
         </ChecklistRow>
       </>;
     case 'Display':

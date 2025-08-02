@@ -100,7 +100,7 @@ export default function AdminAppMenu({
       items.push({
         label: appText.admin.updatePlural,
         annotation: <>
-          <span className="mr-3">
+          <span className="mr-3 text-blue-500">
             {photosCountNeedSync}
           </span>
           <InsightsIndicatorDot

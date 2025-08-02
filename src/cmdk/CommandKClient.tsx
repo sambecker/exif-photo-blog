@@ -182,8 +182,8 @@ export default function CommandKClient({
   const {
     doesPathOfferSort,
     isSortedByDefault,
-    pathNewest,
-    pathOldest,
+    pathDescending,
+    pathAscending,
     pathTakenAt,
     pathUploadedAt,
     pathClearSort,
@@ -526,11 +526,11 @@ export default function CommandKClient({
 
   const sortItems = [{
     label: appText.sort.newestFirst,
-    path: pathNewest,
+    path: pathDescending,
     annotation: renderCheck(!isAscending),
   }, {
     label: appText.sort.oldestFirst,
-    path: pathOldest,
+    path: pathAscending,
     annotation: renderCheck(isAscending),
   }, {
     label: appText.sort.byTakenAt,

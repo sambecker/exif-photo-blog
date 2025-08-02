@@ -65,6 +65,12 @@ export const TEXT = {
     uploadedAt: 'Uploaded at',
     byUploadedAt: 'By uploaded at',
     uploadedAtShort: 'Uploaded',
+    lightness: 'Lightness',
+    byLightness: 'By lightness',
+    chroma: 'Saturation',
+    byChroma: 'By saturation',
+    hue: 'Color',
+    byHue: 'By color',
     clearSort: 'Clear sort',
   },
   cmdk: {

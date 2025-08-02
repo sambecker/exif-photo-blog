@@ -1,11 +1,12 @@
 import { getStoragePhotoUrlsNoStore } from '@/platforms/storage/cache';
-import { getPhotos, getPhotosInNeedOfSyncCount } from '@/photo/db/query';
+import { getPhotos, getPhotosInNeedOfUpdateCount } from '@/photo/db/query';
 import { getPhotosMetaCached } from '@/photo/cache';
 import AdminPhotosClient from '@/admin/AdminPhotosClient';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { TIMEZONE_COOKIE_NAME } from '@/utility/timezone';
 import {
+  ADMIN_DEBUG_TOOLS_ENABLED,
   AI_TEXT_GENERATION_ENABLED,
   PRESERVE_ORIGINAL_UPLOADS,
 } from '@/app/config';
@@ -34,7 +35,7 @@ export default async function AdminPhotosPage() {
     getPhotosMetaCached({ hidden: 'include'})
       .then(({ count }) => count)
       .catch(() => 0),
-    getPhotosInNeedOfSyncCount()
+    getPhotosInNeedOfUpdateCount()
       .catch(() => 0),
     DEBUG_PHOTO_BLOBS
       ? getStoragePhotoUrlsNoStore()
@@ -57,6 +58,7 @@ export default async function AdminPhotosPage() {
       infiniteScrollInitial: INFINITE_SCROLL_INITIAL_ADMIN_PHOTOS,
       infiniteScrollMultiple: INFINITE_SCROLL_MULTIPLE_ADMIN_PHOTOS,
       timezone,
+      debugColorData: ADMIN_DEBUG_TOOLS_ENABLED,
     }} />
   );
 }

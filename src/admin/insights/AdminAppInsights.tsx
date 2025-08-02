@@ -6,7 +6,7 @@ import {
   getUniqueLenses,
   getUniqueRecipes,
   getUniqueTags,
-  getPhotosInNeedOfSyncCount,
+  getPhotosInNeedOfUpdateCount,
 } from '@/photo/db/query';
 import AdminAppInsightsClient from './AdminAppInsightsClient';
 import { getAllInsights, getGitHubMetaForCurrentApp } from '.';
@@ -27,7 +27,7 @@ export default async function AdminAppInsights() {
   ] = await Promise.all([
     getPhotosMeta({ hidden: 'include' }),
     getPhotosMeta({ hidden: 'only' }),
-    getPhotosInNeedOfSyncCount(),
+    getPhotosInNeedOfUpdateCount(),
     getPhotosMeta({ maximumAspectRatio: 0.9 }),
     getGitHubMetaForCurrentApp(),
     getUniqueCameras(),
