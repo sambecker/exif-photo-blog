@@ -11,7 +11,7 @@ import {
   PRESERVE_ORIGINAL_UPLOADS,
 } from '@/app/config';
 
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 const DEBUG_PHOTO_BLOBS = false;
 
