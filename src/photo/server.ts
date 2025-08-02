@@ -25,7 +25,7 @@ import {
 } from './db/query';
 import { PhotoDbInsert } from '.';
 import { convertExifToFormData } from './form/server';
-import { getColorFieldsForPhotoUrlFormData } from './color/server';
+import { getColorDataForPhotoForm } from './color/server';
 
 const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
@@ -113,7 +113,7 @@ export const extractImageDataFromBlobPath = async (
 
   if (error) { console.log(error); }
 
-  const colorFields = await getColorFieldsForPhotoUrlFormData(url);
+  const colorFields = await getColorDataForPhotoForm(url);
 
   return {
     blobId,

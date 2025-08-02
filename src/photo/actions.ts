@@ -64,7 +64,7 @@ import { convertStringToArray } from '@/utility/string';
 import { after } from 'next/server';
 import {
   getColorFieldsForImageUrl,
-  getColorFieldsForPhotoUrlDbInsert,
+  getColorDataForPhotoDbInsert,
 } from '@/photo/color/server';
 
 // Private actions
@@ -425,13 +425,15 @@ export const storeColorDataForAllPhotosAction = async () =>
   runAuthenticatedAdminServerAction(async () => {
     const start = performance.now();
     const photoUrls = await getUrlsForPhotos();
+    let count = 0;
     for (const { id, url } of photoUrls) {
+      count++;
       const {
         colorData,
         colorLightness,
         colorChroma,
         colorHue,
-      } = await getColorFieldsForPhotoUrlDbInsert(url) ?? {};
+      } = await getColorDataForPhotoDbInsert(url) ?? {};
       if (
         colorData &&
         colorLightness !== undefined &&
@@ -446,9 +448,10 @@ export const storeColorDataForAllPhotosAction = async () =>
           colorHue,
         );
       }
+      console.log(`Captured ${id} color data [${count}/${photoUrls.length}]`);
     }
     const end = performance.now();
-    console.log(`Updated ${photoUrls.length} photos in ${end - start}ms`);
+    console.log(`Updated ${count} photos in ${end - start}ms`);
     revalidateAllKeysAndPaths();
   });
 

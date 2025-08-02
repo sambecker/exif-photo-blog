@@ -80,7 +80,7 @@ export const getColorFieldsForImageUrl = async (
 };
 
 // Used when inserting colors into database
-export const getColorFieldsForPhotoUrlDbInsert = async (
+export const getColorDataForPhotoDbInsert = async (
   ...args: Parameters<typeof getColorFieldsForImageUrl>
 ) => {
   const { colorData, ...rest } = await getColorFieldsForImageUrl(...args) ?? {};
@@ -90,11 +90,11 @@ export const getColorFieldsForPhotoUrlDbInsert = async (
 };
 
 // Used when preparing colors for form
-export const getColorFieldsForPhotoUrlFormData = async (
+export const getColorDataForPhotoForm = async (
   ...args: Parameters<typeof getColorFieldsForImageUrl>
 ) => {
   const { colorLightness, colorChroma, colorHue, ...rest} =
-    await getColorFieldsForPhotoUrlDbInsert(...args) ?? {};
+    await getColorDataForPhotoDbInsert(...args) ?? {};
   return {
     colorLightness: `${colorLightness}`,
     colorChroma: `${colorChroma}`,
