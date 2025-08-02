@@ -16,6 +16,7 @@ import { pluralize } from '@/utility/string';
 import IconBroom from '@/components/icons/IconBroom';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 import { useAppText } from '@/i18n/state/client';
+import UpdateAllColorsButton from '@/photo/color/UpdateAllColorsButton';
 
 export default function AdminPhotosClient({
   photos,
@@ -28,6 +29,7 @@ export default function AdminPhotosClient({
   infiniteScrollInitial,
   infiniteScrollMultiple,
   timezone,
+  debugColorData,
 }: {
   photos: Photo[]
   photosCount: number
@@ -39,6 +41,7 @@ export default function AdminPhotosClient({
   infiniteScrollInitial: number
   infiniteScrollMultiple: number
   timezone: Timezone
+  debugColorData: boolean
 }) {
   const { uploadState: { isUploading } } = useAppState();
 
@@ -56,6 +59,8 @@ export default function AdminPhotosClient({
                 onLastUpload={onLastUpload}
               />
             </div>
+            {debugColorData &&
+              <UpdateAllColorsButton />}
             {photosCountNeedsSync > 0 &&
               <PathLoaderButton
                 path={PATH_ADMIN_PHOTOS_UPDATES}

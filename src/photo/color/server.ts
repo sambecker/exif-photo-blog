@@ -5,7 +5,6 @@ import { FastAverageColor } from 'fast-average-color';
 import { Oklch, PhotoColorData } from '.';
 import sharp from 'sharp';
 import { extractColors } from 'extract-colors';
-import { Photo } from '..';
 
 const NULL_RGB = { r: 0, g: 0, b: 0 };
 
@@ -64,38 +63,42 @@ const getColorsFromImageUrl = async (
 
 export const getColorFieldsForImageUrl = async (
   url: string,
-): Promise<Partial<Photo>> => {
-  const colorData = await getColorsFromImageUrl(url);
-  return {
-    colorData,
-    // Use fast-average-color for color-based sorting
-    // (store all values as integers for faster sorting)
-    colorLightness: Math.round(colorData.average.l * 100),
-    colorChroma: Math.round(colorData.average.c * 100),
-    colorHue: Math.round(colorData.average.h),
-  };
+) => {
+  try {
+    const colorData = await getColorsFromImageUrl(url);
+    return {
+      colorData,
+      // Use fast-average-color for color-based sorting
+      // (store all values as integers for faster sorting)
+      colorLightness: Math.round(colorData.average.l * 100),
+      colorChroma: Math.round(colorData.average.c * 100),
+      colorHue: Math.round(colorData.average.h),
+    } as const;
+  } catch {
+    console.log('Error fetching image url data', url);
+  }
 };
 
+// Used when inserting colors into database
+export const getColorFieldsForPhotoUrlDbInsert = async (
+  ...args: Parameters<typeof getColorFieldsForImageUrl>
+) => {
+  const { colorData, ...rest } = await getColorFieldsForImageUrl(...args) ?? {};
+  if (colorData) {
+    return { colorData: JSON.stringify(colorData), ...rest };
+  }
+};
+
+// Used when preparing colors for form
 export const getColorFieldsForPhotoUrlFormData = async (
   ...args: Parameters<typeof getColorFieldsForImageUrl>
 ) => {
-  const {
-    colorData,
-    colorLightness,
-    colorChroma,
-    colorHue,
-  } = await getColorFieldsForImageUrl(...args);
-  if (
-    colorData &&
-    colorLightness !== undefined &&
-    colorChroma !== undefined &&
-    colorHue !== undefined
-  ) {
-    return {
-      colorData: JSON.stringify(colorData),
-      colorLightness: colorLightness.toString(),
-      colorChroma: colorChroma.toString(),
-      colorHue: colorHue.toString(),
-    };
-  }
+  const { colorLightness, colorChroma, colorHue, ...rest} =
+    await getColorFieldsForPhotoUrlDbInsert(...args) ?? {};
+  return {
+    colorLightness: `${colorLightness}`,
+    colorChroma: `${colorChroma}`,
+    colorHue: `${colorHue}`,
+    ...rest,
+  };
 };

@@ -13,6 +13,8 @@ import {
   deletePhotoRecipeGlobally,
   renamePhotoRecipeGlobally,
   getPhotosNeedingRecipeTitleCount,
+  getUrlsForPhotos,
+  updateColorDataForPhoto,
 } from '@/photo/db/query';
 import { PhotoQueryOptions, areOptionsSensitive } from './db';
 import {
@@ -60,7 +62,10 @@ import { convertUploadToPhoto } from './storage';
 import { UrlAddStatus } from '@/admin/AdminUploadsClient';
 import { convertStringToArray } from '@/utility/string';
 import { after } from 'next/server';
-import { getColorFieldsForImageUrl } from '@/photo/color/server';
+import {
+  getColorFieldsForImageUrl,
+  getColorFieldsForPhotoUrlDbInsert,
+} from '@/photo/color/server';
 
 // Private actions
 
@@ -413,6 +418,38 @@ export const storeColorDataForPhotoAction = async (photoId: string) =>
       }));
       revalidatePhoto(photo.id);
     }
+  });
+
+// Convenience action to experiment with color formulations
+export const storeColorDataForAllPhotosAction = async () =>
+  runAuthenticatedAdminServerAction(async () => {
+    const start = performance.now();
+    const photoUrls = await getUrlsForPhotos();
+    for (const { id, url } of photoUrls) {
+      const {
+        colorData,
+        colorLightness,
+        colorChroma,
+        colorHue,
+      } = await getColorFieldsForPhotoUrlDbInsert(url) ?? {};
+      if (
+        colorData &&
+        colorLightness !== undefined &&
+        colorChroma !== undefined &&
+        colorHue !== undefined
+      ) {
+        await updateColorDataForPhoto(
+          id,
+          colorData,
+          colorLightness,
+          colorChroma,
+          colorHue,
+        );
+      }
+    }
+    const end = performance.now();
+    console.log(`Updated ${photoUrls.length} photos in ${end - start}ms`);
+    revalidateAllKeysAndPaths();
   });
 
 export const deletePhotoRecipeGloballyAction = async (formData: FormData) =>

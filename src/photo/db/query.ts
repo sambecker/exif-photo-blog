@@ -633,7 +633,7 @@ export const getPhoto = async (
       .then(photos => photos.length > 0 ? photos[0] : undefined);
   }, 'getPhoto');
 
-// Sync queries
+// Update queries
 
 const outdatedWhereClauses = [
   `updated_at < $1`,
@@ -675,26 +675,55 @@ const needsSyncWhereStatement =
     ...needsColorDataWhereClauses,
   ].join(' OR ')}`;
 
-export const getPhotosInNeedOfUpdate = () => safelyQueryPhotos(
-  () => query(`
-    SELECT * FROM photos
-    ${needsSyncWhereStatement}
-    ORDER BY created_at DESC
-    LIMIT ${UPDATE_QUERY_LIMIT}
-  `,
-  outdatedWhereValues,
-  )
-    .then(({ rows }) => rows.map(parsePhotoFromDb)),
-  'getPhotosInNeedOfUpdate',
-);
+export const getPhotosInNeedOfUpdate = () =>
+  safelyQueryPhotos(
+    () => query(`
+      SELECT * FROM photos
+      ${needsSyncWhereStatement}
+      ORDER BY created_at DESC
+      LIMIT ${UPDATE_QUERY_LIMIT}
+    `,
+    outdatedWhereValues,
+    )
+      .then(({ rows }) => rows.map(parsePhotoFromDb)),
+    'getPhotosInNeedOfUpdate',
+  );
 
-export const getPhotosInNeedOfSyncCount = () => safelyQueryPhotos(
-  () => query(`
-    SELECT COUNT(*) FROM photos
-    ${needsSyncWhereStatement}
-  `,
-  outdatedWhereValues,
-  )
-    .then(({ rows }) => parseInt(rows[0].count, 10)),
-  'getPhotosInNeedOfSyncCount',
-);
+export const getPhotosInNeedOfUpdateCount = () =>
+  safelyQueryPhotos(
+    () => query(`
+      SELECT COUNT(*) FROM photos
+      ${needsSyncWhereStatement}
+    `,
+    outdatedWhereValues,
+    )
+      .then(({ rows }) => parseInt(rows[0].count, 10)),
+    'getPhotosInNeedOfUpdateCount',
+  );
+
+// Backfills and experimentation
+
+export const getUrlsForPhotos = () =>
+  safelyQueryPhotos(() => sql<{ id: string, url: string }>`
+    SELECT id, url FROM photos
+    LIMIT ${UPDATE_QUERY_LIMIT}
+  `.then(({ rows }) => rows), 'getUrlsForPhotos');
+
+export const updateColorDataForPhoto = (
+  photoId: string,
+  colorData: string,
+  colorLightness: number,
+  colorChroma: number,
+  colorHue: number,
+) =>
+  safelyQueryPhotos(
+    () => sql`
+      UPDATE photos SET
+      color_data=${colorData},
+      color_lightness=${colorLightness},
+      color_chroma=${colorChroma},
+      color_hue=${colorHue}
+      WHERE id=${photoId}
+    `,
+    'updateColorDataForPhoto',
+  );
