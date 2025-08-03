@@ -12,7 +12,7 @@ import {
 } from '@/app/config';
 
 // TODO: Reduce maxDuration before merging
-export const maxDuration = 300;
+export const maxDuration = 900;
 
 const DEBUG_PHOTO_BLOBS = false;
 
