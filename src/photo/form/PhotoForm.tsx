@@ -460,7 +460,6 @@ export default function PhotoForm({
                       classNameDot="size-[13px]!"
                       // eslint-disable-next-line max-len
                       colorData={generateColorDataFromString(formData.colorData)}
-                      separateAverage={false}
                     />}
                   />;
                 case 'visibility':

@@ -87,10 +87,7 @@ export default function AdminPhotosTable({
                 </Link>
                 {debugColorData && photo.colorData &&
                   <div>
-                    <PhotoColors
-                      colorData={photo.colorData}
-                      separateAverage={false}
-                    />
+                    <PhotoColors colorData={photo.colorData} />
                   </div>}
               </span>
               {!doesPhotoHaveDefaultVisibility(photo) &&
