@@ -694,26 +694,16 @@ export const getPhotosInNeedOfUpdateCount = () =>
 
 // Backfills and experimentation
 
-export const getUrlsForPhotos = () =>
-  safelyQueryPhotos(() => sql<{ id: string, url: string }>`
-    SELECT id, url FROM photos
-    LIMIT ${UPDATE_QUERY_LIMIT}
-  `.then(({ rows }) => rows)
-  , 'getUrlsForPhotos');
-
-export const getUrlsForPhotosWithMissingAiColor = () =>
-  safelyQueryPhotos(() => sql<{ id: string, url: string }>`
-    SELECT id, url FROM photos
-    LIMIT ${UPDATE_QUERY_LIMIT}
-  `.then(({ rows }) => rows)
-  , 'getUrlsForPhotosWithMissingAiColor');
-
 export const getColorDataForPhotos = () =>
-  safelyQueryPhotos(() => sql<{ id: string, color_data: PhotoColorData }>`
-    SELECT id, color_data FROM photos
+  safelyQueryPhotos(() => sql<{
+    id: string,
+    url: string,
+    color_data?: PhotoColorData,
+  }>`
+    SELECT id, url, color_data FROM photos
     LIMIT ${UPDATE_QUERY_LIMIT}
-  `.then(({ rows }) => rows.map(({ id, color_data }) =>
-    ({ id, colorData: color_data })))
+  `.then(({ rows }) => rows.map(({ id, url, color_data }) =>
+    ({ id, url, colorData: color_data })))
   , 'getColorDataForPhotos');
 
 export const updateColorDataForPhoto = (

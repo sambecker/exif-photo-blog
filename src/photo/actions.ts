@@ -14,7 +14,6 @@ import {
   renamePhotoRecipeGlobally,
   getPhotosNeedingRecipeTitleCount,
   updateColorDataForPhoto,
-  getUrlsForPhotos,
   getColorDataForPhotos,
 } from '@/photo/db/query';
 import { PhotoQueryOptions, areOptionsSensitive } from './db';
@@ -65,7 +64,7 @@ import { convertStringToArray } from '@/utility/string';
 import { after } from 'next/server';
 import {
   getColorFieldsForImageUrl,
-  getColorDataForPhotoDbInsert,
+  getColorsFromImageUrl,
 } from '@/photo/color/server';
 import { calculateColorSort } from './color/sort';
 
@@ -424,45 +423,16 @@ export const storeColorDataForPhotoAction = async (photoId: string) =>
 
 export const recalculateColorDataForAllPhotosAction = async () =>
   runAuthenticatedAdminServerAction(async () => {
-    const photoUrls = await getColorDataForPhotos();
-    for (const { id, colorData } of photoUrls) {
+    const photos = await getColorDataForPhotos();
+    for (const { id, url, colorData: _colorData } of photos) {
+      const colorData = _colorData ?? await getColorsFromImageUrl(url);
       const colorSort = calculateColorSort(colorData);
-      console.log(`Recalculated ${id} color data`);
       await updateColorDataForPhoto(
         id,
         JSON.stringify(colorData),
         colorSort,
       );
     }
-  });
-
-// Convenience action to experiment with color formulations
-export const storeColorDataForAllPhotosAction = async () =>
-  runAuthenticatedAdminServerAction(async () => {
-    const start = performance.now();
-    const photoUrls = await getUrlsForPhotos();
-    let count = 0;
-    for (const { id, url } of photoUrls) {
-      count++;
-      const {
-        colorData,
-        colorSort,
-      } = await getColorDataForPhotoDbInsert(url, true) ?? {};
-      if (
-        colorData &&
-        colorSort !== undefined
-      ) {
-        await updateColorDataForPhoto(
-          id,
-          colorData,
-          colorSort,
-        );
-      }
-      console.log(`Captured ${id} color data [${count}/${photoUrls.length}]`);
-    }
-    const end = performance.now();
-    console.log(`Updated ${count} photos in ${end - start}ms`);
-    revalidateAllKeysAndPaths();
   });
 
 export const deletePhotoRecipeGloballyAction = async (formData: FormData) =>

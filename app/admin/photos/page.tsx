@@ -6,7 +6,6 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { TIMEZONE_COOKIE_NAME } from '@/utility/timezone';
 import {
-  ADMIN_DEBUG_TOOLS_ENABLED,
   AI_CONTENT_GENERATION_ENABLED,
   PRESERVE_ORIGINAL_UPLOADS,
 } from '@/app/config';
@@ -58,7 +57,6 @@ export default async function AdminPhotosPage() {
       infiniteScrollInitial: INFINITE_SCROLL_INITIAL_ADMIN_PHOTOS,
       infiniteScrollMultiple: INFINITE_SCROLL_MULTIPLE_ADMIN_PHOTOS,
       timezone,
-      debugColorData: ADMIN_DEBUG_TOOLS_ENABLED,
     }} />
   );
 }

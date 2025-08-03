@@ -41,7 +41,7 @@ export default function AdminPhotosClient({
   infiniteScrollInitial: number
   infiniteScrollMultiple: number
   timezone: Timezone
-  debugColorData: boolean
+  debugColorData?: boolean
 }) {
   const { uploadState: { isUploading } } = useAppState();
 

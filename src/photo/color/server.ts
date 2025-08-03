@@ -57,7 +57,7 @@ const getExtractedColorsFromImageUrl = async (url: string) => {
     colors.map(({ hex }) => convertHexToOklch(hex)));
 };
 
-const getColorsFromImageUrl = async (
+export const getColorsFromImageUrl = async (
   url: string,
   isBatch?: boolean,
 ): Promise<PhotoColorData> => {
