@@ -11,6 +11,7 @@ export default function AdminPhotosTableInfinite({
   hasAiTextGeneration,
   canEdit,
   canDelete,
+  debugColorData,
 }: {
   initialOffset: number
   itemsPerPage: number
@@ -32,6 +33,7 @@ export default function AdminPhotosTableInfinite({
           hasAiTextGeneration={hasAiTextGeneration}
           canEdit={canEdit}
           canDelete={canDelete}
+          debugColorData={debugColorData}
         />}
     </InfinitePhotoScroll>
   );
