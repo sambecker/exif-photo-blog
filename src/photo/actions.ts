@@ -13,8 +13,8 @@ import {
   deletePhotoRecipeGlobally,
   renamePhotoRecipeGlobally,
   getPhotosNeedingRecipeTitleCount,
-  getUrlsForPhotos,
   updateColorDataForPhoto,
+  getUrlsForPhotosWithMissingAiColor,
 } from '@/photo/db/query';
 import { PhotoQueryOptions, areOptionsSensitive } from './db';
 import {
@@ -424,7 +424,7 @@ export const storeColorDataForPhotoAction = async (photoId: string) =>
 export const storeColorDataForAllPhotosAction = async () =>
   runAuthenticatedAdminServerAction(async () => {
     const start = performance.now();
-    const photoUrls = await getUrlsForPhotos();
+    const photoUrls = await getUrlsForPhotosWithMissingAiColor();
     let count = 0;
     for (const { id, url } of photoUrls) {
       count++;

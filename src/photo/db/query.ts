@@ -709,6 +709,13 @@ export const getUrlsForPhotos = () =>
     LIMIT ${UPDATE_QUERY_LIMIT}
   `.then(({ rows }) => rows), 'getUrlsForPhotos');
 
+export const getUrlsForPhotosWithMissingAiColor = () =>
+  safelyQueryPhotos(() => sql<{ id: string, url: string }>`
+    SELECT id, url FROM photos
+    WHERE color_data->'ai' IS NULL
+    LIMIT ${UPDATE_QUERY_LIMIT}
+  `.then(({ rows }) => rows), 'getUrlsForPhotos');
+
 export const updateColorDataForPhoto = (
   photoId: string,
   colorData: string,
