@@ -11,8 +11,7 @@ import {
   PRESERVE_ORIGINAL_UPLOADS,
 } from '@/app/config';
 
-// TODO: Reduce maxDuration before merging
-export const maxDuration = 800;
+export const maxDuration = 60;
 
 const DEBUG_PHOTO_BLOBS = false;
 
