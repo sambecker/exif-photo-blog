@@ -55,8 +55,9 @@ const getExtractedColorsFromImageUrl = async (url: string) => {
 
 const getColorsFromImageUrl = async (
   url: string,
+  useAi?: boolean,
 ): Promise<PhotoColorData> => {
-  const ai = await getColorFromAI(url);
+  const ai = useAi ? await getColorFromAI(url) : undefined;
   const average = await getAverageColorFromImageUrl(url);
   const colors = await getExtractedColorsFromImageUrl(url);
   return {
@@ -68,9 +69,10 @@ const getColorsFromImageUrl = async (
 
 export const getColorFieldsForImageUrl = async (
   url: string,
+  useAi?: boolean,
 ) => {
   try {
-    const colorData = await getColorsFromImageUrl(url);
+    const colorData = await getColorsFromImageUrl(url, useAi);
     const colorPreferred = colorData.ai ?? colorData.average;
     return {
       colorData,

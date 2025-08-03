@@ -53,7 +53,7 @@ import { AiImageQuery, getAiImageQuery } from './ai';
 import { streamOpenAiImageQuery } from '@/platforms/openai';
 import {
   AI_TEXT_AUTO_GENERATED_FIELDS,
-  AI_TEXT_GENERATION_ENABLED,
+  AI_CONTENT_GENERATION_ENABLED,
   BLUR_ENABLED,
 } from '@/app/config';
 import { generateAiImageQueries } from './ai/server';
@@ -130,11 +130,11 @@ const addUpload = async ({
   } = await extractImageDataFromBlobPath(url, {
     includeInitialPhotoFields: true,
     generateBlurData: BLUR_ENABLED,
-    generateResizedImage: AI_TEXT_GENERATION_ENABLED,
+    generateResizedImage: AI_CONTENT_GENERATION_ENABLED,
   });
 
   if (formDataFromExif) {
-    if (AI_TEXT_GENERATION_ENABLED) {
+    if (AI_CONTENT_GENERATION_ENABLED) {
       onStreamUpdate?.('Generating AI text');
     }
 
@@ -213,7 +213,7 @@ export const addUploadsAction = async ({
   shouldRevalidateAllKeysAndPaths?: boolean
 }) =>
   runAuthenticatedAdminServerAction(async () => {
-    const PROGRESS_TASK_COUNT = AI_TEXT_GENERATION_ENABLED ? 5 : 4;
+    const PROGRESS_TASK_COUNT = AI_CONTENT_GENERATION_ENABLED ? 5 : 4;
 
     const addedUploadUrls: string[] = [];
     let currentUploadUrl = '';
@@ -433,7 +433,10 @@ export const storeColorDataForAllPhotosAction = async () =>
         colorLightness,
         colorChroma,
         colorHue,
-      } = await getColorDataForPhotoDbInsert(url) ?? {};
+      } = await getColorDataForPhotoDbInsert(
+        url,
+        AI_CONTENT_GENERATION_ENABLED,
+      ) ?? {};
       if (
         colorData &&
         colorLightness !== undefined &&
@@ -517,7 +520,7 @@ export const syncPhotoAction = async (photoId: string, isBatch?: boolean) =>
       } = await extractImageDataFromBlobPath(photo.url, {
         includeInitialPhotoFields: false,
         generateBlurData: BLUR_ENABLED,
-        generateResizedImage: AI_TEXT_GENERATION_ENABLED,
+        generateResizedImage: AI_CONTENT_GENERATION_ENABLED,
       });
 
       let urlToDelete: string | undefined;

@@ -6,7 +6,7 @@ import PhotoHeader from '@/photo/PhotoHeader';
 import PhotoFilm from '@/film/PhotoFilm';
 import { getRecipePropsFromPhotos } from '@/recipe';
 import { useAppState } from '@/app/AppState';
-import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
+import { AI_CONTENT_GENERATION_ENABLED } from '@/app/config';
 import { useAppText } from '@/i18n/state/client';
 
 export default function FilmHeader({
@@ -57,7 +57,7 @@ export default function FilmHeader({
       indexNumber={indexNumber}
       count={count}
       dateRange={dateRange}
-      hasAiTextGeneration={AI_TEXT_GENERATION_ENABLED}
+      hasAiTextGeneration={AI_CONTENT_GENERATION_ENABLED}
       includeShareButton
     />
   );

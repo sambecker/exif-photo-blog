@@ -3,7 +3,7 @@ import PhotoHeader from '@/photo/PhotoHeader';
 import { Lens, lensFromPhoto } from '.';
 import PhotoLens from './PhotoLens';
 import { descriptionForLensPhotos } from './meta';
-import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
+import { AI_CONTENT_GENERATION_ENABLED } from '@/app/config';
 import { getAppText } from '@/i18n/state/server';
 
 export default async function LensHeader({
@@ -46,7 +46,7 @@ export default async function LensHeader({
       indexNumber={indexNumber}
       count={count}
       dateRange={dateRange}
-      hasAiTextGeneration={AI_TEXT_GENERATION_ENABLED}
+      hasAiTextGeneration={AI_CONTENT_GENERATION_ENABLED}
       includeShareButton
     />
   );

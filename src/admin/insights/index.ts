@@ -11,7 +11,7 @@ import {
   IS_META_TITLE_CONFIGURED,
   HAS_STATIC_OPTIMIZATION,
   GRID_HOMEPAGE_ENABLED,
-  AI_TEXT_GENERATION_ENABLED,
+  AI_CONTENT_GENERATION_ENABLED,
 } from '@/app/config';
 import { PhotoDateRange } from '@/photo';
 import { getGitHubMeta } from '@/platforms/github';
@@ -132,7 +132,7 @@ export const getAllInsights = ({
 }) => ({
   ...getSignificantInsights({ codeMeta, photosCountNeedSync }),
   noFork: !codeMeta?.isForkedFromBase && !codeMeta?.isBaseRepo,
-  noAi: !AI_TEXT_GENERATION_ENABLED,
+  noAi: !AI_CONTENT_GENERATION_ENABLED,
   noConfiguredMeta:
     !IS_META_TITLE_CONFIGURED ||
     !IS_META_DESCRIPTION_CONFIGURED,

@@ -8,7 +8,7 @@ import {
 import { PATH_ADMIN } from '@/app/path';
 import PhotoEditPageClient from '@/photo/PhotoEditPageClient';
 import {
-  AI_TEXT_GENERATION_ENABLED,
+  AI_CONTENT_GENERATION_ENABLED,
   BLUR_ENABLED,
   IS_PREVIEW,
 } from '@/app/config';
@@ -36,10 +36,10 @@ export default async function PhotoEditPage({
 
   if (!photo) { redirect(PATH_ADMIN); }
 
-  const hasAiTextGeneration = AI_TEXT_GENERATION_ENABLED;
+  const hasAiTextGeneration = AI_CONTENT_GENERATION_ENABLED;
   
   // Only generate image thumbnails when AI generation is enabled
-  const imageThumbnailBase64 = AI_TEXT_GENERATION_ENABLED
+  const imageThumbnailBase64 = AI_CONTENT_GENERATION_ENABLED
     ? await resizeImageFromUrl(
       getNextImageUrlForManipulation(photo.url, IS_PREVIEW),
     )

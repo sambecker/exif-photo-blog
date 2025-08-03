@@ -7,7 +7,7 @@ import { cookies } from 'next/headers';
 import { TIMEZONE_COOKIE_NAME } from '@/utility/timezone';
 import {
   ADMIN_DEBUG_TOOLS_ENABLED,
-  AI_TEXT_GENERATION_ENABLED,
+  AI_CONTENT_GENERATION_ENABLED,
   PRESERVE_ORIGINAL_UPLOADS,
 } from '@/app/config';
 
@@ -49,7 +49,7 @@ export default async function AdminPhotosPage() {
       photosCount,
       photosCountNeedsSync,
       shouldResize: !PRESERVE_ORIGINAL_UPLOADS,
-      hasAiTextGeneration: AI_TEXT_GENERATION_ENABLED,
+      hasAiTextGeneration: AI_CONTENT_GENERATION_ENABLED,
       onLastUpload: async () => {
         'use server';
         // Update upload count in admin nav

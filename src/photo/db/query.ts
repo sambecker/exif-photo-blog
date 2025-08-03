@@ -18,7 +18,7 @@ import { Films } from '@/film';
 import {
   ADMIN_SQL_DEBUG_ENABLED,
   AI_TEXT_AUTO_GENERATED_FIELDS,
-  AI_TEXT_GENERATION_ENABLED,
+  AI_CONTENT_GENERATION_ENABLED,
   COLOR_SORT_ENABLED,
 } from '@/app/config';
 import {
@@ -647,7 +647,7 @@ const outdatedWhereValues = [
 ];
 
 const needsAiTextWhereClauses =
-  AI_TEXT_GENERATION_ENABLED
+  AI_CONTENT_GENERATION_ENABLED
     ? AI_TEXT_AUTO_GENERATED_FIELDS
       .map(field => {
         switch (field) {
