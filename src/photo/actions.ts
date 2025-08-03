@@ -66,8 +66,8 @@ import { after } from 'next/server';
 import {
   getColorFieldsForImageUrl,
   getColorDataForPhotoDbInsert,
-  calculateColorValues,
 } from '@/photo/color/server';
+import { calculateColorSort } from './color/sort';
 
 // Private actions
 
@@ -426,7 +426,7 @@ export const recalculateColorDataForAllPhotosAction = async () =>
   runAuthenticatedAdminServerAction(async () => {
     const photoUrls = await getColorDataForPhotos();
     for (const { id, colorData } of photoUrls) {
-      const colorSort = calculateColorValues(colorData);
+      const colorSort = calculateColorSort(colorData);
       console.log(`Recalculated ${id} color data`);
       await updateColorDataForPhoto(
         id,

@@ -9,6 +9,7 @@ import {
   shortenUrl,
 } from '@/utility/url';
 import { getNavSortControlFromString, getSortByFromString } from '@/photo/sort';
+import { parseChromaCutoff, parseStartingHue } from '@/photo/color/sort';
 
 // HARD-CODED GLOBAL CONFIGURATION
 
@@ -281,7 +282,11 @@ export const USER_DEFAULT_SORT_OPTIONS = {
   sortWithPriority: USER_DEFAULT_SORT_WITH_PRIORITY,
 };
 export const COLOR_SORT_ENABLED =
-  process.env.NEXT_PUBLIC_SORT_BY_COLOR === '1';
+  process.env.NEXT_PUBLIC_COLOR_SORT === '1';
+export const COLOR_SORT_STARTING_HUE =
+  parseStartingHue(process.env.NEXT_PUBLIC_COLOR_SORT_STARTING_HUE);
+export const COLOR_SORT_CHROMA_CUTOFF =
+  parseChromaCutoff(process.env.NEXT_PUBLIC_COLOR_SORT_CHROMA_CUTOFF);
 export const NAV_SORT_CONTROL = COLOR_SORT_ENABLED
   ? 'menu'
   : getNavSortControlFromString(process.env.NEXT_PUBLIC_NAV_SORT_CONTROL);
@@ -424,10 +429,15 @@ export const APP_CONFIGURATION = {
   // Sort
   hasDefaultSortBy: Boolean(process.env.NEXT_PUBLIC_DEFAULT_SORT),
   defaultSortBy: USER_DEFAULT_SORT_BY,
-  isSortWithPriority: USER_DEFAULT_SORT_WITH_PRIORITY,
   hasNavSortControl: Boolean(process.env.NEXT_PUBLIC_NAV_SORT_CONTROL),
   navSortControl: NAV_SORT_CONTROL,
   isColorSortEnabled: COLOR_SORT_ENABLED,
+  hasColorSortConfiguration:
+    Boolean(process.env.NEXT_PUBLIC_COLOR_SORT_STARTING_HUE) ||
+    Boolean(process.env.NEXT_PUBLIC_COLOR_SORT_CHROMA_CUTOFF),
+  colorSortStartingHue: COLOR_SORT_STARTING_HUE,
+  colorSortChromaCutoff: COLOR_SORT_CHROMA_CUTOFF,
+  isSortWithPriority: USER_DEFAULT_SORT_WITH_PRIORITY,
   // Display
   showKeyboardShortcutTooltips: SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
   showExifInfo: SHOW_EXIF_DATA,

@@ -1,12 +1,16 @@
 import { convertRgbToOklab, parseHex } from 'culori';
 import { getNextImageUrlForManipulation } from '@/platforms/next-image';
-import { AI_CONTENT_GENERATION_ENABLED, IS_PREVIEW } from '@/app/config';
+import {
+  AI_CONTENT_GENERATION_ENABLED,
+  IS_PREVIEW,
+} from '@/app/config';
 import { FastAverageColor } from 'fast-average-color';
 import { Oklch, PhotoColorData } from './client';
 import sharp from 'sharp';
 import { extractColors } from 'extract-colors';
 import { getImageBase64FromUrl } from '../server';
 import { generateOpenAiImageQuery } from '@/platforms/openai';
+import { calculateColorSort } from './sort';
 
 const NULL_RGB = { r: 0, g: 0, b: 0 };
 
@@ -77,7 +81,7 @@ export const getColorFieldsForImageUrl = async (
     const colorData = await getColorsFromImageUrl(url, isBatch);
     return {
       colorData,
-      colorSort: calculateColorValues(colorData),
+      colorSort: calculateColorSort(colorData),
     };
   } catch {
     console.log('Error fetching image url data', url);
@@ -125,31 +129,4 @@ export const getColorFromAI = async (
   if (hex) {
     return convertHexToOklch(`#${hex}`);
   }
-};
-
-// Start with yellow
-const HUE_MAXIMA = 80;
-// Only sort sufficiently vibrant colors
-const CHROMA_CUTOFF = 0.05;
-
-export const calculateColorValues = (colorData: PhotoColorData) => {
-  const colorPreferred = colorData.ai ?? colorData.average;
-
-  const hueNormalized = colorPreferred.h >= HUE_MAXIMA
-    ? 360 - Math.abs(colorPreferred.h - HUE_MAXIMA)
-    : Math.abs(colorPreferred.h - HUE_MAXIMA);
-
-  const allColors = colorData.ai ? [colorData.ai] : [];
-  allColors.push(...colorData.colors, colorData.average);
-  const chromaAverage = allColors.reduce(
-    (acc, color) => acc + color.c, 0) / allColors.length;
-
-  return colorPreferred.c >= CHROMA_CUTOFF
-    // Organize by hue
-    ? hueNormalized + 200
-    : chromaAverage > 0
-      // Organize by lightness (with some chroma)
-      ? colorData.average.l * 100 + 100 
-      // Organize by lightness (strictly black and white)
-      : colorData.average.l * 100;
 };

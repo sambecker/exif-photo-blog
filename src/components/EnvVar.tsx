@@ -12,7 +12,7 @@ export default function EnvVar({
   className,
 }: {
   variable: string,
-  value?: string,
+  value?: string | number,
   accessory?: ReactNode,
   includeCopyButton?: boolean,
   trailingContent?: ReactNode,
