@@ -20,7 +20,10 @@ export default function ColorDot({
 }) {
   return (
     <Tooltip content={<>
-      {title && <div className="text-dim mb-1">{title}</div>}
+      {title &&
+        <div className="text-dim mb-1 text-left">
+          {title}
+        </div>}
       {renderColor('L', color.l * 100)}
       {renderColor('C', color.c * 100)}
       {renderColor('H', color.h)}

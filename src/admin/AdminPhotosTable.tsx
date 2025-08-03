@@ -18,6 +18,8 @@ import { photoNeedsToBeUpdated } from '@/photo/update';
 import PhotoVisibilityIcon from '@/photo/visibility/PhotoVisibilityIcon';
 import { doesPhotoHaveDefaultVisibility } from '@/photo/visibility';
 import UpdateTooltip from '@/photo/update/UpdateTooltip';
+import PhotoColors from '@/photo/color/PhotoColors';
+import SyncColorButton from '@/photo/color/SyncColorButton';
 
 export default function AdminPhotosTable({
   photos,
@@ -31,6 +33,7 @@ export default function AdminPhotosTable({
   timezone,
   shouldScrollIntoViewOnExternalSync,
   updateMode,
+  debugColorData,
 }: {
   photos: Photo[],
   onLastPhotoVisible?: () => void
@@ -44,6 +47,7 @@ export default function AdminPhotosTable({
   shouldScrollIntoViewOnExternalSync?: boolean
   // Only sync color data where possible
   updateMode?: boolean
+  debugColorData?: boolean
 }) {
   const { invalidateSwr } = useAppState();
 
@@ -81,6 +85,13 @@ export default function AdminPhotosTable({
                 >
                   {titleForPhoto(photo, false)}
                 </Link>
+                {debugColorData && photo.colorData &&
+                  <div>
+                    <PhotoColors
+                      colorData={photo.colorData}
+                      separateAverage={false}
+                    />
+                  </div>}
               </span>
               {!doesPhotoHaveDefaultVisibility(photo) &&
                 <span className={clsx(
@@ -132,6 +143,8 @@ export default function AdminPhotosTable({
                 shouldScrollIntoViewOnExternalSync}
               updateMode={updateMode}
             />
+            {debugColorData &&
+              <SyncColorButton photoId={photo.id} />}
             {canDelete &&
               <DeletePhotoButton
                 photo={photo}

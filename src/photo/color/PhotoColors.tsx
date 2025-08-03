@@ -18,6 +18,14 @@ export default function PhotoColors({
       'inline-flex gap-x-1 flex-wrap',
       className,
     )}>
+      {colorData.ai &&
+        <div className={clsx(separateAverage && 'mr-2')}>
+          <ColorDot
+            title="AI"
+            className={classNameDot}
+            color={colorData.ai}
+          />
+        </div>}
       <div className={clsx(separateAverage && 'mr-2')}>
         <ColorDot
           title="Average"

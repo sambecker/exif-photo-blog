@@ -139,17 +139,20 @@ export const extractImageDataFromBlobPath = async (
 
 const generateBase64 = async (
   image: ArrayBuffer,
-  middleware: (sharp: Sharp) => Sharp,
+  middleware?: (sharp: Sharp) => Sharp,
 ) => 
-  middleware(sharp(image))
+  (middleware ? middleware(sharp(image)) : sharp(image))
     .withMetadata()
     .toFormat('jpeg', { quality: 90 })
     .toBuffer()
     .then(data => `data:image/jpeg;base64,${data.toString('base64')}`);
 
-const resizeImage = async (image: ArrayBuffer) => 
+const resizeImage = async (
+  image: ArrayBuffer,
+  width = IMAGE_WIDTH_RESIZE,
+) => 
   generateBase64(image, sharp => sharp
-    .resize(IMAGE_WIDTH_RESIZE),
+    .resize(width),
   );
 
 const blurImage = async (image: ArrayBuffer) => 
@@ -159,10 +162,22 @@ const blurImage = async (image: ArrayBuffer) =>
     .blur(4),
   );
 
-export const resizeImageFromUrl = async (url: string) => 
+export const getImageBase64FromUrl = async (url: string) => 
   fetch(decodeURIComponent(url))
     .then(res => res.arrayBuffer())
-    .then(buffer => resizeImage(buffer))
+    .then(buffer => generateBase64(buffer))
+    .catch(e => {
+      console.log(`Error getting image base64 from URL (${url})`, e);
+      return '';
+    });
+
+export const resizeImageFromUrl = async (
+  url: string,
+  width?: number,
+) => 
+  fetch(decodeURIComponent(url))
+    .then(res => res.arrayBuffer())
+    .then(buffer => resizeImage(buffer, width))
     .catch(e => {
       console.log(`Error resizing image from URL (${url})`, e);
       return '';

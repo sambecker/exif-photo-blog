@@ -5,6 +5,8 @@ import { FastAverageColor } from 'fast-average-color';
 import { Oklch, PhotoColorData } from '.';
 import sharp from 'sharp';
 import { extractColors } from 'extract-colors';
+import { getImageBase64FromUrl } from '../server';
+import { generateOpenAiImageQuery } from '@/platforms/openai';
 
 const NULL_RGB = { r: 0, g: 0, b: 0 };
 
@@ -47,17 +49,20 @@ const getAverageColorFromImageUrl = async (url: string) => {
 // algorithm library: extract-colors
 const getExtractedColorsFromImageUrl = async (url: string) => {
   const data = await getImageDataFromUrl(url);
-  return extractColors(data);
+  return extractColors(data).then(colors =>
+    colors.map(({ hex }) => convertHexToOklch(hex)));
 };
 
 const getColorsFromImageUrl = async (
   url: string,
 ): Promise<PhotoColorData> => {
+  const ai = await getColorFromAI(url);
   const average = await getAverageColorFromImageUrl(url);
   const colors = await getExtractedColorsFromImageUrl(url);
   return {
+    ai,
     average,
-    colors: colors.map(({ hex }) => convertHexToOklch(hex)),
+    colors,
   };
 };
 
@@ -66,13 +71,14 @@ export const getColorFieldsForImageUrl = async (
 ) => {
   try {
     const colorData = await getColorsFromImageUrl(url);
+    const colorPreferred = colorData.ai ?? colorData.average;
     return {
       colorData,
       // Use fast-average-color for color-based sorting
       // (store all values as integers for faster sorting)
-      colorLightness: Math.round(colorData.average.l * 100),
-      colorChroma: Math.round(colorData.average.c * 100),
-      colorHue: Math.round(colorData.average.h),
+      colorLightness: Math.round(colorPreferred.l * 100),
+      colorChroma: Math.round(colorPreferred.c * 100),
+      colorHue: Math.round(colorPreferred.h),
     } as const;
   } catch {
     console.log('Error fetching image url data', url);
@@ -101,4 +107,19 @@ export const getColorDataForPhotoForm = async (
     colorHue: `${colorHue}`,
     ...rest,
   };
+};
+
+export const getColorFromAI = async (_url: string) => {
+  const url = getNextImageUrlForManipulation(_url, IS_PREVIEW);
+  const image = await getImageBase64FromUrl(url);
+  const hexColor = await generateOpenAiImageQuery(image, `
+    Does this image have a primary subject color?
+    If yes, what is the approximate hex color of the subject.
+    If not, what is the approximate hex color of the background?
+    Respond only with a hex color value:
+  `);
+  const hex = hexColor?.match(/#*([a-f0-9]{6})/i)?.[1];
+  if (hex) {
+    return convertHexToOklch(`#${hex}`);
+  }
 };
