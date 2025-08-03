@@ -1,6 +1,6 @@
 import { convertRgbToOklab, parseHex } from 'culori';
 import { getNextImageUrlForManipulation } from '@/platforms/next-image';
-import { IS_PREVIEW } from '@/app/config';
+import { AI_CONTENT_GENERATION_ENABLED, IS_PREVIEW } from '@/app/config';
 import { FastAverageColor } from 'fast-average-color';
 import { Oklch, PhotoColorData } from '.';
 import sharp from 'sharp';
@@ -55,9 +55,11 @@ const getExtractedColorsFromImageUrl = async (url: string) => {
 
 const getColorsFromImageUrl = async (
   url: string,
-  useAi?: boolean,
+  isBatch?: boolean,
 ): Promise<PhotoColorData> => {
-  const ai = useAi ? await getColorFromAI(url) : undefined;
+  const ai = AI_CONTENT_GENERATION_ENABLED 
+    ? await getColorFromAI(url, isBatch)
+    : undefined;
   const average = await getAverageColorFromImageUrl(url);
   const colors = await getExtractedColorsFromImageUrl(url);
   return {
@@ -69,10 +71,10 @@ const getColorsFromImageUrl = async (
 
 export const getColorFieldsForImageUrl = async (
   url: string,
-  useAi?: boolean,
+  isBatch?: boolean,
 ) => {
   try {
-    const colorData = await getColorsFromImageUrl(url, useAi);
+    const colorData = await getColorsFromImageUrl(url, isBatch);
     const colorPreferred = colorData.ai ?? colorData.average;
     return {
       colorData,
@@ -111,7 +113,10 @@ export const getColorDataForPhotoForm = async (
   };
 };
 
-export const getColorFromAI = async (_url: string) => {
+export const getColorFromAI = async (
+  _url: string,
+  useBatch?: boolean,
+) => {
   const url = getNextImageUrlForManipulation(_url, IS_PREVIEW);
   const image = await getImageBase64FromUrl(url);
   const hexColor = await generateOpenAiImageQuery(image, `
@@ -119,7 +124,7 @@ export const getColorFromAI = async (_url: string) => {
     If yes, what is the approximate hex color of the subject.
     If not, what is the approximate hex color of the background?
     Respond only with a hex color value:
-  `);
+  `, useBatch);
   const hex = hexColor?.match(/#*([a-f0-9]{6})/i)?.[1];
   if (hex) {
     return convertHexToOklch(`#${hex}`);

@@ -433,10 +433,7 @@ export const storeColorDataForAllPhotosAction = async () =>
         colorLightness,
         colorChroma,
         colorHue,
-      } = await getColorDataForPhotoDbInsert(
-        url,
-        AI_CONTENT_GENERATION_ENABLED,
-      ) ?? {};
+      } = await getColorDataForPhotoDbInsert(url, true) ?? {};
       if (
         colorData &&
         colorLightness !== undefined &&
