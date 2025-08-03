@@ -36,11 +36,17 @@ export default function SortMenu({
   });
   
   const itemsSortOrder = [{
-    ...renderLabel(appText.sort.newest, !isAscending),
+    ...renderLabel(
+      isColor ? appText.sort.descending : appText.sort.newest,
+      !isAscending,
+    ),
     icon: renderIcon(!isAscending),
     href: pathDescending,
   }, {
-    ...renderLabel(appText.sort.oldest, isAscending),
+    ...renderLabel(
+      isColor ? appText.sort.ascending : appText.sort.oldest,
+      isAscending,
+    ),
     icon: renderIcon(isAscending),
     href: pathAscending,
   }];
