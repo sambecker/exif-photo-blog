@@ -41,38 +41,3 @@ export const generateColorDataFromString = (colorData?: string) => {
     }
   }
 };
-
-// Start with yellow
-const HUE_MAXIMA = 80;
-// Only sort sufficiently vibrant colors
-const CHROMA_CUTOFF = 0.05;
-
-export const calculateColorValues = (colorData: PhotoColorData) => {
-  const colorPreferred = colorData.ai ?? colorData.average;
-
-  const hueNormalized = colorPreferred.h >= HUE_MAXIMA
-    ? 360 - Math.abs(colorPreferred.h - HUE_MAXIMA)
-    : Math.abs(colorPreferred.h - HUE_MAXIMA);
-
-  const allColors = colorData.ai ? [colorData.ai] : [];
-  allColors.push(...colorData.colors, colorData.average);
-  const chromaAverage = allColors.reduce(
-    (acc, color) => acc + color.c, 0) / allColors.length;
-
-  const colorSort = colorPreferred.c >= CHROMA_CUTOFF
-    // Organize by hue
-    ? hueNormalized + 200
-    : chromaAverage > 0
-      // Organize by lightness (with some chroma)
-      ? colorData.average.l * 100 + 100 
-      // Organize by lightness (strictly black and white)
-      : colorData.average.l * 100;
-
-  // eslint-disable-next-line max-len
-  console.log(`L:${colorPreferred.l} C:${colorPreferred.c} H:${colorPreferred.h} -> SCORE:${colorSort}`);
-
-  return {
-    colorData,
-    colorSort: Math.round(colorSort),
-  };
-};

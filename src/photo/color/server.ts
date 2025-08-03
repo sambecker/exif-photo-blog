@@ -2,7 +2,7 @@ import { convertRgbToOklab, parseHex } from 'culori';
 import { getNextImageUrlForManipulation } from '@/platforms/next-image';
 import { AI_CONTENT_GENERATION_ENABLED, IS_PREVIEW } from '@/app/config';
 import { FastAverageColor } from 'fast-average-color';
-import { calculateColorValues, Oklch, PhotoColorData } from './client';
+import { Oklch, PhotoColorData } from './client';
 import sharp from 'sharp';
 import { extractColors } from 'extract-colors';
 import { getImageBase64FromUrl } from '../server';
@@ -75,7 +75,10 @@ export const getColorFieldsForImageUrl = async (
 ) => {
   try {
     const colorData = await getColorsFromImageUrl(url, isBatch);
-    return calculateColorValues(colorData);
+    return {
+      colorData,
+      colorSort: calculateColorValues(colorData),
+    };
   } catch {
     console.log('Error fetching image url data', url);
   }
@@ -122,4 +125,31 @@ export const getColorFromAI = async (
   if (hex) {
     return convertHexToOklch(`#${hex}`);
   }
+};
+
+// Start with yellow
+const HUE_MAXIMA = 80;
+// Only sort sufficiently vibrant colors
+const CHROMA_CUTOFF = 0.05;
+
+export const calculateColorValues = (colorData: PhotoColorData) => {
+  const colorPreferred = colorData.ai ?? colorData.average;
+
+  const hueNormalized = colorPreferred.h >= HUE_MAXIMA
+    ? 360 - Math.abs(colorPreferred.h - HUE_MAXIMA)
+    : Math.abs(colorPreferred.h - HUE_MAXIMA);
+
+  const allColors = colorData.ai ? [colorData.ai] : [];
+  allColors.push(...colorData.colors, colorData.average);
+  const chromaAverage = allColors.reduce(
+    (acc, color) => acc + color.c, 0) / allColors.length;
+
+  return colorPreferred.c >= CHROMA_CUTOFF
+    // Organize by hue
+    ? hueNormalized + 200
+    : chromaAverage > 0
+      // Organize by lightness (with some chroma)
+      ? colorData.average.l * 100 + 100 
+      // Organize by lightness (strictly black and white)
+      : colorData.average.l * 100;
 };
