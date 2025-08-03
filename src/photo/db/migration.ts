@@ -80,13 +80,11 @@ export const MIGRATIONS: Migration[] = [{
   `,
 }, {
   label: '07: Color Data',
-  fields: ['color_data', 'color_lightness', 'color_chroma', 'color_hue'],
+  fields: ['color_data', 'color_sort'],
   run: () => sql`
     ALTER TABLE photos
     ADD COLUMN IF NOT EXISTS color_data JSONB,
-    ADD COLUMN IF NOT EXISTS color_lightness SMALLINT,
-    ADD COLUMN IF NOT EXISTS color_chroma SMALLINT,
-    ADD COLUMN IF NOT EXISTS color_hue SMALLINT
+    ADD COLUMN IF NOT EXISTS color_sort SMALLINT
   `,
 }];
 

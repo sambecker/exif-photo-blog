@@ -14,7 +14,8 @@ import {
   renamePhotoRecipeGlobally,
   getPhotosNeedingRecipeTitleCount,
   updateColorDataForPhoto,
-  getUrlsForPhotosWithMissingAiColor,
+  getUrlsForPhotos,
+  getColorDataForPhotos,
 } from '@/photo/db/query';
 import { PhotoQueryOptions, areOptionsSensitive } from './db';
 import {
@@ -66,6 +67,7 @@ import {
   getColorFieldsForImageUrl,
   getColorDataForPhotoDbInsert,
 } from '@/photo/color/server';
+import { calculateColorValues } from './color/client';
 
 // Private actions
 
@@ -420,32 +422,40 @@ export const storeColorDataForPhotoAction = async (photoId: string) =>
     }
   });
 
+export const recalculateColorDataForAllPhotosAction = async () =>
+  runAuthenticatedAdminServerAction(async () => {
+    const photoUrls = await getColorDataForPhotos();
+    for (const { id, colorData } of photoUrls) {
+      const colorDataUpdated = calculateColorValues(colorData);
+      console.log(`Recalculated ${id} color data`);
+      await updateColorDataForPhoto(
+        id,
+        JSON.stringify(colorDataUpdated.colorData),
+        colorDataUpdated.colorSort,
+      );
+    }
+  });
+
 // Convenience action to experiment with color formulations
 export const storeColorDataForAllPhotosAction = async () =>
   runAuthenticatedAdminServerAction(async () => {
     const start = performance.now();
-    const photoUrls = await getUrlsForPhotosWithMissingAiColor();
+    const photoUrls = await getUrlsForPhotos();
     let count = 0;
     for (const { id, url } of photoUrls) {
       count++;
       const {
         colorData,
-        colorLightness,
-        colorChroma,
-        colorHue,
+        colorSort,
       } = await getColorDataForPhotoDbInsert(url, true) ?? {};
       if (
         colorData &&
-        colorLightness !== undefined &&
-        colorChroma !== undefined &&
-        colorHue !== undefined
+        colorSort !== undefined
       ) {
         await updateColorDataForPhoto(
           id,
           colorData,
-          colorLightness,
-          colorChroma,
-          colorHue,
+          colorSort,
         );
       }
       console.log(`Captured ${id} color data [${count}/${photoUrls.length}]`);

@@ -30,22 +30,6 @@ export const SORT_BY_OPTIONS = [{
   string: 'uploaded-at-oldest-first',
   canBeDefault: true,
 }, {
-  sortBy: 'lightness',
-  string: 'lightness',
-  canBeDefault: false,
-}, {
-  sortBy: 'lightnessAsc',
-  string: 'lightness-oldest-first',
-  canBeDefault: false,
-}, {
-  sortBy: 'chroma',
-  string: 'chroma',
-  canBeDefault: false,
-}, {
-  sortBy: 'chromaAsc',
-  string: 'chroma-oldest-first',
-  canBeDefault: false,
-}, {
   sortBy: 'hue',
   string: 'hue',
   canBeDefault: false,
@@ -74,10 +58,6 @@ export const getSortByFromString = (sortBy = ''): SortBy => {
   case 'taken-at-oldest-first': return 'takenAtAsc';
   case 'uploaded-at': return 'createdAt';
   case 'uploaded-at-oldest-first': return 'createdAtAsc';
-  case 'lightness': return 'lightness';
-  case 'lightness-oldest-first': return 'lightnessAsc';
-  case 'chroma': return 'chroma';
-  case 'chroma-oldest-first': return 'chromaAsc';
   case 'hue': return 'hue';
   case 'hue-oldest-first': return 'hueAsc';
   default: return 'takenAt';
@@ -87,6 +67,4 @@ export const getSortByFromString = (sortBy = ''): SortBy => {
 export const isSortAscending = (sortBy: SortBy) =>
   sortBy === 'takenAtAsc' ||
   sortBy === 'createdAtAsc' ||
-  sortBy === 'lightnessAsc' ||
-  sortBy === 'chromaAsc' ||
   sortBy === 'hueAsc';

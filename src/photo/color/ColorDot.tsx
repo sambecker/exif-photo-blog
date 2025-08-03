@@ -1,5 +1,5 @@
 import clsx from 'clsx/lite';
-import { convertOklchToCss, Oklch } from '.';
+import { convertOklchToCss, Oklch } from './client';
 import Tooltip from '@/components/Tooltip';
 
 const renderColor = (letter: string, value: number) => (

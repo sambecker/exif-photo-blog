@@ -43,6 +43,7 @@ export default function PhotoMedium({
       ref={ref}
       href={pathForPhoto({ photo, ...categories })}
       className={clsx(
+        'group',
         'active:brightness-75',
         selected && 'brightness-50',
         className,
@@ -61,7 +62,10 @@ export default function PhotoMedium({
               <Spinner size={20} color="text" />
             </div>}
           {debugColor && photo.colorData &&
-            <div className="absolute top-2 right-2 z-10">
+            <div className={clsx(
+              'absolute inset-2 z-10',
+              'opacity-0 group-hover:opacity-100 transition-opacity',
+            )}>
               <PhotoColors
                 className="justify-end"
                 colorData={photo.colorData}

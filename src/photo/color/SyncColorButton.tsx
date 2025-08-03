@@ -3,7 +3,7 @@
 import LoaderButton from '@/components/primitives/LoaderButton';
 import { IoColorFilterOutline } from 'react-icons/io5';
 import {
-  storeColorDataForAllPhotosAction,
+  recalculateColorDataForAllPhotosAction,
   storeColorDataForPhotoAction,
 } from '../actions';
 import { useState } from 'react';
@@ -22,7 +22,7 @@ export default function SyncColorButton({
         setIsUpdatingColorData(true);
         (photoId
           ? storeColorDataForPhotoAction(photoId)
-          : storeColorDataForAllPhotosAction())
+          : recalculateColorDataForAllPhotosAction())
           .finally(() => setIsUpdatingColorData(false));
       }}
       tooltip={photoId

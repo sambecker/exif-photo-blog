@@ -178,30 +178,14 @@ export const getOrderByFromOptions = (options: PhotoQueryOptions) => {
     return sortWithPriority
       ? 'ORDER BY priority_order ASC, created_at ASC'
       : 'ORDER BY created_at ASC';
-  case 'lightness':
-    return sortWithPriority
-      ? 'ORDER BY priority_order ASC, color_lightness DESC'
-      : 'ORDER BY color_lightness DESC';
-  case 'lightnessAsc':
-    return sortWithPriority
-      ? 'ORDER BY priority_order ASC, color_lightness ASC'
-      : 'ORDER BY color_lightness ASC';
-  case 'chroma':
-    return sortWithPriority
-      ? 'ORDER BY priority_order ASC, color_chroma DESC'
-      : 'ORDER BY color_chroma DESC';
-  case 'chromaAsc':
-    return sortWithPriority
-      ? 'ORDER BY priority_order ASC, color_chroma ASC'
-      : 'ORDER BY color_chroma ASC';
   case 'hue':
     return sortWithPriority
-      ? 'ORDER BY priority_order ASC, color_hue DESC'
-      : 'ORDER BY color_hue DESC';
+      ? 'ORDER BY priority_order ASC, color_sort DESC'
+      : 'ORDER BY color_sort DESC';
   case 'hueAsc':
     return sortWithPriority
-      ? 'ORDER BY priority_order ASC, color_hue ASC'
-      : 'ORDER BY color_hue ASC';
+      ? 'ORDER BY priority_order ASC, color_sort ASC'
+      : 'ORDER BY color_sort ASC';
   }
 };
 

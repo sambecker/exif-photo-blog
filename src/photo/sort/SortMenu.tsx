@@ -12,16 +12,12 @@ export default function SortMenu({
   isAscending,
   isTakenAt,
   isUploadedAt,
-  isLightness,
-  isChroma,
-  isHue,
+  isColor,
   pathDescending,
   pathAscending,
   pathTakenAt,
   pathUploadedAt,
-  pathLightness,
-  pathChroma,
-  pathHue,
+  pathColor,
 }: {
   isOpen?: boolean
   setIsOpen?: (isOpen: boolean) => void
@@ -61,19 +57,9 @@ export default function SortMenu({
 
   if (COLOR_SORT_ENABLED) {
     itemsSortType.push({
-      ...renderLabel(appText.sort.lightness, isLightness),
-      icon: renderIcon(isLightness),
-      href: pathLightness,
-    });
-    itemsSortType.push({
-      ...renderLabel(appText.sort.chroma, isChroma),
-      icon: renderIcon(isChroma),
-      href: pathChroma,
-    });
-    itemsSortType.push({
-      ...renderLabel(appText.sort.hue, isHue),
-      icon: renderIcon(isHue),
-      href: pathHue,
+      ...renderLabel(appText.sort.color, isColor),
+      icon: renderIcon(isColor),
+      href: pathColor,
     });
   }
 

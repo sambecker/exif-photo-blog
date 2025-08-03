@@ -38,6 +38,7 @@ import {
 import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
 import { Recipes } from '@/recipe';
 import { Years } from '@/years';
+import { PhotoColorData } from '../color/client';
 
 const createPhotosTable = () =>
   sql`
@@ -68,9 +69,7 @@ const createPhotosTable = () =>
       recipe_title VARCHAR(255),
       recipe_data JSONB,
       color_data JSONB,
-      color_lightness SMALLINT,
-      color_chroma SMALLINT,
-      color_hue SMALLINT,
+      color_sort SMALLINT,
       priority_order REAL,
       taken_at TIMESTAMP WITH TIME ZONE NOT NULL,
       taken_at_naive VARCHAR(255) NOT NULL,
@@ -199,9 +198,7 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       recipe_title,
       recipe_data,
       color_data,
-      color_lightness,
-      color_chroma,
-      color_hue,
+      color_sort,
       priority_order,
       exclude_from_feeds,
       hidden,
@@ -235,9 +232,7 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       ${photo.recipeTitle},
       ${photo.recipeData},
       ${photo.colorData},
-      ${photo.colorLightness},
-      ${photo.colorChroma},
-      ${photo.colorHue},
+      ${photo.colorSort},
       ${photo.priorityOrder},
       ${photo.excludeFromFeeds},
       ${photo.hidden},
@@ -274,9 +269,7 @@ export const updatePhoto = (photo: PhotoDbInsert) =>
     recipe_title=${photo.recipeTitle},
     recipe_data=${photo.recipeData},
     color_data=${photo.colorData},
-    color_lightness=${photo.colorLightness},
-    color_chroma=${photo.colorChroma},
-    color_hue=${photo.colorHue},
+    color_sort=${photo.colorSort},
     priority_order=${photo.priorityOrder || null},
     exclude_from_feeds=${photo.excludeFromFeeds},
     hidden=${photo.hidden},
@@ -662,9 +655,7 @@ const needsAiTextWhereClauses =
 const needsColorDataWhereClauses = COLOR_SORT_ENABLED
   ? [`(
     color_data IS NULL OR
-    color_lightness IS NULL OR
-    color_chroma IS NULL OR
-    color_hue IS NULL
+    color_sort IS NULL
   )`]
   : [];
 
@@ -707,29 +698,34 @@ export const getUrlsForPhotos = () =>
   safelyQueryPhotos(() => sql<{ id: string, url: string }>`
     SELECT id, url FROM photos
     LIMIT ${UPDATE_QUERY_LIMIT}
-  `.then(({ rows }) => rows), 'getUrlsForPhotos');
+  `.then(({ rows }) => rows)
+  , 'getUrlsForPhotos');
 
 export const getUrlsForPhotosWithMissingAiColor = () =>
   safelyQueryPhotos(() => sql<{ id: string, url: string }>`
     SELECT id, url FROM photos
-    WHERE color_data->'ai' IS NULL
     LIMIT ${UPDATE_QUERY_LIMIT}
-  `.then(({ rows }) => rows), 'getUrlsForPhotos');
+  `.then(({ rows }) => rows)
+  , 'getUrlsForPhotosWithMissingAiColor');
+
+export const getColorDataForPhotos = () =>
+  safelyQueryPhotos(() => sql<{ id: string, color_data: PhotoColorData }>`
+    SELECT id, color_data FROM photos
+    LIMIT ${UPDATE_QUERY_LIMIT}
+  `.then(({ rows }) => rows.map(({ id, color_data }) =>
+    ({ id, colorData: color_data })))
+  , 'getColorDataForPhotos');
 
 export const updateColorDataForPhoto = (
   photoId: string,
   colorData: string,
-  colorLightness: number,
-  colorChroma: number,
-  colorHue: number,
+  colorSort: number,
 ) =>
   safelyQueryPhotos(
     () => sql`
       UPDATE photos SET
       color_data=${colorData},
-      color_lightness=${colorLightness},
-      color_chroma=${colorChroma},
-      color_hue=${colorHue}
+      color_sort=${colorSort}
       WHERE id=${photoId}
     `,
     'updateColorDataForPhoto',

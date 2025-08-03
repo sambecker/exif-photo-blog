@@ -5,9 +5,7 @@ import {
   doesPathOfferSort as _doesPathOfferSort,
   PARAM_SORT_ORDER_ASCENDING,
   PARAM_SORT_ORDER_DESCENDING,
-  PARAM_SORT_TYPE_LIGHTNESS,
-  PARAM_SORT_TYPE_CHROMA,
-  PARAM_SORT_TYPE_HUE,
+  PARAM_SORT_TYPE_COLOR,
   PARAM_SORT_TYPE_TAKEN_AT,
   PARAM_SORT_TYPE_UPLOADED_AT,
   PATH_FULL_INFERRED,
@@ -41,28 +39,12 @@ const getSortByComponents = (sortBy: SortBy): {
     sortType: PARAM_SORT_TYPE_UPLOADED_AT,
     sortOrder: PARAM_SORT_ORDER_ASCENDING,
   };
-  case 'lightness': return {
-    sortType: PARAM_SORT_TYPE_LIGHTNESS,
-    sortOrder: PARAM_SORT_ORDER_DESCENDING,
-  };
-  case 'lightnessAsc': return {
-    sortType: PARAM_SORT_TYPE_LIGHTNESS,
-    sortOrder: PARAM_SORT_ORDER_ASCENDING,
-  };
-  case 'chroma': return {
-    sortType: PARAM_SORT_TYPE_CHROMA,
-    sortOrder: PARAM_SORT_ORDER_DESCENDING,
-  };
-  case 'chromaAsc': return {
-    sortType: PARAM_SORT_TYPE_CHROMA,
-    sortOrder: PARAM_SORT_ORDER_ASCENDING,
-  };
   case 'hue': return {
-    sortType: PARAM_SORT_TYPE_HUE,
+    sortType: PARAM_SORT_TYPE_COLOR,
     sortOrder: PARAM_SORT_ORDER_DESCENDING,
   };
   case 'hueAsc': return {
-    sortType: PARAM_SORT_TYPE_HUE,
+    sortType: PARAM_SORT_TYPE_COLOR,
     sortOrder: PARAM_SORT_ORDER_ASCENDING,
   };
   }
@@ -95,19 +77,7 @@ const _getSortOptionsFromParams = (
       : 'createdAt';
     break;
   }
-  case PARAM_SORT_TYPE_LIGHTNESS: {
-    sortBy = isAscending
-      ? 'lightnessAsc'
-      : 'lightness';
-    break;
-  }
-  case PARAM_SORT_TYPE_CHROMA: {
-    sortBy = isAscending
-      ? 'chromaAsc'
-      : 'chroma';
-    break;
-  }
-  case PARAM_SORT_TYPE_HUE: {
+  case PARAM_SORT_TYPE_COLOR: {
     sortBy = isAscending
       ? 'hueAsc'
       : 'hue';
@@ -158,9 +128,7 @@ export const getSortStateFromPath = (pathname: string) => {
   const isAscending = sortOrder === PARAM_SORT_ORDER_ASCENDING;
   const isTakenAt = sortType === PARAM_SORT_TYPE_TAKEN_AT;
   const isUploadedAt = sortType === PARAM_SORT_TYPE_UPLOADED_AT;
-  const isLightness = sortType === PARAM_SORT_TYPE_LIGHTNESS;
-  const isChroma = sortType === PARAM_SORT_TYPE_CHROMA;
-  const isHue = sortType === PARAM_SORT_TYPE_HUE;
+  const isColor = sortType === PARAM_SORT_TYPE_COLOR;
 
   const getPath = ({
     gridOrFull = _gridOrFull,
@@ -203,12 +171,8 @@ export const getSortStateFromPath = (pathname: string) => {
     getPath({ sortType: PARAM_SORT_TYPE_TAKEN_AT, sortOrder });
   const pathUploadedAt =
     getPath({ sortType: PARAM_SORT_TYPE_UPLOADED_AT, sortOrder });
-  const pathLightness =
-    getPath({ sortType: PARAM_SORT_TYPE_LIGHTNESS, sortOrder });
-  const pathChroma =
-    getPath({ sortType: PARAM_SORT_TYPE_CHROMA, sortOrder });
-  const pathHue =
-    getPath({ sortType: PARAM_SORT_TYPE_HUE, sortOrder });
+  const pathColor =
+    getPath({ sortType: PARAM_SORT_TYPE_COLOR, sortOrder });
 
   // Sort clear
   const pathClearSort = _gridOrFull === 'grid'
@@ -222,18 +186,14 @@ export const getSortStateFromPath = (pathname: string) => {
     isAscending,
     isTakenAt,
     isUploadedAt,
-    isLightness,
-    isChroma,
-    isHue,
+    isColor,
     pathGrid,
     pathFull,
     pathDescending,
     pathAscending,
     pathTakenAt,
     pathUploadedAt,
-    pathLightness,
-    pathChroma,
-    pathHue,
+    pathColor,
     pathClearSort,
     pathSortToggle,
   };

@@ -189,22 +189,8 @@ const FORM_METADATA = (
     isJson: true,
     shouldHide: () => !COLOR_SORT_ENABLED,
   },
-  colorLightness: {
-    label: 'lightness',
-    note: 'Used for color-based sorting',
-    noteShort: 'Color-based sorting',
-    shouldHide: () => !COLOR_SORT_ENABLED,
-  },
-  colorChroma: {
-    label: 'chroma',
-    note: 'Used for color-based sorting',
-    noteShort: 'Color-based sorting',
-    shouldHide: () => !COLOR_SORT_ENABLED,
-  },
-  colorHue: {
-    label: 'hue',
-    note: 'Used for color-based sorting',
-    noteShort: 'Color-based sorting',
+  colorSort: {
+    label: 'color sort',
     shouldHide: () => !COLOR_SORT_ENABLED,
   },
   priorityOrder: { label: 'priority order' },
@@ -370,14 +356,8 @@ export const convertFormDataToPhotoDbInsert = (
     exposureCompensation: photoForm.exposureCompensation
       ? parseFloat(photoForm.exposureCompensation)
       : undefined,
-    colorLightness: photoForm.colorLightness
-      ? parseInt(photoForm.colorLightness)
-      : undefined,
-    colorChroma: photoForm.colorChroma
-      ? parseInt(photoForm.colorChroma)
-      : undefined,
-    colorHue: photoForm.colorHue
-      ? parseInt(photoForm.colorHue)
+    colorSort: photoForm.colorSort
+      ? parseInt(photoForm.colorSort)
       : undefined,
     priorityOrder: photoForm.priorityOrder
       ? parseFloat(photoForm.priorityOrder)

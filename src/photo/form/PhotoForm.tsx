@@ -50,7 +50,7 @@ import IconAddUpload from '@/components/icons/IconAddUpload';
 import { didVisibilityChange } from '../visibility';
 import FieldsetVisibility from '../visibility/FieldsetVisibility';
 import PhotoColors from '../color/PhotoColors';
-import { generateColorDataFromString } from '../color';
+import { generateColorDataFromString } from '../color/client';
 
 const THUMBNAIL_SIZE = 300;
 

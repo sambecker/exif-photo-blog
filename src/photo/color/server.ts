@@ -2,7 +2,7 @@ import { convertRgbToOklab, parseHex } from 'culori';
 import { getNextImageUrlForManipulation } from '@/platforms/next-image';
 import { AI_CONTENT_GENERATION_ENABLED, IS_PREVIEW } from '@/app/config';
 import { FastAverageColor } from 'fast-average-color';
-import { Oklch, PhotoColorData } from '.';
+import { calculateColorValues, Oklch, PhotoColorData } from './client';
 import sharp from 'sharp';
 import { extractColors } from 'extract-colors';
 import { getImageBase64FromUrl } from '../server';
@@ -63,7 +63,7 @@ const getColorsFromImageUrl = async (
   const average = await getAverageColorFromImageUrl(url);
   const colors = await getExtractedColorsFromImageUrl(url);
   return {
-    ai,
+    ...ai && { ai },
     average,
     colors,
   };
@@ -75,15 +75,7 @@ export const getColorFieldsForImageUrl = async (
 ) => {
   try {
     const colorData = await getColorsFromImageUrl(url, isBatch);
-    const colorPreferred = colorData.ai ?? colorData.average;
-    return {
-      colorData,
-      // Use fast-average-color for color-based sorting
-      // (store all values as integers for faster sorting)
-      colorLightness: Math.round(colorPreferred.l * 100),
-      colorChroma: Math.round(colorPreferred.c * 100),
-      colorHue: Math.round(colorPreferred.h),
-    } as const;
+    return calculateColorValues(colorData);
   } catch {
     console.log('Error fetching image url data', url);
   }
@@ -95,7 +87,10 @@ export const getColorDataForPhotoDbInsert = async (
 ) => {
   const { colorData, ...rest } = await getColorFieldsForImageUrl(...args) ?? {};
   if (colorData) {
-    return { colorData: JSON.stringify(colorData), ...rest };
+    return {
+      colorData: JSON.stringify(colorData),
+      ...rest,
+    };
   }
 };
 
@@ -103,12 +98,10 @@ export const getColorDataForPhotoDbInsert = async (
 export const getColorDataForPhotoForm = async (
   ...args: Parameters<typeof getColorFieldsForImageUrl>
 ) => {
-  const { colorLightness, colorChroma, colorHue, ...rest} =
+  const { colorSort, ...rest} =
     await getColorDataForPhotoDbInsert(...args) ?? {};
   return {
-    colorLightness: `${colorLightness}`,
-    colorChroma: `${colorChroma}`,
-    colorHue: `${colorHue}`,
+    colorSort: `${colorSort}`,
     ...rest,
   };
 };

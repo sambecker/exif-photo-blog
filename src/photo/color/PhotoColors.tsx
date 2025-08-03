@@ -1,38 +1,32 @@
 import clsx from 'clsx/lite';
 import ColorDot from './ColorDot';
-import { PhotoColorData } from '.';
+import { PhotoColorData } from './client';
 
 export default function PhotoColors({
   className,
   classNameDot,
   colorData,
-  separateAverage = true,
 }: {
   className?: string
   classNameDot?: string
   colorData?: PhotoColorData
-  separateAverage?: boolean
 }) {
   return colorData
     ? <div className={clsx(
-      'inline-flex gap-x-1 flex-wrap',
+      'flex gap-1 flex-wrap justify-start',
       className,
     )}>
       {colorData.ai &&
-        <div className={clsx(separateAverage && 'mr-2')}>
-          <ColorDot
-            title="AI"
-            className={classNameDot}
-            color={colorData.ai}
-          />
-        </div>}
-      <div className={clsx(separateAverage && 'mr-2')}>
         <ColorDot
-          title="Average"
+          title="AI"
           className={classNameDot}
-          color={colorData.average}
-        />
-      </div>
+          color={colorData.ai}
+        />}
+      <ColorDot
+        title="Average"
+        className={classNameDot}
+        color={colorData.average}
+      />
       {colorData.colors.map((color, index) =>
         <ColorDot
           key={index}
