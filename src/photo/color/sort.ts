@@ -38,7 +38,7 @@ export const calculateColorSort = (colorData: PhotoColorData) => {
   const chromaAverage = allColors.reduce(
     (acc, color) => acc + color.c, 0) / allColors.length;
 
-  return colorPreferred.c >= COLOR_SORT_CHROMA_CUTOFF
+  const colorSort = colorPreferred.c >= COLOR_SORT_CHROMA_CUTOFF
     // Organize by hue
     ? hueNormalized + SECTION_OFFSET_HUE
     : chromaAverage > 0
@@ -46,4 +46,6 @@ export const calculateColorSort = (colorData: PhotoColorData) => {
       ? colorData.average.l * 100 + SECTION_OFFSET_LOW_CHROMA
       // Organize by lightness (strictly black and white)
       : colorData.average.l * 100 + SECTION_OFFSET_BLACK_AND_WHITE;
+
+  return Math.round(colorSort);
 };
