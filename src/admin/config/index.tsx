@@ -27,7 +27,7 @@ const ADMIN_CONFIG_SECTIONS = [{
   required: true,
   icon: <BiPencil size={16} />,
 }, {
-  title: 'AI Text Generation',
+  title: 'AI Content Generation',
   titleShort: 'AI',
   required: false,
   icon: <HiSparkles size={14} />,

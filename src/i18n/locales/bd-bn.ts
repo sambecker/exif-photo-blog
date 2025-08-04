@@ -57,6 +57,8 @@ export const TEXT: I18N = {
     sort: 'সাজান',
     newest: 'নতুনতম',
     oldest: 'পুরাতনতম',
+    descending: 'অবরোহী',
+    ascending: 'আরোহী',
     newestFirst: 'নতুনতম প্রথমে',
     oldestFirst: 'পুরাতনতম প্রথমে',
     viewNewest: 'নতুনতম দেখুন',
@@ -66,6 +68,8 @@ export const TEXT: I18N = {
     uploadedAt: 'আপলোড হয়েছে',
     byUploadedAt: 'আপলোডের সময় অনুযায়ী',
     uploadedAtShort: 'আপলোড',
+    color: 'ক্রোমাটিক',
+    byColor: 'রঙ অনুযায়ী',
     clearSort: 'সাজানো মুছুন',
   },
   cmdk: {

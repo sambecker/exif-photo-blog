@@ -4,6 +4,7 @@ import { getSortStateFromPath } from './path';
 import IconCheck from '@/components/icons/IconCheck';
 import { clsx } from 'clsx/lite';
 import { useAppText } from '@/i18n/state/client';
+import { COLOR_SORT_ENABLED } from '@/app/config';
 
 export default function SortMenu({
   isOpen,
@@ -11,10 +12,12 @@ export default function SortMenu({
   isAscending,
   isTakenAt,
   isUploadedAt,
-  pathNewest,
-  pathOldest,
+  isColor,
+  pathDescending,
+  pathAscending,
   pathTakenAt,
   pathUploadedAt,
+  pathColor,
 }: {
   isOpen?: boolean
   setIsOpen?: (isOpen: boolean) => void
@@ -32,6 +35,40 @@ export default function SortMenu({
     </span>,
   });
   
+  const itemsSortOrder = [{
+    ...renderLabel(
+      isColor ? appText.sort.descending : appText.sort.newest,
+      !isAscending,
+    ),
+    icon: renderIcon(!isAscending),
+    href: pathDescending,
+  }, {
+    ...renderLabel(
+      isColor ? appText.sort.ascending : appText.sort.oldest,
+      isAscending,
+    ),
+    icon: renderIcon(isAscending),
+    href: pathAscending,
+  }];
+
+  const itemsSortType = [{
+    ...renderLabel(appText.sort.takenAt, isTakenAt),
+    icon: renderIcon(isTakenAt),
+    href: pathTakenAt,
+  }, {
+    ...renderLabel(appText.sort.uploadedAtShort, isUploadedAt),
+    icon: renderIcon(isUploadedAt),
+    href: pathUploadedAt,
+  }];
+
+  if (COLOR_SORT_ENABLED) {
+    itemsSortType.push({
+      ...renderLabel(appText.sort.color, isColor),
+      icon: renderIcon(isColor),
+      href: pathColor,
+    });
+  }
+
   return (
     <SwitcherItemMenu
       {...{ isOpen, setIsOpen }}
@@ -40,25 +77,9 @@ export default function SortMenu({
         className="shrink-0 translate-x-[0.5px] translate-y-[1px]"
       />}
       sections={[{
-        items: [{
-          ...renderLabel(appText.sort.newest, !isAscending),
-          icon: renderIcon(!isAscending),
-          href: pathNewest,
-        }, {
-          ...renderLabel(appText.sort.oldest, isAscending),
-          icon: renderIcon(isAscending),
-          href: pathOldest,
-        }],
+        items: itemsSortOrder,
       }, {
-        items: [{
-          ...renderLabel(appText.sort.takenAt, isTakenAt),
-          icon: renderIcon(isTakenAt),
-          href: pathTakenAt,
-        }, {
-          ...renderLabel(appText.sort.uploadedAtShort, isUploadedAt),
-          icon: renderIcon(isUploadedAt),
-          href: pathUploadedAt,
-        }],
+        items: itemsSortType,
       }]}
       align="start"
       side="top"

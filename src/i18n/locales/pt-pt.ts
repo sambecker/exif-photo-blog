@@ -57,6 +57,8 @@ export const TEXT: I18N = {
     sort: 'Ordenar',
     newest: 'Mais recentes',
     oldest: 'Mais antigas',
+    descending: 'Decrescente',
+    ascending: 'Crescente',
     newestFirst: 'Mais recentes primeiro',
     oldestFirst: 'Mais antigas primeiro',
     viewNewest: 'Ver mais recentes',
@@ -66,6 +68,8 @@ export const TEXT: I18N = {
     uploadedAt: 'Enviado em',
     byUploadedAt: 'Por data de envio',
     uploadedAtShort: 'Enviado',
+    color: 'Cromático',
+    byColor: 'Por cor',
     clearSort: 'Limpar ordenação',
   },
   cmdk: {

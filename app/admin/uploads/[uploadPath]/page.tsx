@@ -9,7 +9,7 @@ import {
 import UploadPageClient from '@/photo/UploadPageClient';
 import {
   AI_TEXT_AUTO_GENERATED_FIELDS,
-  AI_TEXT_GENERATION_ENABLED,
+  AI_CONTENT_GENERATION_ENABLED,
   BLUR_ENABLED,
 } from '@/app/config';
 import ErrorNote from '@/components/ErrorNote';
@@ -35,12 +35,12 @@ export default async function UploadPage({ params, searchParams }: Params) {
   } = await extractImageDataFromBlobPath(uploadPath, {
     includeInitialPhotoFields: true,
     generateBlurData: BLUR_ENABLED,
-    generateResizedImage: AI_TEXT_GENERATION_ENABLED,
+    generateResizedImage: AI_CONTENT_GENERATION_ENABLED,
   });
 
   const isDataMissing =
     !formDataFromExif ||
-    (AI_TEXT_GENERATION_ENABLED && !imageThumbnailBase64);
+    (AI_CONTENT_GENERATION_ENABLED && !imageThumbnailBase64);
 
   if (isDataMissing && !error) {
     // Only redirect if there's no error to report
@@ -64,7 +64,7 @@ export default async function UploadPage({ params, searchParams }: Params) {
       : undefined,
   ]);
 
-  const hasAiTextGeneration = AI_TEXT_GENERATION_ENABLED;
+  const hasAiTextGeneration = AI_CONTENT_GENERATION_ENABLED;
   let textFieldsToAutoGenerate = AI_TEXT_AUTO_GENERATED_FIELDS;
 
   if (formDataFromExif) {

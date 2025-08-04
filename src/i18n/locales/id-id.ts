@@ -57,6 +57,8 @@ export const TEXT: I18N = {
     sort: 'Urutkan',
     newest: 'Terbaru',
     oldest: 'Terlama',
+    descending: 'Menurun',
+    ascending: 'Menaik',
     newestFirst: 'Terbaru dulu',
     oldestFirst: 'Terlama dulu',
     viewNewest: 'Lihat terbaru',
@@ -66,6 +68,8 @@ export const TEXT: I18N = {
     uploadedAt: 'Diunggah pada',
     byUploadedAt: 'Berdasarkan waktu unggahan',
     uploadedAtShort: 'Diunggah',
+    color: 'Kromatik',
+    byColor: 'Berdasarkan warna',
     clearSort: 'Hapus pengurutan',
   },
   cmdk: {

@@ -49,6 +49,8 @@ import { useAppText } from '@/i18n/state/client';
 import IconAddUpload from '@/components/icons/IconAddUpload';
 import { didVisibilityChange } from '../visibility';
 import FieldsetVisibility from '../visibility/FieldsetVisibility';
+import PhotoColors from '../color/PhotoColors';
+import { generateColorDataFromString } from '../color/client';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -117,8 +119,12 @@ export default function PhotoForm({
             let a = currentForm[key];
             let b = value;
             if (FIELDS_WITH_JSON.includes(key)) {
-              a = a ? JSON.parse(a) : undefined;
-              b = b ? JSON.parse(b) : undefined;
+              try {
+                a = a ? JSON.parse(a) : undefined;
+                b = b ? JSON.parse(b) : undefined;
+              } catch (error) {
+                console.log(`Error parsing JSON: ${key}`, error);
+              }
             }
             if (!deepEqual(a, b)) {
               changedKeys.push(key as keyof PhotoFormData);
@@ -444,6 +450,17 @@ export default function PhotoForm({
                     recipeData={formData.recipeData}
                     film={formData.film}
                     onMatchResults={onMatchResults}
+                  />;
+                case 'colorData':
+                  return <FieldsetWithStatus
+                    key={key}
+                    {...fieldProps}
+                    noteComplex={<PhotoColors
+                      className="translate-y-[1.5px]"
+                      classNameDot="size-[13px]!"
+                      // eslint-disable-next-line max-len
+                      colorData={generateColorDataFromString(formData.colorData)}
+                    />}
                   />;
                 case 'visibility':
                   return <FieldsetVisibility

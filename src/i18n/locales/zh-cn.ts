@@ -57,6 +57,8 @@ export const TEXT: I18N = {
     sort: '排序',
     newest: '最新',
     oldest: '最旧',
+    descending: '降序',
+    ascending: '升序',
     newestFirst: '最新优先',
     oldestFirst: '最旧优先',
     viewNewest: '查看最新',
@@ -66,6 +68,8 @@ export const TEXT: I18N = {
     uploadedAt: '上传时间',
     byUploadedAt: '按上传时间',
     uploadedAtShort: '上传',
+    color: '色度',
+    byColor: '按颜色',
     clearSort: '清除排序',
   },
   cmdk: {

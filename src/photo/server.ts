@@ -25,17 +25,18 @@ import {
 } from './db/query';
 import { PhotoDbInsert } from '.';
 import { convertExifToFormData } from './form/server';
+import { getColorFieldsForPhotoForm } from './color/server';
 
 const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
 
 export const extractImageDataFromBlobPath = async (
   blobPath: string,
-  options?: {
+  options: {
     includeInitialPhotoFields?: boolean
     generateBlurData?: boolean
     generateResizedImage?: boolean
-  },
+  } = {},
 ): Promise<{
   blobId?: string
   formDataFromExif?: Partial<PhotoFormData>
@@ -48,7 +49,7 @@ export const extractImageDataFromBlobPath = async (
     includeInitialPhotoFields,
     generateBlurData,
     generateResizedImage,
-  } = options ?? {};
+  } = options;
 
   const url = decodeURIComponent(blobPath);
 
@@ -112,6 +113,8 @@ export const extractImageDataFromBlobPath = async (
 
   if (error) { console.log(error); }
 
+  const colorFields = await getColorFieldsForPhotoForm(url);
+
   return {
     blobId,
     ...exifData && {
@@ -123,7 +126,8 @@ export const extractImageDataFromBlobPath = async (
           url,
         },
         ...generateBlurData && { blurData },
-        ...convertExifToFormData (exifData, film, recipe),
+        ...convertExifToFormData(exifData, film, recipe),
+        ...colorFields,
       },
     },
     imageResizedBase64,
@@ -135,17 +139,20 @@ export const extractImageDataFromBlobPath = async (
 
 const generateBase64 = async (
   image: ArrayBuffer,
-  middleware: (sharp: Sharp) => Sharp,
+  middleware?: (sharp: Sharp) => Sharp,
 ) => 
-  middleware(sharp(image))
+  (middleware ? middleware(sharp(image)) : sharp(image))
     .withMetadata()
     .toFormat('jpeg', { quality: 90 })
     .toBuffer()
     .then(data => `data:image/jpeg;base64,${data.toString('base64')}`);
 
-const resizeImage = async (image: ArrayBuffer) => 
+const resizeImage = async (
+  image: ArrayBuffer,
+  width = IMAGE_WIDTH_RESIZE,
+) => 
   generateBase64(image, sharp => sharp
-    .resize(IMAGE_WIDTH_RESIZE),
+    .resize(width),
   );
 
 const blurImage = async (image: ArrayBuffer) => 
@@ -155,10 +162,22 @@ const blurImage = async (image: ArrayBuffer) =>
     .blur(4),
   );
 
-export const resizeImageFromUrl = async (url: string) => 
+export const getImageBase64FromUrl = async (url: string) => 
   fetch(decodeURIComponent(url))
     .then(res => res.arrayBuffer())
-    .then(buffer => resizeImage(buffer))
+    .then(buffer => generateBase64(buffer))
+    .catch(e => {
+      console.log(`Error getting image base64 from URL (${url})`, e);
+      return '';
+    });
+
+export const resizeImageFromUrl = async (
+  url: string,
+  width?: number,
+) => 
+  fetch(decodeURIComponent(url))
+    .then(res => res.arrayBuffer())
+    .then(buffer => resizeImage(buffer, width))
     .catch(e => {
       console.log(`Error resizing image from URL (${url})`, e);
       return '';
@@ -210,6 +229,7 @@ export const convertFormDataToPhotoDbInsertAndLookupRecipeTitle =
         photo.recipeData,
         photo.film,
       );
+      // Only replace recipe title when a new one is found
       if (recipeTitle) {
         photo.recipeTitle = recipeTitle;
       }

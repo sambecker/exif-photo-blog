@@ -14,7 +14,7 @@ import PhotoHeader from './PhotoHeader';
 import RecipeHeader from '@/recipe/RecipeHeader';
 import { ReactNode } from 'react';
 import LensHeader from '@/lens/LensHeader';
-import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
+import { AI_CONTENT_GENERATION_ENABLED } from '@/app/config';
 import YearHeader from '@/years/YearHeader';
 import RecentsHeader from '@/recents/RecentsHeader';
 
@@ -135,7 +135,7 @@ export default function PhotoDetailPage({
           selectedPhoto={photo}
           photos={photos}
           recipe={recipe}
-          hasAiTextGeneration={AI_TEXT_GENERATION_ENABLED}
+          hasAiTextGeneration={AI_CONTENT_GENERATION_ENABLED}
         />}
       />
       <AnimateItems

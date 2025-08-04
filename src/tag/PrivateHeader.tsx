@@ -1,7 +1,7 @@
 import { Photo, photoQuantityText } from '@/photo';
 import PhotoHeader from '@/photo/PhotoHeader';
 import PhotoPrivate from './PhotoPrivate';
-import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
+import { AI_CONTENT_GENERATION_ENABLED } from '@/app/config';
 import { getAppText } from '@/i18n/state/server';
 
 export default async function PrivateHeader({
@@ -25,7 +25,7 @@ export default async function PrivateHeader({
       selectedPhoto={selectedPhoto}
       indexNumber={indexNumber}
       count={count}
-      hasAiTextGeneration={AI_TEXT_GENERATION_ENABLED}
+      hasAiTextGeneration={AI_CONTENT_GENERATION_ENABLED}
     />
   );
 }

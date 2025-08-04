@@ -1,17 +1,17 @@
-import AdminPhotosSyncClient from '@/admin/AdminPhotosSyncClient';
-import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
-import { getPhotosInNeedOfSync } from '@/photo/db/query';
+import AdminPhotosUpdateClient from '@/admin/AdminPhotosUpdateClient';
+import { AI_CONTENT_GENERATION_ENABLED } from '@/app/config';
+import { getPhotosInNeedOfUpdate } from '@/photo/db/query';
 
 export const maxDuration = 60;
 
 export default async function AdminUpdatesPage() {
-  const photos = await getPhotosInNeedOfSync()
+  const photos = await getPhotosInNeedOfUpdate()
     .catch(() => []);
 
   return (
-    <AdminPhotosSyncClient {...{
+    <AdminPhotosUpdateClient {...{
       photos,
-      hasAiTextGeneration: AI_TEXT_GENERATION_ENABLED,
+      hasAiTextGeneration: AI_CONTENT_GENERATION_ENABLED,
     }} />
   );
 }

@@ -57,6 +57,8 @@ export const TEXT: I18N = {
     sort: 'Sırala',
     newest: 'En Yeni',
     oldest: 'En Eski',
+    descending: 'Azalan',
+    ascending: 'Artan',
     newestFirst: 'En Yeniden Eskiye',
     oldestFirst: 'En Eskiden Yeniye',
     viewNewest: 'En yeniye bak',
@@ -66,6 +68,8 @@ export const TEXT: I18N = {
     uploadedAt: 'Yüklenme Zamanı',
     byUploadedAt: 'Yüklenme zamanına göre',
     uploadedAtShort: 'Yüklenme',
+    color: 'Kromatik',
+    byColor: 'Renge göre',
     clearSort: 'Sıralamayı temizle',
   },
   cmdk: {

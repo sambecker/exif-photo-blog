@@ -13,6 +13,8 @@ import {
   deletePhotoRecipeGlobally,
   renamePhotoRecipeGlobally,
   getPhotosNeedingRecipeTitleCount,
+  updateColorDataForPhoto,
+  getColorDataForPhotos,
 } from '@/photo/db/query';
 import { PhotoQueryOptions, areOptionsSensitive } from './db';
 import {
@@ -51,7 +53,7 @@ import { AiImageQuery, getAiImageQuery } from './ai';
 import { streamOpenAiImageQuery } from '@/platforms/openai';
 import {
   AI_TEXT_AUTO_GENERATED_FIELDS,
-  AI_TEXT_GENERATION_ENABLED,
+  AI_CONTENT_GENERATION_ENABLED,
   BLUR_ENABLED,
 } from '@/app/config';
 import { generateAiImageQueries } from './ai/server';
@@ -60,6 +62,10 @@ import { convertUploadToPhoto } from './storage';
 import { UrlAddStatus } from '@/admin/AdminUploadsClient';
 import { convertStringToArray } from '@/utility/string';
 import { after } from 'next/server';
+import {
+  getColorFieldsForImageUrl,
+  getColorFieldsForPhotoDbInsert,
+} from '@/photo/color/server';
 
 // Private actions
 
@@ -124,11 +130,11 @@ const addUpload = async ({
   } = await extractImageDataFromBlobPath(url, {
     includeInitialPhotoFields: true,
     generateBlurData: BLUR_ENABLED,
-    generateResizedImage: AI_TEXT_GENERATION_ENABLED,
+    generateResizedImage: AI_CONTENT_GENERATION_ENABLED,
   });
 
   if (formDataFromExif) {
-    if (AI_TEXT_GENERATION_ENABLED) {
+    if (AI_CONTENT_GENERATION_ENABLED) {
       onStreamUpdate?.('Generating AI text');
     }
 
@@ -207,7 +213,7 @@ export const addUploadsAction = async ({
   shouldRevalidateAllKeysAndPaths?: boolean
 }) =>
   runAuthenticatedAdminServerAction(async () => {
-    const PROGRESS_TASK_COUNT = AI_TEXT_GENERATION_ENABLED ? 5 : 4;
+    const PROGRESS_TASK_COUNT = AI_CONTENT_GENERATION_ENABLED ? 5 : 4;
 
     const addedUploadUrls: string[] = [];
     let currentUploadUrl = '';
@@ -401,6 +407,39 @@ export const getPhotosNeedingRecipeTitleCountAction = async (
     ),
   );
 
+export const storeColorDataForPhotoAction = async (photoId: string) =>
+  runAuthenticatedAdminServerAction(async () => {
+    const photo = await getPhoto(photoId, true);
+    if (photo) {
+      const colorFields = await getColorFieldsForImageUrl(
+        photo.url,
+        photo.colorData,
+      );
+      if (colorFields) {
+        await updatePhoto(convertPhotoToPhotoDbInsert({
+          ...photo,
+          ...colorFields,
+        }));
+      }
+      revalidatePhoto(photo.id);
+    }
+  });
+
+export const recalculateColorDataForAllPhotosAction = async () =>
+  runAuthenticatedAdminServerAction(async () => {
+    const photos = await getColorDataForPhotos();
+    for (const { id, url, colorData: _colorData } of photos) {
+      const colorFields = await getColorFieldsForPhotoDbInsert(url, _colorData);
+      if (colorFields && colorFields.colorSort) {
+        await updateColorDataForPhoto(
+          id,
+          colorFields.colorData,
+          colorFields.colorSort,
+        );
+      }
+    }
+  });
+
 export const deletePhotoRecipeGloballyAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
     const recipe = formData.get('recipe') as string;
@@ -463,7 +502,7 @@ export const syncPhotoAction = async (photoId: string, isBatch?: boolean) =>
       } = await extractImageDataFromBlobPath(photo.url, {
         includeInitialPhotoFields: false,
         generateBlurData: BLUR_ENABLED,
-        generateResizedImage: AI_TEXT_GENERATION_ENABLED,
+        generateResizedImage: AI_CONTENT_GENERATION_ENABLED,
       });
 
       let urlToDelete: string | undefined;
@@ -490,7 +529,7 @@ export const syncPhotoAction = async (photoId: string, isBatch?: boolean) =>
           semanticDescription: aiSemanticDescription,
         } = await generateAiImageQueries(
           imageResizedBase64,
-          photo.syncStatus.missingAiTextFields,
+          photo.updateStatus.isMissingAiTextFields,
           undefined,
           isBatch,
         );
@@ -526,10 +565,15 @@ export const syncPhotoAction = async (photoId: string, isBatch?: boolean) =>
     }
   });
 
-export const syncPhotosAction = async (photoIds: string[]) =>
+export const syncPhotosAction = async (photosToSync: {
+  photoId: string,
+  onlySyncColorData?: boolean,
+}[]) =>
   runAuthenticatedAdminServerAction(async () => {
-    for (const photoId of photoIds) {
-      await syncPhotoAction(photoId, true);
+    for (const { photoId, onlySyncColorData } of photosToSync) {
+      await (onlySyncColorData
+        ? storeColorDataForPhotoAction(photoId)
+        : syncPhotoAction(photoId, true));
     }
     revalidateAllKeysAndPaths();
   });

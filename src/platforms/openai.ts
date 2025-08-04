@@ -4,7 +4,7 @@ import { createOpenAI } from '@ai-sdk/openai';
 import { Redis } from '@upstash/redis';
 import { Ratelimit } from '@upstash/ratelimit';
 import {
-  AI_TEXT_GENERATION_ENABLED,
+  AI_CONTENT_GENERATION_ENABLED,
   HAS_REDIS_STORAGE,
   OPENAI_BASE_URL,
 } from '@/app/config';
@@ -16,7 +16,7 @@ const redis = HAS_REDIS_STORAGE ? Redis.fromEnv() : undefined;
 const RATE_LIMIT_IDENTIFIER = 'openai-image-query';
 const MODEL = 'gpt-4o';
 
-const openai = AI_TEXT_GENERATION_ENABLED
+const openai = AI_CONTENT_GENERATION_ENABLED
   ? createOpenAI({
     apiKey: process.env.OPENAI_SECRET_KEY,
     ...OPENAI_BASE_URL && { baseURL: OPENAI_BASE_URL },

@@ -56,6 +56,8 @@ export const TEXT = {
     sort: 'Sort',
     newest: 'Newest',
     oldest: 'Oldest',
+    descending: 'Descending',
+    ascending: 'Ascending',
     newestFirst: 'Newest first',
     oldestFirst: 'Oldest first',
     viewNewest: 'View newest',
@@ -65,6 +67,8 @@ export const TEXT = {
     uploadedAt: 'Uploaded at',
     byUploadedAt: 'By uploaded at',
     uploadedAtShort: 'Uploaded',
+    color: 'Chromatic',
+    byColor: 'By color',
     clearSort: 'Clear sort',
   },
   cmdk: {

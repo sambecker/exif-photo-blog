@@ -14,6 +14,7 @@ import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { ReactNode } from 'react';
 import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import { SelectMenuOptionType } from '@/components/SelectMenuOption';
+import { COLOR_SORT_ENABLED } from '@/app/config';
 
 type VirtualFields =
   'visibility' |
@@ -182,6 +183,16 @@ const FORM_METADATA = (
     label: 'taken at (naive)',
     validate: validationMessageNaivePostgresDateString,
   },
+  colorData: {
+    type: 'textarea',
+    label: 'color data',
+    isJson: true,
+    shouldHide: () => !COLOR_SORT_ENABLED,
+  },
+  colorSort: {
+    label: 'color sort',
+    shouldHide: () => !COLOR_SORT_ENABLED,
+  },
   priorityOrder: { label: 'priority order' },
   excludeFromFeeds: { label: 'exclude from feeds', type: 'hidden' },
   hidden: { label: 'hidden', type: 'hidden' },
@@ -256,6 +267,8 @@ export const convertPhotoToFormData = (photo: Photo): PhotoFormData => {
     case 'hidden':
       return value ? 'true' : 'false';
     case 'recipeData':
+      return JSON.stringify(value);
+    case 'colorData':
       return JSON.stringify(value);
     default:
       return value !== undefined && value !== null
@@ -342,6 +355,9 @@ export const convertFormDataToPhotoDbInsert = (
       : undefined,
     exposureCompensation: photoForm.exposureCompensation
       ? parseFloat(photoForm.exposureCompensation)
+      : undefined,
+    colorSort: photoForm.colorSort
+      ? parseInt(photoForm.colorSort)
       : undefined,
     priorityOrder: photoForm.priorityOrder
       ? parseFloat(photoForm.priorityOrder)

@@ -16,6 +16,7 @@ import { pluralize } from '@/utility/string';
 import IconBroom from '@/components/icons/IconBroom';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 import { useAppText } from '@/i18n/state/client';
+import SyncColorButton from '@/photo/color/SyncColorButton';
 
 export default function AdminPhotosClient({
   photos,
@@ -28,6 +29,7 @@ export default function AdminPhotosClient({
   infiniteScrollInitial,
   infiniteScrollMultiple,
   timezone,
+  debugColorData,
 }: {
   photos: Photo[]
   photosCount: number
@@ -39,6 +41,7 @@ export default function AdminPhotosClient({
   infiniteScrollInitial: number
   infiniteScrollMultiple: number
   timezone: Timezone
+  debugColorData?: boolean
 }) {
   const { uploadState: { isUploading } } = useAppState();
 
@@ -56,6 +59,8 @@ export default function AdminPhotosClient({
                 onLastUpload={onLastUpload}
               />
             </div>
+            {debugColorData &&
+              <SyncColorButton />}
             {photosCountNeedsSync > 0 &&
               <PathLoaderButton
                 path={PATH_ADMIN_PHOTOS_UPDATES}
@@ -67,7 +72,7 @@ export default function AdminPhotosClient({
                   pluralize(
                     photosCountNeedsSync,
                     appText.photo.photo,
-                    appText.photo.photoPlural,
+                    appText.photo.photoPlural.toLocaleLowerCase(),
                   ) +
                   ' missing data or AI-generated text'
                 )}
@@ -108,6 +113,7 @@ export default function AdminPhotosClient({
               photos={photos}
               hasAiTextGeneration={hasAiTextGeneration}
               timezone={timezone}
+              debugColorData={debugColorData}
             />
             {photosCount > photos.length &&
               <AdminPhotosTableInfinite
@@ -115,6 +121,7 @@ export default function AdminPhotosClient({
                 itemsPerPage={infiniteScrollMultiple}
                 hasAiTextGeneration={hasAiTextGeneration}
                 timezone={timezone}
+                debugColorData={debugColorData}
               />}
           </div>
         </div>}

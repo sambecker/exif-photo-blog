@@ -11,7 +11,7 @@ import {
   getPhotosMeta,
   getUniqueTags,
   getUniqueRecipes,
-  getPhotosInNeedOfSyncCount,
+  getPhotosInNeedOfUpdateCount,
 } from '@/photo/db/query';
 import {
   getGitHubMetaForCurrentApp,
@@ -37,7 +37,7 @@ export const getAdminDataAction = async () =>
       getPhotosMeta({ hidden: 'only' })
         .then(({ count }) => count)
         .catch(() => 0),
-      getPhotosInNeedOfSyncCount(),
+      getPhotosInNeedOfUpdateCount(),
       getGitHubMetaForCurrentApp(),
       getStorageUploadUrlsNoStore()
         .then(urls => urls.length)
