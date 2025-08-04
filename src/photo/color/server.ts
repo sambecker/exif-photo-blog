@@ -57,7 +57,7 @@ const getExtractedColorsFromImageUrl = async (url: string) => {
     colors.map(({ hex }) => convertHexToOklch(hex)));
 };
 
-export const getColorsFromImageUrl = async (
+const getColorDataFromImageUrl = async (
   url: string,
   isBatch?: boolean,
 ): Promise<PhotoColorData> => {
@@ -75,10 +75,12 @@ export const getColorsFromImageUrl = async (
 
 export const getColorFieldsForImageUrl = async (
   url: string,
+  _colorData?: PhotoColorData,
   isBatch?: boolean,
 ) => {
   try {
-    const colorData = await getColorsFromImageUrl(url, isBatch);
+    const colorData = _colorData ??
+      await getColorDataFromImageUrl(url, isBatch);
     return {
       colorData,
       colorSort: calculateColorSort(colorData),
@@ -89,7 +91,7 @@ export const getColorFieldsForImageUrl = async (
 };
 
 // Used when inserting colors into database
-export const getColorDataForPhotoDbInsert = async (
+export const getColorFieldsForPhotoDbInsert = async (
   ...args: Parameters<typeof getColorFieldsForImageUrl>
 ) => {
   const { colorData, ...rest } = await getColorFieldsForImageUrl(...args) ?? {};
@@ -102,11 +104,11 @@ export const getColorDataForPhotoDbInsert = async (
 };
 
 // Used when preparing colors for form
-export const getColorDataForPhotoForm = async (
+export const getColorFieldsForPhotoForm = async (
   ...args: Parameters<typeof getColorFieldsForImageUrl>
 ) => {
-  const { colorSort, ...rest} =
-    await getColorDataForPhotoDbInsert(...args) ?? {};
+  const { colorSort, ...rest } =
+    await getColorFieldsForPhotoDbInsert(...args) ?? {};
   return {
     colorSort: `${colorSort}`,
     ...rest,

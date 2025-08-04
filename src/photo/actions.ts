@@ -64,9 +64,8 @@ import { convertStringToArray } from '@/utility/string';
 import { after } from 'next/server';
 import {
   getColorFieldsForImageUrl,
-  getColorsFromImageUrl,
+  getColorFieldsForPhotoDbInsert,
 } from '@/photo/color/server';
-import { calculateColorSort } from './color/sort';
 
 // Private actions
 
@@ -412,11 +411,16 @@ export const storeColorDataForPhotoAction = async (photoId: string) =>
   runAuthenticatedAdminServerAction(async () => {
     const photo = await getPhoto(photoId, true);
     if (photo) {
-      const colorData = await getColorFieldsForImageUrl(photo.url);
-      await updatePhoto(convertPhotoToPhotoDbInsert({
-        ...photo,
-        ...colorData,
-      }));
+      const colorFields = await getColorFieldsForImageUrl(
+        photo.url,
+        photo.colorData,
+      );
+      if (colorFields) {
+        await updatePhoto(convertPhotoToPhotoDbInsert({
+          ...photo,
+          ...colorFields,
+        }));
+      }
       revalidatePhoto(photo.id);
     }
   });
@@ -425,13 +429,14 @@ export const recalculateColorDataForAllPhotosAction = async () =>
   runAuthenticatedAdminServerAction(async () => {
     const photos = await getColorDataForPhotos();
     for (const { id, url, colorData: _colorData } of photos) {
-      const colorData = _colorData ?? await getColorsFromImageUrl(url);
-      const colorSort = calculateColorSort(colorData);
-      await updateColorDataForPhoto(
-        id,
-        JSON.stringify(colorData),
-        colorSort,
-      );
+      const colorFields = await getColorFieldsForPhotoDbInsert(url, _colorData);
+      if (colorFields && colorFields.colorSort) {
+        await updateColorDataForPhoto(
+          id,
+          colorFields.colorData,
+          colorFields.colorSort,
+        );
+      }
     }
   });
 
