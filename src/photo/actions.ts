@@ -529,7 +529,7 @@ export const syncPhotoAction = async (photoId: string, isBatch?: boolean) =>
           semanticDescription: aiSemanticDescription,
         } = await generateAiImageQueries(
           imageResizedBase64,
-          photo.updateStatus.isMissingAiTextFields,
+          photo.updateStatus?.isMissingAiTextFields,
           undefined,
           isBatch,
         );

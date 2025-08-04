@@ -114,7 +114,7 @@ export interface Photo extends Omit<PhotoDb, 'recipeData' | 'colorData'> {
   tags: string[]
   recipeData?: FujifilmRecipe
   colorData?: PhotoColorData
-  updateStatus: PhotoUpdateStatus
+  updateStatus?: PhotoUpdateStatus
 }
 
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {

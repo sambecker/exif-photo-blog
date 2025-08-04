@@ -63,21 +63,21 @@ export const generatePhotoUpdateStatus = (
 });
 
 export const photoNeedsToBeUpdated = (photo: Photo) =>
-  photo.updateStatus.isOutdated ||
-  photo.updateStatus.isMissingAiTextFields.length > 0 ||
-  photo.updateStatus.isMissingColorData;
+  photo.updateStatus?.isOutdated ||
+  (photo.updateStatus?.isMissingAiTextFields ?? []).length > 0 ||
+  photo.updateStatus?.isMissingColorData;
 
 export const isPhotoOnlyMissingColorData = (photo?: Photo) =>
-  photo?.updateStatus.isMissingColorData &&
+  photo?.updateStatus?.isMissingColorData &&
   !photo?.updateStatus.isOutdated &&
   (photo?.updateStatus.isMissingAiTextFields.length ?? 0) === 0;
 
 export const getPhotoUpdateStatusText = (photo: Photo) => {
   const {
     isOutdated,
-    isMissingAiTextFields,
+    isMissingAiTextFields = [],
     isMissingColorData,
-  } = photo.updateStatus;
+  } = photo.updateStatus ?? {};
 
   const cta = 'sync to update';
   if (isOutdated) {
@@ -103,13 +103,13 @@ export const getPhotoUpdateStatusText = (photo: Photo) => {
 
 export const getPhotosUpdateStatusCounts = (photos: Photo[]) => {
   const photosCountOutdated = photos.filter(
-    photo => photo.updateStatus.isOutdated,
+    photo => photo.updateStatus?.isOutdated,
   ).length;
   const photosCountMissingAiText = photos.filter(
-    photo => photo.updateStatus.isMissingAiTextFields.length > 0,
+    photo => (photo.updateStatus?.isMissingAiTextFields ?? []).length > 0,
   ).length;
   const photosCountMissingColorData = photos.filter(
-    photo => photo.updateStatus.isMissingColorData,
+    photo => photo.updateStatus?.isMissingColorData,
   ).length;
 
   return {
