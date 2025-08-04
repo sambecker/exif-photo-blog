@@ -23,7 +23,7 @@ export default function PhotoMedium({
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
   className,
   onVisible,
-  debugColor = true,
+  debugColor,
   ...categories
 }: {
   photo: Photo
