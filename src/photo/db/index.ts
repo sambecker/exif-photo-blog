@@ -178,14 +178,15 @@ export const getOrderByFromOptions = (options: PhotoQueryOptions) => {
     return sortWithPriority
       ? 'ORDER BY priority_order ASC, created_at ASC'
       : 'ORDER BY created_at ASC';
+  // Add date sort to account for photos with same color sort
   case 'color':
     return sortWithPriority
-      ? 'ORDER BY priority_order ASC, color_sort DESC'
-      : 'ORDER BY color_sort DESC';
+      ? 'ORDER BY priority_order ASC, color_sort DESC, taken_at DESC'
+      : 'ORDER BY color_sort DESC, taken_at DESC';
   case 'colorAsc':
     return sortWithPriority
-      ? 'ORDER BY priority_order ASC, color_sort ASC'
-      : 'ORDER BY color_sort ASC';
+      ? 'ORDER BY priority_order ASC, color_sort ASC, taken_at DESC'
+      : 'ORDER BY color_sort ASC, taken_at DESC';
   }
 };
 
