@@ -15,31 +15,28 @@ export const getNavSortControlFromString = (
 
 export const SORT_BY_OPTIONS = [{
   sortBy: 'takenAt',
-  string: 'taken-at',
-  canBeDefault: true,
+  configKey: 'taken-at',
 }, {
   sortBy: 'takenAtAsc',
-  string: 'taken-at-oldest-first',
-  canBeDefault: true,
+  configKey: 'taken-at-oldest-first',
 }, {
   sortBy: 'createdAt',
-  string: 'uploaded-at',
-  canBeDefault: true,
+  configKey: 'uploaded-at',
 }, {
   sortBy: 'createdAtAsc',
-  string: 'uploaded-at-oldest-first',
-  canBeDefault: true,
+  configKey: 'uploaded-at-oldest-first',
 }, {
-  sortBy: 'hue',
-  string: 'hue',
-  canBeDefault: false,
+  sortBy: 'color',
+  configKey: undefined,
 }, {
-  sortBy: 'hueAsc',
-  string: 'hue-oldest-first',
-  canBeDefault: false,
+  sortBy: 'colorAsc',
+  configKey: undefined,
 }] as const;
 
 export type SortBy = (typeof SORT_BY_OPTIONS)[number]['sortBy'];
+
+export const DEFAULT_SORT_BY_OPTIONS = SORT_BY_OPTIONS
+  .filter(({ configKey }) => configKey);
 
 export const APP_DEFAULT_SORT_BY: SortBy = 'takenAt';
 
@@ -58,8 +55,8 @@ export const getSortByFromString = (sortBy = ''): SortBy => {
   case 'taken-at-oldest-first': return 'takenAtAsc';
   case 'uploaded-at': return 'createdAt';
   case 'uploaded-at-oldest-first': return 'createdAtAsc';
-  case 'hue': return 'hue';
-  case 'hue-oldest-first': return 'hueAsc';
+  case 'color': return 'color';
+  case 'color-ascending': return 'colorAsc';
   default: return 'takenAt';
   }
 };
@@ -67,4 +64,4 @@ export const getSortByFromString = (sortBy = ''): SortBy => {
 export const isSortAscending = (sortBy: SortBy) =>
   sortBy === 'takenAtAsc' ||
   sortBy === 'createdAtAsc' ||
-  sortBy === 'hueAsc';
+  sortBy === 'colorAsc';

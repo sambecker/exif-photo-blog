@@ -24,7 +24,7 @@ import { AI_AUTO_GENERATED_FIELDS_ALL } from '@/photo/ai';
 import clsx from 'clsx/lite';
 import Link from 'next/link';
 import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/path';
-import { APP_DEFAULT_SORT_BY, SORT_BY_OPTIONS } from '@/photo/sort';
+import { APP_DEFAULT_SORT_BY, DEFAULT_SORT_BY_OPTIONS } from '@/photo/sort';
 import {
   AdminConfigSection,
   ConfigSectionKey,
@@ -624,13 +624,12 @@ export default function AdminAppConfigurationClient({
           optional
         >
           <div>
-            {SORT_BY_OPTIONS
-              .filter(({ canBeDefault }) => canBeDefault)
-              .map(({sortBy, string }) =>
+            {DEFAULT_SORT_BY_OPTIONS
+              .map(({sortBy, configKey }) =>
                 <Fragment key={ sortBy }>
                   {renderSubStatus(
                     sortBy === defaultSortBy ? 'checked' : 'optional',
-                    `${string}${sortBy === APP_DEFAULT_SORT_BY
+                    `${configKey}${sortBy === APP_DEFAULT_SORT_BY
                       ? ' (default)'
                       : ''}`,
                   )}

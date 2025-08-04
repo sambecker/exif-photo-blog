@@ -39,11 +39,11 @@ const getSortByComponents = (sortBy: SortBy): {
     sortType: PARAM_SORT_TYPE_UPLOADED_AT,
     sortOrder: PARAM_SORT_ORDER_ASCENDING,
   };
-  case 'hue': return {
+  case 'color': return {
     sortType: PARAM_SORT_TYPE_COLOR,
     sortOrder: PARAM_SORT_ORDER_DESCENDING,
   };
-  case 'hueAsc': return {
+  case 'colorAsc': return {
     sortType: PARAM_SORT_TYPE_COLOR,
     sortOrder: PARAM_SORT_ORDER_ASCENDING,
   };
@@ -79,8 +79,8 @@ const _getSortOptionsFromParams = (
   }
   case PARAM_SORT_TYPE_COLOR: {
     sortBy = isAscending
-      ? 'hueAsc'
-      : 'hue';
+      ? 'colorAsc'
+      : 'color';
     break;
   }
   }
