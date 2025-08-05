@@ -10,6 +10,7 @@ import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { getAppText } from '@/i18n/state/server';
 import { SHOW_RECENTS } from '@/app/config';
+import { isNextImageReadyBasedOnPhotos } from '@/photo';
 
 export const dynamic = 'force-static';
 
@@ -35,10 +36,14 @@ export async function GET() {
 
   const { width, height } = IMAGE_OG_DIMENSION_SMALL;
 
+  // Make sure next/image can be reached from absolute urls,
+  // which may not exist on first pre-render
+  const isNextImageReady = await isNextImageReadyBasedOnPhotos(photos);
+
   return new ImageResponse(
     <RecentsImageResponse {...{
       title,
-      photos,
+      photos: isNextImageReady ? photos : [],
       width,
       height,
       fontFamily,
