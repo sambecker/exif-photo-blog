@@ -119,6 +119,8 @@ export default function MoreMenuItem({
           className={clsx(
             'inline-flex items-center grow',
             'text-sm text-main hover:text-main',
+            // Enlarge clickable area
+            '-m-2 p-2',
           )}
           onLoad={() => {
             action?.();
