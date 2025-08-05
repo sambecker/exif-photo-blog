@@ -59,6 +59,7 @@ import { formatCount, formatCountDescriptive } from '@/utility/string';
 import CommandKItem from './CommandKItem';
 import {
   CATEGORY_VISIBILITY,
+  COLOR_SORT_ENABLED,
   GRID_HOMEPAGE_ENABLED,
   HIDE_TAGS_WITH_ONE_PHOTO,
 } from '@/app/config';
@@ -148,6 +149,8 @@ export default function CommandKClient({
 } & PhotoSetCategories) {
   const pathname = usePathname();
 
+  const appText = useAppText();
+
   const {
     isUserSignedIn,
     clearAuthStateAndRedirectIfNecessary,
@@ -182,17 +185,22 @@ export default function CommandKClient({
   const {
     doesPathOfferSort,
     isSortedByDefault,
+    isAscending,
+    isTakenAt,
+    isUploadedAt,
+    isColor,
+    descendingLabel,
+    ascendingLabel,
     pathDescending,
     pathAscending,
     pathTakenAt,
     pathUploadedAt,
+    pathColor,
     pathClearSort,
-    isAscending,
-    isTakenAt,
-    isUploadedAt,
-  } = useMemo(() => getSortStateFromPath(pathname), [pathname]);
-
-  const appText = useAppText();
+  } = useMemo(
+    () => getSortStateFromPath(pathname, appText),
+    [pathname, appText],
+  );
 
   const isOpenRef = useRef(isOpen);
 
@@ -525,11 +533,11 @@ export default function CommandKClient({
   }
 
   const sortItems = [{
-    label: appText.sort.newestFirst,
+    label: descendingLabel,
     path: pathDescending,
     annotation: renderCheck(!isAscending),
   }, {
-    label: appText.sort.oldestFirst,
+    label: ascendingLabel,
     path: pathAscending,
     annotation: renderCheck(isAscending),
   }, {
@@ -541,6 +549,14 @@ export default function CommandKClient({
     path: pathUploadedAt,
     annotation: renderCheck(isUploadedAt),
   }];
+
+  if (COLOR_SORT_ENABLED) {
+    sortItems.push({
+      label: appText.sort.byColor,
+      path: pathColor,
+      annotation: renderCheck(isColor),
+    });
+  }
 
   if (!isSortedByDefault) {
     sortItems.push({

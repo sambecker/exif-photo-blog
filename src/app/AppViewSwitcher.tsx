@@ -52,7 +52,10 @@ export default function AppViewSwitcher({
     invalidateSwr,
   } = useAppState();
 
-  const sortConfig = useMemo(() => getSortStateFromPath(pathname), [pathname]);
+  const sortConfig = useMemo(
+    () => getSortStateFromPath(pathname, appText),
+    [pathname, appText],
+  );
 
   const {
     sortBy,

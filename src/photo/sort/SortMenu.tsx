@@ -13,6 +13,8 @@ export default function SortMenu({
   isTakenAt,
   isUploadedAt,
   isColor,
+  descendingLabel,
+  ascendingLabel,
   pathDescending,
   pathAscending,
   pathTakenAt,
@@ -37,14 +39,14 @@ export default function SortMenu({
   
   const itemsSortOrder = [{
     ...renderLabel(
-      isColor ? appText.sort.descending : appText.sort.newest,
+      descendingLabel,
       !isAscending,
     ),
     icon: renderIcon(!isAscending),
     href: pathDescending,
   }, {
     ...renderLabel(
-      isColor ? appText.sort.ascending : appText.sort.oldest,
+      ascendingLabel,
       isAscending,
     ),
     icon: renderIcon(isAscending),

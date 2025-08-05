@@ -17,6 +17,7 @@ import {
   GRID_HOMEPAGE_ENABLED,
   USER_DEFAULT_SORT_WITH_PRIORITY,
 } from '@/app/config';
+import { AppTextState } from '@/i18n/state';
 
 const getSortByComponents = (sortBy: SortBy): {
   sortType: string
@@ -111,7 +112,10 @@ const getPathSortComponents = (pathname: string) => {
   };
 };
 
-export const getSortStateFromPath = (pathname: string) => {
+export const getSortStateFromPath = (
+  pathname: string,
+  appText: AppTextState,
+) => {
   const doesPathOfferSort = _doesPathOfferSort(pathname);
 
   const {
@@ -129,6 +133,14 @@ export const getSortStateFromPath = (pathname: string) => {
   const isTakenAt = sortType === PARAM_SORT_TYPE_TAKEN_AT;
   const isUploadedAt = sortType === PARAM_SORT_TYPE_UPLOADED_AT;
   const isColor = sortType === PARAM_SORT_TYPE_COLOR;
+
+  const descendingLabel = isColor
+    ? appText.sort.descending
+    : appText.sort.newestFirst;
+
+  const ascendingLabel = isColor
+    ? appText.sort.ascending
+    : appText.sort.oldestFirst;
 
   const getPath = ({
     gridOrFull = _gridOrFull,
@@ -187,6 +199,8 @@ export const getSortStateFromPath = (pathname: string) => {
     isTakenAt,
     isUploadedAt,
     isColor,
+    descendingLabel,
+    ascendingLabel,
     pathGrid,
     pathFull,
     pathDescending,
