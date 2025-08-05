@@ -5,10 +5,9 @@ import {
 } from '@/image-response';
 import HomeImageResponse from '@/image-response/HomeImageResponse';
 import { getIBMPlexMono } from '@/app/font';
-import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
-import { isNextImageReadyBasedOnPhotos } from '@/photo';
 import { APP_OG_IMAGE_QUERY_OPTIONS } from '@/feed';
+import { safePhotoImageResponse } from '@/platforms/safe-photo-image-response';
 
 export const dynamic = 'force-static';
 
@@ -29,17 +28,15 @@ export async function GET() {
 
   const { width, height } = IMAGE_OG_DIMENSION_SMALL;
 
-  // Make sure next/image can be reached from absolute urls,
-  // which may not exist on first pre-render
-  const isNextImageReady = await isNextImageReadyBasedOnPhotos(photos);
-
-  return new ImageResponse(
-    <HomeImageResponse {...{
-      photos: isNextImageReady ? photos : [],
-      width,
-      height,
-      fontFamily,
-    }}/>,
-    { width, height, headers, fonts },
+  return safePhotoImageResponse(
+    photos,
+    isNextImageReady => (
+      <HomeImageResponse {...{
+        photos: isNextImageReady ? photos : [],
+        width,
+        height,
+        fontFamily,
+      }}/>
+    ), { width, height, headers, fonts },
   );
 }

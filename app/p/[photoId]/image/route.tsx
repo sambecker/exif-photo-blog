@@ -2,10 +2,9 @@ import { getPhotoCached } from '@/photo/cache';
 import { IMAGE_OG_DIMENSION } from '@/image-response';
 import PhotoImageResponse from '@/image-response/PhotoImageResponse';
 import { getIBMPlexMono } from '@/app/font';
-import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
-import { isNextImageReadyBasedOnPhotos } from '@/photo';
 import { staticallyGeneratePhotosIfConfigured } from '@/app/static';
+import { safePhotoImageResponse } from '@/platforms/safe-photo-image-response';
 
 export const generateStaticParams = staticallyGeneratePhotosIfConfigured(
   'image',
@@ -30,19 +29,18 @@ export async function GET(
   if (!photo) { return new Response('Photo not found', { status: 404 }); }
 
   const { width, height } = IMAGE_OG_DIMENSION;
-
-  // Make sure next/image can be reached from absolute urls,
-  // which may not exist on first pre-render
-  const isNextImageReady = await isNextImageReadyBasedOnPhotos([photo]);
   
-  return new ImageResponse(
-    <PhotoImageResponse {...{
-      photo,
-      width,
-      height,
-      fontFamily,
-      isNextImageReady,
-    }} />,
+  return safePhotoImageResponse(
+    [photo],
+    isNextImageReady => (
+      <PhotoImageResponse {...{
+        photo,
+        width,
+        height,
+        fontFamily,
+        isNextImageReady,
+      }} />
+    ),
     { width, height, fonts, headers },
   );
 }

@@ -6,9 +6,8 @@ import {
 import TemplateImageResponse from
   '@/image-response/TemplateImageResponse';
 import { getIBMPlexMono } from '@/app/font';
-import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
-import { isNextImageReadyBasedOnPhotos } from '@/photo';
+import { safePhotoImageResponse } from '@/platforms/safe-photo-image-response';
 
 export async function GET() {
   const [
@@ -26,12 +25,9 @@ export async function GET() {
 
   const { width, height } = GRID_OG_DIMENSION;
 
-  // Make sure next/image can be reached from absolute urls,
-  // which may not exist on first pre-render
-  const isNextImageReady = await isNextImageReadyBasedOnPhotos(photos);
-  
-  return new ImageResponse(
-    (
+  return safePhotoImageResponse(
+    photos,
+    isNextImageReady => (
       <TemplateImageResponse {...{
         photos: isNextImageReady ? photos : [],
         width,

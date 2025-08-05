@@ -1,8 +1,6 @@
 import { formatFocalLength } from '@/focal';
-import { getNextImageUrlForRequest } from '@/platforms/next-image';
 import { photoHasFilmData } from '@/film';
 import {
-  IS_PREVIEW,
   SHOW_EXIF_DATA,
   SHOW_FILMS,
   SHOW_LENSES,
@@ -373,17 +371,6 @@ export const getKeywordsForPhoto = (photo: Photo) =>
     .concat((photo.semanticDescription ?? '').split(' '))
     .filter(Boolean)
     .map(keyword => keyword.toLocaleLowerCase());
-
-export const isNextImageReadyBasedOnPhotos = async (
-  photos: Photo[],
-): Promise<boolean> =>
-  photos.length > 0 && fetch(getNextImageUrlForRequest({
-    imageUrl: photos[0].url,
-    size: 640,
-    addBypassSecret: IS_PREVIEW,
-  }))
-    .then(response => response.ok)
-    .catch(() => false);
 
 export const downloadFileNameForPhoto = (photo: Photo) =>
   photo.title
