@@ -373,8 +373,8 @@ Thank you ❤️ translators: [@sconetto](https://github.com/sconetto) (`pt-br`,
 #### Can I work locally without access to an image storage provider?
 > At this time, an external storage provider is necessary in order to develop locally. If you have a strategy to propose which allows files to be locally uploaded and served to `next/image` in away that mirrors an external storage provider for debugging purposes, please open a PR.
 
-#### Can this template run in a docker image?
-> Possibly. See [Issue #116](https://github.com/sambecker/exif-photo-blog/issues/116) for discussion.
+#### Can this template be self-hosted?
+> Possibly. See [Issue #116](https://github.com/sambecker/exif-photo-blog/issues/116) and [Issue #132](https://github.com/sambecker/exif-photo-blog/issues/132) for discussion around image hosting and docker usage.
 
 #### Why am I seeing many merge conflicts when syncing my fork?
 > Previous versions of this template stored Next.js "App Router" files in `/src`, and app-level functionality in `/src/site`. If you've made customizations and are having difficulty merging updates, consider moving `/src/app` files to `/`, and renaming `src/site` to `/src/app`. Other structural changes include moving `tailwind.css` and `middleware.ts` to `/`. Additionally, it may be helpful to review [PR #195](https://github.com/sambecker/exif-photo-blog/pull/195) for an overview of the most significant changes.
