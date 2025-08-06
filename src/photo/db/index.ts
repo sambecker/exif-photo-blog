@@ -185,8 +185,8 @@ export const getOrderByFromOptions = (options: PhotoQueryOptions) => {
       : 'ORDER BY color_sort DESC, taken_at DESC';
   case 'colorAsc':
     return sortWithPriority
-      ? 'ORDER BY priority_order ASC, color_sort ASC, taken_at DESC'
-      : 'ORDER BY color_sort ASC, taken_at DESC';
+      ? 'ORDER BY priority_order ASC, color_sort ASC, taken_at ASC'
+      : 'ORDER BY color_sort ASC, taken_at ASC';
   }
 };
 
