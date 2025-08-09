@@ -6,10 +6,10 @@ export const getNavSortControlFromString = (
   navSortControl = '',
 ): NavSortControl => {
   switch (navSortControl.toLocaleLowerCase()) {
-  case 'none': return 'none';
-  case 'toggle': return 'toggle';
-  case 'menu': return 'menu';
-  default: return NAV_SORT_CONTROL_DEFAULT;
+    case 'none': return 'none';
+    case 'toggle': return 'toggle';
+    case 'menu': return 'menu';
+    default: return NAV_SORT_CONTROL_DEFAULT;
   }
 };
 
@@ -51,13 +51,13 @@ export interface SortProps {
 
 export const getSortByFromString = (sortBy = ''): SortBy => {
   switch (sortBy) {
-  case 'taken-at': return 'takenAt';
-  case 'taken-at-oldest-first': return 'takenAtAsc';
-  case 'uploaded-at': return 'createdAt';
-  case 'uploaded-at-oldest-first': return 'createdAtAsc';
-  case 'color': return 'color';
-  case 'color-ascending': return 'colorAsc';
-  default: return 'takenAt';
+    case 'taken-at': return 'takenAt';
+    case 'taken-at-oldest-first': return 'takenAtAsc';
+    case 'uploaded-at': return 'createdAt';
+    case 'uploaded-at-oldest-first': return 'createdAtAsc';
+    case 'color': return 'color';
+    case 'color-ascending': return 'colorAsc';
+    default: return 'takenAt';
   }
 };
 

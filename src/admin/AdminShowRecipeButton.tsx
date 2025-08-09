@@ -16,7 +16,7 @@ export default function AdminShowRecipeButton(props: RecipeProps) {
       />}
       onClick={() => setRecipeModalProps?.(props)}
     >
-        Preview
+      Preview
     </LoaderButton>
   );
 }

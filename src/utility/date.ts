@@ -50,26 +50,26 @@ export const formatDate = ({
     : DATE_FORMAT_SHORT_PLACEHOLDER;
 
   switch (length) {
-  case 'rss':
-    formatString = DATE_FORMAT_RSS;
-    placeholderString = DATE_FORMAT_RSS_PLACEHOLDER;
-    break;
-  case 'tiny':
-    formatString = DATE_FORMAT_TINY;
-    placeholderString = DATE_FORMAT_TINY_PLACEHOLDER;
-    break;
-  case 'short':
-    formatString = DATE_FORMAT_SHORT;
-    placeholderString = DATE_FORMAT_SHORT_PLACEHOLDER;
-    break;
-  case 'medium':
-    formatString = !hideTime
-      ? DATE_FORMAT_MEDIUM
-      : DATE_FORMAT_SHORT;
-    placeholderString = !hideTime
-      ? DATE_FORMAT_MEDIUM_PLACEHOLDER
-      : DATE_FORMAT_SHORT_PLACEHOLDER;
-    break;
+    case 'rss':
+      formatString = DATE_FORMAT_RSS;
+      placeholderString = DATE_FORMAT_RSS_PLACEHOLDER;
+      break;
+    case 'tiny':
+      formatString = DATE_FORMAT_TINY;
+      placeholderString = DATE_FORMAT_TINY_PLACEHOLDER;
+      break;
+    case 'short':
+      formatString = DATE_FORMAT_SHORT;
+      placeholderString = DATE_FORMAT_SHORT_PLACEHOLDER;
+      break;
+    case 'medium':
+      formatString = !hideTime
+        ? DATE_FORMAT_MEDIUM
+        : DATE_FORMAT_SHORT;
+      placeholderString = !hideTime
+        ? DATE_FORMAT_MEDIUM_PLACEHOLDER
+        : DATE_FORMAT_SHORT_PLACEHOLDER;
+      break;
   }
 
   return showPlaceholder

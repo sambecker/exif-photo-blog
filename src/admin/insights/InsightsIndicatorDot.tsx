@@ -23,9 +23,9 @@ export default function InsightsIndicatorDot({
 
   const getSize = () => {
     switch (size) {
-    case 'small': return 6;
-    case 'medium': return 7;
-    case 'large': return 8;
+      case 'small': return 6;
+      case 'medium': return 7;
+      case 'large': return 8;
     }
   };
 

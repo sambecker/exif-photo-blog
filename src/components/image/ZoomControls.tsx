@@ -16,8 +16,8 @@ export default function ZoomControls({
 }: {
   ref?: RefObject<ZoomControlsRef | null>
   children: ReactNode
-  selectImageElement?:
-    (container: HTMLElement | null) => HTMLImageElement | null
+  selectImageElement?: (container: HTMLElement | null) =>
+    HTMLImageElement | null
   isEnabled?: boolean
 }) {
   const refImageContainer = useRef<HTMLDivElement>(null);

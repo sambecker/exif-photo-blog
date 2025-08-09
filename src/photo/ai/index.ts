@@ -56,21 +56,21 @@ export const getAiImageQuery = (
   existingTitle?: string,
 ): string => {
   switch (query) {  
-  case 'title': return 'Write a compelling title for this image in 3 words or less';
-  case 'caption': return existingTitle
-    ? `Write a pithy caption for this image in 6 words or less and no punctuation that complements the existing title: "${existingTitle}"`
-    : 'Write a pithy caption for this image in 6 words or less and no punctuation';
-  case 'title-and-caption': return 'Write a compelling title and pithy caption of 8 words or less for this image, using the format Title: "title" Caption: "caption"';
-  case 'tags':
-    const tagQuery = 'Describe this image in 1-2 comma-separated unique keywords, with no adjective or adverbs. Avoid using general terms like "nature," "travel," "architecture," or "sky." Use terms that are highly specific to the image and not redundant.';
-    const tags = existingTags.map(({ tag }) => tag).join(', ');
-    return tags
-      ? `${tagQuery}. Consider using some of these existing tags, but only if they are relevant: ${tags}.`
-      : tagQuery;
-  case 'description-small': return 'Describe this image succinctly without the initial text "This image shows" or "This is a picture of"';
-  case 'description': return 'Describe this image';
-  case 'description-large': return 'Describe this image in detail';
-  case 'description-semantic': return 'List up to 5 things in this image without description as a comma-separated list';
+    case 'title': return 'Write a compelling title for this image in 3 words or less';
+    case 'caption': return existingTitle
+      ? `Write a pithy caption for this image in 6 words or less and no punctuation that complements the existing title: "${existingTitle}"`
+      : 'Write a pithy caption for this image in 6 words or less and no punctuation';
+    case 'title-and-caption': return 'Write a compelling title and pithy caption of 8 words or less for this image, using the format Title: "title" Caption: "caption"';
+    case 'tags':
+      const tagQuery = 'Describe this image in 1-2 comma-separated unique keywords, with no adjective or adverbs. Avoid using general terms like "nature," "travel," "architecture," or "sky." Use terms that are highly specific to the image and not redundant.';
+      const tags = existingTags.map(({ tag }) => tag).join(', ');
+      return tags
+        ? `${tagQuery}. Consider using some of these existing tags, but only if they are relevant: ${tags}.`
+        : tagQuery;
+    case 'description-small': return 'Describe this image succinctly without the initial text "This image shows" or "This is a picture of"';
+    case 'description': return 'Describe this image';
+    case 'description-large': return 'Describe this image in detail';
+    case 'description-semantic': return 'List up to 5 things in this image without description as a comma-separated list';
   }
 };
 

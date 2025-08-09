@@ -67,12 +67,12 @@ export const getWheresFromOptions = (
   let valuesIndex = initialValuesIndex;
 
   switch (hidden) {
-  case 'exclude':
-    wheres.push('hidden IS NOT TRUE');
-    break;
-  case 'only':
-    wheres.push('hidden IS TRUE');
-    break;
+    case 'exclude':
+      wheres.push('hidden IS NOT TRUE');
+      break;
+    case 'only':
+      wheres.push('hidden IS TRUE');
+      break;
   }
 
   if (excludeFromFeeds) {
@@ -162,31 +162,31 @@ export const getOrderByFromOptions = (options: PhotoQueryOptions) => {
   } = options;
 
   switch (sortBy) {
-  case 'takenAt':
-    return sortWithPriority
-      ? 'ORDER BY priority_order ASC, taken_at DESC'
-      : 'ORDER BY taken_at DESC';
-  case 'takenAtAsc':
-    return sortWithPriority
-      ? 'ORDER BY priority_order ASC, taken_at ASC'
-      : 'ORDER BY taken_at ASC';
-  case 'createdAt':
-    return sortWithPriority
-      ? 'ORDER BY priority_order ASC, created_at DESC'
-      : 'ORDER BY created_at DESC';
-  case 'createdAtAsc':
-    return sortWithPriority
-      ? 'ORDER BY priority_order ASC, created_at ASC'
-      : 'ORDER BY created_at ASC';
-  // Add date sort to account for photos with same color sort
-  case 'color':
-    return sortWithPriority
-      ? 'ORDER BY priority_order ASC, color_sort DESC, taken_at DESC'
-      : 'ORDER BY color_sort DESC, taken_at DESC';
-  case 'colorAsc':
-    return sortWithPriority
-      ? 'ORDER BY priority_order ASC, color_sort ASC, taken_at ASC'
-      : 'ORDER BY color_sort ASC, taken_at ASC';
+    case 'takenAt':
+      return sortWithPriority
+        ? 'ORDER BY priority_order ASC, taken_at DESC'
+        : 'ORDER BY taken_at DESC';
+    case 'takenAtAsc':
+      return sortWithPriority
+        ? 'ORDER BY priority_order ASC, taken_at ASC'
+        : 'ORDER BY taken_at ASC';
+    case 'createdAt':
+      return sortWithPriority
+        ? 'ORDER BY priority_order ASC, created_at DESC'
+        : 'ORDER BY created_at DESC';
+    case 'createdAtAsc':
+      return sortWithPriority
+        ? 'ORDER BY priority_order ASC, created_at ASC'
+        : 'ORDER BY created_at ASC';
+      // Add date sort to account for photos with same color sort
+    case 'color':
+      return sortWithPriority
+        ? 'ORDER BY priority_order ASC, color_sort DESC, taken_at DESC'
+        : 'ORDER BY color_sort DESC, taken_at DESC';
+    case 'colorAsc':
+      return sortWithPriority
+        ? 'ORDER BY priority_order ASC, color_sort ASC, taken_at ASC'
+        : 'ORDER BY color_sort ASC, taken_at ASC';
   }
 };
 

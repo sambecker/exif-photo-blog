@@ -24,30 +24,30 @@ const getSortByComponents = (sortBy: SortBy): {
   sortOrder: string
 } => {
   switch (sortBy) {
-  case 'takenAt': return {
-    sortType: PARAM_SORT_TYPE_TAKEN_AT,
-    sortOrder: PARAM_SORT_ORDER_DESCENDING,
-  };
-  case 'takenAtAsc': return {
-    sortType: PARAM_SORT_TYPE_TAKEN_AT,
-    sortOrder: PARAM_SORT_ORDER_ASCENDING,
-  };
-  case 'createdAt': return {
-    sortType: PARAM_SORT_TYPE_UPLOADED_AT,
-    sortOrder: PARAM_SORT_ORDER_DESCENDING,
-  };
-  case 'createdAtAsc': return {
-    sortType: PARAM_SORT_TYPE_UPLOADED_AT,
-    sortOrder: PARAM_SORT_ORDER_ASCENDING,
-  };
-  case 'color': return {
-    sortType: PARAM_SORT_TYPE_COLOR,
-    sortOrder: PARAM_SORT_ORDER_DESCENDING,
-  };
-  case 'colorAsc': return {
-    sortType: PARAM_SORT_TYPE_COLOR,
-    sortOrder: PARAM_SORT_ORDER_ASCENDING,
-  };
+    case 'takenAt': return {
+      sortType: PARAM_SORT_TYPE_TAKEN_AT,
+      sortOrder: PARAM_SORT_ORDER_DESCENDING,
+    };
+    case 'takenAtAsc': return {
+      sortType: PARAM_SORT_TYPE_TAKEN_AT,
+      sortOrder: PARAM_SORT_ORDER_ASCENDING,
+    };
+    case 'createdAt': return {
+      sortType: PARAM_SORT_TYPE_UPLOADED_AT,
+      sortOrder: PARAM_SORT_ORDER_DESCENDING,
+    };
+    case 'createdAtAsc': return {
+      sortType: PARAM_SORT_TYPE_UPLOADED_AT,
+      sortOrder: PARAM_SORT_ORDER_ASCENDING,
+    };
+    case 'color': return {
+      sortType: PARAM_SORT_TYPE_COLOR,
+      sortOrder: PARAM_SORT_ORDER_DESCENDING,
+    };
+    case 'colorAsc': return {
+      sortType: PARAM_SORT_TYPE_COLOR,
+      sortOrder: PARAM_SORT_ORDER_ASCENDING,
+    };
   }
 };
 
@@ -66,24 +66,24 @@ const _getSortOptionsFromParams = (
   let sortBy: SortBy = 'takenAt';
   const isAscending = sortOrder === PARAM_SORT_ORDER_ASCENDING;
   switch (sortType) {
-  case PARAM_SORT_TYPE_TAKEN_AT: {
-    sortBy = isAscending
-      ? 'takenAtAsc'
-      : 'takenAt';
-    break;
-  }
-  case PARAM_SORT_TYPE_UPLOADED_AT: {
-    sortBy = isAscending
-      ? 'createdAtAsc'
-      : 'createdAt';
-    break;
-  }
-  case PARAM_SORT_TYPE_COLOR: {
-    sortBy = isAscending
-      ? 'colorAsc'
-      : 'color';
-    break;
-  }
+    case PARAM_SORT_TYPE_TAKEN_AT: {
+      sortBy = isAscending
+        ? 'takenAtAsc'
+        : 'takenAt';
+      break;
+    }
+    case PARAM_SORT_TYPE_UPLOADED_AT: {
+      sortBy = isAscending
+        ? 'createdAtAsc'
+        : 'createdAt';
+      break;
+    }
+    case PARAM_SORT_TYPE_COLOR: {
+      sortBy = isAscending
+        ? 'colorAsc'
+        : 'color';
+      break;
+    }
   }
   return {
     sortBy,

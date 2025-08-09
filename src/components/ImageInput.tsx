@@ -145,14 +145,14 @@ export default function ImageInput({
                       // Reverse engineer orientation
                       // so preserved EXIF data can be copied
                       switch (orientation) {
-                      case 1: orientation = 1; break;
-                      case 2: orientation = 1; break;
-                      case 3: orientation = 3; break;
-                      case 4: orientation = 1; break;
-                      case 5: orientation = 1; break;
-                      case 6: orientation = 8; break;
-                      case 7: orientation = 1; break;
-                      case 8: orientation = 6; break;
+                        case 1: orientation = 1; break;
+                        case 2: orientation = 1; break;
+                        case 3: orientation = 3; break;
+                        case 4: orientation = 1; break;
+                        case 5: orientation = 1; break;
+                        case 6: orientation = 8; break;
+                        case 7: orientation = 1; break;
+                        case 8: orientation = 6; break;
                       }
                     }
 
@@ -171,43 +171,43 @@ export default function ImageInput({
                     // https://gist.github.com/SagiMedina/f00a57de4e211456225d3114fd10b0d0
                     
                     switch(orientation) {
-                    case 2:
-                      ctx.translate(width, 0);
-                      ctx.scale(-1, 1);
-                      break;
-                    case 3:
-                      ctx.translate(width, height);
-                      ctx.rotate((180 / 180) * Math.PI);
-                      break;
-                    case 4:
-                      ctx.translate(0, height);
-                      ctx.scale(1, -1);
-                      break;
-                    case 5:
-                      canvas.width = height;
-                      canvas.height = width;
-                      ctx.rotate((90 / 180) * Math.PI);
-                      ctx.scale(1, -1);
-                      break;
-                    case 6:
-                      canvas.width = height;
-                      canvas.height = width;
-                      ctx.rotate((90 / 180) * Math.PI);
-                      ctx.translate(0, -height);
-                      break;
-                    case 7:
-                      canvas.width = height;
-                      canvas.height = width;
-                      ctx.rotate((270 / 180) * Math.PI);
-                      ctx.translate(-width, height);
-                      ctx.scale(1, -1);
-                      break;
-                    case 8:
-                      canvas.width = height;
-                      canvas.height = width;
-                      ctx.translate(0, width);
-                      ctx.rotate((270 / 180) * Math.PI);
-                      break;
+                      case 2:
+                        ctx.translate(width, 0);
+                        ctx.scale(-1, 1);
+                        break;
+                      case 3:
+                        ctx.translate(width, height);
+                        ctx.rotate((180 / 180) * Math.PI);
+                        break;
+                      case 4:
+                        ctx.translate(0, height);
+                        ctx.scale(1, -1);
+                        break;
+                      case 5:
+                        canvas.width = height;
+                        canvas.height = width;
+                        ctx.rotate((90 / 180) * Math.PI);
+                        ctx.scale(1, -1);
+                        break;
+                      case 6:
+                        canvas.width = height;
+                        canvas.height = width;
+                        ctx.rotate((90 / 180) * Math.PI);
+                        ctx.translate(0, -height);
+                        break;
+                      case 7:
+                        canvas.width = height;
+                        canvas.height = width;
+                        ctx.rotate((270 / 180) * Math.PI);
+                        ctx.translate(-width, height);
+                        ctx.scale(1, -1);
+                        break;
+                      case 8:
+                        canvas.width = height;
+                        canvas.height = width;
+                        ctx.translate(0, width);
+                        ctx.rotate((270 / 180) * Math.PI);
+                        break;
                     }
 
                     ctx.drawImage(image, 0, 0, width, height);

@@ -39,8 +39,8 @@ const feedPhotoToXml = (photo: FeedPhotoRss): string => {
     </pubDate>
     <guid isPermaLink="true">${photo.link}</guid>
     ${photo.description
-    ? `<description><![CDATA[${photo.description}]]></description>`
-    : ''}
+      ? `<description><![CDATA[${photo.description}]]></description>`
+      : ''}
     <media:content
       url="${formatStringForXml(photo.media.content.url)}"
       type="image/jpeg"

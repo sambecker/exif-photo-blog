@@ -47,24 +47,24 @@ export const staticallyGenerateCategoryIfConfigured = <T, K>(
   getData: () => Promise<T[]>,
   formatData: (data: T[]) => K[],
 ): (() => Promise<K[]>) | undefined =>
-    CATEGORY_VISIBILITY.includes(key) &&
-    IS_PRODUCTION && (
-      (type === 'page' && STATICALLY_OPTIMIZED_PHOTO_CATEGORIES) ||
-      (type === 'image' && STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES)
-    )
-      ? async () => {
-        const data = (await getData()
-          .catch(e => {
-            console.error(`Error fetching static ${key} data: ${e}`);
-            return [];
-          }))
-          .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
-        if (IS_BUILDING) {
-          logStaticGenerationDetails(
-            data.length,
-            `${depluralize(key)} ${type}`,
-          );
-        }
-        return formatData(data);
+  CATEGORY_VISIBILITY.includes(key) &&
+  IS_PRODUCTION && (
+    (type === 'page' && STATICALLY_OPTIMIZED_PHOTO_CATEGORIES) ||
+    (type === 'image' && STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES)
+  )
+    ? async () => {
+      const data = (await getData()
+        .catch(e => {
+          console.error(`Error fetching static ${key} data: ${e}`);
+          return [];
+        }))
+        .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
+      if (IS_BUILDING) {
+        logStaticGenerationDetails(
+          data.length,
+          `${depluralize(key)} ${type}`,
+        );
       }
-      : undefined;
+      return formatData(data);
+    }
+    : undefined;

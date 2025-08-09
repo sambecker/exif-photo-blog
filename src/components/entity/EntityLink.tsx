@@ -74,14 +74,14 @@ export default function EntityLink({
 
   const classForContrast = () => {
     switch (contrast) {
-    case 'low':
-      return 'text-dim';
-    case 'high':
-      return 'text-main';
-    case 'frosted':
-      return 'text-black';
-    default:
-      return 'text-medium';
+      case 'low':
+        return 'text-dim';
+      case 'high':
+        return 'text-main';
+      case 'frosted':
+        return 'text-black';
+      default:
+        return 'text-medium';
     }
   };
 

@@ -59,58 +59,58 @@ export default function SelectMenu({
     const listener = (e: KeyboardEvent) => {
       // Keys which always trap focus
       switch (e.key) {
-      case 'ArrowDown':
-      case 'ArrowUp':
-      case 'Escape':
-        setShouldHighlightOnHover(false);
-        e.stopImmediatePropagation();
-        e.preventDefault();
+        case 'ArrowDown':
+        case 'ArrowUp':
+        case 'Escape':
+          setShouldHighlightOnHover(false);
+          e.stopImmediatePropagation();
+          e.preventDefault();
       }
       // Navigate options
       switch (e.key) {
-      case 'ArrowDown':
-        if (isOpen) {
-          setSelectedOptionIndex(i => {
-            if (i === undefined) {
-              return options.length > 1 ? 1 : 0;
-            } else if (i >= options.length - 1) {
-              return 0;
-            } else {
-              return i + 1;
-            }
-          });
-        } else {
-          setIsOpen(true);
-          setSelectedOptionIndex(0);
-        }
-        break;
-      case 'ArrowUp':
-        if (isOpen) {
-          setSelectedOptionIndex((i = 0) => {
-            if (options.length > 1) {
-              if (i === 0) {
-                return options.length - 1;
+        case 'ArrowDown':
+          if (isOpen) {
+            setSelectedOptionIndex(i => {
+              if (i === undefined) {
+                return options.length > 1 ? 1 : 0;
+              } else if (i >= options.length - 1) {
+                return 0;
               } else {
-                return i - 1;
+                return i + 1;
               }
-            }
-          });
-        } else {
-          setIsOpen(true);
-          setSelectedOptionIndex(Math.max(0, options.length - 1));
-        }
-        break;
-      case 'Enter':
-        if (isOpen) {
-          if (selectedOptionIndex !== undefined) {
-            onChange?.(options[selectedOptionIndex].value);
+            });
+          } else {
+            setIsOpen(true);
+            setSelectedOptionIndex(0);
           }
+          break;
+        case 'ArrowUp':
+          if (isOpen) {
+            setSelectedOptionIndex((i = 0) => {
+              if (options.length > 1) {
+                if (i === 0) {
+                  return options.length - 1;
+                } else {
+                  return i - 1;
+                }
+              }
+            });
+          } else {
+            setIsOpen(true);
+            setSelectedOptionIndex(Math.max(0, options.length - 1));
+          }
+          break;
+        case 'Enter':
+          if (isOpen) {
+            if (selectedOptionIndex !== undefined) {
+              onChange?.(options[selectedOptionIndex].value);
+            }
+            setIsOpen(false);
+          }
+          break;
+        case 'Escape':
           setIsOpen(false);
-        }
-        break;
-      case 'Escape':
-        setIsOpen(false);
-        break;
+          break;
       }
     };
 

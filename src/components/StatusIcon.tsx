@@ -17,26 +17,26 @@ export default function StatusIcon({
 }) {
   const getIcon = () => {
     switch (type) {
-    case 'checked':
-      return <BiSolidCheckboxChecked
-        size={18}
-        className="text-green-400"
-      />;
-    case 'missing':
-      return <BiSolidXSquare
-        size={14.5}
-        className="text-red-400"
-      />;
-    case 'warning':
-      return <BiSolidXSquare
-        size={14.5}
-        className="text-amber-500"
-      />;
-    case 'optional':
-      return <BiSolidCheckboxMinus
-        size={18}
-        className="text-dim"
-      />;
+      case 'checked':
+        return <BiSolidCheckboxChecked
+          size={18}
+          className="text-green-400"
+        />;
+      case 'missing':
+        return <BiSolidXSquare
+          size={14.5}
+          className="text-red-400"
+        />;
+      case 'warning':
+        return <BiSolidXSquare
+          size={14.5}
+          className="text-amber-500"
+        />;
+      case 'optional':
+        return <BiSolidCheckboxMinus
+          size={18}
+          className="text-dim"
+        />;
     }
   };
 

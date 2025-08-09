@@ -113,10 +113,10 @@ export const formatLensText = (
         : modelRaw;
 
   switch (length) {
-  case 'long':
-    return make ? `${make} ${modelRaw}` : modelRaw;
-  case 'medium':
-  case 'short':
-    return model;
+    case 'long':
+      return make ? `${make} ${modelRaw}` : modelRaw;
+    case 'medium':
+    case 'short':
+      return model;
   }
 };

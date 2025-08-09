@@ -440,58 +440,58 @@ export default function AdminAppInsightsClient({
         />
         {CATEGORY_VISIBILITY.map(category => {
           switch (category) {
-          case 'cameras':
-            return <ScoreCardRow
-              key={category}
-              icon={<IconCamera
-                size={15}
-                className="translate-y-[0.5px]"
-              />}
-              content={pluralize(camerasCount, 'camera')}
-            />;
-          case 'lenses':
-            return <ScoreCardRow
-              key={category}
-              icon={<IconLens
-                size={15}
-                className="translate-y-[0.5px]"
-              />}
-              content={pluralize(lensesCount, 'lens', 'lenses')}
-            />;
-          case 'tags':
-            return <ScoreCardRow
-              key={category}
-              icon={<IconTag
-                size={15}
-                className="translate-x-[1px] translate-y-[1px]"
-              />}
-              content={pluralize(tagsCount, 'tag')}
-            />;
-          case 'recipes':
-            return recipesCount > 0
-              ? <ScoreCardRow
+            case 'cameras':
+              return <ScoreCardRow
                 key={category}
-                icon={<IconRecipe
-                  size={18}
-                  className="translate-x-[0.5px] translate-y-[-0.5px]"
+                icon={<IconCamera
+                  size={15}
+                  className="translate-y-[0.5px]"
                 />}
-                content={pluralize(recipesCount, 'recipe')}
-              />
-              : null;
-          case 'films':
-            return filmsCount > 0
-              ? <ScoreCardRow
+                content={pluralize(camerasCount, 'camera')}
+              />;
+            case 'lenses':
+              return <ScoreCardRow
                 key={category}
-                icon={<IconFilm size={15} />}
-                content={pluralize(filmsCount, 'film')}
-              />
-              : null;
-          case 'focal-lengths':
-            return <ScoreCardRow
-              key={category}
-              icon={<IconFocalLength size={14} />}
-              content={pluralize(focalLengthsCount, 'focal length')}
-            />;
+                icon={<IconLens
+                  size={15}
+                  className="translate-y-[0.5px]"
+                />}
+                content={pluralize(lensesCount, 'lens', 'lenses')}
+              />;
+            case 'tags':
+              return <ScoreCardRow
+                key={category}
+                icon={<IconTag
+                  size={15}
+                  className="translate-x-[1px] translate-y-[1px]"
+                />}
+                content={pluralize(tagsCount, 'tag')}
+              />;
+            case 'recipes':
+              return recipesCount > 0
+                ? <ScoreCardRow
+                  key={category}
+                  icon={<IconRecipe
+                    size={18}
+                    className="translate-x-[0.5px] translate-y-[-0.5px]"
+                  />}
+                  content={pluralize(recipesCount, 'recipe')}
+                />
+                : null;
+            case 'films':
+              return filmsCount > 0
+                ? <ScoreCardRow
+                  key={category}
+                  icon={<IconFilm size={15} />}
+                  content={pluralize(filmsCount, 'film')}
+                />
+                : null;
+            case 'focal-lengths':
+              return <ScoreCardRow
+                key={category}
+                icon={<IconFocalLength size={14} />}
+                content={pluralize(focalLengthsCount, 'focal length')}
+              />;
           }
         })}
         {descriptionWithSpaces && <ScoreCardRow

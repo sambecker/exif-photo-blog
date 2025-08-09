@@ -60,24 +60,24 @@ const getCacheKeyForPhotoQueryOptions = (
 ): string | null => {
   switch (option) {
   // Complex keys
-  case 'camera': {
-    const value = options[option];
-    return value ? `${option}-${createCameraKey(value)}` : null;
-  }
-  case 'lens': {
-    const value = options[option];
-    return value ? `${option}-${createLensKey(value)}` : null;
-  }
-  case 'takenBefore':
-  case 'takenAfterInclusive': 
-  case 'updatedBefore': {
-    const value = options[option];
-    return value ? `${option}-${value.toISOString()}` : null;
-  }
-  // Primitive keys
-  default:
-    const value = options[option];
-    return value !== undefined ? `${option}-${value}` : null;
+    case 'camera': {
+      const value = options[option];
+      return value ? `${option}-${createCameraKey(value)}` : null;
+    }
+    case 'lens': {
+      const value = options[option];
+      return value ? `${option}-${createLensKey(value)}` : null;
+    }
+    case 'takenBefore':
+    case 'takenAfterInclusive': 
+    case 'updatedBefore': {
+      const value = options[option];
+      return value ? `${option}-${value.toISOString()}` : null;
+    }
+    // Primitive keys
+    default:
+      const value = options[option];
+      return value !== undefined ? `${option}-${value}` : null;
   }
 };
 

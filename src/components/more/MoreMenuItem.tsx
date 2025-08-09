@@ -45,14 +45,14 @@ export default function MoreMenuItem({
 
   const getColorClasses = () => {
     switch (color) {
-    case 'grey': return clsx(
-      'hover:bg-gray-100/90 active:bg-gray-200/75',
-      'dark:hover:bg-gray-800/60 dark:active:bg-gray-900/80',
-    );
-    case 'red': return clsx(
-      'hover:bg-red-100/50 active:bg-red-100/75',
-      'dark:hover:bg-red-950/55 dark:active:bg-red-950/80',
-    );
+      case 'grey': return clsx(
+        'hover:bg-gray-100/90 active:bg-gray-200/75',
+        'dark:hover:bg-gray-800/60 dark:active:bg-gray-900/80',
+      );
+      case 'red': return clsx(
+        'hover:bg-red-100/50 active:bg-red-100/75',
+        'dark:hover:bg-red-950/55 dark:active:bg-red-950/80',
+      );
     }
   };
 

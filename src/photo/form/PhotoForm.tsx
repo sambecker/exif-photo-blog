@@ -193,61 +193,64 @@ export default function PhotoForm({
 
   const isFieldGeneratingAi = (key: keyof PhotoFormData) => {
     switch (key) {
-    case 'title':
-      return aiContent?.isLoadingTitle;
-    case 'caption':
-      return aiContent?.isLoadingCaption;
-    case 'tags':
-      return aiContent?.isLoadingTags;
-    case 'semanticDescription':
-      return aiContent?.isLoadingSemantic;
-    default:
-      return false;
+      case 'title':
+        return aiContent?.isLoadingTitle;
+      case 'caption':
+        return aiContent?.isLoadingCaption;
+      case 'tags':
+        return aiContent?.isLoadingTags;
+      case 'semanticDescription':
+        return aiContent?.isLoadingSemantic;
+      default:
+        return false;
     }
   };
 
   const accessoryForField = (key: keyof PhotoFormData) => {
     if (aiContent) {
       switch (key) {
-      case 'title':
-        return <AiButton
-          tabIndex={-1}
-          aiContent={aiContent}
-          requestFields={['title']}
-          shouldConfirm={Boolean(formData.title)}
-          className="h-full"
-        />;
-      case 'caption':
-        return <AiButton
-          tabIndex={-1}
-          aiContent={aiContent}
-          requestFields={['caption']}
-          shouldConfirm={Boolean(formData.caption)}
-          className="h-full"
-        />;
-      case 'tags':
-        return <AiButton
-          tabIndex={-1}
-          aiContent={aiContent}
-          requestFields={['tags']}
-          shouldConfirm={Boolean(formData.tags)}
-          className="h-full"
-        />;
-      case 'semanticDescription':
-        return <AiButton
-          tabIndex={-1}
-          aiContent={aiContent}
-          requestFields={['semantic']}
-          shouldConfirm={Boolean(formData.semanticDescription)}
-        />;
-      case 'blurData':
-        return shouldDebugImageFallbacks && type === 'edit' && formData.url
-          ? <UpdateBlurDataButton
-            photoUrl={getNextImageUrlForManipulation(formData.url, IS_PREVIEW)}
-            onUpdatedBlurData={blurData =>
-              setFormData(data => ({ ...data, blurData }))}
-          />
-          : null;
+        case 'title':
+          return <AiButton
+            tabIndex={-1}
+            aiContent={aiContent}
+            requestFields={['title']}
+            shouldConfirm={Boolean(formData.title)}
+            className="h-full"
+          />;
+        case 'caption':
+          return <AiButton
+            tabIndex={-1}
+            aiContent={aiContent}
+            requestFields={['caption']}
+            shouldConfirm={Boolean(formData.caption)}
+            className="h-full"
+          />;
+        case 'tags':
+          return <AiButton
+            tabIndex={-1}
+            aiContent={aiContent}
+            requestFields={['tags']}
+            shouldConfirm={Boolean(formData.tags)}
+            className="h-full"
+          />;
+        case 'semanticDescription':
+          return <AiButton
+            tabIndex={-1}
+            aiContent={aiContent}
+            requestFields={['semantic']}
+            shouldConfirm={Boolean(formData.semanticDescription)}
+          />;
+        case 'blurData':
+          return shouldDebugImageFallbacks && type === 'edit' && formData.url
+            ? <UpdateBlurDataButton
+              photoUrl={getNextImageUrlForManipulation(
+                formData.url,
+                IS_PREVIEW,
+              )}
+              onUpdatedBlurData={blurData =>
+                setFormData(data => ({ ...data, blurData }))}
+            />
+            : null;
       }
     }
   };
@@ -429,60 +432,60 @@ export default function PhotoForm({
                 };
 
                 switch (key) {
-                case 'film':
-                  return <FieldsetWithStatus
-                    key={key}
-                    {...fieldProps}
-                    tagOptionsDefaultIcon={<span
-                      className="w-4 overflow-hidden"
-                    >
-                      <PhotoFilmIcon />
-                    </span>}
-                  />;
-                case 'applyRecipeTitleGlobally':
-                  return <ApplyRecipeTitleGloballyCheckbox
-                    key={key}
-                    {...fieldProps}
-                    photoId={initialPhotoForm.id}
-                    recipeTitle={formData.recipeTitle}
-                    hasRecipeTitleChanged={
-                      changedFormKeys.includes('recipeTitle')}
-                    recipeData={formData.recipeData}
-                    film={formData.film}
-                    onMatchResults={onMatchResults}
-                  />;
-                case 'colorData':
-                  return <FieldsetWithStatus
-                    key={key}
-                    {...fieldProps}
-                    noteComplex={<PhotoColors
-                      className="translate-y-[1.5px]"
-                      classNameDot="size-[13px]!"
-                      // eslint-disable-next-line max-len
-                      colorData={generateColorDataFromString(formData.colorData)}
-                    />}
-                  />;
-                case 'visibility':
-                  return <FieldsetVisibility
-                    key={key}
-                    {...fieldProps}
-                    formData={formData}
-                    setFormData={setFormData}
-                    isModified={didVisibilityChange(
-                      initialPhotoForm,
-                      formData,
-                    )}
-                  />;
-                case 'favorite':
-                  return <FieldsetFavs
-                    key={key}
-                    {...fieldProps}
-                  />;
-                default:
-                  return <FieldsetWithStatus
-                    key={key}
-                    {...fieldProps}
-                  />;
+                  case 'film':
+                    return <FieldsetWithStatus
+                      key={key}
+                      {...fieldProps}
+                      tagOptionsDefaultIcon={<span
+                        className="w-4 overflow-hidden"
+                      >
+                        <PhotoFilmIcon />
+                      </span>}
+                    />;
+                  case 'applyRecipeTitleGlobally':
+                    return <ApplyRecipeTitleGloballyCheckbox
+                      key={key}
+                      {...fieldProps}
+                      photoId={initialPhotoForm.id}
+                      recipeTitle={formData.recipeTitle}
+                      hasRecipeTitleChanged={
+                        changedFormKeys.includes('recipeTitle')}
+                      recipeData={formData.recipeData}
+                      film={formData.film}
+                      onMatchResults={onMatchResults}
+                    />;
+                  case 'colorData':
+                    return <FieldsetWithStatus
+                      key={key}
+                      {...fieldProps}
+                      noteComplex={<PhotoColors
+                        className="translate-y-[1.5px]"
+                        classNameDot="size-[13px]!"
+                        // eslint-disable-next-line max-len
+                        colorData={generateColorDataFromString(formData.colorData)}
+                      />}
+                    />;
+                  case 'visibility':
+                    return <FieldsetVisibility
+                      key={key}
+                      {...fieldProps}
+                      formData={formData}
+                      setFormData={setFormData}
+                      isModified={didVisibilityChange(
+                        initialPhotoForm,
+                        formData,
+                      )}
+                    />;
+                  case 'favorite':
+                    return <FieldsetFavs
+                      key={key}
+                      {...fieldProps}
+                    />;
+                  default:
+                    return <FieldsetWithStatus
+                      key={key}
+                      {...fieldProps}
+                    />;
                 }
               }
             })}

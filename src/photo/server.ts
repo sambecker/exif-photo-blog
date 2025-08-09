@@ -221,7 +221,7 @@ export const removeGpsData = async (image: ArrayBuffer) =>
 
 export const convertFormDataToPhotoDbInsertAndLookupRecipeTitle =
   async (...args: Parameters<typeof convertFormDataToPhotoDbInsert>):
-    Promise<ReturnType<typeof convertFormDataToPhotoDbInsert>> => {
+  Promise<ReturnType<typeof convertFormDataToPhotoDbInsert>> => {
     const photo = convertFormDataToPhotoDbInsert(...args);
 
     if (photo.recipeData && !photo.recipeTitle && photo.film) {

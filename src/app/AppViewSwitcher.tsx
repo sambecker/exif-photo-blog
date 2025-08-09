@@ -86,15 +86,15 @@ export default function AppViewSwitcher({
   const onKeyDown = useCallback((e: KeyboardEvent) => {
     if (!e.metaKey) {
       switch (e.key.toLocaleUpperCase()) {
-      case KEY_COMMANDS.full:
-        if (pathname !== PATH_FULL_INFERRED) { refHrefFull.current?.click(); }
-        break;
-      case KEY_COMMANDS.grid:
-        if (pathname !== PATH_GRID_INFERRED) { refHrefGrid.current?.click(); }
-        break;
-      case KEY_COMMANDS.admin:
-        if (isUserSignedIn) { setIsAdminMenuOpen(true); }
-        break;
+        case KEY_COMMANDS.full:
+          if (pathname !== PATH_FULL_INFERRED) { refHrefFull.current?.click(); }
+          break;
+        case KEY_COMMANDS.grid:
+          if (pathname !== PATH_GRID_INFERRED) { refHrefGrid.current?.click(); }
+          break;
+        case KEY_COMMANDS.admin:
+          if (isUserSignedIn) { setIsAdminMenuOpen(true); }
+          break;
       }
     }
   }, [pathname, isUserSignedIn]);

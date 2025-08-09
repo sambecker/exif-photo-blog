@@ -28,8 +28,9 @@ export type AppStateContextType = {
   clearNextPhotoAnimation?: (id?: string) => void
   shouldRespondToKeyboardCommands?: boolean
   setShouldRespondToKeyboardCommands?: Dispatch<SetStateAction<boolean>>
-  categoriesWithCounts?:
-    Awaited<ReturnType<typeof getCountsForCategoriesCachedAction>>
+  categoriesWithCounts?: Awaited<ReturnType<
+    typeof getCountsForCategoriesCachedAction
+  >>
   // MODAL
   isCommandKOpen?: boolean
   setIsCommandKOpen?: Dispatch<SetStateAction<boolean>>

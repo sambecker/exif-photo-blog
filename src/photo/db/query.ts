@@ -644,10 +644,10 @@ const needsAiTextWhereClauses =
     ? AI_TEXT_AUTO_GENERATED_FIELDS
       .map(field => {
         switch (field) {
-        case 'title': return `(title <> '') IS NOT TRUE`;
-        case 'caption': return `(caption <> '') IS NOT TRUE`;
-        case 'tags': return `(tags IS NULL OR array_length(tags, 1) = 0)`;
-        case 'semantic': return `(semantic_description <> '') IS NOT TRUE`;
+          case 'title': return `(title <> '') IS NOT TRUE`;
+          case 'caption': return `(caption <> '') IS NOT TRUE`;
+          case 'tags': return `(tags IS NULL OR array_length(tags, 1) = 0)`;
+          case 'semantic': return `(semantic_description <> '') IS NOT TRUE`;
         }
       })
     : [];
@@ -703,7 +703,7 @@ export const getColorDataForPhotos = () =>
     SELECT id, url, color_data FROM photos
     LIMIT ${UPDATE_QUERY_LIMIT}
   `.then(({ rows }) => rows.map(({ id, url, color_data }) =>
-    ({ id, url, colorData: color_data })))
+        ({ id, url, colorData: color_data })))
   , 'getColorDataForPhotos');
 
 export const updateColorDataForPhoto = (

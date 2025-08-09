@@ -18,16 +18,16 @@ export default function AiButton({
   const isLoading = useMemo(() =>
     (requestFields ?? []).map(field => {
       switch (field) {
-      case 'title':
-        return aiContent.isLoadingTitle;
-      case 'caption':
-        return aiContent.isLoadingCaption;
-      case 'tags':
-        return aiContent.isLoadingTags;
-      case 'semantic':
-        return aiContent.isLoadingSemantic;
-      default:
-        return false;
+        case 'title':
+          return aiContent.isLoadingTitle;
+        case 'caption':
+          return aiContent.isLoadingCaption;
+        case 'tags':
+          return aiContent.isLoadingTags;
+        case 'semantic':
+          return aiContent.isLoadingSemantic;
+        default:
+          return false;
       }
     }).some(Boolean)
   , [

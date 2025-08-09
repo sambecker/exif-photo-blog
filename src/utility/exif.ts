@@ -17,16 +17,16 @@ export const getAspectRatioFromExif = (data: ExifData): number => {
   const height = data.imageSize?.height ?? 2.0;
 
   switch (orientation) {
-  case OrientationTypes.TOP_LEFT:
-  case OrientationTypes.TOP_RIGHT:
-  case OrientationTypes.BOTTOM_RIGHT:
-  case OrientationTypes.BOTTOM_LEFT:
-  case OrientationTypes.LEFT_TOP:
-  case OrientationTypes.RIGHT_BOTTOM:
-    return width / height;
-  case OrientationTypes.RIGHT_TOP:
-  case OrientationTypes.LEFT_BOTTOM:
-    return height / width;
+    case OrientationTypes.TOP_LEFT:
+    case OrientationTypes.TOP_RIGHT:
+    case OrientationTypes.BOTTOM_RIGHT:
+    case OrientationTypes.BOTTOM_LEFT:
+    case OrientationTypes.LEFT_TOP:
+    case OrientationTypes.RIGHT_BOTTOM:
+      return width / height;
+    case OrientationTypes.RIGHT_TOP:
+    case OrientationTypes.LEFT_BOTTOM:
+      return height / width;
   }
 };
 
@@ -37,17 +37,17 @@ export const convertApertureValueToFNumber = (
     const aperture = parseInt(apertureValue);
     if (aperture <= 10) {
       switch (aperture) {
-      case 0: return '1';
-      case 1: return '1.4';
-      case 2: return '2';
-      case 3: return '2.8';
-      case 4: return '4';
-      case 5: return '5.6';
-      case 6: return '8';
-      case 7: return '11';
-      case 8: return '16';
-      case 9: return '22';
-      case 10: return '32';
+        case 0: return '1';
+        case 1: return '1.4';
+        case 2: return '2';
+        case 3: return '2.8';
+        case 4: return '4';
+        case 5: return '5.6';
+        case 6: return '8';
+        case 7: return '11';
+        case 8: return '16';
+        case 9: return '22';
+        case 10: return '32';
       }
     } else {
       const value = Math.round(Math.pow(2, aperture / 2.0) * 10) / 10;

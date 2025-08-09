@@ -172,68 +172,66 @@ export default function TagInput({
     const listener = (e: KeyboardEvent) => {
       // Keys which always trap focus
       switch (e.key) {
-      case 'ArrowDown':
-      case 'ArrowUp':
-      case 'Escape':
-        e.stopImmediatePropagation();
-        e.preventDefault();
-      }
-      switch (e.key) {
-      case 'Enter':
-        // Only trap focus if there are options to select
-        // otherwise allow form to submit
-        if (
-          shouldShowMenu &&
-          optionsFiltered.length > 0
-        ) {
+        case 'ArrowDown':
+        case 'ArrowUp':
+        case 'Escape':
           e.stopImmediatePropagation();
           e.preventDefault();
-          if (!hasReachedLimit) {
-            addOptions([optionsFiltered[selectedOptionIndex ?? 0].value]);
+      }
+      switch (e.key) {
+        case 'Enter':
+        // Only trap focus if there are options to select
+        // otherwise allow form to submit
+          if (
+            shouldShowMenu &&
+          optionsFiltered.length > 0
+          ) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            if (!hasReachedLimit) {
+              addOptions([optionsFiltered[selectedOptionIndex ?? 0].value]);
+            }
           }
-        }
-        break;
-      case 'ArrowDown':
-        if (shouldShowMenu) {
+          break;
+        case 'ArrowDown':
+          if (shouldShowMenu) {
+            setSelectedOptionIndex(i => {
+              if (i === undefined) {
+                return optionsFiltered.length > 1 ? 1 : 0;
+              } else if (i >= optionsFiltered.length - 1) {
+                return 0;
+              } else {
+                return i + 1;
+              }
+            });
+          } else {
+            setShouldShowMenu(true);
+          }
+          break;
+        case 'ArrowUp':
           setSelectedOptionIndex(i => {
-            if (i === undefined) {
-              return optionsFiltered.length > 1 ? 1 : 0;
-            } else if (i >= optionsFiltered.length - 1) {
-              return 0;
+            if (
+              document.activeElement === inputRef.current &&
+              optionsFiltered.length > 0
+            ) {
+              return optionsFiltered.length - 1;
+            } else if (i === undefined || i === 0) {
+              inputRef.current?.focus();
+              return undefined;
             } else {
-              return i + 1;
+              return i - 1;
             }
           });
-        } else {
-          setShouldShowMenu(true);
-        }
-        break;
-      case 'ArrowUp':
-        setSelectedOptionIndex(i => {
-          if (
-            document.activeElement === inputRef.current &&
-            optionsFiltered.length > 0
-          ) {
-            return optionsFiltered.length - 1;
-          } else if (i === undefined || i === 0) {
-            inputRef.current?.focus();
-            return undefined;
-          } else {
-            return i - 1;
+          break;
+        case 'Backspace':
+          if (inputText === '' && selectedOptions.length > 0) {
+            removeOption(selectedOptions[selectedOptions.length - 1]);
+            if (!showMenuOnDelete) { hideMenu(); }
           }
-        });
-        break;
-      case 'Backspace':
-        if (inputText === '' && selectedOptions.length > 0) {
-          removeOption(selectedOptions[selectedOptions.length - 1]);
-          if (!showMenuOnDelete) {
-            hideMenu();
-          }
-        }
-        break;
-      case 'Escape':
-        hideMenu(true);
-        break;
+          break;
+        case 'Escape':
+          hideMenu(true);
+          break;
       }
     };
 

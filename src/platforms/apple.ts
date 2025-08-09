@@ -49,110 +49,110 @@ export const formatAppleLensText = (
   } else if (side?.toLocaleUpperCase() === 'BACK') {
     switch (phoneName?.toLocaleUpperCase()) {
     // X + XS
-    case 'X':
-    case 'XS':
-    case 'XS MAX':
-      switch (aperture) {
-      case '1.8': return format('Main');
-      case '2.4': return format('Telephoto');
-      }
-    // XR + SE (single lens)
-    case 'XR':
-    case 'SE':
-      return format('Main');
-    // 11
-    case '11':
-      switch (aperture) {
-      case '2.4': return format('Wide');
-      case '1.8': return format('Main');
-      }
-    case '11 PRO':
-    case '11 PRO MAX':
-      switch (aperture) {
-      case '2.4': return format('Wide');
-      case '1.8': return format('Main');
-      case '2.0': return format('Telephoto');
-      }
-    // 12
-    case '12':
-    case '12 MINI':
-      switch (aperture) {
-      case '2.4': return format('Wide');
-      case '1.6': return format('Main');
-      }
-    case '12 PRO':
-      switch (aperture) {
-      case '2.4': return format('Wide');
-      case '1.6': return format('Main');
-      case '2.0': return format('Telephoto');
-      }
-    case '12 PRO MAX':
-      switch (aperture) {
-      case '2.4': return format('Wide');
-      case '1.6': return format('Main');
-      case '2.2': return format('Telephoto');
-      }
-    // 13
-    case '13':
-    case '13 MINI':
-    case '13 PLUS':
-      switch (aperture) {
-      case '2.4': return format('Wide');
-      case '1.6': return format('Main');
-      }
-    case '13 PRO':
-    case '13 PRO MAX':
-      switch (aperture) {
-      case '1.8': return format('Wide');
-      case '1.5': return format('Main');
-      case '2.8': return format('Telephoto');
-      }
-    // 14
-    case '14':
-    case '14 PLUS':
-      switch (aperture) {
-      case '2.4': return format('Wide');
-      case '1.5': return format('Main');
-      }
-    case '14 PRO':
-    case '14 PRO MAX':
-      switch (aperture) {
-      case '2.2': return format('Wide');
-      case '1.78': return format('Main');
-      case '2.8': return format('Telephoto');
-      }
-    // 15
-    case '15':
-    case '15 PLUS':
-      switch (aperture) {
-      case '2.4': return format('Wide');
-      case '1.6': return format('Main');
-      }
-    case '15 PRO':
-    case '15 PRO MAX':
-      switch (aperture) {
-      case '2.2': return format('Wide');
-      case '1.78': return format('Main');
-      case '2.8': return format('Telephoto');
-      }
-    // 16 (single lens)
-    case '16E':
-      return format('Main');
-    case '16':
-    case '16 PLUS':
-      switch (aperture) {
-      case '2.2': return format('Wide');
-      case '1.6': return format('Main');
-      }
-    case '16 PRO':
-    case '16 PRO MAX':
-      switch (aperture) {
-      case '2.2': return format('Wide');
-      case '1.78': return format('Main');
-      case '2.8': return format('Telephoto');
-      }
-    default:
-      return format('Back', true);
+      case 'X':
+      case 'XS':
+      case 'XS MAX':
+        switch (aperture) {
+          case '1.8': return format('Main');
+          case '2.4': return format('Telephoto');
+        }
+        // XR + SE (single lens)
+      case 'XR':
+      case 'SE':
+        return format('Main');
+        // 11
+      case '11':
+        switch (aperture) {
+          case '2.4': return format('Wide');
+          case '1.8': return format('Main');
+        }
+      case '11 PRO':
+      case '11 PRO MAX':
+        switch (aperture) {
+          case '2.4': return format('Wide');
+          case '1.8': return format('Main');
+          case '2.0': return format('Telephoto');
+        }
+        // 12
+      case '12':
+      case '12 MINI':
+        switch (aperture) {
+          case '2.4': return format('Wide');
+          case '1.6': return format('Main');
+        }
+      case '12 PRO':
+        switch (aperture) {
+          case '2.4': return format('Wide');
+          case '1.6': return format('Main');
+          case '2.0': return format('Telephoto');
+        }
+      case '12 PRO MAX':
+        switch (aperture) {
+          case '2.4': return format('Wide');
+          case '1.6': return format('Main');
+          case '2.2': return format('Telephoto');
+        }
+        // 13
+      case '13':
+      case '13 MINI':
+      case '13 PLUS':
+        switch (aperture) {
+          case '2.4': return format('Wide');
+          case '1.6': return format('Main');
+        }
+      case '13 PRO':
+      case '13 PRO MAX':
+        switch (aperture) {
+          case '1.8': return format('Wide');
+          case '1.5': return format('Main');
+          case '2.8': return format('Telephoto');
+        }
+        // 14
+      case '14':
+      case '14 PLUS':
+        switch (aperture) {
+          case '2.4': return format('Wide');
+          case '1.5': return format('Main');
+        }
+      case '14 PRO':
+      case '14 PRO MAX':
+        switch (aperture) {
+          case '2.2': return format('Wide');
+          case '1.78': return format('Main');
+          case '2.8': return format('Telephoto');
+        }
+        // 15
+      case '15':
+      case '15 PLUS':
+        switch (aperture) {
+          case '2.4': return format('Wide');
+          case '1.6': return format('Main');
+        }
+      case '15 PRO':
+      case '15 PRO MAX':
+        switch (aperture) {
+          case '2.2': return format('Wide');
+          case '1.78': return format('Main');
+          case '2.8': return format('Telephoto');
+        }
+        // 16 (single lens)
+      case '16E':
+        return format('Main');
+      case '16':
+      case '16 PLUS':
+        switch (aperture) {
+          case '2.2': return format('Wide');
+          case '1.6': return format('Main');
+        }
+      case '16 PRO':
+      case '16 PRO MAX':
+        switch (aperture) {
+          case '2.2': return format('Wide');
+          case '1.78': return format('Main');
+          case '2.8': return format('Telephoto');
+        }
+      default:
+        return format('Back', true);
     }
   }
 

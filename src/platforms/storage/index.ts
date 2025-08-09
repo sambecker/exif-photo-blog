@@ -49,17 +49,17 @@ export type StorageType =
 
 export const labelForStorage = (type: StorageType): string => {
   switch (type) {
-  case 'vercel-blob': return 'Vercel Blob';
-  case 'cloudflare-r2': return 'Cloudflare R2';
-  case 'aws-s3': return 'AWS S3';
+    case 'vercel-blob': return 'Vercel Blob';
+    case 'cloudflare-r2': return 'Cloudflare R2';
+    case 'aws-s3': return 'AWS S3';
   }
 };
 
 export const baseUrlForStorage = (type: StorageType) => {
   switch (type) {
-  case 'vercel-blob': return VERCEL_BLOB_BASE_URL;
-  case 'cloudflare-r2': return CLOUDFLARE_R2_BASE_URL_PUBLIC;
-  case 'aws-s3': return AWS_S3_BASE_URL;
+    case 'vercel-blob': return VERCEL_BLOB_BASE_URL;
+    case 'cloudflare-r2': return CLOUDFLARE_R2_BASE_URL_PUBLIC;
+    case 'aws-s3': return AWS_S3_BASE_URL;
   }
 };
 
@@ -91,12 +91,12 @@ const REGEX_UPLOAD_ID = new RegExp(
 
 export const fileNameForStorageUrl = (url: string) => {
   switch (storageTypeFromUrl(url)) {
-  case 'vercel-blob':
-    return url.replace(`${VERCEL_BLOB_BASE_URL}/`, '');
-  case 'cloudflare-r2':
-    return url.replace(`${CLOUDFLARE_R2_BASE_URL_PUBLIC}/`, '');
-  case 'aws-s3':
-    return url.replace(`${AWS_S3_BASE_URL}/`, '');
+    case 'vercel-blob':
+      return url.replace(`${VERCEL_BLOB_BASE_URL}/`, '');
+    case 'cloudflare-r2':
+      return url.replace(`${CLOUDFLARE_R2_BASE_URL_PUBLIC}/`, '');
+    case 'aws-s3':
+      return url.replace(`${AWS_S3_BASE_URL}/`, '');
   }
 };
 
@@ -144,12 +144,12 @@ export const putFile = (
   fileName: string,
 ) => {
   switch (CURRENT_STORAGE) {
-  case 'vercel-blob':
-    return vercelBlobPut(file, fileName);
-  case 'cloudflare-r2':
-    return cloudflareR2Put(file, fileName);
-  case 'aws-s3':
-    return awsS3Put(file, fileName);
+    case 'vercel-blob':
+      return vercelBlobPut(file, fileName);
+    case 'cloudflare-r2':
+      return cloudflareR2Put(file, fileName);
+    case 'aws-s3':
+      return awsS3Put(file, fileName);
   }
 };
 
@@ -158,35 +158,35 @@ export const copyFile = (
   destinationFileName: string,
 ): Promise<string> => {
   switch (storageTypeFromUrl(originUrl)) {
-  case 'vercel-blob':
-    return vercelBlobCopy(
-      originUrl,
-      destinationFileName,
-      false,
-    );
-  case 'cloudflare-r2':
-    return cloudflareR2Copy(
-      getFileNameFromStorageUrl(originUrl),
-      destinationFileName,
-      false,
-    );
-  case 'aws-s3':
-    return awsS3Copy(
-      originUrl,
-      destinationFileName,
-      false,
-    );
+    case 'vercel-blob':
+      return vercelBlobCopy(
+        originUrl,
+        destinationFileName,
+        false,
+      );
+    case 'cloudflare-r2':
+      return cloudflareR2Copy(
+        getFileNameFromStorageUrl(originUrl),
+        destinationFileName,
+        false,
+      );
+    case 'aws-s3':
+      return awsS3Copy(
+        originUrl,
+        destinationFileName,
+        false,
+      );
   }
 };
 
 export const deleteFile = (url: string) => {
   switch (storageTypeFromUrl(url)) {
-  case 'vercel-blob':
-    return vercelBlobDelete(url);
-  case 'cloudflare-r2':
-    return cloudflareR2Delete(getFileNameFromStorageUrl(url));
-  case 'aws-s3':
-    return awsS3Delete(getFileNameFromStorageUrl(url));
+    case 'vercel-blob':
+      return vercelBlobDelete(url);
+    case 'cloudflare-r2':
+      return cloudflareR2Delete(getFileNameFromStorageUrl(url));
+    case 'aws-s3':
+      return awsS3Delete(getFileNameFromStorageUrl(url));
   }
 };
 

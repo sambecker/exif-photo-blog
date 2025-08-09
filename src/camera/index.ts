@@ -74,22 +74,22 @@ export const formatCameraText = (
     model.toLocaleLowerCase().startsWith(makeSimple.toLocaleLowerCase())
   );
   switch (length) {
-  case 'long':
-    return `${make} ${model}`;
-  case 'medium':
-    return doesModelStartWithMake || isCameraMakeApple(make)
-      ? model
-      : `${make} ${model}`;
-  case 'short':
-    model = doesModelStartWithMake
-      ? model.replace(makeSimple, '').trim()
-      : model;
-    if (
-      model.includes('iPhone') &&
+    case 'long':
+      return `${make} ${model}`;
+    case 'medium':
+      return doesModelStartWithMake || isCameraMakeApple(make)
+        ? model
+        : `${make} ${model}`;
+    case 'short':
+      model = doesModelStartWithMake
+        ? model.replace(makeSimple, '').trim()
+        : model;
+      if (
+        model.includes('iPhone') &&
       model.length > 9
-    ) {
-      model = model.replace(/iPhone\s*/i, '');
-    }
-    return model;
+      ) {
+        model = model.replace(/iPhone\s*/i, '');
+      }
+      return model;
   }
 };

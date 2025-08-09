@@ -59,21 +59,21 @@ export const parseFujifilmMakerNote = (
 
       switch (tagType) {
       // Int8 (UInt8 read as Int8 according to spec)
-      case 1:
-        sendNumbersForDataType(offset => bytes.readInt8(offset), 1);
-        break;
-      // UInt16
-      case 3:
-        sendNumbersForDataType(offset => bytes.readUInt16LE(offset), 2);
-        break;
-      // UInt32
-      case 4:
-        sendNumbersForDataType(offset => bytes.readUInt32LE(offset), 4);
-        break;
-      // Int32
-      case 9:
-        sendNumbersForDataType(offset => bytes.readInt32LE(offset), 4);
-        break;
+        case 1:
+          sendNumbersForDataType(offset => bytes.readInt8(offset), 1);
+          break;
+          // UInt16
+        case 3:
+          sendNumbersForDataType(offset => bytes.readUInt16LE(offset), 2);
+          break;
+          // UInt32
+        case 4:
+          sendNumbersForDataType(offset => bytes.readUInt32LE(offset), 4);
+          break;
+          // Int32
+        case 9:
+          sendNumbersForDataType(offset => bytes.readInt32LE(offset), 4);
+          break;
       }
     }
   }

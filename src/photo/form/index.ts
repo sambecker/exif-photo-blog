@@ -258,22 +258,22 @@ export const formHasTextContent = ({
 export const convertPhotoToFormData = (photo: Photo): PhotoFormData => {
   const valueForKey = (key: keyof Photo, value: any) => {
     switch (key) {
-    case 'tags':
-      return (value ?? [])
-        .filter((tag: string) => tag !== TAG_FAVS)
-        .join(', ');
-    case 'takenAt':
-      return value?.toISOString ? value.toISOString() : value;
-    case 'hidden':
-      return value ? 'true' : 'false';
-    case 'recipeData':
-      return JSON.stringify(value);
-    case 'colorData':
-      return JSON.stringify(value);
-    default:
-      return value !== undefined && value !== null
-        ? value.toString()
-        : undefined;
+      case 'tags':
+        return (value ?? [])
+          .filter((tag: string) => tag !== TAG_FAVS)
+          .join(', ');
+      case 'takenAt':
+        return value?.toISOString ? value.toISOString() : value;
+      case 'hidden':
+        return value ? 'true' : 'false';
+      case 'recipeData':
+        return JSON.stringify(value);
+      case 'colorData':
+        return JSON.stringify(value);
+      default:
+        return value !== undefined && value !== null
+          ? value.toString()
+          : undefined;
     }
   };
   return Object.entries(photo).reduce((photoForm, [key, value]) => ({

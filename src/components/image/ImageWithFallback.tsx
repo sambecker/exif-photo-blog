@@ -41,11 +41,11 @@ export default function ImageWithFallback({
 
   const getBlurClass = () => {
     switch (blurCompatibilityLevel) {
-    case 'high':
+      case 'high':
       // Fix poorly blurred placeholder data generated on client
-      return 'blur-[4px] @xs:blue-md scale-[1.05]';
-    case 'low':
-      return 'blur-[2px] @xs:blue-md scale-[1.01]';
+        return 'blur-[4px] @xs:blue-md scale-[1.05]';
+      case 'low':
+        return 'blur-[2px] @xs:blue-md scale-[1.01]';
     }
   };
 

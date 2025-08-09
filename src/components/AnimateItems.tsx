@@ -75,22 +75,22 @@ function AnimateItems({
 
   const getInitialVariant = (): Variant => {
     switch (typeResolved) {
-    case 'left': return {
-      opacity: 0,
-      transform: `translateX(${distanceOffset}px)`,
-    };
-    case 'right': return {
-      opacity: 0,
-      transform: `translateX(${-distanceOffset}px)`,
-    };
-    case 'bottom': return {
-      opacity: 0,
-      transform: `translateY(${distanceOffset}px)`,
-    };
-    default: return {
-      opacity: 0,
-      transform: `translateY(${distanceOffset}px) scale(${scaleOffset})`,
-    };
+      case 'left': return {
+        opacity: 0,
+        transform: `translateX(${distanceOffset}px)`,
+      };
+      case 'right': return {
+        opacity: 0,
+        transform: `translateX(${-distanceOffset}px)`,
+      };
+      case 'bottom': return {
+        opacity: 0,
+        transform: `translateY(${distanceOffset}px)`,
+      };
+      default: return {
+        opacity: 0,
+        transform: `translateY(${distanceOffset}px) scale(${scaleOffset})`,
+      };
     }
   };
 
