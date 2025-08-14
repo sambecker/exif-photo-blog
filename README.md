@@ -291,8 +291,8 @@ Partial internationalization (for non-admin, user-facing text) provided for a ha
 
 ### Supported Languages
 - `bd-bn`
-- `en-us`
 - `en-gb`
+- `en-us`
 - `id-id`
 - `pt-br`
 - `pt-pt`
