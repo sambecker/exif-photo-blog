@@ -90,7 +90,7 @@ export default function RootLayout({
     >
       <body className={clsx(
         // Center on large screens
-        'lg:flex flex-col items-center',
+        '3xl:flex flex-col items-center',
       )}>
         <AppStateProvider areAdminDebugToolsEnabled={ADMIN_DEBUG_TOOLS_ENABLED}>
           <AppTextProvider>
