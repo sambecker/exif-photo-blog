@@ -49,7 +49,7 @@ import {
 import { TAG_FAVS, isPhotoFav, isTagFavs } from '@/tag';
 import { convertPhotoToPhotoDbInsert, Photo } from '.';
 import { runAuthenticatedAdminServerAction } from '@/auth/server';
-import { AiImageQuery, getAiImageQuery } from './ai';
+import { AiImageQuery, getAiImageQuery, getAiTextFieldsToGenerate } from './ai';
 import { streamOpenAiImageQuery } from '@/platforms/openai';
 import {
   AI_TEXT_AUTO_GENERATED_FIELDS,
@@ -97,7 +97,7 @@ export const createPhotoAction = async (formData: FormData) =>
 const addUpload = async ({
   url,
   title: _title,
-  tags,
+  tags: _tags,
   favorite,
   hidden,
   excludeFromFeeds,
@@ -139,22 +139,29 @@ const addUpload = async ({
     }
 
     const title = _title || formDataFromExif.title;
+    const caption = formDataFromExif.caption;
+    const tags = _tags || formDataFromExif.tags;
 
     const {
       title: aiTitle,
-      caption,
+      caption: aiCaption,
       tags: aiTags,
       semanticDescription,
     } = await generateAiImageQueries(
       imageResizedBase64,
-      AI_TEXT_AUTO_GENERATED_FIELDS,
+      getAiTextFieldsToGenerate(
+        AI_TEXT_AUTO_GENERATED_FIELDS,
+        Boolean(title),
+        Boolean(caption),
+        Boolean(tags),
+      ),
       title,
     );
 
     const form: Partial<PhotoFormData> = {
       ...formDataFromExif,
       title: title || aiTitle,
-      caption,
+      caption: caption || aiCaption,
       tags: tags || aiTags,
       excludeFromFeeds,
       hidden,
