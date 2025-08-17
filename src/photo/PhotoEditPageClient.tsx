@@ -37,8 +37,8 @@ export default function PhotoEditPageClient({
     setIsPending,
     updatedTitle,
     setUpdatedTitle,
-    hasTextContent,
-    setHasTextContent,
+    shouldConfirmAiTextGeneration,
+    setShouldConfirmAiTextGeneration,
     aiContent,
   } = usePhotoFormParent({
     photoForm,
@@ -59,7 +59,10 @@ export default function PhotoEditPageClient({
       accessory={
         <div className="flex gap-2">
           {hasAiTextGeneration &&
-            <AiButton {...{ aiContent, shouldConfirm: hasTextContent }} />}
+            <AiButton {...{
+              aiContent,
+              shouldConfirm: shouldConfirmAiTextGeneration,
+            }} />}
           <ExifCaptureButton
             photoUrl={photo.url}
             onSync={setUpdatedExifData}
@@ -77,7 +80,7 @@ export default function PhotoEditPageClient({
         uniqueFilms={uniqueFilms}
         aiContent={hasAiTextGeneration ? aiContent : undefined}
         onTitleChange={setUpdatedTitle}
-        onTextContentChange={setHasTextContent}
+        onFormDataChange={setShouldConfirmAiTextGeneration}
         onFormStatusChange={setIsPending}
       />
     </AdminChildPage>
