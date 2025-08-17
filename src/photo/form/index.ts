@@ -246,12 +246,12 @@ export const isFormValid = (formData: Partial<PhotoFormData>) =>
       (!validateStringMaxLength || (formData[key]?.length ?? 0) <= validateStringMaxLength),
   );
 
-export const formHasTextContent = ({
+export const formHasExistingAiTextContent = ({
   title,
   caption,
   tags,
   semanticDescription,
-}: Partial<PhotoFormData>) =>
+}: Partial<PhotoFormData> = {}) =>
   Boolean(title || caption || tags || semanticDescription);
 
 // CREATE FORM DATA: FROM PHOTO
