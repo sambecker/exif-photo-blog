@@ -85,6 +85,7 @@ const FORM_METADATA = (
     label: 'title',
     capitalize: true,
     validateStringMaxLength: STRING_MAX_LENGTH_SHORT,
+    shouldNotOverwriteWithNullDataOnSync: true,
   },
   caption: {
     label: 'caption',

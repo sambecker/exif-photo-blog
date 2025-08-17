@@ -17,10 +17,7 @@ export const convertExifToFormData = (
   data: ExifData,
   film?: FujifilmSimulation,
   recipeData?: FujifilmRecipe,
-): Omit<
-  Record<keyof PhotoExif, string | undefined>,
-  'takenAt' | 'takenAtNaive'
-> => ({
+): Partial<Record<keyof PhotoExif, string | undefined>> => ({
   aspectRatio: getAspectRatioFromExif(data).toString(),
   make: data.tags?.Make,
   model: data.tags?.Model,
@@ -48,5 +45,8 @@ export const convertExifToFormData = (
     ),
     takenAtNaive:
       convertTimestampToNaivePostgresString(data.tags.DateTimeOriginal),
+  },
+  ...(data.tags?.ImageDescription || data.tags?.XPTitle) && {
+    title: data.tags?.ImageDescription || data.tags?.XPTitle,
   },
 }); 

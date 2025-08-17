@@ -536,7 +536,7 @@ export const syncPhotoAction = async (photoId: string, isBatch?: boolean) =>
 
         const formDataFromPhoto = convertPhotoToFormData(photo);
 
-        // Don't overwrite manually configured fujifilm meta with null data
+        // Don't overwrite manually configured meta with null data
         FIELDS_TO_NOT_OVERWRITE_WITH_NULL_DATA_ON_SYNC.forEach(field => {
           if (!formDataFromExif[field] && formDataFromPhoto[field]) {
             delete formDataFromExif[field];

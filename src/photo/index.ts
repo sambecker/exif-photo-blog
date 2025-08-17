@@ -68,6 +68,8 @@ export interface PhotoExif {
   recipeData?: string
   takenAt?: string
   takenAtNaive?: string
+  // Photo meta potentially located in EXIF data
+  title?: string
 }
 
 // Raw db insert
@@ -76,7 +78,6 @@ export interface PhotoDbInsert extends PhotoExif {
   url: string
   extension: string
   blurData?: string
-  title?: string
   caption?: string
   semanticDescription?: string
   tags?: string[]
