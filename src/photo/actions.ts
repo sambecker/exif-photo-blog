@@ -96,7 +96,7 @@ export const createPhotoAction = async (formData: FormData) =>
 // - addUploadsAction
 const addUpload = async ({
   url,
-  title,
+  title: _title,
   tags,
   favorite,
   hidden,
@@ -138,6 +138,8 @@ const addUpload = async ({
       onStreamUpdate?.('Generating AI text');
     }
 
+    const title = _title || formDataFromExif.title;
+
     const {
       title: aiTitle,
       caption,
@@ -145,10 +147,7 @@ const addUpload = async ({
       semanticDescription,
     } = await generateAiImageQueries(
       imageResizedBase64,
-      Boolean(title)
-        ? AI_TEXT_AUTO_GENERATED_FIELDS
-          .filter(field => field !== 'title')
-        : AI_TEXT_AUTO_GENERATED_FIELDS,
+      AI_TEXT_AUTO_GENERATED_FIELDS,
       title,
     );
 
@@ -190,9 +189,7 @@ const addUpload = async ({
 };
 
 export const addUploadAction = async (args: Parameters<typeof addUpload>[0]) =>
-  runAuthenticatedAdminServerAction(async () => {
-    await addUpload(args);
-  });
+  runAuthenticatedAdminServerAction(() => addUpload(args));
 
 export const addUploadsAction = async ({
   uploadUrls,
