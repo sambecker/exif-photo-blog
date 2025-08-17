@@ -68,8 +68,10 @@ export interface PhotoExif {
   recipeData?: string
   takenAt?: string
   takenAtNaive?: string
-  // Photo meta potentially located in EXIF data
+  // Photo meta potentially located in EXIF/XMP data
   title?: string
+  caption?: string
+  tags?: string[]
 }
 
 // Raw db insert

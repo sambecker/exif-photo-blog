@@ -26,6 +26,7 @@ import {
 import { PhotoDbInsert } from '.';
 import { convertExifToFormData } from './form/server';
 import { getColorFieldsForPhotoForm } from './color/server';
+import exifr from 'exifr';
 
 const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
@@ -58,6 +59,7 @@ export const extractImageDataFromBlobPath = async (
   const extension = getExtensionFromStorageUrl(url);
 
   let exifData: ExifData | undefined;
+  let exifrData: any | undefined;
   let film: FujifilmSimulation | undefined;
   let recipe: FujifilmRecipe | undefined;
   let blurData: string | undefined;
@@ -80,6 +82,7 @@ export const extractImageDataFromBlobPath = async (
       // Data for form
       parser.enableBinaryFields(false);
       exifData = parser.parse();
+      exifrData = await exifr.parse(fileBytes, { xmp: true });
 
       // Capture film simulation for Fujifilm cameras
       if (isExifForFujifilm(exifData)) {
@@ -126,7 +129,7 @@ export const extractImageDataFromBlobPath = async (
           url,
         },
         ...generateBlurData && { blurData },
-        ...convertExifToFormData(exifData, film, recipe),
+        ...convertExifToFormData(exifData, exifrData, film, recipe),
         ...colorFields,
       },
     },
