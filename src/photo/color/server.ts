@@ -61,7 +61,7 @@ const getColorDataFromImageUrl = async (
   url: string,
   isBatch?: boolean,
 ): Promise<PhotoColorData> => {
-  const ai = AI_CONTENT_GENERATION_ENABLED 
+  const ai = AI_CONTENT_GENERATION_ENABLED
     ? await getColorFromAI(url, isBatch)
     : undefined;
   const average = await getAverageColorFromImageUrl(url);
@@ -95,7 +95,7 @@ export const getColorFieldsForPhotoDbInsert = async (
   ...args: Parameters<typeof getColorFieldsForImageUrl>
 ) => {
   const { colorData, ...rest } = await getColorFieldsForImageUrl(...args) ?? {};
-  if (colorData) {
+  if (colorData !== undefined) {
     return {
       colorData: JSON.stringify(colorData),
       ...rest,
@@ -109,10 +109,12 @@ export const getColorFieldsForPhotoForm = async (
 ) => {
   const { colorSort, ...rest } =
     await getColorFieldsForPhotoDbInsert(...args) ?? {};
-  return {
-    colorSort: `${colorSort}`,
-    ...rest,
-  };
+  if (colorSort !== undefined) {
+    return {
+      colorSort: `${colorSort}`,
+      ...rest,
+    };
+  }
 };
 
 export const getColorFromAI = async (
