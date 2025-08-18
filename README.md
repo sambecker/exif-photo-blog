@@ -309,13 +309,13 @@ Thank you ❤️ translators: [@sconetto](https://github.com/sconetto) (`pt-br`,
 > For forked repos, click "Code," then "Update branch" from the main repo page. If you originally cloned the code, you can [create a fork](https://github.com/sambecker/exif-photo-blog/fork) from GitHub, then update your Git connection from your Vercel project settings. Once you've done this, you may need to go to your project deployments page, click •••, select "Create deployment," and choose `main`.
 
 #### How do I edit multiple photos?
-> On desktop, select ••• menu in the top right next to site title and choose, "Select Multiple." On mobile, "Select Multiple Photos" can be accessed from the search menu. From there, you can perform bulk tag, favorite, and delete actions.
+> In the admin menu, select "Batch edit ..." From there, you can perform bulk tag, favorite, and delete actions.
 
 #### Why don't my photo changes show up immediately?
 > This template statically optimizes core views such as `/` and `/grid` to minimize visitor load times. Consequently, when photos are added, edited, or removed, it might take several minutes for those changes to propagate. If it seems like a change is not taking effect, try navigating to `/admin/configuration` and clicking "Clear Cache."
 
 #### Why do production deployments fail when static optimization is enabled?
-> There have been reports ([Issue 184](https://github.com/sambecker/exif-photo-blog/issues/184#issuecomment-2629474045) + [185](https://github.com/sambecker/exif-photo-blog/issues/185#issuecomment-2629478570)) that having large photos (over 30MB), or a CDN, e.g., Cloudflare in front of Vercel, may destabilize static optimization.
+> There have been reports ([#184](https://github.com/sambecker/exif-photo-blog/issues/184#issuecomment-2629474045) + [#185](https://github.com/sambecker/exif-photo-blog/issues/185#issuecomment-2629478570)) that having large photos (over 30MB), or a CDN, e.g., Cloudflare in front of Vercel, may destabilize static optimization.
 
 #### Why don't my older photos look right?
 > As the template has evolved, EXIF fields (such as lenses) have been added, blur data is generated through a different method, and AI/privacy features have been added. In order to bring older photos up to date, either click the 'sync' button next to a photo or go to photo updates (`/admin/photos/updates`) to sync all photos that need updates.
@@ -363,7 +363,7 @@ Thank you ❤️ translators: [@sconetto](https://github.com/sconetto) (`pt-br`,
 > The default timeout for processing multiple uploads is 60 seconds (the limit for Hobby accounts). This can be extended to 5 minutes on Pro accounts by setting `maxDuration = 300` in `src/app/admin/uploads/page.tsx`.
 
 #### I've added my OpenAI key but can't seem to make it work. Why am I seeing connection errors?
-> You may need to pre-purchase credits before accessing the OpenAI API. See [Issue #110](https://github.com/sambecker/exif-photo-blog/issues/110) for discussion.
+> You may need to pre-purchase credits before accessing the OpenAI API. See [#110](https://github.com/sambecker/exif-photo-blog/issues/110) for discussion.
 
 #### How do I generate AI text for preexisting photos?
 > Once AI text generation is configured, photos missing text will show up in photo updates (`/admin/photos/updates`).
@@ -375,7 +375,7 @@ Thank you ❤️ translators: [@sconetto](https://github.com/sconetto) (`pt-br`,
 > At this time, an external storage provider is necessary in order to develop locally. If you have a strategy to propose which allows files to be locally uploaded and served to `next/image` in away that mirrors an external storage provider for debugging purposes, please open a PR.
 
 #### Can this template be self-hosted?
-> Possibly. See [Issue #116](https://github.com/sambecker/exif-photo-blog/issues/116) and [Issue #132](https://github.com/sambecker/exif-photo-blog/issues/132) for discussion around image hosting and docker usage.
+> Possibly. See [#116](https://github.com/sambecker/exif-photo-blog/issues/116) and [#132](https://github.com/sambecker/exif-photo-blog/issues/132) for discussion around image hosting and docker usage.
 
 #### Why am I seeing many merge conflicts when syncing my fork?
 > Previous versions of this template stored Next.js "App Router" files in `/src`, and app-level functionality in `/src/site`. If you've made customizations and are having difficulty merging updates, consider moving `/src/app` files to `/`, and renaming `src/site` to `/src/app`. Other structural changes include moving `tailwind.css` and `middleware.ts` to `/`. Additionally, it may be helpful to review [PR #195](https://github.com/sambecker/exif-photo-blog/pull/195) for an overview of the most significant changes.
