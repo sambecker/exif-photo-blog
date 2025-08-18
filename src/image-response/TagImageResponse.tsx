@@ -34,18 +34,22 @@ export default function TagImageResponse({
         height,
         fontFamily,
         icon: isTagFavs(tag)
-          ? <IconFavs
-            size={height * .066}
-            style={{
-              // Fix horizontal distortion in icon size
-              width: height * .076,
-              marginRight: height * .015,
-            }}
-          />
+          ? <span tw="text-amber-500 inline-flex ">
+            <IconFavs
+              size={height * .066}
+              style={{
+                // Fix horizontal distortion in icon size
+                width: height * .076,
+                marginRight: height * .015,
+                transform: `translateY(${-height * .0015}px)`,
+              }}
+              highlight
+            />
+          </span>
           : <IconTag
-            size={height * .0725}
+            size={height * .07}
             style={{
-              transform: `translateY(${height * .007}px)`,
+              transform: `translateY(${height * .004}px)`,
               marginRight: height * .01,
             }}
           />,
