@@ -65,6 +65,8 @@ export default function PhotoForm({
   uniqueRecipes,
   uniqueFilms,
   aiContent,
+  formSection,
+  setFormSection,
   shouldStripGpsData,
   onTitleChange,
   onFormDataChange,
@@ -79,6 +81,8 @@ export default function PhotoForm({
   uniqueFilms?: Films
   aiContent?: AiContent
   shouldStripGpsData?: boolean
+  formSection: FormSection
+  setFormSection: (formSection: FormSection) => void
   onTitleChange?: (updatedTitle: string) => void
   onFormDataChange?: (formData: Partial<PhotoFormData>) => void,
   onFormStatusChange?: (pending: boolean) => void
@@ -88,7 +92,6 @@ export default function PhotoForm({
   const [formErrors, setFormErrors] =
     useState(getFormErrors(initialPhotoForm));
   const [formActionErrorMessage, setFormActionErrorMessage] = useState('');
-  const [formSection, setFormSection] = useState<FormSection>(FORM_SECTIONS[0]);
 
   const { invalidateSwr, shouldDebugImageFallbacks } = useAppState();
 
