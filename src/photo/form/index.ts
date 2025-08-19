@@ -42,7 +42,17 @@ export type AnnotatedTag = {
   annotationAria?: string,
 };
 
+export const FORM_SECTIONS = [
+  'meta',
+  'core',
+  'exif',
+  'misc',
+] as const;
+
+export type FormSection = (typeof FORM_SECTIONS)[number];
+
 export type FormMeta = {
+  section: FormSection
   label: string
   note?: string
   noteShort?: string
@@ -82,12 +92,14 @@ const FORM_METADATA = (
   shouldStripGpsData?: boolean,
 ): Record<keyof PhotoFormData, FormMeta> => ({
   title: {
+    section: 'meta',
     label: 'title',
     capitalize: true,
     validateStringMaxLength: STRING_MAX_LENGTH_SHORT,
     shouldNotOverwriteWithNullDataOnSync: true,
   },
   caption: {
+    section: 'meta',
     label: 'caption',
     capitalize: true,
     validateStringMaxLength: STRING_MAX_LENGTH_LONG,
@@ -95,28 +107,55 @@ const FORM_METADATA = (
       !aiTextGeneration && (!title && !caption),
   },
   tags: {
+    section: 'meta',
     label: 'tags',
     tagOptions,
     validate: getValidationMessageForTags,
   },
   semanticDescription: {
+    section: 'meta',
     type: 'textarea',
     label: 'semantic description (not visible)',
     capitalize: true,
     validateStringMaxLength: STRING_MAX_LENGTH_LONG,
     shouldHide: () => !aiTextGeneration,
   },
-  id: { label: 'id', readOnly: true, hideIfEmpty: true },
+  id: {
+    section: 'core',
+    label: 'id',
+    readOnly: true,
+    hideIfEmpty: true,
+  },
   blurData: {
+    section: 'misc',
     label: 'blur data',
     readOnly: true,
   },
-  url: { label: 'storage url', readOnly: true },
-  extension: { label: 'extension', readOnly: true },
-  aspectRatio: { label: 'aspect ratio', readOnly: true },
-  make: { label: 'camera make' },
-  model: { label: 'camera model' },
+  url: {
+    section: 'core',
+    label: 'storage url',
+    readOnly: true,
+  },
+  extension: {
+    section: 'core',
+    label: 'extension',
+    readOnly: true,
+  },
+  aspectRatio: {
+    section: 'core',
+    label: 'aspect ratio',
+    readOnly: true,
+  },
+  make: {
+    section: 'exif',
+    label: 'camera make',
+  },
+  model: {
+    section: 'exif',
+    label: 'camera model',
+  },
   film: {
+    section: 'exif',
     label: 'film',
     note: 'Intended for Fujifilm cameras and analog scans',
     noteShort: 'Fujifilm cameras / analog scans',
@@ -125,6 +164,7 @@ const FORM_METADATA = (
     shouldNotOverwriteWithNullDataOnSync: true,
   },
   recipeTitle: {
+    section: 'exif',
     label: 'recipe title',
     tagOptions: recipeOptions,
     tagOptionsLimit: 1,
@@ -133,6 +173,7 @@ const FORM_METADATA = (
     shouldHide: ({ make }) => make !== MAKE_FUJIFILM,
   },
   applyRecipeTitleGlobally: {
+    section: 'exif',
     label: 'apply recipe title globally',
     type: 'checkbox',
     excludeFromInsert: true,
@@ -146,6 +187,7 @@ const FORM_METADATA = (
       ),
   },
   recipeData: {
+    section: 'exif',
     type: 'textarea',
     label: 'recipe data',
     spellCheck: false,
@@ -165,45 +207,77 @@ const FORM_METADATA = (
       return validationMessage;
     },
   },
-  focalLength: { label: 'focal length' },
-  focalLengthIn35MmFormat: { label: 'focal length 35mm-equivalent' },
-  lensMake: { label: 'lens make' },
-  lensModel: { label: 'lens model' },
-  fNumber: { label: 'aperture' },
-  iso: { label: 'ISO' },
-  exposureTime: { label: 'exposure time' },
-  exposureCompensation: { label: 'exposure compensation' },
-  locationName: { label: 'location name', shouldHide: () => true },
-  latitude: { label: 'latitude' },
-  longitude: { label: 'longitude' },
+  focalLength: {
+    section: 'exif',
+    label: 'focal length',
+  },
+  focalLengthIn35MmFormat: {
+    section: 'exif',
+    label: 'focal length 35mm-equivalent',
+  },
+  lensMake: { section: 'exif', label: 'lens make' },
+  lensModel: { section: 'exif', label: 'lens model' },
+  fNumber: { section: 'exif', label: 'aperture' },
+  iso: { section: 'exif', label: 'ISO' },
+  exposureTime: { section: 'exif', label: 'exposure time' },
+  exposureCompensation: { section: 'exif', label: 'exposure compensation' },
+  locationName: {
+    section: 'exif',
+    label: 'location name',
+    shouldHide: () => true,
+  },
+  latitude: { section: 'exif', label: 'latitude' },
+  longitude: { section: 'exif', label: 'longitude' },
   takenAt: {
+    section: 'exif',
     label: 'taken at',
     validate: validationMessagePostgresDateString,
   },
   takenAtNaive: {
+    section: 'exif',
     label: 'taken at (naive)',
     validate: validationMessageNaivePostgresDateString,
   },
   colorData: {
+    section: 'misc',
     type: 'textarea',
     label: 'color data',
     isJson: true,
     shouldHide: () => !COLOR_SORT_ENABLED,
   },
   colorSort: {
+    section: 'misc',
     label: 'color sort',
     shouldHide: () => !COLOR_SORT_ENABLED,
   },
-  priorityOrder: { label: 'priority order' },
-  excludeFromFeeds: { label: 'exclude from feeds', type: 'hidden' },
-  hidden: { label: 'hidden', type: 'hidden' },
+  priorityOrder: {
+    section: 'misc',
+    label: 'priority order',
+  },
   visibility: {
+    section: 'meta',
     type: 'text',
     label: 'visibility',
     excludeFromInsert: true,
   },
-  favorite: { label: 'favorite', type: 'checkbox', excludeFromInsert: true },
+  excludeFromFeeds: {
+    section: 'meta',
+    label: 'exclude from feeds',
+    type: 'hidden',
+  },
+  hidden: {
+    section: 'meta',
+    label: 'hidden',
+    type: 'hidden',
+  },
+  favorite: {
+    section: 'meta',
+    label: 'favorite',
+    type: 'checkbox',
+    excludeFromInsert: true,
+  },
   shouldStripGpsData: {
+    section: 'misc',
     label: 'strip gps data',
     type: 'hidden',
     excludeFromInsert: true,

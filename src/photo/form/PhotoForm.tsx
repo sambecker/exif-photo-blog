@@ -10,8 +10,10 @@ import {
 import {
   FIELDS_WITH_JSON,
   FORM_METADATA_ENTRIES,
+  FORM_SECTIONS,
   FormFields,
   FormMeta,
+  FormSection,
   PhotoFormData,
   convertFormKeysToLabels,
   getChangedFormFields,
@@ -50,6 +52,7 @@ import { didVisibilityChange } from '../visibility';
 import FieldsetVisibility from '../visibility/FieldsetVisibility';
 import PhotoColors from '../color/PhotoColors';
 import { generateColorDataFromString } from '../color/client';
+import { capitalize } from '@/utility/string';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -85,6 +88,7 @@ export default function PhotoForm({
   const [formErrors, setFormErrors] =
     useState(getFormErrors(initialPhotoForm));
   const [formActionErrorMessage, setFormActionErrorMessage] = useState('');
+  const [formSection, setFormSection] = useState<FormSection>('meta');
 
   const { invalidateSwr, shouldDebugImageFallbacks } = useAppState();
 
@@ -327,6 +331,24 @@ export default function PhotoForm({
       </div>
       {formActionErrorMessage &&
         <ErrorNote>{formActionErrorMessage}</ErrorNote>}
+      <div className="flex gap-2">
+        {FORM_SECTIONS.map(section => (
+          <span
+            key={section}
+            className={clsx(
+              'px-2.5 py-1 rounded-full cursor-pointer',
+              'text-xs font-medium uppercase tracking-wider',
+              'active:opacity-70',
+              section === formSection
+                ? 'bg-invert text-invert'
+                : 'bg-medium',
+            )}
+            onClick={() => setFormSection(section)}
+          >
+            {capitalize(section)}
+          </span>
+        ))}
+      </div>
       <form
         action={data => (type === 'create'
           ? createPhotoAction
@@ -353,6 +375,7 @@ export default function PhotoForm({
             shouldStripGpsData,
           )
             .map(([key, {
+              section,
               label,
               note,
               noteShort,
@@ -377,6 +400,9 @@ export default function PhotoForm({
               if (!isFieldHidden(key, hideIfEmpty, shouldHide)) {
                 const fieldProps: ComponentProps<typeof FieldsetWithStatus> = {
                   id: key,
+                  className: clsx(
+                    section !== formSection && 'hidden',
+                  ),
                   label: label + (
                     key === 'blurData' && shouldDebugImageFallbacks
                       ? ` (${(formData[key] ?? '').length} chars.)`
