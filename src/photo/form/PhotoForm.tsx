@@ -88,7 +88,7 @@ export default function PhotoForm({
   const [formErrors, setFormErrors] =
     useState(getFormErrors(initialPhotoForm));
   const [formActionErrorMessage, setFormActionErrorMessage] = useState('');
-  const [formSection, setFormSection] = useState<FormSection>('meta');
+  const [formSection, setFormSection] = useState<FormSection>(FORM_SECTIONS[0]);
 
   const { invalidateSwr, shouldDebugImageFallbacks } = useAppState();
 
@@ -288,7 +288,7 @@ export default function PhotoForm({
   }, []);
 
   return (
-    <div className="space-y-8 max-w-[38rem] relative">
+    <div className="space-y-4 max-w-[38rem] relative">
       <div className="flex gap-2">
         <div className="relative">
           <ImageWithFallback
@@ -331,17 +331,27 @@ export default function PhotoForm({
       </div>
       {formActionErrorMessage &&
         <ErrorNote>{formActionErrorMessage}</ErrorNote>}
-      <div className="flex gap-2">
+      <div className={clsx(
+        'flex gap-4',
+        'sticky top-0 z-10 bg-main',
+        'border-b border-gray-200 dark:border-gray-700',
+        'uppercase tracking-wide text-sm',
+        '*:py-2',
+      )}>
+        <span className="flex gap-4 max-sm:hidden">
+          <span>Photo Data</span>
+          <span className="text-extra-extra-dim">/</span>
+        </span>
         {FORM_SECTIONS.map(section => (
           <span
             key={section}
             className={clsx(
-              'px-2.5 py-1 rounded-full cursor-pointer',
-              'text-xs font-medium uppercase tracking-wider',
-              'active:opacity-70',
+              'cursor-pointer hover:text-main',
+              'active:border-b-2',
+              'active:border-b-gray-200 dark:active:border-b-gray-700',
               section === formSection
-                ? 'bg-invert text-invert'
-                : 'bg-medium',
+                ? 'font-bold border-b-2 border-b-black dark:border-b-white'
+                : 'text-dim',
             )}
             onClick={() => setFormSection(section)}
           >
@@ -366,7 +376,7 @@ export default function PhotoForm({
         }}
       >
         {/* Fields */}
-        <div className="space-y-6">
+        <div className="space-y-5 mt-6">
           {FORM_METADATA_ENTRIES(
             convertTagsForForm(uniqueTags, appText),
             convertRecipesForForm(uniqueRecipes),
@@ -484,7 +494,6 @@ export default function PhotoForm({
                       key={key}
                       {...fieldProps}
                       noteComplex={<PhotoColors
-                        className="translate-y-[1.5px]"
                         classNameDot="size-[13px]!"
                         // eslint-disable-next-line max-len
                         colorData={generateColorDataFromString(formData.colorData)}

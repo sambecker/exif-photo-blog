@@ -43,9 +43,9 @@ export type AnnotatedTag = {
 };
 
 export const FORM_SECTIONS = [
-  'meta',
-  'core',
+  'basic',
   'exif',
+  'core',
   'misc',
 ] as const;
 
@@ -92,14 +92,14 @@ const FORM_METADATA = (
   shouldStripGpsData?: boolean,
 ): Record<keyof PhotoFormData, FormMeta> => ({
   title: {
-    section: 'meta',
+    section: 'basic',
     label: 'title',
     capitalize: true,
     validateStringMaxLength: STRING_MAX_LENGTH_SHORT,
     shouldNotOverwriteWithNullDataOnSync: true,
   },
   caption: {
-    section: 'meta',
+    section: 'basic',
     label: 'caption',
     capitalize: true,
     validateStringMaxLength: STRING_MAX_LENGTH_LONG,
@@ -107,18 +107,40 @@ const FORM_METADATA = (
       !aiTextGeneration && (!title && !caption),
   },
   tags: {
-    section: 'meta',
+    section: 'basic',
     label: 'tags',
     tagOptions,
     validate: getValidationMessageForTags,
   },
   semanticDescription: {
-    section: 'meta',
+    section: 'basic',
     type: 'textarea',
     label: 'semantic description (not visible)',
     capitalize: true,
     validateStringMaxLength: STRING_MAX_LENGTH_LONG,
     shouldHide: () => !aiTextGeneration,
+  },
+  visibility: {
+    section: 'basic',
+    type: 'text',
+    label: 'visibility',
+    excludeFromInsert: true,
+  },
+  excludeFromFeeds: {
+    section: 'basic',
+    label: 'exclude from feeds',
+    type: 'hidden',
+  },
+  hidden: {
+    section: 'basic',
+    label: 'hidden',
+    type: 'hidden',
+  },
+  favorite: {
+    section: 'basic',
+    label: 'favorite',
+    type: 'checkbox',
+    excludeFromInsert: true,
   },
   id: {
     section: 'core',
@@ -126,14 +148,14 @@ const FORM_METADATA = (
     readOnly: true,
     hideIfEmpty: true,
   },
-  blurData: {
-    section: 'misc',
-    label: 'blur data',
-    readOnly: true,
-  },
   url: {
     section: 'core',
     label: 'storage url',
+    readOnly: true,
+  },
+  blurData: {
+    section: 'core',
+    label: 'blur data',
     readOnly: true,
   },
   extension: {
@@ -238,6 +260,10 @@ const FORM_METADATA = (
     label: 'taken at (naive)',
     validate: validationMessageNaivePostgresDateString,
   },
+  priorityOrder: {
+    section: 'misc',
+    label: 'priority order',
+  },
   colorData: {
     section: 'misc',
     type: 'textarea',
@@ -249,32 +275,6 @@ const FORM_METADATA = (
     section: 'misc',
     label: 'color sort',
     shouldHide: () => !COLOR_SORT_ENABLED,
-  },
-  priorityOrder: {
-    section: 'misc',
-    label: 'priority order',
-  },
-  visibility: {
-    section: 'meta',
-    type: 'text',
-    label: 'visibility',
-    excludeFromInsert: true,
-  },
-  excludeFromFeeds: {
-    section: 'meta',
-    label: 'exclude from feeds',
-    type: 'hidden',
-  },
-  hidden: {
-    section: 'meta',
-    label: 'hidden',
-    type: 'hidden',
-  },
-  favorite: {
-    section: 'meta',
-    label: 'favorite',
-    type: 'checkbox',
-    excludeFromInsert: true,
   },
   shouldStripGpsData: {
     section: 'misc',
