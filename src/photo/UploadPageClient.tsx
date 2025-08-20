@@ -38,10 +38,11 @@ export default function UploadPageClient({
     setIsPending,
     updatedTitle,
     setUpdatedTitle,
-    hasTextContent,
-    setHasTextContent,
+    shouldConfirmAiTextGeneration,
+    setShouldConfirmAiTextGeneration,
     aiContent,
   } = usePhotoFormParent({
+    photoForm: formDataFromExif,
     textFieldsToAutoGenerate,
     imageThumbnailBase64,
   });
@@ -61,7 +62,10 @@ export default function UploadPageClient({
         : blobId}
       breadcrumbEllipsis
       accessory={hasAiTextGeneration &&
-        <AiButton {...{ aiContent, shouldConfirm: hasTextContent }} />}
+        <AiButton {...{
+          aiContent,
+          shouldConfirm: shouldConfirmAiTextGeneration,
+        }} />}
       isLoading={pending}
     >
       <PhotoForm
@@ -72,8 +76,8 @@ export default function UploadPageClient({
         aiContent={hasAiTextGeneration ? aiContent : undefined}
         shouldStripGpsData={shouldStripGpsData}
         onTitleChange={setUpdatedTitle}
-        onTextContentChange={setHasTextContent}
         onFormStatusChange={setIsPending}
+        onFormDataChange={setShouldConfirmAiTextGeneration}
       />
     </AdminChildPage>
   );

@@ -49,7 +49,7 @@ import {
 import { TAG_FAVS, isPhotoFav, isTagFavs } from '@/tag';
 import { convertPhotoToPhotoDbInsert, Photo } from '.';
 import { runAuthenticatedAdminServerAction } from '@/auth/server';
-import { AiImageQuery, getAiImageQuery } from './ai';
+import { AiImageQuery, getAiImageQuery, getAiTextFieldsToGenerate } from './ai';
 import { streamOpenAiImageQuery } from '@/platforms/openai';
 import {
   AI_TEXT_AUTO_GENERATED_FIELDS,
@@ -96,8 +96,8 @@ export const createPhotoAction = async (formData: FormData) =>
 // - addUploadsAction
 const addUpload = async ({
   url,
-  title,
-  tags,
+  title: _title,
+  tags: _tags,
   favorite,
   hidden,
   excludeFromFeeds,
@@ -138,24 +138,30 @@ const addUpload = async ({
       onStreamUpdate?.('Generating AI text');
     }
 
+    const title = _title || formDataFromExif.title;
+    const caption = formDataFromExif.caption;
+    const tags = _tags || formDataFromExif.tags;
+
     const {
       title: aiTitle,
-      caption,
+      caption: aiCaption,
       tags: aiTags,
       semanticDescription,
     } = await generateAiImageQueries(
       imageResizedBase64,
-      Boolean(title)
-        ? AI_TEXT_AUTO_GENERATED_FIELDS
-          .filter(field => field !== 'title')
-        : AI_TEXT_AUTO_GENERATED_FIELDS,
+      getAiTextFieldsToGenerate(
+        AI_TEXT_AUTO_GENERATED_FIELDS,
+        Boolean(title),
+        Boolean(caption),
+        Boolean(tags),
+      ),
       title,
     );
 
     const form: Partial<PhotoFormData> = {
       ...formDataFromExif,
       title: title || aiTitle,
-      caption,
+      caption: caption || aiCaption,
       tags: tags || aiTags,
       excludeFromFeeds,
       hidden,
@@ -190,9 +196,7 @@ const addUpload = async ({
 };
 
 export const addUploadAction = async (args: Parameters<typeof addUpload>[0]) =>
-  runAuthenticatedAdminServerAction(async () => {
-    await addUpload(args);
-  });
+  runAuthenticatedAdminServerAction(() => addUpload(args));
 
 export const addUploadsAction = async ({
   uploadUrls,
@@ -536,7 +540,7 @@ export const syncPhotoAction = async (photoId: string, isBatch?: boolean) =>
 
         const formDataFromPhoto = convertPhotoToFormData(photo);
 
-        // Don't overwrite manually configured fujifilm meta with null data
+        // Don't overwrite manually configured meta with null data
         FIELDS_TO_NOT_OVERWRITE_WITH_NULL_DATA_ON_SYNC.forEach(field => {
           if (!formDataFromExif[field] && formDataFromPhoto[field]) {
             delete formDataFromExif[field];

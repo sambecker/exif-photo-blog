@@ -14,7 +14,6 @@ import {
   FormMeta,
   PhotoFormData,
   convertFormKeysToLabels,
-  formHasTextContent,
   getChangedFormFields,
   getFormErrors,
   isFormValid,
@@ -65,7 +64,7 @@ export default function PhotoForm({
   aiContent,
   shouldStripGpsData,
   onTitleChange,
-  onTextContentChange,
+  onFormDataChange,
   onFormStatusChange,
 }: {
   type?: 'create' | 'edit'
@@ -78,7 +77,7 @@ export default function PhotoForm({
   aiContent?: AiContent
   shouldStripGpsData?: boolean
   onTitleChange?: (updatedTitle: string) => void
-  onTextContentChange?: (hasContent: boolean) => void,
+  onFormDataChange?: (formData: Partial<PhotoFormData>) => void,
   onFormStatusChange?: (pending: boolean) => void
 }) {
   const [formData, setFormData] =
@@ -188,8 +187,8 @@ export default function PhotoForm({
   [aiContent?.semanticDescription]);
 
   useEffect(() => {
-    onTextContentChange?.(formHasTextContent(formData));
-  }, [onTextContentChange, formData]);
+    onFormDataChange?.(formData);
+  }, [onFormDataChange, formData]);
 
   const isFieldGeneratingAi = (key: keyof PhotoFormData) => {
     switch (key) {
