@@ -153,14 +153,14 @@ const FORM_METADATA = (
     label: 'storage url',
     readOnly: true,
   },
-  blurData: {
-    section: 'core',
-    label: 'blur data',
-    readOnly: true,
-  },
   extension: {
     section: 'core',
     label: 'extension',
+    readOnly: true,
+  },
+  blurData: {
+    section: 'core',
+    label: 'blur data',
     readOnly: true,
   },
   aspectRatio: {
