@@ -1,10 +1,8 @@
 import {
   S3Client,
   CopyObjectCommand,
-  DeleteObjectCommand,
   ListObjectsCommand,
-  PutObjectCommand, ListObjectVersionsCommand, DeleteObjectsCommand,
-  GetBucketVersioningCommand,
+  PutObjectCommand, DeleteObjectsCommand,
 } from '@aws-sdk/client-s3';
 import { StorageListResponse, generateStorageId } from '.';
 import { formatBytesToMB } from '@/utility/number';
@@ -90,8 +88,9 @@ export const minioDelete = async (url: string): Promise<void> => {
     ? url.replace(`${MINIO_BASE_URL}/`, '')
     : url;
 
-  new DeleteObjectCommand({
+  const deleteObjectsCommand = new DeleteObjectsCommand({
     Bucket: MINIO_BUCKET,
-    Key,
+    Delete: { Objects: [{Key}] },
   });
+  await minioClient().send(deleteObjectsCommand);
 };
