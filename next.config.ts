@@ -21,13 +21,23 @@ const HOSTNAME_AWS_S3 =
     ? `${process.env.NEXT_PUBLIC_AWS_S3_BUCKET}.s3.${process.env.NEXT_PUBLIC_AWS_S3_REGION}.amazonaws.com`
     : undefined;
 
-const generateRemotePattern = (hostname: string) =>
-  ({
-    protocol: 'https',
-    hostname: removeUrlProtocol(hostname)!,
-    port: '',
+const HOSTNAME_MINIO =
+  process.env.NEXT_PUBLIC_MINIO_ENDPOINT
+    ? process.env.NEXT_PUBLIC_MINIO_ENDPOINT
+    : undefined;
+
+const generateRemotePattern = (hostname: string, protocol: 'https' | 'http' = 'https') => {
+  const cleanHostname = removeUrlProtocol(hostname)!;
+  
+  const [hostnamePart, portPart] = cleanHostname.split(':');
+  
+  return {
+    protocol,
+    hostname: hostnamePart,
+    port: portPart || '',
     pathname: '/**',
-  } as const);
+  } as const;
+};
 
 const remotePatterns: RemotePattern[] = [];
 
@@ -39,6 +49,10 @@ if (HOSTNAME_CLOUDFLARE_R2) {
 }
 if (HOSTNAME_AWS_S3) {
   remotePatterns.push(generateRemotePattern(HOSTNAME_AWS_S3));
+}
+if (HOSTNAME_MINIO) {
+  const minioProtocol = process.env.NEXT_PUBLIC_MINIO_USE_SSL === 'true' ? 'https' : 'http';
+  remotePatterns.push(generateRemotePattern(HOSTNAME_MINIO, minioProtocol));
 }
 
 const LOCALE = process.env.NEXT_PUBLIC_LOCALE || 'en-us';

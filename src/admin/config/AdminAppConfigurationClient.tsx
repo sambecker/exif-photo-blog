@@ -43,6 +43,7 @@ export default function AdminAppConfigurationClient({
   hasVercelBlobStorage,
   hasCloudflareR2Storage,
   hasAwsS3Storage,
+  hasMinioStorage,
   hasMultipleStorageProviders,
   currentStorage,
   // Auth
@@ -306,6 +307,18 @@ export default function AdminAppConfigurationClient({
                     externalIcon
                   >
                     create/configure bucket
+                  </AdminLink>
+                </>)}
+              {hasMinioStorage
+                ? renderSubStatus('checked', 'MinIO: connected')
+                : renderSubStatus('optional', <>
+                  {labelForStorage('minio')}:
+                  {' '}
+                  <AdminLink
+                    href="https://github.com/sambecker/exif-photo-blog#minio"
+                    externalIcon
+                  >
+                    setup MinIO server
                   </AdminLink>
                 </>)}
             </div>
