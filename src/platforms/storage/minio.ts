@@ -3,7 +3,8 @@ import {
   CopyObjectCommand,
   DeleteObjectCommand,
   ListObjectsCommand,
-  PutObjectCommand,
+  PutObjectCommand, ListObjectVersionsCommand, DeleteObjectsCommand,
+  GetBucketVersioningCommand,
 } from '@aws-sdk/client-s3';
 import { StorageListResponse, generateStorageId } from '.';
 import { formatBytesToMB } from '@/utility/number';
@@ -84,9 +85,13 @@ export const minioList = async (
       size: Size ? formatBytesToMB(Size) : undefined,
     })) ?? []);
 
-export const minioDelete = async (Key: string) => {
-  minioClient().send(new DeleteObjectCommand({
+export const minioDelete = async (url: string): Promise<void> => {
+  const Key = isUrlFromMinio(url)
+    ? url.replace(`${MINIO_BASE_URL}/`, '')
+    : url;
+
+  new DeleteObjectCommand({
     Bucket: MINIO_BUCKET,
     Key,
-  }));
+  });
 };

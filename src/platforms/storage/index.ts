@@ -213,7 +213,7 @@ export const deleteFile = (url: string) => {
     case 'aws-s3':
       return awsS3Delete(getFileNameFromStorageUrl(url));
     case 'minio':
-      return minioDelete(getFileNameFromStorageUrl(url));
+      return minioDelete(url);
   }
 };
 
