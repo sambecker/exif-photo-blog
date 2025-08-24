@@ -320,7 +320,7 @@ First, install and deploy the MinIO server, and then create a bucket with public
     - `NEXT_PUBLIC_MINIO_BUCKET`: Your bucketname
     - `NEXT_PUBLIC_MINIO_ENDPOINT`: MinIO server endpoint (e.g., "minio.yourdomain.com")
     - `NEXT_PUBLIC_MINIO_PORT`: (optional)
-    - `NEXT_PUBLIC_MINIO_USE_SSL`: true/false
+    - `NEXT_PUBLIC_MINIO_DISABLE_SSL`: Set to `1` to disable SSL (defaults to HTTPS)
 
 ### 2. Create a User with Restricted Permissions
 
@@ -353,13 +353,13 @@ Next, create a dedicated user and a policy that grants permissions to manage obj
   ```
 - **Create a new user:** Create a new user with an access key and a secret key.
   ```bash
-  mc admin user add myminio {MINIO_ACCESS_KEY} {MINIO_SECRET_KEY}
+  mc admin user add myminio {MINIO_ACCESS_KEY} {MINIO_SECRET_ACCESS_KEY}
   ```- **Attach the policy to the user:** Assign the `photos-manager-policy` to the new user.
   ```bash
   mc admin policy set myminio photos-manager-policy user=MINIO_ACCESS_KEY
   ```- **Store private credentials:** Set the following private environment variables for your application. ⚠️ **Ensure these access keys are not prefixed with `NEXT_PUBLIC`**.
   - `MINIO_ACCESS_KEY`: Your MINIO_ACCESS_KEY
-  - `MINIO_SECRET_KEY`: Your MINIO_SECRET_KEY
+  - `MINIO_SECRET_ACCESS_KEY`: Your MINIO_SECRET_ACCESS_KEY
   
 
 ## Alternate database providers (experimental)

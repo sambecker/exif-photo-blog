@@ -192,7 +192,7 @@ export const HAS_MINIO_STORAGE_CLIENT =
 export const HAS_MINIO_STORAGE =
   HAS_MINIO_STORAGE_CLIENT &&
   Boolean(process.env.MINIO_ACCESS_KEY) &&
-  Boolean(process.env.MINIO_SECRET_KEY);
+  Boolean(process.env.MINIO_SECRET_ACCESS_KEY);
 
 export const HAS_MULTIPLE_STORAGE_PROVIDERS = [
   HAS_VERCEL_BLOB_STORAGE,

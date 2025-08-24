@@ -3,6 +3,7 @@ import {
   CopyObjectCommand,
   ListObjectsCommand,
   PutObjectCommand, DeleteObjectsCommand,
+  DeleteObjectCommand,
 } from '@aws-sdk/client-s3';
 import { StorageListResponse, generateStorageId } from '.';
 import { formatBytesToMB } from '@/utility/number';
@@ -10,24 +11,24 @@ import { formatBytesToMB } from '@/utility/number';
 const MINIO_BUCKET = process.env.NEXT_PUBLIC_MINIO_BUCKET ?? '';
 const MINIO_ENDPOINT = process.env.NEXT_PUBLIC_MINIO_ENDPOINT ?? '';
 const MINIO_PORT = process.env.NEXT_PUBLIC_MINIO_PORT ?? '';
-const MINIO_USE_SSL = process.env.NEXT_PUBLIC_MINIO_USE_SSL === 'true';
+const MINIO_DISABLE_SSL = process.env.NEXT_PUBLIC_MINIO_DISABLE_SSL === '1';
 const MINIO_ACCESS_KEY = process.env.MINIO_ACCESS_KEY ?? '';
-const MINIO_SECRET_KEY = process.env.MINIO_SECRET_KEY ?? '';
+const MINIO_SECRET_ACCESS_KEY = process.env.MINIO_SECRET_ACCESS_KEY ?? '';
 
 export const MINIO_BASE_URL = MINIO_BUCKET && MINIO_ENDPOINT
-  ? `${MINIO_USE_SSL ? 'https' : 'http'}://${MINIO_ENDPOINT}${
+  ? `${MINIO_DISABLE_SSL ? 'http' : 'https'}://${MINIO_ENDPOINT}${
     MINIO_PORT ? `:${MINIO_PORT}` : ''
   }/${MINIO_BUCKET}`
   : undefined;
 
 export const minioClient = () => new S3Client({
   region: 'us-east-1',
-  endpoint: `${MINIO_USE_SSL ? 'https' : 'http'}://${MINIO_ENDPOINT}${
+  endpoint: `${MINIO_DISABLE_SSL ? 'http' : 'https'}://${MINIO_ENDPOINT}${
     MINIO_PORT ? `:${MINIO_PORT}` : ''
   }`,
   credentials: {
     accessKeyId: MINIO_ACCESS_KEY,
-    secretAccessKey: MINIO_SECRET_KEY,
+    secretAccessKey: MINIO_SECRET_ACCESS_KEY,
   },
   forcePathStyle: true,
 });
@@ -85,12 +86,11 @@ export const minioList = async (
 
 export const minioDelete = async (url: string): Promise<void> => {
   const Key = isUrlFromMinio(url)
-    ? url.replace(`${MINIO_BASE_URL}/`, '')
-    : url;
-
-  const deleteObjectsCommand = new DeleteObjectsCommand({
+  ? url.replace(`${MINIO_BASE_URL}/`, '')
+  : url;
+  const deleteObjectCommand = new DeleteObjectCommand({
     Bucket: MINIO_BUCKET,
-    Delete: { Objects: [{Key}] },
+    Key,
   });
-  await minioClient().send(deleteObjectsCommand);
+  await minioClient().send(deleteObjectCommand);
 };
