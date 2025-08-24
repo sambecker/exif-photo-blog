@@ -1,5 +1,5 @@
 import { generateText, streamText } from 'ai';
-import { createStreamableValue } from 'ai/rsc';
+import { createStreamableValue } from '@ai-sdk/rsc';
 import { createOpenAI } from '@ai-sdk/openai';
 import { Redis } from '@upstash/redis';
 import { Ratelimit } from '@upstash/ratelimit';

@@ -75,7 +75,7 @@ _⚠️ READ BEFORE PROCEEDING_
 
 1. Setup OpenAI
    - If you don't already have one, create an [OpenAI](https://openai.com) account and fund it (see [this thread](https://github.com/sambecker/exif-photo-blog/issues/110) if you're having issues)
-   - Generate an API key and store in environment variable `OPENAI_SECRET_KEY`
+   - Generate an API key and store in environment variable `OPENAI_SECRET_KEY` (make sure to enable Responses API write access if customizing permissions)
    - Setup usage limits to avoid unexpected charges (_recommended_)
 2. Add rate limiting (_recommended_)
    - As an additional precaution, create an Upstash Redis store from the storage tab of the Vercel dashboard and link it to your project in order to enable rate limiting—no further configuration necessary
@@ -363,7 +363,7 @@ Thank you ❤️ translators: [@sconetto](https://github.com/sconetto) (`pt-br`,
 > The default timeout for processing multiple uploads is 60 seconds (the limit for Hobby accounts). This can be extended to 5 minutes on Pro accounts by setting `maxDuration = 300` in `src/app/admin/uploads/page.tsx`.
 
 #### I've added my OpenAI key but can't seem to make it work. Why am I seeing connection errors?
-> You may need to pre-purchase credits before accessing the OpenAI API. See [#110](https://github.com/sambecker/exif-photo-blog/issues/110) for discussion.
+> You may need to pre-purchase credits before accessing the OpenAI API. See [#110](https://github.com/sambecker/exif-photo-blog/issues/110) for discussion. If you've customized key permissions, make sure write access to the Responses API is enabled.
 
 #### How do I generate AI text for preexisting photos?
 > Once AI text generation is configured, photos missing text will show up in photo updates (`/admin/photos/updates`).
