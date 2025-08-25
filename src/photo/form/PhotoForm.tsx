@@ -333,13 +333,6 @@ export default function PhotoForm({
       </div>
       {formActionErrorMessage &&
         <ErrorNote>{formActionErrorMessage}</ErrorNote>}
-      {/* <div className={clsx(
-        'flex gap-2 items-center text-dim font-medium tracking-wider',
-        'border-b border-gray-200 dark:border-gray-700',
-      )}>
-        <RxFileText className="size-4" />
-        <span className="text-sm uppercase">Text</span>
-      </div> */}
       <div className={clsx(
         'flex gap-4',
         'sticky top-0 z-10 bg-main',
@@ -352,8 +345,9 @@ export default function PhotoForm({
           <span className="text-extra-extra-dim">/</span>
         </span>
         {FORM_SECTIONS.map(section => (
-          <span
+          <a
             key={section}
+            href={`#${section}`}
             className={clsx(
               'cursor-pointer hover:text-main',
               'active:border-b-2',
@@ -365,7 +359,7 @@ export default function PhotoForm({
             onClick={() => setFormSection(section)}
           >
             {capitalize(section)}
-          </span>
+          </a>
         ))}
       </div>
       <form
@@ -396,7 +390,13 @@ export default function PhotoForm({
             .map(({ section, fields }) => 
               <div
                 key={section}
+                className="block"
               >
+                <a
+                  id={section}
+                  href={`#${section}`}
+                  className="scroll-mt-12"
+                />
                 {fields.map(([key, {
                   label,
                   note,
