@@ -4,7 +4,6 @@ import AdminChildPage from '@/components/AdminChildPage';
 import { PATH_ADMIN_UPLOADS } from '@/app/path';
 import {
   FORM_SECTIONS,
-  FormSection,
   PhotoFormData,
   generateTakenAtFields,
 } from './form';
@@ -58,7 +57,7 @@ export default function UploadPageClient({
     ...generateTakenAtFields(formDataFromExif),
   }), [formDataFromExif]);
 
-  const [formSection, setFormSection] = useState<FormSection>(FORM_SECTIONS[0]);
+  const [formSection, setFormSection] = useState(FORM_SECTIONS[0]);
 
   return (
     <AdminChildPage

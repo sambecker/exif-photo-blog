@@ -42,17 +42,8 @@ export type AnnotatedTag = {
   annotationAria?: string,
 };
 
-export const FORM_SECTIONS = [
-  'basic',
-  'exif',
-  'core',
-  'misc',
-] as const;
-
-export type FormSection = (typeof FORM_SECTIONS)[number];
-
 export type FormMeta = {
-  section: FormSection
+  section: string
   label: string
   note?: string
   noteShort?: string
@@ -92,14 +83,14 @@ const FORM_METADATA = (
   shouldStripGpsData?: boolean,
 ): Record<keyof PhotoFormData, FormMeta> => ({
   title: {
-    section: 'basic',
+    section: 'text',
     label: 'title',
     capitalize: true,
     validateStringMaxLength: STRING_MAX_LENGTH_SHORT,
     shouldNotOverwriteWithNullDataOnSync: true,
   },
   caption: {
-    section: 'basic',
+    section: 'text',
     label: 'caption',
     capitalize: true,
     validateStringMaxLength: STRING_MAX_LENGTH_LONG,
@@ -107,13 +98,13 @@ const FORM_METADATA = (
       !aiTextGeneration && (!title && !caption),
   },
   tags: {
-    section: 'basic',
+    section: 'text',
     label: 'tags',
     tagOptions,
     validate: getValidationMessageForTags,
   },
   semanticDescription: {
-    section: 'basic',
+    section: 'text',
     type: 'textarea',
     label: 'semantic description (not visible)',
     capitalize: true,
@@ -121,52 +112,26 @@ const FORM_METADATA = (
     shouldHide: () => !aiTextGeneration,
   },
   visibility: {
-    section: 'basic',
+    section: 'text',
     type: 'text',
     label: 'visibility',
     excludeFromInsert: true,
   },
   excludeFromFeeds: {
-    section: 'basic',
+    section: 'text',
     label: 'exclude from feeds',
     type: 'hidden',
   },
   hidden: {
-    section: 'basic',
+    section: 'text',
     label: 'hidden',
     type: 'hidden',
   },
   favorite: {
-    section: 'basic',
+    section: 'text',
     label: 'favorite',
     type: 'checkbox',
     excludeFromInsert: true,
-  },
-  id: {
-    section: 'core',
-    label: 'id',
-    readOnly: true,
-    hideIfEmpty: true,
-  },
-  url: {
-    section: 'core',
-    label: 'storage url',
-    readOnly: true,
-  },
-  extension: {
-    section: 'core',
-    label: 'extension',
-    readOnly: true,
-  },
-  blurData: {
-    section: 'core',
-    label: 'blur data',
-    readOnly: true,
-  },
-  aspectRatio: {
-    section: 'core',
-    label: 'aspect ratio',
-    readOnly: true,
   },
   make: {
     section: 'exif',
@@ -260,6 +225,32 @@ const FORM_METADATA = (
     label: 'taken at (naive)',
     validate: validationMessageNaivePostgresDateString,
   },
+  id: {
+    section: 'storage',
+    label: 'id',
+    readOnly: true,
+    hideIfEmpty: true,
+  },
+  url: {
+    section: 'storage',
+    label: 'storage url',
+    readOnly: true,
+  },
+  extension: {
+    section: 'storage',
+    label: 'extension',
+    readOnly: true,
+  },
+  blurData: {
+    section: 'storage',
+    label: 'blur data',
+    readOnly: true,
+  },
+  aspectRatio: {
+    section: 'storage',
+    label: 'aspect ratio',
+    readOnly: true,
+  },
   priorityOrder: {
     section: 'misc',
     label: 'priority order',
@@ -298,6 +289,28 @@ export const FORM_METADATA_ENTRIES = (
   ...args: Parameters<typeof FORM_METADATA>
 ) =>
   (Object.entries(FORM_METADATA(...args)) as [keyof PhotoFormData, FormMeta][]);
+
+export const FORM_METADATA_ENTRIES_BY_SECTION = (
+  ...args: Parameters<typeof FORM_METADATA>
+) => {
+  const fields = (Object
+    .entries(FORM_METADATA(...args)) as [keyof PhotoFormData, FormMeta][]);
+  return fields.reduce((acc, field) => {
+    const section = acc.find(s => s.section === field[1].section);
+    if (section) {
+      section.fields.push(field);
+    } else {
+      acc.push({ section: field[1].section, fields: [field] });
+    }
+    return acc;
+  }, [] as {
+    section: string
+    fields: [keyof PhotoFormData, FormMeta][]
+  }[]);
+};
+
+export const FORM_SECTIONS = FORM_METADATA_ENTRIES_BY_SECTION()
+  .map(section => section.section);
 
 export const convertFormKeysToLabels = (keys: (keyof PhotoFormData)[]) =>
   keys.map(key => FORM_METADATA()[key].label.toUpperCase());

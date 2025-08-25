@@ -5,7 +5,6 @@ import { Photo } from '.';
 import { PATH_ADMIN_PHOTOS } from '@/app/path';
 import {
   FORM_SECTIONS,
-  FormSection,
   PhotoFormData,
   convertPhotoToFormData,
 } from './form';
@@ -53,7 +52,7 @@ export default function PhotoEditPageClient({
   const [updatedExifData, setUpdatedExifData] =
     useState<Partial<PhotoFormData>>();
 
-  const [formSection, setFormSection] = useState<FormSection>(FORM_SECTIONS[0]);
+  const [formSection, setFormSection] = useState(FORM_SECTIONS[0]);
 
   return (
     <AdminChildPage

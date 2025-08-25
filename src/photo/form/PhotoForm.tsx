@@ -9,11 +9,10 @@ import {
 } from 'react';
 import {
   FIELDS_WITH_JSON,
-  FORM_METADATA_ENTRIES,
+  FORM_METADATA_ENTRIES_BY_SECTION,
   FORM_SECTIONS,
   FormFields,
   FormMeta,
-  FormSection,
   PhotoFormData,
   convertFormKeysToLabels,
   getChangedFormFields,
@@ -81,8 +80,8 @@ export default function PhotoForm({
   uniqueFilms?: Films
   aiContent?: AiContent
   shouldStripGpsData?: boolean
-  formSection: FormSection
-  setFormSection: (formSection: FormSection) => void
+  formSection: string
+  setFormSection: (formSection: string) => void
   onTitleChange?: (updatedTitle: string) => void
   onFormDataChange?: (formData: Partial<PhotoFormData>) => void,
   onFormStatusChange?: (pending: boolean) => void
@@ -334,6 +333,13 @@ export default function PhotoForm({
       </div>
       {formActionErrorMessage &&
         <ErrorNote>{formActionErrorMessage}</ErrorNote>}
+      {/* <div className={clsx(
+        'flex gap-2 items-center text-dim font-medium tracking-wider',
+        'border-b border-gray-200 dark:border-gray-700',
+      )}>
+        <RxFileText className="size-4" />
+        <span className="text-sm uppercase">Text</span>
+      </div> */}
       <div className={clsx(
         'flex gap-4',
         'sticky top-0 z-10 bg-main',
@@ -342,7 +348,7 @@ export default function PhotoForm({
         '*:py-2',
       )}>
         <span className="flex gap-4 max-sm:hidden">
-          <span>Photo Data</span>
+          <span>Photo Details</span>
           <span className="text-extra-extra-dim">/</span>
         </span>
         {FORM_SECTIONS.map(section => (
@@ -379,153 +385,156 @@ export default function PhotoForm({
         }}
       >
         {/* Fields */}
-        <div className="space-y-5 mt-6">
-          {FORM_METADATA_ENTRIES(
+        <div className="mt-6 space-y-5 *:space-y-5">
+          {FORM_METADATA_ENTRIES_BY_SECTION(
             convertTagsForForm(uniqueTags, appText),
             convertRecipesForForm(uniqueRecipes),
             convertFilmsForForm(uniqueFilms, isMakeFujifilm(formData.make)),
             aiContent !== undefined,
             shouldStripGpsData,
           )
-            .map(([key, {
-              section,
-              label,
-              note,
-              noteShort,
-              required,
-              selectOptions,
-              selectOptionsDefaultLabel,
-              tagOptions,
-              tagOptionsLimit,
-              tagOptionsLimitValidationMessage,
-              readOnly,
-              hideModificationStatus,
-              validate,
-              validateStringMaxLength,
-              spellCheck,
-              capitalize,
-              hideIfEmpty,
-              shouldHide,
-              loadingMessage,
-              type,
-              staticValue,
-            }]) => {
-              if (!isFieldHidden(key, hideIfEmpty, shouldHide)) {
-                const fieldProps: ComponentProps<typeof FieldsetWithStatus> = {
-                  id: key,
-                  className: clsx(
-                    section !== formSection && 'hidden',
-                  ),
-                  label: label + (
-                    key === 'blurData' && shouldDebugImageFallbacks
-                      ? ` (${(formData[key] ?? '').length} chars.)`
-                      : ''
-                  ),
+            .map(({ section, fields }) => 
+              <div
+                key={section}
+              >
+                {fields.map(([key, {
+                  label,
                   note,
                   noteShort,
-                  error: formErrors[key],
-                  value: staticValue ?? formData[key] ?? '',
-                  isModified: (
-                    !hideModificationStatus &&
-                    changedFormKeys.includes(key)
-                  ),
-                  onChange: value => {
-                    const formUpdated = { ...formData, [key]: value };
-                    setFormData(formUpdated);
-                    if (validate) {
-                      setFormErrors({
-                        ...formErrors, [key]:
-                        validate(value),
-                      });
-                    } else if (validateStringMaxLength !== undefined) {
-                      setFormErrors({
-                        ...formErrors,
-                        [key]: value.length > validateStringMaxLength
-                          ? `${validateStringMaxLength} characters or less`
-                          : undefined,
-                      });
-                    }
-                    if (key === 'title') {
-                      onTitleChange?.(value.trim());
-                    }
-                  },
+                  required,
                   selectOptions,
-                  selectOptionsDefaultLabel: selectOptionsDefaultLabel,
+                  selectOptionsDefaultLabel,
                   tagOptions,
                   tagOptionsLimit,
                   tagOptionsLimitValidationMessage,
-                  required,
                   readOnly,
+                  hideModificationStatus,
+                  validate,
+                  validateStringMaxLength,
                   spellCheck,
                   capitalize,
-                  placeholder: loadingMessage && !formData[key]
-                    ? loadingMessage
-                    : undefined,
-                  loading: (
-                    (loadingMessage && !formData[key] ? true : false) ||
-                    isFieldGeneratingAi(key)
-                  ),
+                  hideIfEmpty,
+                  shouldHide,
+                  loadingMessage,
                   type,
-                  accessory: accessoryForField(key),
-                };
+                  staticValue,
+                }]) => {
+                  if (!isFieldHidden(key, hideIfEmpty, shouldHide)) {
+                    // eslint-disable-next-line max-len
+                    const fieldProps: ComponentProps<typeof FieldsetWithStatus> = {
+                      id: key,
+                      label: label + (
+                        key === 'blurData' && shouldDebugImageFallbacks
+                          ? ` (${(formData[key] ?? '').length} chars.)`
+                          : ''
+                      ),
+                      note,
+                      noteShort,
+                      error: formErrors[key],
+                      value: staticValue ?? formData[key] ?? '',
+                      isModified: (
+                        !hideModificationStatus &&
+                        changedFormKeys.includes(key)
+                      ),
+                      onChange: value => {
+                        const formUpdated = { ...formData, [key]: value };
+                        setFormData(formUpdated);
+                        if (validate) {
+                          setFormErrors({
+                            ...formErrors, [key]:
+                            validate(value),
+                          });
+                        } else if (validateStringMaxLength !== undefined) {
+                          setFormErrors({
+                            ...formErrors,
+                            [key]: value.length > validateStringMaxLength
+                              ? `${validateStringMaxLength} characters or less`
+                              : undefined,
+                          });
+                        }
+                        if (key === 'title') {
+                          onTitleChange?.(value.trim());
+                        }
+                      },
+                      selectOptions,
+                      selectOptionsDefaultLabel: selectOptionsDefaultLabel,
+                      tagOptions,
+                      tagOptionsLimit,
+                      tagOptionsLimitValidationMessage,
+                      required,
+                      readOnly,
+                      spellCheck,
+                      capitalize,
+                      placeholder: loadingMessage && !formData[key]
+                        ? loadingMessage
+                        : undefined,
+                      loading: (
+                        (loadingMessage && !formData[key] ? true : false) ||
+                        isFieldGeneratingAi(key)
+                      ),
+                      type,
+                      accessory: accessoryForField(key),
+                    };
 
-                switch (key) {
-                  case 'film':
-                    return <FieldsetWithStatus
-                      key={key}
-                      {...fieldProps}
-                      tagOptionsDefaultIcon={<span
-                        className="w-4 overflow-hidden"
-                      >
-                        <PhotoFilmIcon />
-                      </span>}
-                    />;
-                  case 'applyRecipeTitleGlobally':
-                    return <ApplyRecipeTitleGloballyCheckbox
-                      key={key}
-                      {...fieldProps}
-                      photoId={initialPhotoForm.id}
-                      recipeTitle={formData.recipeTitle}
-                      hasRecipeTitleChanged={
-                        changedFormKeys.includes('recipeTitle')}
-                      recipeData={formData.recipeData}
-                      film={formData.film}
-                      onMatchResults={onMatchResults}
-                    />;
-                  case 'colorData':
-                    return <FieldsetWithStatus
-                      key={key}
-                      {...fieldProps}
-                      noteComplex={<PhotoColors
-                        classNameDot="size-[13px]!"
-                        // eslint-disable-next-line max-len
-                        colorData={generateColorDataFromString(formData.colorData)}
-                      />}
-                    />;
-                  case 'visibility':
-                    return <FieldsetVisibility
-                      key={key}
-                      {...fieldProps}
-                      formData={formData}
-                      setFormData={setFormData}
-                      isModified={didVisibilityChange(
-                        initialPhotoForm,
-                        formData,
-                      )}
-                    />;
-                  case 'favorite':
-                    return <FieldsetFavs
-                      key={key}
-                      {...fieldProps}
-                    />;
-                  default:
-                    return <FieldsetWithStatus
-                      key={key}
-                      {...fieldProps}
-                    />;
-                }
-              }
-            })}
+                    switch (key) {
+                      case 'film':
+                        return <FieldsetWithStatus
+                          key={key}
+                          {...fieldProps}
+                          tagOptionsDefaultIcon={<span
+                            className="w-4 overflow-hidden"
+                          >
+                            <PhotoFilmIcon />
+                          </span>}
+                        />;
+                      case 'applyRecipeTitleGlobally':
+                        return <ApplyRecipeTitleGloballyCheckbox
+                          key={key}
+                          {...fieldProps}
+                          photoId={initialPhotoForm.id}
+                          recipeTitle={formData.recipeTitle}
+                          hasRecipeTitleChanged={
+                            changedFormKeys.includes('recipeTitle')}
+                          recipeData={formData.recipeData}
+                          film={formData.film}
+                          onMatchResults={onMatchResults}
+                        />;
+                      case 'colorData':
+                        return <FieldsetWithStatus
+                          key={key}
+                          {...fieldProps}
+                          noteComplex={<PhotoColors
+                            classNameDot="size-[13px]!"
+                            // eslint-disable-next-line max-len
+                            colorData={generateColorDataFromString(formData.colorData)}
+                          />}
+                        />;
+                      case 'visibility':
+                        return <FieldsetVisibility
+                          key={key}
+                          {...fieldProps}
+                          formData={formData}
+                          setFormData={setFormData}
+                          isModified={didVisibilityChange(
+                            initialPhotoForm,
+                            formData,
+                          )}
+                        />;
+                      case 'favorite':
+                        return <FieldsetFavs
+                          key={key}
+                          {...fieldProps}
+                        />;
+                      default:
+                        return <FieldsetWithStatus
+                          key={key}
+                          {...fieldProps}
+                        />;
+                    }
+                  }
+                })}
+              </div>,
+            )}
         </div>
         {/* Actions */}
         <div className={clsx(
