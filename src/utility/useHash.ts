@@ -4,29 +4,29 @@ import { useCallback, useEffect, useState } from 'react';
 export default function useHash() {
   const [hash, setHash] = useState('');
 
-  const updateHash = useCallback(() => {
+  const storeHash = useCallback(() => {
     setHash(window.location.hash.replace('#', ''));
   }, []);
 
   useEffect(() => {
-    window.addEventListener('hashchange', updateHash);
+    window.addEventListener('hashchange', storeHash);
     return () => {
-      window.removeEventListener('hashchange', updateHash);
+      window.removeEventListener('hashchange', storeHash);
     };
-  }, [updateHash]);
+  }, [storeHash]);
 
   // Needed to capture non-request-initiated hash changes
   const params = useSearchParams();
   useEffect(() => {
-    updateHash();
-  }, [params, updateHash]);
+    storeHash();
+  }, [params, storeHash]);
 
-  const setWindowHash = useCallback((hash: string) => {
-    window.location.hash = hash;
+  const updateWindowHash = useCallback((hash: string) => {
+    window.history.replaceState(null, '', `#${hash}`);
   }, []);
 
   return {
     hash,
-    updateHash: setWindowHash,
+    updateHash: updateWindowHash,
   };
 }

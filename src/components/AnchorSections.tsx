@@ -10,42 +10,48 @@ import {
 export default function AnchorSections({
   sectionIds,
   sectionContent,
-  // setCurrentSection,
   className,
   classNameSection,
 }: {
   sectionIds: string[]
   sectionContent: ReactNode[]
-  // setCurrentSection: Dispatch<SetStateAction<string>>
   className?: string
   classNameSection?: string
 }) {
-  const { hash } = useHash();
+  const { hash, updateHash } = useHash();
 
-  const isAutoSelectDisabled = useRef(true);
+  const isAutoSelectDisabled = useRef(false);
 
-  // Disable auto-select for 500ms after page load
+  // Highlight initial section
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      isAutoSelectDisabled.current = false;
-    }, 500);
-    return () => clearTimeout(timeout);
-  }, []);
+    updateHash(sectionIds[0]);
+  }, [updateHash, sectionIds]);
 
-  // Disable auto-select for 500ms after page navigation
+  // Disable auto-select for 100ms after hash
   useEffect(() => {
     isAutoSelectDisabled.current = true;
     const timeout = setTimeout(() => {
       isAutoSelectDisabled.current = false;
-    }, 500);
+    }, 100);
     return () => clearTimeout(timeout);
   }, [hash]);
 
+  // Reset section when scrolled to the top
+  useEffect(() => {
+    const onScroll = () => {
+      if (window.scrollY <= 0) {
+        updateHash(sectionIds[0]);
+      }
+    };
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [updateHash, sectionIds]);
+
   const onVisible = useCallback((section: string) => {
     if (!isAutoSelectDisabled.current) {
-      window.location.hash = section;
+      updateHash(section);
     }
-  }, []);
+  }, [updateHash]);
   
   return (
     <div className={className}>
@@ -72,14 +78,17 @@ function AnchorSection({
 }: {
   id: string
   children: ReactNode
-  onVisible?: (section: string) => void
-  onHidden?: (section: string) => void
+  onVisible?: (section: string, force?: boolean) => void
+  onHidden?: (section: string, force?: boolean) => void
   className?: string
 }) {
   const ref = useRef<HTMLDivElement>(null);
+
   const onVisible = useCallback(() => _onVisible?.(id), [id, _onVisible]);
-  const onHidden = useCallback(() => _onHidden?.(id), [id, _onHidden]);
+  const onHidden = useCallback(() =>  _onHidden?.(id), [id, _onHidden]);
+
   useVisibility({ ref, onVisible, onHidden });
+
   return (
     <div ref={ref} {...{ id, className }}>
       <a href={`#${id}`} />
