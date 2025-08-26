@@ -2,7 +2,6 @@
 
 import {
   ComponentProps,
-  Fragment,
   useCallback,
   useEffect,
   useMemo,
@@ -304,10 +303,6 @@ export default function PhotoForm({
     shouldStripGpsData,
   ]);
 
-  const formSections = useMemo(() =>
-    formContent.map(({ section }) => section)
-  , [formContent]);
-
   const ref = useRef<HTMLImageElement>(null);
   const isThumbnailVisible = useIsVisible({ ref, initiallyVisible: true });
   const thumbnailDimensions =
@@ -416,10 +411,10 @@ export default function PhotoForm({
         <AnchorSections
           className="mt-6 space-y-5 *:space-y-5"
           classNameSection="scroll-mt-12"
-          sectionIds={formSections}
-          sectionContent={formContent
-            .map(({ section, fields }) =>
-              <Fragment key={section}>
+          sections={formContent
+            .map(({ section, fields }) => ({
+              id: section,
+              content: <>
                 {fields.map(([key, {
                   label,
                   note,
@@ -555,8 +550,8 @@ export default function PhotoForm({
                     }
                   }
                 })}
-              </Fragment>,
-            )}
+              </>,
+            }))}
         />
         {/* Actions */}
         <div className={clsx(

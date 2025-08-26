@@ -4,17 +4,19 @@ import {
   ReactNode,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
 } from 'react';
 
 export default function AnchorSections({
-  sectionIds,
-  sectionContent,
+  sections,
   className,
   classNameSection,
 }: {
-  sectionIds: string[]
-  sectionContent: ReactNode[]
+  sections: {
+    id: string
+    content: ReactNode
+  }[]
   className?: string
   classNameSection?: string
 }) {
@@ -22,10 +24,12 @@ export default function AnchorSections({
 
   const isAutoSelectDisabled = useRef(false);
 
+  const firstSection = useMemo(() => sections[0].id, [sections]);
+
   // Highlight initial section
   useEffect(() => {
-    updateHash(sectionIds[0]);
-  }, [updateHash, sectionIds]);
+    updateHash(firstSection);
+  }, [updateHash, firstSection]);
 
   // Disable auto-select for 100ms after hash
   useEffect(() => {
@@ -40,12 +44,12 @@ export default function AnchorSections({
   useEffect(() => {
     const onScroll = () => {
       if (window.scrollY <= 0) {
-        updateHash(sectionIds[0]);
+        updateHash(firstSection);
       }
     };
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
-  }, [updateHash, sectionIds]);
+  }, [updateHash, firstSection]);
 
   const onVisible = useCallback((section: string) => {
     if (!isAutoSelectDisabled.current) {
@@ -55,14 +59,14 @@ export default function AnchorSections({
   
   return (
     <div className={className}>
-      {sectionIds.map((id, index) => (
+      {sections.map(({ id, content }) => (
         <AnchorSection
           key={id}
           id={id}
           className={classNameSection}
           onVisible={onVisible}
         >
-          {sectionContent[index]}
+          {content}
         </AnchorSection>
       ))}
     </div>
