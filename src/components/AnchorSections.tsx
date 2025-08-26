@@ -41,16 +41,14 @@ export default function AnchorSections({
     return () => clearTimeout(timeout);
   }, [hash]);
 
+  // Reset section when scrolled to the top
   const _onScroll = useCallback(() => {
     if (window.scrollY <= 0) {
       console.log('resetting section');
       updateHash(firstSection);
     }
   }, [updateHash, firstSection]);
-
   const onScroll = useDebouncedCallback(_onScroll, 100, { leading: true });
-
-  // Reset section when scrolled to the top
   useEffect(() => {
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
