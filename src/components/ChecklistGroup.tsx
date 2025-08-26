@@ -5,7 +5,7 @@ import Badge from './Badge';
 import ResponsiveText from './primitives/ResponsiveText';
 import { parameterize } from '@/utility/string';
 import ScoreCard from './ScoreCard';
-import useVisible from '@/utility/useVisible';
+import useVisibility from '@/utility/useVisibility';
 
 export default function ChecklistGroup({
   title,
@@ -28,7 +28,7 @@ export default function ChecklistGroup({
 
   const slug = parameterize(title);
 
-  useVisible({ ref, onVisible: () => {
+  useVisibility({ ref, onVisible: () => {
     if (updateHashOnVisible) {
       window.history.replaceState(null, '', `#${slug}`);
     }

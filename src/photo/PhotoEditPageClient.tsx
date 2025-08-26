@@ -4,7 +4,6 @@ import AdminChildPage from '@/components/AdminChildPage';
 import { Photo } from '.';
 import { PATH_ADMIN_PHOTOS } from '@/app/path';
 import {
-  FORM_SECTIONS,
   PhotoFormData,
   convertPhotoToFormData,
 } from './form';
@@ -52,8 +51,6 @@ export default function PhotoEditPageClient({
   const [updatedExifData, setUpdatedExifData] =
     useState<Partial<PhotoFormData>>();
 
-  const [formSection, setFormSection] = useState(FORM_SECTIONS[0]);
-
   return (
     <AdminChildPage
       backPath={PATH_ADMIN_PHOTOS}
@@ -68,7 +65,6 @@ export default function PhotoEditPageClient({
             <AiButton {...{
               aiContent,
               shouldConfirm: shouldConfirmAiTextGeneration,
-              onClick: () => setFormSection(FORM_SECTIONS[0]),
             }} />}
           <ExifCaptureButton
             photoUrl={photo.url}
@@ -86,8 +82,6 @@ export default function PhotoEditPageClient({
         uniqueRecipes={uniqueRecipes}
         uniqueFilms={uniqueFilms}
         aiContent={hasAiTextGeneration ? aiContent : undefined}
-        formSection={formSection}
-        setFormSection={setFormSection}
         onTitleChange={setUpdatedTitle}
         onFormStatusChange={setIsPending}
         onFormDataChange={setShouldConfirmAiTextGeneration}

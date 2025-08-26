@@ -5,7 +5,7 @@ export default function useHash() {
   const [hash, setHash] = useState('');
 
   const updateHash = useCallback(() => {
-    setHash(window.location.hash);
+    setHash(window.location.hash.replace('#', ''));
   }, []);
 
   useEffect(() => {
@@ -21,5 +21,12 @@ export default function useHash() {
     updateHash();
   }, [params, updateHash]);
 
-  return hash.replace('#', '');
+  const setWindowHash = useCallback((hash: string) => {
+    window.location.hash = hash;
+  }, []);
+
+  return {
+    hash,
+    updateHash: setWindowHash,
+  };
 }

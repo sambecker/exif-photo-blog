@@ -2,9 +2,11 @@
 
 import {
   ComponentProps,
+  Fragment,
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import {
@@ -52,6 +54,9 @@ import FieldsetVisibility from '../visibility/FieldsetVisibility';
 import PhotoColors from '../color/PhotoColors';
 import { generateColorDataFromString } from '../color/client';
 import { capitalize } from '@/utility/string';
+import AnchorSections from '@/components/AnchorSections';
+import useIsVisible from '@/utility/useIsVisible';
+import useHash from '@/utility/useHash';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -64,8 +69,6 @@ export default function PhotoForm({
   uniqueRecipes,
   uniqueFilms,
   aiContent,
-  formSection,
-  setFormSection,
   shouldStripGpsData,
   onTitleChange,
   onFormDataChange,
@@ -80,8 +83,6 @@ export default function PhotoForm({
   uniqueFilms?: Films
   aiContent?: AiContent
   shouldStripGpsData?: boolean
-  formSection: string
-  setFormSection: (formSection: string) => void
   onTitleChange?: (updatedTitle: string) => void
   onFormDataChange?: (formData: Partial<PhotoFormData>) => void,
   onFormStatusChange?: (pending: boolean) => void
@@ -91,6 +92,8 @@ export default function PhotoForm({
   const [formErrors, setFormErrors] =
     useState(getFormErrors(initialPhotoForm));
   const [formActionErrorMessage, setFormActionErrorMessage] = useState('');
+
+  const { hash } = useHash();
 
   const { invalidateSwr, shouldDebugImageFallbacks } = useAppState();
 
@@ -150,11 +153,6 @@ export default function PhotoForm({
       }
     }
   }, [updatedExifData]);
-
-  const {
-    width,
-    height,
-  } = getDimensionsFromSize(THUMBNAIL_SIZE, formData.aspectRatio);
 
   const url = formData.url ?? '';
 
@@ -289,23 +287,60 @@ export default function PhotoForm({
     }));
   }, []);
 
+  const formContent = useMemo(() =>
+    FORM_METADATA_ENTRIES_BY_SECTION(
+      convertTagsForForm(uniqueTags, appText),
+      convertRecipesForForm(uniqueRecipes),
+      convertFilmsForForm(uniqueFilms, isMakeFujifilm(formData.make)),
+      aiContent !== undefined,
+      shouldStripGpsData,
+    ), [
+    uniqueTags,
+    appText,
+    uniqueRecipes,
+    uniqueFilms,
+    formData.make,
+    aiContent,
+    shouldStripGpsData,
+  ]);
+
+  const formSections = useMemo(() =>
+    formContent.map(({ section }) => section)
+  , [formContent]);
+
+  const ref = useRef<HTMLImageElement>(null);
+  const isThumbnailVisible = useIsVisible({ ref, initiallyVisible: true });
+  const thumbnailDimensions =
+    getDimensionsFromSize(THUMBNAIL_SIZE, formData.aspectRatio);
+  const thumbnail = (includeRef?: boolean, className?: string) =>
+    <ImageWithFallback
+      ref={includeRef ? ref : undefined}
+      alt="Upload"
+      src={url}
+      className={clsx(
+        'border rounded-md overflow-hidden',
+        'border-gray-200 dark:border-gray-700',
+        className,
+      )}
+      blurDataURL={formData.blurData}
+      blurCompatibilityLevel="none"
+      width={thumbnailDimensions.width}
+      height={thumbnailDimensions.height}
+      priority
+    />;
+
   return (
     <div className="space-y-4 max-w-[38rem] relative">
       <div className="flex gap-2">
         <div className="relative">
-          <ImageWithFallback
-            alt="Upload"
-            src={url}
-            className={clsx(
-              'border rounded-md overflow-hidden',
-              'border-gray-200 dark:border-gray-700',
-            )}
-            blurDataURL={formData.blurData}
-            blurCompatibilityLevel="none"
-            width={width}
-            height={height}
-            priority
-          />
+          {thumbnail(true)}
+          <div className="max-lg:hidden fixed top-8 left-[42rem]">
+            {thumbnail(false, clsx(
+              'opacity-0 -translate-y-4',
+              !isThumbnailVisible &&
+                'opacity-100 translate-y-0 transition-all duration-200',
+            ))}
+          </div>
           <div className={clsx(
             'absolute top-2 left-2 transition-opacity duration-500',
             aiContent?.isLoading ? 'opacity-100' : 'opacity-0',
@@ -352,11 +387,10 @@ export default function PhotoForm({
               'cursor-pointer hover:text-main',
               'active:border-b-2',
               'active:border-b-gray-200 dark:active:border-b-gray-700',
-              section === formSection
+              section === hash
                 ? 'font-bold border-b-2 border-b-black dark:border-b-white'
                 : 'text-dim',
             )}
-            onClick={() => setFormSection(section)}
           >
             {capitalize(section)}
           </a>
@@ -379,24 +413,13 @@ export default function PhotoForm({
         }}
       >
         {/* Fields */}
-        <div className="mt-6 space-y-5 *:space-y-5">
-          {FORM_METADATA_ENTRIES_BY_SECTION(
-            convertTagsForForm(uniqueTags, appText),
-            convertRecipesForForm(uniqueRecipes),
-            convertFilmsForForm(uniqueFilms, isMakeFujifilm(formData.make)),
-            aiContent !== undefined,
-            shouldStripGpsData,
-          )
-            .map(({ section, fields }) => 
-              <div
-                key={section}
-                className="block"
-              >
-                <a
-                  id={section}
-                  href={`#${section}`}
-                  className="scroll-mt-12"
-                />
+        <AnchorSections
+          className="mt-6 space-y-5 *:space-y-5"
+          classNameSection="scroll-mt-12"
+          sectionIds={formSections}
+          sectionContent={formContent
+            .map(({ section, fields }) =>
+              <Fragment key={section}>
                 {fields.map(([key, {
                   label,
                   note,
@@ -475,7 +498,6 @@ export default function PhotoForm({
                       type,
                       accessory: accessoryForField(key),
                     };
-
                     switch (key) {
                       case 'film':
                         return <FieldsetWithStatus
@@ -533,9 +555,9 @@ export default function PhotoForm({
                     }
                   }
                 })}
-              </div>,
+              </Fragment>,
             )}
-        </div>
+        />
         {/* Actions */}
         <div className={clsx(
           'flex gap-3 sticky bottom-0',
