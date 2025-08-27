@@ -45,9 +45,15 @@ const LOCALE = process.env.NEXT_PUBLIC_LOCALE || 'en-us';
 const LOCALE_ALIAS = './date-fns-locale-alias';
 const LOCALE_DYNAMIC = `i18n/locales/${LOCALE}`;
 
+const IMAGE_QUALITY =
+  process.env.NEXT_PUBLIC_IMAGE_QUALITY
+    ? parseInt(process.env.NEXT_PUBLIC_IMAGE_QUALITY)
+    : 75;
+
 const nextConfig: NextConfig = {
   images: {
     imageSizes: [200],
+    qualities: [IMAGE_QUALITY],
     remotePatterns,
     minimumCacheTTL: 31536000,
   },
