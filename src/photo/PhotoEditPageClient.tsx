@@ -65,6 +65,7 @@ export default function PhotoEditPageClient({
             <AiButton {...{
               aiContent,
               shouldConfirm: shouldConfirmAiTextGeneration,
+              tooltip: 'Generate AI text for all fields',
             }} />}
           <ExifCaptureButton
             photoUrl={photo.url}

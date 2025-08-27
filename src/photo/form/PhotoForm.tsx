@@ -329,7 +329,11 @@ export default function PhotoForm({
       <div className="flex gap-2">
         <div className="relative">
           {thumbnail(true)}
-          <div className="max-lg:hidden fixed top-8 left-[42rem]">
+          <div className={clsx(
+            'max-lg:hidden fixed top-8 left-[42rem]',
+            // Prevent image blocking form buttons
+            'pointer-events-none',
+          )}>
             {thumbnail(false, clsx(
               'opacity-0 -translate-y-4',
               !isThumbnailVisible &&

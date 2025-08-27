@@ -68,6 +68,7 @@ export default function UploadPageClient({
         <AiButton {...{
           aiContent,
           shouldConfirm: shouldConfirmAiTextGeneration,
+          tooltip: 'Generate AI text for all fields',
         }} />}
       isLoading={pending}
     >
