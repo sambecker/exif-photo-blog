@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export default function useVisible({
+export default function useVisibility({
   ref,
   onVisible,
   onHidden,

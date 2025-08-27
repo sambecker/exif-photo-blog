@@ -12,7 +12,8 @@ export default function AdminAppConfigurationSidebar({
   simplifiedView?: boolean
   areInternalToolsEnabled: boolean
 }) {
-  const hash = useHash();
+  const { hash } = useHash();
+
   return (
     <div className={clsx(
       'sticky top-0 pt-2.5 -mt-2.5',

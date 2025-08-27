@@ -3,7 +3,10 @@
 import AdminChildPage from '@/components/AdminChildPage';
 import { Photo } from '.';
 import { PATH_ADMIN_PHOTOS } from '@/app/path';
-import { PhotoFormData, convertPhotoToFormData } from './form';
+import {
+  PhotoFormData,
+  convertPhotoToFormData,
+} from './form';
 import PhotoForm from './form/PhotoForm';
 import { Tags } from '@/tag';
 import AiButton from './ai/AiButton';
@@ -80,8 +83,8 @@ export default function PhotoEditPageClient({
         uniqueFilms={uniqueFilms}
         aiContent={hasAiTextGeneration ? aiContent : undefined}
         onTitleChange={setUpdatedTitle}
-        onFormDataChange={setShouldConfirmAiTextGeneration}
         onFormStatusChange={setIsPending}
+        onFormDataChange={setShouldConfirmAiTextGeneration}
       />
     </AdminChildPage>
   );

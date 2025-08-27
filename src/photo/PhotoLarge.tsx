@@ -35,7 +35,7 @@ import {
 import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
 import { useCallback, useMemo, useRef } from 'react';
-import useVisible from '@/utility/useVisible';
+import useVisibility from '@/utility/useVisibility';
 import PhotoDate from './PhotoDate';
 import { useAppState } from '@/app/AppState';
 import { LuExpand } from 'react-icons/lu';
@@ -171,7 +171,7 @@ export default function PhotoLarge({
   const showRecipeContent = showRecipe && shouldShowRecipeDataForPhoto(photo);
   const showFilmContent = showFilm && shouldShowFilmDataForPhoto(photo);
 
-  useVisible({ ref, onVisible });
+  useVisibility({ ref, onVisible });
 
   const hasTitle =
     showTitle &&
