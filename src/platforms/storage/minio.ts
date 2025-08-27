@@ -84,10 +84,7 @@ export const minioList = async (
       size: Size ? formatBytesToMB(Size) : undefined,
     })) ?? []);
 
-export const minioDelete = async (url: string): Promise<void> => {
-  const Key = isUrlFromMinio(url)
-  ? url.replace(`${MINIO_BASE_URL}/`, '')
-  : url;
+export const minioDelete = async (Key: string): Promise<void> => {
   const deleteObjectCommand = new DeleteObjectCommand({
     Bucket: MINIO_BUCKET,
     Key,
