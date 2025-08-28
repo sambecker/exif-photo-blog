@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { streamAiImageQueryAction } from '../actions';
-import { readStreamableValue } from 'ai/rsc';
+import { readStreamableValue } from '@ai-sdk/rsc';
 import { AiImageQuery } from '.';
 
 export default function useAiImageQuery(

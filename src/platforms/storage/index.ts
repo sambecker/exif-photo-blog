@@ -19,6 +19,7 @@ import {
   HAS_AWS_S3_STORAGE,
   HAS_VERCEL_BLOB_STORAGE,
   HAS_CLOUDFLARE_R2_STORAGE,
+  HAS_MINIO_STORAGE,
 } from '@/app/config';
 import { generateNanoid } from '@/utility/nanoid';
 import {
@@ -29,6 +30,14 @@ import {
   cloudflareR2Put,
   isUrlFromCloudflareR2,
 } from './cloudflare-r2';
+import {
+  MINIO_BASE_URL,
+  minioCopy,
+  minioDelete,
+  minioList,
+  minioPut,
+  isUrlFromMinio,
+} from './minio';
 import { PATH_API_PRESIGNED_URL } from '@/app/path';
 
 export const generateStorageId = () => generateNanoid(16);
@@ -45,13 +54,15 @@ export type StorageListResponse = StorageListItem[];
 export type StorageType =
   'vercel-blob' |
   'aws-s3' |
-  'cloudflare-r2';
+  'cloudflare-r2' |
+  'minio';
 
 export const labelForStorage = (type: StorageType): string => {
   switch (type) {
     case 'vercel-blob': return 'Vercel Blob';
     case 'cloudflare-r2': return 'Cloudflare R2';
     case 'aws-s3': return 'AWS S3';
+    case 'minio': return 'MinIO';
   }
 };
 
@@ -60,6 +71,7 @@ export const baseUrlForStorage = (type: StorageType) => {
     case 'vercel-blob': return VERCEL_BLOB_BASE_URL;
     case 'cloudflare-r2': return CLOUDFLARE_R2_BASE_URL_PUBLIC;
     case 'aws-s3': return AWS_S3_BASE_URL;
+    case 'minio': return MINIO_BASE_URL;
   }
 };
 
@@ -68,6 +80,8 @@ export const storageTypeFromUrl = (url: string): StorageType => {
     return 'cloudflare-r2';
   } else if (isUrlFromAwsS3(url)) {
     return 'aws-s3';
+  } else if (isUrlFromMinio(url)) {
+    return 'minio';
   } else {
     return 'vercel-blob';
   }
@@ -89,7 +103,7 @@ const REGEX_UPLOAD_ID = new RegExp(
   'i',
 );
 
-export const fileNameForStorageUrl = (url: string) => {
+export const getFilePathFromStorageUrl = (url: string) => {
   switch (storageTypeFromUrl(url)) {
     case 'vercel-blob':
       return url.replace(`${VERCEL_BLOB_BASE_URL}/`, '');
@@ -97,6 +111,8 @@ export const fileNameForStorageUrl = (url: string) => {
       return url.replace(`${CLOUDFLARE_R2_BASE_URL_PUBLIC}/`, '');
     case 'aws-s3':
       return url.replace(`${AWS_S3_BASE_URL}/`, '');
+    case 'minio':
+      return url.replace(`${MINIO_BASE_URL}/`, '');
   }
 };
 
@@ -134,7 +150,8 @@ export const uploadPhotoFromClient = async (
   extension = 'jpg',
 ) => (
   CURRENT_STORAGE === 'cloudflare-r2' ||
-  CURRENT_STORAGE === 'aws-s3'
+  CURRENT_STORAGE === 'aws-s3' ||
+  CURRENT_STORAGE === 'minio'
 )
   ? uploadFromClientViaPresignedUrl(file, PREFIX_UPLOAD, extension, true)
   : vercelBlobUploadFromClient(file, `${PREFIX_UPLOAD}.${extension}`);
@@ -150,6 +167,8 @@ export const putFile = (
       return cloudflareR2Put(file, fileName);
     case 'aws-s3':
       return awsS3Put(file, fileName);
+    case 'minio':
+      return minioPut(file, fileName);
   }
 };
 
@@ -176,6 +195,12 @@ export const copyFile = (
         destinationFileName,
         false,
       );
+    case 'minio':
+      return minioCopy(
+        getFileNameFromStorageUrl(originUrl),
+        destinationFileName,
+        false,
+      );
   }
 };
 
@@ -184,9 +209,11 @@ export const deleteFile = (url: string) => {
     case 'vercel-blob':
       return vercelBlobDelete(url);
     case 'cloudflare-r2':
-      return cloudflareR2Delete(getFileNameFromStorageUrl(url));
+      return cloudflareR2Delete(getFilePathFromStorageUrl(url));
     case 'aws-s3':
-      return awsS3Delete(getFileNameFromStorageUrl(url));
+      return awsS3Delete(getFilePathFromStorageUrl(url));
+    case 'minio':
+      return minioDelete(getFilePathFromStorageUrl(url));
   }
 };
 
@@ -213,6 +240,10 @@ const getStorageUrlsForPrefix = async (prefix = '') => {
   }
   if (HAS_CLOUDFLARE_R2_STORAGE) {
     urls.push(...await cloudflareR2List(prefix)
+      .catch(() => []));
+  }
+  if (HAS_MINIO_STORAGE) {
+    urls.push(...await minioList(prefix)
       .catch(() => []));
   }
 

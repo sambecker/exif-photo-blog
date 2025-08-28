@@ -3,7 +3,7 @@
 import { ComponentProps, useRef } from 'react';
 import { clsx } from 'clsx/lite';
 import Link from 'next/link';
-import useVisible from '@/utility/useVisible';
+import useVisibility from '@/utility/useVisibility';
 import OGLoaderImage from './OGLoaderImage';
 
 export type OGTilePropsCore = Omit<
@@ -26,7 +26,7 @@ export default function OGTile({
 } & ComponentProps<typeof OGLoaderImage>) {
   const ref = useRef<HTMLAnchorElement>(null);
 
-  useVisible({ ref, onVisible });
+  useVisibility({ ref, onVisible });
 
   return (
     <Link

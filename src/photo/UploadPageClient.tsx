@@ -2,7 +2,10 @@
 
 import AdminChildPage from '@/components/AdminChildPage';
 import { PATH_ADMIN_UPLOADS } from '@/app/path';
-import { PhotoFormData, generateTakenAtFields } from './form';
+import {
+  PhotoFormData,
+  generateTakenAtFields,
+} from './form';
 import PhotoForm from './form/PhotoForm';
 import { Tags } from '@/tag';
 import usePhotoFormParent from './form/usePhotoFormParent';
@@ -38,10 +41,11 @@ export default function UploadPageClient({
     setIsPending,
     updatedTitle,
     setUpdatedTitle,
-    hasTextContent,
-    setHasTextContent,
+    shouldConfirmAiTextGeneration,
+    setShouldConfirmAiTextGeneration,
     aiContent,
   } = usePhotoFormParent({
+    photoForm: formDataFromExif,
     textFieldsToAutoGenerate,
     imageThumbnailBase64,
   });
@@ -61,7 +65,11 @@ export default function UploadPageClient({
         : blobId}
       breadcrumbEllipsis
       accessory={hasAiTextGeneration &&
-        <AiButton {...{ aiContent, shouldConfirm: hasTextContent }} />}
+        <AiButton {...{
+          aiContent,
+          shouldConfirm: shouldConfirmAiTextGeneration,
+          tooltip: 'Generate AI text for all fields',
+        }} />}
       isLoading={pending}
     >
       <PhotoForm
@@ -72,8 +80,8 @@ export default function UploadPageClient({
         aiContent={hasAiTextGeneration ? aiContent : undefined}
         shouldStripGpsData={shouldStripGpsData}
         onTitleChange={setUpdatedTitle}
-        onTextContentChange={setHasTextContent}
         onFormStatusChange={setIsPending}
+        onFormDataChange={setShouldConfirmAiTextGeneration}
       />
     </AdminChildPage>
   );

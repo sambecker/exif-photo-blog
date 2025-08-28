@@ -26,7 +26,7 @@ function AdminChildPage({
   return (
     <AppGrid
       contentMain={
-        <div className="space-y-6">
+        <div className="space-y-5">
           {(backPath || breadcrumb || accessory) &&
             <div className={clsx(
               'flex items-center gap-x-2 gap-y-3',

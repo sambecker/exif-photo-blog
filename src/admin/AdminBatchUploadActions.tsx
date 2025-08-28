@@ -11,7 +11,7 @@ import {
   generateLocalPostgresString,
 } from '@/utility/date';
 import sleep from '@/utility/sleep';
-import { readStreamableValue } from 'ai/rsc';
+import { readStreamableValue } from '@ai-sdk/rsc';
 import { useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
 import { BiCheckCircle } from 'react-icons/bi';

@@ -1,17 +1,11 @@
 import { generateText, streamText } from 'ai';
-import { createStreamableValue } from 'ai/rsc';
+import { createStreamableValue } from '@ai-sdk/rsc';
 import { createOpenAI } from '@ai-sdk/openai';
-import { Redis } from '@upstash/redis';
 import { Ratelimit } from '@upstash/ratelimit';
-import {
-  AI_CONTENT_GENERATION_ENABLED,
-  HAS_REDIS_STORAGE,
-  OPENAI_BASE_URL,
-} from '@/app/config';
+import { AI_CONTENT_GENERATION_ENABLED, OPENAI_BASE_URL } from '@/app/config';
 import { removeBase64Prefix } from '@/utility/image';
 import { cleanUpAiTextResponse } from '@/photo/ai';
-
-const redis = HAS_REDIS_STORAGE ? Redis.fromEnv() : undefined;
+import { redis } from '@/platforms/redis';
 
 const RATE_LIMIT_IDENTIFIER = 'openai-image-query';
 const MODEL = 'gpt-4o';

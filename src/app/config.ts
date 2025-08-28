@@ -186,21 +186,34 @@ export const HAS_AWS_S3_STORAGE =
   Boolean(process.env.AWS_S3_ACCESS_KEY) &&
   Boolean(process.env.AWS_S3_SECRET_ACCESS_KEY);
 
+// STORAGE: MINIO
+// Includes separate check for client-side usage, i.e., url construction
+export const HAS_MINIO_STORAGE_CLIENT =
+  Boolean(process.env.NEXT_PUBLIC_MINIO_BUCKET) &&
+  Boolean(process.env.NEXT_PUBLIC_MINIO_DOMAIN);
+export const HAS_MINIO_STORAGE =
+  HAS_MINIO_STORAGE_CLIENT &&
+  Boolean(process.env.MINIO_ACCESS_KEY) &&
+  Boolean(process.env.MINIO_SECRET_ACCESS_KEY);
+
 export const HAS_MULTIPLE_STORAGE_PROVIDERS = [
   HAS_VERCEL_BLOB_STORAGE,
   HAS_CLOUDFLARE_R2_STORAGE,
   HAS_AWS_S3_STORAGE,
+  HAS_MINIO_STORAGE,
 ].filter(Boolean).length > 1;
 
 // Storage preference requires client-available keys
 // so it can be reached in the browser when uploading
 export const CURRENT_STORAGE: StorageType =
   (process.env.NEXT_PUBLIC_STORAGE_PREFERENCE as StorageType | undefined) || (
-    HAS_CLOUDFLARE_R2_STORAGE_CLIENT
-      ? 'cloudflare-r2'
-      : HAS_AWS_S3_STORAGE_CLIENT
-        ? 'aws-s3'
-        : 'vercel-blob'
+    HAS_MINIO_STORAGE_CLIENT
+      ? 'minio'
+      : HAS_CLOUDFLARE_R2_STORAGE_CLIENT
+        ? 'cloudflare-r2'
+        : HAS_AWS_S3_STORAGE_CLIENT
+          ? 'aws-s3'
+          : 'vercel-blob'
   );
 
 // AI
@@ -366,10 +379,12 @@ export const APP_CONFIGURATION = {
   hasVercelBlobStorage: HAS_VERCEL_BLOB_STORAGE,
   hasCloudflareR2Storage: HAS_CLOUDFLARE_R2_STORAGE,
   hasAwsS3Storage: HAS_AWS_S3_STORAGE,
+  hasMinioStorage: HAS_MINIO_STORAGE,
   hasStorageProvider: (
     HAS_VERCEL_BLOB_STORAGE ||
     HAS_CLOUDFLARE_R2_STORAGE ||
-    HAS_AWS_S3_STORAGE
+    HAS_AWS_S3_STORAGE ||
+    HAS_MINIO_STORAGE
   ),
   hasMultipleStorageProviders: HAS_MULTIPLE_STORAGE_PROVIDERS,
   currentStorage: CURRENT_STORAGE,

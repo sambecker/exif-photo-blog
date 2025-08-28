@@ -15,6 +15,7 @@ import useSWR, { useSWRConfig } from 'swr';
 import {
   HIGH_DENSITY_GRID,
   IS_DEVELOPMENT,
+  IS_PRODUCTION,
   MATTE_PHOTOS,
   SHOW_ZOOM_CONTROLS,
 } from '@/app/config';
@@ -39,6 +40,7 @@ import {
   SWR_KEYS,
   SWRKey,
 } from '@/swr';
+import { warmRedisAction } from './actions';
 
 export default function AppStateProvider({
   children,
@@ -121,6 +123,7 @@ export default function AppStateProvider({
     setHasLoaded(true);
     storeTimezoneCookie();
     setUserEmailEager(getAuthEmailCookie());
+    if (IS_PRODUCTION) { warmRedisAction(); }
     const timeout = setTimeout(() => {
       setHasLoadedWithAnimations(true);
     }, 1000);

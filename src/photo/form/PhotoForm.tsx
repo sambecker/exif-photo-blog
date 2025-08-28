@@ -5,16 +5,17 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import {
   FIELDS_WITH_JSON,
-  FORM_METADATA_ENTRIES,
+  FORM_METADATA_ENTRIES_BY_SECTION,
+  FORM_SECTIONS,
   FormFields,
   FormMeta,
   PhotoFormData,
   convertFormKeysToLabels,
-  formHasTextContent,
   getChangedFormFields,
   getFormErrors,
   isFormValid,
@@ -51,6 +52,10 @@ import { didVisibilityChange } from '../visibility';
 import FieldsetVisibility from '../visibility/FieldsetVisibility';
 import PhotoColors from '../color/PhotoColors';
 import { generateColorDataFromString } from '../color/client';
+import { capitalize } from '@/utility/string';
+import AnchorSections from '@/components/AnchorSections';
+import useIsVisible from '@/utility/useIsVisible';
+import useHash from '@/utility/useHash';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -65,7 +70,7 @@ export default function PhotoForm({
   aiContent,
   shouldStripGpsData,
   onTitleChange,
-  onTextContentChange,
+  onFormDataChange,
   onFormStatusChange,
 }: {
   type?: 'create' | 'edit'
@@ -78,7 +83,7 @@ export default function PhotoForm({
   aiContent?: AiContent
   shouldStripGpsData?: boolean
   onTitleChange?: (updatedTitle: string) => void
-  onTextContentChange?: (hasContent: boolean) => void,
+  onFormDataChange?: (formData: Partial<PhotoFormData>) => void,
   onFormStatusChange?: (pending: boolean) => void
 }) {
   const [formData, setFormData] =
@@ -86,6 +91,8 @@ export default function PhotoForm({
   const [formErrors, setFormErrors] =
     useState(getFormErrors(initialPhotoForm));
   const [formActionErrorMessage, setFormActionErrorMessage] = useState('');
+
+  const { hash } = useHash();
 
   const { invalidateSwr, shouldDebugImageFallbacks } = useAppState();
 
@@ -146,11 +153,6 @@ export default function PhotoForm({
     }
   }, [updatedExifData]);
 
-  const {
-    width,
-    height,
-  } = getDimensionsFromSize(THUMBNAIL_SIZE, formData.aspectRatio);
-
   const url = formData.url ?? '';
 
   useEffect(() => {
@@ -188,8 +190,8 @@ export default function PhotoForm({
   [aiContent?.semanticDescription]);
 
   useEffect(() => {
-    onTextContentChange?.(formHasTextContent(formData));
-  }, [onTextContentChange, formData]);
+    onFormDataChange?.(formData);
+  }, [onFormDataChange, formData]);
 
   const isFieldGeneratingAi = (key: keyof PhotoFormData) => {
     switch (key) {
@@ -284,23 +286,60 @@ export default function PhotoForm({
     }));
   }, []);
 
+  const formContent = useMemo(() =>
+    FORM_METADATA_ENTRIES_BY_SECTION(
+      convertTagsForForm(uniqueTags, appText),
+      convertRecipesForForm(uniqueRecipes),
+      convertFilmsForForm(uniqueFilms, isMakeFujifilm(formData.make)),
+      aiContent !== undefined,
+      shouldStripGpsData,
+    ), [
+    uniqueTags,
+    appText,
+    uniqueRecipes,
+    uniqueFilms,
+    formData.make,
+    aiContent,
+    shouldStripGpsData,
+  ]);
+
+  const ref = useRef<HTMLImageElement>(null);
+  const isThumbnailVisible = useIsVisible({ ref, initiallyVisible: true });
+  const thumbnailDimensions =
+    getDimensionsFromSize(THUMBNAIL_SIZE, formData.aspectRatio);
+  const thumbnail = (includeRef?: boolean, className?: string) =>
+    <ImageWithFallback
+      ref={includeRef ? ref : undefined}
+      alt="Upload"
+      src={url}
+      className={clsx(
+        'border rounded-md overflow-hidden',
+        'border-gray-200 dark:border-gray-700',
+        className,
+      )}
+      blurDataURL={formData.blurData}
+      blurCompatibilityLevel="none"
+      width={thumbnailDimensions.width}
+      height={thumbnailDimensions.height}
+      priority
+    />;
+
   return (
-    <div className="space-y-8 max-w-[38rem] relative">
+    <div className="space-y-4 max-w-[38rem] relative">
       <div className="flex gap-2">
         <div className="relative">
-          <ImageWithFallback
-            alt="Upload"
-            src={url}
-            className={clsx(
-              'border rounded-md overflow-hidden',
-              'border-gray-200 dark:border-gray-700',
-            )}
-            blurDataURL={formData.blurData}
-            blurCompatibilityLevel="none"
-            width={width}
-            height={height}
-            priority
-          />
+          {thumbnail(true)}
+          <div className={clsx(
+            'max-lg:hidden fixed top-8 left-[42rem]',
+            // Prevent image blocking form buttons
+            'pointer-events-none',
+          )}>
+            {thumbnail(false, clsx(
+              'opacity-0 -translate-y-4',
+              !isThumbnailVisible &&
+                'opacity-100 translate-y-0 transition-all duration-200',
+            ))}
+          </div>
           <div className={clsx(
             'absolute top-2 left-2 transition-opacity duration-500',
             aiContent?.isLoading ? 'opacity-100' : 'opacity-0',
@@ -328,6 +367,34 @@ export default function PhotoForm({
       </div>
       {formActionErrorMessage &&
         <ErrorNote>{formActionErrorMessage}</ErrorNote>}
+      <div className={clsx(
+        'flex gap-4',
+        'sticky top-0 z-10 bg-main',
+        'border-b border-gray-200 dark:border-gray-700',
+        'uppercase tracking-wide text-sm',
+        '*:py-2',
+      )}>
+        <span className="flex gap-4 max-sm:hidden">
+          <span>Photo Details</span>
+          <span className="text-extra-extra-dim">/</span>
+        </span>
+        {FORM_SECTIONS.map(section => (
+          <a
+            key={section}
+            href={`#${section}`}
+            className={clsx(
+              'cursor-pointer hover:text-main',
+              'active:border-b-2',
+              'active:border-b-gray-200 dark:active:border-b-gray-700',
+              section === hash
+                ? 'font-bold border-b-2 border-b-black dark:border-b-white'
+                : 'text-dim',
+            )}
+          >
+            {capitalize(section)}
+          </a>
+        ))}
+      </div>
       <form
         action={data => (type === 'create'
           ? createPhotoAction
@@ -345,151 +412,151 @@ export default function PhotoForm({
         }}
       >
         {/* Fields */}
-        <div className="space-y-6">
-          {FORM_METADATA_ENTRIES(
-            convertTagsForForm(uniqueTags, appText),
-            convertRecipesForForm(uniqueRecipes),
-            convertFilmsForForm(uniqueFilms, isMakeFujifilm(formData.make)),
-            aiContent !== undefined,
-            shouldStripGpsData,
-          )
-            .map(([key, {
-              label,
-              note,
-              noteShort,
-              required,
-              selectOptions,
-              selectOptionsDefaultLabel,
-              tagOptions,
-              tagOptionsLimit,
-              tagOptionsLimitValidationMessage,
-              readOnly,
-              hideModificationStatus,
-              validate,
-              validateStringMaxLength,
-              spellCheck,
-              capitalize,
-              hideIfEmpty,
-              shouldHide,
-              loadingMessage,
-              type,
-              staticValue,
-            }]) => {
-              if (!isFieldHidden(key, hideIfEmpty, shouldHide)) {
-                const fieldProps: ComponentProps<typeof FieldsetWithStatus> = {
-                  id: key,
-                  label: label + (
-                    key === 'blurData' && shouldDebugImageFallbacks
-                      ? ` (${(formData[key] ?? '').length} chars.)`
-                      : ''
-                  ),
+        <AnchorSections
+          className="mt-6 space-y-5 *:space-y-5"
+          classNameSection="scroll-mt-12"
+          sections={formContent
+            .map(({ section, fields }) => ({
+              id: section,
+              content: <>
+                {fields.map(([key, {
+                  label,
                   note,
                   noteShort,
-                  error: formErrors[key],
-                  value: staticValue ?? formData[key] ?? '',
-                  isModified: (
-                    !hideModificationStatus &&
-                    changedFormKeys.includes(key)
-                  ),
-                  onChange: value => {
-                    const formUpdated = { ...formData, [key]: value };
-                    setFormData(formUpdated);
-                    if (validate) {
-                      setFormErrors({
-                        ...formErrors, [key]:
-                        validate(value),
-                      });
-                    } else if (validateStringMaxLength !== undefined) {
-                      setFormErrors({
-                        ...formErrors,
-                        [key]: value.length > validateStringMaxLength
-                          ? `${validateStringMaxLength} characters or less`
-                          : undefined,
-                      });
-                    }
-                    if (key === 'title') {
-                      onTitleChange?.(value.trim());
-                    }
-                  },
+                  required,
                   selectOptions,
-                  selectOptionsDefaultLabel: selectOptionsDefaultLabel,
+                  selectOptionsDefaultLabel,
                   tagOptions,
                   tagOptionsLimit,
                   tagOptionsLimitValidationMessage,
-                  required,
                   readOnly,
+                  hideModificationStatus,
+                  validate,
+                  validateStringMaxLength,
                   spellCheck,
                   capitalize,
-                  placeholder: loadingMessage && !formData[key]
-                    ? loadingMessage
-                    : undefined,
-                  loading: (
-                    (loadingMessage && !formData[key] ? true : false) ||
-                    isFieldGeneratingAi(key)
-                  ),
+                  hideIfEmpty,
+                  shouldHide,
+                  loadingMessage,
                   type,
-                  accessory: accessoryForField(key),
-                };
-
-                switch (key) {
-                  case 'film':
-                    return <FieldsetWithStatus
-                      key={key}
-                      {...fieldProps}
-                      tagOptionsDefaultIcon={<span
-                        className="w-4 overflow-hidden"
-                      >
-                        <PhotoFilmIcon />
-                      </span>}
-                    />;
-                  case 'applyRecipeTitleGlobally':
-                    return <ApplyRecipeTitleGloballyCheckbox
-                      key={key}
-                      {...fieldProps}
-                      photoId={initialPhotoForm.id}
-                      recipeTitle={formData.recipeTitle}
-                      hasRecipeTitleChanged={
-                        changedFormKeys.includes('recipeTitle')}
-                      recipeData={formData.recipeData}
-                      film={formData.film}
-                      onMatchResults={onMatchResults}
-                    />;
-                  case 'colorData':
-                    return <FieldsetWithStatus
-                      key={key}
-                      {...fieldProps}
-                      noteComplex={<PhotoColors
-                        className="translate-y-[1.5px]"
-                        classNameDot="size-[13px]!"
-                        // eslint-disable-next-line max-len
-                        colorData={generateColorDataFromString(formData.colorData)}
-                      />}
-                    />;
-                  case 'visibility':
-                    return <FieldsetVisibility
-                      key={key}
-                      {...fieldProps}
-                      formData={formData}
-                      setFormData={setFormData}
-                      isModified={didVisibilityChange(
-                        initialPhotoForm,
-                        formData,
-                      )}
-                    />;
-                  case 'favorite':
-                    return <FieldsetFavs
-                      key={key}
-                      {...fieldProps}
-                    />;
-                  default:
-                    return <FieldsetWithStatus
-                      key={key}
-                      {...fieldProps}
-                    />;
-                }
-              }
-            })}
-        </div>
+                  staticValue,
+                }]) => {
+                  if (!isFieldHidden(key, hideIfEmpty, shouldHide)) {
+                    // eslint-disable-next-line max-len
+                    const fieldProps: ComponentProps<typeof FieldsetWithStatus> = {
+                      id: key,
+                      label: label + (
+                        key === 'blurData' && shouldDebugImageFallbacks
+                          ? ` (${(formData[key] ?? '').length} chars.)`
+                          : ''
+                      ),
+                      note,
+                      noteShort,
+                      error: formErrors[key],
+                      value: staticValue ?? formData[key] ?? '',
+                      isModified: (
+                        !hideModificationStatus &&
+                        changedFormKeys.includes(key)
+                      ),
+                      onChange: value => {
+                        const formUpdated = { ...formData, [key]: value };
+                        setFormData(formUpdated);
+                        if (validate) {
+                          setFormErrors({
+                            ...formErrors, [key]:
+                            validate(value),
+                          });
+                        } else if (validateStringMaxLength !== undefined) {
+                          setFormErrors({
+                            ...formErrors,
+                            [key]: value.length > validateStringMaxLength
+                              ? `${validateStringMaxLength} characters or less`
+                              : undefined,
+                          });
+                        }
+                        if (key === 'title') {
+                          onTitleChange?.(value.trim());
+                        }
+                      },
+                      selectOptions,
+                      selectOptionsDefaultLabel: selectOptionsDefaultLabel,
+                      tagOptions,
+                      tagOptionsLimit,
+                      tagOptionsLimitValidationMessage,
+                      required,
+                      readOnly,
+                      spellCheck,
+                      capitalize,
+                      placeholder: loadingMessage && !formData[key]
+                        ? loadingMessage
+                        : undefined,
+                      loading: (
+                        (loadingMessage && !formData[key] ? true : false) ||
+                        isFieldGeneratingAi(key)
+                      ),
+                      type,
+                      accessory: accessoryForField(key),
+                    };
+                    switch (key) {
+                      case 'film':
+                        return <FieldsetWithStatus
+                          key={key}
+                          {...fieldProps}
+                          tagOptionsDefaultIcon={<span
+                            className="w-4 overflow-hidden"
+                          >
+                            <PhotoFilmIcon />
+                          </span>}
+                        />;
+                      case 'applyRecipeTitleGlobally':
+                        return <ApplyRecipeTitleGloballyCheckbox
+                          key={key}
+                          {...fieldProps}
+                          photoId={initialPhotoForm.id}
+                          recipeTitle={formData.recipeTitle}
+                          hasRecipeTitleChanged={
+                            changedFormKeys.includes('recipeTitle')}
+                          recipeData={formData.recipeData}
+                          film={formData.film}
+                          onMatchResults={onMatchResults}
+                        />;
+                      case 'colorData':
+                        return <FieldsetWithStatus
+                          key={key}
+                          {...fieldProps}
+                          noteComplex={<PhotoColors
+                            classNameDot="size-[13px]!"
+                            // eslint-disable-next-line max-len
+                            colorData={generateColorDataFromString(formData.colorData)}
+                          />}
+                        />;
+                      case 'visibility':
+                        return <FieldsetVisibility
+                          key={key}
+                          {...fieldProps}
+                          formData={formData}
+                          setFormData={setFormData}
+                          isModified={didVisibilityChange(
+                            initialPhotoForm,
+                            formData,
+                          )}
+                        />;
+                      case 'favorite':
+                        return <FieldsetFavs
+                          key={key}
+                          {...fieldProps}
+                        />;
+                      default:
+                        return <FieldsetWithStatus
+                          key={key}
+                          {...fieldProps}
+                        />;
+                    }
+                  }
+                })}
+              </>,
+            }))}
+        />
         {/* Actions */}
         <div className={clsx(
           'flex gap-3 sticky bottom-0',
