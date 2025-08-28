@@ -11,8 +11,8 @@
   "dependencies": {
     "@ai-sdk/openai": "^2.0.22",
     "@ai-sdk/rsc": "^1.0.27",
-    "@aws-sdk/client-s3": "3.876.0",
-    "@aws-sdk/s3-request-presigner": "3.876.0",
+    "@aws-sdk/client-s3": "3.878.0",
+    "@aws-sdk/s3-request-presigner": "3.878.0",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-tooltip": "^1.2.8",
