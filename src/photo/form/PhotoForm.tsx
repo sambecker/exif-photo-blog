@@ -330,14 +330,18 @@ export default function PhotoForm({
         <div className="relative">
           {thumbnail(true)}
           <div className={clsx(
-            'max-lg:hidden fixed top-8 left-[42rem]',
-            // Prevent image blocking form buttons
+            'max-md:hidden',
+            'fixed top-8',
+            // Orient around responsive form fields
+            'left-[77%] min-[850px]:left-[41rem] lg:left-[42rem]',
+            'mr-4',
+            // Prevent image blocking form button interaction
             'pointer-events-none',
           )}>
             {thumbnail(false, clsx(
               'opacity-0 -translate-y-4',
               !isThumbnailVisible &&
-                'opacity-100 translate-y-0 transition-all duration-200',
+                'opacity-100 translate-y-0 transition-all duration-300',
             ))}
           </div>
           <div className={clsx(
