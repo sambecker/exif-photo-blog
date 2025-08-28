@@ -123,10 +123,7 @@ export default function AppStateProvider({
     setHasLoaded(true);
     storeTimezoneCookie();
     setUserEmailEager(getAuthEmailCookie());
-    if (IS_PRODUCTION) {
-      console.log('Warming redis');
-      warmRedisAction();
-    }
+    if (IS_PRODUCTION) { warmRedisAction(); }
     const timeout = setTimeout(() => {
       setHasLoadedWithAnimations(true);
     }, 1000);

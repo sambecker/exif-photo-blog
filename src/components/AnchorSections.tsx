@@ -44,7 +44,6 @@ export default function AnchorSections({
   // Reset section when scrolled to the top
   const _onScroll = useCallback(() => {
     if (window.scrollY <= 0) {
-      console.log('resetting section');
       updateHash(firstSection);
     }
   }, [updateHash, firstSection]);
