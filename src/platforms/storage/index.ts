@@ -103,7 +103,7 @@ const REGEX_UPLOAD_ID = new RegExp(
   'i',
 );
 
-export const fileNameForStorageUrl = (url: string) => {
+export const getFilePathFromStorageUrl = (url: string) => {
   switch (storageTypeFromUrl(url)) {
     case 'vercel-blob':
       return url.replace(`${VERCEL_BLOB_BASE_URL}/`, '');
@@ -209,11 +209,11 @@ export const deleteFile = (url: string) => {
     case 'vercel-blob':
       return vercelBlobDelete(url);
     case 'cloudflare-r2':
-      return cloudflareR2Delete(getFileNameFromStorageUrl(url));
+      return cloudflareR2Delete(getFilePathFromStorageUrl(url));
     case 'aws-s3':
-      return awsS3Delete(getFileNameFromStorageUrl(url));
+      return awsS3Delete(getFilePathFromStorageUrl(url));
     case 'minio':
-      return minioDelete(fileNameForStorageUrl(url));
+      return minioDelete(getFilePathFromStorageUrl(url));
   }
 };
 

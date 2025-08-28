@@ -186,9 +186,11 @@ export const HAS_AWS_S3_STORAGE =
   Boolean(process.env.AWS_S3_ACCESS_KEY) &&
   Boolean(process.env.AWS_S3_SECRET_ACCESS_KEY);
 
+// STORAGE: MINIO
+// Includes separate check for client-side usage, i.e., url construction
 export const HAS_MINIO_STORAGE_CLIENT =
   Boolean(process.env.NEXT_PUBLIC_MINIO_BUCKET) &&
-  Boolean(process.env.NEXT_PUBLIC_MINIO_ENDPOINT);
+  Boolean(process.env.NEXT_PUBLIC_MINIO_DOMAIN);
 export const HAS_MINIO_STORAGE =
   HAS_MINIO_STORAGE_CLIENT &&
   Boolean(process.env.MINIO_ACCESS_KEY) &&

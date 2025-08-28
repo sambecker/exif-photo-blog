@@ -22,22 +22,22 @@ const HOSTNAME_AWS_S3 =
     : undefined;
 
 const HOSTNAME_MINIO =
-  process.env.NEXT_PUBLIC_MINIO_ENDPOINT
-    ? process.env.NEXT_PUBLIC_MINIO_ENDPOINT
-    : undefined;
+  process.env.NEXT_PUBLIC_MINIO_DOMAIN;
+const MINIO_PORT =
+  process.env.NEXT_PUBLIC_MINIO_PORT;
+const MINIO_USE_SSL =
+  process.env.NEXT_PUBLIC_MINIO_DISABLE_SSL !== '1';
 
-const generateRemotePattern = (_hostname: string, useSSL = true) => {
-  const hostname = removeUrlProtocol(_hostname)!;
-  
-  const [hostnamePart, portPart] = hostname.split(':');
-  
-  return {
-    protocol: useSSL ? 'https' : 'http',
-    hostname: hostnamePart,
-    port: portPart || '',
-    pathname: '/**',
-  } as const;
-};
+const generateRemotePattern = (
+  hostname: string,
+  port?: string,
+  useSSL = true,
+): RemotePattern => ({
+  protocol: useSSL ? 'https' : 'http',
+  hostname: removeUrlProtocol(hostname)!,
+  port,
+  pathname: '/**',
+});
 
 const remotePatterns: RemotePattern[] = [];
 
@@ -51,8 +51,11 @@ if (HOSTNAME_AWS_S3) {
   remotePatterns.push(generateRemotePattern(HOSTNAME_AWS_S3));
 }
 if (HOSTNAME_MINIO) {
-  const useSSL = process.env.NEXT_PUBLIC_MINIO_DISABLE_SSL !== '1';
-  remotePatterns.push(generateRemotePattern(HOSTNAME_MINIO, useSSL));
+  remotePatterns.push(generateRemotePattern(
+    HOSTNAME_MINIO,
+    MINIO_PORT,
+    MINIO_USE_SSL,
+  ));
 }
 
 const LOCALE = process.env.NEXT_PUBLIC_LOCALE || 'en-us';

@@ -278,18 +278,18 @@ Only one storage adapter—Vercel Blob, Cloudflare R2, AWS S3, or MinIO—can be
 
 ### MinIO
 
-MinIO is an S3-compatible object storage server that you can host yourself, giving you complete control over your photo storage.
+MinIO is a self-hosted S3-compatible object storage server.
 
-### 1. Server and Public Bucket Setup
+### 1. Server/bucket setup
 
-First, install and deploy the MinIO server, and then create a bucket with public read access.
+First, install and deploy the MinIO server, then create a bucket with public read access.
 
-- **Install MinIO:** Follow the official documentation to [install and deploy MinIO](https://min.io/docs/minio/linux/operations/install-deploy-manage/deploy-minio-single-node-single-drive.html) on your server.
-- **Create a bucket:**
+- **Install MinIO:** [Follow official documentation](https://min.io/docs/minio/linux/operations/install-deploy-manage/deploy-minio-single-node-single-drive.html) to install and deploy MinIO.
+- **Create bucket:**
   ```bash
   mc mb myminio/{BUCKET_NAME}
   ```
-- **Set public read policy:** Create a file named `bucket-policy.json` with the following content to allow read-only access to everyone:
+- **Set public read policy:** Create file named `bucket-policy.json` with the following content to allow read-only access:
   ```json
   {
     "Version": "2012-10-17",
@@ -311,22 +311,22 @@ First, install and deploy the MinIO server, and then create a bucket with public
     ]
   }
   ```
-  Now, apply this policy to your bucket:
+  Next, apply this policy to your bucket:
   ```bash
   mc policy set myminio/photos bucket-policy.json
   ```
   
 - **Store public configuration:** Set the following public environment variables for your application:
-    - `NEXT_PUBLIC_MINIO_BUCKET`: Your bucketname
-    - `NEXT_PUBLIC_MINIO_ENDPOINT`: MinIO server endpoint (e.g., "minio.yourdomain.com")
+    - `NEXT_PUBLIC_MINIO_BUCKET`: Bucket name
+    - `NEXT_PUBLIC_MINIO_DOMAIN`: MinIO server endpoint, e.g., "minio.yourdomain.com"
     - `NEXT_PUBLIC_MINIO_PORT`: (optional)
     - `NEXT_PUBLIC_MINIO_DISABLE_SSL`: Set to `1` to disable SSL (defaults to HTTPS)
 
-### 2. Create a User with Restricted Permissions
+### 2. Create user with restricted permissions
 
-Next, create a dedicated user and a policy that grants permissions to manage objects within the `{BUCKET_NAME}` bucket.
+Create a dedicated user and a policy that grants permission to manage objects within your `BUCKET_NAME`.
 
-- **Define the user policy:** Create a file named `user-policy.json`. This policy will allow the user to list the bucket contents and to get, put, and delete objects within it.
+- **Define user policy:** Create file named `user-policy.json`. This policy will allow the user to list the bucket contents and to get, put, and delete objects within it.
   ```json
   {
     "Version": "2012-10-17",
@@ -347,20 +347,21 @@ Next, create a dedicated user and a policy that grants permissions to manage obj
     ]
   }
   ```
-- **Create the policy:** Add the policy to MinIO and give it a name, for example, `photos-manager-policy`.
+- **Create policy:** Add named policy to MinIO.
   ```bash
   mc admin policy add myminio photos-manager-policy user-policy.json
   ```
-- **Create a new user:** Create a new user with an access key and a secret key.
+- **Create user:** Create new user with access key and secret key.
   ```bash
   mc admin user add myminio {MINIO_ACCESS_KEY} {MINIO_SECRET_ACCESS_KEY}
-  ```- **Attach the policy to the user:** Assign the `photos-manager-policy` to the new user.
+  ```
+- **Attach policy to user:** Assign `photos-manager-policy` to the user.
   ```bash
   mc admin policy set myminio photos-manager-policy user=MINIO_ACCESS_KEY
-  ```- **Store private credentials:** Set the following private environment variables for your application. ⚠️ **Ensure these access keys are not prefixed with `NEXT_PUBLIC`**.
+  ```
+- **Store private credentials:** Set the following private environment variables for your application. ⚠️ **Ensure these access keys are not prefixed with `NEXT_PUBLIC`**.
   - `MINIO_ACCESS_KEY`: Your MINIO_ACCESS_KEY
   - `MINIO_SECRET_ACCESS_KEY`: Your MINIO_SECRET_ACCESS_KEY
-  
 
 ## Alternate database providers (experimental)
 
