@@ -7,6 +7,10 @@ import {
   cloudflareR2Client,
   cloudflareR2PutObjectCommandForKey,
 } from '@/platforms/storage/cloudflare-r2';
+import {
+  minioClient,
+  minioPutObjectCommandForKey,
+} from '@/platforms/storage/minio';
 import { CURRENT_STORAGE } from '@/app/config';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
@@ -18,15 +22,26 @@ export async function GET(
 
   const session = await auth();
   if (session?.user && key) {
-    const url = await getSignedUrl(
-      CURRENT_STORAGE === 'cloudflare-r2'
-        ? cloudflareR2Client()
-        : awsS3Client(),
-      CURRENT_STORAGE === 'cloudflare-r2'
-        ? cloudflareR2PutObjectCommandForKey(key)
-        : awsS3PutObjectCommandForKey(key),
-      { expiresIn: 3600 },
-    );
+    let client;
+    let command;
+
+    switch (CURRENT_STORAGE) {
+      case 'cloudflare-r2':
+        client = cloudflareR2Client();
+        command = cloudflareR2PutObjectCommandForKey(key);
+        break;
+      case 'minio':
+        client = minioClient();
+        command = minioPutObjectCommandForKey(key);
+        break;
+      default:
+        client = awsS3Client();
+        command = awsS3PutObjectCommandForKey(key);
+        break;
+    }
+    
+    const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+
     return new Response(
       url,
       { headers: { 'content-type': 'text/plain' } },

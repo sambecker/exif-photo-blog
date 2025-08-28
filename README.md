@@ -190,7 +190,7 @@ Application behavior can be changed by configuring the following environment var
 
 ## Alternate storage providers
 
-Only one storage adapter—Vercel Blob, Cloudflare R2, or AWS S3—can be used at a time. Ideally, this is configured before photos are uploaded (see [Issue #34](https://github.com/sambecker/exif-photo-blog/issues/34) for migration considerations). If you have multiple adapters, you can set one as preferred by storing `aws-s3`, `cloudflare-r2`, or `vercel-blob` in `NEXT_PUBLIC_STORAGE_PREFERENCE`. See [FAQ](#will-there-be-support-for-image-storage-providers-beyond-vercel-aws-and-cloudflare) regarding unsupported providers.
+Only one storage adapter—Vercel Blob, Cloudflare R2, AWS S3, or MinIO—can be used at a time. Ideally, this is configured before photos are uploaded (see [Issue #34](https://github.com/sambecker/exif-photo-blog/issues/34) for migration considerations). If you have multiple adapters, you can set one as preferred by storing `aws-s3`, `cloudflare-r2`, `minio`, or `vercel-blob` in `NEXT_PUBLIC_STORAGE_PREFERENCE`. See [FAQ](#will-there-be-support-for-image-storage-providers-beyond-vercel-aws-and-cloudflare) regarding unsupported providers.
 
 ### Cloudflare R2
 
@@ -275,6 +275,92 @@ Only one storage adapter—Vercel Blob, Cloudflare R2, or AWS S3—can be used a
    - [Create IAM user](https://console.aws.amazon.com/iam/home#/users) by choosing "Attach policies directly," and selecting the policy created above. Create "Access key" under "Security credentials," choose "Application running outside AWS," and store credentials (⚠️ _Ensure access keys are not prefixed with `NEXT_PUBLIC`_):
      - `AWS_S3_ACCESS_KEY`
      - `AWS_S3_SECRET_ACCESS_KEY`
+
+### MinIO
+
+MinIO is an S3-compatible object storage server that you can host yourself, giving you complete control over your photo storage.
+
+### 1. Server and Public Bucket Setup
+
+First, install and deploy the MinIO server, and then create a bucket with public read access.
+
+- **Install MinIO:** Follow the official documentation to [install and deploy MinIO](https://min.io/docs/minio/linux/operations/install-deploy-manage/deploy-minio-single-node-single-drive.html) on your server.
+- **Create a bucket:**
+  ```bash
+  mc mb myminio/{BUCKET_NAME}
+  ```
+- **Set public read policy:** Create a file named `bucket-policy.json` with the following content to allow read-only access to everyone:
+  ```json
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "AWS": [
+            "*"
+          ]
+        },
+        "Action": [
+          "s3:GetObject"
+        ],
+        "Resource": [
+          "arn:aws:s3:::{BUCKET_NAME}/*"
+        ]
+      }
+    ]
+  }
+  ```
+  Now, apply this policy to your bucket:
+  ```bash
+  mc policy set myminio/photos bucket-policy.json
+  ```
+  
+- **Store public configuration:** Set the following public environment variables for your application:
+    - `NEXT_PUBLIC_MINIO_BUCKET`: Your bucketname
+    - `NEXT_PUBLIC_MINIO_ENDPOINT`: MinIO server endpoint (e.g., "minio.yourdomain.com")
+    - `NEXT_PUBLIC_MINIO_PORT`: (optional)
+    - `NEXT_PUBLIC_MINIO_DISABLE_SSL`: Set to `1` to disable SSL (defaults to HTTPS)
+
+### 2. Create a User with Restricted Permissions
+
+Next, create a dedicated user and a policy that grants permissions to manage objects within the `{BUCKET_NAME}` bucket.
+
+- **Define the user policy:** Create a file named `user-policy.json`. This policy will allow the user to list the bucket contents and to get, put, and delete objects within it.
+  ```json
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "s3:DeleteObject",
+          "s3:GetObject",
+          "s3:ListBucket",
+          "s3:PutObject"
+        ],
+        "Resource": [
+          "arn:aws:s3:::{BUCKET_NAME}/*",
+          "arn:aws:s3:::{BUCKET_NAME}"
+        ]
+      }
+    ]
+  }
+  ```
+- **Create the policy:** Add the policy to MinIO and give it a name, for example, `photos-manager-policy`.
+  ```bash
+  mc admin policy add myminio photos-manager-policy user-policy.json
+  ```
+- **Create a new user:** Create a new user with an access key and a secret key.
+  ```bash
+  mc admin user add myminio {MINIO_ACCESS_KEY} {MINIO_SECRET_ACCESS_KEY}
+  ```- **Attach the policy to the user:** Assign the `photos-manager-policy` to the new user.
+  ```bash
+  mc admin policy set myminio photos-manager-policy user=MINIO_ACCESS_KEY
+  ```- **Store private credentials:** Set the following private environment variables for your application. ⚠️ **Ensure these access keys are not prefixed with `NEXT_PUBLIC`**.
+  - `MINIO_ACCESS_KEY`: Your MINIO_ACCESS_KEY
+  - `MINIO_SECRET_ACCESS_KEY`: Your MINIO_SECRET_ACCESS_KEY
+  
 
 ## Alternate database providers (experimental)
 
@@ -368,8 +454,8 @@ Thank you ❤️ translators: [@sconetto](https://github.com/sconetto) (`pt-br`,
 #### How do I generate AI text for preexisting photos?
 > Once AI text generation is configured, photos missing text will show up in photo updates (`/admin/photos/updates`).
 
-#### Will there be support for image storage providers beyond Vercel, AWS, and Cloudflare?
-> At this time, there are no plans to introduce support for new storage providers. While configuring a new, AWS-compatible provider (e.g., Cloudflare R2) should not be too difficult, there's nuance to consider surrounding details like IAM, CORS, and domain configuration, which can differ slightly from platform to platform. If you’d like to contribute an implementation for a new storage provider, please open a PR.
+#### Will there be support for image storage providers beyond Vercel, AWS, Cloudflare, and MinIO?
+> At this time, there are no plans to introduce support for new storage providers. The template now supports Vercel Blob, AWS S3, Cloudflare R2, and MinIO (self-hosted S3-compatible storage). While configuring other AWS-compatible providers should not be too difficult, there's nuance to consider surrounding details like IAM, CORS, and domain configuration, which can differ slightly from platform to platform. If you'd like to contribute an implementation for a new storage provider, please open a PR.
 
 #### Can I work locally without access to an image storage provider?
 > At this time, an external storage provider is necessary in order to develop locally. If you have a strategy to propose which allows files to be locally uploaded and served to `next/image` in away that mirrors an external storage provider for debugging purposes, please open a PR.
