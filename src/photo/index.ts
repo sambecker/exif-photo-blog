@@ -49,6 +49,20 @@ export const ACCEPTED_PHOTO_FILE_TYPES = [
 
 export const MAX_PHOTO_UPLOAD_SIZE_IN_BYTES = 50_000_000;
 
+export interface PhotoLight {
+  id: string
+  url: string
+  aspectRatio: number
+  blurData?: string
+  updatedAt: Date
+  takenAt: Date
+  createdAt: Date
+  colorData?: PhotoColorData
+  title?: string
+  semanticDescription?: string
+  hidden?: boolean
+}
+
 // Core EXIF data
 export interface PhotoExif {
   aspectRatio: number
@@ -116,6 +130,23 @@ export interface Photo extends Omit<PhotoDb, 'recipeData' | 'colorData'> {
   recipeData?: FujifilmRecipe
   colorData?: PhotoColorData
   updateStatus?: PhotoUpdateStatus
+}
+
+export const parsePhotoLightFromDb = (photoDbRaw: any): PhotoLight => {
+  const photoDb = camelcaseKeys(photoDbRaw) as unknown as Record<string, unknown>;
+  return {
+    id: photoDb.id,
+    url: photoDb.url,
+    aspectRatio: photoDb.aspectRatio,
+    blurData: photoDb.blurData,
+    updatedAt: photoDb.updatedAt,
+    takenAt: photoDb.takenAt,
+    createdAt: photoDb.createdAt,
+    colorData: photoDb.colorData || undefined,
+    title: photoDb.title,
+    semanticDescription: photoDb.semanticDescription,
+    hidden: photoDb.hidden,
+  } as PhotoLight;
 }
 
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
@@ -197,7 +228,7 @@ export const getNextPhoto = (photo: Photo, photos: Photo[]) => {
     : undefined;
 };
 
-export const generateOgImageMetaForPhotos = (photos: Photo[]): Metadata => {
+export const generateOgImageMetaForPhotos = (photos: PhotoLight[]): Metadata => {
   if (photos.length > 0) {
     return {
       openGraph: {
@@ -222,7 +253,7 @@ export const translatePhotoId = (id: string) =>
   PHOTO_ID_FORWARDING_TABLE[id] || id;
 
 export const titleForPhoto = (
-  photo: Photo,
+  photo: PhotoLight,
   useDateAsTitle = true,
   fallback = 'Untitled',
 ) => {
@@ -238,7 +269,7 @@ export const titleForPhoto = (
   }
 };
 
-export const altTextForPhoto = (photo: Photo) =>
+export const altTextForPhoto = (photo: PhotoLight) =>
   photo.semanticDescription || titleForPhoto(photo);
 
 export const photoLabelForCount = (
@@ -380,5 +411,5 @@ export const downloadFileNameForPhoto = (photo: Photo) =>
     ? `${parameterize(photo.title)}.${photo.extension}`
     : photo.url.split('/').pop() || 'download';
 
-export const doesPhotoNeedBlurCompatibility = (photo: Photo) =>
+export const doesPhotoNeedBlurCompatibility = (photo: PhotoLight) =>
   isBefore(photo.updatedAt, new Date('2024-05-07'));

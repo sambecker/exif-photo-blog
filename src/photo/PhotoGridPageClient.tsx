@@ -1,6 +1,6 @@
 'use client';
 
-import { Photo } from '.';
+import { PhotoLight } from '.';
 import { PATH_GRID_INFERRED } from '@/app/path';
 import PhotoGridSidebar from './PhotoGridSidebar';
 import PhotoGridContainer from './PhotoGridContainer';
@@ -19,7 +19,7 @@ export default function PhotoGridPageClient({
   sortWithPriority,
   ...categories
 }: ComponentProps<typeof PhotoGridSidebar> & {
-  photos: Photo[]
+  photos: PhotoLight[]
   photosCount: number
   photosCountWithExcludes: number
   sortBy: SortBy

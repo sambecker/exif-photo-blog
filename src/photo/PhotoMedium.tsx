@@ -1,7 +1,7 @@
 'use client';
 
 import {
-  Photo,
+  PhotoLight,
   altTextForPhoto,
   doesPhotoNeedBlurCompatibility,
 } from '.';
@@ -26,7 +26,7 @@ export default function PhotoMedium({
   debugColor,
   ...categories
 }: {
-  photo: Photo
+  photo: PhotoLight
   selected?: boolean
   priority?: boolean
   prefetch?: boolean

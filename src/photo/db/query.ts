@@ -39,6 +39,15 @@ import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
 import { Recipes } from '@/recipe';
 import { Years } from '@/years';
 import { PhotoColorData } from '../color/client';
+import { parsePhotoLightFromDb } from '../'
+
+export const PHOTO_LIGHT_COLUMNS = [
+  'id', 'url', 'aspect_ratio', 'blur_data',
+  'updated_at', 'taken_at', 'created_at', 'color_data',
+  'title', 'semantic_description', 'hidden'
+].join(', ');
+
+export const PHOTO_COMPLETE_COLUMNS = '*';
 
 const createPhotosTable = () =>
   sql`
@@ -502,6 +511,31 @@ export const getUniqueFocalLengths = async () =>
         lastModified: last_modified as Date,
       })))
   , 'getUniqueFocalLengths');
+
+export const getPhotosLight = async (options: PhotoQueryOptions = {}) =>
+  safelyQueryPhotos(async () => {
+    const sql = [`SELECT ${PHOTO_LIGHT_COLUMNS} FROM photos`];
+    const values = [] as (string | number)[];
+
+    const { wheres, wheresValues, lastValuesIndex } = getWheresFromOptions(options);
+    
+    if (wheres) {
+      sql.push(wheres);
+      values.push(...wheresValues);
+    }
+
+    sql.push(getOrderByFromOptions(options));
+    const { limitAndOffset, limitAndOffsetValues } = getLimitAndOffsetFromOptions(options, lastValuesIndex);
+
+    sql.push(limitAndOffset);
+    values.push(...limitAndOffsetValues);
+
+    return query(sql.join(' '), values)
+      .then(({ rows }) => rows.map(parsePhotoLightFromDb));
+  },
+  'getPhotosLight',
+  options,
+);
 
 export const getPhotos = async (options: PhotoQueryOptions = {}) =>
   safelyQueryPhotos(async () => {
