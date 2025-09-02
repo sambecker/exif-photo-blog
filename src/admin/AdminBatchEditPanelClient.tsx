@@ -156,7 +156,6 @@ export default function AdminBatchEditPanelClient({
 
   const shouldShowPanel =
     isUserSignedIn &&
-    pathname === PATH_GRID_INFERRED &&
     selectedPhotoIds !== undefined;
 
   useEffect(() => {

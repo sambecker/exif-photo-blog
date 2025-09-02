@@ -21,7 +21,6 @@ export default function PhotoGrid({
   staggerOnFirstLoadOnly = true,
   additionalTile,
   small,
-  canSelect,
   onLastPhotoVisible,
   onAnimationComplete,
   ...categories
@@ -35,7 +34,6 @@ export default function PhotoGrid({
   staggerOnFirstLoadOnly?: boolean
   additionalTile?: ReactNode
   small?: boolean
-  canSelect?: boolean
   onLastPhotoVisible?: () => void
   onAnimationComplete?: () => void
 } & PhotoSetCategory) {
@@ -66,7 +64,7 @@ export default function PhotoGrid({
       animateOnFirstLoadOnly={animateOnFirstLoadOnly}
       staggerOnFirstLoadOnly={staggerOnFirstLoadOnly}
       onAnimationComplete={onAnimationComplete}
-      items={photos.map((photo, index) =>{
+      items={photos.map((photo, index) => {
         const isSelected = selectedPhotoIds?.includes(photo.id) ?? false;
         return <div
           key={photo.id}
@@ -96,7 +94,7 @@ export default function PhotoGrid({
                 : undefined,
             }}
           />
-          {isUserSignedIn && canSelect && selectedPhotoIds !== undefined &&
+          {isUserSignedIn && selectedPhotoIds !== undefined &&
             <SelectTileOverlay
               isSelected={isSelected}
               onSelectChange={() => setSelectedPhotoIds?.(isSelected

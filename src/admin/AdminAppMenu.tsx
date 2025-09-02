@@ -165,9 +165,6 @@ export default function AdminAppMenu({
             size={16}
             className="translate-x-[-0.5px] translate-y-[0.5px]"
           />,
-        ...pathname !== PATH_GRID_INFERRED && {
-          href: PATH_GRID_INFERRED,
-        },
         action: () => {
           if (isSelecting) {
             setSelectedPhotoIds?.(undefined);
@@ -192,7 +189,6 @@ export default function AdminAppMenu({
 
     return { items };
   }, [
-    pathname,
     appText,
     isSelecting,
     photosCountNeedSync,
