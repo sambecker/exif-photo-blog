@@ -1,3 +1,8 @@
+export type MakeModelTextLength =
+  'long' |    // Unmodified make and model
+  'medium' |  // Make and model, with modifiers removed
+  'short';    // Model only
+
 export const convertStringToArray = (
   string?: string,
   shouldParameterize = true,

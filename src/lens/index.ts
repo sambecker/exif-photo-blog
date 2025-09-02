@@ -1,5 +1,5 @@
 import { Photo } from '@/photo';
-import { parameterize } from '@/utility/string';
+import { MakeModelTextLength, parameterize } from '@/utility/string';
 import { formatAppleLensText, isLensApple } from '../platforms/apple';
 import { MISSING_FIELD } from '@/app/path';
 import { formatGoogleLensText, isLensGoogle } from '../platforms/google';
@@ -89,11 +89,7 @@ export const lensFromPhoto = (
 
 export const formatLensText = (
   lens: Lens,
-  length:
-    'long' |    // Unmodified make and model
-    'medium' |  // Make and model, with modifiers removed
-    'short'     // Model only
-  = 'medium',
+  length: MakeModelTextLength = 'medium',
 ) => {
   const { make, model: modelRaw } = lens;
 

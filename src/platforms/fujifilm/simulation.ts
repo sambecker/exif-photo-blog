@@ -244,11 +244,11 @@ export const getFujifilmSimulationFromMakerNote = (
       switch (tag) {
         case TAG_ID_SATURATION:
           filmModeFromSaturation =
-          getFujifilmSimulationFromSaturation(numbers[0]);
+            getFujifilmSimulationFromSaturation(numbers[0]);
           break;
         case TAG_ID_FILM_MODE:
           filmMode =
-          getFujifilmMode(numbers[0]);
+            getFujifilmMode(numbers[0]);
           break;
       }
     },
