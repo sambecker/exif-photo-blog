@@ -1,5 +1,7 @@
 import {
+  deleteFile,
   getExtensionFromStorageUrl,
+  getFileNamePartsFromStorageUrl,
   getIdFromStorageUrl,
 } from '@/platforms/storage';
 import { convertFormDataToPhotoDbInsert } from '@/photo/form';
@@ -20,6 +22,7 @@ import {
   getFujifilmRecipeFromMakerNote,
 } from '@/platforms/fujifilm/recipe';
 import {
+  deletePhoto,
   getRecipeTitleForData,
   updateAllMatchingRecipeTitles,
 } from './db/query';
@@ -28,8 +31,9 @@ import { convertExifToFormData } from './form/server';
 import { getColorFieldsForPhotoForm } from './color/server';
 import exifr from 'exifr';
 
-const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
+const IMAGE_WIDTH_RESIZE_SMALL = 200;
+const IMAGE_WIDTH_RESIZE_LARGE = 640;
 
 export const extractImageDataFromBlobPath = async (
   blobPath: string,
@@ -152,7 +156,7 @@ const generateBase64 = async (
 
 const resizeImage = async (
   image: ArrayBuffer,
-  width = IMAGE_WIDTH_RESIZE,
+  width = IMAGE_WIDTH_RESIZE_SMALL,
 ) => 
   generateBase64(image, sharp => sharp
     .resize(width),
@@ -194,6 +198,15 @@ export const blurImageFromUrl = async (url: string) =>
       console.log(`Error blurring image from URL (${url})`, e);
       return '';
     });
+
+export const resizeImageToBytes = async (
+  image: ArrayBuffer,
+  width = IMAGE_WIDTH_RESIZE_LARGE,
+) => 
+  sharp(image)
+    .resize(width)
+    .toFormat('jpeg', { quality: 90 })
+    .toBuffer();
 
 const GPS_NULL_STRING = '-';
 
@@ -260,3 +273,13 @@ export const propagateRecipeTitleIfNecessary = async (
     );
   }
 };
+
+export const deletePhotoAndFiles = async (
+  photoId: string,
+  photoUrl: string,
+) =>
+  deletePhoto(photoId)
+    .then(() => deleteFile(photoUrl))
+    .then(() => deleteFile(
+      getFileNamePartsFromStorageUrl(photoUrl).urlOptimized,
+    ));

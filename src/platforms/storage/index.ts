@@ -40,6 +40,13 @@ import {
 } from './minio';
 import { PATH_API_PRESIGNED_URL } from '@/app/path';
 
+const PREFIX_UPLOAD = 'upload';
+const PREFIX_PHOTO = 'photo';
+const SUFFIX_PHOTO_OPTIMIZED = 'sm';
+
+const EXTENSION_DEFAULT = 'jpg';
+const EXTENSION_OPTIMIZED = 'jpg';
+
 export const generateStorageId = () => generateNanoid(16);
 
 export type StorageListItem = {
@@ -87,9 +94,6 @@ export const storageTypeFromUrl = (url: string): StorageType => {
   }
 };
 
-const PREFIX_UPLOAD = 'upload';
-const PREFIX_PHOTO = 'photo';
-
 export const generateRandomFileNameForPhoto = () =>
   `${PREFIX_PHOTO}-${generateStorageId()}`;
 
@@ -103,17 +107,34 @@ const REGEX_UPLOAD_ID = new RegExp(
   'i',
 );
 
-export const getFilePathFromStorageUrl = (url: string) => {
-  switch (storageTypeFromUrl(url)) {
-    case 'vercel-blob':
-      return url.replace(`${VERCEL_BLOB_BASE_URL}/`, '');
-    case 'cloudflare-r2':
-      return url.replace(`${CLOUDFLARE_R2_BASE_URL_PUBLIC}/`, '');
-    case 'aws-s3':
-      return url.replace(`${AWS_S3_BASE_URL}/`, '');
-    case 'minio':
-      return url.replace(`${MINIO_BASE_URL}/`, '');
-  }
+export const getPhotoFileName = (
+  fileName: string,
+  extension = EXTENSION_DEFAULT,
+  isOptimized = false,
+) =>
+  isOptimized
+    ? `${fileName}-${SUFFIX_PHOTO_OPTIMIZED}.${EXTENSION_OPTIMIZED}`
+    : `${fileName}.${extension}`;
+
+export const getFileNamePartsFromStorageUrl = (url: string) => {
+  const [
+    _,
+    urlBase = '',
+    fileName = '',
+    fileNameBase = '',
+    fileExtension = '',
+  ] = url.match(/^(.+)\/(([a-z0-9-]+)\.([a-z]{1,4}))$/i) ?? [];
+  const fileNameOptimized =
+    `${fileNameBase}-${SUFFIX_PHOTO_OPTIMIZED}.${EXTENSION_OPTIMIZED}`;
+  const urlOptimized =
+    `${urlBase}/${fileNameOptimized}`;
+  return {
+    fileName,
+    fileNameOptimized,
+    fileNameBase,
+    fileExtension,
+    urlOptimized,
+  };
 };
 
 export const getExtensionFromStorageUrl = (url: string) =>
@@ -147,7 +168,7 @@ export const uploadFromClientViaPresignedUrl = async (
 
 export const uploadPhotoFromClient = async (
   file: File | Blob,
-  extension = 'jpg',
+  extension = EXTENSION_DEFAULT,
 ) => (
   CURRENT_STORAGE === 'cloudflare-r2' ||
   CURRENT_STORAGE === 'aws-s3' ||
@@ -205,15 +226,16 @@ export const copyFile = (
 };
 
 export const deleteFile = (url: string) => {
+  const { fileName } = getFileNamePartsFromStorageUrl(url);
   switch (storageTypeFromUrl(url)) {
     case 'vercel-blob':
       return vercelBlobDelete(url);
     case 'cloudflare-r2':
-      return cloudflareR2Delete(getFilePathFromStorageUrl(url));
+      return cloudflareR2Delete(fileName);
     case 'aws-s3':
-      return awsS3Delete(getFilePathFromStorageUrl(url));
+      return awsS3Delete(fileName);
     case 'minio':
-      return minioDelete(getFilePathFromStorageUrl(url));
+      return minioDelete(fileName);
   }
 };
 

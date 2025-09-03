@@ -1,7 +1,6 @@
 'use server';
 
 import {
-  deletePhoto,
   insertPhoto,
   deletePhotoTagGlobally,
   updatePhoto,
@@ -43,6 +42,7 @@ import {
 import {
   blurImageFromUrl,
   convertFormDataToPhotoDbInsertAndLookupRecipeTitle,
+  deletePhotoAndFiles,
   extractImageDataFromBlobPath,
   propagateRecipeTitleIfNecessary,
 } from './server';
@@ -356,7 +356,7 @@ export const deletePhotosAction = async (photoIds: string[]) =>
     for (const photoId of photoIds) {
       const photo = await getPhoto(photoId, true);
       if (photo) {
-        await deletePhoto(photoId).then(() => deleteFile(photo.url));
+        await deletePhotoAndFiles(photoId, photo.url);
       }
     }
     revalidateAllKeysAndPaths();
@@ -368,7 +368,7 @@ export const deletePhotoAction = async (
   shouldRedirect?: boolean,
 ) =>
   runAuthenticatedAdminServerAction(async () => {
-    await deletePhoto(photoId).then(() => deleteFile(photoUrl));
+    await deletePhotoAndFiles(photoId, photoUrl);
     revalidateAllKeysAndPaths();
     if (shouldRedirect) {
       redirect(PATH_ROOT);
