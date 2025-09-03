@@ -58,7 +58,7 @@ import {
 } from '@/app/config';
 import { generateAiImageQueries } from './ai/server';
 import { createStreamableValue } from '@ai-sdk/rsc';
-import { convertUploadToPhoto } from './storage';
+import { convertUploadToPhoto } from './storage/server';
 import { UrlAddStatus } from '@/admin/AdminUploadsClient';
 import { convertStringToArray } from '@/utility/string';
 import { after } from 'next/server';

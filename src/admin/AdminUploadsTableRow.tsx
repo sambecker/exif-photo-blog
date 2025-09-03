@@ -3,7 +3,7 @@ import { UrlAddStatus } from './AdminUploadsClient';
 import {
   getExtensionFromStorageUrl,
   getIdFromStorageUrl,
-} from '@/platforms/storage';
+} from '@/photo/storage';
 import clsx from 'clsx/lite';
 import ResponsiveDate from '@/components/ResponsiveDate';
 import Spinner from '@/components/Spinner';

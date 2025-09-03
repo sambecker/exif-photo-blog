@@ -40,14 +40,10 @@ import {
 } from './minio';
 import { PATH_API_PRESIGNED_URL } from '@/app/path';
 
-const PREFIX_UPLOAD = 'upload';
-const PREFIX_PHOTO = 'photo';
-const SUFFIX_PHOTO_OPTIMIZED = 'sm';
-
-const EXTENSION_DEFAULT = 'jpg';
-const EXTENSION_OPTIMIZED = 'jpg';
-
 export const generateStorageId = () => generateNanoid(16);
+
+export const generateRandomFileName = (fileNamePrefix: string) =>
+  `${fileNamePrefix}-${generateStorageId()}`;
 
 export type StorageListItem = {
   url: string
@@ -63,6 +59,9 @@ export type StorageType =
   'aws-s3' |
   'cloudflare-r2' |
   'minio';
+
+const getFileNameFromStorageUrl = (url: string) =>
+  (new URL(url).pathname.match(/\/(.+)$/)?.[1]) ?? '';
 
 export const labelForStorage = (type: StorageType): string => {
   switch (type) {
@@ -94,61 +93,6 @@ export const storageTypeFromUrl = (url: string): StorageType => {
   }
 };
 
-export const generateRandomFileNameForPhoto = () =>
-  `${PREFIX_PHOTO}-${generateStorageId()}`;
-
-const REGEX_UPLOAD_PATH = new RegExp(
-  `(?:${PREFIX_UPLOAD})\.[a-z]{1,4}`,
-  'i',
-);
-
-const REGEX_UPLOAD_ID = new RegExp(
-  `.${PREFIX_UPLOAD}-([a-z0-9]+)\.[a-z]{1,4}$`,
-  'i',
-);
-
-export const getPhotoFileName = (
-  fileName: string,
-  extension = EXTENSION_DEFAULT,
-  isOptimized = false,
-) =>
-  isOptimized
-    ? `${fileName}-${SUFFIX_PHOTO_OPTIMIZED}.${EXTENSION_OPTIMIZED}`
-    : `${fileName}.${extension}`;
-
-export const getFileNamePartsFromStorageUrl = (url: string) => {
-  const [
-    _,
-    urlBase = '',
-    fileName = '',
-    fileNameBase = '',
-    fileExtension = '',
-  ] = url.match(/^(.+)\/(([a-z0-9-]+)\.([a-z]{1,4}))$/i) ?? [];
-  const fileNameOptimized =
-    `${fileNameBase}-${SUFFIX_PHOTO_OPTIMIZED}.${EXTENSION_OPTIMIZED}`;
-  const urlOptimized =
-    `${urlBase}/${fileNameOptimized}`;
-  return {
-    fileName,
-    fileNameOptimized,
-    fileNameBase,
-    fileExtension,
-    urlOptimized,
-  };
-};
-
-export const getExtensionFromStorageUrl = (url: string) =>
-  url.match(/.([a-z]{1,4})$/i)?.[1];
-
-export const getIdFromStorageUrl = (url: string) =>
-  url.match(REGEX_UPLOAD_ID)?.[1];
-
-export const isUploadPathnameValid = (pathname?: string) =>
-  pathname?.match(REGEX_UPLOAD_PATH);
-
-const getFileNameFromStorageUrl = (url: string) =>
-  (new URL(url).pathname.match(/\/(.+)$/)?.[1]) ?? '';
-
 export const uploadFromClientViaPresignedUrl = async (
   file: File | Blob,
   fileName: string,
@@ -166,16 +110,17 @@ export const uploadFromClientViaPresignedUrl = async (
     .then(() => `${baseUrlForStorage(CURRENT_STORAGE)}/${key}`);
 };
 
-export const uploadPhotoFromClient = async (
+export const uploadFileFromClient = async (
   file: File | Blob,
-  extension = EXTENSION_DEFAULT,
+  fileNamePrefix: string,
+  extension: string,
 ) => (
   CURRENT_STORAGE === 'cloudflare-r2' ||
   CURRENT_STORAGE === 'aws-s3' ||
   CURRENT_STORAGE === 'minio'
 )
-  ? uploadFromClientViaPresignedUrl(file, PREFIX_UPLOAD, extension, true)
-  : vercelBlobUploadFromClient(file, `${PREFIX_UPLOAD}.${extension}`);
+  ? uploadFromClientViaPresignedUrl(file, fileNamePrefix, extension, true)
+  : vercelBlobUploadFromClient(file, `${fileNamePrefix}.${extension}`);
 
 export const putFile = (
   file: Buffer,
@@ -225,6 +170,22 @@ export const copyFile = (
   }
 };
 
+export const getFileNamePartsFromStorageUrl = (url: string) => {
+  const [
+    _,
+    urlBase = '',
+    fileName = '',
+    fileNameBase = '',
+    fileExtension = '',
+  ] = url.match(/^(.+)\/(([a-z0-9-]+)\.([a-z]{1,4}))$/i) ?? [];
+  return {
+    urlBase,
+    fileName,
+    fileNameBase,
+    fileExtension,
+  };
+};
+
 export const deleteFile = (url: string) => {
   const { fileName } = getFileNamePartsFromStorageUrl(url);
   switch (storageTypeFromUrl(url)) {
@@ -249,7 +210,7 @@ export const moveFile = async (
   return url;
 };
 
-const getStorageUrlsForPrefix = async (prefix = '') => {
+export const getStorageUrlsForPrefix = async (prefix = '') => {
   const urls: StorageListResponse = [];
 
   if (HAS_VERCEL_BLOB_STORAGE) {
@@ -276,12 +237,6 @@ const getStorageUrlsForPrefix = async (prefix = '') => {
       return b.uploadedAt.getTime() - a.uploadedAt.getTime();
     });
 };
-
-export const getStorageUploadUrls = () =>
-  getStorageUrlsForPrefix(`${PREFIX_UPLOAD}-`);
-
-export const getStoragePhotoUrls = () =>
-  getStorageUrlsForPrefix(`${PREFIX_PHOTO}-`);
 
 export const testStorageConnection = () =>
   getStorageUrlsForPrefix();

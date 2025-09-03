@@ -1,8 +1,5 @@
 import {
   deleteFile,
-  getExtensionFromStorageUrl,
-  getFileNamePartsFromStorageUrl,
-  getIdFromStorageUrl,
 } from '@/platforms/storage';
 import { convertFormDataToPhotoDbInsert } from '@/photo/form';
 import {
@@ -30,10 +27,13 @@ import { PhotoDbInsert } from '.';
 import { convertExifToFormData } from './form/server';
 import { getColorFieldsForPhotoForm } from './color/server';
 import exifr from 'exifr';
+import { getOptimizedFileNamesFromUrl } from './storage/server';
+import { getExtensionFromStorageUrl, getIdFromStorageUrl } from './storage';
 
 const IMAGE_WIDTH_BLUR = 200;
-const IMAGE_WIDTH_RESIZE_SMALL = 200;
-const IMAGE_WIDTH_RESIZE_LARGE = 1080;
+const IMAGE_WIDTH_RESIZE_SM = 200;
+// const IMAGE_WIDTH_RESIZE_MD = 640;
+const IMAGE_WIDTH_RESIZE_LG = 1080;
 
 export const extractImageDataFromBlobPath = async (
   blobPath: string,
@@ -156,7 +156,7 @@ const generateBase64 = async (
 
 const resizeImage = async (
   image: ArrayBuffer,
-  width = IMAGE_WIDTH_RESIZE_SMALL,
+  width = IMAGE_WIDTH_RESIZE_SM,
 ) => 
   generateBase64(image, sharp => sharp
     .resize(width),
@@ -201,7 +201,7 @@ export const blurImageFromUrl = async (url: string) =>
 
 export const resizeImageToBytes = async (
   image: ArrayBuffer,
-  width = IMAGE_WIDTH_RESIZE_LARGE,
+  width = IMAGE_WIDTH_RESIZE_LG,
 ) => 
   sharp(image)
     .resize(width)
@@ -281,5 +281,5 @@ export const deletePhotoAndFiles = async (
   deletePhoto(photoId)
     .then(() => deleteFile(photoUrl))
     .then(() => deleteFile(
-      getFileNamePartsFromStorageUrl(photoUrl).urlOptimized,
+      getOptimizedFileNamesFromUrl(photoUrl).urlOptimized,
     ));
