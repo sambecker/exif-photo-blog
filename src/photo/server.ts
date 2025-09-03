@@ -33,7 +33,7 @@ import exifr from 'exifr';
 
 const IMAGE_WIDTH_BLUR = 200;
 const IMAGE_WIDTH_RESIZE_SMALL = 200;
-const IMAGE_WIDTH_RESIZE_LARGE = 640;
+const IMAGE_WIDTH_RESIZE_LARGE = 1080;
 
 export const extractImageDataFromBlobPath = async (
   blobPath: string,
