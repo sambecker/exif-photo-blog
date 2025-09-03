@@ -119,6 +119,13 @@ export const PATHS_TO_CACHE = [
   ...PATHS_ADMIN,
 ];
 
+export const PATHS_WITHOUT_GRID = [
+  ...PATHS_ADMIN,
+  PATH_FULL_INFERRED,
+  PATH_OG_ALL,
+  PATH_OG_SAMPLE,
+];
+
 type PhotoPathParams  = { photo: PhotoOrPhotoId } & PhotoSetCategory & {
   showRecipe?: boolean
 };

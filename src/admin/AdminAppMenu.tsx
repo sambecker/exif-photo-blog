@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  PATHS_WITHOUT_GRID,
   PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_INSIGHTS,
   PATH_ADMIN_PHOTOS,
@@ -70,6 +71,8 @@ export default function AdminAppMenu({
   const isAltPressed = useIsKeyBeingPressed('alt');
 
   const showAppInsightsLink = photosCountTotal > 0 && !isAltPressed;
+
+  const shouldRedirectWhenBatchEdit = PATHS_WITHOUT_GRID.includes(pathname);
 
   const sectionUpload: MoreMenuSection = useMemo(() => ({ items: [{
     label: appText.admin.uploadPhotos,
@@ -165,6 +168,9 @@ export default function AdminAppMenu({
             size={16}
             className="translate-x-[-0.5px] translate-y-[0.5px]"
           />,
+        ...shouldRedirectWhenBatchEdit && {
+          href: PATH_GRID_INFERRED,
+        },
         action: () => {
           if (isSelecting) {
             setSelectedPhotoIds?.(undefined);
@@ -195,6 +201,7 @@ export default function AdminAppMenu({
     photosCountTotal,
     recipesCount,
     setSelectedPhotoIds,
+    shouldRedirectWhenBatchEdit,
     showAppInsightsLink,
     tagsCount,
     uploadsCount,
