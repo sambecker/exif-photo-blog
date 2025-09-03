@@ -58,13 +58,16 @@ export default function AdminAppMenu({
     clearAuthStateAndRedirectIfNecessary,
   } = useAppState();
 
+  const isSelecting = selectedPhotoIds !== undefined;
+
   useEffect(() => {
-    setSelectedPhotoIds?.(undefined);
+    if (isSelecting) {
+      setSelectedPhotoIds?.(undefined);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, setSelectedPhotoIds]);
 
   const appText = useAppText();
-
-  const isSelecting = selectedPhotoIds !== undefined;
 
   const isAltPressed = useIsKeyBeingPressed('alt');
 
