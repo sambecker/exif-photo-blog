@@ -1,5 +1,6 @@
 import {
   deleteFile,
+  getIdFromStorageUrl,
 } from '@/platforms/storage';
 import { convertFormDataToPhotoDbInsert } from '@/photo/form';
 import {
@@ -28,7 +29,7 @@ import { convertExifToFormData } from './form/server';
 import { getColorFieldsForPhotoForm } from './color/server';
 import exifr from 'exifr';
 import { getOptimizedFileNamesFromUrl } from './storage/server';
-import { getExtensionFromStorageUrl, getIdFromStorageUrl } from './storage';
+import { getFileNamePartsFromPhotoUrl } from './storage';
 
 const IMAGE_WIDTH_BLUR = 200;
 const IMAGE_WIDTH_RESIZE_SM = 200;
@@ -60,7 +61,7 @@ export const extractImageDataFromBlobPath = async (
 
   const blobId = getIdFromStorageUrl(url);
 
-  const extension = getExtensionFromStorageUrl(url);
+  const extension = getFileNamePartsFromPhotoUrl(url).fileExtension;
 
   let exifData: ExifData | undefined;
   let exifrData: any | undefined;

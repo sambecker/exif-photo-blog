@@ -42,8 +42,11 @@ import { PATH_API_PRESIGNED_URL } from '@/app/path';
 
 export const generateStorageId = () => generateNanoid(16);
 
-export const generateRandomFileName = (fileNamePrefix: string) =>
+export const generateFileNameWithId = (fileNamePrefix: string) =>
   `${fileNamePrefix}-${generateStorageId()}`;
+
+export const getIdFromStorageUrl = (url: string) =>
+  url.match(/-([a-z0-9]+)\.[a-z]{1,4}$/i)?.[1];
 
 export type StorageListItem = {
   url: string

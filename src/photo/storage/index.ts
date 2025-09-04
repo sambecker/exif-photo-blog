@@ -1,27 +1,45 @@
+import { getFileNamePartsFromStorageUrl } from '@/platforms/storage';
+
 export const PREFIX_PHOTO = 'photo';
 export const PREFIX_UPLOAD = 'upload';
-
-export const SUFFIX_OPTIMIZED_SM = 'sm';
-export const SUFFIX_OPTIMIZED_MD = 'md';
-
 export const EXTENSION_DEFAULT = 'jpg';
-export const EXTENSION_OPTIMIZED = 'jpg';
+
+const OPTIMIZED_SUFFIX_SM = 'sm';
+const OPTIMIZED_SUFFIX_MD = 'md';
+const OPTIMIZED_SUFFIX_LG = 'lg';
+const OPTIMIZED_EXTENSION = 'jpg';
 
 const REGEX_UPLOAD_PATH = new RegExp(
   `(?:${PREFIX_UPLOAD})\.[a-z]{1,4}`,
   'i',
 );
 
-const REGEX_UPLOAD_ID = new RegExp(
-  `.${PREFIX_UPLOAD}-([a-z0-9]+)\.[a-z]{1,4}$`,
-  'i',
-);
-
 export const isUploadPathnameValid = (pathname?: string) =>
   pathname?.match(REGEX_UPLOAD_PATH);
 
-export const getExtensionFromStorageUrl = (url: string) =>
-  url.match(/.([a-z]{1,4})$/i)?.[1];
+export const getFileNamePartsFromPhotoUrl = (url: string) => {
+  const parts = getFileNamePartsFromStorageUrl(url);
+  const { fileName } = parts;
+  const fileNameOptimizedSm =
+    `${fileName}-${OPTIMIZED_SUFFIX_SM}.${OPTIMIZED_EXTENSION}`;
+  const fileNameOptimizedMd =
+    `${fileName}-${OPTIMIZED_SUFFIX_MD}.${OPTIMIZED_EXTENSION}`;
+  const fileNameOptimizedLg =
+    `${fileName}-${OPTIMIZED_SUFFIX_LG}.${OPTIMIZED_EXTENSION}`;
+  return {
+    ...parts,
+    fileNameOptimizedSm,
+    fileNameOptimizedMd,
+    fileNameOptimizedLg,
+  };
+};
 
-export const getIdFromStorageUrl = (url: string) =>
-  url.match(REGEX_UPLOAD_ID)?.[1];
+export const getPhotoFileName = (
+  fileName: string,
+  extension = EXTENSION_DEFAULT,
+  optimize?: 'sm' | 'md' | 'lg',
+) =>
+  Boolean(optimize)
+    ? `${fileName}-${optimize}.${OPTIMIZED_EXTENSION}`
+    : `${fileName}.${extension}`;
+

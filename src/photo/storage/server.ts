@@ -1,7 +1,7 @@
 import {
   copyFile,
   deleteFile,
-  generateRandomFileName,
+  generateFileNameWithId,
   getFileNamePartsFromStorageUrl,
   getStorageUrlsForPrefix,
   moveFile,
@@ -11,26 +11,11 @@ import { removeGpsData, resizeImageToBytes } from '../server';
 import {
   PREFIX_PHOTO,
   PREFIX_UPLOAD,
-  EXTENSION_DEFAULT,
-  SUFFIX_OPTIMIZED_SM,
-  SUFFIX_OPTIMIZED_MD,
-  EXTENSION_OPTIMIZED,
-  getExtensionFromStorageUrl,
+  getPhotoFileName,
 } from '.';
 
 export const generateRandomFileNameForPhoto = () =>
-  generateRandomFileName(PREFIX_PHOTO);
-
-export const getPhotoFileName = (
-  fileName: string,
-  extension = EXTENSION_DEFAULT,
-  isOptimized?: 'sm' | 'md',
-) =>
-  isOptimized === 'sm'
-    ? `${fileName}-${SUFFIX_OPTIMIZED_SM}.${EXTENSION_OPTIMIZED}`
-    : isOptimized === 'md'
-      ? `${fileName}-${SUFFIX_OPTIMIZED_MD}.${EXTENSION_OPTIMIZED}`
-      : `${fileName}.${extension}`;
+  generateFileNameWithId(PREFIX_PHOTO);
 
 export const getOptimizedFileNamesFromUrl = (url: string) => {
   const {
@@ -64,7 +49,7 @@ export const convertUploadToPhoto = async ({
   shouldDeleteOrigin?: boolean
 }) => {
   const fileName = generateRandomFileNameForPhoto();
-  const fileExtension = getExtensionFromStorageUrl(urlOrigin);
+  const { fileExtension } = getFileNamePartsFromStorageUrl(urlOrigin);
   const photoPath = getPhotoFileName(fileName, fileExtension);
   const photoPathOptimized = getPhotoFileName(fileName, fileExtension, 'sm');
   const fileBytes = _fileBytes

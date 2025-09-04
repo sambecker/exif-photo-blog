@@ -1,9 +1,5 @@
 import ImageMedium from '@/components/image/ImageMedium';
 import { UrlAddStatus } from './AdminUploadsClient';
-import {
-  getExtensionFromStorageUrl,
-  getIdFromStorageUrl,
-} from '@/photo/storage';
 import clsx from 'clsx/lite';
 import ResponsiveDate from '@/components/ResponsiveDate';
 import Spinner from '@/components/Spinner';
@@ -15,6 +11,10 @@ import { isElementEntirelyInViewport } from '@/utility/dom';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import EditButton from './EditButton';
 import AddUploadButton from './AddUploadButton';
+import {
+  getFileNamePartsFromStorageUrl,
+  getIdFromStorageUrl,
+} from '@/platforms/storage';
 
 export default function AdminUploadsTableRow({
   url,
@@ -41,7 +41,8 @@ export default function AdminUploadsTableRow({
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
-  const extension = getExtensionFromStorageUrl(url)?.toUpperCase();
+  const extension = getFileNamePartsFromStorageUrl(url)
+    .fileExtension?.toUpperCase();
 
   useEffect(() => {
     if (
