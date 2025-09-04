@@ -1,21 +1,30 @@
-import { getFileNamePartsFromStorageUrl } from '@/platforms/storage';
+import {
+  generateFileNameWithId,
+  getFileNamePartsFromStorageUrl,
+  getStorageUrlsForPrefix,
+  uploadFileFromClient,
+} from '@/platforms/storage';
 
-export const PREFIX_PHOTO = 'photo';
-export const PREFIX_UPLOAD = 'upload';
-export const EXTENSION_DEFAULT = 'jpg';
+const PREFIX_PHOTO = 'photo';
+const PREFIX_UPLOAD = 'upload';
+const EXTENSION_DEFAULT = 'jpg';
 
 const OPTIMIZED_SUFFIX_SM = 'sm';
 const OPTIMIZED_SUFFIX_MD = 'md';
 const OPTIMIZED_SUFFIX_LG = 'lg';
 const OPTIMIZED_EXTENSION = 'jpg';
 
-const REGEX_UPLOAD_PATH = new RegExp(
-  `(?:${PREFIX_UPLOAD})\.[a-z]{1,4}`,
-  'i',
-);
-
 export const isUploadPathnameValid = (pathname?: string) =>
-  pathname?.match(REGEX_UPLOAD_PATH);
+  pathname?.match(new RegExp(`(?:${PREFIX_UPLOAD})\.[a-z]{1,4}`, 'i'));
+
+export const generateRandomFileNameForPhoto = () =>
+  generateFileNameWithId(PREFIX_PHOTO);
+
+export const getStorageUploadUrls = () =>
+  getStorageUrlsForPrefix(`${PREFIX_UPLOAD}-`);
+
+export const getStoragePhotoUrls = () =>
+  getStorageUrlsForPrefix(`${PREFIX_PHOTO}-`);
 
 export const getFileNamePartsFromPhotoUrl = (url: string) => {
   const parts = getFileNamePartsFromStorageUrl(url);
@@ -43,3 +52,8 @@ export const getPhotoFileName = (
     ? `${fileName}-${optimize}.${OPTIMIZED_EXTENSION}`
     : `${fileName}.${extension}`;
 
+export const uploadPhotoFromClient = (
+  file: File | Blob,
+  extension = EXTENSION_DEFAULT,
+) =>
+  uploadFileFromClient(file, PREFIX_UPLOAD, extension);

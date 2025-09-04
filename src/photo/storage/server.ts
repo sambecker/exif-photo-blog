@@ -1,21 +1,12 @@
 import {
   copyFile,
   deleteFile,
-  generateFileNameWithId,
   getFileNamePartsFromStorageUrl,
-  getStorageUrlsForPrefix,
   moveFile,
   putFile,
 } from '@/platforms/storage';
 import { removeGpsData, resizeImageToBytes } from '../server';
-import {
-  PREFIX_PHOTO,
-  PREFIX_UPLOAD,
-  getPhotoFileName,
-} from '.';
-
-export const generateRandomFileNameForPhoto = () =>
-  generateFileNameWithId(PREFIX_PHOTO);
+import { generateRandomFileNameForPhoto, getPhotoFileName } from '.';
 
 export const getOptimizedFileNamesFromUrl = (url: string) => {
   const {
@@ -30,12 +21,6 @@ export const getOptimizedFileNamesFromUrl = (url: string) => {
     urlOptimized,
   };
 };
-
-export const getStorageUploadUrls = () =>
-  getStorageUrlsForPrefix(`${PREFIX_UPLOAD}-`);
-
-export const getStoragePhotoUrls = () =>
-  getStorageUrlsForPrefix(`${PREFIX_PHOTO}-`);
 
 export const convertUploadToPhoto = async ({
   urlOrigin,
