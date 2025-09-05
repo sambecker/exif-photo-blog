@@ -60,7 +60,7 @@ export default function AdminAppMenu({
   const isSelecting = selectedPhotoIds !== undefined;
 
   useEffect(() => {
-    if (isSelecting) {
+    if (isSelecting && pathname !== PATH_GRID_INFERRED) {
       setSelectedPhotoIds?.(undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
