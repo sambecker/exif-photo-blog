@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  PATHS_WITHOUT_GRID,
   PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_INSIGHTS,
   PATH_ADMIN_PHOTOS,
@@ -73,7 +72,8 @@ export default function AdminAppMenu({
 
   const showAppInsightsLink = photosCountTotal > 0 && !isAltPressed;
 
-  const shouldRedirectWhenBatchEdit = PATHS_WITHOUT_GRID.includes(pathname);
+  const currentPageHasGrid = () =>
+    document.querySelector('[data-photo-grid]') !== null;
 
   const sectionUpload: MoreMenuSection = useMemo(() => ({ items: [{
     label: appText.admin.uploadPhotos,
@@ -169,7 +169,7 @@ export default function AdminAppMenu({
             size={16}
             className="translate-x-[-0.5px] translate-y-[0.5px]"
           />,
-        ...shouldRedirectWhenBatchEdit && {
+        ...!currentPageHasGrid() && {
           href: PATH_GRID_INFERRED,
         },
         action: () => {
@@ -202,7 +202,6 @@ export default function AdminAppMenu({
     photosCountTotal,
     recipesCount,
     setSelectedPhotoIds,
-    shouldRedirectWhenBatchEdit,
     showAppInsightsLink,
     tagsCount,
     uploadsCount,
