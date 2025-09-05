@@ -152,6 +152,7 @@ export default function AdminBatchEditPanelClient({
 
   const shouldShowPanel =
     isUserSignedIn &&
+    document.querySelector('[data-photo-grid]') !== null &&
     selectedPhotoIds !== undefined;
 
   useEffect(() => {
