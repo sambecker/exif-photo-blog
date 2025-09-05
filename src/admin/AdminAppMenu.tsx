@@ -60,7 +60,7 @@ export default function AdminAppMenu({
   const isSelecting = selectedPhotoIds !== undefined;
 
   useEffect(() => {
-    if (isSelecting && pathname !== PATH_GRID_INFERRED) {
+    if (isSelecting) {
       setSelectedPhotoIds?.(undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -170,7 +170,7 @@ export default function AdminAppMenu({
             className="translate-x-[-0.5px] translate-y-[0.5px]"
           />,
         ...!currentPageHasGrid() && {
-          href: PATH_GRID_INFERRED,
+          href: `${PATH_GRID_INFERRED}?batch=true`,
         },
         action: () => {
           if (isSelecting) {

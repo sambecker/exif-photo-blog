@@ -648,8 +648,7 @@ export default function CommandKClient({
         if (selectedPhotoIds === undefined) {
           const hasGrid = document.querySelector('[data-photo-grid]') !== null;
           if (!hasGrid) {
-            setSelectedPhotoIds?.([]);
-            router.push(PATH_GRID_INFERRED);
+            router.push(`${PATH_GRID_INFERRED}?batch=true`);
             return;
           }
           setSelectedPhotoIds?.([]);

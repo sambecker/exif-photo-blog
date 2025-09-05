@@ -8,7 +8,8 @@ import AnimateItems from '@/components/AnimateItems';
 import { GRID_ASPECT_RATIO } from '@/app/config';
 import { useAppState } from '@/app/AppState';
 import SelectTileOverlay from '@/components/SelectTileOverlay';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { GRID_GAP_CLASSNAME } from '@/components';
 
 export default function PhotoGrid({
@@ -43,6 +44,20 @@ export default function PhotoGrid({
     setSelectedPhotoIds,
     isGridHighDensity,
   } = useAppState();
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // Check for batch editing parameter on mount
+  useEffect(() => {
+    if (searchParams.get('batch') === 'true') {
+      setSelectedPhotoIds?.([]);
+      // Clean up the URL parameter
+      const url = new URL(window.location.href);
+      url.searchParams.delete('batch');
+      router.replace(url.pathname + url.search);
+    }
+  }, [searchParams, setSelectedPhotoIds, router]);
 
   return (
     <div data-photo-grid>
