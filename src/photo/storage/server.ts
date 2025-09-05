@@ -43,8 +43,9 @@ export const convertUploadToPhoto = async ({
   }
   return promise.then(async url => {
     // Store optimized photos once original photo is copied/moved
-    const optimizedPhotoFileMeta = getOptimizedPhotoFileMeta(fileName);
+    const optimizedPhotoFileMeta = getOptimizedPhotoFileMeta(fileNameBase);
     for (const { size, fileName } of optimizedPhotoFileMeta) {
+      console.log('Storing optimized photo', fileName);
       await putFile(
         await resizeImageToBytes(fileBytes, size),
         fileName,

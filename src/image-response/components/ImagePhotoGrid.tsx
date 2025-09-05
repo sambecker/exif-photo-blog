@@ -1,13 +1,14 @@
 /* eslint-disable jsx-a11y/alt-text */
 
 import { Photo } from '@/photo';
-import {
-  NextImageSize,
-  getNextImageUrlForRequest,
-} from '@/platforms/next-image';
+import { NextImageSize } from '@/platforms/next-image';
 import { IS_PREVIEW } from '@/app/config';
+import {
+  doAllPhotosHaveOptimizedFiles,
+  getOptimizedPhotoUrl,
+} from '@/photo/storage';
 
-export default function ImagePhotoGrid({
+export default async function ImagePhotoGrid({
   photos,
   width,
   widthArbitrary,
@@ -47,6 +48,8 @@ export default function ImagePhotoGrid({
   const cellHeight= height / rows -
     (rows - 1) * gap / rows;
 
+  const doOptimizedFilesExist = await doAllPhotosHaveOptimizedFiles(photos);
+
   return (
     <div
       style={{
@@ -69,10 +72,11 @@ export default function ImagePhotoGrid({
           }}
         >
           <img {...{
-            src: getNextImageUrlForRequest({
+            src: getOptimizedPhotoUrl({
               imageUrl: url,
               size: nextImageWidth,
               addBypassSecret: IS_PREVIEW,
+              compatibilityMode: !doOptimizedFilesExist,
             }),
             style: {
               ...imageStyle,

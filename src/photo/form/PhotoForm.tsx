@@ -36,7 +36,6 @@ import Spinner from '@/components/Spinner';
 import usePreventNavigation from '@/utility/usePreventNavigation';
 import { useAppState } from '@/app/AppState';
 import UpdateBlurDataButton from '../UpdateBlurDataButton';
-import { getNextImageUrlForManipulation } from '@/platforms/next-image';
 import { BLUR_ENABLED, IS_PREVIEW } from '@/app/config';
 import ErrorNote from '@/components/ErrorNote';
 import { convertRecipesForForm, Recipes } from '@/recipe';
@@ -56,6 +55,7 @@ import { capitalize } from '@/utility/string';
 import AnchorSections from '@/components/AnchorSections';
 import useIsVisible from '@/utility/useIsVisible';
 import useHash from '@/utility/useHash';
+import { getOptimizedPhotoUrlForManipulation } from '../storage';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -245,7 +245,7 @@ export default function PhotoForm({
         case 'blurData':
           return shouldDebugImageFallbacks && type === 'edit' && formData.url
             ? <UpdateBlurDataButton
-              photoUrl={getNextImageUrlForManipulation(
+              photoUrl={getOptimizedPhotoUrlForManipulation(
                 formData.url,
                 IS_PREVIEW,
               )}

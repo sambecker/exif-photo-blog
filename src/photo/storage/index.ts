@@ -1,10 +1,14 @@
-import { NextImageSize } from '@/platforms/next-image';
+import {
+  getNextImageUrlForRequest,
+  NextImageSize,
+} from '@/platforms/next-image';
 import {
   generateFileNameWithId,
   getFileNamePartsFromStorageUrl,
   getStorageUrlsForPrefix,
   uploadFileFromClient,
 } from '@/platforms/storage';
+import { Photo } from '..';
 
 const PREFIX_PHOTO = 'photo';
 const PREFIX_UPLOAD = 'upload';
@@ -27,17 +31,39 @@ const OPTIMIZED_FILE_SIZES = [{
   size: NextImageSize
 }[];
 
-export type OptimizedSize = (typeof OPTIMIZED_FILE_SIZES)[number]['suffix'];
+type OptimizedSuffix = (typeof OPTIMIZED_FILE_SIZES)[number]['suffix'];
 
-export const getOptimizedPhotoFileMeta = (fileName: string) =>
+const OPTIMIZED_SUFFIX_DEFAULT: OptimizedSuffix = 'md';
+
+const getOptimizedFileName = ({
+  fileNameBase,
+  suffix,
+}: {
+  fileNameBase: string
+  suffix: OptimizedSuffix
+}) =>
+  `${fileNameBase}-${suffix}.${EXTENSION_OPTIMIZED}`;
+
+const getOptimizedUrl =({
+  urlBase,
+  fileNameBase,
+  suffix,
+}: {
+  urlBase: string
+  fileNameBase: string
+  suffix: OptimizedSuffix
+}) =>
+  `${urlBase}/${getOptimizedFileName({ fileNameBase, suffix })}`;
+
+export const getOptimizedPhotoFileMeta = (fileNameBase: string) =>
   OPTIMIZED_FILE_SIZES.map(({ suffix, size }) => ({
     size,
-    fileName: `${fileName}-${suffix}.${EXTENSION_OPTIMIZED}`,
+    fileName: getOptimizedFileName({ fileNameBase, suffix }),
   }));
 
 export const getOptimizedFileNamesFromPhotoUrl = (url: string) => {
-  const { urlBase, fileName } = getFileNamePartsFromStorageUrl(url);
-  return getOptimizedPhotoFileMeta(fileName).map(({ fileName }) =>
+  const { urlBase, fileNameBase } = getFileNamePartsFromStorageUrl(url);
+  return getOptimizedPhotoFileMeta(fileNameBase).map(({ fileName }) =>
     `${urlBase}/${fileName}`);
 };
 
@@ -58,3 +84,57 @@ export const uploadPhotoFromClient = (
   extension = EXTENSION_DEFAULT,
 ) =>
   uploadFileFromClient(file, PREFIX_UPLOAD, extension);
+
+const getSuffixFromNextImageSize = (nextSize: NextImageSize) =>
+  OPTIMIZED_FILE_SIZES.find(({ size }) => size === nextSize)?.suffix
+    ?? OPTIMIZED_SUFFIX_DEFAULT;
+
+export const getOptimizedPhotoUrl = (
+  args: Parameters<typeof getNextImageUrlForRequest>[0] & {
+    compatibilityMode?: boolean
+  },
+) => {
+  const { compatibilityMode = true } = args;
+  const suffix = getSuffixFromNextImageSize(args.size);
+  const {
+    urlBase,
+    fileNameBase,
+  } = getFileNamePartsFromStorageUrl(args.imageUrl);
+  if (!compatibilityMode) {
+    console.log('Fetching optimized photo url', args.imageUrl);
+  }
+  return compatibilityMode
+    ? getNextImageUrlForRequest(args)
+    : getOptimizedUrl({ urlBase, fileNameBase, suffix });
+};
+
+// Generate small, low-bandwidth images for quick manipulations such as
+// generating blur data or image thumbnails for AI text generation
+export const getOptimizedPhotoUrlForManipulation = (
+  imageUrl: string,
+  addBypassSecret: boolean,
+  compatibilityMode?: boolean,
+) =>
+  getOptimizedPhotoUrl({
+    imageUrl,
+    size: 640,
+    addBypassSecret,
+    compatibilityMode,
+  });
+
+const getTestOptimizedPhotoUrl = (url: string) => {
+  const { urlBase, fileNameBase } = getFileNamePartsFromStorageUrl(url);
+  return getOptimizedUrl({
+    urlBase,
+    fileNameBase,
+    suffix: OPTIMIZED_SUFFIX_DEFAULT,
+  });
+};
+
+export const doesPhotoUrlHaveOptimizedFiles = async (url: string) =>
+  fetch(getTestOptimizedPhotoUrl(url)).then(res => res.ok);
+
+export const doAllPhotosHaveOptimizedFiles = async (photos: Photo[]) =>
+  Promise.all(photos.map(({ url }) => fetch(getTestOptimizedPhotoUrl(url))))
+    .then(urls => urls.every(url => url.ok))
+    .catch(() => false);
