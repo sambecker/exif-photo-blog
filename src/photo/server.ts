@@ -1,5 +1,6 @@
 import {
   deleteFile,
+  getFileNamePartsFromStorageUrl,
   getIdFromStorageUrl,
 } from '@/platforms/storage';
 import { convertFormDataToPhotoDbInsert } from '@/photo/form';
@@ -28,8 +29,7 @@ import { PhotoDbInsert } from '.';
 import { convertExifToFormData } from './form/server';
 import { getColorFieldsForPhotoForm } from './color/server';
 import exifr from 'exifr';
-import { getOptimizedFileNamesFromUrl } from './storage/server';
-import { getFileNamePartsFromPhotoUrl } from './storage';
+import { getOptimizedFileNamesFromPhotoUrl } from './storage';
 
 const IMAGE_WIDTH_BLUR = 200;
 const IMAGE_WIDTH_RESIZE_SM = 200;
@@ -61,7 +61,7 @@ export const extractImageDataFromBlobPath = async (
 
   const blobId = getIdFromStorageUrl(url);
 
-  const extension = getFileNamePartsFromPhotoUrl(url).fileExtension;
+  const extension = getFileNamePartsFromStorageUrl(url).fileExtension;
 
   let exifData: ExifData | undefined;
   let exifrData: any | undefined;
@@ -280,7 +280,7 @@ export const deletePhotoAndFiles = async (
   photoUrl: string,
 ) =>
   deletePhoto(photoId)
-    .then(() => deleteFile(photoUrl))
-    .then(() => deleteFile(
-      getOptimizedFileNamesFromUrl(photoUrl).urlOptimized,
-    ));
+    .then(() => Promise.all([
+      deleteFile(photoUrl),
+      ...getOptimizedFileNamesFromPhotoUrl(photoUrl).map(deleteFile),
+    ]));

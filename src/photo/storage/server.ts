@@ -6,21 +6,10 @@ import {
   putFile,
 } from '@/platforms/storage';
 import { removeGpsData, resizeImageToBytes } from '../server';
-import { generateRandomFileNameForPhoto, getPhotoFileName } from '.';
-
-export const getOptimizedFileNamesFromUrl = (url: string) => {
-  const {
-    urlBase,
-    fileNameBase,
-    fileExtension,
-  } = getFileNamePartsFromStorageUrl(url);
-  const fileNameOptimized = getPhotoFileName(fileNameBase, fileExtension, 'sm');
-  const urlOptimized = `${urlBase}/${fileNameOptimized}`;
-  return {
-    fileNameOptimized,
-    urlOptimized,
-  };
-};
+import {
+  generateRandomFileNameForPhoto,
+  getOptimizedPhotoFileMeta,
+} from '.';
 
 export const convertUploadToPhoto = async ({
   urlOrigin,
@@ -33,10 +22,9 @@ export const convertUploadToPhoto = async ({
   shouldStripGpsData?: boolean
   shouldDeleteOrigin?: boolean
 }) => {
-  const fileName = generateRandomFileNameForPhoto();
+  const fileNameBase = generateRandomFileNameForPhoto();
   const { fileExtension } = getFileNamePartsFromStorageUrl(urlOrigin);
-  const photoPath = getPhotoFileName(fileName, fileExtension);
-  const photoPathOptimized = getPhotoFileName(fileName, fileExtension, 'sm');
+  const fileName = `${fileNameBase}.${fileExtension}`;
   const fileBytes = _fileBytes
     ? _fileBytes
     : await fetch(urlOrigin, { cache: 'no-store' })
@@ -44,36 +32,24 @@ export const convertUploadToPhoto = async ({
   let promise: Promise<string>;
   if (shouldStripGpsData) {
     const fileWithoutGps = await removeGpsData(fileBytes);
-    promise = putFile(fileWithoutGps, photoPath).then(async url => {
+    promise = putFile(fileWithoutGps, fileName).then(async url => {
       if (url && shouldDeleteOrigin) { await deleteFile(urlOrigin); }
       return url;
     });
   } else {
     promise = shouldDeleteOrigin
-      ? moveFile(urlOrigin, photoPath)
-      : copyFile(urlOrigin, photoPath);
+      ? moveFile(urlOrigin, fileName)
+      : copyFile(urlOrigin, fileName);
   }
   return promise.then(async url => {
-    // Store optimized photo once original photo is copied/moved
-    await putFile(
-      await resizeImageToBytes(fileBytes, 640),
-      photoPathOptimized,
-    );
+    // Store optimized photos once original photo is copied/moved
+    const optimizedPhotoFileMeta = getOptimizedPhotoFileMeta(fileName);
+    for (const { size, fileName } of optimizedPhotoFileMeta) {
+      await putFile(
+        await resizeImageToBytes(fileBytes, size),
+        fileName,
+      );
+    }
     return url;
   });
-};
-
-export const getOrCreatedOptimizedPhotoUrl = async (url: string) => {
-  const {
-    fileNameOptimized,
-    urlOptimized,
-  } = getOptimizedFileNamesFromUrl(url);
-  const doesUrlExist = await fetch(urlOptimized).then(res => res.ok);
-  if (!doesUrlExist) {
-    console.log('GENERATING JIT OPTIMIZED PHOTO', urlOptimized);
-    const fileBytes = await fetch(url).then(res => res.arrayBuffer());
-    const optimizedFileBytes = await resizeImageToBytes(fileBytes, 640);
-    await putFile(optimizedFileBytes, fileNameOptimized);
-  }
-  return urlOptimized;
 };
