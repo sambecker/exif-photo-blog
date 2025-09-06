@@ -1,5 +1,5 @@
 import {
-  deleteFile,
+  deleteFilesWithPrefix,
   getFileNamePartsFromStorageUrl,
 } from '@/platforms/storage';
 import { convertFormDataToPhotoDbInsert } from '@/photo/form';
@@ -28,7 +28,6 @@ import { PhotoDbInsert } from '.';
 import { convertExifToFormData } from './form/server';
 import { getColorFieldsForPhotoForm } from './color/server';
 import exifr from 'exifr';
-import { getOptimizedUrlsFromPhotoUrl } from './storage';
 
 const IMAGE_WIDTH_BLUR = 200;
 const IMAGE_WIDTH_DEFAULT = 200;
@@ -280,7 +279,7 @@ export const deletePhotoAndFiles = async (
   photoUrl: string,
 ) =>
   deletePhoto(photoId)
-    .then(() => Promise.all([
-      deleteFile(photoUrl),
-      ...getOptimizedUrlsFromPhotoUrl(photoUrl).map(deleteFile),
-    ]));
+    .then(() => {
+      const { fileNameBase } = getFileNamePartsFromStorageUrl(photoUrl);
+      return deleteFilesWithPrefix(fileNameBase);
+    });

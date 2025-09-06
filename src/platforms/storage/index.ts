@@ -200,6 +200,11 @@ export const deleteFile = (url: string) => {
   }
 };
 
+export const deleteFilesWithPrefix = async (prefix: string) => {
+  const urls = await getStorageUrlsForPrefix(prefix);
+  return Promise.all(urls.map(({ url }) => deleteFile(url)));
+};
+
 export const moveFile = async (
   originUrl: string,
   destinationFileName: string,
