@@ -56,15 +56,19 @@ import AnchorSections from '@/components/AnchorSections';
 import useIsVisible from '@/utility/useIsVisible';
 import useHash from '@/utility/useHash';
 import { getOptimizedPhotoUrlForManipulation } from '../storage';
-import { getFileNamePartsFromStorageUrl } from '@/platforms/storage';
+import {
+  getFileNamePartsFromStorageUrl,
+  StorageListResponse,
+} from '@/platforms/storage';
 import SmallDisclosure from '@/components/SmallDisclosure';
+import { TbPhoto } from 'react-icons/tb';
 
 const THUMBNAIL_SIZE = 300;
 
 export default function PhotoForm({
   type = 'create',
   initialPhotoForm,
-  optimizedPhotoUrls,
+  photoStorageUrls,
   updatedExifData,
   updatedBlurData,
   uniqueTags,
@@ -78,7 +82,7 @@ export default function PhotoForm({
 }: {
   type?: 'create' | 'edit'
   initialPhotoForm: Partial<PhotoFormData>
-  optimizedPhotoUrls?: string[]
+  photoStorageUrls?: StorageListResponse
   updatedExifData?: Partial<PhotoFormData>
   updatedBlurData?: string
   uniqueTags?: Tags
@@ -264,21 +268,24 @@ export default function PhotoForm({
   const footerForField = (key: keyof PhotoFormData) => {
     switch (key) {
       case 'url':
-        return optimizedPhotoUrls && formData.url
+        return photoStorageUrls && photoStorageUrls.length > 1
           ? <SmallDisclosure label="Optimized file set">
             <div className="space-y-1">
-              {[formData.url, ...optimizedPhotoUrls].map(url => {
-                const {
-                  fileName,
-                } = getFileNamePartsFromStorageUrl(url);
-                return <Link
+              {photoStorageUrls.map(({ url, size }) => {
+                const { fileName } = getFileNamePartsFromStorageUrl(url);
+                return <div
                   key={url}
-                  className="block text-medium"
-                  href={url}
-                  target="_blank"
+                  className="flex items-center gap-2"
                 >
-                  {fileName}
-                </Link>;
+                  <TbPhoto className="translate-y-[1px] text-medium" />
+                  <Link
+                    href={url}
+                    target="_blank"
+                  >
+                    {fileName}
+                  </Link>
+                  <span className="text-dim">{size}</span>
+                </div>;
               })}
             </div>
           </SmallDisclosure>

@@ -13,11 +13,11 @@ import {
   IS_PREVIEW,
 } from '@/app/config';
 import { blurImageFromUrl, resizeImageFromUrl } from '@/photo/server';
+import { getOptimizedPhotoUrlForManipulation } from '@/photo/storage';
 import {
-  doesPhotoUrlHaveOptimizedFiles,
-  getOptimizedUrlsFromPhotoUrl,
-  getOptimizedPhotoUrlForManipulation,
-} from '@/photo/storage';
+  getFileNamePartsFromStorageUrl,
+  getStorageUrlsForPrefix,
+} from '@/platforms/storage';
 
 export default async function PhotoEditPage({
   params,
@@ -40,9 +40,9 @@ export default async function PhotoEditPage({
 
   if (!photo) { redirect(PATH_ADMIN); }
 
-  const optimizedPhotoUrls = await doesPhotoUrlHaveOptimizedFiles(photo.url)
-    ? getOptimizedUrlsFromPhotoUrl(photo.url)
-    : undefined;
+  const { fileNameBase } = getFileNamePartsFromStorageUrl(photo.url);
+
+  const photoStorageUrls = await getStorageUrlsForPrefix(fileNameBase);
 
   const hasAiTextGeneration = AI_CONTENT_GENERATION_ENABLED;
   
@@ -62,7 +62,7 @@ export default async function PhotoEditPage({
   return (
     <PhotoEditPageClient {...{
       photo,
-      optimizedPhotoUrls,
+      photoStorageUrls,
       uniqueTags,
       uniqueRecipes,
       uniqueFilms,
