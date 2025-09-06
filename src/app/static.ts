@@ -2,7 +2,6 @@ import { CategoryKey } from '../category';
 import {
   CATEGORY_VISIBILITY,
   IS_BUILDING,
-  IS_PRODUCTION,
   STATICALLY_OPTIMIZED_PHOTO_CATEGORIES,
   STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES,
   STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES,
@@ -22,7 +21,7 @@ const logStaticGenerationDetails = (count: number, content: string) => {
 };
 
 export const staticallyGeneratePhotosIfConfigured = (type: StaticOutput) =>
-  IS_PRODUCTION && (
+  (
     (type === 'page' && STATICALLY_OPTIMIZED_PHOTOS) ||
     (type === 'image' && STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES)
   )
@@ -47,8 +46,7 @@ export const staticallyGenerateCategoryIfConfigured = <T, K>(
   getData: () => Promise<T[]>,
   formatData: (data: T[]) => K[],
 ): (() => Promise<K[]>) | undefined =>
-  CATEGORY_VISIBILITY.includes(key) &&
-  IS_PRODUCTION && (
+  CATEGORY_VISIBILITY.includes(key) && (
     (type === 'page' && STATICALLY_OPTIMIZED_PHOTO_CATEGORIES) ||
     (type === 'image' && STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES)
   )
