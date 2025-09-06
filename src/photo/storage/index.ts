@@ -139,3 +139,19 @@ export const doAllPhotosHaveOptimizedFiles = async (photos: Photo[]) =>
   Promise.all(photos.map(({ url }) => fetch(getTestOptimizedPhotoUrl(url))))
     .then(urls => urls.every(url => url.ok))
     .catch(() => false);
+
+export const getStorageUrlsForPhoto = async ({ url }: Photo) => {
+  const getSortScoreForUrl = (url: string) => {
+    const { fileNameBase } = getFileNamePartsFromStorageUrl(url);
+    if (fileNameBase.endsWith('-sm')) { return 1; }
+    if (fileNameBase.endsWith('-md')) { return 2; }
+    if (fileNameBase.endsWith('-lg')) { return 3; }
+    return 0;
+  };
+
+  const { fileNameBase } = getFileNamePartsFromStorageUrl(url);
+
+  return getStorageUrlsForPrefix(fileNameBase).then(urls =>
+    urls.sort((a, b) => getSortScoreForUrl(a.url) - getSortScoreForUrl(b.url)),
+  );
+};

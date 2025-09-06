@@ -13,11 +13,10 @@ import {
   IS_PREVIEW,
 } from '@/app/config';
 import { blurImageFromUrl, resizeImageFromUrl } from '@/photo/server';
-import { getOptimizedPhotoUrlForManipulation } from '@/photo/storage';
 import {
-  getFileNamePartsFromStorageUrl,
-  getStorageUrlsForPrefix,
-} from '@/platforms/storage';
+  getOptimizedPhotoUrlForManipulation,
+  getStorageUrlsForPhoto,
+} from '@/photo/storage';
 
 export default async function PhotoEditPage({
   params,
@@ -40,9 +39,7 @@ export default async function PhotoEditPage({
 
   if (!photo) { redirect(PATH_ADMIN); }
 
-  const { fileNameBase } = getFileNamePartsFromStorageUrl(photo.url);
-
-  const photoStorageUrls = await getStorageUrlsForPrefix(fileNameBase);
+  const photoStorageUrls = await getStorageUrlsForPhoto(photo);
 
   const hasAiTextGeneration = AI_CONTENT_GENERATION_ENABLED;
   
