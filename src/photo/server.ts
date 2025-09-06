@@ -1,7 +1,6 @@
 import {
   deleteFile,
   getFileNamePartsFromStorageUrl,
-  getIdFromStorageUrl,
 } from '@/platforms/storage';
 import { convertFormDataToPhotoDbInsert } from '@/photo/form';
 import {
@@ -32,9 +31,8 @@ import exifr from 'exifr';
 import { getOptimizedFileNamesFromPhotoUrl } from './storage';
 
 const IMAGE_WIDTH_BLUR = 200;
-const IMAGE_WIDTH_RESIZE_SM = 200;
-// const IMAGE_WIDTH_RESIZE_MD = 640;
-const IMAGE_WIDTH_RESIZE_LG = 1080;
+const IMAGE_WIDTH_DEFAULT = 200;
+const IMAGE_QUALITY_DEFAULT = 80;
 
 export const extractImageDataFromBlobPath = async (
   blobPath: string,
@@ -59,9 +57,10 @@ export const extractImageDataFromBlobPath = async (
 
   const url = decodeURIComponent(blobPath);
 
-  const blobId = getIdFromStorageUrl(url);
-
-  const extension = getFileNamePartsFromStorageUrl(url).fileExtension;
+  const {
+    fileExtension: extension,
+    fileId: blobId,
+  } = getFileNamePartsFromStorageUrl(url);
 
   let exifData: ExifData | undefined;
   let exifrData: any | undefined;
@@ -151,13 +150,13 @@ const generateBase64 = async (
 ) => 
   (middleware ? middleware(sharp(image)) : sharp(image))
     .withMetadata()
-    .toFormat('jpeg', { quality: 90 })
+    .toFormat('jpeg', { quality: IMAGE_QUALITY_DEFAULT })
     .toBuffer()
     .then(data => `data:image/jpeg;base64,${data.toString('base64')}`);
 
 const resizeImage = async (
   image: ArrayBuffer,
-  width = IMAGE_WIDTH_RESIZE_SM,
+  width = IMAGE_WIDTH_DEFAULT,
 ) => 
   generateBase64(image, sharp => sharp
     .resize(width),
@@ -202,11 +201,12 @@ export const blurImageFromUrl = async (url: string) =>
 
 export const resizeImageToBytes = async (
   image: ArrayBuffer,
-  width = IMAGE_WIDTH_RESIZE_LG,
+  width: number,
+  quality = IMAGE_QUALITY_DEFAULT,
 ) => 
   sharp(image)
     .resize(width)
-    .toFormat('jpeg', { quality: 90 })
+    .toFormat('jpeg', { quality })
     .toBuffer();
 
 const GPS_NULL_STRING = '-';

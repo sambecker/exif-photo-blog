@@ -100,9 +100,6 @@ export const getOptimizedPhotoUrl = (
     urlBase,
     fileNameBase,
   } = getFileNamePartsFromStorageUrl(args.imageUrl);
-  if (!compatibilityMode) {
-    console.log('Fetching optimized photo url', args.imageUrl);
-  }
   return compatibilityMode
     ? getNextImageUrlForRequest(args)
     : getOptimizedUrl({ urlBase, fileNameBase, suffix });

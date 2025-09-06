@@ -40,14 +40,6 @@ import {
 } from './minio';
 import { PATH_API_PRESIGNED_URL } from '@/app/path';
 
-export const generateStorageId = () => generateNanoid(16);
-
-export const generateFileNameWithId = (fileNamePrefix: string) =>
-  `${fileNamePrefix}-${generateStorageId()}`;
-
-export const getIdFromStorageUrl = (url: string) =>
-  url.match(/-([a-z0-9]+)\.[a-z]{1,4}$/i)?.[1];
-
 export type StorageListItem = {
   url: string
   fileName: string
@@ -63,8 +55,28 @@ export type StorageType =
   'cloudflare-r2' |
   'minio';
 
-const getFileNameFromStorageUrl = (url: string) =>
-  (new URL(url).pathname.match(/\/(.+)$/)?.[1]) ?? '';
+export const generateStorageId = () => generateNanoid(16);
+
+export const generateFileNameWithId = (prefix: string) =>
+  `${prefix}-${generateStorageId()}`;
+
+export const getFileNamePartsFromStorageUrl = (url: string) => {
+  const [
+    _,
+    urlBase = '',
+    fileName = '',
+    fileNameBase = '',
+    fileId = '',
+    fileExtension = '',
+  ] = url.match(/^(.+)\/((-*[a-z0-9]+-*([a-z0-9-]+))\.([a-z]{1,4}))$/i) ?? [];
+  return {
+    urlBase,
+    fileName,
+    fileNameBase,
+    fileId,
+    fileExtension,
+  };
+};
 
 export const labelForStorage = (type: StorageType): string => {
   switch (type) {
@@ -98,13 +110,13 @@ export const storageTypeFromUrl = (url: string): StorageType => {
 
 export const uploadFromClientViaPresignedUrl = async (
   file: File | Blob,
-  fileName: string,
+  fileNameBase: string,
   extension: string,
   addRandomSuffix?: boolean,
 ) => {
   const key = addRandomSuffix
-    ? `${fileName}-${generateStorageId()}.${extension}`
-    : `${fileName}.${extension}`;
+    ? `${fileNameBase}-${generateStorageId()}.${extension}`
+    : `${fileNameBase}.${extension}`;
 
   const url = await fetch(`${PATH_API_PRESIGNED_URL}/${key}`)
     .then((response) => response.text());
@@ -115,15 +127,15 @@ export const uploadFromClientViaPresignedUrl = async (
 
 export const uploadFileFromClient = async (
   file: File | Blob,
-  fileNamePrefix: string,
+  fileNameBase: string,
   extension: string,
 ) => (
   CURRENT_STORAGE === 'cloudflare-r2' ||
   CURRENT_STORAGE === 'aws-s3' ||
   CURRENT_STORAGE === 'minio'
 )
-  ? uploadFromClientViaPresignedUrl(file, fileNamePrefix, extension, true)
-  : vercelBlobUploadFromClient(file, `${fileNamePrefix}.${extension}`);
+  ? uploadFromClientViaPresignedUrl(file, fileNameBase, extension, true)
+  : vercelBlobUploadFromClient(file, `${fileNameBase}.${extension}`);
 
 export const putFile = (
   file: Buffer,
@@ -145,6 +157,7 @@ export const copyFile = (
   originUrl: string,
   destinationFileName: string,
 ): Promise<string> => {
+  const { fileName } = getFileNamePartsFromStorageUrl(originUrl);
   switch (storageTypeFromUrl(originUrl)) {
     case 'vercel-blob':
       return vercelBlobCopy(
@@ -154,7 +167,7 @@ export const copyFile = (
       );
     case 'cloudflare-r2':
       return cloudflareR2Copy(
-        getFileNameFromStorageUrl(originUrl),
+        fileName,
         destinationFileName,
         false,
       );
@@ -166,27 +179,11 @@ export const copyFile = (
       );
     case 'minio':
       return minioCopy(
-        getFileNameFromStorageUrl(originUrl),
+        fileName,
         destinationFileName,
         false,
       );
   }
-};
-
-export const getFileNamePartsFromStorageUrl = (url: string) => {
-  const [
-    _,
-    urlBase = '',
-    fileName = '',
-    fileNameBase = '',
-    fileExtension = '',
-  ] = url.match(/^(.+)\/(([a-z0-9-]+)\.([a-z]{1,4}))$/i) ?? [];
-  return {
-    urlBase,
-    fileName,
-    fileNameBase,
-    fileExtension,
-  };
 };
 
 export const deleteFile = (url: string) => {
