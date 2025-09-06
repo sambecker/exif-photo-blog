@@ -18,6 +18,7 @@ import { Films } from '@/film';
 
 export default function PhotoEditPageClient({
   photo,
+  optimizedPhotoUrls,
   uniqueTags,
   uniqueRecipes,
   uniqueFilms,
@@ -26,6 +27,7 @@ export default function PhotoEditPageClient({
   blurData,
 }: {
   photo: Photo
+  optimizedPhotoUrls?: string[]
   uniqueTags: Tags
   uniqueRecipes: Recipes
   uniqueFilms: Films
@@ -77,6 +79,7 @@ export default function PhotoEditPageClient({
       <PhotoForm
         type="edit"
         initialPhotoForm={photoForm}
+        optimizedPhotoUrls={optimizedPhotoUrls}
         updatedExifData={updatedExifData}
         updatedBlurData={blurData}
         uniqueTags={uniqueTags}

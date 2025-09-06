@@ -65,7 +65,7 @@ export const getOptimizedPhotoFileMeta = (fileNameBase: string) =>
     fileName: getOptimizedFileName({ fileNameBase, suffix }),
   }));
 
-export const getOptimizedFileNamesFromPhotoUrl = (url: string) => {
+export const getOptimizedUrlsFromPhotoUrl = (url: string) => {
   const { urlBase, fileNameBase } = getFileNamePartsFromStorageUrl(url);
   return getOptimizedPhotoFileMeta(fileNameBase).map(({ fileName }) =>
     `${urlBase}/${fileName}`);

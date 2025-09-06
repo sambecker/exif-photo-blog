@@ -56,12 +56,14 @@ import AnchorSections from '@/components/AnchorSections';
 import useIsVisible from '@/utility/useIsVisible';
 import useHash from '@/utility/useHash';
 import { getOptimizedPhotoUrlForManipulation } from '../storage';
+import { getFileNamePartsFromStorageUrl } from '@/platforms/storage';
 
 const THUMBNAIL_SIZE = 300;
 
 export default function PhotoForm({
   type = 'create',
   initialPhotoForm,
+  optimizedPhotoUrls,
   updatedExifData,
   updatedBlurData,
   uniqueTags,
@@ -75,6 +77,7 @@ export default function PhotoForm({
 }: {
   type?: 'create' | 'edit'
   initialPhotoForm: Partial<PhotoFormData>
+  optimizedPhotoUrls?: string[]
   updatedExifData?: Partial<PhotoFormData>
   updatedBlurData?: string
   uniqueTags?: Tags
@@ -550,6 +553,28 @@ export default function PhotoForm({
                           key={key}
                           {...fieldProps}
                         />;
+                      case 'url':
+                        return <div
+                          key={key}
+                          className="flex flex-col gap-2"
+                        >
+                          <FieldsetWithStatus {...fieldProps} />
+                          {optimizedPhotoUrls && formData.url && <div>
+                            {[formData.url, ...optimizedPhotoUrls].map(url => {
+                              const {
+                                fileName,
+                              } = getFileNamePartsFromStorageUrl(url);
+                              return <Link
+                                key={url}
+                                className="block"
+                                href={url}
+                                target="_blank"
+                              >
+                                {fileName}
+                              </Link>;
+                            })}
+                          </div>}
+                        </div>;
                       default:
                         return <FieldsetWithStatus
                           key={key}

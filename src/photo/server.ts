@@ -28,7 +28,7 @@ import { PhotoDbInsert } from '.';
 import { convertExifToFormData } from './form/server';
 import { getColorFieldsForPhotoForm } from './color/server';
 import exifr from 'exifr';
-import { getOptimizedFileNamesFromPhotoUrl } from './storage';
+import { getOptimizedUrlsFromPhotoUrl } from './storage';
 
 const IMAGE_WIDTH_BLUR = 200;
 const IMAGE_WIDTH_DEFAULT = 200;
@@ -282,5 +282,5 @@ export const deletePhotoAndFiles = async (
   deletePhoto(photoId)
     .then(() => Promise.all([
       deleteFile(photoUrl),
-      ...getOptimizedFileNamesFromPhotoUrl(photoUrl).map(deleteFile),
+      ...getOptimizedUrlsFromPhotoUrl(photoUrl).map(deleteFile),
     ]));
