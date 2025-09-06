@@ -20,15 +20,19 @@ const EXTENSION_OPTIMIZED = 'jpg';
 const OPTIMIZED_FILE_SIZES = [{
   suffix: 'sm',
   size: 200,
+  quality: 90,
 }, {
   suffix: 'md',
   size: 640,
+  quality: 90,
 }, {
   suffix: 'lg',
   size: 1080,
+  quality: 80,
 }] as const satisfies {
   suffix: string
   size: NextImageSize
+  quality: number
 }[];
 
 type OptimizedSuffix = (typeof OPTIMIZED_FILE_SIZES)[number]['suffix'];
@@ -56,8 +60,8 @@ const getOptimizedUrl =({
   `${urlBase}/${getOptimizedFileName({ fileNameBase, suffix })}`;
 
 export const getOptimizedPhotoFileMeta = (fileNameBase: string) =>
-  OPTIMIZED_FILE_SIZES.map(({ suffix, size }) => ({
-    size,
+  OPTIMIZED_FILE_SIZES.map(({ suffix, ...rest }) => ({
+    ...rest,
     fileName: getOptimizedFileName({ fileNameBase, suffix }),
   }));
 
