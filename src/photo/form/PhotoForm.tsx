@@ -57,6 +57,7 @@ import useIsVisible from '@/utility/useIsVisible';
 import useHash from '@/utility/useHash';
 import { getOptimizedPhotoUrlForManipulation } from '../storage';
 import { getFileNamePartsFromStorageUrl } from '@/platforms/storage';
+import SmallDisclosure from '@/components/SmallDisclosure';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -257,6 +258,31 @@ export default function PhotoForm({
             />
             : null;
       }
+    }
+  };
+
+  const footerForField = (key: keyof PhotoFormData) => {
+    switch (key) {
+      case 'url':
+        return optimizedPhotoUrls && formData.url
+          ? <SmallDisclosure label="Optimized file set">
+            <div className="space-y-1">
+              {[formData.url, ...optimizedPhotoUrls].map(url => {
+                const {
+                  fileName,
+                } = getFileNamePartsFromStorageUrl(url);
+                return <Link
+                  key={url}
+                  className="block text-medium"
+                  href={url}
+                  target="_blank"
+                >
+                  {fileName}
+                </Link>;
+              })}
+            </div>
+          </SmallDisclosure>
+          : undefined;
     }
   };
 
@@ -503,6 +529,7 @@ export default function PhotoForm({
                       ),
                       type,
                       accessory: accessoryForField(key),
+                      footer: footerForField(key),
                     };
                     switch (key) {
                       case 'film':
@@ -553,28 +580,6 @@ export default function PhotoForm({
                           key={key}
                           {...fieldProps}
                         />;
-                      case 'url':
-                        return <div
-                          key={key}
-                          className="flex flex-col gap-2"
-                        >
-                          <FieldsetWithStatus {...fieldProps} />
-                          {optimizedPhotoUrls && formData.url && <div>
-                            {[formData.url, ...optimizedPhotoUrls].map(url => {
-                              const {
-                                fileName,
-                              } = getFileNamePartsFromStorageUrl(url);
-                              return <Link
-                                key={url}
-                                className="block"
-                                href={url}
-                                target="_blank"
-                              >
-                                {fileName}
-                              </Link>;
-                            })}
-                          </div>}
-                        </div>;
                       default:
                         return <FieldsetWithStatus
                           key={key}
