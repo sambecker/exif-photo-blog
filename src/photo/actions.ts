@@ -78,7 +78,7 @@ export const createPhotoAction = async (formData: FormData) =>
     );
 
     const updatedUrl = await convertUploadToPhoto({
-      urlOrigin: photo.url,
+      uploadUrl: photo.url,
       shouldStripGpsData,
     });
     
@@ -174,7 +174,7 @@ const addUpload = async ({
     onStreamUpdate?.('Transferring to photo storage');
 
     const updatedUrl = await convertUploadToPhoto({
-      urlOrigin: url,
+      uploadUrl: url,
       fileBytes,
       shouldStripGpsData,
     });
@@ -284,7 +284,7 @@ export const updatePhotoAction = async (formData: FormData) =>
       // Anonymize storage url on update if necessary by
       // re-running image upload transfer logic
       const url = await convertUploadToPhoto({
-        urlOrigin: photo.url,
+        uploadUrl: photo.url,
         shouldDeleteOrigin: false,
       });
       if (url) {
@@ -515,7 +515,7 @@ export const syncPhotoAction = async (photoId: string, isBatch?: boolean) =>
           // Anonymize storage url on update if necessary by
           // re-running image upload transfer logic
           const url = await convertUploadToPhoto({
-            urlOrigin: photo.url,
+            uploadUrl: photo.url,
             fileBytes,
             shouldStripGpsData,
             shouldDeleteOrigin: false,

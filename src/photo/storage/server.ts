@@ -12,35 +12,34 @@ import {
 } from '.';
 
 export const convertUploadToPhoto = async ({
-  urlOrigin,
+  uploadUrl,
   fileBytes: _fileBytes,
   shouldStripGpsData,
   shouldDeleteOrigin = true,
 } : {
-  urlOrigin: string
+  uploadUrl: string
   fileBytes?: ArrayBuffer
   shouldStripGpsData?: boolean
   shouldDeleteOrigin?: boolean
 }) => {
   const fileNameBase = generateRandomFileNameForPhoto();
-  const { fileExtension } = getFileNamePartsFromStorageUrl(urlOrigin);
+  const { fileExtension } = getFileNamePartsFromStorageUrl(uploadUrl);
   const fileName = `${fileNameBase}.${fileExtension}`;
   const fileBytes = _fileBytes
     ? _fileBytes
-    : await fetch(urlOrigin, { cache: 'no-store' })
-      .then(res => res.arrayBuffer());
+    : await fetch(uploadUrl).then(res => res.arrayBuffer());
   let promise: Promise<string>;
   if (shouldStripGpsData) {
     const fileWithoutGps = await removeGpsData(fileBytes);
     promise = putFile(fileWithoutGps, fileName)
       .then(async url => {
-        if (url && shouldDeleteOrigin) { await deleteFile(urlOrigin); }
+        if (url && shouldDeleteOrigin) { await deleteFile(uploadUrl); }
         return url;
       });
   } else {
     promise = shouldDeleteOrigin
-      ? moveFile(urlOrigin, fileName)
-      : copyFile(urlOrigin, fileName);
+      ? moveFile(uploadUrl, fileName)
+      : copyFile(uploadUrl, fileName);
   }
   return promise.then(async url => {
     // Store optimized photos once original photo is copied/moved
