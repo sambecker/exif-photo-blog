@@ -644,12 +644,18 @@ export default function CommandKClient({
         ? appText.admin.batchEdit
         : appText.admin.batchExitEdit,
       annotation: <IconLock narrow />,
-      path: selectedPhotoIds === undefined
-        ? PATH_GRID_INFERRED
-        : undefined,
-      action: selectedPhotoIds === undefined
-        ? () => setSelectedPhotoIds?.([])
-        : () => setSelectedPhotoIds?.(undefined),
+      action: () => {
+        if (selectedPhotoIds === undefined) {
+          const hasGrid = document.querySelector('[data-photo-grid]') !== null;
+          if (!hasGrid) {
+            router.push(`${PATH_GRID_INFERRED}?batch=true`);
+            return;
+          }
+          setSelectedPhotoIds?.([]);
+        } else {
+          setSelectedPhotoIds?.(undefined);
+        }
+      },
     }, {
       label: <span className="flex items-center gap-3">
         {appText.admin.appInsights}

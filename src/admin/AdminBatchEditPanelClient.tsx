@@ -8,8 +8,6 @@ import { clsx } from 'clsx/lite';
 import { IoCloseSharp } from 'react-icons/io5';
 import { useEffect, useRef, useState } from 'react';
 import { TAG_FAVS, Tags } from '@/tag';
-import { usePathname } from 'next/navigation';
-import { PATH_GRID_INFERRED } from '@/app/path';
 import PhotoTagFieldset from './PhotoTagFieldset';
 import { tagMultiplePhotosAction } from '@/photo/actions';
 import { toastSuccess } from '@/toast';
@@ -27,8 +25,6 @@ export default function AdminBatchEditPanelClient({
   uniqueTags: Tags
 }) {
   const refNote = useRef<HTMLDivElement>(null);
-
-  const pathname = usePathname();
 
   const {
     isUserSignedIn,
@@ -156,7 +152,7 @@ export default function AdminBatchEditPanelClient({
 
   const shouldShowPanel =
     isUserSignedIn &&
-    pathname === PATH_GRID_INFERRED &&
+    document.querySelector('[data-photo-grid]') !== null &&
     selectedPhotoIds !== undefined;
 
   useEffect(() => {

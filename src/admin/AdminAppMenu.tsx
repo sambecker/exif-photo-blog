@@ -57,19 +57,23 @@ export default function AdminAppMenu({
     clearAuthStateAndRedirectIfNecessary,
   } = useAppState();
 
+  const isSelecting = selectedPhotoIds !== undefined;
+
   useEffect(() => {
-    if (pathname !== PATH_GRID_INFERRED) {
+    if (isSelecting) {
       setSelectedPhotoIds?.(undefined);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, setSelectedPhotoIds]);
 
   const appText = useAppText();
 
-  const isSelecting = selectedPhotoIds !== undefined;
-
   const isAltPressed = useIsKeyBeingPressed('alt');
 
   const showAppInsightsLink = photosCountTotal > 0 && !isAltPressed;
+
+  const currentPageHasGrid = () =>
+    document.querySelector('[data-photo-grid]') !== null;
 
   const sectionUpload: MoreMenuSection = useMemo(() => ({ items: [{
     label: appText.admin.uploadPhotos,
@@ -165,8 +169,8 @@ export default function AdminAppMenu({
             size={16}
             className="translate-x-[-0.5px] translate-y-[0.5px]"
           />,
-        ...pathname !== PATH_GRID_INFERRED && {
-          href: PATH_GRID_INFERRED,
+        ...!currentPageHasGrid() && {
+          href: `${PATH_GRID_INFERRED}?batch=true`,
         },
         action: () => {
           if (isSelecting) {
@@ -192,7 +196,6 @@ export default function AdminAppMenu({
 
     return { items };
   }, [
-    pathname,
     appText,
     isSelecting,
     photosCountNeedSync,
