@@ -65,7 +65,8 @@ export const minioCopy = async (
     : fileNameDestination;
   return minioClient().send(new CopyObjectCommand({
     Bucket: MINIO_BUCKET,
-    CopySource: fileNameSource,
+    // Bucket behavior seems to differ from R2 + S3
+    CopySource: `${MINIO_BUCKET}/${fileNameSource}`,
     Key,
   }))
     .then(() => urlForKey(Key));
