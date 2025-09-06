@@ -66,6 +66,7 @@ import {
   getColorFieldsForImageUrl,
   getColorFieldsForPhotoDbInsert,
 } from '@/photo/color/server';
+import { shouldBackfillPhotoStorage } from './update/server';
 
 // Private actions
 
@@ -277,12 +278,9 @@ export const updatePhotoAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
     const photo =
       await convertFormDataToPhotoDbInsertAndLookupRecipeTitle(formData);
-
+   
     let urlToDelete: string | undefined;
-    if (photo.hidden && photo.url.includes(photo.id)) {
-      // Backfill:
-      // Anonymize storage url on update if necessary by
-      // re-running image upload transfer logic
+    if (await shouldBackfillPhotoStorage(photo)) {
       const url = await convertUploadToPhoto({
         uploadUrl: photo.url,
         shouldDeleteOrigin: false,
@@ -511,7 +509,7 @@ export const syncPhotoAction = async (photoId: string, isBatch?: boolean) =>
 
       let urlToDelete: string | undefined;
       if (formDataFromExif) {
-        if (photo.url.includes(photo.id) || shouldStripGpsData) {
+        if (await shouldBackfillPhotoStorage(photo) || shouldStripGpsData) {
           // Anonymize storage url on update if necessary by
           // re-running image upload transfer logic
           const url = await convertUploadToPhoto({
