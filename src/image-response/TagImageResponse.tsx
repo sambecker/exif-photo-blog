@@ -34,7 +34,7 @@ export default function TagImageResponse({
         height,
         fontFamily,
         icon: isTagFavs(tag)
-          ? <span tw="text-amber-500 inline-flex ">
+          ? <span tw="text-amber-500">
             <IconFavs
               size={height * .066}
               style={{
