@@ -60,7 +60,6 @@ export default function PhotoGridPageClient({
           }} />
         </MaskedScroll>
       }
-      canSelect
     />
   );
 }

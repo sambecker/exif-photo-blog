@@ -3,23 +3,21 @@
 import Note from '@/components/Note';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import AppGrid from '@/components/AppGrid';
-import { useAppState } from '@/app/AppState';
 import { clsx } from 'clsx/lite';
 import { IoCloseSharp } from 'react-icons/io5';
 import { useEffect, useRef, useState } from 'react';
 import { TAG_FAVS, Tags } from '@/tag';
-import { usePathname } from 'next/navigation';
-import { PATH_GRID_INFERRED } from '@/app/path';
-import PhotoTagFieldset from './PhotoTagFieldset';
+import PhotoTagFieldset from '@/admin/PhotoTagFieldset';
 import { tagMultiplePhotosAction } from '@/photo/actions';
 import { toastSuccess } from '@/toast';
-import DeletePhotosButton from './DeletePhotosButton';
+import DeletePhotosButton from '@/admin/DeletePhotosButton';
 import { photoQuantityText } from '@/photo';
 import { FaArrowDown, FaCheck } from 'react-icons/fa6';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 import IconFavs from '@/components/icons/IconFavs';
 import IconTag from '@/components/icons/IconTag';
 import { useAppText } from '@/i18n/state/client';
+import { useSelectPhotosState } from './SelectPhotosState';
 
 export default function AdminBatchEditPanelClient({
   uniqueTags,
@@ -28,27 +26,20 @@ export default function AdminBatchEditPanelClient({
 }) {
   const refNote = useRef<HTMLDivElement>(null);
 
-  const pathname = usePathname();
-
   const {
-    isUserSignedIn,
+    canCurrentPageSelectPhotos,
+    isSelectingPhotos,
+    stopSelectingPhotos,
     selectedPhotoIds,
-    setSelectedPhotoIds,
     isPerformingSelectEdit,
     setIsPerformingSelectEdit,
-  } = useAppState();
+  } = useSelectPhotosState();
 
   const appText = useAppText();
 
   const [tags, setTags] = useState<string>();
   const [tagErrorMessage, setTagErrorMessage] = useState('');
   const isInTagMode = tags !== undefined;
-
-  const resetForm = () => {
-    setSelectedPhotoIds?.(undefined);
-    setTags(undefined);
-    setTagErrorMessage('');
-  };
 
   const photosText = photoQuantityText(
     selectedPhotoIds?.length ?? 0,
@@ -101,7 +92,7 @@ export default function AdminBatchEditPanelClient({
           )
             .then(() => {
               toastSuccess(`${photosText} tagged`);
-              resetForm();
+              stopSelectingPhotos?.();
             })
             .finally(() => setIsPerformingSelectEdit?.(false));
         }}
@@ -121,7 +112,7 @@ export default function AdminBatchEditPanelClient({
         photoIds={selectedPhotoIds}
         disabled={isFormDisabled}
         onClick={() => setIsPerformingSelectEdit?.(true)}
-        onDelete={resetForm}
+        onDelete={stopSelectingPhotos}
         onFinish={() => setIsPerformingSelectEdit?.(false)}
       />
       <LoaderButton
@@ -136,7 +127,7 @@ export default function AdminBatchEditPanelClient({
           )
             .then(() => {
               toastSuccess(`${photosText} favorited`);
-              resetForm();
+              stopSelectingPhotos?.();
             })
             .finally(() => setIsPerformingSelectEdit?.(false));
         }}
@@ -150,21 +141,20 @@ export default function AdminBatchEditPanelClient({
       </LoaderButton>
       <LoaderButton
         icon={<IoCloseSharp size={19} />}
-        onClick={() => setSelectedPhotoIds?.(undefined)}
+        onClick={stopSelectingPhotos}
       />
     </>;
 
   const shouldShowPanel =
-    isUserSignedIn &&
-    pathname === PATH_GRID_INFERRED &&
-    selectedPhotoIds !== undefined;
+    isSelectingPhotos &&
+    canCurrentPageSelectPhotos;
 
   useEffect(() => {
     // Steal focus from Admin Menu to hide tooltip
-    if (shouldShowPanel) {
+    if (isSelectingPhotos) {
       refNote.current?.focus();
     }
-  }, [shouldShowPanel]);
+  }, [isSelectingPhotos]);
 
   return shouldShowPanel
     ? <AppGrid
