@@ -646,9 +646,11 @@ export default function CommandKClient({
     }
     adminSection.items.push({
       label: isSelectingPhotos
-        ? appText.admin.batchExitEdit
-        : appText.admin.batchEdit,
+        ? appText.admin.selectPhotosExit
+        : appText.admin.selectPhotos,
       annotation: <IconLock narrow />,
+      // Search by legacy label
+      keywords: ['batch', 'edit'],
       action: () => {
         if (!isSelectingPhotos) {
           startSelectingPhotos?.();

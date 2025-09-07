@@ -149,8 +149,8 @@ export default function AdminAppMenu({
     if (photosCountTotal) {
       items.push({
         label: isSelectingPhotos
-          ? appText.admin.batchExitEdit
-          : appText.admin.batchEditShort,
+          ? appText.admin.selectPhotosExit
+          : appText.admin.selectPhotos,
         icon: isSelectingPhotos
           ? <FiXSquare
             size={15}
