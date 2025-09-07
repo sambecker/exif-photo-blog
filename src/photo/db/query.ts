@@ -32,10 +32,8 @@ import { Lenses, createLensKey } from '@/lens';
 import { migrationForError } from './migration';
 import {
   UPDATE_QUERY_LIMIT,
-  UPDATED_BEFORE_01,
-  UPDATED_BEFORE_02,
+  OUTDATED_UPDATE_AT_THRESHOLD,
 } from '../update';
-import { MAKE_FUJIFILM } from '@/platforms/fujifilm';
 import { Recipes } from '@/recipe';
 import { Years } from '@/years';
 import { PhotoColorData } from '../color/client';
@@ -630,13 +628,10 @@ export const getPhoto = async (
 
 const outdatedWhereClauses = [
   `updated_at < $1`,
-  `(updated_at < $2 AND make = $3)`,
 ];
 
 const outdatedWhereValues = [
-  UPDATED_BEFORE_01.toISOString(),
-  UPDATED_BEFORE_02.toISOString(),
-  MAKE_FUJIFILM,
+  OUTDATED_UPDATE_AT_THRESHOLD.toISOString(),
 ];
 
 const needsAiTextWhereClauses =
