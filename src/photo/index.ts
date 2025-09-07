@@ -19,7 +19,6 @@ import camelcaseKeys from 'camelcase-keys';
 import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
-import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import { PhotoUpdateStatus, generatePhotoUpdateStatus } from './update';
 import { AppTextState } from '@/i18n/state';
 import { PhotoColorData } from './color/client';
@@ -64,7 +63,7 @@ export interface PhotoExif {
   exposureCompensation?: number
   latitude?: number
   longitude?: number
-  film?: FujifilmSimulation
+  film?: string
   recipeData?: string
   takenAt?: string
   takenAtNaive?: string
