@@ -121,6 +121,7 @@ export default function MoreMenuItem({
             'text-sm text-main hover:text-main',
             // Enlarge clickable area
             '-m-2 p-2',
+            keyCommand && 'sm:-mr-10',
           )}
           onLoad={() => {
             action?.();
@@ -143,7 +144,7 @@ export default function MoreMenuItem({
       {keyCommand &&
         <KeyCommand
           modifier={keyCommandModifier}
-          className="hidden! sm:inline-flex!"
+          className="max-sm:hidden pointer-events-none"
         >
           {keyCommand}
         </KeyCommand>}
