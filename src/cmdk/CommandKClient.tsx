@@ -185,7 +185,6 @@ export default function CommandKClient({
     isSelectingPhotos,
     startSelectingPhotos,
     stopSelectingPhotos,
-    selectedPhotoIds,
   } = useSelectPhotosState();
 
   const {
@@ -646,9 +645,9 @@ export default function CommandKClient({
       });
     }
     adminSection.items.push({
-      label: selectedPhotoIds === undefined
-        ? appText.admin.batchEdit
-        : appText.admin.batchExitEdit,
+      label: isSelectingPhotos
+        ? appText.admin.batchExitEdit
+        : appText.admin.batchEdit,
       annotation: <IconLock narrow />,
       action: () => {
         if (!isSelectingPhotos) {

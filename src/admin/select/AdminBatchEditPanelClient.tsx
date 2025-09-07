@@ -31,7 +31,6 @@ export default function AdminBatchEditPanelClient({
     isSelectingPhotos,
     stopSelectingPhotos,
     selectedPhotoIds,
-    setSelectedPhotoIds,
     isPerformingSelectEdit,
     setIsPerformingSelectEdit,
   } = useSelectPhotosState();
@@ -41,12 +40,6 @@ export default function AdminBatchEditPanelClient({
   const [tags, setTags] = useState<string>();
   const [tagErrorMessage, setTagErrorMessage] = useState('');
   const isInTagMode = tags !== undefined;
-
-  const resetForm = () => {
-    setSelectedPhotoIds?.([]);
-    setTags(undefined);
-    setTagErrorMessage('');
-  };
 
   const photosText = photoQuantityText(
     selectedPhotoIds?.length ?? 0,
@@ -99,7 +92,7 @@ export default function AdminBatchEditPanelClient({
           )
             .then(() => {
               toastSuccess(`${photosText} tagged`);
-              resetForm();
+              stopSelectingPhotos?.();
             })
             .finally(() => setIsPerformingSelectEdit?.(false));
         }}
@@ -119,7 +112,7 @@ export default function AdminBatchEditPanelClient({
         photoIds={selectedPhotoIds}
         disabled={isFormDisabled}
         onClick={() => setIsPerformingSelectEdit?.(true)}
-        onDelete={resetForm}
+        onDelete={stopSelectingPhotos}
         onFinish={() => setIsPerformingSelectEdit?.(false)}
       />
       <LoaderButton
@@ -134,7 +127,7 @@ export default function AdminBatchEditPanelClient({
           )
             .then(() => {
               toastSuccess(`${photosText} favorited`);
-              resetForm();
+              stopSelectingPhotos?.();
             })
             .finally(() => setIsPerformingSelectEdit?.(false));
         }}

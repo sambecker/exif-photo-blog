@@ -88,7 +88,7 @@ export default function PhotoGrid({
               className={clsx(
                 'flex w-full h-full',
                 // Prevent photo navigation when selecting
-                selectedPhotoIds?.length !== undefined && 'pointer-events-none',
+                isSelectingPhotos && 'pointer-events-none',
               )}
               {...{
                 photo,

@@ -6,6 +6,7 @@ import { PARAM_SELECT, PATH_GRID_INFERRED } from '@/app/path';
 import { usePathname } from 'next/navigation';
 import { useAppState } from '@/app/AppState';
 import useClientSearchParams from '@/utility/useClientSearchParams';
+import { pushPathWithEvent } from '@/utility/url';
 
 export const DATA_KEY_PHOTO_GRID = 'data-photo-grid';
 
@@ -21,7 +22,11 @@ export default function SelectPhotosProvider({
   const searchParamsSelect = useClientSearchParams(PARAM_SELECT);
 
   const [canCurrentPageSelectPhotos, setCanCurrentPageSelectPhotos] =
-    useState(true);
+    useState(false);
+  const [selectedPhotoIds, setSelectedPhotoIds] =
+    useState<string[]>([]);
+  const [isPerformingSelectEdit, setIsPerformingSelectEdit] =
+    useState(false);
 
   useEffect(() => {
     setCanCurrentPageSelectPhotos(document
@@ -33,31 +38,22 @@ export default function SelectPhotosProvider({
     searchParamsSelect === 'true'
   , [isUserSignedIn, searchParamsSelect]);
     
-  const startSelectingPhotos = useCallback(() => {
-    window.history.pushState(
-      null,
-      '',
-      canCurrentPageSelectPhotos
-        ? `${pathname}?${PARAM_SELECT}=true`
-        : `${PATH_GRID_INFERRED}?batch=true`,
-    );
-    dispatchEvent(new Event('pushstate'));
-  }, [canCurrentPageSelectPhotos, pathname]);
+  const startSelectingPhotos = useCallback(() =>
+    pushPathWithEvent(canCurrentPageSelectPhotos
+      ? `${pathname}?${PARAM_SELECT}=true`
+      // Redirect to grid if current view does not support photo selection
+      : `${PATH_GRID_INFERRED}?${PARAM_SELECT}=true`)
+  , [canCurrentPageSelectPhotos, pathname]);
   
-  const stopSelectingPhotos = useCallback(() => {
-    window.history.pushState(null, '', pathname);
-    dispatchEvent(new Event('pushstate'));
-  }, [pathname]);
+  const stopSelectingPhotos = useCallback(() =>
+    pushPathWithEvent(pathname)
+  , [pathname]);
 
   useEffect(() => {
-    if (!isSelectingPhotos) { setSelectedPhotoIds([]); }
+    if (!isSelectingPhotos) {
+      setSelectedPhotoIds([]);
+    }
   }, [isSelectingPhotos]);
-
-  const [selectedPhotoIds, setSelectedPhotoIds] =
-    useState<string[]>([]);
-
-  const [isPerformingSelectEdit, setIsPerformingSelectEdit] =
-    useState(false);
 
   return (
     <SelectPhotosContext.Provider value={{
