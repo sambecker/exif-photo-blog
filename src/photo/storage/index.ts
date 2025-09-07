@@ -128,7 +128,7 @@ const getTestOptimizedPhotoUrl = (url: string) => {
   return getOptimizedUrl({
     urlBase,
     fileNameBase,
-    suffix: OPTIMIZED_SUFFIX_DEFAULT,
+    suffix: 'sm',
   });
 };
 
