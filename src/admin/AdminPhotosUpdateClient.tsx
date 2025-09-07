@@ -129,7 +129,7 @@ export default function AdminPhotosUpdateClient({
             <div className="font-bold">
               Photo updates: {statusText}
             </div>
-            Sync to capture new EXIF fields, improve blur data,
+            Sync to capture new EXIF fields, optimize image data,
             {' '}
             use AI to generate missing text (if configured)
           </div>
