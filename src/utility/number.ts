@@ -88,12 +88,13 @@ export const formatNumberToFraction = (number: number) => {
   }
 };
 
-export const formatBytesToMB = (
+export const formatBytes = (
   bytes: number,
   byteSize = 1000,
-  precision = 1,
 ) =>
-  `${(bytes / byteSize / byteSize).toFixed(precision)}MB`;
+  bytes < byteSize * byteSize
+    ? `${Math.round(bytes / byteSize)}KB`
+    : `${(bytes / byteSize / byteSize).toFixed(1)}MB`;
 
 export const convertNumberToRomanNumeral = (number: number) => {
   const romanNumerals = [

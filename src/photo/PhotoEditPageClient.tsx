@@ -15,9 +15,11 @@ import ExifCaptureButton from '@/admin/ExifCaptureButton';
 import { useState } from 'react';
 import { Recipes } from '@/recipe';
 import { Films } from '@/film';
+import { StorageListResponse } from '@/platforms/storage';
 
 export default function PhotoEditPageClient({
   photo,
+  photoStorageUrls,
   uniqueTags,
   uniqueRecipes,
   uniqueFilms,
@@ -26,6 +28,7 @@ export default function PhotoEditPageClient({
   blurData,
 }: {
   photo: Photo
+  photoStorageUrls?: StorageListResponse
   uniqueTags: Tags
   uniqueRecipes: Recipes
   uniqueFilms: Films
@@ -77,6 +80,7 @@ export default function PhotoEditPageClient({
       <PhotoForm
         type="edit"
         initialPhotoForm={photoForm}
+        photoStorageUrls={photoStorageUrls}
         updatedExifData={updatedExifData}
         updatedBlurData={blurData}
         uniqueTags={uniqueTags}

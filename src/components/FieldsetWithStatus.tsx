@@ -41,6 +41,7 @@ export default function FieldsetWithStatus({
   type = 'text',
   inputRef: inputRefProp,
   accessory,
+  footer,
   hideLabel,
   tabIndex,
 }: {
@@ -70,7 +71,8 @@ export default function FieldsetWithStatus({
   capitalize?: boolean
   type?: FieldSetType
   inputRef?: RefObject<HTMLInputElement | null>
-  accessory?: React.ReactNode
+  accessory?: ReactNode
+  footer?: ReactNode
   hideLabel?: boolean
   tabIndex?: number
 }) {
@@ -240,6 +242,9 @@ export default function FieldsetWithStatus({
             {accessory}
           </div>}
         </div>
+        {footer && <div className="mt-3">
+          {footer}
+        </div>}
       </div>
   );
 };

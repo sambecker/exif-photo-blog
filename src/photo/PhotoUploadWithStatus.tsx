@@ -1,6 +1,5 @@
 'use client';
 
-import { uploadPhotoFromClient } from '@/platforms/storage';
 import { usePathname, useRouter } from 'next/navigation';
 import { PATH_ADMIN_UPLOADS, pathForAdminUploadUrl } from '@/app/path';
 import ImageInput from '../components/ImageInput';
@@ -10,6 +9,7 @@ import { RefObject, useTransition, useRef, useEffect } from 'react';
 import Spinner from '@/components/Spinner';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 import { useAppText } from '@/i18n/state/client';
+import { uploadPhotoFromClient } from './storage';
 
 export default function PhotoUploadWithStatus({
   inputRef,
