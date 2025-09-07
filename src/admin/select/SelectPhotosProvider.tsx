@@ -60,7 +60,6 @@ export default function SelectPhotosProvider({
       const isSomePhotoGridVisible = photoGrids
         .some(element => isElementPartiallyInViewport(element, -20));
       if (!isSomePhotoGridVisible) {
-        console.log('scrolling to photo grid');
         photoGrids[0]?.scrollIntoView({ behavior: 'smooth' });
       }
     } else {
