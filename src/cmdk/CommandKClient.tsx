@@ -93,6 +93,7 @@ import { formatDistanceToNow } from 'date-fns';
 import IconCheck from '@/components/icons/IconCheck';
 import { getSortStateFromPath } from '@/photo/sort/path';
 import IconSort from '@/components/icons/IconSort';
+import { useSelectPhotosState } from '@/admin/select/SelectPhotosState';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -161,8 +162,6 @@ export default function CommandKClient({
     uploadsCount,
     tagsCount,
     recipesCount,
-    selectedPhotoIds,
-    setSelectedPhotoIds,
     insightsIndicatorStatus,
     isGridHighDensity,
     areZoomControlsShown,
@@ -181,6 +180,13 @@ export default function CommandKClient({
     setShouldDebugInsights,
     setShouldDebugRecipeOverlays,
   } = useAppState();
+
+  const {
+    isSelectingPhotos,
+    startSelectingPhotos,
+    stopSelectingPhotos,
+    selectedPhotoIds,
+  } = useSelectPhotosState();
 
   const {
     doesPathOfferSort,
@@ -645,15 +651,10 @@ export default function CommandKClient({
         : appText.admin.batchExitEdit,
       annotation: <IconLock narrow />,
       action: () => {
-        if (selectedPhotoIds === undefined) {
-          const hasGrid = document.querySelector('[data-photo-grid]') !== null;
-          if (!hasGrid) {
-            router.push(`${PATH_GRID_INFERRED}?batch=true`);
-            return;
-          }
-          setSelectedPhotoIds?.([]);
+        if (!isSelectingPhotos) {
+          startSelectingPhotos?.();
         } else {
-          setSelectedPhotoIds?.(undefined);
+          stopSelectingPhotos?.();
         }
       },
     }, {

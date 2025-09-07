@@ -8,9 +8,10 @@ import AnimateItems from '@/components/AnimateItems';
 import { GRID_ASPECT_RATIO } from '@/app/config';
 import { useAppState } from '@/app/AppState';
 import SelectTileOverlay from '@/components/SelectTileOverlay';
-import { ReactNode, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { ReactNode } from 'react';
 import { GRID_GAP_CLASSNAME } from '@/components';
+import { useSelectPhotosState } from '@/admin/select/SelectPhotosState';
+import { DATA_KEY_PHOTO_GRID } from '@/admin/select/SelectPhotosProvider';
 
 export default function PhotoGrid({
   photos,
@@ -39,28 +40,17 @@ export default function PhotoGrid({
   onAnimationComplete?: () => void
 } & PhotoSetCategory) {
   const {
-    isUserSignedIn,
-    selectedPhotoIds,
-    setSelectedPhotoIds,
     isGridHighDensity,
   } = useAppState();
 
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  // Check for batch editing parameter on mount
-  useEffect(() => {
-    if (searchParams.get('batch') === 'true') {
-      setSelectedPhotoIds?.([]);
-      // Clean up the URL parameter
-      const url = new URL(window.location.href);
-      url.searchParams.delete('batch');
-      router.replace(url.pathname + url.search);
-    }
-  }, [searchParams, setSelectedPhotoIds, router]);
+  const {
+    isSelectingPhotos,
+    selectedPhotoIds,
+    setSelectedPhotoIds,
+  } = useSelectPhotosState();
 
   return (
-    <div data-photo-grid>
+    <div {...{ [DATA_KEY_PHOTO_GRID]: true }}>
       <AnimateItems
         className={clsx(
           'grid',
@@ -110,7 +100,7 @@ export default function PhotoGrid({
                   : undefined,
               }}
             />
-            {isUserSignedIn && selectedPhotoIds !== undefined &&
+            {isSelectingPhotos &&
               <SelectTileOverlay
                 isSelected={isSelected}
                 onSelectChange={() => setSelectedPhotoIds?.(isSelected

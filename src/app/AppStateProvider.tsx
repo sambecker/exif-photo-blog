@@ -93,13 +93,11 @@ export default function AppStateProvider({
     useState<string>();
   const [userEmailEager, setUserEmailEager] =
     useState<string>();
+  const isUserSignedIn = Boolean(userEmail);
+  const isUserSignedInEager = Boolean(userEmailEager);
   // ADMIN
   const [adminUpdateTimes, setAdminUpdateTimes] =
     useState<Date[]>([]);
-  const [selectedPhotoIds, setSelectedPhotoIds] =
-    useState<string[] | undefined>();
-  const [isPerformingSelectEdit, setIsPerformingSelectEdit] =
-    useState(false);
   // UPLOAD
   const uploadInputRef = useRef<HTMLInputElement>(null);
   const [uploadState, _setUploadState] = useState(INITIAL_UPLOAD_STATE);
@@ -161,8 +159,6 @@ export default function AppStateProvider({
       setUserEmail(auth?.user?.email ?? undefined);
     }
   }, [auth, authError]);
-  const isUserSignedIn = Boolean(userEmail);
-  const isUserSignedInEager = Boolean(userEmailEager);
 
   const {
     data: adminData,
@@ -260,10 +256,6 @@ export default function AppStateProvider({
         isLoadingAdminData,
         refreshAdminData,
         updateAdminData,
-        selectedPhotoIds,
-        setSelectedPhotoIds,
-        isPerformingSelectEdit,
-        setIsPerformingSelectEdit,
         // UPLOAD
         uploadInputRef,
         startUpload,

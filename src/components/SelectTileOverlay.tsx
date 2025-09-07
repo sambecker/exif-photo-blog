@@ -2,8 +2,8 @@
 
 import { clsx } from 'clsx/lite';
 import SimpleCheckbox from './primitives/SimpleCheckbox';
-import { useAppState } from '@/app/AppState';
 import Spinner from './Spinner';
+import { useSelectPhotosState } from '@/admin/select/SelectPhotosState';
 
 export default function SelectTileOverlay({
   isSelected,
@@ -12,7 +12,7 @@ export default function SelectTileOverlay({
   isSelected: boolean
   onSelectChange: () => void
 }) {
-  const { isPerformingSelectEdit } = useAppState();
+  const { isPerformingSelectEdit } = useSelectPhotosState();
 
   return (
     <div className={clsx(

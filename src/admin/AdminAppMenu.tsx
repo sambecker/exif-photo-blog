@@ -15,7 +15,7 @@ import { IoArrowDown, IoArrowUp } from 'react-icons/io5';
 import { clsx } from 'clsx/lite';
 import AdminAppInfoIcon from './AdminAppInfoIcon';
 import { signOutAction } from '@/auth/actions';
-import { ComponentProps, useEffect, useMemo } from 'react';
+import { ComponentProps, useMemo } from 'react';
 import useIsKeyBeingPressed from '@/utility/useIsKeyBeingPressed';
 import IconPhoto from '@/components/icons/IconPhoto';
 import IconUpload from '@/components/icons/IconUpload';
@@ -31,8 +31,8 @@ import Spinner from '@/components/Spinner';
 import { useAppText } from '@/i18n/state/client';
 import SwitcherItemMenu from '@/components/switcher/SwitcherItemMenu';
 import { MoreMenuSection } from '@/components/more/MoreMenu';
-import { usePathname } from 'next/navigation';
 import { FiXSquare } from 'react-icons/fi';
+import { useSelectPhotosState } from './select/SelectPhotosState';
 
 export default function AdminAppMenu({
   isOpen,
@@ -41,39 +41,30 @@ export default function AdminAppMenu({
   isOpen?: boolean
   setIsOpen?: (isOpen: boolean) => void
 }) {
-  const pathname = usePathname();
-
   const {
     photosCountTotal = 0,
     photosCountNeedSync = 0,
     uploadsCount = 0,
     tagsCount = 0,
     recipesCount = 0,
-    selectedPhotoIds,
     isLoadingAdminData,
     startUpload,
-    setSelectedPhotoIds,
     refreshAdminData,
     clearAuthStateAndRedirectIfNecessary,
   } = useAppState();
 
-  const isSelecting = selectedPhotoIds !== undefined;
-
-  useEffect(() => {
-    if (isSelecting) {
-      setSelectedPhotoIds?.(undefined);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, setSelectedPhotoIds]);
+  const {
+    canCurrentPageSelectPhotos,
+    isSelectingPhotos,
+    startSelectingPhotos,
+    stopSelectingPhotos,
+  } = useSelectPhotosState();
 
   const appText = useAppText();
 
   const isAltPressed = useIsKeyBeingPressed('alt');
 
   const showAppInsightsLink = photosCountTotal > 0 && !isAltPressed;
-
-  const currentPageHasGrid = () =>
-    document.querySelector('[data-photo-grid]') !== null;
 
   const sectionUpload: MoreMenuSection = useMemo(() => ({ items: [{
     label: appText.admin.uploadPhotos,
@@ -157,10 +148,10 @@ export default function AdminAppMenu({
     }
     if (photosCountTotal) {
       items.push({
-        label: isSelecting
+        label: isSelectingPhotos
           ? appText.admin.batchExitEdit
           : appText.admin.batchEditShort,
-        icon: isSelecting
+        icon: isSelectingPhotos
           ? <FiXSquare
             size={15}
             className="translate-x-[-0.75px] translate-y-[0.5px]"
@@ -169,16 +160,12 @@ export default function AdminAppMenu({
             size={16}
             className="translate-x-[-0.5px] translate-y-[0.5px]"
           />,
-        ...!currentPageHasGrid() && {
+        ...!canCurrentPageSelectPhotos && {
           href: `${PATH_GRID_INFERRED}?batch=true`,
         },
-        action: () => {
-          if (isSelecting) {
-            setSelectedPhotoIds?.(undefined);
-          } else {
-            setSelectedPhotoIds?.([]);
-          }
-        },
+        action: isSelectingPhotos
+          ? stopSelectingPhotos
+          : startSelectingPhotos,
       });
     }
     items.push({
@@ -197,11 +184,13 @@ export default function AdminAppMenu({
     return { items };
   }, [
     appText,
-    isSelecting,
+    canCurrentPageSelectPhotos,
+    isSelectingPhotos,
+    startSelectingPhotos,
+    stopSelectingPhotos,
     photosCountNeedSync,
     photosCountTotal,
     recipesCount,
-    setSelectedPhotoIds,
     showAppInsightsLink,
     tagsCount,
     uploadsCount,
