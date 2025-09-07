@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { useAppState } from '@/app/AppState';
 import useClientSearchParams from '@/utility/useClientSearchParams';
 import { pushPathWithEvent } from '@/utility/url';
+import { isElementPartiallyInViewport } from '@/utility/dom';
 
 export const DATA_KEY_PHOTO_GRID = 'data-photo-grid';
 
@@ -28,10 +29,14 @@ export default function SelectPhotosProvider({
   const [isPerformingSelectEdit, setIsPerformingSelectEdit] =
     useState(false);
 
+  const getPhotoGridElements = useCallback(() =>
+    document.querySelectorAll(`[${DATA_KEY_PHOTO_GRID}]`)
+  , []);
+
   useEffect(() => {
-    setCanCurrentPageSelectPhotos(document
-      .querySelector(`[${DATA_KEY_PHOTO_GRID}]`) !== null);
-  }, [pathname]);
+    const doesPageHavePhotoGrids = getPhotoGridElements().length > 0;
+    setCanCurrentPageSelectPhotos(doesPageHavePhotoGrids);
+  }, [pathname, getPhotoGridElements]);
 
   const isSelectingPhotos = useMemo(() =>
     isUserSignedIn &&
@@ -50,10 +55,18 @@ export default function SelectPhotosProvider({
   , [pathname]);
 
   useEffect(() => {
-    if (!isSelectingPhotos) {
+    if (isSelectingPhotos) {
+      const photoGrids = Array.from(getPhotoGridElements());
+      const isSomePhotoGridVisible = photoGrids
+        .some(element => isElementPartiallyInViewport(element, -20));
+      if (!isSomePhotoGridVisible) {
+        console.log('scrolling to photo grid');
+        photoGrids[0]?.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
       setSelectedPhotoIds([]);
     }
-  }, [isSelectingPhotos]);
+  }, [isSelectingPhotos, getPhotoGridElements]);
 
   return (
     <SelectPhotosContext.Provider value={{
