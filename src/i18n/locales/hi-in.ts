@@ -1,7 +1,7 @@
 import { I18N } from '..';
 export { hi as default } from 'date-fns/locale/hi';
 
-export const TEXT = {
+export const TEXT: I18N = {
   photo: {
     photo: 'फोटो',
     photoPlural: 'फोटोवां',
@@ -91,7 +91,7 @@ export const TEXT = {
     system: 'सिस्टम',
     light: 'लाइट मोड',
     dark: 'डार्क मोड',
-  }, 
+  },
   auth: {
     signIn: 'साइन इन करें',
     signOut: 'साइन आउट करें',
@@ -111,9 +111,8 @@ export const TEXT = {
     manageLenses: 'लेंस प्रबंधित करें',
     manageTags: 'टैग प्रबंधित करें',
     manageRecipes: 'रेसिपी प्रबंधित करें',
-    batchEdit: 'फोटो बैच संपादित करें...',
-    batchEditShort: 'बैच संपादित करें...',
-    batchExitEdit: 'बैच संपादन से बाहर निकलें',
+    selectPhotos: 'फोटो चुनें...',
+    selectPhotosExit: 'चयन बंद करें',
     appInsights: 'ऐप इनसाइट्स',
     appConfig: 'ऐप कॉन्फ़िगरेशन',
     edit: 'संपादित करें',
@@ -124,6 +123,7 @@ export const TEXT = {
     download: 'डाउनलोड करें',
     sync: 'सिंक करें',
     delete: 'हटाएं',
+    // eslint-disable-next-line max-len
     deleteConfirm: 'क्या आप सुनिश्चित हैं कि "{{photoTitle}}" को हटाना चाहते हैं?',
   },
   onboarding: {
@@ -132,7 +132,7 @@ export const TEXT = {
     setupSignIn: 'फोटो अपलोड करने के लिए साइन इन करें',
     setupFirstPhoto: 'अपनी पहली फोटो जोड़ें',
     // eslint-disable-next-line max-len
-    setupConfig: 'साइट का नाम और अन्य कॉन्फ़िगरेशन बदलने के लिए पर्यावरण चर संपादित करें जो कि',
+    setupConfig: 'साइट का नाम और अन्य कॉन्फ़िगरेशन बदलने के लिए पर्यावरण चर संपादित करें',
   },
   misc: {
     loading: 'लोड हो रहा है...',
