@@ -1,8 +1,11 @@
+import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
 export default function useClientSearchParams(
   paramKey: string,
 ): string | undefined {
+  const pathname = usePathname();
+
   const [paramValue, setParamValue] = useState<string>();
 
   const captureParam = useCallback(() => {
@@ -19,6 +22,8 @@ export default function useClientSearchParams(
       window.removeEventListener('replacestate', captureParam);
     };
   }, [captureParam]);
+
+  useEffect(captureParam, [captureParam, pathname]);
 
   return paramValue;
 };
