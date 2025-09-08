@@ -3,10 +3,10 @@
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { SelectPhotosContext } from './SelectPhotosState';
 import { PARAM_SELECT, PATH_GRID_INFERRED } from '@/app/path';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAppState } from '@/app/AppState';
 import useClientSearchParams from '@/utility/useClientSearchParams';
-import { pushPathWithEvent } from '@/utility/url';
+import { replacePathWithEvent } from '@/utility/url';
 import { isElementPartiallyInViewport } from '@/utility/dom';
 
 export const DATA_KEY_PHOTO_GRID = 'data-photo-grid';
@@ -16,6 +16,8 @@ export default function SelectPhotosProvider({
 }: {
   children: ReactNode
 }) {
+  const router = useRouter();
+
   const pathname = usePathname();
 
   const { isUserSignedIn } = useAppState();
@@ -44,14 +46,15 @@ export default function SelectPhotosProvider({
   , [isUserSignedIn, searchParamsSelect]);
     
   const startSelectingPhotos = useCallback(() =>
-    pushPathWithEvent(canCurrentPageSelectPhotos
-      ? `${pathname}?${PARAM_SELECT}=true`
+    canCurrentPageSelectPhotos
+      // Use replacePathWithEvent because only query params change
+      ? replacePathWithEvent(`${pathname}?${PARAM_SELECT}=true`)
       // Redirect to grid if current view does not support photo selection
-      : `${PATH_GRID_INFERRED}?${PARAM_SELECT}=true`)
-  , [canCurrentPageSelectPhotos, pathname]);
+      : router.push(`${PATH_GRID_INFERRED}?${PARAM_SELECT}=true`)
+  , [router, canCurrentPageSelectPhotos, pathname]);
   
   const stopSelectingPhotos = useCallback(() =>
-    pushPathWithEvent(pathname)
+    replacePathWithEvent(pathname)
   , [pathname]);
 
   useEffect(() => {

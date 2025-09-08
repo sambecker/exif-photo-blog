@@ -8,7 +8,6 @@ import {
   PATH_ADMIN_RECIPES,
   PATH_ADMIN_TAGS,
   PATH_ADMIN_UPLOADS,
-  PATH_GRID_INFERRED,
 } from '@/app/path';
 import { useAppState } from '@/app/AppState';
 import { IoArrowDown, IoArrowUp } from 'react-icons/io5';
@@ -54,7 +53,6 @@ export default function AdminAppMenu({
   } = useAppState();
 
   const {
-    canCurrentPageSelectPhotos,
     isSelectingPhotos,
     startSelectingPhotos,
     stopSelectingPhotos,
@@ -160,9 +158,6 @@ export default function AdminAppMenu({
             size={16}
             className="translate-x-[-0.5px] translate-y-[0.5px]"
           />,
-        ...!canCurrentPageSelectPhotos && {
-          href: `${PATH_GRID_INFERRED}?batch=true`,
-        },
         action: isSelectingPhotos
           ? stopSelectingPhotos
           : startSelectingPhotos,
@@ -184,7 +179,6 @@ export default function AdminAppMenu({
     return { items };
   }, [
     appText,
-    canCurrentPageSelectPhotos,
     isSelectingPhotos,
     startSelectingPhotos,
     stopSelectingPhotos,
