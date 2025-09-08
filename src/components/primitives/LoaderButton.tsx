@@ -61,7 +61,6 @@ export default function LoaderButton({
         }
       }}
       className={clsx(
-        'font-mono',
         ...(styleAs !== 'button'
           ? [
             'link h-4 active:text-medium',
