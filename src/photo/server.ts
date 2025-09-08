@@ -1,6 +1,6 @@
 import {
-  getExtensionFromStorageUrl,
-  getIdFromStorageUrl,
+  deleteFilesWithPrefix,
+  getFileNamePartsFromStorageUrl,
 } from '@/platforms/storage';
 import { convertFormDataToPhotoDbInsert } from '@/photo/form';
 import {
@@ -20,6 +20,7 @@ import {
   getFujifilmRecipeFromMakerNote,
 } from '@/platforms/fujifilm/recipe';
 import {
+  deletePhoto,
   getRecipeTitleForData,
   updateAllMatchingRecipeTitles,
 } from './db/query';
@@ -28,8 +29,9 @@ import { convertExifToFormData } from './form/server';
 import { getColorFieldsForPhotoForm } from './color/server';
 import exifr from 'exifr';
 
-const IMAGE_WIDTH_RESIZE = 200;
 const IMAGE_WIDTH_BLUR = 200;
+const IMAGE_WIDTH_DEFAULT = 200;
+const IMAGE_QUALITY_DEFAULT = 80;
 
 export const extractImageDataFromBlobPath = async (
   blobPath: string,
@@ -54,9 +56,10 @@ export const extractImageDataFromBlobPath = async (
 
   const url = decodeURIComponent(blobPath);
 
-  const blobId = getIdFromStorageUrl(url);
-
-  const extension = getExtensionFromStorageUrl(url);
+  const {
+    fileExtension: extension,
+    fileId: blobId,
+  } = getFileNamePartsFromStorageUrl(url);
 
   let exifData: ExifData | undefined;
   let exifrData: any | undefined;
@@ -146,13 +149,13 @@ const generateBase64 = async (
 ) => 
   (middleware ? middleware(sharp(image)) : sharp(image))
     .withMetadata()
-    .toFormat('jpeg', { quality: 90 })
+    .toFormat('jpeg', { quality: IMAGE_QUALITY_DEFAULT })
     .toBuffer()
     .then(data => `data:image/jpeg;base64,${data.toString('base64')}`);
 
 const resizeImage = async (
   image: ArrayBuffer,
-  width = IMAGE_WIDTH_RESIZE,
+  width = IMAGE_WIDTH_DEFAULT,
 ) => 
   generateBase64(image, sharp => sharp
     .resize(width),
@@ -194,6 +197,16 @@ export const blurImageFromUrl = async (url: string) =>
       console.log(`Error blurring image from URL (${url})`, e);
       return '';
     });
+
+export const resizeImageToBytes = async (
+  image: ArrayBuffer,
+  width: number,
+  quality = IMAGE_QUALITY_DEFAULT,
+) => 
+  sharp(image)
+    .resize(width)
+    .toFormat('jpeg', { quality })
+    .toBuffer();
 
 const GPS_NULL_STRING = '-';
 
@@ -260,3 +273,13 @@ export const propagateRecipeTitleIfNecessary = async (
     );
   }
 };
+
+export const deletePhotoAndFiles = async (
+  photoId: string,
+  photoUrl: string,
+) =>
+  deletePhoto(photoId)
+    .then(() => {
+      const { fileNameBase } = getFileNamePartsFromStorageUrl(photoUrl);
+      return deleteFilesWithPrefix(fileNameBase);
+    });

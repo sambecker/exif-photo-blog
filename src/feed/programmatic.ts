@@ -1,8 +1,6 @@
 import { descriptionForPhoto, Photo, titleForPhoto } from '@/photo';
-import {
-  getNextImageUrlForRequest,
-  NextImageSize,
-} from '@/platforms/next-image';
+import { getOptimizedPhotoUrl } from '@/photo/storage';
+import { NextImageSize } from '@/platforms/next-image';
 
 export const FEED_PHOTO_REQUEST_LIMIT = 40;
 
@@ -20,7 +18,7 @@ export const generateFeedMedia = (
   photo: Photo,
   size: NextImageSize,
 ): FeedMedia => ({
-  url: getNextImageUrlForRequest({ imageUrl: photo.url, size }),
+  url: getOptimizedPhotoUrl({ imageUrl: photo.url, size }),
   width: size,
   height: Math.round(size / photo.aspectRatio),
 });

@@ -14,7 +14,6 @@ export default function PhotoGridInfinite({
   excludeFromFeeds,
   canStart,
   animateOnFirstLoadOnly,
-  canSelect,
   ...categories
 }: {
   cacheKey: string
@@ -40,7 +39,6 @@ export default function PhotoGridInfinite({
           canStart,
           onLastPhotoVisible,
           animateOnFirstLoadOnly,
-          canSelect,
         }} />}
     </InfinitePhotoScroll>
   );

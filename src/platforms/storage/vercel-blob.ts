@@ -1,8 +1,8 @@
 import { PATH_API_VERCEL_BLOB_UPLOAD } from '@/app/path';
 import { copy, del, list, put } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
-import { getFilePathFromStorageUrl, StorageListResponse } from '.';
-import { formatBytesToMB } from '@/utility/number';
+import { getFileNamePartsFromStorageUrl, StorageListResponse } from '.';
+import { formatBytes } from '@/utility/number';
 
 const VERCEL_BLOB_STORE_ID = process.env.BLOB_READ_WRITE_TOKEN?.match(
   /^vercel_blob_rw_([a-z0-9]+)_[a-z0-9]+$/i,
@@ -55,7 +55,7 @@ export const vercelBlobList = (
 ): Promise<StorageListResponse> => list({ prefix })
   .then(({ blobs }) => blobs.map(({ url, uploadedAt, size }) => ({
     url,
-    fileName: getFilePathFromStorageUrl(url),
+    fileName: getFileNamePartsFromStorageUrl(url).fileName,
     uploadedAt,
-    size: formatBytesToMB(size),
+    size: formatBytes(size),
   })));

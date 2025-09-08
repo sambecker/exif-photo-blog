@@ -70,7 +70,7 @@ const IMAGE_QUALITY =
 const nextConfig: NextConfig = {
   images: {
     imageSizes: [200],
-    qualities: [IMAGE_QUALITY],
+    qualities: [75, IMAGE_QUALITY],
     remotePatterns,
     minimumCacheTTL: 31536000,
   },

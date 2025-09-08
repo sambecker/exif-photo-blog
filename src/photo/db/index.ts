@@ -9,7 +9,7 @@ export const PHOTO_DEFAULT_LIMIT = 100;
 
 // These must mirror utility/string.ts parameterization
 const CHARACTERS_TO_REMOVE = [',', '/'];
-const CHARACTERS_TO_REPLACE = ['+', '&', '|', ' '];
+const CHARACTERS_TO_REPLACE = ['+', '&', '|', ':', '_', ' '];
 
 const parameterizeForDb = (field: string) =>
   `REGEXP_REPLACE(

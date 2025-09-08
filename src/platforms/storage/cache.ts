@@ -1,5 +1,8 @@
 import { unstable_noStore } from 'next/cache';
-import { getStoragePhotoUrls, getStorageUploadUrls } from '@/platforms/storage';
+import {
+  getStoragePhotoUrls,
+  getStorageUploadUrls,
+} from '@/photo/storage';
 
 export const getStorageUploadUrlsNoStore: typeof getStorageUploadUrls =
   (...args) => {

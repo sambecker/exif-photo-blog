@@ -36,7 +36,6 @@ import Spinner from '@/components/Spinner';
 import usePreventNavigation from '@/utility/usePreventNavigation';
 import { useAppState } from '@/app/AppState';
 import UpdateBlurDataButton from '../UpdateBlurDataButton';
-import { getNextImageUrlForManipulation } from '@/platforms/next-image';
 import { BLUR_ENABLED, IS_PREVIEW } from '@/app/config';
 import ErrorNote from '@/components/ErrorNote';
 import { convertRecipesForForm, Recipes } from '@/recipe';
@@ -56,12 +55,20 @@ import { capitalize } from '@/utility/string';
 import AnchorSections from '@/components/AnchorSections';
 import useIsVisible from '@/utility/useIsVisible';
 import useHash from '@/utility/useHash';
+import { getOptimizedPhotoUrlForManipulation } from '../storage';
+import {
+  getFileNamePartsFromStorageUrl,
+  StorageListResponse,
+} from '@/platforms/storage';
+import SmallDisclosure from '@/components/SmallDisclosure';
+import { TbPhoto } from 'react-icons/tb';
 
 const THUMBNAIL_SIZE = 300;
 
 export default function PhotoForm({
   type = 'create',
   initialPhotoForm,
+  photoStorageUrls,
   updatedExifData,
   updatedBlurData,
   uniqueTags,
@@ -75,6 +82,7 @@ export default function PhotoForm({
 }: {
   type?: 'create' | 'edit'
   initialPhotoForm: Partial<PhotoFormData>
+  photoStorageUrls?: StorageListResponse
   updatedExifData?: Partial<PhotoFormData>
   updatedBlurData?: string
   uniqueTags?: Tags
@@ -245,7 +253,7 @@ export default function PhotoForm({
         case 'blurData':
           return shouldDebugImageFallbacks && type === 'edit' && formData.url
             ? <UpdateBlurDataButton
-              photoUrl={getNextImageUrlForManipulation(
+              photoUrl={getOptimizedPhotoUrlForManipulation(
                 formData.url,
                 IS_PREVIEW,
               )}
@@ -254,6 +262,34 @@ export default function PhotoForm({
             />
             : null;
       }
+    }
+  };
+
+  const footerForField = (key: keyof PhotoFormData) => {
+    switch (key) {
+      case 'url':
+        return photoStorageUrls && photoStorageUrls.length > 1
+          ? <SmallDisclosure label="Optimized file set">
+            <div className="space-y-1">
+              {photoStorageUrls.map(({ url, size }) => {
+                const { fileName } = getFileNamePartsFromStorageUrl(url);
+                return <div
+                  key={url}
+                  className="flex items-center gap-2"
+                >
+                  <TbPhoto className="translate-y-[1px] text-medium" />
+                  <Link
+                    href={url}
+                    target="_blank"
+                  >
+                    {fileName}
+                  </Link>
+                  <span className="text-dim">{size}</span>
+                </div>;
+              })}
+            </div>
+          </SmallDisclosure>
+          : undefined;
     }
   };
 
@@ -500,6 +536,7 @@ export default function PhotoForm({
                       ),
                       type,
                       accessory: accessoryForField(key),
+                      footer: footerForField(key),
                     };
                     switch (key) {
                       case 'film':

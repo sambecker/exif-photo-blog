@@ -1,7 +1,6 @@
 import { createCameraKey, Camera } from '@/camera';
 import { createLensKey, Lens } from '@/lens';
 import { useCallback } from 'react';
-import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import { useAppState } from '@/app/AppState';
 
 export default function useCategoryCounts() {
@@ -27,7 +26,7 @@ export default function useCategoryCounts() {
     return recipeCounts[recipe];
   }, [categoriesWithCounts]);
 
-  const getFilmCount = useCallback((film: FujifilmSimulation) => {
+  const getFilmCount = useCallback((film: string) => {
     const filmCounts = categoriesWithCounts?.films ?? {};
     return filmCounts[film];
   }, [categoriesWithCounts]);

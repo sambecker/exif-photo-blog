@@ -1,9 +1,5 @@
 import ImageMedium from '@/components/image/ImageMedium';
 import { UrlAddStatus } from './AdminUploadsClient';
-import {
-  getExtensionFromStorageUrl,
-  getIdFromStorageUrl,
-} from '@/platforms/storage';
 import clsx from 'clsx/lite';
 import ResponsiveDate from '@/components/ResponsiveDate';
 import Spinner from '@/components/Spinner';
@@ -15,6 +11,7 @@ import { isElementEntirelyInViewport } from '@/utility/dom';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import EditButton from './EditButton';
 import AddUploadButton from './AddUploadButton';
+import { getFileNamePartsFromStorageUrl } from '@/platforms/storage';
 
 export default function AdminUploadsTableRow({
   url,
@@ -41,7 +38,12 @@ export default function AdminUploadsTableRow({
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
-  const extension = getExtensionFromStorageUrl(url)?.toUpperCase();
+  const {
+    fileExtension,
+    fileId,
+  } = getFileNamePartsFromStorageUrl(url);
+
+  const extension = fileExtension?.toUpperCase();
 
   useEffect(() => {
     if (
@@ -86,7 +88,7 @@ export default function AdminUploadsTableRow({
         'transition-transform',
       )}>
         <ImageMedium
-          title={getIdFromStorageUrl(url)}
+          title={fileId}
           src={url}
           alt={url}
           aspectRatio={3.0 / 2.0}

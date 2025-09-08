@@ -6,7 +6,7 @@ import {
   DeleteObjectCommand,
 } from '@aws-sdk/client-s3';
 import { StorageListResponse, generateStorageId } from '.';
-import { formatBytesToMB } from '@/utility/number';
+import { formatBytes } from '@/utility/number';
 
 const MINIO_BUCKET = process.env.NEXT_PUBLIC_MINIO_BUCKET ?? '';
 const MINIO_DOMAIN = process.env.NEXT_PUBLIC_MINIO_DOMAIN ?? '';
@@ -65,7 +65,8 @@ export const minioCopy = async (
     : fileNameDestination;
   return minioClient().send(new CopyObjectCommand({
     Bucket: MINIO_BUCKET,
-    CopySource: fileNameSource,
+    // Bucket behavior seems to differ from R2 + S3
+    CopySource: `${MINIO_BUCKET}/${fileNameSource}`,
     Key,
   }))
     .then(() => urlForKey(Key));
@@ -82,7 +83,7 @@ export const minioList = async (
       url: urlForKey(Key),
       fileName: Key ?? '',
       uploadedAt: LastModified,
-      size: Size ? formatBytesToMB(Size) : undefined,
+      size: Size ? formatBytes(Size) : undefined,
     })) ?? []);
 
 export const minioDelete = async (Key: string): Promise<void> => {

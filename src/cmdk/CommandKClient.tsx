@@ -93,6 +93,7 @@ import { formatDistanceToNow } from 'date-fns';
 import IconCheck from '@/components/icons/IconCheck';
 import { getSortStateFromPath } from '@/photo/sort/path';
 import IconSort from '@/components/icons/IconSort';
+import { useSelectPhotosState } from '@/admin/select/SelectPhotosState';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -161,8 +162,6 @@ export default function CommandKClient({
     uploadsCount,
     tagsCount,
     recipesCount,
-    selectedPhotoIds,
-    setSelectedPhotoIds,
     insightsIndicatorStatus,
     isGridHighDensity,
     areZoomControlsShown,
@@ -181,6 +180,12 @@ export default function CommandKClient({
     setShouldDebugInsights,
     setShouldDebugRecipeOverlays,
   } = useAppState();
+
+  const {
+    isSelectingPhotos,
+    startSelectingPhotos,
+    stopSelectingPhotos,
+  } = useSelectPhotosState();
 
   const {
     doesPathOfferSort,
@@ -640,16 +645,19 @@ export default function CommandKClient({
       });
     }
     adminSection.items.push({
-      label: selectedPhotoIds === undefined
-        ? appText.admin.batchEdit
-        : appText.admin.batchExitEdit,
+      label: isSelectingPhotos
+        ? appText.admin.selectPhotosExit
+        : appText.admin.selectPhotos,
       annotation: <IconLock narrow />,
-      path: selectedPhotoIds === undefined
-        ? PATH_GRID_INFERRED
-        : undefined,
-      action: selectedPhotoIds === undefined
-        ? () => setSelectedPhotoIds?.([])
-        : () => setSelectedPhotoIds?.(undefined),
+      // Search by legacy label
+      keywords: ['batch', 'edit'],
+      action: () => {
+        if (!isSelectingPhotos) {
+          startSelectingPhotos?.();
+        } else {
+          stopSelectingPhotos?.();
+        }
+      },
     }, {
       label: <span className="flex items-center gap-3">
         {appText.admin.appInsights}

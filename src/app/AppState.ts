@@ -53,10 +53,6 @@ export type AppStateContextType = {
   isLoadingAdminData?: boolean
   refreshAdminData?: () => void
   updateAdminData?: (updatedData: Partial<AdminData>) => void
-  selectedPhotoIds?: string[]
-  setSelectedPhotoIds?: Dispatch<SetStateAction<string[] | undefined>>
-  isPerformingSelectEdit?: boolean
-  setIsPerformingSelectEdit?: Dispatch<SetStateAction<boolean>>
   insightsIndicatorStatus?: InsightsIndicatorStatus
   // UPLOAD
   startUpload?: () => Promise<boolean>
