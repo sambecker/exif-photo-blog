@@ -9,7 +9,7 @@ import { shortenUrl } from '@/utility/url';
 import { toastSuccess } from '@/toast';
 import { PiXLogo } from 'react-icons/pi';
 import { SHOW_SOCIAL } from '@/app/config';
-import { generateXPostText } from '@/utility/social';
+import { generateXPostText } from '@/social';
 import { useAppState } from '@/app/AppState';
 import useOnPathChange from '@/utility/useOnPathChange';
 import { IoArrowUp } from 'react-icons/io5';
