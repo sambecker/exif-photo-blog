@@ -10,6 +10,7 @@ import {
 } from '@/utility/url';
 import { getNavSortControlFromString, getSortByFromString } from '@/photo/sort';
 import { parseChromaCutoff, parseStartingHue } from '@/photo/color/sort';
+import { parseSocialKeysFromString } from '@/social';
 
 // HARD-CODED GLOBAL CONFIGURATION
 
@@ -314,8 +315,12 @@ export const SHOW_ZOOM_CONTROLS =
   process.env.NEXT_PUBLIC_HIDE_ZOOM_CONTROLS !== '1';
 export const SHOW_TAKEN_AT_TIME =
   process.env.NEXT_PUBLIC_HIDE_TAKEN_AT_TIME !== '1';
-export const SHOW_SOCIAL =
-  process.env.NEXT_PUBLIC_HIDE_SOCIAL !== '1';
+export const SOCIAL_KEYS = parseSocialKeysFromString(
+  // Legacy environment variable
+  process.env.NEXT_PUBLIC_HIDE_SOCIAL === '1'
+    ? 'none'
+    : process.env.NEXT_PUBLIC_SOCIAL_NETWORKS,
+);
 export const SHOW_REPO_LINK =
   process.env.NEXT_PUBLIC_HIDE_REPO_LINK !== '1';
 
@@ -458,7 +463,7 @@ export const APP_CONFIGURATION = {
   showExifInfo: SHOW_EXIF_DATA,
   showZoomControls: SHOW_ZOOM_CONTROLS,
   showTakenAtTimeHidden: SHOW_TAKEN_AT_TIME,
-  showSocial: SHOW_SOCIAL,
+  showSocial: SOCIAL_KEYS.length > 0,
   showRepoLink: SHOW_REPO_LINK,
   // Grid
   isGridHomepageEnabled: GRID_HOMEPAGE_ENABLED,
