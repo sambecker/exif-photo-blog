@@ -52,7 +52,10 @@ export default function PhotoSyncButton({
       : 'Regenerate photo data'}>
       <LoaderButton
         ref={ref}
-        className={clsx('scroll-mt-8', className)}
+        className={clsx(
+          'scroll-mt-32',
+          className,
+        )}
         icon={updateMode
           ? <IconBroom size={18} />
           : <IconGrSync

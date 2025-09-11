@@ -5,7 +5,7 @@ import AdminPhotosTable from '@/admin/AdminPhotosTable';
 import Note from '@/components/Note';
 import AdminChildPage from '@/components/AdminChildPage';
 import { PATH_ADMIN_PHOTOS } from '@/app/path';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { syncPhotosAction } from '@/photo/actions';
 import { useRouter } from 'next/navigation';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
@@ -32,15 +32,15 @@ export default function AdminPhotosUpdateClient({
   const errorRef = useRef<Error>(undefined);
 
   // Use state for updating progress button and error UI
+  const [statusText, setStatusText] =
+    useState(getPhotosUpdateStatusText(photos));
   const [photoIdsSyncing, setPhotoIdsSyncing] = useState<string[]>([]);
-  const [error, setError] = useState<Error>();
   const [progress, setProgress] = useState(0);
+  const [error, setError] = useState<Error>();
 
   const arePhotoIdsSyncing = photoIdsSyncing.length > 0;
 
   const router = useRouter();
-
-  const statusText = useMemo(() => getPhotosUpdateStatusText(photos), [photos]);
 
   useEffect(() => {
     if (photos.length === 0 && !error && !errorRef.current) {
@@ -88,6 +88,8 @@ export default function AdminPhotosUpdateClient({
                   photoIdsToSync.current = photoIdsToSync.current.filter(
                     id => !photoIds.includes(id),
                   );
+                  setStatusText(getPhotosUpdateStatusText(photos
+                    .filter(({ id }) => photoIdsToSync.current.includes(id))));
                   setProgress(
                     (photos.length - photoIdsToSync.current.length) /
                     photos.length,
@@ -127,11 +129,17 @@ export default function AdminPhotosUpdateClient({
         >
           <div className="space-y-1.5">
             <div className="font-bold">
-              Photo updates: {statusText}
+              {arePhotoIdsSyncing
+                ? <>Updating photos: {statusText}</>
+                : <>Photo updates: {statusText}</>}
             </div>
-            Sync to capture new EXIF fields, optimize image data,
-            {' '}
-            use AI to generate missing text (if configured)
+            {arePhotoIdsSyncing
+              ? <>Leave browser open until updates complete</>
+              : <>
+                Sync to capture new EXIF fields, optimize image data,
+                {' '}
+                use AI to generate missing text (if configured)
+              </>}
           </div>
         </Note>
         <div className="space-y-4">
