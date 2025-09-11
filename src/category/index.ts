@@ -7,8 +7,9 @@ import { FocalLengths } from '@/focal';
 import { Recipes } from '@/recipe';
 import { Recents } from '@/recents';
 import { Years } from '@/years';
+import { parseCommaSeparatedKeyString } from '@/utility/key';
 
-const CATEGORY_KEYS = [
+export const CATEGORY_KEYS = [
   'recents',
   'years',
   'cameras',
@@ -32,13 +33,19 @@ export const DEFAULT_CATEGORY_KEYS: CategoryKeys = [
   'films',
 ];
 
+export const parseOrderedCategoriesFromString = (
+  string?: string,
+) =>
+  parseCommaSeparatedKeyString({
+    string,
+    acceptedKeys: CATEGORY_KEYS,
+    defaultKeys: DEFAULT_CATEGORY_KEYS,
+  });
+
 export interface CategoryQueryMeta {
   count: number
   lastModified: Date
 }
-
-export const getHiddenCategories = (keys: CategoryKeys): CategoryKeys =>
-  CATEGORY_KEYS.filter(key => !keys.includes(key));
 
 export const getHiddenDefaultCategories = (keys: CategoryKeys): CategoryKeys =>
   DEFAULT_CATEGORY_KEYS.filter(key => !keys.includes(key));
@@ -70,16 +77,6 @@ export interface PhotoSetAttributes {
   count?: number
   dateRange?: PhotoDateRange
 }
-
-export const getOrderedCategoriesFromString = (
-  categories?: string,
-): CategoryKeys =>
-  categories
-    ? categories
-      .split(',')
-      .map(category => category.trim().toLocaleLowerCase() as CategoryKey)
-      .filter(category => CATEGORY_KEYS.includes(category))
-    : DEFAULT_CATEGORY_KEYS;
 
 export const sortCategoryByCount = (
   a: { count: number },

@@ -7,14 +7,20 @@ import { BiCopy } from 'react-icons/bi';
 import { ReactNode, useEffect } from 'react';
 import { shortenUrl } from '@/utility/url';
 import { toastSuccess } from '@/toast';
-import { PiXLogo } from 'react-icons/pi';
-import { SHOW_SOCIAL } from '@/app/config';
-import { generateXPostText } from '@/utility/social';
+import { SOCIAL_KEYS } from '@/app/config';
 import { useAppState } from '@/app/AppState';
 import useOnPathChange from '@/utility/useOnPathChange';
 import { IoArrowUp } from 'react-icons/io5';
 import MaskedScroll from '@/components/MaskedScroll';
 import { useAppText } from '@/i18n/state/client';
+import SocialButton from '@/social/SocialButton';
+import LoaderButton from '@/components/primitives/LoaderButton';
+
+const BUTTON_COLOR_CLASSNAMES = clsx(
+  'border-gray-200 bg-gray-50 active:bg-gray-100',
+  // eslint-disable-next-line max-len
+  'dark:border-gray-800 dark:bg-gray-900/75 dark:hover:bg-gray-800/75 dark:active:bg-gray-900',
+);
 
 export default function ShareModal({
   title,
@@ -43,24 +49,27 @@ export default function ShareModal({
     return () => setShouldRespondToKeyboardCommands?.(true);
   }, [setShouldRespondToKeyboardCommands]);
 
-  const renderIcon = (
+  const renderButton = (
     icon: ReactNode,
     action: () => void,
     embedded?: boolean,
+    tooltip?: string,
   ) =>
-    <div
+    <LoaderButton
       className={clsx(
-        'py-2.5 px-3',
-        embedded ? 'border-l' : 'border rounded-md',
-        'border-gray-200 bg-gray-50 active:bg-gray-100',
-        // eslint-disable-next-line max-len
-        'dark:border-gray-800 dark:bg-gray-900/75 dark:hover:bg-gray-800/75 dark:active:bg-gray-900',
+        'flex items-center justify-center h-10',
+        'px-3',
+        embedded
+          ? 'border-t-0 border-b-0 border-r-0 rounded-none'
+          : 'border rounded-md',
+        BUTTON_COLOR_CLASSNAMES,
         'cursor-pointer',
       )}
       onClick={action}
+      tooltip={tooltip}
     >
       {icon}
-    </div>;
+    </LoaderButton>;
 
   useOnPathChange(() => setShareModalProps?.(undefined));
 
@@ -78,7 +87,7 @@ export default function ShareModal({
             </div>
           </div>}
         {children}
-        <div className="flex items-center gap-2">
+        <div className="flex items-stretch h-10 gap-2">
           <div className={clsx(
             'rounded-md',
             'w-full overflow-hidden',
@@ -95,17 +104,29 @@ export default function ShareModal({
                 {shortenUrl(pathShare)}
               </div>
             </MaskedScroll>
-            {renderIcon(
+            {renderButton(
               <BiCopy size={18} />,
               () => {
                 navigator.clipboard.writeText(pathShare);
                 toastSuccess(appText.photo.copied);
               },
               true,
+              appText.tooltip.shareCopy,
             )}
           </div>
+          {SOCIAL_KEYS.map(key =>
+            <SocialButton
+              key={key}
+              socialKey={key}
+              path={pathShare}
+              text={socialText}
+              className={clsx(
+                'h-full',
+                BUTTON_COLOR_CLASSNAMES,
+              )}
+            />)}
           {typeof navigator !== 'undefined' && navigator.share &&
-            renderIcon(
+            renderButton(
               <IoArrowUp size={18} />,
               () => navigator.share({
                 title: navigatorTitle,
@@ -113,14 +134,8 @@ export default function ShareModal({
                 url: pathShare,
               })
                 .catch(() => console.log('Share canceled')),
-            )}
-          {SHOW_SOCIAL &&
-            renderIcon(
-              <PiXLogo size={18} />,
-              () => window.open(
-                generateXPostText(pathShare, socialText),
-                '_blank',
-              ),
+              false,
+              appText.tooltip.shareTo,
             )}
         </div>
       </div>

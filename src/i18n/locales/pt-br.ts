@@ -81,10 +81,16 @@ export const TEXT: I18N = {
   tooltip: {
     '35mm': 'Equivalente em 35mm',
     zoom: 'Aumentar zoom',
-    sharePhoto: 'Compartilhar Foto',
     recipeInfo: 'Informações da receita',
     recipeCopy: 'Copiar texto da receita',
     download: 'Baixar arquivo original',
+    sharePhoto: 'Compartilhar Foto',
+    shareCopy: 'Copiar Link',
+    shareTo: 'Compartilhar ...',
+    shareX: 'Compartilhar no X',
+    shareThreads: 'Compartilhar no Threads',
+    shareFacebook: 'Compartilhar no Facebook',
+    shareLinkedIn: 'Compartilhar no LinkedIn',
   },
   theme: {
     theme: 'Tema',

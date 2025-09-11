@@ -1,14 +1,14 @@
 import {
   DEFAULT_CATEGORY_KEYS,
-  getOrderedCategoriesFromString,
+  parseOrderedCategoriesFromString,
 } from '@/category';
 
 describe('set', () => {
   it('parses from string', () => {
-    expect(getOrderedCategoriesFromString())
+    expect(parseOrderedCategoriesFromString())
       .toStrictEqual(DEFAULT_CATEGORY_KEYS);
     
-    expect(getOrderedCategoriesFromString(
+    expect(parseOrderedCategoriesFromString(
       'cameras,recipes,tags,films,focal-lengths,lenses',
     )).toStrictEqual([
       'cameras',
@@ -19,7 +19,7 @@ describe('set', () => {
       'lenses',
     ]);
     
-    expect(getOrderedCategoriesFromString(
+    expect(parseOrderedCategoriesFromString(
       'cameras, recipes, tags, films',
     )).toStrictEqual([
       'cameras',
@@ -28,7 +28,7 @@ describe('set', () => {
       'films',
     ]);
     
-    expect(getOrderedCategoriesFromString(
+    expect(parseOrderedCategoriesFromString(
       'cameras',
     )).toStrictEqual([
       'cameras',
