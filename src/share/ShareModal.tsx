@@ -16,6 +16,12 @@ import { useAppText } from '@/i18n/state/client';
 import SocialButton from '@/social/SocialButton';
 import LoaderButton from '@/components/primitives/LoaderButton';
 
+const BUTTON_COLOR_CLASSNAMES = clsx(
+  'border-gray-200 bg-gray-50 active:bg-gray-100',
+  // eslint-disable-next-line max-len
+  'dark:border-gray-800 dark:bg-gray-900/75 dark:hover:bg-gray-800/75 dark:active:bg-gray-900',
+);
+
 export default function ShareModal({
   title,
   pathShare,
@@ -56,9 +62,7 @@ export default function ShareModal({
         embedded
           ? 'border-t-0 border-b-0 border-r-0 rounded-none'
           : 'border rounded-md',
-        'border-gray-200 bg-gray-50 active:bg-gray-100',
-        // eslint-disable-next-line max-len
-        'dark:border-gray-800 dark:bg-gray-900/75 dark:hover:bg-gray-800/75 dark:active:bg-gray-900',
+        BUTTON_COLOR_CLASSNAMES,
         'cursor-pointer',
       )}
       onClick={action}
@@ -107,9 +111,20 @@ export default function ShareModal({
                 toastSuccess(appText.photo.copied);
               },
               true,
-              'Copy URL',
+              appText.tooltip.shareCopy,
             )}
           </div>
+          {SOCIAL_KEYS.map(key =>
+            <SocialButton
+              key={key}
+              socialKey={key}
+              path={pathShare}
+              text={socialText}
+              className={clsx(
+                'h-full',
+                BUTTON_COLOR_CLASSNAMES,
+              )}
+            />)}
           {typeof navigator !== 'undefined' && navigator.share &&
             renderButton(
               <IoArrowUp size={18} />,
@@ -120,21 +135,8 @@ export default function ShareModal({
               })
                 .catch(() => console.log('Share canceled')),
               false,
-              'Share ...',
+              appText.tooltip.shareTo,
             )}
-          {SOCIAL_KEYS.map(key =>
-            <SocialButton
-              key={key}
-              socialKey={key}
-              path={pathShare}
-              text={socialText}
-              className={clsx(
-                'h-full',
-                'border-gray-200 bg-gray-50 active:bg-gray-100',
-                // eslint-disable-next-line max-len
-                'dark:border-gray-800 dark:bg-gray-900/75 dark:hover:bg-gray-800/75 dark:active:bg-gray-900',
-              )}
-            />)}
         </div>
       </div>
     </Modal>

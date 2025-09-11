@@ -81,10 +81,16 @@ export const TEXT: I18N = {
   tooltip: {
     '35mm': '35mm 等效焦距',
     zoom: '放大',
-    sharePhoto: '分享照片',
     recipeInfo: '预设信息',
     recipeCopy: '复制预设文本',
     download: '下载原始文件',
+    sharePhoto: '分享照片',
+    shareCopy: '复制链接',
+    shareTo: '分享 ...',
+    shareX: '在 X 上分享',
+    shareThreads: '在 Threads 上分享',
+    shareFacebook: '在 Facebook 上分享',
+    shareLinkedIn: '在 LinkedIn 上分享',
   },
   theme: {
     theme: '主题',

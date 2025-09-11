@@ -1,9 +1,10 @@
 import { FaFacebookF, FaLinkedin, FaThreads } from 'react-icons/fa6';
-import { generateSocialUrl, SocialKey, tooltipForSocialKey } from '.';
+import { urlForSocial, SocialKey, tooltipForSocial } from '.';
 import { PiXLogo } from 'react-icons/pi';
 import Link from 'next/link';
 import clsx from 'clsx';
 import Tooltip from '@/components/Tooltip';
+import { useAppText } from '@/i18n/state/client';
 
 const iconForSocialKey = (key: SocialKey) => {
   switch (key) {
@@ -25,17 +26,17 @@ export default function SocialButton({
   text: string
   className?: string
 }) {
-  return <Tooltip content={tooltipForSocialKey(socialKey)}>
-    <Link
-      className={clsx(
-        'button',
-        className,
-      )}
-      href={generateSocialUrl(socialKey, path, text)}
-      target="_blank"
-      // tooltip={tooltipForSocialKey(socialKey)}
-    >
-      {iconForSocialKey(socialKey)}
-    </Link>
-  </Tooltip>;
+  const appText = useAppText();
+
+  return (
+    <Tooltip content={tooltipForSocial(socialKey, appText)}>
+      <Link
+        className={clsx('button', className)}
+        href={urlForSocial(socialKey, path, text)}
+        target="_blank"
+      >
+        {iconForSocialKey(socialKey)}
+      </Link>
+    </Tooltip>
+  );
 }

@@ -81,10 +81,16 @@ export const TEXT: I18N = {
   tooltip: {
     '35mm': '35mm Eşdeğeri',
     zoom: 'Yakınlaştır',
-    sharePhoto: 'Fotoğrafı Paylaş',
     recipeInfo: 'Tarif Bilgisi',
     recipeCopy: 'Tarifi Kopyala',
     download: 'Orijinal Dosyayı İndir',
+    sharePhoto: 'Fotoğrafı Paylaş',
+    shareCopy: 'Bağlantıyı Kopyala',
+    shareTo: 'Paylaş ...',
+    shareX: 'X\'te Paylaş',
+    shareThreads: 'Threads\'te Paylaş',
+    shareFacebook: 'Facebook\'ta Paylaş',
+    shareLinkedIn: 'LinkedIn\'de Paylaş',
   },
   theme: {
     theme: 'Tema',

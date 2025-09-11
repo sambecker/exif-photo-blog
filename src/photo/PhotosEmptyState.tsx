@@ -1,7 +1,7 @@
 import Container from '@/components/Container';
 import AppGrid from '@/components/AppGrid';
 import {
-  IS_SITE_READY,
+  IS_APP_READY,
   PRESERVE_ORIGINAL_UPLOADS,
 } from '@/app/config';
 import AdminAppConfiguration from '@/admin/config/AdminAppConfiguration';
@@ -32,11 +32,11 @@ export default async function PhotosEmptyState() {
             'font-bold text-2xl',
             'text-gray-700 dark:text-gray-200',
           )}>
-            {!IS_SITE_READY
+            {!IS_APP_READY
               ? appText.onboarding.setupIncomplete
               : appText.onboarding.setupComplete}
           </div>
-          {!IS_SITE_READY
+          {!IS_APP_READY
             ? <AdminAppConfiguration simplifiedView />
             : <div className="max-w-md text-center space-y-6">
               <SignInOrUploadClient

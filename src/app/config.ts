@@ -315,12 +315,6 @@ export const SHOW_ZOOM_CONTROLS =
   process.env.NEXT_PUBLIC_HIDE_ZOOM_CONTROLS !== '1';
 export const SHOW_TAKEN_AT_TIME =
   process.env.NEXT_PUBLIC_HIDE_TAKEN_AT_TIME !== '1';
-export const SOCIAL_KEYS = parseSocialKeysFromString(
-  // Legacy environment variable
-  process.env.NEXT_PUBLIC_HIDE_SOCIAL === '1'
-    ? 'none'
-    : process.env.NEXT_PUBLIC_SOCIAL_NETWORKS,
-);
 export const SHOW_REPO_LINK =
   process.env.NEXT_PUBLIC_HIDE_REPO_LINK !== '1';
 
@@ -359,6 +353,12 @@ export const GEO_PRIVACY_ENABLED =
   process.env.NEXT_PUBLIC_GEO_PRIVACY === '1';
 export const ALLOW_PUBLIC_DOWNLOADS =
   process.env.NEXT_PUBLIC_ALLOW_PUBLIC_DOWNLOADS === '1';
+export const SOCIAL_KEYS = parseSocialKeysFromString(
+  // Legacy environment variable
+  process.env.NEXT_PUBLIC_HIDE_SOCIAL === '1'
+    ? 'none'
+    : process.env.NEXT_PUBLIC_SOCIAL_NETWORKS,
+);
 export const SITE_FEEDS_ENABLED =
   process.env.NEXT_PUBLIC_SITE_FEEDS === '1';
 export const OG_TEXT_BOTTOM_ALIGNMENT =
@@ -463,7 +463,6 @@ export const APP_CONFIGURATION = {
   showExifInfo: SHOW_EXIF_DATA,
   showZoomControls: SHOW_ZOOM_CONTROLS,
   showTakenAtTimeHidden: SHOW_TAKEN_AT_TIME,
-  showSocial: SOCIAL_KEYS.length > 0,
   showRepoLink: SHOW_REPO_LINK,
   // Grid
   isGridHomepageEnabled: GRID_HOMEPAGE_ENABLED,
@@ -484,6 +483,8 @@ export const APP_CONFIGURATION = {
   // Settings
   isGeoPrivacyEnabled: GEO_PRIVACY_ENABLED,
   arePublicDownloadsEnabled: ALLOW_PUBLIC_DOWNLOADS,
+  hasSocialKeys: Boolean(process.env.NEXT_PUBLIC_SOCIAL_NETWORKS),
+  socialKeys: SOCIAL_KEYS,
   areSiteFeedsEnabled: SITE_FEEDS_ENABLED,
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,
   // Internal
@@ -503,7 +504,25 @@ export const APP_CONFIGURATION = {
   commitUrl: VERCEL_GIT_COMMIT_URL,
 };
 
-export const IS_SITE_READY =
+const ALL_LEGACY_ENV_VARS = [
+  'NEXT_PUBLIC_SITE_DOMAIN',
+  'NEXT_PUBLIC_SITE_DESCRIPTION',
+  'NEXT_PUBLIC_SITE_TITLE',
+  'NEXT_PUBLIC_SITE_ABOUT',
+  'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES',
+  'NEXT_PUBLIC_STATICALLY_OPTIMIZE_OG_IMAGES',
+  'NEXT_PUBLIC_PRO_MODE',
+  'NEXT_PUBLIC_HIDE_SOCIAL',
+  'NEXT_PUBLIC_SITE_DOMAIN',
+];
+
+export const USED_LEGACY_ENV_VARS = ALL_LEGACY_ENV_VARS
+  .filter(variable => Boolean(process.env[variable]));
+
+export const DOES_APP_HAVE_LEGACY_ENV_VARS =
+  USED_LEGACY_ENV_VARS.length > 0;
+
+export const IS_APP_READY =
   APP_CONFIGURATION.hasDatabase &&
   APP_CONFIGURATION.hasStorageProvider &&
   APP_CONFIGURATION.hasAuthSecret &&

@@ -1,7 +1,7 @@
 const KEY_ALL = 'all';
 const KEY_NONE = 'none';
 
-export const parseCommaSeparatedStringList = <T>({
+export const parseCommaSeparatedKeyString = <T>({
   string: _string,
   acceptedKeys,
   defaultKeys = [],
@@ -24,3 +24,24 @@ export const parseCommaSeparatedStringList = <T>({
       : defaultKeys;
   }
 };
+export const getOrderedKeyListStatus = <T>({
+  selectedKeys,
+  acceptedKeys,
+}: {
+  selectedKeys: T[],
+  acceptedKeys: readonly T[],
+}): {
+  label: string,
+  selected: boolean,
+}[] =>
+  selectedKeys
+    .map((key, index) => ({
+      label: `${index + 1}.${key}`,
+      selected: true,
+    }))
+    .concat(acceptedKeys
+      .filter(key => !selectedKeys.includes(key))
+      .map(key => ({
+        label: `* ${key}`,
+        selected: false,
+      })));

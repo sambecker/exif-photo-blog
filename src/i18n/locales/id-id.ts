@@ -81,10 +81,16 @@ export const TEXT: I18N = {
   tooltip: {
     '35mm': 'Setara 35mm',
     zoom: 'Perbesar',
-    sharePhoto: 'Bagikan Foto',
     recipeInfo: 'Informasi Resep',
     recipeCopy: 'Salin Teks Resep',
     download: 'Unduh File Asli',
+    sharePhoto: 'Bagikan Foto',
+    shareCopy: 'Salin Tautan',
+    shareTo: 'Bagikan ...',
+    shareX: 'Bagikan di X',
+    shareThreads: 'Bagikan di Threads',
+    shareFacebook: 'Bagikan di Facebook',
+    shareLinkedIn: 'Bagikan di LinkedIn',
   },
   theme: {
     theme: 'Tema',

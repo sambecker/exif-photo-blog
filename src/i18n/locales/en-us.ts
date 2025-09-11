@@ -80,10 +80,16 @@ export const TEXT = {
   tooltip: {
     '35mm': '35mm Equivalent',
     zoom: 'Zoom In',
-    sharePhoto: 'Share Photo',
     recipeInfo: 'Recipe Info',
     recipeCopy: 'Copy Recipe Text',
     download: 'Download Original File',
+    sharePhoto: 'Share Photo',
+    shareCopy: 'Copy Link',
+    shareTo: 'Share ...',
+    shareX: 'Share on X',
+    shareThreads: 'Share on Threads',
+    shareFacebook: 'Share on Facebook',
+    shareLinkedIn: 'Share on LinkedIn',
   },
   theme: {
     theme: 'Theme',

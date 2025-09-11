@@ -1,4 +1,5 @@
-import { parseCommaSeparatedStringList } from '@/utility/env';
+import { AppTextState } from '@/i18n/state';
+import { parseCommaSeparatedKeyString } from '@/utility/key';
 
 export const SOCIAL_KEYS = [
   'x',
@@ -9,18 +10,18 @@ export const SOCIAL_KEYS = [
 
 export type SocialKey = (typeof SOCIAL_KEYS)[number];
 
-const DEFAULT_SOCIAL_KEYS: SocialKey[] = [
+export const DEFAULT_SOCIAL_KEYS: SocialKey[] = [
   'x',
 ];
 
 export const parseSocialKeysFromString = (string?: string) =>
-  parseCommaSeparatedStringList({
+  parseCommaSeparatedKeyString({
     string,
     acceptedKeys: SOCIAL_KEYS,
     defaultKeys: DEFAULT_SOCIAL_KEYS,
   });
 
-export const generateSocialUrl = (
+export const urlForSocial = (
   key: SocialKey,
   path: string,
   text: string,
@@ -29,7 +30,7 @@ export const generateSocialUrl = (
     case 'x': {
       const url = new URL('https://x.com/intent/tweet');
       url.searchParams.set('url', path);
-      if (text) { url.searchParams.set('text', text); }
+      url.searchParams.set('text', text);
       return url.toString();
     }
     case 'threads': {
@@ -45,17 +46,20 @@ export const generateSocialUrl = (
     case 'linkedin': {
       const url = new URL('https://www.linkedin.com/shareArticle');
       url.searchParams.set('url', path);
-      if (text) { url.searchParams.set('text', text); }
+      url.searchParams.set('text', text);
       return url.toString();
     }
   }
 };
 
-export const tooltipForSocialKey = (key: SocialKey) => {
+export const tooltipForSocial = (
+  key: SocialKey,
+  { tooltip }: AppTextState,
+) => {
   switch (key) {
-    case 'x': return 'Share on X';
-    case 'threads': return 'Share on Threads';
-    case 'facebook': return 'Share on Facebook';
-    case 'linkedin': return 'Share on LinkedIn';
+    case 'x': return tooltip.shareX;
+    case 'threads': return tooltip.shareThreads;
+    case 'facebook': return tooltip.shareFacebook;
+    case 'linkedin': return tooltip.shareLinkedIn;
   }
 };
