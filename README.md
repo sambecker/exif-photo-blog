@@ -170,7 +170,6 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_HIDE_EXIF_DATA = 1` hides EXIF data in photo details and OG images (potentially useful for portfolios, which don't focus on photography)
 - `NEXT_PUBLIC_HIDE_ZOOM_CONTROLS = 1` hides fullscreen photo zoom controls
 - `NEXT_PUBLIC_HIDE_TAKEN_AT_TIME = 1` hides taken at time from photo meta
-- `NEXT_PUBLIC_HIDE_SOCIAL = 1` removes X (formerly Twitter) button from share modal
 - `NEXT_PUBLIC_HIDE_REPO_LINK = 1` removes footer link to repo
 
 #### Grid
@@ -185,6 +184,15 @@ Application behavior can be changed by configuring the following environment var
 #### Settings
 - `NEXT_PUBLIC_GEO_PRIVACY = 1` disables collection/display of location-based data (⚠️ re-compresses uploaded images in order to remove GPS information)
 - `NEXT_PUBLIC_ALLOW_PUBLIC_DOWNLOADS = 1` enables public photo downloads for all visitors (⚠️ may result in increased bandwidth usage)
+- `NEXT_PUBLIC_SOCIAL_NETWORKS`
+  - Comma-separated list of social networks to show in share modal
+  - Accepted values:
+    - `x` (default)
+    - `threads`
+    - `facebook`
+    - `linkedin`
+    - `all`
+    - `none`
 - `NEXT_PUBLIC_SITE_FEEDS = 1` enables feeds at `/feed.json` and `/rss.xml`
 - `NEXT_PUBLIC_OG_TEXT_ALIGNMENT = BOTTOM` keeps OG image text bottom aligned (default is top)
 
