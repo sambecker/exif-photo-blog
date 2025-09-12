@@ -12,6 +12,7 @@ import {
   HAS_STATIC_OPTIMIZATION,
   GRID_HOMEPAGE_ENABLED,
   AI_CONTENT_GENERATION_ENABLED,
+  HAS_DEPRECATED_ENV_VARS,
 } from '@/app/config';
 import { PhotoDateRange } from '@/photo';
 import { getGitHubMeta } from '@/platforms/github';
@@ -25,6 +26,7 @@ const AdminAppInsightCode = [
 type AdminAppInsightCode = typeof AdminAppInsightCode[number];
 
 const _INSIGHTS_TEMPLATE = [
+  'deprecatedEnvVars',
   'noAi',
   'noAiRateLimiting',
   'noConfiguredDomain',
@@ -89,6 +91,7 @@ export const getSignificantInsights = ({
   } = APP_CONFIGURATION;
 
   return {
+    deprecatedEnvVars: HAS_DEPRECATED_ENV_VARS,
     forkBehind: Boolean(codeMeta?.isBehind),
     noAiRateLimiting: isAiTextGenerationEnabled && !hasRedisStorage,
     noConfiguredDomain: !hasDomain,
@@ -108,13 +111,14 @@ export const indicatorStatusForSignificantInsights = ({
   });
 
   const {
+    deprecatedEnvVars,
     forkBehind,
     noAiRateLimiting,
     noConfiguredDomain,
     photosNeedSync,
   } = insights;
 
-  if (noAiRateLimiting || noConfiguredDomain) {
+  if (deprecatedEnvVars || noAiRateLimiting || noConfiguredDomain) {
     return 'yellow';
   } else if (forkBehind || photosNeedSync) {
     return 'blue';

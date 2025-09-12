@@ -3,7 +3,7 @@
 import ScoreCard from '@/components/ScoreCard';
 import ScoreCardRow from '@/components/ScoreCardRow';
 import { dateRangeForPhotos } from '@/photo';
-import { FaCircleInfo, FaRegCalendar } from 'react-icons/fa6';
+import { FaArrowRight, FaCircleInfo, FaRegCalendar } from 'react-icons/fa6';
 import { MdAspectRatio } from 'react-icons/md';
 import { PiWarningBold } from 'react-icons/pi';
 import { TbSparkles } from 'react-icons/tb';
@@ -17,9 +17,10 @@ import {
   TEMPLATE_REPO_URL_FORK,
   TEMPLATE_REPO_URL_README,
   CATEGORY_VISIBILITY,
+  USED_DEPRECATED_ENV_VARS,
 } from '@/app/config';
 import {
-  AdminAppInsights,
+  getAllInsights,
   getGitHubMetaForCurrentApp,
   hasTemplateRecommendations,
   PhotoStats,
@@ -88,6 +89,7 @@ const renderHighlightText = (
 export default function AdminAppInsightsClient({
   codeMeta,
   insights,
+  usedDeprecatedEnvVars,
   photoStats: {
     photosCount,
     photosCountHidden,
@@ -102,12 +104,14 @@ export default function AdminAppInsightsClient({
   },
 }: {
   codeMeta?: Awaited<ReturnType<typeof getGitHubMetaForCurrentApp>>
-  insights: AdminAppInsights
+  insights: ReturnType<typeof getAllInsights>
+  usedDeprecatedEnvVars: typeof USED_DEPRECATED_ENV_VARS
   photoStats: PhotoStats
 }) {
   const { shouldDebugInsights: debug } = useAppState();
 
   const {
+    deprecatedEnvVars,
     noFork,
     forkBehind,
     noAi,
@@ -250,6 +254,36 @@ export default function AdminAppInsightsClient({
       <ScoreCard title="Template recommendations">
         {(hasTemplateRecommendations(insights) || debug)
           ? <>
+            {(deprecatedEnvVars || debug) && <ScoreCardRow
+              icon={<PiWarningBold
+                size={17}
+                className={clsx(
+                  'translate-x-[0.5px]',
+                  TEXT_COLOR_WARNING,
+                )}
+              />}
+              content={isExpanded => renderHighlightText(
+                'Update environment variables',
+                'yellow',
+                !isExpanded,
+              )}
+              expandContent={<div className="flex flex-col gap-2">
+                Future versions of this template will not build correctly
+                when including the following deprecated environment variables:
+                <div className="space-y-1">
+                  {usedDeprecatedEnvVars.map(({ old, replacement }) => (
+                    <div
+                      key={old}
+                      className="flex items-center gap-2"
+                    >
+                      <div className="text-xs">{old}</div>
+                      <FaArrowRight size={10} />
+                      <EnvVar variable={replacement} className="w-full" />
+                    </div>
+                  ))}
+                </div>
+              </div>}
+            />}
             {(noAiRateLimiting || debug) && <ScoreCardRow
               icon={<PiWarningBold
                 size={17}
