@@ -132,7 +132,7 @@ export default function ImageInput({
                     '2d', { colorSpace: 'display-p3' },
                   );
 
-                  if ((shouldResize || isPng) && canvas && ctx) {
+                  if (shouldResize && canvas && ctx) {
                     // Process images that need resizing
                     const image = await blobToImage(file);
 

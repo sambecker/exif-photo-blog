@@ -269,17 +269,23 @@ export default function AdminAppInsightsClient({
                 !isExpanded,
               )}
               expandContent={<div className="flex flex-col gap-2">
-                Future versions of this template will not build correctly
-                when including the following deprecated environment variables:
+                Future versions of this template may not build correctly
+                with the following deprecated environment variables:
                 <div className="space-y-1">
                   {usedDeprecatedEnvVars.map(({ old, replacement }) => (
                     <MaskedScroll
                       key={old}
-                      className="flex items-center gap-2"
+                      className={clsx(
+                        'inline-flex items-center gap-3',
+                        'overflow-y-hidden',
+                      )}
                       direction="horizontal"
                     >
-                      <div className="text-xs text-dim">{old}</div>
-                      <FaArrowRight size={11} className="shrink-0" />
+                      <div className="text-xs font-medium">{old}</div>
+                      <FaArrowRight
+                        size={11}
+                        className="shrink-0 text-extra-dim"
+                      />
                       <EnvVar variable={replacement} maskScroll={false} />
                     </MaskedScroll>
                   ))}
