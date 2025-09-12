@@ -276,8 +276,8 @@ export default function AdminAppInsightsClient({
                       key={old}
                       className="flex items-center gap-2"
                     >
-                      <div className="text-xs">{old}</div>
-                      <FaArrowRight size={10} />
+                      <div className="text-xs text-dim">{old}</div>
+                      <FaArrowRight size={11} className="shrink-0" />
                       <EnvVar variable={replacement} className="w-full" />
                     </div>
                   ))}
