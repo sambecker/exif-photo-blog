@@ -32,6 +32,7 @@ export default function AdminPhotosUpdateClient({
   const errorRef = useRef<Error>(undefined);
 
   // Use state for updating progress button and error UI
+  const [updateCount, setUpdateCount] = useState(photos.length);
   const [statusText, setStatusText] =
     useState(getPhotosUpdateStatusText(photos));
   const [photoIdsSyncing, setPhotoIdsSyncing] = useState<string[]>([]);
@@ -53,22 +54,22 @@ export default function AdminPhotosUpdateClient({
       backLabel="Photos"
       backPath={PATH_ADMIN_PHOTOS}
       breadcrumb={<ResponsiveText shortText="Updates">
-        Updates ({photos.length})
+        Updates ({updateCount})
       </ResponsiveText>}
       accessory={<ProgressButton
         primary
         icon={<IconBroom size={18} />}
         hideText="never"
         progress={progress}
-        tooltip={photos.length === 1
+        tooltip={updateCount === 1
           ? 'Update 1 photo'
-          : `Update all ${photos.length} photos`}
+          : `Update all ${updateCount} photos`}
         onClick={async () => {
           if (window.confirm([
             'Are you sure you want to sync',
-            photos.length === 1
+            updateCount === 1
               ? '1 photo?'
-              : `all ${photos.length} photos?`,
+              : `all ${updateCount} photos?`,
             'Browser must remain open while syncing.',
             'This action cannot be undone.',
           ].join(' '))) {
@@ -88,8 +89,10 @@ export default function AdminPhotosUpdateClient({
                   photoIdsToSync.current = photoIdsToSync.current.filter(
                     id => !photoIds.includes(id),
                   );
-                  setStatusText(getPhotosUpdateStatusText(photos
-                    .filter(({ id }) => photoIdsToSync.current.includes(id))));
+                  const photosRemaining = photos
+                    .filter(({ id }) => photoIdsToSync.current.includes(id));
+                  setStatusText(getPhotosUpdateStatusText(photosRemaining));
+                  setUpdateCount(photosRemaining.length);
                   setProgress(
                     (photos.length - photoIdsToSync.current.length) /
                     photos.length,
