@@ -47,6 +47,7 @@ import IconTag from '@/components/icons/IconTag';
 import IconPhoto from '@/components/icons/IconPhoto';
 import { HiOutlineDocumentText } from 'react-icons/hi';
 import { ReactNode } from 'react';
+import MaskedScroll from '@/components/MaskedScroll';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
@@ -272,14 +273,15 @@ export default function AdminAppInsightsClient({
                 when including the following deprecated environment variables:
                 <div className="space-y-1">
                   {usedDeprecatedEnvVars.map(({ old, replacement }) => (
-                    <div
+                    <MaskedScroll
                       key={old}
                       className="flex items-center gap-2"
+                      direction="horizontal"
                     >
                       <div className="text-xs text-dim">{old}</div>
                       <FaArrowRight size={11} className="shrink-0" />
-                      <EnvVar variable={replacement} className="w-full" />
-                    </div>
+                      <EnvVar variable={replacement} maskScroll={false} />
+                    </MaskedScroll>
                   ))}
                 </div>
               </div>}

@@ -3,6 +3,7 @@ import useMaskedScroll from './useMaskedScroll';
 
 export default function MaskedScroll({
   ref: refProp,
+  enabled = true,
   direction,
   fadeSize,
   animationDuration,
@@ -15,6 +16,7 @@ export default function MaskedScroll({
   ...props
 }: {
   ref?: RefObject<HTMLDivElement | null>
+  enabled?: boolean
 } & HTMLAttributes<HTMLDivElement>
 & Omit<Parameters<typeof useMaskedScroll>[0], 'ref'>) {
   const refInternal = useRef<HTMLDivElement>(null);
@@ -34,7 +36,10 @@ export default function MaskedScroll({
   return <div
     {...props}
     ref={ref}
-    style={{ ...styleMask, ...style }}
+    style={{
+      ...enabled && styleMask,
+      ...style,
+    }}
   >
     {children}
   </div>;
