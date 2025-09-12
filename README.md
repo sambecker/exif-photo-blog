@@ -49,8 +49,6 @@ https://photos.sambecker.com
 3. Add optional title
 4. Click "Create"
 
-If you don't plan to change the code, or don't mind making your updates public, consider forking this repo to easily receive future updates. If you've already setup your project on Vercel see detailed instructions here on reconfiguring your project.
-
 🔄&nbsp;&nbsp;Receiving updates
 -
 If you don't plan to change the code, or don't mind making your updates public, consider [forking](https://github.com/sambecker/exif-photo-blog/fork) this repo to easily receive future updates. If you've already set up your project on Vercel see these [migration instructions](#how-do-i-receive-template-updates).
