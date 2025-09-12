@@ -72,8 +72,8 @@ export default function PhotoSyncButton({
           ) {
             setIsSyncing(true);
             (onlySyncColorData
-              ? storeColorDataForPhotoAction
-              : syncPhotoAction)(photo.id)
+              ? storeColorDataForPhotoAction(photo.id)
+              : syncPhotoAction(photo.id, { updateMode }))
               .then(() => {
                 onSyncComplete?.();
                 if (shouldToast) {

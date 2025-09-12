@@ -34,11 +34,16 @@ const IMAGE_WIDTH_DEFAULT = 200;
 const IMAGE_QUALITY_DEFAULT = 80;
 
 export const extractImageDataFromBlobPath = async (
-  blobPath: string,
-  options: {
+  blobPath: string, {
+    includeInitialPhotoFields,
+    generateBlurData,
+    generateResizedImage,
+    updateColorFields = true,
+  }: {
     includeInitialPhotoFields?: boolean
     generateBlurData?: boolean
     generateResizedImage?: boolean
+    updateColorFields?: boolean
   } = {},
 ): Promise<{
   blobId?: string
@@ -48,12 +53,6 @@ export const extractImageDataFromBlobPath = async (
   fileBytes?: ArrayBuffer
   error?: string
 }> => {
-  const {
-    includeInitialPhotoFields,
-    generateBlurData,
-    generateResizedImage,
-  } = options;
-
   const url = decodeURIComponent(blobPath);
 
   const {
@@ -119,7 +118,9 @@ export const extractImageDataFromBlobPath = async (
 
   if (error) { console.log(error); }
 
-  const colorFields = await getColorFieldsForPhotoForm(url);
+  const colorFields = updateColorFields
+    ? await getColorFieldsForPhotoForm(url)
+    : undefined;
 
   return {
     blobId,

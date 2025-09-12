@@ -491,7 +491,15 @@ export const getExifDataAction = async (
 // - strip GPS data if necessary
 // - update blur data (or destroy if blur is disabled)
 // - generate AI text data, if enabled, and auto-generated fields are empty
-export const syncPhotoAction = async (photoId: string, isBatch?: boolean) =>
+export const syncPhotoAction = async (
+  photoId: string, {
+    isBatch,
+    updateMode,
+  }: {
+    isBatch?: boolean,
+    updateMode?: boolean,
+  } = {},
+) =>
   runAuthenticatedAdminServerAction(async () => {
     const photo = await getPhoto(photoId ?? '', true);
 
@@ -505,6 +513,12 @@ export const syncPhotoAction = async (photoId: string, isBatch?: boolean) =>
         includeInitialPhotoFields: false,
         generateBlurData: BLUR_ENABLED,
         generateResizedImage: AI_CONTENT_GENERATION_ENABLED,
+        // If in update mode, only update color fields if necessary
+        updateColorFields: !(
+          updateMode &&
+          photo.colorData !== undefined &&
+          photo.colorSort !== undefined
+        ),
       });
 
       let urlToDelete: string | undefined;
@@ -575,7 +589,7 @@ export const syncPhotosAction = async (photosToSync: {
     for (const { photoId, onlySyncColorData } of photosToSync) {
       await (onlySyncColorData
         ? storeColorDataForPhotoAction(photoId)
-        : syncPhotoAction(photoId, true));
+        : syncPhotoAction(photoId, { isBatch: true }));
     }
     revalidateAllKeysAndPaths();
   });
