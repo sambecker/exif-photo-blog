@@ -160,7 +160,11 @@ export const POSTGRES_SSL_ENABLED =
 
 // STORAGE: REDIS
 export const HAS_REDIS_STORAGE =
-  Boolean(process.env.KV_URL);
+  Boolean(
+    process.env.KV_URL ||
+    process.env.EXIF_KV_URL ||
+    process.env.UPSTASH_REDIS_REST_URL,
+  );
 
 // STORAGE: VERCEL BLOB
 export const HAS_VERCEL_BLOB_STORAGE =
