@@ -13,7 +13,7 @@ import {
   BLUR_ENABLED,
 } from '@/app/config';
 import ErrorNote from '@/components/ErrorNote';
-import { getRecipeTitleForData } from '@/photo/db/query';
+import { getRecipeTitleForData } from '@/db/query';
 
 export const maxDuration = 60;
 

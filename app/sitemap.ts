@@ -15,7 +15,7 @@ import {
 } from '@/app/path';
 import { isTagFavs } from '@/tag';
 import { BASE_URL, GRID_HOMEPAGE_ENABLED } from '@/app/config';
-import { getPhotoIdsAndUpdatedAt } from '@/photo/db/query';
+import { getPhotoIdsAndUpdatedAt } from '@/db/query';
 
 // Cache for 24 hours
 export const revalidate = 86_400;

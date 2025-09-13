@@ -10,7 +10,7 @@ import ResponsiveText from '../primitives/ResponsiveText';
 import { SHOW_CATEGORY_IMAGE_HOVERS } from '@/app/config';
 import EntityHover from './EntityHover';
 import { getPhotosCachedAction } from '@/photo/actions';
-import { PhotoQueryOptions } from '@/photo/db';
+import { PhotoQueryOptions } from '@/db';
 import { MAX_PHOTOS_TO_SHOW_PER_CATEGORY } from '@/image-response';
 
 export interface EntityLinkExternalProps {

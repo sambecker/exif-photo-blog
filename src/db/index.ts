@@ -1,8 +1,8 @@
 import { parameterize } from '@/utility/string';
-import { PhotoSetCategory } from '../../category';
+import { PhotoSetCategory } from '@/category';
 import { Camera } from '@/camera';
 import { Lens } from '@/lens';
-import { APP_DEFAULT_SORT_BY, SortBy } from '../sort';
+import { APP_DEFAULT_SORT_BY, SortBy } from '@/photo/sort';
 
 export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 export const PHOTO_DEFAULT_LIMIT = 100;

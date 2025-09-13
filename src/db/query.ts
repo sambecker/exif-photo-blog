@@ -33,10 +33,10 @@ import { migrationForError } from './migration';
 import {
   UPDATE_QUERY_LIMIT,
   OUTDATED_UPDATE_AT_THRESHOLD,
-} from '../update';
+} from '@/photo/update';
 import { Recipes } from '@/recipe';
 import { Years } from '@/years';
-import { PhotoColorData } from '../color/client';
+import { PhotoColorData } from '@/photo/color/client';
 
 const createPhotosTable = () =>
   sql`
@@ -80,7 +80,7 @@ const createPhotosTable = () =>
 
 // Safe wrapper intended for most queries with JIT migration/table creation
 // Catches up to 3 migrations in older installations
-const safelyQueryPhotos = async <T>(
+const safelyQuery = async <T>(
   callback: () => Promise<T>,
   queryLabel: string,
   queryOptions?: PhotoQueryOptions,
@@ -168,7 +168,7 @@ const safelyQueryPhotos = async <T>(
 
 // Must provide id as 8-character nanoid
 export const insertPhoto = (photo: PhotoDbInsert) =>
-  safelyQueryPhotos(() => sql`
+  safelyQuery(() => sql`
     INSERT INTO photos (
       id,
       url,
@@ -240,7 +240,7 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
   `, 'insertPhoto');
 
 export const updatePhoto = (photo: PhotoDbInsert) =>
-  safelyQueryPhotos(() => sql`
+  safelyQuery(() => sql`
     UPDATE photos SET
     url=${photo.url},
     extension=${photo.extension},
@@ -278,21 +278,21 @@ export const updatePhoto = (photo: PhotoDbInsert) =>
   `, 'updatePhoto');
 
 export const deletePhotoTagGlobally = (tag: string) =>
-  safelyQueryPhotos(() => sql`
+  safelyQuery(() => sql`
     UPDATE photos
     SET tags=ARRAY_REMOVE(tags, ${tag})
     WHERE ${tag}=ANY(tags)
   `, 'deletePhotoTagGlobally');
 
 export const renamePhotoTagGlobally = (tag: string, updatedTag: string) =>
-  safelyQueryPhotos(() => sql`
+  safelyQuery(() => sql`
     UPDATE photos
     SET tags=ARRAY_REPLACE(tags, ${tag}, ${updatedTag})
     WHERE ${tag}=ANY(tags)
   `, 'renamePhotoTagGlobally');
 
 export const addTagsToPhotos = (tags: string[], photoIds: string[]) =>
-  safelyQueryPhotos(() => query(`
+  safelyQuery(() => query(`
     UPDATE photos 
     SET tags = (
       SELECT array_agg(DISTINCT elem)
@@ -307,7 +307,7 @@ export const addTagsToPhotos = (tags: string[], photoIds: string[]) =>
   ]), 'addTagsToPhotos');
 
 export const deletePhotoRecipeGlobally = (recipe: string) =>
-  safelyQueryPhotos(() => sql`
+  safelyQuery(() => sql`
     UPDATE photos
     SET recipe_title=NULL
     WHERE recipe_title=${recipe}
@@ -317,25 +317,25 @@ export const renamePhotoRecipeGlobally = (
   recipe: string,
   updatedRecipe: string,
 ) =>
-  safelyQueryPhotos(() => sql`
+  safelyQuery(() => sql`
     UPDATE photos
     SET recipe_title=${updatedRecipe}
     WHERE recipe_title=${recipe}
   `, 'renamePhotoRecipeGlobally');
 
 export const deletePhoto = (id: string) =>
-  safelyQueryPhotos(() => sql`
+  safelyQuery(() => sql`
     DELETE FROM photos WHERE id=${id}
   `, 'deletePhoto');
 
 export const getPhotosMostRecentUpdate = async () =>
-  safelyQueryPhotos(() => sql`
+  safelyQuery(() => sql`
     SELECT updated_at FROM photos ORDER BY updated_at DESC LIMIT 1
   `.then(({ rows }) => rows[0] ? rows[0].updated_at as Date : undefined)
   , 'getPhotosMostRecentUpdate');
 
 export const getUniqueCameras = async () =>
-  safelyQueryPhotos(() => sql`
+  safelyQuery(() => sql`
     SELECT DISTINCT make||' '||model as camera, make, model,
       COUNT(*),
       MAX(updated_at) as last_modified
@@ -356,7 +356,7 @@ export const getUniqueCameras = async () =>
   , 'getUniqueCameras');
 
 export const getUniqueLenses = async () =>
-  safelyQueryPhotos(() => sql`
+  safelyQuery(() => sql`
     SELECT DISTINCT lens_make||' '||lens_model as lens,
       lens_make, lens_model,
       COUNT(*),
@@ -376,7 +376,7 @@ export const getUniqueLenses = async () =>
   , 'getUniqueLenses');
 
 export const getUniqueTags = async () =>
-  safelyQueryPhotos(() => sql`
+  safelyQuery(() => sql`
     SELECT DISTINCT unnest(tags) as tag,
       COUNT(*),
       MAX(updated_at) as last_modified
@@ -392,7 +392,7 @@ export const getUniqueTags = async () =>
   , 'getUniqueTags');
 
 export const getUniqueRecipes = async () =>
-  safelyQueryPhotos(() => sql`
+  safelyQuery(() => sql`
     SELECT DISTINCT recipe_title,
       COUNT(*),
       MAX(updated_at) as last_modified
@@ -409,7 +409,7 @@ export const getUniqueRecipes = async () =>
   , 'getUniqueRecipes');
 
 export const getUniqueYears = async () =>
-  safelyQueryPhotos(() => sql`
+  safelyQuery(() => sql`
     SELECT
       DISTINCT EXTRACT(YEAR FROM taken_at) AS year,
       COUNT(*),
@@ -429,7 +429,7 @@ export const getRecipeTitleForData = async (
   film: string,
 ) =>
   // Includes legacy check on pre-stringified JSON
-  safelyQueryPhotos(() => sql`
+  safelyQuery(() => sql`
     SELECT recipe_title FROM photos
     WHERE hidden IS NOT TRUE
     AND recipe_data=${typeof data === 'string' ? data : JSON.stringify(data)}
@@ -444,7 +444,7 @@ export const getPhotosNeedingRecipeTitleCount = async (
   film: string,
   photoIdToExclude?: string,
 ) =>
-  safelyQueryPhotos(() => sql`
+  safelyQuery(() => sql`
     SELECT COUNT(*)
     FROM photos
     WHERE recipe_title IS NULL
@@ -459,7 +459,7 @@ export const updateAllMatchingRecipeTitles = (
   data: string,
   film: string,
 ) =>
-  safelyQueryPhotos(() => sql`
+  safelyQuery(() => sql`
     UPDATE photos
     SET recipe_title=${title}
     WHERE recipe_title IS NULL
@@ -468,7 +468,7 @@ export const updateAllMatchingRecipeTitles = (
   `, 'updateAllMatchingRecipeTitles');
 
 export const getUniqueFilms = async () =>
-  safelyQueryPhotos(() => sql`
+  safelyQuery(() => sql`
     SELECT DISTINCT film,
       COUNT(*),
       MAX(updated_at) as last_modified
@@ -485,7 +485,7 @@ export const getUniqueFilms = async () =>
   , 'getUniqueFilms');
 
 export const getUniqueFocalLengths = async () =>
-  safelyQueryPhotos(() => sql`
+  safelyQuery(() => sql`
     SELECT DISTINCT focal_length,
       COUNT(*),
       MAX(updated_at) as last_modified
@@ -502,7 +502,7 @@ export const getUniqueFocalLengths = async () =>
   , 'getUniqueFocalLengths');
 
 export const getPhotos = async (options: PhotoQueryOptions = {}) =>
-  safelyQueryPhotos(async () => {
+  safelyQuery(async () => {
     const sql = ['SELECT * FROM photos'];
     const values = [] as (string | number)[];
 
@@ -540,7 +540,7 @@ export const getPhotosNearId = async (
   photoId: string,
   options: PhotoQueryOptions,
 ) =>
-  safelyQueryPhotos(async () => {
+  safelyQuery(async () => {
     const { limit } = options;
 
     const {
@@ -578,7 +578,7 @@ export const getPhotosNearId = async (
   }, `getPhotosNearId: ${photoId}`);    
 
 export const getPhotosMeta = (options: PhotoQueryOptions = {}) =>
-  safelyQueryPhotos(async () => {
+  safelyQuery(async () => {
     // eslint-disable-next-line max-len
     let sql = 'SELECT COUNT(*), MIN(taken_at_naive) as start, MAX(taken_at_naive) as end FROM photos';
     const { wheres, wheresValues } = getWheresFromOptions(options);
@@ -596,14 +596,14 @@ export const getPhotosMeta = (options: PhotoQueryOptions = {}) =>
   }, 'getPhotosMeta');
 
 export const getPublicPhotoIds = async ({ limit }: { limit?: number }) =>
-  safelyQueryPhotos(() => (limit
+  safelyQuery(() => (limit
     ? sql`SELECT id FROM photos WHERE hidden IS NOT TRUE LIMIT ${limit}`
     : sql`SELECT id FROM photos WHERE hidden IS NOT TRUE`)
     .then(({ rows }) => rows.map(({ id }) => id as string))
   , 'getPublicPhotoIds');
 
 export const getPhotoIdsAndUpdatedAt = async () =>
-  safelyQueryPhotos(() =>
+  safelyQuery(() =>
     sql`SELECT id, updated_at FROM photos WHERE hidden IS NOT TRUE`
       .then(({ rows }) => rows.map(({ id, updated_at }) =>
         ({ id: id as string, updatedAt: updated_at as Date })))
@@ -613,7 +613,7 @@ export const getPhoto = async (
   id: string,
   includeHidden?: boolean,
 ): Promise<Photo | undefined> =>
-  safelyQueryPhotos(async () => {
+  safelyQuery(async () => {
     // Check for photo id forwarding and convert short ids to uuids
     const photoId = translatePhotoId(id);
     return (includeHidden
@@ -662,7 +662,7 @@ const needsSyncWhereStatement =
   ].join(' OR ')}`;
 
 export const getPhotosInNeedOfUpdate = () =>
-  safelyQueryPhotos(
+  safelyQuery(
     () => query(`
       SELECT * FROM photos
       ${needsSyncWhereStatement}
@@ -676,7 +676,7 @@ export const getPhotosInNeedOfUpdate = () =>
   );
 
 export const getPhotosInNeedOfUpdateCount = () =>
-  safelyQueryPhotos(
+  safelyQuery(
     () => query(`
       SELECT COUNT(*) FROM photos
       ${needsSyncWhereStatement}
@@ -690,7 +690,7 @@ export const getPhotosInNeedOfUpdateCount = () =>
 // Backfills and experimentation
 
 export const getColorDataForPhotos = () =>
-  safelyQueryPhotos(() => sql<{
+  safelyQuery(() => sql<{
     id: string,
     url: string,
     color_data?: PhotoColorData,
@@ -706,7 +706,7 @@ export const updateColorDataForPhoto = (
   colorData: string,
   colorSort: number,
 ) =>
-  safelyQueryPhotos(
+  safelyQuery(
     () => sql`
       UPDATE photos SET
       color_data=${colorData},

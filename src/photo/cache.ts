@@ -17,8 +17,8 @@ import {
   getUniqueLenses,
   getUniqueRecipes,
   getUniqueYears,
-} from '@/photo/db/query';
-import { PhotoQueryOptions } from './db';
+} from '@/db/query';
+import { PhotoQueryOptions } from '@/db';
 import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
 import { createCameraKey } from '@/camera';
 import {

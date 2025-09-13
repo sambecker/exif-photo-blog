@@ -12,7 +12,7 @@ import {
   getUniqueTags,
   getUniqueRecipes,
   getPhotosInNeedOfUpdateCount,
-} from '@/photo/db/query';
+} from '@/db/query';
 import {
   getGitHubMetaForCurrentApp,
   indicatorStatusForSignificantInsights,

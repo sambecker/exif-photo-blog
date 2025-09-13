@@ -9,7 +9,7 @@ import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import FocalLengthImageResponse from
   '@/image-response/FocalLengthImageResponse';
 import { formatFocalLength, getFocalLengthFromString } from '@/focal';
-import { getUniqueFocalLengths } from '@/photo/db/query';
+import { getUniqueFocalLengths } from '@/db/query';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(

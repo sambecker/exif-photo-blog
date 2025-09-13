@@ -4,7 +4,7 @@ import {
   getAiImageQuery,
   parseTitleAndCaption,
 } from '.';
-import { getUniqueTags } from '../db/query';
+import { getUniqueTags } from '@/db/query';
 
 export const generateAiImageQueries = async (
   imageBase64?: string,
