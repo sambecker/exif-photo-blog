@@ -1,4 +1,5 @@
 import {
+  getCompatibleExifValue,
   convertApertureValueToFNumber,
   getAspectRatioFromExif,
   getOffsetFromExif,
@@ -11,21 +12,21 @@ import { GEO_PRIVACY_ENABLED } from '@/app/config';
 import { PhotoExif } from '..';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
-import type { ExifData } from 'ts-exif-parser';
+import type { ExifData, ExifTags } from 'ts-exif-parser';
 
 export const convertExifToFormData = (
-  data: ExifData,
-  dataExifr?: any,
+  exif: ExifData,
+  exifr?: any,
   film?: FujifilmSimulation,
   recipeData?: FujifilmRecipe,
 ): Partial<Record<keyof PhotoExif, string | undefined>> => {
-  let title: string | undefined = dataExifr?.title?.value;
+  let title: string | undefined = exifr?.title?.value;
   let caption: string | undefined;
   const description: string | undefined =
-    data.tags?.ImageDescription ||
-    dataExifr?.ImageDescription ||
-    dataExifr?.description?.value;
-  const tags: string[] | undefined = dataExifr?.subject;
+    exif.tags?.ImageDescription ||
+    exifr?.ImageDescription ||
+    exifr?.description?.value;
+  const tags: string[] | undefined = exifr?.subject;
 
   if (title && title !== description) {
     caption = description;
@@ -33,34 +34,46 @@ export const convertExifToFormData = (
     title = description;
   }
 
+  // Convenience function with exif + exifr in scope
+  const getExifValue = (
+    key: keyof ExifTags,
+    exifrSpecificKey?: string,
+  ) => getCompatibleExifValue(key, exif, exifr, exifrSpecificKey);
+
+  const dateTimeOriginal = getExifValue('DateTimeOriginal');
+
   return {
-    aspectRatio: getAspectRatioFromExif(data).toString(),
-    make: data.tags?.Make,
-    model: data.tags?.Model,
-    focalLength: data.tags?.FocalLength?.toString(),
-    focalLengthIn35MmFormat: data.tags?.FocalLengthIn35mmFormat?.toString(),
-    lensMake: data.tags?.LensMake,
-    lensModel: data.tags?.LensModel,
+    aspectRatio: getAspectRatioFromExif(exif).toString(),
+    make: getExifValue('Make'),
+    model: getExifValue('Model'),
+    focalLength: getExifValue('FocalLength')?.toString(),
+    focalLengthIn35MmFormat:getExifValue('FocalLengthIn35mmFormat')?.toString(),
+    lensMake: getExifValue('LensMake'),
+    lensModel: getExifValue('LensModel'),
     fNumber: (
-      data.tags?.FNumber?.toString() ||
-      convertApertureValueToFNumber(data.tags?.ApertureValue)
+      getExifValue('FNumber')?.toString() ||
+      convertApertureValueToFNumber(getExifValue('ApertureValue'))
     ),
-    iso: data.tags?.ISO?.toString() || data.tags?.ISOSpeed?.toString(),
-    exposureTime: data.tags?.ExposureTime?.toString(),
-    exposureCompensation: data.tags?.ExposureCompensation?.toString(),
-    latitude:
-      !GEO_PRIVACY_ENABLED ? data.tags?.GPSLatitude?.toString() : undefined,
-    longitude:
-      !GEO_PRIVACY_ENABLED ? data.tags?.GPSLongitude?.toString() : undefined,
+    iso:
+      getExifValue('ISO')?.toString() ||
+      getExifValue('ISOSpeed')?.toString(),
+    exposureTime: getExifValue('ExposureTime')?.toString(),
+    exposureCompensation: getExifValue('ExposureCompensation')?.toString(),
+    latitude: !GEO_PRIVACY_ENABLED
+      ? getExifValue('GPSLatitude', 'latitude')?.toString()
+      : undefined,
+    longitude: !GEO_PRIVACY_ENABLED
+      ? getExifValue('GPSLongitude', 'longitude')?.toString()
+      : undefined,
     film,
     recipeData: JSON.stringify(recipeData),
-    ...data.tags?.DateTimeOriginal && {
+    ...dateTimeOriginal && {
       takenAt: convertTimestampWithOffsetToPostgresString(
-        data.tags.DateTimeOriginal,
-        getOffsetFromExif(data),
+        dateTimeOriginal,
+        getOffsetFromExif(exif, exifr),
       ),
       takenAtNaive:
-        convertTimestampToNaivePostgresString(data.tags.DateTimeOriginal),
+        convertTimestampToNaivePostgresString(dateTimeOriginal),
     },
     ...title && { title },
     ...caption && { caption },

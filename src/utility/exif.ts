@@ -1,13 +1,25 @@
-import { OrientationTypes, type ExifData } from 'ts-exif-parser';
+import { OrientationTypes, type ExifData, ExifTags } from 'ts-exif-parser';
 
 const OFFSET_REGEX = /[+-]\d\d:\d\d/;
 
-export const getOffsetFromExif = (data: ExifData) =>
-  Object.values(data.tags as any)
-    .find((value: any) =>
-      typeof value === 'string' &&
-      OFFSET_REGEX.test(value),
-    ) as string | undefined;
+export const getCompatibleExifValue = (
+  key: keyof ExifTags,
+  exif: ExifData,
+  exifr: any,
+  exifrSpecificKey?: string,
+) => exif.tags?.[key] || exifr?.[exifrSpecificKey || key];
+
+const isValueOffset = (value: any) =>
+  typeof value === 'string' &&
+  OFFSET_REGEX.test(value);
+
+export const getOffsetFromExif = (
+  exif: ExifData,
+  exifr: any,
+) => (
+  Object.values(exif.tags as any).find(isValueOffset) ||
+  Object.values(exifr).find(isValueOffset)
+) as string | undefined;
 
 export const getAspectRatioFromExif = (data: ExifData): number => {
   // Using '||' operator to handle `Orientation` unexpectedly being '0'
