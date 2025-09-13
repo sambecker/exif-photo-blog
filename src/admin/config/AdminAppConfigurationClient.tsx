@@ -938,8 +938,8 @@ export default function AdminAppConfigurationClient({
         ))}
       <div className="pl-11 pr-2 sm:pr-11 mt-4 md:mt-7">
         <div>
-          Changes to environment variables require a redeploy
-          or reboot of local dev server
+          Changes to environment variables require a new deployment
+          to take effect
         </div>
       </div>
     </ScoreCardContainer>
