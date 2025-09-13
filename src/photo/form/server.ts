@@ -37,7 +37,8 @@ export const convertExifToFormData = (
   // Convenience function with exif + exifr in scope
   const getExifValue = (
     key: keyof ExifTags,
-  ) => getCompatibleExifValue(key, exif, exifr);
+    exifrSpecificKey?: string,
+  ) => getCompatibleExifValue(key, exif, exifr, exifrSpecificKey);
 
   const dateTimeOriginal = getExifValue('DateTimeOriginal');
 
@@ -59,10 +60,10 @@ export const convertExifToFormData = (
     exposureTime: getExifValue('ExposureTime')?.toString(),
     exposureCompensation: getExifValue('ExposureCompensation')?.toString(),
     latitude: !GEO_PRIVACY_ENABLED
-      ? getExifValue('GPSLatitude')?.toString()
+      ? getExifValue('GPSLatitude', 'latitude')?.toString()
       : undefined,
     longitude: !GEO_PRIVACY_ENABLED
-      ? getExifValue('GPSLongitude')?.toString()
+      ? getExifValue('GPSLongitude', 'longitude')?.toString()
       : undefined,
     film,
     recipeData: JSON.stringify(recipeData),

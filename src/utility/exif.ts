@@ -6,7 +6,8 @@ export const getCompatibleExifValue = (
   key: keyof ExifTags,
   exif: ExifData,
   exifr: any,
-) => exif.tags?.[key] || exifr?.[key];
+  exifrSpecificKey?: string,
+) => exif.tags?.[key] || exifr?.[exifrSpecificKey || key];
 
 const isValueOffset = (value: any) =>
   typeof value === 'string' &&
