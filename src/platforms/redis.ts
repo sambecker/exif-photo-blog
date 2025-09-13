@@ -7,10 +7,10 @@ export const redis = (
   process.env.UPSTASH_REDIS_REST_URL
 ) ? Redis.fromEnv()
   : (
-    process.env.EXIF_KV_URL &&
+    process.env.EXIF_KV_REST_API_URL &&
     process.env.EXIF_KV_REST_API_TOKEN
   ) ? new Redis({
-      url: process.env.EXIF_KV_URL,
+      url: process.env.EXIF_KV_REST_API_URL,
       token: process.env.EXIF_KV_REST_API_TOKEN,
     })
     : undefined;
