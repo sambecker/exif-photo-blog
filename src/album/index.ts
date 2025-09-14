@@ -1,3 +1,5 @@
+import { CategoryQueryMeta } from '@/category';
+
 export interface Album {
   id: string
   title: string
@@ -8,3 +10,7 @@ export interface Album {
   latitude?: number
   longitude?: number
 }
+
+type AlbumWithMeta = { album: string } & CategoryQueryMeta;
+
+export type Albums = AlbumWithMeta[];

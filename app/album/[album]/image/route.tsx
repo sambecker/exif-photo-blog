@@ -19,16 +19,16 @@ export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
 
 export async function GET(
   _: Request,
-  context: { params: Promise<{ tag: string }> },
+  context: { params: Promise<{ album: string }> },
 ) {
-  const { tag } = await context.params;
+  const { album } = await context.params;
 
   const [
     photos,
     { fontFamily, fonts },
     headers,
   ] = await Promise.all([
-    getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY, tag }),
+    getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY, tag: album }),
     getIBMPlexMono(),
     getImageResponseCacheControlHeaders(),
   ]);
@@ -37,7 +37,7 @@ export async function GET(
 
   return new ImageResponse(
     <TagImageResponse {...{
-      tag,
+      tag: album,
       photos,
       width,
       height,

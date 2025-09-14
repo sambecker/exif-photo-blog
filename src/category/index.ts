@@ -8,12 +8,14 @@ import { Recipes } from '@/recipe';
 import { Recents } from '@/recents';
 import { Years } from '@/years';
 import { parseCommaSeparatedKeyString } from '@/utility/key';
+import { Albums } from '@/album';
 
 export const CATEGORY_KEYS = [
   'recents',
   'years',
   'cameras',
   'lenses',
+  'albums',
   'tags',
   'recipes',
   'films',
@@ -26,6 +28,7 @@ export type CategoryKeys = CategoryKey[];
 
 export const DEFAULT_CATEGORY_KEYS: CategoryKeys = [
   'recents',
+  'albums',
   'tags',
   'cameras',
   'lenses',
@@ -55,6 +58,7 @@ export interface PhotoSetCategory {
   year?: string
   camera?: Camera
   lens?: Lens
+  album?: string
   tag?: string
   recipe?: string
   film?: string
@@ -62,14 +66,15 @@ export interface PhotoSetCategory {
 }
 
 export interface PhotoSetCategories {
+  recents: Recents
+  years: Years
   cameras: Cameras
   lenses: Lenses
+  albums: Albums
   tags: Tags
   recipes: Recipes
   films: Films
   focalLengths: FocalLengths
-  years: Years
-  recents: Recents
 }
 
 export interface PhotoSetAttributes {

@@ -22,6 +22,7 @@ import { createLensKey } from '@/lens';
 import { sortTagsByCount } from '@/tag';
 import { sortCategoriesByCount } from '@/category';
 import { sortFocalLengths } from '@/focal';
+import { Albums } from '@/album';
 
 type CategoryData = Awaited<ReturnType<typeof getDataForCategories>>;
 
@@ -34,6 +35,7 @@ export const NULL_CATEGORY_DATA: CategoryData = {
   recipes: [],
   films: [],
   focalLengths: [],
+  albums: [],
 };
 
 export const getDataForCategories = () => Promise.all([
@@ -80,6 +82,7 @@ export const getDataForCategories = () => Promise.all([
       .then(sortFocalLengths)
       .catch(() => [])
     : undefined,
+  [] as Albums,
 ]).then(([
   recents = [],
   years = [],
@@ -89,6 +92,7 @@ export const getDataForCategories = () => Promise.all([
   recipes = [],
   films = [],
   focalLengths = [],
+  albums = [],
 ]) => ({
   recents,
   years,
@@ -98,6 +102,7 @@ export const getDataForCategories = () => Promise.all([
   recipes,
   films,
   focalLengths,
+  albums,
 }));
 
 export const getCountsForCategories = async () => {
