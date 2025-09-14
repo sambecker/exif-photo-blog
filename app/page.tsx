@@ -10,6 +10,7 @@ import PhotoGridPage from '@/photo/PhotoGridPage';
 import { getDataForCategoriesCached } from '@/category/cache';
 import { getPhotosMetaCached } from '@/photo/cache';
 import { FEED_META_QUERY_OPTIONS, getFeedQueryOptions } from '@/feed';
+import { getAlbums } from '@/album/query';
 
 export const dynamic = 'force-static';
 export const maxDuration = 60;
@@ -30,6 +31,7 @@ export default async function HomePage() {
     photosCount,
     photosCountWithExcludes,
     categories,
+    albums,
   ] = await Promise.all([
     getPhotosCached()
       .catch(() => []),
@@ -42,6 +44,9 @@ export default async function HomePage() {
     GRID_HOMEPAGE_ENABLED
       ? getDataForCategoriesCached()
       : NULL_CATEGORY_DATA,
+    GRID_HOMEPAGE_ENABLED
+      ? getAlbums()
+      : [],
   ]);
 
   return (
@@ -54,6 +59,7 @@ export default async function HomePage() {
             photosCountWithExcludes,
             ...USER_DEFAULT_SORT_OPTIONS,
             ...categories,
+            albums,
           }}
         />
         : <PhotoFullPage {...{

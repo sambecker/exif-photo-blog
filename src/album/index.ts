@@ -1,6 +1,8 @@
 export interface Album {
   id: string
-  name: string
+  title: string
+  slug: string
+  subhead?: string
   description?: string
   locationName?: string
   latitude?: number

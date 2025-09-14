@@ -40,6 +40,7 @@ import IconYear from '@/components/icons/IconYear';
 import PhotoYear from '@/years/PhotoYear';
 import { chunkArray } from '@/utility/array';
 import PhotoRecents from '@/recents/PhotoRecents';
+import { Album } from '@/album';
 
 const APPROXIMATE_ITEM_HEIGHT = 40;
 const ABOUT_HEIGHT_OFFSET = 24;
@@ -51,6 +52,7 @@ export default function PhotoGridSidebar({
   aboutTextHasBrParagraphBreaks,
   ..._categories
 }: PhotoSetCategories & {
+  albums: Album[]
   photosCount: number
   containerHeight?: number
   aboutTextSafelyParsedHtml?: string
