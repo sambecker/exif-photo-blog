@@ -40,6 +40,11 @@ export type PhotoQueryOptions = {
 export const areOptionsSensitive = (options: PhotoQueryOptions) =>
   options.hidden === 'include' || options.hidden === 'only';
 
+export const getJoinsFromOptions = (options: PhotoQueryOptions) =>
+  options.album
+    ? 'JOIN album_photo ap ON ap.photo_id = p.id'
+    : undefined;
+
 export const getWheresFromOptions = (
   options: PhotoQueryOptions,
   initialValuesIndex = 1,
@@ -54,6 +59,7 @@ export const getWheresFromOptions = (
     maximumAspectRatio,
     recent,
     year,
+    album,
     tag,
     camera,
     lens,
@@ -128,6 +134,10 @@ export const getWheresFromOptions = (
     // Ensure unique queries for lenses missing makes
     if (!lens.make) { wheres.push('lens_make IS NULL'); }
     wheresValues.push(parameterize(lens.model));
+  }
+  if (album) {
+    wheres.push(`album_id=$${valuesIndex++}`);
+    wheresValues.push(album);
   }
   if (tag) {
     wheres.push(`$${valuesIndex++}=ANY(tags)`);

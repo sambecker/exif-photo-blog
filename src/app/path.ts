@@ -263,6 +263,9 @@ export const absolutePathForCamera= (camera: Camera, share?: boolean) =>
 
 export const absolutePathForLens= (lens: Lens, share?: boolean) =>
   `${getBaseUrl(share)}${pathForLens(lens)}`;
+  
+export const absolutePathForAlbum = (album: string, share?: boolean) =>
+  `${getBaseUrl(share)}${pathForAlbum(album)}`;
 
 export const absolutePathForTag = (tag: string, share?: boolean) =>
   `${getBaseUrl(share)}${pathForTag(tag)}`;
@@ -283,31 +286,34 @@ export const absolutePathForRecents = (share?: boolean) =>
   `${getBaseUrl(share)}${PREFIX_RECENTS}`;
 
 export const absolutePathForPhotoImage = (photo: PhotoOrPhotoId) =>
-  `${getBaseUrl()}${pathForPhotoImage(photo)}`;
+  `${absolutePathForPhoto({ photo })}/${IMAGE}`;
 
 export const absolutePathForCameraImage= (camera: Camera) =>
-  `${getBaseUrl()}${pathForCameraImage(camera)}`;
+  `${absolutePathForCamera(camera)}/${IMAGE}`;
 
 export const absolutePathForLensImage= (lens: Lens) =>
-  `${getBaseUrl()}${pathForLensImage(lens)}`;
+  `${absolutePathForLens(lens)}/${IMAGE}`;
+
+export const absolutePathForAlbumImage = (album: string) =>
+  `${absolutePathForAlbum(album)}/${IMAGE}`;
 
 export const absolutePathForTagImage = (tag: string) =>
-  `${getBaseUrl()}${pathForTagImage(tag)}`;
+  `${absolutePathForTag(tag)}/${IMAGE}`;
 
 export const absolutePathForRecipeImage = (recipe: string) =>
-  `${getBaseUrl()}${pathForRecipeImage(recipe)}`;
+  `${absolutePathForRecipe(recipe)}/${IMAGE}`;
 
 export const absolutePathForFilmImage = (film: string) =>
-  `${getBaseUrl()}${pathForFilmImage(film)}`;
+  `${absolutePathForFilm(film)}/${IMAGE}`;
 
 export const absolutePathForFocalLengthImage = (focal: number) =>
-  `${getBaseUrl()}${pathForFocalLengthImage(focal)}`;
+  `${absolutePathForFocalLength(focal)}/${IMAGE}`;
+    
+export const absolutePathForYearImage = (year: string) =>
+  `${absolutePathForYear(year)}/${IMAGE}`;
 
-export const absolutePathForYearImage = (year: string, share?: boolean) =>
-  `${getBaseUrl(share)}${pathForYearImage(year)}`;
-
-export const absolutePathForRecentsImage = (share?: boolean) =>
-  `${getBaseUrl(share)}${pathForRecentsImage()}`;
+export const absolutePathForRecentsImage = () =>
+  `${absolutePathForRecents()}/${IMAGE}`;
 
 // p/[photoId]
 export const isPathPhoto = (pathname = '') =>
@@ -344,6 +350,14 @@ export const isPathLens = (pathname = '') =>
 // lens/[make]/[model]/[photoId]
 export const isPathLensPhoto = (pathname = '') =>
   new RegExp(`^${PREFIX_LENS}/[^/]+/[^/]+/[^/]+/?$`).test(pathname);
+
+// album/[album]
+export const isPathAlbum = (pathname = '') =>
+  new RegExp(`^${PREFIX_ALBUM}/[^/]+/?$`).test(pathname);
+
+// album/[album]/[photoId]
+export const isPathAlbumPhoto = (pathname = '') =>
+  new RegExp(`^${PREFIX_ALBUM}/[^/]+/[^/]+/?$`).test(pathname);
 
 // tag/[tag]
 export const isPathTag = (pathname = '') =>
@@ -442,6 +456,8 @@ export const getPathComponents = (pathname = ''): {
     new RegExp(`^${PREFIX_YEAR}/[^/]+/([^/]+)`))?.[1];
   const photoIdFromRecents = pathname.match(
     new RegExp(`^${PREFIX_RECENTS}/([^/]+)`))?.[1];
+  const album = pathname.match(
+    new RegExp(`^${PREFIX_ALBUM}/([^/]+)`))?.[1];
   const tag = pathname.match(
     new RegExp(`^${PREFIX_TAG}/([^/]+)`))?.[1];
   const film = pathname.match(
@@ -468,6 +484,7 @@ export const getPathComponents = (pathname = ''): {
       photoIdFromYear ||
       photoIdFromRecents
     ),
+    album,
     tag,
     camera,
     film,
@@ -484,6 +501,7 @@ export const getEscapePath = (pathname?: string) => {
     year,
     camera,
     lens,
+    album,
     tag,
     recipe,
     film,
@@ -510,6 +528,8 @@ export const getEscapePath = (pathname?: string) => {
     return pathForCamera(camera);
   } else if (lens && isPathLensPhoto(pathname)) {
     return pathForLens(lens);
+  } else if (album && isPathAlbumPhoto(pathname)) {
+    return pathForAlbum(album);
   } else if (tag && isPathTagPhoto(pathname)) {
     return pathForTag(tag);
   } else if (recipe && isPathRecipePhoto(pathname)) {

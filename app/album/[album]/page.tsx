@@ -1,8 +1,6 @@
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
-import { getUniqueTags, getPhotosByAlbum } from '@/photo/query';
+import { getPhotos, getUniqueTags } from '@/photo/query';
 import { PATH_ROOT } from '@/app/path';
-import { generateMetaForTag } from '@/tag';
-import { getPhotosTagDataCached } from '@/tag/data';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
@@ -10,9 +8,11 @@ import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
 import AlbumOverview from '@/album/AlbumOverview';
 import { getAlbumFromSlug } from '@/album/query';
+import { Album, generateMetaForAlbum } from '@/album';
+import { getPhotosAlbumDataCached } from '@/album/data';
 
-const getPhotosTagDataCachedCached = cache((tag: string) =>
-  getPhotosTagDataCached({ tag, limit: INFINITE_SCROLL_GRID_INITIAL}));
+const getPhotosAlbumDataCachedCached = cache((album: Album) =>
+  getPhotosAlbumDataCached({ album, limit: INFINITE_SCROLL_GRID_INITIAL}));
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'tags',
@@ -30,12 +30,14 @@ export async function generateMetadata({
 }: AlbumProps): Promise<Metadata> {
   const { album: albumFromParams } = await params;
 
-  const album = decodeURIComponent(albumFromParams);
+  const albumSlug = decodeURIComponent(albumFromParams);
+
+  const album = await getAlbumFromSlug(albumSlug);
 
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosTagDataCachedCached(album);
+  ] = await getPhotosAlbumDataCachedCached(album);
 
   if (photos.length === 0) { return {}; }
 
@@ -46,7 +48,7 @@ export async function generateMetadata({
     title,
     description,
     images,
-  } = generateMetaForTag(album, photos, appText, count, dateRange);
+  } = generateMetaForAlbum(album, photos, appText, count, dateRange);
 
   return {
     title,
@@ -65,7 +67,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function TagPage({
+export default async function AlbumPage({
   params,
 }:AlbumProps) {
   const { album: albumFromParams } = await params;
@@ -76,7 +78,7 @@ export default async function TagPage({
 
   if (!album) { redirect(PATH_ROOT); }
 
-  const photos = await getPhotosByAlbum(album.id);
+  const photos = await getPhotos({ album: album.id });
 
   if (photos.length === 0) { redirect(PATH_ROOT); }
 

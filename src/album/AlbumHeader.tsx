@@ -1,9 +1,8 @@
 import { Photo, PhotoDateRangePostgres } from '@/photo';
-import { descriptionForTaggedPhotos } from '../tag';
 import PhotoHeader from '@/photo/PhotoHeader';
 import { AI_CONTENT_GENERATION_ENABLED } from '@/app/config';
 import { getAppText } from '@/i18n/state/server';
-import { Album } from '.';
+import { Album, descriptionForAlbumPhotos } from '.';
 import { safelyParseFormattedHtml } from '@/utility/html';
 import PhotoAlbum from './PhotoAlbum';
 
@@ -32,8 +31,7 @@ export default async function AlbumHeader({
         contrast="high"
         showHover={false}
       />}
-      entityVerb={appText.category.tagged}
-      entityDescription={descriptionForTaggedPhotos(
+      entityDescription={descriptionForAlbumPhotos(
         photos,
         appText,
         undefined,

@@ -123,7 +123,7 @@ export default function PhotoGridSidebar({
   const yearsContent = years.length > 0
     ? <HeaderList
       key="years"
-      title="Years"
+      title={appText.category.yearPlural}
       icon={<IconYear
         size={14}
         className="translate-x-[0.5px]"
@@ -192,7 +192,7 @@ export default function PhotoGridSidebar({
   const albumsContent = albums.length > 0
     ? <HeaderList
       key="albums"
-      title="Albums"
+      title={appText.category.albumPlural}
       icon={<IconAlbum
         className="translate-x-[1px]"
       />}

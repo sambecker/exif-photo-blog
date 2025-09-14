@@ -25,6 +25,7 @@ import {
   getOrderByFromOptions,
   getLimitAndOffsetFromOptions,
   getWheresFromOptions,
+  getJoinsFromOptions,
 } from '../db';
 import { FocalLengths } from '@/focal';
 import { Lenses, createLensKey } from '@/lens';
@@ -413,8 +414,14 @@ export const getUniqueFocalLengths = async () =>
 
 export const getPhotos = async (options: PhotoQueryOptions = {}) =>
   safelyQuery(async () => {
-    const sql = ['SELECT * FROM photos'];
+    const sql = ['SELECT p.* FROM photos p'];
     const values = [] as (string | number)[];
+
+    const joins = getJoinsFromOptions(options);
+
+    if (joins) {
+      sql.push(joins);
+    }
 
     const {
       wheres,
@@ -453,6 +460,8 @@ export const getPhotosNearId = async (
   safelyQuery(async () => {
     const { limit } = options;
 
+    const joins = getJoinsFromOptions(options);
+
     const {
       wheres,
       wheresValues,
@@ -464,9 +473,10 @@ export const getPhotosNearId = async (
     return query(
       `
         WITH twi AS (
-          SELECT *, row_number()
+          SELECT p.*, row_number()
           OVER (${getOrderByFromOptions(options)}) as row_number
-          FROM photos
+          FROM photos p
+          ${joins ? `${joins}` : ''}
           ${wheres}
         ),
         current AS (SELECT row_number FROM twi WHERE id = $${valuesIndex++})
@@ -490,7 +500,9 @@ export const getPhotosNearId = async (
 export const getPhotosMeta = (options: PhotoQueryOptions = {}) =>
   safelyQuery(async () => {
     // eslint-disable-next-line max-len
-    let sql = 'SELECT COUNT(*), MIN(taken_at_naive) as start, MAX(taken_at_naive) as end FROM photos';
+    let sql = 'SELECT COUNT(*), MIN(p.taken_at_naive) as start, MAX(p.taken_at_naive) as end FROM photos p';
+    const joins = getJoinsFromOptions(options);
+    if (joins) { sql += ` ${joins}`; }
     const { wheres, wheresValues } = getWheresFromOptions(options);
     if (wheres) { sql += ` ${wheres}`; }
     return query(sql, wheresValues)
@@ -596,17 +608,6 @@ export const getPhotosInNeedOfUpdateCount = () =>
       .then(({ rows }) => parseInt(rows[0].count, 10)),
     'getPhotosInNeedOfUpdateCount',
   );
-
-// Foreign keys
-
-export const getPhotosByAlbum = (albumId: string) =>
-  safelyQuery(() => sql<PhotoDb>`
-    SELECT p.* FROM photos p
-    JOIN album_photo ap ON ap.photo_id = p.id
-    WHERE ap.album_id = ${albumId}
-    ORDER BY p.taken_at DESC
-  `.then(({ rows }) => rows.map(parsePhotoFromDb))
-  , 'getPhotosByAlbum');
 
 // Backfills and experimentation
 
