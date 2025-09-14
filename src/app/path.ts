@@ -43,6 +43,7 @@ export const PATH_FEED_JSON             = '/feed.json';
 export const PREFIX_PHOTO               = '/p';
 export const PREFIX_CAMERA              = '/shot-on';
 export const PREFIX_LENS                = '/lens';
+export const PREFIX_ALBUM               = '/album';
 export const PREFIX_TAG                 = '/tag';
 export const PREFIX_RECIPE              = '/recipe';
 export const PREFIX_FILM                = '/film';
@@ -178,6 +179,9 @@ export const pathForPhoto = ({
   return `${prefix}/${getPhotoId(photo)}`;
 };
 
+export const pathForYear = (year: string) =>
+  `${PREFIX_YEAR}/${year}`;
+
 export const pathForCamera = ({ make, model }: Camera) =>
   `${PREFIX_CAMERA}/${parameterize(make)}/${parameterize(model)}`;
 
@@ -185,6 +189,9 @@ export const pathForLens = ({ make, model }: Lens) =>
   make
     ? `${PREFIX_LENS}/${parameterize(make)}/${parameterize(model)}`
     : `${PREFIX_LENS}/${MISSING_FIELD}/${parameterize(model)}`;
+
+export const pathForAlbum = (slug: string) =>
+  `${PREFIX_ALBUM}/${slug}`;
 
 export const pathForTag = (tag: string) =>
   `${PREFIX_TAG}/${tag}`;
@@ -197,9 +204,6 @@ export const pathForFilm = (film: string) =>
 
 export const pathForFocalLength = (focal: number) =>
   `${PREFIX_FOCAL_LENGTH}/${focal}mm`;
-
-export const pathForYear = (year: string) =>
-  `${PREFIX_YEAR}/${year}`;
 
 // Image paths
 const pathForImage = (path: string) =>

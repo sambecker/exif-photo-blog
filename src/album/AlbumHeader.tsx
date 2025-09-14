@@ -1,11 +1,11 @@
 import { Photo, PhotoDateRange } from '@/photo';
-import PhotoTag from '../tag/PhotoTag';
 import { descriptionForTaggedPhotos } from '../tag';
 import PhotoHeader from '@/photo/PhotoHeader';
 import { AI_CONTENT_GENERATION_ENABLED } from '@/app/config';
 import { getAppText } from '@/i18n/state/server';
 import { Album } from '.';
 import { safelyParseFormattedHtml } from '@/utility/html';
+import PhotoAlbum from './PhotoAlbum';
 
 export default async function AlbumHeader({
   album,
@@ -25,9 +25,10 @@ export default async function AlbumHeader({
   const appText = await getAppText();
   return (
     <PhotoHeader
-      tag={album.slug}
-      entity={<PhotoTag
-        tag={album.slug}
+      album={album.slug}
+      entity={<PhotoAlbum
+        title={album.title}
+        slug={album.slug}
         contrast="high"
         showHover={false}
       />}

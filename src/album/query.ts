@@ -1,6 +1,6 @@
 import { safelyQuery } from '@/db/query';
 import { sql } from '@/platforms/postgres';
-import { Album } from '.';
+import { Album, Albums } from '.';
 
 export const createAlbumsTable = () =>
   sql`
@@ -79,3 +79,25 @@ export const getAlbums = () =>
     SELECT * FROM albums
   `.then(({ rows }) => rows)
   , 'getAlbums');
+
+export const getAlbumsWithPhotoCounts = () =>
+  safelyQuery(() => sql`
+    SELECT 
+      a.title, a.slug, a.updated_at,
+      COALESCE(COUNT(ap.photo_id), 0) as count
+    FROM albums a
+    LEFT JOIN album_photo ap ON a.id = ap.album_id
+    GROUP BY a.id
+    ORDER BY a.created_at DESC
+  `.then(({ rows }): Albums => rows.map(({
+      title,
+      slug,
+      updated_at,
+      count,
+    }) => ({
+      title,
+      slug,
+      count: parseInt(count, 10),
+      lastModified: updated_at as Date,
+    })))
+  , 'getAlbumsWithPhotoCounts');

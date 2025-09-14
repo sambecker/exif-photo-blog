@@ -15,7 +15,7 @@ import RecipeHeader from '@/recipe/RecipeHeader';
 import { ReactNode } from 'react';
 import LensHeader from '@/lens/LensHeader';
 import { AI_CONTENT_GENERATION_ENABLED } from '@/app/config';
-import YearHeader from '@/years/YearHeader';
+import YearHeader from '@/year/YearHeader';
 import RecentsHeader from '@/recents/RecentsHeader';
 
 export default function PhotoDetailPage({

@@ -33,7 +33,7 @@ import {
   OUTDATED_UPDATE_AT_THRESHOLD,
 } from '@/photo/update';
 import { Recipes } from '@/recipe';
-import { Years } from '@/years';
+import { Years } from '@/year';
 import { PhotoColorData } from '@/photo/color/client';
 import { safelyQuery } from '@/db/query';
 

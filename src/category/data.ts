@@ -17,12 +17,13 @@ import {
   SHOW_TAGS,
   SHOW_YEARS,
   SHOW_RECENTS,
+  SHOW_ALBUMS,
 } from '@/app/config';
 import { createLensKey } from '@/lens';
 import { sortTagsByCount } from '@/tag';
 import { sortCategoriesByCount } from '@/category';
 import { sortFocalLengths } from '@/focal';
-import { Albums } from '@/album';
+import { getAlbumsWithPhotoCounts } from '@/album/query';
 
 type CategoryData = Awaited<ReturnType<typeof getDataForCategories>>;
 
@@ -82,7 +83,10 @@ export const getDataForCategories = () => Promise.all([
       .then(sortFocalLengths)
       .catch(() => [])
     : undefined,
-  [] as Albums,
+  SHOW_ALBUMS
+    ? getAlbumsWithPhotoCounts()
+      .catch(() => [])
+    : undefined,
 ]).then(([
   recents = [],
   years = [],

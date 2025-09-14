@@ -6,7 +6,7 @@ import { Tags } from '@/tag';
 import { FocalLengths } from '@/focal';
 import { Recipes } from '@/recipe';
 import { Recents } from '@/recents';
-import { Years } from '@/years';
+import { Years } from '@/year';
 import { parseCommaSeparatedKeyString } from '@/utility/key';
 import { Albums } from '@/album';
 

@@ -11,6 +11,9 @@ export interface Album {
   longitude?: number
 }
 
-type AlbumWithMeta = { album: string } & CategoryQueryMeta;
+type AlbumWithMeta = {
+  title: string
+  slug: string
+} & CategoryQueryMeta;
 
 export type Albums = AlbumWithMeta[];

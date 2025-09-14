@@ -8,7 +8,7 @@ import FocalLengthShareModal from '@/focal/FocalLengthShareModal';
 import { useAppState } from '@/app/AppState';
 import RecipeShareModal from '@/recipe/RecipeShareModal';
 import LensShareModal from '@/lens/LensShareModal';
-import YearShareModal from '@/years/YearShareModal';
+import YearShareModal from '@/year/YearShareModal';
 import RecentsShareModal from '@/recents/RecentsShareModal';
 
 export default function ShareModals() {

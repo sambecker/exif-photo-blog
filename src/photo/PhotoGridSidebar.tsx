@@ -18,7 +18,6 @@ import PhotoPrivate from '@/tag/PhotoPrivate';
 import {
   CATEGORY_VISIBILITY,
   HIDE_TAGS_WITH_ONE_PHOTO,
-  SHOW_CATEGORY_IMAGE_HOVERS,
 } from '@/app/config';
 import { clsx } from 'clsx/lite';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
@@ -37,9 +36,11 @@ import PhotoFocalLength from '@/focal/PhotoFocalLength';
 import useElementHeight from '@/utility/useElementHeight';
 import { useAppText } from '@/i18n/state/client';
 import IconYear from '@/components/icons/IconYear';
-import PhotoYear from '@/years/PhotoYear';
+import PhotoYear from '@/year/PhotoYear';
 import { chunkArray } from '@/utility/array';
 import PhotoRecents from '@/recents/PhotoRecents';
+import IconAlbum from '@/components/icons/IconAlbum';
+import PhotoAlbum from '@/album/PhotoAlbum';
 
 const APPROXIMATE_ITEM_HEIGHT = 40;
 const ABOUT_HEIGHT_OFFSET = 24;
@@ -69,6 +70,7 @@ export default function PhotoGridSidebar({
     years,
     cameras,
     lenses,
+    albums,
     tags,
     films,
     recipes,
@@ -133,7 +135,7 @@ export default function PhotoGridSidebar({
             <PhotoYear
               key={year}
               year={year}
-              countOnHover={SHOW_CATEGORY_IMAGE_HOVERS ? count : undefined}
+              countOnHover={count}
               type="text-only"
               prefetch={false}
               contrast="low"
@@ -187,6 +189,32 @@ export default function PhotoGridSidebar({
     />
     : null;
 
+  const albumsContent = albums.length > 0
+    ? <HeaderList
+      key="albums"
+      title="Albums"
+      icon={<IconAlbum
+        size={12.5}
+        className="translate-x-[1px]"
+      />}
+      maxItems={maxItemsPerCategory}
+      items={albums
+        .map(({ title, slug, count }) =>
+          <div key={slug} className="flex gap-1">
+            <PhotoAlbum
+              key={slug}
+              title={title}
+              slug={slug}
+              countOnHover={count}
+              type="text-only"
+              prefetch={false}
+              contrast="low"
+              badged
+            />
+          </div>)}
+    />
+    : null;
+
   const tagsContent = tags.length > 0
     ? <HeaderList
       key="tags"
@@ -221,8 +249,8 @@ export default function PhotoGridSidebar({
               return <PhotoTag
                 key={tag}
                 tag={tag}
-                type="text-only"
                 countOnHover={count}
+                type="text-only"
                 prefetch={false}
                 contrast="low"
                 badged
@@ -319,6 +347,7 @@ export default function PhotoGridSidebar({
           case 'years': return yearsContent;
           case 'cameras': return camerasContent;
           case 'lenses': return lensesContent;
+          case 'albums': return albumsContent;
           case 'tags': return tagsContent;
           case 'recipes': return recipesContent;
           case 'films': return filmsContent;
