@@ -1,5 +1,5 @@
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
-import { getUniqueRecipes } from '@/db/query';
+import { getUniqueRecipes } from '@/photo/query';
 import { PATH_ROOT } from '@/app/path';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';

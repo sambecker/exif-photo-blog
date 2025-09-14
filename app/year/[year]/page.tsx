@@ -1,5 +1,5 @@
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
-import { getUniqueYears } from '@/db/query';
+import { getUniqueYears } from '@/photo/query';
 import { generateMetaForYear } from '@/years/meta';
 import YearOverview from '@/years/YearOverview';
 import { getPhotosYearDataCached } from '@/years/data';

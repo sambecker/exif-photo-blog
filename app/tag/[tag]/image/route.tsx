@@ -7,7 +7,7 @@ import TagImageResponse from '@/image-response/TagImageResponse';
 import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
-import { getUniqueTags } from '@/db/query';
+import { getUniqueTags } from '@/photo/query';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(

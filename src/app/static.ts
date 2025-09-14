@@ -9,7 +9,7 @@ import {
   STATICALLY_OPTIMIZED_PHOTOS,
 } from '@/app/config';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/db';
-import { getPublicPhotoIds } from '@/db/query';
+import { getPublicPhotoIds } from '@/photo/query';
 import { depluralize, pluralize } from '@/utility/string';
 
 type StaticOutput = 'page' | 'image';

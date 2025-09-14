@@ -1,6 +1,6 @@
 import AdminRecipeTable from '@/admin/AdminRecipeTable';
 import AppGrid from '@/components/AppGrid';
-import { getUniqueRecipes } from '@/db/query';
+import { getUniqueRecipes } from '@/photo/query';
 
 export default async function AdminRecipesPage() {
   const recipes = await getUniqueRecipes().catch(() => []);

@@ -6,7 +6,7 @@ import {
 import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
-import { getUniqueLenses } from '@/db/query';
+import { getUniqueLenses } from '@/photo/query';
 import {
   getLensFromParams,
   LensProps,

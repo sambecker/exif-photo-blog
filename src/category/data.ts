@@ -7,7 +7,7 @@ import {
   getUniqueRecipes,
   getUniqueTags,
   getUniqueYears,
-} from '@/db/query';
+} from '@/photo/query';
 import {
   SHOW_FILMS,
   SHOW_FOCAL_LENGTHS,
