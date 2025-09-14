@@ -485,7 +485,7 @@ export const getPhotosNearId = async (
           indexNumber,
         };
       });
-  }, `getPhotosNearId: ${photoId}`);    
+  }, `getPhotosNearId: ${photoId}`);  
 
 export const getPhotosMeta = (options: PhotoQueryOptions = {}) =>
   safelyQuery(async () => {
@@ -596,6 +596,17 @@ export const getPhotosInNeedOfUpdateCount = () =>
       .then(({ rows }) => parseInt(rows[0].count, 10)),
     'getPhotosInNeedOfUpdateCount',
   );
+
+// Foreign keys
+
+export const getPhotosByAlbum = (albumId: string) =>
+  safelyQuery(() => sql<PhotoDb>`
+    SELECT p.* FROM photos p
+    JOIN album_photo ap ON ap.photo_id = p.id
+    WHERE ap.album_id = ${albumId}
+    ORDER BY p.taken_at DESC
+  `.then(({ rows }) => rows.map(parsePhotoFromDb))
+  , 'getPhotosByAlbum');
 
 // Backfills and experimentation
 

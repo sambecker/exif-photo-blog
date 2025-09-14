@@ -305,7 +305,7 @@ export default function PhotoGridSidebar({
           key="about"
           ref={aboutRef}
           className={clsx(
-            'max-w-60 normal-case text-dim',
+            'max-w-60 normal-case text-dim [&>a]:underline',
             aboutTextHasBrParagraphBreaks && 'pb-2',
           )}
           dangerouslySetInnerHTML={{

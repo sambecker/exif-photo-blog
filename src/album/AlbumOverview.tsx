@@ -1,0 +1,34 @@
+import { Photo, PhotoDateRange } from '@/photo';
+import PhotoGridContainer from '@/photo/PhotoGridContainer';
+import { Album } from '.';
+import AlbumHeader from './AlbumHeader';
+
+export default function AlbumOverview({
+  album,
+  photos,
+  count,
+  dateRange,
+  animateOnFirstLoadOnly,
+}: {
+  album: Album,
+  photos: Photo[],
+  count: number,
+  dateRange?: PhotoDateRange,
+  animateOnFirstLoadOnly?: boolean,
+}) {
+  return (
+    <PhotoGridContainer {...{
+      cacheKey: `album-${album.slug}`,
+      photos,
+      count,
+      tag: album.slug,
+      header: <AlbumHeader {...{
+        album,
+        photos,
+        count,
+        dateRange,
+      }} />,
+      animateOnFirstLoadOnly,
+    }} />
+  );
+}

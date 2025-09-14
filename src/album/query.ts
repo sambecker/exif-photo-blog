@@ -1,7 +1,6 @@
 import { safelyQuery } from '@/db/query';
 import { sql } from '@/platforms/postgres';
 import { Album } from '.';
-import { parameterize } from '@/utility/string';
 
 export const createAlbumsTable = () =>
   sql`
@@ -41,7 +40,7 @@ export const insertAlbum = (album: Album) =>
       longitude
     ) VALUES (
       ${album.title},
-      ${parameterize(album.title)},
+      ${album.slug},
       ${album.subhead},
       ${album.description},
       ${album.locationName},
@@ -54,7 +53,7 @@ export const updateAlbum = (album: Album) =>
   safelyQuery(() => sql`
     UPDATE albums SET
       title=${album.title},
-      slug=${parameterize(album.title)},
+      slug=${album.slug},
       subhead=${album.subhead},
       description=${album.description},
       location_name=${album.locationName},
@@ -63,6 +62,12 @@ export const updateAlbum = (album: Album) =>
       updated_at=${(new Date()).toISOString()}
     WHERE id=${album.id}
   `, 'updateAlbum');
+
+export const getAlbumFromSlug = (slug: string) =>
+  safelyQuery(() => sql<Album>`
+    SELECT * FROM albums WHERE slug=${slug}
+  `.then(({ rows }) => rows[0])
+  , 'getAlbum');
 
 export const deleteAlbum = (id: string) =>
   safelyQuery(() => sql`
