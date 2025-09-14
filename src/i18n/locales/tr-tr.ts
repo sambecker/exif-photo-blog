@@ -17,6 +17,8 @@ export const TEXT: I18N = {
     cameraShare: '{{camera}} ile çekilmiş fotoğraflar',
     lens: 'Lens',
     lensPlural: 'Lensler',
+    album: 'Albüm',
+    albumPlural: 'Albümler',
     tag: 'Etiket',
     tagPlural: 'Etiketler',
     tagged: 'Etiketli',

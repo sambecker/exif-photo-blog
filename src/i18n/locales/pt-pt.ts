@@ -17,6 +17,8 @@ export const TEXT: I18N = {
     cameraShare: 'Fotografias tiradas com {{camera}}',
     lens: 'Objetiva',
     lensPlural: 'Objetivas',
+    album: 'Álbum',
+    albumPlural: 'Álbuns',
     tag: 'Etiqueta',
     tagPlural: 'Etiquetas',
     tagged: 'Etiquetado',

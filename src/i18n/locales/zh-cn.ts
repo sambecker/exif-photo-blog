@@ -17,6 +17,8 @@ export const TEXT: I18N = {
     cameraShare: '使用 {{camera}} 拍摄的照片',
     lens: '镜头',
     lensPlural: '镜头',
+    album: '相册',
+    albumPlural: '相册',
     tag: '标签',
     tagPlural: '标签',
     tagged: '已标记',

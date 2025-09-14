@@ -17,6 +17,8 @@ export const TEXT: I18N = {
     cameraShare: 'Foto yang diambil dengan {{camera}}',
     lens: 'Lensa',
     lensPlural: 'Lensa',
+    album: 'Album',
+    albumPlural: 'Album',
     tag: 'Tag',
     tagPlural: 'Tag',
     tagged: 'Ditandai',

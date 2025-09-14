@@ -17,6 +17,8 @@ export const TEXT: I18N = {
     cameraShare: '{{camera}} पर लिया गया फोटो',
     lens: 'लेंस',
     lensPlural: 'लेंस',
+    album: 'एल्बम',
+    albumPlural: 'एल्बम',
     tag: 'टैग',
     tagPlural: 'टैग्स',
     tagged: 'टैग किया गया',
