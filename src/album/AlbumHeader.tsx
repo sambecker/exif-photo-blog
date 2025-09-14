@@ -1,4 +1,4 @@
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import { descriptionForTaggedPhotos } from '../tag';
 import PhotoHeader from '@/photo/PhotoHeader';
 import { AI_CONTENT_GENERATION_ENABLED } from '@/app/config';
@@ -20,7 +20,7 @@ export default async function AlbumHeader({
   selectedPhoto?: Photo
   indexNumber?: number
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 }) {
   const appText = await getAppText();
   return (

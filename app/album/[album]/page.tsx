@@ -78,7 +78,13 @@ export default async function TagPage({
 
   const photos = await getPhotosByAlbum(album.id);
 
+  if (photos.length === 0) { redirect(PATH_ROOT); }
+
   return (
-    <AlbumOverview {...{ album, photos, count: 1, dateRange: undefined }} />
+    <AlbumOverview {...{
+      album,
+      photos,
+      count: photos.length,
+    }} />
   );
 }

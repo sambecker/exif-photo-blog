@@ -1,4 +1,4 @@
-import { Photo, PhotoDateRange } from '../photo';
+import { Photo, PhotoDateRangePostgres } from '../photo';
 import { Camera, Cameras } from '@/camera';
 import { Films } from '@/film';
 import { Lens, Lenses } from '@/lens';
@@ -80,7 +80,7 @@ export interface PhotoSetCategories {
 export interface PhotoSetAttributes {
   photos: Photo[]
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 }
 
 export const sortCategoryByCount = (

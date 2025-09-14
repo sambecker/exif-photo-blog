@@ -1,6 +1,6 @@
 import {
   Photo,
-  PhotoDateRange,
+  PhotoDateRangePostgres,
   descriptionForPhotoSet,
   photoQuantityText,
 } from '@/photo';
@@ -98,7 +98,7 @@ export const descriptionForTaggedPhotos = (
   appText: AppTextState,
   dateBased?: boolean,
   explicitCount?: number,
-  explicitDateRange?: PhotoDateRange,
+  explicitDateRange?: PhotoDateRangePostgres,
 ) =>
   descriptionForPhotoSet(
     photos,
@@ -114,7 +114,7 @@ export const generateMetaForTag = (
   photos: Photo[],
   appText: AppTextState,
   explicitCount?: number,
-  explicitDateRange?: PhotoDateRange,
+  explicitDateRange?: PhotoDateRangePostgres,
 ) => ({
   url: absolutePathForTag(tag),
   title: titleForTag(tag, photos, appText, explicitCount),

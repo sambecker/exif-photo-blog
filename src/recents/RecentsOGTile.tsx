@@ -1,6 +1,6 @@
 'use client';
 
-import { Photo, PhotoDateRange, descriptionForPhotoSet } from '@/photo';
+import { Photo, PhotoDateRangePostgres, descriptionForPhotoSet } from '@/photo';
 import { PREFIX_RECENTS, pathForRecentsImage } from '@/app/path';
 import OGTile, { OGTilePropsCore } from '@/components/og/OGTile';
 import { useAppText } from '@/i18n/state/client';
@@ -13,7 +13,7 @@ export default function RecentsOGTile({
 }: {
   photos: Photo[]
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 } & OGTilePropsCore) {
   const appText = useAppText();
   return (

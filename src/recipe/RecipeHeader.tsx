@@ -1,6 +1,6 @@
 'use client';
 
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import PhotoHeader from '@/photo/PhotoHeader';
 import PhotoRecipe from './PhotoRecipe';
 import { useAppState } from '@/app/AppState';
@@ -21,7 +21,7 @@ export default function RecipeHeader({
   selectedPhoto?: Photo
   indexNumber?: number
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 }) {
   const { recipeModalProps, setRecipeModalProps } = useAppState();
 

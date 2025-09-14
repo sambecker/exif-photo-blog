@@ -1,4 +1,4 @@
-import { descriptionForPhotoSet, Photo, PhotoDateRange } from '@/photo';
+import { descriptionForPhotoSet, Photo, PhotoDateRangePostgres } from '@/photo';
 import { AppTextState } from '@/i18n/state';
 import { absolutePathForYear, absolutePathForYearImage } from '@/app/path';
 
@@ -7,7 +7,7 @@ export const generateMetaForYear = (
   photos: Photo[],
   appText: AppTextState,
   count?: number,
-  _dateRange?: PhotoDateRange,
+  _dateRange?: PhotoDateRangePostgres,
 ) => {
   const title = appText.category.yearTitle(year);
   const description = descriptionForPhotoSet(

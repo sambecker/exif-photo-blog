@@ -1,6 +1,6 @@
 'use client';
 
-import { descriptionForPhotoSet, Photo, PhotoDateRange } from '@/photo';
+import { descriptionForPhotoSet, Photo, PhotoDateRangePostgres } from '@/photo';
 import PhotoHeader from '@/photo/PhotoHeader';
 import { AI_CONTENT_GENERATION_ENABLED } from '@/app/config';
 import PhotoYear from './PhotoYear';
@@ -19,7 +19,7 @@ export default function YearHeader({
   selectedPhoto?: Photo
   indexNumber?: number
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 }) {
   const appText = useAppText();
 

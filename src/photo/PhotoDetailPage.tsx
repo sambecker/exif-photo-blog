@@ -1,5 +1,5 @@
 import AnimateItems from '@/components/AnimateItems';
-import { Photo, PhotoDateRange } from '.';
+import { Photo, PhotoDateRangePostgres } from '.';
 import { PhotoSetCategory } from '../category';
 import PhotoLarge from './PhotoLarge';
 import AppGrid from '@/components/AppGrid';
@@ -41,7 +41,7 @@ export default function PhotoDetailPage({
   photosGrid?: Photo[]
   indexNumber?: number
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
   shouldShare?: boolean
   includeFavoriteInAdminMenu?: boolean
 } & PhotoSetCategory) {

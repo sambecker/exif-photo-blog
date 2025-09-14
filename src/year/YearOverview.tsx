@@ -1,4 +1,4 @@
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import YearHeader from './YearHeader';
 import PhotoGridContainer from '@/photo/PhotoGridContainer';
 
@@ -12,7 +12,7 @@ export default function YearOverview({
   year: string,
   photos: Photo[],
   count: number,
-  dateRange?: PhotoDateRange,
+  dateRange?: PhotoDateRangePostgres,
   animateOnFirstLoadOnly?: boolean,
 }) {
   return (

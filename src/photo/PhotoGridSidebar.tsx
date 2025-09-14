@@ -194,7 +194,6 @@ export default function PhotoGridSidebar({
       key="albums"
       title="Albums"
       icon={<IconAlbum
-        size={12.5}
         className="translate-x-[1px]"
       />}
       maxItems={maxItemsPerCategory}

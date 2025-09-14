@@ -1,4 +1,4 @@
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import PhotoGridContainer from '@/photo/PhotoGridContainer';
 import { Album } from '.';
 import AlbumHeader from './AlbumHeader';
@@ -13,7 +13,7 @@ export default function AlbumOverview({
   album: Album,
   photos: Photo[],
   count: number,
-  dateRange?: PhotoDateRange,
+  dateRange?: PhotoDateRangePostgres,
   animateOnFirstLoadOnly?: boolean,
 }) {
   return (

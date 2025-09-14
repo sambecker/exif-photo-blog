@@ -1,6 +1,9 @@
 import { IconBaseProps } from 'react-icons';
-import { FaRegFolderClosed } from 'react-icons/fa6';
+import { LuFolderClosed } from 'react-icons/lu';
 
 export default function IconAlbum(props: IconBaseProps) {
-  return <FaRegFolderClosed {...props} />;
+  return <LuFolderClosed {...{
+    ...props,
+    size: props.size ?? 14,
+  }} />;
 }

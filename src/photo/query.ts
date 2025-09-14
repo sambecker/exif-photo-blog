@@ -10,7 +10,7 @@ import {
   translatePhotoId,
   parsePhotoFromDb,
   Photo,
-  PhotoDateRange,
+  PhotoDateRangePostgres,
 } from '@/photo';
 import { Cameras, createCameraKey } from '@/camera';
 import { Tags } from '@/tag';
@@ -500,7 +500,7 @@ export const getPhotosMeta = (options: PhotoQueryOptions = {}) =>
           ? { dateRange: {
             start: rows[0].start as string,
             end: rows[0].end as string,
-          } as PhotoDateRange }
+          } as PhotoDateRangePostgres }
           : undefined,
       }));
   }, 'getPhotosMeta');

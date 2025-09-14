@@ -17,10 +17,7 @@ export default function PhotoAlbum({
       label={title}
       path={pathForAlbum(slug)}
       hoverPhotoQueryOptions={{ album: slug }}
-      icon={<IconAlbum
-        size={12.5}
-        className="translate-y-[-0.5px]"
-      />}
+      icon={<IconAlbum />}
     />
   );
 }

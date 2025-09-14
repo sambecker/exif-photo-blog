@@ -3,8 +3,8 @@
 import { clsx } from 'clsx/lite';
 import {
   Photo,
-  PhotoDateRange,
-  dateRangeForPhotos,
+  PhotoDateRangePostgres,
+  formattedDateRangeForPhotos,
   titleForPhoto,
 } from '.';
 import { PhotoSetCategory } from '../category';
@@ -40,7 +40,7 @@ export default function PhotoHeader({
   entityDescription?: string
   indexNumber?: number
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
   richContent?: ReactNode
   hasAiTextGeneration: boolean
   includeShareButton?: boolean
@@ -51,7 +51,7 @@ export default function PhotoHeader({
 
   const entityVerb = _entityVerb ?? appText.photo.photo.toLocaleUpperCase();
 
-  const { start, end } = dateRangeForPhotos(photos, dateRange);
+  const { start, end } = formattedDateRangeForPhotos(photos, dateRange);
 
   const selectedPhotoIndex = selectedPhoto
     ? photos.findIndex(photo => photo.id === selectedPhoto.id)
