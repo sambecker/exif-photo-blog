@@ -21,7 +21,7 @@ export default function AlbumOverview({
       cacheKey: `album-${album.slug}`,
       photos,
       count,
-      album: album.id,
+      album: album.slug,
       header: <AlbumHeader {...{
         album,
         photos,

@@ -78,8 +78,6 @@ export default async function TagPage({
 
   if (photos.length === 0) { redirect(PATH_ROOT); }
 
-  console.log('TagPage', {dateRange});
-
   return (
     <TagOverview {...{ tag, photos, count, dateRange }} />
   );

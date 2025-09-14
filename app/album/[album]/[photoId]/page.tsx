@@ -13,25 +13,28 @@ import {
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotosMetaCached, getPhotosNearIdCached } from '@/photo/cache';
 import { cache } from 'react';
+import { getAlbumFromSlug } from '@/album/query';
 
-const getPhotosNearIdCachedCached = cache((photoId: string, tag: string) =>
+const getPhotosNearIdCachedCached = cache((photoId: string, album: string) =>
   getPhotosNearIdCached(
     photoId,
-    { tag, limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 },
+    { album, limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 },
   ));
 
 interface PhotoTagProps {
-  params: Promise<{ photoId: string, tag: string }>
+  params: Promise<{ photoId: string, album: string }>
 }
 
 export async function generateMetadata({
   params,
 }: PhotoTagProps): Promise<Metadata> {
-  const { photoId, tag: tagFromParams } = await params;
+  const { photoId, album: albumFromParams } = await params;
 
-  const tag = decodeURIComponent(tagFromParams);
+  const albumSlug = decodeURIComponent(albumFromParams);
 
-  const { photo } = await getPhotosNearIdCachedCached(photoId, tag);
+  const album = await getAlbumFromSlug(albumSlug);
+
+  const { photo } = await getPhotosNearIdCachedCached(photoId, album.id);
 
   if (!photo) { return {}; }
 
@@ -39,7 +42,7 @@ export async function generateMetadata({
   const description = descriptionForPhoto(photo);
   const descriptionHtml = descriptionForPhoto(photo, true);
   const images = absolutePathForPhotoImage(photo);
-  const url = absolutePathForPhoto({ photo, tag });
+  const url = absolutePathForPhoto({ photo, album: album.slug });
 
   return {
     title,
@@ -59,26 +62,28 @@ export async function generateMetadata({
   };
 }
 
-export default async function PhotoTagPage({
+export default async function PhotoAlbumPage({
   params,
 }: PhotoTagProps) {
-  const { photoId, tag: tagFromParams } = await params;
+  const { photoId, album: albumFromParams } = await params;
 
-  const tag = decodeURIComponent(tagFromParams);
+  const albumSlug = decodeURIComponent(albumFromParams);
+
+  const album = await getAlbumFromSlug(albumSlug);
 
   const { photo, photos, photosGrid, indexNumber } =
-    await getPhotosNearIdCachedCached(photoId, tag);
+    await getPhotosNearIdCachedCached(photoId, album.id);
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const { count, dateRange } = await getPhotosMetaCached({ tag });
+  const { count, dateRange } = await getPhotosMetaCached({ album: album.id });
 
   return (
     <PhotoDetailPage {...{
       photo,
       photos,
       photosGrid,
-      tag,
+      album: album.slug,
       indexNumber,
       count,
       dateRange,

@@ -149,6 +149,7 @@ export const pathForPhoto = ({
   year,
   camera,
   lens,
+  album,
   tag,
   film,
   focal,
@@ -166,6 +167,8 @@ export const pathForPhoto = ({
     prefix = pathForCamera(camera);
   } else if (lens) {
     prefix = pathForLens(lens);
+  } else if (album) {
+    prefix = pathForAlbum(album);
   } else if (tag) {
     prefix = pathForTag(tag);
   } else if (recipe) {
