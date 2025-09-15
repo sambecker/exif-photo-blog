@@ -224,6 +224,9 @@ export const pathForCameraImage = (camera: Camera) =>
 export const pathForLensImage = (lens: Lens) =>
   pathForImage(pathForLens(lens));
 
+export const pathForAlbumImage = (album: Album) =>
+  pathForImage(pathForAlbum(album));
+
 export const pathForTagImage = (tag: string) =>
   pathForImage(pathForTag(tag));
 

@@ -30,11 +30,10 @@ export const shareTextForLens = (
   lens: Lens,
   photos: Photo[],
   appText: AppTextState,
-) =>
-  [
-    `${appText.category.lens}:`,
-    formatLensText(lensFromPhoto(photos[0], lens)),
-  ].join(' ');
+) => [
+  `${appText.category.lens}:`,
+  formatLensText(lensFromPhoto(photos[0], lens)),
+].join(' ');
 
 export const descriptionForLensPhotos = (
   photos: Photo[],

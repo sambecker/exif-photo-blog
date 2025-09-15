@@ -7,7 +7,6 @@ import {
   PhotoDateRangePostgres,
   photoQuantityText,
 } from '@/photo';
-import { titleForTag } from '@/tag';
 
 export interface Album {
   id: string
@@ -29,13 +28,21 @@ export type Albums = AlbumWithMeta[];
 export type AlbumOrAlbumSlug = Album | string;
 
 export const titleForAlbum = (
-  album: string,
+  album: Album,
   photos:Photo[] = [],
   appText: AppTextState,
   explicitCount?: number,
 ) => [
-  album,
+  album.title,
   photoQuantityText(explicitCount ?? photos.length, appText),
+].join(' ');
+
+export const shareTextForAlbum = (
+  album: Album,
+  appText: AppTextState,
+) => [
+  `${appText.category.album}:`,
+  album.title,
 ].join(' ');
 
 export const descriptionForAlbumPhotos = (
@@ -62,7 +69,7 @@ export const generateMetaForAlbum = (
   explicitDateRange?: PhotoDateRangePostgres,
 ) => ({
   url: absolutePathForAlbum(album),
-  title: titleForTag(album.title, photos, appText, explicitCount),
+  title: titleForAlbum(album, photos, appText, explicitCount),
   description: descriptionForAlbumPhotos(
     photos,
     appText,
