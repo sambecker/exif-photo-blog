@@ -1,7 +1,7 @@
 import { Photo } from '../photo';
 import IconFull from '@/components/icons/IconFull';
 import IconGrid from '@/components/icons/IconGrid';
-import ImagePhotoGrid from './components/ImagePhotoGrid';
+import ImagePhotoGrid from '../image-response/components/ImagePhotoGrid';
 import { NextImageSize } from '@/platforms/next-image';
 
 export default function TemplateImageResponse({

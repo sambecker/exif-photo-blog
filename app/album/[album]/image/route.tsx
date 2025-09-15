@@ -3,12 +3,13 @@ import {
   IMAGE_OG_DIMENSION_SMALL,
   MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
 } from '@/image-response';
-import TagImageResponse from '@/image-response/TagImageResponse';
 import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { getUniqueTags } from '@/photo/query';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
+import AlbumImageResponse from '@/album/AlbumImageResponse';
+import { getAlbumFromSlug } from '@/album/query';
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'tags',
@@ -21,14 +22,16 @@ export async function GET(
   _: Request,
   context: { params: Promise<{ album: string }> },
 ) {
-  const { album } = await context.params;
+  const { album: albumParam } = await context.params;
+
+  const album = await getAlbumFromSlug(decodeURIComponent(albumParam));
 
   const [
     photos,
     { fontFamily, fonts },
     headers,
   ] = await Promise.all([
-    getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY, tag: album }),
+    getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY, album }),
     getIBMPlexMono(),
     getImageResponseCacheControlHeaders(),
   ]);
@@ -36,8 +39,8 @@ export async function GET(
   const { width, height } = IMAGE_OG_DIMENSION_SMALL;
 
   return new ImageResponse(
-    <TagImageResponse {...{
-      tag: album,
+    <AlbumImageResponse {...{
+      album,
       photos,
       width,
       height,

@@ -1,18 +1,18 @@
 import { Photo } from '@/photo';
-import ImageCaption from './components/ImageCaption';
-import ImagePhotoGrid from './components/ImagePhotoGrid';
-import ImageContainer from './components/ImageContainer';
+import ImageCaption from '../image-response/components/ImageCaption';
+import ImagePhotoGrid from '../image-response/components/ImagePhotoGrid';
+import ImageContainer from '../image-response/components/ImageContainer';
 import { NextImageSize } from '@/platforms/next-image';
-import IconYear from '@/components/icons/IconYear';
+import IconRecents from '@/components/icons/IconRecents';
 
-export default function YearImageResponse({
-  year,
+export default function RecentsImageResponse({
+  title,
   photos,
   width,
   height,
   fontFamily,
 }: {
-  year: string
+  title: string
   photos: Photo[]
   width: NextImageSize
   height: number
@@ -31,14 +31,14 @@ export default function YearImageResponse({
         width,
         height,
         fontFamily,
-        icon: <IconYear
-          size={height * .0725}
+        icon: <IconRecents
+          size={height * .08}
           style={{
-            transform: `translateY(${height * .001}px)`,
+            transform: `translateY(${height * .003}px)`,
             marginRight: height * .01,
           }}
         />,
-        title: year,
+        title,
       }} />
     </ImageContainer>
   );

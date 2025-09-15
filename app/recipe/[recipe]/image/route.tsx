@@ -7,7 +7,7 @@ import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { getUniqueRecipes } from '@/photo/query';
-import RecipeImageResponse from '@/image-response/RecipeImageResponse';
+import RecipeImageResponse from '@/recipe/RecipeImageResponse';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(

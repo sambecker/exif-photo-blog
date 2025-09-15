@@ -1,8 +1,8 @@
 import { Photo, shouldShowExifDataForPhoto } from '../photo';
 import { AiFillApple } from 'react-icons/ai';
-import ImageCaption from './components/ImageCaption';
-import ImagePhotoGrid from './components/ImagePhotoGrid';
-import ImageContainer from './components/ImageContainer';
+import ImageCaption from '@/image-response/components/ImageCaption';
+import ImagePhotoGrid from '@/image-response/components/ImagePhotoGrid';
+import ImageContainer from '@/image-response/components/ImageContainer';
 import { OG_TEXT_BOTTOM_ALIGNMENT } from '@/app/config';
 import { NextImageSize } from '@/platforms/next-image';
 import { cameraFromPhoto, formatCameraText } from '@/camera';

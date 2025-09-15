@@ -12,7 +12,7 @@ import {
   LensProps,
   safelyGenerateLensStaticParams,
 } from '@/lens';
-import LensImageResponse from '@/image-response/LensImageResponse';
+import LensImageResponse from '@/lens/LensImageResponse';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(

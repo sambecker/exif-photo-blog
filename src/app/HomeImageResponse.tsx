@@ -1,8 +1,8 @@
 import { NAV_TITLE } from '@/app/config';
 import { Photo } from '../photo';
-import ImageCaption from './components/ImageCaption';
-import ImageContainer from './components/ImageContainer';
-import ImagePhotoGrid from './components/ImagePhotoGrid';
+import ImageCaption from '@/image-response/components/ImageCaption';
+import ImageContainer from '@/image-response/components/ImageContainer';
+import ImagePhotoGrid from '@/image-response/components/ImagePhotoGrid';
 import { NextImageSize } from '@/platforms/next-image';
 
 export default function HomeImageResponse({

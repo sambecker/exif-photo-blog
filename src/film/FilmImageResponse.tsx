@@ -1,7 +1,7 @@
 import { Photo } from '../photo';
-import ImageCaption from './components/ImageCaption';
-import ImagePhotoGrid from './components/ImagePhotoGrid';
-import ImageContainer from './components/ImageContainer';
+import ImageCaption from '@/image-response/components/ImageCaption';
+import ImagePhotoGrid from '@/image-response/components/ImagePhotoGrid';
+import ImageContainer from '@/image-response/components/ImageContainer';
 import PhotoFilmIcon from 
   '@/film/PhotoFilmIcon';
 import { NextImageSize } from '@/platforms/next-image';
