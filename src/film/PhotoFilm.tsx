@@ -10,6 +10,7 @@ import { labelForFilm } from '.';
 import { isStringFujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import PhotoRecipeOverlayButton from '@/recipe/PhotoRecipeOverlayButton';
 import { ComponentProps } from 'react';
+import useCategoryCounts from '@/category/useCategoryCounts';
 
 export default function PhotoFilm({
   film,
@@ -23,6 +24,8 @@ export default function PhotoFilm({
   film: string
 } & Partial<ComponentProps<typeof PhotoRecipeOverlayButton>>
   & EntityLinkExternalProps) {
+  const { getFilmCount } = useCategoryCounts();
+  
   const { small, medium, large } = labelForFilm(film);
 
   return (
@@ -51,6 +54,7 @@ export default function PhotoFilm({
           isShowingRecipeOverlay,
         }} />}
       iconWide={isStringFujifilmSimulation(film)}
+      countOnHover={props.countOnHover ?? getFilmCount(film)}
     />
   );
 }

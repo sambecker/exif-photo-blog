@@ -49,7 +49,6 @@ import PhotoRecipe from '@/recipe/PhotoRecipe';
 import PhotoLens from '@/lens/PhotoLens';
 import { lensFromPhoto } from '@/lens';
 import MaskedScroll from '@/components/MaskedScroll';
-import useCategoryCountsForPhoto from '@/category/useCategoryCountsForPhoto';
 import { useAppText } from '@/i18n/state/client';
 
 export default function PhotoLarge({
@@ -126,14 +125,6 @@ export default function PhotoLarge({
   } = useAppState();
 
   const appText = useAppText();
-
-  const {
-    cameraCount,
-    lensCount,
-    tagCounts,
-    recipeCount,
-    filmCount,
-  } = useCategoryCountsForPhoto(photo);
 
   const showZoomControls = _showZoomControls && areZoomControlsShown;
   const selectZoomImageElement = useCallback(
@@ -332,14 +323,12 @@ export default function PhotoLarge({
                               camera={camera}
                               contrast="medium"
                               prefetch={prefetchRelatedLinks}
-                              countOnHover={cameraCount}
                             />}
                           {showLensContent &&
                             <PhotoLens
                               lens={lens}
                               contrast="medium"
                               prefetch={prefetchRelatedLinks}
-                              countOnHover={lensCount}
                             />}
                         </div>}
                       {showRecipeContent && recipeTitle &&
@@ -348,14 +337,12 @@ export default function PhotoLarge({
                           recipe={recipeTitle}
                           contrast="medium"
                           prefetch={prefetchRelatedLinks}
-                          countOnHover={recipeCount}
                           toggleRecipeOverlay={toggleRecipeOverlay}
                           isShowingRecipeOverlay={isShowingRecipeOverlay}
                         />}
                       {showTagsContent &&
                         <PhotoTags
                           tags={tags}
-                          tagCounts={tagCounts}
                           contrast="medium"
                           prefetch={prefetchRelatedLinks}
                         />}
@@ -415,7 +402,6 @@ export default function PhotoLarge({
                         ref={refPhotoFilm}
                         film={photo.film}
                         prefetch={prefetchRelatedLinks}
-                        countOnHover={filmCount}
                         {...photo.recipeData && !photo.recipeTitle && {
                           toggleRecipeOverlay,
                           isShowingRecipeOverlay,

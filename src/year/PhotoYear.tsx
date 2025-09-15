@@ -1,4 +1,7 @@
+'use client';
+
 import { pathForYear } from '@/app/path';
+import useCategoryCounts from '@/category/useCategoryCounts';
 import EntityLink, { EntityLinkExternalProps } from
   '@/components/entity/EntityLink';
 import IconYear from '@/components/icons/IconYear';
@@ -9,6 +12,7 @@ export default function PhotoYear({
 }: {
   year: string
 } & EntityLinkExternalProps) {
+  const { getYearsCount } = useCategoryCounts();
   return (
     <EntityLink
       {...props}
@@ -19,6 +23,7 @@ export default function PhotoYear({
         size={14}
         className="translate-x-[0.5px] translate-y-[-0.5px]"
       />}
+      countOnHover={props.countOnHover ?? getYearsCount(year)}
     />
   );
 }

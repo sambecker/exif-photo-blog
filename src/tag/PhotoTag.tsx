@@ -6,6 +6,7 @@ import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/entity/EntityLink';
 import IconTag from '@/components/icons/IconTag';
+import useCategoryCounts from '@/category/useCategoryCounts';
 
 export default function PhotoTag({
   tag,
@@ -13,6 +14,7 @@ export default function PhotoTag({
 }: {
   tag: string
 } & EntityLinkExternalProps) {
+  const { getTagCount } = useCategoryCounts();
   return (
     <EntityLink
       {...props}
@@ -20,6 +22,7 @@ export default function PhotoTag({
       path={pathForTag(tag)}
       hoverPhotoQueryOptions={{ tag }}
       icon={<IconTag size={14} className="translate-x-[0.5px]" />}
+      countOnHover={props.countOnHover ?? getTagCount(tag)}
     />
   );
 }

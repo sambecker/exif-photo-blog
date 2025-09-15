@@ -419,9 +419,7 @@ export const getPhotos = async (options: PhotoQueryOptions = {}) =>
 
     const joins = getJoinsFromOptions(options);
 
-    if (joins) {
-      sql.push(joins);
-    }
+    if (joins) { sql.push(joins); }
 
     const {
       wheres,

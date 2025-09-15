@@ -6,12 +6,14 @@ import AlbumHeader from './AlbumHeader';
 export default function AlbumOverview({
   album,
   photos,
+  tags,
   count,
   dateRange,
   animateOnFirstLoadOnly,
 }: {
   album: Album,
   photos: Photo[],
+  tags: string[],
   count: number,
   dateRange?: PhotoDateRangePostgres,
   animateOnFirstLoadOnly?: boolean,
@@ -25,6 +27,7 @@ export default function AlbumOverview({
       header: <AlbumHeader {...{
         album,
         photos,
+        tags,
         count,
         dateRange,
         showAlbumMeta: true,

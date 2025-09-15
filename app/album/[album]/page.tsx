@@ -7,7 +7,11 @@ import { cache } from 'react';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
 import AlbumOverview from '@/album/AlbumOverview';
-import { getAlbumFromSlug, getAlbumsWithMeta } from '@/album/query';
+import {
+  getAlbumFromSlug,
+  getAlbumsWithMeta,
+  getTagsForAlbum,
+} from '@/album/query';
 import { Album, generateMetaForAlbum } from '@/album';
 import { getPhotosAlbumDataCached } from '@/album/data';
 
@@ -82,10 +86,13 @@ export default async function AlbumPage({
 
   if (photos.length === 0) { redirect(PATH_ROOT); }
 
+  const tags = await getTagsForAlbum(album.id);
+
   return (
     <AlbumOverview {...{
       album,
       photos,
+      tags,
       count: photos.length,
     }} />
   );

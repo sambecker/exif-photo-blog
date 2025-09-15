@@ -9,6 +9,7 @@ import clsx from 'clsx/lite';
 import { ComponentProps } from 'react';
 import IconRecipe from '@/components/icons/IconRecipe';
 import PhotoRecipeOverlayButton from './PhotoRecipeOverlayButton';
+import useCategoryCounts from '@/category/useCategoryCounts';
 
 export default function PhotoRecipe({
   ref,
@@ -20,6 +21,7 @@ export default function PhotoRecipe({
   recipe: string
 } & Partial<ComponentProps<typeof PhotoRecipeOverlayButton>>
   & EntityLinkExternalProps) {
+  const { getRecipeCount } = useCategoryCounts();
   return (
     <EntityLink
       {...props}
@@ -39,6 +41,7 @@ export default function PhotoRecipe({
           toggleRecipeOverlay,
           isShowingRecipeOverlay,
         }} />}
+      countOnHover={props.countOnHover ?? getRecipeCount(recipe)}
     />
   );
 }

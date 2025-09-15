@@ -6,6 +6,7 @@ import EntityLink, {
   EntityLinkExternalProps,
 } from '@/components/entity/EntityLink';
 import IconLens from '@/components/icons/IconLens';
+import useCategoryCounts from '@/category/useCategoryCounts';
 
 export default function PhotoLens({
   lens,
@@ -15,6 +16,7 @@ export default function PhotoLens({
   lens: Lens
   longText?: boolean
 } & EntityLinkExternalProps) {
+  const { getLensCount } = useCategoryCounts();
   return (
     <EntityLink
       {...props}
@@ -26,6 +28,7 @@ export default function PhotoLens({
         size={14}
         className="translate-x-[-0.5px]"
       />}
+      countOnHover={props.countOnHover ?? getLensCount(lens)}
     />
   );
 }

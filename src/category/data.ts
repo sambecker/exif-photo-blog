@@ -115,6 +115,7 @@ export const getCountsForCategories = async () => {
     years,
     cameras,
     lenses,
+    albums,
     tags,
     recipes,
     films,
@@ -127,6 +128,10 @@ export const getCountsForCategories = async () => {
       : {} as Record<string, number>,
     years: years.reduce((acc, year) => {
       acc[year.year] = year.count;
+      return acc;
+    }, {} as Record<string, number>),
+    albums: albums.reduce((acc, { album, count }) => {
+      acc[album.slug] = count;
       return acc;
     }, {} as Record<string, number>),
     cameras: cameras.reduce((acc, camera) => {

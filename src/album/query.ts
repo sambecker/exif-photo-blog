@@ -92,3 +92,12 @@ export const getAlbumsWithMeta = () =>
       lastModified: album.updated_at as Date,
     })))
   , 'getAlbumsWithPhotoCounts');
+
+export const getTagsForAlbum = (albumId: string) =>
+  safelyQuery(() => sql`
+    SELECT DISTINCT unnest(p.tags) as tag
+    FROM photos p
+    LEFT JOIN album_photo ap ON p.id = ap.photo_id
+    WHERE album_id=${albumId}
+  `.then(({ rows }) => rows.map(({ tag }) => tag))
+  , 'getTagsForAlbum');
