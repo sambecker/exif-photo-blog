@@ -27,7 +27,7 @@ export default function AlbumOverview({
         photos,
         count,
         dateRange,
-        showAlbumDescription: true,
+        showAlbumMeta: true,
       }} />,
       animateOnFirstLoadOnly,
     }} />

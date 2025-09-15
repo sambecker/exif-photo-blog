@@ -25,6 +25,7 @@ export default function PhotoHeader({
   entity,
   entityVerb: _entityVerb,
   entityDescription,
+  entitySubhead,
   indexNumber,
   count,
   dateRange,
@@ -38,6 +39,7 @@ export default function PhotoHeader({
   entity?: ReactNode
   entityVerb?: string
   entityDescription?: string
+  entitySubhead?: string
   indexNumber?: number
   count?: number
   dateRange?: PhotoDateRangePostgres
@@ -81,14 +83,22 @@ export default function PhotoHeader({
         : <>{end}<br />&ndash; {start}</>}
     </span>;
 
-  const renderContentA = entity ?? (
-    selectedPhoto !== undefined &&
-      <PhotoLink
-        photo={selectedPhoto}
-        className="uppercase font-bold truncate"
-      >
-        {titleForPhoto(selectedPhoto, true)}
-      </PhotoLink>);
+  const renderContentA = entity
+    ? <div>
+      <div>{entity}</div>
+      {entitySubhead &&
+        <div className="text-dim">
+          {entitySubhead}
+        </div>}
+    </div>
+    : (
+      selectedPhoto !== undefined &&
+        <PhotoLink
+          photo={selectedPhoto}
+          className="uppercase font-bold truncate"
+        >
+          {titleForPhoto(selectedPhoto, true)}
+        </PhotoLink>);
 
   const renderBlock = (content: ReactNode) =>
     <DivDebugBaselineGrid
