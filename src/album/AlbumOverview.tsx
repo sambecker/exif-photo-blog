@@ -21,12 +21,13 @@ export default function AlbumOverview({
       cacheKey: `album-${album.slug}`,
       photos,
       count,
-      album: album.slug,
+      album,
       header: <AlbumHeader {...{
         album,
         photos,
         count,
         dateRange,
+        showAlbumDescription: true,
       }} />,
       animateOnFirstLoadOnly,
     }} />

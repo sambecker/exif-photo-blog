@@ -21,11 +21,12 @@ export interface Album {
 }
 
 type AlbumWithMeta = {
-  title: string
-  slug: string
+  album: Album
 } & CategoryQueryMeta;
 
 export type Albums = AlbumWithMeta[];
+
+export type AlbumOrAlbumSlug = Album | string;
 
 export const titleForAlbum = (
   album: string,
@@ -54,14 +55,14 @@ export const descriptionForAlbumPhotos = (
   );
 
 export const generateMetaForAlbum = (
-  { title, slug }: Album,
+  album: Album,
   photos: Photo[],
   appText: AppTextState,
   explicitCount?: number,
   explicitDateRange?: PhotoDateRangePostgres,
 ) => ({
-  url: absolutePathForAlbum(slug),
-  title: titleForTag(title, photos, appText, explicitCount),
+  url: absolutePathForAlbum(album),
+  title: titleForTag(album.title, photos, appText, explicitCount),
   description: descriptionForAlbumPhotos(
     photos,
     appText,
@@ -69,5 +70,5 @@ export const generateMetaForAlbum = (
     explicitCount,
     explicitDateRange,
   ),
-  images: absolutePathForAlbumImage(slug),
+  images: absolutePathForAlbumImage(album),
 });

@@ -13,6 +13,7 @@ export default async function AlbumHeader({
   indexNumber,
   count,
   dateRange,
+  showAlbumDescription,
 }: {
   album: Album
   photos: Photo[]
@@ -20,14 +21,14 @@ export default async function AlbumHeader({
   indexNumber?: number
   count?: number
   dateRange?: PhotoDateRangePostgres
+  showAlbumDescription?: boolean
 }) {
   const appText = await getAppText();
   return (
     <PhotoHeader
-      album={album.slug}
+      album={album}
       entity={<PhotoAlbum
-        title={album.title}
-        slug={album.slug}
+        album={album}
         contrast="high"
         showHover={false}
       />}
@@ -42,7 +43,7 @@ export default async function AlbumHeader({
       indexNumber={indexNumber}
       count={count}
       dateRange={dateRange}
-      richContent={album.description
+      richContent={showAlbumDescription && album.description
         ? <div
           className="text-medium [&>a]:underline"
           dangerouslySetInnerHTML={{

@@ -86,7 +86,7 @@ export default function PhotoDetailPage({
     />;
   } else if (album) {
     customHeader = <AlbumHeader
-      album={{ title: album, slug: album, id: album }}
+      album={album}
       photos={photos}
       selectedPhoto={photo}
       indexNumber={indexNumber}

@@ -198,16 +198,15 @@ export default function PhotoGridSidebar({
       />}
       maxItems={maxItemsPerCategory}
       items={albums
-        .map(({ title, slug, count }) =>
-          <div key={slug} className="flex gap-1">
+        .map(({ album, count }) =>
+          <div key={album.slug} className="flex gap-1">
             <PhotoAlbum
-              key={slug}
-              title={title}
-              slug={slug}
-              countOnHover={count}
+              key={album.slug}
+              album={album}
               type="text-only"
               prefetch={false}
               contrast="low"
+              countOnHover={count}
               badged
             />
           </div>)}

@@ -78,7 +78,7 @@ export default async function AlbumPage({
 
   if (!album) { redirect(PATH_ROOT); }
 
-  const photos = await getPhotos({ album: album.id });
+  const photos = await getPhotos({ album });
 
   if (photos.length === 0) { redirect(PATH_ROOT); }
 

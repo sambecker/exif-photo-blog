@@ -8,7 +8,7 @@ import { Recipes } from '@/recipe';
 import { Recents } from '@/recents';
 import { Years } from '@/year';
 import { parseCommaSeparatedKeyString } from '@/utility/key';
-import { Albums } from '@/album';
+import { Album, Albums } from '@/album';
 
 export const CATEGORY_KEYS = [
   'recents',
@@ -58,7 +58,7 @@ export interface PhotoSetCategory {
   year?: string
   camera?: Camera
   lens?: Lens
-  album?: string
+  album?: Album
   tag?: string
   recipe?: string
   film?: string

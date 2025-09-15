@@ -83,21 +83,18 @@ export const getAlbums = () =>
 export const getAlbumsWithPhotoCounts = () =>
   safelyQuery(() => sql`
     SELECT 
-      a.title, a.slug, a.updated_at,
+      a.*,
       COALESCE(COUNT(ap.photo_id), 0) as count
     FROM albums a
     LEFT JOIN album_photo ap ON a.id = ap.album_id
     GROUP BY a.id
     ORDER BY a.created_at DESC
   `.then(({ rows }): Albums => rows.map(({
-      title,
-      slug,
-      updated_at,
       count,
+      ...album
     }) => ({
-      title,
-      slug,
+      album: album as Album,
       count: parseInt(count, 10),
-      lastModified: updated_at as Date,
+      lastModified: album.updated_at as Date,
     })))
   , 'getAlbumsWithPhotoCounts');

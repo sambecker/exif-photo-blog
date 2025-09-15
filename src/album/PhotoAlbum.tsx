@@ -2,21 +2,20 @@ import { pathForAlbum } from '@/app/path';
 import EntityLink, { EntityLinkExternalProps } from
   '@/components/entity/EntityLink';
 import IconAlbum from '@/components/icons/IconAlbum';
+import { Album } from '.';
 
 export default function PhotoAlbum({
-  title,
-  slug,
+  album,
   ...props
 }: {
-  title: string
-  slug: string
+  album: Album
 } & EntityLinkExternalProps) {
   return (
     <EntityLink
       {...props}
-      label={title}
-      path={pathForAlbum(slug)}
-      hoverPhotoQueryOptions={{ album: slug }}
+      label={album.title}
+      path={pathForAlbum(album)}
+      hoverPhotoQueryOptions={{ album }}
       icon={<IconAlbum className="translate-y-[-0.5px]" />}
     />
   );

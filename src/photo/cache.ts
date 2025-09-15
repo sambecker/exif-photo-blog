@@ -61,12 +61,16 @@ const getCacheKeyForPhotoQueryOptions = (
   switch (option) {
   // Complex keys
     case 'camera': {
-      const value = options[option];
-      return value ? `${option}-${createCameraKey(value)}` : null;
+      const camera = options[option];
+      return camera ? `${option}-${createCameraKey(camera)}` : null;
     }
     case 'lens': {
-      const value = options[option];
-      return value ? `${option}-${createLensKey(value)}` : null;
+      const lens = options[option];
+      return lens ? `${option}-${createLensKey(lens)}` : null;
+    }
+    case 'album': {
+      const album = options[option];
+      return album ? album.slug : null;
     }
     case 'takenBefore':
     case 'takenAfterInclusive': 

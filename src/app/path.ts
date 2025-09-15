@@ -5,6 +5,7 @@ import { Camera } from '@/camera';
 import { parameterize } from '@/utility/string';
 import { TAG_PRIVATE } from '@/tag';
 import { Lens } from '@/lens';
+import { Album, AlbumOrAlbumSlug } from '@/album';
 
 // Core
 export const PATH_ROOT                  = '/';
@@ -55,6 +56,7 @@ export const PREFIX_RECENTS             = '/recents';
 const PATH_PHOTO_DYNAMIC                = `${PREFIX_PHOTO}/[photoId]`;
 const PATH_CAMERA_DYNAMIC               = `${PREFIX_CAMERA}/[make]/[model]`;
 const PATH_LENS_DYNAMIC                 = `${PREFIX_LENS}/[make]/[model]`;
+const PATH_ALBUM_DYNAMIC                = `${PREFIX_ALBUM}/[album]`;
 const PATH_TAG_DYNAMIC                  = `${PREFIX_TAG}/[tag]`;
 const PATH_FILM_DYNAMIC                 = `${PREFIX_FILM}/[film]`;
 const PATH_FOCAL_LENGTH_DYNAMIC         = `${PREFIX_FOCAL_LENGTH}/[focal]`;
@@ -112,6 +114,7 @@ export const PATHS_TO_CACHE = [
   PATH_PHOTO_DYNAMIC,
   PATH_CAMERA_DYNAMIC,
   PATH_LENS_DYNAMIC,
+  PATH_ALBUM_DYNAMIC,
   PATH_TAG_DYNAMIC,
   PATH_FILM_DYNAMIC,
   PATH_FOCAL_LENGTH_DYNAMIC,
@@ -193,8 +196,8 @@ export const pathForLens = ({ make, model }: Lens) =>
     ? `${PREFIX_LENS}/${parameterize(make)}/${parameterize(model)}`
     : `${PREFIX_LENS}/${MISSING_FIELD}/${parameterize(model)}`;
 
-export const pathForAlbum = (slug: string) =>
-  `${PREFIX_ALBUM}/${slug}`;
+export const pathForAlbum = (album: AlbumOrAlbumSlug) =>
+  `${PREFIX_ALBUM}/${typeof album === 'string' ? album : album.slug}`;
 
 export const pathForTag = (tag: string) =>
   `${PREFIX_TAG}/${tag}`;
@@ -267,7 +270,7 @@ export const absolutePathForCamera= (camera: Camera, share?: boolean) =>
 export const absolutePathForLens= (lens: Lens, share?: boolean) =>
   `${getBaseUrl(share)}${pathForLens(lens)}`;
   
-export const absolutePathForAlbum = (album: string, share?: boolean) =>
+export const absolutePathForAlbum = (album: Album, share?: boolean) =>
   `${getBaseUrl(share)}${pathForAlbum(album)}`;
 
 export const absolutePathForTag = (tag: string, share?: boolean) =>
@@ -297,7 +300,7 @@ export const absolutePathForCameraImage= (camera: Camera) =>
 export const absolutePathForLensImage= (lens: Lens) =>
   `${absolutePathForLens(lens)}/${IMAGE}`;
 
-export const absolutePathForAlbumImage = (album: string) =>
+export const absolutePathForAlbumImage = (album: Album) =>
   `${absolutePathForAlbum(album)}/${IMAGE}`;
 
 export const absolutePathForTagImage = (tag: string) =>
@@ -438,9 +441,12 @@ export const isPathProtected = (pathname?: string) =>
   checkPathPrefix(pathname, pathForTag(TAG_PRIVATE)) ||
   checkPathPrefix(pathname, PATH_OG);
 
-export const getPathComponents = (pathname = ''): {
+export const getPathComponents = (
+  pathname = '',
+): (Omit<PhotoSetCategory, 'album'> & {
+  album?: string
   photoId?: string
-} & PhotoSetCategory => {
+}) => {
   const photoIdFromPhoto = pathname.match(
     new RegExp(`^${PREFIX_PHOTO}/([^/]+)`))?.[1];
   const photoIdFromCamera = pathname.match(

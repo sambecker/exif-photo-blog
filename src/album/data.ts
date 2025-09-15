@@ -10,7 +10,7 @@ export const getPhotosAlbumDataCached = ({
   limit?: number,
 }) =>
   Promise.all([
-    getPhotos({ album: album.id, limit }),
-    getPhotosMetaCached({ album: album.id }),
+    getPhotos({ album, limit }),
+    getPhotosMetaCached({ album }),
   ]);
 

@@ -3,6 +3,7 @@ import { PhotoSetCategory } from '@/category';
 import { Camera } from '@/camera';
 import { Lens } from '@/lens';
 import { APP_DEFAULT_SORT_BY, SortBy } from '@/photo/sort';
+import { Album } from '@/album';
 
 export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 export const PHOTO_DEFAULT_LIMIT = 100;
@@ -32,9 +33,10 @@ export type PhotoQueryOptions = {
   updatedBefore?: Date
   excludeFromFeeds?: boolean
   hidden?: 'exclude' | 'include' | 'only'
-} & Omit<PhotoSetCategory, 'camera' | 'lens'> & {
+} & Omit<PhotoSetCategory, 'camera' | 'lens' | 'album'> & {
   camera?: Partial<Camera>
   lens?: Partial<Lens>
+  album?: Album
 };
 
 export const areOptionsSensitive = (options: PhotoQueryOptions) =>
@@ -137,7 +139,7 @@ export const getWheresFromOptions = (
   }
   if (album) {
     wheres.push(`album_id=$${valuesIndex++}`);
-    wheresValues.push(album);
+    wheresValues.push(album.id);
   }
   if (tag) {
     wheres.push(`$${valuesIndex++}=ANY(tags)`);
