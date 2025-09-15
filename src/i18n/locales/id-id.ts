@@ -117,6 +117,7 @@ export const TEXT: I18N = {
     managePhotos: 'Kelola Foto',
     manageCameras: 'Kelola Kamera',
     manageLenses: 'Kelola Lensa',
+    manageAlbums: 'Kelola Album',
     manageTags: 'Kelola Tag',
     manageRecipes: 'Kelola Resep',
     selectPhotos: 'Pilih Foto ...',

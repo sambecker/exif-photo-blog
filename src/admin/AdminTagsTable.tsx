@@ -11,7 +11,7 @@ import { clsx } from 'clsx/lite';
 import AdminTagBadge from './AdminTagBadge';
 import { getAppText } from '@/i18n/state/server';
 
-export default async function AdminTagTable({
+export default async function AdminTagsTable({
   tags,
 }: {
   tags: Tags

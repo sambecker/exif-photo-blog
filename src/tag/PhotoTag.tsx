@@ -20,9 +20,9 @@ export default function PhotoTag({
       {...props}
       label={formatTag(tag)}
       path={pathForTag(tag)}
-      hoverPhotoQueryOptions={{ tag }}
+      hoverQueryOptions={{ tag }}
       icon={<IconTag size={14} className="translate-x-[0.5px]" />}
-      countOnHover={props.countOnHover ?? getTagCount(tag)}
+      hoverCount={props.hoverCount ?? getTagCount(tag)}
     />
   );
 }

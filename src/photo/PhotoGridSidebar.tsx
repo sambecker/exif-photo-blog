@@ -111,7 +111,7 @@ export default function PhotoGridSidebar({
       key="recents"
       items={[<PhotoRecents
         key="recents"
-        countOnHover={recents[0]?.count}
+        hoverCount={recents[0]?.count}
         type="text-only"
         prefetch={false}
         contrast="low"
@@ -135,10 +135,11 @@ export default function PhotoGridSidebar({
             <PhotoYear
               key={year}
               year={year}
-              countOnHover={count}
+              hoverCount={count}
               type="text-only"
               prefetch={false}
               contrast="low"
+              hoverType="image"
               suppressSpinner
               badged
             />)}
@@ -161,7 +162,7 @@ export default function PhotoGridSidebar({
             key={cameraKey}
             camera={camera}
             type="text-only"
-            countOnHover={count}
+            hoverCount={count}
             prefetch={false}
             contrast="low"
             badged
@@ -181,7 +182,7 @@ export default function PhotoGridSidebar({
             key={lensKey}
             lens={lens}
             type="text-only"
-            countOnHover={count}
+            hoverCount={count}
             prefetch={false}
             contrast="low"
             badged
@@ -206,7 +207,7 @@ export default function PhotoGridSidebar({
               type="text-only"
               prefetch={false}
               contrast="low"
-              countOnHover={count}
+              hoverCount={count}
               badged
             />
           </div>)}
@@ -228,7 +229,7 @@ export default function PhotoGridSidebar({
             case TAG_FAVS:
               return <PhotoFavs
                 key={TAG_FAVS}
-                countOnHover={count}
+                hoverCount={count}
                 type="icon-last"
                 prefetch={false}
                 contrast="low"
@@ -237,7 +238,7 @@ export default function PhotoGridSidebar({
             case TAG_PRIVATE:
               return <PhotoPrivate
                 key={TAG_PRIVATE}
-                countOnHover={count}
+                hoverCount={count}
                 type="icon-last"
                 prefetch={false}
                 contrast="low"
@@ -247,7 +248,7 @@ export default function PhotoGridSidebar({
               return <PhotoTag
                 key={tag}
                 tag={tag}
-                countOnHover={count}
+                hoverCount={count}
                 type="text-only"
                 prefetch={false}
                 contrast="low"
@@ -273,7 +274,7 @@ export default function PhotoGridSidebar({
             key={recipe}
             recipe={recipe}
             type="text-only"
-            countOnHover={count}
+            hoverCount={count}
             prefetch={false}
             contrast="low"
             badged
@@ -292,7 +293,7 @@ export default function PhotoGridSidebar({
           <PhotoFilm
             key={film}
             film={film}
-            countOnHover={count}
+            hoverCount={count}
             type="text-only"
             prefetch={false}
           />)}
@@ -309,7 +310,7 @@ export default function PhotoGridSidebar({
         <PhotoFocalLength
           key={focal}
           focal={focal}
-          countOnHover={count}
+          hoverCount={count}
           type="text-only"
           prefetch={false}
           badged

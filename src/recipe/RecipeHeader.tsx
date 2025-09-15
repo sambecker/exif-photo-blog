@@ -35,7 +35,7 @@ export default function RecipeHeader({
       entity={<PhotoRecipe
         recipe={recipe}
         contrast="high"
-        showHover={false}
+        hoverType="none"
         isShowingRecipeOverlay={Boolean(recipeModalProps)}
         toggleRecipeOverlay={recipeProps
           ? () => setRecipeModalProps?.(recipeProps)

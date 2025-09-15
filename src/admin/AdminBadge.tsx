@@ -1,25 +1,30 @@
 import { photoLabelForCount } from '@/photo';
 import { clsx } from 'clsx/lite';
 import Badge from '@/components/Badge';
-import PhotoRecipe from '@/recipe/PhotoRecipe';
 import { getAppText } from '@/i18n/state/server';
+import { ReactNode } from 'react';
 
-export default async function AdminRecipeBadge({
-  recipe,
+export default async function AdminBadge({
+  entity,
   count,
   hideBadge,
+  className,
 }: {
-  recipe: string,
+  entity: ReactNode,
   count: number,
   hideBadge?: boolean,
+  className?: string,
 }) {
   const appText = await getAppText();
 
   const renderBadgeContent = () =>
     <div className={clsx(
       'inline-flex items-center gap-2',
+      // Fix nested EntityLink-in-Badge quirk
+      '[&>*>*:first-child]:items-center',
+      className,
     )}>
-      <PhotoRecipe {...{ recipe }} hoverType="image" />
+      {entity}
       <div className="text-dim uppercase">
         <span>{count}</span>
         <span className="hidden xs:inline-block">

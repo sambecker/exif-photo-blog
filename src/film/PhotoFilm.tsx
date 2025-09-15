@@ -34,7 +34,7 @@ export default function PhotoFilm({
       label={medium}
       labelSmall={small}
       path={pathForFilm(film)}
-      hoverPhotoQueryOptions={{ film }}
+      hoverQueryOptions={{ film }}
       icon={<PhotoFilmIcon
         film={film}
         className={clsx(
@@ -54,7 +54,7 @@ export default function PhotoFilm({
           isShowingRecipeOverlay,
         }} />}
       iconWide={isStringFujifilmSimulation(film)}
-      countOnHover={props.countOnHover ?? getFilmCount(film)}
+      hoverCount={props.hoverCount ?? getFilmCount(film)}
     />
   );
 }

@@ -117,6 +117,7 @@ export const TEXT: I18N = {
     managePhotos: 'ছবি ব্যবস্থাপনা করুন',
     manageCameras: 'ক্যামেরা ব্যবস্থাপনা করুন',
     manageLenses: 'লেন্স ব্যবস্থাপনা করুন',
+    manageAlbums: 'অ্যালবাম ব্যবস্থাপনা করুন',
     manageTags: 'ট্যাগ ব্যবস্থাপনা করুন',
     manageRecipes: 'রেসিপি ব্যবস্থাপনা করুন',
     selectPhotos: 'ছবি নির্বাচন করুন ...',

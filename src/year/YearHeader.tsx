@@ -29,7 +29,7 @@ export default function YearHeader({
       entity={<PhotoYear
         year={year}
         contrast="high"
-        showHover={false}
+        hoverType="none"
       />}
       entityDescription={descriptionForPhotoSet(
         photos,

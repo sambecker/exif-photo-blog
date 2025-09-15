@@ -117,6 +117,7 @@ export const TEXT: I18N = {
     managePhotos: '管理照片',
     manageCameras: '管理相机',
     manageLenses: '管理镜头',
+    manageAlbums: '管理相册',
     manageTags: '管理标签',
     manageRecipes: '管理预设',
     selectPhotos: '选择照片...',

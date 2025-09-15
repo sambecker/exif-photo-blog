@@ -23,9 +23,9 @@ export interface EntityLinkExternalProps {
   suppressSpinner?: boolean
   className?: string
   truncate?: boolean
-  countOnHover?: number
-  showHover?: boolean
-  hoverPhotoQueryOptions?: PhotoQueryOptions
+  hoverCount?: number
+  hoverType?: 'auto' | 'text' | 'image' | 'none'
+  hoverQueryOptions?: PhotoQueryOptions
 }
 
 export default function EntityLink({
@@ -40,9 +40,9 @@ export default function EntityLink({
   badged,
   contrast = 'medium',
   path = '', // Make link optional for debugging purposes
-  showHover = SHOW_CATEGORY_IMAGE_HOVERS,
-  countOnHover,
-  hoverPhotoQueryOptions,
+  hoverCount,
+  hoverType = 'auto',
+  hoverQueryOptions,
   prefetch,
   title,
   action,
@@ -85,10 +85,23 @@ export default function EntityLink({
     }
   };
 
-  const showHoverEntity =
+  const canShowHover =
     !isLoading &&
-    countOnHover &&
-    !showHover;
+    hoverCount;
+
+  const showHoverImage =
+    canShowHover && SHOW_CATEGORY_IMAGE_HOVERS && (
+      hoverType === 'auto' ||
+      hoverType === 'image'
+    );
+
+  const showHoverText =
+    canShowHover && (
+      (hoverType === 'auto' && !SHOW_CATEGORY_IMAGE_HOVERS) ||
+      hoverType === 'text'
+    );
+
+  console.log({ showHover: canShowHover, showHoverImage, showHoverText });
 
   const renderLabel =
     <ResponsiveText shortText={labelSmall}>
@@ -162,14 +175,14 @@ export default function EntityLink({
         className,
       )}
     >
-      {showHover && countOnHover && hoverPhotoQueryOptions
+      {showHoverImage
         ? <EntityHover
           hoverKey={path}
           header={renderLink(true)}
-          photosCount={countOnHover}
+          photosCount={hoverCount}
           getPhotos={() =>
             getPhotosCachedAction({
-              ...hoverPhotoQueryOptions,
+              ...hoverQueryOptions,
               limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
             })}
           color={contrast === 'frosted' ? 'frosted' : undefined}
@@ -181,9 +194,9 @@ export default function EntityLink({
         <span className="action">
           {action}
         </span>}
-      {showHoverEntity &&
+      {showHoverText &&
         <span className="hidden peer-hover:inline text-dim">
-          {countOnHover}
+          {hoverCount}
         </span>}
       {isLoading && !suppressSpinner &&
         <Spinner

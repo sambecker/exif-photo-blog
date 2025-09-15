@@ -68,6 +68,7 @@ const PATH_RECENTS_DYNAMIC              = `${PREFIX_RECENTS}/[photoId]`;
 export const PATH_ADMIN_PHOTOS          = `${PATH_ADMIN}/photos`;
 export const PATH_ADMIN_PHOTOS_UPDATES  = `${PATH_ADMIN_PHOTOS}/updates`;
 export const PATH_ADMIN_UPLOADS         = `${PATH_ADMIN}/uploads`;
+export const PATH_ADMIN_ALBUMS          = `${PATH_ADMIN}/albums`;
 export const PATH_ADMIN_TAGS            = `${PATH_ADMIN}/tags`;
 export const PATH_ADMIN_RECIPES         = `${PATH_ADMIN}/recipes`;
 export const PATH_ADMIN_CONFIGURATION   = `${PATH_ADMIN}/configuration`;
@@ -98,6 +99,7 @@ export const PATHS_ADMIN = [
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_PHOTOS_UPDATES,
   PATH_ADMIN_UPLOADS,
+  PATH_ADMIN_ALBUMS,
   PATH_ADMIN_TAGS,
   PATH_ADMIN_RECIPES,
   PATH_ADMIN_INSIGHTS,
@@ -134,6 +136,9 @@ export const pathForAdminUploadUrl = (url: string, title?: string) =>
 
 export const pathForAdminPhotoEdit = (photo: PhotoOrPhotoId) =>
   `${PATH_ADMIN_PHOTOS}/${getPhotoId(photo)}/${EDIT}`;
+
+export const pathForAdminAlbumEdit = (album: Album) =>
+  `${PATH_ADMIN_ALBUMS}/${album.slug}/${EDIT}`;
 
 export const pathForAdminTagEdit = (tag: string) =>
   `${PATH_ADMIN_TAGS}/${tag}/${EDIT}`;

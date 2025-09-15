@@ -1,16 +1,16 @@
-import AdminTagsTable from '@/admin/AdminTagsTable';
+import AdminAlbumsTable from '@/admin/AdminAlbumsTable';
+import { getAlbumsWithMeta } from '@/album/query';
 import AppGrid from '@/components/AppGrid';
-import { getUniqueTags } from '@/photo/query';
 
 export default async function AdminTagsPage() {
-  const tags = await getUniqueTags().catch(() => []);
+  const albums = await getAlbumsWithMeta();
 
   return (
     <AppGrid
       contentMain={
         <div className="space-y-6">
           <div className="space-y-4">
-            <AdminTagsTable {...{ tags }} />
+            <AdminAlbumsTable {...{ albums }} />
           </div>
         </div>}
     />

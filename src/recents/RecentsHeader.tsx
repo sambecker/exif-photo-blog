@@ -24,7 +24,7 @@ export default function RecentsHeader({
   return (
     <PhotoHeader
       recent={true}
-      entity={<PhotoRecents showHover={false} />}
+      entity={<PhotoRecents hoverType="none" />}
       entityDescription={descriptionForPhotoSet(
         photos,
         appText,

@@ -29,7 +29,7 @@ export default function PhotoRecipe({
       title="Recipe"
       label={formatRecipe(recipe)}
       path={pathForRecipe(recipe)}
-      hoverPhotoQueryOptions={{ recipe }}
+      hoverQueryOptions={{ recipe }}
       icon={<IconRecipe
         size={16}
         className={clsx(
@@ -41,7 +41,7 @@ export default function PhotoRecipe({
           toggleRecipeOverlay,
           isShowingRecipeOverlay,
         }} />}
-      countOnHover={props.countOnHover ?? getRecipeCount(recipe)}
+      hoverCount={props.hoverCount ?? getRecipeCount(recipe)}
     />
   );
 }

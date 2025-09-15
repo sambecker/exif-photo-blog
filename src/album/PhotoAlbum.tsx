@@ -19,9 +19,9 @@ export default function PhotoAlbum({
       {...props}
       label={album.title}
       path={pathForAlbum(album)}
-      hoverPhotoQueryOptions={{ album }}
+      hoverQueryOptions={{ album }}
       icon={<IconAlbum className="translate-y-[-0.5px]" />}
-      countOnHover={props.countOnHover ?? getAlbumCount(album)}
+      hoverCount={props.hoverCount ?? getAlbumCount(album)}
     />
   );
 }

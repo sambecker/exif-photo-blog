@@ -117,6 +117,7 @@ export const TEXT: I18N = {
     managePhotos: 'फोटो प्रबंधित करें',
     manageCameras: 'कैमरे प्रबंधित करें',
     manageLenses: 'लेंस प्रबंधित करें',
+    manageAlbums: 'एल्बम प्रबंधित करें',
     manageTags: 'टैग प्रबंधित करें',
     manageRecipes: 'रेसिपी प्रबंधित करें',
     selectPhotos: 'फोटो चुनें...',

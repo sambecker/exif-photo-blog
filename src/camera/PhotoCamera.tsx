@@ -28,7 +28,7 @@ export default function PhotoCamera({
       {...props}
       label={formatCameraText(camera)}
       path={pathForCamera(camera)}
-      hoverPhotoQueryOptions={{ camera }}
+      hoverQueryOptions={{ camera }}
       icon={showAppleIcon
         ? <AiFillApple
           title="Apple"
@@ -39,7 +39,7 @@ export default function PhotoCamera({
           size={15}
           className="translate-x-[-0.5px] translate-y-[-0.5px]"
         />}
-      countOnHover={props.countOnHover ?? getCameraCount(camera)}
+      hoverCount={props.hoverCount ?? getCameraCount(camera)}
     />
   );
 }

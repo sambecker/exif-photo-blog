@@ -1,6 +1,9 @@
 import { Photo, PhotoDateRangePostgres } from '@/photo';
 import PhotoHeader from '@/photo/PhotoHeader';
-import { AI_CONTENT_GENERATION_ENABLED } from '@/app/config';
+import {
+  AI_CONTENT_GENERATION_ENABLED,
+  SHOW_CATEGORY_IMAGE_HOVERS,
+} from '@/app/config';
 import { getAppText } from '@/i18n/state/server';
 import { Album, descriptionForAlbumPhotos } from '.';
 import { safelyParseFormattedHtml } from '@/utility/html';
@@ -35,7 +38,7 @@ export default async function AlbumHeader({
       entity={<PhotoAlbum
         album={album}
         contrast="high"
-        showHover={false}
+        hoverType="none"
       />}
       entityDescription={descriptionForAlbumPhotos(
         photos,
@@ -64,6 +67,7 @@ export default async function AlbumHeader({
                   badged
                   type="text-only"
                   contrast="low"
+                  hoverType={SHOW_CATEGORY_IMAGE_HOVERS ? 'image' : 'none'}
                   prefetch={false}
                 />
               ))}
