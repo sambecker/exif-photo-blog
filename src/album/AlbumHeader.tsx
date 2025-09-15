@@ -52,16 +52,19 @@ export default async function AlbumHeader({
       richContent={showAlbumMeta && album.description
         ? <div className="space-y-2">
           {tags.length > 0 &&
-            <MaskedScroll className="flex items-center gap-1.5">
-              <IconTag className="text-dim translate-y-[1.5px]" />
+            <MaskedScroll
+              className="whitespace-nowrap space-x-1.5"
+              direction="horizontal"
+            >
+              <IconTag className="inline-block text-dim translate-y-[-0.5px]" />
               {tags.map(tag => (
                 <PhotoTag
                   key={tag}
                   tag={tag}
                   badged
                   type="text-only"
-                  prefetch={false}
                   contrast="low"
+                  prefetch={false}
                 />
               ))}
             </MaskedScroll>}

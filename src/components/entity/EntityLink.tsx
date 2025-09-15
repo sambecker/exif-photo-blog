@@ -22,6 +22,7 @@ export interface EntityLinkExternalProps {
   prefetch?: boolean
   suppressSpinner?: boolean
   className?: string
+  truncate?: boolean
   countOnHover?: number
   showHover?: boolean
   hoverPhotoQueryOptions?: PhotoQueryOptions
@@ -62,7 +63,6 @@ export default function EntityLink({
   prefetch?: boolean
   title?: string
   action?: ReactNode
-  truncate?: boolean
   className?: string
   classNameIcon?: string
   uppercase?: boolean
