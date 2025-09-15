@@ -6,16 +6,15 @@ import {
 import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
-import { getUniqueTags } from '@/photo/query';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import AlbumImageResponse from '@/album/AlbumImageResponse';
-import { getAlbumFromSlug } from '@/album/query';
+import { getAlbumFromSlug, getAlbumsWithMeta } from '@/album/query';
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-  'tags',
+  'albums',
   'image',
-  getUniqueTags,
-  tags => tags.map(({ tag }) => ({ tag })),
+  getAlbumsWithMeta,
+  albums => albums.map(({ album }) => ({ album: album.slug })),
 );
 
 export async function GET(

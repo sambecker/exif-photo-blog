@@ -74,13 +74,7 @@ export const deleteAlbum = (id: string) =>
     DELETE FROM albums WHERE id=${id}
   `, 'deleteAlbum');
 
-export const getAlbums = () =>
-  safelyQuery(() => sql<Album>`
-    SELECT * FROM albums
-  `.then(({ rows }) => rows)
-  , 'getAlbums');
-
-export const getAlbumsWithPhotoCounts = () =>
+export const getAlbumsWithMeta = () =>
   safelyQuery(() => sql`
     SELECT 
       a.*,

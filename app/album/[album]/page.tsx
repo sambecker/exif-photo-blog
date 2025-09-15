@@ -1,5 +1,5 @@
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
-import { getPhotos, getUniqueTags } from '@/photo/query';
+import { getPhotos } from '@/photo/query';
 import { PATH_ROOT } from '@/app/path';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
@@ -7,7 +7,7 @@ import { cache } from 'react';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
 import AlbumOverview from '@/album/AlbumOverview';
-import { getAlbumFromSlug } from '@/album/query';
+import { getAlbumFromSlug, getAlbumsWithMeta } from '@/album/query';
 import { Album, generateMetaForAlbum } from '@/album';
 import { getPhotosAlbumDataCached } from '@/album/data';
 
@@ -15,10 +15,10 @@ const getPhotosAlbumDataCachedCached = cache((album: Album) =>
   getPhotosAlbumDataCached({ album, limit: INFINITE_SCROLL_GRID_INITIAL}));
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-  'tags',
+  'albums',
   'page',
-  getUniqueTags,
-  tags => tags.map(({ tag }) => ({ tag })),
+  getAlbumsWithMeta,
+  albums => albums.map(({ album }) => ({ album: album.slug })),
 );
 
 interface AlbumProps {

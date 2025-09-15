@@ -23,7 +23,7 @@ import { createLensKey } from '@/lens';
 import { sortTagsByCount } from '@/tag';
 import { sortCategoriesByCount } from '@/category';
 import { sortFocalLengths } from '@/focal';
-import { getAlbumsWithPhotoCounts } from '@/album/query';
+import { getAlbumsWithMeta } from '@/album/query';
 
 type CategoryData = Awaited<ReturnType<typeof getDataForCategories>>;
 
@@ -84,7 +84,7 @@ export const getDataForCategories = () => Promise.all([
       .catch(() => [])
     : undefined,
   SHOW_ALBUMS
-    ? getAlbumsWithPhotoCounts()
+    ? getAlbumsWithMeta()
       .catch(() => [])
     : undefined,
 ]).then(([
