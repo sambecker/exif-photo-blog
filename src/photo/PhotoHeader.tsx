@@ -87,7 +87,7 @@ export default function PhotoHeader({
     ? <div>
       <div>{entity}</div>
       {entitySubhead &&
-        <div className="text-dim truncate">
+        <div className="text-dim whitespace-normal">
           {entitySubhead}
         </div>}
     </div>
