@@ -2,13 +2,15 @@
 
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
-import { PATH_ADMIN_TAGS } from '@/app/path';
+import { PATH_ADMIN_ALBUMS } from '@/app/path';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
-import { ReactNode, useMemo, useState } from 'react';
-import { renamePhotoTagGloballyAction } from '@/photo/actions';
-import { parameterize } from '@/utility/string';
+import { ReactNode, useCallback, useMemo, useState} from 'react';
 import { useAppState } from '@/app/AppState';
 import { Album } from '@/album';
+import { ALBUM_FORM_META } from '@/album/form';
+import { parameterize } from '@/utility/string';
+import { updateAlbumAction } from '@/album/actions';
+import clsx from 'clsx';
 
 export default function AdminAlbumForm({
   album,
@@ -19,51 +21,51 @@ export default function AdminAlbumForm({
 }) {
   const { invalidateSwr } = useAppState();
 
-  // const [updatedTagRaw, setUpdatedTagRaw] = useState(tag);
+  const [albumForm, setAlbumForm] = useState<Album>(album);
 
-  // const updatedTag = useMemo(() =>
-  //   parameterize(updatedTagRaw)
-  // , [updatedTagRaw]);
+  const isFormValid = useMemo(() => {
+    return ALBUM_FORM_META.every(({ key, required }) => {
+      return !required || Boolean(albumForm[key]);
+    });
+  }, [albumForm]);
 
-  // const isFormValid = (
-  //   updatedTag &&
-  //   updatedTag !== tag
-  // );
+  const updateAlbum = useCallback((key: keyof Album, value: string) => {
+    setAlbumForm(form => ({
+      ...form,
+      [key]: value,
+      ...key === 'title' && { slug: parameterize(value) },
+    }));
+  }, []);
 
   return (
     <form
-      action={renamePhotoTagGloballyAction}
-      className="space-y-8"
+      action={updateAlbumAction}
+      className="max-w-[38rem] space-y-4"
     >
-      {/* <FieldsetWithStatus
-        label="New Tag Name"
-        value={updatedTagRaw}
-        onChange={setUpdatedTagRaw}
-      /> */}
-      {/* Form data: tag to be replaced */}
-      {/* <input
-        name="tag"
-        value={tag}
-        hidden
-        readOnly
-      /> */}
-      {/* Form data: updated tag */}
-      {/* <input
-        name="updatedTag"
-        value={updatedTag}
-        hidden
-        readOnly
-      /> */}
+      {ALBUM_FORM_META
+        .filter(({ hidden }) => !hidden)
+        .map(({ key, label, type, readOnly }) => (
+          <FieldsetWithStatus
+            key={key}
+            id={key}
+            type={type}
+            label={label ?? key}
+            value={albumForm[key] ? `${albumForm[key]}` : ''}
+            onChange={value => updateAlbum(key, value)}
+            isModified={albumForm[key] !== album[key]}
+            readOnly={readOnly}
+            className={clsx(key === 'description' && '[&_textarea]:h-36')}
+          />))}
       {children}
       <div className="flex gap-3">
         <Link
           className="button"
-          href={PATH_ADMIN_TAGS}
+          href={PATH_ADMIN_ALBUMS}
         >
           Cancel
         </Link>
         <SubmitButtonWithStatus
-          // disabled={!isFormValid}
+          disabled={!isFormValid}
           onFormSubmit={invalidateSwr}
         >
           Update

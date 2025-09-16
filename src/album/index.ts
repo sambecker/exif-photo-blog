@@ -7,6 +7,7 @@ import {
   PhotoDateRangePostgres,
   photoQuantityText,
 } from '@/photo';
+import camelcaseKeys from 'camelcase-keys';
 
 export interface Album {
   id: string
@@ -26,6 +27,9 @@ type AlbumWithMeta = {
 export type Albums = AlbumWithMeta[];
 
 export type AlbumOrAlbumSlug = Album | string;
+
+export const parseAlbumFromDb = (album: any): Album =>
+  camelcaseKeys(album);
 
 export const titleForAlbum = (
   album: Album,

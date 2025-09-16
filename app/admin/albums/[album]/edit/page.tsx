@@ -21,6 +21,8 @@ export default async function AlbumPageEdit({
   const albumSlug = decodeURIComponent(albumFromParams);
 
   const album = await getAlbumFromSlug(albumSlug);
+
+  if (!album) { redirect(PATH_ADMIN); }
   
   const [
     { count },

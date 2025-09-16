@@ -36,8 +36,10 @@ import {
   PREFIX_TAG,
   pathForPhoto,
   PREFIX_YEAR,
+  PREFIX_ALBUM,
 } from '@/app/path';
 import { createLensKey } from '@/lens';
+import { getAlbumsWithMeta } from '@/album/query';
 
 // Table key
 export const KEY_PHOTOS     = 'photos';
@@ -45,6 +47,7 @@ const KEY_PHOTO             = 'photo';
 // Field keys
 const KEY_CAMERAS           = 'cameras';
 const KEY_LENSES            = 'lenses';
+const KEY_ALBUMS            = 'albums';
 const KEY_TAGS              = 'tags';
 const KEY_FILMS             = 'films';
 const KEY_RECIPES           = 'recipes';
@@ -102,6 +105,9 @@ const getPhotosCacheKeys = (options: PhotoQueryOptions = {}) => {
 export const revalidatePhotosKey = () =>
   revalidateTag(KEY_PHOTOS);
 
+export const revalidateAlbumsKey = () =>
+  revalidateTag(KEY_ALBUMS);
+
 export const revalidateTagsKey = () =>
   revalidateTag(KEY_TAGS);
 
@@ -125,6 +131,7 @@ export const revalidateYearsKey = () =>
 
 export const revalidateAllKeys = () => {
   revalidatePhotosKey();
+  revalidateAlbumsKey();
   revalidateTagsKey();
   revalidateCamerasKey();
   revalidateLensesKey();
@@ -146,21 +153,23 @@ export const revalidateAllKeysAndPaths = () => {
 export const revalidatePhoto = (photoId: string) => {
   // Tags
   revalidateTag(photoId);
-  revalidateTagsKey();
+  revalidateYearsKey();
   revalidateCamerasKey();
   revalidateLensesKey();
+  revalidateAlbumsKey();
+  revalidateTagsKey();
   revalidateFilmsKey();
   revalidateRecipesKey();
   revalidateFocalLengthsKey();
-  revalidateYearsKey();
   // Paths
   revalidatePath(pathForPhoto({ photo: photoId }), 'layout');
   revalidatePath(PATH_ROOT, 'layout');
   revalidatePath(PATH_GRID, 'layout');
   revalidatePath(PATH_FULL, 'layout');
-  revalidatePath(PREFIX_TAG, 'layout');
   revalidatePath(PREFIX_CAMERA, 'layout');
   revalidatePath(PREFIX_LENS, 'layout');
+  revalidatePath(PREFIX_ALBUM, 'layout');
+  revalidatePath(PREFIX_TAG, 'layout');
   revalidatePath(PREFIX_FILM, 'layout');
   revalidatePath(PREFIX_RECIPE, 'layout');
   revalidatePath(PREFIX_FOCAL_LENGTH, 'layout');
@@ -216,6 +225,12 @@ export const getPhotoCached = (...args: Parameters<typeof getPhoto>) =>
     [KEY_PHOTOS, KEY_PHOTO],
   )(...args).then(photo => photo ? parseCachedPhotoDates(photo) : undefined);
 
+export const getAlbumsWithMetaCached =
+  unstable_cache(
+    getAlbumsWithMeta,
+    [KEY_PHOTOS, KEY_ALBUMS],
+  );
+  
 export const getUniqueTagsCached =
   unstable_cache(
     getUniqueTags,

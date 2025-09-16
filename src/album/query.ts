@@ -1,6 +1,6 @@
 import { safelyQuery } from '@/db/query';
 import { sql } from '@/platforms/postgres';
-import { Album, Albums } from '.';
+import { Album, Albums, parseAlbumFromDb } from '.';
 
 export const createAlbumsTable = () =>
   sql`
@@ -58,7 +58,7 @@ export const updateAlbum = (album: Album) =>
       description=${album.description},
       location_name=${album.locationName},
       latitude=${album.latitude},
-      longitude=${album.longitude}
+      longitude=${album.longitude},
       updated_at=${(new Date()).toISOString()}
     WHERE id=${album.id}
   `, 'updateAlbum');
@@ -66,7 +66,7 @@ export const updateAlbum = (album: Album) =>
 export const getAlbumFromSlug = (slug: string) =>
   safelyQuery(() => sql<Album>`
     SELECT * FROM albums WHERE slug=${slug}
-  `.then(({ rows }) => rows[0])
+  `.then(({ rows }) => rows[0] ? parseAlbumFromDb(rows[0]) : undefined)
   , 'getAlbum');
 
 export const deleteAlbum = (id: string) =>
@@ -87,7 +87,7 @@ export const getAlbumsWithMeta = () =>
       count,
       ...album
     }) => ({
-      album: album as Album,
+      album: parseAlbumFromDb(album),
       count: parseInt(count, 10),
       lastModified: album.updated_at as Date,
     })))
