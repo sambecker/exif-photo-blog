@@ -7,6 +7,8 @@ import {
   PhotoDateRangePostgres,
   photoQuantityText,
 } from '@/photo';
+import { AnnotatedTag } from '@/photo/form';
+import { formatCount, formatCountDescriptive } from '@/utility/string';
 import camelcaseKeys from 'camelcase-keys';
 
 export interface Album {
@@ -83,3 +85,14 @@ export const generateMetaForAlbum = (
   ),
   images: absolutePathForAlbumImage(album),
 });
+
+export const convertAlbumsForForm = (
+  albums: Albums = [],
+): AnnotatedTag[] =>
+  albums
+    .sort((a, b) => a.album.title.localeCompare(b.album.title))
+    .map(({ album, count }) => ({
+      value: album.title,
+      annotation: formatCount(count),
+      annotationAria: formatCountDescriptive(count),
+    }));

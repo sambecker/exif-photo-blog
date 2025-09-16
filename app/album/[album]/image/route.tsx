@@ -25,6 +25,8 @@ export async function GET(
 
   const album = await getAlbumFromSlug(decodeURIComponent(albumParam));
 
+  if (!album) { return new Response('Album not found', { status: 404 }); }
+
   const [
     photos,
     { fontFamily, fonts },

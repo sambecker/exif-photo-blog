@@ -62,6 +62,7 @@ import {
 } from '@/platforms/storage';
 import SmallDisclosure from '@/components/SmallDisclosure';
 import { TbPhoto } from 'react-icons/tb';
+import { Albums, convertAlbumsForForm } from '@/album';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -71,6 +72,8 @@ export default function PhotoForm({
   photoStorageUrls,
   updatedExifData,
   updatedBlurData,
+  photoAlbumIds = [],
+  albums,
   uniqueTags,
   uniqueRecipes,
   uniqueFilms,
@@ -85,9 +88,11 @@ export default function PhotoForm({
   photoStorageUrls?: StorageListResponse
   updatedExifData?: Partial<PhotoFormData>
   updatedBlurData?: string
-  uniqueTags?: Tags
-  uniqueRecipes?: Recipes
-  uniqueFilms?: Films
+  photoAlbumIds?: string[]
+  albums: Albums
+  uniqueTags: Tags
+  uniqueRecipes: Recipes
+  uniqueFilms: Films
   aiContent?: AiContent
   shouldStripGpsData?: boolean
   onTitleChange?: (updatedTitle: string) => void
@@ -324,12 +329,14 @@ export default function PhotoForm({
 
   const formContent = useMemo(() =>
     FORM_METADATA_ENTRIES_BY_SECTION(
+      convertAlbumsForForm(albums),
       convertTagsForForm(uniqueTags, appText),
       convertRecipesForForm(uniqueRecipes),
       convertFilmsForForm(uniqueFilms, isMakeFujifilm(formData.make)),
       aiContent !== undefined,
       shouldStripGpsData,
     ), [
+    albums,
     uniqueTags,
     appText,
     uniqueRecipes,
@@ -469,6 +476,7 @@ export default function PhotoForm({
                   tagOptions,
                   tagOptionsLimit,
                   tagOptionsLimitValidationMessage,
+                  tagOptionsShouldParameterize,
                   readOnly,
                   hideModificationStatus,
                   validate,
@@ -523,6 +531,7 @@ export default function PhotoForm({
                       tagOptions,
                       tagOptionsLimit,
                       tagOptionsLimitValidationMessage,
+                      tagOptionsShouldParameterize,
                       required,
                       readOnly,
                       spellCheck,

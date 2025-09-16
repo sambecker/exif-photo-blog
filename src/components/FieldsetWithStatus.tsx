@@ -31,6 +31,7 @@ export default function FieldsetWithStatus({
   tagOptions,
   tagOptionsLimit,
   tagOptionsLimitValidationMessage,
+  tagOptionsShouldParameterize,
   tagOptionsDefaultIcon,
   placeholder,
   loading,
@@ -62,6 +63,7 @@ export default function FieldsetWithStatus({
   tagOptions?: AnnotatedTag[]
   tagOptionsLimit?: number
   tagOptionsLimitValidationMessage?: string
+  tagOptionsShouldParameterize?: boolean
   tagOptionsDefaultIcon?: ReactNode
   placeholder?: string
   loading?: boolean
@@ -210,6 +212,7 @@ export default function FieldsetWithStatus({
                 placeholder={placeholder}
                 limit={tagOptionsLimit}
                 limitValidationMessage={tagOptionsLimitValidationMessage}
+                shouldParameterize={tagOptionsShouldParameterize}
               />
               : type === 'textarea'
                 ? <textarea

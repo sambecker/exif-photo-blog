@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import {
+  getAlbumsWithMetaCached,
   getPhotoNoStore,
   getUniqueFilmsCached,
   getUniqueRecipesCached,
@@ -17,6 +18,7 @@ import {
   getOptimizedPhotoUrlForManipulation,
   getStorageUrlsForPhoto,
 } from '@/photo/storage';
+import { getAlbumIdsForPhoto } from '@/album/query';
 
 export default async function PhotoEditPage({
   params,
@@ -27,11 +29,15 @@ export default async function PhotoEditPage({
 
   const [
     photo,
+    photoAlbumIds,
+    albums,
     uniqueTags,
     uniqueRecipes,
     uniqueFilms,
   ] = await Promise.all([
     getPhotoNoStore(photoId, true),
+    getAlbumIdsForPhoto(photoId),
+    getAlbumsWithMetaCached(),
     getUniqueTagsCached(),
     getUniqueRecipesCached(),
     getUniqueFilmsCached(),
@@ -60,6 +66,8 @@ export default async function PhotoEditPage({
     <PhotoEditPageClient {...{
       photo,
       photoStorageUrls,
+      photoAlbumIds,
+      albums,
       uniqueTags,
       uniqueRecipes,
       uniqueFilms,

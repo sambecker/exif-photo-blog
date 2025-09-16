@@ -156,6 +156,7 @@ export default function PhotoDetailPage({
           <PhotoLarge
             key={photo.id}
             photo={photo}
+            album={album}
             primaryTag={tag}
             priority
             prefetchRelatedLinks
@@ -172,6 +173,7 @@ export default function PhotoDetailPage({
             shouldShareYear={year !== undefined}
             shouldShareCamera={camera !== undefined}
             shouldShareLens={lens !== undefined}
+            shouldShareAlbum={album !== undefined}
             shouldShareTag={tag !== undefined}
             shouldShareFilm={film !== undefined}
             shouldShareRecipe={recipe !== undefined}

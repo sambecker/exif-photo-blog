@@ -50,10 +50,12 @@ import PhotoLens from '@/lens/PhotoLens';
 import { lensFromPhoto } from '@/lens';
 import MaskedScroll from '@/components/MaskedScroll';
 import { useAppText } from '@/i18n/state/client';
+import { Album } from '@/album';
 
 export default function PhotoLarge({
   photo,
   className,
+  album,
   primaryTag,
   priority,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
@@ -74,6 +76,7 @@ export default function PhotoLarge({
   shouldShareYear,
   shouldShareCamera,
   shouldShareLens,
+  shouldShareAlbum,
   shouldShareTag,
   shouldShareFilm,
   shouldShareRecipe,
@@ -84,6 +87,7 @@ export default function PhotoLarge({
 }: {
   photo: Photo
   className?: string
+  album?: Album
   primaryTag?: string
   priority?: boolean
   prefetch?: boolean
@@ -104,6 +108,7 @@ export default function PhotoLarge({
   shouldShareYear?: boolean
   shouldShareCamera?: boolean
   shouldShareLens?: boolean
+  shouldShareAlbum?: boolean
   shouldShareTag?: boolean
   shouldShareFilm?: boolean
   shouldShareRecipe?: boolean
@@ -447,6 +452,9 @@ export default function PhotoLarge({
                           : undefined}
                         year={shouldShareYear
                           ? year
+                          : undefined}
+                        album={shouldShareAlbum
+                          ? album
                           : undefined}
                         tag={shouldShareTag
                           ? primaryTag

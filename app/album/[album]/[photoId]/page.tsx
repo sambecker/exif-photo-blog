@@ -35,6 +35,8 @@ export async function generateMetadata({
 
   const album = await getAlbumFromSlug(albumSlug);
 
+  if (!album) { return {}; }
+
   const { photo } = await getPhotosNearIdCachedCached(photoId, album);
 
   if (!photo) { return {}; }
@@ -71,6 +73,8 @@ export default async function PhotoAlbumPage({
   const albumSlug = decodeURIComponent(albumFromParams);
 
   const album = await getAlbumFromSlug(albumSlug);
+
+  if (!album) { redirect(PATH_ROOT); }
 
   const { photo, photos, photosGrid, indexNumber } =
     await getPhotosNearIdCachedCached(photoId, album);

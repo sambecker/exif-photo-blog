@@ -2,6 +2,7 @@ import { PARAM_UPLOAD_TITLE, PATH_ADMIN } from '@/app/path';
 import { extractImageDataFromBlobPath } from '@/photo/server';
 import { redirect } from 'next/navigation';
 import {
+  getAlbumsWithMetaCached,
   getUniqueFilmsCached,
   getUniqueRecipesCached,
   getUniqueTagsCached,
@@ -48,11 +49,13 @@ export default async function UploadPage({ params, searchParams }: Params) {
   }
 
   const [
+    albums,
     uniqueTags,
     uniqueRecipes,
     uniqueFilms,
     recipeTitle,
   ] = await Promise.all([
+    getAlbumsWithMetaCached(),
     getUniqueTagsCached(),
     getUniqueRecipesCached(),
     getUniqueFilmsCached(),
@@ -83,6 +86,7 @@ export default async function UploadPage({ params, searchParams }: Params) {
       ? <UploadPageClient {...{
         blobId,
         formDataFromExif,
+        albums,
         uniqueTags,
         uniqueRecipes,
         uniqueFilms,

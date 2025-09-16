@@ -93,6 +93,12 @@ export const getAlbumsWithMeta = () =>
     })))
   , 'getAlbumsWithPhotoCounts');
 
+export const getAlbumIdsForPhoto = (photoId: string) =>
+  safelyQuery(() => sql<{ album_id: string }>`
+    SELECT album_id FROM album_photo WHERE photo_id = ${photoId}
+  `.then(({ rows }) => rows.map(({ album_id }) => album_id))
+  , 'getAlbumIdsForPhotos');
+
 export const getTagsForAlbum = (albumId: string) =>
   safelyQuery(() => sql`
     SELECT DISTINCT unnest(p.tags) as tag

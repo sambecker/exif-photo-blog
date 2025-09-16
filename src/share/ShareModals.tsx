@@ -38,6 +38,7 @@ export default function ShareModals() {
       year,
       camera,
       lens,
+      album,
       tag,
       recipe,
       film,

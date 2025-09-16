@@ -101,8 +101,6 @@ export default function EntityLink({
       hoverType === 'text'
     );
 
-  console.log({ showHover: canShowHover, showHoverImage, showHoverText });
-
   const renderLabel =
     <ResponsiveText shortText={labelSmall}>
       {label}

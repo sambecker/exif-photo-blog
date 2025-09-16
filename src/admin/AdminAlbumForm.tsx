@@ -10,7 +10,7 @@ import { Album } from '@/album';
 import { ALBUM_FORM_META } from '@/album/form';
 import { parameterize } from '@/utility/string';
 import { updateAlbumAction } from '@/album/actions';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 
 export default function AdminAlbumForm({
   album,

@@ -46,14 +46,17 @@ export default async function AlbumHeader({
         undefined,
         count,
       )}
-      entitySubhead={showAlbumMeta ? album.subhead : undefined}
       photos={photos}
       selectedPhoto={selectedPhoto}
       indexNumber={indexNumber}
       count={count}
       dateRange={dateRange}
-      richContent={showAlbumMeta && album.description
+      richContent={showAlbumMeta
         ? <div className="space-y-2">
+          {album.subhead &&
+            <div className="text-medium mb-6 uppercase font-medium">
+              {album.subhead}
+            </div>}
           {tags.length > 0 &&
             <MaskedScroll
               className="whitespace-nowrap space-x-1.5"
@@ -72,12 +75,13 @@ export default async function AlbumHeader({
                 />
               ))}
             </MaskedScroll>}
-          <div
-            className="text-medium [&>a]:underline"
-            dangerouslySetInnerHTML={{
-              __html: safelyParseFormattedHtml(album.description),
-            }}
-          />
+          {album.description &&
+            <div
+              className="text-medium [&>a]:underline"
+              dangerouslySetInnerHTML={{
+                __html: safelyParseFormattedHtml(album.description),
+              }}
+            />}
         </div>
         : undefined}
       hasAiTextGeneration={AI_CONTENT_GENERATION_ENABLED}
