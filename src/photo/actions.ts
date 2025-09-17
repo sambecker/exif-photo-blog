@@ -38,6 +38,7 @@ import {
   PATH_ADMIN_TAGS,
   PATH_ROOT,
   pathForPhoto,
+  pathForTag,
 } from '@/app/path';
 import {
   blurImageFromUrl,
@@ -68,7 +69,7 @@ import {
 } from '@/photo/color/server';
 import { shouldBackfillPhotoStorage } from './update/server';
 import { getAlbumTitlesFromFormData } from '@/album/form';
-import { addAlbumTitlesToPhoto } from '@/album/server';
+import { addAlbumTitlesToPhoto, upgradeTagToAlbum } from '@/album/server';
 
 // Private actions
 
@@ -380,14 +381,24 @@ export const deletePhotoAction = async (
     }
   });
 
-export const deletePhotoTagGloballyAction = async (formData: FormData) =>
+export const deletePhotoTagGloballyFormAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
     const tag = formData.get('tag') as string;
-
     await deletePhotoTagGlobally(tag);
-
     revalidatePhotosKey();
     revalidateAdminPaths();
+  });
+
+export const deletePhotoTagGloballyAction = async (
+  tag: string,
+  currentPath?: string,
+) =>
+  runAuthenticatedAdminServerAction(async () => {
+    await deletePhotoTagGlobally(tag);
+    revalidateAllKeysAndPaths();
+    if (currentPath === pathForTag(tag)) {
+      redirect(PATH_ROOT);
+    }
   });
 
 export const renamePhotoTagGloballyAction = async (formData: FormData) =>
@@ -402,6 +413,11 @@ export const renamePhotoTagGloballyAction = async (formData: FormData) =>
       redirect(PATH_ADMIN_TAGS);
     }
   });
+
+export const upgradeTagToAlbumAction = async (tag: string) =>
+  runAuthenticatedAdminServerAction(async () =>
+    upgradeTagToAlbum(tag).then(revalidateAllKeysAndPaths),
+  );
 
 export const getPhotosNeedingRecipeTitleCountAction = async (
   recipeData: string,

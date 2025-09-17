@@ -34,6 +34,7 @@ export default async function TagHeader({
           tag={tag}
           contrast="high"
           hoverType="none"
+          showAdminMenu
         />}
       entityVerb={appText.category.tagged}
       entityDescription={descriptionForTaggedPhotos(

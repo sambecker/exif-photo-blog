@@ -31,6 +31,13 @@ export type AlbumOrAlbumSlug = Album | string;
 export const parseAlbumFromDb = (album: any): Album =>
   camelcaseKeys(album);
 
+export const albumHasMeta = (album: Album) =>
+  album.subhead ||
+  album.description ||
+  album.locationName ||
+  album.latitude ||
+  album.longitude;
+
 export const titleForAlbum = (
   album: Album,
   photos:Photo[] = [],
@@ -83,3 +90,12 @@ export const generateMetaForAlbum = (
   ),
   images: absolutePathForAlbumImage(album),
 });
+
+export const deleteAlbumConfirmationText = (
+  album: Album,
+  count: number,
+  appText: AppTextState,
+) =>
+  `Are you sure you want to delete the "${album.title}" album, containing ` +
+  `${photoQuantityText(count, appText, false, false).toLowerCase()}? ` +
+  'No photos will be deleted.';

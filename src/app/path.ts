@@ -5,7 +5,7 @@ import { Camera } from '@/camera';
 import { parameterize } from '@/utility/string';
 import { TAG_PRIVATE } from '@/tag';
 import { Lens } from '@/lens';
-import { Album, AlbumOrAlbumSlug } from '@/album';
+import { AlbumOrAlbumSlug } from '@/album';
 
 // Core
 export const PATH_ROOT                  = '/';
@@ -130,6 +130,16 @@ type PhotoPathParams  = { photo: PhotoOrPhotoId } & PhotoSetCategory & {
   showRecipe?: boolean
 };
 
+const getPhotoId = (photoOrPhotoId: PhotoOrPhotoId) =>
+  typeof photoOrPhotoId === 'string'
+    ? photoOrPhotoId
+    : photoOrPhotoId.id;
+
+const getAlbumSlug = (albumOrAlbumSlug: AlbumOrAlbumSlug) =>
+  typeof albumOrAlbumSlug === 'string'
+    ? albumOrAlbumSlug
+    : albumOrAlbumSlug.slug;
+
 export const pathForAdminUploadUrl = (url: string, title?: string) =>
   // eslint-disable-next-line max-len
   `${PATH_ADMIN_UPLOADS}/${encodeURIComponent(url)}${title ? `?${PARAM_UPLOAD_TITLE}=${encodeURIComponent(title)}` : ''}`;
@@ -137,8 +147,8 @@ export const pathForAdminUploadUrl = (url: string, title?: string) =>
 export const pathForAdminPhotoEdit = (photo: PhotoOrPhotoId) =>
   `${PATH_ADMIN_PHOTOS}/${getPhotoId(photo)}/${EDIT}`;
 
-export const pathForAdminAlbumEdit = (album: Album) =>
-  `${PATH_ADMIN_ALBUMS}/${album.slug}/${EDIT}`;
+export const pathForAdminAlbumEdit = (album: AlbumOrAlbumSlug) =>
+  `${PATH_ADMIN_ALBUMS}/${getAlbumSlug(album)}/${EDIT}`;
 
 export const pathForAdminTagEdit = (tag: string) =>
   `${PATH_ADMIN_TAGS}/${tag}/${EDIT}`;
@@ -147,9 +157,6 @@ export const pathForAdminRecipeEdit = (recipe: string) =>
   `${PATH_ADMIN_RECIPES}/${recipe}/${EDIT}`;
 
 type PhotoOrPhotoId = Photo | string;
-
-const getPhotoId = (photoOrPhotoId: PhotoOrPhotoId) =>
-  typeof photoOrPhotoId === 'string' ? photoOrPhotoId : photoOrPhotoId.id;
 
 export const pathForPhoto = ({
   photo,
@@ -202,7 +209,7 @@ export const pathForLens = ({ make, model }: Lens) =>
     : `${PREFIX_LENS}/${MISSING_FIELD}/${parameterize(model)}`;
 
 export const pathForAlbum = (album: AlbumOrAlbumSlug) =>
-  `${PREFIX_ALBUM}/${typeof album === 'string' ? album : album.slug}`;
+  `${PREFIX_ALBUM}/${getAlbumSlug(album)}`;
 
 export const pathForTag = (tag: string) =>
   `${PREFIX_TAG}/${tag}`;
@@ -229,7 +236,7 @@ export const pathForCameraImage = (camera: Camera) =>
 export const pathForLensImage = (lens: Lens) =>
   pathForImage(pathForLens(lens));
 
-export const pathForAlbumImage = (album: Album) =>
+export const pathForAlbumImage = (album: AlbumOrAlbumSlug) =>
   pathForImage(pathForAlbum(album));
 
 export const pathForTagImage = (tag: string) =>
@@ -278,7 +285,10 @@ export const absolutePathForCamera= (camera: Camera, share?: boolean) =>
 export const absolutePathForLens= (lens: Lens, share?: boolean) =>
   `${getBaseUrl(share)}${pathForLens(lens)}`;
   
-export const absolutePathForAlbum = (album: Album, share?: boolean) =>
+export const absolutePathForAlbum = (
+  album: AlbumOrAlbumSlug,
+  share?: boolean,
+) =>
   `${getBaseUrl(share)}${pathForAlbum(album)}`;
 
 export const absolutePathForTag = (tag: string, share?: boolean) =>
@@ -308,7 +318,7 @@ export const absolutePathForCameraImage= (camera: Camera) =>
 export const absolutePathForLensImage= (lens: Lens) =>
   `${absolutePathForLens(lens)}/${IMAGE}`;
 
-export const absolutePathForAlbumImage = (album: Album) =>
+export const absolutePathForAlbumImage = (album: AlbumOrAlbumSlug) =>
   `${absolutePathForAlbum(album)}/${IMAGE}`;
 
 export const absolutePathForTagImage = (tag: string) =>
