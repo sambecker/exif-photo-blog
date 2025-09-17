@@ -2,7 +2,6 @@ import { PARAM_UPLOAD_TITLE, PATH_ADMIN } from '@/app/path';
 import { extractImageDataFromBlobPath } from '@/photo/server';
 import { redirect } from 'next/navigation';
 import {
-  getAlbumsWithMetaCached,
   getUniqueFilmsCached,
   getUniqueRecipesCached,
   getUniqueTagsCached,
@@ -15,6 +14,7 @@ import {
 } from '@/app/config';
 import ErrorNote from '@/components/ErrorNote';
 import { getRecipeTitleForData } from '@/photo/query';
+import { getAlbumsWithMeta } from '@/album/query';
 
 export const maxDuration = 60;
 
@@ -55,7 +55,7 @@ export default async function UploadPage({ params, searchParams }: Params) {
     uniqueFilms,
     recipeTitle,
   ] = await Promise.all([
-    getAlbumsWithMetaCached(),
+    getAlbumsWithMeta(),
     getUniqueTagsCached(),
     getUniqueRecipesCached(),
     getUniqueFilmsCached(),

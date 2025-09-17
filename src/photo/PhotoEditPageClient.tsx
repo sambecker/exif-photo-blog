@@ -21,7 +21,7 @@ import { Albums } from '@/album';
 export default function PhotoEditPageClient({
   photo,
   photoStorageUrls,
-  photoAlbumIds,
+  photoAlbumTitles,
   albums,
   uniqueTags,
   uniqueRecipes,
@@ -32,7 +32,7 @@ export default function PhotoEditPageClient({
 }: {
   photo: Photo
   photoStorageUrls?: StorageListResponse
-  photoAlbumIds: string[]
+  photoAlbumTitles: string[]
   albums: Albums
   uniqueTags: Tags
   uniqueRecipes: Recipes
@@ -88,7 +88,7 @@ export default function PhotoEditPageClient({
         photoStorageUrls={photoStorageUrls}
         updatedExifData={updatedExifData}
         updatedBlurData={blurData}
-        photoAlbumIds={photoAlbumIds}
+        photoAlbumTitles={photoAlbumTitles}
         albums={albums}
         uniqueTags={uniqueTags}
         uniqueRecipes={uniqueRecipes}

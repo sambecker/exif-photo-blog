@@ -1,5 +1,4 @@
 import FormWithConfirm from '@/components/FormWithConfirm';
-import { deletePhotoTagGloballyAction } from '@/photo/actions';
 import AdminTable from '@/admin/AdminTable';
 import { Fragment } from 'react';
 import DeleteFormButton from '@/admin/DeleteFormButton';
@@ -10,6 +9,7 @@ import { clsx } from 'clsx/lite';
 import { getAppText } from '@/i18n/state/server';
 import { Albums } from '@/album';
 import AdminAlbumBadge from './AdminAlbumBadge';
+import { deleteAlbumAction } from '@/album/actions';
 
 export default async function AdminAlbumsTable({
   albums,
@@ -31,7 +31,7 @@ export default async function AdminAlbumsTable({
           )}>
             <EditButton path={pathForAdminAlbumEdit(album)} />
             <FormWithConfirm
-              action={deletePhotoTagGloballyAction}
+              action={deleteAlbumAction}
               confirmText={
                 // eslint-disable-next-line max-len
                 `Are you sure you want to remove "${album.title}" from ${photoQuantityText(count, appText, false, false).toLowerCase()}?`}

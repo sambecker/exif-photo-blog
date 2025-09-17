@@ -62,7 +62,8 @@ import {
 } from '@/platforms/storage';
 import SmallDisclosure from '@/components/SmallDisclosure';
 import { TbPhoto } from 'react-icons/tb';
-import { Albums, convertAlbumsForForm } from '@/album';
+import { Albums } from '@/album';
+import FieldsetAlbum from '@/album/FieldsetAlbum';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -72,7 +73,7 @@ export default function PhotoForm({
   photoStorageUrls,
   updatedExifData,
   updatedBlurData,
-  photoAlbumIds = [],
+  photoAlbumTitles = [],
   albums,
   uniqueTags,
   uniqueRecipes,
@@ -88,7 +89,7 @@ export default function PhotoForm({
   photoStorageUrls?: StorageListResponse
   updatedExifData?: Partial<PhotoFormData>
   updatedBlurData?: string
-  photoAlbumIds?: string[]
+  photoAlbumTitles?: string[]
   albums: Albums
   uniqueTags: Tags
   uniqueRecipes: Recipes
@@ -105,6 +106,14 @@ export default function PhotoForm({
     useState(getFormErrors(initialPhotoForm));
   const [formActionErrorMessage, setFormActionErrorMessage] = useState('');
 
+  const [albumTitles, setAlbumTitles] = useState(photoAlbumTitles
+    .sort((a, b) => a.localeCompare(b))
+    .join(','));
+
+  const areAlbumTitlesModified = albumTitles !== photoAlbumTitles
+    .sort((a, b) => a.localeCompare(b))
+    .join(',');
+
   const { hash } = useHash();
 
   const { invalidateSwr, shouldDebugImageFallbacks } = useAppState();
@@ -114,7 +123,7 @@ export default function PhotoForm({
   const changedFormKeys = useMemo(() =>
     getChangedFormFields(initialPhotoForm, formData),
   [initialPhotoForm, formData]);
-  const formHasChanged = changedFormKeys.length > 0;
+  const formHasChanged = changedFormKeys.length > 0 || areAlbumTitlesModified;
   const onlyChangedFieldIsBlurData =
     changedFormKeys.length === 1 &&
     changedFormKeys[0] === 'blurData';
@@ -329,14 +338,12 @@ export default function PhotoForm({
 
   const formContent = useMemo(() =>
     FORM_METADATA_ENTRIES_BY_SECTION(
-      convertAlbumsForForm(albums),
       convertTagsForForm(uniqueTags, appText),
       convertRecipesForForm(uniqueRecipes),
       convertFilmsForForm(uniqueFilms, isMakeFujifilm(formData.make)),
       aiContent !== undefined,
       shouldStripGpsData,
     ), [
-    albums,
     uniqueTags,
     appText,
     uniqueRecipes,
@@ -579,6 +586,19 @@ export default function PhotoForm({
                             // eslint-disable-next-line max-len
                             colorData={generateColorDataFromString(formData.colorData)}
                           />}
+                        />;
+                      case 'albums':
+                        return <FieldsetAlbum
+                          key={key}
+                          {...fieldProps}
+                          albumOptions={albums}
+                          value={albumTitles}
+                          onChange={value => setAlbumTitles(value)}
+                          isModified={areAlbumTitlesModified}
+                          className={clsx(
+                            fieldProps.className,
+                            'relative z-10',
+                          )}
                         />;
                       case 'visibility':
                         return <FieldsetVisibility

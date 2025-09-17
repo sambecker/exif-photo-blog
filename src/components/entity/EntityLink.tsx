@@ -40,7 +40,7 @@ export default function EntityLink({
   badged,
   contrast = 'medium',
   path = '', // Make link optional for debugging purposes
-  hoverCount,
+  hoverCount = 0,
   hoverType = 'auto',
   hoverQueryOptions,
   prefetch,
@@ -87,7 +87,7 @@ export default function EntityLink({
 
   const canShowHover =
     !isLoading &&
-    hoverCount;
+    hoverCount > 0;
 
   const showHoverImage =
     canShowHover && SHOW_CATEGORY_IMAGE_HOVERS && (

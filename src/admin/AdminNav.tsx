@@ -1,6 +1,5 @@
 import { getStorageUploadUrlsNoStore } from '@/platforms/storage/cache';
 import {
-  getAlbumsWithMetaCached,
   getPhotosMetaCached,
   getPhotosMostRecentUpdateCached,
   getUniqueRecipesCached,
@@ -15,6 +14,7 @@ import {
 } from '@/app/path';
 import AdminNavClient from './AdminNavClient';
 import { getAppText } from '@/i18n/state/server';
+import { getAlbumsWithMeta } from '@/album/query';
 
 export default async function AdminNav() {
   const [
@@ -34,7 +34,7 @@ export default async function AdminNav() {
         console.error(`Error getting blob upload urls: ${e}`);
         return 0;
       }),
-    getAlbumsWithMetaCached().then(albums => albums.length)
+    getAlbumsWithMeta().then(albums => albums.length)
       .catch(() => 0),
     getUniqueTagsCached().then(tags => tags.length)
       .catch(() => 0),

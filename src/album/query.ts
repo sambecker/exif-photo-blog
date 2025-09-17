@@ -28,7 +28,7 @@ export const createAlbumPhotoTable = () =>
     )
   `;
 
-export const insertAlbum = (album: Album) =>
+export const insertAlbum = (album: Omit<Album, 'id'>) =>
   safelyQuery(() => sql`
     INSERT INTO albums (
       title,
@@ -45,9 +45,11 @@ export const insertAlbum = (album: Album) =>
       ${album.description},
       ${album.locationName},
       ${album.latitude},
-      ${album.longitude},
+      ${album.longitude}
     )
-  `, 'insertAlbum');
+    RETURNING id
+  `.then(({ rows }) => rows[0]?.id as string)
+  , 'insertAlbum');
 
 export const updateAlbum = (album: Album) =>
   safelyQuery(() => sql`
@@ -93,11 +95,24 @@ export const getAlbumsWithMeta = () =>
     })))
   , 'getAlbumsWithPhotoCounts');
 
-export const getAlbumIdsForPhoto = (photoId: string) =>
-  safelyQuery(() => sql<{ album_id: string }>`
-    SELECT album_id FROM album_photo WHERE photo_id = ${photoId}
-  `.then(({ rows }) => rows.map(({ album_id }) => album_id))
-  , 'getAlbumIdsForPhotos');
+export const clearPhotoAlbumIds = (photoId: string) =>
+  safelyQuery(() => sql`
+    DELETE FROM album_photo WHERE photo_id=${photoId}
+  `, 'clearPhotoAlbumIds');
+
+export const addPhotoAlbumId = (photoId: string, albumId: string) =>
+  safelyQuery(() => sql`
+    INSERT INTO album_photo (album_id, photo_id) VALUES (${albumId}, ${photoId})
+    ON CONFLICT (album_id, photo_id) DO NOTHING
+  `, 'updateAlbumPhoto');
+
+export const getAlbumTitlesForPhoto = (photoId: string) =>
+  safelyQuery(() => sql<{ title: string }>`
+    SELECT a.title FROM albums a
+    JOIN album_photo ap ON a.id = ap.album_id
+    WHERE ap.photo_id=${photoId}
+  `.then(({ rows }) => rows.map(({ title }) => title))
+  , 'getAlbumTitlesForPhoto');
 
 export const getTagsForAlbum = (albumId: string) =>
   safelyQuery(() => sql`

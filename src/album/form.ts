@@ -1,5 +1,6 @@
-import { FieldSetType } from '@/photo/form';
-import { Album } from '.';
+import { AnnotatedTag, FieldSetType } from '@/photo/form';
+import { Album, Albums } from '.';
+import { formatCount, formatCountDescriptive } from '@/utility/string';
 
 export const ALBUM_FORM_META: {
   key: keyof Album
@@ -35,3 +36,17 @@ export const convertFormDataToAlbum = (formData: FormData): Album => {
       : undefined,
   };
 };
+
+export const convertAlbumsToAnnotatedTags = (
+  albums: Albums = [],
+): AnnotatedTag[] =>
+  albums
+    .sort((a, b) => a.album.title.localeCompare(b.album.title))
+    .map(({ album, count }) => ({
+      value: album.title,
+      annotation: formatCount(count),
+      annotationAria: formatCountDescriptive(count),
+    }));
+
+export const getAlbumTitlesFromFormData = (formData: FormData) =>
+  formData.get('albums')?.toString().split(',').filter(Boolean) ?? [];
