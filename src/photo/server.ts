@@ -23,7 +23,7 @@ import {
   deletePhoto,
   getRecipeTitleForData,
   updateAllMatchingRecipeTitles,
-} from './db/query';
+} from '@/photo/query';
 import { PhotoDbInsert } from '.';
 import { convertExifToFormData } from './form/server';
 import { getColorFieldsForPhotoForm } from './color/server';

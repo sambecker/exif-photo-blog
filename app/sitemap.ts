@@ -3,6 +3,7 @@ import { getDataForCategoriesCached } from '@/category/cache';
 import {
   ABSOLUTE_PATH_FULL,
   ABSOLUTE_PATH_GRID,
+  absolutePathForAlbum,
   absolutePathForCamera,
   absolutePathForFilm,
   absolutePathForFocalLength,
@@ -15,7 +16,7 @@ import {
 } from '@/app/path';
 import { isTagFavs } from '@/tag';
 import { BASE_URL, GRID_HOMEPAGE_ENABLED } from '@/app/config';
-import { getPhotoIdsAndUpdatedAt } from '@/photo/db/query';
+import { getPhotoIdsAndUpdatedAt } from '@/photo/query';
 
 // Cache for 24 hours
 export const revalidate = 86_400;
@@ -33,6 +34,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       years,
       cameras,
       lenses,
+      albums,
       tags,
       recipes,
       films,
@@ -45,6 +47,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       years: [],
       cameras: [],
       lenses: [],
+      albums: [],
       tags: [],
       recipes: [],
       films: [],
@@ -58,6 +61,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...years.map(({ lastModified }) => lastModified),
     ...cameras.map(({ lastModified }) => lastModified),
     ...lenses.map(({ lastModified }) => lastModified),
+    ...albums.map(({ lastModified }) => lastModified),
     ...tags.map(({ lastModified }) => lastModified),
     ...recipes.map(({ lastModified }) => lastModified),
     ...films.map(({ lastModified }) => lastModified),
@@ -101,6 +105,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Lenses
     ...lenses.map(({ lens, lastModified }) => ({
       url: absolutePathForLens(lens),
+      priority: PRIORITY_CATEGORY,
+      lastModified,
+    })),
+    // Albums
+    ...albums.map(({ album, lastModified }) => ({
+      url: absolutePathForAlbum(album),
       priority: PRIORITY_CATEGORY,
       lastModified,
     })),

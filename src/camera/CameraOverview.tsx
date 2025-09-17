@@ -1,4 +1,4 @@
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import { Camera, createCameraKey } from '.';
 import CameraHeader from './CameraHeader';
 import PhotoGridContainer from '@/photo/PhotoGridContainer';
@@ -13,7 +13,7 @@ export default function CameraOverview({
   camera: Camera,
   photos: Photo[],
   count: number,
-  dateRange?: PhotoDateRange,
+  dateRange?: PhotoDateRangePostgres,
   animateOnFirstLoadOnly?: boolean,
 }) {
   return (

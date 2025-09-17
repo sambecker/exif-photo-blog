@@ -1,7 +1,7 @@
 import { generateOgImageMetaForPhotos } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
-import { getPhotos } from '@/photo/db/query';
+import { getPhotos } from '@/photo/query';
 import { cache } from 'react';
 import PhotoGridPage from '@/photo/PhotoGridPage';
 import { getDataForCategoriesCached } from '@/category/cache';
@@ -9,7 +9,7 @@ import { getPhotosMetaCached } from '@/photo/cache';
 import { SortProps } from '@/photo/sort';
 import { getSortOptionsFromParams } from '@/photo/sort/path';
 import { FEED_META_QUERY_OPTIONS, getFeedQueryOptions } from '@/feed';
-import { PhotoQueryOptions } from '@/photo/db';
+import { PhotoQueryOptions } from '@/db';
 
 export const maxDuration = 60;
 

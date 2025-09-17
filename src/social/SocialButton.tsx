@@ -2,7 +2,7 @@ import { FaFacebookF, FaLinkedin, FaThreads } from 'react-icons/fa6';
 import { urlForSocial, SocialKey, tooltipForSocial } from '.';
 import { PiXLogo } from 'react-icons/pi';
 import Link from 'next/link';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import Tooltip from '@/components/Tooltip';
 import { useAppText } from '@/i18n/state/client';
 

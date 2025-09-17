@@ -14,8 +14,8 @@ import {
   getPhotosNeedingRecipeTitleCount,
   updateColorDataForPhoto,
   getColorDataForPhotos,
-} from '@/photo/db/query';
-import { PhotoQueryOptions, areOptionsSensitive } from './db';
+} from '@/photo/query';
+import { PhotoQueryOptions, areOptionsSensitive } from '@/db';
 import {
   FIELDS_TO_NOT_OVERWRITE_WITH_NULL_DATA_ON_SYNC,
   PhotoFormData,
@@ -67,6 +67,8 @@ import {
   getColorFieldsForPhotoDbInsert,
 } from '@/photo/color/server';
 import { shouldBackfillPhotoStorage } from './update/server';
+import { getAlbumTitlesFromFormData } from '@/album/form';
+import { addAlbumTitlesToPhoto } from '@/album/server';
 
 // Private actions
 
@@ -74,9 +76,10 @@ export const createPhotoAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
     const shouldStripGpsData = formData.get('shouldStripGpsData') === 'true';
 
-    const photo = await convertFormDataToPhotoDbInsertAndLookupRecipeTitle(
-      formData,
-    );
+    const photo =
+      await convertFormDataToPhotoDbInsertAndLookupRecipeTitle(formData);
+
+    const albumTitles = getAlbumTitlesFromFormData(formData);
 
     const updatedUrl = await convertUploadToPhoto({
       uploadUrl: photo.url,
@@ -86,6 +89,7 @@ export const createPhotoAction = async (formData: FormData) =>
     if (updatedUrl) {
       photo.url = updatedUrl;
       await insertPhoto(photo);
+      await addAlbumTitlesToPhoto(albumTitles, photo.id, false);
       await propagateRecipeTitleIfNecessary(formData, photo);
       revalidateAllKeysAndPaths();
       redirect(PATH_ADMIN_PHOTOS);
@@ -278,6 +282,9 @@ export const updatePhotoAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
     const photo =
       await convertFormDataToPhotoDbInsertAndLookupRecipeTitle(formData);
+
+    const albumTitles = getAlbumTitlesFromFormData(formData);
+    await addAlbumTitlesToPhoto(albumTitles, photo.id);
    
     let urlToDelete: string | undefined;
     if (await shouldBackfillPhotoStorage(photo)) {
@@ -299,7 +306,7 @@ export const updatePhotoAction = async (formData: FormData) =>
         await propagateRecipeTitleIfNecessary(formData, photo);
       });
 
-    revalidatePhoto(photo.id);
+    revalidateAllKeysAndPaths();
 
     redirect(PATH_ADMIN_PHOTOS);
   });

@@ -269,7 +269,13 @@ export const deleteConfirmationTextForPhoto = (
 ) =>
   appText.admin.deleteConfirm(titleForPhoto(photo));
 
-export type PhotoDateRange = { start: string, end: string };
+export type PhotoDateRangePostgres = { start: string, end: string };
+export type PhotoDateRangeFormatted = {
+  start: string,
+  end: string,
+  description: string,
+  descriptionWithSpaces: string,
+};
 
 export const descriptionForPhotoSet = (
   photos:Photo[] = [],
@@ -277,10 +283,10 @@ export const descriptionForPhotoSet = (
   descriptor?: string,
   dateBased?: boolean,
   explicitCount?: number,
-  explicitDateRange?: PhotoDateRange,
+  explicitDateRange?: PhotoDateRangePostgres,
 ) =>
   dateBased
-    ? dateRangeForPhotos(photos, explicitDateRange)
+    ? formattedDateRangeForPhotos(photos, explicitDateRange)
       .description
       .toLocaleUpperCase()
     : [
@@ -298,10 +304,10 @@ const sortPhotosByDateNonDestructively = (
     ? b.takenAt.getTime() - a.takenAt.getTime()
     : a.takenAt.getTime() - b.takenAt.getTime());
 
-export const dateRangeForPhotos = (
+export const formattedDateRangeForPhotos = (
   photos: Photo[] = [],
-  explicitDateRange?: PhotoDateRange,
-) => {
+  explicitDateRange?: PhotoDateRangePostgres,
+): PhotoDateRangeFormatted => {
   let start = '';
   let end = '';
   let description = '';

@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  PATH_ADMIN_ALBUMS,
   PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_INSIGHTS,
   PATH_ADMIN_PHOTOS,
@@ -32,6 +33,7 @@ import SwitcherItemMenu from '@/components/switcher/SwitcherItemMenu';
 import { MoreMenuSection } from '@/components/more/MoreMenu';
 import { FiXSquare } from 'react-icons/fi';
 import { useSelectPhotosState } from './select/SelectPhotosState';
+import IconAlbum from '@/components/icons/IconAlbum';
 
 export default function AdminAppMenu({
   isOpen,
@@ -44,6 +46,7 @@ export default function AdminAppMenu({
     photosCountTotal = 0,
     photosCountNeedSync = 0,
     uploadsCount = 0,
+    albumsCount = 0,
     tagsCount = 0,
     recipesCount = 0,
     isLoadingAdminData,
@@ -83,8 +86,8 @@ export default function AdminAppMenu({
         label: appText.admin.uploadPlural,
         annotation: `${uploadsCount}`,
         icon: <IconFolder
-          size={16}
-          className="translate-x-[1px] translate-y-[0.5px]"
+          size={15}
+          className="translate-x-[0.5px] translate-y-[0.5px]"
         />,
         href: PATH_ADMIN_UPLOADS,
       });
@@ -120,6 +123,17 @@ export default function AdminAppMenu({
           className="translate-x-[-0.5px] translate-y-[0.5px]"
         />,
         href: PATH_ADMIN_PHOTOS,
+      });
+    }
+    if (albumsCount) {
+      items.push({
+        label: appText.admin.manageAlbums,
+        annotation: `${albumsCount}`,
+        icon: <IconAlbum
+          size={15}
+          className="translate-x-[-0.5px] translate-y-[0.5px]"
+        />,
+        href: PATH_ADMIN_ALBUMS,
       });
     }
     if (tagsCount) {
@@ -186,6 +200,7 @@ export default function AdminAppMenu({
     photosCountTotal,
     recipesCount,
     showAppInsightsLink,
+    albumsCount,
     tagsCount,
     uploadsCount,
   ]);

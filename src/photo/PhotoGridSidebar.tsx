@@ -18,7 +18,6 @@ import PhotoPrivate from '@/tag/PhotoPrivate';
 import {
   CATEGORY_VISIBILITY,
   HIDE_TAGS_WITH_ONE_PHOTO,
-  SHOW_CATEGORY_IMAGE_HOVERS,
 } from '@/app/config';
 import { clsx } from 'clsx/lite';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
@@ -37,9 +36,11 @@ import PhotoFocalLength from '@/focal/PhotoFocalLength';
 import useElementHeight from '@/utility/useElementHeight';
 import { useAppText } from '@/i18n/state/client';
 import IconYear from '@/components/icons/IconYear';
-import PhotoYear from '@/years/PhotoYear';
+import PhotoYear from '@/year/PhotoYear';
 import { chunkArray } from '@/utility/array';
 import PhotoRecents from '@/recents/PhotoRecents';
+import IconAlbum from '@/components/icons/IconAlbum';
+import PhotoAlbum from '@/album/PhotoAlbum';
 
 const APPROXIMATE_ITEM_HEIGHT = 40;
 const ABOUT_HEIGHT_OFFSET = 24;
@@ -69,6 +70,7 @@ export default function PhotoGridSidebar({
     years,
     cameras,
     lenses,
+    albums,
     tags,
     films,
     recipes,
@@ -109,7 +111,7 @@ export default function PhotoGridSidebar({
       key="recents"
       items={[<PhotoRecents
         key="recents"
-        countOnHover={recents[0]?.count}
+        hoverCount={recents[0]?.count}
         type="text-only"
         prefetch={false}
         contrast="low"
@@ -121,7 +123,7 @@ export default function PhotoGridSidebar({
   const yearsContent = years.length > 0
     ? <HeaderList
       key="years"
-      title="Years"
+      title={appText.category.yearPlural}
       icon={<IconYear
         size={14}
         className="translate-x-[0.5px]"
@@ -133,10 +135,11 @@ export default function PhotoGridSidebar({
             <PhotoYear
               key={year}
               year={year}
-              countOnHover={SHOW_CATEGORY_IMAGE_HOVERS ? count : undefined}
+              hoverCount={count}
               type="text-only"
               prefetch={false}
               contrast="low"
+              hoverType="image"
               suppressSpinner
               badged
             />)}
@@ -159,7 +162,7 @@ export default function PhotoGridSidebar({
             key={cameraKey}
             camera={camera}
             type="text-only"
-            countOnHover={count}
+            hoverCount={count}
             prefetch={false}
             contrast="low"
             badged
@@ -179,11 +182,35 @@ export default function PhotoGridSidebar({
             key={lensKey}
             lens={lens}
             type="text-only"
-            countOnHover={count}
+            hoverCount={count}
             prefetch={false}
             contrast="low"
             badged
           />)}
+    />
+    : null;
+
+  const albumsContent = albums.length > 0
+    ? <HeaderList
+      key="albums"
+      title={appText.category.albumPlural}
+      icon={<IconAlbum
+        className="translate-x-[1px]"
+      />}
+      maxItems={maxItemsPerCategory}
+      items={albums
+        .map(({ album, count }) =>
+          <div key={album.slug} className="flex gap-1">
+            <PhotoAlbum
+              key={album.slug}
+              album={album}
+              type="text-only"
+              prefetch={false}
+              contrast="low"
+              hoverCount={count}
+              badged
+            />
+          </div>)}
     />
     : null;
 
@@ -202,7 +229,7 @@ export default function PhotoGridSidebar({
             case TAG_FAVS:
               return <PhotoFavs
                 key={TAG_FAVS}
-                countOnHover={count}
+                hoverCount={count}
                 type="icon-last"
                 prefetch={false}
                 contrast="low"
@@ -211,7 +238,7 @@ export default function PhotoGridSidebar({
             case TAG_PRIVATE:
               return <PhotoPrivate
                 key={TAG_PRIVATE}
-                countOnHover={count}
+                hoverCount={count}
                 type="icon-last"
                 prefetch={false}
                 contrast="low"
@@ -221,8 +248,8 @@ export default function PhotoGridSidebar({
               return <PhotoTag
                 key={tag}
                 tag={tag}
+                hoverCount={count}
                 type="text-only"
-                countOnHover={count}
                 prefetch={false}
                 contrast="low"
                 badged
@@ -247,7 +274,7 @@ export default function PhotoGridSidebar({
             key={recipe}
             recipe={recipe}
             type="text-only"
-            countOnHover={count}
+            hoverCount={count}
             prefetch={false}
             contrast="low"
             badged
@@ -266,7 +293,7 @@ export default function PhotoGridSidebar({
           <PhotoFilm
             key={film}
             film={film}
-            countOnHover={count}
+            hoverCount={count}
             type="text-only"
             prefetch={false}
           />)}
@@ -283,7 +310,7 @@ export default function PhotoGridSidebar({
         <PhotoFocalLength
           key={focal}
           focal={focal}
-          countOnHover={count}
+          hoverCount={count}
           type="text-only"
           prefetch={false}
           badged
@@ -305,7 +332,7 @@ export default function PhotoGridSidebar({
           key="about"
           ref={aboutRef}
           className={clsx(
-            'max-w-60 normal-case text-dim',
+            'max-w-60 normal-case text-dim [&>a]:underline',
             aboutTextHasBrParagraphBreaks && 'pb-2',
           )}
           dangerouslySetInnerHTML={{
@@ -319,6 +346,7 @@ export default function PhotoGridSidebar({
           case 'years': return yearsContent;
           case 'cameras': return camerasContent;
           case 'lenses': return lensesContent;
+          case 'albums': return albumsContent;
           case 'tags': return tagsContent;
           case 'recipes': return recipesContent;
           case 'films': return filmsContent;

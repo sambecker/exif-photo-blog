@@ -1,3 +1,5 @@
+'use client';
+
 import { HTMLAttributes, RefObject, useRef } from 'react';
 import useMaskedScroll from './useMaskedScroll';
 

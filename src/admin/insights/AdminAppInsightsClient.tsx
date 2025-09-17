@@ -2,7 +2,7 @@
 
 import ScoreCard from '@/components/ScoreCard';
 import ScoreCardRow from '@/components/ScoreCardRow';
-import { dateRangeForPhotos } from '@/photo';
+import { formattedDateRangeForPhotos } from '@/photo';
 import { FaArrowRight, FaCircleInfo, FaRegCalendar } from 'react-icons/fa6';
 import { MdAspectRatio } from 'react-icons/md';
 import { PiWarningBold } from 'react-icons/pi';
@@ -125,7 +125,8 @@ export default function AdminAppInsightsClient({
     noStaticOptimization,
   } = insights;
 
-  const { descriptionWithSpaces } = dateRangeForPhotos(undefined, dateRange);
+  const { descriptionWithSpaces } =
+    formattedDateRangeForPhotos(undefined, dateRange);
 
   const branchLink = <a
     className="truncate"

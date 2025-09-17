@@ -23,6 +23,7 @@ import {
   PATH_FULL_INFERRED,
   PATH_GRID_INFERRED,
   PATH_SIGN_IN,
+  pathForAlbum,
   pathForCamera,
   pathForFilm,
   pathForFocalLength,
@@ -94,6 +95,7 @@ import IconCheck from '@/components/icons/IconCheck';
 import { getSortStateFromPath } from '@/photo/sort/path';
 import IconSort from '@/components/icons/IconSort';
 import { useSelectPhotosState } from '@/admin/select/SelectPhotosState';
+import IconAlbum from '@/components/icons/IconAlbum';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -140,6 +142,7 @@ export default function CommandKClient({
   years: _years,
   cameras,
   lenses,
+  albums,
   tags: _tags,
   recipes,
   films,
@@ -397,6 +400,16 @@ export default function CommandKClient({
               path: pathForLens(lens),
             })),
           };
+          case 'albums': return {
+            heading: appText.category.albumPlural,
+            accessory: <IconAlbum size={14} />,
+            items: albums.map(({ album, count }) => ({
+              label: album.title,
+              annotation: formatCount(count),
+              annotationAria: formatCountDescriptive(count),
+              path: pathForAlbum(album),
+            })),
+          };
           case 'tags': return {
             heading: appText.category.tagPlural,
             accessory: <IconTag
@@ -466,6 +479,7 @@ export default function CommandKClient({
     years,
     cameras,
     lenses,
+    albums,
     tags,
     recipes,
     films,

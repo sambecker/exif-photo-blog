@@ -1,8 +1,8 @@
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
-import { getUniqueYears } from '@/photo/db/query';
-import { generateMetaForYear } from '@/years/meta';
-import YearOverview from '@/years/YearOverview';
-import { getPhotosYearDataCached } from '@/years/data';
+import { getUniqueYears } from '@/photo/query';
+import { generateMetaForYear } from '@/year/meta';
+import YearOverview from '@/year/YearOverview';
+import { getPhotosYearDataCached } from '@/year/data';
 import { Metadata } from 'next/types';
 import { cache } from 'react';
 import { PATH_ROOT } from '@/app/path';

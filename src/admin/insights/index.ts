@@ -14,7 +14,7 @@ import {
   AI_CONTENT_GENERATION_ENABLED,
   HAS_DEPRECATED_ENV_VARS,
 } from '@/app/config';
-import { PhotoDateRange } from '@/photo';
+import { PhotoDateRangePostgres } from '@/photo';
 import { getGitHubMeta } from '@/platforms/github';
 
 const BASIC_PHOTO_INSTALLATION_COUNT = 32;
@@ -64,7 +64,7 @@ export interface PhotoStats {
   recipesCount: number
   filmsCount: number
   focalLengthsCount: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 }
 
 export const getGitHubMetaForCurrentApp = () =>

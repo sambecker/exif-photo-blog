@@ -17,6 +17,7 @@ import {
   getOptimizedPhotoUrlForManipulation,
   getStorageUrlsForPhoto,
 } from '@/photo/storage';
+import { getAlbumsWithMeta, getAlbumTitlesForPhoto } from '@/album/query';
 
 export default async function PhotoEditPage({
   params,
@@ -27,11 +28,15 @@ export default async function PhotoEditPage({
 
   const [
     photo,
+    photoAlbumTitles,
+    albums,
     uniqueTags,
     uniqueRecipes,
     uniqueFilms,
   ] = await Promise.all([
     getPhotoNoStore(photoId, true),
+    getAlbumTitlesForPhoto(photoId),
+    getAlbumsWithMeta(),
     getUniqueTagsCached(),
     getUniqueRecipesCached(),
     getUniqueFilmsCached(),
@@ -60,6 +65,8 @@ export default async function PhotoEditPage({
     <PhotoEditPageClient {...{
       photo,
       photoStorageUrls,
+      photoAlbumTitles,
+      albums,
       uniqueTags,
       uniqueRecipes,
       uniqueFilms,

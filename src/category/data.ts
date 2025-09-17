@@ -7,7 +7,7 @@ import {
   getUniqueRecipes,
   getUniqueTags,
   getUniqueYears,
-} from '@/photo/db/query';
+} from '@/photo/query';
 import {
   SHOW_FILMS,
   SHOW_FOCAL_LENGTHS,
@@ -17,11 +17,13 @@ import {
   SHOW_TAGS,
   SHOW_YEARS,
   SHOW_RECENTS,
+  SHOW_ALBUMS,
 } from '@/app/config';
 import { createLensKey } from '@/lens';
 import { sortTagsByCount } from '@/tag';
 import { sortCategoriesByCount } from '@/category';
 import { sortFocalLengths } from '@/focal';
+import { getAlbumsWithMeta } from '@/album/query';
 
 type CategoryData = Awaited<ReturnType<typeof getDataForCategories>>;
 
@@ -34,6 +36,7 @@ export const NULL_CATEGORY_DATA: CategoryData = {
   recipes: [],
   films: [],
   focalLengths: [],
+  albums: [],
 };
 
 export const getDataForCategories = () => Promise.all([
@@ -80,6 +83,10 @@ export const getDataForCategories = () => Promise.all([
       .then(sortFocalLengths)
       .catch(() => [])
     : undefined,
+  SHOW_ALBUMS
+    ? getAlbumsWithMeta()
+      .catch(() => [])
+    : undefined,
 ]).then(([
   recents = [],
   years = [],
@@ -89,6 +96,7 @@ export const getDataForCategories = () => Promise.all([
   recipes = [],
   films = [],
   focalLengths = [],
+  albums = [],
 ]) => ({
   recents,
   years,
@@ -98,6 +106,7 @@ export const getDataForCategories = () => Promise.all([
   recipes,
   films,
   focalLengths,
+  albums,
 }));
 
 export const getCountsForCategories = async () => {
@@ -106,6 +115,7 @@ export const getCountsForCategories = async () => {
     years,
     cameras,
     lenses,
+    albums,
     tags,
     recipes,
     films,
@@ -118,6 +128,10 @@ export const getCountsForCategories = async () => {
       : {} as Record<string, number>,
     years: years.reduce((acc, year) => {
       acc[year.year] = year.count;
+      return acc;
+    }, {} as Record<string, number>),
+    albums: albums.reduce((acc, { album, count }) => {
+      acc[album.slug] = count;
       return acc;
     }, {} as Record<string, number>),
     cameras: cameras.reduce((acc, camera) => {

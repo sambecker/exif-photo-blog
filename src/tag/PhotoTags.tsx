@@ -21,12 +21,12 @@ export default function PhotoTags({
             ? <PhotoFavs {...{
               contrast,
               prefetch,
-              countOnHover: tagCounts[tag],
+              hoverCount: tagCounts[tag],
             }} />
             : <PhotoTag {...{
               tag,
               contrast,
-              prefetch, countOnHover: tagCounts[tag] }} />}
+              prefetch, hoverCount: tagCounts[tag] }} />}
         </Fragment>)}
     </div>
   );

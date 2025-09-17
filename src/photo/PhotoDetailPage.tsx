@@ -1,5 +1,5 @@
 import AnimateItems from '@/components/AnimateItems';
-import { Photo, PhotoDateRange } from '.';
+import { Photo, PhotoDateRangePostgres } from '.';
 import { PhotoSetCategory } from '../category';
 import PhotoLarge from './PhotoLarge';
 import AppGrid from '@/components/AppGrid';
@@ -15,8 +15,9 @@ import RecipeHeader from '@/recipe/RecipeHeader';
 import { ReactNode } from 'react';
 import LensHeader from '@/lens/LensHeader';
 import { AI_CONTENT_GENERATION_ENABLED } from '@/app/config';
-import YearHeader from '@/years/YearHeader';
+import YearHeader from '@/year/YearHeader';
 import RecentsHeader from '@/recents/RecentsHeader';
+import AlbumHeader from '@/album/AlbumHeader';
 
 export default function PhotoDetailPage({
   photo,
@@ -24,9 +25,10 @@ export default function PhotoDetailPage({
   photosGrid,
   recent,
   year,
-  tag,
   camera,
   lens,
+  album,
+  tag,
   film,
   recipe,
   focal,
@@ -41,30 +43,13 @@ export default function PhotoDetailPage({
   photosGrid?: Photo[]
   indexNumber?: number
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
   shouldShare?: boolean
   includeFavoriteInAdminMenu?: boolean
 } & PhotoSetCategory) {
   let customHeader: ReactNode | undefined;
 
-  if (tag) {
-    customHeader = tag === TAG_PRIVATE
-      ? <PrivateHeader
-        photos={photos}
-        selectedPhoto={photo}
-        indexNumber={indexNumber}
-        count={count ?? 0}
-      />
-      : <TagHeader
-        key={tag}
-        tag={tag}
-        photos={photos}
-        selectedPhoto={photo}
-        indexNumber={indexNumber}
-        count={count}
-        dateRange={dateRange}
-      />;
-  } else if (year) {
+  if (year) {
     customHeader = <YearHeader
       year={year}
       photos={photos}
@@ -99,6 +84,32 @@ export default function PhotoDetailPage({
       count={count}
       dateRange={dateRange}
     />;
+  } else if (album) {
+    customHeader = <AlbumHeader
+      album={album}
+      photos={photos}
+      selectedPhoto={photo}
+      indexNumber={indexNumber}
+      count={count}
+      dateRange={dateRange}
+    />;
+  } else if (tag) {
+    customHeader = tag === TAG_PRIVATE
+      ? <PrivateHeader
+        photos={photos}
+        selectedPhoto={photo}
+        indexNumber={indexNumber}
+        count={count ?? 0}
+      />
+      : <TagHeader
+        key={tag}
+        tag={tag}
+        photos={photos}
+        selectedPhoto={photo}
+        indexNumber={indexNumber}
+        count={count}
+        dateRange={dateRange}
+      />;
   } else if (film) {
     customHeader = <FilmHeader
       film={film}
@@ -145,6 +156,7 @@ export default function PhotoDetailPage({
           <PhotoLarge
             key={photo.id}
             photo={photo}
+            album={album}
             primaryTag={tag}
             priority
             prefetchRelatedLinks
@@ -161,6 +173,7 @@ export default function PhotoDetailPage({
             shouldShareYear={year !== undefined}
             shouldShareCamera={camera !== undefined}
             shouldShareLens={lens !== undefined}
+            shouldShareAlbum={album !== undefined}
             shouldShareTag={tag !== undefined}
             shouldShareFilm={film !== undefined}
             shouldShareRecipe={recipe !== undefined}

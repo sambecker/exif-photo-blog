@@ -46,7 +46,7 @@ export default async function RecipePageEdit({
         />
       }
     >
-      <AdminRecipeForm {...{ recipe, photos }}>
+      <AdminRecipeForm {...{ recipe }}>
         <PhotoLightbox
           {...{ count, photos, recipe }}
           maxPhotosToShow={MAX_PHOTO_TO_SHOW}

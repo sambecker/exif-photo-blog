@@ -3,7 +3,7 @@ import {
   descriptionForPhotoSet,
   Photo,
   photoQuantityText,
-  PhotoDateRange,
+  PhotoDateRangePostgres,
 } from '@/photo';
 import {
   capitalizeWords,
@@ -51,7 +51,7 @@ export const descriptionForRecipePhotos = (
   appText: AppTextState,
   dateBased?: boolean,
   explicitCount?: number,
-  explicitDateRange?: PhotoDateRange,
+  explicitDateRange?: PhotoDateRangePostgres,
 ) =>
   descriptionForPhotoSet(
     photos,
@@ -149,7 +149,7 @@ export const generateMetaForRecipe = (
   photos: Photo[],
   appText: AppTextState,
   explicitCount?: number,
-  explicitDateRange?: PhotoDateRange,
+  explicitDateRange?: PhotoDateRangePostgres,
 ) => ({
   url: absolutePathForRecipe(recipe),
   title: titleForRecipe(recipe, photos, appText, explicitCount),

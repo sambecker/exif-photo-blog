@@ -1,6 +1,6 @@
 'use client';
 
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import {
   pathForFocalLength,
   pathForFocalLengthImage,
@@ -19,7 +19,7 @@ export default function FocalLengthOGTile({
   focal: number
   photos: Photo[]
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 } & OGTilePropsCore) {
   const appText = useAppText();
   return (

@@ -8,8 +8,8 @@ import {
   STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES,
   STATICALLY_OPTIMIZED_PHOTOS,
 } from '@/app/config';
-import { GENERATE_STATIC_PARAMS_LIMIT } from '@/photo/db';
-import { getPublicPhotoIds } from '@/photo/db/query';
+import { GENERATE_STATIC_PARAMS_LIMIT } from '@/db';
+import { getPublicPhotoIds } from '@/photo/query';
 import { depluralize, pluralize } from '@/utility/string';
 
 type StaticOutput = 'page' | 'image';

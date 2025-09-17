@@ -1,4 +1,4 @@
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import PhotoHeader from '@/photo/PhotoHeader';
 import { Lens, lensFromPhoto } from '.';
 import PhotoLens from './PhotoLens';
@@ -19,7 +19,7 @@ export default async function LensHeader({
   selectedPhoto?: Photo
   indexNumber?: number
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 }) {
   const lens = lensFromPhoto(photos[0], lensProp);
   const appText = await getAppText();
@@ -30,7 +30,7 @@ export default async function LensHeader({
       entity={<PhotoLens
         {...{ lens }}
         contrast="high"
-        showHover={false}
+        hoverType="none"
         longText
       />}
       entityDescription={

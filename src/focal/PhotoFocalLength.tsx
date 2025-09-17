@@ -6,6 +6,7 @@ import EntityLink, {
 } from '@/components/entity/EntityLink';
 import { formatFocalLength } from '.';
 import IconFocalLength from '@/components/icons/IconFocalLength';
+import useCategoryCounts from '@/category/useCategoryCounts';
 
 export default function PhotoFocalLength({
   focal,
@@ -13,13 +14,15 @@ export default function PhotoFocalLength({
 }: {
   focal: number
 } & EntityLinkExternalProps) {
+  const { getFocalLengthCount } = useCategoryCounts();
   return (
     <EntityLink
       {...props}
       label={formatFocalLength(focal)}
       path={pathForFocalLength(focal)}
-      hoverPhotoQueryOptions={{ focal }}
+      hoverQueryOptions={{ focal }}
       icon={<IconFocalLength className="translate-y-[-1px]" />}
+      hoverCount={props.hoverCount ?? getFocalLengthCount(focal)}
     />
   );
 }

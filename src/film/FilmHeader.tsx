@@ -1,6 +1,6 @@
 'use client';
 
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import { descriptionForFilmPhotos } from '.';
 import PhotoHeader from '@/photo/PhotoHeader';
 import PhotoFilm from '@/film/PhotoFilm';
@@ -22,7 +22,7 @@ export default function FilmHeader({
   selectedPhoto?: Photo
   indexNumber?: number
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 }) {
   const { recipeModalProps, setRecipeModalProps } = useAppState();
 
@@ -43,7 +43,7 @@ export default function FilmHeader({
         toggleRecipeOverlay={recipeProps
           ? () => setRecipeModalProps?.(recipeProps)
           : undefined}
-        showHover={false}
+        hoverType="none"
       />}
       entityDescription={descriptionForFilmPhotos(
         photos,

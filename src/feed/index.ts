@@ -1,5 +1,5 @@
 import { USER_DEFAULT_SORT_OPTIONS } from '@/app/config';
-import { PhotoQueryOptions } from '../photo/db';
+import { PhotoQueryOptions } from '@/db';
 import {
   INFINITE_SCROLL_FULL_INITIAL,
   INFINITE_SCROLL_GRID_INITIAL,

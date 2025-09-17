@@ -30,6 +30,7 @@ export default function TagInput({
   placeholder,
   limit,
   limitValidationMessage,
+  shouldParameterize,
 }: {
   id?: string
   name: string
@@ -43,6 +44,7 @@ export default function TagInput({
   placeholder?: string
   limit?: number
   limitValidationMessage?: string
+  shouldParameterize?: boolean
 }) {
   const behaveAsDropdown = limit === 1;
 
@@ -59,8 +61,8 @@ export default function TagInput({
   , [options]);
 
   const selectedOptions = useMemo(() =>
-    convertStringToArray(value) ?? []
-  , [value]);
+    convertStringToArray(value, shouldParameterize) ?? []
+  , [value, shouldParameterize]);
 
   const hasReachedLimit = useMemo(() =>
     limit !== undefined &&
@@ -68,14 +70,30 @@ export default function TagInput({
     !behaveAsDropdown
   , [limit, behaveAsDropdown, selectedOptions]);
 
-  const inputTextFormatted = parameterize(inputText);
-  const isInputTextUnique =
-    inputTextFormatted &&
-    !optionValues.includes(inputTextFormatted) &&
-    !selectedOptions.includes(inputTextFormatted);
+  const inputTextFormatted = shouldParameterize
+    ? parameterize(inputText)
+    : inputText.trim();
+  const isInputTextUnique = useMemo(() => {
+    if (shouldParameterize) {
+      // Check already-parameterized values
+      return inputTextFormatted &&
+      !optionValues.includes(inputTextFormatted) &&
+      !selectedOptions.includes(inputTextFormatted);
+    } else {
+      // Parameterize for check only
+      const inputTextParameterized = parameterize(inputTextFormatted);
+      return inputTextFormatted &&
+      !optionValues
+        .map(value => parameterize(value))
+        .includes((inputTextParameterized)) &&
+      !selectedOptions
+        .map(value => parameterize(value))
+        .includes(inputTextParameterized);
+    }
+  }, [shouldParameterize, inputTextFormatted, optionValues, selectedOptions]);
 
   const optionsFiltered = useMemo<AnnotatedTag[]>(() => hasReachedLimit
-    ? [{ value: limitValidationMessage ?? `Tag limit reached (${limit})` }]
+    ? [{ value: limitValidationMessage ?? `Limit reached (${limit})` }]
     : (isInputTextUnique
       ? [{ value: `${CREATE_LABEL} "${inputTextFormatted}"` }]
       : []
@@ -84,7 +102,9 @@ export default function TagInput({
         !selectedOptions.includes(value) &&
         (
           !inputTextFormatted ||
-          value.includes(inputTextFormatted)
+          (shouldParameterize
+            ? value.includes(inputTextFormatted)
+            : (parameterize(value)).includes(parameterize(inputTextFormatted)))
         )))
   , [
     hasReachedLimit,
@@ -94,6 +114,7 @@ export default function TagInput({
     limitValidationMessage,
     options,
     selectedOptions,
+    shouldParameterize,
   ]);
 
   const hideMenu = useCallback((shouldBlurInput?: boolean) => {
@@ -110,7 +131,9 @@ export default function TagInput({
       .map(option => option.startsWith(CREATE_LABEL)
         ? option.match(new RegExp(`^${CREATE_LABEL} "(.+)"$`))?.[1] ?? option
         : option)
-      .map(option => parameterize(option))
+      .map(option => shouldParameterize
+        ? parameterize(option)
+        : option)
       .filter(option => !selectedOptions.includes(option));
 
     if (optionsToAdd.length > 0) {
@@ -136,14 +159,22 @@ export default function TagInput({
     } else {
       inputRef.current?.focus();
     }
-  }, [limit, behaveAsDropdown, selectedOptions, onChange, hideMenu]);
+  }, [
+    limit,
+    behaveAsDropdown,
+    selectedOptions,
+    shouldParameterize,
+    onChange,
+    hideMenu,
+  ]);
 
   const removeOption = useCallback((option: string) => {
-    onChange?.(selectedOptions.filter(o =>
-      o !== parameterize(option)).join(','));
+    onChange?.(selectedOptions
+      .filter(o => o !== (shouldParameterize ? parameterize(option) : option))
+      .join(','));
     setSelectedOptionIndex(undefined);
     inputRef.current?.focus();
-  }, [onChange, selectedOptions]);
+  }, [shouldParameterize, onChange, selectedOptions]);
 
   // Show options when input text changes
   useEffect(() => {

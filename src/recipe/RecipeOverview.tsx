@@ -1,4 +1,4 @@
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import PhotoGridContainer from '@/photo/PhotoGridContainer';
 import RecipeHeader from './RecipeHeader';
 
@@ -12,7 +12,7 @@ export default function RecipeOverview({
   recipe: string,
   photos: Photo[],
   count: number,
-  dateRange?: PhotoDateRange,
+  dateRange?: PhotoDateRangePostgres,
   animateOnFirstLoadOnly?: boolean,
 }) {
   return (

@@ -13,7 +13,8 @@ import {
   BLUR_ENABLED,
 } from '@/app/config';
 import ErrorNote from '@/components/ErrorNote';
-import { getRecipeTitleForData } from '@/photo/db/query';
+import { getRecipeTitleForData } from '@/photo/query';
+import { getAlbumsWithMeta } from '@/album/query';
 
 export const maxDuration = 60;
 
@@ -48,11 +49,13 @@ export default async function UploadPage({ params, searchParams }: Params) {
   }
 
   const [
+    albums,
     uniqueTags,
     uniqueRecipes,
     uniqueFilms,
     recipeTitle,
   ] = await Promise.all([
+    getAlbumsWithMeta(),
     getUniqueTagsCached(),
     getUniqueRecipesCached(),
     getUniqueFilmsCached(),
@@ -83,6 +86,7 @@ export default async function UploadPage({ params, searchParams }: Params) {
       ? <UploadPageClient {...{
         blobId,
         formDataFromExif,
+        albums,
         uniqueTags,
         uniqueRecipes,
         uniqueFilms,

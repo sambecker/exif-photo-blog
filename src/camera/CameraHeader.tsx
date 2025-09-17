@@ -1,4 +1,4 @@
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import PhotoHeader from '@/photo/PhotoHeader';
 import { Camera, cameraFromPhoto } from '.';
 import PhotoCamera from './PhotoCamera';
@@ -19,7 +19,7 @@ export default async function CameraHeader({
   selectedPhoto?: Photo
   indexNumber?: number
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 }) {
   const appText = await getAppText();
   const camera = cameraFromPhoto(photos[0], cameraProp);
@@ -30,7 +30,7 @@ export default async function CameraHeader({
       entity={<PhotoCamera
         {...{ camera }}
         contrast="high"
-        showHover={false}
+        hoverType="none"
       />}
       entityDescription={
         descriptionForCameraPhotos(

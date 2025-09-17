@@ -1,5 +1,5 @@
 import { getStoragePhotoUrlsNoStore } from '@/platforms/storage/cache';
-import { getPhotos, getPhotosInNeedOfUpdateCount } from '@/photo/db/query';
+import { getPhotos, getPhotosInNeedOfUpdateCount } from '@/photo/query';
 import { getPhotosMetaCached } from '@/photo/cache';
 import AdminPhotosClient from '@/admin/AdminPhotosClient';
 import { revalidatePath } from 'next/cache';
