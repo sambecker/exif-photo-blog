@@ -218,3 +218,33 @@ export const getLimitAndOffsetFromOptions = (
     limitAndOffsetValues: [limit, offset],
   };
 };
+
+export const convertArrayToPostgresString = (
+  array?: string[],
+  type: 'braces' | 'brackets' | 'parentheses' = 'braces', 
+) => array
+  ? type === 'braces'
+    ? `{${array.join(',')}}`
+    : type === 'brackets'
+      ? `[${array.map(i => `'${i}'`).join(',')}]`
+      : `(${array.map(i => `'${i}'`).join(',')})`
+  : null;
+
+export const generateManyToManyValues = (idsA: string[], idsB: string[]) => {
+  const pairs: string[][] = [];
+
+  for (const idA of idsA) {
+    for (const idB of idsB) {
+      pairs.push([idA, idB]);
+    }
+  }
+  const valueString = 'VALUES ' + pairs.map((_, index) =>
+    `($${index * 2 + 1},$${index * 2 + 2})`).join(',');
+
+  const values = pairs.flat();
+  
+  return {
+    valueString,
+    values,
+  };
+};

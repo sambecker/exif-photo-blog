@@ -17,7 +17,7 @@ import { Dispatch, SetStateAction, useRef, useState } from 'react';
 import { BiCheckCircle } from 'react-icons/bi';
 import ProgressButton from '@/components/primitives/ProgressButton';
 import { UrlAddStatus } from './AdminUploadsClient';
-import PhotoTagFieldset from './PhotoTagFieldset';
+import FieldsetTag from '../tag/FieldsetTag';
 import DeleteUploadButton from './DeleteUploadButton';
 import { useAppState } from '@/app/AppState';
 import { pluralize } from '@/utility/string';
@@ -146,7 +146,7 @@ export default function AdminBatchUploadActions({
           </div>
           {showBulkSettings && !actionErrorMessage &&
             <div className="space-y-4 mb-6">
-              <PhotoTagFieldset
+              <FieldsetTag
                 label="Tags"
                 tags={formData.tags ?? ''}
                 tagOptions={uniqueTags}

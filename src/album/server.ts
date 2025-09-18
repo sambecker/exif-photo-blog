@@ -7,7 +7,7 @@ import {
 } from './query';
 import { deletePhotoTagGlobally, getPhotos } from '@/photo/query';
 
-const createAlbumsAndGetIds = async (titles: string[]) => {
+export const createAlbumsAndGetIds = async (titles: string[]) => {
   const albums = await getAlbumsWithMeta();
   return Promise.all(titles.map(async title => {
     const album = albums.find(({ album }) => album.title === title);

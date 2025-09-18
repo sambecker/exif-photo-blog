@@ -52,7 +52,7 @@ export default async function AlbumHeader({
       indexNumber={indexNumber}
       count={count}
       dateRange={dateRange}
-      richContent={showAlbumMeta && albumHasMeta(album)
+      richContent={showAlbumMeta && (albumHasMeta(album) || tags.length > 0)
         ? <div className="space-y-2">
           {album.subhead &&
             <div className="text-medium mb-6 uppercase font-medium">

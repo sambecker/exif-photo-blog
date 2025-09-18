@@ -1,5 +1,6 @@
 import { safelyQuery } from '@/db/query';
-import { sql } from '@/platforms/postgres';
+import { query, sql } from '@/platforms/postgres';
+import { generateManyToManyValues } from '@/db';
 import { Album, Albums, parseAlbumFromDb } from '.';
 
 export const createAlbumsTable = () =>
@@ -100,11 +101,17 @@ export const clearPhotoAlbumIds = (photoId: string) =>
     DELETE FROM album_photo WHERE photo_id=${photoId}
   `, 'clearPhotoAlbumIds');
 
-export const addPhotoAlbumId = (photoId: string, albumId: string) =>
-  safelyQuery(() => sql`
-    INSERT INTO album_photo (album_id, photo_id) VALUES (${albumId}, ${photoId})
+export const addPhotoAlbumIds = (photoIds: string[], albumIds: string[]) => {
+  const { valueString, values } = generateManyToManyValues(albumIds, photoIds);
+  return safelyQuery(() => query(`
+    INSERT INTO album_photo (album_id, photo_id)
+    ${valueString}
     ON CONFLICT (album_id, photo_id) DO NOTHING
-  `, 'updateAlbumPhoto');
+  `, values), 'updateAlbumPhoto');
+};
+
+export const addPhotoAlbumId = (photoId: string, albumId: string) =>
+  addPhotoAlbumIds([photoId], [albumId]);
 
 export const getAlbumTitlesForPhoto = (photoId: string) =>
   safelyQuery(() => sql<{ title: string }>`

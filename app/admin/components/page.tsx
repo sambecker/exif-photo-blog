@@ -1,6 +1,6 @@
 'use client';
 
-import PhotoTagFieldset from '@/admin/PhotoTagFieldset';
+import FieldsetTag from '@/tag/FieldsetTag';
 import AppGrid from '@/components/AppGrid';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import IconHidden from '@/components/icons/IconHidden';
@@ -25,7 +25,7 @@ export default function ComponentsPage() {
           <StatusIcon type="optional" />
         </div>
         <div className="z-12">
-          <PhotoTagFieldset
+          <FieldsetTag
             tags="tag-1"
             tagOptions={[{
               tag: 'Tag 1',
