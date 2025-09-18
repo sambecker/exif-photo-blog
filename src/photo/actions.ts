@@ -69,7 +69,12 @@ import {
 } from '@/photo/color/server';
 import { shouldBackfillPhotoStorage } from './update/server';
 import { getAlbumTitlesFromFormData } from '@/album/form';
-import { addAlbumTitlesToPhoto, upgradeTagToAlbum } from '@/album/server';
+import {
+  addAlbumTitlesToPhoto,
+  createAlbumsAndGetIds,
+  upgradeTagToAlbum,
+} from '@/album/server';
+import { addPhotoAlbumIds } from '@/album/query';
 
 // Private actions
 
@@ -103,6 +108,7 @@ export const createPhotoAction = async (formData: FormData) =>
 const addUpload = async ({
   url,
   title: _title,
+  albumIds = [],
   tags: _tags,
   favorite,
   hidden,
@@ -115,6 +121,7 @@ const addUpload = async ({
 }:{
   url: string
   title?: string
+  albumIds?: string[]
   tags?: string
   favorite?: string
   hidden?: string
@@ -191,6 +198,7 @@ const addUpload = async ({
         await convertFormDataToPhotoDbInsertAndLookupRecipeTitle(form);
       photo.url = updatedUrl;
       await insertPhoto(photo);
+      await addPhotoAlbumIds(albumIds, [photo.id]);
       if (shouldRevalidateAllKeysAndPaths) {
         after(revalidateAllKeysAndPaths);
       }
@@ -208,6 +216,7 @@ export const addUploadsAction = async ({
   uploadUrls,
   uploadTitles,
   shouldRevalidateAllKeysAndPaths = true,
+  albumTitles,
   tags,
   favorite,
   hidden,
@@ -216,11 +225,12 @@ export const addUploadsAction = async ({
   takenAtNaiveLocal,
 }: Omit<
   Parameters<typeof addUpload>[0],
-  'url' | 'onStreamUpdate' | 'onFinish'
+  'url' | 'onStreamUpdate' | 'onFinish' | 'albumIds'
 > & {
   uploadUrls: string[]
   uploadTitles: string[]
   shouldRevalidateAllKeysAndPaths?: boolean
+  albumTitles?: string[]
 }) =>
   runAuthenticatedAdminServerAction(async () => {
     const PROGRESS_TASK_COUNT = AI_CONTENT_GENERATION_ENABLED ? 5 : 4;
@@ -242,6 +252,10 @@ export const addUploadsAction = async ({
         progress: ++progress / PROGRESS_TASK_COUNT,
       });
 
+    const albumIds = albumTitles
+      ? await createAlbumsAndGetIds(albumTitles)
+      : [];
+
     (async () => {
       try {
         for (const [index, url] of uploadUrls.entries()) {
@@ -253,6 +267,7 @@ export const addUploadsAction = async ({
           await addUpload({
             url,
             title,
+            albumIds,
             tags,
             favorite,
             hidden,

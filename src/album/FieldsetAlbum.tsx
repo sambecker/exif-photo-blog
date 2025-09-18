@@ -28,7 +28,7 @@ export default function FieldsetAlbum({
     <div ref={ref}>
       <FieldsetWithStatus
         {...props}
-        label={label ?? 'Album'}
+        label={label ?? 'Albums'}
         tagOptions={convertAlbumsToAnnotatedTags(albumOptions)}
         tagOptionsShouldParameterize={false}
       />

@@ -43,8 +43,8 @@ export default function AdminBatchEditPanelClient({
 
   const appText = useAppText();
 
-  const [albums, setAlbums] = useState<string>();
-  const isInAlbumMode = albums !== undefined;
+  const [albumTitles, setAlbumsTitles] = useState<string>();
+  const isInAlbumMode = albumTitles !== undefined;
 
   const [tags, setTags] = useState<string>();
   const [tagErrorMessage, setTagErrorMessage] = useState('');
@@ -64,7 +64,7 @@ export default function AdminBatchEditPanelClient({
   const renderPhotoCTA = selectedPhotoIds?.length === 0
     ? <>
       <FaArrowDown />
-      <ResponsiveText shortText="Select below">
+      <ResponsiveText shortText="Select">
         Select photos below
       </ResponsiveText>
     </>
@@ -75,13 +75,13 @@ export default function AdminBatchEditPanelClient({
   const renderActions = isInTagMode || isInAlbumMode
     ? <>
       <LoaderButton
-        className="min-h-[2.5rem] px-2.5"
+        className="min-h-[2.5rem]"
         icon={<IoCloseSharp
           size={19}
           className="translate-y-[0.5px]"
         />}
         onClick={() => {
-          setAlbums(undefined);
+          setAlbumsTitles(undefined);
           setTags(undefined);
           setTagErrorMessage('');
         }}
@@ -110,7 +110,7 @@ export default function AdminBatchEditPanelClient({
           } else if (isInAlbumMode) {
             addPhotosToAlbumsAction(
               selectedPhotoIds ?? [],
-              albums.split(','),
+              albumTitles.split(','),
             )
               .then(() => {
                 toastSuccess(`${photosText} added`);
@@ -122,7 +122,7 @@ export default function AdminBatchEditPanelClient({
         disabled={
           (
             (!tags || Boolean(tagErrorMessage)) &&
-            !albums
+            !albumTitles
           ) ||
           (selectedPhotoIds?.length ?? 0) === 0 ||
           isPerformingSelectEdit
@@ -158,7 +158,7 @@ export default function AdminBatchEditPanelClient({
         }}
       />
       <LoaderButton
-        onClick={() => setAlbums('')}
+        onClick={() => setAlbumsTitles('')}
         disabled={isFormDisabled}
         icon={<IconAlbum size={15} className="translate-y-[1.5px]" />}
       >
@@ -174,7 +174,6 @@ export default function AdminBatchEditPanelClient({
       <LoaderButton
         icon={<IoCloseSharp size={19} />}
         onClick={stopSelectingPhotos}
-        className="px-2.5"
       />
     </>;
 
@@ -214,8 +213,8 @@ export default function AdminBatchEditPanelClient({
           {isInAlbumMode
             ? <FieldsetAlbum
               albumOptions={uniqueAlbums}
-              value={albums}
-              onChange={setAlbums}
+              value={albumTitles}
+              onChange={setAlbumsTitles}
               readOnly={isPerformingSelectEdit}
               openOnLoad
               hideLabel
