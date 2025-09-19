@@ -5,7 +5,7 @@ import {
   SHOW_CATEGORY_IMAGE_HOVERS,
 } from '@/app/config';
 import { getAppText } from '@/i18n/state/server';
-import { Album, descriptionForAlbumPhotos } from '.';
+import { Album, albumHasMeta, descriptionForAlbumPhotos } from '.';
 import { safelyParseFormattedHtml } from '@/utility/html';
 import PhotoAlbum from './PhotoAlbum';
 import PhotoTag from '@/tag/PhotoTag';
@@ -39,6 +39,7 @@ export default async function AlbumHeader({
         album={album}
         contrast="high"
         hoverType="none"
+        showAdminMenu
       />}
       entityDescription={descriptionForAlbumPhotos(
         photos,
@@ -51,7 +52,7 @@ export default async function AlbumHeader({
       indexNumber={indexNumber}
       count={count}
       dateRange={dateRange}
-      richContent={showAlbumMeta
+      richContent={showAlbumMeta && (albumHasMeta(album) || tags.length > 0)
         ? <div className="space-y-2">
           {album.subhead &&
             <div className="text-medium mb-6 uppercase font-medium">

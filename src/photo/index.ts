@@ -250,7 +250,7 @@ export const photoLabelForCount = (
     : appText.photo.photoPlural;
   return _capitalize
     ? capitalize(label)
-    : label;
+    : label.toLocaleLowerCase();
 };
 
 export const photoQuantityText = (

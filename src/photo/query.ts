@@ -2,8 +2,8 @@
 import {
   sql,
   query,
-  convertArrayToPostgresString,
 } from '@/platforms/postgres';
+import { convertArrayToPostgresString } from '@/db';
 import {
   PhotoDb,
   PhotoDbInsert,

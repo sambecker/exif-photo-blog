@@ -7,7 +7,7 @@ import { clsx } from 'clsx/lite';
 import { IoCloseSharp } from 'react-icons/io5';
 import { useEffect, useRef, useState } from 'react';
 import { TAG_FAVS, Tags } from '@/tag';
-import PhotoTagFieldset from '@/admin/PhotoTagFieldset';
+import FieldsetTag from '@/tag/FieldsetTag';
 import { tagMultiplePhotosAction } from '@/photo/actions';
 import { toastSuccess } from '@/toast';
 import DeletePhotosButton from '@/admin/DeletePhotosButton';
@@ -18,10 +18,16 @@ import IconFavs from '@/components/icons/IconFavs';
 import IconTag from '@/components/icons/IconTag';
 import { useAppText } from '@/i18n/state/client';
 import { useSelectPhotosState } from './SelectPhotosState';
+import { Albums } from '@/album';
+import FieldsetAlbum from '@/album/FieldsetAlbum';
+import IconAlbum from '@/components/icons/IconAlbum';
+import { addPhotosToAlbumsAction } from '@/album/actions';
 
 export default function AdminBatchEditPanelClient({
+  uniqueAlbums,
   uniqueTags,
 }: {
+  uniqueAlbums: Albums
   uniqueTags: Tags
 }) {
   const refNote = useRef<HTMLDivElement>(null);
@@ -36,6 +42,9 @@ export default function AdminBatchEditPanelClient({
   } = useSelectPhotosState();
 
   const appText = useAppText();
+
+  const [albumTitles, setAlbumsTitles] = useState<string>();
+  const isInAlbumMode = albumTitles !== undefined;
 
   const [tags, setTags] = useState<string>();
   const [tagErrorMessage, setTagErrorMessage] = useState('');
@@ -55,7 +64,7 @@ export default function AdminBatchEditPanelClient({
   const renderPhotoCTA = selectedPhotoIds?.length === 0
     ? <>
       <FaArrowDown />
-      <ResponsiveText shortText="Select below">
+      <ResponsiveText shortText="Select">
         Select photos below
       </ResponsiveText>
     </>
@@ -63,7 +72,7 @@ export default function AdminBatchEditPanelClient({
       {photosText} selected
     </ResponsiveText>;
 
-  const renderActions = isInTagMode
+  const renderActions = isInTagMode || isInAlbumMode
     ? <>
       <LoaderButton
         className="min-h-[2.5rem]"
@@ -72,39 +81,55 @@ export default function AdminBatchEditPanelClient({
           className="translate-y-[0.5px]"
         />}
         onClick={() => {
+          setAlbumsTitles(undefined);
           setTags(undefined);
           setTagErrorMessage('');
         }}
         disabled={isPerformingSelectEdit}
-      >
-        Cancel
-      </LoaderButton>
+      />
       <LoaderButton
         className="min-h-[2.5rem]"
         icon={<FaCheck size={15} />}
-        // eslint-disable-next-line max-len
-        confirmText={`Are you sure you want to apply tags to ${photosText}? This action cannot be undone.`}
+        confirmText={isInTagMode
+          // eslint-disable-next-line max-len
+          ? `Are you sure you want to apply tags to ${photosText}? This action cannot be undone.`
+          // eslint-disable-next-line max-len
+          : `Are you sure you want to add ${photosText} to these albums? This action cannot be undone.`}
         onClick={() => {
           setIsPerformingSelectEdit?.(true);
-          tagMultiplePhotosAction(
-            tags,
-            selectedPhotoIds ?? [],
-          )
-            .then(() => {
-              toastSuccess(`${photosText} tagged`);
-              stopSelectingPhotos?.();
-            })
-            .finally(() => setIsPerformingSelectEdit?.(false));
+          if (isInTagMode) {
+            tagMultiplePhotosAction(
+              tags,
+              selectedPhotoIds ?? [],
+            )
+              .then(() => {
+                toastSuccess(`${photosText} tagged`);
+                stopSelectingPhotos?.();
+              })
+              .finally(() => setIsPerformingSelectEdit?.(false));
+          } else if (isInAlbumMode) {
+            addPhotosToAlbumsAction(
+              selectedPhotoIds ?? [],
+              albumTitles.split(','),
+            )
+              .then(() => {
+                toastSuccess(`${photosText} added`);
+                stopSelectingPhotos?.();
+              })
+              .finally(() => setIsPerformingSelectEdit?.(false));
+          }
         }}
         disabled={
-          !tags ||
-          Boolean(tagErrorMessage) ||
+          (
+            (!tags || Boolean(tagErrorMessage)) &&
+            !albumTitles
+          ) ||
           (selectedPhotoIds?.length ?? 0) === 0 ||
           isPerformingSelectEdit
         }
         primary
       >
-        Apply Tags
+        Apply
       </LoaderButton>
     </>
     : <>
@@ -133,11 +158,18 @@ export default function AdminBatchEditPanelClient({
         }}
       />
       <LoaderButton
+        onClick={() => setAlbumsTitles('')}
+        disabled={isFormDisabled}
+        icon={<IconAlbum size={15} className="translate-y-[1.5px]" />}
+      >
+        Album
+      </LoaderButton>
+      <LoaderButton
         onClick={() => setTags('')}
         disabled={isFormDisabled}
         icon={<IconTag size={15} className="translate-y-[1.5px]" />}
       >
-        Tag ...
+        Tag
       </LoaderButton>
       <LoaderButton
         icon={<IoCloseSharp size={19} />}
@@ -178,20 +210,29 @@ export default function AdminBatchEditPanelClient({
           spaceChildren={false}
           hideIcon
         >
-          {isInTagMode
-            ? <PhotoTagFieldset
-              tags={tags}
-              tagOptions={uniqueTags}
-              placeholder={`Tag ${photosText} ...`}
-              onChange={setTags}
-              onError={setTagErrorMessage}
+          {isInAlbumMode
+            ? <FieldsetAlbum
+              albumOptions={uniqueAlbums}
+              value={albumTitles}
+              onChange={setAlbumsTitles}
               readOnly={isPerformingSelectEdit}
               openOnLoad
               hideLabel
             />
-            : <div className="text-base flex gap-2 items-center">
-              {renderPhotoCTA}
-            </div>}
+            : isInTagMode
+              ? <FieldsetTag
+                tags={tags}
+                tagOptions={uniqueTags}
+                placeholder={`Tag ${photosText} ...`}
+                onChange={setTags}
+                onError={setTagErrorMessage}
+                readOnly={isPerformingSelectEdit}
+                openOnLoad
+                hideLabel
+              />
+              : <div className="text-base flex gap-2 items-center">
+                {renderPhotoCTA}
+              </div>}
         </Note>
         {tagErrorMessage &&
           <div className="text-error pl-4">

@@ -5,7 +5,7 @@ import { useAppText } from '@/i18n/state/client';
 import { convertTagsForForm, getValidationMessageForTags, Tags } from '@/tag';
 import { ComponentProps, useEffect, useRef, useState } from 'react';
 
-export default function PhotoTagFieldset(props: {
+export default function FieldsetTag(props: {
   tags: string
   tagOptions?: Tags
   onChange: (tags: string) => void
@@ -24,7 +24,7 @@ export default function PhotoTagFieldset(props: {
     ...rest
   } = props;
 
-  const ref = useRef<HTMLInputElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   const appText = useAppText();
 
@@ -43,7 +43,6 @@ export default function PhotoTagFieldset(props: {
     <div ref={ref}>
       <FieldsetWithStatus
         {...rest}
-        inputRef={ref}
         label="Tags"
         value={tags}
         tagOptions={convertTagsForForm(tagOptions, appText)}

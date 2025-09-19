@@ -128,6 +128,14 @@ export const generateMetaForTag = (
   images: absolutePathForTagImage(tag),
 });
 
+export const deleteTagConfirmationText = (
+  tag: string,
+  count: number,
+  appText: AppTextState,
+) =>
+  // eslint-disable-next-line max-len
+  `Are you sure you want to remove "${formatTag(tag)}" from ${photoQuantityText(count, appText, false, false).toLowerCase()}?`;
+
 export const isTagFavs = (tag: string) => tag.toLocaleLowerCase() === TAG_FAVS;
 
 export const isPhotoFav = ({ tags }: Photo) => tags.some(isTagFavs);
