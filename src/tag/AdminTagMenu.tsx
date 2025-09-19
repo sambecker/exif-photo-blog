@@ -42,7 +42,7 @@ export default function AdminTagMenu({
             size={16}
             className="translate-x-[-1px]"
           />,
-          label: 'Upgrade to album',
+          label: 'Upgrade',
           action: () => {
             // eslint-disable-next-line max-len
             if (confirm(`Are you sure you want to upgrade "${formatTag(tag)}" to an album?`)) {

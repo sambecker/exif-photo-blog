@@ -73,7 +73,7 @@ export default function MoreMenu({
             'text-dim',
             'outline-none',
             classNameButton,
-            isOpen && 'bg-gray-100',
+            isOpen && 'bg-dim',
             isOpen && classNameButtonOpen,
           )}
           aria-label={ariaLabel}
