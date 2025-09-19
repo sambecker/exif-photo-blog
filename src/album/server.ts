@@ -1,4 +1,4 @@
-import { capitalize, parameterize } from '@/utility/string';
+import { capitalize, capitalizeWords, parameterize } from '@/utility/string';
 import {
   addPhotoAlbumId,
   clearPhotoAlbumIds,
@@ -31,7 +31,7 @@ export const addAlbumTitlesToPhoto = async (
 };
 
 export const upgradeTagToAlbum = async (tag: string) => {
-  const title = capitalize(tag.replaceAll('-', ' '));
+  const title = capitalizeWords(tag.replaceAll('-', ' '));
   const slug = tag;
   const photos = await getPhotos({ tag });
   if (photos.length > 0) {
