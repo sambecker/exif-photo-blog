@@ -102,12 +102,17 @@ export const clearPhotoAlbumIds = (photoId: string) =>
   `, 'clearPhotoAlbumIds');
 
 export const addPhotoAlbumIds = (photoIds: string[], albumIds: string[]) => {
-  const { valueString, values } = generateManyToManyValues(albumIds, photoIds);
-  return safelyQuery(() => query(`
-    INSERT INTO album_photo (album_id, photo_id)
-    ${valueString}
-    ON CONFLICT (album_id, photo_id) DO NOTHING
-  `, values), 'updateAlbumPhoto');
+  if (photoIds.length > 0 && albumIds.length > 0) {
+    const {
+      valueString,
+      values,
+    } = generateManyToManyValues(albumIds, photoIds);
+    return safelyQuery(() => query(`
+      INSERT INTO album_photo (album_id, photo_id)
+      ${valueString}
+      ON CONFLICT (album_id, photo_id) DO NOTHING
+    `, values), 'updateAlbumPhoto');
+  }
 };
 
 export const addPhotoAlbumId = (photoId: string, albumId: string) =>

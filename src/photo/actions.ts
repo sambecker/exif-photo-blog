@@ -198,7 +198,9 @@ const addUpload = async ({
         await convertFormDataToPhotoDbInsertAndLookupRecipeTitle(form);
       photo.url = updatedUrl;
       await insertPhoto(photo);
-      await addPhotoAlbumIds(albumIds, [photo.id]);
+      if (albumIds.length > 0) {
+        await addPhotoAlbumIds([photo.id], albumIds);
+      }
       if (shouldRevalidateAllKeysAndPaths) {
         after(revalidateAllKeysAndPaths);
       }

@@ -167,7 +167,7 @@ export default function FieldsetWithStatus({
             {isModified && !error &&
               <span className={clsx(
                 'text-main font-medium text-[0.9rem]',
-                ' -ml-1.5 translate-y-[-1px]',
+                ' -ml-1.5 translate-y-[-1px] -z-1',
               )}>
                 *
               </span>}

@@ -597,7 +597,7 @@ export default function PhotoForm({
                           isModified={areAlbumTitlesModified}
                           className={clsx(
                             fieldProps.className,
-                            'relative z-10',
+                            'relative z-1',
                           )}
                         />;
                       case 'visibility':
@@ -631,6 +631,7 @@ export default function PhotoForm({
         <div className={clsx(
           'flex gap-3 sticky bottom-0',
           'pb-4 md:pb-8 mt-16',
+          'relative z-10',
         )}>
           <Link
             className="button"
