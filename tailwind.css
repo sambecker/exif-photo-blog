@@ -266,6 +266,8 @@ html {
       text-medium
       bg-gray-100 dark:bg-gray-900
       pointer-events-none
+      read-only:bg-gray-100
+      dark:read-only:bg-gray-900 dark:read-only:text-gray-400
   }
   input[type=file] {
     @apply
