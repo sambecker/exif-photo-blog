@@ -137,7 +137,6 @@ export default function ImageInput({
                   if (shouldResize) {
                     // Process images that need resizing
                     const image = await blobToImage(file);
-                    setUploadState?.({ image });
 
                     let finalBlob: Blob;
 

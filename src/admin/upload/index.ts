@@ -2,7 +2,6 @@ export interface UploadState {
   isUploading: boolean
   uploadError: string
   debugDownload?: { href: string, fileName: string }
-  image?: HTMLImageElement
   hideUploadPanel?: boolean
   fileUploadName: string
   fileUploadIndex: number
