@@ -17,7 +17,7 @@ export default function ImageInput({
   onBlobReady,
   shouldResize,
   maxSize = MAX_IMAGE_SIZE,
-  quality = 0.85,
+  quality = 0.9,
   showButton,
   disabled: disabledProp,
   debug: _debug,
