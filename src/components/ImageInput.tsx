@@ -1,8 +1,7 @@
 'use client';
 
-import { blobToImage } from '@/utility/blob';
 import { useRef, RefObject } from 'react';
-import { pngToJpegWithExif, resizeToJpegBlob } from '@/utility/exif-client';
+import { pngToJpegWithExif, jpgToJpegWithExif } from '@/utility/exif-client';
 import { clsx } from 'clsx/lite';
 import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
 import { FiUploadCloud } from 'react-icons/fi';
@@ -124,9 +123,6 @@ export default function ImageInput({
                   const outputExtension = shouldResize
                     ? 'jpeg'
                     : isInputPng ? 'png' : 'jpeg';
-                  const outputFormat = outputExtension === 'jpeg'
-                    ? 'image/jpeg'
-                    : 'image/png';
                   
                   const callbackArgs = {
                     extension: outputExtension,
@@ -136,23 +132,22 @@ export default function ImageInput({
                   
                   if (shouldResize) {
                     // Process images that need resizing
-                    const image = await blobToImage(file);
-
                     let finalBlob: Blob;
 
-                    if (isInputPng && outputFormat === 'image/jpeg') {
+                    if (isInputPng) {
                       // Use specialized PNG <> JPEG converter
                       // for EXIF preservation
                       finalBlob = await pngToJpegWithExif(file, {
                         maxSize,
                         quality,
-                      });
+                      }).catch(() => file);
                     } else {
-                      finalBlob = await resizeToJpegBlob(
-                        image, 
-                        maxSize, 
+                      // Use specialized JPG <> JPEG converter
+                      // for EXIF preservation
+                      finalBlob = await jpgToJpegWithExif(file, {
+                        maxSize,
                         quality,
-                      );
+                      }).catch(() => file);
                     }
 
                     await onBlobReady?.({

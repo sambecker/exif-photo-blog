@@ -1,7 +1,12 @@
 import piexif from 'piexifjs';
 
+interface ImageConversionOptions {
+  maxSize: number
+  quality: number
+}
+
 // Read a Blob/File as ArrayBuffer
-export const readAsArrayBuffer = (blob: Blob): Promise<ArrayBuffer> =>
+const readAsArrayBuffer = (blob: Blob): Promise<ArrayBuffer> =>
   new Promise((res, rej) => {
     const fr = new FileReader();
     fr.onload = () => res(fr.result as ArrayBuffer);
@@ -10,7 +15,7 @@ export const readAsArrayBuffer = (blob: Blob): Promise<ArrayBuffer> =>
   });
 
 // Read a Blob/File as DataURL
-export const readAsDataURL = (blob: Blob): Promise<string> =>
+const readAsDataURL = (blob: Blob): Promise<string> =>
   new Promise((res, rej) => {
     const fr = new FileReader();
     fr.onload = () => res(String(fr.result));
@@ -19,7 +24,7 @@ export const readAsDataURL = (blob: Blob): Promise<string> =>
   });
 
 // Convert DataURL string -> Blob
-export function dataURLtoBlob(dataURL: string): Blob {
+const dataURLtoBlob = (dataURL: string): Blob => {
   const [header, b64] = dataURL.split(',');
   const mimeMatch = header.match(/data:([^;]+);base64/);
   if (!mimeMatch) throw new Error('Invalid data URL');
@@ -28,13 +33,13 @@ export function dataURLtoBlob(dataURL: string): Blob {
   const u8 = new Uint8Array(bin.length);
   for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
   return new Blob([u8], { type: mime });
-}
+};
 
 // Extract raw EXIF (TIFF) bytes from a PNG eXIf chunk.
 // Returns Uint8Array or null if no EXIF found.
-export function extractExifFromPNG(
+const extractExifFromPNG = (
   arrayBuffer: ArrayBuffer,
-): Uint8Array | null {
+): Uint8Array | null => {
   const u8 = new Uint8Array(arrayBuffer);
   // PNG signature
   const sig = [137, 80, 78, 71, 13, 10, 26, 10];
@@ -65,19 +70,64 @@ export function extractExifFromPNG(
     p = crcEnd;
   }
   return null;
-}
+};
+
+// Extract raw EXIF (TIFF) bytes from a JPEG file.
+// Returns Uint8Array or null if no EXIF found.
+const extractExifFromJpeg = (
+  arrayBuffer: ArrayBuffer,
+): Uint8Array | null => {
+  const u8 = new Uint8Array(arrayBuffer);
+  
+  // Check JPEG signature (SOI marker)
+  if (u8[0] !== 0xFF || u8[1] !== 0xD8) {
+    throw new Error('Not a JPEG');
+  }
+
+  let p = 2; // after SOI marker
+  while (p + 4 <= u8.length) {
+    // Check for marker
+    if (u8[p] !== 0xFF) break;
+    
+    const marker = u8[p + 1];
+    const length = (u8[p + 2] << 8) | u8[p + 3];
+    const dataStart = p + 4;
+    // length includes the 2 bytes for length itself
+    const dataEnd = dataStart + length - 2;
+    
+    if (dataEnd > u8.length) break;
+
+    // APP1 marker contains EXIF data
+    if (marker === 0xE1) {
+      // Check for EXIF header "Exif\0\0"
+      if (dataEnd >= dataStart + 6) {
+        const exifHeader = String.fromCharCode(
+          u8[dataStart], u8[dataStart + 1], u8[dataStart + 2], 
+          u8[dataStart + 3], u8[dataStart + 4], u8[dataStart + 5],
+        );
+        if (exifHeader === 'Exif\0\0') {
+          // Return the TIFF data (skip the "Exif\0\0" header)
+          return u8.slice(dataStart + 6, dataEnd);
+        }
+      }
+    }
+
+    p = dataEnd;
+  }
+  
+  return null;
+};
 
 // Draw onto a canvas, resize, and encode to JPEG Blob
-export async function resizeToJpegBlob(
+const resizeToJpegBlob = async (
   source: ImageBitmap | HTMLImageElement,
-  maxDim = 2048,
-  quality = 0.9,
-): Promise<Blob> {
+  { maxSize, quality }: ImageConversionOptions,
+): Promise<Blob> => {
   let w = source.width;
   let h = source.height;
 
-  if (Math.max(w, h) > maxDim) {
-    const scale = maxDim / Math.max(w, h);
+  if (Math.max(w, h) > maxSize) {
+    const scale = maxSize / Math.max(w, h);
     w = Math.round(w * scale);
     h = Math.round(h * scale);
   }
@@ -95,14 +145,14 @@ export async function resizeToJpegBlob(
   );
   if (!blob) throw new Error('canvas.toBlob failed');
   return blob;
-}
+};
 
 // Insert raw EXIF bytes into a JPEG Blob using piexifjs.
 // Also normalizes Orientation -> 1 (since pixels are already upright).
-export async function insertExifIntoJpegBlob(
+const insertExifIntoJpegBlob = async (
   jpegBlob: Blob,
   rawExifUint8: Uint8Array | null,
-): Promise<Blob> {
+): Promise<Blob> => {
   const jpegDataURL = await readAsDataURL(jpegBlob);
 
   let withExifDataURL = jpegDataURL;
@@ -127,18 +177,18 @@ export async function insertExifIntoJpegBlob(
     .insert(piexif.dump(exifObj), withExifDataURL);
 
   return dataURLtoBlob(normalizedDataURL);
-}
+};
 
 /**
  * Main: PNG File -> JPEG Blob with EXIF preserved, resized via canvas.toBlob()
  * - Honors EXIF orientation at decode using:
  * createImageBitmap(..., { imageOrientation: 'from-image' })
- * - Sets Orientation=1 in the written EXIF so viewers don’t rotate again
+ * - Sets Orientation=1 in the written EXIF so viewers don't rotate again
  */
-export async function pngToJpegWithExif(
+export const pngToJpegWithExif = async (
   file: File,
-  { maxSize, quality }: { maxSize: number; quality: number },
-): Promise<Blob> {
+  options: ImageConversionOptions,
+): Promise<Blob> => {
   // Extract EXIF from PNG (if present)
   const ab = await readAsArrayBuffer(file);
   const rawExif = extractExifFromPNG(ab); // Uint8Array | null
@@ -159,7 +209,7 @@ export async function pngToJpegWithExif(
   );
 
   // Resize on canvas -> JPEG Blob
-  const jpegBlob = await resizeToJpegBlob(bitmap, maxSize, quality);
+  const jpegBlob = await resizeToJpegBlob(bitmap, options);
 
   // Insert EXIF (and normalize Orientation)
   const outBlob = await insertExifIntoJpegBlob(jpegBlob, rawExif);
@@ -169,4 +219,46 @@ export async function pngToJpegWithExif(
   bitmap.close?.();
 
   return outBlob;
-}
+};
+
+/**
+ * Main: JPEG File -> JPEG Blob with EXIF preserved, resized via canvas.toBlob()
+ * - Honors EXIF orientation at decode using:
+ * createImageBitmap(..., { imageOrientation: 'from-image' })
+ * - Sets Orientation=1 in the written EXIF so viewers don't rotate again
+ */
+export const jpgToJpegWithExif = async (
+  file: File,
+  options: ImageConversionOptions,
+): Promise<Blob> => {
+  // Extract EXIF from JPEG (if present)
+  const ab = await readAsArrayBuffer(file);
+  const rawExif = extractExifFromJpeg(ab); // Uint8Array | null
+
+  // Decode the JPEG for drawing
+  const img = document.createElement('img');
+  img.crossOrigin = 'anonymous'; // for remote URLs with CORS, harmless for File
+  img.src = URL.createObjectURL(file);
+  await new Promise<void>((res, rej) => {
+    img.onload = () => res();
+    img.onerror = () => rej(new Error('Image load failed'));
+  });
+
+  // Prefer ImageBitmap with orientation applied by decoder
+  const bitmap = await createImageBitmap(
+    img,
+    { imageOrientation: 'from-image' },
+  );
+
+  // Resize on canvas -> JPEG Blob
+  const jpegBlob = await resizeToJpegBlob(bitmap, options);
+
+  // Insert EXIF (and normalize Orientation)
+  const outBlob = await insertExifIntoJpegBlob(jpegBlob, rawExif);
+
+  // cleanup
+  URL.revokeObjectURL(img.src);
+  bitmap.close?.();
+
+  return outBlob;
+};
