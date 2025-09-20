@@ -46,7 +46,6 @@ export default function ImageInput({
   const {
     uploadState: {
       isUploading,
-      image,
       filesLength,
       fileUploadIndex,
     },
@@ -136,14 +135,15 @@ export default function ImageInput({
                   };
                   
                   if (shouldResize) {
-                    // Process images that need resizing using convenience functions
+                    // Process images that need resizing
                     const image = await blobToImage(file);
                     setUploadState?.({ image });
 
                     let finalBlob: Blob;
 
                     if (isInputPng && outputFormat === 'image/jpeg') {
-                      // Use the specialized PNG to JPEG converter with EXIF preservation
+                      // Use specialized PNG <> JPEG converter
+                      // for EXIF preservation
                       finalBlob = await pngToJpegWithExif(file, {
                         maxDim: maxSize,
                         quality: quality,
@@ -153,7 +153,7 @@ export default function ImageInput({
                       finalBlob = await resizeToJpegBlob(
                         image, 
                         maxSize, 
-                        quality
+                        quality,
                       );
                     }
 
