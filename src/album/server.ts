@@ -1,4 +1,4 @@
-import { capitalize, capitalizeWords, parameterize } from '@/utility/string';
+import { capitalizeWords, parameterize } from '@/utility/string';
 import {
   addPhotoAlbumId,
   clearPhotoAlbumIds,
