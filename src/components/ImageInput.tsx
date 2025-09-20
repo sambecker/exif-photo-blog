@@ -17,7 +17,7 @@ export default function ImageInput({
   onBlobReady,
   shouldResize,
   maxSize = MAX_IMAGE_SIZE,
-  quality = 0.8,
+  quality = 0.85,
   showButton,
   disabled: disabledProp,
   debug: _debug,
@@ -122,43 +122,42 @@ export default function ImageInput({
                   
                   const outputExtension = shouldResize
                     ? 'jpeg'
-                    : isInputPng ? 'png' : 'jpeg';
+                    : inputExtension;
                   
                   const callbackArgs = {
                     extension: outputExtension,
                     hasMultipleUploads: files.length > 1,
                     isLastBlob: i === files.length - 1,
                   };
+
+                  let blob: Blob | File = file;
                   
                   if (shouldResize) {
-                    // Process images that need resizing
-                    let finalBlob: Blob;
-
                     if (isInputPng) {
                       // Use specialized PNG <> JPEG converter
                       // for EXIF preservation
-                      finalBlob = await pngToJpegWithExif(file, {
-                        maxSize,
-                        quality,
-                      }).catch(() => file);
+                      blob = await pngToJpegWithExif(
+                        file,
+                        { maxSize, quality },
+                      ).catch(() => file);
                     } else {
                       // Use specialized JPG <> JPEG converter
                       // for EXIF preservation
-                      finalBlob = await jpgToJpegWithExif(file, {
-                        maxSize,
-                        quality,
-                      }).catch(() => file);
+                      blob = await jpgToJpegWithExif(
+                        file,
+                        { maxSize, quality },
+                      ).catch(() => file);
                     }
 
                     await onBlobReady?.({
                       ...callbackArgs,
-                      blob: finalBlob,
+                      blob,
                     });
                   } else {
                     // No need to process
                     await onBlobReady?.({
                       ...callbackArgs,
-                      blob: file,
+                      blob,
                     });
                   }
                 }
