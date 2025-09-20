@@ -2,7 +2,7 @@
 
 import { blobToImage } from '@/utility/blob';
 import { useRef, RefObject } from 'react';
-import { CopyExif, getOrientation } from '@/utility/exif';
+import { pngToJpegWithExif, resizeToJpegBlob } from '@/utility/exif-client';
 import { clsx } from 'clsx/lite';
 import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
 import { FiUploadCloud } from 'react-icons/fi';
@@ -21,7 +21,7 @@ export default function ImageInput({
   quality = 0.8,
   showButton,
   disabled: disabledProp,
-  debug,
+  debug: _debug,
 }: {
   ref?: RefObject<HTMLInputElement | null>
   id?: string
@@ -40,7 +40,6 @@ export default function ImageInput({
   debug?: boolean
 }) {
   const inputRefInternal = useRef<HTMLInputElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const inputRef = inputRefExternal ?? inputRefInternal;
 
@@ -117,122 +116,51 @@ export default function ImageInput({
                     fileUploadIndex: i,
                     fileUploadName: file.name,
                   });
+                  const inputExtension = file.name
+                    .split('.')
+                    .pop()?.toLowerCase();
+
+                  const isInputPng = inputExtension === 'png';
+                  
+                  const outputExtension = shouldResize
+                    ? 'jpeg'
+                    : isInputPng ? 'png' : 'jpeg';
+                  const outputFormat = outputExtension === 'jpeg'
+                    ? 'image/jpeg'
+                    : 'image/png';
+                  
                   const callbackArgs = {
-                    extension: file.name.split('.').pop()?.toLowerCase(),
+                    extension: outputExtension,
                     hasMultipleUploads: files.length > 1,
                     isLastBlob: i === files.length - 1,
                   };
-
-                  const isPng = callbackArgs.extension === 'png';
                   
-                  const canvas = canvasRef.current;
-
-                  // Specify wide gamut to avoid data loss while resizing
-                  const ctx = canvas?.getContext(
-                    '2d', { colorSpace: 'display-p3' },
-                  );
-
-                  if (shouldResize && canvas && ctx) {
-                    // Process images that need resizing
+                  if (shouldResize) {
+                    // Process images that need resizing using convenience functions
                     const image = await blobToImage(file);
-
                     setUploadState?.({ image });
 
-                    ctx.save();
-                    
-                    let orientation = await getOrientation(file)
-                      .catch(() => 1) ?? 1;
+                    let finalBlob: Blob;
 
-                    // Preserve EXIF data for PNGs
-                    if (!isPng) {
-                      // Reverse engineer orientation
-                      // so preserved EXIF data can be copied
-                      switch (orientation) {
-                        case 1: orientation = 1; break;
-                        case 2: orientation = 1; break;
-                        case 3: orientation = 3; break;
-                        case 4: orientation = 1; break;
-                        case 5: orientation = 1; break;
-                        case 6: orientation = 8; break;
-                        case 7: orientation = 1; break;
-                        case 8: orientation = 6; break;
-                      }
+                    if (isInputPng && outputFormat === 'image/jpeg') {
+                      // Use the specialized PNG to JPEG converter with EXIF preservation
+                      finalBlob = await pngToJpegWithExif(file, {
+                        maxDim: maxSize,
+                        quality: quality,
+                      });
+                    } else {
+                      // Use the general resizing function for other cases
+                      finalBlob = await resizeToJpegBlob(
+                        image, 
+                        maxSize, 
+                        quality
+                      );
                     }
 
-                    const ratio = image.width / image.height;
-  
-                    const width =
-                      Math.round(ratio >= 1 ? maxSize : maxSize * ratio);
-                    const height =
-                      Math.round(ratio >= 1 ? maxSize / ratio : maxSize);
-
-                    canvas.width = width;
-                    canvas.height = height;
-
-                    // Orientation transforms from:
-                    // eslint-disable-next-line max-len
-                    // https://gist.github.com/SagiMedina/f00a57de4e211456225d3114fd10b0d0
-                    
-                    switch(orientation) {
-                      case 2:
-                        ctx.translate(width, 0);
-                        ctx.scale(-1, 1);
-                        break;
-                      case 3:
-                        ctx.translate(width, height);
-                        ctx.rotate((180 / 180) * Math.PI);
-                        break;
-                      case 4:
-                        ctx.translate(0, height);
-                        ctx.scale(1, -1);
-                        break;
-                      case 5:
-                        canvas.width = height;
-                        canvas.height = width;
-                        ctx.rotate((90 / 180) * Math.PI);
-                        ctx.scale(1, -1);
-                        break;
-                      case 6:
-                        canvas.width = height;
-                        canvas.height = width;
-                        ctx.rotate((90 / 180) * Math.PI);
-                        ctx.translate(0, -height);
-                        break;
-                      case 7:
-                        canvas.width = height;
-                        canvas.height = width;
-                        ctx.rotate((270 / 180) * Math.PI);
-                        ctx.translate(-width, height);
-                        ctx.scale(1, -1);
-                        break;
-                      case 8:
-                        canvas.width = height;
-                        canvas.height = width;
-                        ctx.translate(0, width);
-                        ctx.rotate((270 / 180) * Math.PI);
-                        break;
-                    }
-
-                    ctx.drawImage(image, 0, 0, width, height);
-
-                    ctx.restore();
-
-                    canvas.toBlob(
-                      async blob => {
-                        if (blob) {
-                          const blobWithExif = await CopyExif(file, blob)
-                            // Fallback to original blob if EXIF data is missing
-                            // or image is in PNG format which cannot be parsed
-                            .catch(() => blob);
-                          await onBlobReady?.({
-                            ...callbackArgs,
-                            blob: blobWithExif,
-                          });
-                        }
-                      },
-                      'image/jpeg',
-                      quality,
-                    );
+                    await onBlobReady?.({
+                      ...callbackArgs,
+                      blob: finalBlob,
+                    });
                   } else {
                     // No need to process
                     await onBlobReady?.({
@@ -248,15 +176,6 @@ export default function ImageInput({
           />
         </label>
       </div>
-      <canvas
-        ref={canvasRef}
-        className={clsx(
-          'bg-gray-50 dark:bg-gray-900/50 rounded-md',
-          'border border-gray-200 dark:border-gray-800',
-          'w-[400px]',
-          (!image || !debug) && 'hidden',
-        )}
-      />
     </div>
   );
 }
