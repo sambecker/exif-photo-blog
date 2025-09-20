@@ -144,11 +144,10 @@ export default function ImageInput({
                       // Use specialized PNG <> JPEG converter
                       // for EXIF preservation
                       finalBlob = await pngToJpegWithExif(file, {
-                        maxDim: maxSize,
-                        quality: quality,
+                        maxSize,
+                        quality,
                       });
                     } else {
-                      // Use the general resizing function for other cases
                       finalBlob = await resizeToJpegBlob(
                         image, 
                         maxSize, 

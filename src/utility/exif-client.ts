@@ -137,10 +137,8 @@ export async function insertExifIntoJpegBlob(
  */
 export async function pngToJpegWithExif(
   file: File,
-  opts: { maxDim?: number; quality?: number } = {},
+  { maxSize, quality }: { maxSize: number; quality: number },
 ): Promise<Blob> {
-  const { maxDim = 2048, quality = 0.9 } = opts;
-
   // Extract EXIF from PNG (if present)
   const ab = await readAsArrayBuffer(file);
   const rawExif = extractExifFromPNG(ab); // Uint8Array | null
@@ -155,17 +153,15 @@ export async function pngToJpegWithExif(
   });
 
   // Prefer ImageBitmap with orientation applied by decoder
-  // TS lib.dom types include ImageBitmapOptions; the property is valid
-  // in modern browsers.
   const bitmap = await createImageBitmap(
     img,
     { imageOrientation: 'from-image' },
   );
 
-  // 3) Resize on canvas -> JPEG Blob
-  const jpegBlob = await resizeToJpegBlob(bitmap, maxDim, quality);
+  // Resize on canvas -> JPEG Blob
+  const jpegBlob = await resizeToJpegBlob(bitmap, maxSize, quality);
 
-  // 4) Insert EXIF (and normalize Orientation)
+  // Insert EXIF (and normalize Orientation)
   const outBlob = await insertExifIntoJpegBlob(jpegBlob, rawExif);
 
   // cleanup
@@ -173,30 +169,4 @@ export async function pngToJpegWithExif(
   bitmap.close?.();
 
   return outBlob;
-}
-
-// ---- Example wiring (optional) ----
-// <input type="file" id="png" accept="image/png" />
-export function wireDemoInput(inputId = 'png') {
-  const el = document.getElementById(inputId) as HTMLInputElement | null;
-  if (!el) return;
-  el.addEventListener('change', async () => {
-    const file = el.files?.[0];
-    if (!file) return;
-    try {
-      const out = await pngToJpegWithExif(
-        file,
-        { maxDim: 1600, quality: 0.92 },
-      );
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(out);
-      a.download = (file.name.replace(/\.png$/i, '') || 'image') + '.jpg';
-      a.click();
-      URL.revokeObjectURL(a.href);
-      console.log('JPEG with EXIF ready:', out);
-    } catch (err) {
-      console.error(err);
-      alert('Failed: ' + (err as Error).message);
-    }
-  });
 }
