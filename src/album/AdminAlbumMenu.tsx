@@ -20,9 +20,9 @@ export default function AdminAlbumMenu({
   return (
     <MoreMenu
       ariaLabel="Album menu"
-      className="m-2"
+      className="m-3"
       classNameButton="h-3.5 translate-y-1"
-      side="right"
+      side="bottom"
       sections={[{
         items: [{
           label: 'Edit',
