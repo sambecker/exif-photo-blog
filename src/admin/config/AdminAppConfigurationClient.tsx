@@ -39,7 +39,6 @@ export default function AdminAppConfigurationClient({
   // Storage
   hasDatabase,
   isPostgresSslEnabled,
-  hasVercelPostgres,
   hasRedisStorage,
   hasStorageProvider,
   hasVercelBlobStorage,
@@ -249,27 +248,25 @@ export default function AdminAppConfigurationClient({
             {databaseError && renderError({
               connection: { provider: 'Database', error: databaseError},
             })}
-            {hasVercelPostgres
-              ? renderSubStatus('checked', 'Vercel Postgres: connected')
-              : renderSubStatus('optional', <>
-                Vercel Postgres:
+            {hasDatabase
+              ? renderSubStatus(
+                'checked',
+                // eslint-disable-next-line max-len
+                `Postgres: connected${!isPostgresSslEnabled ? ' (SSL disabled)' : ''}`,
+              )
+              : renderSubStatus('missing', <>
+                Postgres:
                 {' '}
                 <AdminLink
                 // eslint-disable-next-line max-len
-                  href="https://vercel.com/docs/storage/vercel-postgres/quickstart#create-a-postgres-database"
+                  href="https://vercel.com/docs/postgres#create-a-postgres-database"
                   externalIcon
                 >
-                  create store
+                  create database
                 </AdminLink>
                 {' '}
                 and connect to project
               </>)}
-            {hasDatabase && !hasVercelPostgres &&
-            renderSubStatus('checked', <>
-              Postgres-compatible: connected
-              {' '}
-              (SSL {isPostgresSslEnabled ? 'enabled' : 'disabled'})
-            </>)}
           </ChecklistRow>
           <ChecklistRow
             title={

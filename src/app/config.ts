@@ -382,10 +382,6 @@ export const APP_CONFIGURATION = {
   // Storage
   hasDatabase: HAS_DATABASE,
   isPostgresSslEnabled: POSTGRES_SSL_ENABLED,
-  hasVercelPostgres: (
-    /\/verceldb\?/.test(process.env.POSTGRES_URL ?? '') ||
-    /\.vercel-storage\.com\//.test(process.env.POSTGRES_URL ?? '')
-  ),
   hasRedisStorage: HAS_REDIS_STORAGE,
   hasVercelBlobStorage: HAS_VERCEL_BLOB_STORAGE,
   hasCloudflareR2Storage: HAS_CLOUDFLARE_R2_STORAGE,
