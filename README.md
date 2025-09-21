@@ -194,6 +194,12 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_SITE_FEEDS = 1` enables feeds at `/feed.json` and `/rss.xml`
 - `NEXT_PUBLIC_OG_TEXT_ALIGNMENT = BOTTOM` keeps OG image text bottom aligned (default is top)
 
+#### Scripts & Analytics
+- `PAGE_SCRIPT_URLS`
+  - comma-separated list of URLs to be added to the bottom of the body tag via "next/script"
+  - urls must begin with 'https'
+  - ⚠️ this will invoke arbitrary script execution on every page—use with caution
+
 ## Alternate storage providers
 
 Only one storage adapter—Vercel Blob, Cloudflare R2, AWS S3, or MinIO—can be used at a time. Ideally, this is configured before photos are uploaded (see [Issue #34](https://github.com/sambecker/exif-photo-blog/issues/34) for migration considerations). If you have multiple adapters, you can set one as preferred by storing `aws-s3`, `cloudflare-r2`, `minio`, or `vercel-blob` in `NEXT_PUBLIC_STORAGE_PREFERENCE`. See [FAQ](#will-there-be-support-for-image-storage-providers-beyond-vercel-aws-and-cloudflare) regarding unsupported providers.

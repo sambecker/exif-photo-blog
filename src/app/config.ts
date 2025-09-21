@@ -370,6 +370,15 @@ export const SITE_FEEDS_ENABLED =
 export const OG_TEXT_BOTTOM_ALIGNMENT =
   (process.env.NEXT_PUBLIC_OG_TEXT_ALIGNMENT ?? '').toUpperCase() === 'BOTTOM';
 
+// SCRIPTS & ANALYTICS
+
+export const PAGE_SCRIPT_URLS = process.env.PAGE_SCRIPT_URLS
+  ? process.env.PAGE_SCRIPT_URLS
+    .split(',')
+    .map(url => url.trim().toLocaleLowerCase())
+    .filter(url => url.startsWith('https://'))
+  : [];
+
 // INTERNAL
 
 export const ADMIN_DEBUG_TOOLS_ENABLED = process.env.ADMIN_DEBUG_TOOLS === '1';
@@ -489,6 +498,9 @@ export const APP_CONFIGURATION = {
   socialKeys: SOCIAL_NETWORKS,
   areSiteFeedsEnabled: SITE_FEEDS_ENABLED,
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,
+  // Scripts & Analytics
+  hasPageScriptUrls: PAGE_SCRIPT_URLS.length > 0,
+  pageScriptUrls: PAGE_SCRIPT_URLS,
   // Internal
   areInternalToolsEnabled: (
     ADMIN_DEBUG_TOOLS_ENABLED ||

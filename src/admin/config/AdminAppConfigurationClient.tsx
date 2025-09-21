@@ -34,6 +34,8 @@ import ColorDot from '@/photo/color/ColorDot';
 import { Oklch } from '@/photo/color/client';
 import { getOrderedKeyListStatus } from '@/utility/key';
 import { DEFAULT_SOCIAL_KEYS, SOCIAL_KEYS } from '@/social';
+import MaskedScroll from '@/components/MaskedScroll';
+import { IoLink } from 'react-icons/io5';
 
 export default function AdminAppConfigurationClient({
   // Storage
@@ -122,6 +124,9 @@ export default function AdminAppConfigurationClient({
   socialKeys,
   areSiteFeedsEnabled,
   isOgTextBottomAligned,
+  // Scripts & Analytics
+  hasPageScriptUrls,
+  pageScriptUrls,
   // Internal
   areInternalToolsEnabled,
   areAdminDebugToolsEnabled,
@@ -883,6 +888,35 @@ export default function AdminAppConfigurationClient({
             Set environment variable to {'"BOTTOM"'} to
             keep OG image text bottom aligned (default is {'"top"'}):
             {renderEnvVars(['NEXT_PUBLIC_OG_TEXT_ALIGNMENT'])}
+          </ChecklistRow>
+        </>;
+      case 'Scripts & Analytics':
+        return <>
+          <ChecklistRow
+            title="Custom page scripts"
+            status={hasPageScriptUrls}
+            optional
+          >
+            {pageScriptUrls.length > 0 &&
+              <div className="mt-2 text-xs space-y-1.5">
+                {pageScriptUrls.map(url =>
+                  <MaskedScroll
+                    key={url}
+                    className={clsx(
+                      'inline-flex items-center gap-1',
+                      'bg-dim rounded-md px-1.5 py-0.5',
+                    )}
+                    direction="horizontal"
+                  >
+                    <IoLink size={14} className="shrink-0 translate-y-[0.5px]"/>
+                    <span className="font-medium text-nowrap">
+                      {url}
+                    </span>
+                  </MaskedScroll>)}
+              </div>}
+            Set environment variable to comma-separated list of URLs
+            to be added to the bottom of the body tag via {'"next/script"'}:
+            {renderEnvVars(['PAGE_SCRIPT_URLS'])}
           </ChecklistRow>
         </>;
       case 'Internal':

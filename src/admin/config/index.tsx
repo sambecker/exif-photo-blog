@@ -6,6 +6,7 @@ import { HiOutlineCog, HiSparkles } from 'react-icons/hi';
 import { IoMdGrid } from 'react-icons/io';
 import { PiPaintBrushHousehold } from 'react-icons/pi';
 import { RiSpeedMiniLine } from 'react-icons/ri';
+import { TbBrandGoogleAnalytics } from 'react-icons/tb';
 
 export interface AdminConfigSection {
   title: string;
@@ -59,6 +60,10 @@ const ADMIN_CONFIG_SECTIONS = [{
   title: 'Settings',
   required: false,
   icon: <HiOutlineCog size={17} className="translate-y-[0.5px]" />,
+}, {
+  title: 'Scripts & Analytics',
+  required: false,
+  icon: <TbBrandGoogleAnalytics size={18} className="translate-y-[1px]" />,
 }, {
   title: 'Internal',
   required: false,
