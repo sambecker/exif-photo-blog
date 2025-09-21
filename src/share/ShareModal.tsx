@@ -7,7 +7,7 @@ import { BiCopy } from 'react-icons/bi';
 import { ReactNode, useEffect } from 'react';
 import { shortenUrl } from '@/utility/url';
 import { toastSuccess } from '@/toast';
-import { SOCIAL_KEYS } from '@/app/config';
+import { SOCIAL_NETWORKS } from '@/app/config';
 import { useAppState } from '@/app/AppState';
 import useOnPathChange from '@/utility/useOnPathChange';
 import { IoArrowUp } from 'react-icons/io5';
@@ -114,7 +114,7 @@ export default function ShareModal({
               appText.tooltip.shareCopy,
             )}
           </div>
-          {SOCIAL_KEYS.map(key =>
+          {SOCIAL_NETWORKS.map(key =>
             <SocialButton
               key={key}
               socialKey={key}

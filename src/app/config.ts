@@ -359,7 +359,7 @@ export const GEO_PRIVACY_ENABLED =
   process.env.NEXT_PUBLIC_GEO_PRIVACY === '1';
 export const ALLOW_PUBLIC_DOWNLOADS =
   process.env.NEXT_PUBLIC_ALLOW_PUBLIC_DOWNLOADS === '1';
-export const SOCIAL_KEYS = parseSocialKeysFromString(
+export const SOCIAL_NETWORKS = parseSocialKeysFromString(
   // Legacy environment variable
   process.env.NEXT_PUBLIC_HIDE_SOCIAL === '1'
     ? 'none'
@@ -486,7 +486,7 @@ export const APP_CONFIGURATION = {
   isGeoPrivacyEnabled: GEO_PRIVACY_ENABLED,
   arePublicDownloadsEnabled: ALLOW_PUBLIC_DOWNLOADS,
   hasSocialKeys: Boolean(process.env.NEXT_PUBLIC_SOCIAL_NETWORKS),
-  socialKeys: SOCIAL_KEYS,
+  socialKeys: SOCIAL_NETWORKS,
   areSiteFeedsEnabled: SITE_FEEDS_ENABLED,
   isOgTextBottomAligned: OG_TEXT_BOTTOM_ALIGNMENT,
   // Internal

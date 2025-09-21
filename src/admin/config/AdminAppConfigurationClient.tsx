@@ -10,7 +10,7 @@ import {
 } from 'react';
 import ChecklistRow from '@/components/ChecklistRow';
 import ChecklistGroup from '@/components/ChecklistGroup';
-import { AppConfiguration, SOCIAL_KEYS } from '@/app/config';
+import { AppConfiguration } from '@/app/config';
 import StatusIcon from '@/components/StatusIcon';
 import { labelForStorage } from '@/platforms/storage';
 import { testConnectionsAction } from '@/admin/actions';
@@ -33,7 +33,7 @@ import {
 import ColorDot from '@/photo/color/ColorDot';
 import { Oklch } from '@/photo/color/client';
 import { getOrderedKeyListStatus } from '@/utility/key';
-import { DEFAULT_SOCIAL_KEYS } from '@/social';
+import { DEFAULT_SOCIAL_KEYS, SOCIAL_KEYS } from '@/social';
 
 export default function AdminAppConfigurationClient({
   // Storage
