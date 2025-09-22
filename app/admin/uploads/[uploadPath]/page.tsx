@@ -15,6 +15,7 @@ import {
 import ErrorNote from '@/components/ErrorNote';
 import { getRecipeTitleForData } from '@/photo/query';
 import { getAlbumsWithMeta } from '@/album/query';
+import { addAiTextToFormData } from '@/photo/ai/server';
 
 export const maxDuration = 60;
 
@@ -29,7 +30,7 @@ export default async function UploadPage({ params, searchParams }: Params) {
 
   const {
     blobId,
-    formDataFromExif,
+    formDataFromExif: _formDataFromExif,
     imageResizedBase64: imageThumbnailBase64,
     shouldStripGpsData,
     error,
@@ -40,7 +41,7 @@ export default async function UploadPage({ params, searchParams }: Params) {
   });
 
   const isDataMissing =
-    !formDataFromExif ||
+    !_formDataFromExif ||
     (AI_CONTENT_GENERATION_ENABLED && !imageThumbnailBase64);
 
   if (isDataMissing && !error) {
@@ -54,17 +55,22 @@ export default async function UploadPage({ params, searchParams }: Params) {
     uniqueRecipes,
     uniqueFilms,
     recipeTitle,
+    formDataFromExif,
   ] = await Promise.all([
     getAlbumsWithMeta(),
     getUniqueTagsCached(),
     getUniqueRecipesCached(),
     getUniqueFilmsCached(),
-    formDataFromExif?.recipeData && formDataFromExif.film
+    _formDataFromExif?.recipeData && _formDataFromExif.film
       ? getRecipeTitleForData(
-        formDataFromExif.recipeData,
-        formDataFromExif.film,
+        _formDataFromExif.recipeData,
+        _formDataFromExif.film,
       )
       : undefined,
+    addAiTextToFormData(
+      _formDataFromExif,
+      imageThumbnailBase64,
+    ),
   ]);
 
   const hasAiTextGeneration = AI_CONTENT_GENERATION_ENABLED;

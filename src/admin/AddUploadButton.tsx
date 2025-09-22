@@ -4,7 +4,7 @@ import {
   generateLocalNaivePostgresString,
   generateLocalPostgresString,
 } from '@/utility/date';
-import { pathForAdminUploadUrl } from '@/app/path';
+import { PATH_ADMIN_PHOTOS } from '@/app/path';
 import { useRouter } from 'next/navigation';
 import { ComponentProps, useState } from 'react';
 import IconAddUpload from '@/components/icons/IconAddUpload';
@@ -42,7 +42,7 @@ export default function AddUploadButton({
         })
           .then(() => {
             if (shouldRedirectToAdminPhotos) {
-              router.push(pathForAdminUploadUrl(url));
+              router.push(PATH_ADMIN_PHOTOS);
             } else {
               onAddFinish?.(true);
               setIsAddingLocal(false);
