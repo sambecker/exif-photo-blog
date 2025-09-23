@@ -20,7 +20,10 @@ import EnvVar from '@/components/EnvVar';
 import AdminLink from '@/admin/AdminLink';
 import ScoreCardContainer from '@/components/ScoreCardContainer';
 import { CATEGORY_KEYS, DEFAULT_CATEGORY_KEYS } from '@/category';
-import { AI_AUTO_GENERATED_FIELDS_ALL } from '@/photo/ai';
+import {
+  AI_AUTO_GENERATED_FIELDS_ALL,
+  AI_AUTO_GENERATED_FIELDS_DEFAULT,
+} from '@/photo/ai';
 import clsx from 'clsx/lite';
 import Link from 'next/link';
 import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/path';
@@ -238,6 +241,15 @@ export default function AdminAppConfigurationClient({
       className="size-3! ml-1"
       includeTooltip={includeTooltip}
     />;
+
+  const renderCommaSeparatedList = (items: string[]) =>
+    <>
+      {'"'}
+      {items.map((item, index) => <Fragment key={index}>
+        {item}{index < items.length - 1 ? <>,&#8203;</> : <></>}
+      </Fragment>)}
+      {'"'}
+    </>;
 
   const renderGroupContent = (key: ConfigSectionKey): JSX.Element => {
     switch (key) {
@@ -495,7 +507,9 @@ export default function AdminAppConfigurationClient({
             uploading photos. Accepted values: title, caption,
             tags, description, all, or none
             {' '}
-            (default: {'"title,tags,semantic"'}):
+            (default: {renderCommaSeparatedList(
+              AI_AUTO_GENERATED_FIELDS_DEFAULT,
+            )}):
             {renderEnvVars(['AI_TEXT_AUTO_GENERATED_FIELDS'])}
           </ChecklistRow>
           <ChecklistRow
@@ -595,7 +609,7 @@ export default function AdminAppConfigurationClient({
               Configure order and visibility of categories
               (seen in grid sidebar and CMD-K results)
               by storing comma-separated values
-              (default: {`"${DEFAULT_CATEGORY_KEYS.join(',')}"`}):
+              (default: {renderCommaSeparatedList(DEFAULT_CATEGORY_KEYS)}):
             </div>
             {renderEnvVars(['NEXT_PUBLIC_CATEGORY_VISIBILITY'])}
           </ChecklistRow>
@@ -866,7 +880,7 @@ export default function AdminAppConfigurationClient({
               Configure order and visibility of social networks
               (seen in share modal) by storing comma-separated values
               (accepts {'"all"'} or {'"none"'},
-              defaults to {`"${DEFAULT_SOCIAL_KEYS.join(',')}"`})
+              defaults to {renderCommaSeparatedList(DEFAULT_SOCIAL_KEYS)})
             </div>
             {renderEnvVars(['NEXT_PUBLIC_SOCIAL_NETWORKS'])}
           </ChecklistRow>
