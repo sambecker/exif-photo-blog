@@ -9,7 +9,7 @@ import { redis } from '@/platforms/redis';
 import { z } from 'zod';
 
 const RATE_LIMIT_IDENTIFIER = 'openai-image-query';
-const MODEL = 'gpt-4o';
+const MODEL = 'gpt-5';
 
 const openai = AI_CONTENT_GENERATION_ENABLED
   ? createOpenAI({
