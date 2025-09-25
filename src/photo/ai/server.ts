@@ -71,7 +71,7 @@ export const generateAiImageQueries = async (
           )): undefined,
         shouldGenerateSemantic ? generateOpenAiImageQuery(
           imageBase64,
-          getAiImageQuery('description-small'),
+          getAiImageQuery('semantic'),
           isBatch,
         ): undefined,
       ]);

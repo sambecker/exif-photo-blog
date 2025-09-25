@@ -51,10 +51,7 @@ export type AiImageQuery =
   'caption' |
   'title-and-caption' |
   'tags' |
-  'description-small' |
-  'description' |
-  'description-large' |
-  'description-semantic';
+  'semantic';
 
 export const getAiImageQuery = (
   query: AiImageQuery,
@@ -73,10 +70,7 @@ export const getAiImageQuery = (
       return tags
         ? `${tagQuery}. Consider using some of these existing tags, but only if they are relevant: ${tags}.`
         : tagQuery;
-    case 'description-small': return 'Describe this image succinctly without the initial text "This image shows" or "This is a picture of"';
-    case 'description': return 'Describe this image';
-    case 'description-large': return 'Describe this image in detail';
-    case 'description-semantic': return 'List up to 5 things in this image without description as a comma-separated list';
+    case 'semantic': return 'Describe this image succinctly without the initial text "This image shows" or "This is a picture of"';
   }
 };
 
@@ -89,7 +83,7 @@ const getAiImageQueryForField = (
     case 'title': return `TITLE: ${getAiImageQuery('title', existingTags, existingTitle)}`;
     case 'caption': return `CAPTION: ${getAiImageQuery('caption', existingTags, existingTitle)}`;
     case 'tags': return `TAGS: ${getAiImageQuery('tags', existingTags, existingTitle)}`;
-    case 'semantic': return `SEMANTIC: ${getAiImageQuery('description-small', existingTags, existingTitle)}`;
+    case 'semantic': return `SEMANTIC: ${getAiImageQuery('semantic', existingTags, existingTitle)}`;
   }
 };
 
