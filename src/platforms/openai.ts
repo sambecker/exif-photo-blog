@@ -9,7 +9,7 @@ import { redis } from '@/platforms/redis';
 import { z } from 'zod';
 
 const RATE_LIMIT_IDENTIFIER = 'openai-image-query';
-const MODEL = 'gpt-5';
+const MODEL = 'gpt-4o';
 
 const openai = AI_CONTENT_GENERATION_ENABLED
   ? createOpenAI({
@@ -113,7 +113,7 @@ export const generateOpenAiImageObjectQuery = async <T extends z.ZodSchema>(
   query: string,
   schema: T,
   isBatch?: boolean,
-): Promise<z.infer<T> | undefined> => {
+): Promise<z.infer<T>> => {
   await checkRateLimitAndThrow(isBatch);
 
   if (openai) {
@@ -134,6 +134,8 @@ export const generateOpenAiImageObjectQuery = async <T extends z.ZodSchema>(
       schema,
     });
     return result.object as z.infer<T>;
+  } else {
+    throw new Error('No OpenAI client');
   }
 };
 
