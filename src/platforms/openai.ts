@@ -132,7 +132,10 @@ export const generateOpenAiImageObjectQuery = async <T extends z.ZodSchema>(
         ],
       }],
       schema,
-    });
+    }).then(result => Object.fromEntries(Object
+      .entries(result)
+      .map(([k, v]) => [k, cleanUpAiTextResponse(v)]),
+    ));;
     return result.object as z.infer<T>;
   } else {
     throw new Error('No OpenAI client');

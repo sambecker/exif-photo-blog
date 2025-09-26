@@ -39,9 +39,7 @@ export const generateAiImageQueries = async ({
         query,
         schema,
         isBatch,
-      ) || {
-        error: 'No response from AI',
-      };
+      );
     } catch (e: any) {
       return {
         error: e.message,
