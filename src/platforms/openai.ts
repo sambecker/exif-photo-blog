@@ -117,7 +117,7 @@ export const generateOpenAiImageObjectQuery = async <T extends z.ZodSchema>(
   await checkRateLimitAndThrow(isBatch);
 
   if (openai) {
-    const result = await generateObject({
+    return generateObject({
       model: openai(MODEL),
       messages: [{
         'role': 'user',
@@ -133,10 +133,9 @@ export const generateOpenAiImageObjectQuery = async <T extends z.ZodSchema>(
       }],
       schema,
     }).then(result => Object.fromEntries(Object
-      .entries(result)
-      .map(([k, v]) => [k, cleanUpAiTextResponse(v)]),
-    ));;
-    return result.object as z.infer<T>;
+      .entries(result.object || {})
+      .map(([k, v]) => [k, cleanUpAiTextResponse(v as string)]),
+    ) as z.infer<T>);
   } else {
     throw new Error('No OpenAI client');
   }
