@@ -47,7 +47,7 @@ import {
   extractImageDataFromBlobPath,
   propagateRecipeTitleIfNecessary,
 } from './server';
-import { TAG_FAVS, isPhotoFav, isTagFavs } from '@/tag';
+import { TAG_FAVS, Tags, isPhotoFav, isTagFavs } from '@/tag';
 import { convertPhotoToPhotoDbInsert, Photo } from '.';
 import { runAuthenticatedAdminServerAction } from '@/auth/server';
 import { AiImageQuery, getAiImageQuery, getAiTextFieldsToGenerate } from './ai';
@@ -115,6 +115,7 @@ const addUpload = async ({
   excludeFromFeeds,
   takenAtLocal,
   takenAtNaiveLocal,
+  uniqueTags: _uniqueTags,
   onStreamUpdate,
   onFinish,
   shouldRevalidateAllKeysAndPaths,
@@ -128,6 +129,7 @@ const addUpload = async ({
   excludeFromFeeds?: string
   takenAtLocal: string
   takenAtNaiveLocal: string
+  uniqueTags?: Tags
   onStreamUpdate?: (
     statusMessage: string,
     status?: UrlAddStatus['status'],
@@ -155,21 +157,24 @@ const addUpload = async ({
     const caption = formDataFromExif.caption;
     const tags = _tags || formDataFromExif.tags;
 
+    const uniqueTags = _uniqueTags || await getUniqueTags();
+
     const {
       title: aiTitle,
       caption: aiCaption,
       tags: aiTags,
-      semanticDescription,
-    } = await generateAiImageQueries(
-      imageResizedBase64,
-      getAiTextFieldsToGenerate(
+      semantic,
+    } = await generateAiImageQueries({
+      imageBase64: imageResizedBase64,
+      textFieldsToGenerate: getAiTextFieldsToGenerate(
         AI_TEXT_AUTO_GENERATED_FIELDS,
         Boolean(title),
         Boolean(caption),
         Boolean(tags),
       ),
-      title,
-    );
+      existingTitle: title,
+      uniqueTags,
+    });
 
     const form: Partial<PhotoFormData> = {
       ...formDataFromExif,
@@ -179,7 +184,7 @@ const addUpload = async ({
       excludeFromFeeds,
       hidden,
       favorite,
-      semanticDescription,
+      semanticDescription: semantic,
       takenAt: formDataFromExif.takenAt || takenAtLocal,
       takenAtNaive: formDataFromExif.takenAtNaive || takenAtNaiveLocal,
     };
@@ -254,6 +259,8 @@ export const addUploadsAction = async ({
         progress: ++progress / PROGRESS_TASK_COUNT,
       });
 
+    const uniqueTags = await getUniqueTags();
+
     const albumIds = albumTitles
       ? await createAlbumsAndGetIds(albumTitles)
       : [];
@@ -276,6 +283,7 @@ export const addUploadsAction = async ({
             excludeFromFeeds,
             takenAtLocal,
             takenAtNaiveLocal,
+            uniqueTags,
             onStreamUpdate: streamUpdate,
             onFinish: () => {
               addedUploadUrls.push(url);
@@ -561,6 +569,8 @@ export const syncPhotoAction = async (
         ),
       });
 
+      const uniqueTags = await getUniqueTags();
+
       let urlToDelete: string | undefined;
       if (formDataFromExif) {
         if (await shouldBackfillPhotoStorage(photo) || shouldStripGpsData) {
@@ -582,13 +592,13 @@ export const syncPhotoAction = async (
           title: atTitle,
           caption: aiCaption,
           tags: aiTags,
-          semanticDescription: aiSemanticDescription,
-        } = await generateAiImageQueries(
-          imageResizedBase64,
-          photo.updateStatus?.isMissingAiTextFields,
-          undefined,
+          semantic: aiSemanticDescription,
+        } = await generateAiImageQueries({
+          imageBase64: imageResizedBase64,
+          textFieldsToGenerate: photo.updateStatus?.isMissingAiTextFields ?? [],
           isBatch,
-        );
+          uniqueTags,
+        });
 
         const formDataFromPhoto = convertPhotoToFormData(photo);
 
@@ -646,7 +656,7 @@ export const streamAiImageQueryAction = async (
     const existingTags = await getUniqueTags();
     return streamOpenAiImageQuery(
       imageBase64,
-      getAiImageQuery(query, existingTags, existingTitle),
+      getAiImageQuery(query, existingTitle, existingTags),
     );
   });
 

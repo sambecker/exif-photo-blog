@@ -51,14 +51,12 @@ export default async function UploadPage({ params, searchParams }: Params) {
 
   const [
     albums,
-    uniqueTags,
     uniqueRecipes,
     uniqueFilms,
     recipeTitle,
-    formDataFromExif,
+    { uniqueTags, formDataFromExif },
   ] = await Promise.all([
     getAlbumsWithMeta(),
-    getUniqueTagsCached(),
     getUniqueRecipesCached(),
     getUniqueFilmsCached(),
     _formDataFromExif?.recipeData && _formDataFromExif.film
@@ -67,10 +65,20 @@ export default async function UploadPage({ params, searchParams }: Params) {
         _formDataFromExif.film,
       )
       : undefined,
-    addAiTextToFormData(
-      _formDataFromExif,
-      imageThumbnailBase64,
-    ),
+    getUniqueTagsCached().then(uniqueTags =>
+      addAiTextToFormData({
+        formData: _formDataFromExif,
+        imageBase64: imageThumbnailBase64,
+        uniqueTags,
+      })
+        .then(formDataFromExif => ({
+          uniqueTags,
+          formDataFromExif,
+        }))
+        .catch(() => ({
+          uniqueTags,
+          formDataFromExif: _formDataFromExif!,
+        }))),
   ]);
 
   const hasAiTextGeneration = AI_CONTENT_GENERATION_ENABLED;
