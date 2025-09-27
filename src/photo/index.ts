@@ -19,6 +19,7 @@ import camelcaseKeys from 'camelcase-keys';
 import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
+import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import { PhotoUpdateStatus, generatePhotoUpdateStatus } from './update';
 import { AppTextState } from '@/i18n/state';
 import { PhotoColorData } from './color/client';
@@ -55,6 +56,7 @@ export interface PhotoLight {
   blurData?: string
   updatedAt: Date
   takenAt: Date
+  takenAtNaive: string
   createdAt: Date
   colorData?: PhotoColorData
   title?: string
@@ -77,7 +79,7 @@ export interface PhotoExif {
   exposureCompensation?: number
   latitude?: number
   longitude?: number
-  film?: string
+  film?: FujifilmSimulation
   recipeData?: string
   takenAt?: string
   takenAtNaive?: string
@@ -140,6 +142,7 @@ export const parsePhotoLightFromDb = (photoDbRaw: any): PhotoLight => {
     blurData: photoDb.blurData,
     updatedAt: photoDb.updatedAt,
     takenAt: photoDb.takenAt,
+    takenAtNaive: photoDb.takenAtNaive,
     createdAt: photoDb.createdAt,
     colorData: photoDb.colorData || undefined,
     title: photoDb.title,
@@ -213,14 +216,14 @@ export const descriptionForPhoto = (
   (includeSemanticDescription && photo.semanticDescription) ||
   formatDate({ date: photo.takenAt }).toLocaleUpperCase();
 
-export const getPreviousPhoto = (photo: Photo, photos: Photo[]) => {
+export const getPreviousPhoto = (photo: PhotoLight, photos: PhotoLight[]) => {
   const index = photos.findIndex(p => p.id === photo.id);
   return index > 0
     ? photos[index - 1]
     : undefined;
 };
 
-export const getNextPhoto = (photo: Photo, photos: Photo[]) => {
+export const getNextPhoto = (photo: PhotoLight, photos: PhotoLight[]) => {
   const index = photos.findIndex(p => p.id === photo.id);
   return index < photos.length - 1
     ? photos[index + 1]
@@ -303,7 +306,7 @@ export const deleteConfirmationTextForPhoto = (
 export type PhotoDateRange = { start: string, end: string };
 
 export const descriptionForPhotoSet = (
-  photos:Photo[] = [],
+  photos: Photo[] | PhotoLight[] = [],
   appText: AppTextState,
   descriptor?: string,
   dateBased?: boolean,
@@ -322,7 +325,7 @@ export const descriptionForPhotoSet = (
     ].join(' ');
 
 const sortPhotosByDateNonDestructively = (
-  photos: Photo[],
+  photos: Photo[] | PhotoLight[],
   order: 'ASC' | 'DESC' = 'DESC',
 ) =>
   [...photos].sort((a, b) => order === 'DESC'
@@ -330,7 +333,7 @@ const sortPhotosByDateNonDestructively = (
     : a.takenAt.getTime() - b.takenAt.getTime());
 
 export const dateRangeForPhotos = (
-  photos: Photo[] = [],
+  photos: Photo[] | PhotoLight[] = [],
   explicitDateRange?: PhotoDateRange,
 ) => {
   let start = '';

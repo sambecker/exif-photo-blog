@@ -41,7 +41,7 @@ import { parsePhotoLightFromDb } from '../'
 
 export const PHOTO_LIGHT_COLUMNS = [
   'id', 'url', 'aspect_ratio', 'blur_data',
-  'updated_at', 'taken_at', 'created_at', 'color_data',
+  'updated_at', 'taken_at', 'taken_at_naive', 'created_at', 'color_data',
   'title', 'semantic_description', 'hidden'
 ].join(', ');
 

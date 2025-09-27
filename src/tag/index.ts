@@ -1,6 +1,7 @@
 import {
   Photo,
   PhotoDateRange,
+  PhotoLight,
   descriptionForPhotoSet,
   photoQuantityText,
 } from '@/photo';
@@ -94,7 +95,7 @@ export const sortTagsObjectWithoutFavs = (tags: Tags) =>
   sortTags(tags, TAG_FAVS);
 
 export const descriptionForTaggedPhotos = (
-  photos: Photo[] = [],
+  photos: PhotoLight[] = [],
   appText: AppTextState,
   dateBased?: boolean,
   explicitCount?: number,
