@@ -8,7 +8,6 @@ import {
 } from '@/photo/cache';
 import UploadPageClient from '@/photo/UploadPageClient';
 import {
-  AI_TEXT_AUTO_GENERATED_FIELDS,
   AI_CONTENT_GENERATION_ENABLED,
   BLUR_ENABLED,
 } from '@/app/config';
@@ -78,7 +77,6 @@ export default async function UploadPage({ params, searchParams }: Params) {
   ]);
 
   const hasAiTextGeneration = AI_CONTENT_GENERATION_ENABLED;
-  let textFieldsToAutoGenerate = AI_TEXT_AUTO_GENERATED_FIELDS;
 
   if (formDataFromExif) {
     if (recipeTitle) {
@@ -86,8 +84,6 @@ export default async function UploadPage({ params, searchParams }: Params) {
     }
     if (typeof title === 'string') {
       formDataFromExif.title = title;
-      textFieldsToAutoGenerate = textFieldsToAutoGenerate
-        .filter(field => field !== 'title');
     }
   }
 
@@ -101,7 +97,6 @@ export default async function UploadPage({ params, searchParams }: Params) {
         uniqueRecipes,
         uniqueFilms,
         hasAiTextGeneration,
-        textFieldsToAutoGenerate,
         imageThumbnailBase64,
         shouldStripGpsData,
       }} />
