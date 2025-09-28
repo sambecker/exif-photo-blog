@@ -238,7 +238,7 @@ html {
   input[type=text], input[type=email], input[type=password], select, textarea {
     @apply
       px-2.5 py-2
-      border rounded-md
+      border rounded-lg
       bg-main
       border-gray-200 dark:border-gray-700
       font-mono text-base leading-tight
