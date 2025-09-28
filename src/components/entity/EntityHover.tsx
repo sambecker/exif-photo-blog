@@ -66,7 +66,7 @@ export default function EntityHover({
     }
   }, [photosCount]);
 
-  const splitLayout = photosCount === 3;
+  const hasSplitLayout = photosCount === 3;
 
   const content = useMemo(() =>
     <div className="relative w-full h-full">
@@ -77,7 +77,7 @@ export default function EntityHover({
             <PhotoMedium
               key={photos[index].id}
               photo={photos[index]}
-              className={clsx(splitLayout && index === 0 && 'row-span-2')}
+              className={clsx(hasSplitLayout && index === 0 && 'row-span-2')}
             />)}
       </div>
       {/* Placeholder grid */}
@@ -93,7 +93,7 @@ export default function EntityHover({
             key={index}
             className={clsx(
               'border-[0.5px] border-main',
-              splitLayout && index === 0 && 'row-span-2',
+              hasSplitLayout && index === 0 && 'row-span-2',
             )}
           />)}
       </div>
@@ -137,7 +137,7 @@ export default function EntityHover({
     </div>
   , [
     gridClass,
-    splitLayout,
+    hasSplitLayout,
     photosToShow,
     photos,
     header,
