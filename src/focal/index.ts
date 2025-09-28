@@ -1,6 +1,6 @@
 import {
   Photo,
-  PhotoDateRange,
+  PhotoDateRangePostgres,
   descriptionForPhotoSet,
   photoQuantityText,
 } from '@/photo';
@@ -44,7 +44,7 @@ export const descriptionForFocalLengthPhotos = (
   appText: AppTextState,
   dateBased?: boolean,
   explicitCount?: number,
-  explicitDateRange?: PhotoDateRange,
+  explicitDateRange?: PhotoDateRangePostgres,
 ) =>
   descriptionForPhotoSet(
     photos,
@@ -60,7 +60,7 @@ export const generateMetaForFocalLength = (
   photos: Photo[],
   appText: AppTextState,
   explicitCount?: number,
-  explicitDateRange?: PhotoDateRange,
+  explicitDateRange?: PhotoDateRangePostgres,
 ) => ({
   url: absolutePathForFocalLength(focal),
   title: titleForFocalLength(focal, photos, appText, explicitCount),

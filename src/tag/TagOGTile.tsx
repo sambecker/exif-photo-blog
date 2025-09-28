@@ -1,6 +1,6 @@
 'use client';
 
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import { pathForTag, pathForTagImage } from '@/app/path';
 import OGTile, { OGTilePropsCore } from '@/components/og/OGTile';
 import { descriptionForTaggedPhotos, titleForTag } from '.';
@@ -16,7 +16,7 @@ export default function TagOGTile({
   tag: string
   photos: Photo[]
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 } & OGTilePropsCore) {
   const appText = useAppText();
   return (

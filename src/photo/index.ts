@@ -149,7 +149,7 @@ export const parsePhotoLightFromDb = (photoDbRaw: any): PhotoLight => {
     semanticDescription: photoDb.semanticDescription,
     hidden: photoDb.hidden,
   } as PhotoLight;
-}
+};
 
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
   const photoDb = camelcaseKeys(
@@ -284,7 +284,7 @@ export const photoLabelForCount = (
     : appText.photo.photoPlural;
   return _capitalize
     ? capitalize(label)
-    : label;
+    : label.toLocaleLowerCase();
 };
 
 export const photoQuantityText = (
@@ -303,7 +303,13 @@ export const deleteConfirmationTextForPhoto = (
 ) =>
   appText.admin.deleteConfirm(titleForPhoto(photo));
 
-export type PhotoDateRange = { start: string, end: string };
+export type PhotoDateRangePostgres = { start: string, end: string };
+export type PhotoDateRangeFormatted = {
+  start: string,
+  end: string,
+  description: string,
+  descriptionWithSpaces: string,
+};
 
 export const descriptionForPhotoSet = (
   photos: Photo[] | PhotoLight[] = [],
@@ -311,10 +317,10 @@ export const descriptionForPhotoSet = (
   descriptor?: string,
   dateBased?: boolean,
   explicitCount?: number,
-  explicitDateRange?: PhotoDateRange,
+  explicitDateRange?: PhotoDateRangePostgres,
 ) =>
   dateBased
-    ? dateRangeForPhotos(photos, explicitDateRange)
+    ? formattedDateRangeForPhotos(photos, explicitDateRange)
       .description
       .toLocaleUpperCase()
     : [
@@ -332,10 +338,10 @@ const sortPhotosByDateNonDestructively = (
     ? b.takenAt.getTime() - a.takenAt.getTime()
     : a.takenAt.getTime() - b.takenAt.getTime());
 
-export const dateRangeForPhotos = (
-  photos: Photo[] | PhotoLight[] = [],
-  explicitDateRange?: PhotoDateRange,
-) => {
+export const formattedDateRangeForPhotos = (
+  photos: Photo[] = [],
+  explicitDateRange?: PhotoDateRangePostgres,
+): PhotoDateRangeFormatted => {
   let start = '';
   let end = '';
   let description = '';

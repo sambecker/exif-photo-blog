@@ -7,7 +7,10 @@ import { NULL_CATEGORY_DATA } from '@/category/data';
 import PhotoFullPage from '@/photo/PhotoFullPage';
 import PhotoGridPage from '@/photo/PhotoGridPage';
 import { getDataForCategoriesCached } from '@/category/cache';
-import { getPhotosCachedLight, getPhotosMetaCached, getPhotosCached } from '@/photo/cache';
+import {
+  getPhotosCachedLight, getPhotosMetaCached,
+  getPhotosCached,
+} from '@/photo/cache';
 import { FEED_META_QUERY_OPTIONS, getFeedQueryOptions } from '@/feed';
   
 export const dynamic = 'force-static';
@@ -36,8 +39,10 @@ export default async function HomePage() {
     photosCountWithExcludes,
     categories,
   ] = await Promise.all([
-    GRID_HOMEPAGE_ENABLED ? getPhotosLightCached().catch(() => []) : Promise.resolve([]),
-    !GRID_HOMEPAGE_ENABLED ? getPhotosFullCached().catch(() => []) : Promise.resolve([]),
+    GRID_HOMEPAGE_ENABLED ? getPhotosLightCached().catch(() => [])
+      : Promise.resolve([]),
+    !GRID_HOMEPAGE_ENABLED ? getPhotosFullCached().catch(() => [])
+      : Promise.resolve([]),
     getPhotosMetaCached(FEED_META_QUERY_OPTIONS)
       .then(({ count }) => count)
       .catch(() => 0),

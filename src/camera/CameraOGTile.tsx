@@ -1,6 +1,6 @@
 'use client';
 
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import { pathForCamera, pathForCameraImage } from '@/app/path';
 import OGTile, { OGTilePropsCore } from '@/components/og/OGTile';
 import { Camera } from '.';
@@ -17,7 +17,7 @@ export default function CameraOGTile({
   camera: Camera
   photos: Photo[]
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 } & OGTilePropsCore) {
   const appText = useAppText();
   return (

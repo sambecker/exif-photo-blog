@@ -49,8 +49,6 @@ https://photos.sambecker.com
 3. Add optional title
 4. Click "Create"
 
-If you don't plan to change the code, or don't mind making your updates public, consider forking this repo to easily receive future updates. If you've already setup your project on Vercel see detailed instructions here on reconfiguring your project.
-
 🔄&nbsp;&nbsp;Receiving updates
 -
 If you don't plan to change the code, or don't mind making your updates public, consider [forking](https://github.com/sambecker/exif-photo-blog/fork) this repo to easily receive future updates. If you've already set up your project on Vercel see these [migration instructions](#how-do-i-receive-template-updates).
@@ -78,7 +76,7 @@ _⚠️ READ BEFORE PROCEEDING_
    - Generate an API key and store in environment variable `OPENAI_SECRET_KEY` (make sure to enable Responses API write access if customizing permissions)
    - Setup usage limits to avoid unexpected charges (_recommended_)
 2. Add rate limiting (_recommended_)
-   - As an additional precaution, create an Upstash Redis store from the storage tab of the Vercel dashboard and link it to your project in order to enable rate limiting—no further configuration necessary
+   - As an additional precaution, create an Upstash Redis store from the storage tab of the Vercel dashboard and link it to your project (if you are required to add an environment variable prefix, use `EXIF`) in order to enable rate limiting—no further configuration necessary
 3. Configure auto-generated fields (optional)
    - Set which text fields auto-generate when uploading a photo by storing a comma-separated list, e.g., `AI_TEXT_AUTO_GENERATED_FIELDS = title,semantic`
    - Accepted values:
@@ -170,7 +168,6 @@ Application behavior can be changed by configuring the following environment var
 - `NEXT_PUBLIC_HIDE_EXIF_DATA = 1` hides EXIF data in photo details and OG images (potentially useful for portfolios, which don't focus on photography)
 - `NEXT_PUBLIC_HIDE_ZOOM_CONTROLS = 1` hides fullscreen photo zoom controls
 - `NEXT_PUBLIC_HIDE_TAKEN_AT_TIME = 1` hides taken at time from photo meta
-- `NEXT_PUBLIC_HIDE_SOCIAL = 1` removes X (formerly Twitter) button from share modal
 - `NEXT_PUBLIC_HIDE_REPO_LINK = 1` removes footer link to repo
 
 #### Grid
@@ -185,8 +182,23 @@ Application behavior can be changed by configuring the following environment var
 #### Settings
 - `NEXT_PUBLIC_GEO_PRIVACY = 1` disables collection/display of location-based data (⚠️ re-compresses uploaded images in order to remove GPS information)
 - `NEXT_PUBLIC_ALLOW_PUBLIC_DOWNLOADS = 1` enables public photo downloads for all visitors (⚠️ may result in increased bandwidth usage)
+- `NEXT_PUBLIC_SOCIAL_NETWORKS`
+  - Comma-separated list of social networks to show in share modal
+  - Accepted values:
+    - `x` (default)
+    - `threads`
+    - `facebook`
+    - `linkedin`
+    - `all`
+    - `none`
 - `NEXT_PUBLIC_SITE_FEEDS = 1` enables feeds at `/feed.json` and `/rss.xml`
 - `NEXT_PUBLIC_OG_TEXT_ALIGNMENT = BOTTOM` keeps OG image text bottom aligned (default is top)
+
+#### Scripts & Analytics
+- `PAGE_SCRIPT_URLS`
+  - comma-separated list of URLs to be added to the bottom of the body tag via "next/script"
+  - urls must begin with 'https'
+  - ⚠️ this will invoke arbitrary script execution on every page—use with caution
 
 ## Alternate storage providers
 

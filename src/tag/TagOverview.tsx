@@ -1,4 +1,4 @@
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import TagHeader from './TagHeader';
 import PhotoGridContainer from '@/photo/PhotoGridContainer';
 
@@ -12,7 +12,7 @@ export default function TagOverview({
   tag: string,
   photos: Photo[],
   count: number,
-  dateRange?: PhotoDateRange,
+  dateRange?: PhotoDateRangePostgres,
   animateOnFirstLoadOnly?: boolean,
 }) {
   return (

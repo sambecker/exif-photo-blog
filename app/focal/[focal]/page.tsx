@@ -2,7 +2,7 @@ import { generateMetaForFocalLength, getFocalLengthFromString } from '@/focal';
 import FocalLengthOverview from '@/focal/FocalLengthOverview';
 import { getPhotosFocalLengthDataCached } from '@/focal/data';
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
-import { getUniqueFocalLengths } from '@/photo/db/query';
+import { getUniqueFocalLengths } from '@/photo/query';
 import { PATH_ROOT } from '@/app/path';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';

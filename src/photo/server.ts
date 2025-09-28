@@ -23,22 +23,28 @@ import {
   deletePhoto,
   getRecipeTitleForData,
   updateAllMatchingRecipeTitles,
-} from './db/query';
+} from '@/photo/query';
 import { PhotoDbInsert } from '.';
 import { convertExifToFormData } from './form/server';
 import { getColorFieldsForPhotoForm } from './color/server';
 import exifr from 'exifr';
+import { getCompatibleExifValue } from '@/utility/exif';
 
 const IMAGE_WIDTH_BLUR = 200;
 const IMAGE_WIDTH_DEFAULT = 200;
 const IMAGE_QUALITY_DEFAULT = 80;
 
 export const extractImageDataFromBlobPath = async (
-  blobPath: string,
-  options: {
+  blobPath: string, {
+    includeInitialPhotoFields,
+    generateBlurData,
+    generateResizedImage,
+    updateColorFields = true,
+  }: {
     includeInitialPhotoFields?: boolean
     generateBlurData?: boolean
     generateResizedImage?: boolean
+    updateColorFields?: boolean
   } = {},
 ): Promise<{
   blobId?: string
@@ -48,12 +54,6 @@ export const extractImageDataFromBlobPath = async (
   fileBytes?: ArrayBuffer
   error?: string
 }> => {
-  const {
-    includeInitialPhotoFields,
-    generateBlurData,
-    generateResizedImage,
-  } = options;
-
   const url = decodeURIComponent(blobPath);
 
   const {
@@ -61,8 +61,8 @@ export const extractImageDataFromBlobPath = async (
     fileId: blobId,
   } = getFileNamePartsFromStorageUrl(url);
 
-  let exifData: ExifData | undefined;
-  let exifrData: any | undefined;
+  let dataExif: ExifData | undefined;
+  let dataExifr: any | undefined;
   let film: FujifilmSimulation | undefined;
   let recipe: FujifilmRecipe | undefined;
   let blurData: string | undefined;
@@ -84,11 +84,11 @@ export const extractImageDataFromBlobPath = async (
 
       // Data for form
       parser.enableBinaryFields(false);
-      exifData = parser.parse();
-      exifrData = await exifr.parse(fileBytes, { xmp: true });
+      dataExif = parser.parse();
+      dataExifr = await exifr.parse(fileBytes, { xmp: true });
 
       // Capture film simulation for Fujifilm cameras
-      if (isExifForFujifilm(exifData)) {
+      if (isExifForFujifilm(dataExif)) {
         // Parse exif data again with binary fields
         // in order to access MakerNote tag
         parser.enableBinaryFields(true);
@@ -109,8 +109,8 @@ export const extractImageDataFromBlobPath = async (
       }
 
       shouldStripGpsData = GEO_PRIVACY_ENABLED && (
-        Boolean(exifData.tags?.GPSLatitude) ||
-        Boolean(exifData.tags?.GPSLongitude)
+        Boolean(getCompatibleExifValue('GPSLatitude', dataExif, dataExifr)) ||
+        Boolean(getCompatibleExifValue('GPSLongitude', dataExif, dataExifr))
       );
     }
   } catch (e) {
@@ -119,11 +119,13 @@ export const extractImageDataFromBlobPath = async (
 
   if (error) { console.log(error); }
 
-  const colorFields = await getColorFieldsForPhotoForm(url);
+  const colorFields = updateColorFields
+    ? await getColorFieldsForPhotoForm(url)
+    : undefined;
 
   return {
     blobId,
-    ...exifData && {
+    ...dataExif && {
       formDataFromExif: {
         ...includeInitialPhotoFields && {
           hidden: 'false',
@@ -132,7 +134,7 @@ export const extractImageDataFromBlobPath = async (
           url,
         },
         ...generateBlurData && { blurData },
-        ...convertExifToFormData(exifData, exifrData, film, recipe),
+        ...convertExifToFormData(dataExif, dataExifr, film, recipe),
         ...colorFields,
       },
     },

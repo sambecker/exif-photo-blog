@@ -84,7 +84,7 @@ export default function useMaskedScroll({
 
   useEffect(() => {
     const ref = containerRef?.current;
-    const contentRect = ref?.children[0].getBoundingClientRect();
+    const contentRect = ref?.children[0]?.getBoundingClientRect();
     if (scrollToEndOnMount && ref && contentRect) {
       ref.scrollTo(isVertical
         ? { top: contentRect.height }

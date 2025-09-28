@@ -12,11 +12,12 @@ import {
   getUniqueTags,
   getUniqueRecipes,
   getPhotosInNeedOfUpdateCount,
-} from '@/photo/db/query';
+} from '@/photo/query';
 import {
   getGitHubMetaForCurrentApp,
   indicatorStatusForSignificantInsights,
 } from './insights';
+import { getAlbumsWithMeta } from '@/album/query';
 
 export type AdminData = Awaited<ReturnType<typeof getAdminDataAction>>;
 
@@ -28,6 +29,7 @@ export const getAdminDataAction = async () =>
       photosCountNeedSync,
       codeMeta,
       uploadsCount,
+      albumsCount,
       tagsCount,
       recipesCount,
     ] = await Promise.all([
@@ -45,6 +47,9 @@ export const getAdminDataAction = async () =>
           console.error(`Error getting blob upload urls: ${e}`);
           return 0;
         }),
+      getAlbumsWithMeta()
+        .then(albums => albums.length)
+        .catch(() => 0),
       getUniqueTags()
         .then(tags => tags.length)
         .catch(() => 0),
@@ -71,6 +76,7 @@ export const getAdminDataAction = async () =>
       photosCountNeedSync,
       photosCountTotal,
       uploadsCount,
+      albumsCount,
       tagsCount,
       recipesCount,
       insightsIndicatorStatus,

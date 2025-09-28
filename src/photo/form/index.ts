@@ -17,6 +17,7 @@ import { SelectMenuOptionType } from '@/components/SelectMenuOption';
 import { COLOR_SORT_ENABLED } from '@/app/config';
 
 type VirtualFields =
+  'albums' |
   'visibility' |
   'favorite' |
   'applyRecipeTitleGlobally' |
@@ -67,6 +68,7 @@ export type FormMeta = {
   tagOptions?: AnnotatedTag[]
   tagOptionsLimit?: number
   tagOptionsLimitValidationMessage?: string
+  tagOptionsShouldParameterize?: boolean
   shouldNotOverwriteWithNullDataOnSync?: boolean
   isJson?: boolean
   staticValue?: string
@@ -110,6 +112,11 @@ const FORM_METADATA = (
     capitalize: true,
     validateStringMaxLength: STRING_MAX_LENGTH_LONG,
     shouldHide: () => !aiTextGeneration,
+  },
+  albums: {
+    section: 'text',
+    label: 'albums',
+    excludeFromInsert: true,
   },
   visibility: {
     section: 'text',

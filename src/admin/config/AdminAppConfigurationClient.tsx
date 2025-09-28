@@ -19,8 +19,11 @@ import SecretGenerator from '@/app/SecretGenerator';
 import EnvVar from '@/components/EnvVar';
 import AdminLink from '@/admin/AdminLink';
 import ScoreCardContainer from '@/components/ScoreCardContainer';
-import { DEFAULT_CATEGORY_KEYS, getHiddenCategories } from '@/category';
-import { AI_AUTO_GENERATED_FIELDS_ALL } from '@/photo/ai';
+import { CATEGORY_KEYS, DEFAULT_CATEGORY_KEYS } from '@/category';
+import {
+  AI_AUTO_GENERATED_FIELDS_ALL,
+  AI_AUTO_GENERATED_FIELDS_DEFAULT,
+} from '@/photo/ai';
 import clsx from 'clsx/lite';
 import Link from 'next/link';
 import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/path';
@@ -32,12 +35,15 @@ import {
 } from '.';
 import ColorDot from '@/photo/color/ColorDot';
 import { Oklch } from '@/photo/color/client';
+import { getOrderedKeyListStatus } from '@/utility/key';
+import { DEFAULT_SOCIAL_KEYS, SOCIAL_KEYS } from '@/social';
+import MaskedScroll from '@/components/MaskedScroll';
+import { IoLink } from 'react-icons/io5';
 
 export default function AdminAppConfigurationClient({
   // Storage
   hasDatabase,
   isPostgresSslEnabled,
-  hasVercelPostgres,
   hasRedisStorage,
   hasStorageProvider,
   hasVercelBlobStorage,
@@ -100,7 +106,6 @@ export default function AdminAppConfigurationClient({
   showExifInfo,
   showZoomControls,
   showTakenAtTimeHidden,
-  showSocial,
   showRepoLink,
   // Grid
   isGridHomepageEnabled,
@@ -118,8 +123,13 @@ export default function AdminAppConfigurationClient({
   // Settings
   isGeoPrivacyEnabled,
   arePublicDownloadsEnabled,
+  hasSocialKeys,
+  socialKeys,
   areSiteFeedsEnabled,
   isOgTextBottomAligned,
+  // Scripts & Analytics
+  hasPageScriptUrls,
+  pageScriptUrls,
   // Internal
   areInternalToolsEnabled,
   areAdminDebugToolsEnabled,
@@ -185,6 +195,23 @@ export default function AdminAppConfigurationClient({
       'translate-y-[7px]',
     );
 
+  const renderOrderedKeyList = (
+    selectedKeys: string[],
+    acceptedKeys: readonly string[],
+  ) =>
+    <div>
+      {getOrderedKeyListStatus({ selectedKeys, acceptedKeys })
+        .map(({ label, selected }) =>
+          <Fragment key={label}>
+            {renderSubStatus(
+              selected ? 'checked' : 'optional',
+              selected
+                ? label
+                : <span className="text-dim">{label}</span>,
+            )}
+          </Fragment>)}
+    </div>;
+
   const renderError = ({
     connection,
     message,
@@ -215,6 +242,15 @@ export default function AdminAppConfigurationClient({
       includeTooltip={includeTooltip}
     />;
 
+  const renderCommaSeparatedList = (items: string[]) =>
+    <>
+      {'"'}
+      {items.map((item, index) => <Fragment key={index}>
+        {item}{index < items.length - 1 ? <>,&#8203;</> : <></>}
+      </Fragment>)}
+      {'"'}
+    </>;
+
   const renderGroupContent = (key: ConfigSectionKey): JSX.Element => {
     switch (key) {
       case 'Storage':
@@ -229,27 +265,25 @@ export default function AdminAppConfigurationClient({
             {databaseError && renderError({
               connection: { provider: 'Database', error: databaseError},
             })}
-            {hasVercelPostgres
-              ? renderSubStatus('checked', 'Vercel Postgres: connected')
-              : renderSubStatus('optional', <>
-                Vercel Postgres:
+            {hasDatabase
+              ? renderSubStatus(
+                'checked',
+                // eslint-disable-next-line max-len
+                `Postgres: connected${!isPostgresSslEnabled ? ' (SSL disabled)' : ''}`,
+              )
+              : renderSubStatus('missing', <>
+                Postgres:
                 {' '}
                 <AdminLink
                 // eslint-disable-next-line max-len
-                  href="https://vercel.com/docs/storage/vercel-postgres/quickstart#create-a-postgres-database"
+                  href="https://vercel.com/docs/postgres#create-a-postgres-database"
                   externalIcon
                 >
-                  create store
+                  create database
                 </AdminLink>
                 {' '}
                 and connect to project
               </>)}
-            {hasDatabase && !hasVercelPostgres &&
-            renderSubStatus('checked', <>
-              Postgres-compatible: connected
-              {' '}
-              (SSL {isPostgresSslEnabled ? 'enabled' : 'disabled'})
-            </>)}
           </ChecklistRow>
           <ChecklistRow
             title={
@@ -473,7 +507,9 @@ export default function AdminAppConfigurationClient({
             uploading photos. Accepted values: title, caption,
             tags, description, all, or none
             {' '}
-            (default: {'"title,tags,semantic"'}):
+            (default: {renderCommaSeparatedList(
+              AI_AUTO_GENERATED_FIELDS_DEFAULT,
+            )}):
             {renderEnvVars(['AI_TEXT_AUTO_GENERATED_FIELDS'])}
           </ChecklistRow>
           <ChecklistRow
@@ -568,34 +604,13 @@ export default function AdminAppConfigurationClient({
             status={hasCategoryVisibility}
             optional
           >
+            {renderOrderedKeyList(categoryVisibility, CATEGORY_KEYS)}
             <div>
-              {categoryVisibility.map((category, index) =>
-                <Fragment key={category}>
-                  {renderSubStatus(
-                    'checked',
-                    <>
-                      {index + 1}
-                      {'.'}
-                      {category}
-                    </>,
-                  )}
-                </Fragment>)}
-              {getHiddenCategories(categoryVisibility)
-                .map(category =>
-                  <Fragment key={category}>
-                    {renderSubStatus(
-                      'optional',
-                      <span className="text-dim">
-                        {'* '}
-                        {category}
-                      </span>,
-                    )}
-                  </Fragment>)}
+              Configure order and visibility of categories
+              (seen in grid sidebar and CMD-K results)
+              by storing comma-separated values
+              (default: {renderCommaSeparatedList(DEFAULT_CATEGORY_KEYS)}):
             </div>
-            Configure order and visibility of categories
-            (seen in grid sidebar and CMD-K results)
-            by storing comma-separated values
-            (default: {`"${DEFAULT_CATEGORY_KEYS.join(',')}"`}):
             {renderEnvVars(['NEXT_PUBLIC_CATEGORY_VISIBILITY'])}
           </ChecklistRow>
           <ChecklistRow
@@ -750,16 +765,6 @@ export default function AdminAppConfigurationClient({
             {renderEnvVars(['NEXT_PUBLIC_HIDE_TAKEN_AT_TIME'])}
           </ChecklistRow>
           <ChecklistRow
-            title="Show social"
-            status={showSocial}
-            optional
-          >
-            Set environment variable to {'"1"'} to hide
-            {' '}
-            X (formerly Twitter) button from share modal:
-            {renderEnvVars(['NEXT_PUBLIC_HIDE_SOCIAL'])}
-          </ChecklistRow>
-          <ChecklistRow
             title="Show repo link"
             status={showRepoLink}
             optional
@@ -866,6 +871,20 @@ export default function AdminAppConfigurationClient({
             {renderEnvVars(['NEXT_PUBLIC_ALLOW_PUBLIC_DOWNLOADS'])}
           </ChecklistRow>
           <ChecklistRow
+            title="Social networks"
+            status={hasSocialKeys}
+            optional
+          >
+            {renderOrderedKeyList(socialKeys, SOCIAL_KEYS)}
+            <div>
+              Configure order and visibility of social networks
+              (seen in share modal) by storing comma-separated values
+              (accepts {'"all"'} or {'"none"'},
+              defaults to {renderCommaSeparatedList(DEFAULT_SOCIAL_KEYS)})
+            </div>
+            {renderEnvVars(['NEXT_PUBLIC_SOCIAL_NETWORKS'])}
+          </ChecklistRow>
+          <ChecklistRow
             title="Site feeds (JSON/RSS)"
             status={areSiteFeedsEnabled}
             optional
@@ -883,6 +902,35 @@ export default function AdminAppConfigurationClient({
             Set environment variable to {'"BOTTOM"'} to
             keep OG image text bottom aligned (default is {'"top"'}):
             {renderEnvVars(['NEXT_PUBLIC_OG_TEXT_ALIGNMENT'])}
+          </ChecklistRow>
+        </>;
+      case 'Scripts & Analytics':
+        return <>
+          <ChecklistRow
+            title="Custom page scripts"
+            status={hasPageScriptUrls}
+            optional
+          >
+            {pageScriptUrls.length > 0 &&
+              <div className="mt-2 text-xs space-y-1.5">
+                {pageScriptUrls.map(url =>
+                  <MaskedScroll
+                    key={url}
+                    className={clsx(
+                      'inline-flex items-center gap-1',
+                      'bg-dim rounded-md px-1.5 py-0.5',
+                    )}
+                    direction="horizontal"
+                  >
+                    <IoLink size={14} className="shrink-0 translate-y-[0.5px]"/>
+                    <span className="font-medium text-nowrap">
+                      {url}
+                    </span>
+                  </MaskedScroll>)}
+              </div>}
+            Set environment variable to comma-separated list of URLs
+            to be added to the bottom of the body tag via {'"next/script"'}:
+            {renderEnvVars(['PAGE_SCRIPT_URLS'])}
           </ChecklistRow>
         </>;
       case 'Internal':
@@ -935,8 +983,8 @@ export default function AdminAppConfigurationClient({
         ))}
       <div className="pl-11 pr-2 sm:pr-11 mt-4 md:mt-7">
         <div>
-          Changes to environment variables require a redeploy
-          or reboot of local dev server
+          Changes to environment variables require a new deployment
+          to take effect
         </div>
       </div>
     </ScoreCardContainer>

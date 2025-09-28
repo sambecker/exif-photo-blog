@@ -1,4 +1,4 @@
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import RecentsHeader from './RecentsHeader';
 import PhotoGridContainer from '@/photo/PhotoGridContainer';
 
@@ -10,7 +10,7 @@ export default function RecentsOverview({
 }: {
   photos: Photo[],
   count: number,
-  dateRange?: PhotoDateRange,
+  dateRange?: PhotoDateRangePostgres,
   animateOnFirstLoadOnly?: boolean,
 }) {
   return (

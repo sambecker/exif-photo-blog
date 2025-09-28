@@ -7,9 +7,10 @@ import {
   getUniqueRecipes,
   getUniqueTags,
   getPhotosInNeedOfUpdateCount,
-} from '@/photo/db/query';
+} from '@/photo/query';
 import AdminAppInsightsClient from './AdminAppInsightsClient';
 import { getAllInsights, getGitHubMetaForCurrentApp } from '.';
+import { USED_DEPRECATED_ENV_VARS } from '@/app/config';
 
 export default async function AdminAppInsights() {
   const [
@@ -47,6 +48,7 @@ export default async function AdminAppInsights() {
         photosCountNeedSync,
         photosCountPortrait,
       })}
+      usedDeprecatedEnvVars={USED_DEPRECATED_ENV_VARS}
       photoStats={{
         photosCount,
         photosCountHidden,

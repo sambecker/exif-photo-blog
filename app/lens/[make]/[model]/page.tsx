@@ -1,7 +1,7 @@
 import { Metadata } from 'next/types';
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { cache } from 'react';
-import { getUniqueLenses } from '@/photo/db/query';
+import { getUniqueLenses } from '@/photo/query';
 import { generateMetaForLens } from '@/lens/meta';
 import { getPhotosLensDataCached } from '@/lens/data';
 import LensOverview from '@/lens/LensOverview';

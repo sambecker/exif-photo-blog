@@ -1,6 +1,6 @@
 import { getPhotoCached } from '@/photo/cache';
 import { IMAGE_OG_DIMENSION } from '@/image-response';
-import PhotoImageResponse from '@/image-response/PhotoImageResponse';
+import PhotoImageResponse from '@/photo/PhotoImageResponse';
 import { getIBMPlexMono } from '@/app/font';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { staticallyGeneratePhotosIfConfigured } from '@/app/static';

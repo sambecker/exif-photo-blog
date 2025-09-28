@@ -6,13 +6,13 @@ import {
 import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
-import { getUniqueLenses } from '@/photo/db/query';
+import { getUniqueLenses } from '@/photo/query';
 import {
   getLensFromParams,
   LensProps,
   safelyGenerateLensStaticParams,
 } from '@/lens';
-import LensImageResponse from '@/image-response/LensImageResponse';
+import LensImageResponse from '@/lens/LensImageResponse';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(

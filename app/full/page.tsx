@@ -2,7 +2,7 @@ import { generateOgImageMetaForPhotos } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import { cache } from 'react';
-import { getPhotos } from '@/photo/db/query';
+import { getPhotos } from '@/photo/query';
 import PhotoFullPage from '@/photo/PhotoFullPage';
 import { getPhotosMetaCached } from '@/photo/cache';
 import { USER_DEFAULT_SORT_OPTIONS } from '@/app/config';

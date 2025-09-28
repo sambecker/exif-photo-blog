@@ -16,10 +16,13 @@ import { useState } from 'react';
 import { Recipes } from '@/recipe';
 import { Films } from '@/film';
 import { StorageListResponse } from '@/platforms/storage';
+import { Albums } from '@/album';
 
 export default function PhotoEditPageClient({
   photo,
   photoStorageUrls,
+  photoAlbumTitles,
+  albums,
   uniqueTags,
   uniqueRecipes,
   uniqueFilms,
@@ -29,6 +32,8 @@ export default function PhotoEditPageClient({
 }: {
   photo: Photo
   photoStorageUrls?: StorageListResponse
+  photoAlbumTitles: string[]
+  albums: Albums
   uniqueTags: Tags
   uniqueRecipes: Recipes
   uniqueFilms: Films
@@ -83,6 +88,8 @@ export default function PhotoEditPageClient({
         photoStorageUrls={photoStorageUrls}
         updatedExifData={updatedExifData}
         updatedBlurData={blurData}
+        photoAlbumTitles={photoAlbumTitles}
+        albums={albums}
         uniqueTags={uniqueTags}
         uniqueRecipes={uniqueRecipes}
         uniqueFilms={uniqueFilms}

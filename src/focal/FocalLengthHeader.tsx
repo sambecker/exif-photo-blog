@@ -1,4 +1,4 @@
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import { descriptionForFocalLengthPhotos } from '.';
 import PhotoHeader from '@/photo/PhotoHeader';
 import PhotoFocalLength from './PhotoFocalLength';
@@ -18,7 +18,7 @@ export default async function FocalLengthHeader({
   selectedPhoto?: Photo
   indexNumber?: number
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 }) {
   const appText = await getAppText();
   return (
@@ -27,7 +27,7 @@ export default async function FocalLengthHeader({
       entity={<PhotoFocalLength
         focal={focal}
         contrast="high"
-        showHover={false}
+        hoverType="none"
       />}
       entityDescription={descriptionForFocalLengthPhotos(
         photos,

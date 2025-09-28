@@ -1,6 +1,6 @@
 'use client';
 
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import {
   pathForFilm,
   pathForFilmImage,
@@ -19,7 +19,7 @@ export default function FilmOGTile({
   film: string
   photos: Photo[]
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 } & OGTilePropsCore) {
   const appText = useAppText();
   return (

@@ -73,6 +73,7 @@ export default function MoreMenu({
             'text-dim',
             'outline-none',
             classNameButton,
+            isOpen && 'bg-dim',
             isOpen && classNameButtonOpen,
           )}
           aria-label={ariaLabel}
@@ -94,8 +95,10 @@ export default function MoreMenu({
             'not-dark:shadow-lg not-dark:shadow-gray-900/10',
             'data-[side=top]:dark:shadow-[0_0px_40px_rgba(0,0,0,0.6)]',
             'data-[side=bottom]:dark:shadow-[0_10px_40px_rgba(0,0,0,0.6)]',
+            'data-[side=right]:dark:shadow-[0_10px_40px_rgba(0,0,0,0.6)]',
             'data-[side=top]:animate-fade-in-from-bottom',
             'data-[side=bottom]:animate-fade-in-from-top',
+            'data-[side=right]:animate-fade-in-from-top',
             className,
           )}
         >

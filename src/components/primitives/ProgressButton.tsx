@@ -4,6 +4,8 @@ import { ComponentProps } from 'react';
 import LoaderButton from './LoaderButton';
 import { clsx } from 'clsx/lite';
 
+const PROGRESS_PADDING = 0.1;
+
 export default function ProgressButton({
   progress,
   isLoading,
@@ -13,6 +15,8 @@ export default function ProgressButton({
 }: {
   progress?: number
 } & ComponentProps<typeof LoaderButton>) {
+  const progressPadded =
+    PROGRESS_PADDING + (progress ?? 0) * (1 - PROGRESS_PADDING);
   return (
     <LoaderButton
       {...props}
@@ -23,7 +27,7 @@ export default function ProgressButton({
       )}
     >
       <div
-        style={{ transform: `scaleX(${progress ?? 0})`}}
+        style={{ transform: `scaleX(${progressPadded})`}}
         className={clsx(
           'absolute top-0 left-0 w-full',
           'transition-all duration-500 origin-left',

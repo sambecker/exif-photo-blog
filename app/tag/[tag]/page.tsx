@@ -1,5 +1,5 @@
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
-import { getUniqueTags } from '@/photo/db/query';
+import { getUniqueTags } from '@/photo/query';
 import { PATH_ROOT } from '@/app/path';
 import { generateMetaForTag } from '@/tag';
 import TagOverview from '@/tag/TagOverview';

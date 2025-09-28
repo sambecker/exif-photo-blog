@@ -1,4 +1,4 @@
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import { pathForLens, pathForLensImage } from '@/app/path';
 import OGTile, { OGTilePropsCore } from '@/components/og/OGTile';
 import { Lens } from '.';
@@ -15,7 +15,7 @@ export default function LensOGTile({
   lens: Lens
   photos: Photo[]
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 } & OGTilePropsCore) {
   const appText = useAppText();
   return (

@@ -2,8 +2,8 @@
 
 import ScoreCard from '@/components/ScoreCard';
 import ScoreCardRow from '@/components/ScoreCardRow';
-import { dateRangeForPhotos } from '@/photo';
-import { FaCircleInfo, FaRegCalendar } from 'react-icons/fa6';
+import { formattedDateRangeForPhotos } from '@/photo';
+import { FaArrowRight, FaCircleInfo, FaRegCalendar } from 'react-icons/fa6';
 import { MdAspectRatio } from 'react-icons/md';
 import { PiWarningBold } from 'react-icons/pi';
 import { TbSparkles } from 'react-icons/tb';
@@ -17,9 +17,10 @@ import {
   TEMPLATE_REPO_URL_FORK,
   TEMPLATE_REPO_URL_README,
   CATEGORY_VISIBILITY,
+  USED_DEPRECATED_ENV_VARS,
 } from '@/app/config';
 import {
-  AdminAppInsights,
+  getAllInsights,
   getGitHubMetaForCurrentApp,
   hasTemplateRecommendations,
   PhotoStats,
@@ -46,6 +47,7 @@ import IconTag from '@/components/icons/IconTag';
 import IconPhoto from '@/components/icons/IconPhoto';
 import { HiOutlineDocumentText } from 'react-icons/hi';
 import { ReactNode } from 'react';
+import MaskedScroll from '@/components/MaskedScroll';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
@@ -60,12 +62,21 @@ const readmeAnchor = (anchor: string) =>
     README/{anchor}
   </AdminLink>;
 
-const renderLabeledEnvVar = (label: string, envVar: string, value?: string) =>
+const renderLabeledEnvVar = (
+  label: string,
+  variable: string,
+  value?: string,
+  icon?: ReactNode,
+) =>
   <div className="flex flex-col gap-0.5">
     <span className="text-xs uppercase font-medium tracking-wider">
       {label}
     </span>
-    <EnvVar variable={envVar} value={value} />
+    {icon
+      ? <div className="flex items-center gap-1">
+        {icon} <EnvVar {...{ variable, value }} />
+      </div>
+      :<EnvVar {...{ variable, value }} />}
   </div>;
 
 const renderHighlightText = (
@@ -85,9 +96,25 @@ const renderHighlightText = (
     {text}
   </span>;
 
+const renderWarningIconLarge =
+  <PiWarningBold
+    size={17}
+    className={clsx(
+      'translate-x-[0.5px]',
+      TEXT_COLOR_WARNING,
+    )}
+  />;
+
+const renderWarningIconSmall =
+  <PiWarningBold
+    size={14}
+    className="translate-y-[0.5px] text-extra-dim"
+  />;
+
 export default function AdminAppInsightsClient({
   codeMeta,
   insights,
+  usedDeprecatedEnvVars,
   photoStats: {
     photosCount,
     photosCountHidden,
@@ -102,25 +129,29 @@ export default function AdminAppInsightsClient({
   },
 }: {
   codeMeta?: Awaited<ReturnType<typeof getGitHubMetaForCurrentApp>>
-  insights: AdminAppInsights
+  insights: ReturnType<typeof getAllInsights>
+  usedDeprecatedEnvVars: typeof USED_DEPRECATED_ENV_VARS
   photoStats: PhotoStats
 }) {
   const { shouldDebugInsights: debug } = useAppState();
 
   const {
+    deprecatedEnvVars,
     noFork,
     forkBehind,
     noAi,
     noAiRateLimiting,
     noConfiguredDomain,
-    noConfiguredMeta,
+    noConfiguredMetaTitle,
+    noConfiguredMetaDescription,
     photosNeedSync,
     photoMatting,
     gridFirst,
     noStaticOptimization,
   } = insights;
 
-  const { descriptionWithSpaces } = dateRangeForPhotos(undefined, dateRange);
+  const { descriptionWithSpaces } =
+    formattedDateRangeForPhotos(undefined, dateRange);
 
   const branchLink = <a
     className="truncate"
@@ -250,14 +281,45 @@ export default function AdminAppInsightsClient({
       <ScoreCard title="Template recommendations">
         {(hasTemplateRecommendations(insights) || debug)
           ? <>
+            {(deprecatedEnvVars || debug) && <ScoreCardRow
+              icon={renderWarningIconLarge}
+              content={isExpanded => renderHighlightText(
+                'Update environment variables',
+                'yellow',
+                !isExpanded,
+              )}
+              expandContent={<div className="flex flex-col gap-2">
+                Future versions of this template may not build correctly
+                with the following deprecated environment variables:
+                <div className="space-y-1">
+                  {usedDeprecatedEnvVars.map(({ old, replacement }) => (
+                    <MaskedScroll
+                      key={old}
+                      className={clsx(
+                        'inline-flex items-center gap-3',
+                        'overflow-y-hidden',
+                      )}
+                      direction="horizontal"
+                    >
+                      <div className={clsx(
+                        'inline-flex items-center gap-1.5',
+                        'text-xs font-medium',
+                      )}>
+                        {renderWarningIconSmall}
+                        {old}
+                      </div>
+                      <FaArrowRight
+                        size={11}
+                        className="shrink-0 text-extra-dim"
+                      />
+                      <EnvVar variable={replacement} maskScroll={false} />
+                    </MaskedScroll>
+                  ))}
+                </div>
+              </div>}
+            />}
             {(noAiRateLimiting || debug) && <ScoreCardRow
-              icon={<PiWarningBold
-                size={17}
-                className={clsx(
-                  'translate-x-[0.5px]',
-                  TEXT_COLOR_WARNING,
-                )}
-              />}
+              icon={renderWarningIconLarge}
               content={isExpanded => renderHighlightText(
                 'Enable AI rate limiting',
                 'yellow',
@@ -270,13 +332,7 @@ export default function AdminAppInsightsClient({
               </>}
             />}
             {(noConfiguredDomain || debug) && <ScoreCardRow
-              icon={<PiWarningBold
-                size={17}
-                className={clsx(
-                  'translate-x-[0.5px]',
-                  TEXT_COLOR_WARNING,
-                )}
-              />}
+              icon={renderWarningIconLarge}
               content={isExpanded => renderHighlightText(
                 'Configure domain',
                 'yellow',
@@ -292,7 +348,11 @@ export default function AdminAppInsightsClient({
                 />
               </>}
             />}
-            {(noConfiguredMeta || debug) && <ScoreCardRow
+            {(
+              noConfiguredMetaTitle ||
+              noConfiguredMetaDescription ||
+              debug
+            ) && <ScoreCardRow
               icon={<HiOutlineDocumentText
                 size={18}
                 className="translate-x-[1px] translate-y-[-1px]"
@@ -303,11 +363,17 @@ export default function AdminAppInsightsClient({
                 and site description (visible in search results):
                 {' '}
                 <div className="flex flex-col gap-y-4 mt-3">
-                  {renderLabeledEnvVar(
+                  {(
+                    noConfiguredMetaTitle ||
+                    debug
+                  ) && renderLabeledEnvVar(
                     'Site title',
                     'NEXT_PUBLIC_META_TITLE',
                   )}
-                  {renderLabeledEnvVar(
+                  {(
+                    noConfiguredMetaDescription ||
+                    debug
+                  ) && renderLabeledEnvVar(
                     'Site description',
                     'NEXT_PUBLIC_META_DESCRIPTION',
                   )}

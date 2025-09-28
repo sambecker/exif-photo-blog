@@ -5,7 +5,7 @@ import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getPhotosCameraDataCached } from '@/camera/data';
 import CameraOverview from '@/camera/CameraOverview';
 import { cache } from 'react';
-import { getUniqueCameras } from '@/photo/db/query';
+import { getUniqueCameras } from '@/photo/query';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
 

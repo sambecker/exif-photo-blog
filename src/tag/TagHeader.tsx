@@ -1,4 +1,4 @@
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import PhotoTag from './PhotoTag';
 import { descriptionForTaggedPhotos, isTagFavs } from '.';
 import PhotoHeader from '@/photo/PhotoHeader';
@@ -19,7 +19,7 @@ export default async function TagHeader({
   selectedPhoto?: Photo
   indexNumber?: number
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 }) {
   const appText = await getAppText();
   return (
@@ -28,12 +28,13 @@ export default async function TagHeader({
       entity={isTagFavs(tag) 
         ? <PhotoFavs
           contrast="high"
-          showHover={false}
+          hoverType="none"
         />
         : <PhotoTag
           tag={tag}
           contrast="high"
-          showHover={false}
+          hoverType="none"
+          showAdminMenu
         />}
       entityVerb={appText.category.tagged}
       entityDescription={descriptionForTaggedPhotos(

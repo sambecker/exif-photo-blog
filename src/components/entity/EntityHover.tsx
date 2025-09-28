@@ -49,17 +49,15 @@ export default function EntityHover({
       return 6;
     } else if (photosCount >= 4) {
       return 4;
-    } else if (photosCount >= 2) {
-      return 2;
     } else {
-      return 1;
+      return photosCount;
     }
   }, [photosCount]);
 
   const gridClass = useMemo(() => {
     if (photosCount >= 6) {
       return 'grid-cols-3 grid-rows-2';
-    } else if (photosCount >= 4) {
+    } else if (photosCount >= 3) {
       return 'grid-cols-2 grid-rows-2';
     } else if (photosCount >= 2) {
       return 'grid-cols-2';
@@ -67,6 +65,8 @@ export default function EntityHover({
       return 'grid-cols-1';
     }
   }, [photosCount]);
+
+  const hasSplitLayout = photosCount === 3;
 
   const content = useMemo(() =>
     <div className="relative w-full h-full">
@@ -77,6 +77,7 @@ export default function EntityHover({
             <PhotoMedium
               key={photos[index].id}
               photo={photos[index]}
+              className={clsx(hasSplitLayout && index === 0 && 'row-span-2')}
             />)}
       </div>
       {/* Placeholder grid */}
@@ -90,7 +91,10 @@ export default function EntityHover({
         {Array.from({ length: photosToShow }).map((_, index) =>
           <div
             key={index}
-            className="border-[0.5px] border-main"
+            className={clsx(
+              'border-[0.5px] border-main',
+              hasSplitLayout && index === 0 && 'row-span-2',
+            )}
           />)}
       </div>
       {/* Text guard */}
@@ -133,6 +137,7 @@ export default function EntityHover({
     </div>
   , [
     gridClass,
+    hasSplitLayout,
     photosToShow,
     photos,
     header,

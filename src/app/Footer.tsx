@@ -45,12 +45,18 @@ export default function Footer() {
                 'flex items-center gap-1',
                 'text-dim min-h-10',
               )}>
-              <div className="flex gap-x-3 xs:gap-x-4 grow flex-wrap">
+              <div className={clsx(
+                'flex gap-x-3 xs:gap-x-4 grow flex-wrap',
+                'w-full min-w-0',
+              )}>
                 {userEmail || userEmailEager
                   ? <>
-                    <div className="truncate max-w-full">
+                    <Link
+                      href={PATH_ADMIN_PHOTOS}
+                      className="truncate max-w-full"
+                    >
                       {userEmail || userEmailEager}
-                    </div>
+                    </Link>
                     <form action={() => signOutAction()
                       .then(clearAuthStateAndRedirectIfNecessary)}>
                       <SubmitButtonWithStatus styleAs="link">
@@ -66,7 +72,7 @@ export default function Footer() {
                         {appText.nav.admin}
                       </Link>}
               </div>
-              <div className="flex items-center h-10">
+              <div className="flex items-center h-10 shrink-0">
                 <ThemeSwitcher />
               </div>
             </div>]

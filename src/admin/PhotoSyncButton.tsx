@@ -52,7 +52,10 @@ export default function PhotoSyncButton({
       : 'Regenerate photo data'}>
       <LoaderButton
         ref={ref}
-        className={clsx('scroll-mt-8', className)}
+        className={clsx(
+          'scroll-mt-32',
+          className,
+        )}
         icon={updateMode
           ? <IconBroom size={18} />
           : <IconGrSync
@@ -69,8 +72,8 @@ export default function PhotoSyncButton({
           ) {
             setIsSyncing(true);
             (onlySyncColorData
-              ? storeColorDataForPhotoAction
-              : syncPhotoAction)(photo.id)
+              ? storeColorDataForPhotoAction(photo.id)
+              : syncPhotoAction(photo.id, { updateMode }))
               .then(() => {
                 onSyncComplete?.();
                 if (shouldToast) {

@@ -4,7 +4,7 @@ import {
   MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
 } from '@/image-response';
 import RecentsImageResponse from
-  '@/image-response/RecentsImageResponse';
+  '@/recents/RecentsImageResponse';
 import { getIBMPlexMono } from '@/app/font';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { getAppText } from '@/i18n/state/server';

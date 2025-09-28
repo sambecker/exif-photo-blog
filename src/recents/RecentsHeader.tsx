@@ -1,6 +1,6 @@
 'use client';
 
-import { descriptionForPhotoSet, Photo, PhotoDateRange } from '@/photo';
+import { descriptionForPhotoSet, Photo, PhotoDateRangePostgres } from '@/photo';
 import PhotoHeader from '@/photo/PhotoHeader';
 import { AI_CONTENT_GENERATION_ENABLED } from '@/app/config';
 import { useAppText } from '@/i18n/state/client';
@@ -17,14 +17,14 @@ export default function RecentsHeader({
   selectedPhoto?: Photo
   indexNumber?: number
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 }) {
   const appText = useAppText();
 
   return (
     <PhotoHeader
       recent={true}
-      entity={<PhotoRecents showHover={false} />}
+      entity={<PhotoRecents hoverType="none" />}
       entityDescription={descriptionForPhotoSet(
         photos,
         appText,

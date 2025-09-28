@@ -1,4 +1,4 @@
-import { parseISO, parse, format } from 'date-fns';
+import { parseISO, parse, format, isDate } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
 import { Timezone } from './timezone';
 import { setDefaultDateFnLocale } from '@/i18n';
@@ -101,7 +101,10 @@ const dateFromTimestamp = (timestamp?: AmbiguousTimestamp): Date => {
       ? /.+Z/i.test(timestamp)
         ? new Date(timestamp)
         : new Date(`${timestamp}Z`)
-      : undefined;
+      // Check for date last to avoid destabilizing status quo
+      : isDate(timestamp)
+        ? timestamp
+        : undefined;
   return date && !isNaN(date.getTime()) ? date : new Date();
 };
 

@@ -119,7 +119,7 @@ export const getColorFieldsForPhotoForm = async (
 
 export const getColorFromAI = async (
   _url: string,
-  useBatch?: boolean,
+  isBatch?: boolean,
 ) => {
   const url = getOptimizedPhotoUrlForManipulation(_url, IS_PREVIEW);
   const image = await getImageBase64FromUrl(url);
@@ -128,7 +128,7 @@ export const getColorFromAI = async (
     If yes, what is the approximate hex color of the subject.
     If not, what is the approximate hex color of the background?
     Respond only with a hex color value:
-  `, useBatch);
+  `, isBatch);
   const hex = hexColor?.match(/#*([a-f0-9]{6})/i)?.[1];
   if (hex) {
     return convertHexToOklch(`#${hex}`);

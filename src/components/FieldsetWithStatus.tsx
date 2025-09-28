@@ -31,11 +31,12 @@ export default function FieldsetWithStatus({
   tagOptions,
   tagOptionsLimit,
   tagOptionsLimitValidationMessage,
+  tagOptionsShouldParameterize,
   tagOptionsDefaultIcon,
   placeholder,
   loading,
   required,
-  readOnly,
+  readOnly: readOnlyProp,
   spellCheck,
   capitalize,
   type = 'text',
@@ -62,6 +63,7 @@ export default function FieldsetWithStatus({
   tagOptions?: AnnotatedTag[]
   tagOptionsLimit?: number
   tagOptionsLimitValidationMessage?: string
+  tagOptionsShouldParameterize?: boolean
   tagOptionsDefaultIcon?: ReactNode
   placeholder?: string
   loading?: boolean
@@ -84,6 +86,8 @@ export default function FieldsetWithStatus({
 
   const { pending } = useFormStatus();
 
+  const readOnly = readOnlyProp || pending || loading;
+
   const inputProps: InputHTMLAttributes<HTMLInputElement> = {
     id,
     name: id,
@@ -99,7 +103,7 @@ export default function FieldsetWithStatus({
     spellCheck,
     autoComplete: 'off',
     autoCapitalize: !capitalize ? 'off' : undefined,
-    readOnly: readOnly || pending || loading,
+    readOnly,
     disabled: type === 'checkbox' && (
       readOnly || pending || loading
     ),
@@ -165,7 +169,7 @@ export default function FieldsetWithStatus({
             {isModified && !error &&
               <span className={clsx(
                 'text-main font-medium text-[0.9rem]',
-                ' -ml-1.5 translate-y-[-1px]',
+                ' -ml-1.5 translate-y-[-1px] -z-1',
               )}>
                 *
               </span>}
@@ -194,7 +198,7 @@ export default function FieldsetWithStatus({
               options={selectOptions}
               defaultOptionLabel={selectOptionsDefaultLabel}
               error={error}
-              readOnly={readOnly || pending || loading}
+              readOnly={readOnly}
             />
             : tagOptions
               ? <TagInput
@@ -206,10 +210,11 @@ export default function FieldsetWithStatus({
                 onChange={onChange}
                 showMenuOnDelete={tagOptionsLimit === 1}
                 className={clsx(Boolean(error) && 'error')}
-                readOnly={readOnly || pending || loading}
+                readOnly={readOnly}
                 placeholder={placeholder}
                 limit={tagOptionsLimit}
                 limitValidationMessage={tagOptionsLimitValidationMessage}
+                shouldParameterize={tagOptionsShouldParameterize}
               />
               : type === 'textarea'
                 ? <textarea
@@ -218,7 +223,7 @@ export default function FieldsetWithStatus({
                   value={value}
                   placeholder={placeholder}
                   onChange={e => onChange?.(e.target.value)}
-                  readOnly={readOnly || pending || loading}
+                  readOnly={readOnly}
                   spellCheck={spellCheck}
                   autoCapitalize={!capitalize ? 'off' : undefined}
                   className={clsx(
@@ -232,6 +237,7 @@ export default function FieldsetWithStatus({
                     accessory={loading && <Spinner
                       className="translate-y-[0.5px]"
                     />}
+                    readOnly={readOnly}
                     {...inputProps}
                   />
                   : <input
