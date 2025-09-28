@@ -43,7 +43,7 @@ export default function useAiImageQueries(
     requestSemantic,
     semanticDescription,
     isLoadingSemantic,
-  ] = useAiImageQuery(imageBase64, 'description-small');
+  ] = useAiImageQuery(imageBase64, 'semantic');
 
   const title = _title || titleSolo;
   const caption = _caption || captionSolo;
