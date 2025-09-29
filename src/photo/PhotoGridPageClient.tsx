@@ -10,7 +10,7 @@ import MaskedScroll from '@/components/MaskedScroll';
 import { IS_RECENTS_FIRST } from '@/app/config';
 import { SortBy } from './sort';
 import useViewportHeight from '@/utility/useViewportHeight';
-import PhotoMobileSidebar from './PhotoMobileSidebar';
+import PhotoGridSidebarMobile from './PhotoGridSidebarMobile';
 
 export default function PhotoGridPageClient({
   photos,
@@ -51,16 +51,16 @@ export default function PhotoGridPageClient({
               containerHeight,
             }}
           />
-          : <PhotoMobileSidebar
+          : <PhotoGridSidebarMobile
             className="grow mt-0.5"
             {...categories}
           />}
         <button
           className={clsx(
             'self-start',
-            'rounded-full bg-medium border-none',
-            'hover:opacity-90 active:opacity-70',
-            'px-4 pt-[3px] pb-[4px]',
+            'rounded-lg bg-extra-dim border-medium',
+            'hover:bg-dim active:bg-medium transition-colors',
+            'px-3 pt-[3px] pb-[4px]',
             'text-sm',
           )}
           onClick={() => setShowMobileSidebar(!showMobileSidebar)}

@@ -189,3 +189,6 @@ export const limitTagsByCount = (
       .toLocaleLowerCase()
       .includes(queryToInclude.toLocaleLowerCase()))
   ));
+
+export const tagsHaveFavs = (tags: Tags) =>
+  tags.some(({ tag }) => isTagFavs(tag));
