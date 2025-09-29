@@ -10,6 +10,11 @@ import MaskedScroll from '@/components/MaskedScroll';
 import { IS_RECENTS_FIRST } from '@/app/config';
 import { SortBy } from './sort';
 import useViewportHeight from '@/utility/useViewportHeight';
+import PhotoAlbum from '@/album/PhotoAlbum';
+import PhotoYear from '@/year/PhotoYear';
+import PhotoTag from '@/tag/PhotoTag';
+import PhotoFavs from '@/tag/PhotoFavs';
+import PhotoCamera from '@/camera/PhotoCamera';
 
 export default function PhotoGridPageClient({
   photos,
@@ -33,33 +38,65 @@ export default function PhotoGridPageClient({
   [viewPortHeight]);
 
   return (
-    <PhotoGridContainer
-      cacheKey={`page-${PATH_GRID_INFERRED}`}
-      photos={photos}
-      count={photosCount}
-      sortBy={sortBy}
-      sortWithPriority={sortWithPriority}
-      excludeFromFeeds
-      prioritizeInitialPhotos
-      sidebar={
+    <div>
+      <div className={clsx(
+        'flex items-center gap-x-2',
+        'md:hidden',
+        'mb-5',
+      )}>
         <MaskedScroll
-          ref={ref}
-          className={clsx(
-            'sticky top-0',
-            // Optical adjustment for headerless recents
-            IS_RECENTS_FIRST ? '-mb-4.5 -mt-4.5' : '-mb-5 -mt-5',
-            'max-h-screen py-4',
-          )}
-          fadeSize={100}
-          setMaxSize={false}
+          className="grow"
+          direction="horizontal"
+          fadeSize={50}
         >
-          <PhotoGridSidebar {...{
-            ...categories,
-            photosCount: photosCountWithExcludes,
-            containerHeight,
-          }} />
+          <div className={clsx(
+            'whitespace-nowrap space-x-2',
+            // Tighten badge lockups
+            '*:*:*:*:gap-1',
+          )}>
+            <PhotoFavs badged badgeIconFirst />
+            <PhotoAlbum album={categories.albums[0].album} badged />
+            <PhotoYear year={categories.years[0].year} badged />
+            <PhotoTag tag={categories.tags[2].tag} badged />
+            <PhotoCamera camera={categories.cameras[0].camera} badged />
+          </div>
         </MaskedScroll>
-      }
-    />
+        <div className={clsx(
+          'rounded-full bg-medium',
+          'px-3 pt-[1px] pb-[3px]',
+          'text-sm',
+        )}>
+          More
+        </div>
+      </div>
+      <PhotoGridContainer
+        cacheKey={`page-${PATH_GRID_INFERRED}`}
+        photos={photos}
+        count={photosCount}
+        sortBy={sortBy}
+        sortWithPriority={sortWithPriority}
+        excludeFromFeeds
+        prioritizeInitialPhotos
+        sidebar={
+          <MaskedScroll
+            ref={ref}
+            className={clsx(
+              'sticky top-0',
+              // Optical adjustment for headerless recents
+              IS_RECENTS_FIRST ? '-mb-4.5 -mt-4.5' : '-mb-5 -mt-5',
+              'max-h-screen py-4',
+            )}
+            fadeSize={100}
+            setMaxSize={false}
+          >
+            <PhotoGridSidebar {...{
+              ...categories,
+              photosCount: photosCountWithExcludes,
+              containerHeight,
+            }} />
+          </MaskedScroll>
+        }
+      />
+    </div>
   );
 }
