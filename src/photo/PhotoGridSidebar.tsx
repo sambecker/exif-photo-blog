@@ -50,12 +50,14 @@ export default function PhotoGridSidebar({
   containerHeight,
   aboutTextSafelyParsedHtml,
   aboutTextHasBrParagraphBreaks,
+  className,
   ..._categories
 }: PhotoSetCategories & {
   photosCount: number
   containerHeight?: number
   aboutTextSafelyParsedHtml?: string
   aboutTextHasBrParagraphBreaks?: boolean
+  className?: string
 }) {
   const categories = useMemo(() => HIDE_TAGS_WITH_ONE_PHOTO
     ? {
@@ -327,7 +329,7 @@ export default function PhotoGridSidebar({
     : null;
 
   return (
-    <div className="space-y-4">
+    <div className={clsx('space-y-4', className)}>
       {aboutTextSafelyParsedHtml && <HeaderList
         items={[<p
           key="about"

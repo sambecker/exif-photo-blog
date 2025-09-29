@@ -4,17 +4,13 @@ import { Photo } from '.';
 import { PATH_GRID_INFERRED } from '@/app/path';
 import PhotoGridSidebar from './PhotoGridSidebar';
 import PhotoGridContainer from './PhotoGridContainer';
-import { ComponentProps, useMemo, useRef } from 'react';
+import { ComponentProps, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx/lite';
 import MaskedScroll from '@/components/MaskedScroll';
 import { IS_RECENTS_FIRST } from '@/app/config';
 import { SortBy } from './sort';
 import useViewportHeight from '@/utility/useViewportHeight';
-import PhotoAlbum from '@/album/PhotoAlbum';
-import PhotoYear from '@/year/PhotoYear';
-import PhotoTag from '@/tag/PhotoTag';
-import PhotoFavs from '@/tag/PhotoFavs';
-import PhotoCamera from '@/camera/PhotoCamera';
+import PhotoMobileSidebar from './PhotoMobileSidebar';
 
 export default function PhotoGridPageClient({
   photos,
@@ -37,40 +33,44 @@ export default function PhotoGridPageClient({
     viewPortHeight - (ref.current?.getBoundingClientRect().y ?? 0),
   [viewPortHeight]);
 
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
+
   return (
     <div>
       <div className={clsx(
-        'flex items-center gap-x-2',
+        'flex gap-x-2',
         'md:hidden',
         'mb-5',
       )}>
-        <MaskedScroll
-          className="grow"
-          direction="horizontal"
-          fadeSize={50}
+        {showMobileSidebar
+          ? <PhotoGridSidebar
+            className="grow"
+            {...{
+              ...categories,
+              photosCount: photosCountWithExcludes,
+              containerHeight,
+            }}
+          />
+          : <PhotoMobileSidebar
+            className="grow mt-0.5"
+            {...categories}
+          />}
+        <button
+          className={clsx(
+            'self-start',
+            'rounded-full bg-medium border-none',
+            'hover:opacity-90 active:opacity-70',
+            'px-4 pt-[3px] pb-[4px]',
+            'text-sm',
+          )}
+          onClick={() => setShowMobileSidebar(!showMobileSidebar)}
         >
-          <div className={clsx(
-            'whitespace-nowrap space-x-2',
-            // Tighten badge lockups
-            '*:*:*:*:gap-1',
-          )}>
-            <PhotoFavs badged badgeIconFirst />
-            <PhotoAlbum album={categories.albums[0].album} badged />
-            <PhotoYear year={categories.years[0].year} badged />
-            <PhotoTag tag={categories.tags[2].tag} badged />
-            <PhotoCamera camera={categories.cameras[0].camera} badged />
-          </div>
-        </MaskedScroll>
-        <div className={clsx(
-          'rounded-full bg-medium',
-          'px-3 pt-[1px] pb-[3px]',
-          'text-sm',
-        )}>
-          More
-        </div>
+          {showMobileSidebar ? 'Less' : 'More'}
+        </button>
       </div>
       <PhotoGridContainer
         cacheKey={`page-${PATH_GRID_INFERRED}`}
+        className={clsx(showMobileSidebar && 'max-md:hidden')}
         photos={photos}
         count={photosCount}
         sortBy={sortBy}

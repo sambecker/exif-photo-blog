@@ -19,6 +19,7 @@ export default function PhotoGridContainer({
   animateOnFirstLoadOnly,
   header,
   sidebar,
+  className,
   ...categories
 }: {
   cacheKey: string
@@ -28,6 +29,7 @@ export default function PhotoGridContainer({
   excludeFromFeeds?: boolean
   header?: ReactNode
   sidebar?: ReactNode
+  className?: string
 } & ComponentProps<typeof PhotoGrid>) {
   const [
     shouldAnimateDynamicItems,
@@ -40,6 +42,7 @@ export default function PhotoGridContainer({
     <AppGrid
       contentMain={<div className={clsx(
         header && 'space-y-8 mt-1.5',
+        className,
       )}>
         {header &&
           <AnimateItems
