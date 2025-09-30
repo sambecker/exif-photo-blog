@@ -17,6 +17,7 @@ export interface EntityLinkExternalProps {
   ref?: RefObject<HTMLSpanElement | null>
   type?: LabeledIconType
   badged?: boolean
+  badgeType?: ComponentProps<typeof Badge>['type']
   contrast?: ComponentProps<typeof Badge>['contrast']
   uppercase?: boolean
   prefetch?: boolean
@@ -38,6 +39,7 @@ export default function EntityLink({
   iconWide,
   type,
   badged,
+  badgeType = 'small',
   contrast = 'medium',
   path = '', // Make link optional for debugging purposes
   hoverCount = 0,
@@ -132,13 +134,14 @@ export default function EntityLink({
         className: useForHover ? 'text-white' : undefined,
         classNameIcon: clsx(
           !useForHover && 'text-dim',
+          badgeType === 'medium' && 'translate-y-[-0.5px]',
           classNameIcon,
         ),
         debug,
       }}>
         {badged && !useForHover
           ? <Badge
-            type="small"
+            type={badgeType}
             contrast={contrast}
             className={clsx(
               'translate-y-[-0.5px]',

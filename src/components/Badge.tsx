@@ -11,7 +11,7 @@ export default function Badge({
 }: {
   children: React.ReactNode
   className?: string
-  type?: 'large' | 'small' | 'text-only'
+  type?: 'large' | 'medium' | 'small' |'text-only'
   dimContent?: boolean
   contrast?: 'low' | 'medium' | 'high' | 'frosted'
   uppercase?: boolean
@@ -27,9 +27,12 @@ export default function Badge({
           'border border-medium',
         );
       case 'small':
+      case 'medium':
         return clsx(
           'px-[5px] h-[17px] md:h-[18px]',
-          'text-[0.7rem] font-medium rounded-md',
+          type === 'small'
+            ? 'text-[0.7rem] font-medium rounded-md'
+            : 'text-[0.85rem] rounded-md',
           contrast === 'high'
             ? 'text-invert bg-invert'
             : contrast === 'frosted'
