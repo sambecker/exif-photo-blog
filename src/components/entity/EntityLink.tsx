@@ -72,7 +72,11 @@ export default function EntityLink({
 } & EntityLinkExternalProps) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const hasBadgeIcon = Boolean(iconBadgeStart || iconBadgeEnd);
+  const hasBadgeIcon = Boolean(
+    iconBadgeStart ||
+    iconBadgeEnd ||
+    badgeType === 'medium',
+  );
 
   const classForContrast = () => {
     switch (contrast) {
@@ -134,7 +138,6 @@ export default function EntityLink({
         className: useForHover ? 'text-white' : undefined,
         classNameIcon: clsx(
           !useForHover && 'text-dim',
-          badgeType === 'medium' && 'translate-y-[-0.5px]',
           classNameIcon,
         ),
         debug,
@@ -145,11 +148,16 @@ export default function EntityLink({
             contrast={contrast}
             className={clsx(
               'translate-y-[-0.5px]',
-              hasBadgeIcon && '*:flex *:items-center *:gap-1',
+              hasBadgeIcon && '*:flex *:items-center',
+              hasBadgeIcon && badgeType === 'medium'
+                ? '*:gap-[5px]'
+                : '*:gap-1',
             )}
             uppercase
             interactive
           >
+            {badgeType === 'medium' && icon &&
+              <span className="translate-y-[0.5px]">{icon}</span>}
             {iconBadgeStart}
             {renderLabel}
             {iconBadgeEnd}

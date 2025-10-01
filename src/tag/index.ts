@@ -93,6 +93,10 @@ export const sortTagsWithoutFavs = (tags: string[]) =>
 export const sortTagsObjectWithoutFavs = (tags: Tags) =>
   sortTags(tags, TAG_FAVS);
 
+export const getTopNonFavTags = (tags: Tags) => tags
+  .filter(({ tag }) => tag !== TAG_FAVS)
+  .slice(0, 3);
+
 export const descriptionForTaggedPhotos = (
   photos: Photo[] = [],
   appText: AppTextState,

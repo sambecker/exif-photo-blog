@@ -29,10 +29,12 @@ export default function Badge({
       case 'small':
       case 'medium':
         return clsx(
-          'px-[5px] h-[17px] md:h-[18px]',
+          type === 'small'
+            ? 'px-[5px] h-[17px] md:h-[18px]'
+            : 'px-[7px] h-6',
           type === 'small'
             ? 'text-[0.7rem] font-medium rounded-md'
-            : 'text-[0.85rem] rounded-md',
+            : 'text-[0.9rem] rounded-lg',
           contrast === 'high'
             ? 'text-invert bg-invert'
             : contrast === 'frosted'
@@ -56,7 +58,8 @@ export default function Badge({
       'max-w-full',
       'inline-flex items-center',
       stylesForType(),
-      uppercase && 'uppercase tracking-wider',
+      uppercase && 'uppercase',
+      uppercase && type !== 'medium' && 'tracking-wider',
       className,
     )}>
       <span className={clsx(

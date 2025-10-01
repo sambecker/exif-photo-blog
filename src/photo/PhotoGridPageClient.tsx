@@ -10,8 +10,9 @@ import MaskedScroll from '@/components/MaskedScroll';
 import { IS_RECENTS_FIRST, SHOW_CATEGORIES_ON_MOBILE } from '@/app/config';
 import { SortBy } from './sort';
 import useViewportHeight from '@/utility/useViewportHeight';
-import PhotoGridSidebarMobile from './PhotoGridSidebarMobile';
+import TopPhotoEntities from './TopPhotoEntities';
 import AnimateItems from '@/components/AnimateItems';
+import { FaMinus, FaPlus } from 'react-icons/fa6';
 
 export default function PhotoGridPageClient({
   photos,
@@ -57,21 +58,21 @@ export default function PhotoGridPageClient({
                     containerHeight,
                   }}
                 />
-                : <PhotoGridSidebarMobile
+                : <TopPhotoEntities
                   className="grow mt-0.5"
                   {...categories}
                 />}
               <button
                 className={clsx(
-                  'self-start',
+                  'flex items-center justify-center',
+                  'w-10 h-7 p-0 shrink-0',
+                  'text-sm text-medium',
                   'rounded-lg bg-extra-dim border-medium',
                   'hover:bg-dim active:bg-medium transition-colors',
-                  'px-3 pt-[3px] pb-[4px]',
-                  'text-sm',
                 )}
                 onClick={() => setShowMobileSidebar(!showMobileSidebar)}
               >
-                {showMobileSidebar ? 'Less' : 'More'}
+                {showMobileSidebar ? <FaMinus /> : <FaPlus />}
               </button>
             </div>,
           ]} />}

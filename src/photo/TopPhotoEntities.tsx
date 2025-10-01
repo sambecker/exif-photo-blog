@@ -12,9 +12,9 @@ import PhotoFilm from '@/film/PhotoFilm';
 import PhotoFocalLength from '@/focal/PhotoFocalLength';
 import PhotoLens from '@/lens/PhotoLens';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
-import { tagsHaveFavs } from '@/tag';
+import { getTopNonFavTags, tagsHaveFavs } from '@/tag';
 
-export default function PhotoGridSidebarMobile({
+export default function TopPhotoEntities({
   className,
   recents,
   years,
@@ -79,13 +79,15 @@ export default function PhotoGridSidebarMobile({
               badged
               badgeType="medium"
             />;
-          case 'tags': return tags.length > 0 &&
-            <PhotoTag
-              key="tags"
-              tag={tags[2].tag}
-              badged
-              badgeType="medium"
-            />;
+          case 'tags': return getTopNonFavTags(tags)
+            .map(({ tag })=>
+              <PhotoTag
+                key={tag}
+                tag={tag}
+                badged
+                badgeType="medium"
+              />,
+            );
           case 'recipes': return recipes.length > 0 &&
             <PhotoRecipe
               key="recipes"
