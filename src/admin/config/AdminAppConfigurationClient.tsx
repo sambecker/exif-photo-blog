@@ -88,6 +88,7 @@ export default function AdminAppConfigurationClient({
   // Categories
   hasCategoryVisibility,
   categoryVisibility,
+  showCategoriesOnMobile,
   showCategoryImageHover,
   collapseSidebarCategories,
   hideTagsWithOnePhoto,
@@ -612,6 +613,19 @@ export default function AdminAppConfigurationClient({
               (default: {renderCommaSeparatedList(DEFAULT_CATEGORY_KEYS)}):
             </div>
             {renderEnvVars(['NEXT_PUBLIC_CATEGORY_VISIBILITY'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Show on mobile"
+            status={showCategoriesOnMobile}
+            optional
+          >
+            <div className="flex flex-col gap-2">
+              <div>
+                Set environment variable to {'"1"'} to prevent categories
+                displaying on mobile grid view:
+                {renderEnvVars(['NEXT_PUBLIC_HIDE_CATEGORIES_ON_MOBILE'])}
+              </div>
+            </div>
           </ChecklistRow>
           <ChecklistRow
             title="Show image hovers"

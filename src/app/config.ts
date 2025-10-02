@@ -456,6 +456,7 @@ export const APP_CONFIGURATION = {
   hasCategoryVisibility:
     Boolean(process.env.NEXT_PUBLIC_CATEGORY_VISIBILITY),
   categoryVisibility: CATEGORY_VISIBILITY,
+  showCategoriesOnMobile: SHOW_CATEGORIES_ON_MOBILE,
   showCategoryImageHover: SHOW_CATEGORY_IMAGE_HOVERS,
   collapseSidebarCategories: COLLAPSE_SIDEBAR_CATEGORIES,
   hideTagsWithOnePhoto: HIDE_TAGS_WITH_ONE_PHOTO,
