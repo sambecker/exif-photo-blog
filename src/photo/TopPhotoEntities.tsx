@@ -22,6 +22,7 @@ import { useAppState } from '@/app/AppState';
 import { ComponentProps } from 'react';
 import EntityLink from '@/components/entity/EntityLink';
 import { LuPlus } from 'react-icons/lu';
+import { useAppText } from '@/i18n/state/client';
 
 const MAX_ALBUMS = 3;
 const MAX_TAGS = 3;
@@ -47,6 +48,8 @@ export default function TopPhotoEntities({
   className?: string
 }) {
   const { setIsCommandKOpen } = useAppState();
+
+  const { utility } = useAppText();
 
   return (
     <MaskedScroll
@@ -130,10 +133,10 @@ export default function TopPhotoEntities({
         hideText="never"
         className={clsx(
           'h-auto pt-1 pb-1.5 pl-1 pr-2',
-          'gap-x-1',
+          'gap-x-1 uppercase',
         )}
       >
-        More
+        {utility.more}
       </LoaderButton>
     </MaskedScroll>
   );

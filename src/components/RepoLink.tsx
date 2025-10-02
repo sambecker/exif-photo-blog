@@ -9,7 +9,7 @@ export default function RepoLink() {
   return (
     <span className="inline-flex items-center gap-2 whitespace-nowrap">
       <span className="hidden sm:inline-block">
-        {appText.misc.repo}
+        {appText.misc.madeWith}
       </span>
       <Link
         href={TEMPLATE_REPO_URL}
