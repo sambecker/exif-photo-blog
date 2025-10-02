@@ -54,6 +54,9 @@ export const TEXT = {
     next: 'Next',
     nextShort: 'Next',
   },
+  footer: {
+    madeWith: 'Made with',
+  },
   sort: {
     sort: 'Sort',
     newest: 'Newest',
@@ -141,18 +144,15 @@ export const TEXT = {
     // eslint-disable-next-line max-len
     setupConfig: 'Change the site name and other configuration by editing environment variables referenced in',
   },
-  misc: {
-    loading: 'Loading ...',
-    finishing: 'Finishing ...',
-    uploading: 'Uploading',
-    madeWith: 'Made with',
-    copyPhrase: '{{label}} copied',
-  },
   utility: {
     more: 'More',
     less: 'Less',
     loadMore: 'Load More',
+    loading: 'Loading ...',
     tryAgain: 'Try Again',
+    finishing: 'Finishing ...',
+    uploading: 'Uploading',
+    copyPhrase: '{{label}} copied',
     paginate: '{{index}} of {{count}}',
     paginateAction: '{{action}} {{index}} of {{count}}',
   },
