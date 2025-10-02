@@ -167,19 +167,19 @@ export default function PhotoUploadWithStatus({
             {isUploading
               ? isFinishing
                 ? <>
-                  {appText.misc.finishing}
+                  {appText.utility.finishing}
                 </>
                 : <>
                   {!showButton && uploadStatusText
                     ? <>
                       <ResponsiveText shortText={uploadStatusText}>
-                        {appText.misc.uploading} {uploadStatusText}
+                        {appText.utility.uploading} {uploadStatusText}
                       </ResponsiveText>
                       {': '}
                       {fileUploadName}
                     </>
                     : <ResponsiveText shortText={fileUploadName}>
-                      {appText.misc.uploading} {fileUploadName}
+                      {appText.utility.uploading} {fileUploadName}
                     </ResponsiveText>}
                 </>
               : !showButton && <>Initializing</>}

@@ -33,13 +33,10 @@ export const generateAppTextState = (i18n: I18N) => {
       deleteConfirm: (photoTitle: string) =>
         i18n.admin.deleteConfirm.replace('{{photoTitle}}', photoTitle),
     },
-    misc: {
-      ...i18n.misc,
-      copyPhrase: (label: string) =>
-        i18n.misc.copyPhrase.replace('{{label}}', label),
-    },
     utility: {
       ...i18n.utility,
+      copyPhrase: (label: string) =>
+        i18n.utility.copyPhrase.replace('{{label}}', label),
       paginate: (index: number, count: number) =>
         i18n.utility.paginate
           .replace('{{index}}', index.toString())
