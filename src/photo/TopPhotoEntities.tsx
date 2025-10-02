@@ -13,6 +13,18 @@ import PhotoFocalLength from '@/focal/PhotoFocalLength';
 import PhotoLens from '@/lens/PhotoLens';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
 import { getTopNonFavTags, tagsHaveFavs } from '@/tag';
+import LoaderButton from '@/components/primitives/LoaderButton';
+import { useAppState } from '@/app/AppState';
+import { ComponentProps } from 'react';
+import EntityLink from '@/components/entity/EntityLink';
+import { LuPlus } from 'react-icons/lu';
+
+const ENTITY_LINK_PROPS: Partial<ComponentProps<typeof EntityLink>> = {
+  badged: true,
+  badgeType: 'medium',
+  truncate: false,
+  suppressSpinner: true,
+};
 
 export default function TopPhotoEntities({
   className,
@@ -28,89 +40,94 @@ export default function TopPhotoEntities({
 }: PhotoSetCategories & {
   className?: string
 }) {
+  const { setIsCommandKOpen } = useAppState();
+
   return (
     <MaskedScroll
       direction="horizontal"
       className={clsx(
-        'whitespace-nowrap space-x-3',
+        'flex whitespace-nowrap gap-x-3',
+        // Prevent shadow clipping
+        'py-1',
         className,
       )}
       fadeSize={50}
     >
       {tagsHaveFavs(tags) &&
         <PhotoFavs
-          badged
+          {...ENTITY_LINK_PROPS}
           badgeIconFirst
-          badgeType="medium"
         />}
       {CATEGORY_VISIBILITY.map(category => {
         switch (category) {
           case 'recents': return recents.length > 0 &&
             <PhotoRecents
               key="recents"
-              badged
-              badgeType="medium"
+              {...ENTITY_LINK_PROPS}
             />;
           case 'years': return years.length > 0 &&
             <PhotoYear
               key="years"
               year={years[0].year}
-              badged
-              badgeType="medium"
+              {...ENTITY_LINK_PROPS}
             />;
           case 'cameras': return cameras.length > 0 &&
             <PhotoCamera
               key="cameras"
               camera={cameras[0].camera}
-              badged
-              badgeType="medium"
+              {...ENTITY_LINK_PROPS}
             />;
           case 'lenses': return lenses.length > 0 &&
             <PhotoLens
               key="lenses"
               lens={lenses[0].lens}
-              badged
-              badgeType="medium"
+              {...ENTITY_LINK_PROPS}
             />;
           case 'albums': return albums.length > 0 &&
             <PhotoAlbum
               key="albums"
               album={albums[0].album}
-              badged
-              badgeType="medium"
+              {...ENTITY_LINK_PROPS}
             />;
           case 'tags': return getTopNonFavTags(tags)
             .map(({ tag })=>
               <PhotoTag
                 key={tag}
                 tag={tag}
-                badged
-                badgeType="medium"
+                {...ENTITY_LINK_PROPS}
               />,
             );
           case 'recipes': return recipes.length > 0 &&
             <PhotoRecipe
               key="recipes"
               recipe={recipes[0].recipe}
-              badged
-              badgeType="medium"
+              {...ENTITY_LINK_PROPS}
             />;
           case 'films': return films.length > 0 &&
             <PhotoFilm
               key="films"
               film={films[0].film}
-              badged
-              badgeType="medium"
+              {...ENTITY_LINK_PROPS}
             />;
           case 'focal-lengths': return focalLengths.length > 0 &&
             <PhotoFocalLength
               key="focal-lengths"
               focal={focalLengths[0].focal}
-              badged
-              badgeType="medium"
+              {...ENTITY_LINK_PROPS}
             />;
         }
       })}
+      <LoaderButton
+        icon={<LuPlus className="text-[0.95rem] translate-y-[1px]" />}
+        onClick={() => setIsCommandKOpen?.(true)}
+        hideText="never"
+        className={clsx(
+          'h-auto pt-1 pb-1.5 pl-1 pr-2',
+          'gap-x-1',
+        )}
+      >
+        More
+      </LoaderButton>
     </MaskedScroll>
   );
 }

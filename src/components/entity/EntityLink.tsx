@@ -127,10 +127,12 @@ export default function EntityLink({
       setIsLoading={setIsLoading}
     >
       <LabeledIcon {...{
-        icon:
-          (badged && hasBadgeIcon && !useForHover) ? undefined : icon,
-        iconWide:
-          (badged && hasBadgeIcon && !useForHover) ? undefined : iconWide,
+        icon: badged && hasBadgeIcon && !useForHover
+          ? undefined
+          : icon,
+        iconWide: badged && hasBadgeIcon && !useForHover
+          ? undefined
+          : iconWide,
         prefetch,
         title,
         type: useForHover ? 'icon-first' : type,
@@ -152,6 +154,7 @@ export default function EntityLink({
               hasBadgeIcon && badgeType === 'medium'
                 ? '*:gap-[5px]'
                 : '*:gap-1',
+              suppressSpinner && isLoading && 'opacity-50',
             )}
             uppercase
             interactive
@@ -181,6 +184,7 @@ export default function EntityLink({
         'max-w-full overflow-hidden select-none',
         // Underline link text when action is hovered
         '[&:has(.action:hover)_.text-content]:underline',
+        !truncate && 'shrink-0',
         className,
       )}
     >

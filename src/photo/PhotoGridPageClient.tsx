@@ -4,7 +4,7 @@ import { Photo } from '.';
 import { PATH_GRID_INFERRED } from '@/app/path';
 import PhotoGridSidebar from './PhotoGridSidebar';
 import PhotoGridContainer from './PhotoGridContainer';
-import { ComponentProps, useMemo, useRef, useState } from 'react';
+import { ComponentProps, useMemo, useRef } from 'react';
 import clsx from 'clsx/lite';
 import MaskedScroll from '@/components/MaskedScroll';
 import { IS_RECENTS_FIRST, SHOW_CATEGORIES_ON_MOBILE } from '@/app/config';
@@ -12,7 +12,6 @@ import { SortBy } from './sort';
 import useViewportHeight from '@/utility/useViewportHeight';
 import TopPhotoEntities from './TopPhotoEntities';
 import AnimateItems from '@/components/AnimateItems';
-import { FaMinus, FaPlus } from 'react-icons/fa6';
 
 export default function PhotoGridPageClient({
   photos,
@@ -35,8 +34,6 @@ export default function PhotoGridPageClient({
     viewPortHeight - (ref.current?.getBoundingClientRect().y ?? 0),
   [viewPortHeight]);
 
-  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
-
   return (
     <div>
       {SHOW_CATEGORIES_ON_MOBILE &&
@@ -47,38 +44,16 @@ export default function PhotoGridPageClient({
             <div key="mobile-sidebar" className={clsx(
               'flex gap-x-2',
               'md:hidden',
-              'mb-5',
+              'mb-4',
             )}>
-              {showMobileSidebar
-                ? <PhotoGridSidebar
-                  className="grow"
-                  {...{
-                    ...categories,
-                    photosCount: photosCountWithExcludes,
-                    containerHeight,
-                  }}
-                />
-                : <TopPhotoEntities
-                  className="grow mt-0.5"
-                  {...categories}
-                />}
-              <button
-                className={clsx(
-                  'flex items-center justify-center',
-                  'w-10 h-7 p-0 shrink-0',
-                  'text-sm text-medium',
-                  'rounded-lg bg-extra-dim border-medium',
-                  'hover:bg-dim active:bg-medium transition-colors',
-                )}
-                onClick={() => setShowMobileSidebar(!showMobileSidebar)}
-              >
-                {showMobileSidebar ? <FaMinus /> : <FaPlus />}
-              </button>
+              <TopPhotoEntities
+                className="grow"
+                {...categories}
+              />
             </div>,
           ]} />}
       <PhotoGridContainer
         cacheKey={`page-${PATH_GRID_INFERRED}`}
-        className={clsx(showMobileSidebar && 'max-md:hidden')}
         photos={photos}
         count={photosCount}
         sortBy={sortBy}
