@@ -764,12 +764,11 @@ export default function CommandKClient({
             ? <span className="translate-y-[2px]">
               <Spinner size={16} className="-mr-1" />
             </span>
-            : <span className="max-sm:hidden">
+            : <span>
               <LoaderButton
                 className={clsx(
-                  'h-auto! py-1 -mr-2',
-                  'border-medium shadow-none',
-                  queryLiveRaw ? 'px-1' : 'px-1.5',
+                  'h-auto! py-1 mr-[-9px]',
+                  'px-1',
                   'text-[12px]',
                   'text-gray-400/90 dark:text-gray-700',
                 )}
@@ -784,7 +783,14 @@ export default function CommandKClient({
               >
                 {queryLiveRaw
                   ? <IoClose size={17} className="text-dim" />
-                  : 'ESC'}
+                  : <>
+                    <span className="sm:hidden">
+                      <IoClose size={17} className="text-dim" />
+                    </span>
+                    <span className="max-sm:hidden mx-0.5">
+                      ESC
+                    </span>
+                  </>}
               </LoaderButton>
             </span>}
         </div>

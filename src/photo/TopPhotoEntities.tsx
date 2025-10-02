@@ -128,12 +128,14 @@ export default function TopPhotoEntities({
           }
         })}
       <LoaderButton
-        icon={<LuPlus className="text-[0.95rem] translate-y-[1px]" />}
+        icon={<LuPlus
+          className="text-medium text-[0.9rem] translate-y-[0.5px]"
+        />}
         onClick={() => setIsCommandKOpen?.(true)}
         hideText="never"
         className={clsx(
-          'h-auto pt-1 pb-1.5 pl-1 pr-2',
-          'gap-x-1 uppercase',
+          'h-auto pt-[5px] pb-1.5 pl-1 pr-2',
+          'gap-x-[3px] uppercase tracking-wide',
         )}
       >
         {utility.more}

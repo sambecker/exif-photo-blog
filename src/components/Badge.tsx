@@ -31,7 +31,7 @@ export default function Badge({
         return clsx(
           type === 'small'
             ? 'px-[5px] h-[17px] md:h-[18px]'
-            : 'px-[7px] h-6',
+            : 'px-2 h-6.5',
           type === 'small'
             ? 'text-[0.7rem] font-medium rounded-md'
             : 'text-[0.9rem] rounded-lg',
