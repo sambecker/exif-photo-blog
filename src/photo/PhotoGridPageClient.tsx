@@ -12,6 +12,7 @@ import { SortBy } from './sort';
 import useViewportHeight from '@/utility/useViewportHeight';
 import TopPhotoEntities from './TopPhotoEntities';
 import AnimateItems from '@/components/AnimateItems';
+import { hasEnoughTopEntities } from '@/category/mobile';
 
 export default function PhotoGridPageClient({
   photos,
@@ -34,9 +35,13 @@ export default function PhotoGridPageClient({
     viewPortHeight - (ref.current?.getBoundingClientRect().y ?? 0),
   [viewPortHeight]);
 
+  const shouldShowTopEntities = useMemo(() =>
+    SHOW_CATEGORIES_ON_MOBILE && hasEnoughTopEntities(categories),
+  [categories]);
+
   return (
     <div>
-      {SHOW_CATEGORIES_ON_MOBILE &&
+      {shouldShowTopEntities &&
         <AnimateItems
           animateOnFirstLoadOnly
           type="bottom"
