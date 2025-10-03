@@ -159,11 +159,11 @@ export default function EntityLink({
             uppercase
             interactive
           >
-            {badgeType === 'medium' && icon &&
+            {badgeType === 'medium' &&
               <span className="translate-y-[0.5px]">{icon}</span>}
-            {iconBadgeStart}
+            {badgeType !== 'medium' && iconBadgeStart}
             {renderLabel}
-            {iconBadgeEnd}
+            {badgeType !== 'medium' && iconBadgeEnd}
           </Badge>
           : <span className={clsx(
             'text-content',

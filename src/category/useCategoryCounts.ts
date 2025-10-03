@@ -7,7 +7,7 @@ import { Album } from '@/album';
 export default function useCategoryCounts() {
   const { categoriesWithCounts } = useAppState();
 
-  const recentsCount = categoriesWithCounts?.recents[0] ?? 0;
+  const recentsCount = categoriesWithCounts?.recents?.count ?? 0;
 
   const getYearsCount = useCallback((year: string) => {
     const yearCounts = categoriesWithCounts?.years ?? {};
