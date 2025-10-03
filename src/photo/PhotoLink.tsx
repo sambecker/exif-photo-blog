@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode, ComponentProps, RefObject } from 'react';
-import { Photo, titleForPhoto } from '@/photo';
+import { PhotoLight, titleForPhoto } from '@/photo';
 import { PhotoSetCategory } from '@/category';
 import { AnimationConfig } from '../components/AnimateItems';
 import { useAppState } from '@/app/AppState';
@@ -23,7 +23,7 @@ export default function PhotoLink({
   ...categories
 }: {
   ref?: RefObject<HTMLAnchorElement | null>
-  photo?: Photo
+  photo?: PhotoLight
   scroll?: boolean
   prefetch?: boolean
   nextPhotoAnimation?: AnimationConfig
