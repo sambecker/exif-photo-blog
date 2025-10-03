@@ -43,7 +43,6 @@ export default function PhotoGridPageClient({
     <div>
       {shouldShowTopEntities &&
         <AnimateItems
-          animateOnFirstLoadOnly
           type="bottom"
           items={[
             <div key="mobile-sidebar" className={clsx(
