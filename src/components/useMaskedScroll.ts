@@ -15,7 +15,7 @@ export default function useMaskedScroll({
   ref: containerRef,
   direction = 'vertical',
   fadeSize = 24,
-  animationDuration = 0.3,
+  animationDuration = 0.2,
   setMaxSize = true,
   hideScrollbar = true,
   // Disable when calling 'updateMask' explicitly
