@@ -3,6 +3,7 @@ import { Photo } from '.';
 import { PhotoSetCategory } from '../category';
 import PhotoGrid from './PhotoGrid';
 import Link from 'next/link';
+import { useAppText } from '@/i18n/state/client';
 
 export default function PhotoLightbox({
   count,
@@ -16,6 +17,8 @@ export default function PhotoLightbox({
   maxPhotosToShow?: number
   moreLink: string
 } & PhotoSetCategory) {
+  const { utility } = useAppText();
+  
   const photoCountToShow = maxPhotosToShow < count
     ? maxPhotosToShow - 1
     : maxPhotosToShow;
@@ -44,7 +47,7 @@ export default function PhotoLightbox({
             <div className="text-[1.1rem] lg:text-[1.5rem]">
               +{countNotShown}
             </div>
-            <div className="text-dim">More</div>
+            <div className="text-dim">{utility.more}</div>
           </Link>
           : undefined}
         small

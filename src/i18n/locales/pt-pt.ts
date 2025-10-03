@@ -55,6 +55,9 @@ export const TEXT: I18N = {
     next: 'Próximo',
     nextShort: 'Próx',
   },
+  footer: {
+    madeWith: 'Feito com',
+  },
   sort: {
     sort: 'Ordenar',
     newest: 'Mais recentes',
@@ -142,14 +145,15 @@ export const TEXT: I18N = {
     // eslint-disable-next-line max-len
     setupConfig: 'Altere o nome do sítio e outras configurações ao editar as variáveis de ambiente referenciadas em',
   },
-  misc: {
+  utility: {
+    more: 'Mais',
+    less: 'Menos',
+    loadMore: 'Carregar Mais',
     loading: 'A carregar ...',
+    tryAgain: 'Tentar Novamente',
     finishing: 'A finalizar ...',
     uploading: 'A enviar',
-    repo: 'Feito com',
     copyPhrase: '{{label}} copiado',
-  },
-  utility: {
     paginate: '{{index}} de {{count}}',
     paginateAction: '{{action}} {{index}} de {{count}}',
   },

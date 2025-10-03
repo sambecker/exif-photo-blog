@@ -24,7 +24,7 @@ export default function SignInOrUploadClient({
     )}>
       <div>
         {isCheckingAuth
-          ? appText.misc.loading
+          ? appText.utility.loading
           : isUserSignedIn
             ? appText.onboarding.setupFirstPhoto
             : appText.onboarding.setupSignIn}

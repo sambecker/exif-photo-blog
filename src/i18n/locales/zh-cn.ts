@@ -55,6 +55,9 @@ export const TEXT: I18N = {
     next: '下一页',
     nextShort: '下一页',
   },
+  footer: {
+    madeWith: '基于',
+  },
   sort: {
     sort: '排序',
     newest: '最新',
@@ -141,14 +144,15 @@ export const TEXT: I18N = {
     setupFirstPhoto: '添加您的第一张照片',
     setupConfig: '通过编辑环境变量来更改站点名称和其他配置',
   },
-  misc: {
+  utility: {
+    more: '更多',
+    less: '更少',
+    loadMore: '加载更多',
     loading: '加载中...',
+    tryAgain: '重试',
     finishing: '完成中...',
     uploading: '上传中',
-    repo: '基于',
     copyPhrase: '{{label}} 已复制',
-  },
-  utility: {
     paginate: '第 {{index}} 页，共 {{count}} 页',
     paginateAction: '{{action}} 第 {{index}} 页，共 {{count}} 页',
   },

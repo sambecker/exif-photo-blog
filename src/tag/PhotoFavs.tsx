@@ -8,7 +8,10 @@ import EntityLink, {
 } from '@/components/entity/EntityLink';
 import IconFavs from '@/components/icons/IconFavs';
 
-export default function PhotoFavs(props: EntityLinkExternalProps) {
+export default function PhotoFavs({
+  badgeIconFirst,
+  ...props
+}: EntityLinkExternalProps & { badgeIconFirst?: boolean }) {
   const { getTagCount } = useCategoryCounts();
   return (
     <EntityLink
@@ -21,7 +24,7 @@ export default function PhotoFavs(props: EntityLinkExternalProps) {
         className="translate-x-[-0.5px] translate-y-[-0.5px]"
         highlight
       />}
-      iconBadgeEnd={<IconFavs
+      iconBadgeEnd={!badgeIconFirst && <IconFavs
         size={10}
         className="translate-y-[-0.5px]"
         highlight

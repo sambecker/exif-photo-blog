@@ -55,6 +55,9 @@ export const TEXT: I18N = {
     next: 'अगला',
     nextShort: 'अगला',
   },
+  footer: {
+    madeWith: 'निर्मित',
+  },
   sort: {
     sort: 'क्रमबद्ध करें',
     newest: 'नवीनतम',
@@ -143,14 +146,15 @@ export const TEXT: I18N = {
     // eslint-disable-next-line max-len
     setupConfig: 'साइट का नाम और अन्य कॉन्फ़िगरेशन बदलने के लिए पर्यावरण चर संपादित करें',
   },
-  misc: {
+  utility: {
+    more: 'और',
+    less: 'कम',
+    loadMore: 'और लोड करें',
     loading: 'लोड हो रहा है...',
+    tryAgain: 'फिर से कोशिश करें',
     finishing: 'समाप्त कर रहे हैं...',
     uploading: 'अपलोड हो रहा है',
-    repo: 'निर्मित',
     copyPhrase: '{{label}} कॉपी किया गया',
-  },
-  utility: {
     paginate: '{{index}} / {{count}}',
     paginateAction: '{{action}} - {{index}} / {{count}}',
   },

@@ -55,6 +55,9 @@ export const TEXT: I18N = {
     next: 'Sonraki',
     nextShort: 'Sonraki',
   },
+  footer: {
+    madeWith: 'Hazırlayan:',
+  },
   sort: {
     sort: 'Sırala',
     newest: 'En Yeni',
@@ -143,14 +146,15 @@ export const TEXT: I18N = {
     // eslint-disable-next-line max-len
     setupConfig: 'Site adını ve diğer ayarları değiştirmek için şu ortam değişkenlerini düzenleyin:',
   },
-  misc: {
+  utility: {
+    more: 'Daha fazla',
+    less: 'Daha az',
+    loadMore: 'Daha Fazla Yükle',
     loading: 'Yükleniyor ...',
+    tryAgain: 'Tekrar Dene',
     finishing: 'Tamamlanıyor ...',
     uploading: 'Yükleniyor',
-    repo: 'Hazırlayan:',
     copyPhrase: '{{label}} kopyalandı',
-  },
-  utility: {
     paginate: '{{count}} fotoğrafın {{index}}.si',
     paginateAction: '{{action}} - {{count}} fotoğrafın {{index}}.si',
   },

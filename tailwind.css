@@ -114,6 +114,10 @@ html {
   @apply
     text-light dark:text-dark
 }
+@utility text-medium-dark {
+  @apply
+    text-gray-600 dark:text-gray-300
+}
 @utility text-medium {
   @apply
     text-gray-500 dark:text-gray-400

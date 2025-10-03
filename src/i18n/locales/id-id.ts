@@ -55,6 +55,9 @@ export const TEXT: I18N = {
     next: 'Berikutnya',
     nextShort: 'Brkt',
   },
+  footer: {
+    madeWith: 'Dibuat dengan',
+  },
   sort: {
     sort: 'Urutkan',
     newest: 'Terbaru',
@@ -141,14 +144,15 @@ export const TEXT: I18N = {
     setupFirstPhoto: 'Tambahkan foto pertama Anda',
     setupConfig: 'Ubah nama situs dan pengaturan lewat file environment',
   },
-  misc: {
+  utility: {
+    more: 'Lebih banyak',
+    less: 'Lebih sedikit',
+    loadMore: 'Muat Lebih Banyak',
     loading: 'Memuat ...',
+    tryAgain: 'Coba Lagi',
     finishing: 'Menyelesaikan ...',
     uploading: 'Mengunggah',
-    repo: 'Dibuat dengan',
     copyPhrase: '{{label}} disalin',
-  },
-  utility: {
     paginate: '{{index}} dari {{count}}',
     paginateAction: '{{action}} {{index}} dari {{count}}',
   },

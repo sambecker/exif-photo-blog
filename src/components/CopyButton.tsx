@@ -31,7 +31,7 @@ export default function CopyButton({
       onClick={text
         ? () => {
           navigator.clipboard.writeText(text);
-          toastSuccess(appText.misc.copyPhrase(label));
+          toastSuccess(appText.utility.copyPhrase(label));
         }
         : undefined}
       styleAs="link"

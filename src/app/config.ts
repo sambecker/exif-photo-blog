@@ -284,6 +284,8 @@ export const SHOW_FILMS =
   CATEGORY_VISIBILITY.includes('films');
 export const SHOW_FOCAL_LENGTHS =
   CATEGORY_VISIBILITY.includes('focal-lengths');
+export const SHOW_CATEGORIES_ON_MOBILE =
+  process.env.NEXT_PUBLIC_HIDE_CATEGORIES_ON_MOBILE !== '1';
 export const SHOW_CATEGORY_IMAGE_HOVERS =
   process.env.NEXT_PUBLIC_HIDE_CATEGORY_IMAGE_HOVERS !== '1';
 export const COLLAPSE_SIDEBAR_CATEGORIES =
@@ -454,6 +456,7 @@ export const APP_CONFIGURATION = {
   hasCategoryVisibility:
     Boolean(process.env.NEXT_PUBLIC_CATEGORY_VISIBILITY),
   categoryVisibility: CATEGORY_VISIBILITY,
+  showCategoriesOnMobile: SHOW_CATEGORIES_ON_MOBILE,
   showCategoryImageHover: SHOW_CATEGORY_IMAGE_HOVERS,
   collapseSidebarCategories: COLLAPSE_SIDEBAR_CATEGORIES,
   hideTagsWithOnePhoto: HIDE_TAGS_WITH_ONE_PHOTO,
