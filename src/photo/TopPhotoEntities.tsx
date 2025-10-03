@@ -15,9 +15,9 @@ import LoaderButton from '@/components/primitives/LoaderButton';
 import { useAppState } from '@/app/AppState';
 import { ComponentProps, useMemo } from 'react';
 import EntityLink from '@/components/entity/EntityLink';
-import { LuPlus } from 'react-icons/lu';
 import { useAppText } from '@/i18n/state/client';
 import { getTopEntities } from '@/category/mobile';
+import { BiExpandVertical } from 'react-icons/bi';
 
 const ENTITY_LINK_PROPS: Partial<ComponentProps<typeof EntityLink>> = {
   badged: true,
@@ -119,13 +119,13 @@ export default function TopPhotoEntities({
           }
         })}
       <LoaderButton
-        icon={<LuPlus
-          className="text-medium text-[0.9rem] translate-y-[0.5px]"
+        icon={<BiExpandVertical
+          className="text-medium translate-y-[0.75px] text-[0.9rem]"
         />}
         onClick={() => setIsCommandKOpen?.(true)}
         hideText="never"
         className={clsx(
-          'h-auto pt-[5px] pb-1.5 pl-1 pr-2',
+          'h-auto pt-[5px] pb-1.5 pl-1 pr-2.5',
           'gap-x-[3px] uppercase tracking-wide',
         )}
       >
