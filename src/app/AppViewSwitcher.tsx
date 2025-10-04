@@ -171,77 +171,68 @@ export default function AppViewSwitcher({
             noPadding
           />}
       </Switcher>
-      {showSortControl &&
-        <motion.div
-          initial={animate ? { opacity: 0, scale: 0.5 } : false}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.5 }}
-          transition={{ duration: 0.2, ease: 'easeInOut' }}
-        >
-          <Switcher
-            className={clsx('max-sm:hidden', GAP_CLASS_LEFT)}
-            type="borderless"
-          >
-            {NAV_SORT_CONTROL === 'menu'
-              ? <SwitcherItem
-                className={clsx(
-                  !isSortedByDefault && '*:bg-medium *:text-main!',
-                )}
-                icon={<SortMenu
-                  {...sortConfig}
-                  isOpen={isSortMenuOpen}
-                  setIsOpen={isOpen => {
-                    setIsSortMenuOpen(isOpen);
-                    if (isOpen) { setIsAdminMenuOpen(false); }
-                  }}
-                />}
-                tooltip={{
-                  ...!isSortMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-                    content: appText.sort.sort,
-                  },
-                }}
-                width="narrow"
-                noPadding
-              />
-              : <SwitcherItem
-                className={clsx(
-                  '*:w-full *:h-full *:flex *:items-center *:justify-center',
-                  !isSortedByDefault && '*:bg-medium *:text-main!',
-                )}
-                href={pathSortToggle}
-                icon={<IconSort
-                  sort={isAscending ? 'asc' : 'desc'}
-                  className="translate-x-[0.5px] translate-y-[1px]"
-                />}
-                tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-                  content: isAscending
-                    ? appText.sort.viewNewest
-                    : appText.sort.viewOldest,
-                }}}
-                width="narrow"
-                noPadding
-              />}
-          </Switcher>
-        </motion.div>}
       <motion.div
-        // Conditional key necessary to halt/resume layout animations
-        key={animate ? 'search' : 'search-no-animate'}
-        layout={animate}
+        initial={animate ? { opacity: 0, width: '0' } : false}
+        animate={{ opacity: 1, width: showSortControl ? 'auto' : '0' }}
         transition={{ duration: 0.2, ease: 'easeInOut' }}
       >
-        <Switcher type="borderless">
-          <SwitcherItem
-            icon={<IconSearch includeTitle={false} />}
-            onClick={() => setIsCommandKOpen?.(true)}
-            tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-              content: appText.nav.search,
-              keyCommandModifier: KEY_COMMANDS.search[0],
-              keyCommand: KEY_COMMANDS.search[1],
-            }}}
-            width="narrow"
-          />
+        <Switcher
+          className={clsx('max-sm:hidden', GAP_CLASS_LEFT)}
+          type="borderless"
+        >
+          {NAV_SORT_CONTROL === 'menu'
+            ? <SwitcherItem
+              className={clsx(
+                !isSortedByDefault && '*:bg-medium *:text-main!',
+              )}
+              icon={<SortMenu
+                {...sortConfig}
+                isOpen={isSortMenuOpen}
+                setIsOpen={isOpen => {
+                  setIsSortMenuOpen(isOpen);
+                  if (isOpen) { setIsAdminMenuOpen(false); }
+                }}
+              />}
+              tooltip={{
+                ...!isSortMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+                  content: appText.sort.sort,
+                },
+              }}
+              width="narrow"
+              noPadding
+            />
+            : <SwitcherItem
+              className={clsx(
+                '*:w-full *:h-full *:flex *:items-center *:justify-center',
+                !isSortedByDefault && '*:bg-medium *:text-main!',
+              )}
+              href={pathSortToggle}
+              icon={<IconSort
+                sort={isAscending ? 'asc' : 'desc'}
+                className="translate-x-[0.5px] translate-y-[1px]"
+              />}
+              tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+                content: isAscending
+                  ? appText.sort.viewNewest
+                  : appText.sort.viewOldest,
+              }}}
+              width="narrow"
+              noPadding
+            />}
         </Switcher>
       </motion.div>
+      <Switcher type="borderless">
+        <SwitcherItem
+          icon={<IconSearch includeTitle={false} />}
+          onClick={() => setIsCommandKOpen?.(true)}
+          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+            content: appText.nav.search,
+            keyCommandModifier: KEY_COMMANDS.search[0],
+            keyCommand: KEY_COMMANDS.search[1],
+          }}}
+          width="narrow"
+        />
+      </Switcher>
     </div>
   );
 }
