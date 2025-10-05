@@ -23,6 +23,7 @@ export default function PhotoGrid({
   staggerOnFirstLoadOnly = true,
   additionalTile,
   small,
+  selectable = true,
   onLastPhotoVisible,
   onAnimationComplete,
   ...categories
@@ -36,6 +37,7 @@ export default function PhotoGrid({
   staggerOnFirstLoadOnly?: boolean
   additionalTile?: ReactNode
   small?: boolean
+  selectable?: boolean
   onLastPhotoVisible?: () => void
   onAnimationComplete?: () => void
 } & PhotoSetCategory) {
@@ -50,7 +52,7 @@ export default function PhotoGrid({
   } = useSelectPhotosState();
 
   return (
-    <div {...{ [DATA_KEY_PHOTO_GRID]: true }}>
+    <div {...{ [DATA_KEY_PHOTO_GRID]: selectable }}>
       <AnimateItems
         className={clsx(
           'grid',

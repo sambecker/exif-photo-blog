@@ -32,7 +32,7 @@ export default function SelectPhotosProvider({
     useState(false);
 
   const getPhotoGridElements = useCallback(() =>
-    document.querySelectorAll(`[${DATA_KEY_PHOTO_GRID}]`)
+    document.querySelectorAll(`[${DATA_KEY_PHOTO_GRID}=true]`)
   , []);
 
   useEffect(() => {

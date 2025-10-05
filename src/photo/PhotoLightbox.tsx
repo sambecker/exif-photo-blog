@@ -52,6 +52,7 @@ export default function PhotoLightbox({
             <div className="text-dim">{utility.more}</div>
           </Link>
           : undefined}
+        selectable={false}
         small
       />
     </div>
