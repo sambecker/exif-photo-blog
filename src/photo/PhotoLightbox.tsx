@@ -40,6 +40,8 @@ export default function PhotoLightbox({
               'flex flex-col items-center justify-center',
               'gap-0.5',
               'text-[1.1rem] lg:text-[1.25rem]',
+              // Optically adjust for leading '+' character
+              'translate-x-[-1px]',
             )}
           >
             +{countNotShown}

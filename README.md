@@ -91,6 +91,17 @@ _⚠️ READ BEFORE PROCEEDING_
 
 Set `OPENAI_BASE_URL` in order to use an alternate OpenAI-compatible provider
 
+### Location services
+
+To add location meta to entities like albums:
+
+1. Setup Google Places API
+   - Create GCP project if necessary
+   - https://console.cloud.google.com/apis/credentials
+   - Select "Create credentials" and choose "API key"
+   - Choose "Restrict key" and select "Places API (new)"
+   - Store API key in `GOOGLE_PLACES_API_KEY`
+
 ### Web Analytics
 
 1. Open project on Vercel
