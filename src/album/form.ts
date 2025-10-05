@@ -10,7 +10,7 @@ export const ALBUM_FORM_META: {
   readOnly?: boolean
   hidden?: boolean
 }[] = [
-  { key: 'id', type: 'text', readOnly: true },
+  { key: 'id', type: 'text', readOnly: true, hidden: true },
   { key: 'title', type: 'text', required: true },
   { key: 'slug', type: 'text', required: true, readOnly: true },
   { key: 'subhead', type: 'text' },
