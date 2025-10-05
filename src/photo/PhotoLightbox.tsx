@@ -1,3 +1,5 @@
+'use client';
+
 import { clsx } from 'clsx/lite';
 import { Photo } from '.';
 import { PhotoSetCategory } from '../category';
