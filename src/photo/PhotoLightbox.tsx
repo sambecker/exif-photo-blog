@@ -1,11 +1,8 @@
-'use client';
-
 import { clsx } from 'clsx/lite';
 import { Photo } from '.';
 import { PhotoSetCategory } from '../category';
 import PhotoGrid from './PhotoGrid';
 import Link from 'next/link';
-import { useAppText } from '@/i18n/state/client';
 
 export default function PhotoLightbox({
   count,
@@ -18,9 +15,7 @@ export default function PhotoLightbox({
   photos: Photo[]
   maxPhotosToShow?: number
   moreLink: string
-} & PhotoSetCategory) {
-  const { utility } = useAppText();
-  
+} & PhotoSetCategory) {  
   const photoCountToShow = maxPhotosToShow < count
     ? maxPhotosToShow - 1
     : maxPhotosToShow;
@@ -31,7 +26,7 @@ export default function PhotoLightbox({
 
   return (
     <div className={clsx(
-      'border-main p-1.5 lg:p-2 rounded-md',
+      'border-main p-1 rounded-md',
       'bg-gray-50 dark:bg-gray-950',
     )}>
       <PhotoGrid
@@ -43,15 +38,14 @@ export default function PhotoLightbox({
             href={moreLink}
             className={clsx(
               'flex flex-col items-center justify-center',
-              'gap-0.5 lg:gap-1',
+              'gap-0.5',
+              'text-[1.1rem] lg:text-[1.25rem]',
             )}
           >
-            <div className="text-[1.1rem] lg:text-[1.5rem]">
-              +{countNotShown}
-            </div>
-            <div className="text-dim">{utility.more}</div>
+            +{countNotShown}
           </Link>
           : undefined}
+        classNamePhoto="rounded-sm overflow-hidden border-main"
         selectable={false}
         small
       />
