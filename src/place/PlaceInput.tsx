@@ -11,14 +11,9 @@ export default function PlaceInput() {
 
   const [textDebounced] = useDebounce(text, 500);
 
-  console.log({ text, textDebounced });
-
   useEffect(() => {
     if (textDebounced) {
-      getPlaceAutoCompleteAction(textDebounced).then(places => {
-        console.log({ places });
-        setPlaces(places);
-      });
+      getPlaceAutoCompleteAction(textDebounced).then(setPlaces);
     }
   }, [textDebounced]);
 
