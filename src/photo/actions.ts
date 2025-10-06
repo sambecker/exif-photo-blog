@@ -516,7 +516,10 @@ export const renamePhotoRecipeGloballyAction = async (formData: FormData) =>
 export const deleteUploadsAction = async (urls: string[]) =>
   runAuthenticatedAdminServerAction(async () => {
     await Promise.all(urls.map(url => deleteFile(url)));
-    revalidateAdminPaths();
+    if (urls.length > 1) {
+      // Only refresh state when deleting multiple uploads
+      revalidateAdminPaths();
+    }
   });
 
 // Accessed from admin photo edit page
