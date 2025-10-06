@@ -19,8 +19,8 @@ export const checkRateLimitAndThrow = async ({
     try {
       success = (await limiter.limit(identifier)).success;
     } catch (e: any) {
-      // eslint-disable-next-line max-len
-      const message = `Failed to connect to redis rate limiting store ('${identifier}')`;
+      const message =
+        `Failed to connect to redis rate limiting store ('${identifier}')`;
       console.error(message, e);
       throw new Error(message);
     }
