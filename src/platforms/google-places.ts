@@ -3,6 +3,8 @@ import {
   checkRateLimitAndThrow as _checkRateLimitAndThrow,
 } from '@/platforms/rate-limit';
 
+const URL_BASE = 'https://places.googleapis.com/v1/places';
+
 const checkRateLimitAndThrow = () =>
   _checkRateLimitAndThrow({ identifier: 'google-places-query' });
 
@@ -16,22 +18,22 @@ type Location = {
   longitude: number
 }
 
-export const getPlaceAutocomplete = async (
+export const getPlaceAutoComplete = async (
   input: string,
 ) => {
   await checkRateLimitAndThrow();
   return fetch(
-    'https://places.googleapis.com/v1/places:autocomplete', {
+    `${URL_BASE}:autocomplete`, {
       method: 'POST',
       body: JSON.stringify({ input }),
       headers,
     },
   )
     .then(response => response.json())
-    .then(json => json.suggestions.map(({ placePrediction }: any) => ({
+    .then(json => (json?.suggestions ?? []).map(({ placePrediction }: any) => ({
       id: placePrediction.placeId,
       text: placePrediction.structuredFormat.mainText.text,
-      secondary: placePrediction.structuredFormat.secondaryText.text,
+      secondary: placePrediction.structuredFormat.secondaryText?.text,
     })) as {
       id: string
       text: string
@@ -39,23 +41,27 @@ export const getPlaceAutocomplete = async (
     }[]);
 };
 
+const FIELDS = [
+  'id',
+  'displayName',
+  'location',
+  'viewport',
+  'googleMapsUri',
+];
+
 export const getPlaceDetails = async (id: string) => {
   await checkRateLimitAndThrow();
   return fetch(
-    // eslint-disable-next-line max-len
-    `https://places.googleapis.com/v1/places/${id}?fields=id,displayName,location,viewport,googleMapsUri`, {
+    `${URL_BASE}/${id}?fields=${FIELDS.join(',')}`, {
       headers,
     },
   )
     .then(response => response.json())
     .then(json => ({
-      ...json,
-      displayName: json.displayName.text,
-    }) as unknown as {
-      id: string
-      displayName: string
-      location: Location
-      viewport: { low: Location, high: Location }
-      googleMapsUri: string
-    });
+      id: json.id,
+      name: json.displayName.text as string,
+      location: json.location as Location,
+      viewport: json.viewport as { low: Location, high: Location },
+      link: json.googleMapsUri as string,
+    }));
 };

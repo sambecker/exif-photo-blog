@@ -11,6 +11,7 @@ import { ALBUM_FORM_META } from '@/album/form';
 import { parameterize } from '@/utility/string';
 import { updateAlbumAction } from '@/album/actions';
 import clsx from 'clsx/lite';
+import PlaceInput from '@/place/PlaceInput';
 
 export default function AdminAlbumForm({
   album,
@@ -42,6 +43,7 @@ export default function AdminAlbumForm({
       action={updateAlbumAction}
       className="max-w-[38rem] space-y-4"
     >
+      <PlaceInput />
       {ALBUM_FORM_META
         .map(({ key, label, type, readOnly }) => (
           <FieldsetWithStatus

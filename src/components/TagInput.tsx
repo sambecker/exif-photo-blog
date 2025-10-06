@@ -24,6 +24,7 @@ export default function TagInput({
   options = [],
   defaultIcon,
   onChange,
+  onInputTextChange,
   showMenuOnDelete,
   className,
   readOnly,
@@ -38,6 +39,7 @@ export default function TagInput({
   options?: AnnotatedTag[]
   defaultIcon?: ReactNode
   onChange?: (value: string) => void
+  onInputTextChange?: (value: string) => void
   showMenuOnDelete?: boolean
   className?: string
   readOnly?: boolean
@@ -290,7 +292,7 @@ export default function TagInput({
       <span className="truncate">
         {option?.label ?? value}
       </span>
-      {icon && <span className="text-medium">
+      {icon && <span className="text-medium shrink-0">
         {icon}
       </span>}
     </>;
@@ -371,7 +373,10 @@ export default function TagInput({
           )}
           size={10}
           value={inputText}
-          onChange={e => setInputText(e.target.value)}
+          onChange={e => {
+            setInputText(e.target.value);
+            onInputTextChange?.(e.target.value);
+          }}
           autoComplete="off"
           autoCapitalize="off"
           readOnly={readOnly}
@@ -444,7 +449,7 @@ export default function TagInput({
                   </span>
                   {annotation &&
                     <span
-                      className="whitespace-nowrap text-dim text-sm"
+                      className="truncate text-dim text-sm"
                       aria-label={annotationAria}
                     >
                       <span aria-hidden={Boolean(annotationAria)}>

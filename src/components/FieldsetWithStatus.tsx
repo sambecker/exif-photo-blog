@@ -33,6 +33,7 @@ export default function FieldsetWithStatus({
   tagOptionsLimitValidationMessage,
   tagOptionsShouldParameterize,
   tagOptionsDefaultIcon,
+  tagOptionsOnInputTextChange,
   placeholder,
   loading,
   required,
@@ -65,6 +66,7 @@ export default function FieldsetWithStatus({
   tagOptionsLimitValidationMessage?: string
   tagOptionsShouldParameterize?: boolean
   tagOptionsDefaultIcon?: ReactNode
+  tagOptionsOnInputTextChange?: (value: string) => void
   placeholder?: string
   loading?: boolean
   required?: boolean
@@ -208,6 +210,7 @@ export default function FieldsetWithStatus({
                 options={tagOptions}
                 defaultIcon={tagOptionsDefaultIcon}
                 onChange={onChange}
+                onInputTextChange={tagOptionsOnInputTextChange}
                 showMenuOnDelete={tagOptionsLimit === 1}
                 className={clsx(Boolean(error) && 'error')}
                 readOnly={readOnly}
