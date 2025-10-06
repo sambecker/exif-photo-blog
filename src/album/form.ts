@@ -8,16 +8,15 @@ export const ALBUM_FORM_META: {
   type: FieldSetType
   required?: boolean
   readOnly?: boolean
-  hidden?: boolean
 }[] = [
-  { key: 'id', type: 'text', readOnly: true, hidden: true },
+  { key: 'id', type: 'hidden', readOnly: true },
   { key: 'title', type: 'text', required: true },
   { key: 'slug', type: 'text', required: true, readOnly: true },
   { key: 'subhead', type: 'text' },
   { key: 'description', type: 'textarea' },
-  { key: 'locationName', label: 'location name', type: 'text', hidden: true },
-  { key: 'latitude', type: 'text', hidden: true },
-  { key: 'longitude', type: 'text', hidden: true },
+  { key: 'locationName', label: 'location name', type: 'hidden' },
+  { key: 'latitude', type: 'hidden' },
+  { key: 'longitude', type: 'hidden' },
 ];
 
 export const convertFormDataToAlbum = (formData: FormData): Album => {

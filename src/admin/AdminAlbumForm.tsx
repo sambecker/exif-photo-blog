@@ -43,7 +43,6 @@ export default function AdminAlbumForm({
       className="max-w-[38rem] space-y-4"
     >
       {ALBUM_FORM_META
-        .filter(({ hidden }) => !hidden)
         .map(({ key, label, type, readOnly }) => (
           <FieldsetWithStatus
             key={key}
