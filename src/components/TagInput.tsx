@@ -317,7 +317,10 @@ export default function TagInput({
           // Capture text on blur if limit not yet reached
           if (inputText && !hasReachedLimit && allowNewValues) {
             addOptions([inputText]);
-          } else {
+          } else if (allowNewValues) {
+            // Only clear text when there's the possibility of
+            // explicity adding arbitrary values, i.e., when it's not
+            // used as autocomplete
             setInputText('');
           }
           hideMenu();
