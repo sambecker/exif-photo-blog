@@ -12,6 +12,7 @@ import { parameterize } from '@/utility/string';
 import { updateAlbumAction } from '@/album/actions';
 import clsx from 'clsx/lite';
 import PlaceInput from '@/place/PlaceInput';
+import { PlaceDetail } from '@/platforms/google-places';
 
 export default function AdminAlbumForm({
   album,
@@ -23,6 +24,9 @@ export default function AdminAlbumForm({
   const { invalidateSwr } = useAppState();
 
   const [albumForm, setAlbumForm] = useState<Album>(album);
+
+  const [place, setPlace] = useState<PlaceDetail>();
+  const [isLoadingPlace, setIsLoadingPlace] = useState(false);
 
   const isFormValid = useMemo(() => {
     return ALBUM_FORM_META.every(({ key, required }) => {
@@ -43,7 +47,28 @@ export default function AdminAlbumForm({
       action={updateAlbumAction}
       className="max-w-[38rem] space-y-4"
     >
-      <PlaceInput />
+      <PlaceInput {...{
+        place,
+        setPlace,
+        isLoadingPlace,
+        setIsLoadingPlace,
+      }} />
+      {(place || isLoadingPlace) &&
+      <div className="text-sm text-dim">
+        {!place
+          ? 'Loading...'
+          : <>
+            <div>{place.id}</div>
+            <div>{place.name}</div>
+            <div>{place.link}</div>
+            <div>{place.location?.latitude}</div>
+            <div>{place.location?.longitude}</div>
+            <div>{place.viewport?.low.latitude}</div>
+            <div>{place.viewport?.low.longitude}</div>
+            <div>{place.viewport?.high.latitude}</div>
+            <div>{place.viewport?.high.longitude}</div>
+          </>}
+      </div>}
       {ALBUM_FORM_META
         .map(({ key, label, type, readOnly }) => (
           <FieldsetWithStatus

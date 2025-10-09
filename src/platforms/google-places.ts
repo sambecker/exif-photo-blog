@@ -13,14 +13,26 @@ const headers = {
   'X-Goog-Api-Key': GOOGLE_PLACES_API_KEY ?? '',
 };
 
+export interface Place {
+  id: string
+  text: string
+  secondary?: string
+}
+
+export interface PlaceDetail {
+  id: string
+  name: string
+  link: string
+  location?: Location
+  viewport?: { low: Location, high: Location }
+}
+
 type Location = {
   latitude: number
   longitude: number
 }
 
-export const getPlaceAutoComplete = async (
-  input: string,
-) => {
+export const getPlaceAutoComplete = async (input: string) => {
   await checkRateLimitAndThrow();
   return fetch(
     `${URL_BASE}:autocomplete`, {
@@ -31,14 +43,10 @@ export const getPlaceAutoComplete = async (
   )
     .then(response => response.json())
     .then(json => (json?.suggestions ?? []).map(({ placePrediction }: any) => ({
-      id: placePrediction.placeId,
-      text: placePrediction.structuredFormat.mainText.text,
-      secondary: placePrediction.structuredFormat.secondaryText?.text,
-    })) as {
-      id: string
-      text: string
-      secondary?: string
-    }[]);
+      id: placePrediction?.placeId,
+      text: placePrediction?.structuredFormat?.mainText?.text,
+      secondary: placePrediction?.structuredFormat?.secondaryText?.text,
+    })) as Place[]);
 };
 
 const FIELDS = [
@@ -58,10 +66,12 @@ export const getPlaceDetails = async (id: string) => {
   )
     .then(response => response.json())
     .then(json => ({
-      id: json.id,
-      name: json.displayName.text as string,
-      location: json.location as Location,
-      viewport: json.viewport as { low: Location, high: Location },
-      link: json.googleMapsUri as string,
-    }));
+      id: json?.id,
+      name: json?.displayName?.text as string,
+      link: json?.googleMapsUri as string,
+      ...json?.location &&
+        { location: json.location as Location },
+      ...json?.viewport &&
+        { viewport: json?.viewport as { low: Location, high: Location } },
+    } as PlaceDetail));
 };
