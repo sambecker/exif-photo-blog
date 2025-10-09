@@ -22,28 +22,36 @@ export default function TagInput({
   name,
   value = '',
   options = [],
+  labelForValueOverride,
   defaultIcon,
+  accessory,
   onChange,
+  onInputTextChange,
   showMenuOnDelete,
   className,
   readOnly,
   placeholder,
   limit,
   limitValidationMessage,
+  allowNewValues = true,
   shouldParameterize,
 }: {
   id?: string
   name: string
   value?: string
   options?: AnnotatedTag[]
+  labelForValueOverride?: (value: string) => string
   defaultIcon?: ReactNode
+  accessory?: ReactNode
   onChange?: (value: string) => void
+  onInputTextChange?: (value: string) => void
   showMenuOnDelete?: boolean
   className?: string
   readOnly?: boolean
   placeholder?: string
   limit?: number
   limitValidationMessage?: string
+  allowNewValues?: boolean
   shouldParameterize?: boolean
 }) {
   const behaveAsDropdown = limit === 1;
@@ -94,22 +102,25 @@ export default function TagInput({
 
   const optionsFiltered = useMemo<AnnotatedTag[]>(() => hasReachedLimit
     ? [{ value: limitValidationMessage ?? `Limit reached (${limit})` }]
-    : (isInputTextUnique
+    : (isInputTextUnique && allowNewValues
       ? [{ value: `${CREATE_LABEL} "${inputTextFormatted}"` }]
       : []
     ).concat(options
-      .filter(({ value }) =>
-        !selectedOptions.includes(value) &&
-        (
+      .filter(({ value, label }) =>{
+        // Make value and key searchable
+        const key = `${value}-${label}`;
+        return !selectedOptions.includes(key) && (
           !inputTextFormatted ||
           (shouldParameterize
-            ? value.includes(inputTextFormatted)
-            : (parameterize(value)).includes(parameterize(inputTextFormatted)))
-        )))
+            ? key.includes(inputTextFormatted)
+            : (parameterize(key)).includes(parameterize(inputTextFormatted)))
+        );
+      }))
   , [
     hasReachedLimit,
     inputTextFormatted,
     isInputTextUnique,
+    allowNewValues,
     limit,
     limitValidationMessage,
     options,
@@ -211,11 +222,11 @@ export default function TagInput({
       }
       switch (e.key) {
         case 'Enter':
-        // Only trap focus if there are options to select
-        // otherwise allow form to submit
+          // Only trap focus if there are options to select
+          // otherwise allow form to submit
           if (
             shouldShowMenu &&
-          optionsFiltered.length > 0
+            optionsFiltered.length > 0
           ) {
             e.stopImmediatePropagation();
             e.preventDefault();
@@ -290,7 +301,7 @@ export default function TagInput({
       <span className="truncate">
         {option?.label ?? value}
       </span>
-      {icon && <span className="text-medium">
+      {icon && <span className="text-medium shrink-0">
         {icon}
       </span>}
     </>;
@@ -304,9 +315,12 @@ export default function TagInput({
       onBlur={e => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
           // Capture text on blur if limit not yet reached
-          if (inputText && !hasReachedLimit) {
+          if (inputText && !hasReachedLimit && allowNewValues) {
             addOptions([inputText]);
-          } else {
+          } else if (allowNewValues) {
+            // Only clear text when there's the possibility of
+            // explicity adding arbitrary values, i.e., when it's not
+            // used as autocomplete
             setInputText('');
           }
           hideMenu();
@@ -356,7 +370,7 @@ export default function TagInput({
               )}
               onClick={() => removeOption(option)}
             >
-              {renderTag(option)}
+              {renderTag(labelForValueOverride?.(option) || option)}
             </span>)}
         <input
           id={id}
@@ -371,7 +385,10 @@ export default function TagInput({
           )}
           size={10}
           value={inputText}
-          onChange={e => setInputText(e.target.value)}
+          onChange={e => {
+            setInputText(e.target.value);
+            onInputTextChange?.(e.target.value);
+          }}
           autoComplete="off"
           autoCapitalize="off"
           readOnly={readOnly}
@@ -387,6 +404,7 @@ export default function TagInput({
           role="combobox"
         />
         <input type="hidden" name={name} value={value} />
+        {accessory}
       </div>
       <div className="relative">
         {shouldShowMenu && optionsFiltered.length > 0 &&
@@ -444,7 +462,7 @@ export default function TagInput({
                   </span>
                   {annotation &&
                     <span
-                      className="whitespace-nowrap text-dim text-sm"
+                      className="truncate text-dim text-sm"
                       aria-label={annotationAria}
                     >
                       <span aria-hidden={Boolean(annotationAria)}>

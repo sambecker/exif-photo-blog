@@ -33,6 +33,10 @@ export default function FieldsetWithStatus({
   tagOptionsLimitValidationMessage,
   tagOptionsShouldParameterize,
   tagOptionsDefaultIcon,
+  tagOptionsLabelOverride,
+  tagOptionsAllowNewValues,
+  tagOptionsAccessory,
+  tagOptionsOnInputTextChange,
   placeholder,
   loading,
   required,
@@ -65,6 +69,10 @@ export default function FieldsetWithStatus({
   tagOptionsLimitValidationMessage?: string
   tagOptionsShouldParameterize?: boolean
   tagOptionsDefaultIcon?: ReactNode
+  tagOptionsLabelOverride?: (value: string) => string
+  tagOptionsAllowNewValues?: boolean
+  tagOptionsAccessory?: ReactNode
+  tagOptionsOnInputTextChange?: (value: string) => void
   placeholder?: string
   loading?: boolean
   required?: boolean
@@ -206,14 +214,18 @@ export default function FieldsetWithStatus({
                 name={id}
                 value={value}
                 options={tagOptions}
+                labelForValueOverride={tagOptionsLabelOverride}
                 defaultIcon={tagOptionsDefaultIcon}
+                accessory={tagOptionsAccessory}
                 onChange={onChange}
+                onInputTextChange={tagOptionsOnInputTextChange}
                 showMenuOnDelete={tagOptionsLimit === 1}
                 className={clsx(Boolean(error) && 'error')}
                 readOnly={readOnly}
                 placeholder={placeholder}
                 limit={tagOptionsLimit}
                 limitValidationMessage={tagOptionsLimitValidationMessage}
+                allowNewValues={tagOptionsAllowNewValues}
                 shouldParameterize={tagOptionsShouldParameterize}
               />
               : type === 'textarea'

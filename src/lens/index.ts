@@ -2,7 +2,7 @@ import { Photo } from '@/photo';
 import { MakeModelTextLength, parameterize } from '@/utility/string';
 import { formatAppleLensText, isLensApple } from '../platforms/apple';
 import { MISSING_FIELD } from '@/app/path';
-import { formatGoogleLensText, isLensGoogle } from '../platforms/google';
+import { formatGoogleLensText, isLensGoogle } from '../platforms/google-pixel';
 import { CategoryQueryMeta } from '@/category';
 
 const LENS_PLACEHOLDER: Lens = { make: 'Lens', model: 'Model' };
