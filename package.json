@@ -8,7 +8,7 @@
     "test": "jest --watch --transformIgnorePatterns 'node_modules/(?!my-library-dir)/'",
     "analyze": "ANALYZE=true next build"
   },
-  "packageManager": "pnpm@10.17.1",
+  "packageManager": "pnpm@10.18.2",
   "dependencies": {
     "@ai-sdk/openai": "^2.0.40",
     "@ai-sdk/rsc": "^1.0.59",
