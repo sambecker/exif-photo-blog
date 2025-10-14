@@ -1,4 +1,5 @@
 import { GOOGLE_PLACES_API_KEY } from '@/app/config';
+import { Place, PlaceAutocomplete } from '@/place';
 import {
   checkRateLimitAndThrow as _checkRateLimitAndThrow,
 } from '@/platforms/rate-limit';
@@ -13,26 +14,9 @@ const headers = {
   'X-Goog-Api-Key': GOOGLE_PLACES_API_KEY ?? '',
 };
 
-export interface Place {
-  id: string
-  text: string
-  secondary?: string
-}
-
-export interface PlaceDetail {
-  id: string
-  name: string
-  link: string
-  location?: Location
-  viewport?: { low: Location, high: Location }
-}
-
-type Location = {
-  latitude: number
-  longitude: number
-}
-
-export const getPlaceAutoComplete = async (input: string) => {
+export const getPlaceAutocomplete = async (
+  input: string,
+): Promise<PlaceAutocomplete[]> => {
   await checkRateLimitAndThrow();
   return fetch(
     `${URL_BASE}:autocomplete`, {
@@ -46,7 +30,7 @@ export const getPlaceAutoComplete = async (input: string) => {
       id: placePrediction?.placeId,
       text: placePrediction?.structuredFormat?.mainText?.text,
       secondary: placePrediction?.structuredFormat?.secondaryText?.text,
-    })) as Place[]);
+    })));
 };
 
 const FIELDS = [
@@ -57,7 +41,7 @@ const FIELDS = [
   'googleMapsUri',
 ];
 
-export const getPlaceDetails = async (id: string) => {
+export const getPlaceDetails = async (id: string): Promise<Place> => {
   await checkRateLimitAndThrow();
   return fetch(
     `${URL_BASE}/${id}?fields=${FIELDS.join(',')}`, {
@@ -73,5 +57,5 @@ export const getPlaceDetails = async (id: string) => {
         { location: json.location as Location },
       ...json?.viewport &&
         { viewport: json?.viewport as { low: Location, high: Location } },
-    } as PlaceDetail));
+    }));
 };

@@ -391,6 +391,7 @@ export default function TagInput({
           }}
           autoComplete="off"
           autoCapitalize="off"
+          autoCorrect="off"
           readOnly={readOnly}
           placeholder={selectedOptions.length === 0 ? placeholder : undefined}
           onFocus={() => setSelectedOptionIndex(undefined)}

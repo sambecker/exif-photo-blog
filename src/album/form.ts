@@ -14,25 +14,17 @@ export const ALBUM_FORM_META: {
   { key: 'slug', type: 'text', required: true, readOnly: true },
   { key: 'subhead', type: 'text' },
   { key: 'description', type: 'textarea' },
-  { key: 'locationName', label: 'location name', type: 'hidden' },
-  { key: 'latitude', type: 'hidden' },
-  { key: 'longitude', type: 'hidden' },
 ];
 
 export const convertFormDataToAlbum = (formData: FormData): Album => {
+  const locationString = formData.get('location') as string | undefined;
   return {
     id: formData.get('id') as string,
     title: formData.get('title') as string,
     slug: formData.get('slug') as string,
     subhead: formData.get('subhead') as string,
     description: formData.get('description') as string,
-    locationName: formData.get('locationName') as string,
-    latitude: formData.get('latitude')
-      ? parseFloat(formData.get('latitude') as string)
-      : undefined,
-    longitude: formData.get('longitude')
-      ? parseFloat(formData.get('longitude') as string)
-      : undefined,
+    ...locationString && { location: JSON.parse(locationString) },
   };
 };
 

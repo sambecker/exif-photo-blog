@@ -448,7 +448,6 @@ export const APP_CONFIGURATION = {
     Boolean(process.env.AI_TEXT_AUTO_GENERATED_FIELDS),
   // Location services
   hasLocationServices: HAS_LOCATION_SERVICES,
-  googlePlacesApiKey: GOOGLE_PLACES_API_KEY,
   // Performance
   isStaticallyOptimized: HAS_STATIC_OPTIMIZATION,
   arePhotosStaticallyOptimized: STATICALLY_OPTIMIZED_PHOTOS,

@@ -2,21 +2,21 @@ import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import { ComponentProps, useEffect, useRef, useState } from 'react';
 import { getPlaceAutoCompleteAction, getPlaceDetailsAction } from './actions';
 import { useDebounce } from 'use-debounce';
-import { Place, PlaceDetail } from '@/platforms/google-places';
+import { Place, PlaceAutocomplete } from '.';
 import Spinner from '@/components/Spinner';
 
 export default function PlaceInput({
+  initialPlace,
   setPlace,
   setIsLoadingPlace,
-  initialPlace,
+  className,
 }: {
-  place?: PlaceDetail
-  setPlace?: (place?: PlaceDetail) => void
-  isLoadingPlace?: boolean
+  initialPlace?: PlaceAutocomplete
+  setPlace?: (place?: Place) => void
   setIsLoadingPlace?: (isLoading: boolean) => void
-  initialPlace?: Place
+  className?: string
 }) {
-  const places = useRef<Record<string, Place>>(initialPlace
+  const places = useRef<Record<string, PlaceAutocomplete>>(initialPlace
     ? { [initialPlace.id]: initialPlace }
     : {});
 
@@ -29,13 +29,13 @@ export default function PlaceInput({
   const [inputTextDebounced] = useDebounce(inputText, 500);
 
   useEffect(() => {
-    if (placeId) {
+    if (placeId && placeId !== initialPlace?.id) {
       setIsLoadingPlace?.(true);
       getPlaceDetailsAction(placeId)
         .then(setPlace)
         .finally(() => setIsLoadingPlace?.(false));
     }
-  }, [placeId, setPlace, setIsLoadingPlace]);
+  }, [placeId, setPlace, setIsLoadingPlace, initialPlace?.id]);
 
   useEffect(() => {
     if (inputTextDebounced) {
@@ -69,7 +69,9 @@ export default function PlaceInput({
 
   return (
     <FieldsetWithStatus
-      label="Place"
+      id="place-input"
+      label="Location"
+      className={className}
       tagOptions={placeOptions}
       value={placeId}
       onChange={setPlaceId}
