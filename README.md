@@ -87,15 +87,14 @@ See FAQ for [limitations of local development](#can-i-work-locally-without-acces
 
 ### AI text generation
 
-> ⚠️ Usage will result in fees from OpenAI
+To auto-generate text descriptions of photo:
 
 1. Setup OpenAI
    - Create [OpenAI](https://openai.com) account and fund it ([see thread](https://github.com/sambecker/exif-photo-blog/issues/110) if you're having issues)
    - Setup usage limits to avoid unexpected charges (_recommended_)
    - Set `OPENAI_BASE_URL` in order to use alternate OpenAI-compatible providers (experimental)
 2. Generate API key and store in environment variable `OPENAI_SECRET_KEY` (enable Responses API write access if customizing permissions)
-3. Add rate limiting (_recommended_)
-   - [Instructions below](#rate-limiting)
+3. Add [rate limiting](#rate-limiting) (_recommended_)
 4. Configure auto-generated fields (optional)
    - Set which text fields auto-generate when uploading a photo by storing a comma-separated list, e.g., `AI_TEXT_AUTO_GENERATED_FIELDS = title,semantic`
    - Accepted values:
@@ -108,8 +107,6 @@ See FAQ for [limitations of local development](#can-i-work-locally-without-acces
 
 ### Location services
 
-> ⚠️ Usage may result in fees from Google
-
 To add location meta to entities like albums:
 
 1. Setup Google Places API
@@ -117,8 +114,7 @@ To add location meta to entities like albums:
    - Select [Create credentials](https://console.cloud.google.com/apis/credentials) and choose "API key"
    - Choose "Restrict key" and select "Places API (new)"
 2. Store API key in `GOOGLE_PLACES_API_KEY`
-3. Add rate limiting (_recommended_)
-   - [Instructions below](https://github.com/sambecker/exif-photo-blog#rate-limiting)
+3. Add [rate limiting](#rate-limiting) (_recommended_)
 
 ### Rate limiting
 
