@@ -13,6 +13,7 @@ import { updateAlbumAction } from '@/album/actions';
 import clsx from 'clsx/lite';
 import PlaceInput from '@/place/PlaceInput';
 import { convertPlaceToAutocomplete, Place } from '@/place';
+import deepEqual from 'fast-deep-equal/es6/react';
 
 export default function AdminAlbumForm({
   album,
@@ -70,28 +71,34 @@ export default function AdminAlbumForm({
         setIsLoadingPlace,
         className: 'relative z-1',
       }} />
-      {(albumForm.location || isLoadingPlace) && <>
-        <FieldsetWithStatus
-          label="Location Name"
-          value={albumForm.location?.name ?? ''}
-          onChange={value => setAlbumForm(form => ({
-            ...form,
-            ...(albumForm.location && {
-              location: { ...albumForm.location, name: value },
-            }),
-          }))}
-          readOnly={isLoadingPlace}
-        />
-        <FieldsetWithStatus
-          id="location"
-          label="Location Data"
-          type="textarea"
-          value={albumForm.location
-            ? JSON.stringify(albumForm.location)
-            : ''}
-          readOnly
-        />
-      </>}
+      {(albumForm.location || isLoadingPlace) &&
+        <div className="space-y-4 w-full">
+          <FieldsetWithStatus
+            label="Location Display Name"
+            // eslint-disable-next-line max-len
+            value={albumForm.location?.nameFormatted ?? albumForm.location?.name ?? ''}
+            onChange={value => setAlbumForm(form => ({
+              ...form,
+              ...form.location && {
+                location: { ...form.location, nameFormatted: value },
+              },
+            }))}
+            isModified={
+              // eslint-disable-next-line max-len
+              (albumForm.location?.nameFormatted ?? albumForm.location?.name) !==
+              (album.location?.nameFormatted ?? album.location?.name)
+            }
+            readOnly={isLoadingPlace}
+          />
+          <FieldsetWithStatus
+            id="location"
+            label="Location Data"
+            type="textarea"
+            value={JSON.stringify(albumForm.location)}
+            isModified={!deepEqual(albumForm.location, album.location)}
+            readOnly
+          />
+        </div>}
       {children}
       <div className="flex gap-3">
         <Link

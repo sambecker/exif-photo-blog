@@ -33,6 +33,7 @@ export default function FieldsetWithStatus({
   tagOptionsLimitValidationMessage,
   tagOptionsShouldParameterize,
   tagOptionsDefaultIcon,
+  tagOptionsDefaultIconSelected,
   tagOptionsLabelOverride,
   tagOptionsAllowNewValues,
   tagOptionsAccessory,
@@ -69,6 +70,7 @@ export default function FieldsetWithStatus({
   tagOptionsLimitValidationMessage?: string
   tagOptionsShouldParameterize?: boolean
   tagOptionsDefaultIcon?: ReactNode
+  tagOptionsDefaultIconSelected?: ReactNode
   tagOptionsLabelOverride?: (value: string) => string
   tagOptionsAllowNewValues?: boolean
   tagOptionsAccessory?: ReactNode
@@ -169,7 +171,7 @@ export default function FieldsetWithStatus({
             {note && !error &&
               <ResponsiveText
                 className="text-gray-400 dark:text-gray-600"
-                shortText={`(${noteShort})`}
+                shortText={`(${noteShort ?? note})`}
               >
                 ({note})
               </ResponsiveText>}
@@ -216,6 +218,7 @@ export default function FieldsetWithStatus({
                 options={tagOptions}
                 labelForValueOverride={tagOptionsLabelOverride}
                 defaultIcon={tagOptionsDefaultIcon}
+                defaultIconSelected={tagOptionsDefaultIconSelected}
                 accessory={tagOptionsAccessory}
                 onChange={onChange}
                 onInputTextChange={tagOptionsOnInputTextChange}

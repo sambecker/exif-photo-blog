@@ -24,6 +24,7 @@ export default function TagInput({
   options = [],
   labelForValueOverride,
   defaultIcon,
+  defaultIconSelected,
   accessory,
   onChange,
   onInputTextChange,
@@ -42,6 +43,7 @@ export default function TagInput({
   options?: AnnotatedTag[]
   labelForValueOverride?: (value: string) => string
   defaultIcon?: ReactNode
+  defaultIconSelected?: ReactNode
   accessory?: ReactNode
   onChange?: (value: string) => void
   onInputTextChange?: (value: string) => void
@@ -366,10 +368,11 @@ export default function TagInput({
                 'px-1.5 py-0.5',
                 'bg-gray-200/60 dark:bg-gray-800',
                 'active:bg-gray-200 dark:active:bg-gray-900',
-                'rounded-xs',
+                'rounded-sm',
               )}
               onClick={() => removeOption(option)}
             >
+              {defaultIconSelected}
               {renderTag(labelForValueOverride?.(option) || option)}
             </span>)}
         <input

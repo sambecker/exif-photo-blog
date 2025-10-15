@@ -7,6 +7,7 @@ export interface PlaceAutocomplete {
 export interface Place {
   id: string
   name: string
+  nameFormatted: string
   link: string
   location?: Location
   viewport?: { low: Location, high: Location }

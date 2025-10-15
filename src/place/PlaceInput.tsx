@@ -4,6 +4,7 @@ import { getPlaceAutoCompleteAction, getPlaceDetailsAction } from './actions';
 import { useDebounce } from 'use-debounce';
 import { Place, PlaceAutocomplete } from '.';
 import Spinner from '@/components/Spinner';
+import { FaMapPin } from 'react-icons/fa6';
 
 export default function PlaceInput({
   initialPlace,
@@ -27,15 +28,6 @@ export default function PlaceInput({
     useState<ComponentProps<typeof FieldsetWithStatus>['tagOptions']>([]);
 
   const [inputTextDebounced] = useDebounce(inputText, 500);
-
-  useEffect(() => {
-    if (placeId && placeId !== initialPlace?.id) {
-      setIsLoadingPlace?.(true);
-      getPlaceDetailsAction(placeId)
-        .then(setPlace)
-        .finally(() => setIsLoadingPlace?.(false));
-    }
-  }, [placeId, setPlace, setIsLoadingPlace, initialPlace?.id]);
 
   useEffect(() => {
     if (inputTextDebounced) {
@@ -62,20 +54,30 @@ export default function PlaceInput({
     if (!inputText) { setPlaceOptions([]); }
   }, [inputText]);
 
-  // Clear place detail when id is removed
-  useEffect(() => {
-    if (!placeId) { setPlace?.(undefined); }
-  }, [placeId, setPlace]);
-
   return (
     <FieldsetWithStatus
       id="place-input"
       label="Location"
       className={className}
+      isModified={placeId !== initialPlace?.id}
       tagOptions={placeOptions}
       value={placeId}
-      onChange={setPlaceId}
+      onChange={id => {
+        setPlaceId(id);
+        if (id) {
+          setIsLoadingPlace?.(true);
+          getPlaceDetailsAction(id)
+            .then(setPlace)
+            .finally(() => setIsLoadingPlace?.(false));
+        } else {
+          setPlace?.(undefined);
+        }
+      }}
       tagOptionsLabelOverride={(placeId) => places.current[placeId]?.text}
+      tagOptionsDefaultIconSelected={<FaMapPin
+        size={11}
+        className="text-main translate-x-0.5"
+      />}
       tagOptionsOnInputTextChange={setInputText}
       tagOptionsLimit={1}
       tagOptionsAllowNewValues={false}

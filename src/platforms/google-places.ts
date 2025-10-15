@@ -51,8 +51,9 @@ export const getPlaceDetails = async (id: string): Promise<Place> => {
     .then(response => response.json())
     .then(json => ({
       id: json?.id,
-      name: json?.displayName?.text as string,
-      link: json?.googleMapsUri as string,
+      name: json?.displayName?.text,
+      nameFormatted: json?.displayName?.text,
+      link: json?.googleMapsUri,
       ...json?.location &&
         { location: json.location as Location },
       ...json?.viewport &&
