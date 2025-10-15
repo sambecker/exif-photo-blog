@@ -13,7 +13,9 @@ export default function PlaceEntity({
   return (
     <EntityLink
       {...props}
-      icon={<IconPlace />}
+      icon={<IconPlace
+        className="text-[13px] translate-x-[2px]"
+      />}
       label={location.nameFormatted || location.name}
       path={location.link}
       pathTarget="_blank"
