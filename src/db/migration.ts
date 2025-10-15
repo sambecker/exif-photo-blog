@@ -1,7 +1,8 @@
-import { sql } from '@/platforms/postgres';
+import { query, sql } from '@/platforms/postgres';
 
 interface Migration {
   label: string
+  table?: 'photos' | 'albums'
   fields: string[]
   run: () => ReturnType<typeof sql>
 }
@@ -86,13 +87,27 @@ export const MIGRATIONS: Migration[] = [{
     ADD COLUMN IF NOT EXISTS color_data JSONB,
     ADD COLUMN IF NOT EXISTS color_sort SMALLINT
   `,
+}, {
+  label: '08: Location',
+  table: 'albums',
+  fields: ['location'],
+  // `query()` seemingly required to execute
+  // ADD and DROP column alteration in same migration
+  run: () => query(`
+    ALTER TABLE albums
+    ADD COLUMN IF NOT EXISTS location JSONB;
+    ALTER TABLE albums
+    DROP COLUMN IF EXISTS location_name,
+    DROP COLUMN IF EXISTS latitude,
+    DROP COLUMN IF EXISTS longitude;
+  `),
 }];
 
 export const migrationForError = (e: any) =>
-  MIGRATIONS.find(migration =>
-    migration.fields.some(field =>(
+  MIGRATIONS.find(({ fields, table = 'photos' }) =>
+    fields.some(field =>(
       // eslint-disable-next-line max-len
-      new RegExp(`column "${field}" of relation "photos" does not exist`, 'i').test(e.message) ||
+      new RegExp(`column "${field}" of relation "${table}" does not exist`, 'i').test(e.message) ||
       new RegExp(`column "${field}" does not exist`, 'i').test(e.message)
     )),
   );

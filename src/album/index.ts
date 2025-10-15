@@ -7,6 +7,7 @@ import {
   PhotoDateRangePostgres,
   photoQuantityText,
 } from '@/photo';
+import { Place } from '@/place';
 import camelcaseKeys from 'camelcase-keys';
 
 export interface Album {
@@ -15,9 +16,7 @@ export interface Album {
   slug: string
   subhead?: string
   description?: string
-  locationName?: string
-  latitude?: number
-  longitude?: number
+  location?: Place
 }
 
 type AlbumWithMeta = {
@@ -34,9 +33,7 @@ export const parseAlbumFromDb = (album: any): Album =>
 export const albumHasMeta = (album: Album) =>
   album.subhead ||
   album.description ||
-  album.locationName ||
-  album.latitude ||
-  album.longitude;
+  album.location;
 
 export const titleForAlbum = (
   album: Album,

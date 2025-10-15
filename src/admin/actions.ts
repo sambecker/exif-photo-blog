@@ -5,6 +5,7 @@ import { testRedisConnection } from '@/platforms/redis';
 import { testOpenAiConnection } from '@/platforms/openai';
 import { testDatabaseConnection } from '@/platforms/postgres';
 import { testStorageConnection } from '@/platforms/storage';
+import { testGooglePlacesConnection } from '@/platforms/google-places';
 import { APP_CONFIGURATION } from '@/app/config';
 import { getStorageUploadUrlsNoStore } from '@/platforms/storage/cache';
 import {
@@ -99,6 +100,7 @@ export const testConnectionsAction = async () =>
       hasDatabase,
       hasStorageProvider,
       hasRedisStorage,
+      hasLocationServices,
       isAiTextGenerationEnabled,
     } = APP_CONFIGURATION;
 
@@ -107,11 +109,13 @@ export const testConnectionsAction = async () =>
       storageError,
       redisError,
       aiError,
+      locationError,
     ] = await Promise.all([
       scanForError(hasDatabase, testDatabaseConnection),
       scanForError(hasStorageProvider, testStorageConnection),
       scanForError(hasRedisStorage, testRedisConnection),
       scanForError(isAiTextGenerationEnabled, testOpenAiConnection),
+      scanForError(hasLocationServices, testGooglePlacesConnection),
     ]);
 
     return {
@@ -119,5 +123,6 @@ export const testConnectionsAction = async () =>
       storageError,
       redisError,
       aiError,
+      locationError,
     };
   });

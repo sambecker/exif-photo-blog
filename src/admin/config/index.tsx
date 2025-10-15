@@ -1,5 +1,5 @@
 import IconSort from '@/components/icons/IconSort';
-import { BiData, BiHide, BiLockAlt, BiPencil } from 'react-icons/bi';
+import { BiData, BiGlobe, BiHide, BiLockAlt, BiPencil } from 'react-icons/bi';
 import { CgDebug } from 'react-icons/cg';
 import { FaRegFolderClosed } from 'react-icons/fa6';
 import { HiOutlineCog, HiSparkles } from 'react-icons/hi';
@@ -28,7 +28,11 @@ const ADMIN_CONFIG_SECTIONS = [{
   required: true,
   icon: <BiPencil size={16} />,
 }, {
-  title: 'AI Content Generation',
+  title: 'External Services',
+  required: false,
+  icon: <BiGlobe size={16} className="translate-y-[1px]" />,
+}, {
+  title: 'AI Text',
   titleShort: 'AI',
   required: false,
   icon: <HiSparkles size={14} />,

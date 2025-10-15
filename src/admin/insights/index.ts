@@ -28,7 +28,7 @@ type AdminAppInsightCode = typeof AdminAppInsightCode[number];
 const _INSIGHTS_TEMPLATE = [
   'deprecatedEnvVars',
   'noAi',
-  'noAiRateLimiting',
+  'noRateLimiting',
   'noConfiguredDomain',
   'noConfiguredMetaTitle',
   'noConfiguredMetaDescription',
@@ -87,6 +87,7 @@ export const getSignificantInsights = ({
 }) => {
   const {
     isAiTextGenerationEnabled,
+    hasLocationServices,
     hasRedisStorage,
     hasDomain,
   } = APP_CONFIGURATION;
@@ -94,7 +95,10 @@ export const getSignificantInsights = ({
   return {
     deprecatedEnvVars: HAS_DEPRECATED_ENV_VARS,
     forkBehind: Boolean(codeMeta?.isBehind),
-    noAiRateLimiting: isAiTextGenerationEnabled && !hasRedisStorage,
+    noRateLimiting: (
+      isAiTextGenerationEnabled ||
+      hasLocationServices
+    ) && !hasRedisStorage,
     noConfiguredDomain: !hasDomain,
     photosNeedSync: Boolean(photosCountNeedSync),
   };
@@ -114,12 +118,12 @@ export const indicatorStatusForSignificantInsights = ({
   const {
     deprecatedEnvVars,
     forkBehind,
-    noAiRateLimiting,
+    noRateLimiting,
     noConfiguredDomain,
     photosNeedSync,
   } = insights;
 
-  if (deprecatedEnvVars || noAiRateLimiting || noConfiguredDomain) {
+  if (deprecatedEnvVars || noRateLimiting || noConfiguredDomain) {
     return 'yellow';
   } else if (forkBehind || photosNeedSync) {
     return 'blue';

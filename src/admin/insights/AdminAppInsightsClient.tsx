@@ -140,7 +140,7 @@ export default function AdminAppInsightsClient({
     noFork,
     forkBehind,
     noAi,
-    noAiRateLimiting,
+    noRateLimiting,
     noConfiguredDomain,
     noConfiguredMetaTitle,
     noConfiguredMetaDescription,
@@ -318,17 +318,17 @@ export default function AdminAppInsightsClient({
                 </div>
               </div>}
             />}
-            {(noAiRateLimiting || debug) && <ScoreCardRow
+            {(noRateLimiting || debug) && <ScoreCardRow
               icon={renderWarningIconLarge}
               content={isExpanded => renderHighlightText(
-                'Enable AI rate limiting',
+                'Enable rate limiting',
                 'yellow',
                 !isExpanded,
               )}
               expandContent={<>
                 Create Upstash Redis store from storage tab on
                 Vercel dashboard and link to this project to
-                prevent abuse by enabling rate limiting.
+                prevent unexpected usage by enabling rate limiting.
               </>}
             />}
             {(noConfiguredDomain || debug) && <ScoreCardRow

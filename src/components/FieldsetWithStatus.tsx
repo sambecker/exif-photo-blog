@@ -33,6 +33,11 @@ export default function FieldsetWithStatus({
   tagOptionsLimitValidationMessage,
   tagOptionsShouldParameterize,
   tagOptionsDefaultIcon,
+  tagOptionsDefaultIconSelected,
+  tagOptionsLabelOverride,
+  tagOptionsAllowNewValues,
+  tagOptionsAccessory,
+  tagOptionsOnInputTextChange,
   placeholder,
   loading,
   required,
@@ -65,6 +70,11 @@ export default function FieldsetWithStatus({
   tagOptionsLimitValidationMessage?: string
   tagOptionsShouldParameterize?: boolean
   tagOptionsDefaultIcon?: ReactNode
+  tagOptionsDefaultIconSelected?: ReactNode
+  tagOptionsLabelOverride?: (value: string) => string
+  tagOptionsAllowNewValues?: boolean
+  tagOptionsAccessory?: ReactNode
+  tagOptionsOnInputTextChange?: (value: string) => void
   placeholder?: string
   loading?: boolean
   required?: boolean
@@ -161,7 +171,7 @@ export default function FieldsetWithStatus({
             {note && !error &&
               <ResponsiveText
                 className="text-gray-400 dark:text-gray-600"
-                shortText={`(${noteShort})`}
+                shortText={`(${noteShort ?? note})`}
               >
                 ({note})
               </ResponsiveText>}
@@ -206,14 +216,19 @@ export default function FieldsetWithStatus({
                 name={id}
                 value={value}
                 options={tagOptions}
+                labelForValueOverride={tagOptionsLabelOverride}
                 defaultIcon={tagOptionsDefaultIcon}
+                defaultIconSelected={tagOptionsDefaultIconSelected}
+                accessory={tagOptionsAccessory}
                 onChange={onChange}
+                onInputTextChange={tagOptionsOnInputTextChange}
                 showMenuOnDelete={tagOptionsLimit === 1}
                 className={clsx(Boolean(error) && 'error')}
                 readOnly={readOnly}
                 placeholder={placeholder}
                 limit={tagOptionsLimit}
                 limitValidationMessage={tagOptionsLimitValidationMessage}
+                allowNewValues={tagOptionsAllowNewValues}
                 shouldParameterize={tagOptionsShouldParameterize}
               />
               : type === 'textarea'

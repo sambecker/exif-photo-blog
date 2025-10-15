@@ -11,6 +11,7 @@ import PhotoAlbum from './PhotoAlbum';
 import PhotoTag from '@/tag/PhotoTag';
 import IconTag from '@/components/icons/IconTag';
 import MaskedScroll from '@/components/MaskedScroll';
+import PlaceEntity from '@/place/PlaceEntity';
 
 export default async function AlbumHeader({
   album,
@@ -58,23 +59,32 @@ export default async function AlbumHeader({
             <div className="text-medium mb-6 uppercase font-medium">
               {album.subhead}
             </div>}
-          {tags.length > 0 &&
+          {(album.location || tags.length > 0) &&
             <MaskedScroll
               className="whitespace-nowrap space-x-1.5"
               direction="horizontal"
             >
-              <IconTag className="inline-block text-dim translate-y-[-0.5px]" />
-              {tags.map(tag => (
-                <PhotoTag
-                  key={tag}
-                  tag={tag}
-                  badged
-                  type="text-only"
-                  contrast="low"
-                  hoverType={SHOW_CATEGORY_IMAGE_HOVERS ? 'image' : 'none'}
-                  prefetch={false}
+              {album.location &&
+                <PlaceEntity
+                  location={album.location}
+                  className="translate-x-[-2px] mr-3!"
+                />}
+              {tags.length > 0 && <>
+                <IconTag
+                  className="inline-block text-dim translate-y-[-0.5px]"
                 />
-              ))}
+                {tags.map(tag => (
+                  <PhotoTag
+                    key={tag}
+                    tag={tag}
+                    badged
+                    type="text-only"
+                    contrast="low"
+                    hoverType={SHOW_CATEGORY_IMAGE_HOVERS ? 'image' : 'none'}
+                    prefetch={false}
+                  />
+                ))}
+              </>}
             </MaskedScroll>}
           {album.description &&
             <div

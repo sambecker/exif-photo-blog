@@ -11,9 +11,7 @@ export const createAlbumsTable = () =>
       slug VARCHAR(255) UNIQUE NOT NULL,
       subhead TEXT,
       description TEXT,
-      location_name VARCHAR(255),
-      latitude DOUBLE PRECISION,
-      longitude DOUBLE PRECISION,
+      location JSONB,
       updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
       created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     )
@@ -36,17 +34,15 @@ export const insertAlbum = (album: Omit<Album, 'id'>) =>
       slug,
       subhead,
       description,
-      location_name,
-      latitude,
-      longitude
+      location
     ) VALUES (
       ${album.title},
       ${album.slug},
       ${album.subhead},
       ${album.description},
-      ${album.locationName},
-      ${album.latitude},
-      ${album.longitude}
+      ${album.location
+        ? JSON.stringify(album.location)
+        : null}
     )
     RETURNING id
   `.then(({ rows }) => rows[0]?.id as string)
@@ -59,9 +55,9 @@ export const updateAlbum = (album: Album) =>
       slug=${album.slug},
       subhead=${album.subhead},
       description=${album.description},
-      location_name=${album.locationName},
-      latitude=${album.latitude},
-      longitude=${album.longitude},
+      location=${album.location
+        ? JSON.stringify(album.location)
+        : null},
       updated_at=${(new Date()).toISOString()}
     WHERE id=${album.id}
   `, 'updateAlbum');
