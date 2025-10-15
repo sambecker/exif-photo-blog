@@ -85,19 +85,17 @@ See FAQ for [limitations of local development](#can-i-work-locally-without-acces
 - `NEXT_PUBLIC_IMAGE_QUALITY = 1-100` controls the quality of large photos
 - `NEXT_PUBLIC_BLUR_DISABLED = 1` prevents image blur data being stored and displayed (potentially useful for limiting Postgres usage)
 
-## External Services
-
 ### AI text generation
 
 > ⚠️ Usage will result in fees from OpenAI
 
 1. Setup OpenAI
-   - Create an [OpenAI](https://openai.com) account and fund it (see [this thread](https://github.com/sambecker/exif-photo-blog/issues/110) if you're having issues)
+   - Create [OpenAI](https://openai.com) account and fund it ([see thread](https://github.com/sambecker/exif-photo-blog/issues/110) if you're having issues)
    - Setup usage limits to avoid unexpected charges (_recommended_)
-   - _Set `OPENAI_BASE_URL` in order to use an alternate OpenAI-compatible provider (experimental)_
+   - Set `OPENAI_BASE_URL` in order to use alternate OpenAI-compatible providers (experimental)
 2. Generate API key and store in environment variable `OPENAI_SECRET_KEY` (enable Responses API write access if customizing permissions)
 3. Add rate limiting (_recommended_)
-   - [Instructions below](https://github.com/sambecker/exif-photo-blog#rate-limiting)
+   - [Instructions below](#rate-limiting)
 4. Configure auto-generated fields (optional)
    - Set which text fields auto-generate when uploading a photo by storing a comma-separated list, e.g., `AI_TEXT_AUTO_GENERATED_FIELDS = title,semantic`
    - Accepted values:
@@ -110,7 +108,7 @@ See FAQ for [limitations of local development](#can-i-work-locally-without-acces
 
 ### Location services
 
-> ⚠️ Usage will result in fees from Google
+> ⚠️ Usage may result in fees from Google
 
 To add location meta to entities like albums:
 
@@ -122,9 +120,9 @@ To add location meta to entities like albums:
 3. Add rate limiting (_recommended_)
    - [Instructions below](https://github.com/sambecker/exif-photo-blog#rate-limiting)
 
-### Rate Limiting
+### Rate limiting
 
-Create an Upstash Redis store from the storage tab of the Vercel dashboard and link it to your project (if required, add environment variable prefix, `EXIF`) in order to enable rate limiting—no further configuration necessary
+Create Upstash Redis store from storage tab of Vercel dashboard and link to your project (if required, add environment variable prefix `EXIF`) in order to enable rate limiting—no further configuration necessary.
 
 ### Categories
 - `NEXT_PUBLIC_CATEGORY_VISIBILITY`
