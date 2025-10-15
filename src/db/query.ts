@@ -76,8 +76,10 @@ export const safelyQuery = async <T>(
         throw e;
       }
     } else {
-      // Avoid re-logging errors on initial installation
-      if (e.message !== 'The server does not support SSL connections') {
+      // Avoid re-logging common errors on initial installation
+      if (/connect ECONNREFUSED/i.test(e.message)) {
+        console.log('Database connection error');
+      } else if (e.message !== 'The server does not support SSL connections') {
         console.log(`SQL query error (${queryLabel}): ${e.message}`, {
           error: e,
         });
