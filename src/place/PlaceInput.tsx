@@ -4,7 +4,7 @@ import { getPlaceAutoCompleteAction, getPlaceDetailsAction } from './actions';
 import { useDebounce } from 'use-debounce';
 import { Place, PlaceAutocomplete } from '.';
 import Spinner from '@/components/Spinner';
-import { FaMapPin } from 'react-icons/fa6';
+import IconPlace from '@/components/icons/IconPlace';
 
 export default function PlaceInput({
   initialPlace,
@@ -49,11 +49,6 @@ export default function PlaceInput({
     }
   }, [inputTextDebounced]);
 
-  // Clear autocomplete when there's no input text
-  useEffect(() => {
-    if (!inputText) { setPlaceOptions([]); }
-  }, [inputText]);
-
   return (
     <FieldsetWithStatus
       id="place-input"
@@ -74,11 +69,17 @@ export default function PlaceInput({
         }
       }}
       tagOptionsLabelOverride={(placeId) => places.current[placeId]?.text}
-      tagOptionsDefaultIconSelected={<FaMapPin
+      tagOptionsDefaultIconSelected={<IconPlace
         size={11}
         className="text-main translate-x-0.5"
       />}
-      tagOptionsOnInputTextChange={setInputText}
+      tagOptionsOnInputTextChange={text => {
+        setInputText(text);
+        // Clear autocomplete immediately when there's no input text
+        if (!text) {
+          setPlaceOptions([]);
+        }
+      }}
       tagOptionsLimit={1}
       tagOptionsAllowNewValues={false}
       tagOptionsAccessory={isLoadingPlaces &&

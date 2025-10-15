@@ -42,6 +42,7 @@ export default function EntityLink({
   badgeType = 'small',
   contrast = 'medium',
   path = '', // Make link optional for debugging purposes
+  pathTarget,
   hoverCount = 0,
   hoverType = 'auto',
   hoverQueryOptions,
@@ -62,6 +63,7 @@ export default function EntityLink({
   labelSmall?: ReactNode
   iconWide?: boolean
   path?: string
+  pathTarget?: ComponentProps<typeof LinkWithStatus>['target']
   prefetch?: boolean
   title?: string
   action?: ReactNode
@@ -125,6 +127,7 @@ export default function EntityLink({
       )}
       isLoading={isLoading}
       setIsLoading={setIsLoading}
+      target={pathTarget}
     >
       <LabeledIcon {...{
         icon: badged && hasBadgeIcon && !useForHover
