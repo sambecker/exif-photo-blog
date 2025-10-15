@@ -60,3 +60,9 @@ export const getPlaceDetails = async (id: string): Promise<Place> => {
         { viewport: json?.viewport as { low: Location, high: Location } },
     }));
 };
+
+export const testGooglePlacesConnection = async () => {
+  await checkRateLimitAndThrow();
+
+  return getPlaceAutocomplete('Test');
+};

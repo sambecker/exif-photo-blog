@@ -1,7 +1,7 @@
 import { generateText, streamText, generateObject } from 'ai';
 import { createStreamableValue } from '@ai-sdk/rsc';
 import { createOpenAI } from '@ai-sdk/openai';
-import { AI_CONTENT_GENERATION_ENABLED, OPENAI_BASE_URL } from '@/app/config';
+import { OPENAI_BASE_URL, OPENAI_SECRET_KEY } from '@/app/config';
 import { removeBase64Prefix } from '@/utility/image';
 import { cleanUpAiTextResponse } from '@/photo/ai';
 import {
@@ -17,9 +17,9 @@ const checkRateLimitAndThrow = (isBatch?: boolean) =>
 
 const MODEL = 'gpt-4o';
 
-const openai = AI_CONTENT_GENERATION_ENABLED
+const openai = OPENAI_SECRET_KEY
   ? createOpenAI({
-    apiKey: process.env.OPENAI_SECRET_KEY,
+    apiKey: OPENAI_SECRET_KEY,
     ...OPENAI_BASE_URL && { baseURL: OPENAI_BASE_URL },
   })
   : undefined;
