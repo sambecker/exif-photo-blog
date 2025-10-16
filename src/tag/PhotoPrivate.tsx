@@ -5,7 +5,10 @@ import EntityLink, {
 } from '@/components/entity/EntityLink';
 import IconLock from '@/components/icons/IconLock';
 
-export default function PhotoPrivate(props: EntityLinkExternalProps) {
+export default function PhotoPrivate(
+  // Prevent hover behavior
+  props: Omit<EntityLinkExternalProps, 'hoverCount'>,
+) {
   return (
     <EntityLink
       {...props}

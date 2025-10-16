@@ -241,7 +241,6 @@ export default function PhotoGridSidebar({
             case TAG_PRIVATE:
               return <PhotoPrivate
                 key={TAG_PRIVATE}
-                hoverCount={count}
                 type="icon-last"
                 prefetch={false}
                 contrast="low"
