@@ -6,6 +6,7 @@ import PhotoLightbox from '@/photo/PhotoLightbox';
 import { getAlbumFromSlug } from '@/album/query';
 import AdminAlbumBadge from '@/admin/AdminAlbumBadge';
 import AdminAlbumForm from '@/admin/AdminAlbumForm';
+import { HAS_LOCATION_SERVICES } from '@/app/config';
 
 const MAX_PHOTO_TO_SHOW = 6;
 
@@ -40,7 +41,10 @@ export default async function AlbumPageEdit({
       backLabel="Albums"
       breadcrumb={<AdminAlbumBadge {...{ album, count, hideBadge: true }} />}
     >
-      <AdminAlbumForm {...{ album }}>
+      <AdminAlbumForm {...{
+        album,
+        hasLocationServices: HAS_LOCATION_SERVICES,
+      }}>
         {photos.length > 0 &&
           <PhotoLightbox
             {...{ count, photos, album }}

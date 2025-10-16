@@ -17,9 +17,11 @@ import deepEqual from 'fast-deep-equal/es6/react';
 
 export default function AdminAlbumForm({
   album,
+  hasLocationServices,
   children,
 }: {
   album: Album
+  hasLocationServices?: boolean
   children?: ReactNode
 }) {
   const { invalidateSwr } = useAppState();
@@ -65,12 +67,13 @@ export default function AdminAlbumForm({
             readOnly={readOnly}
             className={clsx(key === 'description' && '[&_textarea]:h-36')}
           />))}
-      <PlaceInput {...{
-        initialPlace,
-        setPlace,
-        setIsLoadingPlace,
-        className: 'relative z-1',
-      }} />
+      {hasLocationServices &&
+        <PlaceInput {...{
+          initialPlace,
+          setPlace,
+          setIsLoadingPlace,
+          className: 'relative z-1',
+        }} />}
       {(albumForm.location || isLoadingPlace) &&
         <div className="space-y-4 w-full">
           <FieldsetWithStatus
@@ -96,7 +99,9 @@ export default function AdminAlbumForm({
             type="textarea"
             value={JSON.stringify(albumForm.location)}
             isModified={!deepEqual(albumForm.location, album.location)}
-            readOnly
+            // Make field editable if location services are disabled
+            // to allow for data to be manually erased
+            readOnly={isLoadingPlace || hasLocationServices}
           />
         </div>}
       {children}
