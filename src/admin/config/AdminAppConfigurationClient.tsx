@@ -508,11 +508,11 @@ export default function AdminAppConfigurationClient({
             {renderEnvVars(['OPENAI_SECRET_KEY'])}
           </ChecklistRow>
           <ChecklistRow
-            title={isAiTextGenerationEnabled && isAnalyzingConfiguration
+            title={hasLocationServices && isAnalyzingConfiguration
               ? 'Testing Google Places connection'
               : 'Google Places'}
-            status={isAiTextGenerationEnabled}
-            isPending={isAiTextGenerationEnabled && isAnalyzingConfiguration}
+            status={hasLocationServices}
+            isPending={hasLocationServices && isAnalyzingConfiguration}
             optional
           >
             {locationError && renderError({
