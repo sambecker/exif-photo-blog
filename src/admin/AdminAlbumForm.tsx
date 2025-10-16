@@ -99,8 +99,8 @@ export default function AdminAlbumForm({
             type="textarea"
             value={JSON.stringify(albumForm.location)}
             isModified={!deepEqual(albumForm.location, album.location)}
-            // Make field editable if location services are disabled
-            // to allow for data to be manually erased
+            // Make field editable when location services are disabled
+            // to allow data to be manually cleared
             readOnly={isLoadingPlace || hasLocationServices}
           />
         </div>}
