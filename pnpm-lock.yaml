@@ -145,7 +145,7 @@ importers:
         specifier: 15.5.4
         version: 15.5.4
       '@next/eslint-plugin-next':
-        specifier: ^15.5.4
+        specifier: 15.5.4
         version: 15.5.4
       '@stylistic/eslint-plugin':
         specifier: ^5.4.0
