@@ -12,6 +12,7 @@ import PhotoTag from '@/tag/PhotoTag';
 import IconTag from '@/components/icons/IconTag';
 import MaskedScroll from '@/components/MaskedScroll';
 import PlaceEntity from '@/place/PlaceEntity';
+import PlaceMap from '@/place/PlaceMap';
 
 export default async function AlbumHeader({
   album,
@@ -59,6 +60,8 @@ export default async function AlbumHeader({
             <div className="text-medium mb-6 uppercase font-medium">
               {album.subhead}
             </div>}
+          {album.location &&
+            <PlaceMap place={album.location} />}
           {(album.location || tags.length > 0) &&
             <MaskedScroll
               className="whitespace-nowrap space-x-1.5"
