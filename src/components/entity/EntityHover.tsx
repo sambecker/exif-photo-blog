@@ -152,7 +152,7 @@ export default function EntityHover({
     width,
     height,
     color,
-  }} >
+  }}>
     {children}
   </SharedHover>;
 }

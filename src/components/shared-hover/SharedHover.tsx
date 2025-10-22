@@ -1,11 +1,15 @@
+'use client';
+
 import { ReactNode, useRef, useEffect } from 'react';
 import { SharedHoverProps, useSharedHoverState } from '../shared-hover/state';
 import useSupportsHover from '@/utility/useSupportsHover';
+import clsx from 'clsx/lite';
 
 export default function SharedHover({
   hoverKey: key,
   children,
   content,
+  className,
   width,
   height,
   offsetAbove = -1,
@@ -15,6 +19,7 @@ export default function SharedHover({
   hoverKey: string
   children :ReactNode
   content: ReactNode
+  className?: string
   width: number
   height: number
   offsetAbove?: number
@@ -47,7 +52,7 @@ export default function SharedHover({
 
   return (
     <div
-      className="max-w-full"
+      className={clsx('max-w-full', className)}
       ref={ref}
       onMouseEnter={() => supportsHover &&
         showHover?.(ref.current, {
