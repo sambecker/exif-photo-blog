@@ -4,7 +4,7 @@ import MaskedScroll from '@/components/MaskedScroll';
 import PhotoAlbum from '@/album/PhotoAlbum';
 import PhotoTag from '@/tag/PhotoTag';
 import PhotoFavs from '@/tag/PhotoFavs';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import { CATEGORY_VISIBILITY } from '@/app/config';
 import PhotoRecents from '@/recents/PhotoRecents';
 import PhotoFilm from '@/film/PhotoFilm';

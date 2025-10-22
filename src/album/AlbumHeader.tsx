@@ -66,8 +66,8 @@ export default async function AlbumHeader({
             >
               {album.location &&
                 <PlaceEntity
-                  location={album.location}
-                  className="translate-x-[-2px] mr-3!"
+                  place={album.location}
+                  className="translate-x-[-2px] mr-1.5!"
                 />}
               {tags.length > 0 && <>
                 <IconTag
