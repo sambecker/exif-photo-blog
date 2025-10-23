@@ -334,7 +334,7 @@ export default function PhotoForm({
         ? 'true'
         : 'false',
     }));
-  }, []);
+  }, [setFormData]);
 
   const formContent = useMemo(() =>
     FORM_METADATA_ENTRIES_BY_SECTION(
@@ -371,7 +371,7 @@ export default function PhotoForm({
       blurCompatibilityLevel="none"
       width={thumbnailDimensions.width}
       height={thumbnailDimensions.height}
-      priority
+      preload
     />;
 
   return (
