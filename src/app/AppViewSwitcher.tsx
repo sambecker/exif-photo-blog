@@ -83,6 +83,8 @@ export default function AppViewSwitcher({
   const refHrefFull = useRef<HTMLAnchorElement>(null);
   const refHrefGrid = useRef<HTMLAnchorElement>(null);
 
+  const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
+  
   const onKeyDown = useCallback((e: KeyboardEvent) => {
     if (!e.metaKey) {
       switch (e.key.toLocaleUpperCase()) {
@@ -101,7 +103,6 @@ export default function AppViewSwitcher({
   useKeydownHandler({ onKeyDown });
 
   const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
-  const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
 
   const renderItemFull =
     <SwitcherItem
@@ -135,7 +136,7 @@ export default function AppViewSwitcher({
         className={clsx(
           GAP_CLASS_RIGHT,
           // Apply offset due to outline strategy
-          'translate-x-[1px]',
+          'translate-x-px',
         )}
       >
         {GRID_HOMEPAGE_ENABLED ? renderItemGrid : renderItemFull}
@@ -209,7 +210,7 @@ export default function AppViewSwitcher({
               href={pathSortToggle}
               icon={<IconSort
                 sort={isAscending ? 'asc' : 'desc'}
-                className="translate-x-[0.5px] translate-y-[1px]"
+                className="translate-x-[0.5px] translate-y-px"
               />}
               tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
                 content: isAscending

@@ -17,8 +17,9 @@ export default function StaggeredOgPhotosInfinite({
       initialOffset={initialOffset}
       itemsPerPage={itemsPerPage}
     >
-      {({ photos, onLastPhotoVisible }) =>
+      {({ key, photos, onLastPhotoVisible }) =>
         <StaggeredOgPhotos
+          key={key}
           photos={photos}
           onLastPhotoVisible={onLastPhotoVisible}
         />}

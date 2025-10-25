@@ -62,12 +62,12 @@ export default function AppStateProvider({
     useState(false);
   const [nextPhotoAnimation, _setNextPhotoAnimation] =
     useState<AnimationConfig>();
+  const [nextPhotoAnimationId, setNextPhotoAnimationId] =
+    useState<string>();
   const setNextPhotoAnimation = useCallback((animation?: AnimationConfig) => {
     _setNextPhotoAnimation(animation);
     setNextPhotoAnimationId(undefined);
   }, []);
-  const [nextPhotoAnimationId, setNextPhotoAnimationId] =
-    useState<string>();
   const getNextPhotoAnimationId = useCallback(() => {
     const id = nanoid();
     setNextPhotoAnimationId(id);

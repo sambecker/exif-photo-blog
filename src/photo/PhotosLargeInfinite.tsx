@@ -26,8 +26,9 @@ export default function PhotosLargeInfinite({
       excludeFromFeeds={excludeFromFeeds}
       wrapMoreButtonInGrid
     >
-      {({ photos, onLastPhotoVisible, revalidatePhoto }) =>
+      {({ key, photos, onLastPhotoVisible, revalidatePhoto }) =>
         <PhotosLarge
+          key={key}
           photos={photos}
           onLastPhotoVisible={onLastPhotoVisible}
           revalidatePhoto={revalidatePhoto}

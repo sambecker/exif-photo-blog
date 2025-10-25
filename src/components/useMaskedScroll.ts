@@ -59,11 +59,11 @@ export default function useMaskedScroll({
   useEffect(() => {
     const ref = containerRef?.current;
     if (ref && updateMaskOnEvents) {
-      ref.onscroll = updateMask;
-      ref.onresize = updateMask;
+      ref.addEventListener('scroll', updateMask);
+      ref.addEventListener('resize', updateMask);
       return () => {
-        ref.onscroll = null;
-        ref.onresize = null;
+        ref.removeEventListener('scroll', updateMask);
+        ref.removeEventListener('resize', updateMask);
       };
     }
   }, [containerRef, updateMask, updateMaskOnEvents]);

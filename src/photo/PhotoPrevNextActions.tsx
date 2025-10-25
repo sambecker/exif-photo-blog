@@ -65,11 +65,11 @@ export default function PhotoPrevNextActions({
 
   const toggleFavorite = useCallback(() => {
     if (photo?.id) { return toggleFavoritePhotoAction(photo.id); }
-  }, [photo?.id]);
+  }, [photo]);
 
   const toggleHidden = useCallback(() => {
     if (photo?.id) { return togglePrivatePhotoAction(photo.id); }
-  }, [photo?.id]);
+  }, [photo]);
 
   const navigateToPhotoEdit = useNavigateOrRunActionWithToast({
     pathOrAction: photo ? pathForAdminPhotoEdit(photo) : undefined,
@@ -99,7 +99,7 @@ export default function PhotoPrevNextActions({
   const syncPhoto = useNavigateOrRunActionWithToast({
     pathOrAction: useCallback(() => {
       if (photo?.id) { return syncPhotoAction(photo.id); }
-    }, [photo?.id]),
+    }, [photo]),
     toastMessage: `Syncing ${photoTitle} ...`,
   });
 
@@ -108,7 +108,7 @@ export default function PhotoPrevNextActions({
       if (photo?.id && photo.url) {
         return deletePhotoAction(photo.id, photo.url, true);
       }
-    }, [photo?.id, photo?.url]),
+    }, [photo]),
     toastMessage: `Deleting ${photoTitle} ...`,
   });
 
