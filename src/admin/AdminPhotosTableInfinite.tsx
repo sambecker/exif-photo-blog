@@ -25,8 +25,9 @@ export default function AdminPhotosTableInfinite({
       sortBy="createdAt"
       includeHiddenPhotos
     >
-      {({ photos, onLastPhotoVisible, revalidatePhoto }) =>
+      {({ key, photos, onLastPhotoVisible, revalidatePhoto }) =>
         <AdminPhotosTable
+          key={key}
           photos={photos}
           onLastPhotoVisible={onLastPhotoVisible}
           revalidatePhoto={revalidatePhoto}
