@@ -109,7 +109,7 @@ export default function InfinitePhotoScroll({
     focal,
   ]);
 
-  const { data, isLoading, isValidating, error, mutate, size, setSize } =
+  const { data, isLoading, isValidating, error, mutate, setSize } =
     useSwrInfinite<Photo[]>(
       keyGenerator,
       fetcher,
@@ -137,9 +137,9 @@ export default function InfinitePhotoScroll({
 
   const advance = useCallback(() => {
     if (!isFinished && !isLoadingOrValidating) {
-      setSize(size => size + 1);
+      setSize((data?.length ?? 0) + 1);
     }
-  }, [isFinished, isLoadingOrValidating, setSize]);
+  }, [isFinished, isLoadingOrValidating, setSize, data]);
 
   const revalidatePhoto: RevalidatePhoto = useCallback((
     photoId: string,
@@ -152,11 +152,7 @@ export default function InfinitePhotoScroll({
     },
   } as any), [data, mutate]);
 
-  useVisibility({ ref: buttonContainerRef, onVisible: () => {
-    if (ADMIN_DB_OPTIMIZE_ENABLED && size === 0) {
-      advance();
-    }
-  }});
+  useVisibility({ ref: buttonContainerRef, onVisible: advance });
 
   const renderMoreButton =
     <div ref={buttonContainerRef}>
