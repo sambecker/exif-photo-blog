@@ -60,7 +60,7 @@ export default function InfinitePhotoScroll({
   children: (props: {
     key: string
     photos: Photo[]
-    onLastPhotoVisible: () => void
+    onLastPhotoVisible?: () => void
     revalidatePhoto?: RevalidatePhoto
   }) => ReactNode
 } & PhotoSetCategory) {
@@ -183,7 +183,9 @@ export default function InfinitePhotoScroll({
         children({
           key: `${cacheKey}-${index}`,
           photos, 
-          onLastPhotoVisible: advance,
+          onLastPhotoVisible: index === data.length - 1
+            ? advance
+            : undefined,
           revalidatePhoto,
         })
       ))}
