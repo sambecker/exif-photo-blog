@@ -58,6 +58,7 @@ export default function InfinitePhotoScroll({
   useCachedPhotos?: boolean
   includeHiddenPhotos?: boolean
   children: (props: {
+    key: string
     photos: Photo[]
     onLastPhotoVisible: () => void
     revalidatePhoto?: RevalidatePhoto
@@ -140,8 +141,6 @@ export default function InfinitePhotoScroll({
     }
   }, [isFinished, isLoadingOrValidating, setSize]);
 
-  const photos = useMemo(() => (data ?? [])?.flat(), [data]);
-
   const revalidatePhoto: RevalidatePhoto = useCallback((
     photoId: string,
     revalidateRemainingPhotos?: boolean,
@@ -159,7 +158,7 @@ export default function InfinitePhotoScroll({
     }
   }});
 
-  const renderMoreButton = () =>
+  const renderMoreButton =
     <div ref={buttonContainerRef}>
       <button
         type="button"
@@ -179,15 +178,20 @@ export default function InfinitePhotoScroll({
     </div>;
 
   return (
-    <div className="space-y-4">
-      {children({
-        photos, 
-        onLastPhotoVisible: advance,
-        revalidatePhoto,
-      })}
-      {!isFinished && (wrapMoreButtonInGrid
-        ? <AppGrid contentMain={renderMoreButton()} />
-        : renderMoreButton())}
-    </div>
+    <>
+      {data?.map((photos, index) => (
+        children({
+          key: `${cacheKey}-${index}`,
+          photos, 
+          onLastPhotoVisible: advance,
+          revalidatePhoto,
+        })
+      ))}
+      {!isFinished && <div className="mt-4">
+        {wrapMoreButtonInGrid
+          ? <AppGrid contentMain={renderMoreButton} />
+          : renderMoreButton}
+      </div>}
+    </>
   );
 }
