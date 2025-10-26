@@ -389,7 +389,6 @@ export const PAGE_SCRIPT_URLS = process.env.PAGE_SCRIPT_URLS
 // INTERNAL
 
 export const ADMIN_DEBUG_TOOLS_ENABLED = process.env.ADMIN_DEBUG_TOOLS === '1';
-export const ADMIN_DB_OPTIMIZE_ENABLED = process.env.ADMIN_DB_OPTIMIZE === '1';
 export const ADMIN_SQL_DEBUG_ENABLED =
   process.env.ADMIN_SQL_DEBUG === '1' &&
   !IS_BUILDING;
@@ -514,11 +513,9 @@ export const APP_CONFIGURATION = {
   // Internal
   areInternalToolsEnabled: (
     ADMIN_DEBUG_TOOLS_ENABLED ||
-    ADMIN_DB_OPTIMIZE_ENABLED ||
     ADMIN_SQL_DEBUG_ENABLED
   ),
   areAdminDebugToolsEnabled: ADMIN_DEBUG_TOOLS_ENABLED,
-  isAdminDbOptimizeEnabled: ADMIN_DB_OPTIMIZE_ENABLED,
   isAdminSqlDebugEnabled: ADMIN_SQL_DEBUG_ENABLED,
   // Misc
   baseUrl: BASE_URL,

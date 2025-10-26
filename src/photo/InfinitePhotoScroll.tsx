@@ -1,13 +1,7 @@
 'use client';
 
 import useSwrInfinite from 'swr/infinite';
-import {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react';
+import { ReactNode, useCallback, useMemo, useRef } from 'react';
 import AppGrid from '@/components/AppGrid';
 import Spinner from '@/components/Spinner';
 import { getPhotosCachedAction, getPhotosAction } from '@/photo/actions';
@@ -16,7 +10,6 @@ import { PhotoSetCategory } from '../category';
 import { clsx } from 'clsx/lite';
 import { useAppState } from '@/app/AppState';
 import useVisibility from '@/utility/useVisibility';
-import { ADMIN_DB_OPTIMIZE_ENABLED } from '@/app/config';
 import { SortBy } from './sort';
 import { SWR_KEYS } from '@/swr';
 import { useAppText } from '@/i18n/state/client';
@@ -114,18 +107,12 @@ export default function InfinitePhotoScroll({
       keyGenerator,
       fetcher,
       {
-        initialSize: ADMIN_DB_OPTIMIZE_ENABLED ? 0 : 2,
+        initialSize: 2,
         revalidateFirstPage: false,
         revalidateOnFocus: Boolean(isUserSignedIn),
         revalidateOnReconnect: Boolean(isUserSignedIn),
       },
     );
-
-  useEffect(() => {
-    if (ADMIN_DB_OPTIMIZE_ENABLED) {
-      fetcher(`${SIZE_KEY_SEPARATOR}0`, true);
-    }
-  }, [fetcher]);
 
   const buttonContainerRef = useRef<HTMLDivElement>(null);
   

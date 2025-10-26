@@ -136,7 +136,6 @@ export default function AdminAppConfigurationClient({
   // Internal
   areInternalToolsEnabled,
   areAdminDebugToolsEnabled,
-  isAdminDbOptimizeEnabled,
   isAdminSqlDebugEnabled,
   // Connection status
   databaseError,
@@ -980,15 +979,6 @@ export default function AdminAppConfigurationClient({
             Set environment variable to {'"1"'} to temporarily enable
             features like photo matting, baseline grid, etc.:
             {renderEnvVars(['ADMIN_DEBUG_TOOLS'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title="DB optimize"
-            status={isAdminDbOptimizeEnabled}
-            optional
-          >
-            Set environment variable to {'"1"'} to prevent
-            homepages from seeding infinite scroll on load:
-            {renderEnvVars(['ADMIN_DB_OPTIMIZE'])}
           </ChecklistRow>
           <ChecklistRow
             title="SQL debugging"
