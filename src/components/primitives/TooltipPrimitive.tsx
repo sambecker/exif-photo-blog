@@ -3,11 +3,11 @@
 import { ReactNode, useRef, useState, ComponentProps } from 'react';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import MenuSurface from './MenuSurface';
-import useSupportsHover from '@/utility/useSupportsHover';
 import clsx from 'clsx/lite';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
 import KeyCommand from './KeyCommand';
 import { clearGlobalFocus } from '@/utility/dom';
+import { useAppState } from '@/app/AppState';
 
 export default function TooltipPrimitive({
   content: contentProp,
@@ -51,7 +51,7 @@ export default function TooltipPrimitive({
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const supportsHover = useSupportsHover();
+  const { supportsHover } = useAppState();
 
   const includeButton = supportMobile && supportsHover === false;
 

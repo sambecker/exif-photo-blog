@@ -30,6 +30,8 @@ export type AppStateContextType = {
   categoriesWithCounts?: Awaited<ReturnType<
     typeof getCountsForCategoriesCachedAction
   >>
+  // ENVIRONMENT
+  supportsHover?: boolean
   // MODAL
   isCommandKOpen?: boolean
   setIsCommandKOpen?: Dispatch<SetStateAction<boolean>>

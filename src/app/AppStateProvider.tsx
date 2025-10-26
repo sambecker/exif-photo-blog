@@ -40,6 +40,7 @@ import {
   SWRKey,
 } from '@/swr';
 import { warmRedisAction } from './actions';
+import useSupportsHover from '@/utility/useSupportsHover';
 
 export default function AppStateProvider({
   children,
@@ -78,6 +79,8 @@ export default function AppStateProvider({
   }, [nextPhotoAnimationId, setNextPhotoAnimation]);
   const [shouldRespondToKeyboardCommands, setShouldRespondToKeyboardCommands] =
     useState(true);
+  // ENVIRONMENT
+  const supportsHover = useSupportsHover();
   // MODAL
   const [isCommandKOpen, setIsCommandKOpen] =
     useState(false);
@@ -229,6 +232,8 @@ export default function AppStateProvider({
         shouldRespondToKeyboardCommands,
         setShouldRespondToKeyboardCommands,
         categoriesWithCounts,
+        // ENVIRONMENT
+        supportsHover,
         // MODAL
         isCommandKOpen,
         setIsCommandKOpen,
