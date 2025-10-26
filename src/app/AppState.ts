@@ -18,7 +18,6 @@ import { SWRKey } from '@/swr';
 
 export type AppStateContextType = {
   // CORE
-  previousPathname?: string
   hasLoaded?: boolean
   hasLoadedWithAnimations?: boolean
   invalidateSwr?: (key?: SWRKey, revalidate?: boolean) => void

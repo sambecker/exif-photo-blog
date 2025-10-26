@@ -9,7 +9,6 @@ import {
 } from 'react';
 import { AppStateContext } from '../app/AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
-import usePathnames from '@/utility/usePathnames';
 import { getAuthAction } from '@/auth/actions';
 import useSWR, { useSWRConfig } from 'swr';
 import {
@@ -52,8 +51,6 @@ export default function AppStateProvider({
   const router = useRouter();
 
   const pathname = usePathname();
-
-  const { previousPathname } = usePathnames();
 
   // CORE
   const [hasLoaded, setHasLoaded] =
@@ -222,7 +219,6 @@ export default function AppStateProvider({
     <AppStateContext.Provider
       value={{
         // CORE
-        previousPathname,
         hasLoaded,
         hasLoadedWithAnimations,
         invalidateSwr,
