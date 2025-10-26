@@ -13,7 +13,7 @@ importers:
         version: 2.0.53(zod@4.1.12)
       '@ai-sdk/rsc':
         specifier: ^1.0.79
-        version: 1.0.79(react@19.2.0)(zod@4.1.12)
+        version: 1.0.80(react@19.2.0)(zod@4.1.12)
       '@aws-sdk/client-s3':
         specifier: 3.917.0
         version: 3.917.0
@@ -52,7 +52,7 @@ importers:
         version: 1.2.0(next@16.0.0(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
       ai:
         specifier: ^5.0.79
-        version: 5.0.79(zod@4.1.12)
+        version: 5.0.80(zod@4.1.12)
       camelcase-keys:
         specifier: ^10.0.0
         version: 10.0.0
@@ -247,8 +247,8 @@ packages:
     resolution: {integrity: sha512-6o7Y2SeO9vFKB8lArHXehNuusnpddKPk7xqL7T2/b+OvXMRIXUO1rR4wcv1hAFUAT9avGZshty3Wlua/XA7TvA==}
     engines: {node: '>=18'}
 
-  '@ai-sdk/rsc@1.0.79':
-    resolution: {integrity: sha512-FiEK7DVN7l4RJ2zu/7k9nX9XjIukiak7PKcanvIE5wTvOIG3PeYWlY9AftxF5MKiFyYqyrucUUQ5HI8/VL4dXw==}
+  '@ai-sdk/rsc@1.0.80':
+    resolution: {integrity: sha512-on9k1evpE5bv11EjfC7IdRzjgQU3MxR5uxaHZzUVTZGab97mnOvojEYSIf4obW1X/W1DE7ZxjQWiKQWN3u45VQ==}
     engines: {node: '>=18'}
     peerDependencies:
       react: ^18 || ^19 || ^19.0.0-rc
@@ -2069,8 +2069,8 @@ packages:
     resolution: {integrity: sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==}
     engines: {node: '>= 14'}
 
-  ai@5.0.79:
-    resolution: {integrity: sha512-Zhtn9Kj/RMjuUlnI64qP0IRFfFegEsO7OzYY4peqVvagWaXj3/iIzt8OQl3VzDgaahf85nTbyV3j/TUL322EMQ==}
+  ai@5.0.80:
+    resolution: {integrity: sha512-g1o6pjxm1eTtyh295dRhsg0gvZaHFlSo2oruWrK2rIR7KafWEhNB2A2/aJ9hyPT9AMI8JnQJyto1Tl9DMqwc9w==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
@@ -4594,11 +4594,11 @@ snapshots:
     dependencies:
       json-schema: 0.4.0
 
-  '@ai-sdk/rsc@1.0.79(react@19.2.0)(zod@4.1.12)':
+  '@ai-sdk/rsc@1.0.80(react@19.2.0)(zod@4.1.12)':
     dependencies:
       '@ai-sdk/provider': 2.0.0
       '@ai-sdk/provider-utils': 3.0.12(zod@4.1.12)
-      ai: 5.0.79(zod@4.1.12)
+      ai: 5.0.80(zod@4.1.12)
       jsondiffpatch: 0.6.0
       react: 19.2.0
     optionalDependencies:
@@ -6865,7 +6865,7 @@ snapshots:
 
   agent-base@7.1.4: {}
 
-  ai@5.0.79(zod@4.1.12):
+  ai@5.0.80(zod@4.1.12):
     dependencies:
       '@ai-sdk/gateway': 2.0.1(zod@4.1.12)
       '@ai-sdk/provider': 2.0.0
