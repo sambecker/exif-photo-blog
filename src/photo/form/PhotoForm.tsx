@@ -371,7 +371,7 @@ export default function PhotoForm({
       blurCompatibilityLevel="none"
       width={thumbnailDimensions.width}
       height={thumbnailDimensions.height}
-      preload
+      priority
     />;
 
   return (
