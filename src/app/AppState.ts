@@ -30,6 +30,7 @@ export type AppStateContextType = {
     typeof getCountsForCategoriesCachedAction
   >>
   // ENVIRONMENT
+  timezone?: string
   supportsHover?: boolean
   // MODAL
   isCommandKOpen?: boolean

@@ -78,6 +78,7 @@ export default function AppStateProvider({
   const [shouldRespondToKeyboardCommands, setShouldRespondToKeyboardCommands] =
     useState(true);
   // ENVIRONMENT
+  const [timezone, setTimezone] = useState<string>();
   const supportsHover = useSupportsHover();
   // MODAL
   const [isCommandKOpen, setIsCommandKOpen] =
@@ -117,7 +118,10 @@ export default function AppStateProvider({
 
   useEffect(() => {
     storeTimezoneCookie();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setUserEmailEager(getAuthEmailCookie());
+    // Capture backup timezone on client
+    setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone);
     if (IS_PRODUCTION) { warmRedisAction(); }
     const timeout = setTimeout(() => {
       setHasLoadedWithAnimations(true);
@@ -149,6 +153,7 @@ export default function AppStateProvider({
   } = useSWR(SWR_KEYS.GET_AUTH, getAuthAction);
   useEffect(() => {
     if (auth === null || authError) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setUserEmail(undefined);
       setUserEmailEager(undefined);
       clearAuthEmailCookie();
@@ -229,6 +234,7 @@ export default function AppStateProvider({
         setShouldRespondToKeyboardCommands,
         categoriesWithCounts,
         // ENVIRONMENT
+        timezone,
         supportsHover,
         // MODAL
         isCommandKOpen,
