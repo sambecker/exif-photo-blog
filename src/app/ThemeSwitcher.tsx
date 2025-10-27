@@ -1,26 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import Switcher from '@/components/switcher/Switcher';
 import SwitcherItem from '@/components/switcher/SwitcherItem';
 import { BiDesktop, BiMoon, BiSun } from 'react-icons/bi';
 import { useAppText } from '@/i18n/state/client';
+import { useAppState } from './AppState';
 
 export default function ThemeSwitcher () {
+  const { hasLoadedWithAnimations } = useAppState();
+
   const appText = useAppText();
 
-  const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
-
-  // useEffect only runs on the client, so now we can safely show the UI
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
 
   return (
     <Switcher
@@ -30,19 +22,19 @@ export default function ThemeSwitcher () {
       <SwitcherItem
         icon={<BiDesktop size={16} />}
         onClick={() => setTheme('system')}
-        active={theme === 'system'}
+        active={hasLoadedWithAnimations && theme === 'system'}
         tooltip={{ content: appText.theme.system }}
       />
       <SwitcherItem
         icon={<BiSun size={18} />}
         onClick={() => setTheme('light')}
-        active={theme === 'light'}
+        active={hasLoadedWithAnimations && theme === 'light'}
         tooltip={{ content: appText.theme.light }}
       />
       <SwitcherItem
         icon={<BiMoon size={16} />}
         onClick={() => setTheme('dark')}
-        active={theme === 'dark'}
+        active={hasLoadedWithAnimations && theme === 'dark'}
         tooltip={{ content: appText.theme.dark }}
       />
     </Switcher>

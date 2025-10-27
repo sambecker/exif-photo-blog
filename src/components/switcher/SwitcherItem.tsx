@@ -5,8 +5,8 @@ import Spinner from '../Spinner';
 import LinkWithIconLoader from '../LinkWithIconLoader';
 import Tooltip from '../Tooltip';
 
-const WIDTH_CLASS       = 'w-[42px]';
-const WIDTH_CLASS_NARROW = 'w-[36px]';
+const WIDTH_CLASS         = 'w-[42px]';
+const WIDTH_CLASS_NARROW  = 'w-[36px]';
 
 export default function SwitcherItem({
   icon,

@@ -4,13 +4,17 @@ import { clsx } from 'clsx/lite';
 import Container from '@/components/Container';
 import Spinner from '@/components/Spinner';
 import CopyButton from '@/components/CopyButton';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { generateAuthSecretAction } from '@/auth/actions';
 import { BiRefresh } from 'react-icons/bi';
 
-export default function SecretGenerator() {
+export default function SecretGenerator({
+  secret: secretFromProps,
+}: {
+  secret: string
+}) {
   const [isLoading, setIsLoading] = useState(false);
-  const [secret, setSecret] = useState('');
+  const [secret, setSecret] = useState(secretFromProps);
 
   const getSecret = useCallback(async () => {
     setIsLoading(true);
@@ -18,10 +22,6 @@ export default function SecretGenerator() {
       .then(setSecret)
       .finally(() => setIsLoading(false));
   }, []);
-
-  useEffect(() => {
-    getSecret();
-  }, [getSecret]);
 
   return (
     <div className="flex items-center gap-2">
