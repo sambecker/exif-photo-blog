@@ -17,7 +17,5 @@ export default function useSupportsHover() {
     }
   }, []);
 
-  console.log({ supportsHover });
-
   return supportsHover;
 };
