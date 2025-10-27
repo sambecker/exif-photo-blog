@@ -53,11 +53,10 @@ export default function AdminNavClient({
     useState(areTimesRecent(updateTimes));
 
   useEffect(() => {
-    // Check every 5 seconds if update times are recent
-    setHasRecentUpdates(areTimesRecent(updateTimes));
+    // Check every 1 second if update times are recent
     const interval = setInterval(() =>
       setHasRecentUpdates(areTimesRecent(updateTimes))
-    , 5_000);
+    , 1_000);
     return () => clearInterval(interval);
   }, [updateTimes]);
 

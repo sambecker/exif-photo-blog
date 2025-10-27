@@ -54,8 +54,6 @@ export default function AppStateProvider({
   const pathname = usePathname();
 
   // CORE
-  const [hasLoaded, setHasLoaded] =
-    useState(false);
   const [hasLoadedWithAnimations, setHasLoadedWithAnimations] =
     useState(false);
   const [nextPhotoAnimation, _setNextPhotoAnimation] =
@@ -118,7 +116,6 @@ export default function AppStateProvider({
     useState(false);
 
   useEffect(() => {
-    setHasLoaded(true);
     storeTimezoneCookie();
     setUserEmailEager(getAuthEmailCookie());
     if (IS_PRODUCTION) { warmRedisAction(); }
@@ -222,7 +219,6 @@ export default function AppStateProvider({
     <AppStateContext.Provider
       value={{
         // CORE
-        hasLoaded,
         hasLoadedWithAnimations,
         invalidateSwr,
         nextPhotoAnimation,
