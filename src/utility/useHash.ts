@@ -17,9 +17,8 @@ export default function useHash() {
 
   // Needed to capture non-request-initiated hash changes
   const params = useSearchParams();
-  useEffect(() => {
-    storeHash();
-  }, [params, storeHash]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(storeHash, [params, storeHash]);
 
   const updateWindowHash = useCallback((hash: string) => {
     window.history.replaceState(null, '', `#${hash}`);

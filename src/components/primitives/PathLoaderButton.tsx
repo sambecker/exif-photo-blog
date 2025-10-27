@@ -34,6 +34,7 @@ export default function PathLoaderButton({
       }, loaderDelay);
       return () => clearTimeout(timeout);
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShouldShowLoader(false);
     }
   }, [isPending, loaderDelay]);

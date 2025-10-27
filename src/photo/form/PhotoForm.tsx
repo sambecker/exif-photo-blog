@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 'use client';
 
 import {
@@ -371,7 +372,7 @@ export default function PhotoForm({
       blurCompatibilityLevel="none"
       width={thumbnailDimensions.width}
       height={thumbnailDimensions.height}
-      priority
+      preload
     />;
 
   return (

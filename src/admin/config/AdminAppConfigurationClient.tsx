@@ -137,6 +137,8 @@ export default function AdminAppConfigurationClient({
   areInternalToolsEnabled,
   areAdminDebugToolsEnabled,
   isAdminSqlDebugEnabled,
+  // Auth
+  secret,
   // Connection status
   databaseError,
   storageError,
@@ -147,6 +149,7 @@ export default function AdminAppConfigurationClient({
   simplifiedView,
   isAnalyzingConfiguration,
 }: AppConfiguration &
+  { secret: string } &
   Partial<Awaited<ReturnType<typeof testConnectionsAction>>> & {
     simplifiedView?: boolean
     isAnalyzingConfiguration?: boolean
@@ -373,7 +376,7 @@ export default function AdminAppConfigurationClient({
             Store auth secret in environment variable:
             {!hasAuthSecret &&
             <div className="overflow-x-auto">
-              <SecretGenerator />
+              <SecretGenerator {...{ secret }} />
             </div>}
             {renderEnvVars(['AUTH_SECRET'])}
           </ChecklistRow>

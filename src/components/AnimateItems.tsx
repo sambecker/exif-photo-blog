@@ -46,7 +46,7 @@ function AnimateItems({
   onAnimationComplete,
 }: Props) {
   const {
-    hasLoaded,
+    hasLoadedWithAnimations,
     nextPhotoAnimation,
     getNextPhotoAnimationId,
     clearNextPhotoAnimation,
@@ -56,14 +56,13 @@ function AnimateItems({
 
   const prefersReducedMotion = usePrefersReducedMotion();
   
-  const hasLoadedInitial = useRef(hasLoaded);
   const nextPhotoAnimationInitial = useRef(nextPhotoAnimation);
 
   const shouldAnimate = type !== 'none' &&
     !prefersReducedMotion &&
-    !(animateOnFirstLoadOnly && hasLoadedInitial.current);
+    !(animateOnFirstLoadOnly && hasLoadedWithAnimations);
   const shouldStagger =
-    !(staggerOnFirstLoadOnly && hasLoadedInitial.current);
+    !(staggerOnFirstLoadOnly && hasLoadedWithAnimations);
 
   const typeResolved = animateFromAppState
     ? (nextPhotoAnimationInitial.current?.type ?? type)

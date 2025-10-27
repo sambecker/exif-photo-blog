@@ -22,7 +22,11 @@ export default function SelectPhotosProvider({
 
   const { isUserSignedIn } = useAppState();
   
-  const searchParamsSelect = useClientSearchParams(PARAM_SELECT);
+  const searchParamsSelect = useClientSearchParams(
+    PARAM_SELECT,
+    // Only scan urls when admin is signed in
+    isUserSignedIn,
+  );
 
   const [canCurrentPageSelectPhotos, setCanCurrentPageSelectPhotos] =
     useState(false);
@@ -36,9 +40,12 @@ export default function SelectPhotosProvider({
   , []);
 
   useEffect(() => {
-    const doesPageHavePhotoGrids = getPhotoGridElements().length > 0;
-    setCanCurrentPageSelectPhotos(doesPageHavePhotoGrids);
-  }, [pathname, getPhotoGridElements]);
+    if (isUserSignedIn) {
+      const doesPageHavePhotoGrids = getPhotoGridElements().length > 0;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setCanCurrentPageSelectPhotos(doesPageHavePhotoGrids);
+    }
+  }, [pathname, isUserSignedIn, getPhotoGridElements]);
 
   const isSelectingPhotos = useMemo(() =>
     isUserSignedIn &&
@@ -66,6 +73,7 @@ export default function SelectPhotosProvider({
         photoGrids[0]?.scrollIntoView({ behavior: 'smooth' });
       }
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedPhotoIds([]);
     }
   }, [isSelectingPhotos, getPhotoGridElements]);

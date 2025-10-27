@@ -50,6 +50,7 @@ export default function SelectMenu({
 
   useEffect(() => {
     if (readOnly) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsOpen(false);
     }
   }, [readOnly]);

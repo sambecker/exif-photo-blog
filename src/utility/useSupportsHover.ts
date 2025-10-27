@@ -5,14 +5,16 @@ export default function useSupportsHover() {
     ? window.matchMedia('(hover: hover)')
     : undefined);
   
-  const [supportsHover, setSupportsHover] = 
-    useState<boolean>(mqlRef.current?.matches ?? false);
+  const [supportsHover, setSupportsHover] = useState<boolean>(false);
 
   useEffect(() => {
-    const listener = (e: MediaQueryListEvent) => setSupportsHover(e.matches);
     const mql = mqlRef.current;
-    mql?.addEventListener('change', listener);
-    return () => mql?.removeEventListener('change', listener);
+    if (mql) {
+      setSupportsHover(mql.matches);
+      const listener = (e: MediaQueryListEvent) => setSupportsHover(e.matches);
+      mql.addEventListener('change', listener);
+      return () => mql?.removeEventListener('change', listener);
+    }
   }, []);
 
   return supportsHover;

@@ -18,9 +18,7 @@ const eslintConfig = defineConfig([
       '@stylistic': stylistic,
     },
     rules: {
-      // Temporarily disable during Next.js 16 migration
       'react-hooks/refs': 'off',
-      'react-hooks/set-state-in-effect': 'warn',
       '@next/next/no-img-element': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-require-imports': 'off',

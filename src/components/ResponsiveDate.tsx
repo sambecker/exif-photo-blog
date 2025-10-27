@@ -1,8 +1,8 @@
 'use client';
 
+import { useAppState } from '@/app/AppState';
 import { formatDate } from '@/utility/date';
 import { clsx } from 'clsx/lite';
-import { useEffect, useState } from 'react';
 
 export default function ResponsiveDate({
   date,
@@ -15,13 +15,9 @@ export default function ResponsiveDate({
   className?: string
   titleLabel?: string
 } & Parameters<typeof formatDate>[0]) {
-  const [timezone, setTimezone] = useState(timezoneFromProps);
+  const { timezone: timezoneFromState } = useAppState();
 
-  useEffect(() => {
-    if (!timezoneFromProps) {
-      setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone);
-    }
-  }, [timezoneFromProps]);
+  const timezone = timezoneFromProps ?? timezoneFromState;
 
   const showPlaceholder = timezone === undefined;
 
