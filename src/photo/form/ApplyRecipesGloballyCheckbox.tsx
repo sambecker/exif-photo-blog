@@ -24,6 +24,7 @@ export default function ApplyRecipeTitleGloballyCheckbox({
 
   useEffect(() => {
     if (recipeTitle && hasRecipeTitleChanged && recipeData && film) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setMatchingPhotosCount(undefined);
       getPhotosNeedingRecipeTitleCountAction(recipeData, film, photoId)
         .then(setMatchingPhotosCount);

@@ -22,7 +22,11 @@ export default function SelectPhotosProvider({
 
   const { isUserSignedIn } = useAppState();
   
-  const searchParamsSelect = useClientSearchParams(PARAM_SELECT);
+  const searchParamsSelect = useClientSearchParams(
+    PARAM_SELECT,
+    // Only scan urls when admin is signed in
+    isUserSignedIn,
+  );
 
   const [canCurrentPageSelectPhotos, setCanCurrentPageSelectPhotos] =
     useState(false);

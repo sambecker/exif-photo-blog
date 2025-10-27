@@ -193,6 +193,7 @@ export default function TagInput({
   useEffect(() => {
     if (inputText) {
       if (inputText.includes(',')) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         addOptions(inputText.split(','));
       } else {
         setShouldShowMenu(true);

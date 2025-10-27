@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 export default function useClientSearchParams(
   paramKey: string,
+  enableScanning = true,
 ): string | undefined {
   const pathname = usePathname();
 
@@ -23,7 +24,10 @@ export default function useClientSearchParams(
     };
   }, [captureParam]);
 
-  useEffect(captureParam, [captureParam, pathname]);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (enableScanning) { captureParam(); }
+  }, [pathname, captureParam, enableScanning]);
 
   return paramValue;
 };

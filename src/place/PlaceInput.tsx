@@ -31,6 +31,7 @@ export default function PlaceInput({
 
   useEffect(() => {
     if (inputTextDebounced) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsLoadingPlaces(true);
       getPlaceAutoCompleteAction(inputTextDebounced)
         .then(options => {
