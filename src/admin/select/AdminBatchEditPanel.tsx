@@ -1,3 +1,5 @@
+'use cache';
+
 import { getUniqueTags } from '@/photo/query';
 import AdminBatchEditPanelClient from './AdminBatchEditPanelClient';
 import { getAlbumsWithMeta } from '@/album/query';

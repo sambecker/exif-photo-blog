@@ -1,3 +1,5 @@
+'use cache';
+
 import CommandKClient from './CommandKClient';
 import { photoQuantityText } from '@/photo';
 import { getDataForCategoriesCached } from '@/category/cache';

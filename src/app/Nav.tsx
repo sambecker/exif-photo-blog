@@ -1,3 +1,5 @@
+'use cache';
+
 import { getPhotos } from '@/photo/query';
 import NavClient from './NavClient';
 import { NAV_CAPTION, NAV_TITLE } from './config';
