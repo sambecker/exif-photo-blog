@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 export default function useClientSearchParams(
   paramKey: string,
-  enableScanning = true,
+  enableScanning?: boolean,
 ): string | undefined {
   const pathname = usePathname();
 

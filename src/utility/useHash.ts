@@ -1,4 +1,4 @@
-import { useSearchParams } from 'next/navigation';
+// import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
 export default function useHash() {
@@ -16,9 +16,8 @@ export default function useHash() {
   }, [storeHash]);
 
   // Needed to capture non-request-initiated hash changes
-  const params = useSearchParams();
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(storeHash, [params, storeHash]);
+  // const params = useSearchParams();
+  // useEffect(storeHash, [params, storeHash]);
 
   const updateWindowHash = useCallback((hash: string) => {
     window.history.replaceState(null, '', `#${hash}`);

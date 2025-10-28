@@ -24,8 +24,6 @@ export default function SelectPhotosProvider({
   
   const searchParamsSelect = useClientSearchParams(
     PARAM_SELECT,
-    // Only scan urls when admin is signed in
-    isUserSignedIn,
   );
 
   const [canCurrentPageSelectPhotos, setCanCurrentPageSelectPhotos] =
@@ -45,7 +43,11 @@ export default function SelectPhotosProvider({
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setCanCurrentPageSelectPhotos(doesPageHavePhotoGrids);
     }
-  }, [pathname, isUserSignedIn, getPhotoGridElements]);
+  }, [
+    // pathname,
+    isUserSignedIn,
+    getPhotoGridElements,
+  ]);
 
   const isSelectingPhotos = useMemo(() =>
     isUserSignedIn &&

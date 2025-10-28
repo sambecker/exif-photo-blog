@@ -9,7 +9,6 @@ import { shortenUrl } from '@/utility/url';
 import { toastSuccess } from '@/toast';
 import { SOCIAL_NETWORKS } from '@/app/config';
 import { useAppState } from '@/app/AppState';
-import useOnPathChange from '@/utility/useOnPathChange';
 import { IoArrowUp } from 'react-icons/io5';
 import MaskedScroll from '@/components/MaskedScroll';
 import { useAppText } from '@/i18n/state/client';
@@ -74,8 +73,6 @@ export default function ShareModal({
   const clearShareModalProps = useCallback(() =>
     setShareModalProps?.(undefined),
   [setShareModalProps]);
-
-  useOnPathChange(clearShareModalProps);
 
   return (
     <Modal onClose={clearShareModalProps}>
