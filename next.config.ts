@@ -68,6 +68,7 @@ const IMAGE_QUALITY =
     : 75;
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
   images: {
     imageSizes: [200],
     qualities: [75, IMAGE_QUALITY],
