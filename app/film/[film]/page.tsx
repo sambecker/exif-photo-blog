@@ -2,7 +2,7 @@ import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getUniqueFilms } from '@/photo/query';
 import { generateMetaForFilm } from '@/film';
 import FilmOverview from '@/film/FilmOverview';
-import { getPhotosFilmDataCached } from '@/film/data';
+import { getPhotosFilmData } from '@/film/data';
 import { Metadata } from 'next/types';
 import { cache } from 'react';
 import { PATH_ROOT } from '@/app/path';
@@ -11,7 +11,7 @@ import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
 
 const getPhotosFilmDataCachedCached = cache((film: string) =>
-  getPhotosFilmDataCached({ film, limit: INFINITE_SCROLL_GRID_INITIAL }));
+  getPhotosFilmData({ film, limit: INFINITE_SCROLL_GRID_INITIAL }));
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'films',

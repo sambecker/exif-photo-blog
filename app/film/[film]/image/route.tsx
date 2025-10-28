@@ -1,4 +1,3 @@
-import { getPhotosCached } from '@/photo/cache';
 import {
   IMAGE_OG_DIMENSION_SMALL,
   MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
@@ -7,7 +6,7 @@ import FilmImageResponse from '@/film/FilmImageResponse';
 import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
-import { getUniqueFilms } from '@/photo/query';
+import { getPhotos, getUniqueFilms } from '@/photo/query';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
@@ -28,7 +27,7 @@ export async function GET(
     { fontFamily, fonts },
     headers,
   ] = await Promise.all([
-    getPhotosCached({
+    getPhotos({
       limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
       film: film,
     }),

@@ -1,4 +1,3 @@
-import { getPhotosCached } from '@/photo/cache';
 import {
   IMAGE_OG_DIMENSION_SMALL,
   MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
@@ -6,7 +5,7 @@ import {
 import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
-import { getUniqueLenses } from '@/photo/query';
+import { getPhotos, getUniqueLenses } from '@/photo/query';
 import {
   getLensFromParams,
   LensProps,
@@ -33,7 +32,7 @@ export async function GET(
     { fontFamily, fonts },
     headers,
   ] = await Promise.all([
-    getPhotosCached({
+    getPhotos({
       limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
       lens: lens,
     }),

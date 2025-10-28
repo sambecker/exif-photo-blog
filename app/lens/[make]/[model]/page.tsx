@@ -3,7 +3,7 @@ import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { cache } from 'react';
 import { getUniqueLenses } from '@/photo/query';
 import { generateMetaForLens } from '@/lens/meta';
-import { getPhotosLensDataCached } from '@/lens/data';
+import { getPhotosLensData } from '@/lens/data';
 import LensOverview from '@/lens/LensOverview';
 import {
   getLensFromParams,
@@ -15,10 +15,10 @@ import {
 } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
 
-const getPhotosLensDataCachedCached = cache((
+const getPhotosLensDataCached = cache((
   make: string | undefined,
   model: string,
-) => getPhotosLensDataCached(
+) => getPhotosLensData(
   make,
   model,
   INFINITE_SCROLL_GRID_INITIAL,
@@ -40,7 +40,7 @@ export async function generateMetadata({
     photos,
     { count, dateRange },
     lens,
-  ] = await getPhotosLensDataCachedCached(make, model);
+  ] = await getPhotosLensDataCached(make, model);
 
   const appText = await getAppText();
 
@@ -77,7 +77,7 @@ export default async function LensPage({
     photos,
     { count, dateRange },
     lens,
-  ] = await getPhotosLensDataCachedCached(make, model);
+  ] = await getPhotosLensDataCached(make, model);
 
   return (
     <LensOverview {...{ lens, photos, count, dateRange }} />

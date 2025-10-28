@@ -6,11 +6,11 @@ import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { generateMetaForRecipe } from '@/recipe';
 import RecipeOverview from '@/recipe/RecipeOverview';
-import { getPhotosRecipeDataCached } from '@/recipe/data';
+import { getPhotosRecipeData } from '@/recipe/data';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
 
-const getPhotosRecipeDataCachedCached = cache(getPhotosRecipeDataCached);
+const getPhotosRecipeDataCachedCached = cache(getPhotosRecipeData);
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'recipes',

@@ -1,4 +1,3 @@
-import { getPhotosCached } from '@/photo/cache';
 import {
   IMAGE_OG_DIMENSION_SMALL,
   MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
@@ -9,6 +8,7 @@ import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import AlbumImageResponse from '@/album/AlbumImageResponse';
 import { getAlbumFromSlug, getAlbumsWithMeta } from '@/album/query';
+import { getPhotos } from '@/photo/query';
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'albums',
@@ -32,7 +32,7 @@ export async function GET(
     { fontFamily, fonts },
     headers,
   ] = await Promise.all([
-    getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY, album }),
+    getPhotos({ limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY, album }),
     getIBMPlexMono(),
     getImageResponseCacheControlHeaders(),
   ]);

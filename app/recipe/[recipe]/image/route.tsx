@@ -1,4 +1,3 @@
-import { getPhotosCached } from '@/photo/cache';
 import {
   IMAGE_OG_DIMENSION_SMALL,
   MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
@@ -6,7 +5,7 @@ import {
 import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
-import { getUniqueRecipes } from '@/photo/query';
+import { getPhotos, getUniqueRecipes } from '@/photo/query';
 import RecipeImageResponse from '@/recipe/RecipeImageResponse';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 
@@ -28,7 +27,7 @@ export async function GET(
     { fontFamily, fonts },
     headers,
   ] = await Promise.all([
-    getPhotosCached({ recipe, limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY }),
+    getPhotos({ recipe, limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY }),
     getIBMPlexMono(),
     getImageResponseCacheControlHeaders(),
   ]);

@@ -13,10 +13,10 @@ import {
   getTagsForAlbum,
 } from '@/album/query';
 import { Album, generateMetaForAlbum } from '@/album';
-import { getPhotosAlbumDataCached } from '@/album/data';
+import { getPhotosAlbumData } from '@/album/data';
 
 const getPhotosAlbumDataCachedCached = cache((album: Album) =>
-  getPhotosAlbumDataCached({ album, limit: INFINITE_SCROLL_GRID_INITIAL}));
+  getPhotosAlbumData({ album, limit: INFINITE_SCROLL_GRID_INITIAL}));
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'albums',

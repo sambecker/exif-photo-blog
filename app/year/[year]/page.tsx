@@ -2,7 +2,7 @@ import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getUniqueYears } from '@/photo/query';
 import { generateMetaForYear } from '@/year/meta';
 import YearOverview from '@/year/YearOverview';
-import { getPhotosYearDataCached } from '@/year/data';
+import { getPhotosYearData } from '@/year/data';
 import { Metadata } from 'next/types';
 import { cache } from 'react';
 import { PATH_ROOT } from '@/app/path';
@@ -10,8 +10,8 @@ import { redirect } from 'next/navigation';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
 
-const getPhotosYearDataCachedCached = cache((year: string) =>
-  getPhotosYearDataCached({ year, limit: INFINITE_SCROLL_GRID_INITIAL }));
+const getPhotosYearDataCached = cache((year: string) =>
+  getPhotosYearData({ year, limit: INFINITE_SCROLL_GRID_INITIAL }));
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'years',
@@ -32,7 +32,7 @@ export async function generateMetadata({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosYearDataCachedCached(year);
+  ] = await getPhotosYearDataCached(year);
   
   if (photos.length === 0) { return {}; }
   
@@ -70,7 +70,7 @@ export default async function YearPage({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosYearDataCachedCached(year);
+  ] = await getPhotosYearDataCached(year);
 
   if (photos.length === 0) { redirect(PATH_ROOT); } 
 

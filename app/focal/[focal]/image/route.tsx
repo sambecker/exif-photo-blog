@@ -1,4 +1,3 @@
-import { getPhotosCached } from '@/photo/cache';
 import {
   IMAGE_OG_DIMENSION_SMALL,
   MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
@@ -8,7 +7,7 @@ import { ImageResponse } from 'next/og';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import FocalLengthImageResponse from '@/focal/FocalLengthImageResponse';
 import { formatFocalLength, getFocalLengthFromString } from '@/focal';
-import { getUniqueFocalLengths } from '@/photo/query';
+import { getPhotos, getUniqueFocalLengths } from '@/photo/query';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
@@ -32,7 +31,7 @@ export async function GET(
     { fontFamily, fonts },
     headers,
   ] = await Promise.all([
-    getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY, focal }),
+    getPhotos({ limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY, focal }),
     getIBMPlexMono(),
     getImageResponseCacheControlHeaders(),
   ]);
