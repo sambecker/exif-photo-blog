@@ -11,12 +11,13 @@ import {
   absolutePathForPhotoImage,
 } from '@/app/path';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotosNearIdCached, getPhotosMetaCached } from '@/photo/cache';
 import { cache } from 'react';
 import { getFocalLengthFromString } from '@/focal';
+import { getPhotosNearId } from '@/photo/data';
+import { getPhotosMetaCached } from '@/photo/cache';
 
-const getPhotosNearIdCachedCached = cache((photoId: string, focal: number) =>
-  getPhotosNearIdCached(
+const getPhotosNearIdCached = cache((photoId: string, focal: number) =>
+  getPhotosNearId(
     photoId,
     { focal, limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 },
   ));
@@ -32,7 +33,7 @@ export async function generateMetadata({
 
   const focal = getFocalLengthFromString(focalString);
 
-  const { photo } = await getPhotosNearIdCachedCached(photoId, focal);
+  const { photo } = await getPhotosNearIdCached(photoId, focal);
 
   if (!photo) { return {}; }
 
@@ -68,7 +69,7 @@ export default async function PhotoFocalLengthPage({
   const focal = getFocalLengthFromString(focalString);
 
   const { photo, photos, photosGrid, indexNumber } =
-    await getPhotosNearIdCachedCached(photoId, focal);
+    await getPhotosNearIdCached(photoId, focal);
 
   if (!photo) { redirect(PATH_ROOT); }
 

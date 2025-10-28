@@ -12,22 +12,20 @@ import {
 } from '@/app/path';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import {
-  getPhotosMetaCached,
-  getPhotosNearIdCached,
-} from '@/photo/cache';
-import {
   PhotoCameraProps,
   cameraFromPhoto,
   formatCameraParams,
 } from '@/camera';
 import { cache } from 'react';
+import { getPhotosNearId } from '@/photo/data';
+import { getPhotosMeta } from '@/photo/query';
 
-const getPhotosNearIdCachedCached = cache((
+const getPhotosNearIdCached = cache((
   photoId: string,
   make: string,
   model: string,
 ) =>
-  getPhotosNearIdCached(
+  getPhotosNearId(
     photoId, {
       camera: formatCameraParams({ make, model }),
       limit: RELATED_GRID_PHOTOS_TO_SHOW + 2,
@@ -39,7 +37,7 @@ export async function generateMetadata({
 }: PhotoCameraProps): Promise<Metadata> {
   const { photoId, make, model } = await params;
 
-  const { photo } = await getPhotosNearIdCachedCached(photoId, make, model);
+  const { photo } = await getPhotosNearIdCached(photoId, make, model);
 
   if (!photo) { return {}; }
 
@@ -76,13 +74,13 @@ export default async function PhotoCameraPage({
   const { photoId, make, model } = await params;
 
   const { photo, photos, photosGrid, indexNumber } =
-    await getPhotosNearIdCachedCached(photoId, make, model);
+    await getPhotosNearIdCached(photoId, make, model);
 
   if (!photo) { redirect(PATH_ROOT); }
 
   const camera = cameraFromPhoto(photo, { make, model });
 
-  const { count, dateRange } = await getPhotosMetaCached({ camera });
+  const { count, dateRange } = await getPhotosMeta({ camera });
 
   return (
     <PhotoDetailPage {...{

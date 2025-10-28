@@ -11,13 +11,14 @@ import {
   absolutePathForPhotoImage,
 } from '@/app/path';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotosMetaCached, getPhotosNearIdCached } from '@/photo/cache';
 import { cache } from 'react';
 import { getAlbumFromSlug } from '@/album/query';
 import { Album } from '@/album';
+import { getPhotosNearId } from '@/photo/data';
+import { getPhotosMeta } from '@/photo/query';
 
-const getPhotosNearIdCachedCached = cache((photoId: string, album: Album) =>
-  getPhotosNearIdCached(
+const getPhotosNearIdCached = cache((photoId: string, album: Album) =>
+  getPhotosNearId(
     photoId,
     { album, limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 },
   ));
@@ -37,7 +38,7 @@ export async function generateMetadata({
 
   if (!album) { return {}; }
 
-  const { photo } = await getPhotosNearIdCachedCached(photoId, album);
+  const { photo } = await getPhotosNearIdCached(photoId, album);
 
   if (!photo) { return {}; }
 
@@ -77,11 +78,11 @@ export default async function PhotoAlbumPage({
   if (!album) { redirect(PATH_ROOT); }
 
   const { photo, photos, photosGrid, indexNumber } =
-    await getPhotosNearIdCachedCached(photoId, album);
+    await getPhotosNearIdCached(photoId, album);
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const { count, dateRange } = await getPhotosMetaCached({ album });
+  const { count, dateRange } = await getPhotosMeta({ album });
 
   return (
     <PhotoDetailPage {...{

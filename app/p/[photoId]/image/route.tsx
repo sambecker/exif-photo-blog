@@ -1,10 +1,10 @@
-import { getPhotoCached } from '@/photo/cache';
 import { IMAGE_OG_DIMENSION } from '@/image-response';
 import PhotoImageResponse from '@/photo/PhotoImageResponse';
 import { getIBMPlexMono } from '@/app/font';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { staticallyGeneratePhotosIfConfigured } from '@/app/static';
 import { safePhotoImageResponse } from '@/platforms/safe-photo-image-response';
+import { getPhoto } from '@/photo/query';
 
 export const generateStaticParams = staticallyGeneratePhotosIfConfigured(
   'image',
@@ -21,7 +21,7 @@ export async function GET(
     { fontFamily, fonts },
     headers,
   ] = await Promise.all([
-    getPhotoCached(photoId),
+    getPhoto(photoId),
     getIBMPlexMono(),
     getImageResponseCacheControlHeaders(),
   ]);

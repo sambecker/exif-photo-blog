@@ -1,4 +1,3 @@
-import { getPhotosCached } from '@/photo/cache';
 import {
   IMAGE_OG_DIMENSION,
   MAX_PHOTOS_TO_SHOW_TEMPLATE_TIGHT,
@@ -8,6 +7,7 @@ import TemplateImageResponse from
 import { getIBMPlexMono } from '@/app/font';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { safePhotoImageResponse } from '@/platforms/safe-photo-image-response';
+import { getPhotosCached } from '@/photo/cache';
 
 export async function GET() {
   const [

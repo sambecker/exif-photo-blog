@@ -11,15 +11,13 @@ import {
   absolutePathForPhotoImage,
 } from '@/app/path';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import {
-  getPhotosMetaCached,
-  getPhotosNearIdCached,
-} from '@/photo/cache';
 import { cache } from 'react';
 import RecentsHeader from '@/recents/RecentsHeader';
+import { getPhotosNearId } from '@/photo/data';
+import { getPhotosMeta } from '@/photo/query';
 
-const getPhotosNearIdCachedCached = cache((photoId: string) =>
-  getPhotosNearIdCached(
+const getPhotosNearIdCached = cache((photoId: string) =>
+  getPhotosNearId(
     photoId,
     { recent: true, limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 },
   ));
@@ -33,7 +31,7 @@ export async function generateMetadata({
 }: PhotoRecentsProps): Promise<Metadata> {
   const { photoId } = await params;
 
-  const { photo } = await getPhotosNearIdCachedCached(photoId);
+  const { photo } = await getPhotosNearIdCached(photoId);
 
   if (!photo) { return {}; }
 
@@ -67,11 +65,11 @@ export default async function PhotoRecentsPage({
   const { photoId } = await params;
 
   const { photo, photos, photosGrid, indexNumber } =
-    await getPhotosNearIdCachedCached(photoId);
+    await getPhotosNearIdCached(photoId);
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const { count, dateRange } = await getPhotosMetaCached({ recent: true });
+  const { count, dateRange } = await getPhotosMeta({ recent: true });
 
   return (
     <PhotoDetailPage {...{

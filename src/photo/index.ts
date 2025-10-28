@@ -155,15 +155,15 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
   } as Photo;
 };
 
-export const parseCachedPhotoDates = (photo: Photo) => ({
+export const parsePhotoDates = (photo: Photo) => ({
   ...photo,
   takenAt: new Date(photo.takenAt),
   updatedAt: new Date(photo.updatedAt),
   createdAt: new Date(photo.createdAt),
 } as Photo);
 
-export const parseCachedPhotosDates = (photos: Photo[]) =>
-  photos.map(parseCachedPhotoDates);
+export const parsePhotosDates = (photos: Photo[]) =>
+  photos.map(parsePhotoDates);
 
 export const convertPhotoToPhotoDbInsert = (
   photo: Photo,

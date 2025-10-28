@@ -11,17 +11,15 @@ import {
   absolutePathForPhotoImage,
 } from '@/app/path';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import {
-  getPhotosMetaCached,
-  getPhotosNearIdCached,
-} from '@/photo/cache';
 import { cache } from 'react';
+import { getPhotosNearId } from '@/photo/data';
+import { getPhotosMeta } from '@/photo/query';
 
-const getPhotosNearIdCachedCached = cache((
+const getPhotosNearIdCached = cache((
   photoId: string,
   film: string,
 ) =>
-  getPhotosNearIdCached(
+  getPhotosNearId(
     photoId,
     { film, limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 },
   ));
@@ -35,7 +33,7 @@ export async function generateMetadata({
 }: PhotoFilmProps): Promise<Metadata> {
   const { photoId, film } = await params;
 
-  const { photo } = await getPhotosNearIdCachedCached(photoId, film);
+  const { photo } = await getPhotosNearIdCached(photoId, film);
 
   if (!photo) { return {}; }
 
@@ -69,11 +67,11 @@ export default async function PhotoFilmPage({
   const { photoId, film } = await params;
 
   const { photo, photos, photosGrid, indexNumber } =
-    await getPhotosNearIdCachedCached(photoId, film);
+    await getPhotosNearIdCached(photoId, film);
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const { count, dateRange } = await getPhotosMetaCached({ film: film });
+  const { count, dateRange } = await getPhotosMeta({ film: film });
 
   return (
     <PhotoDetailPage {...{

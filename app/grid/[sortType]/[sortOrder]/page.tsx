@@ -1,11 +1,10 @@
 import { generateOgImageMetaForPhotos } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
-import { getPhotos } from '@/photo/query';
+import { getPhotos, getPhotosMeta } from '@/photo/query';
 import { cache } from 'react';
 import PhotoGridPage from '@/photo/PhotoGridPage';
 import { getDataForCategoriesCached } from '@/category/cache';
-import { getPhotosMetaCached } from '@/photo/cache';
 import { SortProps } from '@/photo/sort';
 import { getSortOptionsFromParams } from '@/photo/sort/path';
 import { FEED_META_QUERY_OPTIONS, getFeedQueryOptions } from '@/feed';
@@ -38,10 +37,10 @@ export default async function GridPage({ params }: SortProps) {
   ] = await Promise.all([
     getPhotosCached(sortOptions)
       .catch(() => []),
-    getPhotosMetaCached(FEED_META_QUERY_OPTIONS)
+    getPhotosMeta(FEED_META_QUERY_OPTIONS)
       .then(({ count }) => count)
       .catch(() => 0),
-    getPhotosMetaCached()
+    getPhotosMeta()
       .then(({ count }) => count)
       .catch(() => 0),
     getDataForCategoriesCached(),

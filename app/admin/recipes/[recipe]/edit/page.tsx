@@ -1,12 +1,12 @@
 import AdminChildPage from '@/components/AdminChildPage';
 import { redirect } from 'next/navigation';
-import { getPhotosCached, getPhotosMetaCached } from '@/photo/cache';
 import { PATH_ADMIN, PATH_ADMIN_RECIPES, pathForRecipe } from '@/app/path';
 import PhotoLightbox from '@/photo/PhotoLightbox';
 import AdminRecipeBadge from '@/admin/AdminRecipeBadge';
 import AdminRecipeForm from '@/admin/AdminRecipeForm';
 import { getRecipePropsFromPhotos } from '@/recipe';
 import AdminShowRecipeButton from '@/admin/AdminShowRecipeButton';
+import { getPhotos, getPhotosMeta } from '@/photo/query';
 
 const MAX_PHOTO_TO_SHOW = 6;
 
@@ -25,8 +25,8 @@ export default async function RecipePageEdit({
     { count },
     photos,
   ] = await Promise.all([
-    getPhotosMetaCached({ recipe }),
-    getPhotosCached({ recipe, limit: MAX_PHOTO_TO_SHOW }),
+    getPhotosMeta({ recipe }),
+    getPhotos({ recipe, limit: MAX_PHOTO_TO_SHOW }),
   ]);
 
   const { data, film } = getRecipePropsFromPhotos(photos) ?? {};

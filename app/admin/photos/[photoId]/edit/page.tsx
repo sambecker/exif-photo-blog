@@ -1,10 +1,4 @@
 import { redirect } from 'next/navigation';
-import {
-  getPhotoNoStore,
-  getUniqueFilmsCached,
-  getUniqueRecipesCached,
-  getUniqueTagsCached,
-} from '@/photo/cache';
 import { PATH_ADMIN } from '@/app/path';
 import PhotoEditPageClient from '@/photo/PhotoEditPageClient';
 import {
@@ -18,6 +12,12 @@ import {
   getStorageUrlsForPhoto,
 } from '@/photo/storage';
 import { getAlbumsWithMeta, getAlbumTitlesForPhoto } from '@/album/query';
+import {
+  getPhoto,
+  getUniqueFilms,
+  getUniqueRecipes,
+  getUniqueTags,
+} from '@/photo/query';
 
 export default async function PhotoEditPage({
   params,
@@ -34,12 +34,12 @@ export default async function PhotoEditPage({
     uniqueRecipes,
     uniqueFilms,
   ] = await Promise.all([
-    getPhotoNoStore(photoId, true),
+    getPhoto(photoId, true),
     getAlbumTitlesForPhoto(photoId),
     getAlbumsWithMeta(),
-    getUniqueTagsCached(),
-    getUniqueRecipesCached(),
-    getUniqueFilmsCached(),
+    getUniqueTags(),
+    getUniqueRecipes(),
+    getUniqueFilms(),
   ]);
 
   if (!photo) { redirect(PATH_ADMIN); }

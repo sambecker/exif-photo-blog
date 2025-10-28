@@ -2,13 +2,11 @@ import { generateOgImageMetaForPhotos } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import { cache } from 'react';
-import { getPhotos } from '@/photo/query';
+import { getPhotos, getPhotosMeta } from '@/photo/query';
 import { GRID_HOMEPAGE_ENABLED, USER_DEFAULT_SORT_OPTIONS } from '@/app/config';
-import { NULL_CATEGORY_DATA } from '@/category/data';
+import { getDataForCategories, NULL_CATEGORY_DATA } from '@/category/data';
 import PhotoFullPage from '@/photo/PhotoFullPage';
 import PhotoGridPage from '@/photo/PhotoGridPage';
-import { getDataForCategoriesCached } from '@/category/cache';
-import { getPhotosMetaCached } from '@/photo/cache';
 import { FEED_META_QUERY_OPTIONS, getFeedQueryOptions } from '@/feed';
 
 export const dynamic = 'force-static';
@@ -33,14 +31,14 @@ export default async function HomePage() {
   ] = await Promise.all([
     getPhotosCached()
       .catch(() => []),
-    getPhotosMetaCached(FEED_META_QUERY_OPTIONS)
+    getPhotosMeta(FEED_META_QUERY_OPTIONS)
       .then(({ count }) => count)
       .catch(() => 0),
-    getPhotosMetaCached()
+    getPhotosMeta()
       .then(({ count }) => count)
       .catch(() => 0),
     GRID_HOMEPAGE_ENABLED
-      ? getDataForCategoriesCached()
+      ? getDataForCategories()
       : NULL_CATEGORY_DATA,
   ]);
 

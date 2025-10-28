@@ -11,14 +11,15 @@ import {
   absolutePathForPhotoImage,
 } from '@/app/path';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotosMetaCached, getPhotosNearIdCached } from '@/photo/cache';
 import { cache } from 'react';
+import { getPhotosNearId } from '@/photo/data';
+import { getPhotosMeta } from '@/photo/query';
 
 const getPhotosNearIdCachedCached = cache((
   photoId: string,
   recipe: string,
 ) =>
-  getPhotosNearIdCached(
+  getPhotosNearId(
     photoId,
     { recipe, limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 },
   ));
@@ -74,7 +75,7 @@ export default async function PhotoRecipePage({
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const { count, dateRange } = await getPhotosMetaCached({ recipe });
+  const { count, dateRange } = await getPhotosMeta({ recipe });
 
   return (
     <PhotoDetailPage {...{

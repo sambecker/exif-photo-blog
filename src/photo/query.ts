@@ -451,7 +451,7 @@ export const getPhotos = async (options: PhotoQueryOptions = {}) =>
   options,
   );
 
-export const getPhotosNearId = async (
+export const getPhotosNearIdQuery = async (
   photoId: string,
   options: PhotoQueryOptions,
 ) =>

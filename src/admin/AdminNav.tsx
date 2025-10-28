@@ -1,11 +1,5 @@
 import { getStorageUploadUrlsNoStore } from '@/platforms/storage/cache';
 import {
-  getPhotosMetaCached,
-  getPhotosMostRecentUpdateCached,
-  getUniqueRecipesCached,
-  getUniqueTagsCached,
-} from '@/photo/cache';
-import {
   PATH_ADMIN_ALBUMS,
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_RECIPES,
@@ -15,6 +9,12 @@ import {
 import AdminNavClient from './AdminNavClient';
 import { getAppText } from '@/i18n/state/server';
 import { getAlbumsWithMeta } from '@/album/query';
+import {
+  getPhotosMeta,
+  getPhotosMostRecentUpdate,
+  getUniqueRecipes,
+  getUniqueTags,
+} from '@/photo/query';
 
 export default async function AdminNav() {
   const [
@@ -25,7 +25,7 @@ export default async function AdminNav() {
     countRecipes,
     mostRecentPhotoUpdateTime,
   ] = await Promise.all([
-    getPhotosMetaCached({ hidden: 'include' })
+    getPhotosMeta({ hidden: 'include' })
       .then(({ count }) => count)
       .catch(() => 0),
     getStorageUploadUrlsNoStore()
@@ -36,11 +36,11 @@ export default async function AdminNav() {
       }),
     getAlbumsWithMeta().then(albums => albums.length)
       .catch(() => 0),
-    getUniqueTagsCached().then(tags => tags.length)
+    getUniqueTags().then(tags => tags.length)
       .catch(() => 0),
-    getUniqueRecipesCached().then(recipes => recipes.length)
+    getUniqueRecipes().then(recipes => recipes.length)
       .catch(() => 0),
-    getPhotosMostRecentUpdateCached().catch(() => undefined),
+    getPhotosMostRecentUpdate().catch(() => undefined),
   ]);
 
   const appText = await getAppText();

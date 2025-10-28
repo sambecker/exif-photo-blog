@@ -1,4 +1,3 @@
-import { getPhotosCached } from '@/photo/cache';
 import {
   IMAGE_OG_DIMENSION_SMALL,
   MAX_PHOTOS_TO_SHOW_OG,
@@ -8,6 +7,7 @@ import { getIBMPlexMono } from '@/app/font';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { APP_OG_IMAGE_QUERY_OPTIONS } from '@/feed';
 import { safePhotoImageResponse } from '@/platforms/safe-photo-image-response';
+import { getPhotos } from '@/photo/query';
 
 export const dynamic = 'force-static';
 
@@ -17,7 +17,7 @@ export async function GET() {
     headers,
     { fontFamily, fonts },
   ] = await Promise.all([
-    getPhotosCached({
+    getPhotos({
       ...APP_OG_IMAGE_QUERY_OPTIONS,
       limit: MAX_PHOTOS_TO_SHOW_OG,
     })

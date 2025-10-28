@@ -2,16 +2,16 @@ import AnimateItems from '@/components/AnimateItems';
 import Note from '@/components/Note';
 import AppGrid from '@/components/AppGrid';
 import PhotoGrid from '@/photo/PhotoGrid';
-import { getPhotosMetaCached, getPhotosNoStore } from '@/photo/cache';
 import { absolutePathForTag } from '@/app/path';
 import { TAG_PRIVATE, descriptionForTaggedPhotos, titleForTag } from '@/tag';
 import PrivateHeader from '@/tag/PrivateHeader';
 import { Metadata } from 'next';
 import { cache } from 'react';
 import { getAppText } from '@/i18n/state/server';
+import { getPhotos, getPhotosMeta } from '@/photo/query';
 
 const getPhotosHiddenMetaCached = cache(() =>
-  getPhotosMetaCached({ hidden: 'only' }));
+  getPhotosMeta({ hidden: 'only' }));
 
 export async function generateMetadata(): Promise<Metadata> {
   const { count, dateRange } = await getPhotosHiddenMetaCached();
@@ -51,7 +51,7 @@ export default async function PrivateTagPage() {
     photos,
     { count, dateRange },
   ] = await Promise.all([
-    getPhotosNoStore({ hidden: 'only' }),
+    getPhotos({ hidden: 'only' }),
     getPhotosHiddenMetaCached(),
   ]);
 

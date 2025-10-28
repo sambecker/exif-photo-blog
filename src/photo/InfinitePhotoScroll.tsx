@@ -4,7 +4,7 @@ import useSwrInfinite from 'swr/infinite';
 import { ReactNode, useCallback, useMemo, useRef } from 'react';
 import AppGrid from '@/components/AppGrid';
 import Spinner from '@/components/Spinner';
-import { getPhotosCachedAction, getPhotosAction } from '@/photo/actions';
+import { getPhotosAction } from '@/photo/actions';
 import { Photo } from '.';
 import { PhotoSetCategory } from '../category';
 import { clsx } from 'clsx/lite';
@@ -37,7 +37,6 @@ export default function InfinitePhotoScroll({
   film,
   focal,
   wrapMoreButtonInGrid,
-  useCachedPhotos = true,
   includeHiddenPhotos,
   children,
 }: {
@@ -72,7 +71,7 @@ export default function InfinitePhotoScroll({
     keyWithSize: string,
     warmOnly?: boolean,
   ) =>
-    (useCachedPhotos ? getPhotosCachedAction : getPhotosAction)({
+    getPhotosAction({
       offset: initialOffset + getSizeFromKey(keyWithSize) * itemsPerPage,
       sortBy, 
       sortWithPriority,
@@ -87,7 +86,6 @@ export default function InfinitePhotoScroll({
       focal,
     }, warmOnly)
   , [
-    useCachedPhotos,
     sortBy,
     sortWithPriority,
     excludeFromFeeds,

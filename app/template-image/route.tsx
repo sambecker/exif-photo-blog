@@ -1,4 +1,3 @@
-import { getPhotosCached } from '@/photo/cache';
 import {
   GRID_OG_DIMENSION,
   MAX_PHOTOS_TO_SHOW_TEMPLATE,
@@ -8,6 +7,7 @@ import TemplateImageResponse from
 import { getIBMPlexMono } from '@/app/font';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { safePhotoImageResponse } from '@/platforms/safe-photo-image-response';
+import { getPhotos } from '@/photo/query';
 
 export async function GET() {
   const [
@@ -15,7 +15,7 @@ export async function GET() {
     { fontFamily, fonts },
     headers,
   ] = await Promise.all([
-    getPhotosCached({
+    getPhotos({
       sortWithPriority: true,
       limit: MAX_PHOTOS_TO_SHOW_TEMPLATE,
     }).catch(() => []),

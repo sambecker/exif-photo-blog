@@ -1,18 +1,18 @@
 import { PARAM_UPLOAD_TITLE, PATH_ADMIN } from '@/app/path';
 import { extractImageDataFromBlobPath } from '@/photo/server';
 import { redirect } from 'next/navigation';
-import {
-  getUniqueFilmsCached,
-  getUniqueRecipesCached,
-  getUniqueTagsCached,
-} from '@/photo/cache';
 import UploadPageClient from '@/photo/UploadPageClient';
 import {
   AI_CONTENT_GENERATION_ENABLED,
   BLUR_ENABLED,
 } from '@/app/config';
 import ErrorNote from '@/components/ErrorNote';
-import { getRecipeTitleForData } from '@/photo/query';
+import {
+  getRecipeTitleForData,
+  getUniqueFilms,
+  getUniqueRecipes,
+  getUniqueTags,
+} from '@/photo/query';
 import { getAlbumsWithMeta } from '@/album/query';
 import { addAiTextToFormData } from '@/photo/ai/server';
 import AppGrid from '@/components/AppGrid';
@@ -40,9 +40,9 @@ export default async function UploadPage({ params, searchParams }: Params) {
       error,
     }] = await Promise.all([
     getAlbumsWithMeta(),
-    getUniqueRecipesCached(),
-    getUniqueFilmsCached(),
-    getUniqueTagsCached(),
+    getUniqueRecipes(),
+    getUniqueFilms(),
+    getUniqueTags(),
     extractImageDataFromBlobPath(uploadPath, {
       includeInitialPhotoFields: true,
       generateBlurData: BLUR_ENABLED,

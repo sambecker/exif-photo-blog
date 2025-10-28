@@ -11,14 +11,12 @@ import {
   absolutePathForPhotoImage,
 } from '@/app/path';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import {
-  getPhotosMetaCached,
-  getPhotosNearIdCached,
-} from '@/photo/cache';
 import { cache } from 'react';
+import { getPhotosNearId } from '@/photo/data';
+import { getPhotosMeta } from '@/photo/query';
 
-const getPhotosNearIdCachedCached = cache((photoId: string, year: string) =>
-  getPhotosNearIdCached(
+const getPhotosNearIdCached = cache((photoId: string, year: string) =>
+  getPhotosNearId(
     photoId,
     { year, limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 },
   ));
@@ -32,7 +30,7 @@ export async function generateMetadata({
 }: PhotoYearProps): Promise<Metadata> {
   const { photoId, year } = await params;
 
-  const { photo } = await getPhotosNearIdCachedCached(photoId, year);
+  const { photo } = await getPhotosNearIdCached(photoId, year);
 
   if (!photo) { return {}; }
 
@@ -66,11 +64,11 @@ export default async function PhotoYearPage({
   const { photoId, year } = await params;
 
   const { photo, photos, photosGrid, indexNumber } =
-    await getPhotosNearIdCachedCached(photoId, year);
+    await getPhotosNearIdCached(photoId, year);
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const { count, dateRange } = await getPhotosMetaCached({ year: year });
+  const { count, dateRange } = await getPhotosMeta({ year });
 
   return (
     <PhotoDetailPage {...{

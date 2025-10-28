@@ -11,11 +11,12 @@ import {
   absolutePathForPhotoImage,
 } from '@/app/path';
 import PhotoDetailPage from '@/photo/PhotoDetailPage';
-import { getPhotosMetaCached, getPhotosNearIdCached } from '@/photo/cache';
 import { cache } from 'react';
+import { getPhotosNearId } from '@/photo/data';
+import { getPhotosMeta } from '@/photo/query';
 
-const getPhotosNearIdCachedCached = cache((photoId: string, tag: string) =>
-  getPhotosNearIdCached(
+const getPhotosNearIdCached = cache((photoId: string, tag: string) =>
+  getPhotosNearId(
     photoId,
     { tag, limit: RELATED_GRID_PHOTOS_TO_SHOW + 2 },
   ));
@@ -31,7 +32,7 @@ export async function generateMetadata({
 
   const tag = decodeURIComponent(tagFromParams);
 
-  const { photo } = await getPhotosNearIdCachedCached(photoId, tag);
+  const { photo } = await getPhotosNearIdCached(photoId, tag);
 
   if (!photo) { return {}; }
 
@@ -67,11 +68,11 @@ export default async function PhotoTagPage({
   const tag = decodeURIComponent(tagFromParams);
 
   const { photo, photos, photosGrid, indexNumber } =
-    await getPhotosNearIdCachedCached(photoId, tag);
+    await getPhotosNearIdCached(photoId, tag);
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const { count, dateRange } = await getPhotosMetaCached({ tag });
+  const { count, dateRange } = await getPhotosMeta({ tag });
 
   return (
     <PhotoDetailPage {...{

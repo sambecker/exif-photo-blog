@@ -2,7 +2,7 @@ import {
   INFINITE_SCROLL_GRID_INITIAL,
   INFINITE_SCROLL_GRID_MULTIPLE,
 } from '@/photo';
-import { getPhotosCached, getPhotosMetaCached } from '@/photo/cache';
+import { getPhotos, getPhotosMeta } from '@/photo/query';
 import StaggeredOgPhotos from '@/photo/StaggeredOgPhotos';
 import StaggeredOgPhotosInfinite from '@/photo/StaggeredOgPhotosInfinite';
 
@@ -11,9 +11,9 @@ export default async function OGPage() {
     photos,
     count,
   ] = await Promise.all([
-    getPhotosCached({ limit: INFINITE_SCROLL_GRID_INITIAL })
+    getPhotos({ limit: INFINITE_SCROLL_GRID_INITIAL })
       .catch(() => []),
-    getPhotosMetaCached()
+    getPhotosMeta()
       .then(({ count }) => count)
       .catch(() => 0),
   ]);

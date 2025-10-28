@@ -2,9 +2,8 @@ import { generateOgImageMetaForPhotos } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import { cache } from 'react';
-import { getPhotos } from '@/photo/query';
+import { getPhotos, getPhotosMeta } from '@/photo/query';
 import PhotoFullPage from '@/photo/PhotoFullPage';
-import { getPhotosMetaCached } from '@/photo/cache';
 import { USER_DEFAULT_SORT_OPTIONS } from '@/app/config';
 import { FEED_META_QUERY_OPTIONS, getFeedQueryOptions } from '@/feed';
 
@@ -28,7 +27,7 @@ export default async function FullPage() {
   ] = await Promise.all([
     getPhotosCached()
       .catch(() => []),
-    getPhotosMetaCached(FEED_META_QUERY_OPTIONS)
+    getPhotosMeta(FEED_META_QUERY_OPTIONS)
       .then(({ count }) => count)
       .catch(() => 0),
   ]);

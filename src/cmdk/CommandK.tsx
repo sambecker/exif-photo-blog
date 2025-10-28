@@ -1,15 +1,15 @@
 import CommandKClient from './CommandKClient';
-import { getPhotosMetaCached } from '@/photo/cache';
 import { photoQuantityText } from '@/photo';
 import { getDataForCategoriesCached } from '@/category/cache';
 import { getAppText } from '@/i18n/state/server';
+import { getPhotosMeta } from '@/photo/query';
 
 export default async function CommandK() {
   const [
     count,
     categories,
   ] = await Promise.all([
-    getPhotosMetaCached()
+    getPhotosMeta()
       .then(({ count }) => count)
       .catch(() => 0),
     getDataForCategoriesCached(),

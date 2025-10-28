@@ -1,10 +1,10 @@
 import AdminChildPage from '@/components/AdminChildPage';
 import { redirect } from 'next/navigation';
-import { getPhotosCached, getPhotosMetaCached } from '@/photo/cache';
 import AdminTagForm from '@/admin/AdminTagForm';
 import { PATH_ADMIN, PATH_ADMIN_TAGS, pathForTag } from '@/app/path';
 import PhotoLightbox from '@/photo/PhotoLightbox';
 import AdminTagBadge from '@/admin/AdminTagBadge';
+import { getPhotos, getPhotosMeta } from '@/photo/query';
 
 const MAX_PHOTO_TO_SHOW = 6;
 
@@ -23,8 +23,8 @@ export default async function TagPageEdit({
     { count },
     photos,
   ] = await Promise.all([
-    getPhotosMetaCached({ tag }),
-    getPhotosCached({ tag, limit: MAX_PHOTO_TO_SHOW }),
+    getPhotosMeta({ tag }),
+    getPhotos({ tag, limit: MAX_PHOTO_TO_SHOW }),
   ]);
 
   if (count === 0) { redirect(PATH_ADMIN); }

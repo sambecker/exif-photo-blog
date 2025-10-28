@@ -10,7 +10,6 @@ import {
   getUniqueCameras,
   getUniqueTags,
   getUniqueFilms,
-  getPhotosNearId,
   getPhotosMostRecentUpdate,
   getPhotosMeta,
   getUniqueFocalLengths,
@@ -19,7 +18,7 @@ import {
   getUniqueYears,
 } from '@/photo/query';
 import { PhotoQueryOptions } from '@/db';
-import { parseCachedPhotoDates, parseCachedPhotosDates } from '@/photo';
+import { parsePhotoDates, parsePhotosDates } from '@/photo';
 import { createCameraKey } from '@/camera';
 import {
   PATHS_ADMIN,
@@ -183,29 +182,7 @@ export const getPhotosCached = (
 ) => unstable_cache(
   getPhotos,
   [KEY_PHOTOS, ...getPhotosCacheKeys(...args)],
-)(...args).then(parseCachedPhotosDates);
-
-export const getPhotosNearIdCached = (
-  ...args: Parameters<typeof getPhotosNearId>
-) => unstable_cache(
-  getPhotosNearId,
-  [KEY_PHOTOS, ...getPhotosCacheKeys(args[1])],
-)(...args).then(({ photos, indexNumber }) => {
-  const [photoId, { limit }] = args;
-  const photo = photos.find(({ id }) => id === photoId);
-  const isPhotoFirst = photos.findIndex(p => p.id === photoId) === 0;
-  return {
-    photo: photo ? parseCachedPhotoDates(photo) : undefined,
-    photos: parseCachedPhotosDates(photos),
-    ...limit && {
-      photosGrid: photos.slice(
-        isPhotoFirst ? 1 : 2,
-        isPhotoFirst ? limit - 1 : limit,
-      ),
-    },
-    indexNumber,
-  };
-});
+)(...args).then(parsePhotosDates);
 
 export const getPhotosMetaCached = unstable_cache(
   getPhotosMeta,
@@ -222,7 +199,7 @@ export const getPhotoCached = (...args: Parameters<typeof getPhoto>) =>
   unstable_cache(
     getPhoto,
     [KEY_PHOTOS, KEY_PHOTO],
-  )(...args).then(photo => photo ? parseCachedPhotoDates(photo) : undefined);
+  )(...args).then(photo => photo ? parsePhotoDates(photo) : undefined);
   
 export const getUniqueTagsCached =
   unstable_cache(

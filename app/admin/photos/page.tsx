@@ -1,6 +1,9 @@
 import { getStoragePhotoUrlsNoStore } from '@/platforms/storage/cache';
-import { getPhotos, getPhotosInNeedOfUpdateCount } from '@/photo/query';
-import { getPhotosMetaCached } from '@/photo/cache';
+import {
+  getPhotos,
+  getPhotosInNeedOfUpdateCount,
+  getPhotosMeta,
+} from '@/photo/query';
 import AdminPhotosClient from '@/admin/AdminPhotosClient';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
@@ -31,7 +34,7 @@ export default async function AdminPhotosPage() {
       sortBy: 'createdAt',
       limit: INFINITE_SCROLL_INITIAL_ADMIN_PHOTOS,
     }).catch(() => []),
-    getPhotosMetaCached({ hidden: 'include'})
+    getPhotosMeta({ hidden: 'include'})
       .then(({ count }) => count)
       .catch(() => 0),
     getPhotosInNeedOfUpdateCount()
