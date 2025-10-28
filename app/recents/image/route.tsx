@@ -1,3 +1,5 @@
+'use cache';
+
 import {
   IMAGE_OG_DIMENSION_SMALL,
   MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
@@ -10,8 +12,6 @@ import { getAppText } from '@/i18n/state/server';
 import { SHOW_RECENTS } from '@/app/config';
 import { safePhotoImageResponse } from '@/platforms/safe-photo-image-response';
 import { getPhotos } from '@/photo/query';
-
-export const dynamic = 'force-static';
 
 export async function GET() {
   const [

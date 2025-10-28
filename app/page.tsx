@@ -11,8 +11,6 @@ import PhotoFullPage from '@/photo/PhotoFullPage';
 import PhotoGridPage from '@/photo/PhotoGridPage';
 import { FEED_META_QUERY_OPTIONS, getFeedQueryOptions } from '@/feed';
 
-export const maxDuration = 60;
-
 const getPhotosCached = cache(() => getPhotos(getFeedQueryOptions({
   isGrid: GRID_HOMEPAGE_ENABLED,
 })));
