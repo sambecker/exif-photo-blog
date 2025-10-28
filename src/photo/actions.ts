@@ -24,7 +24,6 @@ import {
 import { redirect } from 'next/navigation';
 import { deleteFile } from '@/platforms/storage';
 import {
-  getPhotosCached,
   revalidateAdminPaths,
   revalidateAllKeysAndPaths,
   revalidatePhoto,
@@ -678,19 +677,6 @@ export const getPhotosAction = async (
     return areOptionsSensitive(options)
       ? runAuthenticatedAdminServerAction(() => getPhotos(options))
       : getPhotos(options);
-  }
-};
-
-export const getPhotosCachedAction = async (
-  options: PhotoQueryOptions,
-  warmOnly?: boolean,
-) => {
-  if (warmOnly) {
-    return [];
-  } else {
-    return areOptionsSensitive(options)
-      ? runAuthenticatedAdminServerAction(() => getPhotosCached(options))
-      : getPhotosCached(options);
   }
 };
 
