@@ -10,10 +10,10 @@
   },
   "packageManager": "pnpm@10.20.0",
   "dependencies": {
-    "@ai-sdk/openai": "^2.0.57",
+    "@ai-sdk/openai": "^2.0.58",
     "@ai-sdk/rsc": "^1.0.82",
-    "@aws-sdk/client-s3": "3.919.0",
-    "@aws-sdk/s3-request-presigner": "3.919.0",
+    "@aws-sdk/client-s3": "3.920.0",
+    "@aws-sdk/s3-request-presigner": "3.920.0",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-tooltip": "^1.2.8",
