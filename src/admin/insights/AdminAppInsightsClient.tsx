@@ -280,10 +280,7 @@ export default function AdminAppInsightsClient({
             </a>}
           />
           <ScoreCardRow
-            icon={<IconNext className={clsx(
-              'scale-85',
-              'translate-y-[-1.5px]',
-            )} />}
+            icon={<IconNext className="self-start translate-y-px" />}
             content={`Next.js ${nextVersion}`}
           />
         </ScoreCard>
