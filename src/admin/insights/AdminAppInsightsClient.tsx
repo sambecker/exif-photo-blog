@@ -48,6 +48,8 @@ import IconPhoto from '@/components/icons/IconPhoto';
 import { HiOutlineDocumentText } from 'react-icons/hi';
 import { ReactNode } from 'react';
 import MaskedScroll from '@/components/MaskedScroll';
+import IconNext from '@/components/icons/IconNext';
+import Link from 'next/link';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
@@ -113,6 +115,7 @@ const renderWarningIconSmall =
 
 export default function AdminAppInsightsClient({
   codeMeta,
+  nextVersion,
   insights,
   usedDeprecatedEnvVars,
   photoStats: {
@@ -129,6 +132,7 @@ export default function AdminAppInsightsClient({
   },
 }: {
   codeMeta?: Awaited<ReturnType<typeof getGitHubMetaForCurrentApp>>
+  nextVersion: string
   insights: ReturnType<typeof getAllInsights>
   usedDeprecatedEnvVars: typeof USED_DEPRECATED_ENV_VARS
   photoStats: PhotoStats
@@ -275,6 +279,16 @@ export default function AdminAppInsightsClient({
                 {VERCEL_GIT_COMMIT_MESSAGE ?? DEBUG_COMMIT_MESSAGE}
               </span>
             </a>}
+          />
+          <ScoreCardRow
+            icon={<IconNext className="self-start translate-y-px" />}
+            content={<Link
+              // eslint-disable-next-line max-len
+              href={`https://github.com/vercel/next.js/releases/tag/v${nextVersion}`}
+              target="blank"
+            >
+              Next.js {nextVersion}
+            </Link>}
           />
         </ScoreCard>
       </>}

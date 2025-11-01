@@ -11,6 +11,7 @@ import {
 import AdminAppInsightsClient from './AdminAppInsightsClient';
 import { getAllInsights, getGitHubMetaForCurrentApp } from '.';
 import { USED_DEPRECATED_ENV_VARS } from '@/app/config';
+import { dependencies } from '../../../package.json';
 
 export default async function AdminAppInsights() {
   const [
@@ -42,6 +43,7 @@ export default async function AdminAppInsights() {
   return (
     <AdminAppInsightsClient
       codeMeta={codeMeta}
+      nextVersion={dependencies.next}
       insights={getAllInsights({
         codeMeta,
         photosCount,
