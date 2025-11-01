@@ -49,6 +49,7 @@ import { HiOutlineDocumentText } from 'react-icons/hi';
 import { ReactNode } from 'react';
 import MaskedScroll from '@/components/MaskedScroll';
 import IconNext from '@/components/icons/IconNext';
+import Link from 'next/link';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
@@ -281,7 +282,13 @@ export default function AdminAppInsightsClient({
           />
           <ScoreCardRow
             icon={<IconNext className="self-start translate-y-px" />}
-            content={`Next.js ${nextVersion}`}
+            content={<Link
+              // eslint-disable-next-line max-len
+              href={`https://github.com/vercel/next.js/releases/tag/v${nextVersion}`}
+              target="blank"
+            >
+              Next.js {nextVersion}
+            </Link>}
           />
         </ScoreCard>
       </>}
