@@ -588,6 +588,12 @@ export default function PhotoForm({
                             colorData={generateColorDataFromString(formData.colorData)}
                           />}
                         />;
+                      case 'tags':
+                        return <FieldsetWithStatus
+                          key={key}
+                          {...fieldProps}
+                          className="relative z-2"
+                        />;
                       case 'albums':
                         return <FieldsetAlbum
                           key={key}
