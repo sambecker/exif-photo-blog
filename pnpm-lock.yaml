@@ -54,8 +54,8 @@ importers:
         specifier: ^5.0.86
         version: 5.0.86(zod@4.1.12)
       camelcase-keys:
-        specifier: ^10.0.0
-        version: 10.0.0
+        specifier: ^10.0.1
+        version: 10.0.1
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -2249,8 +2249,8 @@ packages:
     resolution: {integrity: sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==}
     engines: {node: '>=6'}
 
-  camelcase-keys@10.0.0:
-    resolution: {integrity: sha512-dzb1nrmD6llsF6eMZWSpQjVfe1FX4WOkR7HPdX1sMxM5u+1MlnbXodNJ/E6NRArYgMtcwMhiqqemGp/QJV/vrw==}
+  camelcase-keys@10.0.1:
+    resolution: {integrity: sha512-kIH5nQUKB8ORZrwjk40GUgnhzuzxwKb6n5L+anOVmVSrjgix1pfNqVNl0tEcOP4AaFYdke3NNpNiGDSD112lcA==}
     engines: {node: '>=20'}
 
   camelcase@5.3.1:
@@ -7104,7 +7104,7 @@ snapshots:
 
   callsites@3.1.0: {}
 
-  camelcase-keys@10.0.0:
+  camelcase-keys@10.0.1:
     dependencies:
       camelcase: 8.0.0
       map-obj: 5.0.2

@@ -25,7 +25,7 @@
     "@vercel/blob": "^2.0.0",
     "@vercel/speed-insights": "^1.2.0",
     "ai": "^5.0.86",
-    "camelcase-keys": "^10.0.0",
+    "camelcase-keys": "^10.0.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "culori": "^4.0.2",
