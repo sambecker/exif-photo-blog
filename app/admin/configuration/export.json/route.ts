@@ -1,5 +1,7 @@
-import { APP_CONFIGURATION } from '@/app/config';
+import { APP_CONFIGURATION, DEBUG_OUTPUTS_ENABLED } from '@/app/config';
 
 export async function GET() {
-  return Response.json(APP_CONFIGURATION);
+  return DEBUG_OUTPUTS_ENABLED
+    ? Response.json(APP_CONFIGURATION)
+    : new Response('Debugging disabled', { status: 404 });
 };

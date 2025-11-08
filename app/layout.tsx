@@ -11,6 +11,8 @@ import {
   SITE_FEEDS_ENABLED,
   ADMIN_DEBUG_TOOLS_ENABLED,
   PAGE_SCRIPT_URLS,
+  VERCEL_GIT_COMMIT_SHA_SHORT,
+  DEBUG_OUTPUTS_ENABLED,
 } from '@/app/config';
 import AppStateProvider from '@/app/AppStateProvider';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
@@ -70,6 +72,11 @@ export const metadata: Metadata = {
     type: 'image/png',
     sizes: '180x180',
   }],
+  ...DEBUG_OUTPUTS_ENABLED && {
+    other: {
+      'build': VERCEL_GIT_COMMIT_SHA_SHORT ?? 'unknown',
+    },
+  },
   ...SITE_FEEDS_ENABLED && {
     alternates: {
       types: {

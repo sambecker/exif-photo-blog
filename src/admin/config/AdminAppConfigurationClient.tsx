@@ -133,6 +133,8 @@ export default function AdminAppConfigurationClient({
   // Scripts & Analytics
   hasPageScriptUrls,
   pageScriptUrls,
+  // Debugging
+  isDebuggingEnabled,
   // Internal
   areInternalToolsEnabled,
   areAdminDebugToolsEnabled,
@@ -970,6 +972,18 @@ export default function AdminAppConfigurationClient({
             Set environment variable to comma-separated list of URLs
             to be added to the bottom of the body tag via {'"next/script"'}:
             {renderEnvVars(['PAGE_SCRIPT_URLS'])}
+          </ChecklistRow>
+        </>;
+      case 'Debugging':
+        return <>
+          <ChecklistRow
+            title="Debug outputs"
+            status={isDebuggingEnabled}
+            optional
+          >
+            Set environment variable to {'"1"'} to disable build identifier
+            and admin configuration export:
+            {renderEnvVars(['DISABLE_DEBUG_OUTPUTS'])}
           </ChecklistRow>
         </>;
       case 'Internal':

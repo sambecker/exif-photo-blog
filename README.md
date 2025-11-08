@@ -203,6 +203,11 @@ Create Upstash Redis store from storage tab of Vercel dashboard and link to your
   - urls must begin with 'https'
   - ⚠️ this will invoke arbitrary script execution on every page—use with caution
 
+### Debugging
+- `DISABLE_DEBUG_OUTPUTS = 1`
+  - removes build identifier in `<head />`
+  - disables `/admin/configuration/export.json`
+
 ## Alternate storage providers
 
 Only one storage adapter—Vercel Blob, Cloudflare R2, AWS S3, or MinIO—can be used at a time. Ideally, this is configured before photos are uploaded (see [Issue #34](https://github.com/sambecker/exif-photo-blog/issues/34) for migration considerations). If you have multiple adapters, you can set one as preferred by storing `aws-s3`, `cloudflare-r2`, `minio`, or `vercel-blob` in `NEXT_PUBLIC_STORAGE_PREFERENCE`. See [FAQ](#will-there-be-support-for-image-storage-providers-beyond-vercel-aws-and-cloudflare) regarding unsupported providers.

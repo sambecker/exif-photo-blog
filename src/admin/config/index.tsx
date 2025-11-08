@@ -3,7 +3,7 @@ import { BiData, BiGlobe, BiHide, BiLockAlt, BiPencil } from 'react-icons/bi';
 import { CgDebug } from 'react-icons/cg';
 import { FaRegFolderClosed } from 'react-icons/fa6';
 import { HiOutlineCog, HiSparkles } from 'react-icons/hi';
-import { IoMdGrid } from 'react-icons/io';
+import { IoMdGrid, IoMdPower } from 'react-icons/io';
 import { PiPaintBrushHousehold } from 'react-icons/pi';
 import { RiSpeedMiniLine } from 'react-icons/ri';
 import { TbBrandGoogleAnalytics } from 'react-icons/tb';
@@ -69,9 +69,19 @@ const ADMIN_CONFIG_SECTIONS = [{
   required: false,
   icon: <TbBrandGoogleAnalytics size={18} className="translate-y-[1px]" />,
 }, {
+  title: 'Debugging',
+  required: false,
+  icon: <CgDebug
+    size={18}
+    className="translate-x-[-2px] translate-y-[0.5px]"
+  />,
+}, {
   title: 'Internal',
   required: false,
-  icon: <CgDebug size={18} className="translate-y-[1px]" />,
+  icon: <IoMdPower
+    size={16}
+    className="translate-x-[-1px] translate-y-[1px]"
+  />,
 }] as const satisfies AdminConfigSection[];
 
 export type ConfigSectionKey = typeof ADMIN_CONFIG_SECTIONS[number]['title'];
