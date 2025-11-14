@@ -11,6 +11,7 @@ import {
 import { getNavSortControlFromString, getSortByFromString } from '@/photo/sort';
 import { parseChromaCutoff, parseStartingHue } from '@/photo/color/sort';
 import { parseSocialKeysFromString } from '@/social';
+import { dependencies } from '../../package.json';
 
 // HARD-CODED GLOBAL CONFIGURATION
 
@@ -524,6 +525,7 @@ export const APP_CONFIGURATION = {
   areAdminDebugToolsEnabled: ADMIN_DEBUG_TOOLS_ENABLED,
   isAdminSqlDebugEnabled: ADMIN_SQL_DEBUG_ENABLED,
   // Misc
+  nextVersion: dependencies.next,
   baseUrl: BASE_URL,
   baseUrlShare: BASE_URL_SHARE,
   commitSha: VERCEL_GIT_COMMIT_SHA_SHORT,
