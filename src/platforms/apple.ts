@@ -135,8 +135,8 @@ export const formatAppleLensText = (
           case '1.78': return format('Main');
           case '2.8': return format('Telephoto');
         }
-        // 16 (single lens)
       case '16E':
+        // Single lens
         return format('Main');
       case '16':
       case '16 PLUS':
@@ -146,6 +146,21 @@ export const formatAppleLensText = (
         }
       case '16 PRO':
       case '16 PRO MAX':
+        switch (aperture) {
+          case '2.2': return format('Wide');
+          case '1.78': return format('Main');
+          case '2.8': return format('Telephoto');
+        }
+      case 'AIR':
+        // Single lens
+        return format('Main');
+      case '17':
+        switch (aperture) {
+          case '2.2': return format('Wide');
+          case '1.6': return format('Main');
+        }
+      case '17 PRO':
+      case '17 PRO MAX':
         switch (aperture) {
           case '2.2': return format('Wide');
           case '1.78': return format('Main');
