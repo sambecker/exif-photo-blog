@@ -1,27 +1,33 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Let us know about an issue
 title: ''
-labels: ''
+labels: 'bug'
 assignees: ''
 
 ---
 
 **Describe the bug**
-A clear and concise description of what the bug is.
+A clear and concise description of what the issue is.
 
-**Does your template use custom code?**
-If so, what features/customizations have you added?
+**Does your app use the latest code?**
+If no, consider syncing your fork.
 
-**Steps to Reproduce**
+**Does your app use custom code?**
+If yes, what features/customizations have you introduced?
+
+**Steps to reproduce**
 1. Go to '...'
 2. Click on '....'
 
 **Screenshots**
-If applicable, add screenshots to help explain your problem.
+Images of videos demonstrating the issue.
 
 **Live deployment**
-If applicable, add url to latest deployment/hosted website.
+If available, url to latest deployment/hosted website.
+
+**Configuration details**
+Paste contents of `/admin/configuration/export.json` here.
 
 **Device details**
  - Device/OS: [e.g. Windows, macOS, iPhone15Pro, Android]
