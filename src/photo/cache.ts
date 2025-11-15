@@ -39,6 +39,7 @@ import {
   PREFIX_ALBUM,
 } from '@/app/path';
 import { createLensKey } from '@/lens';
+import { getAlbumsWithMeta, getAlbumTitlesForPhoto } from '@/album/query';
 
 // Table key
 export const KEY_PHOTOS     = 'photos';
@@ -223,6 +224,18 @@ export const getPhotoCached = (...args: Parameters<typeof getPhoto>) =>
     getPhoto,
     [KEY_PHOTOS, KEY_PHOTO],
   )(...args).then(photo => photo ? parseCachedPhotoDates(photo) : undefined);
+
+export const getAlbumTitlesForPhotoCached =
+  unstable_cache(
+    getAlbumTitlesForPhoto,
+    [KEY_PHOTOS, KEY_ALBUMS],
+  );
+
+export const getAlbumsWithMetaCached =
+  unstable_cache(
+    getAlbumsWithMeta,
+    [KEY_PHOTOS, KEY_ALBUMS],
+  );
   
 export const getUniqueTagsCached =
   unstable_cache(

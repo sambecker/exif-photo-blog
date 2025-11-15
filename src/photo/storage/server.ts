@@ -54,5 +54,8 @@ export const convertUploadToPhoto = async ({
       : copyFile(uploadUrl, fileName);
   }
   // Store optimized photos after original photo is copied/moved
-  return promise.then(async url => storeOptimizedPhotos(url, fileBytes));
+  const updatedUrl = await promise
+    .then(async url => storeOptimizedPhotos(url, fileBytes));
+
+  return updatedUrl;
 };

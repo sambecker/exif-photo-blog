@@ -1,5 +1,7 @@
 import { redirect } from 'next/navigation';
 import {
+  getAlbumsWithMetaCached,
+  getAlbumTitlesForPhotoCached,
   getPhotoNoStore,
   getUniqueFilmsCached,
   getUniqueRecipesCached,
@@ -17,7 +19,6 @@ import {
   getOptimizedPhotoUrlForManipulation,
   getStorageUrlsForPhoto,
 } from '@/photo/storage';
-import { getAlbumsWithMeta, getAlbumTitlesForPhoto } from '@/album/query';
 
 export default async function PhotoEditPage({
   params,
@@ -35,8 +36,8 @@ export default async function PhotoEditPage({
     uniqueFilms,
   ] = await Promise.all([
     getPhotoNoStore(photoId, true),
-    getAlbumTitlesForPhoto(photoId),
-    getAlbumsWithMeta(),
+    getAlbumTitlesForPhotoCached(photoId),
+    getAlbumsWithMetaCached(),
     getUniqueTagsCached(),
     getUniqueRecipesCached(),
     getUniqueFilmsCached(),

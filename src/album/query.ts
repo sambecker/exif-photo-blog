@@ -66,7 +66,7 @@ export const getAlbumFromSlug = (slug: string) =>
   safelyQuery(() => sql<Album>`
     SELECT * FROM albums WHERE slug=${slug}
   `.then(({ rows }) => rows[0] ? parseAlbumFromDb(rows[0]) : undefined)
-  , 'getAlbum');
+  , 'getAlbumFromSlug');
 
 export const deleteAlbum = (id: string) =>
   safelyQuery(() => sql`
@@ -90,7 +90,7 @@ export const getAlbumsWithMeta = () =>
       count: parseInt(count, 10),
       lastModified: album.updated_at as Date,
     })))
-  , 'getAlbumsWithPhotoCounts');
+  , 'getAlbumsWithMeta');
 
 export const clearPhotoAlbumIds = (photoId: string) =>
   safelyQuery(() => sql`
@@ -107,7 +107,8 @@ export const addPhotoAlbumIds = (photoIds: string[], albumIds: string[]) => {
       INSERT INTO album_photo (album_id, photo_id)
       ${valueString}
       ON CONFLICT (album_id, photo_id) DO NOTHING
-    `, values), 'updateAlbumPhoto');
+    `, values)
+    , 'addPhotoAlbumIds');
   }
 };
 
