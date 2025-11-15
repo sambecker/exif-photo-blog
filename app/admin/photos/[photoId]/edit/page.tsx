@@ -1,12 +1,14 @@
 import { redirect } from 'next/navigation';
 import {
-  getAlbumsWithMetaCached,
-  getAlbumTitlesForPhotoCached,
   getPhotoNoStore,
   getUniqueFilmsCached,
   getUniqueRecipesCached,
   getUniqueTagsCached,
 } from '@/photo/cache';
+import {
+  getAlbumTitlesForPhotoCached,
+  getAlbumsWithMetaCached,
+} from '@/album/cache';
 import { PATH_ADMIN } from '@/app/path';
 import PhotoEditPageClient from '@/photo/PhotoEditPageClient';
 import {

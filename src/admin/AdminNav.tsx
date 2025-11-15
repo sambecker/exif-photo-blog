@@ -4,8 +4,8 @@ import {
   getPhotosMostRecentUpdateCached,
   getUniqueRecipesCached,
   getUniqueTagsCached,
-  getAlbumsWithMetaCached,
 } from '@/photo/cache';
+import { getAlbumsWithMetaCached } from '@/album/cache';
 import {
   PATH_ADMIN_ALBUMS,
   PATH_ADMIN_PHOTOS,

@@ -1,4 +1,5 @@
-import { getAlbumsWithMetaCached, getUniqueTagsCached } from '@/photo/cache';
+import { getUniqueTagsCached } from '@/photo/cache';
+import { getAlbumsWithMetaCached } from '@/album/cache';
 import AdminBatchEditPanelClient from './AdminBatchEditPanelClient';
 
 export default async function AdminBatchEditPanel({

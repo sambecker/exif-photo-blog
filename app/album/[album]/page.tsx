@@ -1,5 +1,4 @@
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
-import { getPhotos } from '@/photo/query';
 import { PATH_ROOT } from '@/app/path';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
@@ -7,13 +6,14 @@ import { cache } from 'react';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
 import AlbumOverview from '@/album/AlbumOverview';
-import {
-  getAlbumFromSlug,
-  getAlbumsWithMeta,
-  getTagsForAlbum,
-} from '@/album/query';
 import { Album, generateMetaForAlbum } from '@/album';
 import { getPhotosAlbumDataCached } from '@/album/data';
+import {
+  getAlbumFromSlugCached,
+  getAlbumsWithMetaCached,
+  getTagsForAlbumCached,
+} from '@/album/cache';
+import { getPhotosCached } from '@/photo/cache';
 
 const getPhotosAlbumDataCachedCached = cache((album: Album) =>
   getPhotosAlbumDataCached({ album, limit: INFINITE_SCROLL_GRID_INITIAL}));
@@ -21,7 +21,7 @@ const getPhotosAlbumDataCachedCached = cache((album: Album) =>
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'albums',
   'page',
-  getAlbumsWithMeta,
+  getAlbumsWithMetaCached,
   albums => albums.map(({ album }) => ({ album: album.slug })),
 );
 
@@ -36,7 +36,7 @@ export async function generateMetadata({
 
   const albumSlug = decodeURIComponent(albumFromParams);
 
-  const album = await getAlbumFromSlug(albumSlug);
+  const album = await getAlbumFromSlugCached(albumSlug);
 
   if (!album) { return {}; }
 
@@ -80,13 +80,13 @@ export default async function AlbumPage({
 
   const albumSlug = decodeURIComponent(albumFromParams);
 
-  const album = await getAlbumFromSlug(albumSlug);
+  const album = await getAlbumFromSlugCached(albumSlug);
 
   if (!album) { redirect(PATH_ROOT); }
 
-  const photos = await getPhotos({ album });
+  const photos = await getPhotosCached({ album });
 
-  const tags = await getTagsForAlbum(album.id);
+  const tags = await getTagsForAlbumCached(album.id);
 
   return (
     <AlbumOverview {...{

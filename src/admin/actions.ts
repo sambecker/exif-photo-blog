@@ -9,16 +9,16 @@ import { testGooglePlacesConnection } from '@/platforms/google-places';
 import { APP_CONFIGURATION } from '@/app/config';
 import { getStorageUploadUrlsNoStore } from '@/platforms/storage/cache';
 import {
-  getPhotosMeta,
-  getUniqueTags,
-  getUniqueRecipes,
-  getPhotosInNeedOfUpdateCount,
-} from '@/photo/query';
-import {
   getGitHubMetaForCurrentApp,
   indicatorStatusForSignificantInsights,
 } from './insights';
-import { getAlbumsWithMeta } from '@/album/query';
+import {
+  getPhotosInNeedOfUpdateCountCached,
+  getPhotosMetaCached,
+  getUniqueRecipesCached,
+  getUniqueTagsCached,
+} from '@/photo/cache';
+import { getAlbumsWithMetaCached } from '@/album/cache';
 
 export type AdminData = Awaited<ReturnType<typeof getAdminDataAction>>;
 
@@ -34,13 +34,13 @@ export const getAdminDataAction = async () =>
       tagsCount,
       recipesCount,
     ] = await Promise.all([
-      getPhotosMeta()
+      getPhotosMetaCached()
         .then(({ count }) => count)
         .catch(() => 0),
-      getPhotosMeta({ hidden: 'only' })
+      getPhotosMetaCached({ hidden: 'only' })
         .then(({ count }) => count)
         .catch(() => 0),
-      getPhotosInNeedOfUpdateCount(),
+      getPhotosInNeedOfUpdateCountCached(),
       getGitHubMetaForCurrentApp(),
       getStorageUploadUrlsNoStore()
         .then(urls => urls.length)
@@ -48,13 +48,13 @@ export const getAdminDataAction = async () =>
           console.error(`Error getting blob upload urls: ${e}`);
           return 0;
         }),
-      getAlbumsWithMeta()
+      getAlbumsWithMetaCached()
         .then(albums => albums.length)
         .catch(() => 0),
-      getUniqueTags()
+      getUniqueTagsCached()
         .then(tags => tags.length)
         .catch(() => 0),
-      getUniqueRecipes()
+      getUniqueRecipesCached()
         .then(recipes => recipes.length)
         .catch(() => 0),
     ]);

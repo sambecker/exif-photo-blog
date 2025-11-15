@@ -1,6 +1,7 @@
 import { getStorageUploadUrlsNoStore } from '@/platforms/storage/cache';
 import AppGrid from '@/components/AppGrid';
-import { getUniqueTagsCached, getAlbumsWithMetaCached } from '@/photo/cache';
+import { getUniqueTagsCached } from '@/photo/cache';
+import { getAlbumsWithMetaCached } from '@/album/cache';
 import AdminUploadsClient from '@/admin/AdminUploadsClient';
 import { redirect } from 'next/navigation';
 import { PATH_ADMIN_PHOTOS } from '@/app/path';

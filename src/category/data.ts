@@ -1,14 +1,4 @@
 import {
-  getPhotosMeta,
-  getUniqueCameras,
-  getUniqueFilms,
-  getUniqueFocalLengths,
-  getUniqueLenses,
-  getUniqueRecipes,
-  getUniqueTags,
-  getUniqueYears,
-} from '@/photo/query';
-import {
   SHOW_FILMS,
   SHOW_FOCAL_LENGTHS,
   SHOW_LENSES,
@@ -23,7 +13,17 @@ import { createLensKey } from '@/lens';
 import { sortTagsByCount } from '@/tag';
 import { sortCategoriesByCount } from '@/category';
 import { sortFocalLengths } from '@/focal';
-import { getAlbumsWithMeta } from '@/album/query';
+import {
+  getPhotosMetaCached,
+  getUniqueCamerasCached,
+  getUniqueFilmsCached,
+  getUniqueFocalLengthsCached,
+  getUniqueLensesCached,
+  getUniqueRecipesCached,
+  getUniqueTagsCached,
+  getUniqueYearsCached,
+} from '@/photo/cache';
+import { getAlbumsWithMetaCached } from '@/album/cache';
 
 type CategoryData = Awaited<ReturnType<typeof getDataForCategories>>;
 
@@ -41,7 +41,7 @@ export const NULL_CATEGORY_DATA: CategoryData = {
 
 export const getDataForCategories = () => Promise.all([
   SHOW_RECENTS
-    ? getPhotosMeta({ recent: true })
+    ? getPhotosMetaCached({ recent: true })
       .then(({ count, dateRange }) => count && dateRange
         ? [{
           count,
@@ -50,41 +50,41 @@ export const getDataForCategories = () => Promise.all([
       .catch(() => [])
     : undefined,
   SHOW_YEARS
-    ? getUniqueYears()
+    ? getUniqueYearsCached()
       .catch(() => [])
     : undefined,
   SHOW_CAMERAS
-    ? getUniqueCameras()
+    ? getUniqueCamerasCached()
       .then(sortCategoriesByCount)
       .catch(() => [])
     : undefined,
   SHOW_LENSES
-    ? getUniqueLenses()
+    ? getUniqueLensesCached()
       .then(sortCategoriesByCount)
       .catch(() => [])
     : undefined,
   SHOW_TAGS
-    ? getUniqueTags()
+    ? getUniqueTagsCached()
       .then(sortTagsByCount)
       .catch(() => [])
     : undefined,
   SHOW_RECIPES
-    ? getUniqueRecipes()
+    ? getUniqueRecipesCached()
       .then(sortCategoriesByCount)
       .catch(() => [])
     : undefined,
   SHOW_FILMS
-    ? getUniqueFilms()
+    ? getUniqueFilmsCached()
       .then(sortCategoriesByCount)
       .catch(() => [])
     : undefined,
   SHOW_FOCAL_LENGTHS
-    ? getUniqueFocalLengths()
+    ? getUniqueFocalLengthsCached()
       .then(sortFocalLengths)
       .catch(() => [])
     : undefined,
   SHOW_ALBUMS
-    ? getAlbumsWithMeta()
+    ? getAlbumsWithMetaCached()
       .catch(() => [])
     : undefined,
 ]).then(([
