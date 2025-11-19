@@ -2,7 +2,7 @@
 
 import { runAuthenticatedAdminServerAction } from '@/auth/server';
 import { addPhotoAlbumIds, deleteAlbum, updateAlbum } from './query';
-import { revalidateAllKeysAndPaths } from '@/photo/cache';
+import { revalidateAllKeysAndPaths } from '@/cache';
 import { redirect } from 'next/navigation';
 import { PATH_ADMIN_ALBUMS, PATH_ROOT, pathForAlbum } from '@/app/path';
 import { convertFormDataToAlbum } from './form';

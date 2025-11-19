@@ -1,5 +1,5 @@
 import { auth } from '@/auth/server';
-import { revalidateAdminPaths, revalidatePhotosKey } from '@/photo/cache';
+import { revalidateAdminPaths, revalidatePhotosKey } from '@/cache';
 import {
   ACCEPTED_PHOTO_FILE_TYPES,
   MAX_PHOTO_UPLOAD_SIZE_IN_BYTES,

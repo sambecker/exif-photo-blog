@@ -24,14 +24,13 @@ import {
 import { redirect } from 'next/navigation';
 import { deleteFile } from '@/platforms/storage';
 import {
-  getPhotosCached,
   revalidateAdminPaths,
   revalidateAllKeysAndPaths,
-  revalidatePhoto,
   revalidatePhotosKey,
   revalidateRecipesKey,
   revalidateTagsKey,
-} from '@/photo/cache';
+} from '@/cache';
+import { revalidatePhoto, getPhotosCached } from './cache';
 import {
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_RECIPES,
