@@ -1,3 +1,5 @@
+'use cache';
+
 import { getPhotosCached } from '@/photo/cache';
 import {
   IMAGE_OG_DIMENSION_SMALL,
@@ -8,10 +10,12 @@ import { getIBMPlexMono } from '@/app/font';
 import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { APP_OG_IMAGE_QUERY_OPTIONS } from '@/feed';
 import { safePhotoImageResponse } from '@/platforms/safe-photo-image-response';
-
-export const dynamic = 'force-static';
+import { KEY_PHOTOS } from '@/cache';
+import { cacheTag } from 'next/cache';
 
 export async function GET() {
+  cacheTag(KEY_PHOTOS);
+
   const [
     photos,
     headers,
