@@ -39,6 +39,7 @@ export default function AddUploadButton({
           title,
           takenAtLocal: generateLocalPostgresString(),
           takenAtNaiveLocal: generateLocalNaivePostgresString(),
+          shouldRevalidateAllKeysAndPaths: true,
         })
           .then(() => {
             if (shouldRedirectToAdminPhotos) {
