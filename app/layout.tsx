@@ -1,3 +1,5 @@
+'use cache';
+
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { clsx } from 'clsx/lite';
@@ -25,7 +27,7 @@ import CommandK from '@/cmdk/CommandK';
 import SwrConfigClient from '@/swr/SwrConfigClient';
 import ShareModals from '@/share/ShareModals';
 import AdminUploadPanel from '@/admin/upload/AdminUploadPanel';
-import { revalidatePath } from 'next/cache';
+import { cacheTag, revalidatePath } from 'next/cache';
 import RecipeModal from '@/recipe/RecipeModal';
 import ThemeColors from '@/app/ThemeColors';
 import AppTextProvider from '@/i18n/state/AppTextProvider';
@@ -34,6 +36,8 @@ import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/path';
 import SelectPhotosProvider from '@/admin/select/SelectPhotosProvider';
 import AdminBatchEditPanel from '@/admin/select/AdminBatchEditPanel';
 import Script from 'next/script';
+import { Suspense } from 'react';
+import { KEY_PHOTOS } from '@/cache';
 
 import '../tailwind.css';
 
@@ -87,11 +91,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  cacheTag(KEY_PHOTOS);
+
   return (
     <html
       lang={HTML_LANG}
@@ -122,14 +128,16 @@ export default function RootLayout({
                           'mb-12',
                           'space-y-5',
                         )}>
-                          <AdminUploadPanel
-                            shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
-                            onLastUpload={async () => {
-                              'use server';
-                              // Update upload count in admin nav
-                              revalidatePath('/admin', 'layout');
-                            }}
-                          />
+                          <Suspense>
+                            <AdminUploadPanel
+                              shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
+                              onLastUpload={async () => {
+                                'use server';
+                                // Update upload count in admin nav
+                                revalidatePath('/admin', 'layout');
+                              }}
+                            />
+                          </Suspense>
                           <AdminBatchEditPanel
                             onBatchActionComplete={async () => {
                               'use server';
@@ -137,17 +145,23 @@ export default function RootLayout({
                               revalidatePath('/admin', 'layout');
                             }}
                           />
-                          {children}
+                          <Suspense>
+                            {children}
+                          </Suspense>
                         </div>
                       </main>
-                      <Footer />
+                      <Suspense>
+                        <Footer />
+                      </Suspense>
                     </div>
                     <CommandK />
                   </SharedHoverProvider>
                 </SwrConfigClient>
                 <Analytics debug={false} />
                 <SpeedInsights debug={false} />
-                <PhotoEscapeHandler />
+                <Suspense>
+                  <PhotoEscapeHandler />
+                </Suspense>
                 <ToasterWithThemes />
               </ThemeProvider>
             </SelectPhotosProvider>

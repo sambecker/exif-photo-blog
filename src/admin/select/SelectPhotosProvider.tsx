@@ -8,6 +8,7 @@ import { useAppState } from '@/app/AppState';
 import useClientSearchParams from '@/utility/useClientSearchParams';
 import { replacePathWithEvent } from '@/utility/url';
 import { isElementPartiallyInViewport } from '@/utility/dom';
+import { getPhotoGridElements } from '.';
 
 export const DATA_KEY_PHOTO_GRID = 'data-photo-grid';
 
@@ -35,17 +36,13 @@ export default function SelectPhotosProvider({
   const [isPerformingSelectEdit, setIsPerformingSelectEdit] =
     useState(false);
 
-  const getPhotoGridElements = useCallback(() =>
-    document.querySelectorAll(`[${DATA_KEY_PHOTO_GRID}=true]`)
-  , []);
-
   useEffect(() => {
     if (isUserSignedIn) {
       const doesPageHavePhotoGrids = getPhotoGridElements().length > 0;
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setCanCurrentPageSelectPhotos(doesPageHavePhotoGrids);
     }
-  }, [pathname, isUserSignedIn, getPhotoGridElements]);
+  }, [pathname, isUserSignedIn]);
 
   const isSelectingPhotos = useMemo(() =>
     isUserSignedIn &&
@@ -76,7 +73,7 @@ export default function SelectPhotosProvider({
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedPhotoIds([]);
     }
-  }, [isSelectingPhotos, getPhotoGridElements]);
+  }, [isSelectingPhotos]);
 
   return (
     <SelectPhotosContext.Provider value={{

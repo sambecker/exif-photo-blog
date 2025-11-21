@@ -700,7 +700,7 @@ export default function CommandKClient({
     adminSection.items.push({
       label: appText.auth.signOut,
       action: () => signOutAction()
-        .then(clearAuthStateAndRedirectIfNecessary)
+        .then(() => clearAuthStateAndRedirectIfNecessary?.(pathname))
         .then(() => setIsOpen?.(false)),
     });
   } else {

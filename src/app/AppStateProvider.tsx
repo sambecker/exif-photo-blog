@@ -26,7 +26,7 @@ import {
   clearAuthEmailCookie,
   getAuthEmailCookie,
 } from '@/auth';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { isPathProtected, PATH_ROOT } from '@/app/path';
 import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 import { RecipeProps } from '@/recipe';
@@ -50,8 +50,6 @@ export default function AppStateProvider({
   areAdminDebugToolsEnabled?: boolean
 }) {
   const router = useRouter();
-
-  const pathname = usePathname();
 
   // CORE
   const [hasLoadedWithAnimations, setHasLoadedWithAnimations] =
@@ -190,16 +188,18 @@ export default function AppStateProvider({
     setAdminUpdateTimes(updates => [...updates, new Date()])
   , []);
 
-  const clearAuthStateAndRedirectIfNecessary = useCallback(() => {
-    setUserEmail(undefined);
-    setUserEmailEager(undefined);
-    clearAuthEmailCookie();
-    if (isPathProtected(pathname)) {
-      router.push(PATH_ROOT);
-    } else {
-      toastSuccess('Signed out');
+  const clearAuthStateAndRedirectIfNecessary = useCallback(
+    (pathname: string) => {
+      setUserEmail(undefined);
+      setUserEmailEager(undefined);
+      clearAuthEmailCookie();
+      if (isPathProtected(pathname)) {
+        router.push(PATH_ROOT);
+      } else {
+        toastSuccess('Signed out');
+      }
     }
-  }, [router, pathname]);
+    , [router]);
 
   // Returns false when upload is cancelled
   const startUpload = useCallback(() => new Promise<boolean>(resolve => {

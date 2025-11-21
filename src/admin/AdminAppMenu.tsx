@@ -34,6 +34,7 @@ import { MoreMenuSection } from '@/components/more/MoreMenu';
 import { FiXSquare } from 'react-icons/fi';
 import { useSelectPhotosState } from './select/SelectPhotosState';
 import IconAlbum from '@/components/icons/IconAlbum';
+import { usePathname } from 'next/navigation';
 
 export default function AdminAppMenu({
   isOpen,
@@ -42,6 +43,8 @@ export default function AdminAppMenu({
   isOpen?: boolean
   setIsOpen?: (isOpen: boolean) => void
 }) {
+  const pathname = usePathname();
+
   const {
     photosCountTotal = 0,
     photosCountNeedSync = 0,
@@ -209,9 +212,10 @@ export default function AdminAppMenu({
     items: [{
       label: appText.auth.signOut,
       icon: <IconSignOut size={15} />,
-      action: () => signOutAction().then(clearAuthStateAndRedirectIfNecessary),
+      action: () => signOutAction()
+        .then(() => clearAuthStateAndRedirectIfNecessary?.(pathname)),
     }],
-  }), [appText.auth.signOut, clearAuthStateAndRedirectIfNecessary]);
+  }), [appText.auth.signOut, clearAuthStateAndRedirectIfNecessary, pathname]);
 
   const sections = useMemo(() =>
     [sectionUpload, sectionMain, sectionSignOut]

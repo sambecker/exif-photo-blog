@@ -1,4 +1,5 @@
 import AdminNav from '@/admin/AdminNav';
+import { Suspense } from 'react';
 
 export default async function AdminLayout({
   children,
@@ -7,8 +8,12 @@ export default async function AdminLayout({
 }) {
   return (
     <div className="mt-4 space-y-4">
-      <AdminNav />
-      {children}
+      <Suspense>
+        <Suspense>
+          <AdminNav />
+        </Suspense>
+        {children}
+      </Suspense>
     </div>
   );
 }

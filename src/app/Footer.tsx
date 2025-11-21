@@ -57,8 +57,10 @@ export default function Footer() {
                     >
                       {userEmail || userEmailEager}
                     </Link>
-                    <form action={() => signOutAction()
-                      .then(clearAuthStateAndRedirectIfNecessary)}>
+                    <form
+                      action={() => signOutAction().then(() =>
+                        clearAuthStateAndRedirectIfNecessary?.(pathname))}
+                    >
                       <SubmitButtonWithStatus styleAs="link">
                         {appText.auth.signOut}
                       </SubmitButtonWithStatus>

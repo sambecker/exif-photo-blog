@@ -184,7 +184,6 @@ export const updatePhoto = (photo: PhotoDbInsert) =>
       hidden=${photo.hidden},
       taken_at=${photo.takenAt},
       taken_at_naive=${photo.takenAtNaive},
-      updated_at=${(new Date()).toISOString()}
     WHERE id=${photo.id}
   `, 'updatePhoto');
 

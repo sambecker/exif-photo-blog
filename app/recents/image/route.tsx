@@ -1,5 +1,3 @@
-'use cache';
-
 import {
   IMAGE_OG_DIMENSION_SMALL,
   MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
@@ -11,13 +9,9 @@ import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { getAppText } from '@/i18n/state/server';
 import { SHOW_RECENTS } from '@/app/config';
 import { safePhotoImageResponse } from '@/platforms/safe-photo-image-response';
-import { cacheTag } from 'next/cache';
-import { KEY_PHOTOS } from '@/cache';
 import { getPhotos } from '@/photo/query';
 
 export async function GET() {
-  cacheTag(KEY_PHOTOS);
-
   const [
     photos,
     { fontFamily, fonts },
