@@ -60,8 +60,8 @@ export default function AdminAppMenu({
 
   const {
     isSelectingPhotos,
-    startSelectingPhotos,
-    stopSelectingPhotos,
+    startSelectingPhotosPath,
+    stopSelectingPhotosPath,
   } = useSelectPhotosState();
 
   const appText = useAppText();
@@ -175,9 +175,9 @@ export default function AdminAppMenu({
             size={16}
             className="translate-x-[-0.5px] translate-y-[0.5px]"
           />,
-        action: isSelectingPhotos
-          ? stopSelectingPhotos
-          : startSelectingPhotos,
+        href: isSelectingPhotos
+          ? stopSelectingPhotosPath
+          : startSelectingPhotosPath,
       });
     }
     items.push({
@@ -197,8 +197,8 @@ export default function AdminAppMenu({
   }, [
     appText,
     isSelectingPhotos,
-    startSelectingPhotos,
-    stopSelectingPhotos,
+    startSelectingPhotosPath,
+    stopSelectingPhotosPath,
     photosCountNeedSync,
     photosCountTotal,
     recipesCount,

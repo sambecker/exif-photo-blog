@@ -40,6 +40,7 @@ import { Suspense } from 'react';
 import { KEY_PHOTOS } from '@/cache';
 
 import '../tailwind.css';
+import SelectPhotosListener from '@/admin/select/SelectPhotosListener';
 
 export const metadata: Metadata = {
   title: META_TITLE,
@@ -111,6 +112,9 @@ export default async function RootLayout({
         <AppStateProvider areAdminDebugToolsEnabled={ADMIN_DEBUG_TOOLS_ENABLED}>
           <AppTextProvider>
             <SelectPhotosProvider>
+              <Suspense>
+                <SelectPhotosListener />
+              </Suspense>
               <ThemeColors />
               <ThemeProvider attribute="class" defaultTheme={DEFAULT_THEME}>
                 <SwrConfigClient>
@@ -119,7 +123,9 @@ export default async function RootLayout({
                       'mx-3 mb-3',
                       'lg:mx-6 lg:mb-6',
                     )}>
-                      <Nav />
+                      <Suspense>
+                        <Nav />
+                      </Suspense>
                       <main>
                         <ShareModals />
                         <RecipeModal />

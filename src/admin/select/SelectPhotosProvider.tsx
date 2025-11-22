@@ -1,65 +1,27 @@
 'use client';
 
-import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { SelectPhotosContext } from './SelectPhotosState';
-import { PARAM_SELECT, PATH_GRID_INFERRED } from '@/app/path';
-import { usePathname, useRouter } from 'next/navigation';
-import { useAppState } from '@/app/AppState';
-import useClientSearchParams from '@/utility/useClientSearchParams';
-import { replacePathWithEvent } from '@/utility/url';
 import { isElementPartiallyInViewport } from '@/utility/dom';
 import { getPhotoGridElements } from '.';
-
-export const DATA_KEY_PHOTO_GRID = 'data-photo-grid';
 
 export default function SelectPhotosProvider({
   children,
 }: {
   children: ReactNode
-}) {
-  const router = useRouter();
-
-  const pathname = usePathname();
-
-  const { isUserSignedIn } = useAppState();
-  
-  const searchParamsSelect = useClientSearchParams(
-    PARAM_SELECT,
-    // Only scan urls when admin is signed in
-    isUserSignedIn,
-  );
-
+}) {  
   const [canCurrentPageSelectPhotos, setCanCurrentPageSelectPhotos] =
+    useState(false);
+  const [isSelectingPhotos, setIsSelectingPhotos] =
     useState(false);
   const [selectedPhotoIds, setSelectedPhotoIds] =
     useState<string[]>([]);
   const [isPerformingSelectEdit, setIsPerformingSelectEdit] =
     useState(false);
-
-  useEffect(() => {
-    if (isUserSignedIn) {
-      const doesPageHavePhotoGrids = getPhotoGridElements().length > 0;
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setCanCurrentPageSelectPhotos(doesPageHavePhotoGrids);
-    }
-  }, [pathname, isUserSignedIn]);
-
-  const isSelectingPhotos = useMemo(() =>
-    isUserSignedIn &&
-    searchParamsSelect === 'true'
-  , [isUserSignedIn, searchParamsSelect]);
-    
-  const startSelectingPhotos = useCallback(() =>
-    canCurrentPageSelectPhotos
-      // Use replacePathWithEvent because only query params change
-      ? replacePathWithEvent(`${pathname}?${PARAM_SELECT}=true`)
-      // Redirect to grid if current view does not support photo selection
-      : router.push(`${PATH_GRID_INFERRED}?${PARAM_SELECT}=true`)
-  , [router, canCurrentPageSelectPhotos, pathname]);
-  
-  const stopSelectingPhotos = useCallback(() =>
-    replacePathWithEvent(pathname)
-  , [pathname]);
+  const [startSelectingPhotosPath, setStartSelectingPhotosPath] =
+    useState<string>('');
+  const [stopSelectingPhotosPath, setStopSelectingPhotosPath] =
+    useState<string>('');
 
   useEffect(() => {
     if (isSelectingPhotos) {
@@ -78,9 +40,13 @@ export default function SelectPhotosProvider({
   return (
     <SelectPhotosContext.Provider value={{
       canCurrentPageSelectPhotos,
+      setCanCurrentPageSelectPhotos,
       isSelectingPhotos,
-      startSelectingPhotos,
-      stopSelectingPhotos,
+      setIsSelectingPhotos,
+      startSelectingPhotosPath,
+      setStartSelectingPhotosPath,
+      stopSelectingPhotosPath,
+      setStopSelectingPhotosPath,
       selectedPhotoIds,
       setSelectedPhotoIds,
       isPerformingSelectEdit,
