@@ -1,3 +1,5 @@
+'use cache';
+
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { PATH_ROOT } from '@/app/path';
 import type { Metadata } from 'next';
@@ -10,20 +12,24 @@ import { Album, generateMetaForAlbum } from '@/album';
 import { getPhotosAlbumDataCached } from '@/album/data';
 import {
   getAlbumFromSlugCached,
-  getAlbumsWithMetaCached,
   getTagsForAlbumCached,
 } from '@/album/cache';
 import { getPhotosCached } from '@/photo/cache';
+import { cacheTag } from 'next/cache';
+import { KEY_PHOTOS } from '@/cache';
+import { getAlbumsWithMeta } from '@/album/query';
 
 const getPhotosAlbumDataCachedCached = cache((album: Album) =>
   getPhotosAlbumDataCached({ album, limit: INFINITE_SCROLL_GRID_INITIAL}));
 
-export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-  'albums',
-  'page',
-  getAlbumsWithMetaCached,
-  albums => albums.map(({ album }) => ({ album: album.slug })),
-);
+export async function generateStaticParams() {
+  return staticallyGenerateCategoryIfConfigured(
+    'albums',
+    'page',
+    getAlbumsWithMeta,
+    albums => albums.map(({ album }) => ({ album: album.slug })),
+  )();
+}
 
 interface AlbumProps {
   params: Promise<{ album: string }>
@@ -76,6 +82,8 @@ export async function generateMetadata({
 export default async function AlbumPage({
   params,
 }:AlbumProps) {
+  cacheTag(KEY_PHOTOS);
+
   const { album: albumFromParams } = await params;
 
   const albumSlug = decodeURIComponent(albumFromParams);

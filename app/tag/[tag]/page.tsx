@@ -13,12 +13,12 @@ import { getAppText } from '@/i18n/state/server';
 const getPhotosTagDataCachedCached = cache((tag: string) =>
   getPhotosTagDataCached({ tag, limit: INFINITE_SCROLL_GRID_INITIAL}));
 
-export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-  'tags',
-  'page',
-  getUniqueTags,
-  tags => tags.map(({ tag }) => ({ tag })),
-);
+// export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
+//   'tags',
+//   'page',
+//   getUniqueTags,
+//   tags => tags.map(({ tag }) => ({ tag })),
+// );
 
 interface TagProps {
   params: Promise<{ tag: string }>

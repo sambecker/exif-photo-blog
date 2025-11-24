@@ -18,12 +18,12 @@ const getPhotosCameraDataCachedCached = cache((
   INFINITE_SCROLL_GRID_INITIAL,
 ));
 
-export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-  'cameras',
-  'page',
-  getUniqueCameras,
-  cameras => cameras.map(({ camera }) => formatCameraParams(camera)),
-);
+// export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
+//   'cameras',
+//   'page',
+//   getUniqueCameras,
+//   cameras => cameras.map(({ camera }) => formatCameraParams(camera)),
+// );
 
 export async function generateMetadata({
   params,

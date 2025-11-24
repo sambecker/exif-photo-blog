@@ -13,6 +13,8 @@ import { depluralize, pluralize } from '@/utility/string';
 
 type StaticOutput = 'page' | 'image';
 
+export const KEY_STATIC_EMPTY = '__STATIC_EMPTY__';
+
 const logStaticGenerationDetails = (count: number, content: string) => {
   if (count > 0) {
     const label = pluralize(count, content, undefined, 3);
@@ -44,7 +46,7 @@ export const staticallyGenerateCategoryIfConfigured = <T, K>(
   type: StaticOutput,
   getData: () => Promise<T[]>,
   formatData: (data: T[]) => K[],
-): (() => Promise<K[]>) | undefined =>
+): () => Promise<K[]> =>
   CATEGORY_VISIBILITY.includes(key) && (
     (type === 'page' && STATICALLY_OPTIMIZED_PHOTO_CATEGORIES) ||
     (type === 'image' && STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES)
@@ -64,4 +66,4 @@ export const staticallyGenerateCategoryIfConfigured = <T, K>(
       }
       return formatData(data);
     }
-    : undefined;
+    : () => Promise.resolve([] as K[]);

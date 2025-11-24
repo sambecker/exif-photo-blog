@@ -24,12 +24,12 @@ const getPhotosLensDataCachedCached = cache((
   INFINITE_SCROLL_GRID_INITIAL,
 ));
 
-export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-  'lenses',
-  'page',
-  getUniqueLenses,
-  safelyGenerateLensStaticParams,
-);
+// export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
+//   'lenses',
+//   'page',
+//   getUniqueLenses,
+//   safelyGenerateLensStaticParams,
+// );
 
 export async function generateMetadata({
   params,

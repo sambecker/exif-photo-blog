@@ -16,13 +16,13 @@ const getPhotosFocalDataCachedCached = cache((focal: number) =>
     limit: INFINITE_SCROLL_GRID_INITIAL,
   }));
 
-export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-  'focal-lengths',
-  'page',
-  getUniqueFocalLengths,
-  focalLengths => focalLengths
-    .map(({ focal }) => ({ focal: focal.toString() })),
-);
+// export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
+//   'focal-lengths',
+//   'page',
+//   getUniqueFocalLengths,
+//   focalLengths => focalLengths
+//     .map(({ focal }) => ({ focal: focal.toString() })),
+// );
 
 interface FocalLengthProps {
   params: Promise<{ focal: string }>

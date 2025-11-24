@@ -13,12 +13,12 @@ import { getAppText } from '@/i18n/state/server';
 const getPhotosFilmDataCachedCached = cache((film: string) =>
   getPhotosFilmDataCached({ film, limit: INFINITE_SCROLL_GRID_INITIAL }));
 
-export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-  'films',
-  'page',
-  getUniqueFilms,
-  films => films.map(({ film }) => ({ film })),
-);
+// export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
+//   'films',
+//   'page',
+//   getUniqueFilms,
+//   films => films.map(({ film }) => ({ film })),
+// );
 
 interface FilmProps {
   params: Promise<{ film: string }>

@@ -12,12 +12,12 @@ import { getAppText } from '@/i18n/state/server';
 
 const getPhotosRecipeDataCachedCached = cache(getPhotosRecipeDataCached);
 
-export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-  'recipes',
-  'page',
-  getUniqueRecipes,
-  recipes => recipes.map(({ recipe }) => ({ recipe })),
-);
+// export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
+//   'recipes',
+//   'page',
+//   getUniqueRecipes,
+//   recipes => recipes.map(({ recipe }) => ({ recipe })),
+// );
 
 interface RecipeProps {
   params: Promise<{ recipe: string }>
