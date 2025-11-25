@@ -28,7 +28,6 @@ export const generateStaticParams = async () =>
     'page',
     getAlbumsWithMeta,
     albums => albums.map(({ album }) => ({ album: album.slug })),
-    { album: '' },
   );
 
 interface AlbumProps {

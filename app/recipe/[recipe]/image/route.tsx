@@ -15,7 +15,6 @@ export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'image',
   getUniqueRecipes,
   recipes => recipes.map(({ recipe }) => ({ recipe })),
-  { recipe: '' },
 );
 
 export async function GET(

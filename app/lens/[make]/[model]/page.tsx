@@ -36,7 +36,6 @@ export const generateStaticParams = async () =>
     'page',
     getUniqueLenses,
     safelyGenerateLensStaticParams,
-    { make: '', model: '' },
   );
 
 export async function generateMetadata({

@@ -15,7 +15,6 @@ export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'image',
   getUniqueTags,
   tags => tags.map(({ tag }) => ({ tag })),
-  { tag: '' },
 );
 
 export async function GET(

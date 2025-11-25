@@ -13,6 +13,8 @@ import { depluralize, pluralize } from '@/utility/string';
 
 type StaticOutput = 'page' | 'image';
 
+const NULL_RESPONSE = [{}];
+
 const logStaticGenerationDetails = (count: number, content: string) => {
   if (count > 0) {
     const label = pluralize(count, content, undefined, 3);
@@ -44,9 +46,9 @@ export const staticallyGenerateCategoryIfConfigured = async <T, K>(
   type: StaticOutput,
   getData: () => Promise<T[]>,
   formatData: (data: T[]) => K[],
-  nullResponse: K,
-): Promise<K[]> => {
+): Promise<K[] | typeof NULL_RESPONSE> => {
   let response: K[] = [];
+
   if (CATEGORY_VISIBILITY.includes(key) && (
     (type === 'page' && STATICALLY_OPTIMIZED_PHOTO_CATEGORIES) ||
     (type === 'image' && STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES)
@@ -65,5 +67,10 @@ export const staticallyGenerateCategoryIfConfigured = async <T, K>(
     }
     response = formatData(data);
   }
-  return response.length > 0 ? response : [nullResponse];
+
+  return response.length > 0
+    ? response
+    // Null response necessary to satisfy 'use cache' restriction requiring
+    // at least one response from generateStaticParams 
+    : NULL_RESPONSE;
 };
