@@ -20,6 +20,7 @@ export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'image',
   getUniqueLenses,
   safelyGenerateLensStaticParams,
+  { make: '', model: '' },
 );
 
 export async function GET(

@@ -13,12 +13,12 @@ import { getAppText } from '@/i18n/state/server';
 const getPhotosYearDataCachedCached = cache((year: string) =>
   getPhotosYearDataCached({ year, limit: INFINITE_SCROLL_GRID_INITIAL }));
 
-export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-  'years',
-  'page',
-  getUniqueYears,
-  years => years.map(({ year }) => ({ year })),
-);
+// export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
+//   'years',
+//   'page',
+//   getUniqueYears,
+//   years => years.map(({ year }) => ({ year })),
+// );
 
 interface YearProps {
   params: Promise<{ year: string }>

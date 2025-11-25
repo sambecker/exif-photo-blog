@@ -15,6 +15,7 @@ export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'image',
   getAlbumsWithMeta,
   albums => albums.map(({ album }) => ({ album: album.slug })),
+  { album: '' },
 );
 
 export async function GET(

@@ -15,6 +15,7 @@ export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'image',
   getUniqueYears,
   years => years.map(({ year }) => ({ year })),
+  { year: '' },
 );
 
 export async function GET(

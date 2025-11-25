@@ -16,6 +16,7 @@ export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'image',
   getUniqueCameras,
   cameras => cameras.map(({ camera }) => formatCameraParams(camera)),
+  { make: '', model: '' },
 );
 
 export async function GET(

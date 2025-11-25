@@ -73,7 +73,7 @@ const nextConfig: NextConfig = {
     // TODO: Finalize magic values are correct
     default: {
       stale: 60 * 60 * 24 * 14, // 14 days
-      revalidate: 60 * 60 * 24, // 1 day
+      revalidate: 60 * 60 * 24 * 14, // 14 days
       expire: 60 * 60 * 24 * 14, // 14 days
     },
   },

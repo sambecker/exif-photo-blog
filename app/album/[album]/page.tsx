@@ -22,14 +22,14 @@ import { getAlbumsWithMeta } from '@/album/query';
 const getPhotosAlbumDataCachedCached = cache((album: Album) =>
   getPhotosAlbumDataCached({ album, limit: INFINITE_SCROLL_GRID_INITIAL}));
 
-export async function generateStaticParams() {
-  return staticallyGenerateCategoryIfConfigured(
+export const generateStaticParams = async () =>
+  staticallyGenerateCategoryIfConfigured(
     'albums',
     'page',
     getAlbumsWithMeta,
     albums => albums.map(({ album }) => ({ album: album.slug })),
-  )();
-}
+    { album: '' },
+  );
 
 interface AlbumProps {
   params: Promise<{ album: string }>

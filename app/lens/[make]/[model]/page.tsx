@@ -1,3 +1,5 @@
+'use cache';
+
 import { Metadata } from 'next/types';
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { cache } from 'react';
@@ -14,6 +16,10 @@ import {
   staticallyGenerateCategoryIfConfigured,
 } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
+import { PATH_ROOT } from '@/app/path';
+import { redirect } from 'next/navigation';
+import { cacheTag } from 'next/cache';
+import { KEY_PHOTOS } from '@/cache';
 
 const getPhotosLensDataCachedCached = cache((
   make: string | undefined,
@@ -24,12 +30,14 @@ const getPhotosLensDataCachedCached = cache((
   INFINITE_SCROLL_GRID_INITIAL,
 ));
 
-// export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-//   'lenses',
-//   'page',
-//   getUniqueLenses,
-//   safelyGenerateLensStaticParams,
-// );
+export const generateStaticParams = async () =>
+  staticallyGenerateCategoryIfConfigured(
+    'lenses',
+    'page',
+    getUniqueLenses,
+    safelyGenerateLensStaticParams,
+    { make: '', model: '' },
+  );
 
 export async function generateMetadata({
   params,
@@ -71,6 +79,8 @@ export async function generateMetadata({
 export default async function LensPage({
   params,
 }: LensProps) {
+  cacheTag(KEY_PHOTOS);
+
   const { make, model } = await getLensFromParams(params);
 
   const [
@@ -78,6 +88,8 @@ export default async function LensPage({
     { count, dateRange },
     lens,
   ] = await getPhotosLensDataCachedCached(make, model);
+
+  if (photos.length === 0) { redirect(PATH_ROOT); }
 
   return (
     <LensOverview {...{ lens, photos, count, dateRange }} />
