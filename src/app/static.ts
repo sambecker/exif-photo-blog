@@ -13,8 +13,6 @@ import { depluralize, pluralize } from '@/utility/string';
 
 type StaticOutput = 'page' | 'image';
 
-export const KEY_STATIC_EMPTY = '__STATIC_EMPTY__';
-
 const logStaticGenerationDetails = (count: number, content: string) => {
   if (count > 0) {
     const label = pluralize(count, content, undefined, 3);
