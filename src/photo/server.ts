@@ -20,6 +20,11 @@ import {
   getFujifilmRecipeFromMakerNote,
 } from '@/platforms/fujifilm/recipe';
 import {
+  getNikonPictureControlFromMakerNote,
+  NikonPictureControl,
+} from '@/platforms/nikon/simulation';
+import { isExifForNikon } from '@/platforms/nikon/server';
+import {
   deletePhoto,
   getRecipeTitleForData,
   updateAllMatchingRecipeTitles,
@@ -63,7 +68,7 @@ export const extractImageDataFromBlobPath = async (
 
   let dataExif: ExifData | undefined;
   let dataExifr: any | undefined;
-  let film: FujifilmSimulation | undefined;
+  let film: FujifilmSimulation | NikonPictureControl | undefined;
   let recipe: FujifilmRecipe | undefined;
   let blurData: string | undefined;
   let imageResizedBase64: string | undefined;
@@ -97,6 +102,18 @@ export const extractImageDataFromBlobPath = async (
         if (Buffer.isBuffer(makerNote)) {
           film = getFujifilmSimulationFromMakerNote(makerNote);
           recipe = getFujifilmRecipeFromMakerNote(makerNote);
+        }
+      }
+
+      // Capture Picture Control for Nikon cameras
+      if (isExifForNikon(dataExif)) {
+        // Parse exif data again with binary fields
+        // in order to access MakerNote tag
+        parser.enableBinaryFields(true);
+        const exifDataBinary = parser.parse();
+        const makerNote = exifDataBinary.tags?.MakerNote;
+        if (Buffer.isBuffer(makerNote)) {
+          film = getNikonPictureControlFromMakerNote(makerNote);
         }
       }
 
