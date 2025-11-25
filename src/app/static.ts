@@ -13,7 +13,10 @@ import { depluralize, pluralize } from '@/utility/string';
 
 type StaticOutput = 'page' | 'image';
 
+// Null response necessary to satisfy 'use cache' restriction requiring
+// at least one param from generateStaticParams
 const NULL_PARAMS = [{}];
+type NullParams = typeof NULL_PARAMS;
 
 const logStaticGenerationDetails = (count: number, content: string) => {
   if (count > 0) {
@@ -24,7 +27,7 @@ const logStaticGenerationDetails = (count: number, content: string) => {
 
 export const staticallyGeneratePhotosIfConfigured = async (
   type: StaticOutput,
-): Promise<{ photoId: string }[] | typeof NULL_PARAMS> => {
+): Promise<{ photoId: string }[] | NullParams> => {
   let params: { photoId: string }[] = [];
 
   if (
@@ -44,11 +47,7 @@ export const staticallyGeneratePhotosIfConfigured = async (
     params = photoIds.map(photoId => ({ photoId }));
   }
 
-  return params.length > 0
-    ? params
-    // Null response necessary to satisfy 'use cache' restriction requiring
-    // at least one response from generateStaticParams 
-    : NULL_PARAMS;
+  return params.length > 0 ? params : NULL_PARAMS;
 };
 
 export const staticallyGenerateCategoryIfConfigured = async <T, K>(
@@ -56,7 +55,7 @@ export const staticallyGenerateCategoryIfConfigured = async <T, K>(
   type: StaticOutput,
   getData: () => Promise<T[]>,
   formatData: (data: T[]) => K[],
-): Promise<K[] | typeof NULL_PARAMS> => {
+): Promise<K[] | NullParams> => {
   let params: K[] = [];
 
   if (CATEGORY_VISIBILITY.includes(key) && (
@@ -78,9 +77,5 @@ export const staticallyGenerateCategoryIfConfigured = async <T, K>(
     params = formatData(data);
   }
 
-  return params.length > 0
-    ? params
-    // Null response necessary to satisfy 'use cache' restriction requiring
-    // at least one response from generateStaticParams 
-    : NULL_PARAMS;
+  return params.length > 0 ? params : NULL_PARAMS;
 };

@@ -1,3 +1,5 @@
+'use cache';
+
 import { Metadata } from 'next/types';
 import { CameraProps, formatCameraParams } from '@/camera';
 import { generateMetaForCamera } from '@/camera/meta';
@@ -8,6 +10,8 @@ import { cache } from 'react';
 import { getUniqueCameras } from '@/photo/query';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
+import { KEY_PHOTOS } from '@/cache';
+import { cacheTag } from 'next/cache';
 
 const getPhotosCameraDataCachedCached = cache((
   make: string,
@@ -18,12 +22,13 @@ const getPhotosCameraDataCachedCached = cache((
   INFINITE_SCROLL_GRID_INITIAL,
 ));
 
-// export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-//   'cameras',
-//   'page',
-//   getUniqueCameras,
-//   cameras => cameras.map(({ camera }) => formatCameraParams(camera)),
-// );
+export const generateStaticParams = async () =>
+  staticallyGenerateCategoryIfConfigured(
+    'cameras',
+    'page',
+    getUniqueCameras,
+    cameras => cameras.map(({ camera }) => formatCameraParams(camera)),
+  );
 
 export async function generateMetadata({
   params,
@@ -65,6 +70,8 @@ export async function generateMetadata({
 export default async function CameraPage({
   params,
 }: CameraProps) {
+  cacheTag(KEY_PHOTOS);
+
   const { make, model } = await params;
 
   const [

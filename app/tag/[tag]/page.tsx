@@ -1,3 +1,5 @@
+'use cache';
+
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getUniqueTags } from '@/photo/query';
 import { PATH_ROOT } from '@/app/path';
@@ -9,16 +11,19 @@ import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
+import { cacheTag } from 'next/cache';
+import { KEY_PHOTOS } from '@/cache';
 
 const getPhotosTagDataCachedCached = cache((tag: string) =>
   getPhotosTagDataCached({ tag, limit: INFINITE_SCROLL_GRID_INITIAL}));
 
-// export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-//   'tags',
-//   'page',
-//   getUniqueTags,
-//   tags => tags.map(({ tag }) => ({ tag })),
-// );
+export const generateStaticParams = async () =>
+  staticallyGenerateCategoryIfConfigured(
+    'tags',
+    'page',
+    getUniqueTags,
+    tags => tags.map(({ tag }) => ({ tag })),
+  );
 
 interface TagProps {
   params: Promise<{ tag: string }>
@@ -67,6 +72,8 @@ export async function generateMetadata({
 export default async function TagPage({
   params,
 }:TagProps) {
+  cacheTag(KEY_PHOTOS);
+
   const { tag: tagFromParams } = await params;
 
   const tag = decodeURIComponent(tagFromParams);

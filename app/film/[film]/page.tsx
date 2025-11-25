@@ -1,3 +1,5 @@
+'use cache';
+
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getUniqueFilms } from '@/photo/query';
 import { generateMetaForFilm } from '@/film';
@@ -9,16 +11,19 @@ import { PATH_ROOT } from '@/app/path';
 import { redirect } from 'next/navigation';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
+import { cacheTag } from 'next/cache';
+import { KEY_PHOTOS } from '@/cache';
 
 const getPhotosFilmDataCachedCached = cache((film: string) =>
   getPhotosFilmDataCached({ film, limit: INFINITE_SCROLL_GRID_INITIAL }));
 
-// export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-//   'films',
-//   'page',
-//   getUniqueFilms,
-//   films => films.map(({ film }) => ({ film })),
-// );
+export const generateStaticParams = async () =>
+  staticallyGenerateCategoryIfConfigured(
+    'films',
+    'page',
+    getUniqueFilms,
+    films => films.map(({ film }) => ({ film })),
+  );
 
 interface FilmProps {
   params: Promise<{ film: string }>
@@ -65,6 +70,8 @@ export async function generateMetadata({
 export default async function FilmPage({
   params,
 }: FilmProps) {
+  cacheTag(KEY_PHOTOS);
+
   const { film } = await params;
 
   const [

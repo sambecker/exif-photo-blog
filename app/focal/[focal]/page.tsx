@@ -1,3 +1,5 @@
+'use cache';
+
 import { generateMetaForFocalLength, getFocalLengthFromString } from '@/focal';
 import FocalLengthOverview from '@/focal/FocalLengthOverview';
 import { getPhotosFocalLengthDataCached } from '@/focal/data';
@@ -9,6 +11,8 @@ import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
+import { KEY_PHOTOS } from '@/cache';
+import { cacheTag } from 'next/cache';
 
 const getPhotosFocalDataCachedCached = cache((focal: number) =>
   getPhotosFocalLengthDataCached({
@@ -16,13 +20,14 @@ const getPhotosFocalDataCachedCached = cache((focal: number) =>
     limit: INFINITE_SCROLL_GRID_INITIAL,
   }));
 
-// export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-//   'focal-lengths',
-//   'page',
-//   getUniqueFocalLengths,
-//   focalLengths => focalLengths
-//     .map(({ focal }) => ({ focal: focal.toString() })),
-// );
+export const generateStaticParams = async () =>
+  staticallyGenerateCategoryIfConfigured(
+    'focal-lengths',
+    'page',
+    getUniqueFocalLengths,
+    focalLengths => focalLengths
+      .map(({ focal }) => ({ focal: focal.toString() })),
+  );
 
 interface FocalLengthProps {
   params: Promise<{ focal: string }>
@@ -71,6 +76,8 @@ export async function generateMetadata({
 export default async function TagPage({
   params,
 }:FocalLengthProps) {
+  cacheTag(KEY_PHOTOS);
+
   const { focal: focalString } = await params;
 
   const focal = getFocalLengthFromString(focalString);

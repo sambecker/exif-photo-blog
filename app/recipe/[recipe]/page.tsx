@@ -1,3 +1,5 @@
+'use cache';
+
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getUniqueRecipes } from '@/photo/query';
 import { PATH_ROOT } from '@/app/path';
@@ -9,15 +11,18 @@ import RecipeOverview from '@/recipe/RecipeOverview';
 import { getPhotosRecipeDataCached } from '@/recipe/data';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
+import { cacheTag } from 'next/cache';
+import { KEY_PHOTOS } from '@/cache';
 
 const getPhotosRecipeDataCachedCached = cache(getPhotosRecipeDataCached);
 
-// export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-//   'recipes',
-//   'page',
-//   getUniqueRecipes,
-//   recipes => recipes.map(({ recipe }) => ({ recipe })),
-// );
+export const generateStaticParams = async () =>
+  staticallyGenerateCategoryIfConfigured(
+    'recipes',
+    'page',
+    getUniqueRecipes,
+    recipes => recipes.map(({ recipe }) => ({ recipe })),
+  );
 
 interface RecipeProps {
   params: Promise<{ recipe: string }>
@@ -69,6 +74,8 @@ export async function generateMetadata({
 export default async function RecipePage({
   params,
 }:RecipeProps) {
+  cacheTag(KEY_PHOTOS);
+
   const { recipe: recipeFromParams } = await params;
 
   const recipe = decodeURIComponent(recipeFromParams);

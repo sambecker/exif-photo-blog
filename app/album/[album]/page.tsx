@@ -9,7 +9,7 @@ import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
 import AlbumOverview from '@/album/AlbumOverview';
 import { Album, generateMetaForAlbum } from '@/album';
-import { getPhotosAlbumDataCached } from '@/album/data';
+import { getPhotosAlbumData } from '@/album/data';
 import {
   getAlbumFromSlugCached,
   getTagsForAlbumCached,
@@ -19,8 +19,8 @@ import { cacheTag } from 'next/cache';
 import { KEY_PHOTOS } from '@/cache';
 import { getAlbumsWithMeta } from '@/album/query';
 
-const getPhotosAlbumDataCachedCached = cache((album: Album) =>
-  getPhotosAlbumDataCached({ album, limit: INFINITE_SCROLL_GRID_INITIAL}));
+const getPhotosAlbumDataCached = cache((album: Album) =>
+  getPhotosAlbumData({ album, limit: INFINITE_SCROLL_GRID_INITIAL}));
 
 export const generateStaticParams = async () =>
   staticallyGenerateCategoryIfConfigured(
@@ -48,7 +48,7 @@ export async function generateMetadata({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosAlbumDataCachedCached(album);
+  ] = await getPhotosAlbumDataCached(album);
 
   if (photos.length === 0) { return {}; }
 
