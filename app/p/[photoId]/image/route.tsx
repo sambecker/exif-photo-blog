@@ -6,9 +6,10 @@ import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { staticallyGeneratePhotosIfConfigured } from '@/app/static';
 import { safePhotoImageResponse } from '@/platforms/safe-photo-image-response';
 
-export const generateStaticParams = staticallyGeneratePhotosIfConfigured(
-  'image',
-);
+export const generateStaticParams = async () =>
+  staticallyGeneratePhotosIfConfigured(
+    'image',
+  );
 
 export async function GET(
   _: Request,

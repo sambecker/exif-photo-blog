@@ -13,7 +13,7 @@ import { depluralize, pluralize } from '@/utility/string';
 
 type StaticOutput = 'page' | 'image';
 
-const NULL_RESPONSE = [{}];
+const NULL_PARAMS = [{}];
 
 const logStaticGenerationDetails = (count: number, content: string) => {
   if (count > 0) {
@@ -22,11 +22,15 @@ const logStaticGenerationDetails = (count: number, content: string) => {
   }
 };
 
-export const staticallyGeneratePhotosIfConfigured = (type: StaticOutput) => (
-  (type === 'page' && STATICALLY_OPTIMIZED_PHOTOS) ||
-  (type === 'image' && STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES)
-)
-  ? async () => {
+export const staticallyGeneratePhotosIfConfigured = async (
+  type: StaticOutput,
+): Promise<{ photoId: string }[] | typeof NULL_PARAMS> => {
+  let params: { photoId: string }[] = [];
+
+  if (
+    (type === 'page' && STATICALLY_OPTIMIZED_PHOTOS) ||
+    (type === 'image' && STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES)
+  ) {
     const photoIds = await getPublicPhotoIds({
       limit: GENERATE_STATIC_PARAMS_LIMIT,
     })
@@ -37,17 +41,23 @@ export const staticallyGeneratePhotosIfConfigured = (type: StaticOutput) => (
     if (IS_BUILDING) {
       logStaticGenerationDetails(photoIds.length, `photo ${type}`);
     }
-    return photoIds.map(photoId => ({ photoId }));
+    params = photoIds.map(photoId => ({ photoId }));
   }
-  : undefined;
+
+  return params.length > 0
+    ? params
+    // Null response necessary to satisfy 'use cache' restriction requiring
+    // at least one response from generateStaticParams 
+    : NULL_PARAMS;
+};
 
 export const staticallyGenerateCategoryIfConfigured = async <T, K>(
   key: CategoryKey,
   type: StaticOutput,
   getData: () => Promise<T[]>,
   formatData: (data: T[]) => K[],
-): Promise<K[] | typeof NULL_RESPONSE> => {
-  let response: K[] = [];
+): Promise<K[] | typeof NULL_PARAMS> => {
+  let params: K[] = [];
 
   if (CATEGORY_VISIBILITY.includes(key) && (
     (type === 'page' && STATICALLY_OPTIMIZED_PHOTO_CATEGORIES) ||
@@ -65,12 +75,12 @@ export const staticallyGenerateCategoryIfConfigured = async <T, K>(
         `${depluralize(key)} ${type}`,
       );
     }
-    response = formatData(data);
+    params = formatData(data);
   }
 
-  return response.length > 0
-    ? response
+  return params.length > 0
+    ? params
     // Null response necessary to satisfy 'use cache' restriction requiring
     // at least one response from generateStaticParams 
-    : NULL_RESPONSE;
+    : NULL_PARAMS;
 };
