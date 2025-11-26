@@ -6,14 +6,9 @@ import TemplateImageResponse from
   '@/app/TemplateImageResponse';
 import { getIBMPlexMono } from '@/app/font';
 import { safePhotoImageResponse } from '@/platforms/safe-photo-image-response';
-import { KEY_PHOTOS } from '@/cache';
-import { cacheTag } from 'next/cache';
 import { getPhotos } from '@/photo/query';
 
-async function getCacheComponent() {
-  'use cache';
-  cacheTag(KEY_PHOTOS);
-
+export async function GET() {
   const [
     photos,
     { fontFamily, fonts },
@@ -41,8 +36,4 @@ async function getCacheComponent() {
     ),
     { width, height, fonts },
   );
-}
-
-export async function GET() {
-  return getCacheComponent();
 }

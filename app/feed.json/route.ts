@@ -5,18 +5,19 @@ import { cacheTag } from 'next/cache';
 import { getPhotos } from '@/photo/query';
 import { KEY_PHOTOS } from '@/cache';
 
-async function getPhotosCached() {
+async function getCacheComponent() {
   'use cache';
   cacheTag(KEY_PHOTOS);
 
-  return getPhotos(PROGRAMMATIC_QUERY_OPTIONS);
+  const photos = await getPhotos(PROGRAMMATIC_QUERY_OPTIONS).catch(() => []);
+
+  return formatFeedJson(photos);
 }
 
 export async function GET() {
   if (SITE_FEEDS_ENABLED) {
-    const photos = await getPhotosCached()
-      .catch(() => []);
-    return Response.json(formatFeedJson(photos));
+    const json = await getCacheComponent();
+    return Response.json(json);
   } else {
     return new Response('Feeds disabled', { status: 404 });
   }

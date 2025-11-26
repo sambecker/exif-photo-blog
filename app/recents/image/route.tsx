@@ -12,14 +12,11 @@ import { getPhotos } from '@/photo/query';
 import { KEY_PHOTOS } from '@/cache';
 import { cacheTag } from 'next/cache';
 
-async function getCacheComponent() {
+async function getDynamicContent() {
   'use cache';
   cacheTag(KEY_PHOTOS);
 
-  const [
-    photos,
-    { fontFamily, fonts },
-  ] = await Promise.all([
+  return Promise.all([
     SHOW_RECENTS
       ? getPhotos({
         limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
@@ -28,6 +25,13 @@ async function getCacheComponent() {
       : [],
     getIBMPlexMono(),
   ]);
+}
+
+export async function GET() {
+  const [
+    photos,
+    { fontFamily, fonts },
+  ] = await getDynamicContent();
 
   const appText = await getAppText();
 
@@ -48,8 +52,4 @@ async function getCacheComponent() {
     ),
     { width, height, fonts },
   );
-}
-
-export async function GET() {
-  return getCacheComponent();
 }
