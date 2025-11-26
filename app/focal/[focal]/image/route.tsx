@@ -1,15 +1,15 @@
-import { getPhotosCached } from '@/photo/cache';
 import {
   IMAGE_OG_DIMENSION_SMALL,
   MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
 } from '@/image-response';
 import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
-import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import FocalLengthImageResponse from '@/focal/FocalLengthImageResponse';
 import { formatFocalLength, getFocalLengthFromString } from '@/focal';
-import { getUniqueFocalLengths } from '@/photo/query';
+import { getPhotos, getUniqueFocalLengths } from '@/photo/query';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
+import { KEY_PHOTOS } from '@/cache';
+import { cacheTag } from 'next/cache';
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'focal-lengths',
@@ -19,22 +19,16 @@ export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
     .map(({ focal }) => ({ focal: formatFocalLength(focal) })),
 );
 
-export async function GET(
-  _: Request,
-  context: { params: Promise<{ focal: string }> },
-) {
-  const focalString = (await context.params).focal;
-
-  const focal = getFocalLengthFromString(focalString);
+async function getCacheComponent(focal: number) {
+  'use cache';
+  cacheTag(KEY_PHOTOS);
 
   const [
     photos,
     { fontFamily, fonts },
-    headers,
   ] = await Promise.all([
-    getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY, focal }),
+    getPhotos({ limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY, focal }),
     getIBMPlexMono(),
-    getImageResponseCacheControlHeaders(),
   ]);
 
   const { width, height } = IMAGE_OG_DIMENSION_SMALL;
@@ -47,6 +41,17 @@ export async function GET(
       height,
       fontFamily,
     }}/>,
-    { width, height, fonts, headers },
+    { width, height, fonts },
   );
+}
+
+export async function GET(
+  _: Request,
+  context: { params: Promise<{ focal: string }> },
+) {
+  const focalString = (await context.params).focal;
+
+  const focal = getFocalLengthFromString(focalString);
+
+  return getCacheComponent(focal);
 }

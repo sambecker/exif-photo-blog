@@ -6,9 +6,10 @@ import {
 import TagImageResponse from '@/tag/TagImageResponse';
 import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
-import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { getUniqueTags } from '@/photo/query';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
+import { cacheTag } from 'next/cache';
+import { KEY_PHOTOS } from '@/cache';
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'tags',
@@ -17,20 +18,16 @@ export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   tags => tags.map(({ tag }) => ({ tag })),
 );
 
-export async function GET(
-  _: Request,
-  context: { params: Promise<{ tag: string }> },
-) {
-  const { tag } = await context.params;
+async function getCacheComponent(tag: string) {
+  'use cache';
+  cacheTag(KEY_PHOTOS);
 
   const [
     photos,
     { fontFamily, fonts },
-    headers,
   ] = await Promise.all([
     getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY, tag }),
     getIBMPlexMono(),
-    getImageResponseCacheControlHeaders(),
   ]);
 
   const { width, height } = IMAGE_OG_DIMENSION_SMALL;
@@ -43,6 +40,15 @@ export async function GET(
       height,
       fontFamily,
     }}/>,
-    { width, height, fonts, headers },
+    { width, height, fonts },
   );
+}
+
+export async function GET(
+  _: Request,
+  context: { params: Promise<{ tag: string }> },
+) {
+  const { tag } = await context.params;
+
+  return getCacheComponent(tag);
 }

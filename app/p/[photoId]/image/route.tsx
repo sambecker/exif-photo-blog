@@ -2,29 +2,26 @@ import { getPhotoCached } from '@/photo/cache';
 import { IMAGE_OG_DIMENSION } from '@/image-response';
 import PhotoImageResponse from '@/photo/PhotoImageResponse';
 import { getIBMPlexMono } from '@/app/font';
-import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { staticallyGeneratePhotosIfConfigured } from '@/app/static';
 import { safePhotoImageResponse } from '@/platforms/safe-photo-image-response';
+import { KEY_PHOTOS } from '@/cache';
+import { cacheTag } from 'next/cache';
 
 export const generateStaticParams = async () =>
   staticallyGeneratePhotosIfConfigured(
     'image',
   );
 
-export async function GET(
-  _: Request,
-  context: { params: Promise<{ photoId: string }> },
-) {
-  const { photoId } = await context.params;
-
+async function getCacheComponent(photoId: string) {
+  'use cache';
+  cacheTag(KEY_PHOTOS);
+  
   const [
     photo,
     { fontFamily, fonts },
-    headers,
   ] = await Promise.all([
     getPhotoCached(photoId),
     getIBMPlexMono(),
-    getImageResponseCacheControlHeaders(),
   ]);
   
   if (!photo) { return new Response('Photo not found', { status: 404 }); }
@@ -42,6 +39,15 @@ export async function GET(
         isNextImageReady,
       }} />
     ),
-    { width, height, fonts, headers },
+    { width, height, fonts },
   );
+}
+
+export async function GET(
+  _: Request,
+  context: { params: Promise<{ photoId: string }> },
+) {
+  const { photoId } = await context.params;
+
+  return getCacheComponent(photoId);
 }

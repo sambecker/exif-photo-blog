@@ -5,14 +5,17 @@ import {
 } from '@/image-response';
 import HomeImageResponse from '@/app/HomeImageResponse';
 import { getIBMPlexMono } from '@/app/font';
-import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { APP_OG_IMAGE_QUERY_OPTIONS } from '@/feed';
 import { safePhotoImageResponse } from '@/platforms/safe-photo-image-response';
+import { KEY_PHOTOS } from '@/cache';
+import { cacheTag } from 'next/cache';
 
-export async function GET() {
+async function getCacheComponent() {
+  'use cache';
+  cacheTag(KEY_PHOTOS);
+
   const [
     photos,
-    headers,
     { fontFamily, fonts },
   ] = await Promise.all([
     getPhotosCached({
@@ -20,7 +23,6 @@ export async function GET() {
       limit: MAX_PHOTOS_TO_SHOW_OG,
     })
       .catch(() => []),
-    getImageResponseCacheControlHeaders(),
     getIBMPlexMono(),
   ]);
 
@@ -35,6 +37,10 @@ export async function GET() {
         height,
         fontFamily,
       }}/>
-    ), { width, height, headers, fonts },
+    ), { width, height, fonts },
   );
+}
+
+export async function GET() {
+  return getCacheComponent();
 }

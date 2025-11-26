@@ -8,6 +8,7 @@ import { KEY_PHOTOS } from '@/cache';
 async function getPhotosCached() {
   'use cache';
   cacheTag(KEY_PHOTOS);
+
   return getPhotos(PROGRAMMATIC_QUERY_OPTIONS);
 }
 

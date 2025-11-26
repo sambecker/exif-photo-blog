@@ -1,5 +1,5 @@
 import { getPhotosCached } from '@/photo/cache';
-import { CameraProps, formatCameraParams } from '@/camera';
+import { Camera, CameraProps, formatCameraParams } from '@/camera';
 import {
   IMAGE_OG_DIMENSION_SMALL,
   MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
@@ -7,9 +7,10 @@ import {
 import CameraImageResponse from '@/camera/CameraImageResponse';
 import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
-import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { getUniqueCameras } from '@/photo/query';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
+import { KEY_PHOTOS } from '@/cache';
+import { cacheTag } from 'next/cache';
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'cameras',
@@ -18,23 +19,19 @@ export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   cameras => cameras.map(({ camera }) => formatCameraParams(camera)),
 );
 
-export async function GET(
-  _: Request,
-  context: CameraProps,
-) {
-  const camera = formatCameraParams(await context.params);
-
+async function getCacheComponent(camera: Camera) {
+  'use cache';
+  cacheTag(KEY_PHOTOS);
+  
   const [
     photos,
     { fontFamily, fonts },
-    headers,
   ] = await Promise.all([
     getPhotosCached({
       limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
       camera: camera,
     }),
     getIBMPlexMono(),
-    getImageResponseCacheControlHeaders(),
   ]);
 
   const { width, height } = IMAGE_OG_DIMENSION_SMALL;
@@ -47,6 +44,15 @@ export async function GET(
       height,
       fontFamily,
     }}/>,
-    { width, height, fonts, headers },
+    { width, height, fonts },
   );
+}
+
+export async function GET(
+  _: Request,
+  context: CameraProps,
+) {
+  const camera = formatCameraParams(await context.params);
+
+  return getCacheComponent(camera);
 }

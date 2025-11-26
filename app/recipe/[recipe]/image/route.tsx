@@ -5,10 +5,11 @@ import {
 } from '@/image-response';
 import { getIBMPlexMono } from '@/app/font';
 import { ImageResponse } from 'next/og';
-import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { getUniqueRecipes } from '@/photo/query';
 import RecipeImageResponse from '@/recipe/RecipeImageResponse';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
+import { KEY_PHOTOS } from '@/cache';
+import { cacheTag } from 'next/cache';
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'recipes',
@@ -17,20 +18,16 @@ export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   recipes => recipes.map(({ recipe }) => ({ recipe })),
 );
 
-export async function GET(
-  _: Request,
-  context: { params: Promise<{ recipe: string }> },
-) {
-  const { recipe } = await context.params;
-
+async function getCacheComponent(recipe: string) {
+  'use cache';
+  cacheTag(KEY_PHOTOS);
+  
   const [
     photos,
     { fontFamily, fonts },
-    headers,
   ] = await Promise.all([
     getPhotosCached({ recipe, limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY }),
     getIBMPlexMono(),
-    getImageResponseCacheControlHeaders(),
   ]);
 
   const { width, height } = IMAGE_OG_DIMENSION_SMALL;
@@ -43,6 +40,15 @@ export async function GET(
       height,
       fontFamily,
     }}/>,
-    { width, height, fonts, headers },
+    { width, height, fonts },
   );
+}
+
+export async function GET(
+  _: Request,
+  context: { params: Promise<{ recipe: string }> },
+) {
+  const { recipe } = await context.params;
+
+  return getCacheComponent(recipe);
 }

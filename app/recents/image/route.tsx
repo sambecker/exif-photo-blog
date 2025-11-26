@@ -5,17 +5,20 @@ import {
 import RecentsImageResponse from
   '@/recents/RecentsImageResponse';
 import { getIBMPlexMono } from '@/app/font';
-import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
 import { getAppText } from '@/i18n/state/server';
 import { SHOW_RECENTS } from '@/app/config';
 import { safePhotoImageResponse } from '@/platforms/safe-photo-image-response';
 import { getPhotos } from '@/photo/query';
+import { KEY_PHOTOS } from '@/cache';
+import { cacheTag } from 'next/cache';
 
-export async function GET() {
+async function getCacheComponent() {
+  'use cache';
+  cacheTag(KEY_PHOTOS);
+
   const [
     photos,
     { fontFamily, fonts },
-    headers,
   ] = await Promise.all([
     SHOW_RECENTS
       ? getPhotos({
@@ -24,7 +27,6 @@ export async function GET() {
       }).catch(() => [])
       : [],
     getIBMPlexMono(),
-    getImageResponseCacheControlHeaders(),
   ]);
 
   const appText = await getAppText();
@@ -44,6 +46,10 @@ export async function GET() {
         fontFamily,
       }}/>
     ),
-    { width, height, fonts, headers },
+    { width, height, fonts },
   );
+}
+
+export async function GET() {
+  return getCacheComponent();
 }
