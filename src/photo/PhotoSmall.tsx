@@ -8,7 +8,6 @@ import ImageSmall from '@/components/image/ImageSmall';
 import Link from 'next/link';
 import { clsx } from 'clsx/lite';
 import { pathForPhoto } from '@/app/path';
-import { SHOULD_PREFETCH_ALL_LINKS } from '@/app/config';
 import { useRef } from 'react';
 import useVisibility from '@/utility/useVisibility';
 
@@ -16,7 +15,7 @@ export default function PhotoSmall({
   photo,
   selected,
   className,
-  prefetch = SHOULD_PREFETCH_ALL_LINKS,
+  prefetch,
   onVisible,
   ...categories
 }: {

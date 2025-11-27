@@ -81,7 +81,6 @@ export default async function AlbumHeader({
                     type="text-only"
                     contrast="low"
                     hoverType={SHOW_CATEGORY_IMAGE_HOVERS ? 'image' : 'none'}
-                    prefetch={false}
                   />
                 ))}
               </>}

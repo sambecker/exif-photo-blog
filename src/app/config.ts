@@ -13,10 +13,6 @@ import { parseChromaCutoff, parseStartingHue } from '@/photo/color/sort';
 import { parseSocialKeysFromString } from '@/social';
 import { dependencies } from '../../package.json';
 
-// HARD-CODED GLOBAL CONFIGURATION
-
-export const SHOULD_PREFETCH_ALL_LINKS: boolean | undefined = undefined;
-
 // TEMPLATE META
 
 export const TEMPLATE_TITLE = 'Photo Blog';

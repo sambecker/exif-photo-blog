@@ -172,7 +172,6 @@ export default function PhotoHeader({
                       count,
                       dateRange,
                       className: 'translate-x-[1px] translate-y-[1.5px] w-4',
-                      prefetch: true,
                       dim: true,
                     }} />}
                 </>

@@ -86,7 +86,6 @@ export default function AdminNavClient({
                     checkPathPrefix(pathname, href) ? 'font-bold' : 'text-dim',
                     'hover:text-main active:text-medium',
                   )}
-                  prefetch={false}
                 >
                   <span>{label}</span>
                   {count > 0 &&
