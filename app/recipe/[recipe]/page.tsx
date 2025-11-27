@@ -8,13 +8,13 @@ import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { generateMetaForRecipe } from '@/recipe';
 import RecipeOverview from '@/recipe/RecipeOverview';
-import { getPhotosRecipeDataCached } from '@/recipe/data';
+import { getPhotosRecipeData } from '@/recipe/data';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
 import { cacheTag } from 'next/cache';
 import { KEY_PHOTOS } from '@/cache';
 
-const getPhotosRecipeDataCachedCached = cache(getPhotosRecipeDataCached);
+const getPhotosRecipeDataCached = cache(getPhotosRecipeData);
 
 export const generateStaticParams = async () =>
   staticallyGenerateCategoryIfConfigured(
@@ -38,7 +38,7 @@ export async function generateMetadata({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosRecipeDataCachedCached({
+  ] = await getPhotosRecipeDataCached({
     recipe,
     limit: INFINITE_SCROLL_GRID_INITIAL,
   });
@@ -83,7 +83,7 @@ export default async function RecipePage({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosRecipeDataCachedCached({
+  ] = await getPhotosRecipeDataCached({
     recipe,
     limit: INFINITE_SCROLL_GRID_INITIAL,
   });

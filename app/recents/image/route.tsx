@@ -12,7 +12,7 @@ import { getPhotos } from '@/photo/query';
 import { KEY_PHOTOS } from '@/cache';
 import { cacheTag } from 'next/cache';
 
-async function getDynamicContent() {
+async function getCacheContent() {
   'use cache';
   cacheTag(KEY_PHOTOS);
 
@@ -24,6 +24,8 @@ async function getDynamicContent() {
       }).catch(() => [])
       : [],
     getIBMPlexMono(),
+    getAppText()
+      .then(({ category }) => category.recentPlural.toLocaleUpperCase()),
   ]);
 }
 
@@ -31,11 +33,8 @@ export async function GET() {
   const [
     photos,
     { fontFamily, fonts },
-  ] = await getDynamicContent();
-
-  const appText = await getAppText();
-
-  const title = appText.category.recentPlural.toLocaleUpperCase();
+    title,
+  ] = await getCacheContent();
 
   const { width, height } = IMAGE_OG_DIMENSION_SMALL;
 

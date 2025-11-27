@@ -2,7 +2,7 @@
 
 import { generateMetaForFocalLength, getFocalLengthFromString } from '@/focal';
 import FocalLengthOverview from '@/focal/FocalLengthOverview';
-import { getPhotosFocalLengthDataCached } from '@/focal/data';
+import { getPhotosFocalLengthData } from '@/focal/data';
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getUniqueFocalLengths } from '@/photo/query';
 import { PATH_ROOT } from '@/app/path';
@@ -14,8 +14,8 @@ import { getAppText } from '@/i18n/state/server';
 import { KEY_PHOTOS } from '@/cache';
 import { cacheTag } from 'next/cache';
 
-const getPhotosFocalDataCachedCached = cache((focal: number) =>
-  getPhotosFocalLengthDataCached({
+const getPhotosFocalDataCached = cache((focal: number) =>
+  getPhotosFocalLengthData({
     focal,
     limit: INFINITE_SCROLL_GRID_INITIAL,
   }));
@@ -43,7 +43,7 @@ export async function generateMetadata({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosFocalDataCachedCached(focal);
+  ] = await getPhotosFocalDataCached(focal);
 
   if (photos.length === 0) { return {}; }
 
@@ -85,7 +85,7 @@ export default async function TagPage({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosFocalDataCachedCached(focal);
+  ] = await getPhotosFocalDataCached(focal);
 
   if (photos.length === 0) { redirect(PATH_ROOT); }
 

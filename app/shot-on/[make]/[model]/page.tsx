@@ -4,7 +4,7 @@ import { Metadata } from 'next/types';
 import { CameraProps, formatCameraParams } from '@/camera';
 import { generateMetaForCamera } from '@/camera/meta';
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
-import { getPhotosCameraDataCached } from '@/camera/data';
+import { getPhotosCameraData } from '@/camera/data';
 import CameraOverview from '@/camera/CameraOverview';
 import { cache } from 'react';
 import { getUniqueCameras } from '@/photo/query';
@@ -13,10 +13,10 @@ import { getAppText } from '@/i18n/state/server';
 import { KEY_PHOTOS } from '@/cache';
 import { cacheTag } from 'next/cache';
 
-const getPhotosCameraDataCachedCached = cache((
+const getPhotosCameraDataCached = cache((
   make: string,
   model: string,
-) => getPhotosCameraDataCached(
+) => getPhotosCameraData(
   make,
   model,
   INFINITE_SCROLL_GRID_INITIAL,
@@ -39,7 +39,7 @@ export async function generateMetadata({
     photos,
     { count, dateRange },
     camera,
-  ] = await getPhotosCameraDataCachedCached(make, model);
+  ] = await getPhotosCameraDataCached(make, model);
 
   const appText = await getAppText();
 
@@ -78,7 +78,7 @@ export default async function CameraPage({
     photos,
     { count, dateRange },
     camera,
-  ] = await getPhotosCameraDataCachedCached(make, model);
+  ] = await getPhotosCameraDataCached(make, model);
 
   return (
     <CameraOverview {...{ camera, photos, count, dateRange }} />

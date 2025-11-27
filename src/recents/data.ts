@@ -1,14 +1,11 @@
-import {
-  getPhotosCached,
-  getPhotosMetaCached,
-} from '@/photo/cache';
+import { getPhotos, getPhotosMeta } from '@/photo/query';
 
-export const getPhotosRecentsDataCached = ({
+export const getPhotosRecentsData = ({
   limit,
 }: {
   limit?: number,
 }) =>
   Promise.all([
-    getPhotosCached({ recent: true, limit }),
-    getPhotosMetaCached({ recent: true }),
+    getPhotos({ recent: true, limit }),
+    getPhotosMeta({ recent: true }),
   ]);
