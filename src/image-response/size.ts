@@ -6,7 +6,7 @@ export const MAX_PHOTOS_TO_SHOW_PER_CATEGORY = 6;
 export const MAX_PHOTOS_TO_SHOW_TEMPLATE = 16;
 export const MAX_PHOTOS_TO_SHOW_TEMPLATE_TIGHT = 12;
 
-interface OGImageDimension {
+export interface OGImageDimension {
   width: NextImageSize
   height: number
   aspectRatio: number

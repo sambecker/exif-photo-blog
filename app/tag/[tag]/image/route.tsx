@@ -1,15 +1,8 @@
-import { getPhotosCached } from '@/photo/cache';
-import {
-  IMAGE_OG_DIMENSION_SMALL,
-  MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
-} from '@/image-response';
+import { MAX_PHOTOS_TO_SHOW_PER_CATEGORY } from '@/image-response/size';
 import TagImageResponse from '@/tag/TagImageResponse';
-import { getIBMPlexMono } from '@/app/font';
-import { ImageResponse } from 'next/og';
 import { getUniqueTags } from '@/photo/query';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
-import { cacheTag } from 'next/cache';
-import { KEY_PHOTOS } from '@/cache';
+import { cachedOgPhotoResponse } from '@/image-response/photo';
 
 export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   'tags',
@@ -18,37 +11,15 @@ export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
   tags => tags.map(({ tag }) => ({ tag })),
 );
 
-async function getCacheComponent(tag: string) {
-  'use cache';
-  cacheTag(KEY_PHOTOS);
-
-  const [
-    photos,
-    { fontFamily, fonts },
-  ] = await Promise.all([
-    getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY, tag }),
-    getIBMPlexMono(),
-  ]);
-
-  const { width, height } = IMAGE_OG_DIMENSION_SMALL;
-
-  return new ImageResponse(
-    <TagImageResponse {...{
-      tag,
-      photos,
-      width,
-      height,
-      fontFamily,
-    }}/>,
-    { width, height, fonts },
-  );
-}
-
 export async function GET(
   _: Request,
   context: { params: Promise<{ tag: string }> },
 ) {
   const { tag } = await context.params;
 
-  return getCacheComponent(tag);
+  return cachedOgPhotoResponse(
+    { tag },
+    { tag, limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY },
+    args => <TagImageResponse {...{ tag, ...args }}/>,
+  );
 }

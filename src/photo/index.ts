@@ -371,8 +371,8 @@ export const shouldShowFilmDataForPhoto = (photo: Photo) =>
   SHOW_FILMS &&
   photoHasFilmData(photo);
 
-export const shouldShowExifDataForPhoto = (photo: Photo) =>
-  SHOW_EXIF_DATA && photoHasExifData(photo);
+export const shouldShowExifDataForPhoto = (photo?: Photo) =>
+  SHOW_EXIF_DATA && photo && photoHasExifData(photo);
 
 export const getKeywordsForPhoto = (photo: Photo) =>
   (photo.caption ?? '').split(' ')
