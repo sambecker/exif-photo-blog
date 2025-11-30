@@ -10,8 +10,7 @@ import { cache } from 'react';
 import { getUniqueCameras } from '@/photo/query';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
-import { KEY_PHOTOS } from '@/cache';
-import { cacheTag } from 'next/cache';
+import { cacheTagGlobal } from '@/cache';
 
 const getPhotosCameraDataCached = cache((
   make: string,
@@ -70,7 +69,7 @@ export async function generateMetadata({
 export default async function CameraPage({
   params,
 }: CameraProps) {
-  cacheTag(KEY_PHOTOS);
+  cacheTagGlobal();
 
   const { make, model } = await params;
 

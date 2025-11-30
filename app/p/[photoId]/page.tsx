@@ -16,8 +16,7 @@ import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotoCached, getPhotosNearIdCached } from '@/photo/cache';
 import { cache } from 'react';
 import { staticallyGeneratePhotosIfConfigured } from '@/app/static';
-import { cacheTag } from 'next/cache';
-import { KEY_PHOTOS } from '@/cache';
+import { cacheTagGlobal } from '@/cache';
 
 const getPhotosNearIdCachedCached = cache(async (photoId: string) => {
   const photo = await getPhotoCached(photoId);
@@ -81,7 +80,7 @@ export async function generateMetadata({
 export default async function PhotoPage({
   params,
 }: PhotoProps) {
-  cacheTag(KEY_PHOTOS);
+  cacheTagGlobal();
 
   const { photoId } = await params;
   const { photo, photos, photosGrid } =

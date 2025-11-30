@@ -11,8 +11,7 @@ import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
-import { KEY_PHOTOS } from '@/cache';
-import { cacheTag } from 'next/cache';
+import { cacheTagGlobal } from '@/cache';
 
 const getPhotosFocalDataCached = cache((focal: number) =>
   getPhotosFocalLengthData({
@@ -76,7 +75,7 @@ export async function generateMetadata({
 export default async function TagPage({
   params,
 }:FocalLengthProps) {
-  cacheTag(KEY_PHOTOS);
+  cacheTagGlobal();
 
   const { focal: focalString } = await params;
 

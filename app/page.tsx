@@ -10,15 +10,14 @@ import { getDataForCategories, NULL_CATEGORY_DATA } from '@/category/data';
 import PhotoFullPage from '@/photo/PhotoFullPage';
 import PhotoGridPage from '@/photo/PhotoGridPage';
 import { FEED_META_QUERY_OPTIONS, getFeedQueryOptions } from '@/feed';
-import { cacheTag } from 'next/cache';
-import { KEY_PHOTOS } from '@/cache';
+import { cacheTagGlobal } from '@/cache';
 
 const getPhotosCached = cache(() => getPhotos(getFeedQueryOptions({
   isGrid: GRID_HOMEPAGE_ENABLED,
 })));
 
 export async function generateMetadata(): Promise<Metadata> {
-  cacheTag(KEY_PHOTOS);
+  cacheTagGlobal();
   
   const photos = await getPhotosCached()
     .catch(() => []);
@@ -26,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  cacheTag(KEY_PHOTOS);
+  cacheTagGlobal();
   
   const [
     photos,

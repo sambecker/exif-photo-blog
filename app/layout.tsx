@@ -27,7 +27,7 @@ import CommandK from '@/cmdk/CommandK';
 import SwrConfigClient from '@/swr/SwrConfigClient';
 import ShareModals from '@/share/ShareModals';
 import AdminUploadPanel from '@/admin/upload/AdminUploadPanel';
-import { cacheTag, revalidatePath } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 import RecipeModal from '@/recipe/RecipeModal';
 import ThemeColors from '@/app/ThemeColors';
 import AppTextProvider from '@/i18n/state/AppTextProvider';
@@ -37,10 +37,10 @@ import SelectPhotosProvider from '@/admin/select/SelectPhotosProvider';
 import AdminBatchEditPanel from '@/admin/select/AdminBatchEditPanel';
 import Script from 'next/script';
 import { Suspense } from 'react';
-import { KEY_PHOTOS } from '@/cache';
+import { cacheTagGlobal } from '@/cache';
+import SelectPhotosListener from '@/admin/select/SelectPhotosListener';
 
 import '../tailwind.css';
-import SelectPhotosListener from '@/admin/select/SelectPhotosListener';
 
 export const metadata: Metadata = {
   title: META_TITLE,
@@ -97,7 +97,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  cacheTag(KEY_PHOTOS);
+  cacheTagGlobal();
 
   return (
     <html

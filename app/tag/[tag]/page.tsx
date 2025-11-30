@@ -11,8 +11,7 @@ import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
-import { cacheTag } from 'next/cache';
-import { KEY_PHOTOS } from '@/cache';
+import { cacheTagGlobal } from '@/cache';
 
 const getPhotosTagDataCached = cache((tag: string) =>
   getPhotosTagData({ tag, limit: INFINITE_SCROLL_GRID_INITIAL}));
@@ -72,7 +71,7 @@ export async function generateMetadata({
 export default async function TagPage({
   params,
 }:TagProps) {
-  cacheTag(KEY_PHOTOS);
+  cacheTagGlobal();
 
   const { tag: tagFromParams } = await params;
 

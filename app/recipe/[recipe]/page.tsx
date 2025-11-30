@@ -11,8 +11,7 @@ import RecipeOverview from '@/recipe/RecipeOverview';
 import { getPhotosRecipeData } from '@/recipe/data';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
-import { cacheTag } from 'next/cache';
-import { KEY_PHOTOS } from '@/cache';
+import { cacheTagGlobal } from '@/cache';
 
 const getPhotosRecipeDataCached = cache(getPhotosRecipeData);
 
@@ -74,7 +73,7 @@ export async function generateMetadata({
 export default async function RecipePage({
   params,
 }:RecipeProps) {
-  cacheTag(KEY_PHOTOS);
+  cacheTagGlobal();
 
   const { recipe: recipeFromParams } = await params;
 

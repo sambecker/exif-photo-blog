@@ -11,8 +11,7 @@ import { PATH_ROOT } from '@/app/path';
 import { redirect } from 'next/navigation';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
-import { cacheTag } from 'next/cache';
-import { KEY_PHOTOS } from '@/cache';
+import { cacheTagGlobal } from '@/cache';
 
 const getPhotosFilmDataCached = cache((film: string) =>
   getPhotosFilmData({ film, limit: INFINITE_SCROLL_GRID_INITIAL }));
@@ -70,7 +69,7 @@ export async function generateMetadata({
 export default async function FilmPage({
   params,
 }: FilmProps) {
-  cacheTag(KEY_PHOTOS);
+  cacheTagGlobal();
 
   const { film } = await params;
 

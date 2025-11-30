@@ -1,13 +1,12 @@
 import { SITE_FEEDS_ENABLED } from '@/app/config';
 import { formatFeedJson } from '@/feed/json';
 import { PROGRAMMATIC_QUERY_OPTIONS } from '@/feed';
-import { cacheTag } from 'next/cache';
 import { getPhotos } from '@/photo/query';
-import { KEY_PHOTOS } from '@/cache';
+import { cacheTagGlobal } from '@/cache';
 
 async function getCacheComponent() {
   'use cache';
-  cacheTag(KEY_PHOTOS);
+  cacheTagGlobal();
 
   const photos = await getPhotos(PROGRAMMATIC_QUERY_OPTIONS).catch(() => []);
 

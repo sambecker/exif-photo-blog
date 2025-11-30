@@ -8,15 +8,14 @@ import { getPhotos, getPhotosMeta } from '@/photo/query';
 import PhotoFullPage from '@/photo/PhotoFullPage';
 import { USER_DEFAULT_SORT_OPTIONS } from '@/app/config';
 import { FEED_META_QUERY_OPTIONS, getFeedQueryOptions } from '@/feed';
-import { cacheTag } from 'next/cache';
-import { KEY_PHOTOS } from '@/cache';
+import { cacheTagGlobal } from '@/cache';
 
 const getPhotosCached = cache(() => getPhotos(getFeedQueryOptions({
   isGrid: false,
 })));
 
 export async function generateMetadata(): Promise<Metadata> {
-  cacheTag(KEY_PHOTOS);
+  cacheTagGlobal();
 
   const photos = await getPhotosCached()
     .catch(() => []);
@@ -24,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function FullPage() {
-  cacheTag(KEY_PHOTOS);
+  cacheTagGlobal();
 
   const [
     photos,

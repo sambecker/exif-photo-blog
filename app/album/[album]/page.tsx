@@ -15,8 +15,7 @@ import {
   getTagsForAlbumCached,
 } from '@/album/cache';
 import { getPhotosCached } from '@/photo/cache';
-import { cacheTag } from 'next/cache';
-import { KEY_PHOTOS } from '@/cache';
+import { cacheTagGlobal } from '@/cache';
 import { getAlbumsWithMeta } from '@/album/query';
 
 const getPhotosAlbumDataCached = cache((album: Album) =>
@@ -81,7 +80,7 @@ export async function generateMetadata({
 export default async function AlbumPage({
   params,
 }:AlbumProps) {
-  cacheTag(KEY_PHOTOS);
+  cacheTagGlobal();
 
   const { album: albumFromParams } = await params;
 

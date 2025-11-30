@@ -1,13 +1,12 @@
 import { SITE_FEEDS_ENABLED } from '@/app/config';
 import { formatFeedRssXml } from '@/feed/rss';
 import { PROGRAMMATIC_QUERY_OPTIONS } from '@/feed';
-import { KEY_PHOTOS } from '@/cache';
-import { cacheTag } from 'next/cache';
+import { cacheTagGlobal } from '@/cache';
 import { getPhotos } from '@/photo/query';
 
 async function getCacheComponent() {
   'use cache';
-  cacheTag(KEY_PHOTOS);
+  cacheTagGlobal();
 
   return getPhotos(PROGRAMMATIC_QUERY_OPTIONS);
 }

@@ -18,8 +18,7 @@ import {
 import { getAppText } from '@/i18n/state/server';
 import { PATH_ROOT } from '@/app/path';
 import { redirect } from 'next/navigation';
-import { cacheTag } from 'next/cache';
-import { KEY_PHOTOS } from '@/cache';
+import { cacheTagGlobal } from '@/cache';
 
 const getPhotosLensDataCached = cache((
   make: string | undefined,
@@ -78,7 +77,7 @@ export async function generateMetadata({
 export default async function LensPage({
   params,
 }: LensProps) {
-  cacheTag(KEY_PHOTOS);
+  cacheTagGlobal();
 
   const { make, model } = await getLensFromParams(params);
 

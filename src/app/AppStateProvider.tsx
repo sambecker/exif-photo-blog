@@ -32,7 +32,7 @@ import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 import { RecipeProps } from '@/recipe';
 import { nanoid } from 'nanoid';
 import { toastSuccess } from '@/toast';
-import { getCountsForCategoriesCachedAction } from '@/category/actions';
+import { getCountsForCategoriesAction } from '@/category/actions';
 import {
   canKeyBePurged,
   canKeyBePurgedAndRevalidated,
@@ -141,7 +141,7 @@ export default function AppStateProvider({
 
   const { data: categoriesWithCounts } = useSWR(
     SWR_KEYS.GET_COUNTS_FOR_CATEGORIES,
-    getCountsForCategoriesCachedAction,
+    getCountsForCategoriesAction,
   );
 
   const {

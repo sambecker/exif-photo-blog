@@ -8,8 +8,7 @@ import { cache } from 'react';
 import PhotoGridPage from '@/photo/PhotoGridPage';
 import { USER_DEFAULT_SORT_OPTIONS } from '@/app/config';
 import { FEED_META_QUERY_OPTIONS, getFeedQueryOptions } from '@/feed';
-import { KEY_PHOTOS } from '@/cache';
-import { cacheTag } from 'next/cache';
+import { cacheTagGlobal } from '@/cache';
 import { getDataForCategories } from '@/category/data';
 
 const getPhotosCached = cache(() => getPhotos(getFeedQueryOptions({
@@ -17,7 +16,7 @@ const getPhotosCached = cache(() => getPhotos(getFeedQueryOptions({
 })));
 
 export async function generateMetadata(): Promise<Metadata> {
-  cacheTag(KEY_PHOTOS);
+  cacheTagGlobal();
 
   const photos = await getPhotosCached()
     .catch(() => []);
@@ -25,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function GridPage() {
-  cacheTag(KEY_PHOTOS);
+  cacheTagGlobal();
 
   const [
     photos,

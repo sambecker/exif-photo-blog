@@ -4,7 +4,7 @@ import {
   getAlbumTitlesForPhoto,
   getTagsForAlbum,
 } from '@/album/query';
-import { KEY_ALBUMS, KEY_PHOTOS } from '@/cache';
+import { KEY_ALBUMS, KEY_PHOTOS } from '@/cache/index-old';
 import { unstable_cache } from 'next/cache';
 
 export const getAlbumFromSlugCached =

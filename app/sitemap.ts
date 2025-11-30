@@ -16,8 +16,7 @@ import {
 import { isTagFavs } from '@/tag';
 import { BASE_URL, GRID_HOMEPAGE_ENABLED } from '@/app/config';
 import { getPhotoIdsAndUpdatedAt } from '@/photo/query';
-import { cacheTag } from 'next/cache';
-import { KEY_PHOTOS } from '@/cache';
+import { cacheTagGlobal } from '@/cache';
 import { getDataForCategories } from '@/category/data';
 
 const PRIORITY_HOME             = 1;
@@ -28,7 +27,7 @@ const PRIORITY_PHOTO            = 0.5;
  
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   'use cache';
-  cacheTag(KEY_PHOTOS);
+  cacheTagGlobal();
 
   const [
     {

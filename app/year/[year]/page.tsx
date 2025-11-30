@@ -11,8 +11,7 @@ import { PATH_ROOT } from '@/app/path';
 import { redirect } from 'next/navigation';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
-import { KEY_PHOTOS } from '@/cache';
-import { cacheTag } from 'next/cache';
+import { cacheTagGlobal } from '@/cache';
 
 const getPhotosYearDataCached = cache((year: string) =>
   getPhotosYearData({ year, limit: INFINITE_SCROLL_GRID_INITIAL }));
@@ -70,7 +69,7 @@ export async function generateMetadata({
 export default async function YearPage({
   params,
 }: YearProps) {
-  cacheTag(KEY_PHOTOS);
+  cacheTagGlobal();
 
   const { year } = await params;
 
