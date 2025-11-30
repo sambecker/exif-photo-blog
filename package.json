@@ -72,6 +72,7 @@
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "@types/sanitize-html": "^2.16.0",
+    "baseline-browser-mapping": "^2.8.32",
     "cross-fetch": "^4.1.0",
     "eslint": "9.39.1",
     "eslint-config-next": "16.0.5",
