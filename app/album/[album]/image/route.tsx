@@ -1,16 +1,7 @@
 import { MAX_PHOTOS_TO_SHOW_PER_CATEGORY } from '@/image-response/size';
-import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import AlbumImageResponse from '@/album/AlbumImageResponse';
-import { getAlbumFromSlug, getAlbumsWithMeta } from '@/album/query';
+import { getAlbumFromSlug } from '@/album/query';
 import { cachedOgPhotoResponse } from '@/image-response/photo';
-
-export const generateStaticParams = async () =>
-  staticallyGenerateCategoryIfConfigured(
-    'albums',
-    'image',
-    getAlbumsWithMeta,
-    albums => albums.map(({ album }) => ({ album: album.slug })),
-  );
 
 export async function GET(
   _: Request,
