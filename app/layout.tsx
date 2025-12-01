@@ -37,10 +37,11 @@ import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/path';
 import SelectPhotosProvider from '@/admin/select/SelectPhotosProvider';
 import AdminBatchEditPanel from '@/admin/select/AdminBatchEditPanel';
 import Script from 'next/script';
-import { Suspense } from 'react';
+import { ComponentProps, Suspense } from 'react';
 import { cacheTagGlobal } from '@/cache';
 import SelectPhotosListener from '@/admin/select/SelectPhotosListener';
-import Nav from '@/app/Nav';
+import { Nav } from '@/app/Nav';
+import NavClient from '@/app/NavClient';
 import { getPhotos } from '@/photo/query';
 
 import '../tailwind.css';
@@ -101,8 +102,14 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   cacheTagGlobal();
+
   const photos = await getPhotos({ limit: 1 }).catch(() => []);
-  const animateNav = photos.length > 0;
+  const props: ComponentProps<typeof Nav> = {
+    navTitle: NAV_TITLE,
+    navCaption: NAV_CAPTION,
+    animate: photos.length > 0,
+  };
+
   return (
     <html
       lang={HTML_LANG}
@@ -127,11 +134,9 @@ export default async function RootLayout({
                       'mx-3 mb-3',
                       'lg:mx-6 lg:mb-6',
                     )}>
-                      <Nav
-                        navTitle={NAV_TITLE}
-                        navCaption={NAV_CAPTION}
-                        animate={animateNav}
-                      />
+                      <Suspense fallback={<NavClient {...props} />}>
+                        <Nav {...props} />
+                      </Suspense>
                       <main>
                         <ShareModals />
                         <RecipeModal />
@@ -157,7 +162,9 @@ export default async function RootLayout({
                               revalidatePath('/admin', 'layout');
                             }}
                           />
-                          {children}
+                          <Suspense>
+                            {children}
+                          </Suspense>
                         </div>
                       </main>
                       <Suspense>

@@ -20,7 +20,6 @@ export default function Footer() {
 
   const {
     userEmail,
-    userEmailEager,
     isCheckingAuth,
     clearAuthStateAndRedirectIfNecessary,
   } = useAppState();
@@ -28,7 +27,6 @@ export default function Footer() {
   const appText = useAppText();
 
   const showFooter = !isPathSignIn(pathname);
-
   const shouldAnimate = !isPathAdmin(pathname);
 
   return (
@@ -49,13 +47,13 @@ export default function Footer() {
                 'flex gap-x-3 xs:gap-x-4 grow flex-wrap',
                 'w-full min-w-0',
               )}>
-                {userEmail || userEmailEager
+                {userEmail
                   ? <>
                     <Link
                       href={PATH_ADMIN_PHOTOS}
                       className="truncate max-w-full"
                     >
-                      {userEmail || userEmailEager}
+                      {userEmail}
                     </Link>
                     <form
                       action={() => signOutAction().then(() =>

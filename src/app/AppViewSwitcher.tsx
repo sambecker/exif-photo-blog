@@ -5,6 +5,7 @@ import IconGrid from '@/components/icons/IconGrid';
 import {
   PATH_FULL_INFERRED,
   PATH_GRID_INFERRED,
+  PATH_ROOT,
 } from '@/app/path';
 import IconSearch from '../components/icons/IconSearch';
 import { useAppState } from '@/app/AppState';
@@ -18,7 +19,6 @@ import Spinner from '@/components/Spinner';
 import clsx from 'clsx/lite';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useKeydownHandler from '@/utility/useKeydownHandler';
-import { usePathname } from 'next/navigation';
 import { KEY_COMMANDS } from '@/photo/key-commands';
 import { useAppText } from '@/i18n/state/client';
 import IconSort from '@/components/icons/IconSort';
@@ -35,14 +35,14 @@ const GAP_CLASS_LEFT  = 'ml-0.5 sm:ml-1';
 export default function AppViewSwitcher({
   currentSelection,
   className,
+  pathname = PATH_ROOT,
   animate = true,
 }: {
   currentSelection?: SwitcherSelection
   className?: string
+  pathname?: string
   animate?: boolean
 }) {
-  const pathname = usePathname();
-  
   const appText = useAppText();
 
   const {
