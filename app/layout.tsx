@@ -15,13 +15,14 @@ import {
   PAGE_SCRIPT_URLS,
   VERCEL_GIT_COMMIT_SHA_SHORT,
   DEBUG_OUTPUTS_ENABLED,
+  NAV_TITLE,
+  NAV_CAPTION,
 } from '@/app/config';
 import AppStateProvider from '@/app/AppStateProvider';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
 import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
 import { Metadata } from 'next/types';
 import { ThemeProvider } from 'next-themes';
-import Nav from '@/app/Nav';
 import Footer from '@/app/Footer';
 import CommandK from '@/cmdk/CommandK';
 import SwrConfigClient from '@/swr/SwrConfigClient';
@@ -39,6 +40,8 @@ import Script from 'next/script';
 import { Suspense } from 'react';
 import { cacheTagGlobal } from '@/cache';
 import SelectPhotosListener from '@/admin/select/SelectPhotosListener';
+import Nav from '@/app/Nav';
+import { getPhotos } from '@/photo/query';
 
 import '../tailwind.css';
 
@@ -98,7 +101,8 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   cacheTagGlobal();
-
+  const photos = await getPhotos({ limit: 1 }).catch(() => []);
+  const animateNav = photos.length > 0;
   return (
     <html
       lang={HTML_LANG}
@@ -123,9 +127,11 @@ export default async function RootLayout({
                       'mx-3 mb-3',
                       'lg:mx-6 lg:mb-6',
                     )}>
-                      <Suspense>
-                        <Nav />
-                      </Suspense>
+                      <Nav
+                        navTitle={NAV_TITLE}
+                        navCaption={NAV_CAPTION}
+                        animate={animateNav}
+                      />
                       <main>
                         <ShareModals />
                         <RecipeModal />
@@ -151,9 +157,7 @@ export default async function RootLayout({
                               revalidatePath('/admin', 'layout');
                             }}
                           />
-                          <Suspense>
-                            {children}
-                          </Suspense>
+                          {children}
                         </div>
                       </main>
                       <Suspense>

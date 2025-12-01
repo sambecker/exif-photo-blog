@@ -30,7 +30,7 @@ import {
   revalidateRecipesKey,
   revalidateTagsKey,
 } from '@/cache/index-old';
-import { revalidatePhoto, getPhotosCached } from './cache';
+import { revalidatePhoto } from './cache';
 import {
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_RECIPES,
@@ -74,7 +74,7 @@ import {
   upgradeTagToAlbum,
 } from '@/album/server';
 import { addPhotoAlbumIds } from '@/album/query';
-import { revalidateGlobalCache } from '@/cache';
+import { cacheTagGlobal, revalidateGlobalCache } from '@/cache';
 
 // Private actions
 
@@ -685,12 +685,14 @@ export const getPhotosCachedAction = async (
   options: PhotoQueryOptions,
   warmOnly?: boolean,
 ) => {
+  'use cache';
+  cacheTagGlobal();
   if (warmOnly) {
     return [];
   } else {
     return areOptionsSensitive(options)
-      ? runAuthenticatedAdminServerAction(() => getPhotosCached(options))
-      : getPhotosCached(options);
+      ? runAuthenticatedAdminServerAction(() => getPhotos(options))
+      : getPhotos(options);
   }
 };
 
