@@ -2,7 +2,7 @@ import { generateOgImageMetaForPhotos } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import { getPhotos, getPhotosMeta } from '@/photo/query';
-import { cache, Suspense } from 'react';
+import { cache } from 'react';
 import PhotoGridPage from '@/photo/PhotoGridPage';
 import { SortProps } from '@/photo/sort';
 import { getSortOptionsFromParams } from '@/photo/sort/path';
@@ -57,8 +57,6 @@ export default async function GridPage({ params }: SortProps) {
           ...categories,
         }}
       />
-      : <Suspense>
-        <PhotosEmptyState />
-      </Suspense>
+      : <PhotosEmptyState />
   );
 }

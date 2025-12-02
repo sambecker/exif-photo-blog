@@ -3,7 +3,7 @@
 import { generateOgImageMetaForPhotos } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
-import { cache, Suspense } from 'react';
+import { cache } from 'react';
 import { getPhotos, getPhotosMeta } from '@/photo/query';
 import { GRID_HOMEPAGE_ENABLED, USER_DEFAULT_SORT_OPTIONS } from '@/app/config';
 import { getDataForCategories, NULL_CATEGORY_DATA } from '@/category/data';
@@ -63,8 +63,6 @@ export default async function HomePage() {
           photosCount,
           ...USER_DEFAULT_SORT_OPTIONS,
         }} />
-      : <Suspense>
-        <PhotosEmptyState />
-      </Suspense>
+      : <PhotosEmptyState />
   );
 }

@@ -4,7 +4,7 @@ import { generateOgImageMetaForPhotos } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
 import { getPhotos, getPhotosMeta } from '@/photo/query';
-import { cache, Suspense } from 'react';
+import { cache } from 'react';
 import PhotoGridPage from '@/photo/PhotoGridPage';
 import { USER_DEFAULT_SORT_OPTIONS } from '@/app/config';
 import { FEED_META_QUERY_OPTIONS, getFeedQueryOptions } from '@/feed';
@@ -54,8 +54,6 @@ export default async function GridPage() {
           ...categories,
         }}
       />
-      : <Suspense>
-        <PhotosEmptyState />
-      </Suspense>
+      : <PhotosEmptyState />
   );
 }
