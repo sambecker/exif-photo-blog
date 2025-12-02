@@ -3,7 +3,7 @@
 import { generateOgImageMetaForPhotos } from '@/photo';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { Metadata } from 'next/types';
-import { cache } from 'react';
+import { cache, Suspense } from 'react';
 import { getPhotos, getPhotosMeta } from '@/photo/query';
 import PhotoFullPage from '@/photo/PhotoFullPage';
 import { USER_DEFAULT_SORT_OPTIONS } from '@/app/config';
@@ -43,6 +43,8 @@ export default async function FullPage() {
         photosCount,
         ...USER_DEFAULT_SORT_OPTIONS,
       }} />
-      : <PhotosEmptyState />
+      : <Suspense>
+        <PhotosEmptyState />
+      </Suspense>
   );
 }
