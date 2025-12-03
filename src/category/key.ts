@@ -4,6 +4,7 @@ import {
   pathForFilm,
   pathForFocalLength,
   pathForLens,
+  pathForPhoto,
   pathForRecipe,
   pathForTag,
   pathForYear,
@@ -11,7 +12,9 @@ import {
 } from '@/app/path';
 import { PhotoSetCategory } from '.';
 
-export const keyForCategory = (category: PhotoSetCategory) => {
+export const keyForCategory = (
+  category: PhotoSetCategory & { photoId?: string },
+): string => {
   let key = '';
 
   if (category.recent) {
@@ -32,6 +35,8 @@ export const keyForCategory = (category: PhotoSetCategory) => {
     key = pathForFilm(category.film);
   } else if (category.focal) {
     key = pathForFocalLength(category.focal);
+  } else if (category.photoId) {
+    key = pathForPhoto({ photo: category.photoId });
   }
 
   return key

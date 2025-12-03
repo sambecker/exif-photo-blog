@@ -1,4 +1,3 @@
-import { PhotoSetCategory } from '@/category';
 import { keyForCategory } from '@/category/key';
 import {
   deleteFilesWithPrefix,
@@ -16,12 +15,12 @@ const OG_RESPONSE_CONFIG: ResponseInit = {
 };
 
 export const cachedOgResponse = async (
-  _categoryOrKey: PhotoSetCategory | string,
+  _categoryOrKey: Parameters<typeof keyForCategory>[0] | string,
   getOgResponse: () => Promise<Response>,
 ): Promise<Response> => {
-  const categoryOrKey = typeof _categoryOrKey !== 'string'
-    ? keyForCategory(_categoryOrKey)
-    : _categoryOrKey;
+  const categoryOrKey = typeof _categoryOrKey === 'string'
+    ? _categoryOrKey
+    : keyForCategory(_categoryOrKey);
   const key = `${OG_PREFIX}${categoryOrKey}`;
   const cachedResponse = await fetch(storageUrlForKey(key) + OG_EXTENSION);
   if (cachedResponse.ok) {

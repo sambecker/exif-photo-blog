@@ -8,7 +8,7 @@ export async function GET(
   const { photoId } = await context.params;
 
   return cachedOgPhotoResponse(
-    `photo-${photoId}`,
+    { photoId },
     photoId,
     ({ photos, ...args }) =>
       <PhotoImageResponse {...{ photo: photos[0], ...args }}/>,
