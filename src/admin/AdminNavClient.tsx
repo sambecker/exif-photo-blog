@@ -77,21 +77,27 @@ export default function AdminNavClient({
               className="grow -mx-1 flex gap-0.5 md:gap-1.5"
               direction="horizontal"
             >
-              {items.map(({ label, href, count }) =>
-                <LinkWithLoaderBackground
-                  key={label}
-                  href={href}
-                  className={clsx(
-                    'flex gap-0.5',
-                    checkPathPrefix(pathname, href) ? 'font-bold' : 'text-dim',
-                    'hover:text-main active:text-medium',
-                  )}
-                  prefetch={false}
-                >
-                  <span>{label}</span>
-                  {count > 0 &&
-                    <span>({count})</span>}
-                </LinkWithLoaderBackground>)}
+              {items.length === 0
+                ? <div className={clsx(
+                  'h-6 bg-dim rounded-md animate-pulse',
+                  'w-full md:w-80',
+                )} />
+                : items.map(({ label, href, count }) =>
+                  <LinkWithLoaderBackground
+                    key={label}
+                    href={href}
+                    className={clsx(
+                      'flex gap-0.5',
+                      checkPathPrefix(pathname, href)
+                        ? 'font-bold'
+                        : 'text-dim',
+                      'hover:text-main active:text-medium',
+                    )}
+                  >
+                    <span>{label}</span>
+                    {count > 0 &&
+                      <span>({count})</span>}
+                  </LinkWithLoaderBackground>)}
             </MaskedScroll>
             <LinkWithIconLoader
               href={includeInsights

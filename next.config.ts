@@ -68,6 +68,15 @@ const IMAGE_QUALITY =
     : 75;
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
+  cacheLife: {
+    // TODO: Finalize magic values are correct
+    default: {
+      stale: 60 * 60 * 24 * 14, // 14 days
+      revalidate: 60 * 60 * 24 * 14, // 14 days
+      expire: 60 * 60 * 24 * 14, // 14 days
+    },
+  },
   images: {
     imageSizes: [200],
     qualities: [75, IMAGE_QUALITY],

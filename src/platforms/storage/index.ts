@@ -87,7 +87,7 @@ export const labelForStorage = (type: StorageType): string => {
   }
 };
 
-export const baseUrlForStorage = (type: StorageType) => {
+export const baseUrlForStorage = (type: StorageType = CURRENT_STORAGE) => {
   switch (type) {
     case 'vercel-blob': return VERCEL_BLOB_BASE_URL;
     case 'cloudflare-r2': return CLOUDFLARE_R2_BASE_URL_PUBLIC;
@@ -95,6 +95,9 @@ export const baseUrlForStorage = (type: StorageType) => {
     case 'minio': return MINIO_BASE_URL;
   }
 };
+
+export const storageUrlForKey = (key: string) =>
+  `${baseUrlForStorage(CURRENT_STORAGE)}/${key}`;
 
 export const storageTypeFromUrl = (url: string): StorageType => {
   if (isUrlFromCloudflareR2(url)) {
@@ -122,7 +125,7 @@ export const uploadFromClientViaPresignedUrl = async (
     .then((response) => response.text());
 
   return fetch(url, { method: 'PUT', body: file })
-    .then(() => `${baseUrlForStorage(CURRENT_STORAGE)}/${key}`);
+    .then(() => `${baseUrlForStorage()}/${key}`);
 };
 
 export const uploadFileFromClient = async (
