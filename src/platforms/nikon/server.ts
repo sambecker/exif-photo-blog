@@ -1,21 +1,11 @@
 import type { ExifData } from 'ts-exif-parser';
-import { MAKE_NIKON } from '.';
+import { isMakeNikon } from '.';
 
 // Nikon MakerNote Header
 const NIKON_MAKERNOTE_HEADER = 'Nikon\x00\x02\x00\x00\x00';
-const HEADER_SIZE = 18; // "Nikon\x00\x02\x00\x00\x00" + 2 bytes (TIFF header) + 4 bytes (offset) ?
-// Actually, usually it's "Nikon\x00\x02\x10\x00\x00" or similar.
-// Let's assume standard TIFF structure after "Nikon\x00\x02\x00\x00\x00" (10 bytes)
-// The TIFF structure starts at offset 10 (0-indexed) relative to the start of MakerNote?
-// Or is it relative to the start of the file?
-// Nikon Type 3 MakerNote:
-// Header: "Nikon\x00\x02\x10\x00\x00" (10 bytes)
-// Followed by TIFF structure (IFD).
-// The offsets in the IFD are relative to the start of the MakerNote (or sometimes start of file + offset).
-// Let's try to parse it as a TIFF IFD starting at offset 10.
+const HEADER_SIZE = 18;
 
-export const isExifForNikon = (data: ExifData) =>
-  data.tags?.Make?.toUpperCase() === MAKE_NIKON;
+export const isExifForNikon = (data: ExifData) => isMakeNikon(data.tags?.Make);
 
 export const parseNikonMakerNote = (
   bytes: Buffer,
@@ -29,26 +19,6 @@ export const parseNikonMakerNote = (
   // Assume Type 3 for Z series
   // Skip 10 bytes header
   const baseOffset = 10;
-  
-  // Read TIFF header at baseOffset
-  // Byte order (2 bytes): 0x4949 (II) or 0x4D4D (MM)
-  // 0x2A00 (42)
-  // Offset to first IFD (4 bytes)
-  
-  // Actually, Nikon Type 3 usually starts directly with the IFD count at offset 10?
-  // Let's look at how Fujifilm did it. They hardcoded offsets.
-  // Nikon Type 3:
-  // 0-4: "Nikon"
-  // 5: 0x00
-  // 6: 0x02
-  // 7: 0x10 (or 0x00)
-  // 8-9: 0x0000
-  // 10-13: Tiff header? Or just start of IFD?
-  // Often it is:
-  // 10-11: 0x4949 (II)
-  // 12-13: 0x2A00 (42)
-  // 14-17: Offset to 0th IFD (usually 8)
-  // So the TIFF structure starts at 10.
   
   const tiffStart = 10;
   if (bytes.length < tiffStart + 8) return;
