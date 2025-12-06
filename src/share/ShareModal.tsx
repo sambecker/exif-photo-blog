@@ -15,7 +15,6 @@ import MaskedScroll from '@/components/MaskedScroll';
 import { useAppText } from '@/i18n/state/client';
 import SocialButton from '@/social/SocialButton';
 import LoaderButton from '@/components/primitives/LoaderButton';
-import QRCodeButton from '@/share/QRCodeButton';
 import Image from 'next/image';
 
 const BUTTON_COLOR_CLASSNAMES = clsx(
