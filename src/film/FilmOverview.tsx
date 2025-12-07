@@ -15,14 +15,15 @@ export default function FilmOverview({
   dateRange?: PhotoDateRangePostgres,
   animateOnFirstLoadOnly?: boolean,
 }) {
+  const decodedFilm = decodeURIComponent(film);
   return (
     <PhotoGridContainer {...{
       cacheKey: `film-${film}`, 
       photos,
       count,
-      film,
+      film: decodedFilm,
       header: <FilmHeader {...{
-        film,
+        film: decodedFilm,
         photos,
         count,
         dateRange,
