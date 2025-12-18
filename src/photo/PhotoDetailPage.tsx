@@ -1,4 +1,5 @@
-import AnimateItems from '@/components/AnimateItems';
+'use client';
+
 import { Photo, PhotoDateRangePostgres } from '.';
 import { PhotoSetCategory } from '../category';
 import PhotoLarge from './PhotoLarge';
@@ -18,6 +19,8 @@ import { AI_CONTENT_GENERATION_ENABLED } from '@/app/config';
 import YearHeader from '@/year/YearHeader';
 import RecentsHeader from '@/recents/RecentsHeader';
 import AlbumHeader from '@/album/AlbumHeader';
+import { useAppState } from '@/app/AppState';
+import { clsx } from 'clsx/lite';
 
 export default function PhotoDetailPage({
   photo,
@@ -48,6 +51,8 @@ export default function PhotoDetailPage({
   includeFavoriteInAdminMenu?: boolean
 } & PhotoSetCategory) {
   let customHeader: ReactNode | undefined;
+
+  const { hasLoadedWithAnimations } = useAppState();
 
   if (year) {
     customHeader = <YearHeader
@@ -149,39 +154,38 @@ export default function PhotoDetailPage({
           hasAiTextGeneration={AI_CONTENT_GENERATION_ENABLED}
         />}
       />
-      <AnimateItems
-        className="md:mb-8"
-        animateFromAppState
-        items={[
-          <PhotoLarge
-            key={photo.id}
-            photo={photo}
-            album={album}
-            primaryTag={tag}
-            priority
-            prefetchRelatedLinks
-            recent={recent}
-            year={year}
-            showTitle={Boolean(customHeader)}
-            showTitleAsH1
-            showCamera={!camera}
-            showLens={!lens}
-            showFilm={!film}
-            showRecipe={!recipe}
-            shouldShare={shouldShare}
-            shouldShareRecents={recent !== undefined}
-            shouldShareYear={year !== undefined}
-            shouldShareCamera={camera !== undefined}
-            shouldShareLens={lens !== undefined}
-            shouldShareAlbum={album !== undefined}
-            shouldShareTag={tag !== undefined}
-            shouldShareFilm={film !== undefined}
-            shouldShareRecipe={recipe !== undefined}
-            shouldShareFocalLength={focal !== undefined}
-            includeFavoriteInAdminMenu={includeFavoriteInAdminMenu}
-            showAdminKeyCommands
-          />,
-        ]}
+      <PhotoLarge
+        key={photo.id}
+        className={clsx(
+          'md:mb-8',
+          !hasLoadedWithAnimations &&
+            'opacity-0 animate-fade-in-from-bottom-large',
+        )}
+        photo={photo}
+        album={album}
+        primaryTag={tag}
+        priority
+        prefetchRelatedLinks
+        recent={recent}
+        year={year}
+        showTitle={Boolean(customHeader)}
+        showTitleAsH1
+        showCamera={!camera}
+        showLens={!lens}
+        showFilm={!film}
+        showRecipe={!recipe}
+        shouldShare={shouldShare}
+        shouldShareRecents={recent !== undefined}
+        shouldShareYear={year !== undefined}
+        shouldShareCamera={camera !== undefined}
+        shouldShareLens={lens !== undefined}
+        shouldShareAlbum={album !== undefined}
+        shouldShareTag={tag !== undefined}
+        shouldShareFilm={film !== undefined}
+        shouldShareRecipe={recipe !== undefined}
+        shouldShareFocalLength={focal !== undefined}
+        includeFavoriteInAdminMenu={includeFavoriteInAdminMenu}
+        showAdminKeyCommands
       />
       <AppGrid
         contentMain={<PhotoGrid
