@@ -98,7 +98,7 @@ export const getTopNonFavTags = (tags: Tags) => tags
   .slice(0, 3);
 
 export const descriptionForTaggedPhotos = (
-  photos: Photo[] = [],
+  photos: PhotoLight[] = [],
   appText: AppTextState,
   dateBased?: boolean,
   explicitCount?: number,

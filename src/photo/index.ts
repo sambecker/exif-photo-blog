@@ -19,6 +19,7 @@ import camelcaseKeys from 'camelcase-keys';
 import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
+import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import { PhotoUpdateStatus, generatePhotoUpdateStatus } from './update';
 import { AppTextState } from '@/i18n/state';
 import { PhotoColorData } from './color/client';
@@ -48,6 +49,21 @@ export const ACCEPTED_PHOTO_FILE_TYPES = [
 
 export const MAX_PHOTO_UPLOAD_SIZE_IN_BYTES = 50_000_000;
 
+export interface PhotoLight {
+  id: string
+  url: string
+  aspectRatio: number
+  blurData?: string
+  updatedAt: Date
+  takenAt: Date
+  takenAtNaive: string
+  createdAt: Date
+  colorData?: PhotoColorData
+  title?: string
+  semanticDescription?: string
+  hidden?: boolean
+}
+
 // Core EXIF data
 export interface PhotoExif {
   aspectRatio: number
@@ -63,7 +79,7 @@ export interface PhotoExif {
   exposureCompensation?: number
   latitude?: number
   longitude?: number
-  film?: string
+  film?: FujifilmSimulation
   recipeData?: string
   takenAt?: string
   takenAtNaive?: string
@@ -116,6 +132,24 @@ export interface Photo extends Omit<PhotoDb, 'recipeData' | 'colorData'> {
   colorData?: PhotoColorData
   updateStatus?: PhotoUpdateStatus
 }
+
+export const parsePhotoLightFromDb = (photoDbRaw: any): PhotoLight => {
+  const photoDb = camelcaseKeys(photoDbRaw) as unknown as Record<string, unknown>;
+  return {
+    id: photoDb.id,
+    url: photoDb.url,
+    aspectRatio: photoDb.aspectRatio,
+    blurData: photoDb.blurData,
+    updatedAt: photoDb.updatedAt,
+    takenAt: photoDb.takenAt,
+    takenAtNaive: photoDb.takenAtNaive,
+    createdAt: photoDb.createdAt,
+    colorData: photoDb.colorData || undefined,
+    title: photoDb.title,
+    semanticDescription: photoDb.semanticDescription,
+    hidden: photoDb.hidden,
+  } as PhotoLight;
+};
 
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
   const photoDb = camelcaseKeys(
@@ -182,21 +216,21 @@ export const descriptionForPhoto = (
   (includeSemanticDescription && photo.semanticDescription) ||
   formatDate({ date: photo.takenAt }).toLocaleUpperCase();
 
-export const getPreviousPhoto = (photo: Photo, photos: Photo[]) => {
+export const getPreviousPhoto = (photo: PhotoLight, photos: PhotoLight[]) => {
   const index = photos.findIndex(p => p.id === photo.id);
   return index > 0
     ? photos[index - 1]
     : undefined;
 };
 
-export const getNextPhoto = (photo: Photo, photos: Photo[]) => {
+export const getNextPhoto = (photo: PhotoLight, photos: PhotoLight[]) => {
   const index = photos.findIndex(p => p.id === photo.id);
   return index < photos.length - 1
     ? photos[index + 1]
     : undefined;
 };
 
-export const generateOgImageMetaForPhotos = (photos: Photo[]): Metadata => {
+export const generateOgImageMetaForPhotos = (photos: PhotoLight[]): Metadata => {
   if (photos.length > 0) {
     return {
       openGraph: {
@@ -221,7 +255,7 @@ export const translatePhotoId = (id: string) =>
   PHOTO_ID_FORWARDING_TABLE[id] || id;
 
 export const titleForPhoto = (
-  photo: Photo,
+  photo: PhotoLight,
   useDateAsTitle = true,
   fallback = 'Untitled',
 ) => {
@@ -237,7 +271,7 @@ export const titleForPhoto = (
   }
 };
 
-export const altTextForPhoto = (photo: Photo) =>
+export const altTextForPhoto = (photo: PhotoLight) =>
   photo.semanticDescription || titleForPhoto(photo);
 
 export const photoLabelForCount = (
@@ -278,7 +312,7 @@ export type PhotoDateRangeFormatted = {
 };
 
 export const descriptionForPhotoSet = (
-  photos:Photo[] = [],
+  photos: Photo[] | PhotoLight[] = [],
   appText: AppTextState,
   descriptor?: string,
   dateBased?: boolean,
@@ -297,7 +331,7 @@ export const descriptionForPhotoSet = (
     ].join(' ');
 
 const sortPhotosByDateNonDestructively = (
-  photos: Photo[],
+  photos: Photo[] | PhotoLight[],
   order: 'ASC' | 'DESC' = 'DESC',
 ) =>
   [...photos].sort((a, b) => order === 'DESC'
@@ -385,5 +419,5 @@ export const downloadFileNameForPhoto = (photo: Photo) =>
     ? `${parameterize(photo.title)}.${photo.extension}`
     : photo.url.split('/').pop() || 'download';
 
-export const doesPhotoNeedBlurCompatibility = (photo: Photo) =>
+export const doesPhotoNeedBlurCompatibility = (photo: PhotoLight) =>
   isBefore(photo.updatedAt, new Date('2024-05-07'));

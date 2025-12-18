@@ -1,6 +1,6 @@
 'use client';
 
-import { Photo } from '.';
+import { PhotoLight } from '.';
 import { PhotoSetCategory } from '../category';
 import PhotoMedium from './PhotoMedium';
 import { clsx } from 'clsx/lite';
@@ -30,8 +30,8 @@ export default function PhotoGrid({
   onAnimationComplete,
   ...categories
 }: {
-  photos: Photo[]
-  selectedPhoto?: Photo
+  photos: PhotoLight[]
+  selectedPhoto?: PhotoLight
   prioritizeInitialPhotos?: boolean
   className?: string
   classNamePhoto?: string

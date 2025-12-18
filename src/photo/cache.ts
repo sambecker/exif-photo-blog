@@ -7,6 +7,7 @@ import {
 import {
   getPhoto,
   getPhotos,
+  getPhotosLight,
   getUniqueCameras,
   getUniqueTags,
   getUniqueFilms,
@@ -133,6 +134,23 @@ export const revalidatePhoto = (photoId: string) => {
 };
 
 // Cache
+export const getPhotosCachedLight = (
+  ...args: Parameters<typeof getPhotosLight>
+) => {
+  return unstable_cache(
+    async (...args) => {
+      const photos = await getPhotosLight(...args);
+      return photos.map(photo => ({
+        ...photo,
+        takenAt: new Date(photo.takenAt),
+        updatedAt: new Date(photo.updatedAt),
+        createdAt: new Date(photo.createdAt),
+      }));
+    },
+    [KEY_PHOTOS, 'light', ...getPhotosCacheKeys(...args)],
+    { revalidate: 3600, tags: [KEY_PHOTOS] }
+  )(...args);
+};
 
 export const getPhotosCached = (
   ...args: Parameters<typeof getPhotos>
