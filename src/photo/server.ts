@@ -20,6 +20,11 @@ import {
   getFujifilmRecipeFromMakerNote,
 } from '@/platforms/fujifilm/recipe';
 import {
+  getNikonPictureControlFromMakerNote,
+  NikonPictureControl,
+} from '@/platforms/nikon/simulation';
+import { isExifForNikon } from '@/platforms/nikon/server';
+import {
   deletePhoto,
   getRecipeTitleForData,
   updateAllMatchingRecipeTitles,
@@ -63,7 +68,7 @@ export const extractImageDataFromBlobPath = async (
 
   let dataExif: ExifData | undefined;
   let dataExifr: any | undefined;
-  let film: FujifilmSimulation | undefined;
+  let film: FujifilmSimulation | NikonPictureControl | undefined;
   let recipe: FujifilmRecipe | undefined;
   let blurData: string | undefined;
   let imageResizedBase64: string | undefined;
@@ -87,16 +92,20 @@ export const extractImageDataFromBlobPath = async (
       dataExif = parser.parse();
       dataExifr = await exifr.parse(fileBytes, { xmp: true });
 
-      // Capture film simulation for Fujifilm cameras
-      if (isExifForFujifilm(dataExif)) {
+      // Capture film simulation for Fujifilm or Picture Control for Nikon
+      if (isExifForFujifilm(dataExif) || isExifForNikon(dataExif)) {
         // Parse exif data again with binary fields
         // in order to access MakerNote tag
         parser.enableBinaryFields(true);
         const exifDataBinary = parser.parse();
         const makerNote = exifDataBinary.tags?.MakerNote;
         if (Buffer.isBuffer(makerNote)) {
-          film = getFujifilmSimulationFromMakerNote(makerNote);
-          recipe = getFujifilmRecipeFromMakerNote(makerNote);
+          if (isExifForFujifilm(dataExif)) {
+            film = getFujifilmSimulationFromMakerNote(makerNote);
+            recipe = getFujifilmRecipeFromMakerNote(makerNote);
+          } else if (isExifForNikon(dataExif)) {
+            film = getNikonPictureControlFromMakerNote(makerNote);
+          }
         }
       }
 
@@ -144,7 +153,6 @@ export const extractImageDataFromBlobPath = async (
     error,
   };
 };
-
 const generateBase64 = async (
   image: ArrayBuffer,
   middleware?: (sharp: Sharp) => Sharp,

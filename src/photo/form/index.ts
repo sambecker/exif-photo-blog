@@ -151,8 +151,8 @@ const FORM_METADATA = (
   film: {
     section: 'exif',
     label: 'film',
-    note: 'Intended for Fujifilm cameras and analog scans',
-    noteShort: 'Fujifilm cameras / analog scans',
+    note: 'Intended for Fujifilm / Nikon cameras and analog scans',
+    noteShort: 'Fujifilm / Nikon cameras / analog scans',
     tagOptions: filmOptions,
     tagOptionsLimit: 1,
     shouldNotOverwriteWithNullDataOnSync: true,

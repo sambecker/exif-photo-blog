@@ -24,7 +24,8 @@ export interface RecipeProps {
   data: FujifilmRecipe
   film: string
   iso?: string
-  exposure?: string   
+  exposure?: string
+  make?: string
 }
 
 export const formatRecipe = (recipe?: string) =>

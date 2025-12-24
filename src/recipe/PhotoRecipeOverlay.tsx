@@ -25,6 +25,7 @@ export default function PhotoRecipeOverlay({
   title,
   data,
   film,
+  make,
   onClose,
   isOnPhoto = true,
 }: RecipeProps & {
@@ -163,6 +164,7 @@ export default function PhotoRecipeOverlay({
             <div className="flex items-center gap-1.5">
               <PhotoFilm
                 film={film}
+                make={isOnPhoto ? make : undefined}
                 contrast="frosted"
                 className={clsx(
                   'translate-y-[-0.5px]',

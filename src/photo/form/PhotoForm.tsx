@@ -108,6 +108,9 @@ export default function PhotoForm({
     useState(getFormErrors(initialPhotoForm));
   const [formActionErrorMessage, setFormActionErrorMessage] = useState('');
 
+  const [detectedFilm, setDetectedFilm] =
+    useState(initialPhotoForm.film);
+
   const [albumTitles, setAlbumTitles] = useState(photoAlbumTitles
     .sort((a, b) => a.localeCompare(b))
     .join(','));
@@ -167,6 +170,10 @@ export default function PhotoForm({
           ...updatedExifData,
         };
       });
+
+      if (updatedExifData?.film) {
+        setDetectedFilm(updatedExifData.film);
+      }
 
       if (changedKeys.length > 0) {
         const fields = convertFormKeysToLabels(changedKeys);
@@ -342,7 +349,12 @@ export default function PhotoForm({
     FORM_METADATA_ENTRIES_BY_SECTION(
       convertTagsForForm(uniqueTags, appText),
       convertRecipesForForm(uniqueRecipes),
-      convertFilmsForForm(uniqueFilms, isMakeFujifilm(formData.make)),
+      convertFilmsForForm(
+        uniqueFilms,
+        isMakeFujifilm(formData.make),
+        detectedFilm,
+        formData.make,
+      ),
       aiContent !== undefined,
       shouldStripGpsData,
     ), [
@@ -351,6 +363,7 @@ export default function PhotoForm({
     uniqueRecipes,
     uniqueFilms,
     formData.make,
+    detectedFilm,
     aiContent,
     shouldStripGpsData,
   ]);

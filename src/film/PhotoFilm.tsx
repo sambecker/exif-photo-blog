@@ -14,6 +14,7 @@ import useCategoryCounts from '@/category/useCategoryCounts';
 
 export default function PhotoFilm({
   film,
+  make,
   type = 'icon-last',
   badged = true,
   contrast = 'low',
@@ -22,6 +23,7 @@ export default function PhotoFilm({
   ...props
 }: {
   film: string
+  make?: string
 } & Partial<ComponentProps<typeof PhotoRecipeOverlayButton>>
   & EntityLinkExternalProps) {
   const { getFilmCount } = useCategoryCounts();
@@ -37,6 +39,7 @@ export default function PhotoFilm({
       hoverQueryOptions={{ film }}
       icon={<PhotoFilmIcon
         film={film}
+        make={make}
         className={clsx(
           contrast === 'frosted' && 'text-black',
           type === 'icon-only'
