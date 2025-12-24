@@ -13,6 +13,10 @@ import {
   labelForFujifilmSimulation,
 } from '@/platforms/fujifilm/simulation';
 import {
+  isStringNikonPictureControl,
+  labelForNikonPictureControl,
+} from '@/platforms/nikon/simulation';
+import {
   deparameterize,
   formatCount,
   formatCountDescriptive,
@@ -31,14 +35,19 @@ export const labelForFilm = (film: string) => {
   const simulationLabel = labelForFujifilmSimulation(film as any);
   if (simulationLabel) {
     return simulationLabel;
-  } else {
-    const filmFormatted = deparameterize(film);
-    return {
-      small: filmFormatted,
-      medium: filmFormatted,
-      large: filmFormatted,
-    };
   }
+
+  // Use Nikon Picture Control text when recognized
+  if (isStringNikonPictureControl(film)) {
+    return labelForNikonPictureControl(film);
+  }
+
+  const filmFormatted = deparameterize(film);
+  return {
+    small: filmFormatted,
+    medium: filmFormatted,
+    large: filmFormatted,
+  };
 };
 
 export const sortFilms = (
@@ -111,6 +120,7 @@ export const photoHasFilmData = (photo: Photo) =>
 export const convertFilmsForForm = (
   _films: Films = [],
   includeAllFujifilmSimulations?: boolean,
+  currentFilm?: string,
 ): AnnotatedTag[] => {
   const films: AnnotatedTag[] = includeAllFujifilmSimulations
     ? FUJIFILM_SIMULATION_FORM_INPUT_OPTIONS
@@ -129,6 +139,10 @@ export const convertFilmsForForm = (
       films[index] = { ...films[index], ...meta };
     }
   });
+
+  if (currentFilm && !films.some(f => f.value === currentFilm)) {
+    films.push({ value: currentFilm });
+  }
 
   return films
     .map(film => ({
