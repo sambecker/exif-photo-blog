@@ -353,6 +353,7 @@ export default function PhotoForm({
         uniqueFilms,
         isMakeFujifilm(formData.make),
         detectedFilm,
+        formData.make,
       ),
       aiContent !== undefined,
       shouldStripGpsData,
