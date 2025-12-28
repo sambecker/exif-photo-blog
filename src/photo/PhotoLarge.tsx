@@ -412,6 +412,7 @@ export default function PhotoLarge({
                       <PhotoFilm
                         ref={refPhotoFilm}
                         film={photo.film}
+                        make={photo.make}
                         prefetch={prefetchRelatedLinks}
                         {...photo.recipeData && !photo.recipeTitle && {
                           toggleRecipeOverlay,
