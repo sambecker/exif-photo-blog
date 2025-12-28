@@ -1,4 +1,6 @@
-import { getNikonPictureControlFromMakerNote } from '@/platforms/nikon/simulation';
+import {
+  getNikonPictureControlFromMakerNote,
+} from '@/platforms/nikon/simulation';
 
 describe('Nikon', () => {
   describe('parsing', () => {
@@ -9,7 +11,9 @@ describe('Nikon', () => {
       
       // TIFF Header at offset 10
       // II (Little Endian)
-      const tiffHeader = Buffer.from([0x49, 0x49, 0x2A, 0x00, 0x08, 0x00, 0x00, 0x00]);
+      const tiffHeader = Buffer.from(
+        [0x49, 0x49, 0x2A, 0x00, 0x08, 0x00, 0x00, 0x00],
+      );
       
       // IFD at offset 10 + 8 = 18
       // Count: 1 tag
@@ -33,12 +37,18 @@ describe('Nikon', () => {
       const data = Buffer.alloc(108);
       data.write('0310', 0);
       data.write('0310', 4);
-      data.write('Standard\0\0\0', 8); // Name at offset 8
+      data.write('standard\0\0\0', 8); // Name at offset 8
       
-      const makerNote = Buffer.concat([header, tiffHeader, ifdCount, tag, data]);
+      const makerNote = Buffer.concat([
+        header,
+        tiffHeader,
+        ifdCount,
+        tag,
+        data,
+      ]);
       
       const pictureControl = getNikonPictureControlFromMakerNote(makerNote);
-      expect(pictureControl).toBe('Standard');
+      expect(pictureControl).toBe('standard');
     });
 
     it('returns undefined for invalid header', () => {
