@@ -1,21 +1,6 @@
-import { getPhotosCached } from '@/photo/cache';
-import {
-  IMAGE_OG_DIMENSION_SMALL,
-  MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
-} from '@/image-response';
+import { MAX_PHOTOS_TO_SHOW_PER_CATEGORY } from '@/image-response/size';
 import FilmImageResponse from '@/film/FilmImageResponse';
-import { getIBMPlexMono } from '@/app/font';
-import { ImageResponse } from 'next/og';
-import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
-import { getUniqueFilms } from '@/photo/query';
-import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
-
-export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-  'films',
-  'image',
-  getUniqueFilms,
-  films => films.map(({ film }) => ({ film })),
-);
+import { cachedOgPhotoResponse } from '@/image-response/photo';
 
 export async function GET(
   _: Request,
@@ -23,29 +8,9 @@ export async function GET(
 ) {
   const { film } = await context.params;
 
-  const [
-    photos,
-    { fontFamily, fonts },
-    headers,
-  ] = await Promise.all([
-    getPhotosCached({
-      limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
-      film: film,
-    }),
-    getIBMPlexMono(),
-    getImageResponseCacheControlHeaders(),
-  ]);
-
-  const { width, height } = IMAGE_OG_DIMENSION_SMALL;
-
-  return new ImageResponse(
-    <FilmImageResponse {...{
-      film,
-      photos,
-      width,
-      height,
-      fontFamily,
-    }}/>,
-    { width, height, fonts, headers },
+  return cachedOgPhotoResponse(
+    { film },
+    { film, limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY },
+    args => <FilmImageResponse {...{ film, ...args }} />,
   );
 }

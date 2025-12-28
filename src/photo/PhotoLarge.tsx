@@ -26,7 +26,6 @@ import { sortTagsArray } from '@/tag';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
 import PhotoLink from './PhotoLink';
 import {
-  SHOULD_PREFETCH_ALL_LINKS,
   ALLOW_PUBLIC_DOWNLOADS,
   SHOW_TAKEN_AT_TIME,
   MATTE_COLOR,
@@ -58,8 +57,8 @@ export default function PhotoLarge({
   album,
   primaryTag,
   priority,
-  prefetch = SHOULD_PREFETCH_ALL_LINKS,
-  prefetchRelatedLinks = SHOULD_PREFETCH_ALL_LINKS,
+  prefetch,
+  prefetchRelatedLinks,
   recent,
   year,
   revalidatePhoto,

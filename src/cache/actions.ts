@@ -1,7 +1,7 @@
 'use server';
 
 import { runAuthenticatedAdminServerAction } from '@/auth/server';
-import { revalidateAllKeysAndPaths } from '.';
+import { revalidateGlobalCache } from '.';
 
-export const revalidateAllKeysAndPathsAction = async () =>
-  runAuthenticatedAdminServerAction(revalidateAllKeysAndPaths);
+export const revalidateGlobalCacheAction = async () =>
+  runAuthenticatedAdminServerAction(revalidateGlobalCache);
