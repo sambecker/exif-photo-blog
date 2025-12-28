@@ -14,10 +14,12 @@ import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import type { ExifData, ExifTags } from 'ts-exif-parser';
 
+import { NikonPictureControl } from '@/platforms/nikon/simulation';
+
 export const convertExifToFormData = (
   exif: ExifData,
   exifr?: any,
-  film?: FujifilmSimulation,
+  film?: FujifilmSimulation | NikonPictureControl,
   recipeData?: FujifilmRecipe,
 ): Partial<Record<keyof PhotoExif, string | undefined>> => {
   let title: string | undefined = exifr?.title?.value;

@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 import { CSSProperties } from 'react';
 import { labelForFilm } from '.';
+import { isMakeFujifilm } from '@/platforms/fujifilm';
 
 const INTRINSIC_WIDTH = 28;
 const INTRINSIC_WIDTH_FALLBACK = 14;
@@ -12,11 +13,13 @@ const FALLBACK_ICON = <g>
 
 export default function PhotoFilmIcon({
   film,
+  make,
   height = INTRINSIC_HEIGHT,
   className,
   style,
 }: {
   film?: string
+  make?: string
   height?: number
   className?: string
   style?: CSSProperties
@@ -24,6 +27,9 @@ export default function PhotoFilmIcon({
   const simulationIcon = (() => {
     // Self-calling switch function and non-fragment groups
     // necessary for ImageResponse compatibility
+    if (make && !isMakeFujifilm(make)) {
+      return undefined;
+    }
     switch (film) {
       case 'monochrome': return <g>
         <path fillRule="evenodd" clipRule="evenodd" d="M16.25 14H22.5C22.6381 14 22.75 13.8881 22.75 13.75V10.5202C22.75 10.4539 22.7763 10.3903 22.8232 10.3434L25.677 7.48989C25.7238 7.44301 25.7502 7.37942 25.7502 7.31311V4.25C25.7502 4.11193 25.6383 4 25.5002 4H16.25C16.1119 4 16 4.11194 16 4.25002L16.0002 6.49998C16.0002 6.63806 15.8882 6.75 15.7502 6.75H14.7502C14.6121 6.75 14.5002 6.86192 14.5002 6.99999L14.5 11C14.5 11.1381 14.6119 11.25 14.75 11.25H15.75C15.8881 11.25 16 11.3619 16 11.5V13.75C16 13.8881 16.1119 14 16.25 14ZM18.75 5H17V6.5H18.75V5ZM17 11.5H18.75V13H17V11.5ZM21.75 5H20V6.5H21.75V5ZM20 11.5H21.75V13H20V11.5ZM24.75 5H23V6.5H24.75V5Z" fill="currentColor"/>

@@ -67,20 +67,21 @@ export default async function PhotoFilmPage({
   params,
 }: PhotoFilmProps) {
   const { photoId, film } = await params;
+  const decodedFilm = decodeURIComponent(film);
 
   const { photo, photos, photosGrid, indexNumber } =
-    await getPhotosNearIdCachedCached(photoId, film);
+    await getPhotosNearIdCachedCached(photoId, decodedFilm);
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const { count, dateRange } = await getPhotosMetaCached({ film: film });
+  const { count, dateRange } = await getPhotosMetaCached({ film: decodedFilm });
 
   return (
     <PhotoDetailPage {...{
       photo,
       photos,
       photosGrid,
-      film: film,
+      film: decodedFilm,
       indexNumber,
       count,
       dateRange,
