@@ -218,7 +218,7 @@ export const pathForRecipe = (recipe: string) =>
   `${PREFIX_RECIPE}/${recipe}`;
 
 export const pathForFilm = (film: string) =>
-  `${PREFIX_FILM}/${film}`;
+  `${PREFIX_FILM}/${parameterize(film)}`;
 
 export const pathForFocalLength = (focal: number) =>
   `${PREFIX_FOCAL_LENGTH}/${focal}mm`;

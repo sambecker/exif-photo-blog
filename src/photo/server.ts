@@ -153,6 +153,7 @@ export const extractImageDataFromBlobPath = async (
     error,
   };
 };
+
 const generateBase64 = async (
   image: ArrayBuffer,
   middleware?: (sharp: Sharp) => Sharp,

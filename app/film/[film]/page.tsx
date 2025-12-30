@@ -66,12 +66,11 @@ export default async function FilmPage({
   params,
 }: FilmProps) {
   const { film } = await params;
-  const decodedFilm = decodeURIComponent(film);
 
   const [
     photos,
     { count, dateRange },
-  ] =  await getPhotosFilmDataCachedCached(decodedFilm);
+  ] = await getPhotosFilmDataCachedCached(film);
 
   if (photos.length === 0) { redirect(PATH_ROOT); } 
 

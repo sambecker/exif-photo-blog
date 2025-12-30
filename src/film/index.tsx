@@ -16,11 +16,7 @@ import {
   isStringNikonPictureControl,
   labelForNikonPictureControl,
 } from '@/platforms/nikon/simulation';
-import {
-  deparameterize,
-  formatCount,
-  formatCountDescriptive,
-} from '@/utility/string';
+import { deparameterize } from '@/utility/string';
 import { AnnotatedTag } from '@/photo/form';
 import PhotoFilmIcon from './PhotoFilmIcon';
 import { AppTextState } from '@/i18n/state';
