@@ -34,7 +34,7 @@ import {
 } from '@/app/config';
 import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef, ViewTransition } from 'react';
 import useVisibility from '@/utility/useVisibility';
 import PhotoDate from './PhotoDate';
 import { useAppState } from '@/app/AppState';
@@ -82,6 +82,7 @@ export default function PhotoLarge({
   shouldShareRecipe,
   shouldShareFocalLength,
   includeFavoriteInAdminMenu,
+  includeViewTransition = true,
   onVisible,
   showAdminKeyCommands,
 }: {
@@ -114,6 +115,7 @@ export default function PhotoLarge({
   shouldShareRecipe?: boolean
   shouldShareFocalLength?: boolean
   includeFavoriteInAdminMenu?: boolean
+  includeViewTransition?: boolean
   onVisible?: () => void
   showAdminKeyCommands?: boolean
 }) {
@@ -282,7 +284,11 @@ export default function PhotoLarge({
       className={className}
       contentMain={showZoomControls
         ? <div className={largePhotoContainerClassName}>
-          {renderLargePhoto}
+          {includeViewTransition
+            ? <ViewTransition name="photo">
+              {renderLargePhoto}
+            </ViewTransition>
+            : renderLargePhoto}
         </div>
         : <Link
           href={pathForPhoto({ photo })}
