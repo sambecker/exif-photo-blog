@@ -1,4 +1,4 @@
-import { Photo } from '@/photo';
+import { PhotoLight } from '@/photo';
 import { PhotoSetCategory } from '@/category';
 import { getBaseUrl, GRID_HOMEPAGE_ENABLED } from './config';
 import { Camera } from '@/camera';
@@ -156,7 +156,7 @@ export const pathForAdminTagEdit = (tag: string) =>
 export const pathForAdminRecipeEdit = (recipe: string) =>
   `${PATH_ADMIN_RECIPES}/${recipe}/${EDIT}`;
 
-type PhotoOrPhotoId = Photo | string;
+type PhotoOrPhotoId = PhotoLight | string;
 
 export const pathForPhoto = ({
   photo,
