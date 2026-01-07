@@ -41,6 +41,7 @@ import {
 } from '@/swr';
 import { warmRedisAction } from './actions';
 import useSupportsHover from '@/utility/useSupportsHover';
+import useTransitionDirection from './useTransitionDirection';
 
 export default function AppStateProvider({
   children,
@@ -75,6 +76,7 @@ export default function AppStateProvider({
       setNextPhotoAnimationId(undefined);
     }
   }, [nextPhotoAnimationId, setNextPhotoAnimation]);
+  const { setTransitionDirection } = useTransitionDirection();
   const [shouldRespondToKeyboardCommands, setShouldRespondToKeyboardCommands] =
     useState(true);
   // ENVIRONMENT
@@ -220,6 +222,12 @@ export default function AppStateProvider({
     _setUploadState(INITIAL_UPLOAD_STATE);
   }, []);
 
+  useEffect(() => {
+    return () => {
+      console.log('AppStateProvider: useEffect: CLEARING');
+    };
+  }, []);
+
   return (
     <AppStateContext.Provider
       value={{
@@ -230,6 +238,7 @@ export default function AppStateProvider({
         setNextPhotoAnimation,
         getNextPhotoAnimationId,
         clearNextPhotoAnimation,
+        setTransitionDirection,
         shouldRespondToKeyboardCommands,
         setShouldRespondToKeyboardCommands,
         categoriesWithCounts,
