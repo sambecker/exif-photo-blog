@@ -11,7 +11,7 @@ import SelectTileOverlay from '@/components/SelectTileOverlay';
 import { ReactNode } from 'react';
 import { GRID_GAP_CLASSNAME } from '@/components';
 import { useSelectPhotosState } from '@/admin/select/SelectPhotosState';
-import { DATA_KEY_PHOTO_GRID } from '@/admin/select/SelectPhotosProvider';
+import { DATA_KEY_PHOTO_GRID } from '@/admin/select';
 
 export default function PhotoGrid({
   photos,

@@ -4,7 +4,7 @@ import { Photo } from '.';
 import { PATH_GRID_INFERRED } from '@/app/path';
 import PhotoGridSidebar from './PhotoGridSidebar';
 import PhotoGridContainer from './PhotoGridContainer';
-import { ComponentProps, useMemo, useRef } from 'react';
+import { ComponentProps, Suspense, useMemo, useRef } from 'react';
 import clsx from 'clsx/lite';
 import MaskedScroll from '@/components/MaskedScroll';
 import { IS_RECENTS_FIRST, SHOW_CATEGORIES_ON_MOBILE } from '@/app/config';
@@ -76,11 +76,14 @@ export default function PhotoGridPageClient({
             fadeSize={100}
             setMaxSize={false}
           >
-            <PhotoGridSidebar {...{
-              ...categories,
-              photosCount: photosCountWithExcludes,
-              containerHeight,
-            }} />
+            <Suspense>
+              {/* Due to client-side date handling */}
+              <PhotoGridSidebar {...{
+                ...categories,
+                photosCount: photosCountWithExcludes,
+                containerHeight,
+              }} />
+            </Suspense>
           </MaskedScroll>
         }
       />

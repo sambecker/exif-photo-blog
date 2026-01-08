@@ -15,8 +15,13 @@ import {
 } from '@/app/path';
 import AdminNavClient from './AdminNavClient';
 import { getAppText } from '@/i18n/state/server';
+import { connection } from 'next/server';
 
 export default async function AdminNav() {
+  // For some reason, this is necessary when using Vercel Blob,
+  // which uses "new Date()" in its library
+  await connection();
+
   const [
     countPhotos,
     countUploads,

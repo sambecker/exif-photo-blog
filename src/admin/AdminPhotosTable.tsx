@@ -79,10 +79,7 @@ export default function AdminPhotosTable({
                 'truncate',
                 photo.hidden && 'text-dim',
               )}>
-                <Link
-                  href={pathForPhoto({ photo })}
-                  prefetch={false}
-                >
+                <Link href={pathForPhoto({ photo })}>
                   {titleForPhoto(photo, false)}
                 </Link>
                 {debugColorData && photo.colorData &&

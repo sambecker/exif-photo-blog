@@ -13,6 +13,11 @@ import { depluralize, pluralize } from '@/utility/string';
 
 type StaticOutput = 'page' | 'image';
 
+// Null response necessary to satisfy 'use cache' restriction requiring
+// at least one param from generateStaticParams
+const NULL_PARAMS = [{}];
+type NullParams = typeof NULL_PARAMS;
+
 const logStaticGenerationDetails = (count: number, content: string) => {
   if (count > 0) {
     const label = pluralize(count, content, undefined, 3);
@@ -20,11 +25,15 @@ const logStaticGenerationDetails = (count: number, content: string) => {
   }
 };
 
-export const staticallyGeneratePhotosIfConfigured = (type: StaticOutput) => (
-  (type === 'page' && STATICALLY_OPTIMIZED_PHOTOS) ||
-  (type === 'image' && STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES)
-)
-  ? async () => {
+export const staticallyGeneratePhotosIfConfigured = async (
+  type: StaticOutput,
+): Promise<{ photoId: string }[] | NullParams> => {
+  let params: { photoId: string }[] = [];
+
+  if (
+    (type === 'page' && STATICALLY_OPTIMIZED_PHOTOS) ||
+    (type === 'image' && STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES)
+  ) {
     const photoIds = await getPublicPhotoIds({
       limit: GENERATE_STATIC_PARAMS_LIMIT,
     })
@@ -35,33 +44,38 @@ export const staticallyGeneratePhotosIfConfigured = (type: StaticOutput) => (
     if (IS_BUILDING) {
       logStaticGenerationDetails(photoIds.length, `photo ${type}`);
     }
-    return photoIds.map(photoId => ({ photoId }));
+    params = photoIds.map(photoId => ({ photoId }));
   }
-  : undefined;
 
-export const staticallyGenerateCategoryIfConfigured = <T, K>(
+  return params.length > 0 ? params : NULL_PARAMS;
+};
+
+export const staticallyGenerateCategoryIfConfigured = async <T, K>(
   key: CategoryKey,
   type: StaticOutput,
   getData: () => Promise<T[]>,
   formatData: (data: T[]) => K[],
-): (() => Promise<K[]>) | undefined =>
-  CATEGORY_VISIBILITY.includes(key) && (
+): Promise<K[] | NullParams> => {
+  let params: K[] = [];
+
+  if (CATEGORY_VISIBILITY.includes(key) && (
     (type === 'page' && STATICALLY_OPTIMIZED_PHOTO_CATEGORIES) ||
     (type === 'image' && STATICALLY_OPTIMIZED_PHOTO_CATEGORY_OG_IMAGES)
-  )
-    ? async () => {
-      const data = (await getData()
-        .catch(e => {
-          console.error(`Error fetching static ${key} data: ${e}`);
-          return [];
-        }))
-        .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
-      if (IS_BUILDING) {
-        logStaticGenerationDetails(
-          data.length,
-          `${depluralize(key)} ${type}`,
-        );
-      }
-      return formatData(data);
+  )) {
+    const data = (await getData()
+      .catch(e => {
+        console.error(`Error fetching static ${key} data: ${e}`);
+        return [];
+      }))
+      .slice(0, GENERATE_STATIC_PARAMS_LIMIT);
+    if (IS_BUILDING) {
+      logStaticGenerationDetails(
+        data.length,
+        `${depluralize(key)} ${type}`,
+      );
     }
-    : undefined;
+    params = formatData(data);
+  }
+
+  return params.length > 0 ? params : NULL_PARAMS;
+};

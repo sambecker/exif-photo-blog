@@ -5,10 +5,15 @@ import { getAlbumsWithMetaCached } from '@/album/cache';
 import AdminUploadsClient from '@/admin/AdminUploadsClient';
 import { redirect } from 'next/navigation';
 import { PATH_ADMIN_PHOTOS } from '@/app/path';
+import { connection } from 'next/server';
 
 export const maxDuration = 60;
 
 export default async function AdminUploadsPage() {
+  // For some reason, this is necessary when using Vercel Blob,
+  // which uses "new Date()" in its library
+  await connection();
+
   const urls = await getStorageUploadUrlsNoStore();
   const uniqueAlbums = await getAlbumsWithMetaCached();
   const uniqueTags = await getUniqueTagsCached();

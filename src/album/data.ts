@@ -1,7 +1,7 @@
-import { getPhotosCached, getPhotosMetaCached } from '@/photo/cache';
 import { Album } from '.';
+import { getPhotos, getPhotosMeta } from '@/photo/query';
 
-export const getPhotosAlbumDataCached = ({
+export const getPhotosAlbumData = ({
   album,
   limit,
 }: {
@@ -9,7 +9,7 @@ export const getPhotosAlbumDataCached = ({
   limit?: number,
 }) =>
   Promise.all([
-    getPhotosCached({ album, limit }),
-    getPhotosMetaCached({ album }),
+    getPhotos({ album, limit }),
+    getPhotosMeta({ album }),
   ]);
 
