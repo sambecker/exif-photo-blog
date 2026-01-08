@@ -13,8 +13,8 @@ import { PhotoExif } from '..';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import type { ExifData, ExifTags } from 'ts-exif-parser';
-
 import { NikonPictureControl } from '@/platforms/nikon/simulation';
+import { parameterize } from '@/utility/string';
 
 export const convertExifToFormData = (
   exif: ExifData,
@@ -67,7 +67,9 @@ export const convertExifToFormData = (
     longitude: !GEO_PRIVACY_ENABLED
       ? getExifValue('GPSLongitude', 'longitude')?.toString()
       : undefined,
-    film,
+    // Make sure film is parameterized since
+    // Nikon picture controls may not be parameterized
+    film: film ? parameterize(film) : undefined,
     recipeData: JSON.stringify(recipeData),
     ...dateTimeOriginal && {
       takenAt: convertTimestampWithOffsetToPostgresString(
