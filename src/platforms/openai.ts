@@ -1,4 +1,4 @@
-import { generateText, streamText, generateObject } from 'ai';
+import { generateText, Output, streamText } from 'ai';
 import { createStreamableValue } from '@ai-sdk/rsc';
 import { createOpenAI } from '@ai-sdk/openai';
 import { OPENAI_BASE_URL, OPENAI_SECRET_KEY } from '@/app/config';
@@ -15,7 +15,7 @@ const checkRateLimitAndThrow = (isBatch?: boolean) =>
     ...isBatch && { tokens: 1200, duration: '1d' },
   });
 
-const MODEL: Parameters<NonNullable<typeof openai>>[0] = 'gpt-5.1';
+const MODEL: Parameters<NonNullable<typeof openai>>[0] = 'gpt-5.2';
 
 const openai = OPENAI_SECRET_KEY
   ? createOpenAI({
@@ -93,8 +93,9 @@ export const generateOpenAiImageObjectQuery = async <T extends z.ZodSchema>(
   await checkRateLimitAndThrow(isBatch);
 
   if (openai) {
-    return generateObject({
+    return generateText({
       model: openai(MODEL),
+      output: Output.object({ schema }),
       messages: [{
         'role': 'user',
         'content': [
@@ -107,9 +108,8 @@ export const generateOpenAiImageObjectQuery = async <T extends z.ZodSchema>(
           },
         ],
       }],
-      schema,
     }).then(result => Object.fromEntries(Object
-      .entries(result.object || {})
+      .entries(result.output || {})
       .map(([k, v]) => [k, cleanUpAiTextResponse(v as string)]),
     ) as z.infer<T>);
   } else {

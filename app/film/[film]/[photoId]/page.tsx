@@ -73,14 +73,14 @@ export default async function PhotoFilmPage({
 
   if (!photo) { redirect(PATH_ROOT); }
 
-  const { count, dateRange } = await getPhotosMetaCached({ film: film });
+  const { count, dateRange } = await getPhotosMetaCached({ film });
 
   return (
     <PhotoDetailPage {...{
       photo,
       photos,
       photosGrid,
-      film: film,
+      film,
       indexNumber,
       count,
       dateRange,

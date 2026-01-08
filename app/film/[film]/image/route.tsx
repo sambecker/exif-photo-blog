@@ -30,7 +30,7 @@ export async function GET(
   ] = await Promise.all([
     getPhotosCached({
       limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
-      film: film,
+      film,
     }),
     getIBMPlexMono(),
     getImageResponseCacheControlHeaders(),

@@ -70,7 +70,7 @@ export default async function FilmPage({
   const [
     photos,
     { count, dateRange },
-  ] =  await getPhotosFilmDataCachedCached(film);
+  ] = await getPhotosFilmDataCachedCached(film);
 
   if (photos.length === 0) { redirect(PATH_ROOT); } 
 
