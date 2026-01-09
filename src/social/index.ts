@@ -6,6 +6,7 @@ export const SOCIAL_KEYS = [
   'threads',
   'facebook',
   'linkedin',
+  'qrcode',
 ] as const;
 
 export type SocialKey = (typeof SOCIAL_KEYS)[number];
@@ -49,6 +50,12 @@ export const urlForSocial = (
       url.searchParams.set('text', text);
       return url.toString();
     }
+    case 'qrcode': {
+      const url = new URL('https://api.qrserver.com/v1/create-qr-code/');
+      url.searchParams.set('data', path);
+      url.searchParams.set('size', '200x200');
+      return url.toString();
+    }
   }
 };
 
@@ -61,5 +68,6 @@ export const tooltipForSocial = (
     case 'threads': return tooltip.shareThreads;
     case 'facebook': return tooltip.shareFacebook;
     case 'linkedin': return tooltip.shareLinkedIn;
+    case 'qrcode': return tooltip.shareQRCode;
   }
 };

@@ -96,6 +96,7 @@ export const TEXT: I18N = {
     shareThreads: 'Share on Threads',
     shareFacebook: 'Share on Facebook',
     shareLinkedIn: 'Share on LinkedIn',
+    shareQRCode: 'Toggle QR Code',
   },
   theme: {
     theme: 'Theme',

@@ -96,6 +96,7 @@ export const TEXT: I18N = {
     shareThreads: 'Threads এ শেয়ার করুন',
     shareFacebook: 'Facebook এ শেয়ার করুন',
     shareLinkedIn: 'LinkedIn এ শেয়ার করুন',
+    shareQRCode: 'QR কোড টগল করুন',
   },
   theme: {
     theme: 'থিম',
