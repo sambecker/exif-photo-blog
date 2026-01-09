@@ -96,6 +96,7 @@ export const TEXT: I18N = {
     shareThreads: '在 Threads 上分享',
     shareFacebook: '在 Facebook 上分享',
     shareLinkedIn: '在 LinkedIn 上分享',
+    shareQRCode: '切换二维码',
   },
   theme: {
     theme: '主题',

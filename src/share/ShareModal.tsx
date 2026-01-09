@@ -135,24 +135,26 @@ export default function ShareModal({
             )}
           </div>
           {SOCIAL_NETWORKS.map(key =>
-            <SocialButton
-              key={key}
-              socialKey={key}
-              path={pathShare}
-              text={socialText}
-              className={clsx(
-                'h-full',
-                BUTTON_COLOR_CLASSNAMES,
-              )}
-            />)}
-          {
-            renderButton(
-              <TbQrcode size={18} />,
-              () => setShowQR(q => !q),
-              false,
-              showQR ? 'Show Preview' : 'Show QR Code',
+            key === 'qrcode' ? (
+              renderButton(
+                <TbQrcode size={18} />,
+                () => setShowQR(q => !q),
+                false,
+                appText.tooltip.shareQRCode,
+              )
+            ) : (
+              <SocialButton
+                key={key}
+                socialKey={key}
+                path={pathShare}
+                text={socialText}
+                className={clsx(
+                  'h-full',
+                  BUTTON_COLOR_CLASSNAMES,
+                )}
+              />
             )
-          }
+          )}
           {typeof navigator !== 'undefined' && navigator.share &&
             renderButton(
               <IoArrowUp size={18} />,
