@@ -10,7 +10,7 @@ import { toastSuccess } from '@/toast';
 import { SOCIAL_NETWORKS } from '@/app/config';
 import { useAppState } from '@/app/AppState';
 import useOnPathChange from '@/utility/useOnPathChange';
-import { IoArrowUp } from 'react-icons/io5';
+import { IoArrowUp, IoCloseSharp } from 'react-icons/io5';
 import MaskedScroll from '@/components/MaskedScroll';
 import { useAppText } from '@/i18n/state/client';
 import SocialButton from '@/social/SocialButton';
@@ -97,7 +97,7 @@ export default function ShareModal({
         ) : (
           <div className="flex flex-col items-center gap-4 p-4">
             <div className={clsx(
-              'p-3 bg-white rounded-2xl shadow-lg border',
+              'p-3 bg-white rounded-2xl shadow-lg outline-medium',
               'flex items-center justify-center',
             )}>
               <Image
@@ -141,7 +141,7 @@ export default function ShareModal({
           {SOCIAL_NETWORKS.map(key =>
             key === 'qrcode' ? (
               renderButton(
-                <TbQrcode size={18} />,
+                showQR ? <IoCloseSharp size={18} /> : <TbQrcode size={18} />,
                 () => setShowQR(q => !q),
                 false,
                 appText.tooltip.shareQRCode,

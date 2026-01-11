@@ -912,14 +912,14 @@ export default function AdminAppConfigurationClient({
             {renderEnvVars(['NEXT_PUBLIC_ALLOW_PUBLIC_DOWNLOADS'])}
           </ChecklistRow>
           <ChecklistRow
-            title="Social networks and sharing"
+            title="Share modal options"
             status={hasSocialKeys}
             optional
           >
             {renderOrderedKeyList(socialKeys, SOCIAL_KEYS)}
             <div>
-              Configure order and visibility of social networks and sharing 
-              options (seen in share modal) by storing comma-separated values
+              Configure order and visibility of share modal 
+              options by storing comma-separated values
               (accepts {'"all"'} or {'"none"'},
               defaults to {renderCommaSeparatedList(DEFAULT_SOCIAL_KEYS)})
             </div>
