@@ -75,7 +75,7 @@ export default function ShareModal({
 
   const clearShareModalProps = useCallback(() =>
     setShareModalProps?.(undefined),
-    [setShareModalProps]);
+  [setShareModalProps]);
 
   useOnPathChange(clearShareModalProps);
 
@@ -96,8 +96,12 @@ export default function ShareModal({
           <>{children}</>
         ) : (
           <div className="flex flex-col items-center gap-4 p-4">
-            <div className="p-3 bg-white rounded-2xl shadow-lg border flex items-center justify-center">
+            <div className={clsx(
+              'p-3 bg-white rounded-2xl shadow-lg border',
+              'flex items-center justify-center',
+            )}>
               <Image
+                /* eslint-disable-next-line max-len */
                 src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(pathShare)}`}
                 alt="QR Code"
                 className="rounded-xl bg-white"
@@ -153,7 +157,7 @@ export default function ShareModal({
                   BUTTON_COLOR_CLASSNAMES,
                 )}
               />
-            )
+            ),
           )}
           {typeof navigator !== 'undefined' && navigator.share &&
             renderButton(
