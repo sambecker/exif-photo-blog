@@ -1,10 +1,10 @@
 'use client';
 
 import Modal from '@/components/Modal';
-import { TbPhotoShare } from 'react-icons/tb';
+import { TbPhotoShare, TbQrcode } from 'react-icons/tb';
 import { clsx } from 'clsx/lite';
 import { BiCopy } from 'react-icons/bi';
-import { ReactNode, useCallback, useEffect } from 'react';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { shortenUrl } from '@/utility/url';
 import { toastSuccess } from '@/toast';
 import { SOCIAL_NETWORKS } from '@/app/config';
@@ -15,6 +15,7 @@ import MaskedScroll from '@/components/MaskedScroll';
 import { useAppText } from '@/i18n/state/client';
 import SocialButton from '@/social/SocialButton';
 import LoaderButton from '@/components/primitives/LoaderButton';
+import Image from 'next/image';
 
 const BUTTON_COLOR_CLASSNAMES = clsx(
   'border-gray-200 bg-gray-50 active:bg-gray-100',
@@ -43,6 +44,7 @@ export default function ShareModal({
   } = useAppState();
 
   const appText = useAppText();
+  const [showQR, setShowQR] = useState(false);
 
   useEffect(() => {
     setShouldRespondToKeyboardCommands?.(false);
@@ -90,7 +92,25 @@ export default function ShareModal({
               {title}
             </div>
           </div>}
-        {children}
+        {!showQR ? (
+          <>{children}</>
+        ) : (
+          <div className="flex flex-col items-center gap-4 p-4">
+            <div className={clsx(
+              'p-3 bg-white rounded-2xl shadow-lg border',
+              'flex items-center justify-center',
+            )}>
+              <Image
+                /* eslint-disable-next-line max-len */
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(pathShare)}`}
+                alt="QR Code"
+                className="rounded-xl bg-white"
+                width={300}
+                height={300}
+              />
+            </div>
+          </div>
+        )}
         <div className="flex items-stretch h-10 gap-2">
           <div className={clsx(
             'rounded-md',
@@ -119,16 +139,26 @@ export default function ShareModal({
             )}
           </div>
           {SOCIAL_NETWORKS.map(key =>
-            <SocialButton
-              key={key}
-              socialKey={key}
-              path={pathShare}
-              text={socialText}
-              className={clsx(
-                'h-full',
-                BUTTON_COLOR_CLASSNAMES,
-              )}
-            />)}
+            key === 'qrcode' ? (
+              renderButton(
+                <TbQrcode size={18} />,
+                () => setShowQR(q => !q),
+                false,
+                appText.tooltip.shareQRCode,
+              )
+            ) : (
+              <SocialButton
+                key={key}
+                socialKey={key}
+                path={pathShare}
+                text={socialText}
+                className={clsx(
+                  'h-full',
+                  BUTTON_COLOR_CLASSNAMES,
+                )}
+              />
+            ),
+          )}
           {typeof navigator !== 'undefined' && navigator.share &&
             renderButton(
               <IoArrowUp size={18} />,

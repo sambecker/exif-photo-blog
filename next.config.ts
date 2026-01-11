@@ -39,7 +39,14 @@ const generateRemotePattern = (
   pathname: '/**',
 });
 
-const remotePatterns: RemotePattern[] = [];
+const remotePatterns: RemotePattern[] = [
+  {
+    protocol: 'https',
+    hostname: 'api.qrserver.com',
+    port: '',
+    pathname: '/v1/create-qr-code/**',
+  },
+];
 
 if (HOSTNAME_VERCEL_BLOB) {
   remotePatterns.push(generateRemotePattern(HOSTNAME_VERCEL_BLOB));
