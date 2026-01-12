@@ -1,4 +1,4 @@
-import { parseISO, parse, format, isDate } from 'date-fns';
+import { parseISO, parse, format, isValid } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
 import { Timezone } from './timezone';
 import { setDefaultDateFnLocale } from '@/i18n';
@@ -102,7 +102,7 @@ const dateFromTimestamp = (timestamp?: AmbiguousTimestamp): Date => {
         ? new Date(timestamp)
         : new Date(`${timestamp}Z`)
       : timestamp;
-  return isDate(date) ? date : new Date();
+  return isValid(date) ? date as Date : new Date();
 };
 
 const createNaiveDateWithOffset = (
