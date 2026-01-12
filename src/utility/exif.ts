@@ -1,7 +1,5 @@
 import { OrientationTypes, type ExifData, ExifTags } from 'ts-exif-parser';
 
-const OFFSET_REGEX = /[+-]\d\d:\d\d/;
-
 export const getCompatibleExifValue = (
   key: keyof ExifTags,
   exif: ExifData,
@@ -11,7 +9,7 @@ export const getCompatibleExifValue = (
 
 const isValueOffset = (value: any) =>
   typeof value === 'string' &&
-  OFFSET_REGEX.test(value);
+  /^[+-]\d\d:\d\d$/.test(value);
 
 export const getOffsetFromExif = (
   exif: ExifData,

@@ -101,11 +101,8 @@ const dateFromTimestamp = (timestamp?: AmbiguousTimestamp): Date => {
       ? /.+Z/i.test(timestamp)
         ? new Date(timestamp)
         : new Date(`${timestamp}Z`)
-      // Check for date last to avoid destabilizing status quo
-      : isDate(timestamp)
-        ? timestamp
-        : undefined;
-  return date && !isNaN(date.getTime()) ? date : new Date();
+      : timestamp;
+  return isDate(date) ? date : new Date();
 };
 
 const createNaiveDateWithOffset = (
