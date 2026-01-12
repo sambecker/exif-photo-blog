@@ -1,6 +1,6 @@
 'use server';
 
-import { getCountsForCategoriesCached } from './cache';
+import { getCountsForCategories } from './data';
 
-export const getCountsForCategoriesCachedAction = async () =>
-  getCountsForCategoriesCached();
+export const getCountsForCategoriesAction = async () =>
+  getCountsForCategories();

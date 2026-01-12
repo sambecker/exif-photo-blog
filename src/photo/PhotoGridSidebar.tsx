@@ -115,7 +115,6 @@ export default function PhotoGridSidebar({
         key="recents"
         hoverCount={recents[0]?.count}
         type="text-only"
-        prefetch={false}
         contrast="low"
         badged
       />]}
@@ -139,7 +138,6 @@ export default function PhotoGridSidebar({
               year={year}
               hoverCount={count}
               type="text-only"
-              prefetch={false}
               contrast="low"
               hoverType="image"
               suppressSpinner
@@ -165,7 +163,6 @@ export default function PhotoGridSidebar({
             camera={camera}
             type="text-only"
             hoverCount={count}
-            prefetch={false}
             contrast="low"
             badged
           />)}
@@ -185,7 +182,6 @@ export default function PhotoGridSidebar({
             lens={lens}
             type="text-only"
             hoverCount={count}
-            prefetch={false}
             contrast="low"
             badged
           />)}
@@ -208,7 +204,6 @@ export default function PhotoGridSidebar({
               key={album.slug}
               album={album}
               type="text-only"
-              prefetch={false}
               contrast="low"
               hoverCount={count}
               badged
@@ -234,7 +229,6 @@ export default function PhotoGridSidebar({
                 key={TAG_FAVS}
                 hoverCount={count}
                 type="icon-last"
-                prefetch={false}
                 contrast="low"
                 badged
               />;
@@ -242,7 +236,6 @@ export default function PhotoGridSidebar({
               return <PhotoPrivate
                 key={TAG_PRIVATE}
                 type="icon-last"
-                prefetch={false}
                 contrast="low"
                 badged
               />;
@@ -252,7 +245,6 @@ export default function PhotoGridSidebar({
                 tag={tag}
                 hoverCount={count}
                 type="text-only"
-                prefetch={false}
                 contrast="low"
                 badged
               />;
@@ -277,7 +269,6 @@ export default function PhotoGridSidebar({
             recipe={recipe}
             type="text-only"
             hoverCount={count}
-            prefetch={false}
             contrast="low"
             badged
           />)}
@@ -297,7 +288,6 @@ export default function PhotoGridSidebar({
             film={film}
             hoverCount={count}
             type="text-only"
-            prefetch={false}
           />)}
     />
     : null;
@@ -314,7 +304,6 @@ export default function PhotoGridSidebar({
           focal={focal}
           hoverCount={count}
           type="text-only"
-          prefetch={false}
           badged
         />)}
     />

@@ -1,6 +1,8 @@
+'use cache';
+
 import { generateMetaForFocalLength, getFocalLengthFromString } from '@/focal';
 import FocalLengthOverview from '@/focal/FocalLengthOverview';
-import { getPhotosFocalLengthDataCached } from '@/focal/data';
+import { getPhotosFocalLengthData } from '@/focal/data';
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getUniqueFocalLengths } from '@/photo/query';
 import { PATH_ROOT } from '@/app/path';
@@ -9,20 +11,22 @@ import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
+import { cacheTagGlobal } from '@/cache';
 
-const getPhotosFocalDataCachedCached = cache((focal: number) =>
-  getPhotosFocalLengthDataCached({
+const getPhotosFocalDataCached = cache((focal: number) =>
+  getPhotosFocalLengthData({
     focal,
     limit: INFINITE_SCROLL_GRID_INITIAL,
   }));
 
-export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-  'focal-lengths',
-  'page',
-  getUniqueFocalLengths,
-  focalLengths => focalLengths
-    .map(({ focal }) => ({ focal: focal.toString() })),
-);
+export const generateStaticParams = async () =>
+  staticallyGenerateCategoryIfConfigured(
+    'focal-lengths',
+    'page',
+    getUniqueFocalLengths,
+    focalLengths => focalLengths
+      .map(({ focal }) => ({ focal: focal.toString() })),
+  );
 
 interface FocalLengthProps {
   params: Promise<{ focal: string }>
@@ -38,7 +42,7 @@ export async function generateMetadata({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosFocalDataCachedCached(focal);
+  ] = await getPhotosFocalDataCached(focal);
 
   if (photos.length === 0) { return {}; }
 
@@ -71,6 +75,8 @@ export async function generateMetadata({
 export default async function TagPage({
   params,
 }:FocalLengthProps) {
+  cacheTagGlobal();
+
   const { focal: focalString } = await params;
 
   const focal = getFocalLengthFromString(focalString);
@@ -78,7 +84,7 @@ export default async function TagPage({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosFocalDataCachedCached(focal);
+  ] = await getPhotosFocalDataCached(focal);
 
   if (photos.length === 0) { redirect(PATH_ROOT); }
 

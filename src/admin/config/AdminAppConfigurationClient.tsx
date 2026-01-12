@@ -39,6 +39,7 @@ import { getOrderedKeyListStatus } from '@/utility/key';
 import { DEFAULT_SOCIAL_KEYS, SOCIAL_KEYS } from '@/social';
 import MaskedScroll from '@/components/MaskedScroll';
 import { IoLink } from 'react-icons/io5';
+import { generateAuthSecretAction } from '@/auth/actions';
 
 export default function AdminAppConfigurationClient({
   // Storage
@@ -139,25 +140,34 @@ export default function AdminAppConfigurationClient({
   areInternalToolsEnabled,
   areAdminDebugToolsEnabled,
   isAdminSqlDebugEnabled,
-  // Auth
-  secret,
-  // Connection status
-  databaseError,
-  storageError,
-  redisError,
-  aiError,
-  locationError,
   // Component props
   simplifiedView,
-  isAnalyzingConfiguration,
-}: AppConfiguration &
-  { secret: string } &
-  Partial<Awaited<ReturnType<typeof testConnectionsAction>>> & {
-    simplifiedView?: boolean
-    isAnalyzingConfiguration?: boolean
-  }) {
-  const [hasScrolled, setHasScrolled] = useState(false);
+  // isAnalyzingConfiguration,
+}: AppConfiguration & { 
+  simplifiedView?: boolean
+}) {
+  const [secret, setSecret] = useState('');
+  const [isAnalyzingConfiguration, setIsAnalyzingConfiguration] =
+    useState(true);
+  const [connectionErrors, setConnectionErrors] =
+    useState<Partial<Awaited<ReturnType<typeof testConnectionsAction>>>>({});
+  const {
+    databaseError,
+    storageError,
+    redisError,
+    aiError,
+    locationError,
+  } = connectionErrors;
+  useEffect(() => {
+    generateAuthSecretAction().then(setSecret);
+  }, []);
+  useEffect(() => {
+    testConnectionsAction()
+      .then(setConnectionErrors)
+      .finally(() => setIsAnalyzingConfiguration(false));
+  }, []);
 
+  const [hasScrolled, setHasScrolled] = useState(false);
   useEffect(() => {
     const handleScroll = () => { setHasScrolled(true); };
     window.addEventListener('scroll', handleScroll);

@@ -1,3 +1,5 @@
+'use cache';
+
 import {
   RELATED_GRID_PHOTOS_TO_SHOW,
   descriptionForPhoto,
@@ -14,8 +16,7 @@ import PhotoDetailPage from '@/photo/PhotoDetailPage';
 import { getPhotoCached, getPhotosNearIdCached } from '@/photo/cache';
 import { cache } from 'react';
 import { staticallyGeneratePhotosIfConfigured } from '@/app/static';
-
-export const maxDuration = 60;
+import { cacheTagGlobal } from '@/cache';
 
 const getPhotosNearIdCachedCached = cache(async (photoId: string) => {
   const photo = await getPhotoCached(photoId);
@@ -35,9 +36,10 @@ const getPhotosNearIdCachedCached = cache(async (photoId: string) => {
     );
 });
 
-export const generateStaticParams = staticallyGeneratePhotosIfConfigured(
-  'page',
-);
+export const generateStaticParams = async () =>
+  staticallyGeneratePhotosIfConfigured(
+    'page',
+  );
 
 interface PhotoProps {
   params: Promise<{ photoId: string }>
@@ -78,6 +80,8 @@ export async function generateMetadata({
 export default async function PhotoPage({
   params,
 }: PhotoProps) {
+  cacheTagGlobal();
+
   const { photoId } = await params;
   const { photo, photos, photosGrid } =
     await getPhotosNearIdCachedCached(photoId);

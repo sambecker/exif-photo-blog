@@ -26,7 +26,9 @@ export default function PhotoTags({
             : <PhotoTag {...{
               tag,
               contrast,
-              prefetch, hoverCount: tagCounts[tag] }} />}
+              prefetch,
+              hoverCount: tagCounts[tag],
+            }} />}
         </Fragment>)}
     </div>
   );

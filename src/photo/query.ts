@@ -183,8 +183,7 @@ export const updatePhoto = (photo: PhotoDbInsert) =>
       exclude_from_feeds=${photo.excludeFromFeeds},
       hidden=${photo.hidden},
       taken_at=${photo.takenAt},
-      taken_at_naive=${photo.takenAtNaive},
-      updated_at=${(new Date()).toISOString()}
+      taken_at_naive=${photo.takenAtNaive}
     WHERE id=${photo.id}
   `, 'updatePhoto');
 
