@@ -3,20 +3,20 @@
 import { ReactNode, ComponentProps, RefObject } from 'react';
 import { Photo, titleForPhoto } from '@/photo';
 import { PhotoSetCategory } from '@/category';
-import { AnimationConfig } from '../components/AnimateItems';
-import { useAppState } from '@/app/AppState';
 import { pathForPhoto } from '@/app/path';
 import { clsx } from 'clsx/lite';
 import LinkWithStatus from '@/components/LinkWithStatus';
 import Spinner from '@/components/Spinner';
 import LinkWithLoaderBackground from '@/components/LinkWithLoaderBackground';
+import { TransitionDirection } from '@/app/useTransitionDirection';
+import { useAppState } from '@/app/AppState';
 
 export default function PhotoLink({
   ref,
   photo,
   scroll,
   prefetch,
-  nextPhotoAnimation,
+  transitionDirection,
   className,
   children: _children,
   loaderType = 'spinner',
@@ -26,12 +26,12 @@ export default function PhotoLink({
   photo?: Photo
   scroll?: boolean
   prefetch?: boolean
-  nextPhotoAnimation?: AnimationConfig
+  transitionDirection?: TransitionDirection
   className?: string
   children?: ReactNode
   loaderType?: 'spinner' | 'badge'
 } & PhotoSetCategory) {
-  const { setNextPhotoAnimation } = useAppState();
+  const { setTransitionDirection } = useAppState();
 
   const linkProps:
     Omit<ComponentProps<typeof LinkWithStatus>, 'children'> |
@@ -41,8 +41,8 @@ export default function PhotoLink({
         className,
         href: pathForPhoto({ photo, ...categories }),
         onClick: () => {
-          if (nextPhotoAnimation) {
-            setNextPhotoAnimation?.(nextPhotoAnimation);
+          if (transitionDirection) {
+            setTransitionDirection?.(transitionDirection);
           }
         },
         scroll,

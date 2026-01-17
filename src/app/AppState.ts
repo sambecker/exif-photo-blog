@@ -15,6 +15,7 @@ import { AdminData } from '@/admin/actions';
 import { RecipeProps } from '@/recipe';
 import { getCountsForCategoriesCachedAction } from '@/category/actions';
 import { SWRKey } from '@/swr';
+import { TransitionDirection } from './useTransitionDirection';
 
 export type AppStateContextType = {
   // CORE
@@ -24,6 +25,7 @@ export type AppStateContextType = {
   setNextPhotoAnimation?: (animationConfig?: AnimationConfig) => void
   getNextPhotoAnimationId?: () => string
   clearNextPhotoAnimation?: (id?: string) => void
+  setTransitionDirection?: (direction: TransitionDirection) => void
   shouldRespondToKeyboardCommands?: boolean
   setShouldRespondToKeyboardCommands?: Dispatch<SetStateAction<boolean>>
   categoriesWithCounts?: Awaited<ReturnType<

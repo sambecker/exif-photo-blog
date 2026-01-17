@@ -93,6 +93,9 @@ const nextConfig: NextConfig = {
     };
     return config;
   },
+  experimental: {
+    viewTransition: true,
+  },
 };
 
 module.exports = process.env.ANALYZE === 'true'
