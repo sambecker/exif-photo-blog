@@ -26,7 +26,7 @@ import {
   PhotoStats,
 } from '.';
 import EnvVar from '@/components/EnvVar';
-import { IoSyncCircle } from 'react-icons/io5';
+import { IoCheckmarkCircleOutline, IoSyncCircle } from 'react-icons/io5';
 import clsx from 'clsx/lite';
 import { PATH_ADMIN_PHOTOS_UPDATES } from '@/app/path';
 import { LiaBroomSolid } from 'react-icons/lia';
@@ -479,8 +479,11 @@ export default function AdminAppInsightsClient({
               </>}
             />}
           </>
-          : <AdminEmptyState includeContainer={false}>
-            Nothing to report!
+          : <AdminEmptyState
+            icon={<IoCheckmarkCircleOutline />}
+            includeContainer={false}
+          >
+            No recommendations found
           </AdminEmptyState>}
       </ScoreCard>
       <ScoreCard title="Library Stats">
