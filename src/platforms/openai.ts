@@ -1,7 +1,7 @@
 import { generateText, Output, streamText } from 'ai';
 import { createStreamableValue } from '@ai-sdk/rsc';
 import { createOpenAI } from '@ai-sdk/openai';
-import { OPENAI_BASE_URL, OPENAI_SECRET_KEY } from '@/app/config';
+import { OPENAI_BASE_URL, OPENAI_MODEL, OPENAI_SECRET_KEY } from '@/app/config';
 import { removeBase64Prefix } from '@/utility/image';
 import { cleanUpAiTextResponse } from '@/photo/ai';
 import {
@@ -15,7 +15,7 @@ const checkRateLimitAndThrow = (isBatch?: boolean) =>
     ...isBatch && { tokens: 1200, duration: '1d' },
   });
 
-const MODEL: Parameters<NonNullable<typeof openai>>[0] = 'gpt-5.2';
+const MODEL: Parameters<NonNullable<typeof openai>>[0] = OPENAI_MODEL;
 
 const openai = OPENAI_SECRET_KEY
   ? createOpenAI({

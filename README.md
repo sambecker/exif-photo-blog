@@ -93,6 +93,7 @@ To auto-generate text descriptions of photo:
    - Create [OpenAI](https://openai.com) account and fund it ([see thread](https://github.com/sambecker/exif-photo-blog/issues/110) if you're having issues)
    - Setup usage limits to avoid unexpected charges (_recommended_)
    - Set `OPENAI_BASE_URL` in order to use alternate OpenAI-compatible providers (experimental)
+   - Set `OPENAI_MODEL` to override the default model (`gpt-5.2`)
 2. Generate API key and store in environment variable `OPENAI_SECRET_KEY` (enable Responses API write access if customizing permissions)
 3. Add [rate limiting](#rate-limiting) (_recommended_)
 4. Configure auto-generated fields (optional)
