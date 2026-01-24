@@ -52,12 +52,14 @@ export default function ShareModal({
   }, [setShouldRespondToKeyboardCommands]);
 
   const renderButton = (
+    key: string,
     icon: ReactNode,
     action: () => void,
     embedded?: boolean,
     tooltip?: string,
   ) =>
     <LoaderButton
+      key={key}
       className={clsx(
         'flex items-center justify-center h-10',
         'px-3',
@@ -129,6 +131,7 @@ export default function ShareModal({
               </div>
             </MaskedScroll>
             {renderButton(
+              'copy',
               <BiCopy size={18} />,
               () => {
                 navigator.clipboard.writeText(pathShare);
@@ -141,6 +144,7 @@ export default function ShareModal({
           {SOCIAL_NETWORKS.map(key =>
             key === 'qrcode' ? (
               renderButton(
+                'qrcode',
                 showQR ? <IoCloseSharp size={18} /> : <TbQrcode size={18} />,
                 () => setShowQR(q => !q),
                 false,
@@ -161,6 +165,7 @@ export default function ShareModal({
           )}
           {typeof navigator !== 'undefined' && navigator.share &&
             renderButton(
+              'share',
               <IoArrowUp size={18} />,
               () => navigator.share({
                 title: navigatorTitle,
