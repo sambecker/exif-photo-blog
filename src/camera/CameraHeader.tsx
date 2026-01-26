@@ -1,12 +1,14 @@
+'use client';
+
 import { Photo, PhotoDateRangePostgres } from '@/photo';
 import PhotoHeader from '@/photo/PhotoHeader';
 import { Camera, cameraFromPhoto } from '.';
 import PhotoCamera from './PhotoCamera';
 import { descriptionForCameraPhotos } from './meta';
 import { AI_CONTENT_GENERATION_ENABLED } from '@/app/config';
-import { getAppText } from '@/i18n/state/server';
+import { useAppText } from '@/i18n/state/client';
 
-export default async function CameraHeader({
+export default function CameraHeader({
   camera: cameraProp,
   photos,
   selectedPhoto,
@@ -21,7 +23,7 @@ export default async function CameraHeader({
   count?: number
   dateRange?: PhotoDateRangePostgres
 }) {
-  const appText = await getAppText();
+  const appText = useAppText();
   const camera = cameraFromPhoto(photos[0], cameraProp);
 
   return (

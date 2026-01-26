@@ -11,7 +11,6 @@ import { PhotoSetCategory } from '../category';
 import PhotoLink from './PhotoLink';
 import { pathForAdminPhotoEdit, pathForPhoto } from '@/app/path';
 import { useAppState } from '@/app/AppState';
-import { AnimationConfig } from '@/components/AnimateItems';
 import { clsx } from 'clsx/lite';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import useNavigateOrRunActionWithToast
@@ -34,9 +33,6 @@ import { KEY_COMMANDS } from './key-commands';
 import { syncPhotoConfirmText } from '@/admin/confirm';
 import { useAppText } from '@/i18n/state/client';
 
-const ANIMATION_LEFT: AnimationConfig = { type: 'left', duration: 0.3 };
-const ANIMATION_RIGHT: AnimationConfig = { type: 'right', duration: 0.3 };
-
 export default function PhotoPrevNextActions({
   photo,
   photos = [],
@@ -49,7 +45,9 @@ export default function PhotoPrevNextActions({
   className?: string
   hasAiTextGeneration: boolean
 } & PhotoSetCategory) {
-  const { setNextPhotoAnimation, isUserSignedIn } = useAppState();
+  const { isUserSignedIn } = useAppState();
+
+  const { setTransitionDirection } = useAppState();
 
   const appText = useAppText();
 
@@ -141,14 +139,14 @@ export default function PhotoPrevNextActions({
         case KEY_COMMANDS.prev[0]:
         case KEY_COMMANDS.prev[1]:
           if (pathPrevious) {
-            setNextPhotoAnimation?.(ANIMATION_RIGHT);
+            setTransitionDirection?.('right');
             refPrevious.current?.click();
           }
           break;
         case KEY_COMMANDS.next[0]:
         case KEY_COMMANDS.next[1]:
           if (pathNext) {
-            setNextPhotoAnimation?.(ANIMATION_LEFT);
+            setTransitionDirection?.('left');
             refNext.current?.click();
           }
           break;
@@ -198,7 +196,7 @@ export default function PhotoPrevNextActions({
       };
     }
   }, [
-    setNextPhotoAnimation,
+    setTransitionDirection,
     pathPrevious,
     pathNext,
     isUserSignedIn,
@@ -227,6 +225,7 @@ export default function PhotoPrevNextActions({
         // Fixes alignment issue when switching from chevrons to text
         'items-center sm:items-start',
         '*:select-none',
+        
       )}>
         <Tooltip {...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
           content: appText.nav.prev,
@@ -236,7 +235,7 @@ export default function PhotoPrevNextActions({
             {...categories}
             ref={refPrevious}
             photo={previousPhoto}
-            nextPhotoAnimation={ANIMATION_RIGHT}
+            transitionDirection="right"
             scroll={false}
             loaderType="badge"
             prefetch
@@ -258,7 +257,7 @@ export default function PhotoPrevNextActions({
             {...categories}
             ref={refNext}
             photo={nextPhoto}
-            nextPhotoAnimation={ANIMATION_LEFT}
+            transitionDirection="left"
             scroll={false}
             loaderType="badge"
             prefetch

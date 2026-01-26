@@ -60,7 +60,7 @@ html {
   }
 
   --animate-fade-in-from-bottom: fade-in-from-bottom 0.2s ease-out;
-  --animate-fade-in-from-bottom-large: fade-in-from-bottom-large 0.2s ease-out;
+  --animate-fade-in-from-bottom-large: fade-in-from-bottom-large 0.75s ease-out 0.5s both;
   @keyframes fade-in-from-bottom {
     0% { opacity: 0; transform: translateY(10px); }
     100% { opacity: 1; transform: translateY(0); }
@@ -345,6 +345,48 @@ html {
     @apply
       hover:text-medium
       active:text-dim
+  }
+  /* View Transitions */
+  :root {
+    /* Managed by AppStateProvider */
+    --photo-enter: slide-top-enter;
+    --photo-exit: slide-top-exit;
+  }
+  ::view-transition-old(photo) {
+    animation: 200ms ease-out var(--photo-exit);
+  }
+  ::view-transition-new(photo) {
+    animation: 200ms ease-out var(--photo-enter);
+  }
+  /* View Transitions: Top */
+  @keyframes slide-top-exit {
+    0% { opacity: 1; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  @keyframes slide-top-enter {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0px); }
+  }
+  /* View Transitions: Left */
+  @keyframes slide-left-exit {
+    0% { opacity: 1; transform: translateX(0px); }
+    50% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(0px); }
+  }
+  @keyframes slide-left-enter {
+    0% { opacity: 0; transform: translateX(20px); }
+    100% { opacity: 1; transform: translateX(0px); }
+  }
+  /* View Transitions: Right */
+  @keyframes slide-right-exit {
+    0% { opacity: 1; transform: translateX(0px); }
+    50% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(0px); }
+  }
+  @keyframes slide-right-enter {
+    0% { opacity: 0; transform: translateX(-20px); }
+    100% { opacity: 1; transform: translateX(0px); }
   }
 }
 
