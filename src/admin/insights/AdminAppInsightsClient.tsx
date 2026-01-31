@@ -137,7 +137,7 @@ export default function AdminAppInsightsClient({
   codeMeta?: Awaited<ReturnType<typeof getGitHubMetaForCurrentApp>>
   nextVersion: string
   reactVersion: string
-  nodeVersion: string
+  nodeVersion?: string
   insights: ReturnType<typeof getAllInsights>
   usedDeprecatedEnvVars: typeof USED_DEPRECATED_ENV_VARS
   photoStats: PhotoStats
@@ -306,12 +306,12 @@ export default function AdminAppInsightsClient({
               </Link>
             </>}
           />
-          <ScoreCardRow
+          {nodeVersion && <ScoreCardRow
             icon={<IconNode className="translate-y-px" />}
             content={<span>
               Node.js {nodeVersion}
             </span>}
-          />
+          />}
         </ScoreCard>
       </>}
       <ScoreCard title="Template recommendations">

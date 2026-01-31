@@ -530,7 +530,7 @@ export const APP_CONFIGURATION = {
   // Misc
   nextVersion: dependencies.next,
   reactVersion: dependencies.react,
-  nodeVersion: process.version,
+  nodeVersion: (process.version || '').match(/[0-9.]+$/)?.[0],
   baseUrl: BASE_URL,
   baseUrlShare: BASE_URL_SHARE,
   commitSha: VERCEL_GIT_COMMIT_SHA_SHORT,
