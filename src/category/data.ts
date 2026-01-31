@@ -42,10 +42,10 @@ export const NULL_CATEGORY_DATA: CategoryData = {
 export const getDataForCategories = () => Promise.all([
   SHOW_RECENTS
     ? getPhotosMetaCached({ recent: true })
-      .then(({ count, dateRange }) => count && dateRange
+      .then(({ count, dateRangeCreatedAt }) => count && dateRangeCreatedAt
         ? [{
           count,
-          lastModified: new Date(dateRange?.end ?? ''),
+          lastModified: new Date(dateRangeCreatedAt?.end ?? ''),
         }] : undefined)
       .catch(() => [])
     : undefined,

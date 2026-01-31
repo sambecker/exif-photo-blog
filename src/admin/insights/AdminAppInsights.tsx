@@ -43,6 +43,8 @@ export default async function AdminAppInsights() {
     <AdminAppInsightsClient
       codeMeta={codeMeta}
       nextVersion={APP_CONFIGURATION.nextVersion}
+      reactVersion={APP_CONFIGURATION.reactVersion}
+      nodeVersion={APP_CONFIGURATION.nodeVersion}
       insights={getAllInsights({
         codeMeta,
         photosCount,

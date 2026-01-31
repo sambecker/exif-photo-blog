@@ -92,7 +92,8 @@ To auto-generate text descriptions of photo:
 1. Setup OpenAI
    - Create [OpenAI](https://openai.com) account and fund it ([see thread](https://github.com/sambecker/exif-photo-blog/issues/110) if you're having issues)
    - Setup usage limits to avoid unexpected charges (_recommended_)
-   - Set `OPENAI_BASE_URL` in order to use alternate OpenAI-compatible providers (experimental)
+   - Set `OPENAI_MODEL` to choose a specific model (set to 'compatible' to use gpt-4o)
+   - Set `OPENAI_BASE_URL` to use alternate OpenAI-compatible providers (experimental)
 2. Generate API key and store in environment variable `OPENAI_SECRET_KEY` (enable Responses API write access if customizing permissions)
 3. Add [rate limiting](#rate-limiting) (_recommended_)
 4. Configure auto-generated fields (optional)
@@ -178,12 +179,13 @@ Create Upstash Redis store from storage tab of Vercel dashboard and link to your
 - `NEXT_PUBLIC_GEO_PRIVACY = 1` disables collection/display of location-based data (⚠️ re-compresses uploaded images in order to remove GPS information)
 - `NEXT_PUBLIC_ALLOW_PUBLIC_DOWNLOADS = 1` enables public photo downloads for all visitors (⚠️ may result in increased bandwidth usage)
 - `NEXT_PUBLIC_SOCIAL_NETWORKS`
-  - Comma-separated list of social networks to show in share modal
+  - Comma-separated list of share modal options
   - Accepted values:
     - `x` (default)
     - `threads`
     - `facebook`
     - `linkedin`
+    - `qrcode`
     - `all`
     - `none`
 - `NEXT_PUBLIC_SITE_FEEDS = 1` enables feeds at `/feed.json` and `/rss.xml`

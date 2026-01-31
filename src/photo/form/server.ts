@@ -43,6 +43,7 @@ export const convertExifToFormData = (
   ) => getCompatibleExifValue(key, exif, exifr, exifrSpecificKey);
 
   const dateTimeOriginal = getExifValue('DateTimeOriginal');
+  const offset = getOffsetFromExif(exif, exifr);
 
   return {
     aspectRatio: getAspectRatioFromExif(exif).toString(),
@@ -74,7 +75,7 @@ export const convertExifToFormData = (
     ...dateTimeOriginal && {
       takenAt: convertTimestampWithOffsetToPostgresString(
         dateTimeOriginal,
-        getOffsetFromExif(exif, exifr),
+        offset,
       ),
       takenAtNaive:
         convertTimestampToNaivePostgresString(dateTimeOriginal),

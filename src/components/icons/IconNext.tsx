@@ -3,17 +3,20 @@
 import clsx from 'clsx/lite';
 
 export default function IconNext({
+  size = '1em',
   className,
 }: {
+  size?: string | number
   className?: string
 }) {
   return (
     <span className={clsx(
       'text-main dark:text-black',
-      'border border-transparent dark:border-white/40 rounded-full',
+      'border border-transparent dark:border-white/40',
+      'self-start rounded-full',
       className,
     )}>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="1em" height="1em">
+      <svg width={size} height={size} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
         <mask height="180" id=":r8:mask0_408_134" maskUnits="userSpaceOnUse" width="180" x="0" y="0" style={{ maskType: 'alpha' }}>
           <circle cx="90" cy="90" fill="black" r="90"></circle>
         </mask>

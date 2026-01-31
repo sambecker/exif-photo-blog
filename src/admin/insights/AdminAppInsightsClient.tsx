@@ -26,7 +26,7 @@ import {
   PhotoStats,
 } from '.';
 import EnvVar from '@/components/EnvVar';
-import { IoSyncCircle } from 'react-icons/io5';
+import { IoCheckmarkCircleOutline, IoSyncCircle } from 'react-icons/io5';
 import clsx from 'clsx/lite';
 import { PATH_ADMIN_PHOTOS_UPDATES } from '@/app/path';
 import { LiaBroomSolid } from 'react-icons/lia';
@@ -50,6 +50,7 @@ import { ReactNode } from 'react';
 import MaskedScroll from '@/components/MaskedScroll';
 import IconNext from '@/components/icons/IconNext';
 import Link from 'next/link';
+import IconNode from '@/components/icons/IconNode';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
@@ -116,6 +117,8 @@ const renderWarningIconSmall =
 export default function AdminAppInsightsClient({
   codeMeta,
   nextVersion,
+  reactVersion,
+  nodeVersion,
   insights,
   usedDeprecatedEnvVars,
   photoStats: {
@@ -133,6 +136,8 @@ export default function AdminAppInsightsClient({
 }: {
   codeMeta?: Awaited<ReturnType<typeof getGitHubMetaForCurrentApp>>
   nextVersion: string
+  reactVersion: string
+  nodeVersion: string
   insights: ReturnType<typeof getAllInsights>
   usedDeprecatedEnvVars: typeof USED_DEPRECATED_ENV_VARS
   photoStats: PhotoStats
@@ -281,14 +286,31 @@ export default function AdminAppInsightsClient({
             </a>}
           />
           <ScoreCardRow
-            icon={<IconNext className="self-start translate-y-px" />}
-            content={<Link
-              // eslint-disable-next-line max-len
-              href={`https://github.com/vercel/next.js/releases/tag/v${nextVersion}`}
-              target="blank"
-            >
-              Next.js {nextVersion}
-            </Link>}
+            icon={<IconNext className="translate-y-px" />}
+            content={<>
+              <Link
+                // eslint-disable-next-line max-len
+                href={`https://github.com/vercel/next.js/releases/tag/v${nextVersion}`}
+                target="blank"
+              >
+                Next.js {nextVersion}              
+              </Link>
+              {' '}
+              <Link
+                // eslint-disable-next-line max-len
+                href={`https://github.com/facebook/react/releases/tag/v${reactVersion}`}
+                className="text-dim hover:text-medium active:text-dim"
+                target="blank"
+              >
+                (React {reactVersion})
+              </Link>
+            </>}
+          />
+          <ScoreCardRow
+            icon={<IconNode className="translate-y-px" />}
+            content={<span>
+              Node.js {nodeVersion}
+            </span>}
           />
         </ScoreCard>
       </>}
@@ -479,8 +501,11 @@ export default function AdminAppInsightsClient({
               </>}
             />}
           </>
-          : <AdminEmptyState includeContainer={false}>
-            Nothing to report!
+          : <AdminEmptyState
+            icon={<IoCheckmarkCircleOutline />}
+            includeContainer={false}
+          >
+            No recommendations found
           </AdminEmptyState>}
       </ScoreCard>
       <ScoreCard title="Library Stats">

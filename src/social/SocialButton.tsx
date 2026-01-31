@@ -5,6 +5,7 @@ import Link from 'next/link';
 import clsx from 'clsx/lite';
 import Tooltip from '@/components/Tooltip';
 import { useAppText } from '@/i18n/state/client';
+import { TbQrcode } from 'react-icons/tb';
 
 const iconForSocialKey = (key: SocialKey) => {
   switch (key) {
@@ -12,6 +13,7 @@ const iconForSocialKey = (key: SocialKey) => {
     case 'threads': return <FaThreads size={18} />;
     case 'facebook': return <FaFacebookF size={14} />;
     case 'linkedin': return <FaLinkedin size={16} />;
+    case 'qrcode': return <TbQrcode size={16} />;
   }
 };
 
