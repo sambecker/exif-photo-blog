@@ -287,17 +287,24 @@ export default function AdminAppInsightsClient({
           />
           <ScoreCardRow
             icon={<IconNext className="translate-y-px" />}
-            content={<Link
-              // eslint-disable-next-line max-len
-              href={`https://github.com/vercel/next.js/releases/tag/v${nextVersion}`}
-              target="blank"
-            >
-              Next.js {nextVersion}
+            content={<>
+              <Link
+                // eslint-disable-next-line max-len
+                href={`https://github.com/vercel/next.js/releases/tag/v${nextVersion}`}
+                target="blank"
+              >
+                Next.js {nextVersion}              
+              </Link>
               {' '}
-              <span className="text-dim">
+              <Link
+                // eslint-disable-next-line max-len
+                href={`https://github.com/facebook/react/releases/tag/v${reactVersion}`}
+                className="text-dim hover:text-medium active:text-dim"
+                target="blank"
+              >
                 (React {reactVersion})
-              </span>
-            </Link>}
+              </Link>
+            </>}
           />
           <ScoreCardRow
             icon={<IconNode className="translate-y-px" />}
