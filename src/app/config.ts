@@ -529,6 +529,7 @@ export const APP_CONFIGURATION = {
   isAdminSqlDebugEnabled: ADMIN_SQL_DEBUG_ENABLED,
   // Misc
   nextVersion: dependencies.next,
+  nodeVersion: process.version,
   baseUrl: BASE_URL,
   baseUrlShare: BASE_URL_SHARE,
   commitSha: VERCEL_GIT_COMMIT_SHA_SHORT,

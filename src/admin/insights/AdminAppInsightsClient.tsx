@@ -50,6 +50,7 @@ import { ReactNode } from 'react';
 import MaskedScroll from '@/components/MaskedScroll';
 import IconNext from '@/components/icons/IconNext';
 import Link from 'next/link';
+import IconNode from '@/components/icons/IconNode';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
@@ -116,6 +117,7 @@ const renderWarningIconSmall =
 export default function AdminAppInsightsClient({
   codeMeta,
   nextVersion,
+  nodeVersion,
   insights,
   usedDeprecatedEnvVars,
   photoStats: {
@@ -133,6 +135,7 @@ export default function AdminAppInsightsClient({
 }: {
   codeMeta?: Awaited<ReturnType<typeof getGitHubMetaForCurrentApp>>
   nextVersion: string
+  nodeVersion: string
   insights: ReturnType<typeof getAllInsights>
   usedDeprecatedEnvVars: typeof USED_DEPRECATED_ENV_VARS
   photoStats: PhotoStats
@@ -281,7 +284,7 @@ export default function AdminAppInsightsClient({
             </a>}
           />
           <ScoreCardRow
-            icon={<IconNext className="self-start translate-y-px" />}
+            icon={<IconNext className="translate-y-px" />}
             content={<Link
               // eslint-disable-next-line max-len
               href={`https://github.com/vercel/next.js/releases/tag/v${nextVersion}`}
@@ -289,6 +292,12 @@ export default function AdminAppInsightsClient({
             >
               Next.js {nextVersion}
             </Link>}
+          />
+          <ScoreCardRow
+            icon={<IconNode className="translate-y-px" />}
+            content={<span>
+              Node.js {nodeVersion}
+            </span>}
           />
         </ScoreCard>
       </>}
