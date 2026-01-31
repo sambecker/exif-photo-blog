@@ -34,7 +34,7 @@ export default function Badge({
             : 'px-2 h-6.5',
           type === 'small'
             ? 'text-[0.7rem] font-medium rounded-md'
-            : 'text-[0.9rem] rounded-lg',
+            : 'text-[0.85rem] tracking-wide rounded-lg',
           contrast === 'high'
             ? 'text-invert bg-invert'
             : contrast === 'frosted'
