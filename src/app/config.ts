@@ -163,6 +163,7 @@ export const POSTGRES_SSL_ENABLED =
 export const HAS_REDIS_STORAGE =
   Boolean(
     process.env.KV_URL ||
+    process.env.KV_REST_API_URL ||
     process.env.EXIF_KV_REST_API_URL ||
     process.env.UPSTASH_REDIS_REST_URL,
   );
