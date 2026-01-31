@@ -529,6 +529,7 @@ export const APP_CONFIGURATION = {
   isAdminSqlDebugEnabled: ADMIN_SQL_DEBUG_ENABLED,
   // Misc
   nextVersion: dependencies.next,
+  reactVersion: dependencies.react,
   nodeVersion: process.version,
   baseUrl: BASE_URL,
   baseUrlShare: BASE_URL_SHARE,

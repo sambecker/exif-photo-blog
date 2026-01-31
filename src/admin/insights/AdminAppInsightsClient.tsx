@@ -117,6 +117,7 @@ const renderWarningIconSmall =
 export default function AdminAppInsightsClient({
   codeMeta,
   nextVersion,
+  reactVersion,
   nodeVersion,
   insights,
   usedDeprecatedEnvVars,
@@ -135,6 +136,7 @@ export default function AdminAppInsightsClient({
 }: {
   codeMeta?: Awaited<ReturnType<typeof getGitHubMetaForCurrentApp>>
   nextVersion: string
+  reactVersion: string
   nodeVersion: string
   insights: ReturnType<typeof getAllInsights>
   usedDeprecatedEnvVars: typeof USED_DEPRECATED_ENV_VARS
@@ -291,6 +293,10 @@ export default function AdminAppInsightsClient({
               target="blank"
             >
               Next.js {nextVersion}
+              {' '}
+              <span className="text-dim">
+                (React {reactVersion})
+              </span>
             </Link>}
           />
           <ScoreCardRow
