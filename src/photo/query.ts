@@ -497,8 +497,12 @@ export const getPhotosNearId = async (
 
 export const getPhotosMeta = (options: PhotoQueryOptions = {}) =>
   safelyQuery(async () => {
-    // eslint-disable-next-line max-len
-    let sql = 'SELECT COUNT(*), MIN(p.taken_at_naive) as start, MAX(p.taken_at_naive) as end FROM photos p';
+    let sql = `
+      SELECT COUNT(*),
+      MIN(p.taken_at_naive) as start, MAX(p.taken_at_naive) as end,
+      MIN(p.created_at) as start_created_at, MAX(p.created_at) as end_created_at
+      FROM photos p
+    `;
     const joins = getJoinsFromOptions(options);
     if (joins) { sql += ` ${joins}`; }
     const { wheres, wheresValues } = getWheresFromOptions(options);
@@ -510,6 +514,13 @@ export const getPhotosMeta = (options: PhotoQueryOptions = {}) =>
           ? { dateRange: {
             start: rows[0].start as string,
             end: rows[0].end as string,
+          } as PhotoDateRangePostgres }
+          : undefined,
+        // Used to calculate upload time for 'recents'
+        ...rows[0]?.start_created_at && rows[0]?.end_created_at
+          ? { dateRangeCreatedAt: {
+            start: rows[0].start_created_at as string,
+            end: rows[0].end_created_at as string,
           } as PhotoDateRangePostgres }
           : undefined,
       }));
