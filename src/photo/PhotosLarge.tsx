@@ -35,6 +35,7 @@ export default function PhotosLarge({
           onVisible={index === photos.length - 1
             ? onLastPhotoVisible
             : undefined}
+          includeViewTransition={false}
         />)}
       itemKeys={photos.map(photo => photo.id)}
     />
