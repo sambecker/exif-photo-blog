@@ -12,7 +12,8 @@ export default function IconNext({
   return (
     <span className={clsx(
       'text-main dark:text-black',
-      'border border-transparent dark:border-white/40 rounded-full',
+      'border border-transparent dark:border-white/40',
+      'self-start rounded-full',
       className,
     )}>
       <svg width={size} height={size} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
