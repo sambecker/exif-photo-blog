@@ -308,9 +308,13 @@ export default function AdminAppInsightsClient({
           />
           {nodeVersion && <ScoreCardRow
             icon={<IconNode className="translate-y-px" />}
-            content={<span>
-              Node.js {nodeVersion}
-            </span>}
+            content={<Link
+              // eslint-disable-next-line max-len
+              href={`https://github.com/nodejs/node/releases/tag/v${nodeVersion}`}
+              target="blank"
+            >
+              Node.js {nodeVersion}          
+            </Link>}
           />}
         </ScoreCard>
       </>}
