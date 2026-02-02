@@ -1,5 +1,4 @@
 import type { MetadataRoute } from 'next';
-import { getDataForCategoriesCached } from '@/category/cache';
 import {
   ABSOLUTE_PATH_FULL,
   ABSOLUTE_PATH_GRID,
@@ -17,9 +16,8 @@ import {
 import { isTagFavs } from '@/tag';
 import { BASE_URL, GRID_HOMEPAGE_ENABLED } from '@/app/config';
 import { getPhotoIdsAndUpdatedAt } from '@/photo/query';
-
-// Cache for 24 hours
-export const revalidate = 86_400;
+import { cacheTagGlobal } from '@/cache';
+import { getDataForCategories } from '@/category/data';
 
 const PRIORITY_HOME             = 1;
 const PRIORITY_HOME_VIEW        = 0.9;
@@ -28,6 +26,9 @@ const PRIORITY_CATEGORY         = 0.7;
 const PRIORITY_PHOTO            = 0.5;
  
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  'use cache';
+  cacheTagGlobal();
+
   const [
     {
       recents,
@@ -42,7 +43,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     photos,
   ] = await Promise.all([
-    getDataForCategoriesCached().catch(() => ({
+    getDataForCategories().catch(() => ({
       recents: [],
       years: [],
       cameras: [],

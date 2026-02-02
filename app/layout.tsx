@@ -1,3 +1,5 @@
+'use cache';
+
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { clsx } from 'clsx/lite';
@@ -13,13 +15,14 @@ import {
   PAGE_SCRIPT_URLS,
   VERCEL_GIT_COMMIT_SHA_SHORT,
   DEBUG_OUTPUTS_ENABLED,
+  NAV_TITLE,
+  NAV_CAPTION,
 } from '@/app/config';
 import AppStateProvider from '@/app/AppStateProvider';
 import ToasterWithThemes from '@/toast/ToasterWithThemes';
 import PhotoEscapeHandler from '@/photo/PhotoEscapeHandler';
 import { Metadata } from 'next/types';
 import { ThemeProvider } from 'next-themes';
-import Nav from '@/app/Nav';
 import Footer from '@/app/Footer';
 import CommandK from '@/cmdk/CommandK';
 import SwrConfigClient from '@/swr/SwrConfigClient';
@@ -34,6 +37,12 @@ import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/path';
 import SelectPhotosProvider from '@/admin/select/SelectPhotosProvider';
 import AdminBatchEditPanel from '@/admin/select/AdminBatchEditPanel';
 import Script from 'next/script';
+import { ComponentProps, Suspense } from 'react';
+import { cacheTagGlobal } from '@/cache';
+import SelectPhotosListener from '@/admin/select/SelectPhotosListener';
+import { Nav } from '@/app/Nav';
+import NavClient from '@/app/NavClient';
+import { getPhotos } from '@/photo/query';
 
 import '../tailwind.css';
 
@@ -87,11 +96,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  cacheTagGlobal();
+
+  const photos = await getPhotos({ limit: 1 }).catch(() => []);
+  const props: ComponentProps<typeof Nav> = {
+    navTitle: NAV_TITLE,
+    navCaption: NAV_CAPTION,
+    animate: photos.length > 0,
+  };
+
   return (
     <html
       lang={HTML_LANG}
@@ -105,6 +123,9 @@ export default function RootLayout({
         <AppStateProvider areAdminDebugToolsEnabled={ADMIN_DEBUG_TOOLS_ENABLED}>
           <AppTextProvider>
             <SelectPhotosProvider>
+              <Suspense>
+                <SelectPhotosListener />
+              </Suspense>
               <ThemeColors />
               <ThemeProvider attribute="class" defaultTheme={DEFAULT_THEME}>
                 <SwrConfigClient>
@@ -113,7 +134,9 @@ export default function RootLayout({
                       'mx-3 mb-3',
                       'lg:mx-6 lg:mb-6',
                     )}>
-                      <Nav />
+                      <Suspense fallback={<NavClient {...props} />}>
+                        <Nav {...props} />
+                      </Suspense>
                       <main>
                         <ShareModals />
                         <RecipeModal />
@@ -122,14 +145,16 @@ export default function RootLayout({
                           'mb-12',
                           'space-y-5',
                         )}>
-                          <AdminUploadPanel
-                            shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
-                            onLastUpload={async () => {
-                              'use server';
-                              // Update upload count in admin nav
-                              revalidatePath('/admin', 'layout');
-                            }}
-                          />
+                          <Suspense>
+                            <AdminUploadPanel
+                              shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
+                              onLastUpload={async () => {
+                                'use server';
+                                // Update upload count in admin nav
+                                revalidatePath('/admin', 'layout');
+                              }}
+                            />
+                          </Suspense>
                           <AdminBatchEditPanel
                             onBatchActionComplete={async () => {
                               'use server';
@@ -137,17 +162,23 @@ export default function RootLayout({
                               revalidatePath('/admin', 'layout');
                             }}
                           />
-                          {children}
+                          <Suspense>
+                            {children}
+                          </Suspense>
                         </div>
                       </main>
-                      <Footer />
+                      <Suspense>
+                        <Footer />
+                      </Suspense>
                     </div>
                     <CommandK />
                   </SharedHoverProvider>
                 </SwrConfigClient>
                 <Analytics debug={false} />
                 <SpeedInsights debug={false} />
-                <PhotoEscapeHandler />
+                <Suspense>
+                  <PhotoEscapeHandler />
+                </Suspense>
                 <ToasterWithThemes />
               </ThemeProvider>
             </SelectPhotosProvider>

@@ -2,9 +2,13 @@ import { createContext, Dispatch, SetStateAction, use } from 'react';
 
 export type SelectPhotosState = {
   canCurrentPageSelectPhotos?: boolean
-  isSelectingPhotos?: boolean;
-  startSelectingPhotos?: () => void
-  stopSelectingPhotos?: () => void
+  setCanCurrentPageSelectPhotos?: Dispatch<SetStateAction<boolean>>
+  isSelectingPhotos?: boolean
+  setIsSelectingPhotos?: Dispatch<SetStateAction<boolean>>
+  startSelectingPhotosPath?: string
+  setStartSelectingPhotosPath?: Dispatch<SetStateAction<string>>
+  stopSelectingPhotosPath?: string
+  setStopSelectingPhotosPath?: Dispatch<SetStateAction<string>>
   selectedPhotoIds?: string[]
   setSelectedPhotoIds?: (photoIds: string[]) => void
   isPerformingSelectEdit?: boolean

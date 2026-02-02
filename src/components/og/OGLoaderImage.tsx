@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { clsx } from 'clsx/lite';
 import Spinner from '@/components/Spinner';
-import { IMAGE_OG_DIMENSION } from '@/image-response';
+import { IMAGE_OG_DIMENSION } from '@/image-response/size';
 import { TbPhotoQuestion } from 'react-icons/tb';
 
 type LoadingState = 'loading' | 'loaded' | 'failed';

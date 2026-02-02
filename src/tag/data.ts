@@ -1,9 +1,6 @@
-import {
-  getPhotosCached,
-  getPhotosMetaCached,
-} from '@/photo/cache';
+import { getPhotos, getPhotosMeta } from '@/photo/query';
 
-export const getPhotosTagDataCached = ({
+export const getPhotosTagData = ({
   tag,
   limit,
 }: {
@@ -11,7 +8,7 @@ export const getPhotosTagDataCached = ({
   limit?: number,
 }) =>
   Promise.all([
-    getPhotosCached({ tag, limit }),
-    getPhotosMetaCached({ tag }),
+    getPhotos({ tag, limit }),
+    getPhotosMeta({ tag }),
   ]);
 

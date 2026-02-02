@@ -1,9 +1,6 @@
-import {
-  getPhotosCached,
-  getPhotosMetaCached,
-} from '@/photo/cache';
+import { getPhotos, getPhotosMeta } from '@/photo/query';
 
-export const getPhotosFocalLengthDataCached = ({
+export const getPhotosFocalLengthData = ({
   focal,
   limit,
 }: {
@@ -11,7 +8,6 @@ export const getPhotosFocalLengthDataCached = ({
   limit?: number,
 }) =>
   Promise.all([
-    getPhotosCached({ focal, limit }),
-    getPhotosMetaCached({ focal }),
+    getPhotos({ focal, limit }),
+    getPhotosMeta({ focal }),
   ]);
-
