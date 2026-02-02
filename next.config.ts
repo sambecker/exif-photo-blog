@@ -81,6 +81,7 @@ const nextConfig: NextConfig = {
     remotePatterns,
     minimumCacheTTL: 31536000,
   },
+  serverExternalPackages: ['exifr'],
   turbopack: {
     resolveAlias: {
       [LOCALE_ALIAS]: `@/${LOCALE_DYNAMIC}`,
