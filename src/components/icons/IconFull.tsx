@@ -23,9 +23,9 @@ export default function IconFull({
       className={className}
     >
       {includeTitle && <title>Full Frame</title>}
-      <rect x="5.625" y="6.625" width="16.75" height="10.75" rx="1" strokeWidth="1.25"/>
-      <line x1="5" y1="3.875" x2="23" y2="3.875" strokeWidth="1.25"/>
-      <line x1="23" y1="20.125" x2="5" y2="20.125" strokeWidth="1.25"/>
+      <path d="M6.83301 7.125H21.167C21.5579 7.12518 21.8748 7.44206 21.875 7.83301V16.167C21.8748 16.5579 21.5579 16.8748 21.167 16.875H6.83301C6.44206 16.8748 6.12518 16.5579 6.125 16.167V7.83301C6.12518 7.44206 6.44206 7.12518 6.83301 7.125Z" strokeWidth="1.25"/>
+      <path d="M5.5 4.875H22.5" strokeWidth="1.25"/>
+      <path d="M22.5 19.125L5.5 19.125" strokeWidth="1.25"/>
     </svg>
   );
 };

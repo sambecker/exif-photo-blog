@@ -253,6 +253,18 @@ const FORM_METADATA = (
     label: 'blur data',
     readOnly: true,
   },
+  width: {
+    section: 'storage',
+    label: 'width',
+    readOnly: true,
+    hideIfEmpty: true,
+  },
+  height: {
+    section: 'storage',
+    label: 'height',
+    readOnly: true,
+    hideIfEmpty: true,
+  },
   aspectRatio: {
     section: 'storage',
     label: 'aspect ratio',
@@ -423,6 +435,12 @@ export const convertFormDataToPhotoDbInsert = (
     ...photoForm.recipeTitle && {
       recipeTitle: parameterize(photoForm.recipeTitle),
     },
+    width: photoForm.width
+      ? parseInt(photoForm.width)
+      : undefined,
+    height: photoForm.height
+      ? parseInt(photoForm.height)
+      : undefined,
     // Convert form strings to numbers
     aspectRatio: photoForm.aspectRatio
       ? roundToNumber(parseFloat(photoForm.aspectRatio), 6)

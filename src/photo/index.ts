@@ -50,6 +50,8 @@ export const MAX_PHOTO_UPLOAD_SIZE_IN_BYTES = 50_000_000;
 
 // Core EXIF data
 export interface PhotoExif {
+  width?: number
+  height?: number
   aspectRatio: number
   make?: string
   model?: string

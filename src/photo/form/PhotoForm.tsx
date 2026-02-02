@@ -295,7 +295,10 @@ export default function PhotoForm({
           ? <SmallDisclosure label="Optimized file set">
             <div className="space-y-1">
               {photoStorageUrls.map(({ url, size }) => {
-                const { fileName } = getFileNamePartsFromStorageUrl(url);
+                const {
+                  fileName,
+                  fileModifier,
+                } = getFileNamePartsFromStorageUrl(url);
                 return <div
                   key={url}
                   className="flex items-center gap-2"
@@ -307,7 +310,12 @@ export default function PhotoForm({
                   >
                     {fileName}
                   </Link>
-                  <span className="text-dim">{size}</span>
+                  <span className="text-dim">
+                    {size}
+                    {/* Show dimensions for original file when available */}
+                    {!fileModifier && formData.width && formData.height &&
+                      ` @ ${formData.width}×${formData.height}`}
+                  </span>
                 </div>;
               })}
             </div>

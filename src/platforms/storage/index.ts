@@ -67,13 +67,17 @@ export const getFileNamePartsFromStorageUrl = (url: string) => {
     fileName = '',
     fileNameBase = '',
     fileId = '',
+    fileModifier = '',
     fileExtension = '',
-  ] = url.match(/^(.+)\/((-*[a-z0-9]+-*([a-z0-9-]+))\.([a-z]{1,4}))$/i) ?? [];
+  ] = url.match(
+    /^(.+)\/((-*[a-z0-9]+-*([a-z0-9]+)-*([a-z0-9]+)*)\.([a-z]{1,4}))$/i,
+  ) ?? [];
   return {
     urlBase,
     fileName,
     fileNameBase,
     fileId,
+    fileModifier,
     fileExtension,
   };
 };

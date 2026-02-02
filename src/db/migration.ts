@@ -101,6 +101,15 @@ export const MIGRATIONS: Migration[] = [{
     DROP COLUMN IF EXISTS latitude,
     DROP COLUMN IF EXISTS longitude;
   `),
+}, {
+  label: '09: Image Dimensions',
+  table: 'photos',
+  fields: ['width', 'height'],
+  run: () => sql`
+    ALTER TABLE photos
+    ADD COLUMN IF NOT EXISTS width INTEGER,
+    ADD COLUMN IF NOT EXISTS height INTEGER
+  `,
 }];
 
 export const migrationForError = (e: any) =>
