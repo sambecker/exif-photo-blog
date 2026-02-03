@@ -22,6 +22,7 @@ import { Albums } from '@/album';
 import FieldsetAlbum from '@/album/FieldsetAlbum';
 import IconAlbum from '@/components/icons/IconAlbum';
 import { addPhotosToAlbumsAction } from '@/album/actions';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 
 export default function AdminBatchEditPanelClient({
   uniqueAlbums,
@@ -36,6 +37,8 @@ export default function AdminBatchEditPanelClient({
     canCurrentPageSelectPhotos,
     isSelectingPhotos,
     stopSelectingPhotos,
+    isSelectingAllPhotos,
+    toggleIsSelectingAllPhotos,
     selectedPhotoIds,
     isPerformingSelectEdit,
     setIsPerformingSelectEdit,
@@ -230,8 +233,16 @@ export default function AdminBatchEditPanelClient({
                 openOnLoad
                 hideLabel
               />
-              : <div className="text-base flex gap-2 items-center">
-                {renderPhotoCTA}
+              : <div>
+                <div className="text-base flex gap-2 items-center">
+                  {renderPhotoCTA}
+                </div>
+                <FieldsetWithStatus
+                  label="Select All Photos"
+                  type="checkbox"
+                  value={isSelectingAllPhotos ? 'true' : 'false'}
+                  onChange={toggleIsSelectingAllPhotos}
+                />
               </div>}
         </Note>
         {tagErrorMessage &&

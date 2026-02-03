@@ -186,7 +186,6 @@ export default function PhotoDetailPage({
       <AppGrid
         contentMain={<PhotoGrid
           photos={photosGrid ?? photos}
-          selectedPhoto={photo}
           tag={tag}
           camera={camera}
           film={film}
