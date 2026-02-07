@@ -3,14 +3,18 @@
 import { ReactNode, useEffect, useRef } from 'react';
 import { useLinkStatus } from 'next/link';
 
-const FLICKER_THRESHOLD = 400;
+const DEFAULT_FLICKER_THRESHOLD = 400;
 
 export default function LinkWithStatusChild({
   children,
   setIsLoading,
+  onLoad,
+  flickerThreshold = DEFAULT_FLICKER_THRESHOLD,
 }: {
   children: ReactNode
   setIsLoading: (isLoading: boolean) => void
+  onLoad?: () => void
+  flickerThreshold?: number
 }) {
   const { pending } = useLinkStatus();
 
@@ -26,7 +30,7 @@ export default function LinkWithStatusChild({
       startLoadingTimeout.current = setTimeout(() => {
         setIsLoading(true);
         isLoadingStartTime.current = Date.now();
-      }, FLICKER_THRESHOLD);
+      }, flickerThreshold);
     } else if (startLoadingTimeout.current) {
       clearTimeout(startLoadingTimeout.current);
       startLoadingTimeout.current = undefined;
@@ -34,14 +38,27 @@ export default function LinkWithStatusChild({
       stopLoadingTimeout.current = setTimeout(() => {
         setIsLoading(false);
         isLoadingStartTime.current = undefined;
-      }, FLICKER_THRESHOLD - loadingDuration);
+      }, Math.max(0, flickerThreshold - loadingDuration));
     }
-  }, [pending, setIsLoading]);
+  }, [pending, setIsLoading, flickerThreshold]);
 
-  useEffect(() => () => {
-    clearTimeout(startLoadingTimeout.current);
-    clearTimeout(stopLoadingTimeout.current);
+  useEffect(() => {
+    return () => {
+      clearTimeout(startLoadingTimeout.current);
+      clearTimeout(stopLoadingTimeout.current);
+    };
   }, []);
+
+  useEffect(() => {
+    if (!pending && startLoadingTimeout.current) {
+      onLoad?.();
+    }
+    return () => {
+      if (pending && startLoadingTimeout.current) {
+        onLoad?.();
+      }
+    };
+  }, [pending, onLoad]);
 
   return <>{children}</>;
 }

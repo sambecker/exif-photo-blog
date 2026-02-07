@@ -1,4 +1,4 @@
-import { absolutePathForTag } from '@/app/paths';
+import { absolutePathForTag } from '@/app/path';
 import { PhotoSetAttributes } from '../category';
 import ShareModal from '@/share/ShareModal';
 import TagOGTile from './TagOGTile';

@@ -5,8 +5,8 @@ import {
   FeedMedia,
   generateFeedMedia,
   getCoreFeedFields,
-} from '.';
-import { ABSOLUTE_PATH_FOR_RSS_XML, absolutePathForPhoto } from '@/app/paths';
+} from './programmatic';
+import { ABSOLUTE_PATH_RSS_XML, absolutePathForPhoto } from '@/app/path';
 import { formatDate } from '@/utility/date';
 import { formatStringForXml } from '@/utility/string';
 import { BASE_URL, META_DESCRIPTION, META_TITLE } from '@/app/config';
@@ -39,8 +39,8 @@ const feedPhotoToXml = (photo: FeedPhotoRss): string => {
     </pubDate>
     <guid isPermaLink="true">${photo.link}</guid>
     ${photo.description
-    ? `<description><![CDATA[${photo.description}]]></description>`
-    : ''}
+      ? `<description><![CDATA[${photo.description}]]></description>`
+      : ''}
     <media:content
       url="${formatStringForXml(photo.media.content.url)}"
       type="image/jpeg"
@@ -67,7 +67,7 @@ export const formatFeedRssXml = (photos: Photo[]) =>
     <channel>
       <title>${META_TITLE}</title>
       <atom:link
-        href="${ABSOLUTE_PATH_FOR_RSS_XML}"
+        href="${ABSOLUTE_PATH_RSS_XML}"
         rel="self"
         type="application/rss+xml"
       />

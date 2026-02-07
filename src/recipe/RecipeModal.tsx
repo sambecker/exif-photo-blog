@@ -1,7 +1,7 @@
 'use client';
 
 import Modal from '@/components/Modal';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import PhotoRecipeOverlay from './PhotoRecipeOverlay';
 
 export default function ShareModals() {

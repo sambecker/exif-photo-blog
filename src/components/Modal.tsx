@@ -6,7 +6,7 @@ import { clsx } from 'clsx/lite';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
 import { useRouter } from 'next/navigation';
 import AnimateItems from './AnimateItems';
-import { PATH_ROOT } from '@/app/paths';
+import { PATH_ROOT } from '@/app/path';
 import usePrefersReducedMotion from '@/utility/usePrefersReducedMotion';
 import useEscapeHandler from '@/utility/useEscapeHandler';
 import { useTheme } from 'next-themes';

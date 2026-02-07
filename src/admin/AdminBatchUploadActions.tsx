@@ -1,57 +1,64 @@
 'use client';
 
 import ErrorNote from '@/components/ErrorNote';
-import FieldSetWithStatus from '@/components/FieldSetWithStatus';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import Container from '@/components/Container';
 import { addUploadsAction } from '@/photo/actions';
-import { PATH_ADMIN_PHOTOS } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS } from '@/app/path';
 import { Tags } from '@/tag';
 import {
   generateLocalNaivePostgresString,
   generateLocalPostgresString,
 } from '@/utility/date';
 import sleep from '@/utility/sleep';
-import { readStreamableValue } from 'ai/rsc';
+import { readStreamableValue } from '@ai-sdk/rsc';
 import { useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
-import { BiCheckCircle, BiImageAdd } from 'react-icons/bi';
+import { BiCheckCircle } from 'react-icons/bi';
 import ProgressButton from '@/components/primitives/ProgressButton';
 import { UrlAddStatus } from './AdminUploadsClient';
-import PhotoTagFieldset from './PhotoTagFieldset';
+import FieldsetTag from '../tag/FieldsetTag';
 import DeleteUploadButton from './DeleteUploadButton';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { pluralize } from '@/utility/string';
 import FieldsetFavs from '@/photo/form/FieldsetFavs';
-import FieldsetHidden from '@/photo/form/FieldsetHidden';
+import IconAddUpload from '@/components/icons/IconAddUpload';
+import { PhotoFormData } from '@/photo/form';
+import FieldsetVisibility from '@/photo/visibility/FieldsetVisibility';
+import { Albums } from '@/album';
+import FieldsetAlbum from '@/album/FieldsetAlbum';
 
 const UPLOAD_BATCH_SIZE = 2;
 
 export default function AdminBatchUploadActions({
   uploadUrls,
   uploadTitles,
+  uniqueAlbums,
   uniqueTags,
   isAdding,
   setIsAdding,
   setUrlAddStatuses,
   isDeleting,
   setIsDeleting,
+  onBatchActionComplete,
 }: {
   uploadUrls: string[]
   uploadTitles: string[]
+  uniqueAlbums: Albums
   uniqueTags?: Tags
   isAdding: boolean
   setIsAdding: Dispatch<SetStateAction<boolean>>
   setUrlAddStatuses: Dispatch<SetStateAction<UrlAddStatus[]>>
   isDeleting: boolean
   setIsDeleting: Dispatch<SetStateAction<boolean>>
+  onBatchActionComplete?: () => Promise<void>
 }) {
   const { updateAdminData } = useAppState();
 
   const [showBulkSettings, setShowBulkSettings] = useState(false);
-  const [tags, setTags] = useState('');
-  const [favorite, setFavorite] = useState('false');
-  const [hidden, setHidden] = useState('false');
   const [tagErrorMessage, setTagErrorMessage] = useState('');
+  const [formData, setFormData] = useState<Partial<PhotoFormData>>({});
+  const [albumTitles, setAlbumTitles] = useState<string>();
 
   const [buttonText, setButtonText] = useState('Add All Uploads');
   const [actionErrorMessage, setActionErrorMessage] = useState('');
@@ -66,13 +73,16 @@ export default function AdminBatchUploadActions({
     titles: string[],
     isFinalBatch: boolean,
   ) => {
+    const { tags, favorite, excludeFromFeeds, hidden } = formData;
     try {
       const stream = await addUploadsAction({
         uploadUrls: urls,
         uploadTitles: titles,
         ...showBulkSettings && {
+          albumTitles: albumTitles?.split(','),
           tags,
           favorite,
+          excludeFromFeeds,
           hidden,
         },
         takenAtLocal: generateLocalPostgresString(),
@@ -124,15 +134,15 @@ export default function AdminBatchUploadActions({
     <>
       {actionErrorMessage &&
         <ErrorNote>{actionErrorMessage}</ErrorNote>}
-      <Container padding="tight">
-        <div className="w-full space-y-4 py-1">
+      <Container padding="tight" className="p-2! sm:p-3! relative z-10">
+        <div className="w-full space-y-4">
           <div className="flex">
             <div className="grow text-main">
               {showBulkSettings
                 ? `Apply to ${pluralize(uploadUrls.length, 'upload')}`
                 : `Found ${pluralize(uploadUrls.length, 'upload')}`}
             </div>
-            <FieldSetWithStatus
+            <FieldsetWithStatus
               label="Apply to All"
               type="checkbox"
               value={showBulkSettings ? 'true' : 'false'}
@@ -142,28 +152,36 @@ export default function AdminBatchUploadActions({
           </div>
           {showBulkSettings && !actionErrorMessage &&
             <div className="space-y-4 mb-6">
-              <PhotoTagFieldset
+              <FieldsetAlbum
+                albumOptions={uniqueAlbums}
+                value={albumTitles ?? ''}
+                onChange={albums => setAlbumTitles(albums)}
+                readOnly={isAdding}
+                className="relative z-11"
+              />
+              <FieldsetTag
                 label="Tags"
-                tags={tags}
+                tags={formData.tags ?? ''}
                 tagOptions={uniqueTags}
-                onChange={setTags}
+                onChange={tags => setFormData(data => ({ ...data, tags }))}
                 onError={setTagErrorMessage}
                 readOnly={isAdding}
+                className="relative z-10"
               />
-              <div className="flex gap-8">
-                <FieldsetFavs
-                  value={favorite}
-                  onChange={setFavorite}
-                  readOnly={isAdding}
-                />
-                <FieldsetHidden
-                  value={hidden}
-                  onChange={setHidden}
-                  readOnly={isAdding}
-                />
-              </div>
+              <FieldsetVisibility
+                formData={formData}
+                setFormData={setFormData}
+                readOnly={isAdding}
+              />
+              <FieldsetFavs
+                className="pt-2.5 pb-2"
+                value={formData.favorite ?? 'false'}
+                onChange={favorite =>
+                  setFormData(data => ({ ...data, favorite }))}
+                readOnly={isAdding}
+              />
             </div>}
-          <div className="space-y-2">
+          <div className="flex flex-col sm:flex-row-reverse gap-2">
             <ProgressButton
               primary
               className="w-full justify-center"
@@ -176,10 +194,7 @@ export default function AdminBatchUploadActions({
               }
               icon={isAddingComplete
                 ? <BiCheckCircle size={18} className="translate-x-[1px]" />
-                : <BiImageAdd
-                  size={18}
-                  className="translate-x-[1px] translate-y-[2px]"
-                />
+                : <IconAddUpload />
               }
               onClick={async () => {
                 // eslint-disable-next-line max-len
@@ -207,6 +222,7 @@ export default function AdminBatchUploadActions({
                     setAddingProgress(1);
                     setIsAdding(false);
                     setIsAddingComplete(true);
+                    await onBatchActionComplete?.();
                     await sleep(1000).then(() =>
                       router.push(PATH_ADMIN_PHOTOS));
                   } catch (e: any) {
@@ -217,16 +233,17 @@ export default function AdminBatchUploadActions({
                   }
                 }
               }}
-              hideTextOnMobile={false}
+              hideText="never"
             >
               {buttonText}
             </ProgressButton>
             <DeleteUploadButton
               urls={uploadUrls}
               onDeleteStart={() => setIsDeleting(true)}
-              onDelete={didFail => {
+              onDelete={async didFail => {
                 if (!didFail) {
                   updateAdminData?.({ uploadsCount: 0 });
+                  await onBatchActionComplete?.();
                   router.push(PATH_ADMIN_PHOTOS);
                 } else {
                   setIsDeleting(false);
@@ -234,7 +251,7 @@ export default function AdminBatchUploadActions({
               }}
               className="w-full flex justify-center"
               shouldRedirectToAdminPhotos
-              hideTextOnMobile={false}
+              hideText="never"
               disabled={isAdding}
             >
               Delete All Uploads

@@ -1,6 +1,6 @@
 'use client';
 
-import { PATH_ADMIN_PHOTOS } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS } from '@/app/path';
 import InfinitePhotoScroll from '../photo/InfinitePhotoScroll';
 import AdminPhotosTable from './AdminPhotosTable';
 import { ComponentProps } from 'react';
@@ -11,6 +11,7 @@ export default function AdminPhotosTableInfinite({
   hasAiTextGeneration,
   canEdit,
   canDelete,
+  debugColorData,
 }: {
   initialOffset: number
   itemsPerPage: number
@@ -24,14 +25,16 @@ export default function AdminPhotosTableInfinite({
       sortBy="createdAt"
       includeHiddenPhotos
     >
-      {({ photos, onLastPhotoVisible, revalidatePhoto }) =>
+      {({ key, photos, onLastPhotoVisible, revalidatePhoto }) =>
         <AdminPhotosTable
+          key={key}
           photos={photos}
           onLastPhotoVisible={onLastPhotoVisible}
           revalidatePhoto={revalidatePhoto}
           hasAiTextGeneration={hasAiTextGeneration}
           canEdit={canEdit}
           canDelete={canDelete}
+          debugColorData={debugColorData}
         />}
     </InfinitePhotoScroll>
   );

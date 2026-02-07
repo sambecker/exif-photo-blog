@@ -2,15 +2,15 @@ const DEFAULT_ASPECT_RATIO = 3.0 / 2.0;
 
 export const getDimensionsFromSize = (
   size: number,
-  aspectRatioRaw?: string | number,
+  _aspectRatio?: string | number,
 ): {
   width: number
   height: number
   aspectRatio: number
 } => {
-  const aspectRatio = typeof aspectRatioRaw === 'string'
-    ? parseFloat(aspectRatioRaw)
-    : aspectRatioRaw || DEFAULT_ASPECT_RATIO;
+  const aspectRatio = typeof _aspectRatio === 'string'
+    ? parseFloat(_aspectRatio)
+    : _aspectRatio || DEFAULT_ASPECT_RATIO;
 
   let width = size;
   let height = size;

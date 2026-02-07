@@ -18,7 +18,7 @@ export const makeUrlAbsolute = (url?: string) => url !== undefined
     .replace(/\/$/, '')
   : undefined;
 
-export const removeParamsFromUrl = (urlString = '', params: string[]) => {
+export const removeParamsFromUrl = (urlString: string, params: string[]) => {
   const url = new URL(urlString);
   for (const param of params) {
     url.searchParams.delete(param);
@@ -40,4 +40,11 @@ export const downloadFileFromBrowser = async (
   link.click();
   document.body.removeChild(link);
   window.URL.revokeObjectURL(downloadUrl);
+};
+
+// Necessary for useClientSearchParams to see window.location changes,
+// particularly for paths that only change query params
+export const replacePathWithEvent = (pathname: string) => {
+  window.history.pushState(null, '', pathname);
+  dispatchEvent(new Event('replacestate'));
 };

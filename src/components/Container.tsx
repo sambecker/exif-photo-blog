@@ -25,37 +25,37 @@ export default function Container({
 } & HTMLAttributes<HTMLDivElement>) {
   const getColorClasses = () => {
     switch (color) {
-    case 'gray': return [
-      'text-medium',
-      'bg-dim',
-    ];
-    case 'gray-border': return [
-      'text-medium',
-      'bg-extra-dim',
-      'border-medium',
-    ];
-    case 'blue': return [
-      'text-blue-800 dark:text-blue-400',
-      'bg-blue-50 dark:bg-blue-950/50',
-    ];
-    case 'red': return [
-      'text-red-700 dark:text-red-400',
-      'bg-red-100/50 dark:bg-red-950/55',
-    ];
-    case 'yellow': return [
-      'text-amber-700 dark:text-amber-500',
-      'bg-amber-100/55 dark:bg-amber-950/55',
-    ];
+      case 'gray': return [
+        'text-medium',
+        'bg-dim',
+      ];
+      case 'gray-border': return [
+        'text-medium',
+        'bg-extra-dim',
+        'border-medium',
+      ];
+      case 'blue': return [
+        'text-blue-800 dark:text-blue-400',
+        'bg-blue-50 dark:bg-blue-950/50',
+      ];
+      case 'red': return [
+        'text-red-700 dark:text-red-400',
+        'bg-red-100/50 dark:bg-red-950/55',
+      ];
+      case 'yellow': return [
+        'text-amber-700 dark:text-amber-500',
+        'bg-amber-100/55 dark:bg-amber-950/55',
+      ];
     }
   };
 
   const getPaddingClasses = () => {
     switch (padding) {
-    case 'loose': return 'p-4 md:p-24';
-    case 'normal': return 'p-4 md:p-8';
-    case 'tight': return 'py-1.5 px-2.5';
-    case 'tight-cta-right': return 'py-1.5 pl-2.5 pr-1.5';
-    case 'tight-cta-right-left': return 'py-1.5 px-1.5';
+      case 'loose': return 'p-4 md:p-24';
+      case 'normal': return 'p-4 md:p-8';
+      case 'tight': return 'py-1.5 px-2.5';
+      case 'tight-cta-right': return 'py-1.5 pl-2.5 pr-1.5';
+      case 'tight-cta-right-left': return 'py-1.5 px-1.5';
     }
   };
 

@@ -15,7 +15,7 @@ export default function PhotoLightbox({
   photos: Photo[]
   maxPhotosToShow?: number
   moreLink: string
-} & PhotoSetCategory) {
+} & PhotoSetCategory) {  
   const photoCountToShow = maxPhotosToShow < count
     ? maxPhotosToShow - 1
     : maxPhotosToShow;
@@ -26,7 +26,7 @@ export default function PhotoLightbox({
 
   return (
     <div className={clsx(
-      'border-main p-1.5 lg:p-2 rounded-md',
+      'border-main p-1 rounded-md',
       'bg-gray-50 dark:bg-gray-950',
     )}>
       <PhotoGrid
@@ -38,15 +38,17 @@ export default function PhotoLightbox({
             href={moreLink}
             className={clsx(
               'flex flex-col items-center justify-center',
-              'gap-0.5 lg:gap-1',
+              'gap-0.5',
+              'text-[1.1rem] lg:text-[1.25rem]',
+              // Optically adjust for leading '+' character
+              'translate-x-[-1px]',
             )}
           >
-            <div className="text-[1.1rem] lg:text-[1.5rem]">
-              +{countNotShown}
-            </div>
-            <div className="text-dim">More</div>
+            +{countNotShown}
           </Link>
           : undefined}
+        classNamePhoto="rounded-sm overflow-hidden border-main"
+        selectable={false}
         small
       />
     </div>

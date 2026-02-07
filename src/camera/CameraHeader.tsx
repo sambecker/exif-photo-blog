@@ -1,9 +1,9 @@
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import PhotoHeader from '@/photo/PhotoHeader';
 import { Camera, cameraFromPhoto } from '.';
 import PhotoCamera from './PhotoCamera';
 import { descriptionForCameraPhotos } from './meta';
-import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
+import { AI_CONTENT_GENERATION_ENABLED } from '@/app/config';
 import { getAppText } from '@/i18n/state/server';
 
 export default async function CameraHeader({
@@ -19,14 +19,19 @@ export default async function CameraHeader({
   selectedPhoto?: Photo
   indexNumber?: number
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 }) {
-  const camera = cameraFromPhoto(photos[0], cameraProp);
   const appText = await getAppText();
+  const camera = cameraFromPhoto(photos[0], cameraProp);
+
   return (
     <PhotoHeader
       camera={camera}
-      entity={<PhotoCamera {...{ camera }} contrast="high" />}
+      entity={<PhotoCamera
+        {...{ camera }}
+        contrast="high"
+        hoverType="none"
+      />}
       entityDescription={
         descriptionForCameraPhotos(
           photos,
@@ -40,7 +45,7 @@ export default async function CameraHeader({
       indexNumber={indexNumber}
       count={count}
       dateRange={dateRange}
-      hasAiTextGeneration={AI_TEXT_GENERATION_ENABLED}
+      hasAiTextGeneration={AI_CONTENT_GENERATION_ENABLED}
       includeShareButton
     />
   );

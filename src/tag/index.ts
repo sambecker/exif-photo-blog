@@ -1,6 +1,6 @@
 import {
   Photo,
-  PhotoDateRange,
+  PhotoDateRangePostgres,
   descriptionForPhotoSet,
   photoQuantityText,
 } from '@/photo';
@@ -8,7 +8,7 @@ import {
   absolutePathForTag,
   absolutePathForTagImage,
   getPathComponents,
-} from '@/app/paths';
+} from '@/app/path';
 import {
   capitalizeWords,
   convertStringToArray,
@@ -20,7 +20,7 @@ import { AppTextState } from '@/i18n/state';
 
 // Reserved tags
 export const TAG_FAVS   = 'favs';
-export const TAG_HIDDEN = 'hidden';
+export const TAG_PRIVATE = 'private';
 
 type TagWithMeta = { tag: string } & CategoryQueryMeta;
 
@@ -31,7 +31,7 @@ export const formatTag = (tag?: string) =>
 
 export const getValidationMessageForTags = (tags?: string) => {
   const reservedTags = (convertStringToArray(tags) ?? [])
-    .filter(tag => isTagFavs(tag) || isTagHidden(tag))
+    .filter(tag => isTagFavs(tag) || isTagPrivate(tag))
     .map(tag => tag.toLocaleUpperCase());
   return reservedTags.length
     ? `Reserved tags: ${reservedTags.join(', ').toLocaleLowerCase()}`
@@ -93,12 +93,16 @@ export const sortTagsWithoutFavs = (tags: string[]) =>
 export const sortTagsObjectWithoutFavs = (tags: Tags) =>
   sortTags(tags, TAG_FAVS);
 
+export const getTopNonFavTags = (tags: Tags) => tags
+  .filter(({ tag }) => tag !== TAG_FAVS)
+  .slice(0, 3);
+
 export const descriptionForTaggedPhotos = (
   photos: Photo[] = [],
   appText: AppTextState,
   dateBased?: boolean,
   explicitCount?: number,
-  explicitDateRange?: PhotoDateRange,
+  explicitDateRange?: PhotoDateRangePostgres,
 ) =>
   descriptionForPhotoSet(
     photos,
@@ -114,7 +118,7 @@ export const generateMetaForTag = (
   photos: Photo[],
   appText: AppTextState,
   explicitCount?: number,
-  explicitDateRange?: PhotoDateRange,
+  explicitDateRange?: PhotoDateRangePostgres,
 ) => ({
   url: absolutePathForTag(tag),
   title: titleForTag(tag, photos, appText, explicitCount),
@@ -128,6 +132,14 @@ export const generateMetaForTag = (
   images: absolutePathForTagImage(tag),
 });
 
+export const deleteTagConfirmationText = (
+  tag: string,
+  count: number,
+  appText: AppTextState,
+) =>
+  // eslint-disable-next-line max-len
+  `Are you sure you want to remove "${formatTag(tag)}" from ${photoQuantityText(count, appText, false, false).toLowerCase()}?`;
+
 export const isTagFavs = (tag: string) => tag.toLocaleLowerCase() === TAG_FAVS;
 
 export const isPhotoFav = ({ tags }: Photo) => tags.some(isTagFavs);
@@ -135,20 +147,20 @@ export const isPhotoFav = ({ tags }: Photo) => tags.some(isTagFavs);
 export const isPathFavs = (pathname?: string) =>
   getPathComponents(pathname).tag === TAG_FAVS;
 
-export const isTagHidden = (tag: string) => tag.toLowerCase() === TAG_HIDDEN;
+export const isTagPrivate = (tag: string) => tag.toLowerCase() === TAG_PRIVATE;
 
-export const addHiddenToTags = (
+export const addPrivateToTags = (
   tags: Tags,
-  countHidden = 0,
-  lastModifiedHidden = new Date(),
+  countPrivate = 0,
+  lastModifiedPrivate = new Date(),
 ) =>
-  countHidden > 0
+  countPrivate > 0
     ? tags
       .filter(({ tag }) => tag === TAG_FAVS)
       .concat({
-        tag: TAG_HIDDEN,
-        count: countHidden,
-        lastModified: lastModifiedHidden,
+        tag: TAG_PRIVATE,
+        count: countPrivate,
+        lastModified: lastModifiedPrivate,
       })
       .concat(tags
         .filter(({ tag }) => tag !== TAG_FAVS)
@@ -167,3 +179,20 @@ export const convertTagsForForm = (
       annotationAria:
         formatCountDescriptive(count, appText.category.taggedPhotos),
     }));
+
+export const limitTagsByCount = (
+  tags: Tags,
+  minimumCount: number,
+  queryToInclude?: string,
+) =>
+  tags.filter(({ tag, count }) => (
+    count >= minimumCount ||
+    isTagFavs(tag) ||
+    isTagPrivate(tag) ||
+    (queryToInclude && tag
+      .toLocaleLowerCase()
+      .includes(queryToInclude.toLocaleLowerCase()))
+  ));
+
+export const tagsHaveFavs = (tags: Tags) =>
+  tags.some(({ tag }) => isTagFavs(tag));

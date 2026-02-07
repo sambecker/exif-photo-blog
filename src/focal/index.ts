@@ -1,13 +1,13 @@
 import {
   Photo,
-  PhotoDateRange,
+  PhotoDateRangePostgres,
   descriptionForPhotoSet,
   photoQuantityText,
 } from '@/photo';
 import {
   absolutePathForFocalLength,
   absolutePathForFocalLengthImage,
-} from '@/app/paths';
+} from '@/app/path';
 import { AppTextState } from '@/i18n/state';
 import { CategoryQueryMeta } from '@/category';
 
@@ -20,11 +20,7 @@ export const getFocalLengthFromString = (focalString?: string) => {
   return focal ? parseInt(focal, 10) : 0;
 };
 
-export const formatFocalLength = (focal?: number) => focal
-  ? formatFocalLengthSafe(focal)
-  : undefined;
-
-export const formatFocalLengthSafe = (focal = 0) =>
+export const formatFocalLength = (focal = 0) =>
   `${focal}mm`;
 
 export const titleForFocalLength = (
@@ -33,7 +29,7 @@ export const titleForFocalLength = (
   appText: AppTextState,
   explicitCount?: number,
 ) => [
-  appText.category.focalLengthTitle(formatFocalLengthSafe(focal)),
+  appText.category.focalLengthTitle(formatFocalLength(focal)),
   photoQuantityText(explicitCount ?? photos.length, appText),
 ].join(' ');
 
@@ -41,14 +37,14 @@ export const shareTextFocalLength = (
   focal: number,
   appText: AppTextState,
 ) =>
-  appText.category.focalLengthShare(formatFocalLengthSafe(focal));
+  appText.category.focalLengthShare(formatFocalLength(focal));
 
 export const descriptionForFocalLengthPhotos = (
   photos: Photo[],
   appText: AppTextState,
   dateBased?: boolean,
   explicitCount?: number,
-  explicitDateRange?: PhotoDateRange,
+  explicitDateRange?: PhotoDateRangePostgres,
 ) =>
   descriptionForPhotoSet(
     photos,
@@ -64,7 +60,7 @@ export const generateMetaForFocalLength = (
   photos: Photo[],
   appText: AppTextState,
   explicitCount?: number,
-  explicitDateRange?: PhotoDateRange,
+  explicitDateRange?: PhotoDateRangePostgres,
 ) => ({
   url: absolutePathForFocalLength(focal),
   title: titleForFocalLength(focal, photos, appText, explicitCount),

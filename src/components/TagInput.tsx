@@ -22,27 +22,39 @@ export default function TagInput({
   name,
   value = '',
   options = [],
+  labelForValueOverride,
   defaultIcon,
+  defaultIconSelected,
+  accessory,
   onChange,
+  onInputTextChange,
   showMenuOnDelete,
   className,
   readOnly,
   placeholder,
   limit,
   limitValidationMessage,
+  allowNewValues = true,
+  shouldParameterize,
 }: {
   id?: string
   name: string
   value?: string
   options?: AnnotatedTag[]
+  labelForValueOverride?: (value: string) => string
   defaultIcon?: ReactNode
+  defaultIconSelected?: ReactNode
+  accessory?: ReactNode
   onChange?: (value: string) => void
+  onInputTextChange?: (value: string) => void
   showMenuOnDelete?: boolean
   className?: string
   readOnly?: boolean
   placeholder?: string
   limit?: number
   limitValidationMessage?: string
+  allowNewValues?: boolean
+  shouldParameterize?: boolean
 }) {
   const behaveAsDropdown = limit === 1;
 
@@ -59,8 +71,8 @@ export default function TagInput({
   , [options]);
 
   const selectedOptions = useMemo(() =>
-    convertStringToArray(value) ?? []
-  , [value]);
+    convertStringToArray(value, shouldParameterize) ?? []
+  , [value, shouldParameterize]);
 
   const hasReachedLimit = useMemo(() =>
     limit !== undefined &&
@@ -68,32 +80,54 @@ export default function TagInput({
     !behaveAsDropdown
   , [limit, behaveAsDropdown, selectedOptions]);
 
-  const inputTextFormatted = parameterize(inputText);
-  const isInputTextUnique =
-    inputTextFormatted &&
-    !optionValues.includes(inputTextFormatted) &&
-    !selectedOptions.includes(inputTextFormatted);
+  const inputTextFormatted = shouldParameterize
+    ? parameterize(inputText)
+    : inputText.trim();
+  const isInputTextUnique = useMemo(() => {
+    if (shouldParameterize) {
+      // Check already-parameterized values
+      return inputTextFormatted &&
+      !optionValues.includes(inputTextFormatted) &&
+      !selectedOptions.includes(inputTextFormatted);
+    } else {
+      // Parameterize for check only
+      const inputTextParameterized = parameterize(inputTextFormatted);
+      return inputTextFormatted &&
+      !optionValues
+        .map(value => parameterize(value))
+        .includes((inputTextParameterized)) &&
+      !selectedOptions
+        .map(value => parameterize(value))
+        .includes(inputTextParameterized);
+    }
+  }, [shouldParameterize, inputTextFormatted, optionValues, selectedOptions]);
 
   const optionsFiltered = useMemo<AnnotatedTag[]>(() => hasReachedLimit
-    ? [{ value: limitValidationMessage ?? `Tag limit reached (${limit})` }]
-    : (isInputTextUnique
+    ? [{ value: limitValidationMessage ?? `Limit reached (${limit})` }]
+    : (isInputTextUnique && allowNewValues
       ? [{ value: `${CREATE_LABEL} "${inputTextFormatted}"` }]
       : []
     ).concat(options
-      .filter(({ value }) =>
-        !selectedOptions.includes(value) &&
-        (
+      .filter(({ value, label }) =>{
+        // Make value and key searchable
+        const key = `${value}-${label}`;
+        return !selectedOptions.includes(key) && (
           !inputTextFormatted ||
-          value.includes(inputTextFormatted)
-        )))
+          (shouldParameterize
+            ? key.includes(inputTextFormatted)
+            : (parameterize(key)).includes(parameterize(inputTextFormatted)))
+        );
+      }))
   , [
     hasReachedLimit,
     inputTextFormatted,
     isInputTextUnique,
+    allowNewValues,
     limit,
     limitValidationMessage,
     options,
     selectedOptions,
+    shouldParameterize,
   ]);
 
   const hideMenu = useCallback((shouldBlurInput?: boolean) => {
@@ -110,7 +144,9 @@ export default function TagInput({
       .map(option => option.startsWith(CREATE_LABEL)
         ? option.match(new RegExp(`^${CREATE_LABEL} "(.+)"$`))?.[1] ?? option
         : option)
-      .map(option => parameterize(option))
+      .map(option => shouldParameterize
+        ? parameterize(option)
+        : option)
       .filter(option => !selectedOptions.includes(option));
 
     if (optionsToAdd.length > 0) {
@@ -136,19 +172,28 @@ export default function TagInput({
     } else {
       inputRef.current?.focus();
     }
-  }, [limit, behaveAsDropdown, selectedOptions, onChange, hideMenu]);
+  }, [
+    limit,
+    behaveAsDropdown,
+    selectedOptions,
+    shouldParameterize,
+    onChange,
+    hideMenu,
+  ]);
 
   const removeOption = useCallback((option: string) => {
-    onChange?.(selectedOptions.filter(o =>
-      o !== parameterize(option)).join(','));
+    onChange?.(selectedOptions
+      .filter(o => o !== (shouldParameterize ? parameterize(option) : option))
+      .join(','));
     setSelectedOptionIndex(undefined);
     inputRef.current?.focus();
-  }, [onChange, selectedOptions]);
+  }, [shouldParameterize, onChange, selectedOptions]);
 
   // Show options when input text changes
   useEffect(() => {
     if (inputText) {
       if (inputText.includes(',')) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         addOptions(inputText.split(','));
       } else {
         setShouldShowMenu(true);
@@ -172,68 +217,66 @@ export default function TagInput({
     const listener = (e: KeyboardEvent) => {
       // Keys which always trap focus
       switch (e.key) {
-      case 'ArrowDown':
-      case 'ArrowUp':
-      case 'Escape':
-        e.stopImmediatePropagation();
-        e.preventDefault();
-      }
-      switch (e.key) {
-      case 'Enter':
-        // Only trap focus if there are options to select
-        // otherwise allow form to submit
-        if (
-          shouldShowMenu &&
-          optionsFiltered.length > 0
-        ) {
+        case 'ArrowDown':
+        case 'ArrowUp':
+        case 'Escape':
           e.stopImmediatePropagation();
           e.preventDefault();
-          if (!hasReachedLimit) {
-            addOptions([optionsFiltered[selectedOptionIndex ?? 0].value]);
-          }
-        }
-        break;
-      case 'ArrowDown':
-        if (shouldShowMenu) {
-          setSelectedOptionIndex(i => {
-            if (i === undefined) {
-              return optionsFiltered.length > 1 ? 1 : 0;
-            } else if (i >= optionsFiltered.length - 1) {
-              return 0;
-            } else {
-              return i + 1;
-            }
-          });
-        } else {
-          setShouldShowMenu(true);
-        }
-        break;
-      case 'ArrowUp':
-        setSelectedOptionIndex(i => {
+      }
+      switch (e.key) {
+        case 'Enter':
+          // Only trap focus if there are options to select
+          // otherwise allow form to submit
           if (
-            document.activeElement === inputRef.current &&
+            shouldShowMenu &&
             optionsFiltered.length > 0
           ) {
-            return optionsFiltered.length - 1;
-          } else if (i === undefined || i === 0) {
-            inputRef.current?.focus();
-            return undefined;
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            if (!hasReachedLimit) {
+              addOptions([optionsFiltered[selectedOptionIndex ?? 0].value]);
+            }
+          }
+          break;
+        case 'ArrowDown':
+          if (shouldShowMenu) {
+            setSelectedOptionIndex(i => {
+              if (i === undefined) {
+                return optionsFiltered.length > 1 ? 1 : 0;
+              } else if (i >= optionsFiltered.length - 1) {
+                return 0;
+              } else {
+                return i + 1;
+              }
+            });
           } else {
-            return i - 1;
+            setShouldShowMenu(true);
           }
-        });
-        break;
-      case 'Backspace':
-        if (inputText === '' && selectedOptions.length > 0) {
-          removeOption(selectedOptions[selectedOptions.length - 1]);
-          if (!showMenuOnDelete) {
-            hideMenu();
+          break;
+        case 'ArrowUp':
+          setSelectedOptionIndex(i => {
+            if (
+              document.activeElement === inputRef.current &&
+              optionsFiltered.length > 0
+            ) {
+              return optionsFiltered.length - 1;
+            } else if (i === undefined || i === 0) {
+              inputRef.current?.focus();
+              return undefined;
+            } else {
+              return i - 1;
+            }
+          });
+          break;
+        case 'Backspace':
+          if (inputText === '' && selectedOptions.length > 0) {
+            removeOption(selectedOptions[selectedOptions.length - 1]);
+            if (!showMenuOnDelete) { hideMenu(); }
           }
-        }
-        break;
-      case 'Escape':
-        hideMenu(true);
-        break;
+          break;
+        case 'Escape':
+          hideMenu(true);
+          break;
       }
     };
 
@@ -261,7 +304,7 @@ export default function TagInput({
       <span className="truncate">
         {option?.label ?? value}
       </span>
-      {icon && <span className="text-medium">
+      {icon && <span className="text-medium shrink-0">
         {icon}
       </span>}
     </>;
@@ -275,9 +318,12 @@ export default function TagInput({
       onBlur={e => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
           // Capture text on blur if limit not yet reached
-          if (inputText && !hasReachedLimit) {
+          if (inputText && !hasReachedLimit && allowNewValues) {
             addOptions([inputText]);
-          } else {
+          } else if (allowNewValues) {
+            // Only clear text when there's the possibility of
+            // explicity adding arbitrary values, i.e., when it's not
+            // used as autocomplete
             setInputText('');
           }
           hideMenu();
@@ -323,11 +369,12 @@ export default function TagInput({
                 'px-1.5 py-0.5',
                 'bg-gray-200/60 dark:bg-gray-800',
                 'active:bg-gray-200 dark:active:bg-gray-900',
-                'rounded-xs',
+                'rounded-sm',
               )}
               onClick={() => removeOption(option)}
             >
-              {renderTag(option)}
+              {defaultIconSelected}
+              {renderTag(labelForValueOverride?.(option) || option)}
             </span>)}
         <input
           id={id}
@@ -342,9 +389,13 @@ export default function TagInput({
           )}
           size={10}
           value={inputText}
-          onChange={e => setInputText(e.target.value)}
+          onChange={e => {
+            setInputText(e.target.value);
+            onInputTextChange?.(e.target.value);
+          }}
           autoComplete="off"
           autoCapitalize="off"
+          autoCorrect="off"
           readOnly={readOnly}
           placeholder={selectedOptions.length === 0 ? placeholder : undefined}
           onFocus={() => setSelectedOptionIndex(undefined)}
@@ -358,6 +409,7 @@ export default function TagInput({
           role="combobox"
         />
         <input type="hidden" name={name} value={value} />
+        {accessory}
       </div>
       <div className="relative">
         {shouldShowMenu && optionsFiltered.length > 0 &&
@@ -415,7 +467,7 @@ export default function TagInput({
                   </span>
                   {annotation &&
                     <span
-                      className="whitespace-nowrap text-dim text-sm"
+                      className="truncate text-dim text-sm"
                       aria-label={annotationAria}
                     >
                       <span aria-hidden={Boolean(annotationAria)}>

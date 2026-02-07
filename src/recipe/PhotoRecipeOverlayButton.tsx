@@ -23,6 +23,7 @@ export default function PhotoRecipeOverlayButton({
     <Tooltip content={appText.tooltip.recipeInfo}>
       <button
         ref={ref}
+        type="button"
         onClick={() => {
           toggleRecipeOverlay?.();
           // Avoid unexpected tooltip trigger

@@ -19,7 +19,7 @@ export default async function AdminRecipeBadge({
     <div className={clsx(
       'inline-flex items-center gap-2',
     )}>
-      <PhotoRecipe {...{ recipe }} />
+      <PhotoRecipe {...{ recipe }} hoverType="image" />
       <div className="text-dim uppercase">
         <span>{count}</span>
         <span className="hidden xs:inline-block">

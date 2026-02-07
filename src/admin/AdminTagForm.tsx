@@ -2,12 +2,12 @@
 
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import Link from 'next/link';
-import { PATH_ADMIN_TAGS } from '@/app/paths';
-import FieldSetWithStatus from '@/components/FieldSetWithStatus';
+import { PATH_ADMIN_TAGS } from '@/app/path';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import { ReactNode, useMemo, useState } from 'react';
 import { renamePhotoTagGloballyAction } from '@/photo/actions';
 import { parameterize } from '@/utility/string';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 
 export default function AdminTagForm({
   tag,
@@ -34,7 +34,7 @@ export default function AdminTagForm({
       action={renamePhotoTagGloballyAction}
       className="space-y-8"
     >
-      <FieldSetWithStatus
+      <FieldsetWithStatus
         label="New Tag Name"
         value={updatedTagRaw}
         onChange={setUpdatedTagRaw}

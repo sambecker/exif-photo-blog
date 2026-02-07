@@ -17,6 +17,7 @@ export default function useTitleCaptionAiImageQuery(
   const [caption, setCaption] = useState('');
   useEffect(() => {
     const { title, caption } = parseTitleAndCaption(text);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTitle(title);
     setCaption(caption);
   }, [text]);

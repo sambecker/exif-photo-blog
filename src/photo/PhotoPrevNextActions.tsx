@@ -9,8 +9,8 @@ import {
 } from '@/photo';
 import { PhotoSetCategory } from '../category';
 import PhotoLink from './PhotoLink';
-import { pathForAdminPhotoEdit, pathForPhoto } from '@/app/paths';
-import { useAppState } from '@/state/AppState';
+import { pathForAdminPhotoEdit, pathForPhoto } from '@/app/path';
+import { useAppState } from '@/app/AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import { clsx } from 'clsx/lite';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
@@ -20,7 +20,7 @@ import {
   deletePhotoAction,
   syncPhotoAction,
   toggleFavoritePhotoAction,
-  toggleHidePhotoAction,
+  togglePrivatePhotoAction,
 } from './actions';
 import { isPhotoFav } from '@/tag';
 import Tooltip from '@/components/Tooltip';
@@ -56,7 +56,7 @@ export default function PhotoPrevNextActions({
   const photoTitle = photo
     ? photo.title
       ? `'${photo.title}'`
-      : 'photo'
+      : appText.photo.photo.toLocaleLowerCase()
     : undefined;
   const downloadUrl = photo?.url;
   const downloadFileName = photo
@@ -65,11 +65,11 @@ export default function PhotoPrevNextActions({
 
   const toggleFavorite = useCallback(() => {
     if (photo?.id) { return toggleFavoritePhotoAction(photo.id); }
-  }, [photo?.id]);
+  }, [photo]);
 
   const toggleHidden = useCallback(() => {
-    if (photo?.id) { return toggleHidePhotoAction(photo.id); }
-  }, [photo?.id]);
+    if (photo?.id) { return togglePrivatePhotoAction(photo.id); }
+  }, [photo]);
 
   const navigateToPhotoEdit = useNavigateOrRunActionWithToast({
     pathOrAction: photo ? pathForAdminPhotoEdit(photo) : undefined,
@@ -99,7 +99,7 @@ export default function PhotoPrevNextActions({
   const syncPhoto = useNavigateOrRunActionWithToast({
     pathOrAction: useCallback(() => {
       if (photo?.id) { return syncPhotoAction(photo.id); }
-    }, [photo?.id]),
+    }, [photo]),
     toastMessage: `Syncing ${photoTitle} ...`,
   });
 
@@ -108,7 +108,7 @@ export default function PhotoPrevNextActions({
       if (photo?.id && photo.url) {
         return deletePhotoAction(photo.id, photo.url, true);
       }
-    }, [photo?.id, photo?.url]),
+    }, [photo]),
     toastMessage: `Deleting ${photoTitle} ...`,
   });
 
@@ -129,72 +129,72 @@ export default function PhotoPrevNextActions({
   const onKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.metaKey) {
       switch (e.key.toUpperCase()) {
-      case KEY_COMMANDS.delete[1]:
-        if (isUserSignedIn) {
-          deletePhoto();
-        }
-        break;
+        case KEY_COMMANDS.delete[1]:
+          if (isUserSignedIn) {
+            deletePhoto();
+          }
+          break;
       }
     } else {
       switch (e.key.toUpperCase()) {
       // Public commands
-      case KEY_COMMANDS.prev[0]:
-      case KEY_COMMANDS.prev[1]:
-        if (pathPrevious) {
-          setNextPhotoAnimation?.(ANIMATION_RIGHT);
-          refPrevious.current?.click();
-        }
-        break;
-      case KEY_COMMANDS.next[0]:
-      case KEY_COMMANDS.next[1]:
-        if (pathNext) {
-          setNextPhotoAnimation?.(ANIMATION_LEFT);
-          refNext.current?.click();
-        }
-        break;
-      // Admin commands
-      case KEY_COMMANDS.edit:
-        if (isUserSignedIn) {
-          navigateToPhotoEdit();
-        }
-        break;
-      case KEY_COMMANDS.favorite:
-        if (isUserSignedIn && photo && !isPhotoFav(photo)) {
-          favoritePhoto();
-        }
-        break;
-      case KEY_COMMANDS.unfavorite:
-        if (isUserSignedIn && photo && isPhotoFav(photo)) {
-          unfavoritePhoto();
-        }
-        break;
-      case KEY_COMMANDS.toggleHide:
-        if (isUserSignedIn && photo) {
-          if (photo.hidden) {
-            unhidePhoto();
-          } else {
-            hidePhoto();
+        case KEY_COMMANDS.prev[0]:
+        case KEY_COMMANDS.prev[1]:
+          if (pathPrevious) {
+            setNextPhotoAnimation?.(ANIMATION_RIGHT);
+            refPrevious.current?.click();
           }
-        }
-        break;
-      case KEY_COMMANDS.download:
-        if (
-          (isUserSignedIn || ALLOW_PUBLIC_DOWNLOADS) &&
+          break;
+        case KEY_COMMANDS.next[0]:
+        case KEY_COMMANDS.next[1]:
+          if (pathNext) {
+            setNextPhotoAnimation?.(ANIMATION_LEFT);
+            refNext.current?.click();
+          }
+          break;
+          // Admin commands
+        case KEY_COMMANDS.edit:
+          if (isUserSignedIn) {
+            navigateToPhotoEdit();
+          }
+          break;
+        case KEY_COMMANDS.favorite:
+          if (isUserSignedIn && photo && !isPhotoFav(photo)) {
+            favoritePhoto();
+          }
+          break;
+        case KEY_COMMANDS.unfavorite:
+          if (isUserSignedIn && photo && isPhotoFav(photo)) {
+            unfavoritePhoto();
+          }
+          break;
+        case KEY_COMMANDS.togglePrivate:
+          if (isUserSignedIn && photo) {
+            if (photo.hidden) {
+              unhidePhoto();
+            } else {
+              hidePhoto();
+            }
+          }
+          break;
+        case KEY_COMMANDS.download:
+          if (
+            (isUserSignedIn || ALLOW_PUBLIC_DOWNLOADS) &&
           downloadUrl &&
           downloadFileName
-        ) {
-          downloadFileFromBrowser(downloadUrl, downloadFileName);
-        }
-        break;
-      case KEY_COMMANDS.sync:
-        if (
-          isUserSignedIn &&
-          photo &&
-          window.confirm(syncPhotoConfirmText(photo, hasAiTextGeneration))
-        ) {
-          syncPhoto();
-        }
-        break;
+          ) {
+            downloadFileFromBrowser(downloadUrl, downloadFileName);
+          }
+          break;
+        case KEY_COMMANDS.sync:
+          if (
+            isUserSignedIn &&
+            photo &&
+            window.confirm(syncPhotoConfirmText(photo, hasAiTextGeneration))
+          ) {
+            syncPhoto();
+          }
+          break;
       };
     }
   }, [

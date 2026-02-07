@@ -1,21 +1,31 @@
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { FlatCompat } from '@eslint/eslintrc';
+import { defineConfig, globalIgnores } from 'eslint/config';
+import nextVitals from 'eslint-config-next/core-web-vitals';
+import nextTs from 'eslint-config-next/typescript';
+import stylistic from '@stylistic/eslint-plugin';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-const eslintConfig = [
-  ...compat.extends('next/core-web-vitals', 'next/typescript'), {
+const eslintConfig = defineConfig([
+  ...nextVitals,
+  ...nextTs,
+  // Override default ignores of eslint-config-next.
+  globalIgnores([
+    // Default ignores of eslint-config-next:
+    '.next/**',
+    'out/**',
+    'build/**',
+    'next-env.d.ts',
+  ]), {
+    plugins: {
+      '@stylistic': stylistic,
+    },
     rules: {
+      // Disable rule during Next.js 16 migration
+      'react-hooks/refs': 'off',
       '@next/next/no-img-element': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-require-imports': 'off',
+      '@stylistic/indent': ['warn', 2],
       'no-unused-expressions': ['warn'],
+      'no-duplicate-imports': ['warn'],
       '@typescript-eslint/no-unused-vars': [
         'warn', {
           'argsIgnorePattern': '^_',
@@ -25,10 +35,6 @@ const eslintConfig = [
       'comma-dangle': [
         'warn',
         'always-multiline',
-      ],
-      'indent': [
-        'warn',
-        2,
       ],
       'linebreak-style': [
         'warn',
@@ -47,6 +53,8 @@ const eslintConfig = [
         { 'code': 80 },
       ],
     },
-  }];
+  },
+]);
 
 export default eslintConfig;
+

@@ -1,6 +1,6 @@
 'use client';
 
-import { PATH_OG } from '@/app/paths';
+import { PATH_OG } from '@/app/path';
 import InfinitePhotoScroll from './InfinitePhotoScroll';
 import StaggeredOgPhotos from './StaggeredOgPhotos';
 
@@ -17,8 +17,9 @@ export default function StaggeredOgPhotosInfinite({
       initialOffset={initialOffset}
       itemsPerPage={itemsPerPage}
     >
-      {({ photos, onLastPhotoVisible }) =>
+      {({ key, photos, onLastPhotoVisible }) =>
         <StaggeredOgPhotos
+          key={key}
           photos={photos}
           onLastPhotoVisible={onLastPhotoVisible}
         />}

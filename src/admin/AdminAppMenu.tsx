@@ -1,7 +1,7 @@
 'use client';
 
-import MoreMenu from '@/components/more/MoreMenu';
 import {
+  PATH_ADMIN_ALBUMS,
   PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_INSIGHTS,
   PATH_ADMIN_PHOTOS,
@@ -9,10 +9,9 @@ import {
   PATH_ADMIN_RECIPES,
   PATH_ADMIN_TAGS,
   PATH_ADMIN_UPLOADS,
-  PATH_GRID_INFERRED,
-} from '@/app/paths';
-import { useAppState } from '@/state/AppState';
-import { IoArrowDown, IoArrowUp, IoCloseSharp } from 'react-icons/io5';
+} from '@/app/path';
+import { useAppState } from '@/app/AppState';
+import { IoArrowDown, IoArrowUp } from 'react-icons/io5';
 import { clsx } from 'clsx/lite';
 import AdminAppInfoIcon from './AdminAppInfoIcon';
 import { signOutAction } from '@/auth/actions';
@@ -30,55 +29,56 @@ import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 import MoreMenuItem from '@/components/more/MoreMenuItem';
 import Spinner from '@/components/Spinner';
 import { useAppText } from '@/i18n/state/client';
+import SwitcherItemMenu from '@/components/switcher/SwitcherItemMenu';
+import { MoreMenuSection } from '@/components/more/MoreMenu';
+import { FiXSquare } from 'react-icons/fi';
+import { useSelectPhotosState } from './select/SelectPhotosState';
+import IconAlbum from '@/components/icons/IconAlbum';
 
 export default function AdminAppMenu({
-  active,
-  animateMenuClose,
   isOpen,
   setIsOpen,
-  className,
 }: {
-  active?: boolean
-  animateMenuClose?: boolean
   isOpen?: boolean
   setIsOpen?: (isOpen: boolean) => void
-  className?: string
 }) {
   const {
     photosCountTotal = 0,
     photosCountNeedSync = 0,
     uploadsCount = 0,
+    albumsCount = 0,
     tagsCount = 0,
     recipesCount = 0,
-    selectedPhotoIds,
     isLoadingAdminData,
     startUpload,
-    setSelectedPhotoIds,
     refreshAdminData,
     clearAuthStateAndRedirectIfNecessary,
   } = useAppState();
 
-  const appText = useAppText();
+  const {
+    isSelectingPhotos,
+    startSelectingPhotos,
+    stopSelectingPhotos,
+  } = useSelectPhotosState();
 
-  const isSelecting = selectedPhotoIds !== undefined;
+  const appText = useAppText();
 
   const isAltPressed = useIsKeyBeingPressed('alt');
 
   const showAppInsightsLink = photosCountTotal > 0 && !isAltPressed;
 
-  const sectionUpload: ComponentProps<typeof MoreMenuItem>[] =
-    useMemo(() => ([{
-      label: appText.admin.uploadPhotos,
-      icon: <IconUpload
-        size={15}
-        className="translate-x-[0.5px] translate-y-[0.5px]"
-      />,
-      annotation: isLoadingAdminData &&
-        <Spinner className="translate-y-[1.5px]" />,
-      action: startUpload,
-    }]), [appText, isLoadingAdminData, startUpload]);
+  const sectionUpload: MoreMenuSection = useMemo(() => ({ items: [{
+    label: appText.admin.uploadPhotos,
+    icon: <IconUpload
+      size={15}
+      className="translate-x-[0.5px] translate-y-[0.5px]"
+    />,
+    annotation: isLoadingAdminData &&
+      <Spinner className="translate-y-[1.5px]" />,
+    action: startUpload,
+  }]}), [appText, isLoadingAdminData, startUpload]);
 
-  const sectionMain: ComponentProps<typeof MoreMenuItem>[] = useMemo(() => {
+  const sectionMain: MoreMenuSection = useMemo(() => {
     const items: ComponentProps<typeof MoreMenuItem>[] = [];
 
     if (uploadsCount) {
@@ -86,8 +86,8 @@ export default function AdminAppMenu({
         label: appText.admin.uploadPlural,
         annotation: `${uploadsCount}`,
         icon: <IconFolder
-          size={16}
-          className="translate-x-[1px] translate-y-[1px]"
+          size={15}
+          className="translate-x-[0.5px] translate-y-[0.5px]"
         />,
         href: PATH_ADMIN_UPLOADS,
       });
@@ -96,7 +96,7 @@ export default function AdminAppMenu({
       items.push({
         label: appText.admin.updatePlural,
         annotation: <>
-          <span className="mr-3">
+          <span className="mr-3 text-blue-500">
             {photosCountNeedSync}
           </span>
           <InsightsIndicatorDot
@@ -120,9 +120,20 @@ export default function AdminAppMenu({
         },
         icon: <IconPhoto
           size={15}
-          className="translate-x-[-0.5px] translate-y-[1px]"
+          className="translate-x-[-0.5px] translate-y-[0.5px]"
         />,
         href: PATH_ADMIN_PHOTOS,
+      });
+    }
+    if (albumsCount) {
+      items.push({
+        label: appText.admin.manageAlbums,
+        annotation: `${albumsCount}`,
+        icon: <IconAlbum
+          size={15}
+          className="translate-x-[-0.5px] translate-y-[0.5px]"
+        />,
+        href: PATH_ADMIN_ALBUMS,
       });
     }
     if (tagsCount) {
@@ -142,37 +153,28 @@ export default function AdminAppMenu({
         annotation: `${recipesCount}`,
         icon: <IconRecipe
           size={17}
-          className="translate-x-[-0.5px] translate-y-[1px]"
+          className="translate-x-[-0.5px]"
         />,
         href: PATH_ADMIN_RECIPES,
       });
     }
     if (photosCountTotal) {
       items.push({
-        label: isSelecting
-          ? appText.admin.batchExitEdit
-          : appText.admin.batchEditShort,
-        icon: isSelecting
-          ? <IoCloseSharp
-            size={18}
-            className="translate-x-[-1px] translate-y-[1px]"
+        label: isSelectingPhotos
+          ? appText.admin.selectPhotosExit
+          : appText.admin.selectPhotos,
+        icon: isSelectingPhotos
+          ? <FiXSquare
+            size={15}
+            className="translate-x-[-0.75px] translate-y-[0.5px]"
           />
           : <IoMdCheckboxOutline
             size={16}
-            className="translate-x-[-0.5px]"
+            className="translate-x-[-0.5px] translate-y-[0.5px]"
           />,
-        href: PATH_GRID_INFERRED,
-        action: () => {
-          if (isSelecting) {
-            setSelectedPhotoIds?.(undefined);
-          } else {
-            setSelectedPhotoIds?.([]);
-          }
-          if (document.activeElement instanceof HTMLElement) {
-            document.activeElement.blur();
-          }
-        },
-        shouldPreventDefault: false,
+        action: isSelectingPhotos
+          ? stopSelectingPhotos
+          : startSelectingPhotos,
       });
     }
     items.push({
@@ -181,48 +183,46 @@ export default function AdminAppMenu({
         : appText.admin.appConfig,
       icon: <AdminAppInfoIcon
         size="small"
-        className="translate-x-[-0.5px] translate-y-[0.5px]"
+        className="translate-x-[-0.5px]"
       />,
       href: showAppInsightsLink
         ? PATH_ADMIN_INSIGHTS
         : PATH_ADMIN_CONFIGURATION,
     });
 
-    return items;
+    return { items };
   }, [
     appText,
-    isSelecting,
+    isSelectingPhotos,
+    startSelectingPhotos,
+    stopSelectingPhotos,
     photosCountNeedSync,
     photosCountTotal,
     recipesCount,
-    setSelectedPhotoIds,
     showAppInsightsLink,
+    albumsCount,
     tagsCount,
     uploadsCount,
   ]);
 
-  const sectionSignOut: ComponentProps<typeof MoreMenuItem>[] =
-    useMemo(() => ([{
+  const sectionSignOut: MoreMenuSection = useMemo(() => ({
+    items: [{
       label: appText.auth.signOut,
       icon: <IconSignOut size={15} />,
       action: () => signOutAction().then(clearAuthStateAndRedirectIfNecessary),
-    }]), [appText.auth.signOut, clearAuthStateAndRedirectIfNecessary]);
+    }],
+  }), [appText.auth.signOut, clearAuthStateAndRedirectIfNecessary]);
 
   const sections = useMemo(() =>
     [sectionUpload, sectionMain, sectionSignOut]
   , [sectionUpload, sectionMain, sectionSignOut]);
 
   return (
-    <MoreMenu
+    <SwitcherItemMenu
       {...{ isOpen, setIsOpen }}
-      icon={<div className={clsx(
-        'w-[28px] h-[28px]',
-        'overflow-hidden',
-      )}>
+      icon={<div className="w-[28px] h-[28px] overflow-hidden">
         <div className={clsx(
-          'flex flex-col items-center justify-center gap-2',
-          'relative transition-transform',
-          animateMenuClose ? 'duration-300' : 'duration-0',
+          'relative flex flex-col items-center justify-center gap-2',
           'translate-y-[-18px]',
         )}>
           <IoArrowDown size={16} className="shrink-0" />
@@ -231,30 +231,14 @@ export default function AdminAppMenu({
       </div>}
       align="start"
       sideOffset={12}
-      alignOffset={-85}
+      alignOffset={-84}
       onOpen={refreshAdminData}
-      className={clsx(
-        'outline-medium',
-        className,
-      )}
-      classNameButton={clsx(
-        'p-0!',
-        'w-full h-full',
-        'flex items-center justify-center',
-        'hover:bg-transparent dark:hover:bg-transparent',
-        'active:bg-transparent dark:active:bg-transparent',
-        'rounded-none focus:outline-none',
-        active
-          ? 'text-black dark:text-white'
-          : 'text-gray-400 dark:text-gray-600',
-      )}
-      classNameButtonOpen={clsx(
-        'bg-dim text-main!',
-        '[&>*>*]:translate-y-[6px]',
-        !animateMenuClose && '[&>*>*]:duration-300',
-      )}
       sections={sections}
       ariaLabel="Admin Menu"
+      classNameButtonOpen={clsx(
+        '[&>*>*]:translate-y-[6px]',
+        '[&>*>*]:duration-300',
+      )}
     />
   );
 }

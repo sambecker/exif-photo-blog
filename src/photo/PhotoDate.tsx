@@ -35,12 +35,12 @@ export default function PhotoDate({
 
   const getTitleLabel = () => {
     switch (dateType) {
-    case 'takenAt':
-      return appText.photo.taken;
-    case 'createdAt':
-      return appText.photo.created;
-    case 'updatedAt':
-      return appText.photo.updated;
+      case 'takenAt':
+        return appText.photo.taken;
+      case 'createdAt':
+        return appText.photo.created;
+      case 'updatedAt':
+        return appText.photo.updated;
     }
   };
 

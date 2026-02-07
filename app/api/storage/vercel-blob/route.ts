@@ -1,12 +1,12 @@
 import { auth } from '@/auth/server';
-import { revalidateAdminPaths, revalidatePhotosKey } from '@/photo/cache';
+import { revalidateAdminPaths, revalidatePhotosKey } from '@/cache';
 import {
   ACCEPTED_PHOTO_FILE_TYPES,
   MAX_PHOTO_UPLOAD_SIZE_IN_BYTES,
 } from '@/photo';
-import { isUploadPathnameValid } from '@/platforms/storage';
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { NextResponse } from 'next/server';
+import { isUploadPathnameValid } from '@/photo/storage';
 
 export async function POST(request: Request): Promise<NextResponse> {
   const body: HandleUploadBody = await request.json();

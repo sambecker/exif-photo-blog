@@ -1,7 +1,7 @@
 import AdminChildPage from '@/components/AdminChildPage';
 import { redirect } from 'next/navigation';
 import { getPhotosCached, getPhotosMetaCached } from '@/photo/cache';
-import { PATH_ADMIN, PATH_ADMIN_RECIPES, pathForRecipe } from '@/app/paths';
+import { PATH_ADMIN, PATH_ADMIN_RECIPES, pathForRecipe } from '@/app/path';
 import PhotoLightbox from '@/photo/PhotoLightbox';
 import AdminRecipeBadge from '@/admin/AdminRecipeBadge';
 import AdminRecipeForm from '@/admin/AdminRecipeForm';
@@ -46,7 +46,7 @@ export default async function RecipePageEdit({
         />
       }
     >
-      <AdminRecipeForm {...{ recipe, photos }}>
+      <AdminRecipeForm {...{ recipe }}>
         <PhotoLightbox
           {...{ count, photos, recipe }}
           maxPhotosToShow={MAX_PHOTO_TO_SHOW}

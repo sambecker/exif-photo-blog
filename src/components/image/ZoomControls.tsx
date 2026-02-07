@@ -16,8 +16,8 @@ export default function ZoomControls({
 }: {
   ref?: RefObject<ZoomControlsRef | null>
   children: ReactNode
-  selectImageElement?:
-    (container: HTMLElement | null) => HTMLImageElement | null
+  selectImageElement?: (container: HTMLElement | null) =>
+    HTMLImageElement | null
   isEnabled?: boolean
 }) {
   const refImageContainer = useRef<HTMLDivElement>(null);
@@ -41,6 +41,7 @@ export default function ZoomControls({
 
   const button = 
     <button
+      type="button"
       className={clsx(
         'fixed top-[20px] right-[70px]',
         'size-10 items-center justify-center',

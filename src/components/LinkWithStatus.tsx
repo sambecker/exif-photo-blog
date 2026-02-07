@@ -11,13 +11,17 @@ export default function LinkWithStatus({
   loadingClassName,
   isLoading: isLoadingProp = false,
   setIsLoading: setIsLoadingProp,
+  onLoad,
+  flickerThreshold,
   ...props
-}: Omit<ComponentProps<typeof Link>, 'children'> & {
+}: Omit<ComponentProps<typeof Link>, 'children' | 'onLoad'> & {
   children: ReactNode | ((props: { isLoading: boolean }) => ReactNode)
   loadingClassName?: string
   // For hoisting state to a parent component, e.g., <EntityLink />
   isLoading?: boolean
   setIsLoading?: (isLoading: boolean) => void
+  onLoad?: () => void
+  flickerThreshold?: number
 }) {
   const [_isLoading, _setIsLoading] = useState(false);
   const isLoading = isLoadingProp || _isLoading;
@@ -36,7 +40,7 @@ export default function LinkWithStatus({
       isLoading && loadingClassName,
     )}
   >
-    <LinkWithStatusChild {...{ setIsLoading }}>
+    <LinkWithStatusChild {...{ setIsLoading, flickerThreshold, onLoad }}>
       {typeof children === 'function'
         ? children({ isLoading })
         : children}

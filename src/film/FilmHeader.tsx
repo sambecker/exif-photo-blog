@@ -1,12 +1,12 @@
 'use client';
 
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import { descriptionForFilmPhotos } from '.';
 import PhotoHeader from '@/photo/PhotoHeader';
 import PhotoFilm from '@/film/PhotoFilm';
 import { getRecipePropsFromPhotos } from '@/recipe';
-import { useAppState } from '@/state/AppState';
-import { AI_TEXT_GENERATION_ENABLED } from '@/app/config';
+import { useAppState } from '@/app/AppState';
+import { AI_CONTENT_GENERATION_ENABLED } from '@/app/config';
 import { useAppText } from '@/i18n/state/client';
 
 export default function FilmHeader({
@@ -22,7 +22,7 @@ export default function FilmHeader({
   selectedPhoto?: Photo
   indexNumber?: number
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 }) {
   const { recipeModalProps, setRecipeModalProps } = useAppState();
 
@@ -43,6 +43,7 @@ export default function FilmHeader({
         toggleRecipeOverlay={recipeProps
           ? () => setRecipeModalProps?.(recipeProps)
           : undefined}
+        hoverType="none"
       />}
       entityDescription={descriptionForFilmPhotos(
         photos,
@@ -56,7 +57,7 @@ export default function FilmHeader({
       indexNumber={indexNumber}
       count={count}
       dateRange={dateRange}
-      hasAiTextGeneration={AI_TEXT_GENERATION_ENABLED}
+      hasAiTextGeneration={AI_CONTENT_GENERATION_ENABLED}
       includeShareButton
     />
   );

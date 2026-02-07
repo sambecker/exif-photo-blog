@@ -1,22 +1,22 @@
 import {
   Photo,
-  PhotoDateRange,
+  PhotoDateRangePostgres,
   descriptionForPhotoSet,
   photoQuantityText,
 } from '@/photo';
 import {
   absolutePathForFilm,
   absolutePathForFilmImage,
-} from '@/app/paths';
+} from '@/app/path';
 import {
   FUJIFILM_SIMULATION_FORM_INPUT_OPTIONS,
   labelForFujifilmSimulation,
 } from '@/platforms/fujifilm/simulation';
 import {
-  deparameterize,
-  formatCount,
-  formatCountDescriptive,
-} from '@/utility/string';
+  isStringNikonPictureControl,
+  labelForNikonPictureControl,
+} from '@/platforms/nikon/simulation';
+import { deparameterize } from '@/utility/string';
 import { AnnotatedTag } from '@/photo/form';
 import PhotoFilmIcon from './PhotoFilmIcon';
 import { AppTextState } from '@/i18n/state';
@@ -31,14 +31,19 @@ export const labelForFilm = (film: string) => {
   const simulationLabel = labelForFujifilmSimulation(film as any);
   if (simulationLabel) {
     return simulationLabel;
-  } else {
-    const filmFormatted = deparameterize(film);
-    return {
-      small: filmFormatted,
-      medium: filmFormatted,
-      large: filmFormatted,
-    };
   }
+
+  // Use Nikon Picture Control text when recognized
+  if (isStringNikonPictureControl(film)) {
+    return labelForNikonPictureControl(film);
+  }
+
+  const filmFormatted = deparameterize(film);
+  return {
+    small: filmFormatted,
+    medium: filmFormatted,
+    large: filmFormatted,
+  };
 };
 
 export const sortFilms = (
@@ -75,7 +80,7 @@ export const descriptionForFilmPhotos = (
   appText: AppTextState,
   dateBased?: boolean,
   explicitCount?: number,
-  explicitDateRange?: PhotoDateRange,
+  explicitDateRange?: PhotoDateRangePostgres,
 ) =>
   descriptionForPhotoSet(
     photos,
@@ -91,7 +96,7 @@ export const generateMetaForFilm = (
   photos: Photo[],
   appText: AppTextState,
   explicitCount?: number,
-  explicitDateRange?: PhotoDateRange,
+  explicitDateRange?: PhotoDateRangePostgres,
 ) => ({
   url: absolutePathForFilm(film),
   title: titleForFilm(film, photos, appText, explicitCount),
@@ -109,32 +114,36 @@ export const photoHasFilmData = (photo: Photo) =>
   Boolean(photo.film);
 
 export const convertFilmsForForm = (
-  _films: Films = [],
+  films: Films = [],
   includeAllFujifilmSimulations?: boolean,
+  currentFilm?: string,
+  make?: string,
 ): AnnotatedTag[] => {
-  const films: AnnotatedTag[] = includeAllFujifilmSimulations
-    ? FUJIFILM_SIMULATION_FORM_INPUT_OPTIONS
-      .map(({ value }) => ({ value }))
-    : [];
+  const filmOptions: AnnotatedTag[] = [];
 
-  _films.forEach(({ film, count }) => {
-    const index = films.findIndex(f => f.value === film);
-    const meta =  {
-      annotation: formatCount(count),
-      annotationAria: formatCountDescriptive(count),
-    };
-    if (index === -1) {
-      films.push({ value: film, ...meta });
-    } else {
-      films[index] = { ...films[index], ...meta };
-    }
+  if (currentFilm && !films.some(f => f.film === currentFilm)) {
+    films.push({ film: currentFilm } as FilmWithMeta);
+  }
+
+  films.forEach(item => {
+    filmOptions.push({
+      value: item.film,
+      label: labelForFilm(item.film).large,
+      icon: <PhotoFilmIcon film={item.film} make={make} />,
+    });
   });
 
-  return films
-    .map(film => ({
-      ...film,
-      label: labelForFilm(film.value).large,
-      icon: <PhotoFilmIcon film={film.value} />,
-    }))
-    .sort((a, b) => a.value.localeCompare(b.value));
+  if (includeAllFujifilmSimulations) {
+    FUJIFILM_SIMULATION_FORM_INPUT_OPTIONS.forEach(({ value: simulation }) => {
+      if (!filmOptions.some(option => option.value === simulation)) {
+        filmOptions.push({
+          value: simulation,
+          label: labelForFilm(simulation).large,
+          icon: <PhotoFilmIcon film={simulation} make={make} />,
+        });
+      }
+    });
+  }
+
+  return filmOptions.sort((a, b) => a.value.localeCompare(b.value));
 };

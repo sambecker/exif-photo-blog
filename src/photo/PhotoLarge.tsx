@@ -15,7 +15,7 @@ import AppGrid from '@/components/AppGrid';
 import ImageLarge from '@/components/image/ImageLarge';
 import { clsx } from 'clsx/lite';
 import Link from 'next/link';
-import { pathForFocalLength, pathForPhoto } from '@/app/paths';
+import { pathForFocalLength, pathForPhoto } from '@/app/path';
 import PhotoTags from '@/tag/PhotoTags';
 import ShareButton from '@/share/ShareButton';
 import DownloadButton from '@/components/DownloadButton';
@@ -35,9 +35,9 @@ import {
 import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
 import { useCallback, useMemo, useRef } from 'react';
-import useVisible from '@/utility/useVisible';
+import useVisibility from '@/utility/useVisibility';
 import PhotoDate from './PhotoDate';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { LuExpand } from 'react-icons/lu';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import Tooltip from '@/components/Tooltip';
@@ -49,16 +49,19 @@ import PhotoRecipe from '@/recipe/PhotoRecipe';
 import PhotoLens from '@/lens/PhotoLens';
 import { lensFromPhoto } from '@/lens';
 import MaskedScroll from '@/components/MaskedScroll';
-import useCategoryCountsForPhoto from '@/category/useCategoryCountsForPhoto';
 import { useAppText } from '@/i18n/state/client';
+import { Album } from '@/album';
 
 export default function PhotoLarge({
   photo,
   className,
+  album,
   primaryTag,
   priority,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
   prefetchRelatedLinks = SHOULD_PREFETCH_ALL_LINKS,
+  recent,
+  year,
   revalidatePhoto,
   showTitle = true,
   showTitleAsH1,
@@ -69,8 +72,11 @@ export default function PhotoLarge({
   showZoomControls: _showZoomControls = true,
   shouldZoomOnFKeydown = true,
   shouldShare = true,
+  shouldShareRecents,
+  shouldShareYear,
   shouldShareCamera,
   shouldShareLens,
+  shouldShareAlbum,
   shouldShareTag,
   shouldShareFilm,
   shouldShareRecipe,
@@ -81,10 +87,13 @@ export default function PhotoLarge({
 }: {
   photo: Photo
   className?: string
+  album?: Album
   primaryTag?: string
   priority?: boolean
   prefetch?: boolean
   prefetchRelatedLinks?: boolean
+  recent?: boolean
+  year?: string
   revalidatePhoto?: RevalidatePhoto
   showTitle?: boolean
   showTitleAsH1?: boolean
@@ -95,8 +104,11 @@ export default function PhotoLarge({
   showZoomControls?: boolean
   shouldZoomOnFKeydown?: boolean
   shouldShare?: boolean
+  shouldShareRecents?: boolean
+  shouldShareYear?: boolean
   shouldShareCamera?: boolean
   shouldShareLens?: boolean
+  shouldShareAlbum?: boolean
   shouldShareTag?: boolean
   shouldShareFilm?: boolean
   shouldShareRecipe?: boolean
@@ -118,14 +130,6 @@ export default function PhotoLarge({
   } = useAppState();
 
   const appText = useAppText();
-
-  const {
-    cameraCount,
-    lensCount,
-    tagCounts,
-    recipeCount,
-    filmCount,
-  } = useCategoryCountsForPhoto(photo);
 
   const showZoomControls = _showZoomControls && areZoomControlsShown;
   const selectZoomImageElement = useCallback(
@@ -163,7 +167,7 @@ export default function PhotoLarge({
   const showRecipeContent = showRecipe && shouldShowRecipeDataForPhoto(photo);
   const showFilmContent = showFilm && shouldShowFilmDataForPhoto(photo);
 
-  useVisible({ ref, onVisible });
+  useVisibility({ ref, onVisible });
 
   const hasTitle =
     showTitle &&
@@ -288,6 +292,7 @@ export default function PhotoLarge({
           {renderLargePhoto}
         </Link>}
       classNameSide="relative"
+      sideHiddenOnMobile={false}
       contentSide={
         <div className="md:absolute inset-0 -mt-1">
           <MaskedScroll className="sticky top-4 self-start">
@@ -323,15 +328,12 @@ export default function PhotoLarge({
                               camera={camera}
                               contrast="medium"
                               prefetch={prefetchRelatedLinks}
-                              countOnHover={cameraCount}
                             />}
                           {showLensContent &&
                             <PhotoLens
                               lens={lens}
                               contrast="medium"
                               prefetch={prefetchRelatedLinks}
-                              shortText
-                              countOnHover={lensCount}
                             />}
                         </div>}
                       {showRecipeContent && recipeTitle &&
@@ -340,14 +342,12 @@ export default function PhotoLarge({
                           recipe={recipeTitle}
                           contrast="medium"
                           prefetch={prefetchRelatedLinks}
-                          countOnHover={recipeCount}
                           toggleRecipeOverlay={toggleRecipeOverlay}
                           isShowingRecipeOverlay={isShowingRecipeOverlay}
                         />}
                       {showTagsContent &&
                         <PhotoTags
                           tags={tags}
-                          tagCounts={tagCounts}
                           contrast="medium"
                           prefetch={prefetchRelatedLinks}
                         />}
@@ -406,8 +406,8 @@ export default function PhotoLarge({
                       <PhotoFilm
                         ref={refPhotoFilm}
                         film={photo.film}
+                        make={photo.make}
                         prefetch={prefetchRelatedLinks}
-                        countOnHover={filmCount}
                         {...photo.recipeData && !photo.recipeTitle && {
                           toggleRecipeOverlay,
                           isShowingRecipeOverlay,
@@ -448,6 +448,15 @@ export default function PhotoLarge({
                       <ShareButton
                         tooltip={appText.tooltip.sharePhoto}
                         photo={photo}
+                        recent={shouldShareRecents
+                          ? recent
+                          : undefined}
+                        year={shouldShareYear
+                          ? year
+                          : undefined}
+                        album={shouldShareAlbum
+                          ? album
+                          : undefined}
                         tag={shouldShareTag
                           ? primaryTag
                           : undefined}

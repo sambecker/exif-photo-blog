@@ -1,6 +1,6 @@
 import { unstable_cache } from 'next/cache';
 import { getCountsForCategories, getDataForCategories } from './data';
-import { KEY_PHOTOS } from '@/photo/cache';
+import { KEY_PHOTOS } from '@/cache';
 
 export const getDataForCategoriesCached = unstable_cache(
   getDataForCategories,

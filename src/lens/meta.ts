@@ -1,6 +1,6 @@
 import {
   Photo,
-  PhotoDateRange,
+  PhotoDateRangePostgres,
   descriptionForPhotoSet,
   photoQuantityText,
 } from '@/photo';
@@ -8,7 +8,7 @@ import { Lens, lensFromPhoto, formatLensText } from '.';
 import {
   absolutePathForLens,
   absolutePathForLensImage,
-} from '@/app/paths';
+} from '@/app/path';
 import { AppTextState } from '@/i18n/state';
 
 // Meta functions moved to separate file to avoid
@@ -30,18 +30,17 @@ export const shareTextForLens = (
   lens: Lens,
   photos: Photo[],
   appText: AppTextState,
-) =>
-  [
-    `${appText.category.lens}:`,
-    formatLensText(lensFromPhoto(photos[0], lens)),
-  ].join(' ');
+) => [
+  `${appText.category.lens}:`,
+  formatLensText(lensFromPhoto(photos[0], lens)),
+].join(' ');
 
 export const descriptionForLensPhotos = (
   photos: Photo[],
   appText: AppTextState,
   dateBased?: boolean,
   explicitCount?: number,
-  explicitDateRange?: PhotoDateRange,
+  explicitDateRange?: PhotoDateRangePostgres,
 ) =>
   descriptionForPhotoSet(
     photos,
@@ -57,7 +56,7 @@ export const generateMetaForLens = (
   photos: Photo[],
   appText: AppTextState,
   explicitCount?: number,
-  explicitDateRange?: PhotoDateRange,
+  explicitDateRange?: PhotoDateRangePostgres,
 ) => ({
   url: absolutePathForLens(lens),
   title: titleForLens(lens, photos, appText, explicitCount),

@@ -1,15 +1,21 @@
-import { Photo } from '../photo';
+import { Photo, PhotoDateRangePostgres } from '../photo';
 import { Camera, Cameras } from '@/camera';
-import { PhotoDateRange } from '../photo';
 import { Films } from '@/film';
 import { Lens, Lenses } from '@/lens';
 import { Tags } from '@/tag';
 import { FocalLengths } from '@/focal';
 import { Recipes } from '@/recipe';
+import { Recents } from '@/recents';
+import { Years } from '@/year';
+import { parseCommaSeparatedKeyString } from '@/utility/key';
+import { Album, Albums } from '@/album';
 
-const CATEGORY_KEYS = [
+export const CATEGORY_KEYS = [
+  'recents',
+  'years',
   'cameras',
   'lenses',
+  'albums',
   'tags',
   'recipes',
   'films',
@@ -21,6 +27,8 @@ export type CategoryKey = (typeof CATEGORY_KEYS)[number];
 export type CategoryKeys = CategoryKey[];
 
 export const DEFAULT_CATEGORY_KEYS: CategoryKeys = [
+  'recents',
+  'albums',
   'tags',
   'cameras',
   'lenses',
@@ -28,20 +36,29 @@ export const DEFAULT_CATEGORY_KEYS: CategoryKeys = [
   'films',
 ];
 
+export const parseOrderedCategoriesFromString = (
+  string?: string,
+) =>
+  parseCommaSeparatedKeyString({
+    string,
+    acceptedKeys: CATEGORY_KEYS,
+    defaultKeys: DEFAULT_CATEGORY_KEYS,
+  });
+
 export interface CategoryQueryMeta {
   count: number
   lastModified: Date
 }
 
-export const getHiddenCategories = (keys: CategoryKeys): CategoryKeys =>
-  CATEGORY_KEYS.filter(key => !keys.includes(key));
-
 export const getHiddenDefaultCategories = (keys: CategoryKeys): CategoryKeys =>
   DEFAULT_CATEGORY_KEYS.filter(key => !keys.includes(key));
 
 export interface PhotoSetCategory {
+  recent?: boolean
+  year?: string
   camera?: Camera
   lens?: Lens
+  album?: Album
   tag?: string
   recipe?: string
   film?: string
@@ -49,8 +66,11 @@ export interface PhotoSetCategory {
 }
 
 export interface PhotoSetCategories {
+  recents: Recents
+  years: Years
   cameras: Cameras
   lenses: Lenses
+  albums: Albums
   tags: Tags
   recipes: Recipes
   films: Films
@@ -60,18 +80,8 @@ export interface PhotoSetCategories {
 export interface PhotoSetAttributes {
   photos: Photo[]
   count?: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 }
-
-export const getOrderedCategoriesFromString = (
-  categories?: string,
-): CategoryKeys =>
-  categories
-    ? categories
-      .split(',')
-      .map(category => category.trim().toLocaleLowerCase() as CategoryKey)
-      .filter(category => CATEGORY_KEYS.includes(category))
-    : DEFAULT_CATEGORY_KEYS;
 
 export const sortCategoryByCount = (
   a: { count: number },

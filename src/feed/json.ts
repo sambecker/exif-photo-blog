@@ -1,4 +1,4 @@
-import { absolutePathForPhoto } from '@/app/paths';
+import { absolutePathForPhoto } from '@/app/path';
 import {
   FEED_PHOTO_WIDTH_LARGE,
   FEED_PHOTO_WIDTH_MEDIUM,
@@ -6,11 +6,10 @@ import {
   FeedMedia,
   generateFeedMedia,
   getCoreFeedFields,
-} from '.';
+} from './programmatic';
 import { formatDateFromPostgresString } from '@/utility/date';
 import { Photo } from '@/photo';
-import { BASE_URL, META_DESCRIPTION } from '@/app/config';
-import { META_TITLE } from '@/app/config';
+import { BASE_URL, META_DESCRIPTION, META_TITLE } from '@/app/config';
 
 interface FeedPhotoJson {
   id: string

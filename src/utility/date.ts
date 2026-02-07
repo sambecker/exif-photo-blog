@@ -1,4 +1,4 @@
-import { parseISO, parse, format } from 'date-fns';
+import { parseISO, parse, format, isValid } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
 import { Timezone } from './timezone';
 import { setDefaultDateFnLocale } from '@/i18n';
@@ -50,26 +50,26 @@ export const formatDate = ({
     : DATE_FORMAT_SHORT_PLACEHOLDER;
 
   switch (length) {
-  case 'rss':
-    formatString = DATE_FORMAT_RSS;
-    placeholderString = DATE_FORMAT_RSS_PLACEHOLDER;
-    break;
-  case 'tiny':
-    formatString = DATE_FORMAT_TINY;
-    placeholderString = DATE_FORMAT_TINY_PLACEHOLDER;
-    break;
-  case 'short':
-    formatString = DATE_FORMAT_SHORT;
-    placeholderString = DATE_FORMAT_SHORT_PLACEHOLDER;
-    break;
-  case 'medium':
-    formatString = !hideTime
-      ? DATE_FORMAT_MEDIUM
-      : DATE_FORMAT_SHORT;
-    placeholderString = !hideTime
-      ? DATE_FORMAT_MEDIUM_PLACEHOLDER
-      : DATE_FORMAT_SHORT_PLACEHOLDER;
-    break;
+    case 'rss':
+      formatString = DATE_FORMAT_RSS;
+      placeholderString = DATE_FORMAT_RSS_PLACEHOLDER;
+      break;
+    case 'tiny':
+      formatString = DATE_FORMAT_TINY;
+      placeholderString = DATE_FORMAT_TINY_PLACEHOLDER;
+      break;
+    case 'short':
+      formatString = DATE_FORMAT_SHORT;
+      placeholderString = DATE_FORMAT_SHORT_PLACEHOLDER;
+      break;
+    case 'medium':
+      formatString = !hideTime
+        ? DATE_FORMAT_MEDIUM
+        : DATE_FORMAT_SHORT;
+      placeholderString = !hideTime
+        ? DATE_FORMAT_MEDIUM_PLACEHOLDER
+        : DATE_FORMAT_SHORT_PLACEHOLDER;
+      break;
   }
 
   return showPlaceholder
@@ -101,8 +101,8 @@ const dateFromTimestamp = (timestamp?: AmbiguousTimestamp): Date => {
       ? /.+Z/i.test(timestamp)
         ? new Date(timestamp)
         : new Date(`${timestamp}Z`)
-      : undefined;
-  return date && !isNaN(date.getTime()) ? date : new Date();
+      : timestamp;
+  return isValid(date) ? date as Date : new Date();
 };
 
 const createNaiveDateWithOffset = (

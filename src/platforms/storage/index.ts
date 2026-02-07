@@ -19,6 +19,7 @@ import {
   HAS_AWS_S3_STORAGE,
   HAS_VERCEL_BLOB_STORAGE,
   HAS_CLOUDFLARE_R2_STORAGE,
+  HAS_MINIO_STORAGE,
 } from '@/app/config';
 import { generateNanoid } from '@/utility/nanoid';
 import {
@@ -29,9 +30,15 @@ import {
   cloudflareR2Put,
   isUrlFromCloudflareR2,
 } from './cloudflare-r2';
-import { PATH_API_PRESIGNED_URL } from '@/app/paths';
-
-export const generateStorageId = () => generateNanoid(16);
+import {
+  MINIO_BASE_URL,
+  minioCopy,
+  minioDelete,
+  minioList,
+  minioPut,
+  isUrlFromMinio,
+} from './minio';
+import { PATH_API_PRESIGNED_URL } from '@/app/path';
 
 export type StorageListItem = {
   url: string
@@ -45,21 +52,51 @@ export type StorageListResponse = StorageListItem[];
 export type StorageType =
   'vercel-blob' |
   'aws-s3' |
-  'cloudflare-r2';
+  'cloudflare-r2' |
+  'minio';
+
+export const generateStorageId = () => generateNanoid(16);
+
+export const generateFileNameWithId = (prefix: string) =>
+  `${prefix}-${generateStorageId()}`;
+
+export const getFileNamePartsFromStorageUrl = (url: string) => {
+  const [
+    _,
+    urlBase = '',
+    fileName = '',
+    fileNameBase = '',
+    fileId = '',
+    fileModifier = '',
+    fileExtension = '',
+  ] = url.match(
+    /^(.+)\/((-*[a-z0-9]+-*([a-z0-9]+)-*([a-z0-9]+)*)\.([a-z]{1,4}))$/i,
+  ) ?? [];
+  return {
+    urlBase,
+    fileName,
+    fileNameBase,
+    fileId,
+    fileModifier,
+    fileExtension,
+  };
+};
 
 export const labelForStorage = (type: StorageType): string => {
   switch (type) {
-  case 'vercel-blob': return 'Vercel Blob';
-  case 'cloudflare-r2': return 'Cloudflare R2';
-  case 'aws-s3': return 'AWS S3';
+    case 'vercel-blob': return 'Vercel Blob';
+    case 'cloudflare-r2': return 'Cloudflare R2';
+    case 'aws-s3': return 'AWS S3';
+    case 'minio': return 'MinIO';
   }
 };
 
 export const baseUrlForStorage = (type: StorageType) => {
   switch (type) {
-  case 'vercel-blob': return VERCEL_BLOB_BASE_URL;
-  case 'cloudflare-r2': return CLOUDFLARE_R2_BASE_URL_PUBLIC;
-  case 'aws-s3': return AWS_S3_BASE_URL;
+    case 'vercel-blob': return VERCEL_BLOB_BASE_URL;
+    case 'cloudflare-r2': return CLOUDFLARE_R2_BASE_URL_PUBLIC;
+    case 'aws-s3': return AWS_S3_BASE_URL;
+    case 'minio': return MINIO_BASE_URL;
   }
 };
 
@@ -68,59 +105,22 @@ export const storageTypeFromUrl = (url: string): StorageType => {
     return 'cloudflare-r2';
   } else if (isUrlFromAwsS3(url)) {
     return 'aws-s3';
+  } else if (isUrlFromMinio(url)) {
+    return 'minio';
   } else {
     return 'vercel-blob';
   }
 };
 
-const PREFIX_UPLOAD = 'upload';
-const PREFIX_PHOTO = 'photo';
-
-export const generateRandomFileNameForPhoto = () =>
-  `${PREFIX_PHOTO}-${generateStorageId()}`;
-
-const REGEX_UPLOAD_PATH = new RegExp(
-  `(?:${PREFIX_UPLOAD})\.[a-z]{1,4}`,
-  'i',
-);
-
-const REGEX_UPLOAD_ID = new RegExp(
-  `.${PREFIX_UPLOAD}-([a-z0-9]+)\.[a-z]{1,4}$`,
-  'i',
-);
-
-export const fileNameForStorageUrl = (url: string) => {
-  switch (storageTypeFromUrl(url)) {
-  case 'vercel-blob':
-    return url.replace(`${VERCEL_BLOB_BASE_URL}/`, '');
-  case 'cloudflare-r2':
-    return url.replace(`${CLOUDFLARE_R2_BASE_URL_PUBLIC}/`, '');
-  case 'aws-s3':
-    return url.replace(`${AWS_S3_BASE_URL}/`, '');
-  }
-};
-
-export const getExtensionFromStorageUrl = (url: string) =>
-  url.match(/.([a-z]{1,4})$/i)?.[1];
-
-export const getIdFromStorageUrl = (url: string) =>
-  url.match(REGEX_UPLOAD_ID)?.[1];
-
-export const isUploadPathnameValid = (pathname?: string) =>
-  pathname?.match(REGEX_UPLOAD_PATH);
-
-const getFileNameFromStorageUrl = (url: string) =>
-  (new URL(url).pathname.match(/\/(.+)$/)?.[1]) ?? '';
-
 export const uploadFromClientViaPresignedUrl = async (
   file: File | Blob,
-  fileName: string,
+  fileNameBase: string,
   extension: string,
   addRandomSuffix?: boolean,
 ) => {
   const key = addRandomSuffix
-    ? `${fileName}-${generateStorageId()}.${extension}`
-    : `${fileName}.${extension}`;
+    ? `${fileNameBase}-${generateStorageId()}.${extension}`
+    : `${fileNameBase}.${extension}`;
 
   const url = await fetch(`${PATH_API_PRESIGNED_URL}/${key}`)
     .then((response) => response.text());
@@ -129,27 +129,31 @@ export const uploadFromClientViaPresignedUrl = async (
     .then(() => `${baseUrlForStorage(CURRENT_STORAGE)}/${key}`);
 };
 
-export const uploadPhotoFromClient = async (
+export const uploadFileFromClient = async (
   file: File | Blob,
-  extension = 'jpg',
+  fileNameBase: string,
+  extension: string,
 ) => (
   CURRENT_STORAGE === 'cloudflare-r2' ||
-  CURRENT_STORAGE === 'aws-s3'
+  CURRENT_STORAGE === 'aws-s3' ||
+  CURRENT_STORAGE === 'minio'
 )
-  ? uploadFromClientViaPresignedUrl(file, PREFIX_UPLOAD, extension, true)
-  : vercelBlobUploadFromClient(file, `${PREFIX_UPLOAD}.${extension}`);
+  ? uploadFromClientViaPresignedUrl(file, fileNameBase, extension, true)
+  : vercelBlobUploadFromClient(file, `${fileNameBase}.${extension}`);
 
 export const putFile = (
   file: Buffer,
   fileName: string,
 ) => {
   switch (CURRENT_STORAGE) {
-  case 'vercel-blob':
-    return vercelBlobPut(file, fileName);
-  case 'cloudflare-r2':
-    return cloudflareR2Put(file, fileName);
-  case 'aws-s3':
-    return awsS3Put(file, fileName);
+    case 'vercel-blob':
+      return vercelBlobPut(file, fileName);
+    case 'cloudflare-r2':
+      return cloudflareR2Put(file, fileName);
+    case 'aws-s3':
+      return awsS3Put(file, fileName);
+    case 'minio':
+      return minioPut(file, fileName);
   }
 };
 
@@ -157,37 +161,52 @@ export const copyFile = (
   originUrl: string,
   destinationFileName: string,
 ): Promise<string> => {
+  const { fileName } = getFileNamePartsFromStorageUrl(originUrl);
   switch (storageTypeFromUrl(originUrl)) {
-  case 'vercel-blob':
-    return vercelBlobCopy(
-      originUrl,
-      destinationFileName,
-      false,
-    );
-  case 'cloudflare-r2':
-    return cloudflareR2Copy(
-      getFileNameFromStorageUrl(originUrl),
-      destinationFileName,
-      false,
-    );
-  case 'aws-s3':
-    return awsS3Copy(
-      originUrl,
-      destinationFileName,
-      false,
-    );
+    case 'vercel-blob':
+      return vercelBlobCopy(
+        originUrl,
+        destinationFileName,
+        false,
+      );
+    case 'cloudflare-r2':
+      return cloudflareR2Copy(
+        fileName,
+        destinationFileName,
+        false,
+      );
+    case 'aws-s3':
+      return awsS3Copy(
+        originUrl,
+        destinationFileName,
+        false,
+      );
+    case 'minio':
+      return minioCopy(
+        fileName,
+        destinationFileName,
+        false,
+      );
   }
 };
 
 export const deleteFile = (url: string) => {
+  const { fileName } = getFileNamePartsFromStorageUrl(url);
   switch (storageTypeFromUrl(url)) {
-  case 'vercel-blob':
-    return vercelBlobDelete(url);
-  case 'cloudflare-r2':
-    return cloudflareR2Delete(getFileNameFromStorageUrl(url));
-  case 'aws-s3':
-    return awsS3Delete(getFileNameFromStorageUrl(url));
+    case 'vercel-blob':
+      return vercelBlobDelete(url);
+    case 'cloudflare-r2':
+      return cloudflareR2Delete(fileName);
+    case 'aws-s3':
+      return awsS3Delete(fileName);
+    case 'minio':
+      return minioDelete(fileName);
   }
+};
+
+export const deleteFilesWithPrefix = async (prefix: string) => {
+  const urls = await getStorageUrlsForPrefix(prefix);
+  return Promise.all(urls.map(({ url }) => deleteFile(url)));
 };
 
 export const moveFile = async (
@@ -200,7 +219,7 @@ export const moveFile = async (
   return url;
 };
 
-const getStorageUrlsForPrefix = async (prefix = '') => {
+export const getStorageUrlsForPrefix = async (prefix = '') => {
   const urls: StorageListResponse = [];
 
   if (HAS_VERCEL_BLOB_STORAGE) {
@@ -215,6 +234,10 @@ const getStorageUrlsForPrefix = async (prefix = '') => {
     urls.push(...await cloudflareR2List(prefix)
       .catch(() => []));
   }
+  if (HAS_MINIO_STORAGE) {
+    urls.push(...await minioList(prefix)
+      .catch(() => []));
+  }
 
   return urls
     .sort((a, b) => {
@@ -223,12 +246,6 @@ const getStorageUrlsForPrefix = async (prefix = '') => {
       return b.uploadedAt.getTime() - a.uploadedAt.getTime();
     });
 };
-
-export const getStorageUploadUrls = () =>
-  getStorageUrlsForPrefix(`${PREFIX_UPLOAD}-`);
-
-export const getStoragePhotoUrls = () =>
-  getStorageUrlsForPrefix(`${PREFIX_PHOTO}-`);
 
 export const testStorageConnection = () =>
   getStorageUrlsForPrefix();

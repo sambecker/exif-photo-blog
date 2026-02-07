@@ -18,7 +18,7 @@ export default function useNavigateOrRunActionWithToast({
 
   const appText = useAppText();
 
-  const toastMessage = _toastMessage ?? appText.misc.loading;
+  const toastMessage = _toastMessage ?? appText.utility.loading;
 
   const toastId = useRef<string | number>(undefined);
   

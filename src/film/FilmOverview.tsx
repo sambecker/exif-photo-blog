@@ -1,4 +1,4 @@
-import { Photo, PhotoDateRange } from '@/photo';
+import { Photo, PhotoDateRangePostgres } from '@/photo';
 import FilmHeader from './FilmHeader';
 import PhotoGridContainer from '@/photo/PhotoGridContainer';
 
@@ -12,7 +12,7 @@ export default function FilmOverview({
   film: string,
   photos: Photo[],
   count: number,
-  dateRange?: PhotoDateRange,
+  dateRange?: PhotoDateRangePostgres,
   animateOnFirstLoadOnly?: boolean,
 }) {
   return (

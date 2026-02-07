@@ -10,9 +10,9 @@ export default function ExperimentalBadge({
     <Badge
       type="small"
       className={clsx(
-        'text-pink-500 dark:text-white',
-        'bg-pink-100 dark:bg-pink-600',
-        'pt-0.5',
+        'text-pink-500 dark:text-pink-400',
+        'bg-pink-100 dark:bg-pink-800/35',
+        'uppercase',
         className,
       )}>
       Experimental

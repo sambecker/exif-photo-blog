@@ -3,7 +3,12 @@ import { removeParamsFromUrl } from '@/utility/url';
 import { Pool, QueryResult, QueryResultRow } from 'pg';
 
 const pool = new Pool({
-  connectionString: removeParamsFromUrl(process.env.POSTGRES_URL, ['sslmode']),
+  ...process.env.POSTGRES_URL && {
+    connectionString: removeParamsFromUrl(
+      process.env.POSTGRES_URL,
+      ['sslmode'],
+    ),
+  },
   ...POSTGRES_SSL_ENABLED && { ssl: true },
 });
 
@@ -41,17 +46,6 @@ export const sql = <T extends QueryResultRow>(
 
   return query<T>(result, values);
 };
-
-export const convertArrayToPostgresString = (
-  array?: string[],
-  type: 'braces' | 'brackets' | 'parentheses' = 'braces', 
-) => array
-  ? type === 'braces'
-    ? `{${array.join(',')}}`
-    : type === 'brackets'
-      ? `[${array.map(i => `'${i}'`).join(',')}]`
-      : `(${array.map(i => `'${i}'`).join(',')})`
-  : null;
 
 const isTemplateStringsArray = (
   strings: unknown,

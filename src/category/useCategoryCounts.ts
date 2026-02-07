@@ -1,13 +1,18 @@
-import { createCameraKey } from '@/camera';
-import { createLensKey } from '@/lens';
-import { Camera } from '@/camera';
-import { Lens } from '@/lens';
-import { useAppState } from '@/state/AppState';
+import { createCameraKey, Camera } from '@/camera';
+import { createLensKey, Lens } from '@/lens';
 import { useCallback } from 'react';
-import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
+import { useAppState } from '@/app/AppState';
+import { Album } from '@/album';
 
 export default function useCategoryCounts() {
   const { categoriesWithCounts } = useAppState();
+
+  const recentsCount = categoriesWithCounts?.recents?.count ?? 0;
+
+  const getYearsCount = useCallback((year: string) => {
+    const yearCounts = categoriesWithCounts?.years ?? {};
+    return yearCounts[year];
+  }, [categoriesWithCounts]);
 
   const getCameraCount = useCallback((camera: Camera) => {
     const cameraCounts = categoriesWithCounts?.cameras ?? {};
@@ -17,6 +22,11 @@ export default function useCategoryCounts() {
   const getLensCount = useCallback((lens: Lens) => {
     const lensCounts = categoriesWithCounts?.lenses ?? {};
     return lensCounts[createLensKey(lens)];
+  }, [categoriesWithCounts]);
+
+  const getAlbumCount = useCallback((album: Album) => {
+    const albumCounts = categoriesWithCounts?.albums ?? {};
+    return albumCounts[album.slug];
   }, [categoriesWithCounts]);
 
   const getTagCount = useCallback((tag: string) => {
@@ -29,7 +39,7 @@ export default function useCategoryCounts() {
     return recipeCounts[recipe];
   }, [categoriesWithCounts]);
 
-  const getFilmCount = useCallback((film: FujifilmSimulation) => {
+  const getFilmCount = useCallback((film: string) => {
     const filmCounts = categoriesWithCounts?.films ?? {};
     return filmCounts[film];
   }, [categoriesWithCounts]);
@@ -40,8 +50,11 @@ export default function useCategoryCounts() {
   }, [categoriesWithCounts]);
 
   return {
+    recentsCount,
+    getYearsCount,
     getCameraCount,
     getLensCount,
+    getAlbumCount,
     getTagCount,
     getRecipeCount,
     getFilmCount,

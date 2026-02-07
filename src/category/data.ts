@@ -1,81 +1,121 @@
 import {
-  getUniqueCameras,
-  getUniqueFilms,
-  getUniqueFocalLengths,
-  getUniqueLenses,
-  getUniqueRecipes,
-  getUniqueTags,
-} from '@/photo/db/query';
-import {
   SHOW_FILMS,
   SHOW_FOCAL_LENGTHS,
   SHOW_LENSES,
   SHOW_RECIPES,
   SHOW_CAMERAS,
   SHOW_TAGS,
+  SHOW_YEARS,
+  SHOW_RECENTS,
+  SHOW_ALBUMS,
 } from '@/app/config';
 import { createLensKey } from '@/lens';
 import { sortTagsByCount } from '@/tag';
 import { sortCategoriesByCount } from '@/category';
 import { sortFocalLengths } from '@/focal';
+import {
+  getPhotosMetaCached,
+  getUniqueCamerasCached,
+  getUniqueFilmsCached,
+  getUniqueFocalLengthsCached,
+  getUniqueLensesCached,
+  getUniqueRecipesCached,
+  getUniqueTagsCached,
+  getUniqueYearsCached,
+} from '@/photo/cache';
+import { getAlbumsWithMetaCached } from '@/album/cache';
 
 type CategoryData = Awaited<ReturnType<typeof getDataForCategories>>;
 
 export const NULL_CATEGORY_DATA: CategoryData = {
+  recents: [],
+  years: [],
   cameras: [],
   lenses: [],
   tags: [],
   recipes: [],
   films: [],
   focalLengths: [],
+  albums: [],
 };
 
 export const getDataForCategories = () => Promise.all([
+  SHOW_RECENTS
+    ? getPhotosMetaCached({ recent: true })
+      .then(({ count, dateRangeCreatedAt }) => count && dateRangeCreatedAt
+        ? [{
+          count,
+          lastModified: new Date(dateRangeCreatedAt?.end ?? ''),
+        }] : undefined)
+      .catch(() => [])
+    : undefined,
+  SHOW_YEARS
+    ? getUniqueYearsCached()
+      .catch(() => [])
+    : undefined,
   SHOW_CAMERAS
-    ? getUniqueCameras()
+    ? getUniqueCamerasCached()
       .then(sortCategoriesByCount)
       .catch(() => [])
     : undefined,
   SHOW_LENSES
-    ? getUniqueLenses()
+    ? getUniqueLensesCached()
       .then(sortCategoriesByCount)
       .catch(() => [])
     : undefined,
   SHOW_TAGS
-    ? getUniqueTags()
+    ? getUniqueTagsCached()
       .then(sortTagsByCount)
       .catch(() => [])
     : undefined,
   SHOW_RECIPES
-    ? getUniqueRecipes()
+    ? getUniqueRecipesCached()
       .then(sortCategoriesByCount)
       .catch(() => [])
     : undefined,
   SHOW_FILMS
-    ? getUniqueFilms()
+    ? getUniqueFilmsCached()
       .then(sortCategoriesByCount)
       .catch(() => [])
     : undefined,
   SHOW_FOCAL_LENGTHS
-    ? getUniqueFocalLengths()
+    ? getUniqueFocalLengthsCached()
       .then(sortFocalLengths)
       .catch(() => [])
     : undefined,
+  SHOW_ALBUMS
+    ? getAlbumsWithMetaCached()
+      .catch(() => [])
+    : undefined,
 ]).then(([
+  recents = [],
+  years = [],
   cameras = [],
   lenses = [],
   tags = [],
   recipes = [],
   films = [],
   focalLengths = [],
+  albums = [],
 ]) => ({
-  cameras, lenses, tags, recipes, films, focalLengths,
+  recents,
+  years,
+  cameras,
+  lenses,
+  tags,
+  recipes,
+  films,
+  focalLengths,
+  albums,
 }));
 
 export const getCountsForCategories = async () => {
   const {
+    recents,
+    years,
     cameras,
     lenses,
+    albums,
     tags,
     recipes,
     films,
@@ -83,6 +123,17 @@ export const getCountsForCategories = async () => {
   } = await getDataForCategories();
 
   return {
+    recents: recents[0]?.count
+      ? { count: recents[0].count }
+      : {} as Record<string, number>,
+    years: years.reduce((acc, year) => {
+      acc[year.year] = year.count;
+      return acc;
+    }, {} as Record<string, number>),
+    albums: albums.reduce((acc, { album, count }) => {
+      acc[album.slug] = count;
+      return acc;
+    }, {} as Record<string, number>),
     cameras: cameras.reduce((acc, camera) => {
       acc[camera.cameraKey] = camera.count;
       return acc;

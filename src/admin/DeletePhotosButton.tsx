@@ -3,7 +3,7 @@
 import LoaderButton from '@/components/primitives/LoaderButton';
 import { photoQuantityText } from '@/photo';
 import { deletePhotosAction } from '@/photo/actions';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { toastSuccess, toastWarning } from '@/toast';
 import { ComponentProps, useState } from 'react';
 import DeleteButton from './DeleteButton';

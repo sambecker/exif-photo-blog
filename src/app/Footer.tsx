@@ -7,11 +7,11 @@ import Link from 'next/link';
 import { SHOW_REPO_LINK } from '@/app/config';
 import RepoLink from '../components/RepoLink';
 import { usePathname } from 'next/navigation';
-import { PATH_ADMIN_PHOTOS, isPathAdmin, isPathSignIn } from './paths';
+import { PATH_ADMIN_PHOTOS, isPathAdmin, isPathSignIn } from './path';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import { signOutAction } from '@/auth/actions';
 import AnimateItems from '@/components/AnimateItems';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import Spinner from '@/components/Spinner';
 import { useAppText } from '@/i18n/state/client';
 
@@ -45,12 +45,18 @@ export default function Footer() {
                 'flex items-center gap-1',
                 'text-dim min-h-10',
               )}>
-              <div className="flex gap-x-3 xs:gap-x-4 grow flex-wrap">
+              <div className={clsx(
+                'flex gap-x-3 xs:gap-x-4 grow flex-wrap',
+                'w-full min-w-0',
+              )}>
                 {userEmail || userEmailEager
                   ? <>
-                    <div className="truncate max-w-full">
+                    <Link
+                      href={PATH_ADMIN_PHOTOS}
+                      className="truncate max-w-full"
+                    >
                       {userEmail || userEmailEager}
-                    </div>
+                    </Link>
                     <form action={() => signOutAction()
                       .then(clearAuthStateAndRedirectIfNecessary)}>
                       <SubmitButtonWithStatus styleAs="link">
@@ -66,7 +72,7 @@ export default function Footer() {
                         {appText.nav.admin}
                       </Link>}
               </div>
-              <div className="flex items-center h-10">
+              <div className="flex items-center h-10 shrink-0">
                 <ThemeSwitcher />
               </div>
             </div>]

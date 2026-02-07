@@ -5,11 +5,12 @@ import Link from 'next/link';
 import { BiLogoGithub } from 'react-icons/bi';
 
 export default function RepoLink() {
-  const appText = useAppText();
+  const { footer } = useAppText();
+
   return (
     <span className="inline-flex items-center gap-2 whitespace-nowrap">
       <span className="hidden sm:inline-block">
-        {appText.misc.repo}
+        {footer.madeWith}
       </span>
       <Link
         href={TEMPLATE_REPO_URL}

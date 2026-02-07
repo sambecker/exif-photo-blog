@@ -9,16 +9,15 @@ import {
   MATTE_PHOTOS,
   IS_META_DESCRIPTION_CONFIGURED,
   IS_META_TITLE_CONFIGURED,
-  CATEGORY_VISIBILITY,
   HAS_STATIC_OPTIMIZATION,
   GRID_HOMEPAGE_ENABLED,
-  AI_TEXT_GENERATION_ENABLED,
+  AI_CONTENT_GENERATION_ENABLED,
+  HAS_DEPRECATED_ENV_VARS,
 } from '@/app/config';
-import { PhotoDateRange } from '@/photo';
+import { PhotoDateRangePostgres } from '@/photo';
 import { getGitHubMeta } from '@/platforms/github';
 
 const BASIC_PHOTO_INSTALLATION_COUNT = 32;
-const TAG_COUNT_THRESHOLD = 12;
 
 const AdminAppInsightCode = [
   'noFork',
@@ -27,12 +26,13 @@ const AdminAppInsightCode = [
 type AdminAppInsightCode = typeof AdminAppInsightCode[number];
 
 const _INSIGHTS_TEMPLATE = [
+  'deprecatedEnvVars',
   'noAi',
-  'noAiRateLimiting',
+  'noRateLimiting',
   'noConfiguredDomain',
-  'noConfiguredMeta',
+  'noConfiguredMetaTitle',
+  'noConfiguredMetaDescription',
   'photoMatting',
-  'camerasFirst',
   'gridFirst',
   'noStaticOptimization',
 ] as const;
@@ -65,7 +65,7 @@ export interface PhotoStats {
   recipesCount: number
   filmsCount: number
   focalLengthsCount: number
-  dateRange?: PhotoDateRange
+  dateRange?: PhotoDateRangePostgres
 }
 
 export const getGitHubMetaForCurrentApp = () =>
@@ -87,13 +87,18 @@ export const getSignificantInsights = ({
 }) => {
   const {
     isAiTextGenerationEnabled,
+    hasLocationServices,
     hasRedisStorage,
     hasDomain,
   } = APP_CONFIGURATION;
 
   return {
+    deprecatedEnvVars: HAS_DEPRECATED_ENV_VARS,
     forkBehind: Boolean(codeMeta?.isBehind),
-    noAiRateLimiting: isAiTextGenerationEnabled && !hasRedisStorage,
+    noRateLimiting: (
+      isAiTextGenerationEnabled ||
+      hasLocationServices
+    ) && !hasRedisStorage,
     noConfiguredDomain: !hasDomain,
     photosNeedSync: Boolean(photosCountNeedSync),
   };
@@ -111,13 +116,14 @@ export const indicatorStatusForSignificantInsights = ({
   });
 
   const {
+    deprecatedEnvVars,
     forkBehind,
-    noAiRateLimiting,
+    noRateLimiting,
     noConfiguredDomain,
     photosNeedSync,
   } = insights;
 
-  if (noAiRateLimiting || noConfiguredDomain) {
+  if (deprecatedEnvVars || noRateLimiting || noConfiguredDomain) {
     return 'yellow';
   } else if (forkBehind || photosNeedSync) {
     return 'blue';
@@ -129,23 +135,16 @@ export const getAllInsights = ({
   photosCountNeedSync,
   photosCount,
   photosCountPortrait,
-  tagsCount,
 }: Parameters<typeof getSignificantInsights>[0] & {
   photosCount: number
   photosCountPortrait: number
-  tagsCount: number
 }) => ({
   ...getSignificantInsights({ codeMeta, photosCountNeedSync }),
   noFork: !codeMeta?.isForkedFromBase && !codeMeta?.isBaseRepo,
-  noAi: !AI_TEXT_GENERATION_ENABLED,
-  noConfiguredMeta:
-    !IS_META_TITLE_CONFIGURED ||
-    !IS_META_DESCRIPTION_CONFIGURED,
+  noAi: !AI_CONTENT_GENERATION_ENABLED,
+  noConfiguredMetaTitle: !IS_META_TITLE_CONFIGURED,
+  noConfiguredMetaDescription: !IS_META_DESCRIPTION_CONFIGURED,
   photoMatting: photosCountPortrait > 0 && !MATTE_PHOTOS,
-  camerasFirst: (
-    tagsCount > TAG_COUNT_THRESHOLD &&
-    CATEGORY_VISIBILITY[0] !== 'cameras'
-  ),
   gridFirst: (
     photosCount >= BASIC_PHOTO_INSTALLATION_COUNT &&
     !GRID_HOMEPAGE_ENABLED

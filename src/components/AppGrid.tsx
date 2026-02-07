@@ -3,12 +3,12 @@ import { HTMLAttributes, ReactNode, RefObject } from 'react';
 
 /*
   MAX WIDTHS
-  Main: 954px +
-  Sidebar: 302px +
-  Gap: 24px =
+  Main: 956px +
+  Sidebar: 308px +
+  Gap: 16px =
   Total: 1280px
   -
-  Column offset: (302px + 24px) / 2 = 163px
+  Column offset: (308px + 16px) / 2 = 162px
 */
 
 export default function AppGrid({
@@ -19,7 +19,7 @@ export default function AppGrid({
   contentMain,
   contentSide,
   sideFirstOnMobile,
-  sideHiddenOnMobile,
+  sideHiddenOnMobile = true,
   ...props
 }: {
   containerRef?: RefObject<HTMLDivElement | null>
@@ -38,11 +38,10 @@ export default function AppGrid({
       className={clsx(
         'grid',
         'grid-cols-1 md:grid-cols-12',
-        'gap-x-4 lg:gap-x-6',
-        'gap-y-4',
+        'gap-3 md:gap-4',
         'max-w-[1280px] 3xl:w-[1280px]',
         // Offset sidebar width when centering on large screens
-        '3xl:translate-x-[163px]',
+        '3xl:translate-x-[162px]',
         className,
       )}
     >
@@ -58,7 +57,7 @@ export default function AppGrid({
           'col-span-1 md:col-span-3',
           '3xl:max-w-[260px]',
           sideFirstOnMobile && 'order-1 md:order-none',
-          sideHiddenOnMobile && 'hidden md:block',
+          sideHiddenOnMobile && 'max-md:hidden',
           classNameSide,
         )}>
           {contentSide}

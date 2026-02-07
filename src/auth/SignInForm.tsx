@@ -1,6 +1,6 @@
 'use client';
 
-import FieldSetWithStatus from '@/components/FieldSetWithStatus';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import Container from '@/components/Container';
 import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import {
@@ -17,9 +17,9 @@ import {
   KEY_CREDENTIALS_SUCCESS,
 } from '.';
 import { useSearchParams } from 'next/navigation';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import { clsx } from 'clsx/lite';
-import { PATH_ADMIN_PHOTOS } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS } from '@/app/path';
 import IconLock from '@/components/icons/IconLock';
 import { useAppText } from '@/i18n/state/client';
 
@@ -92,7 +92,7 @@ export default function SignInForm({
               {appText.auth.invalidEmailPassword}
             </ErrorNote>}
           <div className="space-y-4 w-full">
-            <FieldSetWithStatus
+            <FieldsetWithStatus
               id="email"
               inputRef={emailRef}
               label={appText.auth.email}
@@ -100,7 +100,7 @@ export default function SignInForm({
               value={email}
               onChange={setEmail}
             />
-            <FieldSetWithStatus
+            <FieldsetWithStatus
               id="password"
               label={appText.auth.password}
               type="password"

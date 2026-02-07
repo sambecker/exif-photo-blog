@@ -9,23 +9,25 @@ export default function EnvVar({
   accessory,
   includeCopyButton = true,
   trailingContent,
+  maskScroll = true,
   className,
 }: {
   variable: string,
-  value?: string,
+  value?: string | number,
   accessory?: ReactNode,
   includeCopyButton?: boolean,
   trailingContent?: ReactNode,
+  maskScroll?: boolean,
   className?: string,
 }) {
   return (
     <MaskedScroll
       direction="horizontal"
       className={clsx(
-        'inline-flex max-w-full',
-        'overflow-y-hidden',
+        maskScroll && 'inline-flex max-w-full overflow-y-hidden',
         className,
       )}
+      enabled={maskScroll}
     >
       <span className="inline-flex items-center gap-1">
         <span className={clsx(

@@ -2,9 +2,8 @@
 
 import ScoreCard from '@/components/ScoreCard';
 import ScoreCardRow from '@/components/ScoreCardRow';
-import { dateRangeForPhotos } from '@/photo';
-import { FaCircleInfo, FaRegCalendar } from 'react-icons/fa6';
-import { HiMiniArrowsUpDown } from 'react-icons/hi2';
+import { formattedDateRangeForPhotos } from '@/photo';
+import { FaArrowRight, FaCircleInfo, FaRegCalendar } from 'react-icons/fa6';
 import { MdAspectRatio } from 'react-icons/md';
 import { PiWarningBold } from 'react-icons/pi';
 import { TbSparkles } from 'react-icons/tb';
@@ -18,17 +17,18 @@ import {
   TEMPLATE_REPO_URL_FORK,
   TEMPLATE_REPO_URL_README,
   CATEGORY_VISIBILITY,
+  USED_DEPRECATED_ENV_VARS,
 } from '@/app/config';
 import {
-  AdminAppInsights,
+  getAllInsights,
   getGitHubMetaForCurrentApp,
   hasTemplateRecommendations,
   PhotoStats,
 } from '.';
 import EnvVar from '@/components/EnvVar';
-import { IoSyncCircle } from 'react-icons/io5';
+import { IoCheckmarkCircleOutline, IoSyncCircle } from 'react-icons/io5';
 import clsx from 'clsx/lite';
-import { PATH_ADMIN_PHOTOS_UPDATES } from '@/app/paths';
+import { PATH_ADMIN_PHOTOS_UPDATES } from '@/app/path';
 import { LiaBroomSolid } from 'react-icons/lia';
 import { IoMdGrid } from 'react-icons/io';
 import { RiSpeedMiniLine } from 'react-icons/ri';
@@ -36,7 +36,7 @@ import AdminLink from '../AdminLink';
 import AdminEmptyState from '../AdminEmptyState';
 import { pluralize } from '@/utility/string';
 import Tooltip from '@/components/Tooltip';
-import { useAppState } from '@/state/AppState';
+import { useAppState } from '@/app/AppState';
 import ScoreCardContainer from '@/components/ScoreCardContainer';
 import IconLens from '@/components/icons/IconLens';
 import IconCamera from '@/components/icons/IconCamera';
@@ -47,6 +47,10 @@ import IconTag from '@/components/icons/IconTag';
 import IconPhoto from '@/components/icons/IconPhoto';
 import { HiOutlineDocumentText } from 'react-icons/hi';
 import { ReactNode } from 'react';
+import MaskedScroll from '@/components/MaskedScroll';
+import IconNext from '@/components/icons/IconNext';
+import Link from 'next/link';
+import IconNode from '@/components/icons/IconNode';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
@@ -61,12 +65,21 @@ const readmeAnchor = (anchor: string) =>
     README/{anchor}
   </AdminLink>;
 
-const renderLabeledEnvVar = (label: string, envVar: string, value?: string) =>
+const renderLabeledEnvVar = (
+  label: string,
+  variable: string,
+  value?: string,
+  icon?: ReactNode,
+) =>
   <div className="flex flex-col gap-0.5">
     <span className="text-xs uppercase font-medium tracking-wider">
       {label}
     </span>
-    <EnvVar variable={envVar} value={value} />
+    {icon
+      ? <div className="flex items-center gap-1">
+        {icon} <EnvVar {...{ variable, value }} />
+      </div>
+      :<EnvVar {...{ variable, value }} />}
   </div>;
 
 const renderHighlightText = (
@@ -86,9 +99,28 @@ const renderHighlightText = (
     {text}
   </span>;
 
+const renderWarningIconLarge =
+  <PiWarningBold
+    size={17}
+    className={clsx(
+      'translate-x-[0.5px]',
+      TEXT_COLOR_WARNING,
+    )}
+  />;
+
+const renderWarningIconSmall =
+  <PiWarningBold
+    size={14}
+    className="translate-y-[0.5px] text-extra-dim"
+  />;
+
 export default function AdminAppInsightsClient({
   codeMeta,
+  nextVersion,
+  reactVersion,
+  nodeVersion,
   insights,
+  usedDeprecatedEnvVars,
   photoStats: {
     photosCount,
     photosCountHidden,
@@ -103,26 +135,32 @@ export default function AdminAppInsightsClient({
   },
 }: {
   codeMeta?: Awaited<ReturnType<typeof getGitHubMetaForCurrentApp>>
-  insights: AdminAppInsights
+  nextVersion: string
+  reactVersion: string
+  nodeVersion?: string
+  insights: ReturnType<typeof getAllInsights>
+  usedDeprecatedEnvVars: typeof USED_DEPRECATED_ENV_VARS
   photoStats: PhotoStats
 }) {
   const { shouldDebugInsights: debug } = useAppState();
 
   const {
+    deprecatedEnvVars,
     noFork,
     forkBehind,
     noAi,
-    noAiRateLimiting,
+    noRateLimiting,
     noConfiguredDomain,
-    noConfiguredMeta,
+    noConfiguredMetaTitle,
+    noConfiguredMetaDescription,
     photosNeedSync,
     photoMatting,
-    camerasFirst,
     gridFirst,
     noStaticOptimization,
   } = insights;
 
-  const { descriptionWithSpaces } = dateRangeForPhotos(undefined, dateRange);
+  const { descriptionWithSpaces } =
+    formattedDateRangeForPhotos(undefined, dateRange);
 
   const branchLink = <a
     className="truncate"
@@ -247,38 +285,94 @@ export default function AdminAppInsightsClient({
               </span>
             </a>}
           />
+          <ScoreCardRow
+            icon={<IconNext className="translate-y-px" />}
+            content={<>
+              <Link
+                // eslint-disable-next-line max-len
+                href={`https://github.com/vercel/next.js/releases/tag/v${nextVersion}`}
+                target="blank"
+              >
+                Next.js {nextVersion}              
+              </Link>
+              {' '}
+              <Link
+                // eslint-disable-next-line max-len
+                href={`https://github.com/facebook/react/releases/tag/v${reactVersion}`}
+                className="text-dim hover:text-medium active:text-dim"
+                target="blank"
+              >
+                (React {reactVersion})
+              </Link>
+            </>}
+          />
+          {nodeVersion && <ScoreCardRow
+            icon={<IconNode className="translate-y-px" />}
+            content={<Link
+              // eslint-disable-next-line max-len
+              href={`https://github.com/nodejs/node/releases/tag/v${nodeVersion}`}
+              target="blank"
+            >
+              Node.js {nodeVersion}          
+            </Link>}
+          />}
         </ScoreCard>
       </>}
       <ScoreCard title="Template recommendations">
         {(hasTemplateRecommendations(insights) || debug)
           ? <>
-            {(noAiRateLimiting || debug) && <ScoreCardRow
-              icon={<PiWarningBold
-                size={17}
-                className={clsx(
-                  'translate-x-[0.5px]',
-                  TEXT_COLOR_WARNING,
-                )}
-              />}
+            {(deprecatedEnvVars || debug) && <ScoreCardRow
+              icon={renderWarningIconLarge}
               content={isExpanded => renderHighlightText(
-                'Enable AI rate limiting',
+                'Update environment variables',
+                'yellow',
+                !isExpanded,
+              )}
+              expandContent={<div className="flex flex-col gap-2">
+                Future versions of this template may not build correctly
+                with the following deprecated environment variables:
+                <div className="space-y-1">
+                  {usedDeprecatedEnvVars.map(({ old, replacement }) => (
+                    <MaskedScroll
+                      key={old}
+                      className={clsx(
+                        'inline-flex items-center gap-3',
+                        'overflow-y-hidden',
+                      )}
+                      direction="horizontal"
+                    >
+                      <div className={clsx(
+                        'inline-flex items-center gap-1.5',
+                        'text-xs font-medium',
+                      )}>
+                        {renderWarningIconSmall}
+                        {old}
+                      </div>
+                      <FaArrowRight
+                        size={11}
+                        className="shrink-0 text-extra-dim"
+                      />
+                      <EnvVar variable={replacement} maskScroll={false} />
+                    </MaskedScroll>
+                  ))}
+                </div>
+              </div>}
+            />}
+            {(noRateLimiting || debug) && <ScoreCardRow
+              icon={renderWarningIconLarge}
+              content={isExpanded => renderHighlightText(
+                'Enable rate limiting',
                 'yellow',
                 !isExpanded,
               )}
               expandContent={<>
                 Create Upstash Redis store from storage tab on
                 Vercel dashboard and link to this project to
-                prevent abuse by enabling rate limiting.
+                prevent unexpected usage by enabling rate limiting.
               </>}
             />}
             {(noConfiguredDomain || debug) && <ScoreCardRow
-              icon={<PiWarningBold
-                size={17}
-                className={clsx(
-                  'translate-x-[0.5px]',
-                  TEXT_COLOR_WARNING,
-                )}
-              />}
+              icon={renderWarningIconLarge}
               content={isExpanded => renderHighlightText(
                 'Configure domain',
                 'yellow',
@@ -294,7 +388,11 @@ export default function AdminAppInsightsClient({
                 />
               </>}
             />}
-            {(noConfiguredMeta || debug) && <ScoreCardRow
+            {(
+              noConfiguredMetaTitle ||
+              noConfiguredMetaDescription ||
+              debug
+            ) && <ScoreCardRow
               icon={<HiOutlineDocumentText
                 size={18}
                 className="translate-x-[1px] translate-y-[-1px]"
@@ -305,11 +403,17 @@ export default function AdminAppInsightsClient({
                 and site description (visible in search results):
                 {' '}
                 <div className="flex flex-col gap-y-4 mt-3">
-                  {renderLabeledEnvVar(
+                  {(
+                    noConfiguredMetaTitle ||
+                    debug
+                  ) && renderLabeledEnvVar(
                     'Site title',
                     'NEXT_PUBLIC_META_TITLE',
                   )}
-                  {renderLabeledEnvVar(
+                  {(
+                    noConfiguredMetaDescription ||
+                    debug
+                  ) && renderLabeledEnvVar(
                     'Site description',
                     'NEXT_PUBLIC_META_DESCRIPTION',
                   )}
@@ -385,23 +489,6 @@ export default function AdminAppInsightsClient({
                 />
               </>}
             />}
-            {(camerasFirst || debug) && <ScoreCardRow
-              icon={<HiMiniArrowsUpDown
-                size={17}
-                className="translate-x-[-1px]"
-              />}
-              content="Move cameras above tags in sidebar"
-              expandContent={<>
-                Now that you have more than a few tags, consider
-                showing cameras first in the sidebar by setting
-                {' '}
-                <EnvVar
-                  variable="NEXT_PUBLIC_CATEGORY_VISIBILITY"
-                  value="cameras, tags, recipes, films"
-                  trailingContent="."
-                />
-              </>}
-            />}
             {(gridFirst || debug) && <ScoreCardRow
               icon={<IoMdGrid size={18} className="translate-y-[-1px]" />}
               content="Grid homepage"
@@ -418,8 +505,11 @@ export default function AdminAppInsightsClient({
               </>}
             />}
           </>
-          : <AdminEmptyState includeContainer={false}>
-            Nothing to report!
+          : <AdminEmptyState
+            icon={<IoCheckmarkCircleOutline />}
+            includeContainer={false}
+          >
+            No recommendations found
           </AdminEmptyState>}
       </ScoreCard>
       <ScoreCard title="Library Stats">
@@ -459,58 +549,58 @@ export default function AdminAppInsightsClient({
         />
         {CATEGORY_VISIBILITY.map(category => {
           switch (category) {
-          case 'cameras':
-            return <ScoreCardRow
-              key={category}
-              icon={<IconCamera
-                size={15}
-                className="translate-y-[0.5px]"
-              />}
-              content={pluralize(camerasCount, 'camera')}
-            />;
-          case 'lenses':
-            return <ScoreCardRow
-              key={category}
-              icon={<IconLens
-                size={15}
-                className="translate-y-[0.5px]"
-              />}
-              content={pluralize(lensesCount, 'lens', 'lenses')}
-            />;
-          case 'tags':
-            return <ScoreCardRow
-              key={category}
-              icon={<IconTag
-                size={15}
-                className="translate-x-[1px] translate-y-[1px]"
-              />}
-              content={pluralize(tagsCount, 'tag')}
-            />;
-          case 'recipes':
-            return recipesCount > 0
-              ? <ScoreCardRow
+            case 'cameras':
+              return <ScoreCardRow
                 key={category}
-                icon={<IconRecipe
-                  size={18}
-                  className="translate-x-[0.5px] translate-y-[-0.5px]"
+                icon={<IconCamera
+                  size={15}
+                  className="translate-y-[0.5px]"
                 />}
-                content={pluralize(recipesCount, 'recipe')}
-              />
-              : null;
-          case 'films':
-            return filmsCount > 0
-              ? <ScoreCardRow
+                content={pluralize(camerasCount, 'camera')}
+              />;
+            case 'lenses':
+              return <ScoreCardRow
                 key={category}
-                icon={<IconFilm size={15} />}
-                content={pluralize(filmsCount, 'film')}
-              />
-              : null;
-          case 'focal-lengths':
-            return <ScoreCardRow
-              key={category}
-              icon={<IconFocalLength size={14} />}
-              content={pluralize(focalLengthsCount, 'focal length')}
-            />;
+                icon={<IconLens
+                  size={15}
+                  className="translate-y-[0.5px]"
+                />}
+                content={pluralize(lensesCount, 'lens', 'lenses')}
+              />;
+            case 'tags':
+              return <ScoreCardRow
+                key={category}
+                icon={<IconTag
+                  size={15}
+                  className="translate-x-[1px] translate-y-[1px]"
+                />}
+                content={pluralize(tagsCount, 'tag')}
+              />;
+            case 'recipes':
+              return recipesCount > 0
+                ? <ScoreCardRow
+                  key={category}
+                  icon={<IconRecipe
+                    size={18}
+                    className="translate-x-[0.5px] translate-y-[-0.5px]"
+                  />}
+                  content={pluralize(recipesCount, 'recipe')}
+                />
+                : null;
+            case 'films':
+              return filmsCount > 0
+                ? <ScoreCardRow
+                  key={category}
+                  icon={<IconFilm size={15} />}
+                  content={pluralize(filmsCount, 'film')}
+                />
+                : null;
+            case 'focal-lengths':
+              return <ScoreCardRow
+                key={category}
+                icon={<IconFocalLength size={14} />}
+                content={pluralize(focalLengthsCount, 'focal length')}
+              />;
           }
         })}
         {descriptionWithSpaces && <ScoreCardRow

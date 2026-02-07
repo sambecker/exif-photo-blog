@@ -6,10 +6,11 @@ import { ReactNode, useState } from 'react';
 import LoaderButton from './primitives/LoaderButton';
 import { IoChevronDownOutline, IoChevronUpOutline } from 'react-icons/io5';
 import { COLLAPSE_SIDEBAR_CATEGORIES } from '@/app/config';
+import { useAppText } from '@/i18n/state/client';
 
 export default function HeaderList({
   title,
-  className,
+  className = 'space-y-1',
   icon,
   items,
   maxItems = 5,
@@ -20,6 +21,8 @@ export default function HeaderList({
   items: ReactNode[],
   maxItems?: number,
 }) {
+  const { utility } = useAppText();
+
   const [isExpanded, setIsExpanded] = useState(false);
 
   const hasItemsToExpand =
@@ -29,10 +32,7 @@ export default function HeaderList({
 
   return (
     <AnimateItems
-      className={clsx(
-        'space-y-1',
-        className,
-      )}
+      className={className}
       scaleOffset={0.95}
       duration={0.5}
       staggerDelay={0.05}
@@ -73,11 +73,11 @@ export default function HeaderList({
                 'group',
               )}
             >
-              {<span className="flex items-center gap-1">
+              {<span className="flex items-center gap-1 uppercase">
                 {isExpanded
-                  ? 'LESS'
+                  ? utility.less
                   : <>
-                    MORE
+                    {utility.more}
                     <span className="hidden group-hover:inline text-dim!">
                       {' '}
                       {items.length - maxItems}

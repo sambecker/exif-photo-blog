@@ -6,10 +6,11 @@ import {
   getUniqueLenses,
   getUniqueRecipes,
   getUniqueTags,
-} from '@/photo/db/query';
+  getPhotosInNeedOfUpdateCount,
+} from '@/photo/query';
 import AdminAppInsightsClient from './AdminAppInsightsClient';
 import { getAllInsights, getGitHubMetaForCurrentApp } from '.';
-import { getPhotosInNeedOfSyncCount } from '@/photo/db/query';
+import { APP_CONFIGURATION, USED_DEPRECATED_ENV_VARS } from '@/app/config';
 
 export default async function AdminAppInsights() {
   const [
@@ -27,7 +28,7 @@ export default async function AdminAppInsights() {
   ] = await Promise.all([
     getPhotosMeta({ hidden: 'include' }),
     getPhotosMeta({ hidden: 'only' }),
-    getPhotosInNeedOfSyncCount(),
+    getPhotosInNeedOfUpdateCount(),
     getPhotosMeta({ maximumAspectRatio: 0.9 }),
     getGitHubMetaForCurrentApp(),
     getUniqueCameras(),
@@ -41,13 +42,16 @@ export default async function AdminAppInsights() {
   return (
     <AdminAppInsightsClient
       codeMeta={codeMeta}
+      nextVersion={APP_CONFIGURATION.nextVersion}
+      reactVersion={APP_CONFIGURATION.reactVersion}
+      nodeVersion={APP_CONFIGURATION.nodeVersion}
       insights={getAllInsights({
         codeMeta,
         photosCount,
         photosCountNeedSync,
         photosCountPortrait,
-        tagsCount: tags.length,
       })}
+      usedDeprecatedEnvVars={USED_DEPRECATED_ENV_VARS}
       photoStats={{
         photosCount,
         photosCountHidden,

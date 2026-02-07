@@ -1,8 +1,8 @@
-import { absolutePathForFocalLength } from '@/app/paths';
+import { absolutePathForFocalLength } from '@/app/path';
 import { PhotoSetAttributes } from '../category';
 import ShareModal from '@/share/ShareModal';
 import FocalLengthOGTile from './FocalLengthOGTile';
-import { formatFocalLengthSafe, shareTextFocalLength } from '.';
+import { formatFocalLength, shareTextFocalLength } from '.';
 import { useAppText } from '@/i18n/state/client';
 
 export default function FocalLengthShareModal({
@@ -17,7 +17,7 @@ export default function FocalLengthShareModal({
   return (
     <ShareModal
       pathShare={absolutePathForFocalLength(focal, true)}
-      navigatorTitle={formatFocalLengthSafe(focal)}
+      navigatorTitle={formatFocalLength(focal)}
       socialText={shareTextFocalLength(focal, appText)}
     >
       <FocalLengthOGTile {...{ focal, photos, count, dateRange }} />

@@ -1,6 +1,6 @@
 import {
   Photo,
-  PhotoDateRange,
+  PhotoDateRangePostgres,
   descriptionForPhotoSet,
   photoQuantityText,
 } from '@/photo';
@@ -8,7 +8,7 @@ import { Camera, cameraFromPhoto, formatCameraText } from '.';
 import {
   absolutePathForCamera,
   absolutePathForCameraImage,
-} from '@/app/paths';
+} from '@/app/path';
 import { AppTextState } from '@/i18n/state';
 
 // Meta functions moved to separate file to avoid
@@ -41,7 +41,7 @@ export const descriptionForCameraPhotos = (
   appText: AppTextState,
   dateBased?: boolean,
   explicitCount?: number,
-  explicitDateRange?: PhotoDateRange,
+  explicitDateRange?: PhotoDateRangePostgres,
 ) =>
   descriptionForPhotoSet(
     photos,
@@ -57,7 +57,7 @@ export const generateMetaForCamera = (
   photos: Photo[],
   appText: AppTextState,
   explicitCount?: number,
-  explicitDateRange?: PhotoDateRange,
+  explicitDateRange?: PhotoDateRangePostgres,
 ) => ({
   url: absolutePathForCamera(camera),
   title: titleForCamera(camera, photos, appText, explicitCount),

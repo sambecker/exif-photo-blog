@@ -1,3 +1,4 @@
+import useElementHeight from '@/utility/useElementHeight';
 import {
   CSSProperties,
   RefObject,
@@ -5,6 +6,7 @@ import {
   useEffect,
   useMemo,
 } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
 
 const CSS_VAR_MASK_COLOR_START = '--mask-color-start';
 const CSS_VAR_MASK_COLOR_END   = '--mask-color-end';
@@ -13,7 +15,7 @@ export default function useMaskedScroll({
   ref: containerRef,
   direction = 'vertical',
   fadeSize = 24,
-  animationDuration = 0.3,
+  animationDuration = 0.2,
   setMaxSize = true,
   hideScrollbar = true,
   // Disable when calling 'updateMask' explicitly
@@ -31,7 +33,9 @@ export default function useMaskedScroll({
 }) {
   const isVertical = direction === 'vertical';
 
-  const updateMask = useCallback(() => {
+  const containerHeight = useElementHeight(containerRef);
+
+  const _updateMask = useCallback(() => {
     const ref = containerRef?.current;
     if (ref) {
       const start = isVertical
@@ -49,24 +53,38 @@ export default function useMaskedScroll({
     }
   }, [containerRef, isVertical]);
 
+  const updateMask = useDebouncedCallback(_updateMask, 50, { leading: true });
+
+  // Update on scroll/resize
   useEffect(() => {
     const ref = containerRef?.current;
-    if (ref) {
-      updateMask();
-      if (updateMaskOnEvents) {
-        ref.onscroll = updateMask;
-        ref.onresize = updateMask;
-        return () => {
-          ref.onscroll = null;
-          ref.onresize = null;
-        };
-      }
+    if (ref && updateMaskOnEvents) {
+      ref.addEventListener('scroll', updateMask);
+      ref.addEventListener('resize', updateMask);
+      return () => {
+        ref.removeEventListener('scroll', updateMask);
+        ref.removeEventListener('resize', updateMask);
+      };
     }
   }, [containerRef, updateMask, updateMaskOnEvents]);
 
+  // Update on container height change
+  useEffect(() => {
+    if (updateMaskOnEvents) {
+      updateMask();
+    }
+  }, [containerHeight, updateMaskOnEvents, updateMask]);
+
+  // Update on mount when not responding to events
+  useEffect(() => {
+    if (!updateMaskOnEvents) {
+      updateMask();
+    }
+  }, [updateMask, updateMaskOnEvents]);
+
   useEffect(() => {
     const ref = containerRef?.current;
-    const contentRect = ref?.children[0].getBoundingClientRect();
+    const contentRect = ref?.children[0]?.getBoundingClientRect();
     if (scrollToEndOnMount && ref && contentRect) {
       ref.scrollTo(isVertical
         ? { top: contentRect.height }

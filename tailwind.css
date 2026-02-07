@@ -42,33 +42,32 @@ html {
   --text-3xl--line-height: 1.5rem;
 
   --animate-fade-in: fade-in 0.5s linear both running;
+  --animate-fade-in-fast: fade-in 0.2s linear both running;
   @keyframes fade-in {
     0% { opacity: 0; }
     100% { opacity: 1; }
   }
 
-  --animate-fade-in-from-top: fade-in-from-top 0.25s ease-in-out;
+  --animate-fade-in-from-top: fade-in-from-top 0.2s ease-out;
+  --animate-fade-in-from-top-large: fade-in-from-top-large 0.2s ease-out;
   @keyframes fade-in-from-top {
-    0% {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in-from-top-large {
+    0% { opacity: 0; transform: translateY(-20px); }
+    100% { opacity: 1; transform: translateY(0); }
   }
 
-  --animate-fade-in-from-bottom: fade-in-from-bottom 0.25s ease-in-out;
+  --animate-fade-in-from-bottom: fade-in-from-bottom 0.2s ease-out;
+  --animate-fade-in-from-bottom-large: fade-in-from-bottom-large 0.2s ease-out;
   @keyframes fade-in-from-bottom {
-    0% {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in-from-bottom-large {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
   }
 
   --animate-rotate-pulse: rotate-pulse 0.75s linear infinite normal both running;
@@ -114,6 +113,10 @@ html {
 @utility text-invert {
   @apply
     text-light dark:text-dark
+}
+@utility text-medium-dark {
+  @apply
+    text-gray-600 dark:text-gray-300
 }
 @utility text-medium {
   @apply
@@ -239,10 +242,11 @@ html {
   input[type=text], input[type=email], input[type=password], select, textarea {
     @apply
       px-2.5 py-2
-      border rounded-md
+      border rounded-lg
       bg-main
       border-gray-200 dark:border-gray-700
       font-mono text-base leading-tight
+      placeholder:text-extra-dim
   }
   input[type=text], input[type=email], input[type=password], select, textarea {
     @apply
@@ -266,6 +270,8 @@ html {
       text-medium
       bg-gray-100 dark:bg-gray-900
       pointer-events-none
+      read-only:bg-gray-100
+      dark:read-only:bg-gray-900 dark:read-only:text-gray-400
   }
   input[type=file] {
     @apply
@@ -290,7 +296,7 @@ html {
   }
   .error {
     @apply
-      border-red-500 dark:border-red-400
+      outline-2 outline-red-500! dark:outline-red-400!
   }
   button, .button {
     @apply
@@ -315,10 +321,9 @@ html {
   }
   button.primary, .button.primary {
     @apply
-      text-invert
+      text-white dark:text-black
       bg-gray-900 dark:bg-gray-100
       disabled:text-dim
-      font-medium
       disabled:bg-gray-100 dark:disabled:bg-gray-900
       disabled:border-gray-200 disabled:dark:border-gray-700
       border-gray-900 dark:border-gray-100

@@ -1,15 +1,12 @@
 import { formatFocalLength } from '@/focal';
-import { getNextImageUrlForRequest } from '@/platforms/next-image';
 import { photoHasFilmData } from '@/film';
 import {
-  HIGH_DENSITY_GRID,
-  IS_PREVIEW,
   SHOW_EXIF_DATA,
   SHOW_FILMS,
   SHOW_LENSES,
   SHOW_RECIPES,
 } from '@/app/config';
-import { ABSOLUTE_PATH_FOR_HOME_IMAGE } from '@/app/paths';
+import { ABSOLUTE_PATH_HOME_IMAGE } from '@/app/path';
 import { formatDate, formatDateFromPostgresString } from '@/utility/date';
 import {
   formatAperture,
@@ -22,23 +19,21 @@ import camelcaseKeys from 'camelcase-keys';
 import { isBefore } from 'date-fns';
 import type { Metadata } from 'next';
 import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
-import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
-import { PhotoSyncStatus, generatePhotoSyncStatus } from './sync';
+import { PhotoUpdateStatus, generatePhotoUpdateStatus } from './update';
 import { AppTextState } from '@/i18n/state';
+import { PhotoColorData } from './color/client';
 
-// INFINITE SCROLL: FEED
-export const INFINITE_SCROLL_FEED_INITIAL =
+// INFINITE SCROLL: FULL
+export const INFINITE_SCROLL_FULL_INITIAL =
   process.env.NODE_ENV === 'development' ? 2 : 12;
-export const INFINITE_SCROLL_FEED_MULTIPLE =
+export const INFINITE_SCROLL_FULL_MULTIPLE =
   process.env.NODE_ENV === 'development' ? 2 : 24;
 
 // INFINITE SCROLL: GRID
-export const INFINITE_SCROLL_GRID_INITIAL = HIGH_DENSITY_GRID
-  ? process.env.NODE_ENV === 'development' ? 12 : 48
-  : process.env.NODE_ENV === 'development' ? 12 : 48;
-export const INFINITE_SCROLL_GRID_MULTIPLE = HIGH_DENSITY_GRID
-  ? process.env.NODE_ENV === 'development' ? 12 : 48
-  : process.env.NODE_ENV === 'development' ? 12 : 48;
+export const INFINITE_SCROLL_GRID_INITIAL =
+  process.env.NODE_ENV === 'development' ? 12 : 60;
+export const INFINITE_SCROLL_GRID_MULTIPLE =
+  process.env.NODE_ENV === 'development' ? 12 : 60;
 
 // Thumbnails below large photos on pages like /p/[photoId]
 export const RELATED_GRID_PHOTOS_TO_SHOW = 12;
@@ -55,6 +50,8 @@ export const MAX_PHOTO_UPLOAD_SIZE_IN_BYTES = 50_000_000;
 
 // Core EXIF data
 export interface PhotoExif {
+  width?: number
+  height?: number
   aspectRatio: number
   make?: string
   model?: string
@@ -68,10 +65,14 @@ export interface PhotoExif {
   exposureCompensation?: number
   latitude?: number
   longitude?: number
-  film?: FujifilmSimulation
+  film?: string
   recipeData?: string
   takenAt?: string
   takenAtNaive?: string
+  // Photo meta potentially located in EXIF/XMP data
+  title?: string
+  caption?: string
+  tags?: string[]
 }
 
 // Raw db insert
@@ -80,13 +81,15 @@ export interface PhotoDbInsert extends PhotoExif {
   url: string
   extension: string
   blurData?: string
-  title?: string
   caption?: string
   semanticDescription?: string
   tags?: string[]
   recipeTitle?: string
   locationName?: string
+  colorData?: string
+  colorSort?: number
   priorityOrder?: number
+  excludeFromFeeds?: boolean
   hidden?: boolean
   takenAt: string
   takenAtNaive: string
@@ -102,7 +105,7 @@ export interface PhotoDb extends
 }
 
 // Parsed db response
-export interface Photo extends Omit<PhotoDb, 'recipeData'> {
+export interface Photo extends Omit<PhotoDb, 'recipeData' | 'colorData'> {
   focalLengthFormatted?: string
   focalLengthIn35MmFormatFormatted?: string
   fNumberFormatted?: string
@@ -112,7 +115,8 @@ export interface Photo extends Omit<PhotoDb, 'recipeData'> {
   takenAtNaiveFormatted: string
   tags: string[]
   recipeData?: FujifilmRecipe
-  syncStatus: PhotoSyncStatus
+  colorData?: PhotoColorData
+  updateStatus?: PhotoUpdateStatus
 }
 
 export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
@@ -123,9 +127,13 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
     ...photoDb,
     tags: photoDb.tags ?? [],
     focalLengthFormatted:
-      formatFocalLength(photoDb.focalLength),
+      photoDb.focalLength
+        ? formatFocalLength(photoDb.focalLength)
+        : undefined,
     focalLengthIn35MmFormatFormatted:
-      formatFocalLength(photoDb.focalLengthIn35MmFormat),
+      photoDb.focalLengthIn35MmFormat
+        ? formatFocalLength(photoDb.focalLengthIn35MmFormat)
+        : undefined,
     fNumberFormatted:
       formatAperture(photoDb.fNumber),
     isoFormatted:
@@ -142,7 +150,10 @@ export const parsePhotoFromDb = (photoDbRaw: PhotoDb): Photo => {
         ? JSON.parse(photoDb.recipeData)
         : photoDb.recipeData
       : undefined,
-    syncStatus: generatePhotoSyncStatus(photoDb),
+    colorData: photoDb.colorData
+      ? photoDb.colorData
+      : undefined,
+    updateStatus: generatePhotoUpdateStatus(photoDb),
   } as Photo;
 };
 
@@ -162,14 +173,8 @@ export const convertPhotoToPhotoDbInsert = (
   ...photo,
   takenAt: photo.takenAt.toISOString(),
   recipeData: JSON.stringify(photo.recipeData),
+  colorData: JSON.stringify(photo.colorData),
 });
-
-export const photoStatsAsString = (photo: Photo) => [
-  photo.model,
-  photo.focalLengthFormatted,
-  photo.fNumberFormatted,
-  photo.isoFormatted,
-].join(' ');
 
 export const descriptionForPhoto = (
   photo: Photo,
@@ -197,11 +202,11 @@ export const generateOgImageMetaForPhotos = (photos: Photo[]): Metadata => {
   if (photos.length > 0) {
     return {
       openGraph: {
-        images: ABSOLUTE_PATH_FOR_HOME_IMAGE,
+        images: ABSOLUTE_PATH_HOME_IMAGE,
       },
       twitter: {
         card: 'summary_large_image',
-        images: ABSOLUTE_PATH_FOR_HOME_IMAGE,
+        images: ABSOLUTE_PATH_HOME_IMAGE,
       },
     };
   } else {
@@ -247,7 +252,7 @@ export const photoLabelForCount = (
     : appText.photo.photoPlural;
   return _capitalize
     ? capitalize(label)
-    : label;
+    : label.toLocaleLowerCase();
 };
 
 export const photoQuantityText = (
@@ -266,7 +271,13 @@ export const deleteConfirmationTextForPhoto = (
 ) =>
   appText.admin.deleteConfirm(titleForPhoto(photo));
 
-export type PhotoDateRange = { start: string, end: string };
+export type PhotoDateRangePostgres = { start: string, end: string };
+export type PhotoDateRangeFormatted = {
+  start: string,
+  end: string,
+  description: string,
+  descriptionWithSpaces: string,
+};
 
 export const descriptionForPhotoSet = (
   photos:Photo[] = [],
@@ -274,10 +285,10 @@ export const descriptionForPhotoSet = (
   descriptor?: string,
   dateBased?: boolean,
   explicitCount?: number,
-  explicitDateRange?: PhotoDateRange,
+  explicitDateRange?: PhotoDateRangePostgres,
 ) =>
   dateBased
-    ? dateRangeForPhotos(photos, explicitDateRange)
+    ? formattedDateRangeForPhotos(photos, explicitDateRange)
       .description
       .toLocaleUpperCase()
     : [
@@ -295,10 +306,10 @@ const sortPhotosByDateNonDestructively = (
     ? b.takenAt.getTime() - a.takenAt.getTime()
     : a.takenAt.getTime() - b.takenAt.getTime());
 
-export const dateRangeForPhotos = (
+export const formattedDateRangeForPhotos = (
   photos: Photo[] = [],
-  explicitDateRange?: PhotoDateRange,
-) => {
+  explicitDateRange?: PhotoDateRangePostgres,
+): PhotoDateRangeFormatted => {
   let start = '';
   let end = '';
   let description = '';
@@ -370,17 +381,6 @@ export const getKeywordsForPhoto = (photo: Photo) =>
     .concat((photo.semanticDescription ?? '').split(' '))
     .filter(Boolean)
     .map(keyword => keyword.toLocaleLowerCase());
-
-export const isNextImageReadyBasedOnPhotos = async (
-  photos: Photo[],
-): Promise<boolean> =>
-  photos.length > 0 && fetch(getNextImageUrlForRequest({
-    imageUrl: photos[0].url,
-    size: 640,
-    addBypassSecret: IS_PREVIEW,
-  }))
-    .then(response => response.ok)
-    .catch(() => false);
 
 export const downloadFileNameForPhoto = (photo: Photo) =>
   photo.title

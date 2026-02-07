@@ -1,30 +1,34 @@
-import { pathForLens } from '@/app/paths';
+'use client';
+
+import { pathForLens } from '@/app/path';
 import { Lens, formatLensText } from '.';
 import EntityLink, {
   EntityLinkExternalProps,
-} from '@/components/primitives/EntityLink';
+} from '@/components/entity/EntityLink';
 import IconLens from '@/components/icons/IconLens';
+import useCategoryCounts from '@/category/useCategoryCounts';
 
 export default function PhotoLens({
   lens,
-  countOnHover,
-  shortText,
+  longText,
   ...props
 }: {
   lens: Lens
-  countOnHover?: number
-  shortText?: boolean
+  longText?: boolean
 } & EntityLinkExternalProps) {
+  const { getLensCount } = useCategoryCounts();
   return (
     <EntityLink
       {...props}
-      label={formatLensText(lens, shortText ? 'short' : 'medium')}
-      href={pathForLens(lens)}
+      label={formatLensText(lens, longText ? 'long' : 'short')}
+      labelSmall={formatLensText(lens, 'short')}
+      path={pathForLens(lens)}
+      hoverQueryOptions={{ lens }}
       icon={<IconLens
         size={14}
         className="translate-x-[-0.5px]"
       />}
-      hoverEntity={countOnHover}
+      hoverCount={props.hoverCount ?? getLensCount(lens)}
     />
   );
 }

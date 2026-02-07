@@ -7,11 +7,12 @@ import Spinner from '@/components/Spinner';
 import {
   PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_INSIGHTS,
+  PATH_ADMIN_PHOTOS_UPDATES,
   checkPathPrefix,
   isPathAdminInfo,
   isPathTopLevelAdmin,
-} from '@/app/paths';
-import { useAppState } from '@/state/AppState';
+} from '@/app/path';
+import { useAppState } from '@/app/AppState';
 import { clsx } from 'clsx/lite';
 import { differenceInMinutes } from 'date-fns';
 import { usePathname } from 'next/navigation';
@@ -52,15 +53,17 @@ export default function AdminNavClient({
     useState(areTimesRecent(updateTimes));
 
   useEffect(() => {
-    // Check every 5 seconds if update times are recent
-    setHasRecentUpdates(areTimesRecent(updateTimes));
+    // Check every 1 second if update times are recent
     const interval = setInterval(() =>
       setHasRecentUpdates(areTimesRecent(updateTimes))
-    , 5_000);
+    , 1_000);
     return () => clearInterval(interval);
   }, [updateTimes]);
 
-  const shouldShowBanner = hasRecentUpdates && isPathTopLevelAdmin(pathname);
+  const shouldShowBanner =
+    hasRecentUpdates &&
+    isPathTopLevelAdmin(pathname) &&
+    pathname !== PATH_ADMIN_PHOTOS_UPDATES;
 
   return (
     <AppGrid

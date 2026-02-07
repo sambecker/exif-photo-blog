@@ -3,42 +3,55 @@
 import { ReactNode, useRef, useState, ComponentProps } from 'react';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import MenuSurface from './MenuSurface';
-import useSupportsHover from '@/utility/useSupportsHover';
 import clsx from 'clsx/lite';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
 import KeyCommand from './KeyCommand';
+import { clearGlobalFocus } from '@/utility/dom';
+import { useAppState } from '@/app/AppState';
 
 export default function TooltipPrimitive({
   content: contentProp,
   children,
   className,
   classNameTrigger: classNameTriggerProp,
-  sideOffset = 10,
-  delayDuration = 100,
-  skipDelayDuration = 300,
-  supportMobile,
   color,
   keyCommand,
   keyCommandModifier,
+  supportMobile,
+  animateLarge,
+  disableHoverableContent,
+  delayDuration = 100,
+  skipDelayDuration = 300,
+  align,
+  side,
+  sideOffset = 10,
+  debug,
 }: {
   content?: ReactNode
   children: ReactNode
   className?: string
   classNameTrigger?: string
-  sideOffset?: number
-  delayDuration?: number
-  skipDelayDuration?: number
-  supportMobile?: boolean
   color?: ComponentProps<typeof MenuSurface>['color']
   keyCommand?: string
   keyCommandModifier?: ComponentProps<typeof KeyCommand>['modifier']
+  supportMobile?: boolean
+  animateLarge?: boolean
+  disableHoverableContent?: boolean
+  // Tooltip.Provider
+  delayDuration?: number
+  skipDelayDuration?: number
+  // Tooltip.Content
+  align?: ComponentProps<typeof Tooltip.Content>['align']
+  side?: ComponentProps<typeof Tooltip.Content>['side']
+  sideOffset?: number
+  debug?: boolean
 }) {
   const refTrigger = useRef<HTMLButtonElement>(null);
   const refContent = useRef<HTMLDivElement>(null);
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const supportsHover = useSupportsHover();
+  const { supportsHover } = useAppState();
 
   const includeButton = supportMobile && supportsHover === false;
 
@@ -64,24 +77,22 @@ export default function TooltipPrimitive({
     </div>
     : contentProp;
 
-  // Blur after clicking to prevent keyboard focus being stuck
-  // when tooltip is combined with a button
-  const blurActiveElement = () => {
-    if (document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur();
-    }
-  };
-
   return (
     <Tooltip.Provider {...{ delayDuration, skipDelayDuration }}>
-      <Tooltip.Root open={includeButton ? isOpen : undefined}>
+      <Tooltip.Root
+        open={(includeButton ? isOpen : undefined) || debug}
+        disableHoverableContent={disableHoverableContent}
+      >
         <Tooltip.Trigger asChild>
           {includeButton
             ? <button
               ref={refTrigger}
+              type="button"
               onClick={() => {
                 setIsOpen(!isOpen);
-                blurActiveElement();
+                // Blur after clicking to prevent keyboard focus being stuck
+                // when tooltip is combined with a button
+                clearGlobalFocus();
               }}
               className={clsx('link', classNameTrigger)}
             >
@@ -89,7 +100,7 @@ export default function TooltipPrimitive({
             </button>
             : <span
               className={classNameTrigger}
-              onClick={blurActiveElement}
+              onClick={clearGlobalFocus}
             >
               {children}
             </span>}
@@ -97,11 +108,17 @@ export default function TooltipPrimitive({
         <Tooltip.Portal>
           <Tooltip.Content
             ref={refContent}
+            align={align}
+            side={side}
             sideOffset={sideOffset}
             className={clsx(
               // Entrance animations
-              'data-[side=top]:animate-fade-in-from-bottom',
-              'data-[side=bottom]:animate-fade-in-from-top',
+              animateLarge
+                ? 'data-[side=top]:animate-fade-in-from-bottom-large'
+                : 'data-[side=top]:animate-fade-in-from-bottom',
+              animateLarge
+                ? 'data-[side=bottom]:animate-fade-in-from-top-large'
+                : 'data-[side=bottom]:animate-fade-in-from-top',
               // Extra collision padding
               'mx-2',
               // Z-index above
