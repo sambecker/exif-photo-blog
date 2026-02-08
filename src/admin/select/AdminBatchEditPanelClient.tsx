@@ -28,9 +28,11 @@ import { convertStringToArray } from '@/utility/string';
 export default function AdminBatchEditPanelClient({
   uniqueAlbums,
   uniqueTags,
+  showSelectAll,
 }: {
   uniqueAlbums: Albums
   uniqueTags: Tags
+  showSelectAll?: boolean
 }) {
   const refNote = useRef<HTMLDivElement>(null);
 
@@ -238,12 +240,13 @@ export default function AdminBatchEditPanelClient({
                 <div className="text-base flex gap-2 items-center">
                   {renderPhotoCTA}
                 </div>
-                <FieldsetWithStatus
-                  label="Select All Photos"
-                  type="checkbox"
-                  value={isSelectingAllPhotos ? 'true' : 'false'}
-                  onChange={toggleIsSelectingAllPhotos}
-                />
+                {showSelectAll &&
+                  <FieldsetWithStatus
+                    label="Select All Photos"
+                    type="checkbox"
+                    value={isSelectingAllPhotos ? 'true' : 'false'}
+                    onChange={toggleIsSelectingAllPhotos}
+                  />}
               </div>}
         </Note>
         {tagErrorMessage &&
