@@ -8,7 +8,7 @@ import {
   STATICALLY_OPTIMIZED_PHOTOS,
 } from '@/app/config';
 import { GENERATE_STATIC_PARAMS_LIMIT } from '@/db';
-import { getPublicPhotoIds } from '@/photo/query';
+import { getAllPublicPhotoIds } from '@/photo/query';
 import { depluralize, pluralize } from '@/utility/string';
 
 type StaticOutput = 'page' | 'image';
@@ -25,7 +25,7 @@ export const staticallyGeneratePhotosIfConfigured = (type: StaticOutput) => (
   (type === 'image' && STATICALLY_OPTIMIZED_PHOTO_OG_IMAGES)
 )
   ? async () => {
-    const photoIds = await getPublicPhotoIds({
+    const photoIds = await getAllPublicPhotoIds({
       limit: GENERATE_STATIC_PARAMS_LIMIT,
     })
       .catch(e => {

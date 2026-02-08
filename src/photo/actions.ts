@@ -14,6 +14,7 @@ import {
   getPhotosNeedingRecipeTitleCount,
   updateColorDataForPhoto,
   getColorDataForPhotos,
+  getPhotoIds,
 } from '@/photo/query';
 import { PhotoQueryOptions, areOptionsSensitive } from '@/db';
 import {
@@ -664,6 +665,44 @@ export const streamAiImageQueryAction = async (
 
 export const getImageBlurAction = async (url: string) =>
   runAuthenticatedAdminServerAction(() => blurImageFromUrl(url));
+
+// Batch actions
+
+export const batchPhotoAction = async ({
+  photoIds: _photoIds = [],
+  photoOptions = {},
+  tags = [],
+  albumIds = [],
+  action,
+}: {
+  photoIds?: string[]
+  photoOptions?: PhotoQueryOptions
+  tags?: string[]
+  albumIds?: string[]
+  action?: 'toggleFavorite' | 'delete'
+}) => runAuthenticatedAdminServerAction(async () => {
+  let photoIds = _photoIds.length > 0
+    ? _photoIds
+    : await getPhotoIds(photoOptions);
+  if (photoOptions) {
+    const photos = await getPhotos(photoOptions);
+    photoIds = photos.map(photo => photo.id);
+  }
+  if (tags.length > 0) {
+    await addTagsToPhotos(tags, photoIds);
+  }
+  if (albumIds.length > 0) {
+    await addPhotoAlbumIds(photoIds, albumIds);
+  }
+  switch (action) {
+    case 'toggleFavorite':
+      await addTagsToPhotos([TAG_FAVS], photoIds);
+      break;
+    case 'delete':
+      await deletePhotosAction(photoIds);
+      break;
+  }
+});
 
 // Public/Private actions
 

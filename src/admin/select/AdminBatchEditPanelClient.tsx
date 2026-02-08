@@ -8,7 +8,7 @@ import { IoCloseSharp } from 'react-icons/io5';
 import { useEffect, useRef, useState } from 'react';
 import { TAG_FAVS, Tags } from '@/tag';
 import FieldsetTag from '@/tag/FieldsetTag';
-import { tagMultiplePhotosAction } from '@/photo/actions';
+import { batchPhotoAction, tagMultiplePhotosAction } from '@/photo/actions';
 import { toastSuccess } from '@/toast';
 import DeletePhotosButton from '@/admin/DeletePhotosButton';
 import { photoQuantityText } from '@/photo';
@@ -23,6 +23,7 @@ import FieldsetAlbum from '@/album/FieldsetAlbum';
 import IconAlbum from '@/components/icons/IconAlbum';
 import { addPhotosToAlbumsAction } from '@/album/actions';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
+import { convertStringToArray } from '@/utility/string';
 
 export default function AdminBatchEditPanelClient({
   uniqueAlbums,
@@ -101,10 +102,10 @@ export default function AdminBatchEditPanelClient({
         onClick={() => {
           setIsPerformingSelectEdit?.(true);
           if (isInTagMode) {
-            tagMultiplePhotosAction(
-              tags,
-              selectedPhotoIds ?? [],
-            )
+            batchPhotoAction({
+              tags: convertStringToArray(tags, false),
+              photoIds: selectedPhotoIds,
+            })
               .then(() => {
                 toastSuccess(`${photosText} tagged`);
                 stopSelectingPhotos?.();
