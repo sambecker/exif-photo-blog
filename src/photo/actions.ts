@@ -61,7 +61,6 @@ import { generateAiImageQueries } from './ai/server';
 import { createStreamableValue } from '@ai-sdk/rsc';
 import { convertUploadToPhoto } from './storage/server';
 import { UrlAddStatus } from '@/admin/AdminUploadsClient';
-import { convertStringToArray } from '@/utility/string';
 import { after } from 'next/server';
 import {
   getColorFieldsForImageUrl,
@@ -337,18 +336,6 @@ export const updatePhotoAction = async (formData: FormData) =>
     redirect(PATH_ADMIN_PHOTOS);
   });
 
-export const tagMultiplePhotosAction = async (
-  tags: string,
-  photoIds: string[],
-) =>
-  runAuthenticatedAdminServerAction(async () => {
-    await addTagsToPhotos(
-      convertStringToArray(tags, false) ?? [],
-      photoIds,
-    );
-    revalidateAllKeysAndPaths();
-  });
-
 export const toggleFavoritePhotoAction = async (
   photoId: string,
   shouldRedirect?: boolean,
@@ -380,17 +367,6 @@ export const togglePrivatePhotoAction = async (
       revalidateAllKeysAndPaths();
     }
     if (redirectPath) { redirect(redirectPath); }
-  });
-
-export const deletePhotosAction = async (photoIds: string[]) =>
-  runAuthenticatedAdminServerAction(async () => {
-    for (const photoId of photoIds) {
-      const photo = await getPhoto(photoId, true);
-      if (photo) {
-        await deletePhotoAndFiles(photoId, photo.url);
-      }
-    }
-    revalidateAllKeysAndPaths();
   });
 
 export const deletePhotoAction = async (
@@ -670,38 +646,45 @@ export const getImageBlurAction = async (url: string) =>
 
 export const batchPhotoAction = async ({
   photoIds: _photoIds = [],
-  photoOptions = {},
+  photoOptions,
   tags = [],
-  albumIds = [],
+  albumTitles = [],
   action,
 }: {
   photoIds?: string[]
   photoOptions?: PhotoQueryOptions
   tags?: string[]
-  albumIds?: string[]
-  action?: 'toggleFavorite' | 'delete'
+  albumTitles?: string[]
+  action?: 'favorite' | 'delete'
 }) => runAuthenticatedAdminServerAction(async () => {
-  let photoIds = _photoIds.length > 0
+  const photoIds = _photoIds.length > 0
     ? _photoIds
-    : await getPhotoIds(photoOptions);
-  if (photoOptions) {
-    const photos = await getPhotos(photoOptions);
-    photoIds = photos.map(photo => photo.id);
-  }
+    : Boolean(photoOptions)
+      ? await getPhotoIds(photoOptions)
+      : [];
+
   if (tags.length > 0) {
     await addTagsToPhotos(tags, photoIds);
   }
-  if (albumIds.length > 0) {
+  if (albumTitles.length > 0) {
+    const albumIds = await createAlbumsAndGetIds(albumTitles);
     await addPhotoAlbumIds(photoIds, albumIds);
   }
   switch (action) {
-    case 'toggleFavorite':
+    case 'favorite':
       await addTagsToPhotos([TAG_FAVS], photoIds);
       break;
     case 'delete':
-      await deletePhotosAction(photoIds);
+      for (const photoId of photoIds) {
+        const photo = await getPhoto(photoId, true);
+        if (photo) {
+          await deletePhotoAndFiles(photoId, photo.url);
+        }
+      }
       break;
   }
+
+  revalidateAllKeysAndPaths();
 });
 
 // Public/Private actions
