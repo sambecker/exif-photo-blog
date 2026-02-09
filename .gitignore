@@ -36,4 +36,5 @@ next-env.d.ts
 
 # temp files
 /backup
+/app/restore
 temp.jpg

@@ -423,10 +423,12 @@ export const getUniqueFocalLengths = async () =>
 const _getPhotos = async (
   options: PhotoQueryOptions = {},
   fields = ['*'],
+  shouldParse = true,
 ) => {
   const sql = [
     `SELECT ${fields.map(field => `p.${field}`).join(', ')} FROM photos p`,
   ];
+
   const values = [] as (string | number)[];
 
   const joins = getJoinsFromOptions(options);
@@ -458,9 +460,11 @@ const _getPhotos = async (
   return query(sql.join(' '), values)
     .then(({ rows, rowCount }) => ({
       // Only parse results if there's at least one photo
-      photos: rows[0].id ? rows.map(parsePhotoFromDb) : [],
+      photos: shouldParse ? rows.map(parsePhotoFromDb) : rows,
       // Prefer explicit count before falling back to row count
-      count: parseInt(rows[0]?.count ?? '0', 10) || rowCount,
+      count: rows[0]?.count !== undefined
+        ? parseInt(rows[0]?.count ?? '0', 10)
+        : rowCount ?? 0,
     }));
 };
 
@@ -474,7 +478,7 @@ export const getPhotos = async (options: PhotoQueryOptions = {}) =>
 
 export const getPhotoIds = async (options: PhotoQueryOptions = {}) =>
   safelyQuery(
-    async () => _getPhotos(options, ['id'])
+    async () => _getPhotos(options, ['id'], false)
       .then(({ photos }) => photos.map(photo => photo.id)),
     'getPhotoIds',
     // Seemingly necessary to pass `options` for expected cache behavior
@@ -483,7 +487,7 @@ export const getPhotoIds = async (options: PhotoQueryOptions = {}) =>
 
 export const getPhotoCount = async (options: PhotoQueryOptions = {}) =>
   safelyQuery(
-    async () => _getPhotos(options, ['COUNT(*)'])
+    async () => _getPhotos(options, ['COUNT(*)'], false)
       .then(({ count }) => count),
     'getPhotoCount',
     // Seemingly necessary to pass `options` for expected cache behavior
