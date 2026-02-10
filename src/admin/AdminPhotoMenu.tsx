@@ -17,6 +17,7 @@ import {
   Photo,
   deleteConfirmationTextForPhoto,
   downloadFileNameForPhoto,
+  titleForPhoto,
 } from '@/photo';
 import { isPathFavs, isPhotoFav, TAG_PRIVATE } from '@/tag';
 import { usePathname } from 'next/navigation';
@@ -40,12 +41,14 @@ export default function AdminPhotoMenu({
   revalidatePhoto,
   includeFavorite = true,
   showKeyCommands,
+  alwaysVisible,
   ...props
-}: Omit<ComponentProps<typeof MoreMenu>, 'sections'> & {
+}: Omit<ComponentProps<typeof MoreMenu>, 'sections' | 'ariaLabel'> & {
   photo: Photo
   revalidatePhoto?: RevalidatePhoto
   includeFavorite?: boolean
   showKeyCommands?: boolean
+  alwaysVisible?: boolean
 }) {
   const { isUserSignedIn, registerAdminUpdate } = useAppState();
 
@@ -189,10 +192,11 @@ export default function AdminPhotoMenu({
   , [sectionMain, sectionDelete]);
 
   return (
-    isUserSignedIn
+    isUserSignedIn || alwaysVisible
       ? <MoreMenu {...{
         ...props,
         sections,
+        ariaLabel: `Admin menu for '${titleForPhoto(photo)}' photo`,
       }}/>
       : null
   );

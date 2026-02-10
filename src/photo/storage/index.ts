@@ -86,6 +86,13 @@ export const uploadPhotoFromClient = (
 ) =>
   uploadFileFromClient(file, PREFIX_UPLOAD, extension);
 
+export const uploadPhotoReplacementFromClient = (
+  file: File | Blob,
+  existingFileName: string,
+  extension: string,
+) =>
+  uploadFileFromClient(file, existingFileName, extension, false);
+
 const getSuffixFromNextImageSize = (nextSize: NextImageSize) =>
   OPTIMIZED_FILE_SIZES.find(({ size }) => size === nextSize)?.suffix
     ?? OPTIMIZED_SUFFIX_DEFAULT;

@@ -30,6 +30,7 @@ export default function MoreMenu({
   isOpen: isOpenProp,
   setIsOpen: setIsOpenProp,
   onOpen,
+  disabled,
   ...props
 }: {
   sections: MoreMenuSection[]
@@ -42,6 +43,7 @@ export default function MoreMenu({
   isOpen?: boolean
   setIsOpen?: (isOpen: boolean) => void
   onOpen?: () => void
+  disabled?: boolean
 } & ComponentProps<typeof DropdownMenu.Content>){
   const [isOpenInternal, setIsOpenInternal] = useState(isOpenProp ?? false);
 
@@ -62,7 +64,7 @@ export default function MoreMenu({
       open={isOpen}
       onOpenChange={setIsOpen}
     >
-      <DropdownMenu.Trigger asChild>
+      <DropdownMenu.Trigger asChild {...{ disabled }}>
         <button
           type="button"
           className={clsx(
