@@ -1,9 +1,6 @@
-import {
-  getPhotosCached,
-  getPhotosMetaCached,
-} from '@/photo/cache';
+import { getPhotos, getPhotosMeta } from '@/photo/query';
 
-export const getPhotosYearDataCached = ({
+export const getPhotosYearData = ({
   year,
   limit,
 }: {
@@ -11,6 +8,6 @@ export const getPhotosYearDataCached = ({
   limit?: number,
 }) =>
   Promise.all([
-    getPhotosCached({ year, limit }),
-    getPhotosMetaCached({ year }),
+    getPhotos({ year, limit }),
+    getPhotosMeta({ year }),
   ]);

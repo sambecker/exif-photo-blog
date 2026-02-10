@@ -13,7 +13,7 @@ export const safelyQuery = async <T>(
 ): Promise<T> => {
   let result: T;
 
-  const start = new Date();
+  const start = performance.now();
 
   try {
     result = await callback();
@@ -89,9 +89,8 @@ export const safelyQuery = async <T>(
   }
 
   if (ADMIN_SQL_DEBUG_ENABLED && queryLabel) {
-    const time =
-      (((new Date()).getTime() - start.getTime()) / 1000).toFixed(2);
-    const message = `Debug query: ${queryLabel} (${time} seconds)`;
+    const time = (performance.now() - start) / 1000;
+    const message = `Debug query: ${queryLabel} (${time.toFixed(2)} seconds)`;
     if (queryOptions) {
       console.log(message, { options: queryOptions });
     } else {

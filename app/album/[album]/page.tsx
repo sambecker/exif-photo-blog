@@ -1,3 +1,5 @@
+'use cache';
+
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { PATH_ROOT } from '@/app/path';
 import type { Metadata } from 'next';
@@ -7,23 +9,25 @@ import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
 import AlbumOverview from '@/album/AlbumOverview';
 import { Album, generateMetaForAlbum } from '@/album';
-import { getPhotosAlbumDataCached } from '@/album/data';
+import { getPhotosAlbumData } from '@/album/data';
 import {
   getAlbumFromSlugCached,
-  getAlbumsWithMetaCached,
   getTagsForAlbumCached,
 } from '@/album/cache';
 import { getPhotosCached } from '@/photo/cache';
+import { cacheTagGlobal } from '@/cache';
+import { getAlbumsWithMeta } from '@/album/query';
 
-const getPhotosAlbumDataCachedCached = cache((album: Album) =>
-  getPhotosAlbumDataCached({ album, limit: INFINITE_SCROLL_GRID_INITIAL}));
+const getPhotosAlbumDataCached = cache((album: Album) =>
+  getPhotosAlbumData({ album, limit: INFINITE_SCROLL_GRID_INITIAL}));
 
-export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-  'albums',
-  'page',
-  getAlbumsWithMetaCached,
-  albums => albums.map(({ album }) => ({ album: album.slug })),
-);
+export const generateStaticParams = async () =>
+  staticallyGenerateCategoryIfConfigured(
+    'albums',
+    'page',
+    getAlbumsWithMeta,
+    albums => albums.map(({ album }) => ({ album: album.slug })),
+  );
 
 interface AlbumProps {
   params: Promise<{ album: string }>
@@ -43,7 +47,7 @@ export async function generateMetadata({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosAlbumDataCachedCached(album);
+  ] = await getPhotosAlbumDataCached(album);
 
   if (photos.length === 0) { return {}; }
 
@@ -76,6 +80,8 @@ export async function generateMetadata({
 export default async function AlbumPage({
   params,
 }:AlbumProps) {
+  cacheTagGlobal();
+
   const { album: albumFromParams } = await params;
 
   const albumSlug = decodeURIComponent(albumFromParams);

@@ -1,7 +1,6 @@
 'use client';
 
 import { clsx } from 'clsx/lite';
-import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import AppGrid from '../components/AppGrid';
 import AppViewSwitcher, { SwitcherSelection } from '@/app/AppViewSwitcher';
@@ -29,15 +28,16 @@ const NAV_HEIGHT_CLASS = NAV_CAPTION
 export default function NavClient({
   navTitle,
   navCaption,
+  pathname,
   animate,
 }: {
   navTitle: string
   navCaption?: string
+  pathname?: string
   animate: boolean
 }) {
   const ref = useRef<HTMLElement>(null);
 
-  const pathname = usePathname();
   const showNav = !isPathSignIn(pathname);
 
   const {
@@ -93,6 +93,7 @@ export default function NavClient({
               <AppViewSwitcher
                 currentSelection={switcherSelectionForPath()}
                 className="translate-x-[-1px]"
+                pathname={pathname}
                 animate={hasLoadedWithAnimations && isNavVisible}
               />
               <div className={clsx(

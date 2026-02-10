@@ -29,8 +29,8 @@ import {
   revalidatePhotosKey,
   revalidateRecipesKey,
   revalidateTagsKey,
-} from '@/cache';
-import { revalidatePhoto, getPhotosCached } from './cache';
+} from '@/cache/index-old';
+import { revalidatePhoto } from './cache';
 import {
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_RECIPES,
@@ -74,6 +74,7 @@ import {
   upgradeTagToAlbum,
 } from '@/album/server';
 import { addPhotoAlbumIds } from '@/album/query';
+import { cacheTagGlobal, revalidateGlobalCache } from '@/cache';
 
 // Private actions
 
@@ -331,7 +332,7 @@ export const updatePhotoAction = async (formData: FormData) =>
         await propagateRecipeTitleIfNecessary(formData, photo);
       });
 
-    revalidateAllKeysAndPaths();
+    await revalidateGlobalCache();
 
     redirect(PATH_ADMIN_PHOTOS);
   });
@@ -345,7 +346,7 @@ export const tagMultiplePhotosAction = async (
       convertStringToArray(tags, false) ?? [],
       photoIds,
     );
-    revalidateAllKeysAndPaths();
+    await revalidateGlobalCache();
   });
 
 export const toggleFavoritePhotoAction = async (
@@ -360,7 +361,7 @@ export const toggleFavoritePhotoAction = async (
         ? tags.filter(tag => !isTagFavs(tag))
         : [...tags, TAG_FAVS];
       await updatePhoto(convertPhotoToPhotoDbInsert(photo));
-      revalidateAllKeysAndPaths();
+      await revalidateGlobalCache();
       if (shouldRedirect) {
         redirect(pathForPhoto({ photo: photoId }));
       }
@@ -376,7 +377,7 @@ export const togglePrivatePhotoAction = async (
     if (photo) {
       photo.hidden = !photo.hidden;
       await updatePhoto(convertPhotoToPhotoDbInsert(photo));
-      revalidateAllKeysAndPaths();
+      await revalidateGlobalCache();
     }
     if (redirectPath) { redirect(redirectPath); }
   });
@@ -389,7 +390,7 @@ export const deletePhotosAction = async (photoIds: string[]) =>
         await deletePhotoAndFiles(photoId, photo.url);
       }
     }
-    revalidateAllKeysAndPaths();
+    await revalidateGlobalCache();
   });
 
 export const deletePhotoAction = async (
@@ -399,7 +400,7 @@ export const deletePhotoAction = async (
 ) =>
   runAuthenticatedAdminServerAction(async () => {
     await deletePhotoAndFiles(photoId, photoUrl);
-    revalidateAllKeysAndPaths();
+    await revalidateGlobalCache();
     if (shouldRedirect) {
       redirect(PATH_ROOT);
     }
@@ -419,7 +420,7 @@ export const deletePhotoTagGloballyAction = async (
 ) =>
   runAuthenticatedAdminServerAction(async () => {
     await deletePhotoTagGlobally(tag);
-    revalidateAllKeysAndPaths();
+    await revalidateGlobalCache();
     if (currentPath === pathForTag(tag)) {
       redirect(PATH_ROOT);
     }
@@ -440,7 +441,7 @@ export const renamePhotoTagGloballyAction = async (formData: FormData) =>
 
 export const upgradeTagToAlbumAction = async (tag: string) =>
   runAuthenticatedAdminServerAction(async () =>
-    upgradeTagToAlbum(tag).then(revalidateAllKeysAndPaths),
+    upgradeTagToAlbum(tag).then(revalidateGlobalCache),
   );
 
 export const getPhotosNeedingRecipeTitleCountAction = async (
@@ -684,12 +685,14 @@ export const getPhotosCachedAction = async (
   options: PhotoQueryOptions,
   warmOnly?: boolean,
 ) => {
+  'use cache';
+  cacheTagGlobal();
   if (warmOnly) {
     return [];
   } else {
     return areOptionsSensitive(options)
-      ? runAuthenticatedAdminServerAction(() => getPhotosCached(options))
-      : getPhotosCached(options);
+      ? runAuthenticatedAdminServerAction(() => getPhotos(options))
+      : getPhotos(options);
   }
 };
 

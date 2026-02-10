@@ -1,14 +1,19 @@
-import { getPhotosCached } from '@/photo/cache';
 import { SITE_FEEDS_ENABLED } from '@/app/config';
 import { formatFeedRssXml } from '@/feed/rss';
 import { PROGRAMMATIC_QUERY_OPTIONS } from '@/feed';
+import { cacheTagGlobal } from '@/cache';
+import { getPhotos } from '@/photo/query';
 
-// Cache for 24 hours
-export const revalidate = 86_400;
+async function getCacheComponent() {
+  'use cache';
+  cacheTagGlobal();
+
+  return getPhotos(PROGRAMMATIC_QUERY_OPTIONS);
+}
 
 export async function GET() {
   if (SITE_FEEDS_ENABLED) {
-    const photos = await getPhotosCached(PROGRAMMATIC_QUERY_OPTIONS)
+    const photos = await getCacheComponent()
       .catch(() => []);
     return new Response(
       formatFeedRssXml(photos),

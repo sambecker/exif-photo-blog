@@ -1,21 +1,6 @@
-import { getPhotosCached } from '@/photo/cache';
-import {
-  IMAGE_OG_DIMENSION_SMALL,
-  MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
-} from '@/image-response';
-import { getIBMPlexMono } from '@/app/font';
-import { ImageResponse } from 'next/og';
-import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
-import { getUniqueRecipes } from '@/photo/query';
+import { MAX_PHOTOS_TO_SHOW_PER_CATEGORY } from '@/image-response/size';
 import RecipeImageResponse from '@/recipe/RecipeImageResponse';
-import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
-
-export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-  'recipes',
-  'image',
-  getUniqueRecipes,
-  recipes => recipes.map(({ recipe }) => ({ recipe })),
-);
+import { cachedOgPhotoResponse } from '@/image-response/photo';
 
 export async function GET(
   _: Request,
@@ -23,26 +8,9 @@ export async function GET(
 ) {
   const { recipe } = await context.params;
 
-  const [
-    photos,
-    { fontFamily, fonts },
-    headers,
-  ] = await Promise.all([
-    getPhotosCached({ recipe, limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY }),
-    getIBMPlexMono(),
-    getImageResponseCacheControlHeaders(),
-  ]);
-
-  const { width, height } = IMAGE_OG_DIMENSION_SMALL;
-
-  return new ImageResponse(
-    <RecipeImageResponse {...{
-      recipe,
-      photos,
-      width,
-      height,
-      fontFamily,
-    }}/>,
-    { width, height, fonts, headers },
+  return cachedOgPhotoResponse(
+    { recipe },
+    { recipe, limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY },
+    args => <RecipeImageResponse {...{ recipe, ...args }} />,
   );
 }

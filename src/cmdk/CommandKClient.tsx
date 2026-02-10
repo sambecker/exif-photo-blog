@@ -186,8 +186,8 @@ export default function CommandKClient({
 
   const {
     isSelectingPhotos,
-    startSelectingPhotos,
-    stopSelectingPhotos,
+    startSelectingPhotosPath,
+    stopSelectingPhotosPath,
   } = useSelectPhotosState();
 
   const {
@@ -665,13 +665,10 @@ export default function CommandKClient({
       annotation: <IconLock narrow />,
       // Search by legacy label
       keywords: ['batch', 'edit'],
-      action: () => {
-        if (!isSelectingPhotos) {
-          startSelectingPhotos?.();
-        } else {
-          stopSelectingPhotos?.();
-        }
-      },
+      // TODO: Fix close action
+      path: isSelectingPhotos
+        ? stopSelectingPhotosPath
+        : startSelectingPhotosPath,
     }, {
       label: <span className="flex items-center gap-3">
         {appText.admin.appInsights}
@@ -700,7 +697,7 @@ export default function CommandKClient({
     adminSection.items.push({
       label: appText.auth.signOut,
       action: () => signOutAction()
-        .then(clearAuthStateAndRedirectIfNecessary)
+        .then(() => clearAuthStateAndRedirectIfNecessary?.(pathname))
         .then(() => setIsOpen?.(false)),
     });
   } else {

@@ -22,6 +22,8 @@ import { Albums } from '@/album';
 import FieldsetAlbum from '@/album/FieldsetAlbum';
 import IconAlbum from '@/components/icons/IconAlbum';
 import { addPhotosToAlbumsAction } from '@/album/actions';
+import { useRouter } from 'next/navigation';
+import PathLoaderButton from '@/components/primitives/PathLoaderButton';
 
 export default function AdminBatchEditPanelClient({
   uniqueAlbums,
@@ -32,10 +34,12 @@ export default function AdminBatchEditPanelClient({
 }) {
   const refNote = useRef<HTMLDivElement>(null);
 
+  const router = useRouter();
+
   const {
     canCurrentPageSelectPhotos,
     isSelectingPhotos,
-    stopSelectingPhotos,
+    stopSelectingPhotosPath = '',
     selectedPhotoIds,
     isPerformingSelectEdit,
     setIsPerformingSelectEdit,
@@ -104,7 +108,7 @@ export default function AdminBatchEditPanelClient({
             )
               .then(() => {
                 toastSuccess(`${photosText} tagged`);
-                stopSelectingPhotos?.();
+                router.push(stopSelectingPhotosPath);
               })
               .finally(() => setIsPerformingSelectEdit?.(false));
           } else if (isInAlbumMode) {
@@ -114,7 +118,7 @@ export default function AdminBatchEditPanelClient({
             )
               .then(() => {
                 toastSuccess(`${photosText} added`);
-                stopSelectingPhotos?.();
+                router.push(stopSelectingPhotosPath);
               })
               .finally(() => setIsPerformingSelectEdit?.(false));
           }
@@ -137,7 +141,7 @@ export default function AdminBatchEditPanelClient({
         photoIds={selectedPhotoIds}
         disabled={isFormDisabled}
         onClick={() => setIsPerformingSelectEdit?.(true)}
-        onDelete={stopSelectingPhotos}
+        onDelete={() => router.push(stopSelectingPhotosPath)}
         onFinish={() => setIsPerformingSelectEdit?.(false)}
       />
       <LoaderButton
@@ -152,7 +156,7 @@ export default function AdminBatchEditPanelClient({
           )
             .then(() => {
               toastSuccess(`${photosText} favorited`);
-              stopSelectingPhotos?.();
+              router.push(stopSelectingPhotosPath);
             })
             .finally(() => setIsPerformingSelectEdit?.(false));
         }}
@@ -171,9 +175,9 @@ export default function AdminBatchEditPanelClient({
       >
         Tag
       </LoaderButton>
-      <LoaderButton
+      <PathLoaderButton
+        path={stopSelectingPhotosPath}
         icon={<IoCloseSharp size={19} />}
-        onClick={stopSelectingPhotos}
       />
     </>;
 

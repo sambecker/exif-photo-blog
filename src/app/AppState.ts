@@ -13,7 +13,7 @@ import { InsightsIndicatorStatus } from '@/admin/insights';
 import { INITIAL_UPLOAD_STATE, UploadState } from '@/admin/upload';
 import { AdminData } from '@/admin/actions';
 import { RecipeProps } from '@/recipe';
-import { getCountsForCategoriesCachedAction } from '@/category/actions';
+import { getCountsForCategoriesAction } from '@/category/actions';
 import { SWRKey } from '@/swr';
 
 export type AppStateContextType = {
@@ -27,7 +27,7 @@ export type AppStateContextType = {
   shouldRespondToKeyboardCommands?: boolean
   setShouldRespondToKeyboardCommands?: Dispatch<SetStateAction<boolean>>
   categoriesWithCounts?: Awaited<ReturnType<
-    typeof getCountsForCategoriesCachedAction
+    typeof getCountsForCategoriesAction
   >>
   // ENVIRONMENT
   timezone?: string
@@ -45,7 +45,7 @@ export type AppStateContextType = {
   setUserEmail?: Dispatch<SetStateAction<string | undefined>>
   isUserSignedIn?: boolean
   isUserSignedInEager?: boolean
-  clearAuthStateAndRedirectIfNecessary?: () => void
+  clearAuthStateAndRedirectIfNecessary?: (pathname: string) => void
   // ADMIN
   isCheckingAuth?: boolean
   adminUpdateTimes?: Date[]

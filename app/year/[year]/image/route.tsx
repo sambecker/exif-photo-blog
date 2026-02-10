@@ -1,21 +1,6 @@
-import { getPhotosCached } from '@/photo/cache';
-import {
-  IMAGE_OG_DIMENSION_SMALL,
-  MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
-} from '@/image-response';
+import { MAX_PHOTOS_TO_SHOW_PER_CATEGORY } from '@/image-response/size';
 import YearImageResponse from '@/year/YearImageResponse';
-import { getIBMPlexMono } from '@/app/font';
-import { ImageResponse } from 'next/og';
-import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
-import { getUniqueYears } from '@/photo/query';
-import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
-
-export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-  'years',
-  'image',
-  getUniqueYears,
-  years => years.map(({ year }) => ({ year })),
-);
+import { cachedOgPhotoResponse } from '@/image-response/photo';
 
 export async function GET(
   _: Request,
@@ -23,29 +8,9 @@ export async function GET(
 ) {
   const { year } = await context.params;
 
-  const [
-    photos,
-    { fontFamily, fonts },
-    headers,
-  ] = await Promise.all([
-    getPhotosCached({
-      limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
-      year: year,
-    }),
-    getIBMPlexMono(),
-    getImageResponseCacheControlHeaders(),
-  ]);
-
-  const { width, height } = IMAGE_OG_DIMENSION_SMALL;
-
-  return new ImageResponse(
-    <YearImageResponse {...{
-      year,
-      photos,
-      width,
-      height,
-      fontFamily,
-    }}/>,
-    { width, height, fonts, headers },
+  return cachedOgPhotoResponse(
+    { year },
+    { year, limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY },
+    args => <YearImageResponse {...{ year, ...args }} />,
   );
-} 
+}

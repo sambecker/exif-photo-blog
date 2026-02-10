@@ -1,9 +1,11 @@
+'use cache';
+
 import { Metadata } from 'next/types';
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { cache } from 'react';
 import { getUniqueLenses } from '@/photo/query';
 import { generateMetaForLens } from '@/lens/meta';
-import { getPhotosLensDataCached } from '@/lens/data';
+import { getPhotosLensData } from '@/lens/data';
 import LensOverview from '@/lens/LensOverview';
 import {
   getLensFromParams,
@@ -14,22 +16,26 @@ import {
   staticallyGenerateCategoryIfConfigured,
 } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
+import { PATH_ROOT } from '@/app/path';
+import { redirect } from 'next/navigation';
+import { cacheTagGlobal } from '@/cache';
 
-const getPhotosLensDataCachedCached = cache((
+const getPhotosLensDataCached = cache((
   make: string | undefined,
   model: string,
-) => getPhotosLensDataCached(
+) => getPhotosLensData(
   make,
   model,
   INFINITE_SCROLL_GRID_INITIAL,
 ));
 
-export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-  'lenses',
-  'page',
-  getUniqueLenses,
-  safelyGenerateLensStaticParams,
-);
+export const generateStaticParams = async () =>
+  staticallyGenerateCategoryIfConfigured(
+    'lenses',
+    'page',
+    getUniqueLenses,
+    safelyGenerateLensStaticParams,
+  );
 
 export async function generateMetadata({
   params,
@@ -40,7 +46,7 @@ export async function generateMetadata({
     photos,
     { count, dateRange },
     lens,
-  ] = await getPhotosLensDataCachedCached(make, model);
+  ] = await getPhotosLensDataCached(make, model);
 
   const appText = await getAppText();
 
@@ -71,13 +77,17 @@ export async function generateMetadata({
 export default async function LensPage({
   params,
 }: LensProps) {
+  cacheTagGlobal();
+
   const { make, model } = await getLensFromParams(params);
 
   const [
     photos,
     { count, dateRange },
     lens,
-  ] = await getPhotosLensDataCachedCached(make, model);
+  ] = await getPhotosLensDataCached(make, model);
+
+  if (photos.length === 0) { redirect(PATH_ROOT); }
 
   return (
     <LensOverview {...{ lens, photos, count, dateRange }} />

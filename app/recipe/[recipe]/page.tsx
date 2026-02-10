@@ -1,3 +1,5 @@
+'use cache';
+
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getUniqueRecipes } from '@/photo/query';
 import { PATH_ROOT } from '@/app/path';
@@ -6,18 +8,20 @@ import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { generateMetaForRecipe } from '@/recipe';
 import RecipeOverview from '@/recipe/RecipeOverview';
-import { getPhotosRecipeDataCached } from '@/recipe/data';
+import { getPhotosRecipeData } from '@/recipe/data';
 import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
 import { getAppText } from '@/i18n/state/server';
+import { cacheTagGlobal } from '@/cache';
 
-const getPhotosRecipeDataCachedCached = cache(getPhotosRecipeDataCached);
+const getPhotosRecipeDataCached = cache(getPhotosRecipeData);
 
-export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-  'recipes',
-  'page',
-  getUniqueRecipes,
-  recipes => recipes.map(({ recipe }) => ({ recipe })),
-);
+export const generateStaticParams = async () =>
+  staticallyGenerateCategoryIfConfigured(
+    'recipes',
+    'page',
+    getUniqueRecipes,
+    recipes => recipes.map(({ recipe }) => ({ recipe })),
+  );
 
 interface RecipeProps {
   params: Promise<{ recipe: string }>
@@ -33,7 +37,7 @@ export async function generateMetadata({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosRecipeDataCachedCached({
+  ] = await getPhotosRecipeDataCached({
     recipe,
     limit: INFINITE_SCROLL_GRID_INITIAL,
   });
@@ -69,6 +73,8 @@ export async function generateMetadata({
 export default async function RecipePage({
   params,
 }:RecipeProps) {
+  cacheTagGlobal();
+
   const { recipe: recipeFromParams } = await params;
 
   const recipe = decodeURIComponent(recipeFromParams);
@@ -76,7 +82,7 @@ export default async function RecipePage({
   const [
     photos,
     { count, dateRange },
-  ] = await getPhotosRecipeDataCachedCached({
+  ] = await getPhotosRecipeDataCached({
     recipe,
     limit: INFINITE_SCROLL_GRID_INITIAL,
   });

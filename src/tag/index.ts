@@ -152,7 +152,6 @@ export const isTagPrivate = (tag: string) => tag.toLowerCase() === TAG_PRIVATE;
 export const addPrivateToTags = (
   tags: Tags,
   countPrivate = 0,
-  lastModifiedPrivate = new Date(),
 ) =>
   countPrivate > 0
     ? tags
@@ -160,7 +159,7 @@ export const addPrivateToTags = (
       .concat({
         tag: TAG_PRIVATE,
         count: countPrivate,
-        lastModified: lastModifiedPrivate,
+        lastModified: new Date(),
       })
       .concat(tags
         .filter(({ tag }) => tag !== TAG_FAVS)

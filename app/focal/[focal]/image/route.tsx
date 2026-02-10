@@ -1,23 +1,7 @@
-import { getPhotosCached } from '@/photo/cache';
-import {
-  IMAGE_OG_DIMENSION_SMALL,
-  MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
-} from '@/image-response';
-import { getIBMPlexMono } from '@/app/font';
-import { ImageResponse } from 'next/og';
-import { getImageResponseCacheControlHeaders } from '@/image-response/cache';
+import { MAX_PHOTOS_TO_SHOW_PER_CATEGORY } from '@/image-response/size';
 import FocalLengthImageResponse from '@/focal/FocalLengthImageResponse';
-import { formatFocalLength, getFocalLengthFromString } from '@/focal';
-import { getUniqueFocalLengths } from '@/photo/query';
-import { staticallyGenerateCategoryIfConfigured } from '@/app/static';
-
-export const generateStaticParams = staticallyGenerateCategoryIfConfigured(
-  'focal-lengths',
-  'image',
-  getUniqueFocalLengths,
-  focalLengths => focalLengths
-    .map(({ focal }) => ({ focal: formatFocalLength(focal) })),
-);
+import { getFocalLengthFromString } from '@/focal';
+import { cachedOgPhotoResponse } from '@/image-response/photo';
 
 export async function GET(
   _: Request,
@@ -27,26 +11,9 @@ export async function GET(
 
   const focal = getFocalLengthFromString(focalString);
 
-  const [
-    photos,
-    { fontFamily, fonts },
-    headers,
-  ] = await Promise.all([
-    getPhotosCached({ limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY, focal }),
-    getIBMPlexMono(),
-    getImageResponseCacheControlHeaders(),
-  ]);
-
-  const { width, height } = IMAGE_OG_DIMENSION_SMALL;
-
-  return new ImageResponse(
-    <FocalLengthImageResponse {...{
-      focal,
-      photos,
-      width,
-      height,
-      fontFamily,
-    }}/>,
-    { width, height, fonts, headers },
+  return cachedOgPhotoResponse(
+    { focal },
+    { focal, limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY },
+    args => <FocalLengthImageResponse {...{ focal, ...args }} />,
   );
 }

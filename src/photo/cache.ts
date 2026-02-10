@@ -58,7 +58,7 @@ import {
   revalidateFilmsKey,
   revalidateRecipesKey,
   revalidateFocalLengthsKey,
-} from '@/cache';
+} from '@/cache/index-old';
 
 const getCacheKeyForPhotoQueryOptions = (
   options: PhotoQueryOptions,

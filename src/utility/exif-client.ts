@@ -1,39 +1,10 @@
 import piexif from 'piexifjs';
+import { readAsArrayBuffer, readAsDataURL, dataURLtoBlob } from './blob';
 
 interface ImageConversionOptions {
   maxSize: number
   quality: number
 }
-
-// Read a Blob/File as ArrayBuffer
-const readAsArrayBuffer = (blob: Blob): Promise<ArrayBuffer> =>
-  new Promise((res, rej) => {
-    const fr = new FileReader();
-    fr.onload = () => res(fr.result as ArrayBuffer);
-    fr.onerror = () => rej(fr.error ?? new Error('FileReader error'));
-    fr.readAsArrayBuffer(blob);
-  });
-
-// Read a Blob/File as DataURL
-const readAsDataURL = (blob: Blob): Promise<string> =>
-  new Promise((res, rej) => {
-    const fr = new FileReader();
-    fr.onload = () => res(String(fr.result));
-    fr.onerror = () => rej(fr.error ?? new Error('FileReader error'));
-    fr.readAsDataURL(blob);
-  });
-
-// Convert DataURL string -> Blob
-const dataURLtoBlob = (dataURL: string): Blob => {
-  const [header, b64] = dataURL.split(',');
-  const mimeMatch = header.match(/data:([^;]+);base64/);
-  if (!mimeMatch) throw new Error('Invalid data URL');
-  const mime = mimeMatch[1];
-  const bin = atob(b64);
-  const u8 = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
-  return new Blob([u8], { type: mime });
-};
 
 // Extract raw EXIF (TIFF) bytes from a PNG eXIf chunk.
 // Returns Uint8Array or null if no EXIF found.
@@ -195,7 +166,8 @@ export const pngToJpegWithExif = async (
 
   // Decode the PNG for drawing
   const img = document.createElement('img');
-  img.crossOrigin = 'anonymous'; // for remote URLs with CORS, harmless for File
+  // For remote URLs with CORS, harmless for File
+  img.crossOrigin = 'anonymous';
   img.src = URL.createObjectURL(file);
   await new Promise<void>((res, rej) => {
     img.onload = () => res();
