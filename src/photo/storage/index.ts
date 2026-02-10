@@ -71,9 +71,6 @@ export const getOptimizedUrlsFromPhotoUrl = (url: string) => {
     `${urlBase}/${fileName}`);
 };
 
-export const isUploadPathnameValid = (pathname?: string) =>
-  pathname?.match(new RegExp(`(?:${PREFIX_UPLOAD})\.[a-z]{1,4}`, 'i'));
-
 export const generateRandomFileNameForPhoto = () =>
   generateFileNameWithId(PREFIX_PHOTO);
 
