@@ -135,6 +135,7 @@ export const TEXT: I18N = {
     public: 'Buat Publik',
     download: 'Unduh',
     sync: 'Sinkronkan',
+    reUpload: 'Unggah ulang',
     delete: 'Hapus',
     deleteConfirm: 'Apakah Anda yakin ingin menghapus "{{photoTitle}}"?',
   },
