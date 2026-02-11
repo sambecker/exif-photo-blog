@@ -226,7 +226,7 @@ export default function AdminPhotoMenu({
                 replacePhotoStorageAction(photo.id, updatedStorageUrl))
               .then(() => revalidatePhoto?.(photo.id))
               .finally(() => onUploadFinishRef.current?.())}
-          shouldResize={PRESERVE_ORIGINAL_UPLOADS}
+          shouldResize={!PRESERVE_ORIGINAL_UPLOADS}
         />
       </>
       : null
