@@ -26,8 +26,11 @@ export default async function AdminStoragePage() {
           <div
             key={id}
           >
-            <LinkWithStatus href={pathForPhoto({ photo: id })}>
-              <span className="min-w-[15rem] inline-block">{title}</span>
+            <LinkWithStatus
+              href={pathForPhoto({ photo: id })}
+              className="w-full inline-flex items-center gap-1"
+            >
+              <span className="w-[15rem] inline-block truncate">{title}</span>
               {isAvailable ? '✅' : '❌'}
             </LinkWithStatus>
           </div>
