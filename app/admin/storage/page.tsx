@@ -15,8 +15,11 @@ export default async function AdminStoragePage() {
   const countAvailable = urls.filter(url => url.isAvailable).length;
   return <AdminInfoPage title={`URLs (${urls.length})`}>
     <div className="w-full space-y-4">
-      <div className="font-bold">
-        Storage ({countAvailable}/{urls.length})
+      <div>
+        <div className="font-bold">
+          Storage ({countAvailable}/{urls.length})
+        </div>
+        <div>{urls.length - countAvailable} missing</div>
       </div>
       <div>
         {urls.map(({ id, title, isAvailable }) => (
