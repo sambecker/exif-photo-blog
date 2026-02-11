@@ -149,7 +149,7 @@ export default function AdminPhotoMenu({
       ...showKeyCommands && { keyCommand: KEY_COMMANDS.sync },
     });
     items.push({
-      label: appText.admin.reUpload,
+      label: appText.admin.reupload,
       icon: <IconUpload
         size={16}
         className="translate-x-[-1px] translate-y-px"

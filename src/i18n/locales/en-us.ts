@@ -134,7 +134,7 @@ export const TEXT = {
     public: 'Make Public',
     download: 'Download',
     sync: 'Sync',
-    reUpload: 'Re-upload',
+    reupload: 'Reupload',
     delete: 'Delete',
     deleteConfirm: 'Are you sure you want to delete "{{photoTitle}}?"',
   },
