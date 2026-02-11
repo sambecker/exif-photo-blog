@@ -71,9 +71,6 @@ export const getOptimizedUrlsFromPhotoUrl = (url: string) => {
     `${urlBase}/${fileName}`);
 };
 
-export const isUploadPathnameValid = (pathname?: string) =>
-  pathname?.match(new RegExp(`(?:${PREFIX_UPLOAD})\.[a-z]{1,4}`, 'i'));
-
 export const generateRandomFileNameForPhoto = () =>
   generateFileNameWithId(PREFIX_PHOTO);
 
@@ -83,11 +80,17 @@ export const getStorageUploadUrls = () =>
 export const getStoragePhotoUrls = () =>
   getStorageUrlsForPrefix(`${PREFIX_PHOTO}-`);
 
-export const uploadPhotoFromClient = (
+export const uploadTempPhotoFromClient = (
   file: File | Blob,
   extension = EXTENSION_DEFAULT,
 ) =>
   uploadFileFromClient(file, PREFIX_UPLOAD, extension);
+
+export const uploadPhotoFromClient = (
+  file: File | Blob,
+  extension = EXTENSION_DEFAULT,
+) =>
+  uploadFileFromClient(file, PREFIX_PHOTO, extension);
 
 const getSuffixFromNextImageSize = (nextSize: NextImageSize) =>
   OPTIMIZED_FILE_SIZES.find(({ size }) => size === nextSize)?.suffix

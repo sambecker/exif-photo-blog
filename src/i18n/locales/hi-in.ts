@@ -135,6 +135,7 @@ export const TEXT: I18N = {
     public: 'सार्वजनिक बनाएं',
     download: 'डाउनलोड करें',
     sync: 'सिंक करें',
+    reupload: 'पुनः अपलोड करें',
     delete: 'हटाएं',
     // eslint-disable-next-line max-len
     deleteConfirm: 'क्या आप सुनिश्चित हैं कि "{{photoTitle}}" को हटाना चाहते हैं?',

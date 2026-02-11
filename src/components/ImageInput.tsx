@@ -15,6 +15,7 @@ export default function ImageInput({
   id = 'file',
   onStart,
   onBlobReady,
+  multiple = true,
   shouldResize,
   maxSize = MAX_IMAGE_SIZE,
   quality = 0.9,
@@ -31,6 +32,7 @@ export default function ImageInput({
     hasMultipleUploads?: boolean,
     isLastBlob?: boolean,
   }) => Promise<any>
+  multiple?: boolean
   shouldResize?: boolean
   maxSize?: number
   quality?: number
@@ -102,7 +104,7 @@ export default function ImageInput({
             className="hidden!"
             accept={ACCEPTED_PHOTO_FILE_TYPES.join(',')}
             disabled={disabled}
-            multiple
+            multiple={multiple}
             onChange={async e => {
               onStart?.();
               const { files } = e.currentTarget;

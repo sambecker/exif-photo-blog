@@ -135,6 +135,7 @@ export const TEXT: I18N = {
     public: '设为公开',
     download: '下载',
     sync: '同步',
+    reupload: '重新上传',
     delete: '删除',
     deleteConfirm: '确定要删除 "{{photoTitle}}" 吗？',
   },

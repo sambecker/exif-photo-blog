@@ -135,6 +135,7 @@ export const TEXT: I18N = {
     public: 'Tornar Público',
     download: 'Baixar',
     sync: 'Sincronizar',
+    reupload: 'Enviar novamente',
     delete: 'Excluir',
     deleteConfirm: 'Tem certeza de que deseja excluir "{{photoTitle}}"?',
   },

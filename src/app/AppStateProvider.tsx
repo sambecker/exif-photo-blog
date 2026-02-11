@@ -202,16 +202,17 @@ export default function AppStateProvider({
   }, [router, pathname]);
 
   // Returns false when upload is cancelled
-  const startUpload = useCallback(() => new Promise<boolean>(resolve => {
-    if (uploadInputRef.current) {
-      uploadInputRef.current.value = '';
-      uploadInputRef.current.click();
-      uploadInputRef.current.oninput = () => resolve(true);
-      uploadInputRef.current.oncancel = () => resolve(false);
-    } else {
-      resolve(false);
-    }
-  })
+  const startUpload = useCallback(() =>
+    new Promise<boolean>(resolve => {
+      if (uploadInputRef.current) {
+        uploadInputRef.current.value = '';
+        uploadInputRef.current.click();
+        uploadInputRef.current.oninput = () => resolve(true);
+        uploadInputRef.current.oncancel = () => resolve(false);
+      } else {
+        resolve(false);
+      }
+    })
   , []);
   const setUploadState = useCallback((uploadState: Partial<UploadState>) => {
     _setUploadState(prev => ({ ...prev, ...uploadState }));

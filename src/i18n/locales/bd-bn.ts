@@ -135,6 +135,7 @@ export const TEXT: I18N = {
     public: 'সর্বজনীন করুন',
     download: 'ডাউনলোড',
     sync: 'সিঙ্ক',
+    reupload: 'পুনরায় আপলোড করুন',
     delete: 'ডিলিট',
     deleteConfirm: 'আপনি কি "{{photoTitle}}" মুছে ফেলতে চান?',
   },

@@ -9,7 +9,7 @@ import { RefObject, useTransition, useRef, useEffect } from 'react';
 import Spinner from '@/components/Spinner';
 import ResponsiveText from '@/components/primitives/ResponsiveText';
 import { useAppText } from '@/i18n/state/client';
-import { uploadPhotoFromClient } from './storage';
+import { uploadTempPhotoFromClient } from './storage';
 
 export default function PhotoUploadWithStatus({
   inputRef,
@@ -119,7 +119,7 @@ export default function PhotoUploadWithStatus({
                 },
               });
             } else {
-              return uploadPhotoFromClient(
+              return uploadTempPhotoFromClient(
                 blob,
                 extension,
               )

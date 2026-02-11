@@ -135,6 +135,7 @@ export const TEXT: I18N = {
     public: 'Herkese Açık Yap',
     download: 'İndir',
     sync: 'Senkronize Et',
+    reupload: 'Yeniden Yükle',
     delete: 'Sil',
     // eslint-disable-next-line max-len
     deleteConfirm: '"{{photoTitle}}" adlı fotoğrafı silmek istediğinize emin misiniz?',
