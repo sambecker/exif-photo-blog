@@ -485,6 +485,16 @@ export const getPhotoIds = async (options: PhotoQueryOptions = {}) =>
     options,
   );
 
+export const getPhotoUrls = async (options: PhotoQueryOptions = {}) =>
+  safelyQuery(
+    async () => _getPhotos(options, ['id', 'title', 'url'], false)
+      .then(({ photos }) =>
+        photos as { id: string, title: string, url: string }[]),
+    'getPhotoUrls',
+    // Seemingly necessary to pass `options` for expected cache behavior
+    options,
+  );
+
 export const getPhotoCount = async (options: PhotoQueryOptions = {}) =>
   safelyQuery(
     async () => _getPhotos(options, ['COUNT(*)'], false)
