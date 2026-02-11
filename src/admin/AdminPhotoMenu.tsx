@@ -156,7 +156,13 @@ export default function AdminPhotoMenu({
       />,
       action: () => new Promise(resolve => {
         onUploadFinishRef.current = resolve;
-        inputRef.current?.click();
+        if (inputRef.current) {
+          inputRef.current.value = '';
+          inputRef.current.click();
+          inputRef.current.oncancel = () => resolve(false);
+        } else {
+          resolve();
+        }
       }),
     });
 
@@ -220,6 +226,7 @@ export default function AdminPhotoMenu({
         }}/>
         <ImageInput
           ref={inputRef}
+          multiple={false}
           onBlobReady={async ({ blob, extension }) =>
             uploadPhotoFromClient(blob, extension)
               .then(updatedStorageUrl =>
