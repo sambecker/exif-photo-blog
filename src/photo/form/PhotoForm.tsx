@@ -72,7 +72,7 @@ const THUMBNAIL_SIZE = 300;
 export default function PhotoForm({
   type = 'create',
   initialPhotoForm,
-  photoStorageUrls,
+  photoStorageUrls = [],
   updatedExifData,
   updatedBlurData,
   photoAlbumTitles = [],
@@ -291,36 +291,40 @@ export default function PhotoForm({
   const footerForField = (key: keyof PhotoFormData) => {
     switch (key) {
       case 'url':
-        return photoStorageUrls && photoStorageUrls.length > 1
-          ? <SmallDisclosure label="Optimized file set">
-            <div className="space-y-1">
-              {photoStorageUrls.map(({ url, size }) => {
-                const {
-                  fileName,
-                  fileModifier,
-                } = getFileNamePartsFromStorageUrl(url);
-                return <div
-                  key={url}
-                  className="flex items-center gap-2"
-                >
-                  <TbPhoto className="translate-y-[1px] text-medium" />
-                  <Link
-                    href={url}
-                    target="_blank"
+        return photoStorageUrls.length === 0
+          ? <span className="text-error">
+            No storage found for photo
+          </span>
+          : photoStorageUrls.length > 1
+            ? <SmallDisclosure label="Optimized file set">
+              <div className="space-y-1">
+                {photoStorageUrls.map(({ url, size }) => {
+                  const {
+                    fileName,
+                    fileModifier,
+                  } = getFileNamePartsFromStorageUrl(url);
+                  return <div
+                    key={url}
+                    className="flex items-center gap-2"
                   >
-                    {fileName}
-                  </Link>
-                  <span className="text-dim">
-                    {size}
-                    {/* Show dimensions for original file when available */}
-                    {!fileModifier && formData.width && formData.height &&
-                      ` @ ${formData.width}×${formData.height}`}
-                  </span>
-                </div>;
-              })}
-            </div>
-          </SmallDisclosure>
-          : undefined;
+                    <TbPhoto className="translate-y-[1px] text-medium" />
+                    <Link
+                      href={url}
+                      target="_blank"
+                    >
+                      {fileName}
+                    </Link>
+                    <span className="text-dim">
+                      {size}
+                      {/* Show dimensions for original file when available */}
+                      {!fileModifier && formData.width && formData.height &&
+                        ` @ ${formData.width}×${formData.height}`}
+                    </span>
+                  </div>;
+                })}
+              </div>
+            </SmallDisclosure>
+            : null;
     }
   };
 

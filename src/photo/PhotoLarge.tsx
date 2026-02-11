@@ -9,7 +9,6 @@ import {
   shouldShowFilmDataForPhoto,
   shouldShowLensDataForPhoto,
   shouldShowRecipeDataForPhoto,
-  titleForPhoto,
 } from '.';
 import AppGrid from '@/components/AppGrid';
 import ImageLarge from '@/components/image/ImageLarge';
@@ -260,7 +259,6 @@ export default function PhotoLarge({
       photo,
       revalidatePhoto,
       includeFavorite: includeFavoriteInAdminMenu,
-      ariaLabel: `Admin menu for '${titleForPhoto(photo)}' photo`,
       showKeyCommands: showAdminKeyCommands,
     }} />;
 

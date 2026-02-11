@@ -12,7 +12,6 @@ import EditButton from './EditButton';
 import { useAppState } from '@/app/AppState';
 import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 import PhotoSyncButton from './PhotoSyncButton';
-import DeletePhotoButton from './DeletePhotoButton';
 import { Timezone } from '@/utility/timezone';
 import { photoNeedsToBeUpdated } from '@/photo/update';
 import PhotoVisibilityIcon from '@/photo/visibility/PhotoVisibilityIcon';
@@ -20,6 +19,7 @@ import { doesPhotoHaveDefaultVisibility } from '@/photo/visibility';
 import UpdateTooltip from '@/photo/update/UpdateTooltip';
 import PhotoColors from '@/photo/color/PhotoColors';
 import SyncColorButton from '@/photo/color/SyncColorButton';
+import AdminPhotoMenu from './AdminPhotoMenu';
 
 export default function AdminPhotosTable({
   photos,
@@ -142,11 +142,12 @@ export default function AdminPhotosTable({
             />
             {debugColorData &&
               <SyncColorButton photoId={photo.id} />}
-            {canDelete &&
-              <DeletePhotoButton
-                photo={photo}
-                onDelete={() => revalidatePhoto?.(photo.id, true)}
-              />}
+            <AdminPhotoMenu
+              photo={photo}
+              revalidatePhoto={revalidatePhoto}
+              disabled={!canEdit || !canDelete}
+              alwaysVisible
+            />
           </div>
         </Fragment>)}
     </AdminTable>

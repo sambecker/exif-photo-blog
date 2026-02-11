@@ -114,32 +114,33 @@ export const storageTypeFromUrl = (url: string): StorageType => {
 
 export const uploadFromClientViaPresignedUrl = async (
   file: File | Blob,
-  fileNameBase: string,
-  extension: string,
-  addRandomSuffix?: boolean,
+  fileName: string,
 ) => {
-  const key = addRandomSuffix
-    ? `${fileNameBase}-${generateStorageId()}.${extension}`
-    : `${fileNameBase}.${extension}`;
-
-  const url = await fetch(`${PATH_API_PRESIGNED_URL}/${key}`)
+  const url = await fetch(`${PATH_API_PRESIGNED_URL}/${fileName}`)
     .then((response) => response.text());
 
   return fetch(url, { method: 'PUT', body: file })
-    .then(() => `${baseUrlForStorage(CURRENT_STORAGE)}/${key}`);
+    .then(() => `${baseUrlForStorage(CURRENT_STORAGE)}/${fileName}`);
 };
 
 export const uploadFileFromClient = async (
   file: File | Blob,
-  fileNameBase: string,
+  _fileName: string,
   extension: string,
-) => (
-  CURRENT_STORAGE === 'cloudflare-r2' ||
-  CURRENT_STORAGE === 'aws-s3' ||
-  CURRENT_STORAGE === 'minio'
-)
-  ? uploadFromClientViaPresignedUrl(file, fileNameBase, extension, true)
-  : vercelBlobUploadFromClient(file, `${fileNameBase}.${extension}`);
+  addRandomSuffix = true,
+) => {
+  const fileName = addRandomSuffix
+    ? `${_fileName}-${generateStorageId()}.${extension}`
+    : `${_fileName}.${extension}`;
+
+  return (
+    CURRENT_STORAGE === 'cloudflare-r2' ||
+    CURRENT_STORAGE === 'aws-s3' ||
+    CURRENT_STORAGE === 'minio'
+  )
+    ? uploadFromClientViaPresignedUrl(file, fileName)
+    : vercelBlobUploadFromClient(file, fileName);
+};
 
 export const putFile = (
   file: Buffer,

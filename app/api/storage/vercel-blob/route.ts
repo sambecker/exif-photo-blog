@@ -6,7 +6,6 @@ import {
 } from '@/photo';
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { NextResponse } from 'next/server';
-import { isUploadPathnameValid } from '@/photo/storage';
 
 export async function POST(request: Request): Promise<NextResponse> {
   const body: HandleUploadBody = await request.json();
@@ -15,18 +14,13 @@ export async function POST(request: Request): Promise<NextResponse> {
     const jsonResponse = await handleUpload({
       body,
       request,
-      onBeforeGenerateToken: async (pathname) => {
+      onBeforeGenerateToken: async () => {
         const session = await auth();
         if (session?.user) {
-          if (isUploadPathnameValid(pathname)) {
-            return {
-              maximumSizeInBytes: MAX_PHOTO_UPLOAD_SIZE_IN_BYTES,
-              allowedContentTypes: ACCEPTED_PHOTO_FILE_TYPES,
-              addRandomSuffix: true,
-            };
-          } else {
-            throw new Error('Invalid upload');
-          }
+          return {
+            maximumSizeInBytes: MAX_PHOTO_UPLOAD_SIZE_IN_BYTES,
+            allowedContentTypes: ACCEPTED_PHOTO_FILE_TYPES,
+          };
         } else {
           throw new Error('Unauthenticated upload');
         }
