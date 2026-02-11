@@ -9,7 +9,6 @@ import {
   shouldShowFilmDataForPhoto,
   shouldShowLensDataForPhoto,
   shouldShowRecipeDataForPhoto,
-  titleForPhoto,
 } from '.';
 import AppGrid from '@/components/AppGrid';
 import ImageLarge from '@/components/image/ImageLarge';
@@ -34,7 +33,7 @@ import {
 } from '@/app/config';
 import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import useVisibility from '@/utility/useVisibility';
 import PhotoDate from './PhotoDate';
 import { useAppState } from '@/app/AppState';
@@ -51,6 +50,7 @@ import { lensFromPhoto } from '@/lens';
 import MaskedScroll from '@/components/MaskedScroll';
 import { useAppText } from '@/i18n/state/client';
 import { Album } from '@/album';
+import { getOptimizedUrlsFromPhotoUrl } from './storage';
 
 export default function PhotoLarge({
   photo,
@@ -167,7 +167,18 @@ export default function PhotoLarge({
   const showRecipeContent = showRecipe && shouldShowRecipeDataForPhoto(photo);
   const showFilmContent = showFilm && shouldShowFilmDataForPhoto(photo);
 
-  useVisibility({ ref, onVisible });
+  const url = getOptimizedUrlsFromPhotoUrl(photo.url)[0];
+  const [hasImage, setHasImage] = useState<boolean>();
+  const onVisibleLocal = useCallback(() => {
+    onVisible?.();
+    if (hasImage === undefined) {
+      fetch(url)
+        .then(res => setHasImage(res.ok))
+        .catch(() => setHasImage(false));
+    }
+  }, [onVisible, url, hasImage]);
+
+  useVisibility({ ref, onVisible: onVisibleLocal });
 
   const hasTitle =
     showTitle &&
@@ -260,7 +271,6 @@ export default function PhotoLarge({
       photo,
       revalidatePhoto,
       includeFavorite: includeFavoriteInAdminMenu,
-      ariaLabel: `Admin menu for '${titleForPhoto(photo)}' photo`,
       showKeyCommands: showAdminKeyCommands,
     }} />;
 
@@ -482,6 +492,13 @@ export default function PhotoLarge({
                         className="translate-y-[0.5px] md:translate-y-0"
                         photo={photo} 
                       />}
+                  </div>
+                  <div>
+                    {hasImage === undefined
+                      ? 'Checking ...'
+                      : hasImage === false
+                        ? '❌'
+                        : '✅'}
                   </div>
                 </div>
               </div>
