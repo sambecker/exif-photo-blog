@@ -125,13 +125,13 @@ export const uploadFromClientViaPresignedUrl = async (
 
 export const uploadFileFromClient = async (
   file: File | Blob,
-  fileNameBase: string,
+  _fileName: string,
   extension: string,
   addRandomSuffix = true,
 ) => {
   const fileName = addRandomSuffix
-    ? `${fileNameBase}-${generateStorageId()}.${extension}`
-    : `${fileNameBase}.${extension}`;
+    ? `${_fileName}-${generateStorageId()}.${extension}`
+    : `${_fileName}.${extension}`;
 
   return (
     CURRENT_STORAGE === 'cloudflare-r2' ||

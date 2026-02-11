@@ -80,18 +80,17 @@ export const getStorageUploadUrls = () =>
 export const getStoragePhotoUrls = () =>
   getStorageUrlsForPrefix(`${PREFIX_PHOTO}-`);
 
-export const uploadPhotoFromClient = (
+export const uploadTempPhotoFromClient = (
   file: File | Blob,
   extension = EXTENSION_DEFAULT,
 ) =>
   uploadFileFromClient(file, PREFIX_UPLOAD, extension);
 
-export const uploadPhotoReplacementFromClient = (
+export const uploadPhotoFromClient = (
   file: File | Blob,
-  existingFileName: string,
-  extension: string,
+  extension = EXTENSION_DEFAULT,
 ) =>
-  uploadFileFromClient(file, existingFileName, extension, false);
+  uploadFileFromClient(file, PREFIX_PHOTO, extension);
 
 const getSuffixFromNextImageSize = (nextSize: NextImageSize) =>
   OPTIMIZED_FILE_SIZES.find(({ size }) => size === nextSize)?.suffix

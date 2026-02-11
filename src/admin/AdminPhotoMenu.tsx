@@ -1,6 +1,6 @@
 'use client';
 
-import { ComponentProps, useMemo } from 'react';
+import { ComponentProps, useMemo, useRef } from 'react';
 import {
   getPathComponents,
   PATH_ROOT,
@@ -9,6 +9,7 @@ import {
 } from '@/app/path';
 import {
   deletePhotoAction,
+  replacePhotoStorageAction,
   syncPhotoAction,
   toggleFavoritePhotoAction,
   togglePrivatePhotoAction,
@@ -35,6 +36,9 @@ import { KEY_COMMANDS } from '@/photo/key-commands';
 import { useAppText } from '@/i18n/state/client';
 import IconLock from '@/components/icons/IconLock';
 import IconTrash from '@/components/icons/IconTrash';
+import IconUpload from '@/components/icons/IconUpload';
+import { uploadPhotoFromClient } from '@/photo/storage';
+import ImageInput from '@/components/ImageInput';
 
 export default function AdminPhotoMenu({
   photo,
@@ -54,6 +58,9 @@ export default function AdminPhotoMenu({
 
   const appText = useAppText();
 
+  const inputRef = useRef<HTMLInputElement>(null);
+  const onUploadFinishRef = useRef<() => void>(null);
+
   const path = usePathname();
   const pathComponents = getPathComponents(path);
   const isOnPhotoDetail = pathComponents.photoId === photo.id;
@@ -71,7 +78,7 @@ export default function AdminPhotoMenu({
       label: appText.admin.edit,
       icon: <IconEdit
         size={14}
-        className="translate-x-[0.5px] translate-y-[0.5px]"
+        className="translate-x-[1px] translate-y-[-0.5px]"
       />,
       href: pathForAdminPhotoEdit(photo.id),
       ...showKeyCommands && { keyCommand: KEY_COMMANDS.edit },
@@ -115,8 +122,8 @@ export default function AdminPhotoMenu({
     items.push({
       label: appText.admin.download,
       icon: <MdOutlineFileDownload
-        size={17}
-        className="translate-x-[-1px]"
+        size={18}
+        className="translate-x-[-1.5px]"
       />,
       href: photo.url,
       hrefDownloadName: downloadFileNameForPhoto(photo),
@@ -139,6 +146,17 @@ export default function AdminPhotoMenu({
       action: () => syncPhotoAction(photo.id)
         .then(() => revalidatePhoto?.(photo.id)),
       ...showKeyCommands && { keyCommand: KEY_COMMANDS.sync },
+    });
+    items.push({
+      label: appText.admin.reUpload,
+      icon: <IconUpload
+        size={16}
+        className="translate-x-[-1px] translate-y-px"
+      />,
+      action: () => new Promise(resolve => {
+        onUploadFinishRef.current = resolve;
+        inputRef.current?.click();
+      }),
     });
 
     return { items };
@@ -193,11 +211,22 @@ export default function AdminPhotoMenu({
 
   return (
     isUserSignedIn || alwaysVisible
-      ? <MoreMenu {...{
-        ...props,
-        sections,
-        ariaLabel: `Admin menu for '${titleForPhoto(photo)}' photo`,
-      }}/>
+      ? <>
+        <MoreMenu {...{
+          ...props,
+          sections,
+          ariaLabel: `Admin menu for '${titleForPhoto(photo)}' photo`,
+        }}/>
+        <ImageInput
+          ref={inputRef}
+          onBlobReady={async ({ blob, extension }) =>
+            uploadPhotoFromClient(blob, extension)
+              .then(updatedStorageUrl =>
+                replacePhotoStorageAction(photo.id, updatedStorageUrl))
+              .then(() => revalidatePhoto?.(photo.id))
+              .finally(() => onUploadFinishRef.current?.())}
+        />
+      </>
       : null
   );
 }

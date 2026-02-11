@@ -22,7 +22,10 @@ import {
   convertPhotoToFormData,
 } from './form';
 import { redirect } from 'next/navigation';
-import { deleteFile } from '@/platforms/storage';
+import {
+  deleteFile,
+  getFileNamePartsFromStorageUrl,
+} from '@/platforms/storage';
 import {
   revalidateAdminPaths,
   revalidateAllKeysAndPaths,
@@ -58,7 +61,10 @@ import {
 } from '@/app/config';
 import { generateAiImageQueries } from './ai/server';
 import { createStreamableValue } from '@ai-sdk/rsc';
-import { convertUploadToPhoto } from './storage/server';
+import {
+  convertUploadToPhoto,
+  storeOptimizedPhotosForUrl,
+} from './storage/server';
 import { UrlAddStatus } from '@/admin/AdminUploadsClient';
 import { convertStringToArray } from '@/utility/string';
 import { after } from 'next/server';
@@ -74,6 +80,7 @@ import {
   upgradeTagToAlbum,
 } from '@/album/server';
 import { addPhotoAlbumIds } from '@/album/query';
+import { getStorageUrlsForPhoto } from './storage';
 
 // Private actions
 
@@ -509,6 +516,29 @@ export const renamePhotoRecipeGloballyAction = async (formData: FormData) =>
       revalidatePhotosKey();
       revalidateRecipesKey();
       redirect(PATH_ADMIN_RECIPES);
+    }
+  });
+
+export const replacePhotoStorageAction = async (
+  photoId: string,
+  updatedStorageUrl: string,
+) =>
+  runAuthenticatedAdminServerAction(async () => {
+    const photo = await getPhoto(photoId, true);
+    if (photo) {
+      const {
+        fileExtension: extension,
+      } = getFileNamePartsFromStorageUrl(updatedStorageUrl);
+      await updatePhoto(convertPhotoToPhotoDbInsert({
+        ...photo,
+        url: updatedStorageUrl,
+        extension,
+      }));
+      await storeOptimizedPhotosForUrl(updatedStorageUrl);
+      const existingStorageUrls = await getStorageUrlsForPhoto(photo)
+        .then(urls => urls.map(({ url }) => url));
+      await Promise.all(existingStorageUrls.map(deleteFile));
+      revalidatePhoto(photo.id);
     }
   });
 
