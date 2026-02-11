@@ -487,9 +487,14 @@ export const getPhotoIds = async (options: PhotoQueryOptions = {}) =>
 
 export const getPhotoUrls = async (options: PhotoQueryOptions = {}) =>
   safelyQuery(
-    async () => _getPhotos(options, ['id', 'title', 'url'], false)
+    async () => _getPhotos(options, ['id', 'title', 'url', 'hidden'], false)
       .then(({ photos }) =>
-        photos as { id: string, title: string, url: string }[]),
+        photos as {
+          id: string,
+          title: string,
+          url: string,
+          hidden?: boolean,
+        }[]),
     'getPhotoUrls',
     // Seemingly necessary to pass `options` for expected cache behavior
     options,
