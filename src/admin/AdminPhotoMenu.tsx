@@ -39,6 +39,7 @@ import IconTrash from '@/components/icons/IconTrash';
 import IconUpload from '@/components/icons/IconUpload';
 import { uploadPhotoFromClient } from '@/photo/storage';
 import ImageInput from '@/components/ImageInput';
+import { PRESERVE_ORIGINAL_UPLOADS } from '@/app/config';
 
 export default function AdminPhotoMenu({
   photo,
@@ -225,6 +226,7 @@ export default function AdminPhotoMenu({
                 replacePhotoStorageAction(photo.id, updatedStorageUrl))
               .then(() => revalidatePhoto?.(photo.id))
               .finally(() => onUploadFinishRef.current?.())}
+          shouldResize={PRESERVE_ORIGINAL_UPLOADS}
         />
       </>
       : null
