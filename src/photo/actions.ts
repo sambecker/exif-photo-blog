@@ -20,6 +20,7 @@ import { PhotoQueryOptions, areOptionsSensitive } from '@/db';
 import {
   FIELDS_TO_NOT_OVERWRITE_WITH_NULL_DATA_ON_SYNC,
   PhotoFormData,
+  convertFormDataToPhotoDbInsert,
   convertPhotoToFormData,
 } from './form';
 import { redirect } from 'next/navigation';
@@ -51,7 +52,7 @@ import {
   propagateRecipeTitleIfNecessary,
 } from './server';
 import { TAG_FAVS, Tags, isPhotoFav, isTagFavs } from '@/tag';
-import { convertPhotoToPhotoDbInsert, Photo } from '.';
+import { convertPhotoToPhotoDbInsert, Photo, PhotoDbInsert } from '.';
 import { runAuthenticatedAdminServerAction } from '@/auth/server';
 import { AiImageQuery, getAiImageQuery, getAiTextFieldsToGenerate } from './ai';
 import { streamOpenAiImageQuery } from '@/platforms/openai';
@@ -502,19 +503,46 @@ export const replacePhotoStorageAction = async (
 ) =>
   runAuthenticatedAdminServerAction(async () => {
     const photo = await getPhoto(photoId, true);
+    
     if (photo) {
       const {
         fileExtension: extension,
       } = getFileNamePartsFromStorageUrl(updatedStorageUrl);
-      await updatePhoto(convertPhotoToPhotoDbInsert({
-        ...photo,
-        url: updatedStorageUrl,
-        extension,
-      }));
+
+      const {
+        formDataFromExif,
+      } = await extractImageDataFromBlobPath(updatedStorageUrl, {
+        generateBlurData: BLUR_ENABLED,
+      });
+
+      let imageFields: Partial<PhotoDbInsert> = {};
+      if (formDataFromExif) {
+        const photoDbInsert = convertFormDataToPhotoDbInsert(formDataFromExif);
+        imageFields = {
+          blurData: photoDbInsert.blurData,
+          width: photoDbInsert.width,
+          height: photoDbInsert.height,
+          aspectRatio: photoDbInsert.aspectRatio,
+          colorData: photoDbInsert.colorData,
+          colorSort: photoDbInsert.colorSort,
+        };
+      }
+
+      await updatePhoto({
+        ...convertPhotoToPhotoDbInsert({
+          ...photo,
+          url: updatedStorageUrl,
+          extension,
+        }),
+        ...imageFields,
+      });
+
       await storeOptimizedPhotosForUrl(updatedStorageUrl);
+
       const existingStorageUrls = await getStorageUrlsForPhoto(photo)
         .then(urls => urls.map(({ url }) => url));
       await Promise.all(existingStorageUrls.map(deleteFile));
+
       revalidatePhoto(photo.id);
     }
   });
