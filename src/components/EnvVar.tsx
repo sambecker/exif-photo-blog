@@ -1,3 +1,5 @@
+'use client';
+
 import clsx from 'clsx/lite';
 import { ReactNode } from 'react';
 import CopyButton from './CopyButton';

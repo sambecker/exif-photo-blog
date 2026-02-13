@@ -33,7 +33,7 @@ import {
 } from '@/app/config';
 import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import useVisibility from '@/utility/useVisibility';
 import PhotoDate from './PhotoDate';
 import { useAppState } from '@/app/AppState';
@@ -50,7 +50,7 @@ import { lensFromPhoto } from '@/lens';
 import MaskedScroll from '@/components/MaskedScroll';
 import { useAppText } from '@/i18n/state/client';
 import { Album } from '@/album';
-import { getOptimizedUrlsFromPhotoUrl } from './storage';
+import AdminPhotoStorageCheck from '@/admin/storage/AdminPhotoStorageCheck';
 
 export default function PhotoLarge({
   photo,
@@ -84,6 +84,7 @@ export default function PhotoLarge({
   includeFavoriteInAdminMenu,
   onVisible,
   showAdminKeyCommands,
+  showStorageCheck,
 }: {
   photo: Photo
   className?: string
@@ -116,6 +117,7 @@ export default function PhotoLarge({
   includeFavoriteInAdminMenu?: boolean
   onVisible?: () => void
   showAdminKeyCommands?: boolean
+  showStorageCheck?: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const refZoomControls = useRef<ZoomControlsRef>(null);
@@ -167,18 +169,7 @@ export default function PhotoLarge({
   const showRecipeContent = showRecipe && shouldShowRecipeDataForPhoto(photo);
   const showFilmContent = showFilm && shouldShowFilmDataForPhoto(photo);
 
-  const url = getOptimizedUrlsFromPhotoUrl(photo.url)[0];
-  const [hasImage, setHasImage] = useState<boolean>();
-  const onVisibleLocal = useCallback(() => {
-    onVisible?.();
-    if (hasImage === undefined) {
-      fetch(url)
-        .then(res => setHasImage(res.ok))
-        .catch(() => setHasImage(false));
-    }
-  }, [onVisible, url, hasImage]);
-
-  useVisibility({ ref, onVisible: onVisibleLocal });
+  useVisibility({ ref, onVisible });
 
   const hasTitle =
     showTitle &&
@@ -493,13 +484,8 @@ export default function PhotoLarge({
                         photo={photo} 
                       />}
                   </div>
-                  <div>
-                    {hasImage === undefined
-                      ? 'Checking ...'
-                      : hasImage === false
-                        ? '❌'
-                        : '✅'}
-                  </div>
+                  {showStorageCheck &&
+                    <AdminPhotoStorageCheck photo={photo} />}
                 </div>
               </div>
             </DivDebugBaselineGrid>

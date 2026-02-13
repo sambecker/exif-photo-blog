@@ -717,7 +717,7 @@ export const batchPhotoAction = async ({
 }) => runAuthenticatedAdminServerAction(async () => {
   const photoIds = _photoIds.length > 0
     ? _photoIds
-    : Boolean(photoOptions)
+    : photoOptions !== undefined
       ? await getPhotoIds(photoOptions)
       : [];
 
