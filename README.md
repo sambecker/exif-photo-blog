@@ -402,6 +402,7 @@ Partial internationalization (for non-admin, user-facing text) provided for a ha
 - `bd-bn`
 - `en-gb`
 - `en-us`
+- `hi-in`
 - `id-id`
 - `pt-br`
 - `pt-pt`
