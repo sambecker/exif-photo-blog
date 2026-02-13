@@ -9,12 +9,14 @@ export default function PhotosLarge({
   prefetchFirstPhotoLinks,
   onLastPhotoVisible,
   revalidatePhoto,
+  showStorageCheck,
 }: {
   photos: Photo[]
   animate?: boolean
   prefetchFirstPhotoLinks?: boolean
   onLastPhotoVisible?: () => void
   revalidatePhoto?: RevalidatePhoto
+  showStorageCheck?: boolean
 }) {
   return (
     <AnimateItems
@@ -35,6 +37,7 @@ export default function PhotosLarge({
           onVisible={index === photos.length - 1
             ? onLastPhotoVisible
             : undefined}
+          showStorageCheck={showStorageCheck}
         />)}
       itemKeys={photos.map(photo => photo.id)}
     />

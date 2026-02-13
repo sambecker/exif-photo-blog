@@ -1,3 +1,4 @@
+import { ADMIN_STORAGE_DEBUG_ENABLED } from '@/app/config';
 import {
   INFINITE_SCROLL_FULL_MULTIPLE,
   Photo,
@@ -17,9 +18,10 @@ export default function PhotoFullPage({
   sortBy: SortBy
   sortWithPriority: boolean
 }) {
+  const showStorageCheck = ADMIN_STORAGE_DEBUG_ENABLED;
   return (
     <div className="space-y-1">
-      <PhotosLarge {...{ photos }} />
+      <PhotosLarge {...{ photos, showStorageCheck }} />
       {photosCount > photos.length &&
         <PhotosLargeInfinite
           initialOffset={photos.length}
@@ -27,6 +29,7 @@ export default function PhotoFullPage({
           sortBy={sortBy}
           sortWithPriority={sortWithPriority}
           excludeFromFeeds
+          showStorageCheck={showStorageCheck}
         />}
     </div>
   );

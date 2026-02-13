@@ -420,43 +420,93 @@ export const getUniqueFocalLengths = async () =>
       })))
   , 'getUniqueFocalLengths');
 
+const _getPhotos = async (
+  options: PhotoQueryOptions = {},
+  fields = ['*'],
+  shouldParse = true,
+) => {
+  const sql = [
+    `SELECT ${fields.map(field => `p.${field}`).join(', ')} FROM photos p`,
+  ];
+
+  const values = [] as (string | number)[];
+
+  const joins = getJoinsFromOptions(options);
+
+  if (joins) { sql.push(joins); }
+
+  const {
+    wheres,
+    wheresValues,
+    lastValuesIndex,
+  } = getWheresFromOptions(options);
+  
+  if (wheres) {
+    sql.push(wheres);
+    values.push(...wheresValues);
+  }
+
+  sql.push(getOrderByFromOptions(options));
+
+  const {
+    limitAndOffset,
+    limitAndOffsetValues,
+  } = getLimitAndOffsetFromOptions(options, lastValuesIndex);
+
+  // LIMIT + OFFSET
+  sql.push(limitAndOffset);
+  values.push(...limitAndOffsetValues);
+
+  return query(sql.join(' '), values)
+    .then(({ rows, rowCount }) => ({
+      // Only parse results if there's at least one photo
+      photos: shouldParse ? rows.map(parsePhotoFromDb) : rows,
+      // Prefer explicit count before falling back to row count
+      count: rows[0]?.count !== undefined
+        ? parseInt(rows[0]?.count ?? '0', 10)
+        : rowCount ?? 0,
+    }));
+};
+
 export const getPhotos = async (options: PhotoQueryOptions = {}) =>
-  safelyQuery(async () => {
-    const sql = ['SELECT p.* FROM photos p'];
-    const values = [] as (string | number)[];
+  safelyQuery(
+    async () => _getPhotos(options).then(({ photos }) => photos),
+    'getPhotos',
+    // Seemingly necessary to pass `options` for expected cache behavior
+    options,
+  );
 
-    const joins = getJoinsFromOptions(options);
+export const getPhotoIds = async (options: PhotoQueryOptions = {}) =>
+  safelyQuery(
+    async () => _getPhotos(options, ['id'], false)
+      .then(({ photos }) => photos.map(photo => photo.id)),
+    'getPhotoIds',
+    // Seemingly necessary to pass `options` for expected cache behavior
+    options,
+  );
 
-    if (joins) { sql.push(joins); }
+export const getPhotoUrls = async (options: PhotoQueryOptions = {}) =>
+  safelyQuery(
+    async () => _getPhotos(options, ['id', 'title', 'url', 'hidden'], false)
+      .then(({ photos }) =>
+        photos as {
+          id: string,
+          title: string,
+          url: string,
+          hidden?: boolean,
+        }[]),
+    'getPhotoUrls',
+    // Seemingly necessary to pass `options` for expected cache behavior
+    options,
+  );
 
-    const {
-      wheres,
-      wheresValues,
-      lastValuesIndex,
-    } = getWheresFromOptions(options);
-    
-    if (wheres) {
-      sql.push(wheres);
-      values.push(...wheresValues);
-    }
-
-    sql.push(getOrderByFromOptions(options));
-
-    const {
-      limitAndOffset,
-      limitAndOffsetValues,
-    } = getLimitAndOffsetFromOptions(options, lastValuesIndex);
-
-    // LIMIT + OFFSET
-    sql.push(limitAndOffset);
-    values.push(...limitAndOffsetValues);
-
-    return query(sql.join(' '), values)
-      .then(({ rows }) => rows.map(parsePhotoFromDb));
-  },
-  'getPhotos',
-  // Seemingly necessary to pass `options` for expected cache behavior
-  options,
+export const getPhotoCount = async (options: PhotoQueryOptions = {}) =>
+  safelyQuery(
+    async () => _getPhotos(options, ['COUNT(*)'], false)
+      .then(({ count }) => count),
+    'getPhotoCount',
+    // Seemingly necessary to pass `options` for expected cache behavior
+    options,
   );
 
 export const getPhotosNearId = async (
@@ -534,14 +584,14 @@ export const getPhotosMeta = (options: PhotoQueryOptions = {}) =>
       }));
   }, 'getPhotosMeta');
 
-export const getPublicPhotoIds = async ({ limit }: { limit?: number }) =>
+export const getAllPublicPhotoIds = async ({ limit }: { limit?: number }) =>
   safelyQuery(() => (limit
     ? sql`SELECT id FROM photos WHERE hidden IS NOT TRUE LIMIT ${limit}`
     : sql`SELECT id FROM photos WHERE hidden IS NOT TRUE`)
     .then(({ rows }) => rows.map(({ id }) => id as string))
   , 'getPublicPhotoIds');
 
-export const getPhotoIdsAndUpdatedAt = async () =>
+export const getAllPhotoIdsWithUpdatedAt = async () =>
   safelyQuery(() =>
     sql`SELECT id, updated_at FROM photos WHERE hidden IS NOT TRUE`
       .then(({ rows }) => rows.map(({ id, updated_at }) =>

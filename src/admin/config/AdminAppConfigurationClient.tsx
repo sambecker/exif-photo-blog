@@ -140,6 +140,7 @@ export default function AdminAppConfigurationClient({
   areInternalToolsEnabled,
   areAdminDebugToolsEnabled,
   isAdminSqlDebugEnabled,
+  isAdminStorageDebugEnabled,
   // Auth
   secret,
   // Connection status
@@ -1017,6 +1018,15 @@ export default function AdminAppConfigurationClient({
             Set environment variable to {'"1"'} to enable
             console output for all sql queries:
             {renderEnvVars(['ADMIN_SQL_DEBUG'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Storage debugging"
+            status={isAdminStorageDebugEnabled}
+            optional
+          >
+            Set environment variable to {'"1"'} to enable
+            storage debugging:
+            {renderEnvVars(['ADMIN_STORAGE_DEBUG'])}
           </ChecklistRow>
         </>;
     }

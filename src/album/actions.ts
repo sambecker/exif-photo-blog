@@ -1,13 +1,12 @@
 'use server';
 
 import { runAuthenticatedAdminServerAction } from '@/auth/server';
-import { addPhotoAlbumIds, deleteAlbum, updateAlbum } from './query';
+import { deleteAlbum, updateAlbum } from './query';
 import { revalidateAllKeysAndPaths } from '@/cache';
 import { redirect } from 'next/navigation';
 import { PATH_ADMIN_ALBUMS, PATH_ROOT, pathForAlbum } from '@/app/path';
 import { convertFormDataToAlbum } from './form';
 import { Album } from '.';
-import { createAlbumsAndGetIds } from './server';
 
 export const updateAlbumAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
@@ -34,14 +33,4 @@ export const deleteAlbumAction = async (
     if (currentPath === pathForAlbum(album)) {
       redirect(PATH_ROOT);
     }
-  });
-
-export const addPhotosToAlbumsAction = async (
-  photoIds: string[],
-  albumTitles: string[],
-) =>
-  runAuthenticatedAdminServerAction(async () => {
-    const albumIds = await createAlbumsAndGetIds(albumTitles);
-    await addPhotoAlbumIds(photoIds, albumIds);
-    revalidateAllKeysAndPaths();
   });

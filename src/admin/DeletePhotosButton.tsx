@@ -2,7 +2,7 @@
 
 import LoaderButton from '@/components/primitives/LoaderButton';
 import { photoQuantityText } from '@/photo';
-import { deletePhotosAction } from '@/photo/actions';
+import { batchPhotoAction } from '@/photo/actions';
 import { useAppState } from '@/app/AppState';
 import { toastSuccess, toastWarning } from '@/toast';
 import { ComponentProps, useState } from 'react';
@@ -43,7 +43,10 @@ export default function DeletePhotosButton({
       onClick={() => {
         onClick?.();
         setIsLoading(true);
-        deletePhotosAction(photoIds)
+        batchPhotoAction({
+          photoIds,
+          action: 'delete',
+        })
           .then(() => {
             toastSuccess(toastText ?? `${photosText} deleted`);
             if (clearLocalState) {

@@ -32,6 +32,8 @@ export default function SelectPhotosProvider({
     useState(false);
   const [selectedPhotoIds, setSelectedPhotoIds] =
     useState<string[]>([]);
+  const [isSelectingAllPhotos, setIsSelectingAllPhotos] =
+    useState(false);
   const [isPerformingSelectEdit, setIsPerformingSelectEdit] =
     useState(false);
 
@@ -64,6 +66,22 @@ export default function SelectPhotosProvider({
     replacePathWithEvent(pathname)
   , [pathname]);
 
+  const togglePhotoSelection = useCallback((photoId: string) => {
+    if (isSelectingAllPhotos) {
+      setSelectedPhotoIds([photoId]);
+      setIsSelectingAllPhotos(false);
+    } else {
+      setSelectedPhotoIds(selectedPhotoIds.includes(photoId)
+        ? (selectedPhotoIds ?? []).filter(id => id !== photoId)
+        : (selectedPhotoIds ?? []).concat(photoId));
+    }
+  }, [isSelectingAllPhotos, selectedPhotoIds]);
+
+  const toggleIsSelectingAllPhotos = useCallback(() => {
+    setIsSelectingAllPhotos(prev => !prev);
+    setSelectedPhotoIds([]);
+  }, []);
+
   useEffect(() => {
     if (isSelectingPhotos) {
       const photoGrids = Array.from(getPhotoGridElements());
@@ -75,6 +93,7 @@ export default function SelectPhotosProvider({
     } else {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedPhotoIds([]);
+      setIsSelectingAllPhotos(false);
     }
   }, [isSelectingPhotos, getPhotoGridElements]);
 
@@ -82,10 +101,12 @@ export default function SelectPhotosProvider({
     <SelectPhotosContext.Provider value={{
       canCurrentPageSelectPhotos,
       isSelectingPhotos,
+      isSelectingAllPhotos,
+      toggleIsSelectingAllPhotos,
       startSelectingPhotos,
       stopSelectingPhotos,
       selectedPhotoIds,
-      setSelectedPhotoIds,
+      togglePhotoSelection,
       isPerformingSelectEdit,
       setIsPerformingSelectEdit,
     }}>

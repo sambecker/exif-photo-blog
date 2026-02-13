@@ -14,7 +14,10 @@ import PhotoHeader from './PhotoHeader';
 import RecipeHeader from '@/recipe/RecipeHeader';
 import { ReactNode } from 'react';
 import LensHeader from '@/lens/LensHeader';
-import { AI_CONTENT_GENERATION_ENABLED } from '@/app/config';
+import {
+  ADMIN_STORAGE_DEBUG_ENABLED,
+  AI_CONTENT_GENERATION_ENABLED,
+} from '@/app/config';
 import YearHeader from '@/year/YearHeader';
 import RecentsHeader from '@/recents/RecentsHeader';
 import AlbumHeader from '@/album/AlbumHeader';
@@ -180,13 +183,13 @@ export default function PhotoDetailPage({
             shouldShareFocalLength={focal !== undefined}
             includeFavoriteInAdminMenu={includeFavoriteInAdminMenu}
             showAdminKeyCommands
+            showStorageCheck={ADMIN_STORAGE_DEBUG_ENABLED}
           />,
         ]}
       />
       <AppGrid
         contentMain={<PhotoGrid
           photos={photosGrid ?? photos}
-          selectedPhoto={photo}
           tag={tag}
           camera={camera}
           film={film}

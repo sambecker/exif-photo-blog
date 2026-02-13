@@ -15,7 +15,6 @@ import { DATA_KEY_PHOTO_GRID } from '@/admin/select/SelectPhotosProvider';
 
 export default function PhotoGrid({
   photos,
-  selectedPhoto,
   prioritizeInitialPhotos,
   className,
   classNamePhoto,
@@ -31,7 +30,6 @@ export default function PhotoGrid({
   ...categories
 }: {
   photos: Photo[]
-  selectedPhoto?: Photo
   prioritizeInitialPhotos?: boolean
   className?: string
   classNamePhoto?: string
@@ -51,8 +49,9 @@ export default function PhotoGrid({
 
   const {
     isSelectingPhotos,
+    isSelectingAllPhotos,
     selectedPhotoIds,
-    setSelectedPhotoIds,
+    togglePhotoSelection,
   } = useSelectPhotosState();
 
   return (
@@ -79,7 +78,10 @@ export default function PhotoGrid({
         staggerOnFirstLoadOnly={staggerOnFirstLoadOnly}
         onAnimationComplete={onAnimationComplete}
         items={photos.map((photo, index) => {
-          const isSelected = selectedPhotoIds?.includes(photo.id) ?? false;
+          const isSelected = (
+            selectedPhotoIds?.includes(photo.id) ||
+            isSelectingAllPhotos
+          ) ?? false;
           return <div
             key={photo.id}
             className={clsx(
@@ -102,7 +104,7 @@ export default function PhotoGrid({
               {...{
                 photo,
                 ...categories,
-                selected: photo.id === selectedPhoto?.id,
+                selected: isSelected,
                 priority: prioritizeInitialPhotos ? index < 6 : undefined,
                 onVisible: index === photos.length - 1
                   ? onLastPhotoVisible
@@ -112,10 +114,7 @@ export default function PhotoGrid({
             {isSelectingPhotos &&
               <SelectTileOverlay
                 isSelected={isSelected}
-                onSelectChange={() => setSelectedPhotoIds?.(isSelected
-                  ? (selectedPhotoIds ?? []).filter(id => id !== photo.id)
-                  : (selectedPhotoIds ?? []).concat(photo.id),
-                )}
+                onSelectChange={() => togglePhotoSelection?.(photo.id)}
               />}
           </div>;
         }).concat(additionalTile ? <>{additionalTile}</> : [])}

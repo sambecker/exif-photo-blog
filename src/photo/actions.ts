@@ -14,11 +14,13 @@ import {
   getPhotosNeedingRecipeTitleCount,
   updateColorDataForPhoto,
   getColorDataForPhotos,
+  getPhotoIds,
 } from '@/photo/query';
 import { PhotoQueryOptions, areOptionsSensitive } from '@/db';
 import {
   FIELDS_TO_NOT_OVERWRITE_WITH_NULL_DATA_ON_SYNC,
   PhotoFormData,
+  convertFormDataToPhotoDbInsert,
   convertPhotoToFormData,
 } from './form';
 import { redirect } from 'next/navigation';
@@ -50,7 +52,7 @@ import {
   propagateRecipeTitleIfNecessary,
 } from './server';
 import { TAG_FAVS, Tags, isPhotoFav, isTagFavs } from '@/tag';
-import { convertPhotoToPhotoDbInsert, Photo } from '.';
+import { convertPhotoToPhotoDbInsert, Photo, PhotoDbInsert } from '.';
 import { runAuthenticatedAdminServerAction } from '@/auth/server';
 import { AiImageQuery, getAiImageQuery, getAiTextFieldsToGenerate } from './ai';
 import { streamOpenAiImageQuery } from '@/platforms/openai';
@@ -66,7 +68,6 @@ import {
   storeOptimizedPhotosForUrl,
 } from './storage/server';
 import { UrlAddStatus } from '@/admin/AdminUploadsClient';
-import { convertStringToArray } from '@/utility/string';
 import { after } from 'next/server';
 import {
   getColorFieldsForImageUrl,
@@ -343,18 +344,6 @@ export const updatePhotoAction = async (formData: FormData) =>
     redirect(PATH_ADMIN_PHOTOS);
   });
 
-export const tagMultiplePhotosAction = async (
-  tags: string,
-  photoIds: string[],
-) =>
-  runAuthenticatedAdminServerAction(async () => {
-    await addTagsToPhotos(
-      convertStringToArray(tags, false) ?? [],
-      photoIds,
-    );
-    revalidateAllKeysAndPaths();
-  });
-
 export const toggleFavoritePhotoAction = async (
   photoId: string,
   shouldRedirect?: boolean,
@@ -386,17 +375,6 @@ export const togglePrivatePhotoAction = async (
       revalidateAllKeysAndPaths();
     }
     if (redirectPath) { redirect(redirectPath); }
-  });
-
-export const deletePhotosAction = async (photoIds: string[]) =>
-  runAuthenticatedAdminServerAction(async () => {
-    for (const photoId of photoIds) {
-      const photo = await getPhoto(photoId, true);
-      if (photo) {
-        await deletePhotoAndFiles(photoId, photo.url);
-      }
-    }
-    revalidateAllKeysAndPaths();
   });
 
 export const deletePhotoAction = async (
@@ -525,19 +503,46 @@ export const replacePhotoStorageAction = async (
 ) =>
   runAuthenticatedAdminServerAction(async () => {
     const photo = await getPhoto(photoId, true);
+    
     if (photo) {
       const {
         fileExtension: extension,
       } = getFileNamePartsFromStorageUrl(updatedStorageUrl);
-      await updatePhoto(convertPhotoToPhotoDbInsert({
-        ...photo,
-        url: updatedStorageUrl,
-        extension,
-      }));
+
+      const {
+        formDataFromExif,
+      } = await extractImageDataFromBlobPath(updatedStorageUrl, {
+        generateBlurData: BLUR_ENABLED,
+      });
+
+      let imageFields: Partial<PhotoDbInsert> = {};
+      if (formDataFromExif) {
+        const photoDbInsert = convertFormDataToPhotoDbInsert(formDataFromExif);
+        imageFields = {
+          blurData: photoDbInsert.blurData,
+          width: photoDbInsert.width,
+          height: photoDbInsert.height,
+          aspectRatio: photoDbInsert.aspectRatio,
+          colorData: photoDbInsert.colorData,
+          colorSort: photoDbInsert.colorSort,
+        };
+      }
+
+      await updatePhoto({
+        ...convertPhotoToPhotoDbInsert({
+          ...photo,
+          url: updatedStorageUrl,
+          extension,
+        }),
+        ...imageFields,
+      });
+
       await storeOptimizedPhotosForUrl(updatedStorageUrl);
+
       const existingStorageUrls = await getStorageUrlsForPhoto(photo)
         .then(urls => urls.map(({ url }) => url));
       await Promise.all(existingStorageUrls.map(deleteFile));
+
       revalidatePhoto(photo.id);
     }
   });
@@ -694,6 +699,51 @@ export const streamAiImageQueryAction = async (
 
 export const getImageBlurAction = async (url: string) =>
   runAuthenticatedAdminServerAction(() => blurImageFromUrl(url));
+
+// Batch actions
+
+export const batchPhotoAction = async ({
+  photoIds: _photoIds = [],
+  photoOptions,
+  tags = [],
+  albumTitles = [],
+  action,
+}: {
+  photoIds?: string[]
+  photoOptions?: PhotoQueryOptions
+  tags?: string[]
+  albumTitles?: string[]
+  action?: 'favorite' | 'delete'
+}) => runAuthenticatedAdminServerAction(async () => {
+  const photoIds = _photoIds.length > 0
+    ? _photoIds
+    : photoOptions !== undefined
+      ? await getPhotoIds(photoOptions)
+      : [];
+
+  if (tags.length > 0) {
+    await addTagsToPhotos(tags, photoIds);
+  }
+  if (albumTitles.length > 0) {
+    const albumIds = await createAlbumsAndGetIds(albumTitles);
+    await addPhotoAlbumIds(photoIds, albumIds);
+  }
+  switch (action) {
+    case 'favorite':
+      await addTagsToPhotos([TAG_FAVS], photoIds);
+      break;
+    case 'delete':
+      for (const photoId of photoIds) {
+        const photo = await getPhoto(photoId, true);
+        if (photo) {
+          await deletePhotoAndFiles(photoId, photo.url);
+        }
+      }
+      break;
+  }
+
+  revalidateAllKeysAndPaths();
+});
 
 // Public/Private actions
 

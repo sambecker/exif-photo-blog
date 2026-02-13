@@ -37,6 +37,7 @@ export type PhotoQueryOptions = {
   camera?: Partial<Camera>
   lens?: Partial<Lens>
   album?: Album
+  photoIds?: string[]
 };
 
 export const areOptionsSensitive = (options: PhotoQueryOptions) =>
@@ -68,6 +69,7 @@ export const getWheresFromOptions = (
     film,
     recipe,
     focal,
+    photoIds,
   } = options;
 
   const wheres = [] as string[];
@@ -156,6 +158,10 @@ export const getWheresFromOptions = (
   if (focal) {
     wheres.push(`focal_length=$${valuesIndex++}`);
     wheresValues.push(focal);
+  }
+  if (photoIds && photoIds.length > 0) {
+    wheres.push(`id=ANY($${valuesIndex++})`);
+    wheresValues.push(convertArrayToPostgresString(photoIds) ?? '');
   }
 
   return {

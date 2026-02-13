@@ -6,9 +6,9 @@ import AppGrid from '@/components/AppGrid';
 import { clsx } from 'clsx/lite';
 import { IoCloseSharp } from 'react-icons/io5';
 import { useEffect, useRef, useState } from 'react';
-import { TAG_FAVS, Tags } from '@/tag';
+import { Tags } from '@/tag';
 import FieldsetTag from '@/tag/FieldsetTag';
-import { tagMultiplePhotosAction } from '@/photo/actions';
+import { batchPhotoAction } from '@/photo/actions';
 import { toastSuccess } from '@/toast';
 import DeletePhotosButton from '@/admin/DeletePhotosButton';
 import { photoQuantityText } from '@/photo';
@@ -21,14 +21,17 @@ import { useSelectPhotosState } from './SelectPhotosState';
 import { Albums } from '@/album';
 import FieldsetAlbum from '@/album/FieldsetAlbum';
 import IconAlbum from '@/components/icons/IconAlbum';
-import { addPhotosToAlbumsAction } from '@/album/actions';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
+import { convertStringToArray } from '@/utility/string';
 
 export default function AdminBatchEditPanelClient({
   uniqueAlbums,
   uniqueTags,
+  showSelectAll,
 }: {
   uniqueAlbums: Albums
   uniqueTags: Tags
+  showSelectAll?: boolean
 }) {
   const refNote = useRef<HTMLDivElement>(null);
 
@@ -36,6 +39,8 @@ export default function AdminBatchEditPanelClient({
     canCurrentPageSelectPhotos,
     isSelectingPhotos,
     stopSelectingPhotos,
+    isSelectingAllPhotos,
+    toggleIsSelectingAllPhotos,
     selectedPhotoIds,
     isPerformingSelectEdit,
     setIsPerformingSelectEdit,
@@ -98,20 +103,20 @@ export default function AdminBatchEditPanelClient({
         onClick={() => {
           setIsPerformingSelectEdit?.(true);
           if (isInTagMode) {
-            tagMultiplePhotosAction(
-              tags,
-              selectedPhotoIds ?? [],
-            )
+            batchPhotoAction({
+              photoIds: selectedPhotoIds,
+              tags: convertStringToArray(tags, false),
+            })
               .then(() => {
                 toastSuccess(`${photosText} tagged`);
                 stopSelectingPhotos?.();
               })
               .finally(() => setIsPerformingSelectEdit?.(false));
           } else if (isInAlbumMode) {
-            addPhotosToAlbumsAction(
-              selectedPhotoIds ?? [],
-              albumTitles.split(','),
-            )
+            batchPhotoAction({
+              photoIds: selectedPhotoIds,
+              albumTitles: albumTitles.split(','),
+            })
               .then(() => {
                 toastSuccess(`${photosText} added`);
                 stopSelectingPhotos?.();
@@ -146,10 +151,10 @@ export default function AdminBatchEditPanelClient({
         confirmText={`Are you sure you want to favorite ${photosText}?`}
         onClick={() => {
           setIsPerformingSelectEdit?.(true);
-          tagMultiplePhotosAction(
-            TAG_FAVS,
-            selectedPhotoIds ?? [],
-          )
+          batchPhotoAction({
+            photoIds: selectedPhotoIds,
+            action: 'favorite',
+          })
             .then(() => {
               toastSuccess(`${photosText} favorited`);
               stopSelectingPhotos?.();
@@ -230,8 +235,17 @@ export default function AdminBatchEditPanelClient({
                 openOnLoad
                 hideLabel
               />
-              : <div className="text-base flex gap-2 items-center">
-                {renderPhotoCTA}
+              : <div>
+                <div className="text-base flex gap-2 items-center">
+                  {renderPhotoCTA}
+                </div>
+                {showSelectAll &&
+                  <FieldsetWithStatus
+                    label="Select All Photos"
+                    type="checkbox"
+                    value={isSelectingAllPhotos ? 'true' : 'false'}
+                    onChange={toggleIsSelectingAllPhotos}
+                  />}
               </div>}
         </Note>
         {tagErrorMessage &&

@@ -399,6 +399,8 @@ export const ADMIN_DEBUG_TOOLS_ENABLED = process.env.ADMIN_DEBUG_TOOLS === '1';
 export const ADMIN_SQL_DEBUG_ENABLED =
   process.env.ADMIN_SQL_DEBUG === '1' &&
   !IS_BUILDING;
+export const ADMIN_STORAGE_DEBUG_ENABLED =
+  process.env.ADMIN_STORAGE_DEBUG === '1';
 
 export const APP_CONFIGURATION = {
   // Storage
@@ -527,6 +529,7 @@ export const APP_CONFIGURATION = {
   ),
   areAdminDebugToolsEnabled: ADMIN_DEBUG_TOOLS_ENABLED,
   isAdminSqlDebugEnabled: ADMIN_SQL_DEBUG_ENABLED,
+  isAdminStorageDebugEnabled: ADMIN_STORAGE_DEBUG_ENABLED,
   // Misc
   nextVersion: dependencies.next,
   reactVersion: dependencies.react,

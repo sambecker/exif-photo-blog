@@ -10,12 +10,14 @@ export default function PhotosLargeInfinite({
   itemsPerPage,
   sortBy,
   excludeFromFeeds,
+  showStorageCheck,
 }: {
   initialOffset: number
   itemsPerPage: number
   sortBy: SortBy
   sortWithPriority: boolean
   excludeFromFeeds?: boolean
+  showStorageCheck?: boolean
 }) {
   return (
     <InfinitePhotoScroll
@@ -29,9 +31,12 @@ export default function PhotosLargeInfinite({
       {({ key, photos, onLastPhotoVisible, revalidatePhoto }) =>
         <PhotosLarge
           key={key}
-          photos={photos}
-          onLastPhotoVisible={onLastPhotoVisible}
-          revalidatePhoto={revalidatePhoto}
+          {...{
+            photos,
+            onLastPhotoVisible,
+            revalidatePhoto,
+            showStorageCheck,
+          }}
         />}
     </InfinitePhotoScroll>
   );
