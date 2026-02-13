@@ -25,6 +25,7 @@ const LOCALE_TEXT_IMPORTS: Record<
   'pt-br': () => import('./locales/pt-br').then(m => m.TEXT),
   'pt-pt': () => import('./locales/pt-pt').then(m => m.TEXT),
   'tr-tr': () => import('./locales/tr-tr').then(m => m.TEXT),
+  'vi-vn': () => import('./locales/vi-vn').then(m => m.TEXT),
   'zh-cn': () => import('./locales/zh-cn').then(m => m.TEXT),
 };
 
