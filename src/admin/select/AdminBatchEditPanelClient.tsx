@@ -27,7 +27,7 @@ import { convertStringToArray } from '@/utility/string';
 export default function AdminBatchEditPanelClient({
   uniqueAlbums,
   uniqueTags,
-  showSelectAll,
+  showSelectAll = true,
 }: {
   uniqueAlbums: Albums
   uniqueTags: Tags
