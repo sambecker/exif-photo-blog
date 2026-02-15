@@ -19,8 +19,8 @@ import { CategoryQueryMeta, sortCategoryByCount } from '@/category';
 import { AppTextState } from '@/i18n/state';
 
 // Reserved tags
-export const TAG_FAVS   = 'favs';
-export const TAG_PRIVATE = 'private';
+export const TAG_FAVS     = 'favs';
+export const TAG_PRIVATE  = 'private';
 
 type TagWithMeta = { tag: string } & CategoryQueryMeta;
 
@@ -147,7 +147,8 @@ export const isPhotoFav = ({ tags }: Photo) => tags.some(isTagFavs);
 export const isPathFavs = (pathname?: string) =>
   getPathComponents(pathname).tag === TAG_FAVS;
 
-export const isTagPrivate = (tag: string) => tag.toLowerCase() === TAG_PRIVATE;
+export const isTagPrivate = (tag = '') =>
+  tag.toLocaleLowerCase() === TAG_PRIVATE;
 
 export const addPrivateToTags = (
   tags: Tags,

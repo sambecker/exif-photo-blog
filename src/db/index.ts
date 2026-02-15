@@ -4,6 +4,9 @@ import { Camera } from '@/camera';
 import { Lens } from '@/lens';
 import { APP_DEFAULT_SORT_BY, SortBy } from '@/photo/sort';
 import { Album } from '@/album';
+import { getPathComponents } from '@/app/path';
+import { getAlbumFromSlug } from '@/album/query';
+import { isTagPrivate } from '@/tag';
 
 export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 export const PHOTO_DEFAULT_LIMIT = 100;
@@ -252,5 +255,22 @@ export const generateManyToManyValues = (idsA: string[], idsB: string[]) => {
   return {
     valueString,
     values,
+  };
+};
+
+export const getPhotoQueryOptionsForPath = async (
+  path: string,
+): Promise<PhotoQueryOptions> => {
+  const { album: albumSlug, tag, ...components } = getPathComponents(path);
+
+  let album: Album | undefined;
+  if (albumSlug) {
+    album = await getAlbumFromSlug(albumSlug);
+  }
+
+  return {
+    album,
+    ...isTagPrivate(tag) ? { hidden: 'only' } : { tag },
+    ...components,
   };
 };
