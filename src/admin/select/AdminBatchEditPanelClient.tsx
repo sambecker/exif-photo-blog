@@ -1,6 +1,5 @@
 'use client';
 
-import Note from '@/components/Note';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import AppGrid from '@/components/AppGrid';
 import { clsx } from 'clsx/lite';
@@ -8,7 +7,7 @@ import { IoCloseSharp } from 'react-icons/io5';
 import { useEffect, useRef, useState } from 'react';
 import { Tags } from '@/tag';
 import FieldsetTag from '@/tag/FieldsetTag';
-import { batchPhotoAction } from '@/photo/actions';
+import { batchPhotoAction, getPhotoCountForPathAction } from '@/photo/actions';
 import { toastSuccess } from '@/toast';
 import DeletePhotosButton from '@/admin/DeletePhotosButton';
 import { photoQuantityText } from '@/photo';
@@ -23,15 +22,14 @@ import FieldsetAlbum from '@/album/FieldsetAlbum';
 import IconAlbum from '@/components/icons/IconAlbum';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import { convertStringToArray } from '@/utility/string';
+import { usePathname } from 'next/navigation';
 
 export default function AdminBatchEditPanelClient({
   uniqueAlbums,
   uniqueTags,
-  showSelectAll,
 }: {
   uniqueAlbums: Albums
   uniqueTags: Tags
-  showSelectAll?: boolean
 }) {
   const refNote = useRef<HTMLDivElement>(null);
 
@@ -45,6 +43,11 @@ export default function AdminBatchEditPanelClient({
     isPerformingSelectEdit,
     setIsPerformingSelectEdit,
   } = useSelectPhotosState();
+
+  const showSelectAll = true;
+
+  const pathname = usePathname();
+  const [queryCountPreview, setQueryCountPreview] = useState<number>();
 
   const appText = useAppText();
 
@@ -66,16 +69,22 @@ export default function AdminBatchEditPanelClient({
     isPerformingSelectEdit ||
     selectedPhotoIds?.length === 0;
 
-  const renderPhotoCTA = selectedPhotoIds?.length === 0
-    ? <>
-      <FaArrowDown />
-      <ResponsiveText shortText="Select">
-        Select photos below
+  const renderPhotoSelectionStatus = isSelectingAllPhotos
+    ? queryCountPreview === undefined
+      ? 'Querying ...'
+      : <ResponsiveText shortText={`${queryCountPreview} selected`}>
+        {`${queryCountPreview} photos selected`}
       </ResponsiveText>
-    </>
-    : <ResponsiveText shortText={photosText}>
-      {photosText} selected
-    </ResponsiveText>;
+    : selectedPhotoIds?.length === 0
+      ? <>
+        <FaArrowDown />
+        <ResponsiveText shortText="Select">
+          Select photos below
+        </ResponsiveText>
+      </>
+      : <ResponsiveText shortText={photosText}>
+        {photosText} selected
+      </ResponsiveText>;
 
   const renderActions = isInTagMode || isInAlbumMode
     ? <>
@@ -187,6 +196,13 @@ export default function AdminBatchEditPanelClient({
     canCurrentPageSelectPhotos;
 
   useEffect(() => {
+    if (!shouldShowPanel) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setQueryCountPreview(undefined);
+    }
+  }, [shouldShowPanel]);
+
+  useEffect(() => {
     // Steal focus from Admin Menu to hide tooltip
     if (isSelectingPhotos) {
       refNote.current?.focus();
@@ -196,62 +212,69 @@ export default function AdminBatchEditPanelClient({
   return shouldShowPanel
     ? <AppGrid
       className="sticky top-0 z-10 -mt-2 pt-2"
-      contentMain={<div className="flex flex-col gap-2">
-        <Note
+      contentMain={
+        <div
           ref={refNote}
           color="gray"
           className={clsx(
-            'min-h-[3.5rem] pr-2',
-            'backdrop-blur-lg border-transparent!',
+            'p-2 rounded-[10px]',
+            'backdrop-blur-lg',
             'text-gray-900! dark:text-gray-100!',
             'bg-gray-100/90! dark:bg-gray-900/70!',
-            // Override default <Note /> content spacing
-            '[&>*>*:first-child]:gap-1.5 sm:[&>*>*:first-child]:gap-2.5',
+            'outline outline-medium',
+            'shadow-xl/5',
           )}
-          padding={isInTagMode ? 'tight-cta-right-left' : 'tight-cta-right'}
-          cta={<div className="flex items-center gap-1.5 sm:gap-2.5">
-            {renderActions}
-          </div>}
-          spaceChildren={false}
-          hideIcon
         >
-          {isInAlbumMode
-            ? <FieldsetAlbum
-              albumOptions={uniqueAlbums}
-              value={albumTitles}
-              onChange={setAlbumsTitles}
-              readOnly={isPerformingSelectEdit}
-              openOnLoad
-              hideLabel
-            />
-            : isInTagMode
-              ? <FieldsetTag
-                tags={tags}
-                tagOptions={uniqueTags}
-                placeholder={`Tag ${photosText} ...`}
-                onChange={setTags}
-                onError={setTagErrorMessage}
+          <div className="flex items-center gap-2">
+            {isInAlbumMode
+              ? <FieldsetAlbum
+                albumOptions={uniqueAlbums}
+                value={albumTitles}
+                onChange={setAlbumsTitles}
                 readOnly={isPerformingSelectEdit}
                 openOnLoad
                 hideLabel
               />
-              : <div>
-                <div className="text-base flex gap-2 items-center">
-                  {renderPhotoCTA}
-                </div>
-                {showSelectAll &&
-                  <FieldsetWithStatus
-                    label="Select All Photos"
-                    type="checkbox"
-                    value={isSelectingAllPhotos ? 'true' : 'false'}
-                    onChange={toggleIsSelectingAllPhotos}
-                  />}
+              : isInTagMode
+                ? <FieldsetTag
+                  tags={tags}
+                  tagOptions={uniqueTags}
+                  placeholder={`Tag ${photosText} ...`}
+                  onChange={setTags}
+                  onError={setTagErrorMessage}
+                  readOnly={isPerformingSelectEdit}
+                  openOnLoad
+                  hideLabel
+                />
+                : <div className="grow">
+                  <div className="flex items-center gap-2">
+                    {renderPhotoSelectionStatus}
+                  </div>
+                </div>}
+            {renderActions}
+          </div>
+          <div className="flex items-center gap-1">
+            {showSelectAll &&
+              <FieldsetWithStatus
+                label="Select All"
+                type="checkbox"
+                value={isSelectingAllPhotos ? 'true' : 'false'}
+                onChange={value => {
+                  toggleIsSelectingAllPhotos?.();
+                  if (value === 'true') {
+                    getPhotoCountForPathAction(pathname)
+                      .then(setQueryCountPreview)
+                      .catch(toggleIsSelectingAllPhotos);
+                  }
+                }}
+                readOnly={isSelectingAllPhotos &&
+                  queryCountPreview === undefined}
+              />}
+            {tagErrorMessage &&
+              <div className="text-error pl-4">
+                {tagErrorMessage}
               </div>}
-        </Note>
-        {tagErrorMessage &&
-          <div className="text-error pl-4">
-            {tagErrorMessage}
-          </div>}
-      </div>} />
+          </div>
+        </div>} />
     : null;
 }
