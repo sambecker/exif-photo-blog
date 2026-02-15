@@ -8,6 +8,7 @@ import { useAppState } from '@/app/AppState';
 import useClientSearchParams from '@/utility/useClientSearchParams';
 import { replacePathWithEvent } from '@/utility/url';
 import { isElementPartiallyInViewport } from '@/utility/dom';
+import { getPhotoCountForPathAction } from '@/photo/actions';
 
 export const DATA_KEY_PHOTO_GRID = 'data-photo-grid';
 
@@ -34,6 +35,7 @@ export default function SelectPhotosProvider({
     useState<string[]>([]);
   const [isSelectingAllPhotos, setIsSelectingAllPhotos] =
     useState(false);
+  const [selectAllCount, setSelectAllCount] = useState<number>();
   const [isPerformingSelectEdit, setIsPerformingSelectEdit] =
     useState(false);
 
@@ -78,9 +80,14 @@ export default function SelectPhotosProvider({
   }, [isSelectingAllPhotos, selectedPhotoIds]);
 
   const toggleIsSelectingAllPhotos = useCallback(() => {
-    setIsSelectingAllPhotos(prev => !prev);
+    setIsSelectingAllPhotos(!isSelectingAllPhotos);
     setSelectedPhotoIds([]);
-  }, []);
+    if (!isSelectingAllPhotos) {
+      getPhotoCountForPathAction(pathname)
+        .then(setSelectAllCount)
+        .catch(() => setIsSelectingAllPhotos(false));
+    }
+  }, [isSelectingAllPhotos, pathname]);
 
   useEffect(() => {
     if (isSelectingPhotos) {
@@ -94,6 +101,7 @@ export default function SelectPhotosProvider({
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedPhotoIds([]);
       setIsSelectingAllPhotos(false);
+      setSelectAllCount(undefined);
     }
   }, [isSelectingPhotos, getPhotoGridElements]);
 
@@ -106,6 +114,7 @@ export default function SelectPhotosProvider({
       startSelectingPhotos,
       stopSelectingPhotos,
       selectedPhotoIds,
+      selectAllCount,
       togglePhotoSelection,
       isPerformingSelectEdit,
       setIsPerformingSelectEdit,

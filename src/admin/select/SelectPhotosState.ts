@@ -8,6 +8,7 @@ export type SelectPhotosState = {
   startSelectingPhotos?: () => void
   stopSelectingPhotos?: () => void
   selectedPhotoIds?: string[]
+  selectAllCount?: number
   togglePhotoSelection?: (photoId: string) => void
   isPerformingSelectEdit?: boolean
   setIsPerformingSelectEdit?: Dispatch<SetStateAction<boolean>>

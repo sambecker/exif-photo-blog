@@ -7,7 +7,7 @@ import { IoCloseSharp } from 'react-icons/io5';
 import { useEffect, useRef, useState } from 'react';
 import { Tags } from '@/tag';
 import FieldsetTag from '@/tag/FieldsetTag';
-import { batchPhotoAction, getPhotoCountForPathAction } from '@/photo/actions';
+import { batchPhotoAction } from '@/photo/actions';
 import { toastSuccess } from '@/toast';
 import DeletePhotosButton from '@/admin/DeletePhotosButton';
 import { photoQuantityText } from '@/photo';
@@ -22,7 +22,6 @@ import FieldsetAlbum from '@/album/FieldsetAlbum';
 import IconAlbum from '@/components/icons/IconAlbum';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import { convertStringToArray } from '@/utility/string';
-import { usePathname } from 'next/navigation';
 
 export default function AdminBatchEditPanelClient({
   uniqueAlbums,
@@ -40,14 +39,12 @@ export default function AdminBatchEditPanelClient({
     isSelectingAllPhotos,
     toggleIsSelectingAllPhotos,
     selectedPhotoIds,
+    selectAllCount,
     isPerformingSelectEdit,
     setIsPerformingSelectEdit,
   } = useSelectPhotosState();
 
   const showSelectAll = true;
-
-  const pathname = usePathname();
-  const [queryCountPreview, setQueryCountPreview] = useState<number>();
 
   const appText = useAppText();
 
@@ -70,10 +67,10 @@ export default function AdminBatchEditPanelClient({
     selectedPhotoIds?.length === 0;
 
   const renderPhotoSelectionStatus = isSelectingAllPhotos
-    ? queryCountPreview === undefined
-      ? 'Querying ...'
-      : <ResponsiveText shortText={`${queryCountPreview} selected`}>
-        {`${queryCountPreview} photos selected`}
+    ? selectAllCount === undefined
+      ? 'Selecting ...'
+      : <ResponsiveText shortText={`${selectAllCount} selected`}>
+        {`${selectAllCount} photos selected`}
       </ResponsiveText>
     : selectedPhotoIds?.length === 0
       ? <>
@@ -196,13 +193,6 @@ export default function AdminBatchEditPanelClient({
     canCurrentPageSelectPhotos;
 
   useEffect(() => {
-    if (!shouldShowPanel) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setQueryCountPreview(undefined);
-    }
-  }, [shouldShowPanel]);
-
-  useEffect(() => {
     // Steal focus from Admin Menu to hide tooltip
     if (isSelectingPhotos) {
       refNote.current?.focus();
@@ -259,16 +249,9 @@ export default function AdminBatchEditPanelClient({
                 label="Select All"
                 type="checkbox"
                 value={isSelectingAllPhotos ? 'true' : 'false'}
-                onChange={value => {
-                  toggleIsSelectingAllPhotos?.();
-                  if (value === 'true') {
-                    getPhotoCountForPathAction(pathname)
-                      .then(setQueryCountPreview)
-                      .catch(toggleIsSelectingAllPhotos);
-                  }
-                }}
+                onChange={toggleIsSelectingAllPhotos}
                 readOnly={isSelectingAllPhotos &&
-                  queryCountPreview === undefined}
+                  selectAllCount === undefined}
               />}
             {tagErrorMessage &&
               <div className="text-error pl-4">
