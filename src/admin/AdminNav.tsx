@@ -36,7 +36,7 @@ export default async function AdminNav() {
       }),
     getAlbumsWithMetaCached().then(albums => albums.length)
       .catch(() => 0),
-    getUniqueTagsCached().then(tags => tags.length)
+    getUniqueTagsCached(true).then(tags => tags.length)
       .catch(() => 0),
     getUniqueRecipesCached().then(recipes => recipes.length)
       .catch(() => 0),

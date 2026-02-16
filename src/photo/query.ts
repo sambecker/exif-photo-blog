@@ -294,20 +294,20 @@ export const getUniqueLenses = async () =>
       })))
   , 'getUniqueLenses');
 
-export const getUniqueTags = async () =>
-  safelyQuery(() => sql`
+export const getUniqueTags = async (includeHidden?: boolean) =>
+  safelyQuery(() => query(`
     SELECT DISTINCT unnest(tags) as tag,
       COUNT(*),
       MAX(updated_at) as last_modified
     FROM photos
-    WHERE hidden IS NOT TRUE
+    ${includeHidden ? '' : 'WHERE hidden IS NOT TRUE'}
     GROUP BY tag
     ORDER BY tag ASC
-  `.then(({ rows }): Tags => rows.map(({ tag, count, last_modified }) => ({
-      tag,
-      count: parseInt(count, 10),
-      lastModified: last_modified as Date,
-    })))
+  `).then(({ rows }): Tags => rows.map(({ tag, count, last_modified }) => ({
+    tag,
+    count: parseInt(count, 10),
+    lastModified: last_modified as Date,
+  })))
   , 'getUniqueTags');
 
 export const getUniqueRecipes = async () =>

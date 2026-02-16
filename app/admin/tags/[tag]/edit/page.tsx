@@ -23,8 +23,8 @@ export default async function TagPageEdit({
     { count },
     photos,
   ] = await Promise.all([
-    getPhotosMetaCached({ tag }),
-    getPhotosCached({ tag, limit: MAX_PHOTO_TO_SHOW }),
+    getPhotosMetaCached({ tag, hidden: 'include' }),
+    getPhotosCached({ tag, limit: MAX_PHOTO_TO_SHOW, hidden: 'include' }),
   ]);
 
   if (count === 0) { redirect(PATH_ADMIN); }

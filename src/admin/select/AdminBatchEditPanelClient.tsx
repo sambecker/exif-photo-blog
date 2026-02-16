@@ -146,8 +146,7 @@ export default function AdminBatchEditPanelClient({
             (!tags || Boolean(tagErrorMessage)) &&
             !albumTitles
           ) ||
-          (selectedPhotoIds?.length ?? 0) === 0 ||
-          isPerformingSelectEdit
+          isFormDisabled
         }
         primary
       >
