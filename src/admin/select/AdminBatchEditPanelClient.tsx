@@ -261,6 +261,7 @@ export default function AdminBatchEditPanelClient({
             <FieldsetWithStatus
               label="Select All"
               type="checkbox"
+              className="-z-10"
               value={isSelectingAllPhotos ? 'true' : 'false'}
               onChange={toggleIsSelectingAllPhotos}
               readOnly={isSelectingAllPhotos &&
