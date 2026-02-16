@@ -710,7 +710,8 @@ export const getImageBlurAction = async (url: string) =>
 export const getPhotoCountForPathAction = async (path: string) =>
   runAuthenticatedAdminServerAction(async () => {
     const options = await getPhotoQueryOptionsForPath(path);
-    return getPhotoCount(options);
+    const count = await getPhotoCount(options);
+    return { options, count };
   });
 
 export const batchPhotoAction = async ({

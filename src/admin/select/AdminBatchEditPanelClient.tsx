@@ -34,17 +34,17 @@ export default function AdminBatchEditPanelClient({
 
   const {
     canCurrentPageSelectPhotos,
+    shouldShowSelectAll,
     isSelectingPhotos,
     stopSelectingPhotos,
     isSelectingAllPhotos,
     toggleIsSelectingAllPhotos,
     selectedPhotoIds,
+    selectAllPhotoOptions,
     selectAllCount,
     isPerformingSelectEdit,
     setIsPerformingSelectEdit,
   } = useSelectPhotosState();
-
-  const showSelectAll = true;
 
   const appText = useAppText();
 
@@ -56,7 +56,9 @@ export default function AdminBatchEditPanelClient({
   const isInTagMode = tags !== undefined;
 
   const photosText = photoQuantityText(
-    selectedPhotoIds?.length ?? 0,
+    (isSelectingAllPhotos
+      ? selectAllCount
+      : selectedPhotoIds?.length) ?? 0,
     appText,
     false,
     false,
@@ -64,7 +66,9 @@ export default function AdminBatchEditPanelClient({
 
   const isFormDisabled =
     isPerformingSelectEdit ||
-    selectedPhotoIds?.length === 0;
+    isSelectingAllPhotos
+      ? !Boolean(selectAllCount)
+      : selectedPhotoIds?.length === 0;
 
   const renderPhotoSelectionStatus = isSelectingAllPhotos
     ? selectAllCount === undefined
@@ -145,7 +149,12 @@ export default function AdminBatchEditPanelClient({
     </>
     : <>
       <DeletePhotosButton
-        photoIds={selectedPhotoIds}
+        {...{
+          ...isSelectingAllPhotos
+            ? { photoOptions: selectAllPhotoOptions }
+            : { photoIds: selectedPhotoIds },
+          photosText,
+        }}
         disabled={isFormDisabled}
         onClick={() => setIsPerformingSelectEdit?.(true)}
         onDelete={stopSelectingPhotos}
@@ -207,6 +216,7 @@ export default function AdminBatchEditPanelClient({
           ref={refNote}
           color="gray"
           className={clsx(
+            'flex flex-col gap-2',
             'p-2 rounded-[10px]',
             'backdrop-blur-lg',
             'text-gray-900! dark:text-gray-100!',
@@ -215,7 +225,7 @@ export default function AdminBatchEditPanelClient({
             'shadow-xl/5',
           )}
         >
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 [&>*:first-child]:grow">
             {isInAlbumMode
               ? <FieldsetAlbum
                 albumOptions={uniqueAlbums}
@@ -243,21 +253,19 @@ export default function AdminBatchEditPanelClient({
                 </div>}
             {renderActions}
           </div>
-          <div className="flex items-center gap-1">
-            {showSelectAll &&
-              <FieldsetWithStatus
-                label="Select All"
-                type="checkbox"
-                value={isSelectingAllPhotos ? 'true' : 'false'}
-                onChange={toggleIsSelectingAllPhotos}
-                readOnly={isSelectingAllPhotos &&
-                  selectAllCount === undefined}
-              />}
-            {tagErrorMessage &&
-              <div className="text-error pl-4">
-                {tagErrorMessage}
-              </div>}
-          </div>
+          {shouldShowSelectAll &&
+            <FieldsetWithStatus
+              label="Select All"
+              type="checkbox"
+              value={isSelectingAllPhotos ? 'true' : 'false'}
+              onChange={toggleIsSelectingAllPhotos}
+              readOnly={isSelectingAllPhotos &&
+                selectAllCount === undefined}
+            />}
+          {tagErrorMessage &&
+            <div className="text-error pl-4">
+              {tagErrorMessage}
+            </div>}
         </div>} />
     : null;
 }
