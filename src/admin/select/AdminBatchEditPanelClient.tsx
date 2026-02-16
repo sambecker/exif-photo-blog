@@ -55,8 +55,15 @@ export default function AdminBatchEditPanelClient({
   const [tagErrorMessage, setTagErrorMessage] = useState('');
   const isInTagMode = tags !== undefined;
 
+  const batchPhotoActionArguments = (
+    isSelectingAllPhotos &&
+    selectAllPhotoOptions
+  )
+    ? { photoOptions: selectAllPhotoOptions }
+    : { photoIds: selectedPhotoIds };
+
   const photosText = photoQuantityText(
-    (isSelectingAllPhotos
+    (isSelectingAllPhotos && selectAllCount !== undefined
       ? selectAllCount
       : selectedPhotoIds?.length) ?? 0,
     appText,
@@ -114,7 +121,7 @@ export default function AdminBatchEditPanelClient({
           setIsPerformingSelectEdit?.(true);
           if (isInTagMode) {
             batchPhotoAction({
-              photoIds: selectedPhotoIds,
+              ...batchPhotoActionArguments,
               tags: convertStringToArray(tags, false),
             })
               .then(() => {
@@ -124,7 +131,7 @@ export default function AdminBatchEditPanelClient({
               .finally(() => setIsPerformingSelectEdit?.(false));
           } else if (isInAlbumMode) {
             batchPhotoAction({
-              photoIds: selectedPhotoIds,
+              ...batchPhotoActionArguments,
               albumTitles: albumTitles.split(','),
             })
               .then(() => {
@@ -150,9 +157,7 @@ export default function AdminBatchEditPanelClient({
     : <>
       <DeletePhotosButton
         {...{
-          ...isSelectingAllPhotos
-            ? { photoOptions: selectAllPhotoOptions }
-            : { photoIds: selectedPhotoIds },
+          ...batchPhotoActionArguments,
           photosText,
         }}
         disabled={isFormDisabled}
@@ -167,7 +172,7 @@ export default function AdminBatchEditPanelClient({
         onClick={() => {
           setIsPerformingSelectEdit?.(true);
           batchPhotoAction({
-            photoIds: selectedPhotoIds,
+            ...batchPhotoActionArguments,
             action: 'favorite',
           })
             .then(() => {
