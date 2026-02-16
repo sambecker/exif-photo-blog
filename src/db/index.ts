@@ -7,6 +7,7 @@ import { Album } from '@/album';
 import { getPathComponents } from '@/app/path';
 import { getAlbumFromSlug } from '@/album/query';
 import { isTagPrivate } from '@/tag';
+import { getPhotoCount } from '@/photo/query';
 
 export const GENERATE_STATIC_PARAMS_LIMIT = 1000;
 export const PHOTO_DEFAULT_LIMIT = 100;
@@ -258,9 +259,9 @@ export const generateManyToManyValues = (idsA: string[], idsB: string[]) => {
   };
 };
 
-export const getPhotoQueryOptionsForPath = async (
+export const getPhotoOptionsCountForPath = async (
   path: string,
-): Promise<PhotoQueryOptions> => {
+): Promise<{ options: PhotoQueryOptions, count: number }> => {
   const { album: albumSlug, tag, ...components } = getPathComponents(path);
 
   let album: Album | undefined;
@@ -268,9 +269,19 @@ export const getPhotoQueryOptionsForPath = async (
     album = await getAlbumFromSlug(albumSlug);
   }
 
-  return {
+  const options: PhotoQueryOptions = {
     album,
     ...isTagPrivate(tag) ? { hidden: 'only' } : { tag },
     ...components,
+  };
+
+  const count = await getPhotoCount(options);
+
+  return {
+    options: {
+      ...options,
+      limit: count,
+    },
+    count,
   };
 };

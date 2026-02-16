@@ -12,7 +12,7 @@ import { useAppState } from '@/app/AppState';
 import useClientSearchParams from '@/utility/useClientSearchParams';
 import { replacePathWithEvent } from '@/utility/url';
 import { isElementPartiallyInViewport } from '@/utility/dom';
-import { getPhotoCountForPathAction } from '@/photo/actions';
+import { getPhotoOptionsCountForPathAction } from '@/photo/actions';
 import { PhotoQueryOptions } from '@/db';
 
 export const DATA_KEY_PHOTO_GRID = 'data-photo-grid';
@@ -95,7 +95,7 @@ export default function SelectPhotosProvider({
     setIsSelectingAllPhotos(!isSelectingAllPhotos);
     setSelectedPhotoIds([]);
     if (!isSelectingAllPhotos) {
-      getPhotoCountForPathAction(pathname)
+      getPhotoOptionsCountForPathAction(pathname)
         .then(({ options, count }) => {
           setSelectAllPhotoOptions(options);
           setSelectAllCount(count);

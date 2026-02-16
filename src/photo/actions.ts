@@ -15,12 +15,11 @@ import {
   updateColorDataForPhoto,
   getColorDataForPhotos,
   getPhotoIds,
-  getPhotoCount,
 } from '@/photo/query';
 import {
   PhotoQueryOptions,
   areOptionsSensitive,
-  getPhotoQueryOptionsForPath,
+  getPhotoOptionsCountForPath,
 } from '@/db';
 import {
   FIELDS_TO_NOT_OVERWRITE_WITH_NULL_DATA_ON_SYNC,
@@ -707,12 +706,10 @@ export const getImageBlurAction = async (url: string) =>
 
 // Batch actions
 
-export const getPhotoCountForPathAction = async (path: string) =>
-  runAuthenticatedAdminServerAction(async () => {
-    const options = await getPhotoQueryOptionsForPath(path);
-    const count = await getPhotoCount(options);
-    return { options, count };
-  });
+export const getPhotoOptionsCountForPathAction = async (path: string) =>
+  runAuthenticatedAdminServerAction(async () =>
+    getPhotoOptionsCountForPath(path),
+  );
 
 export const batchPhotoAction = async ({
   photoIds: _photoIds = [],

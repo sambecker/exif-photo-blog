@@ -222,7 +222,7 @@ export default function AdminBatchEditPanelClient({
           color="gray"
           className={clsx(
             'flex flex-col gap-2',
-            'p-2 rounded-[10px]',
+            'p-2 rounded-xl',
             'backdrop-blur-lg',
             'text-gray-900! dark:text-gray-100!',
             'bg-gray-100/90! dark:bg-gray-900/70!',
