@@ -291,7 +291,7 @@ export default function PhotoForm({
   const footerForField = (key: keyof PhotoFormData) => {
     switch (key) {
       case 'url':
-        return photoStorageUrls.length === 0
+        return type === 'edit' && photoStorageUrls.length === 0
           ? <span className="text-error">
             No storage found for photo
           </span>
