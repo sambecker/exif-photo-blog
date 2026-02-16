@@ -16,7 +16,11 @@ import {
   getColorDataForPhotos,
   getPhotoIds,
 } from '@/photo/query';
-import { PhotoQueryOptions, areOptionsSensitive } from '@/db';
+import {
+  PhotoQueryOptions,
+  areOptionsSensitive,
+  getPhotoOptionsCountForPath,
+} from '@/db';
 import {
   FIELDS_TO_NOT_OVERWRITE_WITH_NULL_DATA_ON_SYNC,
   PhotoFormData,
@@ -701,6 +705,11 @@ export const getImageBlurAction = async (url: string) =>
   runAuthenticatedAdminServerAction(() => blurImageFromUrl(url));
 
 // Batch actions
+
+export const getPhotoOptionsCountForPathAction = async (path: string) =>
+  runAuthenticatedAdminServerAction(async () =>
+    getPhotoOptionsCountForPath(path),
+  );
 
 export const batchPhotoAction = async ({
   photoIds: _photoIds = [],

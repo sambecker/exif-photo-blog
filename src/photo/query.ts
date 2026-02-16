@@ -294,20 +294,20 @@ export const getUniqueLenses = async () =>
       })))
   , 'getUniqueLenses');
 
-export const getUniqueTags = async () =>
-  safelyQuery(() => sql`
+export const getUniqueTags = async (includeHidden?: boolean) =>
+  safelyQuery(() => query(`
     SELECT DISTINCT unnest(tags) as tag,
       COUNT(*),
       MAX(updated_at) as last_modified
     FROM photos
-    WHERE hidden IS NOT TRUE
+    ${includeHidden ? '' : 'WHERE hidden IS NOT TRUE'}
     GROUP BY tag
     ORDER BY tag ASC
-  `.then(({ rows }): Tags => rows.map(({ tag, count, last_modified }) => ({
-      tag,
-      count: parseInt(count, 10),
-      lastModified: last_modified as Date,
-    })))
+  `).then(({ rows }): Tags => rows.map(({ tag, count, last_modified }) => ({
+    tag,
+    count: parseInt(count, 10),
+    lastModified: last_modified as Date,
+  })))
   , 'getUniqueTags');
 
 export const getUniqueRecipes = async () =>
@@ -422,8 +422,13 @@ export const getUniqueFocalLengths = async () =>
 
 const _getPhotos = async (
   options: PhotoQueryOptions = {},
-  fields = ['*'],
-  shouldParse = true,
+  fields = ['*'], {
+    shouldParse = true,
+    includeOrderBy = true,
+  }: {
+    shouldParse?: boolean,
+    includeOrderBy?: boolean,
+  } = {},
 ) => {
   const sql = [
     `SELECT ${fields.map(field => `p.${field}`).join(', ')} FROM photos p`,
@@ -446,7 +451,9 @@ const _getPhotos = async (
     values.push(...wheresValues);
   }
 
-  sql.push(getOrderByFromOptions(options));
+  if (includeOrderBy) {
+    sql.push(getOrderByFromOptions(options));
+  }
 
   const {
     limitAndOffset,
@@ -478,7 +485,7 @@ export const getPhotos = async (options: PhotoQueryOptions = {}) =>
 
 export const getPhotoIds = async (options: PhotoQueryOptions = {}) =>
   safelyQuery(
-    async () => _getPhotos(options, ['id'], false)
+    async () => _getPhotos(options, ['id'], { shouldParse: false })
       .then(({ photos }) => photos.map(photo => photo.id)),
     'getPhotoIds',
     // Seemingly necessary to pass `options` for expected cache behavior
@@ -487,7 +494,11 @@ export const getPhotoIds = async (options: PhotoQueryOptions = {}) =>
 
 export const getPhotoUrls = async (options: PhotoQueryOptions = {}) =>
   safelyQuery(
-    async () => _getPhotos(options, ['id', 'title', 'url', 'hidden'], false)
+    async () => _getPhotos(
+      options,
+      ['id', 'title', 'url', 'hidden'],
+      { shouldParse: false },
+    )
       .then(({ photos }) =>
         photos as {
           id: string,
@@ -502,7 +513,11 @@ export const getPhotoUrls = async (options: PhotoQueryOptions = {}) =>
 
 export const getPhotoCount = async (options: PhotoQueryOptions = {}) =>
   safelyQuery(
-    async () => _getPhotos(options, ['COUNT(*)'], false)
+    async () => _getPhotos(
+      options,
+      ['COUNT'],
+      { shouldParse: false, includeOrderBy: false },
+    )
       .then(({ count }) => count),
     'getPhotoCount',
     // Seemingly necessary to pass `options` for expected cache behavior

@@ -42,6 +42,8 @@ export const PATH_FEED_JSON             = '/feed.json';
 
 // Path prefixes
 export const PREFIX_PHOTO               = '/p';
+export const PREFIX_RECENTS             = '/recents';
+export const PREFIX_YEAR                = '/year';
 export const PREFIX_CAMERA              = '/shot-on';
 export const PREFIX_LENS                = '/lens';
 export const PREFIX_ALBUM               = '/album';
@@ -49,20 +51,18 @@ export const PREFIX_TAG                 = '/tag';
 export const PREFIX_RECIPE              = '/recipe';
 export const PREFIX_FILM                = '/film';
 export const PREFIX_FOCAL_LENGTH        = '/focal';
-export const PREFIX_YEAR                = '/year';
-export const PREFIX_RECENTS             = '/recents';
 
 // Dynamic paths
 const PATH_PHOTO_DYNAMIC                = `${PREFIX_PHOTO}/[photoId]`;
+const PATH_RECENTS_DYNAMIC              = `${PREFIX_RECENTS}/[photoId]`;
+const PATH_YEAR_DYNAMIC                 = `${PREFIX_YEAR}/[year]`;
 const PATH_CAMERA_DYNAMIC               = `${PREFIX_CAMERA}/[make]/[model]`;
 const PATH_LENS_DYNAMIC                 = `${PREFIX_LENS}/[make]/[model]`;
 const PATH_ALBUM_DYNAMIC                = `${PREFIX_ALBUM}/[album]`;
 const PATH_TAG_DYNAMIC                  = `${PREFIX_TAG}/[tag]`;
 const PATH_FILM_DYNAMIC                 = `${PREFIX_FILM}/[film]`;
-const PATH_FOCAL_LENGTH_DYNAMIC         = `${PREFIX_FOCAL_LENGTH}/[focal]`;
 const PATH_RECIPE_DYNAMIC               = `${PREFIX_RECIPE}/[recipe]`;
-const PATH_YEAR_DYNAMIC                 = `${PREFIX_YEAR}/[year]`;
-const PATH_RECENTS_DYNAMIC              = `${PREFIX_RECENTS}/[photoId]`;
+const PATH_FOCAL_LENGTH_DYNAMIC         = `${PREFIX_FOCAL_LENGTH}/[focal]`;
 
 // Admin paths
 export const PATH_ADMIN_PHOTOS          = `${PATH_ADMIN}/photos`;
@@ -467,36 +467,55 @@ export const getPathComponents = (
 }) => {
   const photoIdFromPhoto = pathname.match(
     new RegExp(`^${PREFIX_PHOTO}/([^/]+)`))?.[1];
+  const recent = (
+    isPathRecents(pathname) ||
+    isPathRecentsPhoto(pathname)
+  ) ? true : undefined;
+  const photoIdFromRecents = pathname.match(
+    new RegExp(`^${PREFIX_RECENTS}/([^/]+)`))?.[1];
+  const year = pathname.match(
+    new RegExp(`^${PREFIX_YEAR}/([^/]+)`))?.[1];
   const photoIdFromCamera = pathname.match(
     new RegExp(`^${PREFIX_CAMERA}/[^/]+/[^/]+/([^/]+)`))?.[1];
   const cameraMake = pathname.match(
     new RegExp(`^${PREFIX_CAMERA}/([^/]+)`))?.[1];
   const cameraModel = pathname.match(
     new RegExp(`^${PREFIX_CAMERA}/[^/]+/([^/]+)`))?.[1];
+  const photoIdFromLens = pathname.match(
+    new RegExp(`^${PREFIX_LENS}/[^/]+/[^/]+/([^/]+)`))?.[1];
+  const lensMake = pathname.match(
+    new RegExp(`^${PREFIX_LENS}/([^/]+)`))?.[1];
+  const lensModel = pathname.match(
+    new RegExp(`^${PREFIX_LENS}/[^/]+/([^/]+)`))?.[1];
+  const photoIdFromAlbum = pathname.match(
+    new RegExp(`^${PREFIX_ALBUM}/[^/]+/([^/]+)`))?.[1];
   const photoIdFromTag = pathname.match(
     new RegExp(`^${PREFIX_TAG}/[^/]+/([^/]+)`))?.[1];
+  const photoIdFromRecipe = pathname.match(
+    new RegExp(`^${PREFIX_RECIPE}/[^/]+/([^/]+)`))?.[1];
   const photoIdFromFilm = pathname.match(
     new RegExp(`^${PREFIX_FILM}/[^/]+/([^/]+)`))?.[1];
   const photoIdFromFocalLength = pathname.match(
     new RegExp(`^${PREFIX_FOCAL_LENGTH}/[0-9]+mm/([^/]+)`))?.[1];
   const photoIdFromYear = pathname.match(
     new RegExp(`^${PREFIX_YEAR}/[^/]+/([^/]+)`))?.[1];
-  const photoIdFromRecents = pathname.match(
-    new RegExp(`^${PREFIX_RECENTS}/([^/]+)`))?.[1];
   const album = pathname.match(
     new RegExp(`^${PREFIX_ALBUM}/([^/]+)`))?.[1];
   const tag = pathname.match(
     new RegExp(`^${PREFIX_TAG}/([^/]+)`))?.[1];
+  const recipe = pathname.match(
+    new RegExp(`^${PREFIX_RECIPE}/([^/]+)`))?.[1];
   const film = pathname.match(
     new RegExp(`^${PREFIX_FILM}/([^/]+)`))?.[1] as string;
   const focalString = pathname.match(
     new RegExp(`^${PREFIX_FOCAL_LENGTH}/([0-9]+)mm`))?.[1];
-  const year = pathname.match(
-    new RegExp(`^${PREFIX_YEAR}/([^/]+)`))?.[1];
-  const recent = isPathRecents(pathname) ? true : undefined;
 
   const camera = cameraMake && cameraModel
     ? { make: cameraMake, model: cameraModel }
+    : undefined;
+
+  const lens = lensMake && lensModel
+    ? { make: lensMake, model: lensModel }
     : undefined;
 
   const focal = focalString ? parseInt(focalString) : undefined;
@@ -504,20 +523,25 @@ export const getPathComponents = (
   return {
     photoId: (
       photoIdFromPhoto ||
-      photoIdFromTag ||
-      photoIdFromCamera ||
-      photoIdFromFilm ||
-      photoIdFromFocalLength ||
+      photoIdFromRecents ||
       photoIdFromYear ||
-      photoIdFromRecents
+      photoIdFromCamera ||
+      photoIdFromLens ||
+      photoIdFromAlbum ||
+      photoIdFromTag ||
+      photoIdFromRecipe ||
+      photoIdFromFilm ||
+      photoIdFromFocalLength
     ),
+    recent,
+    year,
+    camera,
+    lens,
     album,
     tag,
-    camera,
+    recipe,
     film,
     focal,
-    year,
-    recent,
   };
 };
 
@@ -541,6 +565,7 @@ export const getEscapePath = (pathname?: string) => {
     (year && isPathYear(pathname)) ||
     (camera && isPathCamera(pathname)) ||
     (lens && isPathLens(pathname)) ||
+    (album && isPathAlbum(pathname)) ||
     (tag && isPathTag(pathname)) ||
     (film && isPathFilm(pathname)) ||
     (focal && isPathFocalLength(pathname)) ||
