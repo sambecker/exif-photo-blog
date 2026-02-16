@@ -1,6 +1,7 @@
+import { I18N } from '..';
 export { vi as default } from 'date-fns/locale/vi';
 
-export const TEXT = {
+export const TEXT: I18N = {
   photo: {
     photo: 'Ảnh',
     photoPlural: 'Ảnh',
@@ -143,6 +144,7 @@ export const TEXT = {
     setupIncomplete: 'Hoàn tất cài đặt',
     setupSignIn: 'Đăng nhập để tải lên ảnh',
     setupFirstPhoto: 'Thêm ảnh đầu tiên của bạn',
+    // eslint-disable-next-line max-len
     setupConfig: 'Thay đổi tên trang web và cấu hình khác bằng cách chỉnh sửa các biến môi trường được tham chiếu trong',
   },
   utility: {
