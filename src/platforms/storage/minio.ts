@@ -4,7 +4,9 @@ import {
   ListObjectsCommand,
   PutObjectCommand,
   DeleteObjectCommand,
+  GetObjectCommand,
 } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { StorageListResponse, generateStorageId } from '.';
 import { formatBytes } from '@/utility/number';
 
@@ -38,9 +40,6 @@ const urlForKey = (key?: string) => `${MINIO_BASE_URL}/${key}`;
 
 export const isUrlFromMinio = (url?: string) =>
   MINIO_BASE_URL && url?.startsWith(MINIO_BASE_URL);
-
-export const minioPutObjectCommandForKey = (Key: string) =>
-  new PutObjectCommand({ Bucket: MINIO_BUCKET, Key });
 
 export const minioPut = async (
   file: Buffer,
@@ -92,4 +91,16 @@ export const minioDelete = async (Key: string): Promise<void> => {
     Key,
   });
   await minioClient().send(deleteObjectCommand);
+};
+
+export const minioGetSignedUrl = async (
+  Key: string,
+  method: 'GET' | 'PUT',
+  expiresIn: number,
+) => {
+  const client = minioClient();
+  const command = method === 'GET'
+    ? new GetObjectCommand({ Bucket: MINIO_BUCKET, Key })
+    : new PutObjectCommand({ Bucket: MINIO_BUCKET, Key, ACL: 'public-read' });
+  return getSignedUrl(client, command, { expiresIn });
 };

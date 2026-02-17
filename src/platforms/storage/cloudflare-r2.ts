@@ -4,7 +4,9 @@ import {
   PutObjectCommand,
   DeleteObjectCommand,
   CopyObjectCommand,
+  GetObjectCommand,
 } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { StorageListResponse, generateStorageId } from '.';
 import { removeUrlProtocol } from '@/utility/url';
 import { formatBytes } from '@/utility/number';
@@ -51,9 +53,6 @@ export const isUrlFromCloudflareR2 = (url?: string) => (
   CLOUDFLARE_R2_BASE_URL_PUBLIC &&
   url?.startsWith(CLOUDFLARE_R2_BASE_URL_PUBLIC)
 );
-
-export const cloudflareR2PutObjectCommandForKey = (Key: string) =>
-  new PutObjectCommand({ Bucket: CLOUDFLARE_R2_BUCKET, Key });
 
 export const cloudflareR2Put = async (
   file: Buffer,
@@ -103,4 +102,17 @@ export const cloudflareR2Delete = async (Key: string) => {
     Bucket: CLOUDFLARE_R2_BUCKET,
     Key,
   }));
+};
+
+export const cloudflareR2GetSignedUrl = async (
+  Key: string,
+  method: 'GET' | 'PUT',
+  expiresIn: number,
+) => {
+  const client = cloudflareR2Client();
+  const command = method === 'GET'
+    ? new GetObjectCommand({ Bucket: CLOUDFLARE_R2_BUCKET, Key })
+    // eslint-disable-next-line max-len
+    : new PutObjectCommand({ Bucket: CLOUDFLARE_R2_BUCKET, Key, ACL: 'public-read' });
+  return getSignedUrl(client, command, { expiresIn });
 };

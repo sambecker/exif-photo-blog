@@ -10,6 +10,7 @@ import {
   AWS_S3_BASE_URL,
   awsS3Copy,
   awsS3Delete,
+  awsS3GetSignedUrl,
   awsS3List,
   awsS3Put,
   isUrlFromAwsS3,
@@ -26,6 +27,7 @@ import {
   CLOUDFLARE_R2_BASE_URL_PUBLIC,
   cloudflareR2Copy,
   cloudflareR2Delete,
+  cloudflareR2GetSignedUrl,
   cloudflareR2List,
   cloudflareR2Put,
   isUrlFromCloudflareR2,
@@ -37,6 +39,7 @@ import {
   minioList,
   minioPut,
   isUrlFromMinio,
+  minioGetSignedUrl,
 } from './minio';
 import { PATH_API_PRESIGNED_URL } from '@/app/path';
 
@@ -246,6 +249,21 @@ export const getStorageUrlsForPrefix = async (prefix = '') => {
       if (!b.uploadedAt) { return -1; }
       return b.uploadedAt.getTime() - a.uploadedAt.getTime();
     });
+};
+
+export const getSignedUrl = async (
+  key: string,
+  method: 'GET' | 'PUT',
+  expiresIn = 3600,
+) => {
+  switch (CURRENT_STORAGE) {
+    case 'cloudflare-r2':
+      return cloudflareR2GetSignedUrl(key, method, expiresIn);
+    case 'minio':
+      return minioGetSignedUrl(key, method, expiresIn);
+    default:
+      return awsS3GetSignedUrl(key, method, expiresIn);
+  }
 };
 
 export const testStorageConnection = () =>
