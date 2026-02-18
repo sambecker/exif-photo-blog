@@ -3,8 +3,11 @@
 import { Photo } from '@/photo';
 import { NextImageSize } from '@/platforms/next-image';
 import { IS_PREVIEW } from '@/app/config';
-import { getOptimizedPhotoUrl } from '@/photo/storage';
-import { fetchBase64ImageFromUrl } from '@/utility/image';
+import {
+  getOptimizedPhotoUrl,
+  getOptimizedPhotoUrlForSuffix,
+} from '@/photo/storage';
+// import { fetchBase64ImageFromUrl } from '@/utility/image';
 import { getSignedUrlForUrl } from '@/platforms/storage';
 
 export default async function ImagePhotoGrid({
@@ -36,6 +39,10 @@ export default async function ImagePhotoGrid({
     ? width ?? 1080
     : 640;
 
+  const optimizedSuffix = count <= 2
+    ? 'lg'
+    : 'md';
+
   let rows = 1;
   if (count > 12) { rows = 4; }
   else if (count > 6) { rows = 3; }
@@ -51,14 +58,26 @@ export default async function ImagePhotoGrid({
     (rows - 1) * gap / rows;
 
   const photoDataUrls = await Promise.all(photos.map(async({ id, url }) => {
-    const optimizedUrl = getOptimizedPhotoUrl({
-      imageUrl: url,
-      size: nextImageWidth,
-      addBypassSecret: IS_PREVIEW,
-    });
-    const presignedUrl = await getSignedUrlForUrl(optimizedUrl, 'GET');
-    const data = await fetchBase64ImageFromUrl(presignedUrl);
-    return { id, data };
+    // Check for optimized image first
+    let optimizedUrl = getOptimizedPhotoUrlForSuffix(url, optimizedSuffix);
+    // Get presigned URL in case it's required
+    optimizedUrl = await getSignedUrlForUrl(optimizedUrl, 'GET');
+    const optimizedUrlExists = await fetch(optimizedUrl)
+      .then(res => res.ok)
+      .catch(() => false);
+
+    // Fall back on `next/image` if optimized image is not available
+    if (!optimizedUrlExists) {
+      optimizedUrl = getOptimizedPhotoUrl({
+        imageUrl: url,
+        size: nextImageWidth,
+        addBypassSecret: IS_PREVIEW,
+      });
+    }
+
+    // const data = await fetchBase64ImageFromUrl(optimizedUrl, 'image/jpeg');
+  
+    return { id, data: optimizedUrl };
   }));
 
   const renderPhoto = (

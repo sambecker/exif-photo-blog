@@ -20,10 +20,14 @@ export const safePhotoImageResponse = async (
   photos: Photo[],
   jsx: (isNextImageReady: boolean) => JSX.Element,
   options: ConstructorParameters<typeof ImageResponse>[1],
+  disableCheck = true,
 ) => {
   // Make sure next/image can be reached from absolute urls,
   // which may not exist on first pre-render
-  const isNextImageReady = await isNextImageReadyBasedOnPhotos(photos);
+  const isNextImageReady = (
+    disableCheck ||
+    await isNextImageReadyBasedOnPhotos(photos)
+  );
 
   return new ImageResponse(
     jsx(isNextImageReady),

@@ -5,7 +5,6 @@ import {
 import {
   generateFileNameWithId,
   getFileNamePartsFromStorageUrl,
-  getSignedUrlForUrl,
   getStorageUrlsForPrefix,
   uploadFileFromClient,
 } from '@/platforms/storage';
@@ -127,24 +126,19 @@ export const getOptimizedPhotoUrlForManipulation = (
     compatibilityMode,
   });
 
-const getTestOptimizedPhotoUrl = (url: string) => {
+export const getOptimizedPhotoUrlForSuffix = (
+  url: string,
+  suffix: OptimizedSuffix,
+) => {
   const { urlBase, fileNameBase } = getFileNamePartsFromStorageUrl(url);
-  return getOptimizedUrl({
-    urlBase,
-    fileNameBase,
-    suffix: 'sm',
-  });
+  return getOptimizedUrl({ urlBase, fileNameBase, suffix });
 };
+
+const getTestOptimizedPhotoUrl = (url: string) =>
+  getOptimizedPhotoUrlForSuffix(url, 'sm');
 
 export const doesPhotoUrlHaveOptimizedFiles = async (url: string) =>
   fetch(getTestOptimizedPhotoUrl(url)).then(res => res.ok);
-
-export const doAllPhotosHaveOptimizedFiles = async (photos: Photo[]) =>
-  Promise.all(photos.map(async ({ url }) => fetch(
-    await getSignedUrlForUrl(getTestOptimizedPhotoUrl(url), 'GET'),
-  )))
-    .then(urls => urls.every(url => url.ok))
-    .catch(() => false);
 
 export const getStorageUrlsForPhoto = async ({ url }: Photo) => {
   const getSortScoreForUrl = (url: string) => {

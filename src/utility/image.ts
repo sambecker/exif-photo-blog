@@ -4,11 +4,12 @@ export const removeBase64Prefix = (base64: string) => {
 
 export const fetchBase64ImageFromUrl = (
   url: string,
+  contentType?: string,
   fetchOptions?: RequestInit,
 ) =>
   fetch(url, fetchOptions)
     .then(async response => {
       const blob = await response.arrayBuffer();
       // eslint-disable-next-line max-len
-      return `data:${response.headers.get('content-type')};base64,${Buffer.from(blob).toString('base64')}`;
+      return `data:${contentType ?? response.headers.get('content-type')};base64,${Buffer.from(blob).toString('base64')}`;
     });
