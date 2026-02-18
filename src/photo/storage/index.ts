@@ -5,6 +5,7 @@ import {
 import {
   generateFileNameWithId,
   getFileNamePartsFromStorageUrl,
+  getSignedUrlForUrl,
   getStorageUrlsForPrefix,
   uploadFileFromClient,
 } from '@/platforms/storage';
@@ -155,3 +156,40 @@ export const getStorageUrlsForPhoto = async ({ url }: Photo) => {
     urls.sort((a, b) => getSortScoreForUrl(a.url) - getSortScoreForUrl(b.url)),
   );
 };
+
+export const getOptimizedUrlsForPhotos = async (
+  photos: Photo[],
+  optimizedSuffix: OptimizedSuffix,
+  nextImageWidth: NextImageSize,
+  addBypassSecret: boolean,
+) =>
+  Promise.all(photos
+    .map(async({ id, url: _url }) => {
+      // Check for optimized image first
+      const optimizedUrl =await getSignedUrlForUrl(
+        getOptimizedPhotoUrlForSuffix(_url, optimizedSuffix),
+        'GET',
+      );
+      const optimizedUrlExists = await fetch(optimizedUrl)
+        .then(res => res.ok)
+        .catch(() => false);
+
+      if (optimizedUrlExists) {
+        return { id, url: optimizedUrl };
+      } else {
+        // Fall back on `next/image` if optimized image is not available
+        const nextImageUrl = getOptimizedPhotoUrl({
+          imageUrl: _url,
+          size: nextImageWidth,
+          addBypassSecret,
+        });
+        const nextImageUrlExists = await fetch(nextImageUrl)
+          .then(res => res.ok)
+          .catch(() => false);
+        return { id, url: nextImageUrlExists ? nextImageUrl : undefined };
+      }
+    }))
+    .then(urls =>(urls.every(url => Boolean(url))
+      ? urls
+      // If any url is defined, return an empty array
+      : []) as { id: string, url: string }[]);

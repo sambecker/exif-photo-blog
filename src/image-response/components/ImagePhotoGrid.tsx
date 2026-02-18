@@ -3,12 +3,7 @@
 import { Photo } from '@/photo';
 import { NextImageSize } from '@/platforms/next-image';
 import { IS_PREVIEW } from '@/app/config';
-import {
-  getOptimizedPhotoUrl,
-  getOptimizedPhotoUrlForSuffix,
-} from '@/photo/storage';
-// import { fetchBase64ImageFromUrl } from '@/utility/image';
-import { getSignedUrlForUrl } from '@/platforms/storage';
+import { getOptimizedUrlsForPhotos } from '@/photo/storage';
 
 export default async function ImagePhotoGrid({
   photos,
@@ -57,31 +52,15 @@ export default async function ImagePhotoGrid({
   const cellHeight= height / rows -
     (rows - 1) * gap / rows;
 
-  const photoDataUrls = await Promise.all(photos.map(async({ id, url }) => {
-    // Check for optimized image first
-    let optimizedUrl = getOptimizedPhotoUrlForSuffix(url, optimizedSuffix);
-    // Get presigned URL in case it's required
-    optimizedUrl = await getSignedUrlForUrl(optimizedUrl, 'GET');
-    const optimizedUrlExists = await fetch(optimizedUrl)
-      .then(res => res.ok)
-      .catch(() => false);
-
-    // Fall back on `next/image` if optimized image is not available
-    if (!optimizedUrlExists) {
-      optimizedUrl = getOptimizedPhotoUrl({
-        imageUrl: url,
-        size: nextImageWidth,
-        addBypassSecret: IS_PREVIEW,
-      });
-    }
-
-    // const data = await fetchBase64ImageFromUrl(optimizedUrl, 'image/jpeg');
-  
-    return { id, data: optimizedUrl };
-  }));
+  const photoUrls = await getOptimizedUrlsForPhotos(
+    photos,
+    optimizedSuffix,
+    nextImageWidth,
+    IS_PREVIEW,
+  );
 
   const renderPhoto = (
-    { id, data }: typeof photoDataUrls[number],
+    { id, url }: typeof photoUrls[number],
     width: number,
     height: number,
   ) =>
@@ -96,7 +75,7 @@ export default async function ImagePhotoGrid({
       }}
     >
       <img {...{
-        src: data,
+        src: url,
         style: {
           ...imageStyle,
           width: '100%',
@@ -126,7 +105,7 @@ export default async function ImagePhotoGrid({
             width: cellWidth,
             height: cellHeight * 2,
           }}>
-            {renderPhoto(photoDataUrls[0], cellWidth, cellHeight * 2)}
+            {renderPhoto(photoUrls[0], cellWidth, cellHeight * 2)}
           </div>
           {/* Small images (R) */}
           <div style={{
@@ -135,12 +114,12 @@ export default async function ImagePhotoGrid({
             width: cellWidth,
             height: cellHeight,
           }}>
-            {photoDataUrls.slice(1).map(photo =>
+            {photoUrls.slice(1).map(photo =>
               renderPhoto(photo, cellWidth, cellHeight),
             )}
           </div>
         </>
-        : photoDataUrls.slice(0, count).map(photo =>
+        : photoUrls.slice(0, count).map(photo =>
           renderPhoto(photo, cellWidth, cellHeight),
         )}
     </div>
