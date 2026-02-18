@@ -104,7 +104,7 @@ export const cloudflareR2Delete = async (Key: string) => {
   }));
 };
 
-export const cloudflareR2GetSignedUrl = async (
+export const cloudflareR2GetSignedUrl = (
   Key: string,
   method: 'GET' | 'PUT',
   expiresIn: number,

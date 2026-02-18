@@ -84,7 +84,7 @@ export const awsS3Delete = async (Key: string) => {
   }));
 };
 
-export const awsS3GetSignedUrl = async (
+export const awsS3GetSignedUrl = (
   Key: string,
   method: 'GET' | 'PUT',
   expiresIn: number,

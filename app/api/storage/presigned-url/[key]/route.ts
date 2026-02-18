@@ -1,5 +1,5 @@
 import { auth } from '@/auth/server';
-import { getSignedUrl } from '@/platforms/storage';
+import { getSignedUrlForKey } from '@/platforms/storage';
 
 export async function GET(
   _: Request,
@@ -10,7 +10,7 @@ export async function GET(
   const session = await auth();
   
   if (session?.user && key) {    
-    const url = await getSignedUrl(key, 'PUT');
+    const url = await getSignedUrlForKey(key, 'PUT');
     return new Response(
       url,
       { headers: { 'content-type': 'text/plain' } },

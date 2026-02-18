@@ -93,7 +93,7 @@ export const minioDelete = async (Key: string): Promise<void> => {
   await minioClient().send(deleteObjectCommand);
 };
 
-export const minioGetSignedUrl = async (
+export const minioGetSignedUrl = (
   Key: string,
   method: 'GET' | 'PUT',
   expiresIn: number,

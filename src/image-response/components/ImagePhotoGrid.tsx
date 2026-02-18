@@ -7,6 +7,8 @@ import {
   doAllPhotosHaveOptimizedFiles,
   getOptimizedPhotoUrl,
 } from '@/photo/storage';
+import { fetchBase64ImageFromUrl } from '@/utility/image';
+import { getSignedUrlForUrl } from '@/platforms/storage';
 
 export default async function ImagePhotoGrid({
   photos,
@@ -53,7 +55,23 @@ export default async function ImagePhotoGrid({
 
   const doOptimizedFilesExist = await doAllPhotosHaveOptimizedFiles(photos);
 
-  const renderPhoto = ({ id, url }: Photo, width: number, height: number) =>
+  const photoDataUrls = await Promise.all(photos.map(async({ id, url }) => {
+    const optimizedUrl = getOptimizedPhotoUrl({
+      imageUrl: url,
+      size: nextImageWidth,
+      addBypassSecret: IS_PREVIEW,
+      compatibilityMode: !doOptimizedFilesExist,
+    });
+    const presignedUrl = await getSignedUrlForUrl(optimizedUrl, 'GET');
+    const data = await fetchBase64ImageFromUrl(presignedUrl);
+    return { id, data };
+  }));
+
+  const renderPhoto = (
+    { id, data }: typeof photoDataUrls[number],
+    width: number,
+    height: number,
+  ) =>
     <div
       key={id}
       style={{
@@ -65,12 +83,7 @@ export default async function ImagePhotoGrid({
       }}
     >
       <img {...{
-        src: getOptimizedPhotoUrl({
-          imageUrl: url,
-          size: nextImageWidth,
-          addBypassSecret: IS_PREVIEW,
-          compatibilityMode: !doOptimizedFilesExist,
-        }),
+        src: data,
         style: {
           ...imageStyle,
           width: '100%',
@@ -100,7 +113,7 @@ export default async function ImagePhotoGrid({
             width: cellWidth,
             height: cellHeight * 2,
           }}>
-            {renderPhoto(photos[0], cellWidth, cellHeight * 2)}
+            {renderPhoto(photoDataUrls[0], cellWidth, cellHeight * 2)}
           </div>
           {/* Small images (R) */}
           <div style={{
@@ -109,12 +122,12 @@ export default async function ImagePhotoGrid({
             width: cellWidth,
             height: cellHeight,
           }}>
-            {photos.slice(1).map(photo =>
+            {photoDataUrls.slice(1).map(photo =>
               renderPhoto(photo, cellWidth, cellHeight),
             )}
           </div>
         </>
-        : photos.slice(0, count).map(photo =>
+        : photoDataUrls.slice(0, count).map(photo =>
           renderPhoto(photo, cellWidth, cellHeight),
         )}
     </div>

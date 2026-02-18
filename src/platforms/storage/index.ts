@@ -251,7 +251,8 @@ export const getStorageUrlsForPrefix = async (prefix = '') => {
     });
 };
 
-export const getSignedUrl = async (
+// Used primarily for uploading files
+export const getSignedUrlForKey = async (
   key: string,
   method: 'GET' | 'PUT',
   expiresIn = 3600,
@@ -263,6 +264,25 @@ export const getSignedUrl = async (
       return minioGetSignedUrl(key, method, expiresIn);
     default:
       return awsS3GetSignedUrl(key, method, expiresIn);
+  }
+};
+
+// Used for safely fetching files via presigned URLs
+export const getSignedUrlForUrl = (
+  url: string,
+  method: 'GET' | 'PUT',
+  expiresIn = 3600,
+) => {
+  const { fileName } = getFileNamePartsFromStorageUrl(url);
+  switch (storageTypeFromUrl(url)) {
+    case 'cloudflare-r2':
+      return cloudflareR2GetSignedUrl(fileName, method, expiresIn);
+    case 'minio':
+      return minioGetSignedUrl(fileName, method, expiresIn);
+    case 'aws-s3':
+      return awsS3GetSignedUrl(fileName, method, expiresIn);
+    default:
+      return url;
   }
 };
 
