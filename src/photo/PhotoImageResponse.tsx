@@ -12,13 +12,11 @@ export default function PhotoImageResponse({
   width,
   height,
   fontFamily,
-  isNextImageReady = true,
 }: {
   photo: Photo
   width: NextImageSize
   height: number
   fontFamily: string
-  isNextImageReady: boolean
 }) {
   const caption = [
     photo.model
@@ -34,7 +32,7 @@ export default function PhotoImageResponse({
   return (
     <ImageContainer>
       <ImagePhotoGrid {...{
-        photos: isNextImageReady ? [photo] : [],
+        photos: [photo],
         width,
         height,
         ...OG_TEXT_BOTTOM_ALIGNMENT && { imagePosition: 'top' },
