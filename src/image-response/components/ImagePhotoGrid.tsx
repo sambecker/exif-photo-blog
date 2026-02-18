@@ -3,7 +3,7 @@
 import { Photo } from '@/photo';
 import { NextImageSize } from '@/platforms/next-image';
 import { IS_PREVIEW } from '@/app/config';
-import { getOptimizedUrlsForPhotos } from '@/photo/storage';
+import { getDataUrlsForPhotos } from '@/photo/storage';
 
 export default async function ImagePhotoGrid({
   photos,
@@ -52,7 +52,7 @@ export default async function ImagePhotoGrid({
   const cellHeight= height / rows -
     (rows - 1) * gap / rows;
 
-  const photoUrls = await getOptimizedUrlsForPhotos(
+  const photoUrls = await getDataUrlsForPhotos(
     photos,
     optimizedSuffix,
     nextImageWidth,
@@ -60,7 +60,7 @@ export default async function ImagePhotoGrid({
   );
 
   const renderPhoto = (
-    { id, url }: typeof photoUrls[number],
+    { id, urlData }: typeof photoUrls[number],
     width: number,
     height: number,
   ) =>
@@ -75,7 +75,7 @@ export default async function ImagePhotoGrid({
       }}
     >
       <img {...{
-        src: url,
+        src: urlData,
         style: {
           ...imageStyle,
           width: '100%',
