@@ -3,7 +3,10 @@
 import { Photo } from '@/photo';
 import { NextImageSize } from '@/platforms/next-image';
 import { IS_PREVIEW } from '@/app/config';
-import { getOptimizedPhotoUrl } from '@/photo/storage';
+import {
+  doAllPhotosHaveOptimizedFiles,
+  getOptimizedPhotoUrl,
+} from '@/photo/storage';
 import { fetchBase64ImageFromUrl } from '@/utility/image';
 import { getSignedUrlForUrl } from '@/platforms/storage';
 
@@ -50,11 +53,14 @@ export default async function ImagePhotoGrid({
   const cellHeight= height / rows -
     (rows - 1) * gap / rows;
 
+  const doOptimizedFilesExist = await doAllPhotosHaveOptimizedFiles(photos);
+
   const photoDataUrls = await Promise.all(photos.map(async({ id, url }) => {
     const optimizedUrl = getOptimizedPhotoUrl({
       imageUrl: url,
       size: nextImageWidth,
       addBypassSecret: IS_PREVIEW,
+      compatibilityMode: !doOptimizedFilesExist,
     });
     const presignedUrl = await getSignedUrlForUrl(optimizedUrl, 'GET');
     const data = await fetchBase64ImageFromUrl(presignedUrl);

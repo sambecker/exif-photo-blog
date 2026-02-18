@@ -5,6 +5,7 @@ import {
 import {
   generateFileNameWithId,
   getFileNamePartsFromStorageUrl,
+  getSignedUrlForUrl,
   getStorageUrlsForPrefix,
   uploadFileFromClient,
 } from '@/platforms/storage';
@@ -139,7 +140,9 @@ export const doesPhotoUrlHaveOptimizedFiles = async (url: string) =>
   fetch(getTestOptimizedPhotoUrl(url)).then(res => res.ok);
 
 export const doAllPhotosHaveOptimizedFiles = async (photos: Photo[]) =>
-  Promise.all(photos.map(({ url }) => fetch(getTestOptimizedPhotoUrl(url))))
+  Promise.all(photos.map(async ({ url }) => fetch(
+    await getSignedUrlForUrl(getTestOptimizedPhotoUrl(url), 'GET'),
+  )))
     .then(urls => urls.every(url => url.ok))
     .catch(() => false);
 
