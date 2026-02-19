@@ -20,9 +20,9 @@ const fetchGitHub = async (
 ) => {
   const data = await fetch(
     url,
-    // Cache all results for 2 minutes to avoid rate limiting
+    // Cache all results for 5 minutes to avoid rate limiting
     // GitHub API requests limited to 60 requests per hour
-    cacheRequest ? { next: { revalidate: 120 } } : undefined,
+    cacheRequest ? { next: { revalidate: 300 } } : undefined,
   )
     .then(response => response.json());
   if ((data.message ?? '').includes(GITHUB_API_ERROR)) {
