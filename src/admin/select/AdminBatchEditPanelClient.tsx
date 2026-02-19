@@ -122,22 +122,32 @@ export default function AdminBatchEditPanelClient({
         onClick={() => {
           setIsPerformingSelectEdit?.(true);
           if (isInTagMode) {
+            const tagsArray = convertStringToArray(tags, false);
+            const tagsFormatted = tagsArray
+              .map(tag => `"${tag}"`)
+              .join(', ');
             batchPhotoAction({
               ...batchPhotoActionArguments,
-              tags: convertStringToArray(tags, false),
+              tags: tagsArray,
             })
               .then(() => {
-                toastSuccess(`${photosText} tagged`);
+                toastSuccess(`${photosText} tagged ${tagsFormatted}`);
                 stopSelectingPhotos?.();
               })
               .finally(() => setIsPerformingSelectEdit?.(false));
           } else if (isInAlbumMode) {
+            const albumTitlesArray = convertStringToArray(albumTitles, false);
+            const albumTitlesFormatted = albumTitlesArray
+              .map(title => `"${title}"`)
+              .join(', ');
             batchPhotoAction({
               ...batchPhotoActionArguments,
-              albumTitles: albumTitles.split(','),
+              albumTitles: albumTitlesArray,
             })
               .then(() => {
-                toastSuccess(`${photosText} added`);
+                toastSuccess(
+                  `${photosText} added to ${albumTitlesFormatted}`,
+                );
                 stopSelectingPhotos?.();
               })
               .finally(() => setIsPerformingSelectEdit?.(false));

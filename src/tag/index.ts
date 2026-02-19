@@ -30,7 +30,7 @@ export const formatTag = (tag?: string) =>
   capitalizeWords(tag?.replaceAll('-', ' '));
 
 export const getValidationMessageForTags = (tags?: string) => {
-  const reservedTags = (convertStringToArray(tags) ?? [])
+  const reservedTags = convertStringToArray(tags)
     .filter(tag => isTagFavs(tag) || isTagPrivate(tag))
     .map(tag => tag.toLocaleUpperCase());
   return reservedTags.length

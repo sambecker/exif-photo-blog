@@ -10,7 +10,7 @@ export const convertStringToArray = (
   ? string.split(',').map(item => shouldParameterize
     ? parameterize(item)
     : item.trim())
-  : undefined;
+  : [];
 
 export const capitalize = (string: string) =>
   string.charAt(0).toLocaleUpperCase() + string.slice(1);

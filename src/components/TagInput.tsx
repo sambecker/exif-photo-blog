@@ -71,7 +71,7 @@ export default function TagInput({
   , [options]);
 
   const selectedOptions = useMemo(() =>
-    convertStringToArray(value, shouldParameterize) ?? []
+    convertStringToArray(value, shouldParameterize)
   , [value, shouldParameterize]);
 
   const hasReachedLimit = useMemo(() =>

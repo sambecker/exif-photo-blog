@@ -401,7 +401,7 @@ export const convertFormDataToPhotoDbInsert = (
     : formData;
 
   // Capture tags before 'favorite' is excluded from insert
-  const tags = convertStringToArray(photoForm.tags) ?? [];
+  const tags = convertStringToArray(photoForm.tags);
   if (photoForm.favorite === 'true') {
     tags.push(TAG_FAVS);
   }
