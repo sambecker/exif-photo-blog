@@ -52,6 +52,7 @@ import IconNext from '@/components/icons/IconNext';
 import Link from 'next/link';
 import IconNode from '@/components/icons/IconNode';
 import { formatDistanceToNow } from 'date-fns';
+import ResponsiveText from '@/components/primitives/ResponsiveText';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
@@ -286,12 +287,17 @@ export default function AdminAppInsightsClient({
                 {VERCEL_GIT_COMMIT_MESSAGE ?? DEBUG_COMMIT_MESSAGE}
               </span>
               <span className="text-dim">
-                (<span className="truncate">
+                (<ResponsiveText
+                  shortText={formatDistanceToNow(
+                    codeMeta?.commitDate ?? DEBUG_COMMIT_DATE,
+                  )}
+                  className="truncate"
+                >
                   {formatDistanceToNow(
                     codeMeta?.commitDate ?? DEBUG_COMMIT_DATE,
                     { addSuffix: true },
                   )}
-                </span>)
+                </ResponsiveText>)
               </span>
             </a>}
           />
