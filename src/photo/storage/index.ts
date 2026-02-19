@@ -117,9 +117,10 @@ export const getOptimizedPhotoUrl = (
 // Generate small, low-bandwidth images for quick manipulations such as
 // generating blur data or image thumbnails for AI text generation
 export const getOptimizedPhotoUrlForManipulation = (
-  args: Parameters<typeof getOptimizedPhotoUrl>[0],
+  imageUrl: string,
+  addBypassSecret?: boolean,
 ) =>
-  getOptimizedPhotoUrl({ ...args, size: 640 });
+  getOptimizedPhotoUrl({ imageUrl, addBypassSecret, size: 640 });
 
 export const getOptimizedPhotoUrlForSuffix = (
   url: string,
