@@ -100,16 +100,16 @@ const getSuffixFromNextImageSize = (nextSize: NextImageSize) =>
 
 export const getOptimizedPhotoUrl = (
   args: Parameters<typeof getNextImageUrlForRequest>[0] & {
-    compatibilityMode?: boolean
+    useNextImage?: boolean
   },
 ) => {
-  const { compatibilityMode = true } = args;
+  const { useNextImage = true } = args;
   const suffix = getSuffixFromNextImageSize(args.size);
   const {
     urlBase,
     fileNameBase,
   } = getFileNamePartsFromStorageUrl(args.imageUrl);
-  return compatibilityMode
+  return useNextImage
     ? getNextImageUrlForRequest(args)
     : getOptimizedUrl({ urlBase, fileNameBase, suffix });
 };
@@ -117,16 +117,9 @@ export const getOptimizedPhotoUrl = (
 // Generate small, low-bandwidth images for quick manipulations such as
 // generating blur data or image thumbnails for AI text generation
 export const getOptimizedPhotoUrlForManipulation = (
-  imageUrl: string,
-  addBypassSecret: boolean,
-  compatibilityMode?: boolean,
+  args: Parameters<typeof getOptimizedPhotoUrl>[0],
 ) =>
-  getOptimizedPhotoUrl({
-    imageUrl,
-    size: 640,
-    addBypassSecret,
-    compatibilityMode,
-  });
+  getOptimizedPhotoUrl({ ...args, size: 640 });
 
 export const getOptimizedPhotoUrlForSuffix = (
   url: string,
@@ -163,11 +156,11 @@ export const getDataUrlsForPhotos = async (
   optimizedSuffix: OptimizedSuffix,
   nextImageWidth: NextImageSize,
   addBypassSecret: boolean,
-) =>
+): Promise<{ id: string, urlData: string }[]> =>
   Promise.all(photos
     .map(async({ id, url }) => {
       // Check for optimized image first
-      const optimizedUrl =await getSignedUrlForUrl(
+      const optimizedUrl = await getSignedUrlForUrl(
         getOptimizedPhotoUrlForSuffix(url, optimizedSuffix),
         'GET',
       );
@@ -186,7 +179,7 @@ export const getDataUrlsForPhotos = async (
         return { id, urlData: nextImageUrlData };
       }
     }))
-    .then(urls =>(urls.every(({ urlData }) => Boolean(urlData))
-      ? urls
+    .then(urls => urls.every(({ urlData }) => Boolean(urlData))
+      ? urls as { id: string, urlData: string }[]
       // If any url is undefined, return an empty array
-      : []) as { id: string, urlData: string }[]);
+      : []);
