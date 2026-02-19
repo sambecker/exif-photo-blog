@@ -5,16 +5,22 @@ export type SelectPhotosState = {
   canCurrentPageSelectPhotos?: boolean
   isSelectingPhotos?: boolean
   isSelectingAllPhotos?: boolean
-  shouldShowSelectAll?: boolean
-  toggleIsSelectingAllPhotos?: () => void
   startSelectingPhotos?: () => void
   stopSelectingPhotos?: () => void
+  shouldShowSelectAll?: boolean
+  toggleIsSelectingAllPhotos?: () => void
   selectedPhotoIds?: string[]
   selectAllPhotoOptions?: PhotoQueryOptions
   selectAllCount?: number
   togglePhotoSelection?: (photoId: string) => void
   isPerformingSelectEdit?: boolean
   setIsPerformingSelectEdit?: Dispatch<SetStateAction<boolean>>
+  albumTitles?: string
+  setAlbumTitles?: Dispatch<SetStateAction<string | undefined>>
+  tags?: string
+  setTags?: Dispatch<SetStateAction<string | undefined>>
+  tagErrorMessage?: string
+  setTagErrorMessage?: Dispatch<SetStateAction<string>>
 };
 
 export const SelectPhotosContext = createContext<SelectPhotosState>({});

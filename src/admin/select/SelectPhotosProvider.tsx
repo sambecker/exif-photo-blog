@@ -51,6 +51,10 @@ export default function SelectPhotosProvider({
   const [isPerformingSelectEdit, setIsPerformingSelectEdit] =
     useState(false);
 
+  const [albumTitles, setAlbumTitles] = useState<string>();
+  const [tags, setTags] = useState<string>();
+  const [tagErrorMessage, setTagErrorMessage] = useState('');
+
   const getPhotoGridElements = useCallback(() =>
     document.querySelectorAll(`[${DATA_KEY_PHOTO_GRID}=true]`)
   , []);
@@ -118,6 +122,9 @@ export default function SelectPhotosProvider({
       setIsSelectingAllPhotos(false);
       setSelectAllPhotoOptions(undefined);
       setSelectAllCount(undefined);
+      setAlbumTitles(undefined);
+      setTags(undefined);
+      setTagErrorMessage('');
     }
   }, [isSelectingPhotos, getPhotoGridElements]);
 
@@ -136,6 +143,12 @@ export default function SelectPhotosProvider({
       togglePhotoSelection,
       isPerformingSelectEdit,
       setIsPerformingSelectEdit,
+      albumTitles,
+      setAlbumTitles,
+      tags,
+      setTags,
+      tagErrorMessage,
+      setTagErrorMessage,
     }}>
       {children}
     </SelectPhotosContext.Provider>
