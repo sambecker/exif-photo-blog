@@ -51,9 +51,11 @@ import MaskedScroll from '@/components/MaskedScroll';
 import IconNext from '@/components/icons/IconNext';
 import Link from 'next/link';
 import IconNode from '@/components/icons/IconNode';
+import { formatDistanceToNow } from 'date-fns';
 
 const DEBUG_COMMIT_SHA = '4cd29ed';
 const DEBUG_COMMIT_MESSAGE = 'Long commit message for debugging purposes';
+const DEBUG_COMMIT_DATE = new Date('2026-02-18T00:00:00Z');
 const DEBUG_BEHIND_BY = 9;
 const DEBUG_PHOTOS_NEED_SYNC_COUNT = 7;
 
@@ -282,6 +284,14 @@ export default function AdminAppInsightsClient({
               </span>
               <span className="truncate">
                 {VERCEL_GIT_COMMIT_MESSAGE ?? DEBUG_COMMIT_MESSAGE}
+              </span>
+              <span className="text-dim">
+                (<span className="truncate">
+                  {formatDistanceToNow(
+                    codeMeta?.commitDate ?? DEBUG_COMMIT_DATE,
+                    { addSuffix: true },
+                  )}
+                </span>)
               </span>
             </a>}
           />
