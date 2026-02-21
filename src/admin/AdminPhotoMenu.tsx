@@ -26,7 +26,6 @@ import MoreMenu, { MoreMenuSection } from '@/components/more/MoreMenu';
 import { useAppState } from '@/app/AppState';
 import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 import { MdOutlineFileDownload } from 'react-icons/md';
-import MoreMenuItem from '@/components/more/MoreMenuItem';
 import IconGrSync from '@/components/icons/IconGrSync';
 import InsightsIndicatorDot from './insights/InsightsIndicatorDot';
 import IconFavs from '@/components/icons/IconFavs';
@@ -40,6 +39,7 @@ import IconUpload from '@/components/icons/IconUpload';
 import { uploadPhotoFromClient } from '@/photo/storage';
 import ImageInput from '@/components/ImageInput';
 import { PRESERVE_ORIGINAL_UPLOADS } from '@/app/config';
+import IconWarning from '@/components/icons/IconWarning';
 
 export default function AdminPhotoMenu({
   photo,
@@ -75,7 +75,7 @@ export default function AdminPhotoMenu({
     : undefined;
 
   const sectionMain = useMemo(() => {
-    const items: ComponentProps<typeof MoreMenuItem>[] = [{
+    const items: MoreMenuSection['items'] = [{
       label: appText.admin.edit,
       icon: <IconEdit
         size={14}
@@ -144,9 +144,25 @@ export default function AdminPhotoMenu({
       icon: <IconGrSync
         className="translate-x-[-1px] translate-y-[0.5px]"
       />,
-      action: () => syncPhotoAction(photo.id)
-        .then(() => revalidatePhoto?.(photo.id)),
-      ...showKeyCommands && { keyCommand: KEY_COMMANDS.sync },
+      items: [{
+        label: appText.admin.syncAutomatic,
+        icon: <IconGrSync
+          className="translate-x-[-1px] translate-y-[0.5px]"
+        />,
+        action: () => syncPhotoAction(photo.id)
+          .then(() => revalidatePhoto?.(photo.id)),
+      }, {
+        label: appText.admin.syncOverwrite,
+        icon: <IconWarning className="translate-x-[-1.5px]" />,
+        className: 'text-warning *:hover:text-warning *:active:text-warning',
+        color: 'yellow',
+        action: () => {
+          if(window.confirm(appText.admin.syncOverwriteConfirm)) {
+            syncPhotoAction(photo.id, { syncMode: 'only-missing' })
+              .then(() => revalidatePhoto?.(photo.id));
+          }
+        },
+      }],
     });
     items.push({
       label: appText.admin.reupload,
@@ -184,7 +200,7 @@ export default function AdminPhotoMenu({
       icon: <IconTrash
         className="translate-x-[-1px]"
       />,
-      className: 'text-error *:hover:text-error',
+      className: 'text-error *:hover:text-error *:active:text-error',
       color: 'red',
       action: () => {
         if (confirm(deleteConfirmationTextForPhoto(photo, appText))) {

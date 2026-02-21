@@ -135,6 +135,10 @@ export const TEXT: I18N = {
     public: 'সর্বজনীন করুন',
     download: 'ডাউনলোড',
     sync: 'সিঙ্ক',
+    syncAutomatic: 'স্বয়ংক্রিয়',
+    syncOverwrite: 'ওভাররাইট করুন',
+    // eslint-disable-next-line max-len
+    syncOverwriteConfirm: 'আপনি কি নিশ্চিত যে আপনি সমস্ত ফটো ফিল্ড ওভাররাইট করতে চান? কাস্টমাইজড ডেটা হারিয়ে যেতে পারে।',
     reupload: 'পুনরায় আপলোড করুন',
     delete: 'ডিলিট',
     deleteConfirm: 'আপনি কি "{{photoTitle}}" মুছে ফেলতে চান?',

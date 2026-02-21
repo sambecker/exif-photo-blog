@@ -135,6 +135,10 @@ export const TEXT: I18N = {
     public: 'Herkese Açık Yap',
     download: 'İndir',
     sync: 'Senkronize Et',
+    syncAutomatic: 'Otomatik',
+    syncOverwrite: 'Üzerine Yaz',
+    // eslint-disable-next-line max-len
+    syncOverwriteConfirm: 'Tüm fotoğraf alanlarının üzerine yazmak istediğinize emin misiniz? Özelleştirilmiş veriler kaybolabilir.',
     reupload: 'Yeniden Yükle',
     delete: 'Sil',
     // eslint-disable-next-line max-len

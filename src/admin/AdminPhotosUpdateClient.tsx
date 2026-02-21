@@ -151,6 +151,7 @@ export default function AdminPhotosUpdateClient({
             photoIdsSyncing={photoIdsSyncing}
             hasAiTextGeneration={hasAiTextGeneration}
             canEdit={false}
+            canSync={true}
             canDelete={false}
             dateType="updatedAt"
             shouldScrollIntoViewOnExternalSync

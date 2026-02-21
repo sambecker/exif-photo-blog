@@ -142,6 +142,10 @@ html {
   @apply
     text-red-500 dark:text-red-400
 }
+@utility text-warning {
+  @apply
+    text-amber-700 dark:text-amber-500
+}
 /* Rules */
 @utility border-main {
   @apply

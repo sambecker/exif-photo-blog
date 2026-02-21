@@ -29,6 +29,7 @@ export default function AdminPhotosTable({
   hasAiTextGeneration,
   dateType = 'createdAt',
   canEdit = true,
+  canSync,
   canDelete = true,
   timezone,
   shouldScrollIntoViewOnExternalSync,
@@ -42,6 +43,7 @@ export default function AdminPhotosTable({
   hasAiTextGeneration: boolean
   dateType?: 'createdAt' | 'updatedAt'
   canEdit?: boolean
+  canSync?: boolean
   canDelete?: boolean
   timezone?: Timezone
   shouldScrollIntoViewOnExternalSync?: boolean
@@ -127,19 +129,20 @@ export default function AdminPhotosTable({
           )}>
             {canEdit &&
               <EditButton path={pathForAdminPhotoEdit(photo)} />}
-            <PhotoSyncButton
-              photo={photo}
-              onSyncComplete={invalidateSwr}
-              isSyncingExternal={photoIdsSyncing.includes(photo.id)}
-              hasAiTextGeneration={hasAiTextGeneration}
-              disabled={photoIdsSyncing.length > 0}
-              className={opacityForPhotoId(photo.id)}
-              shouldConfirm
-              shouldToast
-              shouldScrollIntoViewOnExternalSync={
-                shouldScrollIntoViewOnExternalSync}
-              updateMode={updateMode}
-            />
+            {canSync &&
+              <PhotoSyncButton
+                photo={photo}
+                onSyncComplete={invalidateSwr}
+                isSyncingExternal={photoIdsSyncing.includes(photo.id)}
+                hasAiTextGeneration={hasAiTextGeneration}
+                disabled={photoIdsSyncing.length > 0}
+                className={opacityForPhotoId(photo.id)}
+                shouldConfirm
+                shouldToast
+                shouldScrollIntoViewOnExternalSync={
+                  shouldScrollIntoViewOnExternalSync}
+                updateMode={updateMode}
+              />}
             {debugColorData &&
               <SyncColorButton photoId={photo.id} />}
             <AdminPhotoMenu

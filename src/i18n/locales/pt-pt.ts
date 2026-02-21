@@ -135,6 +135,10 @@ export const TEXT: I18N = {
     public: 'Tornar Público',
     download: 'Descarregar',
     sync: 'Sincronizar',
+    syncAutomatic: 'Automático',
+    syncOverwrite: 'Sobrescrever',
+    // eslint-disable-next-line max-len
+    syncOverwriteConfirm: 'Tens certeza de que queres sobrescrever todos os campos da fotografia? Dados personalizados podem ser perdidos.',
     reupload: 'Carregar novamente',
     delete: 'Excluir',
     deleteConfirm: 'Tens certeza de que deseja excluir "{{photoTitle}}"?',

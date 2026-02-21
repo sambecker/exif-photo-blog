@@ -134,6 +134,10 @@ export const TEXT = {
     public: 'Make Public',
     download: 'Download',
     sync: 'Sync',
+    syncAutomatic: 'Automatic',
+    syncOverwrite: 'Overwrite',
+    // eslint-disable-next-line max-len
+    syncOverwriteConfirm: 'Are you sure you want to overwrite all photo fields? Customized data may be lost.',
     reupload: 'Reupload',
     delete: 'Delete',
     deleteConfirm: 'Are you sure you want to delete "{{photoTitle}}?"',

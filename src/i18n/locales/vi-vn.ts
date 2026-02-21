@@ -135,6 +135,10 @@ export const TEXT: I18N = {
     public: 'Làm công khai',
     download: 'Tải xuống',
     sync: 'Đồng bộ',
+    syncAutomatic: 'Tự động',
+    syncOverwrite: 'Ghi đè',
+    // eslint-disable-next-line max-len
+    syncOverwriteConfirm: 'Bạn có chắc chắn muốn ghi đè tất cả các trường ảnh? Dữ liệu tùy chỉnh có thể bị mất.',
     reupload: 'Tải lên lại',
     delete: 'Xóa',
     deleteConfirm: 'Bạn có chắc chắn muốn xóa "{{photoTitle}}?"',

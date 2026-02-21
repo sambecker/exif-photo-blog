@@ -135,6 +135,10 @@ export const TEXT: I18N = {
     public: 'Buat Publik',
     download: 'Unduh',
     sync: 'Sinkronkan',
+    syncAutomatic: 'Otomatis',
+    syncOverwrite: 'Timpa',
+    // eslint-disable-next-line max-len
+    syncOverwriteConfirm: 'Apakah Anda yakin ingin menimpa semua bidang foto? Data yang disesuaikan mungkin hilang.',
     reupload: 'Unggah ulang',
     delete: 'Hapus',
     deleteConfirm: 'Apakah Anda yakin ingin menghapus "{{photoTitle}}"?',

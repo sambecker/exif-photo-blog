@@ -135,6 +135,10 @@ export const TEXT: I18N = {
     public: 'सार्वजनिक बनाएं',
     download: 'डाउनलोड करें',
     sync: 'सिंक करें',
+    syncAutomatic: 'स्वचालित',
+    syncOverwrite: 'अधिलेखित करें',
+    // eslint-disable-next-line max-len
+    syncOverwriteConfirm: 'क्या आप सुनिश्चित हैं कि आप सभी फोटो फ़ील्ड को अधिलेखित करना चाहते हैं? अनुकूलित डेटा खो सकता है।',
     reupload: 'पुनः अपलोड करें',
     delete: 'हटाएं',
     // eslint-disable-next-line max-len
