@@ -13,6 +13,7 @@ import {
   GRID_HOMEPAGE_ENABLED,
   SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
   NAV_SORT_CONTROL,
+  SHOW_ABOUT_PAGE,
 } from './config';
 import AdminAppMenu from '@/admin/AdminAppMenu';
 import Spinner from '@/components/Spinner';
@@ -144,17 +145,18 @@ export default function AppViewSwitcher({
       >
         {GRID_HOMEPAGE_ENABLED ? renderItemGrid : renderItemFull}
         {GRID_HOMEPAGE_ENABLED ? renderItemFull : renderItemGrid}
-        <SwitcherItem
-          icon={<IconAbout />}
-          href={PATH_ABOUT}
-          hrefRef={refHrefAbout}
-          active={currentSelection === 'about'}
-          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-            content: appText.nav.about,
-            keyCommand: KEY_COMMANDS.about,
-          }}}
-          noPadding
-        />
+        {SHOW_ABOUT_PAGE &&
+          <SwitcherItem
+            icon={<IconAbout />}
+            href={PATH_ABOUT}
+            hrefRef={refHrefAbout}
+            active={currentSelection === 'about'}
+            tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+              content: appText.nav.about,
+              keyCommand: KEY_COMMANDS.about,
+            }}}
+            noPadding
+          />}
         {/* Show spinner if admin is suspected to be logged in */}
         {(isUserSignedInEager && !isUserSignedIn) &&
           <SwitcherItem

@@ -5,8 +5,9 @@ import Spinner from '../Spinner';
 import LinkWithIconLoader from '../LinkWithIconLoader';
 import Tooltip from '../Tooltip';
 
-const WIDTH_CLASS         = 'w-[42px]';
+const WIDTH_CLASS         = 'w-[44px]';
 const WIDTH_CLASS_NARROW  = 'w-[36px]';
+const HEIGHT_CLASS        = 'h-[32px]';
 
 export default function SwitcherItem({
   icon,
@@ -38,7 +39,7 @@ export default function SwitcherItem({
   const widthClass = width === 'narrow' ? WIDTH_CLASS_NARROW : WIDTH_CLASS;
   const className = clsx(
     'flex items-center justify-center',
-    `${widthClass} h-[30px]`,
+    `${widthClass} ${HEIGHT_CLASS}`,
     isInteractive && 'cursor-pointer',
     isInteractive && 'hover:bg-gray-100/60 active:bg-gray-100',
     isInteractive && 'dark:hover:bg-gray-900/75 dark:active:bg-gray-900',

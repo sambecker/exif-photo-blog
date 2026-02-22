@@ -232,7 +232,8 @@ export default function AdminAppMenu({
       </div>}
       align="start"
       sideOffset={10}
-      alignOffset={SHOW_ABOUT_PAGE ? -126 : -84}
+      // Based off icon width (44px) defined in <SwitcherItem />
+      alignOffset={SHOW_ABOUT_PAGE ? -(44 * 3) : -(44 * 2)}
       onOpen={refreshAdminData}
       sections={sections}
       ariaLabel="Admin Menu"
