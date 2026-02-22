@@ -35,6 +35,7 @@ import { FiXSquare } from 'react-icons/fi';
 import { useSelectPhotosState } from './select/SelectPhotosState';
 import IconAlbum from '@/components/icons/IconAlbum';
 import { SHOW_ABOUT_PAGE } from '@/app/config';
+import { SWITCHER_ITEM_WIDTH } from '@/components/switcher/SwitcherItem';
 
 export default function AdminAppMenu({
   isOpen,
@@ -232,8 +233,9 @@ export default function AdminAppMenu({
       </div>}
       align="start"
       sideOffset={10}
-      // Based off icon width (44px) defined in <SwitcherItem />
-      alignOffset={SHOW_ABOUT_PAGE ? -(44 * 3) : -(44 * 2)}
+      alignOffset={SHOW_ABOUT_PAGE
+        ? -(SWITCHER_ITEM_WIDTH * 3)
+        : -(SWITCHER_ITEM_WIDTH * 2)}
       onOpen={refreshAdminData}
       sections={sections}
       ariaLabel="Admin Menu"
