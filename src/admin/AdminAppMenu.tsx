@@ -34,6 +34,7 @@ import { MoreMenuSection } from '@/components/more/MoreMenu';
 import { FiXSquare } from 'react-icons/fi';
 import { useSelectPhotosState } from './select/SelectPhotosState';
 import IconAlbum from '@/components/icons/IconAlbum';
+import { SHOW_ABOUT_PAGE } from '@/app/config';
 
 export default function AdminAppMenu({
   isOpen,
@@ -230,8 +231,8 @@ export default function AdminAppMenu({
         </div>
       </div>}
       align="start"
-      sideOffset={12}
-      alignOffset={-84}
+      sideOffset={10}
+      alignOffset={SHOW_ABOUT_PAGE ? -126 : -84}
       onOpen={refreshAdminData}
       sections={sections}
       ariaLabel="Admin Menu"

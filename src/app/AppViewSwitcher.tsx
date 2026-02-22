@@ -3,6 +3,7 @@ import SwitcherItem from '@/components/switcher/SwitcherItem';
 import IconFull from '@/components/icons/IconFull';
 import IconGrid from '@/components/icons/IconGrid';
 import {
+  PATH_ABOUT,
   PATH_FULL_INFERRED,
   PATH_GRID_INFERRED,
 } from '@/app/path';
@@ -26,8 +27,9 @@ import { getSortStateFromPath } from '@/photo/sort/path';
 import { motion } from 'framer-motion';
 import SortMenu from '@/photo/sort/SortMenu';
 import { SWR_KEYS } from '@/swr';
+import IconAbout from '@/components/icons/IconAbout';
 
-export type SwitcherSelection = 'full' | 'grid' | 'admin';
+export type SwitcherSelection = 'full' | 'grid' | 'about' | 'admin';
 
 const GAP_CLASS_RIGHT = 'mr-1.5 sm:mr-2';
 const GAP_CLASS_LEFT  = 'ml-0.5 sm:ml-1';
@@ -82,6 +84,7 @@ export default function AppViewSwitcher({
 
   const refHrefFull = useRef<HTMLAnchorElement>(null);
   const refHrefGrid = useRef<HTMLAnchorElement>(null);
+  const refHrefAbout = useRef<HTMLAnchorElement>(null);
 
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
   
@@ -94,19 +97,19 @@ export default function AppViewSwitcher({
         case KEY_COMMANDS.grid:
           if (pathname !== PATH_GRID_INFERRED) { refHrefGrid.current?.click(); }
           break;
-        case KEY_COMMANDS.admin:
-          if (isUserSignedIn) { setIsAdminMenuOpen(true); }
+        case KEY_COMMANDS.about:
+          if (pathname !== PATH_GRID_INFERRED) { refHrefGrid.current?.click(); }
           break;
       }
     }
-  }, [pathname, isUserSignedIn]);
+  }, [pathname]);
   useKeydownHandler({ onKeyDown });
 
   const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
 
   const renderItemFull =
     <SwitcherItem
-      icon={<IconFull includeTitle={false} />}
+      icon={<IconFull />}
       href={pathFull}
       hrefRef={refHrefFull}
       active={currentSelection === 'full'}
@@ -119,7 +122,7 @@ export default function AppViewSwitcher({
 
   const renderItemGrid =
     <SwitcherItem
-      icon={<IconGrid includeTitle={false} />}
+      icon={<IconGrid />}
       href={pathGrid}
       hrefRef={refHrefGrid}
       active={currentSelection === 'grid'}
@@ -141,6 +144,17 @@ export default function AppViewSwitcher({
       >
         {GRID_HOMEPAGE_ENABLED ? renderItemGrid : renderItemFull}
         {GRID_HOMEPAGE_ENABLED ? renderItemFull : renderItemGrid}
+        <SwitcherItem
+          icon={<IconAbout />}
+          href={PATH_ABOUT}
+          hrefRef={refHrefAbout}
+          active={currentSelection === 'about'}
+          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+            content: appText.nav.about,
+            keyCommand: KEY_COMMANDS.about,
+          }}}
+          noPadding
+        />
         {/* Show spinner if admin is suspected to be logged in */}
         {(isUserSignedInEager && !isUserSignedIn) &&
           <SwitcherItem
@@ -150,7 +164,6 @@ export default function AppViewSwitcher({
             tooltip={{
               ...!isAdminMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
                 content: appText.nav.admin,
-                keyCommand: KEY_COMMANDS.admin,
               },
             }}
           />}
@@ -166,7 +179,6 @@ export default function AppViewSwitcher({
             tooltip={{
               ...!isAdminMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
                 content: appText.nav.admin,
-                keyCommand: KEY_COMMANDS.admin,
               },
             }}
             noPadding
@@ -224,7 +236,7 @@ export default function AppViewSwitcher({
       </motion.div>
       <Switcher type="borderless">
         <SwitcherItem
-          icon={<IconSearch includeTitle={false} />}
+          icon={<IconSearch />}
           onClick={() => setIsCommandKOpen?.(true)}
           tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
             content: appText.nav.search,

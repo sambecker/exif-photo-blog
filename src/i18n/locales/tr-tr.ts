@@ -48,6 +48,7 @@ export const TEXT: I18N = {
     home: 'Anasayfa',
     full: 'Tam',
     grid: 'Izgara',
+    about: 'Hakkında',
     admin: 'Yönetici',
     search: 'Ara',
     prev: 'Önceki',

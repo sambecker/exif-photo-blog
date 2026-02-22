@@ -48,6 +48,7 @@ export const TEXT: I18N = {
     home: 'होम',
     full: 'पूर्ण',
     grid: 'ग्रिड',
+    about: 'के बारे में',
     admin: 'एडमिन',
     search: 'खोज',
     prev: 'पिछला',

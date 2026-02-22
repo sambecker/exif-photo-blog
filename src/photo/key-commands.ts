@@ -1,7 +1,7 @@
 export const KEY_COMMANDS = {
   full: 'F',
   grid: 'G',
-  admin: 'A',
+  about: 'A',
   prev: ['J', 'ARROWLEFT'],
   next: ['L', 'ARROWRIGHT'],
   edit: 'E',

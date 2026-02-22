@@ -48,6 +48,7 @@ export const TEXT: I18N = {
     home: 'Trang chủ',
     full: 'Toàn bộ',
     grid: 'Lưới',
+    about: 'Giới thiệu',
     admin: 'Quản trị',
     search: 'Tìm kiếm',
     prev: 'Trước',
