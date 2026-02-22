@@ -1,3 +1,5 @@
+import AboutPageClient from '@/about/AboutPageClient';
+
 export default function AboutPage() {
-  return <div>About</div>;
+  return <AboutPageClient />;
 }
