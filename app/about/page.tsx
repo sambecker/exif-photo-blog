@@ -14,7 +14,7 @@ export default async function AboutPage() {
     photos,
     categories,
   ] = await Promise.all([
-    getPhotosCached({ tag: TAG_FAVS, limit: 1 }),
+    getPhotosCached({ tag: TAG_FAVS, limit: 1 }).catch(() => []),
     getAllPhotoIdsWithUpdatedAt().catch(() => []),
     getDataForCategoriesCached().catch(() => (NULL_CATEGORY_DATA)),
   ]);
