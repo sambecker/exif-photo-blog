@@ -81,8 +81,10 @@ export default function AdminBatchEditPanelClient({
 
   const renderPhotoSelectionStatus = isSelectingAllPhotos
     ? selectAllCount === undefined
-      ? 'Selecting ...'
-      : <ResponsiveText shortText={`${selectAllCount} selected`}>
+      ? <ResponsiveText shortText="Selecting" className="text-dim">
+        Selecting ...
+      </ResponsiveText>
+      : <ResponsiveText shortText={`${selectAllCount} photos`}>
         {`${selectAllCount} photos selected`}
       </ResponsiveText>
     : selectedPhotoIds?.length === 0
@@ -241,7 +243,10 @@ export default function AdminBatchEditPanelClient({
             'shadow-xl/5',
           )}
         >
-          <div className="flex items-center gap-2 [&>*:first-child]:grow">
+          <div className={clsx(
+            'flex items-center gap-1 md:gap-2',
+            '[&>*:first-child]:grow',
+          )}>
             {isInAlbumMode
               ? <FieldsetAlbum
                 albumOptions={uniqueAlbums}
