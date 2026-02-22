@@ -7,6 +7,7 @@ import AppGrid from '../components/AppGrid';
 import AppViewSwitcher, { SwitcherSelection } from '@/app/AppViewSwitcher';
 import {
   PATH_ROOT,
+  isPathAbout,
   isPathAdmin,
   isPathFull,
   isPathGrid,
@@ -65,6 +66,8 @@ export default function NavClient({
       return 'grid';
     } else if (isPathFull(pathname)) {
       return 'full';
+    } else if (isPathAbout(pathname)) {
+      return 'about';
     } else if (isPathProtected(pathname)) {
       return 'admin';
     }

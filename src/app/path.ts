@@ -431,6 +431,9 @@ export const isPathGrid = (pathname?: string) =>
 export const isPathFull = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_FULL);
 
+export const isPathAbout = (pathname?: string) =>
+  checkPathPrefix(pathname, PATH_ABOUT);
+
 export const isPathTopLevel = (pathname?: string) =>
   isPathRoot(pathname)||
   isPathGrid(pathname) ||
