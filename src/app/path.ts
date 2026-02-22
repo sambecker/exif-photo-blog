@@ -435,9 +435,10 @@ export const isPathAbout = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ABOUT);
 
 export const isPathTopLevel = (pathname?: string) =>
-  isPathRoot(pathname)||
+  isPathRoot(pathname) ||
   isPathGrid(pathname) ||
-  isPathFull(pathname);
+  isPathFull(pathname) ||
+  isPathAbout(pathname);
 
 export const isPathSignIn = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_SIGN_IN);
