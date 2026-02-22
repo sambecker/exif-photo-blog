@@ -40,7 +40,6 @@ import {
 } from '@/cache';
 import { revalidatePhoto, getPhotosCached } from './cache';
 import {
-  PATH_ADMIN_PHOTOS,
   PATH_ADMIN_RECIPES,
   PATH_ADMIN_TAGS,
   PATH_ROOT,
@@ -108,7 +107,6 @@ export const createPhotoAction = async (formData: FormData) =>
       await addAlbumTitlesToPhoto(albumTitles, photo.id, false);
       await propagateRecipeTitleIfNecessary(formData, photo);
       revalidateAllKeysAndPaths();
-      redirect(PATH_ADMIN_PHOTOS);
     }
   });
 
@@ -343,8 +341,6 @@ export const updatePhotoAction = async (formData: FormData) =>
       });
 
     revalidateAllKeysAndPaths();
-
-    redirect(PATH_ADMIN_PHOTOS);
   });
 
 export const toggleFavoritePhotoAction = async (

@@ -3,6 +3,7 @@
 import { ComponentProps, useMemo, useRef } from 'react';
 import {
   getPathComponents,
+  PARAM_REDIRECT,
   PATH_ROOT,
   pathForAdminPhotoEdit,
   pathForTag,
@@ -81,7 +82,8 @@ export default function AdminPhotoMenu({
         size={14}
         className="translate-x-[1px] translate-y-[-0.5px]"
       />,
-      href: pathForAdminPhotoEdit(photo.id),
+      href: pathForAdminPhotoEdit(photo.id) +
+        `?${PARAM_REDIRECT}=${encodeURIComponent(path)}`,
       ...showKeyCommands && { keyCommand: KEY_COMMANDS.edit },
     }];
     if (includeFavorite) {
@@ -184,6 +186,7 @@ export default function AdminPhotoMenu({
 
     return { items };
   }, [
+    path,
     appText,
     photo,
     showKeyCommands,

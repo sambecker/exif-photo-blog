@@ -88,8 +88,11 @@ export const PATH_API_PRESIGNED_URL = `${PATH_API_STORAGE}/presigned-url`;
 // Modifiers
 const EDIT = 'edit';
 const IMAGE = 'image';
+
+// Parameters
 export const PARAM_UPLOAD_TITLE = 'title';
 export const PARAM_SELECT = 'select';
+export const PARAM_REDIRECT = 'redirect';
 
 // Special characters
 export const MISSING_FIELD = '-';
