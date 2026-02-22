@@ -11,7 +11,7 @@ import {
 } from '@/app/config';
 import { createLensKey } from '@/lens';
 import { sortTagsByCount } from '@/tag';
-import { sortCategoriesByCount } from '@/category';
+import { PhotoSetCategories, sortCategoriesByCount } from '@/category';
 import { sortFocalLengths } from '@/focal';
 import {
   getPhotosMetaCached,
@@ -172,7 +172,7 @@ export const getLastModifiedForCategories = (
     recipes,
     films,
     focalLengths,
-  }: Awaited<ReturnType<typeof getDataForCategories>>,
+  }: PhotoSetCategories,
   photos: {updatedAt: Date }[],
 ) => [
   ...recents.map(({ lastModified }) => lastModified),
