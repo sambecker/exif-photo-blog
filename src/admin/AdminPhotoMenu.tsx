@@ -160,7 +160,7 @@ export default function AdminPhotoMenu({
         color: 'yellow',
         action: () => {
           if(window.confirm(appText.admin.syncOverwriteConfirm)) {
-            syncPhotoAction(photo.id, { syncMode: 'only-missing' })
+            return syncPhotoAction(photo.id, { syncMode: 'only-missing' })
               .then(() => revalidatePhoto?.(photo.id));
           }
         },
