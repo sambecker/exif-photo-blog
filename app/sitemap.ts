@@ -17,7 +17,10 @@ import {
 import { isTagFavs } from '@/tag';
 import { BASE_URL, GRID_HOMEPAGE_ENABLED } from '@/app/config';
 import { getAllPhotoIdsWithUpdatedAt } from '@/photo/query';
-import { getLastModifiedForCategories } from '@/category/data';
+import {
+  getLastModifiedForCategories,
+  NULL_CATEGORY_DATA,
+} from '@/category/data';
 
 // Cache for 24 hours
 export const revalidate = 86_400;
@@ -33,17 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     categories,
     photos,
   ] = await Promise.all([
-    getDataForCategoriesCached().catch(() => ({
-      recents: [],
-      years: [],
-      cameras: [],
-      lenses: [],
-      albums: [],
-      tags: [],
-      recipes: [],
-      films: [],
-      focalLengths: [],
-    })),
+    getDataForCategoriesCached().catch(() => NULL_CATEGORY_DATA),
     getAllPhotoIdsWithUpdatedAt().catch(() => []),
   ]);
 

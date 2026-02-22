@@ -1,6 +1,9 @@
 import AboutPageClient from '@/about/AboutPageClient';
 import { getDataForCategoriesCached } from '@/category/cache';
-import { getLastModifiedForCategories } from '@/category/data';
+import {
+  getLastModifiedForCategories,
+  NULL_CATEGORY_DATA,
+} from '@/category/data';
 import { getPhotosCached } from '@/photo/cache';
 import { getAllPhotoIdsWithUpdatedAt } from '@/photo/query';
 import { TAG_FAVS } from '@/tag';
@@ -13,17 +16,7 @@ export default async function AboutPage() {
   ] = await Promise.all([
     getPhotosCached({ tag: TAG_FAVS, limit: 1 }),
     getAllPhotoIdsWithUpdatedAt().catch(() => []),
-    getDataForCategoriesCached().catch(() => ({
-      recents: [],
-      years: [],
-      cameras: [],
-      lenses: [],
-      albums: [],
-      tags: [],
-      recipes: [],
-      films: [],
-      focalLengths: [],
-    })),
+    getDataForCategoriesCached().catch(() => (NULL_CATEGORY_DATA)),
   ]);
 
   const lastModifiedSite = getLastModifiedForCategories(
