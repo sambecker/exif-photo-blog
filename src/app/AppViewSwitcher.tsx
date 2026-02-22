@@ -98,7 +98,7 @@ export default function AppViewSwitcher({
           if (pathname !== PATH_GRID_INFERRED) { refHrefGrid.current?.click(); }
           break;
         case KEY_COMMANDS.about:
-          if (pathname !== PATH_GRID_INFERRED) { refHrefGrid.current?.click(); }
+          if (pathname !== PATH_ABOUT) { refHrefAbout.current?.click(); }
           break;
       }
     }
