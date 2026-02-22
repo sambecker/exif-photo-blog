@@ -10,6 +10,7 @@ import {
   useState,
 } from 'react';
 import {
+  FIELDS_TO_NOT_TOAST,
   FIELDS_WITH_JSON,
   FORM_METADATA_ENTRIES_BY_SECTION,
   FORM_SECTIONS,
@@ -184,8 +185,10 @@ export default function PhotoForm({
         setDetectedFilm(updatedExifData.film);
       }
 
-      if (changedKeys.length > 0) {
-        const fields = convertFormKeysToLabels(changedKeys);
+      const keysToToast = changedKeys.filter(key =>
+        !FIELDS_TO_NOT_TOAST.includes(key));
+      if (keysToToast.length > 0) {
+        const fields = convertFormKeysToLabels(keysToToast);
         toastSuccess(`Updated EXIF fields: ${fields.join(', ')}`, 8000);
       } else {
         toastWarning('No new EXIF data found');

@@ -291,6 +291,11 @@ const FORM_METADATA = (
   },
 });
 
+export const FIELDS_TO_NOT_TOAST: (keyof PhotoFormData)[] = [
+  'colorData',
+  'colorSort',
+];
+
 export const FIELDS_WITH_JSON = Object.entries(FORM_METADATA())
   .filter(([_, meta]) => meta.isJson)
   .map(([key]) => key as keyof PhotoFormData);
