@@ -40,7 +40,10 @@ export default function AboutPageClient({
         width={heroPhoto.width}
         height={heroPhoto.height}
       />}
-      <div className={clsx('grid grid-cols-3 gap-4')}>
+      <div className={clsx(
+        'grid gap-4',
+        'grid-cols-2 sm:grid-cols-3 ',
+      )}>
         <div>Cameras ({categories.cameras.length})</div>
         <div>Lenses ({categories.lenses.length})</div>
         <div>Films ({categories.films.length})</div>
