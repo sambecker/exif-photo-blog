@@ -7,9 +7,9 @@ import Tooltip from '../Tooltip';
 
 export const SWITCHER_ITEM_WIDTH = 46;
 
-const WIDTH_CLASS         = 'w-[46px]';
-const WIDTH_CLASS_NARROW  = 'w-[36px]';
-const HEIGHT_CLASS        = 'h-[32px]';
+export const WIDTH_CLASS         = 'w-[46px]';
+export const WIDTH_CLASS_NARROW  = 'w-[36px]';
+export const HEIGHT_CLASS        = 'h-[32px]';
 
 export default function SwitcherItem({
   icon,

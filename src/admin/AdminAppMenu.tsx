@@ -35,7 +35,10 @@ import { FiXSquare } from 'react-icons/fi';
 import { useSelectPhotosState } from './select/SelectPhotosState';
 import IconAlbum from '@/components/icons/IconAlbum';
 import { SHOW_ABOUT_PAGE } from '@/app/config';
-import { SWITCHER_ITEM_WIDTH } from '@/components/switcher/SwitcherItem';
+import {
+  HEIGHT_CLASS,
+  SWITCHER_ITEM_WIDTH,
+} from '@/components/switcher/SwitcherItem';
 
 export default function AdminAppMenu({
   isOpen,
@@ -222,10 +225,10 @@ export default function AdminAppMenu({
   return (
     <SwitcherItemMenu
       {...{ isOpen, setIsOpen }}
-      icon={<div className="w-[28px] h-[28px] overflow-hidden">
+      icon={<div className={`w-full ${HEIGHT_CLASS} overflow-hidden`}>
         <div className={clsx(
-          'relative flex flex-col items-center justify-center gap-2',
-          'translate-y-[-18px]',
+          'relative flex flex-col items-center gap-2',
+          'translate-y-[-16px]',
         )}>
           <IoArrowDown size={16} className="shrink-0" />
           <IoArrowUp size={16} className="shrink-0" />
@@ -240,7 +243,7 @@ export default function AdminAppMenu({
       sections={sections}
       ariaLabel="Admin Menu"
       classNameButtonOpen={clsx(
-        '[&>*>*]:translate-y-[6px]',
+        '[&>*>*]:translate-y-[8px]',
         '[&>*>*]:duration-300',
       )}
     />
