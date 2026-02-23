@@ -44,6 +44,8 @@ export default function HeaderList({
             'dark:text-gray-100',
             'flex items-center mb-1 gap-1',
             'uppercase select-none',
+            'text-sm tracking-wide',
+            'translate-x-px',
           )}
         >
           {icon &&

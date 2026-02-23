@@ -190,8 +190,14 @@ export default function AboutPageClient({
         width={heroPhoto.width}
         height={heroPhoto.height}
       />}
-      {renderRow([albumsContent, tagsContent, recipeContent])}
-      {renderRow([camerasContent, lensesContent, filmsContent])}
+      {renderRow([
+        albumsContent,
+        tagsContent,
+        recipeContent,
+        camerasContent,
+        lensesContent,
+        filmsContent,
+      ])}
     </div>} />
   );
 }
