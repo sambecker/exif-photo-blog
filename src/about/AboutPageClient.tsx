@@ -12,6 +12,7 @@ import IconLens from '@/components/icons/IconLens';
 import IconRecipe from '@/components/icons/IconRecipe';
 import IconTag from '@/components/icons/IconTag';
 import ImageLarge from '@/components/image/ImageLarge';
+import ImageMedium from '@/components/image/ImageMedium';
 import PhotoFilm from '@/film/PhotoFilm';
 import { useAppText } from '@/i18n/state/client';
 import PhotoLens from '@/lens/PhotoLens';
@@ -20,31 +21,15 @@ import PhotoRecipe from '@/recipe/PhotoRecipe';
 import PhotoTag from '@/tag/PhotoTag';
 import clsx from 'clsx/lite';
 import { formatDistanceToNowStrict } from 'date-fns';
-import { ReactNode } from 'react';
-
-const renderRow = (items: ReactNode[]) => {
-  return (
-    <div className={clsx(
-      'grid gap-4',
-      'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 ',
-    )}>
-      {items.map((item, index) => (
-        <div
-          key={index}
-          className="pt-1 border-t border-gray-200 dark:border-gray-700"
-        >
-          {item}
-        </div>
-      ))}
-    </div>);
-};
 
 export default function AboutPageClient({
-  heroPhoto,
+  photoAvatar,
+  photoHero,
   categories: { albums, tags, recipes, cameras, lenses, films },
   lastUpdated,
 }: {
-  heroPhoto?: Photo
+  photoAvatar?: Photo
+  photoHero?: Photo
   categories: PhotoSetCategories
   lastUpdated?: Date
 }) {
@@ -170,33 +155,60 @@ export default function AboutPageClient({
     <AppGrid contentMain={<div className={clsx(
       'space-y-8 mt-5',
     )}>
-      <div className={clsx('sm:flex items-center justify-between')}>
-        <div>About this site</div>
-        {lastUpdated && <div className={clsx('text-dim')}>
-          Last updated {formatDistanceToNowStrict(
-            lastUpdated,
-            { addSuffix: true },
-          )}
-        </div>}
+      <div className="flex items-center gap-4">
+        {photoAvatar && <ImageMedium
+          className="size-10 rounded-full overflow-auto"
+          src={photoAvatar.url}
+          alt={altTextForPhoto(photoAvatar)}
+          blurDataURL={photoAvatar.blurData}
+          aspectRatio={photoAvatar.aspectRatio}
+        />}
+        <div className={clsx('sm:flex items-center justify-between grow')}>
+          <div>
+            <div className="font-bold">
+              About this site
+            </div>
+            <div>
+              A brief subhead here
+            </div>
+          </div>
+          {lastUpdated && <div className={clsx('text-dim')}>
+            Updated
+            {' '}
+            {formatDistanceToNowStrict(lastUpdated, { addSuffix: true })}
+          </div>}
+        </div>
       </div>
       <div className={clsx('text-medium')}>
         {/* eslint-disable-next-line max-len */}
         A digital gallery dedicated to the beauty of the mundane. This blog explores the intersection of light, shadow, and silence. No filters, no noise—just the world as it sits when we stop to look.
       </div>
-      {heroPhoto && <ImageLarge
-        src={heroPhoto.url}
-        alt={altTextForPhoto(heroPhoto)}
-        blurDataURL={heroPhoto.blurData}
-        aspectRatio={heroPhoto.aspectRatio}
+      {photoHero && <ImageLarge
+        src={photoHero.url}
+        alt={altTextForPhoto(photoHero)}
+        blurDataURL={photoHero.blurData}
+        aspectRatio={photoHero.aspectRatio}
       />}
-      {renderRow([
-        albumsContent,
-        tagsContent,
-        recipeContent,
-        camerasContent,
-        lensesContent,
-        filmsContent,
-      ])}
+      <div className={clsx(
+        'grid gap-4',
+        'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 ',
+      )}>
+        {[
+          albumsContent,
+          tagsContent,
+          recipeContent,
+          camerasContent,
+          lensesContent,
+          filmsContent,
+        ].map((item, index) => (
+          <div
+            key={index}
+            className="pt-1 border-t border-gray-200 dark:border-gray-700"
+          >
+            {item}
+          </div>
+        ))}
+      </div>
     </div>} />
   );
 }
