@@ -11,7 +11,7 @@ import IconFilm from '@/components/icons/IconFilm';
 import IconLens from '@/components/icons/IconLens';
 import IconRecipe from '@/components/icons/IconRecipe';
 import IconTag from '@/components/icons/IconTag';
-import ImageWithFallback from '@/components/image/ImageWithFallback';
+import ImageLarge from '@/components/image/ImageLarge';
 import PhotoFilm from '@/film/PhotoFilm';
 import { useAppText } from '@/i18n/state/client';
 import PhotoLens from '@/lens/PhotoLens';
@@ -183,12 +183,11 @@ export default function AboutPageClient({
         {/* eslint-disable-next-line max-len */}
         A digital gallery dedicated to the beauty of the mundane. This blog explores the intersection of light, shadow, and silence. No filters, no noise—just the world as it sits when we stop to look.
       </div>
-      {heroPhoto && <ImageWithFallback
+      {heroPhoto && <ImageLarge
         src={heroPhoto.url}
         alt={altTextForPhoto(heroPhoto)}
         blurDataURL={heroPhoto.blurData}
-        width={heroPhoto.width}
-        height={heroPhoto.height}
+        aspectRatio={heroPhoto.aspectRatio}
       />}
       {renderRow([
         albumsContent,
