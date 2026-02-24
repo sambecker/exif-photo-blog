@@ -71,7 +71,7 @@ See FAQ for [limitations of local development](#can-i-work-locally-without-acces
 - `NEXT_PUBLIC_META_DESCRIPTION` (seen in search results)
 - `NEXT_PUBLIC_NAV_TITLE` (seen in top-right navigation, defaults to domain when not configured)
 - `NEXT_PUBLIC_NAV_CAPTION` (seen in top-right navigation, beneath title)
-- `NEXT_PUBLIC_PAGE_ABOUT` (seen in grid sidebar—accepts rich formatting tags: `<b>`, `<strong>`, `<i>`, `<em>`, `<u>`, `<br>`)
+- `NEXT_PUBLIC_SIDEBAR_TEXT` (seen in grid sidebar—accepts rich formatting tags: `<b>`, `<strong>`, `<i>`, `<em>`, `<u>`, `<br>`)
 - `NEXT_PUBLIC_DOMAIN_SHARE` (seen in share modals where a shorter url may be desirable)
 
 ### Performance

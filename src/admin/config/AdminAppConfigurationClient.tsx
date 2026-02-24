@@ -68,8 +68,8 @@ export default function AdminAppConfigurationClient({
   hasNavTitle,
   navCaption,
   hasNavCaption,
-  pageAbout,
-  hasPageAbout,
+  sidebarText,
+  hasSidebarText,
   // Performance
   isStaticallyOptimized,
   arePhotosStaticallyOptimized,
@@ -377,7 +377,7 @@ export default function AdminAppConfigurationClient({
             status={hasAuthSecret}
             isPending={!hasAuthSecret && isAnalyzingConfiguration}
           >
-            Store auth secret in environment variable:
+            Store auth secret in environment variable
             {!hasAuthSecret &&
             <div className="overflow-x-auto">
               <SecretGenerator {...{ secret }} />
@@ -390,7 +390,7 @@ export default function AdminAppConfigurationClient({
           >
             Store admin email/password
             {' '}
-            in environment variables:
+            in environment variables
             {renderEnvVars([
               'ADMIN_EMAIL',
               'ADMIN_PASSWORD',
@@ -405,8 +405,7 @@ export default function AdminAppConfigurationClient({
             optional
           >
             {renderContent(locale)}
-            Store in environment variable
-            (check README for
+            Check README for
             {' '}
             <AdminLink
             // eslint-disable-next-line max-len
@@ -414,7 +413,6 @@ export default function AdminAppConfigurationClient({
             >
               supported languages
             </AdminLink>
-            ):
             {renderEnvVars(['NEXT_PUBLIC_LOCALE'])}
           </ChecklistRow>
           <ChecklistRow
@@ -422,8 +420,7 @@ export default function AdminAppConfigurationClient({
             status={hasDomain}
           >
             {renderContent(domain)}
-            Store in environment variable
-            (used in explicit share urls, seen in nav if no title is defined):
+            Used in explicit share urls (seen in nav if no title is defined)
             {renderEnvVars(['NEXT_PUBLIC_DOMAIN'])}
           </ChecklistRow>
           <ChecklistRow
@@ -432,8 +429,7 @@ export default function AdminAppConfigurationClient({
             showWarning
           >
             {renderContent(metaTitle)}
-            Store in environment variable
-            (seen in search results and browser tab):
+            Seen in search results and browser tab
             {renderEnvVars(['NEXT_PUBLIC_META_TITLE'])}
           </ChecklistRow>
           {!simplifiedView && <>
@@ -443,8 +439,7 @@ export default function AdminAppConfigurationClient({
               optional
             >
               {renderContent(metaDescription)}
-              Store in environment variable
-              (seen in search results):
+              Seen in search results
               {renderEnvVars(['NEXT_PUBLIC_META_DESCRIPTION'])}
             </ChecklistRow>
             <ChecklistRow
@@ -453,7 +448,7 @@ export default function AdminAppConfigurationClient({
               optional
             >
               {renderContent(navTitle)}
-              Store in environment variable (replaces domain in top-right nav):
+              Replaces domain in top-right nav
               {renderEnvVars(['NEXT_PUBLIC_NAV_TITLE'])}
             </ChecklistRow>
             <ChecklistRow
@@ -462,18 +457,17 @@ export default function AdminAppConfigurationClient({
               optional
             >
               {hasNavCaption && renderContent(navCaption)}
-              Store in environment variable
-              (seen in top-right nav, under title):
+              Seen in top-right nav, under title
               {renderEnvVars(['NEXT_PUBLIC_NAV_CAPTION'])}
             </ChecklistRow>
             <ChecklistRow
-              title="Page about"
-              status={hasPageAbout}
+              title="Sidebar text"
+              status={hasSidebarText}
               optional
             >
-              {hasPageAbout && renderContent(pageAbout)}
-              Store in environment variable (seen in sidebar):
-              {renderEnvVars(['NEXT_PUBLIC_PAGE_ABOUT'])}
+              {hasSidebarText && renderContent(sidebarText)}
+              Seen in sidebar on desktop grid view
+              {renderEnvVars(['NEXT_PUBLIC_SIDEBAR_TEXT'])}
             </ChecklistRow>
           </>}
         </>;
@@ -510,7 +504,7 @@ export default function AdminAppConfigurationClient({
             text descriptions, including an invisible field called
             {' '}
             {'"Semantic Description"'}, which supports CMD-K search
-            and image accessibility:
+            and image accessibility
             {renderEnvVars(['OPENAI_SECRET_KEY'])}
           </ChecklistRow>
           <ChecklistRow
@@ -525,7 +519,7 @@ export default function AdminAppConfigurationClient({
               connection: { provider: 'Google Places', error: locationError},
             })}
             Store Google Places API key in order to add location meta
-            to entities like albums:
+            to entities like albums
             {renderEnvVars(['GOOGLE_PLACES_API_KEY'])}
           </ChecklistRow>
         </>;
@@ -554,7 +548,7 @@ export default function AdminAppConfigurationClient({
             {' '}
             (default: {renderCommaSeparatedList(
               AI_AUTO_GENERATED_FIELDS_DEFAULT,
-            )}):
+            )})
             {renderEnvVars(['AI_TEXT_AUTO_GENERATED_FIELDS'])}
           </ChecklistRow>
           <ChecklistRow
@@ -565,7 +559,7 @@ export default function AdminAppConfigurationClient({
             Store model in environment variable to use
             alternate OpenAI model
             {' '}
-            {'(set to \'compatible\' to use gpt-4o):'}
+            {'(set to \'compatible\' to use gpt-4o)'}
             {renderEnvVars(['OPENAI_MODEL'])}
           </ChecklistRow>
           <ChecklistRow
@@ -574,7 +568,7 @@ export default function AdminAppConfigurationClient({
             optional
           >
             Store base URL in environment variable to use
-            alternate OpenAI-compatible providers:
+            alternate OpenAI-compatible providers
             {renderEnvVars(['OPENAI_BASE_URL'])}
           </ChecklistRow>
         </>;
@@ -587,7 +581,7 @@ export default function AdminAppConfigurationClient({
           >
             Set environment variable to {'"1"'} to make site more responsive
             by enabling static optimization
-            (i.e., rendering pages and images at build time):
+            (i.e., rendering pages and images at build time)
             <div>
               {renderSubStatusWithEnvVar(
                 arePhotosStaticallyOptimized ? 'checked' : 'optional',
@@ -614,7 +608,7 @@ export default function AdminAppConfigurationClient({
             optional
           >
             Set environment variable to {'"1"'} to prevent
-            image uploads being compressed before storing:
+            image uploads being compressed before storing
             {renderEnvVars(['NEXT_PUBLIC_PRESERVE_ORIGINAL_UPLOADS'])}
           </ChecklistRow>
           <ChecklistRow
@@ -625,7 +619,7 @@ export default function AdminAppConfigurationClient({
             Set environment variable from {'"1-100"'}
             {' '}
             to control the quality of large photos
-            ({'"100"'} represents highest quality/largest size):
+            ({'"100"'} represents highest quality/largest size)
             {renderEnvVars(['NEXT_PUBLIC_IMAGE_QUALITY'])}
           </ChecklistRow>
           <ChecklistRow
@@ -634,7 +628,7 @@ export default function AdminAppConfigurationClient({
             optional
           >
             Set environment variable to {'"1"'} to prevent
-            image blur data being stored and displayed:
+            image blur data being stored and displayed
             {renderEnvVars(['NEXT_PUBLIC_BLUR_DISABLED'])}
           </ChecklistRow> 
         </>;
@@ -650,7 +644,7 @@ export default function AdminAppConfigurationClient({
               Configure order and visibility of categories
               (seen in grid sidebar and CMD-K results)
               by storing comma-separated values
-              (default: {renderCommaSeparatedList(DEFAULT_CATEGORY_KEYS)}):
+              (default: {renderCommaSeparatedList(DEFAULT_CATEGORY_KEYS)})
             </div>
             {renderEnvVars(['NEXT_PUBLIC_CATEGORY_VISIBILITY'])}
           </ChecklistRow>
@@ -662,7 +656,7 @@ export default function AdminAppConfigurationClient({
             <div className="flex flex-col gap-2">
               <div>
                 Set environment variable to {'"1"'} to prevent categories
-                displaying on mobile grid view:
+                displaying on mobile grid view
                 {renderEnvVars(['NEXT_PUBLIC_HIDE_CATEGORIES_ON_MOBILE'])}
               </div>
             </div>
@@ -675,7 +669,7 @@ export default function AdminAppConfigurationClient({
             <div className="flex flex-col gap-2">
               <div>
                 Set environment variable to {'"1"'} to prevent images
-                displaying when hovering over category links:
+                displaying when hovering over category links
                 {renderEnvVars(['NEXT_PUBLIC_HIDE_CATEGORY_IMAGE_HOVERS'])}
               </div>
             </div>
@@ -727,7 +721,7 @@ export default function AdminAppConfigurationClient({
             optional
           >
             Set environment variable to {'"none"'}, {'"toggle"'} (default),
-            or {'"menu"'}, to control sort UI on grid/full homepages:
+            or {'"menu"'}, to control sort UI on grid/full homepages
             {renderEnvVars(['NEXT_PUBLIC_NAV_SORT_CONTROL'])}
           </ChecklistRow>
           <ChecklistRow
@@ -739,7 +733,7 @@ export default function AdminAppConfigurationClient({
             Set environment variable to {'"1"'} to enable color-based sorting
             (forces nav sort control to {'"menu,"'} flags photos missing
             color data in admin dashboard)—color identification
-            benefits greatly from AI being enabled:
+            benefits greatly from AI being enabled
             {renderEnvVars([
               'NEXT_PUBLIC_COLOR_SORT',
             ])}
@@ -753,7 +747,7 @@ export default function AdminAppConfigurationClient({
             Configure which colors start first
             (accepts a hue of 0 to 360, default: 80)
             and which are considered sufficiently vibrant
-            (accepts a chroma of 0 to 0.37, default: 0.05):
+            (accepts a chroma of 0 to 0.37, default: 0.05)
             <div>
               <EnvVar
                 variable="NEXT_PUBLIC_COLOR_SORT_STARTING_HUE"
@@ -777,7 +771,7 @@ export default function AdminAppConfigurationClient({
           >
             Set environment variable to {'"1"'} to take priority field
             into account when sorting photos (enabling may have
-            performance consequences):
+            performance consequences)
             {renderEnvVars(['NEXT_PUBLIC_PRIORITY_BASED_SORTING'])}
           </ChecklistRow>
         </>;
@@ -789,7 +783,7 @@ export default function AdminAppConfigurationClient({
             optional
           >
             Set environment variable to {'"1"'} to hide keyboard shortcut
-            tooltips in areas like the main nav, and previous/next photo links:
+            tooltips in areas like the main nav, and previous/next photo links
             {renderEnvVars(['NEXT_PUBLIC_HIDE_KEYBOARD_SHORTCUT_TOOLTIPS'])}
           </ChecklistRow>
           <ChecklistRow
@@ -797,7 +791,7 @@ export default function AdminAppConfigurationClient({
             status={showExifInfo}
             optional
           >
-            Set environment variable to {'"1"'} to hide EXIF data:
+            Set environment variable to {'"1"'} to hide EXIF data
             {renderEnvVars(['NEXT_PUBLIC_HIDE_EXIF_DATA'])}
           </ChecklistRow>
           <ChecklistRow
@@ -806,7 +800,7 @@ export default function AdminAppConfigurationClient({
             optional
           >
             Set environment variable to {'"1"'} to hide
-            fullscreen photo zoom controls:
+            fullscreen photo zoom controls
             {renderEnvVars(['NEXT_PUBLIC_HIDE_ZOOM_CONTROLS'])}
           </ChecklistRow>
           <ChecklistRow
@@ -815,7 +809,7 @@ export default function AdminAppConfigurationClient({
             optional
           >
             Set environment variable to {'"1"'} to hide
-            taken at time from photo meta:
+            taken at time from photo meta
             {renderEnvVars(['NEXT_PUBLIC_HIDE_TAKEN_AT_TIME'])}
           </ChecklistRow>
           <ChecklistRow
@@ -823,7 +817,7 @@ export default function AdminAppConfigurationClient({
             status={showRepoLink}
             optional
           >
-            Set environment variable to {'"1"'} to hide footer link:
+            Set environment variable to {'"1"'} to hide footer link
             {renderEnvVars(['NEXT_PUBLIC_HIDE_REPO_LINK'])}
           </ChecklistRow>
         </>;
@@ -835,7 +829,7 @@ export default function AdminAppConfigurationClient({
             optional
           >
             Set environment variable to {'"1"'} to show grid layout
-            on homepage:
+            on homepage
             {renderEnvVars(['NEXT_PUBLIC_GRID_HOMEPAGE'])}
           </ChecklistRow>
           <ChecklistRow
@@ -845,7 +839,7 @@ export default function AdminAppConfigurationClient({
           >
             Set environment variable to any number to enforce aspect ratio
             {' '}
-            (default is {'"1"'}, i.e., square)—set to {'"0"'} to disable:
+            (default is {'"1"'}, i.e., square)—set to {'"0"'} to disable
             {renderEnvVars(['NEXT_PUBLIC_GRID_ASPECT_RATIO'])}
           </ChecklistRow>
           <ChecklistRow
@@ -855,7 +849,7 @@ export default function AdminAppConfigurationClient({
           >
             Set environment variable to {'"1"'} to ensure large thumbnails
             on photo grid views (if not configured, density is based on
-            aspect ratio):
+            aspect ratio)
             {renderEnvVars(['NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS'])}
           </ChecklistRow> 
         </>;
@@ -870,7 +864,7 @@ export default function AdminAppConfigurationClient({
             {' '}
             to configure initial theme
             {' '}
-            (defaults to {'\'system\''}):
+            (defaults to {'\'system\''})
             {renderEnvVars(['NEXT_PUBLIC_DEFAULT_THEME'])}
           </ChecklistRow>
           <ChecklistRow
@@ -880,7 +874,7 @@ export default function AdminAppConfigurationClient({
           >
             Set environment variable to {'"1"'} to constrain the size
             {' '}
-            of each photo, and display a surrounding border:
+            of each photo, and display a surrounding border
             <div className="pt-1 flex flex-col gap-1">
               <EnvVar variable="NEXT_PUBLIC_MATTE_PHOTOS" />
             </div>
@@ -891,7 +885,7 @@ export default function AdminAppConfigurationClient({
             optional
           >
             Set environment variable hex values (e.g., #cccccc)
-            to override matte colors:
+            to override matte colors
             <div className="pt-1 flex flex-col gap-1">
               <EnvVar
                 variable="NEXT_PUBLIC_MATTE_COLOR"
@@ -912,7 +906,7 @@ export default function AdminAppConfigurationClient({
             optional
           >
             Set environment variable to {'"1"'} to disable
-            collection/display of location-based data:
+            collection/display of location-based data
             {renderEnvVars(['NEXT_PUBLIC_GEO_PRIVACY'])}
           </ChecklistRow>
           <ChecklistRow
@@ -921,7 +915,7 @@ export default function AdminAppConfigurationClient({
             optional
           >
             Set environment variable to {'"1"'} to enable
-            public photo downloads for all visitors:
+            public photo downloads for all visitors
             {renderEnvVars(['NEXT_PUBLIC_ALLOW_PUBLIC_DOWNLOADS'])}
           </ChecklistRow>
           <ChecklistRow
@@ -945,7 +939,7 @@ export default function AdminAppConfigurationClient({
           >
             Set environment variable to {'"1"'} to enable feeds at
             {' '}
-            {renderLink(PATH_FEED_JSON)} and {renderLink(PATH_RSS_XML)}:
+            {renderLink(PATH_FEED_JSON)} and {renderLink(PATH_RSS_XML)}
             {renderEnvVars(['NEXT_PUBLIC_SITE_FEEDS'])}
           </ChecklistRow>
           <ChecklistRow
@@ -954,7 +948,7 @@ export default function AdminAppConfigurationClient({
             optional
           >
             Set environment variable to {'"BOTTOM"'} to
-            keep OG image text bottom aligned (default is {'"top"'}):
+            keep OG image text bottom aligned (default is {'"top"'})
             {renderEnvVars(['NEXT_PUBLIC_OG_TEXT_ALIGNMENT'])}
           </ChecklistRow>
         </>;
@@ -983,7 +977,7 @@ export default function AdminAppConfigurationClient({
                   </MaskedScroll>)}
               </div>}
             Set environment variable to comma-separated list of URLs
-            to be added to the bottom of the body tag via {'"next/script"'}:
+            to be added to the bottom of the body tag via {'"next/script"'}
             {renderEnvVars(['PAGE_SCRIPT_URLS'])}
           </ChecklistRow>
         </>;
@@ -995,7 +989,7 @@ export default function AdminAppConfigurationClient({
             optional
           >
             Set environment variable to {'"1"'} to disable build identifier
-            and admin configuration export:
+            and admin configuration export
             {renderEnvVars(['DISABLE_DEBUG_OUTPUTS'])}
           </ChecklistRow>
         </>;
@@ -1007,7 +1001,7 @@ export default function AdminAppConfigurationClient({
             optional
           >
             Set environment variable to {'"1"'} to temporarily enable
-            features like photo matting, baseline grid, etc.:
+            features like photo matting, baseline grid, etc.
             {renderEnvVars(['ADMIN_DEBUG_TOOLS'])}
           </ChecklistRow>
           <ChecklistRow
@@ -1016,7 +1010,7 @@ export default function AdminAppConfigurationClient({
             optional
           >
             Set environment variable to {'"1"'} to enable
-            console output for all sql queries:
+            console output for all sql queries
             {renderEnvVars(['ADMIN_SQL_DEBUG'])}
           </ChecklistRow>
           <ChecklistRow
@@ -1025,7 +1019,7 @@ export default function AdminAppConfigurationClient({
             optional
           >
             Set environment variable to {'"1"'} to enable
-            storage debugging:
+            storage debugging
             {renderEnvVars(['ADMIN_STORAGE_DEBUG'])}
           </ChecklistRow>
         </>;

@@ -146,9 +146,10 @@ export const NAV_TITLE =
   SITE_DOMAIN_SHORT ||
   META_TITLE;
 
-export const PAGE_ABOUT =
+export const SIDEBAR_TEXT =
+  process.env.NEXT_PUBLIC_SIDEBAR_TEXT ||
+  // Legacy environment variables
   process.env.NEXT_PUBLIC_PAGE_ABOUT ||
-  // Legacy environment variable
   process.env.NEXT_PUBLIC_SITE_ABOUT;
 
 // STORAGE
@@ -443,8 +444,8 @@ export const APP_CONFIGURATION = {
   hasNavTitle: Boolean(CUSTOM_NAV_TITLE),
   navCaption: NAV_CAPTION,
   hasNavCaption: Boolean(NAV_CAPTION),
-  pageAbout: PAGE_ABOUT,
-  hasPageAbout: Boolean(process.env.NEXT_PUBLIC_SITE_ABOUT),
+  sidebarText: SIDEBAR_TEXT,
+  hasSidebarText: Boolean(SIDEBAR_TEXT),
   // Performance
   isStaticallyOptimized: HAS_STATIC_OPTIMIZATION,
   arePhotosStaticallyOptimized: STATICALLY_OPTIMIZED_PHOTOS,
@@ -553,7 +554,10 @@ const ALL_DEPRECATED_ENV_VARS = [{
   replacement: 'NEXT_PUBLIC_META_TITLE',
 }, {
   old: 'NEXT_PUBLIC_SITE_ABOUT',
-  replacement: 'NEXT_PUBLIC_PAGE_ABOUT',
+  replacement: 'NEXT_PUBLIC_SIDEBAR_TEXT',
+}, {
+  old: 'NEXT_PUBLIC_PAGE_ABOUT',
+  replacement: 'NEXT_PUBLIC_SIDEBAR_TEXT',
 }, {
   old: 'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES',
   replacement: 'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS',

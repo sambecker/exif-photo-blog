@@ -4,16 +4,16 @@ import {
   htmlHasBrParagraphBreaks,
   safelyParseFormattedHtml,
 } from '@/utility/html';
-import { PAGE_ABOUT } from '@/app/config';
+import { SIDEBAR_TEXT } from '@/app/config';
 
 export default function PhotoGridPage(
   props: ComponentProps<typeof PhotoGridPageClient>,
 ) {
-  const aboutTextSafelyParsedHtml = PAGE_ABOUT
-    ? safelyParseFormattedHtml(PAGE_ABOUT)
+  const aboutTextSafelyParsedHtml = SIDEBAR_TEXT
+    ? safelyParseFormattedHtml(SIDEBAR_TEXT)
     : undefined;
-  const aboutTextHasBrParagraphBreaks = PAGE_ABOUT
-    ? htmlHasBrParagraphBreaks(PAGE_ABOUT)
+  const aboutTextHasBrParagraphBreaks = SIDEBAR_TEXT
+    ? htmlHasBrParagraphBreaks(SIDEBAR_TEXT)
     : false;
 
   return <PhotoGridPageClient {...{
