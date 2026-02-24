@@ -152,9 +152,9 @@ export default function SharedHoverProvider({
                   {/* Border */}
                   <div className={clsx(
                     'absolute inset-0',
-                    'rounded-[0.25rem]',
+                    'border rounded-[0.25rem]',
                     hoverProps.color === 'frosted'
-                      ? 'border border-gray-400/25'
+                      ? 'border-gray-400/25'
                       : 'border-medium',
                   )} />
                 </div>

@@ -69,7 +69,7 @@ export default function HeaderList({
               className={clsx(
                 'mt-0.5',
                 'text-xs font-medium tracking-wider',
-                'border-medium rounded-md',
+                'border border-medium rounded-md',
                 'px-[5px] h-5!',
                 'hover:bg-dim hover:text-main active:bg-main',
                 'group',
