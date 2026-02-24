@@ -13,7 +13,7 @@ export default function Switcher({
   return (
     <div className={clsx(
       'flex divide-x overflow-hidden',
-      'rounded-[7px]',
+      'rounded-lg',
       'divide-medium',
       type === 'regular' &&
         'outline-medium shadow-[0_2px_4px_rgba(0,0,0,0.07)]',
