@@ -27,7 +27,7 @@ export default async function AboutPage() {
   return (
     <AboutPageClient
       photoAvatar={favs[5]}
-      photoHero={favs[2]}
+      photoHero={favs[3]}
       categories={categories}
       lastUpdated={lastModifiedSite}
     />

@@ -13,7 +13,6 @@ import IconFilm from '@/components/icons/IconFilm';
 import IconLens from '@/components/icons/IconLens';
 import IconRecipe from '@/components/icons/IconRecipe';
 import IconTag from '@/components/icons/IconTag';
-import ImageLarge from '@/components/image/ImageLarge';
 import ImageMedium from '@/components/image/ImageMedium';
 import PhotoFilm from '@/film/PhotoFilm';
 import { useAppText } from '@/i18n/state/client';
@@ -24,6 +23,7 @@ import PhotoTag from '@/tag/PhotoTag';
 import clsx from 'clsx/lite';
 import { formatDistanceToNowStrict } from 'date-fns';
 import AdminAboutMenu from './AdminAboutMenu';
+import PhotoLarge from '@/photo/PhotoLarge';
 
 export default function AboutPageClient({
   photoAvatar,
@@ -161,67 +161,66 @@ export default function AboutPageClient({
   return (
     <AnimateItems
       type="bottom"
-      items={[<AppGrid
+      items={[<div
         key="about-page"
-        contentMain={<div className={clsx(
-          'space-y-8 mt-5',
-        )}>
-          <div className="flex items-center gap-4">
-            {photoAvatar && <ImageMedium
-              className="size-10 rounded-full overflow-auto"
-              src={photoAvatar.url}
-              alt={altTextForPhoto(photoAvatar)}
-              blurDataURL={photoAvatar.blurData}
-              aspectRatio={photoAvatar.aspectRatio}
-            />}
-            <div className={clsx('sm:flex items-center justify-between grow')}>
-              <div>
-                <div className="font-bold">
-                  About this site
-                </div>
-                <div>
-                  A brief subhead here
-                </div>
-              </div>
-              {lastUpdated && <div className={clsx('text-dim')}>
-                Updated
-                {' '}
-                {formatDistanceToNowStrict(lastUpdated, { addSuffix: true })}
-              </div>}
-            </div>
-            {isUserSignedIn && <AdminAboutMenu />}
-          </div>
-          <div className={clsx('text-medium')}>
-            {/* eslint-disable-next-line max-len */}
-            A digital gallery dedicated to the beauty of the mundane. This blog explores the intersection of light, shadow, and silence. No filters, no noise—just the world as it sits when we stop to look.
-          </div>
-          {photoHero && <ImageLarge
-            src={photoHero.url}
-            alt={altTextForPhoto(photoHero)}
-            blurDataURL={photoHero.blurData}
-            aspectRatio={photoHero.aspectRatio}
-          />}
-          <div className={clsx(
-            'grid gap-4',
-            'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 ',
-          )}>
-            {[
-              albumsContent,
-              tagsContent,
-              recipeContent,
-              camerasContent,
-              lensesContent,
-              filmsContent,
-            ].map((item, index) => (
+        className="space-y-8 mt-5"
+      >
+        <AppGrid
+          contentMain={<div className="space-y-8">
+            <div className="flex items-center gap-4">
+              {photoAvatar && <ImageMedium
+                className="size-10 rounded-full overflow-auto"
+                src={photoAvatar.url}
+                alt={altTextForPhoto(photoAvatar)}
+                blurDataURL={photoAvatar.blurData}
+                aspectRatio={photoAvatar.aspectRatio}
+              />}
               <div
-                key={index}
-                className="pt-1 border-t border-gray-200 dark:border-gray-700"
+                className={clsx('sm:flex items-center justify-between grow')}
               >
-                {item}
+                <div>
+                  <div className="font-bold">
+                    About this site
+                  </div>
+                  <div>
+                    A brief subhead here
+                  </div>
+                </div>
+                {lastUpdated && <div className={clsx('text-dim')}>
+                  Updated
+                  {' '}
+                  {formatDistanceToNowStrict(lastUpdated, { addSuffix: true })}
+                </div>}
               </div>
-            ))}
-          </div>
-        </div>} />]}
+              {isUserSignedIn && <AdminAboutMenu />}
+            </div>
+            <div className={clsx('text-medium')}>
+              {/* eslint-disable-next-line max-len */}
+              A digital gallery dedicated to the beauty of the mundane. This blog explores the intersection of light, shadow, and silence. No filters, no noise—just the world as it sits when we stop to look.
+            </div>
+          </div>} />
+        {photoHero && <PhotoLarge photo={photoHero} />}
+        <AppGrid contentMain={(<div className={clsx(
+          'grid gap-1',
+          'grid-cols-2 lg:grid-cols-4 ',
+        )}>
+          {[
+            albumsContent,
+            tagsContent,
+            recipeContent,
+            camerasContent,
+            lensesContent,
+            filmsContent,
+          ].map((item, index) => (
+            <div
+              key={index}
+              className="pt-1 border-t border-gray-200 dark:border-gray-700"
+            >
+              {item}
+            </div>
+          ))}
+        </div>)} />
+      </div>]}
     />
   );
 }
