@@ -24,10 +24,12 @@ export default async function AboutPage() {
     photos,
   );
 
-  return <AboutPageClient
-    photoAvatar={favs[5]}
-    photoHero={favs[2]}
-    categories={categories}
-    lastUpdated={lastModifiedSite}
-  />;
+  return (
+    <AboutPageClient
+      photoAvatar={favs[5]}
+      photoHero={favs[2]}
+      categories={categories}
+      lastUpdated={lastModifiedSite}
+    />
+  );
 }

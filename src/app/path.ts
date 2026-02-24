@@ -25,6 +25,10 @@ export const PATH_FULL_INFERRED = GRID_HOMEPAGE_ENABLED
   ? PATH_FULL
   : PATH_ROOT;
 
+// Modifiers
+const EDIT = 'edit';
+const IMAGE = 'image';
+
 // Sort
 export const PARAM_SORT_TYPE_TAKEN_AT     = 'taken-at';
 export const PARAM_SORT_TYPE_UPLOADED_AT  = 'uploaded-at';
@@ -74,6 +78,7 @@ export const PATH_ADMIN_TAGS            = `${PATH_ADMIN}/tags`;
 export const PATH_ADMIN_RECIPES         = `${PATH_ADMIN}/recipes`;
 export const PATH_ADMIN_CONFIGURATION   = `${PATH_ADMIN}/configuration`;
 export const PATH_ADMIN_INSIGHTS        = `${PATH_ADMIN}/insights`;
+export const PATH_ADMIN_ABOUT_EDIT      = `${PATH_ABOUT}/${EDIT}`;
 export const PATH_ADMIN_BASELINE        = `${PATH_ADMIN}/baseline`;
 export const PATH_ADMIN_COMPONENTS      = `${PATH_ADMIN}/components`;
 
@@ -85,10 +90,6 @@ export const PATH_OG_SAMPLE             = `${PATH_OG}/sample`;
 export const PATH_API_STORAGE = `${PATH_API}/storage`;
 export const PATH_API_VERCEL_BLOB_UPLOAD = `${PATH_API_STORAGE}/vercel-blob`;
 export const PATH_API_PRESIGNED_URL = `${PATH_API_STORAGE}/presigned-url`;
-
-// Modifiers
-const EDIT = 'edit';
-const IMAGE = 'image';
 
 // Parameters
 export const PARAM_UPLOAD_TITLE = 'title';
@@ -108,6 +109,7 @@ export const PATHS_ADMIN = [
   PATH_ADMIN_RECIPES,
   PATH_ADMIN_INSIGHTS,
   PATH_ADMIN_CONFIGURATION,
+  PATH_ADMIN_ABOUT_EDIT,
   PATH_ADMIN_BASELINE,
   PATH_ADMIN_COMPONENTS,
 ];
@@ -465,6 +467,7 @@ export const isPathAdminInfo = (pathname?: string) =>
 export const isPathProtected = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ADMIN) ||
   checkPathPrefix(pathname, pathForTag(TAG_PRIVATE)) ||
+  checkPathPrefix(pathname, PATH_ADMIN_ABOUT_EDIT) ||
   checkPathPrefix(pathname, PATH_OG);
 
 export const getPathComponents = (

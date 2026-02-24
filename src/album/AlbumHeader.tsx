@@ -33,6 +33,7 @@ export default async function AlbumHeader({
   showAlbumMeta?: boolean
 }) {
   const appText = await getAppText();
+
   return (
     <PhotoHeader
       album={album}
