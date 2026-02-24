@@ -5,8 +5,11 @@ export const createAboutTable = () =>
   sql`
     CREATE TABLE IF NOT EXISTS about (
       id SERIAL PRIMARY KEY,
-      title TEXT NOT NULL,
-      description TEXT NOT NULL,
+      photo_id_avatar VARCHAR(8),
+      photo_id_hero VARCHAR(8),
+      title TEXT,
+      subhead TEXT,
+      description TEXT,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     )

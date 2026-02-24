@@ -1,7 +1,10 @@
 export interface About {
   id: number
-  title: string
-  description: string
+  photoIdAvatar?: string
+  photoIdHero?: string
+  title?: string
+  subhead?: string
+  description?: string
   createdAt: Date
   updatedAt: Date
 }
