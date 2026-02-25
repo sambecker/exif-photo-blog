@@ -184,7 +184,8 @@ export default function AboutPageClient({
               items={items}
             />
           </div>} />
-        {photoHero && <PhotoLarge photo={photoHero} />}
+        {photoHero &&
+          <PhotoLarge photo={photoHero} />}
       </div>]}
     />
   );
