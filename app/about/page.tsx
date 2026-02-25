@@ -30,6 +30,7 @@ export default async function AboutPage() {
     films,
   } = categories;
 
+  // TODO: take About data into account
   const lastModifiedSite = getLastModifiedForCategories(
     categories,
     photos,
@@ -37,6 +38,10 @@ export default async function AboutPage() {
 
   return (
     <AboutPageClient
+      title="About this site"
+      subhead="A brief subhead here"
+      // eslint-disable-next-line max-len
+      description="A digital gallery dedicated to the beauty of the mundane. This blog explores the intersection of light, shadow, and silence. No filters, no noise—just the world as it sits when we stop to look."
       photosCount={photosMeta?.count}
       photosOldest={photosMeta?.dateRange?.start}
       photoAvatar={favs[5]}

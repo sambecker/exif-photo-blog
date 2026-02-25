@@ -21,6 +21,9 @@ import { Lens } from '@/lens';
 import { Album } from '@/album';
 
 export default function AboutPageClient({
+  title,
+  subhead,
+  description,
   photosCount = 0,
   photosOldest,
   photoAvatar,
@@ -33,6 +36,9 @@ export default function AboutPageClient({
   tag,
   lastUpdated,
 }: {
+  title?: string
+  subhead?: string
+  description?: ReactNode
   photosCount?: number
   photosOldest?: string
   photoAvatar?: Photo
@@ -154,11 +160,11 @@ export default function AboutPageClient({
               >
                 <div>
                   <div className="font-bold">
-                    About this site
+                    {title || 'About this site'}
                   </div>
-                  <div>
-                    A brief subhead here
-                  </div>
+                  {subhead && <div>
+                    {subhead}
+                  </div>}
                 </div>
                 {lastUpdated && <div className={clsx('text-dim')}>
                   Updated
@@ -168,12 +174,9 @@ export default function AboutPageClient({
               </div>
               {isUserSignedIn && <AdminAboutMenu />}
             </div>
-            <div className={clsx('text-medium')}>
-              A digital gallery dedicated to the beauty of the mundane.
-              This blog explores the intersection of light, shadow, and silence.
-              No filters, no noise—just the world as it sits
-              when we stop to look.
-            </div>
+            {description && <div className={clsx('text-medium')}>
+              {description}
+            </div>}
             <AnimateItems
               className={clsx(
                 'grid gap-x-2 gap-y-4 grid-cols-2 lg:grid-cols-4',
