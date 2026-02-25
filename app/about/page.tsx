@@ -4,16 +4,18 @@ import {
   getLastModifiedForCategories,
   NULL_CATEGORY_DATA,
 } from '@/category/data';
-import { getPhotosCached } from '@/photo/cache';
+import { getPhotosCached, getPhotosMetaCached } from '@/photo/cache';
 import { getAllPhotoIdsWithUpdatedAt } from '@/photo/query';
 import { TAG_FAVS } from '@/tag';
 
 export default async function AboutPage() {
   const [
+    photosMeta,
     favs,
     photos,
     categories,
   ] = await Promise.all([
+    getPhotosMetaCached().catch(() => {}),
     getPhotosCached({ tag: TAG_FAVS, limit: 12 }).catch(() => []),
     getAllPhotoIdsWithUpdatedAt().catch(() => []),
     getDataForCategoriesCached().catch(() => (NULL_CATEGORY_DATA)),
@@ -35,6 +37,8 @@ export default async function AboutPage() {
 
   return (
     <AboutPageClient
+      photosCount={photosMeta?.count}
+      photosOldest={photosMeta?.dateRange?.start}
       photoAvatar={favs[5]}
       photoHero={favs[3]}
       camera={cameras[0]?.camera}

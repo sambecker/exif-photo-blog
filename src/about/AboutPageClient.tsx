@@ -15,12 +15,14 @@ import clsx from 'clsx/lite';
 import { formatDistanceToNowStrict } from 'date-fns';
 import AdminAboutMenu from './AdminAboutMenu';
 import PhotoLarge from '@/photo/PhotoLarge';
-import { ReactNode } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { Camera } from '@/camera';
 import { Lens } from '@/lens';
 import { Album } from '@/album';
 
 export default function AboutPageClient({
+  photosCount = 0,
+  photosOldest,
   photoAvatar,
   photoHero,
   camera,
@@ -31,6 +33,8 @@ export default function AboutPageClient({
   tag,
   lastUpdated,
 }: {
+  photosCount?: number
+  photosOldest?: string
   photoAvatar?: Photo
   photoHero?: Photo
   camera?: Camera
@@ -46,13 +50,87 @@ export default function AboutPageClient({
   } = useAppState();
 
   const renderItem = (label: string, content?: ReactNode) => (
-    <div className="border-t border-medium pt-1 space-y-0.5">
+    <div
+      key={label}
+      className="border-t border-medium pt-1 space-y-0.5"
+    >
       <div className="text-xs uppercase tracking-wide text-dim">
         {label}
       </div>
-      {content ?? '--'}
+      <div>
+        {content || '--'}
+      </div>
     </div>
   );
+
+  const items = useMemo(() => [
+    renderItem(
+      'Photo Count',
+      photosCount.toString().padStart(4, '0'),
+    ),
+    renderItem(
+      'First Photo',
+      photosOldest?.slice(0, 10),
+    ),
+    camera && renderItem(
+      'Top Camera',
+      <PhotoCamera
+        camera={camera}
+        type="text-only"
+        contrast="high"
+      />,
+    ),
+    lens && renderItem(
+      'Top Lens',
+      <PhotoLens
+        lens={lens}
+        type="text-only"
+        contrast="high"
+      />,
+    ),
+    recipe && renderItem(
+      'Top Recipe',
+      <PhotoRecipe
+        recipe={recipe}
+        type="text-only"
+        contrast="high"
+      />,
+    ),
+    film && renderItem(
+      'Top Film',
+      <PhotoFilm
+        film={film}
+        type="text-only"
+        contrast="high"
+        badged={false}
+      />,
+    ),
+    album && renderItem(
+      'Recent Album',
+      <PhotoAlbum
+        album={album}
+        type="text-only"
+        contrast="high"
+      />,
+    ),
+    tag && renderItem(
+      'Top Tag',
+      <PhotoTag
+        tag={tag}
+        type="text-only"
+        contrast="high"
+      />,
+    ),
+  ].filter(Boolean), [
+    photosCount,
+    photosOldest,
+    camera,
+    lens,
+    recipe,
+    film,
+    album,
+    tag,
+  ]);
 
   return (
     <AnimateItems
@@ -96,71 +174,12 @@ export default function AboutPageClient({
               No filters, no noise—just the world as it sits
               when we stop to look.
             </div>
-            <div className={clsx(
-              'grid gap-x-2 gap-y-4 grid-cols-2 lg:grid-cols-4',
-            )}>
-              {renderItem(
-                'Photos',
-                <span>
-                  0429
-                </span>,
+            <AnimateItems
+              className={clsx(
+                'grid gap-x-2 gap-y-4 grid-cols-2 lg:grid-cols-4',
               )}
-              {renderItem(
-                'Oldest Photo',
-                <span>
-                  2023-01-01
-                </span>,
-              )}
-              {camera && renderItem(
-                'Top Camera',
-                <PhotoCamera
-                  camera={camera}
-                  type="text-only"
-                  contrast="high"
-                />,
-              )}
-              {lens && renderItem(
-                'Top Lens',
-                <PhotoLens
-                  lens={lens}
-                  type="text-only"
-                  contrast="high"
-                />,
-              )}
-              {recipe && renderItem(
-                'Top Recipe',
-                <PhotoRecipe
-                  recipe={recipe}
-                  type="text-only"
-                  contrast="high"
-                />,
-              )}
-              {film && renderItem(
-                'Top Film',
-                <PhotoFilm
-                  film={film}
-                  type="text-only"
-                  contrast="high"
-                  badged={false}
-                />,
-              )}
-              {album && renderItem(
-                'Recent Album',
-                <PhotoAlbum
-                  album={album}
-                  type="text-only"
-                  contrast="high"
-                />,
-              )}
-              {tag && renderItem(
-                'Top Tag',
-                <PhotoTag
-                  tag={tag}
-                  type="text-only"
-                  contrast="high"
-                />,
-              )}
-            </div>
+              items={items}
+            />
           </div>} />
         {photoHero && <PhotoLarge photo={photoHero} />}
       </div>]}
