@@ -3,7 +3,6 @@
 import PhotoAlbum from '@/album/PhotoAlbum';
 import { useAppState } from '@/app/AppState';
 import PhotoCamera from '@/camera/PhotoCamera';
-import { PhotoSetCategories } from '@/category';
 import AnimateItems from '@/components/AnimateItems';
 import AppGrid from '@/components/AppGrid';
 import ImageMedium from '@/components/image/ImageMedium';
@@ -17,28 +16,41 @@ import { formatDistanceToNowStrict } from 'date-fns';
 import AdminAboutMenu from './AdminAboutMenu';
 import PhotoLarge from '@/photo/PhotoLarge';
 import { ReactNode } from 'react';
+import { Camera } from '@/camera';
+import { Lens } from '@/lens';
+import { Album } from '@/album';
 
 export default function AboutPageClient({
   photoAvatar,
   photoHero,
-  categories: { albums, tags, recipes, cameras, lenses, films },
+  camera,
+  lens,
+  recipe,
+  film,
+  album,
+  tag,
   lastUpdated,
 }: {
   photoAvatar?: Photo
   photoHero?: Photo
-  categories: PhotoSetCategories
+  camera?: Camera
+  lens?: Lens
+  recipe?: string
+  film?: string
+  album?: Album
+  tag?: string
   lastUpdated?: Date
 }) {
   const {
     isUserSignedIn,
   } = useAppState();
 
-  const renderTopRow = (label: string, content: ReactNode) => (
+  const renderItem = (label: string, content?: ReactNode) => (
     <div className="border-t border-medium pt-1 space-y-0.5">
-      <div className="text-xs font-medium uppercase tracking-wider text-medium">
+      <div className="text-xs uppercase tracking-wide text-dim">
         {label}
       </div>
-      {content}
+      {content ?? '--'}
     </div>
   );
 
@@ -47,13 +59,13 @@ export default function AboutPageClient({
       type="bottom"
       items={[<div
         key="about-page"
-        className="space-y-8 mt-5"
+        className="space-y-12 mt-5"
       >
         <AppGrid
           contentMain={<div className="space-y-8">
             <div className="flex items-center gap-4">
               {photoAvatar && <ImageMedium
-                className="size-10 rounded-full overflow-auto"
+                className="size-12 rounded-full overflow-auto"
                 src={photoAvatar.url}
                 alt={altTextForPhoto(photoAvatar)}
                 blurDataURL={photoAvatar.blurData}
@@ -87,42 +99,67 @@ export default function AboutPageClient({
             <div className={clsx(
               'grid gap-x-2 gap-y-4 grid-cols-2 lg:grid-cols-4',
             )}>
-              <div>
-                {renderTopRow(
-                  'Top Camera',
-                  <PhotoCamera camera={cameras[0].camera} />,
-                )}
-              </div>
-              <div>
-                {renderTopRow(
-                  'Top Lens',
-                  <PhotoLens lens={lenses[0].lens} />,
-                )}
-              </div>
-              <div>
-                {renderTopRow(
-                  'Top Recipe',
-                  <PhotoRecipe recipe={recipes[0].recipe} />,
-                )}
-              </div>
-              <div>
-                {renderTopRow(
-                  'Top Film',
-                  <PhotoFilm film={films[0].film} />,
-                )}
-              </div>
-              <div>
-                {renderTopRow(
-                  'Most Recent Album',
-                  <PhotoAlbum album={albums[0].album} />,
-                )}
-              </div>
-              <div>
-                {renderTopRow(
-                  'Top Tag',
-                  <PhotoTag tag={tags[1].tag} />,
-                )}
-              </div>
+              {renderItem(
+                'Photos',
+                <span>
+                  0429
+                </span>,
+              )}
+              {renderItem(
+                'Oldest Photo',
+                <span>
+                  2023-01-01
+                </span>,
+              )}
+              {camera && renderItem(
+                'Top Camera',
+                <PhotoCamera
+                  camera={camera}
+                  type="text-only"
+                  contrast="high"
+                />,
+              )}
+              {lens && renderItem(
+                'Top Lens',
+                <PhotoLens
+                  lens={lens}
+                  type="text-only"
+                  contrast="high"
+                />,
+              )}
+              {recipe && renderItem(
+                'Top Recipe',
+                <PhotoRecipe
+                  recipe={recipe}
+                  type="text-only"
+                  contrast="high"
+                />,
+              )}
+              {film && renderItem(
+                'Top Film',
+                <PhotoFilm
+                  film={film}
+                  type="text-only"
+                  contrast="high"
+                  badged={false}
+                />,
+              )}
+              {album && renderItem(
+                'Recent Album',
+                <PhotoAlbum
+                  album={album}
+                  type="text-only"
+                  contrast="high"
+                />,
+              )}
+              {tag && renderItem(
+                'Top Tag',
+                <PhotoTag
+                  tag={tag}
+                  type="text-only"
+                  contrast="high"
+                />,
+              )}
             </div>
           </div>} />
         {photoHero && <PhotoLarge photo={photoHero} />}

@@ -19,6 +19,15 @@ export default async function AboutPage() {
     getDataForCategoriesCached().catch(() => (NULL_CATEGORY_DATA)),
   ]);
 
+  const {
+    cameras,
+    lenses,
+    albums,
+    tags,
+    recipes,
+    films,
+  } = categories;
+
   const lastModifiedSite = getLastModifiedForCategories(
     categories,
     photos,
@@ -28,7 +37,12 @@ export default async function AboutPage() {
     <AboutPageClient
       photoAvatar={favs[5]}
       photoHero={favs[3]}
-      categories={categories}
+      camera={cameras[0]?.camera}
+      lens={lenses[0]?.lens}
+      recipe={recipes[0]?.recipe}
+      film={films[0]?.film}
+      album={albums[0]?.album}
+      tag={tags.filter(({ tag }) => tag !== TAG_FAVS)[0]?.tag}
       lastUpdated={lastModifiedSite}
     />
   );
