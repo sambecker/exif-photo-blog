@@ -3,26 +3,29 @@
 import { PATH_ABOUT } from '@/app/path';
 import ImageInput from '@/components/ImageInput';
 import LinkWithStatus from '@/components/LinkWithStatus';
-import { Photo } from '@/photo';
 import { getOptimizedPhotoUrl } from '@/photo/storage';
 import clsx from 'clsx/lite';
 import { useRef, useState } from 'react';
-import { AboutInsert } from '.';
+import { About, AboutInsert } from '.';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import AdminChildPage from '@/components/AdminChildPage';
 import { updateAboutAction } from './actions';
+import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
+import { Photo } from '@/photo';
 
 export default function AdminAboutEditPage({
+  about,
   photoAvatar,
   shouldResizeImages,
 }: {
+  about?: About
   photoAvatar?: Photo
   shouldResizeImages?: boolean
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [isUploading, setIsUploading] = useState(false);
-  const [aboutForm, setAboutForm] = useState<Partial<AboutInsert>>({});
+  const [aboutForm, setAboutForm] = useState<Partial<AboutInsert>>(about ?? {});
 
   const avatarUrl = getOptimizedPhotoUrl({
     imageUrl: photoAvatar?.url ?? '',
@@ -37,7 +40,7 @@ export default function AdminAboutEditPage({
       breadcrumb="Edit About Page"
     >
       <form
-        className="min-h-[30rem] space-y-8"
+        className="space-y-8"
         action={updateAboutAction}
       >
         <button
@@ -65,6 +68,13 @@ export default function AdminAboutEditPage({
         />
         <div className="space-y-3">
           <FieldsetWithStatus
+            id="photoIdAvatar"
+            label="Avatar Photo Id"
+            value={aboutForm?.photoIdAvatar ?? ''}
+            onChange={photoIdAvatar => setAboutForm(form =>
+              ({ ...form, photoIdAvatar }))}
+          />
+          <FieldsetWithStatus
             label="Title"
             value={aboutForm?.title ?? ''}
             onChange={title => setAboutForm(form =>
@@ -77,15 +87,15 @@ export default function AdminAboutEditPage({
               ({ ...form, subhead }))}
           />
           <FieldsetWithStatus
-            type="textarea"
             label="Description"
+            type="textarea"
             value={aboutForm?.description ?? ''}
             onChange={description => setAboutForm(form =>
               ({ ...form, description }))}
           />
           <FieldsetWithStatus
+            id="photoIdHero"
             label="Hero Photo Id"
-            note="Chosen from favorites or recents if undefined"
             value={aboutForm?.photoIdHero ?? ''}
             onChange={photoIdHero => setAboutForm(form =>
               ({ ...form, photoIdHero }))}
@@ -98,13 +108,12 @@ export default function AdminAboutEditPage({
           >
             Cancel
           </LinkWithStatus>
-          <LinkWithStatus
-            href={PATH_ABOUT}
-            className="button primary"
-            type="submit"
+          <SubmitButtonWithStatus
+            hideText="never"
+            primary
           >
             Update
-          </LinkWithStatus>
+          </SubmitButtonWithStatus>
         </div>
       </form>
     </AdminChildPage>

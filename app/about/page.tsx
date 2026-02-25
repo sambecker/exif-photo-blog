@@ -5,21 +5,43 @@ import {
   getLastModifiedForCategories,
   NULL_CATEGORY_DATA,
 } from '@/category/data';
-import { getPhotosCached, getPhotosMetaCached } from '@/photo/cache';
+import { getPhotoCached, getPhotosMetaCached } from '@/photo/cache';
 import { getAllPhotoIdsWithUpdatedAt } from '@/photo/query';
 import { TAG_FAVS } from '@/tag';
+import { max } from 'date-fns';
 
 export default async function AboutPage() {
   const [
-    _about,
+    {
+      about,
+      photoAvatar,
+      photoHero,
+    },
     photosMeta,
-    favs,
     photos,
     categories,
   ] = await Promise.all([
-    getAboutCached(),
+    getAboutCached()
+      .then(async about => {
+        const photoAvatar = about?.photoIdAvatar
+          ? await getPhotoCached(about?.photoIdAvatar ?? '', true)
+          : undefined;
+        // Add fallback behavior to grab latest favorite
+        // or oldest photo
+        const photoHero = about?.photoIdHero
+          ? await getPhotoCached(about?.photoIdHero ?? '', true)
+          : undefined;
+        return {
+          about,
+          photoAvatar,
+          photoHero,
+        };
+      }).catch(() => ({
+        about: undefined,
+        photoAvatar: undefined,
+        photoHero: undefined,
+      })),
     getPhotosMetaCached().catch(() => {}),
-    getPhotosCached({ tag: TAG_FAVS, limit: 12 }).catch(() => []),
     getAllPhotoIdsWithUpdatedAt().catch(() => []),
     getDataForCategoriesCached().catch(() => (NULL_CATEGORY_DATA)),
   ]);
@@ -33,22 +55,20 @@ export default async function AboutPage() {
     films,
   } = categories;
 
-  // TODO: take About data into account
-  const lastModifiedSite = getLastModifiedForCategories(
-    categories,
-    photos,
-  );
+  const lastModifiedSite = max([
+    getLastModifiedForCategories(categories, photos),
+    about?.updatedAt,
+  ].filter(date => date instanceof Date));
 
   return (
     <AboutPageClient
-      title="About this site"
-      subhead="A brief subhead here"
-      // eslint-disable-next-line max-len
-      description="A digital gallery dedicated to the beauty of the mundane. This blog explores the intersection of light, shadow, and silence. No filters, no noise—just the world as it sits when we stop to look."
+      title={about?.title}
+      subhead={about?.subhead}
+      description={about?.description}
       photosCount={photosMeta?.count}
       photosOldest={photosMeta?.dateRange?.start}
-      photoAvatar={favs[5]}
-      photoHero={favs[3]}
+      photoAvatar={photoAvatar}
+      photoHero={photoHero}
       camera={cameras[0]?.camera}
       lens={lenses[0]?.lens}
       recipe={recipes[0]?.recipe}

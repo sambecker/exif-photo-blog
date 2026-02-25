@@ -3,6 +3,8 @@ import { About, AboutInsert } from '.';
 import { safelyQuery } from '@/db/query';
 import camelcaseKeys from 'camelcase-keys';
 
+const ABOUT_ID = 1;
+
 export const createAboutTable = () =>
   sql`
     CREATE TABLE IF NOT EXISTS about (
@@ -17,35 +19,37 @@ export const createAboutTable = () =>
     )
   `;
 
-export const insertAbout = (about: AboutInsert) =>
+export const upsertAbout = (about: AboutInsert) =>
   safelyQuery(() => sql`
     INSERT INTO about (
+      id,
       title,
       subhead,
       description,
       photo_id_avatar,
-      photo_id_hero
+      photo_id_hero,
+      updated_at,
+      created_at
     ) VALUES (
+      ${ABOUT_ID},
       ${about.title},
       ${about.subhead},
       ${about.description},
       ${about.photoIdAvatar},
-      ${about.photoIdHero}
+      ${about.photoIdHero},
+      ${new Date().toISOString()},
+      ${new Date().toISOString()}
     )
+    ON CONFLICT (id) DO UPDATE SET
+      title = EXCLUDED.title,
+      subhead = EXCLUDED.subhead,
+      description = EXCLUDED.description,
+      photo_id_avatar = EXCLUDED.photo_id_avatar,
+      photo_id_hero = EXCLUDED.photo_id_hero,
+      updated_at = CURRENT_TIMESTAMP
+    RETURNING id
   `.then(({ rows }) => rows[0]?.id as number)
   , 'insertAbout');
-
-export const updateAbout = (about: AboutInsert) =>
-  safelyQuery(() => sql`
-    UPDATE about SET
-      title = ${about.title},
-      subhead = ${about.subhead},
-      description = ${about.description},
-      photo_id_avatar = ${about.photoIdAvatar},
-      photo_id_hero = ${about.photoIdHero}
-      updated_at = ${new Date().toISOString()}
-    WHERE id = ${about.id}
-  `, 'updateAbout');
 
 export const getAbout = () =>
   safelyQuery(() => sql`

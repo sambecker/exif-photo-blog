@@ -1,17 +1,19 @@
 import AdminAboutEditPage from '@/about/AdminAboutEditPage';
+import { getAbout } from '@/about/query';
 import { PRESERVE_ORIGINAL_UPLOADS } from '@/app/config';
-import { getPhotosCached } from '@/photo/cache';
-import { TAG_FAVS } from '@/tag';
+import { getPhotoNoStore } from '@/photo/cache';
 
 export default async function AboutEditPage() {
-  const photoAvatar = await getPhotosCached({ tag: TAG_FAVS, limit: 6 })
-    .then(photos => photos[5])
-    .catch(() => undefined);
+  const about = await getAbout();
+  const photoAvatar = about?.photoIdAvatar
+    ? await getPhotoNoStore(about?.photoIdAvatar ?? '', true)
+    : undefined;
 
   return (
-    <AdminAboutEditPage
-      photoAvatar={photoAvatar}
-      shouldResizeImages={!PRESERVE_ORIGINAL_UPLOADS}
-    />
+    <AdminAboutEditPage {...{
+      about,
+      photoAvatar,
+      shouldResizeImages: !PRESERVE_ORIGINAL_UPLOADS,
+    }} />
   );
 }
