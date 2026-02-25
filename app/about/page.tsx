@@ -1,4 +1,5 @@
 import AboutPageClient from '@/about/AboutPageClient';
+import { getAboutCached } from '@/about/cache';
 import { getDataForCategoriesCached } from '@/category/cache';
 import {
   getLastModifiedForCategories,
@@ -10,11 +11,13 @@ import { TAG_FAVS } from '@/tag';
 
 export default async function AboutPage() {
   const [
+    _about,
     photosMeta,
     favs,
     photos,
     categories,
   ] = await Promise.all([
+    getAboutCached(),
     getPhotosMetaCached().catch(() => {}),
     getPhotosCached({ tag: TAG_FAVS, limit: 12 }).catch(() => []),
     getAllPhotoIdsWithUpdatedAt().catch(() => []),

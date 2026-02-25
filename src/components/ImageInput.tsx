@@ -13,18 +13,21 @@ import { useAppText } from '@/i18n/state/client';
 export default function ImageInput({
   ref: inputRefExternal,
   id = 'file',
+  className,
   onStart,
   onBlobReady,
   multiple = true,
   shouldResize,
   maxSize = MAX_IMAGE_SIZE,
   quality = 0.9,
+  hidden,
   showButton,
   disabled: disabledProp,
   debug: _debug,
 }: {
   ref?: RefObject<HTMLInputElement | null>
   id?: string
+  className?: string
   onStart?: () => void
   onBlobReady?: (args: {
     blob: Blob,
@@ -36,6 +39,7 @@ export default function ImageInput({
   shouldResize?: boolean
   maxSize?: number
   quality?: number
+  hidden?: boolean
   showButton?: boolean
   disabled?: boolean
   debug?: boolean
@@ -59,7 +63,10 @@ export default function ImageInput({
   const disabled = disabledProp || isUploading;
 
   return (
-    <div className="flex flex-col gap-4 min-w-0">
+    <div className={clsx(
+      hidden ? 'hidden' : 'flex flex-col gap-4 min-w-0',
+      className,
+    )}>
       <div className="flex items-center gap-2 sm:gap-4">
         <label
           htmlFor={id}

@@ -1,15 +1,16 @@
 'use client';
 
 import { PATH_ABOUT } from '@/app/path';
-import AppGrid from '@/components/AppGrid';
 import ImageInput from '@/components/ImageInput';
 import LinkWithStatus from '@/components/LinkWithStatus';
 import { Photo } from '@/photo';
 import { getOptimizedPhotoUrl } from '@/photo/storage';
 import clsx from 'clsx/lite';
 import { useRef, useState } from 'react';
-import { AboutForm } from '.';
+import { AboutInsert } from '.';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
+import AdminChildPage from '@/components/AdminChildPage';
+import { updateAboutAction } from './actions';
 
 export default function AdminAboutEditPage({
   photoAvatar,
@@ -21,7 +22,7 @@ export default function AdminAboutEditPage({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [isUploading, setIsUploading] = useState(false);
-  const [aboutForm, setAboutForm] = useState<Partial<AboutForm>>({});
+  const [aboutForm, setAboutForm] = useState<Partial<AboutInsert>>({});
 
   const avatarUrl = getOptimizedPhotoUrl({
     imageUrl: photoAvatar?.url ?? '',
@@ -30,14 +31,18 @@ export default function AdminAboutEditPage({
   });
 
   return (
-    <AppGrid contentMain={<div className={clsx(
-      'space-y-8 mt-5',
-    )}>
-      <div className="min-h-[30rem] space-y-8">
-        <div>About Page</div>
+    <AdminChildPage
+      backPath={PATH_ABOUT}
+      backLabel="About"
+      breadcrumb="Edit About Page"
+    >
+      <form
+        className="min-h-[30rem] space-y-8"
+        action={updateAboutAction}
+      >
         <button
           className={clsx(
-            'size-10 rounded-full overflow-auto',
+            'size-12 rounded-full overflow-auto',
             'active:opacity-70',
             'bg-cover bg-center bg-no-repeat bg-dim',
           )}
@@ -56,41 +61,52 @@ export default function AdminAboutEditPage({
           ref={inputRef}
           multiple={false}
           shouldResize={shouldResizeImages}
+          hidden
         />
-        <FieldsetWithStatus
-          label="Title"
-          value={aboutForm?.title ?? ''}
-          onChange={value => setAboutForm(form =>
-            ({ ...form, title: value ?? '' }))}
-        />
-        <FieldsetWithStatus
-          label="Subhead"
-          value={aboutForm?.subhead ?? ''}
-          onChange={value => setAboutForm(form =>
-            ({ ...form, subhead: value ?? '' }))}
-        />
-        <FieldsetWithStatus
-          type="textarea"
-          label="Description"
-          value={aboutForm?.description ?? ''}
-          onChange={value => setAboutForm(form =>
-            ({ ...form, description: value ?? '' }))}
-        />
-      </div>
-      <div className="flex gap-2">
-        <LinkWithStatus
-          href={PATH_ABOUT}
-          className="button"
-        >
-          Cancel
-        </LinkWithStatus>
-        <LinkWithStatus
-          href={PATH_ABOUT}
-          className="button primary"
-        >
-          Done
-        </LinkWithStatus>
-      </div>
-    </div>} />
+        <div className="space-y-3">
+          <FieldsetWithStatus
+            label="Title"
+            value={aboutForm?.title ?? ''}
+            onChange={title => setAboutForm(form =>
+              ({ ...form, title }))}
+          />
+          <FieldsetWithStatus
+            label="Subhead"
+            value={aboutForm?.subhead ?? ''}
+            onChange={subhead => setAboutForm(form =>
+              ({ ...form, subhead }))}
+          />
+          <FieldsetWithStatus
+            type="textarea"
+            label="Description"
+            value={aboutForm?.description ?? ''}
+            onChange={description => setAboutForm(form =>
+              ({ ...form, description }))}
+          />
+          <FieldsetWithStatus
+            label="Hero Photo Id"
+            note="Chosen from favorites or recents if undefined"
+            value={aboutForm?.photoIdHero ?? ''}
+            onChange={photoIdHero => setAboutForm(form =>
+              ({ ...form, photoIdHero }))}
+          />
+        </div>
+        <div className="flex gap-2">
+          <LinkWithStatus
+            href={PATH_ABOUT}
+            className="button"
+          >
+            Cancel
+          </LinkWithStatus>
+          <LinkWithStatus
+            href={PATH_ABOUT}
+            className="button primary"
+            type="submit"
+          >
+            Update
+          </LinkWithStatus>
+        </div>
+      </form>
+    </AdminChildPage>
   );
 }

@@ -1,5 +1,5 @@
 import { sql } from '@/platforms/postgres';
-import { About } from '.';
+import { About, AboutInsert } from '.';
 import { safelyQuery } from '@/db/query';
 import camelcaseKeys from 'camelcase-keys';
 
@@ -17,7 +17,7 @@ export const createAboutTable = () =>
     )
   `;
 
-export const insertAbout = (about: About) =>
+export const insertAbout = (about: AboutInsert) =>
   safelyQuery(() => sql`
     INSERT INTO about (
       title,
@@ -35,7 +35,7 @@ export const insertAbout = (about: About) =>
   `.then(({ rows }) => rows[0]?.id as number)
   , 'insertAbout');
 
-export const updateAbout = (about: About) =>
+export const updateAbout = (about: AboutInsert) =>
   safelyQuery(() => sql`
     UPDATE about SET
       title = ${about.title},
@@ -49,7 +49,7 @@ export const updateAbout = (about: About) =>
 
 export const getAbout = () =>
   safelyQuery(() => sql`
-    SELECT * FROM about
+    SELECT * FROM about LIMIT 1
   `.then(({ rows }) => rows[0]
       ? camelcaseKeys(
         rows[0] as unknown as Record<string, unknown>,
