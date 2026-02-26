@@ -39,10 +39,12 @@ export default function AppViewSwitcher({
   currentSelection,
   className,
   animate = true,
+  hideSortControl,
 }: {
   currentSelection?: SwitcherSelection
   className?: string
   animate?: boolean
+  hideSortControl?: boolean
 }) {
   const pathname = usePathname();
   
@@ -72,7 +74,8 @@ export default function AppViewSwitcher({
 
   const showSortControl =
     NAV_SORT_CONTROL !== 'none' &&
-    doesPathOfferSort;
+    doesPathOfferSort &&
+    !hideSortControl;
 
   const hasLoadedRef = useRef(false);
   useEffect(() => {

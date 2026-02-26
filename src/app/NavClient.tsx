@@ -30,11 +30,11 @@ const NAV_HEIGHT_CLASS = NAV_CAPTION
 export default function NavClient({
   navTitle,
   navCaption,
-  animate,
+  isInEmptyState,
 }: {
   navTitle: string
   navCaption?: string
-  animate: boolean
+  isInEmptyState: boolean
 }) {
   const ref = useRef<HTMLElement>(null);
 
@@ -80,7 +80,7 @@ export default function NavClient({
       contentMain={
         <AnimateItems
           animateOnFirstLoadOnly
-          type={animate && !isPathAdmin(pathname) ? 'bottom' : 'none'}
+          type={!isInEmptyState && !isPathAdmin(pathname) ? 'bottom' : 'none'}
           distanceOffset={10}
           items={showNav
             ? [<nav
@@ -97,6 +97,7 @@ export default function NavClient({
                 currentSelection={switcherSelectionForPath()}
                 className="translate-x-[-1px]"
                 animate={hasLoadedWithAnimations && isNavVisible}
+                hideSortControl={isInEmptyState}
               />
               <div className={clsx(
                 'grow text-right min-w-0',
