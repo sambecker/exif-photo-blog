@@ -18,6 +18,8 @@ import { safelyParseFormattedHtml } from '@/utility/html';
 import { max } from 'date-fns';
 import { redirect } from 'next/navigation';
 
+export const dynamic = 'force-static';
+
 export default async function AboutPage() {
   if (!SHOW_ABOUT_PAGE) { redirect(PATH_ROOT); }
 
