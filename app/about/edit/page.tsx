@@ -11,10 +11,16 @@ export default async function AboutEditPage() {
       .catch(() => undefined)
     : undefined;
 
+  const photoHero = about?.photoIdHero
+    ? await getPhotoNoStore(about?.photoIdHero ?? '', true)
+      .catch(() => undefined)
+    : undefined;
+
   return (
     <AdminAboutEditPage {...{
       about,
       photoAvatar,
+      photoHero,
       shouldResizeImages: !PRESERVE_ORIGINAL_UPLOADS,
     }} />
   );

@@ -763,6 +763,11 @@ export const batchPhotoAction = async ({
   revalidateAllKeysAndPaths();
 });
 
+export const getPhotoAction = async (photoId: string) =>
+  runAuthenticatedAdminServerAction(async () =>
+    getPhoto(photoId, true),
+  );
+
 // Public/Private actions
 
 export const getPhotosAction = async (

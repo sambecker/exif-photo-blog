@@ -5,10 +5,9 @@ import { useAppState } from '@/app/AppState';
 import PhotoCamera from '@/camera/PhotoCamera';
 import AnimateItems from '@/components/AnimateItems';
 import AppGrid from '@/components/AppGrid';
-import ImageMedium from '@/components/image/ImageMedium';
 import PhotoFilm from '@/film/PhotoFilm';
 import PhotoLens from '@/lens/PhotoLens';
-import { altTextForPhoto, Photo } from '@/photo';
+import { Photo } from '@/photo';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
 import PhotoTag from '@/tag/PhotoTag';
 import clsx from 'clsx/lite';
@@ -20,6 +19,7 @@ import { Camera } from '@/camera';
 import { Lens } from '@/lens';
 import { Album } from '@/album';
 import { useAppText } from '@/i18n/state/client';
+import PhotoAvatar from '@/photo/PhotoAvatar';
 
 export default function AboutPageClient({
   title,
@@ -150,14 +150,8 @@ export default function AboutPageClient({
       >
         <AppGrid
           contentMain={<div className="space-y-8">
-            <div className="flex items-center gap-4">
-              {photoAvatar && <ImageMedium
-                className="size-12 rounded-full overflow-auto"
-                src={photoAvatar.url}
-                alt={altTextForPhoto(photoAvatar)}
-                blurDataURL={photoAvatar.blurData}
-                aspectRatio={photoAvatar.aspectRatio}
-              />}
+            <div className="flex items-center gap-4 sm:gap-6">
+              <PhotoAvatar photo={photoAvatar} />
               <div
                 className={clsx('sm:flex items-center justify-between grow')}
               >
@@ -177,9 +171,10 @@ export default function AboutPageClient({
               </div>
               {isUserSignedIn && <AdminAboutMenu />}
             </div>
-            {description && <div className={clsx('text-medium')}>
-              {description}
-            </div>}
+            {description &&
+              <div className="text-medium [&>*>a]:underline">
+                {description}
+              </div>}
             <AnimateItems
               className={clsx(
                 'grid gap-x-2 gap-y-6 grid-cols-2 lg:grid-cols-4',

@@ -7,9 +7,14 @@ import {
   getLastModifiedForCategories,
   NULL_CATEGORY_DATA,
 } from '@/category/data';
-import { getPhotoCached, getPhotosMetaCached } from '@/photo/cache';
+import {
+  getPhotoCached,
+  getPhotosCached,
+  getPhotosMetaCached,
+} from '@/photo/cache';
 import { getAllPhotoIdsWithUpdatedAt } from '@/photo/query';
 import { TAG_FAVS } from '@/tag';
+import { safelyParseFormattedHtml } from '@/utility/html';
 import { max } from 'date-fns';
 import { redirect } from 'next/navigation';
 
@@ -28,14 +33,18 @@ export default async function AboutPage() {
   ] = await Promise.all([
     getAboutCached()
       .then(async about => {
-        const photoAvatar = about?.photoIdAvatar
-          ? await getPhotoCached(about?.photoIdAvatar ?? '', true)
-          : undefined;
-        // Add fallback behavior to grab latest favorite
-        // or oldest photo
-        const photoHero = about?.photoIdHero
-          ? await getPhotoCached(about?.photoIdHero ?? '', true)
-          : undefined;
+        const photoAvatar = await (about?.photoIdAvatar
+          ? getPhotoCached(about?.photoIdAvatar ?? '', true)
+          : undefined);
+        const photoHero = await (about?.photoIdHero
+          ? getPhotoCached(about?.photoIdHero ?? '', true)
+          // Fall back to favorite photos if no hero photo is set
+          : getPhotosCached({ tag: TAG_FAVS, limit: 1 })
+            .then(photos => photos.length > 0
+              ? photos[0]
+              // Fall back to oldest photo if no favorite photos exist
+              : getPhotosCached({ limit: 1, sortBy: 'takenAtAsc' })
+                .then(photos => photos[0])));
         return {
           about,
           photoAvatar,
@@ -50,6 +59,12 @@ export default async function AboutPage() {
     getAllPhotoIdsWithUpdatedAt().catch(() => []),
     getDataForCategoriesCached().catch(() => (NULL_CATEGORY_DATA)),
   ]);
+
+  const description = about?.description
+    ? <div dangerouslySetInnerHTML={{
+      __html: safelyParseFormattedHtml(about.description),
+    }} />
+    : undefined;
 
   const {
     cameras,
@@ -69,7 +84,7 @@ export default async function AboutPage() {
     <AboutPageClient
       title={about?.title}
       subhead={about?.subhead}
-      description={about?.description}
+      description={description}
       photosCount={photosMeta?.count}
       photosOldest={photosMeta?.dateRange?.start}
       photoAvatar={photoAvatar}
