@@ -58,6 +58,15 @@ export const TEXT: I18N = {
   },
   about: {
     titleDefault: 'Tentang situs ini',
+    updated: 'Diperbarui {{distance}} yang lalu',
+    photoCount: 'Jumlah foto',
+    firstPhoto: 'Foto pertama',
+    topCamera: 'Kamera teratas',
+    topLens: 'Lensa teratas',
+    topRecipe: 'Resep teratas',
+    topFilm: 'Film teratas',
+    recentAlbum: 'Album terbaru',
+    popularTag: 'Tag populer',
   },
   footer: {
     madeWith: 'Dibuat dengan',

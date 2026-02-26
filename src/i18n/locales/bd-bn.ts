@@ -58,6 +58,15 @@ export const TEXT: I18N = {
   },
   about: {
     titleDefault: 'এই সাইট সম্পর্কে',
+    updated: '{{distance}} আগে আপডেট হয়েছে',
+    photoCount: 'ছবির সংখ্যা',
+    firstPhoto: 'প্রথম ছবি',
+    topCamera: 'শীর্ষ ক্যামেরা',
+    topLens: 'শীর্ষ লেন্স',
+    topRecipe: 'শীর্ষ রেসিপি',
+    topFilm: 'শীর্ষ ফিল্ম',
+    recentAlbum: 'সাম্প্রতিক অ্যালবাম',
+    popularTag: 'জনপ্রিয় ট্যাগ',
   },
   footer: {
     madeWith: 'তৈরি হয়েছে',

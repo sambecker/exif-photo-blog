@@ -58,6 +58,15 @@ export const TEXT: I18N = {
   },
   about: {
     titleDefault: 'Giới thiệu trang web',
+    updated: 'Cập nhật {{distance}} trước',
+    photoCount: 'Số lượng ảnh',
+    firstPhoto: 'Ảnh đầu tiên',
+    topCamera: 'Máy ảnh phổ biến',
+    topLens: 'Ống kính phổ biến',
+    topRecipe: 'Công thức phổ biến',
+    topFilm: 'Phim phổ biến',
+    recentAlbum: 'Album gần đây',
+    popularTag: 'Thẻ phổ biến',
   },
   footer: {
     madeWith: 'Được tạo bằng',

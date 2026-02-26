@@ -74,15 +74,15 @@ export default function AboutPageClient({
 
   const items = useMemo(() => [
     renderItem(
-      'Photo Count',
+      appText.about.photoCount,
       photosCount.toString().padStart(4, '0'),
     ),
     renderItem(
-      'First Photo',
+      appText.about.firstPhoto,
       photosOldest?.slice(0, 10),
     ),
     camera && renderItem(
-      'Top Camera',
+      appText.about.topCamera,
       <PhotoCamera
         camera={camera}
         type="text-only"
@@ -90,7 +90,7 @@ export default function AboutPageClient({
       />,
     ),
     lens && renderItem(
-      'Top Lens',
+      appText.about.topLens,
       <PhotoLens
         lens={lens}
         type="text-only"
@@ -98,7 +98,7 @@ export default function AboutPageClient({
       />,
     ),
     recipe && renderItem(
-      'Top Recipe',
+      appText.about.topRecipe,
       <PhotoRecipe
         recipe={recipe}
         type="text-only"
@@ -106,7 +106,7 @@ export default function AboutPageClient({
       />,
     ),
     film && renderItem(
-      'Top Film',
+      appText.about.topFilm,
       <PhotoFilm
         film={film}
         type="text-only"
@@ -115,7 +115,7 @@ export default function AboutPageClient({
       />,
     ),
     album && renderItem(
-      'Recent Album',
+      appText.about.recentAlbum,
       <PhotoAlbum
         album={album}
         type="text-only"
@@ -123,7 +123,7 @@ export default function AboutPageClient({
       />,
     ),
     tag && renderItem(
-      'Top Tag',
+      appText.about.popularTag,
       <PhotoTag
         tag={tag}
         type="text-only"
@@ -131,6 +131,7 @@ export default function AboutPageClient({
       />,
     ),
   ].filter(Boolean), [
+    appText.about,
     photosCount,
     photosOldest,
     camera,
@@ -159,14 +160,13 @@ export default function AboutPageClient({
                   <div className="font-bold">
                     {title || appText.about.titleDefault}
                   </div>
-                  {subhead && <div>
-                    {subhead}
-                  </div>}
+                  {subhead &&
+                    <div>{subhead}</div>}
                 </div>
                 {lastUpdated && <div className={clsx('text-dim')}>
-                  Updated
-                  {' '}
-                  {formatDistanceToNowStrict(lastUpdated, { addSuffix: true })}
+                  {appText.about.updated(
+                    formatDistanceToNowStrict(lastUpdated),
+                  )}
                 </div>}
               </div>
               {isUserSignedIn && <AdminAboutMenu />}

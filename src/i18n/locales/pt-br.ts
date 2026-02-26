@@ -58,6 +58,15 @@ export const TEXT: I18N = {
   },
   about: {
     titleDefault: 'Sobre este site',
+    updated: 'Atualizado há {{distance}}',
+    photoCount: 'Quantidade de fotos',
+    firstPhoto: 'Primeira foto',
+    topCamera: 'Câmera principal',
+    topLens: 'Lente principal',
+    topRecipe: 'Receita principal',
+    topFilm: 'Filme principal',
+    recentAlbum: 'Álbum recente',
+    popularTag: 'Tag popular',
   },
   footer: {
     madeWith: 'Feito com',

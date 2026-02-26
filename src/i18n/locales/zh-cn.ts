@@ -58,6 +58,15 @@ export const TEXT: I18N = {
   },
   about: {
     titleDefault: '关于本网站',
+    updated: '{{distance}} 前更新',
+    photoCount: '照片数量',
+    firstPhoto: '第一张照片',
+    topCamera: '常用相机',
+    topLens: '常用镜头',
+    topRecipe: '常用配方',
+    topFilm: '常用胶片',
+    recentAlbum: '最近相册',
+    popularTag: '热门标签',
   },
   footer: {
     madeWith: '基于',

@@ -58,6 +58,15 @@ export const TEXT: I18N = {
   },
   about: {
     titleDefault: 'Site hakkında',
+    updated: '{{distance}} önce güncellendi',
+    photoCount: 'Fotoğraf sayısı',
+    firstPhoto: 'İlk fotoğraf',
+    topCamera: 'En çok kullanılan kamera',
+    topLens: 'En çok kullanılan lens',
+    topRecipe: 'En çok kullanılan tarif',
+    topFilm: 'En çok kullanılan film',
+    recentAlbum: 'Son albüm',
+    popularTag: 'Popüler etiket',
   },
   footer: {
     madeWith: 'Hazırlayan:',
