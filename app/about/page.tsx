@@ -12,6 +12,7 @@ import {
   getPhotosCached,
   getPhotosMetaCached,
 } from '@/photo/cache';
+import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { getAllPhotoIdsWithUpdatedAt } from '@/photo/query';
 import { TAG_FAVS } from '@/tag';
 import { safelyParseFormattedHtml } from '@/utility/html';
@@ -83,21 +84,23 @@ export default async function AboutPage() {
   ].filter(date => date instanceof Date));
 
   return (
-    <AboutPageClient
-      title={about?.title}
-      subhead={about?.subhead}
-      description={description}
-      photosCount={photosMeta?.count}
-      photosOldest={photosMeta?.dateRange?.start}
-      photoAvatar={photoAvatar}
-      photoHero={photoHero}
-      camera={cameras[0]?.camera}
-      lens={lenses[0]?.lens}
-      recipe={recipes[0]?.recipe}
-      film={films[0]?.film}
-      album={albums[0]?.album}
-      tag={tags.filter(({ tag }) => tag !== TAG_FAVS)[0]?.tag}
-      lastUpdated={lastModifiedSite}
-    />
+    (photosMeta?.count ?? 0) > 0
+      ? <AboutPageClient
+        title={about?.title}
+        subhead={about?.subhead}
+        description={description}
+        photosCount={photosMeta?.count}
+        photosOldest={photosMeta?.dateRange?.start}
+        photoAvatar={photoAvatar}
+        photoHero={photoHero}
+        camera={cameras[0]?.camera}
+        lens={lenses[0]?.lens}
+        recipe={recipes[0]?.recipe}
+        film={films[0]?.film}
+        album={albums[0]?.album}
+        tag={tags.filter(({ tag }) => tag !== TAG_FAVS)[0]?.tag}
+        lastUpdated={lastModifiedSite}
+      />
+      : <PhotosEmptyState />
   );
 }

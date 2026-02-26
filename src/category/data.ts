@@ -173,7 +173,7 @@ export const getLastModifiedForCategories = (
     films,
     focalLengths,
   }: PhotoSetCategories,
-  photos: {updatedAt: Date }[],
+  photos: { updatedAt: Date }[],
 ) => [
   ...recents.map(({ lastModified }) => lastModified),
   ...years.map(({ lastModified }) => lastModified),
