@@ -324,7 +324,8 @@ export const NAV_SORT_CONTROL = COLOR_SORT_ENABLED
 
 // DISPLAY
 
-export const SHOW_ABOUT_PAGE = true;
+export const SHOW_ABOUT_PAGE =
+  process.env.NEXT_PUBLIC_HIDE_ABOUT_PAGE !== '1';
 export const SHOW_KEYBOARD_SHORTCUT_TOOLTIPS =
   process.env.NEXT_PUBLIC_HIDE_KEYBOARD_SHORTCUT_TOOLTIPS !== '1';
 export const SHOW_EXIF_DATA =
@@ -491,6 +492,7 @@ export const APP_CONFIGURATION = {
   colorSortChromaCutoff: COLOR_SORT_CHROMA_CUTOFF,
   isSortWithPriority: USER_DEFAULT_SORT_WITH_PRIORITY,
   // Display
+  showAboutPage: SHOW_ABOUT_PAGE,
   showKeyboardShortcutTooltips: SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
   showExifInfo: SHOW_EXIF_DATA,
   showZoomControls: SHOW_ZOOM_CONTROLS,

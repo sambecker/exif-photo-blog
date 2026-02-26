@@ -160,6 +160,7 @@ Create Upstash Redis store from storage tab of Vercel dashboard and link to your
 
 
 ### Display
+- `NEXT_PUBLIC_HIDE_ABOUT_PAGE = 1` hides `/about` page
 - `NEXT_PUBLIC_HIDE_KEYBOARD_SHORTCUT_TOOLTIPS = 1` hides keyboard shortcut hints in areas like the main nav, and previous/next photo links
 - `NEXT_PUBLIC_HIDE_EXIF_DATA = 1` hides EXIF data in photo details and OG images (potentially useful for portfolios, which don't focus on photography)
 - `NEXT_PUBLIC_HIDE_ZOOM_CONTROLS = 1` hides fullscreen photo zoom controls

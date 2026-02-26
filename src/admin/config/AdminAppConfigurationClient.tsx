@@ -26,7 +26,7 @@ import {
 } from '@/photo/ai';
 import clsx from 'clsx/lite';
 import Link from 'next/link';
-import { PATH_FEED_JSON, PATH_RSS_XML } from '@/app/path';
+import { PATH_ABOUT, PATH_FEED_JSON, PATH_RSS_XML } from '@/app/path';
 import { APP_DEFAULT_SORT_BY, DEFAULT_SORT_BY_OPTIONS } from '@/photo/sort';
 import {
   AdminConfigSection,
@@ -106,6 +106,7 @@ export default function AdminAppConfigurationClient({
   colorSortChromaCutoff,
   isSortWithPriority,
   // Display
+  showAboutPage,
   showKeyboardShortcutTooltips,
   showExifInfo,
   showZoomControls,
@@ -778,6 +779,16 @@ export default function AdminAppConfigurationClient({
       case 'Display':
         return <>
           <ChecklistRow
+            title="Show about page"
+            status={showAboutPage}
+            optional
+          >
+            Set environment variable to {'"1"'} to hide
+            {' '}
+            {renderLink(PATH_ABOUT)} page
+            {renderEnvVars(['NEXT_PUBLIC_HIDE_ABOUT_PAGE'])}
+          </ChecklistRow>
+          <ChecklistRow
             title="Show keyboard shortcut tooltips"
             status={showKeyboardShortcutTooltips}
             optional
@@ -937,9 +948,11 @@ export default function AdminAppConfigurationClient({
             status={areSiteFeedsEnabled}
             optional
           >
-            Set environment variable to {'"1"'} to enable feeds at
+            Set environment variable to {'"1"'} to enable
             {' '}
             {renderLink(PATH_FEED_JSON)} and {renderLink(PATH_RSS_XML)}
+            {' '}
+            feeds
             {renderEnvVars(['NEXT_PUBLIC_SITE_FEEDS'])}
           </ChecklistRow>
           <ChecklistRow

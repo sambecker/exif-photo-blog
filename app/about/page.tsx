@@ -1,5 +1,7 @@
 import AboutPageClient from '@/about/AboutPageClient';
 import { getAboutCached } from '@/about/cache';
+import { SHOW_ABOUT_PAGE } from '@/app/config';
+import { PATH_ROOT } from '@/app/path';
 import { getDataForCategoriesCached } from '@/category/cache';
 import {
   getLastModifiedForCategories,
@@ -9,8 +11,11 @@ import { getPhotoCached, getPhotosMetaCached } from '@/photo/cache';
 import { getAllPhotoIdsWithUpdatedAt } from '@/photo/query';
 import { TAG_FAVS } from '@/tag';
 import { max } from 'date-fns';
+import { redirect } from 'next/navigation';
 
 export default async function AboutPage() {
+  if (!SHOW_ABOUT_PAGE) { redirect(PATH_ROOT); }
+
   const [
     {
       about,
