@@ -22,7 +22,7 @@ import { useAppText } from '@/i18n/state/client';
 import PhotoAvatar from '@/photo/PhotoAvatar';
 import Link from 'next/link';
 import { PATH_ADMIN_ABOUT_EDIT } from '@/app/path';
-import { LuCirclePlus } from 'react-icons/lu';
+import { LuCirclePlus, LuUser } from 'react-icons/lu';
 import AdminEmptyState from '@/admin/AdminEmptyState';
 
 export default function AboutPageClient({
@@ -156,7 +156,10 @@ export default function AboutPageClient({
         <AppGrid
           contentMain={<div className="space-y-8">
             <div className="flex items-center gap-4 sm:gap-6">
-              <PhotoAvatar photo={photoAvatar} />
+              <PhotoAvatar
+                photo={photoAvatar}
+                placeholder={<LuUser size={22} className="text-dim" />}
+              />
               <div
                 className={clsx('sm:flex items-center justify-between grow')}
               >
