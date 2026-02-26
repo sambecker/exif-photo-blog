@@ -11,8 +11,9 @@ import SubmitButtonWithStatus from '@/components/SubmitButtonWithStatus';
 import { Photo } from '@/photo';
 import PhotoAvatar from '@/photo/PhotoAvatar';
 import PhotoMedium from '@/photo/PhotoMedium';
-import clsx from 'clsx';
+import clsx from 'clsx/lite';
 import useDynamicPhoto from '@/photo/useDynamicPhoto';
+import { useAppText } from '@/i18n/state/client';
 
 export default function AdminAboutEditPage({
   about,
@@ -24,6 +25,8 @@ export default function AdminAboutEditPage({
   photoHero?: Photo
   shouldResizeImages?: boolean
 }) {
+  const appText = useAppText();
+
   const [aboutForm, setAboutForm] = useState<Partial<AboutInsert>>(about ?? {});
 
   const {
@@ -66,11 +69,13 @@ export default function AdminAboutEditPage({
           <FieldsetWithStatus
             label="Title"
             value={aboutForm?.title ?? ''}
+            placeholder={appText.about.titleDefault}
             onChange={title => setAboutForm(form =>
               ({ ...form, title }))}
           />
           <FieldsetWithStatus
             label="Subhead"
+            type={!aboutForm?.title ? 'hidden' : undefined}
             value={aboutForm?.subhead ?? ''}
             onChange={subhead => setAboutForm(form =>
               ({ ...form, subhead }))}

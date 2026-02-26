@@ -5,16 +5,19 @@ import { IoInformationCircleOutline } from 'react-icons/io5';
 export default function AdminEmptyState({
   icon,
   children,
+  className,
   includeContainer = true,
 }: {
   icon?: ReactNode
   children: ReactNode
+  className?: string
   includeContainer?: boolean
 }) {
   return (
     <div className={clsx(
       'flex flex-col gap-4 justify-center items-center p-8',
-      includeContainer &&'component-surface shadow-xs',
+      includeContainer && 'component-surface shadow-xs',
+      className,
     )}>
       <div className={clsx(
         'size-14 flex justify-center items-center',

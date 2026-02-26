@@ -20,6 +20,10 @@ import { Lens } from '@/lens';
 import { Album } from '@/album';
 import { useAppText } from '@/i18n/state/client';
 import PhotoAvatar from '@/photo/PhotoAvatar';
+import Link from 'next/link';
+import { PATH_ADMIN_ABOUT_EDIT } from '@/app/path';
+import { LuCirclePlus } from 'react-icons/lu';
+import AdminEmptyState from '@/admin/AdminEmptyState';
 
 export default function AboutPageClient({
   title,
@@ -171,10 +175,26 @@ export default function AboutPageClient({
               </div>
               {isUserSignedIn && <AdminAboutMenu />}
             </div>
-            {description &&
-              <div className="text-medium [&>*>a]:underline">
+            {description
+              ? <div className="text-medium [&>*>a]:underline">
                 {description}
-              </div>}
+              </div>
+              : isUserSignedIn &&
+                <Link
+                  href={PATH_ADMIN_ABOUT_EDIT}
+                  className={clsx(
+                    'flex items-center justify-center gap-2.5',
+                    'border border-dashed border-medium rounded-lg',
+                  )}
+                >
+                  <AdminEmptyState
+                    icon={<LuCirclePlus size={22} />}
+                    includeContainer={false}
+                    className="gap-3! p-6!"
+                  >
+                    Add optional description
+                  </AdminEmptyState>
+                </Link>}
             <AnimateItems
               className={clsx(
                 'grid gap-x-2 gap-y-6 grid-cols-2 lg:grid-cols-4',
