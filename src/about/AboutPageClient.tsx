@@ -58,12 +58,12 @@ export default function AboutPageClient({
   const renderItem = (label: string, content?: ReactNode) => (
     <div
       key={label}
-      className="border-t border-medium pt-1 space-y-0.5"
+      className="border-t border-medium pt-1 space-y-px"
     >
-      <div className="text-xs uppercase tracking-wide text-dim">
+      <div className="text-[13px] uppercase tracking-wide text-dim truncate">
         {label}
       </div>
-      <div>
+      <div className="text-[16px] truncate">
         {content || '--'}
       </div>
     </div>
@@ -179,7 +179,7 @@ export default function AboutPageClient({
             </div>}
             <AnimateItems
               className={clsx(
-                'grid gap-x-2 gap-y-4 grid-cols-2 lg:grid-cols-4',
+                'grid gap-x-2 gap-y-6 grid-cols-2 lg:grid-cols-4',
               )}
               items={items}
             />
