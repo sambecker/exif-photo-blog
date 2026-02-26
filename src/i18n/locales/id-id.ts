@@ -56,6 +56,9 @@ export const TEXT: I18N = {
     next: 'Berikutnya',
     nextShort: 'Brkt',
   },
+  about: {
+    titleDefault: 'Tentang situs ini',
+  },
   footer: {
     madeWith: 'Dibuat dengan',
   },

@@ -56,6 +56,9 @@ export const TEXT: I18N = {
     next: '下一页',
     nextShort: '下一页',
   },
+  about: {
+    titleDefault: '关于本网站',
+  },
   footer: {
     madeWith: '基于',
   },

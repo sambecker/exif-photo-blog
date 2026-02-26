@@ -56,6 +56,9 @@ export const TEXT: I18N = {
     next: 'Próximo',
     nextShort: 'Próx',
   },
+  about: {
+    titleDefault: 'Sobre este site',
+  },
   footer: {
     madeWith: 'Feito com',
   },

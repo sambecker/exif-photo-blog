@@ -19,6 +19,7 @@ import { ReactNode, useMemo } from 'react';
 import { Camera } from '@/camera';
 import { Lens } from '@/lens';
 import { Album } from '@/album';
+import { useAppText } from '@/i18n/state/client';
 
 export default function AboutPageClient({
   title,
@@ -54,6 +55,8 @@ export default function AboutPageClient({
   const {
     isUserSignedIn,
   } = useAppState();
+
+  const appText = useAppText();
 
   const renderItem = (label: string, content?: ReactNode) => (
     <div
@@ -160,7 +163,7 @@ export default function AboutPageClient({
               >
                 <div>
                   <div className="font-bold">
-                    {title || 'About this site'}
+                    {title || appText.about.titleDefault}
                   </div>
                   {subhead && <div>
                     {subhead}

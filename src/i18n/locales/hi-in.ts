@@ -56,6 +56,9 @@ export const TEXT: I18N = {
     next: 'अगला',
     nextShort: 'अगला',
   },
+  about: {
+    titleDefault: 'इस साइट के बारे में',
+  },
   footer: {
     madeWith: 'निर्मित',
   },

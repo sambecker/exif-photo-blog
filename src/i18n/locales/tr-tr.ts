@@ -56,6 +56,9 @@ export const TEXT: I18N = {
     next: 'Sonraki',
     nextShort: 'Sonraki',
   },
+  about: {
+    titleDefault: 'Site hakkında',
+  },
   footer: {
     madeWith: 'Hazırlayan:',
   },

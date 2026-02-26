@@ -56,6 +56,9 @@ export const TEXT: I18N = {
     next: 'Tiếp',
     nextShort: 'Tiếp',
   },
+  about: {
+    titleDefault: 'Giới thiệu trang web',
+  },
   footer: {
     madeWith: 'Được tạo bằng',
   },
