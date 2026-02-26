@@ -71,7 +71,7 @@ See FAQ for [limitations of local development](#can-i-work-locally-without-acces
 - `NEXT_PUBLIC_META_DESCRIPTION` (seen in search results)
 - `NEXT_PUBLIC_NAV_TITLE` (seen in top-right navigation, defaults to domain when not configured)
 - `NEXT_PUBLIC_NAV_CAPTION` (seen in top-right navigation, beneath title)
-- `NEXT_PUBLIC_PAGE_ABOUT` (seen in grid sidebar—accepts rich formatting tags: `<b>`, `<strong>`, `<i>`, `<em>`, `<u>`, `<br>`)
+- `NEXT_PUBLIC_SIDEBAR_TEXT` (seen in grid sidebar—accepts rich formatting tags: `<b>`, `<strong>`, `<i>`, `<em>`, `<u>`, `<br>`)
 - `NEXT_PUBLIC_DOMAIN_SHARE` (seen in share modals where a shorter url may be desirable)
 
 ### Performance
@@ -160,6 +160,7 @@ Create Upstash Redis store from storage tab of Vercel dashboard and link to your
 
 
 ### Display
+- `NEXT_PUBLIC_HIDE_ABOUT_PAGE = 1` hides `/about` page
 - `NEXT_PUBLIC_HIDE_KEYBOARD_SHORTCUT_TOOLTIPS = 1` hides keyboard shortcut hints in areas like the main nav, and previous/next photo links
 - `NEXT_PUBLIC_HIDE_EXIF_DATA = 1` hides EXIF data in photo details and OG images (potentially useful for portfolios, which don't focus on photography)
 - `NEXT_PUBLIC_HIDE_ZOOM_CONTROLS = 1` hides fullscreen photo zoom controls

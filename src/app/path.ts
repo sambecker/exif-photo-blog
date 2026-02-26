@@ -11,6 +11,7 @@ import { AlbumOrAlbumSlug } from '@/album';
 export const PATH_ROOT                  = '/';
 export const PATH_GRID                  = '/grid';
 export const PATH_FULL                  = '/full';
+export const PATH_ABOUT                 = '/about';
 export const PATH_ADMIN                 = '/admin';
 export const PATH_API                   = '/api';
 export const PATH_SIGN_IN               = '/sign-in';
@@ -23,6 +24,10 @@ export const PATH_GRID_INFERRED = GRID_HOMEPAGE_ENABLED
 export const PATH_FULL_INFERRED = GRID_HOMEPAGE_ENABLED
   ? PATH_FULL
   : PATH_ROOT;
+
+// Modifiers
+const EDIT = 'edit';
+const IMAGE = 'image';
 
 // Sort
 export const PARAM_SORT_TYPE_TAKEN_AT     = 'taken-at';
@@ -73,6 +78,7 @@ export const PATH_ADMIN_TAGS            = `${PATH_ADMIN}/tags`;
 export const PATH_ADMIN_RECIPES         = `${PATH_ADMIN}/recipes`;
 export const PATH_ADMIN_CONFIGURATION   = `${PATH_ADMIN}/configuration`;
 export const PATH_ADMIN_INSIGHTS        = `${PATH_ADMIN}/insights`;
+export const PATH_ADMIN_ABOUT_EDIT      = `${PATH_ABOUT}/${EDIT}`;
 export const PATH_ADMIN_BASELINE        = `${PATH_ADMIN}/baseline`;
 export const PATH_ADMIN_COMPONENTS      = `${PATH_ADMIN}/components`;
 
@@ -84,10 +90,6 @@ export const PATH_OG_SAMPLE             = `${PATH_OG}/sample`;
 export const PATH_API_STORAGE = `${PATH_API}/storage`;
 export const PATH_API_VERCEL_BLOB_UPLOAD = `${PATH_API_STORAGE}/vercel-blob`;
 export const PATH_API_PRESIGNED_URL = `${PATH_API_STORAGE}/presigned-url`;
-
-// Modifiers
-const EDIT = 'edit';
-const IMAGE = 'image';
 
 // Parameters
 export const PARAM_UPLOAD_TITLE = 'title';
@@ -107,6 +109,7 @@ export const PATHS_ADMIN = [
   PATH_ADMIN_RECIPES,
   PATH_ADMIN_INSIGHTS,
   PATH_ADMIN_CONFIGURATION,
+  PATH_ADMIN_ABOUT_EDIT,
   PATH_ADMIN_BASELINE,
   PATH_ADMIN_COMPONENTS,
 ];
@@ -115,6 +118,7 @@ export const PATHS_TO_CACHE = [
   PATH_ROOT,
   PATH_GRID,
   PATH_FULL,
+  PATH_ABOUT,
   PATH_OG,
   PATH_PHOTO_DYNAMIC,
   PATH_CAMERA_DYNAMIC,
@@ -430,10 +434,14 @@ export const isPathGrid = (pathname?: string) =>
 export const isPathFull = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_FULL);
 
+export const isPathAbout = (pathname?: string) =>
+  checkPathPrefix(pathname, PATH_ABOUT);
+
 export const isPathTopLevel = (pathname?: string) =>
-  isPathRoot(pathname)||
+  isPathRoot(pathname) ||
   isPathGrid(pathname) ||
-  isPathFull(pathname);
+  isPathFull(pathname) ||
+  isPathAbout(pathname);
 
 export const isPathSignIn = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_SIGN_IN);
@@ -460,6 +468,7 @@ export const isPathAdminInfo = (pathname?: string) =>
 export const isPathProtected = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ADMIN) ||
   checkPathPrefix(pathname, pathForTag(TAG_PRIVATE)) ||
+  checkPathPrefix(pathname, PATH_ADMIN_ABOUT_EDIT) ||
   checkPathPrefix(pathname, PATH_OG);
 
 export const getPathComponents = (

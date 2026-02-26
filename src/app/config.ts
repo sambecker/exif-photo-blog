@@ -146,9 +146,10 @@ export const NAV_TITLE =
   SITE_DOMAIN_SHORT ||
   META_TITLE;
 
-export const PAGE_ABOUT =
+export const SIDEBAR_TEXT =
+  process.env.NEXT_PUBLIC_SIDEBAR_TEXT ||
+  // Legacy environment variables
   process.env.NEXT_PUBLIC_PAGE_ABOUT ||
-  // Legacy environment variable
   process.env.NEXT_PUBLIC_SITE_ABOUT;
 
 // STORAGE
@@ -323,6 +324,8 @@ export const NAV_SORT_CONTROL = COLOR_SORT_ENABLED
 
 // DISPLAY
 
+export const SHOW_ABOUT_PAGE =
+  process.env.NEXT_PUBLIC_HIDE_ABOUT_PAGE !== '1';
 export const SHOW_KEYBOARD_SHORTCUT_TOOLTIPS =
   process.env.NEXT_PUBLIC_HIDE_KEYBOARD_SHORTCUT_TOOLTIPS !== '1';
 export const SHOW_EXIF_DATA =
@@ -442,8 +445,8 @@ export const APP_CONFIGURATION = {
   hasNavTitle: Boolean(CUSTOM_NAV_TITLE),
   navCaption: NAV_CAPTION,
   hasNavCaption: Boolean(NAV_CAPTION),
-  pageAbout: PAGE_ABOUT,
-  hasPageAbout: Boolean(process.env.NEXT_PUBLIC_SITE_ABOUT),
+  sidebarText: SIDEBAR_TEXT,
+  hasSidebarText: Boolean(SIDEBAR_TEXT),
   // Performance
   isStaticallyOptimized: HAS_STATIC_OPTIMIZATION,
   arePhotosStaticallyOptimized: STATICALLY_OPTIMIZED_PHOTOS,
@@ -489,6 +492,7 @@ export const APP_CONFIGURATION = {
   colorSortChromaCutoff: COLOR_SORT_CHROMA_CUTOFF,
   isSortWithPriority: USER_DEFAULT_SORT_WITH_PRIORITY,
   // Display
+  showAboutPage: SHOW_ABOUT_PAGE,
   showKeyboardShortcutTooltips: SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
   showExifInfo: SHOW_EXIF_DATA,
   showZoomControls: SHOW_ZOOM_CONTROLS,
@@ -552,7 +556,10 @@ const ALL_DEPRECATED_ENV_VARS = [{
   replacement: 'NEXT_PUBLIC_META_TITLE',
 }, {
   old: 'NEXT_PUBLIC_SITE_ABOUT',
-  replacement: 'NEXT_PUBLIC_PAGE_ABOUT',
+  replacement: 'NEXT_PUBLIC_SIDEBAR_TEXT',
+}, {
+  old: 'NEXT_PUBLIC_PAGE_ABOUT',
+  replacement: 'NEXT_PUBLIC_SIDEBAR_TEXT',
 }, {
   old: 'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PAGES',
   replacement: 'NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS',

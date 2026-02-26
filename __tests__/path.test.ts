@@ -13,6 +13,7 @@ import {
   isPathTag,
   isPathTagPhoto,
   PATH_ADMIN,
+  PATH_ADMIN_ABOUT_EDIT,
   PATH_ADMIN_PHOTOS,
   PATH_FULL,
   PATH_GRID,
@@ -91,11 +92,12 @@ describe('Paths', () => {
     // Private
     expect(isPathProtected(PATH_ADMIN)).toBe(true);
     expect(isPathProtected(PATH_ADMIN_PHOTOS)).toBe(true);
+    expect(isPathProtected(PATH_TAG_PRIVATE)).toBe(true);
+    expect(isPathProtected(PATH_TAG_PRIVATE_PHOTO)).toBe(true);
+    expect(isPathProtected(PATH_ADMIN_ABOUT_EDIT)).toBe(true);
     expect(isPathProtected(PATH_OG)).toBe(true);
     expect(isPathProtected(PATH_OG_ALL)).toBe(true);
     expect(isPathProtected(PATH_OG_SAMPLE)).toBe(true);
-    expect(isPathProtected(PATH_TAG_PRIVATE)).toBe(true);
-    expect(isPathProtected(PATH_TAG_PRIVATE_PHOTO)).toBe(true);
   });
   it('can be classified', () => {
     // Positive

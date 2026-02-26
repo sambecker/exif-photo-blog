@@ -66,13 +66,13 @@ export default function TemplateImageResponse({
                 color: '#333',
                 borderRight: '2px solid #333',
               }}>
-                <IconFull includeTitle={false} width={80} />
+                <IconFull width={80} />
               </div>
               <div style={{
                 display: 'flex',
                 padding: '3px 10px',
               }}>
-                <IconGrid includeTitle={false} width={80} />
+                <IconGrid width={80} />
               </div>
             </div>
           </div>

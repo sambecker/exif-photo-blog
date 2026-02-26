@@ -7,6 +7,6 @@ export default async function Nav() {
   return <NavClient
     navTitle={NAV_TITLE}
     navCaption={NAV_CAPTION}
-    animate={photos.length > 0}
+    isInEmptyState={photos.length === 0}
   />; 
 }

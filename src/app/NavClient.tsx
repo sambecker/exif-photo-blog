@@ -7,6 +7,7 @@ import AppGrid from '../components/AppGrid';
 import AppViewSwitcher, { SwitcherSelection } from '@/app/AppViewSwitcher';
 import {
   PATH_ROOT,
+  isPathAbout,
   isPathAdmin,
   isPathFull,
   isPathGrid,
@@ -29,11 +30,11 @@ const NAV_HEIGHT_CLASS = NAV_CAPTION
 export default function NavClient({
   navTitle,
   navCaption,
-  animate,
+  isInEmptyState,
 }: {
   navTitle: string
   navCaption?: string
-  animate: boolean
+  isInEmptyState: boolean
 }) {
   const ref = useRef<HTMLElement>(null);
 
@@ -65,6 +66,8 @@ export default function NavClient({
       return 'grid';
     } else if (isPathFull(pathname)) {
       return 'full';
+    } else if (isPathAbout(pathname)) {
+      return 'about';
     } else if (isPathProtected(pathname)) {
       return 'admin';
     }
@@ -77,14 +80,14 @@ export default function NavClient({
       contentMain={
         <AnimateItems
           animateOnFirstLoadOnly
-          type={animate && !isPathAdmin(pathname) ? 'bottom' : 'none'}
+          type={!isInEmptyState && !isPathAdmin(pathname) ? 'bottom' : 'none'}
           distanceOffset={10}
           items={showNav
             ? [<nav
               key="nav"
               ref={ref}
               className={clsx(
-                'w-full flex items-center bg-main',
+                'w-full flex items-center gap-2 bg-main',
                 NAV_HEIGHT_CLASS,
                 // Enlarge nav to ensure it fully masks underlying content
                 'md:w-[calc(100%+8px)] md:translate-x-[-4px] md:px-[4px]',
@@ -94,6 +97,7 @@ export default function NavClient({
                 currentSelection={switcherSelectionForPath()}
                 className="translate-x-[-1px]"
                 animate={hasLoadedWithAnimations && isNavVisible}
+                hideSortControl={isInEmptyState}
               />
               <div className={clsx(
                 'grow text-right min-w-0',

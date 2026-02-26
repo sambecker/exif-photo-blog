@@ -11,7 +11,7 @@ import {
 } from '@/app/config';
 import { createLensKey } from '@/lens';
 import { sortTagsByCount } from '@/tag';
-import { sortCategoriesByCount } from '@/category';
+import { PhotoSetCategories, sortCategoriesByCount } from '@/category';
 import { sortFocalLengths } from '@/focal';
 import {
   getPhotosMetaCached,
@@ -160,3 +160,31 @@ export const getCountsForCategories = async () => {
     }, {} as Record<string, number>),
   };
 };
+
+export const getLastModifiedForCategories = (
+  {
+    recents,
+    years,
+    cameras,
+    lenses,
+    albums,
+    tags,
+    recipes,
+    films,
+    focalLengths,
+  }: PhotoSetCategories,
+  photos: { updatedAt: Date }[],
+) => [
+  ...recents.map(({ lastModified }) => lastModified),
+  ...years.map(({ lastModified }) => lastModified),
+  ...cameras.map(({ lastModified }) => lastModified),
+  ...lenses.map(({ lastModified }) => lastModified),
+  ...albums.map(({ lastModified }) => lastModified),
+  ...tags.map(({ lastModified }) => lastModified),
+  ...recipes.map(({ lastModified }) => lastModified),
+  ...films.map(({ lastModified }) => lastModified),
+  ...focalLengths.map(({ lastModified }) => lastModified),
+  ...photos.map(({ updatedAt }) => updatedAt),
+]
+  .filter(date => date instanceof Date)
+  .sort((a, b) => b.getTime() - a.getTime())[0];

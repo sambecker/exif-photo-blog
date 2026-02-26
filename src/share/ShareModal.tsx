@@ -118,7 +118,7 @@ export default function ShareModal({
             'rounded-md',
             'w-full overflow-hidden',
             'flex items-center justify-stretch',
-            'border-medium',
+            'border border-medium',
           )}>
             <MaskedScroll
               className="flex grow"

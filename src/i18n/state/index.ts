@@ -28,6 +28,11 @@ export const generateAppTextState = (i18n: I18N) => {
       recentSubhead: (distance: string) =>
         i18n.category.recentSubhead.replace('{{distance}}', distance),
     },
+    about: {
+      ...i18n.about,
+      updated: (distance: string) =>
+        i18n.about.updated.replace('{{distance}}', distance),
+    },
     admin: {
       ...i18n.admin,
       deleteConfirm: (photoTitle: string) =>

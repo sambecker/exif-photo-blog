@@ -34,6 +34,11 @@ import { MoreMenuSection } from '@/components/more/MoreMenu';
 import { FiXSquare } from 'react-icons/fi';
 import { useSelectPhotosState } from './select/SelectPhotosState';
 import IconAlbum from '@/components/icons/IconAlbum';
+import { SHOW_ABOUT_PAGE } from '@/app/config';
+import {
+  HEIGHT_CLASS,
+  SWITCHER_ITEM_WIDTH,
+} from '@/components/switcher/SwitcherItem';
 
 export default function AdminAppMenu({
   isOpen,
@@ -220,23 +225,25 @@ export default function AdminAppMenu({
   return (
     <SwitcherItemMenu
       {...{ isOpen, setIsOpen }}
-      icon={<div className="w-[28px] h-[28px] overflow-hidden">
+      icon={<div className={`w-full ${HEIGHT_CLASS} overflow-hidden`}>
         <div className={clsx(
-          'relative flex flex-col items-center justify-center gap-2',
-          'translate-y-[-18px]',
+          'relative flex flex-col items-center gap-2',
+          'translate-y-[-16px]',
         )}>
           <IoArrowDown size={16} className="shrink-0" />
           <IoArrowUp size={16} className="shrink-0" />
         </div>
       </div>}
       align="start"
-      sideOffset={12}
-      alignOffset={-84}
+      sideOffset={10}
+      alignOffset={SHOW_ABOUT_PAGE
+        ? -(SWITCHER_ITEM_WIDTH * 3)
+        : -(SWITCHER_ITEM_WIDTH * 2)}
       onOpen={refreshAdminData}
       sections={sections}
       ariaLabel="Admin Menu"
       classNameButtonOpen={clsx(
-        '[&>*>*]:translate-y-[6px]',
+        '[&>*>*]:translate-y-[8px]',
         '[&>*>*]:duration-300',
       )}
     />

@@ -12,6 +12,7 @@ import {
   useTransition,
 } from 'react';
 import {
+  PATH_ABOUT,
   PATH_ADMIN_BASELINE,
   PATH_ADMIN_COMPONENTS,
   PATH_ADMIN_CONFIGURATION,
@@ -63,6 +64,7 @@ import {
   COLOR_SORT_ENABLED,
   GRID_HOMEPAGE_ENABLED,
   HIDE_TAGS_WITH_ONE_PHOTO,
+  SHOW_ABOUT_PAGE,
 } from '@/app/config';
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
@@ -610,6 +612,13 @@ export default function CommandKClient({
   const pageItems: CommandKItem[] = GRID_HOMEPAGE_ENABLED
     ? [pageGrid, pageFull]
     : [pageFull, pageGrid];
+
+  if (SHOW_ABOUT_PAGE) {
+    pageItems.push({
+      label: appText.nav.about,
+      path: PATH_ABOUT,
+    });
+  }
 
   const sectionPages: CommandKSection = {
     heading: appText.cmdk.pages,
