@@ -45,6 +45,8 @@ export default function AdminAboutEditPage({
     photoId: aboutForm?.photoIdHero,
   });
 
+  const convertUrlToPhotoId = (url?: string) => url?.split('/').pop();
+
   return (
     <AdminChildPage
       backPath={PATH_ABOUT}
@@ -63,7 +65,7 @@ export default function AdminAboutEditPage({
             spellCheck={false}
             value={aboutForm?.photoIdAvatar ?? ''}
             onChange={photoIdAvatar => setAboutForm(form =>
-              ({ ...form, photoIdAvatar }))}
+              ({ ...form, photoIdAvatar: convertUrlToPhotoId(photoIdAvatar) }))}
             loading={isLoadingPhotoAvatar}
           />
           <FieldsetWithStatus
@@ -93,7 +95,7 @@ export default function AdminAboutEditPage({
             spellCheck={false}
             value={aboutForm?.photoIdHero ?? ''}
             onChange={photoIdHero => setAboutForm(form =>
-              ({ ...form, photoIdHero }))}
+              ({ ...form, photoIdHero: convertUrlToPhotoId(photoIdHero) }))}
             loading={isLoadingPhotoHero}
           />
           {photoHero &&
