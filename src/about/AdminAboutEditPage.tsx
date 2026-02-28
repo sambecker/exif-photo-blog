@@ -20,6 +20,9 @@ export default function AdminAboutEditPage({
   about,
   photoAvatar: _photoAvatar,
   photoHero: _photoHero,
+  photos,
+  photosCount,
+  photosHidden,
 }: {
   about?: About
   photoAvatar?: Photo
@@ -68,6 +71,9 @@ export default function AdminAboutEditPage({
             onChange={photoIdAvatar => setAboutForm(form =>
               ({ ...form, photoIdAvatar: convertUrlToPhotoId(photoIdAvatar) }))}
             photo={photoAvatar}
+            photos={photos}
+            photosCount={photosCount}
+            photosHidden={photosHidden}
           />
           <PhotoAvatar photo={photoAvatar} />
           <FieldsetWithStatus
