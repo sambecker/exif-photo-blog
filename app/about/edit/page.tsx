@@ -41,10 +41,13 @@ export default async function AboutEditPage() {
         photoHero,
       };
     }),
-    getPhotosCached(PHOTO_CHOOSER_QUERY_OPTIONS),
+    getPhotosCached(PHOTO_CHOOSER_QUERY_OPTIONS)
+      .catch(() => []),
     getPhotosMetaCached(PHOTO_CHOOSER_QUERY_OPTIONS)
-      .then(({ count }) => count),
-    getPhotosCached({ hidden: 'only', limit: 1000 }),
+      .then(({ count }) => count)
+      .catch(() => 0),
+    getPhotosCached({ hidden: 'only', limit: 1000 })
+      .catch(() => []),
   ]);
 
   return (
