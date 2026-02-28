@@ -8,6 +8,8 @@ import { GRID_SPACE_CLASSNAME } from '@/components';
 import useDynamicPhoto from '../useDynamicPhoto';
 import { IoSearch } from 'react-icons/io5';
 import { useState } from 'react';
+import usePhotoQuery from '../usePhotoQuery';
+import Spinner from '@/components/Spinner';
 
 export default function FieldsetPhotoChooser({
   label,
@@ -25,6 +27,10 @@ export default function FieldsetPhotoChooser({
   photosHidden?: Photo[]
 }) {
   const [query, setQuery] = useState('');
+  const {
+    photos: photosQuery,
+    isLoading,
+  } = usePhotoQuery(query);
 
   const {
     photo: photoAvatar,
@@ -76,17 +82,19 @@ export default function FieldsetPhotoChooser({
                 <div className="grow">
                   Choose photo
                 </div>
-                <IoSearch size={16} />
+                {isLoading ? <Spinner /> : <IoSearch size={16} />}
               </div>
-              <input
+              <FieldsetWithStatus
+                label="Search for a photo"
                 type="text"
                 placeholder="Search for a photo"
                 className="w-full mb-2"
                 value={query}
-                onChange={e => setQuery(e.target.value)}
+                onChange={setQuery}
+                hideLabel
               />
               <div className="grid grid-cols-3 gap-0.5">
-                {photos.map(photo => (
+                {(photosQuery.length > 0 ? photosQuery : photos).map(photo => (
                   <span
                     key={photo.id}
                     className={clsx(
@@ -99,8 +107,8 @@ export default function FieldsetPhotoChooser({
                       alt={altTextForPhoto(photo)}
                       aspectRatio={photo.aspectRatio}
                       blurDataURL={photo.blurData}
-                      // eslint-disable-next-line max-len
-                      blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
+                      blurCompatibilityMode={
+                        doesPhotoNeedBlurCompatibility(photo)}
                       onClick={() => onChange(photo.id)}
                     />
                   </span>
