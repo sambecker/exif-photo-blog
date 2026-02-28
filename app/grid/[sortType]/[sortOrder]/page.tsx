@@ -8,13 +8,13 @@ import { getDataForCategoriesCached } from '@/category/cache';
 import { getPhotosMetaCached } from '@/photo/cache';
 import { SortProps } from '@/photo/sort';
 import { getSortOptionsFromParams } from '@/photo/sort/path';
-import { FEED_META_QUERY_OPTIONS, getFeedQueryOptions } from '@/feed';
+import { FEED_META_QUERY_OPTIONS, feedQueryOptions } from '@/feed';
 import { PhotoQueryOptions } from '@/db';
 
 export const maxDuration = 60;
 
 const getPhotosCached = cache((options: PhotoQueryOptions) =>
-  getPhotos(getFeedQueryOptions({
+  getPhotos(feedQueryOptions({
     isGrid: true,
     ...options,
   })));

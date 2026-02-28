@@ -13,21 +13,23 @@ const FEED_BASE_QUERY_OPTIONS: PhotoQueryOptions = {
 
 // PAGE FEED QUERY OPTIONS
 
-export const getFeedQueryOptions = ({
+export const feedQueryOptions = ({
   isGrid,
   sortBy = USER_DEFAULT_SORT_OPTIONS.sortBy,
   sortWithPriority = USER_DEFAULT_SORT_OPTIONS.sortWithPriority,
+  ...options
 }: {
   isGrid: boolean,
   sortBy?: SortBy,
   sortWithPriority?: boolean,
-}): PhotoQueryOptions => ({
+} & PhotoQueryOptions): PhotoQueryOptions => ({
   ...FEED_BASE_QUERY_OPTIONS,
   sortBy,
   sortWithPriority,
   limit: isGrid
     ? INFINITE_SCROLL_GRID_INITIAL
     : INFINITE_SCROLL_FULL_INITIAL,
+  ...options,
 });
 
 export const FEED_META_QUERY_OPTIONS: PhotoQueryOptions = {

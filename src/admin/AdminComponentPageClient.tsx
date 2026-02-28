@@ -10,8 +10,8 @@ import StatusIcon from '@/components/StatusIcon';
 import clsx from 'clsx/lite';
 import { useState } from 'react';
 import { Photo } from '@/photo';
-import FieldsetPhotoQuery from '@/photo/FieldsetPhotoQuery';
-import FieldsetPhotoChooser from '@/photo/FieldsetPhotoChooser';
+import FieldsetPhotoQuery from '@/photo/form/FieldsetPhotoQuery';
+import FieldsetPhotoChooser from '@/photo/form/FieldsetPhotoChooser';
 
 export default function ComponentsPageClient({
   photo,

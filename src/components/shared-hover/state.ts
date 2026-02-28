@@ -6,7 +6,7 @@ import {
   SetStateAction,
   use,
 } from 'react';
-import MenuSurface from '../primitives/MenuSurface';
+import ComponentSurface from '../primitives/surface/ComponentSurface';
 
 export type SharedHoverProps = {
   key: string
@@ -14,7 +14,7 @@ export type SharedHoverProps = {
   height: number
   offsetAbove: number
   offsetBelow: number
-  color?: ComponentProps<typeof MenuSurface>['color']
+  color?: ComponentProps<typeof ComponentSurface>['color']
 }
 
 export type SharedHoverState = {

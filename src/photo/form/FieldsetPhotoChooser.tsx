@@ -1,9 +1,10 @@
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
-import { altTextForPhoto, doesPhotoNeedBlurCompatibility, Photo } from '.';
+import { altTextForPhoto, doesPhotoNeedBlurCompatibility, Photo } from '..';
 import clsx from 'clsx/lite';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import ImageMedium from '@/components/image/ImageMedium';
-import PhotoGridInfinite from './PhotoGridInfinite';
+import PhotoGridInfinite from '../PhotoGridInfinite';
+import { menuSurfaceStyles } from '@/components/primitives/surface';
 
 export default function FieldsetPhotoChooser({
   label,
@@ -24,7 +25,7 @@ export default function FieldsetPhotoChooser({
           <button type="button" className="p-1.5">
             {photo && 
               <span className={clsx(
-                'flex w-[8rem]',
+                'flex size-[6rem]',
                 'border border-medium rounded-[4px]',
                 'overflow-hidden select-none active:opacity-75',
               )}>
@@ -43,20 +44,7 @@ export default function FieldsetPhotoChooser({
             onCloseAutoFocus={e => e.preventDefault()}
             align="start"
             sideOffset={10}
-            // alignOffset={-10}
-            className={clsx(
-              'z-20',
-              'min-w-[8rem]',
-              'component-surface',
-              'p-1.5',
-              'not-dark:shadow-lg not-dark:shadow-gray-900/10',
-              'data-[side=top]:dark:shadow-[0_0px_40px_rgba(0,0,0,0.6)]',
-              'data-[side=bottom]:dark:shadow-[0_10px_40px_rgba(0,0,0,0.6)]',
-              'data-[side=right]:dark:shadow-[0_10px_40px_rgba(0,0,0,0.6)]',
-              'data-[side=top]:animate-fade-in-from-bottom',
-              'data-[side=bottom]:animate-fade-in-from-top',
-              'data-[side=right]:animate-fade-in-from-top',
-            )}>
+            className={menuSurfaceStyles('z-20 px-1.5 py-1.5')}>
             <div className={clsx(
               'w-[14rem] max-h-[20rem] rounded-[3px] overflow-y-auto',
               'space-y-1',

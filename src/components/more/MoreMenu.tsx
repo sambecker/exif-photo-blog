@@ -11,21 +11,7 @@ import { FiMoreHorizontal } from 'react-icons/fi';
 import MoreMenuItem from './MoreMenuItem';
 import { clearGlobalFocus } from '@/utility/dom';
 import { FaChevronRight } from 'react-icons/fa6';
-
-const surfaceStyles = (className?: string) => clsx(
-  'z-10',
-  'min-w-[8rem]',
-  'component-surface',
-  'py-1',
-  'not-dark:shadow-lg not-dark:shadow-gray-900/10',
-  'data-[side=top]:dark:shadow-[0_0px_40px_rgba(0,0,0,0.6)]',
-  'data-[side=bottom]:dark:shadow-[0_10px_40px_rgba(0,0,0,0.6)]',
-  'data-[side=right]:dark:shadow-[0_10px_40px_rgba(0,0,0,0.6)]',
-  'data-[side=top]:animate-fade-in-from-bottom',
-  'data-[side=bottom]:animate-fade-in-from-top',
-  'data-[side=right]:animate-fade-in-from-top',
-  className,
-);
+import { menuSurfaceStyles } from '../primitives/surface';
 
 export type MoreMenuSection = {
   label?: string
@@ -115,7 +101,7 @@ export default function MoreMenu({
           onCloseAutoFocus={e => e.preventDefault()}
           align={align}
           sideOffset={sideOffset}
-          className={surfaceStyles(className)}
+          className={menuSurfaceStyles(className)}
         >
           {header && <div className={clsx(
             'px-3 pt-3 pb-2 text-dim uppercase',
@@ -171,7 +157,7 @@ export default function MoreMenu({
                       </DropdownMenu.SubTrigger>
                       <DropdownMenu.Portal>
                         <DropdownMenu.SubContent
-                          className={surfaceStyles()}
+                          className={menuSurfaceStyles()}
                         >
                           {item.items.map(item =>
                             <div key={item.label} className="px-1">

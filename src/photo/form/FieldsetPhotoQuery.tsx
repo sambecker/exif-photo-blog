@@ -1,12 +1,12 @@
 'use client';
 
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
-import { Photo } from '.';
+import { Photo } from '..';
 import { useEffect, useState } from 'react';
-import { AnnotatedTag } from './form';
+import { AnnotatedTag } from '../form';
 import { useDebounce } from 'use-debounce';
-import PhotoSmall from './PhotoSmall';
-import { getPhotosAction } from './actions';
+import PhotoSmall from '../PhotoSmall';
+import { getPhotosAction } from '../actions';
 
 const convertPhotoToAnnotatedTag = (photo: Photo): AnnotatedTag => ({
   value: photo.id,
