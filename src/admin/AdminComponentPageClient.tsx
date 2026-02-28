@@ -15,8 +15,12 @@ import FieldsetPhotoChooser from '@/photo/form/FieldsetPhotoChooser';
 
 export default function ComponentsPageClient({
   photo,
+  photos,
+  photosCount,
 }: {
   photo: Photo
+  photos: Photo[]
+  photosCount: number
 }) {
   const [valuePhoto, setValuePhoto] = useState(photo?.id ?? '');
   const [valuePhotoChooser, setValuePhotoChooser] = useState(photo?.id ?? '');
@@ -39,6 +43,8 @@ export default function ComponentsPageClient({
           <FieldsetPhotoChooser
             label="Photo"
             photo={photo}
+            photos={photos}
+            photosCount={photosCount}
             value={valuePhotoChooser}
             onChange={setValuePhotoChooser}
           />

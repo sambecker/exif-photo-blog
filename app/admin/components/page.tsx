@@ -1,10 +1,16 @@
 import AdminComponentPageClient from '@/admin/AdminComponentPageClient';
-import { getPhotosCached } from '@/photo/cache';
+import { getPhotosCached, getPhotosMetaCached } from '@/photo/cache';
 
 export default async function ComponentsPage() {
-  const photos = await getPhotosCached({ limit: 1});
+  const photos = await getPhotosCached();
+  const photosCount = await getPhotosMetaCached()
+    .then(({ count }) => count);
 
   return (
-    <AdminComponentPageClient photo={photos[0]} />
+    <AdminComponentPageClient
+      photo={photos[0]}
+      photos={photos}
+      photosCount={photosCount}
+    />
   );
 }
