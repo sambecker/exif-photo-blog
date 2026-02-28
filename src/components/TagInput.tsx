@@ -41,7 +41,7 @@ export default function TagInput({
   name: string
   value?: string
   options?: AnnotatedTag[]
-  labelForValueOverride?: (value: string) => string
+  labelForValueOverride?: (value: string) => string | undefined
   defaultIcon?: ReactNode
   defaultIconSelected?: ReactNode
   accessory?: ReactNode
@@ -416,7 +416,7 @@ export default function TagInput({
           <div
             className={clsx(
               'component-surface',
-              'absolute top-3 w-full px-1.5 py-1.5',
+              'absolute top-3 w-full px-1.5 py-1.5 -mx-px',
               'max-h-[8rem] overflow-y-auto flex flex-col',
               'shadow-lg dark:shadow-xl',
             )}

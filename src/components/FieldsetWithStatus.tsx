@@ -71,7 +71,7 @@ export default function FieldsetWithStatus({
   tagOptionsShouldParameterize?: boolean
   tagOptionsDefaultIcon?: ReactNode
   tagOptionsDefaultIconSelected?: ReactNode
-  tagOptionsLabelOverride?: (value: string) => string
+  tagOptionsLabelOverride?: (value: string) => string | undefined
   tagOptionsAllowNewValues?: boolean
   tagOptionsAccessory?: ReactNode
   tagOptionsOnInputTextChange?: (value: string) => void
