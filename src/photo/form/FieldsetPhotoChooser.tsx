@@ -6,8 +6,8 @@ import ImageMedium from '@/components/image/ImageMedium';
 import { menuSurfaceStyles } from '@/components/primitives/surface';
 import { GRID_SPACE_CLASSNAME } from '@/components';
 import useDynamicPhoto from '../useDynamicPhoto';
-import { IoSearch } from 'react-icons/io5';
-import { useState } from 'react';
+import { IoClose, IoSearch } from 'react-icons/io5';
+import { useEffect, useRef, useState } from 'react';
 import usePhotoQuery from '../usePhotoQuery';
 import Spinner from '@/components/Spinner';
 
@@ -26,10 +26,15 @@ export default function FieldsetPhotoChooser({
   photosCount?: number
   photosHidden?: Photo[]
 }) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const [showQuery, setShowQuery] = useState(true);
+  // TODO: Move query into hook
   const [query, setQuery] = useState('');
   const {
     photos: photosQuery,
     isLoading,
+    reset,
   } = usePhotoQuery(query);
 
   const {
@@ -39,6 +44,16 @@ export default function FieldsetPhotoChooser({
     initialPhoto: photo,
     photoId: value,
   });
+
+  useEffect(() => {
+    if (showQuery) {
+      inputRef.current?.focus();
+    } else {
+      reset();
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setQuery('');
+    }
+  }, [showQuery, reset]);
 
   return (
     <>
@@ -82,19 +97,33 @@ export default function FieldsetPhotoChooser({
                 <div className="grow">
                   Choose photo
                 </div>
-                {isLoading ? <Spinner /> : <IoSearch size={16} />}
+                {isLoading
+                  ? <Spinner />
+                  : showQuery
+                    ? <IoClose
+                      size={16}
+                      className="cursor-pointer"
+                      onClick={() => setShowQuery(false)}
+                    />
+                    : <IoSearch
+                      size={16}
+                      className="cursor-pointer"
+                      onClick={() => setShowQuery(true)}
+                    />}
               </div>
-              <FieldsetWithStatus
-                label="Search for a photo"
-                type="text"
-                placeholder="Search for a photo"
-                className="w-full mb-2"
-                value={query}
-                onChange={setQuery}
-                hideLabel
-              />
-              <div className="grid grid-cols-3 gap-0.5">
-                {(photosQuery.length > 0 ? photosQuery : photos).map(photo => (
+              {showQuery &&
+                <input
+                  ref={inputRef}
+                  type="text"
+                  placeholder="Search for a photo"
+                  className="block w-full m-0"
+                  value={query}
+                  onChange={e => setQuery(e.target.value)}
+                />}
+              <div className={clsx(
+                'grid grid-cols-3 gap-0.5',
+              )}>
+                {(showQuery && query ? photosQuery : photos).map(photo => (
                   <span
                     key={photo.id}
                     className={clsx(
