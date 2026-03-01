@@ -6,10 +6,34 @@ import ImageMedium from '@/components/image/ImageMedium';
 import { menuSurfaceStyles } from '@/components/primitives/surface';
 import { GRID_SPACE_CLASSNAME } from '@/components';
 import useDynamicPhoto from '../useDynamicPhoto';
-import { IoClose, IoSearch } from 'react-icons/io5';
+import { IoSearch } from 'react-icons/io5';
 import { useEffect, useRef, useState } from 'react';
 import usePhotoQuery from '../usePhotoQuery';
 import Spinner from '@/components/Spinner';
+import { BiChevronDown } from 'react-icons/bi';
+import SegmentMenu from '@/components/SegmentMenu';
+import IconFavs from '@/components/icons/IconFavs';
+import IconLock from '@/components/icons/IconLock';
+
+type Mode = 'all' | 'favs' | 'hidden' | 'search';
+
+const renderPhoto = ({
+  photo,
+  className,
+  onClick,
+}: {
+  photo: Photo,
+  className?: string,
+  onClick?: () => void,
+}) =>
+  <ImageMedium
+    src={photo.url}
+    alt={altTextForPhoto(photo)}
+    aspectRatio={photo.aspectRatio}
+    blurDataURL={photo.blurData}
+    blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
+    {...{ className, onClick }}
+  />;
 
 export default function FieldsetPhotoChooser({
   label,
@@ -26,10 +50,12 @@ export default function FieldsetPhotoChooser({
   photosCount?: number
   photosHidden?: Photo[]
 }) {
+  const [mode, setMode] = useState<Mode>('all');
+
+  const showQuery = mode === 'search';
+
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [showQuery, setShowQuery] = useState(true);
-  // TODO: Move query into hook
   const [query, setQuery] = useState('');
   const {
     photos: photosQuery,
@@ -60,21 +86,27 @@ export default function FieldsetPhotoChooser({
       <FieldsetWithStatus {...{ label, value, onChange, type: 'hidden' }} />
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
-          <button type="button" className="p-1.5">
+          <button type="button" className="inline-flex flex-col p-1.5">
+            <span className={clsx(
+              'w-full',
+              'flex items-center gap-1',
+              'font-sans',
+              'text-xs text-medium font-medium uppercase tracking-wider',
+            )}>
+              <span className="grow truncate text-left">
+                Avatar
+              </span>
+              <BiChevronDown size={18} />
+            </span>
             <span className={clsx(
               'flex size-[6rem]',
               'border border-medium rounded-[4px]',
               'overflow-hidden select-none active:opacity-75',
             )}>
-              {photoAvatar && <ImageMedium
-                src={photoAvatar.url}
-                alt={altTextForPhoto(photoAvatar)}
-                aspectRatio={photoAvatar.aspectRatio}
-                blurDataURL={photoAvatar.blurData}
-                blurCompatibilityMode={
-                  doesPhotoNeedBlurCompatibility(photoAvatar)}
-                className={clsx(isLoadingPhotoAvatar && 'opacity-50')}
-              />}
+              {photoAvatar && renderPhoto({
+                photo: photoAvatar,
+                className: clsx(isLoadingPhotoAvatar && 'opacity-50'),
+              })}
             </span>
           </button>
         </DropdownMenu.Trigger>
@@ -83,34 +115,32 @@ export default function FieldsetPhotoChooser({
             onCloseAutoFocus={e => e.preventDefault()}
             align="start"
             sideOffset={10}
-            className={menuSurfaceStyles('z-20 px-1.5 py-1.5')}
+            className={menuSurfaceStyles('z-20 px-1.5 py-1.5 rounded-2xl')}
           >
             <div className={clsx(
               GRID_SPACE_CLASSNAME,
-              'w-[18rem] max-h-[20rem] rounded-[3px] overflow-y-auto',
+              'w-[18rem] max-h-[20rem] rounded-xl overflow-y-auto',
             )}>
-              <div className={clsx(
-                'flex items-center gap-1',
-                'text-medium text-xs font-medium uppercase tracking-wider',
-                'pt-1 pb-2 px-1.5',
-              )}>
-                <div className="grow">
-                  Choose photo
-                </div>
-                {isLoading
-                  ? <Spinner />
-                  : showQuery
-                    ? <IoClose
-                      size={16}
-                      className="cursor-pointer"
-                      onClick={() => setShowQuery(false)}
-                    />
-                    : <IoSearch
-                      size={16}
-                      className="cursor-pointer"
-                      onClick={() => setShowQuery(true)}
-                    />}
-              </div>
+              <SegmentMenu
+                className="pt-1 pb-2 px-1.5"
+                items={[{
+                  value: 'all',
+                }, {
+                  value: 'favs',
+                  icon: <IconFavs size={16} />,
+                  iconSelected: <IconFavs size={16} highlight />,
+                }, {
+                  value: 'hidden',
+                  icon: <IconLock size={15} />,
+                }, {
+                  value: 'search',
+                  icon: isLoading
+                    ? <Spinner />
+                    : <IoSearch size={16} />,
+                }]}
+                selected={mode}
+                onChange={setMode}
+              />
               {showQuery &&
                 <input
                   ref={inputRef}
@@ -131,15 +161,10 @@ export default function FieldsetPhotoChooser({
                       'overflow-hidden select-none active:opacity-75',
                     )}
                   >
-                    <ImageMedium
-                      src={photo.url}
-                      alt={altTextForPhoto(photo)}
-                      aspectRatio={photo.aspectRatio}
-                      blurDataURL={photo.blurData}
-                      blurCompatibilityMode={
-                        doesPhotoNeedBlurCompatibility(photo)}
-                      onClick={() => onChange(photo.id)}
-                    />
+                    {renderPhoto({
+                      photo,
+                      onClick: () => onChange(photo.id),
+                    })}
                   </span>
                 ))}
               </div>
