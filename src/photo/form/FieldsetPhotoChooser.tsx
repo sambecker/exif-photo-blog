@@ -18,6 +18,9 @@ import SegmentMenu from '@/components/SegmentMenu';
 import IconFavs from '@/components/icons/IconFavs';
 import InfinitePhotoScroll from '../InfinitePhotoScroll';
 
+// TODO:
+// Create empty state for all modes, including no search results
+
 type Mode = 'all' | 'favs' | 'search';
 
 const CLASSNAME_GRID = 'grid grid-cols-3 gap-0.5';
@@ -98,6 +101,16 @@ export default function FieldsetPhotoChooser({
       {renderPhoto(photo)}
     </span>;
 
+  const photosToShow = showQuery && query
+    ? photosQuery
+    : mode === 'favs'
+      ? photosFavs : photos;
+
+  const shouldPaginate =
+    !(showQuery && query) &&
+    photosCount > photos.length &&
+    mode !== 'favs';
+
   return (
     <>
       <FieldsetWithStatus {...{ label, value, onChange, type: 'hidden' }} />
@@ -176,28 +189,21 @@ export default function FieldsetPhotoChooser({
               'space-y-0.5',
             )}>
               <div className={CLASSNAME_GRID}>
-                {(showQuery && query
-                  ? photosQuery
-                  : mode === 'favs'
-                    ? photosFavs : photos)
-                  .map(photo => renderPhotoButton(photo))}
+                {photosToShow.map(photo => renderPhotoButton(photo))}
               </div>
-              {
-                !(showQuery && query) &&
-                photosCount > photos.length &&
-                mode !== 'favs' &&
-                  <InfinitePhotoScroll
-                    cacheKey="photo-chooser"
-                    initialOffset={photos.length}
-                    itemsPerPage={INFINITE_SCROLL_GRID_MULTIPLE}
-                    moreButtonClassName="mt-2"
-                  >
-                    {({ key, photos }) => (
-                      <div key={key} className={CLASSNAME_GRID}>
-                        {photos.map(photo => renderPhotoButton(photo))}
-                      </div>
-                    )}
-                  </InfinitePhotoScroll>}
+              {shouldPaginate &&
+                <InfinitePhotoScroll
+                  cacheKey="photo-chooser"
+                  initialOffset={photos.length}
+                  itemsPerPage={INFINITE_SCROLL_GRID_MULTIPLE}
+                  moreButtonClassName="mt-2"
+                >
+                  {({ key, photos }) => (
+                    <div key={key} className={CLASSNAME_GRID}>
+                      {photos.map(photo => renderPhotoButton(photo))}
+                    </div>
+                  )}
+                </InfinitePhotoScroll>}
             </div>
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
