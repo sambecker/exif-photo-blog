@@ -1,5 +1,6 @@
 import clsx from 'clsx/lite';
 import { ReactNode } from 'react';
+import Spinner from './Spinner';
 
 export default function SegmentMenu<T extends string>({
   items,
@@ -11,6 +12,7 @@ export default function SegmentMenu<T extends string>({
     value: T
     icon?: ReactNode
     iconSelected?: ReactNode
+    isLoading?: boolean
   }[]
   selected: T
   onChange: (value: T) => void
@@ -21,7 +23,7 @@ export default function SegmentMenu<T extends string>({
       'flex justify-center gap-1',
       className,
     )}>
-      {items.map(({ value, icon, iconSelected }) => (
+      {items.map(({ value, icon, iconSelected, isLoading }) => (
         <button
           key={value}
           onClick={() => onChange(value)}
@@ -36,15 +38,17 @@ export default function SegmentMenu<T extends string>({
             'active:bg-extra-dim',
           )}
         >
-          {icon
-            ? selected === value && iconSelected
-              ? iconSelected
-              : icon
-            : <span className={clsx(
-              'text-sm font-medium uppercase tracking-wider',
-            )}>
-              {value}
-            </span>}
+          {isLoading
+            ? <Spinner />
+            : icon
+              ? selected === value && iconSelected
+                ? iconSelected
+                : icon
+              : <span className={clsx(
+                'text-sm font-medium uppercase tracking-wider',
+              )}>
+                {value}
+              </span>}
         </button>
       ))}
     </div>

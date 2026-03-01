@@ -1,55 +1,55 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
-import { altTextForPhoto, doesPhotoNeedBlurCompatibility, Photo } from '..';
+import {
+  altTextForPhoto,
+  doesPhotoNeedBlurCompatibility,
+  INFINITE_SCROLL_GRID_MULTIPLE,
+  Photo,
+} from '..';
 import clsx from 'clsx/lite';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import ImageMedium from '@/components/image/ImageMedium';
 import { menuSurfaceStyles } from '@/components/primitives/surface';
-import { GRID_SPACE_CLASSNAME } from '@/components';
-import useDynamicPhoto from '../useDynamicPhoto';
 import { IoSearch } from 'react-icons/io5';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import usePhotoQuery from '../usePhotoQuery';
-import Spinner from '@/components/Spinner';
 import { BiChevronDown } from 'react-icons/bi';
 import SegmentMenu from '@/components/SegmentMenu';
 import IconFavs from '@/components/icons/IconFavs';
-import IconLock from '@/components/icons/IconLock';
+import InfinitePhotoScroll from '../InfinitePhotoScroll';
 
-type Mode = 'all' | 'favs' | 'hidden' | 'search';
+type Mode = 'all' | 'favs' | 'search';
 
-const renderPhoto = ({
-  photo,
-  className,
-  onClick,
-}: {
-  photo: Photo,
-  className?: string,
-  onClick?: () => void,
-}) =>
+const CLASSNAME_GRID = 'grid grid-cols-3 gap-0.5';
+
+const renderPhoto = (photo: Photo) =>
   <ImageMedium
     src={photo.url}
     alt={altTextForPhoto(photo)}
     aspectRatio={photo.aspectRatio}
     blurDataURL={photo.blurData}
     blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
-    {...{ className, onClick }}
   />;
 
 export default function FieldsetPhotoChooser({
   label,
   value,
   onChange,
-  photo,
+  photo: _photo,
   photos = [],
+  photosCount,
 }: {
   label: string
   value: string
-  onChange: (value: string) => void
+  onChange: (photoId: string) => void
   photo?: Photo
-  photos?: Photo[]
-  photosCount?: number
-  photosHidden?: Photo[]
+  photos: Photo[]
+  photosCount: number
 }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const [photo, setPhoto] = useState(_photo);
+
   const [mode, setMode] = useState<Mode>('all');
 
   const showQuery = mode === 'search';
@@ -59,42 +59,60 @@ export default function FieldsetPhotoChooser({
   const [query, setQuery] = useState('');
   const {
     photos: photosQuery,
-    isLoading,
-    reset,
-  } = usePhotoQuery(query);
+    isLoading: isLoadingPhotoQuery,
+    reset: resetPhotoQuery,
+  } = usePhotoQuery({ query, isPrivate: true });
 
-  const {
-    photo: photoAvatar,
-    isLoading: isLoadingPhotoAvatar,
-  } = useDynamicPhoto({
-    initialPhoto: photo,
-    photoId: value,
-  });
+  const reset = useCallback((resetMenu?: boolean) => {
+    resetPhotoQuery();
+    setQuery('');
+    if (resetMenu) { setMode('all'); }
+  }, [resetPhotoQuery]);
 
+  // Focus input on query mode
   useEffect(() => {
-    if (showQuery) {
-      inputRef.current?.focus();
-    } else {
-      reset();
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setQuery('');
-    }
-  }, [showQuery, reset]);
+    if (showQuery) { inputRef.current?.focus(); }
+  }, [showQuery]);
+
+  // Reset menu when closed
+  useEffect(() => {
+    if (!isOpen) { reset(true); }
+  }, [isOpen, reset]);
+
+  const renderPhotoButton = (photo: Photo) =>
+    <span
+      key={photo.id}
+      className={clsx(
+        'flex w-full aspect-square object-cover',
+        'overflow-hidden select-none active:opacity-75',
+        'cursor-pointer',
+      )}
+      onClick={() => {
+        setPhoto(photo);
+        onChange(photo.id);
+        setIsOpen(false);
+      }}
+    >
+      {renderPhoto(photo)}
+    </span>;
 
   return (
     <>
       <FieldsetWithStatus {...{ label, value, onChange, type: 'hidden' }} />
-      <DropdownMenu.Root>
+      <DropdownMenu.Root open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenu.Trigger asChild>
-          <button type="button" className="inline-flex flex-col p-1.5">
+          <button type="button" className={clsx(
+            'inline-flex flex-col p-1.5 pt-0 gap-0',
+          )}>
             <span className={clsx(
               'w-full',
               'flex items-center gap-1',
               'font-sans',
               'text-xs text-medium font-medium uppercase tracking-wider',
+              'py-1',
             )}>
               <span className="grow truncate text-left">
-                Avatar
+                {label}
               </span>
               <BiChevronDown size={18} />
             </span>
@@ -103,10 +121,7 @@ export default function FieldsetPhotoChooser({
               'border border-medium rounded-[4px]',
               'overflow-hidden select-none active:opacity-75',
             )}>
-              {photoAvatar && renderPhoto({
-                photo: photoAvatar,
-                className: clsx(isLoadingPhotoAvatar && 'opacity-50'),
-              })}
+              {photo && renderPhoto(photo)}
             </span>
           </button>
         </DropdownMenu.Trigger>
@@ -115,59 +130,65 @@ export default function FieldsetPhotoChooser({
             onCloseAutoFocus={e => e.preventDefault()}
             align="start"
             sideOffset={10}
-            className={menuSurfaceStyles('z-20 px-1.5 py-1.5 rounded-2xl')}
+            className={menuSurfaceStyles('z-20 rounded-2xl pb-0 overflow-auto')}
           >
+            <SegmentMenu
+              className="pt-1 pb-2 px-1.5"
+              items={[{
+                value: 'all',
+              }, {
+                value: 'favs',
+                icon: <IconFavs size={16} />,
+                iconSelected: <IconFavs size={16} highlight />,
+              }, {
+                value: 'search',
+                icon: <IoSearch size={16} />,
+                isLoading: isLoadingPhotoQuery,
+              }]}
+              selected={mode}
+              onChange={mode => {
+                setMode(mode);
+                if (mode !== 'search') {
+                  reset();
+                }
+              }}
+            />
             <div className={clsx(
-              GRID_SPACE_CLASSNAME,
-              'w-[18rem] max-h-[20rem] rounded-xl overflow-y-auto',
+              'border-t border-medium',
+              'p-1',
+              !showQuery && 'hidden',
             )}>
-              <SegmentMenu
-                className="pt-1 pb-2 px-1.5"
-                items={[{
-                  value: 'all',
-                }, {
-                  value: 'favs',
-                  icon: <IconFavs size={16} />,
-                  iconSelected: <IconFavs size={16} highlight />,
-                }, {
-                  value: 'hidden',
-                  icon: <IconLock size={15} />,
-                }, {
-                  value: 'search',
-                  icon: isLoading
-                    ? <Spinner />
-                    : <IoSearch size={16} />,
-                }]}
-                selected={mode}
-                onChange={setMode}
+              <input
+                id="query"
+                ref={inputRef}
+                type="text"
+                placeholder="Search for a photo"
+                className="block w-full m-0 border-none outline-none"
+                value={query}
+                onChange={e => setQuery(e.target.value)}
               />
-              {showQuery &&
-                <input
-                  ref={inputRef}
-                  type="text"
-                  placeholder="Search for a photo"
-                  className="block w-full m-0"
-                  value={query}
-                  onChange={e => setQuery(e.target.value)}
-                />}
-              <div className={clsx(
-                'grid grid-cols-3 gap-0.5',
-              )}>
-                {(showQuery && query ? photosQuery : photos).map(photo => (
-                  <span
-                    key={photo.id}
-                    className={clsx(
-                      'flex w-full aspect-square object-cover',
-                      'overflow-hidden select-none active:opacity-75',
-                    )}
-                  >
-                    {renderPhoto({
-                      photo,
-                      onClick: () => onChange(photo.id),
-                    })}
-                  </span>
-                ))}
+            </div>
+            <div className={clsx(
+              'w-[18rem] max-h-[20rem] overflow-y-auto',
+              'space-y-0.5',
+            )}>
+              <div className={CLASSNAME_GRID}>
+                {(showQuery && query ? photosQuery : photos)
+                  .map(photo => renderPhotoButton(photo))}
               </div>
+              {!(showQuery && query) && photosCount > photos.length &&
+                <InfinitePhotoScroll
+                  cacheKey="photo-chooser"
+                  initialOffset={photos.length}
+                  itemsPerPage={INFINITE_SCROLL_GRID_MULTIPLE}
+                  moreButtonClassName="mt-2"
+                >
+                  {({ key, photos }) => (
+                    <div key={key} className={CLASSNAME_GRID}>
+                      {photos.map(photo => renderPhotoButton(photo))}
+                    </div>
+                  )}
+                </InfinitePhotoScroll>}
             </div>
           </DropdownMenu.Content>
         </DropdownMenu.Portal>

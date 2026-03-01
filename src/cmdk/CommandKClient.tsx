@@ -250,7 +250,7 @@ export default function CommandKClient({
     photos,
     isLoading,
     reset,
-  } = usePhotoQuery(query, !isPending);
+  } = usePhotoQuery({ query, isEnabled: !isPending });
 
   const { setTheme } = useTheme();
 

@@ -22,14 +22,12 @@ export default function AdminAboutEditPage({
   photoHero: _photoHero,
   photos,
   photosCount,
-  photosHidden,
 }: {
   about?: About
   photoAvatar?: Photo
   photoHero?: Photo
-  photos?: Photo[]
-  photosCount?: number
-  photosHidden?: Photo[]
+  photos: Photo[]
+  photosCount: number
   shouldResizeImages?: boolean
 }) {
   const appText = useAppText();
@@ -73,7 +71,6 @@ export default function AdminAboutEditPage({
             photo={photoAvatar}
             photos={photos}
             photosCount={photosCount}
-            photosHidden={photosHidden}
           />
           <PhotoAvatar photo={photoAvatar} />
           <FieldsetWithStatus

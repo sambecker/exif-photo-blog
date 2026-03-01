@@ -13,7 +13,7 @@ import { Photo } from '@/photo';
 import FieldsetPhotoQuery from '@/photo/form/FieldsetPhotoQuery';
 import FieldsetPhotoChooser from '@/photo/form/FieldsetPhotoChooser';
 
-export default function ComponentsPageClient({
+export default function AdminComponentPageClient({
   photo,
   photos,
   photosCount,
