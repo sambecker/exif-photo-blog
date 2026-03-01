@@ -24,23 +24,29 @@ export default async function AboutEditPage() {
     photosCount,
     photosHidden,
   ] = await Promise.all([
-    getAbout().then(async about => {
-      const photoAvatar = about?.photoIdAvatar
-        ? await getPhoto(about?.photoIdAvatar ?? '', true)
-          .catch(() => undefined)
-        : undefined;
+    getAbout()
+      .then(async about => {
+        const photoAvatar = about?.photoIdAvatar
+          ? await getPhoto(about?.photoIdAvatar ?? '', true)
+            .catch(() => undefined)
+          : undefined;
 
-      const photoHero = about?.photoIdHero
-        ? await getPhoto(about?.photoIdHero ?? '', true)
-          .catch(() => undefined)
-        : undefined;
+        const photoHero = about?.photoIdHero
+          ? await getPhoto(about?.photoIdHero ?? '', true)
+            .catch(() => undefined)
+          : undefined;
 
-      return {
-        about,
-        photoAvatar,
-        photoHero,
-      };
-    }),
+        return {
+          about,
+          photoAvatar,
+          photoHero,
+        };
+      })
+      .catch(() => ({
+        about: undefined,
+        photoAvatar: undefined,
+        photoHero: undefined,
+      })),
     getPhotosCached(PHOTO_CHOOSER_QUERY_OPTIONS)
       .catch(() => []),
     getPhotosMetaCached(PHOTO_CHOOSER_QUERY_OPTIONS)

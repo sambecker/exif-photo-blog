@@ -67,7 +67,7 @@ export default function AdminAboutEditPage({
             label="Avatar Photo"
             value={aboutForm?.photoIdAvatar ?? ''}
             onChange={photoIdAvatar => setAboutForm(form =>
-              ({ ...form, photoIdAvatar: convertUrlToPhotoId(photoIdAvatar) }))}
+              ({ ...form, photoIdAvatar }))}
             photo={photoAvatar}
             photos={photos}
             photosCount={photosCount}
