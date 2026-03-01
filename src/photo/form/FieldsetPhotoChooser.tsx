@@ -38,6 +38,7 @@ export default function FieldsetPhotoChooser({
   photo: _photo,
   photos = [],
   photosCount,
+  photosFavs,
 }: {
   label: string
   value: string
@@ -45,6 +46,7 @@ export default function FieldsetPhotoChooser({
   photo?: Photo
   photos: Photo[]
   photosCount: number
+  photosFavs: Photo[]
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -154,41 +156,48 @@ export default function FieldsetPhotoChooser({
               }}
             />
             <div className={clsx(
-              'border-t border-medium',
-              'p-1',
-              !showQuery && 'hidden',
+              'flex items-center transition-all overflow-hidden',
+              showQuery ? 'h-12 opacity-100' : 'h-0 opacity-0',
             )}>
-              <input
-                id="query"
-                ref={inputRef}
-                type="text"
-                placeholder="Search for a photo"
-                className="block w-full m-0 border-none outline-none"
-                value={query}
-                onChange={e => setQuery(e.target.value)}
-              />
+              <div className="p-1 border-t border-medium w-full">
+                <input
+                  id="query"
+                  ref={inputRef}
+                  type="text"
+                  placeholder="Search for a photo"
+                  className="block w-full m-0 border-none outline-none"
+                  value={query}
+                  onChange={e => setQuery(e.target.value)}
+                />
+              </div>
             </div>
             <div className={clsx(
               'w-[18rem] max-h-[20rem] overflow-y-auto',
               'space-y-0.5',
             )}>
               <div className={CLASSNAME_GRID}>
-                {(showQuery && query ? photosQuery : photos)
+                {(showQuery && query
+                  ? photosQuery
+                  : mode === 'favs'
+                    ? photosFavs : photos)
                   .map(photo => renderPhotoButton(photo))}
               </div>
-              {!(showQuery && query) && photosCount > photos.length &&
-                <InfinitePhotoScroll
-                  cacheKey="photo-chooser"
-                  initialOffset={photos.length}
-                  itemsPerPage={INFINITE_SCROLL_GRID_MULTIPLE}
-                  moreButtonClassName="mt-2"
-                >
-                  {({ key, photos }) => (
-                    <div key={key} className={CLASSNAME_GRID}>
-                      {photos.map(photo => renderPhotoButton(photo))}
-                    </div>
-                  )}
-                </InfinitePhotoScroll>}
+              {
+                !(showQuery && query) &&
+                photosCount > photos.length &&
+                mode !== 'favs' &&
+                  <InfinitePhotoScroll
+                    cacheKey="photo-chooser"
+                    initialOffset={photos.length}
+                    itemsPerPage={INFINITE_SCROLL_GRID_MULTIPLE}
+                    moreButtonClassName="mt-2"
+                  >
+                    {({ key, photos }) => (
+                      <div key={key} className={CLASSNAME_GRID}>
+                        {photos.map(photo => renderPhotoButton(photo))}
+                      </div>
+                    )}
+                  </InfinitePhotoScroll>}
             </div>
           </DropdownMenu.Content>
         </DropdownMenu.Portal>

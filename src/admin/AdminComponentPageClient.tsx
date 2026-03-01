@@ -16,10 +16,12 @@ export default function AdminComponentPageClient({
   photo,
   photos,
   photosCount,
+  photosFavs,
 }: {
   photo: Photo
   photos: Photo[]
   photosCount: number
+  photosFavs: Photo[]
 }) {
   const [valuePhoto, setValuePhoto] = useState(photo?.id ?? '');
 
@@ -43,6 +45,7 @@ export default function AdminComponentPageClient({
             photo={photo}
             photos={photos}
             photosCount={photosCount}
+            photosFavs={photosFavs}
             value={valuePhoto}
             onChange={setValuePhoto}
           />

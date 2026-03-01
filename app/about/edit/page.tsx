@@ -7,6 +7,7 @@ import {
   getPhotosMetaCached,
 } from '@/photo/cache';
 import { getPhoto } from '@/photo/query';
+import { TAG_FAVS } from '@/tag';
 
 const PHOTO_CHOOSER_QUERY_OPTIONS = feedQueryOptions({
   isGrid: true,
@@ -22,7 +23,7 @@ export default async function AboutEditPage() {
     },
     photos,
     photosCount,
-    photosHidden,
+    photosFavs,
   ] = await Promise.all([
     getAbout()
       .then(async about => {
@@ -52,7 +53,7 @@ export default async function AboutEditPage() {
     getPhotosMetaCached(PHOTO_CHOOSER_QUERY_OPTIONS)
       .then(({ count }) => count)
       .catch(() => 0),
-    getPhotosCached({ hidden: 'only', limit: 1000 })
+    getPhotosCached({ tag: TAG_FAVS })
       .catch(() => []),
   ]);
 
@@ -63,7 +64,7 @@ export default async function AboutEditPage() {
       photoHero,
       photos,
       photosCount,
-      photosHidden,
+      photosFavs,
       shouldResizeImages: !PRESERVE_ORIGINAL_UPLOADS,
     }} />
   );
