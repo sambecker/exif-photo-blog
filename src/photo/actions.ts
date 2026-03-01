@@ -798,7 +798,7 @@ export const getPhotosCachedAction = async (
 
 // Public actions
 
-export const searchPhotosAction = async (query: string) =>
+export const searchPhotosPublicAction = async (query: string) =>
   getPhotos({ query, limit: 10 })
     .catch(e => {
       console.error('Could not query photos', e);

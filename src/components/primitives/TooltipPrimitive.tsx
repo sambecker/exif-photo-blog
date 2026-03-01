@@ -2,7 +2,7 @@
 
 import { ReactNode, useRef, useState, ComponentProps } from 'react';
 import * as Tooltip from '@radix-ui/react-tooltip';
-import MenuSurface from './MenuSurface';
+import ComponentSurface from './surface/ComponentSurface';
 import clsx from 'clsx/lite';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
 import KeyCommand from './KeyCommand';
@@ -31,7 +31,7 @@ export default function TooltipPrimitive({
   children: ReactNode
   className?: string
   classNameTrigger?: string
-  color?: ComponentProps<typeof MenuSurface>['color']
+  color?: ComponentProps<typeof ComponentSurface>['color']
   keyCommand?: string
   keyCommandModifier?: ComponentProps<typeof KeyCommand>['modifier']
   supportMobile?: boolean
@@ -126,9 +126,9 @@ export default function TooltipPrimitive({
             )}
           >
             {content &&
-              <MenuSurface {...{ color, className }}>
+              <ComponentSurface {...{ color, className }}>
                 {content}
-              </MenuSurface>}
+              </ComponentSurface>}
           </Tooltip.Content>
         </Tooltip.Portal>
       </Tooltip.Root>

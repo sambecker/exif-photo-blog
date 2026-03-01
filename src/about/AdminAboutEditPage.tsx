@@ -14,15 +14,22 @@ import PhotoMedium from '@/photo/PhotoMedium';
 import clsx from 'clsx/lite';
 import useDynamicPhoto from '@/photo/useDynamicPhoto';
 import { useAppText } from '@/i18n/state/client';
+import FieldsetPhotoChooser from '@/photo/form/FieldsetPhotoChooser';
 
 export default function AdminAboutEditPage({
   about,
   photoAvatar: _photoAvatar,
   photoHero: _photoHero,
+  photos,
+  photosCount,
+  photosFavs,
 }: {
   about?: About
   photoAvatar?: Photo
   photoHero?: Photo
+  photos: Photo[]
+  photosCount: number
+  photosFavs: Photo[]
   shouldResizeImages?: boolean
 }) {
   const appText = useAppText();
@@ -58,6 +65,16 @@ export default function AdminAboutEditPage({
         action={updateAboutAction}
       >
         <div className="space-y-4">
+          <FieldsetPhotoChooser
+            label="Avatar Photo"
+            value={aboutForm?.photoIdAvatar ?? ''}
+            onChange={photoIdAvatar => setAboutForm(form =>
+              ({ ...form, photoIdAvatar }))}
+            photo={photoAvatar}
+            photos={photos}
+            photosCount={photosCount}
+            photosFavs={photosFavs}
+          />
           <PhotoAvatar photo={photoAvatar} />
           <FieldsetWithStatus
             id="photoIdAvatar"

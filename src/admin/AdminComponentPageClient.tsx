@@ -10,16 +10,20 @@ import StatusIcon from '@/components/StatusIcon';
 import clsx from 'clsx/lite';
 import { useState } from 'react';
 import { Photo } from '@/photo';
-import FieldsetPhotoQuery from '@/photo/FieldsetPhotoQuery';
-import FieldsetPhotoChooser from '@/photo/FieldsetPhotoChooser';
+import FieldsetPhotoChooser from '@/photo/form/FieldsetPhotoChooser';
 
-export default function ComponentsPageClient({
+export default function AdminComponentPageClient({
   photo,
+  photos,
+  photosCount,
+  photosFavs,
 }: {
   photo: Photo
+  photos: Photo[]
+  photosCount: number
+  photosFavs: Photo[]
 }) {
   const [valuePhoto, setValuePhoto] = useState(photo?.id ?? '');
-  const [valuePhotoChooser, setValuePhotoChooser] = useState(photo?.id ?? '');
 
   const [value, setValue] = useState('visible');
 
@@ -39,14 +43,9 @@ export default function ComponentsPageClient({
           <FieldsetPhotoChooser
             label="Photo"
             photo={photo}
-            value={valuePhotoChooser}
-            onChange={setValuePhotoChooser}
-          />
-        </div>
-        <div className="z-13">
-          <FieldsetPhotoQuery
-            label="Photo"
-            photos={[photo]}
+            photos={photos}
+            photosCount={photosCount}
+            photosFavs={photosFavs}
             value={valuePhoto}
             onChange={setValuePhoto}
           />

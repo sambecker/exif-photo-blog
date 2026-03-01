@@ -9,12 +9,12 @@ import PhotoFullPage from '@/photo/PhotoFullPage';
 import PhotoGridPage from '@/photo/PhotoGridPage';
 import { getDataForCategoriesCached } from '@/category/cache';
 import { getPhotosMetaCached } from '@/photo/cache';
-import { FEED_META_QUERY_OPTIONS, getFeedQueryOptions } from '@/feed';
+import { FEED_META_QUERY_OPTIONS, feedQueryOptions } from '@/feed';
 
 export const dynamic = 'force-static';
 export const maxDuration = 60;
 
-const getPhotosCached = cache(() => getPhotos(getFeedQueryOptions({
+const getPhotosCached = cache(() => getPhotos(feedQueryOptions({
   isGrid: GRID_HOMEPAGE_ENABLED,
 })));
 

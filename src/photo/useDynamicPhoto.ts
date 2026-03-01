@@ -14,7 +14,7 @@ export default function useDynamicPhoto({
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [photoIdDebounced] = useDebounce(photoId, 500);
+  const [photoIdDebounced] = useDebounce(photoId, 500, { leading: true });
 
   useEffect(() => {
     if (photoIdDebounced) {

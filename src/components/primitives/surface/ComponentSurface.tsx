@@ -1,7 +1,7 @@
 import { ReactNode, RefObject } from 'react';
 import clsx from 'clsx/lite';
 
-export default function MenuSurface({
+export default function ComponentSurface({
   ref,
   children,
   className,
