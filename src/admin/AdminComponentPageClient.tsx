@@ -10,7 +10,6 @@ import StatusIcon from '@/components/StatusIcon';
 import clsx from 'clsx/lite';
 import { useState } from 'react';
 import { Photo } from '@/photo';
-import FieldsetPhotoQuery from '@/photo/form/FieldsetPhotoQuery';
 import FieldsetPhotoChooser from '@/photo/form/FieldsetPhotoChooser';
 
 export default function AdminComponentPageClient({
@@ -23,7 +22,6 @@ export default function AdminComponentPageClient({
   photosCount: number
 }) {
   const [valuePhoto, setValuePhoto] = useState(photo?.id ?? '');
-  const [valuePhotoChooser, setValuePhotoChooser] = useState(photo?.id ?? '');
 
   const [value, setValue] = useState('visible');
 
@@ -45,14 +43,6 @@ export default function AdminComponentPageClient({
             photo={photo}
             photos={photos}
             photosCount={photosCount}
-            value={valuePhotoChooser}
-            onChange={setValuePhotoChooser}
-          />
-        </div>
-        <div className="z-13">
-          <FieldsetPhotoQuery
-            label="Photo"
-            photos={[photo]}
             value={valuePhoto}
             onChange={setValuePhoto}
           />
