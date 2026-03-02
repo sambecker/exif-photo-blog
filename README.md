@@ -403,6 +403,7 @@ Partial internationalization (for non-admin, user-facing text) provided for a ha
 - `bd-bn`
 - `en-gb`
 - `en-us`
+- `es-es`
 - `hi-in`
 - `id-id`
 - `pt-br`
@@ -410,7 +411,6 @@ Partial internationalization (for non-admin, user-facing text) provided for a ha
 - `tr-tr`
 - `vi-vn`
 - `zh-cn`
-- `es-es`
 
 To add support for a new language, open a PR following instructions in [/src/i18n/index.ts](https://github.com/sambecker/exif-photo-blog/blob/main/src/i18n/index.ts), using [en-us.ts](https://github.com/sambecker/exif-photo-blog/blob/main/src/i18n/locales/en-us.ts) as reference.
 
