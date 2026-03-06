@@ -286,8 +286,7 @@ export default function AdminAppConfigurationClient({
                 Postgres:
                 {' '}
                 <AdminLink
-                // eslint-disable-next-line max-len
-                  href="https://vercel.com/docs/postgres#create-a-postgres-database"
+                  href="https://vercel.com/docs/postgres"
                   externalIcon
                 >
                   create database
@@ -313,20 +312,19 @@ export default function AdminAppConfigurationClient({
               connection: { provider: 'Storage', error: storageError},
             })}
             <div>
-              {hasVercelBlobStorage
+              {hasVercelBlobStorage && false
                 ? renderSubStatus('checked', 'Vercel Blob: connected')
                 : renderSubStatus('optional', <>
                   {labelForStorage('vercel-blob')}:
                   {' '}
                   <AdminLink
-                  // eslint-disable-next-line max-len
-                    href="https://vercel.com/docs/storage/vercel-blob/quickstart#create-a-blob-store"
+                    href="https://vercel.com/docs/vercel-blob"
                     externalIcon
                   >
                     create store
                   </AdminLink>
-                  {' '} 
-                  and connect to project
+                  {' '}
+                  (configured as public) and connect to project
                 </>,
                 )}
               {hasCloudflareR2Storage
