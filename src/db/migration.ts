@@ -103,13 +103,19 @@ export const MIGRATIONS: Migration[] = [{
   `),
 }, {
   label: '09: Image Dimensions',
-  table: 'photos',
   fields: ['width', 'height'],
   run: () => sql`
     ALTER TABLE photos
     ADD COLUMN IF NOT EXISTS width INTEGER,
     ADD COLUMN IF NOT EXISTS height INTEGER
   `,
+}, {
+  label: '10: ISO',
+  fields: ['iso'],
+  run: () => query(`
+    ALTER TABLE photos
+    ALTER COLUMN iso TYPE INTEGER
+  `),
 }];
 
 export const migrationForError = (e: any) =>
@@ -117,6 +123,8 @@ export const migrationForError = (e: any) =>
     fields.some(field =>(
       // eslint-disable-next-line max-len
       new RegExp(`column "${field}" of relation "${table}" does not exist`, 'i').test(e.message) ||
-      new RegExp(`column "${field}" does not exist`, 'i').test(e.message)
+      new RegExp(`column "${field}" does not exist`, 'i').test(e.message) ||
+      // eslint-disable-next-line max-len
+      field === 'iso' && new RegExp('out of range for type smallint', 'i').test(e.message)
     )),
   );

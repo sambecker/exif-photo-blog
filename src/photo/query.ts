@@ -59,7 +59,7 @@ export const createPhotosTable = () =>
       lens_make VARCHAR(255),
       lens_model VARCHAR(255),
       f_number REAL,
-      iso SMALLINT,
+      iso INTEGER,
       exposure_time DOUBLE PRECISION,
       exposure_compensation REAL,
       location_name VARCHAR(255),
