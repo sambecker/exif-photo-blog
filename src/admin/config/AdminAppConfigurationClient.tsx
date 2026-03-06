@@ -312,7 +312,7 @@ export default function AdminAppConfigurationClient({
               connection: { provider: 'Storage', error: storageError},
             })}
             <div>
-              {hasVercelBlobStorage && false
+              {hasVercelBlobStorage
                 ? renderSubStatus('checked', 'Vercel Blob: connected')
                 : renderSubStatus('optional', <>
                   {labelForStorage('vercel-blob')}:
