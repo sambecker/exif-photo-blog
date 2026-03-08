@@ -198,7 +198,10 @@ export default function AboutPageClient({
                   </Link>}
             <AnimateItems
               className={clsx(
-                'grid gap-x-2 gap-y-6 grid-cols-2 lg:grid-cols-4',
+                'grid gap-x-2 gap-y-6 grid-cols-2',
+                items.length <= 6
+                  ? 'lg:grid-cols-3'
+                  : 'lg:grid-cols-4',
               )}
               items={items}
             />
