@@ -39,6 +39,7 @@
     "ILCE",
     "ILIKE",
     "ILME",
+    "imgproxy",
     "jpgs",
     "Lightbox",
     "Makernote",
@@ -71,6 +72,7 @@
     "Supabase",
     "thephotoblog",
     "trpc",
+    "turbopack",
     "Turbopack",
     "Unfavoriting",
     "Unhiding",
@@ -88,5 +90,8 @@
   ],
   "files.associations": {
     "*.css": "tailwindcss"
-  }
+  },
+  "prettier.singleQuote": true,
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "single"
 }
