@@ -123,7 +123,8 @@ export const minioGetSignedUrl = (
   method: 'GET' | 'PUT',
   expiresIn: number,
 ) => {
-  const client = minioClient();
+  // Use public client for presigned URLs so they work from browser
+  const client = minioClientPublic();
   const command =
     method === 'GET'
       ? new GetObjectCommand({ Bucket: MINIO_BUCKET, Key })
