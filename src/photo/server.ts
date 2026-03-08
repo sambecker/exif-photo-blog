@@ -95,14 +95,33 @@ export const extractImageDataFromBlobPath = async (
 
   const fetchUrl = resolveLocalUrlForServer(url);
 
-  const fileBytes = blobPath
-    ? await fetch(fetchUrl, { cache: 'no-store' })
-      .then((res) => res.arrayBuffer())
-      .catch((e: Error & { cause?: unknown }) => {
-        error = `Error fetching image from ${url}: "${e.message}"`;
-        return undefined;
-      })
-    : undefined;
+  // For MinIO URLs, use S3 client directly to avoid presigned URL issues
+  // with internal container networking
+  const fileBytes = await (async (): Promise<ArrayBuffer | undefined> => {
+    if (!blobPath) return undefined;
+    
+    try {
+      // Try to fetch from the resolved URL first
+      const response = await fetch(fetchUrl, { cache: 'no-store' });
+      if (response.ok) {
+        return response.arrayBuffer();
+      }
+      
+      // If fetch fails (e.g., 403 with presigned URL), try S3 client for MinIO
+      if (url.includes('localhost:9000') || url.includes('minio:9000')) {
+        const { minioGetObject } = await import('@/platforms/storage/minio');
+        const key = url.split('/').pop();
+        if (key) {
+          return await minioGetObject(key);
+        }
+      }
+      
+      throw new Error(`Fetch failed with status: ${response.status}`);
+    } catch (e: any) {
+      error = `Error fetching image from ${url}: "${e.message}"`;
+      return undefined;
+    }
+  })();
 
   try {
     if (fileBytes) {

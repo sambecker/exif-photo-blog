@@ -131,3 +131,23 @@ export const minioGetSignedUrl = (
       : new PutObjectCommand({ Bucket: MINIO_BUCKET, Key, ACL: 'public-read' });
   return getSignedUrl(client, command, { expiresIn });
 };
+
+export const minioGetObject = async (Key: string): Promise<ArrayBuffer> => {
+  const client = minioClient();
+  const command = new GetObjectCommand({
+    Bucket: MINIO_BUCKET,
+    Key,
+  });
+  const response = await client.send(command);
+  // Convert the readable stream to a buffer
+  const chunks: Buffer[] = [];
+  // @ts-expect-error - Body is a ReadableStream
+  for await (const chunk of response.Body) {
+    chunks.push(Buffer.from(chunk));
+  }
+  const buffer = Buffer.concat(chunks);
+  return buffer.buffer.slice(
+    buffer.byteOffset,
+    buffer.byteOffset + buffer.byteLength,
+  );
+};
