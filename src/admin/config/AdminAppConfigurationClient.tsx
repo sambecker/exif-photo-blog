@@ -109,6 +109,7 @@ export default function AdminAppConfigurationClient({
   showAboutPage,
   showKeyboardShortcutTooltips,
   showExifInfo,
+  alwaysShowExposureComp,
   showZoomControls,
   showTakenAtTimeHidden,
   showRepoLink,
@@ -802,6 +803,15 @@ export default function AdminAppConfigurationClient({
           >
             Set environment variable to {'"1"'} to hide EXIF data
             {renderEnvVars(['NEXT_PUBLIC_HIDE_EXIF_DATA'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Always show exposure compensation"
+            status={alwaysShowExposureComp}
+            optional
+          >
+            Set environment variable to {'"1"'} to always show
+            exposure compensation even when {'it\'s'} 0ev
+            {renderEnvVars(['NEXT_PUBLIC_ALWAYS_SHOW_EXPOSURE_COMP'])}
           </ChecklistRow>
           <ChecklistRow
             title="Show zoom controls"

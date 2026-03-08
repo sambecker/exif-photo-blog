@@ -30,6 +30,7 @@ import {
   SHOW_TAKEN_AT_TIME,
   MATTE_COLOR,
   MATTE_COLOR_DARK,
+  ALWAYS_SHOW_EXPOSURE_COMP,
 } from '@/app/config';
 import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
@@ -401,7 +402,9 @@ export default function PhotoLarge({
                       <li>{photo.fNumberFormatted}</li>
                       <li>{photo.exposureTimeFormatted}</li>
                       <li>{photo.isoFormatted}</li>
-                      <li>{photo.exposureCompensationFormatted ?? '0ev'}</li>
+                      {photo.exposureCompensationFormatted
+                        ? <li>{photo.exposureCompensationFormatted}</li>
+                        : ALWAYS_SHOW_EXPOSURE_COMP && <li>0ev</li>}
                     </ul>
                     {showFilmContent && photo.film &&
                       <PhotoFilm
