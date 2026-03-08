@@ -14,6 +14,9 @@ export type NextImageSize = NextCustomSize | NextImageDeviceSize;
 
 export const MAX_IMAGE_SIZE: NextImageSize = 3840;
 
+// Check if image optimization is disabled
+const IMAGE_UNOPTIMIZED = process.env.NEXT_PUBLIC_IMAGE_UNOPTIMIZED === '1';
+
 export const getNextImageUrlForRequest = ({
   imageUrl,
   size,
@@ -21,12 +24,17 @@ export const getNextImageUrlForRequest = ({
   baseUrl = BASE_URL,
   addBypassSecret,
 }: {
-  imageUrl: string
-  size: NextImageSize
-  quality?: number
-  baseUrl?: string
-  addBypassSecret?: boolean
+  imageUrl: string;
+  size: NextImageSize;
+  quality?: number;
+  baseUrl?: string;
+  addBypassSecret?: boolean;
 }) => {
+  // If unoptimized, return the original image URL directly
+  if (IMAGE_UNOPTIMIZED) {
+    return imageUrl;
+  }
+
   const url = new URL(`${baseUrl}/_next/image`);
 
   url.searchParams.append('url', imageUrl);
