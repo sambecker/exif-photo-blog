@@ -47,7 +47,7 @@ export default function AdminAboutEditPage({
           <FieldsetPhotoChooser
             id="photoIdAvatar"
             label="Avatar"
-            value={aboutForm?.photoIdAvatar || photoAvatar?.id || ''}
+            value={aboutForm?.photoIdAvatar ?? photoAvatar?.id ?? ''}
             onChange={photoIdAvatar => setAboutForm(form =>
               ({ ...form, photoIdAvatar }))}
             photo={photoAvatar}

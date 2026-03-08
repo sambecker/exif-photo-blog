@@ -164,30 +164,54 @@ export default function FieldsetPhotoChooser({
               'z-20 rounded-2xl pb-0 overflow-auto',
             )}
           >
-            <SegmentMenu
-              className="pt-1 pb-2 px-1.5"
-              items={[{
-                value: 'all',
-              }, {
-                value: 'favs',
-                icon: <IconFavs size={16} />,
-                iconSelected: <IconFavs size={16} highlight />,
-              }, {
-                value: 'search',
-                icon: <IoSearch size={16} />,
-                isLoading: isLoadingPhotoQuery,
-              }]}
-              selected={mode}
-              onChange={mode => {
-                setMode(mode);
-                if (mode !== 'search') {
-                  reset();
-                } else {
-                  refContainer.current?.scrollTo({ top: 0 });
-                  refInput.current?.focus();
-                }
-              }}
-            />
+            <div className={clsx(
+              'flex items-center',
+              'pt-1 pb-2',
+              photo
+                ? 'justify-between pl-1.5 pr-3'
+                : 'justify-center',
+            )}>
+              <SegmentMenu
+                items={[{
+                  value: 'all',
+                }, {
+                  value: 'favs',
+                  icon: <IconFavs size={16} />,
+                  iconSelected: <IconFavs size={16} highlight />,
+                }, {
+                  value: 'search',
+                  icon: <IoSearch size={16} />,
+                  isLoading: isLoadingPhotoQuery,
+                }]}
+                selected={mode}
+                onChange={mode => {
+                  setMode(mode);
+                  if (mode !== 'search') {
+                    reset();
+                  } else {
+                    refContainer.current?.scrollTo({ top: 0 });
+                    refInput.current?.focus();
+                  }
+                }}
+              />
+              {photo && <button
+                type="button"
+                className={clsx(
+                  'link',
+                  'font-sans',
+                  'text-xs text-medium font-medium uppercase tracking-wider',
+                  'py-1',
+                  'select-none',
+                )}
+                onClick={() => {
+                  setPhoto(undefined);
+                  props.onChange?.('');
+                  setIsOpen(false);
+                }}
+              >
+                Clear
+              </button>}
+            </div>
             <div
               ref={refContainer}
               className={clsx(
@@ -198,18 +222,15 @@ export default function FieldsetPhotoChooser({
               <div className={clsx(
                 'flex items-center transition-all overflow-hidden',
                 showQuery ? 'h-12 opacity-100' : 'h-0 opacity-0',
+                'border-t border-medium',
               )}>
-                <div className="w-full px-1.5">
+                <div className="w-full px-0.5">
                   <input
                     id="query"
                     ref={refInput}
                     type="text"
                     placeholder="Search for a photo"
-                    className={clsx(
-                      'block w-full m-0 outline-none',
-                      'rounded-full border border-dim',
-                      'mb-2',
-                    )}
+                    className="block w-full m-0 outline-none border-none"
                     value={query}
                     onChange={e => setQuery(e.target.value)}
                   />
