@@ -97,6 +97,8 @@ import IconSort from '@/components/icons/IconSort';
 import { useSelectPhotosState } from '@/admin/select/SelectPhotosState';
 import IconAlbum from '@/components/icons/IconAlbum';
 import usePhotoQuery from '@/photo/usePhotoQuery';
+import { clearCacheAction } from '@/photo/actions';
+import { toastSuccess } from '@/toast';
 
 const DIALOG_TITLE = 'Global Command-K Menu';
 const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
@@ -160,6 +162,7 @@ export default function CommandKClient({
     clearAuthStateAndRedirectIfNecessary,
     isCommandKOpen: isOpen,
     startUpload,
+    invalidateSwr,
     photosCountTotal,
     photosCountHidden = 0,
     uploadsCount,
@@ -650,6 +653,14 @@ export default function CommandKClient({
           stopSelectingPhotos?.();
         }
       },
+    }, {
+      label: appText.admin.clearCache,
+      annotation: <IconLock narrow />,
+      action: () => clearCacheAction()
+        .then(() => {
+          invalidateSwr?.();
+          toastSuccess(appText.admin.clearCacheSuccess);
+        }),
     }, {
       label: <span className="flex items-center gap-3">
         {appText.admin.appInsights}

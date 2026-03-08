@@ -8,15 +8,15 @@ export default function ToasterWithThemes() {
   const { resolvedTheme } = useTheme();
   return (
     <Toaster
-      theme={resolvedTheme as 'light' | 'dark' | undefined}
+      theme={resolvedTheme as 'light' | 'dark'}
       toastOptions={{
         classNames: {
           toast: clsx(
-            'flex items-center gap-x-1.5 p-4 w-full',
+            'flex items-center gap-x-1! px-5! py-4! w-full',
             'font-mono text-sm',
             'bg-white dark:bg-black',
             'text-gray-900 dark:text-gray-100',
-            'outline-medium! outline-offset-[-1px]',
+            'outline-medium! outline-offset-[-1px] rounded-xl!',
           ),
         },
       }}

@@ -141,6 +141,8 @@ export const TEXT: I18N = {
     selectPhotosExit: '停止选择',
     appInsights: '应用分析',
     appConfig: '应用配置',
+    clearCache: '清除缓存',
+    clearCacheSuccess: '站点缓存已清除',
     edit: '编辑',
     favorite: '收藏',
     unfavorite: '取消收藏',

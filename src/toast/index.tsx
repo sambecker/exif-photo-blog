@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { PiWarningBold } from 'react-icons/pi';
-import { FiCheckSquare } from 'react-icons/fi';
 import { toast } from 'sonner';
 import Spinner from '@/components/Spinner';
+import { FaRegCircleCheck } from 'react-icons/fa6';
 
 const DEFAULT_DURATION = 4000;
 
@@ -11,7 +11,10 @@ export const toastSuccess = (
   duration = DEFAULT_DURATION,
 ) => toast(
   message, {
-    icon: <FiCheckSquare size={16} />,
+    icon: <FaRegCircleCheck
+      size={15}
+      className="text-medium"
+    />,
     duration,
   },
 );
@@ -21,7 +24,10 @@ export const toastWarning = (
   duration = DEFAULT_DURATION,
 ) => toast(
   message, {
-    icon: <PiWarningBold size={16} />,
+    icon: <PiWarningBold
+      size={16}
+      className="text-medium"
+    />,
     duration,
   },
 );

@@ -141,6 +141,8 @@ export const TEXT: I18N = {
     selectPhotosExit: 'Dừng chọn',
     appInsights: 'Thống kê ứng dụng',
     appConfig: 'Cấu hình ứng dụng',
+    clearCache: 'Xóa bộ nhớ cache',
+    clearCacheSuccess: 'Đã xóa bộ nhớ cache của trang web',
     edit: 'Chỉnh sửa',
     favorite: 'Yêu thích',
     unfavorite: 'Bỏ yêu thích',

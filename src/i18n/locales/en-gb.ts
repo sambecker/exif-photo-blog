@@ -141,6 +141,8 @@ export const TEXT: I18N = {
     selectPhotosExit: 'Stop Selecting',
     appInsights: 'App Insights',
     appConfig: 'App Configuration',
+    clearCache: 'Clear Cache',
+    clearCacheSuccess: 'Site cache has been cleared',
     edit: 'Edit',
     favorite: 'Favourite',
     unfavorite: 'Unfavourite',

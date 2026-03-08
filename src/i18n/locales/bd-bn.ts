@@ -141,6 +141,8 @@ export const TEXT: I18N = {
     selectPhotosExit: 'নির্বাচন বন্ধ করুন',
     appInsights: 'অ্যাপ ইনসাইট',
     appConfig: 'অ্যাপ কনফিগারেশন',
+    clearCache: 'ক্যাশ সাফ করুন',
+    clearCacheSuccess: 'সাইট ক্যাশ সাফ করা হয়েছে',
     edit: 'এডিট',
     favorite: 'পছন্দ',
     unfavorite: 'পছন্দ অপসারণ',

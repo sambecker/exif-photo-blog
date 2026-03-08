@@ -140,6 +140,8 @@ export const TEXT = {
     selectPhotosExit: 'Stop Selecting',
     appInsights: 'App Insights',
     appConfig: 'App Configuration',
+    clearCache: 'Clear Cache',
+    clearCacheSuccess: 'Site cache has been cleared',
     edit: 'Edit',
     favorite: 'Favorite',
     unfavorite: 'Unfavorite',

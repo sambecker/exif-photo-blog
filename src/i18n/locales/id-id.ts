@@ -141,6 +141,8 @@ export const TEXT: I18N = {
     selectPhotosExit: 'Berhenti Memilih',
     appInsights: 'Wawasan Aplikasi',
     appConfig: 'Konfigurasi Aplikasi',
+    clearCache: 'Bersihkan Cache',
+    clearCacheSuccess: 'Cache situs telah dibersihkan',
     edit: 'Edit',
     favorite: 'Favorit',
     unfavorite: 'Hapus dari Favorit',
