@@ -1,15 +1,16 @@
 # 📷 `EXIF` Photo Blog
 
-https://github.com/sambecker/exif-photo-blog/assets/169298/4253ea54-558a-4358-8834-89943cfbafb4
+<https://github.com/sambecker/exif-photo-blog/assets/169298/4253ea54-558a-4358-8834-89943cfbafb4>
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/sambecker-pro/clone?demo-description=Store%20photos%20with%20original%20camera%20data&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F39rys245Px3FVBGRJNYEON%2Fbf68d5c052bda9e9e5bec21878764bc3%2Fimage.png&demo-title=Photo%20Blog&demo-url=https%3A%2F%2Fphotos.sambecker.com&from=templates&project-name=Photo%20Blog&repository-name=exif-photo-blog&repository-url=https%3A%2F%2Fgithub.com%2Fsambecker%2Fexif-photo-blog&skippable-integrations=1&stores=%5B%7B%22type%22%3A%22postgres%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D&teamCreateStatus=hidden)
 
 🎬&nbsp;&nbsp;Demo
 -
-https://photos.sambecker.com
+<https://photos.sambecker.com>
 
 ✨&nbsp;&nbsp;Features
 -
+
 - Built-in auth
 - Photo upload with EXIF extraction
 - Organize photos by tag
@@ -25,6 +26,7 @@ https://photos.sambecker.com
 
 🛠️&nbsp;&nbsp;Installation
 -
+
 ### 1. Deploy to Vercel
 
 1. Click [Deploy](https://vercel.com/new/clone?demo-title=Photo+Blog&demo-description=Store+photos+with+original+camera+data&demo-url=https%3A%2F%2Fphotos.sambecker.com&demo-image=https%3A%2F%2Fphotos.sambecker.com%2Ftemplate-image-tight&project-name=Photo+Blog&repository-name=exif-photo-blog&repository-url=https%3A%2F%2Fgithub.com%2Fsambecker%2Fexif-photo-blog&from=templates&skippable-integrations=1&teamCreateStatus=hidden&stores=%5B%7B%22type%22%3A%22postgres%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D)
@@ -43,18 +45,21 @@ https://photos.sambecker.com
    - Visit project on Vercel, navigate to "Deployments" tab, click ••• button next to most recent deployment, and select "Redeploy"
 
 ### 3. Upload your first photo 🎉
+
 1. Visit `/admin`
 2. Sign in with credentials supplied in Step 2
-2. Click "Upload Photos"
-3. Add optional title
-4. Click "Create"
+3. Click "Upload Photos"
+4. Add optional title
+5. Click "Create"
 
 🔄&nbsp;&nbsp;Receiving updates
 -
+
 If you don't plan to change the code, or don't mind making your updates public, consider [forking](https://github.com/sambecker/exif-photo-blog/fork) this repo to easily receive future updates. If you've already set up your project on Vercel see these [migration instructions](#how-do-i-receive-template-updates).
 
 💻&nbsp;&nbsp;Local development
 -
+
 1. Clone code
 2. Run `pnpm i` to install dependencies
 3. If necessary, install [Vercel CLI](https://vercel.com/docs/cli#installing-vercel-cli) and authenticate by running `vercel login`
@@ -63,10 +68,110 @@ If you don't plan to change the code, or don't mind making your updates public, 
 
 See FAQ for [limitations of local development](#can-i-work-locally-without-access-to-an-image-storage-provider)
 
+### Local development with Docker
+
+For local development without Vercel, you can use Docker Compose to run the full stack locally with PostgreSQL, MinIO, and imgproxy:
+
+#### Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/) installed
+- [Docker Compose](https://docs.docker.com/compose/install/) installed
+
+#### Quick Start
+
+1. Copy the example environment file:
+   ```bash
+   cp .env.example.local .env.local
+   ```
+
+2. Start the development stack:
+   ```bash
+   docker compose -f dev-docker-compose.yml up
+   ```
+
+3. Access the services:
+   - Application: http://localhost:3000
+   - MinIO Console: http://localhost:9001
+   - PostgreSQL: localhost:5432
+   - imgproxy: http://localhost:8080
+
+4. The MinIO bucket is created automatically with public read access
+
+#### Environment Variables
+
+Edit `.env.local` to configure:
+
+```bash
+# Auth (generate with: openssl rand -base64 32)
+AUTH_SECRET=
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD=changeme
+
+# Database
+POSTGRES_URL=postgresql://postgres:changeme@postgres:5432/exif_photo_blog?sslmode=disable
+
+# Storage (MinIO)
+MINIO_ROOT_USER=minioadmin
+MINIO_ROOT_PASSWORD=minioadmin
+MINIO_ACCESS_KEY=minioadmin
+MINIO_SECRET_ACCESS_KEY=minioadmin
+NEXT_PUBLIC_MINIO_BUCKET=photos
+NEXT_PUBLIC_MINIO_DOMAIN=localhost
+NEXT_PUBLIC_MINIO_PORT=9000
+NEXT_PUBLIC_MINIO_DISABLE_SSL=1
+MINIO_ENDPOINT_INTERNAL=http://minio:9000
+
+# URLs
+NEXT_PUBLIC_DOMAIN=localhost:3000
+NEXTAUTH_URL=http://localhost:3000
+
+# Image Optimization
+NEXT_PUBLIC_IMAGE_LOADER=imgproxy
+NEXT_PUBLIC_IMGPROXY_URL=http://localhost:8080
+```
+
+#### Common Commands
+
+```bash
+# Start development stack (rebuilds if needed)
+docker compose -f dev-docker-compose.yml up --build
+
+# Start in background
+docker compose -f dev-docker-compose.yml up -d
+
+# View logs
+docker compose -f dev-docker-compose.yml logs -f
+
+# Stop and remove containers
+docker compose -f dev-docker-compose.yml down
+
+# Stop and remove containers with volumes (resets database)
+docker compose -f dev-docker-compose.yml down -v
+```
+
+#### Customization
+
+To customize ports or add environment variables, copy the override example:
+```bash
+cp docker-compose.override.yml.example docker-compose.override.yml
+```
+Then edit `docker-compose.override.yml` as needed.
+
+### Self-Hosting with Docker
+
+For production self-hosting, see the comprehensive [Self-Hosting Guide](docs/SELF_HOSTING.md) which includes:
+- Complete Docker Compose configuration
+- imgproxy setup for image optimization
+- MinIO configuration
+- Environment variable reference
+- Backup and recovery procedures
+- Security considerations
+
 🎨&nbsp;&nbsp;Customization
 -
 
 ### Content
+
 - `NEXT_PUBLIC_META_TITLE` (seen in search results and browser tab)
 - `NEXT_PUBLIC_META_DESCRIPTION` (seen in search results)
 - `NEXT_PUBLIC_NAV_TITLE` (seen in top-right navigation, defaults to domain when not configured)
@@ -75,6 +180,7 @@ See FAQ for [limitations of local development](#can-i-work-locally-without-acces
 - `NEXT_PUBLIC_DOMAIN_SHARE` (seen in share modals where a shorter url may be desirable)
 
 ### Performance
+>
 > ⚠️ Enabling may result in increased project usage. See FAQ for static optimization [troubleshooting hints](#why-do-production-deployments-fail-when-static-optimization-is-enabled).
 
 - `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS = 1` enables static optimization for photo pages (`p/[photoId]`), i.e., renders pages at build time
@@ -122,23 +228,25 @@ To add location meta to entities like albums:
 Create Upstash Redis store from storage tab of Vercel dashboard and link to your project (if required, add environment variable prefix `EXIF`) in order to enable rate limiting—no further configuration necessary.
 
 ### Categories
+
 - `NEXT_PUBLIC_CATEGORY_VISIBILITY`
   - Comma-separated value controlling which photo sets appear in grid sidebar and CMD-K menu, and in what order. For example, you could move cameras above tags, and hide film simulations, by updating to `cameras,tags,lenses,recipes`.
   - Accepted values:
-     - `recents` (default)
-     - `years`
-     - `tags` (default)
-     - `cameras` (default)
-     - `lenses` (default)
-     - `recipes` (default)
-     - `films` (default)
-     - `focal-lengths`
+    - `recents` (default)
+    - `years`
+    - `tags` (default)
+    - `cameras` (default)
+    - `lenses` (default)
+    - `recipes` (default)
+    - `films` (default)
+    - `focal-lengths`
 - `NEXT_PUBLIC_HIDE_CATEGORIES_ON_MOBILE = 1` prevents categories displaying on mobile grid view
 - `NEXT_PUBLIC_HIDE_CATEGORY_IMAGE_HOVERS = 1` prevents images displaying when hovering over category links
 - `NEXT_PUBLIC_EXHAUSTIVE_SIDEBAR_CATEGORIES = 1` always shows expanded sidebar content
 - `NEXT_PUBLIC_HIDE_TAGS_WITH_ONE_PHOTO = 1` to only show tags with 2 or more photos
 
 ### Sorting
+
 - `NEXT_PUBLIC_DEFAULT_SORT`
   - Sets default sort on grid/full homepages
   - Accepted values:
@@ -158,8 +266,8 @@ Create Upstash Redis store from storage tab of Vercel dashboard and link to your
   - `NEXT_PUBLIC_COLOR_SORT_CHROMA_CUTOFF` controls which colors are considered sufficiently vibrant (accepts a chroma of 0 to 0.37, default: 0.05):
 - `NEXT_PUBLIC_PRIORITY_BASED_SORTING = 1` takes priority field into account when sorting photos (⚠️ enabling may have performance consequences)
 
-
 ### Display
+
 - `NEXT_PUBLIC_HIDE_ABOUT_PAGE = 1` hides `/about` page
 - `NEXT_PUBLIC_HIDE_KEYBOARD_SHORTCUT_TOOLTIPS = 1` hides keyboard shortcut hints in areas like the main nav, and previous/next photo links
 - `NEXT_PUBLIC_HIDE_EXIF_DATA = 1` hides EXIF data in photo details and OG images (potentially useful for portfolios, which don't focus on photography)
@@ -168,15 +276,18 @@ Create Upstash Redis store from storage tab of Vercel dashboard and link to your
 - `NEXT_PUBLIC_HIDE_REPO_LINK = 1` removes footer link to repo
 
 ### Grid
+
 - `NEXT_PUBLIC_GRID_HOMEPAGE = 1` shows grid layout on homepage
 - `NEXT_PUBLIC_GRID_ASPECT_RATIO = 1.5` sets aspect ratio for grid tiles (defaults to `1`—setting to `0` removes the constraint)
 - `NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS = 1` ensures large thumbnails on photo grid views (if not configured, density is based on aspect ratio)
 
 ### Design
+
 - `NEXT_PUBLIC_DEFAULT_THEME = light | dark` sets preferred initial theme (defaults to `system` when not configured)
 - `NEXT_PUBLIC_MATTE_PHOTOS = 1` constrains the size of each photo, and displays a surrounding border, potentially useful for photos with tall aspect ratios (colors can be customized via `NEXT_PUBLIC_MATTE_COLOR` + `NEXT_PUBLIC_MATTE_COLOR_DARK`)
 
 ### Settings
+
 - `NEXT_PUBLIC_GEO_PRIVACY = 1` disables collection/display of location-based data (⚠️ re-compresses uploaded images in order to remove GPS information)
 - `NEXT_PUBLIC_ALLOW_PUBLIC_DOWNLOADS = 1` enables public photo downloads for all visitors (⚠️ may result in increased bandwidth usage)
 - `NEXT_PUBLIC_SOCIAL_NETWORKS`
@@ -193,6 +304,7 @@ Create Upstash Redis store from storage tab of Vercel dashboard and link to your
 - `NEXT_PUBLIC_OG_TEXT_ALIGNMENT = BOTTOM` keeps OG image text bottom aligned (default is top)
 
 ### Scripts & Analytics
+
 - Web Analytics
   1. Open project on Vercel
   2. Click "Analytics" tab
@@ -207,6 +319,7 @@ Create Upstash Redis store from storage tab of Vercel dashboard and link to your
   - ⚠️ this will invoke arbitrary script execution on every page—use with caution
 
 ### Debugging
+
 - `DISABLE_DEBUG_OUTPUTS = 1`
   - removes build identifier in `<head />`
   - disables `/admin/configuration/export.json`
@@ -220,6 +333,7 @@ Only one storage adapter—Vercel Blob, Cloudflare R2, AWS S3, or MinIO—can be
 1. Setup bucket
    - [Create R2 bucket](https://developers.cloudflare.com/r2/) with default settings
    - Setup CORS under bucket settings:
+
    ```json
    [{
        "AllowedHeaders": ["*"],
@@ -234,6 +348,7 @@ Only one storage adapter—Vercel Blob, Cloudflare R2, AWS S3, or MinIO—can be
        ]
    }]
    ```
+
    - Enable public hosting by doing one of the following:
        - Select "Connect Custom Domain" and choose a Cloudflare domain
        - OR
@@ -254,6 +369,7 @@ Only one storage adapter—Vercel Blob, Cloudflare R2, AWS S3, or MinIO—can be
 1. Setup bucket
    - [Create S3 bucket](https://s3.console.aws.amazon.com/s3) with "ACLs enabled," and "Block all public access" turned off
    - Setup CORS under bucket permissions:
+
      ```json
      [{
       "AllowedHeaders": ["*"],
@@ -269,11 +385,13 @@ Only one storage adapter—Vercel Blob, Cloudflare R2, AWS S3, or MinIO—can be
       "ExposeHeaders": []
      }]
      ```
+
    - Store public configuration
      - `NEXT_PUBLIC_AWS_S3_BUCKET`: bucket name
      - `NEXT_PUBLIC_AWS_S3_REGION`: bucket region, e.g., "us-east-1"
 2. Setup private credentials
    - [Create IAM policy](https://console.aws.amazon.com/iam/home#/policies) using JSON editor:
+
      ```json
      {
        "Version": "2012-10-17",
@@ -295,6 +413,7 @@ Only one storage adapter—Vercel Blob, Cloudflare R2, AWS S3, or MinIO—can be
        ]
      }
      ```
+
    - [Create IAM user](https://console.aws.amazon.com/iam/home#/users) by choosing "Attach policies directly," and selecting the policy created above. Create "Access key" under "Security credentials," choose "Application running outside AWS," and store credentials (⚠️ _Ensure access keys are not prefixed with `NEXT_PUBLIC`_):
      - `AWS_S3_ACCESS_KEY`
      - `AWS_S3_SECRET_ACCESS_KEY`
@@ -309,10 +428,13 @@ First, install and deploy the MinIO server, then create a bucket with public rea
 
 - **Install MinIO:** [Follow official documentation](https://min.io/docs/minio/linux/operations/install-deploy-manage/deploy-minio-single-node-single-drive.html) to install and deploy MinIO.
 - **Create bucket:**
+
   ```bash
   mc mb myminio/{BUCKET_NAME}
   ```
+
 - **Set public read policy:** Create file named `bucket-policy.json` with the following content to allow read-only access:
+
   ```json
   {
     "Version": "2012-10-17",
@@ -334,22 +456,25 @@ First, install and deploy the MinIO server, then create a bucket with public rea
     ]
   }
   ```
+
   Next, apply this policy to your bucket:
+
   ```bash
   mc policy set myminio/photos bucket-policy.json
   ```
   
 - **Store public configuration:** Set the following public environment variables for your application:
-    - `NEXT_PUBLIC_MINIO_BUCKET`: Bucket name
-    - `NEXT_PUBLIC_MINIO_DOMAIN`: MinIO server endpoint, e.g., "minio.yourdomain.com"
-    - `NEXT_PUBLIC_MINIO_PORT`: (optional)
-    - `NEXT_PUBLIC_MINIO_DISABLE_SSL`: Set to `1` to disable SSL (defaults to HTTPS)
+  - `NEXT_PUBLIC_MINIO_BUCKET`: Bucket name
+  - `NEXT_PUBLIC_MINIO_DOMAIN`: MinIO server endpoint, e.g., "minio.yourdomain.com"
+  - `NEXT_PUBLIC_MINIO_PORT`: (optional)
+  - `NEXT_PUBLIC_MINIO_DISABLE_SSL`: Set to `1` to disable SSL (defaults to HTTPS)
 
 ### 2. Create user with restricted permissions
 
 Create a dedicated user and a policy that grants permission to manage objects within your `BUCKET_NAME`.
 
 - **Define user policy:** Create file named `user-policy.json`. This policy will allow the user to list the bucket contents and to get, put, and delete objects within it.
+
   ```json
   {
     "Version": "2012-10-17",
@@ -370,18 +495,25 @@ Create a dedicated user and a policy that grants permission to manage objects wi
     ]
   }
   ```
+
 - **Create policy:** Add named policy to MinIO.
+
   ```bash
   mc admin policy add myminio photos-manager-policy user-policy.json
   ```
+
 - **Create user:** Create new user with access key and secret key.
+
   ```bash
   mc admin user add myminio {MINIO_ACCESS_KEY} {MINIO_SECRET_ACCESS_KEY}
   ```
+
 - **Attach policy to user:** Assign `photos-manager-policy` to the user.
+
   ```bash
   mc admin policy set myminio photos-manager-policy user=MINIO_ACCESS_KEY
   ```
+
 - **Store private credentials:** Set the following private environment variables for your application. ⚠️ **Ensure these access keys are not prefixed with `NEXT_PUBLIC`**.
   - `MINIO_ACCESS_KEY`: Your MINIO_ACCESS_KEY
   - `MINIO_SECRET_ACCESS_KEY`: Your MINIO_SECRET_ACCESS_KEY
@@ -391,6 +523,7 @@ Create a dedicated user and a policy that grants permission to manage objects wi
 Vercel Postgres can be switched to another Postgres-compatible, pooling provider by updating `POSTGRES_URL`. Some providers only work when SSL is disabled, which can configured by setting `DISABLE_POSTGRES_SSL = 1`.
 
 ### Supabase
+
 1. Ensure connection string is set to "Transaction Mode" via port `6543`
 2. Disable SSL by setting `DISABLE_POSTGRES_SSL = 1`
 
@@ -400,6 +533,7 @@ Vercel Postgres can be switched to another Postgres-compatible, pooling provider
 Partial internationalization (for non-admin, user-facing text) provided for a handful of languages. Configure locale by setting environment variable `NEXT_PUBLIC_LOCALE`.
 
 ### Supported Languages
+
 - `bd-bn`
 - `en-gb`
 - `en-us`
@@ -418,77 +552,103 @@ Thank you ❤️ translators: [@sconetto](https://github.com/sconetto) (`pt-br`,
 
 📖&nbsp;&nbsp;FAQ
 -
+
 #### How do I receive template updates?
+>
 > For forked repos, click "Code," then "Update branch" from the main repo page. If you originally cloned the code, you can [create a fork](https://github.com/sambecker/exif-photo-blog/fork) from GitHub, then update your Git connection from your Vercel project settings. Once you've done this, you may need to go to your project deployments page, click •••, select "Create deployment," and choose `main`.
 
 #### How do I edit multiple photos?
+>
 > In the admin menu, select "Batch edit ..." From there, you can perform bulk tag, favorite, and delete actions.
 
 #### Why don't my photo changes show up immediately?
+>
 > This template statically optimizes core views such as `/` and `/grid` to minimize visitor load times. Consequently, when photos are added, edited, or removed, it might take several minutes for those changes to propagate. If it seems like a change is not taking effect, try navigating to `/admin/configuration` and clicking "Clear Cache."
 
 #### Why do production deployments fail when static optimization is enabled?
+>
 > There have been reports ([#184](https://github.com/sambecker/exif-photo-blog/issues/184#issuecomment-2629474045) + [#185](https://github.com/sambecker/exif-photo-blog/issues/185#issuecomment-2629478570)) that having large photos (over 30MB), or a CDN, e.g., Cloudflare in front of Vercel, may destabilize static optimization.
 
 #### Why don't my older photos look right?
+>
 > As the template has evolved, EXIF fields (such as lenses) have been added, blur data is generated through a different method, and AI/privacy features have been added. In order to bring older photos up to date, either click the 'sync' button next to a photo or go to photo updates (`/admin/photos/updates`) to sync all photos that need updates.
 
 #### Why don't my OG images load when I share a link?
+>
 > Many services such as iMessage, Slack, and X, require near-instant responses when unfurling link-based content. In order to guarantee sufficient responsiveness, consider rendering pages and image assets ahead of time by enabling static optimization by setting `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTOS = 1` and `NEXT_PUBLIC_STATICALLY_OPTIMIZE_PHOTO_OG_IMAGES = 1`. Keep in mind that this will increase platform usage.
 
 #### Why do vertical images take up so much space?
+>
 > By default, all photos are shown full-width, regardless of orientation. Enable matting to showcase horizontal and vertical photos at similar scales by setting `NEXT_PUBLIC_MATTE_PHOTOS = 1`.
 
 #### Why are my grid thumbnails so small?
+>
 > Thumbnail grid density (seen on `/grid`, tag overviews, and other photo sets) is dependent on aspect ratio configuration (ratios of 1 or less have more photos per row). This can be overridden by setting `NEXT_PUBLIC_SHOW_LARGE_THUMBNAILS = 1`.
 
 #### How secure are photos marked “private?”
+>
 > While all private paths (`/tag/private/*`) require authentication, raw links to individual photo assets remain publicly accessible. Randomly generated urls from storage providers are only secure via obscurity. Use with caution.
 
 #### My images/content have fallen out of sync with my database and/or my production site no longer matches local development. What do I do?
+>
 > Navigate to `/admin/configuration` and click "Clear Cache."
 
 #### I'm seeing server-side runtime errors when loading a page after updating my fork. What do I do?
+>
 > Navigate to `/admin/configuration` and click "Clear Cache." If this doesn't help, [open an issue](https://github.com/sambecker/exif-photo-blog/issues/new).
 
 #### Why can’t I upload HEIC files?
-> This template relies on `sharp` to manipulate images and `next/image` to serve them, neither of which currently support HEIC (https://github.com/vercel/next.js/discussions/30043 + https://github.com/lovell/sharp/issues/3981). Fortunately, you can still upload HEIC files directly from native share controls on Apple platforms and they will automatically be converted to JPG upon upload. If you think you have a viable HEIC strategy, feel free to open a PR. See https://github.com/sambecker/exif-photo-blog/issues/229 for discussion.
+>
+> This template relies on `sharp` to manipulate images and `next/image` to serve them, neither of which currently support HEIC (<https://github.com/vercel/next.js/discussions/30043> + <https://github.com/lovell/sharp/issues/3981>). Fortunately, you can still upload HEIC files directly from native share controls on Apple platforms and they will automatically be converted to JPG upon upload. If you think you have a viable HEIC strategy, feel free to open a PR. See <https://github.com/sambecker/exif-photo-blog/issues/229> for discussion.
 
 #### Why are my thumbnails square?
+>
 > Absent configuration, the default grid aspect ratio is `1`. `NEXT_PUBLIC_GRID_ASPECT_RATIO` can be set to any number (for instance, `1.5` for 3:2 images) or ignored by setting to `0`.
 
 #### Why aren't Fujifilm simulations importing alongside EXIF data?
+>
 > Fujifilm simulation data is stored in vendor-specific Makernote binaries embedded in EXIF data. Under certain circumstances an intermediary may strip out this data. For instance, there is a known issue on iOS where editing an image, e.g., cropping it, causes Makernote data loss. If simulation data appears to be missing, try importing the original file as it was stored by the camera. Additionally, if you can confirm the simulation mode, you can edit the photo and manually select it.
 
 #### My Fujifilm recipes are missing/displaying incorrect data. What should I do?
+>
 > If you don't see a recipe, first try syncing your photo from the ••• menu, or from `/admin/photos`. If the data looks incorrect, open an issue with the file in question attached in order for it to be investigated. Fujifilm file specifications have evolved over time and recipe parsing may need to be adjusted based on camera model/vintage.
 
 #### How do I hide Fujifilm content such as a recipes and film simulations?
+>
 > This can be accomplished by setting `NEXT_PUBLIC_CATEGORY_VISIBILITY` (which has a default value of `tags,cameras,lenses,recipes,films`) to `tags,cameras,lenses`.
 
 #### Why do my images appear flipped/rotated incorrectly?
+>
 > For a number of reasons, only EXIF orientations: 1, 3, 6, and 8 are supported. Orientations 2, 4, 5, and 7—which make use of mirroring—are not supported.
 
 #### Why does my image placeholder blur look different from photo to photo?
+>
 > Earlier versions of this template generated blur data on the client, which varied visually from browser to browser. Data is now generated consistently on the server. If you wish to update blur data for a particular photo, edit the photo in question, make no changes, and choose "Update."
 
 #### Why are large, multi-photo uploads not finishing?
+>
 > The default timeout for processing multiple uploads is 60 seconds (the limit for Hobby accounts). This can be extended to 5 minutes on Pro accounts by setting `maxDuration = 300` in `src/app/admin/uploads/page.tsx`.
 
 #### I've added my OpenAI key but can't seem to make it work. Why am I seeing connection errors?
+>
 > You may need to pre-purchase credits before accessing the OpenAI API. See [#110](https://github.com/sambecker/exif-photo-blog/issues/110) for discussion. If you've customized key permissions, make sure write access to the Responses API is enabled.
 
 #### How do I generate AI text for preexisting photos?
+>
 > Once AI text generation is configured, photos missing text will show up in photo updates (`/admin/photos/updates`).
 
 #### Will there be support for image storage providers beyond Vercel, AWS, Cloudflare, and MinIO?
+>
 > At this time, there are no plans to introduce support for new storage providers. The template now supports Vercel Blob, AWS S3, Cloudflare R2, and MinIO (self-hosted S3-compatible storage). While configuring other AWS-compatible providers should not be too difficult, there's nuance to consider surrounding details like IAM, CORS, and domain configuration, which can differ slightly from platform to platform. If you'd like to contribute an implementation for a new storage provider, please open a PR.
 
 #### Can I work locally without access to an image storage provider?
-> At this time, an external storage provider is necessary in order to develop locally. If you have a strategy to propose which allows files to be locally uploaded and served to `next/image` in away that mirrors an external storage provider for debugging purposes, please open a PR.
+>
+> Yes! Use the Docker Compose setup which includes MinIO (S3-compatible storage) and imgproxy (image optimization). See [Local development with Docker](#local-development-with-docker) section above.
 
 #### Can this template be self-hosted?
-> Possibly. See [#116](https://github.com/sambecker/exif-photo-blog/issues/116) and [#132](https://github.com/sambecker/exif-photo-blog/issues/132) for discussion around image hosting and docker usage.
+>
+> Yes! See the [Self-Hosting Guide](docs/SELF_HOSTING.md) for complete instructions on running the application with Docker Compose, including PostgreSQL, MinIO, and imgproxy for image optimization. Also see [#132](https://github.com/sambecker/exif-photo-blog/issues/132) for additional discussion.
 
 #### Why am I seeing many merge conflicts when syncing my fork?
+>
 > Previous versions of this template stored Next.js "App Router" files in `/src`, and app-level functionality in `/src/site`. If you've made customizations and are having difficulty merging updates, consider moving `/src/app` files to `/`, and renaming `src/site` to `/src/app`. Other structural changes include moving `tailwind.css` and `middleware.ts` to `/`. Additionally, it may be helpful to review [PR #195](https://github.com/sambecker/exif-photo-blog/pull/195) for an overview of the most significant changes.
