@@ -72,6 +72,7 @@ import { Albums } from '@/album';
 import FieldsetAlbum from '@/album/FieldsetAlbum';
 import Form from 'next/form';
 import { useRouter, useSearchParams } from 'next/navigation';
+import DateTimePicker from '@/components/DateTimePicker';
 
 const THUMBNAIL_SIZE = 300;
 
@@ -658,6 +659,32 @@ export default function PhotoForm({
                             initialPhotoForm,
                             formData,
                           )}
+                        />;
+                      case 'takenAt':
+                        return <FieldsetWithStatus
+                          key={key}
+                          {...fieldProps}
+                          accessory={<DateTimePicker
+                            value={formData.takenAt ?? ''}
+                            onChange={value => {
+                              setFormData(d => ({ ...d, takenAt: value }));
+                            }}
+                            type="utc"
+                            readOnly={fieldProps.readOnly}
+                          />}
+                        />;
+                      case 'takenAtNaive':
+                        return <FieldsetWithStatus
+                          key={key}
+                          {...fieldProps}
+                          accessory={<DateTimePicker
+                            value={formData.takenAtNaive ?? ''}
+                            onChange={value => {
+                              setFormData(d => ({ ...d, takenAtNaive: value }));
+                            }}
+                            type="naive"
+                            readOnly={fieldProps.readOnly}
+                          />}
                         />;
                       case 'favorite':
                         return <FieldsetFavs
