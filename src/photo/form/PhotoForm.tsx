@@ -666,9 +666,7 @@ export default function PhotoForm({
                           {...fieldProps}
                           accessory={<DateTimePicker
                             value={formData.takenAt ?? ''}
-                            onChange={value => {
-                              setFormData(d => ({ ...d, takenAt: value }));
-                            }}
+                            onChange={fieldProps.onChange}
                             type="utc"
                             readOnly={fieldProps.readOnly}
                           />}
@@ -679,9 +677,7 @@ export default function PhotoForm({
                           {...fieldProps}
                           accessory={<DateTimePicker
                             value={formData.takenAtNaive ?? ''}
-                            onChange={value => {
-                              setFormData(d => ({ ...d, takenAtNaive: value }));
-                            }}
+                            onChange={fieldProps.onChange}
                             type="naive"
                             readOnly={fieldProps.readOnly}
                           />}

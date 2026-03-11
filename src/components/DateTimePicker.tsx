@@ -5,7 +5,6 @@ import {
   useRef,
   useMemo,
   useCallback,
-  useEffect,
 } from 'react';
 import {
   format,
@@ -245,7 +244,7 @@ export default function DateTimePicker({
             'mt-2 pt-2 border-t border-gray-200 dark:border-gray-700',
           )}>
             <div className="flex items-center gap-1">
-              <TimeSpinner
+              <TimeField
                 value={h}
                 max={23}
                 onChange={newH => {
@@ -257,7 +256,7 @@ export default function DateTimePicker({
                 }}
               />
               <span className="text-dim select-none">:</span>
-              <TimeSpinner
+              <TimeField
                 value={m}
                 max={59}
                 onChange={newM => {
@@ -269,7 +268,7 @@ export default function DateTimePicker({
                 }}
               />
               <span className="text-dim select-none">:</span>
-              <TimeSpinner
+              <TimeField
                 value={s}
                 max={59}
                 onChange={newS => {
@@ -309,7 +308,7 @@ export default function DateTimePicker({
   );
 }
 
-function TimeSpinner({
+function TimeField({
   value,
   max,
   onChange,
@@ -318,26 +317,25 @@ function TimeSpinner({
   max: number
   onChange: (value: number) => void
 }) {
-  const [text, setText] = useState(String(value).padStart(2, '0'));
-
-  useEffect(() => {
-    setText(String(value).padStart(2, '0'));
-  }, [value]);
+  const formatted = useMemo(() => String(value).padStart(2, '0'), [value]);
+  const [draft, setDraft] = useState<string | null>(null);
 
   return (
     <input
       type="text"
       inputMode="numeric"
-      value={text}
-      onChange={e => setText(e.target.value)}
-      onBlur={() => {
-        const n = parseInt(text, 10);
+      value={draft ?? formatted}
+      onChange={e => {
+        const val = e.target.value;
+        if (!/^\d{0,2}$/.test(val)) return;
+        setDraft(val);
+        const n = parseInt(val, 10);
         if (!isNaN(n) && n >= 0 && n <= max) {
           onChange(n);
-        } else {
-          setText(String(value).padStart(2, '0'));
         }
       }}
+      onFocus={() => setDraft(formatted)}
+      onBlur={() => setDraft(null)}
       className="w-9! min-h-0! text-center px-1! py-1! text-xs"
     />
   );
