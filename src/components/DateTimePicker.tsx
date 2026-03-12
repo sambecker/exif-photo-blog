@@ -24,17 +24,16 @@ import { clsx } from 'clsx/lite';
 import useClickInsideOutside from '@/utility/useClickInsideOutside';
 import { useFormStatus } from 'react-dom';
 import { TbCalendar, TbChevronLeft, TbChevronRight } from 'react-icons/tb';
+import {
+  DATE_FORMAT_POSTGRES,
+  DAY_NAMES,
+  getLocalTimeZoneLabel,
+} from '@/utility/date';
 
-const FORMAT_NAIVE = 'yyyy-MM-dd HH:mm:ss';
-const DAY_NAMES = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-
-export type DateTimePickerType = 'utc' | 'naive';
+type DateTimePickerType = 'utc' | 'naive';
 type DisplayMode = 'utc' | 'local';
 
-// Get short local timezone label, e.g. "EST", "PST", "UTC+5"
-const LOCAL_TZ_LABEL =
-  new Date().toLocaleTimeString('en-US', { timeZoneName: 'short' })
-    .split(' ').at(-1) ?? 'LOCAL';
+const LOCAL_TZ_LABEL = getLocalTimeZoneLabel() ?? 'LOCAL';
 
 function parseValue(
   value: string,
@@ -60,7 +59,7 @@ function parseValue(
         utcDate.getUTCSeconds(),
       );
     } else {
-      const d = parse(value, FORMAT_NAIVE, new Date());
+      const d = parse(value, DATE_FORMAT_POSTGRES, new Date());
       return isValid(d) ? d : null;
     }
   } catch {
@@ -95,7 +94,7 @@ function formatValue(
       displayDate.getSeconds(),
     )).toISOString();
   }
-  return format(displayDate, FORMAT_NAIVE);
+  return format(displayDate, DATE_FORMAT_POSTGRES);
 }
 
 export default function DateTimePicker({
