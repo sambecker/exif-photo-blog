@@ -67,6 +67,7 @@ export const TEXT: I18N = {
     topFilm: 'En çok kullanılan film',
     recentAlbum: 'Son albüm',
     popularTag: 'Popüler etiket',
+    popularPlace: 'Popüler yer',
   },
   footer: {
     madeWith: 'Hazırlayan:',

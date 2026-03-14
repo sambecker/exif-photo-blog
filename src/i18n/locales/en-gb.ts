@@ -67,6 +67,7 @@ export const TEXT: I18N = {
     topFilm: 'Top Film',
     recentAlbum: 'Recent Album',
     popularTag: 'Popular Tag',
+    popularPlace: 'Popular Place',
   },
   footer: {
     madeWith: 'Made with',

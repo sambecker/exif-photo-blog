@@ -50,7 +50,7 @@ export default function PlaceEntity({
         label={place.nameFormatted || place.name}
         path={place.link}
         pathTarget="_blank"
-        badged
+        badged={props.badged ?? true}
       />
     </SharedHover>
   );

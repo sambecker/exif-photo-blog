@@ -67,6 +67,7 @@ export const TEXT: I18N = {
     topFilm: 'Phim phổ biến',
     recentAlbum: 'Album gần đây',
     popularTag: 'Thẻ phổ biến',
+    popularPlace: 'Địa điểm phổ biến',
   },
   footer: {
     madeWith: 'Được tạo bằng',

@@ -67,6 +67,7 @@ export const TEXT: I18N = {
     topFilm: 'शीर्ष फिल्म',
     recentAlbum: 'हाल का एल्बम',
     popularTag: 'लोकप्रिय टैग',
+    popularPlace: 'लोकप्रिय स्थान',
   },
   footer: {
     madeWith: 'निर्मित',

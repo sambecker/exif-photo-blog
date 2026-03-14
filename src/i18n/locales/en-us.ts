@@ -64,8 +64,9 @@ export const TEXT = {
     topLens: 'Top Lens',
     topRecipe: 'Top Recipe',
     topFilm: 'Top Film',
-    recentAlbum: 'Recent Album',
     popularTag: 'Popular Tag',
+    popularPlace: 'Popular Place',
+    recentAlbum: 'Recent Album',
   },
   footer: {
     madeWith: 'Made with',

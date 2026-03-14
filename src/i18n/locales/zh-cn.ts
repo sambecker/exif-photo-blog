@@ -67,6 +67,7 @@ export const TEXT: I18N = {
     topFilm: '常用胶片',
     recentAlbum: '最近相册',
     popularTag: '热门标签',
+    popularPlace: '热门地点',
   },
   footer: {
     madeWith: '基于',

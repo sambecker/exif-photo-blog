@@ -61,6 +61,10 @@ export default async function AboutPage() {
     films,
   } = categories;
 
+  const place = albums
+    .slice()
+    .sort((a, b) => b.count - a.count)[0]?.album.location;
+
   const lastModifiedSite = max([
     getLastModifiedForCategories(categories, photos),
     about?.updatedAt,
@@ -80,8 +84,9 @@ export default async function AboutPage() {
         lens={lenses[0]?.lens}
         recipe={recipes[0]?.recipe}
         film={films[0]?.film}
-        album={albums[0]?.album}
         tag={tags.filter(({ tag }) => tag !== TAG_FAVS)[0]?.tag}
+        place={place}
+        album={albums[0]?.album}
         lastUpdated={lastModifiedSite}
       />
       : <PhotosEmptyState />
