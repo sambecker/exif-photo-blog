@@ -19,6 +19,7 @@ import {
   PATH_ADMIN_INSIGHTS,
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_RECIPES,
+  PATH_ADMIN_ALBUMS,
   PATH_ADMIN_TAGS,
   PATH_ADMIN_UPLOADS,
   PATH_FULL_INFERRED,
@@ -166,6 +167,7 @@ export default function CommandKClient({
     photosCountTotal,
     photosCountHidden = 0,
     uploadsCount,
+    albumsCount,
     tagsCount,
     recipesCount,
     insightsIndicatorStatus,
@@ -625,6 +627,13 @@ export default function CommandKClient({
       annotation: <IconLock narrow />,
       path: PATH_ADMIN_PHOTOS,
     });
+    if (albumsCount) {
+      adminSection.items.push({
+        label: `${appText.admin.manageAlbums} (${albumsCount})`,
+        annotation: <IconLock narrow />,
+        path: PATH_ADMIN_ALBUMS,
+      });
+    }
     if (tagsCount) {
       adminSection.items.push({
         label: `${appText.admin.manageTags} (${tagsCount})`,
