@@ -41,7 +41,7 @@ export default function AppGrid({
         'gap-3 md:gap-4',
         'max-w-[1280px] 3xl:w-[1280px]',
         // Offset sidebar width when centering on large screens
-        '3xl:translate-x-[162px]',
+        '3xl:relative 3xl:left-[162px]',
         className,
       )}
     >

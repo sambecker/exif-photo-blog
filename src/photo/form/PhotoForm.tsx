@@ -415,47 +415,46 @@ export default function PhotoForm({
     />;
 
   return (
-    <div className="space-y-4 max-w-[38rem] relative">
+    <div className="space-y-4 max-w-[38rem]">
       <div className="flex gap-2">
-        <div className="relative">
-          {thumbnail(true)}
+        {thumbnail(true)}
+        <div className={clsx(
+          'max-md:hidden',
+          'fixed top-8 mr-4',
+          // Orient around responsive form fields
+          'left-[77%] min-[850px]:left-[41rem] lg:left-[42rem]',
+          // For some reason, left property cannot target relative ancestor
+          '3xl:left-auto 3xl:translate-x-[41rem]',
+          // Prevent image blocking form button interaction
+          'pointer-events-none',
+        )}>
+          {thumbnail(false, clsx(
+            'opacity-0 -translate-y-4',
+            !isThumbnailVisible &&
+              'opacity-100 translate-y-0 transition-all duration-300',
+          ))}
+        </div>
+        <div className={clsx(
+          'absolute top-2 left-2 transition-opacity duration-500',
+          aiContent?.isLoading ? 'opacity-100' : 'opacity-0',
+        )}>
           <div className={clsx(
-            'max-md:hidden',
-            'fixed top-8',
-            // Orient around responsive form fields
-            'left-[77%] min-[850px]:left-[41rem] lg:left-[42rem]',
-            'mr-4',
-            // Prevent image blocking form button interaction
-            'pointer-events-none',
+            'leading-none text-xs font-medium uppercase tracking-wide',
+            'px-1.5 py-1 rounded-[4px]',
+            'inline-flex items-center gap-2',
+            'bg-white/70 dark:bg-black/60 backdrop-blur-md',
+            'border border-gray-900/10 dark:border-gray-700/70',
+            'select-none',
           )}>
-            {thumbnail(false, clsx(
-              'opacity-0 -translate-y-4',
-              !isThumbnailVisible &&
-                'opacity-100 translate-y-0 transition-all duration-300',
-            ))}
-          </div>
-          <div className={clsx(
-            'absolute top-2 left-2 transition-opacity duration-500',
-            aiContent?.isLoading ? 'opacity-100' : 'opacity-0',
-          )}>
-            <div className={clsx(
-              'leading-none text-xs font-medium uppercase tracking-wide',
-              'px-1.5 py-1 rounded-[4px]',
-              'inline-flex items-center gap-2',
-              'bg-white/70 dark:bg-black/60 backdrop-blur-md',
-              'border border-gray-900/10 dark:border-gray-700/70',
-              'select-none',
-            )}>
-              <Spinner
-                color="text"
-                size={9}
-                className={clsx(
-                  'text-extra-dim',
-                  'translate-x-[1px] translate-y-[0.5px]',
-                )}
-              />
-              Analyzing image
-            </div>
+            <Spinner
+              color="text"
+              size={9}
+              className={clsx(
+                'text-extra-dim',
+                'translate-x-[1px] translate-y-[0.5px]',
+              )}
+            />
+            Analyzing image
           </div>
         </div>
       </div>
