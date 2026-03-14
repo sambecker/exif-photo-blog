@@ -158,7 +158,8 @@ export default function FieldsetPhotoChooser({
           <DropdownMenu.Content
             onCloseAutoFocus={e => e.preventDefault()}
             align="start"
-            sideOffset={-80}
+            side="top"
+            sideOffset={-98}
             className={clsx(
               MENU_SURFACE_STYLES,
               'z-20 rounded-2xl pb-0 overflow-auto',
@@ -198,8 +199,8 @@ export default function FieldsetPhotoChooser({
                 type="button"
                 className={clsx(
                   'link',
-                  'font-sans',
-                  'text-xs text-medium font-medium uppercase tracking-wider',
+                  'font-sans text-medium active:text-dim',
+                  'text-xs font-medium uppercase tracking-wider',
                   'py-1',
                   'select-none',
                 )}
