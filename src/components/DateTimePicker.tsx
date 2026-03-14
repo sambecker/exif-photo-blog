@@ -335,7 +335,7 @@ function TimeField({
       }}
       onFocus={() => setDraft(formatted)}
       onBlur={() => setDraft(null)}
-      className="w-9! min-h-0! text-center px-1! py-1! text-xs"
+      className="w-9! min-h-0! text-center px-1! py-1! text-[1rem]"
     />
   );
 }
