@@ -1,13 +1,10 @@
 import { convertRgbToOklab, parseHex } from 'culori';
-import {
-  AI_CONTENT_GENERATION_ENABLED,
-  IS_PREVIEW,
-} from '@/app/config';
+import { AI_CONTENT_GENERATION_ENABLED, IS_PREVIEW } from '@/app/config';
 import { FastAverageColor } from 'fast-average-color';
 import { Oklch, PhotoColorData } from './client';
 import sharp from 'sharp';
 import { extractColors } from 'extract-colors';
-import { getImageBase64FromUrl } from '../server';
+import { getImageBase64FromUrl, resolveLocalUrlForServer } from '../server';
 import { generateOpenAiImageQuery } from '@/platforms/openai';
 import { calculateColorSort } from './sort';
 import { getOptimizedPhotoUrlForManipulation } from '../storage';
@@ -21,17 +18,27 @@ export const convertHexToOklch = (hex: string): Oklch => {
   const _h = Math.atan2(b, a) * (180 / Math.PI);
   const h = _h < 0 ? _h + 360 : _h;
   return {
-    l: +(l.toFixed(3)),
-    c: +(c.toFixed(3)),
-    h: +(h.toFixed(3)),
+    l: +l.toFixed(3),
+    c: +c.toFixed(3),
+    h: +h.toFixed(3),
   };
 };
 
 // Convert image url to byte array
 const getImageDataFromUrl = async (_url: string) => {
   const url = getOptimizedPhotoUrlForManipulation(_url, IS_PREVIEW);
-  const imageBuffer = await fetch(decodeURIComponent(url))
-    .then(res => res.arrayBuffer());
+  const fetchUrl = resolveLocalUrlForServer(decodeURIComponent(url));
+
+  const imageBuffer = await fetch(fetchUrl)
+    .then((res) => res.arrayBuffer())
+    .catch((e) => {
+      console.error(
+        `Failed to fetch inside getImageDataFromUrl: ${fetchUrl}`,
+        e,
+      );
+      throw e;
+    });
+
   const image = sharp(imageBuffer);
   const { width, height } = await image.metadata();
   const buffer = await image.ensureAlpha().raw().toBuffer();
@@ -53,8 +60,9 @@ const getAverageColorFromImageUrl = async (url: string) => {
 // algorithm library: extract-colors
 const getExtractedColorsFromImageUrl = async (url: string) => {
   const data = await getImageDataFromUrl(url);
-  return extractColors(data).then(colors =>
-    colors.map(({ hex }) => convertHexToOklch(hex)));
+  return extractColors(data).then((colors) =>
+    colors.map(({ hex }) => convertHexToOklch(hex)),
+  );
 };
 
 const getColorDataFromImageUrl = async (
@@ -67,7 +75,7 @@ const getColorDataFromImageUrl = async (
   const average = await getAverageColorFromImageUrl(url);
   const colors = await getExtractedColorsFromImageUrl(url);
   return {
-    ...ai && { ai },
+    ...(ai && { ai }),
     average,
     colors,
   };
@@ -79,8 +87,8 @@ export const getColorFieldsForImageUrl = async (
   isBatch?: boolean,
 ) => {
   try {
-    const colorData = _colorData ??
-      await getColorDataFromImageUrl(url, isBatch);
+    const colorData =
+      _colorData ?? (await getColorDataFromImageUrl(url, isBatch));
     return {
       colorData,
       colorSort: calculateColorSort(colorData),
@@ -94,7 +102,8 @@ export const getColorFieldsForImageUrl = async (
 export const getColorFieldsForPhotoDbInsert = async (
   ...args: Parameters<typeof getColorFieldsForImageUrl>
 ) => {
-  const { colorData, ...rest } = await getColorFieldsForImageUrl(...args) ?? {};
+  const { colorData, ...rest } =
+    (await getColorFieldsForImageUrl(...args)) ?? {};
   if (colorData !== undefined) {
     return {
       colorData: JSON.stringify(colorData),
@@ -108,7 +117,7 @@ export const getColorFieldsForPhotoForm = async (
   ...args: Parameters<typeof getColorFieldsForImageUrl>
 ) => {
   const { colorSort, ...rest } =
-    await getColorFieldsForPhotoDbInsert(...args) ?? {};
+    (await getColorFieldsForPhotoDbInsert(...args)) ?? {};
   if (colorSort !== undefined) {
     return {
       colorSort: `${colorSort}`,
@@ -117,18 +126,19 @@ export const getColorFieldsForPhotoForm = async (
   }
 };
 
-export const getColorFromAI = async (
-  _url: string,
-  isBatch?: boolean,
-) => {
+export const getColorFromAI = async (_url: string, isBatch?: boolean) => {
   const url = getOptimizedPhotoUrlForManipulation(_url, IS_PREVIEW);
   const image = await getImageBase64FromUrl(url);
-  const hexColor = await generateOpenAiImageQuery(image, `
+  const hexColor = await generateOpenAiImageQuery(
+    image,
+    `
     Does this image have a primary subject color?
     If yes, what is the approximate hex color of the subject.
     If not, what is the approximate hex color of the background?
     Respond only with a hex color value:
-  `, isBatch);
+  `,
+    isBatch,
+  );
   const hex = hexColor?.match(/#*([a-f0-9]{6})/i)?.[1];
   if (hex) {
     return convertHexToOklch(`#${hex}`);

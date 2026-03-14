@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
+.pnpm-store
 
 # testing
 /coverage
@@ -26,6 +27,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+!.env.example.local
 
 # vercel
 .vercel
@@ -38,3 +40,6 @@ next-env.d.ts
 /backup
 /app/restore
 temp.jpg
+
+# local agentic context
+.opencode

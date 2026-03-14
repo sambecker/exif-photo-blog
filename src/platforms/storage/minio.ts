@@ -18,23 +18,38 @@ const MINIO_ACCESS_KEY = process.env.MINIO_ACCESS_KEY ?? '';
 const MINIO_SECRET_ACCESS_KEY = process.env.MINIO_SECRET_ACCESS_KEY ?? '';
 
 const PROTOCOL = MINIO_DISABLE_SSL ? 'http' : 'https';
-const ENDPOINT = MINIO_BUCKET && MINIO_DOMAIN
-  ? `${PROTOCOL}://${MINIO_DOMAIN}${MINIO_PORT ? `:${MINIO_PORT}` : ''}`
-  : undefined;
+const ENDPOINT =
+  MINIO_BUCKET && MINIO_DOMAIN
+    ? `${PROTOCOL}://${MINIO_DOMAIN}${MINIO_PORT ? `:${MINIO_PORT}` : ''}`
+    : undefined;
 
 export const MINIO_BASE_URL = ENDPOINT
   ? `${ENDPOINT}/${MINIO_BUCKET}`
   : undefined;
 
-export const minioClient = () => new S3Client({
-  region: 'us-east-1',
-  endpoint: ENDPOINT,
-  credentials: {
-    accessKeyId: MINIO_ACCESS_KEY,
-    secretAccessKey: MINIO_SECRET_ACCESS_KEY,
-  },
-  forcePathStyle: true,
-});
+import { fixLocalhostUrlForNode } from '@/utility/url';
+
+export const minioClient = () =>
+  new S3Client({
+    region: 'us-east-1',
+    endpoint: ENDPOINT ? fixLocalhostUrlForNode(ENDPOINT) : undefined,
+    credentials: {
+      accessKeyId: MINIO_ACCESS_KEY,
+      secretAccessKey: MINIO_SECRET_ACCESS_KEY,
+    },
+    forcePathStyle: true,
+  });
+
+export const minioClientPublic = () =>
+  new S3Client({
+    region: 'us-east-1',
+    endpoint: ENDPOINT,
+    credentials: {
+      accessKeyId: MINIO_ACCESS_KEY,
+      secretAccessKey: MINIO_SECRET_ACCESS_KEY,
+    },
+    forcePathStyle: true,
+  });
 
 const urlForKey = (key?: string) => `${MINIO_BASE_URL}/${key}`;
 
@@ -45,11 +60,14 @@ export const minioPut = async (
   file: Buffer,
   fileName: string,
 ): Promise<string> =>
-  minioClient().send(new PutObjectCommand({
-    Bucket: MINIO_BUCKET,
-    Key: fileName,
-    Body: file,
-  }))
+  minioClient()
+    .send(
+      new PutObjectCommand({
+        Bucket: MINIO_BUCKET,
+        Key: fileName,
+        Body: file,
+      }),
+    )
     .then(() => urlForKey(fileName));
 
 export const minioCopy = async (
@@ -62,28 +80,35 @@ export const minioCopy = async (
   const Key = addRandomSuffix
     ? `${name}-${generateStorageId()}.${extension}`
     : fileNameDestination;
-  return minioClient().send(new CopyObjectCommand({
-    Bucket: MINIO_BUCKET,
-    // Bucket behavior seems to differ from R2 + S3
-    CopySource: `${MINIO_BUCKET}/${fileNameSource}`,
-    Key,
-  }))
+  return minioClient()
+    .send(
+      new CopyObjectCommand({
+        Bucket: MINIO_BUCKET,
+        // Bucket behavior seems to differ from R2 + S3
+        CopySource: `${MINIO_BUCKET}/${fileNameSource}`,
+        Key,
+      }),
+    )
     .then(() => urlForKey(Key));
 };
 
-export const minioList = async (
-  Prefix: string,
-): Promise<StorageListResponse> =>
-  minioClient().send(new ListObjectsCommand({
-    Bucket: MINIO_BUCKET,
-    Prefix,
-  }))
-    .then((data) => data.Contents?.map(({ Key, LastModified, Size }) => ({
-      url: urlForKey(Key),
-      fileName: Key ?? '',
-      uploadedAt: LastModified,
-      size: Size ? formatBytes(Size) : undefined,
-    })) ?? []);
+export const minioList = async (Prefix: string): Promise<StorageListResponse> =>
+  minioClient()
+    .send(
+      new ListObjectsCommand({
+        Bucket: MINIO_BUCKET,
+        Prefix,
+      }),
+    )
+    .then(
+      (data) =>
+        data.Contents?.map(({ Key, LastModified, Size }) => ({
+          url: urlForKey(Key),
+          fileName: Key ?? '',
+          uploadedAt: LastModified,
+          size: Size ? formatBytes(Size) : undefined,
+        })) ?? [],
+    );
 
 export const minioDelete = async (Key: string): Promise<void> => {
   const deleteObjectCommand = new DeleteObjectCommand({
@@ -98,9 +123,31 @@ export const minioGetSignedUrl = (
   method: 'GET' | 'PUT',
   expiresIn: number,
 ) => {
-  const client = minioClient();
-  const command = method === 'GET'
-    ? new GetObjectCommand({ Bucket: MINIO_BUCKET, Key })
-    : new PutObjectCommand({ Bucket: MINIO_BUCKET, Key, ACL: 'public-read' });
+  // Use public client for presigned URLs so they work from browser
+  const client = minioClientPublic();
+  const command =
+    method === 'GET'
+      ? new GetObjectCommand({ Bucket: MINIO_BUCKET, Key })
+      : new PutObjectCommand({ Bucket: MINIO_BUCKET, Key, ACL: 'public-read' });
   return getSignedUrl(client, command, { expiresIn });
+};
+
+export const minioGetObject = async (Key: string): Promise<ArrayBuffer> => {
+  const client = minioClient();
+  const command = new GetObjectCommand({
+    Bucket: MINIO_BUCKET,
+    Key,
+  });
+  const response = await client.send(command);
+  // Convert the readable stream to a buffer
+  const chunks: Buffer[] = [];
+  // @ts-expect-error - Body is a ReadableStream
+  for await (const chunk of response.Body) {
+    chunks.push(Buffer.from(chunk));
+  }
+  const buffer = Buffer.concat(chunks);
+  return buffer.buffer.slice(
+    buffer.byteOffset,
+    buffer.byteOffset + buffer.byteLength,
+  );
 };
