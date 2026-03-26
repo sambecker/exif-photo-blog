@@ -16,7 +16,7 @@ export const getOffsetFromExif = (
   exif: ExifData,
   exifr: any,
 ) => (
-  Object.values(exif.tags ?? {}).find(isValueOffset) ||
+  Object.values(exif?.tags ?? {}).find(isValueOffset) ||
   Object.values(exifr ?? {}).find(isValueOffset)
 ) as string | undefined;
 
