@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
+.pnpm-store
 
 #db
 *.sql
@@ -29,6 +30,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+!.env.example.local
 
 # vercel
 .vercel
@@ -41,3 +43,6 @@ next-env.d.ts
 /backup
 /app/restore
 temp.jpg
+
+# local agentic context
+.opencode

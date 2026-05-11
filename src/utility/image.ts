@@ -1,4 +1,5 @@
 import { getFileNamePartsFromStorageUrl } from '@/platforms/storage';
+import { fixLocalhostUrlForNode } from './url';
 
 export const removeBase64Prefix = (base64: string) => {
   return base64.match(/^data:image\/[a-z]{3,4};base64,(.+)$/)?.[1] ?? base64;
@@ -10,8 +11,8 @@ export const fetchBase64ImageFromUrl = async (
 ) => {
   const { fileExtension } = getFileNamePartsFromStorageUrl(url);
   const contentType = fileExtension === 'png' ? 'image/png' : 'image/jpeg';
-  return fetch(url, fetchOptions)
-    .then(async response => {
+  return fetch(fixLocalhostUrlForNode(url), fetchOptions)
+    .then(async (response) => {
       if (response.ok) {
         const blob = await response.arrayBuffer();
         // eslint-disable-next-line max-len

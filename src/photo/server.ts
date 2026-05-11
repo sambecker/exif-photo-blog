@@ -10,10 +10,7 @@ import {
 import { ExifData, ExifParserFactory } from 'ts-exif-parser';
 import { PhotoFormData } from './form';
 import sharp, { Sharp } from 'sharp';
-import {
-  GEO_PRIVACY_ENABLED,
-  PRESERVE_ORIGINAL_UPLOADS,
-} from '@/app/config';
+import { GEO_PRIVACY_ENABLED, PRESERVE_ORIGINAL_UPLOADS } from '@/app/config';
 import { isExifForFujifilm } from '@/platforms/fujifilm/server';
 import {
   FujifilmRecipe,
@@ -39,32 +36,53 @@ const IMAGE_WIDTH_BLUR = 200;
 const IMAGE_WIDTH_DEFAULT = 200;
 const IMAGE_QUALITY_DEFAULT = 80;
 
+export const resolveLocalUrlForServer = (urlPath: string) => {
+  // If running in docker-compose, localhost/127.0.0.1 needs to be routed to
+  // the internal containers
+  if (
+    urlPath.startsWith('http://localhost:') ||
+    urlPath.startsWith('http://127.0.0.1:')
+  ) {
+    if (urlPath.includes(':9000')) {
+      return urlPath.replace(
+        /http:\/\/(localhost|127\.0\.0\.1):9000/,
+        'http://minio:9000',
+      );
+    } else if (urlPath.includes(':8080')) {
+      return urlPath.replace(
+        /http:\/\/(localhost|127\.0\.0\.1):8080/,
+        'http://imgproxy:8080',
+      );
+    }
+  }
+  return urlPath;
+};
+
 export const extractImageDataFromBlobPath = async (
-  blobPath: string, {
+  blobPath: string,
+  {
     includeInitialPhotoFields,
     generateBlurData,
     generateResizedImage,
     updateColorFields = true,
   }: {
-    includeInitialPhotoFields?: boolean
-    generateBlurData?: boolean
-    generateResizedImage?: boolean
-    updateColorFields?: boolean
+    includeInitialPhotoFields?: boolean;
+    generateBlurData?: boolean;
+    generateResizedImage?: boolean;
+    updateColorFields?: boolean;
   } = {},
 ): Promise<{
-  blobId?: string
-  formDataFromExif?: Partial<PhotoFormData>
-  imageResizedBase64?: string
-  shouldStripGpsData?: boolean
-  fileBytes?: ArrayBuffer
-  error?: string
+  blobId?: string;
+  formDataFromExif?: Partial<PhotoFormData>;
+  imageResizedBase64?: string;
+  shouldStripGpsData?: boolean;
+  fileBytes?: ArrayBuffer;
+  error?: string;
 }> => {
   const url = decodeURIComponent(blobPath);
 
-  const {
-    fileExtension: extension,
-    fileId: blobId,
-  } = getFileNamePartsFromStorageUrl(url);
+  const { fileExtension: extension, fileId: blobId } =
+    getFileNamePartsFromStorageUrl(url);
 
   let dataExif: ExifData | undefined;
   let dataExifr: any | undefined;
@@ -75,13 +93,35 @@ export const extractImageDataFromBlobPath = async (
   let shouldStripGpsData = false;
   let error: string | undefined;
 
-  const fileBytes = blobPath
-    ? await fetch(url, { cache: 'no-store' }).then(res => res.arrayBuffer())
-      .catch(e => {
-        error = `Error fetching image from ${url}: "${e.message}"`;
-        return undefined;
-      })
-    : undefined;
+  const fetchUrl = resolveLocalUrlForServer(url);
+
+  // For MinIO URLs, use S3 client directly to avoid presigned URL issues
+  // with internal container networking
+  const fileBytes = await (async (): Promise<ArrayBuffer | undefined> => {
+    if (!blobPath) return undefined;
+    
+    try {
+      // Try to fetch from the resolved URL first
+      const response = await fetch(fetchUrl, { cache: 'no-store' });
+      if (response.ok) {
+        return response.arrayBuffer();
+      }
+      
+      // If fetch fails (e.g., 403 with presigned URL), try S3 client for MinIO
+      if (url.includes('localhost:9000') || url.includes('minio:9000')) {
+        const { minioGetObject } = await import('@/platforms/storage/minio');
+        const key = url.split('/').pop();
+        if (key) {
+          return await minioGetObject(key);
+        }
+      }
+      
+      throw new Error(`Fetch failed with status: ${response.status}`);
+    } catch (e: any) {
+      error = `Error fetching image from ${url}: "${e.message}"`;
+      return undefined;
+    }
+  })();
 
   try {
     if (fileBytes) {
@@ -117,16 +157,18 @@ export const extractImageDataFromBlobPath = async (
         imageResizedBase64 = await resizeImage(fileBytes);
       }
 
-      shouldStripGpsData = GEO_PRIVACY_ENABLED && (
-        Boolean(getCompatibleExifValue('GPSLatitude', dataExif, dataExifr)) ||
-        Boolean(getCompatibleExifValue('GPSLongitude', dataExif, dataExifr))
-      );
+      shouldStripGpsData =
+        GEO_PRIVACY_ENABLED &&
+        (Boolean(getCompatibleExifValue('GPSLatitude', dataExif, dataExifr)) ||
+          Boolean(getCompatibleExifValue('GPSLongitude', dataExif, dataExifr)));
     }
   } catch (e) {
     error = `Error extracting image data from ${url}: "${e}"`;
   }
 
-  if (error) { console.log(error); }
+  if (error) {
+    console.log(error);
+  }
 
   const colorFields = updateColorFields
     ? await getColorFieldsForPhotoForm(url)
@@ -134,19 +176,19 @@ export const extractImageDataFromBlobPath = async (
 
   return {
     blobId,
-    ...dataExif && {
+    ...(dataExif && {
       formDataFromExif: {
-        ...includeInitialPhotoFields && {
+        ...(includeInitialPhotoFields && {
           hidden: 'false',
           favorite: 'false',
           extension,
           url,
-        },
-        ...generateBlurData && { blurData },
+        }),
+        ...(generateBlurData && { blurData }),
         ...convertExifToFormData(dataExif, dataExifr, film, recipe),
         ...colorFields,
       },
-    },
+    }),
     imageResizedBase64,
     shouldStripGpsData,
     fileBytes,
@@ -157,54 +199,44 @@ export const extractImageDataFromBlobPath = async (
 const generateBase64 = async (
   image: ArrayBuffer,
   middleware?: (sharp: Sharp) => Sharp,
-) => 
+) =>
   (middleware ? middleware(sharp(image)) : sharp(image))
     .withMetadata()
     .toFormat('jpeg', { quality: IMAGE_QUALITY_DEFAULT })
     .toBuffer()
-    .then(data => `data:image/jpeg;base64,${data.toString('base64')}`);
+    .then((data) => `data:image/jpeg;base64,${data.toString('base64')}`);
 
-const resizeImage = async (
-  image: ArrayBuffer,
-  width = IMAGE_WIDTH_DEFAULT,
-) => 
-  generateBase64(image, sharp => sharp
-    .resize(width),
+const resizeImage = async (image: ArrayBuffer, width = IMAGE_WIDTH_DEFAULT) =>
+  generateBase64(image, (sharp) => sharp.resize(width));
+
+const blurImage = async (image: ArrayBuffer) =>
+  generateBase64(image, (sharp) =>
+    sharp.resize(IMAGE_WIDTH_BLUR).modulate({ saturation: 1.15 }).blur(4),
   );
 
-const blurImage = async (image: ArrayBuffer) => 
-  generateBase64(image, sharp => sharp
-    .resize(IMAGE_WIDTH_BLUR)
-    .modulate({ saturation: 1.15 })
-    .blur(4),
-  );
-
-export const getImageBase64FromUrl = async (url: string) => 
-  fetch(decodeURIComponent(url))
-    .then(res => res.arrayBuffer())
-    .then(buffer => generateBase64(buffer))
-    .catch(e => {
+export const getImageBase64FromUrl = async (url: string) =>
+  fetch(resolveLocalUrlForServer(decodeURIComponent(url)))
+    .then((res) => res.arrayBuffer())
+    .then((buffer) => generateBase64(buffer))
+    .catch((e) => {
       console.log(`Error getting image base64 from URL (${url})`, e);
       return '';
     });
 
-export const resizeImageFromUrl = async (
-  url: string,
-  width?: number,
-) => 
-  fetch(decodeURIComponent(url))
-    .then(res => res.arrayBuffer())
-    .then(buffer => resizeImage(buffer, width))
-    .catch(e => {
+export const resizeImageFromUrl = async (url: string, width?: number) =>
+  fetch(resolveLocalUrlForServer(decodeURIComponent(url)))
+    .then((res) => res.arrayBuffer())
+    .then((buffer) => resizeImage(buffer, width))
+    .catch((e) => {
       console.log(`Error resizing image from URL (${url})`, e);
       return '';
     });
 
-export const blurImageFromUrl = async (url: string) => 
-  fetch(decodeURIComponent(url))
-    .then(res => res.arrayBuffer())
-    .then(buffer => blurImage(buffer))
-    .catch(e => {
+export const blurImageFromUrl = async (url: string) =>
+  fetch(resolveLocalUrlForServer(decodeURIComponent(url)))
+    .then((res) => res.arrayBuffer())
+    .then((buffer) => blurImage(buffer))
+    .catch((e) => {
       console.log(`Error blurring image from URL (${url})`, e);
       return '';
     });
@@ -213,11 +245,7 @@ export const resizeImageToBytes = async (
   image: ArrayBuffer,
   width: number,
   quality = IMAGE_QUALITY_DEFAULT,
-) => 
-  sharp(image)
-    .resize(width)
-    .toFormat('jpeg', { quality })
-    .toBuffer();
+) => sharp(image).resize(width).toFormat('jpeg', { quality }).toBuffer();
 
 const GPS_NULL_STRING = '-';
 
@@ -246,24 +274,24 @@ export const removeGpsData = async (image: ArrayBuffer) =>
     .toFormat('jpeg', { quality: PRESERVE_ORIGINAL_UPLOADS ? 95 : 80 })
     .toBuffer();
 
-export const convertFormDataToPhotoDbInsertAndLookupRecipeTitle =
-  async (...args: Parameters<typeof convertFormDataToPhotoDbInsert>):
-  Promise<ReturnType<typeof convertFormDataToPhotoDbInsert>> => {
-    const photo = convertFormDataToPhotoDbInsert(...args);
+export const convertFormDataToPhotoDbInsertAndLookupRecipeTitle = async (
+  ...args: Parameters<typeof convertFormDataToPhotoDbInsert>
+): Promise<ReturnType<typeof convertFormDataToPhotoDbInsert>> => {
+  const photo = convertFormDataToPhotoDbInsert(...args);
 
-    if (photo.recipeData && !photo.recipeTitle && photo.film) {
-      const recipeTitle = await getRecipeTitleForData(
-        photo.recipeData,
-        photo.film,
-      );
-      // Only replace recipe title when a new one is found
-      if (recipeTitle) {
-        photo.recipeTitle = recipeTitle;
-      }
+  if (photo.recipeData && !photo.recipeTitle && photo.film) {
+    const recipeTitle = await getRecipeTitleForData(
+      photo.recipeData,
+      photo.film,
+    );
+    // Only replace recipe title when a new one is found
+    if (recipeTitle) {
+      photo.recipeTitle = recipeTitle;
     }
+  }
 
-    return photo;
-  };
+  return photo;
+};
 
 export const propagateRecipeTitleIfNecessary = async (
   formData: FormData,
@@ -285,12 +313,8 @@ export const propagateRecipeTitleIfNecessary = async (
   }
 };
 
-export const deletePhotoAndFiles = async (
-  photoId: string,
-  photoUrl: string,
-) =>
-  deletePhoto(photoId)
-    .then(() => {
-      const { fileNameBase } = getFileNamePartsFromStorageUrl(photoUrl);
-      return deleteFilesWithPrefix(fileNameBase);
-    });
+export const deletePhotoAndFiles = async (photoId: string, photoUrl: string) =>
+  deletePhoto(photoId).then(() => {
+    const { fileNameBase } = getFileNamePartsFromStorageUrl(photoUrl);
+    return deleteFilesWithPrefix(fileNameBase);
+  });
