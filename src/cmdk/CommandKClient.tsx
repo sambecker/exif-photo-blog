@@ -99,6 +99,7 @@ import CgFileDocumentIcon from '@/components/icons/CgFileDocumentIcon';
 import CgCloseIcon from '@/components/icons/CgCloseIcon';
 import FaRegUserCircleIcon from '@/components/icons/FaRegUserCircleIcon';
 import { formatDistanceToNow } from 'date-fns';
+import dateFnsLocale from '@/i18n/date-fns-locale-alias';
 import IconCheck from '@/components/icons/IconCheck';
 import { getSortStateFromPath } from '@/photo/sort/path';
 import IconSort from '@/components/icons/IconSort';
@@ -344,7 +345,7 @@ export default function CommandKClient({
     if (!recent) { return undefined; }
     const { count, lastModified } = recent;
     const subhead = appText.category.recentSubhead(
-      formatDistanceToNow(lastModified),
+      formatDistanceToNow(lastModified, { locale: dateFnsLocale }),
     );
     return count ? { count, subhead } : undefined;
   }, [recent, appText]);

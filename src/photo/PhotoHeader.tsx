@@ -19,11 +19,22 @@ import { useAppState } from '@/app/AppState';
 import { GRID_GAP_CLASSNAME } from '@/components';
 import { useAppText } from '@/i18n/state/client';
 
+export type EntityVerbKey =
+  'tagged' |
+  'camera' |
+  'lens' |
+  'film' |
+  'focalLength' |
+  'recipe' |
+  'year' |
+  'recent';
+
 export default function PhotoHeader({
   photos,
   selectedPhoto,
   entity,
   entityVerb: _entityVerb,
+  entityVerbKey,
   entityDescription,
   indexNumber,
   count,
@@ -36,6 +47,7 @@ export default function PhotoHeader({
   selectedPhoto?: Photo
   entity?: ReactNode
   entityVerb?: string
+  entityVerbKey?: EntityVerbKey
   entityDescription?: string
   indexNumber?: number
   count?: number
@@ -47,7 +59,16 @@ export default function PhotoHeader({
 
   const appText = useAppText();
 
-  const entityVerb = _entityVerb ?? appText.photo.photo.toLocaleUpperCase();
+  // Resolve entityVerb client-side when given a key so it follows the
+  // active locale (es-ar / en-us) instead of the server-resolved string
+  const entityVerbFromKey = entityVerbKey
+    ? appText.category[entityVerbKey]
+    : undefined;
+
+  const entityVerb =
+    entityVerbFromKey ??
+    _entityVerb ??
+    appText.photo.photo.toLocaleUpperCase();
 
   const { start, end } = dateRangeForPhotos(photos, dateRange);
 

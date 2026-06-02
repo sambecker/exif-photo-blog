@@ -59,7 +59,11 @@ export default function SelectTileOverlay({
             : null
           : (disabled && !isSelected) ? null : <SimpleCheckbox
             className={clsx(
-              isSelected ? 'text-red-500' : 'text-white',
+              // Smooth color + scale pop when toggling selection
+              'transition-[color,transform] duration-150 ease-out',
+              isSelected
+                ? 'text-red-500 scale-110'
+                : 'text-white scale-100',
               // Required to prevent Safari jitter
               'translate-x-[0.1px]',
             )}

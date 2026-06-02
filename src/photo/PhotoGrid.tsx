@@ -62,6 +62,8 @@ export default function PhotoGrid({
           className={clsx(
             'relative overflow-hidden',
             'group',
+            // Smooth transition for selection / lock state changes
+            'transition-[border-width,opacity] duration-200 ease-out',
             isSelected && 'border-4 border-red-800',
             isLocked && 'border-4 border-red-800',
             isLocked && 'cursor-not-allowed',
@@ -78,7 +80,8 @@ export default function PhotoGrid({
               (isSelected || isLocked) && 'opacity-50',
             )}
             photo={photo}
-            priority={prioritizeInitialPhotos ? index < 6 : undefined}
+            // Reduce priority count: 4 covers above-the-fold on every breakpoint
+            priority={prioritizeInitialPhotos ? index < 4 : undefined}
             disableLink={selectionMode}
             {...categories}
           />

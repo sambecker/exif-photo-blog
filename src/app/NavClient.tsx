@@ -59,6 +59,7 @@ export default function NavClient({
   const {
     hasLoadedWithAnimations,
     isUserSignedIn,
+    isUserSignedInEager,
     isUserAdmin,
     isCheckingAuth: _isCheckingAuth,
     clearAuthStateAndRedirectIfNecessary,
@@ -234,7 +235,7 @@ export default function NavClient({
                 </button>
               </div>
               {/* Sign-in/Sign-out Button */}
-              {!isUserSignedIn ? (
+              {!(isUserSignedIn || isUserSignedInEager) ? (
                 <div className="ml-3 sm:ml-4">
                   <Link
                     href="/sign-in"

@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Photo,
   altTextForPhoto,
@@ -5,7 +7,8 @@ import {
 } from '.';
 import { PhotoSetCategory } from '../category';
 import ImageSmall from '@/components/image/ImageSmall';
-import Link from 'next/link';
+import LinkWithStatus from '@/components/LinkWithStatus';
+import Spinner from '@/components/Spinner';
 import { clsx } from 'clsx/lite';
 import { pathForPhoto } from '@/app/path';
 import { SHOULD_PREFETCH_ALL_LINKS } from '@/app/config';
@@ -31,12 +34,14 @@ export default function PhotoSmall({
   useVisible({ ref, onVisible });
 
   return (
-    <Link
+    <LinkWithStatus
       ref={ref}
       href={pathForPhoto({ photo, ...categories })}
       className={clsx(
         className,
-        'active:brightness-75',
+        'relative block',
+        'transition-transform duration-150 ease-out',
+        'active:scale-[0.985] active:brightness-75',
         selected && 'brightness-50',
         'min-w-[50px]',
         'rounded-[3px] overflow-hidden',
@@ -44,13 +49,24 @@ export default function PhotoSmall({
       )}
       prefetch={prefetch}
     >
-      <ImageSmall
-        src={photo.url}
-        aspectRatio={photo.aspectRatio}
-        blurDataURL={photo.blurData}
-        blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
-        alt={altTextForPhoto(photo)}
-      />
-    </Link>
+      {({ isLoading }) =>
+        <>
+          <ImageSmall
+            src={photo.url}
+            aspectRatio={photo.aspectRatio}
+            blurDataURL={photo.blurData}
+            blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
+            alt={altTextForPhoto(photo)}
+          />
+          {isLoading &&
+            <div className={clsx(
+              'absolute inset-0 flex items-center justify-center',
+              'bg-black/30 backdrop-blur-[2px] animate-fade-in',
+              'pointer-events-none z-10',
+            )}>
+              <Spinner size={14} color="text" />
+            </div>}
+        </>}
+    </LinkWithStatus>
   );
 };
