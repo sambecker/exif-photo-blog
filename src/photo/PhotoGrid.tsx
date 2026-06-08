@@ -10,7 +10,7 @@ import { GRID_ASPECT_RATIO } from '@/app/config';
 import SelectTileOverlay from '@/components/SelectTileOverlay';
 import { ReactNode } from 'react';
 
-import { useSession } from 'next-auth/react';
+
 
 export default function PhotoGrid({
   photos,
@@ -34,8 +34,9 @@ export default function PhotoGrid({
   additionalTile?: ReactNode,
   userEmail?: string,
 } & PhotoSetCategory) {
-  const { data: session } = useSession();
-  const currentUserEmail = userEmail ?? session?.user?.email;
+  // userEmail is passed down from the parent (HomePageClient / PhotoGridPageClient)
+  // which already calls useSession() once at a higher level — no need to call it here
+  const currentUserEmail = userEmail;
 
   return (
     <div className={clsx(
