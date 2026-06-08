@@ -265,8 +265,8 @@ export const SHOW_FILMS =
   CATEGORY_VISIBILITY.includes('films');
 export const SHOW_FOCAL_LENGTHS =
   CATEGORY_VISIBILITY.includes('focal-lengths');
-export const SHOW_CATEGORY_IMAGE_HOVERS =
-  process.env.NEXT_PUBLIC_HIDE_CATEGORY_IMAGE_HOVERS !== '1';
+// Hover preview disabled for all categories (tags, cameras, lenses, films, etc.)
+export const SHOW_CATEGORY_IMAGE_HOVERS = false;
 export const COLLAPSE_SIDEBAR_CATEGORIES =
   process.env.NEXT_PUBLIC_EXHAUSTIVE_SIDEBAR_CATEGORIES !== '1';
 export const HIDE_TAGS_WITH_ONE_PHOTO =
