@@ -64,7 +64,7 @@ export default function PhotoEditPageClient({
               shouldConfirm: shouldConfirmAiTextGeneration,
             }} />}
           <ExifCaptureButton
-            photoId={photo.id}
+
             photoUrl={photo.url}
             onExifDataCapture={setUpdatedExifData}
           />

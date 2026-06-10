@@ -50,7 +50,7 @@ export default function EntityLink({
   badged,
   contrast = 'medium',
   path = '', // Make link optional for debugging purposes
-  showHover = SHOW_CATEGORY_IMAGE_HOVERS,
+  showHover: showHoverProp = SHOW_CATEGORY_IMAGE_HOVERS,
   countOnHover,
   hoverPhotoQueryOptions,
   prefetch,
@@ -79,6 +79,10 @@ export default function EntityLink({
   uppercase?: boolean
   debug?: boolean
 } & EntityLinkExternalProps) {
+  // Force-respect global env flag — if SHOW_CATEGORY_IMAGE_HOVERS is false,
+  // hover previews are disabled regardless of the prop value passed by callers.
+  const showHover = showHoverProp && SHOW_CATEGORY_IMAGE_HOVERS;
+
   const { mutate } = useSWRConfig();
   const [isLoading, setIsLoading] = useState(false);
   const internalRef = useRef<HTMLDivElement>(null);
@@ -259,10 +263,10 @@ export default function EntityLink({
   return (
     <div
       ref={effectiveRef}
-      {...(showHover && countOnHover && hoverPhotoQueryOptions && {
+      {...(showHover && countOnHover && hoverPhotoQueryOptions ? {
         onMouseEnter: handleMouseEnter,
         onMouseLeave: handleMouseLeave,
-      })}
+      } : {})}
       className={clsx(
         'inline-flex items-center gap-2',
         showHover ? 'max-w-full overflow-hidden' : 'whitespace-nowrap',

@@ -1,7 +1,7 @@
 'use client';
 
 
-/* eslint-disable max-len */
+
 
 import { clsx } from 'clsx/lite';
 import AppGrid from '../components/AppGrid';

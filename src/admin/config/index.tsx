@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+
 import BiDataIcon from '@/components/icons/BiDataIcon';
 import LiaKeySolidIcon from '@/components/icons/LiaKeySolidIcon';
 import LiaRobotSolidIcon from '@/components/icons/LiaRobotSolidIcon';

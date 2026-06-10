@@ -2,6 +2,7 @@ import { parseISO, parse, format } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
 import { Timezone } from './timezone';
 import { setDefaultDateFnLocale } from '@/i18n';
+import dateFnsLocale from '@/i18n/date-fns-locale-alias';
 
 setDefaultDateFnLocale();
 
@@ -75,8 +76,10 @@ export const formatDate = ({
   return showPlaceholder
     ? placeholderString
     : timezone
-      ? formatInTimeZone(date, timezone, formatString)
-      : format(date, formatString);
+      ? formatInTimeZone(date, timezone, formatString, {
+        locale: dateFnsLocale,
+      })
+      : format(date, formatString, { locale: dateFnsLocale });
 };
 
 export const formatDateFromPostgresString = (

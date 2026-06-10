@@ -10,11 +10,11 @@ import { useAppText } from '@/i18n/state/client';
 import LuDatabaseBackupIcon from '@/components/icons/LuDatabaseBackupIcon';
 
 export default function ExifCaptureButton({
-  photoId,
+
   photoUrl,
   onExifDataCapture,
 }: {
-  photoId: string,
+
   photoUrl: string,
   onExifDataCapture: (formData: Partial<PhotoFormData>) => void,
 }) {

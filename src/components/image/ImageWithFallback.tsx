@@ -63,7 +63,8 @@ export default function ImageWithFallback({
         {...props}
         priority={priority}
         loading={priority ? 'eager' : props.loading ?? 'lazy'}
-        // Down-prioritize off-screen images so they don't compete with critical assets
+        // Down-prioritize off-screen images so they don't compete 
+        // with critical assets
         fetchPriority={priority ? 'high' : 'low'}
         className={clsx(
           classNameImage,

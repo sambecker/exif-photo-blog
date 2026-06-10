@@ -65,6 +65,7 @@ function PhotoMedium({
           disableLink && 'pointer-events-none',
         )}
         prefetch={prefetch}
+        flickerThreshold={100}
         onContextMenu={(e) => e.preventDefault()}
         style={{ WebkitTouchCallout: 'none' }}
       >

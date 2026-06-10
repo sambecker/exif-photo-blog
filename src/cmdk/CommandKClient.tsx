@@ -25,7 +25,7 @@ import {
   PATH_ADMIN_UPLOADS,
   PATH_FULL_INFERRED,
   PATH_GRID_INFERRED,
-  PATH_ROOT,
+
   PATH_SIGN_IN,
   pathForCamera,
   pathForFilm,
@@ -43,7 +43,7 @@ import { useDebounce } from 'use-debounce';
 import Spinner from '../components/Spinner';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { signOut } from 'next-auth/react';
+
 import BiDesktopIcon from '@/components/icons/BiDesktopIcon';
 import BiSunIcon from '@/components/icons/BiSunIcon';
 import BiMoonIcon from '@/components/icons/BiMoonIcon';

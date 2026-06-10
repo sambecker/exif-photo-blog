@@ -48,6 +48,7 @@ export default function PhotoSmall({
         'border-main',
       )}
       prefetch={prefetch}
+      flickerThreshold={100}
     >
       {({ isLoading }) =>
         <>

@@ -45,6 +45,7 @@ if (HOSTNAME_AWS_S3) {
 
 const LOCALE = process.env.NEXT_PUBLIC_LOCALE || 'en-us';
 const LOCALE_ALIAS = './date-fns-locale-alias';
+const LOCALE_ALIAS_ABSOLUTE = '@/i18n/date-fns-locale-alias';
 const LOCALE_DYNAMIC = `i18n/locales/${LOCALE}`;
 
 const nextConfig = {
@@ -59,6 +60,7 @@ const nextConfig = {
     config.resolve.alias = {
       ...config.resolve.alias,
       [LOCALE_ALIAS]: path.resolve(__dirname, `src/${LOCALE_DYNAMIC}`),
+      [LOCALE_ALIAS_ABSOLUTE]: path.resolve(__dirname, `src/${LOCALE_DYNAMIC}`),
     };
     return config;
   },

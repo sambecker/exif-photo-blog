@@ -29,11 +29,12 @@ import { useAppState } from '@/app/AppState';
 import Switcher from '@/components/switcher/Switcher';
 import SwitcherItem from '@/components/switcher/SwitcherItem';
 import { useSelection } from '@/selection/SelectionContext';
-import { useSession, signOut } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import AdminAppMenu from '@/admin/AdminAppMenu';
 import { toast } from 'sonner';
 import { useLanguage } from '@/i18n/state/LanguageContext';
 import { useAppText } from '@/i18n/state/client';
+import Spinner from '@/components/Spinner';
 
 
 const NAV_HEIGHT_CLASS = NAV_CAPTION
@@ -57,11 +58,11 @@ export default function NavClient({
 
   const { status } = useSession();
   const {
-    hasLoadedWithAnimations,
+
     isUserSignedIn,
     isUserSignedInEager,
     isUserAdmin,
-    isCheckingAuth: _isCheckingAuth,
+    isCheckingAuth,
     clearAuthStateAndRedirectIfNecessary,
   } = useAppState();
 
@@ -79,7 +80,7 @@ export default function NavClient({
   const {
     classNameStickyContainer,
     classNameStickyNav,
-    isNavVisible,
+
   } = useStickyNav(ref, !isPathAdmin(pathname));
 
   const renderLink = (
@@ -130,7 +131,7 @@ export default function NavClient({
                   </div>
                 }
                 {/* Selection Buttons - Hidden on mobile */}
-                {status !== 'loading' && selectionMode && status === 'authenticated' ? (
+                {selectionMode && status === 'authenticated' ? (
                   <div className="hidden sm:flex items-center">
                     <Switcher type="borderless">
                       <SwitcherItem
@@ -166,7 +167,7 @@ export default function NavClient({
                     <span className="text-dim ml-1 whitespace-nowrap">({selectedPhotos.length})</span>
                   </div>
                 ) : (
-                  status !== 'loading' && status === 'authenticated' && !isPathSelected(pathname) && (
+                  status === 'authenticated' && !isPathSelected(pathname) && (
                     <Switcher type="borderless" className="hidden sm:flex">
                       <SwitcherItem
                         className="px-3"
@@ -235,7 +236,13 @@ export default function NavClient({
                 </button>
               </div>
               {/* Sign-in/Sign-out Button */}
-              {!(isUserSignedIn || isUserSignedInEager) ? (
+              {isCheckingAuth && !(isUserSignedIn || isUserSignedInEager) ? (
+                <div className={clsx(
+                  'ml-3 sm:ml-4 inline-flex items-center self-start h-4',
+                )}>
+                  <Spinner size={14} />
+                </div>
+              ) : !(isUserSignedIn || isUserSignedInEager) ? (
                 <div className="ml-3 sm:ml-4">
                   <Link
                     href="/sign-in"

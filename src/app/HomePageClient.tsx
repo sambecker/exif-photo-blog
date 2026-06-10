@@ -6,7 +6,7 @@ import { useSelection } from '@/selection/SelectionContext';
 import { useSession } from 'next-auth/react';
 import { Photo } from '@/photo';
 import { PhotoSetCategories } from '@/category';
-import AppGrid from '@/components/AppGrid';
+
 import PhotoGridSidebar from '@/photo/PhotoGridSidebar';
 import PhotoGridMobileFilters from '@/photo/PhotoGridMobileFilters';
 import PhotoGridContainer from '@/photo/PhotoGridContainer';
@@ -49,7 +49,9 @@ export default function HomePageClient({
         photos={photos}
         count={photosCount}
         sortBy={sortBy ?? USER_DEFAULT_SORT_OPTIONS.sortBy}
-        sortWithPriority={sortWithPriority ?? USER_DEFAULT_SORT_OPTIONS.sortWithPriority}
+        sortWithPriority={
+          sortWithPriority ?? USER_DEFAULT_SORT_OPTIONS.sortWithPriority
+        }
         excludeFromFeeds
         prioritizeInitialPhotos
         userEmail={session?.user?.email ?? undefined}
