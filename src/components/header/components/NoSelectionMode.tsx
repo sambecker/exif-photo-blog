@@ -17,7 +17,7 @@ const NoSelectionMode: FC = () => {
   }
 
   return (
-    <Switcher type='borderless' className='hidden sm:flex pepeTrueno'>
+    <Switcher type='borderless' className='hidden sm:flex'>
       <SwitcherItem
         icon={
           <span className='whitespace-nowrap'>
