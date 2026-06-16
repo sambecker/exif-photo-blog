@@ -2,29 +2,19 @@
 
 import { FC } from 'react';
 import { clsx } from 'clsx/lite';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import AppViewSwitcher, { SwitcherSelection } from '@/app/AppViewSwitcher';
-import {
-  PATH_ROOT,
-  isPathFull,
-  isPathGrid,
-  isPathProtected,
-  isPathSelected,
-  PATH_SELECTED,
-} from '@/app/path';
+import { PATH_ROOT, isPathFull, isPathGrid, isPathProtected } from '@/app/path';
 import { GRID_HOMEPAGE_ENABLED, NAV_CAPTION } from '@/app/config';
 import { useAppState } from '@/app/AppState';
-import Switcher from '@/components/switcher/Switcher';
-import SwitcherItem from '@/components/switcher/SwitcherItem';
-import { useSelection } from '@/selection/SelectionContext';
 import { useSession } from 'next-auth/react';
 import AdminAppMenu from '@/admin/AdminAppMenu';
-import { toast } from 'sonner';
-import { useAppText } from '@/i18n/state/client';
+
 import SelectionMode from '@/components/header/components/SelectionMode';
 import Title from '@/components/header/components/Title';
 import Tools from '@/components/header/components/Tools';
+import NoSelectionMode from '@/components/header/components/NoSelectionMode';
 
 const NAV_HEIGHT_CLASS = NAV_CAPTION
   ? 'min-h-[4rem] sm:min-h-[5rem]'
@@ -37,20 +27,9 @@ const Header: FC<{
   navCaption?: string;
 }> = ({ navRef, classNameStickyNav, navTitle, navCaption }) => {
   const pathname = usePathname();
-  const router = useRouter();
 
   const { status } = useSession();
   const { isUserAdmin } = useAppState();
-
-  const {
-    selectionMode,
-    toggleSelectionMode,
-    selectedPhotos,
-    confirmSelection,
-    clearSelection,
-  } = useSelection();
-
-  const appText = useAppText();
 
   const switcherSelectionForPath = (): SwitcherSelection | undefined => {
     if (pathname === PATH_ROOT) {
@@ -63,7 +42,6 @@ const Header: FC<{
       return 'admin';
     }
   };
-  console.log('banana selectionMode', selectionMode, status);
   return (
     <nav
       ref={navRef}
@@ -88,47 +66,14 @@ const Header: FC<{
             </div>
           )}
 
-          {/* Selection Buttons - Hidden on mobile */}
-          {status === 'authenticated' &&
-            (selectionMode ? (
+          {status === 'authenticated' && (
+            <>
+              {/* Selection Buttons */}
               <SelectionMode />
-            ) : (
-              !isPathSelected(pathname) && (
-                <Switcher type='borderless' className='hidden sm:flex'>
-                  <SwitcherItem
-                    className='px-3'
-                    width='auto'
-                    noPadding
-                    icon={<span>{appText.selected.select}</span>}
-                    onClick={() => toggleSelectionMode()}
-                    tooltip={{
-                      content: appText.selected.selectTooltip,
-                    }}
-                  />
-                </Switcher>
-              )
-            ))}
-
-          {/* View Selections Button - only visible when not in selectionMode and photos are selected - Hidden on mobile */}
-          {!selectionMode &&
-            selectedPhotos.length > 0 &&
-            status === 'authenticated' && (
-              <Switcher type='borderless' className='hidden sm:flex'>
-                <SwitcherItem
-                  icon={
-                    <span className='whitespace-nowrap'>
-                      {appText.selected.selectedItem} ({selectedPhotos.length})
-                    </span>
-                  }
-                  href={PATH_SELECTED}
-                  onClick={() => toast.info(appText.selected.redirecting)}
-                  tooltip={{
-                    content: appText.selected.viewSelections,
-                  }}
-                  width='extended'
-                />
-              </Switcher>
-            )}
+              {/* View Selections Button */}
+              <NoSelectionMode />
+            </>
+          )}
         </div>
 
         {/* Admin Button */}
