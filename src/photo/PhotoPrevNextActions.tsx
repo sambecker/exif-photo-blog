@@ -14,8 +14,7 @@ import { useAppState } from '@/app/AppState';
 import { AnimationConfig } from '@/components/AnimateItems';
 import { clsx } from 'clsx/lite';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import useNavigateOrRunActionWithToast
-  from '@/components/useNavigateOrRunActionWithToast';
+import useNavigateOrRunActionWithToast from '@/components/useNavigateOrRunActionWithToast';
 import {
   deletePhotoAction,
   syncPhotoAction,
@@ -44,10 +43,10 @@ export default function PhotoPrevNextActions({
   hasAiTextGeneration,
   ...categories
 }: {
-  photo?: Photo
-  photos?: Photo[]
-  className?: string
-  hasAiTextGeneration: boolean
+  photo?: Photo;
+  photos?: Photo[];
+  className?: string;
+  hasAiTextGeneration: boolean;
 } & PhotoSetCategory) {
   const { setNextPhotoAnimation, isUserSignedIn } = useAppState();
 
@@ -59,16 +58,18 @@ export default function PhotoPrevNextActions({
       : appText.photo.photo.toLocaleLowerCase()
     : undefined;
   const downloadUrl = photo?.url;
-  const downloadFileName = photo
-    ? downloadFileNameForPhoto(photo)
-    : undefined;
+  const downloadFileName = photo ? downloadFileNameForPhoto(photo) : undefined;
 
   const toggleFavorite = useCallback(() => {
-    if (photo?.id) { return toggleFavoritePhotoAction(photo.id); }
+    if (photo?.id) {
+      return toggleFavoritePhotoAction(photo.id);
+    }
   }, [photo?.id]);
 
   const toggleHidden = useCallback(() => {
-    if (photo?.id) { return togglePrivatePhotoAction(photo.id); }
+    if (photo?.id) {
+      return togglePrivatePhotoAction(photo.id);
+    }
   }, [photo?.id]);
 
   const navigateToPhotoEdit = useNavigateOrRunActionWithToast({
@@ -98,7 +99,9 @@ export default function PhotoPrevNextActions({
 
   const syncPhoto = useNavigateOrRunActionWithToast({
     pathOrAction: useCallback(() => {
-      if (photo?.id) { return syncPhotoAction(photo.id); }
+      if (photo?.id) {
+        return syncPhotoAction(photo.id);
+      }
     }, [photo?.id]),
     toastMessage: `Syncing ${photoTitle} ...`,
   });
@@ -126,150 +129,154 @@ export default function PhotoPrevNextActions({
     ? pathForPhoto({ photo: nextPhoto, ...categories })
     : undefined;
 
-  const onKeyDown = useCallback((e: KeyboardEvent) => {
-    if (e.metaKey) {
-      switch (e.key.toUpperCase()) {
-        case KEY_COMMANDS.delete[1]:
-          if (isUserSignedIn) {
-            deletePhoto();
-          }
-          break;
-      }
-    } else {
-      switch (e.key.toUpperCase()) {
-      // Public commands
-        case KEY_COMMANDS.prev[0]:
-        case KEY_COMMANDS.prev[1]:
-          if (pathPrevious) {
-            setNextPhotoAnimation?.(ANIMATION_RIGHT);
-            refPrevious.current?.click();
-          }
-          break;
-        case KEY_COMMANDS.next[0]:
-        case KEY_COMMANDS.next[1]:
-          if (pathNext) {
-            setNextPhotoAnimation?.(ANIMATION_LEFT);
-            refNext.current?.click();
-          }
-          break;
-          // Admin commands
-        case KEY_COMMANDS.edit:
-          if (isUserSignedIn) {
-            navigateToPhotoEdit();
-          }
-          break;
-        case KEY_COMMANDS.favorite:
-          if (isUserSignedIn && photo && !isPhotoFav(photo)) {
-            favoritePhoto();
-          }
-          break;
-        case KEY_COMMANDS.unfavorite:
-          if (isUserSignedIn && photo && isPhotoFav(photo)) {
-            unfavoritePhoto();
-          }
-          break;
-        case KEY_COMMANDS.togglePrivate:
-          if (isUserSignedIn && photo) {
-            if (photo.hidden) {
-              unhidePhoto();
-            } else {
-              hidePhoto();
+  const onKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.metaKey) {
+        switch (e.key.toUpperCase()) {
+          case KEY_COMMANDS.delete[1]:
+            if (isUserSignedIn) {
+              deletePhoto();
             }
-          }
-          break;
-        case KEY_COMMANDS.download:
-          if (
-            (isUserSignedIn || ALLOW_PUBLIC_DOWNLOADS) &&
-          downloadUrl &&
-          downloadFileName
-          ) {
-            downloadFileFromBrowser(downloadUrl, downloadFileName);
-          }
-          break;
-        case KEY_COMMANDS.sync:
-          if (
-            isUserSignedIn &&
-            photo &&
-            window.confirm(syncPhotoConfirmText(photo, hasAiTextGeneration))
-          ) {
-            syncPhoto();
-          }
-          break;
-      };
-    }
-  }, [
-    setNextPhotoAnimation,
-    pathPrevious,
-    pathNext,
-    isUserSignedIn,
-    navigateToPhotoEdit,
-    photo,
-    favoritePhoto,
-    unfavoritePhoto,
-    hidePhoto,
-    unhidePhoto,
-    downloadUrl,
-    downloadFileName,
-    syncPhoto,
-    deletePhoto,
-    hasAiTextGeneration,
-  ]);
+            break;
+        }
+      } else {
+        switch (e.key.toUpperCase()) {
+          // Public commands
+          case KEY_COMMANDS.prev[0]:
+          case KEY_COMMANDS.prev[1]:
+            if (pathPrevious) {
+              setNextPhotoAnimation?.(ANIMATION_RIGHT);
+              refPrevious.current?.click();
+            }
+            break;
+          case KEY_COMMANDS.next[0]:
+          case KEY_COMMANDS.next[1]:
+            if (pathNext) {
+              setNextPhotoAnimation?.(ANIMATION_LEFT);
+              refNext.current?.click();
+            }
+            break;
+          // Admin commands
+          case KEY_COMMANDS.edit:
+            if (isUserSignedIn) {
+              navigateToPhotoEdit();
+            }
+            break;
+          case KEY_COMMANDS.favorite:
+            if (isUserSignedIn && photo && !isPhotoFav(photo)) {
+              favoritePhoto();
+            }
+            break;
+          case KEY_COMMANDS.unfavorite:
+            if (isUserSignedIn && photo && isPhotoFav(photo)) {
+              unfavoritePhoto();
+            }
+            break;
+          case KEY_COMMANDS.togglePrivate:
+            if (isUserSignedIn && photo) {
+              if (photo.hidden) {
+                unhidePhoto();
+              } else {
+                hidePhoto();
+              }
+            }
+            break;
+          case KEY_COMMANDS.download:
+            if (
+              (isUserSignedIn || ALLOW_PUBLIC_DOWNLOADS) &&
+              downloadUrl &&
+              downloadFileName
+            ) {
+              downloadFileFromBrowser(downloadUrl, downloadFileName);
+            }
+            break;
+          case KEY_COMMANDS.sync:
+            if (
+              isUserSignedIn &&
+              photo &&
+              window.confirm(syncPhotoConfirmText(photo, hasAiTextGeneration))
+            ) {
+              syncPhoto();
+            }
+            break;
+        }
+      }
+    },
+    [
+      setNextPhotoAnimation,
+      pathPrevious,
+      pathNext,
+      isUserSignedIn,
+      navigateToPhotoEdit,
+      photo,
+      favoritePhoto,
+      unfavoritePhoto,
+      hidePhoto,
+      unhidePhoto,
+      downloadUrl,
+      downloadFileName,
+      syncPhoto,
+      deletePhoto,
+      hasAiTextGeneration,
+    ],
+  );
   useKeydownHandler({ onKeyDown });
 
   return (
-    <div className={clsx(
-      'flex items-center',
-      className,
-    )}>
-      <div className={clsx(
-        'h-4',
-        'flex gap-2 select-none',
-        // Fixes alignment issue when switching from chevrons to text
-        'items-center sm:items-start',
-        '*:select-none',
-      )}>
-        <Tooltip {...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-          content: appText.nav.prev,
-          keyCommand: KEY_COMMANDS.prev[0],
-        }}>
+    <div className={clsx('flex items-center', className)}>
+      <div
+        className={clsx(
+          'h-4',
+          'flex gap-2 select-none',
+          // Fixes alignment issue when switching from chevrons to text
+          'items-center sm:items-start',
+          '*:select-none',
+        )}
+      >
+        <Tooltip
+          {...(SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+            content: appText.nav.prev,
+            keyCommand: KEY_COMMANDS.prev[0],
+          })}
+        >
           <PhotoLink
             {...categories}
             ref={refPrevious}
             photo={previousPhoto}
             nextPhotoAnimation={ANIMATION_RIGHT}
             scroll={false}
-            loaderType="badge"
+            loaderType='badge'
             prefetch
           >
-            <FiChevronLeft className="sm:hidden text-[1.1rem]" />
-            <span className="hidden sm:inline-block uppercase">
-              {appText.nav.prevShort}
+            <FiChevronLeft className='sm:hidden text-[1.1rem]' />
+            <span className='hidden sm:inline-block uppercase'>
+              {`< ${appText.nav.prevShort}`}
             </span>
           </PhotoLink>
         </Tooltip>
-        <span className="text-extra-extra-dim">
-          /
-        </span>
-        <Tooltip {...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-          content: appText.nav.next,
-          keyCommand: KEY_COMMANDS.next[0],
-        }}>
+        <span className='text-extra-extra-dim'>/</span>
+        <Tooltip
+          {...(SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+            content: appText.nav.next,
+            keyCommand: KEY_COMMANDS.next[0],
+          })}
+        >
           <PhotoLink
             {...categories}
             ref={refNext}
             photo={nextPhoto}
             nextPhotoAnimation={ANIMATION_LEFT}
             scroll={false}
-            loaderType="badge"
+            loaderType='badge'
             prefetch
           >
-            <FiChevronRight className="sm:hidden text-[1.1rem]" />
-            <span className="hidden sm:inline-block uppercase">
-              {appText.nav.nextShort}
+            <FiChevronRight className='sm:hidden text-[1.1rem]' />
+            <span className='hidden sm:inline-block uppercase'>
+              {`${appText.nav.nextShort} >`}
             </span>
           </PhotoLink>
         </Tooltip>
       </div>
     </div>
   );
-};
+}

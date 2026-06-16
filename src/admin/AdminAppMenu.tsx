@@ -19,20 +19,19 @@ import { useSelection } from '@/selection/SelectionContext';
 import { useAppText } from '@/i18n/state/client';
 import AdminMenuIcon from './AdminMenuIcon';
 import { useState } from 'react';
-import { FiImage, FiUploadCloud, FiTag, FiSettings, FiBarChart2 } from 'react-icons/fi';
+import {
+  FiImage,
+  FiUploadCloud,
+  FiTag,
+  FiSettings,
+  FiBarChart2,
+} from 'react-icons/fi';
 
 export default function AdminAppMenu() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
-  const {
-    isUserAdmin,
-  } = useAppState();
-
-  const {
-    selectionMode: isSelecting,
-    toggleSelectionMode,
-  } = useSelection();
+  const { selectionMode: isSelecting, toggleSelectionMode } = useSelection();
 
   const appText = useAppText();
 
@@ -41,65 +40,62 @@ export default function AdminAppMenu() {
       label: appText.admin.managePhotos,
       href: PATH_ADMIN_PHOTOS,
       active: pathname.startsWith(PATH_ADMIN_PHOTOS),
-      icon: <FiImage size={16} className="translate-y-[-1px]" />,
+      icon: <FiImage size={16} className='translate-y-[-1px]' />,
     },
     {
       label: appText.admin.uploadPlural,
       href: PATH_ADMIN_UPLOADS,
       active: pathname.startsWith(PATH_ADMIN_UPLOADS),
-      icon: <FiUploadCloud size={16} className="translate-y-[-1px]" />,
+      icon: <FiUploadCloud size={16} className='translate-y-[-1px]' />,
     },
     {
       label: appText.admin.manageTags,
       href: PATH_ADMIN_TAGS,
       active: pathname.startsWith(PATH_ADMIN_TAGS),
-      icon: <FiTag size={16} className="translate-y-[-1px]" />,
+      icon: <FiTag size={16} className='translate-y-[-1px]' />,
     },
     {
       label: appText.admin.appConfig,
       href: PATH_ADMIN_CONFIGURATION,
       active: pathname.startsWith(PATH_ADMIN_CONFIGURATION),
-      icon: <FiSettings size={16} className="translate-y-[-1px]" />,
+      icon: <FiSettings size={16} className='translate-y-[-1px]' />,
     },
     {
       label: appText.admin.appInsights,
       href: PATH_ADMIN_INSIGHTS,
       active: pathname.startsWith(PATH_ADMIN_INSIGHTS),
-      icon: <FiBarChart2 size={16} className="translate-y-[-1px]" />,
+      icon: <FiBarChart2 size={16} className='translate-y-[-1px]' />,
     },
     {
       label: 'Report',
       href: PATH_ADMIN_REPORT,
       active: pathname.startsWith(PATH_ADMIN_REPORT),
-      icon: <FiBarChart2 size={16} className="translate-y-[-1px]" />,
+      icon: <FiBarChart2 size={16} className='translate-y-[-1px]' />,
     },
   ];
-
-  if (!isUserAdmin) {
-    return null;
-  }
 
   return (
     <DropdownMenu.Root onOpenChange={setIsOpen}>
       <DropdownMenu.Trigger asChild>
         <button
-          type="button"
+          type='button'
           className={clsx(
             'flex items-center justify-center w-[42px] h-[28px] cursor-pointer',
             'hover:bg-gray-100/60 active:bg-gray-100',
             'dark:hover:bg-gray-900/75 dark:active:bg-gray-900',
             'text-gray-400 dark:text-gray-600',
             'hover:text-gray-700 dark:hover:text-gray-400',
-            isOpen && 'bg-dim text-main! [&>*>*]:translate-y-[6px] [&>*>*]:duration-300',
+            isOpen &&
+              'bg-dim text-main! [&>*>*]:translate-y-[6px] [&>*>*]:duration-300',
           )}
-          aria-label="Admin Menu"
+          aria-label='Admin Menu'
         >
           <AdminMenuIcon isOpen={isOpen} />
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          align="start"
+          align='start'
           className={clsx(
             'z-50 min-w-[8rem] component-surface py-1 not-dark:shadow-lg',
             'not-dark:shadow-gray-900/10',
@@ -110,9 +106,9 @@ export default function AdminAppMenu() {
             'outline-medium',
           )}
         >
-          <div className="divide-y divide-medium">
-            <div className="px-1 py-1">
-              {menuItems.map(item => (
+          <div className='divide-y divide-medium'>
+            <div className='px-1 py-1'>
+              {menuItems.map((item) => (
                 <DropdownMenu.Item key={item.href} asChild>
                   <Link
                     href={item.href}
@@ -129,7 +125,7 @@ export default function AdminAppMenu() {
                 </DropdownMenu.Item>
               ))}
             </div>
-            <div className="px-1 py-1">
+            <div className='px-1 py-1'>
               <DropdownMenu.Item asChild>
                 <button
                   onClick={toggleSelectionMode}

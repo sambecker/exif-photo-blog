@@ -5,9 +5,12 @@ import Spinner from '../Spinner';
 import LinkWithIconLoader from '../LinkWithIconLoader';
 import Tooltip from '../Tooltip';
 
-const WIDTH_CLASS       = 'w-[42px]';
-const WIDTH_CLASS_NARROW = 'w-[120px]';
-const WIDTH_CLASS_AUTO   = 'w-auto';
+const WIDTH_CLASS_MAP: Record<string, string> = {
+  normal: 'w-[42px]',
+  narrow: 'w-[120px]',
+  extended: 'w-[160px]',
+  auto: 'w-auto',
+};
 
 export default function SwitcherItem({
   icon,
@@ -23,74 +26,69 @@ export default function SwitcherItem({
   tooltip,
   width = 'normal',
 }: {
-  icon: ReactNode
-  title?: string
-  href?: string
-  hrefRef?: Ref<HTMLAnchorElement>
-  className?: string
-  onClick?: () => void
-  active?: boolean
-  isInteractive?: boolean
-  noPadding?: boolean
-  prefetch?: boolean
-  tooltip?: ComponentProps<typeof Tooltip>
-  width?: 'narrow' | 'normal' | 'auto'
+  icon: ReactNode;
+  title?: string;
+  href?: string;
+  hrefRef?: Ref<HTMLAnchorElement>;
+  className?: string;
+  onClick?: () => void;
+  active?: boolean;
+  isInteractive?: boolean;
+  noPadding?: boolean;
+  prefetch?: boolean;
+  tooltip?: ComponentProps<typeof Tooltip>;
+  width?: 'narrow' | 'normal' | 'extended' | 'auto';
 }) {
-  const widthClass = ((): string => {
-    switch (width) {
-      case 'narrow': return WIDTH_CLASS_NARROW;
-      case 'auto': return WIDTH_CLASS_AUTO;
-      default: return WIDTH_CLASS;
-    }
-  })();
+  const widthClass = WIDTH_CLASS_MAP[width];
   const className = clsx(
     'flex items-center justify-center',
     `${widthClass} h-[28px]`,
     isInteractive && 'cursor-pointer',
     isInteractive && 'hover:bg-gray-100/60 active:bg-gray-100',
     isInteractive && 'dark:hover:bg-gray-900/75 dark:active:bg-gray-900',
-    active
-      ? 'text-black dark:text-white'
-      : 'text-gray-400 dark:text-gray-600',
+    active ? 'text-black dark:text-white' : 'text-gray-400 dark:text-gray-600',
     active
       ? 'hover:text-black dark:hover:text-white'
       : 'hover:text-gray-700 dark:hover:text-gray-400',
     classNameProp,
   );
 
-  const renderIcon = () => noPadding
-    ? icon
-    : <div className={clsx(
-      'w-[28px] h-[24px]',
-      'flex items-center justify-center',
-    )}>
-      {icon}
-    </div>;
-
-  const content = href
-    ? <LinkWithIconLoader {...{
-      href,
-      ref: hrefRef,
-      title,
-      onClick,
-      className,
-      prefetch,
-      icon: renderIcon(),
-      loader: <Spinner />,
-    }} />
-    : <div {...{ title, onClick, className }}>
-      {renderIcon()}
-    </div>;
-
-  return (
-    tooltip
-      ? <Tooltip
-        {...tooltip}
-        classNameTrigger={widthClass}
-        delayDuration={500}
+  const renderIcon = () =>
+    noPadding ? (
+      icon
+    ) : (
+      <div
+        className={clsx(
+          'w-[28px] h-[24px]',
+          'flex items-center justify-center',
+        )}
       >
-        {content}
-      </Tooltip>
-      : content
+        {icon}
+      </div>
+    );
+
+  const content = href ? (
+    <LinkWithIconLoader
+      {...{
+        href,
+        ref: hrefRef,
+        title,
+        onClick,
+        className,
+        prefetch,
+        icon: renderIcon(),
+        loader: <Spinner />,
+      }}
+    />
+  ) : (
+    <div {...{ title, onClick, className }}>{renderIcon()}</div>
   );
-};
+
+  return tooltip ? (
+    <Tooltip {...tooltip} classNameTrigger={widthClass} delayDuration={500}>
+      {content}
+    </Tooltip>
+  ) : (
+    content
+  );
+}
