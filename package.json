@@ -81,14 +81,5 @@
     "tailwindcss": "4.3.2",
     "ts-node": "^10.9.2",
     "typescript": "6.0.3"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@tailwindcss/oxide",
-      "@vercel/speed-insights",
-      "oxc-resolver",
-      "sharp",
-      "unrs-resolver"
-    ]
   }
 }

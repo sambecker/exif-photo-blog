@@ -1,5 +1,8 @@
 packages: []
 allowBuilds:
+  '@tailwindcss/oxide': true
+  '@vercel/speed-insights': true
+  oxc-resolver: true
   sharp: true
   unrs-resolver: true
 minimumReleaseAgeExclude:
