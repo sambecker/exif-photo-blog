@@ -1,0 +1,27 @@
+# Example override file for docker-compose
+# Copy this file to docker-compose.override.yml and customize as needed
+# Run with: docker compose up
+
+services:
+  app:
+    ports:
+      - "3000:3000"
+    # Uncomment to use custom environment file
+    # env_file:
+    #   - .env.custom
+
+  postgres:
+    ports:
+      - "5432:5432"
+
+  redis:
+    ports:
+      - "6379:6379"
+
+  minio:
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    # Example: Change MinIO storage location
+    # volumes:
+    #   - /path/to/custom/minio/data:/data

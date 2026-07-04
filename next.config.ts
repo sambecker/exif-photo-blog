@@ -21,12 +21,9 @@ const HOSTNAME_AWS_S3 =
     ? `${process.env.NEXT_PUBLIC_AWS_S3_BUCKET}.s3.${process.env.NEXT_PUBLIC_AWS_S3_REGION}.amazonaws.com`
     : undefined;
 
-const HOSTNAME_MINIO =
-  process.env.NEXT_PUBLIC_MINIO_DOMAIN;
-const MINIO_PORT =
-  process.env.NEXT_PUBLIC_MINIO_PORT;
-const MINIO_USE_SSL =
-  process.env.NEXT_PUBLIC_MINIO_DISABLE_SSL !== '1';
+const HOSTNAME_MINIO = process.env.NEXT_PUBLIC_MINIO_DOMAIN;
+const MINIO_PORT = process.env.NEXT_PUBLIC_MINIO_PORT;
+const MINIO_USE_SSL = process.env.NEXT_PUBLIC_MINIO_DISABLE_SSL !== '1';
 
 const generateRemotePattern = (
   hostname: string,
@@ -58,28 +55,37 @@ if (HOSTNAME_AWS_S3) {
   remotePatterns.push(generateRemotePattern(HOSTNAME_AWS_S3));
 }
 if (HOSTNAME_MINIO) {
-  remotePatterns.push(generateRemotePattern(
-    HOSTNAME_MINIO,
-    MINIO_PORT,
-    MINIO_USE_SSL,
-  ));
+  remotePatterns.push(
+    generateRemotePattern(HOSTNAME_MINIO, MINIO_PORT, MINIO_USE_SSL),
+  );
 }
 
 const LOCALE = process.env.NEXT_PUBLIC_LOCALE || 'en-us';
 const LOCALE_ALIAS = './date-fns-locale-alias';
 const LOCALE_DYNAMIC = `i18n/locales/${LOCALE}`;
 
-const IMAGE_QUALITY =
-  process.env.NEXT_PUBLIC_IMAGE_QUALITY
-    ? parseInt(process.env.NEXT_PUBLIC_IMAGE_QUALITY)
-    : 75;
+const IMAGE_QUALITY = process.env.NEXT_PUBLIC_IMAGE_QUALITY
+  ? parseInt(process.env.NEXT_PUBLIC_IMAGE_QUALITY)
+  : 75;
+
+// Check if we're using a custom image loader (imgproxy for self-hosting)
+const IMAGE_LOADER = process.env.NEXT_PUBLIC_IMAGE_LOADER;
+const USE_IMGPROXY = IMAGE_LOADER === 'imgproxy';
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   images: {
     imageSizes: [200],
     qualities: [75, IMAGE_QUALITY],
     remotePatterns,
     minimumCacheTTL: 31536000,
+    // Use custom loader for imgproxy, otherwise use default
+    loader: USE_IMGPROXY ? 'custom' : undefined,
+    // Specify the path to the custom loader (use src/ path)
+    loaderFile: USE_IMGPROXY ? './src/image-loader.ts' : undefined,
+    // Only un-optimize if not using imgproxy and explicitly set
+    unoptimized:
+      !USE_IMGPROXY && process.env.NEXT_PUBLIC_IMAGE_UNOPTIMIZED === '1',
   },
   serverExternalPackages: ['exifr'],
   turbopack: {
@@ -96,6 +102,7 @@ const nextConfig: NextConfig = {
   },
 };
 
-module.exports = process.env.ANALYZE === 'true'
-  ? require('@next/bundle-analyzer')()(nextConfig)
-  : nextConfig;
+module.exports =
+  process.env.ANALYZE === 'true'
+    ? require('@next/bundle-analyzer')()(nextConfig)
+    : nextConfig;
