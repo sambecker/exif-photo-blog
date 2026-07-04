@@ -475,12 +475,13 @@ export default function AdminAppInsightsClient({
               icon={<TbSparkles size={17} />}
               content="Improve SEO + accessibility with AI"
               expandContent={<>
-                Enable automatic AI text generation
+                Enable automatic AI text generation via
                 {' '}
-                by setting <EnvVar
-                  variable="OPENAI_SECRET_KEY"
-                  trailingContent="."
-                />
+                <EnvVar variable="AI_GATEWAY_MODEL" trailingContent="," />
+                {' '}
+                (recommended on Vercel, no API key needed) or
+                {' '}
+                <EnvVar variable="OPENAI_SECRET_KEY" trailingContent="." />
                 {' '}
                 Further instruction and cost considerations in
                 {' '}

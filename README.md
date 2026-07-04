@@ -89,7 +89,30 @@ See FAQ for [limitations of local development](#can-i-work-locally-without-acces
 
 ### AI text generation
 
-To auto-generate text descriptions of photo:
+To auto-generate text descriptions of photos, configure one of the two providers below. The active provider is decided by which variable you set: `OPENAI_SECRET_KEY` selects direct OpenAI, otherwise `AI_GATEWAY_MODEL` selects Vercel AI Gateway. If both are set, the direct OpenAI integration takes precedence — setting `OPENAI_SECRET_KEY` acts as an explicit override; remove it to use the Gateway.
+
+#### Option A: Vercel AI Gateway (_recommended if deployed on Vercel_)
+
+1. Set `AI_GATEWAY_MODEL` to a [supported model](https://vercel.com/docs/ai-gateway/models-and-providers) using the `creator/model-name` format, e.g. `openai/gpt-5.2` — the model must support image input (vision), since every auto-generated field is derived from the photo itself
+2. If deployed on Vercel, no API key is required — [authentication happens automatically via OIDC](https://vercel.com/docs/ai-gateway#authentication)
+   - Outside Vercel (or for local development without `vercel env pull`), generate an API key from the [Vercel AI Gateway dashboard](https://vercel.com/docs/ai-gateway) and store it in `AI_GATEWAY_API_KEY`
+3. Add [rate limiting](#rate-limiting) (_recommended_)
+4. Configure auto-generated fields (optional)
+   - Set which text fields auto-generate when uploading a photo by storing a comma-separated list, e.g., `AI_TEXT_AUTO_GENERATED_FIELDS = title,semantic`
+
+**Choosing a model:** each field is one image in and a few words out, so per-photo token usage is tiny — the cheaper vision tiers are usually more than enough, and even flagship models cost a fraction of a cent per photo. Any [vision-capable model](https://vercel.com/ai-gateway/models) works; a few good options across the price range (approximate USD per million input / output tokens — see the [model list](https://vercel.com/ai-gateway/models) for current rates):
+
+| Tier | Model | ~ Input / Output |
+| --- | --- | --- |
+| Budget (great for this) | `openai/gpt-5-nano` | $0.05 / $0.40 |
+| | `google/gemini-2.5-flash-lite` | $0.10 / $0.40 |
+| | `openai/gpt-4o-mini` | $0.15 / $0.60 |
+| Balanced | `openai/gpt-5-mini` | $0.25 / $2.00 |
+| | `google/gemini-3-flash` | $0.50 / $3.00 |
+| Highest quality | `openai/gpt-5.2` | $1.75 / $14.00 |
+| | `anthropic/claude-sonnet-5` | $2.00 / $10.00 |
+
+#### Option B: Direct OpenAI integration
 
 1. Setup OpenAI
    - Create [OpenAI](https://openai.com) account and fund it ([see thread](https://github.com/sambecker/exif-photo-blog/issues/110) if you're having issues)
@@ -97,6 +120,7 @@ To auto-generate text descriptions of photo:
    - Set `OPENAI_MODEL` to choose a specific model (set to 'compatible' to use gpt-4o)
    - Set `OPENAI_BASE_URL` to use alternate OpenAI-compatible providers (experimental)
 2. Generate API key and store in environment variable `OPENAI_SECRET_KEY` (enable Responses API write access if customizing permissions)
+   - Setting `OPENAI_SECRET_KEY` overrides a configured `AI_GATEWAY_MODEL`
 3. Add [rate limiting](#rate-limiting) (_recommended_)
 4. Configure auto-generated fields (optional)
    - Set which text fields auto-generate when uploading a photo by storing a comma-separated list, e.g., `AI_TEXT_AUTO_GENERATED_FIELDS = title,semantic`
