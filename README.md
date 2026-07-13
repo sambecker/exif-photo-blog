@@ -100,8 +100,6 @@ To auto-generate text descriptions of photos, configure a provider. Vercel AI Ga
 4. Configure auto-generated fields (optional)
    - Set which text fields auto-generate when uploading a photo by storing a comma-separated list, e.g., `AI_TEXT_AUTO_GENERATED_FIELDS = title,semantic`
 
-Per-photo token usage is tiny (one image in, a few words out), so cheaper vision tiers are usually plenty. Browse [available models](https://vercel.com/ai-gateway/models) for current pricing.
-
 #### Alternate: Direct OpenAI (or OpenAI-compatible)
 
 1. Setup OpenAI
