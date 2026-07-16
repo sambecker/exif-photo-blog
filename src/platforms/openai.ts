@@ -1,7 +1,13 @@
-import { generateText, Output, streamText } from 'ai';
+import { gateway, generateText, LanguageModel, Output, streamText } from 'ai';
 import { createStreamableValue } from '@ai-sdk/rsc';
 import { createOpenAI } from '@ai-sdk/openai';
-import { OPENAI_BASE_URL, OPENAI_MODEL, OPENAI_SECRET_KEY } from '@/app/config';
+import {
+  AI_ACTIVE_TEXT_GENERATION_PROVIDER,
+  AI_GATEWAY_MODEL,
+  OPENAI_BASE_URL,
+  OPENAI_MODEL,
+  OPENAI_SECRET_KEY,
+} from '@/app/config';
 import { removeBase64Prefix } from '@/utility/image';
 import { cleanUpAiTextResponse } from '@/photo/ai';
 import {
@@ -9,27 +15,38 @@ import {
 } from '@/platforms/rate-limit';
 import { z } from 'zod';
 
-type OpenAIModel = Parameters<NonNullable<typeof openai>>[0];
+type OpenAIModel = Parameters<NonNullable<typeof openaiClient>>[0];
 
 const MODEL_DEFAULT: OpenAIModel = 'gpt-5.2';
 const MODEL_COMPATIBLE: OpenAIModel = 'gpt-4o';
 
-const MODEL: OpenAIModel = OPENAI_MODEL === 'compatible'
+const OPENAI_MODEL_ID: OpenAIModel = OPENAI_MODEL === 'compatible'
   ? MODEL_COMPATIBLE
   : (OPENAI_MODEL || MODEL_DEFAULT);
 
 const checkRateLimitAndThrow = (isBatch?: boolean) =>
   _checkRateLimitAndThrow({
-    identifier: 'openai-image-query',
+    identifier: 'ai-image-query',
     ...isBatch && { tokens: 1200, duration: '1d' },
   });
 
-const openai = OPENAI_SECRET_KEY
+const openaiClient = OPENAI_SECRET_KEY
   ? createOpenAI({
     apiKey: OPENAI_SECRET_KEY,
     ...OPENAI_BASE_URL && { baseURL: OPENAI_BASE_URL },
   })
   : undefined;
+
+// AI_ACTIVE_TEXT_GENERATION_PROVIDER (src/app/config.ts) is the single
+// source of truth for which provider wins: direct OpenAI when a secret key
+// is set, else Vercel AI Gateway when a model is set, else off. `model`
+// stays undefined when off, which is the no-auto-spend backstop below.
+const model: LanguageModel | undefined =
+  AI_ACTIVE_TEXT_GENERATION_PROVIDER === 'gateway' && AI_GATEWAY_MODEL
+    ? gateway(AI_GATEWAY_MODEL)
+    : AI_ACTIVE_TEXT_GENERATION_PROVIDER === 'openai'
+      ? openaiClient?.(OPENAI_MODEL_ID)
+      : undefined;
 
 const getImageTextArgs = (
   imageBase64: string,
@@ -37,8 +54,8 @@ const getImageTextArgs = (
 ): (
   Parameters<typeof streamText>[0] &
   Parameters<typeof generateText>[0]
-) | undefined => openai ? {
-  model: openai(MODEL),
+) | undefined => model ? {
+  model,
   messages: [{
     'role': 'user',
     'content': [
@@ -99,9 +116,9 @@ export const generateOpenAiImageObjectQuery = async <T extends z.ZodSchema>(
 ): Promise<z.infer<T>> => {
   await checkRateLimitAndThrow(isBatch);
 
-  if (openai) {
+  if (model) {
     return generateText({
-      model: openai(MODEL),
+      model,
       output: Output.object({ schema }),
       messages: [{
         'role': 'user',
@@ -120,16 +137,16 @@ export const generateOpenAiImageObjectQuery = async <T extends z.ZodSchema>(
       .map(([k, v]) => [k, cleanUpAiTextResponse(v as string)]),
     ) as z.infer<T>);
   } else {
-    throw new Error('No OpenAI client');
+    throw new Error('No AI model configured');
   }
 };
 
 export const testOpenAiConnection = async () => {
   await checkRateLimitAndThrow();
 
-  if (openai) {
+  if (model) {
     return generateText({
-      model: openai(MODEL),
+      model,
       messages: [{
         'role': 'user',
         'content': [
