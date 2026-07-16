@@ -83,8 +83,6 @@ export default function AdminAppConfigurationClient({
   // AI
   isVercelDeployment,
   hasOpenaiSecretKey,
-  hasOpenaiModel,
-  hasOpenaiBaseUrl,
   hasAiGatewayModel,
   aiActiveTextGenerationProvider,
   isAiTextGenerationEnabled,
@@ -184,10 +182,25 @@ export default function AdminAppConfigurationClient({
     </div>
     : null;
 
-  const renderEnvVars = (variables: string[]) =>
+  const renderEnvVars = (variables: (string | {
+    variable: string,
+    optional?: boolean,
+  })[]) =>
     <div className="pt-1 flex flex-col gap-0.5">
-      {variables.map(variable =>
-        <EnvVar key={variable} variable={variable} />)}
+      {variables.map(_variable => {
+        const { variable, optional } = typeof _variable === 'string'
+          ? { variable: _variable }
+          : _variable;
+        return <EnvVar
+          key={variable}
+          {...{
+            variable,
+            ...optional && { trailingContent:
+              <span className="text-dim">(optional)</span>,
+            },
+          }}
+        />;
+      })}
     </div>;
 
   const renderSubStatus = (
@@ -495,6 +508,66 @@ export default function AdminAppConfigurationClient({
             to enable rate limiting on external services
           </ChecklistRow>
           <ChecklistRow
+            title={aiActiveTextGenerationProvider === 'gateway'
+              && isAnalyzingConfiguration
+              ? 'Testing AI Gateway connection'
+              : 'AI Gateway'}
+            status={aiActiveTextGenerationProvider === 'gateway'}
+            showWarning={hasAiGatewayModel
+              && aiActiveTextGenerationProvider !== 'gateway'}
+            isPending={aiActiveTextGenerationProvider === 'gateway'
+              && isAnalyzingConfiguration}
+            optional
+          >
+            {aiError
+              && aiActiveTextGenerationProvider === 'gateway'
+              && renderError({
+                connection: { provider: 'AI Gateway', error: aiError},
+              })}
+            Store creator/model ({'"openai/gpt-5.2"'}) to use the
+            {' '}
+            {renderLink(
+              'https://vercel.com/docs/ai-gateway',
+              'Vercel AI Gateway',
+            )}
+            {' '}
+            to enable AI-generated text descriptions,
+            including an invisible field called
+            {' '}
+            {'"Semantic Description"'}, which supports CMD-K search
+            and image accessibility. 
+            {' '}
+            API key only necessary for non-Vercel deployments.
+            {renderEnvVars(isVercelDeployment
+              ? ['AI_GATEWAY_MODEL']
+              : ['AI_GATEWAY_MODEL', 'AI_GATEWAY_API_KEY'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title={hasOpenaiSecretKey && isAnalyzingConfiguration
+              ? 'Testing OpenAI connection'
+              : 'OpenAI (legacy)'}
+            status={hasOpenaiSecretKey}
+            isPending={hasOpenaiSecretKey && isAnalyzingConfiguration}
+            optional
+          >
+            {aiError
+              && aiActiveTextGenerationProvider === 'openai'
+              && renderError({
+                connection: { provider: 'OpenAI', error: aiError},
+              })}
+            Takes precedence over AI Gateway when configured.
+            Optionally override the model
+            {' '}
+            {'(set OPENAI_MODEL to \'compatible\' to use gpt-4o)'}
+            {' '}
+            or base URL for OpenAI-compatible providers.
+            {renderEnvVars([
+              { variable: 'OPENAI_SECRET_KEY' },
+              { variable: 'OPENAI_MODEL', optional: true },
+              { variable: 'OPENAI_BASE_URL', optional: true },
+            ])}
+          </ChecklistRow>
+          <ChecklistRow
             title={hasLocationServices && isAnalyzingConfiguration
               ? 'Testing Google Places connection'
               : 'Google Places'}
@@ -512,56 +585,6 @@ export default function AdminAppConfigurationClient({
         </>;
       case 'AI Text':
         return <>
-          <ChecklistRow
-            title={aiActiveTextGenerationProvider === 'gateway'
-              && isAnalyzingConfiguration
-              ? 'Testing Vercel AI Gateway connection'
-              : 'Vercel AI Gateway'}
-            status={aiActiveTextGenerationProvider === 'gateway'}
-            showWarning={hasAiGatewayModel
-              && aiActiveTextGenerationProvider !== 'gateway'}
-            isPending={aiActiveTextGenerationProvider === 'gateway'
-              && isAnalyzingConfiguration}
-            optional
-          >
-            {aiError
-              && aiActiveTextGenerationProvider === 'gateway'
-              && renderError({
-                connection: { provider: 'Vercel AI Gateway', error: aiError},
-              })}
-            Store a {'"creator/model-name"'} string
-            (e.g. {'"openai/gpt-5.2"'}) to route AI text generation
-            through {renderLink(
-              'https://vercel.com/docs/ai-gateway',
-              'Vercel AI Gateway',
-            )} — the model must support image input. On Vercel no API
-            key is required; elsewhere set {' '}
-            <strong>AI_GATEWAY_API_KEY</strong>.
-            {renderEnvVars(isVercelDeployment
-              ? ['AI_GATEWAY_MODEL']
-              : ['AI_GATEWAY_MODEL', 'AI_GATEWAY_API_KEY'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title={hasOpenaiSecretKey && isAnalyzingConfiguration
-              ? 'Testing OpenAI connection'
-              : 'OpenAI'}
-            status={hasOpenaiSecretKey}
-            isPending={hasOpenaiSecretKey && isAnalyzingConfiguration}
-            optional
-          >
-            {aiError
-              && aiActiveTextGenerationProvider === 'openai'
-              && renderError({
-                connection: { provider: 'OpenAI', error: aiError},
-              })}
-            Store OpenAI secret key in order to enable AI-generated
-            text descriptions, including an invisible field called
-            {' '}
-            {'"Semantic Description"'}, which supports CMD-K search
-            and image accessibility. Takes precedence over
-            {' '}<strong>AI_GATEWAY_MODEL</strong> when set.
-            {renderEnvVars(['OPENAI_SECRET_KEY'])}
-          </ChecklistRow>
           <ChecklistRow
             title={'Auto-generated text fields'}
             status={hasAiTextAutoGeneratedFields && isAiTextGenerationEnabled}
@@ -594,26 +617,6 @@ export default function AdminAppConfigurationClient({
               AI_AUTO_GENERATED_FIELDS_DEFAULT,
             )})
             {renderEnvVars(['AI_TEXT_AUTO_GENERATED_FIELDS'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title="Model override"
-            status={hasOpenaiModel}
-            optional
-          >
-            Store model in environment variable to use
-            alternate OpenAI model
-            {' '}
-            {'(set to \'compatible\' to use gpt-4o)'}
-            {renderEnvVars(['OPENAI_MODEL'])}
-          </ChecklistRow>
-          <ChecklistRow
-            title="Base URL override (experimental)"
-            status={hasOpenaiBaseUrl}
-            optional
-          >
-            Store base URL in environment variable to use
-            alternate OpenAI-compatible providers
-            {renderEnvVars(['OPENAI_BASE_URL'])}
           </ChecklistRow>
         </>;
       case 'Performance':
