@@ -89,26 +89,13 @@ See FAQ for [limitations of local development](#can-i-work-locally-without-acces
 
 ### AI text generation
 
-To auto-generate text descriptions of photos, configure a provider. Vercel AI Gateway is the recommended path; direct OpenAI (or an OpenAI-compatible endpoint) is available as an alternate. If both variables are set, `OPENAI_SECRET_KEY` takes precedence — remove it to switch back to the Gateway.
+To auto-generate text descriptions of photos, configure a provider. Vercel AI Gateway is the recommended path; direct OpenAI (or an OpenAI-compatible endpoint) is available as an alternate. If both variables are set, `OPENAI_SECRET_KEY` takes precedence.
 
-#### Recommended: Vercel AI Gateway
+#### Vercel AI Gateway
 
-1. Set `AI_GATEWAY_MODEL` to a [supported model](https://vercel.com/docs/ai-gateway/models-and-providers) using the `creator/model-name` format, e.g. `openai/gpt-5.2` — the model must support image input (vision), since every auto-generated field is derived from the photo itself
+1. Set `AI_GATEWAY_MODEL` to a [supported model](https://vercel.com/docs/ai-gateway/models-and-providers) using the `creator/model-name` format, e.g. `openai/gpt-5.2` — the model must support image input (vision)
 2. If deployed on Vercel, no API key is required — [authentication happens automatically via OIDC](https://vercel.com/docs/ai-gateway#authentication)
    - Outside Vercel (or for local development without `vercel env pull`), generate an API key from the [Vercel AI Gateway dashboard](https://vercel.com/docs/ai-gateway) and store it in `AI_GATEWAY_API_KEY`
-3. Add [rate limiting](#rate-limiting) (_recommended_)
-4. Configure auto-generated fields (optional)
-   - Set which text fields auto-generate when uploading a photo by storing a comma-separated list, e.g., `AI_TEXT_AUTO_GENERATED_FIELDS = title,semantic`
-
-#### Alternate: Direct OpenAI (or OpenAI-compatible)
-
-1. Setup OpenAI
-   - Create [OpenAI](https://openai.com) account and fund it ([see thread](https://github.com/sambecker/exif-photo-blog/issues/110) if you're having issues)
-   - Setup usage limits to avoid unexpected charges (_recommended_)
-   - Set `OPENAI_MODEL` to choose a specific model (set to 'compatible' to use gpt-4o)
-   - Set `OPENAI_BASE_URL` to use alternate OpenAI-compatible providers (experimental)
-2. Generate API key and store in environment variable `OPENAI_SECRET_KEY` (enable Responses API write access if customizing permissions)
-   - Setting `OPENAI_SECRET_KEY` overrides a configured `AI_GATEWAY_MODEL`
 3. Add [rate limiting](#rate-limiting) (_recommended_)
 4. Configure auto-generated fields (optional)
    - Set which text fields auto-generate when uploading a photo by storing a comma-separated list, e.g., `AI_TEXT_AUTO_GENERATED_FIELDS = title,semantic`
@@ -119,6 +106,19 @@ To auto-generate text descriptions of photos, configure a provider. Vercel AI Ga
      - `tags` (default)
      - `semantic` (default)
      - `none`
+
+#### Alternate: Direct OpenAI (or OpenAI-compatible)
+
+1. Setup OpenAI
+   - Create [OpenAI](https://openai.com) account and fund it ([see thread](https://github.com/sambecker/exif-photo-blog/issues/110) if you're having issues)
+   - Setup usage limits to avoid unexpected charges (_recommended_)
+2. Generate API key and store in environment variable `OPENAI_SECRET_KEY` (enable Responses API write access if customizing permissions)
+   - Setting `OPENAI_SECRET_KEY` overrides a configured `AI_GATEWAY_MODEL`
+   - Set `OPENAI_MODEL` to choose a specific model (set to 'compatible' to use gpt-4o)
+3. URL configuration (optional)
+   - Set `OPENAI_BASE_URL` to use alternate OpenAI-compatible providers
+4. Add [rate limiting](#rate-limiting) (_recommended_)
+5. Configure auto-generated fields (optional, see above for instructions)
 
 ### Location services
 
