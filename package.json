@@ -47,7 +47,7 @@
     "react-icons": "^5.7.0",
     "react-openlayers": "^10.5.1",
     "sanitize-html": "^2.17.6",
-    "sharp": "^0.35.3",
+    "sharp": "^0.34.5",
     "sonner": "^2.0.7",
     "swr": "^2.4.2",
     "ts-exif-parser": "^0.2.2",

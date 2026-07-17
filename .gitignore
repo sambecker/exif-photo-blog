@@ -21,6 +21,7 @@
 # misc
 .DS_Store
 *.pem
+index.db
 
 # debug
 npm-debug.log*
