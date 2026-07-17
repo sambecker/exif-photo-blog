@@ -6,24 +6,24 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
 minimumReleaseAgeExclude:
-  - '@ai-sdk/gateway@4.0.8'
+  - '@ai-sdk/gateway@4.0.8 || 4.0.22'
   - '@ai-sdk/openai@4.0.5'
   - '@ai-sdk/provider-utils@5.0.3'
-  - '@ai-sdk/rsc@3.0.11'
+  - '@ai-sdk/rsc@3.0.11 || 3.0.30'
   - '@aws-sdk/checksums@3.1000.11'
-  - '@aws-sdk/client-s3@3.1078.0'
+  - '@aws-sdk/client-s3@3.1078.0 || 3.1089.0'
   - '@aws-sdk/core@3.974.26'
   - '@aws-sdk/credential-provider-env@3.972.52'
   - '@aws-sdk/credential-provider-http@3.972.54'
-  - '@aws-sdk/credential-provider-ini@3.972.59'
-  - '@aws-sdk/credential-provider-login@3.972.58'
-  - '@aws-sdk/credential-provider-node@3.972.61'
+  - '@aws-sdk/credential-provider-ini@3.972.59 || 3.973.4'
+  - '@aws-sdk/credential-provider-login@3.972.58 || 3.972.66'
+  - '@aws-sdk/credential-provider-node@3.972.61 || 3.972.70'
   - '@aws-sdk/credential-provider-process@3.972.52'
   - '@aws-sdk/credential-provider-sso@3.972.58'
   - '@aws-sdk/credential-provider-web-identity@3.972.58'
   - '@aws-sdk/middleware-sdk-s3@3.972.57'
   - '@aws-sdk/nested-clients@3.997.26'
-  - '@aws-sdk/s3-request-presigner@3.1078.0'
+  - '@aws-sdk/s3-request-presigner@3.1078.0 || 3.1089.0'
   - '@aws-sdk/signature-v4-multi-region@3.996.38'
   - '@aws-sdk/token-providers@3.1078.0'
   - '@aws-sdk/types@3.973.15'
@@ -39,7 +39,23 @@ minimumReleaseAgeExclude:
   - '@next/swc-linux-x64-musl@16.2.10'
   - '@next/swc-win32-arm64-msvc@16.2.10'
   - '@next/swc-win32-x64-msvc@16.2.10'
-  - ai@7.0.11
+  - ai@7.0.11 || 7.0.30
   - baseline-browser-mapping@2.10.41
   - eslint-config-next@16.2.10
   - next@16.2.10
+  - '@tailwindcss/node@4.3.3'
+  - '@tailwindcss/oxide-android-arm64@4.3.3'
+  - '@tailwindcss/oxide-darwin-arm64@4.3.3'
+  - '@tailwindcss/oxide-darwin-x64@4.3.3'
+  - '@tailwindcss/oxide-freebsd-x64@4.3.3'
+  - '@tailwindcss/oxide-linux-arm-gnueabihf@4.3.3'
+  - '@tailwindcss/oxide-linux-arm64-gnu@4.3.3'
+  - '@tailwindcss/oxide-linux-arm64-musl@4.3.3'
+  - '@tailwindcss/oxide-linux-x64-gnu@4.3.3'
+  - '@tailwindcss/oxide-linux-x64-musl@4.3.3'
+  - '@tailwindcss/oxide-wasm32-wasi@4.3.3'
+  - '@tailwindcss/oxide-win32-arm64-msvc@4.3.3'
+  - '@tailwindcss/oxide-win32-x64-msvc@4.3.3'
+  - '@tailwindcss/oxide@4.3.3'
+  - '@tailwindcss/postcss@4.3.3'
+  - tailwindcss@4.3.3
