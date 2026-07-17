@@ -63,8 +63,9 @@ const getImageTextArgs = (
         'type': 'text',
         'text': query,
       }, {
-        'type': 'image',
-        'image': removeBase64Prefix(imageBase64),
+        'type': 'file',
+        'mediaType': 'image',
+        'data': removeBase64Prefix(imageBase64),
       },
     ],
   }],
@@ -127,8 +128,9 @@ export const generateOpenAiImageObjectQuery = async <T extends z.ZodSchema>(
             'type': 'text',
             'text': query,
           }, {
-            'type': 'image',
-            'image': removeBase64Prefix(imageBase64),
+            'type': 'file',
+            'mediaType': 'image',
+            'data': removeBase64Prefix(imageBase64),
           },
         ],
       }],
