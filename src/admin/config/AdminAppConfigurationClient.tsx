@@ -125,6 +125,7 @@ export default function AdminAppConfigurationClient({
   // Design
   hasDefaultTheme,
   defaultTheme,
+  arePhotoTitlesUppercase,
   arePhotosMatted,
   arePhotoMatteColorsConfigured,
   matteColor,
@@ -940,6 +941,15 @@ export default function AdminAppConfigurationClient({
             {' '}
             (defaults to {'\'system\''})
             {renderEnvVars(['NEXT_PUBLIC_DEFAULT_THEME'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="Uppercase titles"
+            status={arePhotoTitlesUppercase}
+            optional
+          >
+            Set environment variable to {'"1"'} to prevent
+            photo titles and captions from displaying in uppercase
+            {renderEnvVars(['NEXT_PUBLIC_DISABLE_UPPERCASE_TITLES'])}
           </ChecklistRow>
           <ChecklistRow
             title="Photo matting"

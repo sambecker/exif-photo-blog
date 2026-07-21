@@ -406,6 +406,8 @@ export const DEFAULT_THEME =
     : process.env.NEXT_PUBLIC_DEFAULT_THEME === 'light'
       ? 'light'
       : 'system';
+export const UPPERCASE_TITLES =
+  process.env.NEXT_PUBLIC_DISABLE_UPPERCASE_TITLES !== '1';
 export const MATTE_PHOTOS =
   process.env.NEXT_PUBLIC_MATTE_PHOTOS === '1';
 export const MATTE_COLOR =
@@ -567,6 +569,7 @@ export const APP_CONFIGURATION = {
     Boolean(MATTE_COLOR_DARK),
   matteColor: MATTE_COLOR,
   matteColorDark: MATTE_COLOR_DARK,
+  arePhotoTitlesUppercase: UPPERCASE_TITLES,
   // Settings
   isGeoPrivacyEnabled: GEO_PRIVACY_ENABLED,
   arePublicDownloadsEnabled: ALLOW_PUBLIC_DOWNLOADS,

@@ -31,6 +31,7 @@ import {
   MATTE_COLOR,
   MATTE_COLOR_DARK,
   ALWAYS_SHOW_EXPOSURE_COMP,
+  UPPERCASE_TITLES,
 } from '@/app/config';
 import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
@@ -195,7 +196,10 @@ export default function PhotoLarge({
   const renderPhotoLink =
     <PhotoLink
       photo={photo}
-      className="font-bold uppercase grow"
+      className={clsx(
+        'font-bold grow',
+        UPPERCASE_TITLES && 'uppercase',
+      )}
       prefetch={prefetch}
     />;
 
@@ -313,7 +317,7 @@ export default function PhotoLarge({
                   : renderPhotoLink)}
                 <div className="space-y-baseline">
                   {photo.caption &&
-                    <div className="uppercase">
+                    <div className={clsx(UPPERCASE_TITLES && 'uppercase')}>
                       {photo.caption}
                     </div>}
                   {(
