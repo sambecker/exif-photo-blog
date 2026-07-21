@@ -677,7 +677,7 @@ export default function AdminAppConfigurationClient({
           >
             Set environment variable to {'"1"'} to prevent
             image blur data being stored and displayed
-            {renderEnvVars(['NEXT_PUBLIC_BLUR_DISABLED'])}
+            {renderEnvVars(['NEXT_PUBLIC_DISABLE_BLUR'])}
           </ChecklistRow> 
         </>;
       case 'Categories':

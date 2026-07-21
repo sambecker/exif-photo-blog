@@ -268,6 +268,8 @@ export const IMAGE_QUALITY =
     ? parseInt(process.env.NEXT_PUBLIC_IMAGE_QUALITY)
     : 75;
 export const BLUR_ENABLED =
+  process.env.NEXT_PUBLIC_DISABLE_BLUR !== '1' &&
+  // Legacy environment variable
   process.env.NEXT_PUBLIC_BLUR_DISABLED !== '1';
 
 // AI
@@ -628,6 +630,9 @@ const ALL_DEPRECATED_ENV_VARS = [{
 }, {
   old: 'NEXT_PUBLIC_HIDE_SOCIAL',
   replacement: 'NEXT_PUBLIC_SOCIAL_NETWORKS',
+}, {
+  old: 'NEXT_PUBLIC_BLUR_DISABLED',
+  replacement: 'NEXT_PUBLIC_DISABLE_BLUR',
 }];
 
 export const USED_DEPRECATED_ENV_VARS = ALL_DEPRECATED_ENV_VARS
