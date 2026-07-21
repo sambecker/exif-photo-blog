@@ -94,8 +94,6 @@ const FORM_METADATA = (
     label: 'caption',
     capitalize: true,
     validateStringMaxLength: STRING_MAX_LENGTH_LONG,
-    shouldHide: ({ title, caption }) =>
-      !aiTextGeneration && (!title && !caption),
   },
   tags: {
     section: 'text',
