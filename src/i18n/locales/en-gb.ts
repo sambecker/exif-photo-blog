@@ -140,6 +140,8 @@ export const TEXT: I18N = {
     manageRecipes: 'Manage Recipes',
     selectPhotos: 'Select Photos ...',
     selectPhotosExit: 'Stop Selecting',
+    editTitles: 'Edit Titles ...',
+    editTitlesExit: 'Stop Editing Titles',
     appInsights: 'App Insights',
     appConfig: 'App Configuration',
     clearCache: 'Clear Cache',

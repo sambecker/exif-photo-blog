@@ -33,7 +33,9 @@ import SwitcherItemMenu from '@/components/switcher/SwitcherItemMenu';
 import { MoreMenuSection } from '@/components/more/MoreMenu';
 import { FiXSquare } from 'react-icons/fi';
 import { useSelectPhotosState } from './select/SelectPhotosState';
+import { useEditTitlesState } from './edit-titles/EditTitlesState';
 import IconAlbum from '@/components/icons/IconAlbum';
+import IconEdit from '@/components/icons/IconEdit';
 import { SHOW_ABOUT_PAGE } from '@/app/config';
 import {
   HEIGHT_CLASS,
@@ -65,6 +67,12 @@ export default function AdminAppMenu({
     startSelectingPhotos,
     stopSelectingPhotos,
   } = useSelectPhotosState();
+
+  const {
+    isEditingTitles,
+    startEditingTitles,
+    stopEditingTitles,
+  } = useEditTitlesState();
 
   const appText = useAppText();
 
@@ -181,6 +189,23 @@ export default function AdminAppMenu({
           ? stopSelectingPhotos
           : startSelectingPhotos,
       });
+      items.push({
+        label: isEditingTitles
+          ? appText.admin.editTitlesExit
+          : appText.admin.editTitles,
+        icon: isEditingTitles
+          ? <FiXSquare
+            size={15}
+            className="translate-x-[-0.75px] translate-y-[0.5px]"
+          />
+          : <IconEdit
+            size={15}
+            className="translate-x-[-0.5px] translate-y-[0.5px]"
+          />,
+        action: isEditingTitles
+          ? stopEditingTitles
+          : startEditingTitles,
+      });
     }
     items.push({
       label: showAppInsightsLink
@@ -201,6 +226,9 @@ export default function AdminAppMenu({
     isSelectingPhotos,
     startSelectingPhotos,
     stopSelectingPhotos,
+    isEditingTitles,
+    startEditingTitles,
+    stopEditingTitles,
     photosCountNeedSync,
     photosCountTotal,
     recipesCount,

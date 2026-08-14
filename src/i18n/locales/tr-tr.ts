@@ -140,6 +140,8 @@ export const TEXT: I18N = {
     manageRecipes: 'Tarifleri Yönet',
     selectPhotos: 'Fotoğrafları Seç ...',
     selectPhotosExit: 'Seçmeyi Durdur',
+    editTitles: 'Başlıkları Düzenle ...',
+    editTitlesExit: 'Başlık Düzenlemeyi Durdur',
     appInsights: 'Uygulama Analizi',
     appConfig: 'Uygulama Yapılandırması',
     clearCache: 'Önbelleği Temizle',

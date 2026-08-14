@@ -140,6 +140,8 @@ export const TEXT: I18N = {
     manageRecipes: '管理预设',
     selectPhotos: '选择照片...',
     selectPhotosExit: '停止选择',
+    editTitles: '编辑标题...',
+    editTitlesExit: '停止编辑标题',
     appInsights: '应用分析',
     appConfig: '应用配置',
     clearCache: '清除缓存',

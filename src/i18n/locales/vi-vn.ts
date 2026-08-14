@@ -140,6 +140,8 @@ export const TEXT: I18N = {
     manageRecipes: 'Quản lý công thức',
     selectPhotos: 'Chọn ảnh...',
     selectPhotosExit: 'Dừng chọn',
+    editTitles: 'Chỉnh sửa tiêu đề...',
+    editTitlesExit: 'Dừng chỉnh sửa tiêu đề',
     appInsights: 'Thống kê ứng dụng',
     appConfig: 'Cấu hình ứng dụng',
     clearCache: 'Xóa bộ nhớ cache',

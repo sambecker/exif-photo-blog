@@ -94,6 +94,7 @@ export const PATH_API_PRESIGNED_URL = `${PATH_API_STORAGE}/presigned-url`;
 // Parameters
 export const PARAM_UPLOAD_TITLE = 'title';
 export const PARAM_SELECT = 'select';
+export const PARAM_EDIT_TITLES = 'edit-titles';
 export const PARAM_REDIRECT = 'redirect';
 
 // Special characters
