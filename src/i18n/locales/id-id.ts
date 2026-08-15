@@ -140,6 +140,8 @@ export const TEXT: I18N = {
     manageRecipes: 'Kelola Resep',
     selectPhotos: 'Pilih Foto ...',
     selectPhotosExit: 'Berhenti Memilih',
+    editTitles: 'Edit Judul ...',
+    editTitlesExit: 'Berhenti Mengedit Judul',
     appInsights: 'Wawasan Aplikasi',
     appConfig: 'Konfigurasi Aplikasi',
     clearCache: 'Bersihkan Cache',

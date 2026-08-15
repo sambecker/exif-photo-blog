@@ -4,6 +4,7 @@ import {
   insertPhoto,
   deletePhotoTagGlobally,
   updatePhoto,
+  updatePhotoTitleCaption,
   renamePhotoTagGlobally,
   getPhoto,
   getPhotos,
@@ -760,6 +761,21 @@ export const batchPhotoAction = async ({
       break;
   }
 
+  revalidateAllKeysAndPaths();
+});
+
+export const batchUpdatePhotoTitlesAction = async (
+  updates: {
+    photoId: string
+    title: string
+    caption: string
+  }[],
+) => runAuthenticatedAdminServerAction(async () => {
+  await updatePhotoTitleCaption(
+    updates.map(({ photoId }) => photoId),
+    updates.map(({ title }) => title.trim() || null),
+    updates.map(({ caption }) => caption.trim() || null),
+  );
   revalidateAllKeysAndPaths();
 });
 

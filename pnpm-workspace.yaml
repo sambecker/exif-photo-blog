@@ -6,12 +6,12 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
 minimumReleaseAgeExclude:
-  - '@ai-sdk/gateway@4.0.8 || 4.0.22'
+  - '@ai-sdk/gateway@4.0.8 || 4.0.22 || 4.0.52'
   - '@ai-sdk/openai@4.0.5'
   - '@ai-sdk/provider-utils@5.0.3'
-  - '@ai-sdk/rsc@3.0.11 || 3.0.30'
+  - '@ai-sdk/rsc@3.0.11 || 3.0.30 || 3.0.65'
   - '@aws-sdk/checksums@3.1000.11'
-  - '@aws-sdk/client-s3@3.1078.0 || 3.1089.0'
+  - '@aws-sdk/client-s3@3.1078.0 || 3.1089.0 || 3.1110.0'
   - '@aws-sdk/core@3.974.26'
   - '@aws-sdk/credential-provider-env@3.972.52'
   - '@aws-sdk/credential-provider-http@3.972.54'
@@ -23,26 +23,26 @@ minimumReleaseAgeExclude:
   - '@aws-sdk/credential-provider-web-identity@3.972.58'
   - '@aws-sdk/middleware-sdk-s3@3.972.57'
   - '@aws-sdk/nested-clients@3.997.26'
-  - '@aws-sdk/s3-request-presigner@3.1078.0 || 3.1089.0'
+  - '@aws-sdk/s3-request-presigner@3.1078.0 || 3.1089.0 || 3.1110.0'
   - '@aws-sdk/signature-v4-multi-region@3.996.38'
   - '@aws-sdk/token-providers@3.1078.0'
   - '@aws-sdk/types@3.973.15'
   - '@aws-sdk/xml-builder@3.972.33'
-  - '@next/bundle-analyzer@16.2.10'
-  - '@next/env@16.2.10'
-  - '@next/eslint-plugin-next@16.2.10'
-  - '@next/swc-darwin-arm64@16.2.10'
-  - '@next/swc-darwin-x64@16.2.10'
-  - '@next/swc-linux-arm64-gnu@16.2.10'
-  - '@next/swc-linux-arm64-musl@16.2.10'
-  - '@next/swc-linux-x64-gnu@16.2.10'
-  - '@next/swc-linux-x64-musl@16.2.10'
-  - '@next/swc-win32-arm64-msvc@16.2.10'
-  - '@next/swc-win32-x64-msvc@16.2.10'
-  - ai@7.0.11 || 7.0.30
+  - '@next/bundle-analyzer@16.2.10 || 16.3.1'
+  - '@next/env@16.2.10 || 16.3.1'
+  - '@next/eslint-plugin-next@16.2.10 || 16.3.1'
+  - '@next/swc-darwin-arm64@16.2.10 || 16.3.1'
+  - '@next/swc-darwin-x64@16.2.10 || 16.3.1'
+  - '@next/swc-linux-arm64-gnu@16.2.10 || 16.3.1'
+  - '@next/swc-linux-arm64-musl@16.2.10 || 16.3.1'
+  - '@next/swc-linux-x64-gnu@16.2.10 || 16.3.1'
+  - '@next/swc-linux-x64-musl@16.2.10 || 16.3.1'
+  - '@next/swc-win32-arm64-msvc@16.2.10 || 16.3.1'
+  - '@next/swc-win32-x64-msvc@16.2.10 || 16.3.1'
+  - ai@7.0.11 || 7.0.30 || 7.0.65
   - baseline-browser-mapping@2.10.41
-  - eslint-config-next@16.2.10
-  - next@16.2.10
+  - eslint-config-next@16.2.10 || 16.3.1
+  - next@16.2.10 || 16.3.1
   - '@tailwindcss/node@4.3.3'
   - '@tailwindcss/oxide-android-arm64@4.3.3'
   - '@tailwindcss/oxide-darwin-arm64@4.3.3'

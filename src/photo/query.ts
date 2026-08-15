@@ -196,6 +196,33 @@ export const updatePhoto = (photo: PhotoDbInsert) =>
     WHERE id=${photo.id}
   `, 'updatePhoto');
 
+export const updatePhotoTitleCaption = (
+  photoIds: string[],
+  titles: (string | null)[],
+  captions: (string | null)[],
+) => {
+  if (photoIds.length === 0) {
+    return Promise.resolve();
+  }
+
+  const values: (string | null)[] = [];
+  const valueRows = photoIds.map((id, index) => {
+    const base = index * 3;
+    values.push(id, titles[index] ?? null, captions[index] ?? null);
+    return `($${base + 1}::text, $${base + 2}::text, $${base + 3}::text)`;
+  });
+  values.push((new Date()).toISOString());
+
+  return safelyQuery(() => query(`
+    UPDATE photos AS p SET
+      title = v.title,
+      caption = v.caption,
+      updated_at = $${values.length}
+    FROM (VALUES ${valueRows.join(', ')}) AS v(id, title, caption)
+    WHERE p.id = v.id
+  `, values), 'updatePhotoTitleCaption');
+};
+
 export const deletePhotoTagGlobally = (tag: string) =>
   safelyQuery(() => sql`
     UPDATE photos

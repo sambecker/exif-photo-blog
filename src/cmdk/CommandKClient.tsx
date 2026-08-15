@@ -100,6 +100,7 @@ import IconCheck from '@/components/icons/IconCheck';
 import { getSortStateFromPath } from '@/photo/sort/path';
 import IconSort from '@/components/icons/IconSort';
 import { useSelectPhotosState } from '@/admin/select/SelectPhotosState';
+import { useEditTitlesState } from '@/admin/edit-titles/EditTitlesState';
 import IconAlbum from '@/components/icons/IconAlbum';
 import usePhotoQuery from '@/photo/usePhotoQuery';
 import { clearCacheAction } from '@/photo/actions';
@@ -198,6 +199,12 @@ export default function CommandKClient({
     startSelectingPhotos,
     stopSelectingPhotos,
   } = useSelectPhotosState();
+
+  const {
+    isEditingTitles,
+    startEditingTitles,
+    stopEditingTitles,
+  } = useEditTitlesState();
 
   const {
     doesPathOfferSort,
@@ -671,6 +678,19 @@ export default function CommandKClient({
           startSelectingPhotos?.();
         } else {
           stopSelectingPhotos?.();
+        }
+      },
+    }, {
+      label: isEditingTitles
+        ? appText.admin.editTitlesExit
+        : appText.admin.editTitles,
+      annotation: <IconLock narrow />,
+      keywords: ['title', 'caption', 'bulk'],
+      action: () => {
+        if (!isEditingTitles) {
+          startEditingTitles?.();
+        } else {
+          stopEditingTitles?.();
         }
       },
     }, {
