@@ -11,6 +11,11 @@ import { HTMLAttributes, ReactNode, RefObject } from 'react';
   Column offset: (308px + 16px) / 2 = 162px
 */
 
+// Offsets sidebar width when centering on large screens.
+// Applied to columns, not the container, so that consumer-supplied
+// positioning ('sticky') isn't overridden at large widths.
+const CLASS_COLUMN_OFFSET = '3xl:relative 3xl:left-[162px]';
+
 export default function AppGrid({
   containerRef,
   className,
@@ -40,13 +45,12 @@ export default function AppGrid({
         'grid-cols-1 md:grid-cols-12',
         'gap-3 md:gap-4',
         'max-w-[1280px] 3xl:w-[1280px]',
-        // Offset sidebar width when centering on large screens
-        '3xl:relative 3xl:left-[162px]',
         className,
       )}
     >
       <div className={clsx(
         'col-span-1 md:col-span-9',
+        CLASS_COLUMN_OFFSET,
         sideFirstOnMobile && 'order-2 md:order-none',
         classNameMain,
       )}>
@@ -56,6 +60,7 @@ export default function AppGrid({
         <div className={clsx(
           'col-span-1 md:col-span-3',
           '3xl:max-w-[260px]',
+          CLASS_COLUMN_OFFSET,
           sideFirstOnMobile && 'order-1 md:order-none',
           sideHiddenOnMobile && 'max-md:hidden',
           classNameSide,
