@@ -1,6 +1,6 @@
 'use client';
 
-import { ComponentProps, useMemo, useRef } from 'react';
+import { ComponentProps, useCallback, useMemo, useRef } from 'react';
 import {
   getPathComponents,
   PARAM_REDIRECT,
@@ -11,9 +11,9 @@ import {
 import {
   deletePhotoAction,
   replacePhotoStorageAction,
+  setPhotoVisibilityAction,
   syncPhotoAction,
   toggleFavoritePhotoAction,
-  togglePrivatePhotoAction,
 } from '@/photo/actions';
 import {
   Photo,
@@ -34,13 +34,19 @@ import IconEdit from '@/components/icons/IconEdit';
 import { photoNeedsToBeUpdated } from '@/photo/update';
 import { KEY_COMMANDS } from '@/photo/key-commands';
 import { useAppText } from '@/i18n/state/client';
-import IconLock from '@/components/icons/IconLock';
+import IconCheck from '@/components/icons/IconCheck';
 import IconTrash from '@/components/icons/IconTrash';
 import IconUpload from '@/components/icons/IconUpload';
 import { uploadPhotoFromClient } from '@/photo/storage';
 import ImageInput from '@/components/ImageInput';
 import { PRESERVE_ORIGINAL_UPLOADS } from '@/app/config';
 import IconWarning from '@/components/icons/IconWarning';
+import {
+  getVisibilityFromPhoto,
+  VISIBILITY_LABEL,
+  VISIBILITY_OPTIONS,
+  VisibilityValue,
+} from '@/photo/visibility';
 
 export default function AdminPhotoMenu({
   photo,
@@ -69,11 +75,16 @@ export default function AdminPhotoMenu({
   const isFav = isPhotoFav(photo);
   const shouldRedirectFav = isPathFavs(path) && isFav;
   const shouldRedirectDelete = isOnPhotoDetail;
-  const redirectPathOnPrivateToggle = isOnPhotoDetail
-    ? photo.hidden
-      ? pathForTag(TAG_PRIVATE)
-      : PATH_ROOT
-    : undefined;
+  const visibility = getVisibilityFromPhoto(photo);
+  // Only leave the photo detail page when privacy itself changes
+  const redirectPathForVisibility = useCallback((value: VisibilityValue) => {
+    const willBePrivate = value === 'private';
+    return isOnPhotoDetail && willBePrivate !== Boolean(photo.hidden)
+      ? willBePrivate
+        ? PATH_ROOT
+        : pathForTag(TAG_PRIVATE)
+      : undefined;
+  }, [isOnPhotoDetail, photo.hidden]);
 
   const sectionMain = useMemo(() => {
     const items: MoreMenuSection['items'] = [{
@@ -106,23 +117,6 @@ export default function AdminPhotoMenu({
       });
     }
     items.push({
-      label: photo.hidden ? appText.admin.public : appText.admin.private,
-      icon: <IconLock
-        size={16}
-        className="translate-x-[-1.5px] translate-y-[0.5px]"
-        open={!photo.hidden}
-        narrow
-      />,
-      action: () => togglePrivatePhotoAction(
-        photo.id,
-        redirectPathOnPrivateToggle,
-      )
-        .then(() => revalidatePhoto?.(photo.id)),
-      ...showKeyCommands && {
-        keyCommand: KEY_COMMANDS.togglePrivate,
-      },
-    });
-    items.push({
       label: appText.admin.download,
       icon: <MdOutlineFileDownload
         size={18}
@@ -131,6 +125,28 @@ export default function AdminPhotoMenu({
       href: photo.url,
       hrefDownloadName: downloadFileNameForPhoto(photo),
       ...showKeyCommands && { keyCommand: KEY_COMMANDS.download },
+    });
+    items.push({
+      label: VISIBILITY_LABEL,
+      icon: VISIBILITY_OPTIONS
+        .find(({ value }) => value === visibility)
+        ?.accessoryStart,
+      items: VISIBILITY_OPTIONS.map(({ value, label, accessoryStart }) => ({
+        label,
+        icon: accessoryStart,
+        ...value === visibility && {
+          accessoryEnd: <IconCheck
+            size={13}
+            className="translate-y-[-1px]"
+          />,
+        },
+        action: () => setPhotoVisibilityAction(
+          photo.id,
+          value,
+          redirectPathForVisibility(value),
+        )
+          .then(() => revalidatePhoto?.(photo.id)),
+      })),
     });
     items.push({
       label: appText.admin.sync,
@@ -193,7 +209,8 @@ export default function AdminPhotoMenu({
     includeFavorite,
     isFav,
     shouldRedirectFav,
-    redirectPathOnPrivateToggle,
+    visibility,
+    redirectPathForVisibility,
     revalidatePhoto,
   ]);
 

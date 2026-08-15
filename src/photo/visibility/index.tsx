@@ -6,12 +6,16 @@ import { Photo } from '..';
 
 export type VisibilityValue = 'default' | 'exclude' | 'private';
 
+export const VISIBILITY_LABEL = 'Visibility';
+
 export const EXCLUDE_DESCRIPTION =
   'Excluded from homepage views, rss.xml, etc.';
 export const PRIVATE_DESCRIPTION =
   'Visible only to admins';
 
-export const VISIBILITY_OPTIONS: SelectMenuOptionType<VisibilityValue>[] = [
+export const VISIBILITY_OPTIONS: (
+  SelectMenuOptionType<VisibilityValue> & { label: string }
+)[] = [
   {
     value: 'default',
     accessoryStart: <IconHidden size={17} visible />,
@@ -60,5 +64,12 @@ export const didVisibilityChange = (
   current: Partial<PhotoFormData>,
 ) => getVisibilityValue(original) !== getVisibilityValue(current);
 
+export const getVisibilityFromPhoto = (photo: Photo): VisibilityValue =>
+  photo.hidden
+    ? 'private'
+    : photo.excludeFromFeeds
+      ? 'exclude'
+      : 'default';
+
 export const doesPhotoHaveDefaultVisibility = (photo: Photo) =>
-  !photo.hidden && !photo.excludeFromFeeds;
+  getVisibilityFromPhoto(photo) === 'default';

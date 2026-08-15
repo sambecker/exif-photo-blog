@@ -17,6 +17,7 @@ export default function MoreMenuItem({
   labelComplex,
   annotation,
   icon,
+  accessoryEnd,
   color = 'grey',
   href,
   hrefDownloadName,
@@ -31,6 +32,7 @@ export default function MoreMenuItem({
   labelComplex?: ReactNode
   annotation?: ReactNode
   icon?: ReactNode
+  accessoryEnd?: ReactNode
   color?: 'grey' | 'red' | 'yellow'
   href?: string
   hrefDownloadName?: string
@@ -145,6 +147,10 @@ export default function MoreMenuItem({
         >
           {buttonContent}
         </LoaderButton>}
+      {accessoryEnd &&
+        <span className="shrink-0 text-dim pointer-events-none">
+          {accessoryEnd}
+        </span>}
       {keyCommand &&
         <KeyCommand
           modifier={keyCommandModifier}

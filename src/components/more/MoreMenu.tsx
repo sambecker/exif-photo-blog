@@ -152,8 +152,8 @@ export default function MoreMenu({
                               {item.labelComplex ?? item.label}
                             </span>
                             <FaChevronRight
-                              size={10}
-                              className="text-dim"
+                              size={11}
+                              className="text-dim ml-1"
                             />
                           </div>
                         </div>

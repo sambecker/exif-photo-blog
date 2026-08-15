@@ -20,7 +20,6 @@ import {
   deletePhotoAction,
   syncPhotoAction,
   toggleFavoritePhotoAction,
-  togglePrivatePhotoAction,
 } from './actions';
 import { isPhotoFav } from '@/tag';
 import Tooltip from '@/components/Tooltip';
@@ -67,10 +66,6 @@ export default function PhotoPrevNextActions({
     if (photo?.id) { return toggleFavoritePhotoAction(photo.id); }
   }, [photo]);
 
-  const toggleHidden = useCallback(() => {
-    if (photo?.id) { return togglePrivatePhotoAction(photo.id); }
-  }, [photo]);
-
   const navigateToPhotoEdit = useNavigateOrRunActionWithToast({
     pathOrAction: photo ? pathForAdminPhotoEdit(photo) : undefined,
     toastMessage: `Editing ${photoTitle} ...`,
@@ -84,16 +79,6 @@ export default function PhotoPrevNextActions({
   const unfavoritePhoto = useNavigateOrRunActionWithToast({
     pathOrAction: toggleFavorite,
     toastMessage: `Unfavoriting ${photoTitle} ...`,
-  });
-
-  const hidePhoto = useNavigateOrRunActionWithToast({
-    pathOrAction: toggleHidden,
-    toastMessage: `Hiding ${photoTitle} ...`,
-  });
-
-  const unhidePhoto = useNavigateOrRunActionWithToast({
-    pathOrAction: toggleHidden,
-    toastMessage: `Unhiding ${photoTitle} ...`,
   });
 
   const syncPhoto = useNavigateOrRunActionWithToast({
@@ -168,15 +153,6 @@ export default function PhotoPrevNextActions({
             unfavoritePhoto();
           }
           break;
-        case KEY_COMMANDS.togglePrivate:
-          if (isUserSignedIn && photo) {
-            if (photo.hidden) {
-              unhidePhoto();
-            } else {
-              hidePhoto();
-            }
-          }
-          break;
         case KEY_COMMANDS.download:
           if (
             (isUserSignedIn || ALLOW_PUBLIC_DOWNLOADS) &&
@@ -206,8 +182,6 @@ export default function PhotoPrevNextActions({
     photo,
     favoritePhoto,
     unfavoritePhoto,
-    hidePhoto,
-    unhidePhoto,
     downloadUrl,
     downloadFileName,
     syncPhoto,

@@ -7,7 +7,6 @@ export const KEY_COMMANDS = {
   edit: 'E',
   favorite: 'P',
   unfavorite: 'X',
-  togglePrivate: 'M',
   download: 'D',
   sync: 'S',
   search: ['⌘', 'K'],

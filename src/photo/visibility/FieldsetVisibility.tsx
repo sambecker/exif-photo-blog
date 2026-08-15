@@ -3,6 +3,7 @@ import { ComponentProps, Dispatch, SetStateAction } from 'react';
 import {
   getVisibilityValue,
   updateFormDataWithVisibility,
+  VISIBILITY_LABEL,
   VISIBILITY_OPTIONS,
   VisibilityValue,
 } from '.';
@@ -19,7 +20,7 @@ export default function FieldsetVisibility({
 } & Omit<ComponentProps<typeof FieldsetWithStatus>, 'label' | 'value'>) {
   return (
     <FieldsetWithStatus
-      label="Visibility"
+      label={VISIBILITY_LABEL}
       {...props}
       selectOptions={VISIBILITY_OPTIONS}
       value={getVisibilityValue(formData)}
