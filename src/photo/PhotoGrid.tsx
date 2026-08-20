@@ -72,6 +72,9 @@ export default function PhotoGrid({
       style={{
         ...(MASONRY_GRID_ENABLED) ? {
           aspectRatio: photo.aspectRatio,
+          // Skip render/paint work for tiles scrolled off-screen — height
+          // stays derived from aspectRatio, so this doesn't affect layout
+          contentVisibility: 'auto',
         } : (GRID_ASPECT_RATIO !== 0) ? {
           aspectRatio: GRID_ASPECT_RATIO,
         } : {},
