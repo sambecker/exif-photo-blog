@@ -163,7 +163,7 @@ export default function ShareModal({
               />
             ),
           )}
-          {typeof navigator !== 'undefined' && navigator.share &&
+          {navigator.share &&
             renderButton(
               'share',
               <IoArrowUp size={18} />,
