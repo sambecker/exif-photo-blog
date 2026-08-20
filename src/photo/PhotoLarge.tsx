@@ -503,6 +503,7 @@ export default function PhotoLarge({
                     {showZoomControls &&
                       <LoaderButton
                         tooltip={appText.tooltip.zoom}
+                        aria-label={appText.tooltip.zoom}
                         icon={<LuExpand size={15} />}
                         onClick={() => refZoomControls.current?.open()}
                         styleAs="link"
