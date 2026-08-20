@@ -38,6 +38,10 @@ export default function SwitcherItem({
   tooltip?: ComponentProps<typeof Tooltip>
   width?: 'narrow' | 'normal'
 }) {
+  const ariaLabel = typeof tooltip?.content === 'string'
+    ? tooltip.content
+    : undefined;
+
   const widthClass = width === 'narrow' ? WIDTH_CLASS_NARROW : WIDTH_CLASS;
   const className = clsx(
     'flex items-center justify-center',
@@ -73,10 +77,20 @@ export default function SwitcherItem({
       prefetch,
       icon: renderIcon(),
       loader: <Spinner />,
-    }} />
-    : <div {...{ title, onClick, className }}>
-      {renderIcon()}
-    </div>;
+    }}
+    aria-label={ariaLabel ?? title}
+    />
+    : onClick
+      ? <button
+        type="button"
+        {...{ title, onClick, className }}
+        aria-label={ariaLabel ?? title}
+      >
+        {renderIcon()}
+      </button>
+      : <div {...{ title, className }}>
+        {renderIcon()}
+      </div>;
 
   return (
     tooltip

@@ -7,6 +7,7 @@ import { useAppState } from '@/app/AppState';
 import { getSharePathFromShareModalProps, ShareModalProps } from '.';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAppText } from '@/i18n/state/client';
 
 let prefetchedImage: HTMLImageElement | null = null;
 
@@ -26,6 +27,8 @@ export default function ShareButton({
 
   const router = useRouter();
 
+  const appText = useAppText();
+
   const absoluteImagePath = getSharePathFromShareModalProps({ ...rest });
 
   useEffect(() => {
@@ -35,9 +38,12 @@ export default function ShareButton({
     }
   }, [prefetch, absoluteImagePath, router]);
 
+  const tooltipText = tooltip ?? appText.tooltip.sharePhoto;
+
   return (
     <LoaderButton
-      tooltip={tooltip}
+      tooltip={tooltipText}
+      aria-label={tooltipText}
       onClick={() => setShareModalProps?.({ ...rest })}
       className={clsx(
         className,

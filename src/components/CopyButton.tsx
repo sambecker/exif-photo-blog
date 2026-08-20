@@ -23,6 +23,7 @@ export default function CopyButton({
   return (
     <LoaderButton
       {...props}
+      aria-label={label}
       icon={<BiCopy size={iconSize} />}
       className={clsx(
         subtle && 'text-gray-300 dark:text-gray-700',
