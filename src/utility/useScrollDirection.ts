@@ -7,6 +7,7 @@ export default function useScrollDirection() {
   });
 
   const isTickingRef = useRef(false);
+  const rafRef = useRef<number>(undefined);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -14,7 +15,7 @@ export default function useScrollDirection() {
       // into at most one state update per animation frame
       if (isTickingRef.current) { return; }
       isTickingRef.current = true;
-      requestAnimationFrame(() => {
+      rafRef.current = requestAnimationFrame(() => {
         isTickingRef.current = false;
         const scrollY = window.scrollY;
         const pageHeight = (
@@ -35,7 +36,12 @@ export default function useScrollDirection() {
       });
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafRef.current !== undefined) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
   }, []);
 
   return scrollInfo;
