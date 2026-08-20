@@ -355,9 +355,9 @@ export default function TagInput({
         {selectedOptions
           .filter(Boolean)
           .map(option =>
-            <span
+            <button
               key={option}
-              role="button"
+              type="button"
               aria-label={`Remove tag "${option}"`}
               className={clsx(
                 'inline-flex items-center gap-2 min-w-0',
@@ -368,12 +368,13 @@ export default function TagInput({
                 'bg-gray-200/60 dark:bg-gray-800',
                 'active:bg-gray-200 dark:active:bg-gray-900',
                 'rounded-sm',
+                'border-none shadow-none',
               )}
               onClick={() => removeOption(option)}
             >
               {defaultIconSelected}
               {renderTag(labelForValueOverride?.(option) || option)}
-            </span>)}
+            </button>)}
         <input
           id={id}
           ref={inputRef}
@@ -432,6 +433,11 @@ export default function TagInput({
                 annotation,
                 annotationAria,
               }, index) =>
+                // Enter/Arrow key handling for focused options is done by
+                // the container-level keydown listener above (bubbles up
+                // from whichever option is focused) rather than inline here
+                /* eslint-disable-next-line
+                  jsx-a11y/click-events-have-key-events */
                 <div
                   key={value}
                   role="option"

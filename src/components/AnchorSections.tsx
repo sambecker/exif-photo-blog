@@ -97,7 +97,6 @@ function AnchorSection({
 
   return (
     <div ref={ref} {...{ id, className }}>
-      <a href={`#${id}`} />
       {children}
     </div>
   );
