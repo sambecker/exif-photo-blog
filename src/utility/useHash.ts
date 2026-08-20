@@ -1,31 +1,32 @@
 import { useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useSyncExternalStore } from 'react';
+
+const HASH_CHANGE_EVENT = 'hashchange';
+
+const subscribe = (onStoreChange: () => void) => {
+  window.addEventListener(HASH_CHANGE_EVENT, onStoreChange);
+  return () => window.removeEventListener(HASH_CHANGE_EVENT, onStoreChange);
+};
+
+const getSnapshot = () => window.location.hash.replace('#', '');
+
+const getSnapshotServer = () => '';
 
 export default function useHash() {
-  const [hash, setHash] = useState('');
+  // `hashchange` doesn't fire for history updates made through the router,
+  // so subscribing to search params re-renders—and therefore re-reads the
+  // hash below—when those non-request-initiated changes happen
+  useSearchParams();
 
-  const storeHash = useCallback(() => {
-    setHash(window.location.hash.replace('#', ''));
+  const hash = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getSnapshotServer,
+  );
+
+  const updateHash = useCallback((updatedHash: string) => {
+    window.history.replaceState(null, '', `#${updatedHash}`);
   }, []);
 
-  useEffect(() => {
-    window.addEventListener('hashchange', storeHash);
-    return () => {
-      window.removeEventListener('hashchange', storeHash);
-    };
-  }, [storeHash]);
-
-  // Needed to capture non-request-initiated hash changes
-  const params = useSearchParams();
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(storeHash, [params, storeHash]);
-
-  const updateWindowHash = useCallback((hash: string) => {
-    window.history.replaceState(null, '', `#${hash}`);
-  }, []);
-
-  return {
-    hash,
-    updateHash: updateWindowHash,
-  };
+  return { hash, updateHash };
 }
