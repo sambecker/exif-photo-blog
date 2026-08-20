@@ -90,7 +90,7 @@ export default function AdminUploadsTableRow({
         <ImageMedium
           title={fileId}
           src={url}
-          alt={url}
+          alt={fileId}
           aspectRatio={3.0 / 2.0}
           className={clsx(
             'bg-dim',

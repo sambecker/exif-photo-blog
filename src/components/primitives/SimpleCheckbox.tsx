@@ -21,11 +21,6 @@ export default function SimpleCheckbox(props: {
         'cursor-pointer active:opacity-50',
         className,
       )}
-      onClick={() => {
-        if (inputRef.current) {
-          inputRef.current.checked = !inputRef.current.checked;
-        }
-      }}
     >
       <input
         {...rest}

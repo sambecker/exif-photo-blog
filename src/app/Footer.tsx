@@ -39,7 +39,7 @@ export default function Footer() {
           type={!shouldAnimate ? 'none' : 'bottom'}
           distanceOffset={10}
           items={showFooter
-            ? [<div
+            ? [<footer
               key="footer"
               className={clsx(
                 'flex items-center gap-1',
@@ -75,7 +75,7 @@ export default function Footer() {
               <div className="flex items-center h-10 shrink-0">
                 <ThemeSwitcher />
               </div>
-            </div>]
+            </footer>]
             : []}
         />}
     />

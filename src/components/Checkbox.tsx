@@ -32,7 +32,6 @@ export default function Checkbox({
           ? 'cursor-not-allowed'
           : 'group-has-active:opacity-70',
       )}
-      onClick={() => ref?.current?.click()}
     >
       {accessory
         ? accessory
