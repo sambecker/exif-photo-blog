@@ -183,6 +183,7 @@ export default function AppViewSwitcher({
                 if (isOpen) { setIsSortMenuOpen(false); }
               }}
             />}
+            iconIsFocusable
             tooltip={{
               ...!isAdminMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
                 content: appText.nav.admin,
@@ -213,6 +214,7 @@ export default function AppViewSwitcher({
                   if (isOpen) { setIsAdminMenuOpen(false); }
                 }}
               />}
+              iconIsFocusable
               tooltip={{
                 ...!isSortMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
                   content: appText.sort.sort,

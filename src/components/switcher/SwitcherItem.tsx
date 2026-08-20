@@ -24,6 +24,7 @@ export default function SwitcherItem({
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
   tooltip,
   width = 'normal',
+  iconIsFocusable,
 }: {
   icon: ReactNode
   title?: string
@@ -37,6 +38,10 @@ export default function SwitcherItem({
   prefetch?: boolean
   tooltip?: ComponentProps<typeof Tooltip>
   width?: 'narrow' | 'normal'
+  // Set when `icon` already contains its own focusable element (e.g. a
+  // menu trigger button), so the tooltip trigger doesn't wrap it in
+  // another button — see `triggerIsFocusable` on TooltipPrimitive
+  iconIsFocusable?: boolean
 }) {
   const ariaLabel = typeof tooltip?.content === 'string'
     ? tooltip.content
@@ -98,6 +103,7 @@ export default function SwitcherItem({
         {...tooltip}
         classNameTrigger={widthClass}
         delayDuration={500}
+        triggerIsFocusable={Boolean(href || onClick || iconIsFocusable)}
       >
         {content}
       </Tooltip>

@@ -117,6 +117,7 @@ export default function LoaderButton({
         content={tooltip}
         color={tooltipColor}
         side={tooltipSide}
+        triggerIsFocusable
       >
         {button}
       </Tooltip>

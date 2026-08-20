@@ -19,7 +19,10 @@ export default function ExifCaptureButton({
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <Tooltip content="Refresh form with EXIF data from original file">
+    <Tooltip
+      content="Refresh form with EXIF data from original file"
+      triggerIsFocusable
+    >
       <LoaderButton
         isLoading={isLoading}
         onClick={() => {

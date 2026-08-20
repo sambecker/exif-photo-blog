@@ -47,9 +47,12 @@ export default function PhotoSyncButton({
     isPhotoOnlyMissingColorData(photo);
 
   return (
-    <Tooltip content={onlySyncColorData
-      ? 'Update color data'
-      : 'Regenerate photo data'}>
+    <Tooltip
+      content={onlySyncColorData
+        ? 'Update color data'
+        : 'Regenerate photo data'}
+      triggerIsFocusable
+    >
       <LoaderButton
         ref={ref}
         className={clsx(
