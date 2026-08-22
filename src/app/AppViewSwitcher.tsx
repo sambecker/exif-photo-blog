@@ -158,6 +158,16 @@ export default function AppViewSwitcher({
             }}}
             noPadding
           />}
+        <SwitcherItem
+          icon={<IconSearch />}
+          onClick={() => setIsCommandKOpen?.(true)}
+          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+            content: appText.nav.search,
+            keyCommandModifier: KEY_COMMANDS.search[0],
+            keyCommand: KEY_COMMANDS.search[1],
+          }}}
+          noPadding
+        />
         {/* Show spinner if admin is suspected to be logged in */}
         {(isUserSignedInEager && !isUserSignedIn) &&
           <SwitcherItem
@@ -186,18 +196,6 @@ export default function AppViewSwitcher({
             }}
             noPadding
           />}
-      </Switcher>
-      <Switcher type="borderless">
-        <SwitcherItem
-          icon={<IconSearch />}
-          onClick={() => setIsCommandKOpen?.(true)}
-          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-            content: appText.nav.search,
-            keyCommandModifier: KEY_COMMANDS.search[0],
-            keyCommand: KEY_COMMANDS.search[1],
-          }}}
-          width="narrow"
-        />
       </Switcher>
       {showViewSwitch &&
         <SwitchPrimitive
