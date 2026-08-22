@@ -6,13 +6,13 @@ import {
   PATH_ABOUT,
   PATH_FULL_INFERRED,
   PATH_GRID_INFERRED,
+  PATH_ROOT,
   isPathHome,
   isPathPhotoSet,
 } from '@/app/path';
 import IconSearch from '../components/icons/IconSearch';
 import { useAppState } from '@/app/AppState';
 import {
-  GRID_HOMEPAGE_ENABLED,
   SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
   NAV_SORT_CONTROL,
   SHOW_ABOUT_PAGE,
@@ -23,7 +23,7 @@ import Spinner from '@/components/Spinner';
 import clsx from 'clsx/lite';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useKeydownHandler from '@/utility/useKeydownHandler';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { KEY_COMMANDS } from '@/photo/key-commands';
 import { useAppText } from '@/i18n/state/client';
 import IconSort from '@/components/icons/IconSort';
@@ -34,6 +34,7 @@ import { SWR_KEYS } from '@/swr';
 import IconAbout from '@/components/icons/IconAbout';
 import IconGridMasonry from '@/components/icons/IconGridMasonry';
 import SwitchPrimitive from '@/components/primitives/SwitchPrimitive';
+import { BiHomeAlt as HomeIcon } from 'react-icons/bi';
 
 export type SwitcherSelection = 'full' | 'grid' | 'about' | 'admin';
 
@@ -93,8 +94,8 @@ export default function AppViewSwitcher({
     hasLoadedRef.current = true;
   }, [invalidateSwr, sortBy]);
 
-  const refHrefFull = useRef<HTMLAnchorElement>(null);
-  const refHrefGrid = useRef<HTMLAnchorElement>(null);
+  const router = useRouter();
+
   const refHrefAbout = useRef<HTMLAnchorElement>(null);
 
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
@@ -103,46 +104,20 @@ export default function AppViewSwitcher({
     if (!e.metaKey) {
       switch (e.key.toLocaleUpperCase()) {
         case KEY_COMMANDS.full:
-          if (pathname !== PATH_FULL_INFERRED) { refHrefFull.current?.click(); }
+          if (pathname !== PATH_FULL_INFERRED) { router.push(pathFull); }
           break;
         case KEY_COMMANDS.grid:
-          if (pathname !== PATH_GRID_INFERRED) { refHrefGrid.current?.click(); }
+          if (pathname !== PATH_GRID_INFERRED) { router.push(pathGrid); }
           break;
         case KEY_COMMANDS.about:
           if (pathname !== PATH_ABOUT) { refHrefAbout.current?.click(); }
           break;
       }
     }
-  }, [pathname]);
+  }, [pathname, router, pathFull, pathGrid]);
   useKeydownHandler({ onKeyDown });
 
   const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
-
-  const renderItemFull =
-    <SwitcherItem
-      icon={<IconFull />}
-      href={pathFull}
-      hrefRef={refHrefFull}
-      active={currentSelection === 'full'}
-      tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-        content: appText.nav.full,
-        keyCommand: KEY_COMMANDS.full,
-      }}}
-      noPadding
-    />;
-
-  const renderItemGrid =
-    <SwitcherItem
-      icon={MASONRY_GRID_ENABLED ? <IconGridMasonry /> : <IconGrid />}
-      href={pathGrid}
-      hrefRef={refHrefGrid}
-      active={currentSelection === 'grid'}
-      tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-        content: appText.nav.grid,
-        keyCommand: KEY_COMMANDS.grid,
-      }}}
-      noPadding
-    />;
 
   // Home screens switch views by navigating, sets by toggling state
   const isHome = isPathHome(pathname);
@@ -163,8 +138,14 @@ export default function AppViewSwitcher({
           'translate-x-px',
         )}
       >
-        {GRID_HOMEPAGE_ENABLED ? renderItemGrid : renderItemFull}
-        {GRID_HOMEPAGE_ENABLED ? renderItemFull : renderItemGrid}
+        <SwitcherItem
+          icon={<HomeIcon size={17} />}
+          href={PATH_ROOT}
+          active={isHome}
+          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+            content: appText.nav.home,
+          }}}
+        />
         {SHOW_ABOUT_PAGE &&
           <SwitcherItem
             icon={<IconAbout />}
@@ -223,8 +204,8 @@ export default function AppViewSwitcher({
           checked={!isViewFull}
           onCheckedChange={isGrid => {
             if (isHome) {
-              // Reuse nav links to retain sort and prefetching
-              (isGrid ? refHrefGrid : refHrefFull).current?.click();
+              // Sort-aware paths retain the active sort while switching views
+              router.push(isGrid ? pathGrid : pathFull);
             } else {
               setIsPhotoSetFull?.(!isGrid);
             }
