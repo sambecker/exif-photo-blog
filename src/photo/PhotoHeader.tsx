@@ -19,8 +19,7 @@ import { useAppState } from '@/app/AppState';
 import { GRID_GAP_CLASSNAME } from '@/components';
 import { useAppText } from '@/i18n/state/client';
 import { MASONRY_GRID_ENABLED, UPPERCASE_TITLES } from '@/app/config';
-import Switcher from '@/components/switcher/Switcher';
-import SwitcherItem from '@/components/switcher/SwitcherItem';
+import SwitchPrimitive from '@/components/primitives/SwitchPrimitive';
 import IconFull from '@/components/icons/IconFull';
 import IconGrid from '@/components/icons/IconGrid';
 import IconGridMasonry from '@/components/icons/IconGridMasonry';
@@ -125,23 +124,87 @@ export default function PhotoHeader({
       {renderContentA}
     </h1>;
 
+  const classNameIconFull = isPhotoSetFull ? 'text-main' : 'text-dim';
+  const classNameIconGrid = isPhotoSetFull ? 'text-dim' : 'text-main';
+
   const renderViewSwitcher =
-    <Switcher>
-      <SwitcherItem
-        icon={MASONRY_GRID_ENABLED ? <IconGridMasonry /> : <IconGrid />}
-        onClick={() => setIsPhotoSetFull?.(false)}
-        active={!isPhotoSetFull}
-        tooltip={{ content: appText.nav.grid }}
-        noPadding
+    <span className="inline-flex items-center gap-1">
+      <IconFull className={classNameIconFull} />
+      <SwitchPrimitive
+        checked={!isPhotoSetFull}
+        onCheckedChange={isGrid => setIsPhotoSetFull?.(!isGrid)}
+        label={appText.nav.grid}
       />
-      <SwitcherItem
-        icon={<IconFull />}
-        onClick={() => setIsPhotoSetFull?.(true)}
-        active={isPhotoSetFull}
-        tooltip={{ content: appText.nav.full }}
-        noPadding
-      />
-    </Switcher>;
+      {MASONRY_GRID_ENABLED
+        ? <IconGridMasonry className={classNameIconGrid} />
+        : <IconGrid className={classNameIconGrid} />}
+    </span>;
+
+  // Grid/full switcher on photo sets, photo title on photo details
+  const renderColumnSwitcher =
+    <div className={clsx(
+      'inline-flex',
+      headerType !== 'photo-set' &&
+        (headerType !== 'photo-detail' || UPPERCASE_TITLES) &&
+        'uppercase',
+      headerType === 'photo-set'
+        ? 'col-span-2 sm:col-span-1'
+        : headerType === 'photo-detail-with-entity'
+          ? isGridHighDensity
+            ? 'col-span-2 lg:col-span-3'
+            : 'col-span-2 md:col-span-1 lg:col-span-2'
+          : isGridHighDensity
+            ? 'col-span-3 sm:col-span-3 lg:col-span-5 w-[110%] xl:w-full'
+            : 'col-span-3 md:col-span-2 lg:col-span-3 w-[110%] xl:w-full',
+    )}>
+      {headerType === 'photo-set'
+        ? renderViewSwitcher
+        : renderTitle}
+    </div>;
+
+  // Set title/description/share on photo sets, pagination on photo details
+  const renderColumnMeta =
+    <div className={clsx(
+      'inline-flex gap-1 self-start',
+      'uppercase text-dim',
+      headerType === 'photo-set'
+        ? isGridHighDensity
+          ? 'col-span-2 lg:col-span-4'
+          : 'col-span-2 md:col-span-1 lg:col-span-2'
+        : headerType === 'photo-detail-with-entity'
+          ? isGridHighDensity
+            ? 'col-span-1 lg:col-span-2'
+            : 'col-span-1'
+          : 'hidden!',
+    )}>
+      {headerType === 'photo-set'
+        ? <div className="min-w-0 grow">
+          {renderTitle}
+          {entityDescription}
+          {includeShareButton &&
+            <ShareButton {...{
+              photos,
+              ...categories,
+              count,
+              dateRange,
+              className: 'translate-x-[1px] translate-y-[1.5px] w-4',
+              prefetch: true,
+              dim: true,
+            }} />}
+        </div>
+        : entity &&
+          <ResponsiveText
+            shortText={appText.utility.paginate(
+              paginationIndex,
+              paginationCount,
+            )}
+          >
+            {appText.utility.paginateAction(
+              paginationIndex,
+              paginationCount,
+              entityVerb)}
+          </ResponsiveText>}
+    </div>;
 
   const renderBlock = (content: ReactNode) =>
     <DivDebugBaselineGrid
@@ -165,68 +228,10 @@ export default function PhotoHeader({
       animateOnFirstLoadOnly
       items={[<Fragment key="PhotoHeader">
         {renderBlock(<>
-          {/* Content A: Grid/Full Switcher or Photo Title */}
-          <div className={clsx(
-            'inline-flex',
-            headerType !== 'photo-set' &&
-              (headerType !== 'photo-detail' || UPPERCASE_TITLES) &&
-              'uppercase',
-            headerType === 'photo-set'
-              ? 'col-span-2 sm:col-span-1'
-              : headerType === 'photo-detail-with-entity'
-                ? isGridHighDensity
-                  ? 'col-span-2 lg:col-span-3'
-                  : 'col-span-2 md:col-span-1 lg:col-span-2'
-                : isGridHighDensity
-                  ? 'col-span-3 sm:col-span-3 lg:col-span-5 w-[110%] xl:w-full'
-                  : 'col-span-3 md:col-span-2 lg:col-span-3 w-[110%] xl:w-full',
-          )}>
-            {headerType === 'photo-set'
-              ? renderViewSwitcher
-              : renderTitle}
-          </div>
-          {/* Content B: Filter Set Title/Meta or Photo Pagination */}
-          <div className={clsx(
-            'inline-flex gap-1 self-start',
-            'uppercase text-dim',
-            headerType === 'photo-set'
-              ? isGridHighDensity
-                ? 'col-span-2 lg:col-span-4'
-                : 'col-span-2 md:col-span-1 lg:col-span-2'
-              : headerType === 'photo-detail-with-entity'
-                ? isGridHighDensity
-                  ? 'col-span-1 lg:col-span-2'
-                  : 'col-span-1'
-                : 'hidden!',
-          )}>
-            {headerType === 'photo-set'
-              ? <div className="min-w-0 grow">
-                {renderTitle}
-                {entityDescription}
-                {includeShareButton &&
-                  <ShareButton {...{
-                    photos,
-                    ...categories,
-                    count,
-                    dateRange,
-                    className: 'translate-x-[1px] translate-y-[1.5px] w-4',
-                    prefetch: true,
-                    dim: true,
-                  }} />}
-              </div>
-              : entity &&
-                <ResponsiveText
-                  shortText={appText.utility.paginate(
-                    paginationIndex,
-                    paginationCount,
-                  )}
-                >
-                  {appText.utility.paginateAction(
-                    paginationIndex,
-                    paginationCount,
-                    entityVerb)}
-                </ResponsiveText>}
-          </div>
+          {/* Photo sets lead with title/meta, details with the photo title */}
+          {headerType === 'photo-set'
+            ? <>{renderColumnMeta}{renderColumnSwitcher}</>
+            : <>{renderColumnSwitcher}{renderColumnMeta}</>}
           {/* Content C: Nav */}
           <div className={clsx(
             headerType === 'photo-set'
