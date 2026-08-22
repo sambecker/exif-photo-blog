@@ -58,7 +58,7 @@ export default function PhotoGridContainer({
       animateOnFirstLoadOnly
     />;
 
-  // Full frame is only reachable via the switcher rendered by set headers
+  // Full frame is only offered on photo sets, which always render a header
   if (header && isPhotoSetFull) {
     // Server sends a grid-sized batch, so only show a full-sized slice
     // and let infinite scroll take over from there

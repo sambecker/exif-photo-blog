@@ -80,8 +80,9 @@ export default function SwitchPrimitive({
           className={clsx(
             'block size-4 rounded-full bg-main',
             'shadow-[0_1px_2px_rgba(0,0,0,0.15)]',
+            'translate-x-[14px]',
             'transition-transform ease-out',
-            'data-[state=checked]:translate-x-[14px]',
+            'data-[state=checked]:translate-x-0',
           )}
           style={{ transitionDuration: `${TRANSITION_DURATION}ms` }}
         />

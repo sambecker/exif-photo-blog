@@ -1,11 +1,12 @@
 import Switcher from '@/components/switcher/Switcher';
-import SwitcherItem from '@/components/switcher/SwitcherItem';
+import SwitcherItem, { HEIGHT_CLASS } from '@/components/switcher/SwitcherItem';
 import IconFull from '@/components/icons/IconFull';
 import IconGrid from '@/components/icons/IconGrid';
 import {
   PATH_ABOUT,
   PATH_FULL_INFERRED,
   PATH_GRID_INFERRED,
+  isPathPhotoSet,
 } from '@/app/path';
 import IconSearch from '../components/icons/IconSearch';
 import { useAppState } from '@/app/AppState';
@@ -31,6 +32,7 @@ import SortMenu from '@/photo/sort/SortMenu';
 import { SWR_KEYS } from '@/swr';
 import IconAbout from '@/components/icons/IconAbout';
 import IconGridMasonry from '@/components/icons/IconGridMasonry';
+import SwitchPrimitive from '@/components/primitives/SwitchPrimitive';
 
 export type SwitcherSelection = 'full' | 'grid' | 'about' | 'admin';
 
@@ -57,6 +59,8 @@ export default function AppViewSwitcher({
     isUserSignedInEager,
     setIsCommandKOpen,
     invalidateSwr,
+    isPhotoSetFull,
+    setIsPhotoSetFull,
   } = useAppState();
 
   const sortConfig = useMemo(
@@ -138,6 +142,9 @@ export default function AppViewSwitcher({
       }}}
       noPadding
     />;
+
+  const classNameIconFull = isPhotoSetFull ? 'text-main' : 'text-dim';
+  const classNameIconGrid = isPhotoSetFull ? 'text-dim' : 'text-main';
 
   return (
     <div className={clsx('flex', className)}>
@@ -253,6 +260,17 @@ export default function AppViewSwitcher({
           width="narrow"
         />
       </Switcher>
+      {isPathPhotoSet(pathname) &&
+        <SwitchPrimitive
+          checked={!isPhotoSetFull}
+          onCheckedChange={isGrid => setIsPhotoSetFull?.(!isGrid)}
+          label={appText.nav.grid}
+          className={clsx(HEIGHT_CLASS, GAP_CLASS_LEFT)}
+          accessoryStart={MASONRY_GRID_ENABLED
+            ? <IconGridMasonry className={classNameIconGrid} />
+            : <IconGrid className={classNameIconGrid} />}
+          accessoryEnd={<IconFull className={classNameIconFull} />}
+        />}
     </div>
   );
 }

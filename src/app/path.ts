@@ -438,6 +438,18 @@ export const isPathFull = (pathname?: string) =>
 export const isPathAbout = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ABOUT);
 
+// Category paths which render a photo set, i.e. offer grid/full views
+export const isPathPhotoSet = (pathname?: string) =>
+  isPathRecents(pathname) ||
+  isPathYear(pathname) ||
+  isPathCamera(pathname) ||
+  isPathLens(pathname) ||
+  isPathAlbum(pathname) ||
+  isPathTag(pathname) ||
+  isPathRecipe(pathname) ||
+  isPathFilm(pathname) ||
+  isPathFocalLength(pathname);
+
 export const isPathTopLevel = (pathname?: string) =>
   isPathRoot(pathname) ||
   isPathGrid(pathname) ||
