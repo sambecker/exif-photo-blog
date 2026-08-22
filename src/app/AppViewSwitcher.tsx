@@ -6,6 +6,7 @@ import {
   PATH_ABOUT,
   PATH_FULL_INFERRED,
   PATH_GRID_INFERRED,
+  isPathHome,
   isPathPhotoSet,
 } from '@/app/path';
 import IconSearch from '../components/icons/IconSearch';
@@ -143,8 +144,15 @@ export default function AppViewSwitcher({
       noPadding
     />;
 
-  const classNameIconFull = isPhotoSetFull ? 'text-main' : 'text-dim';
-  const classNameIconGrid = isPhotoSetFull ? 'text-dim' : 'text-main';
+  // Home screens switch views by navigating, sets by toggling state
+  const isHome = isPathHome(pathname);
+  const showViewSwitch = isHome || isPathPhotoSet(pathname);
+  const isViewFull = isHome
+    ? currentSelection === 'full'
+    : isPhotoSetFull;
+
+  const classNameIconFull = isViewFull ? 'text-main' : 'text-dim';
+  const classNameIconGrid = isViewFull ? 'text-dim' : 'text-main';
 
   return (
     <div className={clsx('flex', className)}>
@@ -198,6 +206,36 @@ export default function AppViewSwitcher({
             noPadding
           />}
       </Switcher>
+      <Switcher type="borderless">
+        <SwitcherItem
+          icon={<IconSearch />}
+          onClick={() => setIsCommandKOpen?.(true)}
+          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+            content: appText.nav.search,
+            keyCommandModifier: KEY_COMMANDS.search[0],
+            keyCommand: KEY_COMMANDS.search[1],
+          }}}
+          width="narrow"
+        />
+      </Switcher>
+      {showViewSwitch &&
+        <SwitchPrimitive
+          checked={!isViewFull}
+          onCheckedChange={isGrid => {
+            if (isHome) {
+              // Reuse nav links to retain sort and prefetching
+              (isGrid ? refHrefGrid : refHrefFull).current?.click();
+            } else {
+              setIsPhotoSetFull?.(!isGrid);
+            }
+          }}
+          label={appText.nav.grid}
+          className={clsx(HEIGHT_CLASS, GAP_CLASS_LEFT)}
+          accessoryStart={MASONRY_GRID_ENABLED
+            ? <IconGridMasonry className={classNameIconGrid} />
+            : <IconGrid className={classNameIconGrid} />}
+          accessoryEnd={<IconFull className={classNameIconFull} />}
+        />}
       <motion.div
         initial={animate ? { opacity: 0, width: '0' } : false}
         animate={{ opacity: 1, width: showSortControl ? 'auto' : '0' }}
@@ -248,29 +286,6 @@ export default function AppViewSwitcher({
             />}
         </Switcher>
       </motion.div>
-      <Switcher type="borderless">
-        <SwitcherItem
-          icon={<IconSearch />}
-          onClick={() => setIsCommandKOpen?.(true)}
-          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-            content: appText.nav.search,
-            keyCommandModifier: KEY_COMMANDS.search[0],
-            keyCommand: KEY_COMMANDS.search[1],
-          }}}
-          width="narrow"
-        />
-      </Switcher>
-      {isPathPhotoSet(pathname) &&
-        <SwitchPrimitive
-          checked={!isPhotoSetFull}
-          onCheckedChange={isGrid => setIsPhotoSetFull?.(!isGrid)}
-          label={appText.nav.grid}
-          className={clsx(HEIGHT_CLASS, GAP_CLASS_LEFT)}
-          accessoryStart={MASONRY_GRID_ENABLED
-            ? <IconGridMasonry className={classNameIconGrid} />
-            : <IconGrid className={classNameIconGrid} />}
-          accessoryEnd={<IconFull className={classNameIconFull} />}
-        />}
     </div>
   );
 }

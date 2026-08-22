@@ -450,10 +450,14 @@ export const isPathPhotoSet = (pathname?: string) =>
   isPathFilm(pathname) ||
   isPathFocalLength(pathname);
 
-export const isPathTopLevel = (pathname?: string) =>
+// Home screen paths, including sort variants of grid/full
+export const isPathHome = (pathname?: string) =>
   isPathRoot(pathname) ||
   isPathGrid(pathname) ||
-  isPathFull(pathname) ||
+  isPathFull(pathname);
+
+export const isPathTopLevel = (pathname?: string) =>
+  isPathHome(pathname) ||
   isPathAbout(pathname);
 
 export const isPathSignIn = (pathname?: string) =>
