@@ -128,17 +128,15 @@ export default function PhotoHeader({
   const classNameIconGrid = isPhotoSetFull ? 'text-dim' : 'text-main';
 
   const renderViewSwitcher =
-    <span className="inline-flex items-center gap-1">
-      <IconFull className={classNameIconFull} />
-      <SwitchPrimitive
-        checked={!isPhotoSetFull}
-        onCheckedChange={isGrid => setIsPhotoSetFull?.(!isGrid)}
-        label={appText.nav.grid}
-      />
-      {MASONRY_GRID_ENABLED
+    <SwitchPrimitive
+      checked={!isPhotoSetFull}
+      onCheckedChange={isGrid => setIsPhotoSetFull?.(!isGrid)}
+      label={appText.nav.grid}
+      accessoryStart={<IconFull className={classNameIconFull} />}
+      accessoryEnd={MASONRY_GRID_ENABLED
         ? <IconGridMasonry className={classNameIconGrid} />
         : <IconGrid className={classNameIconGrid} />}
-    </span>;
+    />;
 
   // Grid/full switcher on photo sets, photo title on photo details
   const renderColumnSwitcher =

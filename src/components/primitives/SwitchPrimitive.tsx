@@ -2,7 +2,13 @@
 
 import { clsx } from 'clsx/lite';
 import * as Switch from '@radix-ui/react-switch';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 const TRANSITION_DURATION = 200;
 
@@ -10,11 +16,15 @@ export default function SwitchPrimitive({
   checked = false,
   onCheckedChange,
   label,
+  accessoryStart,
+  accessoryEnd,
   className,
 }: {
   checked?: boolean
   onCheckedChange?: (checked: boolean) => void
   label: string
+  accessoryStart?: ReactNode
+  accessoryEnd?: ReactNode
   className?: string
 }) {
   // Track thumb position separately from the consumer's state so the
@@ -42,29 +52,41 @@ export default function SwitchPrimitive({
   }, [onCheckedChange]);
 
   return (
-    <Switch.Root
-      checked={checkedVisual}
-      onCheckedChange={onCheckedChangeVisual}
-      aria-label={label}
+    <span
       className={clsx(
-        'shrink-0 w-[36px] h-[22px] p-0.5',
-        'rounded-full bg-medium',
-        'data-[state=checked]:bg-invert',
-        'transition-colors ease-out',
+        'inline-flex items-center gap-1',
         'cursor-pointer',
         className,
       )}
-      style={{ transitionDuration: `${TRANSITION_DURATION}ms` }}
+      onClick={() => onCheckedChangeVisual(!checkedVisual)}
     >
-      <Switch.Thumb
+      {accessoryStart}
+      <Switch.Root
+        checked={checkedVisual}
+        onCheckedChange={onCheckedChangeVisual}
+        // Prevent container from also handling clicks on the switch
+        onClick={e => e.stopPropagation()}
+        aria-label={label}
         className={clsx(
-          'block size-4 rounded-full bg-main',
-          'shadow-[0_1px_2px_rgba(0,0,0,0.15)]',
-          'transition-transform ease-out',
-          'data-[state=checked]:translate-x-[14px]',
+          'shrink-0 w-[36px] h-[22px] p-0.5',
+          'rounded-full bg-medium',
+          'data-[state=checked]:bg-invert',
+          'transition-colors ease-out',
+          'cursor-pointer',
         )}
         style={{ transitionDuration: `${TRANSITION_DURATION}ms` }}
-      />
-    </Switch.Root>
+      >
+        <Switch.Thumb
+          className={clsx(
+            'block size-4 rounded-full bg-main',
+            'shadow-[0_1px_2px_rgba(0,0,0,0.15)]',
+            'transition-transform ease-out',
+            'data-[state=checked]:translate-x-[14px]',
+          )}
+          style={{ transitionDuration: `${TRANSITION_DURATION}ms` }}
+        />
+      </Switch.Root>
+      {accessoryEnd}
+    </span>
   );
 }
