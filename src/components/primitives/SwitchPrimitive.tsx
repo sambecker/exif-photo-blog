@@ -2,6 +2,7 @@
 
 import { clsx } from 'clsx/lite';
 import * as Switch from '@radix-ui/react-switch';
+import { CONTROL_OUTLINE_CLASSNAME } from '..';
 import {
   ReactNode,
   useCallback,
@@ -69,18 +70,19 @@ export default function SwitchPrimitive({
         aria-label={label}
         className={clsx(
           'shrink-0 w-[36px] h-[22px] p-0.5',
-          'rounded-full bg-medium',
-          'data-[state=checked]:bg-invert',
-          'transition-colors ease-out',
+          // Shed base button styles which add a border and background
+          'border-none bg-transparent',
+          'rounded-full',
+          CONTROL_OUTLINE_CLASSNAME,
           'cursor-pointer',
         )}
-        style={{ transitionDuration: `${TRANSITION_DURATION}ms` }}
       >
         <Switch.Thumb
           className={clsx(
             'block size-4 rounded-full bg-main',
+            'border border-dim',
             'shadow-[0_1px_2px_rgba(0,0,0,0.15)]',
-            'translate-x-[14px]',
+            'translate-x-[16px]',
             'transition-transform ease-out',
             'data-[state=checked]:translate-x-0',
           )}

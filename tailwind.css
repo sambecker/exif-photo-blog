@@ -167,6 +167,10 @@ html {
   @apply
     divide-gray-400/25 dark:divide-gray-800
 }
+@utility border-dim {
+  @apply
+    border-gray-400 dark:border-gray-500
+}
 /* Background */
 @utility bg-main {
   @apply
