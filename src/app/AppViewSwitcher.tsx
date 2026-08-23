@@ -126,9 +126,6 @@ export default function AppViewSwitcher({
     ? currentSelection === 'full'
     : isPhotoSetFull;
 
-  const classNameIconFull = isViewFull ? 'text-main' : 'text-dim';
-  const classNameIconGrid = isViewFull ? 'text-dim' : 'text-main';
-
   return (
     <div className={clsx('flex', className)}>
       <Switcher
@@ -211,9 +208,9 @@ export default function AppViewSwitcher({
           label={appText.nav.grid}
           className={clsx(HEIGHT_CLASS, GAP_CLASS_LEFT)}
           accessoryStart={MASONRY_GRID_ENABLED
-            ? <IconGridMasonry className={classNameIconGrid} />
-            : <IconGrid className={classNameIconGrid} />}
-          accessoryEnd={<IconFull className={classNameIconFull} />}
+            ? <IconGridMasonry />
+            : <IconGrid />}
+          accessoryEnd={<IconFull />}
         />}
       <motion.div
         initial={animate ? { opacity: 0, width: '0' } : false}

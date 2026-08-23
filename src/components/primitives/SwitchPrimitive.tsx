@@ -52,6 +52,18 @@ export default function SwitchPrimitive({
     );
   }, [onCheckedChange]);
 
+  const renderAccessory = (accessory: ReactNode, isActive: boolean) =>
+    accessory &&
+      <span
+        className={clsx(
+          'transition-colors ease-out',
+          isActive ? 'text-main' : 'text-dim',
+        )}
+        style={{ transitionDuration: `${TRANSITION_DURATION}ms` }}
+      >
+        {accessory}
+      </span>;
+
   return (
     <span
       className={clsx(
@@ -61,7 +73,7 @@ export default function SwitchPrimitive({
       )}
       onClick={() => onCheckedChangeVisual(!checkedVisual)}
     >
-      {accessoryStart}
+      {renderAccessory(accessoryStart, checkedVisual)}
       <Switch.Root
         checked={checkedVisual}
         onCheckedChange={onCheckedChangeVisual}
@@ -89,7 +101,7 @@ export default function SwitchPrimitive({
           style={{ transitionDuration: `${TRANSITION_DURATION}ms` }}
         />
       </Switch.Root>
-      {accessoryEnd}
+      {renderAccessory(accessoryEnd, !checkedVisual)}
     </span>
   );
 }
