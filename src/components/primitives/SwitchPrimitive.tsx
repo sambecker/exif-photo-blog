@@ -81,7 +81,7 @@ export default function SwitchPrimitive({
         onClick={e => e.stopPropagation()}
         aria-label={label}
         className={clsx(
-          'shrink-0 w-[36px] h-[22px] p-0.5',
+          'shrink-0 w-[42px] h-[24px] p-1',
           // Shed base button styles which add a border and background
           'border-none bg-transparent',
           'rounded-full',
@@ -92,9 +92,9 @@ export default function SwitchPrimitive({
         <Switch.Thumb
           className={clsx(
             'block size-4 rounded-full bg-main',
-            'border border-dim',
+            'border-[1.5px] border-text',
             'shadow-[0_1px_2px_rgba(0,0,0,0.15)]',
-            'translate-x-[16px]',
+            'translate-x-[18px]',
             'transition-transform ease-out',
             'data-[state=checked]:translate-x-0',
           )}
