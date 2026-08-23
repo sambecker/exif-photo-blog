@@ -67,7 +67,7 @@ export default function SwitchPrimitive({
           'text-main',
           'w-7.5',
           'transition-opacity ease-out',
-          side === 'start' ? 'right-2' : 'left-2',
+          side === 'start' ? 'right-[3px]' : 'left-[3px]',
         )}
         style={{
           opacity: isVisible ? 1 : 0,
@@ -85,7 +85,7 @@ export default function SwitchPrimitive({
         aria-label={label}
         className={clsx(
           'relative shrink-0',
-          'w-[60px] h-[24px] p-[5px]',
+          'w-[50px] h-[24px] p-[5px]',
           // Shed base button styles which add a border and background
           'border-none bg-transparent hover:bg-extra-dim active:bg-dim',
           'rounded-full',
@@ -99,13 +99,12 @@ export default function SwitchPrimitive({
           className={clsx(
             'relative z-10 block',
             'transition-transform ease-out',
-            'translate-x-[36px]',
+            'translate-x-[28px]',
             'data-[state=checked]:translate-x-0',
-            'text-dim',
           )}
           style={{ transitionDuration: `${TRANSITION_DURATION}ms` }}
         >
-          <SVGDot size={14} />
+          <SVGDot className="text-gray-300 dark:text-gray-600/90" />
         </Switch.Thumb>
       </Switch.Root>
     </span>
@@ -115,11 +114,11 @@ export default function SwitchPrimitive({
 // Necessary to render 1.25px stroke width
 // Border/Outline snap to 1px or 1.5px
 function SVGDot({
-  size,
+  size = 12,
   className,
   style,
 }: {
-  size: number
+  size?: number
   className?: string
   style?: CSSProperties
 }) {
@@ -137,7 +136,7 @@ function SVGDot({
         cx={size / 2}
         cy={size / 2}
         r={size / 2 - 1}
-        stroke="currentColor"
+        fill="currentColor"
         strokeWidth={1.25}
       />
     </svg>

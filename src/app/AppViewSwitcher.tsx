@@ -124,7 +124,7 @@ export default function AppViewSwitcher({
     : isPhotoSetFull;
 
   return (
-    <div className={clsx(className, 'flex', 'gap-3 sm:gap-4')}>
+    <div className={clsx(className, 'flex', 'gap-2.5 sm:gap-4')}>
       <Switcher>
         <SwitcherItem
           icon={<HomeIcon size={17} />}
@@ -206,10 +206,9 @@ export default function AppViewSwitcher({
           label={appText.nav.grid}
           className={clsx(
             HEIGHT_CLASS,
-            '-mr-2',
-            // GAP_CLASS_LEFT,
+            '-mr-3',
           )}
-          accessoryStart={MASONRY_GRID_ENABLED
+          accessoryStart={MASONRY_GRID_ENABLED && isHome
             ? <IconGridMasonry />
             : <IconGrid />}
           accessoryEnd={<IconFull />}
