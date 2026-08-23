@@ -52,56 +52,61 @@ export default function SwitchPrimitive({
     );
   }, [onCheckedChange]);
 
-  const renderAccessory = (accessory: ReactNode, isActive: boolean) =>
+  const renderAccessory = (
+    accessory: ReactNode,
+    side: 'start' | 'end',
+    isVisible: boolean,
+  ) =>
     accessory &&
       <span
+        aria-hidden
         className={clsx(
-          'transition-colors ease-out',
-          isActive ? 'text-main' : 'text-dim',
+          'absolute inset-y-0 flex items-center justify-center',
+          'pointer-events-none',
+          'text-main',
+          // '[&>svg]:w-4 [&>svg]:h-auto',
+          'w-8',
+          'transition-opacity ease-out',
+          side === 'start' ? 'right-2' : 'left-2',
         )}
-        style={{ transitionDuration: `${TRANSITION_DURATION}ms` }}
+        style={{
+          opacity: isVisible ? 1 : 0,
+          transitionDuration: `${TRANSITION_DURATION}ms`,
+        }}
       >
         {accessory}
       </span>;
 
   return (
-    <span
-      className={clsx(
-        'inline-flex items-center gap-1',
-        'cursor-pointer',
-        className,
-      )}
-      onClick={() => onCheckedChangeVisual(!checkedVisual)}
-    >
-      {renderAccessory(accessoryStart, checkedVisual)}
+    <span className={clsx('inline-flex items-center', className)}>
       <Switch.Root
         checked={checkedVisual}
         onCheckedChange={onCheckedChangeVisual}
-        // Prevent container from also handling clicks on the switch
-        onClick={e => e.stopPropagation()}
         aria-label={label}
         className={clsx(
-          'shrink-0 w-[42px] h-[24px] p-1',
+          'relative shrink-0',
+          'w-[66px] h-[26px] p-[4px]',
           // Shed base button styles which add a border and background
-          'border-none bg-transparent',
+          'border-none bg-transparent active:bg-extra-dim',
           'rounded-full',
           CONTROL_OUTLINE_CLASSNAME,
           'cursor-pointer',
         )}
       >
+        {renderAccessory(accessoryEnd, 'end', !checkedVisual)}
+        {renderAccessory(accessoryStart, 'start', checkedVisual)}
         <Switch.Thumb
           className={clsx(
-            'block size-4 rounded-full bg-main',
-            'border-[1.5px] border-text',
-            'shadow-[0_1px_2px_rgba(0,0,0,0.15)]',
-            'translate-x-[18px]',
+            'relative z-10 block size-4 rounded-full bg-main',
+            'border border-dim',
+            // 'shadow-[0_1px_2px_rgba(0,0,0,0.15)]',
+            'translate-x-[42px]',
             'transition-transform ease-out',
             'data-[state=checked]:translate-x-0',
           )}
           style={{ transitionDuration: `${TRANSITION_DURATION}ms` }}
         />
       </Switch.Root>
-      {renderAccessory(accessoryEnd, !checkedVisual)}
     </span>
   );
 }

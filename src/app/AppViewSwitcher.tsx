@@ -195,7 +195,6 @@ export default function AppViewSwitcher({
           />}
       </Switcher>
       <motion.div
-        className="overflow-hidden"
         initial={animate ? { opacity: 0, width: 0 } : false}
         animate={{
           opacity: showViewSwitch ? 1 : 0,
