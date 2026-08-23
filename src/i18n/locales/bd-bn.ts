@@ -48,6 +48,8 @@ export const TEXT: I18N = {
     home: 'হোম',
     full: 'সম্পূর্ণ',
     grid: 'গ্রিড',
+    viewFull: 'সম্পূর্ণ দেখুন',
+    viewGrid: 'গ্রিড দেখুন',
     about: 'সম্পর্কে',
     admin: 'অ্যাডমিন',
     search: 'সার্চ',

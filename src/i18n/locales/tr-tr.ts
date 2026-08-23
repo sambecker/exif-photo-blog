@@ -48,6 +48,8 @@ export const TEXT: I18N = {
     home: 'Anasayfa',
     full: 'Tam',
     grid: 'Izgara',
+    viewFull: 'Tam görüntüle',
+    viewGrid: 'Izgara görüntüle',
     about: 'Hakkında',
     admin: 'Yönetici',
     search: 'Ara',

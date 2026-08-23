@@ -4,6 +4,7 @@ import { clsx } from 'clsx/lite';
 import * as Switch from '@radix-ui/react-switch';
 import { CONTROL_OUTLINE_CLASSNAME } from '..';
 import {
+  ComponentProps,
   CSSProperties,
   ReactNode,
   useCallback,
@@ -11,6 +12,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import Tooltip from '../Tooltip';
 
 const TRANSITION_DURATION = 200;
 
@@ -20,6 +22,7 @@ export default function SwitchPrimitive({
   label,
   accessoryStart,
   accessoryEnd,
+  tooltip,
   className,
 }: {
   checked?: boolean
@@ -27,6 +30,7 @@ export default function SwitchPrimitive({
   label: string
   accessoryStart?: ReactNode
   accessoryEnd?: ReactNode
+  tooltip?: ComponentProps<typeof Tooltip>
   className?: string
 }) {
   // Track thumb position separately from the consumer's state so the
@@ -77,7 +81,7 @@ export default function SwitchPrimitive({
         {accessory}
       </span>;
 
-  return (
+  const switchControl = (
     <span className={clsx('inline-flex items-center', className)}>
       <Switch.Root
         checked={checkedVisual}
@@ -109,6 +113,12 @@ export default function SwitchPrimitive({
       </Switch.Root>
     </span>
   );
+
+  return tooltip?.content
+    ? <Tooltip delayDuration={500} {...tooltip}>
+      {switchControl}
+    </Tooltip>
+    : switchControl;
 }
 
 // Necessary to render 1.25px stroke width

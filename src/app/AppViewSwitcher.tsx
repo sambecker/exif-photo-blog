@@ -93,32 +93,53 @@ export default function AppViewSwitcher({
 
   const router = useRouter();
 
+  const refHrefHome = useRef<HTMLAnchorElement>(null);
   const refHrefAbout = useRef<HTMLAnchorElement>(null);
 
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
   
+  // Home screens switch views by navigating, sets by toggling state
+  const isHome = isPathHome(pathname);
+  const isPhotoSet = isPathPhotoSet(pathname);
+
   const onKeyDown = useCallback((e: KeyboardEvent) => {
     if (!e.metaKey) {
       switch (e.key.toLocaleUpperCase()) {
         case KEY_COMMANDS.full:
-          if (pathname !== PATH_FULL_INFERRED) { router.push(pathFull); }
+          if (isPhotoSet) {
+            setIsPhotoSetFull?.(true);
+          } else if (pathname !== PATH_FULL_INFERRED) {
+            router.push(pathFull);
+          }
           break;
         case KEY_COMMANDS.grid:
-          if (pathname !== PATH_GRID_INFERRED) { router.push(pathGrid); }
+          if (isPhotoSet) {
+            setIsPhotoSetFull?.(false);
+          } else if (pathname !== PATH_GRID_INFERRED) {
+            router.push(pathGrid);
+          }
+          break;
+        case KEY_COMMANDS.home:
+          if (pathname !== PATH_ROOT) { refHrefHome.current?.click(); }
           break;
         case KEY_COMMANDS.about:
           if (pathname !== PATH_ABOUT) { refHrefAbout.current?.click(); }
           break;
       }
     }
-  }, [pathname, router, pathFull, pathGrid]);
+  }, [
+    isPhotoSet,
+    pathname,
+    pathFull,
+    pathGrid,
+    router,
+    setIsPhotoSetFull,
+  ]);
   useKeydownHandler({ onKeyDown });
 
   const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
 
-  // Home screens switch views by navigating, sets by toggling state
-  const isHome = isPathHome(pathname);
-  const showViewSwitch = isHome || isPathPhotoSet(pathname);
+  const showViewSwitch = isHome || isPhotoSet;
   const isViewFull = isHome
     ? currentSelection === 'full'
     : isPhotoSetFull;
@@ -129,9 +150,11 @@ export default function AppViewSwitcher({
         <SwitcherItem
           icon={<HomeIcon size={17} />}
           href={PATH_ROOT}
+          hrefRef={refHrefHome}
           active={isHome}
           tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
             content: appText.nav.home,
+            keyCommand: KEY_COMMANDS.home,
           }}}
         />
         {SHOW_ABOUT_PAGE &&
@@ -203,7 +226,7 @@ export default function AppViewSwitcher({
               setIsPhotoSetFull?.(!isGrid);
             }
           }}
-          label={appText.nav.grid}
+          label={isViewFull ? appText.nav.viewGrid : appText.nav.viewFull}
           className={clsx(
             HEIGHT_CLASS,
             '-mr-3',
@@ -212,6 +235,14 @@ export default function AppViewSwitcher({
             ? <IconGridMasonry />
             : <IconGrid />}
           accessoryEnd={<IconFull />}
+          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+            content: isViewFull
+              ? appText.nav.viewGrid
+              : appText.nav.viewFull,
+            keyCommand: isViewFull
+              ? KEY_COMMANDS.grid
+              : KEY_COMMANDS.full,
+          }}}
         />
       </motion.div>
       <motion.div

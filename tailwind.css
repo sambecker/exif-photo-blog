@@ -42,14 +42,14 @@ html {
   --text-3xl--line-height: 1.5rem;
 
   --animate-fade-in: fade-in 0.5s linear both running;
-  --animate-fade-in-fast: fade-in 0.2s linear both running;
+  --animate-fade-in-fast: fade-in 0.15s linear both running;
   @keyframes fade-in {
     0% { opacity: 0; }
     100% { opacity: 1; }
   }
 
-  --animate-fade-in-from-top: fade-in-from-top 0.2s ease-out;
-  --animate-fade-in-from-top-large: fade-in-from-top-large 0.2s ease-out;
+  --animate-fade-in-from-top: fade-in-from-top 0.15s ease-out;
+  --animate-fade-in-from-top-large: fade-in-from-top-large 0.15s ease-out;
   @keyframes fade-in-from-top {
     0% { opacity: 0; transform: translateY(-10px); }
     100% { opacity: 1; transform: translateY(0); }
@@ -59,8 +59,8 @@ html {
     100% { opacity: 1; transform: translateY(0); }
   }
 
-  --animate-fade-in-from-bottom: fade-in-from-bottom 0.2s ease-out;
-  --animate-fade-in-from-bottom-large: fade-in-from-bottom-large 0.2s ease-out;
+  --animate-fade-in-from-bottom: fade-in-from-bottom 0.15s ease-out;
+  --animate-fade-in-from-bottom-large: fade-in-from-bottom-large 0.15s ease-out;
   @keyframes fade-in-from-bottom {
     0% { opacity: 0; transform: translateY(10px); }
     100% { opacity: 1; transform: translateY(0); }
