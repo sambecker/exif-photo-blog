@@ -4,6 +4,7 @@ import { clsx } from 'clsx/lite';
 import * as Switch from '@radix-ui/react-switch';
 import { CONTROL_OUTLINE_CLASSNAME } from '..';
 import {
+  CSSProperties,
   ReactNode,
   useCallback,
   useEffect,
@@ -64,8 +65,7 @@ export default function SwitchPrimitive({
           'absolute inset-y-0 flex items-center justify-center',
           'pointer-events-none',
           'text-main',
-          // '[&>svg]:w-4 [&>svg]:h-auto',
-          'w-8',
+          'w-7.5',
           'transition-opacity ease-out',
           side === 'start' ? 'right-2' : 'left-2',
         )}
@@ -85,9 +85,9 @@ export default function SwitchPrimitive({
         aria-label={label}
         className={clsx(
           'relative shrink-0',
-          'w-[66px] h-[26px] p-[4px]',
+          'w-[60px] h-[24px] p-[5px]',
           // Shed base button styles which add a border and background
-          'border-none bg-transparent active:bg-extra-dim',
+          'border-none bg-transparent hover:bg-extra-dim active:bg-dim',
           'rounded-full',
           CONTROL_OUTLINE_CLASSNAME,
           'cursor-pointer',
@@ -97,16 +97,49 @@ export default function SwitchPrimitive({
         {renderAccessory(accessoryStart, 'start', checkedVisual)}
         <Switch.Thumb
           className={clsx(
-            'relative z-10 block size-4 rounded-full bg-main',
-            'border border-dim',
-            // 'shadow-[0_1px_2px_rgba(0,0,0,0.15)]',
-            'translate-x-[42px]',
+            'relative z-10 block',
             'transition-transform ease-out',
+            'translate-x-[36px]',
             'data-[state=checked]:translate-x-0',
+            'text-dim',
           )}
           style={{ transitionDuration: `${TRANSITION_DURATION}ms` }}
-        />
+        >
+          <SVGDot size={14} />
+        </Switch.Thumb>
       </Switch.Root>
     </span>
+  );
+}
+
+// Necessary to render 1.25px stroke width
+// Border/Outline snap to 1px or 1.5px
+function SVGDot({
+  size,
+  className,
+  style,
+}: {
+  size: number
+  className?: string
+  style?: CSSProperties
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      className={className}
+      style={style}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={size / 2 - 1}
+        stroke="currentColor"
+        strokeWidth={1.25}
+      />
+    </svg>
   );
 }

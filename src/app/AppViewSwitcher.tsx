@@ -38,9 +38,6 @@ import { BiHomeAlt as HomeIcon } from 'react-icons/bi';
 
 export type SwitcherSelection = 'full' | 'grid' | 'about' | 'admin';
 
-const GAP_CLASS_RIGHT = 'mr-1.5 sm:mr-2';
-const GAP_CLASS_LEFT  = 'ml-0.5 sm:ml-1';
-
 export default function AppViewSwitcher({
   currentSelection,
   className,
@@ -127,14 +124,8 @@ export default function AppViewSwitcher({
     : isPhotoSetFull;
 
   return (
-    <div className={clsx('flex', className)}>
-      <Switcher
-        className={clsx(
-          GAP_CLASS_RIGHT,
-          // Apply offset due to outline strategy
-          'translate-x-px',
-        )}
-      >
+    <div className={clsx(className, 'flex', 'gap-3 sm:gap-4')}>
+      <Switcher>
         <SwitcherItem
           icon={<HomeIcon size={17} />}
           href={PATH_ROOT}
@@ -213,7 +204,11 @@ export default function AppViewSwitcher({
             }
           }}
           label={appText.nav.grid}
-          className={clsx(HEIGHT_CLASS, GAP_CLASS_LEFT)}
+          className={clsx(
+            HEIGHT_CLASS,
+            '-mr-2',
+            // GAP_CLASS_LEFT,
+          )}
           accessoryStart={MASONRY_GRID_ENABLED
             ? <IconGridMasonry />
             : <IconGrid />}
@@ -230,7 +225,7 @@ export default function AppViewSwitcher({
         transition={{ duration: 0.2, ease: 'easeInOut' }}
       >
         <Switcher
-          className={clsx('max-sm:hidden', GAP_CLASS_LEFT)}
+          className={clsx('max-sm:hidden')}
           type="borderless"
         >
           {NAV_SORT_CONTROL === 'menu'
