@@ -194,7 +194,15 @@ export default function AppViewSwitcher({
             noPadding
           />}
       </Switcher>
-      {showViewSwitch &&
+      <motion.div
+        className="overflow-hidden"
+        initial={animate ? { opacity: 0, width: 0 } : false}
+        animate={{
+          opacity: showViewSwitch ? 1 : 0,
+          width: showViewSwitch ? 'auto' : 0,
+        }}
+        transition={{ duration: 0.2, ease: 'easeInOut' }}
+      >
         <SwitchPrimitive
           checked={!isViewFull}
           onCheckedChange={isGrid => {
@@ -211,10 +219,15 @@ export default function AppViewSwitcher({
             ? <IconGridMasonry />
             : <IconGrid />}
           accessoryEnd={<IconFull />}
-        />}
+        />
+      </motion.div>
       <motion.div
-        initial={animate ? { opacity: 0, width: '0' } : false}
-        animate={{ opacity: 1, width: showSortControl ? 'auto' : '0' }}
+        className="overflow-hidden"
+        initial={animate ? { opacity: 0, width: 0 } : false}
+        animate={{
+          opacity: showSortControl ? 1 : 0,
+          width: showSortControl ? 'auto' : 0,
+        }}
         transition={{ duration: 0.2, ease: 'easeInOut' }}
       >
         <Switcher
