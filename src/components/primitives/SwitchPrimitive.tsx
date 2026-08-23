@@ -9,10 +9,10 @@ import {
   ReactNode,
   useCallback,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 import Tooltip from '../Tooltip';
+import Spinner from '../Spinner';
 
 const TRANSITION_DURATION = 200;
 
@@ -22,6 +22,7 @@ export default function SwitchPrimitive({
   label,
   accessoryStart,
   accessoryEnd,
+  isLoading,
   tooltip,
   className,
 }: {
@@ -30,32 +31,23 @@ export default function SwitchPrimitive({
   label: string
   accessoryStart?: ReactNode
   accessoryEnd?: ReactNode
+  isLoading?: boolean
   tooltip?: ComponentProps<typeof Tooltip>
   className?: string
 }) {
-  // Track thumb position separately from the consumer's state so the
-  // animation can complete before triggering potentially expensive work
+  // Thumb catches up to `checked` only after the spinner (if any) finishes
   const [checkedVisual, setCheckedVisual] = useState(checked);
-  const [checkedSynced, setCheckedSynced] = useState(checked);
 
-  // Follow the consumer if it changes state independently of the thumb
-  if (checkedSynced !== checked) {
-    setCheckedSynced(checked);
-    setCheckedVisual(checked);
-  }
-
-  const timeout = useRef<ReturnType<typeof setTimeout>>(undefined);
-
-  useEffect(() => () => clearTimeout(timeout.current), []);
+  useEffect(() => {
+    if (!isLoading && checkedVisual !== checked) {
+      setCheckedVisual(checked);
+    }
+  }, [isLoading, checked, checkedVisual]);
 
   const onCheckedChangeVisual = useCallback((updatedChecked: boolean) => {
-    setCheckedVisual(updatedChecked);
-    clearTimeout(timeout.current);
-    timeout.current = setTimeout(
-      () => onCheckedChange?.(updatedChecked),
-      TRANSITION_DURATION,
-    );
-  }, [onCheckedChange]);
+    if (isLoading) { return; }
+    onCheckedChange?.(updatedChecked);
+  }, [isLoading, onCheckedChange]);
 
   const renderAccessory = (
     accessory: ReactNode,
@@ -97,14 +89,23 @@ export default function SwitchPrimitive({
           'cursor-pointer',
         )}
       >
-        {renderAccessory(accessoryEnd, 'end', !checkedVisual)}
-        {renderAccessory(accessoryStart, 'start', checkedVisual)}
+        {renderAccessory(
+          isLoading ? <Spinner /> : accessoryEnd,
+          'end',
+          !checkedVisual,
+        )}
+        {renderAccessory(
+          isLoading ? <Spinner /> : accessoryStart,
+          'start',
+          checkedVisual,
+        )}
         <Switch.Thumb
           className={clsx(
             'relative z-10 block',
             'transition-transform ease-out',
-            'translate-x-[28px]',
-            'data-[state=checked]:translate-x-0',
+            // Position from local visual state so Radix data-state
+            // cannot leave the thumb stuck after a gated navigation
+            checkedVisual ? 'translate-x-0' : 'translate-x-[28px]',
           )}
           style={{ transitionDuration: `${TRANSITION_DURATION}ms` }}
         >

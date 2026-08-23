@@ -21,8 +21,16 @@ import {
 import AdminAppMenu from '@/admin/AdminAppMenu';
 import Spinner from '@/components/Spinner';
 import clsx from 'clsx/lite';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from 'react';
 import useKeydownHandler from '@/utility/useKeydownHandler';
+import useDelayedLoading from '@/utility/useDelayedLoading';
 import { usePathname, useRouter } from 'next/navigation';
 import { KEY_COMMANDS } from '@/photo/key-commands';
 import { useAppText } from '@/i18n/state/client';
@@ -92,6 +100,9 @@ export default function AppViewSwitcher({
   }, [invalidateSwr, sortBy]);
 
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [isViewSwitchLoading, setIsViewSwitchLoading] = useState(false);
+  useDelayedLoading(isPending, setIsViewSwitchLoading);
 
   const refHrefHome = useRef<HTMLAnchorElement>(null);
   const refHrefAbout = useRef<HTMLAnchorElement>(null);
@@ -102,6 +113,11 @@ export default function AppViewSwitcher({
   const isHome = isPathHome(pathname);
   const isPhotoSet = isPathPhotoSet(pathname);
 
+  const navigateHomeView = useCallback((isGrid: boolean) => {
+    const path = isGrid ? pathGrid : pathFull;
+    startTransition(() => router.push(path));
+  }, [pathFull, pathGrid, router]);
+
   const onKeyDown = useCallback((e: KeyboardEvent) => {
     if (!e.metaKey) {
       switch (e.key.toLocaleUpperCase()) {
@@ -109,14 +125,14 @@ export default function AppViewSwitcher({
           if (isPhotoSet) {
             setIsPhotoSetFull?.(true);
           } else if (pathname !== PATH_FULL_INFERRED) {
-            router.push(pathFull);
+            navigateHomeView(false);
           }
           break;
         case KEY_COMMANDS.grid:
           if (isPhotoSet) {
             setIsPhotoSetFull?.(false);
           } else if (pathname !== PATH_GRID_INFERRED) {
-            router.push(pathGrid);
+            navigateHomeView(true);
           }
           break;
         case KEY_COMMANDS.home:
@@ -130,9 +146,7 @@ export default function AppViewSwitcher({
   }, [
     isPhotoSet,
     pathname,
-    pathFull,
-    pathGrid,
-    router,
+    navigateHomeView,
     setIsPhotoSetFull,
   ]);
   useKeydownHandler({ onKeyDown });
@@ -221,11 +235,12 @@ export default function AppViewSwitcher({
           onCheckedChange={isGrid => {
             if (isHome) {
               // Sort-aware paths retain the active sort while switching views
-              router.push(isGrid ? pathGrid : pathFull);
+              navigateHomeView(isGrid);
             } else {
               setIsPhotoSetFull?.(!isGrid);
             }
           }}
+          isLoading={isViewSwitchLoading}
           label={isViewFull ? appText.nav.viewGrid : appText.nav.viewFull}
           className={clsx(
             HEIGHT_CLASS,
