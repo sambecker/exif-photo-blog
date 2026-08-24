@@ -1,7 +1,8 @@
 import Switcher from '@/components/switcher/Switcher';
-import SwitcherItem, { HEIGHT_CLASS } from '@/components/switcher/SwitcherItem';
+import SwitcherItem from '@/components/switcher/SwitcherItem';
 import IconFull from '@/components/icons/IconFull';
 import IconGrid from '@/components/icons/IconGrid';
+import IconGridMasonry from '@/components/icons/IconGridMasonry';
 import {
   PATH_ABOUT,
   PATH_FULL_INFERRED,
@@ -17,6 +18,7 @@ import {
   NAV_SORT_CONTROL,
   SHOW_ABOUT_PAGE,
   MASONRY_GRID_ENABLED,
+  GRID_HOMEPAGE_ENABLED,
 } from './config';
 import AdminAppMenu from '@/admin/AdminAppMenu';
 import Spinner from '@/components/Spinner';
@@ -40,9 +42,8 @@ import { motion } from 'framer-motion';
 import SortMenu from '@/photo/sort/SortMenu';
 import { SWR_KEYS } from '@/swr';
 import IconAbout from '@/components/icons/IconAbout';
-import IconGridMasonry from '@/components/icons/IconGridMasonry';
-import SwitchPrimitive from '@/components/primitives/SwitchPrimitive';
 import { BiHomeAlt as HomeIcon } from 'react-icons/bi';
+import AppViewMenu from './AppViewMenu';
 
 export type SwitcherSelection = 'full' | 'grid' | 'about' | 'admin';
 
@@ -108,6 +109,7 @@ export default function AppViewSwitcher({
   const refHrefAbout = useRef<HTMLAnchorElement>(null);
 
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
+  const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
   
   // Home screens switch views by navigating, sets by toggling state
   const isHome = isPathHome(pathname);
@@ -158,9 +160,43 @@ export default function AppViewSwitcher({
     ? currentSelection === 'full'
     : isPhotoSetFull;
 
+  const switcherItemGrid = <SwitcherItem
+    key="grid"
+    icon={MASONRY_GRID_ENABLED && isHome
+      ? <IconGridMasonry />
+      : <IconGrid />}
+    href={isHome ? pathGrid : undefined}
+    onClick={isHome
+      ? undefined
+      : () => setIsPhotoSetFull?.(false)}
+    active={!isViewFull}
+    tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+      content: appText.nav.grid,
+      keyCommand: KEY_COMMANDS.grid,
+    }}}
+    width="narrow"
+    noPadding
+  />;
+
+  const switcherItemFull = <SwitcherItem
+    key="full"
+    icon={<IconFull />}
+    href={isHome ? pathFull : undefined}
+    onClick={isHome
+      ? undefined
+      : () => setIsPhotoSetFull?.(true)}
+    active={isViewFull}
+    tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+      content: appText.nav.full,
+      keyCommand: KEY_COMMANDS.full,
+    }}}
+    width="narrow"
+    noPadding
+  />;
+
   return (
-    <div className={clsx(className, 'flex', 'gap-2.5 sm:gap-4')}>
-      <Switcher>
+    <div className={clsx(className, 'flex')}>
+      <Switcher className="mr-2.5 sm:mr-4">
         <SwitcherItem
           icon={<HomeIcon size={17} />}
           href={PATH_ROOT}
@@ -211,7 +247,10 @@ export default function AppViewSwitcher({
               isOpen={isAdminMenuOpen}
               setIsOpen={isOpen => {
                 setIsAdminMenuOpen(isOpen);
-                if (isOpen) { setIsSortMenuOpen(false); }
+                if (isOpen) {
+                  setIsSortMenuOpen(false);
+                  setIsViewMenuOpen(false);
+                }
               }}
             />}
             tooltip={{
@@ -230,60 +269,48 @@ export default function AppViewSwitcher({
         }}
         transition={{ duration: 0.2, ease: 'easeInOut' }}
       >
-        <SwitchPrimitive
-          checked={!isViewFull}
-          onCheckedChange={isGrid => {
-            if (isHome) {
-              // Sort-aware paths retain the active sort while switching views
-              navigateHomeView(isGrid);
-            } else {
-              setIsPhotoSetFull?.(!isGrid);
+        <AppViewMenu
+          className="sm:hidden"
+          isViewFull={isViewFull}
+          isMasonry={MASONRY_GRID_ENABLED && isHome}
+          // Sort-aware paths retain the active sort while switching views
+          hrefGrid={isHome ? pathGrid : undefined}
+          hrefFull={isHome ? pathFull : undefined}
+          onSelectView={setIsPhotoSetFull}
+          isLoading={isViewSwitchLoading}
+          showSortItems={showSortControl}
+          sortConfig={sortConfig}
+          isOpen={isViewMenuOpen}
+          setIsOpen={isOpen => {
+            setIsViewMenuOpen(isOpen);
+            if (isOpen) {
+              setIsAdminMenuOpen(false);
+              setIsSortMenuOpen(false);
             }
           }}
-          isLoading={isViewSwitchLoading}
-          label={isViewFull ? appText.nav.viewGrid : appText.nav.viewFull}
-          className={clsx(
-            HEIGHT_CLASS,
-            '-mr-3',
-          )}
-          accessoryStart={MASONRY_GRID_ENABLED && isHome
-            ? <IconGridMasonry />
-            : <IconGrid />}
-          accessoryEnd={<IconFull />}
-          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-            content: isViewFull
-              ? appText.nav.viewGrid
-              : appText.nav.viewFull,
-            keyCommand: isViewFull
-              ? KEY_COMMANDS.grid
-              : KEY_COMMANDS.full,
-          }}}
         />
-      </motion.div>
-      <motion.div
-        className="overflow-hidden"
-        initial={animate ? { opacity: 0, width: 0 } : false}
-        animate={{
-          opacity: showSortControl ? 1 : 0,
-          width: showSortControl ? 'auto' : 0,
-        }}
-        transition={{ duration: 0.2, ease: 'easeInOut' }}
-      >
         <Switcher
-          className={clsx('max-sm:hidden')}
+          className="max-sm:hidden"
           type="borderless"
+          divide={false}
         >
+          {GRID_HOMEPAGE_ENABLED
+            ? [switcherItemGrid, switcherItemFull]
+            : [switcherItemFull, switcherItemGrid]}
           {NAV_SORT_CONTROL === 'menu'
             ? <SwitcherItem
               className={clsx(
-                !isSortedByDefault && '*:bg-medium *:text-main!',
+                !isSortedByDefault && '*:bg-dim *:text-main!',
               )}
               icon={<SortMenu
                 {...sortConfig}
                 isOpen={isSortMenuOpen}
                 setIsOpen={isOpen => {
                   setIsSortMenuOpen(isOpen);
-                  if (isOpen) { setIsAdminMenuOpen(false); }
+                  if (isOpen) {
+                    setIsAdminMenuOpen(false);
+                    setIsViewMenuOpen(false);
+                  }
                 }}
               />}
               tooltip={{
