@@ -4,10 +4,7 @@ import { ReactNode } from 'react';
 import { clsx } from 'clsx/lite';
 import { FiChevronDown } from 'react-icons/fi';
 import MoreMenu, { MoreMenuSection } from '@/components/more/MoreMenu';
-import {
-  renderMenuItemCheck,
-  renderMenuItemLabel,
-} from '@/components/more/MoreMenuItem';
+import { renderMenuItemCheck } from '@/components/more/MoreMenuItem';
 import IconFull from '@/components/icons/IconFull';
 import IconGrid from '@/components/icons/IconGrid';
 import IconGridMasonry from '@/components/icons/IconGridMasonry';
@@ -24,7 +21,7 @@ import {
   SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
 } from './config';
 
-const ICON_WIDTH_MENU = 22;
+const VIEW_ICON_CLASS = 'w-[24px] -ml-[4px] translate-x-[1px]';
 
 export default function AppViewMenu({
   isViewFull,
@@ -54,9 +51,9 @@ export default function AppViewMenu({
 }) {
   const appText = useAppText();
 
-  const renderIconGrid = (width?: number) => isMasonry
-    ? <IconGridMasonry width={width} />
-    : <IconGrid width={width} />;
+  const renderIconGrid = (forMenu?: boolean) => isMasonry
+    ? <IconGridMasonry className={forMenu ? VIEW_ICON_CLASS : ''} />
+    : <IconGrid className={forMenu ? VIEW_ICON_CLASS : ''} />;
 
   // Selected views are marked with a check, unselected show their own icon
   const renderViewIcon = (icon: ReactNode, isSelected: boolean) => isSelected
@@ -64,8 +61,8 @@ export default function AppViewMenu({
     : icon;
 
   const itemGrid = {
-    ...renderMenuItemLabel(appText.nav.grid, !isViewFull),
-    icon: renderViewIcon(renderIconGrid(ICON_WIDTH_MENU), !isViewFull),
+    label: appText.nav.grid,
+    icon: renderViewIcon(renderIconGrid(true), !isViewFull),
     ...hrefGrid
       ? { href: hrefGrid }
       : { action: () => onSelectView?.(false) },
@@ -73,9 +70,9 @@ export default function AppViewMenu({
   };
 
   const itemFull = {
-    ...renderMenuItemLabel(appText.nav.full, Boolean(isViewFull)),
+    label: appText.nav.full,
     icon: renderViewIcon(
-      <IconFull width={ICON_WIDTH_MENU} />,
+      <IconFull className={VIEW_ICON_CLASS} />,
       Boolean(isViewFull),
     ),
     ...hrefFull
