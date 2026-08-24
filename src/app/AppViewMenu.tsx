@@ -1,6 +1,5 @@
 'use client';
 
-import Switcher from '@/components/switcher/Switcher';
 import SwitcherItem from '@/components/switcher/SwitcherItem';
 import IconFull from '@/components/icons/IconFull';
 import IconGrid from '@/components/icons/IconGrid';
@@ -84,10 +83,12 @@ export default function AppViewMenu({
   />;
 
   return (
-    <Switcher
-      className={className}
-      type="borderless"
-      divide={false}
+    <div
+      className={clsx(
+        className,
+        'flex items-center',
+        '*:rounded-lg *:overflow-hidden',
+      )}
     >
       {GRID_HOMEPAGE_ENABLED
         ? [switcherItemGrid, switcherItemFull]
@@ -128,6 +129,6 @@ export default function AppViewMenu({
           width="narrow"
           noPadding
         />)}
-    </Switcher>
+    </div>
   );
 }
