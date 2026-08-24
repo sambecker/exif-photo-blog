@@ -42,14 +42,14 @@ html {
   --text-3xl--line-height: 1.5rem;
 
   --animate-fade-in: fade-in 0.5s linear both running;
-  --animate-fade-in-fast: fade-in 0.2s linear both running;
+  --animate-fade-in-fast: fade-in 0.15s linear both running;
   @keyframes fade-in {
     0% { opacity: 0; }
     100% { opacity: 1; }
   }
 
-  --animate-fade-in-from-top: fade-in-from-top 0.2s ease-out;
-  --animate-fade-in-from-top-large: fade-in-from-top-large 0.2s ease-out;
+  --animate-fade-in-from-top: fade-in-from-top 0.15s ease-out;
+  --animate-fade-in-from-top-large: fade-in-from-top-large 0.15s ease-out;
   @keyframes fade-in-from-top {
     0% { opacity: 0; transform: translateY(-10px); }
     100% { opacity: 1; transform: translateY(0); }
@@ -59,8 +59,8 @@ html {
     100% { opacity: 1; transform: translateY(0); }
   }
 
-  --animate-fade-in-from-bottom: fade-in-from-bottom 0.2s ease-out;
-  --animate-fade-in-from-bottom-large: fade-in-from-bottom-large 0.2s ease-out;
+  --animate-fade-in-from-bottom: fade-in-from-bottom 0.15s ease-out;
+  --animate-fade-in-from-bottom-large: fade-in-from-bottom-large 0.15s ease-out;
   @keyframes fade-in-from-bottom {
     0% { opacity: 0; transform: translateY(10px); }
     100% { opacity: 1; transform: translateY(0); }
@@ -147,9 +147,13 @@ html {
     text-amber-700 dark:text-amber-500
 }
 /* Rules */
+@utility border-text {
+  @apply
+    border-gray-900 dark:border-gray-100
+}
 @utility border-main {
   @apply
-    border border-gray-200 dark:border-gray-700
+    border-gray-200 dark:border-gray-700
 }
 @utility divide-main {
   @apply
@@ -166,6 +170,10 @@ html {
 @utility divide-medium {
   @apply
     divide-gray-400/25 dark:divide-gray-800
+}
+@utility border-dim {
+  @apply
+    border-gray-400 dark:border-gray-500
 }
 /* Background */
 @utility bg-main {

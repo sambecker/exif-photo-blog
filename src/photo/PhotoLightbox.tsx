@@ -26,7 +26,7 @@ export default function PhotoLightbox({
 
   return (
     <div className={clsx(
-      'border-main p-1 rounded-md',
+      'border border-main p-1 rounded-md',
       'bg-gray-50 dark:bg-gray-950',
     )}>
       <PhotoGrid
@@ -47,7 +47,7 @@ export default function PhotoLightbox({
             +{countNotShown}
           </Link>
           : undefined}
-        classNamePhoto="rounded-sm overflow-hidden border-main"
+        classNamePhoto="rounded-sm overflow-hidden border border-main"
         selectable={false}
         small
       />

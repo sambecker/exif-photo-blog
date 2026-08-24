@@ -2,6 +2,7 @@ import AnimateItems from '@/components/AnimateItems';
 import { Photo } from '.';
 import PhotoLarge from './PhotoLarge';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
+import { PhotoSetCategory } from '../category';
 
 export default function PhotosLarge({
   photos,
@@ -10,6 +11,15 @@ export default function PhotosLarge({
   onLastPhotoVisible,
   revalidatePhoto,
   showStorageCheck,
+  recent,
+  year,
+  camera,
+  lens,
+  album,
+  tag,
+  recipe,
+  film,
+  focal,
 }: {
   photos: Photo[]
   animate?: boolean
@@ -17,7 +27,7 @@ export default function PhotosLarge({
   onLastPhotoVisible?: () => void
   revalidatePhoto?: RevalidatePhoto
   showStorageCheck?: boolean
-}) {
+} & PhotoSetCategory) {
   return (
     <AnimateItems
       className="space-y-1"
@@ -34,6 +44,24 @@ export default function PhotosLarge({
           prefetchRelatedLinks={prefetchFirstPhotoLinks && index === 0}
           revalidatePhoto={revalidatePhoto}
           shouldZoomOnFKeydown={false}
+          album={album}
+          primaryTag={tag}
+          recent={recent}
+          year={year}
+          // Avoid repeating the category the set is already filtered by
+          showCamera={!camera}
+          showLens={!lens}
+          showFilm={!film}
+          showRecipe={!recipe}
+          shouldShareRecents={recent !== undefined}
+          shouldShareYear={year !== undefined}
+          shouldShareCamera={camera !== undefined}
+          shouldShareLens={lens !== undefined}
+          shouldShareAlbum={album !== undefined}
+          shouldShareTag={tag !== undefined}
+          shouldShareFilm={film !== undefined}
+          shouldShareRecipe={recipe !== undefined}
+          shouldShareFocalLength={focal !== undefined}
           onVisible={index === photos.length - 1
             ? onLastPhotoVisible
             : undefined}

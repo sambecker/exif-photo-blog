@@ -48,6 +48,7 @@ export const TEXT: I18N = {
     home: 'Beranda',
     full: 'Lengkap',
     grid: 'Grid',
+    viewOptions: 'Opsi tampilan',
     about: 'Tentang',
     admin: 'Admin',
     search: 'Cari',
