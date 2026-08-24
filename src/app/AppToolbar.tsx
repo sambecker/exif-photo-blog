@@ -1,8 +1,5 @@
 import Switcher from '@/components/switcher/Switcher';
 import SwitcherItem from '@/components/switcher/SwitcherItem';
-import IconFull from '@/components/icons/IconFull';
-import IconGrid from '@/components/icons/IconGrid';
-import IconGridMasonry from '@/components/icons/IconGridMasonry';
 import {
   PATH_ABOUT,
   PATH_FULL_INFERRED,
@@ -18,7 +15,6 @@ import {
   NAV_SORT_CONTROL,
   SHOW_ABOUT_PAGE,
   MASONRY_GRID_ENABLED,
-  GRID_HOMEPAGE_ENABLED,
 } from './config';
 import AdminAppMenu from '@/admin/AdminAppMenu';
 import Spinner from '@/components/Spinner';
@@ -36,24 +32,23 @@ import useDelayedLoading from '@/utility/useDelayedLoading';
 import { usePathname, useRouter } from 'next/navigation';
 import { KEY_COMMANDS } from '@/photo/key-commands';
 import { useAppText } from '@/i18n/state/client';
-import IconSort from '@/components/icons/IconSort';
 import { getSortStateFromPath } from '@/photo/sort/path';
 import { motion } from 'framer-motion';
-import SortMenu from '@/photo/sort/SortMenu';
 import { SWR_KEYS } from '@/swr';
 import IconAbout from '@/components/icons/IconAbout';
 import { BiHomeAlt as HomeIcon } from 'react-icons/bi';
 import AppViewMenu from './AppViewMenu';
+import AppViewMenuCompact from './AppViewMenuCompact';
 
-export type SwitcherSelection = 'full' | 'grid' | 'about' | 'admin';
+export type ToolbarSelection = 'full' | 'grid' | 'about' | 'admin';
 
-export default function AppViewSwitcher({
+export default function AppToolbar({
   currentSelection,
   className,
   animate = true,
   hideSortControl,
 }: {
-  currentSelection?: SwitcherSelection
+  currentSelection?: ToolbarSelection
   className?: string
   animate?: boolean
   hideSortControl?: boolean
@@ -79,11 +74,8 @@ export default function AppViewSwitcher({
   const {
     sortBy,
     doesPathOfferSort,
-    isSortedByDefault,
-    isAscending,
     pathGrid,
     pathFull,
-    pathSortToggle,
   } = sortConfig;
 
   const showSortControl =
@@ -155,48 +147,18 @@ export default function AppViewSwitcher({
 
   const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
 
-  const showViewSwitch = isHome || isPhotoSet;
+  const showViewMenu = isHome || isPhotoSet;
   const isViewFull = isHome
     ? currentSelection === 'full'
     : isPhotoSetFull;
 
-  const switcherItemGrid = <SwitcherItem
-    key="grid"
-    icon={MASONRY_GRID_ENABLED && isHome
-      ? <IconGridMasonry />
-      : <IconGrid />}
-    href={isHome ? pathGrid : undefined}
-    onClick={isHome
-      ? undefined
-      : () => setIsPhotoSetFull?.(false)}
-    active={!isViewFull}
-    tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-      content: appText.nav.grid,
-      keyCommand: KEY_COMMANDS.grid,
-    }}}
-    width="narrow"
-    noPadding
-  />;
-
-  const switcherItemFull = <SwitcherItem
-    key="full"
-    icon={<IconFull />}
-    href={isHome ? pathFull : undefined}
-    onClick={isHome
-      ? undefined
-      : () => setIsPhotoSetFull?.(true)}
-    active={isViewFull}
-    tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-      content: appText.nav.full,
-      keyCommand: KEY_COMMANDS.full,
-    }}}
-    width="narrow"
-    noPadding
-  />;
-
   return (
-    <div className={clsx(className, 'flex')}>
-      <Switcher className="mr-2.5 sm:mr-4">
+    <div className={clsx(
+      className,
+      'flex',
+      'gap-1.5 sm:gap-4',
+    )}>
+      <Switcher>
         <SwitcherItem
           icon={<HomeIcon size={17} />}
           href={PATH_ROOT}
@@ -264,12 +226,12 @@ export default function AppViewSwitcher({
       <motion.div
         initial={animate ? { opacity: 0, width: 0 } : false}
         animate={{
-          opacity: showViewSwitch ? 1 : 0,
-          width: showViewSwitch ? 'auto' : 0,
+          opacity: showViewMenu ? 1 : 0,
+          width: showViewMenu ? 'auto' : 0,
         }}
         transition={{ duration: 0.2, ease: 'easeInOut' }}
       >
-        <AppViewMenu
+        <AppViewMenuCompact
           className="sm:hidden"
           isViewFull={isViewFull}
           isMasonry={MASONRY_GRID_ENABLED && isHome}
@@ -289,57 +251,24 @@ export default function AppViewSwitcher({
             }
           }}
         />
-        <Switcher
+        <AppViewMenu
           className="max-sm:hidden"
-          type="borderless"
-          divide={false}
-        >
-          {GRID_HOMEPAGE_ENABLED
-            ? [switcherItemGrid, switcherItemFull]
-            : [switcherItemFull, switcherItemGrid]}
-          {showSortControl && (NAV_SORT_CONTROL === 'menu'
-            ? <SwitcherItem
-              className={clsx(
-                !isSortedByDefault && '*:bg-dim *:text-main!',
-              )}
-              icon={<SortMenu
-                {...sortConfig}
-                isOpen={isSortMenuOpen}
-                setIsOpen={isOpen => {
-                  setIsSortMenuOpen(isOpen);
-                  if (isOpen) {
-                    setIsAdminMenuOpen(false);
-                    setIsViewMenuOpen(false);
-                  }
-                }}
-              />}
-              tooltip={{
-                ...!isSortMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-                  content: appText.sort.sort,
-                },
-              }}
-              width="narrow"
-              noPadding
-            />
-            : <SwitcherItem
-              className={clsx(
-                '*:w-full *:h-full *:flex *:items-center *:justify-center',
-                !isSortedByDefault && '*:bg-dim *:text-main!',
-              )}
-              href={pathSortToggle}
-              icon={<IconSort
-                sort={isAscending ? 'asc' : 'desc'}
-                className="translate-x-[0.5px] translate-y-px"
-              />}
-              tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-                content: isAscending
-                  ? appText.sort.viewNewest
-                  : appText.sort.viewOldest,
-              }}}
-              width="narrow"
-              noPadding
-            />)}
-        </Switcher>
+          isViewFull={isViewFull}
+          isMasonry={MASONRY_GRID_ENABLED && isHome}
+          hrefGrid={isHome ? pathGrid : undefined}
+          hrefFull={isHome ? pathFull : undefined}
+          onSelectView={setIsPhotoSetFull}
+          showSortControl={showSortControl}
+          sortConfig={sortConfig}
+          isSortMenuOpen={isSortMenuOpen}
+          setIsSortMenuOpen={isOpen => {
+            setIsSortMenuOpen(isOpen);
+            if (isOpen) {
+              setIsAdminMenuOpen(false);
+              setIsViewMenuOpen(false);
+            }
+          }}
+        />
       </motion.div>
     </div>
   );

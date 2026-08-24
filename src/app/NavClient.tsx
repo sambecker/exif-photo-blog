@@ -4,7 +4,7 @@ import { clsx } from 'clsx/lite';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import AppGrid from '../components/AppGrid';
-import AppViewSwitcher, { SwitcherSelection } from '@/app/AppViewSwitcher';
+import AppToolbar, { ToolbarSelection } from '@/app/AppToolbar';
 import {
   PATH_ROOT,
   isPathAbout,
@@ -59,7 +59,7 @@ export default function NavClient({
       ? <Link href={linkOrAction}>{text}</Link>
       : <button onClick={linkOrAction} type="button">{text}</button>;
 
-  const switcherSelectionForPath = (): SwitcherSelection | undefined => {
+  const toolbarSelectionForPath = (): ToolbarSelection | undefined => {
     if (pathname === PATH_ROOT) {
       return GRID_HOMEPAGE_ENABLED ? 'grid' : 'full';
     } else if (isPathGrid(pathname)) {
@@ -93,8 +93,8 @@ export default function NavClient({
                 'md:w-[calc(100%+8px)] md:translate-x-[-4px] md:px-[4px]',
                 classNameStickyNav,
               )}>
-              <AppViewSwitcher
-                currentSelection={switcherSelectionForPath()}
+              <AppToolbar
+                currentSelection={toolbarSelectionForPath()}
                 animate={hasLoadedWithAnimations && isNavVisible}
                 hideSortControl={isInEmptyState}
               />

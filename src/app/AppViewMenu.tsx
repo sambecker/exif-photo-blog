@@ -1,28 +1,21 @@
 'use client';
 
-import { ReactNode } from 'react';
-import { clsx } from 'clsx/lite';
-import { FiChevronDown } from 'react-icons/fi';
-import MoreMenu, { MoreMenuSection } from '@/components/more/MoreMenu';
-import { renderMenuItemCheck } from '@/components/more/MoreMenuItem';
+import Switcher from '@/components/switcher/Switcher';
+import SwitcherItem from '@/components/switcher/SwitcherItem';
 import IconFull from '@/components/icons/IconFull';
 import IconGrid from '@/components/icons/IconGrid';
 import IconGridMasonry from '@/components/icons/IconGridMasonry';
 import IconSort from '@/components/icons/IconSort';
-import Spinner from '@/components/Spinner';
-import Tooltip from '@/components/Tooltip';
-import { HEIGHT_CLASS } from '@/components/switcher/SwitcherItem';
+import SortMenu from '@/photo/sort/SortMenu';
+import { getSortStateFromPath } from '@/photo/sort/path';
 import { useAppText } from '@/i18n/state/client';
 import { KEY_COMMANDS } from '@/photo/key-commands';
-import { getSortStateFromPath } from '@/photo/sort/path';
-import { getSortMenuItems } from '@/photo/sort/menu';
+import clsx from 'clsx/lite';
 import {
   GRID_HOMEPAGE_ENABLED,
   NAV_SORT_CONTROL,
   SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
 } from './config';
-
-const VIEW_ICON_CLASS = 'w-[24px] -ml-[4px] translate-x-[1px]';
 
 export default function AppViewMenu({
   isViewFull,
@@ -31,11 +24,10 @@ export default function AppViewMenu({
   hrefGrid,
   hrefFull,
   onSelectView,
-  isLoading,
-  showSortItems,
+  showSortControl,
   sortConfig,
-  isOpen,
-  setIsOpen,
+  isSortMenuOpen,
+  setIsSortMenuOpen,
   className,
 }: {
   isViewFull?: boolean
@@ -43,111 +35,99 @@ export default function AppViewMenu({
   hrefGrid?: string
   hrefFull?: string
   onSelectView?: (isFull: boolean) => void
-  isLoading?: boolean
-  showSortItems?: boolean
+  showSortControl?: boolean
   sortConfig: ReturnType<typeof getSortStateFromPath>
-  isOpen?: boolean
-  setIsOpen?: (isOpen: boolean) => void
+  isSortMenuOpen?: boolean
+  setIsSortMenuOpen?: (isOpen: boolean) => void
   className?: string
 }) {
   const appText = useAppText();
 
-  const renderIconGrid = (forMenu?: boolean) => isMasonry
-    ? <IconGridMasonry className={forMenu ? VIEW_ICON_CLASS : ''} />
-    : <IconGrid className={forMenu ? VIEW_ICON_CLASS : ''} />;
+  const {
+    isSortedByDefault,
+    isAscending,
+    pathSortToggle,
+  } = sortConfig;
 
-  // Selected views are marked with a check, unselected show their own icon
-  const renderViewIcon = (icon: ReactNode, isSelected: boolean) => isSelected
-    ? renderMenuItemCheck(true)
-    : icon;
+  const switcherItemGrid = <SwitcherItem
+    key="grid"
+    icon={isMasonry
+      ? <IconGridMasonry />
+      : <IconGrid />}
+    href={hrefGrid}
+    onClick={hrefGrid
+      ? undefined
+      : () => onSelectView?.(false)}
+    active={!isViewFull}
+    tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+      content: appText.nav.grid,
+      keyCommand: KEY_COMMANDS.grid,
+    }}}
+    width="narrow"
+    noPadding
+  />;
 
-  const itemGrid = {
-    label: appText.nav.grid,
-    icon: renderViewIcon(renderIconGrid(true), !isViewFull),
-    ...hrefGrid
-      ? { href: hrefGrid }
-      : { action: () => onSelectView?.(false) },
-    ...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && { keyCommand: KEY_COMMANDS.grid },
-  };
-
-  const itemFull = {
-    label: appText.nav.full,
-    icon: renderViewIcon(
-      <IconFull className={VIEW_ICON_CLASS} />,
-      Boolean(isViewFull),
-    ),
-    ...hrefFull
-      ? { href: hrefFull }
-      : { action: () => onSelectView?.(true) },
-    ...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && { keyCommand: KEY_COMMANDS.full },
-  };
-
-  const items: MoreMenuSection['items'] = GRID_HOMEPAGE_ENABLED
-    ? [itemGrid, itemFull]
-    : [itemFull, itemGrid];
-
-  if (showSortItems) {
-    const { itemsSortOrder, itemsSortType } =
-      getSortMenuItems(sortConfig, appText);
-    items.push({
-      label: appText.sort.sort,
-      icon: <IconSort
-        size={15}
-        sort={sortConfig.isAscending ? 'asc' : 'desc'}
-        className="translate-x-[-1px] translate-y-[1px]"
-      />,
-      // Sort types are only offered where the nav exposes a full sort menu
-      sections: NAV_SORT_CONTROL === 'menu'
-        ? [{ items: itemsSortOrder }, { items: itemsSortType }]
-        : [{ items: itemsSortOrder }],
-    });
-  }
-
-  const menu = <div className={clsx(
-    'flex items-center',
-    HEIGHT_CLASS,
-  )}>
-    <MoreMenu
-      {...{ isOpen, setIsOpen }}
-      sections={[{ items }]}
-      ariaLabel="View Menu"
-      align="start"
-      sideOffset={10}
-      alignOffset={-4}
-      icon={<>
-        <span className="flex items-center justify-center">
-          {isLoading
-            ? <Spinner />
-            : isViewFull
-              ? <IconFull />
-              : renderIconGrid()}
-        </span>
-        <FiChevronDown
-          size={13}
-          className="shrink-0 -ml-1"
-        />
-      </>}
-      classNameButton={clsx(
-        'inline-flex items-center',
-        'h-[28px]',
-        'rounded-full',
-        'text-main!',
-        'hover:bg-extra-dim! active:bg-dim!',
-        'cursor-pointer',
-      )}
-      classNameButtonOpen="bg-dim!"
-    />
-  </div>;
+  const switcherItemFull = <SwitcherItem
+    key="full"
+    icon={<IconFull />}
+    href={hrefFull}
+    onClick={hrefFull
+      ? undefined
+      : () => onSelectView?.(true)}
+    active={isViewFull}
+    tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+      content: appText.nav.full,
+      keyCommand: KEY_COMMANDS.full,
+    }}}
+    width="narrow"
+    noPadding
+  />;
 
   return (
-    <Tooltip
-      classNameTrigger={className}
-      delayDuration={500}
-      {...!isOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
-        content: appText.nav.viewOptions,
-      }}
+    <Switcher
+      className={className}
+      type="borderless"
+      divide={false}
     >
-      {menu}
-    </Tooltip>
+      {GRID_HOMEPAGE_ENABLED
+        ? [switcherItemGrid, switcherItemFull]
+        : [switcherItemFull, switcherItemGrid]}
+      {showSortControl && (NAV_SORT_CONTROL === 'menu'
+        ? <SwitcherItem
+          className={clsx(
+            !isSortedByDefault && '*:bg-dim *:text-main!',
+          )}
+          icon={<SortMenu
+            {...sortConfig}
+            isOpen={isSortMenuOpen}
+            setIsOpen={setIsSortMenuOpen}
+          />}
+          tooltip={{
+            ...!isSortMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+              content: appText.sort.sort,
+            },
+          }}
+          width="narrow"
+          noPadding
+        />
+        : <SwitcherItem
+          className={clsx(
+            '*:w-full *:h-full *:flex *:items-center *:justify-center',
+            !isSortedByDefault && '*:bg-dim *:text-main!',
+          )}
+          href={pathSortToggle}
+          icon={<IconSort
+            sort={isAscending ? 'asc' : 'desc'}
+            className="translate-x-[0.5px] translate-y-px"
+          />}
+          tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
+            content: isAscending
+              ? appText.sort.viewNewest
+              : appText.sort.viewOldest,
+          }}}
+          width="narrow"
+          noPadding
+        />)}
+    </Switcher>
   );
 }
