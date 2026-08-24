@@ -9,6 +9,7 @@ import {
 } from '@/photo';
 import { Place } from '@/place';
 import camelcaseKeys from 'camelcase-keys';
+import { VISIBILITY_OPTIONS, VisibilityValue } from '@/photo/visibility';
 
 export interface Album {
   id: string
@@ -96,3 +97,18 @@ export const deleteAlbumConfirmationText = (
   `Are you sure you want to delete the "${album.title}" album, containing ` +
   `${photoQuantityText(count, appText, false, false).toLowerCase()}? ` +
   'No photos will be deleted.';
+
+export const albumVisibilityConfirmationText = (
+  album: Album,
+  count: number,
+  visibility: VisibilityValue,
+  appText: AppTextState,
+) => {
+  const label = VISIBILITY_OPTIONS.find(({ value }) => value === visibility)
+    ?.label.toLowerCase() ?? '';
+  return appText.admin.setVisibilityConfirmForAlbum(
+    label,
+    photoQuantityText(count, appText, false, false).toLowerCase(),
+    album.title,
+  );
+};

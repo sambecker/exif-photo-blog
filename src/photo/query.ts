@@ -237,6 +237,19 @@ export const renamePhotoTagGlobally = (tag: string, updatedTag: string) =>
     WHERE ${tag}=ANY(tags)
   `, 'renamePhotoTagGlobally');
 
+export const setPhotoVisibilityForTagGlobally = (
+  tag: string,
+  hidden: boolean,
+  excludeFromFeeds: boolean,
+) =>
+  safelyQuery(() => sql`
+    UPDATE photos SET
+      hidden=${hidden},
+      exclude_from_feeds=${excludeFromFeeds},
+      updated_at=${(new Date()).toISOString()}
+    WHERE ${tag}=ANY(tags)
+  `, 'setPhotoVisibilityForTagGlobally');
+
 export const addTagsToPhotos = (tags: string[], photoIds: string[]) =>
   safelyQuery(() => query(`
     UPDATE photos 

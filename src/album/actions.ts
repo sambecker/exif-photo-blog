@@ -1,12 +1,13 @@
 'use server';
 
 import { runAuthenticatedAdminServerAction } from '@/auth/server';
-import { deleteAlbum, updateAlbum } from './query';
+import { deleteAlbum, setPhotoVisibilityForAlbum, updateAlbum } from './query';
 import { revalidateAllKeysAndPaths } from '@/cache';
 import { redirect } from 'next/navigation';
 import { PATH_ADMIN_ALBUMS, PATH_ROOT, pathForAlbum } from '@/app/path';
 import { convertFormDataToAlbum } from './form';
 import { Album } from '.';
+import type { VisibilityValue } from '@/photo/visibility';
 
 export const updateAlbumAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
@@ -33,4 +34,17 @@ export const deleteAlbumAction = async (
     if (currentPath === pathForAlbum(album)) {
       redirect(PATH_ROOT);
     }
+  });
+
+export const setAlbumPhotosVisibilityAction = async (
+  album: Album,
+  visibility: VisibilityValue,
+) =>
+  runAuthenticatedAdminServerAction(async () => {
+    await setPhotoVisibilityForAlbum(
+      album.id,
+      visibility === 'private',
+      visibility === 'exclude',
+    );
+    revalidateAllKeysAndPaths();
   });

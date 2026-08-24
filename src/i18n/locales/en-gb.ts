@@ -160,6 +160,14 @@ export const TEXT: I18N = {
     reupload: 'Reupload',
     delete: 'Delete',
     deleteConfirm: 'Are you sure you want to delete "{{photoTitle}}?"',
+    setVisibilityForAlbum: 'Set visibility for all photos in album',
+    setVisibilityForTag: 'Set visibility for all tagged photos',
+    // eslint-disable-next-line max-len
+    setVisibilityConfirmForAlbum: 'Are you sure you want to set visibility to "{{visibility}}" for {{quantity}} in the "{{albumTitle}}" album?',
+    // eslint-disable-next-line max-len
+    setVisibilityConfirmForTag: 'Are you sure you want to set visibility to "{{visibility}}" for {{quantity}} tagged "{{tag}}"?',
+    setVisibilitySuccess: 'Visibility updated',
+    setVisibilityFailure: 'Failed to update visibility',
   },
   onboarding: {
     setupComplete: 'Setup Complete!',

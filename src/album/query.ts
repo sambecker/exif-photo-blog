@@ -123,6 +123,20 @@ export const getAlbumTitlesForPhoto = (photoId: string) =>
   `.then(({ rows }) => rows.map(({ title }) => title))
   , 'getAlbumTitlesForPhoto');
 
+export const setPhotoVisibilityForAlbum = (
+  albumId: string,
+  hidden: boolean,
+  excludeFromFeeds: boolean,
+) =>
+  safelyQuery(() => sql`
+    UPDATE photos p SET
+      hidden=${hidden},
+      exclude_from_feeds=${excludeFromFeeds},
+      updated_at=${(new Date()).toISOString()}
+    FROM album_photo ap
+    WHERE ap.photo_id = p.id AND ap.album_id=${albumId}
+  `, 'setPhotoVisibilityForAlbum');
+
 export const getTagsForAlbum = (albumId: string) =>
   safelyQuery(() => sql`
     SELECT DISTINCT unnest(p.tags) as tag

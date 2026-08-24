@@ -37,6 +37,24 @@ export const generateAppTextState = (i18n: I18N) => {
       ...i18n.admin,
       deleteConfirm: (photoTitle: string) =>
         i18n.admin.deleteConfirm.replace('{{photoTitle}}', photoTitle),
+      setVisibilityConfirmForAlbum: (
+        visibility: string,
+        quantity: string,
+        albumTitle: string,
+      ) =>
+        i18n.admin.setVisibilityConfirmForAlbum
+          .replace('{{visibility}}', visibility)
+          .replace('{{quantity}}', quantity)
+          .replace('{{albumTitle}}', albumTitle),
+      setVisibilityConfirmForTag: (
+        visibility: string,
+        quantity: string,
+        tag: string,
+      ) =>
+        i18n.admin.setVisibilityConfirmForTag
+          .replace('{{visibility}}', visibility)
+          .replace('{{quantity}}', quantity)
+          .replace('{{tag}}', tag),
     },
     utility: {
       ...i18n.utility,

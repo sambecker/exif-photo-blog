@@ -58,6 +58,7 @@ export default function SelectMenu({
   // Setup keyboard listener
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
+      if (readOnly) { return; }
       // Keys which always trap focus
       switch (e.key) {
         case 'ArrowDown':
@@ -123,6 +124,7 @@ export default function SelectMenu({
     options,
     selectedOptionIndex,
     onChange,
+    readOnly,
   ]);
 
   useEffect(() => {
@@ -138,6 +140,7 @@ export default function SelectMenu({
   return (
     <div ref={ref} className={className}>
       <div
+        id={id}
         tabIndex={tabIndex}
         className={clsx(
           'cursor-pointer control pl-1.5 py-2',
@@ -147,8 +150,8 @@ export default function SelectMenu({
           Boolean(error) && 'error',
           readOnly && 'disabled-select',
         )}
-        onMouseDown={() => setIsOpen(o => !o)}
-        onFocus={() => setIsOpen(true)}
+        onMouseDown={() => !readOnly && setIsOpen(o => !o)}
+        onFocus={() => !readOnly && setIsOpen(true)}
         onBlur={e => {
           if (e.relatedTarget && !ref.current?.contains(e.relatedTarget)) {
             setIsOpen(false);
@@ -158,6 +161,7 @@ export default function SelectMenu({
         aria-expanded={isOpen}
         aria-haspopup="true"
         aria-controls={isOpen ? ARIA_ID_SELECT_OPTIONS : undefined}
+        aria-disabled={readOnly || undefined}
         role="combobox"
       >
         {children ?? <div className="flex items-center w-full">
@@ -176,7 +180,7 @@ export default function SelectMenu({
             )}
           />
         </div>}
-        <input id={id} type="hidden" name={name} value={value} />
+        <input type="hidden" name={name} value={value} />
       </div>
       <div className="relative">
         {isOpen &&

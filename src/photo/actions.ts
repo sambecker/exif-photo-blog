@@ -6,6 +6,7 @@ import {
   updatePhoto,
   updatePhotoTitleCaption,
   renamePhotoTagGlobally,
+  setPhotoVisibilityForTagGlobally,
   getPhoto,
   getPhotos,
   addTagsToPhotos,
@@ -411,6 +412,19 @@ export const deletePhotoTagGloballyAction = async (
     if (currentPath === pathForTag(tag)) {
       redirect(PATH_ROOT);
     }
+  });
+
+export const setTagPhotosVisibilityAction = async (
+  tag: string,
+  visibility: VisibilityValue,
+) =>
+  runAuthenticatedAdminServerAction(async () => {
+    await setPhotoVisibilityForTagGlobally(
+      tag,
+      visibility === 'private',
+      visibility === 'exclude',
+    );
+    revalidateAllKeysAndPaths();
   });
 
 export const renamePhotoTagGloballyAction = async (formData: FormData) =>

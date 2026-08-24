@@ -6,25 +6,33 @@ import { PATH_ADMIN_ALBUMS } from '@/app/path';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import { ReactNode, useCallback, useMemo, useState } from 'react';
 import { useAppState } from '@/app/AppState';
-import { Album } from '@/album';
+import { Album, albumVisibilityConfirmationText } from '@/album';
 import { ALBUM_FORM_META } from '@/album/form';
 import { parameterize } from '@/utility/string';
-import { updateAlbumAction } from '@/album/actions';
+import {
+  setAlbumPhotosVisibilityAction,
+  updateAlbumAction,
+} from '@/album/actions';
 import clsx from 'clsx/lite';
 import PlaceInput from '@/place/PlaceInput';
 import { convertPlaceToAutocomplete, Place } from '@/place';
 import deepEqual from 'fast-deep-equal/es6/react';
+import { useAppText } from '@/i18n/state/client';
+import AdminBulkVisibilityFieldset from './AdminBulkVisibilityFieldset';
 
 export default function AdminAlbumForm({
   album,
+  count,
   hasLocationServices,
   children,
 }: {
   album: Album
+  count: number
   hasLocationServices?: boolean
   children?: ReactNode
 }) {
   const { invalidateSwr } = useAppState();
+  const appText = useAppText();
 
   const [albumForm, setAlbumForm] = useState<Album>(album);
 
@@ -104,6 +112,13 @@ export default function AdminAlbumForm({
             readOnly={isLoadingPlace || hasLocationServices}
           />
         </div>}
+      <AdminBulkVisibilityFieldset
+        defaultLabel={appText.admin.setVisibilityForAlbum}
+        getConfirmationText={visibility =>
+          albumVisibilityConfirmationText(album, count, visibility, appText)}
+        action={visibility =>
+          setAlbumPhotosVisibilityAction(album, visibility)}
+      />
       {children}
       <div className="flex gap-3">
         <Link
