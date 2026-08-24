@@ -18,6 +18,7 @@ import { getSortStateFromPath } from '@/photo/sort/path';
 import { getSortMenuItems } from '@/photo/sort/menu';
 import {
   GRID_HOMEPAGE_ENABLED,
+  NAV_SORT_CONTROL,
   SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
 } from './config';
 
@@ -95,7 +96,10 @@ export default function AppViewMenu({
         sort={sortConfig.isAscending ? 'asc' : 'desc'}
         className="translate-x-[-1px] translate-y-[1px]"
       />,
-      items: itemsSortOrder.concat(itemsSortType),
+      // Sort types are only offered where the nav exposes a full sort menu
+      sections: NAV_SORT_CONTROL === 'menu'
+        ? [{ items: itemsSortOrder }, { items: itemsSortType }]
+        : [{ items: itemsSortOrder }],
     });
   }
 

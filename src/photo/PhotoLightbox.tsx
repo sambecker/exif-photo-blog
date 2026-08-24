@@ -47,7 +47,7 @@ export default function PhotoLightbox({
             +{countNotShown}
           </Link>
           : undefined}
-        classNamePhoto="rounded-sm overflow-hidden border-main"
+        classNamePhoto="rounded-sm overflow-hidden border border-main"
         selectable={false}
         small
       />

@@ -297,7 +297,7 @@ export default function AppViewSwitcher({
           {GRID_HOMEPAGE_ENABLED
             ? [switcherItemGrid, switcherItemFull]
             : [switcherItemFull, switcherItemGrid]}
-          {NAV_SORT_CONTROL === 'menu'
+          {showSortControl && (NAV_SORT_CONTROL === 'menu'
             ? <SwitcherItem
               className={clsx(
                 !isSortedByDefault && '*:bg-dim *:text-main!',
@@ -324,7 +324,7 @@ export default function AppViewSwitcher({
             : <SwitcherItem
               className={clsx(
                 '*:w-full *:h-full *:flex *:items-center *:justify-center',
-                !isSortedByDefault && '*:bg-medium *:text-main!',
+                !isSortedByDefault && '*:bg-dim *:text-main!',
               )}
               href={pathSortToggle}
               icon={<IconSort
@@ -338,7 +338,7 @@ export default function AppViewSwitcher({
               }}}
               width="narrow"
               noPadding
-            />}
+            />)}
         </Switcher>
       </motion.div>
     </div>
