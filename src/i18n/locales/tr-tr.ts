@@ -161,6 +161,14 @@ export const TEXT: I18N = {
     delete: 'Sil',
     // eslint-disable-next-line max-len
     deleteConfirm: '"{{photoTitle}}" adlı fotoğrafı silmek istediğinize emin misiniz?',
+    setVisibilityForAlbum: 'Albümdeki tüm fotoğraflar için görünürlüğü ayarla',
+    setVisibilityForTag: 'Etiketlenmiş tüm fotoğraflar için görünürlüğü ayarla',
+    // eslint-disable-next-line max-len
+    setVisibilityConfirmForAlbum: '"{{albumTitle}}" albümündeki {{quantity}} için görünürlüğü "{{visibility}}" olarak ayarlamak istediğinize emin misiniz?',
+    // eslint-disable-next-line max-len
+    setVisibilityConfirmForTag: '"{{tag}}" etiketli {{quantity}} için görünürlüğü "{{visibility}}" olarak ayarlamak istediğinize emin misiniz?',
+    setVisibilitySuccess: 'Görünürlük güncellendi',
+    setVisibilityFailure: 'Görünürlük güncellenemedi',
   },
   onboarding: {
     setupComplete: 'Kurulum Tamamlandı!',

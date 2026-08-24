@@ -117,7 +117,7 @@ export const TEXT: I18N = {
     system: '系统',
     light: '浅色模式',
     dark: '深色模式',
-  }, 
+  },
   auth: {
     signIn: '登录',
     signOut: '退出',
@@ -159,6 +159,14 @@ export const TEXT: I18N = {
     reupload: '重新上传',
     delete: '删除',
     deleteConfirm: '确定要删除 "{{photoTitle}}" 吗？',
+    setVisibilityForAlbum: '为相册中的所有照片设置可见性',
+    setVisibilityForTag: '为所有已标记的照片设置可见性',
+    // eslint-disable-next-line max-len
+    setVisibilityConfirmForAlbum: '确定要将 "{{albumTitle}}" 相册中 {{quantity}} 的可见性设置为 "{{visibility}}" 吗？',
+    // eslint-disable-next-line max-len
+    setVisibilityConfirmForTag: '确定要将标记为 "{{tag}}" 的 {{quantity}} 的可见性设置为 "{{visibility}}" 吗？',
+    setVisibilitySuccess: '可见性已更新',
+    setVisibilityFailure: '更新可见性失败',
   },
   onboarding: {
     setupComplete: '设置完成！',

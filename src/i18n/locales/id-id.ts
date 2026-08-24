@@ -160,6 +160,14 @@ export const TEXT: I18N = {
     reupload: 'Unggah ulang',
     delete: 'Hapus',
     deleteConfirm: 'Apakah Anda yakin ingin menghapus "{{photoTitle}}"?',
+    setVisibilityForAlbum: 'Atur visibilitas untuk semua foto dalam album',
+    setVisibilityForTag: 'Atur visibilitas untuk semua foto yang ditandai',
+    // eslint-disable-next-line max-len
+    setVisibilityConfirmForAlbum: 'Apakah Anda yakin ingin mengatur visibilitas ke "{{visibility}}" untuk {{quantity}} di album "{{albumTitle}}"?',
+    // eslint-disable-next-line max-len
+    setVisibilityConfirmForTag: 'Apakah Anda yakin ingin mengatur visibilitas ke "{{visibility}}" untuk {{quantity}} yang ditandai "{{tag}}"?',
+    setVisibilitySuccess: 'Visibilitas diperbarui',
+    setVisibilityFailure: 'Gagal memperbarui visibilitas',
   },
   onboarding: {
     setupComplete: 'Penyiapan Selesai!',

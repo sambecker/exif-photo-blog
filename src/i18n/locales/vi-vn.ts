@@ -160,6 +160,14 @@ export const TEXT: I18N = {
     reupload: 'Tải lên lại',
     delete: 'Xóa',
     deleteConfirm: 'Bạn có chắc chắn muốn xóa "{{photoTitle}}?"',
+    setVisibilityForAlbum: 'Đặt chế độ hiển thị cho tất cả ảnh trong album',
+    setVisibilityForTag: 'Đặt chế độ hiển thị cho tất cả ảnh được gắn thẻ',
+    // eslint-disable-next-line max-len
+    setVisibilityConfirmForAlbum: 'Bạn có chắc chắn muốn đặt chế độ hiển thị thành "{{visibility}}" cho {{quantity}} trong album "{{albumTitle}}"?',
+    // eslint-disable-next-line max-len
+    setVisibilityConfirmForTag: 'Bạn có chắc chắn muốn đặt chế độ hiển thị thành "{{visibility}}" cho {{quantity}} được gắn thẻ "{{tag}}"?',
+    setVisibilitySuccess: 'Đã cập nhật chế độ hiển thị',
+    setVisibilityFailure: 'Cập nhật chế độ hiển thị không thành công',
   },
   onboarding: {
     setupComplete: 'Cài đặt hoàn tất!',

@@ -160,6 +160,14 @@ export const TEXT: I18N = {
     reupload: 'পুনরায় আপলোড করুন',
     delete: 'ডিলিট',
     deleteConfirm: 'আপনি কি "{{photoTitle}}" মুছে ফেলতে চান?',
+    setVisibilityForAlbum: 'অ্যালবামের সব ছবির জন্য দৃশ্যমানতা সেট করুন',
+    setVisibilityForTag: 'ট্যাগ করা সব ছবির জন্য দৃশ্যমানতা সেট করুন',
+    // eslint-disable-next-line max-len
+    setVisibilityConfirmForAlbum: 'আপনি কি নিশ্চিত যে আপনি "{{albumTitle}}" অ্যালবামের {{quantity}}-এর জন্য দৃশ্যমানতা "{{visibility}}" এ সেট করতে চান?',
+    // eslint-disable-next-line max-len
+    setVisibilityConfirmForTag: 'আপনি কি নিশ্চিত যে আপনি "{{tag}}" ট্যাগ করা {{quantity}}-এর জন্য দৃশ্যমানতা "{{visibility}}" এ সেট করতে চান?',
+    setVisibilitySuccess: 'দৃশ্যমানতা আপডেট হয়েছে',
+    setVisibilityFailure: 'দৃশ্যমানতা আপডেট করতে ব্যর্থ হয়েছে',
   },
   onboarding: {
     setupComplete: 'সেটআপ সম্পন্ন!',

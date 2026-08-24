@@ -161,6 +161,14 @@ export const TEXT: I18N = {
     delete: 'हटाएं',
     // eslint-disable-next-line max-len
     deleteConfirm: 'क्या आप सुनिश्चित हैं कि "{{photoTitle}}" को हटाना चाहते हैं?',
+    setVisibilityForAlbum: 'एल्बम की सभी तस्वीरों के लिए दृश्यता सेट करें',
+    setVisibilityForTag: 'सभी टैग की गई तस्वीरों के लिए दृश्यता सेट करें',
+    // eslint-disable-next-line max-len
+    setVisibilityConfirmForAlbum: 'क्या आप सुनिश्चित हैं कि आप "{{albumTitle}}" एल्बम में {{quantity}} के लिए दृश्यता "{{visibility}}" पर सेट करना चाहते हैं?',
+    // eslint-disable-next-line max-len
+    setVisibilityConfirmForTag: 'क्या आप सुनिश्चित हैं कि आप "{{tag}}" टैग की गई {{quantity}} के लिए दृश्यता "{{visibility}}" पर सेट करना चाहते हैं?',
+    setVisibilitySuccess: 'दृश्यता अपडेट की गई',
+    setVisibilityFailure: 'दृश्यता अपडेट करने में विफल',
   },
   onboarding: {
     setupComplete: 'सेटअप पूरा हुआ!',
