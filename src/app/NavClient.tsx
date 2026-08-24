@@ -4,19 +4,14 @@ import { clsx } from 'clsx/lite';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import AppGrid from '../components/AppGrid';
-import AppToolbar, { ToolbarSelection } from '@/app/AppToolbar';
+import AppToolbar from '@/app/AppToolbar';
 import {
   PATH_ROOT,
-  isPathAbout,
   isPathAdmin,
-  isPathFull,
-  isPathGrid,
-  isPathProtected,
   isPathSignIn,
 } from '@/app/path';
 import AnimateItems from '../components/AnimateItems';
 import {
-  GRID_HOMEPAGE_ENABLED,
   NAV_CAPTION,
 } from './config';
 import { useRef } from 'react';
@@ -59,20 +54,6 @@ export default function NavClient({
       ? <Link href={linkOrAction}>{text}</Link>
       : <button onClick={linkOrAction} type="button">{text}</button>;
 
-  const toolbarSelectionForPath = (): ToolbarSelection | undefined => {
-    if (pathname === PATH_ROOT) {
-      return GRID_HOMEPAGE_ENABLED ? 'grid' : 'full';
-    } else if (isPathGrid(pathname)) {
-      return 'grid';
-    } else if (isPathFull(pathname)) {
-      return 'full';
-    } else if (isPathAbout(pathname)) {
-      return 'about';
-    } else if (isPathProtected(pathname)) {
-      return 'admin';
-    }
-  };
-
   return (
     <AppGrid
       className={classNameStickyContainer}
@@ -94,7 +75,6 @@ export default function NavClient({
                 classNameStickyNav,
               )}>
               <AppToolbar
-                currentSelection={toolbarSelectionForPath()}
                 animate={hasLoadedWithAnimations && isNavVisible}
                 hideSortControl={isInEmptyState}
               />

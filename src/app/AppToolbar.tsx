@@ -1,3 +1,5 @@
+'use client';
+
 import Switcher from '@/components/switcher/Switcher';
 import SwitcherItem from '@/components/switcher/SwitcherItem';
 import {
@@ -5,6 +7,8 @@ import {
   PATH_FULL_INFERRED,
   PATH_GRID_INFERRED,
   PATH_ROOT,
+  isPathAbout,
+  isPathFull,
   isPathHome,
   isPathPhotoSet,
 } from '@/app/path';
@@ -40,15 +44,11 @@ import { BiHomeAlt as HomeIcon } from 'react-icons/bi';
 import AppViewMenu from './AppViewMenu';
 import AppViewMenuCompact from './AppViewMenuCompact';
 
-export type ToolbarSelection = 'full' | 'grid' | 'about' | 'admin';
-
 export default function AppToolbar({
-  currentSelection,
   className,
   animate = true,
   hideSortControl,
 }: {
-  currentSelection?: ToolbarSelection
   className?: string
   animate?: boolean
   hideSortControl?: boolean
@@ -149,7 +149,7 @@ export default function AppToolbar({
 
   const showViewMenu = isHome || isPhotoSet;
   const isViewFull = isHome
-    ? currentSelection === 'full'
+    ? pathname === PATH_FULL_INFERRED || isPathFull(pathname)
     : isPhotoSetFull;
 
   return (
@@ -174,7 +174,7 @@ export default function AppToolbar({
             icon={<IconAbout />}
             href={PATH_ABOUT}
             hrefRef={refHrefAbout}
-            active={currentSelection === 'about'}
+            active={isPathAbout(pathname)}
             tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
               content: appText.nav.about,
               keyCommand: KEY_COMMANDS.about,
