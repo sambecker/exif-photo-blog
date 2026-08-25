@@ -17,7 +17,6 @@ import {
 } from '@/utility/string';
 import { CategoryQueryMeta, sortCategoryByCount } from '@/category';
 import { AppTextState } from '@/i18n/state';
-import { VISIBILITY_OPTIONS, VisibilityValue } from '@/photo/visibility';
 
 // Reserved tags
 export const TAG_FAVS     = 'favs';
@@ -140,21 +139,6 @@ export const deleteTagConfirmationText = (
 ) =>
   // eslint-disable-next-line max-len
   `Are you sure you want to remove "${formatTag(tag)}" from ${photoQuantityText(count, appText, false, false).toLowerCase()}?`;
-
-export const tagVisibilityConfirmationText = (
-  tag: string,
-  count: number,
-  visibility: VisibilityValue,
-  appText: AppTextState,
-) => {
-  const label = VISIBILITY_OPTIONS.find(({ value }) => value === visibility)
-    ?.label.toLowerCase() ?? '';
-  return appText.admin.setVisibilityConfirmForTag(
-    label,
-    photoQuantityText(count, appText, false, false).toLowerCase(),
-    formatTag(tag),
-  );
-};
 
 export const isTagFavs = (tag: string) => tag.toLocaleLowerCase() === TAG_FAVS;
 

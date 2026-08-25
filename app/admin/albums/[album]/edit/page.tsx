@@ -43,7 +43,6 @@ export default async function AlbumPageEdit({
     >
       <AdminAlbumForm {...{
         album,
-        count,
         hasLocationServices: HAS_LOCATION_SERVICES,
       }}>
         {photos.length > 0 &&

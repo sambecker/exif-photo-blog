@@ -35,7 +35,7 @@ export default async function TagPageEdit({
       backLabel="Tags"
       breadcrumb={<AdminTagBadge {...{ tag, count, hideBadge: true }} />}
     >
-      <AdminTagForm {...{ tag, count }}>
+      <AdminTagForm {...{ tag }}>
         <PhotoLightbox
           {...{ count, photos, tag }}
           maxPhotosToShow={MAX_PHOTO_TO_SHOW}

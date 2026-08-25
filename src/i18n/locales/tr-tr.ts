@@ -162,14 +162,30 @@ export const TEXT: I18N = {
     delete: 'Sil',
     // eslint-disable-next-line max-len
     deleteConfirm: '"{{photoTitle}}" adlı fotoğrafı silmek istediğinize emin misiniz?',
-    setVisibilityForAlbum: 'Albümdeki tüm fotoğraflar için görünürlüğü ayarla',
-    setVisibilityForTag: 'Etiketlenmiş tüm fotoğraflar için görünürlüğü ayarla',
+    setVisibility: 'Görünürlük',
+    setVisibilityPlaceholder: '{{quantity}} için görünürlüğü ayarlayın ...',
     // eslint-disable-next-line max-len
-    setVisibilityConfirmForAlbum: '"{{albumTitle}}" albümündeki {{quantity}} için görünürlüğü "{{visibility}}" olarak ayarlamak istediğinize emin misiniz?',
+    setVisibilityConfirm: '{{quantity}} için görünürlüğü "{{visibility}}" olarak ayarlamak istediğinize emin misiniz?',
+    setVisibilitySuccess: 'Görünürlük {{quantity}} için güncellendi',
+    selectPhotosBelow: 'Aşağıdan fotoğraf seçin',
+    selectPhotosBelowShort: 'Seç',
+    selecting: 'Seçiliyor ...',
+    selectingShort: 'Seçiliyor',
+    allSelected: '{{count}} fotoğraf seçildi',
+    allSelectedShort: '{{count}} fotoğraf',
+    photosSelected: '{{quantity}} seçildi',
+    selectAll: 'Tümünü Seç',
+    apply: 'Uygula',
+    tagPlaceholder: '{{quantity}} etiketle ...',
     // eslint-disable-next-line max-len
-    setVisibilityConfirmForTag: '"{{tag}}" etiketli {{quantity}} için görünürlüğü "{{visibility}}" olarak ayarlamak istediğinize emin misiniz?',
-    setVisibilitySuccess: 'Görünürlük güncellendi',
-    setVisibilityFailure: 'Görünürlük güncellenemedi',
+    tagConfirm: '{{quantity}} için etiket uygulamak istediğinize emin misiniz? Bu işlem geri alınamaz.',
+    tagSuccess: '{{quantity}} {{tags}} olarak etiketlendi',
+    // eslint-disable-next-line max-len
+    albumConfirm: '{{quantity}} bu albümlere eklemek istediğinize emin misiniz? Bu işlem geri alınamaz.',
+    albumSuccess: '{{quantity}} {{albums}} albümüne eklendi',
+    // eslint-disable-next-line max-len
+    favoriteConfirm: '{{quantity}} favorilere eklemek istediğinize emin misiniz?',
+    favoriteSuccess: '{{quantity}} favorilere eklendi',
   },
   onboarding: {
     setupComplete: 'Kurulum Tamamlandı!',

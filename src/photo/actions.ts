@@ -6,7 +6,7 @@ import {
   updatePhoto,
   updatePhotoTitleCaption,
   renamePhotoTagGlobally,
-  setPhotoVisibilityForTagGlobally,
+  setPhotoVisibilityForIds,
   getPhoto,
   getPhotos,
   addTagsToPhotos,
@@ -414,19 +414,6 @@ export const deletePhotoTagGloballyAction = async (
     }
   });
 
-export const setTagPhotosVisibilityAction = async (
-  tag: string,
-  visibility: VisibilityValue,
-) =>
-  runAuthenticatedAdminServerAction(async () => {
-    await setPhotoVisibilityForTagGlobally(
-      tag,
-      visibility === 'private',
-      visibility === 'exclude',
-    );
-    revalidateAllKeysAndPaths();
-  });
-
 export const renamePhotoTagGloballyAction = async (formData: FormData) =>
   runAuthenticatedAdminServerAction(async () => {
     const tag = formData.get('tag') as string;
@@ -743,12 +730,14 @@ export const batchPhotoAction = async ({
   photoOptions,
   tags = [],
   albumTitles = [],
+  visibility,
   action,
 }: {
   photoIds?: string[]
   photoOptions?: PhotoQueryOptions
   tags?: string[]
   albumTitles?: string[]
+  visibility?: VisibilityValue
   action?: 'favorite' | 'delete'
 }) => runAuthenticatedAdminServerAction(async () => {
   const photoIds = _photoIds.length > 0
@@ -763,6 +752,13 @@ export const batchPhotoAction = async ({
   if (albumTitles.length > 0) {
     const albumIds = await createAlbumsAndGetIds(albumTitles);
     await addPhotoAlbumIds(photoIds, albumIds);
+  }
+  if (visibility !== undefined) {
+    await setPhotoVisibilityForIds(
+      photoIds,
+      visibility === 'private',
+      visibility === 'exclude',
+    );
   }
   switch (action) {
     case 'favorite':

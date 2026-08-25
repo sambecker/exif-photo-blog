@@ -5,27 +5,18 @@ import Link from 'next/link';
 import { PATH_ADMIN_TAGS } from '@/app/path';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import { ReactNode, useMemo, useState } from 'react';
-import {
-  renamePhotoTagGloballyAction,
-  setTagPhotosVisibilityAction,
-} from '@/photo/actions';
+import { renamePhotoTagGloballyAction } from '@/photo/actions';
 import { parameterize } from '@/utility/string';
 import { useAppState } from '@/app/AppState';
-import { tagVisibilityConfirmationText } from '@/tag';
-import { useAppText } from '@/i18n/state/client';
-import AdminBulkVisibilityFieldset from './AdminBulkVisibilityFieldset';
 
 export default function AdminTagForm({
   tag,
-  count,
   children,
 }: {
   tag: string
-  count: number
   children?: ReactNode
 }) {
   const { invalidateSwr } = useAppState();
-  const appText = useAppText();
 
   const [updatedTagRaw, setUpdatedTagRaw] = useState(tag);
 
@@ -61,12 +52,6 @@ export default function AdminTagForm({
         value={updatedTag}
         hidden
         readOnly
-      />
-      <AdminBulkVisibilityFieldset
-        defaultLabel={appText.admin.setVisibilityForTag}
-        getConfirmationText={visibility =>
-          tagVisibilityConfirmationText(tag, count, visibility, appText)}
-        action={visibility => setTagPhotosVisibilityAction(tag, visibility)}
       />
       {children}
       <div className="flex gap-3">
