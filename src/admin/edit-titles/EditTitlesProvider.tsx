@@ -8,6 +8,7 @@ import {
 import {
   doesPathOfferSort,
   isPathGrid,
+  isPathPhotoSet,
   PARAM_EDIT_TITLES,
   PATH_FULL_INFERRED,
 } from '@/app/path';
@@ -30,7 +31,7 @@ export default function EditTitlesProvider({
   const router = useRouter();
   const pathname = usePathname();
   const appText = useAppText();
-  const { isUserSignedIn } = useAppState();
+  const { isUserSignedIn, setIsPhotoSetFull } = useAppState();
 
   const searchParamsEditTitles = useClientSearchParams(
     PARAM_EDIT_TITLES,
@@ -52,6 +53,13 @@ export default function EditTitlesProvider({
     const hasPhotoLarge = document
       .querySelectorAll(`[${DATA_KEY_PHOTO_LARGE}=true]`)
       .length > 0;
+
+    // Photo-set "Full" is local view state (URL stays on the set)
+    if (isPathPhotoSet(pathname)) {
+      setIsPhotoSetFull?.(true);
+      replacePathWithEvent(`${pathname}?${PARAM_EDIT_TITLES}=true`);
+      return;
+    }
 
     if (hasPhotoLarge) {
       replacePathWithEvent(`${pathname}?${PARAM_EDIT_TITLES}=true`);
@@ -76,7 +84,7 @@ export default function EditTitlesProvider({
     }
 
     router.push(`${PATH_FULL_INFERRED}?${PARAM_EDIT_TITLES}=true`);
-  }, [appText, pathname, router]);
+  }, [appText, pathname, router, setIsPhotoSetFull]);
 
   const stopEditingTitles = useCallback(() =>
     replacePathWithEvent(pathname)
