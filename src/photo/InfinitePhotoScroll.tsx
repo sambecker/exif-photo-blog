@@ -14,6 +14,10 @@ import { SortBy } from './sort';
 import { SWR_KEYS } from '@/swr';
 import { useAppText } from '@/i18n/state/client';
 
+// Future reader:
+// Adding useIsHydrated check caused <PhotoLarge /> images
+// to flicker on home feed
+
 const SIZE_KEY_SEPARATOR = '__';
 const getSizeFromKey = (key: string) =>
   parseInt(key.split(SIZE_KEY_SEPARATOR)[1]);
@@ -67,7 +71,7 @@ export default function InfinitePhotoScroll({
   }) => ReactNode
 } & PhotoSetCategory) {
   const { isUserSignedIn } = useAppState();
-  
+
   const { utility } = useAppText();
 
   const keyGenerator = useCallback(
@@ -83,7 +87,7 @@ export default function InfinitePhotoScroll({
   ) =>
     (useCachedPhotos ? getPhotosCachedAction : getPhotosAction)({
       offset: initialOffset + getSizeFromKey(keyWithSize) * itemsPerPage,
-      sortBy, 
+      sortBy,
       sortWithPriority,
       excludeFromFeeds,
       limit: itemsPerPage,
@@ -130,7 +134,7 @@ export default function InfinitePhotoScroll({
     );
 
   const buttonContainerRef = useRef<HTMLDivElement>(null);
-  
+
   const isLoadingOrValidating = isLoading || isValidating;
 
   const isFinished = useMemo(() =>
@@ -161,7 +165,7 @@ export default function InfinitePhotoScroll({
       <button
         type="button"
         onClick={() => error ? mutate() : advance()}
-        disabled={isLoading || isValidating}
+        disabled={isLoadingOrValidating}
         className={clsx(
           'w-full flex justify-center',
           isLoadingOrValidating && 'subtle',

@@ -6,6 +6,7 @@ import {
 import PhotosLarge from './PhotosLarge';
 import PhotosLargeInfinite from './PhotosLargeInfinite';
 import { SortBy } from './sort';
+import { PATH_FULL_INFERRED } from '@/app/path';
 
 export default function PhotoFullPage({
   photos,
@@ -24,6 +25,7 @@ export default function PhotoFullPage({
       <PhotosLarge {...{ photos, showStorageCheck }} />
       {photosCount > photos.length &&
         <PhotosLargeInfinite
+          cacheKey={`page-${PATH_FULL_INFERRED}`}
           initialOffset={photos.length}
           itemsPerPage={INFINITE_SCROLL_FULL_MULTIPLE}
           sortBy={sortBy}

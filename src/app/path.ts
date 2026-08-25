@@ -438,10 +438,26 @@ export const isPathFull = (pathname?: string) =>
 export const isPathAbout = (pathname?: string) =>
   checkPathPrefix(pathname, PATH_ABOUT);
 
-export const isPathTopLevel = (pathname?: string) =>
+// Category paths which render a photo set, i.e. offer grid/full views
+export const isPathPhotoSet = (pathname?: string) =>
+  isPathRecents(pathname) ||
+  isPathYear(pathname) ||
+  isPathCamera(pathname) ||
+  isPathLens(pathname) ||
+  isPathAlbum(pathname) ||
+  isPathTag(pathname) ||
+  isPathRecipe(pathname) ||
+  isPathFilm(pathname) ||
+  isPathFocalLength(pathname);
+
+// Home screen paths, including sort variants of grid/full
+export const isPathHome = (pathname?: string) =>
   isPathRoot(pathname) ||
   isPathGrid(pathname) ||
-  isPathFull(pathname) ||
+  isPathFull(pathname);
+
+export const isPathTopLevel = (pathname?: string) =>
+  isPathHome(pathname) ||
   isPathAbout(pathname);
 
 export const isPathSignIn = (pathname?: string) =>

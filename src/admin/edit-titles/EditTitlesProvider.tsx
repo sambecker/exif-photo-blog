@@ -133,7 +133,6 @@ export default function EditTitlesProvider({
 
   useEffect(() => {
     if (!isEditingTitles) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPhotoEdits({});
       setIsPerformingUpdate(false);
     }

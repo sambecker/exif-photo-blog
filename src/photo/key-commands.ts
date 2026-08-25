@@ -1,4 +1,5 @@
 export const KEY_COMMANDS = {
+  home: 'H',
   full: 'F',
   grid: 'G',
   about: 'A',

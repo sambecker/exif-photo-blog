@@ -47,6 +47,7 @@ export const TEXT = {
     home: 'Home',
     full: 'Full',
     grid: 'Grid',
+    viewOptions: 'View Options',
     about: 'About',
     admin: 'Admin',
     search: 'Search',

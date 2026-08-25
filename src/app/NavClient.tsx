@@ -4,19 +4,14 @@ import { clsx } from 'clsx/lite';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import AppGrid from '../components/AppGrid';
-import AppViewSwitcher, { SwitcherSelection } from '@/app/AppViewSwitcher';
+import AppToolbar from '@/app/AppToolbar';
 import {
   PATH_ROOT,
-  isPathAbout,
   isPathAdmin,
-  isPathFull,
-  isPathGrid,
-  isPathProtected,
   isPathSignIn,
 } from '@/app/path';
 import AnimateItems from '../components/AnimateItems';
 import {
-  GRID_HOMEPAGE_ENABLED,
   NAV_CAPTION,
 } from './config';
 import { useRef } from 'react';
@@ -59,20 +54,6 @@ export default function NavClient({
       ? <Link href={linkOrAction}>{text}</Link>
       : <button onClick={linkOrAction} type="button">{text}</button>;
 
-  const switcherSelectionForPath = (): SwitcherSelection | undefined => {
-    if (pathname === PATH_ROOT) {
-      return GRID_HOMEPAGE_ENABLED ? 'grid' : 'full';
-    } else if (isPathGrid(pathname)) {
-      return 'grid';
-    } else if (isPathFull(pathname)) {
-      return 'full';
-    } else if (isPathAbout(pathname)) {
-      return 'about';
-    } else if (isPathProtected(pathname)) {
-      return 'admin';
-    }
-  };
-
   return (
     <AppGrid
       className={classNameStickyContainer}
@@ -87,15 +68,13 @@ export default function NavClient({
               key="nav"
               ref={ref}
               className={clsx(
-                'w-full flex items-center gap-2 bg-main',
+                'w-full flex items-center gap-1.5 sm:gap-2 bg-main',
                 NAV_HEIGHT_CLASS,
                 // Enlarge nav to ensure it fully masks underlying content
                 'md:w-[calc(100%+8px)] md:translate-x-[-4px] md:px-[4px]',
                 classNameStickyNav,
               )}>
-              <AppViewSwitcher
-                currentSelection={switcherSelectionForPath()}
-                className="translate-x-[-1px]"
+              <AppToolbar
                 animate={hasLoadedWithAnimations && isNavVisible}
                 hideSortControl={isInEmptyState}
               />
