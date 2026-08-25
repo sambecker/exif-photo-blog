@@ -132,7 +132,7 @@ export default function AppViewMenuCompact({
             </span>
             <FiChevronDown
               size={13}
-              className="shrink-0 -ml-1.5"
+              className="shrink-0 -ml-1.5 text-dim"
             />
           </>}
           classNameButton={clsx(
