@@ -1,8 +1,7 @@
-import AnimateItems from '@/components/AnimateItems';
 import Note from '@/components/Note';
-import AppGrid from '@/components/AppGrid';
-import PhotoGrid from '@/photo/PhotoGrid';
+import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getPhotosMetaCached, getPhotosNoStore } from '@/photo/cache';
+import PhotoGridContainer from '@/photo/PhotoGridContainer';
 import { absolutePathForTag } from '@/app/path';
 import { TAG_PRIVATE, descriptionForTaggedPhotos, titleForTag } from '@/tag';
 import PrivateHeader from '@/tag/PrivateHeader';
@@ -51,27 +50,21 @@ export default async function PrivateTagPage() {
     photos,
     { count, dateRange },
   ] = await Promise.all([
-    getPhotosNoStore({ hidden: 'only' }),
+    getPhotosNoStore({ hidden: 'only', limit: INFINITE_SCROLL_GRID_INITIAL }),
     getPhotosHiddenMetaCached(),
   ]);
 
   return (
-    <AppGrid
-      contentMain={<div className="space-y-4 mt-4">
-        <AnimateItems
-          type="bottom"
-          items={[<PrivateHeader
-            key="PrivateHeader"
-            {...{ photos, count, dateRange }}
-          />]}
-          animateOnFirstLoadOnly
-        />
-        <div className="space-y-6">
-          <Note animate>
-            Visible only to admins (uploads only secure via obscurity)
-          </Note>
-          <PhotoGrid {...{ photos }} />
-        </div>
+    <PhotoGridContainer
+      cacheKey={`tag-${TAG_PRIVATE}`}
+      photos={photos}
+      count={count}
+      tag={TAG_PRIVATE}
+      header={<div className="space-y-6">
+        <PrivateHeader {...{ photos, count, dateRange }} />
+        <Note>
+          Visible only to admins (uploads only secure via obscurity)
+        </Note>
       </div>}
     />
   );

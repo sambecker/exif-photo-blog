@@ -8,6 +8,7 @@ import {
 import {
   doesPathOfferSort,
   isPathGrid,
+  isPathPhotoSet,
   PARAM_EDIT_TITLES,
   PATH_FULL_INFERRED,
 } from '@/app/path';
@@ -30,7 +31,7 @@ export default function EditTitlesProvider({
   const router = useRouter();
   const pathname = usePathname();
   const appText = useAppText();
-  const { isUserSignedIn } = useAppState();
+  const { isUserSignedIn, setIsPhotoSetFull } = useAppState();
 
   const searchParamsEditTitles = useClientSearchParams(
     PARAM_EDIT_TITLES,
@@ -52,6 +53,12 @@ export default function EditTitlesProvider({
     const hasPhotoLarge = document
       .querySelectorAll(`[${DATA_KEY_PHOTO_LARGE}=true]`)
       .length > 0;
+
+    // Photo-set "Full" is local view state (URL stays on the set)
+    if (isPathPhotoSet(pathname)) {
+      replacePathWithEvent(`${pathname}?${PARAM_EDIT_TITLES}=true`);
+      return;
+    }
 
     if (hasPhotoLarge) {
       replacePathWithEvent(`${pathname}?${PARAM_EDIT_TITLES}=true`);
@@ -130,6 +137,13 @@ export default function EditTitlesProvider({
   const modifiedPhotoCount = useMemo(() =>
     Object.keys(photoEdits).length
   , [photoEdits]);
+
+  // Restore "Full" when arriving directly, e.g., page reload
+  useEffect(() => {
+    if (isEditingTitles && isPathPhotoSet(pathname)) {
+      setIsPhotoSetFull?.(true);
+    }
+  }, [isEditingTitles, pathname, setIsPhotoSetFull]);
 
   useEffect(() => {
     if (!isEditingTitles) {
