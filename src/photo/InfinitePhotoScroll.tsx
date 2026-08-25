@@ -13,7 +13,7 @@ import useVisibility from '@/utility/useVisibility';
 import { SortBy } from './sort';
 import { SWR_KEYS } from '@/swr';
 import { useAppText } from '@/i18n/state/client';
-import useIsHydrated from '@/utility/useIsHydrated';
+// import useIsHydrated from '@/utility/useIsHydrated';
 
 const SIZE_KEY_SEPARATOR = '__';
 const getSizeFromKey = (key: string) =>
@@ -138,7 +138,7 @@ export default function InfinitePhotoScroll({
   // client's first hydration pass, causing a hydration mismatch on the
   // "load more" button below. useSyncExternalStore lets the server and
   // client intentionally diverge here without triggering that mismatch.
-  const isHydrated = useIsHydrated();
+  const isHydrated = true;
   const isLoadingOrValidatingForDisplay = isHydrated && isLoadingOrValidating;
 
   const isFinished = useMemo(() =>
