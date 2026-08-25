@@ -11,6 +11,11 @@ export const WIDTH_CLASS         = 'w-[46px]';
 export const WIDTH_CLASS_NARROW  = 'w-[36px]';
 export const HEIGHT_CLASS        = 'h-[32px]';
 
+export const SWITCHER_ITEM_INTERACTIVE_BG = clsx(
+  'hover:bg-gray-100/60 active:bg-gray-100',
+  'dark:hover:bg-gray-900/75 dark:active:bg-gray-900',
+);
+
 export default function SwitcherItem({
   icon,
   title,
@@ -43,8 +48,7 @@ export default function SwitcherItem({
     'flex items-center justify-center',
     `${widthClass} ${HEIGHT_CLASS}`,
     isInteractive && 'cursor-pointer',
-    isInteractive && 'hover:bg-gray-100/60 active:bg-gray-100',
-    isInteractive && 'dark:hover:bg-gray-900/75 dark:active:bg-gray-900',
+    isInteractive && SWITCHER_ITEM_INTERACTIVE_BG,
     active
       ? 'text-black dark:text-white'
       : 'text-gray-400 dark:text-gray-600',

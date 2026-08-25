@@ -11,7 +11,10 @@ import IconGridMasonry from '@/components/icons/IconGridMasonry';
 import IconSort from '@/components/icons/IconSort';
 import Spinner from '@/components/Spinner';
 import Tooltip from '@/components/Tooltip';
-import { HEIGHT_CLASS } from '@/components/switcher/SwitcherItem';
+import {
+  HEIGHT_CLASS,
+  SWITCHER_ITEM_INTERACTIVE_BG,
+} from '@/components/switcher/SwitcherItem';
 import { useAppText } from '@/i18n/state/client';
 import { KEY_COMMANDS } from '@/photo/key-commands';
 import { getSortStateFromPath } from '@/photo/sort/path';
@@ -140,7 +143,7 @@ export default function AppViewMenuCompact({
             'h-[28px]',
             'rounded-full',
             'text-main!',
-            'hover:bg-extra-dim! active:bg-dim!',
+            SWITCHER_ITEM_INTERACTIVE_BG,
             'cursor-pointer',
           )}
           classNameButtonOpen="bg-dim!"
