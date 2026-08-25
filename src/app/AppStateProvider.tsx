@@ -100,6 +100,8 @@ export default function AppStateProvider({
   // UPLOAD
   const uploadInputRef = useRef<HTMLInputElement>(null);
   const [uploadState, _setUploadState] = useState(INITIAL_UPLOAD_STATE);
+  // VIEW
+  const [isPhotoSetFull, setIsPhotoSetFull] = useState(false);
   // DEBUG
   const [isGridHighDensity, setIsGridHighDensity] =
     useState(HIGH_DENSITY_GRID);
@@ -266,6 +268,9 @@ export default function AppStateProvider({
         uploadState,
         setUploadState,
         resetUploadState,
+        // VIEW
+        isPhotoSetFull,
+        setIsPhotoSetFull,
         // DEBUG
         areAdminDebugToolsEnabled,
         isGridHighDensity,

@@ -11,6 +11,19 @@ import LoaderButton from '../primitives/LoaderButton';
 import { downloadFileFromBrowser } from '@/utility/url';
 import KeyCommand from '../primitives/KeyCommand';
 import LoaderLink from '../LoaderLink';
+import IconCheck from '../icons/IconCheck';
+
+// Indicate the active option in a menu of mutually-exclusive choices
+export const renderMenuItemCheck = (isChecked: boolean) => isChecked
+  ? <IconCheck size={13} className="translate-x-[-2px]" />
+  : <span />;
+
+export const renderMenuItemLabel = (label: string, isSelected: boolean) => ({
+  label,
+  labelComplex: <span className={clsx(!isSelected && 'text-dim')}>
+    {label}
+  </span>,
+});
 
 export default function MoreMenuItem({
   label,

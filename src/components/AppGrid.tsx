@@ -45,6 +45,8 @@ export default function AppGrid({
         'grid-cols-1 md:grid-cols-12',
         'gap-3 md:gap-4',
         'max-w-[1280px] 3xl:w-[1280px]',
+        // Don't block fields beneath side column when not present
+        'pointer-events-none',
         className,
       )}
     >
@@ -52,6 +54,8 @@ export default function AppGrid({
         'col-span-1 md:col-span-9',
         CLASS_COLUMN_OFFSET,
         sideFirstOnMobile && 'order-2 md:order-none',
+        // Reenable pointer events
+        'pointer-events-auto',
         classNameMain,
       )}>
         {contentMain}
@@ -63,6 +67,8 @@ export default function AppGrid({
           CLASS_COLUMN_OFFSET,
           sideFirstOnMobile && 'order-1 md:order-none',
           sideHiddenOnMobile && 'max-md:hidden',
+          // Reenable pointer events
+          'pointer-events-auto',
           classNameSide,
         )}>
           {contentSide}

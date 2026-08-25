@@ -48,6 +48,7 @@ export const TEXT: I18N = {
     home: 'Início',
     full: 'Completo',
     grid: 'Grade',
+    viewOptions: 'Opções de visualização',
     about: 'Sobre',
     admin: 'Menu de administração',
     search: 'Pesquisar',

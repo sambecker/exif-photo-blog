@@ -61,6 +61,9 @@ export type AppStateContextType = {
   uploadState: UploadState
   setUploadState?: (uploadState: Partial<UploadState>) => void
   resetUploadState?: () => void
+  // VIEW
+  isPhotoSetFull?: boolean
+  setIsPhotoSetFull?: Dispatch<SetStateAction<boolean>>
   // DEBUG
   areAdminDebugToolsEnabled?: boolean
   isGridHighDensity?: boolean

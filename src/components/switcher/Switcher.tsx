@@ -1,22 +1,24 @@
 import { ReactNode } from 'react';
 import { clsx } from 'clsx/lite';
+import { CONTROL_OUTLINE_CLASSNAME } from '..';
 
 export default function Switcher({
   children,
   type = 'regular',
+  divide = true,
   className,
 }: {
   children: ReactNode
   type?: 'regular' | 'borderless'
+  divide?: boolean
   className?: string
 }) {
   return (
     <div className={clsx(
-      'flex divide-x overflow-hidden',
+      'flex overflow-hidden',
       'rounded-lg',
-      'divide-medium',
-      type === 'regular' &&
-        'outline-medium shadow-[0_2px_4px_rgba(0,0,0,0.07)]',
+      divide && 'divide-x divide-medium',
+      type === 'regular' && CONTROL_OUTLINE_CLASSNAME,
       className,
     )}>
       {children}

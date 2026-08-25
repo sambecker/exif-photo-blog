@@ -48,6 +48,7 @@ export const TEXT: I18N = {
     home: '首页',
     full: '完整',
     grid: '网格',
+    viewOptions: '视图选项',
     about: '关于',
     admin: '管理',
     search: '搜索',
