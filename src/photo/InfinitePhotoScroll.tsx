@@ -13,6 +13,7 @@ import useVisibility from '@/utility/useVisibility';
 import { SortBy } from './sort';
 import { SWR_KEYS } from '@/swr';
 import { useAppText } from '@/i18n/state/client';
+import { isTagPrivate } from '@/tag';
 
 // Future reader:
 // Adding useIsHydrated check caused <PhotoLarge /> images
@@ -81,6 +82,8 @@ export default function InfinitePhotoScroll({
       : `${SWR_KEYS.INFINITE_PHOTO_SCROLL}-${cacheKey}${SIZE_KEY_SEPARATOR}${size}`
     , [cacheKey]);
 
+  const isPrivateTag = isTagPrivate(tag);
+
   const fetcher = useCallback((
     keyWithSize: string,
     warmOnly?: boolean,
@@ -91,13 +94,15 @@ export default function InfinitePhotoScroll({
       sortWithPriority,
       excludeFromFeeds,
       limit: itemsPerPage,
-      hidden: includeHiddenPhotos ? 'include' : 'exclude',
+      hidden: isPrivateTag
+        ? 'only'
+        : includeHiddenPhotos ? 'include' : 'exclude',
       recent,
       year,
       camera,
       lens,
       album,
-      tag,
+      tag: isPrivateTag ? undefined : tag,
       recipe,
       film,
       focal,
@@ -110,6 +115,7 @@ export default function InfinitePhotoScroll({
     initialOffset,
     itemsPerPage,
     includeHiddenPhotos,
+    isPrivateTag,
     recent,
     year,
     camera,

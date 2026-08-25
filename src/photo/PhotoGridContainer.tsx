@@ -17,6 +17,8 @@ import {
   INFINITE_SCROLL_FULL_MULTIPLE,
 } from '.';
 
+// Shows either grid or full frame with infinite scroll
+
 export default function PhotoGridContainer({
   cacheKey,
   photos,
@@ -102,7 +104,8 @@ export default function PhotoGridContainer({
           )}
           {count > photos.length &&
             <PhotoGridInfinite {...{
-              cacheKey,
+              // Keep grid and full frame caches separate
+              cacheKey: `${cacheKey}-grid`,
               initialPhotos: MASONRY_GRID_ENABLED ? photos : undefined,
               initialOffset: photos.length,
               sortBy,
