@@ -43,9 +43,6 @@ export default function PhotoGridContainer({
 } & ComponentProps<typeof PhotoGrid>) {
   const { isPhotoSetFull } = useAppState();
 
-  const shouldRenderInitialGrid =
-    !MASONRY_GRID_ENABLED || count <= photos.length;
-
   const [
     shouldAnimateDynamicItems,
     setShouldAnimateDynamicItems,
@@ -60,41 +57,39 @@ export default function PhotoGridContainer({
       animateOnFirstLoadOnly
     />;
 
-  // Full frame is only offered on photo sets, which always render a header
-  if (header && isPhotoSetFull) {
-    // Server sends a grid-sized batch, so only show a full-sized slice
-    // and let infinite scroll take over from there
-    const photosFull = photos.slice(0, INFINITE_SCROLL_FULL_INITIAL);
-    return (
-      <div className={className}>
-        <AppGrid className="mt-1.5 mb-6" contentMain={renderHeader} />
-        <div className="space-y-1">
-          <PhotosLarge {...{ photos: photosFull, ...categories }} />
-          {count > photosFull.length &&
-            <PhotosLargeInfinite {...{
-              // Keep grid and full frame caches separate
-              cacheKey: `${cacheKey}-full`,
-              initialOffset: photosFull.length,
-              itemsPerPage: INFINITE_SCROLL_FULL_MULTIPLE,
-              sortBy,
-              sortWithPriority,
-              excludeFromFeeds,
-              ...categories,
-            }} />}
-        </div>
-      </div>
-    );
-  }
+  // Full frame only offered on photo sets, which always render a header
+  const photosFull = header && isPhotoSetFull
+    // Server sends grid-sized batch, so only show full-sized slice
+    // and let infinite scroll take over
+    ? photos.slice(0, INFINITE_SCROLL_FULL_INITIAL)
+    : undefined;
 
-  return (
-    <AppGrid
+  return photosFull
+    ? <div className={className}>
+      <AppGrid className="mt-1.5 mb-6" contentMain={renderHeader} />
+      <div className="space-y-1">
+        <PhotosLarge {...{ photos: photosFull, ...categories }} />
+        {count > photosFull.length &&
+          <PhotosLargeInfinite {...{
+            // Keep grid and full frame caches separate
+            cacheKey: `${cacheKey}-full`,
+            initialOffset: photosFull.length,
+            itemsPerPage: INFINITE_SCROLL_FULL_MULTIPLE,
+            sortBy,
+            sortWithPriority,
+            excludeFromFeeds,
+            ...categories,
+          }} />}
+      </div>
+    </div>
+    : <AppGrid
       contentMain={<div className={clsx(
         header && 'space-y-8 mt-1.5',
         className,
       )}>
         {renderHeader}
         <div className={GRID_SPACE_CLASSNAME}>
-          {shouldRenderInitialGrid && (
+          {(!MASONRY_GRID_ENABLED || count <= photos.length) && (
             <PhotoGrid {...{
               photos,
               ...categories,
@@ -118,6 +113,5 @@ export default function PhotoGridContainer({
         </div>
       </div>}
       contentSide={sidebar}
-    />
-  );
+    />;
 }
