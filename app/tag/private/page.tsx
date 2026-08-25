@@ -1,7 +1,7 @@
 import Note from '@/components/Note';
 import { INFINITE_SCROLL_GRID_INITIAL } from '@/photo';
 import { getPhotosMetaCached, getPhotosNoStore } from '@/photo/cache';
-import PhotoGridContainer from '@/photo/PhotoGridContainer';
+import PhotoGridHybridContainer from '@/photo/PhotoGridHybridContainer';
 import { absolutePathForTag } from '@/app/path';
 import { TAG_PRIVATE, descriptionForTaggedPhotos, titleForTag } from '@/tag';
 import PrivateHeader from '@/tag/PrivateHeader';
@@ -55,7 +55,7 @@ export default async function PrivateTagPage() {
   ]);
 
   return (
-    <PhotoGridContainer
+    <PhotoGridHybridContainer
       cacheKey={`tag-${TAG_PRIVATE}`}
       photos={photos}
       count={count}

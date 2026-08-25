@@ -1,6 +1,6 @@
 import { Photo, PhotoDateRangePostgres } from '@/photo';
 import RecentsHeader from './RecentsHeader';
-import PhotoGridContainer from '@/photo/PhotoGridContainer';
+import PhotoGridHybridContainer from '@/photo/PhotoGridHybridContainer';
 
 export default function RecentsOverview({
   photos,
@@ -14,7 +14,7 @@ export default function RecentsOverview({
   animateOnFirstLoadOnly?: boolean,
 }) {
   return (
-    <PhotoGridContainer {...{
+    <PhotoGridHybridContainer {...{
       cacheKey: 'recents', 
       photos,
       count,

@@ -1,5 +1,5 @@
 import { Photo, PhotoDateRangePostgres } from '@/photo';
-import PhotoGridContainer from '@/photo/PhotoGridContainer';
+import PhotoGridHybridContainer from '@/photo/PhotoGridHybridContainer';
 import { Album } from '.';
 import AlbumHeader from './AlbumHeader';
 
@@ -19,7 +19,7 @@ export default function AlbumOverview({
   animateOnFirstLoadOnly?: boolean,
 }) {
   return (
-    <PhotoGridContainer {...{
+    <PhotoGridHybridContainer {...{
       cacheKey: `album-${album.slug}`,
       photos,
       count,

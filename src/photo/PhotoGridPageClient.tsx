@@ -3,7 +3,7 @@
 import { Photo } from '.';
 import { PATH_GRID_INFERRED } from '@/app/path';
 import PhotoGridSidebar from './PhotoGridSidebar';
-import PhotoGridContainer from './PhotoGridContainer';
+import PhotoGridHybridContainer from './PhotoGridHybridContainer';
 import { ComponentProps, useMemo, useRef } from 'react';
 import clsx from 'clsx/lite';
 import MaskedScroll from '@/components/MaskedScroll';
@@ -56,7 +56,7 @@ export default function PhotoGridPageClient({
               />
             </div>,
           ]} />}
-      <PhotoGridContainer
+      <PhotoGridHybridContainer
         cacheKey={`page-${PATH_GRID_INFERRED}`}
         photos={photos}
         count={photosCount}

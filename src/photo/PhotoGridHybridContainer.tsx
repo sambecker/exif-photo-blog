@@ -19,7 +19,7 @@ import {
 
 // Shows either grid or full frame with infinite scroll
 
-export default function PhotoGridContainer({
+export default function PhotoGridHybridContainer({
   cacheKey,
   photos,
   count,

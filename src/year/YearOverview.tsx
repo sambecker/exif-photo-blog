@@ -1,6 +1,6 @@
 import { Photo, PhotoDateRangePostgres } from '@/photo';
 import YearHeader from './YearHeader';
-import PhotoGridContainer from '@/photo/PhotoGridContainer';
+import PhotoGridHybridContainer from '@/photo/PhotoGridHybridContainer';
 
 export default function YearOverview({
   year,
@@ -16,7 +16,7 @@ export default function YearOverview({
   animateOnFirstLoadOnly?: boolean,
 }) {
   return (
-    <PhotoGridContainer {...{
+    <PhotoGridHybridContainer {...{
       cacheKey: `year-${year}`, 
       photos,
       count,
