@@ -13,7 +13,10 @@ import useVisibility from '@/utility/useVisibility';
 import { SortBy } from './sort';
 import { SWR_KEYS } from '@/swr';
 import { useAppText } from '@/i18n/state/client';
-// import useIsHydrated from '@/utility/useIsHydrated';
+
+// Future reader:
+// Adding useIsHydrated check caused <PhotoLarge /> images
+// to flicker on home feed
 
 const SIZE_KEY_SEPARATOR = '__';
 const getSizeFromKey = (key: string) =>
@@ -134,13 +137,6 @@ export default function InfinitePhotoScroll({
 
   const isLoadingOrValidating = isLoading || isValidating;
 
-  // SWR's loading state can differ between the server-rendered pass and the
-  // client's first hydration pass, causing a hydration mismatch on the
-  // "load more" button below. useSyncExternalStore lets the server and
-  // client intentionally diverge here without triggering that mismatch.
-  const isHydrated = true;
-  const isLoadingOrValidatingForDisplay = isHydrated && isLoadingOrValidating;
-
   const isFinished = useMemo(() =>
     data && data[data.length - 1]?.length < itemsPerPage
   , [data, itemsPerPage]);
@@ -169,15 +165,15 @@ export default function InfinitePhotoScroll({
       <button
         type="button"
         onClick={() => error ? mutate() : advance()}
-        disabled={isLoadingOrValidatingForDisplay}
+        disabled={isLoadingOrValidating}
         className={clsx(
           'w-full flex justify-center',
-          isLoadingOrValidatingForDisplay && 'subtle',
+          isLoadingOrValidating && 'subtle',
         )}
       >
         {error
           ? utility.tryAgain
-          : isLoadingOrValidatingForDisplay
+          : isLoadingOrValidating
             ? <Spinner size={20} />
             : utility.loadMore}
       </button>
