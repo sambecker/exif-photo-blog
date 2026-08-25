@@ -56,7 +56,6 @@ export default function EditTitlesProvider({
 
     // Photo-set "Full" is local view state (URL stays on the set)
     if (isPathPhotoSet(pathname)) {
-      setIsPhotoSetFull?.(true);
       replacePathWithEvent(`${pathname}?${PARAM_EDIT_TITLES}=true`);
       return;
     }
@@ -84,7 +83,7 @@ export default function EditTitlesProvider({
     }
 
     router.push(`${PATH_FULL_INFERRED}?${PARAM_EDIT_TITLES}=true`);
-  }, [appText, pathname, router, setIsPhotoSetFull]);
+  }, [appText, pathname, router]);
 
   const stopEditingTitles = useCallback(() =>
     replacePathWithEvent(pathname)
@@ -138,6 +137,13 @@ export default function EditTitlesProvider({
   const modifiedPhotoCount = useMemo(() =>
     Object.keys(photoEdits).length
   , [photoEdits]);
+
+  // Restore "Full" when arriving directly, e.g., page reload
+  useEffect(() => {
+    if (isEditingTitles && isPathPhotoSet(pathname)) {
+      setIsPhotoSetFull?.(true);
+    }
+  }, [isEditingTitles, pathname, setIsPhotoSetFull]);
 
   useEffect(() => {
     if (!isEditingTitles) {
