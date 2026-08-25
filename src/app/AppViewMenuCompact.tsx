@@ -107,6 +107,7 @@ export default function AppViewMenuCompact({
     <Tooltip
       classNameTrigger={className}
       delayDuration={500}
+      triggerIsFocusable
       {...!isOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
         content: appText.nav.viewOptions,
       }}

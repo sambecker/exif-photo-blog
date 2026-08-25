@@ -51,6 +51,7 @@ export default function SwitcherItem({
   const className = clsx(
     'flex items-center justify-center',
     `${widthClass} ${HEIGHT_CLASS}`,
+    'border-none shadow-none',
     isInteractive && 'cursor-pointer',
     isInteractive && 'hover:bg-gray-100/60 active:bg-gray-100',
     isInteractive && 'dark:hover:bg-gray-900/75 dark:active:bg-gray-900',
