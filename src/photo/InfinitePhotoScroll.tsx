@@ -1,13 +1,7 @@
 'use client';
 
 import useSwrInfinite from 'swr/infinite';
-import {
-  ReactNode,
-  useCallback,
-  useMemo,
-  useRef,
-  useSyncExternalStore,
-} from 'react';
+import { ReactNode, useCallback, useMemo, useRef } from 'react';
 import AppGrid from '@/components/AppGrid';
 import Spinner from '@/components/Spinner';
 import { getPhotosCachedAction, getPhotosAction } from '@/photo/actions';
@@ -19,16 +13,11 @@ import useVisibility from '@/utility/useVisibility';
 import { SortBy } from './sort';
 import { SWR_KEYS } from '@/swr';
 import { useAppText } from '@/i18n/state/client';
+import useIsHydrated from '@/utility/useIsHydrated';
 
 const SIZE_KEY_SEPARATOR = '__';
 const getSizeFromKey = (key: string) =>
   parseInt(key.split(SIZE_KEY_SEPARATOR)[1]);
-
-// Used to defer client-only rendering until after mount without a
-// setState-in-effect cascading render (see useSyncExternalStore usage below)
-const subscribeNoop = () => () => {};
-const getSnapshotClient = () => true;
-const getSnapshotServer = () => false;
 
 export type RevalidatePhoto = (
   photoId: string,
@@ -149,12 +138,8 @@ export default function InfinitePhotoScroll({
   // client's first hydration pass, causing a hydration mismatch on the
   // "load more" button below. useSyncExternalStore lets the server and
   // client intentionally diverge here without triggering that mismatch.
-  const hasMounted = useSyncExternalStore(
-    subscribeNoop,
-    getSnapshotClient,
-    getSnapshotServer,
-  );
-  const isLoadingOrValidatingForDisplay = hasMounted && isLoadingOrValidating;
+  const isHydrated = useIsHydrated();
+  const isLoadingOrValidatingForDisplay = isHydrated && isLoadingOrValidating;
 
   const isFinished = useMemo(() =>
     data && data[data.length - 1]?.length < itemsPerPage
