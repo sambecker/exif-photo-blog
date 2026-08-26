@@ -31,7 +31,10 @@ export default function SocialButton({
   const appText = useAppText();
 
   return (
-    <Tooltip content={tooltipForSocial(socialKey, appText)}>
+    <Tooltip
+      content={tooltipForSocial(socialKey, appText)}
+      triggerIsFocusable
+    >
       <Link
         className={clsx('button', className)}
         href={urlForSocial(socialKey, path, text)}

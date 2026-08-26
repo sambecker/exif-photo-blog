@@ -215,6 +215,7 @@ export default function AppToolbar({
                 }
               }}
             />}
+            iconIsFocusable
             tooltip={{
               ...!isAdminMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
                 content: appText.nav.admin,

@@ -20,7 +20,7 @@ export default function PhotoRecipeOverlayButton({
   const appText = useAppText();
 
   return (
-    <Tooltip content={appText.tooltip.recipeInfo}>
+    <Tooltip content={appText.tooltip.recipeInfo} triggerIsFocusable>
       <button
         ref={ref}
         type="button"

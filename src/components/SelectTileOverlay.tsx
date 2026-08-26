@@ -21,8 +21,13 @@ export default function SelectTileOverlay({
       isPerformingSelectEdit && 'pointer-events-none',
     )}>
       {/* Admin Select Border */}
-      <div
-        className="w-full h-full"
+      <button
+        type="button"
+        aria-label={isSelected ? 'Deselect photo' : 'Select photo'}
+        className={clsx(
+          'w-full h-full',
+          'border-none shadow-none p-0 rounded-none bg-transparent',
+        )}
         onClick={onSelectChange}
       >
         <div
@@ -34,7 +39,7 @@ export default function SelectTileOverlay({
             isSelected && 'border-4',
           )}
         />
-      </div>
+      </button>
       {/* Admin Select Action */}
       <div className="absolute top-0 right-0 p-2">
         {isPerformingSelectEdit

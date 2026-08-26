@@ -103,6 +103,7 @@ export default function AppViewMenu({
             isOpen={isSortMenuOpen}
             setIsOpen={setIsSortMenuOpen}
           />}
+          iconIsFocusable
           tooltip={{
             ...!isSortMenuOpen && SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
               content: appText.sort.sort,

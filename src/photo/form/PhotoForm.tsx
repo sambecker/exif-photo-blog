@@ -400,7 +400,7 @@ export default function PhotoForm({
   const thumbnail = (includeRef?: boolean, className?: string) =>
     <ImageWithFallback
       ref={includeRef ? ref : undefined}
-      alt="Upload"
+      alt={formData.title || 'Photo thumbnail'}
       src={url}
       className={clsx(
         'border rounded-md overflow-hidden',

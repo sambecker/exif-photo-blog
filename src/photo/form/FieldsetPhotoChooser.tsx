@@ -83,12 +83,15 @@ export default function FieldsetPhotoChooser({
   }, [isOpen, reset]);
 
   const renderPhotoButton = (photo: Photo) =>
-    <span
+    <button
+      type="button"
       key={photo.id}
+      aria-label={altTextForPhoto(photo)}
       className={clsx(
         'flex w-full aspect-square object-cover',
         'overflow-hidden select-none active:opacity-75',
         'cursor-pointer',
+        'border-none shadow-none p-0 rounded-none bg-transparent',
       )}
       onClick={() => {
         setPhoto(photo);
@@ -97,7 +100,7 @@ export default function FieldsetPhotoChooser({
       }}
     >
       {renderPhoto(photo)}
-    </span>;
+    </button>;
 
   const photosToShow = showQuery && query
     ? photosQuery

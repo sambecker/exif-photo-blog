@@ -11,6 +11,7 @@ export default function ErrorNote({
 }) {
   return (
     <Note
+      role="alert"
       color="red"
       padding="tight"
       className={className}

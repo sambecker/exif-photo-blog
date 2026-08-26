@@ -36,6 +36,13 @@ export default function SelectMenuOption<T = string>({
   }, [isHighlighted]);
 
   return (
+  // Keyboard navigation (arrow keys + Enter) is handled by the parent
+  // SelectMenu's combobox keydown listener, which keeps focus on the
+  // combobox trigger rather than these options (standard ARIA combobox
+  // pattern) — this onClick is for pointer users only
+    /* eslint-disable-next-line
+      jsx-a11y/click-events-have-key-events,
+      jsx-a11y/interactive-supports-focus */
     <div
       ref={ref}
       onClick={onClick}

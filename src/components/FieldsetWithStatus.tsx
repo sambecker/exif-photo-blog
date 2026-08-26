@@ -98,6 +98,8 @@ export default function FieldsetWithStatus({
 
   const readOnly = readOnlyProp || pending || loading;
 
+  const errorId = error ? `${id}-error` : undefined;
+
   const inputProps: InputHTMLAttributes<HTMLInputElement> = {
     id,
     name: id,
@@ -117,6 +119,10 @@ export default function FieldsetWithStatus({
     disabled: type === 'checkbox' && (
       readOnly || pending || loading
     ),
+    required,
+    'aria-required': required,
+    'aria-invalid': Boolean(error),
+    'aria-describedby': errorId,
     className: clsx(
       (
         type === 'text' ||
@@ -184,7 +190,7 @@ export default function FieldsetWithStatus({
                 *
               </span>}
             {error &&
-              <span className="text-error">
+              <span id={errorId} className="text-error">
                 {error}
               </span>}
             {required &&
@@ -240,6 +246,10 @@ export default function FieldsetWithStatus({
                   readOnly={readOnly}
                   spellCheck={spellCheck}
                   autoCapitalize={!capitalize ? 'off' : undefined}
+                  required={required}
+                  aria-required={required}
+                  aria-invalid={Boolean(error)}
+                  aria-describedby={errorId}
                   className={clsx(
                     'w-full h-24 resize-none',
                     Boolean(error) && 'error',

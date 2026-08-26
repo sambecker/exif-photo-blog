@@ -18,6 +18,7 @@ export default function TooltipPrimitive({
   keyCommand,
   keyCommandModifier,
   supportMobile,
+  triggerIsFocusable,
   animateLarge,
   disableHoverableContent,
   delayDuration = 100,
@@ -35,6 +36,13 @@ export default function TooltipPrimitive({
   keyCommand?: string
   keyCommandModifier?: ComponentProps<typeof KeyCommand>['modifier']
   supportMobile?: boolean
+  // Set when `children` already contains its own focusable, keyboard-
+  // operable element (e.g. a real button or link) so the trigger wrapper
+  // doesn't need to be focusable itself — and shouldn't become one, since
+  // nesting interactive elements is invalid. Leave unset (the default) for
+  // non-interactive content (icons, swatches, plain text) so the trigger
+  // wrapper renders as a real button and stays reachable via keyboard.
+  triggerIsFocusable?: boolean
   animateLarge?: boolean
   disableHoverableContent?: boolean
   // Tooltip.Provider
@@ -84,12 +92,12 @@ export default function TooltipPrimitive({
         disableHoverableContent={disableHoverableContent}
       >
         <Tooltip.Trigger asChild>
-          {includeButton
+          {!triggerIsFocusable
             ? <button
               ref={refTrigger}
               type="button"
               onClick={() => {
-                setIsOpen(!isOpen);
+                if (includeButton) { setIsOpen(!isOpen); }
                 // Blur after clicking to prevent keyboard focus being stuck
                 // when tooltip is combined with a button
                 clearGlobalFocus();
@@ -98,6 +106,14 @@ export default function TooltipPrimitive({
             >
               {children}
             </button>
+            // `children` already contains its own focusable element
+            // (asserted by the caller via `triggerIsFocusable`), so this
+            // span is a non-interactive pass-through — onClick here only
+            // clears focus as a side effect once the real element inside
+            // has been activated
+            /* eslint-disable-next-line
+              jsx-a11y/no-static-element-interactions,
+              jsx-a11y/click-events-have-key-events */
             : <span
               className={classNameTrigger}
               onClick={clearGlobalFocus}

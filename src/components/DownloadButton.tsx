@@ -20,6 +20,7 @@ export default function DownloadButton({
   return (
     <LoaderButton
       tooltip={appText.tooltip.download}
+      aria-label={appText.tooltip.download}
       className={clsx(
         className,
         'text-medium',
