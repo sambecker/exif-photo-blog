@@ -139,7 +139,7 @@ export default function SharedHoverProvider({
               >
                 <div
                   className={clsx(
-                    'relative rounded-[0.25rem] overflow-clip',
+                    'relative rounded-[9px] overflow-clip',
                     hoverProps.color !== 'frosted' && 'bg-extra-dim',
                   )}
                   style={{
