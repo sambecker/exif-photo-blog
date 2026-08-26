@@ -161,6 +161,30 @@ export const TEXT: I18N = {
     reupload: 'Volver a subir',
     delete: 'Eliminar',
     deleteConfirm: '¿Estás seguro de que quieres eliminar "{{photoTitle}}"?',
+    setVisibility: 'Visibilidad',
+    setVisibilityPlaceholder: 'Establecer visibilidad para {{quantity}} ...',
+    // eslint-disable-next-line max-len
+    setVisibilityConfirm: '¿Estás seguro de que quieres establecer la visibilidad en "{{visibility}}" para {{quantity}}?',
+    setVisibilitySuccess: 'Visibilidad actualizada para {{quantity}}',
+    selectPhotosBelow: 'Selecciona fotos abajo',
+    selectPhotosBelowShort: 'Seleccionar',
+    selecting: 'Seleccionando ...',
+    selectingShort: 'Seleccionando',
+    allSelected: '{{count}} fotos seleccionadas',
+    allSelectedShort: '{{count}} fotos',
+    photosSelected: '{{quantity}} seleccionadas',
+    selectAll: 'Seleccionar todo',
+    apply: 'Aplicar',
+    tagPlaceholder: 'Etiquetar {{quantity}} ...',
+    // eslint-disable-next-line max-len
+    tagConfirm: '¿Estás seguro de que quieres aplicar etiquetas a {{quantity}}? Esta acción no se puede deshacer.',
+    tagSuccess: '{{quantity}} etiquetadas {{tags}}',
+    // eslint-disable-next-line max-len
+    albumConfirm: '¿Estás seguro de que quieres añadir {{quantity}} a estos álbumes? Esta acción no se puede deshacer.',
+    albumSuccess: '{{quantity}} añadidas a {{albums}}',
+    // eslint-disable-next-line max-len
+    favoriteConfirm: '¿Estás seguro de que quieres marcar como favoritas {{quantity}}?',
+    favoriteSuccess: '{{quantity}} marcadas como favoritas',
   },
   onboarding: {
     setupComplete: '¡Configuración completa!',

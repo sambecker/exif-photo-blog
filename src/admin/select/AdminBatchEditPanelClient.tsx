@@ -22,6 +22,8 @@ import FieldsetAlbum from '@/album/FieldsetAlbum';
 import IconAlbum from '@/components/icons/IconAlbum';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import { convertStringToArray } from '@/utility/string';
+import { VISIBILITY_OPTIONS, VisibilityValue } from '@/photo/visibility';
+import IconHidden from '@/components/icons/IconHidden';
 
 export default function AdminBatchEditPanelClient({
   uniqueAlbums,
@@ -50,12 +52,19 @@ export default function AdminBatchEditPanelClient({
     setTags,
     tagErrorMessage,
     setTagErrorMessage,
+    visibility,
+    setVisibility,
   } = useSelectPhotosState();
 
   const appText = useAppText();
 
   const isInAlbumMode = albumTitles !== undefined;
   const isInTagMode = tags !== undefined;
+  const isInVisibilityMode = visibility !== undefined;
+
+  const visibilityLabel = VISIBILITY_OPTIONS
+    .find(({ value }) => value === visibility)
+    ?.label.toLowerCase();
 
   const batchPhotoActionArguments = (
     isSelectingAllPhotos &&
@@ -81,24 +90,29 @@ export default function AdminBatchEditPanelClient({
 
   const renderPhotoSelectionStatus = isSelectingAllPhotos
     ? selectAllCount === undefined
-      ? <ResponsiveText shortText="Selecting" className="text-dim">
-        Selecting ...
+      ? <ResponsiveText
+        shortText={appText.admin.selectingShort}
+        className="text-dim"
+      >
+        {appText.admin.selecting}
       </ResponsiveText>
-      : <ResponsiveText shortText={`${selectAllCount} photos`}>
-        {`${selectAllCount} photos selected`}
+      : <ResponsiveText
+        shortText={appText.admin.allSelectedShort(`${selectAllCount}`)}
+      >
+        {appText.admin.allSelected(`${selectAllCount}`)}
       </ResponsiveText>
     : selectedPhotoIds?.length === 0
       ? <>
         <FaArrowDown />
-        <ResponsiveText shortText="Select">
-          Select photos below
+        <ResponsiveText shortText={appText.admin.selectPhotosBelowShort}>
+          {appText.admin.selectPhotosBelow}
         </ResponsiveText>
       </>
       : <ResponsiveText shortText={photosText}>
-        {photosText} selected
+        {appText.admin.photosSelected(photosText)}
       </ResponsiveText>;
 
-  const renderActions = isInTagMode || isInAlbumMode
+  const renderActions = isInTagMode || isInAlbumMode || isInVisibilityMode
     ? <>
       <LoaderButton
         className="min-h-[2.5rem]"
@@ -110,6 +124,7 @@ export default function AdminBatchEditPanelClient({
           setAlbumTitles?.(undefined);
           setTags?.(undefined);
           setTagErrorMessage?.('');
+          setVisibility?.(undefined);
         }}
         disabled={isPerformingSelectEdit}
       />
@@ -117,10 +132,13 @@ export default function AdminBatchEditPanelClient({
         className="min-h-[2.5rem]"
         icon={<FaCheck size={15} />}
         confirmText={isInTagMode
-          // eslint-disable-next-line max-len
-          ? `Are you sure you want to apply tags to ${photosText}? This action cannot be undone.`
-          // eslint-disable-next-line max-len
-          : `Are you sure you want to add ${photosText} to these albums? This action cannot be undone.`}
+          ? appText.admin.tagConfirm(photosText)
+          : isInAlbumMode
+            ? appText.admin.albumConfirm(photosText)
+            : appText.admin.setVisibilityConfirm(
+              visibilityLabel ?? '',
+              photosText,
+            )}
         onClick={() => {
           setIsPerformingSelectEdit?.(true);
           if (isInTagMode) {
@@ -133,7 +151,9 @@ export default function AdminBatchEditPanelClient({
               tags: tagsArray,
             })
               .then(() => {
-                toastSuccess(`${photosText} tagged ${tagsFormatted}`);
+                toastSuccess(
+                  appText.admin.tagSuccess(photosText, tagsFormatted),
+                );
                 stopSelectingPhotos?.();
               })
               .finally(() => setIsPerformingSelectEdit?.(false));
@@ -148,8 +168,21 @@ export default function AdminBatchEditPanelClient({
             })
               .then(() => {
                 toastSuccess(
-                  `${photosText} added to ${albumTitlesFormatted}`,
+                  appText.admin.albumSuccess(
+                    photosText,
+                    albumTitlesFormatted,
+                  ),
                 );
+                stopSelectingPhotos?.();
+              })
+              .finally(() => setIsPerformingSelectEdit?.(false));
+          } else if (isInVisibilityMode && visibility) {
+            batchPhotoAction({
+              ...batchPhotoActionArguments,
+              visibility,
+            })
+              .then(() => {
+                toastSuccess(appText.admin.setVisibilitySuccess(photosText));
                 stopSelectingPhotos?.();
               })
               .finally(() => setIsPerformingSelectEdit?.(false));
@@ -158,13 +191,14 @@ export default function AdminBatchEditPanelClient({
         disabled={
           (
             (!tags || Boolean(tagErrorMessage)) &&
-            !albumTitles
+            !albumTitles &&
+            !visibility
           ) ||
           isFormDisabled
         }
         primary
       >
-        Apply
+        {appText.admin.apply}
       </LoaderButton>
     </>
     : <>
@@ -181,7 +215,7 @@ export default function AdminBatchEditPanelClient({
       <LoaderButton
         icon={<IconFavs />}
         disabled={isFormDisabled}
-        confirmText={`Are you sure you want to favorite ${photosText}?`}
+        confirmText={appText.admin.favoriteConfirm(photosText)}
         onClick={() => {
           setIsPerformingSelectEdit?.(true);
           batchPhotoAction({
@@ -189,7 +223,7 @@ export default function AdminBatchEditPanelClient({
             action: 'favorite',
           })
             .then(() => {
-              toastSuccess(`${photosText} favorited`);
+              toastSuccess(appText.admin.favoriteSuccess(photosText));
               stopSelectingPhotos?.();
             })
             .finally(() => setIsPerformingSelectEdit?.(false));
@@ -200,14 +234,21 @@ export default function AdminBatchEditPanelClient({
         disabled={isFormDisabled}
         icon={<IconAlbum size={15} className="translate-y-[1.5px]" />}
       >
-        Album
+        {appText.category.album}
       </LoaderButton>
       <LoaderButton
         onClick={() => setTags?.('')}
         disabled={isFormDisabled}
         icon={<IconTag size={15} className="translate-y-[1.5px]" />}
       >
-        Tag
+        {appText.category.tag}
+      </LoaderButton>
+      <LoaderButton
+        onClick={() => setVisibility?.('')}
+        disabled={isFormDisabled}
+        icon={<IconHidden size={15} className="translate-y-[1.5px]" />}
+      >
+        {appText.admin.setVisibility}
       </LoaderButton>
       <LoaderButton
         icon={<IoCloseSharp size={19} />}
@@ -260,23 +301,36 @@ export default function AdminBatchEditPanelClient({
                 ? <FieldsetTag
                   tags={tags}
                   tagOptions={uniqueTags}
-                  placeholder={`Tag ${photosText} ...`}
+                  placeholder={appText.admin.tagPlaceholder(photosText)}
                   onChange={tags => setTags?.(tags)}
                   onError={setTagErrorMessage}
                   readOnly={isPerformingSelectEdit}
                   openOnLoad
                   hideLabel
                 />
-                : <div className="grow">
-                  <div className="flex items-center gap-2">
-                    {renderPhotoSelectionStatus}
-                  </div>
-                </div>}
+                : isInVisibilityMode
+                  ? <FieldsetWithStatus
+                    label={appText.admin.setVisibility}
+                    selectOptions={VISIBILITY_OPTIONS}
+                    selectOptionsDefaultLabel={
+                      appText.admin.setVisibilityPlaceholder(photosText)
+                    }
+                    value={visibility ?? ''}
+                    onChange={value =>
+                      setVisibility?.(value as VisibilityValue)}
+                    readOnly={isPerformingSelectEdit}
+                    hideLabel
+                  />
+                  : <div className="grow">
+                    <div className="flex items-center gap-2">
+                      {renderPhotoSelectionStatus}
+                    </div>
+                  </div>}
             {renderActions}
           </div>
           {shouldShowSelectAll &&
             <FieldsetWithStatus
-              label="Select All"
+              label={appText.admin.selectAll}
               type="checkbox"
               className="-z-10"
               value={isSelectingAllPhotos ? 'true' : 'false'}

@@ -37,6 +37,38 @@ export const generateAppTextState = (i18n: I18N) => {
       ...i18n.admin,
       deleteConfirm: (photoTitle: string) =>
         i18n.admin.deleteConfirm.replace('{{photoTitle}}', photoTitle),
+      setVisibilityPlaceholder: (quantity: string) =>
+        i18n.admin.setVisibilityPlaceholder.replace('{{quantity}}', quantity),
+      setVisibilityConfirm: (visibility: string, quantity: string) =>
+        i18n.admin.setVisibilityConfirm
+          .replace('{{visibility}}', visibility)
+          .replace('{{quantity}}', quantity),
+      setVisibilitySuccess: (quantity: string) =>
+        i18n.admin.setVisibilitySuccess.replace('{{quantity}}', quantity),
+      allSelected: (count: string) =>
+        i18n.admin.allSelected.replace('{{count}}', count),
+      allSelectedShort: (count: string) =>
+        i18n.admin.allSelectedShort.replace('{{count}}', count),
+      photosSelected: (quantity: string) =>
+        i18n.admin.photosSelected.replace('{{quantity}}', quantity),
+      tagPlaceholder: (quantity: string) =>
+        i18n.admin.tagPlaceholder.replace('{{quantity}}', quantity),
+      tagConfirm: (quantity: string) =>
+        i18n.admin.tagConfirm.replace('{{quantity}}', quantity),
+      tagSuccess: (quantity: string, tags: string) =>
+        i18n.admin.tagSuccess
+          .replace('{{quantity}}', quantity)
+          .replace('{{tags}}', tags),
+      albumConfirm: (quantity: string) =>
+        i18n.admin.albumConfirm.replace('{{quantity}}', quantity),
+      albumSuccess: (quantity: string, albums: string) =>
+        i18n.admin.albumSuccess
+          .replace('{{quantity}}', quantity)
+          .replace('{{albums}}', albums),
+      favoriteConfirm: (quantity: string) =>
+        i18n.admin.favoriteConfirm.replace('{{quantity}}', quantity),
+      favoriteSuccess: (quantity: string) =>
+        i18n.admin.favoriteSuccess.replace('{{quantity}}', quantity),
     },
     utility: {
       ...i18n.utility,

@@ -162,6 +162,30 @@ export const TEXT: I18N = {
     delete: 'हटाएं',
     // eslint-disable-next-line max-len
     deleteConfirm: 'क्या आप सुनिश्चित हैं कि "{{photoTitle}}" को हटाना चाहते हैं?',
+    setVisibility: 'दृश्यता',
+    setVisibilityPlaceholder: '{{quantity}} के लिए दृश्यता सेट करें ...',
+    // eslint-disable-next-line max-len
+    setVisibilityConfirm: 'क्या आप सुनिश्चित हैं कि आप {{quantity}} के लिए दृश्यता "{{visibility}}" पर सेट करना चाहते हैं?',
+    setVisibilitySuccess: '{{quantity}} के लिए दृश्यता अपडेट की गई',
+    selectPhotosBelow: 'नीचे तस्वीरें चुनें',
+    selectPhotosBelowShort: 'चुनें',
+    selecting: 'चयन हो रहा है ...',
+    selectingShort: 'चयन हो रहा है',
+    allSelected: '{{count}} तस्वीरें चयनित',
+    allSelectedShort: '{{count}} तस्वीरें',
+    photosSelected: '{{quantity}} चयनित',
+    selectAll: 'सभी चुनें',
+    apply: 'लागू करें',
+    tagPlaceholder: '{{quantity}} को टैग करें ...',
+    // eslint-disable-next-line max-len
+    tagConfirm: 'क्या आप सुनिश्चित हैं कि आप {{quantity}} पर टैग लागू करना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।',
+    tagSuccess: '{{quantity}} को {{tags}} टैग किया गया',
+    // eslint-disable-next-line max-len
+    albumConfirm: 'क्या आप सुनिश्चित हैं कि आप {{quantity}} को इन एल्बम में जोड़ना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।',
+    albumSuccess: '{{quantity}} को {{albums}} में जोड़ा गया',
+    // eslint-disable-next-line max-len
+    favoriteConfirm: 'क्या आप सुनिश्चित हैं कि आप {{quantity}} को पसंदीदा बनाना चाहते हैं?',
+    favoriteSuccess: '{{quantity}} को पसंदीदा बनाया गया',
   },
   onboarding: {
     setupComplete: 'सेटअप पूरा हुआ!',
