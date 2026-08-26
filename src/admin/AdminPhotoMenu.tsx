@@ -43,8 +43,7 @@ import { PRESERVE_ORIGINAL_UPLOADS } from '@/app/config';
 import IconWarning from '@/components/icons/IconWarning';
 import {
   getVisibilityFromPhoto,
-  VISIBILITY_LABEL,
-  VISIBILITY_OPTIONS,
+  getVisibilityOptions,
   VisibilityValue,
 } from '@/photo/visibility';
 
@@ -126,12 +125,13 @@ export default function AdminPhotoMenu({
       hrefDownloadName: downloadFileNameForPhoto(photo),
       ...showKeyCommands && { keyCommand: KEY_COMMANDS.download },
     });
+    const visibilityOptions = getVisibilityOptions(appText);
     items.push({
-      label: VISIBILITY_LABEL,
-      icon: VISIBILITY_OPTIONS
+      label: appText.admin.setVisibility,
+      icon: visibilityOptions
         .find(({ value }) => value === visibility)
         ?.accessoryStart,
-      items: VISIBILITY_OPTIONS.map(({ value, label, accessoryStart }) => ({
+      items: visibilityOptions.map(({ value, label, accessoryStart }) => ({
         label,
         icon: accessoryStart,
         ...value === visibility && {

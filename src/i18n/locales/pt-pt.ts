@@ -166,12 +166,16 @@ export const TEXT: I18N = {
     // eslint-disable-next-line max-len
     setVisibilityConfirm: 'Tens certeza de que queres definir a visibilidade para "{{visibility}}" para {{quantity}}?',
     setVisibilitySuccess: 'Visibilidade atualizada para {{quantity}}',
+    visibilityDefault: 'Predefinida',
+    visibilityDefaultNote: 'Visíveis em todo o lado',
+    visibilityExclude: 'Ocultar dos feeds',
+    visibilityExcludeNote: 'Excluídas da página inicial, rss.xml, etc.',
+    visibilityPrivate: 'Privada',
+    visibilityPrivateNote: 'Visíveis apenas para administradores',
     selectPhotosBelow: 'Seleciona as fotografias abaixo',
     selectPhotosBelowShort: 'Selecionar',
     selecting: 'A selecionar ...',
     selectingShort: 'A selecionar',
-    allSelected: '{{count}} fotografias selecionadas',
-    allSelectedShort: '{{count}} fotografias',
     photosSelected: '{{quantity}} selecionadas',
     selectAll: 'Selecionar tudo',
     apply: 'Aplicar',
@@ -185,6 +189,7 @@ export const TEXT: I18N = {
     // eslint-disable-next-line max-len
     favoriteConfirm: 'Tens certeza de que queres marcar como favoritas {{quantity}}?',
     favoriteSuccess: '{{quantity}} marcadas como favoritas',
+    batchActionFailure: 'Algo correu mal ao atualizar {{quantity}}',
   },
   onboarding: {
     setupComplete: 'Configuração concluída!',

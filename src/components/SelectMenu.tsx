@@ -19,6 +19,7 @@ export default function SelectMenu({
   tabIndex = 0,
   error,
   readOnly,
+  openOnLoad,
   children,
 }: {
   id?: string
@@ -31,11 +32,13 @@ export default function SelectMenu({
   tabIndex?: number
   error?: string
   readOnly?: boolean
+  openOnLoad?: boolean
   children?: ReactNode
 }) {
   const ARIA_ID_SELECT_OPTIONS = `select-options-${name}`;
 
   const ref = useRef<HTMLDivElement>(null);
+  const refCombobox = useRef<HTMLDivElement>(null);
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState<number>();
@@ -54,6 +57,15 @@ export default function SelectMenu({
       setIsOpen(false);
     }
   }, [readOnly]);
+
+  useEffect(() => {
+    if (openOnLoad) {
+      const timeout = setTimeout(() => {
+        refCombobox.current?.focus();
+      }, 100);
+      return () => clearTimeout(timeout);
+    }
+  }, [openOnLoad]);
 
   // Setup keyboard listener
   useEffect(() => {
@@ -140,6 +152,7 @@ export default function SelectMenu({
   return (
     <div ref={ref} className={className}>
       <div
+        ref={refCombobox}
         id={id}
         tabIndex={tabIndex}
         className={clsx(
@@ -167,9 +180,9 @@ export default function SelectMenu({
         {children ?? <div className="flex items-center w-full">
           <div className="grow min-w-0">
             <SelectMenuOption
-              className="text-lg"
+              className={clsx('text-lg', !selectedOption && 'text-dim')}
               value={value}
-              label={selectedOption?.label}
+              label={selectedOption?.label ?? defaultOptionLabel}
               accessoryStart={selectedOption?.accessoryStart}
             />
           </div>
@@ -200,8 +213,6 @@ export default function SelectMenu({
               className="flex flex-col gap-1"
               fadeSize={16}
             >
-              {defaultOptionLabel &&
-                <SelectMenuOption value="" label={defaultOptionLabel} />}
               {options.map((option, index) =>
                 <SelectMenuOption
                   key={option.value}

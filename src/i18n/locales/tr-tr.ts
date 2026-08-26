@@ -167,12 +167,16 @@ export const TEXT: I18N = {
     // eslint-disable-next-line max-len
     setVisibilityConfirm: '{{quantity}} için görünürlüğü "{{visibility}}" olarak ayarlamak istediğinize emin misiniz?',
     setVisibilitySuccess: 'Görünürlük {{quantity}} için güncellendi',
+    visibilityDefault: 'Varsayılan',
+    visibilityDefaultNote: 'Her yerde görüntülenebilir',
+    visibilityExclude: 'Akışlardan gizle',
+    visibilityExcludeNote: 'Ana sayfa, rss.xml vb. dışında tutulur',
+    visibilityPrivate: 'Gizli',
+    visibilityPrivateNote: 'Yalnızca yöneticiler görebilir',
     selectPhotosBelow: 'Aşağıdan fotoğraf seçin',
     selectPhotosBelowShort: 'Seç',
     selecting: 'Seçiliyor ...',
     selectingShort: 'Seçiliyor',
-    allSelected: '{{count}} fotoğraf seçildi',
-    allSelectedShort: '{{count}} fotoğraf',
     photosSelected: '{{quantity}} seçildi',
     selectAll: 'Tümünü Seç',
     apply: 'Uygula',
@@ -186,6 +190,7 @@ export const TEXT: I18N = {
     // eslint-disable-next-line max-len
     favoriteConfirm: '{{quantity}} favorilere eklemek istediğinize emin misiniz?',
     favoriteSuccess: '{{quantity}} favorilere eklendi',
+    batchActionFailure: '{{quantity}} güncellenirken bir sorun oluştu',
   },
   onboarding: {
     setupComplete: 'Kurulum Tamamlandı!',

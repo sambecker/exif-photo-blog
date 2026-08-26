@@ -167,12 +167,16 @@ export const TEXT: I18N = {
     // eslint-disable-next-line max-len
     setVisibilityConfirm: 'क्या आप सुनिश्चित हैं कि आप {{quantity}} के लिए दृश्यता "{{visibility}}" पर सेट करना चाहते हैं?',
     setVisibilitySuccess: '{{quantity}} के लिए दृश्यता अपडेट की गई',
+    visibilityDefault: 'डिफ़ॉल्ट',
+    visibilityDefaultNote: 'हर जगह देखी जा सकती हैं',
+    visibilityExclude: 'फ़ीड से छिपाएं',
+    visibilityExcludeNote: 'होमपेज व्यू, rss.xml आदि से बाहर',
+    visibilityPrivate: 'निजी',
+    visibilityPrivateNote: 'केवल एडमिन को दिखाई देती हैं',
     selectPhotosBelow: 'नीचे तस्वीरें चुनें',
     selectPhotosBelowShort: 'चुनें',
     selecting: 'चयन हो रहा है ...',
     selectingShort: 'चयन हो रहा है',
-    allSelected: '{{count}} तस्वीरें चयनित',
-    allSelectedShort: '{{count}} तस्वीरें',
     photosSelected: '{{quantity}} चयनित',
     selectAll: 'सभी चुनें',
     apply: 'लागू करें',
@@ -186,6 +190,7 @@ export const TEXT: I18N = {
     // eslint-disable-next-line max-len
     favoriteConfirm: 'क्या आप सुनिश्चित हैं कि आप {{quantity}} को पसंदीदा बनाना चाहते हैं?',
     favoriteSuccess: '{{quantity}} को पसंदीदा बनाया गया',
+    batchActionFailure: '{{quantity}} अपडेट करने में कुछ गड़बड़ हो गई',
   },
   onboarding: {
     setupComplete: 'सेटअप पूरा हुआ!',

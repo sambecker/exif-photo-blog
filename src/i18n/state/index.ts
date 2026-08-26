@@ -45,10 +45,6 @@ export const generateAppTextState = (i18n: I18N) => {
           .replace('{{quantity}}', quantity),
       setVisibilitySuccess: (quantity: string) =>
         i18n.admin.setVisibilitySuccess.replace('{{quantity}}', quantity),
-      allSelected: (count: string) =>
-        i18n.admin.allSelected.replace('{{count}}', count),
-      allSelectedShort: (count: string) =>
-        i18n.admin.allSelectedShort.replace('{{count}}', count),
       photosSelected: (quantity: string) =>
         i18n.admin.photosSelected.replace('{{quantity}}', quantity),
       tagPlaceholder: (quantity: string) =>
@@ -69,6 +65,8 @@ export const generateAppTextState = (i18n: I18N) => {
         i18n.admin.favoriteConfirm.replace('{{quantity}}', quantity),
       favoriteSuccess: (quantity: string) =>
         i18n.admin.favoriteSuccess.replace('{{quantity}}', quantity),
+      batchActionFailure: (quantity: string) =>
+        i18n.admin.batchActionFailure.replace('{{quantity}}', quantity),
     },
     utility: {
       ...i18n.utility,

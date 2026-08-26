@@ -1,13 +1,15 @@
+'use client';
+
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import { ComponentProps, Dispatch, SetStateAction } from 'react';
 import {
+  getVisibilityOptions,
   getVisibilityValue,
   updateFormDataWithVisibility,
-  VISIBILITY_LABEL,
-  VISIBILITY_OPTIONS,
   VisibilityValue,
 } from '.';
 import { PhotoFormData } from '../form';
+import { useAppText } from '@/i18n/state/client';
 
 export default function FieldsetVisibility({
   formData,
@@ -18,11 +20,14 @@ export default function FieldsetVisibility({
   formData: Partial<PhotoFormData>
   setFormData: Dispatch<SetStateAction<Partial<PhotoFormData>>>
 } & Omit<ComponentProps<typeof FieldsetWithStatus>, 'label' | 'value'>) {
+  const appText = useAppText();
+
   return (
     <FieldsetWithStatus
-      label={VISIBILITY_LABEL}
+      id="visibility"
+      label={appText.admin.setVisibility}
       {...props}
-      selectOptions={VISIBILITY_OPTIONS}
+      selectOptions={getVisibilityOptions(appText)}
       value={getVisibilityValue(formData)}
       onChange={value => setFormData(data =>
         updateFormDataWithVisibility(

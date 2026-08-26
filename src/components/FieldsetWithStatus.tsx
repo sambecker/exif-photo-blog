@@ -28,6 +28,7 @@ export default function FieldsetWithStatus({
   className,
   selectOptions,
   selectOptionsDefaultLabel,
+  selectOpenOnLoad,
   tagOptions,
   tagOptionsLimit,
   tagOptionsLimitValidationMessage,
@@ -65,6 +66,7 @@ export default function FieldsetWithStatus({
   className?: string
   selectOptions?: SelectMenuOptionType[]
   selectOptionsDefaultLabel?: string
+  selectOpenOnLoad?: boolean
   tagOptions?: AnnotatedTag[]
   tagOptionsLimit?: number
   tagOptionsLimitValidationMessage?: string
@@ -213,6 +215,7 @@ export default function FieldsetWithStatus({
               onChange={onChange}
               options={selectOptions}
               defaultOptionLabel={selectOptionsDefaultLabel}
+              openOnLoad={selectOpenOnLoad}
               error={error}
               readOnly={readOnly}
             />

@@ -166,12 +166,16 @@ export const TEXT: I18N = {
     // eslint-disable-next-line max-len
     setVisibilityConfirm: 'আপনি কি নিশ্চিত যে আপনি {{quantity}}-এর জন্য দৃশ্যমানতা "{{visibility}}" এ সেট করতে চান?',
     setVisibilitySuccess: '{{quantity}}-এর জন্য দৃশ্যমানতা আপডেট হয়েছে',
+    visibilityDefault: 'ডিফল্ট',
+    visibilityDefaultNote: 'সর্বত্র দৃশ্যমান',
+    visibilityExclude: 'ফিড থেকে লুকান',
+    visibilityExcludeNote: 'হোমপেজ ভিউ, rss.xml ইত্যাদি থেকে বাদ',
+    visibilityPrivate: 'ব্যক্তিগত',
+    visibilityPrivateNote: 'শুধুমাত্র অ্যাডমিনদের কাছে দৃশ্যমান',
     selectPhotosBelow: 'নিচে থেকে ছবি নির্বাচন করুন',
     selectPhotosBelowShort: 'নির্বাচন করুন',
     selecting: 'নির্বাচন করা হচ্ছে ...',
     selectingShort: 'নির্বাচন করা হচ্ছে',
-    allSelected: '{{count}}টি ছবি নির্বাচিত',
-    allSelectedShort: '{{count}}টি ছবি',
     photosSelected: '{{quantity}} নির্বাচিত',
     selectAll: 'সব নির্বাচন করুন',
     apply: 'প্রয়োগ করুন',
@@ -185,6 +189,7 @@ export const TEXT: I18N = {
     // eslint-disable-next-line max-len
     favoriteConfirm: 'আপনি কি নিশ্চিত যে আপনি {{quantity}} পছন্দের তালিকায় যোগ করতে চান?',
     favoriteSuccess: '{{quantity}} পছন্দের তালিকায় যোগ করা হয়েছে',
+    batchActionFailure: '{{quantity}} আপডেট করতে সমস্যা হয়েছে',
   },
   onboarding: {
     setupComplete: 'সেটআপ সম্পন্ন!',

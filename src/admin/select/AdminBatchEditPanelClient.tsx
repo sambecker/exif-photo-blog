@@ -8,7 +8,7 @@ import { useEffect, useRef } from 'react';
 import { Tags } from '@/tag';
 import FieldsetTag from '@/tag/FieldsetTag';
 import { batchPhotoAction } from '@/photo/actions';
-import { toastSuccess } from '@/toast';
+import { toastSuccess, toastWarning } from '@/toast';
 import DeletePhotosButton from '@/admin/DeletePhotosButton';
 import { photoQuantityText } from '@/photo';
 import { FaArrowDown, FaCheck } from 'react-icons/fa6';
@@ -22,7 +22,11 @@ import FieldsetAlbum from '@/album/FieldsetAlbum';
 import IconAlbum from '@/components/icons/IconAlbum';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import { convertStringToArray } from '@/utility/string';
-import { VISIBILITY_OPTIONS, VisibilityValue } from '@/photo/visibility';
+import {
+  getVisibilityLabel,
+  getVisibilityOptions,
+  VisibilityValue,
+} from '@/photo/visibility';
 import IconHidden from '@/components/icons/IconHidden';
 
 export default function AdminBatchEditPanelClient({
@@ -62,9 +66,7 @@ export default function AdminBatchEditPanelClient({
   const isInTagMode = tags !== undefined;
   const isInVisibilityMode = visibility !== undefined;
 
-  const visibilityLabel = VISIBILITY_OPTIONS
-    .find(({ value }) => value === visibility)
-    ?.label.toLowerCase();
+  const visibilityLabel = getVisibilityLabel(appText, visibility);
 
   const batchPhotoActionArguments = (
     isSelectingAllPhotos &&
@@ -84,33 +86,28 @@ export default function AdminBatchEditPanelClient({
 
   const isFormDisabled =
     isPerformingSelectEdit ||
-    isSelectingAllPhotos
+    (isSelectingAllPhotos
       ? !Boolean(selectAllCount)
-      : selectedPhotoIds?.length === 0;
+      : selectedPhotoIds?.length === 0);
 
-  const renderPhotoSelectionStatus = isSelectingAllPhotos
-    ? selectAllCount === undefined
+  const renderPhotoSelectionStatus =
+    isSelectingAllPhotos && selectAllCount === undefined
       ? <ResponsiveText
         shortText={appText.admin.selectingShort}
         className="text-dim"
       >
         {appText.admin.selecting}
       </ResponsiveText>
-      : <ResponsiveText
-        shortText={appText.admin.allSelectedShort(`${selectAllCount}`)}
-      >
-        {appText.admin.allSelected(`${selectAllCount}`)}
-      </ResponsiveText>
-    : selectedPhotoIds?.length === 0
-      ? <>
-        <FaArrowDown />
-        <ResponsiveText shortText={appText.admin.selectPhotosBelowShort}>
-          {appText.admin.selectPhotosBelow}
-        </ResponsiveText>
-      </>
-      : <ResponsiveText shortText={photosText}>
-        {appText.admin.photosSelected(photosText)}
-      </ResponsiveText>;
+      : !isSelectingAllPhotos && selectedPhotoIds?.length === 0
+        ? <>
+          <FaArrowDown />
+          <ResponsiveText shortText={appText.admin.selectPhotosBelowShort}>
+            {appText.admin.selectPhotosBelow}
+          </ResponsiveText>
+        </>
+        : <ResponsiveText shortText={photosText}>
+          {appText.admin.photosSelected(photosText)}
+        </ResponsiveText>;
 
   const renderActions = isInTagMode || isInAlbumMode || isInVisibilityMode
     ? <>
@@ -156,6 +153,8 @@ export default function AdminBatchEditPanelClient({
                 );
                 stopSelectingPhotos?.();
               })
+              .catch(() =>
+                toastWarning(appText.admin.batchActionFailure(photosText)))
               .finally(() => setIsPerformingSelectEdit?.(false));
           } else if (isInAlbumMode) {
             const albumTitlesArray = convertStringToArray(albumTitles, false);
@@ -175,6 +174,8 @@ export default function AdminBatchEditPanelClient({
                 );
                 stopSelectingPhotos?.();
               })
+              .catch(() =>
+                toastWarning(appText.admin.batchActionFailure(photosText)))
               .finally(() => setIsPerformingSelectEdit?.(false));
           } else if (isInVisibilityMode && visibility) {
             batchPhotoAction({
@@ -185,6 +186,8 @@ export default function AdminBatchEditPanelClient({
                 toastSuccess(appText.admin.setVisibilitySuccess(photosText));
                 stopSelectingPhotos?.();
               })
+              .catch(() =>
+                toastWarning(appText.admin.batchActionFailure(photosText)))
               .finally(() => setIsPerformingSelectEdit?.(false));
           }
         }}
@@ -226,6 +229,8 @@ export default function AdminBatchEditPanelClient({
               toastSuccess(appText.admin.favoriteSuccess(photosText));
               stopSelectingPhotos?.();
             })
+            .catch(() =>
+              toastWarning(appText.admin.batchActionFailure(photosText)))
             .finally(() => setIsPerformingSelectEdit?.(false));
         }}
       />
@@ -310,14 +315,16 @@ export default function AdminBatchEditPanelClient({
                 />
                 : isInVisibilityMode
                   ? <FieldsetWithStatus
+                    id="batch-visibility"
                     label={appText.admin.setVisibility}
-                    selectOptions={VISIBILITY_OPTIONS}
+                    selectOptions={getVisibilityOptions(appText)}
                     selectOptionsDefaultLabel={
                       appText.admin.setVisibilityPlaceholder(photosText)
                     }
+                    selectOpenOnLoad
                     value={visibility ?? ''}
                     onChange={value =>
-                      setVisibility?.(value as VisibilityValue)}
+                      setVisibility?.(value as VisibilityValue | '')}
                     readOnly={isPerformingSelectEdit}
                     hideLabel
                   />
@@ -330,6 +337,7 @@ export default function AdminBatchEditPanelClient({
           </div>
           {shouldShowSelectAll &&
             <FieldsetWithStatus
+              id="batch-select-all"
               label={appText.admin.selectAll}
               type="checkbox"
               className="-z-10"
