@@ -126,7 +126,10 @@ export default function TooltipPrimitive({
             )}
           >
             {content &&
-              <ComponentSurface {...{ color, className }}>
+              <ComponentSurface {...{
+                color,
+                className: clsx('rounded-lg', className),
+              }}>
                 {content}
               </ComponentSurface>}
           </Tooltip.Content>

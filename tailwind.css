@@ -363,18 +363,18 @@ html {
 @layer components {
   .component-surface {
     @apply
-      text-main bg-content rounded-lg
+      text-main bg-content rounded-xl
   }
   .component-surface-light {
     @apply
-      text-dark bg-white rounded-lg
+      text-dark bg-white rounded-xl
   }
   .component-surface-dark {
     @apply
-      text-light bg-black rounded-lg
+      text-light bg-black rounded-xl
   }
   .component-surface-frosted {
     @apply
-      text-black bg-neutral-200/95 rounded-lg
+      text-black bg-neutral-200/95 rounded-xl
   }
 }

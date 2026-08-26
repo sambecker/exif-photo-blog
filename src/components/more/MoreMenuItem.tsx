@@ -90,7 +90,7 @@ export default function MoreMenuItem({
       disabled={isLoading}
       className={clsx(
         'flex items-center h-8.5 gap-4',
-        'px-2 py-2 rounded-sm',
+        'px-2 py-2 rounded-lg',
         'select-none hover:outline-hidden',
         getColorClasses(),
         'whitespace-nowrap',
