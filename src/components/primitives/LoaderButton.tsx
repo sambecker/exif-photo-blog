@@ -72,8 +72,7 @@ export default function LoaderButton({
         styleAs === 'link-without-hover' && 'hover:text-main',
         'inline-flex items-center gap-1.5 self-start whitespace-nowrap',
         primary && 'primary',
-        // Hide the default (mouse-click) focus ring, but keep a visible
-        // one for keyboard navigation
+        // Hide mouse-click focus ring, but keep one for keyboard navigation
         hideFocusOutline && [
           'focus:outline-hidden',
           'focus-visible:outline-2',

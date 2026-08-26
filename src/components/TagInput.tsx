@@ -433,9 +433,8 @@ export default function TagInput({
                 annotation,
                 annotationAria,
               }, index) =>
-                // Enter/Arrow key handling for focused options is done by
-                // the container-level keydown listener above (bubbles up
-                // from whichever option is focused) rather than inline here
+                // Enter/Arrow keys are handled by the container-level
+                // keydown listener above, which they bubble up to
                 /* eslint-disable-next-line
                   jsx-a11y/click-events-have-key-events */
                 <div

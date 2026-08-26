@@ -36,12 +36,8 @@ export default function TooltipPrimitive({
   keyCommand?: string
   keyCommandModifier?: ComponentProps<typeof KeyCommand>['modifier']
   supportMobile?: boolean
-  // Set when `children` already contains its own focusable, keyboard-
-  // operable element (e.g. a real button or link) so the trigger wrapper
-  // doesn't need to be focusable itself — and shouldn't become one, since
-  // nesting interactive elements is invalid. Leave unset (the default) for
-  // non-interactive content (icons, swatches, plain text) so the trigger
-  // wrapper renders as a real button and stays reachable via keyboard.
+  // Set when `children` already contains a button or link, to avoid nesting
+  // interactive elements. Otherwise the trigger renders as a real button.
   triggerIsFocusable?: boolean
   animateLarge?: boolean
   disableHoverableContent?: boolean
@@ -106,11 +102,8 @@ export default function TooltipPrimitive({
             >
               {children}
             </button>
-            // `children` already contains its own focusable element
-            // (asserted by the caller via `triggerIsFocusable`), so this
-            // span is a non-interactive pass-through — onClick here only
-            // clears focus as a side effect once the real element inside
-            // has been activated
+            // Non-interactive pass-through: `children` supplies the
+            // focusable element, this onClick only clears focus afterward
             /* eslint-disable-next-line
               jsx-a11y/no-static-element-interactions,
               jsx-a11y/click-events-have-key-events */

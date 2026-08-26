@@ -7,9 +7,8 @@ import jsxA11y from 'eslint-plugin-jsx-a11y';
 export default defineConfig([
   ...nextVitals,
   ...nextTs,
-  // eslint-config-next already registers the jsx-a11y plugin itself, so
-  // only apply its recommended rules here rather than the full flat config
-  // (which would redefine the plugin and error)
+  // Rules only: eslint-config-next already registers the jsx-a11y plugin,
+  // and redefining it errors
   { rules: jsxA11y.flatConfigs.recommended.rules },
   // Override default ignores of eslint-config-next.
   globalIgnores([

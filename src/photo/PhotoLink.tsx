@@ -40,9 +40,8 @@ export default function PhotoLink({
         ref,
         className,
         href: pathForPhoto({ photo, ...categories }),
-        // Always set (or clear) so a stale animation config from an
-        // interrupted prev/next transition can't leak into a plain
-        // thumbnail click and wrongly override its default scale-up
+        // Always set (or clear) so a stale prev/next animation can't leak
+        // into a plain thumbnail click and override its default scale-up
         onClick: () => setNextPhotoAnimation?.(nextPhotoAnimation),
         scroll,
         prefetch,

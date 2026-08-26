@@ -43,9 +43,8 @@ export default function SwitcherItem({
   prefetch?: boolean
   tooltip?: ComponentProps<typeof Tooltip>
   width?: 'narrow' | 'normal'
-  // Set when `icon` already contains its own focusable element (e.g. a
-  // menu trigger button), so the tooltip trigger doesn't wrap it in
-  // another button — see `triggerIsFocusable` on TooltipPrimitive
+  // Set when `icon` contains its own focusable element, so the tooltip
+  // doesn't wrap it in a button. See `triggerIsFocusable` on TooltipPrimitive
   iconIsFocusable?: boolean
 }) {
   const ariaLabel = typeof tooltip?.content === 'string'
