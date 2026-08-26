@@ -54,9 +54,9 @@ export default function SwitcherItem({
 
   const widthClass = width === 'narrow' ? WIDTH_CLASS_NARROW : WIDTH_CLASS;
   const className = clsx(
+    'link',
     'flex items-center justify-center',
     `${widthClass} ${HEIGHT_CLASS}`,
-    'border-none shadow-none',
     isInteractive && 'cursor-pointer',
     isInteractive && SWITCHER_ITEM_INTERACTIVE_BG,
     active
