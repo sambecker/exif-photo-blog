@@ -292,7 +292,6 @@ export default function AdminBatchEditPanelClient({
       id="batch-select-all"
       label={appText.admin.selectAll}
       type="checkbox"
-      className="-z-10"
       value={isSelectingAllPhotos ? 'true' : 'false'}
       onChange={toggleIsSelectingAllPhotos}
       readOnly={isSelectingAllPhotos && selectAllCount === undefined}
@@ -329,6 +328,9 @@ export default function AdminBatchEditPanelClient({
           <div className={clsx(
             'flex gap-1 md:gap-2 min-h-11',
             '[&>*:first-child]:grow [&>*:first-child]:min-w-0',
+            // Keep dropdowns above the row below without
+            // pushing that row behind the panel
+            'relative z-1',
           )}>
             {isInEditMode
               ? <>
