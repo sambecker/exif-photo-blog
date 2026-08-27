@@ -184,6 +184,7 @@ export const TEXT: I18N = {
     // eslint-disable-next-line max-len
     tagConfirm: 'क्या आप सुनिश्चित हैं कि आप {{quantity}} पर टैग लागू करना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।',
     tagSuccess: '{{quantity}} को {{tags}} टैग किया गया',
+    albumPlaceholder: '{{quantity}} को एल्बम में जोड़ें ...',
     // eslint-disable-next-line max-len
     albumConfirm: 'क्या आप सुनिश्चित हैं कि आप {{quantity}} को इन एल्बम में जोड़ना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।',
     albumSuccess: '{{quantity}} को {{albums}} में जोड़ा गया',

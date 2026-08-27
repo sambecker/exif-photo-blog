@@ -210,7 +210,7 @@ export default function FieldsetWithStatus({
               id={id}
               name={id}
               tabIndex={tabIndex}
-              className="w-full"
+              className="w-full min-w-0"
               value={value}
               onChange={onChange}
               options={selectOptions}

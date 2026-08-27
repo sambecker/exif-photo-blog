@@ -183,6 +183,7 @@ export const TEXT: I18N = {
     // eslint-disable-next-line max-len
     tagConfirm: 'Apakah Anda yakin ingin menerapkan tag ke {{quantity}}? Tindakan ini tidak dapat dibatalkan.',
     tagSuccess: '{{quantity}} ditandai {{tags}}',
+    albumPlaceholder: 'Tambahkan {{quantity}} ke album ...',
     // eslint-disable-next-line max-len
     albumConfirm: 'Apakah Anda yakin ingin menambahkan {{quantity}} ke album ini? Tindakan ini tidak dapat dibatalkan.',
     albumSuccess: '{{quantity}} ditambahkan ke {{albums}}',

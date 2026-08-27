@@ -183,6 +183,7 @@ export const TEXT: I18N = {
     // eslint-disable-next-line max-len
     tagConfirm: 'Bạn có chắc chắn muốn áp dụng thẻ cho {{quantity}}? Hành động này không thể hoàn tác.',
     tagSuccess: 'Đã gắn thẻ {{tags}} cho {{quantity}}',
+    albumPlaceholder: 'Thêm {{quantity}} vào album ...',
     // eslint-disable-next-line max-len
     albumConfirm: 'Bạn có chắc chắn muốn thêm {{quantity}} vào các album này? Hành động này không thể hoàn tác.',
     albumSuccess: 'Đã thêm {{quantity}} vào {{albums}}',

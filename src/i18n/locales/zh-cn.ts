@@ -180,6 +180,7 @@ export const TEXT: I18N = {
     tagPlaceholder: '为 {{quantity}} 添加标签 ...',
     tagConfirm: '确定要为 {{quantity}} 应用标签吗？此操作无法撤销。',
     tagSuccess: '已为 {{quantity}} 添加标签 {{tags}}',
+    albumPlaceholder: '将 {{quantity}} 添加到相册 ...',
     albumConfirm: '确定要将 {{quantity}} 添加到这些相册吗？此操作无法撤销。',
     albumSuccess: '已将 {{quantity}} 添加到 {{albums}}',
     favoriteConfirm: '确定要收藏 {{quantity}} 吗？',

@@ -177,10 +177,12 @@ export default function SelectMenu({
         aria-disabled={readOnly || undefined}
         role="combobox"
       >
-        {children ?? <div className="flex items-center w-full">
+        {children ?? <div className="flex items-center w-full min-w-0">
           <div className="grow min-w-0">
             <SelectMenuOption
-              className={clsx('text-lg', !selectedOption && 'text-dim')}
+              className={clsx(selectedOption
+                ? 'text-lg'
+                : 'text-[14px] text-dim')}
               value={value}
               label={selectedOption?.label ?? defaultOptionLabel}
               accessoryStart={selectedOption?.accessoryStart}

@@ -184,6 +184,7 @@ export const TEXT: I18N = {
     // eslint-disable-next-line max-len
     tagConfirm: '{{quantity}} için etiket uygulamak istediğinize emin misiniz? Bu işlem geri alınamaz.',
     tagSuccess: '{{quantity}} {{tags}} olarak etiketlendi',
+    albumPlaceholder: '{{quantity}} albümlere ekle ...',
     // eslint-disable-next-line max-len
     albumConfirm: '{{quantity}} bu albümlere eklemek istediğinize emin misiniz? Bu işlem geri alınamaz.',
     albumSuccess: '{{quantity}} {{albums}} albümüne eklendi',

@@ -183,6 +183,7 @@ export const TEXT: I18N = {
     // eslint-disable-next-line max-len
     tagConfirm: 'Are you sure you want to apply tags to {{quantity}}? This action cannot be undone.',
     tagSuccess: '{{quantity}} tagged {{tags}}',
+    albumPlaceholder: 'Add {{quantity}} to albums ...',
     // eslint-disable-next-line max-len
     albumConfirm: 'Are you sure you want to add {{quantity}} to these albums? This action cannot be undone.',
     albumSuccess: '{{quantity}} added to {{albums}}',

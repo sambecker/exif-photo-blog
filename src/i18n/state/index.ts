@@ -55,6 +55,8 @@ export const generateAppTextState = (i18n: I18N) => {
         i18n.admin.tagSuccess
           .replace('{{quantity}}', quantity)
           .replace('{{tags}}', tags),
+      albumPlaceholder: (quantity: string) =>
+        i18n.admin.albumPlaceholder.replace('{{quantity}}', quantity),
       albumConfirm: (quantity: string) =>
         i18n.admin.albumConfirm.replace('{{quantity}}', quantity),
       albumSuccess: (quantity: string, albums: string) =>

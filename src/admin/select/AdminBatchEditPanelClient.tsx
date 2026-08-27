@@ -142,6 +142,7 @@ export default function AdminBatchEditPanelClient({
     ? <FieldsetAlbum
       albumOptions={uniqueAlbums}
       value={albumTitles}
+      placeholder={appText.admin.albumPlaceholder(photosText)}
       onChange={setAlbumTitles}
       readOnly={isPerformingSelectEdit}
       openOnLoad
@@ -327,7 +328,7 @@ export default function AdminBatchEditPanelClient({
         >
           <div className={clsx(
             'flex gap-1 md:gap-2 min-h-11',
-            '[&>*:first-child]:grow',
+            '[&>*:first-child]:grow [&>*:first-child]:min-w-0',
           )}>
             {isInEditMode
               ? <>

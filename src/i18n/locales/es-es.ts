@@ -183,6 +183,7 @@ export const TEXT: I18N = {
     // eslint-disable-next-line max-len
     tagConfirm: '¿Estás seguro de que quieres aplicar etiquetas a {{quantity}}? Esta acción no se puede deshacer.',
     tagSuccess: '{{quantity}} etiquetadas {{tags}}',
+    albumPlaceholder: 'Añadir {{quantity}} a álbumes ...',
     // eslint-disable-next-line max-len
     albumConfirm: '¿Estás seguro de que quieres añadir {{quantity}} a estos álbumes? Esta acción no se puede deshacer.',
     albumSuccess: '{{quantity}} añadidas a {{albums}}',

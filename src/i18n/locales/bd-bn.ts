@@ -183,6 +183,7 @@ export const TEXT: I18N = {
     // eslint-disable-next-line max-len
     tagConfirm: 'আপনি কি নিশ্চিত যে আপনি {{quantity}}-এ ট্যাগ প্রয়োগ করতে চান? এই ক্রিয়াটি ফিরিয়ে নেওয়া যাবে না।',
     tagSuccess: '{{quantity}} {{tags}} ট্যাগ করা হয়েছে',
+    albumPlaceholder: '{{quantity}} অ্যালবামে যোগ করুন ...',
     // eslint-disable-next-line max-len
     albumConfirm: 'আপনি কি নিশ্চিত যে আপনি {{quantity}} এই অ্যালবামগুলিতে যোগ করতে চান? এই ক্রিয়াটি ফিরিয়ে নেওয়া যাবে না।',
     albumSuccess: '{{quantity}} {{albums}}-এ যোগ করা হয়েছে',
