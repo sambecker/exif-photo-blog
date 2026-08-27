@@ -251,7 +251,11 @@ export default function AdminBatchEditPanelClient({
       <LoaderButton
         onClick={() => setVisibility?.('')}
         disabled={isFormDisabled}
-        icon={<IconHidden size={15} className="translate-y-[1.5px]" />}
+        icon={<IconHidden
+          size={17}
+          className="translate-y-[1px] grow"
+          visible
+        />}
       >
         {appText.admin.setVisibility}
       </LoaderButton>
