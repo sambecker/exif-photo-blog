@@ -11,7 +11,6 @@ import { clsx } from 'clsx/lite';
 import { useAppState } from '@/app/AppState';
 import useVisibility from '@/utility/useVisibility';
 import { SortBy } from './sort';
-import { SWR_KEYS } from '@/swr';
 import { useAppText } from '@/i18n/state/client';
 import { isTagPrivate } from '@/tag';
 
@@ -78,8 +77,7 @@ export default function InfinitePhotoScroll({
   const keyGenerator = useCallback(
     (size: number, prev: Photo[]) => prev && prev.length === 0
       ? null
-      // eslint-disable-next-line max-len
-      : `${SWR_KEYS.INFINITE_PHOTO_SCROLL}-${cacheKey}${SIZE_KEY_SEPARATOR}${size}`
+      : `${cacheKey}${SIZE_KEY_SEPARATOR}${size}`
     , [cacheKey]);
 
   const isPrivateTag = isTagPrivate(tag);

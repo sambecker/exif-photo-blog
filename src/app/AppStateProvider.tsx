@@ -131,17 +131,31 @@ export default function AppStateProvider({
     return () => clearTimeout(timeout);
   }, []);
 
-  const { mutate } = useSWRConfig();
-  const invalidateSwr = useCallback((key?: SWRKey, revalidate?: boolean) => {
-    if (key) {
-      // Mutate specific key
-      mutate((k: string) => k?.startsWith(key), undefined, { revalidate });
+  const { unload, mutate } = useSWRConfig();
+
+  const invalidateSwr = useCallback((
+    args?: {
+      key?: SWRKey
+      revalidate?: boolean
+    },
+  ) => {
+    if (!args) {
+      // Key filters passed to `mutate` cannot match the internal `$inf$` keys
+      // holding useSWRInfinite's page data and page count, so infinite photo
+      // scroll can only be reset by unloading the entire cache
+      unload();
     } else {
-      // Mutate all keys that can be purged
-      mutate(canKeyBePurged, undefined, { revalidate: false });
-      mutate(canKeyBePurgedAndRevalidated, undefined, { revalidate: true });
+      const { key, revalidate } = args;
+      if (key) {
+        // Mutate specific key
+        mutate((k: string) => k?.startsWith(key), undefined, { revalidate });
+      } else {
+        // Mutate all keys that can be purged
+        mutate(canKeyBePurged, undefined, { revalidate: false });
+        mutate(canKeyBePurgedAndRevalidated, undefined, { revalidate: true });
+      }
     }
-  }, [mutate]);
+  }, [mutate, unload]);
 
   const { data: categoriesWithCounts } = useSWR(
     SWR_KEYS.GET_COUNTS_FOR_CATEGORIES,
@@ -159,8 +173,10 @@ export default function AppStateProvider({
       setUserEmail(undefined);
       setUserEmailEager(undefined);
       clearAuthEmailCookie();
-    } else {
-      setUserEmail(auth?.user?.email ?? undefined);
+    } else if (auth) {
+      // Retain email while auth is undefined, i.e., in flight,
+      // so cache invalidation doesn't flash a signed out state
+      setUserEmail(auth.user?.email ?? undefined);
     }
   }, [auth, authError]);
 

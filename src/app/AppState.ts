@@ -19,7 +19,7 @@ import { SWRKey } from '@/swr';
 export type AppStateContextType = {
   // CORE
   hasLoadedWithAnimations?: boolean
-  invalidateSwr?: (key?: SWRKey, revalidate?: boolean) => void
+  invalidateSwr?: (args?: { key?: SWRKey, revalidate?: boolean }) => void
   nextPhotoAnimation?: AnimationConfig
   setNextPhotoAnimation?: (animationConfig?: AnimationConfig) => void
   getNextPhotoAnimationId?: () => string

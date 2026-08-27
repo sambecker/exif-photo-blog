@@ -38,7 +38,6 @@ import { KEY_COMMANDS } from '@/photo/key-commands';
 import { useAppText } from '@/i18n/state/client';
 import { getSortStateFromPath } from '@/photo/sort/path';
 import { motion } from 'framer-motion';
-import { SWR_KEYS } from '@/swr';
 import IconAbout from '@/components/icons/IconAbout';
 import { BiHomeAlt as HomeIcon } from 'react-icons/bi';
 import AppViewMenu from './AppViewMenu';
@@ -87,7 +86,7 @@ export default function AppToolbar({
   useEffect(() => {
     if (hasLoadedRef.current) {
       // After initial load, invalidate cache every time sort changes
-      invalidateSwr?.(SWR_KEYS.INFINITE_PHOTO_SCROLL);
+      invalidateSwr?.();
     }
     hasLoadedRef.current = true;
   }, [invalidateSwr, sortBy]);
