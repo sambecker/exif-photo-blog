@@ -61,6 +61,7 @@ export default function Checkbox({
         type="checkbox"
         className={clsx(
           'absolute inset-0 opacity-0! size-5',
+          !props.readOnly && !props.disabled && 'cursor-pointer',
           className,
         )}
         {...props}

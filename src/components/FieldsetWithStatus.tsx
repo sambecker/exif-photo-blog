@@ -146,7 +146,10 @@ export default function FieldsetWithStatus({
         // For managing checkbox active state
         'group',
         'space-y-1',
-        type === 'checkbox' && 'flex items-center gap-2',
+        type === 'checkbox' && clsx(
+          'flex items-center gap-2',
+          !readOnly && 'cursor-pointer',
+        ),
         className,
       )}>
         {!hideLabel &&
@@ -154,9 +157,12 @@ export default function FieldsetWithStatus({
             htmlFor={id}
             className={clsx(
               'inline-flex flex-wrap gap-x-2 items-center select-none',
-              type === 'checkbox' && 'order-2 m-0 translate-y-[0.25px]',
-              type === 'checkbox' && readOnly &&
-                'opacity-50 cursor-not-allowed',
+              type === 'checkbox' && clsx(
+                'order-2 m-0 translate-y-[0.25px]',
+                readOnly
+                  ? 'opacity-50 cursor-not-allowed'
+                  : 'cursor-pointer',
+              ),
             )}
           >
             <span className="inline-flex items-center gap-x-[5px]">
