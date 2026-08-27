@@ -192,6 +192,10 @@ export const TEXT: I18N = {
     favoriteConfirm: '{{quantity}} favorilere eklemek istediğinize emin misiniz?',
     favoriteSuccess: '{{quantity}} favorilere eklendi',
     batchActionFailure: '{{quantity}} güncellenirken bir sorun oluştu',
+    // eslint-disable-next-line max-len
+    deletePhotosConfirm: '{{quantity}} silmek istediğinize emin misiniz? Bu işlem geri alınamaz.',
+    deletePhotosSuccess: '{{quantity}} silindi',
+    deletePhotosFailure: '{{quantity}} silinirken bir sorun oluştu',
   },
   onboarding: {
     setupComplete: 'Kurulum Tamamlandı!',

@@ -189,6 +189,10 @@ export const TEXT = {
     favoriteConfirm: 'Are you sure you want to favorite {{quantity}}?',
     favoriteSuccess: '{{quantity}} favorited',
     batchActionFailure: 'Something went wrong updating {{quantity}}',
+    // eslint-disable-next-line max-len
+    deletePhotosConfirm: 'Are you sure you want to delete {{quantity}}? This action cannot be undone.',
+    deletePhotosSuccess: '{{quantity}} deleted',
+    deletePhotosFailure: 'Something went wrong deleting {{quantity}}',
   },
   onboarding: {
     setupComplete: 'Setup Complete!',

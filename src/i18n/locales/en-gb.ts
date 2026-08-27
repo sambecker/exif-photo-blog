@@ -190,6 +190,10 @@ export const TEXT: I18N = {
     favoriteConfirm: 'Are you sure you want to favourite {{quantity}}?',
     favoriteSuccess: '{{quantity}} favourited',
     batchActionFailure: 'Something went wrong updating {{quantity}}',
+    // eslint-disable-next-line max-len
+    deletePhotosConfirm: 'Are you sure you want to delete {{quantity}}? This action cannot be undone.',
+    deletePhotosSuccess: '{{quantity}} deleted',
+    deletePhotosFailure: 'Something went wrong deleting {{quantity}}',
   },
   onboarding: {
     setupComplete: 'Setup Complete!',

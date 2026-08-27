@@ -190,6 +190,10 @@ export const TEXT: I18N = {
     favoriteConfirm: 'Apakah Anda yakin ingin menyukai {{quantity}}?',
     favoriteSuccess: '{{quantity}} disukai',
     batchActionFailure: 'Terjadi kesalahan saat memperbarui {{quantity}}',
+    // eslint-disable-next-line max-len
+    deletePhotosConfirm: 'Apakah Anda yakin ingin menghapus {{quantity}}? Tindakan ini tidak dapat dibatalkan.',
+    deletePhotosSuccess: '{{quantity}} dihapus',
+    deletePhotosFailure: 'Terjadi kesalahan saat menghapus {{quantity}}',
   },
   onboarding: {
     setupComplete: 'Penyiapan Selesai!',

@@ -192,6 +192,10 @@ export const TEXT: I18N = {
     favoriteConfirm: 'क्या आप सुनिश्चित हैं कि आप {{quantity}} को पसंदीदा बनाना चाहते हैं?',
     favoriteSuccess: '{{quantity}} को पसंदीदा बनाया गया',
     batchActionFailure: '{{quantity}} अपडेट करने में कुछ गड़बड़ हो गई',
+    // eslint-disable-next-line max-len
+    deletePhotosConfirm: 'क्या आप सुनिश्चित हैं कि {{quantity}} हटाना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।',
+    deletePhotosSuccess: '{{quantity}} हटाई गईं',
+    deletePhotosFailure: '{{quantity}} हटाने में कुछ गड़बड़ हो गई',
   },
   onboarding: {
     setupComplete: 'सेटअप पूरा हुआ!',

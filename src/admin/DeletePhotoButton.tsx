@@ -16,8 +16,8 @@ export default function DeletePhotoButton({
     <DeletePhotosButton
       {...rest}
       photoIds={[photo.id]}
+      photosText={`"${titleForPhoto(photo)}"`}
       confirmText={deleteConfirmationTextForPhoto(photo, appText)}
-      toastText={`"${titleForPhoto(photo)}" deleted`}
     />
   );
 }

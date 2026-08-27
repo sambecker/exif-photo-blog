@@ -7,11 +7,12 @@ import { toastSuccess, toastWarning } from '@/toast';
 import { ComponentProps, useState } from 'react';
 import DeleteButton from './DeleteButton';
 import { PhotoQueryOptions } from '@/db';
+import { useAppText } from '@/i18n/state/client';
 
 export default function DeletePhotosButton({
   photoIds = [],
   photoOptions,
-  photosText,
+  photosText = '',
   onDelete,
   clearLocalState = true,
   onClick,
@@ -33,12 +34,15 @@ export default function DeletePhotosButton({
 
   const { invalidateSwr, registerAdminUpdate } = useAppState();
 
+  const appText = useAppText();
+
   return (
     <DeleteButton
       {...rest}
       isLoading={isLoading}
-      // eslint-disable-next-line max-len
-      confirmText={confirmText ?? `Are you sure you want to delete ${photosText}? This action cannot be undone.`}
+      confirmText={
+        confirmText ?? appText.admin.deletePhotosConfirm(photosText)
+      }
       onClick={() => {
         onClick?.();
         setIsLoading(true);
@@ -48,14 +52,17 @@ export default function DeletePhotosButton({
           action: 'delete',
         })
           .then(() => {
-            toastSuccess(toastText ?? `${photosText} deleted`);
+            toastSuccess(
+              toastText ?? appText.admin.deletePhotosSuccess(photosText),
+            );
             if (clearLocalState) {
               invalidateSwr?.();
               registerAdminUpdate?.();
             }
             onDelete?.();
           })
-          .catch(() => toastWarning(`Failed to delete ${photosText}`))
+          .catch(() =>
+            toastWarning(appText.admin.deletePhotosFailure(photosText)))
           .finally(() => {
             setIsLoading(false);
             onFinish?.();

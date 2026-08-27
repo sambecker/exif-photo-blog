@@ -186,6 +186,9 @@ export const TEXT: I18N = {
     favoriteConfirm: '确定要收藏 {{quantity}} 吗？',
     favoriteSuccess: '已收藏 {{quantity}}',
     batchActionFailure: '更新 {{quantity}} 时出错',
+    deletePhotosConfirm: '确定要删除 {{quantity}} 吗？此操作无法撤销。',
+    deletePhotosSuccess: '已删除 {{quantity}}',
+    deletePhotosFailure: '删除 {{quantity}} 时出错',
   },
   onboarding: {
     setupComplete: '设置完成！',

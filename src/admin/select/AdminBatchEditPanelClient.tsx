@@ -16,6 +16,7 @@ import ResponsiveText from '@/components/primitives/ResponsiveText';
 import IconFavs from '@/components/icons/IconFavs';
 import IconTag from '@/components/icons/IconTag';
 import { useAppText } from '@/i18n/state/client';
+import { useAppState } from '@/app/AppState';
 import { useSelectPhotosState } from './SelectPhotosState';
 import { Albums } from '@/album';
 import FieldsetAlbum from '@/album/FieldsetAlbum';
@@ -62,6 +63,8 @@ export default function AdminBatchEditPanelClient({
 
   const appText = useAppText();
 
+  const { invalidateSwr, registerAdminUpdate } = useAppState();
+
   const isInAlbumMode = albumTitles !== undefined;
   const isInTagMode = tags !== undefined;
   const isInVisibilityMode = visibility !== undefined;
@@ -105,6 +108,8 @@ export default function AdminBatchEditPanelClient({
     batchPhotoAction(args)
       .then(() => {
         onSuccess();
+        invalidateSwr?.();
+        registerAdminUpdate?.();
         stopSelectingPhotos?.();
       })
       .catch(() =>

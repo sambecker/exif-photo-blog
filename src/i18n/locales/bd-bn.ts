@@ -191,6 +191,10 @@ export const TEXT: I18N = {
     favoriteConfirm: 'আপনি কি নিশ্চিত যে আপনি {{quantity}} পছন্দের তালিকায় যোগ করতে চান?',
     favoriteSuccess: '{{quantity}} পছন্দের তালিকায় যোগ করা হয়েছে',
     batchActionFailure: '{{quantity}} আপডেট করতে সমস্যা হয়েছে',
+    // eslint-disable-next-line max-len
+    deletePhotosConfirm: 'আপনি কি নিশ্চিত যে {{quantity}} মুছে ফেলতে চান? এই কাজটি ফেরানো যাবে না।',
+    deletePhotosSuccess: '{{quantity}} মুছে ফেলা হয়েছে',
+    deletePhotosFailure: '{{quantity}} মুছতে সমস্যা হয়েছে',
   },
   onboarding: {
     setupComplete: 'সেটআপ সম্পন্ন!',

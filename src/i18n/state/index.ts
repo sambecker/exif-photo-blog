@@ -69,6 +69,12 @@ export const generateAppTextState = (i18n: I18N) => {
         i18n.admin.favoriteSuccess.replace('{{quantity}}', quantity),
       batchActionFailure: (quantity: string) =>
         i18n.admin.batchActionFailure.replace('{{quantity}}', quantity),
+      deletePhotosConfirm: (quantity: string) =>
+        i18n.admin.deletePhotosConfirm.replace('{{quantity}}', quantity),
+      deletePhotosSuccess: (quantity: string) =>
+        i18n.admin.deletePhotosSuccess.replace('{{quantity}}', quantity),
+      deletePhotosFailure: (quantity: string) =>
+        i18n.admin.deletePhotosFailure.replace('{{quantity}}', quantity),
     },
     utility: {
       ...i18n.utility,

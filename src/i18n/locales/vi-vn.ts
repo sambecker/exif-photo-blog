@@ -190,6 +190,10 @@ export const TEXT: I18N = {
     favoriteConfirm: 'Bạn có chắc chắn muốn yêu thích {{quantity}}?',
     favoriteSuccess: 'Đã yêu thích {{quantity}}',
     batchActionFailure: 'Đã xảy ra lỗi khi cập nhật {{quantity}}',
+    // eslint-disable-next-line max-len
+    deletePhotosConfirm: 'Bạn có chắc chắn muốn xóa {{quantity}}? Hành động này không thể hoàn tác.',
+    deletePhotosSuccess: 'Đã xóa {{quantity}}',
+    deletePhotosFailure: 'Đã xảy ra lỗi khi xóa {{quantity}}',
   },
   onboarding: {
     setupComplete: 'Cài đặt hoàn tất!',

@@ -190,6 +190,10 @@ export const TEXT: I18N = {
     favoriteConfirm: 'Tem certeza de que deseja favoritar {{quantity}}?',
     favoriteSuccess: '{{quantity}} favoritadas',
     batchActionFailure: 'Algo deu errado ao atualizar {{quantity}}',
+    // eslint-disable-next-line max-len
+    deletePhotosConfirm: 'Tem certeza de que deseja excluir {{quantity}}? Esta ação não pode ser desfeita.',
+    deletePhotosSuccess: '{{quantity}} excluídas',
+    deletePhotosFailure: 'Algo deu errado ao excluir {{quantity}}',
   },
   onboarding: {
     setupComplete: 'Configuração concluída!',
