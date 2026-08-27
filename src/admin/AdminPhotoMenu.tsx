@@ -23,6 +23,7 @@ import {
 import { isPathFavs, isPhotoFav } from '@/tag';
 import { usePathname, useRouter } from 'next/navigation';
 import MoreMenu, { MoreMenuSection } from '@/components/more/MoreMenu';
+import { renderMenuItemCheck } from '@/components/more/MoreMenuItem';
 import { useAppState } from '@/app/AppState';
 import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
 import { MdOutlineFileDownload } from 'react-icons/md';
@@ -33,7 +34,6 @@ import IconEdit from '@/components/icons/IconEdit';
 import { photoNeedsToBeUpdated } from '@/photo/update';
 import { KEY_COMMANDS } from '@/photo/key-commands';
 import { useAppText } from '@/i18n/state/client';
-import IconCheck from '@/components/icons/IconCheck';
 import IconTrash from '@/components/icons/IconTrash';
 import IconUpload from '@/components/icons/IconUpload';
 import { uploadPhotoFromClient } from '@/photo/storage';
@@ -134,13 +134,10 @@ export default function AdminPhotoMenu({
         ?.accessoryStart,
       items: visibilityOptions.map(({ value, label, accessoryStart }) => ({
         label,
-        icon: accessoryStart,
-        ...value === visibility && {
-          accessoryEnd: <IconCheck
-            size={13}
-            className="translate-y-[-1px]"
-          />,
-        },
+        // Selected visibility is marked with a check, unselected show its icon
+        icon: value === visibility
+          ? renderMenuItemCheck(true)
+          : accessoryStart,
         action: () => setPhotoVisibilityAction(
           photo.id,
           value,
