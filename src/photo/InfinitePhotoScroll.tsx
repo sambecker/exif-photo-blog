@@ -155,9 +155,13 @@ export default function InfinitePhotoScroll({
     photoId: string,
     revalidateRemainingPhotos?: boolean,
   ) => mutate(data, {
-    revalidate: (_data: Photo[], [_, size]:[string, number]) => {
+    // SWR passes the page's key, so derive its index from the key itself.
+    // A photo absent from loaded pages lives in server-rendered content,
+    // which shifts every page when it's removed
+    revalidate: (_data: Photo[], key: string) => {
       const i = (data ?? []).findIndex(photos =>
         photos.some(photo => photo.id === photoId));
+      const size = getSizeFromKey(key);
       return revalidateRemainingPhotos ? size >= i : size === i;
     },
   } as any), [data, mutate]);

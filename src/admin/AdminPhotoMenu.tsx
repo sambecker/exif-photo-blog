@@ -4,9 +4,8 @@ import { ComponentProps, useCallback, useMemo, useRef } from 'react';
 import {
   getPathComponents,
   PARAM_REDIRECT,
-  PATH_ROOT,
   pathForAdminPhotoEdit,
-  pathForTag,
+  pathForPhoto,
 } from '@/app/path';
 import {
   deletePhotoAction,
@@ -21,8 +20,8 @@ import {
   downloadFileNameForPhoto,
   titleForPhoto,
 } from '@/photo';
-import { isPathFavs, isPhotoFav, TAG_PRIVATE } from '@/tag';
-import { usePathname } from 'next/navigation';
+import { isPathFavs, isPhotoFav } from '@/tag';
+import { usePathname, useRouter } from 'next/navigation';
 import MoreMenu, { MoreMenuSection } from '@/components/more/MoreMenu';
 import { useAppState } from '@/app/AppState';
 import { RevalidatePhoto } from '@/photo/InfinitePhotoScroll';
@@ -68,6 +67,8 @@ export default function AdminPhotoMenu({
   const inputRef = useRef<HTMLInputElement>(null);
   const onUploadFinishRef = useRef<() => void>(null);
 
+  const router = useRouter();
+
   const path = usePathname();
   const pathComponents = getPathComponents(path);
   const isOnPhotoDetail = pathComponents.photoId === photo.id;
@@ -75,15 +76,15 @@ export default function AdminPhotoMenu({
   const shouldRedirectFav = isPathFavs(path) && isFav;
   const shouldRedirectDelete = isOnPhotoDetail;
   const visibility = getVisibilityFromPhoto(photo);
-  // Only leave the photo detail page when privacy itself changes
+  // Only leave the photo detail page when privacy itself changes, following
+  // the photo to its new url: private photos are only reachable beneath the
+  // private tag, public photos only outside it
   const redirectPathForVisibility = useCallback((value: VisibilityValue) => {
     const willBePrivate = value === 'private';
     return isOnPhotoDetail && willBePrivate !== Boolean(photo.hidden)
-      ? willBePrivate
-        ? PATH_ROOT
-        : pathForTag(TAG_PRIVATE)
+      ? pathForPhoto({ photo: { ...photo, hidden: willBePrivate } })
       : undefined;
-  }, [isOnPhotoDetail, photo.hidden]);
+  }, [isOnPhotoDetail, photo]);
 
   const sectionMain = useMemo(() => {
     const items: MoreMenuSection['items'] = [{
@@ -145,7 +146,12 @@ export default function AdminPhotoMenu({
           value,
           redirectPathForVisibility(value),
         )
-          .then(() => revalidatePhoto?.(photo.id)),
+          .then(() => {
+            // Photos leaving a feed shift every subsequent page
+            revalidatePhoto?.(photo.id, true);
+            // Update photos rendered on the server, which SWR doesn't own
+            router.refresh();
+          }),
       })),
     });
     items.push({
@@ -212,6 +218,7 @@ export default function AdminPhotoMenu({
     visibility,
     redirectPathForVisibility,
     revalidatePhoto,
+    router,
   ]);
 
   const sectionDelete: MoreMenuSection = useMemo(() => ({
