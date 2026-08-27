@@ -65,6 +65,7 @@ export default function AdminBatchEditPanelClient({
   const isInAlbumMode = albumTitles !== undefined;
   const isInTagMode = tags !== undefined;
   const isInVisibilityMode = visibility !== undefined;
+  const isInEditMode = isInAlbumMode || isInTagMode || isInVisibilityMode;
 
   const visibilityLabel = getVisibilityLabel(appText, visibility);
 
@@ -90,6 +91,34 @@ export default function AdminBatchEditPanelClient({
       ? !Boolean(selectAllCount)
       : selectedPhotoIds?.length === 0);
 
+  const hasValidEditValue = isInTagMode
+    ? Boolean(tags) && !tagErrorMessage
+    : isInAlbumMode
+      ? Boolean(albumTitles)
+      : Boolean(visibility);
+
+  const performBatchAction = (
+    args: Parameters<typeof batchPhotoAction>[0],
+    onSuccess: () => void,
+  ) => {
+    setIsPerformingSelectEdit?.(true);
+    batchPhotoAction(args)
+      .then(() => {
+        onSuccess();
+        stopSelectingPhotos?.();
+      })
+      .catch(() =>
+        toastWarning(appText.admin.batchActionFailure(photosText)))
+      .finally(() => setIsPerformingSelectEdit?.(false));
+  };
+
+  const exitEditMode = () => {
+    setAlbumTitles?.(undefined);
+    setTags?.(undefined);
+    setTagErrorMessage?.('');
+    setVisibility?.(undefined);
+  };
+
   const renderPhotoSelectionStatus =
     isSelectingAllPhotos && selectAllCount === undefined
       ? <ResponsiveText
@@ -101,169 +130,172 @@ export default function AdminBatchEditPanelClient({
       : !isSelectingAllPhotos && selectedPhotoIds?.length === 0
         ? <>
           <FaArrowDown />
-          <ResponsiveText shortText={appText.admin.selectPhotosBelowShort}>
+          <ResponsiveText>
             {appText.admin.selectPhotosBelow}
           </ResponsiveText>
         </>
-        : <ResponsiveText shortText={photosText}>
+        : <ResponsiveText>
           {appText.admin.photosSelected(photosText)}
         </ResponsiveText>;
 
-  const renderActions = isInTagMode || isInAlbumMode || isInVisibilityMode
-    ? <>
-      <LoaderButton
-        className="min-h-[2.5rem]"
-        icon={<IoCloseSharp
-          size={19}
-          className="translate-y-[0.5px]"
-        />}
-        onClick={() => {
-          setAlbumTitles?.(undefined);
-          setTags?.(undefined);
-          setTagErrorMessage?.('');
-          setVisibility?.(undefined);
-        }}
-        disabled={isPerformingSelectEdit}
+  const renderEditField = isInAlbumMode
+    ? <FieldsetAlbum
+      albumOptions={uniqueAlbums}
+      value={albumTitles}
+      onChange={setAlbumTitles}
+      readOnly={isPerformingSelectEdit}
+      openOnLoad
+      hideLabel
+    />
+    : isInTagMode
+      ? <FieldsetTag
+        tags={tags}
+        tagOptions={uniqueTags}
+        placeholder={appText.admin.tagPlaceholder(photosText)}
+        onChange={tags => setTags?.(tags)}
+        onError={setTagErrorMessage}
+        readOnly={isPerformingSelectEdit}
+        openOnLoad
+        hideLabel
       />
-      <LoaderButton
-        className="min-h-[2.5rem]"
-        icon={<FaCheck size={15} />}
-        confirmText={isInTagMode
-          ? appText.admin.tagConfirm(photosText)
-          : isInAlbumMode
-            ? appText.admin.albumConfirm(photosText)
-            : appText.admin.setVisibilityConfirm(
-              visibilityLabel ?? '',
-              photosText,
-            )}
-        onClick={() => {
-          setIsPerformingSelectEdit?.(true);
-          if (isInTagMode) {
-            const tagsArray = convertStringToArray(tags, false);
-            const tagsFormatted = tagsArray
-              .map(tag => `"${tag}"`)
-              .join(', ');
-            batchPhotoAction({
-              ...batchPhotoActionArguments,
-              tags: tagsArray,
-            })
-              .then(() => {
-                toastSuccess(
-                  appText.admin.tagSuccess(photosText, tagsFormatted),
-                );
-                stopSelectingPhotos?.();
-              })
-              .catch(() =>
-                toastWarning(appText.admin.batchActionFailure(photosText)))
-              .finally(() => setIsPerformingSelectEdit?.(false));
-          } else if (isInAlbumMode) {
-            const albumTitlesArray = convertStringToArray(albumTitles, false);
-            const albumTitlesFormatted = albumTitlesArray
-              .map(title => `"${title}"`)
-              .join(', ');
-            batchPhotoAction({
-              ...batchPhotoActionArguments,
-              albumTitles: albumTitlesArray,
-            })
-              .then(() => {
-                toastSuccess(
-                  appText.admin.albumSuccess(
-                    photosText,
-                    albumTitlesFormatted,
-                  ),
-                );
-                stopSelectingPhotos?.();
-              })
-              .catch(() =>
-                toastWarning(appText.admin.batchActionFailure(photosText)))
-              .finally(() => setIsPerformingSelectEdit?.(false));
-          } else if (isInVisibilityMode && visibility) {
-            batchPhotoAction({
-              ...batchPhotoActionArguments,
-              visibility,
-            })
-              .then(() => {
-                toastSuccess(appText.admin.setVisibilitySuccess(photosText));
-                stopSelectingPhotos?.();
-              })
-              .catch(() =>
-                toastWarning(appText.admin.batchActionFailure(photosText)))
-              .finally(() => setIsPerformingSelectEdit?.(false));
-          }
-        }}
-        disabled={
-          (
-            (!tags || Boolean(tagErrorMessage)) &&
-            !albumTitles &&
-            !visibility
-          ) ||
-          isFormDisabled
+      : <FieldsetWithStatus
+        id="batch-visibility"
+        label={appText.admin.setVisibility}
+        selectOptions={getVisibilityOptions(appText)}
+        selectOptionsDefaultLabel={
+          appText.admin.setVisibilityPlaceholder(photosText)
         }
-        primary
-      >
-        {appText.admin.apply}
-      </LoaderButton>
-    </>
-    : <>
-      <DeletePhotosButton
-        {...{
-          ...batchPhotoActionArguments,
-          photosText,
-        }}
-        disabled={isFormDisabled}
-        onClick={() => setIsPerformingSelectEdit?.(true)}
-        onDelete={stopSelectingPhotos}
-        onFinish={() => setIsPerformingSelectEdit?.(false)}
-      />
-      <LoaderButton
-        icon={<IconFavs />}
-        disabled={isFormDisabled}
-        confirmText={appText.admin.favoriteConfirm(photosText)}
-        onClick={() => {
-          setIsPerformingSelectEdit?.(true);
-          batchPhotoAction({
+        selectOpenOnLoad
+        value={visibility ?? ''}
+        onChange={value => setVisibility?.(value as VisibilityValue | '')}
+        readOnly={isPerformingSelectEdit}
+        hideLabel
+      />;
+
+  const renderEditActions = <>
+    <LoaderButton
+      className="min-h-[2.5rem]"
+      icon={<IoCloseSharp
+        size={19}
+        className="translate-y-[0.5px]"
+      />}
+      onClick={exitEditMode}
+      disabled={isPerformingSelectEdit}
+    />
+    <LoaderButton
+      className="min-h-[2.5rem]"
+      icon={<FaCheck size={15} />}
+      confirmText={isInTagMode
+        ? appText.admin.tagConfirm(photosText)
+        : isInAlbumMode
+          ? appText.admin.albumConfirm(photosText)
+          : appText.admin.setVisibilityConfirm(
+            visibilityLabel ?? '',
+            photosText,
+          )}
+      onClick={() => {
+        if (isInTagMode) {
+          const tagsArray = convertStringToArray(tags, false);
+          const tagsFormatted = tagsArray
+            .map(tag => `"${tag}"`)
+            .join(', ');
+          performBatchAction({
             ...batchPhotoActionArguments,
-            action: 'favorite',
-          })
-            .then(() => {
-              toastSuccess(appText.admin.favoriteSuccess(photosText));
-              stopSelectingPhotos?.();
-            })
-            .catch(() =>
-              toastWarning(appText.admin.batchActionFailure(photosText)))
-            .finally(() => setIsPerformingSelectEdit?.(false));
-        }}
-      />
-      <LoaderButton
-        onClick={() => setAlbumTitles?.('')}
-        disabled={isFormDisabled}
-        icon={<IconAlbum size={15} className="translate-y-[1.5px]" />}
-      >
-        {appText.category.album}
-      </LoaderButton>
-      <LoaderButton
-        onClick={() => setTags?.('')}
-        disabled={isFormDisabled}
-        icon={<IconTag size={15} className="translate-y-[1.5px]" />}
-      >
-        {appText.category.tag}
-      </LoaderButton>
-      <LoaderButton
-        onClick={() => setVisibility?.('')}
-        disabled={isFormDisabled}
-        icon={<IconHidden
-          size={17}
-          className="translate-y-[1px] grow"
-          visible
-        />}
-      >
-        {appText.admin.setVisibility}
-      </LoaderButton>
-      <LoaderButton
-        icon={<IoCloseSharp size={19} />}
-        onClick={stopSelectingPhotos}
-      />
-    </>;
+            tags: tagsArray,
+          }, () => toastSuccess(
+            appText.admin.tagSuccess(photosText, tagsFormatted),
+          ));
+        } else if (isInAlbumMode) {
+          const albumTitlesArray = convertStringToArray(albumTitles, false);
+          const albumTitlesFormatted = albumTitlesArray
+            .map(title => `"${title}"`)
+            .join(', ');
+          performBatchAction({
+            ...batchPhotoActionArguments,
+            albumTitles: albumTitlesArray,
+          }, () => toastSuccess(
+            appText.admin.albumSuccess(photosText, albumTitlesFormatted),
+          ));
+        } else if (visibility) {
+          performBatchAction({
+            ...batchPhotoActionArguments,
+            visibility,
+          }, () => toastSuccess(
+            appText.admin.setVisibilitySuccess(photosText),
+          ));
+        }
+      }}
+      disabled={!hasValidEditValue || isFormDisabled}
+      primary
+    >
+      {appText.admin.apply}
+    </LoaderButton>
+  </>;
+
+  const renderPrimaryActions = <div
+    className="flex items-center gap-1 md:gap-2"
+  >
+    <DeletePhotosButton
+      {...{
+        ...batchPhotoActionArguments,
+        photosText,
+      }}
+      disabled={isFormDisabled}
+      onClick={() => setIsPerformingSelectEdit?.(true)}
+      onDelete={stopSelectingPhotos}
+      onFinish={() => setIsPerformingSelectEdit?.(false)}
+    />
+    <LoaderButton
+      icon={<IconFavs />}
+      disabled={isFormDisabled}
+      confirmText={appText.admin.favoriteConfirm(photosText)}
+      onClick={() => performBatchAction({
+        ...batchPhotoActionArguments,
+        action: 'favorite',
+      }, () => toastSuccess(appText.admin.favoriteSuccess(photosText)))}
+    />
+    <LoaderButton
+      onClick={() => setAlbumTitles?.('')}
+      disabled={isFormDisabled}
+      icon={<IconAlbum size={15} className="translate-y-[1.5px]" />}
+    >
+      {appText.category.album}
+    </LoaderButton>
+    <LoaderButton
+      onClick={() => setTags?.('')}
+      disabled={isFormDisabled}
+      icon={<IconTag size={15} className="translate-y-[1.5px]" />}
+    >
+      {appText.category.tag}
+    </LoaderButton>
+    <LoaderButton
+      onClick={() => setVisibility?.('')}
+      disabled={isFormDisabled}
+      icon={<IconHidden
+        size={17}
+        className="translate-y-[1px] grow"
+        visible
+      />}
+    >
+      {appText.admin.setVisibility}
+    </LoaderButton>
+  </div>;
+
+  const renderStopSelectingButton = <LoaderButton
+    icon={<IoCloseSharp size={19} />}
+    onClick={stopSelectingPhotos}
+  />;
+
+  const renderSelectAll = shouldShowSelectAll &&
+    <FieldsetWithStatus
+      id="batch-select-all"
+      label={appText.admin.selectAll}
+      type="checkbox"
+      className="-z-10"
+      value={isSelectingAllPhotos ? 'true' : 'false'}
+      onChange={toggleIsSelectingAllPhotos}
+      readOnly={isSelectingAllPhotos && selectAllCount === undefined}
+    />;
 
   const shouldShowPanel =
     isSelectingPhotos &&
@@ -294,66 +326,29 @@ export default function AdminBatchEditPanelClient({
           )}
         >
           <div className={clsx(
-            'flex items-center gap-1 md:gap-2',
+            'flex gap-1 md:gap-2 min-h-11',
             '[&>*:first-child]:grow',
           )}>
-            {isInAlbumMode
-              ? <FieldsetAlbum
-                albumOptions={uniqueAlbums}
-                value={albumTitles}
-                onChange={setAlbumTitles}
-                readOnly={isPerformingSelectEdit}
-                openOnLoad
-                hideLabel
-              />
-              : isInTagMode
-                ? <FieldsetTag
-                  tags={tags}
-                  tagOptions={uniqueTags}
-                  placeholder={appText.admin.tagPlaceholder(photosText)}
-                  onChange={tags => setTags?.(tags)}
-                  onError={setTagErrorMessage}
-                  readOnly={isPerformingSelectEdit}
-                  openOnLoad
-                  hideLabel
-                />
-                : isInVisibilityMode
-                  ? <FieldsetWithStatus
-                    id="batch-visibility"
-                    label={appText.admin.setVisibility}
-                    selectOptions={getVisibilityOptions(appText)}
-                    selectOptionsDefaultLabel={
-                      appText.admin.setVisibilityPlaceholder(photosText)
-                    }
-                    selectOpenOnLoad
-                    value={visibility ?? ''}
-                    onChange={value =>
-                      setVisibility?.(value as VisibilityValue | '')}
-                    readOnly={isPerformingSelectEdit}
-                    hideLabel
-                  />
-                  : <div className="grow">
-                    <div className="flex items-center gap-2">
-                      {renderPhotoSelectionStatus}
-                    </div>
-                  </div>}
-            {renderActions}
+            {isInEditMode
+              ? <>
+                {renderEditField}
+                {renderEditActions}
+              </>
+              : <>
+                {renderPrimaryActions}
+                {renderStopSelectingButton}
+              </>}
           </div>
-          {shouldShowSelectAll &&
-            <FieldsetWithStatus
-              id="batch-select-all"
-              label={appText.admin.selectAll}
-              type="checkbox"
-              className="-z-10"
-              value={isSelectingAllPhotos ? 'true' : 'false'}
-              onChange={toggleIsSelectingAllPhotos}
-              readOnly={isSelectingAllPhotos &&
-                selectAllCount === undefined}
-            />}
-          {tagErrorMessage &&
-            <div className="text-error pl-4">
-              {tagErrorMessage}
-            </div>}
+          <div className="flex items-center gap-2 px-1.5 pb-1">
+            <div className="grow flex items-center gap-2 min-w-0">
+              {tagErrorMessage
+                ? <span className="text-error truncate">
+                  {tagErrorMessage}
+                </span>
+                : renderPhotoSelectionStatus}
+            </div>
+            {renderSelectAll}
+          </div>
         </div>} />
     : null;
 }
