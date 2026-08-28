@@ -109,15 +109,15 @@ const FORM_METADATA = (
     validateStringMaxLength: STRING_MAX_LENGTH_LONG,
     shouldHide: () => !aiTextGeneration,
   },
-  albums: {
-    section: 'text',
-    label: 'albums',
-    excludeFromInsert: true,
-  },
   visibility: {
     section: 'text',
     type: 'text',
     label: 'visibility',
+    excludeFromInsert: true,
+  },
+  albums: {
+    section: 'text',
+    label: 'albums',
     excludeFromInsert: true,
   },
   excludeFromFeeds: {
