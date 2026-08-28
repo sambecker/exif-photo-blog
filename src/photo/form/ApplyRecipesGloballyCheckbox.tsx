@@ -8,6 +8,7 @@ export default function ApplyRecipeTitleGloballyCheckbox({
   hasRecipeTitleChanged,
   recipeData,
   film,
+  didCopyRecipeData,
   onMatchResults,
   ...props
 }: ComponentProps<typeof FieldsetWithStatus> & {
@@ -16,14 +17,24 @@ export default function ApplyRecipeTitleGloballyCheckbox({
   hasRecipeTitleChanged?: boolean
   recipeData?: string
   film?: string
+  didCopyRecipeData?: boolean
   onMatchResults: (didFindMatchingPhotos: boolean) => void
 }) {
   const [matchingPhotosCount, setMatchingPhotosCount] = useState<number>();
 
-  const loading = matchingPhotosCount === undefined;
+  const shouldSearchForMatches = Boolean(
+    recipeTitle &&
+    hasRecipeTitleChanged &&
+    recipeData &&
+    film &&
+    // Data copied from an existing title already belongs to that title
+    !didCopyRecipeData,
+  );
+
+  const loading = shouldSearchForMatches && matchingPhotosCount === undefined;
 
   useEffect(() => {
-    if (recipeTitle && hasRecipeTitleChanged && recipeData && film) {
+    if (shouldSearchForMatches && recipeData && film) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setMatchingPhotosCount(undefined);
       getPhotosNeedingRecipeTitleCountAction(recipeData, film, photoId)
@@ -31,13 +42,13 @@ export default function ApplyRecipeTitleGloballyCheckbox({
     } else {
       setMatchingPhotosCount(0);
     }
-  }, [recipeTitle, hasRecipeTitleChanged, recipeData, film, photoId]);
+  }, [shouldSearchForMatches, recipeData, film, photoId]);
 
   useEffect(() => {
     onMatchResults((matchingPhotosCount ?? 0) > 0);
   }, [matchingPhotosCount, onMatchResults]);
 
-  const shouldShowFieldSet = loading || matchingPhotosCount > 0;
+  const shouldShowFieldSet = loading || (matchingPhotosCount ?? 0) > 0;
 
   return (
     shouldShowFieldSet

@@ -14,6 +14,7 @@ import {
   deletePhotoRecipeGlobally,
   renamePhotoRecipeGlobally,
   getPhotosNeedingRecipeTitleCount,
+  getRecipeDataForTitle,
   updateColorDataForPhoto,
   getColorDataForPhotos,
   getPhotoIds,
@@ -443,6 +444,11 @@ export const getPhotosNeedingRecipeTitleCountAction = async (
       film,
       photoIdToExclude,
     ),
+  );
+
+export const getRecipeDataForTitleAction = async (recipeTitle: string) =>
+  runAuthenticatedAdminServerAction(async () =>
+    await getRecipeDataForTitle(recipeTitle),
   );
 
 export const storeColorDataForPhotoAction = async (photoId: string) =>

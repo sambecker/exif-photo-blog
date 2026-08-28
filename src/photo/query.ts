@@ -403,6 +403,21 @@ export const getRecipeTitleForData = async (
     .then(({ rows }) => rows[0]?.recipe_title as string | undefined)
   , 'getRecipeTitleForData');
 
+export const getRecipeDataForTitle = async (title: string) =>
+  safelyQuery(() => sql`
+    SELECT recipe_data FROM photos
+    WHERE hidden IS NOT TRUE
+    AND recipe_title=${title}
+    AND recipe_data IS NOT NULL
+    AND recipe_data::text <> 'null'
+    ORDER BY taken_at DESC
+    LIMIT 1
+  `
+    .then(({ rows }) => rows[0]?.recipe_data
+      ? JSON.stringify(rows[0].recipe_data)
+      : undefined)
+  , 'getRecipeDataForTitle');
+
 export const getPhotosNeedingRecipeTitleCount = async (
   data: string,
   film: string,
