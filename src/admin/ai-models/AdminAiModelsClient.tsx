@@ -18,6 +18,7 @@ import AppGrid from '@/components/AppGrid';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import Spinner from '@/components/Spinner';
+import Tooltip from '@/components/Tooltip';
 import WarningNote from '@/components/WarningNote';
 import EnvVar from '@/components/EnvVar';
 import PhotoSmall from '@/photo/PhotoSmall';
@@ -119,7 +120,8 @@ export default function AdminAiModelsClient({
       setResults(current =>
         applyToColumns(current, (_, index) => generated[index]));
     } catch (e: any) {
-      setResults(current => applyToColumns(current, () => ({
+      setResults(current => applyToColumns(current, column => ({
+        model: columnModels[column],
         error: e.message ?? 'Unknown error',
         durationInMs: 0,
       })));
@@ -184,7 +186,7 @@ export default function AdminAiModelsClient({
   const renderResult = (photoId: string, column: number) => {
     const result = results[photoId]?.[column];
 
-    return <div key={column}>
+    return <div key={column} className="pl-3.5">
       {isCellLoading(photoId, column)
         ? <Spinner />
         : result?.error
@@ -199,11 +201,18 @@ export default function AdminAiModelsClient({
               <div>
                 {result.caption}
               </div>
-              <div className="text-sm text-dim">
+              <div className="flex items-center text-sm text-dim">
                 {(result.durationInMs / 1000).toFixed(1)}s
+                {/* Names the model that ran, which the column's
+                    dropdown may have moved on from since */}
+                <Tooltip
+                  content={result.model as string}
+                  classNameTrigger="ml-1 text-sm -translate-y-px scale-90"
+                  supportMobile
+                />
               </div>
             </>
-            : <span className="text-dim">
+            : <span className="text-dim text-xl">
               &mdash;
             </span>}
     </div>;
@@ -222,7 +231,7 @@ export default function AdminAiModelsClient({
           {/* Background reaches into the sidebar so row buttons scrolling
               past don't appear alongside the Start button */}
           <div className={clsx(
-            'sticky top-0 z-20 bg-main py-2 -mt-2',
+            'sticky top-0 z-20 bg-main py-4 -mt-4',
             'md:-mr-26 md:pr-26',
           )}>
             <div className={CLASS_GRID}>

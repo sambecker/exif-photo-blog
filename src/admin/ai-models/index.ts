@@ -30,6 +30,9 @@ export const AI_MODEL_COLUMNS_DEFAULT: OpenAIModel[] = [
 ];
 
 export type AiModelResult = {
+  // Recorded per result, as a column's dropdown can be
+  // changed after its cells have been generated
+  model: OpenAIModel
   title?: string
   caption?: string
   error?: string

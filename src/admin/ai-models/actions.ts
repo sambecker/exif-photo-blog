@@ -46,9 +46,10 @@ export const generateAiTextForModelsAction = async (
           schema,
           model,
         );
-        return { title, caption, durationInMs: Date.now() - timeStart };
+        return { model, title, caption, durationInMs: Date.now() - timeStart };
       } catch (e: any) {
         return {
+          model,
           error: e.message ?? 'Unknown error',
           durationInMs: Date.now() - timeStart,
         };
