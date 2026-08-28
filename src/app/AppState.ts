@@ -66,6 +66,7 @@ export type AppStateContextType = {
   setIsPhotoSetFull?: Dispatch<SetStateAction<boolean>>
   // DEBUG
   areAdminDebugToolsEnabled?: boolean
+  isAdminAiModelDebugEnabled?: boolean
   isGridHighDensity?: boolean
   setIsGridHighDensity?: Dispatch<SetStateAction<boolean>>
   areZoomControlsShown?: boolean

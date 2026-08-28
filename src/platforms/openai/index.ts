@@ -13,16 +13,16 @@ import { cleanUpAiTextResponse } from '@/photo/ai';
 import {
   checkRateLimitAndThrow as _checkRateLimitAndThrow,
 } from '@/platforms/rate-limit';
+import {
+  OPENAI_MODEL_COMPATIBLE,
+  OPENAI_MODEL_DEFAULT,
+  OpenAIModel,
+} from './models';
 import { z } from 'zod';
 
-type OpenAIModel = Parameters<NonNullable<typeof openaiClient>>[0];
-
-const MODEL_DEFAULT: OpenAIModel = 'gpt-5.2';
-const MODEL_COMPATIBLE: OpenAIModel = 'gpt-4o';
-
 const OPENAI_MODEL_ID: OpenAIModel = OPENAI_MODEL === 'compatible'
-  ? MODEL_COMPATIBLE
-  : (OPENAI_MODEL || MODEL_DEFAULT);
+  ? OPENAI_MODEL_COMPATIBLE
+  : (OPENAI_MODEL || OPENAI_MODEL_DEFAULT);
 
 const checkRateLimitAndThrow = (isBatch?: boolean) =>
   _checkRateLimitAndThrow({
@@ -48,14 +48,15 @@ const model: LanguageModel | undefined =
       ? openaiClient?.(OPENAI_MODEL_ID)
       : undefined;
 
-const getImageTextArgs = (
+const getImageTextArgsForModel = (
+  modelForQuery: LanguageModel,
   imageBase64: string,
   query: string,
 ): (
   Parameters<typeof streamText>[0] &
   Parameters<typeof generateText>[0]
-) | undefined => model ? {
-  model,
+) => ({
+  model: modelForQuery,
   messages: [{
     'role': 'user',
     'content': [
@@ -69,7 +70,14 @@ const getImageTextArgs = (
       },
     ],
   }],
-} : undefined;
+});
+
+const getImageTextArgs = (
+  imageBase64: string,
+  query: string,
+) => model
+  ? getImageTextArgsForModel(model, imageBase64, query)
+  : undefined;
 
 export const streamOpenAiImageQuery = async (
   imageBase64: string,
@@ -109,7 +117,11 @@ export const generateOpenAiImageQuery = async (
   }
 };
 
-export const generateOpenAiImageObjectQuery = async <T extends z.ZodSchema>(
+// Sole path to an object query, so the rate limit can't be skipped by a
+// caller. Checked after the model is resolved to avoid spending a token
+// on a request that was never going to be sent.
+const generateImageObjectQuery = async <T extends z.ZodSchema>(
+  modelForQuery: LanguageModel,
   imageBase64: string,
   query: string,
   schema: T,
@@ -117,29 +129,51 @@ export const generateOpenAiImageObjectQuery = async <T extends z.ZodSchema>(
 ): Promise<z.infer<T>> => {
   await checkRateLimitAndThrow(isBatch);
 
+  return generateText({
+    ...getImageTextArgsForModel(modelForQuery, imageBase64, query),
+    output: Output.object({ schema }),
+  }).then(result => Object.fromEntries(Object
+    .entries(result.output || {})
+    .map(([k, v]) => [k, cleanUpAiTextResponse(v as string)]),
+  ) as z.infer<T>);
+};
+
+export const generateOpenAiImageObjectQuery = async <T extends z.ZodSchema>(
+  imageBase64: string,
+  query: string,
+  schema: T,
+  isBatch?: boolean,
+): Promise<z.infer<T>> => {
   if (model) {
-    return generateText({
-      model,
-      output: Output.object({ schema }),
-      messages: [{
-        'role': 'user',
-        'content': [
-          {
-            'type': 'text',
-            'text': query,
-          }, {
-            'type': 'file',
-            'mediaType': 'image',
-            'data': removeBase64Prefix(imageBase64),
-          },
-        ],
-      }],
-    }).then(result => Object.fromEntries(Object
-      .entries(result.output || {})
-      .map(([k, v]) => [k, cleanUpAiTextResponse(v as string)]),
-    ) as z.infer<T>);
+    return generateImageObjectQuery(model, imageBase64, query, schema, isBatch);
   } else {
     throw new Error('No AI model configured');
+  }
+};
+
+// Pins an explicit model id rather than the configured OPENAI_MODEL, so that
+// models can be compared side-by-side. Requiring `openaiClient` keeps the
+// no-auto-spend backstop intact: a secret key is what makes direct OpenAI the
+// active provider in the first place. Rate limited as a batch, since a single
+// comparison fans out across several models and photos.
+export const generateOpenAiImageObjectQueryForModel = async <
+  T extends z.ZodSchema,
+>(
+  imageBase64: string,
+  query: string,
+  schema: T,
+  modelId: OpenAIModel,
+): Promise<z.infer<T>> => {
+  if (openaiClient) {
+    return generateImageObjectQuery(
+      openaiClient(modelId),
+      imageBase64,
+      query,
+      schema,
+      true,
+    );
+  } else {
+    throw new Error('OPENAI_SECRET_KEY required to query a specific model');
   }
 };
 

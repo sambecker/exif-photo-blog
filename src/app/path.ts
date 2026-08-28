@@ -81,6 +81,7 @@ export const PATH_ADMIN_INSIGHTS        = `${PATH_ADMIN}/insights`;
 export const PATH_ADMIN_ABOUT_EDIT      = `${PATH_ABOUT}/${EDIT}`;
 export const PATH_ADMIN_BASELINE        = `${PATH_ADMIN}/baseline`;
 export const PATH_ADMIN_COMPONENTS      = `${PATH_ADMIN}/components`;
+export const PATH_ADMIN_AI_MODELS       = `${PATH_ADMIN}/ai-models`;
 
 // Debug paths
 export const PATH_OG_ALL                = `${PATH_OG}/all`;
@@ -113,6 +114,7 @@ export const PATHS_ADMIN = [
   PATH_ADMIN_ABOUT_EDIT,
   PATH_ADMIN_BASELINE,
   PATH_ADMIN_COMPONENTS,
+  PATH_ADMIN_AI_MODELS,
 ];
 
 export const PATHS_TO_CACHE = [

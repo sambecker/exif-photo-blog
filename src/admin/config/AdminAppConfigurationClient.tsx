@@ -26,7 +26,12 @@ import {
 } from '@/photo/ai';
 import clsx from 'clsx/lite';
 import Link from 'next/link';
-import { PATH_ABOUT, PATH_FEED_JSON, PATH_RSS_XML } from '@/app/path';
+import {
+  PATH_ABOUT,
+  PATH_ADMIN_AI_MODELS,
+  PATH_FEED_JSON,
+  PATH_RSS_XML,
+} from '@/app/path';
 import { APP_DEFAULT_SORT_BY, DEFAULT_SORT_BY_OPTIONS } from '@/photo/sort';
 import {
   AdminConfigSection,
@@ -147,6 +152,7 @@ export default function AdminAppConfigurationClient({
   areAdminDebugToolsEnabled,
   isAdminSqlDebugEnabled,
   isAdminStorageDebugEnabled,
+  isAdminAiModelDebugEnabled,
   // Auth
   secret,
   // Connection status
@@ -1107,6 +1113,17 @@ export default function AdminAppConfigurationClient({
             Set environment variable to {'"1"'} to enable
             storage debugging
             {renderEnvVars(['ADMIN_STORAGE_DEBUG'])}
+          </ChecklistRow>
+          <ChecklistRow
+            title="AI model debugging"
+            status={isAdminAiModelDebugEnabled}
+            optional
+          >
+            Set environment variable to {'"1"'} to enable
+            the <AdminLink href={PATH_ADMIN_AI_MODELS}>
+              AI model comparison
+            </AdminLink> page
+            {renderEnvVars(['ADMIN_AI_MODEL_DEBUG'])}
           </ChecklistRow>
         </>;
     }

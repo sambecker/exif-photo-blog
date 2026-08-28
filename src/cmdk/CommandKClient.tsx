@@ -13,6 +13,7 @@ import {
 } from 'react';
 import {
   PATH_ABOUT,
+  PATH_ADMIN_AI_MODELS,
   PATH_ADMIN_BASELINE,
   PATH_ADMIN_COMPONENTS,
   PATH_ADMIN_CONFIGURATION,
@@ -180,6 +181,7 @@ export default function CommandKClient({
     areZoomControlsShown,
     arePhotosMatted,
     areAdminDebugToolsEnabled,
+    isAdminAiModelDebugEnabled,
     shouldShowBaselineGrid,
     shouldDebugImageFallbacks,
     shouldDebugInsights,
@@ -724,6 +726,13 @@ export default function CommandKClient({
         label: 'Components Overview',
         annotation: <BiLockAlt />,
         path: PATH_ADMIN_COMPONENTS,
+      });
+    }
+    if (isAdminAiModelDebugEnabled) {
+      adminSection.items.push({
+        label: 'AI Model Comparison',
+        annotation: <BiLockAlt />,
+        path: PATH_ADMIN_AI_MODELS,
       });
     }
     adminSection.items.push({

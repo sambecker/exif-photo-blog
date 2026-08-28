@@ -45,9 +45,11 @@ import useSupportsHover from '@/utility/useSupportsHover';
 export default function AppStateProvider({
   children,
   areAdminDebugToolsEnabled,
+  isAdminAiModelDebugEnabled,
 }: {
   children: ReactNode
   areAdminDebugToolsEnabled?: boolean
+  isAdminAiModelDebugEnabled?: boolean
 }) {
   const router = useRouter();
 
@@ -289,6 +291,7 @@ export default function AppStateProvider({
         setIsPhotoSetFull,
         // DEBUG
         areAdminDebugToolsEnabled,
+        isAdminAiModelDebugEnabled,
         isGridHighDensity,
         setIsGridHighDensity,
         areZoomControlsShown,

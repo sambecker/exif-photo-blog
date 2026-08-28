@@ -10,6 +10,7 @@ import {
   HTML_LANG,
   SITE_FEEDS_ENABLED,
   ADMIN_DEBUG_TOOLS_ENABLED,
+  ADMIN_AI_MODEL_DEBUG_ENABLED,
   PAGE_SCRIPT_URLS,
   VERCEL_GIT_COMMIT_SHA_SHORT,
   DEBUG_OUTPUTS_ENABLED,
@@ -107,7 +108,10 @@ export default function RootLayout({
         // Center on large screens
         '3xl:flex flex-col items-center',
       )}>
-        <AppStateProvider areAdminDebugToolsEnabled={ADMIN_DEBUG_TOOLS_ENABLED}>
+        <AppStateProvider
+          areAdminDebugToolsEnabled={ADMIN_DEBUG_TOOLS_ENABLED}
+          isAdminAiModelDebugEnabled={ADMIN_AI_MODEL_DEBUG_ENABLED}
+        >
           <AppTextProvider>
             <SelectPhotosProvider>
               <EditTitlesProvider>
