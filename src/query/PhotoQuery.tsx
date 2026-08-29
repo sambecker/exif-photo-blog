@@ -23,11 +23,6 @@ export default function PhotoQuery({
 
   const appText = useAppText();
 
-  const editQuery = () => {
-    setNextCommandKQuery?.(query);
-    setIsCommandKOpen?.(true);
-  };
-
   return (
     <EntityLink
       {...props}
@@ -41,29 +36,32 @@ export default function PhotoQuery({
           // can still be opened in a new tab or window
           if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) { return; }
           e.preventDefault();
-          editQuery();
+          setNextCommandKQuery?.(query);
+          setIsCommandKOpen?.(true);
         }
         : undefined}
-      action={editable &&
-        <button
-          type="button"
-          onClick={editQuery}
-          aria-label={appText.nav.search}
-          className={clsx(
-            'link',
-            'text-dim hover:text-main shrink-0',
-            'opacity-0 transition-opacity',
-            'group-hover:opacity-100 focus-visible:opacity-100',
-            'translate-y-[2px]',
-          )}
-        >
-          <IconEdit size={17}/>
-        </button>}
       hoverQueryOptions={{ query }}
-      icon={<IconQuery
-        size={12}
-        className="translate-x-[2px] translate-y-[-0.5px]"
-      />}
+      icon={<span className={clsx(
+        'grid',
+        '[&>*]:col-start-1 [&>*]:row-start-1',
+        '[&>*]:place-self-center',
+      )}>
+        <IconQuery
+          size={12}
+          className={clsx(
+            'translate-x-[2px] translate-y-[-0.5px]',
+            editable && 'transition-opacity group-hover:opacity-0',
+          )}
+        />
+        {editable &&
+          <IconEdit
+            size={15}
+            className={clsx(
+              'opacity-0 transition-opacity',
+              'group-hover:opacity-100',
+            )}
+          />}
+      </span>}
     />
   );
 }
