@@ -98,6 +98,7 @@ export const TEXT: I18N = {
     searching: 'Aranıyor ...',
     noResults: 'Sonuç bulunamadı',
     pages: 'Sayfalar',
+    found: '{{quantity}} bulundu',
     viewAll: 'Tümünü Görüntüle',
   },
   tooltip: {

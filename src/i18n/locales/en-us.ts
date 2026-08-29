@@ -97,6 +97,7 @@ export const TEXT = {
     searching: 'Searching ...',
     noResults: 'No results found',
     pages: 'Pages',
+    found: 'Found {{quantity}}',
     viewAll: 'View All',
   },
   tooltip: {

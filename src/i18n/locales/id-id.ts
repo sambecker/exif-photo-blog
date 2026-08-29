@@ -98,6 +98,7 @@ export const TEXT: I18N = {
     searching: 'Mencari ...',
     noResults: 'Tidak ada hasil ditemukan',
     pages: 'Halaman',
+    found: 'Ditemukan {{quantity}}',
     viewAll: 'Lihat Semua',
   },
   tooltip: {

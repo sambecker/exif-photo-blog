@@ -49,11 +49,15 @@ import Spinner from '../components/Spinner';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { BiDesktop, BiLockAlt, BiMoon, BiSun } from 'react-icons/bi';
-import { IoClose, IoInvertModeSharp } from 'react-icons/io5';
+import { IoArrowDown, IoClose, IoInvertModeSharp } from 'react-icons/io5';
 import { useAppState } from '@/app/AppState';
 import { RiToolsFill } from 'react-icons/ri';
 import { signOutAction } from '@/auth/actions';
-import { getKeywordsForPhoto, titleForPhoto } from '@/photo';
+import {
+  getKeywordsForPhoto,
+  photoQuantityText,
+  titleForPhoto,
+} from '@/photo';
 import PhotoDate from '@/photo/PhotoDate';
 import PhotoSmall from '@/photo/PhotoSmall';
 import {
@@ -133,7 +137,6 @@ type CommandKItem = {
 type CommandKSection = {
   heading: string
   accessory?: ReactNode
-  note?: ReactNode
   items: CommandKItem[]
 }
 
@@ -315,35 +318,39 @@ export default function CommandKClient({
       return [{
         heading: 'Photos',
         accessory: <IconPhoto size={14} />,
-        note: <button
-          type="button"
-          // Headings are aria-hidden, so keep this out of the tab order and
-          // let keyboard users reach the results page via the key command
-          tabIndex={-1}
-          onClick={showAllQueryResults}
-          className="link flex items-center gap-2"
-        >
-          
-          <span className="uppercase text-xs">
-            {appText.cmdk.viewAll}
-          </span>
-          <KeyCommand modifier="⌘" className="max-sm:hidden">
-            ⏎
-          </KeyCommand>
-        </button>,
-        items: photos.map(photo => ({
-          label: titleForPhoto(photo),
-          keywords: getKeywordsForPhoto(photo),
-          annotation: <PhotoDate {...{ photo, timezone: undefined }} />,
-          accessory: <PhotoSmall photo={photo} />,
-          path: pathForPhoto({ photo }),
-        })),
+        items: [
+          {
+            label: <div className="flex items-center gap-2">
+              <IoArrowDown />
+              {appText.cmdk.found(
+                photoQuantityText(photos.length, appText, false),
+              )}
+            </div>,
+            explicitKey: 'view-all',
+            // Keep this row visible for any matching photo query
+            keywords: [queryFormatted, appText.cmdk.viewAll],
+            annotation: <span className="flex items-center gap-2">
+              <span>{appText.cmdk.viewAll}</span>
+              <KeyCommand modifier="⌘" className="max-sm:hidden">
+                ⏎
+              </KeyCommand>
+            </span>,
+            path: pathForQuery(queryFormatted),
+          },
+          ...photos.map(photo => ({
+            label: titleForPhoto(photo),
+            keywords: getKeywordsForPhoto(photo),
+            annotation: <PhotoDate {...{ photo, timezone: undefined }} />,
+            accessory: <PhotoSmall photo={photo} />,
+            path: pathForPhoto({ photo }),
+          })),
+        ],
       }];
     } else {
       return [];
     }
-  },    
-  [photos, appText, showAllQueryResults],
+  },
+  [photos, appText, queryFormatted],
   );
 
   useEffect(() => {
@@ -900,7 +907,7 @@ export default function CommandKClient({
               .concat(adminSection)
               .concat(clientSections)
               .filter(({ items }) => items.length > 0)
-              .map(({ heading, accessory, note, items }) =>
+              .map(({ heading, accessory, items }) =>
                 <Command.Group
                   key={heading}
                   heading={<div className={clsx(
@@ -912,8 +919,6 @@ export default function CommandKClient({
                     {accessory &&
                       <div className="w-5">{accessory}</div>}
                     {heading}
-                    {note &&
-                      <span className="ml-auto pl-3">{note}</span>}
                   </div>}
                   className={clsx(
                     'uppercase',

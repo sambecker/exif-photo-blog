@@ -98,6 +98,7 @@ export const TEXT: I18N = {
     searching: 'खोज रहे हैं...',
     noResults: 'कोई परिणाम नहीं मिला',
     pages: 'पृष्ठ',
+    found: '{{quantity}} मिले',
     viewAll: 'सभी देखें',
   },
   tooltip: {

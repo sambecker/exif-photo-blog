@@ -98,6 +98,7 @@ export const TEXT: I18N = {
     searching: 'Buscando ...',
     noResults: 'No se encontraron resultados',
     pages: 'Páginas',
+    found: '{{quantity}} encontradas',
     viewAll: 'Ver todo',
   },
   tooltip: {

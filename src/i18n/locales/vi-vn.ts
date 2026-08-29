@@ -98,6 +98,7 @@ export const TEXT: I18N = {
     searching: 'Đang tìm kiếm...',
     noResults: 'Không tìm thấy kết quả',
     pages: 'Trang',
+    found: 'Tìm thấy {{quantity}}',
     viewAll: 'Xem tất cả',
   },
   tooltip: {
