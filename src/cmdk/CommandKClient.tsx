@@ -49,7 +49,7 @@ import Spinner from '../components/Spinner';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { BiDesktop, BiLockAlt, BiMoon, BiSun } from 'react-icons/bi';
-import { IoArrowDown, IoClose, IoInvertModeSharp } from 'react-icons/io5';
+import { IoClose, IoInvertModeSharp } from 'react-icons/io5';
 import { useAppState } from '@/app/AppState';
 import { RiToolsFill } from 'react-icons/ri';
 import { signOutAction } from '@/auth/actions';
@@ -321,21 +321,15 @@ export default function CommandKClient({
         accessory: <IconPhoto size={14} />,
         items: [
           {
-            label: <div className="flex items-center gap-2">
-              <IoArrowDown />
-              {appText.cmdk.found(
-                photoQuantityText(photosCount, appText, false),
-              )}
-            </div>,
+            label: appText.cmdk.found(
+              photoQuantityText(photosCount, appText, false),
+            ),
             explicitKey: 'view-all',
             // Keep this row visible for any matching photo query
-            keywords: [queryFormatted, appText.cmdk.viewAll],
-            annotation: <span className="flex items-center gap-2">
-              <span>{appText.cmdk.viewAll}</span>
-              <KeyCommand modifier="⌘" className="max-sm:hidden">
-                ⏎
-              </KeyCommand>
-            </span>,
+            keywords: [queryFormatted],
+            annotation: <KeyCommand modifier="⌘" className="max-sm:hidden">
+              ⏎
+            </KeyCommand>,
             path: pathForQuery(queryFormatted),
           },
           ...photos.map(photo => ({
