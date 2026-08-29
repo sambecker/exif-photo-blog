@@ -414,7 +414,7 @@ export default function TagInput({
         {shouldShowMenu && optionsFiltered.length > 0 &&
           <div
             className={clsx(
-              'component-surface',
+              'component-surface z-1',
               'absolute top-3 w-full px-1.5 py-1.5 -mx-px',
               'max-h-[8rem] overflow-y-auto flex flex-col',
               'shadow-lg dark:shadow-xl',

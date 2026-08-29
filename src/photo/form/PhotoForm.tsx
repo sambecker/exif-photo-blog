@@ -656,7 +656,7 @@ export default function PhotoForm({
                         return <FieldsetWithStatus
                           key={key}
                           {...fieldProps}
-                          className="relative z-2"
+                          className="relative z-3"
                         />;
                       case 'albums':
                         return <FieldsetAlbum
@@ -681,6 +681,7 @@ export default function PhotoForm({
                             initialPhotoForm,
                             formData,
                           )}
+                          className="relative z-2"
                         />;
                       case 'takenAt':
                         return <FieldsetWithStatus

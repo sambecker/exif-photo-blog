@@ -15,7 +15,7 @@ import IconCheck from '../icons/IconCheck';
 
 // Indicate the active option in a menu of mutually-exclusive choices
 export const renderMenuItemCheck = (isChecked: boolean) => isChecked
-  ? <IconCheck size={13} className="translate-x-[-2px]" />
+  ? <IconCheck size={13} />
   : <span />;
 
 export const renderMenuItemLabel = (label: string, isSelected: boolean) => ({

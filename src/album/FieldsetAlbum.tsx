@@ -7,6 +7,7 @@ export default function FieldsetAlbum({
   albumOptions,
   label,
   openOnLoad,
+  className,
   ...props
 }: {
   albumOptions: Albums
@@ -25,7 +26,7 @@ export default function FieldsetAlbum({
   }, [openOnLoad]);
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className={className}>
       <FieldsetWithStatus
         {...props}
         label={label ?? 'Albums'}

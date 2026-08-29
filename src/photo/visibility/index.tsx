@@ -12,19 +12,19 @@ export const getVisibilityOptions = (
 ): (SelectMenuOptionType<VisibilityValue> & { label: string })[] => [
   {
     value: 'default',
-    accessoryStart: <IconHidden size={17} visible />,
+    accessoryStart: <IconHidden size={18} visible />,
     label: appText.admin.visibilityDefault,
     note: appText.admin.visibilityDefaultNote,
   },
   {
     value: 'exclude',
-    accessoryStart: <IconHidden size={17} />,
+    accessoryStart: <IconHidden size={18} />,
     label: appText.admin.visibilityExclude,
     note: appText.admin.visibilityExcludeNote,
   },
   {
     value: 'private',
-    accessoryStart: <IconLock size={14} />,
+    accessoryStart: <IconLock size={15} />,
     label: appText.admin.visibilityPrivate,
     note: appText.admin.visibilityPrivateNote,
   },

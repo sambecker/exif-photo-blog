@@ -126,9 +126,9 @@ export default function AdminPhotoMenu({
     const visibilityOptions = getVisibilityOptions(appText);
     items.push({
       label: appText.admin.setVisibility,
-      icon: visibilityOptions
+      icon: <span className="block translate-x-[-1px]">{visibilityOptions
         .find(({ value }) => value === visibility)
-        ?.accessoryStart,
+        ?.accessoryStart}</span>,
       items: visibilityOptions.map(({ value, label, accessoryStart }) => ({
         label,
         // Selected visibility is marked with a check, unselected show its icon
