@@ -44,6 +44,7 @@ export default function QueryHeader({
       count={count}
       dateRange={dateRange}
       hasAiTextGeneration={AI_CONTENT_GENERATION_ENABLED}
+      includeShareButton
     />
   );
 }

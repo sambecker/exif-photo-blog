@@ -11,6 +11,7 @@ import LensShareModal from '@/lens/LensShareModal';
 import YearShareModal from '@/year/YearShareModal';
 import RecentsShareModal from '@/recents/RecentsShareModal';
 import AlbumShareModal from '@/album/AlbumShareModal';
+import QueryShareModal from '@/query/QueryShareModal';
 
 export default function ShareModals() {
   const { shareModalProps = {} } = useAppState();
@@ -20,6 +21,7 @@ export default function ShareModals() {
     photos,
     count,
     dateRange,
+    query,
     recent,
     year,
     camera,
@@ -34,6 +36,7 @@ export default function ShareModals() {
   if (photo) {
     return <PhotoShareModal {...{
       photo,
+      query,
       recent,
       year,
       camera,
@@ -46,7 +49,9 @@ export default function ShareModals() {
     }} />;
   } else if (photos) {
     const attributes = {photos, count, dateRange};
-    if (recent) {
+    if (query) {
+      return <QueryShareModal {...{ query, ...attributes }} />;
+    } else if (recent) {
       return <RecentsShareModal {...{ ...attributes }} />;
     } else if (year) {
       return <YearShareModal {...{ year, ...attributes }} />;

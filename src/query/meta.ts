@@ -1,6 +1,6 @@
 import { descriptionForPhotoSet, Photo } from '@/photo';
 import { AppTextState } from '@/i18n/state';
-import { absolutePathForQuery } from '@/app/path';
+import { absolutePathForQuery, absolutePathForQueryImage } from '@/app/path';
 
 export const generateMetaForQuery = (
   query: string,
@@ -17,10 +17,12 @@ export const generateMetaForQuery = (
     count,
   );
   const url = absolutePathForQuery(query);
+  const images = absolutePathForQueryImage(query);
 
   return {
     title,
     description,
     url,
+    images,
   };
 };

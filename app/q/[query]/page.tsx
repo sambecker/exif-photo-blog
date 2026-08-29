@@ -35,6 +35,7 @@ export async function generateMetadata({
     url,
     title,
     description,
+    images,
   } = generateMetaForQuery(query, photos, appText, count);
 
   return {
@@ -42,7 +43,13 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
+      images,
       url,
+    },
+    twitter: {
+      images,
+      description,
+      card: 'summary_large_image',
     },
     description,
     // Results are derived from other pages, so keep them out of search indexes

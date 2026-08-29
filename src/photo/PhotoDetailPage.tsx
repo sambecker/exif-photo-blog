@@ -174,6 +174,7 @@ export default function PhotoDetailPage({
             primaryTag={tag}
             priority
             prefetchRelatedLinks
+            query={query}
             recent={recent}
             year={year}
             showTitle={Boolean(customHeader)}
@@ -183,6 +184,7 @@ export default function PhotoDetailPage({
             showFilm={!film}
             showRecipe={!recipe}
             shouldShare={shouldShare}
+            shouldShareQuery={query !== undefined}
             shouldShareRecents={recent !== undefined}
             shouldShareYear={year !== undefined}
             shouldShareCamera={camera !== undefined}

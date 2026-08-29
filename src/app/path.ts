@@ -247,6 +247,9 @@ const pathForImage = (path: string) =>
 export const pathForPhotoImage = (photo: PhotoOrPhotoId) =>
   pathForImage(pathForPhoto({ photo }));
 
+export const pathForQueryImage = (query: string) =>
+  pathForImage(pathForQuery(query));
+
 export const pathForCameraImage = (camera: Camera) =>
   pathForImage(pathForCamera(camera));
 
@@ -331,6 +334,9 @@ export const absolutePathForRecents = (share?: boolean) =>
 
 export const absolutePathForPhotoImage = (photo: PhotoOrPhotoId) =>
   `${absolutePathForPhoto({ photo })}/${IMAGE}`;
+
+export const absolutePathForQueryImage = (query: string) =>
+  `${absolutePathForQuery(query)}/${IMAGE}`;
 
 export const absolutePathForCameraImage= (camera: Camera) =>
   `${absolutePathForCamera(camera)}/${IMAGE}`;
