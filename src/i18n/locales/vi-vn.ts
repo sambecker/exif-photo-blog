@@ -43,7 +43,7 @@ export const TEXT: I18N = {
     recentPlural: 'Gần đây',
     recentTitle: 'Ảnh gần đây',
     recentSubhead: 'Được tải lên {{distance}} trước',
-    queryTitle: 'Ảnh khớp với {{query}}',
+    queryTitle: 'Ảnh khớp với “{{query}}”',
   },
   nav: {
     home: 'Trang chủ',
@@ -98,6 +98,7 @@ export const TEXT: I18N = {
     searching: 'Đang tìm kiếm...',
     noResults: 'Không tìm thấy kết quả',
     pages: 'Trang',
+    viewResults: 'Xem kết quả',
   },
   tooltip: {
     '35mm': 'Tương đương 35mm',

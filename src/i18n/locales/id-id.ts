@@ -43,7 +43,7 @@ export const TEXT: I18N = {
     recentPlural: 'Terbaru',
     recentTitle: 'Foto Terbaru',
     recentSubhead: 'Diunggah {{distance}} yang lalu',
-    queryTitle: 'Foto yang cocok dengan {{query}}',
+    queryTitle: 'Foto yang cocok dengan “{{query}}”',
   },
   nav: {
     home: 'Beranda',
@@ -98,6 +98,7 @@ export const TEXT: I18N = {
     searching: 'Mencari ...',
     noResults: 'Tidak ada hasil ditemukan',
     pages: 'Halaman',
+    viewResults: 'Lihat Hasil',
   },
   tooltip: {
     '35mm': 'Setara 35mm',

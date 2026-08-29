@@ -14,7 +14,7 @@ export default function PhotoQuery({
   return (
     <EntityLink
       {...props}
-      label={query}
+      label={`“${query}”`}
       path={pathForQuery(query)}
       hoverQueryOptions={{ query }}
       icon={<IconQuery

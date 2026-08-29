@@ -1,5 +1,6 @@
 import clsx from 'clsx/lite';
 import { useMemo } from 'react';
+import { GrReturn } from 'react-icons/gr';
 import { HiMiniBackspace } from 'react-icons/hi2';
 import { PiCommandBold } from 'react-icons/pi';
 
@@ -33,11 +34,13 @@ export default function KeyCommand({
         >
           {key === '⌘'
             ? <PiCommandBold />
-            : key === '⌫'
-              ? <HiMiniBackspace
-                className="text-[13px] opacity-80"
-              />
-              : key}
+            : key === '⏎'
+              ? <GrReturn size={14} />
+              : key === '⌫'
+                ? <HiMiniBackspace
+                  className="text-[13px] opacity-80"
+                />
+                : key}
         </span>
       ))}
     </span>

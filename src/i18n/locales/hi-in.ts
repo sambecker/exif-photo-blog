@@ -43,7 +43,7 @@ export const TEXT: I18N = {
     recentPlural: 'हाल ही में',
     recentTitle: 'हाल ही में ली गई फोटो',
     recentSubhead: '{{distance}} पहले अपलोड किया गया',
-    queryTitle: '{{query}} से मेल खाती फोटो',
+    queryTitle: '“{{query}}” से मेल खाती फोटो',
   },
   nav: {
     home: 'होम',
@@ -98,6 +98,7 @@ export const TEXT: I18N = {
     searching: 'खोज रहे हैं...',
     noResults: 'कोई परिणाम नहीं मिला',
     pages: 'पृष्ठ',
+    viewResults: 'परिणाम देखें',
   },
   tooltip: {
     '35mm': '35mm समकक्ष',

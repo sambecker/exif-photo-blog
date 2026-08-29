@@ -96,6 +96,7 @@ import IconFavs from '@/components/icons/IconFavs';
 import { useAppText } from '@/i18n/state/client';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import IconRecents from '@/components/icons/IconRecents';
+import KeyCommand from '@/components/primitives/KeyCommand';
 import { CgClose, CgFileDocument } from 'react-icons/cg';
 import { FaRegUserCircle } from 'react-icons/fa';
 import { formatDistanceToNow } from 'date-fns';
@@ -132,6 +133,7 @@ type CommandKItem = {
 type CommandKSection = {
   heading: string
   accessory?: ReactNode
+  note?: ReactNode
   items: CommandKItem[]
 }
 
@@ -311,6 +313,19 @@ export default function CommandKClient({
       return [{
         heading: 'Photos',
         accessory: <IconPhoto size={14} />,
+        note: <button
+          type="button"
+          // Headings are aria-hidden, so keep this out of the tab order and
+          // let keyboard users reach the results page via the key command
+          tabIndex={-1}
+          onClick={showAllQueryResults}
+          className="link flex items-center gap-1.5"
+        >
+          <KeyCommand modifier="⌘" className="max-sm:hidden">
+            ⏎
+          </KeyCommand>
+          {appText.cmdk.viewResults}
+        </button>,
         items: photos.map(photo => ({
           label: titleForPhoto(photo),
           keywords: getKeywordsForPhoto(photo),
@@ -323,7 +338,7 @@ export default function CommandKClient({
       return [];
     }
   },    
-  [photos],
+  [photos, appText, showAllQueryResults],
   );
 
   useEffect(() => {
@@ -877,18 +892,20 @@ export default function CommandKClient({
               .concat(adminSection)
               .concat(clientSections)
               .filter(({ items }) => items.length > 0)
-              .map(({ heading, accessory, items }) =>
+              .map(({ heading, accessory, note, items }) =>
                 <Command.Group
                   key={heading}
                   heading={<div className={clsx(
                     'flex items-center',
-                    'px-2 py-1',
+                    'px-2 pt-1 pb-2',
                     'text-xs font-medium text-dim tracking-wider',
                     isPending && 'opacity-20',
                   )}>
                     {accessory &&
                       <div className="w-5">{accessory}</div>}
                     {heading}
+                    {note &&
+                      <span className="ml-auto pl-3">{note}</span>}
                   </div>}
                   className={clsx(
                     'uppercase',

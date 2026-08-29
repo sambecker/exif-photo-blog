@@ -43,7 +43,7 @@ export const TEXT: I18N = {
     recentPlural: 'Recientes',
     recentTitle: 'Fotos Recientes',
     recentSubhead: 'Subido hace {{distance}}',
-    queryTitle: 'Fotos que coinciden con {{query}}',
+    queryTitle: 'Fotos que coinciden con “{{query}}”',
   },
   nav: {
     home: 'Inicio',
@@ -98,6 +98,7 @@ export const TEXT: I18N = {
     searching: 'Buscando ...',
     noResults: 'No se encontraron resultados',
     pages: 'Páginas',
+    viewResults: 'Ver resultados',
   },
   tooltip: {
     '35mm': 'Equivalente en 35mm',
