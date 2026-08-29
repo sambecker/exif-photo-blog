@@ -376,10 +376,11 @@ export const shouldShowFilmDataForPhoto = (photo: Photo) =>
 export const shouldShowExifDataForPhoto = (photo: Photo) =>
   SHOW_EXIF_DATA && photoHasExifData(photo);
 
+/** Text fields searched by SQL `ILIKE` on
+ * `title`/`caption`/`semantic_description`. */
 export const getKeywordsForPhoto = (photo: Photo) =>
-  (photo.caption ?? '').split(' ')
-    .concat((photo.semanticDescription ?? '').split(' '))
-    .filter(Boolean)
+  [photo.title, photo.caption, photo.semanticDescription]
+    .filter((keyword): keyword is string => Boolean(keyword))
     .map(keyword => keyword.toLocaleLowerCase());
 
 export const downloadFileNameForPhoto = (photo: Photo) =>

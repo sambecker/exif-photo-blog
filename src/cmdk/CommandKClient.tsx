@@ -277,6 +277,7 @@ export default function CommandKClient({
   const {
     queryFormatted,
     photos,
+    count: photosCount,
     isLoading,
     reset,
   } = usePhotoQuery({
@@ -323,7 +324,7 @@ export default function CommandKClient({
             label: <div className="flex items-center gap-2">
               <IoArrowDown />
               {appText.cmdk.found(
-                photoQuantityText(photos.length, appText, false),
+                photoQuantityText(photosCount, appText, false),
               )}
             </div>,
             explicitKey: 'view-all',
@@ -339,7 +340,9 @@ export default function CommandKClient({
           },
           ...photos.map(photo => ({
             label: titleForPhoto(photo),
-            keywords: getKeywordsForPhoto(photo),
+            // Include query so cmdk's client filter can't hide SQL matches
+            // (e.g. multi-word / cross-field ILIKE hits)
+            keywords: [queryFormatted, ...getKeywordsForPhoto(photo)],
             annotation: <PhotoDate {...{ photo, timezone: undefined }} />,
             accessory: <PhotoSmall photo={photo} />,
             path: pathForPhoto({ photo }),
@@ -350,7 +353,7 @@ export default function CommandKClient({
       return [];
     }
   },
-  [photos, appText, queryFormatted],
+  [photos, photosCount, appText, queryFormatted],
   );
 
   useEffect(() => {

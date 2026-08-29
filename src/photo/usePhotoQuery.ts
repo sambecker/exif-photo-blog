@@ -27,6 +27,7 @@ export default function usePhotoQuery({
     formatQuery(_queryDebounced), [_queryDebounced]);
 
   const [photos, setPhotos] = useState<Photo[]>([]);
+  const [count, setCount] = useState(0);
 
   const resultsNotFound =
     queryDebounced.length >= minimumQueryLength &&
@@ -35,6 +36,7 @@ export default function usePhotoQuery({
 
   const reset = useCallback(() => {
     setPhotos([]);
+    setCount(0);
     setIsLoading(false);
   }, []);
 
@@ -43,8 +45,15 @@ export default function usePhotoQuery({
       setIsLoading(true);
       (isPrivate
         ? getPhotosAction({ query: queryDebounced })
-        : searchPhotosPublicAction(queryDebounced))
-        .then(setPhotos)
+          .then(photos => {
+            setPhotos(photos);
+            setCount(photos.length);
+          })
+        : searchPhotosPublicAction(queryDebounced)
+          .then(({ photos, count }) => {
+            setPhotos(photos);
+            setCount(count);
+          }))
         .finally(() => setIsLoading(false));
     }
   }, [
@@ -59,6 +68,7 @@ export default function usePhotoQuery({
       setIsLoading(true);
     } else {
       setPhotos([]);
+      setCount(0);
       setIsLoading(false);
     }
   }, [minimumQueryLength, queryFormatted]);
@@ -66,6 +76,7 @@ export default function usePhotoQuery({
   return {
     queryFormatted,
     photos,
+    count,
     isLoading,
     resultsNotFound,
     reset,

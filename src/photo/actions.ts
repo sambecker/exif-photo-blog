@@ -88,6 +88,10 @@ import {
 import { addPhotoAlbumIds } from '@/album/query';
 import { getStorageUrlsForPhoto } from './storage';
 import type { VisibilityValue } from './visibility';
+import {
+  COMMAND_K_PHOTO_LIMIT,
+  getPhotosQueryData,
+} from '@/query/data';
 
 // Private actions
 
@@ -834,8 +838,9 @@ export const getPhotosCachedAction = async (
 // Public actions
 
 export const searchPhotosPublicAction = async (query: string) =>
-  getPhotos({ query, limit: 10 })
+  getPhotosQueryData({ query, limit: COMMAND_K_PHOTO_LIMIT })
+    .then(([photos, { count }]) => ({ photos, count }))
     .catch(e => {
       console.error('Could not query photos', e);
-      return [] as Photo[];
+      return { photos: [] as Photo[], count: 0 };
     });
