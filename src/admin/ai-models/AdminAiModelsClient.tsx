@@ -186,9 +186,11 @@ export default function AdminAiModelsClient({
   const renderResult = (photoId: string, column: number) => {
     const result = results[photoId]?.[column];
 
-    return <div key={column} className="pl-3.5">
+    return <div key={column} className="pl-3.5 h-full">
       {isCellLoading(photoId, column)
-        ? <Spinner />
+        ? <div className="flex w-full h-full justify-center items-center">
+          <Spinner />
+        </div>
         : result?.error
           ? <span className="text-error">
             {result.error}
@@ -212,7 +214,10 @@ export default function AdminAiModelsClient({
                 />
               </div>
             </>
-            : <span className="text-dim text-xl">
+            : <span className={clsx(
+              'flex w-full h-full justify-center items-center',
+              'text-dim text-xl',
+            )}>
               &mdash;
             </span>}
     </div>;
@@ -271,7 +276,7 @@ export default function AdminAiModelsClient({
               {allColumns.map(column => renderResult(photo.id, column))}
               {/* Zero-width once there's a sidebar to overflow into, so the
                   button costs the model columns no width */}
-              <div className="md:w-0">
+              <div className="md:w-0 h-full flex items-center">
                 {/* Spans every column, so unlike the column buttons it needs
                     all of them free to avoid running a cell twice at once */}
                 <LoaderButton
