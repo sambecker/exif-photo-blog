@@ -32,10 +32,7 @@ export default function AdminTagMenu({
       sections={[{
         items: [{
           label: 'Edit',
-          icon: <IconEdit
-            size={15}
-            className="translate-y-[0.5px]"
-          />,
+          icon: <IconEdit size={17} className='translate-x-[-1px]' />,
           href: pathForAdminTagEdit(tag),
         }, {
           icon: <TbFolderUp

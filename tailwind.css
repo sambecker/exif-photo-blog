@@ -315,7 +315,7 @@ html {
       cursor-pointer
       hover:no-underline
       inline-flex gap-2 items-center
-      px-3
+      px-2.5
       text-base
       shadow-xs
       active:bg-gray-100 dark:active:bg-gray-900

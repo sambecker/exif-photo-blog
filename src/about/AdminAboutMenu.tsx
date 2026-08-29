@@ -9,7 +9,7 @@ export default function AdminAlbumMenu() {
       sections={[{
         items: [{
           label: 'Edit Page',
-          icon: <IconEdit size={15} />,
+          icon: <IconEdit />,
           href: PATH_ADMIN_ABOUT_EDIT,
         }],
       }]}

@@ -30,6 +30,8 @@ export default function QueryHeader({
         query={query}
         contrast="high"
         hoverType="none"
+        // Editing the query only makes sense where it drives the whole page
+        editable={!selectedPhoto}
       />}
       entityDescription={descriptionForPhotoSet(
         photos,

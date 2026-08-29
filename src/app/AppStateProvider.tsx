@@ -85,6 +85,8 @@ export default function AppStateProvider({
   // MODAL
   const [isCommandKOpen, setIsCommandKOpen] =
     useState(false);
+  const [nextCommandKQuery, setNextCommandKQuery] =
+    useState<string>();
   const [shareModalProps, setShareModalProps] =
     useState<ShareModalProps>();
   const [recipeModalProps, setRecipeModalProps] =
@@ -260,6 +262,8 @@ export default function AppStateProvider({
         // MODAL
         isCommandKOpen,
         setIsCommandKOpen,
+        nextCommandKQuery,
+        setNextCommandKQuery,
         shareModalProps,
         setShareModalProps,
         recipeModalProps,

@@ -174,6 +174,7 @@ export default function CommandKClient({
     isUserSignedIn,
     clearAuthStateAndRedirectIfNecessary,
     isCommandKOpen: isOpen,
+    nextCommandKQuery,
     startUpload,
     invalidateSwr,
     photosCountTotal,
@@ -193,6 +194,7 @@ export default function CommandKClient({
     shouldDebugInsights,
     shouldDebugRecipeOverlays,
     setIsCommandKOpen: setIsOpen,
+    setNextCommandKQuery,
     setShouldShowBaselineGrid,
     setIsGridHighDensity,
     setAreZoomControlsShown,
@@ -321,12 +323,13 @@ export default function CommandKClient({
           onClick={showAllQueryResults}
           className="link flex items-center gap-2"
         >
+          
+          <span className="uppercase text-xs">
+            {appText.cmdk.viewAll}
+          </span>
           <KeyCommand modifier="⌘" className="max-sm:hidden">
             ⏎
           </KeyCommand>
-          <span className="uppercase text-xs text-extra-dim">
-            {appText.cmdk.viewAll}
-          </span>
         </button>,
         items: photos.map(photo => ({
           label: titleForPhoto(photo),
@@ -347,8 +350,11 @@ export default function CommandKClient({
     if (!isOpen) {
       setQuery('');
       reset();
+    } else if (nextCommandKQuery !== undefined) {
+      setQuery(nextCommandKQuery);
+      setNextCommandKQuery?.(undefined);
     }
-  }, [isOpen, reset]);
+  }, [isOpen, reset, nextCommandKQuery, setNextCommandKQuery]);
 
   const recent = recents[0];
   const recentsStatus = useMemo(() => {

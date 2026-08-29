@@ -1,6 +1,12 @@
 'use client';
 
-import { ComponentProps, ReactNode, RefObject, useState } from 'react';
+import {
+  ComponentProps,
+  MouseEventHandler,
+  ReactNode,
+  RefObject,
+  useState,
+} from 'react';
 import LabeledIcon, { LabeledIconType } from '../primitives/LabeledIcon';
 import Badge from '../Badge';
 import { clsx } from 'clsx/lite';
@@ -43,6 +49,7 @@ export default function EntityLink({
   contrast = 'medium',
   path = '', // Make link optional for debugging purposes
   pathTarget,
+  onClick,
   hoverCount = 0,
   hoverType = 'auto',
   hoverQueryOptions,
@@ -64,6 +71,7 @@ export default function EntityLink({
   iconWide?: boolean
   path?: string
   pathTarget?: ComponentProps<typeof LinkWithStatus>['target']
+  onClick?: MouseEventHandler<HTMLAnchorElement>
   prefetch?: boolean
   title?: string
   action?: ReactNode
@@ -128,6 +136,7 @@ export default function EntityLink({
       isLoading={isLoading}
       setIsLoading={setIsLoading}
       target={pathTarget}
+      onClick={onClick}
     >
       <LabeledIcon {...{
         icon: badged && hasBadgeIcon && !useForHover
@@ -207,7 +216,7 @@ export default function EntityLink({
         </EntityHover>
         : renderLink()}
       {action &&
-        <span className="action">
+        <span className="action shrink-0">
           {action}
         </span>}
       {showHoverText &&

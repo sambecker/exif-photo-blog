@@ -89,10 +89,7 @@ export default function AdminPhotoMenu({
   const sectionMain = useMemo(() => {
     const items: MoreMenuSection['items'] = [{
       label: appText.admin.edit,
-      icon: <IconEdit
-        size={14}
-        className="translate-x-[1px] translate-y-[-0.5px]"
-      />,
+      icon: <IconEdit />,
       href: pathForAdminPhotoEdit(photo.id) +
         `?${PARAM_REDIRECT}=${encodeURIComponent(path)}`,
       ...showKeyCommands && { keyCommand: KEY_COMMANDS.edit },
