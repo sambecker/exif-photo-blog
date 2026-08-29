@@ -1,6 +1,6 @@
 import { IconBaseProps } from 'react-icons';
-import { LuSearch } from 'react-icons/lu';
+import { FaMagnifyingGlass } from 'react-icons/fa6';
 
 export default function IconQuery(props: IconBaseProps) {
-  return <LuSearch {...props} />;
+  return <FaMagnifyingGlass {...props} />;
 }

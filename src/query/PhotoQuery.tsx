@@ -18,8 +18,8 @@ export default function PhotoQuery({
       path={pathForQuery(query)}
       hoverQueryOptions={{ query }}
       icon={<IconQuery
-        size={14}
-        className="translate-x-[0.5px] translate-y-[-0.5px]"
+        size={12} 
+        className="translate-x-[2px] translate-y-[-0.5px]"
       />}
     />
   );

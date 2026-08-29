@@ -32,7 +32,7 @@ export default function QueryImageResponse({
         height,
         fontFamily,
         icon: <IconQuery
-          size={height * .0725}
+          size={height * .072}
           style={{
             transform: `translateY(${height * .001}px)`,
             marginRight: height * .01,
