@@ -23,6 +23,11 @@ export default function PhotoQuery({
 
   const appText = useAppText();
 
+  const editQuery = () => {
+    setNextCommandKQuery?.(query);
+    setIsCommandKOpen?.(true);
+  };
+
   return (
     <EntityLink
       {...props}
@@ -36,22 +41,24 @@ export default function PhotoQuery({
           // can still be opened in a new tab or window
           if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) { return; }
           e.preventDefault();
-          setNextCommandKQuery?.(query);
-          setIsCommandKOpen?.(true);
+          editQuery();
         }
         : undefined}
-      // Decorative hover cue — the link itself opens search
       action={editable &&
-        <span
-          aria-hidden
+        <button
+          type="button"
+          onClick={editQuery}
+          aria-label={appText.nav.search}
           className={clsx(
-            'text-dim shrink-0',
+            'link',
+            'text-dim hover:text-main shrink-0',
             'opacity-0 transition-opacity',
-            'group-hover:opacity-100',
+            'group-hover:opacity-100 focus-visible:opacity-100',
+            'translate-y-[2px]',
           )}
         >
-          <IconEdit size={15} className="translate-y-[0.5px]" />
-        </span>}
+          <IconEdit size={17}/>
+        </button>}
       hoverQueryOptions={{ query }}
       icon={<IconQuery
         size={12}
