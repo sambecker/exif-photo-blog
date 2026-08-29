@@ -26,10 +26,7 @@ export default function AdminAlbumMenu({
       sections={[{
         items: [{
           label: 'Edit',
-          icon: <IconEdit
-            size={15}
-            className="translate-y-[0.5px]"
-          />,
+          icon: <IconEdit />,
           href: pathForAdminAlbumEdit(album),
         }],
       }, {

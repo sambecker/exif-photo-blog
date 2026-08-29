@@ -11,6 +11,7 @@ export default function PhotosLarge({
   onLastPhotoVisible,
   revalidatePhoto,
   showStorageCheck,
+  query,
   recent,
   year,
   camera,
@@ -46,6 +47,7 @@ export default function PhotosLarge({
           shouldZoomOnFKeydown={false}
           album={album}
           primaryTag={tag}
+          query={query}
           recent={recent}
           year={year}
           // Avoid repeating the category the set is already filtered by
@@ -53,6 +55,7 @@ export default function PhotosLarge({
           showLens={!lens}
           showFilm={!film}
           showRecipe={!recipe}
+          shouldShareQuery={query !== undefined}
           shouldShareRecents={recent !== undefined}
           shouldShareYear={year !== undefined}
           shouldShareCamera={camera !== undefined}

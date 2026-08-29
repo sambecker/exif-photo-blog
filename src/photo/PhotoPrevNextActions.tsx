@@ -112,7 +112,7 @@ export default function PhotoPrevNextActions({
     : undefined;
 
   const onKeyDown = useCallback((e: KeyboardEvent) => {
-    if (e.metaKey) {
+    if (e.metaKey || e.ctrlKey) {
       switch (e.key.toUpperCase()) {
         case KEY_COMMANDS.delete[1]:
           if (isUserSignedIn) {

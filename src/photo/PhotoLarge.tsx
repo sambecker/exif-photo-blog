@@ -65,6 +65,7 @@ export default function PhotoLarge({
   priority,
   prefetch = SHOULD_PREFETCH_ALL_LINKS,
   prefetchRelatedLinks = SHOULD_PREFETCH_ALL_LINKS,
+  query,
   recent,
   year,
   revalidatePhoto,
@@ -77,6 +78,7 @@ export default function PhotoLarge({
   showZoomControls: _showZoomControls = true,
   shouldZoomOnFKeydown = true,
   shouldShare = true,
+  shouldShareQuery,
   shouldShareRecents,
   shouldShareYear,
   shouldShareCamera,
@@ -98,6 +100,7 @@ export default function PhotoLarge({
   priority?: boolean
   prefetch?: boolean
   prefetchRelatedLinks?: boolean
+  query?: string
   recent?: boolean
   year?: string
   revalidatePhoto?: RevalidatePhoto
@@ -110,6 +113,7 @@ export default function PhotoLarge({
   showZoomControls?: boolean
   shouldZoomOnFKeydown?: boolean
   shouldShare?: boolean
+  shouldShareQuery?: boolean
   shouldShareRecents?: boolean
   shouldShareYear?: boolean
   shouldShareCamera?: boolean
@@ -514,6 +518,9 @@ export default function PhotoLarge({
                       <ShareButton
                         tooltip={appText.tooltip.sharePhoto}
                         photo={photo}
+                        query={shouldShareQuery
+                          ? query
+                          : undefined}
                         recent={shouldShareRecents
                           ? recent
                           : undefined}

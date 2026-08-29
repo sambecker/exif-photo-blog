@@ -5,6 +5,7 @@ import {
   ReactNode,
   SetStateAction,
   Dispatch,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -32,6 +33,7 @@ import {
   pathForFocalLength,
   pathForLens,
   pathForPhoto,
+  pathForQuery,
   pathForRecipe,
   pathForTag,
   pathForYear,
@@ -94,6 +96,7 @@ import IconFavs from '@/components/icons/IconFavs';
 import { useAppText } from '@/i18n/state/client';
 import LoaderButton from '@/components/primitives/LoaderButton';
 import IconRecents from '@/components/icons/IconRecents';
+import KeyCommand from '@/components/primitives/KeyCommand';
 import { CgClose, CgFileDocument } from 'react-icons/cg';
 import { FaRegUserCircle } from 'react-icons/fa';
 import { formatDistanceToNow } from 'date-fns';
@@ -114,6 +117,8 @@ const LISTENER_KEYDOWN = 'keydown';
 
 const MAX_HEIGHT = '20rem';
 
+const MINIMUM_QUERY_LENGTH = 2;
+
 type CommandKItem = {
   label: ReactNode
   explicitKey?: string
@@ -128,6 +133,7 @@ type CommandKItem = {
 type CommandKSection = {
   heading: string
   accessory?: ReactNode
+  note?: ReactNode
   items: CommandKItem[]
 }
 
@@ -168,6 +174,7 @@ export default function CommandKClient({
     isUserSignedIn,
     clearAuthStateAndRedirectIfNecessary,
     isCommandKOpen: isOpen,
+    nextCommandKQuery,
     startUpload,
     invalidateSwr,
     photosCountTotal,
@@ -187,6 +194,7 @@ export default function CommandKClient({
     shouldDebugInsights,
     shouldDebugRecipeOverlays,
     setIsCommandKOpen: setIsOpen,
+    setNextCommandKQuery,
     setShouldShowBaselineGrid,
     setIsGridHighDensity,
     setAreZoomControlsShown,
@@ -268,11 +276,20 @@ export default function CommandKClient({
     photos,
     isLoading,
     reset,
-  } = usePhotoQuery({ query, isEnabled: !isPending });
+  } = usePhotoQuery({
+    query,
+    isEnabled: !isPending,
+    minimumQueryLength: MINIMUM_QUERY_LENGTH,
+  });
 
   const { setTheme } = useTheme();
 
   const router = useRouter();
+
+  const showAllQueryResults = useCallback(() => {
+    shouldCloseAfterWaiting.current = true;
+    startTransition(() => router.push(pathForQuery(queryFormatted)));
+  }, [queryFormatted, router]);
 
   useEffect(() => {
     isOpenRef.current = isOpen;
@@ -298,6 +315,22 @@ export default function CommandKClient({
       return [{
         heading: 'Photos',
         accessory: <IconPhoto size={14} />,
+        note: <button
+          type="button"
+          // Headings are aria-hidden, so keep this out of the tab order and
+          // let keyboard users reach the results page via the key command
+          tabIndex={-1}
+          onClick={showAllQueryResults}
+          className="link flex items-center gap-2"
+        >
+          
+          <span className="uppercase text-xs">
+            {appText.cmdk.viewAll}
+          </span>
+          <KeyCommand modifier="⌘" className="max-sm:hidden">
+            ⏎
+          </KeyCommand>
+        </button>,
         items: photos.map(photo => ({
           label: titleForPhoto(photo),
           keywords: getKeywordsForPhoto(photo),
@@ -310,15 +343,18 @@ export default function CommandKClient({
       return [];
     }
   },    
-  [photos],
+  [photos, appText, showAllQueryResults],
   );
 
   useEffect(() => {
     if (!isOpen) {
       setQuery('');
       reset();
+    } else if (nextCommandKQuery !== undefined) {
+      setQuery(nextCommandKQuery);
+      setNextCommandKQuery?.(undefined);
     }
-  }, [isOpen, reset]);
+  }, [isOpen, reset, nextCommandKQuery, setNextCommandKQuery]);
 
   const recent = recents[0];
   const recentsStatus = useMemo(() => {
@@ -704,6 +740,7 @@ export default function CommandKClient({
           toastSuccess(appText.admin.clearCacheSuccess);
         }),
     }, {
+      explicitKey: appText.admin.appInsights,
       label: <span className="flex items-center gap-3">
         {appText.admin.appInsights}
         {insightsIndicatorStatus &&
@@ -785,6 +822,18 @@ export default function CommandKClient({
               setQuery(value);
               updateMask();
             }}
+            onKeyDown={e => {
+              // Meta+Enter skips individual results and shows the whole set
+              if (
+                e.key === 'Enter' &&
+                (e.metaKey || e.ctrlKey) &&
+                !isLoading &&
+                photos.length > 0
+              ) {
+                e.preventDefault();
+                showAllQueryResults();
+              }
+            }}
             className={clsx(
               'grow p-0',
               'focus:ring-0',
@@ -851,18 +900,20 @@ export default function CommandKClient({
               .concat(adminSection)
               .concat(clientSections)
               .filter(({ items }) => items.length > 0)
-              .map(({ heading, accessory, items }) =>
+              .map(({ heading, accessory, note, items }) =>
                 <Command.Group
                   key={heading}
                   heading={<div className={clsx(
                     'flex items-center',
-                    'px-2 py-1',
+                    'px-2 pt-1 pb-2',
                     'text-xs font-medium text-dim tracking-wider',
                     isPending && 'opacity-20',
                   )}>
                     {accessory &&
                       <div className="w-5">{accessory}</div>}
                     {heading}
+                    {note &&
+                      <span className="ml-auto pl-3">{note}</span>}
                   </div>}
                   className={clsx(
                     'uppercase',
@@ -879,7 +930,15 @@ export default function CommandKClient({
                     path,
                     action,
                   }) => {
-                    const key = `${heading} ${explicitKey ?? label}`;
+                    // Include path so shared titles/
+                    // ReactNode labels stay unique
+                    const key = [
+                      heading,
+                      explicitKey ?? (typeof label === 'string'
+                        ? label
+                        : undefined),
+                      path,
+                    ].filter(Boolean).join(' ');
                     return <CommandKItem
                       key={key}
                       label={label}

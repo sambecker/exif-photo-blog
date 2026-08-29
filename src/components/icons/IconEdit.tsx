@@ -1,6 +1,9 @@
 import { IconBaseProps } from 'react-icons';
-import { FaRegEdit } from 'react-icons/fa';
+import { TbEdit } from 'react-icons/tb';
 
 export default function IconEdit(props: IconBaseProps) {
-  return <FaRegEdit {...props} />;
+  return <TbEdit {...{
+    ...props,
+    size: props.size || 16,
+  }} />;
 }

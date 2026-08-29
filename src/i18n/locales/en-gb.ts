@@ -43,6 +43,7 @@ export const TEXT: I18N = {
     recentPlural: 'Recents',
     recentTitle: 'Recent Photos',
     recentSubhead: 'Uploaded {{distance}} ago',
+    queryTitle: 'Photos matching “{{query}}”',
   },
   nav: {
     home: 'Home',
@@ -97,6 +98,7 @@ export const TEXT: I18N = {
     searching: 'Searching ...',
     noResults: 'No results found',
     pages: 'Pages',
+    viewAll: 'View All',
   },
   tooltip: {
     '35mm': '35mm Equivalent',

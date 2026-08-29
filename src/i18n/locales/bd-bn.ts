@@ -43,6 +43,7 @@ export const TEXT: I18N = {
     recentPlural: 'সাম্প্রতিক',
     recentTitle: 'সাম্প্রতিক ছবি',
     recentSubhead: '{{distance}} আগে আপলোড হয়েছে',
+    queryTitle: '“{{query}}” এর সাথে মেলে এমন ছবি',
   },
   nav: {
     home: 'হোম',
@@ -97,6 +98,7 @@ export const TEXT: I18N = {
     searching: 'অনুসন্ধান হচ্ছে ...',
     noResults: 'কোনো ফলাফল পাওয়া যায়নি',
     pages: 'পৃষ্ঠাসমূহ',
+    viewAll: 'সব দেখুন',
   },
   tooltip: {
     '35mm': '৩৫মিমি সমতুল্য',

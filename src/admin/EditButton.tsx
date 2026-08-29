@@ -9,7 +9,7 @@ export default function EditButton ({
   return (
     <PathLoaderButton
       {...props}
-      icon={<IconEdit size={15} className="translate-y-[0.5px]" />}
+      icon={<IconEdit className="translate-y-[1px]" />}
     >
       {children || 'Edit'}
     </PathLoaderButton>

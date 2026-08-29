@@ -1,7 +1,8 @@
 import clsx from 'clsx/lite';
 import { useMemo } from 'react';
-import { HiMiniBackspace } from 'react-icons/hi2';
-import { PiCommandBold } from 'react-icons/pi';
+import { GrReturn } from 'react-icons/gr';
+import { PiBackspaceBold, PiCommandBold } from 'react-icons/pi';
+import useIsApplePlatform from '@/utility/useIsApplePlatform';
 
 export default function KeyCommand({
   children,
@@ -12,6 +13,8 @@ export default function KeyCommand({
   modifier?: '⌘' | '⌥' | '⇧' | '⌃' | '⏎'
   className?: string
 }) {
+  const isApplePlatform = useIsApplePlatform();
+
   const keys = useMemo(() => {
     const childrenFormatted = children === 'BACKSPACE'
       ? '⌫'
@@ -32,12 +35,14 @@ export default function KeyCommand({
           )}
         >
           {key === '⌘'
-            ? <PiCommandBold />
-            : key === '⌫'
-              ? <HiMiniBackspace
-                className="text-[13px] opacity-80"
-              />
-              : key}
+            ? isApplePlatform
+              ? <PiCommandBold />
+              : <span className="font-semibold text-[10px] px-0.5">^</span>
+            : key === '⏎'
+              ? <GrReturn size={14} />
+              : key === '⌫'
+                ? <PiBackspaceBold size={14} />
+                : key}
         </span>
       ))}
     </span>

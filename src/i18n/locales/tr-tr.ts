@@ -43,6 +43,7 @@ export const TEXT: I18N = {
     recentPlural: 'Son Eklenenler',
     recentTitle: 'Son Yüklenen Fotoğraflar',
     recentSubhead: '{{distance}} önce yüklendi',
+    queryTitle: '“{{query}}” ile eşleşen fotoğraflar',
   },
   nav: {
     home: 'Anasayfa',
@@ -97,6 +98,7 @@ export const TEXT: I18N = {
     searching: 'Aranıyor ...',
     noResults: 'Sonuç bulunamadı',
     pages: 'Sayfalar',
+    viewAll: 'Tümünü Görüntüle',
   },
   tooltip: {
     '35mm': '35mm Eşdeğeri',

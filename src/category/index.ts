@@ -54,6 +54,8 @@ export const getHiddenDefaultCategories = (keys: CategoryKeys): CategoryKeys =>
   DEFAULT_CATEGORY_KEYS.filter(key => !keys.includes(key));
 
 export interface PhotoSetCategory {
+  // Text search results, which behave like a category but aren't enumerable
+  query?: string
   recent?: boolean
   year?: string
   camera?: Camera
