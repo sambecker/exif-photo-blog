@@ -704,6 +704,7 @@ export default function CommandKClient({
           toastSuccess(appText.admin.clearCacheSuccess);
         }),
     }, {
+      explicitKey: appText.admin.appInsights,
       label: <span className="flex items-center gap-3">
         {appText.admin.appInsights}
         {insightsIndicatorStatus &&
@@ -879,7 +880,15 @@ export default function CommandKClient({
                     path,
                     action,
                   }) => {
-                    const key = `${heading} ${explicitKey ?? label}`;
+                    // Include path so shared titles/
+                    // ReactNode labels stay unique
+                    const key = [
+                      heading,
+                      explicitKey ?? (typeof label === 'string'
+                        ? label
+                        : undefined),
+                      path,
+                    ].filter(Boolean).join(' ');
                     return <CommandKItem
                       key={key}
                       label={label}
