@@ -47,6 +47,7 @@ export const PATH_FEED_JSON             = '/feed.json';
 
 // Path prefixes
 export const PREFIX_PHOTO               = '/p';
+export const PREFIX_QUERY               = '/q';
 export const PREFIX_RECENTS             = '/recents';
 export const PREFIX_YEAR                = '/year';
 export const PREFIX_CAMERA              = '/shot-on';
@@ -170,6 +171,7 @@ type PhotoOrPhotoId = Photo | string;
 
 export const pathForPhoto = ({
   photo,
+  query,
   recent,
   year,
   camera,
@@ -184,6 +186,8 @@ export const pathForPhoto = ({
 
   if (typeof photo !== 'string' && photo.hidden) {
     prefix = pathForTag(TAG_PRIVATE);
+  } else if (query) {
+    prefix = pathForQuery(query);
   } else if (recent) {
     prefix = PREFIX_RECENTS;
   } else if (year) {
@@ -206,6 +210,9 @@ export const pathForPhoto = ({
 
   return `${prefix}/${getPhotoId(photo)}`;
 };
+
+export const pathForQuery = (query: string) =>
+  `${PREFIX_QUERY}/${encodeURIComponent(query)}`;
 
 export const pathForYear = (year: string) =>
   `${PREFIX_YEAR}/${year}`;
@@ -289,6 +296,9 @@ export const absolutePathForPhoto = (
 ) =>
   `${getBaseUrl(share)}${pathForPhoto(params)}`;
 
+export const absolutePathForQuery = (query: string, share?: boolean) =>
+  `${getBaseUrl(share)}${pathForQuery(query)}`;
+
 export const absolutePathForCamera= (camera: Camera, share?: boolean) =>
   `${getBaseUrl(share)}${pathForCamera(camera)}`;
 
@@ -352,6 +362,14 @@ export const absolutePathForRecentsImage = () =>
 // p/[photoId]
 export const isPathPhoto = (pathname = '') =>
   new RegExp(`^${PREFIX_PHOTO}/[^/]+/?$`).test(pathname);
+
+// q/[query]
+export const isPathQuery = (pathname = '') =>
+  new RegExp(`^${PREFIX_QUERY}/[^/]+/?$`).test(pathname);
+
+// q/[query]/[photoId]
+export const isPathQueryPhoto = (pathname = '') =>
+  new RegExp(`^${PREFIX_QUERY}/[^/]+/[^/]+/?$`).test(pathname);
 
 // recents
 export const isPathRecents = (pathname = '') =>
@@ -442,6 +460,7 @@ export const isPathAbout = (pathname?: string) =>
 
 // Category paths which render a photo set, i.e. offer grid/full views
 export const isPathPhotoSet = (pathname?: string) =>
+  isPathQuery(pathname) ||
   isPathRecents(pathname) ||
   isPathYear(pathname) ||
   isPathCamera(pathname) ||
@@ -498,6 +517,10 @@ export const getPathComponents = (
 }) => {
   const photoIdFromPhoto = pathname.match(
     new RegExp(`^${PREFIX_PHOTO}/([^/]+)`))?.[1];
+  const queryEncoded = pathname.match(
+    new RegExp(`^${PREFIX_QUERY}/([^/]+)`))?.[1];
+  const photoIdFromQuery = pathname.match(
+    new RegExp(`^${PREFIX_QUERY}/[^/]+/([^/]+)`))?.[1];
   const recent = (
     isPathRecents(pathname) ||
     isPathRecentsPhoto(pathname)
@@ -554,6 +577,7 @@ export const getPathComponents = (
   return {
     photoId: (
       photoIdFromPhoto ||
+      photoIdFromQuery ||
       photoIdFromRecents ||
       photoIdFromYear ||
       photoIdFromCamera ||
@@ -564,6 +588,7 @@ export const getPathComponents = (
       photoIdFromFilm ||
       photoIdFromFocalLength
     ),
+    query: queryEncoded ? decodeURIComponent(queryEncoded) : undefined,
     recent,
     year,
     camera,
@@ -579,6 +604,7 @@ export const getPathComponents = (
 export const getEscapePath = (pathname?: string) => {
   const {
     photoId,
+    query,
     recent,
     year,
     camera,
@@ -592,6 +618,7 @@ export const getEscapePath = (pathname?: string) => {
 
   if (
     (photoId && isPathPhoto(pathname)) ||
+    (query && isPathQuery(pathname)) ||
     (recent && isPathRecents(pathname)) ||
     (year && isPathYear(pathname)) ||
     (camera && isPathCamera(pathname)) ||
@@ -603,6 +630,8 @@ export const getEscapePath = (pathname?: string) => {
     (recipe && isPathRecipe(pathname))
   ) {
     return PATH_ROOT;
+  } else if (query && isPathQueryPhoto(pathname)) {
+    return pathForQuery(query);
   } else if (recent && isPathRecentsPhoto(pathname)) {
     return PREFIX_RECENTS;
   } else if (year && isPathYearPhoto(pathname)) {

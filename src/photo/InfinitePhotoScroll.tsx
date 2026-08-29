@@ -35,6 +35,7 @@ export default function InfinitePhotoScroll({
   sortBy,
   sortWithPriority,
   excludeFromFeeds,
+  query,
   recent,
   year,
   camera,
@@ -95,6 +96,7 @@ export default function InfinitePhotoScroll({
       hidden: isPrivateTag
         ? 'only'
         : includeHiddenPhotos ? 'include' : 'exclude',
+      query,
       recent,
       year,
       camera,
@@ -114,6 +116,7 @@ export default function InfinitePhotoScroll({
     itemsPerPage,
     includeHiddenPhotos,
     isPrivateTag,
+    query,
     recent,
     year,
     camera,

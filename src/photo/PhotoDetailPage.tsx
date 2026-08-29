@@ -21,11 +21,13 @@ import {
 import YearHeader from '@/year/YearHeader';
 import RecentsHeader from '@/recents/RecentsHeader';
 import AlbumHeader from '@/album/AlbumHeader';
+import QueryHeader from '@/query/QueryHeader';
 
 export default function PhotoDetailPage({
   photo,
   photos,
   photosGrid,
+  query,
   recent,
   year,
   camera,
@@ -52,7 +54,16 @@ export default function PhotoDetailPage({
 } & PhotoSetCategory) {
   let customHeader: ReactNode | undefined;
 
-  if (year) {
+  if (query) {
+    customHeader = <QueryHeader
+      query={query}
+      photos={photos}
+      selectedPhoto={photo}
+      indexNumber={indexNumber}
+      count={count}
+      dateRange={dateRange}
+    />;
+  } else if (year) {
     customHeader = <YearHeader
       year={year}
       photos={photos}
@@ -190,6 +201,7 @@ export default function PhotoDetailPage({
       <AppGrid
         contentMain={<PhotoGrid
           photos={photosGrid ?? photos}
+          query={query}
           tag={tag}
           camera={camera}
           film={film}

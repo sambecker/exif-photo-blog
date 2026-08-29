@@ -43,6 +43,7 @@ export const TEXT: I18N = {
     recentPlural: 'Son Eklenenler',
     recentTitle: 'Son Yüklenen Fotoğraflar',
     recentSubhead: '{{distance}} önce yüklendi',
+    queryTitle: '{{query}} ile eşleşen fotoğraflar',
   },
   nav: {
     home: 'Anasayfa',

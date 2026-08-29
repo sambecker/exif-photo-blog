@@ -43,6 +43,7 @@ export const TEXT: I18N = {
     recentPlural: 'हाल ही में',
     recentTitle: 'हाल ही में ली गई फोटो',
     recentSubhead: '{{distance}} पहले अपलोड किया गया',
+    queryTitle: '{{query}} से मेल खाती फोटो',
   },
   nav: {
     home: 'होम',

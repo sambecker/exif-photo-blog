@@ -43,6 +43,7 @@ export const TEXT: I18N = {
     recentPlural: 'Recents',
     recentTitle: 'Recent Photos',
     recentSubhead: 'Uploaded {{distance}} ago',
+    queryTitle: 'Photos matching {{query}}',
   },
   nav: {
     home: 'Home',

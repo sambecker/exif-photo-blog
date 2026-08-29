@@ -43,6 +43,7 @@ export const TEXT: I18N = {
     recentPlural: 'Terbaru',
     recentTitle: 'Foto Terbaru',
     recentSubhead: 'Diunggah {{distance}} yang lalu',
+    queryTitle: 'Foto yang cocok dengan {{query}}',
   },
   nav: {
     home: 'Beranda',

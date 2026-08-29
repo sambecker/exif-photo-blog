@@ -43,6 +43,7 @@ export const TEXT: I18N = {
     recentPlural: 'সাম্প্রতিক',
     recentTitle: 'সাম্প্রতিক ছবি',
     recentSubhead: '{{distance}} আগে আপলোড হয়েছে',
+    queryTitle: '{{query}} এর সাথে মেলে এমন ছবি',
   },
   nav: {
     home: 'হোম',

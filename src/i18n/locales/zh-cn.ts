@@ -43,6 +43,7 @@ export const TEXT: I18N = {
     recentPlural: '最近',
     recentTitle: '最近的照片',
     recentSubhead: '{{distance}} 前上传',
+    queryTitle: '匹配 {{query}} 的照片',
   },
   nav: {
     home: '首页',

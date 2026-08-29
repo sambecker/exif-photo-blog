@@ -5,6 +5,7 @@ import {
   ReactNode,
   SetStateAction,
   Dispatch,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -32,6 +33,7 @@ import {
   pathForFocalLength,
   pathForLens,
   pathForPhoto,
+  pathForQuery,
   pathForRecipe,
   pathForTag,
   pathForYear,
@@ -113,6 +115,8 @@ const DIALOG_DESCRIPTION = 'For searching photos, views, and settings';
 const LISTENER_KEYDOWN = 'keydown';
 
 const MAX_HEIGHT = '20rem';
+
+const MINIMUM_QUERY_LENGTH = 2;
 
 type CommandKItem = {
   label: ReactNode
@@ -268,11 +272,20 @@ export default function CommandKClient({
     photos,
     isLoading,
     reset,
-  } = usePhotoQuery({ query, isEnabled: !isPending });
+  } = usePhotoQuery({
+    query,
+    isEnabled: !isPending,
+    minimumQueryLength: MINIMUM_QUERY_LENGTH,
+  });
 
   const { setTheme } = useTheme();
 
   const router = useRouter();
+
+  const showAllQueryResults = useCallback(() => {
+    shouldCloseAfterWaiting.current = true;
+    startTransition(() => router.push(pathForQuery(queryFormatted)));
+  }, [queryFormatted, router]);
 
   useEffect(() => {
     isOpenRef.current = isOpen;
@@ -785,6 +798,18 @@ export default function CommandKClient({
             onValueChange={value => {
               setQuery(value);
               updateMask();
+            }}
+            onKeyDown={e => {
+              // Meta+Enter skips individual results and shows the whole set
+              if (
+                e.key === 'Enter' &&
+                (e.metaKey || e.ctrlKey) &&
+                !isLoading &&
+                photos.length > 0
+              ) {
+                e.preventDefault();
+                showAllQueryResults();
+              }
             }}
             className={clsx(
               'grow p-0',
