@@ -98,7 +98,7 @@ export const TEXT: I18N = {
     searching: 'खोज रहे हैं...',
     noResults: 'कोई परिणाम नहीं मिला',
     pages: 'पृष्ठ',
-    viewResults: 'परिणाम देखें',
+    viewAll: 'सभी देखें',
   },
   tooltip: {
     '35mm': '35mm समकक्ष',

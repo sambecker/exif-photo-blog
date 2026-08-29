@@ -98,7 +98,7 @@ export const TEXT: I18N = {
     searching: 'Searching ...',
     noResults: 'No results found',
     pages: 'Pages',
-    viewResults: 'View Results',
+    viewAll: 'View All',
   },
   tooltip: {
     '35mm': '35mm Equivalent',

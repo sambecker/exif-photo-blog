@@ -98,7 +98,7 @@ export const TEXT: I18N = {
     searching: 'Đang tìm kiếm...',
     noResults: 'Không tìm thấy kết quả',
     pages: 'Trang',
-    viewResults: 'Xem kết quả',
+    viewAll: 'Xem tất cả',
   },
   tooltip: {
     '35mm': 'Tương đương 35mm',

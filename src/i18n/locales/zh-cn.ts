@@ -98,7 +98,7 @@ export const TEXT: I18N = {
     searching: '搜索中...',
     noResults: '未找到结果',
     pages: '页面',
-    viewResults: '查看结果',
+    viewAll: '查看全部',
   },
   tooltip: {
     '35mm': '35mm 等效焦距',

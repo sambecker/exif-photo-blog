@@ -98,7 +98,7 @@ export const TEXT: I18N = {
     searching: 'অনুসন্ধান হচ্ছে ...',
     noResults: 'কোনো ফলাফল পাওয়া যায়নি',
     pages: 'পৃষ্ঠাসমূহ',
-    viewResults: 'ফলাফল দেখুন',
+    viewAll: 'সব দেখুন',
   },
   tooltip: {
     '35mm': '৩৫মিমি সমতুল্য',

@@ -319,12 +319,14 @@ export default function CommandKClient({
           // let keyboard users reach the results page via the key command
           tabIndex={-1}
           onClick={showAllQueryResults}
-          className="link flex items-center gap-1.5"
+          className="link flex items-center gap-2"
         >
           <KeyCommand modifier="⌘" className="max-sm:hidden">
             ⏎
           </KeyCommand>
-          {appText.cmdk.viewResults}
+          <span className="uppercase text-xs text-extra-dim">
+            {appText.cmdk.viewAll}
+          </span>
         </button>,
         items: photos.map(photo => ({
           label: titleForPhoto(photo),

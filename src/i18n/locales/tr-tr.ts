@@ -98,7 +98,7 @@ export const TEXT: I18N = {
     searching: 'Aranıyor ...',
     noResults: 'Sonuç bulunamadı',
     pages: 'Sayfalar',
-    viewResults: 'Sonuçları Görüntüle',
+    viewAll: 'Tümünü Görüntüle',
   },
   tooltip: {
     '35mm': '35mm Eşdeğeri',
