@@ -1,15 +1,15 @@
 import {
   ComponentProps,
   createContext,
-  Dispatch,
   ReactNode,
-  SetStateAction,
   use,
 } from 'react';
 import ComponentSurface from '../primitives/surface/ComponentSurface';
 
 export type SharedHoverProps = {
   key: string
+  // Snapshot taken at hover time so visibility and content commit together
+  content: ReactNode
   width: number
   height: number
   offsetAbove: number
@@ -19,7 +19,8 @@ export type SharedHoverProps = {
 
 export type SharedHoverState = {
   showHover?: (trigger: HTMLElement | null, hover: SharedHoverProps) => void
-  renderHover?: Dispatch<SetStateAction<ReactNode>>
+  // Applies late-arriving content, ignored once `key` is no longer showing
+  renderHover?: (key: string, content: ReactNode) => void
   dismissHover?: (trigger: HTMLElement | null) => void
   isHoverBeingShown?: (key: string) => boolean
 }

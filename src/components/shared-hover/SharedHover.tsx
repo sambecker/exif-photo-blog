@@ -46,9 +46,9 @@ export default function SharedHover({
 
   useEffect(() => {
     if (isHovering) {
-      renderHover?.(content);
+      renderHover?.(key, content);
     }
-  }, [isHovering, renderHover, content]);
+  }, [isHovering, renderHover, key, content]);
 
   return (
     <div
@@ -57,6 +57,7 @@ export default function SharedHover({
       onMouseEnter={() => supportsHover &&
         showHover?.(ref.current, {
           key,
+          content,
           width,
           height,
           offsetAbove,

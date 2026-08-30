@@ -2,9 +2,7 @@
 
 import {
   CSSProperties,
-  Dispatch,
   ReactNode,
-  SetStateAction,
   useCallback,
   useEffect,
   useMemo,
@@ -15,6 +13,13 @@ import { SharedHoverContext, SharedHoverProps } from './state';
 import { AnimatePresence, motion } from 'framer-motion';
 import ComponentSurface from '../primitives/surface/ComponentSurface';
 import clsx from 'clsx/lite';
+
+type RenderHover = (key: string, content: ReactNode) => void
+
+type HoverContentUpdate = {
+  key: string
+  content: ReactNode
+}
 
 const WINDOW_CHANGE_EVENTS = ['mouseup', 'mousewheel', 'resize'];
 
@@ -33,8 +38,7 @@ export default function SharedHoverProvider({
   const [hoverStyle, setHoverStyle] = useState<CSSProperties>();
 
   const currentTriggerRef = useRef<HTMLElement>(null);
-  const renderHoverRef =
-    useRef<Dispatch<SetStateAction<ReactNode>>>(() => {});
+  const renderHoverRef = useRef<RenderHover>(() => {});
 
   const timeoutInitialHoverRef = useRef<NodeJS.Timeout>(undefined);
   const timeoutDismissRef = useRef<NodeJS.Timeout>(undefined);
@@ -118,14 +122,12 @@ export default function SharedHoverProvider({
 
   // Content state must stay in SharedHoverOverlay: triggers rebuild `content`
   // on every render, so a write that re-renders them never settles
-  const renderHover = useCallback<Dispatch<SetStateAction<ReactNode>>>(
-    content => renderHoverRef.current(content),
+  const renderHover = useCallback<RenderHover>(
+    (key, content) => renderHoverRef.current(key, content),
     [],
   );
 
-  const registerRenderHover = useCallback((
-    fn: Dispatch<SetStateAction<ReactNode>>,
-  ) => {
+  const registerRenderHover = useCallback((fn: RenderHover) => {
     renderHoverRef.current = fn;
   }, []);
 
@@ -155,13 +157,22 @@ function SharedHoverOverlay({
 }: {
   hoverProps?: SharedHoverProps
   hoverStyle?: CSSProperties
-  registerRenderHover: (fn: Dispatch<SetStateAction<ReactNode>>) => void
+  registerRenderHover: (fn: RenderHover) => void
 }) {
-  const [hoverContent, setHoverContent] = useState<ReactNode>();
+  const [update, setUpdate] = useState<HoverContentUpdate>();
 
   useEffect(() => {
-    registerRenderHover(setHoverContent);
+    registerRenderHover((key, content) => setUpdate(current =>
+      current?.key === key && current.content === content
+        ? current
+        : { key, content }));
   }, [registerRenderHover]);
+
+  // Prefer the snapshot from `showHover` so the hover never fades in empty,
+  // and never repaints the previous trigger's content at the new position
+  const hoverContent = update?.key === hoverProps?.key
+    ? update?.content
+    : hoverProps?.content;
 
   return (
     <div className="relative inset-0 z-100 pointer-events-none">
