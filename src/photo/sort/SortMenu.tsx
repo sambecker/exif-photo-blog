@@ -1,8 +1,8 @@
-import IconSort from '@/components/icons/IconSort';
 import SwitcherItemMenu from '@/components/switcher/SwitcherItemMenu';
 import { getSortStateFromPath } from './path';
 import { getSortMenuItems } from './menu';
 import { useAppText } from '@/i18n/state/client';
+import IconSortNav from '@/components/icons/IconSortNav';
 
 export default function SortMenu({
   isOpen,
@@ -20,9 +20,9 @@ export default function SortMenu({
   return (
     <SwitcherItemMenu
       {...{ isOpen, setIsOpen }}
-      icon={<IconSort
+      icon={<IconSortNav
         sort={sortConfig.isAscending ? 'asc' : 'desc'}
-        className="shrink-0 translate-x-[0.5px] translate-y-[1px]"
+        // className="shrink-0 translate-x-[0.5px] translate-y-[1px]"
       />}
       sections={[{
         items: itemsSortOrder,

@@ -4,7 +4,6 @@ import SwitcherItem from '@/components/switcher/SwitcherItem';
 import IconFull from '@/components/icons/IconFull';
 import IconGrid from '@/components/icons/IconGrid';
 import IconGridMasonry from '@/components/icons/IconGridMasonry';
-import IconSort from '@/components/icons/IconSort';
 import SortMenu from '@/photo/sort/SortMenu';
 import { getSortStateFromPath } from '@/photo/sort/path';
 import { useAppText } from '@/i18n/state/client';
@@ -15,6 +14,7 @@ import {
   NAV_SORT_CONTROL,
   SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
 } from './config';
+import IconSortNav from '@/components/icons/IconSortNav';
 
 export default function AppViewMenu({
   isViewFull,
@@ -118,9 +118,8 @@ export default function AppViewMenu({
             !isSortedByDefault && '*:bg-dim *:text-main!',
           )}
           href={pathSortToggle}
-          icon={<IconSort
+          icon={<IconSortNav
             sort={isAscending ? 'asc' : 'desc'}
-            className="translate-x-[0.5px] translate-y-px"
           />}
           tooltip={{...SHOW_KEYBOARD_SHORTCUT_TOOLTIPS && {
             content: isAscending

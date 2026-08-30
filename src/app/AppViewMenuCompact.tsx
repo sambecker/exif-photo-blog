@@ -8,7 +8,6 @@ import { renderMenuItemCheck } from '@/components/more/MoreMenuItem';
 import IconFull from '@/components/icons/IconFull';
 import IconGrid from '@/components/icons/IconGrid';
 import IconGridMasonry from '@/components/icons/IconGridMasonry';
-import IconSort from '@/components/icons/IconSort';
 import Spinner from '@/components/Spinner';
 import Tooltip from '@/components/Tooltip';
 import {
@@ -24,6 +23,7 @@ import {
   NAV_SORT_CONTROL,
   SHOW_KEYBOARD_SHORTCUT_TOOLTIPS,
 } from './config';
+import IconSortNav from '@/components/icons/IconSortNav';
 
 const VIEW_ICON_CLASS = 'w-[24px] -ml-[4px] translate-x-[1px]';
 
@@ -94,10 +94,9 @@ export default function AppViewMenuCompact({
       getSortMenuItems(sortConfig, appText);
     items.push({
       label: appText.sort.sort,
-      icon: <IconSort
-        size={15}
+      icon: <IconSortNav
         sort={sortConfig.isAscending ? 'asc' : 'desc'}
-        className="translate-x-[-1px] translate-y-[1px]"
+        className={clsx(VIEW_ICON_CLASS, 'w-[30px]! -ml-2!')} 
       />,
       // Sort types are only offered where the nav exposes a full sort menu
       sections: NAV_SORT_CONTROL === 'menu'
