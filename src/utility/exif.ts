@@ -31,9 +31,6 @@ export const getDimensionsFromExif = (
   // Using '||' operator to handle `Orientation` unexpectedly being '0'
   const orientation = exif.tags?.Orientation || OrientationTypes.TOP_LEFT;
 
-  const exifrImageWidth = exifr?.ImageWidth;
-  const exifrImageHeight = exifr?.ImageHeight;
-
   let width: number | undefined;
   let height: number | undefined;
 
@@ -44,13 +41,13 @@ export const getDimensionsFromExif = (
     case OrientationTypes.BOTTOM_LEFT:
     case OrientationTypes.LEFT_TOP:
     case OrientationTypes.RIGHT_BOTTOM:
-      width = exif.imageSize?.width || exifrImageWidth;
-      height = exif.imageSize?.height || exifrImageHeight;
+      width = exif.imageSize?.width || exifr?.ImageWidth;
+      height = exif.imageSize?.height || exifr?.ImageHeight;
       break;
     case OrientationTypes.RIGHT_TOP:
     case OrientationTypes.LEFT_BOTTOM:
-      width = exif.imageSize?.height || exifrImageHeight;
-      height = exif.imageSize?.width || exifrImageWidth;
+      width = exif.imageSize?.height || exifr?.ImageHeight;
+      height = exif.imageSize?.width || exifr?.ImageWidth;
       break;
   }
 
