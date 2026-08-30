@@ -38,7 +38,7 @@ export default function PlaceEntity({
           </span>
         </div>
       </div>,
-      className: 'inline-flex',
+      className: 'inline-flex max-w-full',
       width,
       height,
     }}>

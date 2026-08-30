@@ -5,8 +5,7 @@ import AdminTable from './AdminTable';
 import { Fragment } from 'react';
 import PhotoSmall from '@/photo/PhotoSmall';
 import { clsx } from 'clsx/lite';
-import { pathForAdminPhotoEdit, pathForPhoto } from '@/app/path';
-import Link from 'next/link';
+import { pathForAdminPhotoEdit } from '@/app/path';
 import PhotoDate from '@/photo/PhotoDate';
 import EditButton from './EditButton';
 import { useAppState } from '@/app/AppState';
@@ -20,6 +19,7 @@ import UpdateTooltip from '@/photo/update/UpdateTooltip';
 import PhotoColors from '@/photo/color/PhotoColors';
 import SyncColorButton from '@/photo/color/SyncColorButton';
 import AdminPhotoMenu from './AdminPhotoMenu';
+import PhotoLink from '@/photo/PhotoLink';
 
 export default function AdminPhotosTable({
   photos,
@@ -81,12 +81,13 @@ export default function AdminPhotosTable({
                 'truncate',
                 photo.hidden && 'text-dim',
               )}>
-                <Link
-                  href={pathForPhoto({ photo })}
+                <PhotoLink
+                  photo={photo}
                   prefetch={false}
+                  showHover
                 >
                   {titleForPhoto(photo, false)}
-                </Link>
+                </PhotoLink>
                 {debugColorData && photo.colorData &&
                   <div>
                     <PhotoColors colorData={photo.colorData} />

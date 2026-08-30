@@ -7,6 +7,7 @@ import {
   SHOW_RECIPES,
 } from '@/app/config';
 import { ABSOLUTE_PATH_HOME_IMAGE } from '@/app/path';
+import { cameraFromPhoto, formatCameraText } from '@/camera';
 import { formatDate, formatDateFromPostgresString } from '@/utility/date';
 import {
   formatAperture,
@@ -375,6 +376,19 @@ export const shouldShowFilmDataForPhoto = (photo: Photo) =>
 
 export const shouldShowExifDataForPhoto = (photo: Photo) =>
   SHOW_EXIF_DATA && photoHasExifData(photo);
+
+/** EXIF line used by photo OG images and shared photo hovers. */
+export const ogCaptionForPhoto = (photo: Photo) =>
+  [
+    photo.model
+      ? formatCameraText(cameraFromPhoto(photo), 'short')
+      : undefined,
+    photo.focalLengthFormatted,
+    photo.fNumberFormatted,
+    photo.isoFormatted,
+  ]
+    .join(' ')
+    .trim();
 
 /** Text fields searched by SQL `ILIKE` on
  * `title`/`caption`/`semantic_description`. */

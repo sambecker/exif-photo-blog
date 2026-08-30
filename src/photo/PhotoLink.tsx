@@ -10,6 +10,7 @@ import { clsx } from 'clsx/lite';
 import LinkWithStatus from '@/components/LinkWithStatus';
 import Spinner from '@/components/Spinner';
 import LinkWithLoaderBackground from '@/components/LinkWithLoaderBackground';
+import PhotoHover from './PhotoHover';
 
 export default function PhotoLink({
   ref,
@@ -20,6 +21,7 @@ export default function PhotoLink({
   className,
   children: _children,
   loaderType = 'spinner',
+  showHover,
   ...categories
 }: {
   ref?: RefObject<HTMLAnchorElement | null>
@@ -30,6 +32,7 @@ export default function PhotoLink({
   className?: string
   children?: ReactNode
   loaderType?: 'spinner' | 'badge'
+  showHover?: boolean
 } & PhotoSetCategory) {
   const { setNextPhotoAnimation } = useAppState();
 
@@ -52,28 +55,32 @@ export default function PhotoLink({
     ? (_children ?? titleForPhoto(photo))
     : _children;
 
-  return (
-    photo && linkProps
-      ? loaderType === 'spinner'
-        ? <LinkWithStatus {...linkProps}>
-          {({ isLoading }) => <>
-            {children}
-            {isLoading && <>
-              &nbsp;<Spinner className="translate-y-[0.5px]" />
-            </>}
-          </>}
-        </LinkWithStatus>
-        : <LinkWithLoaderBackground
-          {...linkProps}
-          offsetPadding
-        >
+  const link = photo && linkProps
+    ? loaderType === 'spinner'
+      ? <LinkWithStatus {...linkProps}>
+        {({ isLoading }) => <>
           {children}
-        </LinkWithLoaderBackground>
-      : <span className={clsx(
-        'text-gray-300 dark:text-gray-700 cursor-default',
-        className,
-      )}>
+          {isLoading && <>
+            &nbsp;<Spinner className="translate-y-[0.5px]" />
+          </>}
+        </>}
+      </LinkWithStatus>
+      : <LinkWithLoaderBackground
+        {...linkProps}
+        offsetPadding
+      >
         {children}
-      </span>
-  );
+      </LinkWithLoaderBackground>
+    : <span className={clsx(
+      'text-gray-300 dark:text-gray-700 cursor-default',
+      className,
+    )}>
+      {children}
+    </span>;
+
+  return photo && showHover
+    ? <PhotoHover photo={photo} className="inline-flex max-w-full">
+      {link}
+    </PhotoHover>
+    : link;
 };
