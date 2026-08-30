@@ -28,13 +28,22 @@ export default function PhotoEscapeHandler() {
   useLayoutEffect(() => {
     const pending = pendingScrollRef.current;
     if (!pending) { return; }
-    if (pathname !== pending.path) { return; }
+    // Landing anywhere other than the escape target means the request is no
+    // longer relevant—leaving it queued would scroll the page unexpectedly
+    // the next time that path is reached by any means
+    if (pathname !== pending.path) {
+      pendingScrollRef.current = null;
+      return;
+    }
     window.scrollTo(0, pending.y);
     const frame = requestAnimationFrame(() => {
       window.scrollTo(0, pending.y);
       pendingScrollRef.current = null;
     });
-    return () => cancelAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(frame);
+      pendingScrollRef.current = null;
+    };
   }, [pathname]);
 
   const onKeyDown = useCallback(() => {
