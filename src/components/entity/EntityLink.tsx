@@ -14,7 +14,7 @@ import LinkWithStatus from '../LinkWithStatus';
 import Spinner from '../Spinner';
 import ResponsiveText from '../primitives/ResponsiveText';
 import { SHOW_CATEGORY_IMAGE_HOVERS } from '@/app/config';
-import EntityHover from './EntityHover';
+import PhotosHover from '@/photo/PhotosHover';
 import { getPhotosCachedAction } from '@/photo/actions';
 import { PhotoQueryOptions } from '@/db';
 import { MAX_PHOTOS_TO_SHOW_PER_CATEGORY } from '@/image-response';
@@ -201,7 +201,7 @@ export default function EntityLink({
       )}
     >
       {showHoverImage
-        ? <EntityHover
+        ? <PhotosHover
           hoverKey={path}
           header={renderLink(true)}
           photosCount={hoverCount}
@@ -213,7 +213,7 @@ export default function EntityLink({
           color={contrast === 'frosted' ? 'frosted' : undefined}
         >
           {renderLink()}
-        </EntityHover>
+        </PhotosHover>
         : renderLink()}
       {action &&
         <span className="action shrink-0">

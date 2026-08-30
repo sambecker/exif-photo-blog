@@ -2,9 +2,12 @@
 
 import {
   CSSProperties,
+  Dispatch,
   ReactNode,
+  SetStateAction,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -27,10 +30,11 @@ export default function SharedHoverProvider({
   children: ReactNode
 }) {
   const [hoverProps, setHoverProps] = useState<SharedHoverProps>();
-  const [hoverContent, setHoverContent] = useState<ReactNode>();
   const [hoverStyle, setHoverStyle] = useState<CSSProperties>();
 
   const currentTriggerRef = useRef<HTMLElement>(null);
+  const renderHoverRef =
+    useRef<Dispatch<SetStateAction<ReactNode>>>(() => {});
 
   const timeoutInitialHoverRef = useRef<NodeJS.Timeout>(undefined);
   const timeoutDismissRef = useRef<NodeJS.Timeout>(undefined);
@@ -112,57 +116,94 @@ export default function SharedHoverProvider({
     };
   }, [clearState]);
 
+  // Content state must stay in SharedHoverOverlay: triggers rebuild `content`
+  // on every render, so a write that re-renders them never settles
+  const renderHover = useCallback<Dispatch<SetStateAction<ReactNode>>>(
+    content => renderHoverRef.current(content),
+    [],
+  );
+
+  const registerRenderHover = useCallback((
+    fn: Dispatch<SetStateAction<ReactNode>>,
+  ) => {
+    renderHoverRef.current = fn;
+  }, []);
+
+  const contextValue = useMemo(() => ({
+    showHover,
+    dismissHover,
+    renderHover,
+    isHoverBeingShown,
+  }), [showHover, dismissHover, renderHover, isHoverBeingShown]);
+
   return (
-    <SharedHoverContext.Provider
-      value={{
-        showHover,
-        dismissHover,
-        renderHover: setHoverContent,
-        isHoverBeingShown,
-      }}
-    >
-      <div className="relative inset-0 z-100 pointer-events-none">
-        <AnimatePresence>
-          {hoverProps &&
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.2 }}
-              layoutId="hover"
-              className="fixed"
-              style={hoverStyle}
-            >
-              <ComponentSurface
-                className="max-w-none p-1!"
-                color={hoverProps.color}
-              >
-                <div
-                  className={clsx(
-                    'relative rounded-[9px] overflow-clip',
-                    hoverProps.color !== 'frosted' && 'bg-extra-dim',
-                  )}
-                  style={{
-                    width: hoverProps.width,
-                    height: hoverProps.height,
-                  }}
-                >
-                  {/* Content */}
-                  {hoverContent}
-                  {/* Border */}
-                  <div className={clsx(
-                    'absolute inset-0',
-                    'border rounded-[0.25rem]',
-                    hoverProps.color === 'frosted'
-                      ? 'border-gray-400/25'
-                      : 'border-medium',
-                  )} />
-                </div>
-              </ComponentSurface>
-            </motion.div>}
-        </AnimatePresence>
-      </div>
+    <SharedHoverContext.Provider value={contextValue}>
       {children}
+      <SharedHoverOverlay {...{
+        hoverProps,
+        hoverStyle,
+        registerRenderHover,
+      }} />
     </SharedHoverContext.Provider>
+  );
+}
+
+function SharedHoverOverlay({
+  hoverProps,
+  hoverStyle,
+  registerRenderHover,
+}: {
+  hoverProps?: SharedHoverProps
+  hoverStyle?: CSSProperties
+  registerRenderHover: (fn: Dispatch<SetStateAction<ReactNode>>) => void
+}) {
+  const [hoverContent, setHoverContent] = useState<ReactNode>();
+
+  useEffect(() => {
+    registerRenderHover(setHoverContent);
+  }, [registerRenderHover]);
+
+  return (
+    <div className="relative inset-0 z-100 pointer-events-none">
+      <AnimatePresence>
+        {hoverProps &&
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.2 }}
+            layoutId="hover"
+            className="fixed"
+            style={hoverStyle}
+          >
+            <ComponentSurface
+              className="max-w-none p-1!"
+              color={hoverProps.color}
+            >
+              <div
+                className={clsx(
+                  'relative rounded-[9px] overflow-clip',
+                  hoverProps.color !== 'frosted' && 'bg-extra-dim',
+                )}
+                style={{
+                  width: hoverProps.width,
+                  height: hoverProps.height,
+                }}
+              >
+                {/* Content */}
+                {hoverContent}
+                {/* Border */}
+                <div className={clsx(
+                  'absolute inset-0',
+                  'border rounded-[0.25rem]',
+                  hoverProps.color === 'frosted'
+                    ? 'border-gray-400/25'
+                    : 'border-medium',
+                )} />
+              </div>
+            </ComponentSurface>
+          </motion.div>}
+      </AnimatePresence>
+    </div>
   );
 }

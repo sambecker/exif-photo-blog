@@ -1,49 +1,31 @@
 import { ComponentProps, ReactNode, useMemo } from 'react';
 import SharedHover from '../shared-hover/SharedHover';
-import { Photo, photoQuantityText } from '@/photo';
-import { useSharedHoverState } from '../shared-hover/state';
-import useSWR from 'swr';
+import { Photo } from '@/photo';
 import { getDimensionsFromSize } from '@/utility/size';
 import PhotoMedium from '@/photo/PhotoMedium';
-import Spinner from '../Spinner';
 import clsx from 'clsx/lite';
-import { useAppText } from '@/i18n/state/client';
-import { SWR_KEYS } from '@/swr';
 
 const { width, height } = getDimensionsFromSize(300, 16 / 9);
 
 export default function EntityHover({
   hoverKey,
   header,
-  getPhotos,
+  caption,
+  photos,
   photosCount,
   children,
+  className,
   color,
 }: {
   hoverKey: string
-  header: ReactNode
-  getPhotos: () => Promise<Photo[]>
+  header?: ReactNode
+  caption?: ReactNode
+  photos?: Photo[]
   photosCount: number
   color?: ComponentProps<typeof SharedHover>['color']
+  className?: string
   children: ReactNode
 }) {
-  const appText = useAppText();
-
-  const { isHoverBeingShown } = useSharedHoverState();
-
-  const isHovering = isHoverBeingShown?.(hoverKey);
-
-  const {
-    data: photos,
-    isLoading,
-  } = useSWR(
-    isHovering ? `${SWR_KEYS.SHARED_HOVER}-${hoverKey}` : null,
-    getPhotos, {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    });
-
   const photosToShow = useMemo(() => {
     if (photosCount >= 6) {
       return 6;
@@ -78,6 +60,8 @@ export default function EntityHover({
               key={photos[index].id}
               photo={photos[index]}
               className={clsx(hasSplitLayout && index === 0 && 'row-span-2')}
+              // Hover content is inert (pointer-events-none), so never prefetch
+              prefetch={false}
             />)}
       </div>
       {/* Placeholder grid */}
@@ -105,33 +89,31 @@ export default function EntityHover({
         'to-transparent',
       )} />
       {/* Text */}
-      <div className={clsx(
-        'absolute inset-0 p-2.5',
-      )}>
+      <div className="absolute inset-0 p-2.5">
         <div className="flex flex-col gap-1 h-full">
           {/* Header */}
           <div className="grow">
-            <span className={clsx(
-              'flex text-base',
-              'grow',
-              'translate-x-[4px]',
-            )}>
-              {header}
-            </span>
+            {header &&
+              <span className={clsx(
+                'flex text-base text-white',
+                'grow',
+                'translate-x-[4px]',
+              )}>
+                {header}
+              </span>}
           </div>
           {/* Caption */}
-          <div className={clsx(
-            'self-start',
-            'flex items-center gap-2',
-            'px-1.5 py-0.5 rounded-sm',
-            'text-white/90 bg-black/40 backdrop-blur-lg',
-            'outline-medium shadow-sm',
-            'uppercase text-[0.7rem]',
-          )}>
-            {photoQuantityText(photosCount, appText, false)}
-            {isLoading &&
-              <Spinner size={9} />}
-          </div>
+          {caption &&
+            <div className={clsx(
+              'self-start',
+              'flex items-center gap-2',
+              'px-1.5 py-0.5 rounded-sm',
+              'text-white/90 bg-black/40 backdrop-blur-lg',
+              'outline-medium shadow-sm',
+              'uppercase text-[0.7rem]',
+            )}>
+              {caption}
+            </div>}
         </div>
       </div>
     </div>
@@ -141,14 +123,13 @@ export default function EntityHover({
     photosToShow,
     photos,
     header,
-    photosCount,
-    appText,
-    isLoading,
+    caption,
   ]);
 
   return <SharedHover {...{
     hoverKey,
     content,
+    className,
     width,
     height,
     color,
