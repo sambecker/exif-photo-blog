@@ -1,10 +1,50 @@
-import { convertApertureValueToFNumber } from '@/utility/exif';
+import {
+  convertApertureValueToFNumber,
+  getDimensionsFromExif,
+} from '@/utility/exif';
+import { OrientationTypes } from 'ts-exif-parser';
 import {
   formatExposureTime,
   formatExposureCompensation,
 } from '@/utility/exif-format';
 
 describe('EXIF', () => {
+  describe('dimensions from exif', () => {
+    it('fall back to DEFAULT_ASPECT_RATIO when exifr is undefined', () => {
+      // Regression: HEIC uploads can reach a partial parse where exifr is
+      // undefined; previously `exifr.ImageWidth` threw a TypeError.
+      const { width, height, aspectRatio } = getDimensionsFromExif(
+        { tags: {}, imageSize: undefined } as any,
+        undefined,
+      );
+      expect(width).toBeUndefined();
+      expect(height).toBeUndefined();
+      expect(aspectRatio).toBe(1.5); // DEFAULT_ASPECT_RATIO
+    });
+
+    it('use imageSize when present even if exifr is undefined', () => {
+      const { width, height, aspectRatio } = getDimensionsFromExif(
+        {
+          tags: { Orientation: OrientationTypes.TOP_LEFT },
+          imageSize: { width: 4032, height: 3024 } as any,
+        } as any,
+        undefined,
+      );
+      expect(width).toBe(4032);
+      expect(height).toBe(3024);
+      expect(aspectRatio).toBeCloseTo(4 / 3);
+    });
+
+    it('use exifr ImageWidth/Height as fallback when imageSize missing', () => {
+      const { width, height, aspectRatio } = getDimensionsFromExif(
+        { tags: { Orientation: OrientationTypes.TOP_LEFT } } as any,
+        { ImageWidth: 1200, ImageHeight: 800 },
+      );
+      expect(width).toBe(1200);
+      expect(height).toBe(800);
+      expect(aspectRatio).toBeCloseTo(1.5);
+    });
+  });
   describe('converts', () => {
     it('aperture value to f-number', () => {
       expect(convertApertureValueToFNumber('0')).toBe('1');
