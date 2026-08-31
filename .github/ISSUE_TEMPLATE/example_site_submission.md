@@ -1,5 +1,5 @@
 ---
-name: Site submission
+name: Example site submission
 about: Submit a hosted site to be considered for the examples list
 title: ''
 labels: 'site submission'
