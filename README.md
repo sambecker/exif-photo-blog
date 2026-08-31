@@ -4,9 +4,12 @@ https://github.com/sambecker/exif-photo-blog/assets/169298/4253ea54-558a-4358-88
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/sambecker-pro/clone?demo-description=Store%20photos%20with%20original%20camera%20data&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F39rys245Px3FVBGRJNYEON%2Fbf68d5c052bda9e9e5bec21878764bc3%2Fimage.png&demo-title=Photo%20Blog&demo-url=https%3A%2F%2Fphotos.sambecker.com&from=templates&project-name=Photo%20Blog&repository-name=exif-photo-blog&repository-url=https%3A%2F%2Fgithub.com%2Fsambecker%2Fexif-photo-blog&skippable-integrations=1&stores=%5B%7B%22type%22%3A%22postgres%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D&teamCreateStatus=hidden)
 
-🎬&nbsp;&nbsp;Demo
+🎬&nbsp;&nbsp;Hosted examples
 -
-https://photos.sambecker.com
+- https://photos.sambecker.com
+- https://birdnerd.photo
+- https://booshie.photo
+- https://photos.sconetto.me
 
 ✨&nbsp;&nbsp;Features
 -
@@ -22,6 +25,17 @@ https://photos.sambecker.com
 - Support for Fujifilm recipes and film simulations
 
 <img src="/readme/og-image-share.png" alt="OG Image Preview" width=600 />
+
+📋&nbsp;&nbsp;Contents
+-
+- [Installation](#installation)
+- [Receiving updates](#receiving-updates)
+- [Local development](#local-development)
+- [Customization](#customization)
+- [Alternate storage providers](#alternate-storage-providers)
+- [Alternate database providers (experimental)](#alternate-database-providers-experimental)
+- [I18N](#i18n)
+- [FAQ](#faq)
 
 🛠️&nbsp;&nbsp;Installation
 -
