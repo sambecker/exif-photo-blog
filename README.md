@@ -11,7 +11,7 @@ https://github.com/sambecker/exif-photo-blog/assets/169298/4253ea54-558a-4358-88
 - https://booshie.photo
 - https://photos.sconetto.me
 
-_Submit your site as an example by [opening an issue](/issues/new?template=example_site_submission.md)_
+_Submit your site as an example by [opening an issue](https://github.com/sambecker/exif-photo-blog/issues/new?template=example_site_submission.md)_
 
 ✨&nbsp;&nbsp;Features
 -
