@@ -1,7 +1,7 @@
 ---
 name: Example site submission
 about: Submit a hosted site to be considered for the examples list
-title: ''
+title: 'Example site submission'
 labels: 'site submission'
 assignees: ''
 
@@ -20,4 +20,4 @@ Photos must:
 - [ ] contain full EXIF details
 - [ ] look great
 
-Not all submissions will be published.
+_Not all submissions will be published._
