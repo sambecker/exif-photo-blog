@@ -213,6 +213,7 @@ export const TEXT: I18N = {
     tryAgain: 'Try Again',
     finishing: 'Finishing ...',
     uploading: 'Uploading',
+    cancel: 'Cancel',
     copyPhrase: '{{label}} copied',
     paginate: '{{index}} of {{count}}',
     paginateAction: '{{action}} {{index}} of {{count}}',

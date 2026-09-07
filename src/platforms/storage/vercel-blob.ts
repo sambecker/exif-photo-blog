@@ -1,7 +1,11 @@
 import { PATH_API_VERCEL_BLOB_UPLOAD } from '@/app/path';
 import { copy, del, list, put } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
-import { getFileNamePartsFromStorageUrl, StorageListResponse } from '.';
+import {
+  getFileNamePartsFromStorageUrl,
+  StorageListResponse,
+  type ClientUploadOptions,
+} from '.';
 import { formatBytes } from '@/utility/number';
 
 const VERCEL_BLOB_STORE_ID = process.env.BLOB_READ_WRITE_TOKEN?.match(
@@ -19,12 +23,17 @@ export const isUrlFromVercelBlob = (url?: string) =>
 export const vercelBlobUploadFromClient = async (
   file: File | Blob,
   fileName: string,
+  options?: ClientUploadOptions,
 ): Promise<string> =>
   upload(
     fileName,
     file, {
       access: 'public',
       handleUploadUrl: PATH_API_VERCEL_BLOB_UPLOAD,
+      abortSignal: options?.abortSignal,
+      onUploadProgress: options?.onProgress
+        ? ({ loaded, total }) => options.onProgress?.(loaded, total)
+        : undefined,
     },
   )
     .then(({ url }) => url);

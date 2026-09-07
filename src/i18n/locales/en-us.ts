@@ -212,6 +212,7 @@ export const TEXT = {
     tryAgain: 'Try Again',
     finishing: 'Finishing ...',
     uploading: 'Uploading',
+    cancel: 'Cancel',
     copyPhrase: '{{label}} copied',
     paginate: '{{index}} of {{count}}',
     paginateAction: '{{action}} {{index}} of {{count}}',

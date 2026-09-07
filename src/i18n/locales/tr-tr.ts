@@ -215,6 +215,7 @@ export const TEXT: I18N = {
     tryAgain: 'Tekrar Dene',
     finishing: 'Tamamlanıyor ...',
     uploading: 'Yükleniyor',
+    cancel: 'İptal',
     copyPhrase: '{{label}} kopyalandı',
     paginate: '{{count}} fotoğrafın {{index}}.si',
     paginateAction: '{{action}} - {{count}} fotoğrafın {{index}}.si',

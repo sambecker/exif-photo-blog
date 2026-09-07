@@ -7,6 +7,7 @@ import PhotoUploadWithStatus from '@/photo/PhotoUploadWithStatus';
 import { useAppState } from '@/app/AppState';
 import clsx from 'clsx/lite';
 import { IoCloseSharp } from 'react-icons/io5';
+import { useAppText } from '@/i18n/state/client';
 
 export default function AdminUploadPanel({
   shouldResize,
@@ -22,8 +23,11 @@ export default function AdminUploadPanel({
       hideUploadPanel,
       uploadError,
     },
+    cancelUpload,
     resetUploadState,
   } = useAppState();
+
+  const appText = useAppText();
 
   return (
     <AppGrid
@@ -50,7 +54,12 @@ export default function AdminUploadPanel({
                 size={18}
                 className="translate-y-[0.5px]"
               />}
-              onClick={resetUploadState}
+              tooltip={isUploading
+                ? appText.utility.cancel
+                : undefined}
+              onClick={isUploading
+                ? cancelUpload
+                : resetUploadState}
             />
           </div>
         </Container>}

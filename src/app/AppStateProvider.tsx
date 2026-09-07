@@ -103,6 +103,7 @@ export default function AppStateProvider({
     useState<Date[]>([]);
   // UPLOAD
   const uploadInputRef = useRef<HTMLInputElement>(null);
+  const uploadAbortRef = useRef<AbortController | null>(null);
   const [uploadState, _setUploadState] = useState(INITIAL_UPLOAD_STATE);
   // VIEW
   const [isPhotoSetFull, setIsPhotoSetFull] = useState(false);
@@ -242,6 +243,18 @@ export default function AppStateProvider({
   const resetUploadState = useCallback(() => {
     _setUploadState(INITIAL_UPLOAD_STATE);
   }, []);
+  const startUploadSession = useCallback(() => {
+    uploadAbortRef.current = new AbortController();
+    return uploadAbortRef.current.signal;
+  }, []);
+  const cancelUpload = useCallback(() => {
+    uploadAbortRef.current?.abort();
+    uploadAbortRef.current = null;
+    if (uploadInputRef.current) {
+      uploadInputRef.current.value = '';
+    }
+    _setUploadState(INITIAL_UPLOAD_STATE);
+  }, []);
 
   return (
     <AppStateContext.Provider
@@ -287,6 +300,8 @@ export default function AppStateProvider({
         // UPLOAD
         uploadInputRef,
         startUpload,
+        startUploadSession,
+        cancelUpload,
         uploadState,
         setUploadState,
         resetUploadState,

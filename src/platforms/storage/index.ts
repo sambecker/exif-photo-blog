@@ -58,6 +58,11 @@ export type StorageType =
   'cloudflare-r2' |
   'minio';
 
+export type ClientUploadOptions = {
+  onProgress?: (loaded: number, total: number) => void
+  abortSignal?: AbortSignal
+};
+
 export const generateStorageId = () => generateNanoid(16);
 
 export const generateFileNameWithId = (prefix: string) =>
@@ -115,15 +120,57 @@ export const storageTypeFromUrl = (url: string): StorageType => {
   }
 };
 
+const putBlobWithProgress = (
+  url: string,
+  file: File | Blob,
+  {
+    onProgress,
+    abortSignal,
+  }: ClientUploadOptions = {},
+) =>
+  new Promise<void>((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('PUT', url);
+    xhr.upload.onprogress = event => {
+      if (event.lengthComputable) {
+        onProgress?.(event.loaded, event.total);
+      }
+    };
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve();
+      } else {
+        reject(new Error(`Upload failed with status ${xhr.status}`));
+      }
+    };
+    xhr.onerror = () => reject(new Error('Upload failed'));
+    xhr.onabort = () =>
+      reject(new DOMException('The operation was aborted.', 'AbortError'));
+
+    if (abortSignal?.aborted) {
+      reject(new DOMException('The operation was aborted.', 'AbortError'));
+      return;
+    }
+    const onAbort = () => xhr.abort();
+    abortSignal?.addEventListener('abort', onAbort);
+    xhr.onloadend = () => abortSignal?.removeEventListener('abort', onAbort);
+    xhr.send(file);
+  });
+
 export const uploadFromClientViaPresignedUrl = async (
   file: File | Blob,
   fileName: string,
+  options?: ClientUploadOptions,
 ) => {
-  const url = await fetch(`${PATH_API_PRESIGNED_URL}/${fileName}`)
+  const url = await fetch(
+    `${PATH_API_PRESIGNED_URL}/${fileName}`,
+    { signal: options?.abortSignal },
+  )
     .then((response) => response.text());
 
-  return fetch(url, { method: 'PUT', body: file })
-    .then(() => `${baseUrlForStorage(CURRENT_STORAGE)}/${fileName}`);
+  await putBlobWithProgress(url, file, options);
+
+  return `${baseUrlForStorage(CURRENT_STORAGE)}/${fileName}`;
 };
 
 export const uploadFileFromClient = async (
@@ -131,6 +178,7 @@ export const uploadFileFromClient = async (
   _fileName: string,
   extension: string,
   addRandomSuffix = true,
+  options?: ClientUploadOptions,
 ) => {
   const fileName = addRandomSuffix
     ? `${_fileName}-${generateStorageId()}.${extension}`
@@ -141,8 +189,8 @@ export const uploadFileFromClient = async (
     CURRENT_STORAGE === 'aws-s3' ||
     CURRENT_STORAGE === 'minio'
   )
-    ? uploadFromClientViaPresignedUrl(file, fileName)
-    : vercelBlobUploadFromClient(file, fileName);
+    ? uploadFromClientViaPresignedUrl(file, fileName, options)
+    : vercelBlobUploadFromClient(file, fileName, options);
 };
 
 export const putFile = (
