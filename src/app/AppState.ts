@@ -60,6 +60,8 @@ export type AppStateContextType = {
   insightsIndicatorStatus?: InsightsIndicatorStatus
   // UPLOAD
   startUpload?: () => Promise<boolean>
+  startUploadSession?: () => AbortSignal
+  cancelUpload?: () => void
   uploadInputRef?: RefObject<HTMLInputElement | null>
   uploadState: UploadState
   setUploadState?: (uploadState: Partial<UploadState>) => void

@@ -215,6 +215,7 @@ export const TEXT: I18N = {
     tryAgain: 'फिर से कोशिश करें',
     finishing: 'समाप्त कर रहे हैं...',
     uploading: 'अपलोड हो रहा है',
+    cancel: 'रद्द करें',
     copyPhrase: '{{label}} कॉपी किया गया',
     paginate: '{{index}} / {{count}}',
     paginateAction: '{{action}} - {{index}} / {{count}}',

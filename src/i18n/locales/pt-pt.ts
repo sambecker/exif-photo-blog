@@ -214,6 +214,7 @@ export const TEXT: I18N = {
     tryAgain: 'Tentar Novamente',
     finishing: 'A finalizar ...',
     uploading: 'A enviar',
+    cancel: 'Cancelar',
     copyPhrase: '{{label}} copiado',
     paginate: '{{index}} de {{count}}',
     paginateAction: '{{action}} {{index}} de {{count}}',

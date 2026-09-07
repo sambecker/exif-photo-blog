@@ -8,6 +8,7 @@ import {
   getSignedUrlForUrl,
   getStorageUrlsForPrefix,
   uploadFileFromClient,
+  ClientUploadOptions,
 } from '@/platforms/storage';
 import { Photo } from '..';
 import { fetchBase64ImageFromUrl } from '@/utility/image';
@@ -85,14 +86,16 @@ export const getStoragePhotoUrls = () =>
 export const uploadTempPhotoFromClient = (
   file: File | Blob,
   extension = EXTENSION_DEFAULT,
+  options?: ClientUploadOptions,
 ) =>
-  uploadFileFromClient(file, PREFIX_UPLOAD, extension);
+  uploadFileFromClient(file, PREFIX_UPLOAD, extension, true, options);
 
 export const uploadPhotoFromClient = (
   file: File | Blob,
   extension = EXTENSION_DEFAULT,
+  options?: ClientUploadOptions,
 ) =>
-  uploadFileFromClient(file, PREFIX_PHOTO, extension);
+  uploadFileFromClient(file, PREFIX_PHOTO, extension, true, options);
 
 const getSuffixFromNextImageSize = (nextSize: NextImageSize) =>
   OPTIMIZED_FILE_SIZES.find(({ size }) => size === nextSize)?.suffix

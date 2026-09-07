@@ -213,6 +213,7 @@ export const TEXT: I18N = {
     tryAgain: 'Thử lại',
     finishing: 'Đang hoàn thành...',
     uploading: 'Đang tải lên',
+    cancel: 'Hủy',
     copyPhrase: '{{label}} đã sao chép',
     paginate: '{{index}} của {{count}}',
     paginateAction: '{{action}} {{index}} của {{count}}',

@@ -207,6 +207,7 @@ export const TEXT: I18N = {
     tryAgain: '重试',
     finishing: '完成中...',
     uploading: '上传中',
+    cancel: '取消',
     copyPhrase: '{{label}} 已复制',
     paginate: '第 {{index}} 页，共 {{count}} 页',
     paginateAction: '{{action}} 第 {{index}} 页，共 {{count}} 页',

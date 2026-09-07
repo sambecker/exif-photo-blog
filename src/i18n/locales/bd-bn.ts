@@ -214,6 +214,7 @@ export const TEXT: I18N = {
     tryAgain: 'আবার চেষ্টা করুন',
     finishing: 'সম্পন্ন হচ্ছে ...',
     uploading: 'আপলোড হচ্ছে',
+    cancel: 'বাতিল',
     copyPhrase: '{{label}} কপি হয়েছে',
     paginate: '{{index}} / {{count}}',
     paginateAction: '{{action}} - {{index}} / {{count}}',

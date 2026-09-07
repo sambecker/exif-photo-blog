@@ -212,6 +212,7 @@ export const TEXT: I18N = {
     tryAgain: 'Coba Lagi',
     finishing: 'Menyelesaikan ...',
     uploading: 'Mengunggah',
+    cancel: 'Batal',
     copyPhrase: '{{label}} disalin',
     paginate: '{{index}} dari {{count}}',
     paginateAction: '{{action}} {{index}} dari {{count}}',
