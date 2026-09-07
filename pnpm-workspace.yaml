@@ -1,5 +1,6 @@
 packages: []
 allowBuilds:
+  '@parcel/watcher': true
   '@tailwindcss/oxide': true
   '@vercel/speed-insights': true
   oxc-resolver: true
@@ -60,7 +61,7 @@ minimumReleaseAgeExclude:
   - '@tailwindcss/postcss@4.3.3'
   - tailwindcss@4.3.3
   - '@ai-sdk/provider@4.0.8'
-  - '@types/node@26.3.0 || 26.4.0'
+  - '@types/node@26.3.0 || 26.4.0 || 26.5.0'
   - '@img/sharp-darwin-arm64@0.35.4'
   - '@img/sharp-darwin-x64@0.35.4'
   - '@img/sharp-freebsd-wasm32@0.35.4'
