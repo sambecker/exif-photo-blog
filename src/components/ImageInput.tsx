@@ -7,6 +7,7 @@ import { ACCEPTED_PHOTO_FILE_TYPES } from '@/photo';
 import { FiUploadCloud } from 'react-icons/fi';
 import { MAX_IMAGE_SIZE } from '@/platforms/next-image';
 import ProgressButton from './primitives/ProgressButton';
+import ResponsiveText from './primitives/ResponsiveText';
 import { useAppState } from '@/app/AppState';
 import { useAppText } from '@/i18n/state/client';
 import { getUploadProgress } from '@/admin/upload';
@@ -102,11 +103,16 @@ export default function ImageInput({
             >
               {isUploading
                 ? filesLength > 1
-                  ? appText.utility.paginateAction(
+                  ? <ResponsiveText shortText={appText.utility.paginate(
                     fileUploadIndex + 1,
                     filesLength,
-                    appText.admin.uploading,
-                  )
+                  )}>
+                    {appText.utility.paginateAction(
+                      fileUploadIndex + 1,
+                      filesLength,
+                      appText.admin.uploading,
+                    )}
+                  </ResponsiveText>
                   : appText.admin.uploading
                 : appText.admin.uploadPhotos}
             </ProgressButton>}

@@ -13,6 +13,7 @@ import { uploadTempPhotoFromClient } from './storage';
 import { isAbortError } from '@/utility/abort';
 import ProgressBar from '@/components/primitives/ProgressBar';
 import LoaderButton from '@/components/primitives/LoaderButton';
+import { IoCloseSharp } from 'react-icons/io5';
 
 export default function PhotoUploadWithStatus({
   inputRef,
@@ -166,7 +167,10 @@ export default function PhotoUploadWithStatus({
           <LoaderButton
             className="cursor-pointer"
             onClick={cancelUpload}
-            hideText="never"
+            icon={<IoCloseSharp
+              size={18}
+              className="translate-y-[0.5px]"
+            />}
           >
             {appText.utility.cancel}
           </LoaderButton>}

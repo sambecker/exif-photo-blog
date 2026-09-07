@@ -25,7 +25,7 @@ export default function ProgressButton({
     >
       <ProgressBar
         progress={progress}
-        className="absolute top-0 left-0 w-full h-[2px]"
+        className="absolute! top-0 left-0 w-full h-[2px]"
       />
       {children}
     </LoaderButton>
