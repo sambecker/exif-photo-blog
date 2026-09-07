@@ -215,7 +215,10 @@ export default function PhotoUploadWithStatus({
         {!showButton && isUploading && !isFinishing && !uploadError &&
           <ProgressBar
             progress={uploadProgress ?? 0}
-            className="h-[2px] w-full bg-medium"
+            className={clsx(
+              'absolute! top-0 left-0 w-full',
+              'h-[2px] bg-medium',
+            )}
           />}
       </div>}
       {debug && debugDownload &&

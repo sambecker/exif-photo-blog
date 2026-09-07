@@ -38,7 +38,11 @@ export default function AdminUploadPanel({
         <Container
           color="gray"
           padding="tight"
-          className="p-2! pl-4! text-main!"
+          className={clsx(
+            // Necessary for progress bar placement
+            'relative overflow-hidden',
+            'p-2! pl-4! text-main!',
+          )}
         >
           <div className="flex w-full items-center gap-2">
             <PhotoUploadWithStatus
