@@ -32,11 +32,13 @@ export default function AdminComponentPageClient({
       contentMain={<div className="flex flex-col gap-4">
         <div className={clsx(
           'flex gap-1',
-          '*:inline-flex *:bg-medium *:rounded-[3px]',
+          // '*:inline-flex *:bg-medium *:rounded-[3px]',
         )}>
           <StatusIcon type="checked" />
           <StatusIcon type="missing" />
           <StatusIcon type="warning" />
+          <StatusIcon type="optional" />
+          <StatusIcon type="optional" loading />
           <StatusIcon type="optional" />
         </div>
         <div className="z-14">

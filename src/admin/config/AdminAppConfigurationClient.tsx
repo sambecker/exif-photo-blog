@@ -214,9 +214,9 @@ export default function AdminAppConfigurationClient({
   const renderSubStatus = (
     type: ComponentProps<typeof StatusIcon>['type'],
     label: ReactNode,
-    iconClassName = 'translate-y-[3.5px]',
+    iconClassName = 'translate-y-[4px]',
   ) =>
-    <div className="flex gap-2 translate-x-[-2.5px]">
+    <div className="flex gap-2">
       <StatusIcon {...{ type, className: iconClassName }} />
       <span className="min-w-0">
         {label}

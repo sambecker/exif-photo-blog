@@ -1,10 +1,7 @@
-import {
-  BiSolidCheckboxChecked,
-  BiSolidCheckboxMinus,
-  BiSolidXSquare,
-} from 'react-icons/bi';
 import Spinner from './Spinner';
 import clsx from 'clsx/lite';
+import { IoClose } from 'react-icons/io5';
+import { FaCheck, FaMinus } from 'react-icons/fa6';
 
 export default function StatusIcon({
   type,
@@ -15,35 +12,45 @@ export default function StatusIcon({
   loading?: boolean
   className?: string
 }) {
+  const getBgColor = () => {
+    switch (type) {
+      case 'checked':
+        return 'bg-green-500';
+      case 'missing':
+        return 'bg-red-400';
+      case 'warning':
+        return 'bg-amber-500';
+      case 'optional':
+        return 'bg-gray-400 dark:bg-gray-600';
+    }
+  };
+
   const getIcon = () => {
     switch (type) {
       case 'checked':
-        return <BiSolidCheckboxChecked
-          size={18}
-          className="text-green-400"
+        return <FaCheck
+          size={10}
+          className="text-white"
         />;
       case 'missing':
-        return <BiSolidXSquare
-          size={14.5}
-          className="text-red-400"
-        />;
       case 'warning':
-        return <BiSolidXSquare
-          size={14.5}
-          className="text-amber-500"
+        return <IoClose
+          size={12}
+          className="text-white"
         />;
       case 'optional':
-        return <BiSolidCheckboxMinus
-          size={18}
-          className="text-dim"
+        return <FaMinus
+          size={10}
+          className="text-white"
         />;
     }
   };
 
   return (
     <span className={clsx(
-      'size-[16px]',
+      'size-[14px] rounded-md overflow-hidden',
       'inline-flex items-center justify-center',
+      !loading && getBgColor(),
       className,
     )}>
       {loading

@@ -30,6 +30,7 @@ export default function ChecklistRow({
             ? 'warning'
             : optional ? 'optional' : 'missing'}
         loading={isPending}
+        className="translate-y-[1px]"
       />}
       content={<>
         <div className={clsx(
