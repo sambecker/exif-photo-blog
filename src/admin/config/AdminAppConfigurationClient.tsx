@@ -576,18 +576,21 @@ export default function AdminAppConfigurationClient({
           </ChecklistRow>
           <ChecklistRow
             title={hasLocationServices && isAnalyzingConfiguration
-              ? 'Testing Google Places connection'
-              : 'Google Places'}
+              ? 'Testing Google Places/Geocoding connection'
+              : 'Google Places/Geocoding'}
             status={hasLocationServices}
             isPending={hasLocationServices && isAnalyzingConfiguration}
             optional
           >
             {locationError && renderError({
-              connection: { provider: 'Google Places', error: locationError},
+              connection: {
+                provider: 'Google Places/Geocoding',
+                error: locationError,
+              },
             })}
-            Store Google Places API key in order to add location meta
-            to entities like albums
-            {renderEnvVars(['GOOGLE_PLACES_API_KEY'])}
+            Store Google Places/Geocoding API key in order to add location meta
+            to entities like photos and albums
+            {renderEnvVars(['GOOGLE_PLACES_GEOCODING_API_KEY'])}
           </ChecklistRow>
         </>;
       case 'AI Text':

@@ -1,4 +1,4 @@
-import { GOOGLE_PLACES_API_KEY } from '@/app/config';
+import { GOOGLE_PLACES_GEOCODING_API_KEY } from '@/app/config';
 import { Place, PlaceAutocomplete } from '@/place';
 import {
   checkRateLimitAndThrow as _checkRateLimitAndThrow,
@@ -34,7 +34,7 @@ const checkRateLimitAndThrow = () =>
 
 const headers = {
   'Content-Type': 'application/json',
-  'X-Goog-Api-Key': GOOGLE_PLACES_API_KEY ?? '',
+  'X-Goog-Api-Key': GOOGLE_PLACES_GEOCODING_API_KEY ?? '',
 };
 
 const parsePlace = (json: any): Place | undefined =>
@@ -101,7 +101,7 @@ const getPlaceIdFromCoordinates = async (
 ) => {
   const json = await fetch(
     `${URL_MAPS}?latlng=${latitude},${longitude}&key=${
-      GOOGLE_PLACES_API_KEY ?? ''
+      GOOGLE_PLACES_GEOCODING_API_KEY ?? ''
     }`,
   )
     .then(response => response.json())
