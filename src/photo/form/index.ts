@@ -14,14 +14,16 @@ import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { ReactNode } from 'react';
 import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import { SelectMenuOptionType } from '@/components/SelectMenuOption';
-import { COLOR_SORT_ENABLED } from '@/app/config';
+import { COLOR_SORT_ENABLED, GEO_PRIVACY_ENABLED } from '@/app/config';
 
 type VirtualFields =
   'albums' |
   'visibility' |
   'favorite' |
   'applyRecipeTitleGlobally' |
-  'shouldStripGpsData';
+  'shouldStripGpsData' |
+  'locationPlace' |
+  'locationDisplayName';
 
 export type FormFields = keyof PhotoDbInsert | VirtualFields;
 
@@ -76,12 +78,18 @@ export type FormMeta = {
 const STRING_MAX_LENGTH_SHORT = 255;
 const STRING_MAX_LENGTH_LONG  = 1000;
 
+export const shouldShowPhotoLocationFields = (
+  hasLocationServices?: boolean,
+) =>
+  !GEO_PRIVACY_ENABLED && Boolean(hasLocationServices);
+
 const FORM_METADATA = (
   tagOptions?: AnnotatedTag[],
   recipeOptions?: AnnotatedTag[],
   filmOptions?: AnnotatedTag[],
   aiTextGeneration?: boolean,
   shouldStripGpsData?: boolean,
+  hasLocationServices?: boolean,
 ): Record<keyof PhotoFormData, FormMeta> => ({
   title: {
     section: 'text',
@@ -209,19 +217,37 @@ const FORM_METADATA = (
   iso: { section: 'exif', label: 'ISO' },
   exposureTime: { section: 'exif', label: 'exposure time' },
   exposureCompensation: { section: 'exif', label: 'exposure compensation' },
+  latitude: { section: 'exif', label: 'latitude' },
+  longitude: { section: 'exif', label: 'longitude' },
+  locationPlace: {
+    section: 'exif',
+    label: 'location',
+    excludeFromInsert: true,
+    hideModificationStatus: true,
+    shouldHide: () => !shouldShowPhotoLocationFields(hasLocationServices),
+  },
+  locationDisplayName: {
+    section: 'exif',
+    label: 'location display name',
+    excludeFromInsert: true,
+    shouldHide: () => !shouldShowPhotoLocationFields(hasLocationServices),
+  },
+  location: {
+    section: 'exif',
+    label: 'location data',
+    type: shouldShowPhotoLocationFields(hasLocationServices)
+      ? 'textarea'
+      : 'hidden',
+    isJson: true,
+    readOnly: true,
+    spellCheck: false,
+    capitalize: false,
+  },
   locationName: {
     section: 'exif',
     label: 'location name',
     shouldHide: () => true,
   },
-  location: {
-    section: 'exif',
-    label: 'location',
-    isJson: true,
-    shouldHide: () => true,
-  },
-  latitude: { section: 'exif', label: 'latitude' },
-  longitude: { section: 'exif', label: 'longitude' },
   takenAt: {
     section: 'exif',
     label: 'taken at',
@@ -378,7 +404,7 @@ export const convertPhotoToFormData = (photo: Photo): PhotoFormData => {
       case 'colorData':
         return JSON.stringify(value);
       case 'location':
-        return JSON.stringify(value);
+        return value ? JSON.stringify(value) : undefined;
       default:
         return value !== undefined && value !== null
           ? value.toString()
@@ -390,6 +416,8 @@ export const convertPhotoToFormData = (photo: Photo): PhotoFormData => {
     [key]: valueForKey(key as keyof Photo, value),
   }), {
     favorite: photo.tags.includes(TAG_FAVS) ? 'true' : 'false',
+    locationDisplayName:
+      photo.location?.nameFormatted ?? photo.location?.name ?? '',
   } as PhotoFormData);
 };
 
@@ -407,6 +435,7 @@ export const convertFormDataToPhotoDbInsert = (
   if (photoForm.favorite === 'true') {
     tags.push(TAG_FAVS);
   }
+  const locationDisplayName = photoForm.locationDisplayName;
 
   // Parse FormData:
   // - remove server action ID
@@ -463,7 +492,10 @@ export const convertFormDataToPhotoDbInsert = (
       ? parseFloat(photoForm.longitude)
       : undefined,
     ...photoForm.location && {
-      location: JSON.parse(photoForm.location),
+      location: {
+        ...JSON.parse(photoForm.location),
+        ...locationDisplayName && { nameFormatted: locationDisplayName },
+      },
     },
     iso: photoForm.iso
       ? parseInt(photoForm.iso)

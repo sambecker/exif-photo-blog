@@ -10,6 +10,7 @@ import UploadPageClient from '@/photo/UploadPageClient';
 import {
   AI_CONTENT_GENERATION_ENABLED,
   BLUR_ENABLED,
+  HAS_LOCATION_SERVICES,
 } from '@/app/config';
 import ErrorNote from '@/components/ErrorNote';
 import { getRecipeTitleForData } from '@/photo/query';
@@ -99,6 +100,7 @@ export default async function UploadPage({ params, searchParams }: Params) {
         hasAiTextGeneration,
         imageThumbnailBase64,
         shouldStripGpsData,
+        hasLocationServices: HAS_LOCATION_SERVICES,
       }} />
       : <AppGrid contentMain={
         <ErrorNote>

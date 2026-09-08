@@ -14,6 +14,7 @@ import PhotoEditPageClient from '@/photo/PhotoEditPageClient';
 import {
   AI_CONTENT_GENERATION_ENABLED,
   BLUR_ENABLED,
+  HAS_LOCATION_SERVICES,
   IS_PREVIEW,
 } from '@/app/config';
 import { blurImageFromUrl, resizeImageFromUrl } from '@/photo/server';
@@ -76,6 +77,7 @@ export default async function PhotoEditPage({
       hasAiTextGeneration,
       imageThumbnailBase64,
       blurData,
+      hasLocationServices: HAS_LOCATION_SERVICES,
     }} />
   );
 };
