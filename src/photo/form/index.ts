@@ -14,7 +14,7 @@ import { FujifilmRecipe } from '@/platforms/fujifilm/recipe';
 import { ReactNode } from 'react';
 import { FujifilmSimulation } from '@/platforms/fujifilm/simulation';
 import { SelectMenuOptionType } from '@/components/SelectMenuOption';
-import { COLOR_SORT_ENABLED, GEO_PRIVACY_ENABLED } from '@/app/config';
+import { COLOR_SORT_ENABLED } from '@/app/config';
 
 type VirtualFields =
   'albums' |
@@ -77,11 +77,6 @@ export type FormMeta = {
 
 const STRING_MAX_LENGTH_SHORT = 255;
 const STRING_MAX_LENGTH_LONG  = 1000;
-
-export const shouldShowPhotoLocationFields = (
-  hasLocationServices?: boolean,
-) =>
-  !GEO_PRIVACY_ENABLED && Boolean(hasLocationServices);
 
 const FORM_METADATA = (
   tagOptions?: AnnotatedTag[],
@@ -224,18 +219,18 @@ const FORM_METADATA = (
     label: 'location',
     excludeFromInsert: true,
     hideModificationStatus: true,
-    shouldHide: () => !shouldShowPhotoLocationFields(hasLocationServices),
+    shouldHide: () => !hasLocationServices,
   },
   locationDisplayName: {
     section: 'exif',
     label: 'location display name',
     excludeFromInsert: true,
-    shouldHide: () => !shouldShowPhotoLocationFields(hasLocationServices),
+    shouldHide: () => !hasLocationServices,
   },
   location: {
     section: 'exif',
     label: 'location data',
-    type: shouldShowPhotoLocationFields(hasLocationServices)
+    type: hasLocationServices
       ? 'textarea'
       : 'hidden',
     isJson: true,

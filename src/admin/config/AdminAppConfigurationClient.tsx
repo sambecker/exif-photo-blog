@@ -612,7 +612,9 @@ export default function AdminAppConfigurationClient({
             optional
           >
             Set environment variable to {'"1"'} to disable
-            auto-generation of location data (geo privacy must be disabled)
+            auto-generation of location data (places/geocoding API key
+            must be configured and geo privacy must be disabled
+            for locations to be auto-generated)
             {renderEnvVars(['DISABLE_AUTO_GENERATE_LOCATIONS'])}
           </ChecklistRow>
         </>;

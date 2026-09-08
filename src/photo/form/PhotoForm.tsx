@@ -21,7 +21,6 @@ import {
   getChangedFormFields,
   getFormErrors,
   isFormValid,
-  shouldShowPhotoLocationFields,
 } from '.';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import { createPhotoAction, updatePhotoAction } from '../actions';
@@ -361,7 +360,7 @@ export default function PhotoForm({
     ) {
       return true;
     } else if (
-      shouldShowPhotoLocationFields(hasLocationServices) &&
+      hasLocationServices &&
       (key === 'location' || key === 'locationDisplayName') &&
       !formData.location &&
       !isLoadingPlace
