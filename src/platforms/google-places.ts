@@ -8,17 +8,25 @@ const URL_PLACES = 'https://places.googleapis.com/v1/places';
 const URL_MAPS   = 'https://maps.googleapis.com/maps/api/geocode/json';
 const NEARBY_SEARCH_RADIUS_METERS = 500;
 
-const GEOCODE_PREFERRED_TYPES = [
+type GeocodeType =
+  'neighborhood' |
+  'sublocality' |
+  'sublocality_level_1' |
+  'locality' |
+  'administrative_area_level_2' |
+  'natural_feature' |
+  'park' |
+  'point_of_interest' |
+  'premise' |
+  'colloquial_area';
+
+const GEOCODE_PREFERRED_TYPES: GeocodeType[] = [
   'neighborhood',
   'sublocality',
   'sublocality_level_1',
   'locality',
-  'administrative_area_level_2',
   'natural_feature',
   'park',
-  'point_of_interest',
-  'premise',
-  'colloquial_area',
 ];
 
 const checkRateLimitAndThrow = () =>

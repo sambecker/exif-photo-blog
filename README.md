@@ -138,12 +138,14 @@ To auto-generate text descriptions of photos, configure a provider. Vercel AI Ga
 
 ### Location services
 
-To add location meta to entities like albums:
+To add location meta to entities like photos and albums:
 
-1. Setup Google Places API
+1. Setup Google Places/Geocoding API
    - [Create Google Cloud project](https://console.cloud.google.com/projectcreate) if necessary
+   - Enable "Places API (new)" (for finding places of interest)
+   - Enable "Geocoding API" (for reverse lookup based on lat/long coordinates)
    - Select [Create credentials](https://console.cloud.google.com/apis/credentials) and choose "API key"
-   - Choose "Restrict key" and select "Places API (new)"
+   - Choose "Restrict key" and select "Places API (new)" + "Geocoding API"
 2. Store API key in `GOOGLE_PLACES_API_KEY`
 3. Add [rate limiting](#rate-limiting) (_recommended_)
 
