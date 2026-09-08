@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { query, sql } from '@/platforms/postgres';
 
 interface Migration {
@@ -116,15 +117,23 @@ export const MIGRATIONS: Migration[] = [{
     ALTER TABLE photos
     ALTER COLUMN iso TYPE INTEGER
   `),
+}, {
+  label: '11: Photo Location',
+  fields: ['location'],
+  run: () => sql`
+    ALTER TABLE photos
+    ADD COLUMN IF NOT EXISTS location JSONB
+  `,
 }];
 
 export const migrationForError = (e: any) =>
   MIGRATIONS.find(({ fields, table = 'photos' }) =>
     fields.some(field =>(
-      // eslint-disable-next-line max-len
+      // Seen in write conditions
       new RegExp(`column "${field}" of relation "${table}" does not exist`, 'i').test(e.message) ||
+      // Seen in read/query conditions
       new RegExp(`column "${field}" does not exist`, 'i').test(e.message) ||
-      // eslint-disable-next-line max-len
-      field === 'iso' && new RegExp('out of range for type smallint', 'i').test(e.message)
+      // Misc. conditions
+      (table === 'photos' && field === 'iso' && new RegExp('out of range for type smallint', 'i').test(e.message))
     )),
   );

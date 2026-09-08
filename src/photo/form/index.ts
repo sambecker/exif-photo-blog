@@ -214,6 +214,12 @@ const FORM_METADATA = (
     label: 'location name',
     shouldHide: () => true,
   },
+  location: {
+    section: 'exif',
+    label: 'location',
+    isJson: true,
+    shouldHide: () => true,
+  },
   latitude: { section: 'exif', label: 'latitude' },
   longitude: { section: 'exif', label: 'longitude' },
   takenAt: {
@@ -371,6 +377,8 @@ export const convertPhotoToFormData = (photo: Photo): PhotoFormData => {
         return JSON.stringify(value);
       case 'colorData':
         return JSON.stringify(value);
+      case 'location':
+        return JSON.stringify(value);
       default:
         return value !== undefined && value !== null
           ? value.toString()
@@ -454,6 +462,9 @@ export const convertFormDataToPhotoDbInsert = (
     longitude: photoForm.longitude
       ? parseFloat(photoForm.longitude)
       : undefined,
+    ...photoForm.location && {
+      location: JSON.parse(photoForm.location),
+    },
     iso: photoForm.iso
       ? parseInt(photoForm.iso)
       : undefined,
