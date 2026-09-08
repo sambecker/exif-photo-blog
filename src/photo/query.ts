@@ -63,6 +63,7 @@ export const createPhotosTable = () =>
       exposure_time DOUBLE PRECISION,
       exposure_compensation REAL,
       location_name VARCHAR(255),
+      location JSONB,
       latitude DOUBLE PRECISION,
       longitude DOUBLE PRECISION,
       film VARCHAR(255),
@@ -106,6 +107,7 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       exposure_time,
       exposure_compensation,
       location_name,
+      location,
       latitude,
       longitude,
       film,
@@ -141,6 +143,9 @@ export const insertPhoto = (photo: PhotoDbInsert) =>
       ${photo.exposureTime},
       ${photo.exposureCompensation},
       ${photo.locationName},
+      ${photo.location
+        ? JSON.stringify(photo.location)
+        : null},
       ${photo.latitude},
       ${photo.longitude},
       ${photo.film},
@@ -180,6 +185,9 @@ export const updatePhoto = (photo: PhotoDbInsert) =>
       exposure_time=${photo.exposureTime},
       exposure_compensation=${photo.exposureCompensation},
       location_name=${photo.locationName},
+      location=${photo.location
+        ? JSON.stringify(photo.location)
+        : null},
       latitude=${photo.latitude},
       longitude=${photo.longitude},
       film=${photo.film},

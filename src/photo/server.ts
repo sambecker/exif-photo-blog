@@ -11,7 +11,9 @@ import { ExifData, ExifParserFactory } from 'ts-exif-parser';
 import { PhotoFormData } from './form';
 import sharp, { Sharp } from 'sharp';
 import {
+  AUTO_GENERATE_LOCATIONS,
   GEO_PRIVACY_ENABLED,
+  HAS_LOCATION_SERVICES,
   PRESERVE_ORIGINAL_UPLOADS,
 } from '@/app/config';
 import { isExifForFujifilm } from '@/platforms/fujifilm/server';
@@ -34,6 +36,7 @@ import { convertExifToFormData } from './form/server';
 import { getColorFieldsForPhotoForm } from './color/server';
 import exifr from 'exifr';
 import { getCompatibleExifValue } from '@/utility/exif';
+import { getPlaceFromCoordinates } from '@/platforms/google-places';
 
 const IMAGE_WIDTH_BLUR = 200;
 const IMAGE_WIDTH_DEFAULT = 200;
@@ -45,11 +48,13 @@ export const extractImageDataFromBlobPath = async (
     generateBlurData,
     generateResizedImage,
     updateColorFields = true,
+    lookupLocation,
   }: {
     includeInitialPhotoFields?: boolean
     generateBlurData?: boolean
     generateResizedImage?: boolean
     updateColorFields?: boolean
+    lookupLocation?: boolean
   } = {},
 ): Promise<{
   blobId?: string
@@ -132,19 +137,29 @@ export const extractImageDataFromBlobPath = async (
     ? await getColorFieldsForPhotoForm(url)
     : undefined;
 
+  const formDataFromExif = dataExif
+    ? {
+      ...includeInitialPhotoFields && {
+        hidden: 'false',
+        favorite: 'false',
+        extension,
+        url,
+      },
+      ...generateBlurData && { blurData },
+      ...convertExifToFormData(dataExif, dataExifr, film, recipe),
+      ...colorFields,
+    } satisfies Partial<PhotoFormData>
+    : undefined;
+
   return {
     blobId,
-    ...dataExif && {
+    ...formDataFromExif && {
       formDataFromExif: {
-        ...includeInitialPhotoFields && {
-          hidden: 'false',
-          favorite: 'false',
-          extension,
-          url,
-        },
-        ...generateBlurData && { blurData },
-        ...convertExifToFormData(dataExif, dataExifr, film, recipe),
-        ...colorFields,
+        ...formDataFromExif,
+        ...await getLocationFormFieldsFromExif(
+          formDataFromExif,
+          lookupLocation,
+        ),
       },
     },
     imageResizedBase64,
@@ -152,6 +167,39 @@ export const extractImageDataFromBlobPath = async (
     fileBytes,
     error,
   };
+};
+
+const getLocationFormFieldsFromExif = async (
+  formData: Partial<PhotoFormData>,
+  lookupLocation?: boolean,
+): Promise<Partial<PhotoFormData> | undefined> => {
+  if (
+    !lookupLocation ||
+    !AUTO_GENERATE_LOCATIONS ||
+    GEO_PRIVACY_ENABLED ||
+    !HAS_LOCATION_SERVICES ||
+    !formData.latitude ||
+    !formData.longitude
+  ) {
+    return;
+  }
+
+  const latitude = parseFloat(formData.latitude);
+  const longitude = parseFloat(formData.longitude);
+  if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+    return;
+  }
+
+  try {
+    const place = await getPlaceFromCoordinates(latitude, longitude);
+    if (!place) { return; }
+    return {
+      location: JSON.stringify(place),
+      locationDisplayName: place.nameFormatted ?? place.name,
+    };
+  } catch (e) {
+    console.log('Error looking up place from coordinates', e);
+  }
 };
 
 const generateBase64 = async (

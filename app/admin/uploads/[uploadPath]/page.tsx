@@ -9,7 +9,9 @@ import {
 import UploadPageClient from '@/photo/UploadPageClient';
 import {
   AI_CONTENT_GENERATION_ENABLED,
+  AUTO_GENERATE_LOCATIONS,
   BLUR_ENABLED,
+  HAS_LOCATION_SERVICES,
 } from '@/app/config';
 import ErrorNote from '@/components/ErrorNote';
 import { getRecipeTitleForData } from '@/photo/query';
@@ -47,6 +49,7 @@ export default async function UploadPage({ params, searchParams }: Params) {
       includeInitialPhotoFields: true,
       generateBlurData: BLUR_ENABLED,
       generateResizedImage: AI_CONTENT_GENERATION_ENABLED,
+      lookupLocation: AUTO_GENERATE_LOCATIONS,
     }),
   ]);
 
@@ -99,6 +102,7 @@ export default async function UploadPage({ params, searchParams }: Params) {
         hasAiTextGeneration,
         imageThumbnailBase64,
         shouldStripGpsData,
+        hasLocationServices: HAS_LOCATION_SERVICES,
       }} />
       : <AppGrid contentMain={
         <ErrorNote>

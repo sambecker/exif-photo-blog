@@ -21,7 +21,9 @@ type VirtualFields =
   'visibility' |
   'favorite' |
   'applyRecipeTitleGlobally' |
-  'shouldStripGpsData';
+  'shouldStripGpsData' |
+  'locationPlace' |
+  'locationDisplayName';
 
 export type FormFields = keyof PhotoDbInsert | VirtualFields;
 
@@ -82,6 +84,7 @@ const FORM_METADATA = (
   filmOptions?: AnnotatedTag[],
   aiTextGeneration?: boolean,
   shouldStripGpsData?: boolean,
+  hasLocationServices?: boolean,
 ): Record<keyof PhotoFormData, FormMeta> => ({
   title: {
     section: 'text',
@@ -209,13 +212,37 @@ const FORM_METADATA = (
   iso: { section: 'exif', label: 'ISO' },
   exposureTime: { section: 'exif', label: 'exposure time' },
   exposureCompensation: { section: 'exif', label: 'exposure compensation' },
+  latitude: { section: 'exif', label: 'latitude' },
+  longitude: { section: 'exif', label: 'longitude' },
+  locationPlace: {
+    section: 'exif',
+    label: 'location',
+    excludeFromInsert: true,
+    hideModificationStatus: true,
+    shouldHide: () => !hasLocationServices,
+  },
+  locationDisplayName: {
+    section: 'exif',
+    label: 'location display name',
+    excludeFromInsert: true,
+    shouldHide: () => !hasLocationServices,
+  },
+  location: {
+    section: 'exif',
+    label: 'location data',
+    type: hasLocationServices
+      ? 'textarea'
+      : 'hidden',
+    isJson: true,
+    readOnly: true,
+    spellCheck: false,
+    capitalize: false,
+  },
   locationName: {
     section: 'exif',
     label: 'location name',
     shouldHide: () => true,
   },
-  latitude: { section: 'exif', label: 'latitude' },
-  longitude: { section: 'exif', label: 'longitude' },
   takenAt: {
     section: 'exif',
     label: 'taken at',
@@ -371,6 +398,8 @@ export const convertPhotoToFormData = (photo: Photo): PhotoFormData => {
         return JSON.stringify(value);
       case 'colorData':
         return JSON.stringify(value);
+      case 'location':
+        return value ? JSON.stringify(value) : undefined;
       default:
         return value !== undefined && value !== null
           ? value.toString()
@@ -382,6 +411,8 @@ export const convertPhotoToFormData = (photo: Photo): PhotoFormData => {
     [key]: valueForKey(key as keyof Photo, value),
   }), {
     favorite: photo.tags.includes(TAG_FAVS) ? 'true' : 'false',
+    locationDisplayName:
+      photo.location?.nameFormatted ?? photo.location?.name ?? '',
   } as PhotoFormData);
 };
 
@@ -399,6 +430,7 @@ export const convertFormDataToPhotoDbInsert = (
   if (photoForm.favorite === 'true') {
     tags.push(TAG_FAVS);
   }
+  const locationDisplayName = photoForm.locationDisplayName;
 
   // Parse FormData:
   // - remove server action ID
@@ -454,6 +486,12 @@ export const convertFormDataToPhotoDbInsert = (
     longitude: photoForm.longitude
       ? parseFloat(photoForm.longitude)
       : undefined,
+    ...photoForm.location && {
+      location: {
+        ...JSON.parse(photoForm.location),
+        ...locationDisplayName && { nameFormatted: locationDisplayName },
+      },
+    },
     iso: photoForm.iso
       ? parseInt(photoForm.iso)
       : undefined,
