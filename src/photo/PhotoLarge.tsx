@@ -418,12 +418,6 @@ export default function PhotoLarge({
                           toggleRecipeOverlay={toggleRecipeOverlay}
                           isShowingRecipeOverlay={isShowingRecipeOverlay}
                         />}
-                      {showPlaceContent && photo.location &&
-                        <PlaceEntity
-                          place={photo.location}
-                          contrast="low"
-                          className="-translate-x-[3px]"
-                        />}
                       {showTagsContent &&
                         <PhotoTags
                           tags={tags}
@@ -495,6 +489,14 @@ export default function PhotoLarge({
                           isShowingRecipeOverlay,
                         }}
                       />}
+                    {showPlaceContent && photo.location &&
+                      <div>
+                        <PlaceEntity
+                          place={photo.location}
+                          contrast="low"
+                          className="-translate-x-0.5"
+                        />
+                      </div>}
                   </>}
                 <div className={clsx(
                   'flex gap-x-3 gap-y-baseline',
