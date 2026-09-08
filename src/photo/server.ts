@@ -11,6 +11,7 @@ import { ExifData, ExifParserFactory } from 'ts-exif-parser';
 import { PhotoFormData } from './form';
 import sharp, { Sharp } from 'sharp';
 import {
+  AUTO_GENERATE_LOCATIONS,
   GEO_PRIVACY_ENABLED,
   HAS_LOCATION_SERVICES,
   PRESERVE_ORIGINAL_UPLOADS,
@@ -174,6 +175,7 @@ const getLocationFormFieldsFromExif = async (
 ): Promise<Partial<PhotoFormData> | undefined> => {
   if (
     !lookupLocation ||
+    !AUTO_GENERATE_LOCATIONS ||
     GEO_PRIVACY_ENABLED ||
     !HAS_LOCATION_SERVICES ||
     !formData.latitude ||
