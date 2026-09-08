@@ -162,6 +162,7 @@ const addUpload = async ({
     includeInitialPhotoFields: true,
     generateBlurData: BLUR_ENABLED,
     generateResizedImage: AI_CONTENT_GENERATION_ENABLED,
+    lookupLocation: true,
   });
 
   if (formDataFromExif) {

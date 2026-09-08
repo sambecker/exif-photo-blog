@@ -48,6 +48,7 @@ export default async function UploadPage({ params, searchParams }: Params) {
       includeInitialPhotoFields: true,
       generateBlurData: BLUR_ENABLED,
       generateResizedImage: AI_CONTENT_GENERATION_ENABLED,
+      lookupLocation: true,
     }),
   ]);
 
