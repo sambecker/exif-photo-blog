@@ -32,6 +32,7 @@ import {
   MATTE_COLOR_DARK,
   ALWAYS_SHOW_EXPOSURE_COMP,
   UPPERCASE_TITLES,
+  GEO_PRIVACY_ENABLED,
 } from '@/app/config';
 import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
 import { RevalidatePhoto } from './InfinitePhotoScroll';
@@ -56,6 +57,7 @@ import AdminPhotoStorageCheck from '@/admin/storage/AdminPhotoStorageCheck';
 import { useEditTitlesState } from '@/admin/edit-titles/EditTitlesState';
 import { DATA_KEY_PHOTO_LARGE } from '@/admin/edit-titles/EditTitlesProvider';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
+import PlaceEntity from '@/place/PlaceEntity';
 
 export default function PhotoLarge({
   photo,
@@ -193,6 +195,9 @@ export default function PhotoLarge({
   const showTagsContent = tags.length > 0;
   const showRecipeContent = showRecipe && shouldShowRecipeDataForPhoto(photo);
   const showFilmContent = showFilm && shouldShowFilmDataForPhoto(photo);
+  const showPlaceContent =
+    Boolean(photo.location) &&
+    !GEO_PRIVACY_ENABLED;
 
   useVisibility({ ref, onVisible });
 
@@ -211,6 +216,7 @@ export default function PhotoLarge({
     showTagsContent ||
     showRecipeContent ||
     showFilmContent ||
+    showPlaceContent ||
     showExifContent;
 
   const hasNonDateContent =
@@ -384,6 +390,7 @@ export default function PhotoLarge({
                     showCameraContent ||
                     showLensContent ||
                     showRecipeContent ||
+                    showPlaceContent ||
                     showTagsContent
                   ) &&
                     <div>
@@ -410,6 +417,12 @@ export default function PhotoLarge({
                           prefetch={prefetchRelatedLinks}
                           toggleRecipeOverlay={toggleRecipeOverlay}
                           isShowingRecipeOverlay={isShowingRecipeOverlay}
+                        />}
+                      {showPlaceContent && photo.location &&
+                        <PlaceEntity
+                          place={photo.location}
+                          contrast="low"
+                          className="-translate-x-[3px]"
                         />}
                       {showTagsContent &&
                         <PhotoTags
