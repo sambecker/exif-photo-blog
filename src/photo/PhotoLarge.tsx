@@ -258,7 +258,7 @@ export default function PhotoLarge({
           aspectRatio={photo.aspectRatio}
           blurDataURL={photo.blurData}
           blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
-          priority={priority}
+          loading={priority ? 'eager' : undefined}
         />
       </ZoomControls>
       <div className={clsx(

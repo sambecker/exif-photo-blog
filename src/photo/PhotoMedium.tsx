@@ -79,7 +79,7 @@ export default function PhotoMedium({
             className="flex object-cover w-full h-full"
             classNameImage="object-cover w-full h-full"
             alt={altTextForPhoto(photo)}
-            priority={priority}
+            loading={priority ? 'eager' : undefined}
           />
         </div>}
     </LinkWithStatus>
