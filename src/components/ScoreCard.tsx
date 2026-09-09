@@ -14,14 +14,14 @@ export default function ScoreCard({
     <div className="space-y-2">
       {title &&
         <div className={clsx(
-          'pl-[15px] h-7 pb-1 flex items-end',
+          'pl-3.5 sm:pl-2 h-7 pb-1 flex items-end',
           'uppercase font-medium tracking-wider text-[0.8rem]',
           'text-medium',
         )}>
           {title}
         </div>}
       <div className={clsx(
-        'component-surface shadow-xs divide-y divide-medium',
+        'component-surface shadow-xs divide-y divide-medium rounded-md',
         className,
       )}>
         {children}

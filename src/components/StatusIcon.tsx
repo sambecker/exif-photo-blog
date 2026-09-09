@@ -1,7 +1,6 @@
 import Spinner from './Spinner';
 import clsx from 'clsx/lite';
-import { IoClose } from 'react-icons/io5';
-import { FaCheck, FaMinus } from 'react-icons/fa6';
+import { FaTimes, FaMinus, FaCheck } from 'react-icons/fa';
 
 export default function StatusIcon({
   type,
@@ -21,7 +20,7 @@ export default function StatusIcon({
       case 'warning':
         return 'bg-amber-500';
       case 'optional':
-        return 'bg-gray-400 dark:bg-gray-600';
+        return 'bg-gray-300 dark:bg-gray-700';
     }
   };
 
@@ -29,18 +28,18 @@ export default function StatusIcon({
     switch (type) {
       case 'checked':
         return <FaCheck
-          size={10}
+          size={8}
           className="text-white"
         />;
       case 'missing':
       case 'warning':
-        return <IoClose
-          size={12}
+        return <FaTimes
+          size={9}
           className="text-white"
         />;
       case 'optional':
         return <FaMinus
-          size={10}
+          size={9}
           className="text-white"
         />;
     }

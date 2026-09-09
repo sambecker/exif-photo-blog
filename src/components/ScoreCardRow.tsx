@@ -36,7 +36,7 @@ export default function ScoreCardRow({
       className,
     )}>
       <div className={clsx(
-        'flex justify-center pt-[8px] w-11 sm:w-14',
+        'flex justify-center pt-2 w-11',
         'shrink-0 text-icon',
       )}>
         {icon}

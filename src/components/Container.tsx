@@ -52,7 +52,7 @@ export default function Container({
   const getPaddingClasses = () => {
     switch (padding) {
       case 'loose': return 'p-4 md:p-24';
-      case 'normal': return 'p-4 md:p-8';
+      case 'normal': return 'p-3 md:p-8';
       case 'tight': return 'py-1.5 px-2.5';
       case 'tight-cta-right': return 'py-1.5 pl-2.5 pr-1.5';
       case 'tight-cta-right-left': return 'py-1.5 px-1.5';
@@ -64,7 +64,7 @@ export default function Container({
       {...props}
       className={clsx(
         'flex flex-col items-center justify-center',
-        'rounded-lg',
+        'rounded-xl',
         ...getColorClasses(),
         getPaddingClasses(),
         className,
