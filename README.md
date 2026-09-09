@@ -340,7 +340,7 @@ Only one storage adapter—Vercel Blob, Cloudflare R2, AWS S3, or MinIO—can be
 
 MinIO is a self-hosted S3-compatible object storage server.
 
-### 1. Server/bucket setup
+#### 1. Server/bucket setup
 
 First, install and deploy the MinIO server, then create a bucket with public read access.
 
@@ -382,7 +382,7 @@ First, install and deploy the MinIO server, then create a bucket with public rea
     - `NEXT_PUBLIC_MINIO_PORT`: (optional)
     - `NEXT_PUBLIC_MINIO_DISABLE_SSL`: Set to `1` to disable SSL (defaults to HTTPS)
 
-### 2. Create user with restricted permissions
+#### 2. Create user with restricted permissions
 
 Create a dedicated user and a policy that grants permission to manage objects within your `BUCKET_NAME`.
 
