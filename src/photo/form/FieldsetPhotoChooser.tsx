@@ -38,6 +38,8 @@ const renderPhoto = (photo: Photo) =>
     aspectRatio={photo.aspectRatio}
     blurDataURL={photo.blurData}
     blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
+    className="object-cover w-full h-full"
+    classNameImage="object-cover w-full h-full"
   />;
 
 export default function FieldsetPhotoChooser({
@@ -88,7 +90,7 @@ export default function FieldsetPhotoChooser({
       key={photo.id}
       aria-label={altTextForPhoto(photo)}
       className={clsx(
-        'flex w-full aspect-square object-cover',
+        'flex w-full aspect-square items-stretch',
         'overflow-hidden select-none active:opacity-75',
         'cursor-pointer',
         'border-none shadow-none p-0 rounded-none bg-transparent',
