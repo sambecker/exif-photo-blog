@@ -14,11 +14,11 @@ export default function StatusIcon({
   const getBgColor = () => {
     switch (type) {
       case 'checked':
-        return 'bg-green-500';
+        return 'bg-green-500 dark:bg-green-600';
       case 'missing':
-        return 'bg-red-400';
+        return 'bg-red-400 dark:bg-red-500';
       case 'warning':
-        return 'bg-amber-500';
+        return 'bg-amber-500 dark:bg-amber-600';
       case 'optional':
         return 'bg-gray-300 dark:bg-gray-700';
     }
@@ -47,7 +47,7 @@ export default function StatusIcon({
 
   return (
     <span className={clsx(
-      'size-[14px] rounded-md overflow-hidden',
+      'size-[14px] rounded-[5px] overflow-hidden',
       'inline-flex items-center justify-center',
       !loading && getBgColor(),
       className,
