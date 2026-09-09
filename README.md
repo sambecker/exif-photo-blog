@@ -138,19 +138,18 @@ To auto-generate text descriptions of photos, configure a provider. Vercel AI Ga
 
 ### Location
 
-- To add location meta to entities like photos and albums:
+To add location meta to entities like photos and albums:
 
-  1. Setup Google Places/Geocoding API
-      - [Create Google Cloud project](https://console.cloud.google.com/projectcreate) if necessary
-      - Enable "Places API (new)" (for finding places of interest)
-      - Enable "Geocoding API" (for reverse lookup based on lat/long coordinates)
-      - Select [Create credentials](https://console.cloud.google.com/apis/credentials) and choose "API key"
-      - Choose "Restrict key" and select "Places API (new)" + "Geocoding API"
-  2. Store API key in `GOOGLE_PLACES_GEOCODING_API_KEY`
-  3. Add [rate limiting](#rate-limiting) (_recommended_)
+1. Setup Google Places/Geocoding API
+   - [Create Google Cloud project](https://console.cloud.google.com/projectcreate) if necessary
+   - Enable "Places API (new)" (for finding places of interest)
+   - Enable "Geocoding API" (for reverse lookup based on lat/long coordinates)
+   - Select [Create credentials](https://console.cloud.google.com/apis/credentials) and choose "API key"
+   - Choose "Restrict key" and select "Places API (new)" + "Geocoding API"
+2. Store API key in `GOOGLE_PLACES_GEOCODING_API_KEY`
+3. Add [rate limiting](#rate-limiting) (_recommended_)
 
 - `NEXT_PUBLIC_GEO_PRIVACY = 1` disables collection/display of location-based data (⚠️ re-compresses uploaded images in order to remove GPS information)
-
 - `DISABLE_AUTO_GENERATE_LOCATIONS = 1` to disables auto-generation of location data
 
 ### Rate limiting
@@ -232,13 +231,13 @@ Create Upstash Redis store from storage tab of Vercel dashboard and link to your
 
 ### Scripts & Analytics
 - Web Analytics
-  1. Open project on Vercel
-  2. Click "Analytics" tab
-  3. Follow "Enable Web Analytics" instructions (`@vercel/analytics` already included)
+1. Open project on Vercel
+2. Click "Analytics" tab
+3. Follow "Enable Web Analytics" instructions (`@vercel/analytics` already included)
 - Speed Insights
-  1. Open project on Vercel
-  2. Click "Speed Insights" tab
-  3. Follow "Enable Speed Insights" instructions (`@vercel/speed-insights` already included)
+1. Open project on Vercel
+2. Click "Speed Insights" tab
+3. Follow "Enable Speed Insights" instructions (`@vercel/speed-insights` already included)
 - `PAGE_SCRIPT_URLS`
   - comma-separated list of URLs to be added to the bottom of the body tag via "next/script"
   - urls must begin with 'https'
