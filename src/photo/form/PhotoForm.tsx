@@ -459,12 +459,12 @@ export default function PhotoForm({
       blurCompatibilityLevel="none"
       width={thumbnailDimensions.width}
       height={thumbnailDimensions.height}
-      priority
+      loading="eager"
     />;
 
   return (
     <div className="space-y-4 max-w-[38rem]">
-      <div className="flex gap-2">
+      <div className="relative flex gap-2">
         {thumbnail(true)}
         <div className={clsx(
           'max-md:hidden',

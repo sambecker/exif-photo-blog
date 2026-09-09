@@ -39,7 +39,6 @@ export default function FieldsetRecipeData({
     ) {
       let isStale = false;
       searchedTitle.current = recipeTitle;
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsSearchingForData(true);
       getRecipeDataForTitleAction(recipeTitle)
         .then(recipeData => {

@@ -29,7 +29,6 @@ export default function OGLoaderImage({
 
   useEffect(() => {
     if (!ref.current?.complete) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoadingState('loading');
     }
   }, [path]);
