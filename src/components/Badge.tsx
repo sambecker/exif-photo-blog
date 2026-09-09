@@ -22,7 +22,7 @@ export default function Badge({
       case 'large':
         return clsx(
           'px-1.5 h-[26px]',
-          'rounded-md',
+          'rounded-lg',
           'bg-gray-100/40 dark:bg-gray-900/60',
           'border border-medium',
         );
