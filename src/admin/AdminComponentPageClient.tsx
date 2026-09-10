@@ -37,9 +37,9 @@ export default function AdminComponentPageClient({
     <AppGrid
       contentMain={<div className="flex flex-col gap-4">
         <div className="flex flex-wrap gap-3 items-end">
-          {photoFolders.map(folder =>
+          {photoFolders.map((folder, index) =>
             <PhotoFolder
-              key={folder.caption}
+              key={`${folder.caption}-${index}`}
               photos={folder.photos}
               caption={folder.caption}
             />)}
