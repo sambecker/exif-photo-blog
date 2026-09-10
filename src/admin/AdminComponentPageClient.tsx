@@ -11,6 +11,7 @@ import clsx from 'clsx/lite';
 import { useState } from 'react';
 import { Photo } from '@/photo';
 import FieldsetPhotoChooser from '@/photo/form/FieldsetPhotoChooser';
+import PhotoFolder from '@/photo/PhotoFolder';
 
 export default function AdminComponentPageClient({
   photo,
@@ -30,6 +31,14 @@ export default function AdminComponentPageClient({
   return (
     <AppGrid
       contentMain={<div className="flex flex-col gap-4">
+        <div className="flex flex-wrap gap-3 items-end">
+          {[1, 2, 3, 4, 6].map(count =>
+            <PhotoFolder
+              key={count}
+              photos={photos.slice(0, count)}
+              caption={`${count} photo${count === 1 ? '' : 's'}`}
+            />)}
+        </div>
         <div className={clsx(
           'flex gap-1',
           // '*:inline-flex *:bg-medium *:rounded-[3px]',
