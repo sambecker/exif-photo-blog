@@ -91,7 +91,8 @@ export default function PhotoFolder({
   return (
     <div
       className={clsx(
-        'flex flex-col items-center gap-1.5',
+        'group hover:cursor-pointer',
+        'flex flex-col items-center gap-2',
         'shrink-0',
         className,
       )}
@@ -100,6 +101,10 @@ export default function PhotoFolder({
       <div
         className={clsx(
           'relative w-full',
+          'origin-bottom',
+          'transition-transform duration-200',
+          'group-hover:scale-[1.05]',
+          'drop-shadow-[0_1px_2px_rgba(0,0,0,0.12)]',
           tintStyle && clsx(
             '[--folder-fill:var(--folder-fill-light)]',
             '[--folder-stroke:var(--folder-stroke-light)]',
@@ -174,7 +179,14 @@ export default function PhotoFolder({
           </div>}
       </div>
       {caption &&
-        <Badge type="small" uppercase>
+        <Badge
+          type="small"
+          uppercase
+          className={clsx(
+            'transition-transform duration-200',
+            'group-hover:translate-y-0.5',
+          )}
+        >
           {caption}
         </Badge>}
     </div>
