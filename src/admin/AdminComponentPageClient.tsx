@@ -18,11 +18,16 @@ export default function AdminComponentPageClient({
   photos,
   photosCount,
   photosFavs,
+  photoFolders,
 }: {
   photo: Photo
   photos: Photo[]
   photosCount: number
   photosFavs: Photo[]
+  photoFolders: {
+    photos: Photo[]
+    caption: string
+  }[]
 }) {
   const [valuePhoto, setValuePhoto] = useState(photo?.id ?? '');
 
@@ -32,11 +37,11 @@ export default function AdminComponentPageClient({
     <AppGrid
       contentMain={<div className="flex flex-col gap-4">
         <div className="flex flex-wrap gap-3 items-end">
-          {[1, 2, 3, 4, 6].map(count =>
+          {photoFolders.map(folder =>
             <PhotoFolder
-              key={count}
-              photos={photos.slice(0, count)}
-              caption={`${count} photo${count === 1 ? '' : 's'}`}
+              key={folder.caption}
+              photos={folder.photos}
+              caption={folder.caption}
             />)}
         </div>
         <div className={clsx(

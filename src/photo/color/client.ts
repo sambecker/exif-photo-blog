@@ -26,8 +26,26 @@ export const convertJsonStringToOklch = (jsonString = '') => {
   }
 };
 
-export const convertOklchToCss = (oklch: Oklch) =>
-  `oklch(${oklch.l} ${oklch.c} ${oklch.h})`;
+export const convertOklchToCss = (oklch: Oklch, alpha?: number) =>
+  alpha === undefined
+    ? `oklch(${oklch.l} ${oklch.c} ${oklch.h})`
+    : `oklch(${oklch.l} ${oklch.c} ${oklch.h} / ${alpha})`;
+
+export const getProminentColorFromPhotos = (
+  photos: { colorData?: PhotoColorData }[],
+): Oklch | undefined => {
+  let prominent: Oklch | undefined;
+  for (const { colorData } of photos) {
+    if (!colorData) { continue; }
+    const color = colorData.colors[0]
+      ?? colorData.ai
+      ?? colorData.average;
+    if (color && (prominent === undefined || color.c > prominent.c)) {
+      prominent = color;
+    }
+  }
+  return prominent;
+};
 
 export const logOklch = (oklch: Oklch) =>
   `L:${oklch.l.toFixed(2)} C:${oklch.c.toFixed(2)} H:${oklch.h.toFixed(2)}`;
