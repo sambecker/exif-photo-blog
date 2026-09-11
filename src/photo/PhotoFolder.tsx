@@ -16,10 +16,57 @@ import {
 const FOLDER_WIDTH = 143;
 const FOLDER_HEIGHT = 93;
 const FOLDER_TAB_HEIGHT = 7.55;
+const FOLDER_TAB_WIDTH = 47;
+const FOLDER_STROKE_WIDTH = 0.794811;
 const FOLDER_INSET = 4;
+const FOLDER_RADIUS = 5;
 
-/* eslint-disable-next-line max-len */
-const FOLDER_PATH = 'M10 0.397461H31.2734C33.9059 0.397461 36.4234 1.47807 38.2363 3.38672L39.1162 4.31348C41.0792 6.38029 43.8049 7.55071 46.6553 7.55078H132.271C137.575 7.55091 141.874 11.85 141.874 17.1533V82.9932C141.874 88.2963 137.575 92.5956 132.271 92.5957H10C4.69672 92.5957 0.397587 88.2964 0.397461 82.9932V10C0.397461 4.69663 4.69663 0.397461 10 0.397461Z';
+const getFolderPath = () => {
+  const inset = FOLDER_STROKE_WIDTH / 2;
+  const radius = FOLDER_RADIUS + FOLDER_INSET;
+  const left = inset;
+  const top = inset;
+  const right = FOLDER_WIDTH - inset;
+  const bottom = FOLDER_HEIGHT - inset;
+  const tabY = FOLDER_TAB_HEIGHT;
+  const s45 = Math.SQRT1_2;
+  const tabDrop = tabY - top;
+  const chamfer = tabDrop + 2 * radius * (Math.SQRT2 - 1);
+  const tabRight = FOLDER_TAB_WIDTH;
+  const tabTopEnd = tabRight - chamfer;
+
+  const arc = (
+    r: number,
+    sweep: 0 | 1,
+    x: number,
+    y: number,
+  ) =>
+    `A${r} ${r} 0 0 ${sweep} ${x} ${y}`;
+
+  return [
+    `M${left + radius} ${top}`,
+    `H${tabTopEnd}`,
+    arc(
+      radius,
+      1,
+      tabTopEnd + radius * s45,
+      top + radius * (1 - s45),
+    ),
+    `L${tabRight - radius * s45} ${tabY - radius * (1 - s45)}`,
+    arc(radius, 0, tabRight, tabY),
+    `H${right - radius}`,
+    arc(radius, 1, right, tabY + radius),
+    `V${bottom - radius}`,
+    arc(radius, 1, right - radius, bottom),
+    `H${left + radius}`,
+    arc(radius, 1, left, bottom - radius),
+    `V${top + radius}`,
+    arc(radius, 1, left + radius, top),
+    'Z',
+  ].join('');
+};
+
+const FOLDER_PATH = getFolderPath();
 
 const FOLDER_TINT_CHROMA_MAX = 0.07;
 
@@ -136,7 +183,7 @@ export default function PhotoFolder({
                 stroke: 'var(--folder-stroke)',
               }
               : undefined}
-            strokeWidth="0.794811"
+            strokeWidth={FOLDER_STROKE_WIDTH}
           />
         </svg>
         {photosInFolder.length > 0 &&
@@ -153,7 +200,7 @@ export default function PhotoFolder({
               left: `${FOLDER_INSET / FOLDER_WIDTH * 100}%`,
               right: `${FOLDER_INSET / FOLDER_WIDTH * 100}%`,
               bottom: `${FOLDER_INSET / FOLDER_HEIGHT * 100}%`,
-              borderRadius: width * 5 / FOLDER_WIDTH + 1,
+              borderRadius: width * FOLDER_RADIUS / FOLDER_WIDTH + 1,
             }}
           >
             {photosInFolder.map((photo, index) =>
