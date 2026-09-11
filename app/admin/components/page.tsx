@@ -63,7 +63,7 @@ export default async function ComponentsPage() {
   const leastFilm = filmsByCount[filmsByCount.length - 1];
   const leastRecipe = recipesByCount[recipesByCount.length - 1];
 
-  const limit = MAX_PHOTOS_TO_SHOW_PER_CATEGORY;
+  const limit = Math.min(MAX_PHOTOS_TO_SHOW_PER_CATEGORY, 3);
 
   const [
     photosTopTag,

@@ -16,7 +16,7 @@ import {
 const FOLDER_WIDTH = 143;
 const FOLDER_HEIGHT = 93;
 const FOLDER_TAB_HEIGHT = 7.55;
-const FOLDER_INSET = 5.5;
+const FOLDER_INSET = 4;
 
 /* eslint-disable-next-line max-len */
 const FOLDER_PATH = 'M10 0.397461H31.2734C33.9059 0.397461 36.4234 1.47807 38.2363 3.38672L39.1162 4.31348C41.0792 6.38029 43.8049 7.55071 46.6553 7.55078H132.271C137.575 7.55091 141.874 11.85 141.874 17.1533V82.9932C141.874 88.2963 137.575 92.5956 132.271 92.5957H10C4.69672 92.5957 0.397587 88.2964 0.397461 82.9932V10C0.397461 4.69663 4.69663 0.397461 10 0.397461Z';
@@ -63,7 +63,7 @@ export default function PhotoFolder({
   className,
   width = FOLDER_WIDTH,
   channel = true,
-  tint = true,
+  tint,
   caption,
 }: {
   photos: Photo[]
@@ -104,7 +104,7 @@ export default function PhotoFolder({
           'origin-bottom',
           'transition-transform duration-200',
           'group-hover:scale-[1.05]',
-          'drop-shadow-[0_1px_2px_rgba(0,0,0,0.12)]',
+          'drop-shadow-[0px_2px_1px_rgba(0,0,0,0.1)]',
           tintStyle && clsx(
             '[--folder-fill:var(--folder-fill-light)]',
             '[--folder-stroke:var(--folder-stroke-light)]',
@@ -128,7 +128,7 @@ export default function PhotoFolder({
             d={FOLDER_PATH}
             className={clsx(
               !tintStyle && 'fill-gray-100/66 dark:fill-gray-800/66',
-              !tintStyle && 'stroke-gray-200 dark:stroke-gray-700',
+              !tintStyle && 'stroke-gray-300 dark:stroke-gray-700',
             )}
             style={tintStyle
               ? {
@@ -153,7 +153,7 @@ export default function PhotoFolder({
               left: `${FOLDER_INSET / FOLDER_WIDTH * 100}%`,
               right: `${FOLDER_INSET / FOLDER_WIDTH * 100}%`,
               bottom: `${FOLDER_INSET / FOLDER_HEIGHT * 100}%`,
-              borderRadius: width * 5 / FOLDER_WIDTH,
+              borderRadius: width * 5 / FOLDER_WIDTH + 1,
             }}
           >
             {photosInFolder.map((photo, index) =>
