@@ -2,20 +2,45 @@ import AdminComponentPageClient from '@/admin/AdminComponentPageClient';
 import { formatCameraText } from '@/camera';
 import { sortCategoriesByCount } from '@/category';
 import { getAlbumsWithMetaCached } from '@/album/cache';
+import { PhotoQueryOptions } from '@/db';
 import { labelForFilm } from '@/film';
+import { formatFocalLength } from '@/focal';
 import { MAX_PHOTOS_TO_SHOW_PER_CATEGORY } from '@/image-response';
+import { formatLensText } from '@/lens';
 import { INFINITE_SCROLL_GRID_INITIAL, Photo } from '@/photo';
 import {
   getPhotosCached,
   getPhotosMetaCached,
   getUniqueCamerasCached,
   getUniqueFilmsCached,
+  getUniqueFocalLengthsCached,
+  getUniqueLensesCached,
   getUniqueRecipesCached,
   getUniqueTagsCached,
   getUniqueYearsCached,
 } from '@/photo/cache';
 import { formatRecipe } from '@/recipe';
 import { formatTag, sortTagsByCount, TAG_FAVS } from '@/tag';
+
+const FOLDER_LIMITS = [
+  3,
+  4,
+  MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
+] as const;
+
+const getRandomPreviewPhotos = (
+  options: PhotoQueryOptions,
+  limit: number,
+) => getPhotosCached({ ...options, sortBy: 'random', limit })
+  .catch(() => [] as Photo[]);
+
+const previewIndexes = (length: number) =>
+  [...new Set([0, 1, length - 1].filter(i => i >= 0 && i < length))];
+
+type FolderQuery = {
+  options: PhotoQueryOptions
+  caption: string
+};
 
 type PhotoFolderPreview = {
   photos: Photo[]
@@ -29,10 +54,12 @@ export default async function ComponentsPage() {
     photosFavs,
     tags,
     cameras,
+    lenses,
     albums,
     years,
     films,
     recipes,
+    focalLengths,
   ] = await Promise.all([
     getPhotosCached({ limit: INFINITE_SCROLL_GRID_INITIAL }),
     getPhotosMetaCached()
@@ -40,120 +67,85 @@ export default async function ComponentsPage() {
     getPhotosCached({ tag: TAG_FAVS }),
     getUniqueTagsCached().catch(() => []),
     getUniqueCamerasCached().catch(() => []),
+    getUniqueLensesCached().catch(() => []),
     getAlbumsWithMetaCached().catch(() => []),
     getUniqueYearsCached().catch(() => []),
     getUniqueFilmsCached().catch(() => []),
     getUniqueRecipesCached().catch(() => []),
+    getUniqueFocalLengthsCached().catch(() => []),
   ]);
 
   const tagsByCount = sortTagsByCount(tags, TAG_FAVS);
   const camerasByCount = sortCategoriesByCount(cameras);
+  const lensesByCount = sortCategoriesByCount(lenses);
   const filmsByCount = sortCategoriesByCount(films);
   const recipesByCount = sortCategoriesByCount(recipes);
+  const focalLengthsByCount = sortCategoriesByCount(focalLengths);
 
-  const topTag = tagsByCount[0];
-  const secondTag = tagsByCount[1];
-  const topCamera = camerasByCount[0];
-  const leastCamera = camerasByCount.length > 1
-    ? camerasByCount[camerasByCount.length - 1]
-    : undefined;
-  const recentAlbum = albums[0];
-  const secondAlbum = albums[1];
-  const recentYear = years[0];
-  const leastFilm = filmsByCount[filmsByCount.length - 1];
-  const leastRecipe = recipesByCount[recipesByCount.length - 1];
+  const foldersFrom = <T,>(
+    items: T[],
+    toQuery: (item: T) => FolderQuery,
+  ): FolderQuery[] =>
+    previewIndexes(items.length).map(index => toQuery(items[index]));
 
-  const limit = Math.min(MAX_PHOTOS_TO_SHOW_PER_CATEGORY, 3);
-
-  const [
-    photosTopTag,
-    photosSecondTag,
-    photosTopCamera,
-    photosLeastCamera,
-    photosRecentAlbum,
-    photosSecondAlbum,
-    photosRecentYear,
-    photosLeastFilm,
-    photosLeastRecipe,
-  ] = await Promise.all([
-    topTag
-      ? getPhotosCached({ tag: topTag.tag, limit }).catch(() => [])
-      : [],
-    secondTag
-      ? getPhotosCached({ tag: secondTag.tag, limit }).catch(() => [])
-      : [],
-    topCamera
-      ? getPhotosCached({ camera: topCamera.camera, limit })
-        .catch(() => [])
-      : [],
-    leastCamera
-      ? getPhotosCached({ camera: leastCamera.camera, limit })
-        .catch(() => [])
-      : [],
-    recentAlbum
-      ? getPhotosCached({ album: recentAlbum.album, limit })
-        .catch(() => [])
-      : [],
-    secondAlbum
-      ? getPhotosCached({ album: secondAlbum.album, limit })
-        .catch(() => [])
-      : [],
-    recentYear
-      ? getPhotosCached({ year: recentYear.year, limit })
-        .catch(() => [])
-      : [],
-    leastFilm
-      ? getPhotosCached({ film: leastFilm.film, limit }).catch(() => [])
-      : [],
-    leastRecipe
-      ? getPhotosCached({ recipe: leastRecipe.recipe, limit })
-        .catch(() => [])
-      : [],
-  ]);
-
-  const photoFolders = ([
+  const folderQueries: FolderQuery[] = [
     {
-      photos: photosFavs.slice(0, limit),
+      options: { tag: TAG_FAVS },
       caption: formatTag(TAG_FAVS),
     },
-    topTag && {
-      photos: photosTopTag,
-      caption: formatTag(topTag.tag),
+    {
+      options: { recent: true },
+      caption: 'Recents',
     },
-    secondTag && {
-      photos: photosSecondTag,
-      caption: formatTag(secondTag.tag),
-    },
-    topCamera && {
-      photos: photosTopCamera,
-      caption: formatCameraText(topCamera.camera),
-    },
-    leastCamera && {
-      photos: photosLeastCamera,
-      caption: formatCameraText(leastCamera.camera),
-    },
-    recentAlbum && {
-      photos: photosRecentAlbum,
-      caption: recentAlbum.album.title,
-    },
-    secondAlbum && {
-      photos: photosSecondAlbum,
-      caption: secondAlbum.album.title,
-    },
-    recentYear && {
-      photos: photosRecentYear,
-      caption: recentYear.year,
-    },
-    leastFilm && {
-      photos: photosLeastFilm,
-      caption: labelForFilm(leastFilm.film).medium,
-    },
-    leastRecipe && {
-      photos: photosLeastRecipe,
-      caption: formatRecipe(leastRecipe.recipe),
-    },
-  ]).filter((folder): folder is PhotoFolderPreview =>
-    Boolean(folder && folder.photos.length > 0));
+    ...foldersFrom(tagsByCount, ({ tag }) => ({
+      options: { tag },
+      caption: formatTag(tag),
+    })),
+    ...foldersFrom(years, ({ year }) => ({
+      options: { year },
+      caption: year,
+    })),
+    ...foldersFrom(camerasByCount, ({ camera }) => ({
+      options: { camera },
+      caption: formatCameraText(camera),
+    })),
+    ...foldersFrom(lensesByCount, ({ lens }) => ({
+      options: { lens },
+      caption: formatLensText(lens),
+    })),
+    ...foldersFrom(albums, ({ album }) => ({
+      options: { album },
+      caption: album.title,
+    })),
+    ...foldersFrom(recipesByCount, ({ recipe }) => ({
+      options: { recipe },
+      caption: formatRecipe(recipe),
+    })),
+    ...foldersFrom(filmsByCount, ({ film }) => ({
+      options: { film },
+      caption: labelForFilm(film).medium,
+    })),
+    ...foldersFrom(focalLengthsByCount, ({ focal }) => ({
+      options: { focal },
+      caption: formatFocalLength(focal),
+    })),
+  ];
+
+  const folderPhotos = await Promise.all(
+    folderQueries.map((query, index) =>
+      getRandomPreviewPhotos(
+        query.options,
+        FOLDER_LIMITS[index % FOLDER_LIMITS.length],
+      )),
+  );
+
+  const photoFolders = folderQueries
+    .map((query, index) => ({
+      photos: folderPhotos[index],
+      caption: query.caption,
+    }))
+    .filter((folder): folder is PhotoFolderPreview =>
+      folder.photos.length > 0);
 
   return (
     <AdminComponentPageClient

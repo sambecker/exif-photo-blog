@@ -48,6 +48,10 @@ const getSortByComponents = (sortBy: SortBy): {
       sortType: PARAM_SORT_TYPE_COLOR,
       sortOrder: PARAM_SORT_ORDER_ASCENDING,
     };
+    default: return {
+      sortType: USER_DEFAULT_SORT_BY,
+      sortOrder: PARAM_SORT_ORDER_DESCENDING,
+    };
   }
 };
 

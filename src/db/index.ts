@@ -181,6 +181,7 @@ export const getOrderByFromOptions = (options: PhotoQueryOptions) => {
   const {
     sortBy = APP_DEFAULT_SORT_BY,
     sortWithPriority,
+    limit = PHOTO_DEFAULT_LIMIT,
   } = options;
 
   switch (sortBy) {
@@ -209,6 +210,15 @@ export const getOrderByFromOptions = (options: PhotoQueryOptions) => {
       return sortWithPriority
         ? 'ORDER BY priority_order ASC, color_sort ASC, taken_at ASC'
         : 'ORDER BY color_sort ASC, taken_at ASC';
+    case 'random': {
+      // Stable newest-first stride, 2× limit so hits are spaced further apart
+      const stride = Math.max(2, (Math.floor(Number(limit)) || 1) * 2);
+      return [
+        'ORDER BY',
+        `(ROW_NUMBER() OVER (ORDER BY taken_at DESC, id) - 1) % ${stride},`,
+        'taken_at DESC, id',
+      ].join(' ');
+    }
   }
 };
 

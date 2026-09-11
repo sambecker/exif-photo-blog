@@ -1,7 +1,17 @@
 /* eslint-disable max-len */
-import { generateManyToManyValues } from '@/db';
+import { generateManyToManyValues, getOrderByFromOptions } from '@/db';
 
 describe('Postgres', () => {
+  it('orders random photo queries with a stable recency stride', () => {
+    expect(getOrderByFromOptions({ sortBy: 'random', limit: 3 }))
+      .toBe('ORDER BY (ROW_NUMBER() OVER (ORDER BY taken_at DESC, id) - 1) % 6, taken_at DESC, id');
+    expect(getOrderByFromOptions({ sortBy: 'random', limit: 6 }))
+      .toBe('ORDER BY (ROW_NUMBER() OVER (ORDER BY taken_at DESC, id) - 1) % 12, taken_at DESC, id');
+    expect(getOrderByFromOptions({ sortBy: 'random', limit: 0 }))
+      .toBe('ORDER BY (ROW_NUMBER() OVER (ORDER BY taken_at DESC, id) - 1) % 2, taken_at DESC, id');
+    expect(getOrderByFromOptions({ sortBy: 'takenAt' }))
+      .toBe('ORDER BY taken_at DESC');
+  });
   it('Create many to many values', () => {
     expect(generateManyToManyValues(['1'], ['3']))
       .toEqual({

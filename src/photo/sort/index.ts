@@ -31,6 +31,9 @@ export const SORT_BY_OPTIONS = [{
 }, {
   sortBy: 'colorAsc',
   configKey: undefined,
+}, {
+  sortBy: 'random',
+  configKey: undefined,
 }] as const;
 
 export type SortBy = (typeof SORT_BY_OPTIONS)[number]['sortBy'];

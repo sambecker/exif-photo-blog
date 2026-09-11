@@ -208,6 +208,7 @@ export default function EntityLink({
           getPhotos={() =>
             getPhotosCachedAction({
               ...hoverQueryOptions,
+              sortBy: 'random',
               limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
             })}
           color={contrast === 'frosted' ? 'frosted' : undefined}
