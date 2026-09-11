@@ -291,10 +291,6 @@ const FORM_METADATA = (
     label: 'aspect ratio',
     readOnly: true,
   },
-  priorityOrder: {
-    section: 'misc',
-    label: 'priority order',
-  },
   colorData: {
     section: 'misc',
     type: 'textarea',
@@ -306,6 +302,10 @@ const FORM_METADATA = (
     section: 'misc',
     label: 'color sort',
     shouldHide: () => !COLOR_SORT_ENABLED,
+  },
+  priorityOrder: {
+    section: 'misc',
+    label: 'priority order',
   },
   shouldStripGpsData: {
     section: 'misc',
