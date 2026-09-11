@@ -33,9 +33,17 @@ export default function AdminComponentPageClient({
 
   const [value, setValue] = useState('visible');
 
+  const [tint, setTint] = useState(false);
+
   return (
     <AppGrid
       contentMain={<div className="flex flex-col gap-4">
+        <FieldsetWithStatus
+          label="Color tint"
+          type="checkbox"
+          value={tint ? 'true' : 'false'}
+          onChange={value => setTint(value === 'true')}
+        />
         <div className={clsx(
           'grid gap-3',
           'grid-cols-2 xs:grid-cols-3 md:grid-cols-4 lg:grid-cols-5',
@@ -48,6 +56,7 @@ export default function AdminComponentPageClient({
               <PhotoFolder
                 photos={folder.photos}
                 caption={folder.caption}
+                tint={tint}
               />
             </div>)}
         </div>
