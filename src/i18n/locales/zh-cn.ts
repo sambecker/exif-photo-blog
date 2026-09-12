@@ -71,9 +71,6 @@ export const TEXT: I18N = {
     popularTag: '热门标签',
     popularPlace: '热门地点',
   },
-  footer: {
-    madeWith: '基于',
-  },
   sort: {
     sort: '排序',
     newest: '最新',
@@ -211,5 +208,6 @@ export const TEXT: I18N = {
     copyPhrase: '{{label}} 已复制',
     paginate: '第 {{index}} 页，共 {{count}} 页',
     paginateAction: '{{action}} 第 {{index}} 页，共 {{count}} 页',
+    madeWith: '基于',
   },
 };

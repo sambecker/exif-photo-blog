@@ -71,9 +71,6 @@ export const TEXT: I18N = {
     popularTag: 'জনপ্রিয় ট্যাগ',
     popularPlace: 'জনপ্রিয় স্থান',
   },
-  footer: {
-    madeWith: 'তৈরি হয়েছে',
-  },
   sort: {
     sort: 'সাজান',
     newest: 'নতুনতম',
@@ -218,5 +215,6 @@ export const TEXT: I18N = {
     copyPhrase: '{{label}} কপি হয়েছে',
     paginate: '{{index}} / {{count}}',
     paginateAction: '{{action}} - {{index}} / {{count}}',
+    madeWith: 'তৈরি হয়েছে',
   },
 };

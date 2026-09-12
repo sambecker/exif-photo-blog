@@ -71,9 +71,6 @@ export const TEXT: I18N = {
     popularTag: 'लोकप्रिय टैग',
     popularPlace: 'लोकप्रिय स्थान',
   },
-  footer: {
-    madeWith: 'निर्मित',
-  },
   sort: {
     sort: 'क्रमबद्ध करें',
     newest: 'नवीनतम',
@@ -219,5 +216,6 @@ export const TEXT: I18N = {
     copyPhrase: '{{label}} कॉपी किया गया',
     paginate: '{{index}} / {{count}}',
     paginateAction: '{{action}} - {{index}} / {{count}}',
+    madeWith: 'निर्मित',
   },
 };

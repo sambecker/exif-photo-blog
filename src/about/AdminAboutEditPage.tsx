@@ -3,7 +3,7 @@
 import { PATH_ABOUT } from '@/app/path';
 import LinkWithStatus from '@/components/LinkWithStatus';
 import { useState } from 'react';
-import { About, AboutInsert } from '.';
+import { About, AboutInsert, getAboutMeta } from '.';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import AdminChildPage from '@/components/AdminChildPage';
 import { updateAboutAction } from './actions';
@@ -33,6 +33,11 @@ export default function AdminAboutEditPage({
 
   const [aboutForm, setAboutForm] = useState<Partial<AboutInsert>>(about ?? {});
 
+  const {
+    title: placeholderTitle,
+    subhead: placeholderSubhead,
+  } = getAboutMeta(appText);
+
   return (
     <AdminChildPage
       backPath={PATH_ABOUT}
@@ -58,14 +63,14 @@ export default function AdminAboutEditPage({
           <FieldsetWithStatus
             label="Title"
             value={aboutForm?.title ?? ''}
-            placeholder={appText.about.titleDefault}
+            placeholder={placeholderTitle}
             onChange={title => setAboutForm(form =>
               ({ ...form, title }))}
           />
           <FieldsetWithStatus
             label="Subhead"
-            type={!aboutForm?.title ? 'hidden' : undefined}
             value={aboutForm?.subhead ?? ''}
+            placeholder={placeholderSubhead}
             onChange={subhead => setAboutForm(form =>
               ({ ...form, subhead }))}
           />

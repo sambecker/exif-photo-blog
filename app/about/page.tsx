@@ -1,3 +1,4 @@
+import { getAboutMeta } from '@/about';
 import AboutPageClient from '@/about/AboutPageClient';
 import { getAboutDataCached } from '@/about/data';
 import { ABOUT_DESCRIPTION_DEFAULT, SHOW_ABOUT_PAGE } from '@/app/config';
@@ -7,6 +8,7 @@ import {
   getLastModifiedForCategories,
   NULL_CATEGORY_DATA,
 } from '@/category/data';
+import { getAppText } from '@/i18n/state/server';
 import { getPhotosMetaCached } from '@/photo/cache';
 import PhotosEmptyState from '@/photo/PhotosEmptyState';
 import { getAllPhotoIdsWithUpdatedAt } from '@/photo/query';
@@ -19,6 +21,8 @@ export const dynamic = 'force-static';
 
 export default async function AboutPage() {
   if (!SHOW_ABOUT_PAGE) { redirect(PATH_ROOT); }
+  
+  const appText = await getAppText();
 
   const [
     {
@@ -70,11 +74,17 @@ export default async function AboutPage() {
     about?.updatedAt,
   ].filter(date => date instanceof Date));
 
+  const { title, subhead } = getAboutMeta(
+    appText,
+    about?.title,
+    about?.subhead,
+  );
+
   return (
     (photosMeta?.count ?? 0) > 0
       ? <AboutPageClient
-        title={about?.title}
-        subhead={about?.subhead}
+        title={title}
+        subhead={subhead}
         descriptionHtml={descriptionHtml}
         photosCount={photosMeta?.count}
         photosOldest={photosMeta?.dateRange?.start}

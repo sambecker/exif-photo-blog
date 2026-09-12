@@ -71,9 +71,6 @@ export const TEXT: I18N = {
     popularTag: 'Etiqueta popular',
     popularPlace: 'Local popular',
   },
-  footer: {
-    madeWith: 'Feito com',
-  },
   sort: {
     sort: 'Ordenar',
     newest: 'Mais recentes',
@@ -218,5 +215,6 @@ export const TEXT: I18N = {
     copyPhrase: '{{label}} copiado',
     paginate: '{{index}} de {{count}}',
     paginateAction: '{{action}} {{index}} de {{count}}',
+    madeWith: 'Feito com',
   },
 };

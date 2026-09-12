@@ -914,12 +914,13 @@ export default function AdminAppConfigurationClient({
             {renderEnvVars(['NEXT_PUBLIC_HIDE_TAKEN_AT_TIME'])}
           </ChecklistRow>
           <ChecklistRow
-            title="Show repo link"
+            title="Show template attribution"
             status={showRepoLink}
             optional
           >
-            Set environment variable to {'"1"'} to hide footer link
-            {renderEnvVars(['NEXT_PUBLIC_HIDE_REPO_LINK'])}
+            Set environment variable to {'"1"'} to
+            hide {'\"made with exif-photo-blog\"'} references
+            {renderEnvVars(['NEXT_PUBLIC_HIDE_TEMPLATE_ATTRIBUTION'])}
           </ChecklistRow>
         </>;
       case 'Grid':

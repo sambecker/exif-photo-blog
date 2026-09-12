@@ -71,9 +71,6 @@ export const TEXT: I18N = {
     popularTag: 'Popüler etiket',
     popularPlace: 'Popüler yer',
   },
-  footer: {
-    madeWith: 'Hazırlayan:',
-  },
   sort: {
     sort: 'Sırala',
     newest: 'En Yeni',
@@ -219,5 +216,6 @@ export const TEXT: I18N = {
     copyPhrase: '{{label}} kopyalandı',
     paginate: '{{count}} fotoğrafın {{index}}.si',
     paginateAction: '{{action}} - {{count}} fotoğrafın {{index}}.si',
+    madeWith: 'Hazırlayan:',
   },
 };

@@ -201,7 +201,7 @@ Create Upstash Redis store from storage tab of Vercel dashboard and link to your
 - `NEXT_PUBLIC_ALWAYS_SHOW_EXPOSURE_COMP = 1` displays exposure compensation even when it's 0ev
 - `NEXT_PUBLIC_HIDE_ZOOM_CONTROLS = 1` hides fullscreen photo zoom controls
 - `NEXT_PUBLIC_HIDE_TAKEN_AT_TIME = 1` hides taken at time from photo meta
-- `NEXT_PUBLIC_HIDE_REPO_LINK = 1` removes footer link to repo
+- `NEXT_PUBLIC_HIDE_TEMPLATE_ATTRIBUTION = 1` hides "made with exif-photo-blog" references
 
 ### Grid
 - `NEXT_PUBLIC_GRID_HOMEPAGE = 1` shows grid layout on homepage

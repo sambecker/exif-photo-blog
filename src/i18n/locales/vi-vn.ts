@@ -71,9 +71,6 @@ export const TEXT: I18N = {
     popularTag: 'Thẻ phổ biến',
     popularPlace: 'Địa điểm phổ biến',
   },
-  footer: {
-    madeWith: 'Được tạo bằng',
-  },
   sort: {
     sort: 'Sắp xếp',
     newest: 'Mới nhất',
@@ -217,5 +214,6 @@ export const TEXT: I18N = {
     copyPhrase: '{{label}} đã sao chép',
     paginate: '{{index}} của {{count}}',
     paginateAction: '{{action}} {{index}} của {{count}}',
+    madeWith: 'Được tạo bằng',
   },
 };

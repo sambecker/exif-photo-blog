@@ -71,9 +71,6 @@ export const TEXT: I18N = {
     popularTag: 'Tag populer',
     popularPlace: 'Tempat populer',
   },
-  footer: {
-    madeWith: 'Dibuat dengan',
-  },
   sort: {
     sort: 'Urutkan',
     newest: 'Terbaru',
@@ -216,5 +213,6 @@ export const TEXT: I18N = {
     copyPhrase: '{{label}} disalin',
     paginate: '{{index}} dari {{count}}',
     paginateAction: '{{action}} {{index}} dari {{count}}',
+    madeWith: 'Dibuat dengan',
   },
 };

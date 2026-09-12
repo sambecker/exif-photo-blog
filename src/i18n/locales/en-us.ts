@@ -70,9 +70,6 @@ export const TEXT = {
     popularPlace: 'Popular Place',
     recentAlbum: 'Recent Album',
   },
-  footer: {
-    madeWith: 'Made with',
-  },
   sort: {
     sort: 'Sort',
     newest: 'Newest',
@@ -216,5 +213,6 @@ export const TEXT = {
     copyPhrase: '{{label}} copied',
     paginate: '{{index}} of {{count}}',
     paginateAction: '{{action}} {{index}} of {{count}}',
+    madeWith: 'Made with',
   },
 };
