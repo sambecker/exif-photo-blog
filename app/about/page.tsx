@@ -1,7 +1,11 @@
 import { getAboutMeta } from '@/about';
 import AboutPageClient from '@/about/AboutPageClient';
-import { getAboutDataCached } from '@/about/data';
-import { ABOUT_DESCRIPTION_DEFAULT, SHOW_ABOUT_PAGE } from '@/app/config';
+import { getAboutDataCached, getAboutFolderRows } from '@/about/data';
+import {
+  ABOUT_DESCRIPTION_DEFAULT,
+  SHOW_ABOUT_PAGE,
+  SHOW_NEW_ABOUT_PAGE,
+} from '@/app/config';
 import { PATH_ROOT } from '@/app/path';
 import { getDataForCategoriesCached } from '@/category/cache';
 import {
@@ -34,7 +38,7 @@ export default async function AboutPage() {
     photos,
     categories,
   ] = await Promise.all([
-    getAboutDataCached()
+    getAboutDataCached({ includeHero: !SHOW_NEW_ABOUT_PAGE })
       .catch(() => ({
         about: undefined,
         photoAvatar: undefined,
@@ -80,6 +84,10 @@ export default async function AboutPage() {
     about?.subhead,
   );
 
+  const folderRows = SHOW_NEW_ABOUT_PAGE
+    ? await getAboutFolderRows(categories, appText)
+    : undefined;
+
   return (
     (photosMeta?.count ?? 0) > 0
       ? <AboutPageClient
@@ -98,6 +106,7 @@ export default async function AboutPage() {
         place={place}
         album={albums[0]?.album}
         lastUpdated={lastModifiedSite}
+        folderRows={folderRows}
       />
       : <PhotosEmptyState />
   );

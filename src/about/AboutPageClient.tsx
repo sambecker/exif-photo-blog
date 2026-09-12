@@ -26,6 +26,8 @@ import { LuCirclePlus, LuUser } from 'react-icons/lu';
 import AdminEmptyState from '@/admin/AdminEmptyState';
 import { Place } from '@/place';
 import PlaceEntity from '@/place/PlaceEntity';
+import PhotoFolder from '@/components/folder/PhotoFolder';
+import { AboutSetFolderRow } from '@/components/folder';
 
 export default function AboutPageClient({
   title,
@@ -43,6 +45,7 @@ export default function AboutPageClient({
   place,
   album,
   lastUpdated,
+  folderRows,
 }: {
   title?: string
   subhead?: string
@@ -59,6 +62,7 @@ export default function AboutPageClient({
   place?: Place
   album?: Album
   lastUpdated?: Date
+  folderRows?: AboutSetFolderRow[]
 }) {
   const {
     isUserSignedIn,
@@ -220,8 +224,42 @@ export default function AboutPageClient({
               items={items}
             />
           </div>} />
-        {photoHero &&
-          <PhotoLarge photo={photoHero} priority />}
+        {folderRows
+          ? folderRows.length > 0 &&
+            <AppGrid
+              contentMain={<div className="space-y-8">
+                {folderRows.map(({ key, title, folders }) =>
+                  <div key={key} className="space-y-3">
+                    <div className={clsx(
+                      'text-[13px] uppercase tracking-wide text-dim',
+                    )}>
+                      {title}
+                    </div>
+                    <div className={clsx(
+                      'grid gap-3',
+                      'grid-cols-2 xs:grid-cols-3',
+                      'md:grid-cols-4 lg:grid-cols-5',
+                    )}>
+                      {folders.map(folder =>
+                        <div
+                          key={folder.key}
+                          className={clsx(
+                            'w-full h-full',
+                            'flex items-center justify-center',
+                          )}
+                        >
+                          <PhotoFolder
+                            photos={folder.photos}
+                            caption={folder.caption}
+                            href={folder.path}
+                          />
+                        </div>)}
+                    </div>
+                  </div>)}
+              </div>}
+            />
+          : photoHero &&
+            <PhotoLarge photo={photoHero} priority />}
       </div>]}
     />
   );

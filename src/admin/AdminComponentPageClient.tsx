@@ -11,7 +11,7 @@ import clsx from 'clsx/lite';
 import { useState } from 'react';
 import { Photo } from '@/photo';
 import FieldsetPhotoChooser from '@/photo/form/FieldsetPhotoChooser';
-import PhotoFolder from '@/photo/PhotoFolder';
+import PhotoFolder from '@/components/folder/PhotoFolder';
 
 export default function AdminComponentPageClient({
   photo,
@@ -57,6 +57,7 @@ export default function AdminComponentPageClient({
                 photos={folder.photos}
                 caption={folder.caption}
                 tint={tint}
+                maxPhotos={folder.photos.length}
               />
             </div>)}
         </div>
