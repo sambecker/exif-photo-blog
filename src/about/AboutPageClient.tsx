@@ -221,7 +221,7 @@ export default function AboutPageClient({
             />
           </div>} />
         {photoHero &&
-          <PhotoLarge photo={photoHero} />}
+          <PhotoLarge photo={photoHero} priority />}
       </div>]}
     />
   );
