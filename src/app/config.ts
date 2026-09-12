@@ -448,13 +448,18 @@ export const PAGE_SCRIPT_URLS = process.env.PAGE_SCRIPT_URLS
     .filter(url => url.startsWith('https://'))
   : [];
 
+// EXPERIMENTAL
+
+export const SHOW_NEW_ABOUT_PAGE = process.env.SHOW_NEW_ABOUT_PAGE === '1';
+
 // DEBUGGING
 
 export const DEBUG_OUTPUTS_ENABLED = process.env.DISABLE_DEBUG_OUTPUTS !== '1';
 
 // INTERNAL
 
-export const ADMIN_DEBUG_TOOLS_ENABLED = process.env.ADMIN_DEBUG_TOOLS === '1';
+export const ADMIN_DEBUG_TOOLS_ENABLED =
+  process.env.ADMIN_DEBUG_TOOLS === '1';
 export const ADMIN_SQL_DEBUG_ENABLED =
   process.env.ADMIN_SQL_DEBUG === '1' &&
   !IS_BUILDING;
