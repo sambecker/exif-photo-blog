@@ -223,7 +223,10 @@ function FolderPhotoImage({
       <img
         src={src}
         alt={altTextForPhoto(photo)}
-        className={classNameImage}
+        className={clsx(
+          classNameImage,
+          'bg-gray-400/20 dark:bg-gray-950/25',
+        )}
         loading="lazy"
         decoding="async"
       />
