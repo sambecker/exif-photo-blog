@@ -26,6 +26,7 @@ import {
   AboutSetFolder,
   AboutSetFolderRow,
   PHOTO_FOLDER_MAX_PHOTOS,
+  PHOTO_FOLDER_PEEK_PHOTOS,
 } from '@/components/folder';
 import { formatRecipe } from '@/recipe';
 import {
@@ -195,7 +196,7 @@ export const getAboutFolderRows = async (
     rows.flatMap(row => row.queries).map(({ options }) =>
       getPhotosCached({
         ...options,
-        limit: PHOTO_FOLDER_MAX_PHOTOS,
+        limit: PHOTO_FOLDER_MAX_PHOTOS + PHOTO_FOLDER_PEEK_PHOTOS,
       }).catch(() => [] as Photo[])),
   );
 

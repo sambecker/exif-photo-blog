@@ -13,15 +13,35 @@ import {
   getProminentColorFromPhotos,
   Oklch,
 } from '@/photo/color/client';
-import { PHOTO_FOLDER_MAX_PHOTOS } from '.';
+import { PHOTO_FOLDER_MAX_PHOTOS, PHOTO_FOLDER_PEEK_PHOTOS } from '.';
 
 const FOLDER_WIDTH = 143;
 const FOLDER_HEIGHT = 93;
 const FOLDER_TAB_HEIGHT = 7.55;
 const FOLDER_TAB_WIDTH = 47;
-const FOLDER_STROKE_WIDTH = 0.794811;
+const FOLDER_STROKE_WIDTH = 1;
 const FOLDER_INSET = 4;
 const FOLDER_RADIUS = 5;
+
+const FOLDER_PATH_INSET = FOLDER_STROKE_WIDTH / 2;
+const FOLDER_OUTER_RADIUS = FOLDER_RADIUS + FOLDER_INSET;
+
+const FOLDER_COVER_TOP = FOLDER_TAB_HEIGHT / FOLDER_HEIGHT * 100;
+const FOLDER_COVER_SIDE = FOLDER_PATH_INSET / FOLDER_WIDTH * 100;
+const FOLDER_COVER_BOTTOM = FOLDER_PATH_INSET / FOLDER_HEIGHT * 100;
+
+const FOLDER_COVER_WIDTH = FOLDER_WIDTH - FOLDER_STROKE_WIDTH;
+const FOLDER_COVER_HEIGHT = FOLDER_HEIGHT
+  - FOLDER_TAB_HEIGHT
+  - FOLDER_PATH_INSET;
+
+const FOLDER_PHOTO_TOP = FOLDER_INSET / FOLDER_COVER_HEIGHT * 100;
+const FOLDER_PHOTO_SIDE =
+  (FOLDER_INSET - FOLDER_PATH_INSET) / FOLDER_COVER_WIDTH * 100;
+const FOLDER_PHOTO_BOTTOM =
+  (FOLDER_INSET - FOLDER_PATH_INSET) / FOLDER_COVER_HEIGHT * 100;
+
+const PEEK_SIZE = 0.36;
 
 const getFolderPath = () => {
   const inset = FOLDER_STROKE_WIDTH / 2;
@@ -74,15 +94,49 @@ const PHOTO_FOLDER_LAYOUT_MAX_PHOTOS = 6;
 
 const FOLDER_TINT_CHROMA_MAX = 0.07;
 
+const PEEK_DIRECTIONS = [
+  { x: -46, y: -40, r: -16 },
+  { x: -8, y: -54, r: 6 },
+  { x: 44, y: -38, r: 15 },
+  { x: -48, y: 8, r: -12 },
+  { x: 50, y: 12, r: 14 },
+] as const;
+
+const hashToUnit = (value: string, salt: number) => {
+  let hash = salt;
+  for (let i = 0; i < value.length; i++) {
+    hash = (Math.imul(31, hash) + value.charCodeAt(i)) | 0;
+  }
+  return (hash >>> 0) / 0xFFFFFFFF;
+};
+
+const getPeekStyle = (
+  photo: Photo,
+  index: number,
+  folderWidth: number,
+): CSSProperties => {
+  const slot = PEEK_DIRECTIONS[index % PEEK_DIRECTIONS.length];
+  const folderHeight = folderWidth * FOLDER_HEIGHT / FOLDER_WIDTH;
+  const x = slot.x + (hashToUnit(photo.id, 1) - 0.5) * 14;
+  const y = slot.y + (hashToUnit(photo.id, 2) - 0.5) * 12;
+  const rotate = slot.r + (hashToUnit(photo.id, 3) - 0.5) * 14;
+  return {
+    '--peek-x': `${x / 100 * folderWidth}px`,
+    '--peek-y': `${y / 100 * folderHeight}px`,
+    '--peek-rotate': `${rotate}deg`,
+    transitionDelay: `${index * 35}ms`,
+  } as CSSProperties;
+};
+
 const getFolderTint = (color: Oklch) => {
   const c = Math.min(color.c * 0.55, FOLDER_TINT_CHROMA_MAX);
   return {
     '--folder-fill-light': convertOklchToCss(
-      { l: 0.94, c, h: color.h }, 0.66),
+      { l: 0.94, c, h: color.h }),
     '--folder-stroke-light': convertOklchToCss(
       { l: 0.87, c: c * 0.7, h: color.h }),
     '--folder-fill-dark': convertOklchToCss(
-      { l: 0.27, c, h: color.h }, 0.66),
+      { l: 0.27, c, h: color.h }),
     '--folder-stroke-dark': convertOklchToCss(
       { l: 0.36, c: c * 0.75, h: color.h }),
   } as CSSProperties;
@@ -116,6 +170,28 @@ const getPhotoFolderLayout = (
   };
 };
 
+function FolderPhotoImage({
+  photo,
+  className,
+  classNameImage,
+}: {
+  photo: Photo
+  className?: string
+  classNameImage?: string
+}) {
+  return (
+    <ImageMedium
+      src={photo.url}
+      aspectRatio={photo.aspectRatio}
+      blurDataURL={photo.blurData}
+      blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
+      className={className}
+      classNameImage={classNameImage}
+      alt={altTextForPhoto(photo)}
+    />
+  );
+}
+
 export default function PhotoFolder({
   photos,
   className,
@@ -142,6 +218,10 @@ export default function PhotoFolder({
   } = getPhotoFolderLayout(photos.length, maxPhotos);
 
   const photosInFolder = photos.slice(0, photosToShow);
+  const photosPeeking = photos.slice(
+    photosToShow,
+    photosToShow + PHOTO_FOLDER_PEEK_PHOTOS,
+  );
 
   const tintColor = tint
     ? getProminentColorFromPhotos(photosInFolder)
@@ -153,18 +233,22 @@ export default function PhotoFolder({
   const classNameFolder = clsx(
     'group hover:cursor-pointer',
     'flex flex-col items-center gap-2',
-    'shrink-0',
+    'shrink-0 relative hover:z-10',
     className,
   );
+
+  const coverOuterRadius = width * FOLDER_OUTER_RADIUS / FOLDER_WIDTH;
+  const coverInnerRadius = width * FOLDER_RADIUS / FOLDER_WIDTH + 1;
+  const folderStroke = width * FOLDER_STROKE_WIDTH / FOLDER_WIDTH;
+  const peekChannel = 2;
+  const peekInnerRadius = width * PEEK_SIZE * FOLDER_RADIUS / FOLDER_WIDTH;
+  const peekOuterRadius = peekInnerRadius + peekChannel;
 
   const content = <>
     <div
       className={clsx(
         'relative w-full',
-        'origin-bottom',
-        'transition-transform duration-200',
-        'group-hover:scale-[1.05]',
-        'drop-shadow-[0px_2px_1px_rgba(0,0,0,0.1)]',
+        'perspective-midrange transform-3d',
         tintStyle && clsx(
           '[--folder-fill:var(--folder-fill-light)]',
           '[--folder-stroke:var(--folder-stroke-light)]',
@@ -178,7 +262,10 @@ export default function PhotoFolder({
       }}
     >
       <svg
-        className="absolute inset-0 size-full"
+        className={clsx(
+          'absolute inset-0 size-full translate-z-0',
+          'drop-shadow-[0px_2px_1px_rgba(0,0,0,0.1)]',
+        )}
         viewBox={`0 0 ${FOLDER_WIDTH} ${FOLDER_HEIGHT}`}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -187,7 +274,7 @@ export default function PhotoFolder({
         <path
           d={FOLDER_PATH}
           className={clsx(
-            !tintStyle && 'fill-gray-100/66 dark:fill-gray-800/66',
+            !tintStyle && 'fill-gray-100 dark:fill-gray-800',
             !tintStyle && 'stroke-gray-300 dark:stroke-gray-700',
           )}
           style={tintStyle
@@ -199,53 +286,106 @@ export default function PhotoFolder({
           strokeWidth={FOLDER_STROKE_WIDTH}
         />
       </svg>
-      {photosInFolder.length > 0 &&
+      {photosPeeking.map((photo, index) =>
         <div
+          key={photo.id}
           className={clsx(
-            'absolute overflow-hidden',
-            'grid',
-            gridClass,
-            channel && 'gap-[2px]',
+            'absolute left-1/2 top-[54%] z-[1]',
+            'aspect-square pointer-events-none',
+            'folder-peek-rest',
+            'shadow-[0_1px_3px_rgba(0,0,0,0.18)]',
+            'transition-transform duration-200 ease-out',
+            'motion-reduce:transition-none',
+            'group-hover:folder-peek-open',
+            'motion-reduce:group-hover:folder-peek-rest',
+            !tintStyle && 'bg-gray-100 dark:bg-gray-800',
           )}
           style={{
-            top: `${(FOLDER_TAB_HEIGHT + FOLDER_INSET) /
-              FOLDER_HEIGHT * 100}%`,
-            left: `${FOLDER_INSET / FOLDER_WIDTH * 100}%`,
-            right: `${FOLDER_INSET / FOLDER_WIDTH * 100}%`,
-            bottom: `${FOLDER_INSET / FOLDER_HEIGHT * 100}%`,
-            borderRadius: width * FOLDER_RADIUS / FOLDER_WIDTH + 1,
+            width: `${PEEK_SIZE * 100}%`,
+            borderRadius: peekOuterRadius,
+            padding: peekChannel,
+            ...(tintStyle
+              ? { backgroundColor: 'var(--folder-fill)' }
+              : undefined),
+            ...getPeekStyle(photo, index, width),
           }}
         >
-          {photosInFolder.map((photo, index) =>
-            <div
-              key={photo.id}
-              className={clsx(
-                'relative min-h-0 overflow-hidden',
-                hasSplitLayout && index === 0 && 'row-span-2',
-              )}
-            >
-              <ImageMedium
-                src={photo.url}
-                aspectRatio={photo.aspectRatio}
-                blurDataURL={photo.blurData}
-                blurCompatibilityMode={
-                  doesPhotoNeedBlurCompatibility(photo)
-                }
-                className="absolute inset-0 w-full h-full"
-                classNameImage="object-cover w-full h-full"
-                alt={altTextForPhoto(photo)}
-              />
-            </div>)}
-        </div>}
+          <div
+            className="relative size-full overflow-hidden"
+            style={{ borderRadius: peekInnerRadius }}
+          >
+            <FolderPhotoImage
+              photo={photo}
+              className="absolute inset-0 w-full h-full"
+              classNameImage="object-cover w-full h-full"
+            />
+          </div>
+        </div>)}
+      <div
+        className={clsx(
+          'absolute z-[2]',
+          'origin-bottom translate-z-[8px]',
+          'transition-transform duration-300 ease-out',
+          'group-hover:-rotate-x-[34deg]',
+          'motion-reduce:transition-none',
+          'motion-reduce:group-hover:rotate-x-0',
+          !tintStyle && 'bg-gray-100 dark:bg-gray-800',
+          !tintStyle && 'outline-gray-300 dark:outline-gray-700',
+        )}
+        style={{
+          top: `${FOLDER_COVER_TOP}%`,
+          left: `${FOLDER_COVER_SIDE}%`,
+          right: `${FOLDER_COVER_SIDE}%`,
+          bottom: `${FOLDER_COVER_BOTTOM}%`,
+          borderRadius: coverOuterRadius,
+          outlineWidth: folderStroke,
+          outlineStyle: 'solid',
+          outlineOffset: -folderStroke / 2,
+          ...(tintStyle
+            ? {
+              backgroundColor: 'var(--folder-fill)',
+              outlineColor: 'var(--folder-stroke)',
+            }
+            : undefined),
+        }}
+      >
+        {photosInFolder.length > 0 &&
+          <div
+            className={clsx(
+              'absolute overflow-hidden',
+              'grid',
+              gridClass,
+              channel && 'gap-[1.5px]',
+            )}
+            style={{
+              top: `${FOLDER_PHOTO_TOP}%`,
+              left: `${FOLDER_PHOTO_SIDE}%`,
+              right: `${FOLDER_PHOTO_SIDE}%`,
+              bottom: `${FOLDER_PHOTO_BOTTOM}%`,
+              borderRadius: coverInnerRadius,
+            }}
+          >
+            {photosInFolder.map((photo, index) =>
+              <div
+                key={photo.id}
+                className={clsx(
+                  'relative min-h-0 overflow-hidden',
+                  hasSplitLayout && index === 0 && 'row-span-2',
+                )}
+              >
+                <FolderPhotoImage
+                  photo={photo}
+                  className="absolute inset-0 w-full h-full"
+                  classNameImage="object-cover w-full h-full"
+                />
+              </div>)}
+          </div>}
+      </div>
     </div>
     {caption &&
       <Badge
         type="small"
         uppercase
-        className={clsx(
-          'transition-transform duration-200',
-          'group-hover:translate-y-0.5',
-        )}
       >
         {caption}
       </Badge>}

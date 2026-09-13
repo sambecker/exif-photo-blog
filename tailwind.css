@@ -360,6 +360,16 @@ html {
   }
 }
 
+@utility folder-peek-rest {
+  transform: translate(-50%, -50%) translateZ(1px) scale(0.9);
+}
+@utility folder-peek-open {
+  transform: translate(
+    calc(-50% + var(--peek-x)),
+    calc(-50% + var(--peek-y))
+  ) translateZ(1px) rotate(var(--peek-rotate)) scale(1);
+}
+
 @layer components {
   .component-surface {
     @apply

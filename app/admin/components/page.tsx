@@ -2,6 +2,7 @@ import AdminComponentPageClient from '@/admin/AdminComponentPageClient';
 import { formatCameraText } from '@/camera';
 import { sortCategoriesByCount } from '@/category';
 import { getAlbumsWithMetaCached } from '@/album/cache';
+import { PHOTO_FOLDER_PEEK_PHOTOS } from '@/components/folder';
 import { PhotoQueryOptions } from '@/db';
 import { labelForFilm } from '@/film';
 import { formatFocalLength } from '@/focal';
@@ -45,6 +46,7 @@ type FolderQuery = {
 type PhotoFolderPreview = {
   photos: Photo[]
   caption: string
+  maxPhotos: number
 };
 
 export default async function ComponentsPage() {
@@ -135,7 +137,8 @@ export default async function ComponentsPage() {
     folderQueries.map((query, index) =>
       getRandomPreviewPhotos(
         query.options,
-        FOLDER_LIMITS[index % FOLDER_LIMITS.length],
+        FOLDER_LIMITS[index % FOLDER_LIMITS.length] +
+          PHOTO_FOLDER_PEEK_PHOTOS,
       )),
   );
 
@@ -143,6 +146,7 @@ export default async function ComponentsPage() {
     .map((query, index) => ({
       photos: folderPhotos[index],
       caption: query.caption,
+      maxPhotos: FOLDER_LIMITS[index % FOLDER_LIMITS.length],
     }))
     .filter((folder): folder is PhotoFolderPreview =>
       folder.photos.length > 0);
