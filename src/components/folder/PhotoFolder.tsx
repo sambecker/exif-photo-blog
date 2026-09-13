@@ -3,9 +3,7 @@
 import {
   Photo,
   altTextForPhoto,
-  doesPhotoNeedBlurCompatibility,
 } from '@/photo';
-import ImageMedium from '@/components/image/ImageMedium';
 import Badge from '@/components/Badge';
 import clsx from 'clsx/lite';
 import LinkWithStatus from '@/components/LinkWithStatus';
@@ -22,6 +20,7 @@ import {
   formatCountDescriptive,
 } from '@/utility/string';
 import { requestScrollToTop } from '@/utility/useScrollPositionMemory';
+import { getNextImageUrlForRequest } from '@/platforms/next-image';
 
 const FOLDER_WIDTH = 143;
 const FOLDER_HEIGHT = 93;
@@ -201,21 +200,33 @@ function FolderPhotoImage({
   photo,
   className,
   classNameImage,
+  size = 'small',
 }: {
   photo: Photo
   className?: string
   classNameImage?: string
+  size?: 'small' | 'medium' | 'large'
 }) {
+  // Raw <img> avoids next/image client JS + decode() overhead across
+  // hundreds of tiny folder tiles; still hit the optimizer at w=200
+  const src = getNextImageUrlForRequest({
+    imageUrl: photo.url,
+    size: size === 'large'
+      ? 640
+      : size === 'medium'
+        ? 200
+        : 100,
+  });
   return (
-    <ImageMedium
-      src={photo.url}
-      aspectRatio={photo.aspectRatio}
-      blurDataURL={photo.blurData}
-      blurCompatibilityMode={doesPhotoNeedBlurCompatibility(photo)}
-      className={className}
-      classNameImage={classNameImage}
-      alt={altTextForPhoto(photo)}
-    />
+    <div className={clsx('flex relative', className)}>
+      <img
+        src={src}
+        alt={altTextForPhoto(photo)}
+        className={classNameImage}
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
   );
 }
 
@@ -278,7 +289,7 @@ export default function PhotoFolder({
     <div
       className={clsx(
         'relative w-full',
-        'perspective-midrange transform-3d',
+        'perspective-midrange',
         tintStyle && clsx(
           '[--folder-fill:var(--folder-fill-light)]',
           '[--folder-stroke:var(--folder-stroke-light)]',
@@ -428,6 +439,11 @@ export default function PhotoFolder({
                   photo={photo}
                   className="absolute inset-0 w-full h-full"
                   classNameImage="object-cover w-full h-full"
+                  size={photosInFolder.length === 1
+                    ? 'large'
+                    : index === 0
+                      ? 'medium'
+                      : 'small'}
                 />
               </div>)}
           </div>}

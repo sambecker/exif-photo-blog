@@ -165,6 +165,7 @@ export default function LibraryPageClient({
   return (
     <AnimateItems
       type="bottom"
+      animateOnFirstLoadOnly
       items={[<div
         key="library-page"
         className="space-y-12 mt-5"

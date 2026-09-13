@@ -19,6 +19,7 @@ export default function ImageWithFallback({
   ref?: RefObject<HTMLImageElement | null>
   blurCompatibilityLevel?: 'none' | 'low' | 'high'
   classNameImage?: string
+  priority?: boolean
 }) {
   const ref = useRef<HTMLImageElement>(null);
 
