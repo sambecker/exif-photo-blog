@@ -205,6 +205,7 @@ export const getAboutFolderRows = async (
     rows.flatMap(row => row.queries).map(({ options }) =>
       getPhotosCached({
         ...options,
+        sortBy: 'random',
         limit: PHOTO_FOLDER_MAX_PHOTOS + PHOTO_FOLDER_PEEK_PHOTOS,
       }).catch(() => [] as Photo[])),
   );
