@@ -291,6 +291,7 @@ export default function PhotoFolder({
         className={clsx(
           'absolute inset-0 size-full translate-z-0',
           'drop-shadow-[0px_2px_1px_rgba(0,0,0,0.1)]',
+          'group-active:brightness-75',
         )}
         viewBox={`0 0 ${FOLDER_WIDTH} ${FOLDER_HEIGHT}`}
         fill="none"
@@ -324,6 +325,7 @@ export default function PhotoFolder({
             'motion-reduce:transition-none',
             'group-hover:folder-peek-open',
             'motion-reduce:group-hover:folder-peek-rest',
+            'group-active:brightness-75',
             !tintStyle && 'bg-gray-100 dark:bg-gray-800',
           )}
           style={{
@@ -367,6 +369,7 @@ export default function PhotoFolder({
           'after:duration-300 after:ease-out',
           'group-hover:after:opacity-100',
           'motion-reduce:group-hover:after:opacity-0',
+          'group-active:brightness-75',
           !tintStyle && 'bg-gray-100 dark:bg-gray-800',
           !tintStyle && 'outline-gray-300 dark:outline-gray-700',
         )}
