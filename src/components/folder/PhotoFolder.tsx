@@ -99,11 +99,11 @@ const PHOTO_FOLDER_LAYOUT_MAX_PHOTOS = 6;
 const FOLDER_TINT_CHROMA_MAX = 0.07;
 
 const PEEK_DIRECTIONS = [
-  { x: -46, y: -40, r: -16 },
-  { x: -8, y: -54, r: 6 },
-  { x: 44, y: -38, r: 15 },
-  { x: -48, y: 8, r: -12 },
-  { x: 50, y: 12, r: 14 },
+  { x: -28, y: -40, r: -14 },
+  { x: -16, y: -48, r: -4 },
+  { x: 18, y: -50, r: 6 },
+  { x: 30, y: -38, r: 14 },
+  { x: 2, y: -30, r: 4 },
 ] as const;
 
 const hashToUnit = (value: string, salt: number) => {
@@ -121,8 +121,8 @@ const getPeekStyle = (
 ): CSSProperties => {
   const slot = PEEK_DIRECTIONS[index % PEEK_DIRECTIONS.length];
   const folderHeight = folderWidth * FOLDER_HEIGHT / FOLDER_WIDTH;
-  const x = slot.x + (hashToUnit(photo.id, 1) - 0.5) * 14;
-  const y = slot.y + (hashToUnit(photo.id, 2) - 0.5) * 12;
+  const x = slot.x + (hashToUnit(photo.id, 1) - 0.5) * 8;
+  const y = slot.y + (hashToUnit(photo.id, 2) - 0.5) * 10;
   const rotate = slot.r + (hashToUnit(photo.id, 3) - 0.5) * 14;
   return {
     '--peek-x': `${x / 100 * folderWidth}px`,
