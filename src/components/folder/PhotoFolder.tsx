@@ -224,10 +224,10 @@ export default function PhotoFolder({
   } = getPhotoFolderLayout(photos.length, maxPhotos);
 
   const photosInFolder = photos.slice(0, photosToShow);
-  const photosPeeking = photos.slice(
-    photosToShow,
-    photosToShow + PHOTO_FOLDER_PEEK_PHOTOS,
-  );
+  const unusedPhotos = photos.slice(photosToShow);
+  const photosPeeking = unusedPhotos.length > 0
+    ? unusedPhotos.slice(0, PHOTO_FOLDER_PEEK_PHOTOS)
+    : photosInFolder.slice(0, PHOTO_FOLDER_PEEK_PHOTOS);
 
   const tintColor = tint
     ? getProminentColorFromPhotos(photosInFolder)
