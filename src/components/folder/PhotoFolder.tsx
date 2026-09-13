@@ -11,10 +11,11 @@ import Spinner from '@/components/Spinner';
 import { CSSProperties, ReactNode } from 'react';
 import {
   convertOklchToCss,
-  getProminentColorFromPhotos,
+  getDominantColorFromPhoto,
   Oklch,
 } from '@/photo/color/client';
 import { PHOTO_FOLDER_MAX_PHOTOS, PHOTO_FOLDER_PEEK_PHOTOS } from '.';
+import ColorDot from '@/photo/color/ColorDot';
 import {
   formatCount,
   formatCountDescriptive,
@@ -230,12 +231,14 @@ function FolderPhotoImage({
   );
 }
 
+export type PhotoFolderTint = 'off' | 'on' | 'debug';
+
 export default function PhotoFolder({
   photos,
   className,
   width = FOLDER_WIDTH,
   channel = true,
-  tint,
+  tint = 'off',
   caption,
   count,
   href,
@@ -245,7 +248,7 @@ export default function PhotoFolder({
   className?: string
   width?: number
   channel?: boolean
-  tint?: boolean
+  tint?: PhotoFolderTint
   caption?: ReactNode
   count?: number
   href?: string
@@ -264,8 +267,9 @@ export default function PhotoFolder({
   ].slice(0, PHOTO_FOLDER_PEEK_PHOTOS);
   const peekSlots = getCenteredPeekSlots(photosPeeking.length);
 
-  const tintColor = tint
-    ? getProminentColorFromPhotos(photosInFolder)
+  const isTinted = tint === 'on' || tint === 'debug';
+  const tintColor = isTinted
+    ? getDominantColorFromPhoto(photosInFolder[0])
     : undefined;
   const tintStyle = tintColor
     ? getFolderTint(tintColor)
@@ -343,15 +347,12 @@ export default function PhotoFolder({
             'motion-reduce:group-hover:folder-peek-rest',
             'motion-reduce:group-hover:group-active:folder-peek-rest',
             'group-active:brightness-75',
-            !tintStyle && 'bg-gray-100 dark:bg-gray-800',
+            'bg-white',
           )}
           style={{
             width: `${PEEK_SIZE * 100}%`,
             borderRadius: peekOuterRadius,
             padding: peekChannel,
-            ...(tintStyle
-              ? { backgroundColor: 'var(--folder-fill)' }
-              : undefined),
             ...getPeekStyle(
               photo,
               index,
@@ -445,6 +446,27 @@ export default function PhotoFolder({
                       ? 'medium'
                       : 'small'}
                 />
+                {tint === 'debug' && index === 0 && photo.colorData &&
+                  <div className={clsx(
+                    'absolute top-1 left-1 z-10',
+                    'flex gap-0.5',
+                    'pointer-events-none',
+                  )}>
+                    {photo.colorData.ai &&
+                      <ColorDot
+                        title="AI"
+                        className="size-2!"
+                        color={photo.colorData.ai}
+                        includeTooltip={false}
+                      />}
+                    {photo.colorData.colors[0] &&
+                      <ColorDot
+                        title="Color 1"
+                        className="size-2!"
+                        color={photo.colorData.colors[0]}
+                        includeTooltip={false}
+                      />}
+                  </div>}
               </div>)}
           </div>}
       </div>

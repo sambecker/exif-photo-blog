@@ -2,9 +2,11 @@
 
 import PhotoAlbum from '@/album/PhotoAlbum';
 import { useAppState } from '@/app/AppState';
+import { IS_DEVELOPMENT } from '@/app/config';
 import PhotoCamera from '@/camera/PhotoCamera';
 import AnimateItems from '@/components/AnimateItems';
 import AppGrid from '@/components/AppGrid';
+import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import PhotoFilm from '@/film/PhotoFilm';
 import PhotoLens from '@/lens/PhotoLens';
 import { Photo } from '@/photo';
@@ -13,7 +15,7 @@ import PhotoTag from '@/tag/PhotoTag';
 import clsx from 'clsx/lite';
 import { formatDistanceToNowStrict } from 'date-fns';
 import AdminLibraryMenu from './AdminLibraryMenu';
-import { ReactNode, useMemo } from 'react';
+import { ReactNode, useMemo, useState } from 'react';
 import { Camera } from '@/camera';
 import { Lens } from '@/lens';
 import { Album } from '@/album';
@@ -26,6 +28,7 @@ import AdminEmptyState from '@/admin/AdminEmptyState';
 import { Place } from '@/place';
 import PlaceEntity from '@/place/PlaceEntity';
 import PhotoFolder from '@/components/folder/PhotoFolder';
+import type { PhotoFolderTint } from '@/components/folder';
 import CategoryIcon from '@/category/CategoryIcon';
 import type { LibrarySetFolderRow } from '.';
 
@@ -67,6 +70,9 @@ export default function LibraryPageClient({
   } = useAppState();
 
   const appText = useAppText();
+
+  // Temporary folder config
+  const [tint, setTint] = useState<PhotoFolderTint>('off');
 
   const renderItem = (label: string, content?: ReactNode) => (
     <div
@@ -163,106 +169,123 @@ export default function LibraryPageClient({
   ]);
 
   return (
-    <AnimateItems
-      type="bottom"
-      animateOnFirstLoadOnly
-      items={[<div
-        key="library-page"
-        className="space-y-12 mt-5"
-      >
-        <AppGrid
-          contentMain={<div className="space-y-8">
-            <div className="flex items-center gap-4 sm:gap-6">
-              <PhotoAvatar
-                photo={photoAvatar}
-                placeholder={<LuUser size={22} className="text-dim" />}
-              />
-              <div
-                className={clsx('sm:flex items-center justify-between grow')}
-              >
-                <div>
-                  <div className="font-bold">
-                    {title || appText.library.titleDefault}
-                  </div>
-                  {subhead &&
-                    <div>{subhead}</div>}
-                </div>
-                {lastUpdated && <div className={clsx('text-dim')}>
-                  {appText.library.updated(
-                    formatDistanceToNowStrict(lastUpdated),
-                  )}
-                </div>}
-              </div>
-              {isUserSignedIn && <AdminLibraryMenu />}
-            </div>
-            {descriptionHtml
-              ? descriptionHtml
-              : isUserSignedIn &&
-                  <Link
-                    href={PATH_ADMIN_LIBRARY_EDIT}
-                    className={clsx(
-                      'flex items-center justify-center gap-2.5',
-                      'border border-dashed border-medium rounded-lg',
-                    )}
-                  >
-                    <AdminEmptyState
-                      icon={<LuCirclePlus size={22} />}
-                      includeContainer={false}
-                      className="gap-3! p-6!"
-                    >
-                      Add optional description
-                    </AdminEmptyState>
-                  </Link>}
-            <AnimateItems
-              className={clsx(
-                'grid gap-x-2 gap-y-6 grid-cols-2 lg:grid-cols-4',
-              )}
-              items={items}
-            />
-          </div>}
-        />
-        {folderRows.length > 0 &&
+    <>
+      {IS_DEVELOPMENT &&
+        <div className={clsx(
+          'fixed top-4 right-4 z-50',
+          'px-2 py-1 rounded-xl',
+          'backdrop-blur-lg',
+          'bg-gray-100/90 dark:bg-gray-900/70',
+        )}>
+          <FieldsetWithStatus
+            label="Color tint"
+            type="checkbox"
+            value={tint !== 'off' ? 'true' : 'false'}
+            onChange={value => setTint(value === 'true' ? 'on' : 'off')}
+          />
+        </div>}
+      <AnimateItems
+        type="bottom"
+        animateOnFirstLoadOnly
+        items={[<div
+          key="library-page"
+          className="space-y-12 mt-5"
+        >
           <AppGrid
             contentMain={<div className="space-y-8">
-              {folderRows.map(({ key, title, folders }) =>
+              <div className="flex items-center gap-4 sm:gap-6">
+                <PhotoAvatar
+                  photo={photoAvatar}
+                  placeholder={<LuUser size={22} className="text-dim" />}
+                />
                 <div
-                  key={key}
-                  className="border-t border-medium pt-1 space-y-3"
+                  className={clsx('sm:flex items-center justify-between grow')}
                 >
-                  <div className={clsx(
-                    'flex items-center gap-1',
-                    'text-[13px] uppercase tracking-wide text-dim',
-                  )}>
-                    <span className="w-[1rem]">
-                      <CategoryIcon category={key} />
-                    </span>
-                    {title}
+                  <div>
+                    <div className="font-bold">
+                      {title || appText.library.titleDefault}
+                    </div>
+                    {subhead &&
+                      <div>{subhead}</div>}
                   </div>
-                  <div className={clsx(
-                    'grid gap-3',
-                    'grid-cols-2 sm:grid-cols-3',
-                    'lg:grid-cols-5',
-                  )}>
-                    {folders.map(folder =>
-                      <div
-                        key={folder.key}
-                        className={clsx(
-                          'w-full h-full',
-                          'flex items-center justify-center',
-                        )}
+                  {lastUpdated && <div className={clsx('text-dim')}>
+                    {appText.library.updated(
+                      formatDistanceToNowStrict(lastUpdated),
+                    )}
+                  </div>}
+                </div>
+                {isUserSignedIn && <AdminLibraryMenu />}
+              </div>
+              {descriptionHtml
+                ? descriptionHtml
+                : isUserSignedIn &&
+                    <Link
+                      href={PATH_ADMIN_LIBRARY_EDIT}
+                      className={clsx(
+                        'flex items-center justify-center gap-2.5',
+                        'border border-dashed border-medium rounded-lg',
+                      )}
+                    >
+                      <AdminEmptyState
+                        icon={<LuCirclePlus size={22} />}
+                        includeContainer={false}
+                        className="gap-3! p-6!"
                       >
-                        <PhotoFolder
-                          photos={folder.photos}
-                          caption={folder.caption}
-                          count={folder.count}
-                          href={folder.path}
-                        />
-                      </div>)}
-                  </div>
-                </div>)}
+                        Add optional description
+                      </AdminEmptyState>
+                    </Link>}
+              <AnimateItems
+                className={clsx(
+                  'grid gap-x-2 gap-y-6 grid-cols-2 lg:grid-cols-4',
+                )}
+                items={items}
+              />
             </div>}
-          />}
-      </div>]}
-    />
+          />
+          {folderRows.length > 0 &&
+            <AppGrid
+              contentMain={<div className="space-y-8">
+                {folderRows.map(({ key, title, folders }) =>
+                  <div
+                    key={key}
+                    className="border-t border-medium pt-1 space-y-3"
+                  >
+                    <div className={clsx(
+                      'flex items-center gap-1',
+                      'text-[13px] uppercase tracking-wide text-dim',
+                    )}>
+                      <span className="w-[1rem]">
+                        <CategoryIcon category={key} />
+                      </span>
+                      {title}
+                    </div>
+                    <div className={clsx(
+                      'grid gap-3',
+                      'grid-cols-2 sm:grid-cols-3',
+                      'lg:grid-cols-5',
+                    )}>
+                      {folders.map(folder =>
+                        <div
+                          key={folder.key}
+                          className={clsx(
+                            'w-full h-full',
+                            'flex items-center justify-center',
+                          )}
+                        >
+                          <PhotoFolder
+                            photos={folder.photos}
+                            caption={folder.caption}
+                            count={folder.count}
+                            href={folder.path}
+                            tint={tint}
+                          />
+                        </div>)}
+                    </div>
+                  </div>)}
+              </div>}
+            />}
+        </div>]}
+      />
+    </>
   );
 }

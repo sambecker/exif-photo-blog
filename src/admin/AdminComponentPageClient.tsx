@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { Photo } from '@/photo';
 import FieldsetPhotoChooser from '@/photo/form/FieldsetPhotoChooser';
 import PhotoFolder from '@/components/folder/PhotoFolder';
+import type { PhotoFolderTint } from '@/components/folder';
 
 export default function AdminComponentPageClient({
   photo,
@@ -35,7 +36,7 @@ export default function AdminComponentPageClient({
 
   const [value, setValue] = useState('visible');
 
-  const [tint, setTint] = useState(false);
+  const [tint, setTint] = useState<PhotoFolderTint>('off');
 
   return (
     <AppGrid
@@ -43,8 +44,8 @@ export default function AdminComponentPageClient({
         <FieldsetWithStatus
           label="Color tint"
           type="checkbox"
-          value={tint ? 'true' : 'false'}
-          onChange={value => setTint(value === 'true')}
+          value={tint !== 'off' ? 'true' : 'false'}
+          onChange={value => setTint(value === 'true' ? 'on' : 'off')}
         />
         <div className={clsx(
           'grid gap-3',

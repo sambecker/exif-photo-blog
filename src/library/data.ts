@@ -175,7 +175,11 @@ export const getLibraryFolderRows = async (
     key: category,
     title: getCategoryTitle(category, appText),
     queries: getFolderQueriesForCategory(category, categories, appText),
-  })).filter(row => row.queries.length > 0);
+  }))
+    .filter(({ key, queries }) =>
+      queries.length > 0 &&
+      key !== 'recents',
+    );
 
   const folderPhotos = await Promise.all(
     rows.flatMap(row => row.queries).map(({ options }) =>
