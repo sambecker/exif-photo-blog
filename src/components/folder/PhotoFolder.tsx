@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Photo,
   altTextForPhoto,
@@ -6,7 +8,8 @@ import {
 import ImageMedium from '@/components/image/ImageMedium';
 import Badge from '@/components/Badge';
 import clsx from 'clsx/lite';
-import Link from 'next/link';
+import LinkWithStatus from '@/components/LinkWithStatus';
+import Spinner from '@/components/Spinner';
 import { CSSProperties, ReactNode } from 'react';
 import {
   convertOklchToCss,
@@ -270,7 +273,7 @@ export default function PhotoFolder({
   const peekInnerRadius = width * PEEK_SIZE * FOLDER_RADIUS / FOLDER_WIDTH;
   const peekOuterRadius = peekInnerRadius + peekChannel;
 
-  const content = <>
+  const content = (isLoading?: boolean) => <>
     <div
       className={clsx(
         'relative w-full',
@@ -439,8 +442,10 @@ export default function PhotoFolder({
           uppercase
           className={clsx(
             'min-w-0',
-            count !== undefined &&
+            count !== undefined && clsx(
               'group-hover:max-w-[calc(100%-2.75rem)]',
+              isLoading && 'max-w-[calc(100%-2.75rem)]',
+            ),
           )}
         >
           {caption}
@@ -448,19 +453,40 @@ export default function PhotoFolder({
         {count !== undefined &&
           <span
             className={clsx(
-              'max-w-0 overflow-hidden opacity-0',
-              'group-hover:max-w-16 group-hover:opacity-100',
+              'overflow-hidden',
+              isLoading
+                ? 'max-w-16 opacity-100'
+                : clsx(
+                  'max-w-0 opacity-0',
+                  'group-hover:max-w-16 group-hover:opacity-100',
+                ),
               'transition-[max-width,opacity] duration-300 ease-out',
               'motion-reduce:transition-none',
               'pointer-events-none shrink-0',
             )}
-            aria-label={formatCountDescriptive(count)}
+            aria-label={isLoading
+              ? 'Loading'
+              : formatCountDescriptive(count)}
           >
             <span
-              className="pl-1 text-dim text-[0.7rem] whitespace-nowrap"
+              className={clsx(
+                'pl-1 inline-flex items-center',
+                'text-dim text-[0.7rem] whitespace-nowrap',
+              )}
               aria-hidden
             >
-              {formatCount(count)}
+              <span className="relative inline-flex items-center">
+                <span className={clsx(isLoading && 'opacity-0')}>
+                  {formatCount(count)}
+                </span>
+                {isLoading &&
+                  <span className={clsx(
+                    'absolute inset-0',
+                    'flex items-center justify-center',
+                  )}>
+                    <Spinner size={12} />
+                  </span>}
+              </span>
             </span>
           </span>}
       </div>}
@@ -469,17 +495,17 @@ export default function PhotoFolder({
   const folderStyle = { width };
 
   return href
-    ? <Link
+    ? <LinkWithStatus
       href={href}
       className={classNameFolder}
       style={folderStyle}
     >
-      {content}
-    </Link>
+      {({ isLoading }) => content(isLoading)}
+    </LinkWithStatus>
     : <div
       className={classNameFolder}
       style={folderStyle}
     >
-      {content}
+      {content()}
     </div>;
 }
