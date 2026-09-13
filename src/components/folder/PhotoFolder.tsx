@@ -21,6 +21,7 @@ import {
   formatCount,
   formatCountDescriptive,
 } from '@/utility/string';
+import { requestScrollToTop } from '@/utility/useScrollPositionMemory';
 
 const FOLDER_WIDTH = 143;
 const FOLDER_HEIGHT = 93;
@@ -499,6 +500,8 @@ export default function PhotoFolder({
       href={href}
       className={classNameFolder}
       style={folderStyle}
+      scroll={true}
+      onClick={() => requestScrollToTop(href)}
     >
       {({ isLoading }) => content(isLoading)}
     </LinkWithStatus>
