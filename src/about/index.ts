@@ -1,5 +1,7 @@
 import { META_TITLE, SHOW_TEMPLATE_ATTRIBUTION } from '@/app/config';
+import type { CategoryKey } from '@/category';
 import { AppTextState } from '@/i18n/state';
+import type { Photo } from '@/photo';
 
 export interface AboutInsert {
   id: number
@@ -13,6 +15,20 @@ export interface AboutInsert {
 export interface About extends AboutInsert {
   createdAt: Date
   updatedAt: Date
+}
+
+export interface AboutSetFolder {
+  key: string
+  caption: string
+  path: string
+  photos: Photo[]
+  count: number
+}
+
+export interface AboutSetFolderRow {
+  key: CategoryKey
+  title: string
+  folders: AboutSetFolder[]
 }
 
 // Leave title/subhead blank to reveal default values

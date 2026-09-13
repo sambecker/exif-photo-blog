@@ -1,6 +1,7 @@
 import { Photo, PhotoDateRangePostgres } from '../photo';
 import { Camera, Cameras } from '@/camera';
 import { Films } from '@/film';
+import type { AppTextState } from '@/i18n/state';
 import { Lens, Lenses } from '@/lens';
 import { Tags } from '@/tag';
 import { FocalLengths } from '@/focal';
@@ -25,6 +26,23 @@ export const CATEGORY_KEYS = [
 export type CategoryKey = (typeof CATEGORY_KEYS)[number];
 
 export type CategoryKeys = CategoryKey[];
+
+export const getCategoryTitle = (
+  category: CategoryKey,
+  appText: AppTextState,
+) => {
+  switch (category) {
+    case 'recents': return appText.category.recentPlural;
+    case 'years': return appText.category.yearPlural;
+    case 'cameras': return appText.category.cameraPlural;
+    case 'lenses': return appText.category.lensPlural;
+    case 'albums': return appText.category.albumPlural;
+    case 'tags': return appText.category.tagPlural;
+    case 'recipes': return appText.category.recipePlural;
+    case 'films': return appText.category.filmPlural;
+    case 'focal-lengths': return appText.category.focalLengthPlural;
+  }
+};
 
 export const DEFAULT_CATEGORY_KEYS: CategoryKeys = [
   'recents',

@@ -79,7 +79,7 @@ import {
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import InsightsIndicatorDot from '@/admin/insights/InsightsIndicatorDot';
-import { PhotoSetCategories } from '@/category';
+import { PhotoSetCategories, getCategoryTitle } from '@/category';
 import { formatCameraText } from '@/camera';
 import { formatFocalLength } from '@/focal';
 import { formatRecipe } from '@/recipe';
@@ -389,9 +389,10 @@ export default function CommandKClient({
   const categorySections: CommandKSection[] = useMemo(() =>
     CATEGORY_VISIBILITY
       .map(category => {
+        const heading = getCategoryTitle(category, appText);
         switch (category) {
           case 'recents': return {
-            heading: appText.category.recentPlural,
+            heading,
             accessory: <IconRecents size={15} />,
             items: recentsStatus ? [{
               label: recentsStatus.subhead,
@@ -401,7 +402,7 @@ export default function CommandKClient({
             }] : [],
           };
           case 'years': return {
-            heading: appText.category.yearPlural,
+            heading,
             accessory: <IconYear size={14} />,
             items: years.map(({ year, count }) => ({
               label: year,
@@ -411,7 +412,7 @@ export default function CommandKClient({
             })),
           };
           case 'cameras': return {
-            heading: appText.category.cameraPlural,
+            heading,
             accessory: <IconCamera size={14} />,
             items: cameras.map(({ camera, count }) => ({
               label: formatCameraText(camera),
@@ -421,7 +422,7 @@ export default function CommandKClient({
             })),
           };
           case 'lenses': return {
-            heading: appText.category.lensPlural,
+            heading,
             accessory: <IconLens size={14} className="translate-y-[0.5px]" />,
             items: lenses.map(({ lens, count }) => ({
               label: formatLensText(lens, 'medium'),
@@ -432,7 +433,7 @@ export default function CommandKClient({
             })),
           };
           case 'albums': return {
-            heading: appText.category.albumPlural,
+            heading,
             accessory: <IconAlbum size={14} />,
             items: albums.map(({ album, count }) => ({
               label: album.title,
@@ -442,7 +443,7 @@ export default function CommandKClient({
             })),
           };
           case 'tags': return {
-            heading: appText.category.tagPlural,
+            heading,
             accessory: <IconTag
               size={13}
               className="translate-x-[1px] translate-y-[0.75px]"
@@ -469,7 +470,7 @@ export default function CommandKClient({
             })),
           };
           case 'recipes': return {
-            heading: appText.category.recipePlural,
+            heading,
             accessory: <IconRecipe
               size={15}
               className="translate-x-[-1px]"
@@ -482,7 +483,7 @@ export default function CommandKClient({
             })),
           };
           case 'films': return {
-            heading: appText.category.filmPlural,
+            heading,
             accessory: <IconFilm size={14} />,
             items: films.map(({ film, count }) => ({
               label: labelForFilm(film).medium,
@@ -492,7 +493,7 @@ export default function CommandKClient({
             })),
           };
           case 'focal-lengths': return {
-            heading: appText.category.focalLengthPlural,
+            heading,
             accessory: <IconFocalLength className="text-[14px]" />,
             items: focalLengths.map(({ focal, count }) => ({
               label: formatFocalLength(focal),

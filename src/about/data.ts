@@ -14,7 +14,7 @@ import {
   pathForYear,
 } from '@/app/path';
 import { formatCameraText } from '@/camera';
-import { CategoryKey, PhotoSetCategories } from '@/category';
+import { CategoryKey, PhotoSetCategories, getCategoryTitle } from '@/category';
 import { PhotoQueryOptions } from '@/db';
 import { labelForFilm } from '@/film';
 import { formatFocalLength } from '@/focal';
@@ -23,8 +23,6 @@ import { formatLensText } from '@/lens';
 import { Photo } from '@/photo';
 import { getPhotoCached, getPhotosCached } from '@/photo/cache';
 import {
-  AboutSetFolder,
-  AboutSetFolderRow,
   PHOTO_FOLDER_MAX_PHOTOS,
   PHOTO_FOLDER_PEEK_PHOTOS,
 } from '@/components/folder';
@@ -35,7 +33,7 @@ import {
   TAG_FAVS,
   TAG_PRIVATE,
 } from '@/tag';
-import { About } from '.';
+import { About, AboutSetFolder, AboutSetFolderRow } from '.';
 import { getAbout } from './query';
 import { getAboutCached } from './cache';
 
@@ -81,23 +79,6 @@ export const getAboutDataCached = ({
 
 type FolderQuery = Omit<AboutSetFolder, 'photos'> & {
   options: PhotoQueryOptions
-};
-
-const titleForCategoryKey = (
-  category: CategoryKey,
-  appText: AppTextState,
-) => {
-  switch (category) {
-    case 'recents': return appText.category.recentPlural;
-    case 'years': return appText.category.yearPlural;
-    case 'cameras': return appText.category.cameraPlural;
-    case 'lenses': return appText.category.lensPlural;
-    case 'albums': return appText.category.albumPlural;
-    case 'tags': return appText.category.tagPlural;
-    case 'recipes': return appText.category.recipePlural;
-    case 'films': return appText.category.filmPlural;
-    case 'focal-lengths': return appText.category.focalLengthPlural;
-  }
 };
 
 const getFolderQueriesForCategory = (
@@ -197,7 +178,7 @@ export const getAboutFolderRows = async (
 ): Promise<AboutSetFolderRow[]> => {
   const rows = CATEGORY_VISIBILITY.map(category => ({
     key: category,
-    title: titleForCategoryKey(category, appText),
+    title: getCategoryTitle(category, appText),
     queries: getFolderQueriesForCategory(category, categories, appText),
   })).filter(row => row.queries.length > 0);
 

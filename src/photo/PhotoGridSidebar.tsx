@@ -21,25 +21,19 @@ import {
 } from '@/app/config';
 import { clsx } from 'clsx/lite';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
-import IconCamera from '@/components/icons/IconCamera';
-import IconRecipe from '@/components/icons/IconRecipe';
-import IconTag from '@/components/icons/IconTag';
-import IconFilm from '@/components/icons/IconFilm';
-import IconLens from '@/components/icons/IconLens';
-import PhotoLens from '@/lens/PhotoLens';
-import IconFocalLength from '@/components/icons/IconFocalLength';
 import {
   getCategoriesWithItemsCount,
+  getCategoryTitle,
   PhotoSetCategories,
 } from '@/category';
+import CategoryIcon from '@/category/CategoryIcon';
 import PhotoFocalLength from '@/focal/PhotoFocalLength';
+import PhotoLens from '@/lens/PhotoLens';
 import useElementHeight from '@/utility/useElementHeight';
 import { useAppText } from '@/i18n/state/client';
-import IconYear from '@/components/icons/IconYear';
 import PhotoYear from '@/year/PhotoYear';
 import { chunkArray } from '@/utility/array';
 import PhotoRecents from '@/recents/PhotoRecents';
-import IconAlbum from '@/components/icons/IconAlbum';
 import PhotoAlbum from '@/album/PhotoAlbum';
 
 const APPROXIMATE_ITEM_HEIGHT = 40;
@@ -125,11 +119,8 @@ export default function PhotoGridSidebar({
   const yearsContent = years.length > 0
     ? <HeaderList
       key="years"
-      title={appText.category.yearPlural}
-      icon={<IconYear
-        size={13}
-        className="translate-x-[0.5px]"
-      />}
+      title={getCategoryTitle('years', appText)}
+      icon={<CategoryIcon category="years" />}
       maxItems={maxItemsPerCategory}
       items={yearRows.map((row, index) =>
         <div key={index} className="flex gap-[5px]">
@@ -152,11 +143,8 @@ export default function PhotoGridSidebar({
   const camerasContent = cameras.length > 0
     ? <HeaderList
       key="cameras"
-      title={appText.category.cameraPlural}
-      icon={<IconCamera
-        size={14}
-        className="translate-x-[1px]"
-      />}
+      title={getCategoryTitle('cameras', appText)}
+      icon={<CategoryIcon category="cameras" />}
       maxItems={maxItemsPerCategory}
       items={cameras
         .map(({ cameraKey, camera, count }) =>
@@ -175,8 +163,8 @@ export default function PhotoGridSidebar({
   const lensesContent = lenses.length > 0
     ? <HeaderList
       key="lenses"
-      title={appText.category.lensPlural}
-      icon={<IconLens size={15} />}
+      title={getCategoryTitle('lenses', appText)}
+      icon={<CategoryIcon category="lenses" />}
       maxItems={maxItemsPerCategory}
       items={lenses
         .map(({ lensKey, lens, count }) =>
@@ -195,11 +183,8 @@ export default function PhotoGridSidebar({
   const albumsContent = albums.length > 0
     ? <HeaderList
       key="albums"
-      title={appText.category.albumPlural}
-      icon={<IconAlbum
-        size={13.5}
-        className="translate-x-[1.5px]"
-      />}
+      title={getCategoryTitle('albums', appText)}
+      icon={<CategoryIcon category="albums" />}
       maxItems={maxItemsPerCategory}
       items={albums
         .map(({ album, count }) =>
@@ -220,11 +205,8 @@ export default function PhotoGridSidebar({
   const tagsContent = tags.length > 0
     ? <HeaderList
       key="tags"
-      title={appText.category.tagPlural}
-      icon={<IconTag
-        size={13.5}
-        className="translate-x-[1.5px] translate-y-[1px]"
-      />}
+      title={getCategoryTitle('tags', appText)}
+      icon={<CategoryIcon category="tags" />}
       maxItems={maxItemsPerCategory}
       items={tagsIncludingHidden
         .map(({ tag, count }) => {
@@ -264,11 +246,8 @@ export default function PhotoGridSidebar({
   const recipesContent = recipes.length > 0
     ? <HeaderList
       key="recipes"
-      title={appText.category.recipePlural}
-      icon={<IconRecipe
-        size={16}
-        className="translate-x-[-1px]"
-      />}
+      title={getCategoryTitle('recipes', appText)}
+      icon={<CategoryIcon category="recipes" />}
       maxItems={maxItemsPerCategory}
       items={recipes
         .map(({ recipe, count }) =>
@@ -287,8 +266,8 @@ export default function PhotoGridSidebar({
   const filmsContent = films.length > 0
     ? <HeaderList
       key="films"
-      title={appText.category.filmPlural}
-      icon={<IconFilm size={15} />}
+      title={getCategoryTitle('films', appText)}
+      icon={<CategoryIcon category="films" />}
       maxItems={maxItemsPerCategory}
       items={films
         .map(({ film, count }) =>
@@ -305,8 +284,8 @@ export default function PhotoGridSidebar({
   const focalLengthsContent = focalLengths.length > 0
     ? <HeaderList
       key="focal-lengths"
-      title={appText.category.focalLengthPlural}
-      icon={<IconFocalLength size={13} />}
+      title={getCategoryTitle('focal-lengths', appText)}
+      icon={<CategoryIcon category="focal-lengths" />}
       maxItems={maxItemsPerCategory}
       items={focalLengths.map(({ focal, count }) =>
         <PhotoFocalLength
